@@ -1,0 +1,552 @@
+"""Combate por turnos."""
+
+from .classes import CLASSES, HABILIDADES
+from .dados import TRACOS
+from .entidades import Combatente
+from .inimigos import HABS_INIMIGO, NOMES_HABS_INIMIGO
+from .itens import CONSUMIVEIS
+
+DOTS = {
+    "veneno": ("veneno", "verde"),
+    "sangramento": ("sangramento", "vermelho"),
+    "queimadura": ("queimadura", "amarelo"),
+    "maldito": ("maldição", "magenta"),
+}
+NOMES_EFEITOS = {
+    "veneno": "envenenado", "sangramento": "sangrando", "queimadura": "em chamas", "atordoado": "atordoado",
+    "enfraquecido": "enfraquecido", "maldito": "amaldiçoado", "marcado": "marcado", "guarda": "em guarda",
+    "fortalecido": "fortalecido", "esquiva": "esquivo", "barreira": "com barreira", "furtivo": "furtivo",
+}
+USAVEIS_EM_COMBATE = ("pocao_vida", "tonico", "antidoto", "bandagem", "bomba_fumaca")
+
+
+def mult_tracos(alvo, tipo, alcance):
+    m = 1.0
+    t = alvo.tracos
+    if "voador" in t:
+        m *= 0.7 if alcance == "corpo" else 1.25
+    if "blindado" in t:
+        m *= 0.75 if tipo == "fisico" else 1.15
+    if "morto-vivo" in t:
+        m *= {"sagrado": 1.7, "sombra": 0.5, "veneno": 0}.get(tipo, 1)
+    if "etereo" in t:
+        m *= {"fisico": 0.6, "arcano": 1.3, "sagrado": 1.3}.get(tipo, 1)
+    if "planta" in t and tipo == "fogo":
+        m *= 1.5
+    if "construto" in t:
+        m *= {"veneno": 0, "arcano": 1.2}.get(tipo, 1)
+    if "corrompido" in t:
+        m *= {"sagrado": 1.4, "sombra": 0.6}.get(tipo, 1)
+    return m * alvo.resist.get(tipo, 1)
+
+
+class Aliado(Combatente):
+    def __init__(self, nome, hp, atk, agi=4, tipo="servo", alcance="corpo", crit=0.0):
+        super().__init__(nome, hp, atk, 3, agi, 0)
+        self.tipo = tipo
+        self.alcance = alcance
+        self.crit = crit
+
+
+class Combate:
+    def __init__(self, g, inimigos, emboscada=None, pode_fugir=True, titulo=None):
+        self.g = g
+        self.ui = g.ui
+        self.rng = g.rng
+        self.j = g.j
+        self.inimigos = list(inimigos)
+        self.aliados = []
+        self.mortos = []
+        self.companheiro = None
+        self.emboscada = emboscada
+        self.pode_fugir = pode_fugir and not any(e.chefe for e in self.inimigos)
+        self.titulo = titulo or "COMBATE"
+        self.flechas_gastas = 0
+        self.turno = 0
+        self._nomear()
+        c = self.j.companheiro
+        if c and c["hp"] > 0:
+            self.companheiro = Aliado(c["nome"], c["max_hp"], c["atk"], c["agi"], c["tipo"], c["alcance"], c["crit"])
+            self.companheiro.hp = c["hp"]
+            self.aliados.append(self.companheiro)
+
+    # ------------------------------------------------------------ utilidades
+    def dizer(self, texto, cor=None):
+        self.ui.dizer(texto, cor)
+
+    def nome(self, c, obj=False):
+        if c is self.j:
+            return "você" if obj else "Você"
+        return c.nome
+
+    def inimigos_vivos(self):
+        return [e for e in self.inimigos if e.vivo]
+
+    def _nomear(self):
+        contagem = {}
+        for e in self.inimigos:
+            contagem[e.nome] = contagem.get(e.nome, 0) + 1
+        letras = {}
+        for e in self.inimigos:
+            if contagem[e.nome] > 1:
+                n = letras.get(e.nome, 0)
+                letras[e.nome] = n + 1
+                e.nome = f"{e.nome} {'ABCD'[n]}"
+
+    def valor_queimadura(self, u):
+        v = max(2, u.poder * 0.4)
+        if getattr(u, "spec", None) == "piromante":
+            v *= 1.5
+        return v
+
+    def invocar_aliado(self, nome, hp, atk, tipo="servo"):
+        self.aliados.append(Aliado(nome, hp, atk, 3, tipo))
+
+    # ------------------------------------------------------------ dano
+    def atacar(self, u, alvo, mult, tipo="fisico", alcance="corpo", stat="atk", crit_extra=0.0, bonus=0,
+               rotulo=None, pode_esquivar=True):
+        if alvo is None or not alvo.vivo:
+            return 0
+        prefixo = f"[{rotulo}] " if rotulo else ""
+        quem = self.nome(u)
+        if pode_esquivar and not alvo.efeito("atordoado"):
+            esq = min(0.4, alvo.agi * 0.012)
+            if alvo.efeito("esquiva"):
+                esq += alvo.efeito("esquiva")["v"]
+            if self.g.clima == "nevoa":
+                esq += 0.05
+            if self.rng.random() < esq:
+                self.dizer(f"{prefixo}{quem} erra — {self.nome(alvo, True)} se esquiva!", "cinza")
+                return 0
+        eficacia = mult_tracos(alvo, tipo, alcance)
+        if eficacia == 0:
+            self.dizer(f"{prefixo}{self.nome(alvo)} é imune!", "cinza")
+            return 0
+        m = eficacia
+        f = u.efeito("fortalecido")
+        if f:
+            m *= 1 + f["v"]
+        if u.efeito("enfraquecido"):
+            m *= 0.75
+        if u.jogador and u.spec == "berserker":
+            m *= 1 + 0.6 * (1 - u.hp / u.max_hp)
+        if not u.jogador and u not in self.aliados and self.g.noite:
+            m *= 1.1
+        clima = self.g.clima
+        if clima == "chuva":
+            m *= {"fogo": 0.8, "gelo": 1.1}.get(tipo, 1)
+        elif clima == "neve":
+            m *= {"fogo": 0.85, "gelo": 1.2}.get(tipo, 1)
+        elif clima == "tempestade" and alcance == "distancia":
+            m *= 0.85
+        marcado = alvo.efeito("marcado")
+        if marcado:
+            m *= 1 + marcado["v"]
+        if getattr(alvo, "chave", None) and self.g.flag(f"fraqueza:{alvo.chave}"):
+            m *= 1.25
+
+        defesa = alvo.defesa * (0.6 if alvo.efeito("maldito") else 1.0)
+        furtivo = u.efeito("furtivo")
+        crit = bool(furtivo) or self.rng.random() < 0.05 + u.agi * 0.01 + crit_extra
+        base = getattr(u, stat) * mult + bonus
+        dano = base * m * self.rng.uniform(0.85, 1.15) * 100 / (100 + defesa * 6)
+        if crit:
+            dano *= 2.3 if furtivo else 1.6
+        if furtivo:
+            u.remover("furtivo")
+        guarda = alvo.efeito("guarda")
+        if guarda:
+            dano *= 1 - guarda["v"]
+        dano = max(1, round(dano))
+        absorvido = 0
+        barreira = alvo.efeito("barreira")
+        if barreira:
+            absorvido = min(barreira["v"], dano)
+            barreira["v"] -= absorvido
+            dano -= absorvido
+            if barreira["v"] <= 0:
+                alvo.remover("barreira")
+        alvo.hp = max(0, alvo.hp - dano)
+
+        txt = f"{prefixo}{quem} atinge {self.nome(alvo, True)}: {dano} de dano"
+        if tipo != "fisico":
+            txt += f" ({tipo})"
+        if crit:
+            txt = "CRÍTICO! " + txt
+        if absorvido:
+            txt += f" [{absorvido} absorvido]"
+        if eficacia >= 1.3:
+            txt += " — super eficaz!"
+        elif eficacia <= 0.7:
+            txt += " — pouco eficaz."
+        defensor = alvo is self.j or alvo in self.aliados
+        self.dizer(txt, "vermelho" if defensor else "amarelo")
+        if not alvo.vivo:
+            self.ao_morrer(alvo)
+        return dano
+
+    def aplicar(self, alvo, efeito, turnos, valor=0, chance=1.0, rotulo=None):
+        if not alvo.vivo:
+            return False
+        if chance < 1 and self.rng.random() >= chance:
+            return False
+        t = alvo.tracos
+        imune = (
+            (efeito == "veneno" and ("morto-vivo" in t or "construto" in t))
+            or (efeito == "sangramento" and ("construto" in t or "etereo" in t))
+            or (efeito == "queimadura" and alvo.resist.get("fogo", 1) < 0.5)
+        )
+        if imune:
+            self.dizer(f"{self.nome(alvo)} não é afetad{'o' if alvo.g == 'm' else 'a'} ({NOMES_EFEITOS[efeito]}).",
+                       "cinza")
+            return False
+        if efeito == "atordoado" and (alvo.chefe or "gigante" in t) and self.rng.random() < 0.5:
+            self.dizer(f"{self.nome(alvo)} resiste ao atordoamento!", "cinza")
+            return False
+        alvo.aplicar(efeito, turnos, valor)
+        if rotulo:
+            alvo.efeitos[efeito]["r"] = rotulo
+        self.dizer(f"{self.nome(alvo)} fica {rotulo or NOMES_EFEITOS[efeito]}!", "magenta")
+        return True
+
+    def ao_morrer(self, c):
+        if c is self.j:
+            return
+        if c in self.aliados:
+            self.dizer(f"{c.nome} cai!", "vermelho")
+            return
+        if c in self.mortos:
+            return
+        self.mortos.append(c)
+        self.dizer(f"{c.nome} é derrotad{'o' if c.g == 'm' else 'a'}!", "verde+negrito")
+        if self.j.spec == "necromante":
+            self.j.rec = min(self.j.max_rec, self.j.rec + 5)
+
+    # ------------------------------------------------------------ fluxo
+    def executar(self):
+        self.ui.titulo(self.titulo, "vermelho+negrito")
+        self.dizer("Inimigos: " + ", ".join(f"{e.nome} (Nv.{e.nivel})" for e in self.inimigos), "vermelho")
+        if self.companheiro:
+            self.dizer(f"{self.companheiro.nome} rosna ao seu lado.", "verde")
+        pular_inimigos = False
+        if self.emboscada == "inimigo":
+            self.dizer("Você foi pego de surpresa!", "vermelho+negrito")
+            self.fase_inimigos()
+            r = self._checar_fim()
+            if r:
+                return self.fim(r)
+        elif self.emboscada == "jogador":
+            self.dizer("Você tem a iniciativa! Um ataque livre antes que reajam.", "verde+negrito")
+            pular_inimigos = True
+
+        while True:
+            self.turno += 1
+            if self.fase_jogador() == "fuga":
+                return self.fim("fuga")
+            r = self._checar_fim()
+            if r:
+                return self.fim(r)
+            self.fase_aliados()
+            r = self._checar_fim()
+            if r:
+                return self.fim(r)
+            if pular_inimigos:
+                pular_inimigos = False
+            else:
+                self.fase_inimigos()
+                r = self._checar_fim()
+                if r:
+                    return self.fim(r)
+            self.j.rec = min(self.j.max_rec, self.j.rec + self.j.regen)
+
+    def _checar_fim(self):
+        j = self.j
+        if not j.vivo:
+            if j.tem("pena_fenix"):
+                j.consumiveis["pena_fenix"] -= 1
+                j.hp = j.max_hp // 2
+                j.limpar_negativos()
+                self.dizer("A Pena de Fênix arde em chamas douradas e você se ergue das cinzas!", "amarelo+negrito")
+                return None
+            if self.g.flag("bencao_fenix"):
+                self.g.marcar("bencao_fenix", False)
+                j.hp = j.max_hp // 2
+                j.limpar_negativos()
+                self.dizer("Uma luz antiga — a bênção do santuário — te puxa de volta da escuridão!", "amarelo+negrito")
+                return None
+            return "derrota"
+        if not self.inimigos_vivos():
+            return "vitoria"
+        return None
+
+    def mostrar_estado(self):
+        j = self.j
+        ui = self.ui
+        ui.separador()
+        ui.dizer(f"Turno {self.turno}", "cinza")
+        linha = (f"  Você  {ui.barra(j.hp, j.max_hp, 14, 'verde')} {j.hp}/{j.max_hp}  "
+                 f"{j.nome_recurso} {j.rec}/{j.max_rec}")
+        if j.classe == "arqueiro":
+            linha += f"  Flechas {j.flechas}"
+        ui._imprimir(linha + self._efeitos_txt(j))
+        for a in self.aliados:
+            if a.vivo:
+                ui._imprimir(f"  {a.nome}  {ui.barra(a.hp, a.max_hp, 10, 'ciano')} {a.hp}/{a.max_hp}"
+                             + self._efeitos_txt(a))
+        for e in self.inimigos_vivos():
+            extra = "  << preparando golpe! >>" if e.carregando else ""
+            ui._imprimir(f"  {ui.pintar(e.nome, 'vermelho')}  {ui.barra(e.hp, e.max_hp, 14, 'vermelho')} "
+                         f"{e.hp}/{e.max_hp}{self._efeitos_txt(e)}{ui.pintar(extra, 'amarelo')}")
+
+    def _efeitos_txt(self, c):
+        if not c.efeitos:
+            return ""
+        partes = [f"{ef.get('r', NOMES_EFEITOS.get(n, n))}({ef['t']})" for n, ef in c.efeitos.items()]
+        return "  " + self.ui.pintar("[" + ", ".join(partes) + "]", "magenta")
+
+    def processar_efeitos(self, c):
+        """Aplica efeitos de início de turno. Devolve True se o turno é perdido."""
+        pular = "atordoado" in c.efeitos
+        rotulo = c.efeitos.get("atordoado", {}).get("r", "atordoado")
+        for nome in list(c.efeitos):
+            ef = c.efeitos[nome]
+            if nome in DOTS and c.vivo:
+                dano = max(1, int(ef["v"]))
+                if nome == "queimadura" and self.g.clima == "chuva":
+                    dano = max(1, int(dano * 0.7))
+                c.hp = max(0, c.hp - dano)
+                rot, cor = DOTS[nome]
+                self.dizer(f"{self.nome(c)} sofre {dano} de dano ({rot}).", cor)
+                if not c.vivo:
+                    self.ao_morrer(c)
+            ef["t"] -= 1
+            if ef["t"] <= 0:
+                del c.efeitos[nome]
+        if pular and c.vivo:
+            self.dizer(f"{self.nome(c)} está {rotulo} e perde o turno!", "magenta")
+        return pular or not c.vivo
+
+    # ------------------------------------------------------------ jogador
+    def fase_jogador(self):
+        j = self.j
+        self.mostrar_estado()
+        if self.processar_efeitos(j) or not j.vivo:
+            return None
+        while True:
+            nome_atk = CLASSES[j.classe]["ataque"][0]
+            if j.classe == "arqueiro" and j.flechas <= 0:
+                nome_atk = "Golpe de Adaga — sem flechas!"
+            opcoes = [f"Atacar ({nome_atk})", "Habilidades", "Itens", "Analisar inimigos"]
+            if self.pode_fugir:
+                opcoes.append("Fugir")
+            esc = self.ui.escolher("Sua ação:", opcoes)
+            if esc == 0:
+                self.ataque_basico(self.escolher_alvo())
+                return None
+            if esc == 1:
+                if self.menu_habilidades():
+                    return None
+            elif esc == 2:
+                r = self.menu_itens()
+                if r == "fuga":
+                    return "fuga"
+                if r:
+                    return None
+            elif esc == 3:
+                self.analisar()
+            elif esc == 4:
+                return "fuga" if self.tentar_fuga() else None
+
+    def escolher_alvo(self):
+        vivos = self.inimigos_vivos()
+        if len(vivos) == 1:
+            return vivos[0]
+        esc = self.ui.escolher("Alvo:", [f"{e.nome} ({e.hp}/{e.max_hp})" for e in vivos])
+        return vivos[esc]
+
+    def ataque_basico(self, alvo):
+        j = self.j
+        nome, alcance, tipo, stat, mult = CLASSES[j.classe]["ataque"]
+        if j.classe == "arqueiro":
+            if j.flechas > 0:
+                j.flechas -= 1
+                self.flechas_gastas += 1
+            else:
+                nome, alcance, mult = "Adaga", "corpo", 0.6
+        self.atacar(j, alvo, mult, tipo=tipo, alcance=alcance, stat=stat, rotulo=nome)
+
+    def menu_habilidades(self):
+        j = self.j
+        ids = list(j.habilidades)
+        opcoes = []
+        for h_id in ids:
+            h = HABILIDADES[h_id]
+            custo = f"{h['custo']} {j.nome_recurso}"
+            if h.get("flechas"):
+                custo += f", {h['flechas']} flecha{'s' if h['flechas'] > 1 else ''}"
+            opcoes.append(f"{h['nome']} [{custo}] — {h['desc']}")
+        opcoes.append("Voltar")
+        esc = self.ui.escolher("Habilidades:", opcoes)
+        if esc == len(ids):
+            return False
+        h = HABILIDADES[ids[esc]]
+        if j.rec < h["custo"]:
+            self.dizer(f"{j.nome_recurso} insuficiente.", "cinza")
+            return False
+        if h.get("flechas", 0) > j.flechas:
+            self.dizer("Flechas insuficientes!", "cinza")
+            return False
+        if h.get("req"):
+            erro = h["req"](self)
+            if erro:
+                self.dizer(erro, "cinza")
+                return False
+        alvo = self.escolher_alvo() if h["alvo"] == "inimigo" else None
+        j.rec -= h["custo"]
+        j.flechas -= h.get("flechas", 0)
+        self.flechas_gastas += h.get("flechas", 0)
+        h["fn"](self, j, alvo)
+        return True
+
+    def menu_itens(self):
+        j = self.j
+        usaveis = [k for k in USAVEIS_EM_COMBATE if j.consumiveis.get(k, 0) > 0]
+        if not usaveis:
+            self.dizer("Sua bolsa não tem nada útil agora.", "cinza")
+            return None
+        opcoes = [f"{CONSUMIVEIS[k]['nome']} x{j.consumiveis[k]} — {CONSUMIVEIS[k]['desc']}" for k in usaveis]
+        esc = self.ui.escolher("Usar qual item?", opcoes + ["Voltar"])
+        if esc == len(usaveis):
+            return None
+        k = usaveis[esc]
+        if k == "bomba_fumaca":
+            if not self.pode_fugir:
+                self.dizer("Não há como fugir desta luta!", "vermelho")
+                return None
+            j.consumiveis[k] -= 1
+            self.dizer("Você estoura a bomba de fumaça e some na nuvem cinzenta!", "cinza")
+            return "fuga"
+        self.g.usar_consumivel(k)
+        return "turno"
+
+    def analisar(self):
+        for e in self.inimigos_vivos():
+            self.ui.separador()
+            self.dizer(f"{e.nome} — Nível {e.nivel} — Vida {e.hp}/{e.max_hp}", "vermelho+negrito")
+            for t in e.tracos:
+                self.dizer(f"  • {TRACOS.get(t, t)}", "cinza")
+            fracos = [k for k, v in e.resist.items() if v > 1]
+            fortes = [k for k, v in e.resist.items() if v < 1]
+            if fracos:
+                self.dizer(f"  Fraco contra: {', '.join(fracos)}", "verde")
+            if fortes:
+                self.dizer(f"  Resiste a: {', '.join(fortes)}", "amarelo")
+            if e.habilidades:
+                self.dizer("  Habilidades: " + ", ".join(NOMES_HABS_INIMIGO.get(h, h) for h in e.habilidades), "cinza")
+            if getattr(e, "chave", None) and self.g.flag(f"fraqueza:{e.chave}"):
+                self.dizer("  Você conhece o ponto fraco desta criatura! (+25% de dano)", "verde+negrito")
+
+    def tentar_fuga(self):
+        vivos = self.inimigos_vivos()
+        media = sum(e.agi for e in vivos) / len(vivos)
+        chance = max(0.2, min(0.9, 0.5 + (self.j.agi - media) * 0.03))
+        if self.rng.random() < chance:
+            self.dizer("Você recua e consegue escapar!", "verde")
+            return True
+        self.dizer("Você tenta fugir, mas é cercado!", "vermelho")
+        return False
+
+    # ------------------------------------------------------------ aliados e inimigos
+    def fase_aliados(self):
+        for a in list(self.aliados):
+            if not a.vivo or not self.inimigos_vivos():
+                continue
+            if self.processar_efeitos(a):
+                continue
+            alvo = self.rng.choice(self.inimigos_vivos())
+            dano = self.atacar(a, alvo, 1.0, alcance=a.alcance, crit_extra=a.crit, rotulo=a.nome)
+            if dano and a.tipo == "lobo":
+                self.aplicar(alvo, "sangramento", 2, valor=max(1, a.atk * 0.3), chance=0.3)
+            elif dano and a.tipo == "urso":
+                self.aplicar(alvo, "atordoado", 1, chance=0.15)
+
+    def fase_inimigos(self):
+        for e in list(self.inimigos):
+            if not e.vivo or not self.j.vivo:
+                continue
+            if self.processar_efeitos(e):
+                continue
+            self.checar_fase(e)
+            self.agir_inimigo(e)
+
+    def checar_fase(self, e):
+        while e.fase_atual < len(e.fases) and e.hp <= e.max_hp * e.fases[e.fase_atual]["limiar"]:
+            f = e.fases[e.fase_atual]
+            e.fase_atual += 1
+            self.ui.separador("vermelho")
+            self.dizer(f["texto"], "vermelho+negrito")
+            e.atk *= f.get("atk", 1)
+            e.poder *= f.get("poder", 1)
+            e.defesa *= f.get("defesa", 1)
+            e.habilidades += [h for h in f.get("habs", []) if h not in e.habilidades]
+            e.tracos += [t for t in f.get("tracos", []) if t not in e.tracos]
+            if e.invoca:
+                HABS_INIMIGO["invocar"](self, e, None)
+
+    def escolher_alvo_inimigo(self):
+        aliados = [a for a in self.aliados if a.vivo]
+        if aliados:
+            chance = 0.45 if any(a.tipo == "urso" for a in aliados) else 0.25
+            if self.rng.random() < chance:
+                return self.rng.choice(aliados)
+        return self.j
+
+    def agir_inimigo(self, e):
+        alvo = self.escolher_alvo_inimigo()
+        if e.carregando:
+            c = e.carregando
+            e.carregando = None
+            self.atacar(e, alvo, c["mult"], rotulo=c["rotulo"])
+            return
+        if e.habilidades and self.rng.random() < (0.45 if e.chefe else 0.35):
+            h = self.rng.choice(e.habilidades)
+            if HABS_INIMIGO[h](self, e, alvo) is not False:
+                return
+        magico = e.ataque != "fisico" and e.poder > e.atk
+        self.atacar(e, alvo, 1.0, tipo=e.ataque if magico else "fisico",
+                    alcance="distancia" if magico else "corpo", stat="poder" if magico else "atk")
+
+    # ------------------------------------------------------------ fim
+    def fim(self, resultado):
+        j = self.j
+        g = self.g
+        if self.companheiro:
+            j.companheiro["hp"] = self.companheiro.hp
+            if not self.companheiro.vivo:
+                self.dizer(f"{self.companheiro.nome} está ferido demais para lutar até você descansar.", "cinza")
+        j.efeitos = {}
+        if j.classe == "mago":
+            j.rec = min(j.max_rec, j.rec + j.max_rec // 2)
+        else:
+            j.rec = j.max_rec
+        if j.classe == "arqueiro" and self.flechas_gastas and resultado == "vitoria":
+            recuperadas = sum(1 for _ in range(self.flechas_gastas) if self.rng.random() < 0.5)
+            if recuperadas:
+                j.flechas += recuperadas
+                self.dizer(f"Você recolhe {recuperadas} flecha(s) intacta(s) do campo.", "verde")
+
+        if resultado == "vitoria":
+            derrotados = [e for e in self.inimigos if not e.fugiu]
+            self.ui.separador("verde")
+            self.dizer("VITÓRIA!", "verde+negrito")
+            ouro = sum(e.ouro + e.roubado for e in derrotados)
+            if any(e.roubado for e in derrotados):
+                self.dizer("Você recupera o ouro que lhe foi roubado.", "verde")
+            folego = j.curar(j.max_hp * 0.1)
+            if folego:
+                self.dizer(f"Você recupera o fôlego. (+{folego} vida)", "verde")
+            g.ganhar_ouro(ouro)
+            g.registrar_abates(derrotados)
+            g.saque_de_combate(derrotados)
+            g.ganhar_xp(sum(e.xp for e in derrotados))
+        return resultado

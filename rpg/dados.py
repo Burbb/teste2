@@ -1,0 +1,289 @@
+"""Dados estáticos do mundo: biomas, criaturas, afixos, clima e chefes."""
+
+BIOMAS = {
+    "floresta": {
+        "nome": "Floresta",
+        "lugares": [("Bosque", "m"), ("Mata", "f"), ("Floresta", "f"), ("Clareira", "f"), ("Vale", "m")],
+        "familias": ["lobo", "aranha", "bandido", "javali", "ent_jovem"],
+        "ambiente": [
+            "Raízes retorcidas cortam a trilha como dedos de pedra.",
+            "O canto dos pássaros cessa de repente, e o silêncio pesa.",
+            "Feixes de luz atravessam a copa das árvores em colunas douradas.",
+            "O cheiro de musgo úmido e folhas podres toma conta de tudo.",
+            "Um galho estala em algum lugar à sua esquerda.",
+            "Cogumelos pálidos brilham fracamente ao pé dos troncos.",
+        ],
+        "abertura": [
+            "Entre os troncos grossos", "Atrás de uma moita espinhosa",
+            "Na curva de um riacho", "Sob um carvalho partido por um raio",
+        ],
+    },
+    "pantano": {
+        "nome": "Pântano",
+        "lugares": [("Brejo", "m"), ("Charco", "m"), ("Pântano", "m"), ("Lodaçal", "m"), ("Alagado", "m")],
+        "familias": ["afogado", "sapo", "bruxa_brejo", "sanguessuga", "bandido"],
+        "ambiente": [
+            "Bolhas sobem da água escura com cheiro de ovo podre.",
+            "Mosquitos zumbem em nuvens espessas ao seu redor.",
+            "A lama suga suas botas a cada passo.",
+            "Luzes pálidas dançam ao longe, sobre a água parada.",
+            "Árvores mortas se erguem do lodo como mãos esqueléticas.",
+            "Algo grande desliza sob a superfície e some.",
+        ],
+        "abertura": [
+            "Entre os juncos altos", "Da água turva", "Sobre um tronco apodrecido",
+            "Atrás de uma cortina de musgo pendente",
+        ],
+    },
+    "montanha": {
+        "nome": "Montanhas",
+        "lugares": [("Pico", "m"), ("Desfiladeiro", "m"), ("Serra", "f"), ("Garganta", "f"), ("Penhasco", "m")],
+        "familias": ["harpia", "troll", "lobo_gelido", "grifo", "bandido"],
+        "ambiente": [
+            "O vento uiva entre as rochas, cortante como lâmina.",
+            "Pedras soltas rolam encosta abaixo a cada passo.",
+            "Lá embaixo, as nuvens cobrem o vale como um mar branco.",
+            "O ar rarefeito queima seus pulmões.",
+            "Uma águia circula no alto, paciente.",
+            "Ossos de cabra se espalham pela trilha estreita.",
+        ],
+        "abertura": [
+            "De uma fenda na rocha", "Do alto de um rochedo",
+            "Atrás de uma curva estreita da trilha", "De uma caverna escura",
+        ],
+    },
+    "planicie": {
+        "nome": "Planícies",
+        "lugares": [("Campo", "m"), ("Pradaria", "f"), ("Planície", "f"), ("Colina", "f"), ("Estrada", "f")],
+        "familias": ["bandido", "javali", "lobo", "cultista", "mercenario"],
+        "ambiente": [
+            "O capim alto ondula com o vento como um mar dourado.",
+            "Uma estrada de terra batida se estende até o horizonte.",
+            "Ao longe, a fumaça de uma fazenda sobe preguiçosa.",
+            "Corvos se reúnem sobre um campo de trigo abandonado.",
+            "Um moinho velho range sozinho na colina.",
+            "Marcas de rodas de carroça cortam a lama seca.",
+        ],
+        "abertura": [
+            "Do meio do capim alto", "Atrás de uma carroça tombada",
+            "De trás de uma colina", "Na beira da estrada",
+        ],
+    },
+    "ruinas": {
+        "nome": "Ruínas",
+        "lugares": [("Ruínas", "f"), ("Necrópole", "f"), ("Fortaleza", "f"), ("Templo", "m"), ("Catacumbas", "f")],
+        "familias": ["esqueleto", "espectro", "golem", "cultista", "rato"],
+        "ambiente": [
+            "Colunas quebradas se erguem como dentes de um gigante morto.",
+            "Inscrições apagadas cobrem paredes tomadas pela hera.",
+            "Seus passos ecoam em corredores que não deveriam ser tão longos.",
+            "Um frio que não vem do vento sobe pelas suas costas.",
+            "Ossos antigos estalam sob suas botas.",
+            "Uma estátua sem rosto parece virar a cabeça quando você passa.",
+        ],
+        "abertura": [
+            "De trás de uma coluna caída", "Das sombras de uma cripta",
+            "De uma passagem secreta", "Do alto de uma escadaria ruída",
+        ],
+    },
+    "cidadela": {
+        "nome": "Cidadela",
+        "lugares": [("Cidadela", "f")],
+        "familias": ["cultista", "espectro", "cavaleiro_sombrio", "cria_vazio", "abominacao"],
+        "ambiente": [
+            "O céu aqui é de um roxo doente, sem sol nem estrelas.",
+            "As paredes pulsam devagar, como se respirassem.",
+            "Vozes sussurram seu nome de dentro das pedras.",
+        ],
+        "abertura": ["De um corredor de obsidiana", "Das sombras do salão", "De trás de um altar profanado"],
+    },
+}
+
+SUFIXOS_LUGAR = [
+    "do Corvo", "das Lamúrias", "da Lua Velha", "do Rei Caído", "dos Ossos", "de Prata",
+    "das Cinzas", "do Lobo Branco", "dos Sussurros", "da Névoa", "do Juramento",
+    "das Mil Vozes", "do Eco", "da Serpente", "dos Enforcados", "da Última Vigília",
+    "do Sino Partido", "das Bruxas", "do Gigante", "da Aurora",
+]
+
+VILA_PREFIXOS = ["Pedra", "Rocha", "Vila", "Fonte", "Ponte", "Serra", "Água", "Cruz", "Torre", "Muralha"]
+VILA_SUFIXOS = ["velha", "clara", "funda", "alta", "negra", "branca", "rasa", "nova", "fria", "dourada"]
+
+# Traços alteram o dano recebido conforme tipo e alcance do ataque.
+TRACOS = {
+    "fera": "Fera: instintiva e rápida.",
+    "humano": "Humano: astuto, pode fugir ou negociar.",
+    "voador": "Voador: resiste a golpes corpo a corpo, vulnerável a ataques à distância.",
+    "blindado": "Blindado: resiste a dano físico, vulnerável a magia.",
+    "morto-vivo": "Morto-vivo: imune a veneno, fraco contra sagrado, resiste a sombra.",
+    "etereo": "Etéreo: armas físicas atravessam seu corpo; arcano e sagrado o ferem.",
+    "planta": "Planta: queima com facilidade.",
+    "construto": "Construto: imune a veneno e sangramento, sensível ao arcano.",
+    "gigante": "Gigante: difícil de atordoar.",
+    "corrompido": "Corrompido: tocado pelo Vazio; sagrado o fere, sombra o alimenta.",
+    "conjurador": "Conjurador: usa magia.",
+}
+
+# nome, plural, gênero, atributos base (nível 1), traços, habilidades, xp, ouro, tamanho de grupo
+FAMILIAS = {
+    "lobo": dict(nome="lobo", plural="lobos", g="m", hp=20, atk=6, defesa=2, agi=6, poder=0,
+                 tracos=["fera"], habs=["mordida_sangrenta", "uivo"], xp=12, ouro=(0, 2), grupo=(1, 3)),
+    "aranha": dict(nome="aranha gigante", plural="aranhas gigantes", g="f", hp=18, atk=6, defesa=2, agi=7, poder=0,
+                   tracos=["fera"], habs=["teia", "veneno"], xp=13, ouro=(0, 2), grupo=(1, 2)),
+    "bandido": dict(nome="bandido", plural="bandidos", g="m", hp=24, atk=7, defesa=3, agi=5, poder=0,
+                    tracos=["humano"], habs=["roubar", "golpe_sujo"], xp=14, ouro=(4, 12), grupo=(1, 3)),
+    "javali": dict(nome="javali selvagem", plural="javalis selvagens", g="m", hp=28, atk=7, defesa=4, agi=3, poder=0,
+                   tracos=["fera"], habs=["investida"], xp=13, ouro=(0, 1), grupo=(1, 2)),
+    "ent_jovem": dict(nome="ent jovem", plural="ents jovens", g="m", hp=40, atk=8, defesa=7, agi=1, poder=0,
+                      tracos=["planta", "blindado"], habs=["esmagar", "regenerar"], xp=22, ouro=(0, 3), grupo=(1, 1)),
+    "afogado": dict(nome="afogado", plural="afogados", g="m", hp=26, atk=7, defesa=3, agi=2, poder=3,
+                    tracos=["morto-vivo"], habs=["agarrar", "drenar"], xp=15, ouro=(1, 6), grupo=(1, 3)),
+    "sapo": dict(nome="sapo-touro gigante", plural="sapos-touro gigantes", g="m", hp=30, atk=6, defesa=3, agi=4, poder=0,
+                 tracos=["fera"], habs=["veneno", "agarrar"], xp=14, ouro=(0, 1), grupo=(1, 2)),
+    "bruxa_brejo": dict(nome="bruxa do brejo", plural="bruxas do brejo", g="f", hp=24, atk=4, defesa=2, agi=5, poder=9,
+                        tracos=["humano", "conjurador"], habs=["maldicao", "bola_fogo", "cura"], xp=20, ouro=(6, 15),
+                        grupo=(1, 1), ataque="sombra"),
+    "sanguessuga": dict(nome="sanguessuga gigante", plural="sanguessugas gigantes", g="f", hp=16, atk=5, defesa=1, agi=3,
+                        poder=0, tracos=["fera"], habs=["drenar"], xp=9, ouro=(0, 0), grupo=(2, 3)),
+    "harpia": dict(nome="harpia", plural="harpias", g="f", hp=20, atk=7, defesa=2, agi=9, poder=0,
+                   tracos=["voador"], habs=["grito_terror", "mordida_sangrenta"], xp=15, ouro=(1, 5), grupo=(1, 3)),
+    "troll": dict(nome="troll da montanha", plural="trolls da montanha", g="m", hp=55, atk=10, defesa=5, agi=1, poder=0,
+                  tracos=["gigante"], habs=["esmagar", "regenerar"], xp=30, ouro=(2, 10), grupo=(1, 1),
+                  resist={"fogo": 1.4}),
+    "lobo_gelido": dict(nome="lobo gélido", plural="lobos gélidos", g="m", hp=24, atk=7, defesa=3, agi=6, poder=0,
+                        tracos=["fera"], habs=["mordida_gelida", "uivo"], xp=15, ouro=(0, 2), grupo=(1, 3),
+                        resist={"gelo": 0.5, "fogo": 1.3}),
+    "grifo": dict(nome="grifo", plural="grifos", g="m", hp=38, atk=9, defesa=4, agi=7, poder=0,
+                  tracos=["voador", "fera"], habs=["investida", "mordida_sangrenta"], xp=26, ouro=(0, 4), grupo=(1, 1)),
+    "cultista": dict(nome="cultista", plural="cultistas", g="m", hp=22, atk=5, defesa=2, agi=4, poder=8,
+                     tracos=["humano", "conjurador"], habs=["bola_sombra", "cura", "grito_terror"], xp=16,
+                     ouro=(3, 10), grupo=(1, 3), ataque="sombra"),
+    "mercenario": dict(nome="mercenário", plural="mercenários", g="m", hp=32, atk=8, defesa=5, agi=4, poder=0,
+                       tracos=["humano", "blindado"], habs=["esmagar", "golpe_sujo", "grito_guerra"], xp=18,
+                       ouro=(5, 15), grupo=(1, 2)),
+    "esqueleto": dict(nome="esqueleto", plural="esqueletos", g="m", hp=22, atk=7, defesa=4, agi=3, poder=0,
+                      tracos=["morto-vivo"], habs=["investida"], xp=13, ouro=(0, 4), grupo=(1, 3)),
+    "espectro": dict(nome="espectro", plural="espectros", g="m", hp=20, atk=4, defesa=1, agi=8, poder=8,
+                     tracos=["morto-vivo", "etereo"], habs=["drenar", "grito_terror"], xp=17, ouro=(0, 6),
+                     grupo=(1, 2), ataque="sombra"),
+    "golem": dict(nome="golem de pedra", plural="golens de pedra", g="m", hp=60, atk=10, defesa=9, agi=0, poder=0,
+                  tracos=["construto", "blindado"], habs=["esmagar"], xp=30, ouro=(0, 5), grupo=(1, 1)),
+    "rato": dict(nome="rato gigante", plural="ratos gigantes", g="m", hp=12, atk=4, defesa=1, agi=6, poder=0,
+                 tracos=["fera"], habs=["mordida_sangrenta", "veneno"], xp=6, ouro=(0, 1), grupo=(2, 4)),
+    "cavaleiro_sombrio": dict(nome="cavaleiro sombrio", plural="cavaleiros sombrios", g="m", hp=45, atk=11, defesa=7,
+                              agi=3, poder=5, tracos=["morto-vivo", "blindado"], habs=["esmagar", "drenar"], xp=32,
+                              ouro=(5, 20), grupo=(1, 1)),
+    "abominacao": dict(nome="abominação", plural="abominações", g="f", hp=60, atk=11, defesa=4, agi=2, poder=0,
+                       tracos=["corrompido", "gigante"], habs=["esmagar", "veneno", "regenerar"], xp=35,
+                       ouro=(2, 12), grupo=(1, 1)),
+    "cria_vazio": dict(nome="cria do Vazio", plural="crias do Vazio", g="f", hp=26, atk=8, defesa=2, agi=7, poder=7,
+                       tracos=["corrompido", "etereo"], habs=["bola_sombra", "drenar"], xp=20, ouro=(0, 5),
+                       grupo=(1, 2), ataque="sombra"),
+    "esqueleto_servo": dict(nome="servo esquelético", plural="servos esqueléticos", g="m", hp=18, atk=6, defesa=3,
+                            agi=3, poder=0, tracos=["morto-vivo"], habs=[], xp=0, ouro=(0, 0), grupo=(1, 1)),
+}
+
+# Afixos dão variedade: o mesmo lobo pode ser feroz, ancião ou corrompido.
+AFIXOS = {
+    "feroz": dict(m="feroz", f="feroz", atk=1.3, xp=1.3),
+    "robusto": dict(m="robusto", f="robusta", hp=1.5, xp=1.3),
+    "agil": dict(m="ágil", f="ágil", agi=5, xp=1.2),
+    "venenoso": dict(m="venenoso", f="venenosa", habs=["veneno"], xp=1.2),
+    "anciao": dict(m="ancião", f="anciã", hp=1.4, atk=1.2, defesa=1.3, xp=1.8, ouro=2.0),
+    "corrompido": dict(m="corrompido", f="corrompida", hp=1.2, atk=1.2, tracos=["corrompido"], habs=["drenar"], xp=1.5),
+    "flamejante": dict(m="flamejante", f="flamejante", habs=["bola_fogo"], poder=6, resist={"fogo": 0.3, "gelo": 1.4},
+                       xp=1.4),
+}
+
+CLIMAS = {
+    "limpo": {"nome": "Céu limpo", "desc": "O céu está limpo."},
+    "nublado": {"nome": "Nublado", "desc": "Nuvens cinzentas cobrem o céu."},
+    "chuva": {"nome": "Chuva", "desc": "Uma chuva fina e persistente cai. (fogo -20%, gelo +10%)"},
+    "nevoa": {"nome": "Névoa", "desc": "Uma névoa densa engole tudo a poucos passos. (esquiva +5%)"},
+    "tempestade": {"nome": "Tempestade", "desc": "Trovões rasgam o céu. (ataques à distância -15%)"},
+    "neve": {"nome": "Neve", "desc": "Flocos de neve caem em silêncio. (gelo +20%, fogo -15%)"},
+}
+PESOS_CLIMA = {
+    "padrao": {"limpo": 40, "nublado": 25, "chuva": 15, "nevoa": 10, "tempestade": 6},
+    "montanha": {"limpo": 30, "nublado": 20, "nevoa": 15, "tempestade": 10, "neve": 25},
+    "pantano": {"limpo": 15, "nublado": 25, "chuva": 25, "nevoa": 30, "tempestade": 5},
+    "cidadela": {"tempestade": 60, "nevoa": 40},
+}
+
+PERIODOS = ["Manhã", "Tarde", "Anoitecer", "Noite"]
+
+# Guardiões: três deles guardam os Sigilos que abrem o caminho até a Cidadela.
+GUARDIOES = {
+    "floresta": [
+        dict(base="Rainha Aracnídea", g="f", hp=120, atk=10, defesa=4, agi=8, poder=6, tracos=["fera"],
+             habs=["teia", "veneno", "invocar"], invoca="aranha", resist={"fogo": 1.4},
+             intro="Teias grossas como cordas cobrem as árvores. Algo enorme desce do alto, com olhos demais para contar.",
+             fases=[dict(limiar=0.5, texto="A rainha guincha e seus filhotes despencam das copas!",
+                         atk=1.2, habs=["mordida_sangrenta"])]),
+        dict(base="Ent Ancestral", g="m", hp=160, atk=12, defesa=8, agi=1, poder=4, tracos=["planta", "blindado"],
+             habs=["esmagar", "regenerar", "agarrar"], resist={"fogo": 1.6},
+             intro="A floresta inteira parece se mover. Uma árvore milenar abre olhos de seiva âmbar e fala com voz de terremoto.",
+             fases=[dict(limiar=0.4, texto="A casca do Ent racha e uma luz verde e furiosa escapa das fendas!",
+                         atk=1.3, defesa=0.7, habs=["investida"])]),
+    ],
+    "pantano": [
+        dict(base="Hidra do Brejo", g="f", hp=140, atk=10, defesa=4, agi=4, poder=4, tracos=["fera"],
+             habs=["regenerar", "veneno", "mordida_sangrenta"],
+             intro="A água ferve. Uma, duas, três cabeças de serpente emergem, sibilando em uníssono.",
+             fases=[dict(limiar=0.5, texto="Onde uma cabeça foi cortada, duas novas brotam!", atk=1.35)]),
+        dict(base="Bruxa Afogada", g="f", hp=110, atk=6, defesa=3, agi=6, poder=12, tracos=["morto-vivo", "conjurador"],
+             habs=["maldicao", "bola_sombra", "invocar", "drenar"], invoca="afogado", ataque="sombra",
+             intro="Uma mulher de pele azulada flutua sobre o charco, cabelos de algas escorrendo, cantando uma canção de ninar.",
+             fases=[dict(limiar=0.5, texto="O canto vira um grito. Mãos podres emergem da água ao seu redor!",
+                         poder=1.3, habs=["grito_terror"])]),
+    ],
+    "montanha": [
+        dict(base="Rei Troll", g="m", hp=170, atk=13, defesa=6, agi=1, poder=0, tracos=["gigante"],
+             habs=["esmagar", "regenerar", "investida"], resist={"fogo": 1.4},
+             intro="Sobre um trono de ossos de gigante, um troll colossal usa uma coroa feita de um elmo amassado.",
+             fases=[dict(limiar=0.45, texto="O Rei Troll arranca uma rocha do chão e ruge de fúria!", atk=1.3)]),
+        dict(base="Wyrm de Gelo", g="m", hp=130, atk=11, defesa=5, agi=6, poder=8, tracos=["voador"],
+             habs=["mordida_gelida", "esmagar", "grito_terror"], resist={"gelo": 0.3, "fogo": 1.4},
+             intro="O pico inteiro treme. Um dragão serpentino de escamas azul-gelo desdobra as asas sobre você.",
+             fases=[dict(limiar=0.5, texto="O wyrm inspira fundo e o ar congela ao seu redor!", atk=1.25,
+                         habs=["investida"])]),
+    ],
+    "planicie": [
+        dict(base="Senhor da Guerra", g="m", hp=130, atk=11, defesa=7, agi=4, poder=0, tracos=["humano", "blindado"],
+             habs=["golpe_sujo", "esmagar", "invocar", "grito_guerra"], invoca="bandido",
+             intro="Um acampamento fortificado. No centro, um homem de armadura remendada com troféus de seus inimigos aguarda.",
+             fases=[dict(limiar=0.5, texto="\"Ninguém me derruba!\" Ele joga fora o escudo e pega um machado em cada mão.",
+                         atk=1.35, defesa=0.7)]),
+        dict(base="Profeta da Cinza", g="m", hp=115, atk=6, defesa=3, agi=5, poder=12, tracos=["humano", "conjurador"],
+             habs=["bola_sombra", "cura", "invocar", "maldicao"], invoca="cultista", ataque="sombra",
+             intro="Um círculo de fiéis entoa cânticos ao redor de um homem cego que chora cinzas.",
+             fases=[dict(limiar=0.5, texto="O Profeta abre os braços e o Vazio responde ao seu chamado!",
+                         poder=1.3, habs=["drenar"])]),
+    ],
+    "ruinas": [
+        dict(base="Lich Menor", g="m", hp=115, atk=5, defesa=4, agi=4, poder=13, tracos=["morto-vivo", "conjurador"],
+             habs=["bola_sombra", "maldicao", "invocar", "drenar"], invoca="esqueleto", ataque="sombra",
+             intro="Num salão de colunas tombadas, um esqueleto coroado ergue os olhos de um grimório. Duas chamas verdes acendem nas órbitas.",
+             fases=[dict(limiar=0.5, texto="O lich esmaga uma joia em sua mão e sua forma se torna translúcida!",
+                         tracos=["etereo"], poder=1.2)]),
+        dict(base="Golem Primordial", g="m", hp=180, atk=13, defesa=11, agi=0, poder=0, tracos=["construto", "blindado"],
+             habs=["esmagar", "investida"],
+             intro="Runas se acendem no chão. O que você pensava ser uma parede se levanta: um golem do tamanho de uma casa.",
+             fases=[dict(limiar=0.5, texto="As placas de pedra caem e o núcleo pulsante do golem fica exposto!",
+                         defesa=0.4, atk=1.25)]),
+    ],
+}
+
+ANTAGONISTAS = [
+    ("o Rei Cinzento", "m"), ("a Rainha Sem Rosto", "f"), ("o Devorador de Estrelas", "m"),
+    ("o Último Lich", "m"), ("a Mãe das Sombras", "f"), ("o Arauto do Vazio", "m"),
+    ("a Coroa de Cinzas", "f"),
+]
+ORIGENS_ANTAGONISTA = [
+    "que um dia foi um herói como você, até que o Vazio sussurrou em seu ouvido",
+    "que bebeu da Fonte Proibida e nunca mais dormiu",
+    "nascido do último suspiro de um deus esquecido",
+    "que trocou o próprio nome pela imortalidade",
+    "que abriu a Fenda há cem anos e agora quer atravessá-la por completo",
+]
+NOMES_CIDADELA = ["Torre Negra", "Cidadela Partida", "Trono do Vazio", "Bastião das Cinzas", "Coroa de Obsidiana"]
