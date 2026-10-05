@@ -1,7 +1,9 @@
 # Crônicas da Fenda
 
 RPG de texto **offline**, em português, feito em **Python puro** (sem dependências).
-Cada partida gera um reino diferente: mapa, nomes, chefes, eventos e consequências.
+Um RPG **hardcore** e sombrio, no espírito de Diablo: aqui você não é o escolhido.
+A fome mata, feridas infeccionam, a noite cega e a morte é permanente. Cada partida gera
+um reino diferente: mapa, nomes, chefes, eventos e consequências.
 
 ![Interface moderna: log, opções, painel do herói e mapa](docs/interface.png)
 
@@ -21,11 +23,13 @@ Sem o `textual` (ou com `--classico`) o jogo usa a interface clássica, em Pytho
 |---|---|
 | `--classico` | Interface de terminal simples, sem dependências |
 | `--seed 1234` | Gera sempre o mesmo reino (bom para comparar partidas) |
-| `--hardcore` | Morte permanente: cair em combate encerra o jogo |
+| `--brando` | Modo brando: ao cair em combate você é resgatado (perde ouro e dois dias) |
 | `--rapido` / `--sem-cor` | Sem pausas / sem cores (interface clássica) |
 | `--saves PASTA` | Onde salvar (padrão: `~/.cronicas_da_fenda`) |
 
-Na interface moderna: tecle o número/letra da opção, use as setas + Enter, ou clique.
+Na interface moderna, o painel de combate e a faixa de condição (vida, recurso, comida,
+tochas, ferimentos) ficam logo acima das opções, sem precisar desviar o olhar. Tecle o
+número/letra da opção, use as setas + Enter, ou clique.
 `PageUp`/`PageDown` rolam o histórico e `Ctrl+Q` sai.
 
 ## O objetivo
@@ -39,8 +43,33 @@ que abrem o caminho até a Cidadela, onde o vilão (gerado a cada partida) esper
   é preciso evoluir, equipar-se, aprender fraquezas e recrutar aliados.
 - A **corrupção** cresce todo dia. Derrotar um guardião faz ela recuar 20 pontos.
   Se chegar a 100%, o reino está perdido. Ela também deixa os inimigos mais fortes.
-- Se você cair em combate, alguém te resgata e você acorda numa vila, mas perde ouro e
-  dois dias. No modo `--hardcore` não há resgate.
+- **A morte é permanente.** (No modo `--brando`, alguém te resgata e você acorda numa
+  vila, perdendo ouro e dois dias.)
+
+## Sobrevivência
+
+- **Fome:** cada dia consome 1 provisão. Sem comida você fica fraco, não se recupera
+  dormindo e, depois de alguns dias, começa a morrer. Compre comida nas vilas, cace ou
+  saqueie.
+- **Ferimentos:** golpes pesados deixam marcas que duram dias (costelas quebradas,
+  braço fraturado, perna torcida, cortes, queimaduras...) e reduzem seus atributos.
+  Feridas abertas precisam de bandagem, ou podem **infeccionar**. A infecção causa febre
+  e mata se não for tratada com unguento ou por um curandeiro.
+- **Escuridão:** à noite, nas ruínas e na Cidadela, você precisa de tochas. Sem luz, você
+  fica pior em percepção e destreza e é emboscado com mais facilidade.
+- **Cura lenta:** acampar recupera pouca vida (menos ainda na chuva); a taverna, mais.
+  Poções são caras. A mana do mago **não** volta sozinha depois das lutas: só aos poucos
+  ou descansando.
+- **Inimigos perigosos:** bandos de **campeões** (vários inimigos com o mesmo afixo),
+  **únicos** nomeados com escolta, caídos com xamãs que **ressuscitam** os irmãos,
+  carniçais que **devoram** cadáveres para se curar.
+
+## Saque
+
+Itens têm raridade, como em Diablo:
+**comum** · mágico (azul, 1 afixo) · raro (amarelo, 2–3 afixos, nome próprio) ·
+**★ lendário** (itens únicos com nome, história e efeitos especiais).
+Afixos especiais: roubo de vida, chance de crítico, espinhos, vida por turno e vida por abate.
 
 ## Mapa
 
@@ -88,8 +117,9 @@ Cada classe tem uma mecânica própria:
 - **Guerreiro:** o vigor regenera rápido; erguer o escudo reduz o dano pela metade.
 - **Arqueiro:** usa **flechas** (que acabam). Dá para recolher flechas depois da luta,
   fabricá-las em eventos ou comprá-las. É ótimo contra voadores.
-- **Mago:** a mana regenera devagar e só volta pela metade depois de cada luta. As magias
-  exploram fraquezas elementais.
+- **Mago:** a mana é escassa: regenera pouco durante a luta, recupera só 20% depois dela e
+  enche de verdade apenas descansando. O Dardo Arcano é de graça; cada Inferno é uma
+  decisão.
 
 Novas habilidades chegam nos níveis 2, 3, 4 e 7 (a habilidade suprema da especialização).
 
@@ -122,7 +152,7 @@ Novas habilidades chegam nos níveis 2, 3, 4 e 7 (a habilidade suprema da especi
 - **Clima e período do dia:** chuva enfraquece o fogo, a névoa ajuda a esquivar, a
   tempestade atrapalha disparos e à noite os monstros ficam mais fortes.
 - **Contratos** no mural das vilas: caçadas, alvos com recompensa e entregas (com
-  imprevistos no caminho).
+  imprevistos no caminho). Dá para abandoná-los pelo Diário, perdendo reputação.
 
 ## Estrutura do código
 
@@ -134,6 +164,7 @@ rpg/
   mapa.py        desenho do mapa em caracteres
   talentos.py    árvores de talentos
   legado.py      registro de heróis anteriores
+  sobrevivencia.py  fome, ferimentos, infecção e escuridão
   combate.py     combate por turnos, efeitos, traços e fraquezas
   classes.py     classes, especializações, habilidades e companheiros
   inimigos.py    geração de inimigos, guardiões, chefe final e habilidades inimigas

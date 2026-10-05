@@ -17,7 +17,7 @@ from textual.containers import Horizontal, Vertical
 from textual.widgets import Footer, Header, Input, OptionList, RichLog, Static
 from textual.widgets.option_list import Option
 
-from . import mapa
+from . import mapa, sobrevivencia
 from .combate import NOMES_EFEITOS
 from .dados import CLIMAS, PERIODOS
 from .ui import UI
@@ -50,6 +50,60 @@ def _barra(t, atual, maximo, largura, cor):
     t.append("░" * (largura - cheio), style="grey30")
 
 
+def _efeitos(c):
+    return ", ".join(f"{ef.get('r', NOMES_EFEITOS.get(n, n))}({ef['t']})" for n, ef in c.efeitos.items())
+
+
+def painel_vitais(g):
+    """Faixa logo acima das opções: o que importa para a próxima decisão."""
+    j = g.j
+    t = Text()
+    t.append("Vida ", style="bold")
+    _barra(t, j.hp, j.max_hp, 16, "green" if j.hp > j.max_hp * 0.35 else "red")
+    t.append(f" {j.hp}/{j.max_hp}   ")
+    t.append(f"{j.nome_recurso} ", style="bold")
+    _barra(t, j.rec, j.max_rec, 10, "bright_blue")
+    t.append(f" {j.rec}/{j.max_rec}   ")
+    if j.classe == "arqueiro":
+        t.append(f"Flechas {j.flechas}   ", style="yellow")
+    comida = "red bold" if j.provisoes <= 1 else "yellow"
+    t.append(f"Comida {j.provisoes}d", style=comida)
+    t.append(f"   Tochas {j.consumiveis.get('tocha', 0)}", style="red bold" if not j.tem("tocha") else "yellow")
+    t.append(f"   Poções {j.consumiveis.get('pocao_vida', 0)}", style="yellow")
+    males = sobrevivencia.descrever(j)
+    if males:
+        t.append("\n⚠ " + " · ".join(males), style="red bold")
+    return t
+
+
+def painel_combate(g):
+    cb = g.combate_ativo
+    if not cb:
+        return None
+    j = g.j
+    t = Text()
+    t.append(f"⚔ COMBATE — turno {cb.turno}\n", style="bold red")
+    t.append(f"{'Você':<22}", style="bold")
+    _barra(t, j.hp, j.max_hp, 16, "green")
+    t.append(f" {j.hp}/{j.max_hp}")
+    if j.efeitos:
+        t.append(f"  {_efeitos(j)}", style="magenta")
+    for a in cb.aliados:
+        if a.vivo:
+            t.append(f"\n{a.nome[:21]:<22}", style="cyan")
+            _barra(t, a.hp, a.max_hp, 16, "cyan")
+            t.append(f" {a.hp}/{a.max_hp}")
+    for e in cb.inimigos_vivos():
+        t.append(f"\n{e.nome[:21]:<22}", style="red")
+        _barra(t, e.hp, e.max_hp, 16, "red")
+        t.append(f" {e.hp}/{e.max_hp}")
+        if e.carregando:
+            t.append("  ⚠ PREPARANDO GOLPE", style="bold yellow")
+        if e.efeitos:
+            t.append(f"  {_efeitos(e)}", style="magenta")
+    return t
+
+
 def painel_status(g):
     j = g.j
     t = Text()
@@ -58,14 +112,7 @@ def painel_status(g):
     t.append(f"XP {j.xp}/{j.xp_proximo()}", style="grey58")
     if j.pontos_talento:
         t.append(f"   ★ {j.pontos_talento} talento(s)!", style="bold yellow")
-    t.append("\nVida  ")
-    _barra(t, j.hp, j.max_hp, 18, "green")
-    t.append(f" {j.hp}/{j.max_hp}\n")
-    t.append(f"{j.nome_recurso:<5} ")
-    _barra(t, j.rec, j.max_rec, 18, "bright_blue")
-    t.append(f" {j.rec}/{j.max_rec}\n")
-    extra = f"   Flechas {j.flechas}" if j.classe == "arqueiro" else ""
-    t.append(f"Ouro {j.ouro}{extra}   Reputação {j.reputacao:+d}\n", style="yellow")
+    t.append(f"\nOuro {j.ouro}   Reputação {j.reputacao:+d}\n", style="yellow")
     if j.companheiro:
         c = j.companheiro
         t.append(f"{c['nome'][:12]:<12} ")
@@ -73,7 +120,7 @@ def painel_status(g):
         t.append(f" {c['hp']}/{c['max_hp']}\n")
     t.append(f"\nDia {g.dia} · {PERIODOS[min(g.periodo, 3)]} · {CLIMAS[g.clima]['nome']}\n")
     t.append("Corrupção ")
-    _barra(t, g.corrupcao, 100, 18, "magenta")
+    _barra(t, g.corrupcao, 100, 16, "magenta")
     t.append(f" {g.corrupcao}%\n")
     t.append("Sigilos ")
     t.append("◆" * len(j.sigilos), style="bold yellow")
@@ -84,27 +131,6 @@ def painel_status(g):
     if loc["tipo"] != "vila":
         desc += f" · inimigos Nv.{g.nivel_local()}"
     t.append(desc, style="grey58")
-
-    cb = g.combate_ativo
-    if cb:
-        t.append("\n\n⚔ COMBATE", style="bold red")
-        for a in cb.aliados:
-            if a.vivo:
-                t.append(f"\n{a.nome[:14]:<14} ", style="cyan")
-                _barra(t, a.hp, a.max_hp, 10, "cyan")
-                t.append(f" {a.hp}")
-        for e in cb.inimigos_vivos():
-            t.append(f"\n{e.nome[:14]:<14} ", style="red")
-            _barra(t, e.hp, e.max_hp, 10, "red")
-            t.append(f" {e.hp}")
-            if e.carregando:
-                t.append(" ⚠", style="bold yellow")
-            if e.efeitos:
-                t.append("\n  " + ", ".join(ef.get("r", NOMES_EFEITOS.get(n, n)) for n, ef in e.efeitos.items()),
-                         style="magenta")
-        if j.efeitos:
-            t.append("\nVocê: " + ", ".join(ef.get("r", NOMES_EFEITOS.get(n, n)) for n, ef in j.efeitos.items()),
-                     style="magenta")
     return t
 
 
@@ -163,7 +189,8 @@ class TextualUI(UI):
     def atualizar_hud(self):
         g = self.jogo
         if g and g.j and g.mundo:
-            self.app.call_from_thread(self.app.atualizar_hud, painel_status(g), painel_mapa(g, 46, 15))
+            self.app.call_from_thread(self.app.atualizar_hud, painel_status(g), painel_mapa(g, 40, 14),
+                                      painel_vitais(g), painel_combate(g))
 
     def escolher(self, pergunta, opcoes):
         if pergunta:
@@ -186,11 +213,15 @@ class AppRPG(App):
     TITLE = "Crônicas da Fenda"
     SUB_TITLE = "um RPG de texto onde nenhuma jornada é igual"
     CSS = """
+    Screen { align: center top; }
+    #raiz { width: 100%; max-width: 150; }
     #principal { width: 1fr; }
     #log { height: 1fr; border: round $primary; padding: 0 1; scrollbar-size-vertical: 1; }
+    #combate { height: auto; display: none; border: heavy $error; padding: 0 1; }
+    #vitais { height: auto; border: round $warning; padding: 0 1; }
     #opcoes { height: auto; max-height: 16; border: round $accent; }
     #entrada { display: none; border: round $accent; }
-    #lateral { width: 52; }
+    #lateral { width: 46; }
     #status { height: auto; border: round $secondary; padding: 0 1; }
     #mapa { height: 1fr; border: round $secondary; padding: 0 1; }
     """
@@ -209,9 +240,11 @@ class AppRPG(App):
 
     def compose(self) -> ComposeResult:
         yield Header()
-        with Horizontal():
+        with Horizontal(id="raiz"):
             with Vertical(id="principal"):
                 yield RichLog(id="log", wrap=True, markup=False, highlight=False, max_lines=4000)
+                yield Static(id="combate")
+                yield Static(id="vitais")
                 yield OptionList(id="opcoes")
                 yield Input(id="entrada")
             with Vertical(id="lateral"):
@@ -222,6 +255,7 @@ class AppRPG(App):
     def on_mount(self):
         self.query_one("#status").border_title = "Herói"
         self.query_one("#mapa").border_title = "Mapa"
+        self.query_one("#vitais").border_title = "Condição"
         self.query_one("#opcoes").border_title = "O que fazer? (tecle o número/letra ou clique)"
         self.run_worker(self._executar_jogo, thread=True, exit_on_error=True)
 
@@ -258,9 +292,14 @@ class AppRPG(App):
         entrada.display = True
         entrada.focus()
 
-    def atualizar_hud(self, status, mapa_texto):
+    def atualizar_hud(self, status, mapa_texto, vitais, combate):
         self.query_one("#status", Static).update(status)
         self.query_one("#mapa", Static).update(mapa_texto)
+        self.query_one("#vitais", Static).update(vitais)
+        painel = self.query_one("#combate", Static)
+        painel.display = combate is not None
+        if combate is not None:
+            painel.update(combate)
 
     # Eventos da interface ---------------------------------------------
     def _responder(self, indice):

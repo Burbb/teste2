@@ -5,7 +5,8 @@ from .classes import CLASSES, SPECS
 STATS = ("max_hp", "atk", "defesa", "agi", "poder", "max_rec")
 NOMES_STATS = {
     "max_hp": "Vida", "atk": "Ataque", "defesa": "Defesa", "agi": "Agilidade",
-    "poder": "Poder", "max_rec": "Recurso",
+    "poder": "Poder", "max_rec": "Recurso", "roubo_vida": "roubo de vida", "critico": "chance de crítico",
+    "espinhos": "Espinhos", "regen_vida": "Vida por turno", "vida_abate": "Vida por abate",
 }
 EFEITOS_NEGATIVOS = ("veneno", "sangramento", "queimadura", "atordoado", "enfraquecido", "maldito", "marcado")
 
@@ -32,6 +33,9 @@ class Combatente:
 
     def tal(self, talento):
         """Nível de um talento (só o jogador tem talentos)."""
+        return 0
+
+    def especial(self, chave):
         return 0
 
     def efeito(self, nome):
@@ -96,7 +100,7 @@ class Jogador(Combatente):
         self.regen = b["regen"]
         self.ouro = 30
         self.flechas = 30 if classe == "arqueiro" else 0
-        self.consumiveis = {"pocao_vida": 3, "bandagem": 1}
+        self.consumiveis = {"pocao_vida": 2, "bandagem": 2, "tocha": 3}
         if classe == "mago":
             self.consumiveis["tonico"] = 1
         self.mochila = []
@@ -107,6 +111,9 @@ class Jogador(Combatente):
         self.sigilos = []
         self.talentos = {}
         self.pontos_talento = 0
+        self.provisoes = 4
+        self.fome = 0
+        self.ferimentos = []
         self.recalcular()
         self.hp = self.max_hp
 
@@ -127,15 +134,21 @@ class Jogador(Combatente):
     def tal(self, talento):
         return self.talentos.get(talento, 0)
 
+    def especial(self, chave):
+        """Soma de um atributo especial dos itens (roubo de vida, crítico, espinhos...)."""
+        return sum(item["bonus"].get(chave, 0) for item in self.equip.values() if item)
+
     def recalcular(self):
+        from .sobrevivencia import multiplicadores
         from .talentos import bonus_stats
         extras = bonus_stats(self)
+        penal = multiplicadores(self)
         for stat in STATS:
             total = self.base[stat] + extras.get(stat, 0)
             for item in self.equip.values():
                 if item:
                     total += item["bonus"].get(stat, 0)
-            setattr(self, stat, int(round(total)))
+            setattr(self, stat, max(1, int(round(total * penal.get(stat, 1.0)))))
         self.regen = CLASSES[self.classe]["base"]["regen"] + extras.get("regen", 0)
         self.hp = min(self.hp, self.max_hp)
         self.rec = min(self.rec, self.max_rec)
@@ -155,4 +168,7 @@ class Jogador(Combatente):
         obj.__dict__.update(d)
         obj.__dict__.setdefault("talentos", {})
         obj.__dict__.setdefault("pontos_talento", max(0, obj.nivel - 1))
+        obj.__dict__.setdefault("provisoes", 4)
+        obj.__dict__.setdefault("fome", 0)
+        obj.__dict__.setdefault("ferimentos", [])
         return obj

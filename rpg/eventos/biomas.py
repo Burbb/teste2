@@ -56,7 +56,7 @@ def colmeia_selvagem(g):
         return
     if op == "fogo" or g.teste("destreza", 12):
         g.dizer("Você enche um frasco de mel dourado. Doce, quente, curativo.", "verde")
-        g.curar(g.j.max_hp * 0.4)
+        g.curar(g.j.max_hp * 0.2)
         g.dar("pocao_vida")
     else:
         g.dizer("As abelhas acordam de mau humor.", "vermelho")
@@ -101,7 +101,7 @@ def cabana_da_bruxa(g):
             g.dizer("O elixir tem gosto de terra e hortelã. Funciona.", "verde")
             g.j.base["max_hp"] += 4
             g.j.recalcular()
-            g.curar(g.j.max_hp)
+            g.curar(g.j.max_hp * 0.4)
             g.dizer("(+4 vida máxima)", "verde")
         else:
             g.dizer("Você passa a tarde inteira com dor de barriga. A bruxa ri muito.", "vermelho")
@@ -195,7 +195,8 @@ def fazenda_em_apuros(g):
         if g.combate(g.grupo("lobo")) == "vitoria":
             g.dizer("A família inteira te recebe com pão quente e queijo. Você come até se fartar.", "verde")
             g.ganhar_ouro(10 + 2 * g.j.nivel)
-            g.curar(g.j.max_hp)
+            g.dar_provisoes(3)
+            g.curar(g.j.max_hp * 0.2)
             g.mudar_reputacao(3)
 
 
@@ -278,7 +279,7 @@ def abrigo_da_tempestade(g):
         if g.j.spec == "patrulheiro" and g.teste("percepcao", 12):
             g.dizer("Você fala baixo, se move devagar. O animal te aceita como companhia até a chuva passar.",
                     "verde")
-            g.curar(g.j.max_hp * 0.3)
+            g.curar(g.j.max_hp * 0.15)
             return
         fam = "javali" if g.bioma != "pantano" else "sapo"
         e = g.inimigo(fam, afixo="robusto")
@@ -288,7 +289,7 @@ def abrigo_da_tempestade(g):
         g.combate([e])
     else:
         g.dizer("Você acende uma fogueira e espera. Nas paredes, desenhos antigos de caçadores e feras.", "cinza")
-        g.curar(g.j.max_hp * 0.25)
+        g.curar(g.j.max_hp * 0.1)
         if g.chance(0.4):
             g.dizer("Atrás de uma pedra solta, alguém escondeu provisões há muito tempo.", "verde")
             g.dar(g.sortear(["pocao_vida", "tonico", "antidoto"]))

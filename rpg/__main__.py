@@ -25,8 +25,13 @@ COMO JOGAR
 • Escolhas têm consequências: quem você ajuda (ou rouba) pode voltar mais tarde.
 • Derrote criaturas para aprender suas fraquezas (veja o Bestiário).
 • Ouça rumores nas tavernas: revelam tesouros, feras e pontos fracos.
-• Se cair em combate, você é resgatado e acorda numa vila, mas perde ouro e
-  dois dias. Com --hardcore, a morte é permanente.
+• A MORTE É PERMANENTE. (Com --brando, você é resgatado ao cair, perdendo
+  ouro e dois dias.)
+• Coma: cada dia consome 1 provisão. Sem comida você enfraquece e morre.
+• Golpes pesados deixam FERIMENTOS que duram dias. Feridas abertas sem
+  bandagem podem infeccionar — e infecção mata. Curandeiros tratam tudo.
+• À noite, nas ruínas e na cidadela é escuro: leve tochas.
+• A mana do mago só volta descansando (ou com tônicos).
 • Seus heróis anteriores deixam lendas, estátuas e túmulos nas próximas partidas.
 """
 
@@ -41,7 +46,7 @@ def menu_principal(ui, args):
         esc = opcoes[ui.escolher("", opcoes)]
         try:
             if esc == "Novo jogo":
-                jogo = Jogo(ui, seed=args.seed, pasta_saves=args.saves, hardcore=args.hardcore)
+                jogo = Jogo(ui, seed=args.seed, pasta_saves=args.saves, hardcore=not args.brando)
                 ui.jogo = jogo
                 jogo.novo_jogo()
                 jogo.rodar()
@@ -69,8 +74,9 @@ def main():
     parser.add_argument("--seed", type=int, help="semente do mundo (o mesmo número gera o mesmo reino)")
     parser.add_argument("--classico", action="store_true",
                         help="usa a interface de terminal simples em vez da interface moderna")
-    parser.add_argument("--hardcore", action="store_true",
-                        help="morte permanente (sem resgate ao cair em combate)")
+    parser.add_argument("--brando", action="store_true",
+                        help="modo brando: ao cair em combate você é resgatado (sem morte permanente)")
+    parser.add_argument("--hardcore", action="store_true", help=argparse.SUPPRESS)  # já é o padrão
     parser.add_argument("--sem-cor", action="store_true", help="desativa as cores (interface clássica)")
     parser.add_argument("--rapido", action="store_true", help="sem pausas dramáticas (interface clássica)")
     parser.add_argument("--saves", default=os.path.join(os.path.expanduser("~"), ".cronicas_da_fenda"),

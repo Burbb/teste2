@@ -75,13 +75,13 @@ def ouvir_rumor(g, preferir=None):
         g.ganhar_xp(5)
     else:
         fofoca = g.sortear([
-            "o padeiro está traindo a mulher com a irmã do moleiro",
-            "a cerveja daqui é aguada desde que o dono novo chegou",
-            "um bode falou na feira semana passada. Disse só uma palavra, mas ninguém concorda qual",
-            "o capitão da guarda tem medo de galinhas",
-            "o velho do moinho é, na verdade, três crianças dentro de um casaco",
+            "o coveiro cobra o dobro agora, porque precisa enterrar os mortos duas vezes",
+            "a filha do moleiro sumiu na lua nova, e a mãe ainda deixa a porta aberta",
+            "os soldados do barão desertaram e agora cobram pedágio na estrada",
+            "alguém anda roubando os corpos do cemitério antes do enterro",
+            "o padre fugiu levando o ouro da igreja e a fé de todo mundo junto",
         ])
-        g.dizer(f"{fonte} jura que {fofoca}. Útil? Não. Divertido? Muito.", "cinza")
+        g.dizer(f"{fonte} conta, baixinho, que {fofoca}.", "cinza")
 
 
 def _registrar(g, texto, evento_id, local, falso, **dados):
@@ -128,24 +128,29 @@ def briga_de_taverna(g):
 
 @evento(contextos=VILA, peso=5, cooldown=16)
 def festival(g):
-    motivo = g.sortear(["da colheita", "do santo padroeiro", "da primeira neve", "dos lampiões"])
-    g.dizer(f"A vila está em festa: é o festival {motivo}! Música, comida e jogos por toda a praça.", "amarelo")
+    g.dizer("Hoje é a Vigília das Velas: a vila inteira acende velas pelos mortos do ano. São muitas velas. "
+            "Na praça, o barão oferece pão de graça — e um poço de lutas para quem quiser ganhar algumas moedas.",
+            "amarelo")
     op = g.menu("O que faz?", [
-        ("Comer e dançar até tarde", "festejar"),
-        ("Participar do torneio de força (Força)", "torneio"),
-        ("Visitar a tenda da cartomante", "cartomante"),
+        ("Pegar o pão e acender uma vela", "vigilia"),
+        ("Lutar no poço por dinheiro (Força)", "poco"),
+        ("Visitar a velha que lê ossos", "cartomante"),
     ])
-    if op == "festejar":
-        g.curar(g.j.max_hp)
-        g.dizer("Você não se diverte assim há muito tempo.", "verde")
-        g.avancar_periodo()
-    elif op == "torneio":
+    if op == "vigilia":
+        g.dar_provisoes(1)
+        g.dizer("Por um instante, ninguém está sozinho.", "verde")
+        g.curar(g.j.max_hp * 0.1)
+    elif op == "poco":
         if g.teste("forca", 13):
-            g.dizer("Você levanta o barril mais pesado e ganha uma coroa de flores (e um prêmio).", "verde")
-            g.ganhar_ouro(25)
-            g.mudar_reputacao(2)
+            g.dizer("Você quebra o nariz de um lenhador do dobro do seu tamanho. A multidão urra.", "verde")
+            g.ganhar_ouro(30)
+            g.mudar_reputacao(1)
         else:
-            g.dizer("O barril vence.", "cinza")
+            g.dizer("Um soco no fígado, outro na têmpora. Você acorda na lama, sem as moedas da aposta.", "vermelho")
+            g.ferir(g.j.max_hp * 0.2, " no poço")
+            from ..sobrevivencia import ferir
+            if g.chance(0.4):
+                ferir(g, "costelas")
     else:
         ouvir_rumor(g, preferir="fraqueza")
 

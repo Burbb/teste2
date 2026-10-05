@@ -6,14 +6,14 @@ from .entidades import Inimigo
 
 
 def escala(nivel):
-    return 1 + 0.2 * (nivel - 1)
+    return 1 + 0.2 * (nivel - 1) + 0.06 * max(0, nivel - 4) ** 1.3
 
 
 def criar(rng, familia_id, nivel, afixo=None, nome_unico=None):
     f = FAMILIAS[familia_id]
     m = escala(nivel)
     hp = f["hp"] * m
-    atk = f["atk"] * 0.9 * (1 + 0.18 * (nivel - 1))
+    atk = f["atk"] * 0.95 * (1 + 0.18 * (nivel - 1))
     defesa = f["defesa"] * (1 + 0.15 * (nivel - 1))
     agi = f["agi"] + (nivel - 1) // 3
     poder = f["poder"] * m
@@ -62,6 +62,22 @@ def criar(rng, familia_id, nivel, afixo=None, nome_unico=None):
     return e
 
 
+def adicionar_afixo(e, afixo):
+    """Segundo afixo para inimigos únicos."""
+    a = AFIXOS[afixo]
+    e.max_hp = int(e.max_hp * a.get("hp", 1))
+    e.hp = e.max_hp
+    e.atk *= a.get("atk", 1)
+    e.defesa *= a.get("defesa", 1)
+    e.agi += a.get("agi", 0)
+    e.poder += a.get("poder", 0)
+    e.xp = int(e.xp * a.get("xp", 1))
+    e.tracos += [t for t in a.get("tracos", []) if t not in e.tracos]
+    e.habilidades += [h for h in a.get("habs", []) if h not in e.habilidades]
+    e.resist.update(a.get("resist", {}))
+    e.nome += f" {a[e.g].capitalize()}"
+
+
 def _aplicar_template(e, t, nivel):
     e.tracos = list(t["tracos"])
     e.habilidades = list(t["habs"])
@@ -84,7 +100,7 @@ def gerar_guardiao(rng, bioma):
 def instanciar_guardiao(spec, nivel):
     t = GUARDIOES[spec["bioma"]][spec["idx"]]
     m = escala(nivel)
-    m_atk = 0.85 * (1 + 0.18 * (nivel - 1))
+    m_atk = 0.95 * (1 + 0.18 * (nivel - 1))
     e = Inimigo(spec["nome"], t["hp"] * m * 0.75, t["atk"] * m_atk, t["defesa"] * (1 + 0.12 * (nivel - 1)),
                 t["agi"] + nivel // 3, t["poder"] * m_atk, t["g"])
     _aplicar_template(e, t, nivel)
@@ -258,6 +274,26 @@ def _varredura(cb, e, alvo):
         cb.atacar(e, a, 0.8, rotulo="Varredura")
 
 
+def _reviver(cb, e, alvo):
+    caidos = [m for m in cb.inimigos if not m.vivo and not m.fugiu and m.familia == "caido" and m is not e]
+    if not caidos:
+        return False
+    m = cb.rng.choice(caidos)
+    m.hp = m.max_hp // 2
+    m.efeitos = {}
+    if m in cb.mortos:
+        cb.mortos.remove(m)
+    cb.dizer(f"{e.nome} grita palavras profanas: {m.nome} se levanta de novo, rindo!", "vermelho+negrito")
+
+
+def _devorar(cb, e, alvo):
+    if not cb.mortos or e.hp > e.max_hp * 0.75:
+        return False
+    corpo = cb.mortos.pop()
+    cura = e.curar(e.max_hp * 0.35)
+    cb.dizer(f"{e.nome} se ajoelha e arranca pedaços de {corpo.nome} com os dentes. (+{cura})", "vermelho")
+
+
 def _invocar(cb, e, alvo):
     if not e.invoca or len(cb.inimigos_vivos()) >= 4:
         return False
@@ -290,6 +326,8 @@ HABS_INIMIGO = {
     "mordida_gelida": _mordida_gelida,
     "invocar": _invocar,
     "varredura": _varredura,
+    "reviver": _reviver,
+    "devorar": _devorar,
 }
 
 NOMES_HABS_INIMIGO = {
@@ -300,4 +338,5 @@ NOMES_HABS_INIMIGO = {
     "bola_sombra": "esfera sombria", "cura": "cura aliados", "grito_terror": "grito de terror",
     "mordida_gelida": "mordida congelante", "invocar": "invoca reforços",
     "varredura": "golpe em área (atinge você e seus aliados)",
+    "reviver": "ressuscita caídos", "devorar": "devora cadáveres para se curar",
 }

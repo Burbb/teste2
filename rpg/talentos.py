@@ -62,7 +62,7 @@ TALENTOS = {
            stats={"regen": 2}),
         _t("brasas", "Brasas Eternas", 2, 0, 2, "Queimaduras causam +30% de dano por ponto e duram 1 turno a mais.",
            "piromante"),
-        _t("escudo_reflexo", "Escudo Rúnico", 2, 1, 1, "A Barreira Arcana absorve 50% a mais e dura 1 turno a mais."),
+        _t("escudo_reflexo", "Escudo Rúnico", 2, 1, 1, "A Barreira Arcana absorve 30% a mais e dura 1 turno a mais."),
         _t("pacto_sombrio", "Pacto Sombrio", 2, 2, 2, "Drenar Vida cura +20% e servos têm +25% de vida, por ponto.",
            "necromante"),
         _t("ignicao", "Ignição", 3, 0, 1, "A Bola de Fogo sempre deixa o alvo em chamas.", "piromante"),

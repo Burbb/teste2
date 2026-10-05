@@ -5,6 +5,7 @@ from .dados import TRACOS
 from .entidades import Combatente
 from .inimigos import HABS_INIMIGO, NOMES_HABS_INIMIGO
 from .itens import CONSUMIVEIS
+from . import sobrevivencia
 from .talentos import custo_habilidade
 
 DOTS = {
@@ -36,6 +37,8 @@ def mult_tracos(alvo, tipo, alcance):
         m *= 1.5
     if "construto" in t:
         m *= {"veneno": 0, "arcano": 1.2}.get(tipo, 1)
+    if "demonio" in t:
+        m *= {"sagrado": 1.5, "fogo": 0.8}.get(tipo, 1)
     if "corrompido" in t:
         m *= {"sagrado": 1.4, "sombra": 0.6}.get(tipo, 1)
     return m * alvo.resist.get(tipo, 1)
@@ -167,7 +170,7 @@ class Combate:
         furtivo = u.efeito("furtivo")
         abertura = u.jogador and self.abertura
         self.abertura = self.abertura and not u.jogador
-        chance_crit = 0.05 + u.agi * 0.01 + crit_extra + 0.04 * u.tal("olho_aguia")
+        chance_crit = 0.05 + u.agi * 0.01 + crit_extra + 0.04 * u.tal("olho_aguia") + u.especial("critico") / 100
         crit = bool(furtivo) or abertura or self.rng.random() < chance_crit
         base = getattr(u, stat) * mult + bonus
         dano = base * m * self.rng.uniform(0.85, 1.15) * 100 / (100 + defesa * 6)
@@ -207,8 +210,16 @@ class Combate:
             txt += " — pouco eficaz."
         defensor = alvo is self.j or alvo in self.aliados
         self.dizer(txt, "vermelho" if defensor else "amarelo")
-        if u is self.j and dano and u.tal("sede_insaciavel"):
-            u.curar(dano * 0.05 * u.tal("sede_insaciavel"))
+        if u is self.j and dano:
+            roubo = 0.05 * u.tal("sede_insaciavel") + u.especial("roubo_vida") / 100
+            if roubo:
+                u.curar(dano * roubo)
+        if alvo is self.j and dano and alcance == "corpo" and u in self.inimigos and u.vivo and alvo.especial("espinhos"):
+            espinhos = alvo.especial("espinhos")
+            u.hp = max(0, u.hp - espinhos)
+            self.dizer(f"Espinhos ferem {u.nome}. ({espinhos})", "amarelo")
+            if not u.vivo:
+                self.ao_morrer(u, por=alvo)
         if alvo is self.j and alvo.vivo:
             if (alvo.tal("martirio") and not self.usou_martirio and alvo.hp < alvo.max_hp * 0.25):
                 self.usou_martirio = True
@@ -218,6 +229,8 @@ class Combate:
             if (alcance == "corpo" and alvo.tal("contra_ataque") and u in self.inimigos and u.vivo
                     and self.rng.random() < 0.15 * alvo.tal("contra_ataque")):
                 self.atacar(alvo, u, 0.7, rotulo="Contra-ataque")
+        if alvo is self.j and dano:
+            sobrevivencia.talvez_ferir(self.g, dano, tipo, crit, u)
         if not alvo.vivo:
             self.ao_morrer(alvo, por=u, tipo=tipo)
         return dano
@@ -255,7 +268,12 @@ class Combate:
         if c in self.mortos:
             return
         self.mortos.append(c)
-        self.dizer(f"{c.nome} é derrotad{'o' if c.g == 'm' else 'a'}!", "verde+negrito")
+        o = "o" if c.g == "m" else "a"
+        self.dizer(self.rng.choice([
+            f"{c.nome} desaba sem um som.", f"{c.nome} cai num jorro de sangue escuro.",
+            f"{c.nome} se contorce no chão e fica imóvel.", f"{c.nome} é derrubad{o} e não se levanta mais.",
+            f"{c.nome} solta um último grito gorgolejante.",
+        ]), "verde+negrito")
         j = self.j
         if j.spec == "necromante":
             j.rec = min(j.max_rec, j.rec + 5)
@@ -264,6 +282,8 @@ class Combate:
             self.invocar_aliado(f"{c.nome} (servo)", hp=int(c.max_hp * 0.6), atk=c.atk * 0.7)
         if por is not j:
             return
+        if j.especial("vida_abate"):
+            j.curar(j.especial("vida_abate"))
         if j.tal("frenesi"):
             self.frenesi = min(3, self.frenesi + 1)
             j.aplicar("fortalecido", 99, 0)
@@ -399,6 +419,8 @@ class Combate:
     def fase_jogador(self):
         j = self.j
         self.mostrar_estado()
+        if j.especial("regen_vida") and j.hp < j.max_hp:
+            j.curar(j.especial("regen_vida"))
         if self.processar_efeitos(j) or not j.vivo:
             return None
         while True:
@@ -524,7 +546,9 @@ class Combate:
     def tentar_fuga(self):
         vivos = self.inimigos_vivos()
         media = sum(e.agi for e in vivos) / len(vivos)
-        chance = max(0.2, min(0.9, 0.5 + (self.j.agi - media) * 0.03))
+        chance = max(0.15, min(0.85, 0.5 + (self.j.agi - media) * 0.03))
+        if any(f["id"] == "perna" for f in self.j.ferimentos):
+            chance -= 0.2
         if self.rng.random() < chance:
             self.dizer("Você recua e consegue escapar!", "verde")
             return True
@@ -606,10 +630,10 @@ class Combate:
             if not self.companheiro.vivo:
                 self.dizer(f"{self.companheiro.nome} está ferido demais para lutar até você descansar.", "cinza")
         j.efeitos = {}
-        if j.classe == "mago":
-            j.rec = min(j.max_rec, j.rec + j.max_rec // 2)
-        else:
+        if j.classe != "mago":  # o fôlego volta em minutos; a mana, devagar
             j.rec = j.max_rec
+        else:
+            j.rec = min(j.max_rec, j.rec + j.max_rec // 5)
         if j.classe == "arqueiro" and self.flechas_gastas and resultado == "vitoria":
             chance = 0.5 + 0.2 * j.tal("aljava_funda")
             recuperadas = sum(1 for _ in range(self.flechas_gastas) if self.rng.random() < chance)
@@ -624,9 +648,6 @@ class Combate:
             ouro = sum(e.ouro + e.roubado for e in derrotados)
             if any(e.roubado for e in derrotados):
                 self.dizer("Você recupera o ouro que lhe foi roubado.", "verde")
-            folego = j.curar(j.max_hp * 0.1)
-            if folego:
-                self.dizer(f"Você recupera o fôlego. (+{folego} vida)", "verde")
             g.ganhar_ouro(ouro)
             g.registrar_abates(derrotados)
             g.saque_de_combate(derrotados)

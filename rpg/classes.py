@@ -34,11 +34,11 @@ CLASSES = {
         "recurso": "Mana",
         "cor": "azul",
         "desc": "Frágil, mas devastador. Magias elementais exploram fraquezas. Mana regenera devagar.",
-        "base": dict(max_hp=42, atk=3, defesa=3, agi=4, poder=11, max_rec=40, regen=4),
+        "base": dict(max_hp=42, atk=3, defesa=3, agi=4, poder=11, max_rec=40, regen=3),
         "cresc": dict(max_hp=6.5, atk=0.5, defesa=0.8, agi=0.6, poder=2.4, max_rec=5),
         "habilidades": [(1, "bola_fogo"), (1, "meditar"), (2, "lanca_gelo"), (3, "barreira")],
         "specs": ["piromante", "necromante"],
-        "ataque": ("Dardo Arcano", "distancia", "arcano", "poder", 0.9),
+        "ataque": ("Dardo Arcano", "distancia", "arcano", "poder", 1.0),
     },
 }
 
@@ -252,7 +252,7 @@ def _bola_fogo(cb, u, alvo):
 
 
 def _meditar(cb, u, alvo):
-    ganho = min(u.max_rec - u.rec, 12 + int(u.poder * 0.6))
+    ganho = min(u.max_rec - u.rec, 8 + int(u.poder * 0.4))
     u.rec += ganho
     cb.dizer(f"Você fecha os olhos e respira fundo. (+{ganho} mana)", "azul")
 
@@ -264,17 +264,18 @@ def _lanca_gelo(cb, u, alvo):
 
 
 def _barreira(cb, u, alvo):
-    valor = int(u.poder * 2.5 * (1.5 if u.tal("escudo_reflexo") else 1))
-    u.aplicar("barreira", 3 + u.tal("escudo_reflexo"), valor)
+    valor = int(u.poder * 0.9 * (1.3 if u.tal("escudo_reflexo") else 1))
+    u.remover("barreira")  # não acumula
+    u.aplicar("barreira", 2 + u.tal("escudo_reflexo"), valor)
     cb.dizer(f"Runas brilhantes giram ao seu redor. (absorve {valor} de dano)", "azul")
 
 
 def _inferno(cb, u, alvo):
     cb.dizer("O chão se abre em chamas sob seus inimigos!", "vermelho+negrito")
     for ini in cb.inimigos_vivos():
-        dano = cb.atacar(u, ini, 1.2, tipo="fogo", alcance="distancia", stat="poder", pode_esquivar=False)
+        dano = cb.atacar(u, ini, 0.75, tipo="fogo", alcance="distancia", stat="poder", pode_esquivar=False)
         if dano and ini.vivo:
-            cb.aplicar(ini, "queimadura", cb.duracao_queimadura(u), valor=cb.valor_queimadura(u), chance=0.6)
+            cb.aplicar(ini, "queimadura", cb.duracao_queimadura(u), valor=cb.valor_queimadura(u), chance=0.45)
 
 
 def _combustao(cb, u, alvo):
@@ -344,13 +345,13 @@ HABILIDADES = {
     "flecha_envenenada": dict(nome="Flecha Envenenada", custo=10, flechas=1, alvo="inimigo", desc="Dano e veneno forte por 4 turnos.", fn=_flecha_envenenada),
     "execucao": dict(nome="Execução", custo=16, flechas=1, alvo="inimigo", desc="320% de dano se o alvo estiver abaixo de 35% de vida.", fn=_execucao),
     # Mago
-    "bola_fogo": dict(nome="Bola de Fogo", custo=12, alvo="inimigo", desc="150% de dano de fogo, pode queimar.", fn=_bola_fogo),
+    "bola_fogo": dict(nome="Bola de Fogo", custo=14, alvo="inimigo", desc="150% de dano de fogo, pode queimar.", fn=_bola_fogo),
     "meditar": dict(nome="Meditar", custo=0, alvo="proprio", desc="Recupera mana.", fn=_meditar),
     "lanca_gelo": dict(nome="Lança de Gelo", custo=10, alvo="inimigo", desc="130% de dano de gelo, pode congelar.", fn=_lanca_gelo),
-    "barreira": dict(nome="Barreira Arcana", custo=12, alvo="proprio", desc="Escudo que absorve dano por 3 turnos.", fn=_barreira),
-    "inferno": dict(nome="Inferno", custo=24, alvo="todos", desc="Fogo em todos os inimigos, alta chance de queimar.", fn=_inferno),
+    "barreira": dict(nome="Barreira Arcana", custo=18, alvo="proprio", desc="Escudo que absorve dano por 2 turnos (não acumula).", fn=_barreira),
+    "inferno": dict(nome="Inferno", custo=32, alvo="todos", desc="75% de dano de fogo em todos, pode queimar.", fn=_inferno),
     "combustao": dict(nome="Combustão", custo=14, alvo="inimigo", desc="Dano dobrado em alvos em chamas (consome a queimadura).", fn=_combustao),
-    "fenix": dict(nome="Fênix", custo=35, alvo="inimigo", desc="250% de dano de fogo e cura 20% da vida.", fn=_fenix),
+    "fenix": dict(nome="Fênix", custo=40, alvo="inimigo", desc="250% de dano de fogo e cura 20% da vida.", fn=_fenix),
     "drenar_vida": dict(nome="Drenar Vida", custo=14, alvo="inimigo", desc="Dano sombrio que cura 50% do causado.", fn=_drenar_vida),
     "erguer_servo": dict(nome="Erguer Servo", custo=22, alvo="proprio", desc="Invoca um esqueleto aliado (máx. 1, mais com talentos).", fn=_erguer_servo),
     "maldicao": dict(nome="Maldição", custo=18, alvo="todos", desc="Amaldiçoa todos: dano contínuo e -40% de defesa.", fn=_maldicao),

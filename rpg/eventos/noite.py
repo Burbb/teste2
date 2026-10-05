@@ -91,7 +91,7 @@ def sonho_profetico(g):
 @evento(contextos=ACAMP, peso=8, cooldown=6, cond=lambda g: g.clima in ("limpo", "nublado"))
 def ceu_estrelado(g):
     g.dizer("O céu está limpo e coalhado de estrelas. Por algumas horas, o mundo parece em paz.", "azul")
-    g.curar(g.j.max_hp * 0.3)
+    g.curar(g.j.max_hp * 0.1)
     if g.chance(0.3):
         g.dizer("Uma estrela cadente risca o céu. Você faz um pedido.", "azul")
         g.ganhar_xp(5 + g.j.nivel)
@@ -122,4 +122,4 @@ def companheiro_de_vigia(g):
     if g.chance(0.5):
         g.dizer(f"No meio da madrugada, {c['nome']} afugenta algo grande que rondava o acampamento. "
                 f"Você nem acorda.", "verde")
-    g.curar(g.j.max_hp * 0.2)
+    g.curar(g.j.max_hp * 0.08)

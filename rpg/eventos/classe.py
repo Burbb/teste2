@@ -289,8 +289,8 @@ def rastro_de_caca(g):
             return
         g.dizer("Um tiro limpo. Você aproveita tudo: carne, couro, e tendões para cordas de arco.", "verde")
         g.j.flechas -= 1
-        g.curar(g.j.max_hp * 0.3)
-        g.ganhar_ouro(10 + 2 * g.j.nivel)
+        g.dar_provisoes(3)
+        g.ganhar_ouro(5 + g.j.nivel)
         g.dar_flechas(g.rng.randint(3, 6))
         if g.chance(0.3) and g.j.equip["arma"]:
             g.j.equip["arma"]["bonus"]["agi"] = g.j.equip["arma"]["bonus"].get("agi", 0) + 1
@@ -407,7 +407,7 @@ def companheiro_fareja(g):
         g.dar(g.sortear(["pocao_vida", "antidoto", "tonico"]))
     elif sorte < 0.7:
         g.dizer(f"{c['nome']} encurralou uma presa — que agora é sua refeição.", "verde")
-        g.curar(g.j.max_hp * 0.3)
+        g.dar_provisoes(2)
     else:
         g.dizer(f"{c['nome']} rosna para o mato. Inimigos à espreita! Graças a ele, você os vê primeiro.",
                 "amarelo")
@@ -573,7 +573,7 @@ def linha_ley(g):
         g.j.rec = g.j.max_rec
         g.j.base["max_rec"] += 4
         g.j.recalcular()
-        g.curar(g.j.max_hp * 0.3)
+        g.curar(g.j.max_hp * 0.15)
         g.dizer("Sua mana transborda. (+4 Mana máxima, mana restaurada)", "azul")
 
 

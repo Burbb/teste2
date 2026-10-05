@@ -159,7 +159,7 @@ class TestSistemas(unittest.TestCase):
                 g.mundo["atual"] = [l for l in g.mundo["locais"] if l["tipo"] == "selvagem"][0]["id"]
                 try:
                     g.combate(g.grupo(n=3))
-                except (LimiteBot, Derrota):
+                except (LimiteBot, Derrota, FimDeJogo):
                     pass
 
     def test_mapa_renderiza(self):
@@ -183,7 +183,7 @@ class TestSistemas(unittest.TestCase):
         import argparse
         import asyncio
         from rpg.__main__ import menu_principal
-        args = argparse.Namespace(seed=5, classico=False, hardcore=False, sem_cor=False, rapido=True,
+        args = argparse.Namespace(seed=5, classico=False, brando=False, hardcore=False, sem_cor=False, rapido=True,
                                   saves=tempfile.mkdtemp())
 
         async def rodar():

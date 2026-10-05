@@ -4,14 +4,14 @@ BIOMAS = {
     "floresta": {
         "nome": "Floresta",
         "lugares": [("Bosque", "m"), ("Mata", "f"), ("Floresta", "f"), ("Clareira", "f"), ("Vale", "m")],
-        "familias": ["lobo", "aranha", "bandido", "javali", "ent_jovem"],
+        "familias": ["lobo", "aranha", "bandido", "javali", "ent_jovem", "caido"],
         "ambiente": [
-            "Raízes retorcidas cortam a trilha como dedos de pedra.",
-            "O canto dos pássaros cessa de repente, e o silêncio pesa.",
-            "Feixes de luz atravessam a copa das árvores em colunas douradas.",
-            "O cheiro de musgo úmido e folhas podres toma conta de tudo.",
-            "Um galho estala em algum lugar à sua esquerda.",
-            "Cogumelos pálidos brilham fracamente ao pé dos troncos.",
+            "Corpos pendem dos galhos mais altos. Os corvos já levaram os olhos.",
+            "O canto dos pássaros cessa de repente. O silêncio aqui tem dentes.",
+            "Raízes cobrem ossos humanos, como se a floresta os estivesse digerindo devagar.",
+            "Um cheiro de carne podre vem de algum lugar entre as árvores.",
+            "Marcas de garras na casca, na altura da sua cabeça. Recentes.",
+            "Um boneco de palha amarrado a uma árvore, com um pedaço de cabelo humano.",
         ],
         "abertura": [
             "Entre os troncos grossos", "Atrás de uma moita espinhosa",
@@ -21,14 +21,14 @@ BIOMAS = {
     "pantano": {
         "nome": "Pântano",
         "lugares": [("Brejo", "m"), ("Charco", "m"), ("Pântano", "m"), ("Lodaçal", "m"), ("Alagado", "m")],
-        "familias": ["afogado", "sapo", "bruxa_brejo", "sanguessuga", "bandido"],
+        "familias": ["afogado", "sapo", "bruxa_brejo", "sanguessuga", "bandido", "carnical"],
         "ambiente": [
-            "Bolhas sobem da água escura com cheiro de ovo podre.",
-            "Mosquitos zumbem em nuvens espessas ao seu redor.",
-            "A lama suga suas botas a cada passo.",
-            "Luzes pálidas dançam ao longe, sobre a água parada.",
-            "Árvores mortas se erguem do lodo como mãos esqueléticas.",
-            "Algo grande desliza sob a superfície e some.",
+            "Bolhas sobem da água escura. Às vezes, junto delas, sobe um dedo.",
+            "Moscas cobrem um cavalo inchado meio afundado no lodo.",
+            "A lama suga suas botas a cada passo, como se quisesse ficar com você.",
+            "Luzes pálidas dançam sobre a água parada. Os afogados também se lembram de casa.",
+            "Árvores mortas se erguem do lodo como mãos pedindo ajuda.",
+            "Algo grande desliza sob a superfície e some. O silêncio volta pesado.",
         ],
         "abertura": [
             "Entre os juncos altos", "Da água turva", "Sobre um tronco apodrecido",
@@ -38,14 +38,14 @@ BIOMAS = {
     "montanha": {
         "nome": "Montanhas",
         "lugares": [("Pico", "m"), ("Desfiladeiro", "m"), ("Serra", "f"), ("Garganta", "f"), ("Penhasco", "m")],
-        "familias": ["harpia", "troll", "lobo_gelido", "grifo", "bandido"],
+        "familias": ["harpia", "troll", "lobo_gelido", "grifo", "bandido", "cao_infernal"],
         "ambiente": [
-            "O vento uiva entre as rochas, cortante como lâmina.",
-            "Pedras soltas rolam encosta abaixo a cada passo.",
-            "Lá embaixo, as nuvens cobrem o vale como um mar branco.",
-            "O ar rarefeito queima seus pulmões.",
-            "Uma águia circula no alto, paciente.",
-            "Ossos de cabra se espalham pela trilha estreita.",
+            "O vento uiva entre as rochas e traz um cheiro de sangue velho.",
+            "Um acampamento de mineiros abandonado. As panelas ainda têm comida congelada.",
+            "Lá embaixo, as nuvens cobrem o vale. Aqui em cima, só você e os abutres.",
+            "O ar rarefeito queima seus pulmões. Cada passo custa.",
+            "Uma trilha de pegadas na neve termina de repente. Sem corpo. Sem sangue.",
+            "Ossos roídos espalhados pela trilha estreita. Alguns ainda vestem botas.",
         ],
         "abertura": [
             "De uma fenda na rocha", "Do alto de um rochedo",
@@ -55,14 +55,14 @@ BIOMAS = {
     "planicie": {
         "nome": "Planícies",
         "lugares": [("Campo", "m"), ("Pradaria", "f"), ("Planície", "f"), ("Colina", "f"), ("Estrada", "f")],
-        "familias": ["bandido", "javali", "lobo", "cultista", "mercenario"],
+        "familias": ["bandido", "javali", "lobo", "cultista", "mercenario", "caido"],
         "ambiente": [
-            "O capim alto ondula com o vento como um mar dourado.",
-            "Uma estrada de terra batida se estende até o horizonte.",
-            "Ao longe, a fumaça de uma fazenda sobe preguiçosa.",
-            "Corvos se reúnem sobre um campo de trigo abandonado.",
-            "Um moinho velho range sozinho na colina.",
-            "Marcas de rodas de carroça cortam a lama seca.",
+            "Uma fazenda queimada. Na porta do celeiro, alguém riscou: NÃO ABRA.",
+            "Corvos disputam algo no meio do trigo podre. É melhor não olhar.",
+            "Forcas na beira da estrada, com seus frutos balançando ao vento.",
+            "Uma carroça tombada. Os bois foram devorados ainda presos aos arreios.",
+            "Um moinho range sozinho. Dentro, alguém chora — ou algo imita choro.",
+            "Uma vala comum mal coberta. A terra se mexe de leve.",
         ],
         "abertura": [
             "Do meio do capim alto", "Atrás de uma carroça tombada",
@@ -72,14 +72,14 @@ BIOMAS = {
     "ruinas": {
         "nome": "Ruínas",
         "lugares": [("Ruínas", "f"), ("Necrópole", "f"), ("Fortaleza", "f"), ("Templo", "m"), ("Catacumbas", "f")],
-        "familias": ["esqueleto", "espectro", "golem", "cultista", "rato"],
+        "familias": ["esqueleto", "espectro", "golem", "cultista", "rato", "carnical", "caido"],
         "ambiente": [
-            "Colunas quebradas se erguem como dentes de um gigante morto.",
-            "Inscrições apagadas cobrem paredes tomadas pela hera.",
+            "Colunas quebradas se erguem como costelas de um deus morto.",
+            "Nas paredes, nomes riscados à unha por quem ficou preso aqui.",
             "Seus passos ecoam em corredores que não deveriam ser tão longos.",
-            "Um frio que não vem do vento sobe pelas suas costas.",
-            "Ossos antigos estalam sob suas botas.",
-            "Uma estátua sem rosto parece virar a cabeça quando você passa.",
+            "Um frio que não vem do vento sobe pelas suas costas. Algo respira no escuro.",
+            "Ossos estalam sob suas botas. Pequenos demais para serem de adultos.",
+            "Um altar coberto de sangue seco. E sangue não tão seco por cima.",
         ],
         "abertura": [
             "De trás de uma coluna caída", "Das sombras de uma cripta",
@@ -89,11 +89,11 @@ BIOMAS = {
     "cidadela": {
         "nome": "Cidadela",
         "lugares": [("Cidadela", "f")],
-        "familias": ["cultista", "espectro", "cavaleiro_sombrio", "cria_vazio", "abominacao"],
+        "familias": ["cultista", "espectro", "cavaleiro_sombrio", "cria_vazio", "abominacao", "cao_infernal"],
         "ambiente": [
-            "O céu aqui é de um roxo doente, sem sol nem estrelas.",
-            "As paredes pulsam devagar, como se respirassem.",
-            "Vozes sussurram seu nome de dentro das pedras.",
+            "O céu aqui é da cor de uma ferida. Não há sol, nem estrelas, nem esperança.",
+            "As paredes pulsam devagar, como carne viva.",
+            "Vozes sussurram seu nome de dentro das pedras. Algumas são de gente que você conheceu.",
         ],
         "abertura": ["De um corredor de obsidiana", "Das sombras do salão", "De trás de um altar profanado"],
     },
@@ -122,6 +122,7 @@ TRACOS = {
     "gigante": "Gigante: difícil de atordoar.",
     "corrompido": "Corrompido: tocado pelo Vazio; sagrado o fere, sombra o alimenta.",
     "conjurador": "Conjurador: usa magia.",
+    "demonio": "Demônio: cria do Inferno; o sagrado o queima, o fogo pouco o fere.",
 }
 
 # nome, plural, gênero, atributos base (nível 1), traços, habilidades, xp, ouro, tamanho de grupo
@@ -179,6 +180,16 @@ FAMILIAS = {
     "cria_vazio": dict(nome="cria do Vazio", plural="crias do Vazio", g="f", hp=26, atk=8, defesa=2, agi=7, poder=7,
                        tracos=["corrompido", "etereo"], habs=["bola_sombra", "drenar"], xp=20, ouro=(0, 5),
                        grupo=(1, 2), ataque="sombra"),
+    "caido": dict(nome="caído", plural="caídos", g="m", hp=13, atk=5, defesa=1, agi=6, poder=0,
+                  tracos=["demonio"], habs=["golpe_sujo"], xp=7, ouro=(0, 3), grupo=(2, 4)),
+    "xama_caido": dict(nome="xamã caído", plural="xamãs caídos", g="m", hp=18, atk=3, defesa=1, agi=5, poder=7,
+                       tracos=["demonio", "conjurador"], habs=["bola_fogo", "reviver", "reviver"], xp=16,
+                       ouro=(2, 8), grupo=(1, 1), ataque="fogo"),
+    "cao_infernal": dict(nome="cão infernal", plural="cães infernais", g="m", hp=26, atk=8, defesa=3, agi=7, poder=6,
+                         tracos=["demonio", "fera"], habs=["mordida_sangrenta", "bola_fogo"], xp=18, ouro=(0, 2),
+                         grupo=(1, 3), resist={"fogo": 0.3, "gelo": 1.3}),
+    "carnical": dict(nome="carniçal", plural="carniçais", g="m", hp=30, atk=8, defesa=3, agi=4, poder=0,
+                     tracos=["morto-vivo"], habs=["devorar", "mordida_sangrenta"], xp=17, ouro=(0, 4), grupo=(1, 2)),
     "esqueleto_servo": dict(nome="servo esquelético", plural="servos esqueléticos", g="m", hp=18, atk=6, defesa=3,
                             agi=3, poder=0, tracos=["morto-vivo"], habs=[], xp=0, ouro=(0, 0), grupo=(1, 1)),
 }
@@ -275,16 +286,16 @@ GUARDIOES = {
 }
 
 ANTAGONISTAS = [
-    ("o Rei Cinzento", "m"), ("a Rainha Sem Rosto", "f"), ("o Devorador de Estrelas", "m"),
-    ("o Último Lich", "m"), ("a Mãe das Sombras", "f"), ("o Arauto do Vazio", "m"),
-    ("a Coroa de Cinzas", "f"),
+    ("o Senhor do Terror", "m"), ("a Rainha das Moscas", "f"), ("o Devorador de Almas", "m"),
+    ("o Arcebispo Profanado", "m"), ("a Mãe das Crias", "f"), ("o Arauto do Vazio", "m"),
+    ("a Noiva da Peste", "f"), ("o Rei Enforcado", "m"),
 ]
 ORIGENS_ANTAGONISTA = [
-    "que um dia foi um herói como você, até que o Vazio sussurrou em seu ouvido",
-    "que bebeu da Fonte Proibida e nunca mais dormiu",
-    "nascido do último suspiro de um deus esquecido",
-    "que trocou o próprio nome pela imortalidade",
-    "que abriu a Fenda há cem anos e agora quer atravessá-la por completo",
+    "que um dia foi um herói como você, até cravar uma pedra do Inferno na própria testa para aprisionar um demônio — e perder",
+    "que vendeu a cidade inteira ao Vazio em troca de não morrer, e cumpriu o contrato rua por rua",
+    "nascido do último suspiro de um deus que os homens deixaram de adorar",
+    "o bispo que abriu as catacumbas da catedral procurando Deus e encontrou outra coisa",
+    "que abriu a Fenda há cem anos e agora quer atravessá-la por completo, arrastando o mundo junto",
 ]
 NOMES_CIDADELA = ["Torre Negra", "Cidadela Partida", "Trono do Vazio", "Bastião das Cinzas", "Coroa de Obsidiana"]
 
@@ -312,4 +323,8 @@ LORE = {
     "cavaleiro_sombrio": "Guerreiros que juraram lealdade ao Vazio e não puderam morrer depois.",
     "abominacao": "Carne costurada pela corrupção. Ninguém sabe o que ela foi antes.",
     "cria_vazio": "Pedaços da Fenda que aprenderam a andar. Surgem quando a corrupção cresce.",
+    "caido": "Diabretes covardes que atacam em bando, rindo. Mate o xamã primeiro, ou eles voltam.",
+    "xama_caido": "Pequeno feiticeiro dos caídos. Cospe fogo e ergue os irmãos mortos do chão.",
+    "cao_infernal": "Cães de brasa com dentes de obsidiana. O fogo é a casa deles.",
+    "carnical": "Mortos famintos que devoram os caídos no meio da luta para fechar as próprias feridas.",
 }

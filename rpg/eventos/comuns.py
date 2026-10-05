@@ -306,9 +306,11 @@ def santuario_antigo(g):
         g.dizer("Uma pena dourada pousa no altar e some na sua mão. Você sente que, se cair, poderá se erguer "
                 "uma vez.", "amarelo+negrito")
     elif bencao == "cura":
-        g.curar(g.j.max_hp)
+        g.curar(g.j.max_hp * 0.5)
         g.j.rec = g.j.max_rec
-        g.dizer("Todas as suas feridas se fecham.", "verde")
+        g.j.ferimentos = []
+        g.j.recalcular()
+        g.dizer("Um calor sobe da pedra. Ossos se recolocam, cortes se fecham. Todos os ferimentos somem.", "verde")
     else:
         stat = "atk" if g.j.classe != "mago" else "poder"
         g.j.base[stat] += 1
@@ -443,8 +445,10 @@ def ervas_medicinais(g):
     erva = g.sortear(["folhas-de-prata", "raiz-de-sangue", "flor-de-sereno", "musgo-estrela"])
     g.dizer(f"Você reconhece um tufo de {erva} — ou algo muito parecido.", "amarelo")
     if g.teste("percepcao", 11):
-        g.dizer("É a planta certa. Você colhe o suficiente para preparar remédios.", "verde")
-        g.dar(g.sortear(["pocao_vida", "antidoto", "tonico"]))
+        g.dizer("É a planta certa. Você colhe o suficiente para preparar remédios — e algumas raízes comestíveis.",
+                "verde")
+        g.dar(g.sortear(["unguento", "antidoto", "bandagem"]))
+        g.dar_provisoes(1)
         if g.j.spec == "patrulheiro" or g.chance(0.3):
             g.dar("bandagem")
     else:
@@ -607,7 +611,7 @@ def peregrinos(g):
         g.perder_ouro(5 + g.j.nivel)
         g.mudar_reputacao(3)
         g.dizer("Uma velha peregrina te abençoa com óleo na testa.", "verde")
-        g.curar(g.j.max_hp * 0.3)
+        g.curar(g.j.max_hp * 0.15)
 
 
 @evento(peso=lambda g: 3 + g.corrupcao // 8, cooldown=10, cond=lambda g: g.corrupcao >= 25)

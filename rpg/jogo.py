@@ -12,10 +12,13 @@ from .combate import Combate
 from .dados import BIOMAS, CLIMAS, FAMILIAS, GUARDIOES, LORE, PERIODOS, PESOS_CLIMA, TRACOS
 from .entidades import Jogador
 from .eventos.vila import ouvir_rumor
+from . import inimigos
 from .inimigos import criar, instanciar_antagonista, instanciar_guardiao
+from . import itens
 from .itens import CONSUMIVEIS, descrever_bonus, gerar_equip
 from . import legado
 from . import mapa
+from . import sobrevivencia
 from . import talentos
 from .mundo import gerar_mundo, nivel_regiao, vizinhos
 
@@ -26,6 +29,16 @@ NOMES_TESTE = {
 }
 NOMES_SLOT = {"arma": "Arma", "armadura": "Armadura", "amuleto": "Amuleto"}
 LIMITE_MOCHILA = 8
+AMBIENTE_VILA = [
+    "Portas pregadas com tábuas. Um X de cal marca as casas da peste.",
+    "Uma mulher vende os sapatos do filho morto na praça.",
+    "O sino da igreja não toca há meses. O padre foi o primeiro a fugir.",
+    "Guardas magros e assustados vigiam a paliçada. Metade não tem botas.",
+    "Crianças brincam de enterro. Elas conhecem bem as regras.",
+    "Um corpo pende da forca da praça. A placa no pescoço diz: LADRÃO DE PÃO.",
+    "O cheiro de fumaça, esterco e medo. Isto é o que sobrou de civilização.",
+    "Um pregador grita que o fim chegou. Ninguém discute.",
+]
 NIVEL_MAXIMO = 12
 
 
@@ -38,7 +51,7 @@ class Derrota(Exception):
 
 
 class Jogo:
-    def __init__(self, ui, seed=None, pasta_saves="saves", hardcore=False):
+    def __init__(self, ui, seed=None, pasta_saves="saves", hardcore=True):
         self.ui = ui
         self.hardcore = hardcore
         self.seed = seed if seed is not None else random.randrange(1_000_000_000)
@@ -65,6 +78,7 @@ class Jogo:
         self.forcados = []
         self.proximo_id = 1
         self.combate_ativo = None
+        self.sem_luz = False
         self.bestiario = {}
         self.lendas = []
         self.estatisticas = {"abates": 0, "eventos": 0, "ouro_ganho": 0, "chefes": 0, "quedas": 0}
@@ -144,6 +158,8 @@ class Jogo:
     def teste(self, attr, cd):
         d = self.rng.randint(1, 20)
         mod = self.mod_teste(attr)
+        if self.sem_luz and attr in ("percepcao", "destreza"):
+            mod -= 4
         total = d + mod
         ok = d == 20 or (d != 1 and total >= cd)
         extra = " (crítico!)" if d == 20 else " (desastre!)" if d == 1 else ""
@@ -153,7 +169,7 @@ class Jogo:
 
     # ================================================================ recompensas e perdas
     def ganhar_ouro(self, n):
-        n = int(n)
+        n = int(n * 0.75)  # o mundo é pobre: ninguém carrega muito ouro
         if n <= 0:
             return
         self.j.ouro += n
@@ -199,6 +215,12 @@ class Jogo:
     def dar(self, item, qtd=1):
         self.j.consumiveis[item] = self.j.consumiveis.get(item, 0) + qtd
         self.dizer(f"Você obteve: {CONSUMIVEIS[item]['nome']} x{qtd}.", "verde")
+
+    def dar_provisoes(self, n):
+        antes = self.j.provisoes
+        self.j.provisoes = min(sobrevivencia.MAX_PROVISOES, antes + n)
+        if self.j.provisoes > antes:
+            self.dizer(f"+{self.j.provisoes - antes} dia(s) de provisões. (total: {self.j.provisoes})", "verde")
 
     def dar_flechas(self, n):
         if self.j.classe != "arqueiro" or n <= 0:
@@ -276,7 +298,8 @@ class Jogo:
 
     # ================================================================ inimigos e combate
     def nivel_inimigo(self, bonus=0):
-        n = self.nivel_local() + self.rng.choice([-1, 0, 0, 1]) + bonus
+        variacao = [-1, 0, 0] if self.nivel_local() <= 2 else [-1, 0, 0, 1]
+        n = self.nivel_local() + self.rng.choice(variacao) + bonus
         return max(1, min(15, n))
 
     def mundo_vizinhos(self):
@@ -298,6 +321,8 @@ class Jogo:
 
     def familias_locais(self):
         familias = list(BIOMAS[self.bioma]["familias"])
+        if self.corrupcao >= 30:
+            familias += ["caido", "cao_infernal"]
         if self.corrupcao >= 40:
             familias.append("cria_vazio")
         if self.corrupcao >= 70:
@@ -307,20 +332,52 @@ class Jogo:
         return familias
 
     def grupo(self, familia=None, n=None, bonus=0):
+        """Gera um encontro: grupo comum, bando de campeões ou um único nomeado com escolta."""
         familia = familia or self.sortear(self.familias_locais())
         f = FAMILIAS[familia]
+        nv = self.nivel_local()
+        tipo = "normal"
         if n is None:
             lo, hi = f["grupo"]
             n = self.rng.randint(lo, hi)
-            if self.nivel_local() <= 2:
-                n = 1 if self.chance(0.7) else min(n, 2)
-            elif self.nivel_local() <= 4:
-                n = min(n, 2)
-        grupo = [self.inimigo(familia, bonus, self.afixo_aleatorio()) for _ in range(n)]
-        if n == 1 and f["grupo"][1] == 1 and self.nivel_local() >= 3 and self.chance(0.25):
-            outra = self.sortear(BIOMAS[self.bioma]["familias"])
-            if FAMILIAS[outra]["grupo"][1] > 1:
-                grupo.append(self.inimigo(outra, bonus))
+            if nv <= 2:
+                n = 1 if self.chance(0.75) else min(n, 2)
+            elif nv <= 4:
+                n = 1 if self.chance(0.5) else min(n, 2)
+            r = self.rng.random()
+            if nv >= 5 and r < 0.03 + nv * 0.006:
+                tipo = "unico"
+            elif nv >= 4 and r < 0.08 + nv * 0.012:
+                tipo = "campeoes"
+
+        if tipo == "campeoes":
+            afixo = self.sortear(["feroz", "robusto", "agil", "venenoso", "flamejante", "corrompido"])
+            grupo = [self.inimigo(familia, bonus, afixo) for _ in range(max(2, min(n, 3)))]
+            for e in grupo:
+                e.max_hp = int(e.max_hp * 1.25)
+                e.hp = e.max_hp
+                e.xp = int(e.xp * 1.4)
+                e.nome = "Campeão " + e.nome if e.g == "m" else "Campeã " + e.nome
+            self.dizer("Um bando de CAMPEÕES: eles se movem juntos, com um brilho azulado nos olhos.",
+                       "azul+negrito")
+        elif tipo == "unico":
+            a1, a2 = self.rng.sample(["feroz", "robusto", "agil", "venenoso", "anciao", "flamejante", "corrompido"], 2)
+            chefe = self.inimigo(familia, bonus + 1, a1, nome_unico=tx.nome_proprio(self.rng))
+            inimigos.adicionar_afixo(chefe, a2)
+            escolta = []
+            if f["grupo"][1] > 1:
+                escolta = [self.inimigo(familia, bonus) for _ in range(self.rng.randint(1, 2))]
+            grupo = [chefe] + escolta
+            self.dizer(f"Um nome sussurrado com medo nas vilas: {chefe.nome}. Uma criatura ÚNICA.",
+                       "amarelo+negrito")
+        else:
+            grupo = [self.inimigo(familia, bonus, self.afixo_aleatorio()) for _ in range(n)]
+            if n == 1 and f["grupo"][1] == 1 and nv >= 3 and self.chance(0.25):
+                outra = self.sortear(BIOMAS[self.bioma]["familias"])
+                if FAMILIAS[outra]["grupo"][1] > 1:
+                    grupo.append(self.inimigo(outra, bonus))
+        if familia == "caido" and self.chance(0.35 if nv <= 4 else 0.6):
+            grupo.append(self.inimigo("xama_caido", bonus))
         return grupo
 
     def combate(self, inimigos, emboscada=None, pode_fugir=True, titulo=None):
@@ -369,8 +426,11 @@ class Jogo:
     def saque_de_combate(self, derrotados):
         elites = sum(1 for e in derrotados if e.afixo or e.unico)
         chefe = any(e.chefe for e in derrotados)
-        if self.chance(0.3 + 0.1 * elites):
-            self.dar(self.sortear(["pocao_vida", "pocao_vida", "tonico", "antidoto", "bandagem"]))
+        if any("humano" in e.tracos for e in derrotados) and self.chance(0.35):
+            self.dizer("Nos alforjes dos mortos, um pouco de comida.", "cinza")
+            self.dar_provisoes(1)
+        if self.chance(0.15 + 0.1 * elites):
+            self.dar(self.sortear(["bandagem", "bandagem", "tocha", "tocha", "pocao_vida", "tonico", "antidoto"]))
         if self.j.classe == "arqueiro" and any(e.familia in ("bandido", "mercenario") for e in derrotados) \
                 and self.chance(0.5):
             self.dizer("Você encontra uma aljava com flechas entre os pertences dos inimigos.", "verde")
@@ -381,11 +441,15 @@ class Jogo:
 
     # ================================================================ equipamento e itens
     def oferecer_equip(self, item):
-        self.dizer(f"Você encontrou: {item['nome']} [{NOMES_SLOT[item['slot']]}] — {descrever_bonus(item['bonus'])}",
-                   "amarelo+negrito")
+        raridade = itens.NOMES_RARIDADE[item.get("raridade", "comum")]
+        self.dizer(f"Você encontrou: {itens.rotulo(item)} [{NOMES_SLOT[item['slot']]}, {raridade}]",
+                   itens.cor(item) or "branco+negrito")
+        self.dizer(f"  {descrever_bonus(item['bonus'])}", itens.cor(item))
+        if item.get("lore"):
+            self.dizer(f"  \"{item['lore']}\"", "cinza")
         atual = self.j.equip[item["slot"]]
         if atual:
-            self.dizer(f"  Equipado agora: {atual['nome']} — {descrever_bonus(atual['bonus'])}", "cinza")
+            self.dizer(f"  Equipado agora: {itens.rotulo(atual)} — {descrever_bonus(atual['bonus'])}", "cinza")
         op = self.menu("O que fazer com o item?", [
             ("Equipar agora", "equipar"),
             ("Guardar na mochila (para vender ou usar depois)", "guardar") if len(self.j.mochila) < LIMITE_MOCHILA
@@ -419,7 +483,7 @@ class Jogo:
         j.consumiveis[k] -= 1
         nome = CONSUMIVEIS[k]["nome"]
         if k == "pocao_vida":
-            c = j.curar(j.max_hp * 0.4)
+            c = j.curar(j.max_hp * 0.35)
             self.dizer(f"Você bebe a {nome}. (+{c} vida)", "verde")
         elif k == "tonico":
             ganho = min(j.max_rec - j.rec, j.max_rec // 2)
@@ -429,9 +493,21 @@ class Jogo:
             j.remover("veneno")
             self.dizer("O veneno deixa seu corpo.", "verde")
         elif k == "bandagem":
+            sangrando = j.efeito("sangramento")
             j.remover("sangramento")
-            c = j.curar(10)
-            self.dizer(f"Você enfaixa as feridas. (+{c} vida)", "verde")
+            tratou = sobrevivencia.tratar_com_bandagem(self)
+            c = j.curar(8)
+            if not tratou and not sangrando:
+                self.dizer(f"Você troca as faixas velhas. (+{c} vida)", "verde")
+            elif sangrando:
+                self.dizer(f"O sangramento para. (+{c} vida)", "verde")
+        elif k == "unguento":
+            if not sobrevivencia.tem(j, "infeccao"):
+                j.consumiveis[k] += 1
+                self.dizer("Você não tem nenhuma infecção para tratar.", "cinza")
+                return False
+            sobrevivencia.curar_ferimento(self, "infeccao")
+            self.dizer("O unguento arde como fogo. Horas depois, a febre cede. Infecção curada.", "verde+negrito")
         else:
             j.consumiveis[k] += 1
             self.dizer("Isso não tem uso agora.", "cinza")
@@ -545,9 +621,9 @@ class Jogo:
         self.passos += 1
         self.periodo += 1
         if self.periodo == 3:
-            self.dizer("A noite cai. Criaturas mais perigosas rondam no escuro.", "magenta")
+            self.dizer("A noite cai. Algo começa a se mover nas trevas, e não é gente.", "magenta")
 
-    def novo_dia(self):
+    def novo_dia(self, descanso=1):
         self.dia += 1
         self.periodo = 0
         restantes = sum(1 for l in self.mundo["locais"] if l["tipo"] == "covil" and not l["guardiao"]["derrotado"])
@@ -560,11 +636,20 @@ class Jogo:
         self.ui.separador()
         self.dizer(f"Amanhece o dia {self.dia}. {CLIMAS[self.clima]['desc']}", "amarelo")
         self.corromper(2 if restantes >= 2 else 1, silencioso=True)
+        sobrevivencia.amanhecer(self, descanso)
 
-    def descansar(self, fracao):
+    def descansar(self, fracao, mana=1.0):
+        """Descanso devolve pouca vida: ferimentos de verdade levam dias. Com fome, quase nada."""
         j = self.j
-        j.curar(j.max_hp * fracao)
-        j.rec = j.max_rec
+        if j.fome:
+            fracao *= 0.3
+        cura = j.curar(j.max_hp * fracao)
+        if cura:
+            self.dizer(f"Você recupera {cura} de vida. ({j.hp}/{j.max_hp})", "verde")
+        if j.classe == "mago":
+            j.rec = min(j.max_rec, j.rec + int(j.max_rec * mana))
+        else:
+            j.rec = j.max_rec
         j.efeitos = {}
         if j.companheiro:
             j.companheiro["hp"] = j.companheiro["max_hp"]
@@ -653,13 +738,17 @@ class Jogo:
 
     def introducao(self):
         a = self.antagonista
-        self.ui.titulo("O REINO À BEIRA DO VAZIO")
-        self.narrar(f"Há cem anos uma Fenda se abriu no coração do reino. Dela fala {a['nome']}, {a['origem']}.")
-        self.narrar("Três guardiões monstruosos, corrompidos pela Fenda, guardam os Sigilos que selam o caminho até "
-                    f"a {self.mundo['locais'][-1]['nome']}, onde {a['curto']} aguarda.")
-        self.narrar("A cada dia que passa a corrupção cresce. Se chegar a 100%, tudo estará perdido. "
-                    "Derrotar os guardiões faz a sombra recuar.")
-        self.narrar(f"Você, {self.j.nome}, {self.j.nome_classe.lower()}, parte da vila de {self.loc['nome']}.")
+        self.ui.titulo("O REINO À BEIRA DO VAZIO", "vermelho+negrito")
+        self.narrar("Não houve profecia. Não há escolhido. Há cem anos uma Fenda se abriu sob a catedral, e desde "
+                    "então o reino apodrece devagar, como um corpo que ainda não percebeu que morreu.", "cinza")
+        self.narrar(f"Do outro lado fala {a['nome']}, {a['origem']}.")
+        self.narrar("Três guardiões, deformados pela Fenda, guardam os Sigilos que selam o caminho até "
+                    f"a {self.mundo['locais'][-1]['nome']}. Cavaleiros melhores que você já tentaram. Os corvos "
+                    "ainda se lembram do gosto deles.")
+        self.narrar("A cada dia a corrupção avança. Quando chegar a 100%, não haverá mais reino para salvar.")
+        self.narrar(f"Você, {self.j.nome}, {self.j.nome_classe.lower()}, parte de {self.loc['nome']} com "
+                    f"{self.j.provisoes} dias de comida, {self.j.ouro} moedas e nenhuma garantia de voltar.")
+        self.dizer("A fome mata. Feridas infeccionam. A noite cega. E a morte é permanente.", "vermelho+negrito")
         estatua = self.flag("estatua")
         if estatua:
             self.narrar(f"Na praça da vila há uma estátua nova: {estatua['nome']}, {estatua['nome_classe'].lower()}, "
@@ -669,8 +758,8 @@ class Jogo:
             t = self.flag("tumulo")
             self.narrar(f"Dizem que, em algum lugar destas terras, está o túmulo de {t['nome']}, quem tentou "
                         f"antes de você.", "cinza")
-        self.dizer("Dica: explore, aceite contratos, ouça rumores. Suas escolhas voltarão para você — "
-                   "para o bem ou para o mal.", "cinza")
+        self.dizer("Dica: compre provisões e tochas antes de sair, trate feridas abertas com bandagens e não vá "
+                   "aonde o mapa diz que os inimigos são fortes demais. Suas escolhas voltarão para você.", "cinza")
         self.pausar()
 
     # ================================================================ ciclo principal
@@ -707,8 +796,8 @@ class Jogo:
         if j.companheiro:
             j.companheiro["hp"] = j.companheiro["max_hp"]
         j.hp = max(j.hp, int(j.max_hp * 0.4))
-        self.novo_dia()
-        self.novo_dia()
+        self.novo_dia(descanso=0)
+        self.novo_dia(descanso=1)
         self.pausar()
 
     def cabecalho(self):
@@ -733,6 +822,9 @@ class Jogo:
         if j.companheiro:
             c = j.companheiro
             ui._imprimir(f" {c['nome']} {ui.barra(c['hp'], c['max_hp'], 8, 'ciano')} {c['hp']}/{c['max_hp']}")
+        males = sobrevivencia.descrever(j)
+        ui.dizer(f" Provisões {j.provisoes}  Tochas {j.consumiveis.get('tocha', 0)}"
+                 + (f"  |  {', '.join(males)}" if males else ""), "vermelho" if males else "cinza")
         ui.separador()
 
     def tela(self):
@@ -788,15 +880,17 @@ class Jogo:
         j = self.j
         preco_dormir = self.preco(8 + 2 * j.nivel)
         faltando = j.max_hp - j.hp
-        preco_templo = self.preco(max(1, faltando // 3)) if faltando else 0
+        preco_templo = self.preco(max(1, faltando // 2)) if faltando else 0
         opcoes = [
             ("Passear pela vila", "passear"),
             (f"Taverna: dormir até amanhã ({preco_dormir} ouro)", "dormir"),
             (f"Taverna: pagar uma bebida e ouvir rumores ({self.preco(3)} ouro)", "rumores"),
             ("Mercado", "loja"),
             ("Mural de contratos", "mural"),
-            (f"Templo: tratar ferimentos ({preco_templo} ouro)", "templo") if faltando else None,
+            (f"Templo: cuidar da vida ({preco_templo} ouro)", "templo") if faltando else None,
+            ("Curandeiro: tratar ferimentos e infecções", "curandeiro") if j.ferimentos else None,
         ]
+        self.dizer(self.sortear(AMBIENTE_VILA), "cinza")
         op = self.menu(f"Você está em {self.loc['nome']}. O que faz?", opcoes + self.opcoes_comuns())
         if op == "passear":
             if not eventos.disparar(self, "vila"):
@@ -811,6 +905,8 @@ class Jogo:
             self.loja()
         elif op == "mural":
             self.mural()
+        elif op == "curandeiro":
+            self.curandeiro()
         elif op == "templo":
             if self.j.ouro < preco_templo:
                 self.dizer("Você não tem ouro suficiente.", "vermelho")
@@ -821,6 +917,27 @@ class Jogo:
         else:
             self.executar_comum(op)
 
+    def curandeiro(self):
+        j = self.j
+        while j.ferimentos:
+            opcoes = []
+            for f in j.ferimentos:
+                d = sobrevivencia.FERIMENTOS[f["id"]]
+                custo = self.preco((25 + 4 * j.nivel) if f["id"] == "infeccao" else (12 + 3 * j.nivel))
+                opcoes.append((f"{d['nome']} — {custo} ouro", (f["id"], custo)))
+            esc = self.menu("A curandeira, uma velha de mãos manchadas de sangue seco, examina você. "
+                            "\"O que vai ser?\"", opcoes + [("Voltar", None)])
+            if not esc:
+                return
+            fid, custo = esc
+            if j.ouro < custo:
+                self.dizer("\"Sem ouro, sem cura. Ninguém aqui faz caridade mais.\"", "vermelho")
+                continue
+            self.perder_ouro(custo)
+            sobrevivencia.curar_ferimento(self, fid)
+            self.dizer(f"Ela costura, cauteriza e enfaixa sem anestesia. Você grita. "
+                       f"{sobrevivencia.FERIMENTOS[fid]['nome']}: tratado.", "verde")
+
     def preco(self, base):
         fator = 1 - self.j.reputacao / 200
         return max(1, int(round(base * fator)))
@@ -828,9 +945,9 @@ class Jogo:
     def exausto(self):
         self.ui.separador()
         if self.loc["tipo"] == "vila":
-            self.dizer("Exausto, você pede abrigo num estábulo e dorme sobre o feno.", "cinza")
-            self.descansar(0.5)
-            self.novo_dia()
+            self.dizer("Exausto, você pede abrigo num estábulo e dorme sobre o feno, entre ratos.", "cinza")
+            self.descansar(0.15, mana=0.4)
+            self.novo_dia(descanso=1)
         else:
             self.dizer("Você está exausto demais para continuar. É preciso acampar.", "cinza")
             self.acampar()
@@ -839,18 +956,27 @@ class Jogo:
     def explorar(self):
         self.ui.separador()
         self.dizer(self.ambiente(), "cinza")
-        if not eventos.disparar(self, "explorar"):
-            self.dizer("Você vasculha a área, mas não encontra nada digno de nota.", "cinza")
+        sobrevivencia.acender_tocha(self)
+        try:
+            if not eventos.disparar(self, "explorar"):
+                self.dizer("Você vasculha a área, mas não encontra nada digno de nota.", "cinza")
+        finally:
+            self.sem_luz = False
         self.avancar_periodo()
         self.pausar()
 
     def acampar(self):
         self.ui.separador()
-        self.dizer("Você junta gravetos, acende uma pequena fogueira e se enrola na capa.", "cinza")
+        self.dizer("Você junta gravetos, acende uma fogueira fraca e se enrola na capa. O frio entra mesmo assim.",
+                   "cinza")
         if self.chance(0.45):
             eventos.disparar(self, "acampamento")
-        self.descansar(0.6)
-        self.novo_dia()
+        fracao = 0.35
+        if self.clima in ("chuva", "tempestade", "neve"):
+            fracao = 0.2
+            self.dizer("Você dorme encharcado e tremendo. Quase não descansa.", "vermelho")
+        self.descansar(fracao, mana=0.5)
+        self.novo_dia(descanso=1)
         self.pausar()
 
     def dormir_taverna(self, preco):
@@ -858,9 +984,12 @@ class Jogo:
             self.dizer("Sem ouro suficiente. O taverneiro aponta para a porta.", "vermelho")
             return
         self.perder_ouro(preco)
-        self.dizer("Uma cama de verdade, uma refeição quente. Você dorme como pedra.", "verde")
-        self.descansar(1.0)
-        self.novo_dia()
+        self.dizer("Uma cama de palha sem pulgas demais e um ensopado ralo. É o melhor que este mundo oferece.",
+                   "verde")
+        if self.j.provisoes < sobrevivencia.MAX_PROVISOES:
+            self.j.provisoes += 1  # a refeição da taverna conta como o dia de comida
+        self.descansar(0.7)
+        self.novo_dia(descanso=2)
         self.pausar()
 
     def viajar(self):
@@ -872,7 +1001,7 @@ class Jogo:
             if loc["tipo"] != "vila":
                 nv = nivel_regiao(loc, self.corrupcao)
                 texto += f" · Nv.{nv}"
-                if nv >= self.j.nivel + 3:
+                if nv >= self.j.nivel + 2:
                     texto += " (PERIGOSO!)"
             texto += f" · {dist} trecho{'s' if dist > 1 else ''}"
             if not loc["visitado"]:
@@ -895,10 +1024,14 @@ class Jogo:
                 self.mundo["atual"] = loc["id"]
             self.ui.separador()
             self.dizer(f"Viagem para {loc['nome']} — trecho {trecho + 1}/{dist}.", "ciano")
-            if self.chance(0.65):
-                eventos.disparar(self, "viagem")
-            else:
-                self.dizer(self.ambiente() + " A viagem segue sem incidentes.", "cinza")
+            sobrevivencia.acender_tocha(self)
+            try:
+                if self.chance(0.65):
+                    eventos.disparar(self, "viagem")
+                else:
+                    self.dizer(self.ambiente() + " A viagem segue sem incidentes.", "cinza")
+            finally:
+                self.sem_luz = False
             self.avancar_periodo()
         self.chegar(loc)
 
@@ -947,8 +1080,9 @@ class Jogo:
         if chave not in self.lojas:
             prefixo = f"{self.loc['id']}:"
             self.lojas = {k: v for k, v in self.lojas.items() if not k.startswith(prefixo)}
-            itens = [gerar_equip(self.rng, self.j.classe, self.j.nivel + self.rng.choice([0, 0, 1])) for _ in range(4)]
-            self.lojas[chave] = itens
+            estoque = [gerar_equip(self.rng, self.j.classe, self.j.nivel + self.rng.choice([-1, 0, 0, 1]), qualidade=-1)
+                       for _ in range(4)]
+            self.lojas[chave] = estoque
         return self.lojas[chave]
 
     def loja(self):
@@ -956,16 +1090,19 @@ class Jogo:
             j = self.j
             self.ui.separador()
             self.dizer(f"MERCADO — seu ouro: {j.ouro}", "amarelo+negrito")
-            itens = self.estoque()
+            a_venda = self.estoque()
             opcoes = []
-            for k in ("pocao_vida", "tonico", "antidoto", "bandagem", "bomba_fumaca", "pena_fenix"):
+            for k in ("tocha", "bandagem", "unguento", "pocao_vida", "tonico", "antidoto", "bomba_fumaca",
+                      "pena_fenix"):
                 c = CONSUMIVEIS[k]
                 opcoes.append((f"{c['nome']} — {self.preco(c['preco'])} ouro (você tem {j.consumiveis.get(k, 0)})",
                                ("consumivel", k)))
+            opcoes.append((f"Provisões para 1 dia — {self.preco(4)} ouro (você tem {j.provisoes}/"
+                           f"{sobrevivencia.MAX_PROVISOES})", ("provisoes",)))
             if j.classe == "arqueiro":
-                opcoes.append((f"Feixe de 10 flechas — {self.preco(8)} ouro (você tem {j.flechas})", ("flechas",)))
-            for it in itens:
-                opcoes.append((f"{it['nome']} [{NOMES_SLOT[it['slot']]}] {descrever_bonus(it['bonus'])} — "
+                opcoes.append((f"Feixe de 10 flechas — {self.preco(10)} ouro (você tem {j.flechas})", ("flechas",)))
+            for it in a_venda:
+                opcoes.append((f"{itens.rotulo(it)} [{NOMES_SLOT[it['slot']]}] {descrever_bonus(it['bonus'])} — "
                                f"{self.preco(it['preco'])} ouro", ("equip", it)))
             if j.mochila:
                 opcoes.append(("Vender itens da mochila", ("vender",)))
@@ -976,8 +1113,11 @@ class Jogo:
             if op[0] == "vender":
                 self.vender()
                 continue
-            preco = self.preco({"consumivel": lambda: CONSUMIVEIS[op[1]]["preco"], "flechas": lambda: 8,
-                                "equip": lambda: op[1]["preco"]}[op[0]]())
+            preco = self.preco({"consumivel": lambda: CONSUMIVEIS[op[1]]["preco"], "flechas": lambda: 10,
+                                "provisoes": lambda: 4, "equip": lambda: op[1]["preco"]}[op[0]]())
+            if op[0] == "provisoes" and j.provisoes >= sobrevivencia.MAX_PROVISOES:
+                self.dizer("Você não consegue carregar mais comida.", "vermelho")
+                continue
             if j.ouro < preco:
                 self.dizer("Ouro insuficiente.", "vermelho")
                 continue
@@ -989,8 +1129,11 @@ class Jogo:
                 self.dar(op[1])
             elif op[0] == "flechas":
                 self.dar_flechas(10)
+            elif op[0] == "provisoes":
+                j.provisoes += 1
+                self.dizer(f"Pão duro, carne seca e um odre de água. (provisões: {j.provisoes})", "verde")
             else:
-                itens.remove(op[1])
+                a_venda.remove(op[1])
                 self.oferecer_equip_comprado(op[1])
 
     def oferecer_equip_comprado(self, item):
@@ -1083,12 +1226,16 @@ class Jogo:
             self.ui.titulo(f"{j.nome} — {j.nome_classe} nível {j.nivel}")
             self.dizer(f"Vida {j.hp}/{j.max_hp}   {j.nome_recurso} {j.rec}/{j.max_rec}   Ataque {j.atk}   "
                        f"Defesa {j.defesa}   Agilidade {j.agi}   Poder {j.poder}")
+            self.dizer(f"Provisões: {j.provisoes} dia(s)   Tochas: {j.consumiveis.get('tocha', 0)}", "amarelo")
+            males = sobrevivencia.descrever(j)
+            self.dizer("Condição: " + (", ".join(males) if males else "sem ferimentos"),
+                       "vermelho" if males else "verde")
             self.dizer(f"Reputação: {j.reputacao:+d}   Ouro: {j.ouro}" +
                        (f"   Flechas: {j.flechas}" if j.classe == "arqueiro" else ""))
             self.dizer("Equipamento:", "ciano")
             for slot, it in j.equip.items():
-                self.dizer(f"  {NOMES_SLOT[slot]}: " + (f"{it['nome']} ({descrever_bonus(it['bonus'])})" if it
-                                                        else "—"))
+                self.dizer(f"  {NOMES_SLOT[slot]}: " + (f"{itens.rotulo(it)} ({descrever_bonus(it['bonus'])})" if it
+                                                        else "—"), itens.cor(it) if it else None)
             self.dizer("Habilidades: " + ", ".join(HABILIDADES[h]["nome"] for h in j.habilidades), "ciano")
             cons = [f"{CONSUMIVEIS[k]['nome']} x{v}" for k, v in j.consumiveis.items() if v > 0]
             self.dizer("Bolsa: " + (", ".join(cons) if cons else "vazia"), "ciano")
@@ -1106,8 +1253,8 @@ class Jogo:
             if op is None:
                 return
             if op == "usar":
-                itens = [k for k in ("pocao_vida", "tonico", "antidoto", "bandagem") if j.tem(k)]
-                k = self.menu("Usar:", [(CONSUMIVEIS[k]["nome"], k) for k in itens] + [("Voltar", None)])
+                usaveis = [k for k in ("bandagem", "unguento", "pocao_vida", "tonico", "antidoto") if j.tem(k)]
+                k = self.menu("Usar:", [(CONSUMIVEIS[k]["nome"], k) for k in usaveis] + [("Voltar", None)])
                 if k:
                     self.usar_consumivel(k)
             else:
@@ -1151,7 +1298,24 @@ class Jogo:
             self.dizer(f"Nêmesis: {n['nome']}, {FAMILIAS[n['familia']]['nome']} que te persegue.", "vermelho")
         if self.aliados_finais:
             self.dizer("Aliados para a batalha final: " + ", ".join(x["nome"] for x in self.aliados_finais), "verde")
-        self.pausar()
+        pendentes = [c for c in self.contratos if not c.get("concluido")]
+        if pendentes:
+            c = self.menu("", [("Fechar o diário", None)] +
+                          [(f"Abandonar: {c['desc']}", c) for c in pendentes])
+            if c:
+                self.abandonar_contrato(c)
+        else:
+            self.pausar()
+
+    def abandonar_contrato(self, c):
+        penalidade = 6 if c["tipo"] == "entrega" else 3
+        aviso = " Você fica com a encomenda, mas vira ladrão aos olhos de todos." if c["tipo"] == "entrega" else ""
+        if not self.menu(f"Abandonar \"{c['desc']}\"? (reputação -{penalidade}){aviso}",
+                         [("Sim, abandonar", True), ("Não", False)]):
+            return
+        self.contratos.remove(c)
+        self.dizer("Você risca o contrato do diário. Alguém, em algum lugar, vai saber que você desistiu.", "cinza")
+        self.mudar_reputacao(-penalidade)
 
     # ================================================================ chefes
     def nivel_guardiao(self, loc):
@@ -1249,8 +1413,16 @@ class Jogo:
 
     def fim_de_jogo(self, motivo):
         self.registrar_legado("corrupcao" if self.corrupcao >= 100 else "morte", motivo)
-        self.ui.titulo("FIM DE JOGO", "vermelho+negrito")
+        self.estatisticas["causa"] = motivo
+        self.ui.titulo("VOCÊ MORREU" if self.corrupcao < 100 else "O REINO CAIU", "vermelho+negrito")
         self.narrar(motivo, "vermelho")
+        epitafio = self.sortear([
+            "Ninguém veio buscar o corpo. Os lobos vieram.",
+            "Seu nome será esquecido antes do próximo inverno.",
+            "Em alguma taverna, alguém pergunta por você. Ninguém sabe responder.",
+            "O próximo a tentar encontrará seus ossos — e talvez aprenda com eles.",
+        ])
+        self.narrar(epitafio, "cinza")
         self.resumo()
         self.pausar()
         raise FimDeJogo()
@@ -1259,6 +1431,7 @@ class Jogo:
         j = self.j
         a = self.antagonista
         self.registrar_legado("vitoria", f"derrotou {a['nome']}")
+        self.estatisticas["venceu"] = True
         self.ui.titulo("VITÓRIA", "amarelo+negrito")
         self.narrar(f"{tx.maiuscula(a['curto'])} se desfaz como cinza ao vento. A Fenda se fecha com um "
                     f"suspiro que ecoa por todo o reino.", "amarelo")
