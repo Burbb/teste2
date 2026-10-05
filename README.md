@@ -3,36 +3,73 @@
 RPG de texto **offline**, em português, feito em **Python puro** (sem dependências).
 Cada partida gera um reino diferente: mapa, nomes, chefes, eventos e consequências.
 
+![Interface moderna: log, opções, painel do herói e mapa](docs/interface.png)
+
 ## Como jogar
 
-Precisa apenas do Python 3.8 ou mais novo.
+Precisa do Python 3.8 ou mais novo. Para a **interface moderna** (painel do herói, mapa
+sempre visível, opções clicáveis), instale uma dependência:
 
 ```bash
-python jogar.py            # ou: python -m rpg
+pip install -r requirements.txt   # instala o textual (opcional)
+python jogar.py                   # ou: python -m rpg
 ```
 
-Opções:
+Sem o `textual` (ou com `--classico`) o jogo usa a interface clássica, em Python puro.
 
 | Opção | O que faz |
 |---|---|
+| `--classico` | Interface de terminal simples, sem dependências |
 | `--seed 1234` | Gera sempre o mesmo reino (bom para comparar partidas) |
 | `--hardcore` | Morte permanente: cair em combate encerra o jogo |
-| `--rapido` | Sem pausas dramáticas no texto |
-| `--sem-cor` | Desliga as cores (terminais antigos) |
+| `--rapido` / `--sem-cor` | Sem pausas / sem cores (interface clássica) |
 | `--saves PASTA` | Onde salvar (padrão: `~/.cronicas_da_fenda`) |
 
-Tudo é feito digitando o número da opção e apertando Enter.
+Na interface moderna: tecle o número/letra da opção, use as setas + Enter, ou clique.
+`PageUp`/`PageDown` rolam o histórico e `Ctrl+Q` sai.
 
 ## O objetivo
 
 Uma Fenda para o Vazio se abriu no reino. Três **guardiões** guardam os **Sigilos**
 que abrem o caminho até a Cidadela, onde o vilão (gerado a cada partida) espera.
 
-A **corrupção** cresce todo dia e cresce mais rápido enquanto houver guardiões vivos.
-Derrotar um guardião faz a corrupção recuar. Se ela chegar a 100%, o reino está perdido.
+- O **nível dos inimigos depende da região**, não do seu. Quanto mais longe da vila
+  inicial, mais perigoso (o mapa mostra o "Nv." de cada lugar). Os guardiões têm nível
+  fixo e o chefe final é nível 11 ou mais. Correr direto para os chefes não funciona:
+  é preciso evoluir, equipar-se, aprender fraquezas e recrutar aliados.
+- A **corrupção** cresce todo dia. Derrotar um guardião faz ela recuar 20 pontos.
+  Se chegar a 100%, o reino está perdido. Ela também deixa os inimigos mais fortes.
+- Se você cair em combate, alguém te resgata e você acorda numa vila, mas perde ouro e
+  dois dias. No modo `--hardcore` não há resgate.
 
-Se você cair em combate, alguém te resgata e você acorda numa vila, mas perde ouro e
-dois dias (e a corrupção avança). No modo `--hardcore` não há resgate.
+## Mapa
+
+O reino é gerado no espaço: regiões de bioma contínuas e estradas que não se cruzam.
+O mapa mostra o que você já descobriu (o resto fica na névoa):
+
+```
+   ⌂1─────────@5───          @ você   ⌂ vila   ♣ floresta   ≈ pântano
+              ╲  ╲──Π4        ▲ montanha   ∴ planície   Π ruínas
+               ╲              ☠ covil   ✓ covil vencido   ♜ cidadela
+                ∴7─────☠9
+```
+
+Os números do mapa são os mesmos do menu de viagem, que avisa quando um destino é
+perigoso demais para o seu nível.
+
+## Árvore de talentos
+
+Cada classe tem uma árvore em 3 colunas: o **tronco comum** no meio e, nas laterais,
+talentos que **só funcionam com uma das especializações**. Você ganha 1 ponto por nível
+e 1 por guardião derrotado (não dá para pegar tudo):
+
+```
+            ← PALADINO          TRONCO COMUM          BERSERKER →
+Nv.2    [Pele de Ferro 2/3]  [Golpe Brutal 1/3]    [Fôlego 0/2]
+Nv.4    [Luz Curativa 1/2]   [Contra-ataque 0/2]   [Sede Insaciável 0/2✗]
+Nv.6    [Aura de Proteção]   [Muralha 0/1]         [Frenesi 0/2✗]
+Nv.9    [Martírio 0/1]                             [Imortal 0/1✗]
+```
 
 ## Classes e especializações
 
@@ -60,7 +97,7 @@ Novas habilidades chegam nos níveis 2, 3, 4 e 7 (a habilidade suprema da especi
 
 - **Mundo procedural:** mapa em grafo com vilas, regiões selvagens, covis e a Cidadela.
   Nomes de lugares, NPCs, guardiões e do vilão são gerados a cada partida.
-- **87 eventos** com pesos dinâmicos. O que pode acontecer depende de classe,
+- **88 eventos** com pesos dinâmicos. O que pode acontecer depende de classe,
   especialização, bioma, clima, período do dia, reputação, corrupção e das suas escolhas
   anteriores. Eventos vistos recentemente perdem peso, para não repetir.
 - **Eventos de classe e especialização:** caçar, fabricar flechas, derrubar um falcão
@@ -74,6 +111,12 @@ Novas habilidades chegam nos níveis 2, 3, 4 e 7 (a habilidade suprema da especi
 - **Nêmesis:** se você fugir de uma criatura de elite, ela volta mais forte para te caçar.
 - **Rumores:** nas tavernas você ouve sobre tesouros, feras lendárias, mercadores raros e
   pontos fracos dos guardiões (+25% de dano). Alguns rumores são falsos.
+- **Bestiário:** fraquezas e habilidades de cada criatura só aparecem depois de você
+  derrotar algumas (magos estudam à primeira vista). Com 5 abates você vira mestre
+  caçador daquela criatura (+10% de dano).
+- **Legado entre partidas:** heróis anteriores deixam marcas no próximo mundo: o túmulo
+  de quem caiu (com a arma dele e um espírito aliado), a estátua de quem venceu e
+  baladas nas tavernas.
 - **Inimigos com afixos** (feroz, ancião, corrompido, flamejante...), **traços**
   (voador, blindado, etéreo, morto-vivo...) e **fraquezas**. Use *Analisar inimigos*.
 - **Clima e período do dia:** chuva enfraquece o fogo, a névoa ajuda a esquivar, a
@@ -86,14 +129,18 @@ Novas habilidades chegam nos níveis 2, 3, 4 e 7 (a habilidade suprema da especi
 ```
 rpg/
   jogo.py        estado, ciclo principal, vilas, loja, contratos, salvar/carregar
+  tui.py         interface moderna (Textual): log, opções, painel do herói e mapa
+  ui.py          interface clássica (cores ANSI, menus) e o "jogador robô" dos testes
+  mapa.py        desenho do mapa em caracteres
+  talentos.py    árvores de talentos
+  legado.py      registro de heróis anteriores
   combate.py     combate por turnos, efeitos, traços e fraquezas
   classes.py     classes, especializações, habilidades e companheiros
   inimigos.py    geração de inimigos, guardiões, chefe final e habilidades inimigas
-  mundo.py       geração do mapa
+  mundo.py       geração espacial do mundo e nível de cada região
   itens.py       consumíveis e equipamentos procedurais
   dados.py       biomas, criaturas, afixos, clima e guardiões
   texto.py       nomes procedurais e utilidades de texto
-  ui.py          terminal (cores, menus) e o "jogador robô" dos testes
   eventos/
     motor.py     registro e sorteio de eventos (condições, pesos, anti-repetição)
     comuns.py    encontros, estranhos na estrada, consequências
@@ -129,5 +176,6 @@ Ferramentas úteis dentro de um evento: `g.menu`, `g.teste`, `g.combate`, `g.gru
 python -m unittest discover tests
 ```
 
-Um "jogador robô" joga dezenas de partidas com escolhas aleatórias e força cada evento
-em todas as classes e especializações, para garantir que nada quebre.
+Um "jogador robô" joga dezenas de partidas com escolhas aleatórias, força cada evento
+em todas as classes e especializações, testa as árvores de talentos, o mapa e a
+interface Textual (em modo headless).

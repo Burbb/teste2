@@ -84,6 +84,11 @@ class UI:
         cheio = min(largura, cheio)
         return self.pintar("█" * cheio, cor) + self.pintar("░" * (largura - cheio), "cinza")
 
+    def desenhar(self, linhas):
+        """Desenha um bloco de linhas, cada uma uma lista de pedaços (texto, cor)."""
+        for linha in linhas:
+            self._imprimir("".join(self.pintar(t, c) for t, c in linha).rstrip())
+
     # ------------------------------------------------------------ entrada
     def escolher(self, pergunta, opcoes):
         """Mostra opções numeradas e devolve o índice escolhido."""

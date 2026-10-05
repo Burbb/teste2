@@ -701,3 +701,41 @@ def mercador_raro(g):
     elif esc:
         g.perder_ouro(int(esc["preco"] * 0.9))
         g.oferecer_equip(esc)
+
+
+# ---------------------------------------------------------------------- legado de partidas anteriores
+@evento(contextos=("explorar", "viagem"), peso=80, cooldown=0, unico=True,
+        cond=lambda g: g.flag("tumulo") and g.flag("tumulo")["local"] == g.loc["id"])
+def tumulo_do_heroi(g):
+    t = g.flag("tumulo")
+    if t["resultado"] == "corrupcao":
+        causa = "quando a sombra engoliu o mundo"
+    else:
+        causa = t["causa"].replace("Você tombou diante de", "diante de").rstrip(".")
+    g.dizer(f"Uma lápide tosca, coberta de musgo. Alguém gravou com a ponta de uma faca: \"{t['nome']}, "
+            f"{t['nome_classe'].lower()} de nível {t['nivel']}. Caiu {causa}, no dia {t['dia']}.\"", "magenta")
+    g.dizer("Este mundo não é o mesmo daquele herói... e ainda assim, aqui está. Ecos atravessam a Fenda.",
+            "magenta")
+    op = g.menu("O que faz?", [
+        ("Prestar homenagem", "honrar"),
+        ("Cavar e pegar o que ficou com o corpo", "cavar"),
+    ])
+    if op == "honrar":
+        g.dizer(f"Você se ajoelha. Por um instante, sente a mão de {t['nome']} no seu ombro.", "verde")
+        g.ganhar_xp(20 + 10 * g.j.nivel)
+        g.mudar_reputacao(2)
+        g.aliado_final(f"O espírito de {t['nome']}", f"Uma figura translúcida surge ao seu lado: {t['nome']}. "
+                                                      f"\"Desta vez, terminamos juntos.\"", "dano", 0.08)
+        return
+    arma = t.get("arma")
+    if arma and arma.get("classe") == g.j.classe:
+        item = gerar_equip(g.rng, g.j.classe, g.j.nivel + 1, slot="arma", qualidade=1)
+        item["nome"] = f"{arma['nome'].split(' ')[0]} de {t['nome']}"
+    else:
+        item = gerar_equip(g.rng, g.j.classe, g.j.nivel + 1, slot="amuleto", qualidade=1)
+        item["nome"] = f"Medalhão de {t['nome']}"
+    g.dizer("Entre os ossos, algo ainda brilha.", "amarelo")
+    g.oferecer_equip(item)
+    if g.chance(0.4):
+        g.dizer("Um frio sobe pelos seus braços. Os mortos não gostam de ser roubados.", "vermelho")
+        g.combate([g.inimigo("espectro", afixo="anciao")])

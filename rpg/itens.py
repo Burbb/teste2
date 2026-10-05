@@ -33,10 +33,10 @@ PESO_PRECO = {"max_hp": 0.25, "max_rec": 0.4, "atk": 1.0, "poder": 1.0, "defesa"
 
 def gerar_equip(rng, classe, nivel, slot=None, qualidade=0):
     slot = slot or rng.choices(["arma", "armadura", "amuleto"], [4, 4, 2])[0]
-    t = int(rng.gauss(nivel / 3, 0.8)) + qualidade
+    t = int(rng.gauss(nivel / 3.5, 0.8)) + qualidade
     t = max(0, min(len(TIERS) - 1, t))
     adj_m, adj_f, mult = TIERS[t]
-    forca = (2 + nivel * 1.1) * mult
+    forca = (1.5 + nivel * 0.9) * mult
     bonus = {}
     if slot == "arma":
         base, g = rng.choice(ARMAS[classe])

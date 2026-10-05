@@ -30,6 +30,10 @@ class Combatente:
     def vivo(self):
         return self.hp > 0
 
+    def tal(self, talento):
+        """Nível de um talento (só o jogador tem talentos)."""
+        return 0
+
     def efeito(self, nome):
         return self.efeitos.get(nome)
 
@@ -101,6 +105,8 @@ class Jogador(Combatente):
         self.companheiro = None
         self.reputacao = 0
         self.sigilos = []
+        self.talentos = {}
+        self.pontos_talento = 0
         self.recalcular()
         self.hp = self.max_hp
 
@@ -116,15 +122,21 @@ class Jogador(Combatente):
         return CLASSES[self.classe]["recurso"]
 
     def xp_proximo(self):
-        return int(35 * self.nivel ** 1.5)
+        return int(30 * self.nivel ** 1.45)
+
+    def tal(self, talento):
+        return self.talentos.get(talento, 0)
 
     def recalcular(self):
+        from .talentos import bonus_stats
+        extras = bonus_stats(self)
         for stat in STATS:
-            total = self.base[stat]
+            total = self.base[stat] + extras.get(stat, 0)
             for item in self.equip.values():
                 if item:
                     total += item["bonus"].get(stat, 0)
             setattr(self, stat, int(round(total)))
+        self.regen = CLASSES[self.classe]["base"]["regen"] + extras.get("regen", 0)
         self.hp = min(self.hp, self.max_hp)
         self.rec = min(self.rec, self.max_rec)
 
@@ -141,4 +153,6 @@ class Jogador(Combatente):
     def de_dict(cls, d):
         obj = cls.__new__(cls)
         obj.__dict__.update(d)
+        obj.__dict__.setdefault("talentos", {})
+        obj.__dict__.setdefault("pontos_talento", max(0, obj.nivel - 1))
         return obj

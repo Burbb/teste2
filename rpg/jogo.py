@@ -9,12 +9,15 @@ from . import eventos
 from . import texto as tx
 from .classes import CLASSES, COMPANHEIROS, HABILIDADES, SPECS, habilidades_ate
 from .combate import Combate
-from .dados import BIOMAS, CLIMAS, FAMILIAS, GUARDIOES, PERIODOS, PESOS_CLIMA
+from .dados import BIOMAS, CLIMAS, FAMILIAS, GUARDIOES, LORE, PERIODOS, PESOS_CLIMA, TRACOS
 from .entidades import Jogador
 from .eventos.vila import ouvir_rumor
 from .inimigos import criar, instanciar_antagonista, instanciar_guardiao
 from .itens import CONSUMIVEIS, descrever_bonus, gerar_equip
-from .mundo import gerar_mundo, vizinhos
+from . import legado
+from . import mapa
+from . import talentos
+from .mundo import gerar_mundo, nivel_regiao, vizinhos
 
 VERSAO_SAVE = 1
 NOMES_TESTE = {
@@ -23,7 +26,7 @@ NOMES_TESTE = {
 }
 NOMES_SLOT = {"arma": "Arma", "armadura": "Armadura", "amuleto": "Amuleto"}
 LIMITE_MOCHILA = 8
-NIVEL_MAXIMO = 10
+NIVEL_MAXIMO = 12
 
 
 class FimDeJogo(Exception):
@@ -61,6 +64,9 @@ class Jogo:
         self.aliados_finais = []
         self.forcados = []
         self.proximo_id = 1
+        self.combate_ativo = None
+        self.bestiario = {}
+        self.lendas = []
         self.estatisticas = {"abates": 0, "eventos": 0, "ouro_ganho": 0, "chefes": 0, "quedas": 0}
 
     # ================================================================ atalhos
@@ -270,9 +276,14 @@ class Jogo:
 
     # ================================================================ inimigos e combate
     def nivel_inimigo(self, bonus=0):
-        n = (self.j.nivel + self.rng.choice([-1, 0, 0, 0, 1]) + (self.loc["perigo"] - 2) // 2
-             + self.corrupcao // 40 + bonus)
-        return max(1, min(12, n))
+        n = self.nivel_local() + self.rng.choice([-1, 0, 0, 1]) + bonus
+        return max(1, min(15, n))
+
+    def mundo_vizinhos(self):
+        return vizinhos(self.mundo, self.loc)
+
+    def nivel_local(self):
+        return nivel_regiao(self.loc, self.corrupcao)
 
     def inimigo(self, familia, bonus=0, afixo=None, nome_unico=None, nivel=None):
         return criar(self.rng, familia, nivel or self.nivel_inimigo(bonus), afixo, nome_unico)
@@ -301,12 +312,12 @@ class Jogo:
         if n is None:
             lo, hi = f["grupo"]
             n = self.rng.randint(lo, hi)
-            if self.j.nivel <= 2:
+            if self.nivel_local() <= 2:
                 n = 1 if self.chance(0.7) else min(n, 2)
-            elif self.j.nivel <= 4:
+            elif self.nivel_local() <= 4:
                 n = min(n, 2)
         grupo = [self.inimigo(familia, bonus, self.afixo_aleatorio()) for _ in range(n)]
-        if n == 1 and f["grupo"][1] == 1 and self.j.nivel >= 3 and self.chance(0.2):
+        if n == 1 and f["grupo"][1] == 1 and self.nivel_local() >= 3 and self.chance(0.25):
             outra = self.sortear(BIOMAS[self.bioma]["familias"])
             if FAMILIAS[outra]["grupo"][1] > 1:
                 grupo.append(self.inimigo(outra, bonus))
@@ -334,6 +345,11 @@ class Jogo:
     def registrar_abates(self, derrotados):
         self.estatisticas["abates"] += len(derrotados)
         for e in derrotados:
+            if e.familia in self.bestiario:
+                self.bestiario[e.familia]["abates"] += 1
+                if self.bestiario[e.familia]["abates"] == 5:
+                    self.dizer(f"Você agora conhece {FAMILIAS[e.familia]['plural']} como ninguém. "
+                               f"(mestre caçador: +10% de dano contra eles)", "verde")
             if e.chave == "nemesis":
                 self.nemesis = None
                 self.dizer("Seu nêmesis finalmente tomba. Você sente um peso sair dos ombros.", "verde+negrito")
@@ -360,7 +376,8 @@ class Jogo:
             self.dizer("Você encontra uma aljava com flechas entre os pertences dos inimigos.", "verde")
             self.dar_flechas(self.rng.randint(3, 8))
         if chefe or self.chance(0.07 + 0.2 * elites):
-            self.oferecer_equip(gerar_equip(self.rng, self.j.classe, self.j.nivel, qualidade=1 if chefe else 0))
+            nivel = min(max(e.nivel for e in derrotados), self.j.nivel + 2)
+            self.oferecer_equip(gerar_equip(self.rng, self.j.classe, nivel, qualidade=1 if chefe else 0))
 
     # ================================================================ equipamento e itens
     def oferecer_equip(self, item):
@@ -440,10 +457,47 @@ class Jogo:
             j.companheiro["hp"] = j.companheiro["max_hp"]
         self.ui.titulo(f"NÍVEL {j.nivel}!", "verde+negrito")
         self.dizer("Seus ferimentos se fecham e você se sente mais forte.", "verde")
+        self.ganhar_ponto_talento()
         self._aprender_habilidades()
         if j.nivel >= 4 and not j.spec and f"encruzilhada_{j.classe}" not in self.forcados:
             self.forcados.append(f"encruzilhada_{j.classe}")
             self.dizer("Você sente que uma encruzilhada se aproxima em seu caminho...", "magenta")
+
+    def ganhar_ponto_talento(self, n=1):
+        self.j.pontos_talento += n
+        self.dizer(f"+{n} ponto de talento! (use em \"Talentos\" — você tem {self.j.pontos_talento})",
+                   "amarelo+negrito")
+
+    def menu_talentos(self):
+        while True:
+            j = self.j
+            self.ui.titulo(f"TALENTOS — {j.nome_classe} · pontos disponíveis: {j.pontos_talento}")
+            self.ui.desenhar(talentos.desenhar(j))
+            self.dizer("verde = aprendido · amarelo = disponível · cinza = bloqueado", "cinza")
+            opcoes = []
+            for t in talentos.TALENTOS[j.classe]:
+                est = talentos.estado(j, t)
+                texto = f"{t['nome']} {j.tal(t['id'])}/{t['max']} — {t['desc']}"
+                if est == "disponivel" and j.pontos_talento:
+                    texto = "▶ " + texto
+                elif est != "disponivel":
+                    texto += f" ({talentos.motivo(t, est) or 'completo'})"
+                opcoes.append((texto, t))
+            t = self.menu("Escolha um talento para aprender:", opcoes + [("Voltar", None)])
+            if t is None:
+                return
+            est = talentos.estado(j, t)
+            if est != "disponivel":
+                self.dizer(f"Indisponível: {talentos.motivo(t, est) or 'já está no máximo'}.", "vermelho")
+            elif not j.pontos_talento:
+                self.dizer("Você não tem pontos de talento. Suba de nível ou derrote guardiões.", "vermelho")
+            else:
+                j.pontos_talento -= 1
+                j.talentos[t["id"]] = j.tal(t["id"]) + 1
+                antes = j.max_hp
+                j.recalcular()
+                j.hp += max(0, j.max_hp - antes)
+                self.dizer(f"Você aprendeu {t['nome']} ({j.tal(t['id'])}/{t['max']}).", "verde+negrito")
 
     def _aprender_habilidades(self):
         j = self.j
@@ -505,7 +559,7 @@ class Jogo:
                 self.impulsos[r["evento"]] = self.impulsos.get(r["evento"], 1) * 3
         self.ui.separador()
         self.dizer(f"Amanhece o dia {self.dia}. {CLIMAS[self.clima]['desc']}", "amarelo")
-        self.corromper(1 + restantes, silencioso=True)
+        self.corromper(2 if restantes >= 2 else 1, silencioso=True)
 
     def descansar(self, fracao):
         j = self.j
@@ -539,6 +593,63 @@ class Jogo:
         self.j.equip["arma"] = gerar_equip(self.rng, classe, 1, "arma", qualidade=-2)
         self.j.recalcular()
         self.j.hp = self.j.max_hp
+        self.preparar_legado()
+
+    # ================================================================ legado e bestiário
+    def preparar_legado(self):
+        """Heróis de partidas anteriores deixam marcas neste mundo."""
+        self.lendas = legado.carregar(self.pasta_saves)[-6:]
+        if not self.lendas:
+            return
+        ultimo = self.lendas[-1]
+        if ultimo["resultado"] == "vitoria":
+            self.marcar("estatua", ultimo)
+            self.j.reputacao += 5
+        else:
+            selvagens = [l for l in self.mundo["locais"] if l["tipo"] == "selvagem"]
+            self.marcar("tumulo", dict(ultimo, local=self.sortear(selvagens)["id"]))
+
+    def registrar_legado(self, resultado, causa):
+        j = self.j
+        legado.registrar(self.pasta_saves, {
+            "nome": j.nome, "classe": j.classe, "spec": j.spec, "nome_classe": j.nome_classe, "nivel": j.nivel,
+            "dia": self.dia, "resultado": resultado, "causa": causa, "arma": j.equip["arma"],
+            "antagonista": self.antagonista["nome"], "sigilos": len(j.sigilos),
+        })
+
+    def ver_criatura(self, familia):
+        if familia in FAMILIAS:
+            b = self.bestiario.setdefault(familia, {"vistos": 0, "abates": 0})
+            b["vistos"] += 1
+
+    def conhece(self, familia):
+        """Fraquezas e habilidades ficam visíveis após 2 abates (magos estudam à primeira vista)."""
+        if familia not in FAMILIAS:
+            return True
+        return self.j.classe == "mago" or self.bestiario.get(familia, {}).get("abates", 0) >= 2
+
+    def mestre_caca(self, familia):
+        return self.bestiario.get(familia, {}).get("abates", 0) >= 5
+
+    def ver_bestiario(self):
+        self.ui.titulo(f"BESTIÁRIO — {len(self.bestiario)}/{len(LORE)} criaturas")
+        if not self.bestiario:
+            self.dizer("Você ainda não enfrentou nenhuma criatura.", "cinza")
+        for fam, b in sorted(self.bestiario.items(), key=lambda x: FAMILIAS[x[0]]["nome"]):
+            f = FAMILIAS[fam]
+            selo = "  ★ mestre caçador: +10% de dano" if self.mestre_caca(fam) else ""
+            self.dizer(f"{tx.maiuscula(f['nome'])} — abates: {b['abates']}{selo}", "amarelo+negrito")
+            self.dizer(f"  {LORE.get(fam, '')}", "cinza")
+            if self.conhece(fam):
+                tracos = ", ".join(TRACOS[t].split(":")[0] for t in f["tracos"])
+                fracos = [k for k, v in f.get("resist", {}).items() if v > 1]
+                info = f"  Traços: {tracos}"
+                if fracos:
+                    info += f" · fraco contra {', '.join(fracos)}"
+                self.dizer(info)
+            else:
+                self.dizer("  Detalhes: ??? (derrote mais destas criaturas para aprender)", "cinza")
+        self.pausar()
 
     def introducao(self):
         a = self.antagonista
@@ -549,6 +660,15 @@ class Jogo:
         self.narrar("A cada dia que passa a corrupção cresce. Se chegar a 100%, tudo estará perdido. "
                     "Derrotar os guardiões faz a sombra recuar.")
         self.narrar(f"Você, {self.j.nome}, {self.j.nome_classe.lower()}, parte da vila de {self.loc['nome']}.")
+        estatua = self.flag("estatua")
+        if estatua:
+            self.narrar(f"Na praça da vila há uma estátua nova: {estatua['nome']}, {estatua['nome_classe'].lower()}, "
+                        f"que derrotou {estatua['antagonista']} em outra era. O povo olha para você com "
+                        f"esperança. (reputação +5)", "amarelo")
+        elif self.flag("tumulo"):
+            t = self.flag("tumulo")
+            self.narrar(f"Dizem que, em algum lugar destas terras, está o túmulo de {t['nome']}, quem tentou "
+                        f"antes de você.", "cinza")
         self.dizer("Dica: explore, aceite contratos, ouça rumores. Suas escolhas voltarão para você — "
                    "para o bem ou para o mal.", "cinza")
         self.pausar()
@@ -599,7 +719,10 @@ class Jogo:
                   f"   |   Corrupção {self.corrupcao}%", "amarelo")
         tipo = {"vila": "Vila", "selvagem": BIOMAS[loc["bioma"]]["nome"], "covil": BIOMAS[loc["bioma"]]["nome"],
                 "cidadela": "Cidadela"}[loc["tipo"]]
-        ui.dizer(f" {loc['nome']} — {tipo} · Perigo {tx.estrelas(loc['perigo'])}", "negrito")
+        perigo = "" if loc["tipo"] == "vila" else f" · Inimigos Nv.{self.nivel_local()}"
+        ui.dizer(f" [{loc['id'] + 1}] {loc['nome']} — {tipo}{perigo}", "negrito")
+        if getattr(ui, "hud", False):
+            return  # o painel lateral já mostra o resto
         ui.dizer(f" {j.nome}, {j.nome_classe} Nv.{j.nivel}  (XP {j.xp}/{j.xp_proximo()})  "
                  f"Sigilos {len(j.sigilos)}/3", "ciano")
         linha = (f" Vida {ui.barra(j.hp, j.max_hp, 14)} {j.hp}/{j.max_hp}   {j.nome_recurso} {j.rec}/{j.max_rec}"
@@ -623,17 +746,20 @@ class Jogo:
             self.menu_selvagem()
 
     def opcoes_comuns(self):
+        pontos = self.j.pontos_talento
         return [
             ("Viajar", "viajar"),
+            ("Talentos" + (f"  ★ {pontos} ponto(s) para gastar!" if pontos else ""), "talentos"),
             ("Personagem e inventário", "personagem"),
             ("Mapa", "mapa"),
             ("Diário (contratos, rumores, aliados)", "diario"),
+            ("Bestiário", "bestiario"),
             ("Salvar jogo", "salvar"),
             ("Sair do jogo", "sair"),
         ]
 
     def executar_comum(self, op):
-        acoes = {"viajar": self.viajar, "personagem": self.personagem, "mapa": self.mapa,
+        acoes = {"viajar": self.viajar, "personagem": self.personagem, "talentos": self.menu_talentos, "bestiario": self.ver_bestiario, "mapa": self.mapa,
                  "diario": self.diario, "salvar": self.salvar, "sair": self.sair}
         acoes[op]()
 
@@ -738,20 +864,20 @@ class Jogo:
         self.pausar()
 
     def viajar(self):
-        origem = self.loc
+        self.ui.titulo("VIAGEM")
+        self.ui.desenhar(mapa.renderizar(self))
         opcoes = []
-        for loc, dist in vizinhos(self.mundo, origem):
-            if loc["tipo"] == "vila":
-                desc = "vila"
-            elif loc["tipo"] == "cidadela":
-                desc = "CIDADELA" + ("" if len(self.j.sigilos) >= 3 else " — selada")
-            else:
-                desc = BIOMAS[loc["bioma"]]["nome"]
-                if loc["tipo"] == "covil" and (loc["visitado"] or self.flag(f"conhecido:{loc['id']}")):
-                    desc += ", covil" + (" (derrotado)" if loc["guardiao"]["derrotado"] else "")
-            marca = "" if loc["visitado"] else " · inexplorado"
-            opcoes.append((f"{loc['nome']} ({desc}) — {dist} trecho{'s' if dist > 1 else ''}{marca}",
-                           (loc, dist)))
+        for loc, dist in sorted(vizinhos(self.mundo, self.loc), key=lambda v: v[0]["id"]):
+            texto = f"[{loc['id'] + 1}] {mapa.glifo(self, loc)} {loc['nome']} — {mapa.descricao(self, loc)}"
+            if loc["tipo"] != "vila":
+                nv = nivel_regiao(loc, self.corrupcao)
+                texto += f" · Nv.{nv}"
+                if nv >= self.j.nivel + 3:
+                    texto += " (PERIGOSO!)"
+            texto += f" · {dist} trecho{'s' if dist > 1 else ''}"
+            if not loc["visitado"]:
+                texto += " · inexplorado"
+            opcoes.append((texto, (loc, dist)))
         opcoes.append(("Voltar", None))
         destino = self.menu("Para onde?", opcoes)
         if not destino:
@@ -788,7 +914,11 @@ class Jogo:
             self.dizer(self.ambiente(), "cinza")
         if loc["tipo"] == "covil" and not loc["guardiao"]["derrotado"]:
             g = loc["guardiao"]
-            self.dizer(f"Este é o covil de {g['nome']}. Um dos Sigilos está aqui.", "magenta")
+            self.dizer(f"Este é o covil de {g['nome']} (Nv.{self.nivel_guardiao(loc)}). Um dos Sigilos está aqui.",
+                       "magenta")
+        if loc["tipo"] != "vila" and self.nivel_local() >= self.j.nivel + 3:
+            self.dizer("Um arrepio sobe pela espinha. As criaturas daqui são muito mais fortes do que você.",
+                       "vermelho+negrito")
         if loc["tipo"] == "cidadela":
             self.dizer(f"Os três Sigilos ardem em sua mão e a muralha de sombras se abre. "
                        f"{tx.maiuscula(self.antagonista['curto'])} sabe que você chegou.", "magenta+negrito")
@@ -991,29 +1121,12 @@ class Jogo:
                         self.equipar(it)
 
     def mapa(self):
-        self.ui.titulo("MAPA CONHECIDO")
-        locais = self.mundo["locais"]
-        conhecidos = {l["id"] for l in locais if l["visitado"]}
-        for l in locais:
-            if l["visitado"]:
-                conhecidos |= {int(i) for i in l["con"]}
-        for l in locais:
-            if l["id"] not in conhecidos:
-                continue
-            marca = " ◄ você está aqui" if l["id"] == self.loc["id"] else ""
-            if l["tipo"] == "vila":
-                tipo = "vila"
-            elif l["tipo"] == "cidadela":
-                tipo = "CIDADELA"
-            else:
-                tipo = BIOMAS[l["bioma"]]["nome"]
-                if l["tipo"] == "covil" and (l["visitado"] or self.flag(f"conhecido:{l['id']}")):
-                    tipo += ", covil" + (" ✓" if l["guardiao"]["derrotado"] else "")
-            self.dizer(f"{l['nome']} ({tipo}) {tx.estrelas(l['perigo'])}{marca}",
-                       "amarelo+negrito" if marca else ("negrito" if l["visitado"] else "cinza"))
-            if l["visitado"]:
-                ligacoes = [f"{locais[int(i)]['nome']} ({d})" for i, d in l["con"].items()]
-                self.dizer("    ↳ " + ", ".join(ligacoes), "cinza")
+        self.ui.titulo("MAPA DO REINO")
+        self.ui.desenhar(mapa.renderizar(self))
+        self.dizer(mapa.SIMBOLOS, "cinza")
+        self.ui.separador()
+        for rotulo, texto, cor in mapa.legenda(self):
+            self.dizer(f"{rotulo:>2}  {texto}", cor)
         self.pausar()
 
     def diario(self):
@@ -1041,6 +1154,9 @@ class Jogo:
         self.pausar()
 
     # ================================================================ chefes
+    def nivel_guardiao(self, loc):
+        return nivel_regiao(loc, self.corrupcao) + 1
+
     def enfrentar_guardiao(self):
         loc = self.loc
         gspec = loc["guardiao"]
@@ -1053,7 +1169,7 @@ class Jogo:
         if not self.menu("Não haverá como fugir depois de começar.", [("Lutar!", True), ("Recuar por enquanto",
                                                                                          False)]):
             return
-        nivel = max(loc["perigo"] + 1, self.j.nivel + 1)
+        nivel = self.nivel_guardiao(loc)
         chefe = instanciar_guardiao(gspec, nivel)
         chefe.chave = chave
         r = self.combate([chefe], pode_fugir=False, titulo=f"GUARDIÃO: {gspec['nome']}")
@@ -1063,8 +1179,9 @@ class Jogo:
             self.estatisticas["chefes"] += 1
             self.ui.titulo(f"SIGILO OBTIDO ({len(self.j.sigilos)}/3)", "amarelo+negrito")
             self.dizer("Uma runa ardente se grava na palma da sua mão.", "amarelo")
-            self.corromper(-15)
+            self.corromper(-20)
             self.mudar_reputacao(5)
+            self.ganhar_ponto_talento()
             if len(self.j.sigilos) >= 3:
                 self.dizer(f"Os três Sigilos pulsam juntos. O caminho para {self.mundo['locais'][-1]['nome']} "
                            f"está aberto!", "magenta+negrito")
@@ -1089,11 +1206,12 @@ class Jogo:
             self.narrar("\"Herói do povo, é? Vamos ver se as preces deles te salvam.\"", "magenta")
         self.pausar()
 
-        guarda = self.inimigo("cavaleiro_sombrio", nome_unico=tx.nome_proprio(self.rng), nivel=j.nivel + 1)
+        guarda = self.inimigo("cavaleiro_sombrio", nome_unico=tx.nome_proprio(self.rng),
+                             nivel=self.nivel_local() + 1)
         self.dizer("Um cavaleiro de armadura negra se coloca entre vocês.", "vermelho")
         self.combate([guarda], pode_fugir=False, titulo="O ÚLTIMO GUARDA")
 
-        chefe = instanciar_antagonista(a, max(j.nivel + 1, 8), self.corrupcao)
+        chefe = instanciar_antagonista(a, 11 + self.corrupcao // 34, self.corrupcao)
         if self.aliados_finais:
             self.ui.separador("verde")
             self.dizer("Mas você não está só.", "verde+negrito")
@@ -1130,6 +1248,7 @@ class Jogo:
         self.dizer(f"Semente do mundo: {self.seed} (use --seed para jogar o mesmo reino de novo)", "cinza")
 
     def fim_de_jogo(self, motivo):
+        self.registrar_legado("corrupcao" if self.corrupcao >= 100 else "morte", motivo)
         self.ui.titulo("FIM DE JOGO", "vermelho+negrito")
         self.narrar(motivo, "vermelho")
         self.resumo()
@@ -1139,6 +1258,7 @@ class Jogo:
     def vitoria(self):
         j = self.j
         a = self.antagonista
+        self.registrar_legado("vitoria", f"derrotou {a['nome']}")
         self.ui.titulo("VITÓRIA", "amarelo+negrito")
         self.narrar(f"{tx.maiuscula(a['curto'])} se desfaz como cinza ao vento. A Fenda se fecha com um "
                     f"suspiro que ecoa por todo o reino.", "amarelo")
@@ -1188,7 +1308,7 @@ class Jogo:
         }
         for campo in ("mundo", "dia", "periodo", "clima", "corrupcao", "passos", "flags", "historico", "contagem",
                       "impulsos", "sementes", "rumores", "contratos", "ofertas", "lojas", "nemesis",
-                      "aliados_finais", "forcados", "proximo_id", "estatisticas", "hardcore"):
+                      "aliados_finais", "forcados", "proximo_id", "estatisticas", "hardcore", "bestiario", "lendas"):
             dados[campo] = getattr(self, campo)
         caminho = self.caminho_save()
         with open(caminho, "w", encoding="utf-8") as f:
@@ -1207,4 +1327,8 @@ class Jogo:
         dados.pop("seed", None)
         for campo, valor in dados.items():
             setattr(g, campo, valor)
+        # Saves da versão anterior não tinham coordenadas no mapa.
+        for loc in g.mundo["locais"]:
+            loc.setdefault("x", 0.03 + 0.9 * (loc["perigo"] - 1) / 4 if loc["id"] else 0.03)
+            loc.setdefault("y", 0.08 + 0.84 * ((loc["id"] * 5) % 11) / 10)
         return g

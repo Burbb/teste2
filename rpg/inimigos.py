@@ -100,10 +100,10 @@ def instanciar_antagonista(ant, nivel, corrupcao):
     fator = 1 + corrupcao / 400
     m = escala(nivel) * fator
     m_atk = 0.85 * (1 + 0.18 * (nivel - 1)) * fator
-    e = Inimigo(ant["nome"], 125 * m, 10 * m_atk, 7 * (1 + 0.12 * (nivel - 1)), 6 + nivel // 3, 11 * m_atk, ant["g"])
+    e = Inimigo(ant["nome"], 150 * m, 11 * m_atk, 7 * (1 + 0.12 * (nivel - 1)), 6 + nivel // 3, 11 * m_atk, ant["g"])
     t = dict(
         tracos=["conjurador"],
-        habs=["bola_sombra", "drenar", "grito_terror", "maldicao"],
+        habs=["bola_sombra", "drenar", "grito_terror", "maldicao", "varredura"],
         resist={"sombra": 0.8, "sagrado": 1.25},
         ataque="sombra",
         invoca="cria_vazio",
@@ -249,6 +249,15 @@ def _mordida_gelida(cb, e, alvo):
         cb.aplicar(alvo, "atordoado", 1, chance=0.25, rotulo="congelado")
 
 
+def _varredura(cb, e, alvo):
+    alvos = [cb.j] + [a for a in cb.aliados if a.vivo]
+    if len(alvos) == 1 and cb.rng.random() < 0.5:
+        return False
+    cb.dizer(f"{e.nome} desfere um golpe amplo que atinge todos à frente!", "vermelho+negrito")
+    for a in alvos:
+        cb.atacar(e, a, 0.8, rotulo="Varredura")
+
+
 def _invocar(cb, e, alvo):
     if not e.invoca or len(cb.inimigos_vivos()) >= 4:
         return False
@@ -280,6 +289,7 @@ HABS_INIMIGO = {
     "grito_terror": _grito_terror,
     "mordida_gelida": _mordida_gelida,
     "invocar": _invocar,
+    "varredura": _varredura,
 }
 
 NOMES_HABS_INIMIGO = {
@@ -289,4 +299,5 @@ NOMES_HABS_INIMIGO = {
     "agarrar": "agarrão imobilizante", "drenar": "drena vida", "maldicao": "maldição", "bola_fogo": "bola de fogo",
     "bola_sombra": "esfera sombria", "cura": "cura aliados", "grito_terror": "grito de terror",
     "mordida_gelida": "mordida congelante", "invocar": "invoca reforços",
+    "varredura": "golpe em área (atinge você e seus aliados)",
 }

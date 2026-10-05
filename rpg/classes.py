@@ -23,11 +23,11 @@ CLASSES = {
         "recurso": "Foco",
         "cor": "verde",
         "desc": "Ágil e preciso, ataca à distância. Gasta flechas (que podem acabar!) e é ótimo contra voadores.",
-        "base": dict(max_hp=48, atk=8, defesa=4, agi=8, poder=2, max_rec=25, regen=5),
-        "cresc": dict(max_hp=7.5, atk=1.9, defesa=1.0, agi=1.2, poder=0.4, max_rec=2),
+        "base": dict(max_hp=52, atk=8, defesa=4, agi=8, poder=2, max_rec=25, regen=5),
+        "cresc": dict(max_hp=8, atk=2.0, defesa=1.1, agi=1.2, poder=0.4, max_rec=2),
         "habilidades": [(1, "tiro_certeiro"), (1, "marcar_presa"), (2, "chuva_flechas"), (3, "passo_agil")],
         "specs": ["patrulheiro", "sombra"],
-        "ataque": ("Disparo", "distancia", "fisico", "atk", 1.0),
+        "ataque": ("Disparo", "distancia", "fisico", "atk", 1.1),
     },
     "mago": {
         "nome": "Mago",
@@ -67,7 +67,7 @@ SPECS = {
     "sombra": {
         "nome": "Sombra", "classe": "arqueiro",
         "desc": "Irmandade da Sombra. Furtividade, venenos e execuções. Críticos devastadores.",
-        "bonus": dict(agi=5, atk=3, max_hp=8),
+        "bonus": dict(agi=5, atk=3, max_hp=10, defesa=2),
         "cresc": dict(agi=0.6, atk=0.4),
         "habilidades": [(4, "desaparecer"), (4, "flecha_envenenada"), (7, "execucao")],
     },
@@ -107,8 +107,9 @@ def _golpe_pesado(cb, u, alvo):
 
 
 def _erguer_escudo(cb, u, alvo):
-    u.aplicar("guarda", 2, 0.5)
-    cb.dizer("Você ergue o escudo e firma os pés. (dano recebido -50% por 2 turnos)", "ciano")
+    turnos = 2 + u.tal("muralha")
+    u.aplicar("guarda", turnos, 0.5)
+    cb.dizer(f"Você ergue o escudo e firma os pés. (dano recebido -50% por {turnos} turnos)", "ciano")
 
 
 def _investida(cb, u, alvo):
@@ -127,13 +128,13 @@ def _grito_guerra(cb, u, alvo):
 def _golpe_sagrado(cb, u, alvo):
     dano = cb.atacar(u, alvo, 1.3, tipo="sagrado", bonus=u.poder * 0.8, rotulo="Golpe Sagrado")
     if dano:
-        cura = u.curar(dano * 0.35)
+        cura = u.curar(dano * 0.35 * (1 + 0.25 * u.tal("luz_curativa")))
         if cura:
             cb.dizer(f"A luz fecha suas feridas. (+{cura} vida)", "verde")
 
 
 def _prece(cb, u, alvo):
-    cura = u.curar(u.max_hp * 0.3 + u.poder * 1.5)
+    cura = u.curar((u.max_hp * 0.3 + u.poder * 1.5) * (1 + 0.25 * u.tal("luz_curativa")))
     u.limpar_negativos()
     cb.dizer(f"Você reza em voz baixa. Uma luz quente te envolve. (+{cura} vida, males removidos)", "verde")
 
@@ -170,7 +171,7 @@ def _furia_cega(cb, u, alvo):
 
 # --- Arqueiro ----------------------------------------------------------
 def _tiro_certeiro(cb, u, alvo):
-    cb.atacar(u, alvo, 1.5, alcance="distancia", crit_extra=0.3, rotulo="Tiro Certeiro")
+    cb.atacar(u, alvo, 1.7, alcance="distancia", crit_extra=0.3, rotulo="Tiro Certeiro")
 
 
 def _marcar_presa(cb, u, alvo):
@@ -181,7 +182,7 @@ def _marcar_presa(cb, u, alvo):
 def _chuva_flechas(cb, u, alvo):
     cb.dizer("Você dispara uma saraivada de flechas para o alto...", "ciano")
     for ini in cb.inimigos_vivos():
-        cb.atacar(u, ini, 0.9, alcance="distancia")
+        cb.atacar(u, ini, 1.0, alcance="distancia")
 
 
 def _passo_agil(cb, u, alvo):
@@ -246,7 +247,8 @@ def _execucao(cb, u, alvo):
 def _bola_fogo(cb, u, alvo):
     dano = cb.atacar(u, alvo, 1.5, tipo="fogo", alcance="distancia", stat="poder", rotulo="Bola de Fogo")
     if dano:
-        cb.aplicar(alvo, "queimadura", 3, valor=cb.valor_queimadura(u), chance=0.4)
+        cb.aplicar(alvo, "queimadura", cb.duracao_queimadura(u), valor=cb.valor_queimadura(u),
+                   chance=1.0 if u.tal("ignicao") else 0.4)
 
 
 def _meditar(cb, u, alvo):
@@ -262,8 +264,9 @@ def _lanca_gelo(cb, u, alvo):
 
 
 def _barreira(cb, u, alvo):
-    u.aplicar("barreira", 3, int(u.poder * 2.5))
-    cb.dizer(f"Runas brilhantes giram ao seu redor. (absorve {int(u.poder * 2.5)} de dano)", "azul")
+    valor = int(u.poder * 2.5 * (1.5 if u.tal("escudo_reflexo") else 1))
+    u.aplicar("barreira", 3 + u.tal("escudo_reflexo"), valor)
+    cb.dizer(f"Runas brilhantes giram ao seu redor. (absorve {valor} de dano)", "azul")
 
 
 def _inferno(cb, u, alvo):
@@ -271,7 +274,7 @@ def _inferno(cb, u, alvo):
     for ini in cb.inimigos_vivos():
         dano = cb.atacar(u, ini, 1.2, tipo="fogo", alcance="distancia", stat="poder", pode_esquivar=False)
         if dano and ini.vivo:
-            cb.aplicar(ini, "queimadura", 3, valor=cb.valor_queimadura(u), chance=0.6)
+            cb.aplicar(ini, "queimadura", cb.duracao_queimadura(u), valor=cb.valor_queimadura(u), chance=0.6)
 
 
 def _combustao(cb, u, alvo):
@@ -294,24 +297,26 @@ def _fenix(cb, u, alvo):
 def _drenar_vida(cb, u, alvo):
     dano = cb.atacar(u, alvo, 1.2, tipo="sombra", alcance="distancia", stat="poder", rotulo="Drenar Vida")
     if dano:
-        cura = u.curar(dano * 0.8)
+        cura = u.curar(dano * (0.5 + 0.2 * u.tal("pacto_sombrio")))
         if cura:
             cb.dizer(f"A vitalidade roubada flui para você. (+{cura} vida)", "verde")
 
 
 def _erguer_servo(cb, u, alvo):
     servos = [a for a in cb.aliados if getattr(a, "tipo", "") == "servo" and a.vivo]
-    if len(servos) >= 2:
-        cb.dizer("Seus dois servos já estão de pé. O esforço se perde no ar.", "cinza")
+    maximo = 1 + u.tal("exercito")
+    if len(servos) >= maximo:
+        cb.dizer("Você não consegue controlar mais servos. O esforço se perde no ar.", "cinza")
         return
     origem = "dos ossos de um inimigo caído" if cb.mortos else "da própria terra"
     cb.dizer(f"Você ergue um servo esquelético {origem}!", "magenta")
-    cb.invocar_aliado("Servo Esquelético", hp=int(u.poder * 2.5) + 10, atk=int(u.poder * 0.7) + 2, tipo="servo")
+    vida = (u.poder * 1.6 + 8) * (1 + 0.25 * u.tal("pacto_sombrio"))
+    cb.invocar_aliado("Servo Esquelético", hp=int(vida), atk=int(u.poder * 0.45) + 2, tipo="servo")
 
 
 def _maldicao(cb, u, alvo):
     for ini in cb.inimigos_vivos():
-        cb.aplicar(ini, "maldito", 4, valor=max(3, u.poder * 0.5))
+        cb.aplicar(ini, "maldito", 4, valor=max(3, u.poder * 0.4))
     cb.dizer("Você pronuncia palavras que não deveriam existir. Seus inimigos murcham.", "magenta")
 
 
@@ -328,7 +333,7 @@ HABILIDADES = {
     "redemoinho": dict(nome="Redemoinho", custo=16, alvo="todos", desc="Atinge todos os inimigos com 110% de dano.", fn=_redemoinho),
     "furia_cega": dict(nome="Fúria Cega", custo=0, alvo="inimigo", desc="Sacrifica 15% da vida: +60% de dano por 3 turnos e ataca.", fn=_furia_cega),
     # Arqueiro
-    "tiro_certeiro": dict(nome="Tiro Certeiro", custo=8, flechas=1, alvo="inimigo", desc="150% de dano, +30% chance de crítico.", fn=_tiro_certeiro),
+    "tiro_certeiro": dict(nome="Tiro Certeiro", custo=8, flechas=1, alvo="inimigo", desc="170% de dano, +30% chance de crítico.", fn=_tiro_certeiro),
     "marcar_presa": dict(nome="Marcar Presa", custo=6, alvo="inimigo", desc="O alvo recebe +25% de dano por 3 turnos.", fn=_marcar_presa),
     "chuva_flechas": dict(nome="Chuva de Flechas", custo=14, flechas=3, alvo="todos", desc="Atinge todos os inimigos (3 flechas).", fn=_chuva_flechas),
     "passo_agil": dict(nome="Passo Ágil", custo=6, alvo="proprio", desc="+40% de esquiva por 2 turnos.", fn=_passo_agil),
@@ -346,8 +351,8 @@ HABILIDADES = {
     "inferno": dict(nome="Inferno", custo=24, alvo="todos", desc="Fogo em todos os inimigos, alta chance de queimar.", fn=_inferno),
     "combustao": dict(nome="Combustão", custo=14, alvo="inimigo", desc="Dano dobrado em alvos em chamas (consome a queimadura).", fn=_combustao),
     "fenix": dict(nome="Fênix", custo=35, alvo="inimigo", desc="250% de dano de fogo e cura 20% da vida.", fn=_fenix),
-    "drenar_vida": dict(nome="Drenar Vida", custo=12, alvo="inimigo", desc="Dano sombrio que cura 80% do causado.", fn=_drenar_vida),
-    "erguer_servo": dict(nome="Erguer Servo", custo=20, alvo="proprio", desc="Invoca um esqueleto aliado (máx. 2).", fn=_erguer_servo),
+    "drenar_vida": dict(nome="Drenar Vida", custo=14, alvo="inimigo", desc="Dano sombrio que cura 50% do causado.", fn=_drenar_vida),
+    "erguer_servo": dict(nome="Erguer Servo", custo=22, alvo="proprio", desc="Invoca um esqueleto aliado (máx. 1, mais com talentos).", fn=_erguer_servo),
     "maldicao": dict(nome="Maldição", custo=18, alvo="todos", desc="Amaldiçoa todos: dano contínuo e -40% de defesa.", fn=_maldicao),
 }
 

@@ -16,6 +16,8 @@ def ouvir_rumor(g, preferir=None):
     p = g.npc()
     fonte = f"{p['um'].capitalize()} {p['prof']} {p['traco']}"
     tipos = ["tesouro", "fera", "mercador", "lore", "fofoca"]
+    if g.lendas:
+        tipos.append("lenda")
     if covis:
         tipos += ["fraqueza", "covil", "fraqueza"]
     tipo = preferir if preferir in tipos else g.sortear(tipos)
@@ -55,6 +57,17 @@ def ouvir_rumor(g, preferir=None):
         g.dizer(f"{fonte} comenta: \"Vi uma tenda de seda roxa em {l['nome']}. O vendedor tinha olhos de ouro "
                 f"e coisas que não se acham em mercado nenhum.\"", "amarelo")
         _registrar(g, f"Um mercador estranho em {l['nome']}.", "mercador_raro", l, falso)
+    elif tipo == "lenda":
+        h = g.sortear(g.lendas)
+        if h["resultado"] == "vitoria":
+            feito = f"derrotou {h['antagonista']} e fechou a Fenda"
+        elif h["resultado"] == "corrupcao":
+            feito = f"chegou a reunir {h.get('sigilos', 0)} Sigilos antes de a sombra vencer"
+        else:
+            feito = "caiu lutando, sem nunca recuar"
+        g.dizer(f"{fonte} canta uma balada antiga sobre {h['nome']}, {h['nome_classe'].lower()} que {feito}. "
+                f"A taverna inteira faz silêncio no último verso.", "amarelo")
+        g.ganhar_xp(5)
     elif tipo == "lore":
         a = g.antagonista
         g.dizer(f"{fonte} conta a velha história de {a['nome']}, {a['origem']}. Dizem que ele ainda sente "

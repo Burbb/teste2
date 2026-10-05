@@ -1,0 +1,3 @@
+# Opcional: interface moderna com painéis, mapa lateral e clique.
+# Sem ela, o jogo roda na interface clássica (Python puro).
+textual>=0.80
