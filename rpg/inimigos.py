@@ -13,7 +13,7 @@ def criar(rng, familia_id, nivel, afixo=None, nome_unico=None):
     f = FAMILIAS[familia_id]
     m = escala(nivel)
     hp = f["hp"] * m
-    atk = f["atk"] * 0.95 * (1 + 0.18 * (nivel - 1))
+    atk = f["atk"] * 0.9 * (1 + 0.18 * (nivel - 1))
     defesa = f["defesa"] * (1 + 0.15 * (nivel - 1))
     agi = f["agi"] + (nivel - 1) // 3
     poder = f["poder"] * m
@@ -101,11 +101,11 @@ def instanciar_guardiao(spec, nivel):
     t = GUARDIOES[spec["bioma"]][spec["idx"]]
     m = escala(nivel)
     m_atk = 0.95 * (1 + 0.18 * (nivel - 1))
-    e = Inimigo(spec["nome"], t["hp"] * m * 0.75, t["atk"] * m_atk, t["defesa"] * (1 + 0.12 * (nivel - 1)),
+    e = Inimigo(spec["nome"], t["hp"] * m * 0.9, t["atk"] * m_atk, t["defesa"] * (1 + 0.12 * (nivel - 1)),
                 t["agi"] + nivel // 3, t["poder"] * m_atk, t["g"])
     _aplicar_template(e, t, nivel)
-    e.xp = int(90 * (1 + 0.35 * (nivel - 1)))
-    e.ouro = int(60 * (1 + 0.25 * (nivel - 1)))
+    e.xp = int(55 * (1 + 0.3 * (nivel - 1)))
+    e.ouro = int(30 * (1 + 0.2 * (nivel - 1)))
     e.desc = spec["nome"]
     e.plural = spec["nome"]
     e.familia = "guardiao"

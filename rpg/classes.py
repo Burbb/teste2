@@ -35,7 +35,7 @@ CLASSES = {
         "cor": "azul",
         "desc": "Frágil, mas devastador. Magias elementais exploram fraquezas. Mana regenera devagar.",
         "base": dict(max_hp=42, atk=3, defesa=3, agi=4, poder=11, max_rec=40, regen=3),
-        "cresc": dict(max_hp=6.5, atk=0.5, defesa=0.8, agi=0.6, poder=2.4, max_rec=5),
+        "cresc": dict(max_hp=6.5, atk=0.5, defesa=0.8, agi=0.6, poder=2.0, max_rec=5),
         "habilidades": [(1, "bola_fogo"), (1, "meditar"), (2, "lanca_gelo"), (3, "barreira")],
         "specs": ["piromante", "necromante"],
         "ataque": ("Dardo Arcano", "distancia", "arcano", "poder", 1.0),
@@ -74,7 +74,7 @@ SPECS = {
     "piromante": {
         "nome": "Piromante", "classe": "mago",
         "desc": "A Chama Viva. Queimaduras mais fortes, magias em área e explosões em cadeia.",
-        "bonus": dict(poder=6, max_rec=10),
+        "bonus": dict(poder=4, max_rec=10),
         "cresc": dict(poder=0.8),
         "habilidades": [(4, "inferno"), (4, "combustao"), (7, "fenix")],
     },
@@ -264,7 +264,7 @@ def _lanca_gelo(cb, u, alvo):
 
 
 def _barreira(cb, u, alvo):
-    valor = int(u.poder * 0.9 * (1.3 if u.tal("escudo_reflexo") else 1))
+    valor = int((u.max_hp * 0.2 + u.poder * 0.3) * (1.3 if u.tal("escudo_reflexo") else 1))
     u.remover("barreira")  # não acumula
     u.aplicar("barreira", 2 + u.tal("escudo_reflexo"), valor)
     cb.dizer(f"Runas brilhantes giram ao seu redor. (absorve {valor} de dano)", "azul")
@@ -273,7 +273,7 @@ def _barreira(cb, u, alvo):
 def _inferno(cb, u, alvo):
     cb.dizer("O chão se abre em chamas sob seus inimigos!", "vermelho+negrito")
     for ini in cb.inimigos_vivos():
-        dano = cb.atacar(u, ini, 0.75, tipo="fogo", alcance="distancia", stat="poder", pode_esquivar=False)
+        dano = cb.atacar(u, ini, 0.6, tipo="fogo", alcance="distancia", stat="poder")
         if dano and ini.vivo:
             cb.aplicar(ini, "queimadura", cb.duracao_queimadura(u), valor=cb.valor_queimadura(u), chance=0.45)
 
@@ -349,7 +349,7 @@ HABILIDADES = {
     "meditar": dict(nome="Meditar", custo=0, alvo="proprio", desc="Recupera mana.", fn=_meditar),
     "lanca_gelo": dict(nome="Lança de Gelo", custo=10, alvo="inimigo", desc="130% de dano de gelo, pode congelar.", fn=_lanca_gelo),
     "barreira": dict(nome="Barreira Arcana", custo=18, alvo="proprio", desc="Escudo que absorve dano por 2 turnos (não acumula).", fn=_barreira),
-    "inferno": dict(nome="Inferno", custo=32, alvo="todos", desc="75% de dano de fogo em todos, pode queimar.", fn=_inferno),
+    "inferno": dict(nome="Inferno", custo=35, alvo="todos", desc="60% de dano de fogo em todos (pode errar), pode queimar.", fn=_inferno),
     "combustao": dict(nome="Combustão", custo=14, alvo="inimigo", desc="Dano dobrado em alvos em chamas (consome a queimadura).", fn=_combustao),
     "fenix": dict(nome="Fênix", custo=40, alvo="inimigo", desc="250% de dano de fogo e cura 20% da vida.", fn=_fenix),
     "drenar_vida": dict(nome="Drenar Vida", custo=14, alvo="inimigo", desc="Dano sombrio que cura 50% do causado.", fn=_drenar_vida),

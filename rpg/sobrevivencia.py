@@ -25,8 +25,9 @@ def multiplicadores(jogador):
         for stat, v in FERIMENTOS[f["id"]]["mult"].items():
             mult[stat] = mult.get(stat, 1.0) * v
     if jogador.fome:
-        for stat in ("atk", "poder", "max_hp"):
-            mult[stat] = mult.get(stat, 1.0) * (0.9 if jogador.fome < 3 else 0.8)
+        fator = {1: 0.9, 2: 0.8}.get(jogador.fome, 0.65)
+        for stat in ("atk", "poder", "max_hp", "agi"):
+            mult[stat] = mult.get(stat, 1.0) * fator
     return mult
 
 
@@ -119,12 +120,12 @@ def amanhecer(g, descanso):
     else:
         j.fome += 1
         if j.fome == 1:
-            g.dizer("Sem provisões. Você vai dormir com fome. (-10% força e vida, não se recupera dormindo)",
+            g.dizer("Sem provisões. Você vai dormir com fome. (-10% atributos, quase não se recupera dormindo)",
                     "vermelho")
         elif j.fome < 3:
-            g.dizer(f"Dia {j.fome} sem comer. Seu estômago dói o tempo todo.", "vermelho")
+            g.dizer(f"Dia {j.fome} sem comer. Suas mãos tremem e a vista escurece. (-20% atributos)", "vermelho")
         else:
-            perda = max(2, int(j.max_hp * 0.12))
+            perda = max(3, int(j.max_hp * 0.2))
             g.dizer(f"Dia {j.fome} sem comer. Seu corpo começa a se consumir. (-{perda} vida)", "vermelho+negrito")
             j.hp -= perda
             if j.hp <= 0:

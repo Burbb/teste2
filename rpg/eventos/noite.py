@@ -108,7 +108,7 @@ def sussurros_do_vazio(g):
         return
     g.dizer("Você escuta. É fácil escutar. A voz te ensina coisas — e cobra caro.", "magenta")
     stat = "poder" if g.j.classe == "mago" else "atk"
-    g.j.base[stat] += 2
+    g.bonus_permanente(stat, 2)
     g.j.recalcular()
     g.corromper(5)
     g.mudar_reputacao(-3)

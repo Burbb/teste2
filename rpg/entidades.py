@@ -129,7 +129,7 @@ class Jogador(Combatente):
         return CLASSES[self.classe]["recurso"]
 
     def xp_proximo(self):
-        return int(30 * self.nivel ** 1.45)
+        return int(30 * self.nivel ** 1.52)
 
     def tal(self, talento):
         return self.talentos.get(talento, 0)

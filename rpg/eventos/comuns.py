@@ -297,7 +297,7 @@ def santuario_antigo(g):
         return
     bencao = g.sortear(["vida", "fenix", "cura", "poder", "fenix" if not g.flag("bencao_fenix") else "vida"])
     if bencao == "vida":
-        g.j.base["max_hp"] += 5
+        g.bonus_permanente("max_hp", 5)
         g.j.recalcular()
         g.curar(5)
         g.dizer("Um calor sobe pelo seu peito. (+5 vida máxima)", "verde")
@@ -313,7 +313,7 @@ def santuario_antigo(g):
         g.dizer("Um calor sobe da pedra. Ossos se recolocam, cortes se fecham. Todos os ferimentos somem.", "verde")
     else:
         stat = "atk" if g.j.classe != "mago" else "poder"
-        g.j.base[stat] += 1
+        g.bonus_permanente(stat, 1)
         g.j.recalcular()
         g.dizer("Sua arma parece mais leve, seus golpes mais certeiros. (+1 permanente)", "verde")
 
@@ -420,7 +420,7 @@ def cadaver_aventureiro(g):
         g.mudar_reputacao(2)
         if g.j.spec == "necromante":
             g.dizer("Um sussurro agradecido sai da terra. O espírito te concede um pouco de sua força.", "magenta")
-            g.j.base["poder"] += 1
+            g.bonus_permanente("poder", 1)
             g.j.recalcular()
     vivos = [l for l in g.mundo["locais"] if l["tipo"] == "covil" and not l["guardiao"]["derrotado"]
              and not g.flag(f"fraqueza:guardiao:{l['id']}")]

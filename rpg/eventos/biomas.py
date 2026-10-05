@@ -22,7 +22,7 @@ def circulo_de_fadas(g):
     if op == "dancar":
         if g.teste("vontade", 13):
             g.dizer("Você dança uma noite inteira que dura um minuto. Ao sair, se sente leve como pluma.", "verde")
-            g.j.base["agi"] += 1
+            g.bonus_permanente("agi", 1)
             g.j.recalcular()
             g.dizer("(+1 Agilidade permanente)", "verde")
         else:
@@ -99,7 +99,7 @@ def cabana_da_bruxa(g):
         g.perder_ouro(20)
         if g.chance(0.8):
             g.dizer("O elixir tem gosto de terra e hortelã. Funciona.", "verde")
-            g.j.base["max_hp"] += 4
+            g.bonus_permanente("max_hp", 4)
             g.j.recalcular()
             g.curar(g.j.max_hp * 0.4)
             g.dizer("(+4 vida máxima)", "verde")
@@ -232,8 +232,8 @@ def biblioteca_ruida(g):
         if g.teste("arcano", cd):
             g.dizer("As runas se apagam com respeito. Os livros contêm conhecimento de verdade.", "verde")
             if g.j.classe == "mago":
-                g.j.base["poder"] += 2
-                g.j.base["max_rec"] += 5
+                g.bonus_permanente("poder", 2)
+                g.bonus_permanente("max_rec", 5)
                 g.j.recalcular()
                 g.dizer("(+2 Poder, +5 Mana máxima)", "verde")
             g.ganhar_xp(20 + 5 * g.j.nivel)
@@ -311,7 +311,7 @@ def sussurros_na_nevoa(g):
         g.mudar_reputacao(2)
     elif op == "prender":
         g.dizer("O espírito grita enquanto é arrastado para dentro do seu cajado. Seu poder cresce.", "magenta")
-        g.j.base["poder"] += 2
+        g.bonus_permanente("poder", 2)
         g.j.recalcular()
         g.mudar_reputacao(-2)
     elif op == "falar":

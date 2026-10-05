@@ -111,8 +111,8 @@ def veterano_cicatrizes(g):
     if op == "treinar":
         g.avancar_periodo()
         g.dizer("Ele te derruba onze vezes. Na décima segunda, você entende.", "verde")
-        g.j.base["atk"] += 1
-        g.j.base["defesa"] += 1
+        g.bonus_permanente("atk", 1)
+        g.bonus_permanente("defesa", 1)
         g.j.recalcular()
         g.dizer("(+1 Ataque, +1 Defesa permanentes)", "verde")
     elif op == "ouvir":
@@ -176,7 +176,7 @@ def os_enfermos(g):
         g.dizer("Você passa horas impondo as mãos. Quando termina, mal consegue ficar de pé — mas ninguém "
                 "naquela casa vai morrer.", "amarelo")
         g.ferir(g.j.max_hp * 0.3, " de exaustão")
-        g.j.base["poder"] += 2
+        g.bonus_permanente("poder", 2)
         g.j.recalcular()
         g.mudar_reputacao(8)
         g.dizer("(+2 Poder: sua fé se fortalece)", "verde")
@@ -233,8 +233,8 @@ def chamado_do_sangue(g):
         g.j.recalcular()
         if r == "vitoria":
             g.dizer("Você ruge sobre o corpo do urso. O Pacto está satisfeito... e te recompensa.", "vermelho+negrito")
-            g.j.base["atk"] += 2
-            g.j.base["max_hp"] += 5
+            g.bonus_permanente("atk", 2)
+            g.bonus_permanente("max_hp", 5)
             g.j.recalcular()
             g.dizer("(+2 Ataque, +5 Vida máxima)", "verde")
     else:
@@ -246,7 +246,7 @@ def furia_noturna(g):
     g.dizer("Você acorda com as mãos tremendo. Sonhou com sangue. A fúria quer sair — agora.", "vermelho")
     if g.teste("vontade", 13):
         g.dizer("Você medita até o amanhecer. Controle é uma forma de força.", "verde")
-        g.j.base["defesa"] += 1
+        g.bonus_permanente("defesa", 1)
         g.j.recalcular()
         g.dizer("(+1 Defesa)", "verde")
     else:
@@ -427,7 +427,7 @@ def circulo_dos_druidas(g):
             c["atk"] += 3
             c["hp"] = c["max_hp"]
             g.dizer(f"{c['nome']} uiva para o céu. Seus olhos agora brilham verdes. (+15 vida, +3 ataque)", "verde")
-        g.j.base["max_hp"] += 5
+        g.bonus_permanente("max_hp", 5)
         g.j.recalcular()
         g.aliado_final("Os druidas", "Raízes rompem o chão de obsidiana e prendem as pernas do inimigo — os "
                                      "druidas cumpriram a promessa.", "dano", 0.08)
@@ -455,7 +455,7 @@ def contrato_da_irmandade(g):
     if op == "matar":
         g.dizer("Silencioso, rápido. A Irmandade paga o que deve.", "magenta")
         g.ganhar_ouro(60 + 5 * g.j.nivel)
-        g.j.base["agi"] += 1
+        g.bonus_permanente("agi", 1)
         g.j.recalcular()
         g.mudar_reputacao(-2)
     else:
@@ -518,11 +518,11 @@ def anomalia_arcana(g):
         return
     resultado = g.sortear(["mana", "poder", "explosao", "teleporte", "elemental"])
     if resultado == "mana":
-        g.j.base["max_rec"] += 8
+        g.bonus_permanente("max_rec", 8)
         g.j.recalcular()
         g.dizer("A energia se assenta em você. (+8 Mana máxima)", "azul")
     elif resultado == "poder":
-        g.j.base["poder"] += 2
+        g.bonus_permanente("poder", 2)
         g.j.recalcular()
         g.dizer("Seus dedos soltam faíscas por horas. (+2 Poder)", "azul")
     elif resultado == "explosao":
@@ -550,7 +550,7 @@ def grimorio_perdido(g):
     if op == "ler":
         if g.teste("arcano", 14):
             g.dizer("Páginas de teoria proibida — e você entende cada palavra.", "verde")
-            g.j.base["poder"] += 3
+            g.bonus_permanente("poder", 3)
             g.j.recalcular()
             g.dizer("(+3 Poder)", "verde")
         else:
@@ -571,7 +571,7 @@ def linha_ley(g):
     if op == "meditar":
         g.avancar_periodo()
         g.j.rec = g.j.max_rec
-        g.j.base["max_rec"] += 4
+        g.bonus_permanente("max_rec", 4)
         g.j.recalcular()
         g.curar(g.j.max_hp * 0.15)
         g.dizer("Sua mana transborda. (+4 Mana máxima, mana restaurada)", "azul")
@@ -639,8 +639,8 @@ def elemental_selvagem(g):
         if g.teste("vontade", 13):
             g.dizer("O elemental se enrosca em seu braço como uma serpente e some sob a pele. Você queima por "
                     "dentro — de um jeito bom.", "verde")
-            g.j.base["poder"] += 2
-            g.j.base["max_hp"] += 4
+            g.bonus_permanente("poder", 2)
+            g.bonus_permanente("max_hp", 4)
             g.j.recalcular()
             g.dizer("(+2 Poder, +4 Vida máxima)", "verde")
         else:
@@ -692,7 +692,7 @@ def cemiterio_antigo(g):
     elif op == "aprender":
         if g.teste("arcano", 13):
             g.dizer("Os mortos falam de magias perdidas.", "verde")
-            g.j.base["poder"] += 2
+            g.bonus_permanente("poder", 2)
             g.j.recalcular()
             g.dizer("(+2 Poder)", "verde")
         else:

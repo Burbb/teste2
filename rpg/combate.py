@@ -656,5 +656,5 @@ class Combate:
             g.ganhar_ouro(ouro)
             g.registrar_abates(derrotados)
             g.saque_de_combate(derrotados)
-            g.ganhar_xp(sum(e.xp * max(0.2, min(1.6, 1 + 0.15 * (e.nivel - j.nivel))) for e in derrotados))
+            g.ganhar_xp(sum(e.xp * max(0.2, min(1.25, 1 + 0.08 * (e.nivel - j.nivel))) for e in derrotados))
         return resultado

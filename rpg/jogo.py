@@ -10,7 +10,7 @@ from . import texto as tx
 from .classes import CLASSES, COMPANHEIROS, HABILIDADES, SPECS, habilidades_ate
 from .combate import Combate
 from .dados import BIOMAS, CLIMAS, FAMILIAS, GUARDIOES, LORE, PERIODOS, PESOS_CLIMA, TRACOS
-from .entidades import Jogador
+from .entidades import NOMES_STATS, Jogador
 from .eventos.vila import ouvir_rumor
 from . import inimigos
 from .inimigos import criar, instanciar_antagonista, instanciar_guardiao
@@ -219,6 +219,19 @@ class Jogo:
     def dar(self, item, qtd=1):
         self.j.consumiveis[item] = self.j.consumiveis.get(item, 0) + qtd
         self.dizer(f"Você obteve: {CONSUMIVEIS[item]['nome']} x{qtd}.", "verde")
+
+    def bonus_permanente(self, stat, valor):
+        """Bônus de atributo vindo de eventos, com teto por partida (evita acumular sem fim)."""
+        teto = {"max_hp": 15, "max_rec": 15}.get(stat, 4)
+        ganhos = self.flags.setdefault("bonus_eventos", {})
+        ganho = max(0, min(valor, teto - ganhos.get(stat, 0)))
+        if not ganho:
+            self.dizer("(Você sente que já tirou tudo o que podia desse tipo de experiência.)", "cinza")
+            return 0
+        ganhos[stat] = ganhos.get(stat, 0) + ganho
+        self.j.base[stat] += ganho
+        self.j.recalcular()
+        return ganho
 
     def dar_provisoes(self, n):
         antes = self.j.provisoes
@@ -529,18 +542,19 @@ class Jogo:
         if j.spec:
             for k, v in SPECS[j.spec]["cresc"].items():
                 cresc[k] = cresc.get(k, 0) + v
+        antes_hp, antes_rec = j.max_hp, j.max_rec
         for k, v in cresc.items():
             j.base[k] += v
         j.recalcular()
-        j.hp = j.max_hp
-        j.rec = j.max_rec
+        j.hp = min(j.max_hp, j.hp + max(0, j.max_hp - antes_hp))  # só ganha o que o máximo aumentou
+        j.rec = min(j.max_rec, j.rec + max(0, j.max_rec - antes_rec))
         registrar(self, "nivel", stats=telemetria.instantaneo(j))
         if j.companheiro:
             j.companheiro["max_hp"] += 5
             j.companheiro["atk"] += 1.5
             j.companheiro["hp"] = j.companheiro["max_hp"]
         self.ui.titulo(f"NÍVEL {j.nivel}!", "verde+negrito")
-        self.dizer("Seus ferimentos se fecham e você se sente mais forte.", "verde")
+        self.dizer("Você se sente mais forte. (Subir de nível não cura feridas: isso, só o descanso.)", "verde")
         self.ganhar_ponto_talento()
         self._aprender_habilidades()
         if j.nivel >= 4 and not j.spec and f"encruzilhada_{j.classe}" not in self.forcados:
@@ -645,7 +659,7 @@ class Jogo:
                 self.impulsos[r["evento"]] = self.impulsos.get(r["evento"], 1) * 3
         self.ui.separador()
         self.dizer(f"Amanhece o dia {self.dia}. {CLIMAS[self.clima]['desc']}", "amarelo")
-        self.corromper(2 if restantes >= 2 else 1, silencioso=True)
+        self.corromper(2 if restantes else 1, silencioso=True)
         sobrevivencia.amanhecer(self, descanso)
         registrar(self, "dia", descanso=descanso, provisoes=self.j.provisoes, fome=self.j.fome,
                   corrupcao=self.corrupcao, ferimentos=len(self.j.ferimentos), local=self.loc["nome"])
@@ -903,6 +917,7 @@ class Jogo:
             ("Mural de contratos", "mural"),
             (f"Templo: cuidar da vida ({preco_templo} ouro)", "templo") if faltando else None,
             ("Curandeiro: tratar ferimentos e infecções", "curandeiro") if j.ferimentos else None,
+            ("Ferreiro: reforçar arma ou armadura", "ferreiro"),
         ]
         self.dizer(self.sortear(AMBIENTE_VILA), "cinza")
         op = self.menu(f"Você está em {self.loc['nome']}. O que faz?", opcoes + self.opcoes_comuns())
@@ -921,6 +936,8 @@ class Jogo:
             self.mural()
         elif op == "curandeiro":
             self.curandeiro()
+        elif op == "ferreiro":
+            self.ferreiro()
         elif op == "templo":
             if self.j.ouro < preco_templo:
                 self.dizer("Você não tem ouro suficiente.", "vermelho")
@@ -930,6 +947,40 @@ class Jogo:
                 self.dizer("Um clérigo trata suas feridas com unguentos e orações.", "verde")
         else:
             self.executar_comum(op)
+
+    def ferreiro(self):
+        j = self.j
+        while True:
+            opcoes = []
+            for slot, stat in (("arma", "poder" if j.classe == "mago" else "atk"), ("armadura", "defesa")):
+                item = j.equip[slot]
+                if not item:
+                    continue
+                ref = item.get("reforco", 0)
+                if ref >= 5:
+                    opcoes.append((f"{itens.rotulo(item)} — já está no limite (+5)", None))
+                    continue
+                custo = self.preco(int(40 * (ref + 1) ** 1.6))
+                ganho = max(1, round(item["bonus"].get(stat, 0) * 0.12))
+                opcoes.append((f"{itens.rotulo(item)} +{ref} → +{ref + 1}: +{ganho} {NOMES_STATS[stat]} — {custo} ouro",
+                               (item, stat, ganho, custo)))
+            esc = self.menu(f"O ferreiro, um homem sem dois dedos, cospe na forja. \"Ouro primeiro.\" "
+                            f"(você tem {j.ouro})", opcoes + [("Voltar", "voltar")])
+            if esc == "voltar":
+                return
+            if esc is None:
+                continue
+            item, stat, ganho, custo = esc
+            if j.ouro < custo:
+                self.dizer("\"Volta quando tiver o dinheiro.\"", "vermelho")
+                continue
+            self.perder_ouro(custo)
+            item["bonus"][stat] = item["bonus"].get(stat, 0) + ganho
+            item["reforco"] = item.get("reforco", 0) + 1
+            item["nome"] = item["nome"].split(" +")[0] + f" +{item['reforco']}"
+            j.recalcular()
+            registrar(self, "ferreiro", item=item["nome"], stat=stat, ganho=ganho, custo=custo)
+            self.dizer(f"Faíscas, marteladas, água fervendo. {item['nome']}: +{ganho} {NOMES_STATS[stat]}.", "verde")
 
     def curandeiro(self):
         j = self.j
@@ -985,9 +1036,9 @@ class Jogo:
                    "cinza")
         if self.chance(0.45):
             eventos.disparar(self, "acampamento")
-        fracao = 0.35
+        fracao = 0.4
         if self.clima in ("chuva", "tempestade", "neve"):
-            fracao = 0.2
+            fracao = 0.25
             self.dizer("Você dorme encharcado e tremendo. Quase não descansa.", "vermelho")
         self.descansar(fracao, mana=0.5)
         self.novo_dia(descanso=1)
@@ -1002,7 +1053,7 @@ class Jogo:
                    "verde")
         if self.j.provisoes < sobrevivencia.MAX_PROVISOES:
             self.j.provisoes += 1  # a refeição da taverna conta como o dia de comida
-        self.descansar(0.7)
+        self.descansar(0.8)
         self.novo_dia(descanso=2)
         self.pausar()
 
@@ -1173,7 +1224,7 @@ class Jogo:
         vilas = [l for l in self.mundo["locais"] if l["tipo"] == "vila" and l["id"] != self.loc["id"]]
         tipo = self.sortear(["caca", "caca", "alvo", "alvo", "entrega"])
         cid = self.novo_id()
-        ouro = int((25 + 12 * j.nivel) * self.rng.uniform(0.9, 1.3))
+        ouro = int((18 + 8 * j.nivel) * self.rng.uniform(0.9, 1.3))
         xp = 20 + 12 * j.nivel
         if tipo == "entrega" and vilas:
             dest = self.sortear(vilas)
@@ -1359,7 +1410,7 @@ class Jogo:
             self.estatisticas["chefes"] += 1
             self.ui.titulo(f"SIGILO OBTIDO ({len(self.j.sigilos)}/3)", "amarelo+negrito")
             self.dizer("Uma runa ardente se grava na palma da sua mão.", "amarelo")
-            self.corromper(-20)
+            self.corromper(-15)
             self.mudar_reputacao(5)
             self.ganhar_ponto_talento()
             if len(self.j.sigilos) >= 3:
