@@ -46,12 +46,12 @@ def ferir(g, fid, motivo=""):
         if d["dias"]:
             existente["dias"] += d["dias"] // 2
         existente["tratado"] = False
-        g.dizer(f"Seu ferimento piora: {d['nome']}!{motivo}", "vermelho+negrito")
+        g.ui.efeito(f"Ferimento piora: {d['nome']}{motivo}", "ferimento")
     else:
         j.ferimentos.append({"id": fid, "dias": d["dias"], "tratado": False})
-        g.dizer(f"FERIMENTO: {d['nome']}{motivo}. "
-                + ("Precisa ser tratado com bandagem ou pode infeccionar." if d.get("aberto") else
-                   "Só o tempo ou um curandeiro resolvem."), "vermelho+negrito")
+        g.ui.efeito(f"FERIMENTO: {d['nome']}{motivo} — "
+                    + ("trate com bandagem ou pode infeccionar" if d.get("aberto") else
+                       "só o tempo ou um curandeiro resolvem"), "ferimento")
     antes_hp = j.hp
     j.recalcular()
     j.hp = min(antes_hp, j.max_hp)

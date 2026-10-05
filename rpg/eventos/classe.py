@@ -28,7 +28,6 @@ def _escolher_caminho(g, a, b, texto_a, texto_b):
 # ====================================================================== encruzilhadas (forçadas)
 @evento(contextos=TODOS, peso=0)
 def encruzilhada_guerreiro(g):
-    g.ui.titulo("A ENCRUZILHADA", "magenta+negrito")
     g.narrar("Você chega a um templo em ruínas no alto de uma colina. Lá dentro, duas presenças.", "magenta")
     g.narrar("Ajoelhado diante de um altar partido, um cavaleiro de armadura gasta reza em voz baixa. A luz que "
              "entra pelo teto quebrado parece se curvar na direção dele.")
@@ -49,7 +48,6 @@ def encruzilhada_guerreiro(g):
 
 @evento(contextos=TODOS, peso=0)
 def encruzilhada_arqueiro(g):
-    g.ui.titulo("A ENCRUZILHADA", "magenta+negrito")
     g.narrar("Um rastro de sangue leva a uma clareira. Uma velha patrulheira enfaixa a pata de um lobo "
              "ferido, cercada por um falcão e um urso que te observam sem medo.", "magenta")
     g.narrar("\"A mata escolhe os seus\", ela diz, sem olhar para você. \"E acho que escolheu você.\"", "verde")
@@ -65,7 +63,6 @@ def encruzilhada_arqueiro(g):
 
 @evento(contextos=TODOS, peso=0)
 def encruzilhada_mago(g):
-    g.ui.titulo("A ENCRUZILHADA", "magenta+negrito")
     g.narrar("À noite, seu grimório começa a queimar sozinho. As páginas não viram cinza: viram palavras de "
              "fogo que flutuam no ar e sussurram promessas de calor e poder.", "magenta")
     g.narrar("Ao mesmo tempo, da terra sob seus pés, uma voz fria e paciente: \"O fogo consome. Eu "
@@ -114,7 +111,6 @@ def veterano_cicatrizes(g):
         g.bonus_permanente("atk", 1)
         g.bonus_permanente("defesa", 1)
         g.j.recalcular()
-        g.dizer("(+1 Ataque, +1 Defesa permanentes)", "verde")
     elif op == "ouvir":
         g.dizer(f"Ele fala sobre {g.antagonista['curto']} como quem fala de um velho conhecido.", "cinza")
         g.ganhar_xp(15 + 3 * g.j.nivel)
@@ -179,7 +175,6 @@ def os_enfermos(g):
         g.bonus_permanente("poder", 2)
         g.j.recalcular()
         g.mudar_reputacao(8)
-        g.dizer("(+2 Poder: sua fé se fortalece)", "verde")
     elif op == "remedio":
         g.j.consumiveis["pocao_vida"] -= 1
         g.mudar_reputacao(3)
@@ -236,7 +231,6 @@ def chamado_do_sangue(g):
             g.bonus_permanente("atk", 2)
             g.bonus_permanente("max_hp", 5)
             g.j.recalcular()
-            g.dizer("(+2 Ataque, +5 Vida máxima)", "verde")
     else:
         g.combate([e])
 
@@ -248,7 +242,6 @@ def furia_noturna(g):
         g.dizer("Você medita até o amanhecer. Controle é uma forma de força.", "verde")
         g.bonus_permanente("defesa", 1)
         g.j.recalcular()
-        g.dizer("(+1 Defesa)", "verde")
     else:
         g.dizer("Você destroça árvores com a arma até cair exausto.", "vermelho")
         g.ferir(g.j.max_hp * 0.15)
@@ -552,7 +545,6 @@ def grimorio_perdido(g):
             g.dizer("Páginas de teoria proibida — e você entende cada palavra.", "verde")
             g.bonus_permanente("poder", 3)
             g.j.recalcular()
-            g.dizer("(+3 Poder)", "verde")
         else:
             g.dizer("As letras se mexem, entram pelos seus olhos. Você grita.", "vermelho")
             g.ferir(g.j.max_hp * 0.25)
@@ -642,7 +634,6 @@ def elemental_selvagem(g):
             g.bonus_permanente("poder", 2)
             g.bonus_permanente("max_hp", 4)
             g.j.recalcular()
-            g.dizer("(+2 Poder, +4 Vida máxima)", "verde")
         else:
             g.ferir(g.j.max_hp * 0.25, " em queimaduras")
     elif op == "lutar":
@@ -694,7 +685,6 @@ def cemiterio_antigo(g):
             g.dizer("Os mortos falam de magias perdidas.", "verde")
             g.bonus_permanente("poder", 2)
             g.j.recalcular()
-            g.dizer("(+2 Poder)", "verde")
         else:
             g.dizer("Os mortos não gostam de perguntas.", "vermelho")
             g.combate(g.grupo("esqueleto", n=2))

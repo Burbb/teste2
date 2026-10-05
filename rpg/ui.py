@@ -33,6 +33,13 @@ def _suporta_cor():
     return True
 
 
+COR_EFEITO = {
+    "ouro": "amarelo", "perda": "vermelho", "xp": "ciano", "dano": "vermelho", "cura": "verde",
+    "item": "verde", "rep": "magenta", "teste_ok": "verde+negrito", "teste_falha": "vermelho+negrito",
+    "ferimento": "vermelho+negrito", "info": "cinza", "nivel": "amarelo+negrito",
+}
+
+
 class LimiteBot(Exception):
     """O jogador robô atingiu o número máximo de decisões."""
 
@@ -83,6 +90,23 @@ class UI:
         cheio = round(largura * max(0, atual) / maximo) if maximo else 0
         cheio = min(largura, cheio)
         return self.pintar("█" * cheio, cor) + self.pintar("░" * (largura - cheio), "cinza")
+
+    # ------------------------------------------------------------ estrutura narrativa
+    def cena(self, titulo, subtitulo=None, tipo="evento"):
+        """Começa uma nova cena (um "momento" da história)."""
+        cor = {"combate": "vermelho+negrito", "local": "amarelo+negrito"}.get(tipo, "ciano+negrito")
+        self._imprimir("")
+        self._imprimir(self.pintar(f"◆ {titulo.upper()}", cor))
+        if subtitulo:
+            self._imprimir(self.pintar(f"  {subtitulo}", "cinza"))
+        self._imprimir("")
+
+    def efeito(self, texto, tipo="info"):
+        """Consequência mecânica (ouro, vida, testes...), separada da prosa."""
+        self._imprimir("   " + self.pintar(f"▸ {texto}", COR_EFEITO.get(tipo)))
+
+    def novo_turno(self, n):
+        self._imprimir(self.pintar(f"── turno {n} ──", "cinza"))
 
     def desenhar(self, linhas):
         """Desenha um bloco de linhas, cada uma uma lista de pedaços (texto, cor)."""

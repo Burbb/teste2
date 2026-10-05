@@ -38,8 +38,7 @@ COMO JOGAR
 
 def menu_principal(ui, args):
     while True:
-        ui.titulo("CRÔNICAS DA FENDA", "magenta+negrito")
-        ui.dizer("Um RPG de texto onde nenhuma jornada é igual à outra.", "cinza")
+        ui.cena("Crônicas da Fenda", "um RPG de texto onde nenhuma jornada é igual à outra", "local")
         saves = sorted(s for s in glob.glob(os.path.join(args.saves, "*.json"))
                        if os.path.basename(s) != "legado.json")
         opcoes = ["Novo jogo"] + (["Carregar jogo"] if saves else []) + ["Como jogar", "Sair"]
@@ -79,6 +78,8 @@ def main():
     parser.add_argument("--hardcore", action="store_true", help=argparse.SUPPRESS)  # já é o padrão
     parser.add_argument("--sem-cor", action="store_true", help="desativa as cores (interface clássica)")
     parser.add_argument("--rapido", action="store_true", help="sem pausas dramáticas (interface clássica)")
+    parser.add_argument("--velocidade", choices=["lento", "normal", "rapido", "instantaneo"], default="normal",
+                        help="velocidade em que o texto aparece na interface moderna (F3 muda durante o jogo)")
     parser.add_argument("--saves", default=os.path.join(os.path.expanduser("~"), ".cronicas_da_fenda"),
                         help="pasta onde os jogos salvos ficam")
     args = parser.parse_args()

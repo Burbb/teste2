@@ -24,7 +24,6 @@ def circulo_de_fadas(g):
             g.dizer("Você dança uma noite inteira que dura um minuto. Ao sair, se sente leve como pluma.", "verde")
             g.bonus_permanente("agi", 1)
             g.j.recalcular()
-            g.dizer("(+1 Agilidade permanente)", "verde")
         else:
             g.dizer("Você dança... e dança... quando para, o sol mudou de lugar. Você perdeu horas — e um pouco "
                     "de si.", "vermelho")
@@ -102,7 +101,6 @@ def cabana_da_bruxa(g):
             g.bonus_permanente("max_hp", 4)
             g.j.recalcular()
             g.curar(g.j.max_hp * 0.4)
-            g.dizer("(+4 vida máxima)", "verde")
         else:
             g.dizer("Você passa a tarde inteira com dor de barriga. A bruxa ri muito.", "vermelho")
             g.ferir(8)
@@ -235,7 +233,6 @@ def biblioteca_ruida(g):
                 g.bonus_permanente("poder", 2)
                 g.bonus_permanente("max_rec", 5)
                 g.j.recalcular()
-                g.dizer("(+2 Poder, +5 Mana máxima)", "verde")
             g.ganhar_xp(20 + 5 * g.j.nivel)
         else:
             g.dizer("As runas explodem em faíscas.", "vermelho")

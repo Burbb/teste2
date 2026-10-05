@@ -72,6 +72,8 @@ def disparar(g, contexto):
     g.contagem[ev.id] = g.contagem.get(ev.id, 0) + 1
     g.estatisticas["eventos"] = g.estatisticas.get("eventos", 0) + 1
     from ..telemetria import registrar
+    from .titulos import titulo
     registrar(g, "evento", id=ev.id, contexto=contexto)
+    g.ui.cena(titulo(ev.id), g.contexto_cena(), tipo="evento")
     ev.fn(g)
     return ev.id

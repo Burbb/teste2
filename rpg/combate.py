@@ -1,5 +1,6 @@
 """Combate por turnos."""
 
+from . import texto as tx
 from .classes import CLASSES, HABILIDADES
 from .dados import TRACOS
 from .entidades import Combatente
@@ -305,8 +306,9 @@ class Combate:
 
     # ------------------------------------------------------------ fluxo
     def executar(self):
-        self.ui.titulo(self.titulo, "vermelho+negrito")
-        self.dizer("Inimigos: " + ", ".join(f"{e.nome} (Nv.{e.nivel})" for e in self.inimigos), "vermelho")
+        self.ui.cena(self.titulo, tx.lista_natural([f"{e.nome} (Nv.{e.nivel})" for e in self.inimigos]), "combate")
+        if not getattr(self.ui, "hud", False):
+            self.dizer("Inimigos: " + ", ".join(f"{e.nome} (Nv.{e.nivel})" for e in self.inimigos), "vermelho")
         if self.companheiro:
             self.dizer(f"{self.companheiro.nome} rosna ao seu lado.", "verde")
         pular_inimigos = False
@@ -371,8 +373,7 @@ class Combate:
     def mostrar_estado(self):
         j = self.j
         ui = self.ui
-        ui.separador()
-        ui.dizer(f"Turno {self.turno}", "cinza")
+        ui.novo_turno(self.turno)
         if getattr(ui, "hud", False):
             return  # o painel lateral mostra vida, efeitos e inimigos
         linha = (f"  Você  {ui.barra(j.hp, j.max_hp, 14, 'verde')} {j.hp}/{j.max_hp}  "

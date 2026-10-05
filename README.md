@@ -25,12 +25,34 @@ Sem o `textual` (ou com `--classico`) o jogo usa a interface clássica, em Pytho
 | `--seed 1234` | Gera sempre o mesmo reino (bom para comparar partidas) |
 | `--brando` | Modo brando: ao cair em combate você é resgatado (perde ouro e dois dias) |
 | `--rapido` / `--sem-cor` | Sem pausas / sem cores (interface clássica) |
+| `--velocidade lento\|normal\|rapido\|instantaneo` | Velocidade com que o texto surge (interface moderna) |
 | `--saves PASTA` | Onde salvar (padrão: `~/.cronicas_da_fenda`) |
 
-Na interface moderna, o painel de combate e a faixa de condição (vida, recurso, comida,
-tochas, ferimentos) ficam logo acima das opções, sem precisar desviar o olhar. Tecle o
-número/letra da opção, use as setas + Enter, ou clique.
-`PageUp`/`PageDown` rolam o histórico e `Ctrl+Q` sai.
+### Como a história aparece (interface moderna)
+
+A interface foi pensada para que a história seja lida, e não pulada a caminho do menu:
+
+- **Uma cena por página.** Cada evento, local ou luta abre uma página nova com título e
+  contexto (lugar, dia, período, clima). O texto antigo não se acumula.
+- **O texto surge no ritmo da leitura**, e as opções só aparecem quando ele termina.
+  Qualquer tecla ou clique mostra tudo de uma vez. Quando a cena tem desfecho, um
+  **Continuar ▸** segura a página para você ler o resultado antes da próxima.
+- **A prosa fica numa coluna estreita**, com tons de livro. A mecânica aparece à parte, em
+  etiquetas coloridas (`Percepção 15 contra 11 — SUCESSO`, `+20 ouro`, `-8 vida`), e não se
+  mistura ao texto.
+- **As opções mostram o seu modificador**, por exemplo `(Destreza +3 no d20)`, para que a
+  escolha seja informada.
+- **Em combate**, cada turno ganha um divisor e os turnos anteriores esmaecem. O painel da
+  luta e a faixa de condição ficam logo acima das opções.
+
+| Tecla | O que faz |
+|---|---|
+| número/letra, setas + Enter, clique | Escolher uma opção |
+| qualquer tecla durante o texto | Mostrar o texto inteiro |
+| `Espaço`/`Enter` | Continuar ▸ |
+| `F2` | Alternar entre a cena e o histórico completo da partida |
+| `F3` | Mudar a velocidade do texto (lento, normal, rápido, instantâneo) |
+| `Ctrl+Q` | Fechar na hora (para salvar, use "Salvar jogo" no menu da vila) |
 
 ## O objetivo
 
