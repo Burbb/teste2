@@ -71,5 +71,7 @@ def disparar(g, contexto):
     g.historico[ev.id] = g.passos
     g.contagem[ev.id] = g.contagem.get(ev.id, 0) + 1
     g.estatisticas["eventos"] = g.estatisticas.get("eventos", 0) + 1
+    from ..telemetria import registrar
+    registrar(g, "evento", id=ev.id, contexto=contexto)
     ev.fn(g)
     return ev.id

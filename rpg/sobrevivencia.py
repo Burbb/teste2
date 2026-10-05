@@ -36,8 +36,10 @@ def tem(jogador, fid):
 
 def ferir(g, fid, motivo=""):
     """Aplica (ou agrava) um ferimento duradouro."""
+    from .telemetria import registrar
     j = g.j
     d = FERIMENTOS[fid]
+    registrar(g, "ferimento", id=fid)
     existente = next((f for f in j.ferimentos if f["id"] == fid), None)
     if existente:
         if d["dias"]:

@@ -165,6 +165,7 @@ rpg/
   talentos.py    árvores de talentos
   legado.py      registro de heróis anteriores
   sobrevivencia.py  fome, ferimentos, infecção e escuridão
+  telemetria.py  registro da partida e resumo para análise de equilíbrio
   combate.py     combate por turnos, efeitos, traços e fraquezas
   classes.py     classes, especializações, habilidades e companheiros
   inimigos.py    geração de inimigos, guardiões, chefe final e habilidades inimigas
@@ -200,6 +201,19 @@ def vulto_na_nevoa(g):
 Ferramentas úteis dentro de um evento: `g.menu`, `g.teste`, `g.combate`, `g.grupo`,
 `g.inimigo`, `g.ganhar_ouro`, `g.ganhar_xp`, `g.dar`, `g.oferecer_equip`,
 `g.mudar_reputacao`, `g.plantar`/`g.colher` (consequências futuras) e `g.aliado_final`.
+
+## Registro da partida (para análise de equilíbrio)
+
+O jogo grava automaticamente, só no seu computador, um registro de cada partida em
+`~/.cronicas_da_fenda/runs/` (ou na pasta passada em `--saves`):
+
+- `AAAA-MM-DD_HHMM_nome_classe.md` — resumo legível: progressão por nível, ordem dos
+  talentos, combates por nível (dano causado e recebido, vida perdida, maior golpe,
+  recurso no fim, turnos), chefes, ferimentos, consumíveis, itens e eventos.
+- `AAAA-MM-DD_HHMM_nome_classe.jsonl` — tudo, evento por evento.
+
+O registro é atualizado ao morrer, vencer, salvar ou sair. Para reler um `.jsonl`:
+`python -m rpg.telemetria ARQUIVO.jsonl`.
 
 ## Testes
 

@@ -5,7 +5,7 @@ from .dados import TRACOS
 from .entidades import Combatente
 from .inimigos import HABS_INIMIGO, NOMES_HABS_INIMIGO
 from .itens import CONSUMIVEIS
-from . import sobrevivencia
+from . import sobrevivencia, telemetria
 from .talentos import custo_habilidade
 
 DOTS = {
@@ -83,6 +83,7 @@ class Combate:
             self.companheiro.hp = int(c["hp"] * laco)
             self.aliados.append(self.companheiro)
         g.combate_ativo = self
+        telemetria.novo_combate(self)
 
     # ------------------------------------------------------------ utilidades
     def dizer(self, texto, cor=None):
@@ -196,6 +197,7 @@ class Combate:
             alvo.aplicar("fortalecido", 3, 0.5)
             self.dizer("Um golpe que deveria te matar... mas você se recusa a cair! (Imortal)", "vermelho+negrito")
         alvo.hp = max(0, alvo.hp - dano)
+        telemetria.contabilizar_dano(self, u, alvo, dano, crit)
 
         txt = f"{prefixo}{quem} atinge {self.nome(alvo, True)}: {dano} de dano"
         if tipo != "fisico":
@@ -497,6 +499,8 @@ class Combate:
                 return False
         alvo = self.escolher_alvo() if h["alvo"] == "inimigo" else None
         j.rec -= custo
+        self.tel["habilidades"][ids[esc]] = self.tel["habilidades"].get(ids[esc], 0) + 1
+        self.tel["rec_gasto"] += custo
         j.flechas -= h.get("flechas", 0)
         self.flechas_gastas += h.get("flechas", 0)
         h["fn"](self, j, alvo)
@@ -623,6 +627,7 @@ class Combate:
     def fim(self, resultado):
         j = self.j
         g = self.g
+        telemetria.fim_combate(self, resultado)
         g.combate_ativo = None
         if self.companheiro:
             laco = 1 + 0.2 * j.tal("laco_animal")

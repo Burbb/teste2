@@ -20,6 +20,8 @@ from . import legado
 from . import mapa
 from . import sobrevivencia
 from . import talentos
+from . import telemetria
+from .telemetria import registrar
 from .mundo import gerar_mundo, nivel_regiao, vizinhos
 
 VERSAO_SAVE = 1
@@ -79,6 +81,8 @@ class Jogo:
         self.proximo_id = 1
         self.combate_ativo = None
         self.sem_luz = False
+        self.registro = []
+        self.arquivo_run = None
         self.bestiario = {}
         self.lendas = []
         self.estatisticas = {"abates": 0, "eventos": 0, "ouro_ganho": 0, "chefes": 0, "quedas": 0}
@@ -475,6 +479,8 @@ class Jogo:
                 self.dizer(f"Mochila cheia: {antigo['nome']} fica para trás.", "cinza")
         j.recalcular()
         self.dizer(f"Você equipa {item['nome']}.", "verde")
+        registrar(self, "equipar", item=item["nome"], slot=item["slot"], raridade=item.get("raridade", "comum"),
+                  bonus=item["bonus"])
 
     def usar_consumivel(self, k):
         j = self.j
@@ -482,6 +488,7 @@ class Jogo:
             return False
         j.consumiveis[k] -= 1
         nome = CONSUMIVEIS[k]["nome"]
+        registrar(self, "consumivel", item=k, em_combate=self.combate_ativo is not None)
         if k == "pocao_vida":
             c = j.curar(j.max_hp * 0.35)
             self.dizer(f"Você bebe a {nome}. (+{c} vida)", "verde")
@@ -527,6 +534,7 @@ class Jogo:
         j.recalcular()
         j.hp = j.max_hp
         j.rec = j.max_rec
+        registrar(self, "nivel", stats=telemetria.instantaneo(j))
         if j.companheiro:
             j.companheiro["max_hp"] += 5
             j.companheiro["atk"] += 1.5
@@ -570,6 +578,7 @@ class Jogo:
             else:
                 j.pontos_talento -= 1
                 j.talentos[t["id"]] = j.tal(t["id"]) + 1
+                registrar(self, "talento", id=t["id"], nome=t["nome"], rank=j.tal(t["id"]))
                 antes = j.max_hp
                 j.recalcular()
                 j.hp += max(0, j.max_hp - antes)
@@ -585,6 +594,7 @@ class Jogo:
     def especializar(self, spec):
         j = self.j
         j.spec = spec
+        registrar(self, "spec", spec=spec)
         for k, v in SPECS[spec]["bonus"].items():
             j.base[k] += v
         j.recalcular()
@@ -637,6 +647,8 @@ class Jogo:
         self.dizer(f"Amanhece o dia {self.dia}. {CLIMAS[self.clima]['desc']}", "amarelo")
         self.corromper(2 if restantes >= 2 else 1, silencioso=True)
         sobrevivencia.amanhecer(self, descanso)
+        registrar(self, "dia", descanso=descanso, provisoes=self.j.provisoes, fome=self.j.fome,
+                  corrupcao=self.corrupcao, ferimentos=len(self.j.ferimentos), local=self.loc["nome"])
 
     def descansar(self, fracao, mana=1.0):
         """Descanso devolve pouca vida: ferimentos de verdade levam dias. Com fome, quase nada."""
@@ -679,6 +691,8 @@ class Jogo:
         self.j.recalcular()
         self.j.hp = self.j.max_hp
         self.preparar_legado()
+        registrar(self, "inicio", nome=nome, classe=classe, seed=self.seed, hardcore=self.hardcore,
+                  stats=telemetria.instantaneo(self.j))
 
     # ================================================================ legado e bestiário
     def preparar_legado(self):
@@ -1037,6 +1051,8 @@ class Jogo:
 
     def chegar(self, loc):
         self.mundo["atual"] = loc["id"]
+        registrar(self, "chegada", local=loc["nome"], tipo_local=loc["tipo"], nivel_regiao=self.nivel_local(),
+                  primeira=not loc["visitado"])
         primeira = not loc["visitado"]
         loc["visitado"] = True
         if self.chance(0.5):
@@ -1410,10 +1426,16 @@ class Jogo:
                    f"Eventos vividos: {e['eventos']}  ·  Ouro ganho: {e['ouro_ganho']}  ·  "
                    f"Quedas: {e.get('quedas', 0)}", "ciano")
         self.dizer(f"Semente do mundo: {self.seed} (use --seed para jogar o mesmo reino de novo)", "cinza")
+        caminho = telemetria.exportar(self)
+        if caminho:
+            self.dizer(f"Registro da partida salvo em: {caminho} (e o .jsonl ao lado). "
+                       f"Mande esses arquivos para análise de equilíbrio.", "ciano")
 
     def fim_de_jogo(self, motivo):
         self.registrar_legado("corrupcao" if self.corrupcao >= 100 else "morte", motivo)
         self.estatisticas["causa"] = motivo
+        registrar(self, "fim", resultado="corrupcao" if self.corrupcao >= 100 else "morte", causa=motivo,
+                  corrupcao=self.corrupcao)
         self.ui.titulo("VOCÊ MORREU" if self.corrupcao < 100 else "O REINO CAIU", "vermelho+negrito")
         self.narrar(motivo, "vermelho")
         epitafio = self.sortear([
@@ -1432,6 +1454,7 @@ class Jogo:
         a = self.antagonista
         self.registrar_legado("vitoria", f"derrotou {a['nome']}")
         self.estatisticas["venceu"] = True
+        registrar(self, "fim", resultado="vitoria", causa=f"derrotou {a['nome']}", corrupcao=self.corrupcao)
         self.ui.titulo("VITÓRIA", "amarelo+negrito")
         self.narrar(f"{tx.maiuscula(a['curto'])} se desfaz como cinza ao vento. A Fenda se fecha com um "
                     f"suspiro que ecoa por todo o reino.", "amarelo")
@@ -1464,6 +1487,10 @@ class Jogo:
             return
         if op == "salvar":
             self.salvar()
+        else:
+            caminho = telemetria.exportar(self)
+            if caminho:
+                self.dizer(f"Registro parcial da partida: {caminho}", "cinza")
         raise FimDeJogo()
 
     def caminho_save(self):
@@ -1481,12 +1508,16 @@ class Jogo:
         }
         for campo in ("mundo", "dia", "periodo", "clima", "corrupcao", "passos", "flags", "historico", "contagem",
                       "impulsos", "sementes", "rumores", "contratos", "ofertas", "lojas", "nemesis",
-                      "aliados_finais", "forcados", "proximo_id", "estatisticas", "hardcore", "bestiario", "lendas"):
+                      "aliados_finais", "forcados", "proximo_id", "estatisticas", "hardcore", "bestiario", "lendas",
+                      "registro", "arquivo_run"):
             dados[campo] = getattr(self, campo)
         caminho = self.caminho_save()
         with open(caminho, "w", encoding="utf-8") as f:
             json.dump(dados, f, ensure_ascii=False)
         self.dizer(f"Jogo salvo em {caminho}.", "verde")
+        registro = telemetria.exportar(self)
+        if registro:
+            self.dizer(f"Registro parcial da partida: {registro}", "cinza")
 
     @classmethod
     def carregar(cls, ui, caminho, pasta_saves="saves"):
