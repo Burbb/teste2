@@ -242,7 +242,7 @@ def biblioteca_ruida(g):
             g.ferir(5 + 2 * g.j.nivel)
     else:
         g.dizer("A proteção estoura e acorda os guardiões da biblioteca.", "vermelho")
-        g.combate(g.grupo("espectro", n=2))
+        g.combate(g.grupo("espectro", n=1 if g.nivel_local() <= 2 else 2))
 
 
 @evento(peso=6, cooldown=14, cond=_bioma("ruinas"))

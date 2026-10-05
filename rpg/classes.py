@@ -252,7 +252,7 @@ def _bola_fogo(cb, u, alvo):
 
 
 def _meditar(cb, u, alvo):
-    ganho = min(u.max_rec - u.rec, 8 + int(u.poder * 0.4))
+    ganho = min(u.max_rec - u.rec, 6 + int(u.max_rec * 0.12))
     u.rec += ganho
     cb.dizer(f"Você fecha os olhos e respira fundo. (+{ganho} mana)", "azul")
 
@@ -264,7 +264,7 @@ def _lanca_gelo(cb, u, alvo):
 
 
 def _barreira(cb, u, alvo):
-    valor = int((u.max_hp * 0.2 + u.poder * 0.3) * (1.3 if u.tal("escudo_reflexo") else 1))
+    valor = int((u.max_hp * 0.15 + u.poder * 0.2) * (1.3 if u.tal("escudo_reflexo") else 1))
     u.remover("barreira")  # não acumula
     u.aplicar("barreira", 2 + u.tal("escudo_reflexo"), valor)
     cb.dizer(f"Runas brilhantes giram ao seu redor. (absorve {valor} de dano)", "azul")
@@ -298,7 +298,7 @@ def _fenix(cb, u, alvo):
 def _drenar_vida(cb, u, alvo):
     dano = cb.atacar(u, alvo, 1.2, tipo="sombra", alcance="distancia", stat="poder", rotulo="Drenar Vida")
     if dano:
-        cura = u.curar(dano * (0.5 + 0.2 * u.tal("pacto_sombrio")))
+        cura = u.curar(dano * (0.4 + 0.1 * u.tal("pacto_sombrio")))
         if cura:
             cb.dizer(f"A vitalidade roubada flui para você. (+{cura} vida)", "verde")
 
@@ -311,8 +311,8 @@ def _erguer_servo(cb, u, alvo):
         return
     origem = "dos ossos de um inimigo caído" if cb.mortos else "da própria terra"
     cb.dizer(f"Você ergue um servo esquelético {origem}!", "magenta")
-    vida = (u.poder * 1.6 + 8) * (1 + 0.25 * u.tal("pacto_sombrio"))
-    cb.invocar_aliado("Servo Esquelético", hp=int(vida), atk=int(u.poder * 0.45) + 2, tipo="servo")
+    vida = (u.poder * 1.2 + 8) * (1 + 0.15 * u.tal("pacto_sombrio"))
+    cb.invocar_aliado("Servo Esquelético", hp=int(vida), atk=int(u.poder * 0.3) + 2, tipo="servo")
 
 
 def _maldicao(cb, u, alvo):
@@ -348,11 +348,11 @@ HABILIDADES = {
     "bola_fogo": dict(nome="Bola de Fogo", custo=14, alvo="inimigo", desc="150% de dano de fogo, pode queimar.", fn=_bola_fogo),
     "meditar": dict(nome="Meditar", custo=0, alvo="proprio", desc="Recupera mana.", fn=_meditar),
     "lanca_gelo": dict(nome="Lança de Gelo", custo=10, alvo="inimigo", desc="130% de dano de gelo, pode congelar.", fn=_lanca_gelo),
-    "barreira": dict(nome="Barreira Arcana", custo=18, alvo="proprio", desc="Escudo que absorve dano por 2 turnos (não acumula).", fn=_barreira),
+    "barreira": dict(nome="Barreira Arcana", custo=20, alvo="proprio", desc="Escudo que absorve dano por 2 turnos (não acumula).", fn=_barreira),
     "inferno": dict(nome="Inferno", custo=35, alvo="todos", desc="60% de dano de fogo em todos (pode errar), pode queimar.", fn=_inferno),
     "combustao": dict(nome="Combustão", custo=14, alvo="inimigo", desc="Dano dobrado em alvos em chamas (consome a queimadura).", fn=_combustao),
     "fenix": dict(nome="Fênix", custo=40, alvo="inimigo", desc="250% de dano de fogo e cura 20% da vida.", fn=_fenix),
-    "drenar_vida": dict(nome="Drenar Vida", custo=14, alvo="inimigo", desc="Dano sombrio que cura 50% do causado.", fn=_drenar_vida),
+    "drenar_vida": dict(nome="Drenar Vida", custo=14, alvo="inimigo", desc="Dano sombrio que cura 40% do causado.", fn=_drenar_vida),
     "erguer_servo": dict(nome="Erguer Servo", custo=22, alvo="proprio", desc="Invoca um esqueleto aliado (máx. 1, mais com talentos).", fn=_erguer_servo),
     "maldicao": dict(nome="Maldição", custo=18, alvo="todos", desc="Amaldiçoa todos: dano contínuo e -40% de defesa.", fn=_maldicao),
 }

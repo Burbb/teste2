@@ -32,7 +32,7 @@ def mult_tracos(alvo, tipo, alcance):
     if "morto-vivo" in t:
         m *= {"sagrado": 1.7, "sombra": 0.5, "veneno": 0}.get(tipo, 1)
     if "etereo" in t:
-        m *= {"fisico": 0.6, "arcano": 1.3, "sagrado": 1.3}.get(tipo, 1)
+        m *= {"fisico": 0.75, "arcano": 1.3, "sagrado": 1.3}.get(tipo, 1)
     if "planta" in t and tipo == "fogo":
         m *= 1.5
     if "construto" in t:
@@ -281,7 +281,7 @@ class Combate:
             j.rec = min(j.max_rec, j.rec + 5)
         if j.tal("senhor_mortos") and len(self.mortos) == 1 and not c.chefe:
             self.dizer(f"{c.nome} se ergue de novo — agora sob o seu comando!", "magenta")
-            self.invocar_aliado(f"{c.nome} (servo)", hp=int(c.max_hp * 0.6), atk=c.atk * 0.7)
+            self.invocar_aliado(f"{c.nome} (servo)", hp=int(c.max_hp * 0.4), atk=c.atk * 0.5)
         if por is not j:
             return
         if j.especial("vida_abate"):
@@ -600,16 +600,18 @@ class Combate:
             if e.invoca:
                 HABS_INIMIGO["invocar"](self, e, None)
 
-    def escolher_alvo_inimigo(self):
+    def escolher_alvo_inimigo(self, e=None):
         aliados = [a for a in self.aliados if a.vivo]
         if aliados:
             chance = 0.45 if any(a.tipo == "urso" for a in aliados) else 0.25
+            if e is not None and e.chefe:
+                chance = 0.15  # chefes sabem quem está por trás dos servos
             if self.rng.random() < chance:
                 return self.rng.choice(aliados)
         return self.j
 
     def agir_inimigo(self, e):
-        alvo = self.escolher_alvo_inimigo()
+        alvo = self.escolher_alvo_inimigo(e)
         if e.carregando:
             c = e.carregando
             e.carregando = None
