@@ -559,3 +559,17 @@ class TestSistemas(unittest.TestCase):
                 await pilot.press("ctrl+q")
 
         asyncio.run(rodar())
+
+
+class TestGabarito(unittest.TestCase):
+    def test_partidas_identicas_ao_gabarito(self):
+        """Refatorações não podem mudar a jogabilidade: as partidas de referência saem iguais, evento por evento.
+        Se a mudança de jogabilidade foi de propósito: python -m tests.gabarito --atualizar"""
+        import json
+        from tests import gabarito
+        with open(gabarito.ARQUIVO, encoding="utf-8") as f:
+            esperado = json.load(f)
+        atual = gabarito.calcular()
+        self.assertEqual(sorted(esperado), sorted(atual))
+        diferentes = [n for n in esperado if esperado[n] != atual[n]]
+        self.assertEqual(diferentes, [], "partidas diferentes do gabarito (veja python -m tests.gabarito --mostrar)")
