@@ -97,33 +97,212 @@ const Telas = (() => {
     document.getElementById("talento-info").hidden = true;
   }
 
-  // ------------------------------------------------------------------ painéis
-  function slotItem(it, padrao, extra = "") {
-    if (!it) return `<div class="slot-px vazio" title="vazio">${S(padrao, 2)}</div>`;
-    const icone = it.slot === "arma" ? (App.estado ? ARMA[App.estado.heroi.classe] : "espada") : it.slot === "armadura" ? "armadura" : it.slot === "amuleto" ? "amuleto" : padrao;
-    return `<div class="slot-px r-${h(it.raridade)} ${extra}" title="${h(it.nome)}\n${h(it.bonus)}">${S(icone, 2)}</div>`;
+  // ------------------------------------------------------------------ itens e dicas
+  const ESPACOS = { cabeca: ["cabeca"], amuleto: ["amuleto"], armadura: ["armadura"], maos: ["maos"], arma: ["arma"],
+    secundaria: ["secundaria"], pernas: ["pernas"], pes: ["pes"], anel: ["anel1", "anel2"] };
+  const NOME_ESPACO = { cabeca: "Cabeça", amuleto: "Amuleto", armadura: "Peito", maos: "Mãos", arma: "Arma",
+    secundaria: "Mão secundária", pernas: "Pernas", pes: "Pés", anel: "Anel", anel1: "Anel", anel2: "Anel" };
+  const VAZIO = { cabeca: "elmo", amuleto: "amuleto", armadura: "armadura", maos: "manopla", arma: "espada",
+    secundaria: "escudo", pernas: "calca", pes: "bota", anel1: "anel", anel2: "anel" };
+  const AREA = { cabeca: "cab", amuleto: "amu", armadura: "pei", maos: "mao", arma: "arm", secundaria: "sec",
+    pernas: "per", pes: "pes", anel1: "an1", anel2: "an2" };
+  const RARIDADE = { comum: "comum", magico: "mágico", raro: "raro", lendario: "LENDÁRIO" };
+  const NOMES_STAT = { max_hp: "Vida", atk: "Ataque", defesa: "Defesa", agi: "Agilidade", poder: "Poder", max_rec: "Recurso",
+    roubo_vida: "% roubo de vida", critico: "% crítico", espinhos: "Espinhos", regen_vida: "Vida por turno", vida_abate: "Vida por abate" };
+  const CLASSE_NOME = { guerreiro: "guerreiros", arqueiro: "arqueiros", mago: "magos" };
+
+  function iconeItem(it) {
+    const b = `${it.base || ""} ${it.nome || ""}`;
+    switch (it.slot) {
+      case "arma":
+        if (/Machado|Cutelo/.test(b)) return "machado";
+        if (/Maça/.test(b)) return "maca";
+        if (/Martelo/.test(b)) return "martelo";
+        if (/Besta/.test(b)) return "besta";
+        if (/Arco/.test(b)) return "arco";
+        if (/Varinha/.test(b)) return "varinha";
+        if (/Orbe/.test(b)) return "orbe";
+        if (/Grimório/.test(b)) return "livro";
+        if (/Cajado/.test(b)) return "cajado";
+        return "espada";
+      case "cabeca": return /Diadema|Coroa/.test(b) ? "coroa" : /Pontudo/.test(b) ? "chapeu" : /Capuz|Couro/.test(b) ? "capuz" : "elmo";
+      case "armadura": return /Manto|Túnica|Veste/.test(b) ? "manto" : /Gibão|Capa|Colete|Couro/.test(b) ? "gibao" : "armadura";
+      case "maos": return /Manopla/.test(b) ? "manopla" : "luva";
+      case "pernas": return /Couro/.test(b) ? "calca_couro" : /Viagem/.test(b) ? "calca_tecido" : "calca";
+      case "pes": return /Ferrada/.test(b) ? "bota_ferro" : /Sandália/.test(b) ? "sandalia" : "bota";
+      case "secundaria": return /Aljava/.test(b) ? "aljava" : /Foco/.test(b) ? "orbe" : /Tomo/.test(b) ? "livro" : "escudo";
+      case "anel": return "anel";
+      default: return "amuleto";
+    }
   }
 
-  function personagem() {
+  function comparar(it) {
+    const heroi = App.estado && App.estado.heroi;
+    if (!heroi || !it.bonus_bruto) return "";
+    const espacos = ESPACOS[it.slot] || [it.slot];
+    const eq = espacos.map((s) => heroi.equip[s]).filter(Boolean);
+    if (espacos.length > 1 && eq.length < espacos.length) return '<div class="comparacao"><span class="melhor">▲ há um espaço livre</span></div>';
+    if (!eq.length) return '<div class="comparacao"><span class="melhor">▲ espaço vazio: tudo é ganho</span></div>';
+    const alvo = eq.reduce((a, b) => (Object.values(a.bonus_bruto).reduce((x, y) => x + y, 0) <= Object.values(b.bonus_bruto).reduce((x, y) => x + y, 0) ? a : b));
+    const chaves = new Set([...Object.keys(it.bonus_bruto), ...Object.keys(alvo.bonus_bruto)]);
+    const linhas = [...chaves].map((k) => {
+      const d = (it.bonus_bruto[k] || 0) - (alvo.bonus_bruto[k] || 0);
+      return d ? `<span class="${d > 0 ? "melhor" : "pior"}">${d > 0 ? "▲ +" : "▼ "}${d} ${NOMES_STAT[k] || k}</span>` : "";
+    }).filter(Boolean);
+    return `<div class="comparacao"><small>contra ${h(alvo.nome)}:</small>${linhas.join("") || "<span>igual</span>"}</div>`;
+  }
+
+  const dicas = [];
+  function dica(html) {
+    if (dicas.length > 3000) dicas.splice(0, 2000);  // antigas não estão mais na tela
+    dicas.push(html);
+    return `data-dica="${dicas.length - 1}"`;
+  }
+  function dicaItem(it, rodape = "", comparando = true) {
+    const heroi = App.estado && App.estado.heroi;
+    const naoUsa = it.classe && heroi && it.classe !== heroi.classe ? `<div class="pior">Só ${CLASSE_NOME[it.classe] || it.classe} sabem usar isto.</div>` : "";
+    return dica(`<b class="r-${h(it.raridade)}">${h(it.nome)}</b><div class="tipo">${NOME_ESPACO[it.slot] || ""} · ${RARIDADE[it.raridade] || ""}</div>
+      <div class="bonus">${h(it.bonus).split(", ").join("<br>")}</div>${comparando ? comparar(it) : ""}${naoUsa}
+      ${it.lore ? `<div class="lore">"${h(it.lore)}"</div>` : ""}${rodape ? `<div class="rodape">${rodape}</div>` : ""}`);
+  }
+  function ligarDicas(raiz) {
+    let caixa = document.getElementById("dica-item");
+    if (!caixa) { caixa = document.createElement("div"); caixa.id = "dica-item"; caixa.className = "moldura"; caixa.hidden = true; document.body.appendChild(caixa); }
+    raiz.querySelectorAll("[data-dica]").forEach((el) => {
+      el.addEventListener("mouseenter", () => {
+        caixa.innerHTML = dicas[Number(el.dataset.dica)] || "";
+        caixa.hidden = false;
+        const r = el.getBoundingClientRect();
+        const esq = r.right + 10 + 290 > window.innerWidth ? r.left - 300 : r.right + 10;
+        caixa.style.left = Math.max(6, esq) + "px";
+        caixa.style.top = Math.max(6, Math.min(window.innerHeight - caixa.offsetHeight - 6, r.top - 6)) + "px";
+      });
+      el.addEventListener("mouseleave", () => { caixa.hidden = true; });
+    });
+  }
+  function esconderDica() { const c = document.getElementById("dica-item"); if (c) c.hidden = true; }
+
+  // ------------------------------------------------------------------ inventário (boneco + mochila)
+  function personagem(d) {
     const e = App.estado;
     if (!e) return "";
     const p = e.heroi;
+    const limite = (d && d.limite) || p.limite_mochila || 12;
     const icAttr = { Ataque: "espada", Defesa: "escudo", Agilidade: "folha", Poder: "chama" };
     const attrs = Object.entries(p.atributos).map(([k, v]) => `<div class="atributo">${S(icAttr[k] || "estrela", 1)}<span class="nome">${h(k)}</span><span class="valor">${v}</span></div>`).join("");
-    const bolsa = p.bolsa.map((b) => `<div class="slot-px clicavel" data-item="${h(b.id)}" title="${h(b.nome)}: ${h(b.desc)}\nClique para usar">${S(ICONE_ITEM[b.id] || "pocao", 2)}<span class="qtd">${b.qtd}</span></div>`).join("");
-    const mochila = p.mochila.map((it, i) => slotItem(it, "pergaminho", `clicavel" data-mochila="${i}`)).join("");
-    return `<div class="tela">
-      <div class="ficha-topo"><div class="retrato-grande">${S(p.classe, 6)}</div>
-        <div><div class="heroi-nome">${h(p.nome)}</div><div class="heroi-titulo">${h(p.titulo)} · nível ${p.nivel} · ${p.xp}/${p.xp_proximo} XP</div>
-        <div class="heroi-titulo">Reputação ${p.reputacao > 0 ? "+" : ""}${p.reputacao}${p.reputacao_txt ? " · " + h(p.reputacao_txt) : ""}</div></div></div>
-      <div class="ficha-colunas">
-        <div><h4>Atributos</h4><div class="atributos">${attrs}</div>
-          <h4>Equipado</h4><div class="slots">${slotItem(p.equip.arma, ARMA[p.classe])}${slotItem(p.equip.armadura, "armadura")}${slotItem(p.equip.amuleto, "amuleto")}</div>
-          <div class="linhas" style="margin-top:6px">${["arma", "armadura", "amuleto"].map((s) => p.equip[s] ? `<div class="linha"><span class="r-${h(p.equip[s].raridade)}">${h(p.equip[s].nome)}</span><b style="font-size:15px">${h(p.equip[s].bonus)}</b></div>` : "").join("")}</div></div>
-        <div><h4>Bolsa</h4><div class="slots">${bolsa || '<span class="vazio">vazia</span>'}</div>
-          <h4>Mochila ${p.mochila.length}/8</h4><div class="slots">${mochila || '<span class="vazio">nada para trocar</span>'}</div>
-          <div class="vazio" style="margin-top:6px">Clique num item da bolsa para usar, ou num da mochila para equipar.</div></div>
+    const espacos = Object.keys(AREA).map((s) => {
+      const it = p.equip[s];
+      const conteudo = it ? S(iconeItem(it), 2) : S(VAZIO[s], 2, "fantasma");
+      const extra = it ? `draggable="true" ${dicaItem(it, "Arraste para a mochila ou dê dois cliques para tirar.", false)}` : `title="${NOME_ESPACO[s]} (vazio)"`;
+      return `<div class="espaco slot-px ${it ? "r-" + h(it.raridade) : "vazio"}" data-espaco="${s}" style="grid-area:${AREA[s]}" ${extra}>${conteudo}<span class="espaco-nome">${NOME_ESPACO[s]}</span></div>`;
+    }).join("");
+    const celulas = [];
+    for (let i = 0; i < limite; i++) {
+      const it = p.mochila[i];
+      celulas.push(it
+        ? `<div class="slot-px celula r-${h(it.raridade)}${it.classe && it.classe !== p.classe ? " inutil" : ""}" draggable="true" data-mochila="${i}" ${dicaItem(it, "Arraste para o corpo ou dê dois cliques para equipar.")}>${S(iconeItem(it), 2)}</div>`
+        : '<div class="slot-px celula vazia"></div>');
+    }
+    const bolsa = p.bolsa.map((b) => `<div class="slot-px clicavel" data-usar="${h(b.id)}" ${dica(`<b>${h(b.nome)}</b><div>${h(b.desc)}</div>${b.id === "tocha" ? "" : '<div class="rodape">Clique para usar.</div>'}`)}>${S(ICONE_ITEM[b.id] || "pocao", 2)}<span class="qtd">${b.qtd}</span></div>`).join("");
+    return `<div class="tela inventario">
+      <div class="boneco">${espacos}<div class="boneco-retrato">${S(p.classe, 6)}</div></div>
+      <div class="inv-lado">
+        <div class="ficha-mini"><div class="heroi-nome">${h(p.nome)}</div><div class="heroi-titulo">${h(p.titulo)} · nível ${p.nivel} · ${p.xp}/${p.xp_proximo} XP</div></div>
+        <div class="atributos">${attrs}</div>
+        <h4>Mochila <small>${p.mochila.length}/${limite}</small></h4>
+        <div class="mochila-grade">${celulas.join("")}<div class="slot-px lixeira" title="Arraste um item aqui para largar">${S("caveira", 2, "fantasma")}<span class="espaco-nome">Largar</span></div></div>
+        <h4>Bolsa</h4><div class="slots">${bolsa || '<span class="vazio">vazia</span>'}</div>
+        <div class="dica-uso">Arraste itens entre a mochila e o corpo. Dois cliques também funcionam. Passe o mouse para comparar.</div>
       </div></div>`;
+  }
+
+  function ligarInventario(raiz) {
+    const heroi = App.estado && App.estado.heroi;
+    if (!heroi) return;
+    let arrastando = null;
+    const limpar = () => { raiz.querySelectorAll(".alvo").forEach((x) => x.classList.remove("alvo")); arrastando = null; };
+    raiz.querySelectorAll("[draggable=true]").forEach((el) => {
+      el.addEventListener("dragstart", (ev) => {
+        esconderDica();
+        arrastando = el.dataset.mochila !== undefined ? { de: "mochila", i: Number(el.dataset.mochila) } : { de: "espaco", espaco: el.dataset.espaco };
+        ev.dataTransfer.setData("text/plain", "item");
+        ev.dataTransfer.effectAllowed = "move";
+        if (arrastando.de === "mochila") {
+          const it = heroi.mochila[arrastando.i];
+          (ESPACOS[it.slot] || []).forEach((s) => { const alvo = raiz.querySelector(`[data-espaco="${s}"]`); if (alvo) alvo.classList.add("alvo"); });
+          raiz.querySelector(".lixeira").classList.add("alvo");
+        } else raiz.querySelector(".mochila-grade").classList.add("alvo");
+      });
+      el.addEventListener("dragend", limpar);
+    });
+    const aceitar = (alvo, ok) => {
+      alvo.addEventListener("dragover", (ev) => { if (arrastando && ok(arrastando)) ev.preventDefault(); });
+    };
+    raiz.querySelectorAll("[data-espaco]").forEach((alvo) => {
+      aceitar(alvo, (a) => a.de === "mochila" && (ESPACOS[heroi.mochila[a.i].slot] || []).includes(alvo.dataset.espaco));
+      alvo.addEventListener("drop", (ev) => { ev.preventDefault(); const a = arrastando; limpar(); App.acao({ equipar: a.i, destino: alvo.dataset.espaco }, "equipar"); });
+      alvo.addEventListener("dblclick", () => { if (heroi.equip[alvo.dataset.espaco]) App.acao({ tirar: alvo.dataset.espaco }, "equipar"); });
+    });
+    const grade = raiz.querySelector(".mochila-grade");
+    aceitar(grade, (a) => a.de === "espaco");
+    grade.addEventListener("drop", (ev) => { if (ev.target.closest(".lixeira")) return; ev.preventDefault(); const a = arrastando; limpar(); if (a && a.de === "espaco") App.acao({ tirar: a.espaco }, "equipar"); });
+    const lixo = raiz.querySelector(".lixeira");
+    aceitar(lixo, (a) => a.de === "mochila");
+    lixo.addEventListener("drop", (ev) => {
+      ev.preventDefault(); ev.stopPropagation();
+      const a = arrastando; limpar();
+      if (a && a.de === "mochila" && window.confirm(`Largar ${heroi.mochila[a.i].nome}? Não há volta.`)) App.acao({ largar: a.i });
+    });
+    raiz.querySelectorAll("[data-mochila]").forEach((el) => el.addEventListener("dblclick", () => App.acao({ equipar: Number(el.dataset.mochila) }, "equipar")));
+    raiz.querySelectorAll("[data-usar]").forEach((el) => el.addEventListener("click", (ev) => { ev.stopPropagation(); App.acao({ usar: el.dataset.usar }, "item"); }));
+  }
+
+  // ------------------------------------------------------------------ mercado
+  function loja(d) {
+    const cons = d.consumiveis.map((c) => {
+      const caro = c.preco > d.ouro;
+      const icone = c.id === "provisoes" ? "pernil" : c.id === "flechas" ? "aljava" : (ICONE_ITEM[c.id] || "pocao");
+      return `<button type="button" class="mercadoria${caro ? " caro" : ""}" data-comprar="${h(c.id)}" ${dica(`<b>${h(c.nome)}</b><div>${h(c.desc)}</div><div class="rodape">${caro ? "Ouro insuficiente." : "Clique para comprar."}</div>`)}>
+        <span class="slot-px">${S(icone, 2)}${c.tem ? `<span class="qtd">${c.tem}</span>` : ""}</span>
+        <span class="merc-nome">${h(c.nome)}</span><span class="preco">${S("moeda", 1)}${c.preco}</span></button>`;
+    }).join("");
+    const equips = d.equipamentos.map((it, i) => {
+      const caro = it.preco > d.ouro;
+      return `<button type="button" class="mercadoria equip${caro ? " caro" : ""}" data-comprar-item="${i}" ${dicaItem(it, caro ? "Ouro insuficiente." : "Clique para comprar (vai para a mochila).")}>
+        <span class="slot-px r-${h(it.raridade)}">${S(iconeItem(it), 2)}</span>
+        <span class="merc-nome r-${h(it.raridade)}">${h(it.nome)}</span><span class="merc-bonus">${h(it.bonus)}</span><span class="preco">${S("moeda", 1)}${it.preco}</span></button>`;
+    }).join("");
+    const venda = d.mochila.map((it, i) => `<div role="button" tabindex="0" class="mercadoria equip venda" draggable="true" data-vender="${i}" ${dicaItem(it, "Clique (ou arraste para o balcão) para vender.")}>
+        <span class="slot-px r-${h(it.raridade)}">${S(iconeItem(it), 2)}</span>
+        <span class="merc-nome r-${h(it.raridade)}">${h(it.nome)}</span><span class="merc-bonus">${h(it.bonus)}</span><span class="preco ganho">+${S("moeda", 1)}${it.preco}</span></div>`).join("");
+    return `<div class="tela loja">
+      <div class="loja-topo">${S("saco", 3)}<div><b>O mercador</b><span class="lore">"Tudo tem preço. Até você."</span></div>
+        <span class="ouro-loja">${S("moedas", 2)}${d.ouro}</span></div>
+      <div class="balcao">
+        <h4>Suprimentos</h4><div class="vitrine">${cons}</div>
+        <h4>Equipamentos</h4><div class="vitrine">${equips || '<span class="vazio">Nada que preste hoje. Volte em alguns dias.</span>'}</div>
+      </div>
+      <h4>Sua mochila <small>${d.ocupado}/${d.limite} · o mercador paga metade</small></h4>
+      <div class="vitrine vitrine-venda">${venda || '<span class="vazio">Nada para vender.</span>'}</div></div>`;
+  }
+
+  function ligarLoja(raiz) {
+    raiz.querySelectorAll("[data-comprar]").forEach((el) => el.addEventListener("click", (ev) => { ev.stopPropagation(); if (!el.classList.contains("caro")) App.acao({ comprar: el.dataset.comprar }, "moeda"); else App.som("falha"); }));
+    raiz.querySelectorAll("[data-comprar-item]").forEach((el) => el.addEventListener("click", (ev) => { ev.stopPropagation(); if (!el.classList.contains("caro")) App.acao({ comprar_item: Number(el.dataset.comprarItem) }, "moeda"); else App.som("falha"); }));
+    let vendendo = null;
+    const balcao = raiz.querySelector(".loja");  // solte em qualquer lugar do balcão do mercador
+    const vendas = raiz.querySelector(".vitrine-venda");
+    raiz.querySelectorAll("[data-vender]").forEach((el) => {
+      el.addEventListener("click", (ev) => { ev.stopPropagation(); App.acao({ vender: Number(el.dataset.vender) }, "moeda"); });
+      el.addEventListener("dragstart", (ev) => { esconderDica(); vendendo = Number(el.dataset.vender); ev.dataTransfer.setData("text/plain", "item"); balcao.classList.add("alvo"); });
+      el.addEventListener("dragend", () => { balcao.classList.remove("alvo"); setTimeout(() => { vendendo = null; }, 0); });
+    });
+    balcao.addEventListener("dragover", (ev) => { if (vendendo !== null && !vendas.contains(ev.target)) ev.preventDefault(); });
+    balcao.addEventListener("drop", (ev) => {
+      ev.preventDefault(); balcao.classList.remove("alvo");
+      if (vendendo !== null && !vendas.contains(ev.target)) App.acao({ vender: vendendo }, "moeda");
+      vendendo = null;
+    });
   }
 
   function diario(d) {
@@ -173,10 +352,12 @@ const Telas = (() => {
   }
 
   function painel(m) {
+    esconderDica();  // a tela foi redesenhada: a dica antiga ficaria órfã
     const div = document.createElement("div");
-    div.innerHTML = ({ personagem, diario, bestiario, comitiva }[m.tipo] || (() => ""))(m.dados);
-    div.querySelectorAll("[data-item]").forEach((el) => el.addEventListener("click", (ev) => { ev.stopPropagation(); App.pedir("Usar item da bolsa", "item", el.dataset.item); }));
-    div.querySelectorAll("[data-mochila]").forEach((el) => el.addEventListener("click", (ev) => { ev.stopPropagation(); App.pedir("Equipar item da mochila", "mochila", Number(el.dataset.mochila)); }));
+    div.innerHTML = ({ personagem, diario, bestiario, comitiva, loja }[m.tipo] || (() => ""))(m.dados);
+    if (m.tipo === "personagem") ligarInventario(div);
+    if (m.tipo === "loja") ligarLoja(div);
+    ligarDicas(div);
     return div;
   }
 
@@ -272,10 +453,11 @@ const Telas = (() => {
   function toast(titulo, texto, icone, bom) {
     const t = document.createElement("div");
     t.className = "toast" + (bom ? " bom" : "");
-    t.innerHTML = `${S(icone, 2)}<div><b>${h(titulo)}</b>${h(texto || "")}</div>`;
+    t.innerHTML = `${S(icone, 2)}<div>${titulo ? `<b>${h(titulo)}</b>` : ""}${h(texto || "")}</div>`;
     document.getElementById("toasts").appendChild(t);
     setTimeout(() => t.remove(), 3300);
   }
 
-  return { guardarArvore, abrirTalentos, fecharTalentos, painel, celebrar, toast, iconeCriatura, ICONE_ITEM, ARMA, barra, aprovacao };
+  return { guardarArvore, abrirTalentos, fecharTalentos, painel, celebrar, toast, iconeCriatura, iconeItem, dicaItem, ligarDicas, esconderDica,
+    ICONE_ITEM, ARMA, VAZIO, NOME_ESPACO, AREA, barra, aprovacao };
 })();

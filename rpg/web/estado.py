@@ -16,7 +16,8 @@ def _item(it):
     if not it:
         return None
     return {"nome": rotulo(it), "raridade": it.get("raridade", "comum"), "bonus": descrever_bonus(it["bonus"]),
-            "nivel": it.get("nivel"), "slot": it.get("slot"), "base": it.get("base")}
+            "nivel": it.get("nivel"), "slot": it.get("slot"), "base": it.get("base"), "bonus_bruto": it["bonus"],
+            "classe": it.get("classe"), "lore": it.get("lore")}
 
 
 def heroi(g):
@@ -38,7 +39,7 @@ def heroi(g):
         "bolsa": [{"id": k, "nome": CONSUMIVEIS[k]["nome"], "qtd": v, "desc": CONSUMIVEIS[k]["desc"]}
                   for k, v in j.consumiveis.items() if v > 0 and k in CONSUMIVEIS],
         "equip": {slot: _item(it) for slot, it in j.equip.items()},
-        "mochila": [_item(it) for it in j.mochila],
+        "mochila": [_item(it) for it in j.mochila], "limite_mochila": 12,
         "habilidades": [{"nome": HABILIDADES[h]["nome"], "custo": HABILIDADES[h]["custo"], "desc": HABILIDADES[h]["desc"]}
                         for h in j.habilidades],
         "ferimentos": ferimentos, "males": sobrevivencia.descrever(j),

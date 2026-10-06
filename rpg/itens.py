@@ -33,7 +33,30 @@ ARMADURAS = {
     "arqueiro": [("Gibão de Couro", "m"), ("Capa de Patrulha", "f"), ("Colete Acolchoado", "m")],
     "mago": [("Manto", "m"), ("Túnica", "f"), ("Veste Rúnica", "f")],
 }
-AMULETOS = [("Amuleto", "m"), ("Anel", "m"), ("Talismã", "m"), ("Pingente", "m"), ("Bracelete", "m")]
+AMULETOS = [("Amuleto", "m"), ("Talismã", "m"), ("Pingente", "m"), ("Medalhão", "m")]
+ANEIS = [("Anel", "m"), ("Sinete", "m"), ("Aro", "m")]
+PECAS = {  # partes da armadura e mão secundária, por classe
+    "cabeca": {"guerreiro": [("Elmo", "m"), ("Capacete", "m"), ("Barbuta", "f")],
+               "arqueiro": [("Capuz", "m"), ("Chapéu de Couro", "m")],
+               "mago": [("Capuz", "m"), ("Chapéu Pontudo", "m"), ("Diadema", "m")]},
+    "maos": {"guerreiro": [("Manopla", "f")], "arqueiro": [("Braçadeira", "f")], "mago": [("Luva de Seda", "f")]},
+    "pernas": {"guerreiro": [("Perneira", "f"), ("Greva", "f")], "arqueiro": [("Calça de Couro", "f")],
+               "mago": [("Calça de Viagem", "f")]},
+    "pes": {"guerreiro": [("Bota Ferrada", "f")], "arqueiro": [("Bota de Caça", "f")], "mago": [("Sandália", "f")]},
+    "secundaria": {"guerreiro": [("Escudo", "m"), ("Broquel", "m")], "arqueiro": [("Aljava", "f")],
+                   "mago": [("Tomo", "m"), ("Foco Arcano", "m")]},
+}
+# Espaços do corpo (chaves de jogador.equip). Itens de anel cabem em anel1 ou anel2.
+SLOTS = ["cabeca", "amuleto", "armadura", "maos", "arma", "secundaria", "pernas", "pes", "anel1", "anel2"]
+NOMES_SLOT = {"arma": "Arma", "secundaria": "Mão secundária", "cabeca": "Cabeça", "armadura": "Peito", "maos": "Mãos",
+              "pernas": "Pernas", "pes": "Pés", "amuleto": "Amuleto", "anel": "Anel", "anel1": "Anel", "anel2": "Anel"}
+PESO_SLOT = {"arma": 3, "armadura": 3, "cabeca": 2, "maos": 2, "pernas": 2, "pes": 2, "secundaria": 2,
+             "amuleto": 1, "anel": 1.5}
+
+
+def espacos(slot):
+    """Chaves de equip onde um item deste tipo pode ir."""
+    return ["anel1", "anel2"] if slot == "anel" else [slot]
 
 # Afixos: (nome, atributo, valor base). Os especiais são lidos pelo combate.
 AFIXOS_ITEM = [
@@ -74,10 +97,25 @@ UNICOS = [
     dict(nome="Manto de Cinzas", slot="armadura", classe=None, base="Manto",
          bonus={"defesa": 0.8, "max_rec": 12, "regen_vida": 2},
          lore="Tecido com as cinzas da última vila que a Fenda engoliu."),
-    dict(nome="Coroa dos Afogados", slot="amuleto", classe=None, base="Diadema",
+    dict(nome="Coroa dos Afogados", slot="cabeca", classe=None, base="Diadema",
          bonus={"max_hp": 12, "regen_vida": 2, "defesa": 1},
          lore="Achada na cabeça de um rei no fundo do pântano. Ele não estava morto."),
-    dict(nome="Anel do Último Rei", slot="amuleto", classe=None, base="Anel",
+    dict(nome="Égide do Mártir", slot="secundaria", classe="guerreiro", base="Escudo de Torre",
+         bonus={"defesa": 1.4, "max_hp": 10, "espinhos": 6},
+         lore="Cada amassado é uma oração que alguém não terminou de fazer."),
+    dict(nome="Aljava dos Mil Corvos", slot="secundaria", classe="arqueiro", base="Aljava",
+         bonus={"agi": 1.2, "critico": 7, "atk": 0.6},
+         lore="Penas negras. As flechas voltam sozinhas, às vezes, de madrugada."),
+    dict(nome="Tomo do Nome Esquecido", slot="secundaria", classe="mago", base="Tomo",
+         bonus={"poder": 1.1, "max_rec": 14, "roubo_vida": 3},
+         lore="As páginas estão em branco até você sangrar nelas."),
+    dict(nome="Botas do Andarilho Morto", slot="pes", classe=None, base="Bota",
+         bonus={"agi": 1.4, "regen_vida": 2, "max_hp": 6},
+         lore="Ainda caminham à noite. Calce-as antes que vão embora sem você."),
+    dict(nome="Mãos do Estrangulador", slot="maos", classe=None, base="Luvas",
+         bonus={"atk": 0.8, "poder": 0.8, "critico": 6},
+         lore="Os dedos se fecham sozinhos quando alguém mente perto de você."),
+    dict(nome="Anel do Último Rei", slot="anel", classe=None, base="Anel",
          bonus={"atk": 1, "poder": 1, "critico": 5, "roubo_vida": 3},
          lore="O reino caiu. O anel não."),
 ]
@@ -139,11 +177,11 @@ def gerar_equip(rng, classe, nivel, slot=None, qualidade=0, raridade=None):
         if item:
             return item
         raridade = "raro"
-    slot = slot or rng.choices(["arma", "armadura", "amuleto"], [4, 4, 2])[0]
+    slot = slot or rng.choices(list(PESO_SLOT), list(PESO_SLOT.values()))[0]
     materiais = MATERIAIS
-    if slot == "armadura" and classe == "mago":
+    if slot in ("armadura", "cabeca", "maos", "pernas", "pes") and classe == "mago":
         materiais = MATERIAIS_TECIDO
-    elif slot == "armadura" and classe == "arqueiro":
+    elif slot in ("armadura", "cabeca", "maos", "pernas", "pes", "secundaria") and classe == "arqueiro":
         materiais = MATERIAIS_COURO
     mat_m, mat_f, mult = materiais[max(0, min(len(materiais) - 1, nivel // 3 + rng.choice([-1, 0, 0, 1])))]
     forca = _escala(nivel) * mult
@@ -162,11 +200,39 @@ def gerar_equip(rng, classe, nivel, slot=None, qualidade=0, raridade=None):
         fator = {"guerreiro": 0.7, "arqueiro": 0.5, "mago": 0.35}[classe]
         bonus["defesa"] = max(1, round(forca * fator))
         bonus["max_hp"] = round(forca * 2)
+    elif slot in PECAS:
+        base, g = rng.choice(PECAS[slot][classe])
+        forca *= 0.65  # peças complementares: somadas, não devem valer mais que arma e armadura
+        fator = {"guerreiro": 0.7, "arqueiro": 0.5, "mago": 0.35}[classe]
+        principal = {"guerreiro": "atk", "arqueiro": "agi", "mago": "poder"}[classe]
+        if slot == "cabeca":
+            bonus["defesa"] = max(1, round(forca * fator * 0.4))
+            bonus["max_hp"] = max(1, round(forca * 0.8))
+        elif slot == "maos":
+            bonus[principal] = max(1, round(forca * 0.25))
+            bonus["defesa"] = max(1, round(forca * fator * 0.2))
+        elif slot == "pernas":
+            bonus["defesa"] = max(1, round(forca * fator * 0.45))
+            bonus["max_hp"] = max(1, round(forca * 1.0))
+        elif slot == "pes":
+            bonus["agi"] = max(1, round(forca * 0.3))
+            bonus["defesa"] = max(1, round(forca * fator * 0.2))
+        elif classe == "guerreiro":  # escudo
+            bonus["defesa"] = max(1, round(forca * 0.55))
+            bonus["max_hp"] = max(1, round(forca * 0.8))
+        elif classe == "arqueiro":  # aljava
+            bonus["agi"] = max(1, round(forca * 0.3))
+            bonus["atk"] = max(1, round(forca * 0.3))
+        else:  # tomo
+            bonus["poder"] = max(1, round(forca * 0.45))
+            bonus["max_rec"] = max(1, round(forca * 1.5))
+        if slot == "secundaria" and classe == "mago":
+            mat_m = mat_f = ""
     else:
-        base, g = rng.choice(AMULETOS)
+        base, g = rng.choice(ANEIS if slot == "anel" else AMULETOS)
         mat_m = mat_f = ""
     tipo_base = f"{base} {mat_m if g == 'm' else mat_f}".strip()
-    n_afixos = {"comum": 1 if slot == "amuleto" else 0, "magico": 1, "raro": rng.choice([2, 3])}[raridade]
+    n_afixos = {"comum": 1 if slot in ("amuleto", "anel") else 0, "magico": 1, "raro": rng.choice([2, 3])}[raridade]
     escolhidos, extras = _afixos(rng, nivel, n_afixos)
     for k, v in extras.items():
         bonus[k] = bonus.get(k, 0) + v
@@ -177,7 +243,7 @@ def gerar_equip(rng, classe, nivel, slot=None, qualidade=0, raridade=None):
     else:
         nome = tipo_base
     return {"nome": nome, "base": tipo_base, "slot": slot, "bonus": bonus, "preco": _preco(bonus, raridade),
-            "classe": classe if slot != "amuleto" else None, "raridade": raridade}
+            "classe": classe if slot not in ("amuleto", "anel") else None, "raridade": raridade}
 
 
 def rotulo(item):

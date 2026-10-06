@@ -90,6 +90,7 @@ const Som = (() => {
     escolha() { estalo(ctx.currentTime, 2500, 0.12, 0.03); },
     nivel() { const t = ctx.currentTime; [392, 494, 587, 784].forEach((f, i) => tom(t + i * 0.11, f, 0.09, 0.9, "triangle")); },
     moeda() { const t = ctx.currentTime; tom(t, 1900, 0.06, 0.12, "square"); tom(t + 0.05, 2600, 0.05, 0.2, "square"); },
+    equipar() { const t = ctx.currentTime; estalo(t, 3200, 0.25, 0.06); estalo(t + 0.05, 2200, 0.2, 0.08); tom(t, 180, 0.12, 0.15, "square", 120); },
     item() { const t = ctx.currentTime; tom(t, 660, 0.07, 0.12, "square"); tom(t + 0.07, 990, 0.06, 0.18, "square"); },
     aprova() { const t = ctx.currentTime; tom(t, 523, 0.06, 0.2, "triangle"); tom(t + 0.08, 659, 0.06, 0.3, "triangle"); },
     desaprova() { const t = ctx.currentTime; tom(t, 330, 0.07, 0.25, "triangle", 290); tom(t + 0.1, 262, 0.07, 0.35, "triangle", 230); },

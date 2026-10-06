@@ -104,7 +104,8 @@ class Jogador(Combatente):
         if classe == "mago":
             self.consumiveis["tonico"] = 1
         self.mochila = []
-        self.equip = {"arma": None, "armadura": None, "amuleto": None}
+        self.equip = {s: None for s in ("cabeca", "amuleto", "armadura", "maos", "arma", "secundaria", "pernas", "pes",
+                                        "anel1", "anel2")}
         self.habilidades = [h for (nv, h) in dados["habilidades"] if nv <= 1]
         self.companheiro = None
         self.reputacao = 0
@@ -171,4 +172,6 @@ class Jogador(Combatente):
         obj.__dict__.setdefault("provisoes", 4)
         obj.__dict__.setdefault("fome", 0)
         obj.__dict__.setdefault("ferimentos", [])
+        for s in ("cabeca", "amuleto", "armadura", "maos", "arma", "secundaria", "pernas", "pes", "anel1", "anel2"):
+            obj.equip.setdefault(s, None)  # saves antigos tinham só arma, armadura e amuleto
         return obj

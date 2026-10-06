@@ -69,6 +69,7 @@ class WebUI(UI):
         self.escolhas_na_cena = 0
         self.novo_desde_escolha = False
         self.ultimo_estado = None
+        self.ultimo_titulo = None
 
     # ------------------------------------------------------------ saída
     def _enviar(self, t, **dados):
@@ -141,14 +142,18 @@ class WebUI(UI):
             self._enviar("combate", titulo=titulo, subtitulo=subtitulo)
             return
         if self.escolhas_na_cena > 0:
-            if self.novo_desde_escolha:
+            # Telas de menu que se redesenham (inventário, mercado) não param para "Continuar".
+            mesma_tela = tipo == "menu" and titulo == self.ultimo_titulo
+            if self.novo_desde_escolha and not mesma_tela:
                 self._continuar()
             self._enviar("nova_cena", titulo=titulo, subtitulo=subtitulo, tipo=tipo)
+            self.ultimo_titulo = titulo
             self.escolhas_na_cena = 0
             self.novo_desde_escolha = False
         else:
             # A cena anterior era só uma introdução: o novo título a substitui na mesma página.
             self._enviar("cabecalho", titulo=titulo, subtitulo=subtitulo, tipo=tipo)
+            self.ultimo_titulo = titulo
 
     def novo_turno(self, n):
         self.enviar_estado()

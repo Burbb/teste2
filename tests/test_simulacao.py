@@ -174,6 +174,38 @@ class TestSimulacao(unittest.TestCase):
             g2 = Jogo.carregar(BotUI(random.Random(1)), g.caminho_save(), pasta)
             self.assertEqual([m["id"] for m in g2.comitiva], [m["id"] for m in g.comitiva])
 
+    def test_equipamento_completo(self):
+        """Dez espaços, anéis duplos, tirar e largar, e saves antigos com só três espaços."""
+        from rpg import itens
+        with tempfile.TemporaryDirectory() as pasta:
+            g = Jogo(BotUI(random.Random(2)), seed=2, pasta_saves=pasta)
+            g.iniciar("Robô", "mago")
+            r = random.Random(4)
+            for slot in itens.PESO_SLOT:
+                it = itens.gerar_equip(r, "mago", 5, slot=slot)
+                self.assertEqual(it["slot"], slot if it["raridade"] != "lendario" else it["slot"])
+                g.equipar(it)
+            g.equipar(itens.gerar_equip(r, "mago", 5, slot="anel", raridade="magico"))
+            self.assertTrue(g.j.equip["anel1"] and g.j.equip["anel2"])
+            self.assertEqual(set(g.j.equip), set(itens.SLOTS))
+            antes = g.j.defesa
+            g.desequipar("armadura")
+            self.assertIsNone(g.j.equip["armadura"])
+            self.assertLessEqual(g.j.defesa, antes)
+            item = g.j.mochila[-1]
+            g.largar(item)
+            self.assertNotIn(item, g.j.mochila)
+            dados = g.j.para_dict()
+            dados["equip"] = {"arma": dados["equip"]["arma"], "armadura": None, "amuleto": None}
+            from rpg.entidades import Jogador
+            velho = Jogador.de_dict(dados)
+            self.assertEqual(set(velho.equip), set(itens.SLOTS))
+            for _ in range(300):  # toda geração produz itens válidos em todas as classes
+                for classe in ("guerreiro", "arqueiro", "mago"):
+                    it = itens.gerar_equip(r, classe, r.randint(1, 12))
+                    self.assertIn(it["slot"], itens.PESO_SLOT)
+                    self.assertTrue(it["bonus"])
+
     def test_mundo_conectado(self):
         from rpg.mundo import _distancias, gerar_mundo
         for seed in range(200):

@@ -548,3 +548,57 @@ body.modo-titulo .dica-pular { display: none; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
 }
+
+/* ------------------------------------------------------------------ inventário e mercado */
+.slot-px img.fantasma { opacity: 0.16; filter: grayscale(1); }
+.slot-px.mini { width: 40px; height: 40px; border-width: 2px; }
+.equip-mini { display: grid; grid-template-columns: repeat(5, 40px); gap: 4px; }
+.inventario { display: grid; grid-template-columns: 250px 1fr; gap: 18px; align-items: start; }
+.boneco {
+  display: grid; gap: 22px 8px; padding: 14px 10px 24px; background: #120e0b; border: 3px solid #3a2e24; box-shadow: 3px 3px 0 #000;
+  grid-template-columns: 64px 1fr 64px;
+  grid-template-areas: "amu cab an1" "arm ret sec" "mao ret an2" "per pei pes";
+  justify-items: center;
+}
+.boneco-retrato { grid-area: ret; width: 100px; height: 100px; display: grid; place-items: center; background: radial-gradient(circle, #2a2018, #120e0b 70%); border: 2px solid #2a2420; align-self: center; }
+.espaco { position: relative; width: 60px; height: 60px; }
+.espaco[draggable=true] { cursor: grab; }
+.espaco-nome { position: absolute; left: 50%; bottom: -17px; transform: translateX(-50%); white-space: nowrap; font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--tinta-3); pointer-events: none; }
+.slot-px.alvo { border-color: var(--bom) !important; animation: pode 0.9s steps(2) infinite; }
+.mochila-grade.alvo { outline: 3px dashed var(--bom); outline-offset: 4px; }
+.mochila-grade { display: grid; grid-template-columns: repeat(auto-fill, 56px); gap: 6px; }
+.mochila-grade .slot-px { width: 56px; height: 56px; }
+.celula[draggable=true] { cursor: grab; }
+.celula[draggable=true]:hover { border-color: var(--ouro); transform: translateY(-2px); }
+.celula.vazia { background: #0d0b0a; border-style: dashed; border-color: #2a2420; }
+.celula.inutil img { filter: grayscale(0.8) brightness(0.6); }
+.lixeira { position: relative; border-color: #4a1414; background: #160b0b; }
+.lixeira.alvo { border-color: var(--sangue-2) !important; }
+.inv-lado h4 small, .loja h4 small { font-family: var(--texto); font-size: 13px; color: var(--tinta-3); text-shadow: none; }
+.ficha-mini .heroi-nome { font-size: 40px; }
+.dica-uso { margin-top: 12px; font-size: 13px; color: var(--tinta-3); }
+#dica-item { position: fixed; z-index: 50; width: 280px; padding: 8px 10px; font-size: 14px; line-height: 1.45; pointer-events: none; box-shadow: var(--sombra); }
+#dica-item b { display: block; font-family: var(--titulo); font-weight: 400; font-size: 28px; line-height: 1; color: #fff3d6; }
+#dica-item .tipo { font-size: 12px; color: var(--tinta-3); text-transform: uppercase; letter-spacing: 0.06em; margin: 2px 0 4px; }
+#dica-item .bonus { font-family: var(--num); font-size: 18px; color: var(--tinta); line-height: 1.15; }
+#dica-item .comparacao { margin-top: 6px; padding-top: 4px; border-top: 2px dashed #3a2e24; display: flex; flex-direction: column; font-family: var(--num); font-size: 17px; line-height: 1.15; }
+#dica-item .comparacao small { font-family: var(--texto); font-size: 11px; color: var(--tinta-3); }
+#dica-item .melhor { color: var(--bom); } #dica-item .pior { color: var(--sangue-2); }
+#dica-item .lore { margin-top: 6px; font-style: italic; color: var(--tinta-2); }
+#dica-item .rodape { margin-top: 6px; font-size: 12px; color: var(--ouro); }
+.loja-topo { display: flex; align-items: center; gap: 12px; padding: 8px 12px; background: #120e0b; border: 3px solid #3a2e24; box-shadow: 3px 3px 0 #000; }
+.loja-topo b { font-family: var(--titulo); font-weight: 400; font-size: 34px; line-height: 1; color: var(--ouro); display: block; }
+.ouro-loja { margin-left: auto; display: flex; align-items: center; gap: 6px; font-family: var(--num); font-size: 30px; color: var(--ouro); }
+.loja.alvo .balcao { outline: 3px dashed var(--ouro); outline-offset: 6px; }
+.vitrine { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+.mercadoria { display: grid; grid-template-columns: 56px 1fr; grid-template-rows: auto 1fr auto; gap: 2px 8px; text-align: left; cursor: pointer; padding: 6px; background: #120e0b; border: 3px solid #3a2e24; box-shadow: 3px 3px 0 #000; color: var(--tinta); font-family: var(--texto); }
+.mercadoria .slot-px { grid-row: span 3; width: 56px; height: 56px; }
+.mercadoria:hover { border-color: var(--ouro); transform: translateY(-2px); }
+.mercadoria.caro { opacity: 0.45; cursor: not-allowed; }
+.mercadoria.caro:hover { border-color: var(--sangue); transform: none; }
+.merc-nome { font-size: 13px; font-weight: 600; line-height: 1.2; }
+.merc-bonus { font-family: var(--num); font-size: 15px; color: var(--tinta-3); line-height: 1.1; }
+.preco { display: inline-flex; align-items: center; gap: 3px; font-family: var(--num); font-size: 20px; color: var(--ouro); }
+.preco img.sprite { width: 16px; height: 16px; }
+.preco.ganho { color: var(--bom); }
+@media (max-width: 920px) { .inventario { grid-template-columns: 1fr; } .boneco { max-width: 280px; margin: 0 auto; } }

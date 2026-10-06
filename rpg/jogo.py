@@ -30,8 +30,8 @@ NOMES_TESTE = {
     "forca": "Força", "destreza": "Destreza", "arcano": "Arcano",
     "percepcao": "Percepção", "vontade": "Vontade", "carisma": "Carisma",
 }
-NOMES_SLOT = {"arma": "Arma", "armadura": "Armadura", "amuleto": "Amuleto"}
-LIMITE_MOCHILA = 8
+NOMES_SLOT = itens.NOMES_SLOT
+LIMITE_MOCHILA = 12
 # Criaturas que não aparecem em regiões fracas demais (evita lutas impossíveis no começo).
 NIVEL_MIN_FAMILIA = {
     "bruxa_brejo": 2, "harpia": 2, "espectro": 3, "ent_jovem": 3, "cria_vazio": 3, "cao_infernal": 3,
@@ -496,7 +496,7 @@ class Jogo:
         self.dizer(f"  {descrever_bonus(item['bonus'])}", itens.cor(item))
         if item.get("lore"):
             self.dizer(f"  \"{item['lore']}\"", "cinza")
-        atual = self.j.equip[item["slot"]]
+        atual = self.j.equip[self.espaco_para(item)]
         if atual:
             self.dizer(f"  Equipado agora: {itens.rotulo(atual)} — {descrever_bonus(atual['bonus'])}", "cinza")
         op = self.menu("O que fazer com o item?", [
@@ -511,10 +511,39 @@ class Jogo:
             self.j.mochila.append(item)
             self.dizer("Guardado na mochila.", "cinza")
 
-    def equipar(self, item):
+    def espaco_para(self, item, destino=None):
+        """Em qual espaço do corpo o item entra (anéis: o vazio, ou o primeiro)."""
+        opcoes = itens.espacos(item["slot"])
+        if destino in opcoes:
+            return destino
+        return next((s for s in opcoes if not self.j.equip.get(s)), opcoes[0])
+
+    def pode_usar(self, item):
+        return not item.get("classe") or item["classe"] == self.j.classe
+
+    def desequipar(self, slot):
         j = self.j
-        antigo = j.equip[item["slot"]]
-        j.equip[item["slot"]] = item
+        item = j.equip.get(slot)
+        if not item:
+            return
+        if len(j.mochila) >= LIMITE_MOCHILA:
+            self.dizer("A mochila está cheia. Largue alguma coisa antes.", "vermelho")
+            return
+        j.equip[slot] = None
+        j.mochila.append(item)
+        j.recalcular()
+        self.dizer(f"Você tira {item['nome']} e guarda na mochila.", "cinza")
+
+    def largar(self, item):
+        if item in self.j.mochila:
+            self.j.mochila.remove(item)
+            self.dizer(f"Você larga {item['nome']} no chão. Alguém vai achar.", "cinza")
+
+    def equipar(self, item, destino=None):
+        j = self.j
+        espaco = self.espaco_para(item, destino)
+        antigo = j.equip[espaco]
+        j.equip[espaco] = item
         if item in j.mochila:
             j.mochila.remove(item)
         if antigo:
@@ -524,7 +553,7 @@ class Jogo:
                 self.dizer(f"Mochila cheia: {antigo['nome']} fica para trás.", "cinza")
         j.recalcular()
         self.dizer(f"Você equipa {item['nome']}.", "verde")
-        registrar(self, "equipar", item=item["nome"], slot=item["slot"], raridade=item.get("raridade", "comum"),
+        registrar(self, "equipar", item=item["nome"], slot=espaco, raridade=item.get("raridade", "comum"),
                   bonus=item["bonus"])
 
     def usar_consumivel(self, k):
@@ -1030,7 +1059,9 @@ class Jogo:
         self.ui.cena("A forja", self.loc["nome"], "menu")
         while True:
             opcoes = []
-            for slot, stat in (("arma", "poder" if j.classe == "mago" else "atk"), ("armadura", "defesa")):
+            secundaria = {"guerreiro": "defesa", "arqueiro": "atk", "mago": "poder"}[j.classe]
+            for slot, stat in (("arma", "poder" if j.classe == "mago" else "atk"), ("armadura", "defesa"),
+                               ("secundaria", secundaria)):
                 item = j.equip[slot]
                 if not item:
                     continue
@@ -1239,11 +1270,34 @@ class Jogo:
             self.lojas[chave] = estoque
         return self.lojas[chave]
 
+    def dados_loja(self):
+        j = self.j
+        cons = ["tocha", "bandagem", "unguento", "pocao_vida", "tonico", "antidoto", "bomba_fumaca", "pena_fenix"]
+        def item(it, preco):
+            return {"nome": itens.rotulo(it), "slot": it["slot"], "raridade": it.get("raridade", "comum"),
+                    "bonus": descrever_bonus(it["bonus"]), "bonus_bruto": it["bonus"], "base": it.get("base"),
+                    "preco": preco, "classe": it.get("classe"), "lore": it.get("lore")}
+        return {
+            "ouro": j.ouro, "limite": LIMITE_MOCHILA, "ocupado": len(j.mochila),
+            "consumiveis": [{"id": k, "nome": CONSUMIVEIS[k]["nome"], "desc": CONSUMIVEIS[k]["desc"],
+                             "preco": self.preco(CONSUMIVEIS[k]["preco"]), "tem": j.consumiveis.get(k, 0)} for k in cons]
+            + [{"id": "provisoes", "nome": "Provisões (1 dia)", "desc": "Pão duro, carne seca e um odre de água.",
+                "preco": self.preco(4), "tem": j.provisoes}]
+            + ([{"id": "flechas", "nome": "Feixe de 10 flechas", "desc": "Flechas de freixo, pontas de ferro.",
+                 "preco": self.preco(10), "tem": j.flechas}] if j.classe == "arqueiro" else []),
+            "equipamentos": [item(it, self.preco(it["preco"])) for it in self.estoque()],
+            "mochila": [item(it, it["preco"] // 2) for it in j.mochila],
+        }
+
     def loja(self):
         while True:
             j = self.j
             self.ui.cena("Mercado", f"{self.loc['nome']} · seu ouro: {j.ouro}", "menu")
             a_venda = self.estoque()
+            if self.ui.painel("loja", self.dados_loja()):
+                if self._loja_web(a_venda):
+                    return
+                continue
             opcoes = []
             for k in ("tocha", "bandagem", "unguento", "pocao_vida", "tonico", "antidoto", "bomba_fumaca",
                       "pena_fenix"):
@@ -1288,6 +1342,50 @@ class Jogo:
             else:
                 a_venda.remove(op[1])
                 self.oferecer_equip_comprado(op[1])
+
+    def _loja_web(self, a_venda):
+        """Mercado na interface web: cada compra e venda é uma opção direta. True = sair."""
+        j = self.j
+        opcoes = []
+        for k in ("tocha", "bandagem", "unguento", "pocao_vida", "tonico", "antidoto", "bomba_fumaca", "pena_fenix"):
+            opcoes.append((f"Comprar {CONSUMIVEIS[k]['nome']}", ("consumivel", k), {"comprar": k}))
+        opcoes.append(("Comprar provisões", ("provisoes",), {"comprar": "provisoes"}))
+        if j.classe == "arqueiro":
+            opcoes.append(("Comprar flechas", ("flechas",), {"comprar": "flechas"}))
+        for i, it in enumerate(a_venda):
+            opcoes.append((f"Comprar {it['nome']}", ("equip", it), {"comprar_item": i}))
+        for i, it in enumerate(j.mochila):
+            opcoes.append((f"Vender {it['nome']}", ("vender", it), {"vender": i}))
+        op = self.menu("", opcoes + [("Sair do mercado", None, {"voltar": True})])
+        if op is None:
+            return True
+        if op[0] == "vender":
+            j.mochila.remove(op[1])
+            self.dizer(f"O mercador examina {op[1]['nome']} contra a luz e conta as moedas devagar.", "cinza")
+            self.ganhar_ouro(op[1]["preco"] // 2)
+            return False
+        preco = self.preco({"consumivel": lambda: CONSUMIVEIS[op[1]]["preco"], "flechas": lambda: 10,
+                            "provisoes": lambda: 4, "equip": lambda: op[1]["preco"]}[op[0]]())
+        if op[0] == "provisoes" and j.provisoes >= sobrevivencia.MAX_PROVISOES:
+            self.dizer("Você não consegue carregar mais comida.", "vermelho")
+        elif j.ouro < preco:
+            self.dizer("\"Sem ouro, sem negócio.\"", "vermelho")
+        elif op[0] == "equip" and len(j.mochila) >= LIMITE_MOCHILA:
+            self.dizer("Sua mochila está cheia. Venda ou largue algo antes.", "vermelho")
+        else:
+            self.perder_ouro(preco)
+            if op[0] == "consumivel":
+                self.dar(op[1])
+            elif op[0] == "flechas":
+                self.dar_flechas(10)
+            elif op[0] == "provisoes":
+                j.provisoes += 1
+                self.ui.efeito(f"+1 dia de comida (total {j.provisoes})", "item")
+            else:
+                a_venda.remove(op[1])
+                j.mochila.append(op[1])
+                self.ui.efeito(f"{op[1]['nome']} vai para a mochila", "item")
+        return False
 
     def oferecer_equip_comprado(self, item):
         if self.menu(f"Equipar {item['nome']} agora?", [("Sim", True), ("Não, guardar na mochila", False)]):
@@ -1376,8 +1474,11 @@ class Jogo:
         while True:
             j = self.j
             self.ui.cena(j.nome, f"{j.nome_classe} nível {j.nivel}", "menu")
-            if not self.ui.painel("personagem", {}):
-                self._personagem_texto()
+            if self.ui.painel("personagem", {"limite": LIMITE_MOCHILA}):
+                if self._personagem_web():
+                    return
+                continue
+            self._personagem_texto()
             op = self.menu("", [
                 ("Usar item da bolsa", "usar"),
                 ("Equipar item da mochila", "equipar") if j.mochila else None,
@@ -1399,6 +1500,35 @@ class Jogo:
                         self.dizer("Você não sabe usar isso.", "vermelho")
                     else:
                         self.equipar(it)
+
+    def _personagem_web(self):
+        """Na interface web, cada ação do inventário é uma opção direta (arrastar, clicar). True = sair."""
+        j = self.j
+        opcoes = []
+        for i, it in enumerate(j.mochila):
+            if self.pode_usar(it):
+                for destino in itens.espacos(it["slot"]):
+                    opcoes.append((f"Equipar {it['nome']}", ("equipar", it, destino), {"equipar": i, "destino": destino}))
+        for slot, it in j.equip.items():
+            if it:
+                opcoes.append((f"Tirar {it['nome']}", ("tirar", slot), {"tirar": slot}))
+        for k in ("bandagem", "unguento", "pocao_vida", "tonico", "antidoto"):
+            if j.tem(k):
+                opcoes.append((f"Usar {CONSUMIVEIS[k]['nome']}", ("usar", k), {"usar": k}))
+        for i, it in enumerate(j.mochila):
+            opcoes.append((f"Largar {it['nome']}", ("largar", it), {"largar": i}))
+        op = self.menu("", opcoes + [("Voltar", None, {"voltar": True})])
+        if op is None:
+            return True
+        if op[0] == "equipar":
+            self.equipar(op[1], op[2])
+        elif op[0] == "tirar":
+            self.desequipar(op[1])
+        elif op[0] == "usar":
+            self.usar_consumivel(op[1])
+        else:
+            self.largar(op[1])
+        return False
 
     def _personagem_texto(self):
         j = self.j

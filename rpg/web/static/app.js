@@ -50,6 +50,7 @@ const App = {
   get estado() { return estado; },
   responder: (id, valor) => responder(id, valor),
   pedir: (rotulo, chave, valor) => pedir(rotulo, chave, valor),
+  acao: (filtro, som) => acao(filtro, som),
   som: (n) => Som.tocar(n),
   acaoFecharTalentos: null,
 };
@@ -86,6 +87,18 @@ function pedir(rotulo, chave, valor) {
   pendente = valor === null ? null : { chave, valor };
   responder(pergunta.id, i);
 }
+
+/** Responde à opção cujos metadados batem com o filtro (ações de arrastar, comprar, usar...). */
+function acao(filtro, som) {
+  if (!pergunta || pergunta.tipo !== "opcoes" || !pergunta.opcoes) return false;
+  const i = pergunta.opcoes.findIndex((o) => o.meta && Object.entries(filtro).every(([k, v]) => o.meta[k] === v));
+  if (i < 0) return false;
+  Telas.esconderDica();
+  if (som) Som.tocar(som);
+  responder(pergunta.id, i);
+  return true;
+}
+const ACOES_OCULTAS = ["equipar", "tirar", "usar", "largar", "comprar", "comprar_item", "vender"];
 
 /* ------------------------------------------------------------------ fila */
 async function processar() {
@@ -152,7 +165,18 @@ function cabecalho(m) {
   if (m.titulo !== "Talentos") Telas.fecharTalentos();
 }
 
+let tituloAtual = "";
 async function novaCena(m) {
+  const mesmaTela = m.tipo === "menu" && m.titulo === tituloAtual;  // inventário e mercado se redesenham sem piscar
+  tituloAtual = m.titulo;
+  if (mesmaTela) {
+    // O que aconteceu na ação (equipou, comprou...) vira um aviso rápido antes de a tela se redesenhar.
+    const avisos = [...textoEl.querySelectorAll(":scope > p:not(.eco)")].map((p) => p.textContent).filter(Boolean).slice(-2);
+    if (!replay) avisos.forEach((t) => Telas.toast("", t, "estrela", true));
+    textoEl.innerHTML = ""; promptEl.innerHTML = "";
+    cabecalho(m);
+    return;
+  }
   if (!instantaneo() && textoEl.childElementCount) { folha.classList.add("saindo"); await espera(200); }
   textoEl.innerHTML = "";
   promptEl.innerHTML = "";
@@ -232,7 +256,8 @@ async function efeito(m) {
   else if (m.tipo === "aprova") Som.tocar("aprova");
   else if (m.tipo === "desaprova") Som.tocar("desaprova");
   else if (m.tipo === "ferimento") { Som.tocar("dor"); doer(); Telas.toast("Ferimento", m.texto, "gota"); }
-  else if (m.tipo === "dano" || m.tipo === "perda") { Som.tocar("dor"); doer(); }
+  else if (m.tipo === "perda") Som.tocar("moeda");
+  else if (m.tipo === "dano") { Som.tocar("dor"); doer(); }
   await espera(ritmo(m.tipo === "ferimento" ? 700 : 320));
 }
 
@@ -329,6 +354,7 @@ function mostrarOpcoes(m) {
   const sistema = m.opcoes.filter((o) => atalhoDe(o.texto)).length >= 4;
   const atalhos = el("div", "atalhos");
   m.opcoes.forEach((o, i) => {
+    if (o.meta && ACOES_OCULTAS.some((k) => o.meta[k] !== undefined)) return;  // feitas pela tela (arrastar, clicar)
     const at = sistema && atalhoDe(o.texto);
     if (at) {
       const pontos = /★\s*(\d+)/.exec(o.texto);
@@ -556,10 +582,10 @@ function desenharBatalha(cb, antes) {
 function desenharHeroi(h) {
   const icAttr = { Ataque: "espada", Defesa: "escudo", Agilidade: "folha", Poder: "chama" };
   const attrs = Object.entries(h.atributos).map(([k, v]) => `<div class="atributo">${spr(icAttr[k] || "estrela", 1)}<span class="nome">${esc(k)}</span><span class="valor">${v}</span></div>`).join("");
-  const slot = (it, padrao) => {
-    if (!it) return `<div class="slot-px vazio" title="vazio">${spr(padrao, 2)}</div>`;
-    const ic = it.slot === "arma" ? Telas.ARMA[h.classe] : it.slot === "armadura" ? "armadura" : "amuleto";
-    return `<div class="slot-px r-${esc(it.raridade)}" title="${esc(it.nome)}\n${esc(it.bonus)}">${spr(ic, 2)}</div>`;
+  const slot = (s) => {
+    const it = h.equip[s];
+    if (!it) return `<div class="slot-px mini vazio" title="${esc(Telas.NOME_ESPACO[s])} (vazio)">${spr(Telas.VAZIO[s], 1, "fantasma")}</div>`;
+    return `<div class="slot-px mini r-${esc(it.raridade)}" ${Telas.dicaItem(it, "", false)}>${spr(Telas.iconeItem(it), 1)}</div>`;
   };
   const feridas = h.ferimentos.length ? h.ferimentos.map((f) => `<div class="ferimento">${spr("gota", 1)}${esc(f.nome)} <small>${f.dias ? f.dias + "d" : ""}${f.aberto ? " · aberto" : ""}</small></div>`).join("")
     : '<div class="vazio">nenhum, por enquanto</div>';
@@ -576,13 +602,14 @@ function desenharHeroi(h) {
     <div class="xp-linha"><div class="legenda-linha"><span>Experiência</span><span>${h.xp}/${h.xp_proximo}</span></div>${barra("xp", h.xp, h.xp_proximo)}</div>
     ${h.pontos_talento ? `<div class="talento-aviso" title="Abra Talentos (T) num local">${spr("estrela", 1)} ${h.pontos_talento} ponto(s) de talento</div>` : ""}
     <div class="secao"><h3>Atributos</h3><div class="atributos">${attrs}</div></div>
-    <div class="secao"><h3>Equipado</h3><div class="slots">${slot(h.equip.arma, Telas.ARMA[h.classe])}${slot(h.equip.armadura, "armadura")}${slot(h.equip.amuleto, "amuleto")}</div></div>
+    <div class="secao"><h3>Equipado</h3><div class="equip-mini" title="Abra Personagem (P) para trocar">${Object.keys(Telas.AREA).map(slot).join("")}</div></div>
     ${comitiva}
     <div class="secao"><h3>Ferimentos</h3>${feridas}</div>
     <div class="secao"><h3>Habilidades</h3>${habs}</div>
     <div class="secao"><h3>Bolsa</h3><div class="slots">${bolsa || '<span class="vazio">vazia</span>'}</div></div>
     <div class="secao"><div class="linhas"><div class="linha"><span>Reputação</span><b>${h.reputacao > 0 ? "+" : ""}${h.reputacao}</b></div></div></div>`;
   animarBarras($("#heroi"));
+  Telas.ligarDicas($("#heroi"));
 }
 
 function nivelPerigo(nivel) {

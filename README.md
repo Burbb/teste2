@@ -14,6 +14,10 @@ um reino diferente: mapa, nomes, chefes, eventos e consequências.
 </p>
 <p align="center">
   <img src="docs/talentos.png" width="49%" alt="Árvore de talentos com hover">
+  <img src="docs/inventario.png" width="49%" alt="Inventário: boneco com dez espaços, mochila e comparação de itens">
+</p>
+<p align="center">
+  <img src="docs/mercado.png" width="49%" alt="Mercado interativo">
   <img src="docs/titulo.png" width="49%" alt="Tela de título">
 </p>
 
@@ -72,8 +76,14 @@ nos títulos, Pixelify Sans no texto, Jersey 15 nos números.
   de cada região que você conhece e a névoa do resto. Clique num destino.
 - **Árvore de talentos de verdade:** três colunas, ícones, graus, cadeados, passe o mouse para
   ver o efeito e clique para aprender.
-- **Telas desenhadas:** Personagem (equipamento e bolsa clicáveis), Diário (cartas de
-  contratos, rumores e do inimigo), Bestiário (fichas com fraquezas) e Comitiva.
+- **Inventário de verdade:** um boneco com **dez espaços** (cabeça, amuleto, peito, mãos, arma,
+  mão secundária, pernas, pés e dois anéis) e a mochila em grade. **Arraste** itens para equipar,
+  para tirar ou para a caveira (largar); dois cliques também funcionam. Passe o mouse para ver
+  os atributos e a **comparação com o que está equipado** (▲ verde, ▼ vermelho).
+- **Mercado interativo:** vitrine de suprimentos e equipamentos com preço e comparação; clique
+  para comprar, clique (ou arraste para o balcão) para vender.
+- **Telas desenhadas:** Diário (cartas de contratos, rumores e do inimigo), Bestiário (fichas
+  com fraquezas) e Comitiva.
 - Som ambiente e efeitos sintetizados na hora. Funciona em monitor largo, notebook e celular.
   Recarregar a página não perde nada.
 
@@ -89,6 +99,15 @@ nos títulos, Pixelify Sans no texto, Jersey 15 nos números.
 | `V` ou `F3` | Velocidade do texto |
 | `S` | Liga/desliga o som |
 | `Esc` | Fecha mapa e histórico |
+
+## Equipamento
+
+Dez espaços no corpo, cada classe com suas peças: o guerreiro usa elmo, manoplas, grevas e
+**escudo**; o arqueiro, capuz, braçadeiras e **aljava**; o mago, chapéu ou diadema, luvas de seda
+e **tomo**. Amuleto e dois anéis servem a todos. Os itens vêm em quatro raridades (comum,
+mágico, raro e lendário) com afixos aleatórios, e há itens únicos com história, como a Égide
+do Mártir, as Botas do Andarilho Morto e a Coroa dos Afogados. O ferreiro reforça arma, peito
+e mão secundária. A mochila guarda 12 itens.
 
 ## A comitiva
 
