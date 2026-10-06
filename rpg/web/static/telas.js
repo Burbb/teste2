@@ -189,7 +189,7 @@ const Telas = (() => {
     const p = e.heroi;
     const limite = (d && d.limite) || p.limite_mochila || 12;
     const icAttr = { Ataque: "espada", Defesa: "escudo", Agilidade: "folha", Poder: "chama" };
-    const attrs = Object.entries(p.atributos).map(([k, v]) => `<div class="atributo">${S(icAttr[k] || "estrela", 1)}<span class="nome">${h(k)}</span><span class="valor">${v}</span></div>`).join("");
+    const attrs = atributosHtml(p);
     const espacos = Object.keys(AREA).map((s) => {
       const it = p.equip[s];
       const conteudo = it ? S(iconeItem(it), 2) : S(VAZIO[s], 2, "fantasma");
@@ -214,6 +214,21 @@ const Telas = (() => {
         <h4>Bolsa</h4><div class="slots">${bolsa || '<span class="vazio">vazia</span>'}</div>
         <div class="dica-uso">Arraste itens entre a mochila e o corpo. Dois cliques também funcionam. Passe o mouse para comparar.</div>
       </div></div>`;
+  }
+
+  const ICONE_ATTR = { Ataque: "espada", Defesa: "escudo", Agilidade: "folha", Poder: "chama" };
+  /** Atributos com dica: para que servem e o que você ganha com cada ponto. */
+  function atributosHtml(p) {
+    const info = p.atributos_info || {};
+    return Object.entries(p.atributos).map(([k, v]) => {
+      const linhas = (info[k] || []).map((l) => `<li>${h(l)}</li>`).join("");
+      return `<div class="atributo" ${dica(`<b>${h(k)} ${v}</b><ul class="dica-lista">${linhas}</ul>`)}>${S(ICONE_ATTR[k] || "estrela", 1)}<span class="nome">${h(k)}</span><span class="valor">${v}</span></div>`;
+    }).join("");
+  }
+  function reputacaoHtml(p) {
+    const r = p.reputacao_info || { titulo: "", linhas: [] };
+    return `<div class="linha reputacao" ${dica(`<b>Reputação ${p.reputacao > 0 ? "+" : ""}${p.reputacao}</b><div class="tipo">${h(r.titulo)}</div><ul class="dica-lista">${r.linhas.map((l) => `<li>${h(l)}</li>`).join("")}</ul>`)}>
+      <span>Reputação</span><b>${p.reputacao > 0 ? "+" : ""}${p.reputacao} <small>${h(r.titulo)}</small></b></div>`;
   }
 
   function ligarInventario(raiz) {
@@ -395,12 +410,161 @@ const Telas = (() => {
     return `<div class="tela"><div class="meter" style="margin-bottom:10px">Criaturas conhecidas ${barra("xp", d.fichas.length, d.total)} ${d.fichas.length}/${d.total}</div><div class="cartas">${cartas}</div></div>`;
   }
 
-  function comitiva(d) {
-    const cartas = d.membros.map((m) => `<div class="cartao"><div class="cab">${S(m.id, 3)}<div><b>${h(m.nome)}</b><span class="sub">${h(m.titulo)}${m.ferido ? " · ferido, fora de combate" : ""}</span></div></div>
+  function cartaoMembro(m, reserva) {
+    return `<div class="cartao clicavel${reserva ? " na-reserva" : ""}" data-cid="${h(m.id)}"><div class="cab">${S(m.id, 3)}<div><b>${h(m.nome)}</b><span class="sub">${h(m.titulo)}${m.ferido ? " · ferido, fora de combate" : ""}${reserva ? " · no acampamento" : ""}</span></div></div>
       <span class="lore">${h(m.desc)}</span>
-      <div class="meter" style="margin-top:6px">Vida ${barra("aliado", m.hp, m.max_hp)} ${m.hp}/${m.max_hp}</div>
-      ${aprovacao(m)}${m.conversa ? `<div class="tag" style="margin-top:6px;color:var(--ouro);border-color:#8a6a14">✉ quer conversar</div>` : ""}</div>`).join("");
-    return `<div class="tela"><div class="cartas">${cartas}</div></div>`;
+      <div class="meter" style="margin-top:6px">Vida ${barra("vida", m.hp, m.max_hp)} ${m.hp}/${m.max_hp}</div>
+      ${aprovacao(m)}${m.conversa && !reserva ? '<div class="tag aviso-conversa">✉ quer conversar · clique</div>' : ""}</div>`;
+  }
+  function comitiva(d) {
+    const cartas = d.membros.map((m) => cartaoMembro(m, false)).join("");
+    const reserva = (d.reserva || []).map((m) => cartaoMembro(m, true)).join("");
+    return `<div class="tela"><div class="cartas">${cartas}</div>
+      ${reserva ? `<h4>No acampamento <small>chame de volta quando montar a fogueira</small></h4><div class="cartas">${reserva}</div>` : ""}
+      <div class="dica-uso">Clique num companheiro para conversar ou mandar para o acampamento.</div></div>`;
+  }
+
+  // ------------------------------------------------------------------ mural de contratos
+  const TIPO_CONTRATO = { caca: "Caça", alvo: "Procurado", entrega: "Entrega" };
+  function cartaz(c, ativo, cheio, nivelHeroi) {
+    const arte = c.tipo === "entrega" ? "saco" : iconeCriatura(c.tracos, c.familia || "");
+    const titulo = c.tipo === "alvo" ? c.alvo : c.tipo === "entrega" ? (c.objeto || "Entrega") : c.desc.replace(/^Eliminar /, "").replace(/ em .*$/, "");
+    const perigo = c.nivel == null ? "" : c.nivel - nivelHeroi >= 2 ? "alto" : c.nivel >= nivelHeroi ? "medio" : "baixo";
+    const lugar = `${S(MapaPx.sprite({ tipo: c.lugar_tipo, bioma: c.bioma }), 1)} ${h(c.lugar)}${c.distancia != null ? ` · ${c.distancia} trecho${c.distancia === 1 ? "" : "s"}` : ""}${c.nivel != null ? ` <span class="perigo-tag ${perigo}">Nv.${c.nivel}</span>` : ""}`;
+    let progresso = "";
+    if (ativo && c.tipo === "caca" && c.progresso) {
+      const [feito, total] = c.progresso.split("/").map(Number);
+      progresso = `<div class="contrato-progresso">${barra("xp", feito, total)}<span>${feito}/${total}</span></div>`;
+    }
+    let botao;
+    if (ativo) botao = c.concluido ? '<span class="contrato-feito">Feito! Volte a uma vila para receber</span>'
+      : `<button type="button" class="contrato-botao abandonar" data-abandonar="${c.id}" title="Reputação −${c.penalidade}">Abandonar</button>`;
+    else botao = `<button type="button" class="contrato-botao" data-aceitar="${c.id}"${cheio ? " disabled title=\"Você já tem 3 contratos\"" : ""}>Aceitar</button>`;
+    return `<div class="contrato tipo-${h(c.tipo)}${ativo ? " ativo" : ""}${c.concluido ? " concluido" : ""}">
+      <span class="prego"></span><div class="contrato-tipo">${TIPO_CONTRATO[c.tipo] || h(c.tipo)}</div>
+      <div class="contrato-arte">${S(arte, 3)}</div>
+      <div class="contrato-titulo">${h(titulo)}</div>
+      <div class="contrato-desc">${h(c.desc)}</div>
+      <div class="contrato-lugar">${lugar}</div>${progresso}
+      <div class="contrato-premio"><span>${S("moeda", 1)} ${c.ouro}</span><span>${S("estrela", 1)} ${c.xp} XP</span></div>
+      ${botao}</div>`;
+  }
+  function mural(d) {
+    const cheio = d.ativos.length >= d.limite;
+    const oferta = d.oferta.map((c) => cartaz(c, false, cheio, d.nivel_heroi)).join("");
+    const ativos = d.ativos.map((c) => cartaz(c, true, cheio, d.nivel_heroi)).join("");
+    return `<div class="tela mural">
+      <div class="quadro"><div class="quadro-cab"><b>Contratos</b><span>${d.renova ? `novos cartazes em ${d.renova} dia${d.renova === 1 ? "" : "s"}` : "cartazes novos amanhã"}</span></div>
+        <div class="cartazes">${oferta || '<span class="vazio">O mural está vazio. Volte em alguns dias.</span>'}</div></div>
+      <h4>Seus contratos <small>${d.ativos.length}/${d.limite}</small></h4>
+      <div class="cartazes seus">${ativos || '<span class="vazio">Nenhum. Pegue um cartaz do mural.</span>'}</div></div>`;
+  }
+  function ligarMural(raiz) {
+    raiz.querySelectorAll("[data-aceitar]").forEach((b) => b.addEventListener("click", (ev) => { ev.stopPropagation(); App.acao({ aceitar: Number(b.dataset.aceitar) }, "pagina"); }));
+    raiz.querySelectorAll("[data-abandonar]").forEach((b) => b.addEventListener("click", (ev) => { ev.stopPropagation(); App.acao({ abandonar: Number(b.dataset.abandonar) }, "escolha"); }));
+  }
+
+  // ------------------------------------------------------------------ acampamento (fogueira)
+  const PONTOS_ATIVOS = [[198, 93], [176, 104]];
+  const PONTOS_RESERVA = [[256, 98], [284, 102], [270, 108]];
+  function acampamento(d) {
+    const figuras = [];
+    d.ativos.forEach((m, i) => figuras.push({ ...m, onde: "ativo", p: PONTOS_ATIVOS[i % 2] }));
+    d.reserva.forEach((m, i) => figuras.push({ ...m, onde: "reserva", p: PONTOS_RESERVA[i % 3] }));
+    const botoes = figuras.map((f) => `<button type="button" class="figura ${f.onde}${f.conversa ? " tem-conversa" : ""}" data-cid="${h(f.id)}"
+        style="left:${(f.p[0] / 320) * 100}%;top:${((f.p[1] + 8) / 120) * 100}%">
+        ${f.conversa ? '<i class="carta-aviso">✉</i>' : ""}<span class="figura-nome">${h(f.nome.split(" ").pop())}</span>
+        <span class="figura-estado">${f.onde === "ativo" ? "vai com você" : "no acampamento"}</span></button>`).join("");
+    return `<div class="tela acampamento"><div class="fogueira-palco"><canvas class="fogueira-cena" width="320" height="120"></canvas>${botoes}</div>
+      <div class="dica-uso">Clique em alguém para conversar ou decidir quem vai com você amanhã. Quem fica no acampamento descansa, não come das suas provisões e não opina nas suas escolhas. ${d.ativos.length}/${d.limite} na comitiva.</div></div>`;
+  }
+
+  function desenharFogueira(canvas, d) {
+    const x = canvas.getContext("2d");
+    const W = 320, H = 120;
+    const px = (cx, cy, w, hh, cor) => { x.fillStyle = cor; x.fillRect(cx | 0, cy | 0, w, hh); };
+    const heroi = App.estado && App.estado.heroi;
+    const quem = [[heroi ? heroi.classe : "guerreiro", 128, 93]];
+    d.ativos.forEach((m, i) => quem.push([m.id, ...PONTOS_ATIVOS[i % 2]]));
+    d.reserva.forEach((m, i) => quem.push([m.id, ...PONTOS_RESERVA[i % 3]]));
+    let quadro = 0, timer = null;
+    function cena(primeira) {
+      if (!primeira && !canvas.isConnected) { clearInterval(timer); return; }  // a tela saiu: para de animar
+      quadro++;
+      const vista = document.getElementById("vista");
+      if (vista) x.drawImage(vista, 0, 0, W, 72); else px(0, 0, W, 72, "#080b1a");
+      // chão escuro com pontilhado
+      for (let y = 72; y < H; y++) px(0, y, W, 1, y < 76 ? "#14100c" : "#0d0b09");
+      for (let y = 78; y < H; y += 2) for (let i = (y * 7) % 5; i < W; i += 5) px(i, y, 1, 1, "#1a140f");
+      // luz da fogueira: anéis pontilhados que tremem
+      const raio = 46 + Math.sin(quadro / 2) * 2 + (Math.random() * 2);
+      for (let y = 74; y < H; y++) for (let i = 80; i < 240; i++) {
+        const dx = (i - 160) / raio, dy = (y - 98) / (raio * 0.45), d2 = dx * dx + dy * dy;
+        if (d2 < 1 && ((i + y) % 2 === 0 || d2 < 0.45)) px(i, y, 1, 1, d2 < 0.2 ? "#5a2e12" : d2 < 0.5 ? "#3a2010" : "#24160c");
+      }
+      // barraca do acampamento
+      for (let k = 0; k < 18; k++) px(262 - k, 80 + k, k * 2 + 1 > 36 ? 36 : 1, 1, "#2a2016");
+      for (let k = 0; k < 18; k++) { px(262 - k, 80 + k, 1, 1, "#4a3a28"); px(262 + k, 80 + k, 1, 1, "#4a3a28"); px(263 - k, 80 + k, k * 2 - 1 > 0 ? k * 2 - 1 : 0, 1, "#1a140e"); }
+      px(259, 90, 6, 8, "#0d0b0a");
+      // toras e fogo
+      px(148, 100, 24, 3, "#4a2c14"); px(152, 98, 16, 2, "#5a3a1c");
+      for (let i = 0; i < 9; i++) {
+        const fx = 150 + i * 2.4, alt = 6 + Math.random() * 10 + (i > 2 && i < 7 ? 6 : 0);
+        px(fx, 98 - alt, 2, alt, "#b3262b"); px(fx, 98 - alt * 0.75, 2, alt * 0.75, "#e0782f");
+        if (i > 1 && i < 8) px(fx, 98 - alt * 0.45, 2, alt * 0.45, "#ffd27a");
+      }
+      for (let i = 0; i < 4; i++) {  // fagulhas e fumaça
+        const t = (quadro * 2 + i * 13) % 40;
+        px(158 + Math.sin((quadro + i * 7) / 3) * 4, 80 - t, 1, 1, t < 20 ? "#ffb35c" : "rgba(160,150,140,0.5)");
+      }
+      // figuras, iluminadas pelo fogo
+      quem.forEach(([nomeSpr, fx, fy]) => {
+        const spr = Sprites.canvas(nomeSpr);
+        px(fx - 7, fy + 6, 14, 2, "rgba(0,0,0,0.5)");
+        if (spr) x.drawImage(spr, fx - 8, fy - 9, 16, 16);
+      });
+    }
+    cena(true);
+    timer = setInterval(() => { if (!document.hidden) cena(); }, 125);
+  }
+
+  function menuFigura(ancora, cid) {
+    fecharMenuItem();
+    const ops = App.opcoes() || [];
+    const nomeDe = (id) => (App.estado.heroi.comitiva.concat(App.ultimaFogueira ? App.ultimaFogueira.reserva : []).find((m) => m.id === id) || {}).nome || id;
+    const itens = [];
+    ops.forEach((o) => {
+      const m = o.meta || {};
+      if (m.conversar === cid) itens.push([`${S("pergaminho", 1)} Conversar${/✉/.test(o.texto) ? " ✉" : ""}`, { conversar: cid }]);
+      if (m.chamar === cid && !m.sai) itens.push([`${S("espada", 1)} Levar amanhã`, { chamar: cid }]);
+      if (m.chamar === cid && m.sai) itens.push([`${S("espada", 1)} Levar no lugar de ${h(nomeDe(m.sai).split(" ").pop())}`, { chamar: cid, sai: m.sai }]);
+      if (m.reservar === cid) itens.push([`${S("fogueira", 1)} Deixar no acampamento`, { reservar: cid }]);
+      if (m.acampamento === cid) itens.push([`${S("fogueira", 1)} Mandar para o acampamento`, { acampamento: cid }]);
+    });
+    if (!itens.length) return;
+    const menu = document.createElement("div");
+    menu.className = "menu-item moldura";
+    menu.innerHTML = `<b>${h(nomeDe(cid))}</b>` + itens.map(([t], i) => `<button type="button" data-i="${i}">${t}</button>`).join("") +
+      '<button type="button" class="secundaria" data-i="-1">Cancelar</button>';
+    document.body.appendChild(menu);
+    const r = ancora.getBoundingClientRect();
+    menu.style.left = Math.max(8, Math.min(innerWidth - menu.offsetWidth - 8, r.left)) + "px";
+    menu.style.top = (r.bottom + 6 + menu.offsetHeight > innerHeight ? r.top - menu.offsetHeight - 6 : r.bottom + 6) + "px";
+    menu.addEventListener("click", (ev) => {
+      const b = ev.target.closest("button");
+      if (!b) return;
+      ev.stopPropagation();
+      fecharMenuItem();
+      const i = Number(b.dataset.i);
+      if (i >= 0) App.acao(itens[i][1], "escolha");
+    });
+    setTimeout(() => document.addEventListener("click", fecharMenuItem, { once: true }), 0);
+  }
+
+  function ligarFigurasComitiva(raiz) {
+    raiz.querySelectorAll("[data-cid].figura, .cartao[data-cid]").forEach((el) => {
+      el.addEventListener("click", (ev) => { ev.stopPropagation(); menuFigura(el, el.dataset.cid); });
+    });
   }
 
   function barra(classe, atual, maximo) {
@@ -414,7 +578,10 @@ const Telas = (() => {
   function painel(m) {
     esconderDica();  // a tela foi redesenhada: a dica antiga ficaria órfã
     const div = document.createElement("div");
-    div.innerHTML = ({ personagem, diario, bestiario, comitiva, loja }[m.tipo] || (() => ""))(m.dados);
+    div.innerHTML = ({ personagem, diario, bestiario, comitiva, loja, acampamento, mural }[m.tipo] || (() => ""))(m.dados);
+    if (m.tipo === "acampamento") { App.ultimaFogueira = m.dados; desenharFogueira(div.querySelector(".fogueira-cena"), m.dados); }
+    if (m.tipo === "acampamento" || m.tipo === "comitiva") ligarFigurasComitiva(div);
+    if (m.tipo === "mural") ligarMural(div);
     if (m.tipo === "personagem") ligarInventario(div);
     if (m.tipo === "loja") { App.ultimaLoja = m.dados; ligarLoja(div); }
     ligarDicas(div);
@@ -518,6 +685,6 @@ const Telas = (() => {
     setTimeout(() => t.remove(), 3300);
   }
 
-  return { fecharMenuItem, guardarArvore, abrirTalentos, fecharTalentos, painel, celebrar, toast, iconeCriatura, iconeItem, dicaItem, ligarDicas, esconderDica,
+  return { atributosHtml, reputacaoHtml, dica, fecharMenuItem, guardarArvore, abrirTalentos, fecharTalentos, painel, celebrar, toast, iconeCriatura, iconeItem, dicaItem, ligarDicas, esconderDica,
     ICONE_ITEM, ARMA, VAZIO, NOME_ESPACO, AREA, barra, aprovacao };
 })();

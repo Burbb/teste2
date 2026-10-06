@@ -3,6 +3,9 @@
    Molduras e texturas são geradas em pixel art pelo sprites.js e entram como variáveis CSS. */
 
 @font-face { font-family: "Jacquard 24"; src: url(fontes/jacquard-24-latin-400-normal.woff2) format("woff2"); font-display: swap; }
+/* Títulos: letras góticas, mas números da fonte de números (o 5 gótico é difícil de ler). */
+@font-face { font-family: "Titulo"; src: url(fontes/jersey-15-latin-400-normal.woff2) format("woff2"); unicode-range: U+0030-0039, U+0025, U+002B, U+002F; font-display: swap; }
+@font-face { font-family: "Titulo"; src: url(fontes/jacquard-24-latin-400-normal.woff2) format("woff2"); font-display: swap; }
 @font-face { font-family: "Pixelify Sans"; font-weight: 400; src: url(fontes/pixelify-sans-latin-400-normal.woff2) format("woff2"); font-display: swap; }
 @font-face { font-family: "Pixelify Sans"; font-weight: 600; src: url(fontes/pixelify-sans-latin-600-normal.woff2) format("woff2"); font-display: swap; }
 @font-face { font-family: "Jersey 15"; src: url(fontes/jersey-15-latin-400-normal.woff2) format("woff2"); font-display: swap; }
@@ -28,7 +31,7 @@
   --raro: #f2c94c;
   --lendario: #ff9d4d;
   --corrupcao: 0;
-  --titulo: "Jacquard 24", "Pixelify Sans", serif;
+  --titulo: "Titulo", "Jacquard 24", "Pixelify Sans", serif;
   --texto: "Pixelify Sans", "Trebuchet MS", sans-serif;
   --num: "Jersey 15", "Pixelify Sans", monospace;
   --sombra: 4px 4px 0 rgba(0, 0, 0, 0.55);
@@ -680,10 +683,10 @@ body.modo-titulo .dica-pular { display: none; }
 .slot-px img.fantasma { opacity: 0.16; filter: grayscale(1); }
 .slot-px.mini { width: 40px; height: 40px; border-width: 2px; }
 .equip-mini { display: grid; grid-template-columns: repeat(5, 40px); gap: 4px; }
-.inventario { display: grid; grid-template-columns: 250px 1fr; gap: 18px; align-items: start; }
+.inventario { display: grid; grid-template-columns: auto 1fr; gap: 18px; align-items: start; }
 .boneco {
   display: grid; gap: 22px 8px; padding: 14px 10px 24px; background: #120e0b; border: 3px solid #3a2e24; box-shadow: 3px 3px 0 #000;
-  grid-template-columns: 64px 1fr 64px;
+  grid-template-columns: 64px 104px 64px; justify-content: center;
   grid-template-areas: "amu cab an1" "arm ret sec" "mao ret an2" "per pei pes";
   justify-items: center;
 }
@@ -795,3 +798,61 @@ body.em-combate #hud-linha { display: none; }
 body.em-combate #batalha { margin-top: 0; }
 .cartao-comitiva.atualizou { animation: cc-pulso 0.4s steps(3); }
 @keyframes cc-pulso { 50% { filter: brightness(1.35); } }
+
+.atributo[data-dica], .reputacao[data-dica] { cursor: help; }
+.atributo[data-dica]:hover { border-color: var(--ouro-3); }
+.dica-lista { margin: 4px 0 0; padding-left: 16px; font-size: 13px; line-height: 1.4; color: var(--tinta-2); }
+.dica-lista li { margin-bottom: 3px; }
+.reputacao b small { font-family: var(--texto); font-size: 12px; color: var(--tinta-3); font-weight: 400; margin-left: 4px; }
+
+/* ------------------------------------------------------------------ comitiva no painel */
+button.membro-carta { font: inherit; background: none; border: 0; padding: 0 2px; cursor: pointer; font-size: 16px; }
+button.membro-carta:hover { color: #fff3a0; transform: scale(1.2); }
+.cartao.clicavel { cursor: pointer; }
+.cartao.clicavel:hover { border-color: var(--ouro-3); transform: translateY(-2px); }
+.cartao.na-reserva { opacity: 0.8; border-style: dashed; }
+.tag.aviso-conversa { margin-top: 6px; color: var(--ouro); border-color: #8a6a14; animation: alerta 1.2s steps(2) infinite; }
+
+/* ------------------------------------------------------------------ fogueira */
+.fogueira-palco { position: relative; border: 3px solid #0d0b0a; box-shadow: 3px 3px 0 #000; }
+.fogueira-cena { display: block; width: 100%; height: auto; image-rendering: pixelated; }
+/* Cada figura: o nome logo acima da cabeça e a área clicável cobrindo o boneco (os pés ficam no "top"). */
+.figura { position: absolute; transform: translate(-50%, -100%); height: 34%; min-width: 44px; display: flex; flex-direction: column; justify-content: flex-start; align-items: center; gap: 1px; background: none; border: 0; padding: 0; cursor: pointer; font: inherit; }
+.figura .figura-nome { font-family: var(--num); font-size: 18px; line-height: 1; color: #fff3d6; background: rgba(13, 11, 10, 0.8); border: 2px solid #4a4038; padding: 1px 6px 2px; white-space: nowrap; }
+.figura .figura-estado { font-size: 10px; color: var(--tinta-3); white-space: nowrap; background: rgba(13, 11, 10, 0.7); padding: 0 4px; }
+.figura.ativo .figura-nome { border-color: #8a6a14; }
+.figura:hover .figura-nome, .figura:focus-visible .figura-nome { border-color: var(--ouro); color: var(--ouro); }
+.figura .carta-aviso { font-style: normal; font-size: 14px; color: #120e0b; background: var(--ouro); border: 2px solid #000; padding: 0 3px; animation: alerta 1.2s steps(2) infinite; }
+
+/* ------------------------------------------------------------------ mural de contratos */
+.quadro { padding: 10px 12px 14px; background: #3a2a18; border: 6px solid #5a3a1c; box-shadow: inset 0 0 0 3px #2a1a0c, 4px 4px 0 #000;
+  background-image: repeating-linear-gradient(90deg, rgba(0,0,0,0.12) 0 2px, transparent 2px 9px), repeating-linear-gradient(0deg, rgba(255,220,160,0.05) 0 1px, transparent 1px 7px); }
+.quadro-cab { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 8px; }
+.quadro-cab b { font-family: var(--titulo); font-weight: 400; font-size: 34px; color: var(--ouro); text-shadow: 2px 2px 0 #000; line-height: 1; }
+.quadro-cab span { font-size: 13px; color: #d8c49a; }
+.cartazes { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 14px; }
+.contrato { position: relative; display: flex; flex-direction: column; gap: 4px; padding: 14px 10px 10px; background: #e8d8b0; color: #2a1e12; border: 2px solid #8a6a40;
+  box-shadow: 3px 3px 0 rgba(0,0,0,0.6); transform: rotate(-0.8deg); }
+.contrato:nth-child(2n) { transform: rotate(0.7deg); }
+.contrato:hover { transform: rotate(0) translateY(-3px); z-index: 2; }
+.contrato .prego { position: absolute; top: 4px; left: 50%; width: 8px; height: 8px; margin-left: -4px; background: #6e1d1d; border: 2px solid #2a0808; }
+.contrato-tipo { font-family: var(--titulo); font-size: 26px; line-height: 1; text-align: center; color: #6e1d1d; }
+.contrato.tipo-entrega .contrato-tipo { color: #2e4a20; }
+.contrato.tipo-caca .contrato-tipo { color: #5a3a10; }
+.contrato-arte { align-self: center; width: 60px; height: 60px; display: grid; place-items: center; background: #d4c094; border: 2px solid #8a6a40; }
+.contrato.tipo-alvo .contrato-arte img { filter: sepia(0.6) contrast(1.2); }
+.contrato-titulo { font-weight: 600; font-size: 15px; text-align: center; line-height: 1.2; }
+.contrato-desc { font-size: 13px; line-height: 1.35; color: #4a3a28; }
+.contrato-lugar { font-size: 12px; color: #4a3a28; display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.contrato-lugar img.sprite { width: 16px; height: 16px; }
+.contrato-progresso { display: flex; align-items: center; gap: 6px; font-family: var(--num); font-size: 16px; }
+.contrato-progresso .barra-px { flex: 1; }
+.contrato-premio { display: flex; justify-content: space-between; font-family: var(--num); font-size: 19px; color: #5a3a10; border-top: 2px dashed #a88a5a; padding-top: 4px; }
+.contrato-premio span { display: inline-flex; align-items: center; gap: 3px; }
+.contrato-botao { margin-top: 4px; cursor: pointer; font-family: var(--texto); font-weight: 600; font-size: 14px; color: #fff3d6; background: #6e1d1d; border: 2px solid #2a0808; padding: 4px 8px; box-shadow: 2px 2px 0 #000; }
+.contrato-botao:hover { background: #8a2626; }
+.contrato-botao.abandonar { background: #4a4038; }
+.contrato-botao:disabled { opacity: 0.45; cursor: not-allowed; }
+.contrato-feito { text-align: center; font-size: 13px; font-weight: 600; color: #2e4a20; }
+.contrato.concluido::after { content: "FEITO"; position: absolute; top: 34px; right: 6px; transform: rotate(14deg); font-family: var(--num); font-size: 22px; color: #2e6a20; border: 3px solid #2e6a20; padding: 0 6px; }
+.cartazes.seus .contrato { background: #d8c8a0; }

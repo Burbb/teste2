@@ -55,6 +55,11 @@ def _distancias(locais, origem=0):
     return dist
 
 
+def distancias(locais, origem):
+    """Quantos trechos de estrada separam cada lugar da origem."""
+    return _distancias(locais, origem)
+
+
 def _dist_visual(p, q):
     # O mapa é desenhado com caracteres ~2x mais altos que largos.
     return math.hypot((p[0] - q[0]) * 64, (p[1] - q[1]) * 32)

@@ -21,8 +21,12 @@ um reino diferente: mapa, nomes, chefes, eventos e consequências.
   <img src="docs/comitiva.png" width="49%" alt="Odette aprova muito: o cartão da comitiva surge acima do trecho mais recente, com a ação separada da fala">
 </p>
 <p align="center">
+  <img src="docs/fogueira.png" width="49%" alt="A fogueira: a comitiva em volta do fogo e Yara na reserva, perto da barraca">
+  <img src="docs/mural.png" width="49%" alt="Mural de contratos: cartazes de Caça e Procurado pregados no quadro">
+</p>
+<p align="center">
   <img src="docs/talentos.png" width="49%" alt="Árvore de talentos com hover">
-  <img src="docs/inventario.png" width="49%" alt="Inventário: boneco com dez espaços, mochila e comparação de itens">
+  <img src="docs/inventario.png" width="49%" alt="Inventário: boneco com dez espaços e a dica da Agilidade (esquiva, crítico, testes)">
 </p>
 <p align="center">
   <img src="docs/mercado.png" width="49%" alt="Mercado: quantidade, avisos soltos perto do clique e a seta de voltar">
@@ -108,7 +112,16 @@ nos títulos, Pixelify Sans no texto, Jersey 15 nos números.
   (`−16 ouro`, `Tocha ×4`) aparece **solto na tela, perto de onde você clicou**. E "Voltar" virou
   uma **seta fixa** no canto da página, que também responde ao `Esc`.
 - **Telas desenhadas:** Diário (cartas de contratos, rumores e do inimigo), Bestiário (fichas
-  com fraquezas) e Comitiva.
+  com fraquezas) e Comitiva (clique num companheiro para conversar ou mandá-lo ao acampamento).
+- **Mural de contratos** como um quadro de cortiça: cada contrato é um cartaz pregado (Caça,
+  Procurado, Entrega) com o alvo, o lugar, a distância, o nível do perigo, a recompensa em
+  ouro e XP e o botão Aceitar. Os seus contratos aparecem embaixo, com o progresso da caça e o
+  botão Abandonar.
+- **Atributos explicados:** passe o mouse em Ataque, Defesa, Agilidade e Poder (no painel e na
+  tela de personagem) para ver o que cada um faz com os números de agora: quanto a Defesa
+  reduz do dano, a chance de esquiva e de crítico da Agilidade, o bônus nos testes e o que
+  você ganha com mais um ponto. A Reputação também: título (Respeitado, Malvisto...), desconto
+  no mercado, bônus de Carisma e o que muda no mundo.
 - Som ambiente e efeitos sintetizados na hora. Funciona em monitor largo, notebook e celular.
   Recarregar a página não perde nada.
 
@@ -138,7 +151,7 @@ e mão secundária. A mochila guarda 12 itens.
 ## A comitiva
 
 Você não precisa caminhar sozinho, e talvez não deva. Três companheiros podem cruzar o seu caminho
-(no máximo dois ao mesmo tempo). Cada um tem **valores próprios**, e eles **discordam entre si**:
+(dois andam com você; quem sobra espera no acampamento). Cada um tem **valores próprios**, e eles **discordam entre si**:
 
 | Companheiro | Quem é | Em combate | Admira | Despreza |
 |---|---|---|---|---|
@@ -157,8 +170,13 @@ Você não precisa caminhar sozinho, e talvez não deva. Três companheiros pode
   negras onde uma porta pode ser fechada ou aberta de vez. Algumas dessas escolhas mudam
   quem estará ao seu lado (ou contra você) no salão do trono.
 - **Discussões** entre companheiros: às vezes você vai ter que tomar partido.
+- **O acampamento.** Quem sai da comitiva não some: vai **esperar no acampamento**. Quando
+  você acampa à noite, abre a cena da **fogueira**: você e a comitiva em volta do fogo e quem
+  está na reserva perto da barraca. Clique em alguém para conversar (o ✉ mostra quem tem algo
+  a dizer), levar alguém da reserva no lugar de outro ou deixar alguém descansando. Quem fica
+  no acampamento se recupera, não come das suas provisões e não opina nas suas escolhas.
 - **O preço:** cada companheiro come uma provisão por dia, Morel cobra soldo, grupos
-  atraem mais inimigos, os inimigos resistem mais e o XP é dividido. Quem cai em combate
+  atraem mais inimigos, os inimigos resistem mais e o XP é dividido (só quem anda com você). Quem cai em combate
   pode morrer de verdade (Odette por perto ajuda a evitar).
 
 ## O objetivo

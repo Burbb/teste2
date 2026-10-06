@@ -69,7 +69,7 @@ const Batalha = (() => {
     if (c.cid) e.dataset.cid = c.cid;
     e.innerHTML = `<div class="carta-fx"></div><div class="icone">${S(icone(c), 2)}</div>
       <div class="carta-nome"><span></span><small></small></div>
-      <div class="carta-hp"><span class="barra-px ${c.lado === "aliado" ? (c.uid === "j" ? "vida" : "aliado") : "vida"}"><span class="rastro"></span><span class="enchimento"></span></span><span class="num"></span></div>
+      <div class="carta-hp"><span class="barra-px vida"><span class="rastro"></span><span class="enchimento"></span></span><span class="num"></span></div>
       ${c.uid === "j" ? '<div class="carta-rec"><span class="barra-px mana"><span class="enchimento"></span></span><span class="num"></span></div>' : ""}
       <div class="carta-efeitos"></div><div class="preparando" hidden>⚠ prepara um golpe devastador</div>`;
     const b = e.querySelector(".carta-hp .barra-px");

@@ -341,7 +341,7 @@ def teodoro_ruivo(g):
     grupo = [lider] + [g.inimigo("bandido", nivel=g.j.nivel) for _ in range(2)]
     for e in grupo[1:]:
         e.nome = "Desertor dos Cães"
-    resultado = g.combate(grupo, pode_fugir=False, titulo="OS CÃES DE FERRO")
+    resultado = g.combate(grupo, pode_fugir=False, titulo="OS IRON HOUNDS")
     if resultado == "vitoria" and cm.presente(g, "morel"):
         g.narrar("Morel se ajoelha ao lado de Theodore. \"Eu devia isso a você, Theo.\" Não fica claro se fala da luta "
                  "ou da ponte.", "cinza")

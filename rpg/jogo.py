@@ -23,7 +23,7 @@ from . import sobrevivencia
 from . import talentos
 from . import telemetria
 from .telemetria import registrar
-from .mundo import gerar_mundo, nivel_regiao, vizinhos
+from .mundo import distancias, gerar_mundo, nivel_regiao, vizinhos
 
 VERSAO_SAVE = 1
 NOMES_TESTE = {
@@ -88,6 +88,7 @@ class Jogo:
         self.combate_ativo = None
         self.autosalvar = False  # ligado pelo menu principal quando há uma pessoa jogando
         self.comitiva = []
+        self.reserva = []  # companheiros que esperam no acampamento
         self.evento_atual = None
         self.sem_luz = False
         self.registro = []
@@ -977,8 +978,8 @@ class Jogo:
             ("Viajar", "viajar"),
             ("Talentos" + (f"  ★ {pontos} ponto(s) para gastar!" if pontos else ""), "talentos"),
             ("Personagem e inventário", "personagem"),
-            (f"Comitiva ({len(self.comitiva)})" + ("  ✉ alguém quer conversar" if any(
-                c["conversa"] for c in comitiva.estado(self)) else ""), "comitiva") if self.comitiva else None,
+            ("Comitiva" + ("  ✉ alguém quer conversar" if any(
+                c["conversa"] for c in comitiva.estado(self)) else ""), "comitiva") if self.comitiva or self.reserva else None,
             ("Mapa", "mapa"),
             ("Diário (contratos, rumores, aliados)", "diario"),
             ("Bestiário", "bestiario"),
@@ -1143,10 +1144,15 @@ class Jogo:
         self.pausar()
 
     def acampar(self):
-        self.ui.cena("Acampamento", self.contexto_cena(), "evento")
-        self.dizer("Você junta gravetos, acende uma fogueira fraca e se enrola na capa. O frio entra mesmo assim.",
-                   "cinza")
-        if not comitiva.noite(self) and self.chance(0.45):
+        intro = "Você junta gravetos, acende uma fogueira fraca e se enrola na capa. O frio entra mesmo assim."
+        if comitiva.membros(self) or comitiva.reserva(self):
+            conversou = comitiva.fogueira(self, intro)
+            self.ui.cena("Acampamento", self.contexto_cena(), "evento")
+        else:
+            self.ui.cena("Acampamento", self.contexto_cena(), "evento")
+            self.dizer(intro, "cinza")
+            conversou = False
+        if not conversou and not comitiva.noite(self) and self.chance(0.45):
             eventos.disparar(self, "acampamento")
         fracao = 0.4
         if self.clima in ("chuva", "tempestade", "neve"):
@@ -1482,6 +1488,10 @@ class Jogo:
             self.ofertas[vid] = oferta
         while True:
             self.ui.cena("Mural de contratos", f"{self.loc['nome']} · contratos ativos: {len(self.contratos)}/3", "menu")
+            if self.ui.painel("mural", self.dados_mural(oferta)):
+                if self._mural_web(oferta):
+                    return
+                continue
             opcoes = [(f"{c['desc']} (recompensa: {c['ouro']} ouro, {c['xp']} XP)", c) for c in oferta["lista"]]
             c = self.menu("Aceitar qual contrato?", opcoes + [("Voltar", None)])
             if not c:
@@ -1496,6 +1506,50 @@ class Jogo:
                 self.marcar(f"conhecido:{c['local']}")
             if c["tipo"] == "entrega":
                 self.plantar("pacote_suspeito", 3, contrato=c["id"])
+
+    def cartao_contrato(self, c):
+        """Um contrato como cartão do mural: tipo, alvo, lugar, distância, recompensa e progresso."""
+        locais = self.mundo["locais"]
+        lugar = locais[c["destino"] if c["tipo"] == "entrega" else c["local"]]
+        dist = distancias(locais, self.loc["id"]).get(lugar["id"])
+        f = FAMILIAS.get(c.get("familia"), {})
+        progresso = (f"{c.get('feito', 0)}/{c['total']}" if c["tipo"] == "caca" else
+                     "abatido" if c.get("concluido") else None)
+        return {"id": c["id"], "tipo": c["tipo"], "desc": c["desc"], "ouro": c["ouro"], "xp": c["xp"],
+                "lugar": lugar["nome"], "lugar_tipo": lugar["tipo"], "bioma": lugar["bioma"], "distancia": dist,
+                "nivel": None if lugar["tipo"] == "vila" else nivel_regiao(lugar, self.corrupcao),
+                "alvo": c.get("nome"), "familia": c.get("familia"), "familia_nome": f.get("nome"),
+                "tracos": f.get("tracos", []), "objeto": c.get("objeto"), "progresso": progresso,
+                "concluido": bool(c.get("concluido")), "penalidade": 6 if c["tipo"] == "entrega" else 3}
+
+    def dados_mural(self, oferta):
+        return {"oferta": [self.cartao_contrato(c) for c in oferta["lista"]],
+                "ativos": [self.cartao_contrato(c) for c in self.contratos], "limite": 3,
+                "renova": max(0, 3 - (self.dia - oferta["dia"])), "nivel_heroi": self.j.nivel}
+
+    def _mural_web(self, oferta):
+        """Mural na interface web: aceitar e abandonar são cliques nos cartões. True = sair."""
+        opcoes = [(f"Aceitar: {c['desc']}", ("aceitar", c), {"aceitar": c["id"]}) for c in oferta["lista"]]
+        opcoes += [(f"Abandonar: {c['desc']}", ("abandonar", c), {"abandonar": c["id"]})
+                   for c in self.contratos if not c.get("concluido")]
+        op = self.menu("", opcoes + [("Voltar", None, {"voltar": True})])
+        if op is None:
+            return True
+        acao, c = op
+        if acao == "abandonar":
+            self.abandonar_contrato(c)
+            return False
+        if len(self.contratos) >= 3:
+            self.dizer("Você já tem contratos demais. Termine ou abandone um antes.", "vermelho")
+            return False
+        oferta["lista"].remove(c)
+        self.contratos.append(c)
+        self.ui.efeito("Contrato aceito", "info")
+        if c["tipo"] == "alvo":
+            self.marcar(f"conhecido:{c['local']}")
+        if c["tipo"] == "entrega":
+            self.plantar("pacote_suspeito", 3, contrato=c["id"])
+        return False
 
     def receber_contratos(self):
         for c in list(self.contratos):
@@ -1865,7 +1919,7 @@ class Jogo:
         for campo in ("mundo", "dia", "periodo", "clima", "corrupcao", "passos", "flags", "historico", "contagem",
                       "impulsos", "sementes", "rumores", "contratos", "ofertas", "lojas", "nemesis",
                       "aliados_finais", "forcados", "proximo_id", "estatisticas", "hardcore", "bestiario", "lendas",
-                      "registro", "arquivo_run", "comitiva"):
+                      "registro", "arquivo_run", "comitiva", "reserva"):
             dados[campo] = getattr(self, campo)
         caminho = self.caminho_save()
         temporario = caminho + ".tmp"

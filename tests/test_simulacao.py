@@ -191,6 +191,53 @@ class TestSimulacao(unittest.TestCase):
             self.assertIs(g.j.equip["cabeca"], elmo)
             self.assertNotIn(elmo, g.j.mochila)
 
+    def test_acampamento_e_reserva(self):
+        """Quem sai da comitiva espera no acampamento; na fogueira dá para trocar quem vai junto."""
+        with tempfile.TemporaryDirectory() as pasta:
+            g = Jogo(BotUI(random.Random(4), max_decisoes=200), seed=4, pasta_saves=pasta)
+            g.iniciar("Robô", "guerreiro")
+            comitiva.recrutar(g, "odete")
+            comitiva.recrutar(g, "morel")
+            g.ui.escolher = lambda pergunta, opcoes: next(i for i, o in enumerate(opcoes) if "espera no acampamento" in o)
+            self.assertTrue(comitiva.oferecer_vaga(g, "yara"))
+            self.assertIsNotNone(comitiva.na_reserva(g, "yara"))
+            self.assertFalse(comitiva.presente(g, "yara"))
+            self.assertFalse(comitiva.disponivel(g, "yara"))
+            # Na reserva não come nem opina.
+            comitiva.reagir(g, "magia_proibida")
+            self.assertEqual(comitiva.na_reserva(g, "yara")["aprovacao"], 0)
+            # Na fogueira: troca a Yara pela Odette e dorme.
+            passos = iter(["Levar Yara no lugar de Odette", "Dormir até o amanhecer"])
+            alvo = {"t": next(passos)}
+
+            def escolher(pergunta, opcoes):
+                i = next(i for i, o in enumerate(opcoes) if o.startswith(alvo["t"]))
+                alvo["t"] = next(passos, "Dormir até o amanhecer")
+                return i
+            g.ui.escolher = escolher
+            comitiva.fogueira(g)
+            self.assertTrue(comitiva.presente(g, "yara"))
+            self.assertIsNotNone(comitiva.na_reserva(g, "odete"))
+            # Salvar e carregar mantém a reserva.
+            g.salvar(silencioso=True)
+            g2 = Jogo.carregar(BotUI(random.Random(1)), g.caminho_save(), pasta)
+            self.assertEqual([m["id"] for m in g2.reserva], ["odete"])
+
+    def test_mural_web(self):
+        with tempfile.TemporaryDirectory() as pasta:
+            g = Jogo(BotUI(random.Random(6), max_decisoes=50), seed=6, pasta_saves=pasta)
+            g.iniciar("Robô", "arqueiro")
+            oferta = {"dia": g.dia, "lista": [g.gerar_contrato() for _ in range(3)]}
+            dados = g.dados_mural(oferta)
+            self.assertEqual(len(dados["oferta"]), 3)
+            for c in dados["oferta"]:
+                self.assertTrue({"lugar", "ouro", "xp", "distancia", "tipo"} <= set(c))
+            primeiro = oferta["lista"][0]
+            g.ui.escolher = lambda pergunta, opcoes: opcoes.index(f"Aceitar: {primeiro['desc']}")
+            self.assertFalse(g._mural_web(oferta))
+            self.assertIn(primeiro, g.contratos)
+            self.assertEqual(len(oferta["lista"]), 2)
+
     def test_comitiva(self):
         """Opinião, partida, conversas, combate e salvar/carregar da comitiva."""
         with tempfile.TemporaryDirectory() as pasta:

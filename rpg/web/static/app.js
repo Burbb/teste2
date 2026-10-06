@@ -52,6 +52,8 @@ const App = {
   pedir: (rotulo, chave, valor) => pedir(rotulo, chave, valor),
   acao: (filtro, som, extra) => acao(filtro, som, extra),
   ultimaLoja: null,
+  ultimaFogueira: null,
+  opcoes: () => (pergunta && pergunta.tipo === "opcoes" ? pergunta.opcoes : null),
   som: (n) => Som.tocar(n),
   doer: () => doer(),
   acaoFecharTalentos: null,
@@ -100,7 +102,8 @@ function acao(filtro, som, extra) {
   responder(pergunta.id, extra ? { i, ...extra } : i);  // extra: dados que vão junto (ex.: quantidade)
   return true;
 }
-const ACOES_OCULTAS = ["equipar", "tirar", "usar", "largar", "comprar", "comprar_item", "vender"];
+const ACOES_OCULTAS = ["equipar", "tirar", "usar", "largar", "comprar", "comprar_item", "vender", "aceitar", "abandonar",
+  "conversar", "chamar", "reservar", "acampamento"];
 
 /* ------------------------------------------------------------------ fila */
 async function processar() {
@@ -141,7 +144,7 @@ async function tratar(m) {
     case "celebrar": await Telas.celebrar(m, instantaneo()); break;
     case "talentos": Telas.guardarArvore(m.arvore); break;
     case "painel": anexar(Telas.painel(m)); break;
-    case "subtitulo": anexar(el("div", "subtitulo", esc(m.texto))); break;
+    case "subtitulo": anexar(el("div", "subtitulo", esc(suavizar(m.texto)))); break;
     case "separador": anexar(el("hr")); break;
     case "bloco": bloco(m); break;
     case "mapa": mapaNaPagina(m); break;
@@ -159,10 +162,19 @@ function anexar(no) { textoEl.appendChild(no); rolarFim(); return no; }
 function rolarFim() { if (seguir) pagina.scrollTop = pagina.scrollHeight; }
 pagina.addEventListener("scroll", () => { seguir = pagina.scrollTop + pagina.clientHeight >= pagina.scrollHeight - 80; }, { passive: true });
 
+/** Gótico em CAIXA ALTA é ilegível: "O ÚLTIMO GUARDA" vira "O Último Guarda". */
+const MIUDAS = new Set(["de", "da", "do", "das", "dos", "e", "em", "of", "the", "a", "o", "os", "as"]);
+function suavizar(t) {
+  t = String(t ?? "");
+  if (/[a-zà-ÿ]/.test(t) || !/[A-ZÀ-Ý]{2}/.test(t)) return t;
+  return t.toLowerCase().replace(/[\p{L}']+/gu, (p, i) => (i > 0 && MIUDAS.has(p) ? p : p[0].toUpperCase() + p.slice(1)));
+}
+App.suavizar = suavizar;
+
 function cabecalho(m) {
   document.querySelectorAll(".voltar-seta").forEach((x) => x.remove());
   cab.dataset.tipo = m.tipo || "evento";
-  cab.innerHTML = `<h1 class="cena-titulo">${esc(m.titulo)}</h1>` + (m.subtitulo ? `<div class="cena-sub">${esc(m.subtitulo)}</div>` : "") +
+  cab.innerHTML = `<h1 class="cena-titulo">${esc(suavizar(m.titulo))}</h1>` + (m.subtitulo ? `<div class="cena-sub">${esc(m.subtitulo)}</div>` : "") +
     `<div class="ornamento"><i></i><b></b><i></i></div>`;
   corpo.classList.toggle("modo-titulo", m.tipo === "titulo");
   if (m.tipo === "titulo") {
@@ -266,8 +278,8 @@ async function opiniao(m) {
 
 function iconeChip(m) {
   const t = m.texto;
-  const porNome = ["Odette", "Morel", "Yara"].find((n) => t.includes(n));
-  if ((m.tipo === "aprova" || m.tipo === "desaprova") && porNome) return porNome.toLowerCase();
+  const porNome = [["Odette", "odete"], ["Morel", "morel"], ["Yara", "yara"]].find(([n]) => t.includes(n));
+  if ((m.tipo === "aprova" || m.tipo === "desaprova") && porNome) return porNome[1];
   if (m.tipo === "item") {
     if (/comida|Provis/i.test(t)) return "pernil";
     if (/Tocha/.test(t)) return "tocha";
@@ -349,7 +361,7 @@ async function rolagem(m) {
 }
 
 function faixaCombate(m) {
-  anexar(el("div", "faixa-combate", `⚔ ${esc(m.titulo)}`));
+  anexar(el("div", "faixa-combate", `⚔ ${esc(suavizar(m.titulo))}`));
   if (m.subtitulo) anexar(el("div", "faixa-combate-sub", esc(m.subtitulo)));
   historico("h-cena", "⚔ " + m.titulo);
   if (!replay) Som.tocar("golpe");
@@ -374,6 +386,7 @@ function bloco(m) {
 function eco(m) {
   historico("h-eco", "› " + m.texto);
   if (estado && estado.combate) return;  // na luta, a carta que avança já mostra o que você escolheu
+  if (emTela()) return;  // nas telas desenhadas (mercado, inventário), o aviso solto já contou o que aconteceu
   anexar(el("p", "eco", esc(m.texto)));
 }
 
@@ -667,8 +680,7 @@ function desenharHud(h, antes) {
 }
 
 function desenharHeroi(h) {
-  const icAttr = { Ataque: "espada", Defesa: "escudo", Agilidade: "folha", Poder: "chama" };
-  const attrs = Object.entries(h.atributos).map(([k, v]) => `<div class="atributo">${spr(icAttr[k] || "estrela", 1)}<span class="nome">${esc(k)}</span><span class="valor">${v}</span></div>`).join("");
+  const attrs = Telas.atributosHtml(h);
   const slot = (s) => {
     const it = h.equip[s];
     if (!it) return `<div class="slot-px mini vazio" title="${esc(Telas.NOME_ESPACO[s])} (vazio)">${spr(Telas.VAZIO[s], 1, "fantasma")}</div>`;
@@ -679,10 +691,10 @@ function desenharHeroi(h) {
   const habs = h.habilidades.map((x) => `<div class="habilidade" title="${esc(x.desc)}"><span>${esc(x.nome)}</span><small>${x.custo} ${esc(h.recurso)}</small></div>`).join("");
   const bolsa = h.bolsa.filter((b) => b.id !== "tocha").map((b) => `<div class="slot-px" title="${esc(b.nome)}: ${esc(b.desc)}">${spr(Telas.ICONE_ITEM[b.id] || "pocao", 2)}<span class="qtd">${b.qtd}</span></div>`).join("");
   const comitiva = h.comitiva && h.comitiva.length ? `<div class="secao"><h3>Comitiva</h3>${h.comitiva.map((m) =>
-    `<div class="membro${m.ferido ? " ferido" : ""}" data-cid="${esc(m.id)}" title="${esc(m.titulo)} · aprovação ${m.aprovacao > 0 ? "+" : ""}${m.aprovacao}${m.ferido ? " · ferido, fora de combate até descansar" : ""}">
+    `<div class="membro${m.ferido ? " ferido" : ""}" data-cid="${esc(m.id)}">
       <div class="icone">${spr(m.id, 2)}</div>
-      <div class="membro-nome"><span>${esc(m.nome)}</span>${m.conversa ? '<span class="membro-carta" title="Quer conversar">✉</span>' : ""}</div>
-      ${barra("aliado fina", m.hp, m.max_hp)}${Telas.aprovacao(m)}</div>`).join("")}</div>` : "";
+      <div class="membro-nome"><span>${esc(m.nome)}</span>${m.conversa ? `<button type="button" class="membro-carta" data-conversar="${esc(m.id)}" title="${esc(m.nome.split(" ").pop())} quer conversar">✉</button>` : ""}</div>
+      ${barra("vida fina", m.hp, m.max_hp)}${Telas.aprovacao(m)}</div>`).join("")}</div>` : "";
   $("#heroi").innerHTML = `
     <div class="identidade"><div class="retrato-grande">${spr(h.classe, 3)}</div>
       <div><div class="heroi-nome">${esc(h.nome)}</div><div class="heroi-titulo">${esc(h.titulo)} · nível ${h.nivel}</div></div></div>
@@ -694,7 +706,7 @@ function desenharHeroi(h) {
     <div class="secao"><h3>Ferimentos</h3>${feridas}</div>
     <div class="secao"><h3>Habilidades</h3>${habs}</div>
     <div class="secao"><h3>Bolsa</h3><div class="slots">${bolsa || '<span class="vazio">vazia</span>'}</div></div>
-    <div class="secao"><div class="linhas"><div class="linha"><span>Reputação</span><b>${h.reputacao > 0 ? "+" : ""}${h.reputacao}</b></div></div></div>`;
+    <div class="secao"><div class="linhas">${Telas.reputacaoHtml(h)}</div></div>`;
   animarBarras($("#heroi"));
   Telas.ligarDicas($("#heroi"));
 }
@@ -788,6 +800,14 @@ document.addEventListener("click", (ev) => {
     return;
   }
   if (ev.target.closest(".talento-aviso")) { pedir("Talentos", "_", null); return; }
+  const carta = ev.target.closest("[data-conversar]");
+  if (carta) {
+    const cid = carta.dataset.conversar;
+    const direta = pergunta && pergunta.tipo === "opcoes" && pergunta.opcoes.some((o) => o.meta && o.meta.conversar === cid);
+    if (direta || (pergunta && pergunta.tipo === "opcoes" && pergunta.opcoes.some((o) => o.texto.startsWith("Comitiva")))) pedir("Comitiva", "conversar", cid);
+    else Telas.toast("", "Dá para conversar quando estiver num lugar seguro (vila ou acampamento).", cid, true);
+    return;
+  }
   if (processando && ev.target.closest("#pagina")) pular = true;
 });
 

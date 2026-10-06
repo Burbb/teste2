@@ -226,9 +226,18 @@ def presente(g, cid):
     return membro(g, cid) is not None
 
 
+def reserva(g):
+    """Quem espera no acampamento: não anda com você, não luta, não come do seu saco e não opina."""
+    return list(getattr(g, "reserva", None) or [])
+
+
+def na_reserva(g, cid):
+    return next((m for m in reserva(g) if m["id"] == cid), None)
+
+
 def disponivel(g, cid):
-    """Ainda pode ser encontrado: não está na comitiva, não morreu, não foi embora."""
-    return not presente(g, cid) and not g.flag(f"comitiva:{cid}")
+    """Ainda pode ser encontrado: não está na comitiva nem no acampamento, não morreu, não foi embora."""
+    return not presente(g, cid) and not na_reserva(g, cid) and not g.flag(f"comitiva:{cid}")
 
 
 def nome(cid):
@@ -265,7 +274,7 @@ def atributos(g, m):
 
 
 def atualizar_vida_maxima(g):
-    for m in membros(g):
+    for m in membros(g) + reserva(g):
         novo = atributos(g, m)["max_hp"]
         if novo > m["max_hp"]:
             m["hp"] += novo - m["max_hp"]
@@ -275,7 +284,7 @@ def atualizar_vida_maxima(g):
 
 # ---------------------------------------------------------------- entrar e sair
 def recrutar(g, cid):
-    if presente(g, cid):
+    if presente(g, cid) or na_reserva(g, cid):
         return None
     m = {"id": cid, "aprovacao": 0, "dias": 0, "desde": g.dia, "conversas": 0, "ultima_conversa": -1,
          "missao": 0, "caminho": None, "ferido": False, "hp": 1, "max_hp": 1}
@@ -308,13 +317,43 @@ def oferecer_vaga(g, cid):
             recrutar(g, cid)
             return True
         return False
-    opcoes = [(f"Mandar {nome(m['id'])} embora e levar {d['curto']}", m["id"]) for m in ms]
-    opcoes.append(("Não: sua comitiva já está completa", None))
+    opcoes = [(f"Mandar {nome(m['id'])} para o acampamento e levar {d['curto']}", m["id"]) for m in ms]
+    opcoes.append((f"{d['curto']} espera no acampamento (troque quando acampar)", "reserva"))
+    opcoes.append(("Recusar", None))
     troca = g.menu(f"Sua comitiva está cheia. {d['curto']} quer vir.", opcoes)
     if troca is None:
         return False
-    dispensar(g, troca, silencioso=True)
+    if troca == "reserva":
+        recrutar(g, cid)
+        para_acampamento(g, cid, silencioso=True)
+        return True
+    para_acampamento(g, troca, silencioso=True)
     recrutar(g, cid)
+    return True
+
+
+def para_acampamento(g, cid, silencioso=False):
+    """Sai da comitiva sem ir embora: espera no acampamento até ser chamado de volta."""
+    m = membro(g, cid)
+    if not m:
+        return
+    g.comitiva.remove(m)
+    m["ferido"] = False
+    g.reserva.append(m)
+    if not silencioso:
+        g.ui.efeito(f"{nome(cid)} vai esperar no acampamento", "info")
+    registrar(g, "comitiva", acao="acampamento", id=cid, aprovacao=m["aprovacao"])
+
+
+def chamar(g, cid):
+    """Do acampamento de volta para a estrada (se houver lugar)."""
+    m = na_reserva(g, cid)
+    if not m or len(membros(g)) >= LIMITE:
+        return False
+    g.reserva.remove(m)
+    g.comitiva.append(m)
+    g.ui.efeito(f"{nome(cid)} volta para a comitiva", "aprova")
+    registrar(g, "comitiva", acao="volta", id=cid, aprovacao=m["aprovacao"])
     return True
 
 
@@ -323,13 +362,17 @@ def dispensar(g, cid, silencioso=False):
     if not silencioso:
         g.narrar(f"{d['curto']} junta as coisas sem dizer muito. Na primeira encruzilhada, cada um segue o seu caminho.",
                  "cinza")
+    m = na_reserva(g, cid)
+    if m:  # quem estava no acampamento também pode ser despedido de vez
+        g.reserva.remove(m)
+        g.comitiva.append(m)
     sair(g, cid, "dispensado")
     g.ui.efeito(f"{d['nome']} deixa a comitiva", "desaprova")
 
 
 # ---------------------------------------------------------------- opinião
 def mudar_aprovacao(g, cid, delta, mostrar=True, fala=None):
-    m = membro(g, cid)
+    m = membro(g, cid) or na_reserva(g, cid)  # conversas na fogueira também contam
     if not m or not delta:
         return
     m["aprovacao"] = max(-100, min(100, m["aprovacao"] + delta))
@@ -396,6 +439,9 @@ def amanhecer(g, descanso):
         m["dias"] += 1
         if descanso:
             m["ferido"] = False
+    for m in reserva(g):  # no acampamento, todo mundo se recupera
+        m["hp"] = m["max_hp"]
+        m["ferido"] = False
     comer(g)
     if presente(g, "morel"):
         pagar_soldo(g)
@@ -476,16 +522,74 @@ def fala_ociosa(g, m):
     return g.sortear(COMPANHEIROS[m["id"]]["ocioso"][faixa])
 
 
+def fogueira(g, intro=None):
+    """O acampamento à noite: quem anda com você e quem espera na reserva, em volta do fogo.
+    Conversar, trocar quem vai junto amanhã e, por fim, dormir. Devolve True se houve conversa de história."""
+    conversou = False
+    ociosos = set()
+    while True:
+        ms, rs = membros(g), reserva(g)
+        g.ui.cena("Fogueira", g.contexto_cena(), "menu")
+        if intro:
+            g.dizer(intro, "cinza")
+            intro = None
+        dados = {"ativos": estado(g), "reserva": estado(g, reserva(g)), "limite": LIMITE,
+                 "clima": g.clima, "bioma": g.loc["bioma"]}
+        if not g.ui.painel("acampamento", dados):
+            for m in ms + rs:
+                onde = "na comitiva" if m in ms else "no acampamento"
+                g.dizer(f"{nome(m['id'])} ({onde}) — vida {m['hp']}/{m['max_hp']} · {nivel(m)[0]}", "cinza")
+        opcoes = []
+        for m in ms + rs:
+            tem = proxima_conversa(g, m) and m["ultima_conversa"] != g.dia
+            if tem or m["id"] not in ociosos:
+                opcoes.append((f"Conversar com {nome(m['id'])}" + ("  ✉" if tem else ""), ("falar", m["id"]),
+                               {"conversar": m["id"]}))
+        for m in rs:
+            if len(ms) < LIMITE:
+                opcoes.append((f"Levar {nome(m['id'])} amanhã", ("chamar", m["id"]), {"chamar": m["id"]}))
+            else:
+                for a in ms:
+                    opcoes.append((f"Levar {nome(m['id'])} no lugar de {nome(a['id'])}", ("trocar", m["id"], a["id"]),
+                                   {"chamar": m["id"], "sai": a["id"]}))
+        for m in ms:
+            opcoes.append((f"Deixar {nome(m['id'])} no acampamento", ("reservar", m["id"]), {"reservar": m["id"]}))
+        opcoes.append(("Dormir até o amanhecer", None, {"dormir": True}))
+        op = g.menu("", opcoes)
+        if op is None:
+            return conversou
+        acao, cid = op[0], op[1]
+        m = membro(g, cid) or na_reserva(g, cid)
+        if acao == "falar":
+            if conversar(g, m):
+                conversou = True
+            else:
+                ociosos.add(cid)
+                g.ui.fala(cid, nome(cid), fala_ociosa(g, m))
+        elif acao == "chamar":
+            chamar(g, cid)
+        elif acao == "trocar":
+            para_acampamento(g, op[2], silencioso=True)
+            chamar(g, cid)
+        elif acao == "reservar":
+            para_acampamento(g, cid)
+
+
 def menu(g):
     while True:
         ms = membros(g)
         g.ui.cena("Comitiva", f"{len(ms)}/{LIMITE} companheiros", "menu")
         if not ms:
-            g.dizer("Ninguém caminha com você. Por enquanto.", "cinza")
+            rs = reserva(g)
+            g.dizer("Ninguém caminha com você agora." + (
+                f" {' e '.join(nome(m['id']) for m in rs)} espera{'m' if len(rs) > 1 else ''} no acampamento: "
+                "monte a fogueira para chamar." if rs else " Por enquanto."), "cinza")
             g.pausar()
             return
         fichas = [dict(e, desc=COMPANHEIROS[e["id"]]["desc"]) for e in estado(g)]
-        for m in ([] if g.ui.painel("comitiva", {"membros": fichas, "limite": LIMITE}) else ms):
+        painel = {"membros": fichas, "limite": LIMITE,
+                  "reserva": [dict(e, desc=COMPANHEIROS[e["id"]]["desc"]) for e in estado(g, reserva(g))]}
+        for m in ([] if g.ui.painel("comitiva", painel) else ms):
             d = COMPANHEIROS[m["id"]]
             rotulo, _ = nivel(m)
             situacao = " · FERID" + ("A" if d["g"] == "f" else "O") + ", fora de combate até descansar" if m["ferido"] else ""
@@ -494,9 +598,10 @@ def menu(g):
         opcoes = []
         for m in ms:
             novidade = "  (tem algo a dizer)" if proxima_conversa(g, m) and m["ultima_conversa"] != g.dia else ""
-            opcoes.append((f"Conversar com {nome(m['id'])}{novidade}", ("falar", m["id"])))
+            opcoes.append((f"Conversar com {nome(m['id'])}{novidade}", ("falar", m["id"]), {"conversar": m["id"]}))
         for m in ms:
-            opcoes.append((f"Dispensar {nome(m['id'])}", ("dispensar", m["id"])))
+            opcoes.append((f"Mandar {nome(m['id'])} para o acampamento", ("acampamento", m["id"]),
+                           {"acampamento": m["id"]}))
         opcoes.append(("Voltar", None))
         op = g.menu("", opcoes)
         if op is None:
@@ -505,14 +610,11 @@ def menu(g):
         m = membro(g, cid)
         if acao == "falar":
             if not conversar(g, m):
-                g.dizer(fala_ociosa(g, m))
-                g.pausar()
+                g.ui.fala(cid, nome(cid), fala_ociosa(g, m))
         else:
-            if g.menu(f"Mandar {nome(cid)} embora? Não há volta.", [("Sim", "sim"), ("Não", "nao")]) == "sim":
-                dispensar(g, cid)
-                for outro in membros(g):  # os outros também têm opinião sobre isso
-                    if (cid, outro["id"]) in (("yara", "odete"), ("odete", "yara")):
-                        mudar_aprovacao(g, outro["id"], 3)
+            g.narrar(f"{nome(cid)} pega as coisas e volta para o acampamento. Quando você montar a fogueira, "
+                     "vai estar lá.", "cinza")
+            para_acampamento(g, cid)
 
 
 # ---------------------------------------------------------------- combate
@@ -703,9 +805,9 @@ def antes_da_batalha_final(g):
     return extras
 
 
-def estado(g):
+def estado(g, quem=None):
     lista = []
-    for m in membros(g):
+    for m in (membros(g) if quem is None else quem):
         d = COMPANHEIROS[m["id"]]
         rotulo, classe = nivel(m)
         lista.append({"id": m["id"], "nome": d["nome"], "titulo": d["titulo"], "hp": m["hp"], "max_hp": m["max_hp"],

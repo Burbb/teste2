@@ -20,6 +20,62 @@ def _item(it):
             "classe": it.get("classe"), "lore": it.get("lore")}
 
 
+def _pct(x):
+    v = f"{x * 100:.0f}" if abs(x * 100 - round(x * 100)) < 0.05 else f"{x * 100:.1f}".replace(".", ",")
+    return v + "%"
+
+
+def explicar_atributos(g):
+    """Para que serve cada atributo, com os números de agora (o que a tela mostra ao passar o mouse)."""
+    j = g.j
+    ataque_usa = CLASSES[j.classe]["ataque"][3]
+    reducao = 1 - 100 / (100 + j.defesa * 6)
+    reducao_mais = 1 - 100 / (100 + (j.defesa + 1) * 6) - reducao
+    esquiva = min(0.4, j.agi * 0.012)
+    critico = 0.05 + j.agi * 0.01 + 0.04 * j.tal("olho_aguia") + j.especial("critico") / 100
+    ataque = ["Força dos golpes de arma: quanto maior, mais dano físico."]
+    if ataque_usa == "atk":
+        ataque.append(f"É a base do seu ataque básico ({CLASSES[j.classe]['ataque'][0]}) e das habilidades físicas.")
+    else:
+        ataque.append("Pouco importa para você: suas magias usam Poder.")
+    ataque += [f"Teste de Força: +{j.atk // 3} no d20.", "+1 de Ataque ≈ +1 de dano por golpe, antes da defesa do inimigo."]
+    defesa = [f"Reduz todo dano recebido em {_pct(reducao)}.",
+              f"Cada ponto a mais reduz cerca de {_pct(reducao_mais)} a mais (o ganho diminui aos poucos).",
+              f"Teste de Vontade: +{j.defesa // 4} no d20."]
+    agilidade = [f"Chance de se esquivar de um golpe: {_pct(esquiva)} (máximo 40%).",
+                 f"Chance de acerto crítico: {_pct(critico)}.",
+                 "Mais fácil fugir de uma luta.",
+                 f"Testes de Destreza: +{j.agi // 2}, Percepção: +{j.agi // 3}.",
+                 "+1 de Agilidade = +1,2% de esquiva e +1% de crítico."]
+    poder = ["Força da magia e da fé."]
+    if j.classe == "mago":
+        poder += ["É a base de todas as suas magias e do ataque básico.",
+                  f"Queimaduras causam {max(2, int(j.poder * 0.4))} por turno."]
+    elif j.spec == "paladino":
+        poder += ["Aumenta o Golpe Sagrado, o Julgamento e a cura da Prece."]
+    else:
+        poder += ["Pouco importa para a sua classe (alguns itens e eventos usam)."]
+    poder.append(f"Teste de Arcano: +{j.poder // 3} no d20.")
+    return {"Ataque": ataque, "Defesa": defesa, "Agilidade": agilidade, "Poder": poder}
+
+
+def explicar_reputacao(g):
+    r = g.j.reputacao
+    titulo = ("Herói do povo" if r >= 30 else "Respeitado" if r >= 10 else "Temido" if r <= -30
+              else "Malvisto" if r <= -10 else "Desconhecido")
+    desconto = r / 200
+    linhas = ["O que o povo pensa de você. Sobe ajudando, protegendo e cumprindo a palavra; "
+              "cai roubando, ameaçando e matando quem não devia.",
+              (f"Mercados e serviços {_pct(desconto)} mais baratos." if r > 0 else
+               f"Mercados e serviços {_pct(-desconto)} mais caros." if r < 0 else "Preços normais."),
+              f"Testes de Carisma: {r // 10:+d} no d20."]
+    if r <= -10:
+        linhas.append("Guardas desconfiam de você e caçadores de recompensa podem aparecer.")
+    if r >= 20:
+        linhas.append("Algumas pessoas vão lembrar do que você fez, até no fim da jornada.")
+    return {"titulo": titulo, "linhas": linhas}
+
+
 def heroi(g):
     j = g.j
     ferimentos = []
@@ -32,6 +88,7 @@ def heroi(g):
         "nivel": j.nivel, "xp": j.xp, "xp_proximo": j.xp_proximo(),
         "hp": j.hp, "max_hp": j.max_hp, "rec": j.rec, "max_rec": j.max_rec, "recurso": j.nome_recurso,
         "atributos": {"Ataque": j.atk, "Defesa": j.defesa, "Agilidade": j.agi, "Poder": j.poder},
+        "atributos_info": explicar_atributos(g), "reputacao_info": explicar_reputacao(g),
         "ouro": j.ouro, "reputacao": j.reputacao, "flechas": j.flechas if j.classe == "arqueiro" else None,
         "provisoes": j.provisoes, "fome": j.fome, "tochas": j.consumiveis.get("tocha", 0),
         "pocoes": j.consumiveis.get("pocao_vida", 0), "bandagens": j.consumiveis.get("bandagem", 0),
