@@ -1,5 +1,6 @@
 """Fotografia do estado do jogo em JSON, para a interface web desenhar painéis, mapa e combate."""
 
+from .. import balanceamento as bal
 from .. import comitiva, mapa, sobrevivencia
 from ..classes import CLASSES, HABILIDADES
 from ..combate import NOMES_EFEITOS
@@ -38,10 +39,11 @@ def explicar_atributos(g):
     """Para que serve cada atributo, com os números de agora (o que a tela mostra ao passar o mouse)."""
     j = g.j
     ataque_usa = CLASSES[j.classe]["ataque"][3]
-    reducao = 1 - 100 / (100 + j.defesa * 6)
-    reducao_mais = 1 - 100 / (100 + (j.defesa + 1) * 6) - reducao
-    esquiva = min(0.4, j.agi * 0.012)
-    critico = min(0.6, 0.05 + j.agi * 0.01 + 0.04 * j.tal("olho_aguia") + j.especial("critico") / 100)
+    reducao = 1 - 100 / (100 + j.defesa * bal.DEFESA_FATOR)
+    reducao_mais = 1 - 100 / (100 + (j.defesa + 1) * bal.DEFESA_FATOR) - reducao
+    esquiva = min(bal.ESQUIVA_MAX_AGI, j.agi * bal.ESQUIVA_POR_AGI)
+    critico = min(bal.MAX_CRITICO, bal.CRITICO_BASE + j.agi * bal.CRITICO_POR_AGI + 0.04 * j.tal("olho_aguia")
+                  + j.especial("critico") / 100)
     ataque = ["Força dos golpes de arma: quanto maior, mais dano físico."]
     if ataque_usa == "atk":
         ataque.append(f"É a base do seu ataque básico ({CLASSES[j.classe]['ataque'][0]}) e das habilidades físicas.")

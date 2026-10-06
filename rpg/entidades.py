@@ -1,5 +1,6 @@
 """Combatentes: jogador, inimigos e aliados."""
 
+from . import balanceamento as bal
 from .classes import CLASSES, SPECS
 
 STATS = ("max_hp", "atk", "defesa", "agi", "poder", "max_rec")
@@ -99,7 +100,7 @@ class Jogador(Combatente):
         self.rec = self.max_rec
         self.regen = b["regen"]
         self.ouro = 30
-        self.flechas = 20 if classe == "arqueiro" else 0
+        self.flechas = bal.FLECHAS_INICIAIS if classe == "arqueiro" else 0
         self.consumiveis = {"pocao_vida": 2, "bandagem": 2, "tocha": 3}
         if classe == "mago":
             self.consumiveis["tonico"] = 1
@@ -130,7 +131,7 @@ class Jogador(Combatente):
         return CLASSES[self.classe]["recurso"]
 
     def xp_proximo(self):
-        return int(30 * self.nivel ** 1.52)
+        return bal.xp_para_subir(self.nivel)
 
     def tal(self, talento):
         return self.talentos.get(talento, 0)

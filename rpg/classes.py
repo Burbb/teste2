@@ -6,6 +6,8 @@
     Mago      -> Piromante | Necromante
 """
 
+from . import balanceamento as bal
+
 CLASSES = {
     "guerreiro": {
         "nome": "Guerreiro",
@@ -302,7 +304,7 @@ def _combustao(cb, u, alvo):
     if restante:
         alvo.remover("queimadura")
         cb.dizer(f"As chamas em {alvo.nome} explodem{' de uma vez' if camadas > 1 else ''}!", "vermelho")
-        cb.atacar(u, alvo, 1.0, tipo="fogo", alcance="distancia", stat="poder", bonus=restante * (1.6 + 0.2 * camadas),
+        cb.atacar(u, alvo, 1.0, tipo="fogo", alcance="distancia", stat="poder", bonus=restante * (bal.COMBUSTAO_BASE + bal.COMBUSTAO_POR_CAMADA * camadas),
                   crit_extra=0.05 * camadas, rotulo=f"Combustão ×{camadas}" if camadas > 1 else "Combustão")
     else:
         cb.atacar(u, alvo, 0.8, tipo="fogo", alcance="distancia", stat="poder", rotulo="Combustão")

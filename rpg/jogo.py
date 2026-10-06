@@ -14,7 +14,8 @@ from . import telemetria
 from .telemetria import registrar
 from .mundo import gerar_mundo
 from .regras import (AMBIENTE_VILA, LIMITE_MOCHILA, NIVEL_MAXIMO, NIVEL_MIN_FAMILIA, NOMES_SLOT, NOMES_TESTE,
-                     PRECO_FLECHAS, VERSAO_SAVE, Derrota, FimDeJogo)
+                     VERSAO_SAVE, Derrota, FimDeJogo)
+from .balanceamento import PRECO_FLECHAS
 from .sistemas.testes import Testes
 from .sistemas.recompensas import Recompensas
 from .sistemas.confronto import Confronto

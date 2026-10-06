@@ -4,7 +4,8 @@ from .. import itens
 from ..itens import CONSUMIVEIS, descrever_bonus, gerar_equip
 from .. import sobrevivencia
 from ..telemetria import registrar
-from ..regras import LIMITE_MOCHILA, NOMES_SLOT, PRECO_FLECHAS
+from ..regras import LIMITE_MOCHILA, NOMES_SLOT
+from ..balanceamento import PRECO_FLECHAS
 
 
 class Loja:

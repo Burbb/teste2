@@ -5,6 +5,7 @@ from ..dados import CLIMAS, PESOS_CLIMA
 from .. import comitiva
 from .. import sobrevivencia
 from ..telemetria import registrar
+from .. import balanceamento as bal
 
 
 class Tempo:
@@ -57,7 +58,7 @@ class Tempo:
         self.ui.separador()
         if self.loc["tipo"] == "vila":
             self.dizer("Exausto, você pede abrigo num estábulo e dorme sobre o feno, entre ratos.", "cinza")
-            self.descansar(0.15, mana=0.4, folego=0.4)
+            self.descansar(bal.EXAUSTO_VIDA, mana=bal.EXAUSTO_RECURSO, folego=bal.EXAUSTO_RECURSO)
             self.novo_dia(descanso=1)
         else:
             self.dizer("Você está exausto demais para continuar. É preciso acampar.", "cinza")
@@ -85,11 +86,11 @@ class Tempo:
             conversou = True
         if not conversou and not comitiva.noite(self) and self.chance(0.45):
             eventos.disparar(self, "acampamento")
-        fracao = 0.3
+        fracao = bal.ACAMPAR_VIDA
         if self.clima in ("chuva", "tempestade", "neve"):
-            fracao = 0.18
+            fracao = bal.ACAMPAR_VIDA_RUIM
             self.dizer("Você dorme encharcado e tremendo. Quase não descansa.", "vermelho")
-        self.descansar(fracao, mana=0.5, folego=0.75)
+        self.descansar(fracao, mana=bal.ACAMPAR_MANA, folego=bal.ACAMPAR_FOLEGO)
         self.novo_dia(descanso=1)
         self.pausar()
 
@@ -105,6 +106,6 @@ class Tempo:
             self.j.provisoes += 1  # a refeição da taverna conta como o dia de comida
         self.periodo = 3
         self.encruzilhada_no_descanso()
-        self.descansar(0.65)
+        self.descansar(bal.TAVERNA_VIDA)
         self.novo_dia(descanso=2)
         self.pausar()

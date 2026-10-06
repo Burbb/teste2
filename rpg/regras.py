@@ -10,7 +10,6 @@ NOMES_TESTE = {
 NOMES_SLOT = itens.NOMES_SLOT
 LIMITE_MOCHILA = 12
 # Criaturas que não aparecem em regiões fracas demais (evita lutas impossíveis no começo).
-PRECO_FLECHAS = 7  # feixe de 5
 NIVEL_MIN_FAMILIA = {
     "bruxa_brejo": 2, "harpia": 2, "espectro": 3, "ent_jovem": 3, "cria_vazio": 3, "cao_infernal": 3,
     "golem": 4, "troll": 4, "grifo": 4, "abominacao": 6, "cavaleiro_sombrio": 6,

@@ -7,6 +7,7 @@ from .. import comitiva
 from .. import sobrevivencia
 from ..telemetria import registrar
 from ..regras import LIMITE_MOCHILA, NOMES_SLOT
+from .. import balanceamento as bal
 
 
 class Inventario:
@@ -120,7 +121,7 @@ class Inventario:
             m["ferido"] = False
             self.dizer(f"{nome} bebe a Poção de Vida e respira melhor. (+{m['hp'] - antes} vida)", "verde")
         else:
-            m["hp"] = min(m["max_hp"], m["hp"] + 8)
+            m["hp"] = min(m["max_hp"], m["hp"] + bal.BANDAGEM_VIDA)
             if m["ferido"]:
                 m["ferido"] = False
                 self.dizer(f"Você enfaixa {nome} com cuidado. Já consegue ficar de pé e lutar. (+{m['hp'] - antes} vida)",
@@ -141,10 +142,10 @@ class Inventario:
         nome = CONSUMIVEIS[k]["nome"]
         registrar(self, "consumivel", item=k, em_combate=self.combate_ativo is not None)
         if k == "pocao_vida":
-            c = j.curar(j.max_hp * 0.35)
+            c = j.curar(j.max_hp * bal.POCAO_VIDA)
             self.dizer(f"Você bebe a {nome}. (+{c} vida)", "verde")
         elif k == "tonico":
-            ganho = min(j.max_rec - j.rec, j.max_rec // 2)
+            ganho = min(j.max_rec - j.rec, int(j.max_rec * bal.TONICO))
             j.rec += ganho
             self.dizer(f"Você bebe o {nome}. (+{ganho} {j.nome_recurso})", "azul")
         elif k == "antidoto":

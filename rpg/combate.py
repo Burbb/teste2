@@ -10,6 +10,7 @@ from .inimigos import HABS_INIMIGO, NOMES_HABS_INIMIGO, ROTULOS_HABS_INIMIGO
 from .itens import CONSUMIVEIS, descrever_bonus, rotulo
 from . import comitiva, sobrevivencia, telemetria
 from .talentos import custo_habilidade
+from . import balanceamento as bal
 
 DOTS = {
     "veneno": ("veneno", "verde"),
@@ -22,9 +23,6 @@ NOMES_EFEITOS = {
     "enfraquecido": "enfraquecido", "maldito": "amaldiçoado", "marcado": "marcado", "guarda": "em guarda",
     "fortalecido": "fortalecido", "esquiva": "esquivo", "barreira": "com barreira", "furtivo": "furtivo",
 }
-# Tetos: esquiva e crítico empilhados (agilidade + Passo Ágil + Desaparecer + itens) viravam imortalidade.
-MAX_ESQUIVA = 0.6
-MAX_CRITICO = 0.6
 USAVEIS_EM_COMBATE = ("pocao_vida", "tonico", "antidoto", "bandagem", "bomba_fumaca")
 
 
@@ -205,15 +203,15 @@ class Combate:
                 letras[e.nome] = n + 1
                 e.nome = f"{e.nome} {'ABCDEFGHIJ'[min(n, 9)]}"
 
-    MAX_CHAMAS = 3
+    MAX_CHAMAS = bal.MAX_CHAMAS
 
     def valor_queimadura(self, u):
         """Dano por turno de UMA camada de chamas. É pouco de propósito: o fogo do mago rende quando as
         camadas se acumulam (até 3) e a Combustão as detona de uma vez."""
-        v = max(2, u.poder * 0.12)
+        v = max(2, u.poder * bal.QUEIMADURA_POR_PODER)
         if getattr(u, "spec", None) == "piromante":
-            v *= 1.25
-        return v * (1 + 0.2 * u.tal("brasas"))
+            v *= bal.QUEIMADURA_PIROMANTE
+        return v * (1 + bal.QUEIMADURA_BRASAS * u.tal("brasas"))
 
     def camadas(self, alvo):
         ef = alvo.efeito("queimadura")
@@ -238,12 +236,12 @@ class Combate:
         prefixo = f"[{rotulo}] " if rotulo else ""
         quem = self.nome(u)
         if pode_esquivar and not alvo.efeito("atordoado"):
-            esq = min(0.4, alvo.agi * 0.012)
+            esq = min(bal.ESQUIVA_MAX_AGI, alvo.agi * bal.ESQUIVA_POR_AGI)
             if alvo.efeito("esquiva"):
                 esq += alvo.efeito("esquiva")["v"]
             if self.g.clima == "nevoa":
                 esq += 0.05
-            esq = min(MAX_ESQUIVA, esq)  # nem o mais ágil dos heróis é intocável
+            esq = min(bal.MAX_ESQUIVA, esq)
             if self.rng.random() < esq:
                 self.lance("erro", de=self.uid(u), em=self.uid(alvo), motivo="esquiva", rotulo=rotulo)
                 if detalhar:
@@ -263,7 +261,7 @@ class Combate:
         if u.jogador and u.spec == "berserker":
             m *= 1 + 0.6 * (1 - u.hp / u.max_hp)
         if not u.jogador and u not in self.aliados and self.g.noite:
-            m *= 1.1
+            m *= bal.NOITE_INIMIGOS
         clima = self.g.clima
         if clima == "chuva":
             m *= {"fogo": 0.8, "gelo": 1.1}.get(tipo, 1)
@@ -285,11 +283,11 @@ class Combate:
         furtivo = u.efeito("furtivo")
         abertura = u.jogador and self.abertura
         self.abertura = self.abertura and not u.jogador
-        chance_crit = min(MAX_CRITICO, 0.05 + u.agi * 0.01 + crit_extra + 0.04 * u.tal("olho_aguia")
+        chance_crit = min(bal.MAX_CRITICO, bal.CRITICO_BASE + u.agi * bal.CRITICO_POR_AGI + crit_extra + 0.04 * u.tal("olho_aguia")
                           + u.especial("critico") / 100)
         crit = bool(furtivo) or abertura or self.rng.random() < chance_crit
         base = getattr(u, stat) * mult + bonus
-        dano = base * m * self.rng.uniform(0.85, 1.15) * 100 / (100 + defesa * 6)
+        dano = base * m * self.rng.uniform(0.85, 1.15) * 100 / (100 + defesa * bal.DEFESA_FATOR)
         if crit:
             dano *= (2.3 if furtivo else 1.6) + 0.2 * u.tal("golpe_sombras")
         if furtivo:
@@ -871,11 +869,11 @@ class Combate:
                 self.dizer(f"{self.companheiro.nome} está ferido demais para lutar até você descansar.", "cinza")
         j.efeitos = {}
         if j.classe != "mago":  # o fôlego volta em parte; a mana, devagar
-            j.rec = min(j.max_rec, j.rec + j.max_rec // 2)
+            j.rec = min(j.max_rec, j.rec + int(j.max_rec * bal.FOLEGO_POS_LUTA))
         else:
-            j.rec = min(j.max_rec, j.rec + j.max_rec // 5)
+            j.rec = min(j.max_rec, j.rec + int(j.max_rec * bal.MANA_POS_LUTA))
         if j.classe == "arqueiro" and self.flechas_gastas and resultado == "vitoria":
-            chance = 0.35 + 0.15 * j.tal("aljava_funda")
+            chance = bal.RECOLHER_FLECHA + bal.RECOLHER_FLECHA_TALENTO * j.tal("aljava_funda")
             recuperadas = sum(1 for _ in range(self.flechas_gastas) if self.rng.random() < chance)
             recuperadas = min(recuperadas, self.g.max_flechas() - j.flechas)
             if recuperadas > 0:

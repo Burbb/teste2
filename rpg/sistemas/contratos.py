@@ -5,18 +5,19 @@ from ..dados import BIOMAS, FAMILIAS
 from .. import sobrevivencia
 from ..mundo import distancias, nivel_regiao
 from ..regras import NIVEL_MIN_FAMILIA
+from .. import balanceamento as bal
 
 
 class Contratos:
     # Peso de cada lugar no mural conforme a diferença entre o nível dele e o seu:
     # quase sempre algo do seu tamanho, às vezes um desafio, raramente algo fácil.
-    PESO_NIVEL_CONTRATO = {-1: 1.0, 0: 3.0, 1: 3.0, 2: 1.5}
+    PESO_NIVEL_CONTRATO = bal.PESO_NIVEL_CONTRATO
 
     def recompensa_contrato(self, nivel, mult=1.0):
         """Ouro e XP crescem com o nível do CONTRATO (do lugar), não com o seu: um trabalho fácil paga pouco.
         O XP fica em torno de 1/8 do que falta para subir naquele nível, para não catapultar ninguém."""
-        ouro = int((10 + 6 * nivel) * mult * self.rng.uniform(0.9, 1.2))
-        xp = int((8 + 0.12 * int(30 * nivel ** 1.52)) * mult)
+        ouro = int((bal.CONTRATO_OURO_BASE + bal.CONTRATO_OURO_POR_NIVEL * nivel) * mult * self.rng.uniform(0.9, 1.2))
+        xp = int((bal.CONTRATO_XP_BASE + bal.CONTRATO_XP_FRACAO * bal.xp_para_subir(nivel)) * mult)
         return ouro, xp
 
     def lugar_para_contrato(self, selvagens):
