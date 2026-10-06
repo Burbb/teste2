@@ -505,6 +505,8 @@ class Jogo:
             else None,
             ("Deixar para trás", "deixar"),
         ])
+        registrar(self, "saque", item=item["nome"], raridade=item.get("raridade", "comum"), slot=item["slot"],
+                  nivel=item.get("nivel"), escolha=op or "deixar")
         if op == "equipar":
             self.equipar(item)
         elif op == "guardar":
@@ -1332,6 +1334,8 @@ class Jogo:
                 self.dizer("Sua mochila está cheia.", "vermelho")
                 continue
             self.perder_ouro(preco)
+            registrar(self, "compra", item=op[1] if op[0] == "consumivel" else op[1]["nome"] if op[0] == "equip"
+                      else op[0], categoria=op[0], qtd=1, preco=preco)
             if op[0] == "consumivel":
                 self.dar(op[1])
             elif op[0] == "flechas":
@@ -1365,7 +1369,9 @@ class Jogo:
         if op[0] == "vender":
             j.mochila.remove(op[1])
             self.ui.efeito(f"Vendeu {op[1]['nome']}", "info")
+            antes = j.ouro
             self.ganhar_ouro(op[1]["preco"] // 2)
+            registrar(self, "venda", item=op[1]["nome"], raridade=op[1].get("raridade", "comum"), preco=j.ouro - antes)
             return False
         if op[0] == "equipar":
             self.equipar(op[1])
@@ -1382,6 +1388,8 @@ class Jogo:
                 self.dizer("Sua mochila está cheia. Venda ou largue algo antes.", "vermelho")
                 return False
             self.perder_ouro(preco)
+            registrar(self, "compra", item=op[1]["nome"], categoria="equipamento", qtd=1, preco=preco,
+                      raridade=op[1].get("raridade", "comum"), vestiu=vago)
             a_venda.remove(op[1])
             if vago:  # espaço vazio no corpo: já sai vestido
                 self.equipar(op[1], espaco)
@@ -1404,6 +1412,7 @@ class Jogo:
             self.dizer("\"Sem ouro, sem negócio.\"", "vermelho")
             return False
         self.perder_ouro(preco * qtd)
+        registrar(self, "compra", item=op[1] if op[0] == "consumivel" else op[0], categoria=op[0], qtd=qtd, preco=preco * qtd)
         if op[0] == "consumivel":
             self.dar(op[1], qtd)
         elif op[0] == "flechas":
@@ -1411,6 +1420,14 @@ class Jogo:
         else:
             self.dar_provisoes(qtd)
         return False
+
+    def _retrato_final(self):
+        """Como o herói terminou: equipamento, atributos, talentos e comitiva (para o registro da partida)."""
+        j = self.j
+        return {"equipamento": {s: (f"{it['nome']} [{it.get('raridade', 'comum')}] {descrever_bonus(it['bonus'])}"
+                                    if it else None) for s, it in j.equip.items()},
+                "stats": telemetria.instantaneo(j), "talentos": dict(j.talentos), "spec": j.spec,
+                "comitiva": [{"id": m["id"], "aprovacao": m["aprovacao"]} for m in comitiva.membros(self)]}
 
     def oferecer_equip_comprado(self, item):
         if self.menu(f"Equipar {item['nome']} agora?", [("Sim", True), ("Não, guardar na mochila", False)]):
@@ -1425,7 +1442,9 @@ class Jogo:
         it = self.menu("Vender o quê?", opcoes + [("Voltar", None)])
         if it:
             j.mochila.remove(it)
+            antes = j.ouro
             self.ganhar_ouro(it["preco"] // 2)
+            registrar(self, "venda", item=it["nome"], raridade=it.get("raridade", "comum"), preco=j.ouro - antes)
 
     def gerar_contrato(self):
         j = self.j
@@ -1766,7 +1785,7 @@ class Jogo:
         self.registrar_legado("corrupcao" if self.corrupcao >= 100 else "morte", motivo)
         self.estatisticas["causa"] = motivo
         registrar(self, "fim", resultado="corrupcao" if self.corrupcao >= 100 else "morte", causa=motivo,
-                  corrupcao=self.corrupcao)
+                  corrupcao=self.corrupcao, **self._retrato_final())
         if self.hardcore:  # morte permanente de verdade: o save vai junto
             try:
                 os.remove(self.caminho_save())
@@ -1790,7 +1809,8 @@ class Jogo:
         a = self.antagonista
         self.registrar_legado("vitoria", f"derrotou {a['nome']}")
         self.estatisticas["venceu"] = True
-        registrar(self, "fim", resultado="vitoria", causa=f"derrotou {a['nome']}", corrupcao=self.corrupcao)
+        registrar(self, "fim", resultado="vitoria", causa=f"derrotou {a['nome']}", corrupcao=self.corrupcao,
+                  **self._retrato_final())
         self.ui.cena("Vitória", f"dia {self.dia}", "vitoria")
         self.narrar(f"{tx.maiuscula(a['curto'])} se desfaz como cinza ao vento. A Fenda se fecha com um "
                     f"suspiro que ecoa por todo o reino.", "amarelo")

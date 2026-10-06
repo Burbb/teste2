@@ -450,54 +450,101 @@ const Batalha = (() => {
   function mirar(uid, ligado) { const el = carta(uid); if (el) el.classList.toggle("mirando", ligado); }
 
   /* ------------------------------------------------------------ comitiva: falas e opiniões */
-  function ancora(cid) {
-    const vis = (e) => e && e.offsetParent !== null;
-    const opcoes = [document.querySelector(`#arena .carta[data-cid="${cid}"]`), document.querySelector(`.hud-membro[data-cid="${cid}"]`),
-      document.querySelector(`#heroi .membro[data-cid="${cid}"]`)];
-    return opcoes.find(vis) || null;
+  // Na luta, a fala sai num balão da carta de quem falou. Fora dela, cada reação vira um cartão
+  // que surge no canto de baixo da página (onde você está lendo), fica um pouco e some.
+  function separarFala(texto, nome) {
+    const falas = [];
+    let acao = texto.replace(/["“]([^"”]+)["”]/g, (_, f) => { falas.push(f.trim()); return " "; });
+    acao = acao.replace(/\s+/g, " ").replace(/\s+([,.!?;:])/g, "$1").replace(/^[\s,.;:—–-]+|[\s,;:—–-]+$/g, "").trim();
+    if (/^(diz|sussurra|murmura|responde|resmunga|completa|acrescenta|fala)\b/i.test(acao) && acao.length < 50) acao = "";
+    const curto = String(nome || "").split(" ").pop();
+    if (curto && acao.startsWith(curto + " ")) acao = acao.slice(curto.length + 1);
+    acao = acao.replace(/\.$/, "");
+    return { acao, fala: falas.join(" … ") };
   }
-  const baloes = {};
+  function pilha() {
+    let p = document.getElementById("comitiva-avisos");
+    if (!p) { p = document.createElement("div"); p.id = "comitiva-avisos"; document.body.appendChild(p); }
+    // Fica logo acima do trecho mais recente: cobre o que você já leu, nunca a linha nova.
+    const r = document.getElementById("pagina").getBoundingClientRect();
+    const ultimo = document.querySelector("#texto > :last-child");
+    let base = ultimo ? ultimo.getBoundingClientRect().top - 10 : r.bottom - 22;
+    if (base < r.top + 140) base = Math.min(r.bottom - 12, (ultimo ? ultimo.getBoundingClientRect().bottom : r.bottom) + 10 + 140);
+    base = Math.max(r.top + 140, Math.min(r.bottom - 12, innerHeight - 12, base));
+    p.style.right = Math.max(8, innerWidth - r.right + 22) + "px";
+    p.style.bottom = Math.max(10, innerHeight - base) + "px";
+    return p;
+  }
+  const cartoesAbertos = {};
+  function cartao(cid, nome, { delta, texto }) {
+    let c = cartoesAbertos[cid];
+    if (!c || !c.isConnected) {
+      c = document.createElement("div");
+      c.className = "cartao-comitiva";
+      c.innerHTML = `<div class="cc-retrato">${S(cid, 3)}</div><div class="cc-corpo"><div class="cc-topo"><b>${esc(nome)}</b></div></div>`;
+      c.addEventListener("click", () => fechar(c));
+      pilha().appendChild(c);
+      cartoesAbertos[cid] = c;
+      c.classList.add("chegou");
+    } else {
+      c.classList.remove("atualizou"); void c.offsetWidth; c.classList.add("atualizou");
+    }
+    const corpo = c.querySelector(".cc-corpo");
+    if (delta) {
+      const bom = delta > 0, forte = Math.abs(delta) >= 8;
+      const velho = c.querySelector(".cc-selo");
+      if (velho) velho.remove();
+      c.querySelector(".cc-topo").insertAdjacentHTML("beforeend",
+        `<span class="cc-selo ${bom ? "aprova" : "desaprova"}${forte ? " forte" : ""}">${bom ? "▲ aprova" : "▼ desaprova"}${forte ? " muito" : ""}</span>`);
+      c.classList.toggle("aprova", bom); c.classList.toggle("desaprova", !bom);
+    }
+    if (texto) {
+      const { acao, fala } = separarFala(texto, nome);
+      corpo.querySelectorAll(".cc-acao, .cc-fala").forEach((x) => x.remove());
+      if (acao) corpo.insertAdjacentHTML("beforeend", `<div class="cc-acao">${esc(acao)}</div>`);
+      if (fala) corpo.insertAdjacentHTML("beforeend", `<div class="cc-fala">${esc(fala)}</div>`);
+    }
+    const letras = (c.textContent || "").length;
+    clearTimeout(c._timer);
+    c._timer = setTimeout(() => fechar(c), Math.min(9000, 2600 + letras * 40));
+    return c;
+  }
+  function fechar(c) {
+    clearTimeout(c._timer);
+    c.classList.add("sumindo");
+    setTimeout(() => c.remove(), 320);
+  }
+
   function balao(cid, nome, texto) {
-    const alvo = ancora(cid);
-    if (!alvo) { Telas.toast(nome, texto, cid, true); return 1600; }
+    const naLuta = document.querySelector(`#arena .carta[data-cid="${cid}"]`);
+    som("fala");
+    if (!naLuta || naLuta.offsetParent === null) {
+      cartao(cid, nome, { texto });
+      return Math.min(1600, 500 + texto.length * 18);
+    }
     if (baloes[cid]) baloes[cid].remove();
+    const { acao, fala } = separarFala(texto, nome);
     const b = document.createElement("div");
-    const narrado = !/^["“«—]/.test(texto.trim());
-    b.className = "balao" + (narrado ? " narrado" : "");
-    b.innerHTML = `<b>${esc(nome)}</b><span>${esc(texto.replace(/^["“]|["”]$/g, ""))}</span>`;
+    b.className = "balao" + (fala ? "" : " narrado");
+    b.innerHTML = `<b>${esc(nome)}</b>${fala ? `<span>${esc(fala)}</span>` : ""}${acao ? `<i>${esc(acao)}</i>` : ""}`;
     document.body.appendChild(b);
-    const r = alvo.getBoundingClientRect(), w = b.offsetWidth, h = b.offsetHeight;
-    let x = r.left + r.width / 2 - w / 2;
-    x = Math.max(8, Math.min(innerWidth - w - 8, x));
+    const r = naLuta.getBoundingClientRect(), w = b.offsetWidth, h = b.offsetHeight;
+    let x = Math.max(8, Math.min(innerWidth - w - 8, r.left + r.width / 2 - w / 2));
     let y = r.top - h - 12;
     if (y < 52) { y = r.bottom + 12; b.classList.add("abaixo"); }
     b.style.left = x + "px"; b.style.top = y + "px";
     b.style.setProperty("--rabo", Math.max(14, Math.min(w - 14, r.left + r.width / 2 - x)) + "px");
     baloes[cid] = b;
-    alvo.classList.remove("falando"); void alvo.offsetWidth; alvo.classList.add("falando");
-    const dur = Math.min(8000, 2600 + texto.length * 45);
     b.addEventListener("click", () => b.remove());
-    setTimeout(() => { b.classList.add("sumindo"); setTimeout(() => { b.remove(); alvo.classList.remove("falando"); }, 300); }, dur);
-    som("fala");
+    setTimeout(() => { b.classList.add("sumindo"); setTimeout(() => b.remove(), 300); }, Math.min(8000, 2600 + texto.length * 45));
     return Math.min(1600, 500 + texto.length * 18);
   }
+  const baloes = {};
   function opiniao(cid, nome, delta) {
-    const bom = delta > 0, forte = Math.abs(delta) >= 8;
-    const alvo = ancora(cid);
-    som(bom ? "aprova" : "desaprova");
-    const texto = `${nome} ${bom ? "aprova" : "desaprova"}${forte ? " muito" : ""}`;
-    if (!alvo) { Telas.toast("", texto, cid, bom); return; }
-    const s = document.createElement("div");
-    s.className = `selo ${bom ? "aprova" : "desaprova"}${forte ? " forte" : ""}`;
-    s.innerHTML = `<i>${bom ? "▲" : "▼"}</i>${esc(texto)}`;
-    document.body.appendChild(s);
-    const r = alvo.getBoundingClientRect();
-    s.style.left = Math.max(8, Math.min(innerWidth - s.offsetWidth - 8, r.left + r.width / 2 - s.offsetWidth / 2)) + "px";
-    s.style.top = Math.max(50, r.top - 6) + "px";
-    setTimeout(() => s.remove(), 2300);
-    alvo.classList.remove("reagiu-bem", "reagiu-mal"); void alvo.offsetWidth;
-    alvo.classList.add(bom ? "reagiu-bem" : "reagiu-mal");
-    setTimeout(() => alvo.classList.remove("reagiu-bem", "reagiu-mal"), 900);
+    som(delta > 0 ? "aprova" : "desaprova");
+    cartao(cid, nome, { delta });
+    const carta = document.querySelector(`#arena .carta[data-cid="${cid}"]`);
+    if (carta) reiniciar(carta, delta > 0 ? "reagiu-bem" : "reagiu-mal", 900);
   }
 
   return { configurar, desenhar, lance, vez, alvos, limparAlvos, mirar, balao, opiniao };

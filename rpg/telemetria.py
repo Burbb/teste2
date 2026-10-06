@@ -13,7 +13,7 @@ import json
 import os
 import re
 
-VERSAO = 1
+VERSAO = 2  # 2: cura, roubo de vida, absorção, críticos, dano por elemento e por aliado, economia, saque
 
 
 def registrar(g, tipo, **dados):
@@ -33,8 +33,39 @@ def instantaneo(j):
 def novo_combate(cb):
     j = cb.j
     cb.tel = {"hp_inicio": j.hp, "rec_inicio": j.rec, "dano_causado": 0, "dano_aliados": 0, "dano_recebido": 0,
-              "maior_golpe": 0, "habilidades": {}, "rec_gasto": 0, "itens": [], "esquivas": 0,
-              "criticos_recebidos": 0}
+              "maior_golpe": 0, "habilidades": {}, "rec_gasto": 0, "esquivas": 0, "criticos_recebidos": 0,
+              "stats_inicio": instantaneo(j), "criticos": 0, "erros": 0, "absorvido": 0, "cura_recebida": 0,
+              "roubo_vida": 0, "cura_por_aliados": 0, "dano_por_elemento": {}, "dano_por_aliado": {}}
+
+
+def lance(cb, tipo, d):
+    """Cada lance do combate (o mesmo que a interface anima) também alimenta o registro."""
+    tel = getattr(cb, "tel", None)
+    if tel is None:
+        return
+    j = cb.j
+    de, em = cb.objeto(d.get("de")), cb.objeto(d.get("em"))
+    if tipo == "golpe":
+        if de is j:
+            el = d.get("elemento") or "fisico"
+            tel["dano_por_elemento"][el] = tel["dano_por_elemento"].get(el, 0) + d["dano"]
+            tel["criticos"] += bool(d.get("crit"))
+        elif de in cb.aliados:
+            tel["dano_por_aliado"][de.nome] = tel["dano_por_aliado"].get(de.nome, 0) + d["dano"]
+        if em is j:
+            tel["absorvido"] += d.get("absorvido") or 0
+    elif tipo == "erro":
+        if de is j:
+            tel["erros"] += 1
+        if em is j and d.get("motivo") == "esquiva":
+            tel["esquivas"] += 1
+    elif tipo == "cura":
+        if em is j:
+            tel["cura_recebida"] += d["valor"]
+            if d.get("modo") == "roubo":
+                tel["roubo_vida"] += d["valor"]
+        if de is not None and de in cb.aliados:
+            tel["cura_por_aliados"] += d["valor"]
 
 
 def contabilizar_dano(cb, u, alvo, dano, critico):
@@ -60,9 +91,11 @@ def fim_combate(cb, resultado):
     inimigos = [{"nome": e.nome, "familia": e.familia, "nivel": e.nivel, "afixo": e.afixo, "chefe": e.chefe,
                  "hp_max": e.max_hp, "atk": round(e.atk, 1), "poder": round(e.poder, 1), "morto": not e.vivo}
                 for e in cb.inimigos]
+    aliados = [{"nome": a.nome, "tipo": a.tipo, "hp_fim": max(0, a.hp), "hp_max": a.max_hp, "caiu": not a.vivo}
+               for a in cb.aliados]
     registrar(g, "combate", resultado=resultado, titulo=cb.titulo, emboscada=cb.emboscada,
               nivel_regiao=g.nivel_local(), local=g.loc["nome"], clima=g.clima, inimigos=inimigos,
-              turnos=cb.turno, hp_fim=j.hp, rec_fim=j.rec, sem_luz=g.sem_luz, **tel)
+              aliados=aliados, turnos=cb.turno, hp_fim=j.hp, rec_fim=j.rec, sem_luz=g.sem_luz, **tel)
 
 
 def _nome_arquivo(g):
@@ -82,8 +115,10 @@ def exportar(g):
     try:
         os.makedirs(pasta, exist_ok=True)
         with open(base + ".jsonl", "w", encoding="utf-8") as f:
-            f.write(json.dumps({"t": "cabecalho", "versao": VERSAO, "seed": g.seed, "classe": g.j.classe,
-                                "hardcore": g.hardcore}, ensure_ascii=False) + "\n")
+            from . import __version__
+            f.write(json.dumps({"t": "cabecalho", "versao": VERSAO, "versao_jogo": __version__, "seed": g.seed,
+                                "classe": g.j.classe, "hardcore": g.hardcore,
+                                "interface": type(g.ui).__name__}, ensure_ascii=False) + "\n")
             for ev in g.registro:
                 f.write(json.dumps(ev, ensure_ascii=False) + "\n")
         with open(base + ".md", "w", encoding="utf-8") as f:
@@ -108,7 +143,9 @@ def resumo(registro):
     ultimo = ev[-1] if ev else {}
     w(f"# Run: {inicio.get('nome', '?')} — {inicio.get('classe', '?')}" + (f" / {spec}" if spec else ""))
     w("")
-    w(f"- Semente: {inicio.get('seed')} · Hardcore: {inicio.get('hardcore')} · Versão do registro: {VERSAO}")
+    cab = next((e for e in registro if e["t"] == "cabecalho"), {})
+    w(f"- Semente: {inicio.get('seed')} · Hardcore: {inicio.get('hardcore')} · Versão do registro: "
+      f"{cab.get('versao', VERSAO)} · Jogo: {cab.get('versao_jogo', '?')} · Interface: {cab.get('interface', '?')}")
     if fim:
         w(f"- Resultado: **{fim['resultado']}** — {fim.get('causa', '')}")
     else:
@@ -162,6 +199,40 @@ def resumo(registro):
     if habs:
         w("Habilidades usadas: " + ", ".join(f"{h} ×{q}" for h, q in sorted(habs.items(), key=lambda x: -x[1])))
         w("")
+    novos = [c for c in combates if "cura_recebida" in c]  # registro v2 em diante
+    if novos:
+        w("### Detalhes por nível (o que cura, protege e erra)")
+        w("")
+        w("| Nv herói | Defesa no início | Cura recebida/luta | Roubo de vida/luta | Absorvido/luta | Críticos/luta | "
+          "Erros/luta | Esquivas/luta | Dano dos aliados/luta | Aliados caídos |")
+        w("|---|---|---|---|---|---|---|---|---|---|")
+        por = {}
+        for c in novos:
+            por.setdefault(c["nv"], []).append(c)
+        for nv in sorted(por):
+            cs = por[nv]
+            n = len(cs)
+
+            def m(k, cs=cs, n=n):
+                return sum(c.get(k, 0) for c in cs) / n
+            caidos = sum(sum(1 for a in c.get("aliados", []) if a["caiu"] and a["tipo"] == "comitiva") for c in cs)
+            defesa = sum(c["stats_inicio"]["defesa"] for c in cs) / n
+            w(f"| {nv} | {defesa:.0f} | "
+              f"{m('cura_recebida'):.0f} | {m('roubo_vida'):.0f} | {m('absorvido'):.0f} | {m('criticos'):.1f} | "
+              f"{m('erros'):.1f} | {m('esquivas'):.1f} | {m('dano_aliados'):.0f} | {caidos} |")
+        w("")
+        elem, por_aliado = {}, {}
+        for c in novos:
+            for k, v in c["dano_por_elemento"].items():
+                elem[k] = elem.get(k, 0) + v
+            for k, v in c["dano_por_aliado"].items():
+                por_aliado[k] = por_aliado.get(k, 0) + v
+        if elem:
+            w("Seu dano por elemento: " + ", ".join(f"{k} {v}" for k, v in sorted(elem.items(), key=lambda x: -x[1])))
+            w("")
+        if por_aliado:
+            w("Dano por aliado: " + ", ".join(f"{k} {v}" for k, v in sorted(por_aliado.items(), key=lambda x: -x[1])))
+            w("")
     secos = sum(1 for c in combates if c["rec_fim"] < 0.2 * c["rec_max"])
     w(f"Lutas que terminaram com recurso abaixo de 20%: {secos} de {len(combates)} ({_pct(secos, len(combates))})")
     w("")
@@ -170,12 +241,15 @@ def resumo(registro):
     if chefes:
         w("## Chefes")
         w("")
-        w("| Chefe | Nv chefe | Nv herói | Resultado | Turnos | Vida perdida | Maior golpe |")
-        w("|---|---|---|---|---|---|---|")
+        w("| Chefe | Nv chefe | Nv herói | Resultado | Turnos | Vida perdida | Dano recebido | Cura recebida | "
+          "Maior golpe | Defesa do herói | Dano dos aliados |")
+        w("|---|---|---|---|---|---|---|---|---|---|---|")
         for c in chefes:
             ch = next(i for i in c["inimigos"] if i["chefe"])
+            defesa = c["stats_inicio"]["defesa"] if "stats_inicio" in c else "-"
             w(f"| {ch['nome']} | {ch['nivel']} | {c['nv']} | {c['resultado']} | {c['turnos']} | "
-              f"{_pct(c['hp_inicio'] - c['hp_fim'], c['hp_max'])} | {c['maior_golpe']} |")
+              f"{_pct(c['hp_inicio'] - c['hp_fim'], c['hp_max'])} | {c['dano_recebido']} | {c.get('cura_recebida', '-')} | "
+              f"{c['maior_golpe']} | {defesa} | {c.get('dano_aliados', 0)} |")
         w("")
 
     w("## Sobrevivência e itens")
@@ -193,6 +267,40 @@ def resumo(registro):
     if equipados:
         w("- Itens equipados: " + "; ".join(f"{e['item']} [{e['raridade']}] (nv {e['nv']})" for e in equipados))
     w("")
+    compras = [e for e in ev if e["t"] == "compra"]
+    vendas = [e for e in ev if e["t"] == "venda"]
+    forja = [e for e in ev if e["t"] == "ferreiro"]
+    if compras or vendas or forja:
+        w("## Economia")
+        w("")
+        gasto = {}
+        for e in compras:
+            gasto[e["item"]] = gasto.get(e["item"], [0, 0])
+            gasto[e["item"]][0] += e.get("qtd", 1)
+            gasto[e["item"]][1] += e["preco"]
+        if gasto:
+            w(f"- Compras ({sum(v[1] for v in gasto.values())} de ouro): "
+              + ", ".join(f"{k} ×{q} ({o})" for k, (q, o) in sorted(gasto.items(), key=lambda x: -x[1][1])))
+        if vendas:
+            w(f"- Vendas ({sum(e['preco'] for e in vendas)} de ouro): " + ", ".join(e["item"] for e in vendas))
+        if forja:
+            w(f"- Ferreiro ({sum(e.get('custo', 0) for e in forja)} de ouro): "
+              + ", ".join(f"{e['item']} +{e['ganho']} {e['stat']}" for e in forja))
+        w("")
+    saques = [e for e in ev if e["t"] == "saque"]
+    if saques:
+        w("## Saque encontrado")
+        w("")
+        for e in saques:
+            w(f"- Dia {e['dia']}, nv {e['nv']}: {e['item']} [{e['raridade']}, {e['slot']}] → {e['escolha']}")
+        w("")
+    if fim and fim.get("equipamento"):
+        w("## Equipamento no fim")
+        w("")
+        for slot, it in fim["equipamento"].items():
+            if it:
+                w(f"- {slot}: {it}")
+        w("")
     com = [e for e in ev if e["t"] == "comitiva"]
     if com:
         w("## Comitiva")

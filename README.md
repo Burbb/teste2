@@ -18,7 +18,7 @@ um reino diferente: mapa, nomes, chefes, eventos e consequências.
 </p>
 <p align="center">
   <img src="docs/mapa.png" width="49%" alt="Mapa do reino no estilo da paisagem: regiões pontilhadas com pinheiros, picos e casinhas">
-  <img src="docs/comitiva.png" width="49%" alt="A comitiva na HUD: Morel aprova e o selo salta do retrato">
+  <img src="docs/comitiva.png" width="49%" alt="Odette aprova muito: o cartão da comitiva surge acima do trecho mais recente, com a ação separada da fala">
 </p>
 <p align="center">
   <img src="docs/talentos.png" width="49%" alt="Árvore de talentos com hover">
@@ -69,10 +69,10 @@ nos títulos, Pixelify Sans no texto, Jersey 15 nos números.
   topo que muda com o bioma, o período do dia, o clima e a corrupção (chuva, neve, névoa,
   relâmpagos, fumaça das chaminés, estrelas). O texto surge no ritmo da leitura, e **as escolhas só
   aparecem quando ele termina**. Qualquer tecla ou clique mostra tudo de uma vez.
-- **HUD no topo, perto do texto.** Retrato, vida e recurso, e os suprimentos **desenhados**: um
-  pernil quando a comida está no fim e vários quando sobra (um osso quando acabou), moedas que
-  viram pilha e depois saco, tochas acesas que tremulam (ou apagadas), frascos cheios ou vazios.
-  Tudo pisca e mostra `+3`/`−1` quando muda.
+- **HUD no topo, perto do texto.** Retrato, vida e recurso, e os suprimentos **desenhados** com
+  um desenho para "tem" e outro para "acabou": pernil ou osso, moedas ou bolsa vazia, tocha acesa
+  (que tremula) ou apagada, frasco cheio ou vazio. O número ao lado diz quanto, e tudo pisca e
+  mostra `+3`/`−1` quando muda. Na luta, a linha de suprimentos dá lugar ao palco.
 - **Combate em palco.** Ao começar uma luta, a paisagem do lugar vira o chão da batalha: a sua
   carta e a da comitiva de um lado, os inimigos do outro. **Uma ação por vez**: quem age dá um
   passo à frente e avança até o alvo, o alvo treme e mostra o dano. Cada elemento tem cor e som
@@ -80,11 +80,12 @@ nos títulos, Pixelify Sans no texto, Jersey 15 nos números.
   sombra escurece. O **Redemoinho** leva a sua carta ao centro e gira quatro vezes, com quatro
   golpes. Cura brilha em **verde**, roubo de vida em **vermelho**, proteção em **azul**, e os
   efeitos (veneno, chamas, guarda, maldição...) ficam como ícones na carta. Para escolher o alvo,
-  clique na carta do inimigo. O texto fica enxuto: uma linha curta por golpe, e cada turno começa
-  numa página limpa (o histórico guarda tudo).
-- **A comitiva fala em balões.** Os retratos dos companheiros ficam na HUD; o que dizem sai
-  em **balões** de cima do retrato (ou da carta, na luta), e quando aprovam ou desaprovam algo
-  salta um **selo** (`▲ Morel aprova`) com som próprio.
+  clique na carta do inimigo. O texto fica enxuto: uma linha curta por golpe, e a página guarda
+  só o turno anterior (apagado) e o atual (o histórico guarda tudo).
+- **A comitiva reage onde você está lendo.** Quando um companheiro aprova, desaprova ou fala, um
+  **cartão** com o retrato surge logo acima do trecho mais recente (`▲ Morel aprova`), com o que
+  ele faz em itálico separado do que ele diz, fica alguns segundos e some (clique para fechar).
+  Na luta, a fala sai num balão da carta dele.
 - **Momentos que importam têm festa.** Vitória com faixa e fanfarra; **subir de nível** abre uma
   tela com os atributos ganhos, o ponto de talento e as habilidades novas; Sigilos,
   especialização e novos companheiros também ganham destaque. O d20 rola na tela nos testes,
@@ -346,7 +347,11 @@ O jogo grava automaticamente, só no seu computador, um registro de cada partida
 
 - `AAAA-MM-DD_HHMM_nome_classe.md` — resumo legível: progressão por nível, ordem dos
   talentos, combates por nível (dano causado e recebido, vida perdida, maior golpe,
-  recurso no fim, turnos), chefes, ferimentos, consumíveis, itens e eventos.
+  recurso no fim, turnos), e o detalhe do que cura e protege (defesa no início da luta, cura
+  recebida, roubo de vida, dano absorvido, críticos, erros, esquivas, dano e quedas dos
+  aliados), dano por elemento e por aliado, chefes, economia (compras, vendas, ferreiro), saque
+  encontrado e o que você fez com ele, equipamento no fim, comitiva, ferimentos e eventos.
+  O cabeçalho diz a versão do registro, a versão do jogo e a interface usada.
 - `AAAA-MM-DD_HHMM_nome_classe.jsonl` — tudo, evento por evento.
 
 O registro é atualizado ao morrer, vencer, salvar ou sair. Para reler um `.jsonl`:

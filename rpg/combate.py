@@ -79,6 +79,7 @@ class Combate:
         self.frenesi = 0
         self.explodindo = False
         self._n_uid = 0
+        self._por_uid = {}
         _SERIE[0] += 1
         self._serie = _SERIE[0]
         self._fala_turno = -1
@@ -112,12 +113,19 @@ class Combate:
         if c is self.j:
             return "j"
         u = getattr(c, "uid", None)
-        if u is None:
+        if u is None or u not in self._por_uid:
             self._n_uid += 1
             u = c.uid = f"c{self._serie}-{self._n_uid}"
+            self._por_uid[u] = c
         return u
 
+    def objeto(self, uid):
+        if uid == "j":
+            return self.j
+        return self._por_uid.get(uid)
+
     def lance(self, tipo, **dados):
+        telemetria.lance(self, tipo, dados)
         self.ui.lance(tipo, **dados)
 
     @contextmanager

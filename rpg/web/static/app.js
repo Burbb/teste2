@@ -261,7 +261,7 @@ async function opiniao(m) {
   historico("h-chip", `▸ ${m.nome} ${bom ? "aprova" : "desaprova"}${Math.abs(m.delta) >= 8 ? " muito" : ""}`);
   if (replay) return;
   Batalha.opiniao(m.cid, m.nome, m.delta);
-  if (!instantaneo()) await espera(ritmo(260));
+  if (!instantaneo()) await espera(ritmo(380));
 }
 
 function iconeChip(m) {
@@ -496,7 +496,11 @@ function mostrarOpcoes(m) {
   if (lista.childElementCount) promptEl.appendChild(lista);
   if (atalhos.childElementCount) promptEl.appendChild(atalhos);
   if (!replay) guardar("cdf-dica", String(Number(ler("cdf-dica") || 0) + 1));
-  if (estado) { desenharMundo(estado); atualizarMapasDaPagina(); }
+  if (estado) {
+    const chave = [...destinosClicaveis()].join(",") + "|" + estado.local.id;
+    if (chave !== ultimoMundo) { ultimoMundo = chave; desenharMundo(estado); }
+    atualizarMapasDaPagina();
+  }
   rolarFim();
 }
 
@@ -585,6 +589,7 @@ function flutuar(alvo, texto, classe) {
   setTimeout(() => f.remove(), 1300);
 }
 
+let ultimoHeroi = "", ultimoMundo = "";
 function aplicarEstado(e) {
   const antes = estado;
   estado = e;
@@ -604,10 +609,11 @@ function aplicarEstado(e) {
   $("#sigilos-topo").innerHTML = [0, 1, 2].map((i) => `<i class="sigilo${i < e.heroi.sigilos ? " tem" : ""}"></i>`).join("");
   desenharHud(e.heroi, antes && antes.heroi);
   Batalha.desenhar(e.combate, e.heroi, replay);
-  desenharHeroi(e.heroi);
+  const chaveHeroi = JSON.stringify(e.heroi);
+  if (chaveHeroi !== ultimoHeroi) { ultimoHeroi = chaveHeroi; desenharHeroi(e.heroi); }
   const mudouMapa = !antes || antes.local.id !== e.local.id || JSON.stringify(antes.mapa) !== JSON.stringify(e.mapa) || antes.heroi.nivel !== e.heroi.nivel ||
     antes.mundo.periodo_n !== e.mundo.periodo_n || antes.mundo.clima_id !== e.mundo.clima_id;
-  if (mudouMapa) desenharMundo(e);
+  if (mudouMapa) { desenharMundo(e); ultimoMundo = ""; }
   if (!$("#sobre-mapa").hidden && mudouMapa) desenharMapaGrande();
 }
 
@@ -616,23 +622,13 @@ function recurso(id, icones, qtd, opts = {}) {
   return `<div class="recurso${opts.alerta ? " alerta" : ""}${opts.vazio ? " vazio" : ""}" data-rec="${id}" title="${esc(opts.titulo || "")}">
     <div class="icones">${imgs}</div><div class="qtd">${qtd}</div></div>`;
 }
-function repetir(nome, n) { return Array.from({ length: n }, () => nome); }
-
-function hudComitiva(h) {
-  if (!h.comitiva || !h.comitiva.length) return "";
-  return `<div class="hud-comitiva">${h.comitiva.map((m) => {
-    const humor = m.aprovacao >= 45 ? "bom" : m.aprovacao <= -20 ? "ruim" : "neutro";
-    return `<div class="hud-membro${m.ferido ? " ferido" : ""}" data-cid="${esc(m.id)}" title="${esc(m.nome)} · ${esc(m.titulo)} · aprovação ${m.aprovacao > 0 ? "+" : ""}${m.aprovacao}${m.ferido ? " · ferido" : ""}${m.conversa ? " · quer conversar" : ""}">
-      ${spr(m.id, 2)}<span class="humor ${humor}"></span>${m.conversa ? '<span class="carta-aviso">✉</span>' : ""}
-      <span class="barra-px aliado fina"><span class="enchimento" style="width:${pct(m.hp, m.max_hp)}%"></span></span></div>`;
-  }).join("")}</div>`;
-}
 
 function desenharHud(h, antes) {
-  const comida = h.provisoes === 0 ? ["osso"] : repetir("pernil", h.provisoes <= 2 ? 1 : h.provisoes <= 5 ? 2 : 3);
-  const tochas = h.tochas === 0 ? ["tocha_apagada"] : repetir("tocha", h.tochas <= 2 ? 1 : 2);
-  const ouro = h.ouro === 0 ? ["bolsa_vazia"] : h.ouro < 60 ? ["moeda"] : h.ouro < 200 ? ["moedas"] : ["saco"];
-  const pocoes = h.pocoes === 0 ? ["frasco_vazio"] : repetir("pocao", Math.min(3, h.pocoes));
+  // Um desenho para "acabou" e outro para "tem": o número ao lado diz quanto.
+  const comida = [h.provisoes ? "pernil" : "osso"];
+  const tochas = [h.tochas ? "tocha" : "tocha_apagada"];
+  const ouro = [h.ouro ? "moedas" : "bolsa_vazia"];
+  const pocoes = [h.pocoes ? "pocao" : "frasco_vazio"];
   const vidaCritica = h.hp <= h.max_hp * 0.3;
   const feridas = h.ferimentos.length ? `<div class="recurso alerta" data-rec="feridas" title="${esc(h.males.join(" · "))}"><div class="icones">${spr("gota", 2)}</div><div class="qtd">${h.ferimentos.length}</div></div>` : "";
   $("#hud-linha").innerHTML = `
@@ -642,7 +638,6 @@ function desenharHud(h, antes) {
       <div class="vital${vidaCritica ? " critico" : ""}" data-vital="hp">${spr("coracao", 1)}${barra("vida", h.hp, h.max_hp, antes ? antes.hp : undefined)}<span class="num">${h.hp}/${h.max_hp}</span></div>
       <div class="vital" data-vital="rec">${spr(RECURSO_ICONE[h.recurso] || "estrela", 1)}${barra(RECURSO_BARRA[h.recurso] || "mana", h.rec, h.max_rec, antes ? antes.rec : undefined)}<span class="num">${h.rec}/${h.max_rec}</span></div>
     </div>
-    ${hudComitiva(h)}
     <div class="hud-recursos">
       ${recurso("provisoes", comida, `${h.provisoes}<small>d</small>`, { alerta: h.provisoes <= 1, vazio: !h.provisoes, titulo: h.provisoes ? `Comida para ${h.provisoes} dia(s). Cada dia consome 1 (e cada companheiro come também).` : "Sem comida! Você vai passar fome." })}
       ${recurso("tochas", tochas, h.tochas, { alerta: h.tochas === 0, vazio: !h.tochas, titulo: "Tochas: luz para a noite, ruínas e a cidadela." })}

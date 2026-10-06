@@ -70,9 +70,11 @@ body.escuro .vinheta { background: radial-gradient(ellipse 50% 55% at 50% 50%, t
 .dor { background: radial-gradient(ellipse 70% 70% at 50% 50%, transparent 45%, rgba(200, 20, 20, 0.6) 100%); opacity: 0; }
 .dor.ativa { animation: dor 0.6s steps(4) forwards; }
 @keyframes dor { 0% { opacity: 1; } 100% { opacity: 0; } }
-#brasas { position: absolute; inset: 0; overflow: hidden; opacity: 0.5; }
+#brasas { position: absolute; inset: 0; overflow: hidden; opacity: 0.5; contain: strict; }
+/* As brasas pedem uma repintura da tela inteira a cada quadro: só na tela de título. */
+body:not(.modo-titulo) #brasas { display: none; }
 body.modo-titulo #brasas { opacity: 1; }
-.brasa { position: absolute; bottom: -8px; width: 4px; height: 4px; background: #ffb35c; box-shadow: 0 0 0 2px rgba(255, 120, 30, 0.35); animation: subir linear infinite; }
+.brasa { will-change: transform, opacity; position: absolute; bottom: -8px; width: 4px; height: 4px; background: #ffb35c; box-shadow: 0 0 0 2px rgba(255, 120, 30, 0.35); animation: subir linear infinite; }
 @keyframes subir { 0% { transform: translate(0, 0); opacity: 0; } 10% { opacity: 1; } 100% { transform: translate(var(--deriva, 30px), -105vh); opacity: 0; } }
 
 /* ------------------------------------------------------------------ topo */
@@ -157,7 +159,7 @@ body.sem-heroi #hud, body.modo-titulo #hud { display: none; }
 /* ------------------------------------------------------------------ batalha: cartas sobre a paisagem */
 #batalha { display: none; margin-top: 4px; }
 body.em-combate #batalha { display: block; }
-body.em-combate .hud-vitais, body.em-combate .hud-retrato, body.em-combate .hud-comitiva { display: none; }
+body.em-combate .hud-vitais, body.em-combate .hud-retrato { display: none; }
 body.em-combate #hud-linha { justify-content: flex-end; }
 #arena { position: relative; display: flex; justify-content: space-between; align-items: center; gap: 18%; min-height: 210px; padding: 14px 14px 18px; overflow: visible; border: 3px solid #0d0b0a; isolation: isolate; }
 #arena > canvas#vista { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; aspect-ratio: auto; border: 0; z-index: -1; }
@@ -165,7 +167,7 @@ body.em-combate #hud-linha { justify-content: flex-end; }
 .fileira { display: grid; grid-template-columns: minmax(0, 210px); gap: 8px; z-index: 1; }
 .fileira.duas { grid-template-columns: repeat(2, minmax(0, 180px)); }
 .camada-fx { position: absolute; inset: 0; pointer-events: none; z-index: 3; }
-.carta { position: relative; min-width: 0; background: rgba(13, 11, 10, 0.86); border: 3px solid #4a4038; padding: 4px 7px 5px; display: grid; grid-template-columns: 36px 1fr; gap: 2px 8px; align-items: center; box-shadow: 3px 3px 0 rgba(0,0,0,0.6); }
+.carta { will-change: translate; position: relative; min-width: 0; background: rgba(13, 11, 10, 0.86); border: 3px solid #4a4038; padding: 4px 7px 5px; display: grid; grid-template-columns: 36px 1fr; gap: 2px 8px; align-items: center; box-shadow: 3px 3px 0 rgba(0,0,0,0.6); }
 .carta .icone { grid-row: span 2; width: 36px; height: 36px; display: grid; place-items: center; background: #0d0b0a; border: 2px solid #2a2420; position: relative; }
 .carta.heroi { border-color: #8a6a14; }
 .carta.heroi .carta-nome { color: #fff3d6; }
@@ -227,14 +229,14 @@ body.em-combate #hud-linha { justify-content: flex-end; }
 .carta.atingida-forte { animation: tremer-forte 0.4s steps(6); }
 @keyframes tremer { 25% { transform: translateX(-5px); } 50% { transform: translateX(5px); } 75% { transform: translateX(-2px); } }
 @keyframes tremer-forte { 15% { transform: translate(-8px, 2px); } 30% { transform: translate(8px, -2px); } 45% { transform: translate(-6px, 0); } 60% { transform: translate(5px, 2px); } 80% { transform: translate(-2px, 0); } }
-.carta-fx { position: absolute; inset: -3px; pointer-events: none; opacity: 0; z-index: 2; mix-blend-mode: screen; }
+.carta-fx { position: absolute; inset: -3px; pointer-events: none; opacity: 0; z-index: 2; }
 .carta-fx[class*="el-"] { animation: clarao-el 0.45s steps(4) forwards; }
 @keyframes clarao-el { 0% { opacity: 0.85; } 100% { opacity: 0; } }
 .carta-fx.el-fisico { background: #fff; }
 .carta-fx.el-fogo { background: linear-gradient(0deg, #ff5a1a, #ffb35c 60%, #fff3a0); animation-duration: 0.7s; }
 .carta-fx.el-gelo { background: linear-gradient(180deg, #ffffff, #7fb0ff); }
 .carta-fx.el-sagrado { background: radial-gradient(circle, #fff3a0, #f2c94c 60%, transparent); }
-.carta-fx.el-sombra { background: #6a3aa8; mix-blend-mode: normal; }
+.carta-fx.el-sombra { background: #6a3aa8; }
 .carta-fx.el-arcano { background: #8e6fd8; }
 .carta-fx.el-veneno { background: #4f9a5b; }
 .carta.esquivou { animation: esquivar 0.4s steps(4); }
@@ -247,7 +249,7 @@ body.em-combate #hud-linha { justify-content: flex-end; }
 .carta.giro { animation: giro 0.3s steps(6); }
 @keyframes girar { to { transform: rotate(360deg); } }
 @keyframes giro { 0% { rotate: 0deg; } 100% { rotate: 360deg; } }
-.carta[class*="aura-"]::after { content: ""; position: absolute; inset: -6px; pointer-events: none; border: 3px solid var(--aura); box-shadow: 0 0 0 3px rgba(0,0,0,0.6), inset 0 0 0 200px color-mix(in srgb, var(--aura) 22%, transparent); animation: aura 0.9s steps(6) forwards; }
+.carta[class*="aura-"]::after { content: ""; position: absolute; inset: -6px; pointer-events: none; border: 3px solid var(--aura); outline: 3px solid rgba(0,0,0,0.6); background: color-mix(in srgb, var(--aura) 22%, transparent); animation: aura 0.9s steps(6) forwards; }
 @keyframes aura { 0% { opacity: 0; } 20% { opacity: 1; } 60% { opacity: 0.7; } 100% { opacity: 0; } }
 .carta.aura-cura { --aura: #8fbf6a; } .carta.aura-roubo { --aura: #e2574c; } .carta.aura-protecao { --aura: #7fb0ff; }
 .carta.aura-forca { --aura: #ffb35c; } .carta.aura-fogo { --aura: #ff7a2e; } .carta.aura-veneno { --aura: #6fbf4a; }
@@ -274,13 +276,6 @@ body.em-combate #hud-linha { justify-content: flex-end; }
 .flutua.info { color: #f0e0c0; font-size: 17px; }
 
 /* ------------------------------------------------------------------ comitiva na HUD, balões e selos */
-.hud-comitiva { display: flex; gap: 6px; align-items: flex-end; }
-.hud-membro { position: relative; width: 44px; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 2px; background: #0d0b0a; border: 2px solid #1f5f63; cursor: help; }
-.hud-membro .barra-px { width: 100%; height: 6px; border-width: 1px; }
-.hud-membro.ferido img { filter: grayscale(0.8) brightness(0.6); }
-.hud-membro .humor { position: absolute; top: -4px; right: -4px; width: 10px; height: 10px; border: 2px solid #000; }
-.humor.bom { background: var(--bom); } .humor.neutro { background: #b8a888; } .humor.ruim { background: var(--sangue-2); }
-.hud-membro .carta-aviso { position: absolute; top: -8px; left: -6px; font-size: 12px; color: #120e0b; background: var(--ouro); border: 1px solid #000; padding: 0 2px; line-height: 1.1; animation: alerta 1.2s steps(2) infinite; }
 .reagiu-bem { animation: reagiu-bem 0.8s steps(4); }
 .reagiu-mal { animation: reagiu-mal 0.8s steps(4); }
 @keyframes reagiu-bem { 30% { transform: translateY(-6px); filter: brightness(1.5) drop-shadow(0 0 4px #8fbf6a); } }
@@ -299,13 +294,6 @@ body.em-combate #hud-linha { justify-content: flex-end; }
 .balao.sumindo { animation: some 0.3s steps(3) forwards; }
 @keyframes balao { from { opacity: 0; transform: translateY(6px) scale(0.9); } to { opacity: 1; transform: none; } }
 @keyframes some { to { opacity: 0; transform: translateY(-4px); } }
-.selo { position: fixed; z-index: 61; display: flex; align-items: center; gap: 4px; white-space: nowrap; pointer-events: none; font-family: var(--num); font-size: 19px; line-height: 1; padding: 3px 8px 4px; border: 2px solid #000; box-shadow: 2px 2px 0 #000; animation: selo 2.2s steps(10) forwards; }
-.selo i { font-style: normal; font-size: 13px; }
-.selo.aprova { background: #2d4a1e; color: #d8f5c0; border-color: #8fbf6a; }
-.selo.desaprova { background: #3a1438; color: #f0c8e8; border-color: #a04a8a; }
-.selo.forte { font-size: 23px; }
-.selo.forte.aprova { background: #3d6a2a; } .selo.forte.desaprova { background: #5a1a50; }
-@keyframes selo { 0% { opacity: 0; transform: translateY(8px) scale(0.6); } 12% { opacity: 1; transform: translateY(-6px) scale(1.1); } 20% { transform: translateY(-8px) scale(1); } 80% { opacity: 1; } 100% { opacity: 0; transform: translateY(-34px); } }
 
 /* ------------------------------------------------------------------ página */
 #pagina { position: relative; flex: 1; min-height: 0; width: 100%; max-width: 860px; overflow-y: auto; box-shadow: var(--sombra); scrollbar-width: thin; scrollbar-color: #4a4038 #120e0b; background-color: #17120e; }
@@ -775,3 +763,35 @@ body.modo-titulo .dica-pular { display: none; }
 .menu-item button.vender { color: var(--ouro); }
 .menu-item button.secundaria { color: var(--tinta-3); }
 .menu-item .pior { font-size: 13px; color: var(--sangue-2); }
+
+/* ------------------------------------------------------------------ cartões da comitiva (fora da luta) */
+#comitiva-avisos { position: fixed; z-index: 62; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; pointer-events: none; }
+.cartao-comitiva { pointer-events: auto; cursor: pointer; display: flex; gap: 10px; align-items: flex-start; width: min(360px, 82vw); padding: 8px 12px 9px 8px; background: #17120e; border: 3px solid #5a4632; box-shadow: 4px 4px 0 #000, 0 0 0 2px #000; }
+.cartao-comitiva.aprova { border-color: #5f8f3e; }
+.cartao-comitiva.desaprova { border-color: #8a3a7a; }
+.cartao-comitiva.chegou { animation: cc-entra 0.35s steps(5); }
+.cartao-comitiva.sumindo { animation: cc-sai 0.3s steps(4) forwards; }
+@keyframes cc-entra { from { opacity: 0; transform: translateX(26px); } to { opacity: 1; transform: none; } }
+@keyframes cc-sai { to { opacity: 0; transform: translateX(26px); } }
+.cc-retrato { flex: none; width: 54px; height: 54px; display: grid; place-items: center; background: #0d0b0a; border: 2px solid #2a2420; }
+.cartao-comitiva.aprova .cc-retrato { animation: reagiu-bem 0.8s steps(4); }
+.cartao-comitiva.desaprova .cc-retrato { animation: reagiu-mal 0.8s steps(4); }
+.cc-corpo { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.cc-topo { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.cc-topo b { font-family: var(--titulo); font-weight: 400; font-size: 26px; line-height: 1; color: #fff3d6; text-shadow: 2px 2px 0 #000; }
+.cc-selo { font-family: var(--num); font-size: 19px; line-height: 1; padding: 1px 6px 2px; border: 2px solid #000; }
+.cc-selo.aprova { background: #2d4a1e; color: #d8f5c0; }
+.cc-selo.desaprova { background: #3a1438; color: #f0c8e8; }
+.cc-selo.forte { font-size: 22px; }
+.cc-selo.forte.aprova { background: #3d6a2a; } .cc-selo.forte.desaprova { background: #5a1a50; }
+.cc-acao { font-size: 14px; font-style: italic; color: var(--tinta-3); line-height: 1.3; }
+.cc-acao::before { content: "— "; }
+.cc-fala { font-size: 16px; line-height: 1.35; color: #f2e6cc; }
+.cc-fala::before { content: "“"; color: var(--ouro); } .cc-fala::after { content: "”"; color: var(--ouro); }
+.balao i { display: block; margin-top: 3px; font-size: 13px; color: #6a5a48; }
+.balao.narrado i { color: var(--tinta-2); margin-top: 0; }
+/* Na luta, a linha de suprimentos some: o palco ganha a altura (o botão Itens mostra o que dá para usar). */
+body.em-combate #hud-linha { display: none; }
+body.em-combate #batalha { margin-top: 0; }
+.cartao-comitiva.atualizou { animation: cc-pulso 0.4s steps(3); }
+@keyframes cc-pulso { 50% { filter: brightness(1.35); } }
