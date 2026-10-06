@@ -620,8 +620,8 @@ function cartaAcao(o, i, m, pos) {
     rodape = `<span class="acao-alvo">gasta o turno</span>`;
   }
   b.innerHTML = `<span class="tecla">${tecla}</span><span class="acao-icone">${icone}</span><span class="acao-nome">${esc(nome)}</span><span class="acao-rodape">${rodape}</span>`;
-  if (meta.trocar !== undefined) b.setAttribute("data-dica", Telas.dicaItem(meta.equip, "Trocar de arma no meio da luta gasta o seu turno.").match(/\d+/)[0]);
-  else b.setAttribute("data-dica", Telas.dica(dicaHtml).match(/\d+/)[0]);
+  b.dataset.dica = Telas.guardarDica(meta.trocar !== undefined
+    ? Telas.htmlItem(meta.equip, "Trocar de arma no meio da luta gasta o seu turno.") : dicaHtml);
   if (bloqueio) b.classList.add("bloqueada");
   b.addEventListener("click", (ev) => {
     ev.stopPropagation();

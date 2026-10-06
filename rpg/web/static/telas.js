@@ -156,17 +156,20 @@ const Telas = (() => {
   }
 
   const dicas = [];
-  function dica(html) {
+  /** Guarda o HTML de uma dica e devolve o id (para elementos montados via DOM). */
+  function guardarDica(html) {
     if (dicas.length > 3000) dicas.splice(0, 2000);  // antigas não estão mais na tela
     dicas.push(html);
-    return `data-dica="${dicas.length - 1}"`;
+    return dicas.length - 1;
   }
-  function dicaItem(it, rodape = "", comparando = true) {
+  function dica(html) { return `data-dica="${guardarDica(html)}"`; }
+  function dicaItem(it, rodape = "", comparando = true) { return `data-dica="${guardarDica(htmlItem(it, rodape, comparando))}"`; }
+  function htmlItem(it, rodape = "", comparando = true) {
     const heroi = App.estado && App.estado.heroi;
     const naoUsa = it.classe && heroi && it.classe !== heroi.classe ? `<div class="pior">Só ${CLASSE_NOME[it.classe] || it.classe} sabem usar isto.</div>` : "";
-    return dica(`<b class="r-${h(it.raridade)}">${h(it.nome)}</b><div class="tipo">${NOME_ESPACO[it.slot] || ""} · ${RARIDADE[it.raridade] || ""}</div>
+    return `<b class="r-${h(it.raridade)}">${h(it.nome)}</b><div class="tipo">${NOME_ESPACO[it.slot] || ""} · ${RARIDADE[it.raridade] || ""}</div>
       <div class="bonus">${h(it.bonus).split(", ").join("<br>")}</div>${comparando ? comparar(it) : ""}${naoUsa}
-      ${it.lore ? `<div class="lore">"${h(it.lore)}"</div>` : ""}${rodape ? `<div class="rodape">${rodape}</div>` : ""}`);
+      ${it.lore ? `<div class="lore">"${h(it.lore)}"</div>` : ""}${rodape ? `<div class="rodape">${rodape}</div>` : ""}`;
   }
   /** A caixa de dica é uma só; ela lembra quem a abriu. Se esse dono sai da tela (a cena trocou, o combate
    *  acabou) sem o mouse "sair" dele, um vigia fecha a dica em vez de deixá-la presa. */
@@ -767,6 +770,6 @@ const Telas = (() => {
     setTimeout(() => t.remove(), 3300);
   }
 
-  return { rastreador, atributosHtml, reputacaoHtml, dica, abrirDica, novaVisita, fecharMenuItem, guardarArvore, abrirTalentos, fecharTalentos, painel, celebrar, toast, iconeCriatura, iconeItem, dicaItem, ligarDicas, esconderDica,
+  return { rastreador, atributosHtml, reputacaoHtml, dica, guardarDica, htmlItem, abrirDica, novaVisita, fecharMenuItem, guardarArvore, abrirTalentos, fecharTalentos, painel, celebrar, toast, iconeCriatura, iconeItem, dicaItem, ligarDicas, esconderDica,
     ICONE_ITEM, ARMA, VAZIO, NOME_ESPACO, AREA, barra, aprovacao };
 })();
