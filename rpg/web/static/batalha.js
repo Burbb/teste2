@@ -74,6 +74,10 @@ const Batalha = (() => {
       <div class="carta-efeitos"></div><div class="preparando" hidden>⚠ prepara um golpe devastador</div>`;
     const b = e.querySelector(".carta-hp .barra-px");
     [...b.children].forEach((x) => { x.style.width = pct(c.hp, c.max_hp) + "%"; });
+    if (c.lado === "inimigo") {  // a ficha do inimigo aparece ao passar o mouse (no lugar do antigo "Analisar")
+      e.addEventListener("mouseenter", () => mostrarFicha(e));
+      e.addEventListener("mouseleave", esconderFicha);
+    }
     return e;
   }
 
@@ -91,7 +95,49 @@ const Batalha = (() => {
     }).join("");
   }
 
+  const ICONE_TRACO = { fera: "fera", humano: "humano", voador: "voador", blindado: "escudo", "morto-vivo": "caveira",
+    etereo: "etereo", planta: "planta", construto: "construto", gigante: "martelo", corrompido: "corrompido",
+    conjurador: "cajado", demonio: "demonio" };
+  const ELEMENTO = { fisico: ["espada", "corpo a corpo"], distancia: ["flecha", "à distância"], fogo: ["chama", "fogo"],
+    gelo: ["gelo", "gelo"], sagrado: ["orbe_luz", "sagrado"], sombra: ["orbe_sombra", "sombra"], arcano: ["orbe_arcano", "arcano"],
+    veneno: ["gota_verde", "veneno"] };
+  function mostrarFicha(el) {
+    const c = el._ficha;
+    if (!c || !c.ficha) return;
+    const f = c.ficha;
+    let caixa = document.getElementById("dica-item");
+    if (!caixa) { caixa = document.createElement("div"); caixa.id = "dica-item"; caixa.className = "moldura"; document.body.appendChild(caixa); }
+    const tracos = f.tracos.map((t) => `<span class="ficha-traco" title="${esc(t.texto)}">${S(ICONE_TRACO[t.id] || "estrela", 2)}<small>${esc(t.id)}</small></span>`).join("");
+    let corpo;
+    if (f.conhecido) {
+      const linha = (filtro, classe) => Object.entries(f.mult).filter(([, v]) => filtro(v)).map(([k, v]) => {
+        const [ic, nome] = ELEMENTO[k] || ["estrela", k];
+        return `<span class="ficha-mult ${classe}">${S(ic, 2)}<b>${v === 0 ? "imune" : "×" + String(v).replace(".", ",")}</b><small>${nome}</small></span>`;
+      }).join("");
+      const fracos = linha((v) => v >= 1.15, "fraco"), fortes = linha((v) => v <= 0.85, "forte");
+      corpo = (fracos ? `<div class="ficha-titulo bom">Fraco contra</div><div class="ficha-linha">${fracos}</div>` : "") +
+        (fortes ? `<div class="ficha-titulo ruim">Resiste a</div><div class="ficha-linha">${fortes}</div>` : "") +
+        (!fracos && !fortes ? '<div class="ficha-titulo">Sem fraquezas nem resistências</div>' : "") +
+        (f.habilidades.length ? `<div class="ficha-titulo">Golpes</div><div class="ficha-habs">${f.habilidades.map((h) => `<span>${esc(h)}</span>`).join("")}</div>` : "");
+    } else {
+      corpo = '<div class="ficha-titulo">Fraquezas: ???</div><div class="pior">Derrote mais destes para aprender (veja o Bestiário).</div>';
+    }
+    caixa.innerHTML = `<b>${esc(c.nome)}</b><div class="tipo">Nível ${c.nivel}${c.chefe ? " · chefe" : ""} · ataque ${f.atk} · defesa ${f.defesa}</div>
+      <div class="ficha-tracos">${tracos}</div>${corpo}${f.ponto_fraco ? '<div class="rodape">Você conhece o ponto fraco: +25% de dano!</div>' : ""}`;
+    caixa.classList.add("ficha-inimigo");
+    caixa.hidden = false;
+    const r = el.getBoundingClientRect();
+    const esq = r.left - 300 < 6 ? r.right + 10 : r.left - 300;
+    caixa.style.left = Math.max(6, Math.min(innerWidth - 296, esq)) + "px";
+    caixa.style.top = Math.max(6, Math.min(innerHeight - caixa.offsetHeight - 6, r.top)) + "px";
+  }
+  function esconderFicha() {
+    const caixa = document.getElementById("dica-item");
+    if (caixa) { caixa.hidden = true; caixa.classList.remove("ficha-inimigo"); }
+  }
+
   function atualizarCarta(el, c, heroi) {
+    el._ficha = c;
     const classes = ["carta", c.lado];
     if (c.uid === "j") classes.push("heroi");
     if (c.chefe) classes.push("chefe");
@@ -313,6 +359,29 @@ const Batalha = (() => {
         return;
       }
       case "golpe": return golpe(m, de, em);
+      case "roubo_ouro": {
+        // moedas saem da sua carta e voam para a do ladrão, que ri
+        if (de && em && !rapido()) {
+          await investir(de, em);
+          som("risada");
+          for (let i = 0; i < Math.min(6, 2 + Math.floor(m.valor / 6)); i++) {
+            projetil(em, de, "moeda");
+            await dormir(70);
+          }
+          ir(de, 26 * lado(de), 0, pausa(170));
+        }
+        if (em) numero(em, `−${m.valor} ouro`, "roubo");
+        if (de) { rotulo(de, "Hehehe!", "inimiga"); reiniciar(de, "gargalha", 900); }
+        await dormir(pausa(500));
+        return;
+      }
+      case "fuga": {
+        if (!de) return;
+        som("esquiva");
+        de.classList.add("fugindo");
+        await ir(de, 160, 0, pausa(420), "ease-in");
+        return;
+      }
       case "giro": {
         if (!de) return;
         reiniciar(de, "giro", 320);

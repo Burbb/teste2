@@ -184,12 +184,14 @@ const MapaPx = (() => {
     });
     caixa.appendChild(c);
     const clic = opts.clicaveis || new Set();
+    const marcas = opts.marcas || new Set();  // lugares com contrato: ganham um "!" de missão
     mapa.nos.forEach((n) => {
       const [px, py] = conv(n);
       const esq = (px / W) * 100, topo = (py / H) * 100;
       const b = document.createElement("button");
       b.type = "button";
-      b.className = "no-btn" + (n.atual ? " atual" : "") + (clic.has(n.id) ? " clicavel" : "");
+      b.className = "no-btn" + (n.atual ? " atual" : "") + (clic.has(n.id) ? " clicavel" : "") + (marcas.has(n.id) ? " contrato" : "");
+      b.dataset.id = n.id;
       b.style.left = esq + "%"; b.style.top = topo + "%";
       const nv = n.nivel ? ` · inimigos Nv.${n.nivel}` : "";
       b.title = `${n.nome} — ${n.descricao}${nv}${n.distancia ? ` · ${n.distancia} trecho(s) daqui` : ""}${clic.has(n.id) ? "\nClique para viajar" : ""}`;

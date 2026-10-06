@@ -499,10 +499,14 @@ class Combate:
             nome_atk = CLASSES[j.classe]["ataque"][0]
             if j.classe == "arqueiro" and j.flechas <= 0:
                 nome_atk = "Golpe de Adaga — sem flechas!"
-            opcoes = [f"Atacar ({nome_atk})", "Habilidades", "Itens", "Analisar inimigos"]
+            # Na interface gráfica, a ficha do inimigo aparece ao passar o mouse na carta: sem "Analisar".
+            analisar = not getattr(self.ui, "web", False)
+            opcoes = [f"Atacar ({nome_atk})", "Habilidades", "Itens"] + (["Analisar inimigos"] if analisar else [])
             if self.pode_fugir:
                 opcoes.append("Fugir")
             esc = self.ui.escolher("Sua ação:", opcoes)
+            if esc >= 3 and not analisar:
+                esc += 1  # mantém a numeração das ações abaixo
             if esc == 0:
                 self.ataque_basico(self.escolher_alvo())
                 return None

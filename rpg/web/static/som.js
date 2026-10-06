@@ -130,6 +130,15 @@ const Som = (() => {
     feitico() { const t = ctx.currentTime; tom(t, 392, 0.06, 0.35, "triangle", 262); tom(t + 0.06, 311, 0.05, 0.4, "triangle", 196); },
     protecao() { const t = ctx.currentTime; [392, 523, 659].forEach((f, i) => tom(t + i * 0.05, f, 0.05, 0.6, "triangle")); sopro(t, 0.5, 3000, 5000, 0.03, 1, "highpass"); },
     rugido() { const t = ctx.currentTime; tom(t, 70, 0.5, 0.9, "sawtooth", 45); tom(t, 73, 0.4, 0.9, "sawtooth", 48); sopro(t, 0.9, 300, 120, 0.4, 0.8, "lowpass"); },
+    risada() {  // "he-he-he" de encrenqueiro: três sílabas nasais descendo
+      const t = ctx.currentTime;
+      [0, 0.13, 0.26, 0.41].forEach((d, i) => {
+        const f = 620 - i * 60;
+        tom(t + d, f, 0.07, 0.1, "square", f * 0.82);
+        tom(t + d, f * 1.5, 0.025, 0.08, "sawtooth", f * 1.2);
+        sopro(t + d, 0.08, 1800, 900, 0.05, 3);
+      });
+    },
     fala() { const t = ctx.currentTime; [0, 0.06, 0.12].forEach((d) => tom(t + d, 520 + Math.random() * 260, 0.03, 0.06, "square")); },
     morte() {
       const t = ctx.currentTime;

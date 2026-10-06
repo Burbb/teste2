@@ -25,6 +25,10 @@ um reino diferente: mapa, nomes, chefes, eventos e consequências.
   <img src="docs/mural.png" width="49%" alt="Mural de contratos: cartazes de Caça e Procurado pregados no quadro">
 </p>
 <p align="center">
+  <img src="docs/ficha-inimigo.png" width="49%" alt="Ficha do inimigo ao passar o mouse e o clima no topo (Fogo −15%, Gelo +20%)">
+  <img src="docs/diario.png" width="49%" alt="Diário como quadro de contratos e o rastreador de contratos no painel da direita">
+</p>
+<p align="center">
   <img src="docs/talentos.png" width="49%" alt="Árvore de talentos com hover">
   <img src="docs/inventario.png" width="49%" alt="Inventário: boneco com dez espaços e a dica da Agilidade (esquiva, crítico, testes)">
 </p>
@@ -66,8 +70,11 @@ hardcore, morrer apaga o save: a morte é permanente de verdade.
 ### A interface
 
 Pixel art, no espírito de Daggerfall e Tibia, e tudo desenhado em código: não há arquivos de
-imagem. Os sprites são grades de pixels no `sprites.js` e as fontes são livres (OFL): Jacquard 24
-nos títulos, Pixelify Sans no texto, Jersey 15 nos números.
+imagem. Os sprites são grades de pixels no `sprites.js`, sempre desenhados em pixels inteiros da
+tela (mesmo com zoom de 125% ou 150% no sistema). As fontes são livres (OFL) e cada uma tem um
+papel: a gótica **Jacquard 24** só nos títulos grandes; **Alegreya SC** (versalete) nos
+cabeçalhos, nomes e botões; **Alegreya** na história, feita para leitura longa; **Alegreya Sans**
+na interface miúda; **Jersey 15** nos números. O botão "Fonte" no topo volta às fontes pixel.
 
 - **A história em primeiro lugar.** Uma cena por página, com uma **paisagem em pixel art** no
   topo que muda com o bioma, o período do dia, o clima e a corrupção (chuva, neve, névoa,
@@ -113,6 +120,9 @@ nos títulos, Pixelify Sans no texto, Jersey 15 nos números.
   uma **seta fixa** no canto da página, que também responde ao `Esc`.
 - **Telas desenhadas:** Diário (cartas de contratos, rumores e do inimigo), Bestiário (fichas
   com fraquezas) e Comitiva (clique num companheiro para conversar ou mandá-lo ao acampamento).
+- **Contratos sempre à vista:** no painel da direita, abaixo do mapa, cada contrato mostra o alvo,
+  o lugar, a distância e o progresso, e o lugar ganha um "!" no mapa. Clique para viajar até lá.
+  O Diário virou um quadro como o mural, com Abandonar em cada cartaz.
 - **Mural de contratos** como um quadro de cortiça: cada contrato é um cartaz pregado (Caça,
   Procurado, Entrega) com o alvo, o lugar, a distância, o nível do perigo, a recompensa em
   ouro e XP e o botão Aceitar. Os seus contratos aparecem embaixo, com o progresso da caça e o
@@ -122,6 +132,14 @@ nos títulos, Pixelify Sans no texto, Jersey 15 nos números.
   reduz do dano, a chance de esquiva e de crítico da Agilidade, o bônus nos testes e o que
   você ganha com mais um ponto. A Reputação também: título (Respeitado, Malvisto...), desconto
   no mercado, bônus de Carisma e o que muda no mundo.
+- **Clima que pesa:** os efeitos do clima e da hora ficam no topo (e no canto da luta) com
+  ícone e número, como `Fogo −15%` na neve ou `Inimigos +10%` à noite. Passe o mouse para ler.
+- **Ficha do inimigo:** na luta, passe o mouse na carta de um inimigo: traços, fraquezas e
+  resistências por elemento (×1,5 contra fogo...) e os golpes que ele usa, se você já conhece a
+  espécie (Bestiário).
+- **Testes de dado explicados:** passe o mouse no selo do teste (`FOR +8`) para ver de onde vem
+  o bônus e a chance aproximada. Os atributos ajudam com retorno decrescente e a dificuldade
+  sobe um pouco com o seu nível, então o fim de jogo não vira sucesso garantido.
 - Som ambiente e efeitos sintetizados na hora. Funciona em monitor largo, notebook e celular.
   Recarregar a página não perde nada.
 
@@ -161,7 +179,8 @@ Você não precisa caminhar sozinho, e talvez não deva. Três companheiros pode
 
 - **Aprovação.** 117 escolhas, em 49 eventos, têm peso moral. Quando você escolhe,
   cada companheiro reage (um selo `▼ Odette desaprova muito` salta do retrato) e às vezes diz o
-  que pensa, num balão. Na luta também soltam uma frase de vez em quando. Quem confia
+  que pensa, num balão. Na luta também soltam uma frase de vez em quando. Passe o mouse na barra
+  de aprovação para ver o que ela muda (força em combate, conversas, partida). Quem confia
   em você luta melhor; abaixo de um certo ponto, vai embora, e nem todos vão em paz.
 - **Conversas** no acampamento ou no menu **Comitiva** (`C`): cada um tem uma história que
   só se abre com confiança.

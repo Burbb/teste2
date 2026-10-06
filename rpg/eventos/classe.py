@@ -63,7 +63,8 @@ def encruzilhada_arqueiro(g):
 
 @evento(contextos=TODOS, peso=0)
 def encruzilhada_mago(g):
-    g.narrar("À noite, seu grimório começa a queimar sozinho. As páginas não viram cinza: viram palavras de "
+    g.narrar(f"{'Enquanto você dorme' if g.noite else 'Sem aviso'}, seu grimório começa a queimar sozinho. "
+             "As páginas não viram cinza: viram palavras de "
              "fogo que flutuam no ar e sussurram promessas de calor e poder.", "magenta")
     g.narrar("Ao mesmo tempo, da terra sob seus pés, uma voz fria e paciente: \"O fogo consome. Eu "
              "preservo. Os mortos não esquecem quem lhes dá um propósito...\"", "cinza")

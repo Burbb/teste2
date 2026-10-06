@@ -186,8 +186,10 @@ def _roubar(cb, e, alvo):
     qtd = min(j.ouro, cb.rng.randint(5, 15) + j.nivel * 2)
     j.ouro -= qtd
     e.roubado += qtd
+    cb.lance("roubo_ouro", de=cb.uid(e), em="j", valor=qtd)
     cb.dizer(f"{e.nome} enfia a mão na sua bolsa e leva {qtd} moedas!", "vermelho")
     if len(cb.inimigos_vivos()) > 1 and cb.rng.random() < 0.35:
+        cb.lance("fuga", de=cb.uid(e))
         e.fugiu = True
         e.hp = 0
         cb.dizer(f"{e.nome} gargalha e some no mato com o seu ouro!", "vermelho+negrito")

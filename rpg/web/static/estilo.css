@@ -50,6 +50,8 @@ body {
   image-rendering: pixelated;
 }
 img.sprite, canvas { image-rendering: pixelated; image-rendering: crisp-edges; }
+/* Sprites em pixels inteiros da tela: --px vale 1 pixel do aparelho (ou 2, 3...), nunca 1,25. */
+img.sprite { width: calc(var(--px, 1px) * var(--s, 16)); height: calc(var(--px, 1px) * var(--s, 16)); }
 button { font: inherit; color: inherit; }
 kbd { font-family: var(--num); font-size: 0.85em; padding: 0 4px; border: 2px solid var(--linha); color: var(--tinta-3); margin-left: 4px; background: #0d0b0a; }
 [hidden] { display: none !important; }
@@ -121,7 +123,7 @@ body.sem-heroi #hud, body.modo-titulo #hud { display: none; }
 .hud-nome b { font-family: var(--titulo); font-size: 26px; font-weight: 400; color: #fff3d6; line-height: 1; text-shadow: 2px 2px 0 #000; }
 .hud-nome span { font-size: 13px; color: var(--tinta-3); white-space: nowrap; }
 .vital { display: flex; align-items: center; gap: 6px; position: relative; }
-.vital img.sprite { width: 20px; height: 20px; }
+.vital img.sprite { --s: 16; }
 .vital .barra-px { flex: 1; height: 16px; }
 .vital .num { font-family: var(--num); font-size: 20px; min-width: 62px; text-align: right; color: var(--tinta); line-height: 1; }
 .vital.critico .barra-px { animation: piscar-vida 0.8s steps(2) infinite; }
@@ -193,7 +195,7 @@ body.em-combate #hud-linha { justify-content: flex-end; }
 .carta-efeitos { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 3px; }
 .carta-efeitos:empty { display: none; }
 .ef { display: inline-flex; align-items: center; gap: 1px; padding: 0 3px 0 1px; border: 2px solid; background: #0d0b0a; font-family: var(--num); font-size: 14px; line-height: 1; }
-.ef img.sprite { width: 16px; height: 16px; }
+.ef img.sprite { --s: 16; }
 .ef.novo { animation: ef-novo 0.6s steps(4); }
 @keyframes ef-novo { 0% { transform: scale(2); filter: brightness(2.5); } 100% { transform: none; } }
 .ef.fam-protecao { border-color: #3d63c9; color: #a8c4ff; }
@@ -263,7 +265,7 @@ body.em-combate #hud-linha { justify-content: flex-end; }
 @keyframes particula-sobe { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-46px); opacity: 0; } }
 @keyframes particula-roubo { 0% { transform: translate(0, -46px); opacity: 0; } 30% { opacity: 1; } 100% { transform: translate(0, 0); opacity: 0; } }
 .labareda { position: absolute; bottom: 0; z-index: 3; pointer-events: none; animation: labareda 0.9s steps(6) forwards; }
-.labareda img.sprite { width: 22px; height: 22px; }
+.labareda img.sprite { --s: 16; }
 @keyframes labareda { 0% { transform: translateY(6px) scale(0.6); opacity: 0; } 25% { opacity: 1; transform: translateY(-6px) scale(1.15); } 100% { transform: translateY(-34px) scale(0.5); opacity: 0; } }
 .projetil { position: absolute; left: 0; top: 0; width: 32px; height: 32px; }
 .projetil.brilhante img { filter: drop-shadow(0 0 4px #fff3a0); }
@@ -353,7 +355,7 @@ body.modo-titulo .vinheta { background: radial-gradient(ellipse 80% 70% at 50% 4
 /* etiquetas */
 .chips { display: flex; flex-wrap: wrap; gap: 6px; margin: -0.2em 0 1em; }
 .chip { display: inline-flex; align-items: center; gap: 6px; font-family: var(--num); font-size: 20px; line-height: 1; padding: 3px 9px 3px 4px; border: 2px solid; background: #120e0b; box-shadow: 2px 2px 0 #000; animation: surgir 0.3s steps(3); }
-.chip img.sprite { width: 22px; height: 22px; }
+.chip img.sprite { --s: 16; }
 @keyframes surgir { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 .chip.ouro { color: var(--ouro); border-color: #8a6a14; }
 .chip.perda, .chip.dano { color: #ff9c90; border-color: #8a1414; }
@@ -413,7 +415,7 @@ body.modo-titulo .vinheta { background: radial-gradient(ellipse 80% 70% at 50% 4
 @keyframes seta { 50% { transform: translateX(3px); } }
 .escolha .tecla { flex: none; font-family: var(--num); font-size: 20px; color: var(--brasa); min-width: 1.2em; text-align: right; }
 .escolha .rotulo { flex: 1; }
-.escolha img.sprite { align-self: center; width: 24px; height: 24px; }
+.escolha img.sprite { --s: 16; align-self: center; }
 .escolha.secundaria { color: var(--tinta-2); font-size: 17px; }
 .teste { flex: none; align-self: center; font-family: var(--num); font-size: 18px; padding: 1px 7px; border: 2px solid; background: #120e0b; white-space: nowrap; }
 .teste.bom { color: #bfe59b; border-color: #3d6a2a; }
@@ -422,7 +424,7 @@ body.modo-titulo .vinheta { background: radial-gradient(ellipse 80% 70% at 50% 4
 .escolhas.escolhido .escolha { pointer-events: none; opacity: 0.3; }
 .atalhos { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; padding-top: 12px; border-top: 2px dashed #3a2e24; }
 .atalho { display: inline-flex; align-items: center; gap: 5px; font-size: 14px; color: var(--tinta-2); background: #120e0b; border: 2px solid #3a2e24; padding: 2px 9px 2px 4px; cursor: pointer; box-shadow: 2px 2px 0 #000; }
-.atalho img.sprite { width: 22px; height: 22px; }
+.atalho img.sprite { --s: 16; }
 .atalho:hover, .atalho:focus-visible { color: var(--tinta); border-color: #6a5430; outline: none; }
 .atalho.destaque { color: #120e0b; background: var(--ouro); border-color: #fff3a0; animation: alerta 1.2s steps(2) infinite; }
 .atalho.destaque kbd { color: #4a3a10; border-color: #8a6a14; background: #f2d77a; }
@@ -438,7 +440,7 @@ body.modo-titulo .vinheta { background: radial-gradient(ellipse 80% 70% at 50% 4
 .escolhas.acoes-combate li { flex: 1 1 140px; }
 .acoes-combate .escolha { flex-direction: column; align-items: center; gap: 2px; padding: 6px 6px 8px; text-align: center; background: #120e0b; border: 3px solid #3a2e24; box-shadow: 3px 3px 0 #000; font-size: 16px; line-height: 1.15; }
 .acoes-combate .escolha::before { display: none; }
-.acoes-combate .escolha img.sprite { width: 32px; height: 32px; }
+.acoes-combate .escolha img.sprite { --s: 32; }
 .acoes-combate .escolha .tecla { position: absolute; top: 2px; left: 6px; font-size: 16px; text-align: left; min-width: 0; }
 .acoes-combate .escolha:hover, .acoes-combate .escolha:focus-visible { border-color: var(--ouro); transform: translateY(-2px); }
 .pergunta-rotulo.mira::after { content: " · ou clique na carta do inimigo"; text-transform: none; letter-spacing: 0; font-weight: 400; color: var(--ouro); }
@@ -455,10 +457,10 @@ body.modo-titulo .vinheta { background: radial-gradient(ellipse 80% 70% at 50% 4
 .xp-linha { margin-top: 10px; }
 .legenda-linha { display: flex; justify-content: space-between; font-family: var(--num); font-size: 17px; color: var(--tinta-3); margin-bottom: 3px; }
 .talento-aviso { margin-top: 8px; display: flex; align-items: center; gap: 6px; justify-content: center; padding: 3px 8px; font-weight: 600; font-size: 14px; color: #120e0b; background: var(--ouro); border: 2px solid #fff3a0; box-shadow: 2px 2px 0 #000; animation: alerta 1.2s steps(2) infinite; }
-.talento-aviso img.sprite { width: 22px; height: 22px; }
+.talento-aviso img.sprite { --s: 16; }
 .atributos { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
 .atributo { display: flex; align-items: center; gap: 6px; background: #120e0b; border: 2px solid #2a2420; padding: 3px 6px; }
-.atributo img.sprite { width: 22px; height: 22px; }
+.atributo img.sprite { --s: 16; }
 .atributo .nome { font-size: 11px; color: var(--tinta-3); text-transform: uppercase; }
 .atributo .valor { font-family: var(--num); font-size: 24px; line-height: 1; color: var(--tinta); margin-left: auto; }
 .linhas { display: flex; flex-direction: column; gap: 3px; font-size: 14px; }
@@ -472,7 +474,7 @@ body.modo-titulo .vinheta { background: radial-gradient(ellipse 80% 70% at 50% 4
 .slot-px.clicavel { cursor: pointer; } .slot-px.clicavel:hover { border-color: var(--ouro); transform: translateY(-2px); }
 .r-magico { color: var(--magico) !important; } .r-raro { color: var(--raro) !important; } .r-lendario { color: var(--lendario) !important; }
 .ferimento { display: flex; align-items: center; gap: 4px; color: var(--sangue-2); font-size: 14px; }
-.ferimento img.sprite { width: 20px; height: 20px; }
+.ferimento img.sprite { --s: 16; }
 .ferimento small { color: var(--tinta-3); }
 .vazio { color: var(--tinta-3); font-style: italic; font-size: 13px; }
 .habilidade { font-size: 14px; display: flex; justify-content: space-between; gap: 8px; cursor: help; }
@@ -499,7 +501,7 @@ body.modo-titulo .vinheta { background: radial-gradient(ellipse 80% 70% at 50% 4
 .perigo-tag.alto { color: #ff8e80; border-color: #8a1414; }
 .caminhos { display: flex; flex-direction: column; gap: 2px; }
 .caminho { display: grid; grid-template-columns: 30px 1fr auto; gap: 8px; align-items: center; font-size: 14px; padding: 3px 4px; border: 2px solid transparent; }
-.caminho img.sprite { width: 28px; height: 28px; }
+.caminho img.sprite { --s: 32; }
 .caminho .nome small { display: block; color: var(--tinta-3); font-size: 12px; }
 .caminho .dist { font-family: var(--num); font-size: 16px; color: var(--tinta-3); white-space: nowrap; }
 .caminho.clicavel { cursor: pointer; }
@@ -596,7 +598,7 @@ body.modo-titulo .vinheta { background: radial-gradient(ellipse 80% 70% at 50% 4
 .festa .texto-festa { color: var(--tinta-2); margin: 8px 0 0; }
 .festa .lista { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 16px 0 6px; }
 .festa .ganho { display: inline-flex; align-items: center; gap: 6px; font-family: var(--num); font-size: 25px; padding: 3px 10px 3px 6px; background: #120e0b; border: 3px solid #3d6a2a; color: var(--bom); box-shadow: 3px 3px 0 #000; opacity: 0; animation: surgir 0.3s steps(3) forwards; }
-.festa .ganho img.sprite { width: 26px; height: 26px; }
+.festa .ganho img.sprite { --s: 32; }
 .festa .ganho.ouro { border-color: #8a6a14; color: var(--ouro); }
 .festa .habilidade-nova { margin-top: 10px; padding: 8px 12px; background: #120e0b; border: 3px solid #5a3a8a; text-align: left; opacity: 0; animation: surgir 0.3s steps(3) forwards; }
 .festa .habilidade-nova b { font-family: var(--titulo); font-size: 30px; font-weight: 400; color: var(--arcano); display: block; line-height: 1; }
@@ -672,7 +674,7 @@ body.modo-titulo .dica-pular { display: none; }
   #folha { padding: 16px 12px 24px; font-size: 18px; }
   #arena { gap: 10px; padding: 10px 6px 14px; }
   .fileira, .fileira.duas { grid-template-columns: minmax(0, 1fr); }
-  .carta { grid-template-columns: 28px 1fr; padding: 3px 5px; } .carta .icone { width: 28px; height: 28px; } .carta .icone img { width: 24px; height: 24px; }
+  .carta { grid-template-columns: 28px 1fr; padding: 3px 5px; } .carta .icone { width: 28px; height: 28px; } .carta .icone img { --s: 16; }
   .ficha-colunas { grid-template-columns: 1fr; }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -729,7 +731,7 @@ body.modo-titulo .dica-pular { display: none; }
 .merc-nome { font-size: 13px; font-weight: 600; line-height: 1.2; }
 .merc-bonus { font-family: var(--num); font-size: 15px; color: var(--tinta-3); line-height: 1.1; }
 .preco { display: inline-flex; align-items: center; gap: 3px; font-family: var(--num); font-size: 20px; color: var(--ouro); }
-.preco img.sprite { width: 16px; height: 16px; }
+.preco img.sprite { --s: 16; }
 .preco.ganho { color: var(--bom); }
 @media (max-width: 920px) { .inventario { grid-template-columns: 1fr; } .boneco { max-width: 280px; margin: 0 auto; } }
 #historico-lista .h-fala { color: #f2d7a8; font-style: italic; }
@@ -744,7 +746,7 @@ body.modo-titulo .dica-pular { display: none; }
 #cena-cab { clear: none; }
 @media (max-width: 920px) { .voltar-seta { margin-left: -4px; } .voltar-seta kbd { display: none; } }
 .aviso-flutuante { position: fixed; z-index: 70; display: flex; align-items: center; gap: 5px; white-space: nowrap; pointer-events: none; font-family: var(--num); font-size: 21px; line-height: 1; padding: 3px 9px 4px 4px; background: #120e0b; border: 2px solid #4a4038; color: var(--tinta); box-shadow: 3px 3px 0 #000; animation: aviso-sobe 2s steps(12) forwards; }
-.aviso-flutuante img.sprite { width: 20px; height: 20px; }
+.aviso-flutuante img.sprite { --s: 16; }
 .aviso-flutuante.ouro { color: var(--ouro); border-color: #8a6a14; }
 .aviso-flutuante.perda, .aviso-flutuante.dano { color: #ff9c90; border-color: #8a1414; }
 .aviso-flutuante.item, .aviso-flutuante.cura { color: #bfe59b; border-color: #3d6a2a; }
@@ -844,7 +846,7 @@ button.membro-carta:hover { color: #fff3a0; transform: scale(1.2); }
 .contrato-titulo { font-weight: 600; font-size: 15px; text-align: center; line-height: 1.2; }
 .contrato-desc { font-size: 13px; line-height: 1.35; color: #4a3a28; }
 .contrato-lugar { font-size: 12px; color: #4a3a28; display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
-.contrato-lugar img.sprite { width: 16px; height: 16px; }
+.contrato-lugar img.sprite { --s: 16; }
 .contrato-progresso { display: flex; align-items: center; gap: 6px; font-family: var(--num); font-size: 16px; }
 .contrato-progresso .barra-px { flex: 1; }
 .contrato-premio { display: flex; justify-content: space-between; font-family: var(--num); font-size: 19px; color: #5a3a10; border-top: 2px dashed #a88a5a; padding-top: 4px; }
@@ -856,3 +858,103 @@ button.membro-carta:hover { color: #fff3a0; transform: scale(1.2); }
 .contrato-feito { text-align: center; font-size: 13px; font-weight: 600; color: #2e4a20; }
 .contrato.concluido::after { content: "FEITO"; position: absolute; top: 34px; right: 6px; transform: rotate(14deg); font-family: var(--num); font-size: 22px; color: #2e6a20; border: 3px solid #2e6a20; padding: 0 6px; }
 .cartazes.seus .contrato { background: #d8c8a0; }
+
+/* ------------------------------------------------------------------ rastreador de contratos e diário */
+.rastreador h3 { margin-bottom: 4px; }
+.rastro-contrato { display: flex; gap: 8px; align-items: center; padding: 4px 6px; margin-bottom: 4px; background: #120e0b; border: 2px solid #3a2e24; border-left: 4px solid var(--ouro-3); }
+.rastro-contrato.clicavel { cursor: pointer; }
+.rastro-contrato.clicavel:hover { border-color: var(--ouro); }
+.rastro-contrato.feito { border-left-color: var(--bom); }
+.rastro-arte { flex: none; width: 36px; height: 36px; display: grid; place-items: center; background: #0d0b0a; border: 2px solid #2a2420; }
+.rastro-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.rastro-info b { font-size: 14px; color: #f2e6cc; line-height: 1.2; }
+.rastro-lugar { font-size: 12px; color: var(--tinta-3); display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
+.rastro-contrato.feito .rastro-lugar { color: var(--bom); font-weight: 600; }
+.rastro-prog { display: flex; align-items: center; gap: 6px; }
+.rastro-prog .barra-px { flex: 1; height: 8px; }
+.rastro-prog small { font-family: var(--num); font-size: 15px; color: var(--tinta-2); }
+.no-btn.contrato::after { content: "!"; position: absolute; left: 50%; top: -15px; transform: translateX(-50%); font-family: var(--num); font-size: 16px; line-height: 1; color: #120e0b; background: var(--ouro); border: 2px solid #000; padding: 0 4px; animation: alerta 1.2s steps(2) infinite; pointer-events: none; }
+.no-btn.destacado { outline: 3px solid var(--ouro); outline-offset: 3px; }
+.faixa-jornada { display: flex; flex-wrap: wrap; gap: 18px; align-items: center; margin-bottom: 12px; font-family: var(--num); font-size: 19px; color: var(--tinta-2); }
+.faixa-jornada .barra-px { display: inline-block; width: 120px; vertical-align: middle; }
+.sigilos-diario { display: inline-flex; gap: 6px; align-items: center; }
+.sigilos-diario .sigilo { display: inline-block; width: 12px; height: 12px; border: 2px solid #4a4038; transform: rotate(45deg); background: #1b1511; }
+.sigilos-diario .sigilo.tem { background: var(--ouro); border-color: #fff3a0; }
+.bilhetes { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+.bilhete { position: relative; padding: 12px 10px 8px; background: #e8d8b0; color: #2a1e12; border: 2px solid #8a6a40; box-shadow: 3px 3px 0 rgba(0,0,0,0.6); font-size: 14px; line-height: 1.4; transform: rotate(-0.6deg); }
+.bilhete:nth-child(2n) { transform: rotate(0.6deg); }
+.bilhete small { display: block; margin-top: 4px; font-size: 11px; color: #6a5a40; }
+.bilhete img.sprite { --s: 16; vertical-align: -3px; }
+.bilhete.inimigo { background: #d8b0a8; border-color: #6e1d1d; }
+
+.carta.gargalha .icone { animation: gargalha 0.9s steps(6); }
+@keyframes gargalha { 20%, 60% { transform: translateY(-3px) rotate(-6deg); } 40%, 80% { transform: translateY(0) rotate(6deg); } }
+.carta.fugindo { opacity: 0; transition: opacity 0.4s steps(4); }
+
+/* ficha do inimigo (hover na carta) */
+#dica-item.ficha-inimigo { width: 290px; }
+.ficha-tracos { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0; }
+.ficha-traco { display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 3px 4px; background: #0d0b0a; border: 2px solid #3a2e24; cursor: help; }
+.ficha-traco small { font-size: 10px; color: var(--tinta-3); }
+.ficha-titulo { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--tinta-3); margin-top: 6px; }
+.ficha-titulo.bom { color: var(--bom); } .ficha-titulo.ruim { color: var(--sangue-2); }
+.ficha-linha { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 3px; }
+.ficha-mult { display: inline-flex; align-items: center; gap: 4px; padding: 2px 6px 2px 2px; border: 2px solid; background: #0d0b0a; }
+.ficha-mult b { font-family: var(--num); font-size: 18px; font-weight: 400; line-height: 1; }
+.ficha-mult small { font-size: 11px; color: var(--tinta-3); }
+.ficha-mult.fraco { border-color: #3d6a2a; color: #bfe59b; } .ficha-mult.forte { border-color: #8a1414; color: #ff9c90; }
+.ficha-habs { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 3px; }
+.ficha-habs span { font-size: 12px; padding: 1px 6px; background: #2a1f3a; color: #cdbcf5; border: 1px solid #4a3a6a; }
+
+/* modificadores de clima e hora */
+#modificadores { gap: 6px; }
+#modificadores:empty { display: none; }
+.mod { display: inline-flex; align-items: center; gap: 4px; font-family: var(--num); font-size: 17px; line-height: 1; color: #d8e4f0; padding: 2px 7px 3px 3px; background: #121820; border: 2px solid #2c3e5a; cursor: help; white-space: nowrap; }
+.mod img.sprite { --s: 16; }
+.mods-arena { position: absolute; top: 6px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 5; }
+.mods-arena:empty { display: none; }
+.mods-arena .mod { background: rgba(13, 17, 26, 0.85); }
+body.sem-heroi #modificadores { visibility: hidden; }
+
+/* ================================================================== tipografia
+   Um papel para cada fonte, como nos RPGs de texto (Darkest Dungeon, Pentiment, Disco Elysium):
+   - gótica (Jacquard 24): só títulos grandes e o logo, a identidade do jogo;
+   - Alegreya SC (versalete): cabeçalhos, nomes e botões, legível em qualquer tamanho;
+   - Alegreya: a prosa, desenhada para leitura longa, com itálico de verdade;
+   - Alegreya Sans: interface miúda (dicas, rótulos);
+   - Jersey 15: números da HUD e do combate (dano, vida, ouro).
+   "Fonte: pixel" no topo volta às fontes pixel antigas. */
+@font-face { font-family: "Alegreya"; font-weight: 400; src: url(fontes/alegreya-latin-400-normal.woff2) format("woff2"); font-display: swap; }
+@font-face { font-family: "Alegreya"; font-weight: 400; font-style: italic; src: url(fontes/alegreya-latin-400-italic.woff2) format("woff2"); font-display: swap; }
+@font-face { font-family: "Alegreya"; font-weight: 600; src: url(fontes/alegreya-latin-600-normal.woff2) format("woff2"); font-display: swap; }
+@font-face { font-family: "Alegreya"; font-weight: 700; src: url(fontes/alegreya-latin-700-normal.woff2) format("woff2"); font-display: swap; }
+@font-face { font-family: "Alegreya SC"; font-weight: 500; src: url(fontes/alegreya-sc-latin-500-normal.woff2) format("woff2"); font-display: swap; }
+@font-face { font-family: "Alegreya SC"; font-weight: 700; src: url(fontes/alegreya-sc-latin-700-normal.woff2) format("woff2"); font-display: swap; }
+@font-face { font-family: "Alegreya Sans"; font-weight: 500; src: url(fontes/alegreya-sans-latin-500-normal.woff2) format("woff2"); font-display: swap; }
+@font-face { font-family: "Alegreya Sans"; font-weight: 700; src: url(fontes/alegreya-sans-latin-700-normal.woff2) format("woff2"); font-display: swap; }
+:root { --cabeca: "Alegreya SC", Georgia, serif; --prosa: "Alegreya", Georgia, serif; --ui: "Alegreya Sans", "Trebuchet MS", sans-serif; }
+body.fonte-pixel { --cabeca: var(--titulo); --prosa: var(--texto); --ui: var(--texto); }
+body:not(.fonte-pixel) { font-family: var(--ui); }
+body:not(.fonte-pixel) #folha, body:not(.fonte-pixel) .escolha, body:not(.fonte-pixel) .balao span, body:not(.fonte-pixel) .cc-fala,
+body:not(.fonte-pixel) .bilhete, body:not(.fonte-pixel) .contrato-desc, body:not(.fonte-pixel) .lore { font-family: var(--prosa); }
+body:not(.fonte-pixel) #folha { font-size: 21px; line-height: 1.55; }
+body:not(.fonte-pixel) .escolha { font-size: 20px; }
+body:not(.fonte-pixel) .escolha.secundaria { font-size: 18px; }
+body:not(.fonte-pixel) .acoes-combate .escolha { font-family: var(--cabeca); font-size: 17px; }
+body:not(.fonte-pixel) :is(.hud-nome b, .continuar, .secao h3, .tela h4, .cartao .cab b, .arvore-col-titulo, #talento-info b,
+  .festa .habilidade-nova b, .toast b, #historico-lista .h-cena, #dica-item b, .menu-item b, .cc-topo b, .heroi-nome) {
+  font-family: var(--cabeca); font-weight: 700; letter-spacing: 0.01em; }
+body:not(.fonte-pixel) .secao h3 { font-size: 21px; }
+body:not(.fonte-pixel) .tela h4 { font-size: 23px; }
+body:not(.fonte-pixel) .cartao .cab b, body:not(.fonte-pixel) #dica-item b, body:not(.fonte-pixel) .cc-topo b { font-size: 21px; }
+body:not(.fonte-pixel) .menu-item b { font-size: 19px; }
+body:not(.fonte-pixel) .hud-nome b, body:not(.fonte-pixel) .toast b, body:not(.fonte-pixel) #talento-info b,
+body:not(.fonte-pixel) .arvore-col-titulo, body:not(.fonte-pixel) #historico-lista .h-cena, body:not(.fonte-pixel) .festa .habilidade-nova b { font-size: 23px; }
+body:not(.fonte-pixel) .heroi-nome { font-size: 26px; }
+body:not(.fonte-pixel) .continuar { font-size: 24px; padding: 6px 26px 7px; }
+body:not(.fonte-pixel) .pergunta-rotulo, body:not(.fonte-pixel) .rol-attr { font-family: var(--cabeca); font-size: 14px; letter-spacing: 0.08em; text-transform: none; }
+body:not(.fonte-pixel) .carta-nome, body:not(.fonte-pixel) .figura-nome { font-family: var(--cabeca); }
+/* no modo livro, quem pedia a fonte de interface pixel passa a usar a Alegreya Sans */
+body:not(.fonte-pixel) { --texto: "Alegreya Sans", "Trebuchet MS", sans-serif; }
+body:not(.fonte-pixel) #texto p.detalhe { font-family: var(--ui); font-size: 16px; line-height: 1.25; }
+body:not(.fonte-pixel) .chip { font-family: var(--ui); font-weight: 700; font-size: 16px; }

@@ -1,6 +1,7 @@
 """Estado do jogo, ciclo principal e ações do jogador."""
 
 import json
+import math
 import os
 import random
 import re
@@ -164,7 +165,7 @@ class Jogo:
         for attr, nome in NOMES_TESTE.items():
             marca = f"({nome})"
             if marca in rotulo:
-                mod = self.mod_teste(attr) - (4 if self.sem_luz and attr in ("percepcao", "destreza") else 0)
+                mod = self.mod_teste(attr)
                 rotulo = rotulo.replace(marca, f"({nome} {mod:+d} no d20)")
         return rotulo
 
@@ -172,28 +173,53 @@ class Jogo:
         return self.sortear(BIOMAS[self.bioma]["ambiente"])
 
     # ================================================================ testes
-    def mod_teste(self, attr):
+    @staticmethod
+    def _bonus_atributo(valor):
+        """Atributos ajudam nos testes, mas com retorno decrescente: 5 → +2, 11 → +4, 20 → +6, 43 → +8."""
+        return int(round(2.5 * math.log2(1 + max(0, valor) / 5)))
+
+    def partes_teste(self, attr):
+        """De onde vem o bônus de cada teste: [(rótulo, valor), ...]."""
         j = self.j
-        base = j.nivel // 2
+        b = self._bonus_atributo
+        partes = [("nível", j.nivel // 2)]
         if attr == "forca":
-            return base + j.atk // 3
-        if attr == "destreza":
-            return base + j.agi // 2
-        if attr == "arcano":
-            return base + j.poder // 3
-        if attr == "percepcao":
-            return base + j.agi // 3 + (3 if j.classe == "arqueiro" else 0) + (2 if j.spec == "patrulheiro" else 0)
-        if attr == "vontade":
-            return base + j.defesa // 4 + (3 if j.spec == "paladino" else 0) + (2 if j.classe == "mago" else 0)
-        if attr == "carisma":
-            return base + j.reputacao // 10 + (2 if j.spec == "paladino" else 0)
-        return base
+            partes.append((f"Ataque {j.atk}", b(j.atk)))
+        elif attr == "destreza":
+            partes.append((f"Agilidade {j.agi}", b(j.agi * 1.4)))
+        elif attr == "arcano":
+            partes.append((f"Poder {j.poder}", b(j.poder)))
+        elif attr == "percepcao":
+            partes.append((f"Agilidade {j.agi}", b(j.agi)))
+            if j.classe == "arqueiro":
+                partes.append(("olhos de arqueiro", 3))
+            if j.spec == "patrulheiro":
+                partes.append(("patrulheiro", 2))
+        elif attr == "vontade":
+            partes.append((f"Defesa {j.defesa}", b(j.defesa * 0.8)))
+            if j.spec == "paladino":
+                partes.append(("paladino", 3))
+            if j.classe == "mago":
+                partes.append(("mente treinada", 2))
+        elif attr == "carisma":
+            partes.append((f"Reputação {j.reputacao:+d}", j.reputacao // 10))
+            if j.spec == "paladino":
+                partes.append(("paladino", 2))
+        if self.sem_luz and attr in ("percepcao", "destreza"):
+            partes.append(("escuridão", -4))
+        return [p for p in partes if p[1]]
+
+    def mod_teste(self, attr):
+        return sum(v for _, v in self.partes_teste(attr))
+
+    def dificuldade(self, cd):
+        """O mundo endurece com você: cada dois níveis acima do primeiro, +1 na dificuldade."""
+        return cd + (self.j.nivel - 1) // 2
 
     def teste(self, attr, cd):
         d = self.rng.randint(1, 20)
         mod = self.mod_teste(attr)
-        if self.sem_luz and attr in ("percepcao", "destreza"):
-            mod -= 4
+        cd = self.dificuldade(cd)
         total = d + mod
         ok = d == 20 or (d != 1 and total >= cd)
         self.ui.rolagem(NOMES_TESTE[attr], cd, d, mod, total, ok)
@@ -336,6 +362,16 @@ class Jogo:
             self.rumores.remove(r)
             self.impulsos.pop(evento, None)
         return r
+
+    def encruzilhada_no_descanso(self):
+        """A escolha de especialização chega na primeira noite de descanso depois do nível 4 (como um sonho, uma visão)."""
+        pendente = next((f for f in self.forcados if f.startswith("encruzilhada_")), None)
+        if not pendente:
+            return False
+        self.forcados.remove(pendente)
+        self.forcados.insert(0, pendente)
+        eventos.disparar(self, "noite")
+        return True
 
     def evento_forcado(self, contexto):
         if self.forcados:
@@ -631,7 +667,8 @@ class Jogo:
                                    "especializacao": j.nivel >= 4 and not j.spec})
         if j.nivel >= 4 and not j.spec and f"encruzilhada_{j.classe}" not in self.forcados:
             self.forcados.append(f"encruzilhada_{j.classe}")
-            self.dizer("Você sente que uma encruzilhada se aproxima em seu caminho...", "magenta")
+            self.dizer("Você sente que uma encruzilhada se aproxima. Talvez ela venha na próxima noite de descanso...",
+                       "magenta")
 
     def ganhar_ponto_talento(self, n=1):
         self.j.pontos_talento += n
@@ -1152,6 +1189,8 @@ class Jogo:
             self.ui.cena("Acampamento", self.contexto_cena(), "evento")
             self.dizer(intro, "cinza")
             conversou = False
+        if self.encruzilhada_no_descanso():
+            conversou = True
         if not conversou and not comitiva.noite(self) and self.chance(0.45):
             eventos.disparar(self, "acampamento")
         fracao = 0.4
@@ -1172,6 +1211,8 @@ class Jogo:
                    "verde")
         if self.j.provisoes < sobrevivencia.MAX_PROVISOES:
             self.j.provisoes += 1  # a refeição da taverna conta como o dia de comida
+        self.periodo = 3
+        self.encruzilhada_no_descanso()
         self.descansar(0.8)
         self.novo_dia(descanso=2)
         self.pausar()
@@ -1516,7 +1557,7 @@ class Jogo:
         progresso = (f"{c.get('feito', 0)}/{c['total']}" if c["tipo"] == "caca" else
                      "abatido" if c.get("concluido") else None)
         return {"id": c["id"], "tipo": c["tipo"], "desc": c["desc"], "ouro": c["ouro"], "xp": c["xp"],
-                "lugar": lugar["nome"], "lugar_tipo": lugar["tipo"], "bioma": lugar["bioma"], "distancia": dist,
+                "lugar": lugar["nome"], "lugar_id": lugar["id"], "lugar_tipo": lugar["tipo"], "bioma": lugar["bioma"], "distancia": dist,
                 "nivel": None if lugar["tipo"] == "vila" else nivel_regiao(lugar, self.corrupcao),
                 "alvo": c.get("nome"), "familia": c.get("familia"), "familia_nome": f.get("nome"),
                 "tracos": f.get("tracos", []), "objeto": c.get("objeto"), "progresso": progresso,
@@ -1672,29 +1713,30 @@ class Jogo:
         return False
 
     def diario(self):
-        self.ui.cena("Diário", f"dia {self.dia}", "menu")
-        a = self.antagonista
-        n = self.nemesis
-        dados = {
-            "antagonista": {"nome": a["nome"], "origem": a["origem"]}, "sigilos": len(self.j.sigilos),
-            "corrupcao": self.corrupcao, "dia": self.dia,
-            "contratos": [{"desc": c["desc"], "tipo": c["tipo"], "concluido": bool(c.get("concluido")),
-                           "progresso": f"{c['feito']}/{c['total']}" if c["tipo"] == "caca" else None,
-                           "ouro": c.get("ouro")} for c in self.contratos],
-            "rumores": [{"texto": r["texto"], "expira": r["expira"] - self.dia} for r in self.rumores],
-            "nemesis": {"nome": n["nome"], "familia": FAMILIAS[n["familia"]]["nome"]} if n else None,
-            "aliados": [{"nome": x["nome"], "texto": x["texto"]} for x in self.aliados_finais],
-        }
-        if not self.ui.painel("diario", dados):
-            self._diario_texto(a)
-        pendentes = [c for c in self.contratos if not c.get("concluido")]
-        if pendentes:
-            c = self.menu("", [("Fechar o diário", None)] +
-                          [(f"Abandonar: {c['desc']}", c) for c in pendentes])
-            if c:
-                self.abandonar_contrato(c)
-        else:
-            self.pausar()
+        while True:
+            self.ui.cena("Diário", f"dia {self.dia}", "menu")
+            a = self.antagonista
+            n = self.nemesis
+            dados = {
+                "antagonista": {"nome": a["nome"], "origem": a["origem"]}, "sigilos": len(self.j.sigilos),
+                "corrupcao": self.corrupcao, "dia": self.dia,
+                "contratos": [self.cartao_contrato(c) for c in self.contratos], "limite": 3,
+                "nivel_heroi": self.j.nivel,
+                "rumores": [{"texto": r["texto"], "expira": r["expira"] - self.dia} for r in self.rumores],
+                "nemesis": {"nome": n["nome"], "familia": FAMILIAS[n["familia"]]["nome"]} if n else None,
+            }
+            web = self.ui.painel("diario", dados)
+            if not web:
+                self._diario_texto(a)
+            pendentes = [c for c in self.contratos if not c.get("concluido")]
+            if not pendentes and not web:
+                self.pausar()
+                return
+            c = self.menu("", [(f"Abandonar: {c['desc']}", c, {"abandonar": c["id"]}) for c in pendentes] +
+                          [("Fechar o diário", None, {"voltar": True})])
+            if not c:
+                return
+            self.abandonar_contrato(c)
 
     def _diario_texto(self, a):
         self.dizer(f"Inimigo final: {a['nome']}, {a['origem']}.", "magenta")

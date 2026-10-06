@@ -73,6 +73,7 @@ function conectar() {
 async function responder(id, valor) {
   if (!pergunta || pergunta.id !== id) return;
   pergunta = null;
+  Telas.fecharMenuItem();  // um menu de figura aberto não sobrevive à escolha (inclusive Voltar)
   promptEl.querySelectorAll(".escolhas").forEach((u) => u.classList.add("escolhido"));
   Som.tocar("escolha");
   try {
@@ -485,9 +486,16 @@ function mostrarOpcoes(m) {
     const tecla = pos < 9 ? String(pos + 1) : pos === 9 ? "0" : "";
     let teste = "", icone = "";
     if (o.teste) {
-      const nivel = o.teste.mod >= 4 ? "bom" : o.teste.mod >= 1 ? "medio" : "ruim";
+      const folga = o.teste.mod - (estado ? estado.heroi.dificuldade_extra : 0);
+      const nivel = folga >= 6 ? "bom" : folga >= 3 ? "medio" : "ruim";
       const sinal = o.teste.mod >= 0 ? "+" : "−";
-      teste = `<span class="teste ${nivel}" title="Teste de ${esc(o.teste.atributo)}: você rola um d20 e soma ${sinal}${Math.abs(o.teste.mod)} contra uma dificuldade que só o mundo conhece.">${SIGLA[o.teste.atributo] || esc(o.teste.atributo)} ${sinal}${Math.abs(o.teste.mod)}</span>`;
+      const info = estado && estado.heroi.testes && estado.heroi.testes[o.teste.atributo];
+      const partes = info ? info.partes.map(([r, v]) => `<li>${esc(r)}: <b>${v >= 0 ? "+" : "−"}${Math.abs(v)}</b></li>`).join("") : "";
+      const chance = Math.max(5, Math.min(95, (21 - (12 + (estado ? estado.heroi.dificuldade_extra : 0) - o.teste.mod)) * 5));
+      const dicaTeste = Telas.dica(`<b>Teste de ${esc(o.teste.atributo)} ${sinal}${Math.abs(o.teste.mod)}</b>
+        <div class="tipo">d20 + bônus contra a dificuldade</div><ul class="dica-lista">${partes || "<li>sem bônus</li>"}</ul>
+        <div class="rodape">Tire 20 e passa sempre; 1 falha sempre. A dificuldade varia com a situação e sobe um pouco a cada dois níveis seus. Numa dificuldade média, sua chance é de cerca de ${chance}%.</div>`);
+      teste = `<span class="teste ${nivel}" ${dicaTeste}>${SIGLA[o.teste.atributo] || esc(o.teste.atributo)} ${sinal}${Math.abs(o.teste.mod)}</span>`;
     }
     if (o.meta && o.meta.local !== undefined && estado) {
       const n = estado.mapa.nos.find((x) => x.id === o.meta.local);
@@ -506,7 +514,7 @@ function mostrarOpcoes(m) {
     li.appendChild(b);
     lista.appendChild(li);
   });
-  if (lista.childElementCount) promptEl.appendChild(lista);
+  if (lista.childElementCount) { promptEl.appendChild(lista); Telas.ligarDicas(lista); }
   if (atalhos.childElementCount) promptEl.appendChild(atalhos);
   if (!replay) guardar("cdf-dica", String(Number(ler("cdf-dica") || 0) + 1));
   if (estado) {
@@ -579,7 +587,7 @@ function atualizarMapasDaPagina() {
   textoEl.querySelectorAll("[data-mapa]").forEach((caixa) => {
     const clic = destinosClicaveis();
     caixa.innerHTML = "";
-    caixa.appendChild(MapaPx.criar(estado.mapa, { grande: true, clicaveis: clic, aoClicar: viajarPara, nivelHeroi: estado.heroi.nivel }));
+    caixa.appendChild(MapaPx.criar(estado.mapa, { grande: true, clicaveis: clic, aoClicar: viajarPara, nivelHeroi: estado.heroi.nivel, marcas: marcasContrato(estado) }));
     if (clic.size) caixa.appendChild(el("div", "mapa-dica", "Clique num destino no mapa para viajar"));
   });
 }
@@ -622,12 +630,33 @@ function aplicarEstado(e) {
   $("#sigilos-topo").innerHTML = [0, 1, 2].map((i) => `<i class="sigilo${i < e.heroi.sigilos ? " tem" : ""}"></i>`).join("");
   desenharHud(e.heroi, antes && antes.heroi);
   Batalha.desenhar(e.combate, e.heroi, replay);
+  desenharModificadores(e.mundo.modificadores || []);
   const chaveHeroi = JSON.stringify(e.heroi);
   if (chaveHeroi !== ultimoHeroi) { ultimoHeroi = chaveHeroi; desenharHeroi(e.heroi); }
   const mudouMapa = !antes || antes.local.id !== e.local.id || JSON.stringify(antes.mapa) !== JSON.stringify(e.mapa) || antes.heroi.nivel !== e.heroi.nivel ||
-    antes.mundo.periodo_n !== e.mundo.periodo_n || antes.mundo.clima_id !== e.mundo.clima_id;
+    antes.mundo.periodo_n !== e.mundo.periodo_n || antes.mundo.clima_id !== e.mundo.clima_id ||
+    JSON.stringify(antes.contratos) !== JSON.stringify(e.contratos);
   if (mudouMapa) { desenharMundo(e); ultimoMundo = ""; }
   if (!$("#sobre-mapa").hidden && mudouMapa) desenharMapaGrande();
+}
+
+let ultimosMods = "";
+/** Clima e hora que mexem nos números: ícone + porcentagem no topo (e no canto do palco, na luta). */
+function desenharModificadores(mods) {
+  const chave = JSON.stringify(mods) + !!(estado && estado.combate);
+  if (chave === ultimosMods) return;
+  ultimosMods = chave;
+  const html = mods.map((m) => `<span class="mod" ${Telas.dica(`<b>${esc(m.texto)}</b><div>${esc(m.detalhe)}</div>`)}>${spr(m.icone, 1)}${esc(m.texto)}</span>`).join("");
+  const topo = $("#modificadores");
+  topo.innerHTML = html;
+  Telas.ligarDicas(topo);
+  const arena = $("#arena");
+  if (arena) {
+    let canto = arena.querySelector(".mods-arena");
+    if (!canto) { canto = el("div", "mods-arena"); arena.appendChild(canto); }
+    canto.innerHTML = html;
+    Telas.ligarDicas(canto);
+  }
 }
 
 function recurso(id, icones, qtd, opts = {}) {
@@ -717,6 +746,8 @@ function nivelPerigo(nivel) {
   return d >= 2 ? "alto" : d >= 0 ? "medio" : "baixo";
 }
 
+function marcasContrato(e) { return new Set((e.contratos || []).filter((c) => !c.concluido).map((c) => c.lugar_id)); }
+
 function desenharMundo(e) {
   const l = e.local;
   const clic = destinosClicaveis();
@@ -727,13 +758,20 @@ function desenharMundo(e) {
   const raiz = $("#mundo");
   raiz.innerHTML = `<div class="local-nome">${esc(l.nome)}</div><div class="local-desc">${esc(l.descricao)}</div>
     ${l.nivel ? `<span class="perigo-tag ${nivelPerigo(l.nivel)}">inimigos Nv.${l.nivel}</span>` : ""}<div id="mapa-mini"></div>
+    ${Telas.rastreador(e.contratos, e.heroi.nivel)}
     <div class="secao"><h3>Caminhos</h3><div class="caminhos">${caminhos || '<div class="vazio">nenhum</div>'}</div></div>`;
-  const mini = MapaPx.criar(e.mapa, { clicaveis: clic, aoClicar: viajarPara, nivelHeroi: e.heroi.nivel });
+  const mini = MapaPx.criar(e.mapa, { clicaveis: clic, aoClicar: viajarPara, nivelHeroi: e.heroi.nivel, marcas: marcasContrato(e) });
   mini.title = "Abrir o mapa (M)";
   mini.addEventListener("click", (ev) => { if (!ev.target.closest(".clicavel")) alternarMapa(true); });
   $("#mapa-mini").appendChild(mini);
   if (clic.size) $("#mapa-mini").appendChild(el("div", "mapa-dica", "Clique num destino para viajar"));
   raiz.querySelectorAll(".caminho.clicavel").forEach((c) => c.addEventListener("click", () => viajarPara(Number(c.dataset.local))));
+  raiz.querySelectorAll(".rastro-contrato").forEach((c) => {
+    const id = Number(c.dataset.local);
+    if (clic.has(id)) { c.classList.add("clicavel"); c.addEventListener("click", () => viajarPara(id)); }
+    c.addEventListener("mouseenter", () => document.querySelectorAll(`.no-btn[data-id="${id}"]`).forEach((b) => b.classList.add("destacado")));
+    c.addEventListener("mouseleave", () => document.querySelectorAll(".no-btn.destacado").forEach((b) => b.classList.remove("destacado")));
+  });
 }
 
 function legendaMapa() {
@@ -745,7 +783,7 @@ function desenharMapaGrande() {
   if (!estado) return;
   const caixa = $("#mapa-grande");
   caixa.innerHTML = "";
-  caixa.appendChild(MapaPx.criar(estado.mapa, { grande: true, clicaveis: destinosClicaveis(), nivelHeroi: estado.heroi.nivel,
+  caixa.appendChild(MapaPx.criar(estado.mapa, { grande: true, clicaveis: destinosClicaveis(), nivelHeroi: estado.heroi.nivel, marcas: marcasContrato(estado),
     aoClicar: (id) => { alternarMapa(false); viajarPara(id); } }));
   $("#mapa-legenda").innerHTML = legendaMapa();
 }
@@ -765,6 +803,13 @@ function mudarVelocidade() {
   velocidade = ORDEM_VEL[(ORDEM_VEL.indexOf(velocidade) + 1) % ORDEM_VEL.length];
   guardar("cdf-velocidade", velocidade);
   $("#vel-rotulo").textContent = NOME_VEL[velocidade];
+  alternarFonte(ler("cdf-fonte") === "pixel");
+}
+function alternarFonte(forcar) {
+  const pixel = forcar === undefined ? !corpo.classList.contains("fonte-pixel") : forcar;
+  corpo.classList.toggle("fonte-pixel", pixel);
+  $("#fonte-rotulo").textContent = pixel ? "pixel" : "livro";
+  if (forcar === undefined) guardar("cdf-fonte", pixel ? "pixel" : "livro");
 }
 function alternarSom() {
   Som.iniciar();
@@ -795,6 +840,7 @@ document.addEventListener("click", (ev) => {
     else if (a === "mapa") alternarMapa();
     else if (a === "velocidade") mudarVelocidade();
     else if (a === "som") alternarSom();
+    else if (a === "fonte") alternarFonte();
     else if (a === "heroi") corpo.classList.toggle("mostrar-heroi");
     else if (a === "fechar-talentos") fecharTudo();
     return;
@@ -864,7 +910,17 @@ function brasas() {
   }
 }
 
+/** Unidade de pixel da arte: um número inteiro de pixels do aparelho (com zoom de 125% ou 150% no sistema,
+    1px de CSS não é 1 pixel de verdade, e a pixel art fica torta). */
+function unidadePixel() {
+  const dpr = window.devicePixelRatio || 1;
+  const k = Math.max(1, Math.round(dpr));
+  document.documentElement.style.setProperty("--px", (k / dpr) + "px");
+}
+window.addEventListener("resize", unidadePixel);
+
 function tema() {
+  unidadePixel();
   const raiz = document.documentElement.style;
   raiz.setProperty("--moldura", `url(${Sprites.moldura("#1b1511", "#5a4632", "#8a6e4a", "#c9a227")})`);
   raiz.setProperty("--textura-fundo", `url(${Sprites.textura(["#120e0b", "#16110d", "#0e0b09", "#1a140f"], 64, 11)})`);

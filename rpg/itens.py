@@ -48,7 +48,7 @@ PECAS = {  # partes da armadura e mão secundária, por classe
 }
 # Espaços do corpo (chaves de jogador.equip). Itens de anel cabem em anel1 ou anel2.
 SLOTS = ["cabeca", "amuleto", "armadura", "maos", "arma", "secundaria", "pernas", "pes", "anel1", "anel2"]
-NOMES_SLOT = {"arma": "Arma", "secundaria": "Mão secundária", "cabeca": "Cabeça", "armadura": "Peito", "maos": "Mãos",
+NOMES_SLOT = {"arma": "Arma", "secundaria": "Apoio", "cabeca": "Cabeça", "armadura": "Peito", "maos": "Mãos",
               "pernas": "Pernas", "pes": "Pés", "amuleto": "Amuleto", "anel": "Anel", "anel1": "Anel", "anel2": "Anel"}
 PESO_SLOT = {"arma": 3, "armadura": 3, "cabeca": 2, "maos": 2, "pernas": 2, "pes": 2, "secundaria": 2,
              "amuleto": 1, "anel": 1.5}

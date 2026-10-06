@@ -100,8 +100,11 @@ const Telas = (() => {
   // ------------------------------------------------------------------ itens e dicas
   const ESPACOS = { cabeca: ["cabeca"], amuleto: ["amuleto"], armadura: ["armadura"], maos: ["maos"], arma: ["arma"],
     secundaria: ["secundaria"], pernas: ["pernas"], pes: ["pes"], anel: ["anel1", "anel2"] };
+  // A outra mão leva coisas diferentes em cada classe: o nome do espaço segue o que cabe nele.
+  const SECUNDARIA = { guerreiro: "Escudo", arqueiro: "Aljava", mago: "Grimório" };
   const NOME_ESPACO = { cabeca: "Cabeça", amuleto: "Amuleto", armadura: "Peito", maos: "Mãos", arma: "Arma",
-    secundaria: "Mão secundária", pernas: "Pernas", pes: "Pés", anel: "Anel", anel1: "Anel", anel2: "Anel" };
+    get secundaria() { return SECUNDARIA[App.estado && App.estado.heroi && App.estado.heroi.classe] || "Apoio"; },
+    pernas: "Pernas", pes: "Pés", anel: "Anel", anel1: "Anel", anel2: "Anel" };
   const VAZIO = { cabeca: "elmo", amuleto: "amuleto", armadura: "armadura", maos: "manopla", arma: "espada",
     secundaria: "escudo", pernas: "calca", pes: "bota", anel1: "anel", anel2: "anel" };
   const AREA = { cabeca: "cab", amuleto: "amu", armadura: "pei", maos: "mao", arma: "arm", secundaria: "sec",
@@ -381,19 +384,17 @@ const Telas = (() => {
   }
 
   function diario(d) {
-    const contratos = d.contratos.map((c) => `<div class="cartao${c.concluido ? " feito" : ""}"><div class="cab">${S(c.tipo === "caca" || c.tipo === "alvo" ? "espada" : "pergaminho", 2)}<div><b>Contrato</b><span class="sub">${c.ouro ? c.ouro + " de ouro" : ""}${c.progresso ? " · " + c.progresso : ""}</span></div></div>${h(c.desc)}</div>`).join("");
-    const rumores = d.rumores.map((r) => `<div class="cartao"><div class="cab">${S("olho", 2)}<div><b>Rumor</b><span class="sub">${r.expira > 0 ? `some em ${r.expira} dia(s)` : "some hoje"}</span></div></div><span class="lore">${h(r.texto)}</span></div>`).join("");
-    const aliados = d.aliados.map((a) => `<div class="cartao"><div class="cab">${S("escudo", 2)}<div><b>${h(a.nome)}</b><span class="sub">aliado na batalha final</span></div></div><span class="lore">${h(a.texto)}</span></div>`).join("");
-    const losangos = [0, 1, 2].map((i) => `<i class="${i < d.sigilos ? "tem" : ""}" style="display:inline-block;width:18px;height:18px;border:3px solid #4a4038;transform:rotate(45deg);margin:0 8px;background:${i < d.sigilos ? "var(--ouro)" : "#1b1511"}"></i>`).join("");
-    return `<div class="tela"><div class="cartas">
-      <div class="cartao inimigo" style="grid-column:1/-1"><div class="cab">${S("corrompido", 3)}<div><b>${h(d.antagonista.nome)}</b><span class="sub">${h(d.antagonista.origem)}</span></div></div>
-        <div class="meter">Corrupção ${barra("corrupcao", d.corrupcao, 100)} ${d.corrupcao}%</div>
-        <div class="meter" style="margin-top:6px">Sigilos <span style="margin-left:8px">${losangos}</span> ${d.sigilos}/3 · dia ${d.dia}</div></div>
-      ${d.nemesis ? `<div class="cartao inimigo"><div class="cab">${S("fera", 2)}<div><b>${h(d.nemesis.nome)}</b><span class="sub">nêmesis · ${h(d.nemesis.familia)}</span></div></div><span class="lore">Ele não esqueceu de você.</span></div>` : ""}
-    </div>
-    <h4>Contratos</h4><div class="cartas">${contratos || '<span class="vazio">Nenhum contrato. Procure o mural de uma vila.</span>'}</div>
-    <h4>Rumores</h4><div class="cartas">${rumores || '<span class="vazio">Nenhum rumor. Pague uma bebida numa taverna.</span>'}</div>
-    ${aliados ? `<h4>Aliados para o fim</h4><div class="cartas">${aliados}</div>` : ""}</div>`;
+    const contratos = d.contratos.map((c) => cartaz(c, true, false, d.nivel_heroi)).join("");
+    const rumores = d.rumores.map((r) => `<div class="bilhete"><span class="prego"></span>${S("olho", 1)} ${h(r.texto)}<small>${r.expira > 0 ? `some em ${r.expira} dia${r.expira === 1 ? "" : "s"}` : "some hoje"}</small></div>`).join("");
+    const losangos = [0, 1, 2].map((i) => `<i class="sigilo${i < d.sigilos ? " tem" : ""}"></i>`).join("");
+    return `<div class="tela diario">
+      <div class="faixa-jornada"><span>Dia ${d.dia}</span><span class="sigilos-diario" title="Sigilos dos guardiões">${losangos} ${d.sigilos}/3</span>
+        <span title="Corrupção do reino">Corrupção ${barra("corrupcao", d.corrupcao, 100)} ${d.corrupcao}%</span></div>
+      <div class="quadro"><div class="quadro-cab"><b>Contratos</b><span>${d.contratos.length}/${d.limite} · os lugares ficam marcados no mapa</span></div>
+        <div class="cartazes">${contratos || '<span class="vazio">Nenhum contrato. Procure o mural de uma vila.</span>'}</div></div>
+      ${rumores ? `<h4>Rumores</h4><div class="bilhetes">${rumores}</div>` : ""}
+      ${d.nemesis ? `<h4>Quem te persegue</h4><div class="bilhete inimigo">${S("fera", 1)} ${h(d.nemesis.nome)}, ${h(d.nemesis.familia)}. Ele não esqueceu de você.</div>` : ""}
+    </div>`;
   }
 
   function bestiario(d) {
@@ -462,6 +463,23 @@ const Telas = (() => {
   function ligarMural(raiz) {
     raiz.querySelectorAll("[data-aceitar]").forEach((b) => b.addEventListener("click", (ev) => { ev.stopPropagation(); App.acao({ aceitar: Number(b.dataset.aceitar) }, "pagina"); }));
     raiz.querySelectorAll("[data-abandonar]").forEach((b) => b.addEventListener("click", (ev) => { ev.stopPropagation(); App.acao({ abandonar: Number(b.dataset.abandonar) }, "escolha"); }));
+  }
+
+  /** Rastreador sempre à vista: alvo, lugar, distância e progresso de cada contrato. */
+  function rastreador(contratos, nivelHeroi) {
+    if (!contratos || !contratos.length) return "";
+    return `<div class="secao rastreador"><h3>Contratos</h3>${contratos.map((c) => {
+      const arte = c.tipo === "entrega" ? "saco" : iconeCriatura(c.tracos, c.familia || "");
+      const alvo = c.tipo === "alvo" ? c.alvo : c.tipo === "entrega" ? `Levar ${c.objeto}` : c.desc.replace(/^Eliminar /, "").replace(/ em .*$/, "");
+      let prog = "";
+      if (c.tipo === "caca" && c.progresso) { const [f, t] = c.progresso.split("/").map(Number); prog = `${barra("xp", f, t)}<small>${f}/${t}</small>`; }
+      const perigo = c.nivel == null ? "" : c.nivel - nivelHeroi >= 2 ? "alto" : c.nivel >= nivelHeroi ? "medio" : "baixo";
+      return `<div class="rastro-contrato${c.concluido ? " feito" : ""}" data-local="${c.lugar_id}" title="${h(c.desc)}">
+        <span class="rastro-arte">${S(arte, 2)}</span>
+        <span class="rastro-info"><b>${h(alvo)}</b>
+          <span class="rastro-lugar">${c.concluido ? "Feito! Receba numa vila" : `${h(c.lugar)}${c.distancia ? ` · ${c.distancia} trecho${c.distancia === 1 ? "" : "s"}` : c.distancia === 0 ? " · você está aqui" : ""}`}${c.nivel != null && !c.concluido ? ` <span class="perigo-tag ${perigo}">Nv.${c.nivel}</span>` : ""}</span>
+          ${prog ? `<span class="rastro-prog">${prog}</span>` : ""}</span></div>`;
+    }).join("")}</div>`;
   }
 
   // ------------------------------------------------------------------ acampamento (fogueira)
@@ -572,7 +590,8 @@ const Telas = (() => {
     return `<span class="barra-px ${classe}"><span class="enchimento" style="width:${p}%"></span></span>`;
   }
   function aprovacao(m) {
-    return `<div class="aprovacao ${h(m.classe)}"><span class="trilho"><span class="marca" style="left:${(m.aprovacao + 100) / 2}%"></span></span><span class="rotulo">${h(m.nivel)}</span></div>`;
+    const info = (m.aprovacao_info || []).map((l) => `<li>${h(l)}</li>`).join("");
+    return `<div class="aprovacao ${h(m.classe)}" ${dica(`<b>Aprovação de ${h(m.nome.split(" ").pop())}</b><div class="tipo">${h(m.nivel)} · ${m.aprovacao > 0 ? "+" : ""}${m.aprovacao}</div><ul class="dica-lista">${info}</ul><div class="rodape">Roxo: desconfiança · verde: confiança.</div>`)}><span class="trilho"><span class="marca" style="left:${(m.aprovacao + 100) / 2}%"></span></span><span class="rotulo">${h(m.nivel)}</span></div>`;
   }
 
   function painel(m) {
@@ -581,7 +600,7 @@ const Telas = (() => {
     div.innerHTML = ({ personagem, diario, bestiario, comitiva, loja, acampamento, mural }[m.tipo] || (() => ""))(m.dados);
     if (m.tipo === "acampamento") { App.ultimaFogueira = m.dados; desenharFogueira(div.querySelector(".fogueira-cena"), m.dados); }
     if (m.tipo === "acampamento" || m.tipo === "comitiva") ligarFigurasComitiva(div);
-    if (m.tipo === "mural") ligarMural(div);
+    if (m.tipo === "mural" || m.tipo === "diario") ligarMural(div);
     if (m.tipo === "personagem") ligarInventario(div);
     if (m.tipo === "loja") { App.ultimaLoja = m.dados; ligarLoja(div); }
     ligarDicas(div);
@@ -685,6 +704,6 @@ const Telas = (() => {
     setTimeout(() => t.remove(), 3300);
   }
 
-  return { atributosHtml, reputacaoHtml, dica, fecharMenuItem, guardarArvore, abrirTalentos, fecharTalentos, painel, celebrar, toast, iconeCriatura, iconeItem, dicaItem, ligarDicas, esconderDica,
+  return { rastreador, atributosHtml, reputacaoHtml, dica, fecharMenuItem, guardarArvore, abrirTalentos, fecharTalentos, painel, celebrar, toast, iconeCriatura, iconeItem, dicaItem, ligarDicas, esconderDica,
     ICONE_ITEM, ARMA, VAZIO, NOME_ESPACO, AREA, barra, aprovacao };
 })();

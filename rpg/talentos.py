@@ -128,7 +128,7 @@ def dados_arvore(jogador):
                     "rank": jogador.tal(t["id"]), "max": t["max"], "estado": est, "motivo": motivo(t, est),
                     "spec": SPECS[t["spec"]]["nome"] if t["spec"] else None})
     return {"classe": CLASSES[jogador.classe]["nome"], "pontos": jogador.pontos_talento, "nivel": jogador.nivel,
-            "colunas": [SPECS[a]["nome"], "Tronco comum", SPECS[b]["nome"]], "spec": jogador.spec,
+            "colunas": [SPECS[a]["nome"], CLASSES[jogador.classe]["nome"], SPECS[b]["nome"]], "spec": jogador.spec,
             "camadas": {str(k): v for k, v in NIVEL_CAMADA.items()}, "nos": nos}
 
 

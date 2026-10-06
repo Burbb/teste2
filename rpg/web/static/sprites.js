@@ -168,19 +168,19 @@ const Sprites = (() => {
     pocao: [
       "................",
       "......kkkk......",
-      "......kbBk......",
-      "......kkkk......",
-      ".......kwk......",
-      ".......kwk......",
-      ".....kkkwkkk....",
-      "....kwRRrrrrk...",
-      "...kwRRrrrrrrk..",
-      "...kRRrrrrrrrk..",
-      "...krrrrrrrrDk..",
-      "...krrrrrrrDDk..",
-      "....krrrrrDDk...",
-      ".....kkkkkkk....",
-      "................",
+      "......knbk......",
+      "......kBbk......",
+      ".....kGwwGk.....",
+      "......kwgk......",
+      "......kwgk......",
+      ".....kwwggk.....",
+      "...kkGwwggGkk...",
+      "..kGWRRRRrrrGk..",
+      "..kWRRrrrrrrDk..",
+      "..kGRrrrrrrrDk..",
+      "..kGrrrrrrrDDk..",
+      "...kGrrrrrDDk...",
+      "....kkkkkkkk....",
       "................"],
     pocao_azul: [
       "................",
@@ -1267,6 +1267,61 @@ const Sprites = (() => {
     ".......k........",
     "................"];
   S.gota_verde = trocar(S.gota, { R: "E", r: "e", D: "f" });
+  S.gota_azul = trocar(S.gota, { R: "U", r: "u", D: "v" });
+  // A poção é um frasco de vidro (rolha, gargalo, líquido com brilho); as variantes trocam só o líquido.
+  S.pocao_azul = trocar(S.pocao, { R: "U", r: "u", D: "v" });
+  S.frasco_vazio = trocar(S.pocao, { R: "s", r: "K", D: "k", W: "g" });
+  S.floco = [
+    "................",
+    ".......W........",
+    "....W..U..W.....",
+    ".....WWUWW......",
+    "....U.WUW.U.....",
+    "..W..WWUWW..W...",
+    "...WWU.U.UWW....",
+    ".UUUUUUWUUUUUU..",
+    "...WWU.U.UWW....",
+    "..W..WWUWW..W...",
+    "....U.WUW.U.....",
+    ".....WWUWW......",
+    "....W..U..W.....",
+    ".......W........",
+    "................",
+    "................"];
+  S.raio = [
+    "................",
+    "........kkkk....",
+    ".......kYYyk....",
+    "......kYYyk.....",
+    ".....kYYyk......",
+    "....kYYykkkk....",
+    "...kYYYYYYYk....",
+    "...kkkkYYyk.....",
+    "......kYyk......",
+    ".....kYyk.......",
+    "....kYyk........",
+    "...kYyk.........",
+    "...kyk..........",
+    "...kk...........",
+    "................",
+    "................"];
+  S.lua = [
+    "................",
+    "......kkkk......",
+    "....kkWWWk......",
+    "...kWWGk........",
+    "..kWWGk.........",
+    "..kWGGk.........",
+    ".kWWGk..........",
+    ".kWWGk..........",
+    ".kWWGk..........",
+    ".kWWGGk.........",
+    "..kWWGGk........",
+    "..kWWWGGkk..k...",
+    "...kWWWWGGkkWk..",
+    "....kkWWWWWWk...",
+    "......kkkkkk....",
+    "................"];
   S.gota_roxa = trocar(S.gota, { R: "M", r: "m", D: "x" });
   S.escudo_azul = trocar(S.escudo, { c: "U", r: "u", G: "W", g: "U" });
   S.orbe_sombra = trocar(S.orbe.slice(0, 10).concat(Array(6).fill("................")), { M: "m", m: "x", W: "M", x: "k" });
@@ -1297,7 +1352,7 @@ const Sprites = (() => {
   }
   /** HTML de um sprite. escala: tamanho em px de cada pixel. */
   function img(nome, escala = 2, classe = "") {
-    return `<img class="sprite ${classe}" src="${url(nome)}" width="${16 * escala}" height="${16 * escala}" alt="" draggable="false">`;
+    return `<img class="sprite ${classe}" src="${url(nome)}" width="${16 * escala}" height="${16 * escala}" style="--s:${16 * escala}" alt="" draggable="false">`;
   }
   /** Moldura em pixel art (9-slice) para border-image. */
   function moldura(fundo, borda, brilho, rebite) {
