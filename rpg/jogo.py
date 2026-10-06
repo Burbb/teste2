@@ -608,9 +608,62 @@ class Jogo:
         registrar(self, "equipar", item=item["nome"], slot=espaco, raridade=item.get("raridade", "comum"),
                   bonus=item["bonus"])
 
+    def motivo_inutil(self, k, m=None):
+        """Por que usar o item agora não faria nada (ou None). m: um companheiro, em vez de você."""
+        j = self.j
+        if m is not None:
+            if k not in ("pocao_vida", "bandagem"):
+                return "Isso só serve em você."
+            if m["hp"] >= m["max_hp"] and not m["ferido"]:
+                return f"{comitiva.nome(m['id'])} não precisa disso agora."
+            return None
+        if k == "pocao_vida" and j.hp >= j.max_hp:
+            return "Sua vida já está cheia."
+        if k == "tonico" and j.rec >= j.max_rec:
+            return f"{j.nome_recurso} já está no máximo."
+        if k == "antidoto" and not j.efeito("veneno"):
+            return "Não há veneno no seu sangue."
+        if k == "bandagem" and not j.efeito("sangramento") and j.hp >= j.max_hp and not any(
+                sobrevivencia.FERIMENTOS[f["id"]].get("aberto") and not f["tratado"] for f in j.ferimentos):
+            return "Nada para enfaixar: sem sangramento, sem feridas abertas."
+        if k == "unguento" and not sobrevivencia.tem(j, "infeccao"):
+            return "Você não tem nenhuma infecção para tratar."
+        return None
+
+    def usar_em_companheiro(self, k, cid):
+        """Fora de combate, poção e bandagem também servem na comitiva. A bandagem põe de pé quem caiu."""
+        m = comitiva.membro(self, cid)
+        if not m or not self.j.tem(k):
+            return False
+        motivo = self.motivo_inutil(k, m)
+        if motivo:
+            self.dizer(motivo, "cinza")
+            return False
+        self.j.consumiveis[k] -= 1
+        nome = comitiva.nome(cid)
+        registrar(self, "consumivel", item=k, em_combate=False, em=cid)
+        antes = m["hp"]
+        if k == "pocao_vida":
+            m["hp"] = min(m["max_hp"], m["hp"] + int(m["max_hp"] * 0.35))
+            m["ferido"] = False
+            self.dizer(f"{nome} bebe a Poção de Vida e respira melhor. (+{m['hp'] - antes} vida)", "verde")
+        else:
+            m["hp"] = min(m["max_hp"], m["hp"] + 8)
+            if m["ferido"]:
+                m["ferido"] = False
+                self.dizer(f"Você enfaixa {nome} com cuidado. Já consegue ficar de pé e lutar. (+{m['hp'] - antes} vida)",
+                           "verde")
+            else:
+                self.dizer(f"Você troca as faixas de {nome}. (+{m['hp'] - antes} vida)", "verde")
+        return True
+
     def usar_consumivel(self, k):
         j = self.j
         if not j.tem(k):
+            return False
+        motivo = self.motivo_inutil(k)
+        if motivo:
+            self.dizer(motivo, "cinza")
             return False
         j.consumiveis[k] -= 1
         nome = CONSUMIVEIS[k]["nome"]
@@ -1757,6 +1810,10 @@ class Jogo:
         for k in ("bandagem", "unguento", "pocao_vida", "tonico", "antidoto"):
             if j.tem(k):
                 opcoes.append((f"Usar {CONSUMIVEIS[k]['nome']}", ("usar", k), {"usar": k}))
+                if k in ("bandagem", "pocao_vida"):
+                    for m in comitiva.membros(self):
+                        opcoes.append((f"Usar {CONSUMIVEIS[k]['nome']} em {comitiva.nome(m['id'])}",
+                                       ("usar_em", k, m["id"]), {"usar": k, "em": m["id"]}))
         for i, it in enumerate(j.mochila):
             opcoes.append((f"Largar {it['nome']}", ("largar", it), {"largar": i}))
         op = self.menu("", opcoes + [("Voltar", None, {"voltar": True})])
@@ -1768,6 +1825,8 @@ class Jogo:
             self.desequipar(op[1])
         elif op[0] == "usar":
             self.usar_consumivel(op[1])
+        elif op[0] == "usar_em":
+            self.usar_em_companheiro(op[1], op[2])
         else:
             self.largar(op[1])
         return False

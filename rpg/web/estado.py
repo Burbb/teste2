@@ -41,7 +41,7 @@ def explicar_atributos(g):
     reducao = 1 - 100 / (100 + j.defesa * 6)
     reducao_mais = 1 - 100 / (100 + (j.defesa + 1) * 6) - reducao
     esquiva = min(0.4, j.agi * 0.012)
-    critico = 0.05 + j.agi * 0.01 + 0.04 * j.tal("olho_aguia") + j.especial("critico") / 100
+    critico = min(0.6, 0.05 + j.agi * 0.01 + 0.04 * j.tal("olho_aguia") + j.especial("critico") / 100)
     ataque = ["Força dos golpes de arma: quanto maior, mais dano físico."]
     if ataque_usa == "atk":
         ataque.append(f"É a base do seu ataque básico ({CLASSES[j.classe]['ataque'][0]}) e das habilidades físicas.")
@@ -51,8 +51,8 @@ def explicar_atributos(g):
     defesa = [f"Reduz todo dano recebido em {_pct(reducao)}.",
               f"Cada ponto a mais reduz cerca de {_pct(reducao_mais)} a mais (o ganho diminui aos poucos).",
               f"Testes de Vontade: {g.mod_teste('vontade'):+d} no d20."]
-    agilidade = [f"Chance de se esquivar de um golpe: {_pct(esquiva)} (máximo 40%).",
-                 f"Chance de acerto crítico: {_pct(critico)}.",
+    agilidade = [f"Chance de se esquivar de um golpe: {_pct(esquiva)} (máximo 40% só pela Agilidade; com habilidades, até 60%).",
+                 f"Chance de acerto crítico: {_pct(critico)} (máximo 60%).",
                  "Mais fácil fugir de uma luta.",
                  f"Testes de Destreza: {g.mod_teste('destreza'):+d}, Percepção: {g.mod_teste('percepcao'):+d}.",
                  "+1 de Agilidade = +1,2% de esquiva e +1% de crítico."]
@@ -105,7 +105,12 @@ def heroi(g):
         "provisoes": j.provisoes, "fome": j.fome, "tochas": j.consumiveis.get("tocha", 0),
         "pocoes": j.consumiveis.get("pocao_vida", 0), "bandagens": j.consumiveis.get("bandagem", 0),
         "spec": j.spec, "reputacao_txt": "herói do povo" if j.reputacao >= 20 else "temido" if j.reputacao <= -20 else "",
-        "bolsa": [{"id": k, "nome": CONSUMIVEIS[k]["nome"], "qtd": v, "desc": CONSUMIVEIS[k]["desc"]}
+        "bolsa": [{"id": k, "nome": CONSUMIVEIS[k]["nome"], "qtd": v, "desc": CONSUMIVEIS[k]["desc"],
+                   "motivo": None if k == "tocha" else g.motivo_inutil(k),
+                   "alvos": [{"id": m["id"], "nome": comitiva.nome(m["id"]), "hp": m["hp"], "max_hp": m["max_hp"],
+                              "ferido": m["ferido"], "caido": comitiva.flexao(m["id"], "caíd{a}, não luta"),
+                              "motivo": g.motivo_inutil(k, m)}
+                             for m in comitiva.membros(g)] if k in ("pocao_vida", "bandagem") and not g.combate_ativo else []}
                   for k, v in j.consumiveis.items() if v > 0 and k in CONSUMIVEIS],
         "equip": {slot: _item(it) for slot, it in j.equip.items()},
         "mochila": [_item(it) for it in j.mochila], "limite_mochila": 12,

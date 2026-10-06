@@ -71,7 +71,7 @@ const Batalha = (() => {
     e.innerHTML = `<div class="carta-fx"></div><div class="icone">${S(icone(c), 2)}</div>
       <div class="carta-nome"><span></span><small></small></div>
       <div class="carta-hp"><span class="barra-px vida"><span class="rastro"></span><span class="enchimento"></span></span><span class="num"></span></div>
-      ${c.uid === "j" ? '<div class="carta-rec"><span class="barra-px mana"><span class="enchimento"></span></span><span class="num"></span></div>' : ""}
+      ${c.uid === "j" ? '<div class="carta-rec"><span class="barra-px mana"><span class="enchimento"></span></span><span class="num"></span></div><div class="carta-flechas" hidden></div>' : ""}
       <div class="carta-efeitos"></div><div class="preparando" hidden>⚠ prepara um golpe devastador</div>`;
     const b = e.querySelector(".carta-hp .barra-px");
     [...b.children].forEach((x) => { x.style.width = pct(c.hp, c.max_hp) + "%"; });
@@ -157,6 +157,19 @@ const Batalha = (() => {
       r.querySelector(".enchimento").style.width = pct(heroi.rec, heroi.max_rec) + "%";
       r.querySelector(".num").textContent = `${heroi.rec}/${heroi.max_rec}`;
       el.title = `${c.nome} · ${heroi.recurso} ${heroi.rec}/${heroi.max_rec}`;
+      // Arqueiro: as flechas ficam à vista na própria carta, e piscam quando estão acabando.
+      const fl = el.querySelector(".carta-flechas");
+      if (fl) {
+        const tem = heroi.flechas !== null && heroi.flechas !== undefined;
+        fl.hidden = !tem;
+        if (tem) {
+          const txt = heroi.flechas > 0 ? `${heroi.flechas}` : "sem flechas: só a adaga";
+          if (fl.dataset.v !== txt) { fl.dataset.v = txt; fl.innerHTML = `${S("flecha", 1)}<b>${txt}</b>`; }
+          fl.classList.toggle("poucas", heroi.flechas <= 8);
+          fl.classList.toggle("zerada", heroi.flechas <= 0);
+          fl.title = `Flechas: ${heroi.flechas} (a aljava leva ${heroi.max_flechas || 30}). Sem flechas, o ataque vira um golpe de adaga fraco e as habilidades de tiro ficam bloqueadas.`;
+        }
+      }
     } else el.title = c.nome;
     const ef = el.querySelector(".carta-efeitos");
     const html = c.vivo ? efeitosHtml(c.efeitos) : "";
@@ -577,7 +590,7 @@ const Batalha = (() => {
     if (el !== "fisico" && !m.crit) setTimeout(() => som("golpe_leve"), 60);
     if (m.em === "j") { App.doer(); som("dor"); }
     if (de && de !== em && !de.classList.contains("girando") && !distancia && !emArea) ir(de, 26 * lado(de), 0, pausa(170));
-    await dormir(pausa(de && de.classList.contains("girando") ? 110 : m.crit ? 420 : 300));
+    await dormir(pausa(de && de.classList.contains("girando") ? 110 : m.crit ? 460 : 380));
   }
 
   /* ------------------------------------------------------------ vez e alvos */

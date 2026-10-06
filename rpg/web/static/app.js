@@ -29,10 +29,11 @@ const RECURSO_ICONE = { Vigor: "chama", Mana: "pocao_azul", Foco: "olho" };
 const D20 = '<svg viewBox="-30 -30 60 60"><polygon class="face" points="0,-27 23,-13 23,13 0,27 -23,13 -23,-13"/>' +
   '<path class="aresta" d="M0,-15 L13,8 L-13,8 Z M0,-27 L0,-15 M0,-15 L23,-13 M0,-15 L-23,-13 M13,8 L23,-13 M13,8 L23,13 M13,8 L0,27 M-13,8 L-23,-13 M-13,8 L-23,13 M-13,8 L0,27"/>' +
   '<text x="0" y="1">20</text></svg>';
+// [padrão, rótulo, tecla, ícone, grupo]: personagem · mundo · sistema
 const SISTEMA = [
-  [/^Talentos/, "Talentos", "t", "estrela"], [/^Personagem e inventário/, "Personagem", "p", "armadura"],
-  [/^Comitiva/, "Comitiva", "c", "escudo"], [/^Mapa$/, "Mapa", "", "pergaminho"], [/^Diário/, "Diário", "d", "livro"],
-  [/^Bestiário/, "Bestiário", "b", "caveira"], [/^Salvar jogo/, "Salvar", "g", "pergaminho"], [/^Sair do jogo/, "Sair", "q", "bolsa_vazia"],
+  [/^Personagem e inventário/, "Personagem", "p", "armadura", 0], [/^Talentos/, "Talentos", "t", "estrela", 0],
+  [/^Comitiva/, "Comitiva", "c", "humano", 0], [/^Mapa$/, "Mapa", "m", "pergaminho", 1], [/^Diário/, "Diário", "d", "livro", 1],
+  [/^Bestiário/, "Bestiário", "b", "caveira", 1], [/^Salvar jogo/, "Salvar", "g", "cadeado", 2], [/^Sair do jogo/, "Sair", "q", "fuga", 2],
 ];
 
 const corpo = document.body;
@@ -55,6 +56,7 @@ const App = {
   ultimaFogueira: null,
   opcoes: () => (pergunta && pergunta.tipo === "opcoes" ? pergunta.opcoes : null),
   som: (n) => Som.tocar(n),
+  avisar: (texto) => aviso(texto, "info", "pergaminho"),
   doer: () => doer(),
   acaoFecharTalentos: null,
 };
@@ -478,9 +480,12 @@ function mostrarOpcoes(m) {
       const qtd = /^Comitiva \((\d+)\)/.exec(o.texto);
       const b = el("button", "atalho" + (pontos || carta ? " destaque" : ""));
       b.type = "button";
-      b.innerHTML = spr(at[3], 1) + esc(at[1]) + (qtd ? ` ${qtd[1]}` : "") + (pontos ? ` <b>★${pontos[1]}</b>` : "") + (carta ? " <b>✉</b>" : "") +
+      const selo = pontos ? `<b class="selo">★${pontos[1]}</b>` : carta ? '<b class="selo">✉</b>' : "";
+      b.innerHTML = `<span class="atalho-icone">${spr(at[3], 2)}${selo}</span><span class="atalho-nome">${esc(at[1])}</span>` +
         (at[2] ? `<kbd>${at[2].toUpperCase()}</kbd>` : "");
-      b.title = o.texto;
+      b.title = o.texto + (at[2] ? ` (${at[2].toUpperCase()})` : "");
+      if (atalhos.lastElementChild && Number(atalhos.lastElementChild.dataset.grupo) !== at[4]) atalhos.appendChild(el("span", "doca-sep"));
+      b.dataset.grupo = at[4];
       b.addEventListener("click", (ev) => { ev.stopPropagation(); responder(m.id, i); });
       atalhos.appendChild(b);
       if (at[2]) pergunta.letras[at[2]] = i;
@@ -595,7 +600,8 @@ function cartaAcao(o, i, m, pos) {
     icone = spr(Telas.ICONE_ITEM[meta.usar_item] || "pocao", 2);
     nome = meta.nome;
     rodape = `<span class="acao-custo"><b>×${meta.qtd}</b></span><span class="acao-alvo">gasta o turno</span>`;
-    dicaHtml = `<b>${esc(meta.nome)}</b><div class="tipo">Você tem ${meta.qtd}</div><div class="bonus">${esc(meta.desc)}</div>`;
+    if (meta.motivo) bloqueio = meta.motivo;
+    dicaHtml = `<b>${esc(meta.nome)}</b><div class="tipo">Você tem ${meta.qtd}</div><div class="bonus">${esc(meta.desc)}</div>${bloqueio ? `<div class="pior">${esc(bloqueio)}</div>` : ""}`;
   } else {
     const it = meta.equip;
     b.classList.add("el-fisico", "troca");
@@ -762,7 +768,7 @@ function recurso(id, icones, qtd, opts = {}) {
 
 function desenharHud(h, antes) {
   // Um desenho para "acabou" e outro para "tem": o número ao lado diz quanto.
-  const comida = [h.provisoes ? "pernil" : "osso"];
+  const comida = [h.provisoes ? "pernil" : "osso_diag"];
   const tochas = [h.tochas ? "tocha" : "tocha_apagada"];
   const ouro = [h.ouro ? "moedas" : "bolsa_vazia"];
   const pocoes = [h.pocoes ? "pocao" : "frasco_vazio"];

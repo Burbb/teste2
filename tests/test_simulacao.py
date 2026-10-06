@@ -295,6 +295,26 @@ class TestSimulacao(unittest.TestCase):
             # Contrato mais difícil paga mais.
             self.assertLess(g.recompensa_contrato(1)[1], g.recompensa_contrato(7)[1])
 
+    def test_grupo_sem_repeticao(self):
+        from rpg import texto as tx
+        from rpg.inimigos import criar
+        r = random.Random(1)
+        self.assertEqual(tx.descrever_grupo([criar(r, "harpia", 3, "flamejante"), criar(r, "harpia", 3, "flamejante")]),
+                         "duas harpias flamejantes")
+
+    def test_consumiveis_inuteis_e_comitiva(self):
+        with tempfile.TemporaryDirectory() as pasta:
+            g = Jogo(BotUI(random.Random(2), max_decisoes=50), seed=2, pasta_saves=pasta)
+            g.iniciar("Robô", "guerreiro")
+            g.j.consumiveis.update(pocao_vida=1, bandagem=1)
+            self.assertFalse(g.usar_consumivel("pocao_vida"))  # vida cheia: não gasta
+            self.assertEqual(g.j.consumiveis["pocao_vida"], 1)
+            m = comitiva.recrutar(g, "odete")
+            m["hp"], m["ferido"] = 1, True
+            self.assertTrue(g.usar_em_companheiro("bandagem", "odete"))
+            self.assertFalse(m["ferido"])
+            self.assertEqual(g.j.consumiveis["bandagem"], 0)
+
     def test_mercado_quantidade_e_auto_equipar(self):
         with tempfile.TemporaryDirectory() as pasta:
             g = Jogo(BotUI(random.Random(2), max_decisoes=50), seed=2, pasta_saves=pasta)

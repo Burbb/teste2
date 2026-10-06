@@ -22,6 +22,9 @@ NOMES_EFEITOS = {
     "enfraquecido": "enfraquecido", "maldito": "amaldiçoado", "marcado": "marcado", "guarda": "em guarda",
     "fortalecido": "fortalecido", "esquiva": "esquivo", "barreira": "com barreira", "furtivo": "furtivo",
 }
+# Tetos: esquiva e crítico empilhados (agilidade + Passo Ágil + Desaparecer + itens) viravam imortalidade.
+MAX_ESQUIVA = 0.6
+MAX_CRITICO = 0.6
 USAVEIS_EM_COMBATE = ("pocao_vida", "tonico", "antidoto", "bandagem", "bomba_fumaca")
 
 
@@ -239,6 +242,7 @@ class Combate:
                 esq += alvo.efeito("esquiva")["v"]
             if self.g.clima == "nevoa":
                 esq += 0.05
+            esq = min(MAX_ESQUIVA, esq)  # nem o mais ágil dos heróis é intocável
             if self.rng.random() < esq:
                 self.lance("erro", de=self.uid(u), em=self.uid(alvo), motivo="esquiva", rotulo=rotulo)
                 if detalhar:
@@ -280,7 +284,8 @@ class Combate:
         furtivo = u.efeito("furtivo")
         abertura = u.jogador and self.abertura
         self.abertura = self.abertura and not u.jogador
-        chance_crit = 0.05 + u.agi * 0.01 + crit_extra + 0.04 * u.tal("olho_aguia") + u.especial("critico") / 100
+        chance_crit = min(MAX_CRITICO, 0.05 + u.agi * 0.01 + crit_extra + 0.04 * u.tal("olho_aguia")
+                          + u.especial("critico") / 100)
         crit = bool(furtivo) or abertura or self.rng.random() < chance_crit
         base = getattr(u, stat) * mult + bonus
         dano = base * m * self.rng.uniform(0.85, 1.15) * 100 / (100 + defesa * 6)
@@ -688,7 +693,8 @@ class Combate:
             return None
         opcoes = [f"{CONSUMIVEIS[k]['nome']} x{j.consumiveis[k]} — {CONSUMIVEIS[k]['desc']}" for k in usaveis]
         metas = [{"usar_item": k, "item": k, "qtd": j.consumiveis[k], "nome": CONSUMIVEIS[k]["nome"],
-                  "desc": CONSUMIVEIS[k]["desc"]} for k in usaveis]
+                  "desc": CONSUMIVEIS[k]["desc"], "motivo": None if k == "bomba_fumaca" else self.g.motivo_inutil(k)}
+                 for k in usaveis]
         for it in armas:
             opcoes.append(f"Trocar para {it['nome']} (gasta o turno)")
             metas.append({"trocar": j.mochila.index(it), "equip": {
@@ -715,6 +721,10 @@ class Combate:
             j.consumiveis[k] -= 1
             self.dizer("Você estoura a bomba de fumaça e some na nuvem cinzenta!", "cinza")
             return "fuga"
+        motivo = self.g.motivo_inutil(k)
+        if motivo:
+            self.dizer(motivo, "cinza")
+            return None
         with self.agindo(j, CONSUMIVEIS[k]["nome"], hab="item"):
             antes, antes_rec = j.hp, j.rec
             self.g.usar_consumivel(k)

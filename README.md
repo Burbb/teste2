@@ -139,6 +139,13 @@ na interface miúda; **Jersey 15** nos números. O botão "Fonte" no topo volta 
   tempo; o Inferno abre o chão sob todos de uma vez. O Redemoinho continua girando golpe a golpe.
 - **Contratos do seu tamanho:** o mural sorteia lugares de nível próximo ao seu (de um abaixo
   até dois acima), e ouro e XP crescem com o nível do lugar: trabalho fácil paga pouco.
+- **Itens com bom senso:** o jogo avisa em vez de gastar poção com vida cheia ou bandagem sem
+  ferida. Fora de combate, poção e bandagem também servem na comitiva (clique na poção e escolha
+  em quem); a bandagem põe de pé um companheiro caído.
+- **Doca de atalhos:** Personagem, Talentos, Comitiva · Mapa, Diário, Bestiário · Salvar, Sair,
+  em botões de ícone com a tecla no canto e selos de aviso (pontos de talento, carta).
+- **Flechas na carta:** o arqueiro vê as flechas na própria carta da luta, piscando quando
+  estão acabando. Sem flechas, o ataque vira um golpe de adaga fraco e os tiros ficam bloqueados.
 - **Caçada garantida:** no lugar de um contrato de caça aparece "Caçar … (contrato, 1/3)" (e o
   cartão do contrato pisca com "Seguir os rastros ▸"). Seguir os rastros sempre leva ao bicho; a
   Percepção decide quem vê quem primeiro. Cada abate mostra o progresso.
@@ -304,7 +311,7 @@ Mago      (Mana)  ──┬── Piromante    acende chamas em camadas e detona
 Cada classe tem uma mecânica própria:
 - **Guerreiro:** o vigor regenera rápido; erguer o escudo reduz o dano pela metade.
 - **Arqueiro:** usa **flechas** (que acabam). Começa com 20, e a aljava leva 30 (+5 por ponto
-  em Aljava Funda). Depois da luta dá para recolher cerca de um terço do que atirou; o
+  em Aljava Funda). Esquiva e crítico têm teto de 60% (nem o mais ágil é intocável). Depois da luta dá para recolher cerca de um terço do que atirou; o
   resto se compra em feixes de 5 ou se acha com bandidos. É ótimo contra voadores.
   Quando avista inimigos antes, escolhe entre **atacar de surpresa** (turno livre e o
   primeiro golpe é crítico) e **subir num ponto alto** (teste de Destreza: quem luta corpo a

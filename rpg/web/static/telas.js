@@ -294,7 +294,13 @@ const Telas = (() => {
       if (a && a.de === "mochila" && window.confirm(`Largar ${heroi.mochila[a.i].nome}? Não há volta.`)) App.acao({ largar: a.i });
     });
     raiz.querySelectorAll("[data-mochila]").forEach((el) => el.addEventListener("dblclick", () => App.acao({ equipar: Number(el.dataset.mochila) }, "equipar")));
-    raiz.querySelectorAll("[data-usar]").forEach((el) => el.addEventListener("click", (ev) => { ev.stopPropagation(); App.acao({ usar: el.dataset.usar }, "item"); }));
+    raiz.querySelectorAll("[data-usar]").forEach((el) => el.addEventListener("click", (ev) => {
+      ev.stopPropagation();
+      const b = (App.estado.heroi.bolsa || []).find((x) => x.id === el.dataset.usar);
+      if (b && b.alvos && b.alvos.length) { menuUso(el, b); return; }
+      if (b && b.motivo) { App.som("falha"); App.avisar(b.motivo, el); return; }
+      App.acao({ usar: el.dataset.usar }, "item");
+    }));
   }
 
   // ------------------------------------------------------------------ mercado
@@ -329,6 +335,33 @@ const Telas = (() => {
       </div>
       <h4>Sua mochila <small>${d.ocupado}/${d.limite} · clique num item para equipar ou vender (o mercador paga metade)</small></h4>
       <div class="mochila-grade mochila-loja">${mochila.join("")}</div></div>`;
+  }
+
+  /** Poção ou bandagem com a comitiva por perto: em quem usar? (só fora de combate) */
+  function menuUso(ancora, b) {
+    fecharMenuItem();
+    esconderDica();
+    const heroi = App.estado.heroi;
+    const linha = (rotulo, vida, motivo, attr) => `<button type="button" ${attr}${motivo ? ` disabled title="${h(motivo)}"` : ""}>${rotulo}<small>${vida}</small></button>`;
+    const m = document.createElement("div");
+    m.className = "menu-item moldura menu-uso";
+    m.innerHTML = `<b>${h(b.nome)}</b>
+      ${linha("Em você", `${heroi.hp}/${heroi.max_hp}`, b.motivo, 'data-em=""')}
+      ${b.alvos.map((a) => linha(`Em ${h(a.nome)}`, a.ferido ? h(a.caido) : `${a.hp}/${a.max_hp}`, a.motivo, `data-em="${h(a.id)}"`)).join("")}
+      <button type="button" data-em="-" class="secundaria">Cancelar</button>`;
+    document.body.appendChild(m);
+    const r = ancora.getBoundingClientRect();
+    m.style.left = Math.max(8, Math.min(innerWidth - m.offsetWidth - 8, r.left)) + "px";
+    m.style.top = (r.bottom + 6 + m.offsetHeight > innerHeight ? r.top - m.offsetHeight - 6 : r.bottom + 6) + "px";
+    m.addEventListener("click", (ev) => {
+      const bt = ev.target.closest("button");
+      if (!bt || bt.disabled) return;
+      ev.stopPropagation();
+      fecharMenuItem();
+      if (bt.dataset.em === "-") return;
+      App.acao(bt.dataset.em ? { usar: b.id, em: bt.dataset.em } : { usar: b.id }, "item");
+    });
+    setTimeout(() => document.addEventListener("click", fecharMenuItem, { once: true }), 0);
   }
 
   function fecharMenuItem() { document.querySelectorAll(".menu-item").forEach((m) => m.remove()); }

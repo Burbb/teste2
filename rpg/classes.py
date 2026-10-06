@@ -197,8 +197,8 @@ def _chuva_flechas(cb, u, alvo):
 
 
 def _passo_agil(cb, u, alvo):
-    u.aplicar("esquiva", 2, 0.4)
-    cb.dizer("Você se move em zigue-zague, difícil de acertar. (+40% esquiva)", "ciano")
+    u.aplicar("esquiva", 2, 0.3)
+    cb.dizer("Você se move em zigue-zague, difícil de acertar. (+30% esquiva, até o teto de 60%)", "ciano")
 
 
 def _tiro_duplo(cb, u, alvo):
@@ -356,7 +356,7 @@ HABILIDADES = {
     "tiro_certeiro": dict(nome="Tiro Certeiro", custo=8, flechas=1, alvo="inimigo", desc="170% de dano, +30% chance de crítico.", fn=_tiro_certeiro),
     "marcar_presa": dict(nome="Marcar Presa", custo=6, alvo="inimigo", desc="O alvo recebe +25% de dano por 3 turnos.", fn=_marcar_presa),
     "chuva_flechas": dict(nome="Chuva de Flechas", custo=14, flechas=3, alvo="todos", desc="Atinge todos os inimigos (3 flechas).", fn=_chuva_flechas),
-    "passo_agil": dict(nome="Passo Ágil", custo=6, alvo="proprio", desc="+40% de esquiva por 2 turnos.", fn=_passo_agil),
+    "passo_agil": dict(nome="Passo Ágil", custo=6, alvo="proprio", desc="+30% de esquiva por 2 turnos (a esquiva total não passa de 60%).", fn=_passo_agil),
     "tiro_duplo": dict(nome="Tiro Duplo", custo=10, flechas=2, alvo="inimigo", desc="Dois disparos de 90%.", fn=_tiro_duplo),
     "comando_fera": dict(nome="Comando: Atacar!", custo=12, alvo="inimigo", desc="Seu companheiro desfere um ataque de 200%.", fn=_comando_fera, req=_req_fera),
     "furia_natureza": dict(nome="Fúria da Natureza", custo=25, flechas=4, alvo="todos", desc="130% em todos, sangramento e cura o companheiro.", fn=_furia_natureza),

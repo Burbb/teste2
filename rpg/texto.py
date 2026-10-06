@@ -84,23 +84,32 @@ def lista_natural(itens):
     return ", ".join(itens[:-1]) + " e " + itens[-1]
 
 
+PLURAL_ADJ = {"feroz": "ferozes", "ágil": "ágeis", "ancião": "anciões", "anciã": "anciãs"}
+
+
+def plural_adjetivo(adj):
+    return PLURAL_ADJ.get(adj, adj + "s")
+
+
 def descrever_grupo(inimigos):
-    """'dois lobos e uma aranha gigante feroz'."""
-    simples = {}
-    partes = []
+    """'dois lobos e uma aranha gigante feroz'; 'duas harpias flamejantes' (e não 'uma harpia flamejante e uma
+    harpia flamejante')."""
+    from .dados import AFIXOS
+    grupos, unicos = {}, []
     for ini in inimigos:
-        if ini.unico or ini.afixo:
-            partes.append(ini.desc)
+        if ini.unico:
+            unicos.append(ini.desc)
         else:
-            chave = ini.familia
-            simples.setdefault(chave, []).append(ini)
-    for lista in simples.values():
+            grupos.setdefault((ini.familia, ini.afixo), []).append(ini)
+    partes = []
+    for (_, afixo), lista in grupos.items():
         ini = lista[0]
         if len(lista) == 1:
-            partes.insert(0, ini.desc)
+            partes.append(ini.desc)
         else:
-            partes.insert(0, f"{numero(len(lista), ini.g)} {ini.plural}")
-    return lista_natural(partes)
+            adj = f" {plural_adjetivo(AFIXOS[afixo][ini.g])}" if afixo else ""
+            partes.append(f"{numero(len(lista), ini.g)} {ini.plural}{adj}")
+    return lista_natural(partes + unicos)
 
 
 def estrelas(n, total=5):
