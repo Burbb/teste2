@@ -14,6 +14,7 @@ import hashlib
 import json
 import os
 import random
+import re
 import sys
 import tempfile
 
@@ -87,7 +88,8 @@ def transcrever(seed, classe, web=False):
             g.rodar()
         except LimiteBot:
             pass
-        linhas = [x.replace(pasta, "<PASTA>") for x in ui.linhas]
+        # O nome do registro da run leva data e hora: fora isso, tudo tem de bater.
+        linhas = [re.sub(r"\d{4}-\d{2}-\d{2}_\d{4}", "<DATA>", x.replace(pasta, "<PASTA>")) for x in ui.linhas]
         # O estado final inteiro, do jeito que vai para o save.
         g.salvar(silencioso=True)
         for nome in sorted(os.listdir(pasta)):
