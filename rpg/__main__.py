@@ -33,6 +33,10 @@ COMO JOGAR
 • À noite, nas ruínas e na cidadela é escuro: leve tochas.
 • A mana do mago só volta descansando (ou com tônicos).
 • Seus heróis anteriores deixam lendas, estátuas e túmulos nas próximas partidas.
+• Pelo caminho você pode encontrar COMPANHEIROS. Cada um tem valores próprios e
+  reage às suas escolhas. Quem confia em você luta melhor e conta a própria
+  história; quem perde a confiança vai embora. Uma comitiva come, cobra e
+  atrai mais inimigos, e a experiência é dividida.
 """
 
 

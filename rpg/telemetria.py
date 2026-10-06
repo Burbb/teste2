@@ -193,6 +193,27 @@ def resumo(registro):
     if equipados:
         w("- Itens equipados: " + "; ".join(f"{e['item']} [{e['raridade']}] (nv {e['nv']})" for e in equipados))
     w("")
+    com = [e for e in ev if e["t"] == "comitiva"]
+    if com:
+        w("## Comitiva")
+        w("")
+        w("| Companheiro | Entrou (dia) | Saída | Aprovação final | Reações + / − | Conversas |")
+        w("|---|---|---|---|---|---|")
+        for cid in dict.fromkeys(e["id"] for e in com):
+            meus = [e for e in com if e["id"] == cid]
+            entrou = next((e["dia"] for e in meus if e.get("acao") == "entra"), "—")
+            saida = next((f"{e['acao']} (dia {e['dia']})" for e in meus
+                          if e.get("acao") in ("morto", "partiu", "entregue", "dispensado", "traiu")), "ficou")
+            opinioes = [e for e in meus if e.get("acao") == "opiniao"]
+            final = opinioes[-1]["aprovacao"] if opinioes else 0
+            pos = sum(1 for e in opinioes if e["delta"] > 0)
+            neg = sum(1 for e in opinioes if e["delta"] < 0)
+            conversas = sum(1 for e in meus if e.get("acao") == "conversa")
+            w(f"| {cid} | {entrou} | {saida} | {final:+d} | {pos} / {neg} | {conversas} |")
+        dano = sum(e.get("dano_aliados", 0) for e in ev if e["t"] == "combate")
+        w("")
+        w(f"Dano causado por aliados (comitiva, animal e servos): {dano}")
+        w("")
     eventos = {}
     for e in ev:
         if e["t"] == "evento":

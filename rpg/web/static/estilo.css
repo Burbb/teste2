@@ -233,6 +233,8 @@ body.modo-titulo #condicao, body.sem-heroi #condicao { display: none; }
 .chip.rep { color: #e0b4ff; border-color: rgba(170, 120, 230, 0.5); background: rgba(150, 100, 210, 0.14); }
 .chip.ferimento { color: #fff; border-color: #b3262b; background: rgba(150, 20, 25, 0.6); }
 .chip.info { color: var(--tinta-suave); border-color: rgba(160, 150, 130, 0.35); background: rgba(160, 150, 130, 0.08); }
+.chip.aprova { color: #cfe8b8; border-color: rgba(143, 191, 106, 0.45); background: rgba(80, 120, 60, 0.18); font-style: italic; }
+.chip.desaprova { color: #e0b8e8; border-color: rgba(150, 90, 170, 0.5); background: rgba(110, 50, 130, 0.2); font-style: italic; }
 .chip.nivel { color: #1c1408; border-color: var(--ouro-claro); background: linear-gradient(180deg, #f3dc8a, #c9a227); font-weight: 700; box-shadow: 0 0 16px rgba(233, 207, 122, 0.45); }
 
 /* rolagem de dado */
@@ -451,6 +453,22 @@ body.em-combate #combate { display: flex; }
 .ferimento { color: var(--sangue-claro); font-size: 15px; }
 .ferimento small { color: var(--tinta-fraca); }
 .vazio { color: var(--tinta-fraca); font-style: italic; font-size: 14px; }
+.membro { padding: 6px 0 9px; border-bottom: 1px dashed rgba(255, 255, 255, 0.06); }
+.membro:last-child { border-bottom: 0; }
+.membro.ferido { opacity: 0.6; }
+.membro-topo { display: flex; justify-content: space-between; align-items: baseline; }
+.membro-nome { font-family: var(--titulo); font-weight: 700; font-size: 14.5px; color: #bfe6e8; letter-spacing: 0.03em; }
+.membro-carta { color: var(--ouro-claro); animation: alerta 1.6s ease-in-out infinite; }
+.membro-sub { font-size: 13px; color: var(--tinta-fraca); margin-bottom: 5px; }
+.aprovacao { display: flex; align-items: center; gap: 8px; margin-top: 6px; font-size: 13px; }
+.aprovacao .trilho {
+  position: relative; flex: 1; height: 4px; border-radius: 999px;
+  background: linear-gradient(90deg, #7a2a8a 0%, #4a3d5a 35%, #3d3a33 50%, #3d5a3a 65%, #8fbf6a 100%); opacity: 0.8;
+}
+.aprovacao .marca { position: absolute; top: 50%; width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px; border-radius: 50%; background: #f1e4c4; box-shadow: 0 0 6px rgba(0, 0, 0, 0.8); transition: left 0.8s ease; }
+.aprovacao .rotulo { color: var(--tinta-suave); white-space: nowrap; }
+.aprovacao.partindo .rotulo, .aprovacao.baixo .rotulo { color: #d29ae0; }
+.aprovacao.bom .rotulo, .aprovacao.alto .rotulo, .aprovacao.maximo .rotulo { color: var(--bom); }
 .habilidade { font-size: 15px; display: flex; justify-content: space-between; gap: 8px; }
 .habilidade small { color: var(--tinta-fraca); white-space: nowrap; }
 

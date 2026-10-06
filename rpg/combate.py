@@ -6,7 +6,7 @@ from .dados import TRACOS
 from .entidades import Combatente
 from .inimigos import HABS_INIMIGO, NOMES_HABS_INIMIGO
 from .itens import CONSUMIVEIS
-from . import sobrevivencia, telemetria
+from . import comitiva, sobrevivencia, telemetria
 from .talentos import custo_habilidade
 
 DOTS = {
@@ -107,7 +107,7 @@ class Combate:
             if contagem[e.nome] > 1:
                 n = letras.get(e.nome, 0)
                 letras[e.nome] = n + 1
-                e.nome = f"{e.nome} {'ABCD'[n]}"
+                e.nome = f"{e.nome} {'ABCDEFGHIJ'[min(n, 9)]}"
 
     def valor_queimadura(self, u):
         v = max(2, u.poder * 0.4)
@@ -311,6 +311,7 @@ class Combate:
             self.dizer("Inimigos: " + ", ".join(f"{e.nome} (Nv.{e.nivel})" for e in self.inimigos), "vermelho")
         if self.companheiro:
             self.dizer(f"{self.companheiro.nome} rosna ao seu lado.", "verde")
+        comitiva.preparar_combate(self)
         pular_inimigos = False
         if self.emboscada == "inimigo":
             self.dizer("Você foi pego de surpresa!", "vermelho+negrito")
@@ -556,6 +557,7 @@ class Combate:
             chance -= 0.2
         if self.rng.random() < chance:
             self.dizer("Você recua e consegue escapar!", "verde")
+            comitiva.reagir(self.g, "fuga", forca=0.5)
             return True
         self.dizer("Você tenta fugir, mas é cercado!", "vermelho")
         return False
@@ -566,6 +568,9 @@ class Combate:
             if not a.vivo or not self.inimigos_vivos():
                 continue
             if self.processar_efeitos(a):
+                continue
+            if a.tipo == "comitiva":
+                comitiva.agir(self, a)
                 continue
             ataques = 2 if a is self.companheiro and self.j.tal("matilha") else 1
             for _ in range(ataques):
@@ -603,6 +608,9 @@ class Combate:
 
     def escolher_alvo_inimigo(self, e=None):
         aliados = [a for a in self.aliados if a.vivo]
+        tanque = comitiva.alvo_inimigo(self, aliados, e)
+        if tanque:
+            return tanque
         if aliados:
             chance = 0.45 if any(a.tipo == "urso" for a in aliados) else 0.25
             if e is not None and e.chefe:
@@ -632,6 +640,9 @@ class Combate:
         g = self.g
         telemetria.fim_combate(self, resultado)
         g.combate_ativo = None
+        comitiva.encerrar_combate(self, resultado)
+        if resultado == "vitoria" and any(e.chefe for e in self.inimigos):
+            comitiva.reagir(g, "coragem", forca=0.75)
         if self.companheiro:
             laco = 1 + 0.2 * j.tal("laco_animal")
             j.companheiro["hp"] = min(j.companheiro["max_hp"], int(self.companheiro.hp / laco))
@@ -659,5 +670,6 @@ class Combate:
             g.ganhar_ouro(ouro)
             g.registrar_abates(derrotados)
             g.saque_de_combate(derrotados)
-            g.ganhar_xp(sum(e.xp * max(0.2, min(1.25, 1 + 0.08 * (e.nivel - j.nivel))) for e in derrotados))
+            g.ganhar_xp(comitiva.parte_do_xp(g) *
+                        sum(e.xp * max(0.2, min(1.25, 1 + 0.08 * (e.nivel - j.nivel))) for e in derrotados))
         return resultado

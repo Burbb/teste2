@@ -36,7 +36,8 @@ def _suporta_cor():
 COR_EFEITO = {
     "ouro": "amarelo", "perda": "vermelho", "xp": "ciano", "dano": "vermelho", "cura": "verde",
     "item": "verde", "rep": "magenta", "teste_ok": "verde+negrito", "teste_falha": "vermelho+negrito",
-    "ferimento": "vermelho+negrito", "info": "cinza", "nivel": "amarelo+negrito",
+    "ferimento": "vermelho+negrito", "info": "cinza", "nivel": "amarelo+negrito", "aprova": "verde",
+    "desaprova": "magenta",
 }
 
 

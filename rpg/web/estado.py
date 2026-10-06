@@ -1,6 +1,6 @@
 """Fotografia do estado do jogo em JSON, para a interface web desenhar painéis, mapa e combate."""
 
-from .. import mapa, sobrevivencia
+from .. import comitiva, mapa, sobrevivencia
 from ..classes import CLASSES, HABILIDADES
 from ..combate import NOMES_EFEITOS
 from ..dados import BIOMAS, CLIMAS, PERIODOS
@@ -45,6 +45,7 @@ def heroi(g):
         "companheiro": ({"nome": j.companheiro["nome"], "hp": j.companheiro["hp"], "max_hp": j.companheiro["max_hp"]}
                         if j.companheiro else None),
         "efeitos": _efeitos(j),
+        "comitiva": comitiva.estado(g),
     }
 
 

@@ -7,6 +7,7 @@ import random
 import tempfile
 import unittest
 
+from rpg import comitiva
 from rpg.classes import CLASSES
 from rpg.eventos import REGISTRO
 from rpg.jogo import Derrota, FimDeJogo, Jogo
@@ -95,6 +96,14 @@ class TestSimulacao(unittest.TestCase):
                  "arma": arma, "antagonista": "Zor, o Rei", "sigilos": 2}
         g.lendas = [heroi]
         g.marcar("tumulo", dict(heroi, local=aqui))
+        g.dia = 6
+        if rng.random() < 0.85:  # uma comitiva em algum ponto da história
+            for cid in rng.sample(list(comitiva.COMPANHEIROS), 2):
+                m = comitiva.recrutar(g, cid)
+                m.update(aprovacao=rng.choice([-20, 20, 60]), missao=rng.choice([0, 1, 2, 3]), dias=10,
+                         conselho=rng.choice(["cortar", "usar"]),
+                         caminho=rng.choice([None, "vazio", "liberta", "penitente", "capitao"]))
+            g.plantar("teodoro_ruivo", 0)
         for ev_id in ("tesouro_escondido", "fera_lendaria", "mercador_raro"):
             g.rumores.append({"texto": "teste", "evento": ev_id, "local": aqui, "expira": 99, "familia": "lobo",
                               "nome": "Bocarra"})
@@ -115,6 +124,55 @@ class TestSimulacao(unittest.TestCase):
                 g2.rodar()
             except LimiteBot:
                 pass
+
+    def test_comitiva(self):
+        """Opinião, partida, conversas, combate e salvar/carregar da comitiva."""
+        with tempfile.TemporaryDirectory() as pasta:
+            g = Jogo(BotUI(random.Random(5), max_decisoes=400), seed=5, pasta_saves=pasta)
+            g.iniciar("Robô", "guerreiro")
+            for cid in ("odete", "yara"):
+                comitiva.recrutar(g, cid)
+            # A escolha feita num evento chega à comitiva pelo menu do jogo.
+            g.evento_atual = "viajante_ferido"
+            g.ui.escolher = lambda pergunta, opcoes: opcoes.index("Revistar os bolsos")
+            g.menu("?", [("Ajudar", "pocao"), ("Revistar os bolsos", "roubar")])
+            g.evento_atual = None
+            self.assertLess(comitiva.membro(g, "odete")["aprovacao"], -5)
+            del g.ui.escolher
+            comitiva.membro(g, "odete")["aprovacao"] = 0
+            comitiva.membro(g, "yara")["aprovacao"] = 0
+            comitiva.reagir(g, "magia_proibida")
+            self.assertLess(comitiva.membro(g, "odete")["aprovacao"], 0)
+            self.assertGreater(comitiva.membro(g, "yara")["aprovacao"], 0)
+            for _ in range(5):
+                comitiva.reagir(g, "magia_proibida", "sacrilegio")
+            self.assertFalse(comitiva.presente(g, "odete"), "Odete deveria ter ido embora")
+            self.assertEqual(g.flag("comitiva:odete"), "partiu")
+            self.assertFalse(comitiva.disponivel(g, "odete"))
+            # Todas as conversas de todos são alcançáveis com aprovação alta e missões concluídas.
+            for cid in ("morel", "odete"):
+                g.flags.pop(f"comitiva:{cid}", None)
+            g.comitiva = []
+            for cid in comitiva.COMPANHEIROS:
+                g.comitiva = []
+                m = comitiva.recrutar(g, cid)
+                for etapa in range(len(comitiva.CONVERSAS[cid])):
+                    m.update(aprovacao=60, dias=20, missao=3 if etapa == 2 else m["missao"],
+                             caminho=m["caminho"] or "liberta", ultima_conversa=-1)
+                    self.assertTrue(comitiva.conversar(g, m), f"{cid} etapa {etapa}")
+                    self.assertTrue(comitiva.presente(g, cid))
+            # Combates e uma partida jogada com comitiva completa.
+            g.comitiva = []
+            for cid in ("morel", "yara"):
+                comitiva.recrutar(g, cid)
+            try:
+                for _ in range(40):
+                    g.tela()
+            except (LimiteBot, FimDeJogo, Derrota):
+                pass
+            g.salvar(silencioso=True)
+            g2 = Jogo.carregar(BotUI(random.Random(1)), g.caminho_save(), pasta)
+            self.assertEqual([m["id"] for m in g2.comitiva], [m["id"] for m in g.comitiva])
 
     def test_mundo_conectado(self):
         from rpg.mundo import _distancias, gerar_mundo

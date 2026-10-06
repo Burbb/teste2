@@ -16,6 +16,7 @@ from . import inimigos
 from .inimigos import criar, instanciar_antagonista, instanciar_guardiao
 from . import itens
 from .itens import CONSUMIVEIS, descrever_bonus, gerar_equip
+from . import comitiva
 from . import legado
 from . import mapa
 from . import sobrevivencia
@@ -86,6 +87,8 @@ class Jogo:
         self.proximo_id = 1
         self.combate_ativo = None
         self.autosalvar = False  # ligado pelo menu principal quando há uma pessoa jogando
+        self.comitiva = []
+        self.evento_atual = None
         self.sem_luz = False
         self.registro = []
         self.arquivo_run = None
@@ -143,7 +146,10 @@ class Jogo:
         validas = [o for o in opcoes if o]
         rotulos = [self._anotar_teste(o[0]) for o in validas]
         esc = self.ui.escolher(pergunta, rotulos)
-        return validas[esc][1]
+        chave = validas[esc][1]
+        if self.evento_atual and self.comitiva:
+            comitiva.reagir_escolha(self, self.evento_atual, chave)
+        return chave
 
     def _anotar_teste(self, rotulo):
         """'(Destreza)' vira '(Destreza +3)': mostra quanto você soma ao dado."""
@@ -379,6 +385,9 @@ class Jogo:
                 n = 1 if self.chance(0.75) else min(n, 2)
             elif nv <= 4:
                 n = 1 if self.chance(0.5) else min(n, 2)
+            for _ in self.comitiva:  # uma comitiva chama atenção: mais inimigos aparecem
+                if self.chance(0.45):
+                    n = min(n + 1, hi + 1)
             r = self.rng.random()
             if nv >= 5 and r < 0.03 + nv * 0.006:
                 tipo = "unico"
@@ -565,6 +574,7 @@ class Jogo:
             j.base[k] += v
         j.recalcular()
         j.hp = min(j.max_hp, j.hp + max(0, j.max_hp - antes_hp))  # só ganha o que o máximo aumentou
+        comitiva.atualizar_vida_maxima(self)
         j.rec = min(j.max_rec, j.rec + max(0, j.max_rec - antes_rec))
         registrar(self, "nivel", stats=telemetria.instantaneo(j))
         if j.companheiro:
@@ -635,6 +645,10 @@ class Jogo:
         self.ui.titulo(f"VOCÊ AGORA É {SPECS[spec]['nome'].upper()}", "magenta+negrito")
         self.dizer(SPECS[spec]["desc"], "magenta")
         self._aprender_habilidades()
+        etiquetas = {"necromante": ("magia_proibida", "sacrilegio"), "paladino": ("fe", "honra"),
+                     "piromante": ("curiosidade",), "berserker": ("violencia", "coragem"), "sombra": ("trapaca",)}
+        if spec in etiquetas:
+            comitiva.reagir(self, *etiquetas[spec], forca=1.5)
         if spec == "patrulheiro":
             self.escolher_companheiro()
 
@@ -679,6 +693,7 @@ class Jogo:
         self.dizer(f"Amanhece o dia {self.dia}. {CLIMAS[self.clima]['desc']}", "amarelo")
         self.corromper(2 if restantes else 1, silencioso=True)
         sobrevivencia.amanhecer(self, descanso)
+        comitiva.amanhecer(self, descanso)
         registrar(self, "dia", descanso=descanso, provisoes=self.j.provisoes, fome=self.j.fome,
                   corrupcao=self.corrupcao, ferimentos=len(self.j.ferimentos), local=self.loc["nome"])
 
@@ -697,6 +712,7 @@ class Jogo:
         j.efeitos = {}
         if j.companheiro:
             j.companheiro["hp"] = j.companheiro["max_hp"]
+        comitiva.descansar(self, fracao)
 
     # ================================================================ início
     def novo_jogo(self):
@@ -897,6 +913,8 @@ class Jogo:
             ("Viajar", "viajar"),
             ("Talentos" + (f"  ★ {pontos} ponto(s) para gastar!" if pontos else ""), "talentos"),
             ("Personagem e inventário", "personagem"),
+            (f"Comitiva ({len(self.comitiva)})" + ("  ✉ alguém quer conversar" if any(
+                c["conversa"] for c in comitiva.estado(self)) else ""), "comitiva") if self.comitiva else None,
             ("Mapa", "mapa"),
             ("Diário (contratos, rumores, aliados)", "diario"),
             ("Bestiário", "bestiario"),
@@ -905,7 +923,7 @@ class Jogo:
         ]
 
     def executar_comum(self, op):
-        acoes = {"viajar": self.viajar, "personagem": self.personagem, "talentos": self.menu_talentos, "bestiario": self.ver_bestiario, "mapa": self.mapa,
+        acoes = {"viajar": self.viajar, "personagem": self.personagem, "comitiva": lambda: comitiva.menu(self), "talentos": self.menu_talentos, "bestiario": self.ver_bestiario, "mapa": self.mapa,
                  "diario": self.diario, "salvar": self.salvar, "sair": self.sair}
         acoes[op]()
 
@@ -1062,7 +1080,7 @@ class Jogo:
         self.ui.cena("Acampamento", self.contexto_cena(), "evento")
         self.dizer("Você junta gravetos, acende uma fogueira fraca e se enrola na capa. O frio entra mesmo assim.",
                    "cinza")
-        if self.chance(0.45):
+        if not comitiva.noite(self) and self.chance(0.45):
             eventos.disparar(self, "acampamento")
         fracao = 0.4
         if self.clima in ("chuva", "tempestade", "neve"):
@@ -1485,6 +1503,14 @@ class Jogo:
         self.combate([guarda], pode_fugir=False, titulo="O ÚLTIMO GUARDA")
 
         chefe = instanciar_antagonista(a, 11 + self.corrupcao // 34, self.corrupcao)
+        traidores = comitiva.antes_da_batalha_final(self)
+        extras = []
+        if "yara" in traidores:
+            yara = self.inimigo("bruxa_brejo", nome_unico="Yara", nivel=chefe.nivel - 1)
+            yara.nome = "Yara, Voz da Fenda"
+            yara.max_hp = yara.hp = int(yara.max_hp * 1.6)
+            yara.poder = int(yara.poder * 1.4)
+            extras.append(yara)
         if self.aliados_finais:
             self.ui.separador("verde")
             self.dizer("Mas você não está só.", "verde+negrito")
@@ -1507,7 +1533,7 @@ class Jogo:
                     self.dizer(f"  (seu dano aumenta em {int(bonus * 100)}% nesta batalha)", "verde")
             self.pausar()
         j.hp = max(j.hp, j.max_hp // 2)
-        self.combate([chefe], pode_fugir=False, titulo="O FIM DE TODAS AS COISAS")
+        self.combate([chefe] + extras, pode_fugir=False, titulo="O FIM DE TODAS AS COISAS")
         self.vitoria()
 
     # ================================================================ finais
@@ -1607,7 +1633,7 @@ class Jogo:
         for campo in ("mundo", "dia", "periodo", "clima", "corrupcao", "passos", "flags", "historico", "contagem",
                       "impulsos", "sementes", "rumores", "contratos", "ofertas", "lojas", "nemesis",
                       "aliados_finais", "forcados", "proximo_id", "estatisticas", "hardcore", "bestiario", "lendas",
-                      "registro", "arquivo_run"):
+                      "registro", "arquivo_run", "comitiva"):
             dados[campo] = getattr(self, campo)
         caminho = self.caminho_save()
         temporario = caminho + ".tmp"

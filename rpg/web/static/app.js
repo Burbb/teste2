@@ -297,7 +297,8 @@ function doer() {
 function limparPrompt() { promptEl.innerHTML = ""; pergunta = null; }
 
 const SISTEMA = [
-  [/^Talentos/, "Talentos", "t"], [/^Personagem e inventário/, "Personagem", "p"], [/^Mapa$/, "Mapa", ""],
+  [/^Talentos/, "Talentos", "t"], [/^Personagem e inventário/, "Personagem", "p"], [/^Comitiva/, "Comitiva", "c"],
+  [/^Mapa$/, "Mapa", ""],
   [/^Diário/, "Diário", "d"], [/^Bestiário/, "Bestiário", "b"], [/^Salvar jogo/, "Salvar", "g"], [/^Sair do jogo/, "Sair", "q"],
 ];
 function atalhoDe(texto) { return SISTEMA.find(([re]) => re.test(texto)); }
@@ -314,9 +315,12 @@ function mostrarOpcoes(m) {
     const at = sistema && atalhoDe(o.texto);
     if (at) {
       const pontos = /★\s*(\d+)/.exec(o.texto);
-      const b = el("button", "atalho" + (pontos ? " destaque" : ""));
+      const carta = /✉/.test(o.texto);
+      const qtd = /^Comitiva \((\d+)\)/.exec(o.texto);
+      const b = el("button", "atalho" + (pontos || carta ? " destaque" : ""));
       b.type = "button";
-      b.innerHTML = esc(at[1]) + (pontos ? ` <b>★${pontos[1]}</b>` : "") + (at[2] ? `<kbd>${at[2].toUpperCase()}</kbd>` : "");
+      b.innerHTML = esc(at[1]) + (qtd ? ` ${qtd[1]}` : "") + (pontos ? ` <b>★${pontos[1]}</b>` : "") + (carta ? " <b>✉</b>" : "") +
+        (at[2] ? `<kbd>${at[2].toUpperCase()}</kbd>` : "");
       b.title = o.texto;
       b.addEventListener("click", (ev) => { ev.stopPropagation(); responder(m.id, i); });
       atalhos.appendChild(b);
@@ -455,6 +459,15 @@ function desenharHeroi(h) {
   const habs = h.habilidades.map((x) => `<div class="habilidade" title="${esc(x.desc)}"><span>${esc(x.nome)}</span><small>${x.custo} ${esc(h.recurso)}</small></div>`).join("");
   const bolsa = h.bolsa.length ? h.bolsa.map((b) => `<div class="linha" title="${esc(b.desc)}"><span>${esc(b.nome)}</span><b>×${b.qtd}</b></div>`).join("")
     : '<div class="vazio">vazia</div>';
+  const comitivaHtml = h.comitiva && h.comitiva.length ? `<div class="secao"><h3>Comitiva</h3>${h.comitiva.map((m) => {
+    const pos = (m.aprovacao + 100) / 2;
+    return `<div class="membro${m.ferido ? " ferido" : ""}" title="${esc(m.titulo)} · aprovação ${m.aprovacao > 0 ? "+" : ""}${m.aprovacao}">
+      <div class="membro-topo"><span class="membro-nome">${esc(m.nome)}</span>${m.conversa ? '<span class="membro-carta" title="Quer conversar">✉</span>' : ""}</div>
+      <div class="membro-sub">${esc(m.titulo)}${m.ferido ? " · fora de combate até descansar" : ""}</div>
+      ${barra("aliado fina", m.hp, m.max_hp)}
+      <div class="aprovacao ${m.classe}"><span class="trilho"><span class="marca" style="left:${pos}%"></span></span><span class="rotulo">${esc(m.nivel)}</span></div>
+    </div>`;
+  }).join("")}</div>` : "";
   const mochila = h.mochila.length ? `<div class="secao"><h3>Mochila ${h.mochila.length}/8</h3>${h.mochila.map((it) =>
     `<div class="slot"><div class="slot-nome r-${esc(it.raridade)}">${esc(it.nome)}</div><div class="slot-bonus">${esc(it.bonus)}</div></div>`).join("")}</div>` : "";
   $("#heroi").innerHTML = `
@@ -469,6 +482,7 @@ function desenharHeroi(h) {
       <div class="linha"><span>Ouro</span><b>${h.ouro}</b></div>
       <div class="linha"><span>Reputação</span><b>${h.reputacao > 0 ? "+" : ""}${h.reputacao}</b></div>
     </div></div>
+    ${comitivaHtml}
     <div class="secao"><h3>Ferimentos</h3>${feridas}</div>
     <div class="secao"><h3>Equipamento</h3>${equip}</div>
     <div class="secao"><h3>Habilidades</h3>${habs}</div>

@@ -19,7 +19,7 @@ from textual.containers import Horizontal, Vertical, VerticalScroll
 from textual.widgets import Footer, Header, Input, OptionList, RichLog, Static
 from textual.widgets.option_list import Option
 
-from . import mapa, sobrevivencia
+from . import comitiva, mapa, sobrevivencia
 from .combate import NOMES_EFEITOS
 from .dados import CLIMAS, PERIODOS
 from .ui import UI
@@ -120,6 +120,11 @@ def painel_status(g):
         t.append(f"{c['nome'][:12]:<12} ")
         _barra(t, c["hp"], c["max_hp"], 12, "cyan")
         t.append(f" {c['hp']}/{c['max_hp']}\n")
+    for m in comitiva.estado(g):
+        t.append(f"{m['nome'].split()[-1][:12]:<12} ")
+        _barra(t, m["hp"], m["max_hp"], 12, "cyan")
+        t.append(f" {m['nivel']}" + (" · ferido" if m["ferido"] else "") + "\n",
+                 style="green" if m["aprovacao"] >= 15 else "red" if m["aprovacao"] <= -15 else "grey58")
     t.append(f"\nDia {g.dia} · {PERIODOS[min(g.periodo, 3)]} · {CLIMAS[g.clima]['nome']}\n")
     t.append("Corrupção ")
     _barra(t, g.corrupcao, 100, 16, "magenta")
@@ -151,6 +156,7 @@ CHIPS = {
     "dano": "bold white on red3", "cura": "bold black on green3", "item": "bold black on chartreuse3",
     "rep": "bold white on magenta", "teste_ok": "bold black on green3", "teste_falha": "bold white on red3",
     "ferimento": "bold white on dark_red", "info": "black on grey70", "nivel": "bold black on gold1",
+    "aprova": "black on pale_green3", "desaprova": "white on medium_purple4",
 }
 # Paleta da prosa: texto neutro de livro; cores só para ênfase, mais suaves que as do terminal clássico.
 PROSA = {

@@ -75,5 +75,9 @@ def disparar(g, contexto):
     from .titulos import titulo
     registrar(g, "evento", id=ev.id, contexto=contexto)
     g.ui.cena(titulo(ev.id), g.contexto_cena(), tipo="evento")
-    ev.fn(g)
+    anterior, g.evento_atual = g.evento_atual, ev.id  # a comitiva reage às escolhas deste evento
+    try:
+        ev.fn(g)
+    finally:
+        g.evento_atual = anterior
     return ev.id

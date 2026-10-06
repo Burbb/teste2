@@ -1,6 +1,10 @@
 """Títulos de cena de cada evento (aparecem no topo da página)."""
 
 TITULOS = {
+    "odete_na_estrada": "A irmã de vigília", "odete_a_mae": "A mãe de Tomé", "morel_na_taverna": "O cão de ferro",
+    "teodoro_ruivo": "A Ponte de Varn", "yara_na_fogueira": "A fogueira", "yara_sonambula": "Pés descalços",
+    "yara_circulo_negro": "O círculo negro", "discussao_fe_e_bruxaria": "Fé e bruxaria", "discussao_pao": "O pão",
+    "discussao_mao_na_espada": "A mão na espada",
     "encontro_hostil": "Algo se move", "nemesis_retorna": "O caçador volta", "alvo_contrato": "A presa do contrato",
     "viajante_ferido": "Sangue na estrada", "viajante_grato": "Um rosto conhecido",
     "mercador_ambulante": "A carroça colorida", "mercador_golpista": "O golpista atolado",

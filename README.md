@@ -68,7 +68,7 @@ A tela foi pensada para que a história seja lida, e não pulada a caminho do me
 | Tecla | O que faz |
 |---|---|
 | `1`–`9`, `0`, setas + Enter, clique | Escolher uma opção |
-| `T` `P` `D` `B` `G` `Q` | Talentos, Personagem, Diário, Bestiário, Salvar, Sair (nos menus de local) |
+| `T` `P` `C` `D` `B` `G` `Q` | Talentos, Personagem, Comitiva, Diário, Bestiário, Salvar, Sair (nos menus de local) |
 | qualquer tecla durante o texto | Mostrar o texto inteiro |
 | `Espaço`/`Enter` | Continuar ▸ |
 | `M` | Mapa do reino |
@@ -76,6 +76,31 @@ A tela foi pensada para que a história seja lida, e não pulada a caminho do me
 | `V` ou `F3` | Velocidade do texto |
 | `S` | Liga/desliga o som |
 | `Esc` | Fecha mapa e histórico |
+
+## A comitiva
+
+Você não precisa caminhar sozinho, e talvez não deva. Três companheiros podem cruzar o seu caminho
+(no máximo dois ao mesmo tempo). Cada um tem **valores próprios**, e eles **discordam entre si**:
+
+| Companheiro | Quem é | Em combate | Admira | Despreza |
+|---|---|---|---|---|
+| **Irmã Odete** | Clériga que fugiu da catedral na noite em que a Fenda se abriu | Cura quem estiver morrendo | misericórdia, fé, honestidade | crueldade, sacrilégio, magia proibida |
+| **Bastião Morel** | Ex-capitão mercenário dos Cães de Ferro | Atrai os golpes para si e atordoa | coragem, pragmatismo, honra | fuga, autoridade, caridade "inútil" |
+| **Yara** | Bruxa do brejo, quase queimada; a Fenda fala com ela | Amaldiçoa e ataca com magia | magia proibida, curiosidade, rebeldia | fé, autoridade, fanatismo, purificar |
+
+- **Aprovação.** 117 escolhas, em 49 eventos, têm peso moral. Quando você escolhe,
+  cada companheiro reage (`Odete desaprova muito`) e às vezes diz o que pensa. Quem confia
+  em você luta melhor; abaixo de um certo ponto, vai embora, e nem todos vão em paz.
+- **Conversas** no acampamento ou no menu **Comitiva** (`C`): cada um tem uma história que
+  só se abre com confiança.
+- **Missões pessoais em três atos**, com escolhas que mudam o companheiro para sempre: a
+  mãe de um acólito morto, um tenente que sobreviveu à Ponte de Varn, um círculo de pedras
+  negras onde uma porta pode ser fechada ou aberta de vez. Algumas dessas escolhas mudam
+  quem estará ao seu lado (ou contra você) no salão do trono.
+- **Discussões** entre companheiros: às vezes você vai ter que tomar partido.
+- **O preço:** cada companheiro come uma provisão por dia, Morel cobra soldo, grupos
+  atraem mais inimigos, os inimigos resistem mais e o XP é dividido. Quem cai em combate
+  pode morrer de verdade (Odete por perto ajuda a evitar).
 
 ## O objetivo
 
@@ -204,6 +229,7 @@ Novas habilidades chegam nos níveis 2, 3, 4 e 7 (a habilidade suprema da especi
 ```
 rpg/
   jogo.py        estado, ciclo principal, vilas, loja, contratos, salvar/carregar
+  comitiva.py    companheiros: valores, aprovação, reações, combate, conversas, partida e morte
   web/           interface principal: servidor local (só biblioteca padrão) + página
     ponte.py     WebUI: cada chamada da UI vira uma mensagem JSON (cenas, texto, dados, escolhas)
     estado.py    fotografia do jogo em JSON (herói, mapa, combate) para os painéis
@@ -230,6 +256,7 @@ rpg/
     classe.py    eventos de classe e especialização, e as encruzilhadas
     noite.py     eventos do acampamento
     vila.py      eventos de vila e gerador de rumores
+    comitiva.py  recrutamento, conversas, missões pessoais e discussões da comitiva
 ```
 
 ### Criando um evento novo
