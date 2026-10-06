@@ -361,7 +361,24 @@ const Batalha = (() => {
         emArea = !!m.area;
         rotulo(de, m.nome, de.classList.contains("inimigo") ? "inimiga" : "");
         await passoFrente(de, m.area);
-        if (m.hab === "redemoinho") de.classList.add("girando");
+        if (m.hab === "grito_guerra") {
+          // O grito vem antes de tudo: a arena treme e o herói brilha; só então os inimigos se encolhem.
+          som("rugido");
+          reiniciar(arena, "tremor", 420);
+          brilho(de, "forca");
+          rotulo(de, "AAARGH!", "boa");
+          await dormir(pausa(520));
+        }
+        return;
+      }
+      case "buff": {
+        if (!em) return;
+        marcar(m.em);
+        const fams = [...new Set((m.efeitos || []).map((id) => (EFEITO[id] || [])[1] || "protecao"))];
+        fams.forEach((f, i) => setTimeout(() => brilho(em, f), i * 160));
+        if (m.hab !== "grito_guerra") rotulo(em, m.rotulo);
+        som(fams.includes("sombra") ? "sombra" : fams.includes("forca") ? "feitico" : "protecao");
+        await dormir(pausa(560 + 160 * Math.max(0, fams.length - 1)));
         return;
       }
       case "fim_acao": {
@@ -523,12 +540,58 @@ const Batalha = (() => {
     camadaFx.appendChild(p);
     await p.animate([{ transform: `translate(${x0}px, ${y0}px) rotate(${ang}deg)`, opacity: 0.4 },
       { transform: `translate(${x1}px, ${y1}px) rotate(${ang}deg)`, opacity: 1 }],
-      { duration: pausa(260), easing: "cubic-bezier(.5,0,1,.6)" }).finished.catch(() => {});
+      { duration: pausa(420), easing: "cubic-bezier(.45,0,.9,.6)" }).finished.catch(() => {});
     p.remove();
   }
 
   /** Golpes em área: tudo voa e acerta ao mesmo tempo; depois o resto (efeitos, curas) segue em ordem. */
+  /** Um corte em pixel atravessando a carta (o Redemoinho deixa vários, em ângulos diferentes). */
+  function corte(el, angulo) {
+    if (rapido()) return;
+    const c = document.createElement("i");
+    c.className = "corte";
+    c.style.rotate = angulo + "deg";
+    c.style.top = 30 + Math.random() * 40 + "%";
+    el.appendChild(c);
+    setTimeout(() => c.remove(), 420);
+  }
+
+  async function redemoinho(m) {
+    // Rodadas separadas pelos marcadores "giro": cada uma corta todos os alvos ao mesmo tempo, bem rápido.
+    const rodadas = [];
+    m.lances.forEach((x) => {
+      if (x.tipo === "giro") rodadas.push([]);
+      else if (rodadas.length && (x.tipo === "golpe" || x.tipo === "erro")) rodadas[rodadas.length - 1].push(x);
+    });
+    const resto = m.lances.filter((x) => !["giro", "golpe", "erro"].includes(x.tipo));
+    const de = carta((m.lances.find((x) => x.de) || {}).de);
+    if (de) { reiniciar(de, "aura-forca", 700); clarao(de, "fisico"); }
+    som("esquiva");
+    await dormir(pausa(160));
+    const soma = {};  // o número sobe uma vez só por inimigo, com o total dos giros
+    for (let r = 0; r < rodadas.length; r++) {
+      rodadas[r].forEach((x) => {
+        const em = carta(x.em);
+        if (!em) return;
+        marcar(x.em);
+        corte(em, (r % 2 ? -1 : 1) * (12 + Math.random() * 18));
+        if (x.tipo === "golpe") {
+          barra(em, x.hp, x.max_hp); clarao(em, "fisico"); tremer(em, x.crit);
+          const s = soma[x.em] || (soma[x.em] = { dano: 0, crit: false, em });
+          s.dano += x.dano; s.crit = s.crit || x.crit;
+        }
+      });
+      som(r === rodadas.length - 1 ? "golpe" : "golpe_leve");
+      if (rodadas[r].some((x) => x.crit)) som("critico_golpe");
+      await dormir(pausa(150));
+    }
+    Object.values(soma).forEach((s) => numero(s.em, s.crit ? `${s.dano}!` : `−${s.dano}`, s.crit ? "crit" : "menos"));
+    await dormir(pausa(420));
+    for (const x of resto) await lance(x);
+  }
+
   async function salva(m) {
+    if (m.hab === "redemoinho") return redemoinho(m);
     const golpes = m.lances.filter((x) => x.tipo === "golpe" || x.tipo === "erro");
     const resto = m.lances.filter((x) => !golpes.includes(x));
     if (!golpes.length) { for (const x of resto) await lance(x); return; }
@@ -539,7 +602,8 @@ const Batalha = (() => {
     // 1) a salva no ar
     if (el === "fisico" && distancia) {
       som("disparo");
-      await Promise.all(alvosEl.flatMap((a) => [0, 1, 2].map((k) => queda(a, "flecha", k * 70 + Math.random() * 40))));
+      await dormir(pausa(180));  // a saraivada sobe antes de cair
+      await Promise.all(alvosEl.flatMap((a) => [0, 1, 2].map((k) => queda(a, "flecha", k * 110 + Math.random() * 60))));
     } else if (el === "fisico") {
       if (de) reiniciar(de, "giro", 300);
       await dormir(pausa(160));
@@ -672,13 +736,13 @@ const Batalha = (() => {
     }
     const letras = (c.textContent || "").length;
     clearTimeout(c._timer);
-    c._timer = setTimeout(() => fechar(c), Math.min(9000, 2600 + letras * 40));
+    c._timer = setTimeout(() => fechar(c), Math.min(6500, 1700 + letras * 30));
     return c;
   }
   function fechar(c) {
     clearTimeout(c._timer);
     c.classList.add("sumindo");
-    setTimeout(() => c.remove(), 320);
+    setTimeout(() => c.remove(), 260);
   }
 
   function balao(cid, nome, texto) {

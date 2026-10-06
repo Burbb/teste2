@@ -155,17 +155,20 @@ def _sede_sangue(cb, u, alvo):
             cb.dizer(f"Você bebe a fúria do golpe. (+{cura} vida)", "verde")
 
 
+GIROS_REDEMOINHO = 5
+
+
 def _redemoinho(cb, u, alvo):
-    """Quatro giros; cada um acerta todos os inimigos com um quarto do golpe (110% no total)."""
+    """Cinco giros rápidos; cada um corta todos os inimigos ao mesmo tempo com 22% do golpe (110% no total)."""
     cb.dizer("Você gira a arma num arco brutal!", "ciano")
     total = {}
-    for giro in range(4):
+    for giro in range(GIROS_REDEMOINHO):
         vivos = cb.inimigos_vivos()
         if not vivos:
             break
         cb.lance("giro", de=cb.uid(u), n=giro + 1)
         for ini in vivos:
-            total[ini] = total.get(ini, 0) + cb.atacar(u, ini, 0.275, detalhar=False)
+            total[ini] = total.get(ini, 0) + cb.atacar(u, ini, 1.1 / GIROS_REDEMOINHO, detalhar=False)
     partes = [f"{ini.nome} {d}" for ini, d in total.items()]
     if partes:
         cb.detalhe("Redemoinho: " + ", ".join(partes) + " de dano.", "amarelo")

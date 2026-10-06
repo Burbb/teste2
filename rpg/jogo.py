@@ -476,8 +476,8 @@ class Jogo:
             grupo.append(self.inimigo("xama_caido", bonus))
         return grupo
 
-    def combate(self, inimigos, emboscada=None, pode_fugir=True, titulo=None):
-        r = Combate(self, inimigos, emboscada, pode_fugir, titulo).executar()
+    def combate(self, inimigos, emboscada=None, pode_fugir=True, titulo=None, sozinho=False):
+        r = Combate(self, inimigos, emboscada, pode_fugir, titulo, sozinho=sozinho).executar()
         if r == "derrota":
             causa = f"Você tombou diante de {tx.lista_natural([e.nome for e in inimigos])}."
             if self.hardcore:
@@ -507,20 +507,23 @@ class Jogo:
                 self.nemesis = None
                 self.dizer("Seu nêmesis finalmente tomba. Você sente um peso sair dos ombros.", "verde+negrito")
                 self.ganhar_ouro(30 + 10 * self.j.nivel)
-            for c in self.contratos:
-                if c.get("concluido"):
+        # Contratos: conta a luta inteira de uma vez e anuncia uma vez só (ou progresso, ou concluído).
+        for c in self.contratos:
+            if c.get("concluido"):
+                continue
+            if c["tipo"] == "caca" and self.loc["id"] == c["local"]:
+                n = sum(1 for e in derrotados if e.familia == c["familia"])
+                if not n:
                     continue
-                if c["tipo"] == "caca" and e.familia == c["familia"] and self.loc["id"] == c["local"]:
-                    c["feito"] += 1
-                    if c["feito"] >= c["total"]:
-                        c["concluido"] = True
-                        self.dizer(f"Contrato concluído: {c['desc']} Receba a recompensa em qualquer vila.", "verde")
-                    else:
-                        self.ui.efeito(f"Contrato: {c['feito']}/{c['total']} {FAMILIAS[c['familia']]['plural']}",
-                                       "info")
-                elif c["tipo"] == "alvo" and e.chave == c["chave"]:
+                c["feito"] = min(c["total"], c["feito"] + n)
+                if c["feito"] >= c["total"]:
                     c["concluido"] = True
                     self.dizer(f"Contrato concluído: {c['desc']} Receba a recompensa em qualquer vila.", "verde")
+                else:
+                    self.ui.efeito(f"Contrato: {c['feito']}/{c['total']} {FAMILIAS[c['familia']]['plural']}", "info")
+            elif c["tipo"] == "alvo" and any(e.chave == c["chave"] for e in derrotados):
+                c["concluido"] = True
+                self.dizer(f"Contrato concluído: {c['desc']} Receba a recompensa em qualquer vila.", "verde")
 
     def saque_de_combate(self, derrotados):
         elites = sum(1 for e in derrotados if e.afixo or e.unico)
@@ -1265,7 +1268,8 @@ class Jogo:
             intro = "Você segue a fumaça até o seu acampamento. A fogueira de quem esperou por você ainda arde."
         else:
             intro = "Você junta gravetos, acende uma fogueira fraca e se enrola na capa. O frio entra mesmo assim."
-        if comitiva.membros(self) or comitiva.reserva(self):
+        # A fogueira desenhada aparece sempre na interface web, mesmo sozinho: é o momento de respirar do dia.
+        if comitiva.membros(self) or comitiva.reserva(self) or getattr(self.ui, "web", False):
             conversou = comitiva.fogueira(self, intro)
             self.ui.cena("Acampamento", self.contexto_cena(), "evento")
         else:

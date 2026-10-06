@@ -288,8 +288,8 @@ body.em-combate #hud-linha { justify-content: flex-end; }
 .flutua.info { color: #f0e0c0; font-size: 17px; }
 
 /* ------------------------------------------------------------------ comitiva na HUD, balões e selos */
-.reagiu-bem { animation: reagiu-bem 0.8s steps(4); }
-.reagiu-mal { animation: reagiu-mal 0.8s steps(4); }
+.reagiu-bem { animation: reagiu-bem 0.6s steps(14); }
+.reagiu-mal { animation: reagiu-mal 0.6s steps(14); }
 @keyframes reagiu-bem { 30% { transform: translateY(-6px); filter: brightness(1.5) drop-shadow(0 0 4px #8fbf6a); } }
 @keyframes reagiu-mal { 20% { transform: translateX(-3px); filter: brightness(0.7) sepia(1) hue-rotate(220deg) saturate(3); } 40% { transform: translateX(3px); } 60% { transform: translateX(-2px); } }
 .falando { outline: 2px solid #fff3d6; outline-offset: 2px; }
@@ -440,7 +440,7 @@ body.modo-titulo .vinheta { background: radial-gradient(ellipse 80% 70% at 50% 4
 .atalho img.sprite { --s: 32; }
 .atalho-nome { font-family: var(--ui); font-size: 11px; font-weight: 700; letter-spacing: 0.02em; line-height: 1; white-space: nowrap; }
 .atalho kbd { position: absolute; top: 2px; right: 3px; margin: 0; font-size: 11px; line-height: 1; padding: 1px 3px; color: var(--tinta-3); background: #0a0807; border: 1px solid #3a2e24; }
-.atalho .selo { position: absolute; top: -8px; right: -12px; font-family: var(--num); font-size: 13px; font-weight: normal; line-height: 1; padding: 1px 4px 2px; color: #120e0b; background: var(--ouro); box-shadow: 0 0 0 1px #000, 2px 2px 0 #000; animation: alerta 1.2s steps(2) infinite; }
+.atalho .selo { position: absolute; top: -9px; left: -14px; z-index: 1; font-family: var(--num); font-size: 13px; font-weight: normal; line-height: 1; padding: 1px 4px 2px; color: #120e0b; background: var(--ouro); box-shadow: 0 0 0 1px #000, 2px 2px 0 #000; animation: alerta 1.2s steps(2) infinite; }
 .atalho:hover, .atalho:focus-visible { color: #fff3d6; border-color: var(--ouro); background: #1c140d; outline: none; transform: translateY(-2px); }
 .atalho:hover .atalho-icone { border-color: #6a5430; }
 .atalho.destaque { border-color: #8a6a14; color: var(--ouro); }
@@ -791,13 +791,13 @@ body.modo-titulo .dica-pular { display: none; }
 .cartao-comitiva { pointer-events: auto; cursor: pointer; display: flex; gap: 10px; align-items: flex-start; width: min(360px, 82vw); padding: 8px 12px 9px 8px; background: #17120e; border: 3px solid #5a4632; box-shadow: 4px 4px 0 #000, 0 0 0 2px #000; }
 .cartao-comitiva.aprova { border-color: #5f8f3e; }
 .cartao-comitiva.desaprova { border-color: #8a3a7a; }
-.cartao-comitiva.chegou { animation: cc-entra 0.35s steps(5); }
-.cartao-comitiva.sumindo { animation: cc-sai 0.3s steps(4) forwards; }
+.cartao-comitiva.chegou { animation: cc-entra 0.3s steps(12); }
+.cartao-comitiva.sumindo { animation: cc-sai 0.25s steps(10) forwards; }
 @keyframes cc-entra { from { opacity: 0; transform: translateX(26px); } to { opacity: 1; transform: none; } }
 @keyframes cc-sai { to { opacity: 0; transform: translateX(26px); } }
 .cc-retrato { flex: none; width: 54px; height: 54px; display: grid; place-items: center; background: #0d0b0a; border: 2px solid #2a2420; }
-.cartao-comitiva.aprova .cc-retrato { animation: reagiu-bem 0.8s steps(4); }
-.cartao-comitiva.desaprova .cc-retrato { animation: reagiu-mal 0.8s steps(4); }
+.cartao-comitiva.aprova .cc-retrato { animation: reagiu-bem 0.6s steps(14); }
+.cartao-comitiva.desaprova .cc-retrato { animation: reagiu-mal 0.6s steps(14); }
 .cc-corpo { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
 .cc-topo { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
 .cc-topo b { font-family: var(--titulo); font-weight: 400; font-size: 26px; line-height: 1; color: #fff3d6; text-shadow: 2px 2px 0 #000; }
@@ -830,7 +830,7 @@ button.membro-carta:hover { color: #fff3a0; transform: scale(1.2); }
 .cartao.clicavel { cursor: pointer; }
 .cartao.clicavel:hover { border-color: var(--ouro-3); transform: translateY(-2px); }
 .cartao.na-reserva { opacity: 0.8; border-style: dashed; }
-.tag.aviso-conversa { margin-top: 6px; color: var(--ouro); border-color: #8a6a14; animation: alerta 1.2s steps(2) infinite; }
+.tag.aviso-conversa { margin-top: 6px; color: var(--ouro); border-color: #8a6a14; background: #1c140d; cursor: pointer; font: inherit; animation: alerta 1.2s steps(2) infinite; }
 
 /* ------------------------------------------------------------------ fogueira */
 .fogueira-palco { position: relative; border: 3px solid #0d0b0a; box-shadow: 3px 3px 0 #000; }
@@ -1003,8 +1003,6 @@ body:not(.fonte-pixel) .chip { font-family: var(--ui); font-weight: 700; font-si
 .carta-acao.bloqueada { filter: grayscale(0.85) brightness(0.65); cursor: not-allowed; }
 .carta-acao.bloqueada:hover { transform: none; border-color: #5a2020; border-left-color: #5a2020; }
 .carta-acao.bloqueada .acao-custo b { color: #e2574c; }
-.carta-acao.negada { animation: negada 0.3s steps(4); }
-@keyframes negada { 25% { translate: -4px 0; } 75% { translate: 4px 0; } }
 .carta-acao.el-fogo { --el: #e0782f; } .carta-acao.el-gelo { --el: #7fb0ff; } .carta-acao.el-sagrado { --el: #f2c94c; }
 .carta-acao.el-sombra { --el: #8e6fd8; } .carta-acao.el-arcano { --el: #6f9bff; } .carta-acao.el-veneno { --el: #6fbf4a; }
 .carta-acao.el-natureza { --el: #4f9a5b; } .carta-acao.el-sangue { --el: #b3262b; } .carta-acao.el-protecao { --el: #3d63c9; }
@@ -1018,3 +1016,13 @@ body:not(.fonte-pixel) .chip { font-family: var(--ui); font-weight: 700; font-si
 .carta-flechas.poucas { color: var(--ouro); }
 .carta-flechas.poucas b { animation: alerta 1.2s steps(2) infinite; display: inline-block; }
 .carta-flechas.zerada { color: var(--sangue-2); }
+.carta-acao.voltar-carta { --el: #5a4a38; }
+.carta-acao.voltar-carta .acao-icone { font-size: 20px; color: var(--ouro); }
+.carta-acao.voltar-carta .acao-rodape kbd { margin: 0 2px 0 0; }
+#arena.tremor { animation: tremor-arena 0.42s steps(10); }
+@keyframes tremor-arena { 20% { translate: -3px 1px; } 40% { translate: 3px -1px; } 60% { translate: -2px 0; } 80% { translate: 2px 1px; } }
+/* corte do Redemoinho: uma lâmina de luz em pixel que atravessa a carta */
+.corte { position: absolute; left: 4%; width: 92%; height: 4px; z-index: 4; pointer-events: none; transform-origin: center;
+  background: linear-gradient(90deg, transparent 0 8%, #fff 8% 70%, #ffe08a 70% 88%, transparent 88%); box-shadow: 0 0 0 1px rgba(0,0,0,0.5), 0 0 6px #fff3a0;
+  animation: cortar 0.38s steps(8) forwards; }
+@keyframes cortar { 0% { scale: 0 1; opacity: 1; } 45% { scale: 1 1; opacity: 1; } 100% { scale: 1 0.2; opacity: 0; } }

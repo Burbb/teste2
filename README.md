@@ -136,7 +136,7 @@ na interface miúda; **Jersey 15** nos números. O botão "Fonte" no topo volta 
   Itens dá para trocar de arma ou de mão secundária no meio da luta, ao custo do turno
   (armadura não).
 - **Área acerta junto:** Chuva de Flechas faz chover flechas sobre todos os alvos ao mesmo
-  tempo; o Inferno abre o chão sob todos de uma vez. O Redemoinho continua girando golpe a golpe.
+  tempo; o Inferno abre o chão sob todos de uma vez. O Redemoinho avança e corta todos os alvos em cinco giros rápidos, com o total de dano no fim.
 - **Contratos do seu tamanho:** o mural sorteia lugares de nível próximo ao seu (de um abaixo
   até dois acima), e ouro e XP crescem com o nível do lugar: trabalho fácil paga pouco.
 - **Itens com bom senso:** o jogo avisa em vez de gastar poção com vida cheia ou bandagem sem
@@ -146,6 +146,10 @@ na interface miúda; **Jersey 15** nos números. O botão "Fonte" no topo volta 
   em botões de ícone com a tecla no canto e selos de aviso (pontos de talento, carta).
 - **Flechas na carta:** o arqueiro vê as flechas na própria carta da luta, piscando quando
   estão acabando. Sem flechas, o ataque vira um golpe de adaga fraco e os tiros ficam bloqueados.
+- **Voltar sem caçar o botão:** na luta, "Voltar" vira a última carta da grade (e Esc ou o botão
+  direito do mouse voltam um passo em qualquer tela).
+- **Duelo é duelo:** nos duelos de honra a comitiva e o animal ficam de fora, assistindo.
+- **Fogueira sempre:** acampar mostra a fogueira desenhada mesmo quando você está sozinho.
 - **Caçada garantida:** no lugar de um contrato de caça aparece "Caçar … (contrato, 1/3)" (e o
   cartão do contrato pisca com "Seguir os rastros ▸"). Seguir os rastros sempre leva ao bicho; a
   Percepção decide quem vê quem primeiro. Cada abate mostra o progresso.

@@ -304,7 +304,8 @@ const Telas = (() => {
   }
 
   // ------------------------------------------------------------------ mercado
-  const qtdLoja = {};  // quantidade escolhida em cada suprimento (sobrevive ao redesenho da tela)
+  const qtdLoja = {};  // quantidade escolhida em cada suprimento (sobrevive ao redesenho, não à saída do mercado)
+  function novaVisita() { for (const k in qtdLoja) delete qtdLoja[k]; }
   function maxCompra(c, ouro) { return Math.max(0, Math.min(99, c.limite ?? 99, Math.floor(ouro / c.preco))); }
   function loja(d) {
     const cons = d.consumiveis.map((c) => {
@@ -400,7 +401,7 @@ const Telas = (() => {
       };
       el.querySelectorAll("[data-q]").forEach((b) => {
         let rep = null;
-        const passo = () => mudar((qtdLoja[id] || 1) + Number(b.dataset.q));
+        const passo = () => mudar(Math.min(qtdLoja[id] || 1, max || 1) + Number(b.dataset.q));
         b.addEventListener("click", (ev) => { ev.stopPropagation(); });
         b.addEventListener("pointerdown", (ev) => {
           ev.stopPropagation(); passo(); App.som("escolha");
@@ -408,7 +409,9 @@ const Telas = (() => {
         });
         ["pointerup", "pointerleave", "pointercancel"].forEach((t) => b.addEventListener(t, () => clearTimeout(rep)));
       });
-      el.addEventListener("wheel", (ev) => { if (max > 1) { ev.preventDefault(); mudar((qtdLoja[id] || 1) + (ev.deltaY < 0 ? 1 : -1)); } }, { passive: false });
+      // A roda do mouse só mexe na quantidade em cima do controle (rolar a página não pode mudar a compra).
+      const ctrl = el.querySelector(".qtd-ctrl");
+      if (ctrl) ctrl.addEventListener("wheel", (ev) => { if (max > 1) { ev.preventDefault(); mudar(Math.min(qtdLoja[id] || 1, max) + (ev.deltaY < 0 ? 1 : -1)); } }, { passive: false });
       const comprar = (ev) => {
         if (el.classList.contains("caro")) { App.som("falha"); return; }
         const q = ev.shiftKey ? Math.min(5, max) : Math.min(qtdLoja[id] || 1, max);
@@ -470,7 +473,7 @@ const Telas = (() => {
     return `<div class="cartao clicavel${reserva ? " na-reserva" : ""}" data-cid="${h(m.id)}"><div class="cab">${S(m.id, 3)}<div><b>${h(m.nome)}</b><span class="sub">${h(m.titulo)}${m.ferido ? " · ferido, fora de combate" : ""}${reserva ? " · no acampamento" : ""}</span></div></div>
       <span class="lore">${h(m.desc)}</span>
       <div class="meter" style="margin-top:6px">Vida ${barra("vida", m.hp, m.max_hp)} ${m.hp}/${m.max_hp}</div>
-      ${aprovacao(m)}${m.conversa && !reserva ? '<div class="tag aviso-conversa">✉ quer conversar · clique</div>' : ""}</div>`;
+      ${aprovacao(m)}${m.conversa && !reserva ? '<button type="button" class="tag aviso-conversa">✉ quer conversar · clique aqui</button>' : ""}</div>`;
   }
   function comitiva(d) {
     const cartas = d.membros.map((m) => cartaoMembro(m, false)).join("");
@@ -549,7 +552,7 @@ const Telas = (() => {
         ${f.conversa ? '<i class="carta-aviso">✉</i>' : ""}<span class="figura-nome">${h(f.nome.split(" ").pop())}</span>
         <span class="figura-estado">${f.onde === "ativo" ? "vai com você" : "no acampamento"}</span></button>`).join("");
     return `<div class="tela acampamento"><div class="fogueira-palco"><canvas class="fogueira-cena" width="320" height="120"></canvas>${botoes}</div>
-      <div class="dica-uso">Clique em alguém para conversar ou decidir quem vai com você amanhã. Quem fica no acampamento descansa, não come das suas provisões e não opina nas suas escolhas. ${d.ativos.length}/${d.limite} na comitiva.</div></div>`;
+      <div class="dica-uso">${figuras.length ? `Clique em alguém para conversar ou decidir quem vai com você amanhã. Quem fica no acampamento descansa, não come das suas provisões e não opina nas suas escolhas. ${d.ativos.length}/${d.limite} na comitiva.` : "Só você, o fogo e os barulhos da mata. Quem você encontrar pelo caminho pode se sentar aqui um dia."}</div></div>`;
   }
 
   function desenharFogueira(canvas, d) {
@@ -636,7 +639,12 @@ const Telas = (() => {
 
   function ligarFigurasComitiva(raiz) {
     raiz.querySelectorAll("[data-cid].figura, .cartao[data-cid]").forEach((el) => {
-      el.addEventListener("click", (ev) => { ev.stopPropagation(); menuFigura(el, el.dataset.cid); });
+      el.addEventListener("click", (ev) => {
+        ev.stopPropagation();
+        // Clicou no aviso de conversa (✉ do retrato ou "quer conversar"): abre a conversa direto, sem menu.
+        if (ev.target.closest(".aviso-conversa, .carta-aviso") && App.acao({ conversar: el.dataset.cid }, "escolha")) return;
+        menuFigura(el, el.dataset.cid);
+      });
     });
   }
 
@@ -759,6 +767,6 @@ const Telas = (() => {
     setTimeout(() => t.remove(), 3300);
   }
 
-  return { rastreador, atributosHtml, reputacaoHtml, dica, abrirDica, fecharMenuItem, guardarArvore, abrirTalentos, fecharTalentos, painel, celebrar, toast, iconeCriatura, iconeItem, dicaItem, ligarDicas, esconderDica,
+  return { rastreador, atributosHtml, reputacaoHtml, dica, abrirDica, novaVisita, fecharMenuItem, guardarArvore, abrirTalentos, fecharTalentos, painel, celebrar, toast, iconeCriatura, iconeItem, dicaItem, ligarDicas, esconderDica,
     ICONE_ITEM, ARMA, VAZIO, NOME_ESPACO, AREA, barra, aprovacao };
 })();

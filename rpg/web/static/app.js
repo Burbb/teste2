@@ -211,6 +211,7 @@ async function novaCena(m) {
     cabecalho(m);
     return;
   }
+  Telas.novaVisita();  // saiu da tela: a quantidade do mercado volta a 1 na próxima visita
   if (!instantaneo() && textoEl.childElementCount) { folha.classList.add("saindo"); await espera(200); }
   textoEl.innerHTML = "";
   promptEl.innerHTML = "";
@@ -537,6 +538,15 @@ function mostrarOpcoes(m) {
     li.appendChild(b);
     lista.appendChild(li);
   });
+  if (emLuta && voltar >= 0 && lista.classList.contains("grade-acoes")) {
+    // Na luta, "Voltar" fica junto das cartas: ir de Habilidades para Itens sem subir o mouse até o topo.
+    const li = el("li");
+    const b = el("button", "escolha carta-acao voltar-carta", `<span class="acao-icone">◀</span><span class="acao-nome">Voltar</span><span class="acao-rodape"><kbd>Esc</kbd> ou botão direito</span>`);
+    b.type = "button";
+    b.addEventListener("click", (ev) => { ev.stopPropagation(); responder(m.id, voltar); });
+    li.appendChild(b);
+    lista.appendChild(li);
+  }
   if (lista.childElementCount) { promptEl.appendChild(lista); Telas.ligarDicas(lista); }
   if (atalhos.childElementCount) promptEl.appendChild(atalhos);
   if (!replay) guardar("cdf-dica", String(Number(ler("cdf-dica") || 0) + 1));
@@ -615,11 +625,19 @@ function cartaAcao(o, i, m, pos) {
   if (bloqueio) b.classList.add("bloqueada");
   b.addEventListener("click", (ev) => {
     ev.stopPropagation();
-    if (bloqueio) { App.som("falha"); b.classList.remove("negada"); void b.offsetWidth; b.classList.add("negada"); return; }
+    // Animação à parte (WAAPI): trocar a classe de animação apagava a de entrada e o botão sumia.
+    if (bloqueio) { App.som("falha"); b.animate([{ translate: "0" }, { translate: "-4px 0" }, { translate: "4px 0" }, { translate: "0" }], { duration: 260, easing: "steps(6)" }); return; }
     responder(m.id, i);
   });
   return b;
 }
+
+// Botão direito em qualquer lugar da página volta um passo (quando a tela atual tem "Voltar").
+document.addEventListener("contextmenu", (ev) => {
+  if (!pergunta || pergunta.voltar === undefined || ev.target.closest("input, textarea")) return;
+  ev.preventDefault();
+  responder(pergunta.id, pergunta.voltar);
+});
 
 function iconeAcaoCombate(t) {
   if (/^Atacar/.test(t)) return spr({ guerreiro: "espada", arqueiro: "arco", mago: "cajado" }[estado.heroi.classe] || "espada", 2);

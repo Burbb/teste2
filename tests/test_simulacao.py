@@ -160,10 +160,14 @@ class TestSimulacao(unittest.TestCase):
             self.assertEqual(tipos[0], "acao")
             self.assertEqual(lances[0][1]["hab"], "redemoinho")
             self.assertTrue(lances[0][1]["area"])
-            self.assertEqual(tipos.count("giro"), 4)
-            self.assertEqual(tipos.count("golpe") + tipos.count("erro"), 8)
             self.assertEqual(tipos[-1], "fim_acao")
-            golpe = next(d for t, d in lances if t == "golpe")
+            # Os giros saem numa salva só: a tela anima cada giro cortando todos ao mesmo tempo.
+            salva = next(d for t, d in lances if t == "salva")["lances"]
+            internos = [x["tipo"] for x in salva]
+            from rpg.classes import GIROS_REDEMOINHO
+            self.assertEqual(internos.count("giro"), GIROS_REDEMOINHO)
+            self.assertEqual(internos.count("golpe") + internos.count("erro"), 2 * GIROS_REDEMOINHO)
+            golpe = next(x for x in salva if x["tipo"] == "golpe")
             self.assertEqual(golpe["de"], "j")
             self.assertIn(golpe["em"], {cb.uid(e) for e in inimigos})
             cb.fase_aliados()

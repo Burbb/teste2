@@ -62,8 +62,9 @@ _SERIE = [0]
 
 
 class Combate:
-    def __init__(self, g, inimigos, emboscada=None, pode_fugir=True, titulo=None):
+    def __init__(self, g, inimigos, emboscada=None, pode_fugir=True, titulo=None, sozinho=False):
         self.g = g
+        self.sozinho = sozinho  # duelo: nem comitiva nem animal entram na luta
         self.ui = g.ui
         self.rng = g.rng
         self.j = g.j
@@ -92,7 +93,7 @@ class Combate:
         for e in self.inimigos:
             g.ver_criatura(e.familia)
         c = self.j.companheiro
-        if c and c["hp"] > 0:
+        if c and c["hp"] > 0 and not sozinho:
             laco = 1 + 0.2 * self.j.tal("laco_animal")
             self.companheiro = Aliado(c["nome"], int(c["max_hp"] * laco), c["atk"] * laco, c["agi"], c["tipo"],
                                       c["alcance"], c["crit"])
@@ -164,7 +165,7 @@ class Combate:
     def agindo(self, u, nome=None, alvo=None, area=False, hab=None):
         self.lance("acao", de=self.uid(u), nome=nome, alvo=self.uid(alvo), area=area, hab=hab)
         try:
-            if area and hab != "redemoinho":  # o Redemoinho gira golpe a golpe; o resto acerta todos juntos
+            if area:  # golpes em área acertam todos juntos (no Redemoinho, giro a giro)
                 with self.salva(hab):
                     yield
             else:
@@ -449,7 +450,11 @@ class Combate:
             self.dizer("Inimigos: " + ", ".join(f"{e.nome} (Nv.{e.nivel})" for e in self.inimigos), "vermelho")
         if self.companheiro:
             self.dizer(f"{self.companheiro.nome} rosna ao seu lado.", "verde")
-        comitiva.preparar_combate(self)
+        if self.sozinho:
+            if comitiva.membros(self.g) or self.j.companheiro:
+                self.dizer("Um duelo é coisa de dois. Os seus ficam de fora, assistindo.", "cinza")
+        else:
+            comitiva.preparar_combate(self)
         pular_inimigos = False
         if self.emboscada == "inimigo":
             self.dizer("Você foi pego de surpresa!", "vermelho+negrito")
@@ -678,8 +683,13 @@ class Combate:
         self.flechas_gastas += h.get("flechas", 0)
         with self.agindo(j, h["nome"], alvo, area=h["alvo"] == "todos", hab=ids[esc]):
             antes, self._cura_j = j.hp, 0
+            efeitos_antes = {k: dict(v) for k, v in j.efeitos.items()}
             h["fn"](self, j, alvo)
             self.curou(j, j.hp - antes - self._cura_j, rotulo=h["nome"])
+            # Buffs em si mesmo (grito, escudo, esquiva, sombras) também viram um lance: a tela anima e espera.
+            novos = [k for k, v in j.efeitos.items() if efeitos_antes.get(k) != v]
+            if novos:
+                self.lance("buff", em="j", efeitos=novos, rotulo=h["nome"], hab=ids[esc])
         return True
 
     def menu_itens(self):

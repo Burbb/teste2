@@ -89,7 +89,7 @@ def duelo_de_honra(g):
         return
     e = g.inimigo("mercenario", afixo="feroz", nome_unico=nome)
     e.habilidades = ["esmagar", "golpe_sujo"]
-    if g.combate([e], pode_fugir=False, titulo="DUELO DE HONRA") == "vitoria":
+    if g.combate([e], pode_fugir=False, titulo="Duelo de honra", sozinho=True) == "vitoria":
         g.dizer(f"{nome} se ajoelha. \"Você me venceu limpo. Quando precisar de uma espada, chame.\"", "verde")
         g.ganhar_ouro(15 + 5 * g.j.nivel)
         g.mudar_reputacao(3)
