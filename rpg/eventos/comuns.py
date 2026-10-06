@@ -20,21 +20,30 @@ def encontro_hostil(g):
     if g.teste("percepcao", cd):
         g.dizer(f"{abertura}, você avista {desc} antes que notem sua presença.", "amarelo")
         opcoes = [
-            ("Atacar de surpresa", "atacar"),
+            ("Atacar de surpresa: um turno livre e o primeiro golpe é crítico", "atacar"),
             ("Tentar passar despercebido (Destreza)", "evitar"),
         ]
         if g.j.classe == "arqueiro":
-            opcoes.insert(0, ("Subir num ponto alto e atirar primeiro (vantagem)", "alto"))
+            # Escolha de verdade: a surpresa é um golpe certeiro agora; o ponto alto é uma vantagem que dura,
+            # forte contra quem luta corpo a corpo e inútil contra quem voa ou conjura, e a subida pode falhar.
+            opcoes.insert(1, ("Subir num ponto alto (Destreza): quem luta corpo a corpo perde o 1º turno "
+                              "escalando; +15% de dano por 3 turnos", "alto"))
         if g.j.classe == "mago":
             opcoes.append(("Lançar uma ilusão para distraí-los (Arcano)", "ilusao"))
         if all("humano" in e.tracos for e in grupo):
             opcoes.append(("Conversar (Carisma)", "conversar"))
         op = g.menu("O que você faz?", opcoes)
         if op == "alto":
-            g.dizer("Você escala uma posição elevada sem fazer barulho e encaixa a primeira flecha...", "verde")
-            for e in grupo:
-                e.aplicar("marcado", 2, 0.15)
-            g.combate(grupo, emboscada="jogador")
+            if g.teste("destreza", 11):
+                g.dizer("Você escala as pedras sem um ruído. Lá de cima, eles são alvos fáceis.", "verde")
+                for e in grupo:
+                    e.aplicar("marcado", 3, 0.15)
+                    if not {"voador", "conjurador"} & set(e.tracos):
+                        e.aplicar("atordoado", 1, 0)
+                        e.efeitos["atordoado"]["r"] = "escalando"
+            else:
+                g.dizer("Uma pedra solta rola encosta abaixo. Eles olham para cima ao mesmo tempo.", "vermelho")
+            g.combate(grupo)
         elif op == "atacar":
             g.combate(grupo, emboscada="jogador")
         elif op == "evitar":

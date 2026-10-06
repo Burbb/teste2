@@ -359,6 +359,7 @@ const Batalha = (() => {
         return;
       }
       case "golpe": return golpe(m, de, em);
+      case "salva": return salva(m);
       case "roubo_ouro": {
         // moedas saem da sua carta e voam para a do ladrão, que ri
         if (de && em && !rapido()) {
@@ -481,6 +482,80 @@ const Batalha = (() => {
     }
   }
 
+  function impacto(m, em) {
+    const el = m.elemento || "fisico";
+    barra(em, m.hp, m.max_hp);
+    clarao(em, el);
+    tremer(em, m.crit);
+    if (el === "fogo") labaredas(em);
+    else if (el !== "fisico") particulas(em, el, 8);
+    if (m.crit) numero(em, `${m.dano}!`, "crit");
+    else numero(em, `−${m.dano}`, "menos");
+    if (m.absorvido) numero(em, `(${m.absorvido})`, "escudo");
+    if (m.eficacia === "super") rotulo(em, "fraqueza!", "boa");
+    else if (m.eficacia === "pouco") rotulo(em, "resiste", "ruim");
+  }
+
+  /** Um projétil que cai do alto sobre a carta (chuva de flechas, luz do julgamento). */
+  async function queda(para, sprite, atraso) {
+    if (rapido()) return;
+    await dormir(atraso);
+    const ra = arena.getBoundingClientRect(), b = para.getBoundingClientRect();
+    const x1 = b.left + b.width * (0.2 + Math.random() * 0.6) - ra.left - 16, y1 = b.top + b.height / 2 - ra.top - 16;
+    const x0 = x1 - 50 - Math.random() * 30, y0 = -30;
+    const ang = sprite === "flecha" ? Math.atan2(y1 - y0, x1 - x0) * 180 / Math.PI + 45 : 0;
+    const p = document.createElement("div");
+    p.className = "projetil" + (sprite === "flecha" ? "" : " brilhante");
+    p.innerHTML = S(sprite, 2);
+    camadaFx.appendChild(p);
+    await p.animate([{ transform: `translate(${x0}px, ${y0}px) rotate(${ang}deg)`, opacity: 0.4 },
+      { transform: `translate(${x1}px, ${y1}px) rotate(${ang}deg)`, opacity: 1 }],
+      { duration: pausa(260), easing: "cubic-bezier(.5,0,1,.6)" }).finished.catch(() => {});
+    p.remove();
+  }
+
+  /** Golpes em área: tudo voa e acerta ao mesmo tempo; depois o resto (efeitos, curas) segue em ordem. */
+  async function salva(m) {
+    const golpes = m.lances.filter((x) => x.tipo === "golpe" || x.tipo === "erro");
+    const resto = m.lances.filter((x) => !golpes.includes(x));
+    if (!golpes.length) { for (const x of resto) await lance(x); return; }
+    const de = carta(golpes[0].de);
+    const el = golpes.find((x) => x.elemento)?.elemento || "fisico";
+    const distancia = golpes.some((x) => x.alcance === "distancia");
+    const alvosEl = [...new Set(golpes.map((x) => x.em))].map(carta).filter(Boolean);
+    // 1) a salva no ar
+    if (el === "fisico" && distancia) {
+      som("disparo");
+      await Promise.all(alvosEl.flatMap((a) => [0, 1, 2].map((k) => queda(a, "flecha", k * 70 + Math.random() * 40))));
+    } else if (el === "fisico") {
+      if (de) reiniciar(de, "giro", 300);
+      await dormir(pausa(160));
+    } else if (["sagrado", "sombra", "arcano", "gelo", "veneno"].includes(el)) {
+      som("lancar");
+      await Promise.all(alvosEl.map((a, k) => queda(a, PROJETIL[el] || "orbe_arcano", k * 40)));
+    } else {
+      // fogo (Inferno): o chão se abre sob todos de uma vez
+      som("lancar");
+      alvosEl.forEach((a) => { brilho(a, "fogo"); labaredas(a); });
+      await dormir(pausa(240));
+    }
+    // 2) todos os impactos juntos
+    golpes.forEach((x) => {
+      const em = carta(x.em);
+      if (!em) return;
+      marcar(x.em);
+      if (x.tipo === "golpe") impacto(x, em);
+      else { if (x.motivo === "esquiva") reiniciar(em, "esquivou", 420); numero(em, x.motivo === "imune" ? "imune" : "esquiva", "info"); }
+    });
+    const critou = golpes.some((x) => x.crit);
+    som(critou ? "critico_golpe" : SOM_ELEMENTO[el] || "golpe");
+    setTimeout(() => som("golpe_leve"), 70);
+    if (golpes.some((x) => x.em === "j" && x.tipo === "golpe")) { App.doer(); som("dor"); }
+    await dormir(pausa(critou ? 520 : 420));
+    // 3) o que veio depois (queimaduras, curas...) em sequência
+    for (const x of resto) await lance(x);
+  }
+
   async function golpe(m, de, em) {
     if (!em) return;
     marcar(m.em);
@@ -497,17 +572,7 @@ const Batalha = (() => {
         await projetil(de, em, PROJETIL[el] || "flecha");
       } else await investir(de, em);
     }
-    // impacto
-    barra(em, m.hp, m.max_hp);
-    clarao(em, el);
-    tremer(em, m.crit);
-    if (el === "fogo") labaredas(em);
-    else if (el !== "fisico") particulas(em, el, 8);
-    if (m.crit) numero(em, `${m.dano}!`, "crit");
-    else numero(em, `−${m.dano}`, "menos");
-    if (m.absorvido) numero(em, `(${m.absorvido})`, "escudo");
-    if (m.eficacia === "super") rotulo(em, "fraqueza!", "boa");
-    else if (m.eficacia === "pouco") rotulo(em, "resiste", "ruim");
+    impacto(m, em);
     som(m.crit ? "critico_golpe" : SOM_ELEMENTO[el] || "golpe");
     if (el !== "fisico" && !m.crit) setTimeout(() => som("golpe_leve"), 60);
     if (m.em === "j") { App.doer(); som("dor"); }

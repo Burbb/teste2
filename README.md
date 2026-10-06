@@ -40,6 +40,10 @@ um reino diferente: mapa, nomes, chefes, eventos e consequências.
   <img src="docs/cacada.png" width="49%" alt="Caçada de contrato: a opção Caçar no lugar e o cartão com Seguir os rastros">
   <img src="docs/chamas-mana.png" width="49%" alt="Troll em chamas ×3 e o Meditar enchendo a barra de mana da carta">
 </p>
+<p align="center">
+  <img src="docs/acoes-combate.png" width="49%" alt="Habilidades como cartas: ícone, custo, alvo e dica no hover">
+  <img src="docs/chuva-flechas.png" width="49%" alt="Chuva de Flechas: as flechas caem e os três bandidos são atingidos juntos">
+</p>
 
 ## Como jogar
 
@@ -127,6 +131,14 @@ na interface miúda; **Jersey 15** nos números. O botão "Fonte" no topo volta 
 - **Contratos sempre à vista:** no painel da direita, abaixo do mapa, cada contrato mostra o alvo,
   o lugar, a distância e o progresso, e o lugar ganha um "!" no mapa. Clique para viajar até lá.
   O Diário virou um quadro como o mural, com Abandonar em cada cartaz.
+- **Ações de combate como cartas:** Habilidades e Itens abrem cartas com ícone, custo (mana,
+  vigor, foco, flechas), alvo e dica no hover; o que você não pode pagar fica apagado. Em
+  Itens dá para trocar de arma ou de mão secundária no meio da luta, ao custo do turno
+  (armadura não).
+- **Área acerta junto:** Chuva de Flechas faz chover flechas sobre todos os alvos ao mesmo
+  tempo; o Inferno abre o chão sob todos de uma vez. O Redemoinho continua girando golpe a golpe.
+- **Contratos do seu tamanho:** o mural sorteia lugares de nível próximo ao seu (de um abaixo
+  até dois acima), e ouro e XP crescem com o nível do lugar: trabalho fácil paga pouco.
 - **Caçada garantida:** no lugar de um contrato de caça aparece "Caçar … (contrato, 1/3)" (e o
   cartão do contrato pisca com "Seguir os rastros ▸"). Seguir os rastros sempre leva ao bicho; a
   Percepção decide quem vê quem primeiro. Cada abate mostra o progresso.
@@ -232,9 +244,10 @@ que abrem o caminho até a Cidadela, onde o vilão (gerado a cada partida) esper
   e mata se não for tratada com unguento ou por um curandeiro.
 - **Escuridão:** à noite, nas ruínas e na Cidadela, você precisa de tochas. Sem luz, você
   fica pior em percepção e destreza e é emboscado com mais facilidade.
-- **Cura lenta:** acampar recupera pouca vida (menos ainda na chuva); a taverna, mais.
-  Poções são caras. A mana do mago **não** volta sozinha depois das lutas: só aos poucos
-  ou descansando.
+- **Cura lenta:** acampar recupera 30% da vida (18% na chuva, neve ou tempestade); a
+  taverna, 65%. Poções são caras. Depois de uma luta, vigor e foco voltam só pela metade, e a
+  mana do mago, 20%. Uma noite ao relento devolve 75% do vigor/foco e metade da mana; só a
+  cama da taverna enche tudo.
 - **Inimigos perigosos:** bandos de **campeões** (vários inimigos com o mesmo afixo),
   **únicos** nomeados com escolta, caídos com xamãs que **ressuscitam** os irmãos,
   carniçais que **devoram** cadáveres para se curar.
@@ -290,8 +303,13 @@ Mago      (Mana)  ──┬── Piromante    acende chamas em camadas e detona
 
 Cada classe tem uma mecânica própria:
 - **Guerreiro:** o vigor regenera rápido; erguer o escudo reduz o dano pela metade.
-- **Arqueiro:** usa **flechas** (que acabam). Dá para recolher flechas depois da luta,
-  fabricá-las em eventos ou comprá-las. É ótimo contra voadores.
+- **Arqueiro:** usa **flechas** (que acabam). Começa com 20, e a aljava leva 30 (+5 por ponto
+  em Aljava Funda). Depois da luta dá para recolher cerca de um terço do que atirou; o
+  resto se compra em feixes de 5 ou se acha com bandidos. É ótimo contra voadores.
+  Quando avista inimigos antes, escolhe entre **atacar de surpresa** (turno livre e o
+  primeiro golpe é crítico) e **subir num ponto alto** (teste de Destreza: quem luta corpo a
+  corpo perde o 1º turno escalando e você causa +15% por 3 turnos; não adianta contra quem
+  voa ou conjura).
 - **Mago:** a mana é escassa: regenera pouco durante a luta, recupera só 20% depois dela e
   enche de verdade apenas descansando. O Dardo Arcano é de graça; cada Inferno é uma
   decisão.
@@ -326,7 +344,8 @@ Novas habilidades chegam nos níveis 2, 3, 4 e 7 (a habilidade suprema da especi
   de quem caiu (com a arma dele e um espírito aliado), a estátua de quem venceu e
   baladas nas tavernas.
 - **Inimigos com afixos** (feroz, ancião, corrompido, flamejante...), **traços**
-  (voador, blindado, etéreo, morto-vivo...) e **fraquezas**. Use *Analisar inimigos*.
+  (voador, blindado, etéreo, morto-vivo...) e **fraquezas**. Passe o mouse na carta do
+  inimigo (ou use *Analisar inimigos* no terminal).
 - **Clima e período do dia:** chuva enfraquece o fogo, a névoa ajuda a esquivar, a
   tempestade atrapalha disparos e à noite os monstros ficam mais fortes.
 - **Contratos** no mural das vilas: caçadas, alvos com recompensa e entregas (com

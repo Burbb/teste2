@@ -196,6 +196,14 @@ const MapaPx = (() => {
       const nv = n.nivel ? ` · inimigos Nv.${n.nivel}` : "";
       b.title = `${n.nome} — ${n.descricao}${nv}${n.distancia ? ` · ${n.distancia} trecho(s) daqui` : ""}${clic.has(n.id) ? "\nClique para viajar" : ""}`;
       if (clic.has(n.id) && opts.aoClicar) b.addEventListener("click", (ev) => { ev.stopPropagation(); opts.aoClicar(n.id); });
+      if (marcas.has(n.id)) {
+        // Elemento próprio (e não ::after, que o anel de "você está aqui" já usa): um selo "!" no canto do lugar.
+        const m = document.createElement("span");
+        m.className = "marca-contrato";
+        m.textContent = "!";
+        b.appendChild(m);
+        b.title += "\nVocê tem um contrato aqui";
+      }
       caixa.appendChild(b);
       if (grande || n.atual || clic.has(n.id)) {
         const r = document.createElement("span");

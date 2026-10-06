@@ -15,7 +15,7 @@ const Telas = (() => {
     canalizacao: "olho", brasas: "chama", escudo_reflexo: "escudo", pacto_sombrio: "gota", ignicao: "chama",
     eficiencia: "estrela", exercito: "caveira", coracao_ardente: "chama", senhor_mortos: "caveira",
   };
-  const ICONE_ITEM = { pocao_vida: "pocao", tonico: "pocao_azul", antidoto: "folha", bandagem: "bandagem", unguento: "pocao_azul",
+  const ICONE_ITEM = { pocao_vida: "pocao", tonico: "pocao_azul", antidoto: "folha", bandagem: "bandagem", unguento: "unguento",
     tocha: "tocha", bomba_fumaca: "caveira", pena_fenix: "chama" };
   const ARMA = { guerreiro: "espada", arqueiro: "arco", mago: "cajado" };
 

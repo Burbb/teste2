@@ -310,7 +310,7 @@ body.em-combate #hud-linha { justify-content: flex-end; }
 /* ------------------------------------------------------------------ página */
 #pagina { position: relative; flex: 1; min-height: 0; width: 100%; max-width: 860px; overflow-y: auto; box-shadow: var(--sombra); scrollbar-width: thin; scrollbar-color: #4a4038 #120e0b; background-color: #17120e; }
 #vista { display: block; width: 100%; height: auto; aspect-ratio: 320 / 72; border-bottom: 4px solid #0d0b0a; }
-body.modo-titulo { background: var(--ceu-titulo, #04050c); }
+body.modo-titulo { background: var(--ceu-titulo, #04050c); transition: background-color 1.2s ease; }
 body.modo-titulo #vista { position: fixed; left: 0; right: 0; bottom: 0; width: 100%; height: auto; aspect-ratio: 320 / 72; z-index: 0; border: 0; pointer-events: none; }
 body.modo-titulo #folha { position: relative; z-index: 1; }
 body.modo-titulo .vinheta { background: radial-gradient(ellipse 80% 70% at 50% 40%, transparent 50%, rgba(0, 0, 0, 0.55) 100%); }
@@ -886,7 +886,8 @@ button.membro-carta:hover { color: #fff3a0; transform: scale(1.2); }
 .rastro-prog { display: flex; align-items: center; gap: 6px; }
 .rastro-prog .barra-px { flex: 1; height: 8px; }
 .rastro-prog small { font-family: var(--num); font-size: 15px; color: var(--tinta-2); }
-.no-btn.contrato::after { content: "!"; position: absolute; left: 50%; top: -15px; transform: translateX(-50%); font-family: var(--num); font-size: 16px; line-height: 1; color: #120e0b; background: var(--ouro); border: 2px solid #000; padding: 0 4px; animation: alerta 1.2s steps(2) infinite; pointer-events: none; }
+.marca-contrato { position: absolute; right: -5px; top: -7px; z-index: 2; min-width: 10px; padding: 0 2px; font-family: var(--num); font-size: 11px; line-height: 11px; text-align: center; color: #120e0b; background: var(--ouro); box-shadow: 0 0 0 1px #000; pointer-events: none; }
+.mapa-px.grande .marca-contrato { right: -6px; top: -8px; min-width: 13px; font-size: 14px; line-height: 14px; animation: alerta 1.2s steps(2) infinite; }
 .no-btn.destacado { outline: 3px solid var(--ouro); outline-offset: 3px; }
 .faixa-jornada { display: flex; flex-wrap: wrap; gap: 18px; align-items: center; margin-bottom: 12px; font-family: var(--num); font-size: 19px; color: var(--tinta-2); }
 .faixa-jornada .barra-px { display: inline-block; width: 120px; vertical-align: middle; }
@@ -924,7 +925,8 @@ button.membro-carta:hover { color: #fff3a0; transform: scale(1.2); }
 #modificadores:empty { display: none; }
 .mod { display: inline-flex; align-items: center; gap: 4px; font-family: var(--num); font-size: 17px; line-height: 1; color: #d8e4f0; padding: 2px 7px 3px 3px; background: #121820; border: 2px solid #2c3e5a; cursor: help; white-space: nowrap; }
 .mod img.sprite { --s: 16; }
-.mods-arena { position: absolute; top: 6px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 5; }
+.mods-arena { position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%); display: flex; gap: 4px; z-index: 5; pointer-events: auto; }
+.mods-arena .mod { font-size: 14px; padding: 1px 5px 2px 2px; }
 .mods-arena:empty { display: none; }
 .mods-arena .mod { background: rgba(13, 17, 26, 0.85); }
 body.sem-heroi #modificadores { visibility: hidden; }
@@ -971,3 +973,30 @@ body:not(.fonte-pixel) .carta-nome, body:not(.fonte-pixel) .figura-nome { font-f
 body:not(.fonte-pixel) { --texto: "Alegreya Sans", "Trebuchet MS", sans-serif; }
 body:not(.fonte-pixel) #texto p.detalhe { font-family: var(--ui); font-size: 16px; line-height: 1.25; }
 body:not(.fonte-pixel) .chip { font-family: var(--ui); font-weight: 700; font-size: 16px; }
+
+/* ---------------------------------------------------------------- cartas de ação (habilidades e itens) */
+.escolhas.grade-acoes { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+.escolhas.grade-acoes li { display: flex; }
+.carta-acao { --el: #8a6a40; position: relative; flex: 1; display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; column-gap: 8px; row-gap: 2px; align-items: center;
+  padding: 8px 8px 6px 8px; text-align: left; background: #120e0b; border: 3px solid #3a2e24; border-left: 5px solid var(--el); box-shadow: 3px 3px 0 #000; }
+.carta-acao::before { display: none; }
+.carta-acao .tecla { position: absolute; top: 1px; right: 5px; left: auto; min-width: 0; font-size: 13px; color: var(--tinta-3, #7a6a58); }
+.carta-acao .acao-icone { grid-row: 1 / 3; display: grid; place-items: center; width: 40px; height: 40px; background: #0a0807; border: 2px solid #2a2018; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--el) 45%, transparent); }
+.carta-acao .acao-icone img.sprite { --s: 32; }
+.carta-acao .acao-nome { font-family: var(--cabeca); font-size: 16px; line-height: 1.1; color: var(--tinta, #f1e4c4); padding-right: 10px; }
+.carta-acao .acao-rodape { display: flex; flex-wrap: wrap; gap: 2px 8px; align-items: center; font-family: var(--ui); font-size: 12px; color: var(--tinta-2, #b8a88c); }
+.carta-acao .acao-custo { display: inline-flex; align-items: center; gap: 2px; }
+.carta-acao .acao-custo b { font-family: var(--num); font-size: 15px; font-weight: normal; color: #a8c4ff; }
+.carta-acao .acao-custo b.gratis { font-family: var(--ui); font-size: 12px; color: var(--bom, #8fbf6a); }
+.carta-acao .acao-custo img.sprite { --s: 16; }
+.carta-acao:hover, .carta-acao:focus-visible { border-color: var(--ouro); border-left-color: var(--el); transform: translateY(-2px); background: #1c140d; }
+.carta-acao.bloqueada { filter: grayscale(0.85) brightness(0.65); cursor: not-allowed; }
+.carta-acao.bloqueada:hover { transform: none; border-color: #5a2020; border-left-color: #5a2020; }
+.carta-acao.bloqueada .acao-custo b { color: #e2574c; }
+.carta-acao.negada { animation: negada 0.3s steps(4); }
+@keyframes negada { 25% { translate: -4px 0; } 75% { translate: 4px 0; } }
+.carta-acao.el-fogo { --el: #e0782f; } .carta-acao.el-gelo { --el: #7fb0ff; } .carta-acao.el-sagrado { --el: #f2c94c; }
+.carta-acao.el-sombra { --el: #8e6fd8; } .carta-acao.el-arcano { --el: #6f9bff; } .carta-acao.el-veneno { --el: #6fbf4a; }
+.carta-acao.el-natureza { --el: #4f9a5b; } .carta-acao.el-sangue { --el: #b3262b; } .carta-acao.el-protecao { --el: #3d63c9; }
+.carta-acao.el-forca { --el: #ffb35c; } .carta-acao.el-fisico { --el: #a89878; } .carta-acao.el-cura { --el: #8fbf6a; }
+.carta-acao.el-cura .acao-custo b, .carta-acao.troca .acao-custo b { color: var(--tinta); }

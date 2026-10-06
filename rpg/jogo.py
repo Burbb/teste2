@@ -34,6 +34,7 @@ NOMES_TESTE = {
 NOMES_SLOT = itens.NOMES_SLOT
 LIMITE_MOCHILA = 12
 # Criaturas que não aparecem em regiões fracas demais (evita lutas impossíveis no começo).
+PRECO_FLECHAS = 7  # feixe de 5
 NIVEL_MIN_FAMILIA = {
     "bruxa_brejo": 2, "harpia": 2, "espectro": 3, "ent_jovem": 3, "cria_vazio": 3, "cao_infernal": 3,
     "golem": 4, "troll": 4, "grifo": 4, "abominacao": 6, "cavaleiro_sombrio": 6,
@@ -294,11 +295,20 @@ class Jogo:
         if self.j.provisoes > antes:
             self.ui.efeito(f"+{self.j.provisoes - antes} dia(s) de comida (total {self.j.provisoes})", "item")
 
+    def max_flechas(self):
+        """A aljava tem fundo: não dá para comprar cem flechas e esquecer delas."""
+        return 30 + 5 * self.j.tal("aljava_funda")
+
     def dar_flechas(self, n):
         if self.j.classe != "arqueiro" or n <= 0:
-            return
+            return 0
+        n = min(n, self.max_flechas() - self.j.flechas)
+        if n <= 0:
+            self.dizer("Sua aljava já está cheia.", "cinza")
+            return 0
         self.j.flechas += n
-        self.ui.efeito(f"+{n} flechas (total {self.j.flechas})", "item")
+        self.ui.efeito(f"+{n} flechas (total {self.j.flechas}/{self.max_flechas()})", "item")
+        return n
 
     def mudar_reputacao(self, d):
         antes = self.j.reputacao
@@ -521,9 +531,9 @@ class Jogo:
         if self.chance(0.15 + 0.1 * elites):
             self.dar(self.sortear(["bandagem", "bandagem", "tocha", "tocha", "pocao_vida", "tonico", "antidoto"]))
         if self.j.classe == "arqueiro" and any(e.familia in ("bandido", "mercenario") for e in derrotados) \
-                and self.chance(0.5):
-            self.dizer("Você encontra uma aljava com flechas entre os pertences dos inimigos.", "verde")
-            self.dar_flechas(self.rng.randint(3, 8))
+                and self.chance(0.3):
+            self.dizer("Você encontra algumas flechas entre os pertences dos inimigos.", "verde")
+            self.dar_flechas(self.rng.randint(2, 5))
         if chefe or self.chance(0.07 + 0.2 * elites):
             nivel = min(max(e.nivel for e in derrotados), self.j.nivel + 2)
             self.oferecer_equip(gerar_equip(self.rng, self.j.classe, nivel, qualidade=1 if chefe else 0))
@@ -790,18 +800,17 @@ class Jogo:
         registrar(self, "dia", descanso=descanso, provisoes=self.j.provisoes, fome=self.j.fome,
                   corrupcao=self.corrupcao, ferimentos=len(self.j.ferimentos), local=self.loc["nome"])
 
-    def descansar(self, fracao, mana=1.0):
-        """Descanso devolve pouca vida: ferimentos de verdade levam dias. Com fome, quase nada."""
+    def descansar(self, fracao, mana=1.0, folego=1.0):
+        """Descanso devolve pouca vida: ferimentos de verdade levam dias. Com fome, quase nada.
+        Mana volta pela metade numa noite ao relento; vigor e foco, quase todo (só a cama devolve tudo)."""
         j = self.j
         if j.fome:
             fracao *= 0.3
         cura = j.curar(j.max_hp * fracao)
         if cura:
             self.dizer(f"Você recupera {cura} de vida. ({j.hp}/{j.max_hp})", "verde")
-        if j.classe == "mago":
-            j.rec = min(j.max_rec, j.rec + int(j.max_rec * mana))
-        else:
-            j.rec = j.max_rec
+        parte = mana if j.classe == "mago" else folego
+        j.rec = min(j.max_rec, j.rec + int(j.max_rec * parte))
         j.efeitos = {}
         if j.companheiro:
             j.companheiro["hp"] = j.companheiro["max_hp"]
@@ -1174,7 +1183,7 @@ class Jogo:
         self.ui.separador()
         if self.loc["tipo"] == "vila":
             self.dizer("Exausto, você pede abrigo num estábulo e dorme sobre o feno, entre ratos.", "cinza")
-            self.descansar(0.15, mana=0.4)
+            self.descansar(0.15, mana=0.4, folego=0.4)
             self.novo_dia(descanso=1)
         else:
             self.dizer("Você está exausto demais para continuar. É preciso acampar.", "cinza")
@@ -1214,11 +1223,11 @@ class Jogo:
             conversou = True
         if not conversou and not comitiva.noite(self) and self.chance(0.45):
             eventos.disparar(self, "acampamento")
-        fracao = 0.4
+        fracao = 0.3
         if self.clima in ("chuva", "tempestade", "neve"):
-            fracao = 0.25
+            fracao = 0.18
             self.dizer("Você dorme encharcado e tremendo. Quase não descansa.", "vermelho")
-        self.descansar(fracao, mana=0.5)
+        self.descansar(fracao, mana=0.5, folego=0.75)
         self.novo_dia(descanso=1)
         self.pausar()
 
@@ -1234,7 +1243,7 @@ class Jogo:
             self.j.provisoes += 1  # a refeição da taverna conta como o dia de comida
         self.periodo = 3
         self.encruzilhada_no_descanso()
-        self.descansar(0.8)
+        self.descansar(0.65)
         self.novo_dia(descanso=2)
         self.pausar()
 
@@ -1353,8 +1362,9 @@ class Jogo:
                              "preco": self.preco(CONSUMIVEIS[k]["preco"]), "tem": j.consumiveis.get(k, 0)} for k in cons]
             + [{"id": "provisoes", "nome": "Provisões (1 dia)", "desc": "Pão duro, carne seca e um odre de água.",
                 "preco": self.preco(4), "tem": j.provisoes, "limite": sobrevivencia.MAX_PROVISOES - j.provisoes}]
-            + ([{"id": "flechas", "nome": "Feixe de 10 flechas", "desc": "Flechas de freixo, pontas de ferro.",
-                 "preco": self.preco(10), "tem": j.flechas}] if j.classe == "arqueiro" else []),
+            + ([{"id": "flechas", "nome": "Feixe de 5 flechas", "desc": f"Flechas de freixo, pontas de ferro. A aljava leva {self.max_flechas()}.",
+                 "preco": self.preco(PRECO_FLECHAS), "tem": j.flechas,
+                 "limite": (self.max_flechas() - j.flechas + 4) // 5}] if j.classe == "arqueiro" else []),
             "equipamentos": [item(it, self.preco(it["preco"])) for it in self.estoque()],
             "mochila": [dict(item(it, it["preco"] // 2), usavel=self.pode_usar(it)) for it in j.mochila],
         }
@@ -1377,7 +1387,8 @@ class Jogo:
             opcoes.append((f"Provisões para 1 dia — {self.preco(4)} ouro (você tem {j.provisoes}/"
                            f"{sobrevivencia.MAX_PROVISOES})", ("provisoes",)))
             if j.classe == "arqueiro":
-                opcoes.append((f"Feixe de 10 flechas — {self.preco(10)} ouro (você tem {j.flechas})", ("flechas",)))
+                opcoes.append((f"Feixe de 5 flechas — {self.preco(PRECO_FLECHAS)} ouro (você tem {j.flechas}/"
+                               f"{self.max_flechas()})", ("flechas",)))
             for it in a_venda:
                 opcoes.append((f"{itens.rotulo(it)} [{NOMES_SLOT[it['slot']]}] {descrever_bonus(it['bonus'])} — "
                                f"{self.preco(it['preco'])} ouro", ("equip", it)))
@@ -1390,7 +1401,7 @@ class Jogo:
             if op[0] == "vender":
                 self.vender()
                 continue
-            preco = self.preco({"consumivel": lambda: CONSUMIVEIS[op[1]]["preco"], "flechas": lambda: 10,
+            preco = self.preco({"consumivel": lambda: CONSUMIVEIS[op[1]]["preco"], "flechas": lambda: PRECO_FLECHAS,
                                 "provisoes": lambda: 4, "equip": lambda: op[1]["preco"]}[op[0]]())
             if op[0] == "provisoes" and j.provisoes >= sobrevivencia.MAX_PROVISOES:
                 self.dizer("Você não consegue carregar mais comida.", "vermelho")
@@ -1407,7 +1418,7 @@ class Jogo:
             if op[0] == "consumivel":
                 self.dar(op[1])
             elif op[0] == "flechas":
-                self.dar_flechas(10)
+                self.dar_flechas(5)
             elif op[0] == "provisoes":
                 j.provisoes += 1
                 self.dizer(f"Pão duro, carne seca e um odre de água. (provisões: {j.provisoes})", "verde")
@@ -1444,7 +1455,7 @@ class Jogo:
         if op[0] == "equipar":
             self.equipar(op[1])
             return False
-        preco = self.preco({"consumivel": lambda: CONSUMIVEIS[op[1]]["preco"], "flechas": lambda: 10,
+        preco = self.preco({"consumivel": lambda: CONSUMIVEIS[op[1]]["preco"], "flechas": lambda: PRECO_FLECHAS,
                             "provisoes": lambda: 4, "equip": lambda: op[1]["preco"]}[op[0]]())
         if op[0] == "equip":
             if j.ouro < preco:
@@ -1475,6 +1486,11 @@ class Jogo:
             if qtd <= 0:
                 self.dizer("Você não consegue carregar mais comida.", "vermelho")
                 return False
+        if op[0] == "flechas":
+            qtd = min(qtd, (self.max_flechas() - j.flechas + 4) // 5)
+            if qtd <= 0:
+                self.dizer("Sua aljava já está cheia.", "vermelho")
+                return False
         qtd = min(qtd, j.ouro // preco)
         if qtd <= 0:
             self.dizer("\"Sem ouro, sem negócio.\"", "vermelho")
@@ -1484,7 +1500,7 @@ class Jogo:
         if op[0] == "consumivel":
             self.dar(op[1], qtd)
         elif op[0] == "flechas":
-            self.dar_flechas(10 * qtd)
+            self.dar_flechas(5 * qtd)
         else:
             self.dar_provisoes(qtd)
         return False
@@ -1514,33 +1530,54 @@ class Jogo:
             self.ganhar_ouro(it["preco"] // 2)
             registrar(self, "venda", item=it["nome"], raridade=it.get("raridade", "comum"), preco=j.ouro - antes)
 
+    # Peso de cada lugar no mural conforme a diferença entre o nível dele e o seu:
+    # quase sempre algo do seu tamanho, às vezes um desafio, raramente algo fácil.
+    PESO_NIVEL_CONTRATO = {-1: 1.0, 0: 3.0, 1: 3.0, 2: 1.5}
+
+    def recompensa_contrato(self, nivel, mult=1.0):
+        """Ouro e XP crescem com o nível do CONTRATO (do lugar), não com o seu: um trabalho fácil paga pouco.
+        O XP fica em torno de 1/8 do que falta para subir naquele nível, para não catapultar ninguém."""
+        ouro = int((10 + 6 * nivel) * mult * self.rng.uniform(0.9, 1.2))
+        xp = int((8 + 0.12 * int(30 * nivel ** 1.52)) * mult)
+        return ouro, xp
+
+    def lugar_para_contrato(self, selvagens):
+        h = self.j.nivel
+        pesos = [self.PESO_NIVEL_CONTRATO.get(nivel_regiao(l, self.corrupcao) - h, 0) for l in selvagens]
+        if any(pesos):
+            return self.rng.choices(selvagens, weights=pesos)[0]
+        perto = min(abs(nivel_regiao(l, self.corrupcao) - h) for l in selvagens)
+        return self.sortear([l for l in selvagens if abs(nivel_regiao(l, self.corrupcao) - h) == perto])
+
     def gerar_contrato(self):
         j = self.j
         selvagens = [l for l in self.mundo["locais"] if l["tipo"] in ("selvagem", "covil")]
         vilas = [l for l in self.mundo["locais"] if l["tipo"] == "vila" and l["id"] != self.loc["id"]]
         tipo = self.sortear(["caca", "caca", "alvo", "alvo", "entrega"])
         cid = self.novo_id()
-        ouro = int((18 + 8 * j.nivel) * self.rng.uniform(0.9, 1.3))
-        xp = 20 + 12 * j.nivel
         if tipo == "entrega" and vilas:
+            dist = distancias(self.mundo["locais"], self.loc["id"])
             dest = self.sortear(vilas)
+            ouro, xp = self.recompensa_contrato(j.nivel, 0.5 + 0.12 * dist.get(dest["id"], 2))
             objeto = self.sortear(["um baú lacrado", "uma carta com selo de cera negra", "um frasco de remédio",
                                    "um embrulho que se mexe às vezes", "as escrituras de uma fazenda",
                                    "um anel de noivado"])
             return {"id": cid, "tipo": "entrega", "destino": dest["id"], "objeto": objeto, "ouro": ouro, "xp": xp,
                     "desc": f"Levar {objeto} até {dest['nome']}."}
-        loc = self.sortear(selvagens)
+        loc = self.lugar_para_contrato(selvagens)
         nv = nivel_regiao(loc, self.corrupcao)  # só bichos que de fato aparecem por lá
         fam = self.sortear([f for f in BIOMAS[loc["bioma"]]["familias"] if NIVEL_MIN_FAMILIA.get(f, 1) <= nv]
                            or BIOMAS[loc["bioma"]]["familias"])
         f = FAMILIAS[fam]
         if tipo == "alvo":
             nome = tx.nome_proprio(self.rng)
+            ouro, xp = self.recompensa_contrato(nv, 1.4)
             return {"id": cid, "tipo": "alvo", "local": loc["id"], "familia": fam, "nome": nome,
-                    "chave": f"alvo:{cid}", "ouro": int(ouro * 1.5), "xp": int(xp * 1.5),
+                    "chave": f"alvo:{cid}", "ouro": ouro, "xp": xp,
                     "desc": f"Caçar {nome}, {tx.artigo(f['g'], False)} {f['nome']} enorme que aterroriza "
                             f"{loc['nome']}."}
         total = self.rng.randint(2, 4)
+        ouro, xp = self.recompensa_contrato(nv, 0.7 + 0.15 * total)
         return {"id": cid, "tipo": "caca", "local": loc["id"], "familia": fam, "total": total, "feito": 0,
                 "ouro": ouro, "xp": xp, "desc": f"Eliminar {total} {f['plural']} em {loc['nome']}."}
 

@@ -99,7 +99,7 @@ class Jogador(Combatente):
         self.rec = self.max_rec
         self.regen = b["regen"]
         self.ouro = 30
-        self.flechas = 30 if classe == "arqueiro" else 0
+        self.flechas = 20 if classe == "arqueiro" else 0
         self.consumiveis = {"pocao_vida": 2, "bandagem": 2, "tocha": 3}
         if classe == "mago":
             self.consumiveis["tonico"] = 1

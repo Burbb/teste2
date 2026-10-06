@@ -487,6 +487,13 @@ function mostrarOpcoes(m) {
       return;
     }
     pergunta.numeros.push(i);
+    if (emLuta && o.meta && (o.meta.habilidade || o.meta.usar_item || o.meta.trocar !== undefined)) {
+      lista.classList.add("grade-acoes");
+      const li = el("li");
+      li.appendChild(cartaAcao(o, i, m, pergunta.numeros.length - 1));
+      lista.appendChild(li);
+      return;
+    }
     const li = el("li");
     const b = el("button", "escolha");
     b.type = "button";
@@ -552,12 +559,68 @@ function marcarCacadas() {
   });
 }
 
+/* Cartas de ação do combate: habilidades e itens com ícone, custo e dica (como numa barra de ações). */
+const HAB_ICONE = {
+  golpe_pesado: ["martelo", "fisico"], erguer_escudo: ["escudo", "protecao"], investida: ["espada", "fisico"],
+  grito_guerra: ["manopla", "forca"], golpe_sagrado: ["orbe_luz", "sagrado"], prece: ["coracao", "sagrado"],
+  julgamento: ["raio", "sagrado"], sede_sangue: ["gota", "sangue"], redemoinho: ["machado", "fisico"],
+  furia_cega: ["caveira", "sangue"], tiro_certeiro: ["flecha", "fisico"], marcar_presa: ["olho", "forca"],
+  chuva_flechas: ["aljava", "fisico"], passo_agil: ["fuga", "protecao"], tiro_duplo: ["arco", "fisico"],
+  comando_fera: ["fera", "natureza"], furia_natureza: ["folha", "natureza"], desaparecer: ["capuz", "sombra"],
+  flecha_envenenada: ["gota_verde", "veneno"], execucao: ["caveira", "sangue"], bola_fogo: ["chama", "fogo"],
+  meditar: ["lua", "arcano"], lanca_gelo: ["gelo", "gelo"], barreira: ["escudo_azul", "arcano"],
+  inferno: ["fogueira", "fogo"], combustao: ["estrela", "fogo"], fenix: ["voador", "fogo"],
+  drenar_vida: ["gota_roxa", "sombra"], erguer_servo: ["osso", "sombra"], maldicao: ["orbe_sombra", "sombra"],
+};
+const ALVO_TXT = { inimigo: "um inimigo", todos: "todos os inimigos", proprio: "você" };
+function cartaAcao(o, i, m, pos) {
+  const meta = o.meta;
+  const b = el("button", "escolha carta-acao");
+  b.type = "button";
+  const tecla = pos < 9 ? String(pos + 1) : pos === 9 ? "0" : "";
+  let icone, nome, rodape = "", dicaHtml, bloqueio = null;
+  if (meta.habilidade) {
+    const [ic, fam] = HAB_ICONE[meta.habilidade] || ["estrela", "arcano"];
+    b.classList.add("el-" + fam);
+    icone = spr(ic, 2);
+    nome = meta.nome;
+    const custo = (meta.custo ? `${spr(RECURSO_ICONE[meta.recurso] || "estrela", 1)}<b>${meta.custo}</b>` : `<b class="gratis">grátis</b>`) +
+      (meta.flechas ? ` ${spr("flecha", 1)}<b>${meta.flechas}</b>` : "");
+    rodape = `<span class="acao-custo">${custo}</span><span class="acao-alvo">${ALVO_TXT[meta.alvo_tipo] || ""}</span>`;
+    if (!meta.pode) bloqueio = meta.motivo || "Indisponível";
+    dicaHtml = `<b>${esc(meta.nome)}</b><div class="tipo">${meta.custo ? `${meta.custo} de ${esc(meta.recurso)}` : "Sem custo"}${meta.flechas ? ` · ${meta.flechas} flecha${meta.flechas > 1 ? "s" : ""}` : ""} · alvo: ${ALVO_TXT[meta.alvo_tipo] || "—"}</div>
+      <div class="bonus">${esc(meta.desc)}</div>${bloqueio ? `<div class="pior">${esc(bloqueio)}</div>` : ""}`;
+  } else if (meta.usar_item) {
+    b.classList.add("el-cura");
+    icone = spr(Telas.ICONE_ITEM[meta.usar_item] || "pocao", 2);
+    nome = meta.nome;
+    rodape = `<span class="acao-custo"><b>×${meta.qtd}</b></span><span class="acao-alvo">gasta o turno</span>`;
+    dicaHtml = `<b>${esc(meta.nome)}</b><div class="tipo">Você tem ${meta.qtd}</div><div class="bonus">${esc(meta.desc)}</div>`;
+  } else {
+    const it = meta.equip;
+    b.classList.add("el-fisico", "troca");
+    icone = spr(Telas.iconeItem(it), 2);
+    nome = "Trocar: " + it.nome;
+    rodape = `<span class="acao-alvo">gasta o turno</span>`;
+  }
+  b.innerHTML = `<span class="tecla">${tecla}</span><span class="acao-icone">${icone}</span><span class="acao-nome">${esc(nome)}</span><span class="acao-rodape">${rodape}</span>`;
+  if (meta.trocar !== undefined) b.setAttribute("data-dica", Telas.dicaItem(meta.equip, "Trocar de arma no meio da luta gasta o seu turno.").match(/\d+/)[0]);
+  else b.setAttribute("data-dica", Telas.dica(dicaHtml).match(/\d+/)[0]);
+  if (bloqueio) b.classList.add("bloqueada");
+  b.addEventListener("click", (ev) => {
+    ev.stopPropagation();
+    if (bloqueio) { App.som("falha"); b.classList.remove("negada"); void b.offsetWidth; b.classList.add("negada"); return; }
+    responder(m.id, i);
+  });
+  return b;
+}
+
 function iconeAcaoCombate(t) {
   if (/^Atacar/.test(t)) return spr({ guerreiro: "espada", arqueiro: "arco", mago: "cajado" }[estado.heroi.classe] || "espada", 2);
   if (/^Habilidades/.test(t)) return spr("estrela", 2);
   if (/^Itens/.test(t)) return spr("pocao", 2);
   if (/^Analisar/.test(t)) return spr("olho", 2);
-  if (/^Fugir/.test(t)) return spr("bota", 2);
+  if (/^Fugir/.test(t)) return spr("fuga", 2);
   return "";
 }
 
@@ -650,6 +713,11 @@ function aplicarEstado(e) {
   corpo.style.setProperty("--corrupcao", (e.mundo.corrupcao / 100).toFixed(2));
   Som.ambiente(bioma);
   Vista.atualizar(e);
+  if (corpo.classList.contains("modo-titulo")) {
+    // Carregou um save ainda na tela de título: o céu inteiro passa a ser o do lugar e da hora do save.
+    const [r, g, b] = Vista.corDoCeu();
+    corpo.style.setProperty("--ceu-titulo", `rgb(${r}, ${g}, ${b})`);
+  }
   MapaPx.ambiente(e.mundo);
   $("#tempo").textContent = `Dia ${e.mundo.dia} · ${e.mundo.periodo} · ${e.mundo.clima}`;
   $("#corrupcao-topo .enchimento").style.width = e.mundo.corrupcao + "%";
@@ -713,7 +781,7 @@ function desenharHud(h, antes) {
       ${recurso("ouro", ouro, h.ouro, { vazio: !h.ouro, titulo: "Ouro" })}
       ${recurso("pocoes", pocoes, h.pocoes, { vazio: !h.pocoes, titulo: "Poções de vida (35% da vida)" })}
       ${recurso("bandagens", ["bandagem"], h.bandagens, { vazio: !h.bandagens, alerta: !h.bandagens && h.ferimentos.some((f) => f.aberto), titulo: "Bandagens: estancam sangramento e tratam feridas abertas" })}
-      ${h.flechas !== null && h.flechas !== undefined ? recurso("flechas", ["aljava"], h.flechas, { alerta: h.flechas <= 5, titulo: "Flechas" }) : ""}
+      ${h.flechas !== null && h.flechas !== undefined ? recurso("flechas", ["aljava"], h.flechas, { alerta: h.flechas <= 8, titulo: `Flechas (a aljava leva ${h.max_flechas || 30})` }) : ""}
       ${feridas}
     </div>`;
   animarBarras($("#hud-linha"));

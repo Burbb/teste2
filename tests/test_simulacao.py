@@ -248,6 +248,53 @@ class TestSimulacao(unittest.TestCase):
             self.assertNotIn("Jogo: ?", topo)
             self.assertIn("Interface: BotUI", topo)
 
+    def test_area_acerta_todos_juntos(self):
+        """Habilidade em área vira um lance "salva" com os golpes de todos os alvos (a tela anima tudo junto)."""
+        from rpg import classes
+        from rpg.combate import Combate
+        lances = []
+
+        class Gravador(BotUI):
+            def lance(self, tipo, **dados):
+                lances.append((tipo, dados))
+
+        with tempfile.TemporaryDirectory() as pasta:
+            g = Jogo(Gravador(random.Random(9), max_decisoes=50), seed=9, pasta_saves=pasta)
+            g.iniciar("Robô", "arqueiro")
+            inimigos = [g.inimigo("bandido", nivel=1) for _ in range(3)]
+            for e in inimigos:
+                e.hp = e.max_hp = 500
+            cb = Combate(g, inimigos)
+            with cb.agindo(g.j, "Chuva de Flechas", area=True, hab="chuva_flechas"):
+                classes._chuva_flechas(cb, g.j, None)
+            tipos = [t for t, _ in lances]
+            self.assertEqual(tipos, ["acao", "salva", "fim_acao"])
+            golpes = [x for x in lances[1][1]["lances"] if x["tipo"] in ("golpe", "erro")]
+            self.assertEqual({x["em"] for x in golpes}, {cb.uid(e) for e in inimigos})
+            g.combate_ativo = None
+
+    def test_aljava_tem_limite(self):
+        with tempfile.TemporaryDirectory() as pasta:
+            g = Jogo(BotUI(random.Random(3), max_decisoes=50), seed=3, pasta_saves=pasta)
+            g.iniciar("Robô", "arqueiro")
+            g.dar_flechas(500)
+            self.assertEqual(g.j.flechas, g.max_flechas())
+
+    def test_contratos_na_faixa_do_heroi(self):
+        from rpg.mundo import nivel_regiao
+        with tempfile.TemporaryDirectory() as pasta:
+            g = Jogo(BotUI(random.Random(4), max_decisoes=50), seed=4, pasta_saves=pasta)
+            g.iniciar("Robô", "guerreiro")
+            for nivel in (1, 3, 5):
+                g.j.nivel = nivel
+                niveis = [nivel_regiao(g.mundo["locais"][c["local"]], g.corrupcao)
+                          for c in (g.gerar_contrato() for _ in range(40)) if c["tipo"] != "entrega"]
+                existentes = {nivel_regiao(l, g.corrupcao) for l in g.mundo["locais"] if l["tipo"] in ("selvagem", "covil")}
+                if any(-1 <= n - nivel <= 2 for n in existentes):
+                    self.assertTrue(all(-1 <= n - nivel <= 2 for n in niveis), (nivel, niveis))
+            # Contrato mais difícil paga mais.
+            self.assertLess(g.recompensa_contrato(1)[1], g.recompensa_contrato(7)[1])
+
     def test_mercado_quantidade_e_auto_equipar(self):
         with tempfile.TemporaryDirectory() as pasta:
             g = Jogo(BotUI(random.Random(2), max_decisoes=50), seed=2, pasta_saves=pasta)

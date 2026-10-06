@@ -41,7 +41,7 @@ TALENTOS = {
     "arqueiro": [
         _t("olho_aguia", "Olho de Águia", 1, 0, 3, "+4% de chance de crítico por ponto."),
         _t("pes_leves", "Pés Leves", 1, 1, 3, "+2 Agilidade por ponto.", stats={"agi": 2}),
-        _t("aljava_funda", "Aljava Funda", 1, 2, 2, "+20% de chance por ponto de recuperar flechas."),
+        _t("aljava_funda", "Aljava Funda", 1, 2, 2, "+15% de chance por ponto de recuperar flechas e +5 de espaço na aljava."),
         _t("laco_animal", "Laço Animal", 2, 0, 3, "Seu companheiro ganha +20% de vida e ataque por ponto.",
            "patrulheiro"),
         _t("tiro_abertura", "Tiro de Abertura", 2, 1, 1, "Seu primeiro ataque em cada combate é sempre crítico."),

@@ -7,7 +7,7 @@ from .classes import CLASSES, HABILIDADES
 from .dados import TRACOS
 from .entidades import Combatente
 from .inimigos import HABS_INIMIGO, NOMES_HABS_INIMIGO, ROTULOS_HABS_INIMIGO
-from .itens import CONSUMIVEIS
+from .itens import CONSUMIVEIS, descrever_bonus, rotulo
 from . import comitiva, sobrevivencia, telemetria
 from .talentos import custo_habilidade
 
@@ -84,6 +84,7 @@ class Combate:
         self._serie = _SERIE[0]
         self._fala_turno = -1
         self._cura_j = 0
+        self._salva = self._salva_textos = None
         self._nomear()
         for e in self.inimigos:
             g.ver_criatura(e.familia)
@@ -99,10 +100,16 @@ class Combate:
 
     # ------------------------------------------------------------ utilidades
     def dizer(self, texto, cor=None):
+        if self._salva is not None:
+            self._salva_textos.append((self.ui.dizer, texto, cor))
+            return
         self.ui.dizer(texto, cor)
         self.ui.atualizar()  # a barra de vida acompanha cada linha do combate
 
     def detalhe(self, texto, cor=None):
+        if self._salva is not None:
+            self._salva_textos.append((self.ui.detalhe, texto, cor))
+            return
         self.ui.detalhe(texto, cor)
         self.ui.atualizar()
 
@@ -126,13 +133,39 @@ class Combate:
 
     def lance(self, tipo, **dados):
         telemetria.lance(self, tipo, dados)
+        if self._salva is not None:
+            self._salva.append(dict(dados, tipo=tipo))
+            return
         self.ui.lance(tipo, **dados)
+
+    @contextmanager
+    def salva(self, hab=None):
+        """Golpes em área saem juntos: os lances (e as linhas do registro) ficam guardados e vão à interface
+        num só lance "salva", que anima todos os alvos ao mesmo tempo, como uma chuva de flechas de verdade."""
+        if self._salva is not None:
+            yield
+            return
+        self._salva, self._salva_textos = [], []
+        try:
+            yield
+        finally:
+            lances, textos = self._salva, self._salva_textos
+            self._salva = self._salva_textos = None
+            if lances:
+                self.ui.lance("salva", hab=hab, lances=lances)
+            for fn, texto, cor in textos:
+                fn(texto, cor)
+            self.ui.atualizar()
 
     @contextmanager
     def agindo(self, u, nome=None, alvo=None, area=False, hab=None):
         self.lance("acao", de=self.uid(u), nome=nome, alvo=self.uid(alvo), area=area, hab=hab)
         try:
-            yield
+            if area and hab != "redemoinho":  # o Redemoinho gira golpe a golpe; o resto acerta todos juntos
+                with self.salva(hab):
+                    yield
+            else:
+                yield
         finally:
             self.lance("fim_acao", de=self.uid(u))
 
@@ -420,8 +453,10 @@ class Combate:
             if r:
                 return self.fim(r)
         elif self.emboscada == "jogador":
-            self.dizer("Você tem a iniciativa! Um ataque livre antes que reajam.", "verde+negrito")
+            self.dizer("Você tem a iniciativa! Um ataque livre antes que reajam, e o primeiro golpe é crítico.",
+                       "verde+negrito")
             pular_inimigos = True
+            self.abertura = True
         if self.j.tal("aura_protecao"):
             self.j.aplicar("barreira", 99, int(self.j.poder * 2.5))
             self.dizer(f"Uma aura dourada te envolve. (barreira de {int(self.j.poder * 2.5)})", "amarelo")
@@ -583,18 +618,38 @@ class Combate:
             if dano and j.tal("laminas_envenenadas"):
                 self.aplicar(alvo, "veneno", 3, valor=max(2, j.atk * 0.35), chance=0.2 * j.tal("laminas_envenenadas"))
 
+    def motivo_bloqueio(self, h_id):
+        """Por que não dá para usar a habilidade agora (ou None se dá)."""
+        j, h = self.j, HABILIDADES[h_id]
+        if j.rec < custo_habilidade(j, h_id):
+            return f"{j.nome_recurso} insuficiente"
+        if h.get("flechas", 0) > j.flechas:
+            return "Flechas insuficientes"
+        if h.get("req"):
+            return h["req"](self)
+        return None
+
     def menu_habilidades(self):
         j = self.j
         ids = list(j.habilidades)
-        opcoes = []
+        opcoes, metas = [], []
         for h_id in ids:
             h = HABILIDADES[h_id]
             custo = f"{custo_habilidade(j, h_id)} {j.nome_recurso}"
             if h.get("flechas"):
                 custo += f", {h['flechas']} flecha{'s' if h['flechas'] > 1 else ''}"
             opcoes.append(f"{h['nome']} [{custo}] — {h['desc']}")
+            motivo = self.motivo_bloqueio(h_id)
+            # A interface gráfica desenha cada habilidade como uma carta com ícone, custo e dica.
+            metas.append({"habilidade": h_id, "nome": h["nome"], "custo": custo_habilidade(j, h_id),
+                          "recurso": j.nome_recurso, "flechas": h.get("flechas", 0), "alvo_tipo": h["alvo"],
+                          "desc": h["desc"], "pode": motivo is None, "motivo": motivo})
         opcoes.append("Voltar")
-        esc = self.ui.escolher("Habilidades:", opcoes)
+        self.ui.meta_opcoes = metas + [None]
+        try:
+            esc = self.ui.escolher("Habilidades:", opcoes)
+        finally:
+            self.ui.meta_opcoes = None
         if esc == len(ids):
             return False
         h = HABILIDADES[ids[esc]]
@@ -625,13 +680,33 @@ class Combate:
     def menu_itens(self):
         j = self.j
         usaveis = [k for k in USAVEIS_EM_COMBATE if j.consumiveis.get(k, 0) > 0]
-        if not usaveis:
+        # Trocar de arma (ou de escudo/aljava/grimório) no meio da luta é possível, mas gasta o turno.
+        # Armadura não: ninguém veste uma cota de malha com um lobo no pescoço.
+        armas = [it for it in j.mochila if it["slot"] in ("arma", "secundaria") and self.g.pode_usar(it)]
+        if not usaveis and not armas:
             self.dizer("Sua bolsa não tem nada útil agora.", "cinza")
             return None
         opcoes = [f"{CONSUMIVEIS[k]['nome']} x{j.consumiveis[k]} — {CONSUMIVEIS[k]['desc']}" for k in usaveis]
-        esc = self.ui.escolher("Usar qual item?", opcoes + ["Voltar"])
-        if esc == len(usaveis):
+        metas = [{"usar_item": k, "item": k, "qtd": j.consumiveis[k], "nome": CONSUMIVEIS[k]["nome"],
+                  "desc": CONSUMIVEIS[k]["desc"]} for k in usaveis]
+        for it in armas:
+            opcoes.append(f"Trocar para {it['nome']} (gasta o turno)")
+            metas.append({"trocar": j.mochila.index(it), "equip": {
+                "nome": rotulo(it), "raridade": it.get("raridade", "comum"), "bonus": descrever_bonus(it["bonus"]),
+                "slot": it["slot"], "base": it.get("base"), "bonus_bruto": it["bonus"], "classe": it.get("classe"),
+                "lore": it.get("lore")}})
+        self.ui.meta_opcoes = metas + [None]
+        try:
+            esc = self.ui.escolher("Usar qual item?", opcoes + ["Voltar"])
+        finally:
+            self.ui.meta_opcoes = None
+        if esc == len(opcoes):
             return None
+        if esc >= len(usaveis):
+            it = armas[esc - len(usaveis)]
+            with self.agindo(j, "Troca de arma", hab="item"):
+                self.g.equipar(it)
+            return "turno"
         k = usaveis[esc]
         if k == "bomba_fumaca":
             if not self.pode_fugir:
@@ -775,14 +850,15 @@ class Combate:
             if not self.companheiro.vivo:
                 self.dizer(f"{self.companheiro.nome} está ferido demais para lutar até você descansar.", "cinza")
         j.efeitos = {}
-        if j.classe != "mago":  # o fôlego volta em minutos; a mana, devagar
-            j.rec = j.max_rec
+        if j.classe != "mago":  # o fôlego volta em parte; a mana, devagar
+            j.rec = min(j.max_rec, j.rec + j.max_rec // 2)
         else:
             j.rec = min(j.max_rec, j.rec + j.max_rec // 5)
         if j.classe == "arqueiro" and self.flechas_gastas and resultado == "vitoria":
-            chance = 0.5 + 0.2 * j.tal("aljava_funda")
+            chance = 0.35 + 0.15 * j.tal("aljava_funda")
             recuperadas = sum(1 for _ in range(self.flechas_gastas) if self.rng.random() < chance)
-            if recuperadas:
+            recuperadas = min(recuperadas, self.g.max_flechas() - j.flechas)
+            if recuperadas > 0:
                 j.flechas += recuperadas
                 self.dizer(f"Você recolhe {recuperadas} flecha(s) intacta(s) do campo.", "verde")
 

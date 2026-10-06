@@ -230,11 +230,13 @@ const Vista = (() => {
     { local: { id: 5, tipo: "selvagem", bioma: "cidadela" }, mundo: { periodo_n: 3, clima_id: "limpo", corrupcao: 70 } },
     { local: { id: 12, tipo: "vila", bioma: "planicie" }, mundo: { periodo_n: 3, clima_id: "neve", corrupcao: 0 } },
   ];
+  /** Cor do alto do céu da paisagem atual: na tela de título ela pinta a página inteira acima da vista. */
+  function corDoCeu() { return fundo ? fundo.getContext("2d").getImageData(0, 0, 1, 1).data.slice(0, 3) : [4, 5, 12]; }
   function titulo() {
     const t = TITULOS[Math.floor(Math.random() * TITULOS.length)];
     atualizar({ local: t.local, mundo: Object.assign({ escuro: false }, t.mundo) });
-    return fundo.getContext("2d").getImageData(0, 0, 1, 1).data.slice(0, 3);
+    return corDoCeu();
   }
 
-  return { atualizar, titulo };
+  return { atualizar, titulo, corDoCeu };
 })();

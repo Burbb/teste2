@@ -2,6 +2,7 @@
 
 from .. import texto as tx
 from ..dados import BIOMAS, FAMILIAS
+from ..mundo import nivel_regiao
 from .motor import evento
 
 VILA = ("vila",)
@@ -239,14 +240,15 @@ def guarda_desconfiado(g):
 @evento(contextos=VILA, peso=6, cooldown=14)
 def pedido_de_socorro(g):
     p = g.npc()
-    l = g.sortear([x for x in g.mundo["locais"] if x["tipo"] in ("selvagem", "covil")])
+    l = g.lugar_para_contrato([x for x in g.mundo["locais"] if x["tipo"] in ("selvagem", "covil")])
     g.dizer(f"{p['nome']}, {p['um']} {p['prof']} {p['traco']}, te puxa pelo braço: \"Meu irmão foi para "
             f"{l['nome']} há três dias e não voltou. Por favor!\"", "amarelo")
     if g.menu("Aceitar?", [("Prometer procurar", True), ("Dizer que não pode", False)]):
         cid = g.novo_id()
         fam = g.sortear(BIOMAS[l["bioma"]]["familias"])
+        ouro, xp = g.recompensa_contrato(nivel_regiao(l, g.corrupcao), 1.3)
         g.contratos.append({"id": cid, "tipo": "alvo", "local": l["id"], "familia": fam,
                             "nome": tx.nome_proprio(g.rng), "chave": f"alvo:{cid}",
-                            "ouro": 20 + 8 * g.j.nivel, "xp": 30 + 10 * g.j.nivel,
+                            "ouro": ouro, "xp": xp,
                             "desc": f"Encontrar o irmão de {p['nome']} em {l['nome']} (algo o pegou)."})
         g.dizer("Adicionado ao diário.", "cinza")
