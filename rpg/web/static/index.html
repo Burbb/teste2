@@ -9,10 +9,8 @@
 <body class="sem-heroi" data-bioma="vila" data-periodo="0">
 
 <div id="atmosfera" aria-hidden="true">
-  <div class="camada tinta"></div>
   <div class="camada corrupcao"></div>
   <div class="camada vinheta"></div>
-  <div class="camada grao"></div>
   <div class="camada dor"></div>
   <div id="brasas"></div>
 </div>
@@ -22,7 +20,7 @@
   <div id="tempo" class="topo-info"></div>
   <div id="corrupcao-topo" class="topo-info" title="Corrupção do reino. Em 100%, tudo acaba.">
     <span class="rotulo">Corrupção</span>
-    <span class="barra fina"><span class="enchimento"></span></span>
+    <span class="barra-px corrupcao"><span class="enchimento"></span></span>
     <span class="valor">0%</span>
   </div>
   <div id="sigilos-topo" class="topo-info" title="Sigilos dos guardiões"></div>
@@ -36,41 +34,59 @@
 </header>
 
 <main id="mesa">
-  <aside id="heroi" class="painel" aria-label="Herói"></aside>
+  <aside id="heroi" class="painel moldura" aria-label="Herói"></aside>
 
   <section id="palco">
-    <div id="combate" aria-live="polite"></div>
-    <article id="pagina">
+    <div id="hud" class="moldura" aria-live="polite">
+      <div id="hud-linha"></div>
+      <div id="batalha"></div>
+    </div>
+    <article id="pagina" class="moldura">
+      <canvas id="vista" width="320" height="72" aria-hidden="true"></canvas>
       <div id="folha">
         <header id="cena-cab"></header>
         <div id="texto" aria-live="polite"></div>
         <div id="prompt"></div>
       </div>
     </article>
-    <footer id="condicao"></footer>
   </section>
 
-  <aside id="mundo" class="painel" aria-label="Mundo"></aside>
+  <aside id="mundo" class="painel moldura" aria-label="Mundo"></aside>
 </main>
 
-<div id="gaveta-historico" class="gaveta" hidden>
+<div id="gaveta-historico" class="gaveta moldura" hidden>
   <div class="gaveta-cab"><h2>Histórico da jornada</h2><button data-acao="historico">Fechar <kbd>Esc</kbd></button></div>
   <div id="historico-lista"></div>
 </div>
 
 <div id="sobre-mapa" class="sobreposicao" hidden>
-  <div class="sobre-caixa">
+  <div class="sobre-caixa moldura">
     <div class="gaveta-cab"><h2>Mapa do reino</h2><button data-acao="mapa">Fechar <kbd>Esc</kbd></button></div>
     <div id="mapa-grande"></div>
     <div id="mapa-legenda"></div>
   </div>
 </div>
 
-<div id="aviso-fim" class="sobreposicao" hidden>
-  <div class="sobre-caixa fim"><h2>Até a próxima jornada</h2><p>Você já pode fechar esta janela.</p></div>
+<div id="sobre-talentos" class="sobreposicao" hidden>
+  <div class="sobre-caixa moldura talentos-caixa">
+    <div class="gaveta-cab"><h2 id="talentos-titulo">Talentos</h2><button data-acao="fechar-talentos">Fechar <kbd>Esc</kbd></button></div>
+    <div id="arvore"></div>
+    <div id="talento-info" class="moldura" hidden></div>
+  </div>
 </div>
 
+<div id="celebracao" class="sobreposicao" hidden></div>
+<div id="toasts"></div>
+
+<div id="aviso-fim" class="sobreposicao" hidden>
+  <div class="sobre-caixa moldura fim"><h2>Até a próxima jornada</h2><p>Você já pode fechar esta janela.</p></div>
+</div>
+
+<script src="/static/sprites.js"></script>
 <script src="/static/som.js"></script>
+<script src="/static/vista.js"></script>
+<script src="/static/mapa.js"></script>
+<script src="/static/telas.js"></script>
 <script src="/static/app.js"></script>
 </body>
 </html>

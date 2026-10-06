@@ -283,6 +283,7 @@ def recrutar(g, cid):
     g.comitiva.append(m)
     d = COMPANHEIROS[cid]
     g.ui.efeito(f"{d['nome']} se junta à comitiva", "aprova")
+    g.ui.celebrar("comitiva", {"id": cid, "nome": d["nome"], "titulo": d["titulo"], "desc": d["desc"]})
     registrar(g, "comitiva", acao="entra", id=cid)
     return m
 
@@ -485,11 +486,12 @@ def menu(g):
             g.dizer("Ninguém caminha com você. Por enquanto.", "cinza")
             g.pausar()
             return
-        for m in ms:
+        fichas = [dict(e, desc=COMPANHEIROS[e["id"]]["desc"]) for e in estado(g)]
+        for m in ([] if g.ui.painel("comitiva", {"membros": fichas, "limite": LIMITE}) else ms):
             d = COMPANHEIROS[m["id"]]
             rotulo, _ = nivel(m)
-            estado = " · FERID" + ("A" if d["g"] == "f" else "O") + ", fora de combate até descansar" if m["ferido"] else ""
-            g.dizer(f"{d['nome']}, {d['titulo']} — vida {m['hp']}/{m['max_hp']} · {rotulo}{estado}")
+            situacao = " · FERID" + ("A" if d["g"] == "f" else "O") + ", fora de combate até descansar" if m["ferido"] else ""
+            g.dizer(f"{d['nome']}, {d['titulo']} — vida {m['hp']}/{m['max_hp']} · {rotulo}{situacao}")
             g.dizer(d["desc"], "cinza")
         opcoes = []
         for m in ms:

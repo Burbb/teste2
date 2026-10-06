@@ -55,8 +55,8 @@ class TestWeb(unittest.TestCase):
         return urllib.request.urlopen(req, timeout=10).status
 
     def test_arquivos_e_token(self):
-        for caminho in ("/", "/static/app.js", "/static/estilo.css", "/static/som.js",
-                        "/static/fontes/alegreya-latin-400-normal.woff2"):
+        for caminho in ("/", "/static/app.js", "/static/estilo.css", "/static/som.js", "/static/sprites.js", "/static/vista.js", "/static/mapa.js", "/static/telas.js",
+                        "/static/fontes/pixelify-sans-latin-400-normal.woff2"):
             with urllib.request.urlopen(self.base + caminho, timeout=10) as r:
                 self.assertEqual(r.status, 200, caminho)
         for caminho in ("/static/../servidor.py", "/eventos", "/config"):

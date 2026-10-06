@@ -47,6 +47,7 @@ class LimiteBot(Exception):
 
 class UI:
     interativo = True
+    meta_opcoes = None  # dados extras de cada opção (local de viagem, talento...), para interfaces gráficas
 
     def __init__(self, cor=None, rapido=False):
         self.cor = _suporta_cor() if cor is None else cor
@@ -115,6 +116,22 @@ class UI:
 
     def novo_turno(self, n):
         self._imprimir(self.pintar(f"── turno {n} ──", "cinza"))
+
+    def atualizar(self):
+        """O estado mudou (um golpe, uma cura): interfaces com painel podem redesenhar."""
+
+    def fim_combate(self, resultado):
+        """O combate acabou: interfaces gráficas podem mostrar o último golpe antes do resultado."""
+
+    def celebrar(self, tipo, dados):
+        """Momentos de conquista (nível, Sigilo, especialização...): interfaces gráficas fazem festa."""
+
+    def painel(self, tipo, dados):
+        """Telas como Diário e Bestiário: interfaces gráficas desenham os dados; as de texto ignoram."""
+        return False
+
+    def arvore_talentos(self, dados):
+        """Interfaces gráficas desenham a árvore; as de texto usam o desenho em caracteres."""
 
     def desenhar(self, linhas):
         """Desenha um bloco de linhas, cada uma uma lista de pedaços (texto, cor)."""

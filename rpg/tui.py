@@ -275,6 +275,9 @@ class TextualUI(UI):
             raise SystemExit(0)
         return resposta
 
+    def atualizar(self):
+        self.atualizar_hud()
+
     def atualizar_hud(self):
         g = self.jogo
         if g and g.j and g.mundo:

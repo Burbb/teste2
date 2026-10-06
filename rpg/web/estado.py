@@ -16,7 +16,7 @@ def _item(it):
     if not it:
         return None
     return {"nome": rotulo(it), "raridade": it.get("raridade", "comum"), "bonus": descrever_bonus(it["bonus"]),
-            "nivel": it.get("nivel")}
+            "nivel": it.get("nivel"), "slot": it.get("slot"), "base": it.get("base")}
 
 
 def heroi(g):
@@ -33,8 +33,9 @@ def heroi(g):
         "atributos": {"Ataque": j.atk, "Defesa": j.defesa, "Agilidade": j.agi, "Poder": j.poder},
         "ouro": j.ouro, "reputacao": j.reputacao, "flechas": j.flechas if j.classe == "arqueiro" else None,
         "provisoes": j.provisoes, "fome": j.fome, "tochas": j.consumiveis.get("tocha", 0),
-        "pocoes": j.consumiveis.get("pocao_vida", 0),
-        "bolsa": [{"nome": CONSUMIVEIS[k]["nome"], "qtd": v, "desc": CONSUMIVEIS[k]["desc"]}
+        "pocoes": j.consumiveis.get("pocao_vida", 0), "bandagens": j.consumiveis.get("bandagem", 0),
+        "spec": j.spec, "reputacao_txt": "herói do povo" if j.reputacao >= 20 else "temido" if j.reputacao <= -20 else "",
+        "bolsa": [{"id": k, "nome": CONSUMIVEIS[k]["nome"], "qtd": v, "desc": CONSUMIVEIS[k]["desc"]}
                   for k, v in j.consumiveis.items() if v > 0 and k in CONSUMIVEIS],
         "equip": {slot: _item(it) for slot, it in j.equip.items()},
         "mochila": [_item(it) for it in j.mochila],
@@ -81,7 +82,8 @@ def combate(g):
 
     def ficha(c, lado):
         d = {"nome": c.nome, "hp": max(0, c.hp), "max_hp": c.max_hp, "efeitos": _efeitos(c), "lado": lado,
-             "vivo": c.vivo}
+             "vivo": c.vivo, "tracos": list(getattr(c, "tracos", []) or []), "cid": getattr(c, "cid", None),
+             "tipo": getattr(c, "tipo", None)}
         if lado == "inimigo":
             d.update(nivel=c.nivel, chefe=c.chefe, unico=getattr(c, "unico", False), afixo=c.afixo,
                      familia=c.familia, preparando=bool(c.carregando))
@@ -89,8 +91,8 @@ def combate(g):
 
     return {
         "titulo": cb.titulo, "turno": cb.turno,
-        "inimigos": [ficha(e, "inimigo") for e in cb.inimigos if e.vivo],
-        "aliados": [ficha(a, "aliado") for a in cb.aliados if a.vivo],
+        "inimigos": [ficha(e, "inimigo") for e in cb.inimigos if e.vivo or not e.fugiu],
+        "aliados": [ficha(a, "aliado") for a in cb.aliados],
     }
 
 

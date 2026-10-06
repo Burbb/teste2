@@ -6,11 +6,15 @@ Um RPG **hardcore** e sombrio, no espírito de Diablo: aqui você não é o esco
 A fome mata, feridas infeccionam, a noite cega e a morte é permanente. Cada partida gera
 um reino diferente: mapa, nomes, chefes, eventos e consequências.
 
-![Uma cena: o dado de Percepção, a história e as escolhas com o modificador de cada teste](docs/interface.png)
+![Uma cena: paisagem em pixel art, o dado de Percepção, a HUD com suprimentos desenhados e o mapa](docs/interface.png)
 
 <p align="center">
+  <img src="docs/combate.png" width="49%" alt="Combate: a HUD vira aliados contra inimigos; o inimigo morto aparece antes da vitória">
+  <img src="docs/nivel.png" width="49%" alt="Subir de nível: atributos ganhos, ponto de talento e habilidades novas">
+</p>
+<p align="center">
+  <img src="docs/talentos.png" width="49%" alt="Árvore de talentos com hover">
   <img src="docs/titulo.png" width="49%" alt="Tela de título">
-  <img src="docs/combate.png" width="49%" alt="Combate: cartas dos inimigos, turnos e orbes de vida e mana">
 </p>
 
 ## Como jogar
@@ -45,30 +49,39 @@ hardcore, morrer apaga o save: a morte é permanente de verdade.
 
 ### A interface
 
-A tela foi pensada para que a história seja lida, e não pulada a caminho do menu:
+Pixel art, no espírito de Daggerfall e Tibia, e tudo desenhado em código: não há arquivos de
+imagem. Os sprites são grades de pixels no `sprites.js` e as fontes são livres (OFL): Jacquard 24
+nos títulos, Pixelify Sans no texto, Jersey 15 nos números.
 
-- **Uma cena por página**, com título, lugar, dia, período e clima. O texto surge no ritmo
-  da leitura e **as escolhas só aparecem quando ele termina**. Qualquer tecla ou clique
-  mostra tudo de uma vez. Quando a cena tem desfecho, um **Continuar ▸** segura a página.
-- **Prosa de livro** (fonte Alegreya, coluna estreita, capitular no começo das cenas). A
-  mecânica fica à parte: **o d20 rola na tela** nos testes, e ouro, dano e XP viram etiquetas.
-- **As escolhas mostram o seu modificador** (`DES +3`, `ARC +6`): verde quando você é bom
-  nisso, vermelho quando não é. As opções de sistema (talentos, diário, salvar…) ficam
-  como atalhos discretos abaixo das escolhas da história.
-- **Painéis sempre à vista:** herói (atributos, ferimentos, equipamento com cor de raridade,
-  habilidades, bolsa), mapa do que você já conhece, caminhos daqui com o perigo de cada
-  região, e orbes de vida e recurso ao lado das escolhas.
-- **Combate:** cartas dos inimigos com barras que sentem o golpe, aviso quando um inimigo
-  prepara um ataque forte, divisor por turno e turnos antigos esmaecidos.
-- **Atmosfera:** o fundo muda de cor com o bioma, a noite escurece as bordas, sem tocha a
-  luz tremula e a corrupção avermelha a tela. Som ambiente e efeitos são sintetizados na
-  hora (sem arquivos de áudio).
-- Funciona em tela larga, notebook e celular. Recarregar a página não perde nada.
+- **A história em primeiro lugar.** Uma cena por página, com uma **paisagem em pixel art** no
+  topo que muda com o bioma, o período do dia, o clima e a corrupção (chuva, neve, névoa,
+  relâmpagos, fumaça das chaminés, estrelas). O texto surge no ritmo da leitura, e **as escolhas só
+  aparecem quando ele termina**. Qualquer tecla ou clique mostra tudo de uma vez.
+- **HUD no topo, perto do texto.** Retrato, vida e recurso, e os suprimentos **desenhados**: um
+  pernil quando a comida está no fim e vários quando sobra (um osso quando acabou), moedas que
+  viram pilha e depois saco, tochas acesas que tremulam (ou apagadas), frascos cheios ou vazios.
+  Tudo pisca e mostra `+3`/`−1` quando muda.
+- **Combate na HUD.** Ao começar uma luta, a HUD se abre em **aliados contra inimigos**, com
+  cartas que tremem e mostram o dano a cada golpe, aviso de golpe forte e o **último golpe
+  visível**: o inimigo morre na tela antes da vitória.
+- **Momentos que importam têm festa.** Vitória com faixa e fanfarra; **subir de nível** abre uma
+  tela com os atributos ganhos, o ponto de talento e as habilidades novas; Sigilos,
+  especialização e novos companheiros também ganham destaque. O d20 rola na tela nos testes,
+  com som de sucesso ou falha.
+- **Viaje clicando no mapa.** O mapa (lateral, na página e em tela cheia com `M`) mostra o terreno
+  de cada região que você conhece e a névoa do resto. Clique num destino.
+- **Árvore de talentos de verdade:** três colunas, ícones, graus, cadeados, passe o mouse para
+  ver o efeito e clique para aprender.
+- **Telas desenhadas:** Personagem (equipamento e bolsa clicáveis), Diário (cartas de
+  contratos, rumores e do inimigo), Bestiário (fichas com fraquezas) e Comitiva.
+- Som ambiente e efeitos sintetizados na hora. Funciona em monitor largo, notebook e celular.
+  Recarregar a página não perde nada.
 
 | Tecla | O que faz |
 |---|---|
 | `1`–`9`, `0`, setas + Enter, clique | Escolher uma opção |
 | `T` `P` `C` `D` `B` `G` `Q` | Talentos, Personagem, Comitiva, Diário, Bestiário, Salvar, Sair (nos menus de local) |
+| clique no mapa | Viajar para aquele destino |
 | qualquer tecla durante o texto | Mostrar o texto inteiro |
 | `Espaço`/`Enter` | Continuar ▸ |
 | `M` | Mapa do reino |
@@ -234,7 +247,8 @@ rpg/
     ponte.py     WebUI: cada chamada da UI vira uma mensagem JSON (cenas, texto, dados, escolhas)
     estado.py    fotografia do jogo em JSON (herói, mapa, combate) para os painéis
     servidor.py  HTTP + SSE em 127.0.0.1, com token por sessão
-    static/      index.html, estilo.css, app.js, som.js e as fontes (licença OFL)
+    static/      index.html, estilo.css, app.js (fila, HUD, combate), telas.js (talentos, fichas,
+                 celebrações), sprites.js (pixel art), vista.js (paisagem), mapa.js, som.js, fontes OFL
   tui.py         interface de terminal com painéis (Textual), via --terminal
   ui.py          interface clássica (cores ANSI, menus) e o "jogador robô" dos testes
   mapa.py        desenho do mapa em caracteres

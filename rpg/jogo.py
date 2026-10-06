@@ -145,7 +145,12 @@ class Jogo:
         """opcoes: lista de (rótulo, chave) ou None (opção indisponível)."""
         validas = [o for o in opcoes if o]
         rotulos = [self._anotar_teste(o[0]) for o in validas]
-        esc = self.ui.escolher(pergunta, rotulos)
+        metas = [o[2] if len(o) > 2 else None for o in validas]
+        self.ui.meta_opcoes = metas if any(metas) else None
+        try:
+            esc = self.ui.escolher(pergunta, rotulos)
+        finally:
+            self.ui.meta_opcoes = None
         chave = validas[esc][1]
         if self.evento_atual and self.comitiva:
             comitiva.reagir_escolha(self, self.evento_atual, chave)
@@ -570,6 +575,7 @@ class Jogo:
             for k, v in SPECS[j.spec]["cresc"].items():
                 cresc[k] = cresc.get(k, 0) + v
         antes_hp, antes_rec = j.max_hp, j.max_rec
+        antes = {k: getattr(j, k) for k in ("max_hp", "max_rec", "atk", "defesa", "agi", "poder")}
         for k, v in cresc.items():
             j.base[k] += v
         j.recalcular()
@@ -584,7 +590,13 @@ class Jogo:
         self.ui.titulo(f"NÍVEL {j.nivel}!", "verde+negrito")
         self.dizer("Você se sente mais forte. (Subir de nível não cura feridas: isso, só o descanso.)", "verde")
         self.ganhar_ponto_talento()
-        self._aprender_habilidades()
+        novas = self._aprender_habilidades()
+        ganhos = {NOMES_STATS.get(k, k) if k != "max_rec" else j.nome_recurso: getattr(j, k) - v
+                  for k, v in antes.items() if getattr(j, k) > v}
+        self.ui.celebrar("nivel", {"nivel": j.nivel, "ganhos": ganhos, "pontos": j.pontos_talento,
+                                   "habilidades": [{"nome": HABILIDADES[h]["nome"], "desc": HABILIDADES[h]["desc"]}
+                                                   for h in novas],
+                                   "especializacao": j.nivel >= 4 and not j.spec})
         if j.nivel >= 4 and not j.spec and f"encruzilhada_{j.classe}" not in self.forcados:
             self.forcados.append(f"encruzilhada_{j.classe}")
             self.dizer("Você sente que uma encruzilhada se aproxima em seu caminho...", "magenta")
@@ -598,8 +610,11 @@ class Jogo:
         while True:
             j = self.j
             self.ui.cena("Talentos", f"{j.nome_classe} · pontos disponíveis: {j.pontos_talento}", "menu")
-            self.ui.desenhar(talentos.desenhar(j))
-            self.dizer("verde = aprendido · amarelo = disponível · cinza = bloqueado", "cinza")
+            if getattr(self.ui, "web", False):
+                self.ui.arvore_talentos(talentos.dados_arvore(j))
+            else:
+                self.ui.desenhar(talentos.desenhar(j))
+                self.dizer("verde = aprendido · amarelo = disponível · cinza = bloqueado", "cinza")
             opcoes = []
             for t in talentos.TALENTOS[j.classe]:
                 est = talentos.estado(j, t)
@@ -608,8 +623,8 @@ class Jogo:
                     texto = "▶ " + texto
                 elif est != "disponivel":
                     texto += f" ({talentos.motivo(t, est) or 'completo'})"
-                opcoes.append((texto, t))
-            t = self.menu("Escolha um talento para aprender:", opcoes + [("Voltar", None)])
+                opcoes.append((texto, t, {"talento": t["id"]}))
+            t = self.menu("Escolha um talento para aprender:", opcoes + [("Voltar", None, {"voltar": True})])
             if t is None:
                 return
             est = talentos.estado(j, t)
@@ -628,10 +643,13 @@ class Jogo:
 
     def _aprender_habilidades(self):
         j = self.j
+        novas = []
         for h in habilidades_ate(j.classe, j.spec, j.nivel):
             if h not in j.habilidades:
                 j.habilidades.append(h)
+                novas.append(h)
                 self.dizer(f"Nova habilidade: {HABILIDADES[h]['nome']} — {HABILIDADES[h]['desc']}", "amarelo+negrito")
+        return novas
 
     def especializar(self, spec):
         j = self.j
@@ -644,7 +662,10 @@ class Jogo:
         j.rec = j.max_rec
         self.ui.titulo(f"VOCÊ AGORA É {SPECS[spec]['nome'].upper()}", "magenta+negrito")
         self.dizer(SPECS[spec]["desc"], "magenta")
-        self._aprender_habilidades()
+        novas = self._aprender_habilidades()
+        self.ui.celebrar("spec", {"nome": SPECS[spec]["nome"], "desc": SPECS[spec]["desc"],
+                                  "habilidades": [{"nome": HABILIDADES[h]["nome"], "desc": HABILIDADES[h]["desc"]}
+                                                  for h in novas]})
         etiquetas = {"necromante": ("magia_proibida", "sacrilegio"), "paladino": ("fe", "honra"),
                      "piromante": ("curiosidade",), "berserker": ("violencia", "coragem"), "sombra": ("trapaca",)}
         if spec in etiquetas:
@@ -780,6 +801,18 @@ class Jogo:
 
     def ver_bestiario(self):
         self.ui.cena("Bestiário", f"{len(self.bestiario)}/{len(LORE)} criaturas", "menu")
+        fichas = []
+        for fam, b in sorted(self.bestiario.items(), key=lambda x: FAMILIAS[x[0]]["nome"]):
+            f = FAMILIAS[fam]
+            conhece = self.conhece(fam)
+            fichas.append({"id": fam, "nome": tx.maiuscula(f["nome"]), "abates": b["abates"], "lore": LORE.get(fam, ""),
+                           "conhecido": conhece, "mestre": self.mestre_caca(fam), "tracos": f["tracos"],
+                           "tracos_nomes": [TRACOS[t].split(":")[0] for t in f["tracos"]] if conhece else [],
+                           "fraquezas": [k for k, v in f.get("resist", {}).items() if v > 1] if conhece else [],
+                           "resiste": [k for k, v in f.get("resist", {}).items() if v < 1] if conhece else []})
+        if self.ui.painel("bestiario", {"fichas": fichas, "total": len(LORE)}):
+            self.pausar()
+            return
         if not self.bestiario:
             self.dizer("Você ainda não enfrentou nenhuma criatura.", "cinza")
         for fam, b in sorted(self.bestiario.items(), key=lambda x: FAMILIAS[x[0]]["nome"]):
@@ -1109,7 +1142,9 @@ class Jogo:
         self.desenhar_mapa()
         opcoes = []
         for loc, dist in sorted(vizinhos(self.mundo, self.loc), key=lambda v: v[0]["id"]):
-            texto = f"[{loc['id'] + 1}] {mapa.glifo(self, loc)} {loc['nome']} — {mapa.descricao(self, loc)}"
+            web = getattr(self.ui, "web", False)  # na web, o mapa é clicável e desenha os próprios ícones
+            numero = "" if web else f"[{loc['id'] + 1}] {mapa.glifo(self, loc)} "
+            texto = f"{numero}{loc['nome']} — {mapa.descricao(self, loc)}"
             if loc["tipo"] != "vila":
                 nv = nivel_regiao(loc, self.corrupcao)
                 texto += f" · Nv.{nv}"
@@ -1118,7 +1153,7 @@ class Jogo:
             texto += f" · {dist} trecho{'s' if dist > 1 else ''}"
             if not loc["visitado"]:
                 texto += " · inexplorado"
-            opcoes.append((texto, (loc, dist)))
+            opcoes.append((texto, (loc, dist), {"local": loc["id"]}))
         opcoes.append(("Voltar", None))
         destino = self.menu("Para onde?", opcoes)
         if not destino:
@@ -1341,27 +1376,8 @@ class Jogo:
         while True:
             j = self.j
             self.ui.cena(j.nome, f"{j.nome_classe} nível {j.nivel}", "menu")
-            self.dizer(f"Vida {j.hp}/{j.max_hp}   {j.nome_recurso} {j.rec}/{j.max_rec}   Ataque {j.atk}   "
-                       f"Defesa {j.defesa}   Agilidade {j.agi}   Poder {j.poder}")
-            self.dizer(f"Provisões: {j.provisoes} dia(s)   Tochas: {j.consumiveis.get('tocha', 0)}", "amarelo")
-            males = sobrevivencia.descrever(j)
-            self.dizer("Condição: " + (", ".join(males) if males else "sem ferimentos"),
-                       "vermelho" if males else "verde")
-            self.dizer(f"Reputação: {j.reputacao:+d}   Ouro: {j.ouro}" +
-                       (f"   Flechas: {j.flechas}" if j.classe == "arqueiro" else ""))
-            self.dizer("Equipamento:", "ciano")
-            for slot, it in j.equip.items():
-                self.dizer(f"  {NOMES_SLOT[slot]}: " + (f"{itens.rotulo(it)} ({descrever_bonus(it['bonus'])})" if it
-                                                        else "—"), itens.cor(it) if it else None)
-            self.dizer("Habilidades: " + ", ".join(HABILIDADES[h]["nome"] for h in j.habilidades), "ciano")
-            cons = [f"{CONSUMIVEIS[k]['nome']} x{v}" for k, v in j.consumiveis.items() if v > 0]
-            self.dizer("Bolsa: " + (", ".join(cons) if cons else "vazia"), "ciano")
-            if j.mochila:
-                self.dizer(f"Mochila ({len(j.mochila)}/{LIMITE_MOCHILA}): " +
-                           ", ".join(it["nome"] for it in j.mochila), "ciano")
-            if j.companheiro:
-                c = j.companheiro
-                self.dizer(f"Companheiro: {c['nome']} — vida {c['hp']}/{c['max_hp']}, ataque {int(c['atk'])}", "ciano")
+            if not self.ui.painel("personagem", {}):
+                self._personagem_texto()
             op = self.menu("", [
                 ("Usar item da bolsa", "usar"),
                 ("Equipar item da mochila", "equipar") if j.mochila else None,
@@ -1371,18 +1387,42 @@ class Jogo:
                 return
             if op == "usar":
                 usaveis = [k for k in ("bandagem", "unguento", "pocao_vida", "tonico", "antidoto") if j.tem(k)]
-                k = self.menu("Usar:", [(CONSUMIVEIS[k]["nome"], k) for k in usaveis] + [("Voltar", None)])
+                k = self.menu("Usar:", [(CONSUMIVEIS[k]["nome"], k, {"item": k}) for k in usaveis] + [("Voltar", None)])
                 if k:
                     self.usar_consumivel(k)
             else:
                 it = self.menu("Equipar:", [(f"{it['nome']} [{NOMES_SLOT[it['slot']]}] "
-                                             f"{descrever_bonus(it['bonus'])}", it) for it in j.mochila]
-                               + [("Voltar", None)])
+                                             f"{descrever_bonus(it['bonus'])}", it, {"mochila": i})
+                                            for i, it in enumerate(j.mochila)] + [("Voltar", None)])
                 if it:
                     if it["classe"] and it["classe"] != j.classe:
                         self.dizer("Você não sabe usar isso.", "vermelho")
                     else:
                         self.equipar(it)
+
+    def _personagem_texto(self):
+        j = self.j
+        self.dizer(f"Vida {j.hp}/{j.max_hp}   {j.nome_recurso} {j.rec}/{j.max_rec}   Ataque {j.atk}   "
+                   f"Defesa {j.defesa}   Agilidade {j.agi}   Poder {j.poder}")
+        self.dizer(f"Provisões: {j.provisoes} dia(s)   Tochas: {j.consumiveis.get('tocha', 0)}", "amarelo")
+        males = sobrevivencia.descrever(j)
+        self.dizer("Condição: " + (", ".join(males) if males else "sem ferimentos"),
+                   "vermelho" if males else "verde")
+        self.dizer(f"Reputação: {j.reputacao:+d}   Ouro: {j.ouro}" +
+                   (f"   Flechas: {j.flechas}" if j.classe == "arqueiro" else ""))
+        self.dizer("Equipamento:", "ciano")
+        for slot, it in j.equip.items():
+            self.dizer(f"  {NOMES_SLOT[slot]}: " + (f"{itens.rotulo(it)} ({descrever_bonus(it['bonus'])})" if it
+                                                    else "—"), itens.cor(it) if it else None)
+        self.dizer("Habilidades: " + ", ".join(HABILIDADES[h]["nome"] for h in j.habilidades), "ciano")
+        cons = [f"{CONSUMIVEIS[k]['nome']} x{v}" for k, v in j.consumiveis.items() if v > 0]
+        self.dizer("Bolsa: " + (", ".join(cons) if cons else "vazia"), "ciano")
+        if j.mochila:
+            self.dizer(f"Mochila ({len(j.mochila)}/{LIMITE_MOCHILA}): " +
+                       ", ".join(it["nome"] for it in j.mochila), "ciano")
+        if j.companheiro:
+            c = j.companheiro
+            self.dizer(f"Companheiro: {c['nome']} — vida {c['hp']}/{c['max_hp']}, ataque {int(c['atk'])}", "ciano")
 
     def mapa(self):
         self.ui.cena("Mapa do reino", self.contexto_cena(), "menu")
@@ -1406,6 +1446,29 @@ class Jogo:
     def diario(self):
         self.ui.cena("Diário", f"dia {self.dia}", "menu")
         a = self.antagonista
+        n = self.nemesis
+        dados = {
+            "antagonista": {"nome": a["nome"], "origem": a["origem"]}, "sigilos": len(self.j.sigilos),
+            "corrupcao": self.corrupcao, "dia": self.dia,
+            "contratos": [{"desc": c["desc"], "tipo": c["tipo"], "concluido": bool(c.get("concluido")),
+                           "progresso": f"{c['feito']}/{c['total']}" if c["tipo"] == "caca" else None,
+                           "ouro": c.get("ouro")} for c in self.contratos],
+            "rumores": [{"texto": r["texto"], "expira": r["expira"] - self.dia} for r in self.rumores],
+            "nemesis": {"nome": n["nome"], "familia": FAMILIAS[n["familia"]]["nome"]} if n else None,
+            "aliados": [{"nome": x["nome"], "texto": x["texto"]} for x in self.aliados_finais],
+        }
+        if not self.ui.painel("diario", dados):
+            self._diario_texto(a)
+        pendentes = [c for c in self.contratos if not c.get("concluido")]
+        if pendentes:
+            c = self.menu("", [("Fechar o diário", None)] +
+                          [(f"Abandonar: {c['desc']}", c) for c in pendentes])
+            if c:
+                self.abandonar_contrato(c)
+        else:
+            self.pausar()
+
+    def _diario_texto(self, a):
         self.dizer(f"Inimigo final: {a['nome']}, {a['origem']}.", "magenta")
         self.dizer(f"Sigilos: {len(self.j.sigilos)}/3   Corrupção: {self.corrupcao}%   Dia {self.dia}", "magenta")
         self.dizer("Contratos:", "ciano")
@@ -1425,14 +1488,6 @@ class Jogo:
             self.dizer(f"Nêmesis: {n['nome']}, {FAMILIAS[n['familia']]['nome']} que te persegue.", "vermelho")
         if self.aliados_finais:
             self.dizer("Aliados para a batalha final: " + ", ".join(x["nome"] for x in self.aliados_finais), "verde")
-        pendentes = [c for c in self.contratos if not c.get("concluido")]
-        if pendentes:
-            c = self.menu("", [("Fechar o diário", None)] +
-                          [(f"Abandonar: {c['desc']}", c) for c in pendentes])
-            if c:
-                self.abandonar_contrato(c)
-        else:
-            self.pausar()
 
     def abandonar_contrato(self, c):
         penalidade = 6 if c["tipo"] == "entrega" else 3
@@ -1473,6 +1528,8 @@ class Jogo:
             self.corromper(-15)
             self.mudar_reputacao(5)
             self.ganhar_ponto_talento()
+            self.ui.celebrar("sigilo", {"sigilos": len(self.j.sigilos), "guardiao": gspec["nome"],
+                                        "pontos": self.j.pontos_talento})
             if len(self.j.sigilos) >= 3:
                 self.dizer(f"Os três Sigilos pulsam juntos. O caminho para {self.mundo['locais'][-1]['nome']} "
                            f"está aberto!", "magenta+negrito")

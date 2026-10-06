@@ -73,7 +73,7 @@ class WebUI(UI):
     # ------------------------------------------------------------ saída
     def _enviar(self, t, **dados):
         self.canal.publicar({"t": t, **dados})
-        if t in ("texto", "efeito", "rolagem", "bloco", "mapa"):
+        if t in ("texto", "efeito", "rolagem", "bloco", "mapa", "painel", "celebrar"):
             self.novo_desde_escolha = True
 
     def enviar_estado(self):
@@ -92,6 +92,7 @@ class WebUI(UI):
         texto = str(texto)
         if texto.strip():
             self._enviar("texto", texto=texto, cor=cor)
+            self.enviar_estado()
 
     def narrar(self, texto, cor=None):
         self.dizer(texto, cor)
@@ -111,6 +112,25 @@ class WebUI(UI):
 
     def efeito(self, texto, tipo="info"):
         self._enviar("efeito", texto=texto, tipo=tipo)
+        self.enviar_estado()  # a HUD reage junto com a etiqueta
+
+    def atualizar(self):
+        self.enviar_estado()
+
+    def fim_combate(self, resultado):
+        self._enviar("fim_combate", resultado=resultado)
+
+    def celebrar(self, tipo, dados):
+        self.enviar_estado()
+        self._enviar("celebrar", tipo=tipo, dados=dados)
+
+    def painel(self, tipo, dados):
+        self.enviar_estado()
+        self._enviar("painel", tipo=tipo, dados=dados)
+        return True
+
+    def arvore_talentos(self, dados):
+        self._enviar("talentos", arvore=dados)
 
     def rolagem(self, atributo, cd, d20, mod, total, sucesso):
         self._enviar("rolagem", atributo=atributo, cd=cd, d20=d20, mod=mod, total=total, sucesso=sucesso)
@@ -161,11 +181,14 @@ class WebUI(UI):
             self.dizer(pergunta, "ciano")
             pergunta = ""
         itens = []
-        for texto in opcoes:
+        metas = self.meta_opcoes or [None] * len(opcoes)
+        for texto, meta in zip(opcoes, metas):
             m = TESTE.search(texto)
             item = {"texto": TESTE.sub("", texto).strip() if m else texto}
             if m:
                 item["teste"] = {"atributo": m.group(1), "mod": int(m.group(2))}
+            if meta:
+                item["meta"] = meta
             itens.append(item)
         while True:
             i = self._perguntar("opcoes", pergunta=pergunta, opcoes=itens)

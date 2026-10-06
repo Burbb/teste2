@@ -90,6 +90,26 @@ const Som = (() => {
     escolha() { estalo(ctx.currentTime, 2500, 0.12, 0.03); },
     nivel() { const t = ctx.currentTime; [392, 494, 587, 784].forEach((f, i) => tom(t + i * 0.11, f, 0.09, 0.9, "triangle")); },
     moeda() { const t = ctx.currentTime; tom(t, 1900, 0.06, 0.12, "square"); tom(t + 0.05, 2600, 0.05, 0.2, "square"); },
+    item() { const t = ctx.currentTime; tom(t, 660, 0.07, 0.12, "square"); tom(t + 0.07, 990, 0.06, 0.18, "square"); },
+    aprova() { const t = ctx.currentTime; tom(t, 523, 0.06, 0.2, "triangle"); tom(t + 0.08, 659, 0.06, 0.3, "triangle"); },
+    desaprova() { const t = ctx.currentTime; tom(t, 330, 0.07, 0.25, "triangle", 290); tom(t + 0.1, 262, 0.07, 0.35, "triangle", 230); },
+    morte() {
+      const t = ctx.currentTime;
+      tom(t, 220, 0.25, 0.5, "sawtooth", 55);
+      estalo(t, 300, 0.5, 0.3);
+      estalo(t + 0.08, 180, 0.4, 0.35);
+    },
+    vitoria() {
+      const t = ctx.currentTime;
+      [[392, 0], [523, 0.12], [659, 0.24], [784, 0.36]].forEach(([f, d]) => tom(t + d, f, 0.1, 0.35, "square"));
+      tom(t + 0.48, 1046, 0.1, 0.9, "square");
+    },
+    fanfarra() {
+      const t = ctx.currentTime;
+      const notas = [[523, 0, 0.18], [523, 0.15, 0.18], [523, 0.3, 0.18], [659, 0.45, 0.5], [587, 0.95, 0.18], [659, 1.1, 0.18], [784, 1.25, 1.1]];
+      notas.forEach(([f, d, dur]) => { tom(t + d, f, 0.09, dur, "square"); tom(t + d, f / 2, 0.06, dur, "triangle"); });
+      for (let i = 0; i < 14; i++) tom(t + 1.3 + i * 0.05, 1500 + Math.random() * 1500, 0.025, 0.25, "sine");
+    },
   };
 
   const AMBIENTES = {

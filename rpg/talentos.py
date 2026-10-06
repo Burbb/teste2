@@ -118,6 +118,20 @@ def motivo(t, est):
     return ""
 
 
+def dados_arvore(jogador):
+    """A árvore em dados, para a interface gráfica desenhar (colunas: spec A, tronco, spec B)."""
+    a, b = CLASSES[jogador.classe]["specs"]
+    nos = []
+    for t in TALENTOS[jogador.classe]:
+        est = estado(jogador, t)
+        nos.append({"id": t["id"], "nome": t["nome"], "desc": t["desc"], "camada": t["camada"], "coluna": t["coluna"],
+                    "rank": jogador.tal(t["id"]), "max": t["max"], "estado": est, "motivo": motivo(t, est),
+                    "spec": SPECS[t["spec"]]["nome"] if t["spec"] else None})
+    return {"classe": CLASSES[jogador.classe]["nome"], "pontos": jogador.pontos_talento, "nivel": jogador.nivel,
+            "colunas": [SPECS[a]["nome"], "Tronco comum", SPECS[b]["nome"]], "spec": jogador.spec,
+            "camadas": {str(k): v for k, v in NIVEL_CAMADA.items()}, "nos": nos}
+
+
 def desenhar(jogador, largura=76):
     """Linhas (pedaços texto/cor) com a árvore em 3 colunas."""
     col = (largura - 8) // 3

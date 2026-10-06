@@ -89,6 +89,7 @@ class Combate:
     # ------------------------------------------------------------ utilidades
     def dizer(self, texto, cor=None):
         self.ui.dizer(texto, cor)
+        self.ui.atualizar()  # a barra de vida acompanha cada linha do combate
 
     def nome(self, c, obj=False):
         if c is self.j:
@@ -639,6 +640,8 @@ class Combate:
         j = self.j
         g = self.g
         telemetria.fim_combate(self, resultado)
+        self.ui.atualizar()
+        self.ui.fim_combate(resultado)  # o último golpe aparece antes da vitória
         g.combate_ativo = None
         comitiva.encerrar_combate(self, resultado)
         if resultado == "vitoria" and any(e.chefe for e in self.inimigos):
@@ -667,6 +670,7 @@ class Combate:
             ouro = sum(e.ouro + e.roubado for e in derrotados)
             if any(e.roubado for e in derrotados):
                 self.dizer("Você recupera o ouro que lhe foi roubado.", "verde")
+            g.ui.celebrar("vitoria", {"inimigos": len(derrotados), "chefe": any(e.chefe for e in derrotados)})
             g.ganhar_ouro(ouro)
             g.registrar_abates(derrotados)
             g.saque_de_combate(derrotados)
