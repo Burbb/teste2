@@ -214,7 +214,11 @@ class WebUI(UI):
             itens.append(item)
         while True:
             i = self._perguntar("opcoes", pergunta=pergunta, opcoes=itens)
-            if isinstance(i, int) and 0 <= i < len(opcoes):
+            self.extra_resposta = None
+            if isinstance(i, dict):  # {"i": 3, "qtd": 5}: a escolha e o que veio junto
+                self.extra_resposta = i
+                i = i.get("i")
+            if isinstance(i, int) and not isinstance(i, bool) and 0 <= i < len(opcoes):
                 break
         self._enviar("escolhido", texto=itens[i]["texto"])
         self.escolhas_na_cena += 1

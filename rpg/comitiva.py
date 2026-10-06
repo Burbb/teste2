@@ -17,48 +17,48 @@ LIMITE = 2  # companheiros ao mesmo tempo (fora o animal do patrulheiro)
 
 COMPANHEIROS = {
     "odete": dict(
-        nome="Irmã Odete", curto="Odete", g="f", titulo="clériga desertora", papel="cura",
+        nome="Sister Odette", curto="Odette", g="f", titulo="clériga desertora", papel="cura",
         desc="Fugiu da catedral na noite em que a Fenda se abriu. Fecha feridas; não perdoa crueldade.",
         base=dict(hp=30, atk=4, poder=6, defesa=3, agi=4), cresc=dict(hp=6, atk=0.6, poder=1.2, defesa=0.6),
         valores={"misericordia": 3, "generosidade": 2, "fe": 3, "honestidade": 2, "purificar": 2, "honra": 1,
                  "diplomacia": 1, "crueldade": -4, "ganancia": -2, "trapaca": -2, "sacrilegio": -4,
                  "magia_proibida": -3, "violencia": -1},
         aprova={
-            "misericordia": "Odete toca seu braço de leve. \"Ainda existe gente boa neste reino. Às vezes eu esqueço.\"",
-            "generosidade": "\"Moedas não descem com a gente para a cova\", diz Odete, quase sorrindo.",
-            "fe": "Odete reza junto, baixinho. Pela primeira vez em dias, a voz dela não treme.",
-            "honestidade": "\"A verdade custa caro\", diz Odete. \"Mas é a única moeda que não enferruja.\"",
-            "purificar": "Odete faz o sinal da Luz sobre as cinzas. \"Que fique queimado.\"",
-            None: "Odete acena com a cabeça, em silêncio.",
+            "misericordia": "Odette toca seu braço de leve. \"Ainda existe gente boa neste reino. Às vezes eu esqueço.\"",
+            "generosidade": "\"Moedas não descem com a gente para a cova\", diz Odette, quase sorrindo.",
+            "fe": "Odette reza junto, baixinho. Pela primeira vez em dias, a voz dela não treme.",
+            "honestidade": "\"A verdade custa caro\", diz Odette. \"Mas é a única moeda que não enferruja.\"",
+            "purificar": "Odette faz o sinal da Luz sobre as cinzas. \"Que fique queimado.\"",
+            None: "Odette acena com a cabeça, em silêncio.",
         },
         desaprova={
-            "crueldade": "Odete desvia o olhar. \"Eu fugi de muita coisa. Não vou fugir de dizer que isso foi errado.\"",
-            "ganancia": "\"Ouro\", Odete cospe a palavra. \"Foi por ouro que o bispo vendeu as relíquias. Lembra do que veio depois?\"",
-            "sacrilegio": "Odete empalidece. \"Os mortos não se defendem. Por isso mesmo merecem respeito.\"",
-            "magia_proibida": "\"Isso é a voz da Fenda\", sussurra Odete, apertando o rosário. \"Eu já ouvi essa voz. Não a deixe entrar.\"",
-            "trapaca": "Odete não diz nada. Mas não olha mais para você pelo resto do caminho.",
-            "violencia": "\"Precisava disso?\", pergunta Odete, limpando o sangue de alguém que nem conhecia.",
-            None: "Odete aperta os lábios.",
+            "crueldade": "Odette desvia o olhar. \"Eu fugi de muita coisa. Não vou fugir de dizer que isso foi errado.\"",
+            "ganancia": "\"Ouro\", Odette cospe a palavra. \"Foi por ouro que o bispo vendeu as relíquias. Lembra do que veio depois?\"",
+            "sacrilegio": "Odette empalidece. \"Os mortos não se defendem. Por isso mesmo merecem respeito.\"",
+            "magia_proibida": "\"Isso é a voz da Fenda\", sussurra Odette, apertando o rosário. \"Eu já ouvi essa voz. Não a deixe entrar.\"",
+            "trapaca": "Odette não diz nada. Mas não olha mais para você pelo resto do caminho.",
+            "violencia": "\"Precisava disso?\", pergunta Odette, limpando o sangue de alguém que nem conhecia.",
+            None: "Odette aperta os lábios.",
         },
-        partida="Odete para no meio da estrada. \"Prometi a mim mesma que nunca mais ficaria parada vendo o mal "
+        partida="Odette para no meio da estrada. \"Prometi a mim mesma que nunca mais ficaria parada vendo o mal "
                 "acontecer. Ficar com você é ficar parada.\" Ela se vira e vai embora, sem pressa, sem olhar para trás.",
         ocioso={
-            "alto": ["Odete remenda sua capa sem que você peça. \"Assim o frio entra menos. Não discuta.\"",
-                     "\"Quando tudo isso acabar\", diz Odete, \"quero ver uma igreja com as portas abertas. Só isso.\""],
-            "medio": ["Odete conta as bandagens que restam. \"Poucas. Tente não sangrar tanto.\"",
-                      "Odete olha para o norte, para onde ficava a catedral. Não diz nada."],
-            "baixo": ["Odete responde com uma palavra só. Depois, nem isso.",
-                      "\"Estou aqui pelos feridos que encontramos no caminho\", diz Odete. \"Não por você.\""],
+            "alto": ["Odette remenda sua capa sem que você peça. \"Assim o frio entra menos. Não discuta.\"",
+                     "\"Quando tudo isso acabar\", diz Odette, \"quero ver uma igreja com as portas abertas. Só isso.\""],
+            "medio": ["Odette conta as bandagens que restam. \"Poucas. Tente não sangrar tanto.\"",
+                      "Odette olha para o norte, para onde ficava a catedral. Não diz nada."],
+            "baixo": ["Odette responde com uma palavra só. Depois, nem isso.",
+                      "\"Estou aqui pelos feridos que encontramos no caminho\", diz Odette. \"Não por você.\""],
         },
     ),
     "morel": dict(
-        nome="Bastião Morel", curto="Morel", g="m", titulo="mercenário", papel="escudo",
+        nome="Bastian Morel", curto="Morel", g="m", titulo="mercenário", papel="escudo",
         desc="Ex-capitão de uma companhia que não existe mais. Luta por ouro, segura a linha e odeia covardes.",
         base=dict(hp=52, atk=8, poder=0, defesa=6, agi=3), cresc=dict(hp=9, atk=1.5, poder=0, defesa=1.0),
         valores={"coragem": 3, "pragmatismo": 2, "honra": 2, "ganancia": 1, "violencia": 1, "fuga": -4,
                  "cautela": -1, "generosidade": -1, "autoridade": -2, "trapaca": -1, "fe": -1},
         aprova={
-            "coragem": "Morel solta uma gargalhada rouca. \"Isso! Os Cães de Ferro teriam gostado de você.\"",
+            "coragem": "Morel solta uma gargalhada rouca. \"Isso! Os Iron Hounds teriam gostado de você.\"",
             "pragmatismo": "\"Cabeça fria\", aprova Morel. \"Herói morto não paga dívida nenhuma.\"",
             "ganancia": "Morel conta as moedas junto com você, de olho. \"Agora sim estamos conversando.\"",
             "honra": "Morel bate o punho no peito, à moda antiga. \"Palavra dada. Ainda existe isso.\"",
@@ -70,7 +70,7 @@ COMPANHEIROS = {
             "cautela": "Morel boceja, alto. \"Se for para fugir de toda sombra, melhor virar pastor de cabras.\"",
             "generosidade": "\"Caridade não enche a barriga de ninguém\", resmunga Morel. \"Muito menos a minha.\"",
             "autoridade": "Morel cospe no chão. \"Guarda, nobre, bispo. Tudo a mesma laia. Nunca dobre o joelho.\"",
-            "fe": "\"Rezar\", Morel ri sem graça. \"Rezei a noite toda na Ponte de Varn. Ninguém respondeu.\"",
+            "fe": "\"Rezar\", Morel ri sem graça. \"Rezei a noite toda na Varn Bridge. Ninguém respondeu.\"",
             "trapaca": "\"Trapaça é para quem não sabe lutar\", diz Morel, e se afasta um passo.",
             None: "Morel cruza os braços.",
         },
@@ -594,12 +594,12 @@ def agir(cb, a):
             a.fe -= 1
             quem = "você" if alvo is cb.j else alvo.nome
             cb.curou(alvo, ganho, de=a, rotulo="Prece")
-            cb.detalhe(f"[Prece] Odete impõe as mãos sobre {quem}: +{ganho} de vida.", "verde")
+            cb.detalhe(f"[Prece] Odette impõe as mãos sobre {quem}: +{ganho} de vida.", "verde")
             gritar(cb, a, "cura", 0.5)
             if a.membro["aprovacao"] >= 75:
                 alvo.limpar_negativos()
             return
-        cb.atacar(a, cb.rng.choice(vivos), 0.9, tipo="sagrado", rotulo="Odete")
+        cb.atacar(a, cb.rng.choice(vivos), 0.9, tipo="sagrado", rotulo="Odette")
         gritar(cb, a, "ataque", 0.15)
         return
     if cid == "morel":
@@ -657,7 +657,7 @@ def morrer(g, m):
     d = COMPANHEIROS[cid]
     g.ui.separador("vermelho")
     finais = {
-        "odete": "Odete cai de joelhos, as mãos ainda erguidas numa prece que não termina. Quando você chega até ela, "
+        "odete": "Odette cai de joelhos, as mãos ainda erguidas numa prece que não termina. Quando você chega até ela, "
                  "os olhos já estão parados, voltados para o norte, para a catedral.",
         "morel": "Morel ainda tenta se levantar, apoiado na espada. \"Segura a linha\", ele diz, para ninguém. "
                  "Depois desaba, e a linha que ele segurava era você.",
@@ -668,7 +668,7 @@ def morrer(g, m):
     sair(g, cid, "morto")
     for outro in membros(g):
         if outro["id"] == "odete":
-            g.dizer(f"Odete fecha os olhos de {d['curto']} e reza por um bom tempo.", "cinza")
+            g.dizer(f"Odette fecha os olhos de {d['curto']} e reza por um bom tempo.", "cinza")
         elif outro["id"] == "morel":
             g.dizer("Morel cava a cova sozinho. Não deixa ninguém ajudar.", "cinza")
         else:
@@ -691,7 +691,7 @@ def antes_da_batalha_final(g):
             extras.append("yara")
         elif m["aprovacao"] >= 45:
             falas = {
-                "odete": "Odete aperta seu ombro. \"Desta vez eu não vou fugir.\"",
+                "odete": "Odette aperta seu ombro. \"Desta vez eu não vou fugir.\"",
                 "morel": "Morel desembainha a espada e se põe um passo à sua frente. \"Segura a linha. Eu seguro você.\"",
                 "yara": "Yara entrelaça os dedos nos seus por um instante. \"Ele vai tentar falar comigo. Não deixa.\"",
             }

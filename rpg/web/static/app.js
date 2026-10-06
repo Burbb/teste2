@@ -50,7 +50,8 @@ const App = {
   get estado() { return estado; },
   responder: (id, valor) => responder(id, valor),
   pedir: (rotulo, chave, valor) => pedir(rotulo, chave, valor),
-  acao: (filtro, som) => acao(filtro, som),
+  acao: (filtro, som, extra) => acao(filtro, som, extra),
+  ultimaLoja: null,
   som: (n) => Som.tocar(n),
   doer: () => doer(),
   acaoFecharTalentos: null,
@@ -90,13 +91,13 @@ function pedir(rotulo, chave, valor) {
 }
 
 /** Responde à opção cujos metadados batem com o filtro (ações de arrastar, comprar, usar...). */
-function acao(filtro, som) {
+function acao(filtro, som, extra) {
   if (!pergunta || pergunta.tipo !== "opcoes" || !pergunta.opcoes) return false;
   const i = pergunta.opcoes.findIndex((o) => o.meta && Object.entries(filtro).every(([k, v]) => o.meta[k] === v));
   if (i < 0) return false;
   Telas.esconderDica();
   if (som) Som.tocar(som);
-  responder(pergunta.id, i);
+  responder(pergunta.id, extra ? { i, ...extra } : i);  // extra: dados que vão junto (ex.: quantidade)
   return true;
 }
 const ACOES_OCULTAS = ["equipar", "tirar", "usar", "largar", "comprar", "comprar_item", "vender"];
@@ -159,6 +160,7 @@ function rolarFim() { if (seguir) pagina.scrollTop = pagina.scrollHeight; }
 pagina.addEventListener("scroll", () => { seguir = pagina.scrollTop + pagina.clientHeight >= pagina.scrollHeight - 80; }, { passive: true });
 
 function cabecalho(m) {
+  document.querySelectorAll(".voltar-seta").forEach((x) => x.remove());
   cab.dataset.tipo = m.tipo || "evento";
   cab.innerHTML = `<h1 class="cena-titulo">${esc(m.titulo)}</h1>` + (m.subtitulo ? `<div class="cena-sub">${esc(m.subtitulo)}</div>` : "") +
     `<div class="ornamento"><i></i><b></b><i></i></div>`;
@@ -228,6 +230,12 @@ async function texto(m) {
     if (!instantaneo()) await espera(ritmo(160));
     return;
   }
+  if (emTela()) {  // numa tela desenhada, frases curtas viram aviso solto
+    const tipo = /^(vermelho)/.test(m.cor || "") ? "perda" : /^(verde)/.test(m.cor || "") ? "item" : "info";
+    aviso(m.texto, tipo, tipo === "perda" ? "caveira" : tipo === "item" ? "estrela" : "pergaminho");
+    historico("", m.texto);
+    return;
+  }
   const p = el("p");
   const [base, ...mods] = (m.cor || "").split("+");
   if (COR_PROSA[base]) p.classList.add(COR_PROSA[base]);
@@ -258,7 +266,7 @@ async function opiniao(m) {
 
 function iconeChip(m) {
   const t = m.texto;
-  const porNome = ["Odete", "Morel", "Yara"].find((n) => t.includes(n));
+  const porNome = ["Odette", "Morel", "Yara"].find((n) => t.includes(n));
   if ((m.tipo === "aprova" || m.tipo === "desaprova") && porNome) return porNome.toLowerCase();
   if (m.tipo === "item") {
     if (/comida|Provis/i.test(t)) return "pernil";
@@ -273,7 +281,32 @@ function iconeChip(m) {
     ferimento: "gota", nivel: "estrela", info: "pergaminho" }[m.tipo] || "pergaminho";
 }
 
+/* Avisos soltos na tela: nas telas desenhadas (mercado, inventário), o que aconteceu aparece
+   perto de onde você clicou, e não lá embaixo da página. */
+let ultimoClique = { x: 0, y: 0, t: -1e9 }, avisosAtivos = 0;
+document.addEventListener("pointerdown", (ev) => { ultimoClique = { x: ev.clientX, y: ev.clientY, t: performance.now() }; }, true);
+function emTela() { return !!textoEl.querySelector(".tela") && !(estado && estado.combate); }
+function aviso(texto, tipo, icone) {
+  if (replay) return;
+  const a = el("div", `aviso-flutuante ${tipo || "info"}`, (icone ? spr(icone, 1) : "") + esc(texto));
+  document.body.appendChild(a);
+  const n = avisosAtivos++;
+  const perto = performance.now() - ultimoClique.t < 5000;
+  const x = perto ? ultimoClique.x : innerWidth / 2, y = (perto ? ultimoClique.y - 40 : 110) - n * 32;
+  a.style.left = Math.max(8, Math.min(innerWidth - a.offsetWidth - 8, x - a.offsetWidth / 2)) + "px";
+  a.style.top = Math.max(54, y) + "px";
+  setTimeout(() => { a.remove(); avisosAtivos = Math.max(0, avisosAtivos - 1); }, 2000);
+}
+
 async function efeito(m) {
+  if (emTela()) {
+    aviso(m.texto, m.tipo, iconeChip(m));
+    historico("h-chip", "▸ " + m.texto);
+    if (replay) return;
+    Som.tocar({ ouro: "moeda", perda: "moeda", item: "item", cura: "item", nivel: "nivel" }[m.tipo] || "item");
+    if (!instantaneo()) await espera(ritmo(90));
+    return;
+  }
   let linha = textoEl.lastElementChild;
   if (!linha || !linha.classList.contains("chips") || linha.classList.contains("passado")) linha = anexar(el("div", "chips"));
   linha.appendChild(el("span", `chip ${m.tipo || "info"}`, spr(iconeChip(m), 1) + esc(m.texto)));
@@ -367,7 +400,11 @@ function doer() {
 }
 
 /* ------------------------------------------------------------------ escolhas */
-function limparPrompt() { promptEl.innerHTML = ""; pergunta = null; Batalha.limparAlvos(); Batalha.vez(null); }
+function limparPrompt() {
+  promptEl.innerHTML = ""; pergunta = null; Batalha.limparAlvos(); Batalha.vez(null);
+  document.querySelectorAll(".voltar-seta").forEach((b) => b.remove());
+  Telas.fecharMenuItem();
+}
 function atalhoDe(t) { return SISTEMA.find(([re]) => re.test(t)); }
 
 function mostrarOpcoes(m) {
@@ -397,7 +434,18 @@ function mostrarOpcoes(m) {
   }
   const sistema = m.opcoes.filter((o) => atalhoDe(o.texto)).length >= 4;
   const atalhos = el("div", "atalhos");
+  document.querySelectorAll(".voltar-seta").forEach((x) => x.remove());
+  const voltar = m.opcoes.length > 1 && !corpo.classList.contains("modo-titulo") ? m.opcoes.findIndex(ehVoltar) : -1;
+  if (voltar >= 0) {
+    // "Voltar" vira uma seta fixa no canto da página (e Esc/Backspace), em vez de ficar no fim da lista.
+    const b = el("button", "voltar-seta", `<span>◀</span> ${esc(/^Sair do mercado/.test(m.opcoes[voltar].texto) ? "Sair do mercado" : "Voltar")}<kbd>Esc</kbd>`);
+    b.type = "button";
+    b.addEventListener("click", (ev) => { ev.stopPropagation(); responder(m.id, voltar); });
+    folha.prepend(b);
+    pergunta.voltar = voltar;
+  }
   m.opcoes.forEach((o, i) => {
+    if (i === voltar) return;
     if (o.meta && ACOES_OCULTAS.some((k) => o.meta[k] !== undefined)) return;  // feitas pela tela (arrastar, clicar)
     const at = sistema && atalhoDe(o.texto);
     if (at) {
@@ -459,6 +507,10 @@ function iconeAcaoCombate(t) {
   if (/^Analisar/.test(t)) return spr("olho", 2);
   if (/^Fugir/.test(t)) return spr("bota", 2);
   return "";
+}
+
+function ehVoltar(o) {
+  return (o.meta && o.meta.voltar) || /^(Voltar|Sair do mercado|Cancelar|Fechar)\b/.test(o.texto);
 }
 
 function mostrarContinuar(m) {
@@ -749,7 +801,12 @@ document.addEventListener("keydown", (ev) => {
   if (ev.target.tagName === "INPUT") { if (ev.key === "Escape") ev.target.blur(); return; }
   if (ev.ctrlKey || ev.metaKey || ev.altKey) return;
   const k = ev.key;
-  if (k === "Escape") { fecharTudo(); return; }
+  if (k === "Escape" || k === "Backspace") {
+    const aberto = !$("#gaveta-historico").hidden || !$("#sobre-mapa").hidden || !$("#sobre-talentos").hidden || document.querySelector(".menu-item");
+    if (!aberto && pergunta && pergunta.voltar !== undefined && !processando) { ev.preventDefault(); responder(pergunta.id, pergunta.voltar); return; }
+    if (k === "Escape") { Telas.fecharMenuItem(); fecharTudo(); }
+    return;
+  }
   if (pergunta && pergunta.letras && pergunta.letras[k.toLowerCase()] !== undefined && !processando) {
     ev.preventDefault(); responder(pergunta.id, pergunta.letras[k.toLowerCase()]); return;
   }

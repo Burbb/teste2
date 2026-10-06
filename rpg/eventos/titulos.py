@@ -1,8 +1,8 @@
 """Títulos de cena de cada evento (aparecem no topo da página)."""
 
 TITULOS = {
-    "odete_na_estrada": "A irmã de vigília", "odete_a_mae": "A mãe de Tomé", "morel_na_taverna": "O cão de ferro",
-    "teodoro_ruivo": "A Ponte de Varn", "yara_na_fogueira": "A fogueira", "yara_sonambula": "Pés descalços",
+    "odete_na_estrada": "A irmã de vigília", "odete_a_mae": "A mãe de Thomas", "morel_na_taverna": "O cão de ferro",
+    "teodoro_ruivo": "A Varn Bridge", "yara_na_fogueira": "A fogueira", "yara_sonambula": "Pés descalços",
     "yara_circulo_negro": "O círculo negro", "discussao_fe_e_bruxaria": "Fé e bruxaria", "discussao_pao": "O pão",
     "discussao_mao_na_espada": "A mão na espada",
     "encontro_hostil": "Algo se move", "nemesis_retorna": "O caçador volta", "alvo_contrato": "A presa do contrato",
@@ -34,7 +34,7 @@ TITULOS = {
     "aldeoes_temerosos": "Portas que se fecham", "olhos_na_escuridao": "Olhos na escuridão",
     "visitante_misterioso": "Um visitante", "ladrao_noturno": "Passos no escuro", "ladrao_redimido": "Um aviso",
     "sonho_profetico": "Um sonho", "ceu_estrelado": "Estrelas", "sussurros_do_vazio": "A voz na fogueira",
-    "companheiro_de_vigia": "Vigília", "briga_de_taverna": "Briga na taverna", "festival": "Vigília das Velas",
+    "companheiro_de_vigia": "Vigília", "briga_de_taverna": "Briga na taverna", "festival": "Candlewatch",
     "pregador_do_vazio": "O pregador", "familia_grata": "Gratidão", "mendigo_misterioso": "O mendigo",
     "guarda_desconfiado": "Guardas", "pedido_de_socorro": "Um pedido",
 }

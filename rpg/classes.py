@@ -45,14 +45,14 @@ CLASSES = {
 SPECS = {
     "paladino": {
         "nome": "Paladino", "classe": "guerreiro",
-        "desc": "Juramento da Luz. Cura a si mesmo, fere mortos-vivos e corrompidos com poder sagrado.",
+        "desc": "Oath of Light. Cura a si mesmo, fere mortos-vivos e corrompidos com poder sagrado.",
         "bonus": dict(max_hp=15, poder=6, defesa=3),
         "cresc": dict(poder=1.5, max_hp=2),
         "habilidades": [(4, "golpe_sagrado"), (4, "prece"), (7, "julgamento")],
     },
     "berserker": {
         "nome": "Berserker", "classe": "guerreiro",
-        "desc": "Pacto do Sangue. Quanto mais ferido, mais forte. Rouba vida e acerta todos ao redor.",
+        "desc": "Blood Pact. Quanto mais ferido, mais forte. Rouba vida e acerta todos ao redor.",
         "bonus": dict(atk=5, max_hp=10, defesa=-2),
         "cresc": dict(atk=1.0),
         "habilidades": [(4, "sede_sangue"), (4, "redemoinho"), (7, "furia_cega")],
@@ -73,14 +73,14 @@ SPECS = {
     },
     "piromante": {
         "nome": "Piromante", "classe": "mago",
-        "desc": "A Chama Viva. Queimaduras mais fortes, magias em área e explosões em cadeia.",
+        "desc": "A Living Flame. Queimaduras mais fortes, magias em área e explosões em cadeia.",
         "bonus": dict(poder=4, max_rec=10),
         "cresc": dict(poder=0.8),
         "habilidades": [(4, "inferno"), (4, "combustao"), (7, "fenix")],
     },
     "necromante": {
         "nome": "Necromante", "classe": "mago",
-        "desc": "O Sussurro do Túmulo. Drena vida, amaldiçoa e ergue servos dos mortos.",
+        "desc": "O Grave Whisper. Drena vida, amaldiçoa e ergue servos dos mortos.",
         "bonus": dict(max_hp=12, poder=3, defesa=2),
         "cresc": dict(max_hp=2, poder=0.5),
         "habilidades": [(4, "drenar_vida"), (4, "erguer_servo"), (7, "maldicao")],

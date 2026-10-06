@@ -9,6 +9,7 @@ import unittest
 
 from rpg import comitiva
 from rpg.classes import CLASSES
+from rpg.itens import CONSUMIVEIS
 from rpg.eventos import REGISTRO
 from rpg.jogo import Derrota, FimDeJogo, Jogo
 from rpg.ui import BotUI, LimiteBot
@@ -169,6 +170,27 @@ class TestSimulacao(unittest.TestCase):
             self.assertTrue(any(d.get("de") == cb.uid(a) for t, d in lances for a in cb.aliados if t == "acao"))
             g.combate_ativo = None
 
+    def test_mercado_quantidade_e_auto_equipar(self):
+        with tempfile.TemporaryDirectory() as pasta:
+            g = Jogo(BotUI(random.Random(2), max_decisoes=50), seed=2, pasta_saves=pasta)
+            g.iniciar("Robô", "guerreiro")
+            g.j.ouro = 500
+            tochas = g.j.consumiveis.get("tocha", 0)
+            preco = g.preco(CONSUMIVEIS["tocha"]["preco"])
+            g.ui.escolher = lambda pergunta, opcoes: opcoes.index("Comprar Tocha")
+            g.ui.extra_resposta = {"qtd": 3}
+            self.assertFalse(g._loja_web([]))
+            self.assertEqual(g.j.consumiveis["tocha"], tochas + 3)
+            self.assertEqual(g.j.ouro, 500 - 3 * preco)
+            # Equipamento comprado com o espaço do corpo vazio já sai vestido.
+            from rpg.itens import gerar_equip
+            elmo = gerar_equip(random.Random(1), "guerreiro", 2, slot="cabeca")
+            g.j.equip["cabeca"] = None
+            g.ui.escolher = lambda pergunta, opcoes: opcoes.index(f"Comprar {elmo['nome']}")
+            g._loja_web([elmo])
+            self.assertIs(g.j.equip["cabeca"], elmo)
+            self.assertNotIn(elmo, g.j.mochila)
+
     def test_comitiva(self):
         """Opinião, partida, conversas, combate e salvar/carregar da comitiva."""
         with tempfile.TemporaryDirectory() as pasta:
@@ -190,7 +212,7 @@ class TestSimulacao(unittest.TestCase):
             self.assertGreater(comitiva.membro(g, "yara")["aprovacao"], 0)
             for _ in range(5):
                 comitiva.reagir(g, "magia_proibida", "sacrilegio")
-            self.assertFalse(comitiva.presente(g, "odete"), "Odete deveria ter ido embora")
+            self.assertFalse(comitiva.presente(g, "odete"), "Odette deveria ter ido embora")
             self.assertEqual(g.flag("comitiva:odete"), "partiu")
             self.assertFalse(comitiva.disponivel(g, "odete"))
             # Todas as conversas de todos são alcançáveis com aprovação alta e missões concluídas.

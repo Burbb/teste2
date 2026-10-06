@@ -128,7 +128,7 @@ def briga_de_taverna(g):
 
 @evento(contextos=VILA, peso=5, cooldown=16)
 def festival(g):
-    g.dizer("Hoje é a Vigília das Velas: a vila inteira acende velas pelos mortos do ano. São muitas velas. "
+    g.dizer("Hoje é a Candlewatch: a vila inteira acende velas pelos mortos do ano. São muitas velas. "
             "Na praça, o barão oferece pão de graça — e um poço de lutas para quem quiser ganhar algumas moedas.",
             "amarelo")
     op = g.menu("O que faz?", [

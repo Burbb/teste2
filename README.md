@@ -6,7 +6,7 @@ Um RPG **hardcore** e sombrio, no espírito de Diablo: aqui você não é o esco
 A fome mata, feridas infeccionam, a noite cega e a morte é permanente. Cada partida gera
 um reino diferente: mapa, nomes, chefes, eventos e consequências.
 
-![Uma cena: paisagem em pixel art, o dado de Percepção, a HUD com suprimentos desenhados e o mapa](docs/interface.png)
+![O dado de Percepção falha, um lobo gélido surge e a luta começa no palco sobre a paisagem](docs/interface.png)
 
 <p align="center">
   <img src="docs/combate.png" width="49%" alt="Combate: as cartas da comitiva e dos inimigos sobre a paisagem; a Bola de Fogo incendeia o alvo">
@@ -14,7 +14,7 @@ um reino diferente: mapa, nomes, chefes, eventos e consequências.
 </p>
 <p align="center">
   <img src="docs/redemoinho.png" width="49%" alt="Redemoinho: a carta do herói vai ao centro e gira quatro vezes">
-  <img src="docs/cura.png" width="49%" alt="Odete cura: a carta brilha em verde e o número sobe">
+  <img src="docs/cura.png" width="49%" alt="Odette cura: a carta brilha em verde e o número sobe">
 </p>
 <p align="center">
   <img src="docs/mapa.png" width="49%" alt="Mapa do reino no estilo da paisagem: regiões pontilhadas com pinheiros, picos e casinhas">
@@ -25,7 +25,7 @@ um reino diferente: mapa, nomes, chefes, eventos e consequências.
   <img src="docs/inventario.png" width="49%" alt="Inventário: boneco com dez espaços, mochila e comparação de itens">
 </p>
 <p align="center">
-  <img src="docs/mercado.png" width="49%" alt="Mercado interativo">
+  <img src="docs/mercado.png" width="49%" alt="Mercado: quantidade, avisos soltos perto do clique e a seta de voltar">
   <img src="docs/titulo.png" width="49%" alt="Tela de título com uma paisagem sorteada">
 </p>
 
@@ -99,8 +99,13 @@ nos títulos, Pixelify Sans no texto, Jersey 15 nos números.
   mão secundária, pernas, pés e dois anéis) e a mochila em grade. **Arraste** itens para equipar,
   para tirar ou para a caveira (largar); dois cliques também funcionam. Passe o mouse para ver
   os atributos e a **comparação com o que está equipado** (▲ verde, ▼ vermelho).
-- **Mercado interativo:** vitrine de suprimentos e equipamentos com preço e comparação; clique
-  para comprar, clique (ou arraste para o balcão) para vender.
+- **Mercado interativo:** vitrine de suprimentos e equipamentos com preço e comparação.
+  Suprimentos têm **quantidade** (`−`/`+`, segurar acelera, rodinha do mouse, Shift+clique compra 5).
+  Equipamento comprado para um espaço vazio do corpo **já sai vestido**. Na mochila, clicar num
+  item abre um menu com **Equipar** ou **Vender**, e nada é vendido sem você confirmar.
+- **Nada some lá embaixo:** nas telas desenhadas (mercado, inventário), o que acontece
+  (`−16 ouro`, `Tocha ×4`) aparece **solto na tela, perto de onde você clicou**. E "Voltar" virou
+  uma **seta fixa** no canto da página, que também responde ao `Esc`.
 - **Telas desenhadas:** Diário (cartas de contratos, rumores e do inimigo), Bestiário (fichas
   com fraquezas) e Comitiva.
 - Som ambiente e efeitos sintetizados na hora. Funciona em monitor largo, notebook e celular.
@@ -118,7 +123,7 @@ nos títulos, Pixelify Sans no texto, Jersey 15 nos números.
 | `H` ou `F2` | Histórico completo da partida |
 | `V` ou `F3` | Velocidade do texto |
 | `S` | Liga/desliga o som |
-| `Esc` | Fecha mapa e histórico |
+| `Esc` ou `Backspace` | Voltar (seta ◀) · fecha mapa e histórico |
 
 ## Equipamento
 
@@ -136,24 +141,24 @@ Você não precisa caminhar sozinho, e talvez não deva. Três companheiros pode
 
 | Companheiro | Quem é | Em combate | Admira | Despreza |
 |---|---|---|---|---|
-| **Irmã Odete** | Clériga que fugiu da catedral na noite em que a Fenda se abriu | Cura quem estiver morrendo | misericórdia, fé, honestidade | crueldade, sacrilégio, magia proibida |
-| **Bastião Morel** | Ex-capitão mercenário dos Cães de Ferro | Atrai os golpes para si e atordoa | coragem, pragmatismo, honra | fuga, autoridade, caridade "inútil" |
+| **Sister Odette** | Clériga que fugiu da catedral na noite em que a Fenda se abriu | Cura quem estiver morrendo | misericórdia, fé, honestidade | crueldade, sacrilégio, magia proibida |
+| **Bastian Morel** | Ex-capitão mercenário dos Iron Hounds | Atrai os golpes para si e atordoa | coragem, pragmatismo, honra | fuga, autoridade, caridade "inútil" |
 | **Yara** | Bruxa do brejo, quase queimada; a Fenda fala com ela | Amaldiçoa e ataca com magia | magia proibida, curiosidade, rebeldia | fé, autoridade, fanatismo, purificar |
 
 - **Aprovação.** 117 escolhas, em 49 eventos, têm peso moral. Quando você escolhe,
-  cada companheiro reage (um selo `▼ Odete desaprova muito` salta do retrato) e às vezes diz o
+  cada companheiro reage (um selo `▼ Odette desaprova muito` salta do retrato) e às vezes diz o
   que pensa, num balão. Na luta também soltam uma frase de vez em quando. Quem confia
   em você luta melhor; abaixo de um certo ponto, vai embora, e nem todos vão em paz.
 - **Conversas** no acampamento ou no menu **Comitiva** (`C`): cada um tem uma história que
   só se abre com confiança.
 - **Missões pessoais em três atos**, com escolhas que mudam o companheiro para sempre: a
-  mãe de um acólito morto, um tenente que sobreviveu à Ponte de Varn, um círculo de pedras
+  mãe de um acólito morto, um tenente que sobreviveu à Varn Bridge, um círculo de pedras
   negras onde uma porta pode ser fechada ou aberta de vez. Algumas dessas escolhas mudam
   quem estará ao seu lado (ou contra você) no salão do trono.
 - **Discussões** entre companheiros: às vezes você vai ter que tomar partido.
 - **O preço:** cada companheiro come uma provisão por dia, Morel cobra soldo, grupos
   atraem mais inimigos, os inimigos resistem mais e o XP é dividido. Quem cai em combate
-  pode morrer de verdade (Odete por perto ajuda a evitar).
+  pode morrer de verdade (Odette por perto ajuda a evitar).
 
 ## O objetivo
 

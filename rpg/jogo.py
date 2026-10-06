@@ -1282,11 +1282,11 @@ class Jogo:
             "consumiveis": [{"id": k, "nome": CONSUMIVEIS[k]["nome"], "desc": CONSUMIVEIS[k]["desc"],
                              "preco": self.preco(CONSUMIVEIS[k]["preco"]), "tem": j.consumiveis.get(k, 0)} for k in cons]
             + [{"id": "provisoes", "nome": "Provisões (1 dia)", "desc": "Pão duro, carne seca e um odre de água.",
-                "preco": self.preco(4), "tem": j.provisoes}]
+                "preco": self.preco(4), "tem": j.provisoes, "limite": sobrevivencia.MAX_PROVISOES - j.provisoes}]
             + ([{"id": "flechas", "nome": "Feixe de 10 flechas", "desc": "Flechas de freixo, pontas de ferro.",
                  "preco": self.preco(10), "tem": j.flechas}] if j.classe == "arqueiro" else []),
             "equipamentos": [item(it, self.preco(it["preco"])) for it in self.estoque()],
-            "mochila": [item(it, it["preco"] // 2) for it in j.mochila],
+            "mochila": [dict(item(it, it["preco"] // 2), usavel=self.pode_usar(it)) for it in j.mochila],
         }
 
     def loja(self):
@@ -1344,7 +1344,8 @@ class Jogo:
                 self.oferecer_equip_comprado(op[1])
 
     def _loja_web(self, a_venda):
-        """Mercado na interface web: cada compra e venda é uma opção direta. True = sair."""
+        """Mercado na interface web: cada compra e venda é uma opção direta. True = sair.
+        Suprimentos podem ser comprados em quantidade (a tela manda "qtd" junto da escolha)."""
         j = self.j
         opcoes = []
         for k in ("tocha", "bandagem", "unguento", "pocao_vida", "tonico", "antidoto", "bomba_fumaca", "pena_fenix"):
@@ -1355,36 +1356,60 @@ class Jogo:
         for i, it in enumerate(a_venda):
             opcoes.append((f"Comprar {it['nome']}", ("equip", it), {"comprar_item": i}))
         for i, it in enumerate(j.mochila):
+            if self.pode_usar(it):
+                opcoes.append((f"Equipar {it['nome']}", ("equipar", it), {"equipar": i}))
             opcoes.append((f"Vender {it['nome']}", ("vender", it), {"vender": i}))
         op = self.menu("", opcoes + [("Sair do mercado", None, {"voltar": True})])
         if op is None:
             return True
         if op[0] == "vender":
             j.mochila.remove(op[1])
-            self.dizer(f"O mercador examina {op[1]['nome']} contra a luz e conta as moedas devagar.", "cinza")
+            self.ui.efeito(f"Vendeu {op[1]['nome']}", "info")
             self.ganhar_ouro(op[1]["preco"] // 2)
+            return False
+        if op[0] == "equipar":
+            self.equipar(op[1])
             return False
         preco = self.preco({"consumivel": lambda: CONSUMIVEIS[op[1]]["preco"], "flechas": lambda: 10,
                             "provisoes": lambda: 4, "equip": lambda: op[1]["preco"]}[op[0]]())
-        if op[0] == "provisoes" and j.provisoes >= sobrevivencia.MAX_PROVISOES:
-            self.dizer("Você não consegue carregar mais comida.", "vermelho")
-        elif j.ouro < preco:
-            self.dizer("\"Sem ouro, sem negócio.\"", "vermelho")
-        elif op[0] == "equip" and len(j.mochila) >= LIMITE_MOCHILA:
-            self.dizer("Sua mochila está cheia. Venda ou largue algo antes.", "vermelho")
-        else:
+        if op[0] == "equip":
+            if j.ouro < preco:
+                self.dizer("\"Sem ouro, sem negócio.\"", "vermelho")
+                return False
+            espaco = self.espaco_para(op[1])
+            vago = self.pode_usar(op[1]) and not j.equip.get(espaco)
+            if not vago and len(j.mochila) >= LIMITE_MOCHILA:
+                self.dizer("Sua mochila está cheia. Venda ou largue algo antes.", "vermelho")
+                return False
             self.perder_ouro(preco)
-            if op[0] == "consumivel":
-                self.dar(op[1])
-            elif op[0] == "flechas":
-                self.dar_flechas(10)
-            elif op[0] == "provisoes":
-                j.provisoes += 1
-                self.ui.efeito(f"+1 dia de comida (total {j.provisoes})", "item")
+            a_venda.remove(op[1])
+            if vago:  # espaço vazio no corpo: já sai vestido
+                self.equipar(op[1], espaco)
             else:
-                a_venda.remove(op[1])
                 j.mochila.append(op[1])
                 self.ui.efeito(f"{op[1]['nome']} vai para a mochila", "item")
+            return False
+        extra = getattr(self.ui, "extra_resposta", None) or {}
+        try:
+            qtd = max(1, min(99, int(extra.get("qtd", 1))))
+        except (TypeError, ValueError):
+            qtd = 1
+        if op[0] == "provisoes":
+            qtd = min(qtd, sobrevivencia.MAX_PROVISOES - j.provisoes)
+            if qtd <= 0:
+                self.dizer("Você não consegue carregar mais comida.", "vermelho")
+                return False
+        qtd = min(qtd, j.ouro // preco)
+        if qtd <= 0:
+            self.dizer("\"Sem ouro, sem negócio.\"", "vermelho")
+            return False
+        self.perder_ouro(preco * qtd)
+        if op[0] == "consumivel":
+            self.dar(op[1], qtd)
+        elif op[0] == "flechas":
+            self.dar_flechas(10 * qtd)
+        else:
+            self.dar_provisoes(qtd)
         return False
 
     def oferecer_equip_comprado(self, item):
@@ -1694,7 +1719,7 @@ class Jogo:
         extras = []
         if "yara" in traidores:
             yara = self.inimigo("bruxa_brejo", nome_unico="Yara", nivel=chefe.nivel - 1)
-            yara.nome = "Yara, Voz da Fenda"
+            yara.nome = "Yara, Voice of the Rift"
             yara.max_hp = yara.hp = int(yara.max_hp * 1.6)
             yara.poder = int(yara.poder * 1.4)
             extras.append(yara)

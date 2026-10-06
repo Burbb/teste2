@@ -47,6 +47,7 @@ class LimiteBot(Exception):
 
 class UI:
     interativo = True
+    extra_resposta = None  # dados extras que a interface mandou junto da escolha (ex.: quantidade)
     meta_opcoes = None  # dados extras de cada opção (local de viagem, talento...), para interfaces gráficas
 
     def __init__(self, cor=None, rapido=False):

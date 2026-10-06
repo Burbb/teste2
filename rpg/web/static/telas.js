@@ -258,23 +258,28 @@ const Telas = (() => {
   }
 
   // ------------------------------------------------------------------ mercado
+  const qtdLoja = {};  // quantidade escolhida em cada suprimento (sobrevive ao redesenho da tela)
+  function maxCompra(c, ouro) { return Math.max(0, Math.min(99, c.limite ?? 99, Math.floor(ouro / c.preco))); }
   function loja(d) {
     const cons = d.consumiveis.map((c) => {
-      const caro = c.preco > d.ouro;
+      const max = maxCompra(c, d.ouro);
+      const q = Math.max(1, Math.min(qtdLoja[c.id] || 1, max || 1));
+      const caro = max < 1;
       const icone = c.id === "provisoes" ? "pernil" : c.id === "flechas" ? "aljava" : (ICONE_ITEM[c.id] || "pocao");
-      return `<button type="button" class="mercadoria${caro ? " caro" : ""}" data-comprar="${h(c.id)}" ${dica(`<b>${h(c.nome)}</b><div>${h(c.desc)}</div><div class="rodape">${caro ? "Ouro insuficiente." : "Clique para comprar."}</div>`)}>
+      return `<div role="button" tabindex="0" class="mercadoria suprimento${caro ? " caro" : ""}" data-comprar="${h(c.id)}" data-preco="${c.preco}" data-max="${max}" ${dica(`<b>${h(c.nome)}</b><div>${h(c.desc)}</div><div class="rodape">${caro ? (c.limite === 0 ? "Você não carrega mais." : "Ouro insuficiente.") : "Escolha a quantidade e clique para comprar. Shift+clique compra 5."}</div>`)}>
         <span class="slot-px">${S(icone, 2)}${c.tem ? `<span class="qtd">${c.tem}</span>` : ""}</span>
-        <span class="merc-nome">${h(c.nome)}</span><span class="preco">${S("moeda", 1)}${c.preco}</span></button>`;
+        <span class="merc-nome">${h(c.nome)}</span>
+        <span class="preco">${S("moeda", 1)}<span class="total">${c.preco * q}</span></span>
+        <span class="qtd-ctrl"><button type="button" data-q="-1" aria-label="menos">−</button><b>${q}</b><button type="button" data-q="1" aria-label="mais">+</button></span></div>`;
     }).join("");
     const equips = d.equipamentos.map((it, i) => {
       const caro = it.preco > d.ouro;
-      return `<button type="button" class="mercadoria equip${caro ? " caro" : ""}" data-comprar-item="${i}" ${dicaItem(it, caro ? "Ouro insuficiente." : "Clique para comprar (vai para a mochila).")}>
+      return `<button type="button" class="mercadoria equip${caro ? " caro" : ""}" data-comprar-item="${i}" ${dicaItem(it, caro ? "Ouro insuficiente." : "Clique para comprar. Se o espaço do corpo estiver vazio, você já sai vestindo.")}>
         <span class="slot-px r-${h(it.raridade)}">${S(iconeItem(it), 2)}</span>
         <span class="merc-nome r-${h(it.raridade)}">${h(it.nome)}</span><span class="merc-bonus">${h(it.bonus)}</span><span class="preco">${S("moeda", 1)}${it.preco}</span></button>`;
     }).join("");
-    const venda = d.mochila.map((it, i) => `<div role="button" tabindex="0" class="mercadoria equip venda" draggable="true" data-vender="${i}" ${dicaItem(it, "Clique (ou arraste para o balcão) para vender.")}>
-        <span class="slot-px r-${h(it.raridade)}">${S(iconeItem(it), 2)}</span>
-        <span class="merc-nome r-${h(it.raridade)}">${h(it.nome)}</span><span class="merc-bonus">${h(it.bonus)}</span><span class="preco ganho">+${S("moeda", 1)}${it.preco}</span></div>`).join("");
+    const mochila = d.mochila.map((it, i) => `<div role="button" tabindex="0" class="slot-px celula r-${h(it.raridade)}${it.usavel ? "" : " inutil"}" draggable="true" data-mochila-loja="${i}" ${dicaItem(it, "Clique para equipar ou vender.")}>${S(iconeItem(it), 2)}</div>`);
+    for (let i = d.mochila.length; i < d.limite; i++) mochila.push('<div class="slot-px celula vazia"></div>');
     return `<div class="tela loja">
       <div class="loja-topo">${S("saco", 3)}<div><b>O mercador</b><span class="lore">"Tudo tem preço. Até você."</span></div>
         <span class="ouro-loja">${S("moedas", 2)}${d.ouro}</span></div>
@@ -282,25 +287,80 @@ const Telas = (() => {
         <h4>Suprimentos</h4><div class="vitrine">${cons}</div>
         <h4>Equipamentos</h4><div class="vitrine">${equips || '<span class="vazio">Nada que preste hoje. Volte em alguns dias.</span>'}</div>
       </div>
-      <h4>Sua mochila <small>${d.ocupado}/${d.limite} · o mercador paga metade</small></h4>
-      <div class="vitrine vitrine-venda">${venda || '<span class="vazio">Nada para vender.</span>'}</div></div>`;
+      <h4>Sua mochila <small>${d.ocupado}/${d.limite} · clique num item para equipar ou vender (o mercador paga metade)</small></h4>
+      <div class="mochila-grade mochila-loja">${mochila.join("")}</div></div>`;
+  }
+
+  function fecharMenuItem() { document.querySelectorAll(".menu-item").forEach((m) => m.remove()); }
+  function menuItem(ancora, it, i) {
+    fecharMenuItem();
+    esconderDica();
+    const m = document.createElement("div");
+    m.className = "menu-item moldura";
+    m.innerHTML = `<b class="r-${h(it.raridade)}">${h(it.nome)}</b>
+      ${it.usavel ? `<button type="button" data-a="equipar">${S("armadura", 1)} Equipar</button>` : '<span class="pior">Não é para a sua classe.</span>'}
+      <button type="button" data-a="vender" class="vender">${S("moeda", 1)} Vender por ${it.preco}</button>
+      <button type="button" data-a="nada" class="secundaria">Cancelar</button>`;
+    document.body.appendChild(m);
+    const r = ancora.getBoundingClientRect();
+    m.style.left = Math.max(8, Math.min(innerWidth - m.offsetWidth - 8, r.left)) + "px";
+    m.style.top = (r.bottom + 6 + m.offsetHeight > innerHeight ? r.top - m.offsetHeight - 6 : r.bottom + 6) + "px";
+    m.addEventListener("click", (ev) => {
+      const b = ev.target.closest("button");
+      if (!b) return;
+      ev.stopPropagation();
+      fecharMenuItem();
+      if (b.dataset.a === "equipar") App.acao({ equipar: i }, "equipar");
+      else if (b.dataset.a === "vender") App.acao({ vender: i }, "moeda");
+    });
+    setTimeout(() => document.addEventListener("click", fecharMenuItem, { once: true }), 0);
   }
 
   function ligarLoja(raiz) {
-    raiz.querySelectorAll("[data-comprar]").forEach((el) => el.addEventListener("click", (ev) => { ev.stopPropagation(); if (!el.classList.contains("caro")) App.acao({ comprar: el.dataset.comprar }, "moeda"); else App.som("falha"); }));
+    const dados = App.ultimaLoja;
+    raiz.querySelectorAll("[data-comprar]").forEach((el) => {
+      const preco = Number(el.dataset.preco), max = Number(el.dataset.max), id = el.dataset.comprar;
+      const num = el.querySelector(".qtd-ctrl b"), total = el.querySelector(".total");
+      const mudar = (q) => {
+        q = Math.max(1, Math.min(max || 1, q));
+        qtdLoja[id] = q; num.textContent = q; total.textContent = preco * q;
+      };
+      el.querySelectorAll("[data-q]").forEach((b) => {
+        let rep = null;
+        const passo = () => mudar((qtdLoja[id] || 1) + Number(b.dataset.q));
+        b.addEventListener("click", (ev) => { ev.stopPropagation(); });
+        b.addEventListener("pointerdown", (ev) => {
+          ev.stopPropagation(); passo(); App.som("escolha");
+          rep = setTimeout(function repetir() { passo(); rep = setTimeout(repetir, 70); }, 380);  // segurar acelera
+        });
+        ["pointerup", "pointerleave", "pointercancel"].forEach((t) => b.addEventListener(t, () => clearTimeout(rep)));
+      });
+      el.addEventListener("wheel", (ev) => { if (max > 1) { ev.preventDefault(); mudar((qtdLoja[id] || 1) + (ev.deltaY < 0 ? 1 : -1)); } }, { passive: false });
+      const comprar = (ev) => {
+        if (el.classList.contains("caro")) { App.som("falha"); return; }
+        const q = ev.shiftKey ? Math.min(5, max) : Math.min(qtdLoja[id] || 1, max);
+        qtdLoja[id] = 1;
+        App.acao({ comprar: id }, "moeda", { qtd: q });
+      };
+      el.addEventListener("click", (ev) => { if (!ev.target.closest(".qtd-ctrl")) comprar(ev); });
+      el.addEventListener("keydown", (ev) => { if (ev.key === "Enter") comprar(ev); });
+    });
     raiz.querySelectorAll("[data-comprar-item]").forEach((el) => el.addEventListener("click", (ev) => { ev.stopPropagation(); if (!el.classList.contains("caro")) App.acao({ comprar_item: Number(el.dataset.comprarItem) }, "moeda"); else App.som("falha"); }));
+    // Mochila: clique abre um menu (equipar / vender); arrastar só vende se soltar no balcão do mercador.
     let vendendo = null;
-    const balcao = raiz.querySelector(".loja");  // solte em qualquer lugar do balcão do mercador
-    const vendas = raiz.querySelector(".vitrine-venda");
-    raiz.querySelectorAll("[data-vender]").forEach((el) => {
-      el.addEventListener("click", (ev) => { ev.stopPropagation(); App.acao({ vender: Number(el.dataset.vender) }, "moeda"); });
-      el.addEventListener("dragstart", (ev) => { esconderDica(); vendendo = Number(el.dataset.vender); ev.dataTransfer.setData("text/plain", "item"); balcao.classList.add("alvo"); });
+    const balcao = raiz.querySelector(".balcao");
+    raiz.querySelectorAll("[data-mochila-loja]").forEach((el) => {
+      const i = Number(el.dataset.mochilaLoja);
+      const it = dados && dados.mochila[i];
+      el.addEventListener("click", (ev) => { ev.stopPropagation(); if (it) menuItem(el, it, i); });
+      el.addEventListener("keydown", (ev) => { if (ev.key === "Enter" && it) menuItem(el, it, i); });
+      el.addEventListener("dragstart", (ev) => { esconderDica(); fecharMenuItem(); vendendo = i; ev.dataTransfer.setData("text/plain", "item"); balcao.classList.add("alvo"); });
       el.addEventListener("dragend", () => { balcao.classList.remove("alvo"); setTimeout(() => { vendendo = null; }, 0); });
     });
-    balcao.addEventListener("dragover", (ev) => { if (vendendo !== null && !vendas.contains(ev.target)) ev.preventDefault(); });
+    balcao.addEventListener("dragover", (ev) => { if (vendendo !== null) ev.preventDefault(); });
     balcao.addEventListener("drop", (ev) => {
       ev.preventDefault(); balcao.classList.remove("alvo");
-      if (vendendo !== null && !vendas.contains(ev.target)) App.acao({ vender: vendendo }, "moeda");
+      if (vendendo !== null) App.acao({ vender: vendendo }, "moeda");
       vendendo = null;
     });
   }
@@ -356,7 +416,7 @@ const Telas = (() => {
     const div = document.createElement("div");
     div.innerHTML = ({ personagem, diario, bestiario, comitiva, loja }[m.tipo] || (() => ""))(m.dados);
     if (m.tipo === "personagem") ligarInventario(div);
-    if (m.tipo === "loja") ligarLoja(div);
+    if (m.tipo === "loja") { App.ultimaLoja = m.dados; ligarLoja(div); }
     ligarDicas(div);
     return div;
   }
@@ -458,6 +518,6 @@ const Telas = (() => {
     setTimeout(() => t.remove(), 3300);
   }
 
-  return { guardarArvore, abrirTalentos, fecharTalentos, painel, celebrar, toast, iconeCriatura, iconeItem, dicaItem, ligarDicas, esconderDica,
+  return { fecharMenuItem, guardarArvore, abrirTalentos, fecharTalentos, painel, celebrar, toast, iconeCriatura, iconeItem, dicaItem, ligarDicas, esconderDica,
     ICONE_ITEM, ARMA, VAZIO, NOME_ESPACO, AREA, barra, aprovacao };
 })();

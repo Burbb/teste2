@@ -93,7 +93,7 @@ def _aplicar_template(e, t, nivel):
 def gerar_guardiao(rng, bioma):
     idx = rng.randrange(len(GUARDIOES[bioma]))
     t = GUARDIOES[bioma][idx]
-    nome = f"{tx.nome_proprio(rng)}, {tx.artigo(t['g'])} {t['base']}"
+    nome = f"{tx.nome_proprio(rng)}, the {t['base']}"
     return {"bioma": bioma, "idx": idx, "nome": nome, "g": t["g"], "derrotado": False, "base": t["base"]}
 
 
@@ -301,7 +301,11 @@ def _invocar(cb, e, alvo):
     if not e.invoca or len(cb.inimigos_vivos()) >= 4:
         return False
     novo = criar(cb.rng, e.invoca, max(1, e.nivel - 2))
-    novo.nome = f"{novo.nome} (invocado)"
+    # Cada invocado tem letra própria: "Esqueleto A", "Esqueleto B"... nunca dois com o mesmo nome.
+    base = novo.nome
+    usados = {x.nome for x in cb.inimigos}
+    letra = next((l for l in "ABCDEFGHIJKLMNOP" if f"{base} {l} (invocado)" not in usados), "Z")
+    novo.nome = f"{base} {letra} (invocado)"
     novo.xp //= 2
     novo.ouro = 0
     cb.inimigos.append(novo)

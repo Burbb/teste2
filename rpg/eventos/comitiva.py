@@ -42,11 +42,11 @@ def odete_na_estrada(g):
                     "e fica um tempo ali, parada.", "cinza")
             simpatia = 5
     elif op == "perguntar":
-        g.dizer("\"Odete. Irmã Odete.\" Ela não tira as mãos da ferida. \"Ele já está morto, sabia? Só não percebeu "
+        g.dizer("\"Odette. Sister Odette.\" Ela não tira as mãos da ferida. \"Ele já está morto, sabia? Só não percebeu "
                 "ainda.\" Ele percebe pouco depois.", "cinza")
         simpatia = 0
     elif op == "roubar":
-        g.dizer("Você encontra três moedas e um dente de ouro. Odete se levanta, com sangue até os cotovelos, e te "
+        g.dizer("Você encontra três moedas e um dente de ouro. Odette se levanta, com sangue até os cotovelos, e te "
                 "encara até você ir embora.", "vermelho")
         g.ganhar_ouro(4)
         g.mudar_reputacao(-3)
@@ -63,13 +63,13 @@ def odete_na_estrada(g):
     if cm.oferecer_vaga(g, "odete"):
         cm.mudar_aprovacao(g, "odete", simpatia, mostrar=False)
     else:
-        g.dizer("Odete assente, como se esperasse isso, e segue para o outro lado.", "cinza")
+        g.dizer("Odette assente, como se esperasse isso, e segue para o outro lado.", "cinza")
         g.marcar("comitiva:odete", "recusou")
 
 
 @conversa("odete", 0, dias=1)
 def odete_conversa_habito(g, m):
-    g.dizer("Você pergunta pelo hábito chamuscado. Odete demora a responder.")
+    g.dizer("Você pergunta pelo hábito chamuscado. Odette demora a responder.")
     g.dizer("\"Chamuscado, não queimado. Tem diferença. Queimado é quem ficou.\"", "amarelo")
     op = g.menu("O que diz?", [
         ("\"Não precisa me contar nada.\"", "respeito"),
@@ -84,14 +84,14 @@ def odete_conversa_habito(g, m):
                 "Ela se deita de costas para você e não diz mais nada.", "cinza")
         cm.mudar_aprovacao(g, "odete", 1)
     else:
-        g.dizer("\"Sim\", diz Odete, sem se ofender. \"É exatamente o que eu sou.\" O silêncio depois é pior que "
+        g.dizer("\"Sim\", diz Odette, sem se ofender. \"É exatamente o que eu sou.\" O silêncio depois é pior que "
                 "qualquer resposta.", "cinza")
         cm.mudar_aprovacao(g, "odete", -5)
 
 
 @conversa("odete", 1, dias=3, aprov=10)
 def odete_conversa_confissao(g, m):
-    g.dizer("Odete fala sem que você pergunte, com a voz de quem ensaiou muitas vezes e mesmo assim não está pronta.")
+    g.dizer("Odette fala sem que você pergunte, com a voz de quem ensaiou muitas vezes e mesmo assim não está pronta.")
     g.narrar("\"Naquela noite eu ouvi a voz primeiro. Antes do chão abrir, antes dos gritos. Ela disse o meu nome. "
              "E eu corri. Tranquei a porta da cripta por fora, para que a coisa não me seguisse.\"", "amarelo")
     g.narrar("\"Os acólitos estavam lá dentro.\"", "amarelo+negrito")
@@ -101,7 +101,7 @@ def odete_conversa_confissao(g, m):
         ("\"E o que você quer fazer com isso agora?\"", "agora"),
     ])
     if op == "consolar":
-        g.dizer("\"Todo mundo diz isso\", Odete sussurra. \"É o que eu digo também. Não ajuda, mas obrigada.\"", "verde")
+        g.dizer("\"Todo mundo diz isso\", Odette sussurra. \"É o que eu digo também. Não ajuda, mas obrigada.\"", "verde")
         cm.mudar_aprovacao(g, "odete", 6)
     elif op == "verdade":
         g.dizer("Ela fica muito tempo calada. \"Sim. Ninguém nunca tinha dito em voz alta.\" E então, estranhamente, "
@@ -110,43 +110,43 @@ def odete_conversa_confissao(g, m):
     else:
         g.dizer("\"Olhar nos olhos de alguém\", diz ela. \"Só isso. E não desviar.\"", "verde")
         cm.mudar_aprovacao(g, "odete", 4)
-    g.dizer("\"As famílias deles ainda acham que morreram como mártires. Há uma mãe, a mãe de Tomé, que acende "
+    g.dizer("\"As famílias deles ainda acham que morreram como mártires. Há uma mãe, a mãe de Thomas, que acende "
             "uma vela todo dia pelo filho. Um dia eu vou ter que encarar essa mulher.\"", "amarelo")
     m["missao"] = 1
-    g.dizer("(Odete procura a mãe de Tomé. Talvez você a encontre em alguma vila.)", "ciano")
+    g.dizer("(Odette procura a mãe de Thomas. Talvez você a encontre em alguma vila.)", "ciano")
 
 
 @evento(contextos=("vila",), peso=40, cooldown=0, unico=True,
         cond=lambda g: cm.presente(g, "odete") and cm.membro(g, "odete")["missao"] == 1)
 def odete_a_mae(g):
     m = cm.membro(g, "odete")
-    g.dizer("Na praça, uma velha acende uma vela diante de um retrato desbotado de um rapaz de hábito. Odete para, "
+    g.dizer("Na praça, uma velha acende uma vela diante de um retrato desbotado de um rapaz de hábito. Odette para, "
             "como se tivesse batido numa parede.")
-    g.dizer("\"É ela\", sussurra. \"A mãe de Tomé.\"", "amarelo")
-    op = g.menu("O que você diz a Odete?", [
+    g.dizer("\"É ela\", sussurra. \"A mãe de Thomas.\"", "amarelo")
+    op = g.menu("O que você diz a Odette?", [
         ("\"Vá. Conte a verdade. Eu fico ao seu lado.\" (Carisma)", "verdade"),
         ("\"Diga que ele morreu como herói. Ela merece paz.\"", "mentira"),
         ("\"Isso é entre vocês duas.\"", "sozinha"),
     ])
     if op == "mentira" and m["aprovacao"] < 45:
-        g.dizer("Odete balança a cabeça. \"Não. Já menti calando por tempo demais.\" Ela vai sem você.", "cinza")
+        g.dizer("Odette balança a cabeça. \"Não. Já menti calando por tempo demais.\" Ela vai sem você.", "cinza")
         cm.mudar_aprovacao(g, "odete", -4)
         op = "sozinha"
     if op == "mentira":
-        g.narrar("Odete hesita, olha para você, e faz o que você disse. \"Ele morreu protegendo os outros\", diz. A velha "
-                 "chora de orgulho. Odete sorri para ela. Você nunca viu um sorriso tão triste.", "cinza")
+        g.narrar("Odette hesita, olha para você, e faz o que você disse. \"Ele morreu protegendo os outros\", diz. A velha "
+                 "chora de orgulho. Odette sorri para ela. Você nunca viu um sorriso tão triste.", "cinza")
         cm.mudar_aprovacao(g, "odete", -6)
         m["caminho"] = "calada"
     else:
         apoio = op == "verdade"
         ok = g.teste("carisma", 13) if apoio else g.chance(0.5)
-        g.narrar("Odete se ajoelha diante da velha e conta tudo. A voz, a porta, a chave. A velha escuta até o fim.",
+        g.narrar("Odette se ajoelha diante da velha e conta tudo. A voz, a porta, a chave. A velha escuta até o fim.",
                  "amarelo")
         if ok:
-            g.narrar("Depois, levanta a mão e dá um tapa no rosto de Odete. E então a abraça, e as duas choram juntas "
-                     "na praça. \"Pelo menos agora eu sei\", diz a mãe de Tomé.", "verde")
+            g.narrar("Depois, levanta a mão e dá um tapa no rosto de Odette. E então a abraça, e as duas choram juntas "
+                     "na praça. \"Pelo menos agora eu sei\", diz a mãe de Thomas.", "verde")
         else:
-            g.narrar("Depois, grita. Grita até juntar gente. Alguém cospe em Odete. Ela não se defende.", "vermelho")
+            g.narrar("Depois, grita. Grita até juntar gente. Alguém cospe em Odette. Ela não se defende.", "vermelho")
             g.mudar_reputacao(-2)
         cm.mudar_aprovacao(g, "odete", 15 if apoio else (8 if ok else 5))
         m["caminho"] = "penitente"
@@ -156,15 +156,15 @@ def odete_a_mae(g):
 @conversa("odete", 2, dias=4, aprov=40, cond=lambda g, m: m["missao"] == 3)
 def odete_conversa_final(g, m):
     if m["caminho"] == "penitente":
-        g.dizer("\"Ontem eu dormi a noite inteira\", diz Odete, espantada consigo mesma. \"A primeira vez desde a "
+        g.dizer("\"Ontem eu dormi a noite inteira\", diz Odette, espantada consigo mesma. \"A primeira vez desde a "
                 "Fenda.\" Ela tira o rosário do pescoço e põe na sua mão.")
         g.dizer("\"Quando você for até ele, eu vou estar lá. E dessa vez a minha prece não vai tremer.\"", "amarelo")
-        g.aliado_final("Irmã Odete", "Odete ergue o rosário e a Luz que ela achava ter perdido enche o salão do trono. "
+        g.aliado_final("Sister Odette", "Odette ergue o rosário e a Luz que ela achava ter perdido enche o salão do trono. "
                                      "Suas feridas se fecham.", "cura", 0)
         cm.mudar_aprovacao(g, "odete", 5)
     else:
-        g.dizer("\"Ela ainda acende a vela todo dia\", diz Odete. \"Por uma mentira minha. Pelo menos ela dorme.\" "
-                "Odete não diz se ela mesma dorme.", "cinza")
+        g.dizer("\"Ela ainda acende a vela todo dia\", diz Odette. \"Por uma mentira minha. Pelo menos ela dorme.\" "
+                "Odette não diz se ela mesma dorme.", "cinza")
         cm.mudar_aprovacao(g, "odete", 2)
 
 
@@ -175,7 +175,7 @@ def morel_na_taverna(g):
     g.dizer("No canto da taverna, um homem grande come sozinho, de costas para a parede. Cicatriz de orelha a orelha, "
             "armadura remendada com pedaços de outras armaduras. Ele fala sem levantar os olhos do prato.")
     g.dizer("\"Você tem cara de quem vai morrer na estrada. Eu tenho cara de quem impede isso. Quarenta moedas e a "
-            "minha espada é sua. Bastião Morel, ex-capitão dos Cães de Ferro.\"", "amarelo")
+            "minha espada é sua. Bastian Morel, ex-capitão dos Iron Hounds.\"", "amarelo")
     op = g.menu("O que faz?", [
         ("Pagar 40 ouro", "pagar") if g.j.ouro >= 40 else None,
         ("\"Queda de braço. Se eu ganhar, você vem de graça.\" (Força)", "braco"),
@@ -219,8 +219,8 @@ def morel_na_taverna(g):
 
 @conversa("morel", 0, dias=1)
 def morel_conversa_caes(g, m):
-    g.dizer("Morel afia a espada. \"Os Cães de Ferro. Duzentos homens. A melhor companhia do reino. Ganhamos a "
-            "Batalha dos Vaus por um saco de prata e uma barrica de vinho.\"")
+    g.dizer("Morel afia a espada. \"Os Iron Hounds. Duzentos homens. A melhor companhia do reino. Ganhamos a "
+            "Battle of the Fords por um saco de prata e uma barrica de vinho.\"")
     op = g.menu("O que diz?", [
         ("\"E onde estão agora?\"", "onde"),
         ("\"Quanto vocês cobravam?\"", "preco"),
@@ -242,14 +242,14 @@ def morel_conversa_caes(g, m):
 @conversa("morel", 1, dias=3, aprov=10)
 def morel_conversa_ponte(g, m):
     g.dizer("Morel bebe mais do que costuma. Depois de um tempo, fala, olhando para o fogo.")
-    g.narrar("\"Ponte de Varn. O duque mandou segurar a passagem contra as crias do Vazio até a coluna dele "
+    g.narrar("\"Varn Bridge. O duque mandou segurar a passagem contra as crias do Vazio até a coluna dele "
              "passar. A coluna nunca veio. Ao amanhecer eu tinha quarenta homens e uma escolha.\"", "amarelo")
-    g.narrar("\"Mandei recuar. Eu, o capitão. Saímos eu e mais seis. Teodoro Ruivo, meu tenente, ficou na ponte com "
+    g.narrar("\"Mandei recuar. Eu, o capitão. Saímos eu e mais seis. Red Theodore, meu tenente, ficou na ponte com "
              "o resto, gritando o meu nome. Dizem que sobreviveu. Dizem que me procura.\"", "amarelo")
     op = g.menu("O que diz?", [
         ("\"Você salvou seis homens. Ficar seria morrer junto.\"", "salvou"),
         ("\"Você abandonou seus homens.\"", "abandonou"),
-        ("\"Se Teodoro aparecer, você vai fugir de novo?\"", "fugir"),
+        ("\"Se Theodore aparecer, você vai fugir de novo?\"", "fugir"),
     ])
     if op == "salvou":
         g.dizer("\"É o que eu digo pra mim\", Morel resmunga. \"Às vezes funciona.\"", "verde")
@@ -270,13 +270,13 @@ def morel_conversa_ponte(g, m):
 def teodoro_ruivo(g):
     g.colher("teodoro_ruivo")
     m = cm.membro(g, "morel")
-    g.dizer("Um assobio de três notas: o toque dos Cães de Ferro. Da mata saem seis homens com tabardos desbotados. "
+    g.dizer("Um assobio de três notas: o toque dos Iron Hounds. Da mata saem seis homens com tabardos desbotados. "
             "O da frente tem metade do rosto queimada e um cabelo que um dia foi ruivo.")
-    g.dizer("\"Capitão\", diz Teodoro, e a palavra sai como cuspe. \"Procurei você por dois invernos.\" Ele olha para "
+    g.dizer("\"Capitão\", diz Theodore, e a palavra sai como cuspe. \"Procurei você por dois invernos.\" Ele olha para "
             "você. \"Isso não é com você, estranho. Entrega o covarde e vai embora com a bolsa cheia.\"", "vermelho")
     g.dizer("Morel põe a mão no punho da espada. Não olha para você.", "cinza")
     op = g.menu("O que faz?", [
-        ("Entregar Morel (Teodoro paga 80 ouro)", "entregar"),
+        ("Entregar Morel (Theodore paga 80 ouro)", "entregar"),
         ("Desembainhar e lutar ao lado de Morel", "lutar"),
         ("\"Que os dois resolvam isso num duelo.\"", "duelo"),
         ("\"O inimigo é o Vazio, não ele. Depois vocês acertam as contas.\" (Carisma)", "convencer"),
@@ -290,31 +290,31 @@ def teodoro_ruivo(g):
         return
     if op == "convencer":
         if g.teste("carisma", 15):
-            g.dizer("Teodoro fica muito tempo calado. \"Depois que isso acabar, capitão. Depois.\" E então, mais baixo: "
+            g.dizer("Theodore fica muito tempo calado. \"Depois que isso acabar, capitão. Depois.\" E então, mais baixo: "
                     "\"Os Cães ainda sabem lutar. Se você for mesmo contra a sombra, mande chamar.\"", "verde")
-            g.aliado_final("Teodoro Ruivo", "Os Cães de Ferro invadem o salão sob o grito de Teodoro Ruivo, e por um "
+            g.aliado_final("Red Theodore", "Os Iron Hounds invadem o salão sob o grito de Red Theodore, e por um "
                                             "instante a velha companhia luta de novo, inteira.", "dano", 0.08)
             m["caminho"] = "adiado"
             cm.mudar_aprovacao(g, "morel", 6)
             m["missao"] = 3
             return
-        g.dizer("\"Bonito discurso\", diz Teodoro, e saca a espada.", "vermelho")
+        g.dizer("\"Bonito discurso\", diz Theodore, e saca a espada.", "vermelho")
         op = "lutar"
     if op == "duelo":
-        g.narrar("Os homens de Teodoro abrem uma roda. Os dois velhos camaradas se medem em silêncio, e então o aço "
+        g.narrar("Os homens de Theodore abrem uma roda. Os dois velhos camaradas se medem em silêncio, e então o aço "
                  "canta.", "amarelo")
         chance = 0.5 + m["aprovacao"] / 200
         if g.chance(chance):
-            g.narrar("Morel desarma Teodoro com um golpe que você nem vê direito. A ponta da espada para na garganta "
+            g.narrar("Morel desarma Theodore com um golpe que você nem vê direito. A ponta da espada para na garganta "
                      "do tenente.", "verde")
             op2 = g.menu("Morel olha para você.", [
                 ("\"Poupe ele.\"", "poupar"),
                 ("Não dizer nada. A decisão é dele.", "decidir"),
             ])
             if op2 == "poupar" and m["aprovacao"] >= 30:
-                g.narrar("Morel abaixa a espada. \"Alguém tem que sair vivo da Ponte de Varn sem ter fugido\", diz. "
-                         "Teodoro chora como criança. Seus homens também.", "verde")
-                g.aliado_final("Teodoro Ruivo", "Os Cães de Ferro invadem o salão sob o grito de Teodoro Ruivo, e "
+                g.narrar("Morel abaixa a espada. \"Alguém tem que sair vivo da Varn Bridge sem ter fugido\", diz. "
+                         "Theodore chora como criança. Seus homens também.", "verde")
+                g.aliado_final("Red Theodore", "Os Iron Hounds invadem o salão sob o grito de Red Theodore, e "
                                                 "por um instante a velha companhia luta de novo, inteira.", "dano", 0.1)
                 m["caminho"] = "redencao"
                 cm.mudar_aprovacao(g, "morel", 12)
@@ -322,12 +322,12 @@ def teodoro_ruivo(g):
             else:
                 if op2 == "poupar":
                     g.dizer("Morel ouve, mas não escuta.", "cinza")
-                g.narrar("Morel crava a espada. Fecha os olhos de Teodoro com cuidado e fica ali, de joelhos, até os "
+                g.narrar("Morel crava a espada. Fecha os olhos de Theodore com cuidado e fica ali, de joelhos, até os "
                          "outros irem embora.", "cinza")
                 m["caminho"] = "capitao"
                 cm.mudar_aprovacao(g, "morel", 6)
         else:
-            g.narrar("Teodoro é mais rápido. A espada dele abre o flanco de Morel, que cai de joelhos. O tenente cospe "
+            g.narrar("Theodore é mais rápido. A espada dele abre o flanco de Morel, que cai de joelhos. O tenente cospe "
                      "no chão. \"Agora estamos quites, capitão.\" E vai embora com os seus.", "vermelho")
             m["hp"] = 1
             m["ferido"] = True
@@ -337,13 +337,13 @@ def teodoro_ruivo(g):
         m["missao"] = 3
         return
     # Luta
-    lider = g.inimigo("mercenario", nome_unico="Teodoro Ruivo", nivel=g.j.nivel + 1)
+    lider = g.inimigo("mercenario", nome_unico="Red Theodore", nivel=g.j.nivel + 1)
     grupo = [lider] + [g.inimigo("bandido", nivel=g.j.nivel) for _ in range(2)]
     for e in grupo[1:]:
         e.nome = "Desertor dos Cães"
     resultado = g.combate(grupo, pode_fugir=False, titulo="OS CÃES DE FERRO")
     if resultado == "vitoria" and cm.presente(g, "morel"):
-        g.narrar("Morel se ajoelha ao lado de Teodoro. \"Eu devia isso a você, Teo.\" Não fica claro se fala da luta "
+        g.narrar("Morel se ajoelha ao lado de Theodore. \"Eu devia isso a você, Theo.\" Não fica claro se fala da luta "
                  "ou da ponte.", "cinza")
         m["caminho"] = "capitao"
         cm.mudar_aprovacao(g, "morel", 15)
@@ -359,7 +359,7 @@ def morel_conversa_final(g, m):
                 "amarelo")
     else:
         g.dizer("\"Não sei mais o que ela significa\", diz Morel. \"Fica com você. Você parece saber.\"", "amarelo")
-    g.aliado_final("Bastião Morel", "Morel solta o velho grito dos Cães de Ferro, e o seu sangue ferve com ele.",
+    g.aliado_final("Bastian Morel", "Morel solta o velho grito dos Iron Hounds, e o seu sangue ferve com ele.",
                    "forca", 0)
     cm.mudar_aprovacao(g, "morel", 5)
 
@@ -576,7 +576,7 @@ def yara_conversa_final(g, m):
     else:
         g.dizer("\"Ele ainda fala comigo\", diz Yara. \"Mas agora eu também falo com ele. E às vezes, só às vezes, "
                 "ele tem medo de mim.\"", "magenta")
-        g.aliado_final("Yara", "Yara volta contra Ulook o poder que ele mesmo deu a ela. O Arauto do Vazio sangra "
+        g.aliado_final("Yara", "Yara volta contra Ulook o poder que ele mesmo deu a ela. O Herald of the Void sangra "
                                "escuridão.", "dano", 0.2)
     cm.mudar_aprovacao(g, "yara", 3)
 
@@ -599,11 +599,11 @@ def _acalmar(g, a, b):
 
 @evento(contextos=("acampamento",), peso=22, cooldown=10, max_vezes=2, cond=lambda g: _par(g, "odete", "yara"))
 def discussao_fe_e_bruxaria(g):
-    g.dizer("Odete e Yara discutem baixo, do jeito que só se discute quando já se discutiu antes.")
-    g.dizer("\"Você brinca com a mesma coisa que matou quarenta inocentes\", diz Odete.", "amarelo")
+    g.dizer("Odette e Yara discutem baixo, do jeito que só se discute quando já se discutiu antes.")
+    g.dizer("\"Você brinca com a mesma coisa que matou quarenta inocentes\", diz Odette.", "amarelo")
     g.dizer("\"E você reza para o mesmo deus que deixou acontecer\", responde Yara.", "magenta")
     op = g.menu("As duas olham para você.", [
-        ("Ficar do lado de Odete", "odete"),
+        ("Ficar do lado de Odette", "odete"),
         ("Ficar do lado de Yara", "yara"),
         ("\"As duas têm razão, e as duas vão dormir agora.\" (Carisma)", "acalmar"),
     ])
@@ -617,10 +617,10 @@ def discussao_fe_e_bruxaria(g):
 
 @evento(contextos=("acampamento",), peso=22, cooldown=10, max_vezes=2, cond=lambda g: _par(g, "odete", "morel"))
 def discussao_pao(g):
-    g.dizer("De manhã, Odete separa um embrulho de pão para uma família que dorme na beira da estrada. Morel segura "
+    g.dizer("De manhã, Odette separa um embrulho de pão para uma família que dorme na beira da estrada. Morel segura "
             "o pulso dela.")
     g.dizer("\"Comida é para quem segura a espada\", diz ele. \"Caridade não salva ninguém da Fenda.\"", "amarelo")
-    g.dizer("\"Então para que estamos lutando?\", pergunta Odete.", "amarelo")
+    g.dizer("\"Então para que estamos lutando?\", pergunta Odette.", "amarelo")
     op = g.menu("Os dois esperam a sua palavra.", [
         ("\"Deixe ela dar o pão, Morel.\" (−1 provisão)", "odete") if g.j.provisoes > 0 else None,
         ("\"Morel tem razão. A estrada é longa.\"", "morel"),
