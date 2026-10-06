@@ -38,7 +38,7 @@ COMO JOGAR
 
 def menu_principal(ui, args):
     while True:
-        ui.cena("Crônicas da Fenda", "um RPG de texto onde nenhuma jornada é igual à outra", "local")
+        ui.cena("Crônicas da Fenda", "um RPG de texto onde nenhuma jornada é igual à outra", "titulo")
         saves = sorted(s for s in glob.glob(os.path.join(args.saves, "*.json"))
                        if os.path.basename(s) != "legado.json")
         opcoes = ["Novo jogo"] + (["Carregar jogo"] if saves else []) + ["Como jogar", "Sair"]
@@ -46,6 +46,7 @@ def menu_principal(ui, args):
         try:
             if esc == "Novo jogo":
                 jogo = Jogo(ui, seed=args.seed, pasta_saves=args.saves, hardcore=not args.brando)
+                jogo.autosalvar = ui.interativo
                 ui.jogo = jogo
                 jogo.novo_jogo()
                 jogo.rodar()
@@ -54,6 +55,7 @@ def menu_principal(ui, args):
                 i = ui.escolher("Qual jogo?", nomes + ["Voltar"])
                 if i < len(saves):
                     jogo = Jogo.carregar(ui, saves[i], args.saves)
+                    jogo.autosalvar = ui.interativo
                     ui.jogo = jogo
                     ui.dizer(f"Bem-vindo de volta, {jogo.j.nome}.", "verde")
                     jogo.rodar()
@@ -71,24 +73,36 @@ def menu_principal(ui, args):
 def main():
     parser = argparse.ArgumentParser(description="Crônicas da Fenda — RPG de texto offline")
     parser.add_argument("--seed", type=int, help="semente do mundo (o mesmo número gera o mesmo reino)")
+    parser.add_argument("--terminal", action="store_true",
+                        help="joga dentro do terminal, com painéis (precisa do textual)")
     parser.add_argument("--classico", action="store_true",
-                        help="usa a interface de terminal simples em vez da interface moderna")
+                        help="interface de terminal simples, sem dependências")
+    parser.add_argument("--navegador", action="store_true",
+                        help="abre no navegador mesmo se o pywebview (janela própria) estiver instalado")
+    parser.add_argument("--sem-abrir", dest="abrir", action="store_false",
+                        help="não abre o navegador sozinho (só mostra o endereço)")
+    parser.add_argument("--porta", type=int, default=0, help="porta local da interface (padrão: qualquer livre)")
     parser.add_argument("--brando", action="store_true",
                         help="modo brando: ao cair em combate você é resgatado (sem morte permanente)")
     parser.add_argument("--hardcore", action="store_true", help=argparse.SUPPRESS)  # já é o padrão
     parser.add_argument("--sem-cor", action="store_true", help="desativa as cores (interface clássica)")
     parser.add_argument("--rapido", action="store_true", help="sem pausas dramáticas (interface clássica)")
     parser.add_argument("--velocidade", choices=["lento", "normal", "rapido", "instantaneo"], default="normal",
-                        help="velocidade em que o texto aparece na interface moderna (F3 muda durante o jogo)")
+                        help="velocidade em que o texto aparece (F3 muda durante o jogo)")
     parser.add_argument("--saves", default=os.path.join(os.path.expanduser("~"), ".cronicas_da_fenda"),
                         help="pasta onde os jogos salvos ficam")
     args = parser.parse_args()
 
-    if not args.classico and sys.stdout.isatty():
+    if not args.classico and not args.terminal:
+        from .web import jogar
+        jogar(args, menu_principal)
+        return
+
+    if args.terminal and sys.stdout.isatty():
         try:
             from .tui import AppRPG
         except ImportError:
-            print("Dica: instale 'textual' (pip install textual) para a interface moderna com mapa e painéis.\n")
+            print("Dica: instale 'textual' (pip install textual) para jogar no terminal com mapa e painéis.\n")
         else:
             AppRPG(args, menu_principal).run()
             return

@@ -168,7 +168,8 @@ def estilo_prosa(cor):
     return f"{base} {extras}".strip()
 
 
-COR_CENA = {"combate": "red", "local": "gold1", "menu": "cyan", "evento": "bright_white"}
+COR_CENA = {"combate": "red", "local": "gold1", "menu": "cyan", "evento": "bright_white", "chefe": "red",
+            "morte": "red", "vitoria": "gold1", "titulo": "gold1"}
 VELOCIDADES = {"instantaneo": 0, "rapido": 320, "normal": 140, "lento": 70}
 
 
@@ -293,6 +294,7 @@ class TextualUI(UI):
         self.app.call_from_thread(self.app.mostrar_opcoes, ["Continuar ▸"], "")
         self._esperar()
         self.novo_desde_escolha = False
+        self.escolhas_na_cena += 1  # quem tocou em Continuar já leu: a próxima cena abre página nova
 
     def perguntar(self, pergunta, padrao=""):
         self.app.call_from_thread(self.app.pedir_texto, pergunta, padrao)

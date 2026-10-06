@@ -1,3 +1,5 @@
-# Opcional: interface moderna com painéis, mapa lateral e clique.
-# Sem ela, o jogo roda na interface clássica (Python puro).
+# Tudo opcional: o jogo roda só com o Python.
+# Janela própria (em vez do navegador):
+pywebview>=5.0
+# Modo terminal com painéis (python jogar.py --terminal):
 textual>=0.80

@@ -94,7 +94,8 @@ class UI:
     # ------------------------------------------------------------ estrutura narrativa
     def cena(self, titulo, subtitulo=None, tipo="evento"):
         """Começa uma nova cena (um "momento" da história)."""
-        cor = {"combate": "vermelho+negrito", "local": "amarelo+negrito"}.get(tipo, "ciano+negrito")
+        cor = {"combate": "vermelho+negrito", "chefe": "vermelho+negrito", "morte": "vermelho+negrito",
+               "local": "amarelo+negrito", "titulo": "amarelo+negrito", "vitoria": "amarelo+negrito"}.get(tipo, "ciano+negrito")
         self._imprimir("")
         self._imprimir(self.pintar(f"◆ {titulo.upper()}", cor))
         if subtitulo:
@@ -104,6 +105,12 @@ class UI:
     def efeito(self, texto, tipo="info"):
         """Consequência mecânica (ouro, vida, testes...), separada da prosa."""
         self._imprimir("   " + self.pintar(f"▸ {texto}", COR_EFEITO.get(tipo)))
+
+    def rolagem(self, atributo, cd, d20, mod, total, sucesso):
+        """Resultado de um teste de atributo (a interface web anima o dado)."""
+        extra = " · crítico!" if d20 == 20 else " · desastre!" if d20 == 1 else ""
+        self.efeito(f"{atributo} {total} contra {cd} — {'SUCESSO' if sucesso else 'FALHA'} (d20 {d20} {mod:+d}){extra}",
+                    "teste_ok" if sucesso else "teste_falha")
 
     def novo_turno(self, n):
         self._imprimir(self.pintar(f"── turno {n} ──", "cinza"))

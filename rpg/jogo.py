@@ -85,6 +85,7 @@ class Jogo:
         self.forcados = []
         self.proximo_id = 1
         self.combate_ativo = None
+        self.autosalvar = False  # ligado pelo menu principal quando há uma pessoa jogando
         self.sem_luz = False
         self.registro = []
         self.arquivo_run = None
@@ -183,9 +184,7 @@ class Jogo:
             mod -= 4
         total = d + mod
         ok = d == 20 or (d != 1 and total >= cd)
-        extra = " · crítico!" if d == 20 else " · desastre!" if d == 1 else ""
-        self.ui.efeito(f"{NOMES_TESTE[attr]} {total} contra {cd} — {'SUCESSO' if ok else 'FALHA'} "
-                       f"(d20 {d} {mod:+d}){extra}", "teste_ok" if ok else "teste_falha")
+        self.ui.rolagem(NOMES_TESTE[attr], cd, d, mod, total, ok)
         return ok
 
     # ================================================================ recompensas e perdas
@@ -878,6 +877,11 @@ class Jogo:
         ui.separador()
 
     def tela(self):
+        if self.autosalvar:
+            try:
+                self.salvar(silencioso=True)
+            except OSError:
+                pass
         if self.periodo > 3:
             self.exausto()
         self.cabecalho()
@@ -1084,7 +1088,7 @@ class Jogo:
 
     def viajar(self):
         self.ui.cena("Viagem", self.contexto_cena(), "menu")
-        self.ui.desenhar(mapa.renderizar(self))
+        self.desenhar_mapa()
         opcoes = []
         for loc, dist in sorted(vizinhos(self.mundo, self.loc), key=lambda v: v[0]["id"]):
             texto = f"[{loc['id'] + 1}] {mapa.glifo(self, loc)} {loc['nome']} — {mapa.descricao(self, loc)}"
@@ -1364,12 +1368,22 @@ class Jogo:
 
     def mapa(self):
         self.ui.cena("Mapa do reino", self.contexto_cena(), "menu")
-        self.ui.desenhar(mapa.renderizar(self))
+        if self.desenhar_mapa(grande=True):
+            self.pausar()
+            return
         self.dizer(mapa.SIMBOLOS, "cinza")
         self.ui.separador()
         for rotulo, texto, cor in mapa.legenda(self):
             self.dizer(f"{rotulo:>2}  {texto}", cor)
         self.pausar()
+
+    def desenhar_mapa(self, grande=False):
+        """A interface web desenha o próprio mapa (em SVG); as de terminal, em caracteres."""
+        if getattr(self.ui, "web", False):
+            self.ui.mostrar_mapa(grande)
+            return True
+        self.ui.desenhar(mapa.renderizar(self))
+        return False
 
     def diario(self):
         self.ui.cena("Diário", f"dia {self.dia}", "menu")
@@ -1420,7 +1434,7 @@ class Jogo:
         loc = self.loc
         gspec = loc["guardiao"]
         t = GUARDIOES[gspec["bioma"]][gspec["idx"]]
-        self.ui.cena(gspec["nome"], f"guardião · {loc['nome']}", "evento")
+        self.ui.cena(gspec["nome"], f"guardião · {loc['nome']}", "chefe")
         self.narrar(t["intro"], "vermelho")
         chave = f"guardiao:{loc['id']}"
         if self.flag(f"fraqueza:{chave}"):
@@ -1450,7 +1464,7 @@ class Jogo:
     def batalha_final(self):
         a = self.antagonista
         j = self.j
-        self.ui.cena(a["nome"], "o salão do trono", "evento")
+        self.ui.cena(a["nome"], "o salão do trono", "chefe")
         falas = {
             "guerreiro": "Tanto aço, tanta coragem. Eu também empunhei uma espada, um dia.",
             "arqueiro": "Você mira bem. Mas como se acerta o que não tem coração?",
@@ -1515,7 +1529,12 @@ class Jogo:
         self.estatisticas["causa"] = motivo
         registrar(self, "fim", resultado="corrupcao" if self.corrupcao >= 100 else "morte", causa=motivo,
                   corrupcao=self.corrupcao)
-        self.ui.cena("Você morreu" if self.corrupcao < 100 else "O reino caiu", f"dia {self.dia}", "evento")
+        if self.hardcore:  # morte permanente de verdade: o save vai junto
+            try:
+                os.remove(self.caminho_save())
+            except OSError:
+                pass
+        self.ui.cena("Você morreu" if self.corrupcao < 100 else "O reino caiu", f"dia {self.dia}", "morte")
         self.narrar(motivo, "vermelho")
         epitafio = self.sortear([
             "Ninguém veio buscar o corpo. Os lobos vieram.",
@@ -1534,7 +1553,7 @@ class Jogo:
         self.registrar_legado("vitoria", f"derrotou {a['nome']}")
         self.estatisticas["venceu"] = True
         registrar(self, "fim", resultado="vitoria", causa=f"derrotou {a['nome']}", corrupcao=self.corrupcao)
-        self.ui.cena("Vitória", f"dia {self.dia}", "evento")
+        self.ui.cena("Vitória", f"dia {self.dia}", "vitoria")
         self.narrar(f"{tx.maiuscula(a['curto'])} se desfaz como cinza ao vento. A Fenda se fecha com um "
                     f"suspiro que ecoa por todo o reino.", "amarelo")
         epilogos = {
@@ -1576,7 +1595,7 @@ class Jogo:
         slug = re.sub(r"[^a-z0-9]+", "_", self.j.nome.lower()).strip("_") or "heroi"
         return os.path.join(self.pasta_saves, f"{slug}.json")
 
-    def salvar(self):
+    def salvar(self, silencioso=False):
         os.makedirs(self.pasta_saves, exist_ok=True)
         estado = self.rng.getstate()
         dados = {
@@ -1591,8 +1610,12 @@ class Jogo:
                       "registro", "arquivo_run"):
             dados[campo] = getattr(self, campo)
         caminho = self.caminho_save()
-        with open(caminho, "w", encoding="utf-8") as f:
+        temporario = caminho + ".tmp"
+        with open(temporario, "w", encoding="utf-8") as f:
             json.dump(dados, f, ensure_ascii=False)
+        os.replace(temporario, caminho)  # nunca deixa um save pela metade
+        if silencioso:
+            return
         self.dizer(f"Jogo salvo em {caminho}.", "verde")
         registro = telemetria.exportar(self)
         if registro:

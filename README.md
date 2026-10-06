@@ -1,58 +1,81 @@
 # Crônicas da Fenda
 
-RPG de texto **offline**, em português, feito em **Python puro** (sem dependências).
+RPG de texto **offline**, em português. O motor é escrito em **Python puro**, e a tela é uma
+interface em HTML que roda localmente, sem internet.
 Um RPG **hardcore** e sombrio, no espírito de Diablo: aqui você não é o escolhido.
 A fome mata, feridas infeccionam, a noite cega e a morte é permanente. Cada partida gera
 um reino diferente: mapa, nomes, chefes, eventos e consequências.
 
-![Interface moderna: log, opções, painel do herói e mapa](docs/interface.png)
+![Uma cena: o dado de Percepção, a história e as escolhas com o modificador de cada teste](docs/interface.png)
+
+<p align="center">
+  <img src="docs/titulo.png" width="49%" alt="Tela de título">
+  <img src="docs/combate.png" width="49%" alt="Combate: cartas dos inimigos, turnos e orbes de vida e mana">
+</p>
 
 ## Como jogar
 
-Precisa do Python 3.8 ou mais novo. Para a **interface moderna** (painel do herói, mapa
-sempre visível, opções clicáveis), instale uma dependência:
+Precisa do Python 3.8 ou mais novo. Não precisa instalar nada:
 
 ```bash
-pip install -r requirements.txt   # instala o textual (opcional)
-python jogar.py                   # ou: python -m rpg
+python jogar.py          # ou: python -m rpg
 ```
 
-Sem o `textual` (ou com `--classico`) o jogo usa a interface clássica, em Python puro.
+O jogo abre no navegador. Ele roda **no seu computador**: o servidor escuta só em
+`127.0.0.1` e cada sessão tem uma chave própria. Para jogar numa **janela própria**, como
+um programa, instale o `pywebview` (opcional):
+
+```bash
+pip install -r requirements.txt   # pywebview (janela própria) e textual (modo terminal)
+```
 
 | Opção | O que faz |
 |---|---|
-| `--classico` | Interface de terminal simples, sem dependências |
+| `--navegador` | Abre no navegador mesmo com o `pywebview` instalado |
+| `--sem-abrir` | Não abre nada sozinho, só mostra o endereço |
+| `--terminal` | Joga dentro do terminal, com painéis (precisa do `textual`) |
+| `--classico` | Terminal simples, sem cores especiais e sem dependências |
 | `--seed 1234` | Gera sempre o mesmo reino (bom para comparar partidas) |
 | `--brando` | Modo brando: ao cair em combate você é resgatado (perde ouro e dois dias) |
-| `--rapido` / `--sem-cor` | Sem pausas / sem cores (interface clássica) |
-| `--velocidade lento\|normal\|rapido\|instantaneo` | Velocidade com que o texto surge (interface moderna) |
+| `--velocidade lento\|normal\|rapido\|instantaneo` | Velocidade com que o texto surge |
 | `--saves PASTA` | Onde salvar (padrão: `~/.cronicas_da_fenda`) |
 
-### Como a história aparece (interface moderna)
+O jogo **salva sozinho** sempre que você volta a um local (vila ou região). No modo
+hardcore, morrer apaga o save: a morte é permanente de verdade.
 
-A interface foi pensada para que a história seja lida, e não pulada a caminho do menu:
+### A interface
 
-- **Uma cena por página.** Cada evento, local ou luta abre uma página nova com título e
-  contexto (lugar, dia, período, clima). O texto antigo não se acumula.
-- **O texto surge no ritmo da leitura**, e as opções só aparecem quando ele termina.
-  Qualquer tecla ou clique mostra tudo de uma vez. Quando a cena tem desfecho, um
-  **Continuar ▸** segura a página para você ler o resultado antes da próxima.
-- **A prosa fica numa coluna estreita**, com tons de livro. A mecânica aparece à parte, em
-  etiquetas coloridas (`Percepção 15 contra 11 — SUCESSO`, `+20 ouro`, `-8 vida`), e não se
-  mistura ao texto.
-- **As opções mostram o seu modificador**, por exemplo `(Destreza +3 no d20)`, para que a
-  escolha seja informada.
-- **Em combate**, cada turno ganha um divisor e os turnos anteriores esmaecem. O painel da
-  luta e a faixa de condição ficam logo acima das opções.
+A tela foi pensada para que a história seja lida, e não pulada a caminho do menu:
+
+- **Uma cena por página**, com título, lugar, dia, período e clima. O texto surge no ritmo
+  da leitura e **as escolhas só aparecem quando ele termina**. Qualquer tecla ou clique
+  mostra tudo de uma vez. Quando a cena tem desfecho, um **Continuar ▸** segura a página.
+- **Prosa de livro** (fonte Alegreya, coluna estreita, capitular no começo das cenas). A
+  mecânica fica à parte: **o d20 rola na tela** nos testes, e ouro, dano e XP viram etiquetas.
+- **As escolhas mostram o seu modificador** (`DES +3`, `ARC +6`): verde quando você é bom
+  nisso, vermelho quando não é. As opções de sistema (talentos, diário, salvar…) ficam
+  como atalhos discretos abaixo das escolhas da história.
+- **Painéis sempre à vista:** herói (atributos, ferimentos, equipamento com cor de raridade,
+  habilidades, bolsa), mapa do que você já conhece, caminhos daqui com o perigo de cada
+  região, e orbes de vida e recurso ao lado das escolhas.
+- **Combate:** cartas dos inimigos com barras que sentem o golpe, aviso quando um inimigo
+  prepara um ataque forte, divisor por turno e turnos antigos esmaecidos.
+- **Atmosfera:** o fundo muda de cor com o bioma, a noite escurece as bordas, sem tocha a
+  luz tremula e a corrupção avermelha a tela. Som ambiente e efeitos são sintetizados na
+  hora (sem arquivos de áudio).
+- Funciona em tela larga, notebook e celular. Recarregar a página não perde nada.
 
 | Tecla | O que faz |
 |---|---|
-| número/letra, setas + Enter, clique | Escolher uma opção |
+| `1`–`9`, `0`, setas + Enter, clique | Escolher uma opção |
+| `T` `P` `D` `B` `G` `Q` | Talentos, Personagem, Diário, Bestiário, Salvar, Sair (nos menus de local) |
 | qualquer tecla durante o texto | Mostrar o texto inteiro |
 | `Espaço`/`Enter` | Continuar ▸ |
-| `F2` | Alternar entre a cena e o histórico completo da partida |
-| `F3` | Mudar a velocidade do texto (lento, normal, rápido, instantâneo) |
-| `Ctrl+Q` | Fechar na hora (para salvar, use "Salvar jogo" no menu da vila) |
+| `M` | Mapa do reino |
+| `H` ou `F2` | Histórico completo da partida |
+| `V` ou `F3` | Velocidade do texto |
+| `S` | Liga/desliga o som |
+| `Esc` | Fecha mapa e histórico |
 
 ## O objetivo
 
@@ -181,7 +204,12 @@ Novas habilidades chegam nos níveis 2, 3, 4 e 7 (a habilidade suprema da especi
 ```
 rpg/
   jogo.py        estado, ciclo principal, vilas, loja, contratos, salvar/carregar
-  tui.py         interface moderna (Textual): log, opções, painel do herói e mapa
+  web/           interface principal: servidor local (só biblioteca padrão) + página
+    ponte.py     WebUI: cada chamada da UI vira uma mensagem JSON (cenas, texto, dados, escolhas)
+    estado.py    fotografia do jogo em JSON (herói, mapa, combate) para os painéis
+    servidor.py  HTTP + SSE em 127.0.0.1, com token por sessão
+    static/      index.html, estilo.css, app.js, som.js e as fontes (licença OFL)
+  tui.py         interface de terminal com painéis (Textual), via --terminal
   ui.py          interface clássica (cores ANSI, menus) e o "jogador robô" dos testes
   mapa.py        desenho do mapa em caracteres
   talentos.py    árvores de talentos
@@ -244,5 +272,6 @@ python -m unittest discover tests
 ```
 
 Um "jogador robô" joga dezenas de partidas com escolhas aleatórias, força cada evento
-em todas as classes e especializações, testa as árvores de talentos, o mapa e a
-interface Textual (em modo headless).
+em todas as classes e especializações, testa as árvores de talentos e o mapa, joga uma
+partida inteira pela interface web (por HTTP, como um navegador faria, conferindo também o
+token e a recarga da página) e testa a interface Textual em modo headless.
