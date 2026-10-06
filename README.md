@@ -36,6 +36,10 @@ um reino diferente: mapa, nomes, chefes, eventos e consequências.
   <img src="docs/mercado.png" width="49%" alt="Mercado: quantidade, avisos soltos perto do clique e a seta de voltar">
   <img src="docs/titulo.png" width="49%" alt="Tela de título com uma paisagem sorteada">
 </p>
+<p align="center">
+  <img src="docs/cacada.png" width="49%" alt="Caçada de contrato: a opção Caçar no lugar e o cartão com Seguir os rastros">
+  <img src="docs/chamas-mana.png" width="49%" alt="Troll em chamas ×3 e o Meditar enchendo a barra de mana da carta">
+</p>
 
 ## Como jogar
 
@@ -123,6 +127,11 @@ na interface miúda; **Jersey 15** nos números. O botão "Fonte" no topo volta 
 - **Contratos sempre à vista:** no painel da direita, abaixo do mapa, cada contrato mostra o alvo,
   o lugar, a distância e o progresso, e o lugar ganha um "!" no mapa. Clique para viajar até lá.
   O Diário virou um quadro como o mural, com Abandonar em cada cartaz.
+- **Caçada garantida:** no lugar de um contrato de caça aparece "Caçar … (contrato, 1/3)" (e o
+  cartão do contrato pisca com "Seguir os rastros ▸"). Seguir os rastros sempre leva ao bicho; a
+  Percepção decide quem vê quem primeiro. Cada abate mostra o progresso.
+- **Mana visível:** Meditar, o Tônico e os talentos que devolvem recurso enchem a barra da carta
+  com brilho azul e "+N mana".
 - **Mural de contratos** como um quadro de cortiça: cada contrato é um cartaz pregado (Caça,
   Procurado, Entrega) com o alvo, o lugar, a distância, o nível do perigo, a recompensa em
   ouro e XP e o botão Aceitar. Os seus contratos aparecem embaixo, com o progresso da caça e o
@@ -275,7 +284,7 @@ Guerreiro (Vigor) ──┬── Paladino     cura, dano sagrado, forte contra 
                     └── Berserker    quanto mais ferido, mais forte; rouba vida; ataques em área
 Arqueiro  (Foco)  ──┬── Patrulheiro  companheiro animal (lobo, falcão ou urso), tiro duplo
                     └── Sombra       furtividade, veneno, execuções e críticos devastadores
-Mago      (Mana)  ──┬── Piromante    fogo em área, queimaduras fortes, combustão
+Mago      (Mana)  ──┬── Piromante    acende chamas em camadas e detona com a Combustão
                     └── Necromante   drenar vida, erguer servos esqueletos, maldições
 ```
 
@@ -286,6 +295,9 @@ Cada classe tem uma mecânica própria:
 - **Mago:** a mana é escassa: regenera pouco durante a luta, recupera só 20% depois dela e
   enche de verdade apenas descansando. O Dardo Arcano é de graça; cada Inferno é uma
   decisão.
+- **Fogo em camadas (Piromante):** Bola de Fogo e Inferno acendem o alvo; cada acerto soma uma
+  camada (até ×3), e uma camada sozinha arde pouco. A **Combustão** detona tudo o que ainda
+  arderia, de uma vez, e fica mais forte com mais camadas. Sem chamas, é um estalo fraco.
 
 Novas habilidades chegam nos níveis 2, 3, 4 e 7 (a habilidade suprema da especialização).
 
@@ -318,7 +330,8 @@ Novas habilidades chegam nos níveis 2, 3, 4 e 7 (a habilidade suprema da especi
 - **Clima e período do dia:** chuva enfraquece o fogo, a névoa ajuda a esquivar, a
   tempestade atrapalha disparos e à noite os monstros ficam mais fortes.
 - **Contratos** no mural das vilas: caçadas, alvos com recompensa e entregas (com
-  imprevistos no caminho). Dá para abandoná-los pelo Diário, perdendo reputação.
+  imprevistos no caminho). Dá para abandoná-los pelo Diário, perdendo reputação. Caçadas e
+  alvos ganham a ação "Caçar"/"Rastrear" no próprio lugar, com encontro garantido.
 
 ## Estrutura do código
 

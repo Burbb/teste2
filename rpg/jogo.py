@@ -505,6 +505,9 @@ class Jogo:
                     if c["feito"] >= c["total"]:
                         c["concluido"] = True
                         self.dizer(f"Contrato concluído: {c['desc']} Receba a recompensa em qualquer vila.", "verde")
+                    else:
+                        self.ui.efeito(f"Contrato: {c['feito']}/{c['total']} {FAMILIAS[c['familia']]['plural']}",
+                                       "info")
                 elif c["tipo"] == "alvo" and e.chave == c["chave"]:
                     c["concluido"] = True
                     self.dizer(f"Contrato concluído: {c['desc']} Receba a recompensa em qualquer vila.", "verde")
@@ -1036,10 +1039,20 @@ class Jogo:
             opcoes.append((f"Enfrentar {loc['guardiao']['nome']} (guardião)", "chefe"))
         if loc["tipo"] == "cidadela":
             opcoes.append((f"Invadir o salão do trono e enfrentar {self.antagonista['curto']}", "final"))
+        for c in self.contratos_aqui():
+            if c["tipo"] == "alvo":
+                rotulo = f"Rastrear {c['nome']} (contrato)"
+            else:
+                rotulo = f"Caçar {FAMILIAS[c['familia']]['plural']} (contrato, {c['feito']}/{c['total']})"
+            opcoes.append((rotulo, f"cacar:{c['id']}", {"cacar": c["id"]}))
         opcoes.append(("Explorar a região" + (" (à noite é mais perigoso)" if self.noite else ""), "explorar"))
         opcoes.append(("Acampar e descansar até o amanhecer", "acampar"))
         op = self.menu("O que você faz?", opcoes + self.opcoes_comuns())
-        if op == "chefe":
+        if isinstance(op, str) and op.startswith("cacar:"):
+            c = next((c for c in self.contratos if f"cacar:{c['id']}" == op), None)
+            if c:
+                self.cacar(c)
+        elif op == "chefe":
             self.enfrentar_guardiao()
         elif op == "final":
             self.batalha_final()
@@ -1181,7 +1194,15 @@ class Jogo:
         self.pausar()
 
     def acampar(self):
-        intro = "Você junta gravetos, acende uma fogueira fraca e se enrola na capa. O frio entra mesmo assim."
+        juntos = [comitiva.nome(m["id"]) for m in comitiva.membros(self)]
+        if juntos:
+            quem = juntos[0] if len(juntos) == 1 else ", ".join(juntos[:-1]) + " e " + juntos[-1]
+            intro = (f"Vocês juntam gravetos e a fogueira pega. {quem} se {'ajeita' if len(juntos) == 1 else 'ajeitam'} "
+                     "perto do fogo; a noite fica um pouco menos escura.")
+        elif comitiva.reserva(self):
+            intro = "Você segue a fumaça até o seu acampamento. A fogueira de quem esperou por você ainda arde."
+        else:
+            intro = "Você junta gravetos, acende uma fogueira fraca e se enrola na capa. O frio entra mesmo assim."
         if comitiva.membros(self) or comitiva.reserva(self):
             conversou = comitiva.fogueira(self, intro)
             self.ui.cena("Acampamento", self.contexto_cena(), "evento")
@@ -1509,7 +1530,9 @@ class Jogo:
             return {"id": cid, "tipo": "entrega", "destino": dest["id"], "objeto": objeto, "ouro": ouro, "xp": xp,
                     "desc": f"Levar {objeto} até {dest['nome']}."}
         loc = self.sortear(selvagens)
-        fam = self.sortear(BIOMAS[loc["bioma"]]["familias"])
+        nv = nivel_regiao(loc, self.corrupcao)  # só bichos que de fato aparecem por lá
+        fam = self.sortear([f for f in BIOMAS[loc["bioma"]]["familias"] if NIVEL_MIN_FAMILIA.get(f, 1) <= nv]
+                           or BIOMAS[loc["bioma"]]["familias"])
         f = FAMILIAS[fam]
         if tipo == "alvo":
             nome = tx.nome_proprio(self.rng)
@@ -1601,6 +1624,49 @@ class Jogo:
                 self.ganhar_ouro(c["ouro"])
                 self.mudar_reputacao(3)
                 self.ganhar_xp(c["xp"])
+
+    def contratos_aqui(self):
+        """Contratos de caça (bando ou alvo nomeado) ainda abertos neste lugar."""
+        return [c for c in self.contratos if c["tipo"] in ("caca", "alvo") and c["local"] == self.loc["id"]
+                and not c.get("concluido")]
+
+    PISTAS = [
+        "Pegadas frescas na lama, fundas e espaçadas", "Tufos de pelo presos nos espinhos",
+        "Uma carcaça roída, ainda morna", "Galhos quebrados na altura do peito",
+        "Fezes recentes e o cheiro forte de bicho", "Marcas de garras numa árvore caída",
+    ]
+
+    def cacar(self, c):
+        """Caçada de contrato: quem foi contratado sabe o que procura. Seguir os rastros sempre leva ao alvo;
+        a Percepção decide quem vê quem primeiro. Custa um período, como explorar."""
+        f = FAMILIAS[c["familia"]]
+        self.ui.cena("Caçada", self.contexto_cena(), "evento")
+        sobrevivencia.acender_tocha(self)
+        try:
+            pista = self.sortear(self.PISTAS)
+            if c["tipo"] == "alvo":
+                e = self.inimigo(c["familia"], afixo="anciao", nome_unico=c["nome"], bonus=1)
+                e.chave = c["chave"]
+                self.narrar(f"{pista}. Grandes demais para {tx.artigo(f['g'], False)} {f['nome']} comum. "
+                            f"Você segue a trilha até a toca e lá está: {e.nome}.", "amarelo")
+                grupo = [e]
+            else:
+                restam = c["total"] - c["feito"]
+                lo, hi = f["grupo"]
+                n = max(1, min(restam, hi, self.rng.randint(1, 2)))
+                self.narrar(f"{pista}. Rastros de {f['plural']}, como o mural descreveu. Você segue a trilha.",
+                            "amarelo")
+                grupo = self.grupo(c["familia"], n=n)
+            if self.teste("percepcao", 12):
+                self.dizer("Você os vê antes que eles te vejam. O primeiro golpe é seu.", "verde")
+                self.combate(grupo, emboscada="jogador")
+            else:
+                self.dizer("Um galho estala sob o seu pé. Eles se viram ao mesmo tempo.", "vermelho")
+                self.combate(grupo)
+        finally:
+            self.sem_luz = False
+        self.avancar_periodo()
+        self.pausar()
 
     def contrato_alvo_aqui(self):
         for c in self.contratos:
@@ -1788,7 +1854,7 @@ class Jogo:
         nivel = self.nivel_guardiao(loc)
         chefe = instanciar_guardiao(gspec, nivel)
         chefe.chave = chave
-        r = self.combate([chefe], pode_fugir=False, titulo=f"GUARDIÃO: {gspec['nome']}")
+        r = self.combate([chefe], pode_fugir=False, titulo=f"Guardião: {gspec['nome']}")
         if r == "vitoria":
             gspec["derrotado"] = True
             self.j.sigilos.append(loc["bioma"])

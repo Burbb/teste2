@@ -168,22 +168,44 @@ const Telas = (() => {
       <div class="bonus">${h(it.bonus).split(", ").join("<br>")}</div>${comparando ? comparar(it) : ""}${naoUsa}
       ${it.lore ? `<div class="lore">"${h(it.lore)}"</div>` : ""}${rodape ? `<div class="rodape">${rodape}</div>` : ""}`);
   }
-  function ligarDicas(raiz) {
+  /** A caixa de dica é uma só; ela lembra quem a abriu. Se esse dono sai da tela (a cena trocou, o combate
+   *  acabou) sem o mouse "sair" dele, um vigia fecha a dica em vez de deixá-la presa. */
+  function caixaDica() {
     let caixa = document.getElementById("dica-item");
     if (!caixa) { caixa = document.createElement("div"); caixa.id = "dica-item"; caixa.className = "moldura"; caixa.hidden = true; document.body.appendChild(caixa); }
+    return caixa;
+  }
+  let vigia = 0;
+  function abrirDica(dono) {
+    const caixa = caixaDica();
+    caixa._dono = dono;
+    caixa.hidden = false;
+    clearInterval(vigia);
+    vigia = setInterval(() => {
+      if (caixa.hidden || !caixa._dono || !caixa._dono.isConnected || !caixa._dono.matches(":hover")) esconderDica();
+    }, 250);
+    return caixa;
+  }
+  function ligarDicas(raiz) {
+    const caixa = caixaDica();
     raiz.querySelectorAll("[data-dica]").forEach((el) => {
       el.addEventListener("mouseenter", () => {
         caixa.innerHTML = dicas[Number(el.dataset.dica)] || "";
-        caixa.hidden = false;
+        caixa.classList.remove("ficha-inimigo");
+        abrirDica(el);
         const r = el.getBoundingClientRect();
         const esq = r.right + 10 + 290 > window.innerWidth ? r.left - 300 : r.right + 10;
         caixa.style.left = Math.max(6, esq) + "px";
         caixa.style.top = Math.max(6, Math.min(window.innerHeight - caixa.offsetHeight - 6, r.top - 6)) + "px";
       });
-      el.addEventListener("mouseleave", () => { caixa.hidden = true; });
+      el.addEventListener("mouseleave", esconderDica);
     });
   }
-  function esconderDica() { const c = document.getElementById("dica-item"); if (c) c.hidden = true; }
+  function esconderDica() {
+    clearInterval(vigia);
+    const c = document.getElementById("dica-item");
+    if (c) { c.hidden = true; c._dono = null; c.classList.remove("ficha-inimigo"); }
+  }
 
   // ------------------------------------------------------------------ inventário (boneco + mochila)
   function personagem(d) {
@@ -474,7 +496,7 @@ const Telas = (() => {
       let prog = "";
       if (c.tipo === "caca" && c.progresso) { const [f, t] = c.progresso.split("/").map(Number); prog = `${barra("xp", f, t)}<small>${f}/${t}</small>`; }
       const perigo = c.nivel == null ? "" : c.nivel - nivelHeroi >= 2 ? "alto" : c.nivel >= nivelHeroi ? "medio" : "baixo";
-      return `<div class="rastro-contrato${c.concluido ? " feito" : ""}" data-local="${c.lugar_id}" title="${h(c.desc)}">
+      return `<div class="rastro-contrato${c.concluido ? " feito" : ""}" data-local="${c.lugar_id}" data-contrato="${c.id}" title="${h(c.desc)}">
         <span class="rastro-arte">${S(arte, 2)}</span>
         <span class="rastro-info"><b>${h(alvo)}</b>
           <span class="rastro-lugar">${c.concluido ? "Feito! Receba numa vila" : `${h(c.lugar)}${c.distancia ? ` · ${c.distancia} trecho${c.distancia === 1 ? "" : "s"}` : c.distancia === 0 ? " · você está aqui" : ""}`}${c.nivel != null && !c.concluido ? ` <span class="perigo-tag ${perigo}">Nv.${c.nivel}</span>` : ""}</span>
@@ -704,6 +726,6 @@ const Telas = (() => {
     setTimeout(() => t.remove(), 3300);
   }
 
-  return { rastreador, atributosHtml, reputacaoHtml, dica, fecharMenuItem, guardarArvore, abrirTalentos, fecharTalentos, painel, celebrar, toast, iconeCriatura, iconeItem, dicaItem, ligarDicas, esconderDica,
+  return { rastreador, atributosHtml, reputacaoHtml, dica, abrirDica, fecharMenuItem, guardarArvore, abrirTalentos, fecharTalentos, painel, celebrar, toast, iconeCriatura, iconeItem, dicaItem, ligarDicas, esconderDica,
     ICONE_ITEM, ARMA, VAZIO, NOME_ESPACO, AREA, barra, aprovacao };
 })();

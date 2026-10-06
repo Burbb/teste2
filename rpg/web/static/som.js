@@ -121,6 +121,7 @@ const Som = (() => {
     sombra() { const t = ctx.currentTime; tom(t, 180, 0.12, 0.5, "sawtooth", 70); tom(t + 0.02, 186, 0.1, 0.5, "sawtooth", 66); sopro(t, 0.4, 800, 200, 0.2, 2); },
     arcano() { const t = ctx.currentTime; tom(t, 660, 0.07, 0.3, "square", 1760); tom(t + 0.05, 990, 0.05, 0.3, "triangle", 2200); tom(t, 130, 0.25, 0.16, "sine", 60); },
     veneno() { const t = ctx.currentTime; for (let i = 0; i < 5; i++) tom(t + i * 0.06, 300 + Math.random() * 400, 0.06, 0.1, "sine", 600 + Math.random() * 300); },
+    mana() { const t = ctx.currentTime; [392, 587, 784, 1175].forEach((f, i) => tom(t + i * 0.07, f, 0.045, 0.55, "triangle", f * 1.01)); tom(t, 196, 0.08, 0.5, "sine", 220); sopro(t, 0.5, 3000, 7000, 0.02, 0.7, "highpass"); },
     cura() { const t = ctx.currentTime; [523, 659, 784, 1046, 1318].forEach((f, i) => tom(t + i * 0.06, f, 0.05, 0.5, "sine")); sopro(t, 0.6, 2000, 6000, 0.03, 0.8, "highpass"); },
     roubo() { const t = ctx.currentTime; tom(t, 520, 0.09, 0.45, "sawtooth", 140); tom(t + 0.1, 330, 0.06, 0.4, "triangle", 110); sopro(t, 0.45, 1600, 300, 0.12, 3); },
     esquiva() { const t = ctx.currentTime; sopro(t, 0.22, 600, 3200, 0.18, 1.5); },

@@ -27,7 +27,8 @@ const Batalha = (() => {
     sagrado: ["#fff3a0", "#f2c94c", "#ffffff"], sombra: ["#8e6fd8", "#5a2a6e", "#2a1f3a"], arcano: ["#c8b0ff", "#8e6fd8", "#7fb0ff"],
     veneno: ["#8fbf6a", "#4f9a5b", "#c8f0a0"], cura: ["#8fbf6a", "#c8f0a0", "#4f9a5b"], roubo: ["#e2574c", "#b3262b", "#6e0d0d"],
     sangue: ["#e2574c", "#b3262b"], protecao: ["#7fb0ff", "#c8e0ff", "#3d63c9"], forca: ["#ffb35c", "#f2c94c"],
-    maldicao: ["#8e6fd8", "#5a2a6e"], atordoado: ["#fff3a0", "#f2c94c"], marca: ["#f2c94c", "#e0782f"] };
+    maldicao: ["#8e6fd8", "#5a2a6e"], mana: ["#a8c4ff", "#4d74e0", "#ffffff"], vigor: ["#ffb35c", "#f2c94c", "#fff3a0"],
+    foco: ["#c8f0a0", "#8fbf6a", "#ffffff"], atordoado: ["#fff3a0", "#f2c94c"], marca: ["#f2c94c", "#e0782f"] };
 
   const S = (n, e = 2, c = "") => Sprites.img(n, e, c);
   const agora = () => performance.now();
@@ -91,7 +92,10 @@ const Batalha = (() => {
   function efeitosHtml(lista) {
     return lista.map((f) => {
       const [ic, fam] = EFEITO[f.id] || ["estrela", "forca"];
-      return `<span class="ef fam-${fam}" data-ef="${esc(f.id)}" title="${esc(f.nome)} (${f.turnos} turno${f.turnos === 1 ? "" : "s"})">${S(ic, 1)}<b>${f.turnos > 9 ? "∞" : f.turnos}</b></span>`;
+      const dano = f.por_turno ? ` · ${f.por_turno} de dano por turno` : "";
+      const extra = f.id === "queimadura" ? " · a Combustão detona o que falta arder" : "";
+      const camadas = f.camadas ? `<i class="camadas">×${f.camadas}</i>` : "";
+      return `<span class="ef fam-${fam}${f.camadas ? " acumulado" : ""}" data-ef="${esc(f.id)}" title="${esc(f.nome)} (${f.turnos} turno${f.turnos === 1 ? "" : "s"})${dano}${extra}">${S(ic, 1)}<b>${f.turnos > 9 ? "∞" : f.turnos}</b>${camadas}</span>`;
     }).join("");
   }
 
@@ -105,8 +109,7 @@ const Batalha = (() => {
     const c = el._ficha;
     if (!c || !c.ficha) return;
     const f = c.ficha;
-    let caixa = document.getElementById("dica-item");
-    if (!caixa) { caixa = document.createElement("div"); caixa.id = "dica-item"; caixa.className = "moldura"; document.body.appendChild(caixa); }
+    const caixa = Telas.abrirDica(el);
     const tracos = f.tracos.map((t) => `<span class="ficha-traco" title="${esc(t.texto)}">${S(ICONE_TRACO[t.id] || "estrela", 2)}<small>${esc(t.id)}</small></span>`).join("");
     let corpo;
     if (f.conhecido) {
@@ -125,16 +128,12 @@ const Batalha = (() => {
     caixa.innerHTML = `<b>${esc(c.nome)}</b><div class="tipo">Nível ${c.nivel}${c.chefe ? " · chefe" : ""} · ataque ${f.atk} · defesa ${f.defesa}</div>
       <div class="ficha-tracos">${tracos}</div>${corpo}${f.ponto_fraco ? '<div class="rodape">Você conhece o ponto fraco: +25% de dano!</div>' : ""}`;
     caixa.classList.add("ficha-inimigo");
-    caixa.hidden = false;
     const r = el.getBoundingClientRect();
     const esq = r.left - 300 < 6 ? r.right + 10 : r.left - 300;
     caixa.style.left = Math.max(6, Math.min(innerWidth - 296, esq)) + "px";
     caixa.style.top = Math.max(6, Math.min(innerHeight - caixa.offsetHeight - 6, r.top)) + "px";
   }
-  function esconderFicha() {
-    const caixa = document.getElementById("dica-item");
-    if (caixa) { caixa.hidden = true; caixa.classList.remove("ficha-inimigo"); }
-  }
+  function esconderFicha() { Telas.esconderDica(); }
 
   function atualizarCarta(el, c, heroi) {
     el._ficha = c;
@@ -168,6 +167,7 @@ const Batalha = (() => {
   /** Desenha (ou atualiza no lugar) as cartas a partir do estado do combate. */
   function desenhar(cb, heroi, replay) {
     if (!cb) {
+      esconderFicha();  // a carta sob o mouse some com a arena; a ficha não pode ficar presa
       if (arena) paisagem(false);
       cartas.clear(); anteriores = {}; emArea = false;
       if (arena) { colAliados.innerHTML = ""; colInimigos.innerHTML = ""; camadaFx.innerHTML = ""; }
@@ -412,6 +412,25 @@ const Batalha = (() => {
         }
         som(m.modo === "roubo" ? "roubo" : "cura");
         await dormir(pausa(420));
+        return;
+      }
+      case "recurso": {
+        // Mana (ou vigor/foco) voltando: a barra de recurso da carta enche, brilha e sobe "+N".
+        if (!em) return;
+        marcar(m.em);
+        const fam = { Vigor: "vigor", Foco: "foco" }[m.recurso] || "mana";
+        const r = em.querySelector(".carta-rec");
+        if (r) {
+          r.querySelector(".enchimento").style.width = pct(m.rec, m.max_rec) + "%";
+          r.querySelector(".num").textContent = `${m.rec}/${m.max_rec}`;
+          reiniciar(r, "enchendo", 900);
+        }
+        reiniciar(em, "aura-" + fam, 900);
+        particulas(em, fam, 14);
+        numero(em, `+${m.valor} ${m.recurso ? m.recurso.toLowerCase() : "mana"}`, fam);
+        if (m.rotulo) rotulo(em, m.rotulo);
+        som("mana");
+        await dormir(pausa(480));
         return;
       }
       case "tique": {

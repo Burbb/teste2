@@ -10,7 +10,15 @@ from ..jogo import NOMES_TESTE
 
 
 def _efeitos(c):
-    return [{"nome": ef.get("r", NOMES_EFEITOS.get(n, n)), "id": n, "turnos": ef["t"]} for n, ef in c.efeitos.items()]
+    lista = []
+    for n, ef in c.efeitos.items():
+        d = {"nome": ef.get("r", NOMES_EFEITOS.get(n, n)), "id": n, "turnos": ef["t"]}
+        if n in ("queimadura", "veneno", "sangramento"):
+            d["por_turno"] = max(1, int(ef["v"]))
+        if ef.get("s", 1) > 1:
+            d["camadas"] = ef["s"]
+        lista.append(d)
+    return lista
 
 
 def _item(it):

@@ -114,15 +114,15 @@ def exportar(g):
     base = os.path.join(pasta, _nome_arquivo(g))
     try:
         os.makedirs(pasta, exist_ok=True)
+        from . import __version__
+        cab = {"t": "cabecalho", "versao": VERSAO, "versao_jogo": __version__, "seed": g.seed,
+               "classe": g.j.classe, "hardcore": g.hardcore, "interface": type(g.ui).__name__}
         with open(base + ".jsonl", "w", encoding="utf-8") as f:
-            from . import __version__
-            f.write(json.dumps({"t": "cabecalho", "versao": VERSAO, "versao_jogo": __version__, "seed": g.seed,
-                                "classe": g.j.classe, "hardcore": g.hardcore,
-                                "interface": type(g.ui).__name__}, ensure_ascii=False) + "\n")
+            f.write(json.dumps(cab, ensure_ascii=False) + "\n")
             for ev in g.registro:
                 f.write(json.dumps(ev, ensure_ascii=False) + "\n")
         with open(base + ".md", "w", encoding="utf-8") as f:
-            f.write(resumo(g.registro))
+            f.write(resumo([cab] + list(g.registro)))  # o resumo também mostra versão e interface
     except OSError:
         return None
     return base + ".md"

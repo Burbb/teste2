@@ -74,6 +74,9 @@ async function responder(id, valor) {
   if (!pergunta || pergunta.id !== id) return;
   pergunta = null;
   Telas.fecharMenuItem();  // um menu de figura aberto não sobrevive à escolha (inclusive Voltar)
+  Telas.esconderDica();  // nem a dica de um item que estava sob o mouse
+  // O que já está na página foi lido: se a mesma tela se redesenhar, só o que vier depois vira aviso.
+  textoEl.querySelectorAll(":scope > p").forEach((p) => p.classList.add("lido"));
   promptEl.querySelectorAll(".escolhas").forEach((u) => u.classList.add("escolhido"));
   Som.tocar("escolha");
   try {
@@ -167,13 +170,19 @@ pagina.addEventListener("scroll", () => { seguir = pagina.scrollTop + pagina.cli
 const MIUDAS = new Set(["de", "da", "do", "das", "dos", "e", "em", "of", "the", "a", "o", "os", "as"]);
 function suavizar(t) {
   t = String(t ?? "");
-  if (/[a-zà-ÿ]/.test(t) || !/[A-ZÀ-Ý]{2}/.test(t)) return t;
-  return t.toLowerCase().replace(/[\p{L}']+/gu, (p, i) => (i > 0 && MIUDAS.has(p) ? p : p[0].toUpperCase() + p.slice(1)));
+  // Palavra a palavra: "GUARDIÃO: Ulric, the Lesser Lich" vira "Guardião: Ulric, the Lesser Lich".
+  // Siglas curtas (PV, XP) ficam; palavras já em caixa baixa ou capitalizadas também.
+  return t.replace(/[\p{L}']+/gu, (p, i) => {
+    const baixa = p.toLowerCase();
+    if (p.length < 2 || (p.length < 3 && !MIUDAS.has(baixa)) || p !== p.toUpperCase() || p === baixa) return p;
+    return i > 0 && MIUDAS.has(baixa) ? baixa : baixa[0].toUpperCase() + baixa.slice(1);
+  });
 }
 App.suavizar = suavizar;
 
 function cabecalho(m) {
   document.querySelectorAll(".voltar-seta").forEach((x) => x.remove());
+  Telas.esconderDica();
   cab.dataset.tipo = m.tipo || "evento";
   cab.innerHTML = `<h1 class="cena-titulo">${esc(suavizar(m.titulo))}</h1>` + (m.subtitulo ? `<div class="cena-sub">${esc(m.subtitulo)}</div>` : "") +
     `<div class="ornamento"><i></i><b></b><i></i></div>`;
@@ -194,7 +203,7 @@ async function novaCena(m) {
   tituloAtual = m.titulo;
   if (mesmaTela) {
     // O que aconteceu na ação (equipou, comprou...) vira um aviso rápido antes de a tela se redesenhar.
-    const avisos = [...textoEl.querySelectorAll(":scope > p:not(.eco)")].map((p) => p.textContent).filter(Boolean).slice(-2);
+    const avisos = [...textoEl.querySelectorAll(":scope > p:not(.eco):not(.lido)")].map((p) => p.textContent).filter(Boolean).slice(-2);
     if (!replay) avisos.forEach((t) => Telas.toast("", t, "estrela", true));
     textoEl.innerHTML = ""; promptEl.innerHTML = "";
     cabecalho(m);
@@ -416,6 +425,7 @@ function doer() {
 /* ------------------------------------------------------------------ escolhas */
 function limparPrompt() {
   promptEl.innerHTML = ""; pergunta = null; Batalha.limparAlvos(); Batalha.vez(null);
+  document.querySelectorAll(".rastro-contrato.cacavel").forEach((c) => { c.classList.remove("cacavel"); c.querySelector(".rastro-cacar")?.remove(); });
   document.querySelectorAll(".voltar-seta").forEach((b) => b.remove());
   Telas.fecharMenuItem();
 }
@@ -502,6 +512,7 @@ function mostrarOpcoes(m) {
       if (n) icone = spr(MapaPx.sprite(n), 1);
     }
     if (o.meta && o.meta.item) icone = spr(Telas.ICONE_ITEM[o.meta.item] || "pocao", 1);
+    if (o.meta && o.meta.cacar !== undefined) { icone = spr("arco", 1); b.classList.add("op-contrato"); }
     if (emLuta) icone = iconeAcaoCombate(o.texto) || icone;
     if (o.meta && o.meta.alvo) {
       b.addEventListener("mouseenter", () => Batalha.mirar(o.meta.alvo, true));
@@ -522,7 +533,23 @@ function mostrarOpcoes(m) {
     if (chave !== ultimoMundo) { ultimoMundo = chave; desenharMundo(estado); }
     atualizarMapasDaPagina();
   }
+  marcarCacadas();
   rolarFim();
+}
+
+/** Contrato de caça com o alvo aqui: o cartão do rastreador vira atalho para "Caçar". */
+function opcaoCacar(id) {
+  if (!pergunta || pergunta.tipo !== "opcoes") return -1;
+  return pergunta.opcoes.findIndex((o) => o.meta && o.meta.cacar === id);
+}
+function marcarCacadas() {
+  document.querySelectorAll(".rastro-contrato").forEach((c) => {
+    const pode = opcaoCacar(Number(c.dataset.contrato)) >= 0;
+    c.classList.toggle("cacavel", pode);
+    const selo = c.querySelector(".rastro-cacar");
+    if (pode && !selo) c.querySelector(".rastro-info").insertAdjacentHTML("beforeend", '<span class="rastro-cacar">Seguir os rastros ▸</span>');
+    else if (!pode && selo) selo.remove();
+  });
 }
 
 function iconeAcaoCombate(t) {
@@ -768,7 +795,12 @@ function desenharMundo(e) {
   raiz.querySelectorAll(".caminho.clicavel").forEach((c) => c.addEventListener("click", () => viajarPara(Number(c.dataset.local))));
   raiz.querySelectorAll(".rastro-contrato").forEach((c) => {
     const id = Number(c.dataset.local);
-    if (clic.has(id)) { c.classList.add("clicavel"); c.addEventListener("click", () => viajarPara(id)); }
+    if (clic.has(id)) c.classList.add("clicavel");
+    c.addEventListener("click", () => {
+      const i = opcaoCacar(Number(c.dataset.contrato));
+      if (i >= 0) responder(pergunta.id, i);
+      else if (clic.has(id)) viajarPara(id);
+    });
     c.addEventListener("mouseenter", () => document.querySelectorAll(`.no-btn[data-id="${id}"]`).forEach((b) => b.classList.add("destacado")));
     c.addEventListener("mouseleave", () => document.querySelectorAll(".no-btn.destacado").forEach((b) => b.classList.remove("destacado")));
   });

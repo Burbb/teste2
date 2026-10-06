@@ -143,6 +143,12 @@ class Combate:
             self.lance("cura", em=self.uid(c), de=self.uid(de), valor=int(valor), modo=tipo, rotulo=rotulo,
                        hp=max(0, c.hp), max_hp=c.max_hp)
 
+    def recuperou(self, c, valor, rotulo=None):
+        """Ganho de recurso (mana, vigor, foco) visível na carta: Meditar, Tônico, talentos."""
+        if valor and valor > 0 and c is self.j:
+            self.lance("recurso", em=self.uid(c), valor=int(valor), rotulo=rotulo, recurso=c.nome_recurso,
+                       rec=c.rec, max_rec=c.max_rec)
+
     def nome(self, c, obj=False):
         if c is self.j:
             return "você" if obj else "Você"
@@ -162,11 +168,24 @@ class Combate:
                 letras[e.nome] = n + 1
                 e.nome = f"{e.nome} {'ABCDEFGHIJ'[min(n, 9)]}"
 
+    MAX_CHAMAS = 3
+
     def valor_queimadura(self, u):
-        v = max(2, u.poder * 0.4)
+        """Dano por turno de UMA camada de chamas. É pouco de propósito: o fogo do mago rende quando as
+        camadas se acumulam (até 3) e a Combustão as detona de uma vez."""
+        v = max(2, u.poder * 0.12)
         if getattr(u, "spec", None) == "piromante":
-            v *= 1.5
-        return v * (1 + 0.3 * u.tal("brasas"))
+            v *= 1.25
+        return v * (1 + 0.2 * u.tal("brasas"))
+
+    def camadas(self, alvo):
+        ef = alvo.efeito("queimadura")
+        return ef.get("s", 1) if ef else 0
+
+    def restante_queimadura(self, alvo):
+        """Quanto a queimadura ainda causaria se ardesse até o fim (é o que a Combustão detona)."""
+        ef = alvo.efeito("queimadura")
+        return int(ef["v"]) * ef["t"] if ef else 0
 
     def duracao_queimadura(self, u):
         return 3 + (1 if u.tal("brasas") else 0)
@@ -303,7 +322,7 @@ class Combate:
             self.ao_morrer(alvo, por=u, tipo=tipo)
         return dano
 
-    def aplicar(self, alvo, efeito, turnos, valor=0, chance=1.0, rotulo=None):
+    def aplicar(self, alvo, efeito, turnos, valor=0, chance=1.0, rotulo=None, acumula=False):
         if not alvo.vivo:
             return False
         if chance < 1 and self.rng.random() >= chance:
@@ -321,7 +340,18 @@ class Combate:
         if efeito == "atordoado" and (alvo.chefe or "gigante" in t) and self.rng.random() < 0.5:
             self.detalhe(f"{self.nome(alvo)} resiste ao atordoamento!", "cinza")
             return False
-        alvo.aplicar(efeito, turnos, valor)
+        atual = alvo.efeitos.get(efeito)
+        if acumula and atual and efeito == "queimadura":
+            # Mais uma camada: o dano por turno soma (até o teto) e a duração se renova.
+            s = min(self.MAX_CHAMAS, atual.get("s", 1) + 1)
+            base = max(atual.get("b", atual["v"]), valor)
+            atual.update(s=s, b=base, v=base * s, t=max(atual["t"], turnos))
+            rotulo = f"em chamas ×{s}"
+        else:
+            alvo.aplicar(efeito, turnos, valor)
+            if acumula and efeito == "queimadura":
+                alvo.efeitos[efeito].setdefault("s", 1)
+                alvo.efeitos[efeito].setdefault("b", valor)
         if rotulo:
             alvo.efeitos[efeito]["r"] = rotulo
         self.lance("efeito", em=self.uid(alvo), efeito=efeito, rotulo=rotulo or NOMES_EFEITOS[efeito])
@@ -345,7 +375,9 @@ class Combate:
         ]), "verde+negrito")
         j = self.j
         if j.spec == "necromante":
+            antes = j.rec
             j.rec = min(j.max_rec, j.rec + 5)
+            self.recuperou(j, j.rec - antes, "Colheita")
         if j.tal("senhor_mortos") and len(self.mortos) == 1 and not c.chefe:
             self.dizer(f"{c.nome} se ergue de novo — agora sob o seu comando!", "magenta")
             self.invocar_aliado(f"{c.nome} (servo)", hp=int(c.max_hp * 0.4), atk=c.atk * 0.5)
@@ -359,7 +391,9 @@ class Combate:
             j.efeitos["fortalecido"]["v"] = 0.1 * j.tal("frenesi") * self.frenesi
             self.dizer(f"O sangue ferve: Frenesi x{self.frenesi}!", "vermelho")
         if j.tal("assassino"):
+            antes = j.rec
             j.rec = min(j.max_rec, j.rec + j.max_rec // 2)
+            self.recuperou(j, j.rec - antes)
             j.aplicar("furtivo", 2, 1)
             self.dizer("Você some antes que o corpo toque o chão. (Assassino)", "magenta")
         if tipo == "fogo" and j.tal("coracao_ardente") and not self.explodindo:
@@ -607,9 +641,10 @@ class Combate:
             self.dizer("Você estoura a bomba de fumaça e some na nuvem cinzenta!", "cinza")
             return "fuga"
         with self.agindo(j, CONSUMIVEIS[k]["nome"], hab="item"):
-            antes = j.hp
+            antes, antes_rec = j.hp, j.rec
             self.g.usar_consumivel(k)
             self.curou(j, j.hp - antes, rotulo=CONSUMIVEIS[k]["nome"])
+            self.recuperou(j, j.rec - antes_rec, rotulo=CONSUMIVEIS[k]["nome"])
         return "turno"
 
     def analisar(self):

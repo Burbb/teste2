@@ -170,6 +170,84 @@ class TestSimulacao(unittest.TestCase):
             self.assertTrue(any(d.get("de") == cb.uid(a) for t, d in lances for a in cb.aliados if t == "acao"))
             g.combate_ativo = None
 
+    def test_chamas_acumulam_e_combustao_detona(self):
+        """O fogo do mago rende em camadas (até 3) e a Combustão transforma o que falta arder em dano na hora."""
+        from rpg import classes
+        from rpg.combate import Combate
+        lances = []
+
+        class Gravador(BotUI):
+            def lance(self, tipo, **dados):
+                lances.append((tipo, dados))
+
+        with tempfile.TemporaryDirectory() as pasta:
+            g = Jogo(Gravador(random.Random(7), max_decisoes=50), seed=7, pasta_saves=pasta)
+            g.iniciar("Robô", "mago")
+            g.j.spec = "piromante"
+            g.clima = "limpo"
+            alvo = g.inimigo("bandido", nivel=3)
+            alvo.hp = alvo.max_hp = 2000
+            alvo.agi = 0
+            cb = Combate(g, [alvo])
+            base = cb.valor_queimadura(g.j)
+            self.assertLess(base, g.j.poder * 0.2)  # uma camada é pouco: o forte é acumular e detonar
+            for _ in range(4):
+                cb.aplicar(alvo, "queimadura", cb.duracao_queimadura(g.j), valor=base, acumula=True)
+            self.assertEqual(cb.camadas(alvo), Combate.MAX_CHAMAS)
+            self.assertAlmostEqual(alvo.efeito("queimadura")["v"], base * Combate.MAX_CHAMAS)
+            restante = cb.restante_queimadura(alvo)
+            antes = alvo.hp
+            classes._combustao(cb, g.j, alvo)
+            self.assertIsNone(alvo.efeito("queimadura"))
+            self.assertGreater(antes - alvo.hp, restante * 0.5)
+            # Meditar mostra a mana voltando na carta.
+            g.j.rec = 0
+            classes._meditar(cb, g.j, None)
+            rec = [d for t, d in lances if t == "recurso"]
+            self.assertTrue(rec and rec[-1]["valor"] > 0 and rec[-1]["em"] == "j")
+            g.combate_ativo = None
+
+    def test_cacada_de_contrato_sempre_acha_o_bicho(self):
+        with tempfile.TemporaryDirectory() as pasta:
+            g = Jogo(BotUI(random.Random(5), max_decisoes=200), seed=5, pasta_saves=pasta)
+            g.iniciar("Robô", "guerreiro")
+            loc = next(l for l in g.mundo["locais"] if l["tipo"] == "selvagem")
+            g.mundo["atual"] = loc["id"]
+            from rpg.dados import BIOMAS
+            fam = BIOMAS[loc["bioma"]]["familias"][0]
+            c = {"id": 991, "tipo": "caca", "local": loc["id"], "familia": fam, "total": 3, "feito": 0,
+                 "ouro": 10, "xp": 10, "desc": "teste"}
+            g.contratos.append(c)
+            vistos = []
+
+            def escolher(pergunta, opcoes):
+                vistos.append(list(opcoes))
+                return next(i for i, o in enumerate(opcoes) if o.startswith("Caçar"))
+            g.ui.escolher = escolher
+            grupos = []
+
+            def combate(grupo, **kw):  # vitória instantânea: só interessa quem apareceu
+                grupos.append(grupo)
+                g.registrar_abates(grupo)
+                return "vitoria"
+            g.combate = combate
+            while not c.get("concluido"):
+                g.menu_selvagem()
+                self.assertLessEqual(len(grupos), 3)
+            self.assertTrue(any(o.startswith("Caçar") for o in vistos[0]))
+            self.assertTrue(all(grupo[0].familia == fam for grupo in grupos))
+            self.assertEqual(g.contratos_aqui(), [])
+
+    def test_resumo_da_run_tem_versao(self):
+        from rpg import telemetria
+        with tempfile.TemporaryDirectory() as pasta:
+            g = jogar(11, "arqueiro", decisoes=80, pasta=pasta)
+            caminho = telemetria.exportar(g)
+            with open(caminho, encoding="utf-8") as f:
+                topo = f.read(600)
+            self.assertNotIn("Jogo: ?", topo)
+            self.assertIn("Interface: BotUI", topo)
+
     def test_mercado_quantidade_e_auto_equipar(self):
         with tempfile.TemporaryDirectory() as pasta:
             g = Jogo(BotUI(random.Random(2), max_decisoes=50), seed=2, pasta_saves=pasta)

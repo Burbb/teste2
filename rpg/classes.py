@@ -259,13 +259,14 @@ def _bola_fogo(cb, u, alvo):
     dano = cb.atacar(u, alvo, 1.5, tipo="fogo", alcance="distancia", stat="poder", rotulo="Bola de Fogo")
     if dano:
         cb.aplicar(alvo, "queimadura", cb.duracao_queimadura(u), valor=cb.valor_queimadura(u),
-                   chance=1.0 if u.tal("ignicao") else 0.4)
+                   chance=1.0 if u.tal("ignicao") else 0.6, acumula=True)
 
 
 def _meditar(cb, u, alvo):
     ganho = min(u.max_rec - u.rec, 6 + int(u.max_rec * 0.12))
     u.rec += ganho
     cb.dizer(f"Você fecha os olhos e respira fundo. (+{ganho} mana)", "azul")
+    cb.recuperou(u, ganho, "Meditar")
 
 
 def _lanca_gelo(cb, u, alvo):
@@ -286,16 +287,22 @@ def _inferno(cb, u, alvo):
     for ini in cb.inimigos_vivos():
         dano = cb.atacar(u, ini, 0.6, tipo="fogo", alcance="distancia", stat="poder")
         if dano and ini.vivo:
-            cb.aplicar(ini, "queimadura", cb.duracao_queimadura(u), valor=cb.valor_queimadura(u), chance=0.45)
+            cb.aplicar(ini, "queimadura", cb.duracao_queimadura(u), valor=cb.valor_queimadura(u), chance=0.5,
+                       acumula=True)
 
 
 def _combustao(cb, u, alvo):
-    mult = 1.3
-    if alvo.efeito("queimadura"):
-        mult = 2.6
+    """Detona as chamas do alvo: tudo o que a queimadura ainda causaria vira dano agora, e mais um pouco.
+    Sem chamas, é um estalo fraco. O jogo é acender (Bola de Fogo, Inferno) e escolher a hora de explodir."""
+    restante = cb.restante_queimadura(alvo)
+    camadas = cb.camadas(alvo)
+    if restante:
         alvo.remover("queimadura")
-        cb.dizer(f"As chamas em {alvo.nome} explodem!", "vermelho")
-    cb.atacar(u, alvo, mult, tipo="fogo", alcance="distancia", stat="poder", rotulo="Combustão")
+        cb.dizer(f"As chamas em {alvo.nome} explodem{' de uma vez' if camadas > 1 else ''}!", "vermelho")
+        cb.atacar(u, alvo, 1.0, tipo="fogo", alcance="distancia", stat="poder", bonus=restante * (1.6 + 0.2 * camadas),
+                  crit_extra=0.05 * camadas, rotulo=f"Combustão ×{camadas}" if camadas > 1 else "Combustão")
+    else:
+        cb.atacar(u, alvo, 0.8, tipo="fogo", alcance="distancia", stat="poder", rotulo="Combustão")
 
 
 def _fenix(cb, u, alvo):
@@ -357,12 +364,12 @@ HABILIDADES = {
     "flecha_envenenada": dict(nome="Flecha Envenenada", custo=10, flechas=1, alvo="inimigo", desc="Dano e veneno forte por 4 turnos.", fn=_flecha_envenenada),
     "execucao": dict(nome="Execução", custo=16, flechas=1, alvo="inimigo", desc="320% de dano se o alvo estiver abaixo de 35% de vida.", fn=_execucao),
     # Mago
-    "bola_fogo": dict(nome="Bola de Fogo", custo=14, alvo="inimigo", desc="150% de dano de fogo, pode queimar.", fn=_bola_fogo),
+    "bola_fogo": dict(nome="Bola de Fogo", custo=14, alvo="inimigo", desc="150% de dano de fogo; costuma acender o alvo (as chamas acumulam até 3 camadas).", fn=_bola_fogo),
     "meditar": dict(nome="Meditar", custo=0, alvo="proprio", desc="Recupera mana.", fn=_meditar),
     "lanca_gelo": dict(nome="Lança de Gelo", custo=10, alvo="inimigo", desc="130% de dano de gelo, pode congelar.", fn=_lanca_gelo),
     "barreira": dict(nome="Barreira Arcana", custo=20, alvo="proprio", desc="Escudo que absorve dano por 2 turnos (não acumula).", fn=_barreira),
-    "inferno": dict(nome="Inferno", custo=35, alvo="todos", desc="60% de dano de fogo em todos (pode errar), pode queimar.", fn=_inferno),
-    "combustao": dict(nome="Combustão", custo=14, alvo="inimigo", desc="Dano dobrado em alvos em chamas (consome a queimadura).", fn=_combustao),
+    "inferno": dict(nome="Inferno", custo=35, alvo="todos", desc="60% de dano de fogo em todos (pode errar); pode acender cada um.", fn=_inferno),
+    "combustao": dict(nome="Combustão", custo=14, alvo="inimigo", desc="Detona as chamas do alvo: o que a queimadura ainda causaria vira dano na hora (mais forte com várias camadas).", fn=_combustao),
     "fenix": dict(nome="Fênix", custo=40, alvo="inimigo", desc="250% de dano de fogo e cura 20% da vida.", fn=_fenix),
     "drenar_vida": dict(nome="Drenar Vida", custo=14, alvo="inimigo", desc="Dano sombrio que cura 40% do causado.", fn=_drenar_vida),
     "erguer_servo": dict(nome="Erguer Servo", custo=22, alvo="proprio", desc="Invoca um esqueleto aliado (máx. 1, mais com talentos).", fn=_erguer_servo),
