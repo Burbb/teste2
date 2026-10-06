@@ -123,6 +123,25 @@ class UI:
     def fim_combate(self, resultado):
         """O combate acabou: interfaces gráficas podem mostrar o último golpe antes do resultado."""
 
+    def lance(self, tipo, **dados):
+        """Um lance de combate (ação, golpe, cura...) com quem e em quem, para interfaces que animam as cartas.
+        O texto do lance já foi (ou será) dito; as interfaces de texto não precisam de nada aqui."""
+
+    def detalhe(self, texto, cor=None):
+        """Linha mecânica de combate (dano, esquiva, efeito aplicado). Interfaces gráficas a mostram miúda,
+        porque a animação já conta o que aconteceu."""
+        self.dizer(texto, cor)
+
+    def fala(self, cid, nome, texto):
+        """Um companheiro fala. Interfaces gráficas mostram um balão saindo do retrato."""
+        self.dizer(texto, "cinza")
+
+    def opiniao(self, cid, nome, delta):
+        """Um companheiro aprova ou desaprova algo."""
+        intensidade = " muito" if abs(delta) >= 8 else ""
+        verbo = "aprova" if delta > 0 else "desaprova"
+        self.efeito(f"{nome} {verbo}{intensidade}", "aprova" if delta > 0 else "desaprova")
+
     def celebrar(self, tipo, dados):
         """Momentos de conquista (nível, Sigilo, especialização...): interfaces gráficas fazem festa."""
 

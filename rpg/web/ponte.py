@@ -118,6 +118,23 @@ class WebUI(UI):
     def atualizar(self):
         self.enviar_estado()
 
+    def lance(self, tipo, **dados):
+        self._enviar("lance", tipo=tipo, **dados)
+
+    def detalhe(self, texto, cor=None):
+        texto = str(texto)
+        if texto.strip():
+            self._enviar("texto", texto=texto, cor=cor, detalhe=True)
+            self.enviar_estado()
+
+    def fala(self, cid, nome, texto):
+        self._enviar("fala", cid=cid, nome=nome, texto=texto)
+        self.novo_desde_escolha = True
+
+    def opiniao(self, cid, nome, delta):
+        self._enviar("opiniao", cid=cid, nome=nome, delta=delta)
+        self.enviar_estado()
+
     def fim_combate(self, resultado):
         self._enviar("fim_combate", resultado=resultado)
 

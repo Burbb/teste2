@@ -9,8 +9,16 @@ um reino diferente: mapa, nomes, chefes, eventos e consequências.
 ![Uma cena: paisagem em pixel art, o dado de Percepção, a HUD com suprimentos desenhados e o mapa](docs/interface.png)
 
 <p align="center">
-  <img src="docs/combate.png" width="49%" alt="Combate: a HUD vira aliados contra inimigos; o inimigo morto aparece antes da vitória">
+  <img src="docs/combate.png" width="49%" alt="Combate: as cartas da comitiva e dos inimigos sobre a paisagem; a Bola de Fogo incendeia o alvo">
   <img src="docs/nivel.png" width="49%" alt="Subir de nível: atributos ganhos, ponto de talento e habilidades novas">
+</p>
+<p align="center">
+  <img src="docs/redemoinho.png" width="49%" alt="Redemoinho: a carta do herói vai ao centro e gira quatro vezes">
+  <img src="docs/cura.png" width="49%" alt="Odete cura: a carta brilha em verde e o número sobe">
+</p>
+<p align="center">
+  <img src="docs/mapa.png" width="49%" alt="Mapa do reino no estilo da paisagem: regiões pontilhadas com pinheiros, picos e casinhas">
+  <img src="docs/comitiva.png" width="49%" alt="A comitiva na HUD: Morel aprova e o selo salta do retrato">
 </p>
 <p align="center">
   <img src="docs/talentos.png" width="49%" alt="Árvore de talentos com hover">
@@ -18,7 +26,7 @@ um reino diferente: mapa, nomes, chefes, eventos e consequências.
 </p>
 <p align="center">
   <img src="docs/mercado.png" width="49%" alt="Mercado interativo">
-  <img src="docs/titulo.png" width="49%" alt="Tela de título">
+  <img src="docs/titulo.png" width="49%" alt="Tela de título com uma paisagem sorteada">
 </p>
 
 ## Como jogar
@@ -65,15 +73,26 @@ nos títulos, Pixelify Sans no texto, Jersey 15 nos números.
   pernil quando a comida está no fim e vários quando sobra (um osso quando acabou), moedas que
   viram pilha e depois saco, tochas acesas que tremulam (ou apagadas), frascos cheios ou vazios.
   Tudo pisca e mostra `+3`/`−1` quando muda.
-- **Combate na HUD.** Ao começar uma luta, a HUD se abre em **aliados contra inimigos**, com
-  cartas que tremem e mostram o dano a cada golpe, aviso de golpe forte e o **último golpe
-  visível**: o inimigo morre na tela antes da vitória.
+- **Combate em palco.** Ao começar uma luta, a paisagem do lugar vira o chão da batalha: a sua
+  carta e a da comitiva de um lado, os inimigos do outro. **Uma ação por vez**: quem age dá um
+  passo à frente e avança até o alvo, o alvo treme e mostra o dano. Cada elemento tem cor e som
+  próprios: a Bola de Fogo voa e deixa labaredas, o gelo cristaliza, a luz sagrada brilha, a
+  sombra escurece. O **Redemoinho** leva a sua carta ao centro e gira quatro vezes, com quatro
+  golpes. Cura brilha em **verde**, roubo de vida em **vermelho**, proteção em **azul**, e os
+  efeitos (veneno, chamas, guarda, maldição...) ficam como ícones na carta. Para escolher o alvo,
+  clique na carta do inimigo. O texto fica enxuto: uma linha curta por golpe, e cada turno começa
+  numa página limpa (o histórico guarda tudo).
+- **A comitiva fala em balões.** Os retratos dos companheiros ficam na HUD; o que dizem sai
+  em **balões** de cima do retrato (ou da carta, na luta), e quando aprovam ou desaprovam algo
+  salta um **selo** (`▲ Morel aprova`) com som próprio.
 - **Momentos que importam têm festa.** Vitória com faixa e fanfarra; **subir de nível** abre uma
   tela com os atributos ganhos, o ponto de talento e as habilidades novas; Sigilos,
   especialização e novos companheiros também ganham destaque. O d20 rola na tela nos testes,
   com som de sucesso ou falha.
-- **Viaje clicando no mapa.** O mapa (lateral, na página e em tela cheia com `M`) mostra o terreno
-  de cada região que você conhece e a névoa do resto. Clique num destino.
+- **Viaje clicando no mapa.** O mapa (lateral, na página e em tela cheia com `M`) é desenhado no
+  mesmo estilo da paisagem: manchas pontilhadas de cada bioma, pinheiros, picos nevados, juncos,
+  colunas, casinhas com janela acesa, e a cor muda com a hora do dia. A névoa cobre o resto.
+  Clique num destino.
 - **Árvore de talentos de verdade:** três colunas, ícones, graus, cadeados, passe o mouse para
   ver o efeito e clique para aprender.
 - **Inventário de verdade:** um boneco com **dez espaços** (cabeça, amuleto, peito, mãos, arma,
@@ -90,6 +109,7 @@ nos títulos, Pixelify Sans no texto, Jersey 15 nos números.
 | Tecla | O que faz |
 |---|---|
 | `1`–`9`, `0`, setas + Enter, clique | Escolher uma opção |
+| clique na carta do inimigo | Escolher o alvo na luta |
 | `T` `P` `C` `D` `B` `G` `Q` | Talentos, Personagem, Comitiva, Diário, Bestiário, Salvar, Sair (nos menus de local) |
 | clique no mapa | Viajar para aquele destino |
 | qualquer tecla durante o texto | Mostrar o texto inteiro |
@@ -121,7 +141,8 @@ Você não precisa caminhar sozinho, e talvez não deva. Três companheiros pode
 | **Yara** | Bruxa do brejo, quase queimada; a Fenda fala com ela | Amaldiçoa e ataca com magia | magia proibida, curiosidade, rebeldia | fé, autoridade, fanatismo, purificar |
 
 - **Aprovação.** 117 escolhas, em 49 eventos, têm peso moral. Quando você escolhe,
-  cada companheiro reage (`Odete desaprova muito`) e às vezes diz o que pensa. Quem confia
+  cada companheiro reage (um selo `▼ Odete desaprova muito` salta do retrato) e às vezes diz o
+  que pensa, num balão. Na luta também soltam uma frase de vez em quando. Quem confia
   em você luta melhor; abaixo de um certo ponto, vai embora, e nem todos vão em paz.
 - **Conversas** no acampamento ou no menu **Comitiva** (`C`): cada um tem uma história que
   só se abre com confiança.
@@ -266,8 +287,9 @@ rpg/
     ponte.py     WebUI: cada chamada da UI vira uma mensagem JSON (cenas, texto, dados, escolhas)
     estado.py    fotografia do jogo em JSON (herói, mapa, combate) para os painéis
     servidor.py  HTTP + SSE em 127.0.0.1, com token por sessão
-    static/      index.html, estilo.css, app.js (fila, HUD, combate), telas.js (talentos, fichas,
-                 celebrações), sprites.js (pixel art), vista.js (paisagem), mapa.js, som.js, fontes OFL
+    static/      index.html, estilo.css, app.js (fila, HUD, texto), batalha.js (palco da luta,
+                 balões e selos), telas.js (talentos, fichas, celebrações), sprites.js (pixel art),
+                 vista.js (paisagem), mapa.js, som.js, fontes OFL
   tui.py         interface de terminal com painéis (Textual), via --terminal
   ui.py          interface clássica (cores ANSI, menus) e o "jogador robô" dos testes
   mapa.py        desenho do mapa em caracteres

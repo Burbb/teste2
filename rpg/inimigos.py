@@ -210,6 +210,7 @@ def _regenerar(cb, e, alvo):
     if e.hp > e.max_hp * 0.7:
         return False
     cura = e.curar(e.max_hp * 0.15)
+    cb.curou(e, cura, rotulo="Regenerar")
     cb.dizer(f"As feridas de {e.nome} se fecham diante dos seus olhos. (+{cura})", "vermelho")
 
 
@@ -223,7 +224,7 @@ def _drenar(cb, e, alvo):
     stat = "poder" if e.poder > e.atk else "atk"
     dano = cb.atacar(e, alvo, 1.0, tipo="sombra", stat=stat, rotulo="Toque Drenante")
     if dano:
-        e.curar(dano * 0.6)
+        cb.curou(e, e.curar(dano * 0.6), "roubo")
 
 
 def _maldicao(cb, e, alvo):
@@ -247,6 +248,7 @@ def _cura(cb, e, alvo):
         return False
     a = min(feridos, key=lambda x: x.hp / x.max_hp)
     cura = a.curar(a.max_hp * 0.3 + e.poder)
+    cb.curou(a, cura, de=e, rotulo="Cura")
     quem = "a si mesmo" if a is e else a.nome
     cb.dizer(f"{e.nome} entoa um cântico e cura {quem}. (+{cura})", "vermelho")
 
@@ -291,6 +293,7 @@ def _devorar(cb, e, alvo):
         return False
     corpo = cb.mortos.pop()
     cura = e.curar(e.max_hp * 0.35)
+    cb.curou(e, cura, "roubo", rotulo="Devorar")
     cb.dizer(f"{e.nome} se ajoelha e arranca pedaços de {corpo.nome} com os dentes. (+{cura})", "vermelho")
 
 
@@ -339,4 +342,14 @@ NOMES_HABS_INIMIGO = {
     "mordida_gelida": "mordida congelante", "invocar": "invoca reforços",
     "varredura": "golpe em área (atinge você e seus aliados)",
     "reviver": "ressuscita caídos", "devorar": "devora cadáveres para se curar",
+}
+
+# Nomes curtos das habilidades, para a faixa que aparece sobre a carta de quem age.
+ROTULOS_HABS_INIMIGO = {
+    "mordida_sangrenta": "Mordida Sangrenta", "uivo": "Uivo", "grito_guerra": "Grito de Guerra", "teia": "Teia",
+    "veneno": "Veneno", "golpe_sujo": "Golpe Sujo", "roubar": "Roubo", "investida": "Investida",
+    "esmagar": "Preparar Golpe", "regenerar": "Regenerar", "agarrar": "Agarrão", "drenar": "Drenar",
+    "maldicao": "Maldição", "bola_fogo": "Bola de Fogo", "bola_sombra": "Esfera Sombria", "cura": "Cura",
+    "grito_terror": "Grito de Terror", "mordida_gelida": "Mordida Gélida", "invocar": "Invocar",
+    "varredura": "Varredura", "reviver": "Reviver", "devorar": "Devorar",
 }

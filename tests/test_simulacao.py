@@ -125,6 +125,50 @@ class TestSimulacao(unittest.TestCase):
             except LimiteBot:
                 pass
 
+    def test_lances_de_combate(self):
+        """O combate conta à interface quem agiu, em quem, com que elemento, e o Redemoinho gira quatro vezes."""
+        lances, falas = [], []
+
+        class Gravador(BotUI):
+            def lance(self, tipo, **dados):
+                lances.append((tipo, dados))
+
+            def fala(self, cid, nome, texto):
+                falas.append((cid, texto))
+
+        with tempfile.TemporaryDirectory() as pasta:
+            g = Jogo(Gravador(random.Random(3), max_decisoes=300), seed=3, pasta_saves=pasta)
+            g.iniciar("Robô", "guerreiro")
+            for cid in ("odete", "morel"):
+                comitiva.recrutar(g, cid)
+            g.j.spec = "berserker"
+            g.j.habilidades = ["redemoinho"]
+            g.j.rec = g.j.max_rec
+            escolhas = iter([1, 0])  # Habilidades → Redemoinho
+            g.ui.escolher = lambda pergunta, opcoes: next(escolhas, 0)
+            inimigos = [g.inimigo("bandido", nivel=1) for _ in range(2)]
+            for e in inimigos:
+                e.hp = e.max_hp = 500
+            g.combate_ativo = None
+            from rpg.combate import Combate
+            cb = Combate(g, inimigos)
+            comitiva.preparar_combate(cb)
+            cb.turno = 1
+            cb.fase_jogador()
+            tipos = [t for t, _ in lances]
+            self.assertEqual(tipos[0], "acao")
+            self.assertEqual(lances[0][1]["hab"], "redemoinho")
+            self.assertTrue(lances[0][1]["area"])
+            self.assertEqual(tipos.count("giro"), 4)
+            self.assertEqual(tipos.count("golpe") + tipos.count("erro"), 8)
+            self.assertEqual(tipos[-1], "fim_acao")
+            golpe = next(d for t, d in lances if t == "golpe")
+            self.assertEqual(golpe["de"], "j")
+            self.assertIn(golpe["em"], {cb.uid(e) for e in inimigos})
+            cb.fase_aliados()
+            self.assertTrue(any(d.get("de") == cb.uid(a) for t, d in lances for a in cb.aliados if t == "acao"))
+            g.combate_ativo = None
+
     def test_comitiva(self):
         """Opinião, partida, conversas, combate e salvar/carregar da comitiva."""
         with tempfile.TemporaryDirectory() as pasta:

@@ -56,6 +56,20 @@ const Som = (() => {
     o.start(t); o.stop(t + dur + 0.05);
   }
 
+  // Ruído filtrado com envelope e varredura de frequência (fogo, vento, magia).
+  function sopro(t, dur, f0, f1, vol, q = 1, tipo = "bandpass") {
+    const src = ctx.createBufferSource();
+    src.buffer = ruido(dur + 0.05);
+    const f = ctx.createBiquadFilter();
+    f.type = tipo; f.Q.value = q;
+    f.frequency.setValueAtTime(f0, t); f.frequency.exponentialRampToValueAtTime(f1, t + dur);
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + dur * 0.25);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    src.connect(f).connect(g).connect(mestre);
+    src.start(t); src.stop(t + dur + 0.05);
+  }
+
   const efeitos = {
     dado() {
       const t = ctx.currentTime;
@@ -94,6 +108,29 @@ const Som = (() => {
     item() { const t = ctx.currentTime; tom(t, 660, 0.07, 0.12, "square"); tom(t + 0.07, 990, 0.06, 0.18, "square"); },
     aprova() { const t = ctx.currentTime; tom(t, 523, 0.06, 0.2, "triangle"); tom(t + 0.08, 659, 0.06, 0.3, "triangle"); },
     desaprova() { const t = ctx.currentTime; tom(t, 330, 0.07, 0.25, "triangle", 290); tom(t + 0.1, 262, 0.07, 0.35, "triangle", 230); },
+    golpe_leve() { const t = ctx.currentTime; tom(t, 140, 0.25, 0.14, "sine", 60); estalo(t, 1200, 0.15, 0.05); },
+    critico_golpe() {
+      const t = ctx.currentTime;
+      tom(t, 160, 0.6, 0.3, "sine", 40); estalo(t, 700, 0.45, 0.12); estalo(t + 0.03, 2400, 0.25, 0.08);
+      tom(t + 0.02, 880, 0.06, 0.25, "square", 1320);
+    },
+    dor_leve() { const t = ctx.currentTime; tom(t, 110, 0.25, 0.2, "sine", 60); },
+    chama() { const t = ctx.currentTime; sopro(t, 0.45, 300, 2400, 0.35, 0.7); for (let i = 0; i < 6; i++) estalo(t + 0.05 + Math.random() * 0.35, 3000 + Math.random() * 2000, 0.12, 0.02); tom(t, 90, 0.3, 0.3, "sine", 50); },
+    gelo() { const t = ctx.currentTime; [2093, 2637, 3136, 2349].forEach((f, i) => tom(t + i * 0.035, f, 0.05, 0.35, "triangle")); estalo(t, 5000, 0.25, 0.06); tom(t, 120, 0.25, 0.18, "sine", 60); },
+    sagrado() { const t = ctx.currentTime; [784, 988, 1175, 1568].forEach((f, i) => tom(t + i * 0.03, f, 0.05, 0.6, "sine")); tom(t, 140, 0.3, 0.2, "sine", 60); },
+    sombra() { const t = ctx.currentTime; tom(t, 180, 0.12, 0.5, "sawtooth", 70); tom(t + 0.02, 186, 0.1, 0.5, "sawtooth", 66); sopro(t, 0.4, 800, 200, 0.2, 2); },
+    arcano() { const t = ctx.currentTime; tom(t, 660, 0.07, 0.3, "square", 1760); tom(t + 0.05, 990, 0.05, 0.3, "triangle", 2200); tom(t, 130, 0.25, 0.16, "sine", 60); },
+    veneno() { const t = ctx.currentTime; for (let i = 0; i < 5; i++) tom(t + i * 0.06, 300 + Math.random() * 400, 0.06, 0.1, "sine", 600 + Math.random() * 300); },
+    cura() { const t = ctx.currentTime; [523, 659, 784, 1046, 1318].forEach((f, i) => tom(t + i * 0.06, f, 0.05, 0.5, "sine")); sopro(t, 0.6, 2000, 6000, 0.03, 0.8, "highpass"); },
+    roubo() { const t = ctx.currentTime; tom(t, 520, 0.09, 0.45, "sawtooth", 140); tom(t + 0.1, 330, 0.06, 0.4, "triangle", 110); sopro(t, 0.45, 1600, 300, 0.12, 3); },
+    esquiva() { const t = ctx.currentTime; sopro(t, 0.22, 600, 3200, 0.18, 1.5); },
+    disparo() { const t = ctx.currentTime; estalo(t, 1500, 0.2, 0.04); sopro(t + 0.02, 0.18, 2500, 900, 0.12, 2); },
+    lancar() { const t = ctx.currentTime; sopro(t, 0.25, 400, 1800, 0.18, 1.2); },
+    atordoar() { const t = ctx.currentTime; [1568, 1318, 1568, 1318].forEach((f, i) => tom(t + i * 0.08, f, 0.04, 0.12, "square")); },
+    feitico() { const t = ctx.currentTime; tom(t, 392, 0.06, 0.35, "triangle", 262); tom(t + 0.06, 311, 0.05, 0.4, "triangle", 196); },
+    protecao() { const t = ctx.currentTime; [392, 523, 659].forEach((f, i) => tom(t + i * 0.05, f, 0.05, 0.6, "triangle")); sopro(t, 0.5, 3000, 5000, 0.03, 1, "highpass"); },
+    rugido() { const t = ctx.currentTime; tom(t, 70, 0.5, 0.9, "sawtooth", 45); tom(t, 73, 0.4, 0.9, "sawtooth", 48); sopro(t, 0.9, 300, 120, 0.4, 0.8, "lowpass"); },
+    fala() { const t = ctx.currentTime; [0, 0.06, 0.12].forEach((d) => tom(t + d, 520 + Math.random() * 260, 0.03, 0.06, "square")); },
     morte() {
       const t = ctx.currentTime;
       tom(t, 220, 0.25, 0.5, "sawtooth", 55);

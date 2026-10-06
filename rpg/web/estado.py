@@ -82,7 +82,7 @@ def combate(g):
         return None
 
     def ficha(c, lado):
-        d = {"nome": c.nome, "hp": max(0, c.hp), "max_hp": c.max_hp, "efeitos": _efeitos(c), "lado": lado,
+        d = {"uid": cb.uid(c), "nome": c.nome, "hp": max(0, c.hp), "max_hp": c.max_hp, "efeitos": _efeitos(c), "lado": lado,
              "vivo": c.vivo, "tracos": list(getattr(c, "tracos", []) or []), "cid": getattr(c, "cid", None),
              "tipo": getattr(c, "tipo", None)}
         if lado == "inimigo":
@@ -94,6 +94,7 @@ def combate(g):
         "titulo": cb.titulo, "turno": cb.turno,
         "inimigos": [ficha(e, "inimigo") for e in cb.inimigos if e.vivo or not e.fugiu],
         "aliados": [ficha(a, "aliado") for a in cb.aliados],
+        "heroi": dict(ficha(g.j, "aliado"), nome=g.j.nome, classe=g.j.classe, nivel=g.j.nivel),
     }
 
 

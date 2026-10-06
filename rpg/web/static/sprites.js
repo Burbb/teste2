@@ -1248,6 +1248,31 @@ const Sprites = (() => {
   S.bota_ferro = trocar(S.bota, { b: "g", n: "G", B: "d" });
   S.sandalia = trocar(S.bota, { b: "B", n: "h" });
 
+  // Efeitos de combate: projéteis e ícones de estado.
+  S.gelo = [
+    "................",
+    ".......k........",
+    "......kWk.......",
+    "......kUk.......",
+    ".....kWUuk......",
+    "..k..kUUuk..k...",
+    "..kk.kWUuk.kk...",
+    "...kkkUUuukk....",
+    "....kWUUUuk.....",
+    "...kkUUUuukk....",
+    "..kk.kUUuk.kk...",
+    "..k..kWuuk..k...",
+    ".....kUuuk......",
+    "......kuk.......",
+    ".......k........",
+    "................"];
+  S.gota_verde = trocar(S.gota, { R: "E", r: "e", D: "f" });
+  S.gota_roxa = trocar(S.gota, { R: "M", r: "m", D: "x" });
+  S.escudo_azul = trocar(S.escudo, { c: "U", r: "u", G: "W", g: "U" });
+  S.orbe_sombra = trocar(S.orbe.slice(0, 10).concat(Array(6).fill("................")), { M: "m", m: "x", W: "M", x: "k" });
+  S.orbe_luz = trocar(S.orbe.slice(0, 10).concat(Array(6).fill("................")), { M: "Y", m: "y", W: "W", x: "c" });
+  S.orbe_arcano = trocar(S.orbe.slice(0, 10).concat(Array(6).fill("................")), {});
+
   const cache = {};
   function canvas(nome) {
     if (cache[nome]) return cache[nome];

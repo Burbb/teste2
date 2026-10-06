@@ -334,11 +334,9 @@ def mudar_aprovacao(g, cid, delta, mostrar=True, fala=None):
         return
     m["aprovacao"] = max(-100, min(100, m["aprovacao"] + delta))
     if mostrar:
-        intensidade = " muito" if abs(delta) >= 8 else ""
-        verbo = "aprova" if delta > 0 else "desaprova"
-        g.ui.efeito(f"{nome(cid)} {verbo}{intensidade}", "aprova" if delta > 0 else "desaprova")
+        g.ui.opiniao(cid, nome(cid), delta)
     if fala:
-        g.dizer(fala, "cinza")
+        g.ui.fala(cid, nome(cid), fala)
     registrar(g, "comitiva", acao="opiniao", id=cid, delta=delta, aprovacao=m["aprovacao"])
 
 
@@ -564,6 +562,25 @@ def alvo_inimigo(cb, aliados, e=None):
     return None
 
 
+# Falas curtas no meio da luta: aparecem em balões, uma por turno no máximo.
+GRITOS = {
+    "odete": {"cura": ["Fica de pé. Ainda não é hora.", "Respira. Eu tô aqui.", "A Mãe não te quer ainda."],
+              "ataque": ["Que a luz te encontre!", "Perdoa. Mas vai doer."]},
+    "morel": {"ataque": ["Vem, vem!", "Isso é pelo soldo.", "Olha pra mim, desgraçado!"],
+              "atordoa": ["Fica aí no chão.", "Escudo na cara. Funciona sempre."]},
+    "yara": {"maldicao": ["Eu vejo teu fio... e corto.", "Tua sorte acabou."],
+             "ataque": ["Queima por dentro.", "Hm. Frágil."]},
+}
+
+
+def gritar(cb, a, situacao, chance=0.3):
+    banco = GRITOS.get(a.cid, {}).get(situacao)
+    if not banco or cb._fala_turno == cb.turno or cb.rng.random() >= chance:
+        return
+    cb._fala_turno = cb.turno
+    cb.ui.fala(a.cid, a.nome, cb.rng.choice(banco))
+
+
 def agir(cb, a):
     """Ação de um companheiro no turno dos aliados."""
     cid = a.cid
@@ -576,30 +593,39 @@ def agir(cb, a):
             ganho = alvo.curar(cura)
             a.fe -= 1
             quem = "você" if alvo is cb.j else alvo.nome
-            cb.dizer(f"[Prece] Odete impõe as mãos sobre {quem}: +{ganho} de vida.", "verde")
+            cb.curou(alvo, ganho, de=a, rotulo="Prece")
+            cb.detalhe(f"[Prece] Odete impõe as mãos sobre {quem}: +{ganho} de vida.", "verde")
+            gritar(cb, a, "cura", 0.5)
             if a.membro["aprovacao"] >= 75:
                 alvo.limpar_negativos()
             return
         cb.atacar(a, cb.rng.choice(vivos), 0.9, tipo="sagrado", rotulo="Odete")
+        gritar(cb, a, "ataque", 0.15)
         return
     if cid == "morel":
         alvo = min(vivos, key=lambda e: e.hp)
         dano = cb.atacar(a, alvo, 1.0, rotulo="Morel")
         if dano and cb.rng.random() < 0.2:
-            cb.aplicar(alvo, "atordoado", 1, rotulo="atordoado pelo escudo")
+            if cb.aplicar(alvo, "atordoado", 1, rotulo="atordoado pelo escudo"):
+                gritar(cb, a, "atordoa", 0.6)
+                return
+        gritar(cb, a, "ataque", 0.15)
         return
     if cid == "yara":
         vazio = a.membro.get("caminho") == "vazio"
         sem_maldicao = [e for e in vivos if not e.efeito("enfraquecido")]
         if sem_maldicao and cb.turno % 3 == 1:
             alvo = max(sem_maldicao, key=lambda e: e.atk)
+            cb.lance("feitico", de=cb.uid(a), em=cb.uid(alvo), elemento="sombra", rotulo="Maldição")
             cb.aplicar(alvo, "enfraquecido", 2, rotulo="amaldiçoado por Yara")
             if vazio:
                 cb.aplicar(alvo, "maldito", 2)
+            gritar(cb, a, "maldicao", 0.4)
             return
         tipo = "sombra" if vazio else "arcano"
         cb.atacar(a, cb.rng.choice(vivos), 1.5 if vazio else 1.0, tipo=tipo, alcance="distancia", stat="poder",
                   rotulo="Yara")
+        gritar(cb, a, "ataque", 0.15)
 
 
 def encerrar_combate(cb, resultado):

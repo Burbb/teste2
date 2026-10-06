@@ -52,6 +52,7 @@ const App = {
   pedir: (rotulo, chave, valor) => pedir(rotulo, chave, valor),
   acao: (filtro, som) => acao(filtro, som),
   som: (n) => Som.tocar(n),
+  doer: () => doer(),
   acaoFecharTalentos: null,
 };
 
@@ -131,6 +132,9 @@ async function tratar(m) {
     case "efeito": await efeito(m); break;
     case "rolagem": await rolagem(m); break;
     case "combate": faixaCombate(m); break;
+    case "lance": if (!replay) await Batalha.lance(m); break;
+    case "fala": await fala(m); break;
+    case "opiniao": await opiniao(m); break;
     case "turno": turno(m); break;
     case "fim_combate": if (!instantaneo()) await espera(m.resultado === "vitoria" ? 800 : 400); break;
     case "celebrar": await Telas.celebrar(m, instantaneo()); break;
@@ -159,7 +163,11 @@ function cabecalho(m) {
   cab.innerHTML = `<h1 class="cena-titulo">${esc(m.titulo)}</h1>` + (m.subtitulo ? `<div class="cena-sub">${esc(m.subtitulo)}</div>` : "") +
     `<div class="ornamento"><i></i><b></b><i></i></div>`;
   corpo.classList.toggle("modo-titulo", m.tipo === "titulo");
-  if (m.tipo === "titulo") { corpo.classList.add("sem-heroi"); corpo.classList.remove("em-combate"); estado = null; }
+  if (m.tipo === "titulo") {
+    corpo.classList.add("sem-heroi"); corpo.classList.remove("em-combate"); estado = null;
+    const [r, g, b] = Vista.titulo();  // a paisagem desce até o rodapé; o céu de cima continua na mesma cor
+    corpo.style.setProperty("--ceu-titulo", `rgb(${r}, ${g}, ${b})`);
+  }
   capitular = ["evento", "local", "chefe", "vitoria", "morte"].includes(m.tipo);
   historico("h-cena", m.titulo);
   if (m.titulo !== "Talentos") Telas.fecharTalentos();
@@ -212,6 +220,14 @@ async function texto(m) {
     historico("", m.texto);
     return;
   }
+  if (m.detalhe) {
+    const p = el("p", "detalhe " + (COR_PROSA[(m.cor || "").split("+")[0]] || ""));
+    p.textContent = m.texto.replace(/\[[^\]]+\]\s*/g, "");
+    anexar(p);
+    historico("", m.texto);
+    if (!instantaneo()) await espera(ritmo(160));
+    return;
+  }
   const p = el("p");
   const [base, ...mods] = (m.cor || "").split("+");
   if (COR_PROSA[base]) p.classList.add(COR_PROSA[base]);
@@ -224,6 +240,20 @@ async function texto(m) {
   await revelar(p, m.texto);
   historico("", m.texto);
   if (!instantaneo()) await espera(Math.min(240, 20000 / (cps() || 120)));
+}
+
+async function fala(m) {
+  historico("h-fala", `${m.nome}: ${m.texto}`);
+  if (replay) return;
+  const ms = Batalha.balao(m.cid, m.nome, m.texto);
+  if (!instantaneo()) await espera(ritmo(ms));
+}
+async function opiniao(m) {
+  const bom = m.delta > 0;
+  historico("h-chip", `▸ ${m.nome} ${bom ? "aprova" : "desaprova"}${Math.abs(m.delta) >= 8 ? " muito" : ""}`);
+  if (replay) return;
+  Batalha.opiniao(m.cid, m.nome, m.delta);
+  if (!instantaneo()) await espera(ritmo(260));
 }
 
 function iconeChip(m) {
@@ -293,9 +323,13 @@ function faixaCombate(m) {
 }
 
 function turno(m) {
-  if (m.n > 1) for (const filho of textoEl.children) filho.classList.add("passado");
-  while (textoEl.childElementCount > 70) textoEl.firstElementChild.remove();
+  // A página guarda só o turno anterior (apagado) e o atual; o resto fica no histórico (H).
+  if (m.n > 1) {
+    textoEl.querySelectorAll(".passado").forEach((x) => x.remove());
+    for (const filho of textoEl.children) filho.classList.add("passado");
+  }
   anexar(el("div", "divisor-turno", `turno ${m.n}`));
+  historico("h-turno", `— turno ${m.n} —`);
 }
 
 function bloco(m) {
@@ -304,7 +338,11 @@ function bloco(m) {
   anexar(pre);
 }
 
-function eco(m) { anexar(el("p", "eco", esc(m.texto))); historico("h-eco", "› " + m.texto); }
+function eco(m) {
+  historico("h-eco", "› " + m.texto);
+  if (estado && estado.combate) return;  // na luta, a carta que avança já mostra o que você escolheu
+  anexar(el("p", "eco", esc(m.texto)));
+}
 
 function historico(classe, t) {
   const p = el("p", classe);
@@ -329,7 +367,7 @@ function doer() {
 }
 
 /* ------------------------------------------------------------------ escolhas */
-function limparPrompt() { promptEl.innerHTML = ""; pergunta = null; }
+function limparPrompt() { promptEl.innerHTML = ""; pergunta = null; Batalha.limparAlvos(); Batalha.vez(null); }
 function atalhoDe(t) { return SISTEMA.find(([re]) => re.test(t)); }
 
 function mostrarOpcoes(m) {
@@ -351,6 +389,12 @@ function mostrarOpcoes(m) {
   Telas.fecharTalentos();
   if (m.pergunta) promptEl.appendChild(el("div", "pergunta-rotulo", esc(m.pergunta)));
   const lista = el("ol", "escolhas");
+  const emLuta = !!(estado && estado.combate);
+  if (emLuta && m.pergunta === "Sua ação:") { lista.classList.add("acoes-combate"); Batalha.vez("j"); }
+  if (emLuta && m.opcoes.some((o) => o.meta && o.meta.alvo)) {
+    Batalha.alvos(m.opcoes, (i) => responder(m.id, i));
+    promptEl.firstElementChild && promptEl.firstElementChild.classList.add("mira");
+  }
   const sistema = m.opcoes.filter((o) => atalhoDe(o.texto)).length >= 4;
   const atalhos = el("div", "atalhos");
   m.opcoes.forEach((o, i) => {
@@ -389,6 +433,13 @@ function mostrarOpcoes(m) {
       if (n) icone = spr(MapaPx.sprite(n), 1);
     }
     if (o.meta && o.meta.item) icone = spr(Telas.ICONE_ITEM[o.meta.item] || "pocao", 1);
+    if (emLuta) icone = iconeAcaoCombate(o.texto) || icone;
+    if (o.meta && o.meta.alvo) {
+      b.addEventListener("mouseenter", () => Batalha.mirar(o.meta.alvo, true));
+      b.addEventListener("mouseleave", () => Batalha.mirar(o.meta.alvo, false));
+      b.addEventListener("focus", () => Batalha.mirar(o.meta.alvo, true));
+      b.addEventListener("blur", () => Batalha.mirar(o.meta.alvo, false));
+    }
     b.innerHTML = `<span class="tecla">${tecla}</span>${icone}<span class="rotulo">${esc(o.texto)}</span>${teste}`;
     b.addEventListener("click", (ev) => { ev.stopPropagation(); responder(m.id, i); });
     li.appendChild(b);
@@ -399,6 +450,15 @@ function mostrarOpcoes(m) {
   if (!replay) guardar("cdf-dica", String(Number(ler("cdf-dica") || 0) + 1));
   if (estado) { desenharMundo(estado); atualizarMapasDaPagina(); }
   rolarFim();
+}
+
+function iconeAcaoCombate(t) {
+  if (/^Atacar/.test(t)) return spr({ guerreiro: "espada", arqueiro: "arco", mago: "cajado" }[estado.heroi.classe] || "espada", 2);
+  if (/^Habilidades/.test(t)) return spr("estrela", 2);
+  if (/^Itens/.test(t)) return spr("pocao", 2);
+  if (/^Analisar/.test(t)) return spr("olho", 2);
+  if (/^Fugir/.test(t)) return spr("bota", 2);
+  return "";
 }
 
 function mostrarContinuar(m) {
@@ -485,14 +545,16 @@ function aplicarEstado(e) {
   corpo.style.setProperty("--corrupcao", (e.mundo.corrupcao / 100).toFixed(2));
   Som.ambiente(bioma);
   Vista.atualizar(e);
+  MapaPx.ambiente(e.mundo);
   $("#tempo").textContent = `Dia ${e.mundo.dia} · ${e.mundo.periodo} · ${e.mundo.clima}`;
   $("#corrupcao-topo .enchimento").style.width = e.mundo.corrupcao + "%";
   $("#corrupcao-topo .valor").textContent = e.mundo.corrupcao + "%";
   $("#sigilos-topo").innerHTML = [0, 1, 2].map((i) => `<i class="sigilo${i < e.heroi.sigilos ? " tem" : ""}"></i>`).join("");
   desenharHud(e.heroi, antes && antes.heroi);
-  desenharBatalha(e.combate, antes && antes.combate);
+  Batalha.desenhar(e.combate, e.heroi, replay);
   desenharHeroi(e.heroi);
-  const mudouMapa = !antes || antes.local.id !== e.local.id || JSON.stringify(antes.mapa) !== JSON.stringify(e.mapa) || antes.heroi.nivel !== e.heroi.nivel;
+  const mudouMapa = !antes || antes.local.id !== e.local.id || JSON.stringify(antes.mapa) !== JSON.stringify(e.mapa) || antes.heroi.nivel !== e.heroi.nivel ||
+    antes.mundo.periodo_n !== e.mundo.periodo_n || antes.mundo.clima_id !== e.mundo.clima_id;
   if (mudouMapa) desenharMundo(e);
   if (!$("#sobre-mapa").hidden && mudouMapa) desenharMapaGrande();
 }
@@ -503,6 +565,16 @@ function recurso(id, icones, qtd, opts = {}) {
     <div class="icones">${imgs}</div><div class="qtd">${qtd}</div></div>`;
 }
 function repetir(nome, n) { return Array.from({ length: n }, () => nome); }
+
+function hudComitiva(h) {
+  if (!h.comitiva || !h.comitiva.length) return "";
+  return `<div class="hud-comitiva">${h.comitiva.map((m) => {
+    const humor = m.aprovacao >= 45 ? "bom" : m.aprovacao <= -20 ? "ruim" : "neutro";
+    return `<div class="hud-membro${m.ferido ? " ferido" : ""}" data-cid="${esc(m.id)}" title="${esc(m.nome)} · ${esc(m.titulo)} · aprovação ${m.aprovacao > 0 ? "+" : ""}${m.aprovacao}${m.ferido ? " · ferido" : ""}${m.conversa ? " · quer conversar" : ""}">
+      ${spr(m.id, 2)}<span class="humor ${humor}"></span>${m.conversa ? '<span class="carta-aviso">✉</span>' : ""}
+      <span class="barra-px aliado fina"><span class="enchimento" style="width:${pct(m.hp, m.max_hp)}%"></span></span></div>`;
+  }).join("")}</div>`;
+}
 
 function desenharHud(h, antes) {
   const comida = h.provisoes === 0 ? ["osso"] : repetir("pernil", h.provisoes <= 2 ? 1 : h.provisoes <= 5 ? 2 : 3);
@@ -518,6 +590,7 @@ function desenharHud(h, antes) {
       <div class="vital${vidaCritica ? " critico" : ""}" data-vital="hp">${spr("coracao", 1)}${barra("vida", h.hp, h.max_hp, antes ? antes.hp : undefined)}<span class="num">${h.hp}/${h.max_hp}</span></div>
       <div class="vital" data-vital="rec">${spr(RECURSO_ICONE[h.recurso] || "estrela", 1)}${barra(RECURSO_BARRA[h.recurso] || "mana", h.rec, h.max_rec, antes ? antes.rec : undefined)}<span class="num">${h.rec}/${h.max_rec}</span></div>
     </div>
+    ${hudComitiva(h)}
     <div class="hud-recursos">
       ${recurso("provisoes", comida, `${h.provisoes}<small>d</small>`, { alerta: h.provisoes <= 1, vazio: !h.provisoes, titulo: h.provisoes ? `Comida para ${h.provisoes} dia(s). Cada dia consome 1 (e cada companheiro come também).` : "Sem comida! Você vai passar fome." })}
       ${recurso("tochas", tochas, h.tochas, { alerta: h.tochas === 0, vazio: !h.tochas, titulo: "Tochas: luz para a noite, ruínas e a cidadela." })}
@@ -539,44 +612,11 @@ function desenharHud(h, antes) {
       alvo.classList.add(v > velho ? "ganhou" : "perdeu");
       flutuar(alvo, `${v > velho ? "+" : "−"}${Math.abs(v - velho)}`, v > velho ? "mais" : "menos");
     }
-    if (h.hp !== antes.hp) flutuar($('.vital[data-vital="hp"]'), `${h.hp > antes.hp ? "+" : "−"}${Math.abs(h.hp - antes.hp)}`, h.hp > antes.hp ? "cura" : "menos");
-    if (h.hp < antes.hp) { doer(); Som.tocar("dor"); }
+    const emLuta = estado && estado.combate;
+    if (h.hp !== antes.hp && !emLuta) flutuar($('.vital[data-vital="hp"]'), `${h.hp > antes.hp ? "+" : "−"}${Math.abs(h.hp - antes.hp)}`, h.hp > antes.hp ? "cura" : "menos");
+    if (h.hp < antes.hp && !emLuta) { doer(); Som.tocar("dor"); }
   }
   ultimosRecursos = agora;
-}
-
-function iconeCarta(c) {
-  if (c.lado === "aliado") return c.cid || (c.tipo === "servo" ? "caveira" : "fera");
-  return Telas.iconeCriatura(c.tracos, "");
-}
-
-function desenharBatalha(cb, antes) {
-  const raiz = $("#batalha");
-  if (!cb) { raiz.innerHTML = ""; return; }
-  const anteriores = {};
-  if (antes) [...antes.inimigos, ...antes.aliados].forEach((c) => { anteriores[c.lado + ":" + c.nome] = c; });
-  let golpe = false, morte = false;
-  const carta = (c) => {
-    const ant = anteriores[c.lado + ":" + c.nome];
-    const dano = ant ? ant.hp - c.hp : 0;
-    const classes = ["carta", c.lado];
-    if (c.chefe) classes.push("chefe");
-    if (c.unico) classes.push("unico");
-    if (!c.vivo) { classes.push("morta"); if (ant && ant.vivo && !replay) { classes.push("morrendo"); morte = true; } }
-    else if (dano > 0 && !replay) { classes.push("atingida"); golpe = true; }
-    const efeitos = c.efeitos.length ? `<div class="carta-efeitos">${c.efeitos.map((f) => `<span class="efeito-tag">${esc(f.nome)} ${f.turnos}</span>`).join("")}</div>` : "";
-    const num = dano && !replay ? `<span class="flutua ${dano > 0 ? "menos" : "cura"}">${dano > 0 ? "−" : "+"}${Math.abs(dano)}</span>` : "";
-    return `<div class="${classes.join(" ")}" title="${esc(c.nome)}">${num}
-      <div class="icone">${spr(iconeCarta(c), 2)}</div>
-      <div class="carta-nome"><span>${esc(c.nome)}</span>${c.nivel ? `<small>Nv.${c.nivel}</small>` : ""}</div>
-      <div class="carta-hp">${barra(c.lado === "aliado" ? "aliado" : "vida", c.hp, c.max_hp, ant ? ant.hp : undefined)}<span>${c.vivo ? `${c.hp}/${c.max_hp}` : "morto"}</span></div>
-      ${c.preparando && c.vivo ? '<div class="preparando">⚠ prepara um golpe devastador</div>' : ""}${c.vivo ? efeitos : ""}</div>`;
-  };
-  const aliados = cb.aliados.filter((a) => a.vivo || (anteriores["aliado:" + a.nome] && anteriores["aliado:" + a.nome].vivo));
-  raiz.innerHTML = `<div class="lado aliados">${aliados.map(carta).join("")}</div><div class="versus">vs</div>
-    <div class="lado inimigos">${cb.inimigos.map(carta).join("")}</div>`;
-  animarBarras(raiz);
-  if (morte) Som.tocar("morte"); else if (golpe) Som.tocar("golpe");
 }
 
 function desenharHeroi(h) {
@@ -592,7 +632,7 @@ function desenharHeroi(h) {
   const habs = h.habilidades.map((x) => `<div class="habilidade" title="${esc(x.desc)}"><span>${esc(x.nome)}</span><small>${x.custo} ${esc(h.recurso)}</small></div>`).join("");
   const bolsa = h.bolsa.filter((b) => b.id !== "tocha").map((b) => `<div class="slot-px" title="${esc(b.nome)}: ${esc(b.desc)}">${spr(Telas.ICONE_ITEM[b.id] || "pocao", 2)}<span class="qtd">${b.qtd}</span></div>`).join("");
   const comitiva = h.comitiva && h.comitiva.length ? `<div class="secao"><h3>Comitiva</h3>${h.comitiva.map((m) =>
-    `<div class="membro${m.ferido ? " ferido" : ""}" title="${esc(m.titulo)} · aprovação ${m.aprovacao > 0 ? "+" : ""}${m.aprovacao}${m.ferido ? " · ferido, fora de combate até descansar" : ""}">
+    `<div class="membro${m.ferido ? " ferido" : ""}" data-cid="${esc(m.id)}" title="${esc(m.titulo)} · aprovação ${m.aprovacao > 0 ? "+" : ""}${m.aprovacao}${m.ferido ? " · ferido, fora de combate até descansar" : ""}">
       <div class="icone">${spr(m.id, 2)}</div>
       <div class="membro-nome"><span>${esc(m.nome)}</span>${m.conversa ? '<span class="membro-carta" title="Quer conversar">✉</span>' : ""}</div>
       ${barra("aliado fina", m.hp, m.max_hp)}${Telas.aprovacao(m)}</div>`).join("")}</div>` : "";
@@ -770,6 +810,7 @@ setInterval(() => {
 
 async function iniciar() {
   tema();
+  Batalha.configurar({ rapido: instantaneo, pausa: ritmo });
   try {
     const r = await fetch(`/config?token=${encodeURIComponent(TOKEN)}`);
     const cfg = await r.json();

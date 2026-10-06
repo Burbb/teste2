@@ -149,15 +149,26 @@ def _sede_sangue(cb, u, alvo):
     dano = cb.atacar(u, alvo, 1.4, rotulo="Sede de Sangue")
     if dano:
         cura = u.curar(dano * 0.4)
+        cb.curou(u, cura, "roubo")
         cb.aplicar(alvo, "sangramento", 3, valor=max(2, u.atk * 0.3))
         if cura:
             cb.dizer(f"Você bebe a fúria do golpe. (+{cura} vida)", "verde")
 
 
 def _redemoinho(cb, u, alvo):
+    """Quatro giros; cada um acerta todos os inimigos com um quarto do golpe (110% no total)."""
     cb.dizer("Você gira a arma num arco brutal!", "ciano")
-    for ini in cb.inimigos_vivos():
-        cb.atacar(u, ini, 1.1)
+    total = {}
+    for giro in range(4):
+        vivos = cb.inimigos_vivos()
+        if not vivos:
+            break
+        cb.lance("giro", de=cb.uid(u), n=giro + 1)
+        for ini in vivos:
+            total[ini] = total.get(ini, 0) + cb.atacar(u, ini, 0.275, detalhar=False)
+    partes = [f"{ini.nome} {d}" for ini, d in total.items()]
+    if partes:
+        cb.detalhe("Redemoinho: " + ", ".join(partes) + " de dano.", "amarelo")
 
 
 def _furia_cega(cb, u, alvo):
@@ -299,6 +310,7 @@ def _drenar_vida(cb, u, alvo):
     dano = cb.atacar(u, alvo, 1.2, tipo="sombra", alcance="distancia", stat="poder", rotulo="Drenar Vida")
     if dano:
         cura = u.curar(dano * (0.4 + 0.1 * u.tal("pacto_sombrio")))
+        cb.curou(u, cura, "roubo")
         if cura:
             cb.dizer(f"A vitalidade roubada flui para você. (+{cura} vida)", "verde")
 
