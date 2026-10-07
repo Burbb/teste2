@@ -70,9 +70,27 @@ class WebUI(UI):
         self.novo_desde_escolha = False
         self.ultimo_estado = None
         self.ultimo_titulo = None
+        self._segurando = None  # durante uma salva de golpes: o que chegar espera a animação
+
+    # Salva de golpes (área): tudo o que o jogo mandar enquanto ela acontece (estado, falas, avisos) só sai
+    # depois do lance "salva"; senão a tela mostraria o resultado antes da animação começar.
+    def iniciar_salva(self):
+        if self._segurando is None:
+            self._segurando = []
+
+    def fim_salva(self):
+        guardadas, self._segurando = self._segurando or [], None
+        for m in guardadas:
+            if m["t"] == "estado":
+                continue  # o estado é recalculado no fim, de uma vez
+            self._enviar(**m)
+        self.enviar_estado()
 
     # ------------------------------------------------------------ saída
     def _enviar(self, t, **dados):
+        if self._segurando is not None and not (t == "lance" and dados.get("tipo") == "salva"):
+            self._segurando.append({"t": t, **dados})
+            return
         self.canal.publicar({"t": t, **dados})
         if t in ("texto", "efeito", "rolagem", "bloco", "mapa", "painel", "celebrar"):
             self.novo_desde_escolha = True
@@ -82,6 +100,8 @@ class WebUI(UI):
         if e is None:
             return
         chave = json.dumps(e, sort_keys=True, ensure_ascii=False)
+        if self._segurando is not None:
+            return  # a salva ainda não foi animada
         if chave != self.ultimo_estado:
             self.ultimo_estado = chave
             self._enviar("estado", estado=e)

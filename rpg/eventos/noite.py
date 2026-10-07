@@ -15,8 +15,21 @@ def olhos_na_escuridao(g):
         ("Pegar a arma e lutar", "lutar"),
         ("Atiçar a fogueira para assustá-los (Vontade)", "fogo"),
     ])
-    if op == "fogo" and all("fera" in e.tracos for e in grupo) and g.teste("vontade", 12):
-        g.dizer("Você joga galhos secos no fogo, que sobe alto. Os olhos recuam e somem.", "verde")
+    if op == "fogo":
+        g.dizer("Você joga galhos secos no fogo, que sobe alto e estala.", "amarelo")
+        if all("fera" in e.tracos for e in grupo):
+            if g.teste("vontade", 12):
+                g.dizer("Os olhos recuam, um a um, e somem na mata. Bichos respeitam o fogo.", "verde")
+                return
+            g.dizer("A fome fala mais alto que o medo. Eles avançam.", "vermelho")
+        elif g.teste("vontade", 14):
+            # Gente (e coisa pior) não foge de fogueira, mas a luz mostra onde cada um está.
+            g.dizer("Eles não fogem do fogo, mas a luz os denuncia: você vê cada um antes do primeiro passo.", "verde")
+            g.combate(grupo, emboscada="jogador")
+            return
+        else:
+            g.dizer("A chama sobe, mas eles não são bichos. Avançam com o fogo refletido nos olhos.", "vermelho")
+        g.combate(grupo, emboscada="inimigo" if g.chance(0.25) else None)
         return
     g.combate(grupo, emboscada="inimigo" if g.chance(0.4) else None)
 

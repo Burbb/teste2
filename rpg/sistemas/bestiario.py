@@ -39,6 +39,26 @@ class Bestiario:
             return True
         return self.j.classe == "mago" or self.bestiario.get(familia, {}).get("abates", 0) >= 2
 
+    def conhece_resistencias(self, familia):
+        """As resistências pedem mais estudo: 4 abates (2 para magos)."""
+        if familia not in FAMILIAS:
+            return True
+        precisa = 2 if self.j.classe == "mago" else 4
+        return self.bestiario.get(familia, {}).get("abates", 0) >= precisa
+
+    def progresso_bestiario(self, familia):
+        """O que falta aprender desta espécie, para a ficha do inimigo."""
+        if familia not in FAMILIAS:
+            return None
+        abates = self.bestiario.get(familia, {}).get("abates", 0)
+        if not self.conhece(familia):
+            return f"Derrote {2 - abates} para descobrir as fraquezas ({abates}/2)."
+        if not self.conhece_resistencias(familia):
+            return f"Derrote {4 - abates} para descobrir as resistências ({abates}/4)."
+        if abates < 5:
+            return f"Mais {5 - abates} e você vira mestre caçador desta espécie (+10% de dano)."
+        return "Mestre caçador: +10% de dano contra esta espécie."
+
     def mestre_caca(self, familia):
         return self.bestiario.get(familia, {}).get("abates", 0) >= 5
 

@@ -113,10 +113,10 @@ def briga_de_taverna(g):
             g.curar(10)
         else:
             g.dizer("Você leva um soco que faz o mundo girar.", "vermelho")
-            g.ferir(6)
+            g.ferir(g.j.max_hp * 0.12, " com o soco")
     elif op == "entrar":
         g.dizer("Socos, cadeiras, risadas. No fim, todos dividem uma rodada.", "verde")
-        g.ferir(4)
+        g.ferir(g.j.max_hp * 0.07, " na briga")
         g.ganhar_xp(8)
     elif op == "roubar":
         if g.teste("destreza", 12):

@@ -16,12 +16,12 @@ class Inventario:
         raridade = itens.NOMES_RARIDADE[item.get("raridade", "comum")]
         self.dizer(f"Você encontrou: {itens.rotulo(item)} [{NOMES_SLOT[item['slot']]}, {raridade}]",
                    itens.cor(item) or "branco+negrito")
-        self.dizer(f"  {descrever_bonus(item['bonus'])}", itens.cor(item))
+        self.dizer(f"  {descrever_bonus(item['bonus'], self.j.nome_recurso)}", itens.cor(item))
         if item.get("lore"):
             self.dizer(f"  \"{item['lore']}\"", "cinza")
         atual = self.j.equip[self.espaco_para(item)]
         if atual:
-            self.dizer(f"  Equipado agora: {itens.rotulo(atual)} — {descrever_bonus(atual['bonus'])}", "cinza")
+            self.dizer(f"  Equipado agora: {itens.rotulo(atual)} — {descrever_bonus(atual['bonus'], self.j.nome_recurso)}", "cinza")
         op = self.menu("O que fazer com o item?", [
             ("Equipar agora", "equipar"),
             ("Guardar na mochila (para vender ou usar depois)", "guardar") if len(self.j.mochila) < LIMITE_MOCHILA
@@ -197,7 +197,7 @@ class Inventario:
                     self.usar_consumivel(k)
             else:
                 it = self.menu("Equipar:", [(f"{it['nome']} [{NOMES_SLOT[it['slot']]}] "
-                                             f"{descrever_bonus(it['bonus'])}", it, {"mochila": i})
+                                             f"{descrever_bonus(it['bonus'], self.j.nome_recurso)}", it, {"mochila": i})
                                             for i, it in enumerate(j.mochila)] + [("Voltar", None)])
                 if it:
                     if it["classe"] and it["classe"] != j.classe:
@@ -252,7 +252,7 @@ class Inventario:
                    (f"   Flechas: {j.flechas}" if j.classe == "arqueiro" else ""))
         self.dizer("Equipamento:", "ciano")
         for slot, it in j.equip.items():
-            self.dizer(f"  {NOMES_SLOT[slot]}: " + (f"{itens.rotulo(it)} ({descrever_bonus(it['bonus'])})" if it
+            self.dizer(f"  {NOMES_SLOT[slot]}: " + (f"{itens.rotulo(it)} ({descrever_bonus(it['bonus'], self.j.nome_recurso)})" if it
                                                     else "—"), itens.cor(it) if it else None)
         self.dizer("Habilidades: " + ", ".join(HABILIDADES[h]["nome"] for h in j.habilidades), "ciano")
         cons = [f"{CONSUMIVEIS[k]['nome']} x{v}" for k, v in j.consumiveis.items() if v > 0]

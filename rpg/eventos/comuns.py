@@ -446,7 +446,7 @@ def cadaver_aventureiro(g):
         g.oferecer_equip(gerar_equip(g.rng, g.j.classe, g.j.nivel))
     if op == "revistar" and g.chance(0.25):
         g.dizer("Ao tocar o anel do morto, um frio sobe pelo seu braço. Ele morreu de alguma coisa...", "magenta")
-        g.ferir(6 + g.j.nivel, " com a maldição")
+        g.ferir(g.j.max_hp * 0.15, " com a maldição")
 
 
 @evento(peso=7, cooldown=8, cond=lambda g: g.bioma in ("floresta", "pantano", "planicie", "montanha"))

@@ -2,7 +2,7 @@
 
 from .. import balanceamento as bal
 from .. import comitiva, mapa, sobrevivencia
-from ..classes import CLASSES, HABILIDADES
+from ..classes import CLASSES, HABILIDADES, descricao_habilidade
 from ..combate import NOMES_EFEITOS
 from ..dados import BIOMAS, CLIMAS, PERIODOS
 from ..itens import CONSUMIVEIS, descrever_bonus, rotulo
@@ -22,10 +22,10 @@ def _efeitos(c):
     return lista
 
 
-def _item(it):
+def _item(it, recurso=None):
     if not it:
         return None
-    return {"nome": rotulo(it), "raridade": it.get("raridade", "comum"), "bonus": descrever_bonus(it["bonus"]),
+    return {"nome": rotulo(it), "raridade": it.get("raridade", "comum"), "bonus": descrever_bonus(it["bonus"], recurso),
             "nivel": it.get("nivel"), "slot": it.get("slot"), "base": it.get("base"), "bonus_bruto": it["bonus"],
             "classe": it.get("classe"), "lore": it.get("lore")}
 
@@ -114,9 +114,9 @@ def heroi(g):
                               "motivo": g.motivo_inutil(k, m)}
                              for m in comitiva.membros(g)] if k in ("pocao_vida", "bandagem") and not g.combate_ativo else []}
                   for k, v in j.consumiveis.items() if v > 0 and k in CONSUMIVEIS],
-        "equip": {slot: _item(it) for slot, it in j.equip.items()},
-        "mochila": [_item(it) for it in j.mochila], "limite_mochila": 12,
-        "habilidades": [{"nome": HABILIDADES[h]["nome"], "custo": HABILIDADES[h]["custo"], "desc": HABILIDADES[h]["desc"]}
+        "equip": {slot: _item(it, j.nome_recurso) for slot, it in j.equip.items()},
+        "mochila": [_item(it, j.nome_recurso) for it in j.mochila], "limite_mochila": 12,
+        "habilidades": [{"nome": HABILIDADES[h]["nome"], "custo": HABILIDADES[h]["custo"], "desc": descricao_habilidade(h, j)}
                         for h in j.habilidades],
         "ferimentos": ferimentos, "males": sobrevivencia.descrever(j),
         "pontos_talento": j.pontos_talento, "sigilos": len(j.sigilos),
@@ -153,18 +153,21 @@ def mapa_conhecido(g):
 
 
 def _ficha_inimigo(g, e):
-    """O que você sabe deste inimigo: traços sempre; fraquezas e golpes só se você já conhece a espécie."""
+    """O que você sabe deste inimigo, conforme o bestiário da espécie: traços sempre; as fraquezas depois de
+    conhecer a espécie; as resistências só com mais caçadas."""
     from ..combate import mult_tracos
     from ..dados import TRACOS
-    from ..inimigos import NOMES_HABS_INIMIGO
     conhecido = g.conhece(e.familia)
+    resistencias = g.conhece_resistencias(e.familia)
     mult = {}
     if conhecido:
         for tipo in ("fisico", "fogo", "gelo", "sagrado", "sombra", "arcano", "veneno"):
             mult[tipo] = round(mult_tracos(e, tipo, "corpo"), 2)
         mult["distancia"] = round(mult_tracos(e, "fisico", "distancia"), 2)
-    return {"conhecido": conhecido, "tracos": [{"id": t, "texto": TRACOS.get(t, t)} for t in e.tracos],
-            "mult": mult, "habilidades": [NOMES_HABS_INIMIGO.get(h, h) for h in e.habilidades] if conhecido else [],
+        if not resistencias:
+            mult = {k: v for k, v in mult.items() if v >= 1}
+    return {"conhecido": conhecido, "resistencias": resistencias, "progresso": g.progresso_bestiario(e.familia),
+            "tracos": [{"id": t, "texto": TRACOS.get(t, t)} for t in e.tracos], "mult": mult,
             "ponto_fraco": bool(getattr(e, "chave", None) and g.flag(f"fraqueza:{e.chave}")),
             "atk": round(max(e.atk, e.poder)), "defesa": round(e.defesa)}
 

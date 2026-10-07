@@ -65,11 +65,11 @@
 .mapa-px .no-btn { position: absolute; width: 28px; height: 28px; margin: -14px 0 0 -14px; border: 0; background: transparent; padding: 0; cursor: default; }
 .mapa-px.grande .no-btn { width: 40px; height: 40px; margin: -20px 0 0 -20px; }
 .mapa-px .no-btn.clicavel { cursor: pointer; }
-.mapa-px .no-btn.clicavel::before { content: ""; position: absolute; inset: -2px; border: 2px dashed var(--ouro); animation: pulsa-px 1.4s steps(2) infinite; }
-@keyframes pulsa-px { 50% { inset: -6px; } }
+.mapa-px .no-btn.clicavel::before { content: ""; position: absolute; inset: -2px; border: 2px dashed var(--ouro); animation: pulsa-px 1.6s ease-in-out infinite; }
+@keyframes pulsa-px { 50% { transform: scale(1.22); opacity: 0.65; } }
 .mapa-px .no-btn.clicavel:hover::before { border-style: solid; border-color: #fff3a0; inset: -6px; animation: none; }
-.mapa-px .no-btn.atual::after { content: ""; position: absolute; inset: -4px; border: 3px solid #fff3a0; animation: anel-px 1.2s steps(4) infinite; }
-@keyframes anel-px { 0% { inset: -2px; opacity: 1; } 100% { inset: -12px; opacity: 0; } }
+.mapa-px .no-btn.atual::after { content: ""; position: absolute; inset: -4px; border: 3px solid #fff3a0; animation: anel-px 1.5s cubic-bezier(.2, .7, .4, 1) infinite; }
+@keyframes anel-px { 0% { transform: scale(0.95); opacity: 1; } 100% { transform: scale(1.6); opacity: 0; } }
 .mapa-px .rotulo-mapa { position: absolute; transform: translate(-50%, 0); white-space: nowrap; font-family: var(--num); font-size: 15px; line-height: 1; color: var(--tinta); text-shadow: 2px 0 0 #000, -2px 0 0 #000, 0 2px 0 #000, 0 -2px 0 #000; pointer-events: none; }
 .mapa-px.grande .rotulo-mapa { font-size: 19px; }
 .mapa-px .rotulo-mapa.atual { color: var(--ouro); }

@@ -39,3 +39,14 @@ body.modo-titulo .dica-pular { display: none; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
 }
+/* A paisagem do título se dissolve no céu (sem a linha de corte onde a imagem começa). */
+body.modo-titulo #vista { -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 38%); mask-image: linear-gradient(to bottom, transparent 0, #000 38%); }
+/* Sem barra de rolagem perdida no meio da tela; a lista ainda rola com a roda do mouse. */
+body.modo-titulo #pagina { scrollbar-width: none; }
+body.modo-titulo #pagina::-webkit-scrollbar { display: none; }
+/* A seta de seleção vem antes da palavra, e não por cima dela. */
+body.modo-titulo .escolha::before { position: static; flex: none; align-self: center; margin: 0 12px 0 -26px; }
+/* Muitos saves: em colunas, com letra menor. */
+body.modo-titulo #prompt:has(.escolhas > li:nth-child(5)) { max-width: 760px; width: 100%; }
+body.modo-titulo .escolhas:has(> li:nth-child(5)) { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 2px 16px; }
+body.modo-titulo .escolhas:has(> li:nth-child(5)) .escolha { font-size: 32px; }

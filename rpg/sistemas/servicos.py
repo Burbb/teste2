@@ -1,6 +1,6 @@
 """Serviços da vila: ferreiro, curandeiro e rumores."""
 
-from ..entidades import NOMES_STATS
+from ..entidades import nome_stat
 from ..eventos.vila import ouvir_rumor
 from .. import itens
 from .. import sobrevivencia
@@ -25,7 +25,7 @@ class Servicos:
                     continue
                 custo = self.preco(int(40 * (ref + 1) ** 1.6))
                 ganho = max(1, round(item["bonus"].get(stat, 0) * 0.12))
-                opcoes.append((f"{itens.rotulo(item)} +{ref} → +{ref + 1}: +{ganho} {NOMES_STATS[stat]} — {custo} ouro",
+                opcoes.append((f"{itens.rotulo(item)} +{ref} → +{ref + 1}: +{ganho} {nome_stat(stat, self.j.nome_recurso)} — {custo} ouro",
                                (item, stat, ganho, custo)))
             esc = self.menu(f"O ferreiro, um homem sem dois dedos, cospe na forja. \"Ouro primeiro.\" "
                             f"(você tem {j.ouro})", opcoes + [("Voltar", "voltar")])
@@ -43,7 +43,7 @@ class Servicos:
             item["nome"] = item["nome"].split(" +")[0] + f" +{item['reforco']}"
             j.recalcular()
             registrar(self, "ferreiro", item=item["nome"], stat=stat, ganho=ganho, custo=custo)
-            self.dizer(f"Faíscas, marteladas, água fervendo. {item['nome']}: +{ganho} {NOMES_STATS[stat]}.", "verde")
+            self.dizer(f"Faíscas, marteladas, água fervendo. {item['nome']}: +{ganho} {nome_stat(stat, self.j.nome_recurso)}.", "verde")
 
     def curandeiro(self):
         j = self.j

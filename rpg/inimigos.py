@@ -1,5 +1,6 @@
 """Geração procedural de inimigos e suas habilidades."""
 
+from . import balanceamento as bal
 from . import texto as tx
 from .dados import AFIXOS, FAMILIAS, GUARDIOES
 from .entidades import Inimigo
@@ -12,11 +13,11 @@ def escala(nivel):
 def criar(rng, familia_id, nivel, afixo=None, nome_unico=None):
     f = FAMILIAS[familia_id]
     m = escala(nivel)
-    hp = f["hp"] * m
-    atk = f["atk"] * 0.9 * (1 + 0.18 * (nivel - 1))
+    hp = f["hp"] * m * bal.INIMIGO_VIDA
+    atk = f["atk"] * 0.9 * (1 + 0.18 * (nivel - 1)) * bal.INIMIGO_DANO
     defesa = f["defesa"] * (1 + 0.15 * (nivel - 1))
     agi = f["agi"] + (nivel - 1) // 3
-    poder = f["poder"] * m
+    poder = f["poder"] * m * bal.INIMIGO_DANO
     xp = f["xp"] * (1 + 0.3 * (nivel - 1))
     ouro = rng.randint(*f["ouro"]) * (1 + 0.2 * (nivel - 1))
     tracos = list(f["tracos"])

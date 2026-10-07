@@ -112,19 +112,18 @@ const Batalha = (() => {
     const caixa = Telas.abrirDica(el);
     const tracos = f.tracos.map((t) => `<span class="ficha-traco" title="${esc(t.texto)}">${S(ICONE_TRACO[t.id] || "estrela", 2)}<small>${esc(t.id)}</small></span>`).join("");
     let corpo;
-    if (f.conhecido) {
-      const linha = (filtro, classe) => Object.entries(f.mult).filter(([, v]) => filtro(v)).map(([k, v]) => {
-        const [ic, nome] = ELEMENTO[k] || ["estrela", k];
-        return `<span class="ficha-mult ${classe}">${S(ic, 2)}<b>${v === 0 ? "imune" : "×" + String(v).replace(".", ",")}</b><small>${nome}</small></span>`;
-      }).join("");
-      const fracos = linha((v) => v >= 1.15, "fraco"), fortes = linha((v) => v <= 0.85, "forte");
-      corpo = (fracos ? `<div class="ficha-titulo bom">Fraco contra</div><div class="ficha-linha">${fracos}</div>` : "") +
-        (fortes ? `<div class="ficha-titulo ruim">Resiste a</div><div class="ficha-linha">${fortes}</div>` : "") +
-        (!fracos && !fortes ? '<div class="ficha-titulo">Sem fraquezas nem resistências</div>' : "") +
-        (f.habilidades.length ? `<div class="ficha-titulo">Golpes</div><div class="ficha-habs">${f.habilidades.map((h) => `<span>${esc(h)}</span>`).join("")}</div>` : "");
-    } else {
-      corpo = '<div class="ficha-titulo">Fraquezas: ???</div><div class="pior">Derrote mais destes para aprender (veja o Bestiário).</div>';
-    }
+    const linha = (filtro, classe) => Object.entries(f.mult).filter(([, v]) => filtro(v)).map(([k, v]) => {
+      const [ic, nome] = ELEMENTO[k] || ["estrela", k];
+      return `<span class="ficha-mult ${classe}">${S(ic, 2)}<b>${v === 0 ? "imune" : "×" + String(v).replace(".", ",")}</b><small>${nome}</small></span>`;
+    }).join("");
+    // O bestiário da espécie libera aos poucos: primeiro as fraquezas, depois as resistências.
+    const fracos = f.conhecido ? linha((v) => v >= 1.15, "fraco") : "";
+    const fortes = f.resistencias ? linha((v) => v <= 0.85, "forte") : "";
+    corpo = (f.conhecido ? (fracos ? `<div class="ficha-titulo bom">Fraco contra</div><div class="ficha-linha">${fracos}</div>`
+        : '<div class="ficha-titulo">Sem fraquezas</div>') : '<div class="ficha-titulo">Fraquezas: ???</div>') +
+      (f.resistencias ? (fortes ? `<div class="ficha-titulo ruim">Resiste a</div><div class="ficha-linha">${fortes}</div>`
+        : '<div class="ficha-titulo">Sem resistências</div>') : f.conhecido ? '<div class="ficha-titulo">Resistências: ???</div>' : "") +
+      (f.progresso ? `<div class="pior ficha-progresso">${esc(f.progresso)}</div>` : "");
     caixa.innerHTML = `<b>${esc(c.nome)}</b><div class="tipo">Nível ${c.nivel}${c.chefe ? " · chefe" : ""} · ataque ${f.atk} · defesa ${f.defesa}</div>
       <div class="ficha-tracos">${tracos}</div>${corpo}${f.ponto_fraco ? '<div class="rodape">Você conhece o ponto fraco: +25% de dano!</div>' : ""}`;
     caixa.classList.add("ficha-inimigo");

@@ -28,7 +28,7 @@ class Loja:
         cons = ["tocha", "bandagem", "unguento", "pocao_vida", "tonico", "antidoto", "bomba_fumaca", "pena_fenix"]
         def item(it, preco):
             return {"nome": itens.rotulo(it), "slot": it["slot"], "raridade": it.get("raridade", "comum"),
-                    "bonus": descrever_bonus(it["bonus"]), "bonus_bruto": it["bonus"], "base": it.get("base"),
+                    "bonus": descrever_bonus(it["bonus"], j.nome_recurso), "bonus_bruto": it["bonus"], "base": it.get("base"),
                     "preco": preco, "classe": it.get("classe"), "lore": it.get("lore")}
         return {
             "ouro": j.ouro, "limite": LIMITE_MOCHILA, "ocupado": len(j.mochila),
@@ -138,7 +138,7 @@ class Loja:
                 opcoes.append((f"Feixe de 5 flechas — {self.preco_suprimento('flechas')} ouro (você tem {j.flechas}/"
                                f"{self.max_flechas()})", ("suprimento", "flechas")))
             for it in a_venda:
-                opcoes.append((f"{itens.rotulo(it)} [{NOMES_SLOT[it['slot']]}] {descrever_bonus(it['bonus'])} — "
+                opcoes.append((f"{itens.rotulo(it)} [{NOMES_SLOT[it['slot']]}] {descrever_bonus(it['bonus'], j.nome_recurso)} — "
                                f"{self.preco(it['preco'])} ouro", ("equip", it)))
             if j.mochila:
                 opcoes.append(("Vender itens da mochila", ("vender",)))
@@ -184,7 +184,7 @@ class Loja:
 
     def vender(self):
         j = self.j
-        opcoes = [(f"{it['nome']} — {descrever_bonus(it['bonus'])} — vende por {it['preco'] // 2}", it)
+        opcoes = [(f"{it['nome']} — {descrever_bonus(it['bonus'], j.nome_recurso)} — vende por {it['preco'] // 2}", it)
                   for it in j.mochila]
         it = self.menu("Vender o quê?", opcoes + [("Voltar", None)])
         if it:

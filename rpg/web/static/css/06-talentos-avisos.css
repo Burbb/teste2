@@ -26,8 +26,8 @@
 .no-talento.trancado::after { content: ""; position: absolute; left: -12px; top: -12px; width: 26px; height: 26px; background: var(--cadeado) center / 26px no-repeat; }
 .no-talento.bloqueado { border-color: #3a1414; }
 .no-talento.bloqueado img { filter: grayscale(1) brightness(0.25); }
-.no-talento.aprendeu { animation: aprendeu 0.8s steps(6); }
-@keyframes aprendeu { 0% { transform: scale(1); filter: brightness(3); } 50% { transform: scale(1.2); } 100% { transform: scale(1); filter: none; } }
+.no-talento.aprendeu { animation: aprendeu 0.45s cubic-bezier(.2,.8,.3,1); }
+@keyframes aprendeu { 0% { transform: scale(1.28); filter: brightness(2.4); box-shadow: 0 0 0 2px #000, 0 0 26px rgba(242, 201, 76, 0.9); } 100% { transform: scale(1); filter: none; } }
 #talento-info { position: fixed; z-index: 30; width: 300px; pointer-events: none; padding: 8px 10px; font-size: 15px; line-height: 1.45; box-shadow: var(--sombra); }
 #talento-info b { font-family: var(--titulo); font-size: 30px; font-weight: 400; color: var(--ouro); display: block; line-height: 1; }
 #talento-info .r { font-family: var(--num); font-size: 18px; color: var(--tinta-2); }
@@ -85,3 +85,29 @@
 #mapa-legenda span { display: inline-flex; align-items: center; gap: 4px; }
 .sobre-caixa.fim { width: auto; padding: 30px 50px; text-align: center; }
 .sobre-caixa.fim h2 { font-family: var(--titulo); font-weight: 400; font-size: 52px; color: var(--ouro); margin: 0 0 8px; }
+.faisca { position: fixed; z-index: 90; width: 5px; height: 5px; pointer-events: none; box-shadow: 0 0 0 1px rgba(0,0,0,0.5), 0 0 6px currentColor; }
+
+/* Subir de nível: clarão, anel, raios girando e o número batendo na tela (animações fluidas, sem degraus). */
+.festa { animation: festa-entra 0.38s cubic-bezier(.2, .9, .3, 1.25); }
+@keyframes festa-entra { from { transform: scale(0.75); opacity: 0; } to { transform: none; opacity: 1; } }
+.festa .grande { animation: pulsar-suave 2.4s ease-in-out infinite; }
+@keyframes pulsar-suave { 50% { text-shadow: 4px 4px 0 #000, 0 0 46px rgba(242, 201, 76, 0.85); } }
+.festa-nivel { overflow: hidden; isolation: isolate; }
+.festa-nivel .raios { position: absolute; left: 50%; top: 32%; width: 900px; height: 900px; margin: -450px 0 0 -450px; z-index: -1; pointer-events: none;
+  background: repeating-conic-gradient(rgba(242, 201, 76, 0.13) 0 7deg, transparent 7deg 18deg);
+  -webkit-mask-image: radial-gradient(circle, #000 0, transparent 62%); mask-image: radial-gradient(circle, #000 0, transparent 62%);
+  animation: raios-girando 18s linear infinite, raios-entram 0.9s ease-out both; }
+@keyframes raios-girando { to { rotate: 360deg; } }
+@keyframes raios-entram { from { opacity: 0; scale: 0.4; } }
+.festa-nivel .anel { position: absolute; left: 50%; top: 32%; width: 40px; height: 40px; margin: -20px 0 0 -20px; z-index: -1; border-radius: 50%; pointer-events: none;
+  border: 4px solid rgba(255, 243, 160, 0.9); box-shadow: 0 0 30px rgba(242, 201, 76, 0.8); animation: anel-expande 0.9s cubic-bezier(.1, .7, .3, 1) 0.15s both; }
+@keyframes anel-expande { from { transform: scale(0.2); opacity: 1; } to { transform: scale(14); opacity: 0; } }
+.festa-nivel .nivel-bloco { display: flex; align-items: baseline; justify-content: center; gap: 18px; margin: 4px 0 2px; }
+.festa-nivel .nivel-palavra { font-family: var(--titulo); font-size: 64px; color: #e8dcc0; text-shadow: 3px 3px 0 #000; opacity: 0; animation: surgir-suave 0.35s ease-out 0.1s forwards; }
+.festa-nivel .nivel-numero { font-family: var(--num); font-size: 128px; line-height: 0.85; color: var(--ouro);
+  text-shadow: 5px 5px 0 #000, 0 0 40px rgba(242, 201, 76, 0.75); animation: numero-bate 0.55s cubic-bezier(.2, 1.6, .4, 1) 0.2s both, pulsar-suave 2.4s ease-in-out 1s infinite; }
+@keyframes numero-bate { 0% { transform: scale(2.6); opacity: 0; filter: brightness(3); } 60% { opacity: 1; } 100% { transform: none; filter: none; } }
+@keyframes surgir-suave { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.festa .ganho, .festa .habilidade-nova { animation: ganho-pula 0.38s cubic-bezier(.2, 1.4, .4, 1) forwards; }
+@keyframes ganho-pula { from { opacity: 0; transform: translateY(10px) scale(0.85); } to { opacity: 1; transform: none; } }
+.festa .ganho b.conta { font-weight: normal; margin-right: 6px; }

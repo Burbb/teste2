@@ -267,8 +267,12 @@ def _bola_fogo(cb, u, alvo):
                    chance=1.0 if u.tal("ignicao") else 0.6, acumula=True)
 
 
+def ganho_meditar(u):
+    return 6 + int(u.max_rec * 0.12)
+
+
 def _meditar(cb, u, alvo):
-    ganho = min(u.max_rec - u.rec, 6 + int(u.max_rec * 0.12))
+    ganho = min(u.max_rec - u.rec, ganho_meditar(u))
     u.rec += ganho
     cb.dizer(f"Você fecha os olhos e respira fundo. (+{ganho} mana)", "azul")
     cb.recuperou(u, ganho, "Meditar")
@@ -370,7 +374,9 @@ HABILIDADES = {
     "execucao": dict(nome="Execução", custo=16, flechas=1, alvo="inimigo", desc="320% de dano se o alvo estiver abaixo de 35% de vida.", fn=_execucao),
     # Mago
     "bola_fogo": dict(nome="Bola de Fogo", custo=14, alvo="inimigo", desc="150% de dano de fogo; costuma acender o alvo (as chamas acumulam até 3 camadas).", fn=_bola_fogo),
-    "meditar": dict(nome="Meditar", custo=0, alvo="proprio", desc="Recupera mana.", fn=_meditar),
+    "meditar": dict(nome="Meditar", custo=0, alvo="proprio", desc="Recupera mana (6 + 12% do máximo).",
+                    desc_fn=lambda u: f"Recupera {ganho_meditar(u)} de mana (6 + 12% do máximo). Não custa nada, mas gasta o turno.",
+                    fn=_meditar),
     "lanca_gelo": dict(nome="Lança de Gelo", custo=10, alvo="inimigo", desc="130% de dano de gelo, pode congelar.", fn=_lanca_gelo),
     "barreira": dict(nome="Barreira Arcana", custo=20, alvo="proprio", desc="Escudo que absorve dano por 2 turnos (não acumula).", fn=_barreira),
     "inferno": dict(nome="Inferno", custo=35, alvo="todos", desc="60% de dano de fogo em todos (pode errar); pode acender cada um.", fn=_inferno),
@@ -387,3 +393,9 @@ def habilidades_ate(classe, spec, nivel):
     if spec:
         lista += [h for (nv, h) in SPECS[spec]["habilidades"] if nv <= nivel]
     return lista
+
+
+def descricao_habilidade(h_id, u):
+    """A descrição com os números do herói, quando a habilidade sabe calculá-los (ex.: quanto o Meditar devolve)."""
+    h = HABILIDADES[h_id]
+    return h["desc_fn"](u) if h.get("desc_fn") else h["desc"]

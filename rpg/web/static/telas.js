@@ -71,7 +71,6 @@ const Telas = (() => {
     }
     html += "</div>";
     document.getElementById("arvore").innerHTML = html;
-    if (Object.values(ranksAntes).length && a.nos.some((n) => ranksAntes[n.id] !== undefined && n.rank > ranksAntes[n.id])) App.som("nivel");
     ranksAntes = Object.fromEntries(a.nos.map((n) => [n.id, n.rank]));
     const info = document.getElementById("talento-info");
     document.querySelectorAll("#arvore .no-talento").forEach((el) => {
@@ -87,10 +86,36 @@ const Telas = (() => {
         info.style.top = Math.max(10, r.top - 10) + "px";
       });
       el.addEventListener("mouseleave", () => { info.hidden = true; });
-      if (el.classList.contains("pode")) el.addEventListener("click", () => { info.hidden = true; App.responder(m.id, idx[n.id]); });
+      if (el.classList.contains("pode")) el.addEventListener("click", () => {
+        info.hidden = true;
+        // Resposta na hora do clique, como no mercado: pop, faíscas, som e o ganho subindo perto do nó.
+        App.som("aprender");
+        el.animate([{ scale: 1 }, { scale: 1.28, filter: "brightness(2.2)" }, { scale: 1 }], { duration: 260, easing: "cubic-bezier(.2,.8,.3,1.2)" });
+        faiscas(el, ["#f2c94c", "#fff3a0", "#8fbf6a"], 18);
+        App.avisar(`+1 ${n.nome} (${n.rank + 1}/${n.max})`);
+        const pontos = document.querySelector("#arvore .pontos");
+        if (pontos) pontos.animate([{ scale: 1 }, { scale: 0.8, filter: "brightness(2)" }, { scale: 1 }], { duration: 220 });
+        App.responder(m.id, idx[n.id]);
+      });
     });
     caixa.hidden = false;
     return true;
+  }
+  /** Faíscas que saem de um elemento (talento aprendido, compra...). */
+  function faiscas(el, cores, n = 14) {
+    const r = el.getBoundingClientRect();
+    const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+    for (let i = 0; i < n; i++) {
+      const p = document.createElement("i");
+      p.className = "faisca";
+      p.style.left = cx + "px"; p.style.top = cy + "px";
+      p.style.background = cores[i % cores.length];
+      document.body.appendChild(p);
+      const ang = (i / n) * Math.PI * 2 + Math.random() * 0.4, dist = 40 + Math.random() * 46;
+      p.animate([{ transform: "translate(-50%, -50%) scale(1)", opacity: 1 },
+        { transform: `translate(calc(-50% + ${Math.cos(ang) * dist}px), calc(-50% + ${Math.sin(ang) * dist}px)) scale(0.4)`, opacity: 0 }],
+        { duration: 420 + Math.random() * 180, easing: "cubic-bezier(.15,.7,.3,1)" }).finished.then(() => p.remove(), () => p.remove());
+    }
   }
   function fecharTalentos() {
     document.getElementById("sobre-talentos").hidden = true;
@@ -110,7 +135,7 @@ const Telas = (() => {
   const AREA = { cabeca: "cab", amuleto: "amu", armadura: "pei", maos: "mao", arma: "arm", secundaria: "sec",
     pernas: "per", pes: "pes", anel1: "an1", anel2: "an2" };
   const RARIDADE = { comum: "comum", magico: "mágico", raro: "raro", lendario: "LENDÁRIO" };
-  const NOMES_STAT = { max_hp: "Vida", atk: "Ataque", defesa: "Defesa", agi: "Agilidade", poder: "Poder", max_rec: "Recurso",
+  const NOMES_STAT = { max_hp: "Vida", atk: "Ataque", defesa: "Defesa", agi: "Agilidade", poder: "Poder", get max_rec() { return (App.estado && App.estado.heroi && App.estado.heroi.recurso) || "Mana/Vigor/Foco"; },
     roubo_vida: "% roubo de vida", critico: "% crítico", espinhos: "Espinhos", regen_vida: "Vida por turno", vida_abate: "Vida por abate" };
   const CLASSE_NOME = { guerreiro: "guerreiros", arqueiro: "arqueiros", mago: "magos" };
 
@@ -699,6 +724,23 @@ const Telas = (() => {
   }
 
   /** Mostra a celebração. Devolve uma Promise que resolve quando o jogador fecha (ou na hora, se rápida). */
+  /** Os ganhos do nível contam de 0 até o valor, cada um com um tique. */
+  function contarGanhos(caixa) {
+    caixa.querySelectorAll(".conta").forEach((b) => {
+      const alvo = Number(b.dataset.alvo), atraso = Number(b.dataset.atraso);
+      setTimeout(() => {
+        App.som("tique");
+        const inicio = performance.now(), dur = 320;
+        const passo = (agora) => {
+          const t = Math.min(1, (agora - inicio) / dur);
+          b.textContent = "+" + Math.round(alvo * (1 - Math.pow(1 - t, 3)));
+          if (t < 1) requestAnimationFrame(passo);
+        };
+        requestAnimationFrame(passo);
+      }, atraso);
+    });
+  }
+
   function celebrar(m, instantaneo) {
     const d = m.dados;
     if (m.tipo === "vitoria") {
@@ -718,16 +760,19 @@ const Telas = (() => {
     let html = "";
     if (m.tipo === "nivel") {
       const icones = { Vida: "coracao", Ataque: "espada", Defesa: "escudo", Agilidade: "folha", Poder: "chama", Mana: "pocao_azul", Vigor: "chama", Foco: "olho" };
-      const ganhos = Object.entries(d.ganhos).map(([k, v], i) => `<span class="ganho" style="animation-delay:${0.5 + i * 0.18}s">${S(icones[k] || "estrela", 1)}+${v} ${h(k)}</span>`).join("");
-      const atraso = 0.5 + Object.keys(d.ganhos).length * 0.18;
-      const habs = d.habilidades.map((x, i) => `<div class="habilidade-nova" style="animation-delay:${atraso + 0.4 + i * 0.25}s"><span class="rotulo-festa">nova habilidade</span><b>${h(x.nome)}</b>${h(x.desc)}</div>`).join("");
-      html = `<div class="festa moldura"><div class="rotulo-festa">você subiu de nível</div><div class="grande">Nível ${d.nivel}</div>
-        <div class="lista">${ganhos}<span class="ganho ouro" style="animation-delay:${atraso + 0.1}s">${S("estrela", 1)}+1 ponto de talento</span></div>${habs}
+      const ganhos = Object.entries(d.ganhos).map(([k, v], i) => `<span class="ganho" style="animation-delay:${0.75 + i * 0.12}s">${S(icones[k] || "estrela", 1)}<b class="conta" data-alvo="${v}" data-atraso="${750 + i * 120}">+0</b>${h(k)}</span>`).join("");
+      const atraso = 0.75 + Object.keys(d.ganhos).length * 0.12;
+      const habs = d.habilidades.map((x, i) => `<div class="habilidade-nova" style="animation-delay:${atraso + 0.35 + i * 0.2}s"><span class="rotulo-festa">nova habilidade</span><b>${h(x.nome)}</b>${h(x.desc)}</div>`).join("");
+      html = `<div class="festa festa-nivel moldura"><div class="raios"></div><div class="anel"></div>
+        <div class="rotulo-festa">você subiu de nível</div>
+        <div class="nivel-bloco"><span class="nivel-palavra">Nível</span><span class="nivel-numero">${d.nivel}</span></div>
+        <div class="lista">${ganhos}<span class="ganho ouro" style="animation-delay:${atraso + 0.08}s">${S("estrela", 1)}+1 ponto de talento</span></div>${habs}
         ${d.especializacao ? '<div class="texto-festa" style="color:var(--arcano)">Uma encruzilhada se aproxima: em breve você escolherá sua especialização.</div>' : ""}
         <div class="dica">Seus pontos de talento: ${d.pontos}. Gaste em Talentos (tecla T no menu de um local).</div>
         <button class="continuar" type="button">Continuar <span>▸</span></button></div>`;
-      App.som("fanfarra");
+      App.som("subir");
       particulas(["#f2c94c", "#fff3a0", "#ff9d4d", "#8fbf6a"], 90);
+      setTimeout(() => contarGanhos(caixa), 0);
     } else if (m.tipo === "sigilo") {
       const los = [0, 1, 2].map((i) => `<i class="${i < d.sigilos ? "tem" : ""}${i === d.sigilos - 1 ? " novo" : ""}"></i>`).join("");
       html = `<div class="festa moldura"><div class="rotulo-festa">${h(d.guardiao)} caiu</div><div class="grande">Sigilo ${d.sigilos}/3</div>

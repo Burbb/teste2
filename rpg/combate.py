@@ -3,7 +3,7 @@
 from contextlib import contextmanager
 
 from . import texto as tx
-from .classes import CLASSES, HABILIDADES
+from .classes import CLASSES, HABILIDADES, descricao_habilidade
 from .dados import TRACOS
 from .entidades import Combatente
 from .inimigos import HABS_INIMIGO, NOMES_HABS_INIMIGO, ROTULOS_HABS_INIMIGO
@@ -148,6 +148,7 @@ class Combate:
             yield
             return
         self._salva, self._salva_textos = [], []
+        self.ui.iniciar_salva()
         try:
             yield
         finally:
@@ -155,6 +156,7 @@ class Combate:
             self._salva = self._salva_textos = None
             if lances:
                 self.ui.lance("salva", hab=hab, lances=lances)
+            self.ui.fim_salva()
             for fn, texto, cor in textos:
                 fn(texto, cor)
             self.ui.atualizar()
@@ -651,7 +653,7 @@ class Combate:
             # A interface gráfica desenha cada habilidade como uma carta com ícone, custo e dica.
             metas.append({"habilidade": h_id, "nome": h["nome"], "custo": custo_habilidade(j, h_id),
                           "recurso": j.nome_recurso, "flechas": h.get("flechas", 0), "alvo_tipo": h["alvo"],
-                          "desc": h["desc"], "pode": motivo is None, "motivo": motivo})
+                          "desc": descricao_habilidade(h_id, j), "pode": motivo is None, "motivo": motivo})
         opcoes.append("Voltar")
         self.ui.meta_opcoes = metas + [None]
         try:
@@ -706,7 +708,7 @@ class Combate:
         for it in armas:
             opcoes.append(f"Trocar para {it['nome']} (gasta o turno)")
             metas.append({"trocar": j.mochila.index(it), "equip": {
-                "nome": rotulo(it), "raridade": it.get("raridade", "comum"), "bonus": descrever_bonus(it["bonus"]),
+                "nome": rotulo(it), "raridade": it.get("raridade", "comum"), "bonus": descrever_bonus(it["bonus"], j.nome_recurso),
                 "slot": it["slot"], "base": it.get("base"), "bonus_bruto": it["bonus"], "classe": it.get("classe"),
                 "lore": it.get("lore")}})
         self.ui.meta_opcoes = metas + [None]

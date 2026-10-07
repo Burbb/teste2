@@ -128,6 +128,12 @@ class UI:
         """Um lance de combate (ação, golpe, cura...) com quem e em quem, para interfaces que animam as cartas.
         O texto do lance já foi (ou será) dito; as interfaces de texto não precisam de nada aqui."""
 
+    def iniciar_salva(self):
+        """Golpes em área vão começar: interfaces gráficas seguram o que chegar até a salva ser animada."""
+
+    def fim_salva(self):
+        """A salva foi enviada: o que ficou guardado pode sair."""
+
     def detalhe(self, texto, cor=None):
         """Linha mecânica de combate (dano, esquiva, efeito aplicado). Interfaces gráficas a mostram miúda,
         porque a animação já conta o que aconteceu."""

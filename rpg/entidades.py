@@ -6,10 +6,17 @@ from .classes import CLASSES, SPECS
 STATS = ("max_hp", "atk", "defesa", "agi", "poder", "max_rec")
 NOMES_STATS = {
     "max_hp": "Vida", "atk": "Ataque", "defesa": "Defesa", "agi": "Agilidade",
-    "poder": "Poder", "max_rec": "Recurso", "roubo_vida": "roubo de vida", "critico": "chance de crítico",
+    "poder": "Poder", "max_rec": "Mana/Vigor/Foco", "roubo_vida": "roubo de vida", "critico": "chance de crítico",
     "espinhos": "Espinhos", "regen_vida": "Vida por turno", "vida_abate": "Vida por abate",
 }
 EFEITOS_NEGATIVOS = ("veneno", "sangramento", "queimadura", "atordoado", "enfraquecido", "maldito", "marcado")
+
+
+def nome_stat(stat, recurso=None):
+    """Nome de um atributo para o jogador; o recurso usa a palavra da classe (Mana, Vigor, Foco) quando conhecida."""
+    if stat == "max_rec" and recurso:
+        return recurso
+    return NOMES_STATS[stat]
 
 
 class Combatente:

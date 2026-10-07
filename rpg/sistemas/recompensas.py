@@ -2,7 +2,7 @@
 
 from .. import eventos
 from .. import texto as tx
-from ..entidades import NOMES_STATS
+from ..entidades import nome_stat
 from ..itens import CONSUMIVEIS
 from .. import sobrevivencia
 from ..regras import NIVEL_MAXIMO
@@ -37,11 +37,13 @@ class Recompensas:
             self.subir_nivel()
 
     def ferir(self, n, motivo=""):
+        """Dano de evento (fora do combate). Não mata, mas pode deixar um ferimento duradouro."""
         n = int(n)
         if n <= 0:
             return
         self.j.hp = max(1, self.j.hp - n)
         self.ui.efeito(f"−{n} vida{motivo} ({self.j.hp}/{self.j.max_hp})", "dano")
+        sobrevivencia.ferir_por_evento(self, n, motivo)
 
     def curar(self, n):
         c = self.j.curar(n)
@@ -70,7 +72,7 @@ class Recompensas:
         ganhos[stat] = ganhos.get(stat, 0) + ganho
         self.j.base[stat] += ganho
         self.j.recalcular()
-        self.ui.efeito(f"+{ganho} {NOMES_STATS[stat]} permanente", "nivel")
+        self.ui.efeito(f"+{ganho} {nome_stat(stat, self.j.nome_recurso)} permanente", "nivel")
         return ganho
 
     def dar_provisoes(self, n):

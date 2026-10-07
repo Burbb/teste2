@@ -4,6 +4,8 @@ Num mundo de fantasia de verdade, o que mata não são só os monstros: é a
 fome, a ferida que infecciona, a noite sem luz. Este módulo cuida disso.
 """
 
+from . import balanceamento as bal
+
 FERIMENTOS = {
     "corte": dict(nome="Corte profundo", dias=4, mult={"max_hp": 0.9}, aberto=True),
     "mordida": dict(nome="Mordida dilacerada", dias=4, mult={"max_hp": 0.9, "agi": 0.9}, aberto=True),
@@ -63,8 +65,9 @@ def talvez_ferir(g, dano, tipo, critico, atacante):
     if not j.vivo or dano <= 0:
         return
     gravidade = dano / max(1, j.max_hp)
-    chance = max(0.0, (gravidade - 0.15) * 1.4) + (0.12 if critico else 0) + (0.1 if j.hp < j.max_hp * 0.25 else 0)
-    if g.rng.random() >= min(0.55, chance):
+    chance = (bal.FERIMENTO_BASE + gravidade * bal.FERIMENTO_GRAVIDADE + (bal.FERIMENTO_CRITICO if critico else 0)
+              + (bal.FERIMENTO_POUCA_VIDA if j.hp < j.max_hp * 0.25 else 0))
+    if g.rng.random() >= min(bal.FERIMENTO_TETO, chance):
         return
     if tipo == "fogo":
         fid = "queimadura"
@@ -75,6 +78,29 @@ def talvez_ferir(g, dano, tipo, critico, atacante):
     else:
         fid = g.rng.choice(["corte", "corte", "costelas", "braco", "perna", "concussao"])
     ferir(g, fid)
+
+
+# O que cada tipo de acidente costuma causar (dano de eventos, fora do combate).
+FERIMENTOS_POR_MOTIVO = (
+    (("queda", "avalanche", "desliz", "escorreg"), ("perna", "braco", "costelas")),
+    (("armadilha", "espinho", "lâmina", "lamina", "vidro"), ("corte", "perna")),
+    (("queimadura", "fogo", "chama", "brasa"), ("queimadura",)),
+    (("mordida", "ferroada", "picada"), ("mordida",)),
+    (("soco", "briga", "pancada", "pedra"), ("concussao", "costelas")),
+)
+
+
+def ferir_por_evento(g, dano, motivo=""):
+    """Dano de cenário (queda, armadilha, briga) também pode deixar um ferimento que combina com o acidente."""
+    j = g.j
+    if not j.vivo or dano <= 0:
+        return
+    if g.rng.random() >= (dano / max(1, j.max_hp)) * bal.FERIMENTO_EVENTO:
+        return
+    texto = motivo.lower()
+    opcoes = next((ids for chaves, ids in FERIMENTOS_POR_MOTIVO if any(k in texto for k in chaves)),
+                  ("corte", "costelas", "concussao", "perna"))
+    ferir(g, g.rng.choice(opcoes))
 
 
 def tratar_com_bandagem(g):

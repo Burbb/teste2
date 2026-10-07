@@ -103,6 +103,22 @@ const Som = (() => {
     },
     escolha() { estalo(ctx.currentTime, 2500, 0.12, 0.03); },
     nivel() { const t = ctx.currentTime; [392, 494, 587, 784].forEach((f, i) => tom(t + i * 0.11, f, 0.09, 0.9, "triangle")); },
+    // Aprender talento: "plim" de moeda + um brilho mágico que sobe (curto: é para viciar, não para cansar).
+    aprender() {
+      const t = ctx.currentTime;
+      tom(t, 1568, 0.07, 0.10, "square"); tom(t + 0.045, 2349, 0.06, 0.16, "square");
+      [1047, 1319, 1568, 2093].forEach((f, i) => tom(t + 0.06 + i * 0.035, f, 0.035, 0.22, "triangle"));
+      sopro(t + 0.04, 0.28, 3000, 9000, 0.025, 0.7, "highpass");
+    },
+    // Subir de nível: impacto grave, acorde que sobe e brilho longo.
+    subir() {
+      const t = ctx.currentTime;
+      tom(t, 98, 0.18, 0.5, "sine", 60);
+      [262, 330, 392, 523, 659, 784].forEach((f, i) => tom(t + 0.05 + i * 0.07, f, 0.06, 0.9, "triangle"));
+      [523, 659, 784].forEach((f) => tom(t + 0.5, f, 0.045, 1.4, "sine"));
+      sopro(t + 0.45, 1.2, 2500, 8000, 0.03, 0.6, "highpass");
+    },
+    tique() { estalo(ctx.currentTime, 3600, 0.18, 0.02); },
     moeda() { const t = ctx.currentTime; tom(t, 1900, 0.06, 0.12, "square"); tom(t + 0.05, 2600, 0.05, 0.2, "square"); },
     equipar() { const t = ctx.currentTime; estalo(t, 3200, 0.25, 0.06); estalo(t + 0.05, 2200, 0.2, 0.08); tom(t, 180, 0.12, 0.15, "square", 120); },
     item() { const t = ctx.currentTime; tom(t, 660, 0.07, 0.12, "square"); tom(t + 0.07, 990, 0.06, 0.18, "square"); },

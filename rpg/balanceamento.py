@@ -35,6 +35,21 @@ QUEIMADURA_BRASAS = 0.2       # por ponto do talento Brasas Eternas
 COMBUSTAO_BASE = 1.6          # o que ainda arderia × (1,6 + 0,2 por camada)
 COMBUSTAO_POR_CAMADA = 0.2
 
+# Inimigos comuns (chefes e guardiões à parte): mais duros que o herói sem equipamento, para o
+# equipamento e os talentos serem vantagem e não atropelo.
+INIMIGO_VIDA = 1.15
+INIMIGO_DANO = 1.1
+
+# Ferimentos duradouros. Em combate, cada golpe tem chance de deixar marca:
+#   base + gravidade × fator (gravidade = dano / vida máxima) + crítico + pouca vida, até o teto.
+FERIMENTO_BASE = 0.015
+FERIMENTO_GRAVIDADE = 0.45
+FERIMENTO_CRITICO = 0.10
+FERIMENTO_POUCA_VIDA = 0.08   # quando a vida está abaixo de 25%
+FERIMENTO_TETO = 0.45
+# Dano de eventos (queda, armadilha, briga...) também pode ferir: chance = gravidade × fator.
+FERIMENTO_EVENTO = 1.2
+
 # ---------------------------------------------------------------- arqueiro
 FLECHAS_INICIAIS = 20
 ALJAVA = 30                   # flechas que cabem

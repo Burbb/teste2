@@ -13,7 +13,7 @@ class Finais:
     def _retrato_final(self):
         """Como o herói terminou: equipamento, atributos, talentos e comitiva (para o registro da partida)."""
         j = self.j
-        return {"equipamento": {s: (f"{it['nome']} [{it.get('raridade', 'comum')}] {descrever_bonus(it['bonus'])}"
+        return {"equipamento": {s: (f"{it['nome']} [{it.get('raridade', 'comum')}] {descrever_bonus(it['bonus'], self.j.nome_recurso)}"
                                     if it else None) for s, it in j.equip.items()},
                 "stats": telemetria.instantaneo(j), "talentos": dict(j.talentos), "spec": j.spec,
                 "comitiva": [{"id": m["id"], "aprovacao": m["aprovacao"]} for m in comitiva.membros(self)]}

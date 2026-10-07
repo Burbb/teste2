@@ -103,7 +103,7 @@ def cabana_da_bruxa(g):
             g.curar(g.j.max_hp * 0.4)
         else:
             g.dizer("Você passa a tarde inteira com dor de barriga. A bruxa ri muito.", "vermelho")
-            g.ferir(8)
+            g.ferir(g.j.max_hp * 0.12, " de cólica")
     elif op == "futuro":
         from .vila import ouvir_rumor
         g.dizer("Ela joga ossinhos sobre a mesa e franze a testa...", "magenta")

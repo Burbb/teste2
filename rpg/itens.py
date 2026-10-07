@@ -2,7 +2,7 @@
 
 CONSUMIVEIS = {
     "pocao_vida": {"nome": "Poção de Vida", "preco": 40, "desc": "Recupera 35% da vida. Gosto de ferrugem."},
-    "tonico": {"nome": "Tônico Restaurador", "preco": 35, "desc": "Recupera 50% do recurso (vigor/foco/mana)."},
+    "tonico": {"nome": "Tônico Restaurador", "preco": 35, "desc": "Recupera metade da sua mana, vigor ou foco."},
     "antidoto": {"nome": "Antídoto", "preco": 15, "desc": "Cura veneno."},
     "bandagem": {"nome": "Bandagem", "preco": 10, "desc": "Estanca sangramento e trata uma ferida aberta (evita infecção)."},
     "unguento": {"nome": "Unguento de Prata", "preco": 30, "desc": "Cura uma infecção."},
@@ -261,12 +261,13 @@ def cor(item):
     return COR_RARIDADE[item.get("raridade", "comum")]
 
 
-def descrever_bonus(bonus):
-    from .entidades import NOMES_STATS
+def descrever_bonus(bonus, recurso=None):
+    """'+3 Defesa, +10 Mana'. `recurso`: o nome do recurso do herói (Mana, Vigor, Foco); sem ele, os três."""
+    from .entidades import nome_stat
     partes = []
     for k, v in bonus.items():
         if k in ("roubo_vida", "critico"):
-            partes.append(f"+{v}% {NOMES_STATS[k]}")
+            partes.append(f"+{v}% {nome_stat(k, recurso)}")
         else:
-            partes.append(f"{'+' if v >= 0 else ''}{v} {NOMES_STATS[k]}")
+            partes.append(f"{'+' if v >= 0 else ''}{v} {nome_stat(k, recurso)}")
     return ", ".join(partes)

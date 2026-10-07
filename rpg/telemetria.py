@@ -155,7 +155,7 @@ def resumo(registro):
 
     w("## Progressão")
     w("")
-    w("| Nível | Dia | Ataque | Defesa | Agilidade | Poder | Vida máx | Recurso máx |")
+    w("| Nível | Dia | Ataque | Defesa | Agilidade | Poder | Vida máx | Mana/Vigor/Foco máx |")
     w("|---|---|---|---|---|---|---|---|")
     for e in ev:
         if e["t"] == "nivel":
@@ -176,7 +176,7 @@ def resumo(registro):
     w("## Combates por nível do herói")
     w("")
     w("| Nv herói | Lutas | Nv inimigo médio | Turnos | Dano causado/luta | Dano recebido/luta | "
-      "Vida perdida/luta | Maior golpe | Recurso no fim | Derrotas | Fugas |")
+      "Vida perdida/luta | Maior golpe | Mana/Vigor/Foco no fim | Derrotas | Fugas |")
     w("|---|---|---|---|---|---|---|---|---|---|---|")
     por_nivel = {}
     for c in combates:
@@ -234,7 +234,7 @@ def resumo(registro):
             w("Dano por aliado: " + ", ".join(f"{k} {v}" for k, v in sorted(por_aliado.items(), key=lambda x: -x[1])))
             w("")
     secos = sum(1 for c in combates if c["rec_fim"] < 0.2 * c["rec_max"])
-    w(f"Lutas que terminaram com recurso abaixo de 20%: {secos} de {len(combates)} ({_pct(secos, len(combates))})")
+    w(f"Lutas que terminaram com mana/vigor/foco abaixo de 20%: {secos} de {len(combates)} ({_pct(secos, len(combates))})")
     w("")
 
     chefes = [c for c in combates if any(i["chefe"] for i in c["inimigos"])]
