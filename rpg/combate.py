@@ -230,7 +230,9 @@ class Combate:
         return 3 + mod(u, "queimadura_turnos")
 
     def invocar_aliado(self, nome, hp, atk, tipo="servo"):
-        self.aliados.append(Aliado(nome, hp, atk, 3, tipo))
+        a = Aliado(nome, hp, atk, 3, tipo)
+        self.aliados.append(a)
+        return a
 
     # ------------------------------------------------------------ dano
     def atacar(self, u, alvo, mult, tipo="fisico", alcance="corpo", stat="atk", crit_extra=0.0, bonus=0,

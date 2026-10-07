@@ -26,8 +26,12 @@ Réguas para mexer na dificuldade com números: o simulador por especialização
 replay das partidas de verdade (`tests.replay`, com a do Xatuba em `tests/runs/`) e o `--dev N`. Primeiro ajuste:
 base um pouco mais dura e a curva bem mais dura do meio para o fim (defesa que perde força contra inimigos de nível
 alto, ataque e vida dos inimigos com curva, equipamento crescendo menos, XP mais lento e menor de inimigos fracos).
-Pendente: a diferença entre especializações ficou à mostra (Paladino e Patrulheiro fáceis, Piromante e Necromante
-sofrem no fim); um robô de mapa que jogue partidas inteiras com juízo, para medir o ritmo de nível.
+Em 1.14, o padrão virou hardcore com metas declaradas (em COMO_CRIAR): grupos maiores cedo, companheiro que custa
+caro (mais inimigos e mais vida neles), inimigos mais duros desde a base, curva do meio mais forte e a do fim mais
+plana (menos pico, mais desgaste); Paladino menos invulnerável, Barreira do mago crescendo com o Poder, servo do
+Necromante que provoca. O simulador mede também "lutas até descansar".
+Pendente: passe por especialização (Paladino ainda fácil; Sombra, Piromante e Necromante duras no fim); um modo
+mais brando para quem quiser; um robô de mapa que jogue partidas inteiras com juízo, para medir o ritmo de nível.
 
 ## Depois do núcleo
 

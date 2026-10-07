@@ -35,7 +35,7 @@ CLASSES = {
         "cor": "azul",
         "desc": "Frágil, mas devastador. Magias elementais exploram fraquezas. Mana regenera devagar.",
         "base": dict(max_hp=42, atk=3, defesa=3, agi=4, poder=11, max_rec=40, regen=3),
-        "cresc": dict(max_hp=6.5, atk=0.5, defesa=0.8, agi=0.6, poder=2.0, max_rec=5),
+        "cresc": dict(max_hp=8, atk=0.5, defesa=0.8, agi=0.6, poder=2.0, max_rec=5),
         "habilidades": [(1, "bola_fogo"), (1, "meditar"), (2, "lanca_gelo"), (3, "barreira")],
         "specs": ["piromante", "necromante"],
         "ataque": ("Dardo Arcano", "distancia", "arcano", "poder", 1.0),

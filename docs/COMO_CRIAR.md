@@ -153,3 +153,17 @@ equipamento × XP) fica na seção "a curva". O ciclo:
    tabelas de antes e depois) no commit.
 
 Partida nova que mostra um problema? Copie o .jsonl para `tests/runs/`: ela vira régua para as próximas mudanças.
+
+### As metas (o padrão é hardcore)
+
+O jogo é difícil de propósito, mas a morte deve vir do desgaste e das decisões (emendar lutas sem descansar,
+encarar campeões, únicos e guardiões), não de uma luta comum sorteada. No simulador, média das especializações:
+
+| Fase | Vida perdida por luta comum | Lutas até descansar | Vitórias em luta comum, de vida cheia | Guardião da região |
+|---|---|---|---|---|
+| Começo (nv 1–3) | ~20–30% | 3–5 | ≥ 93% | perigoso cedo demais |
+| Meio (nv 4–8) | ~20–28% | 3–5 | ≥ 93% | 60–80% de vitórias, sai com metade da vida |
+| Fim (nv 9–12) | ~25–32% | 3–4 | ≥ 88% | idem |
+
+Nenhuma especialização deve ficar muito longe da média: hoje o Paladino é a mais tolerante e Sombra, Piromante
+e Necromante as mais duras (veja o ROADMAP).

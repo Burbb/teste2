@@ -13,6 +13,7 @@ from rpg.ui import BotUI
 
 # Habilidades que uma pessoa usa quando o inimigo avisa um golpe forte ("prepara um golpe...").
 DEFESAS = ("erguer_escudo", "passo_agil", "barreira", "desaparecer")
+CURAS = ("prece",)  # curas em si mesmo: quando a vida baixa da metade
 
 # O que conta como "aguentou": as colunas da tabela, na ordem.
 COLUNAS = [
@@ -30,14 +31,15 @@ COLUNAS = [
 
 class LutadorUI(BotUI):
     """Fora da luta, o robô de sempre (ao acaso). Na luta, joga como gente: habilidade forte quando dá,
-    em área quando há vários inimigos, foco no mais ferido, poção quando a vida baixa, e se protege quando
-    um inimigo avisa um golpe forte."""
+    em área quando há vários inimigos, foco no mais ferido, cura e poção quando a vida baixa, e se protege
+    quando está ferido ou quando um inimigo avisa um golpe forte."""
 
     def __init__(self, rng):
         super().__init__(rng, max_decisoes=10 ** 9)
         self.g = None
         self._plano = None
         self._usadas = set()  # buffs já usados nesta luta
+        self._defendeu = -99  # turno em que se protegeu pela última vez
         self._serie = None
         self.golpes = []      # (dano, vida máxima do alvo) dos seus golpes
         self.recebidos = []   # dano dos golpes inimigos em você
@@ -60,7 +62,7 @@ class LutadorUI(BotUI):
         if cb is None:
             return super().escolher(pergunta, opcoes)
         if cb._serie != self._serie:
-            self._serie, self._usadas = cb._serie, set()
+            self._serie, self._usadas, self._defendeu = cb._serie, set(), -99
         metas = self.meta_opcoes or []
         if pergunta == "Sua ação:":
             return self._acao(cb, metas)
@@ -85,6 +87,10 @@ class LutadorUI(BotUI):
             self._plano = "pocao_vida"
             return 2
         habs = [m for m in next((m["habilidades"] for m in metas if m.get("acao") == "habilidades"), []) if m["pode"]]
+        cura = next((m["habilidade"] for m in habs if m["habilidade"] in CURAS), None)
+        if cura and j.hp < 0.5 * j.max_hp:
+            self._plano = cura
+            return 1
         if any(e.carregando for e in cb.inimigos_vivos()):
             defesa = next((m["habilidade"] for m in habs if m["habilidade"] in DEFESAS), None)
             if defesa:
@@ -93,6 +99,12 @@ class LutadorUI(BotUI):
             if j.hp < 0.6 * j.max_hp and any(m.get("usar_item") == "pocao_vida" and not m["motivo"] for m in itens):
                 self._plano = "pocao_vida"
                 return 2
+        # Ferido, a pessoa se protege (de novo a cada 3 turnos, quando o efeito já passou).
+        defesa = next((m["habilidade"] for m in habs if m["habilidade"] in DEFESAS), None)
+        if defesa and j.hp < 0.6 * j.max_hp and cb.turno - self._defendeu >= 3:
+            self._defendeu = cb.turno
+            self._plano = defesa
+            return 1
         h = self._habilidade(cb, habs)
         if h:
             self._plano = h

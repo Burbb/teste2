@@ -21,8 +21,8 @@ from .modificadores import Fixo, mod
 
 # ---------------------------------------------------------------------- gatilhos (reações dos talentos)
 def _aura_protecao(cb, u, rank, d):
-    u.aplicar("barreira", 99, int(u.poder * 2.5))
-    cb.dizer(f"Uma aura dourada te envolve. (barreira de {int(u.poder * 2.5)})", "amarelo")
+    u.aplicar("barreira", 99, int(u.poder * 1.5))
+    cb.dizer(f"Uma aura dourada te envolve. (barreira de {int(u.poder * 1.5)})", "amarelo")
 
 
 def _armadilheiro(cb, u, rank, d):

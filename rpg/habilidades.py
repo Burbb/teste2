@@ -479,7 +479,7 @@ def _meditar(cb, u, alvo):
 
 
 def _valor_barreira(u):
-    return int((u.max_hp * 0.15 + u.poder * 0.2) * mult(u, "barreira_mult"))
+    return int((u.max_hp * 0.2 + u.poder * 0.6) * mult(u, "barreira_mult"))
 
 
 def _barreira(cb, u, alvo):
@@ -531,7 +531,8 @@ def _erguer_servo(cb, u, alvo):
         return
     origem = "dos ossos de um inimigo caído" if cb.mortos else "da própria terra"
     cb.dizer(f"Você ergue um servo esquelético {origem}!", "magenta")
-    cb.invocar_aliado("Servo Esquelético", hp=int(_vida_servo(u)), atk=int(u.poder * 0.3) + 2, tipo="servo")
+    servo = cb.invocar_aliado("Servo Esquelético", hp=int(_vida_servo(u)), atk=int(u.poder * 0.3) + 2, tipo="servo")
+    servo.aplicar("provocando", 2)  # ossos que se jogam na frente: os inimigos olham para ele primeiro
 
 
 # ====================================================================== o catálogo
@@ -550,12 +551,12 @@ HABILIDADES = {
         Dizer("Você solta um grito de guerra que faz o chão tremer!", "ciano"),
         Buff("fortalecido", 3, 0.3),
         Aplicar("enfraquecido", 2, chance=0.8, em="todos")]),
-    "golpe_sagrado": hab("Golpe Sagrado", 15, "inimigo", "Dano sagrado que cura você em 35% do dano.", [
+    "golpe_sagrado": hab("Golpe Sagrado", 15, "inimigo", "Dano sagrado que cura você em 20% do dano.", [
         Dano(1.3, tipo="sagrado", bonus=Escala(poder=0.8), rotulo="Golpe Sagrado", depois=[
-            Se("acertou", CurarPeloDano(0.35, bonus="cura_luz"),
+            Se("acertou", CurarPeloDano(0.2, bonus="cura_luz"),
                Dizer("A luz fecha suas feridas. (+{cura} vida)", "verde", se="cura"))])]),
-    "prece": hab("Prece", 20, "proprio", "Cura 30% da vida + poder e remove males.", [
-        Curar(Escala(max_hp=0.3, poder=1.5), bonus="cura_luz"),
+    "prece": hab("Prece", 20, "proprio", "Cura 25% da vida + poder e remove males.", [
+        Curar(Escala(max_hp=0.25, poder=1.0), bonus="cura_luz"),
         LimparMales(),
         Dizer("Você reza em voz baixa. Uma luz quente te envolve. (+{cura} vida, males removidos)", "verde")]),
     "julgamento": hab("Julgamento Divino", 28, "todos", "Luz sagrada atinge todos os inimigos.", [
@@ -616,7 +617,7 @@ HABILIDADES = {
     "barreira": hab("Barreira Arcana", 20, "proprio", "Escudo que absorve dano por 2 turnos (não acumula).",
                     fn=_barreira,
                     linhas=lambda u: [_efeito(f"Absorve {_valor_barreira(u)} de dano por {2 + mod(u, 'barreira_turnos')} "
-                                              "turnos (15% da vida máxima + Poder × 20%). Não acumula.")]),
+                                              "turnos (20% da vida máxima + Poder × 60%). Não acumula.")]),
     "inferno": hab("Inferno", 35, "todos", "60% de dano de fogo em todos (pode errar); pode acender cada um.", [
         Dizer("O chão se abre em chamas sob seus inimigos!", "vermelho+negrito"),
         Dano(0.6, tipo="fogo", alcance="distancia", stat="poder", em="todos", depois=[
@@ -632,11 +633,12 @@ HABILIDADES = {
         Dano(1.2, tipo="sombra", alcance="distancia", stat="poder", rotulo="Drenar Vida", depois=[
             Se("acertou", Roubo(Mod(0.4, "dreno_cura"), rotulo="Drenar Vida"),
                Dizer("A vitalidade roubada flui para você. (+{cura} vida)", "verde", se="cura"))])]),
-    "erguer_servo": hab("Erguer Servo", 22, "proprio", "Invoca um esqueleto aliado (máx. 1, mais com talentos).",
+    "erguer_servo": hab("Erguer Servo", 22, "proprio", "Invoca um esqueleto aliado que atrai os golpes (máx. 1, mais com talentos).",
                         fn=_erguer_servo,
                         linhas=lambda u: [_efeito(f"Invoca um servo com {int(_vida_servo(u))} de vida e "
                                                   f"{int(u.poder * 0.3) + 2} de ataque (no máximo "
-                                                  f"{1 + mod(u, 'servos_max')} ao mesmo tempo).")]),
+                                                  f"{1 + mod(u, 'servos_max')} ao mesmo tempo)."),
+                                          _efeito("Entra provocando por 2 turnos: os inimigos atacam o servo.")]),
     "maldicao": hab("Maldição", 18, "todos", "Amaldiçoa todos: dano contínuo e -40% de defesa.", [
         Aplicar("maldito", 4, valor=Escala(minimo=3, poder=0.4), em="todos"),
         Dizer("Você pronuncia palavras que não deveriam existir. Seus inimigos murcham.", "magenta")]),

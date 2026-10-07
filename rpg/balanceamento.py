@@ -31,7 +31,7 @@ def fator_xp(diferenca):
 # basta no 9: sem isso, a defesa do herói (nível + equipamento) anulava o crescimento do ataque inimigo.
 DEFESA_FATOR = 6
 DEFESA_PENETRACAO = 100
-DEFESA_PENETRACAO_POR_NIVEL = 40  # por nível do inimigo acima do 1 (nível 1: 100; nível 11: 500)
+DEFESA_PENETRACAO_POR_NIVEL = 42  # por nível do inimigo acima do 1 (nível 1: 100; nível 11: 520)
 
 
 def fator_defesa(defesa, nivel_inimigo=None):
@@ -71,19 +71,19 @@ COMBUSTAO_POR_CAMADA = 0.2
 
 # Inimigos comuns (chefes e guardiões à parte): mais duros que o herói sem equipamento, para o
 # equipamento e os talentos serem vantagem e não atropelo. Multiplicam tudo, em todos os níveis (a base).
-INIMIGO_VIDA = 1.2
-INIMIGO_DANO = 1.2
+INIMIGO_VIDA = 1.45
+INIMIGO_DANO = 1.4
 
 # Quanto o inimigo cresce por nível acima do 1. Vida e poder (magia):
 #   1 + VIDA_POR_NIVEL × (nível − 1) + CURVA × (nível − CURVA_DESDE)^CURVA_EXPOENTE
 # A parte da CURVA é a que pesa no meio e no fim do jogo.
 INIMIGO_VIDA_POR_NIVEL = 0.2
-INIMIGO_CURVA = 0.1
-INIMIGO_CURVA_DESDE = 4
-INIMIGO_CURVA_EXPOENTE = 1.3
+INIMIGO_CURVA = 0.08
+INIMIGO_CURVA_DESDE = 3
+INIMIGO_CURVA_EXPOENTE = 1.1
 INIMIGO_ATK_BASE = 0.9            # o ataque físico da família × isto, antes do nível
 INIMIGO_ATK_POR_NIVEL = 0.2       # ataque: 1 + 0,2 × (nível − 1) + ATK_CURVA × (nível − CURVA_DESDE)^CURVA_EXPOENTE
-INIMIGO_ATK_CURVA = 0.1
+INIMIGO_ATK_CURVA = 0.16
 INIMIGO_DEFESA_POR_NIVEL = 0.15
 INIMIGO_AGI_A_CADA = 3            # +1 de agilidade a cada 3 níveis
 INIMIGO_XP_POR_NIVEL = 0.3
@@ -97,13 +97,13 @@ ANTAGONISTA_ATK = 0.85
 
 # Encontros. Nas regiões de nível até 2 (INICIO) e até 4 (MEIO), chance de o grupo ser um inimigo só; se não for,
 # no máximo GRUPO_MAX_CEDO. Um inimigo sozinho contra você e um companheiro morre antes de fazer estrago.
-GRUPO_SOZINHO_INICIO = 0.75
-GRUPO_SOZINHO_MEIO = 0.5
-GRUPO_MAX_CEDO = 2
+GRUPO_SOZINHO_INICIO = 0.4
+GRUPO_SOZINHO_MEIO = 0.15
+GRUPO_MAX_CEDO = 3
 # Comitiva: cada companheiro chama mais um inimigo com esta chance, e dá aos inimigos esta vida a mais.
-COMITIVA_ATRAI = 0.45
-COMITIVA_VIDA_INIMIGO = 0.15
-COMITIVA_VIDA_CHEFE = 0.2
+COMITIVA_ATRAI = 0.35
+COMITIVA_VIDA_INIMIGO = 0.3
+COMITIVA_VIDA_CHEFE = 0.3
 
 # Herói: cada classe e especialização declara o próprio crescimento por nível (`cresc` em classes.py);
 # isto multiplica todos eles. 0,8 = o herói cresce 20% menos por nível.
