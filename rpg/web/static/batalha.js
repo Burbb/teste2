@@ -167,7 +167,7 @@ const Batalha = (() => {
         const tem = heroi.flechas !== null && heroi.flechas !== undefined;
         fl.hidden = !tem;
         if (tem) {
-          const txt = heroi.flechas > 0 ? `${heroi.flechas}` : "sem flechas: só a adaga";
+          const txt = `${Math.max(0, heroi.flechas)}`;  // zerada fica vermelha; a explicação vai na dica
           if (fl.dataset.v !== txt) { fl.dataset.v = txt; fl.innerHTML = `${S("flecha", 1)}<b>${txt}</b>`; }
           fl.classList.toggle("poucas", heroi.flechas <= 8);
           fl.classList.toggle("zerada", heroi.flechas <= 0);

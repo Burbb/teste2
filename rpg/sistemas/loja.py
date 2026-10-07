@@ -34,9 +34,9 @@ class Loja:
                              "preco": self.preco(CONSUMIVEIS[k]["preco"]), "tem": j.consumiveis.get(k, 0)} for k in cons]
             + [{"id": "provisoes", "nome": "Provisões (1 dia)", "desc": "Pão duro, carne seca e um odre de água.",
                 "preco": self.preco(4), "tem": j.provisoes, "limite": sobrevivencia.MAX_PROVISOES - j.provisoes}]
-            + ([{"id": "flechas", "nome": "Feixe de 5 flechas", "desc": f"Flechas de freixo, pontas de ferro. A aljava leva {self.max_flechas()}.",
+            + ([{"id": "flechas", "nome": "Flecha", "desc": f"Flecha de freixo, ponta de ferro. A aljava leva {self.max_flechas()}.",
                  "preco": self.preco(PRECO_FLECHAS), "tem": j.flechas,
-                 "limite": (self.max_flechas() - j.flechas + 4) // 5}] if j.classe == "arqueiro" else []),
+                 "limite": self.max_flechas() - j.flechas}] if j.classe == "arqueiro" else []),
             "equipamentos": [item(it, self.preco(it["preco"])) for it in self.estoque()],
             "mochila": [dict(item(it, it["preco"] // 2), usavel=self.pode_usar(it)) for it in j.mochila],
         }
@@ -44,7 +44,7 @@ class Loja:
     SUPRIMENTOS = ("tocha", "bandagem", "unguento", "pocao_vida", "tonico", "antidoto", "bomba_fumaca", "pena_fenix")
 
     def preco_suprimento(self, k):
-        """Preço (já com a reputação) de um consumível, de um dia de provisões ou de um feixe de flechas."""
+        """Preço (já com a reputação) de um consumível, de um dia de provisões ou de uma flecha."""
         base = PRECO_FLECHAS if k == "flechas" else 4 if k == "provisoes" else CONSUMIVEIS[k]["preco"]
         return self.preco(base)
 
@@ -63,7 +63,7 @@ class Loja:
                 self.dizer("Você não consegue carregar mais comida.", "vermelho")
                 return False
         if k == "flechas":
-            qtd = min(qtd, (self.max_flechas() - j.flechas + 4) // 5)
+            qtd = min(qtd, self.max_flechas() - j.flechas)
             if qtd <= 0:
                 self.dizer("Sua aljava já está cheia.", "vermelho")
                 return False
@@ -75,7 +75,7 @@ class Loja:
         categoria = k if k in ("provisoes", "flechas") else "consumivel"
         registrar(self, "compra", item=k, categoria=categoria, qtd=qtd, preco=preco * qtd)
         if k == "flechas":
-            self.dar_flechas(5 * qtd)
+            self.dar_flechas(qtd)
         elif k == "provisoes":
             self.dar_provisoes(qtd)
         else:
@@ -136,8 +136,8 @@ class Loja:
             opcoes.append((f"Provisões para 1 dia — {self.preco_suprimento('provisoes')} ouro (você tem {j.provisoes}/"
                            f"{sobrevivencia.MAX_PROVISOES})", ("suprimento", "provisoes")))
             if j.classe == "arqueiro":
-                opcoes.append((f"Feixe de 5 flechas — {self.preco_suprimento('flechas')} ouro (você tem {j.flechas}/"
-                               f"{self.max_flechas()})", ("suprimento", "flechas")))
+                opcoes.append((f"5 flechas — {self.preco_suprimento('flechas')} ouro cada (você tem "
+                               f"{j.flechas}/{self.max_flechas()})", ("suprimento", "flechas")))
             for it in a_venda:
                 opcoes.append((f"{itens.rotulo(it)} [{NOMES_SLOT[it['slot']]}] {descrever_bonus(it['bonus'], j.nome_recurso)} — "
                                f"{self.preco(it['preco'])} ouro", ("equip", it)))
@@ -150,6 +150,8 @@ class Loja:
                 self.vender()
             elif op[0] == "equip":
                 self.comprar_equipamento(op[1], a_venda)
+            elif op[1] == "flechas":  # no terminal, flecha a flecha seria cansativo: cada escolha leva 5
+                self.comprar_suprimento("flechas", 5)
             else:
                 self.comprar_suprimento(op[1])
 

@@ -59,7 +59,7 @@ ALJAVA = 30                   # flechas que cabem
 ALJAVA_POR_TALENTO = 5        # Aljava Funda
 RECOLHER_FLECHA = 0.35        # chance de recolher cada flecha depois da vitória
 RECOLHER_FLECHA_TALENTO = 0.15
-PRECO_FLECHAS = 7             # feixe de 5
+PRECO_FLECHAS = 1.4           # por flecha (o antigo feixe de 5 custava 7); com a reputação, arredonda
 
 # ---------------------------------------------------------------- descanso e consumíveis
 ACAMPAR_VIDA = 0.3
