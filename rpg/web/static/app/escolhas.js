@@ -257,6 +257,7 @@ document.addEventListener("contextmenu", (ev) => {
 function rodaEl() { return document.getElementById("roda"); }
 let janelaAberta = null;  // { fechar } da janelinha de habilidades/itens
 function limparRoda() {
+  previaAlvos(null);
   const r = rodaEl();
   if (r && r.childElementCount) { Telas.esconderDica(); r.replaceChildren(); }
   janelaAberta = null;
@@ -362,12 +363,21 @@ function arcoDeBotoes(botoes) {
 function linhaHabilidade(h, aoClicar) {
   const [ic, fam] = HAB_ICONE[h.habilidade] || ["estrela", "arcano"];
   const custo = h.custo ? `${spr(RECURSO_ICONE[h.recurso] || "estrela", 1)}${h.custo}` : '<span class="gratis">grátis</span>';
-  return { icone: spr(ic, 2), fam, nome: h.nome, info: custo + (h.flechas ? ` ${spr("flecha", 1)}${h.flechas}` : ""), dica: dicaHabilidade(h),
+  return { icone: spr(ic, 2), fam, nome: h.nome, alvo: h.alvo_tipo, info: custo + (h.flechas ? ` ${spr("flecha", 1)}${h.flechas}` : ""), dica: dicaHabilidade(h),
     bloqueio: h.pode ? null : (h.motivo || "Indisponível"), hab: h.habilidade, aoClicar };
 }
 function dicaHabilidade(h) {
   return `<b>${esc(h.nome)}</b><div class="tipo">${h.custo ? `${h.custo} de ${esc(h.recurso)}` : "Sem custo"}${h.flechas ? ` · ${h.flechas} flecha${h.flechas > 1 ? "s" : ""}` : ""} · alvo: ${ALVO_TXT[h.alvo_tipo] || "—"}</div>
     <div class="bonus">${esc(h.desc)}</div>${danoGrimorio(h.habilidade)}${h.pode ? "" : `<div class="pior">${esc(h.motivo || "Indisponível")}</div>`}`;
+}
+
+/** Prévia de quem a habilidade atinge: um inimigo (todos acendem de leve, você escolhe depois), todos, ou você. */
+function previaAlvos(tipo) {
+  document.querySelectorAll("#batalha .carta.previa").forEach((c) => c.classList.remove("previa", "previa-area"));
+  if (!tipo) return;
+  const cartas = tipo === "proprio" ? document.querySelectorAll('#batalha .carta[data-uid="j"]')
+    : document.querySelectorAll("#batalha .carta.inimigo:not(.morta)");
+  cartas.forEach((c) => c.classList.add("previa", ...(tipo === "todos" ? ["previa-area"] : [])));
 }
 
 /** A janelinha ao lado dos botões: uma linha por habilidade ou item (ícone, nome, custo). Teclas 1–9 escolhem. */
@@ -388,7 +398,11 @@ function abrirJanela(ancora, titulo, linhas, aoFechar) {
     b.innerHTML = `<span class="rj-icone">${l.icone}</span><span class="rj-nome">${esc(l.nome)}</span><span class="rj-info">${l.info || ""}</span>${i < 9 ? `<span class="tecla">${i + 1}</span>` : ""}`;
     if (l.dica) b.dataset.dica = Telas.guardarDica(l.dica);
     const usar = () => (l.bloqueio ? tremerNao(b, l.bloqueio) : l.aoClicar());
-    b.addEventListener("click", (ev) => { ev.stopPropagation(); usar(); });
+    b.addEventListener("click", (ev) => { ev.stopPropagation(); previaAlvos(null); usar(); });
+    if (l.alvo) {  // passar o mouse mostra quem a habilidade atingiria
+      b.addEventListener("mouseenter", () => previaAlvos(l.alvo));
+      b.addEventListener("mouseleave", () => previaAlvos(null));
+    }
     pergunta.teclasNum.push(usar);
     li.appendChild(b);
     lista.appendChild(li);
@@ -396,16 +410,17 @@ function abrirJanela(ancora, titulo, linhas, aoFechar) {
   j.appendChild(lista);
   roda.appendChild(j);
   ancora.classList.add("ativo");
-  // Ao lado dos botões, na altura da sua carta, sem sair da tela.
+  // Desce do botão para baixo da arena, por cima do texto: os alvos ficam à vista enquanto você escolhe.
   const g = geometriaHeroi();
-  const x = ancora.offsetLeft + ancora.offsetWidth + 10;
-  j.style.left = Math.min(x, g.W - j.offsetWidth - 6) + "px";
+  const x = ancora.offsetLeft - 8;
+  j.style.left = Math.max(6, Math.min(x, g.W - j.offsetWidth - 6)) + "px";
   const topoTela = j.offsetParent.getBoundingClientRect().top;
   const teto = (document.getElementById("topo")?.getBoundingClientRect().bottom || 0) + 6 - topoTela;  // nunca sob o cabeçalho
-  const y = Math.max(teto, Math.min(g.y + g.h / 2 - j.offsetHeight / 2, innerHeight - topoTela - j.offsetHeight - 8));
+  const y = Math.max(teto, Math.min(g.H + 4, innerHeight - topoTela - j.offsetHeight - 8));
   j.style.top = y + "px";
   const fechar = () => {
     Telas.esconderDica();
+    previaAlvos(null);
     j.remove();
     ancora.classList.remove("ativo");
     if (pergunta) pergunta.teclasNum = teclasAntes;

@@ -75,7 +75,7 @@ body.em-combate #hud { position: relative; z-index: 8; }     /* a janelinha pode
 /* A janelinha de habilidades e itens. */
 .roda-janela { position: absolute; z-index: 2; width: 250px; padding: 8px 8px 9px; border-radius: 12px; background: rgba(15, 11, 9, 0.97); border: 3px solid #8a6a14;
   box-shadow: 0 0 0 2px #000, 0 12px 30px rgba(0, 0, 0, 0.65); animation: janela-surge .2s cubic-bezier(.2, .9, .3, 1.2); }
-@keyframes janela-surge { from { opacity: 0; transform: translateX(-10px) scale(.94); } }
+@keyframes janela-surge { from { opacity: 0; transform: translateY(-10px) scale(.96); } }
 .rj-titulo { display: flex; align-items: center; justify-content: space-between; margin: 0 2px 6px 4px; font-family: var(--cabeca); font-size: 16px; color: var(--ouro); }
 .rj-fechar { width: 24px; height: 24px; padding: 0; border-radius: 6px; font: inherit; font-size: 18px; line-height: 1; color: var(--tinta-2); background: #241a12; border: 1px solid #4a3a26; cursor: pointer; }
 .rj-fechar:hover { color: #fff; border-color: var(--ouro); }
@@ -107,3 +107,7 @@ body.recurso-vigor .rj-linha .rj-info { color: #ffc98a; } body.recurso-foco .rj-
 .roda-mira b { color: var(--ouro); }
 .mira-voltar { font: inherit; font-size: 13px; color: var(--tinta); background: #241a12; border: 1px solid #4a3a26; border-radius: 999px; padding: 2px 10px; cursor: pointer; }
 .mira-voltar:hover { border-color: var(--ouro); }
+/* Prévia: ao passar o mouse numa habilidade, quem ela atingiria acende de leve (em área, todos pulsam juntos). */
+.carta.previa { box-shadow: 0 0 0 2px #000, 0 0 0 4px rgba(242, 201, 76, 0.6), 0 0 14px rgba(242, 201, 76, 0.35); }
+.carta.previa-area { animation: previa-area 0.9s ease-in-out infinite; }
+@keyframes previa-area { 50% { box-shadow: 0 0 0 2px #000, 0 0 0 4px rgba(255, 140, 60, 0.85), 0 0 18px rgba(255, 140, 60, 0.5); } }

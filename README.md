@@ -173,7 +173,8 @@ na interface miúda; **Jersey 15** nos números. O botão "Fonte" no topo volta 
   existe com a mochila cheia.
 - **Sua vez na luta:** sua carta vem para a frente e cresce, e as ações surgem em arco ao lado
   dela (Atacar, Habilidades, Itens, Fugir, teclas 1–4). Habilidades e Itens abrem uma janelinha
-  com ícone, nome e custo de cada um (passe o mouse para ver o que fazem e o dano). Escolhida a
+  logo abaixo da arena (os alvos ficam à vista), com ícone, nome e custo; passar o mouse mostra o que
+  faz, o dano e acende quem seria atingido. Escolhida a
   habilidade, os inimigos acendem: clique no alvo. Esc ou botão direito fecham a janelinha e
   desfazem a escolha antes de gastar qualquer coisa.
 - **Grimório (P):** um livro com cada habilidade e o ataque básico: o dano de agora (faixa,
