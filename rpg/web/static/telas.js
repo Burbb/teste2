@@ -76,7 +76,7 @@ const Telas = (() => {
     document.querySelectorAll("#arvore .no-talento").forEach((el) => {
       const n = a.nos.find((x) => x.id === el.dataset.id);
       el.addEventListener("mouseenter", () => {
-        info.innerHTML = `<b>${h(n.nome)}</b><div class="r">Grau ${n.rank} de ${n.max}${n.spec ? " · " + h(n.spec) : ""}</div><div>${h(n.desc)}</div>` +
+        info.innerHTML = `<b>${h(n.nome)}</b><div class="r">Grau ${n.rank} de ${n.max}${n.spec ? " · " + h(n.spec) : ""}</div><div>${Realce.texto(n.desc)}</div>` +
           (n.motivo ? `<div class="req">${h(n.motivo[0].toUpperCase() + n.motivo.slice(1))}</div>` : "") +
           (n.estado === "comprado" ? '<div class="acao">Aprendido por completo.</div>' :
             n.estado === "disponivel" ? (a.pontos ? '<div class="acao">Clique para aprender (1 ponto).</div>' : '<div class="req">Sem pontos de talento.</div>') : "");
@@ -311,7 +311,7 @@ const Telas = (() => {
         ? `<div class="slot-px celula r-${h(it.raridade)}${it.classe && it.classe !== p.classe ? " inutil" : ""}" draggable="true" data-mochila="${i}" ${dicaItem(it, "Arraste para o corpo ou dê dois cliques para equipar.")}>${S(iconeItem(it), 2)}</div>`
         : '<div class="slot-px celula vazia"></div>');
     }
-    const bolsa = p.bolsa.map((b) => `<div class="slot-px clicavel" data-usar="${h(b.id)}" ${dica(`<b>${h(b.nome)}</b><div>${h(b.desc)}</div>${b.id === "tocha" ? "" : '<div class="rodape">Clique para usar.</div>'}`)}>${S(ICONE_ITEM[b.id] || "pocao", 2)}<span class="qtd">${b.qtd}</span></div>`).join("");
+    const bolsa = p.bolsa.map((b) => `<div class="slot-px clicavel" data-usar="${h(b.id)}" ${dica(`<b>${h(b.nome)}</b><div>${Realce.texto(b.desc)}</div>${b.id === "tocha" ? "" : '<div class="rodape">Clique para usar.</div>'}`)}>${S(ICONE_ITEM[b.id] || "pocao", 2)}<span class="qtd">${b.qtd}</span></div>`).join("");
     return `<div class="tela inventario">
       <div class="boneco">${espacos}<div class="boneco-retrato">${S(p.classe, 6)}</div></div>
       <div class="inv-lado">
@@ -405,18 +405,18 @@ const Telas = (() => {
       <ul class="grimorio-lista">${todas.map((x) => `<li><button type="button" class="grimorio-item${x.id === paginaGrimorio ? " aberto" : ""}" data-pagina="${h(x.id)}">
         <span class="gi-icone">${S(icone(x), 2)}</span><span class="gi-nome">${h(x.nome)}</span><span class="gi-custo">${custo(x)}</span></button></li>`).join("")}</ul>
       <div class="grimorio-atributos">${Object.entries(g.atributos).map(([k, v]) => `<span><small>${h(k)}</small><b>${v}</b></span>`).join("")}</div>
-      <ul class="grimorio-gerais">${g.gerais.map((l) => `<li>${h(l)}</li>`).join("")}</ul>`;
+      <ul class="grimorio-gerais">${g.gerais.map((l) => `<li>${Realce.texto(l)}</li>`).join("")}</ul>`;
     const x = todas.find((t) => t.id === paginaGrimorio);
-    const linhas = x.linhas.map((l) => l.tipo === "efeito" ? `<li class="g-efeito">${h(l.texto)}</li>` : `
+    const linhas = x.linhas.map((l) => l.tipo === "efeito" ? `<li class="g-efeito">${Realce.texto(l.texto)}</li>` : `
       <li class="g-dano"><div class="g-rotulo">${h(l.rotulo)} <i style="color:${COR_ELEMENTO[l.elemento] || "#e8dcc0"}">${h(l.elemento)}</i></div>
-        <div class="g-faixa"><b>${l.min}–${l.max}</b><span>crítico <b>${l.critico}</b> · ${l.chance_critico}% de chance</span></div>
+        <div class="g-faixa"><b>${l.min}–${l.max}</b><span class="rx rx-crit">crítico <b>${l.critico}</b> · ${l.chance_critico}% de chance</span></div>
         <div class="g-formula">${h(l.formula)}</div>
         <div class="g-escala">${l.escala.map((e) => `<span>▲ ${h(e)}</span>`).join("")}</div>
         ${l.nota ? `<div class="g-nota">${h(l.nota)}</div>` : ""}</li>`).join("");
     const det = document.getElementById("grimorio-detalhe");
     det.innerHTML = `<div class="g-topo"><span class="g-icone">${S(icone(x), 4)}</span>
         <div><b class="g-nome">${h(x.nome)}</b><div class="g-meta">${custo(x)}${x.flechas ? ` · ${x.flechas} flecha${x.flechas > 1 ? "s" : ""}` : ""} · Alvo: ${h(x.alvo)}</div></div></div>
-      <p class="g-desc">${h(x.desc)}</p><ul class="g-linhas">${linhas}</ul>
+      <p class="g-desc">${Realce.texto(x.desc)}</p><ul class="g-linhas">${linhas}</ul>
       <p class="g-rodape">Números antes da defesa do inimigo e de efeitos do momento (fortalecido, clima, alvo marcado).</p>`;
     det.classList.remove("virando"); void det.offsetWidth; det.classList.add("virando");
     const caixa = document.getElementById("sobre-grimorio");
@@ -491,7 +491,7 @@ const Telas = (() => {
       const q = Math.max(1, Math.min(qtdLoja[c.id] || 1, max || 1));
       const caro = max < 1;
       const icone = c.id === "provisoes" ? "pernil" : c.id === "flechas" ? "aljava" : (ICONE_ITEM[c.id] || "pocao");
-      return `<div role="button" tabindex="0" class="mercadoria suprimento${caro ? " caro" : ""}" data-comprar="${h(c.id)}" data-preco="${c.preco}" data-max="${max}" ${dica(`<b>${h(c.nome)}</b><div>${h(c.desc)}</div><div class="rodape">${caro ? (c.limite === 0 ? "Você não carrega mais." : "Ouro insuficiente.") : "Escolha a quantidade e clique para comprar. Shift+clique compra 5."}</div>`)}>
+      return `<div role="button" tabindex="0" class="mercadoria suprimento${caro ? " caro" : ""}" data-comprar="${h(c.id)}" data-preco="${c.preco}" data-max="${max}" ${dica(`<b>${h(c.nome)}</b><div>${Realce.texto(c.desc)}</div><div class="rodape">${caro ? (c.limite === 0 ? "Você não carrega mais." : "Ouro insuficiente.") : "Escolha a quantidade e clique para comprar. Shift+clique compra 5."}</div>`)}>
         <span class="slot-px">${S(icone, 2)}${c.tem ? `<span class="qtd">${c.tem}</span>` : ""}</span>
         <span class="merc-nome">${h(c.nome)}</span>
         <span class="preco">${S("moeda", 1)}<span class="total">${c.preco * q}</span></span>
@@ -948,7 +948,7 @@ const Telas = (() => {
     if (m.tipo === "vitoria") {
       if (instantaneo) return Promise.resolve();
       App.som("vitoria");
-      faixa(d.chefe ? "Guardião derrotado!" : "Vitória", d.roubo ? `+${d.roubo} de vida roubada nesta luta` : null, "espada");
+      faixa(d.chefe ? "Guardião derrotado!" : "Vitória", null, "espada");
       particulas(["#f2c94c", "#fff3a0", "#d4af37"], d.chefe ? 70 : 30);
       return new Promise((r) => setTimeout(r, d.chefe ? 1500 : 1000));
     }
@@ -964,7 +964,7 @@ const Telas = (() => {
       const icones = { Vida: "coracao", Ataque: "espada", Defesa: "escudo", Agilidade: "folha", Poder: "chama", Mana: "pocao_azul", Vigor: "chama", Foco: "olho" };
       const ganhos = Object.entries(d.ganhos).map(([k, v], i) => `<span class="ganho" style="animation-delay:${0.75 + i * 0.12}s">${S(icones[k] || "estrela", 1)}<b class="conta" data-alvo="${v}" data-atraso="${750 + i * 120}">+0</b>${h(k)}</span>`).join("");
       const atraso = 0.75 + Object.keys(d.ganhos).length * 0.12;
-      const habs = d.habilidades.map((x, i) => `<div class="habilidade-nova" style="animation-delay:${atraso + 0.35 + i * 0.2}s"><span class="rotulo-festa">nova habilidade</span><b>${h(x.nome)}</b>${h(x.desc)}</div>`).join("");
+      const habs = d.habilidades.map((x, i) => `<div class="habilidade-nova" style="animation-delay:${atraso + 0.35 + i * 0.2}s"><span class="rotulo-festa">nova habilidade</span><b>${h(x.nome)}</b>${Realce.texto(x.desc)}</div>`).join("");
       html = `<div class="festa festa-nivel moldura"><div class="raios"></div><div class="anel"></div>
         <div class="rotulo-festa">você subiu de nível</div>
         <div class="nivel-bloco"><span class="nivel-palavra">Nível</span><span class="nivel-numero">${d.nivel}</span></div>
@@ -984,7 +984,7 @@ const Telas = (() => {
       App.som("fanfarra");
       particulas(["#f2c94c", "#ff4020", "#fff3a0"], 110);
     } else if (m.tipo === "spec") {
-      const habs = d.habilidades.map((x, i) => `<div class="habilidade-nova" style="animation-delay:${0.6 + i * 0.25}s"><span class="rotulo-festa">nova habilidade</span><b>${h(x.nome)}</b>${h(x.desc)}</div>`).join("");
+      const habs = d.habilidades.map((x, i) => `<div class="habilidade-nova" style="animation-delay:${0.6 + i * 0.25}s"><span class="rotulo-festa">nova habilidade</span><b>${h(x.nome)}</b>${Realce.texto(x.desc)}</div>`).join("");
       html = `<div class="festa moldura"><div class="rotulo-festa">você agora é</div><div class="grande arcano">${h(d.nome)}</div>
         <div class="texto-festa">${h(d.desc)}</div>${habs}<button class="continuar" type="button">Continuar <span>▸</span></button></div>`;
       App.som("fanfarra");

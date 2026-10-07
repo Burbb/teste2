@@ -49,8 +49,7 @@ def explicar_atributos(g):
               f"Cada ponto a mais reduz cerca de {_pct(reducao_mais)} a mais (o ganho diminui aos poucos).",
               f"Testes de Vontade: {g.mod_teste('vontade'):+d} no d20."]
     agilidade = [f"Chance de se esquivar de um golpe: {_pct(esquiva)} (máximo 40% só pela Agilidade; com habilidades, até 60%).",
-                 f"Chance de acerto crítico: {_pct(critico)} em cada golpe comum (máximo 60%).",
-                 *[f"Além disso — {l}" for l in grimorio.fontes_critico(j)],
+                 f"Chance de acerto crítico: {_pct(critico)} (máximo 60%).",
                  "Mais fácil fugir de uma luta.",
                  f"Testes de Destreza: {g.mod_teste('destreza'):+d}, Percepção: {g.mod_teste('percepcao'):+d}.",
                  "+1 de Agilidade = +1,2% de esquiva e +1% de crítico."]

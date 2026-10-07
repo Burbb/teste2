@@ -81,9 +81,8 @@ function mostrarOpcoes(m) {
   promptEl.innerHTML = "";
   pergunta = { id: m.id, tipo: "opcoes", n: m.opcoes.length, opcoes: m.opcoes, numeros: [], letras: {} };
   if (m.opcoes.some((o) => o.meta && o.meta.talento) && Telas.abrirTalentos(m)) {
-    const b = el("button", "continuar", "Abrir a árvore de talentos <span>▸</span>");
-    b.addEventListener("click", (ev) => { ev.stopPropagation(); Telas.abrirTalentos(m); });
-    promptEl.appendChild(b);
+    // A árvore abre por cima, como o Grimório: nada muda na página do lugar. Esc ou o ✕ fecham (= Voltar).
+    pergunta.voltar = m.opcoes.findIndex(ehVoltar);
     return;
   }
   Telas.fecharTalentos();
@@ -268,14 +267,14 @@ function cartaAcao(o, i, m, pos) {
     rodape = `<span class="acao-custo">${custo}</span><span class="acao-alvo">${ALVO_TXT[meta.alvo_tipo] || ""}</span>`;
     if (!meta.pode) bloqueio = meta.motivo || "Indisponível";
     dicaHtml = `<b>${esc(meta.nome)}</b><div class="tipo">${meta.custo ? `${meta.custo} de ${esc(meta.recurso)}` : "Sem custo"}${meta.flechas ? ` · ${meta.flechas} flecha${meta.flechas > 1 ? "s" : ""}` : ""} · Alvo: ${ALVO_TXT[meta.alvo_tipo] || "—"}</div>
-      <div class="bonus">${esc(meta.desc)}</div>${danoGrimorio(meta.habilidade)}${bloqueio ? `<div class="pior">${esc(bloqueio)}</div>` : ""}`;
+      <div class="bonus">${Realce.texto(meta.desc)}</div>${danoGrimorio(meta.habilidade)}${bloqueio ? `<div class="pior">${esc(bloqueio)}</div>` : ""}`;
   } else if (meta.usar_item) {
     b.classList.add("el-cura");
     icone = spr(Telas.ICONE_ITEM[meta.usar_item] || "pocao", 2);
     nome = meta.nome;
     rodape = `<span class="acao-custo"><b>×${meta.qtd}</b></span><span class="acao-alvo">gasta o turno</span>`;
     if (meta.motivo) bloqueio = meta.motivo;
-    dicaHtml = `<b>${esc(meta.nome)}</b><div class="tipo">Você tem ${meta.qtd}</div><div class="bonus">${esc(meta.desc)}</div>${bloqueio ? `<div class="pior">${esc(bloqueio)}</div>` : ""}`;
+    dicaHtml = `<b>${esc(meta.nome)}</b><div class="tipo">Você tem ${meta.qtd}</div><div class="bonus">${Realce.texto(meta.desc)}</div>${bloqueio ? `<div class="pior">${esc(bloqueio)}</div>` : ""}`;
   } else {
     const it = meta.equip;
     b.classList.add("el-fisico", "troca");
@@ -443,12 +442,12 @@ function linhaItem(meta, aoClicar) {
       dica: Telas.htmlItem(meta.equip, "Trocar de arma no meio da luta gasta o seu turno."), aoClicar };
   }
   return { icone: spr(Telas.ICONE_ITEM[meta.usar_item] || "pocao", 2), fam: "cura", nome: meta.nome, info: `×${meta.qtd}`, slot: "item",
-    dica: `<b>${esc(meta.nome)}</b><div class="tipo">Você tem ${meta.qtd} · gasta o turno</div><div class="bonus">${esc(meta.desc)}</div>`,
+    dica: `<b>${esc(meta.nome)}</b><div class="tipo">Você tem ${meta.qtd} · gasta o turno</div><div class="bonus">${Realce.texto(meta.desc)}</div>`,
     bloqueio: meta.motivo, aoClicar };
 }
 function dicaHabilidade(h) {
   return `<b>${esc(h.nome)}</b><div class="tipo">${h.custo ? `${h.custo} de ${esc(h.recurso)}` : "Sem custo"}${h.flechas ? ` · ${h.flechas} flecha${h.flechas > 1 ? "s" : ""}` : ""} · Alvo: ${ALVO_TXT[h.alvo_tipo] || "—"}</div>
-    <div class="bonus">${esc(h.desc)}</div>${danoGrimorio(h.habilidade)}${h.pode ? "" : `<div class="pior">${esc(h.motivo || "Indisponível")}</div>`}`;
+    <div class="bonus">${Realce.texto(h.desc)}</div>${danoGrimorio(h.habilidade)}${h.pode ? "" : `<div class="pior">${esc(h.motivo || "Indisponível")}</div>`}`;
 }
 
 /** Prévia de quem a habilidade atinge: um inimigo (todos acendem de leve, você escolhe depois), todos, ou você. */

@@ -108,7 +108,7 @@ async function texto(m) {
   }
   if (m.detalhe) {
     const p = el("p", "detalhe " + (COR_PROSA[(m.cor || "").split("+")[0]] || ""));
-    p.textContent = m.texto.replace(/\[[^\]]+\]\s*/g, "");
+    p.innerHTML = Realce.texto(m.texto.replace(/\[[^\]]+\]\s*/g, ""));  // registro da luta: dano, fogo, crítico em cor
     anexar(p);
     historico("", m.texto);
     if (!instantaneo()) await espera(ritmo(160));

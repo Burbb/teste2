@@ -53,10 +53,11 @@ class Progressao:
     def menu_talentos(self):
         while True:
             j = self.j
-            self.ui.cena("Talentos", f"{j.nome_classe} · pontos disponíveis: {j.pontos_talento}", "menu")
             if getattr(self.ui, "web", False):
+                # na tela gráfica a árvore abre por cima, como o Grimório: a página do lugar fica como estava
                 self.ui.arvore_talentos(talentos.dados_arvore(j))
             else:
+                self.ui.cena("Talentos", f"{j.nome_classe} · pontos disponíveis: {j.pontos_talento}", "menu")
                 self.ui.desenhar(talentos.desenhar(j))
                 self.dizer("verde = aprendido · amarelo = disponível · cinza = bloqueado", "cinza")
             opcoes = []

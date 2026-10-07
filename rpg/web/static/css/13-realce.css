@@ -1,0 +1,38 @@
+/* Realce de termos de jogo nos textos de regra (realce.js): cada efeito com a sua cor, como nos RPGs atuais.
+   Só a cor e um peso a mais; o texto continua o mesmo, para quem não distingue cores. */
+.rx { font-weight: 700; }
+.rx-sangue { color: #ff6b6b; }
+.rx-fogo { color: #ffa04d; }
+.rx-gelo { color: #82d8ff; }
+.rx-veneno { color: #a6dc55; }
+.rx-sombra { color: #bb94ff; }
+.rx-sagrado { color: #ffe6a0; }
+.rx-cura { color: #7fe07a; }
+.rx-crit { color: #ffd447; }
+.rx-mana { color: #8fb4ff; }
+.rx-vigor { color: #ffb866; }
+.rx-foco { color: #b5e8b0; }
+.rx-esquiva { color: #9fe6d8; }
+.rx-protecao { color: #9fc3ea; }
+.rx-controle { color: #e0b3ff; }
+.rx-dano { color: #fff4dc; }
+.rx-num { color: #fff4dc; }
+.rx-crit b { color: inherit; }
+
+/* No pergaminho do Grimório (fundo claro), as mesmas cores em tinta escura; a caixa de dano, escura, fica com as vivas. */
+:is(.g-desc, .g-efeito, .grimorio-gerais) .rx-sangue { color: #a3221e; }
+:is(.g-desc, .g-efeito, .grimorio-gerais) .rx-fogo { color: #b0520c; }
+:is(.g-desc, .g-efeito, .grimorio-gerais) .rx-gelo { color: #1d6a94; }
+:is(.g-desc, .g-efeito, .grimorio-gerais) .rx-veneno { color: #4a7512; }
+:is(.g-desc, .g-efeito, .grimorio-gerais) .rx-sombra { color: #65399e; }
+:is(.g-desc, .g-efeito, .grimorio-gerais) .rx-sagrado { color: #8a6508; }
+:is(.g-desc, .g-efeito, .grimorio-gerais) .rx-cura { color: #2b7424; }
+:is(.g-desc, .g-efeito, .grimorio-gerais) .rx-crit { color: #946a00; }
+:is(.g-desc, .g-efeito, .grimorio-gerais) .rx-mana { color: #2c50a8; }
+:is(.g-desc, .g-efeito, .grimorio-gerais) .rx-vigor { color: #a3560e; }
+:is(.g-desc, .g-efeito, .grimorio-gerais) .rx-foco { color: #36743a; }
+:is(.g-desc, .g-efeito, .grimorio-gerais) .rx-esquiva { color: #216e60; }
+:is(.g-desc, .g-efeito, .grimorio-gerais) .rx-protecao { color: #355a84; }
+:is(.g-desc, .g-efeito, .grimorio-gerais) .rx-controle { color: #723a96; }
+:is(.g-desc, .g-efeito, .grimorio-gerais) .rx-dano { color: #2a1708; }
+:is(.g-desc, .g-efeito, .grimorio-gerais) .rx-num { color: #2a1708; }

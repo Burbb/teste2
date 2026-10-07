@@ -87,7 +87,6 @@ class Combate:
         self._serie = _SERIE[0]
         self._fala_turno = -1
         self._cura_j = 0
-        self._roubo_j = 0
         self._salva = self._salva_textos = None
         self._nomear()
         for e in self.inimigos:
@@ -180,8 +179,6 @@ class Combate:
         if valor and valor > 0:
             if c is self.j:
                 self._cura_j += valor
-                if tipo == "roubo":
-                    self._roubo_j += valor
             self.lance("cura", em=self.uid(c), de=self.uid(de), valor=int(valor), modo=tipo, rotulo=rotulo,
                        fonte=self.uid(fonte), hp=max(0, c.hp), max_hp=c.max_hp)
 
@@ -941,11 +938,7 @@ class Combate:
             ouro = sum(e.ouro + e.roubado for e in derrotados)
             if any(e.roubado for e in derrotados):
                 self.dizer("Você recupera o ouro que lhe foi roubado.", "verde")
-            if self._roubo_j:
-                # a build de roubo de vida precisa se ver funcionando: o total da luta, à vista
-                self.dizer(f"Você roubou {self._roubo_j} de vida nesta luta.", "verde")
-            g.ui.celebrar("vitoria", {"inimigos": len(derrotados), "chefe": any(e.chefe for e in derrotados),
-                                      "roubo": self._roubo_j})
+            g.ui.celebrar("vitoria", {"inimigos": len(derrotados), "chefe": any(e.chefe for e in derrotados)})
             g.ganhar_ouro(ouro)
             g.registrar_abates(derrotados)
             g.saque_de_combate(derrotados)

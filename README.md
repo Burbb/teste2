@@ -189,12 +189,17 @@ na interface miúda; **Jersey 15** nos números. O botão "Fonte" no topo volta 
   **Você**, **Aliado único**, **Todos os aliados**.
 - **Roubo de vida que se vê:** gotas de sangue saem de quem apanhou e voam até quem bateu; só então
   a vida sobe, com `+N ♥` em verde e o nome da fonte (Sede Insaciável, Sede de Sangue, Drenar
-  Vida). No fim da luta: "Você roubou N de vida nesta luta", também na faixa de Vitória. O roubo
-  passivo arredonda (e é pelo menos 1): antes, golpes pequenos truncavam para zero.
+  Vida). O roubo passivo arredonda (e é pelo menos 1): antes, golpes pequenos truncavam para zero.
 - **Crítico explicado:** o crítico garantido diz de onde veio (`CRÍTICO (Tiro de Abertura)!`,
-  Iniciativa, Furtivo), com um selo dourado na carta. A dica da Agilidade e o Grimório listam o
-  que soma além da ficha (Tiro Certeiro +30%, Execução +20%, primeiro tiro garantido...), e o
-  registro da partida separa críticos garantidos dos da sorte.
+  Iniciativa, Furtivo), com um selo dourado na carta. O Grimório lista o que soma além da ficha
+  (Tiro Certeiro +30%, Execução +20%, primeiro tiro garantido...), e o registro da partida separa
+  críticos garantidos dos da sorte.
+- **Cores nos textos de regra:** como nos RPGs atuais, dicas, Grimório, talentos e o registro da
+  luta destacam cada termo com a sua cor: fogo em laranja, sangramento e roubo de vida em
+  vermelho, cura em verde, crítico em amarelo, gelo em azul-claro, veneno em verde-ácido, sombra em
+  roxo, mana em azul, esquiva e proteção em tons frios, e os números de dano em negrito. No
+  pergaminho do Grimório, as mesmas cores em tinta escura. A prosa da história fica sem realce.
+- **Talentos por cima:** a árvore abre sobre a página, como o Grimório, sem trocar a cena de trás.
 - **Ritmo do golpe:** quem ataca volta para o lugar logo depois do impacto, sem ficar parado à
   frente esperando o roubo de vida ou o contra-ataque; o contra-ataque também volta inteiro.
 - **Grimório (P):** um livro com cada habilidade e o ataque básico: o dano de agora (faixa,
@@ -430,8 +435,9 @@ rpg/
     estado.py      fotografia do jogo em JSON (herói, mapa, combate) para os painéis
     servidor.py    HTTP + SSE em 127.0.0.1, com token por sessão
     static/
-      css/         estilos por componente (01-base ... 12-acoes-combate), carregados nessa ordem
+      css/         estilos por componente (01-base ... 13-realce), carregados nessa ordem
       app/         a aplicação: nucleo (conexão e fila), pagina, escolhas, paineis, controles
+      realce.js    cores dos termos de jogo nos textos de regra
       batalha.js   palco da luta, balões e selos · telas.js talentos, fichas, mercado, fogueira
       sprites-dados.js os desenhos em pixel art · sprites.js quem os desenha
       vista.js, mapa.js, som.js, fontes OFL

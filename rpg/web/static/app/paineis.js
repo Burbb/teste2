@@ -136,7 +136,7 @@ function desenharHeroi(h) {
   const feridas = h.ferimentos.length ? h.ferimentos.map((f) => `<div class="ferimento${f.aberto ? " aberto" : ""}" ${Telas.dica(`<b>${esc(f.nome)}</b><div class="tipo">${f.dias ? `${f.dias} dia${f.dias === 1 ? "" : "s"} para sarar` : "não sara sozinha"}${f.aberto ? " · ferida aberta" : ""}</div>${(f.explica || []).map((l, i) => `<div class="${i ? "" : "bonus pior"}">${esc(l)}</div>`).join("")}`)}>${spr("gota", 1)}${esc(f.nome)} <small>${f.dias ? f.dias + "d" : ""}${f.aberto ? " · aberto" : ""}</small></div>`).join("")
     : '<div class="vazio">nenhum, por enquanto</div>';
   const bolsa = h.bolsa.filter((b) => b.id !== "tocha").map((b) => {
-    const dica = `<b>${esc(b.nome)}</b><div>${esc(b.desc)}</div><div class="rodape">${b.motivo ? esc(b.motivo) : "Clique para usar."}</div>`;
+    const dica = `<b>${esc(b.nome)}</b><div>${Realce.texto(b.desc)}</div><div class="rodape">${b.motivo ? esc(b.motivo) : "Clique para usar."}</div>`;
     return `<div role="button" tabindex="0" class="slot-px usavel${b.motivo && !(b.alvos || []).some((a) => !a.motivo) ? " inutil" : ""}" data-bolsa="${esc(b.id)}" ${Telas.dica(dica)}>${spr(Telas.ICONE_ITEM[b.id] || "pocao", 2)}<span class="qtd">${b.qtd}</span></div>`;
   }).join("");
   const comitiva = h.comitiva && h.comitiva.length ? `<div class="secao"><h3>Comitiva</h3>${h.comitiva.map((m) =>
