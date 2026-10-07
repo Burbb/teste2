@@ -513,14 +513,16 @@ const Telas = (() => {
   function novaVisita() { for (const k in qtdLoja) delete qtdLoja[k]; contratosVistos = null; }
   function maxCompra(c, ouro) { return Math.max(0, Math.min(99, c.limite ?? 99, Math.floor(ouro / c.preco))); }
   function loja(d) {
+    // Na vitrine, o número no canto do ícone é o que o mercador tem (como nos jogos do gênero); o que você carrega
+    // está na bolsa e no topo, e a dica de cada item repete.
     const cons = d.consumiveis.map((c) => {
       const max = maxCompra(c, d.ouro);
       const q = Math.max(1, Math.min(qtdLoja[c.id] || 1, max || 1));
       const caro = max < 1;
       const icone = c.id === "provisoes" ? "pernil" : c.id === "flechas" ? "aljava" : (ICONE_ITEM[c.id] || "pocao");
-      return `<div role="button" tabindex="0" class="mercadoria suprimento${caro ? " caro" : ""}" data-comprar="${h(c.id)}" data-preco="${c.preco}" data-max="${max}" ${dica(`<b>${h(c.nome)}</b><div>${Realce.texto(c.desc)}</div><div class="rodape">${caro ? (c.estoque === 0 ? "Esgotado: o mercador reabastece amanhã cedo." : c.limite === 0 ? "Você não carrega mais." : "Ouro insuficiente.") : "Escolha a quantidade e clique para comprar. Shift+clique compra 5."}</div>`)}>
-        <span class="slot-px">${S(icone, 2)}${c.tem ? `<span class="qtd">${c.tem}</span>` : ""}</span>
-        <span class="merc-nome">${h(c.nome)}${c.estoque !== undefined ? `<small class="merc-estoque${c.estoque ? "" : " esgotado"}">${c.estoque ? `${c.estoque} à venda` : "esgotado"}</small>` : ""}</span>
+      return `<div role="button" tabindex="0" class="mercadoria suprimento${caro ? " caro" : ""}" data-comprar="${h(c.id)}" data-preco="${c.preco}" data-max="${max}" ${dica(`<b>${h(c.nome)}</b><div>${Realce.texto(c.desc)}</div><div class="tipo">Você tem ${c.tem}.${c.estoque !== undefined ? ` O mercador tem ${c.estoque} hoje.` : ""}</div><div class="rodape">${caro ? (c.estoque === 0 ? "Esgotado: o mercador reabastece amanhã cedo." : c.limite === 0 ? "Você não carrega mais." : "Ouro insuficiente.") : "Escolha a quantidade e clique para comprar. Shift+clique compra 5."}</div>`)}>
+        <span class="slot-px">${S(icone, 2)}${c.estoque ? `<span class="qtd">${c.estoque}</span>` : ""}</span>
+        <span class="merc-nome">${h(c.nome)}${c.estoque === 0 ? '<small class="merc-estoque esgotado">esgotado</small>' : ""}</span>
         <span class="preco">${S("moeda", 1)}<span class="total">${c.preco * q}</span></span>
         <span class="qtd-ctrl"><button type="button" data-q="-1" aria-label="menos">−</button><b>${q}</b><button type="button" data-q="1" aria-label="mais">+</button></span></div>`;
     }).join("");
