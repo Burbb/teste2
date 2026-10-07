@@ -34,5 +34,8 @@ PLAYWRIGHT_MODULO=<caminho do playwright>/index.mjs node tests/navegador/fumaca.
 `--atualizar`, e diga no commit o que mudou e por quê. Em refatoração de combate, preserve a ordem das contas
 de ponto flutuante e a ordem das chamadas ao sorteio (`rng`): trocar a ordem muda partidas.
 
+Mexer em dificuldade: o ciclo está em [docs/COMO_CRIAR.md](docs/COMO_CRIAR.md) ("Um número de balanceamento"):
+`python -m tests.equilibrio` e `python -m tests.replay` antes e depois, e as tabelas no commit.
+
 Na nuvem, o Playwright costuma estar em `/opt/node22/lib/node_modules/playwright/index.mjs` (não rode
 `playwright install`).

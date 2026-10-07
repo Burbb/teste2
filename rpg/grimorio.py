@@ -118,7 +118,7 @@ def dados(j):
     tal_dist, _ = mult_talentos(j, "distancia")
     gerais = [f"Crítico: {round(chance_critico(j) * 100)}% de chance, dano ×{_num(mult_critico(j))}.",
               "Cada golpe varia ±15%. A defesa do inimigo reduz o dano: defesa 5 tira "
-              f"{_pct(1 - 100 / (100 + 5 * bal.DEFESA_FATOR))}, defesa 10 tira {_pct(1 - 100 / (100 + 10 * bal.DEFESA_FATOR))}."]
+              f"{_pct(1 - bal.fator_defesa(5))}, defesa 10 tira {_pct(1 - bal.fator_defesa(10))}."]
     if tal_corpo > 1:
         gerais.append(f"Talentos: corpo a corpo ×{_num(tal_corpo)}.")
     if tal_dist > 1:

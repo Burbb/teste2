@@ -44,8 +44,8 @@ def explicar_atributos(g):
     """Para que serve cada atributo, com os números de agora (o que a tela mostra ao passar o mouse)."""
     j = g.j
     ataque_usa = CLASSES[j.classe]["ataque"][3]
-    reducao = 1 - 100 / (100 + j.defesa * bal.DEFESA_FATOR)
-    reducao_mais = 1 - 100 / (100 + (j.defesa + 1) * bal.DEFESA_FATOR) - reducao
+    reducao = 1 - bal.fator_defesa(j.defesa, j.nivel)
+    reducao_mais = 1 - bal.fator_defesa(j.defesa + 1, j.nivel) - reducao
     esquiva = min(bal.ESQUIVA_MAX_AGI, j.agi * bal.ESQUIVA_POR_AGI)
     critico = grimorio.chance_critico(j)
     ataque = ["Força dos golpes de arma: quanto maior, mais dano físico."]
@@ -54,7 +54,8 @@ def explicar_atributos(g):
     else:
         ataque.append("Pouco importa para você: suas magias usam Poder.")
     ataque += [f"Testes de Força: {g.mod_teste('forca'):+d} no d20.", "+1 de Ataque ≈ +1 de dano por golpe, antes da defesa do inimigo."]
-    defesa = [f"Reduz todo dano recebido em {_pct(reducao)}.",
+    defesa = [f"Reduz o dano de um inimigo do seu nível em {_pct(reducao)}. Inimigos de nível mais alto "
+              "atravessam mais a armadura; os de nível mais baixo, menos.",
               f"Cada ponto a mais reduz cerca de {_pct(reducao_mais)} a mais (o ganho diminui aos poucos).",
               f"Testes de Vontade: {g.mod_teste('vontade'):+d} no d20."]
     agilidade = [f"Chance de se esquivar de um golpe: {_pct(esquiva)} (máximo 40% só pela Agilidade; com habilidades, até 60%).",

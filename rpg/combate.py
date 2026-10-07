@@ -293,7 +293,8 @@ class Combate:
         # Crítico garantido diz de onde veio: sem isso, parece que a sorte ignora a chance da ficha.
         motivo_crit = ("Furtivo" if furtivo else self.motivo_abertura or "Iniciativa") if (furtivo or abertura) else None
         base = getattr(u, stat) * mult + bonus
-        dano = base * m * self.rng.uniform(0.85, 1.15) * 100 / (100 + defesa * bal.DEFESA_FATOR)
+        inimigo = not u.jogador and u not in self.aliados
+        dano = base * m * self.rng.uniform(0.85, 1.15) * bal.fator_defesa(defesa, u.nivel if inimigo else None)
         if crit:
             dano *= mult_critico(u, furtivo=bool(furtivo))
         if furtivo:
@@ -956,5 +957,5 @@ class Combate:
             g.registrar_abates(derrotados)
             g.saque_de_combate(derrotados)
             g.ganhar_xp(comitiva.parte_do_xp(g) *
-                        sum(e.xp * max(0.2, min(1.25, 1 + 0.08 * (e.nivel - j.nivel))) for e in derrotados))
+                        sum(e.xp * bal.fator_xp(e.nivel - j.nivel) for e in derrotados))
         return resultado

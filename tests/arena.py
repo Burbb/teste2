@@ -11,6 +11,9 @@ from rpg.combate import Combate
 from rpg.jogo import Jogo
 from rpg.ui import BotUI
 
+# Habilidades que uma pessoa usa quando o inimigo avisa um golpe forte ("prepara um golpe...").
+DEFESAS = ("erguer_escudo", "passo_agil", "barreira", "desaparecer")
+
 # O que conta como "aguentou": as colunas da tabela, na ordem.
 COLUNAS = [
     ("lutas", "Lutas"),
@@ -27,7 +30,8 @@ COLUNAS = [
 
 class LutadorUI(BotUI):
     """Fora da luta, o robô de sempre (ao acaso). Na luta, joga como gente: habilidade forte quando dá,
-    em área quando há vários inimigos, foco no mais ferido, poção quando a vida baixa."""
+    em área quando há vários inimigos, foco no mais ferido, poção quando a vida baixa, e se protege quando
+    um inimigo avisa um golpe forte."""
 
     def __init__(self, rng):
         super().__init__(rng, max_decisoes=10 ** 9)
@@ -80,8 +84,16 @@ class LutadorUI(BotUI):
         if j.hp < 0.35 * j.max_hp and any(m.get("usar_item") == "pocao_vida" and not m["motivo"] for m in itens):
             self._plano = "pocao_vida"
             return 2
-        habs = next((m["habilidades"] for m in metas if m.get("acao") == "habilidades"), [])
-        h = self._habilidade(cb, [m for m in habs if m["pode"]])
+        habs = [m for m in next((m["habilidades"] for m in metas if m.get("acao") == "habilidades"), []) if m["pode"]]
+        if any(e.carregando for e in cb.inimigos_vivos()):
+            defesa = next((m["habilidade"] for m in habs if m["habilidade"] in DEFESAS), None)
+            if defesa:
+                self._plano = defesa
+                return 1
+            if j.hp < 0.6 * j.max_hp and any(m.get("usar_item") == "pocao_vida" and not m["motivo"] for m in itens):
+                self._plano = "pocao_vida"
+                return 2
+        h = self._habilidade(cb, habs)
         if h:
             self._plano = h
             return 1

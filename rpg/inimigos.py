@@ -7,15 +7,22 @@ from .entidades import Inimigo
 
 
 def escala(nivel):
+    """Vida e poder do inimigo por nível."""
     return (1 + bal.INIMIGO_VIDA_POR_NIVEL * (nivel - 1)
             + bal.INIMIGO_CURVA * max(0, nivel - bal.INIMIGO_CURVA_DESDE) ** bal.INIMIGO_CURVA_EXPOENTE)
+
+
+def escala_atk(nivel):
+    """Ataque físico do inimigo por nível."""
+    return (1 + bal.INIMIGO_ATK_POR_NIVEL * (nivel - 1)
+            + bal.INIMIGO_ATK_CURVA * max(0, nivel - bal.INIMIGO_CURVA_DESDE) ** bal.INIMIGO_CURVA_EXPOENTE)
 
 
 def criar(rng, familia_id, nivel, afixo=None, nome_unico=None):
     f = FAMILIAS[familia_id]
     m = escala(nivel)
     hp = f["hp"] * m * bal.INIMIGO_VIDA
-    atk = f["atk"] * bal.INIMIGO_ATK_BASE * (1 + bal.INIMIGO_ATK_POR_NIVEL * (nivel - 1)) * bal.INIMIGO_DANO
+    atk = f["atk"] * bal.INIMIGO_ATK_BASE * escala_atk(nivel) * bal.INIMIGO_DANO
     defesa = f["defesa"] * (1 + bal.INIMIGO_DEFESA_POR_NIVEL * (nivel - 1))
     agi = f["agi"] + (nivel - 1) // bal.INIMIGO_AGI_A_CADA
     poder = f["poder"] * m * bal.INIMIGO_DANO
@@ -102,7 +109,7 @@ def gerar_guardiao(rng, bioma):
 def instanciar_guardiao(spec, nivel):
     t = GUARDIOES[spec["bioma"]][spec["idx"]]
     m = escala(nivel)
-    m_atk = bal.GUARDIAO_ATK * (1 + bal.INIMIGO_ATK_POR_NIVEL * (nivel - 1))
+    m_atk = bal.GUARDIAO_ATK * escala_atk(nivel)
     e = Inimigo(spec["nome"], t["hp"] * m * bal.GUARDIAO_VIDA, t["atk"] * m_atk,
                 t["defesa"] * (1 + bal.GUARDIAO_DEFESA_POR_NIVEL * (nivel - 1)),
                 t["agi"] + nivel // bal.INIMIGO_AGI_A_CADA, t["poder"] * m_atk, t["g"])
@@ -118,7 +125,7 @@ def instanciar_guardiao(spec, nivel):
 def instanciar_antagonista(ant, nivel, corrupcao):
     fator = 1 + corrupcao / 400
     m = escala(nivel) * fator
-    m_atk = bal.ANTAGONISTA_ATK * (1 + bal.INIMIGO_ATK_POR_NIVEL * (nivel - 1)) * fator
+    m_atk = bal.ANTAGONISTA_ATK * escala_atk(nivel) * fator
     e = Inimigo(ant["nome"], 150 * m, 11 * m_atk, 7 * (1 + bal.GUARDIAO_DEFESA_POR_NIVEL * (nivel - 1)),
                 6 + nivel // bal.INIMIGO_AGI_A_CADA, 11 * m_atk, ant["g"])
     t = dict(

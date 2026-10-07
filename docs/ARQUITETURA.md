@@ -78,7 +78,8 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
 
 | Onde | O quê |
 |---|---|
-| `rpg/balanceamento.py` | todos os números de dificuldade e generosidade |
+| `rpg/balanceamento.py` | todos os números de dificuldade e generosidade, inclusive a curva por nível (inimigos, equipamento, XP, defesa) |
+| `rpg/dev.py` | herói de nível N com equipamento de acordo (`--dev N` e o simulador de equilíbrio) |
 | `rpg/classes.py` | classes, especializações, animais do Patrulheiro |
 | `rpg/habilidades.py` | habilidades (execução + descrição) |
 | `rpg/talentos.py` | árvores de talentos e passivas de especialização, cada um declarando o próprio efeito |
@@ -110,5 +111,7 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
 | `python -m tests.gabarito` | 18 partidas com sementes fixas saem **idênticas** (refatorar não muda o jogo) |
 | `python -m unittest discover -s tests` | sistemas, saves antigos, catálogo de habilidades, Grimório, gabarito |
 | `tests/navegador/fumaca.mjs` | a interface web de ponta a ponta (Playwright) |
+| `python -m tests.equilibrio` | não é teste, é régua: heróis típicos por especialização e nível lutando (`tests/arena.py`) |
+| `python -m tests.replay` | régua humana: as partidas de `tests/runs/` refeitas com os números de agora |
 
 Mudou o jogo de propósito? `python -m tests.gabarito --atualizar` e diga no commit o que mudou.

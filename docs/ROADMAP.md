@@ -20,6 +20,15 @@ Cada etapa mantém o gabarito de regressão idêntico: nada de jogo muda, só on
 | **D** (próxima) | Mundo e narrativa como dados: flags com nome, facções, reputação por facção, missões com etapas; eventos e diálogos com condições e consequências declaradas; validador de conteúdo (referências existem, ramos alcançáveis). | quando a história começar |
 | **E** | Front-end: `telas.js` dividido por tela; animação de habilidade como campo de dados (hoje há casos fixos em `batalha.js`). | |
 
+## Equilíbrio (1.13)
+
+Réguas para mexer na dificuldade com números: o simulador por especialização e nível (`tests.equilibrio`), o
+replay das partidas de verdade (`tests.replay`, com a do Xatuba em `tests/runs/`) e o `--dev N`. Primeiro ajuste:
+base um pouco mais dura e a curva bem mais dura do meio para o fim (defesa que perde força contra inimigos de nível
+alto, ataque e vida dos inimigos com curva, equipamento crescendo menos, XP mais lento e menor de inimigos fracos).
+Pendente: a diferença entre especializações ficou à mostra (Paladino e Patrulheiro fáceis, Piromante e Necromante
+sofrem no fim); um robô de mapa que jogue partidas inteiras com juízo, para medir o ritmo de nível.
+
 ## Depois do núcleo
 
 - Sistemas gerais (não de uma classe): reputação por facção, missões encadeadas, diálogo com testes de atributo

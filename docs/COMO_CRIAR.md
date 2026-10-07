@@ -136,4 +136,20 @@ Título da cena em `rpg/eventos/titulos.py`; reações da comitiva em `REACOES` 
 
 ## Um número de balanceamento
 
-`rpg/balanceamento.py`. Depois: `python -m tests.gabarito --atualizar` e o motivo no commit.
+Todos moram em `rpg/balanceamento.py`, com o que cada um faz ao lado. A curva do jogo (herói × inimigos ×
+equipamento × XP) fica na seção "a curva". O ciclo:
+
+1. **Meça antes.** Guarde a saída das duas réguas:
+   - `python -m tests.equilibrio`: heróis típicos de cada especialização, níveis 1 a 12, contra o que o jogo
+     sorteia numa região um nível abaixo, e contra guardiões (`--spec`, `--lutas`, `--atraso`, `--sozinho`).
+   - `python -m tests.replay`: as partidas de verdade guardadas em `tests/runs/` (o .jsonl que o jogo grava em
+     `<saves>/runs/`), refeitas luta a luta com os números de agora (`--lutas` mostra uma por uma; `--ficha`
+     confere o herói remontado).
+2. **Mude o número** e meça de novo. As colunas que mais dizem: *Vida perdida* (quanto uma luta custa),
+   *Golpes p/ você cair* (quantos golpes inimigos você aguenta) e *Seus turnos p/ matar*. O robô joga um pouco
+   diferente de uma pessoa: compare antes com depois, não com um número absoluto.
+3. **Sinta jogando:** `python jogar.py --dev 8` começa um jogo novo já no nível 8, com equipamento de acordo.
+4. `python -m tests.gabarito --mostrar` para conferir que só mudou o esperado, `--atualizar`, e o motivo (com as
+   tabelas de antes e depois) no commit.
+
+Partida nova que mostra um problema? Copie o .jsonl para `tests/runs/`: ela vira régua para as próximas mudanças.
