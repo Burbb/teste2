@@ -460,7 +460,8 @@ class TestSimulacao(unittest.TestCase):
             dados = g.j.para_dict()
             dados["equip"] = {"arma": dados["equip"]["arma"], "armadura": None, "amuleto": None}
             from rpg.entidades import Jogador
-            velho = Jogador.de_dict(dados)
+            from rpg.migracoes import migrar
+            velho = Jogador.de_dict(migrar({"versao": 1, "seed": 1, "mundo": {"locais": []}, "jogador": dados})["jogador"])
             self.assertEqual(set(velho.equip), set(itens.SLOTS))
             for _ in range(300):  # toda geração produz itens válidos em todas as classes
                 for classe in ("guerreiro", "arqueiro", "mago"):
