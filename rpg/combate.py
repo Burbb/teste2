@@ -291,7 +291,7 @@ class Combate:
             if self.iniciativa:
                 self.iniciativa = False
                 m *= 1 + bal.INICIATIVA_BONUS
-                bonus_motivo = f"Iniciativa +{round(bal.INICIATIVA_BONUS * 100)}%"
+                bonus_motivo = "Iniciativa!"
 
         defesa = alvo.defesa * (0.6 if alvo.efeito("maldito") else 1.0)
         furtivo = u.efeito("furtivo")
@@ -331,7 +331,7 @@ class Combate:
         if crit:
             txt = (f"CRÍTICO ({motivo_crit})! " if motivo_crit else "CRÍTICO! ") + txt
         if bonus_motivo:
-            txt = f"{bonus_motivo}! " + txt
+            txt = f"{bonus_motivo} " + txt
         if absorvido:
             txt += f" [{absorvido} absorvido]"
         if eficacia >= 1.3:

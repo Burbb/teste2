@@ -547,6 +547,10 @@ def carinho(g):
     g.ui.celebrar("carinho", {"nome": f["nome"]})
 
 
+# O que dá para fazer no acampamento além da fogueira (a própria fogueira faz as vezes da Comitiva; viajar, só de dia).
+ATALHOS_FOGUEIRA = ("talentos", "personagem", "mapa", "diario", "bestiario", "salvar", "sair")
+
+
 def fogueira(g, intro=None):
     """O acampamento à noite: quem anda com você e quem espera na reserva, em volta do fogo.
     Conversar, trocar quem vai junto amanhã e, por fim, dormir. Devolve True se houve conversa de história."""
@@ -585,11 +589,16 @@ def fogueira(g, intro=None):
         if getattr(g.j, "companheiro", None):
             opcoes.append((f"Fazer carinho em {g.j.companheiro['nome']}", ("carinho", None), {"carinho": "fera"}))
         opcoes.append(("Dormir até o amanhecer", None, {"dormir": True}))
-        # Em volta do fogo é a hora de fazer curativos: a bolsa do painel funciona aqui (bandagem, poção, unguento).
+        # Em volta do fogo é a hora de cuidar das coisas: talentos, inventário, diário, salvar (a doca acende)...
+        opcoes += [o for o in g.opcoes_comuns() if o and o[1] in ATALHOS_FOGUEIRA]
+        # ...e de fazer curativos: a bolsa do painel funciona aqui (bandagem, poção, unguento).
         opcoes += g.opcoes_bolsa()
         op = g.menu("", opcoes)
         if op is None:
             return conversou
+        if isinstance(op, str):
+            g.executar_comum(op)
+            continue
         acao, cid = op[0], op[1]
         if acao in ("usar", "usar_em"):
             g.executar_comum(op)

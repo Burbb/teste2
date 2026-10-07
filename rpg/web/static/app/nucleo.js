@@ -138,7 +138,7 @@ async function tratar(m) {
     case "estado": aplicarEstado(m.estado); break;
     case "sincronizado": replay = false; break;
     case "nova_cena": await novaCena(m); break;
-    case "cabecalho": cabecalho(m); break;
+    case "cabecalho": tituloAtual = m.titulo; cabecalho(m); break;  // a tela que se redesenha depois reconhece o título
     case "texto": await texto(m); break;
     case "efeito": await efeito(m); break;
     case "rolagem": await rolagem(m); break;

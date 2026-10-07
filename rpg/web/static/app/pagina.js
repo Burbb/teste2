@@ -65,6 +65,7 @@ async function novaCena(m) {
     const avisos = [...textoEl.querySelectorAll(":scope > p:not(.eco):not(.lido)")].map((p) => p.textContent).filter(Boolean).slice(-2);
     if (!replay) avisos.forEach((t) => Telas.toast("", t, "estrela", true));
     fixarRolagem();
+    seguir = false;  // a tela se redesenha no lugar: crescer (o contrato aceito desce para "Seus contratos") não puxa a página
     textoEl.innerHTML = ""; promptEl.innerHTML = "";
     cabecalho(m);
     return;
@@ -286,6 +287,7 @@ function eco(m) {
   if (estado && estado.combate) return;  // na luta, a carta que avança já mostra o que você escolheu
   if (emTela()) return;  // nas telas desenhadas (mercado, inventário), o aviso solto já contou o que aconteceu
   if (corpo.classList.contains("modo-titulo")) return;  // no título, a própria tela muda: eco seria ruído
+  if (m.navegacao || atalhoDe(m.texto)) return;  // abrir Talentos, Voltar...: navegação, não um passo da história
   anexar(el("p", "eco", esc(m.texto)));
 }
 

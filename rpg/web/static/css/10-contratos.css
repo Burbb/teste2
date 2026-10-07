@@ -21,7 +21,7 @@
 .contrato-lugar img.sprite { --s: 16; }
 .contrato-progresso { display: flex; align-items: center; gap: 6px; font-family: var(--num); font-size: 16px; }
 .contrato-progresso .barra-px { flex: 1; }
-.contrato-premio { display: flex; justify-content: space-between; font-family: var(--num); font-size: 19px; color: #5a3a10; border-top: 2px dashed #a88a5a; padding-top: 4px; }
+.contrato-premio { margin-top: auto; display: flex; justify-content: space-between; font-family: var(--num); font-size: 19px; color: #5a3a10; border-top: 2px dashed #a88a5a; padding-top: 4px; }
 .contrato-premio span { display: inline-flex; align-items: center; gap: 3px; }
 .contrato-botao { margin-top: 4px; cursor: pointer; font-family: var(--texto); font-weight: 600; font-size: 14px; color: #fff3d6; background: #6e1d1d; border: 2px solid #2a0808; padding: 4px 8px; box-shadow: 2px 2px 0 #000; }
 .contrato-botao:hover { background: #8a2626; }
@@ -30,6 +30,11 @@
 .contrato-feito { text-align: center; font-size: 13px; font-weight: 600; color: #2e4a20; }
 .contrato.concluido::after { content: "FEITO"; position: absolute; top: 34px; right: 6px; transform: rotate(14deg); font-family: var(--num); font-size: 22px; color: #2e6a20; border: 3px solid #2e6a20; padding: 0 6px; }
 .cartazes.seus .contrato { background: #d8c8a0; }
+/* No mural, todo cartaz tem a mesma altura e o botão fica no pé: aceitou um, o próximo desliza para o lugar dele
+   com o botão exatamente onde o mouse está. Três cliques seguidos, sem mexer o mouse, pegam os três. */
+.mural .quadro .contrato { height: 350px; }
+.mural .quadro .contrato-titulo { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; flex: none; }
+.mural .quadro .contrato-desc { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; flex: none; }
 
 /* ------------------------------------------------------------------ rastreador de contratos e diário */
 .rastreador h3 { margin-bottom: 4px; }

@@ -159,6 +159,9 @@ async function cenarioVila(browser) {
     conferir(!(await page.$('#prompt .escolha:has-text("Deixar para trás")')), "sem 'deixar para trás' com a mochila livre");
     await (await esperar('#prompt .escolha:has-text("Guardar")')).click();
     const aceitar = await esperar("[data-aceitar]");
+    // Cartazes do mural com a mesma altura e o botão no pé: três cliques seguidos, sem mexer o mouse, pegam os três.
+    const fundos = await page.$$eval(".mural .quadro [data-aceitar]", (bs) => bs.map((b) => Math.round(b.getBoundingClientRect().bottom)));
+    conferir(fundos.length < 2 || Math.max(...fundos) - Math.min(...fundos) <= 4, `os botões de aceitar ficam na mesma linha (${fundos.join(", ")})`);
     await page.evaluate(() => { const p = document.getElementById("pagina"); p.scrollTop = p.scrollHeight; });
     await page.waitForTimeout(300);
     const antes = await page.evaluate(() => document.getElementById("pagina").scrollTop);
