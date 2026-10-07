@@ -79,6 +79,8 @@ class Gravador(BotUI):
 
 
 def transcrever(seed, classe, web=False):
+    from rpg import combate
+    combate._SERIE[0] = 0  # numeração dos combates (ids das cartas): cada partida começa do zero
     with tempfile.TemporaryDirectory() as pasta:
         ui = Gravador(random.Random(seed * 7 + 1), web=web)
         # A semente 3 joga no hardcore (morte permanente); as outras no modo brando, para partidas mais longas.

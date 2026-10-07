@@ -43,6 +43,80 @@ class Loja:
             "mochila": [dict(item(it, it["preco"] // 2), usavel=self.pode_usar(it)) for it in j.mochila],
         }
 
+    SUPRIMENTOS = ("tocha", "bandagem", "unguento", "pocao_vida", "tonico", "antidoto", "bomba_fumaca", "pena_fenix")
+
+    def preco_suprimento(self, k):
+        """Preço (já com a reputação) de um consumível, de um dia de provisões ou de um feixe de flechas."""
+        base = PRECO_FLECHAS if k == "flechas" else 4 if k == "provisoes" else CONSUMIVEIS[k]["preco"]
+        return self.preco(base)
+
+    # ------------------------------------------------------------ regras (as mesmas para qualquer tela)
+    def comprar_suprimento(self, k, qtd=1):
+        """Compra `qtd` de um suprimento, respeitando ouro, comida que cabe e aljava. True se comprou."""
+        j = self.j
+        preco = self.preco_suprimento(k)
+        try:
+            qtd = max(1, min(99, int(qtd)))
+        except (TypeError, ValueError):
+            qtd = 1
+        if k == "provisoes":
+            qtd = min(qtd, sobrevivencia.MAX_PROVISOES - j.provisoes)
+            if qtd <= 0:
+                self.dizer("Você não consegue carregar mais comida.", "vermelho")
+                return False
+        if k == "flechas":
+            qtd = min(qtd, (self.max_flechas() - j.flechas + 4) // 5)
+            if qtd <= 0:
+                self.dizer("Sua aljava já está cheia.", "vermelho")
+                return False
+        qtd = min(qtd, j.ouro // preco)
+        if qtd <= 0:
+            self.dizer("\"Sem ouro, sem negócio.\"", "vermelho")
+            return False
+        self.perder_ouro(preco * qtd)
+        categoria = k if k in ("provisoes", "flechas") else "consumivel"
+        registrar(self, "compra", item=k, categoria=categoria, qtd=qtd, preco=preco * qtd)
+        if k == "flechas":
+            self.dar_flechas(5 * qtd)
+        elif k == "provisoes":
+            self.dar_provisoes(qtd)
+        else:
+            self.dar(k, qtd)
+        return True
+
+    def comprar_equipamento(self, it, a_venda):
+        """Compra uma peça do estoque. Com o espaço do corpo vazio, ela já sai vestida."""
+        j = self.j
+        preco = self.preco(it["preco"])
+        if j.ouro < preco:
+            self.dizer("\"Sem ouro, sem negócio.\"", "vermelho")
+            return False
+        espaco = self.espaco_para(it)
+        vago = self.pode_usar(it) and not j.equip.get(espaco)
+        if not vago and len(j.mochila) >= LIMITE_MOCHILA:
+            self.dizer("Sua mochila está cheia. Venda ou largue algo antes.", "vermelho")
+            return False
+        self.perder_ouro(preco)
+        registrar(self, "compra", item=it["nome"], categoria="equipamento", qtd=1, preco=preco,
+                  raridade=it.get("raridade", "comum"), vestiu=vago)
+        a_venda.remove(it)
+        if vago:
+            self.equipar(it, espaco)
+        else:
+            j.mochila.append(it)
+            self.ui.efeito(f"{it['nome']} vai para a mochila", "item")
+        return True
+
+    def vender_item(self, it):
+        """O mercador paga metade do valor."""
+        j = self.j
+        j.mochila.remove(it)
+        self.ui.efeito(f"Vendeu {it['nome']}", "info")
+        antes = j.ouro
+        self.ganhar_ouro(it["preco"] // 2)
+        registrar(self, "venda", item=it["nome"], raridade=it.get("raridade", "comum"), preco=j.ouro - antes)
+
+    # ------------------------------------------------------------ telas
     def loja(self):
         while True:
             j = self.j
@@ -52,64 +126,42 @@ class Loja:
                 if self._loja_web(a_venda):
                     return
                 continue
+            # Terminal: as mesmas regras, em forma de lista.
             opcoes = []
-            for k in ("tocha", "bandagem", "unguento", "pocao_vida", "tonico", "antidoto", "bomba_fumaca",
-                      "pena_fenix"):
+            for k in self.SUPRIMENTOS:
                 c = CONSUMIVEIS[k]
-                opcoes.append((f"{c['nome']} — {self.preco(c['preco'])} ouro (você tem {j.consumiveis.get(k, 0)})",
-                               ("consumivel", k)))
-            opcoes.append((f"Provisões para 1 dia — {self.preco(4)} ouro (você tem {j.provisoes}/"
-                           f"{sobrevivencia.MAX_PROVISOES})", ("provisoes",)))
+                opcoes.append((f"{c['nome']} — {self.preco_suprimento(k)} ouro (você tem {j.consumiveis.get(k, 0)})",
+                               ("suprimento", k)))
+            opcoes.append((f"Provisões para 1 dia — {self.preco_suprimento('provisoes')} ouro (você tem {j.provisoes}/"
+                           f"{sobrevivencia.MAX_PROVISOES})", ("suprimento", "provisoes")))
             if j.classe == "arqueiro":
-                opcoes.append((f"Feixe de 5 flechas — {self.preco(PRECO_FLECHAS)} ouro (você tem {j.flechas}/"
-                               f"{self.max_flechas()})", ("flechas",)))
+                opcoes.append((f"Feixe de 5 flechas — {self.preco_suprimento('flechas')} ouro (você tem {j.flechas}/"
+                               f"{self.max_flechas()})", ("suprimento", "flechas")))
             for it in a_venda:
                 opcoes.append((f"{itens.rotulo(it)} [{NOMES_SLOT[it['slot']]}] {descrever_bonus(it['bonus'])} — "
                                f"{self.preco(it['preco'])} ouro", ("equip", it)))
             if j.mochila:
                 opcoes.append(("Vender itens da mochila", ("vender",)))
-            opcoes.append(("Sair do mercado", None))
-            op = self.menu("Comprar o quê?", [(o[0].replace("Sair do mercado", "Voltar"), o[1]) for o in opcoes])
+            op = self.menu("Comprar o quê?", opcoes + [("Voltar", None)])
             if op is None:
                 return
             if op[0] == "vender":
                 self.vender()
-                continue
-            preco = self.preco({"consumivel": lambda: CONSUMIVEIS[op[1]]["preco"], "flechas": lambda: PRECO_FLECHAS,
-                                "provisoes": lambda: 4, "equip": lambda: op[1]["preco"]}[op[0]]())
-            if op[0] == "provisoes" and j.provisoes >= sobrevivencia.MAX_PROVISOES:
-                self.dizer("Você não consegue carregar mais comida.", "vermelho")
-                continue
-            if j.ouro < preco:
-                self.dizer("Ouro insuficiente.", "vermelho")
-                continue
-            if op[0] == "equip" and len(j.mochila) >= LIMITE_MOCHILA:
-                self.dizer("Sua mochila está cheia.", "vermelho")
-                continue
-            self.perder_ouro(preco)
-            registrar(self, "compra", item=op[1] if op[0] == "consumivel" else op[1]["nome"] if op[0] == "equip"
-                      else op[0], categoria=op[0], qtd=1, preco=preco)
-            if op[0] == "consumivel":
-                self.dar(op[1])
-            elif op[0] == "flechas":
-                self.dar_flechas(5)
-            elif op[0] == "provisoes":
-                j.provisoes += 1
-                self.dizer(f"Pão duro, carne seca e um odre de água. (provisões: {j.provisoes})", "verde")
+            elif op[0] == "equip":
+                self.comprar_equipamento(op[1], a_venda)
             else:
-                a_venda.remove(op[1])
-                self.oferecer_equip_comprado(op[1])
+                self.comprar_suprimento(op[1])
 
     def _loja_web(self, a_venda):
         """Mercado na interface web: cada compra e venda é uma opção direta. True = sair.
         Suprimentos podem ser comprados em quantidade (a tela manda "qtd" junto da escolha)."""
         j = self.j
         opcoes = []
-        for k in ("tocha", "bandagem", "unguento", "pocao_vida", "tonico", "antidoto", "bomba_fumaca", "pena_fenix"):
-            opcoes.append((f"Comprar {CONSUMIVEIS[k]['nome']}", ("consumivel", k), {"comprar": k}))
-        opcoes.append(("Comprar provisões", ("provisoes",), {"comprar": "provisoes"}))
+        for k in self.SUPRIMENTOS:
+            opcoes.append((f"Comprar {CONSUMIVEIS[k]['nome']}", ("suprimento", k), {"comprar": k}))
+        opcoes.append(("Comprar provisões", ("suprimento", "provisoes"), {"comprar": "provisoes"}))
         if j.classe == "arqueiro":
-            opcoes.append(("Comprar flechas", ("flechas",), {"comprar": "flechas"}))
+            opcoes.append(("Comprar flechas", ("suprimento", "flechas"), {"comprar": "flechas"}))
         for i, it in enumerate(a_venda):
             opcoes.append((f"Comprar {it['nome']}", ("equip", it), {"comprar_item": i}))
         for i, it in enumerate(j.mochila):
@@ -120,70 +172,15 @@ class Loja:
         if op is None:
             return True
         if op[0] == "vender":
-            j.mochila.remove(op[1])
-            self.ui.efeito(f"Vendeu {op[1]['nome']}", "info")
-            antes = j.ouro
-            self.ganhar_ouro(op[1]["preco"] // 2)
-            registrar(self, "venda", item=op[1]["nome"], raridade=op[1].get("raridade", "comum"), preco=j.ouro - antes)
-            return False
-        if op[0] == "equipar":
+            self.vender_item(op[1])
+        elif op[0] == "equipar":
             self.equipar(op[1])
-            return False
-        preco = self.preco({"consumivel": lambda: CONSUMIVEIS[op[1]]["preco"], "flechas": lambda: PRECO_FLECHAS,
-                            "provisoes": lambda: 4, "equip": lambda: op[1]["preco"]}[op[0]]())
-        if op[0] == "equip":
-            if j.ouro < preco:
-                self.dizer("\"Sem ouro, sem negócio.\"", "vermelho")
-                return False
-            espaco = self.espaco_para(op[1])
-            vago = self.pode_usar(op[1]) and not j.equip.get(espaco)
-            if not vago and len(j.mochila) >= LIMITE_MOCHILA:
-                self.dizer("Sua mochila está cheia. Venda ou largue algo antes.", "vermelho")
-                return False
-            self.perder_ouro(preco)
-            registrar(self, "compra", item=op[1]["nome"], categoria="equipamento", qtd=1, preco=preco,
-                      raridade=op[1].get("raridade", "comum"), vestiu=vago)
-            a_venda.remove(op[1])
-            if vago:  # espaço vazio no corpo: já sai vestido
-                self.equipar(op[1], espaco)
-            else:
-                j.mochila.append(op[1])
-                self.ui.efeito(f"{op[1]['nome']} vai para a mochila", "item")
-            return False
-        extra = getattr(self.ui, "extra_resposta", None) or {}
-        try:
-            qtd = max(1, min(99, int(extra.get("qtd", 1))))
-        except (TypeError, ValueError):
-            qtd = 1
-        if op[0] == "provisoes":
-            qtd = min(qtd, sobrevivencia.MAX_PROVISOES - j.provisoes)
-            if qtd <= 0:
-                self.dizer("Você não consegue carregar mais comida.", "vermelho")
-                return False
-        if op[0] == "flechas":
-            qtd = min(qtd, (self.max_flechas() - j.flechas + 4) // 5)
-            if qtd <= 0:
-                self.dizer("Sua aljava já está cheia.", "vermelho")
-                return False
-        qtd = min(qtd, j.ouro // preco)
-        if qtd <= 0:
-            self.dizer("\"Sem ouro, sem negócio.\"", "vermelho")
-            return False
-        self.perder_ouro(preco * qtd)
-        registrar(self, "compra", item=op[1] if op[0] == "consumivel" else op[0], categoria=op[0], qtd=qtd, preco=preco * qtd)
-        if op[0] == "consumivel":
-            self.dar(op[1], qtd)
-        elif op[0] == "flechas":
-            self.dar_flechas(5 * qtd)
+        elif op[0] == "equip":
+            self.comprar_equipamento(op[1], a_venda)
         else:
-            self.dar_provisoes(qtd)
+            extra = getattr(self.ui, "extra_resposta", None) or {}
+            self.comprar_suprimento(op[1], extra.get("qtd", 1))
         return False
-
-    def oferecer_equip_comprado(self, item):
-        if self.menu(f"Equipar {item['nome']} agora?", [("Sim", True), ("Não, guardar na mochila", False)]):
-            self.equipar(item)
-        else:
-            self.j.mochila.append(item)
 
     def vender(self):
         j = self.j
@@ -191,7 +188,4 @@ class Loja:
                   for it in j.mochila]
         it = self.menu("Vender o quê?", opcoes + [("Voltar", None)])
         if it:
-            j.mochila.remove(it)
-            antes = j.ouro
-            self.ganhar_ouro(it["preco"] // 2)
-            registrar(self, "venda", item=it["nome"], raridade=it.get("raridade", "comum"), preco=j.ouro - antes)
+            self.vender_item(it)
