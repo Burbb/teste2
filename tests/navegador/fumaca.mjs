@@ -58,6 +58,10 @@ async function cenarioCombate(browser) {
     await (await page.$('.acoes-combate .escolha:has-text("Habilidades")')).click();
     conferir(!!(await esperar(".grade-acoes .carta-acao")), "habilidades viram cartas");
     conferir(!!(await page.$(".voltar-carta")), "a carta de Voltar fica junto das habilidades");
+    await page.keyboard.press("p");
+    conferir(!!(await esperar("#sobre-grimorio:not([hidden]) .g-faixa")), "o Grimório abre com P e mostra o dano");
+    await page.keyboard.press("Escape");
+    conferir(await page.evaluate(() => document.getElementById("sobre-grimorio").hidden), "Esc fecha o Grimório");
     const bola = await page.$('.carta-acao:has-text("Bola de Fogo")');
     conferir(!!bola, "a Bola de Fogo está entre as cartas");
     await bola.click();

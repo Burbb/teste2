@@ -74,7 +74,7 @@ function desenharModificadores(mods) {
 
 function recurso(id, icones, qtd, opts = {}) {
   const imgs = icones.map((n) => spr(n, 2)).join("");
-  const dica = opts.titulo ? Telas.dica(`<div>${esc(opts.titulo)}</div>`) : "";
+  const dica = opts.titulo ? Telas.dica(esc(opts.titulo), true) : "";
   return `<div class="recurso${opts.alerta ? " alerta" : ""}${opts.vazio ? " vazio" : ""}" data-rec="${id}" ${dica}>
     <div class="icones">${imgs}</div><div class="qtd">${qtd}</div></div>`;
 }
@@ -90,14 +90,14 @@ function desenharHud(h, antes) {
   $("#hud-linha").innerHTML = `
     <div class="hud-retrato" title="${esc(h.titulo)} nível ${h.nivel}">${spr(h.classe, 3)}<span class="nivel">${h.nivel}</span></div>
     <div class="hud-vitais">
-      <div class="hud-nome"><b>${esc(h.nome)}</b><span>${esc(h.titulo)}${h.fome ? " · com fome" : ""}</span></div>
-      <div class="vital${vidaCritica ? " critico" : ""}" data-vital="hp">${spr("coracao", 1)}${barra("vida", h.hp, h.max_hp, antes ? antes.hp : undefined)}<span class="num">${h.hp}/${h.max_hp}</span></div>
-      <div class="vital" data-vital="rec">${spr(RECURSO_ICONE[h.recurso] || "estrela", 1)}${barra(RECURSO_BARRA[h.recurso] || "mana", h.rec, h.max_rec, antes ? antes.rec : undefined)}<span class="num">${h.rec}/${h.max_rec}</span></div>
+      <div class="hud-nome"><b>${esc(h.nome)}</b><span>${h.fome ? "com fome" : ""}</span></div>
+      <div class="vital${vidaCritica ? " critico" : ""}" data-vital="hp" ${Telas.dica("Vida", true)}>${spr("coracao", 1)}${barra("vida", h.hp, h.max_hp, antes ? antes.hp : undefined)}<span class="num">${h.hp}/${h.max_hp}</span></div>
+      <div class="vital" data-vital="rec" ${Telas.dica(esc(h.recurso), true)}>${spr(RECURSO_ICONE[h.recurso] || "estrela", 1)}${barra(RECURSO_BARRA[h.recurso] || "mana", h.rec, h.max_rec, antes ? antes.rec : undefined)}<span class="num">${h.rec}/${h.max_rec}</span></div>
     </div>
     <div class="hud-recursos">
       ${recurso("provisoes", comida, `${h.provisoes}<small>d</small>`, { alerta: h.provisoes <= 1, vazio: !h.provisoes, titulo: h.provisoes ? `Comida para ${h.provisoes} dia(s). Cada dia consome 1 (e cada companheiro come também).` : "Sem comida! Você vai passar fome." })}
       ${recurso("tochas", tochas, h.tochas, { alerta: h.tochas === 0, vazio: !h.tochas, titulo: "Tochas: luz para a noite, ruínas e a cidadela." })}
-      ${recurso("ouro", ouro, h.ouro, { vazio: !h.ouro, titulo: "Ouro" })}
+      ${recurso("ouro", ouro, h.ouro, { vazio: !h.ouro, titulo: h.ouro ? `Ouro: ${h.ouro} moedas` : "Sem ouro" })}
       ${recurso("pocoes", pocoes, h.pocoes, { vazio: !h.pocoes, titulo: "Poções de vida (35% da vida)" })}
       ${recurso("bandagens", ["bandagem"], h.bandagens, { vazio: !h.bandagens, alerta: !h.bandagens && h.ferimentos.some((f) => f.aberto), titulo: "Bandagens: estancam sangramento e tratam feridas abertas" })}
       ${h.flechas !== null && h.flechas !== undefined ? recurso("flechas", ["aljava"], h.flechas, { alerta: h.flechas <= 8, titulo: `Flechas (a aljava leva ${h.max_flechas || 30})` }) : ""}
@@ -132,7 +132,6 @@ function desenharHeroi(h) {
   };
   const feridas = h.ferimentos.length ? h.ferimentos.map((f) => `<div class="ferimento${f.aberto ? " aberto" : ""}" ${Telas.dica(`<b>${esc(f.nome)}</b><div class="tipo">${f.dias ? `${f.dias} dia${f.dias === 1 ? "" : "s"} para sarar` : "não sara sozinha"}${f.aberto ? " · ferida aberta" : ""}</div>${(f.explica || []).map((l, i) => `<div class="${i ? "" : "bonus pior"}">${esc(l)}</div>`).join("")}`)}>${spr("gota", 1)}${esc(f.nome)} <small>${f.dias ? f.dias + "d" : ""}${f.aberto ? " · aberto" : ""}</small></div>`).join("")
     : '<div class="vazio">nenhum, por enquanto</div>';
-  const habs = h.habilidades.map((x) => `<div class="habilidade" title="${esc(x.desc)}"><span>${esc(x.nome)}</span><small>${x.custo} ${esc(h.recurso)}</small></div>`).join("");
   const bolsa = h.bolsa.filter((b) => b.id !== "tocha").map((b) => {
     const dica = `<b>${esc(b.nome)}</b><div>${esc(b.desc)}</div><div class="rodape">${b.motivo ? esc(b.motivo) : "Clique para usar."}</div>`;
     return `<div role="button" tabindex="0" class="slot-px usavel${b.motivo && !(b.alvos || []).some((a) => !a.motivo) ? " inutil" : ""}" data-bolsa="${esc(b.id)}" ${Telas.dica(dica)}>${spr(Telas.ICONE_ITEM[b.id] || "pocao", 2)}<span class="qtd">${b.qtd}</span></div>`;
@@ -151,7 +150,6 @@ function desenharHeroi(h) {
     <div class="secao"><h3>Equipado</h3><div class="equip-mini" title="Abra o Inventário (I) para trocar">${Object.keys(Telas.AREA).map(slot).join("")}</div></div>
     ${comitiva}
     <div class="secao"><h3>Ferimentos</h3>${feridas}</div>
-    <div class="secao"><h3>Habilidades</h3>${habs}</div>
     <div class="secao"><h3>Bolsa</h3><div class="slots">${bolsa || '<span class="vazio">vazia</span>'}</div></div>
     <div class="secao"><div class="linhas">${Telas.reputacaoHtml(h)}</div></div>`;
   animarBarras($("#heroi"));

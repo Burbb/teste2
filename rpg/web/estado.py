@@ -1,7 +1,7 @@
 """Fotografia do estado do jogo em JSON, para a interface web desenhar painéis, mapa e combate."""
 
 from .. import balanceamento as bal
-from .. import comitiva, mapa, sobrevivencia
+from .. import comitiva, grimorio, mapa, sobrevivencia
 from ..classes import CLASSES, HABILIDADES, descricao_habilidade
 from ..combate import NOMES_EFEITOS
 from ..dados import BIOMAS, CLIMAS, PERIODOS
@@ -114,6 +114,7 @@ def heroi(g):
         "mochila": [_item(it, j.nome_recurso) for it in j.mochila], "limite_mochila": 12,
         "habilidades": [{"nome": HABILIDADES[h]["nome"], "custo": HABILIDADES[h]["custo"], "desc": descricao_habilidade(h, j)}
                         for h in j.habilidades],
+        "grimorio": grimorio.dados(j),
         "ferimentos": ferimentos, "males": sobrevivencia.descrever(j),
         "pontos_talento": j.pontos_talento, "sigilos": len(j.sigilos),
         "companheiro": ({"nome": j.companheiro["nome"], "hp": j.companheiro["hp"], "max_hp": j.companheiro["max_hp"]}

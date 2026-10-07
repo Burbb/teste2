@@ -376,7 +376,8 @@ const Batalha = (() => {
         const fams = [...new Set((m.efeitos || []).map((id) => (EFEITO[id] || [])[1] || "protecao"))];
         fams.forEach((f, i) => setTimeout(() => brilho(em, f), i * 160));
         if (m.hab !== "grito_guerra") rotulo(em, m.rotulo);
-        som(fams.includes("sombra") ? "sombra" : fams.includes("forca") ? "feitico" : "protecao");
+        som(m.hab === "erguer_escudo" ? "falange" : fams.includes("sombra") ? "sombra" : fams.includes("forca") ? "feitico" : "protecao");
+        if (m.hab === "erguer_escudo") reiniciar(arena, "tremor", 300);  // o baque dos escudos no chão
         await dormir(pausa(560 + 160 * Math.max(0, fams.length - 1)));
         return;
       }

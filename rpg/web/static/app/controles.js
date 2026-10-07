@@ -33,6 +33,7 @@ function fecharTudo() {
   if (!$("#sobre-talentos").hidden && App.acaoFecharTalentos) { Telas.fecharTalentos(); App.acaoFecharTalentos(); return; }
   $("#gaveta-historico").hidden = true;
   $("#sobre-mapa").hidden = true;
+  $("#sobre-grimorio").hidden = true;
   corpo.classList.remove("mostrar-heroi", "mostrar-mundo");
 }
 
@@ -55,8 +56,10 @@ document.addEventListener("click", (ev) => {
     else if (a === "fonte") alternarFonte();
     else if (a === "heroi") corpo.classList.toggle("mostrar-heroi");
     else if (a === "fechar-talentos") fecharTudo();
+    else if (a === "fechar-grimorio") $("#sobre-grimorio").hidden = true;
     return;
   }
+  if (ev.target.id === "sobre-grimorio") { ev.target.hidden = true; return; }  // clique fora do livro fecha
   if (ev.target.closest(".talento-aviso")) { pedir("Talentos", "_", null); return; }
   const carta = ev.target.closest("[data-conversar]");
   if (carta) {
@@ -75,7 +78,7 @@ document.addEventListener("keydown", (ev) => {
   if (ev.ctrlKey || ev.metaKey || ev.altKey) return;
   const k = ev.key;
   if (k === "Escape" || k === "Backspace") {
-    const aberto = !$("#gaveta-historico").hidden || !$("#sobre-mapa").hidden || !$("#sobre-talentos").hidden || document.querySelector(".menu-item");
+    const aberto = !$("#gaveta-historico").hidden || !$("#sobre-mapa").hidden || !$("#sobre-talentos").hidden || !$("#sobre-grimorio").hidden || document.querySelector(".menu-item");
     if (!aberto && pergunta && pergunta.voltar !== undefined && !processando) { ev.preventDefault(); responder(pergunta.id, pergunta.voltar); return; }
     if (k === "Escape") { Telas.fecharMenuItem(); fecharTudo(); }
     return;
@@ -88,6 +91,7 @@ document.addEventListener("keydown", (ev) => {
   if (k === "F3" || k === "v" || k === "V") { ev.preventDefault(); mudarVelocidade(); return; }
   if (k === "s" || k === "S") { alternarSom(); return; }
   if (k === "i" || k === "I") { corpo.classList.toggle("mostrar-heroi"); return; }
+  if ((k === "p" || k === "P") && estado && !corpo.classList.contains("modo-titulo")) { Telas.alternarGrimorio(); return; }
   if (processando && !pergunta) { if (k.length === 1 || k === "Enter") { ev.preventDefault(); pular = true; } return; }
   if (!pergunta) return;
   if (pergunta.tipo === "continuar" && (k === " " || k === "Enter")) { ev.preventDefault(); responder(pergunta.id, null); return; }

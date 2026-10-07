@@ -70,7 +70,40 @@ const Som = (() => {
     src.start(t); src.stop(t + dur + 0.05);
   }
 
+  // Uma voz de soldado: serra grave passando por dois formantes de "a" (o "HA!" de um coro).
+  function voz(t, f0, dur, vol) {
+    const o = ctx.createOscillator();
+    o.type = "sawtooth";
+    o.frequency.setValueAtTime(f0 * 1.06, t);
+    o.frequency.exponentialRampToValueAtTime(f0 * 0.9, t + dur);
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(vol, t + 0.025);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    [[720, 5], [1180, 6], [2500, 8]].forEach(([fr, q], i) => {
+      const f = ctx.createBiquadFilter();
+      f.type = "bandpass"; f.frequency.value = fr; f.Q.value = q;
+      const gf = ctx.createGain(); gf.gain.value = [1, 0.6, 0.25][i];
+      o.connect(f).connect(gf).connect(g);
+    });
+    g.connect(mestre);
+    o.start(t); o.stop(t + dur + 0.05);
+  }
+
   const efeitos = {
+    // Erguer Escudo: um pelotão responde "HA!" em coro e bate os escudos no chão ao mesmo tempo.
+    falange() {
+      const t = ctx.currentTime;
+      for (let i = 0; i < 7; i++) voz(t + Math.random() * 0.03, 92 + Math.random() * 60, 0.2, 0.05);
+      const b = t + 0.17;
+      for (let i = 0; i < 8; i++) {
+        const j = b + Math.random() * 0.028;
+        tom(j, 66 + Math.random() * 22, 0.1, 0.28, "sine", 38);
+        estalo(j, 1500 + Math.random() * 1400, 0.09, 0.07);
+      }
+      tom(b, 1260, 0.035, 0.45, "triangle"); tom(b + 0.01, 1890, 0.02, 0.35, "triangle");
+      sopro(b, 0.3, 900, 300, 0.12, 0.8, "lowpass");
+    },
     dado() {
       const t = ctx.currentTime;
       let x = 0;

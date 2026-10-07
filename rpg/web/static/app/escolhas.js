@@ -65,6 +65,7 @@ function mostrarOpcoes(m) {
       b.addEventListener("click", (ev) => { ev.stopPropagation(); responder(m.id, i); });
       atalhos.appendChild(b);
       if (at[2]) pergunta.letras[at[2]] = i;
+      if (at[1] === "Talentos") atalhos.appendChild(botaoGrimorio(at[4]));
       return;
     }
     pergunta.numeros.push(i);
@@ -179,7 +180,7 @@ function cartaAcao(o, i, m, pos) {
     rodape = `<span class="acao-custo">${custo}</span><span class="acao-alvo">${ALVO_TXT[meta.alvo_tipo] || ""}</span>`;
     if (!meta.pode) bloqueio = meta.motivo || "Indisponível";
     dicaHtml = `<b>${esc(meta.nome)}</b><div class="tipo">${meta.custo ? `${meta.custo} de ${esc(meta.recurso)}` : "Sem custo"}${meta.flechas ? ` · ${meta.flechas} flecha${meta.flechas > 1 ? "s" : ""}` : ""} · alvo: ${ALVO_TXT[meta.alvo_tipo] || "—"}</div>
-      <div class="bonus">${esc(meta.desc)}</div>${bloqueio ? `<div class="pior">${esc(bloqueio)}</div>` : ""}`;
+      <div class="bonus">${esc(meta.desc)}</div>${danoGrimorio(meta.habilidade)}${bloqueio ? `<div class="pior">${esc(bloqueio)}</div>` : ""}`;
   } else if (meta.usar_item) {
     b.classList.add("el-cura");
     icone = spr(Telas.ICONE_ITEM[meta.usar_item] || "pocao", 2);
@@ -216,11 +217,30 @@ document.addEventListener("contextmenu", (ev) => {
 
 function iconeAcaoCombate(t) {
   if (/^Atacar/.test(t)) return spr({ guerreiro: "espada", arqueiro: "arco", mago: "cajado" }[estado.heroi.classe] || "espada", 2);
-  if (/^Habilidades/.test(t)) return spr("estrela", 2);
+  if (/^Habilidades/.test(t)) return spr("grimorio", 2);
   if (/^Itens/.test(t)) return spr("pocao", 2);
   if (/^Analisar/.test(t)) return spr("olho", 2);
   if (/^Fugir/.test(t)) return spr("fuga", 2);
   return "";
+}
+
+/** A linha de dano do Grimório na dica da carta de habilidade: "Dano 16–22 (crítico 31)". */
+function danoGrimorio(id) {
+  const g = estado && estado.heroi.grimorio;
+  const x = g && g.habilidades.find((h) => h.id === id);
+  const d = x && x.linhas.find((l) => l.tipo === "dano");
+  return d ? `<div class="melhor">${esc(d.rotulo === "Dano" ? "Dano" : d.rotulo)}: ${d.min}–${d.max} (crítico ${d.critico})</div><div class="rodape">Detalhes no Grimório (P).</div>` : "";
+}
+
+/** O Grimório não é um menu do jogo: abre por cima de qualquer tela, como o mapa. */
+function botaoGrimorio(grupo) {
+  const b = el("button", "atalho");
+  b.type = "button";
+  b.dataset.grupo = grupo;
+  b.title = "Grimório: suas habilidades e o dano de cada uma (P)";
+  b.innerHTML = `<span class="atalho-icone">${spr("grimorio", 2)}</span><span class="atalho-nome">Grimório</span><kbd>P</kbd>`;
+  b.addEventListener("click", (ev) => { ev.stopPropagation(); Telas.abrirGrimorio(); });
+  return b;
 }
 
 function ehVoltar(o) {

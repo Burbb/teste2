@@ -186,12 +186,17 @@ const Telas = (() => {
    *  as dicas mais antigas (que já não estão na tela) são esquecidas aos poucos. */
   function guardarDica(html) {
     if (dicas.size > 3000) {
-      for (const k of [...dicas.keys()].slice(0, 2000)) { dicas.delete(k); itensDica.delete(k); }
+      for (const k of [...dicas.keys()].slice(0, 2000)) { dicas.delete(k); itensDica.delete(k); dicasCurtas.delete(k); }
     }
     dicas.set(proximaDica, html);
     return proximaDica++;
   }
-  function dica(html) { return `data-dica="${guardarDica(html)}"`; }
+  const dicasCurtas = new Set();  // dicas de uma linha (ouro, barras do HUD): caixinha preta sutil em cima do elemento
+  function dica(html, curta = false) {
+    const id = guardarDica(html);
+    if (curta) dicasCurtas.add(id);
+    return `data-dica="${id}"`;
+  }
   const itensDica = new Map();  // id da dica → item, para o Shift mostrar o equipado ao lado
   function dicaItem(it, rodape = "", comparando = true) {
     const id = guardarDica(htmlItem(it, rodape, comparando));
@@ -234,12 +239,19 @@ const Telas = (() => {
     const caixa = caixaDica();
     raiz.querySelectorAll("[data-dica]").forEach((el) => {
       el.addEventListener("mouseenter", (ev) => {
-        caixa.innerHTML = dicas.get(Number(el.dataset.dica)) || "";
+        const id = Number(el.dataset.dica);
+        caixa.innerHTML = dicas.get(id) || "";
         caixa.classList.remove("ficha-inimigo");
-        caixa._item = itensDica.get(Number(el.dataset.dica)) || null;
+        caixa.classList.toggle("curta", dicasCurtas.has(id));
+        caixa._item = itensDica.get(id) || null;
         caixa._esquerda = false;
         abrirDica(el);
         const r = el.getBoundingClientRect();
+        if (dicasCurtas.has(id)) {  // centrada logo abaixo do elemento, sem cobrir o que ele mostra
+          caixa.style.left = Math.max(6, Math.min(window.innerWidth - caixa.offsetWidth - 6, r.left + r.width / 2 - caixa.offsetWidth / 2)) + "px";
+          caixa.style.top = Math.min(window.innerHeight - caixa.offsetHeight - 6, r.bottom + 6) + "px";
+          return;
+        }
         caixa._esquerda = r.right + 10 + 290 > window.innerWidth;
         const esq = caixa._esquerda ? r.left - 300 : r.right + 10;
         caixa.style.left = Math.max(6, esq) + "px";
@@ -273,7 +285,7 @@ const Telas = (() => {
   function esconderDica() {
     clearInterval(vigia);
     const c = document.getElementById("dica-item");
-    if (c) { c.hidden = true; c._dono = null; c._item = null; c.classList.remove("ficha-inimigo"); }
+    if (c) { c.hidden = true; c._dono = null; c._item = null; c.classList.remove("ficha-inimigo", "curta"); }
     const lado = document.getElementById("dica-equipado");
     if (lado) lado.hidden = true;
   }
@@ -372,6 +384,51 @@ const Telas = (() => {
       if (b && b.motivo) { App.som("falha"); App.avisar(b.motivo, el); return; }
       App.acao({ usar: el.dataset.usar }, "item");
     }));
+  }
+
+  // ------------------------------------------------------------------ grimório
+  const COR_ELEMENTO = { "físico": "#e8dcc0", fogo: "#ff9a4a", gelo: "#8fc4ff", sagrado: "#f2c94c", sombra: "#b08ae0", arcano: "#c8b0ff", veneno: "#8fbf6a" };
+  let paginaGrimorio = "ataque";
+  /** O livro de habilidades: índice à esquerda; à direita, a habilidade aberta com o dano de agora, de onde ele vem
+   *  e como cresce. Os números chegam prontos do motor (grimorio.py), no estado do herói. */
+  function abrirGrimorio(id) {
+    const g = App.estado && App.estado.heroi && App.estado.heroi.grimorio;
+    if (!g) return;
+    if (id) paginaGrimorio = id;
+    const todas = [g.basico, ...g.habilidades];
+    if (!todas.some((x) => x.id === paginaGrimorio)) paginaGrimorio = "ataque";
+    const heroi = App.estado.heroi;
+    const icone = (x) => x.id === "ataque" ? ({ guerreiro: "espada", arqueiro: "arco", mago: "cajado" }[heroi.classe] || "espada") : (HAB_ICONE[x.id] || ["estrela"])[0];
+    const custo = (x) => x.custo ? `${x.custo} ${h(g.recurso.toLowerCase())}` : "grátis";
+    document.getElementById("grimorio-indice").innerHTML = `
+      <div class="grimorio-cab"><b>Grimório</b><small>${h(heroi.titulo)} · nível ${heroi.nivel}</small></div>
+      <ul class="grimorio-lista">${todas.map((x) => `<li><button type="button" class="grimorio-item${x.id === paginaGrimorio ? " aberto" : ""}" data-pagina="${h(x.id)}">
+        <span class="gi-icone">${S(icone(x), 2)}</span><span class="gi-nome">${h(x.nome)}</span><span class="gi-custo">${custo(x)}</span></button></li>`).join("")}</ul>
+      <div class="grimorio-atributos">${Object.entries(g.atributos).map(([k, v]) => `<span><small>${h(k)}</small><b>${v}</b></span>`).join("")}</div>
+      <ul class="grimorio-gerais">${g.gerais.map((l) => `<li>${h(l)}</li>`).join("")}</ul>`;
+    const x = todas.find((t) => t.id === paginaGrimorio);
+    const linhas = x.linhas.map((l) => l.tipo === "efeito" ? `<li class="g-efeito">${h(l.texto)}</li>` : `
+      <li class="g-dano"><div class="g-rotulo">${h(l.rotulo)} <i style="color:${COR_ELEMENTO[l.elemento] || "#e8dcc0"}">${h(l.elemento)}</i></div>
+        <div class="g-faixa"><b>${l.min}–${l.max}</b><span>crítico <b>${l.critico}</b> · ${l.chance_critico}% de chance</span></div>
+        <div class="g-formula">${h(l.formula)}</div>
+        <div class="g-escala">${l.escala.map((e) => `<span>▲ ${h(e)}</span>`).join("")}</div>
+        ${l.nota ? `<div class="g-nota">${h(l.nota)}</div>` : ""}</li>`).join("");
+    const det = document.getElementById("grimorio-detalhe");
+    det.innerHTML = `<div class="g-topo"><span class="g-icone">${S(icone(x), 4)}</span>
+        <div><b class="g-nome">${h(x.nome)}</b><div class="g-meta">${custo(x)}${x.flechas ? ` · ${x.flechas} flecha${x.flechas > 1 ? "s" : ""}` : ""} · alvo: ${h(x.alvo)}</div></div></div>
+      <p class="g-desc">${h(x.desc)}</p><ul class="g-linhas">${linhas}</ul>
+      <p class="g-rodape">Números antes da defesa do inimigo e de efeitos do momento (fortalecido, clima, alvo marcado).</p>`;
+    det.classList.remove("virando"); void det.offsetWidth; det.classList.add("virando");
+    const caixa = document.getElementById("sobre-grimorio");
+    if (caixa.hidden) { caixa.hidden = false; App.som("pagina"); }
+    caixa.querySelectorAll("[data-pagina]").forEach((b) => b.addEventListener("click", (ev) => {
+      ev.stopPropagation();
+      if (b.dataset.pagina !== paginaGrimorio) { App.som("pagina"); abrirGrimorio(b.dataset.pagina); }
+    }));
+  }
+  function alternarGrimorio() {
+    const caixa = document.getElementById("sobre-grimorio");
+    if (caixa.hidden) abrirGrimorio(); else caixa.hidden = true;
   }
 
   // ------------------------------------------------------------------ carregar jogo
@@ -923,6 +980,6 @@ const Telas = (() => {
     setTimeout(() => t.remove(), 3300);
   }
 
-  return { rastreador, atributosHtml, reputacaoHtml, dica, guardarDica, htmlItem, menuUso, abrirDica, novaVisita, fecharMenuItem, guardarArvore, abrirTalentos, fecharTalentos, painel, celebrar, toast, iconeCriatura, iconeItem, dicaItem, ligarDicas, esconderDica,
+  return { rastreador, atributosHtml, reputacaoHtml, dica, guardarDica, htmlItem, menuUso, abrirGrimorio, alternarGrimorio, abrirDica, novaVisita, fecharMenuItem, guardarArvore, abrirTalentos, fecharTalentos, painel, celebrar, toast, iconeCriatura, iconeItem, dicaItem, ligarDicas, esconderDica,
     ICONE_ITEM, ARMA, VAZIO, NOME_ESPACO, AREA, barra, aprovacao };
 })();

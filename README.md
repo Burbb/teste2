@@ -142,7 +142,7 @@ na interface miúda; **Jersey 15** nos números. O botão "Fonte" no topo volta 
 - **Itens com bom senso:** o jogo avisa em vez de gastar poção com vida cheia ou bandagem sem
   ferida. Fora de combate, poção e bandagem também servem na comitiva (clique na poção e escolha
   em quem); a bandagem põe de pé um companheiro caído.
-- **Doca de atalhos:** Inventário, Talentos, Comitiva · Mapa, Diário, Bestiário · Salvar, Sair,
+- **Doca de atalhos:** Talentos, Grimório, Inventário, Comitiva · Mapa, Diário, Bestiário · Salvar, Sair,
   em botões de ícone com a tecla no canto e selos de aviso (pontos de talento, carta).
 - **Flechas na carta:** o arqueiro vê as flechas na própria carta da luta, piscando quando
   estão acabando. Sem flechas, o ataque vira um golpe de adaga fraco e os tiros ficam bloqueados.
@@ -171,6 +171,9 @@ na interface miúda; **Jersey 15** nos números. O botão "Fonte" no topo volta 
 - **Item encontrado:** o saque aparece como um cartão com o sprite, a raridade (raios na cor
   dela), os bônus e a diferença para o que você usa, que fica ao lado. Deixar para trás só
   existe com a mochila cheia.
+- **Grimório (P):** um livro com cada habilidade e o ataque básico: o dano de agora (faixa,
+  crítico e chance), de onde ele vem (Poder 40 × 150% × talentos) e quanto cresce a cada ponto de
+  atributo, além de efeitos como queimadura, sangramento e cura com os números do seu herói.
 - **Comparar com Shift:** passe o mouse num item (mochila, mercado) e segure Shift para ver o que
   você está usando naquele espaço, inteiro, ao lado.
 - **Bolsa à mão:** a bolsa do painel esquerdo se usa com um clique, em qualquer menu de lugar; na
@@ -190,7 +193,7 @@ na interface miúda; **Jersey 15** nos números. O botão "Fonte" no topo volta 
 |---|---|
 | `1`–`9`, `0`, setas + Enter, clique | Escolher uma opção |
 | clique na carta do inimigo | Escolher o alvo na luta |
-| `T` `I` `C` `D` `B` `G` `Q` | Talentos, Inventário, Comitiva, Diário, Bestiário, Salvar, Sair (nos menus de local) |
+| `T` `P` `I` `C` `D` `B` `G` `Q` | Talentos, Grimório, Inventário, Comitiva, Diário, Bestiário, Salvar, Sair (nos menus de local) |
 | clique no mapa | Viajar para aquele destino |
 | qualquer tecla durante o texto | Mostrar o texto inteiro |
 | `Espaço`/`Enter` | Continuar ▸ |

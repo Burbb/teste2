@@ -9,6 +9,7 @@ function rolarFim() {
 /* Telas que se redesenham no lugar (mural, mercado, inventário) não podem pular: a rolagem fica onde a pessoa
    estava até as novas opções chegarem; a altura antiga segura a página enquanto o conteúdo é trocado. */
 let rolagemFixa = null;
+let cenaInterrompida = false;  // houve luta ou saque desde a última cena (ver novaCena)
 function fixarRolagem() {
   rolagemFixa = pagina.scrollTop;
   textoEl.style.minHeight = textoEl.offsetHeight + "px";
@@ -54,7 +55,10 @@ function cabecalho(m) {
 
 let tituloAtual = "";
 async function novaCena(m) {
-  const mesmaTela = m.tipo === "menu" && m.titulo === tituloAtual;  // inventário e mercado se redesenham sem piscar
+  // Inventário e mercado se redesenham sem piscar. Mas se no meio houve luta ou saque, a página mudou de verdade:
+  // aí é cena nova, e o texto do que aconteceu (a noite caiu, o item equipado) fica na página em vez de virar aviso.
+  const mesmaTela = m.tipo === "menu" && m.titulo === tituloAtual && !cenaInterrompida;
+  cenaInterrompida = false;
   tituloAtual = m.titulo;
   if (mesmaTela) {
     // O que aconteceu na ação (equipou, comprou...) vira um aviso rápido antes de a tela se redesenhar.
@@ -165,7 +169,7 @@ function iconeChip(m) {
    perto de onde você clicou, e não lá embaixo da página. */
 let ultimoClique = { x: 0, y: 0, t: -1e9 }, avisosAtivos = 0;
 document.addEventListener("pointerdown", (ev) => { ultimoClique = { x: ev.clientX, y: ev.clientY, t: performance.now() }; }, true);
-function emTela() { return !!textoEl.querySelector(".tela") && !(estado && estado.combate); }
+function emTela() { return !!textoEl.querySelector(".tela:not(.achado):not(.saves)") && !(estado && estado.combate); }
 function aviso(texto, tipo, icone) {
   if (replay) return;
   const a = el("div", `aviso-flutuante ${tipo || "info"}`, (icone ? spr(icone, 1) : "") + esc(texto));

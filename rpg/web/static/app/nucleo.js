@@ -141,7 +141,7 @@ async function tratar(m) {
     case "texto": await texto(m); break;
     case "efeito": await efeito(m); break;
     case "rolagem": await rolagem(m); break;
-    case "combate": faixaCombate(m); break;
+    case "combate": cenaInterrompida = true; faixaCombate(m); break;
     case "lance": if (!replay) await Batalha.lance(m); break;
     case "fala": await fala(m); break;
     case "opiniao": await opiniao(m); break;
@@ -149,7 +149,7 @@ async function tratar(m) {
     case "fim_combate": if (!instantaneo()) await espera(m.resultado === "vitoria" ? 800 : 400); break;
     case "celebrar": await Telas.celebrar(m, instantaneo()); break;
     case "talentos": Telas.guardarArvore(m.arvore); break;
-    case "painel": anexar(Telas.painel(m)); break;
+    case "painel": if (m.tipo === "achado") cenaInterrompida = true; anexar(Telas.painel(m)); break;
     case "subtitulo": anexar(el("div", "subtitulo", esc(suavizar(m.texto)))); break;
     case "separador": anexar(el("hr")); break;
     case "bloco": bloco(m); break;

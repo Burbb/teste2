@@ -111,3 +111,53 @@
 .festa .ganho, .festa .habilidade-nova { animation: ganho-pula 0.38s cubic-bezier(.2, 1.4, .4, 1) forwards; }
 @keyframes ganho-pula { from { opacity: 0; transform: translateY(10px) scale(0.85); } to { opacity: 1; transform: none; } }
 .festa .ganho b.conta { font-weight: normal; margin-right: 6px; }
+
+/* ------------------------------------------------------------------ Grimório: um livro aberto */
+.grimorio-livro { position: relative; display: grid; grid-template-columns: 1fr 1.25fr; width: min(1020px, 94vw); height: min(640px, 88vh);
+  padding: 14px; background: #3a1f12; border: 3px solid #0d0b0a; box-shadow: 0 0 0 3px #6e4a1c, 8px 8px 0 #000;
+  animation: livro-abre .35s cubic-bezier(.2, .8, .3, 1.1); }
+.grimorio-livro::before { content: ""; position: absolute; inset: 6px; border: 2px solid #8a6a14; pointer-events: none; opacity: .6; }
+.grimorio-pagina { position: relative; overflow-y: auto; padding: 22px 26px 18px; color: #2a1f16; scrollbar-width: thin; scrollbar-color: #a08a5a transparent;
+  background: linear-gradient(180deg, #efe2bf, #e2d1a6); font-family: var(--prosa, var(--texto)); }
+.grimorio-pagina.esquerda { box-shadow: inset -26px 0 26px -18px rgba(60, 35, 10, 0.55); border-right: 1px solid #b89c64; }
+.grimorio-pagina.direita { box-shadow: inset 26px 0 26px -18px rgba(60, 35, 10, 0.55); }
+.grimorio-pagina.direita.virando > * { animation: pagina-vira .32s ease-out both; }
+.grimorio-cab b { display: block; font-family: var(--titulo); font-weight: 400; font-size: 40px; line-height: 1; color: #5a1f12; }
+.grimorio-cab small { font-size: 14px; color: #6e5a3a; }
+.grimorio-lista { list-style: none; margin: 10px 0 10px; padding: 0; display: flex; flex-direction: column; gap: 1px; }
+.grimorio-item { width: 100%; display: grid; grid-template-columns: 34px 1fr auto; align-items: center; gap: 10px; padding: 2px 8px 2px 3px;
+  text-align: left; font: inherit; font-size: 16px; color: #2a1f16; background: transparent; border: 2px solid transparent; cursor: pointer; transition: background .15s, border-color .15s; }
+.grimorio-item:hover { background: rgba(138, 106, 20, 0.14); border-color: rgba(138, 106, 20, 0.35); }
+.grimorio-item.aberto { background: rgba(90, 31, 18, 0.12); border-color: #8a5a2c; }
+.gi-icone { display: grid; place-items: center; width: 34px; height: 34px; overflow: hidden; background: #2a1f16; border: 2px solid #5a4632; }
+.gi-custo { font-family: var(--num); font-size: 15px; color: #6e5a3a; }
+.grimorio-atributos { display: flex; gap: 8px; margin: 6px 0 8px; }
+.grimorio-atributos span { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 3px 0; border: 2px solid #b89c64; background: rgba(255, 255, 255, 0.18); }
+.grimorio-atributos small { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: #6e5a3a; }
+.grimorio-atributos b { font-family: var(--num); font-size: 22px; line-height: 1; color: #2a1f16; }
+.grimorio-gerais { margin: 0; padding-left: 16px; font-size: 13px; line-height: 1.35; color: #4a3a2a; }
+.g-topo { display: flex; align-items: center; gap: 14px; }
+.g-icone { display: grid; place-items: center; width: 76px; height: 76px; flex: none; background: #2a1f16; border: 3px solid #5a4632; box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.35); }
+.g-nome { display: block; font-family: var(--titulo); font-weight: 400; font-size: 40px; line-height: 1; color: #5a1f12; }
+.g-meta { margin-top: 4px; font-size: 14px; color: #6e5a3a; }
+.g-desc { margin: 12px 0 10px; font-size: 17px; font-style: italic; color: #3a2e24; }
+.g-linhas { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.g-dano { padding: 10px 12px; background: rgba(42, 31, 22, 0.88); color: #efe2bf; border: 2px solid #0d0b0a; box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.3); }
+.g-rotulo { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: #c0b090; }
+.g-rotulo i { font-style: normal; margin-left: 6px; }
+.g-faixa { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.g-faixa > b { font-family: var(--num); font-size: 38px; line-height: 1.1; color: #fff3d6; }
+.g-faixa span { font-size: 14px; color: #c0b090; } .g-faixa span b { font-family: var(--num); font-size: 18px; color: var(--ouro); }
+.g-formula { margin-top: 4px; font-family: var(--num); font-size: 16px; color: #e8dcc0; }
+.g-escala { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-top: 4px; font-size: 14px; color: var(--bom); }
+.g-nota { margin-top: 4px; font-size: 13px; color: #c0b090; font-style: italic; }
+.g-efeito { padding: 2px 0 2px 16px; position: relative; font-size: 16px; color: #2a1f16; }
+.g-efeito::before { content: "✦"; position: absolute; left: 0; color: #8a5a2c; }
+.g-rodape { margin: 14px 0 0; font-size: 12px; color: #7a6646; }
+.grimorio-fechar { position: absolute; top: -16px; right: -10px; z-index: 2; font: inherit; font-size: 15px; color: var(--tinta); background: #120e0b; border: 3px solid #5a4632; padding: 3px 10px; box-shadow: 3px 3px 0 #000; cursor: pointer; }
+@keyframes livro-abre { from { transform: scale(.92) translateY(10px); opacity: 0; } }
+@keyframes pagina-vira { from { opacity: 0; transform: translateX(14px); } }
+@media (max-width: 760px) {
+  .grimorio-livro { grid-template-columns: 1fr; grid-template-rows: auto 1fr; height: 92vh; }
+  .grimorio-pagina.esquerda { max-height: 38vh; }
+}

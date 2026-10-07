@@ -1309,6 +1309,24 @@ const SPRITES_GRADES = (() => {
     "......kuk.......",
     ".......k........",
     "................"];
+  // Grimório: tomo roxo com cantoneiras de ouro e uma runa acesa na capa.
+  S.grimorio = [
+    "................",
+    "..kkkkkkkkkkkk..",
+    ".kCxxxxxxxxxxxk.",
+    ".kCxcccccccccxwk",
+    ".kCxcxxxxxxxcxwk",
+    ".kCxcxxMMxxxcxwk",
+    ".kCxcxMxxMxxcxwk",
+    ".kCxcxMyyMxxcxwk",
+    ".kCxcxMxxMxxcxwk",
+    ".kCxcxxMMxxxcxwk",
+    ".kCxcxxxxxxxcxwk",
+    ".kCxcccccccccxwk",
+    ".kCxxxxxxxxxxxwk",
+    ".kCCCCCCCCCCCCwk",
+    "..kwwwwwwwwwwwwk",
+    "...kkkkkkkkkkkk."];
   // Farpa dos espinhos da armadura: um cacho de pontas que salta de volta no agressor.
   S.farpa = [
     "................",
