@@ -1,0 +1,50 @@
+/* ------------------------------------------------------------------ HUD superior */
+#hud { width: 100%; max-width: 860px; padding: 4px 8px; box-shadow: var(--sombra); }
+#hud-linha { display: flex; align-items: center; gap: 12px; }
+.hud-retrato { flex: none; width: 54px; height: 54px; background: #0d0b0a; border: 3px solid #4a4038; display: grid; place-items: center; position: relative; }
+.hud-retrato .nivel { position: absolute; right: -9px; bottom: -9px; font-family: var(--num); font-size: 18px; color: #120e0b; background: var(--ouro); border: 2px solid #000; padding: 0 4px; line-height: 1.1; }
+.hud-vitais { flex: 1.3; min-width: 180px; display: flex; flex-direction: column; gap: 3px; }
+.hud-nome { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.hud-nome b { font-family: var(--titulo); font-size: 26px; font-weight: 400; color: #fff3d6; line-height: 1; text-shadow: 2px 2px 0 #000; }
+.hud-nome span { font-size: 13px; color: var(--tinta-3); white-space: nowrap; }
+.vital { display: flex; align-items: center; gap: 6px; position: relative; }
+.vital img.sprite { --s: 16; }
+.vital .barra-px { flex: 1; height: 16px; }
+.vital .num { font-family: var(--num); font-size: 20px; min-width: 62px; text-align: right; color: var(--tinta); line-height: 1; }
+.vital.critico .barra-px { animation: piscar-vida 0.8s steps(2) infinite; }
+@keyframes piscar-vida { 50% { filter: brightness(1.7); } }
+.hud-recursos { display: flex; gap: 4px; align-items: flex-end; flex-wrap: wrap; justify-content: flex-end; }
+.recurso { position: relative; display: flex; flex-direction: column; align-items: center; min-width: 52px; padding: 2px 3px; cursor: help; }
+.recurso .icones { height: 34px; display: flex; align-items: flex-end; justify-content: center; }
+.recurso .icones img + img { margin-left: -16px; }
+.recurso .qtd { font-family: var(--num); font-size: 20px; line-height: 1; color: var(--tinta); text-shadow: 2px 2px 0 #000; }
+.recurso .qtd small { font-size: 14px; color: var(--tinta-3); }
+.recurso.alerta .qtd { color: var(--sangue-2); }
+.recurso.alerta .icones { animation: alerta 1s steps(2) infinite; }
+@keyframes alerta { 50% { transform: translateY(-2px); filter: brightness(1.5); } }
+.recurso.ganhou .icones { animation: ganhar 0.5s steps(4); }
+.recurso.perdeu .icones { animation: perder 0.45s steps(4); }
+@keyframes ganhar { 0% { transform: scale(1); } 40% { transform: scale(1.35) translateY(-6px); } 100% { transform: scale(1); } }
+@keyframes perder { 20% { transform: translateX(-4px); } 40% { transform: translateX(4px); filter: brightness(0.6) sepia(1) saturate(4); } 60% { transform: translateX(-3px); } 80% { transform: translateX(2px); } }
+.flutua { position: absolute; left: 50%; top: -6px; transform: translateX(-50%); font-family: var(--num); font-size: 24px; pointer-events: none; text-shadow: 2px 2px 0 #000; animation: flutuar 1.1s steps(26) forwards; white-space: nowrap; z-index: 5; }
+.flutua.mais { color: var(--ouro); }
+.flutua.menos { color: var(--sangue-2); }
+.flutua.cura { color: var(--bom); }
+.flutua.mana { color: #a8c4ff; } .flutua.vigor { color: #ffb35c; } .flutua.foco { color: #c8f0a0; }
+.carta-rec.enchendo { animation: enchendo 0.8s steps(16); }
+@keyframes enchendo { 0%, 100% { filter: none; } 30% { filter: brightness(1.8) drop-shadow(0 0 4px #7fb0ff); } }
+@keyframes flutuar { from { transform: translate(-50%, 0); opacity: 1; } to { transform: translate(-50%, -30px); opacity: 0; } }
+
+/* barras em pixel */
+.barra-px { position: relative; display: block; height: 12px; background: #2a2420; border: 2px solid #0d0b0a; overflow: hidden; }
+.barra-px .enchimento, .barra-px .rastro { position: absolute; top: 0; bottom: 0; left: 0; transition: width 0.22s cubic-bezier(.3,.7,.4,1); }
+.barra-px .rastro { background: #f1e4c4; transition: width 0.4s steps(12) 0.12s; }
+.barra-px .enchimento { background: linear-gradient(180deg, var(--c1) 0 30%, var(--c2) 30% 72%, var(--c3) 72%); }
+.barra-px.vida { --c1: #ff7a6e; --c2: #d0342f; --c3: #8a1414; }
+.barra-px.vigor { --c1: #ffe08a; --c2: #e0a22d; --c3: #8a5a0c; }
+.barra-px.mana { --c1: #a8c4ff; --c2: #4d74e0; --c3: #1c2a6b; }
+.barra-px.foco { --c1: #b8f0a0; --c2: #62b86e; --c3: #1f4a25; }
+.barra-px.aliado { --c1: #b8f0f0; --c2: #4fb3b9; --c3: #1f5f63; }
+.barra-px.xp { --c1: #fff3a0; --c2: #d4af37; --c3: #8a6a14; height: 8px; }
+.barra-px.corrupcao { --c1: #ff8ab0; --c2: #b3262b; --c3: #5a1438; }
+.barra-px.fina { height: 8px; }

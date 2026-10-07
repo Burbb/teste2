@@ -1,0 +1,114 @@
+/* Crônicas da Fenda — tema pixel art.
+   Fontes (OFL, embutidas): Jacquard 24 (títulos góticos), Pixelify Sans (prosa e interface), Jersey 15 (números).
+   Molduras e texturas são geradas em pixel art pelo sprites.js e entram como variáveis CSS. */
+
+@font-face { font-family: "Jacquard 24"; src: url(../fontes/jacquard-24-latin-400-normal.woff2) format("woff2"); font-display: swap; }
+/* Títulos: letras góticas, mas números da fonte de números (o 5 gótico é difícil de ler). */
+@font-face { font-family: "Titulo"; src: url(../fontes/jersey-15-latin-400-normal.woff2) format("woff2"); unicode-range: U+0030-0039, U+0025, U+002B, U+002F; font-display: swap; }
+@font-face { font-family: "Titulo"; src: url(../fontes/jacquard-24-latin-400-normal.woff2) format("woff2"); font-display: swap; }
+@font-face { font-family: "Pixelify Sans"; font-weight: 400; src: url(../fontes/pixelify-sans-latin-400-normal.woff2) format("woff2"); font-display: swap; }
+@font-face { font-family: "Pixelify Sans"; font-weight: 600; src: url(../fontes/pixelify-sans-latin-600-normal.woff2) format("woff2"); font-display: swap; }
+@font-face { font-family: "Jersey 15"; src: url(../fontes/jersey-15-latin-400-normal.woff2) format("woff2"); font-display: swap; }
+
+:root {
+  --fundo: #120e0b;
+  --painel: #1b1511;
+  --linha: #3a2e24;
+  --tinta: #eadfc6;
+  --tinta-2: #b8a888;
+  --tinta-3: #7d6f5c;
+  --ouro: #f2c94c;
+  --ouro-2: #d4af37;
+  --ouro-3: #8a6a14;
+  --brasa: #ff9d4d;
+  --sangue: #b3262b;
+  --sangue-2: #e2574c;
+  --bom: #8fbf6a;
+  --arcano: #b49cff;
+  --frio: #7fb0ff;
+  --teal: #74c4c9;
+  --magico: #7d97ff;
+  --raro: #f2c94c;
+  --lendario: #ff9d4d;
+  --corrupcao: 0;
+  --titulo: "Titulo", "Jacquard 24", "Pixelify Sans", serif;
+  --texto: "Pixelify Sans", "Trebuchet MS", sans-serif;
+  --num: "Jersey 15", "Pixelify Sans", monospace;
+  --sombra: 4px 4px 0 rgba(0, 0, 0, 0.55);
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body {
+  background-color: var(--fundo);
+  background-image: var(--textura-fundo);
+  background-size: 192px;
+  color: var(--tinta);
+  font-family: var(--texto);
+  font-size: 17px;
+  overflow: hidden;
+  image-rendering: pixelated;
+}
+img.sprite, canvas { image-rendering: pixelated; image-rendering: crisp-edges; }
+/* Sprites em pixels inteiros da tela: --px vale 1 pixel do aparelho (ou 2, 3...), nunca 1,25. */
+img.sprite { width: calc(var(--px, 1px) * var(--s, 16)); height: calc(var(--px, 1px) * var(--s, 16)); }
+button { font: inherit; color: inherit; }
+kbd { font-family: var(--num); font-size: 0.85em; padding: 0 4px; border: 2px solid var(--linha); color: var(--tinta-3); margin-left: 4px; background: #0d0b0a; }
+[hidden] { display: none !important; }
+
+/* Molduras pixeladas (imagem gerada no sprites.js) */
+.moldura {
+  border: 12px solid #2a2420;
+  border-image: var(--moldura) 4 / 12px stretch;
+  background-color: var(--painel);
+  background-clip: padding-box;
+}
+
+/* ------------------------------------------------------------------ atmosfera */
+#atmosfera { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+.camada { position: absolute; inset: 0; transition: opacity 1.2s ease; }
+.corrupcao { background: radial-gradient(ellipse 75% 70% at 50% 50%, transparent 45%, rgba(120, 8, 20, 0.8) 100%); opacity: calc(var(--corrupcao) * 0.9); }
+.vinheta { background: radial-gradient(ellipse 90% 85% at 50% 45%, transparent 60%, rgba(0, 0, 0, 0.7) 100%); }
+body[data-periodo="3"] .vinheta { background: radial-gradient(ellipse 70% 65% at 50% 45%, transparent 40%, rgba(0, 0, 0, 0.9) 100%); }
+body.escuro .vinheta { background: radial-gradient(ellipse 50% 55% at 50% 50%, transparent 25%, rgba(0, 0, 0, 0.95) 85%); animation: tremeluz 3.2s steps(6) infinite; }
+@keyframes tremeluz { 0%, 100% { opacity: 1; } 40% { opacity: 0.85; } 50% { opacity: 1; } 70% { opacity: 0.9; } }
+.dor { background: radial-gradient(ellipse 70% 70% at 50% 50%, transparent 45%, rgba(200, 20, 20, 0.6) 100%); opacity: 0; }
+.dor.ativa { animation: dor 0.6s steps(4) forwards; }
+@keyframes dor { 0% { opacity: 1; } 100% { opacity: 0; } }
+#brasas { position: absolute; inset: 0; overflow: hidden; opacity: 0.5; contain: strict; }
+/* As brasas pedem uma repintura da tela inteira a cada quadro: só na tela de título. */
+body:not(.modo-titulo) #brasas { display: none; }
+body.modo-titulo #brasas { opacity: 1; }
+.brasa { will-change: transform, opacity; position: absolute; bottom: -8px; width: 4px; height: 4px; background: #ffb35c; box-shadow: 0 0 0 2px rgba(255, 120, 30, 0.35); animation: subir linear infinite; }
+@keyframes subir { 0% { transform: translate(0, 0); opacity: 0; } 10% { opacity: 1; } 100% { transform: translate(var(--deriva, 30px), -105vh); opacity: 0; } }
+
+/* ------------------------------------------------------------------ topo */
+#topo {
+  position: relative; z-index: 2; height: 46px; display: flex; align-items: center; gap: 22px; padding: 0 18px;
+  background: #0d0b0a; border-bottom: 4px solid #2a2420; box-shadow: 0 4px 0 #000;
+}
+.marca { font-family: var(--titulo); font-size: 30px; color: var(--ouro); text-shadow: 2px 2px 0 #000; white-space: nowrap; line-height: 1; }
+.topo-info { font-family: var(--num); font-size: 21px; color: var(--tinta-2); display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+.topo-info .rotulo { color: var(--tinta-3); }
+#corrupcao-topo .barra-px { width: 110px; }
+#corrupcao-topo .valor { color: #e07a8a; }
+#sigilos-topo { gap: 6px; }
+#sigilos-topo .sigilo { width: 12px; height: 12px; border: 2px solid #4a4038; transform: rotate(45deg); background: #1b1511; }
+#sigilos-topo .sigilo.tem { background: var(--ouro); border-color: #fff3a0; box-shadow: 0 0 0 2px #8a6a14; }
+#acoes-topo { margin-left: auto; display: flex; gap: 4px; }
+#acoes-topo button { background: transparent; border: 2px solid transparent; padding: 3px 10px; color: var(--tinta-2); cursor: pointer; font-size: 15px; }
+#acoes-topo button:hover { border-color: var(--linha); background: #1b1511; color: var(--tinta); }
+#acoes-topo button.desligado { opacity: 0.5; text-decoration: line-through; }
+.so-estreito { display: none; }
+body.sem-heroi #tempo, body.sem-heroi #corrupcao-topo, body.sem-heroi #sigilos-topo { visibility: hidden; }
+
+/* ------------------------------------------------------------------ mesa */
+#mesa {
+  position: relative; z-index: 1; height: calc(100% - 50px); display: grid;
+  grid-template-columns: minmax(250px, 290px) minmax(0, 1fr) minmax(280px, 330px);
+  gap: 14px; padding: 12px 16px; max-width: 1740px; margin: 0 auto;
+}
+.painel { padding: 10px 10px 12px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #4a4038 #120e0b; transition: opacity 0.5s steps(5); }
+body.sem-heroi .painel, body.modo-titulo .painel { opacity: 0; pointer-events: none; }
+body.sem-heroi #hud, body.modo-titulo #hud { display: none; }
+#palco { display: flex; flex-direction: column; min-height: 0; gap: 10px; align-items: center; }

@@ -1,0 +1,41 @@
+/* ------------------------------------------------------------------ título */
+body.modo-titulo #pagina { background: transparent; border-color: transparent; border-image: none; box-shadow: none; }
+body.modo-titulo #folha { display: flex; flex-direction: column; justify-content: center; min-height: 100%; text-align: center; }
+body.modo-titulo #cena-cab { margin-bottom: 30px; }
+body.modo-titulo .cena-titulo { font-size: clamp(72px, 11vw, 144px); color: var(--ouro); text-shadow: 6px 6px 0 #000, 0 0 40px rgba(255, 140, 40, 0.35); }
+body.modo-titulo .cena-sub { font-size: 18px; color: var(--tinta-2); }
+body.modo-titulo #prompt { max-width: 380px; margin: 0 auto; }
+body.modo-titulo .escolha { justify-content: center; font-family: var(--titulo); font-size: 44px; line-height: 1.1; color: #e8dcc0; padding-left: 12px; text-shadow: 3px 3px 0 #000, 0 0 12px rgba(0,0,0,0.8); }
+body.modo-titulo .escolha .tecla { display: none; }
+body.modo-titulo .escolha:hover { color: var(--ouro); }
+body.modo-titulo #texto { text-align: left; }
+body.modo-titulo .dica-pular { display: none; }
+
+/* ------------------------------------------------------------------ telas menores */
+@media (max-width: 1280px) {
+  #mesa { grid-template-columns: minmax(230px, 260px) minmax(0, 1fr); }
+  #mundo { display: none; }
+  body.mostrar-mundo #mundo { display: block; position: fixed; z-index: 15; top: 56px; right: 10px; width: 330px; max-height: calc(100% - 66px); }
+  .recurso { min-width: 44px; }
+}
+@media (max-width: 920px) {
+  body { overflow: auto; }
+  #topo { gap: 10px; padding: 0 10px; overflow-x: auto; }
+  .marca, #tempo, #acoes-topo kbd, #corrupcao-topo .rotulo { display: none; }
+  #corrupcao-topo .barra-px { width: 64px; }
+  #acoes-topo button { padding: 3px 6px; }
+  .so-estreito { display: inline-block; }
+  #mesa { grid-template-columns: minmax(0, 1fr); padding: 8px; gap: 8px; }
+  #heroi { display: none; }
+  body.mostrar-heroi #heroi { display: block; position: fixed; z-index: 15; top: 54px; left: 6px; right: 6px; max-height: calc(100% - 60px); }
+  #hud-linha { flex-wrap: wrap; gap: 8px; }
+  .hud-recursos { flex: 1 1 100%; justify-content: space-between; }
+  #folha { padding: 16px 12px 24px; font-size: 18px; }
+  #arena { gap: 10px; padding: 10px 6px 14px; }
+  .fileira, .fileira.duas { grid-template-columns: minmax(0, 1fr); }
+  .carta { grid-template-columns: 28px 1fr; padding: 3px 5px; } .carta .icone { width: 28px; height: 28px; } .carta .icone img { --s: 16; }
+  .ficha-colunas { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+}

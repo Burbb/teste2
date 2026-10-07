@@ -4,7 +4,19 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Crônicas da Fenda</title>
-<link rel="stylesheet" href="/static/estilo.css">
+<!-- estilos por componente, nesta ordem (a ordem decide quem vence) -->
+<link rel="stylesheet" href="/static/css/01-base.css">
+<link rel="stylesheet" href="/static/css/02-hud.css">
+<link rel="stylesheet" href="/static/css/03-batalha.css">
+<link rel="stylesheet" href="/static/css/04-pagina.css">
+<link rel="stylesheet" href="/static/css/05-paineis.css">
+<link rel="stylesheet" href="/static/css/06-talentos-avisos.css">
+<link rel="stylesheet" href="/static/css/07-titulo-responsivo.css">
+<link rel="stylesheet" href="/static/css/08-mercado.css">
+<link rel="stylesheet" href="/static/css/09-comitiva.css">
+<link rel="stylesheet" href="/static/css/10-contratos.css">
+<link rel="stylesheet" href="/static/css/11-tipografia.css">
+<link rel="stylesheet" href="/static/css/12-acoes-combate.css">
 </head>
 <body class="sem-heroi" data-bioma="vila" data-periodo="0">
 
@@ -84,12 +96,18 @@
   <div class="sobre-caixa moldura fim"><h2>Até a próxima jornada</h2><p>Você já pode fechar esta janela.</p></div>
 </div>
 
+<script src="/static/sprites-dados.js"></script>
 <script src="/static/sprites.js"></script>
 <script src="/static/som.js"></script>
 <script src="/static/vista.js"></script>
 <script src="/static/mapa.js"></script>
 <script src="/static/telas.js"></script>
 <script src="/static/batalha.js"></script>
-<script src="/static/app.js"></script>
+<!-- a aplicação, em partes (nesta ordem) -->
+<script src="/static/app/nucleo.js"></script>
+<script src="/static/app/pagina.js"></script>
+<script src="/static/app/escolhas.js"></script>
+<script src="/static/app/paineis.js"></script>
+<script src="/static/app/controles.js"></script>
 </body>
 </html>

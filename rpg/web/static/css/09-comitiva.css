@@ -1,0 +1,56 @@
+/* ------------------------------------------------------------------ cartões da comitiva (fora da luta) */
+#comitiva-avisos { position: fixed; z-index: 62; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; pointer-events: none; }
+.cartao-comitiva { pointer-events: auto; cursor: pointer; display: flex; gap: 10px; align-items: flex-start; width: min(360px, 82vw); padding: 8px 12px 9px 8px; background: #17120e; border: 3px solid #5a4632; box-shadow: 4px 4px 0 #000, 0 0 0 2px #000; }
+.cartao-comitiva.aprova { border-color: #5f8f3e; }
+.cartao-comitiva.desaprova { border-color: #8a3a7a; }
+.cartao-comitiva.chegou { animation: cc-entra 0.3s steps(12); }
+.cartao-comitiva.sumindo { animation: cc-sai 0.25s steps(10) forwards; }
+@keyframes cc-entra { from { opacity: 0; transform: translateX(26px); } to { opacity: 1; transform: none; } }
+@keyframes cc-sai { to { opacity: 0; transform: translateX(26px); } }
+.cc-retrato { flex: none; width: 54px; height: 54px; display: grid; place-items: center; background: #0d0b0a; border: 2px solid #2a2420; }
+.cartao-comitiva.aprova .cc-retrato { animation: reagiu-bem 0.6s steps(14); }
+.cartao-comitiva.desaprova .cc-retrato { animation: reagiu-mal 0.6s steps(14); }
+.cc-corpo { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.cc-topo { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.cc-topo b { font-family: var(--titulo); font-weight: 400; font-size: 26px; line-height: 1; color: #fff3d6; text-shadow: 2px 2px 0 #000; }
+.cc-selo { font-family: var(--num); font-size: 19px; line-height: 1; padding: 1px 6px 2px; border: 2px solid #000; }
+.cc-selo.aprova { background: #2d4a1e; color: #d8f5c0; }
+.cc-selo.desaprova { background: #3a1438; color: #f0c8e8; }
+.cc-selo.forte { font-size: 22px; }
+.cc-selo.forte.aprova { background: #3d6a2a; } .cc-selo.forte.desaprova { background: #5a1a50; }
+.cc-acao { font-size: 14px; font-style: italic; color: var(--tinta-3); line-height: 1.3; }
+.cc-acao::before { content: "— "; }
+.cc-fala { font-size: 16px; line-height: 1.35; color: #f2e6cc; }
+.cc-fala::before { content: "“"; color: var(--ouro); } .cc-fala::after { content: "”"; color: var(--ouro); }
+.balao i { display: block; margin-top: 3px; font-size: 13px; color: #6a5a48; }
+.balao.narrado i { color: var(--tinta-2); margin-top: 0; }
+/* Na luta, a linha de suprimentos some: o palco ganha a altura (o botão Itens mostra o que dá para usar). */
+body.em-combate #hud-linha { display: none; }
+body.em-combate #batalha { margin-top: 0; }
+.cartao-comitiva.atualizou { animation: cc-pulso 0.4s steps(3); }
+@keyframes cc-pulso { 50% { filter: brightness(1.35); } }
+
+.atributo[data-dica], .reputacao[data-dica] { cursor: help; }
+.atributo[data-dica]:hover { border-color: var(--ouro-3); }
+.dica-lista { margin: 4px 0 0; padding-left: 16px; font-size: 13px; line-height: 1.4; color: var(--tinta-2); }
+.dica-lista li { margin-bottom: 3px; }
+.reputacao b small { font-family: var(--texto); font-size: 12px; color: var(--tinta-3); font-weight: 400; margin-left: 4px; }
+
+/* ------------------------------------------------------------------ comitiva no painel */
+button.membro-carta { font: inherit; background: none; border: 0; padding: 0 2px; cursor: pointer; font-size: 16px; }
+button.membro-carta:hover { color: #fff3a0; transform: scale(1.2); }
+.cartao.clicavel { cursor: pointer; }
+.cartao.clicavel:hover { border-color: var(--ouro-3); transform: translateY(-2px); }
+.cartao.na-reserva { opacity: 0.8; border-style: dashed; }
+.tag.aviso-conversa { margin-top: 6px; color: var(--ouro); border-color: #8a6a14; background: #1c140d; cursor: pointer; font: inherit; animation: alerta 1.2s steps(2) infinite; }
+
+/* ------------------------------------------------------------------ fogueira */
+.fogueira-palco { position: relative; border: 3px solid #0d0b0a; box-shadow: 3px 3px 0 #000; }
+.fogueira-cena { display: block; width: 100%; height: auto; image-rendering: pixelated; }
+/* Cada figura: o nome logo acima da cabeça e a área clicável cobrindo o boneco (os pés ficam no "top"). */
+.figura { position: absolute; transform: translate(-50%, -100%); height: 34%; min-width: 44px; display: flex; flex-direction: column; justify-content: flex-start; align-items: center; gap: 1px; background: none; border: 0; padding: 0; cursor: pointer; font: inherit; }
+.figura .figura-nome { font-family: var(--num); font-size: 18px; line-height: 1; color: #fff3d6; background: rgba(13, 11, 10, 0.8); border: 2px solid #4a4038; padding: 1px 6px 2px; white-space: nowrap; }
+.figura .figura-estado { font-size: 10px; color: var(--tinta-3); white-space: nowrap; background: rgba(13, 11, 10, 0.7); padding: 0 4px; }
+.figura.ativo .figura-nome { border-color: #8a6a14; }
+.figura:hover .figura-nome, .figura:focus-visible .figura-nome { border-color: var(--ouro); color: var(--ouro); }
+.figura .carta-aviso { font-style: normal; font-size: 14px; color: #120e0b; background: var(--ouro); border: 2px solid #000; padding: 0 3px; animation: alerta 1.2s steps(2) infinite; }

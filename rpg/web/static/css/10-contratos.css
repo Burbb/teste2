@@ -1,0 +1,97 @@
+/* ------------------------------------------------------------------ mural de contratos */
+.quadro { padding: 10px 12px 14px; background: #3a2a18; border: 6px solid #5a3a1c; box-shadow: inset 0 0 0 3px #2a1a0c, 4px 4px 0 #000;
+  background-image: repeating-linear-gradient(90deg, rgba(0,0,0,0.12) 0 2px, transparent 2px 9px), repeating-linear-gradient(0deg, rgba(255,220,160,0.05) 0 1px, transparent 1px 7px); }
+.quadro-cab { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 8px; }
+.quadro-cab b { font-family: var(--titulo); font-weight: 400; font-size: 34px; color: var(--ouro); text-shadow: 2px 2px 0 #000; line-height: 1; }
+.quadro-cab span { font-size: 13px; color: #d8c49a; }
+.cartazes { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 14px; }
+.contrato { position: relative; display: flex; flex-direction: column; gap: 4px; padding: 14px 10px 10px; background: #e8d8b0; color: #2a1e12; border: 2px solid #8a6a40;
+  box-shadow: 3px 3px 0 rgba(0,0,0,0.6); transform: rotate(-0.8deg); }
+.contrato:nth-child(2n) { transform: rotate(0.7deg); }
+.contrato:hover { transform: rotate(0) translateY(-3px); z-index: 2; }
+.contrato .prego { position: absolute; top: 4px; left: 50%; width: 8px; height: 8px; margin-left: -4px; background: #6e1d1d; border: 2px solid #2a0808; }
+.contrato-tipo { font-family: var(--titulo); font-size: 26px; line-height: 1; text-align: center; color: #6e1d1d; }
+.contrato.tipo-entrega .contrato-tipo { color: #2e4a20; }
+.contrato.tipo-caca .contrato-tipo { color: #5a3a10; }
+.contrato-arte { align-self: center; width: 60px; height: 60px; display: grid; place-items: center; background: #d4c094; border: 2px solid #8a6a40; }
+.contrato.tipo-alvo .contrato-arte img { filter: sepia(0.6) contrast(1.2); }
+.contrato-titulo { font-weight: 600; font-size: 15px; text-align: center; line-height: 1.2; }
+.contrato-desc { font-size: 13px; line-height: 1.35; color: #4a3a28; }
+.contrato-lugar { font-size: 12px; color: #4a3a28; display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.contrato-lugar img.sprite { --s: 16; }
+.contrato-progresso { display: flex; align-items: center; gap: 6px; font-family: var(--num); font-size: 16px; }
+.contrato-progresso .barra-px { flex: 1; }
+.contrato-premio { display: flex; justify-content: space-between; font-family: var(--num); font-size: 19px; color: #5a3a10; border-top: 2px dashed #a88a5a; padding-top: 4px; }
+.contrato-premio span { display: inline-flex; align-items: center; gap: 3px; }
+.contrato-botao { margin-top: 4px; cursor: pointer; font-family: var(--texto); font-weight: 600; font-size: 14px; color: #fff3d6; background: #6e1d1d; border: 2px solid #2a0808; padding: 4px 8px; box-shadow: 2px 2px 0 #000; }
+.contrato-botao:hover { background: #8a2626; }
+.contrato-botao.abandonar { background: #4a4038; }
+.contrato-botao:disabled { opacity: 0.45; cursor: not-allowed; }
+.contrato-feito { text-align: center; font-size: 13px; font-weight: 600; color: #2e4a20; }
+.contrato.concluido::after { content: "FEITO"; position: absolute; top: 34px; right: 6px; transform: rotate(14deg); font-family: var(--num); font-size: 22px; color: #2e6a20; border: 3px solid #2e6a20; padding: 0 6px; }
+.cartazes.seus .contrato { background: #d8c8a0; }
+
+/* ------------------------------------------------------------------ rastreador de contratos e diário */
+.rastreador h3 { margin-bottom: 4px; }
+.rastro-contrato { display: flex; gap: 8px; align-items: center; padding: 4px 6px; margin-bottom: 4px; background: #120e0b; border: 2px solid #3a2e24; border-left: 4px solid var(--ouro-3); }
+.rastro-contrato.clicavel { cursor: pointer; }
+.rastro-contrato.clicavel:hover { border-color: var(--ouro); }
+.rastro-contrato.feito { border-left-color: var(--bom); }
+.rastro-contrato.cacavel { cursor: pointer; border-color: #8a5a0c; animation: chamar-caca 1.6s steps(4) infinite; }
+.rastro-contrato.cacavel:hover { border-color: var(--ouro); background: #1c140d; }
+@keyframes chamar-caca { 50% { border-left-color: var(--ouro); } }
+.rastro-cacar { display: block; font-family: var(--ui); font-size: 12px; font-weight: 700; color: var(--ouro); }
+.escolha.op-contrato { border-color: #8a5a0c; }
+.escolha.op-contrato .rotulo::after { content: " ◆"; color: var(--ouro); }
+.rastro-arte { flex: none; width: 36px; height: 36px; display: grid; place-items: center; background: #0d0b0a; border: 2px solid #2a2420; }
+.rastro-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.rastro-info b { font-size: 14px; color: #f2e6cc; line-height: 1.2; }
+.rastro-lugar { font-size: 12px; color: var(--tinta-3); display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
+.rastro-contrato.feito .rastro-lugar { color: var(--bom); font-weight: 600; }
+.rastro-prog { display: flex; align-items: center; gap: 6px; }
+.rastro-prog .barra-px { flex: 1; height: 8px; }
+.rastro-prog small { font-family: var(--num); font-size: 15px; color: var(--tinta-2); }
+.marca-contrato { position: absolute; right: -5px; top: -7px; z-index: 2; min-width: 10px; padding: 0 2px; font-family: var(--num); font-size: 11px; line-height: 11px; text-align: center; color: #120e0b; background: var(--ouro); box-shadow: 0 0 0 1px #000; pointer-events: none; }
+.mapa-px.grande .marca-contrato { right: -6px; top: -8px; min-width: 13px; font-size: 14px; line-height: 14px; animation: alerta 1.2s steps(2) infinite; }
+.no-btn.destacado { outline: 3px solid var(--ouro); outline-offset: 3px; }
+.faixa-jornada { display: flex; flex-wrap: wrap; gap: 18px; align-items: center; margin-bottom: 12px; font-family: var(--num); font-size: 19px; color: var(--tinta-2); }
+.faixa-jornada .barra-px { display: inline-block; width: 120px; vertical-align: middle; }
+.sigilos-diario { display: inline-flex; gap: 6px; align-items: center; }
+.sigilos-diario .sigilo { display: inline-block; width: 12px; height: 12px; border: 2px solid #4a4038; transform: rotate(45deg); background: #1b1511; }
+.sigilos-diario .sigilo.tem { background: var(--ouro); border-color: #fff3a0; }
+.bilhetes { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+.bilhete { position: relative; padding: 12px 10px 8px; background: #e8d8b0; color: #2a1e12; border: 2px solid #8a6a40; box-shadow: 3px 3px 0 rgba(0,0,0,0.6); font-size: 14px; line-height: 1.4; transform: rotate(-0.6deg); }
+.bilhete:nth-child(2n) { transform: rotate(0.6deg); }
+.bilhete small { display: block; margin-top: 4px; font-size: 11px; color: #6a5a40; }
+.bilhete img.sprite { --s: 16; vertical-align: -3px; }
+.bilhete.inimigo { background: #d8b0a8; border-color: #6e1d1d; }
+
+.carta.gargalha .icone { animation: gargalha 0.9s steps(6); }
+@keyframes gargalha { 20%, 60% { transform: translateY(-3px) rotate(-6deg); } 40%, 80% { transform: translateY(0) rotate(6deg); } }
+.carta.fugindo { opacity: 0; transition: opacity 0.4s steps(4); }
+
+/* ficha do inimigo (hover na carta) */
+#dica-item.ficha-inimigo { width: 290px; }
+.ficha-tracos { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0; }
+.ficha-traco { display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 3px 4px; background: #0d0b0a; border: 2px solid #3a2e24; cursor: help; }
+.ficha-traco small { font-size: 10px; color: var(--tinta-3); }
+.ficha-titulo { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--tinta-3); margin-top: 6px; }
+.ficha-titulo.bom { color: var(--bom); } .ficha-titulo.ruim { color: var(--sangue-2); }
+.ficha-linha { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 3px; }
+.ficha-mult { display: inline-flex; align-items: center; gap: 4px; padding: 2px 6px 2px 2px; border: 2px solid; background: #0d0b0a; }
+.ficha-mult b { font-family: var(--num); font-size: 18px; font-weight: 400; line-height: 1; }
+.ficha-mult small { font-size: 11px; color: var(--tinta-3); }
+.ficha-mult.fraco { border-color: #3d6a2a; color: #bfe59b; } .ficha-mult.forte { border-color: #8a1414; color: #ff9c90; }
+.ficha-habs { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 3px; }
+.ficha-habs span { font-size: 12px; padding: 1px 6px; background: #2a1f3a; color: #cdbcf5; border: 1px solid #4a3a6a; }
+
+/* modificadores de clima e hora */
+#modificadores { gap: 6px; }
+#modificadores:empty { display: none; }
+.mod { display: inline-flex; align-items: center; gap: 4px; font-family: var(--num); font-size: 17px; line-height: 1; color: #d8e4f0; padding: 2px 7px 3px 3px; background: #121820; border: 2px solid #2c3e5a; cursor: help; white-space: nowrap; }
+.mod img.sprite { --s: 16; }
+.mods-arena { position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%); display: flex; gap: 4px; z-index: 5; pointer-events: auto; }
+.mods-arena .mod { font-size: 14px; padding: 1px 5px 2px 2px; }
+.mods-arena:empty { display: none; }
+.mods-arena .mod { background: rgba(13, 17, 26, 0.85); }
+body.sem-heroi #modificadores { visibility: hidden; }
