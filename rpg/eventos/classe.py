@@ -549,10 +549,8 @@ def grimorio_perdido(g):
         else:
             g.dizer("As letras se mexem, entram pelos seus olhos. Você grita.", "vermelho")
             g.ferir(g.j.max_hp * 0.25)
-            g.corromper(2)
     elif op == "queimar":
-        g.dizer("O livro guincha ao queimar. A corrupção ao redor parece recuar um pouco.", "verde")
-        g.corromper(-2)
+        g.dizer("O livro guincha ao queimar. O ar ao redor parece mais leve.", "verde")
         g.ganhar_xp(10)
 
 

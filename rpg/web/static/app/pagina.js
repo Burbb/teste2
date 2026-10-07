@@ -169,7 +169,21 @@ function iconeChip(m) {
 /* Avisos soltos na tela: nas telas desenhadas (mercado, inventário), o que aconteceu aparece
    perto de onde você clicou, e não lá embaixo da página. */
 let ultimoClique = { x: 0, y: 0, t: -1e9 }, avisosAtivos = 0;
-document.addEventListener("pointerdown", (ev) => { ultimoClique = { x: ev.clientX, y: ev.clientY, t: performance.now() }; }, true);
+document.addEventListener("pointerdown", (ev) => {
+  ultimoClique = { x: ev.clientX, y: ev.clientY, t: performance.now() };
+  dispensarAvisosLongos();
+}, true);
+/** Aviso longo (o carinho no animal, um acontecimento na fogueira) fica o tempo de ler, mas quem já leu (ou já
+ *  conhece de cor) clica em qualquer lugar e ele esvai na hora. O clique que fez o aviso aparecer não conta. */
+function dispensarAvisosLongos() {
+  document.querySelectorAll(".aviso-flutuante.longo:not(.saindo)").forEach((a) => {
+    if (performance.now() - (a._nasceu || 0) < 400) return;
+    clearTimeout(a._t);
+    a.classList.add("saindo");
+    avisosAtivos = Math.max(0, avisosAtivos - 1);
+    setTimeout(() => a.remove(), 250);
+  });
+}
 function emTela() { return !!textoEl.querySelector(".tela:not(.achado):not(.saves)") && !(estado && estado.combate); }
 const avisosPorChave = {};
 /** Aviso flutuante perto do clique. Com `chave`, clicar de novo troca o aviso aberto por um novo (aparece toda vez,
@@ -183,6 +197,7 @@ function aviso(texto, tipo, icone, chave) {
   const dura = longo ? Math.min(9000, Math.max(3500, 1500 + String(texto).length * 55)) : 2400;
   const a = el("div", `aviso-flutuante ${tipo || "info"}${longo ? " longo" : ""}`, (icone ? spr(icone, 1) : "") + `<span>${esc(texto)}</span>`);
   a.style.setProperty("--dura", dura + "ms");
+  a._nasceu = performance.now();
   document.body.appendChild(a);
   if (chave) avisosPorChave[chave] = a;
   const n = avisosAtivos++;

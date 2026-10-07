@@ -23,7 +23,6 @@ class Tempo:
     def novo_dia(self, descanso=1):
         self.dia += 1
         self.periodo = 0
-        restantes = sum(1 for l in self.mundo["locais"] if l["tipo"] == "covil" and not l["guardiao"]["derrotado"])
         self.rolar_clima()
         self.rumores = [r for r in self.rumores if r["expira"] >= self.dia]
         self.impulsos = {}
@@ -32,11 +31,10 @@ class Tempo:
                 self.impulsos[r["evento"]] = self.impulsos.get(r["evento"], 1) * 3
         self.ui.separador()
         self.dizer(f"Amanhece o dia {self.dia}. {CLIMAS[self.clima]['desc']}", "amarelo")
-        self.corromper(2 if restantes else 1, silencioso=True)
         sobrevivencia.amanhecer(self, descanso)
         comitiva.amanhecer(self, descanso)
         registrar(self, "dia", descanso=descanso, provisoes=self.j.provisoes, fome=self.j.fome,
-                  corrupcao=self.corrupcao, ferimentos=len(self.j.ferimentos), local=self.loc["nome"])
+                  ferimentos=len(self.j.ferimentos), local=self.loc["nome"])
 
     def descansar(self, fracao, mana=1.0, folego=1.0):
         """Descanso devolve pouca vida: ferimentos de verdade levam dias. Com fome, quase nada.

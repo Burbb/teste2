@@ -67,7 +67,6 @@ class TestSimulacao(unittest.TestCase):
             g.especializar(spec)
         g.j.ouro = 200
         g.j.reputacao = rng.choice([-30, 0, 30])
-        g.corrupcao = rng.choice([10, 55, 80])
         g.clima = rng.choice(["limpo", "chuva", "nevoa", "tempestade", "neve"])
         g.periodo = rng.choice([0, 3])
         tipos = ["vila"] if contextos == ("vila",) else ["selvagem", "covil", "cidadela"]
@@ -291,9 +290,9 @@ class TestSimulacao(unittest.TestCase):
             g.iniciar("Robô", "guerreiro")
             for nivel in (1, 3, 5):
                 g.j.nivel = nivel
-                niveis = [nivel_regiao(g.mundo["locais"][c["local"]], g.corrupcao)
+                niveis = [nivel_regiao(g.mundo["locais"][c["local"]])
                           for c in (g.gerar_contrato() for _ in range(40)) if c["tipo"] != "entrega"]
-                existentes = {nivel_regiao(l, g.corrupcao) for l in g.mundo["locais"] if l["tipo"] in ("selvagem", "covil")}
+                existentes = {nivel_regiao(l) for l in g.mundo["locais"] if l["tipo"] in ("selvagem", "covil")}
                 if any(-1 <= n - nivel <= 2 for n in existentes):
                     self.assertTrue(all(-1 <= n - nivel <= 2 for n in niveis), (nivel, niveis))
             # Contrato mais difícil paga mais.

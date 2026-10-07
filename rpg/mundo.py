@@ -236,9 +236,9 @@ def vizinhos(mundo, loc):
     return [(mundo["locais"][int(i)], d) for i, d in loc["con"].items()]
 
 
-def nivel_regiao(loc, corrupcao=0):
-    """Nível típico dos inimigos de um lugar: cresce com a distância e com a corrupção."""
+def nivel_regiao(loc):
+    """Nível típico dos inimigos de um lugar: cresce com a distância da vila inicial."""
     base = 1 + round((loc["perigo"] - 1) * 1.9)
     if loc["tipo"] == "cidadela":
         base = 10
-    return base + corrupcao // 34
+    return base

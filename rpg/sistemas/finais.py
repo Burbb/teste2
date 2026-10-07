@@ -33,16 +33,15 @@ class Finais:
                        f"Mande esses arquivos para análise de equilíbrio.", "ciano")
 
     def fim_de_jogo(self, motivo):
-        self.registrar_legado("corrupcao" if self.corrupcao >= 100 else "morte", motivo)
+        self.registrar_legado("morte", motivo)
         self.estatisticas["causa"] = motivo
-        registrar(self, "fim", resultado="corrupcao" if self.corrupcao >= 100 else "morte", causa=motivo,
-                  corrupcao=self.corrupcao, **self._retrato_final())
+        registrar(self, "fim", resultado="morte", causa=motivo, **self._retrato_final())
         if self.hardcore:  # morte permanente de verdade: o save vai junto
             try:
                 os.remove(self.caminho_save())
             except OSError:
                 pass
-        self.ui.cena("Você morreu" if self.corrupcao < 100 else "O reino caiu", f"dia {self.dia}", "morte")
+        self.ui.cena("Você morreu", f"dia {self.dia}", "morte")
         self.narrar(motivo, "vermelho")
         epitafio = self.sortear([
             "Ninguém veio buscar o corpo. Os lobos vieram.",
@@ -60,8 +59,7 @@ class Finais:
         a = self.antagonista
         self.registrar_legado("vitoria", f"derrotou {a['nome']}")
         self.estatisticas["venceu"] = True
-        registrar(self, "fim", resultado="vitoria", causa=f"derrotou {a['nome']}", corrupcao=self.corrupcao,
-                  **self._retrato_final())
+        registrar(self, "fim", resultado="vitoria", causa=f"derrotou {a['nome']}", **self._retrato_final())
         self.ui.cena("Vitória", f"dia {self.dia}", "vitoria")
         self.narrar(f"{tx.maiuscula(a['curto'])} se desfaz como cinza ao vento. A Fenda se fecha com um "
                     f"suspiro que ecoa por todo o reino.", "amarelo")
@@ -78,10 +76,6 @@ class Finais:
             self.narrar("Em cada vila por onde passa, crianças brincam de ser você.")
         elif j.reputacao <= -20:
             self.narrar("O reino está salvo, mas as portas se fecham quando você passa. Heróis nem sempre são amados.")
-        if self.corrupcao >= 70:
-            self.narrar("A vitória veio tarde: cicatrizes do Vazio marcarão estas terras por gerações.")
-        elif self.corrupcao <= 25:
-            self.narrar("A vitória veio a tempo: em poucas estações, nem parece que a sombra esteve aqui.")
         self.resumo()
         self.pausar()
         raise FimDeJogo()

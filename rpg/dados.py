@@ -323,7 +323,7 @@ LORE = {
     "rato": "Onde há um, há vinte. Mordidas sujas que infeccionam.",
     "cavaleiro_sombrio": "Guerreiros que juraram lealdade ao Vazio e não puderam morrer depois.",
     "abominacao": "Carne costurada pela corrupção. Ninguém sabe o que ela foi antes.",
-    "cria_vazio": "Pedaços da Fenda que aprenderam a andar. Surgem quando a corrupção cresce.",
+    "cria_vazio": "Pedaços da Fenda que aprenderam a andar. Quanto mais perto dela, mais delas.",
     "caido": "Diabretes covardes que atacam em bando, rindo. Mate o xamã primeiro, ou eles voltam.",
     "xama_caido": "Pequeno feiticeiro dos caídos. Cospe fogo e ergue os irmãos mortos do chão.",
     "cao_infernal": "Cães de brasa com dentes de obsidiana. O fogo é a casa deles.",

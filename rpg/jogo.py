@@ -54,7 +54,6 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         self.dia = 1
         self.periodo = 0
         self.clima = "limpo"
-        self.corrupcao = 0
         self.passos = 0
         self.flags = {}
         self.historico = {}
@@ -198,7 +197,6 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         self.narrar("Três guardiões, deformados pela Fenda, guardam os Sigilos que selam o caminho até "
                     f"a {self.mundo['locais'][-1]['nome']}. Cavaleiros melhores que você já tentaram. Os corvos "
                     "ainda se lembram do gosto deles.")
-        self.narrar("A cada dia a corrupção avança. Quando chegar a 100%, não haverá mais reino para salvar.")
         self.narrar(f"Você, {self.j.nome}, {self.j.nome_classe.lower()}, parte de {self.loc['nome']} com "
                     f"{self.j.provisoes} dias de comida, {self.j.ouro} moedas e nenhuma garantia de voltar.")
         self.dizer("A fome mata. Feridas infeccionam. A noite cega. E a morte é permanente.", "vermelho+negrito")
@@ -227,7 +225,7 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
             return
 
     def resgate(self):
-        """Fora do modo hardcore, cair em combate custa ouro e tempo (e o tempo alimenta a corrupção)."""
+        """Fora do modo hardcore, cair em combate custa ouro e tempo."""
         j = self.j
         self.estatisticas["quedas"] += 1
         locais = self.mundo["locais"]
@@ -265,7 +263,7 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
                 "cidadela": "Cidadela"}[loc["tipo"]]
         perigo = "" if loc["tipo"] == "vila" else f" · inimigos Nv.{self.nivel_local()}"
         ui.cena(loc["nome"], f"{tipo}{perigo} · dia {self.dia}, {PERIODOS[min(self.periodo, 3)].lower()} · "
-                             f"{CLIMAS[self.clima]['nome'].lower()} · corrupção {self.corrupcao}%", "local")
+                             f"{CLIMAS[self.clima]['nome'].lower()}", "local")
         if getattr(ui, "hud", False):
             return  # o painel lateral já mostra o resto
         ui.dizer(f" {j.nome}, {j.nome_classe} Nv.{j.nivel}  (XP {j.xp}/{j.xp_proximo()})  "

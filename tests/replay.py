@@ -69,7 +69,7 @@ def _inimigo(g, x):
     if x["familia"] == "guardiao":
         return _guardiao(x["nome"], x["nivel"])
     if x["familia"] == "antagonista":
-        return fab.instanciar_antagonista(g.antagonista, x["nivel"], g.corrupcao)
+        return fab.instanciar_antagonista(g.antagonista, x["nivel"])
     unico = None
     if ", " in x["nome"]:
         unico = x["nome"].split(", ")[0]

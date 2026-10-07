@@ -174,7 +174,7 @@ def espantalho(g):
     if op == "fogo" or g.chance(0.5):
         if op == "fogo":
             g.dizer("A palha pega fogo e algo lá dentro GRITA.", "vermelho")
-        e = g.inimigo("ent_jovem", afixo="corrompido" if g.corrupcao >= 30 else "feroz")
+        e = g.inimigo("ent_jovem", afixo="corrompido" if g.loc["perigo"] >= 4 else "feroz")
         e.nome = "Espantalho Possuído"
         e.desc = "um espantalho possuído"
         if op == "fogo":

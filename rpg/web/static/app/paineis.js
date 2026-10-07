@@ -31,7 +31,6 @@ function aplicarEstado(e) {
   if (!e.combate) posicionarPrompt();  // a luta acabou: as opções voltam ao pé da página
   corpo.classList.toggle("recurso-vigor", e.heroi.recurso === "Vigor");
   corpo.classList.toggle("recurso-foco", e.heroi.recurso === "Foco");
-  corpo.style.setProperty("--corrupcao", (e.mundo.corrupcao / 100).toFixed(2));
   Som.ambiente(bioma);
   Vista.atualizar(e);
   if (corpo.classList.contains("modo-titulo")) {
@@ -41,8 +40,6 @@ function aplicarEstado(e) {
   }
   MapaPx.ambiente(e.mundo);
   $("#tempo").textContent = `Dia ${e.mundo.dia} · ${e.mundo.periodo} · ${e.mundo.clima}`;
-  $("#corrupcao-topo .enchimento").style.width = e.mundo.corrupcao + "%";
-  $("#corrupcao-topo .valor").textContent = e.mundo.corrupcao + "%";
   $("#sigilos-topo").innerHTML = [0, 1, 2].map((i) => `<i class="sigilo${i < e.heroi.sigilos ? " tem" : ""}"></i>`).join("");
   desenharHud(e.heroi, antes && antes.heroi);
   Batalha.catalogo(e.estados);

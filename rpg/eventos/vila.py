@@ -62,7 +62,7 @@ def ouvir_rumor(g, preferir=None):
         h = g.sortear(g.lendas)
         if h["resultado"] == "vitoria":
             feito = f"derrotou {h['antagonista']} e fechou a Fenda"
-        elif h["resultado"] == "corrupcao":
+        elif h["resultado"] == "corrupcao":  # partidas de antes da 1.16, quando o reino podia cair
             feito = f"chegou a reunir {h.get('sigilos', 0)} Sigilos antes de a sombra vencer"
         else:
             feito = "caiu lutando, sem nunca recuar"
@@ -156,7 +156,7 @@ def festival(g):
         ouvir_rumor(g, preferir="fraqueza")
 
 
-@evento(contextos=VILA, peso=lambda g: 3 + g.corrupcao // 10, cooldown=12, cond=lambda g: g.corrupcao >= 20)
+@evento(contextos=VILA, peso=3, cooldown=12, cond=lambda g: g.loc["perigo"] >= 2)
 def pregador_do_vazio(g):
     a = g.antagonista
     g.dizer(f"Na praça, um homem de olhos fundos grita para a multidão: \"{tx.maiuscula(a['curto'])} não é "
@@ -170,14 +170,12 @@ def pregador_do_vazio(g):
         if g.teste("carisma", 13):
             g.dizer("Você expõe as contradições dele. A multidão o expulsa da vila.", "verde")
             g.mudar_reputacao(4)
-            g.corromper(-2)
         else:
             g.dizer("A multidão vaia — você.", "vermelho")
             g.mudar_reputacao(-2)
     elif op == "seguir":
         g.dizer("Ele te leva até um porão onde outros cultistas se reúnem.", "vermelho")
         if g.combate([g.inimigo("cultista"), g.inimigo("cultista", afixo="corrompido")]) == "vitoria":
-            g.corromper(-4)
             g.mudar_reputacao(5)
 
 
@@ -246,7 +244,7 @@ def pedido_de_socorro(g):
     if g.menu("Aceitar?", [("Prometer procurar", True), ("Dizer que não pode", False)]):
         cid = g.novo_id()
         fam = g.sortear(BIOMAS[l["bioma"]]["familias"])
-        ouro, xp = g.recompensa_contrato(nivel_regiao(l, g.corrupcao), 1.3)
+        ouro, xp = g.recompensa_contrato(nivel_regiao(l), 1.3)
         g.contratos.append({"id": cid, "tipo": "alvo", "local": l["id"], "familia": fam,
                             "nome": tx.nome_proprio(g.rng), "chave": f"alvo:{cid}",
                             "ouro": ouro, "xp": xp,

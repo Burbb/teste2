@@ -13,7 +13,7 @@ const MapaPx = (() => {
   const TINTA = [["#c09a80", 0.12], [null, 0], ["#82363e", 0.2], ["#0d1328", 0.5]];  // manhã, tarde, crepúsculo, noite
   const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
   const NEVOA = "#0f0c0a";
-  let ambiente = { periodo_n: 1, clima_id: "limpo", corrupcao: 0 };
+  let ambiente = { periodo_n: 1, clima_id: "limpo" };
   const cache = {};
 
   function hex(c) { return [1, 3, 5].map((i) => parseInt(c.slice(i, i + 2), 16)); }

@@ -346,11 +346,11 @@ def resumo(registro):
     if dias:
         w("## Por dia")
         w("")
-        w("| Dia | Nv | Vida | Ouro | Provisões | Corrupção | Ferimentos |")
-        w("|---|---|---|---|---|---|---|")
+        w("| Dia | Nv | Vida | Ouro | Provisões | Ferimentos |")
+        w("|---|---|---|---|---|---|")
         for e in dias:
             w(f"| {e['dia']} | {e['nv']} | {e['hp']}/{e['hp_max']} | {e['ouro']} | {e.get('provisoes')} | "
-              f"{e.get('corrupcao')}% | {e.get('ferimentos', 0)} |")
+              f"{e.get('ferimentos', 0)} |")
         w("")
     return "\n".join(linhas)
 

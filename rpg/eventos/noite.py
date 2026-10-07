@@ -110,7 +110,7 @@ def ceu_estrelado(g):
         g.ganhar_xp(5 + g.j.nivel)
 
 
-@evento(contextos=ACAMP, peso=lambda g: 3 + g.corrupcao // 10, cooldown=8, cond=lambda g: g.corrupcao >= 45)
+@evento(contextos=ACAMP, peso=3, cooldown=8, cond=lambda g: g.nivel_local() >= 5)
 def sussurros_do_vazio(g):
     g.dizer(f"Uma voz dentro da fogueira, com o timbre de {g.antagonista['curto']}: \"Para que lutar? "
             f"Junte-se a mim e nunca mais terá medo.\"", "magenta+negrito")
@@ -122,10 +122,11 @@ def sussurros_do_vazio(g):
     g.dizer("Você escuta. É fácil escutar. A voz te ensina coisas — e cobra caro.", "magenta")
     stat = "poder" if g.j.classe == "mago" else "atk"
     g.bonus_permanente(stat, 2)
+    g.j.base["max_hp"] -= 6  # o preço não tem teto
     g.j.recalcular()
-    g.corromper(5)
     g.mudar_reputacao(-3)
-    g.dizer(f"(+2 {'Poder' if stat == 'poder' else 'Ataque'}, mas a corrupção avança)", "magenta")
+    g.dizer(f"(+2 {'Poder' if stat == 'poder' else 'Ataque'}, mas −6 de vida máxima: a voz levou um pedaço de você)",
+            "magenta")
 
 
 @evento(contextos=ACAMP, peso=10, cooldown=6, cond=lambda g: g.j.companheiro is not None)

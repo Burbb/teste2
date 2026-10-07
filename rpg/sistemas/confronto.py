@@ -11,6 +11,10 @@ from ..mundo import nivel_regiao, vizinhos
 from ..regras import NIVEL_MIN_FAMILIA, Derrota
 
 
+# Criaturas da Fenda e o perigo mínimo do lugar para elas aparecerem fora do bioma delas.
+CRIATURAS_DA_FENDA = ((3, "caido"), (4, "cao_infernal"), (4, "cria_vazio"), (5, "abominacao"))
+
+
 class Confronto:
     # ================================================================ inimigos e combate
     def nivel_inimigo(self, bonus=0):
@@ -22,28 +26,25 @@ class Confronto:
         return vizinhos(self.mundo, self.loc)
 
     def nivel_local(self):
-        return nivel_regiao(self.loc, self.corrupcao)
+        return nivel_regiao(self.loc)
 
     def inimigo(self, familia, bonus=0, afixo=None, nome_unico=None, nivel=None):
         return criar(self.rng, familia, nivel or self.nivel_inimigo(bonus), afixo, nome_unico)
 
     def afixo_aleatorio(self):
-        p = 0.10 + self.loc["perigo"] * 0.03 + self.corrupcao / 400
+        p = 0.10 + self.loc["perigo"] * 0.03
         if self.j.nivel <= 1 or not self.chance(p):
             return None
-        if self.corrupcao >= 30 and self.chance(self.corrupcao / 150):
+        if self.loc["perigo"] >= 4 and self.chance(0.3):  # perto da Fenda, o Vazio toca as feras
             return "corrompido"
         return self.sortear(["feroz", "robusto", "agil", "venenoso", "anciao", "flamejante"])
 
     def familias_locais(self):
         nv = self.nivel_local()
         familias = [f for f in BIOMAS[self.bioma]["familias"] if NIVEL_MIN_FAMILIA.get(f, 1) <= nv]
-        if self.corrupcao >= 30:
-            familias += ["caido"] + (["cao_infernal"] if nv >= 3 else [])
-        if self.corrupcao >= 40:
-            familias.append("cria_vazio")
-        if self.corrupcao >= 70:
-            familias.append("abominacao")
+        # Quanto mais perto da Fenda (os lugares perigosos, a caminho da Cidadela), mais criaturas dela.
+        familias += [f for perigo, f in CRIATURAS_DA_FENDA
+                     if self.loc["perigo"] >= perigo and NIVEL_MIN_FAMILIA.get(f, 1) <= nv and f not in familias]
         if self.noite and self.bioma in ("ruinas", "pantano", "planicie"):
             familias.append("espectro")
         return familias

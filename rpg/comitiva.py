@@ -787,7 +787,8 @@ def encerrar_combate(cb, resultado):
             g.dizer(f"{a.nome} está caíd{'a' if a.g == 'f' else 'o'}, mas respira. Vai precisar de uma noite "
                     "de descanso antes de lutar de novo.", "amarelo")
     if presente(g, "yara") and membro(g, "yara").get("caminho") == "vazio" and resultado == "vitoria":
-        g.corromper(1, silencioso=True)  # o poder da Fenda cobra o seu preço
+        # o poder da Fenda cobra o seu preço: Yara bebe um pouco da sua vida a cada luta
+        g.j.hp = max(1, g.j.hp - max(1, int(g.j.max_hp * bal.YARA_VAZIO_CUSTO)))
 
 
 def morrer(g, m):

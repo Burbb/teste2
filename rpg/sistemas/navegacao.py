@@ -18,7 +18,7 @@ class Navegacao:
             numero = "" if web else f"[{loc['id'] + 1}] {mapa.glifo(self, loc)} "
             texto = f"{numero}{loc['nome']} — {mapa.descricao(self, loc)}"
             if loc["tipo"] != "vila":
-                nv = nivel_regiao(loc, self.corrupcao)
+                nv = nivel_regiao(loc)
                 texto += f" · Nv.{nv}"
                 if nv >= self.j.nivel + 2:
                     texto += " (PERIGOSO!)"
@@ -31,7 +31,7 @@ class Navegacao:
         if not destino:
             return
         loc, dist = destino
-        nv = nivel_regiao(loc, self.corrupcao)
+        nv = nivel_regiao(loc)
         if loc["tipo"] != "vila" and nv >= self.j.nivel + 3:
             if not self.menu(f"{loc['nome']} tem inimigos de nível {nv}. Você é nível {self.j.nivel}. "
                              f"Lá, quase qualquer encontro pode te matar. Ir mesmo assim?",

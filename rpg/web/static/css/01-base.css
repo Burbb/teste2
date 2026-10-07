@@ -30,7 +30,6 @@
   --magico: #7d97ff;
   --raro: #f2c94c;
   --lendario: #ff9d4d;
-  --corrupcao: 0;
   --titulo: "Titulo", "Jacquard 24", "Pixelify Sans", serif;
   --texto: "Pixelify Sans", "Trebuchet MS", sans-serif;
   --num: "Jersey 15", "Pixelify Sans", monospace;
@@ -67,7 +66,6 @@ kbd { font-family: var(--num); font-size: 0.85em; padding: 0 4px; border: 2px so
 /* ------------------------------------------------------------------ atmosfera */
 #atmosfera { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
 .camada { position: absolute; inset: 0; transition: opacity 1.2s ease; }
-.corrupcao { background: radial-gradient(ellipse 75% 70% at 50% 50%, transparent 45%, rgba(120, 8, 20, 0.8) 100%); opacity: calc(var(--corrupcao) * 0.9); }
 .vinheta { background: radial-gradient(ellipse 90% 85% at 50% 45%, transparent 60%, rgba(0, 0, 0, 0.7) 100%); }
 body[data-periodo="3"] .vinheta { background: radial-gradient(ellipse 70% 65% at 50% 45%, transparent 40%, rgba(0, 0, 0, 0.9) 100%); }
 body.escuro .vinheta { background: radial-gradient(ellipse 50% 55% at 50% 50%, transparent 25%, rgba(0, 0, 0, 0.95) 85%); animation: tremeluz 3.2s steps(6) infinite; }
@@ -90,8 +88,6 @@ body.modo-titulo #brasas { opacity: 1; }
 .marca { font-family: var(--titulo); font-size: 30px; color: var(--ouro); text-shadow: 2px 2px 0 #000; white-space: nowrap; line-height: 1; }
 .topo-info { font-family: var(--num); font-size: 21px; color: var(--tinta-2); display: flex; align-items: center; gap: 8px; white-space: nowrap; }
 .topo-info .rotulo { color: var(--tinta-3); }
-#corrupcao-topo .barra-px { width: 110px; }
-#corrupcao-topo .valor { color: #e07a8a; }
 #sigilos-topo { gap: 6px; }
 #sigilos-topo .sigilo { width: 12px; height: 12px; border: 2px solid #4a4038; transform: rotate(45deg); background: #1b1511; }
 #sigilos-topo .sigilo.tem { background: var(--ouro); border-color: #fff3a0; box-shadow: 0 0 0 2px #8a6a14; }
@@ -100,7 +96,7 @@ body.modo-titulo #brasas { opacity: 1; }
 #acoes-topo button:hover { border-color: var(--linha); background: #1b1511; color: var(--tinta); }
 #acoes-topo button.desligado { opacity: 0.5; text-decoration: line-through; }
 .so-estreito { display: none; }
-body.sem-heroi #tempo, body.sem-heroi #corrupcao-topo, body.sem-heroi #sigilos-topo { visibility: hidden; }
+body.sem-heroi #tempo, body.sem-heroi #sigilos-topo { visibility: hidden; }
 
 /* ------------------------------------------------------------------ mesa */
 #mesa {

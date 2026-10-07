@@ -1,7 +1,6 @@
-"""Ganhos e perdas: ouro, XP, vida, itens, reputação, corrupção, sementes e rumores."""
+"""Ganhos e perdas: ouro, XP, vida, itens, reputação, sementes e rumores."""
 
 from .. import eventos
-from .. import texto as tx
 from ..entidades import nome_stat
 from ..itens import CONSUMIVEIS
 from .. import sobrevivencia
@@ -104,25 +103,6 @@ class Recompensas:
             self.ui.efeito(f"Reputação +{self.j.reputacao - antes}", "rep")
         elif self.j.reputacao < antes:
             self.ui.efeito(f"Reputação −{antes - self.j.reputacao}", "perda")
-
-    def corromper(self, d, silencioso=False):
-        antes = self.corrupcao
-        self.corrupcao = max(0, min(100, antes + d))
-        if not silencioso:
-            if d < 0:
-                self.dizer(f"A corrupção do reino recua. ({self.corrupcao}%)", "verde")
-            elif d > 0:
-                self.dizer(f"A corrupção do reino aumenta. ({self.corrupcao}%)", "magenta")
-        for limiar, texto in ((25, "As colheitas murcham e os animais andam inquietos. A sombra de {a} se espalha."),
-                              (50, "Crias do Vazio são vistas em plena luz do dia. Os sinos das vilas tocam sem ninguém puxar as cordas."),
-                              (75, "O céu tem cor de hematoma. Rumores dizem que {a} está prestes a atravessar a Fenda."),
-                              (90, "O mundo range como um navio prestes a afundar. Resta pouco tempo!")):
-            if antes < limiar <= self.corrupcao:
-                self.ui.separador("magenta")
-                self.dizer(texto.format(a=self.antagonista["curto"]), "magenta+negrito")
-        if self.corrupcao >= 100:
-            self.fim_de_jogo(f"A corrupção consumiu o reino. {tx.maiuscula(self.antagonista['curto'])} atravessou a "
-                             f"Fenda, e o mundo que você conhecia deixou de existir.")
 
     # ---------------------------------------------------------------- sementes (consequências futuras)
     def plantar(self, id, atraso=4, **dados):

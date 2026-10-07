@@ -21,8 +21,7 @@ body.modo-titulo .dica-pular { display: none; }
 @media (max-width: 920px) {
   body { overflow: auto; }
   #topo { gap: 10px; padding: 0 10px; overflow-x: auto; }
-  .marca, #tempo, #acoes-topo kbd, #corrupcao-topo .rotulo { display: none; }
-  #corrupcao-topo .barra-px { width: 64px; }
+  .marca, #tempo, #acoes-topo kbd { display: none; }
   #acoes-topo button { padding: 3px 6px; }
   .so-estreito { display: inline-block; }
   #mesa { grid-template-columns: minmax(0, 1fr); padding: 8px; gap: 8px; }

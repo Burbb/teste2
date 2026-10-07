@@ -1,5 +1,8 @@
 """O mercado: estoque, preços, compra e venda (texto e interface gráfica)."""
 
+import random
+
+from .. import balanceamento as bal
 from .. import itens
 from ..itens import CONSUMIVEIS, descrever_bonus, gerar_equip
 from .. import sobrevivencia
@@ -23,15 +26,26 @@ class Loja:
             self.lojas[chave] = estoque
         return self.lojas[chave]
 
+    def _chave_vendidos(self):
+        return f"vendidos:{self.loc['id']}:{self.dia}"
+
+    def estoque_suprimentos(self):
+        """Quanto o mercado desta vila ainda tem hoje de cada consumível. O sorteio tem semente própria (mundo,
+        vila e dia: não mexe no resto da partida) e o dia novo traz estoque novo: reabastece toda manhã."""
+        sorteio = random.Random(f"{self.seed}:{self.loc['id']}:{self.dia}")
+        vendidos = self.lojas.get(self._chave_vendidos(), {})
+        return {k: max(0, sorteio.randint(*bal.ESTOQUE_MERCADO[k]) - vendidos.get(k, 0)) for k in self.SUPRIMENTOS}
+
     def dados_loja(self):
         j = self.j
-        cons = ["tocha", "bandagem", "unguento", "pocao_vida", "tonico", "antidoto", "bomba_fumaca", "pena_fenix"]
+        estoque = self.estoque_suprimentos()
         def item(it, preco):
             return itens.ficha(it, j.nome_recurso, preco=preco)
         return {
             "ouro": j.ouro, "limite": LIMITE_MOCHILA, "ocupado": len(j.mochila),
             "consumiveis": [{"id": k, "nome": CONSUMIVEIS[k]["nome"], "desc": CONSUMIVEIS[k]["desc"],
-                             "preco": self.preco(CONSUMIVEIS[k]["preco"]), "tem": j.consumiveis.get(k, 0)} for k in cons]
+                             "preco": self.preco(CONSUMIVEIS[k]["preco"]), "tem": j.consumiveis.get(k, 0),
+                             "estoque": estoque[k], "limite": estoque[k]} for k in self.SUPRIMENTOS]
             + [{"id": "provisoes", "nome": "Provisões (1 dia)", "desc": "Pão duro, carne seca e um odre de água.",
                 "preco": self.preco(4), "tem": j.provisoes, "limite": sobrevivencia.MAX_PROVISOES - j.provisoes}]
             + ([{"id": "flechas", "nome": "Flecha", "desc": f"Flecha de freixo, ponta de ferro. A aljava leva {self.max_flechas()}.",
@@ -67,10 +81,21 @@ class Loja:
             if qtd <= 0:
                 self.dizer("Sua aljava já está cheia.", "vermelho")
                 return False
+        if k in self.SUPRIMENTOS:
+            qtd = min(qtd, self.estoque_suprimentos()[k])
+            if qtd <= 0:
+                self.dizer(f"\"{CONSUMIVEIS[k]['nome']}? Acabou. Amanhã cedo chega mais.\"", "vermelho")
+                return False
         qtd = min(qtd, j.ouro // preco)
         if qtd <= 0:
             self.dizer("\"Sem ouro, sem negócio.\"", "vermelho")
             return False
+        if k in self.SUPRIMENTOS:
+            chave = self._chave_vendidos()
+            prefixo = f"vendidos:{self.loc['id']}:"  # o que se vendeu em outros dias já não importa
+            self.lojas = {c: v for c, v in self.lojas.items() if not c.startswith(prefixo) or c == chave}
+            vendidos = self.lojas.setdefault(chave, {})
+            vendidos[k] = vendidos.get(k, 0) + qtd
         self.perder_ouro(preco * qtd)
         categoria = k if k in ("provisoes", "flechas") else "consumivel"
         registrar(self, "compra", item=k, categoria=categoria, qtd=qtd, preco=preco * qtd)
@@ -129,9 +154,11 @@ class Loja:
                 continue
             # Terminal: as mesmas regras, em forma de lista.
             opcoes = []
+            estoque = self.estoque_suprimentos()
             for k in self.SUPRIMENTOS:
                 c = CONSUMIVEIS[k]
-                opcoes.append((f"{c['nome']} — {self.preco_suprimento(k)} ouro (você tem {j.consumiveis.get(k, 0)})",
+                resta = f"{estoque[k]} à venda" if estoque[k] else "esgotado até amanhã"
+                opcoes.append((f"{c['nome']} — {self.preco_suprimento(k)} ouro ({resta}; você tem {j.consumiveis.get(k, 0)})",
                                ("suprimento", k)))
             opcoes.append((f"Provisões para 1 dia — {self.preco_suprimento('provisoes')} ouro (você tem {j.provisoes}/"
                            f"{sobrevivencia.MAX_PROVISOES})", ("suprimento", "provisoes")))

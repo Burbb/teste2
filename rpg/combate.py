@@ -11,7 +11,7 @@ from .estados import ESTADOS, NOMES
 from .dados import TRACOS
 from .entidades import Combatente
 from .inimigos import HABS_INIMIGO, NOMES_HABS_INIMIGO, ROTULOS_HABS_INIMIGO
-from .itens import CONSUMIVEIS, ficha
+from .itens import CONSUMIVEIS, PENA_FENIX_AGE_SOZINHA, ficha
 from . import comitiva, sobrevivencia, telemetria
 from .talentos import custo_habilidade
 from . import balanceamento as bal
@@ -284,12 +284,14 @@ class Combate:
             m *= 1.25
         if u.jogador and self.g.mestre_caca(getattr(alvo, "familia", None)):
             m *= 1.1
+        bonus_motivo = None  # um bônus que não é crítico, mas a tela anuncia (a iniciativa)
         if u.jogador:
             m *= 1 + mod(u, "dano_corpo" if alcance == "corpo" else "dano_distancia")
             m *= bal.DANO_HEROI
             if self.iniciativa:
                 self.iniciativa = False
                 m *= 1 + bal.INICIATIVA_BONUS
+                bonus_motivo = f"Iniciativa +{round(bal.INICIATIVA_BONUS * 100)}%"
 
         defesa = alvo.defesa * (0.6 if alvo.efeito("maldito") else 1.0)
         furtivo = u.efeito("furtivo")
@@ -328,6 +330,8 @@ class Combate:
             txt += f" ({tipo})"
         if crit:
             txt = (f"CRÍTICO ({motivo_crit})! " if motivo_crit else "CRÍTICO! ") + txt
+        if bonus_motivo:
+            txt = f"{bonus_motivo}! " + txt
         if absorvido:
             txt += f" [{absorvido} absorvido]"
         if eficacia >= 1.3:
@@ -337,7 +341,8 @@ class Combate:
         defensor = alvo is self.j or alvo in self.aliados
         self.lance("golpe", de=self.uid(u), em=self.uid(alvo), dano=dano, crit=crit, crit_motivo=motivo_crit, elemento=tipo,
                    alcance=alcance, absorvido=absorvido, eficacia="super" if eficacia >= 1.3 else "pouco" if eficacia <= 0.7 else None,
-                   rotulo=rotulo, hp=max(0, alvo.hp), max_hp=alvo.max_hp)
+                   rotulo=rotulo, hp=max(0, alvo.hp), max_hp=alvo.max_hp,
+                   **({"bonus_motivo": bonus_motivo} if bonus_motivo else {}))
         if detalhar:
             self.detalhe(txt, "vermelho" if defensor else "amarelo")
         else:
@@ -715,6 +720,8 @@ class Combate:
 
     def motivo_item(self, k):
         """Por que o item não serve agora, na luta (ou None). A bolsa do painel e o menu de itens dizem o mesmo."""
+        if k == "pena_fenix":
+            return PENA_FENIX_AGE_SOZINHA
         if k not in USAVEIS_EM_COMBATE:
             return "Isso não se usa no meio da luta."
         if k == "bomba_fumaca" or self.aliados_precisam(k):

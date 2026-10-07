@@ -225,15 +225,29 @@ const Telas = (() => {
     return caixa;
   }
   let vigia = 0;
-  function abrirDica(dono) {
+  const mouse = { x: -1, y: -1 };
+  window.addEventListener("mousemove", (ev) => { mouse.x = ev.clientX; mouse.y = ev.clientY; }, { capture: true, passive: true });
+  /** `presa`: a dica fica presa ao LUGAR onde o dono estava quando o mouse chegou (a carta de um inimigo avança
+   *  para atacar e volta; a ficha não vai atrás dela). Some quando o mouse sai daquele lugar. */
+  function abrirDica(dono, presa = false) {
     const caixa = caixaDica();
     caixa._dono = dono;
+    caixa._area = presa ? dono.getBoundingClientRect() : null;
     caixa.hidden = false;
     clearInterval(vigia);
     vigia = setInterval(() => {
-      if (caixa.hidden || !caixa._dono || !caixa._dono.isConnected || !caixa._dono.matches(":hover")) esconderDica();
+      const dentro = caixa._area ? mouseNaArea() : caixa._dono && caixa._dono.matches(":hover");
+      if (caixa.hidden || !caixa._dono || !caixa._dono.isConnected || !dentro) esconderDica();
     }, 250);
     return caixa;
+  }
+  function mouseNaArea() {
+    const c = document.getElementById("dica-item"), r = c && c._area;
+    return !!r && mouse.x >= r.left && mouse.x <= r.right && mouse.y >= r.top && mouse.y <= r.bottom;
+  }
+  function dicaAbertaPor(el) {
+    const c = document.getElementById("dica-item");
+    return !!c && !c.hidden && c._dono === el;
   }
   function ligarDicas(raiz) {
     const caixa = caixaDica();
@@ -285,7 +299,7 @@ const Telas = (() => {
   function esconderDica() {
     clearInterval(vigia);
     const c = document.getElementById("dica-item");
-    if (c) { c.hidden = true; c._dono = null; c._item = null; c.classList.remove("ficha-inimigo", "curta"); }
+    if (c) { c.hidden = true; c._dono = null; c._item = null; c._area = null; c.classList.remove("ficha-inimigo", "curta"); }
     const lado = document.getElementById("dica-equipado");
     if (lado) lado.hidden = true;
   }
@@ -502,9 +516,9 @@ const Telas = (() => {
       const q = Math.max(1, Math.min(qtdLoja[c.id] || 1, max || 1));
       const caro = max < 1;
       const icone = c.id === "provisoes" ? "pernil" : c.id === "flechas" ? "aljava" : (ICONE_ITEM[c.id] || "pocao");
-      return `<div role="button" tabindex="0" class="mercadoria suprimento${caro ? " caro" : ""}" data-comprar="${h(c.id)}" data-preco="${c.preco}" data-max="${max}" ${dica(`<b>${h(c.nome)}</b><div>${Realce.texto(c.desc)}</div><div class="rodape">${caro ? (c.limite === 0 ? "Você não carrega mais." : "Ouro insuficiente.") : "Escolha a quantidade e clique para comprar. Shift+clique compra 5."}</div>`)}>
+      return `<div role="button" tabindex="0" class="mercadoria suprimento${caro ? " caro" : ""}" data-comprar="${h(c.id)}" data-preco="${c.preco}" data-max="${max}" ${dica(`<b>${h(c.nome)}</b><div>${Realce.texto(c.desc)}</div><div class="rodape">${caro ? (c.estoque === 0 ? "Esgotado: o mercador reabastece amanhã cedo." : c.limite === 0 ? "Você não carrega mais." : "Ouro insuficiente.") : "Escolha a quantidade e clique para comprar. Shift+clique compra 5."}</div>`)}>
         <span class="slot-px">${S(icone, 2)}${c.tem ? `<span class="qtd">${c.tem}</span>` : ""}</span>
-        <span class="merc-nome">${h(c.nome)}</span>
+        <span class="merc-nome">${h(c.nome)}${c.estoque !== undefined ? `<small class="merc-estoque${c.estoque ? "" : " esgotado"}">${c.estoque ? `${c.estoque} à venda` : "esgotado"}</small>` : ""}</span>
         <span class="preco">${S("moeda", 1)}<span class="total">${c.preco * q}</span></span>
         <span class="qtd-ctrl"><button type="button" data-q="-1" aria-label="menos">−</button><b>${q}</b><button type="button" data-q="1" aria-label="mais">+</button></span></div>`;
     }).join("");
@@ -659,8 +673,7 @@ const Telas = (() => {
     const rumores = d.rumores.map((r) => `<div class="bilhete"><span class="prego"></span>${S("olho", 1)} ${h(r.texto)}<small>${r.expira > 0 ? `some em ${r.expira} dia${r.expira === 1 ? "" : "s"}` : "some hoje"}</small></div>`).join("");
     const losangos = [0, 1, 2].map((i) => `<i class="sigilo${i < d.sigilos ? " tem" : ""}"></i>`).join("");
     return `<div class="tela diario">
-      <div class="faixa-jornada"><span>Dia ${d.dia}</span><span class="sigilos-diario" title="Sigilos dos guardiões">${losangos} ${d.sigilos}/3</span>
-        <span title="Corrupção do reino">Corrupção ${barra("corrupcao", d.corrupcao, 100)} ${d.corrupcao}%</span></div>
+      <div class="faixa-jornada"><span>Dia ${d.dia}</span><span class="sigilos-diario" title="Sigilos dos guardiões">${losangos} ${d.sigilos}/3</span></div>
       <div class="quadro"><div class="quadro-cab"><b>Contratos</b><span>${d.contratos.length}/${d.limite} · os lugares ficam marcados no mapa</span></div>
         <div class="cartazes">${contratos || '<span class="vazio">Nenhum contrato. Procure o mural de uma vila.</span>'}</div></div>
       ${rumores ? `<h4>Rumores</h4><div class="bilhetes">${rumores}</div>` : ""}
@@ -1060,7 +1073,7 @@ const Telas = (() => {
     } else if (m.tipo === "sigilo") {
       const los = [0, 1, 2].map((i) => `<i class="${i < d.sigilos ? "tem" : ""}${i === d.sigilos - 1 ? " novo" : ""}"></i>`).join("");
       html = `<div class="festa moldura"><div class="rotulo-festa">${h(d.guardiao)} caiu</div><div class="grande">Sigilo ${d.sigilos}/3</div>
-        <div class="losangos">${los}</div><div class="texto-festa">Uma runa ardente se grava na sua mão. A corrupção recua.</div>
+        <div class="losangos">${los}</div><div class="texto-festa">Uma runa ardente se grava na sua mão.</div>
         <div class="lista"><span class="ganho ouro">${S("estrela", 1)}+1 ponto de talento</span></div>
         <button class="continuar" type="button">Continuar <span>▸</span></button></div>`;
       App.som("fanfarra");
@@ -1099,6 +1112,6 @@ const Telas = (() => {
     setTimeout(() => t.remove(), 3300);
   }
 
-  return { rastreador, atributosHtml, reputacaoHtml, dica, guardarDica, htmlItem, menuUso, abrirGrimorio, alternarGrimorio, abrirDica, novaVisita, fecharMenuItem, guardarArvore, abrirTalentos, fecharTalentos, painel, celebrar, toast, iconeCriatura, iconeItem, dicaItem, ligarDicas, esconderDica,
+  return { rastreador, atributosHtml, reputacaoHtml, dica, guardarDica, htmlItem, menuUso, abrirGrimorio, alternarGrimorio, abrirDica, dicaAbertaPor, mouseNaArea, novaVisita, fecharMenuItem, guardarArvore, abrirTalentos, fecharTalentos, painel, celebrar, toast, iconeCriatura, iconeItem, dicaItem, ligarDicas, esconderDica,
     ICONE_ITEM, ARMA, VAZIO, NOME_ESPACO, AREA, barra, aprovacao };
 })();

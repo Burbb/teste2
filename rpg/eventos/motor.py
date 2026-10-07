@@ -6,7 +6,7 @@ jogo), uma condição opcional e um tempo de recarga. Na hora de sortear:
 
 * eventos vistos recentemente ou muitas vezes perdem peso (novidade primeiro);
 * rumores e contratos podem multiplicar o peso de eventos específicos;
-* classe, especialização, bioma, clima, período do dia, reputação, corrupção
+* classe, especialização, bioma, clima, período do dia, reputação, perigo do lugar
   e "sementes" plantadas por escolhas antigas habilitam eventos diferentes.
 """
 

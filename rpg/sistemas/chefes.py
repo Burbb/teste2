@@ -1,5 +1,6 @@
 """Guardiões dos covis e a batalha final."""
 
+from .. import balanceamento as bal
 from .. import texto as tx
 from ..dados import GUARDIOES
 from ..inimigos import instanciar_antagonista, instanciar_guardiao
@@ -10,7 +11,7 @@ from ..mundo import nivel_regiao
 class Chefes:
     # ================================================================ chefes
     def nivel_guardiao(self, loc):
-        return nivel_regiao(loc, self.corrupcao) + 1
+        return nivel_regiao(loc) + 1
 
     def enfrentar_guardiao(self):
         loc = self.loc
@@ -34,7 +35,6 @@ class Chefes:
             self.estatisticas["chefes"] += 1
             self.ui.titulo(f"SIGILO OBTIDO ({len(self.j.sigilos)}/3)", "amarelo+negrito")
             self.dizer("Uma runa ardente se grava na palma da sua mão.", "amarelo")
-            self.corromper(-15)
             self.mudar_reputacao(5)
             self.ganhar_ponto_talento()
             self.ui.celebrar("sigilo", {"sigilos": len(self.j.sigilos), "guardiao": gspec["nome"],
@@ -68,7 +68,7 @@ class Chefes:
         self.dizer("Um cavaleiro de armadura negra se coloca entre vocês.", "vermelho")
         self.combate([guarda], pode_fugir=False, titulo="O ÚLTIMO GUARDA")
 
-        chefe = instanciar_antagonista(a, 11 + self.corrupcao // 34, self.corrupcao)
+        chefe = instanciar_antagonista(a, bal.ANTAGONISTA_NIVEL)
         traidores = comitiva.antes_da_batalha_final(self)
         extras = []
         if "yara" in traidores:

@@ -22,11 +22,11 @@ class Contratos:
 
     def lugar_para_contrato(self, selvagens):
         h = self.j.nivel
-        pesos = [self.PESO_NIVEL_CONTRATO.get(nivel_regiao(l, self.corrupcao) - h, 0) for l in selvagens]
+        pesos = [self.PESO_NIVEL_CONTRATO.get(nivel_regiao(l) - h, 0) for l in selvagens]
         if any(pesos):
             return self.rng.choices(selvagens, weights=pesos)[0]
-        perto = min(abs(nivel_regiao(l, self.corrupcao) - h) for l in selvagens)
-        return self.sortear([l for l in selvagens if abs(nivel_regiao(l, self.corrupcao) - h) == perto])
+        perto = min(abs(nivel_regiao(l) - h) for l in selvagens)
+        return self.sortear([l for l in selvagens if abs(nivel_regiao(l) - h) == perto])
 
     def gerar_contrato(self):
         j = self.j
@@ -44,7 +44,7 @@ class Contratos:
             return {"id": cid, "tipo": "entrega", "destino": dest["id"], "objeto": objeto, "ouro": ouro, "xp": xp,
                     "desc": f"Levar {objeto} até {dest['nome']}."}
         loc = self.lugar_para_contrato(selvagens)
-        nv = nivel_regiao(loc, self.corrupcao)  # só bichos que de fato aparecem por lá
+        nv = nivel_regiao(loc)  # só bichos que de fato aparecem por lá
         fam = self.sortear([f for f in BIOMAS[loc["bioma"]]["familias"] if NIVEL_MIN_FAMILIA.get(f, 1) <= nv]
                            or BIOMAS[loc["bioma"]]["familias"])
         f = FAMILIAS[fam]
@@ -102,7 +102,7 @@ class Contratos:
                      "abatido" if c.get("concluido") else None)
         return {"id": c["id"], "tipo": c["tipo"], "desc": c["desc"], "ouro": c["ouro"], "xp": c["xp"],
                 "lugar": lugar["nome"], "lugar_id": lugar["id"], "lugar_tipo": lugar["tipo"], "bioma": lugar["bioma"], "distancia": dist,
-                "nivel": None if lugar["tipo"] == "vila" else nivel_regiao(lugar, self.corrupcao),
+                "nivel": None if lugar["tipo"] == "vila" else nivel_regiao(lugar),
                 "alvo": c.get("nome"), "familia": c.get("familia"), "familia_nome": f.get("nome"),
                 "tracos": f.get("tracos", []), "objeto": c.get("objeto"), "progresso": progresso,
                 "concluido": bool(c.get("concluido")), "penalidade": 6 if c["tipo"] == "entrega" else 3}
@@ -193,7 +193,7 @@ class Contratos:
             n = self.nemesis
             dados = {
                 "antagonista": {"nome": a["nome"], "origem": a["origem"]}, "sigilos": len(self.j.sigilos),
-                "corrupcao": self.corrupcao, "dia": self.dia,
+                "dia": self.dia,
                 "contratos": [self.cartao_contrato(c) for c in self.contratos], "limite": 3,
                 "nivel_heroi": self.j.nivel,
                 "rumores": [{"texto": r["texto"], "expira": r["expira"] - self.dia} for r in self.rumores],
@@ -214,7 +214,7 @@ class Contratos:
 
     def _diario_texto(self, a):
         self.dizer(f"Inimigo final: {a['nome']}, {a['origem']}.", "magenta")
-        self.dizer(f"Sigilos: {len(self.j.sigilos)}/3   Corrupção: {self.corrupcao}%   Dia {self.dia}", "magenta")
+        self.dizer(f"Sigilos: {len(self.j.sigilos)}/3   Dia {self.dia}", "magenta")
         self.dizer("Contratos:", "ciano")
         if not self.contratos:
             self.dizer("  nenhum", "cinza")
@@ -235,9 +235,11 @@ class Contratos:
 
     def abandonar_contrato(self, c):
         penalidade = 6 if c["tipo"] == "entrega" else 3
-        aviso = " Você fica com a encomenda, mas vira ladrão aos olhos de todos." if c["tipo"] == "entrega" else ""
-        if not self.menu(f"Abandonar \"{c['desc']}\"? (reputação -{penalidade}){aviso}",
-                         [("Sim, abandonar", True), ("Não", False)]):
+        # Pergunta curta (vira o rótulo dos botões, em vez de um aviso solto por cima deles); a consequência da
+        # entrega vai no próprio botão.
+        sim = ("Sim: fico com a encomenda (viro ladrão aos olhos de todos)" if c["tipo"] == "entrega"
+               else "Sim, abandonar")
+        if not self.menu(f"Abandonar este contrato? (reputação −{penalidade})", [(sim, True), ("Não", False)]):
             return
         self.contratos.remove(c)
         self.dizer("Você risca o contrato do diário. Alguém, em algum lugar, vai saber que você desistiu.", "cinza")

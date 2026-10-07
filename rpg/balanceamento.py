@@ -96,11 +96,20 @@ INIMIGO_AGI_A_CADA = 3            # +1 de agilidade a cada 3 níveis
 INIMIGO_XP_POR_NIVEL = 0.3
 INIMIGO_OURO_POR_NIVEL = 0.2
 
+# Inimigos que curam (cultistas, o Profeta das Cinzas): vida do alvo × VIDA + Poder × PODER, e só uma vez a cada
+# RECARGA turnos (sem isso, dois cultistas passavam a luta curando um ao outro).
+INIMIGO_CURA_VIDA = 0.2
+INIMIGO_CURA_PODER = 0.5
+INIMIGO_CURA_RECARGA = 3
+
 # Guardiões (chefes de região) e o antagonista usam a mesma escala de vida, com os próprios fatores.
 GUARDIAO_VIDA = 0.9
 GUARDIAO_ATK = 0.95
 GUARDIAO_DEFESA_POR_NIVEL = 0.12
 ANTAGONISTA_ATK = 0.85
+ANTAGONISTA_NIVEL = 11
+# Yara no caminho do Vazio: depois de cada vitória com ela, você perde esta fração da vida máxima.
+YARA_VAZIO_CUSTO = 0.04
 
 # Encontros. Nas regiões de nível até 2 (INICIO) e até 4 (MEIO), chance de o grupo ser um inimigo só; se não for,
 # no máximo GRUPO_MAX_CEDO. Um inimigo sozinho contra você e um companheiro morre antes de fazer estrago.
@@ -158,6 +167,12 @@ EXAUSTO_RECURSO = 0.4
 POCAO_VIDA = 0.35             # fração da vida máxima
 TONICO = 0.5                  # fração do recurso máximo
 BANDAGEM_VIDA = 8
+
+# ---------------------------------------------------------------- mercado
+# Quanto cada mercado tem de cada consumível por dia (mínimo, máximo): sorteado por vila e dia, reabastece toda
+# manhã. Provisões e flechas não acabam.
+ESTOQUE_MERCADO = {"tocha": (4, 8), "bandagem": (2, 5), "unguento": (0, 2), "pocao_vida": (1, 3), "tonico": (1, 2),
+                   "antidoto": (1, 3), "bomba_fumaca": (0, 1), "pena_fenix": (0, 1)}
 
 # ---------------------------------------------------------------- contratos
 # Peso de cada lugar no mural pela diferença entre o nível dele e o seu.

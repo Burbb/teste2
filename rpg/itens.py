@@ -13,6 +13,9 @@ CONSUMIVEIS = {
     "pena_fenix": {"nome": "Pena de Fênix", "preco": 220, "desc": "Revive você com metade da vida se cair em combate."},
 }
 
+# A pena não se usa: ela ergue você sozinha se cair em combate (a bolsa e o menu de itens dizem isto).
+PENA_FENIX_AGE_SOZINHA = "A Pena de Fênix age sozinha: se você cair em combate, ela te ergue com metade da vida."
+
 RARIDADES = ["comum", "magico", "raro", "lendario"]
 NOMES_RARIDADE = {"comum": "Comum", "magico": "Mágico", "raro": "Raro", "lendario": "LENDÁRIO"}
 COR_RARIDADE = {"comum": None, "magico": "azul", "raro": "amarelo", "lendario": "magenta+negrito"}

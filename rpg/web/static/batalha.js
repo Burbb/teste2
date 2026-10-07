@@ -75,7 +75,8 @@ const Batalha = (() => {
     [...b.children].forEach((x) => { x.style.width = pct(c.hp, c.max_hp) + "%"; });
     if (c.lado === "inimigo") {  // a ficha do inimigo aparece ao passar o mouse (no lugar do antigo "Analisar")
       e.addEventListener("mouseenter", () => mostrarFicha(e));
-      e.addEventListener("mouseleave", esconderFicha);
+      // A carta sair de baixo do mouse (avançando para atacar) não fecha a ficha: só o mouse sair do lugar.
+      e.addEventListener("mouseleave", () => { if (!Telas.mouseNaArea()) esconderFicha(); });
     }
     return e;
   }
@@ -106,8 +107,9 @@ const Batalha = (() => {
   function mostrarFicha(el) {
     const c = el._ficha;
     if (!c || !c.ficha) return;
+    if (Telas.dicaAbertaPor(el)) return;  // já aberta (a carta voltou para baixo do mouse): fica onde está
     const f = c.ficha;
-    const caixa = Telas.abrirDica(el);
+    const caixa = Telas.abrirDica(el, true);
     const tracos = f.tracos.map((t) => `<span class="ficha-traco" title="${esc(t.texto)}">${S(ICONE_TRACO[t.id] || "estrela", 2)}<small>${esc(t.id)}</small></span>`).join("");
     let corpo;
     const linha = (filtro, classe) => Object.entries(f.mult).filter(([, v]) => filtro(v)).map(([k, v]) => {
@@ -537,6 +539,7 @@ const Batalha = (() => {
     if (m.crit) numero(em, `${m.dano}!`, "crit");
     else numero(em, `−${m.dano}`, "menos");
     if (m.crit && m.crit_motivo) numero(em, m.crit_motivo, "motivo");  // crítico garantido: de onde ele veio
+    else if (m.bonus_motivo) numero(em, m.bonus_motivo, "motivo");  // golpe reforçado (iniciativa): de onde veio
     if (m.absorvido) numero(em, `(${m.absorvido})`, "escudo");
     if (m.eficacia === "super") rotulo(em, "fraqueza!", "boa");
     else if (m.eficacia === "pouco") rotulo(em, "resiste", "ruim");

@@ -85,7 +85,7 @@ cabeçalhos, nomes e botões; **Alegreya** na história, feita para leitura long
 na interface miúda; **Jersey 15** nos números. O botão "Fonte" no topo volta às fontes pixel.
 
 - **A história em primeiro lugar.** Uma cena por página, com uma **paisagem em pixel art** no
-  topo que muda com o bioma, o período do dia, o clima e a corrupção (chuva, neve, névoa,
+  topo que muda com o bioma, o período do dia e o clima (chuva, neve, névoa,
   relâmpagos, fumaça das chaminés, estrelas). O texto surge no ritmo da leitura, e **as escolhas só
   aparecem quando ele termina**. Qualquer tecla ou clique mostra tudo de uma vez.
 - **HUD no topo, perto do texto.** Retrato, vida e recurso, e os suprimentos **desenhados** com
@@ -120,7 +120,8 @@ na interface miúda; **Jersey 15** nos números. O botão "Fonte" no topo volta 
   para tirar ou para a caveira (largar); dois cliques também funcionam. Passe o mouse para ver
   os atributos e a **comparação com o que está equipado** (▲ verde, ▼ vermelho).
 - **Mercado interativo:** vitrine de suprimentos e equipamentos com preço e comparação.
-  Suprimentos têm **quantidade** (`−`/`+`, segurar acelera, Shift+clique compra 5).
+  Suprimentos têm **quantidade** (`−`/`+`, segurar acelera, Shift+clique compra 5) e **estoque**: cada
+  vila tem poucas unidades de cada consumível por dia, e reabastece toda manhã.
   Equipamento comprado para um espaço vazio do corpo **já sai vestido**: o ícone voa da vitrine
   até o espaço do boneco, que brilha ao receber. Na mochila, clicar num item abre um menu com
   **Equipar** ou **Vender**, e nada é vendido sem você confirmar. A venda paga exatamente o
@@ -310,10 +311,10 @@ que abrem o caminho até a Cidadela, onde o vilão (gerado a cada partida) esper
 
 - O **nível dos inimigos depende da região**, não do seu. Quanto mais longe da vila
   inicial, mais perigoso (o mapa mostra o "Nv." de cada lugar). Os guardiões têm nível
-  fixo e o chefe final é nível 11 ou mais. Correr direto para os chefes não funciona:
+  fixo e o chefe final é nível 11. Correr direto para os chefes não funciona:
   é preciso evoluir, equipar-se, aprender fraquezas e recrutar aliados.
-- A **corrupção** cresce todo dia. Derrotar um guardião faz ela recuar 20 pontos.
-  Se chegar a 100%, o reino está perdido. Ela também deixa os inimigos mais fortes.
+- **Quanto mais perto da Fenda**, a leste, rumo à Cidadela, mais criaturas dela (caídos, cães
+  infernais, crias do Vazio, abominações) e mais feras tocadas pelo Vazio.
 - **A morte é permanente.** (No modo `--brando`, alguém te resgata e você acorda numa
   vila, perdendo ouro e dois dias.)
 
@@ -329,7 +330,8 @@ que abrem o caminho até a Cidadela, onde o vilão (gerado a cada partida) esper
 - **Escuridão:** à noite, nas ruínas e na Cidadela, você precisa de tochas. Sem luz, você
   fica pior em percepção e destreza e é emboscado com mais facilidade.
 - **Cura lenta:** acampar recupera 30% da vida (18% na chuva, neve ou tempestade); a
-  taverna, 65%. Poções são caras. Depois de uma luta, vigor e foco voltam só pela metade, e a
+  taverna, 35%; para voltar inteiro, o templo cobra. Poções são caras e o mercado de cada vila tem
+  poucas (o estoque reabastece toda manhã). Depois de uma luta, vigor e foco voltam só pela metade, e a
   mana do mago, 20%. Uma noite ao relento devolve 75% do vigor/foco e metade da mana; só a
   cama da taverna enche tudo.
 - **Inimigos perigosos:** bandos de **campeões** (vários inimigos com o mesmo afixo),
@@ -408,7 +410,7 @@ Novas habilidades chegam nos níveis 2, 3, 4 e 7 (a habilidade suprema da especi
 - **Mundo procedural:** mapa em grafo com vilas, regiões selvagens, covis e a Cidadela.
   Nomes de lugares, NPCs, guardiões e do vilão são gerados a cada partida.
 - **88 eventos** com pesos dinâmicos. O que pode acontecer depende de classe,
-  especialização, bioma, clima, período do dia, reputação, corrupção e das suas escolhas
+  especialização, bioma, clima, período do dia, reputação, perigo do lugar e das suas escolhas
   anteriores. Eventos vistos recentemente perdem peso, para não repetir.
 - **Eventos de classe e especialização:** caçar, fabricar flechas, derrubar um falcão
   mensageiro ou disputar torneios de tiro como arqueiro; duelos de honra e um ferreiro
@@ -448,7 +450,7 @@ rpg/
     confronto.py     inimigos do lugar, grupos, o combate em si, abates e saque
     progressao.py    níveis, talentos, habilidades, especialização
     tempo.py         clima, períodos, dias, descanso, acampamento e taverna
-    recompensas.py   ouro, XP, vida, itens, reputação, corrupção, sementes e rumores
+    recompensas.py   ouro, XP, vida, itens, reputação, sementes e rumores
     testes.py        testes de atributo (d20 + bônus contra a dificuldade)
     navegacao.py     viagem e mapa · chefes.py guardiões e batalha final
     bestiario.py     legado e bestiário · servicos.py ferreiro, curandeiro, rumores

@@ -31,9 +31,7 @@ const Vista = (() => {
     if (["chuva", "tempestade", "nublado"].includes(clima)) bandas = bandas.map((b) => mix(b, "#3a3f48", clima === "tempestade" ? 0.75 : 0.55));
     if (clima === "nevoa") bandas = bandas.map((b) => mix(b, "#8a9098", 0.5));
     if (clima === "neve") bandas = bandas.map((b) => mix(b, "#a8b0bc", 0.45));
-    const corr = e.mundo.corrupcao / 100;
     if (e.local.bioma === "cidadela") bandas = bandas.map((b, i) => mix(b, i > 2 ? "#a01818" : "#2a0508", 0.7));
-    else if (corr > 0.3) bandas = bandas.map((b, i) => mix(b, i > 2 ? "#7a1a20" : "#1a0508", (corr - 0.3) * 0.8));
     const altura = 46, faixa = altura / bandas.length;
     bandas.forEach((cor, i) => {
       const y0 = Math.round(i * faixa), y1 = Math.round((i + 1) * faixa);
@@ -218,17 +216,17 @@ const Vista = (() => {
     if (!canvas || !e) return;
     ctx = ctx || canvas.getContext("2d");
     estado = e;
-    const k = [e.local.id, e.local.tipo, e.mundo.periodo_n, e.mundo.clima_id, Math.floor(e.mundo.corrupcao / 10), e.local.bioma].join("|");
+    const k = [e.local.id, e.local.tipo, e.mundo.periodo_n, e.mundo.clima_id, e.local.bioma].join("|");
     if (k !== chave) { chave = k; preparar(e); }
     if (!timer) timer = setInterval(() => { if (!document.hidden) desenhar(); }, 100);
     desenhar();
   }
   // Tela de título: uma das paisagens favoritas, sorteada a cada abertura.
   const TITULOS = [
-    { local: { id: 3, tipo: "selvagem", bioma: "montanha" }, mundo: { periodo_n: 3, clima_id: "neve", corrupcao: 0 } },
-    { local: { id: 8, tipo: "selvagem", bioma: "floresta" }, mundo: { periodo_n: 2, clima_id: "chuva", corrupcao: 10 } },
-    { local: { id: 5, tipo: "selvagem", bioma: "cidadela" }, mundo: { periodo_n: 3, clima_id: "limpo", corrupcao: 70 } },
-    { local: { id: 12, tipo: "vila", bioma: "planicie" }, mundo: { periodo_n: 3, clima_id: "neve", corrupcao: 0 } },
+    { local: { id: 3, tipo: "selvagem", bioma: "montanha" }, mundo: { periodo_n: 3, clima_id: "neve" } },
+    { local: { id: 8, tipo: "selvagem", bioma: "floresta" }, mundo: { periodo_n: 2, clima_id: "chuva" } },
+    { local: { id: 5, tipo: "selvagem", bioma: "cidadela" }, mundo: { periodo_n: 3, clima_id: "limpo" } },
+    { local: { id: 12, tipo: "vila", bioma: "planicie" }, mundo: { periodo_n: 3, clima_id: "neve" } },
   ];
   /** Cor do alto do céu da paisagem atual: na tela de título ela pinta a página inteira acima da vista. */
   function corDoCeu() { return fundo ? fundo.getContext("2d").getImageData(0, 0, 1, 1).data.slice(0, 3) : [4, 5, 12]; }

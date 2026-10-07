@@ -149,7 +149,7 @@ def mapa_conhecido(g):
             "id": loc["id"], "n": loc["id"] + 1, "nome": loc["nome"], "x": loc["x"], "y": loc["y"],
             "tipo": loc["tipo"], "bioma": loc["bioma"], "visitado": loc["visitado"], "atual": loc["id"] == atual,
             "distancia": vizinhos.get(loc["id"]), "descricao": mapa.descricao(g, loc),
-            "nivel": None if loc["tipo"] == "vila" else nivel_regiao(loc, g.corrupcao),
+            "nivel": None if loc["tipo"] == "vila" else nivel_regiao(loc),
             "covil": ("vencido" if loc["guardiao"]["derrotado"] else "ativo") if covil else None,
         })
         for vid in loc["con"]:
@@ -230,7 +230,7 @@ def estado(g):
     return {
         "heroi": heroi(g),
         "mundo": {"dia": g.dia, "periodo": PERIODOS[min(g.periodo, 3)], "periodo_n": min(g.periodo, 3),
-                  "noite": g.noite, "clima": CLIMAS[g.clima]["nome"], "clima_id": g.clima, "corrupcao": g.corrupcao,
+                  "noite": g.noite, "clima": CLIMAS[g.clima]["nome"], "clima_id": g.clima,
                   "escuro": bool(g.sem_luz), "modificadores": modificadores(g)},
         "local": {"id": loc["id"], "nome": loc["nome"], "tipo": loc["tipo"], "bioma": loc["bioma"],
                   "bioma_nome": BIOMAS[loc["bioma"]]["nome"], "descricao": mapa.descricao(g, loc),

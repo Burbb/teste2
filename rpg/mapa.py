@@ -154,7 +154,7 @@ def legenda(g, apenas_vizinhos=False):
     for loc in locais:
         if loc["id"] not in vistos or (apenas_vizinhos and loc["id"] not in vizinhos_atuais):
             continue
-        nv = nivel_regiao(loc, g.corrupcao)
+        nv = nivel_regiao(loc)
         texto = f"{glifo(g, loc)} {loc['nome']} — {descricao(g, loc)}"
         if loc["tipo"] != "vila":
             texto += f" · Nv.{nv}"

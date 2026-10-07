@@ -2,7 +2,7 @@
 
 from ..habilidades import HABILIDADES
 from .. import itens
-from ..itens import CONSUMIVEIS, descrever_bonus
+from ..itens import CONSUMIVEIS, PENA_FENIX_AGE_SOZINHA, descrever_bonus
 from .. import comitiva
 from .. import sobrevivencia
 from ..telemetria import registrar
@@ -102,6 +102,10 @@ class Inventario:
             if m["hp"] >= m["max_hp"] and not m["ferido"]:
                 return f"{comitiva.nome(m['id'])} não precisa disso agora."
             return None
+        if k == "bomba_fumaca":
+            return "A Bomba de Fumaça só serve no meio de uma luta: para fugir dela."
+        if k == "pena_fenix":
+            return PENA_FENIX_AGE_SOZINHA
         if k == "pocao_vida" and j.hp >= j.max_hp:
             return "Sua vida já está cheia."
         if k == "tonico" and j.rec >= j.max_rec:

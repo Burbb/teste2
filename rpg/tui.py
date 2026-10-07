@@ -126,9 +126,6 @@ def painel_status(g):
         t.append(f" {m['nivel']}" + (" · ferido" if m["ferido"] else "") + "\n",
                  style="green" if m["aprovacao"] >= 15 else "red" if m["aprovacao"] <= -15 else "grey58")
     t.append(f"\nDia {g.dia} · {PERIODOS[min(g.periodo, 3)]} · {CLIMAS[g.clima]['nome']}\n")
-    t.append("Corrupção ")
-    _barra(t, g.corrupcao, 100, 16, "magenta")
-    t.append(f" {g.corrupcao}%\n")
     t.append("Sigilos ")
     t.append("◆" * len(j.sigilos), style="bold yellow")
     t.append("◇" * (3 - len(j.sigilos)), style="grey50")
@@ -145,7 +142,7 @@ def painel_mapa(g, largura, altura):
     t = texto_de(mapa.renderizar(g, largura, altura))
     t.append("\nCaminhos daqui:", style="grey58")
     for loc, dist in sorted(g.mundo_vizinhos(), key=lambda v: v[0]["id"]):
-        nv = "" if loc["tipo"] == "vila" else f" Nv.{mapa.nivel_regiao(loc, g.corrupcao)}"
+        nv = "" if loc["tipo"] == "vila" else f" Nv.{mapa.nivel_regiao(loc)}"
         t.append(f"\n{loc['id'] + 1:>2} {mapa.glifo(g, loc)} {loc['nome'][:26]}{nv} → {dist}",
                  style="bold" if loc["visitado"] else "grey58")
     return t

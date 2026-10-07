@@ -498,7 +498,7 @@ def jogo_de_dados(g):
         g.dizer("Empate. Vocês riem e dividem uma bebida.", "cinza")
 
 
-@evento(peso=lambda g: 4 + g.corrupcao // 10, cooldown=12, cond=lambda g: g.corrupcao >= 30)
+@evento(peso=4, cooldown=12, cond=lambda g: g.nivel_local() >= 5)
 def visao_do_vazio(g):
     a = g.antagonista
     g.dizer("O mundo perde a cor. Por um instante você está em outro lugar: um trono rachado, um céu sem estrelas, "
@@ -624,7 +624,7 @@ def peregrinos(g):
         g.curar(g.j.max_hp * 0.15)
 
 
-@evento(peso=lambda g: 3 + g.corrupcao // 8, cooldown=10, cond=lambda g: g.corrupcao >= 25)
+@evento(peso=3, cooldown=10, cond=lambda g: g.nivel_local() >= 3)
 def refugiados(g):
     g.dizer("Uma fila de famílias com carroças e trouxas. Fogem de vilarejos onde \"a sombra comeu as "
             "colheitas e depois as pessoas\".", "amarelo")
@@ -722,7 +722,7 @@ def mercador_raro(g):
         cond=lambda g: g.flag("tumulo") and g.flag("tumulo")["local"] == g.loc["id"])
 def tumulo_do_heroi(g):
     t = g.flag("tumulo")
-    if t["resultado"] == "corrupcao":
+    if t["resultado"] == "corrupcao":  # partidas de antes da 1.16, quando o reino podia cair
         causa = "quando a sombra engoliu o mundo"
     else:
         causa = t["causa"].replace("Você tombou diante de", "diante de").rstrip(".")

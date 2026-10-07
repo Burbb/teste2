@@ -122,10 +122,9 @@ def instanciar_guardiao(spec, nivel):
     return e
 
 
-def instanciar_antagonista(ant, nivel, corrupcao):
-    fator = 1 + corrupcao / 400
-    m = escala(nivel) * fator
-    m_atk = bal.ANTAGONISTA_ATK * escala_atk(nivel) * fator * bal.DANO_INIMIGOS
+def instanciar_antagonista(ant, nivel):
+    m = escala(nivel)
+    m_atk = bal.ANTAGONISTA_ATK * escala_atk(nivel) * bal.DANO_INIMIGOS
     e = Inimigo(ant["nome"], 150 * m, 11 * m_atk, 7 * (1 + bal.GUARDIAO_DEFESA_POR_NIVEL * (nivel - 1)),
                 6 + nivel // bal.INIMIGO_AGI_A_CADA, 11 * m_atk, ant["g"])
     t = dict(
@@ -256,11 +255,15 @@ def _bola_sombra(cb, e, alvo):
 
 
 def _cura(cb, e, alvo):
+    """Cura o inimigo mais ferido. Sem mana, mas com fôlego curto: uma vez a cada INIMIGO_CURA_RECARGA turnos."""
+    if cb.turno - getattr(e, "curou_turno", -99) < bal.INIMIGO_CURA_RECARGA:
+        return False
     feridos = [a for a in cb.inimigos_vivos() if a.hp < a.max_hp * 0.6]
     if not feridos:
         return False
+    e.curou_turno = cb.turno
     a = min(feridos, key=lambda x: x.hp / x.max_hp)
-    cura = a.curar(a.max_hp * 0.3 + e.poder)
+    cura = a.curar(a.max_hp * bal.INIMIGO_CURA_VIDA + e.poder * bal.INIMIGO_CURA_PODER)
     cb.curou(a, cura, de=e, rotulo="Cura")
     quem = "a si mesmo" if a is e else a.nome
     cb.dizer(f"{e.nome} entoa um cântico e cura {quem}. (+{cura})", "vermelho")

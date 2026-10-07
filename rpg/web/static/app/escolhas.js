@@ -19,21 +19,17 @@ function montarDoca(atalhos) {
 function marcarDocaAtual() {
   doca.querySelectorAll(".atalho").forEach((b) => b.classList.toggle("atual", !!docaTela && b.dataset.rotulo === docaTela));
 }
-/* Pedido guardado: clicou num atalho (Talentos piscando depois de subir de nível...) enquanto o texto ainda corria ou
-   um "Continuar" esperava. Antes o clique era ignorado e parecia travado; agora o texto corre de uma vez, o
-   Continuar é aceito, e a tela abre sozinha assim que o menu do lugar voltar (o pedido vale por meio minuto). */
-let atalhoGuardado = null;
+/* Clicou num atalho (Talentos piscando depois de subir de nível...) enquanto a cena ainda não acabou: o aviso diz
+   o que falta, e só. A tela não abre sozinha depois (abrir no meio de outra coisa confundia mais do que ajudava). */
 const PARA_ABRIR = { Talentos: "abrir os Talentos", "Inventário": "abrir o Inventário", Comitiva: "abrir a Comitiva", Mapa: "abrir o Mapa",
   "Diário": "abrir o Diário", "Bestiário": "abrir o Bestiário", Salvar: "salvar", Sair: "sair" };
 /** "Termine a cena para abrir os Talentos": aparece a cada clique (não só no primeiro), sem empilhar. */
 function avisarAtalho(rotulo, onde = estado && estado.combate ? "a luta" : "a cena") {
   aviso(`Termine ${onde} para ${PARA_ABRIR[rotulo] || "abrir " + rotulo}`, "info", rotulo === "Talentos" ? "estrela" : "pergaminho", "atalho");
 }
-function guardarAtalho(rotulo) {
-  atalhoGuardado = { rotulo, t: performance.now() };
-  pular = true;
+function recusarAtalho(rotulo) {
+  Som.tocar("falha");
   avisarAtalho(rotulo);
-  if (pergunta && pergunta.tipo === "continuar") responder(pergunta.id, null);
 }
 function atalhoNoMenu(opcoes, rotulo) {
   return opcoes.findIndex((o) => { const at = atalhoDe(o.texto); return at && at[1] === rotulo; });
@@ -44,20 +40,20 @@ function pedirAtalho(rotulo) {
   const b = doca.querySelector(`.atalho[data-rotulo="${rotulo}"]`);
   if (b) { b.click(); return; }
   if (pergunta && pergunta.tipo === "opcoes" && !processando && menuDoLugar(pergunta.opcoes)) return;
-  guardarAtalho(rotulo);
+  recusarAtalho(rotulo);
 }
 
 /** Clique num atalho da doca: no menu do lugar, escolhe direto; numa tela aberta pela doca, volta e abre o outro. */
 function acionarAtalho(rotulo, mid, i) {
   if (estado && estado.combate) { Som.tocar("falha"); avisarAtalho(rotulo); return; }
-  if (!pergunta || processando) { guardarAtalho(rotulo); return; }
+  if (!pergunta || processando) { recusarAtalho(rotulo); return; }
   if (pergunta.tipo === "continuar" && docaTela) {
     // telas de leitura (Bestiário...) terminam em "Continuar": ele faz as vezes do Voltar
     pendente = rotulo === docaTela ? null : { chave: "_atalho", valor: rotulo, saltos: 4 };
     responder(pergunta.id, null);
     return;
   }
-  if (pergunta.tipo === "continuar") { guardarAtalho(rotulo); return; }
+  if (pergunta.tipo === "continuar") { recusarAtalho(rotulo); return; }
   if (pergunta.tipo !== "opcoes") return;
   if (pergunta.id === mid) { docaTela = rotulo; marcarDocaAtual(); responder(mid, i); return; }
   const aqui = atalhoNoMenu(pergunta.opcoes, rotulo);
@@ -65,7 +61,7 @@ function acionarAtalho(rotulo, mid, i) {
   if (menuDoLugar(pergunta.opcoes)) return;  // o lugar não tem esse atalho (ex.: Comitiva sem ninguém)
   if (!docaTela) {
     // Uma escolha da cena está esperando (um evento, o item encontrado): ela vem primeiro.
-    guardarAtalho(rotulo);
+    recusarAtalho(rotulo);
     return;
   }
   const v = pergunta.opcoes.findIndex(ehVoltar);
@@ -107,16 +103,6 @@ function mostrarOpcoes(m) {
   posicionarPrompt();
   soltarAlturaPrompt();
   // Pedido pendente (ex.: clicou num destino do mapa a partir do menu do local): responde sozinho.
-  if (atalhoGuardado && !pendente) {
-    const alvo = performance.now() - atalhoGuardado.t < 30000 ? atalhoNoMenu(m.opcoes, atalhoGuardado.rotulo) : -1;
-    if (performance.now() - atalhoGuardado.t >= 30000) atalhoGuardado = null;
-    if (alvo >= 0) {
-      docaTela = atalhoGuardado.rotulo; atalhoGuardado = null;
-      pergunta = { id: m.id, tipo: "opcoes", opcoes: m.opcoes };
-      responder(m.id, alvo); marcarDocaAtual();
-      return;
-    }
-  }
   if (pendente) {
     const p = pendente;
     pendente = null;
@@ -637,7 +623,7 @@ function ehVoltar(o) {
 function mostrarContinuar(m) {
   posicionarPrompt();
   soltarAlturaPrompt();
-  if ((pendente && pendente.chave === "_atalho" && docaTela) || (atalhoGuardado && !(estado && estado.combate))) {  // a caminho de um atalho
+  if (pendente && pendente.chave === "_atalho" && docaTela) {  // a caminho de um atalho
     pergunta = { id: m.id, tipo: "continuar" };
     responder(m.id, null);
     return;

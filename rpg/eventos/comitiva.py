@@ -519,7 +519,6 @@ def yara_sonambula(g):
     else:
         g.dizer("Ela volta ao amanhecer. Os olhos estão mais escuros. Ela sorri para você como quem agradece.",
                 "magenta")
-        g.corromper(3)
         cm.mudar_aprovacao(g, "yara", 5)
         m["conselho"] = m.get("conselho") or "usar"
     m["missao"] = 2
@@ -549,16 +548,14 @@ def yara_circulo_negro(g):
         g.narrar("Yara enfia as mãos na terra e arranca algo que não é raiz. Grita. O círculo racha de ponta a ponta. "
                  "Quando ela se levanta, os olhos são castanhos de novo.", "verde")
         g.narrar("\"Silêncio\", diz ela, chorando e rindo ao mesmo tempo. \"Silêncio de verdade.\"", "verde+negrito")
-        g.corromper(-3)
         m["caminho"] = "liberta"
         g.aliado_final("Yara", "Yara grita o nome verdadeiro de Ulook, que ouviu em sonhos, e por um instante "
                                "ele hesita.", "dano", 0.12)
     else:
         g.narrar("As pedras se acendem. Yara abre os braços e a escuridão entra nela como água num jarro. Quando acaba, "
                  "ela flutua um palmo acima do chão, e sorri. Você nunca a viu tão bonita. Nem tão longe.", "magenta")
-        g.corromper(4)
         m["caminho"] = "vazio"
-        g.dizer("(O poder de Yara agora é muito maior, e cobra um preço do reino a cada luta.)", "ciano")
+        g.dizer("(O poder de Yara agora é muito maior, e bebe um pouco da sua vida a cada luta vencida.)", "ciano")
     if op == "livre":
         cm.mudar_aprovacao(g, "yara", 10)
     elif op == escolha:

@@ -5,10 +5,10 @@ acrescenta-se uma função `_vN_para_vN1` em MIGRACOES. Um save antigo passa por
 chegar à versão atual; assim nenhum código do jogo precisa se defender de saves velhos.
 """
 
-VERSAO_SAVE = 2
+VERSAO_SAVE = 3
 
 # Tudo o que o estado da partida guarda além do jogador, da semente e do gerador aleatório.
-CAMPOS_SAVE = ("mundo", "dia", "periodo", "clima", "corrupcao", "passos", "flags", "historico", "contagem",
+CAMPOS_SAVE = ("mundo", "dia", "periodo", "clima", "passos", "flags", "historico", "contagem",
                "impulsos", "sementes", "rumores", "contratos", "ofertas", "lojas", "nemesis", "aliados_finais",
                "forcados", "proximo_id", "estatisticas", "hardcore", "bestiario", "lendas", "registro",
                "arquivo_run", "comitiva", "reserva")
@@ -38,7 +38,13 @@ def _v1_para_v2(d):
     return d
 
 
-MIGRACOES = {1: _v1_para_v2}
+def _v2_para_v3(d):
+    """A corrupção do reino saiu do jogo (1.16)."""
+    d.pop("corrupcao", None)
+    return d
+
+
+MIGRACOES = {1: _v1_para_v2, 2: _v2_para_v3}
 
 
 def migrar(dados):

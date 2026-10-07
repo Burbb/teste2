@@ -74,6 +74,7 @@
 .aviso-flutuante.longo { white-space: normal; max-width: min(460px, calc(100vw - 16px)); align-items: flex-start; gap: 8px; padding: 7px 12px 8px 8px;
   font-family: var(--prosa, inherit); font-size: 17px; line-height: 1.35; animation: aviso-fica var(--dura, 5s) ease-out forwards; }
 .aviso-flutuante.longo img.sprite { margin-top: 2px; flex: none; }
+.aviso-flutuante.saindo { animation: none; opacity: 0; transition: opacity .25s ease-out; }
 @keyframes aviso-fica { 0% { opacity: 0; transform: translateY(8px) scale(0.96); } 6% { opacity: 1; transform: none; } 88% { opacity: 1; transform: none; } 100% { opacity: 0; transform: translateY(-12px); } }
 .aviso-flutuante.ouro { color: var(--ouro); border-color: #8a6a14; }
 .aviso-flutuante.perda, .aviso-flutuante.dano { color: #ff9c90; border-color: #8a1414; }
@@ -81,6 +82,8 @@
 .aviso-flutuante.nivel { color: #120e0b; background: var(--ouro); border-color: #fff3a0; }
 @keyframes aviso-sobe { 0% { opacity: 0; transform: translateY(8px) scale(0.8); } 10% { opacity: 1; transform: translateY(0) scale(1.08); } 18% { transform: none; } 75% { opacity: 1; } 100% { opacity: 0; transform: translateY(-30px); } }
 .mercadoria.suprimento { grid-template-rows: auto auto 1fr; }
+.merc-estoque { display: block; font-family: var(--ui); font-size: 11px; color: var(--tinta-2); letter-spacing: .02em; }
+.merc-estoque.esgotado { color: var(--sangue-2); }
 .qtd-ctrl { grid-column: 2; display: inline-flex; align-items: center; gap: 2px; margin-top: 2px; justify-self: start; }
 .qtd-ctrl button { width: 22px; height: 22px; padding: 0; line-height: 1; font-family: var(--num); font-size: 18px; color: var(--tinta); background: #2a2420; border: 2px solid #4a4038; cursor: pointer; user-select: none; touch-action: none; }
 .qtd-ctrl button:hover { border-color: var(--ouro); color: var(--ouro); }
