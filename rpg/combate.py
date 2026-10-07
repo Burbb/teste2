@@ -7,7 +7,7 @@ from .classes import CLASSES, HABILIDADES, descricao_habilidade
 from .dados import TRACOS
 from .entidades import Combatente
 from .inimigos import HABS_INIMIGO, NOMES_HABS_INIMIGO, ROTULOS_HABS_INIMIGO
-from .itens import CONSUMIVEIS, descrever_bonus, rotulo
+from .itens import CONSUMIVEIS, ficha
 from . import comitiva, sobrevivencia, telemetria
 from .talentos import custo_habilidade
 from . import balanceamento as bal
@@ -589,7 +589,7 @@ class Combate:
             opcoes = [f"Atacar ({nome_atk})", "Habilidades", "Itens"] + (["Analisar inimigos"] if analisar else [])
             # Na tela gráfica as ações viram uma barra dentro da arena, com as habilidades já à mostra.
             metas = [{"acao": "atacar", "nome": nome_atk}, {"acao": "habilidades", "habilidades": self.metas_habilidades()},
-                     {"acao": "itens"}] + ([{"acao": "analisar"}] if analisar else [])
+                     {"acao": "itens", "itens": self.metas_itens()}] + ([{"acao": "analisar"}] if analisar else [])
             if self.pode_fugir:
                 opcoes.append("Fugir")
                 metas.append({"acao": "fugir"})
@@ -726,25 +726,33 @@ class Combate:
                 self.lance("buff", em="j", efeitos=novos, rotulo=h["nome"], hab=ids[esc])
         return True
 
-    def menu_itens(self):
+    def itens_da_luta(self):
+        """Consumíveis que servem em luta e armas (ou escudo/aljava/grimório) da mochila para trocar.
+        Trocar de arma gasta o turno; armadura não: ninguém veste uma cota de malha com um lobo no pescoço."""
         j = self.j
         usaveis = [k for k in USAVEIS_EM_COMBATE if j.consumiveis.get(k, 0) > 0]
-        # Trocar de arma (ou de escudo/aljava/grimório) no meio da luta é possível, mas gasta o turno.
-        # Armadura não: ninguém veste uma cota de malha com um lobo no pescoço.
         armas = [it for it in j.mochila if it["slot"] in ("arma", "secundaria") and self.g.pode_usar(it)]
+        return usaveis, armas
+
+    def metas_itens(self):
+        """Cada item usável na luta como a interface gráfica o desenha (ícone, quantidade, dica, se serve agora)."""
+        j = self.j
+        usaveis, armas = self.itens_da_luta()
+        metas = [{"usar_item": k, "item": k, "qtd": j.consumiveis[k], "nome": CONSUMIVEIS[k]["nome"],
+                  "desc": CONSUMIVEIS[k]["desc"], "motivo": None if k == "bomba_fumaca" else self.g.motivo_inutil(k)}
+                 for k in usaveis]
+        metas += [{"trocar": j.mochila.index(it), "equip": ficha(it, j.nome_recurso)} for it in armas]
+        return metas
+
+    def menu_itens(self):
+        j = self.j
+        usaveis, armas = self.itens_da_luta()
         if not usaveis and not armas:
             self.dizer("Sua bolsa não tem nada útil agora.", "cinza")
             return None
         opcoes = [f"{CONSUMIVEIS[k]['nome']} x{j.consumiveis[k]} — {CONSUMIVEIS[k]['desc']}" for k in usaveis]
-        metas = [{"usar_item": k, "item": k, "qtd": j.consumiveis[k], "nome": CONSUMIVEIS[k]["nome"],
-                  "desc": CONSUMIVEIS[k]["desc"], "motivo": None if k == "bomba_fumaca" else self.g.motivo_inutil(k)}
-                 for k in usaveis]
-        for it in armas:
-            opcoes.append(f"Trocar para {it['nome']} (gasta o turno)")
-            metas.append({"trocar": j.mochila.index(it), "equip": {
-                "nome": rotulo(it), "raridade": it.get("raridade", "comum"), "bonus": descrever_bonus(it["bonus"], j.nome_recurso),
-                "slot": it["slot"], "base": it.get("base"), "bonus_bruto": it["bonus"], "classe": it.get("classe"),
-                "lore": it.get("lore")}})
+        opcoes += [f"Trocar para {it['nome']} (gasta o turno)" for it in armas]
+        metas = self.metas_itens()
         self.ui.meta_opcoes = metas + [None]
         try:
             esc = self.ui.escolher("Usar qual item?", opcoes + ["Voltar"])

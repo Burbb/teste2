@@ -121,8 +121,10 @@ na interface miúda; **Jersey 15** nos números. O botão "Fonte" no topo volta 
   os atributos e a **comparação com o que está equipado** (▲ verde, ▼ vermelho).
 - **Mercado interativo:** vitrine de suprimentos e equipamentos com preço e comparação.
   Suprimentos têm **quantidade** (`−`/`+`, segurar acelera, rodinha do mouse, Shift+clique compra 5).
-  Equipamento comprado para um espaço vazio do corpo **já sai vestido**. Na mochila, clicar num
-  item abre um menu com **Equipar** ou **Vender**, e nada é vendido sem você confirmar.
+  Equipamento comprado para um espaço vazio do corpo **já sai vestido**: o ícone voa da vitrine
+  até o espaço do boneco, que brilha ao receber. Na mochila, clicar num item abre um menu com
+  **Equipar** ou **Vender**, e nada é vendido sem você confirmar. A venda paga exatamente o
+  "Vender por" mostrado (metade do preço), com um som só.
 - **Nada some lá embaixo:** nas telas desenhadas (mercado, inventário), o que acontece
   (`−16 ouro`, `Tocha ×4`) aparece **solto na tela, perto de onde você clicou**. E "Voltar" virou
   uma **seta fixa** no canto da página, que também responde ao `Esc`.
@@ -143,13 +145,16 @@ na interface miúda; **Jersey 15** nos números. O botão "Fonte" no topo volta 
   ferida. Fora de combate, poção e bandagem também servem na comitiva (clique na poção e escolha
   em quem); a bandagem põe de pé um companheiro caído.
 - **Doca de atalhos:** Talentos, Grimório, Inventário, Comitiva · Mapa, Diário, Bestiário · Salvar, Sair,
-  em botões de ícone com a tecla no canto e selos de aviso (pontos de talento, carta).
+  em botões de ícone com a tecla no canto e selos de aviso (pontos de talento, carta). A doca
+  é uma barra própria, fixa embaixo da página (fora do texto da história): não pula de lugar a
+  cada cena e só apaga enquanto não há escolha a fazer.
 - **Flechas na carta:** o arqueiro vê as flechas na própria carta da luta, piscando quando
   estão acabando. Sem flechas, o ataque vira um golpe de adaga fraco e os tiros ficam bloqueados.
 - **Voltar sem caçar o botão:** na luta, "Voltar" vira a última carta da grade (e Esc ou o botão
   direito do mouse voltam um passo em qualquer tela).
 - **Duelo é duelo:** nos duelos de honra a comitiva e o animal ficam de fora, assistindo.
-- **Fogueira sempre:** acampar mostra a fogueira desenhada mesmo quando você está sozinho.
+- **Fogueira sempre:** acampar mostra a fogueira desenhada mesmo quando você está sozinho. Na
+  fogueira dá para usar poção e bandagem (em você ou na comitiva) antes de dormir.
 - **Caçada garantida:** no lugar de um contrato de caça aparece "Caçar … (contrato, 1/3)" (e o
   cartão do contrato pisca com "Seguir os rastros ▸"). Seguir os rastros sempre leva ao bicho; a
   Percepção decide quem vê quem primeiro. Cada abate mostra o progresso.
@@ -175,8 +180,12 @@ na interface miúda; **Jersey 15** nos números. O botão "Fonte" no topo volta 
   dela (Atacar, Habilidades, Itens, Fugir, teclas 1–4). Habilidades e Itens abrem uma janelinha
   logo abaixo da arena (os alvos ficam à vista), com ícone, nome e custo; passar o mouse mostra o que
   faz, o dano e acende quem seria atingido. Escolhida a
-  habilidade, os inimigos acendem: clique no alvo. Esc ou botão direito fecham a janelinha e
-  desfazem a escolha antes de gastar qualquer coisa.
+  habilidade, os inimigos acendem: clique no alvo. Esc, botão direito ou um clique fora fecham a
+  janelinha e desfazem a escolha antes de gastar qualquer coisa; as ações em arco continuam ali.
+  O alvo de cada habilidade usa os termos de sempre: **Inimigo único**, **Todos os inimigos**,
+  **Você**, **Aliado único**, **Todos os aliados**.
+- **Ritmo do golpe:** quem ataca volta para o lugar logo depois do impacto, sem ficar parado à
+  frente esperando o roubo de vida ou o contra-ataque; o contra-ataque também volta inteiro.
 - **Grimório (P):** um livro com cada habilidade e o ataque básico: o dano de agora (faixa,
   crítico e chance), de onde ele vem (Poder 40 × 150% × talentos) e quanto cresce a cada ponto de
   atributo, além de efeitos como queimadura, sangramento e cura com os números do seu herói.

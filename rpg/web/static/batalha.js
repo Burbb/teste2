@@ -264,7 +264,7 @@ const Batalha = (() => {
   }
   async function voltar(el) {
     el.classList.remove("agindo");
-    await ir(el, 0, 0, pausa(160));
+    if (el._x || el._y) await ir(el, 0, 0, pausa(160));  // quem já voltou depois do golpe não espera de novo
     el.style.translate = "";
   }
   async function investir(ator, alvo) {
@@ -403,7 +403,7 @@ const Batalha = (() => {
             projetil(em, de, "moeda");
             await dormir(70);
           }
-          ir(de, 26 * lado(de), 0, pausa(170));
+          ir(de, 0, 0, pausa(170));
         }
         if (em) numero(em, `−${m.valor} ouro`, "roubo");
         if (de) { rotulo(de, "Hehehe!", "inimiga"); reiniciar(de, "gargalha", 900); }
@@ -432,7 +432,7 @@ const Batalha = (() => {
           numero(em, m.motivo === "imune" ? "imune" : "esquiva", "info");
         }
         som("esquiva");
-        if (de && !emArea) ir(de, 26 * lado(de), 0, pausa(150));
+        if (de && !emArea) ir(de, 0, 0, pausa(170));
         await dormir(pausa(260));
         return;
       }
@@ -659,7 +659,9 @@ const Batalha = (() => {
     som(m.crit ? "critico_golpe" : SOM_ELEMENTO[el] || "golpe");
     if (el !== "fisico" && !m.crit) setTimeout(() => som("golpe_leve"), 60);
     if (m.em === "j") { App.doer(); som("dor"); }
-    if (de && de !== em && !de.classList.contains("girando") && !distancia && !emArea) ir(de, 26 * lado(de), 0, pausa(170));
+    // Golpeou: volta direto para o lugar (não para o "passo à frente"). Roubo de vida, sangramento e passivas
+    // que vêm depois já aparecem com a carta em casa; um contra-ataque, fora da própria vez, também não fica adiantado.
+    if (de && de !== em && !de.classList.contains("girando") && !emArea) ir(de, 0, 0, pausa(distancia ? 140 : 190));
     await dormir(pausa(de && de.classList.contains("girando") ? 110 : m.crit ? 460 : 380));
   }
 

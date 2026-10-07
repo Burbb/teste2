@@ -49,6 +49,7 @@ let ultimosRecursos = {};
 
 const App = {
   get estado() { return estado; },
+  get ultimoClique() { return ultimoClique; },
   responder: (id, valor) => responder(id, valor),
   pedir: (rotulo, chave, valor) => pedir(rotulo, chave, valor),
   acao: (filtro, som, extra) => acao(filtro, som, extra),

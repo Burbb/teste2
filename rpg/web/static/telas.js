@@ -415,7 +415,7 @@ const Telas = (() => {
         ${l.nota ? `<div class="g-nota">${h(l.nota)}</div>` : ""}</li>`).join("");
     const det = document.getElementById("grimorio-detalhe");
     det.innerHTML = `<div class="g-topo"><span class="g-icone">${S(icone(x), 4)}</span>
-        <div><b class="g-nome">${h(x.nome)}</b><div class="g-meta">${custo(x)}${x.flechas ? ` · ${x.flechas} flecha${x.flechas > 1 ? "s" : ""}` : ""} · alvo: ${h(x.alvo)}</div></div></div>
+        <div><b class="g-nome">${h(x.nome)}</b><div class="g-meta">${custo(x)}${x.flechas ? ` · ${x.flechas} flecha${x.flechas > 1 ? "s" : ""}` : ""} · Alvo: ${h(x.alvo)}</div></div></div>
       <p class="g-desc">${h(x.desc)}</p><ul class="g-linhas">${linhas}</ul>
       <p class="g-rodape">Números antes da defesa do inimigo e de efeitos do momento (fortalecido, clima, alvo marcado).</p>`;
     det.classList.remove("virando"); void det.offsetWidth; det.classList.add("virando");
@@ -540,10 +540,23 @@ const Telas = (() => {
       if (bt.dataset.em === "-") return;
       App.acao(bt.dataset.em ? { usar: b.id, em: bt.dataset.em } : { usar: b.id }, "item");
     });
-    setTimeout(() => document.addEventListener("click", fecharMenuItem, { once: true }), 0);
+    fecharAoClicarFora();
   }
 
-  function fecharMenuItem() { document.querySelectorAll(".menu-item").forEach((m) => m.remove()); }
+  /* Os menus de item fecham com um clique fora deles. Um só "vigia" por vez: antes, cada abertura deixava um
+     ouvinte pendurado e o clique seguinte fechava o menu recém-aberto (a bolsa "às vezes não abria"). */
+  let vigiaFora = null;
+  function fecharAoClicarFora() {
+    setTimeout(() => {
+      if (vigiaFora || !document.querySelector(".menu-item")) return;
+      vigiaFora = (ev) => { if (!ev.target.closest(".menu-item")) fecharMenuItem(); };
+      document.addEventListener("pointerdown", vigiaFora, true);
+    }, 0);
+  }
+  function fecharMenuItem() {
+    document.querySelectorAll(".menu-item").forEach((m) => m.remove());
+    if (vigiaFora) { document.removeEventListener("pointerdown", vigiaFora, true); vigiaFora = null; }
+  }
   function menuItem(ancora, it, i) {
     fecharMenuItem();
     esconderDica();
@@ -563,9 +576,9 @@ const Telas = (() => {
       ev.stopPropagation();
       fecharMenuItem();
       if (b.dataset.a === "equipar") App.acao({ equipar: i }, "equipar");
-      else if (b.dataset.a === "vender") App.acao({ vender: i }, "moeda");
+      else if (b.dataset.a === "vender") App.acao({ vender: i });  // o tilintar vem do ouro recebido: um som só
     });
-    setTimeout(() => document.addEventListener("click", fecharMenuItem, { once: true }), 0);
+    fecharAoClicarFora();
   }
 
   let repeticao = null;  // o "segurar +/−" do mercado em andamento
@@ -825,7 +838,7 @@ const Telas = (() => {
       const i = Number(b.dataset.i);
       if (i >= 0) App.acao(itens[i][1], "escolha");
     });
-    setTimeout(() => document.addEventListener("click", fecharMenuItem, { once: true }), 0);
+    fecharAoClicarFora();
   }
 
   function ligarFigurasComitiva(raiz) {
@@ -906,8 +919,32 @@ const Telas = (() => {
     });
   }
 
+  /** Comprou e já vestiu: o ícone voa do mercado até o espaço do corpo no painel, que brilha ao receber. */
+  function voarParaEspaco(d) {
+    const alvo = document.querySelector(`#heroi [data-mini="${d.espaco}"]`);
+    if (!alvo) return Promise.resolve();
+    const origem = App.ultimoClique && performance.now() - App.ultimoClique.t < 4000 ? App.ultimoClique : { x: innerWidth / 2, y: innerHeight / 2 };
+    const r = alvo.getBoundingClientRect();
+    const voo = document.createElement("div");
+    voo.className = "voo-item";
+    voo.innerHTML = S(iconeItem(d.item), 3);
+    document.body.appendChild(voo);
+    App.som("equipar");
+    const dx = r.left + r.width / 2 - origem.x, dy = r.top + r.height / 2 - origem.y;
+    voo.style.left = origem.x - 24 + "px"; voo.style.top = origem.y - 24 + "px";
+    return voo.animate([{ transform: "translate(0, 0) scale(1.2)", opacity: 1 },
+      { transform: `translate(${dx * 0.5}px, ${dy * 0.5 - 60}px) scale(1)`, opacity: 1 },
+      { transform: `translate(${dx}px, ${dy}px) scale(.45)`, opacity: 0.9 }],
+      { duration: 560, easing: "cubic-bezier(.4,0,.2,1)" }).finished.catch(() => {}).then(() => {
+        voo.remove();
+        const novo = document.querySelector(`#heroi [data-mini="${d.espaco}"]`);
+        if (novo) { novo.classList.remove("recebeu"); void novo.offsetWidth; novo.classList.add("recebeu"); setTimeout(() => novo.classList.remove("recebeu"), 900); }
+      });
+  }
+
   function celebrar(m, instantaneo) {
     const d = m.dados;
+    if (m.tipo === "equipou") return instantaneo ? Promise.resolve() : voarParaEspaco(d);
     if (m.tipo === "vitoria") {
       if (instantaneo) return Promise.resolve();
       App.som("vitoria");

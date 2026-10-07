@@ -153,3 +153,8 @@ body.modo-titulo .vinheta { background: radial-gradient(ellipse 80% 70% at 50% 4
 .acoes-combate .escolha:hover, .acoes-combate .escolha:focus-visible { border-color: var(--ouro); transform: translateY(-2px); }
 .pergunta-rotulo.mira::after { content: " · ou clique na carta do inimigo"; text-transform: none; letter-spacing: 0; font-weight: 400; color: var(--ouro); }
 .dica-pular { text-align: center; font-size: 13px; color: var(--tinta-3); margin-top: 1em; }
+/* A doca: uma barra fixa sob a página, com moldura própria (HUD), em vez de botões no meio do texto. */
+#doca { width: 100%; max-width: 860px; display: none; padding: 6px 10px 7px; box-shadow: var(--sombra); transition: opacity .2s ease; }
+body:not(.sem-heroi):not(.modo-titulo):not(.em-combate) #doca:not(:empty) { display: block; }
+#doca .atalhos { margin: 0 auto; padding: 0; border: 0; background: none; box-shadow: none; }
+#doca.inativa .atalho:not([data-sempre]) { pointer-events: none; opacity: 0.38; filter: grayscale(0.6); }

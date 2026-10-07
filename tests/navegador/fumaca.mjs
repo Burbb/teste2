@@ -145,7 +145,14 @@ async function cenarioVila(browser) {
     const mercado = await esperar('#prompt .escolha:has-text("Mercado")');
     const vida = () => page.evaluate(() => App.estado.heroi.hp);
     const antesPocao = await vida();
-    await (await page.$('#heroi [data-bolsa="pocao_vida"]')).click();
+    let abriu = 0;
+    for (let k = 0; k < 3; k++) {  // cliques seguidos: o menu "em quem usar" abre toda vez (antes, um sim e um não)
+      await (await page.$('#heroi [data-bolsa="pocao_vida"]')).click();
+      await page.waitForTimeout(150);
+      if (await page.$(".menu-uso")) abriu++;
+    }
+    conferir(abriu === 3, `clicar na poção sempre abre o "em quem usar" (${abriu}/3)`);
+    await (await page.$('.menu-uso button[data-em=""]')).click();
     for (let k = 0; k < 30 && (await vida()) === antesPocao; k++) await page.waitForTimeout(100);
     conferir((await vida()) > antesPocao, "a poção da bolsa lateral se usa com um clique");
     await page.waitForTimeout(300);

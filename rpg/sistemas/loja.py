@@ -100,6 +100,9 @@ class Loja:
         a_venda.remove(it)
         if vago:
             self.equipar(it, espaco)
+            # Na tela gráfica, o item "voa" até o espaço do corpo: ninguém acha que ele sumiu.
+            self.ui.celebrar("equipou", {"espaco": espaco, "item": itens.ficha(it, j.nome_recurso)})
+            self.ui.efeito(f"Vestiu {it['nome']}", "item")
         else:
             j.mochila.append(it)
             self.ui.efeito(f"{it['nome']} vai para a mochila", "item")
@@ -109,10 +112,10 @@ class Loja:
         """O mercador paga metade do valor."""
         j = self.j
         j.mochila.remove(it)
-        self.ui.efeito(f"Vendeu {it['nome']}", "info")
-        antes = j.ouro
-        self.ganhar_ouro(it["preco"] // 2)
-        registrar(self, "venda", item=it["nome"], raridade=it.get("raridade", "comum"), preco=j.ouro - antes)
+        valor = it["preco"] // 2  # exatamente o que o botão "Vender por" anunciou
+        j.ouro += valor
+        self.ui.efeito(f"Vendeu {it['nome']}: +{valor} ouro", "ouro")
+        registrar(self, "venda", item=it["nome"], raridade=it.get("raridade", "comum"), preco=valor)
 
     # ------------------------------------------------------------ telas
     def loja(self):

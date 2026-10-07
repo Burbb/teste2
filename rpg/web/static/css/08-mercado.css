@@ -129,3 +129,7 @@
 /* Dica de uma linha (ouro, comida, barras do HUD): só o nome, numa caixinha preta discreta. */
 #dica-item.curta { width: auto; max-width: 260px; padding: 2px 8px 3px; font-size: 13px; line-height: 1.35; color: var(--tinta);
   background: rgba(8, 6, 5, 0.92); border: 1px solid #3a2e24; border-image: none; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5); }
+/* Comprou e vestiu: o ícone voa até o espaço do corpo, que brilha ao receber. */
+.voo-item { position: fixed; z-index: 80; width: 48px; height: 48px; display: grid; place-items: center; pointer-events: none; filter: drop-shadow(0 0 8px rgba(242, 201, 76, 0.8)); }
+.slot-px.recebeu { animation: recebeu .9s ease-out; }
+@keyframes recebeu { 0% { box-shadow: 0 0 0 2px #fff3a0, 0 0 18px rgba(242, 201, 76, 0.9); transform: scale(1.18); } 100% { box-shadow: none; transform: none; } }

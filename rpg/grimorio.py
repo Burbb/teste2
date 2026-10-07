@@ -182,7 +182,9 @@ def _linhas(h_id, u):
     return [efeito(HABILIDADES[h_id]["desc"])]
 
 
-ALVOS = {"inimigo": "um inimigo", "todos": "todos os inimigos", "proprio": "você"}
+# Como os RPGs de turno descrevem o alcance (Final Fantasy, Pokémon): quem, e se é um só ou todos.
+ALVOS = {"inimigo": "Inimigo único", "todos": "Todos os inimigos", "proprio": "Você",
+         "aliado": "Aliado único", "aliados": "Todos os aliados"}
 
 
 def dados(j):

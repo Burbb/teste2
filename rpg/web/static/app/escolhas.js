@@ -1,8 +1,26 @@
 "use strict";
 
 /* ------------------------------------------------------------------ escolhas */
+/* A doca de atalhos (Talentos, Grimório, Inventário...) mora numa barra fixa sob a página, não no meio do texto.
+   Ela acende nos menus de lugar; no resto (eventos, telas), fica apagada no lugar, com o Grimório ainda à mão. */
+const doca = $("#doca");
+let docaSono = 0;
+function montarDoca(atalhos) {
+  clearTimeout(docaSono);
+  doca.replaceChildren(atalhos);
+  doca.classList.remove("inativa");
+  doca.dataset.viva = "1";
+  Telas.ligarDicas(doca);
+}
+function adormecerDoca() {
+  doca.dataset.viva = "0";
+  clearTimeout(docaSono);
+  // um instante de folga: entre um menu e o redesenho dele, a doca não pisca
+  docaSono = setTimeout(() => { if (doca.dataset.viva === "0") doca.classList.add("inativa"); }, 350);
+}
+
 function limparPrompt() {
-  promptEl.innerHTML = ""; pergunta = null; Batalha.limparAlvos(); Batalha.vez(null); limparRoda();
+  promptEl.innerHTML = ""; pergunta = null; Batalha.limparAlvos(); Batalha.vez(null); limparRoda(); adormecerDoca();
   document.querySelectorAll(".rastro-contrato.cacavel").forEach((c) => { c.classList.remove("cacavel"); c.querySelector(".rastro-cacar")?.remove(); });
   document.querySelectorAll(".voltar-seta").forEach((b) => b.remove());
   Telas.fecharMenuItem();
@@ -151,7 +169,7 @@ function mostrarOpcoes(m) {
     if (rot) rot.innerHTML = `${habMirando ? `<b>${esc(habMirando)}</b>: ` : ""}escolha o alvo <small>clique num inimigo</small>`;
   }
   if (lista.childElementCount) { promptEl.appendChild(lista); Telas.ligarDicas(lista); }
-  if (atalhos.childElementCount) promptEl.appendChild(atalhos);
+  if (atalhos.childElementCount) montarDoca(atalhos);
   if (!replay) guardar("cdf-dica", String(Number(ler("cdf-dica") || 0) + 1));
   if (estado) {
     const chave = [...destinosClicaveis()].join(",") + "|" + estado.local.id;
@@ -190,7 +208,8 @@ const HAB_ICONE = {
   inferno: ["fogueira", "fogo"], combustao: ["estrela", "fogo"], fenix: ["voador", "fogo"],
   drenar_vida: ["gota_roxa", "sombra"], erguer_servo: ["osso", "sombra"], maldicao: ["orbe_sombra", "sombra"],
 };
-const ALVO_TXT = { inimigo: "um inimigo", todos: "todos os inimigos", proprio: "você" };
+// Alcance como nos RPGs de turno (Final Fantasy, Pokémon): quem, e se é um só ou todos.
+const ALVO_TXT = { inimigo: "Inimigo único", todos: "Todos os inimigos", proprio: "Você", aliado: "Aliado único", aliados: "Todos os aliados" };
 function cartaAcao(o, i, m, pos) {
   const meta = o.meta;
   const b = el("button", "escolha carta-acao");
@@ -206,7 +225,7 @@ function cartaAcao(o, i, m, pos) {
       (meta.flechas ? ` ${spr("flecha", 1)}<b>${meta.flechas}</b>` : "");
     rodape = `<span class="acao-custo">${custo}</span><span class="acao-alvo">${ALVO_TXT[meta.alvo_tipo] || ""}</span>`;
     if (!meta.pode) bloqueio = meta.motivo || "Indisponível";
-    dicaHtml = `<b>${esc(meta.nome)}</b><div class="tipo">${meta.custo ? `${meta.custo} de ${esc(meta.recurso)}` : "Sem custo"}${meta.flechas ? ` · ${meta.flechas} flecha${meta.flechas > 1 ? "s" : ""}` : ""} · alvo: ${ALVO_TXT[meta.alvo_tipo] || "—"}</div>
+    dicaHtml = `<b>${esc(meta.nome)}</b><div class="tipo">${meta.custo ? `${meta.custo} de ${esc(meta.recurso)}` : "Sem custo"}${meta.flechas ? ` · ${meta.flechas} flecha${meta.flechas > 1 ? "s" : ""}` : ""} · Alvo: ${ALVO_TXT[meta.alvo_tipo] || "—"}</div>
       <div class="bonus">${esc(meta.desc)}</div>${danoGrimorio(meta.habilidade)}${bloqueio ? `<div class="pior">${esc(bloqueio)}</div>` : ""}`;
   } else if (meta.usar_item) {
     b.classList.add("el-cura");
@@ -258,6 +277,7 @@ function rodaEl() { return document.getElementById("roda"); }
 let janelaAberta = null;  // { fechar } da janelinha de habilidades/itens
 function limparRoda() {
   previaAlvos(null);
+  if (janelaAberta && janelaAberta.soltar) janelaAberta.soltar();
   const r = rodaEl();
   if (r && r.childElementCount) { Telas.esconderDica(); r.replaceChildren(); }
   janelaAberta = null;
@@ -330,8 +350,17 @@ function rodaDeAcoes(m) {
       })));
     });
   }
-  botao("itens", spr("pocao", 2), "Itens", "<b>Itens</b><div>Poções, tônicos, bandagens e troca de arma. Usar gasta o turno.</div>",
-    () => { App.som("pagina"); responder(m.id, acaoIdx("itens")); });
+  const itens = m.opcoes[acaoIdx("itens")].meta.itens || [];
+  botao("itens", spr("pocao", 2), "Itens", "<b>Itens</b><div>Poções, tônicos, bandagens e troca de arma. Usar gasta o turno.</div>", (b) => {
+    if (janelaAberta && b.classList.contains("ativo")) { fecharJanela(); return; }
+    if (!itens.length) { tremerNao(b, "Nada na bolsa serve agora."); return; }
+    App.som("pagina");
+    abrirJanela(b, "Itens", itens.map((meta) => linhaItem(meta, () => {
+      App.som(meta.trocar !== undefined ? "equipar" : "item");
+      pendente = meta.trocar !== undefined ? { chave: "trocar", valor: meta.trocar } : { chave: "usar_item", valor: meta.usar_item };
+      responder(m.id, acaoIdx("itens"));
+    })));
+  });
   if (acaoIdx("analisar") >= 0) botao("analisar", spr("olho", 2), "Analisar", "", () => responder(m.id, acaoIdx("analisar")));
   if (acaoIdx("fugir") >= 0) {
     botao("fugir", spr("fuga", 2), "Fugir", "<b>Fugir</b><div>A chance depende da sua Agilidade contra a dos inimigos. Falhar custa o turno.</div>",
@@ -366,8 +395,17 @@ function linhaHabilidade(h, aoClicar) {
   return { icone: spr(ic, 2), fam, nome: h.nome, alvo: h.alvo_tipo, info: custo + (h.flechas ? ` ${spr("flecha", 1)}${h.flechas}` : ""), dica: dicaHabilidade(h),
     bloqueio: h.pode ? null : (h.motivo || "Indisponível"), hab: h.habilidade, aoClicar };
 }
+function linhaItem(meta, aoClicar) {
+  if (meta.trocar !== undefined) {
+    return { icone: spr(Telas.iconeItem(meta.equip), 2), fam: "fisico", nome: "Trocar: " + meta.equip.nome, info: "turno", slot: "troca",
+      dica: Telas.htmlItem(meta.equip, "Trocar de arma no meio da luta gasta o seu turno."), aoClicar };
+  }
+  return { icone: spr(Telas.ICONE_ITEM[meta.usar_item] || "pocao", 2), fam: "cura", nome: meta.nome, info: `×${meta.qtd}`, slot: "item",
+    dica: `<b>${esc(meta.nome)}</b><div class="tipo">Você tem ${meta.qtd} · gasta o turno</div><div class="bonus">${esc(meta.desc)}</div>`,
+    bloqueio: meta.motivo, aoClicar };
+}
 function dicaHabilidade(h) {
-  return `<b>${esc(h.nome)}</b><div class="tipo">${h.custo ? `${h.custo} de ${esc(h.recurso)}` : "Sem custo"}${h.flechas ? ` · ${h.flechas} flecha${h.flechas > 1 ? "s" : ""}` : ""} · alvo: ${ALVO_TXT[h.alvo_tipo] || "—"}</div>
+  return `<b>${esc(h.nome)}</b><div class="tipo">${h.custo ? `${h.custo} de ${esc(h.recurso)}` : "Sem custo"}${h.flechas ? ` · ${h.flechas} flecha${h.flechas > 1 ? "s" : ""}` : ""} · Alvo: ${ALVO_TXT[h.alvo_tipo] || "—"}</div>
     <div class="bonus">${esc(h.desc)}</div>${danoGrimorio(h.habilidade)}${h.pode ? "" : `<div class="pior">${esc(h.motivo || "Indisponível")}</div>`}`;
 }
 
@@ -427,7 +465,11 @@ function abrirJanela(ancora, titulo, linhas, aoFechar) {
     if (aoFechar) aoFechar();
   };
   j.querySelector(".rj-fechar").addEventListener("click", (ev) => { ev.stopPropagation(); fecharJanela(); });
-  janelaAberta = { fechar };
+  // Clique fora da janelinha (e fora dos botões de ação, que têm o próprio comportamento) também fecha.
+  const fora = (ev) => { if (!ev.target.closest(".roda-janela, .roda-botao, #dica-item")) { ev.stopPropagation(); ev.preventDefault(); fecharJanela(); } };
+  setTimeout(() => { if (janelaAberta && janelaAberta.fechar === fecharTudoJanela) document.addEventListener("pointerdown", fora, true); }, 0);
+  const fecharTudoJanela = () => { document.removeEventListener("pointerdown", fora, true); fechar(); };
+  janelaAberta = { fechar: fecharTudoJanela, soltar: () => document.removeEventListener("pointerdown", fora, true) };
   Telas.ligarDicas(j);
 }
 
@@ -440,16 +482,8 @@ function rodaSubmenu(m) {
   m.opcoes.forEach((o, i) => {
     const meta = o.meta;
     if (!meta || i === voltar) return;
-    if (meta.habilidade) {
-      linhas.push(linhaHabilidade(meta, () => { App.som("escolha"); habMirando = meta.nome; responder(m.id, i); }));
-    } else if (meta.usar_item) {
-      linhas.push({ icone: spr(Telas.ICONE_ITEM[meta.usar_item] || "pocao", 2), fam: "cura", nome: meta.nome, info: `×${meta.qtd}`, slot: "item",
-        dica: `<b>${esc(meta.nome)}</b><div class="tipo">Você tem ${meta.qtd} · gasta o turno</div><div class="bonus">${esc(meta.desc)}</div>`,
-        bloqueio: meta.motivo, aoClicar: () => { App.som("item"); responder(m.id, i); } });
-    } else if (meta.trocar !== undefined) {
-      linhas.push({ icone: spr(Telas.iconeItem(meta.equip), 2), fam: "fisico", nome: "Trocar: " + meta.equip.nome, info: "turno",
-        dica: Telas.htmlItem(meta.equip, "Trocar de arma no meio da luta gasta o seu turno."), aoClicar: () => { App.som("equipar"); responder(m.id, i); } });
-    }
+    if (meta.habilidade) linhas.push(linhaHabilidade(meta, () => { App.som("escolha"); habMirando = meta.nome; responder(m.id, i); }));
+    else if (meta.usar_item || meta.trocar !== undefined) linhas.push(linhaItem(meta, () => { App.som("item"); responder(m.id, i); }));
   });
   // Uma âncora invisível onde ficaria o botão de Itens, para a janelinha abrir no mesmo lugar.
   const g = geometriaHeroi();
@@ -501,6 +535,7 @@ function botaoGrimorio(grupo) {
   b.type = "button";
   b.dataset.grupo = grupo;
   b.title = "Grimório: suas habilidades e o dano de cada uma (P)";
+  b.dataset.sempre = "1";  // funciona com a doca apagada
   b.innerHTML = `<span class="atalho-icone">${spr("grimorio", 2)}</span><span class="atalho-nome">Grimório</span><kbd>P</kbd>`;
   b.addEventListener("click", (ev) => { ev.stopPropagation(); Telas.abrirGrimorio(); });
   return b;

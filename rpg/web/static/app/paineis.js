@@ -130,8 +130,8 @@ function desenharHeroi(h) {
   const attrs = Telas.atributosHtml(h);
   const slot = (s) => {
     const it = h.equip[s];
-    if (!it) return `<div class="slot-px mini vazio" title="${esc(Telas.NOME_ESPACO[s])} (vazio)">${spr(Telas.VAZIO[s], 1, "fantasma")}</div>`;
-    return `<div class="slot-px mini r-${esc(it.raridade)}" ${Telas.dicaItem(it, "", false)}>${spr(Telas.iconeItem(it), 1)}</div>`;
+    if (!it) return `<div class="slot-px mini vazio" data-mini="${s}" title="${esc(Telas.NOME_ESPACO[s])} (vazio)">${spr(Telas.VAZIO[s], 1, "fantasma")}</div>`;
+    return `<div class="slot-px mini r-${esc(it.raridade)}" data-mini="${s}" ${Telas.dicaItem(it, "", false)}>${spr(Telas.iconeItem(it), 1)}</div>`;
   };
   const feridas = h.ferimentos.length ? h.ferimentos.map((f) => `<div class="ferimento${f.aberto ? " aberto" : ""}" ${Telas.dica(`<b>${esc(f.nome)}</b><div class="tipo">${f.dias ? `${f.dias} dia${f.dias === 1 ? "" : "s"} para sarar` : "não sara sozinha"}${f.aberto ? " · ferida aberta" : ""}</div>${(f.explica || []).map((l, i) => `<div class="${i ? "" : "bonus pior"}">${esc(l)}</div>`).join("")}`)}>${spr("gota", 1)}${esc(f.nome)} <small>${f.dias ? f.dias + "d" : ""}${f.aberto ? " · aberto" : ""}</small></div>`).join("")
     : '<div class="vazio">nenhum, por enquanto</div>';

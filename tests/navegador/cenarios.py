@@ -88,6 +88,7 @@ def vila(ui):
             g.j.equip[espaco] = it
     g.j.recalcular()
     g.j.hp = g.j.max_hp // 2  # ferido, para a poção da bolsa ter uso
+    cm.recrutar(g, "odete")["hp"] -= 5  # com alguém por perto, poção e bandagem perguntam em quem usar
     for _ in range(60):  # um item raro de um espaço que já está ocupado, para comparar
         it = gerar_equip(rng, "guerreiro", 4, qualidade=1)
         if it["slot"] in ("arma", "armadura") and g.j.equip.get(it["slot"]):

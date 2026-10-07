@@ -555,10 +555,15 @@ def fogueira(g, intro=None):
         for m in ms:
             opcoes.append((f"Deixar {nome(m['id'])} no acampamento", ("reservar", m["id"]), {"reservar": m["id"]}))
         opcoes.append(("Dormir até o amanhecer", None, {"dormir": True}))
+        # Em volta do fogo é a hora de fazer curativos: a bolsa do painel funciona aqui (bandagem, poção, unguento).
+        opcoes += g.opcoes_bolsa()
         op = g.menu("", opcoes)
         if op is None:
             return conversou
         acao, cid = op[0], op[1]
+        if acao in ("usar", "usar_em"):
+            g.executar_comum(op)
+            continue
         m = membro(g, cid) or na_reserva(g, cid)
         if acao == "falar":
             if conversar(g, m):
