@@ -76,16 +76,21 @@ class Contratos:
             c = self.menu("Aceitar qual contrato?", opcoes + [("Voltar", None)])
             if not c:
                 return
-            if len(self.contratos) >= 3:
-                self.dizer("Você já tem contratos demais.", "vermelho")
-                continue
-            oferta["lista"].remove(c)
-            self.contratos.append(c)
-            self.dizer("Contrato aceito.", "verde")
-            if c["tipo"] == "alvo":
-                self.marcar(f"conhecido:{c['local']}")
-            if c["tipo"] == "entrega":
-                self.plantar("pacote_suspeito", 3, contrato=c["id"])
+            self.aceitar_contrato(c, oferta)
+
+    def aceitar_contrato(self, c, oferta):
+        """Tira o contrato do mural e o põe no diário (no máximo 3). True se aceitou."""
+        if len(self.contratos) >= 3:
+            self.dizer("Você já tem contratos demais. Termine ou abandone um antes.", "vermelho")
+            return False
+        oferta["lista"].remove(c)
+        self.contratos.append(c)
+        self.ui.efeito("Contrato aceito", "info")
+        if c["tipo"] == "alvo":
+            self.marcar(f"conhecido:{c['local']}")
+        if c["tipo"] == "entrega":
+            self.plantar("pacote_suspeito", 3, contrato=c["id"])
+        return True
 
     def cartao_contrato(self, c):
         """Um contrato como cartão do mural: tipo, alvo, lugar, distância, recompensa e progresso."""
@@ -118,17 +123,8 @@ class Contratos:
         acao, c = op
         if acao == "abandonar":
             self.abandonar_contrato(c)
-            return False
-        if len(self.contratos) >= 3:
-            self.dizer("Você já tem contratos demais. Termine ou abandone um antes.", "vermelho")
-            return False
-        oferta["lista"].remove(c)
-        self.contratos.append(c)
-        self.ui.efeito("Contrato aceito", "info")
-        if c["tipo"] == "alvo":
-            self.marcar(f"conhecido:{c['local']}")
-        if c["tipo"] == "entrega":
-            self.plantar("pacote_suspeito", 3, contrato=c["id"])
+        else:
+            self.aceitar_contrato(c, oferta)
         return False
 
     def receber_contratos(self):
