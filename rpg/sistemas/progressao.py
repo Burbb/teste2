@@ -1,5 +1,6 @@
 """Níveis, talentos, habilidades, especialização e companheiro animal."""
 
+from .. import balanceamento as bal
 from ..classes import CLASSES, COMPANHEIROS, SPECS, habilidades_ate
 from ..habilidades import HABILIDADES
 from ..entidades import NOMES_STATS
@@ -21,15 +22,15 @@ class Progressao:
         antes_hp, antes_rec = j.max_hp, j.max_rec
         antes = {k: getattr(j, k) for k in ("max_hp", "max_rec", "atk", "defesa", "agi", "poder")}
         for k, v in cresc.items():
-            j.base[k] += v
+            j.base[k] += v * bal.HEROI_CRESCIMENTO
         j.recalcular()
         j.hp = min(j.max_hp, j.hp + max(0, j.max_hp - antes_hp))  # só ganha o que o máximo aumentou
         comitiva.atualizar_vida_maxima(self)
         j.rec = min(j.max_rec, j.rec + max(0, j.max_rec - antes_rec))
         registrar(self, "nivel", stats=telemetria.instantaneo(j))
         if j.companheiro:
-            j.companheiro["max_hp"] += 5
-            j.companheiro["atk"] += 1.5
+            j.companheiro["max_hp"] += bal.ANIMAL_VIDA_SUBIR
+            j.companheiro["atk"] += bal.ANIMAL_ATK_SUBIR
             j.companheiro["hp"] = j.companheiro["max_hp"]
         self.ui.titulo(f"NÍVEL {j.nivel}!", "verde+negrito")
         self.dizer("Você se sente mais forte. (Subir de nível não cura feridas: isso, só o descanso.)", "verde")
@@ -130,8 +131,8 @@ class Progressao:
         nv = self.j.nivel
         nome = self.ui.perguntar(f"Como vai chamar seu {c['nome'].split()[0].lower()}? (Enter para '{c['nome']}')",
                                  c["nome"])
-        hp = int(c["hp"] * (1 + 0.15 * (nv - 1)))
+        hp = int(c["hp"] * (1 + bal.ANIMAL_VIDA_POR_NIVEL * (nv - 1)))
         self.j.companheiro = {"nome": nome, "tipo": tipo, "max_hp": hp, "hp": hp,
-                              "atk": c["atk"] * (1 + 0.2 * (nv - 1)), "agi": c["agi"],
+                              "atk": c["atk"] * (1 + bal.ANIMAL_ATK_POR_NIVEL * (nv - 1)), "agi": c["agi"],
                               "alcance": c["alcance"], "crit": c["crit"]}
         self.dizer(f"{nome} agora caminha ao seu lado.", "verde+negrito")

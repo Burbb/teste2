@@ -7,19 +7,20 @@ from .entidades import Inimigo
 
 
 def escala(nivel):
-    return 1 + 0.2 * (nivel - 1) + 0.06 * max(0, nivel - 4) ** 1.3
+    return (1 + bal.INIMIGO_VIDA_POR_NIVEL * (nivel - 1)
+            + bal.INIMIGO_CURVA * max(0, nivel - bal.INIMIGO_CURVA_DESDE) ** bal.INIMIGO_CURVA_EXPOENTE)
 
 
 def criar(rng, familia_id, nivel, afixo=None, nome_unico=None):
     f = FAMILIAS[familia_id]
     m = escala(nivel)
     hp = f["hp"] * m * bal.INIMIGO_VIDA
-    atk = f["atk"] * 0.9 * (1 + 0.18 * (nivel - 1)) * bal.INIMIGO_DANO
-    defesa = f["defesa"] * (1 + 0.15 * (nivel - 1))
-    agi = f["agi"] + (nivel - 1) // 3
+    atk = f["atk"] * bal.INIMIGO_ATK_BASE * (1 + bal.INIMIGO_ATK_POR_NIVEL * (nivel - 1)) * bal.INIMIGO_DANO
+    defesa = f["defesa"] * (1 + bal.INIMIGO_DEFESA_POR_NIVEL * (nivel - 1))
+    agi = f["agi"] + (nivel - 1) // bal.INIMIGO_AGI_A_CADA
     poder = f["poder"] * m * bal.INIMIGO_DANO
-    xp = f["xp"] * (1 + 0.3 * (nivel - 1))
-    ouro = rng.randint(*f["ouro"]) * (1 + 0.2 * (nivel - 1))
+    xp = f["xp"] * (1 + bal.INIMIGO_XP_POR_NIVEL * (nivel - 1))
+    ouro = rng.randint(*f["ouro"]) * (1 + bal.INIMIGO_OURO_POR_NIVEL * (nivel - 1))
     tracos = list(f["tracos"])
     habs = list(f["habs"])
     resist = dict(f.get("resist", {}))
@@ -101,12 +102,13 @@ def gerar_guardiao(rng, bioma):
 def instanciar_guardiao(spec, nivel):
     t = GUARDIOES[spec["bioma"]][spec["idx"]]
     m = escala(nivel)
-    m_atk = 0.95 * (1 + 0.18 * (nivel - 1))
-    e = Inimigo(spec["nome"], t["hp"] * m * 0.9, t["atk"] * m_atk, t["defesa"] * (1 + 0.12 * (nivel - 1)),
-                t["agi"] + nivel // 3, t["poder"] * m_atk, t["g"])
+    m_atk = bal.GUARDIAO_ATK * (1 + bal.INIMIGO_ATK_POR_NIVEL * (nivel - 1))
+    e = Inimigo(spec["nome"], t["hp"] * m * bal.GUARDIAO_VIDA, t["atk"] * m_atk,
+                t["defesa"] * (1 + bal.GUARDIAO_DEFESA_POR_NIVEL * (nivel - 1)),
+                t["agi"] + nivel // bal.INIMIGO_AGI_A_CADA, t["poder"] * m_atk, t["g"])
     _aplicar_template(e, t, nivel)
-    e.xp = int(55 * (1 + 0.3 * (nivel - 1)))
-    e.ouro = int(30 * (1 + 0.2 * (nivel - 1)))
+    e.xp = int(55 * (1 + bal.INIMIGO_XP_POR_NIVEL * (nivel - 1)))
+    e.ouro = int(30 * (1 + bal.INIMIGO_OURO_POR_NIVEL * (nivel - 1)))
     e.desc = spec["nome"]
     e.plural = spec["nome"]
     e.familia = "guardiao"
@@ -116,8 +118,9 @@ def instanciar_guardiao(spec, nivel):
 def instanciar_antagonista(ant, nivel, corrupcao):
     fator = 1 + corrupcao / 400
     m = escala(nivel) * fator
-    m_atk = 0.85 * (1 + 0.18 * (nivel - 1)) * fator
-    e = Inimigo(ant["nome"], 150 * m, 11 * m_atk, 7 * (1 + 0.12 * (nivel - 1)), 6 + nivel // 3, 11 * m_atk, ant["g"])
+    m_atk = bal.ANTAGONISTA_ATK * (1 + bal.INIMIGO_ATK_POR_NIVEL * (nivel - 1)) * fator
+    e = Inimigo(ant["nome"], 150 * m, 11 * m_atk, 7 * (1 + bal.GUARDIAO_DEFESA_POR_NIVEL * (nivel - 1)),
+                6 + nivel // bal.INIMIGO_AGI_A_CADA, 11 * m_atk, ant["g"])
     t = dict(
         tracos=["conjurador"],
         habs=["bola_sombra", "drenar", "grito_terror", "maldicao", "varredura"],

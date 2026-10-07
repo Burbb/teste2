@@ -38,10 +38,53 @@ QUEIMADURA_BRASAS = 0.2       # por ponto do talento Brasas Eternas
 COMBUSTAO_BASE = 1.6          # o que ainda arderia × (1,6 + 0,2 por camada)
 COMBUSTAO_POR_CAMADA = 0.2
 
+# ---------------------------------------------------------------- a curva: herói × inimigos × equipamento
+# O jogo fica fácil quando o herói (com equipamento e talentos) cresce mais rápido que os inimigos.
+# Os botões abaixo são essa corrida. Para medir o efeito de uma mudança:
+#   python -m tests.equilibrio            robôs jogando, por classe e nível
+#   python -m tests.replay <run>.jsonl    a sua partida refeita com os números de agora
+
 # Inimigos comuns (chefes e guardiões à parte): mais duros que o herói sem equipamento, para o
-# equipamento e os talentos serem vantagem e não atropelo.
+# equipamento e os talentos serem vantagem e não atropelo. Multiplicam tudo, em todos os níveis (a base).
 INIMIGO_VIDA = 1.15
 INIMIGO_DANO = 1.1
+
+# Quanto o inimigo cresce por nível acima do 1. Vida e poder (magia):
+#   1 + VIDA_POR_NIVEL × (nível − 1) + CURVA × (nível − CURVA_DESDE)^CURVA_EXPOENTE
+# A parte da CURVA é a que pesa no meio e no fim do jogo.
+INIMIGO_VIDA_POR_NIVEL = 0.2
+INIMIGO_CURVA = 0.06
+INIMIGO_CURVA_DESDE = 4
+INIMIGO_CURVA_EXPOENTE = 1.3
+INIMIGO_ATK_BASE = 0.9            # o ataque físico da família × isto, antes do nível
+INIMIGO_ATK_POR_NIVEL = 0.18      # ataque: 1 + 0,18 × (nível − 1)
+INIMIGO_DEFESA_POR_NIVEL = 0.15
+INIMIGO_AGI_A_CADA = 3            # +1 de agilidade a cada 3 níveis
+INIMIGO_XP_POR_NIVEL = 0.3
+INIMIGO_OURO_POR_NIVEL = 0.2
+
+# Guardiões (chefes de região) e o antagonista usam a mesma escala de vida, com os próprios fatores.
+GUARDIAO_VIDA = 0.9
+GUARDIAO_ATK = 0.95
+GUARDIAO_DEFESA_POR_NIVEL = 0.12
+ANTAGONISTA_ATK = 0.85
+
+# Herói: cada classe e especialização declara o próprio crescimento por nível (`cresc` em classes.py);
+# isto multiplica todos eles. 0,8 = o herói cresce 20% menos por nível.
+HEROI_CRESCIMENTO = 1.0
+
+# Companheiro animal do Patrulheiro: ao ser chamado e a cada nível do herói.
+ANIMAL_VIDA_POR_NIVEL = 0.15      # na criação: vida × (1 + 0,15 × (nível − 1))
+ANIMAL_ATK_POR_NIVEL = 0.2
+ANIMAL_VIDA_SUBIR = 5             # a cada nível do herói
+ANIMAL_ATK_SUBIR = 1.5
+
+# Equipamento: força do item = ITEM_FORCA_BASE + ITEM_FORCA_POR_NIVEL × nível (× o material).
+ITEM_FORCA_BASE = 1.5
+ITEM_FORCA_POR_NIVEL = 0.9
+ITEM_AFIXO_POR_NIVEL = 0.3        # afixos (do Urso, da Águia...): base × (1 + 0,3 × nível)
+ITEM_AFIXO_FIXO_POR_NIVEL = 0.25  # crítico e roubo de vida: base + 0,25 × nível
+ITEM_UNICO_FORCA = 1.3            # lendários: força × 1,3
 
 # Ferimentos duradouros. Em combate, cada golpe tem chance de deixar marca:
 #   base + gravidade × fator (gravidade = dano / vida máxima) + crítico + pouca vida, até o teto.

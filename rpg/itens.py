@@ -1,5 +1,7 @@
 """Consumíveis e geração procedural de equipamentos."""
 
+from . import balanceamento as bal
+
 CONSUMIVEIS = {
     "pocao_vida": {"nome": "Poção de Vida", "preco": 40, "desc": "Recupera 35% da vida. Gosto de ferrugem."},
     "tonico": {"nome": "Tônico Restaurador", "preco": 35, "desc": "Recupera metade da sua mana, vigor ou foco."},
@@ -134,14 +136,15 @@ def rolar_raridade(rng, qualidade=0):
 
 
 def _escala(nivel):
-    return 1.5 + nivel * 0.9
+    return bal.ITEM_FORCA_BASE + nivel * bal.ITEM_FORCA_POR_NIVEL
 
 
 def _afixos(rng, nivel, n):
     escolhidos = rng.sample(AFIXOS_ITEM, n)
     bonus = {}
     for _, stat, base in escolhidos:
-        valor = base * (1 + nivel * 0.3) if stat not in ("critico", "roubo_vida") else base + nivel * 0.25
+        valor = (base * (1 + nivel * bal.ITEM_AFIXO_POR_NIVEL) if stat not in ("critico", "roubo_vida")
+                 else base + nivel * bal.ITEM_AFIXO_FIXO_POR_NIVEL)
         bonus[stat] = bonus.get(stat, 0) + max(1, round(valor))
     return escolhidos, bonus
 
@@ -151,7 +154,7 @@ def _unico(rng, classe, nivel, slot):
     if not opcoes:
         return None
     u = rng.choice(opcoes)
-    forca = _escala(nivel) * 1.3
+    forca = _escala(nivel) * bal.ITEM_UNICO_FORCA
     bonus = {}
     for stat, v in u["bonus"].items():
         if stat in ("atk", "poder", "agi", "defesa"):
