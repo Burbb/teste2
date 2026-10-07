@@ -11,6 +11,7 @@ Os três companheiros discordam entre si de propósito: agradar a todos é
 impossível, e é isso que dá peso às escolhas.
 """
 
+from . import balanceamento as bal
 from .telemetria import registrar
 
 LIMITE = 2  # companheiros ao mesmo tempo (fora o animal do patrulheiro)
@@ -676,7 +677,7 @@ def preparar_combate(cb):
         cb.aliados.append(a)
     # Inimigos que enfrentam um grupo resistem mais (e chefes, feitos para um herói só, mais ainda).
     for e in cb.inimigos:
-        fator = 1 + (0.2 if e.chefe else 0.15) * len(lista)
+        fator = 1 + (bal.COMITIVA_VIDA_CHEFE if e.chefe else bal.COMITIVA_VIDA_INIMIGO) * len(lista)
         e.max_hp = int(e.max_hp * fator)
         e.hp = int(e.hp * fator)
     if lista and len(lista) == len(membros(g)):

@@ -95,6 +95,16 @@ GUARDIAO_ATK = 0.95
 GUARDIAO_DEFESA_POR_NIVEL = 0.12
 ANTAGONISTA_ATK = 0.85
 
+# Encontros. Nas regiões de nível até 2 (INICIO) e até 4 (MEIO), chance de o grupo ser um inimigo só; se não for,
+# no máximo GRUPO_MAX_CEDO. Um inimigo sozinho contra você e um companheiro morre antes de fazer estrago.
+GRUPO_SOZINHO_INICIO = 0.75
+GRUPO_SOZINHO_MEIO = 0.5
+GRUPO_MAX_CEDO = 2
+# Comitiva: cada companheiro chama mais um inimigo com esta chance, e dá aos inimigos esta vida a mais.
+COMITIVA_ATRAI = 0.45
+COMITIVA_VIDA_INIMIGO = 0.15
+COMITIVA_VIDA_CHEFE = 0.2
+
 # Herói: cada classe e especialização declara o próprio crescimento por nível (`cresc` em classes.py);
 # isto multiplica todos eles. 0,8 = o herói cresce 20% menos por nível.
 HEROI_CRESCIMENTO = 1.0

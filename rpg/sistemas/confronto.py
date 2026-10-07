@@ -1,5 +1,6 @@
 """Inimigos do lugar, grupos, o combate em si, abates e saque."""
 
+from .. import balanceamento as bal
 from .. import texto as tx
 from ..combate import Combate
 from ..dados import BIOMAS, FAMILIAS
@@ -57,11 +58,11 @@ class Confronto:
             lo, hi = f["grupo"]
             n = self.rng.randint(lo, hi)
             if nv <= 2:
-                n = 1 if self.chance(0.75) else min(n, 2)
+                n = 1 if self.chance(bal.GRUPO_SOZINHO_INICIO) else min(n, bal.GRUPO_MAX_CEDO)
             elif nv <= 4:
-                n = 1 if self.chance(0.5) else min(n, 2)
+                n = 1 if self.chance(bal.GRUPO_SOZINHO_MEIO) else min(n, bal.GRUPO_MAX_CEDO)
             for _ in self.comitiva:  # uma comitiva chama atenção: mais inimigos aparecem
-                if self.chance(0.45):
+                if self.chance(bal.COMITIVA_ATRAI):
                     n = min(n + 1, hi + 1)
             r = self.rng.random()
             if nv >= 5 and r < 0.03 + nv * 0.006:
