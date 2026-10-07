@@ -5,7 +5,7 @@ import glob
 import os
 import sys
 
-from .jogo import FimDeJogo, Jogo
+from .jogo import NIVEL_MAXIMO, FimDeJogo, Jogo
 from .migracoes import SaveIncompativel
 from .sistemas.persistencia import resumo_save
 from .ui import UI
@@ -40,6 +40,9 @@ def menu_principal(ui, args):
                 if not jogo.novo_jogo():
                     ui.jogo = None
                     continue
+                if getattr(args, "dev", None):
+                    from .dev import comecar_no_nivel
+                    comecar_no_nivel(jogo, args.dev)
                 jogo.rodar()
             elif esc == "Carregar jogo":
                 caminho = escolher_save(ui, saves)
@@ -78,6 +81,8 @@ def main():
     parser.add_argument("--brando", action="store_true",
                         help="modo brando: ao cair em combate você é resgatado (sem morte permanente)")
     parser.add_argument("--hardcore", action="store_true", help=argparse.SUPPRESS)  # já é o padrão
+    parser.add_argument("--dev", type=int, metavar="N", choices=range(2, NIVEL_MAXIMO + 1),
+                        help="teste: o jogo novo começa no nível N, com equipamento de acordo e pontos de talento")
     parser.add_argument("--sem-cor", action="store_true", help="desativa as cores (interface clássica)")
     parser.add_argument("--rapido", action="store_true", help="sem pausas dramáticas (interface clássica)")
     parser.add_argument("--velocidade", choices=["lento", "normal", "rapido", "instantaneo"], default="normal",

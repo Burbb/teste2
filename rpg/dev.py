@@ -4,6 +4,8 @@ Usado por `python jogar.py --dev N` (para sentir o meio e o fim do jogo sem joga
 simulador de equilíbrio (tests/equilibrio.py), que monta heróis típicos de cada classe e nível.
 """
 
+import random
+
 from .itens import gerar_equip, rolar_raridade
 from .mundo import nivel_regiao
 from . import talentos
@@ -69,8 +71,13 @@ def ir_para_regiao(g, nivel):
 def comecar_no_nivel(g, nivel):
     """O `--dev N`: o herói recém-criado vira um herói de nível N. Os pontos de talento ficam para você gastar
     e a especialização vem pela encruzilhada, como no jogo."""
+    from .ui import BotUI
     j = g.j
-    subir_ate(g, nivel, spec=False)
+    ui, g.ui = g.ui, BotUI(random.Random(0))  # sobe em silêncio: sem uma festa de nível por nível na tela
+    try:
+        subir_ate(g, nivel, spec=False)
+    finally:
+        g.ui = ui
     vestir(g, g.rng, nivel)
     j.ouro += 40 * (nivel - 1)
     j.consumiveis["pocao_vida"] = j.consumiveis.get("pocao_vida", 0) + 2
