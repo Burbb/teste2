@@ -165,7 +165,12 @@ na interface miúda; **Jersey 15** nos números. O botão "Fonte" no topo volta 
   animal já faz sozinho, uma ordem que ele não dá por conta própria: o **urso protege** (ataca e
   provoca: por 2 turnos os inimigos atacam ele, que recebe 30% menos dano), o **lobo dilacera**
   (160% e sangramento forte) e o **falcão cega** (não pode ser esquivado e enfraquece o alvo).
-- **Tiro Duplo em rajada:** as duas flechas saem quase juntas, uma logo atrás da outra.
+- **Tiro Duplo em rajada:** a segunda flecha sai quando a primeira está chegando: dois acertos
+  separados, um logo atrás do outro.
+- **Quem age fica por cima:** quando você manda outro agir (Ordem da Fera, poção na comitiva), a
+  carta dele e a faixa da ação ("Provocando") passam à frente da sua, mesmo com a sua em foco.
+- **O animal na fogueira:** o lobo, o urso ou o falcão do Patrulheiro dorme perto do fogo, com o
+  nome em cima (passe o mouse para ver a vida).
 - **Trocar pelo item encontrado:** "Equipar agora" faz o ícone voar do cartão até o espaço do
   corpo, que brilha; o cartão vira "Vestido" e o antigo, apagado, "Foi para a mochila".
 - **Duelo é duelo:** nos duelos de honra a comitiva e o animal ficam de fora, assistindo.

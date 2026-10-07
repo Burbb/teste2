@@ -1,6 +1,8 @@
 /* Realce de termos de jogo nos textos de regra (realce.js): cada efeito com a sua cor, como nos RPGs atuais.
    Só a cor e um peso a mais; o texto continua o mesmo, para quem não distingue cores. */
-.rx { font-weight: 700; }
+/* Sem negrito "sintetizado": o itálico do pergaminho não tem peso 700 próprio, e o navegador, ao engrossar
+   a letra à força, falhava em alguns glifos (%, q, u) no Windows. Onde não há o peso de verdade, fica a cor. */
+.rx { font-weight: 700; font-synthesis: none; }
 .rx-sangue { color: #ff6b6b; }
 .rx-fogo { color: #ffa04d; }
 .rx-gelo { color: #82d8ff; }

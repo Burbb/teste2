@@ -760,6 +760,7 @@ const Telas = (() => {
   // ------------------------------------------------------------------ acampamento (fogueira)
   const PONTOS_ATIVOS = [[198, 93], [176, 104]];
   const PONTOS_RESERVA = [[256, 98], [284, 102], [270, 108]];
+  const PONTO_FERA = [108, 104];  // o animal do patrulheiro, deitado ao lado do herói
   function acampamento(d) {
     const figuras = [];
     d.ativos.forEach((m, i) => figuras.push({ ...m, onde: "ativo", p: PONTOS_ATIVOS[i % 2] }));
@@ -768,7 +769,10 @@ const Telas = (() => {
         style="left:${(f.p[0] / 320) * 100}%;top:${((f.p[1] + 8) / 120) * 100}%">
         ${f.conversa ? '<i class="carta-aviso">✉</i>' : ""}<span class="figura-nome">${h(f.nome.split(" ").pop())}</span>
         <span class="figura-estado">${f.onde === "ativo" ? "vai com você" : "no acampamento"}</span></button>`).join("");
-    return `<div class="tela acampamento"><div class="fogueira-palco"><canvas class="fogueira-cena" width="320" height="120"></canvas>${botoes}</div>
+    const fera = d.fera ? `<span class="figura fera" style="left:${(PONTO_FERA[0] / 320) * 100}%;top:${((PONTO_FERA[1] - 10) / 120) * 100}%"
+        ${dica(`<b>${h(d.fera.nome)}</b><div>Seu ${h({ lobo: "lobo", urso: "urso", falcao: "falcão" }[d.fera.tipo] || "animal")} dorme perto do fogo. Vida ${d.fera.hp}/${d.fera.max_hp}.</div>`, true)}>
+        <span class="figura-nome">${h(d.fera.nome.split(" ").pop())}</span></span>` : "";
+    return `<div class="tela acampamento"><div class="fogueira-palco"><canvas class="fogueira-cena" width="320" height="120"></canvas>${botoes}${fera}</div>
       <div class="dica-uso">${figuras.length ? `Clique em alguém para conversar ou decidir quem vai com você amanhã. Quem fica no acampamento descansa, não come das suas provisões e não opina nas suas escolhas. ${d.ativos.length}/${d.limite} na comitiva.` : "Só você, o fogo e os barulhos da mata. Quem você encontrar pelo caminho pode se sentar aqui um dia."}</div></div>`;
   }
 
@@ -780,6 +784,7 @@ const Telas = (() => {
     const quem = [[heroi ? heroi.classe : "guerreiro", 128, 93]];
     d.ativos.forEach((m, i) => quem.push([m.id, ...PONTOS_ATIVOS[i % 2]]));
     d.reserva.forEach((m, i) => quem.push([m.id, ...PONTOS_RESERVA[i % 3]]));
+    if (d.fera) quem.push([d.fera.tipo === "falcao" ? "voador" : "fera", ...PONTO_FERA]);
     let quadro = 0, timer = null;
     function cena(primeira) {
       if (!primeira && !canvas.isConnected) { clearInterval(timer); return; }  // a tela saiu: para de animar

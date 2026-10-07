@@ -54,3 +54,5 @@ button.membro-carta:hover { color: #fff3a0; transform: scale(1.2); }
 .figura.ativo .figura-nome { border-color: #8a6a14; }
 .figura:hover .figura-nome, .figura:focus-visible .figura-nome { border-color: var(--ouro); color: var(--ouro); }
 .figura .carta-aviso { font-style: normal; font-size: 14px; color: #120e0b; background: var(--ouro); border: 2px solid #000; padding: 0 3px; animation: alerta 1.2s steps(2) infinite; }
+.figura.fera { cursor: default; height: auto; }
+.figura.fera .figura-nome { font-size: 13px; padding: 0 4px 1px; border-width: 1px; border-color: #3a5a2a; }

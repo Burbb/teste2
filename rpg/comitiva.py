@@ -535,6 +535,9 @@ def fogueira(g, intro=None):
             intro = None
         dados = {"ativos": estado(g), "reserva": estado(g, reserva(g)), "limite": LIMITE,
                  "clima": g.clima, "bioma": g.loc["bioma"]}
+        fera = getattr(g.j, "companheiro", None)
+        if fera:  # o animal do patrulheiro dorme junto do fogo
+            dados["fera"] = {"nome": fera["nome"], "tipo": fera["tipo"], "hp": fera["hp"], "max_hp": fera["max_hp"]}
         if not g.ui.painel("acampamento", dados):
             for m in ms + rs:
                 onde = "na comitiva" if m in ms else "no acampamento"

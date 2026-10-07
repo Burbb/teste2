@@ -62,7 +62,7 @@ const Batalha = (() => {
 
   function icone(c) {
     if (c.uid === "j") return c.classe;
-    if (c.lado === "aliado") return c.cid || (c.tipo === "servo" ? "caveira" : "fera");
+    if (c.lado === "aliado") return c.cid || (c.tipo === "servo" ? "caveira" : c.tipo === "falcao" ? "voador" : "fera");
     return Telas.iconeCriatura(c.tracos, c.familia || "");
   }
 
@@ -356,9 +356,20 @@ const Batalha = (() => {
   const carta = (uid) => (uid ? cartas.get(uid) : null);
   function marcar(...uids) { uids.forEach((u) => { if (u) recentes[u] = agora(); }); }
 
+  /* Quem está em cena fica por cima: quando o herói manda outro agir (Ordem da Fera, poção na comitiva), a carta
+     dele continua grande, mas a do urso que ruge (e a faixa "Provocando") passa à frente por um instante. */
+  let camadaCena = 10;
+  function emCena(el) {
+    if (!el) return;
+    el.style.zIndex = String(++camadaCena);
+    clearTimeout(el._cena);
+    el._cena = setTimeout(() => { el.style.zIndex = ""; }, 1700);
+  }
+
   async function lance(m) {
     if (!arena) return;
     const de = carta(m.de), em = carta(m.em);
+    if (["buff", "cura", "recurso", "golpe", "erro"].includes(m.tipo)) { emCena(de); emCena(em); }
     switch (m.tipo) {
       case "acao": {
         if (!de) return;
@@ -652,7 +663,7 @@ const Batalha = (() => {
     const tiros = m.lances.filter((x) => x.tipo === "golpe" || x.tipo === "erro");
     const resto = juntarRoubos(m.lances.filter((x) => !tiros.includes(x)));
     await Promise.all(tiros.map(async (x, k) => {
-      await dormir(k * pausa(85));
+      await dormir(k * pausa(230));  // a segunda sai quando a primeira está chegando: dois acertos, um atrás do outro
       som("disparo");
       const de = carta(x.de), em = carta(x.em);
       if (de && em) await projetil(de, em, "flecha");
