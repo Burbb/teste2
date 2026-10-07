@@ -128,9 +128,6 @@ body.em-combate #hud-linha { justify-content: flex-end; }
   background: #e0303f; box-shadow: 0 0 0 2px #6e0d0d, 0 0 10px 2px rgba(255, 60, 80, .7); image-rendering: pixelated; }
 .flutua.escudo { color: var(--frio); font-size: 18px; }
 .flutua.espinhos { color: #c9a46a; font-size: 20px; }
-/* A carta golpeada eriça os espinhos por um instante antes de as farpas saltarem. */
-.carta.espinhando { animation: erguer-espinhos .42s ease-out; }
-@keyframes erguer-espinhos { 30% { transform: scale(1.04); filter: drop-shadow(0 0 6px #8a5a2c); } 100% { transform: none; filter: none; } }
 .flutua.info { color: #f0e0c0; font-size: 17px; }
 
 /* ------------------------------------------------------------------ comitiva na HUD, balões e selos */
@@ -146,6 +143,13 @@ body.em-combate #hud-linha { justify-content: flex-end; }
 .balao::after { top: 100%; margin-left: -6px; margin-top: -1px; border-top: 7px solid #f1e4c4; border-width: 7px 6px 0; }
 .balao.abaixo::before { top: auto; bottom: 100%; border-top: 0; border-bottom: 10px solid #0d0b0a; border-width: 0 9px 10px; }
 .balao.abaixo::after { top: auto; bottom: 100%; margin-top: 0; margin-bottom: -1px; border-top: 0; border-bottom: 7px solid #f1e4c4; border-width: 0 6px 7px; }
+/* Ao lado de quem fala: o rabicho sai da borda virada para a carta, na altura dela (--rabo-y). */
+.balao.lado::before, .balao.lado::after { left: auto; top: var(--rabo-y, 20px); margin-left: 0; }
+.balao.a-direita::before { right: 100%; margin-top: -9px; border-width: 9px 10px 9px 0; border-color: transparent #0d0b0a transparent transparent; }
+.balao.a-direita::after { right: 100%; margin-top: -6px; margin-right: -1px; border-width: 6px 7px 6px 0; border-color: transparent #f1e4c4 transparent transparent; }
+.balao.a-esquerda::before { left: 100%; margin-top: -9px; border-width: 9px 0 9px 10px; border-color: transparent transparent transparent #0d0b0a; }
+.balao.a-esquerda::after { left: 100%; margin-top: -6px; margin-left: -1px; border-width: 6px 0 6px 7px; border-color: transparent transparent transparent #f1e4c4; }
+.balao.narrado.a-direita::after { border-right-color: #2a2420; } .balao.narrado.a-esquerda::after { border-left-color: #2a2420; }
 .balao.narrado { background: #2a2420; color: var(--tinta); font-style: italic; }
 .balao.narrado::after { border-top-color: #2a2420; } .balao.narrado.abaixo::after { border-bottom-color: #2a2420; }
 .balao.narrado b { color: var(--ouro); font-style: normal; }

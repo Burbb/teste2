@@ -60,6 +60,13 @@ async function cenarioCombate(browser) {
     conferir(!!(await esperar("#sobre-grimorio:not([hidden]) .g-faixa")), "o Grimório abre com P e mostra o dano");
     await page.keyboard.press("Escape");
     conferir(await page.evaluate(() => document.getElementById("sobre-grimorio").hidden), "Esc fecha o Grimório");
+    conferir(await page.evaluate(() => {
+      Batalha.balao("odete", "Sister Odette", "Odette ergue o símbolo. \"Perdoa, mas vai doer.\"");
+      const b = document.querySelector(".balao").getBoundingClientRect();
+      const outros = [...document.querySelectorAll('#arena .carta:not([data-cid="odete"]), #roda > *')].map((o) => o.getBoundingClientRect());
+      document.querySelectorAll(".balao").forEach((x) => x.remove());
+      return outros.every((o) => b.right <= o.left || b.left >= o.right || b.bottom <= o.top || b.top >= o.bottom);
+    }), "o balão de fala da comitiva não cobre outra carta nem as ações");
     await (await page.$('.roda-botao[data-slot="habilidades"]')).click();
     conferir(!!(await esperar('.roda-janela .rj-linha[data-hab="bola_fogo"]')), "Habilidades abre a janelinha com nome e custo");
     await page.keyboard.press("Escape");

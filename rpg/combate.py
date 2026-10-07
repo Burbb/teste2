@@ -701,10 +701,18 @@ class Combate:
         usaveis, armas = self.itens_da_luta()
         metas = [{"usar_item": k, "item": k, "qtd": j.consumiveis[k], "nome": CONSUMIVEIS[k]["nome"],
                   "desc": CONSUMIVEIS[k]["desc"],
-                  "motivo": None if k == "bomba_fumaca" or self.aliados_precisam(k) else self.g.motivo_inutil(k)}
+                  "motivo": self.motivo_item(k)}
                  for k in usaveis]
         metas += [{"trocar": j.mochila.index(it), "equip": ficha(it, j.nome_recurso)} for it in armas]
         return metas
+
+    def motivo_item(self, k):
+        """Por que o item não serve agora, na luta (ou None). A bolsa do painel e o menu de itens dizem o mesmo."""
+        if k not in USAVEIS_EM_COMBATE:
+            return "Isso não se usa no meio da luta."
+        if k == "bomba_fumaca" or self.aliados_precisam(k):
+            return None
+        return self.g.motivo_inutil(k)
 
     def menu_itens(self):
         j = self.j

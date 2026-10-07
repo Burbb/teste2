@@ -732,7 +732,7 @@ const Batalha = (() => {
         await projetil(de, em, PROJETIL[el] || "flecha");
       } else await investir(de, em);
     }
-    if (m.refletido) return espinhos(m, carta(m.refletido), em);
+    if (m.refletido) return espinhos(m, em);
     impacto(m, em);
     som(m.crit ? "critico_golpe" : SOM_ELEMENTO[el] || "golpe");
     if (el !== "fisico" && !m.crit) setTimeout(() => som("golpe_leve"), 60);
@@ -743,13 +743,9 @@ const Batalha = (() => {
     await dormir(pausa(de && de.classList.contains("girando") ? 110 : m.crit ? 460 : 380));
   }
 
-  /** Dano devolvido pelos espinhos da armadura: farpas saltam da carta de quem foi golpeado até o agressor. */
-  async function espinhos(m, de, em) {
-    if (de && !rapido()) {
-      reiniciar(de, "espinhando", 420);
-      for (let i = 0; i < 3; i++) { projetil(de, em, "farpa"); await dormir(45); }
-      await dormir(pausa(150));
-    }
+  /** Dano devolvido pelos espinhos da armadura: o agressor só sente (sem farpas voando), e "Espinhos" sobe nele. */
+  async function espinhos(m, em) {
+    await dormir(pausa(90));
     barra(em, m.hp, m.max_hp);
     tremer(em, false);
     numero(em, `−${m.dano}`, "espinhos");
@@ -864,18 +860,49 @@ const Batalha = (() => {
     b.className = "balao" + (fala ? "" : " narrado");
     b.innerHTML = `<b>${esc(nome)}</b>${fala ? `<span>${esc(fala)}</span>` : ""}${acao ? `<i>${esc(acao)}</i>` : ""}`;
     document.body.appendChild(b);
-    const r = naLuta.getBoundingClientRect(), w = b.offsetWidth, h = b.offsetHeight;
-    let x = Math.max(8, Math.min(innerWidth - w - 8, r.left + r.width / 2 - w / 2));
-    let y = r.top - h - 12;
-    if (y < 52) { y = r.bottom + 12; b.classList.add("abaixo"); }
-    b.style.left = x + "px"; b.style.top = y + "px";
-    b.style.setProperty("--rabo", Math.max(14, Math.min(w - 14, r.left + r.width / 2 - x)) + "px");
+    posicionarBalao(b, naLuta);
     baloes[cid] = b;
     b.addEventListener("click", () => b.remove());
     setTimeout(() => { b.classList.add("sumindo"); setTimeout(() => b.remove(), 300); }, Math.min(8000, 2600 + texto.length * 45));
     return Math.min(1600, 500 + texto.length * 18);
   }
   const baloes = {};
+  /** Onde o balão cabe sem cobrir ninguém. Como os quadros de tooltip dos jogos: tenta os lugares em ordem
+   *  (ao lado de quem fala, virado para o meio do palco; depois acima; depois abaixo) e fica com o primeiro
+   *  que não encobre outra carta, as ações da roda ou outro balão. Se todos encobrem, o que encobre menos. */
+  function posicionarBalao(b, quem) {
+    const r = quem.getBoundingClientRect(), w = b.offsetWidth, h = b.offsetHeight, folga = 12;
+    const obstaculos = [...document.querySelectorAll("#arena .carta, #roda > *, .balao")]
+      .filter((o) => o !== quem && o !== b && o.offsetParent !== null).map((o) => o.getBoundingClientRect());
+    const arena = (document.getElementById("arena") || document.body).getBoundingClientRect();
+    const meio = arena.left + arena.width / 2;
+    const paraDireita = r.left + r.width / 2 < meio;  // aliados à esquerda falam para a direita, e vice-versa
+    const ladoX = paraDireita ? r.right + folga : r.left - folga - w;
+    const cy = r.top + r.height / 2;
+    const candidatos = [
+      { x: ladoX, y: cy - h / 2, tipo: "lado" },
+      { x: ladoX, y: r.top, tipo: "lado" },
+      { x: ladoX, y: r.bottom - h, tipo: "lado" },
+      { x: r.left + r.width / 2 - w / 2, y: r.top - h - folga, tipo: "acima" },
+      { x: r.left + r.width / 2 - w / 2, y: r.bottom + folga, tipo: "abaixo" },
+    ].map((c) => {
+      c.x = Math.max(8, Math.min(innerWidth - w - 8, c.x));
+      c.y = Math.max(52, Math.min(innerHeight - h - 8, c.y));
+      c.cobre = obstaculos.reduce((s, o) => s + Math.max(0, Math.min(c.x + w, o.right) - Math.max(c.x, o.left))
+        * Math.max(0, Math.min(c.y + h, o.bottom) - Math.max(c.y, o.top)), 0)
+        + Math.max(0, Math.min(c.x + w, r.right) - Math.max(c.x, r.left)) * Math.max(0, Math.min(c.y + h, r.bottom) - Math.max(c.y, r.top));
+      return c;
+    });
+    const c = candidatos.find((k) => !k.cobre) || candidatos.reduce((a, k) => (k.cobre < a.cobre ? k : a));
+    b.style.left = c.x + "px"; b.style.top = c.y + "px";
+    if (c.tipo === "lado") {
+      b.classList.add("lado", paraDireita ? "a-direita" : "a-esquerda");
+      b.style.setProperty("--rabo-y", Math.max(12, Math.min(h - 12, cy - c.y)) + "px");
+    } else {
+      if (c.tipo === "abaixo") b.classList.add("abaixo");
+      b.style.setProperty("--rabo", Math.max(14, Math.min(w - 14, r.left + r.width / 2 - c.x)) + "px");
+    }
+  }
   function opiniao(cid, nome, delta) {
     som(delta > 0 ? "aprova" : "desaprova");
     cartao(cid, nome, { delta });

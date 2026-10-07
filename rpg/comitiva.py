@@ -623,9 +623,7 @@ def menu(g):
                 "monte a fogueira para chamar." if rs else " Por enquanto."), "cinza")
             g.pausar()
             return
-        fichas = [dict(e, desc=COMPANHEIROS[e["id"]]["desc"]) for e in estado(g)]
-        painel = {"membros": fichas, "limite": LIMITE,
-                  "reserva": [dict(e, desc=COMPANHEIROS[e["id"]]["desc"]) for e in estado(g, reserva(g))]}
+        painel = {"membros": estado(g), "limite": LIMITE, "reserva": estado(g, reserva(g))}
         for m in ([] if g.ui.painel("comitiva", painel) else ms):
             d = COMPANHEIROS[m["id"]]
             rotulo, _ = nivel(m)
@@ -878,7 +876,8 @@ def estado(g, quem=None):
     for m in (membros(g) if quem is None else quem):
         d = COMPANHEIROS[m["id"]]
         rotulo, classe = nivel(m)
-        lista.append({"id": m["id"], "nome": d["nome"], "titulo": d["titulo"], "hp": m["hp"], "max_hp": m["max_hp"],
+        lista.append({"id": m["id"], "nome": d["nome"], "titulo": d["titulo"], "desc": d["desc"],
+                      "hp": m["hp"], "max_hp": m["max_hp"],
                       "aprovacao": m["aprovacao"], "nivel": rotulo, "classe": classe, "ferido": m["ferido"],
                       "papel": d["papel"], "conversa": bool(proxima_conversa(g, m)) and m["ultima_conversa"] != g.dia,
                       "aprovacao_info": explicar_aprovacao(g, m)})

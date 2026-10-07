@@ -97,7 +97,7 @@ body.modo-titulo .vinheta { background: radial-gradient(ellipse 80% 70% at 50% 4
 .divisor-turno::before, .divisor-turno::after { content: ""; flex: 1; height: 2px; background: #3a2e24; }
 
 /* ------------------------------------------------------------------ escolhas */
-#prompt:empty { display: none; }
+#prompt:empty:not(.segurando) { display: none; }
 #prompt { margin-top: 1.2em; animation: entrar 0.3s ease-out; }
 .pergunta-rotulo { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--tinta-3); margin-bottom: 6px; }
 .escolhas { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 3px; }

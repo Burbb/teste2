@@ -70,6 +70,11 @@
 @media (max-width: 920px) { .voltar-seta { margin-left: -4px; } .voltar-seta kbd { display: none; } }
 .aviso-flutuante { position: fixed; z-index: 70; display: flex; align-items: center; gap: 5px; white-space: nowrap; pointer-events: none; font-family: var(--num); font-size: 21px; line-height: 1; padding: 3px 9px 4px 4px; background: #120e0b; border: 2px solid #4a4038; color: var(--tinta); box-shadow: 3px 3px 0 #000; animation: aviso-sobe 1.6s cubic-bezier(.2,.7,.3,1) forwards; }
 .aviso-flutuante img.sprite { --s: 16; }
+/* Frase longa: quebra em linhas, letra de leitura, e fica parada o tempo de ler (--dura) antes de sumir. */
+.aviso-flutuante.longo { white-space: normal; max-width: min(460px, calc(100vw - 16px)); align-items: flex-start; gap: 8px; padding: 7px 12px 8px 8px;
+  font-family: var(--prosa, inherit); font-size: 17px; line-height: 1.35; animation: aviso-fica var(--dura, 5s) ease-out forwards; }
+.aviso-flutuante.longo img.sprite { margin-top: 2px; flex: none; }
+@keyframes aviso-fica { 0% { opacity: 0; transform: translateY(8px) scale(0.96); } 6% { opacity: 1; transform: none; } 88% { opacity: 1; transform: none; } 100% { opacity: 0; transform: translateY(-12px); } }
 .aviso-flutuante.ouro { color: var(--ouro); border-color: #8a6a14; }
 .aviso-flutuante.perda, .aviso-flutuante.dano { color: #ff9c90; border-color: #8a1414; }
 .aviso-flutuante.item, .aviso-flutuante.cura { color: #bfe59b; border-color: #3d6a2a; }

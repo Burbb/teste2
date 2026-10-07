@@ -70,6 +70,7 @@ async function novaCena(m) {
     return;
   }
   soltarRolagem();
+  promptEl.style.minHeight = ""; promptEl.classList.remove("segurando");
   Telas.novaVisita();  // saiu da tela: a quantidade do mercado volta a 1 na próxima visita
   if (!instantaneo() && textoEl.childElementCount) { folha.classList.add("saindo"); await espera(200); }
   textoEl.innerHTML = "";
@@ -170,16 +171,26 @@ function iconeChip(m) {
 let ultimoClique = { x: 0, y: 0, t: -1e9 }, avisosAtivos = 0;
 document.addEventListener("pointerdown", (ev) => { ultimoClique = { x: ev.clientX, y: ev.clientY, t: performance.now() }; }, true);
 function emTela() { return !!textoEl.querySelector(".tela:not(.achado):not(.saves)") && !(estado && estado.combate); }
-function aviso(texto, tipo, icone) {
+const avisosPorChave = {};
+/** Aviso flutuante perto do clique. Com `chave`, clicar de novo troca o aviso aberto por um novo (aparece toda vez,
+ *  sem empilhar cópias). */
+function aviso(texto, tipo, icone, chave) {
   if (replay) return;
-  const a = el("div", `aviso-flutuante ${tipo || "info"}`, (icone ? spr(icone, 1) : "") + esc(texto));
+  const velho = chave && avisosPorChave[chave];
+  if (velho && velho.isConnected) { clearTimeout(velho._t); velho.remove(); avisosAtivos = Math.max(0, avisosAtivos - 1); }
+  // Frase longa (o carinho no animal, um acontecimento na fogueira) quebra em linhas e fica o tempo de ler.
+  const longo = String(texto).length > 60;
+  const dura = longo ? Math.min(9000, Math.max(3500, 1500 + String(texto).length * 55)) : 2400;
+  const a = el("div", `aviso-flutuante ${tipo || "info"}${longo ? " longo" : ""}`, (icone ? spr(icone, 1) : "") + `<span>${esc(texto)}</span>`);
+  a.style.setProperty("--dura", dura + "ms");
   document.body.appendChild(a);
+  if (chave) avisosPorChave[chave] = a;
   const n = avisosAtivos++;
   const perto = performance.now() - ultimoClique.t < 5000;
   const x = perto ? ultimoClique.x : innerWidth / 2, y = (perto ? ultimoClique.y - 40 : 110) - n * 32;
   a.style.left = Math.max(8, Math.min(innerWidth - a.offsetWidth - 8, x - a.offsetWidth / 2)) + "px";
   a.style.top = Math.max(54, y) + "px";
-  setTimeout(() => { a.remove(); avisosAtivos = Math.max(0, avisosAtivos - 1); }, 2000);
+  a._t = setTimeout(() => { a.remove(); avisosAtivos = Math.max(0, avisosAtivos - 1); }, dura);
 }
 
 async function efeito(m) {

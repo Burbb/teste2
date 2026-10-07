@@ -23,11 +23,16 @@ function marcarDocaAtual() {
    um "Continuar" esperava. Antes o clique era ignorado e parecia travado; agora o texto corre de uma vez, o
    Continuar é aceito, e a tela abre sozinha assim que o menu do lugar voltar (o pedido vale por meio minuto). */
 let atalhoGuardado = null;
+const PARA_ABRIR = { Talentos: "abrir os Talentos", "Inventário": "abrir o Inventário", Comitiva: "abrir a Comitiva", Mapa: "abrir o Mapa",
+  "Diário": "abrir o Diário", "Bestiário": "abrir o Bestiário", Salvar: "salvar", Sair: "sair" };
+/** "Termine a cena para abrir os Talentos": aparece a cada clique (não só no primeiro), sem empilhar. */
+function avisarAtalho(rotulo, onde = estado && estado.combate ? "a luta" : "a cena") {
+  aviso(`Termine ${onde} para ${PARA_ABRIR[rotulo] || "abrir " + rotulo}`, "info", rotulo === "Talentos" ? "estrela" : "pergaminho", "atalho");
+}
 function guardarAtalho(rotulo) {
-  const novo = !atalhoGuardado || atalhoGuardado.rotulo !== rotulo;
   atalhoGuardado = { rotulo, t: performance.now() };
   pular = true;
-  if (novo) aviso(`${rotulo} abre assim que a cena terminar`, "info", rotulo === "Talentos" ? "estrela" : "pergaminho");
+  avisarAtalho(rotulo);
   if (pergunta && pergunta.tipo === "continuar") responder(pergunta.id, null);
 }
 function atalhoNoMenu(opcoes, rotulo) {
@@ -44,7 +49,7 @@ function pedirAtalho(rotulo) {
 
 /** Clique num atalho da doca: no menu do lugar, escolhe direto; numa tela aberta pela doca, volta e abre o outro. */
 function acionarAtalho(rotulo, mid, i) {
-  if (estado && estado.combate) return;
+  if (estado && estado.combate) { Som.tocar("falha"); avisarAtalho(rotulo); return; }
   if (!pergunta || processando) { guardarAtalho(rotulo); return; }
   if (pergunta.tipo === "continuar" && docaTela) {
     // telas de leitura (Bestiário...) terminam em "Continuar": ele faz as vezes do Voltar
@@ -78,6 +83,9 @@ function adormecerDoca() {
 }
 
 function limparPrompt() {
+  // Numa tela desenhada (fogueira, mercado, mural), o lugar das opções segura a altura até as novas chegarem:
+  // sem isso a página encolhia, a rolagem era puxada para cima e a pessoa perdia onde estava.
+  if (emTela() && promptEl.offsetHeight) { promptEl.style.minHeight = promptEl.offsetHeight + "px"; promptEl.classList.add("segurando"); }
   promptEl.innerHTML = ""; pergunta = null; Batalha.limparAlvos(); Batalha.vez(null); limparRoda(); adormecerDoca();
   document.querySelectorAll(".rastro-contrato.cacavel").forEach((c) => { c.classList.remove("cacavel"); c.querySelector(".rastro-cacar")?.remove(); });
   document.querySelectorAll(".voltar-seta").forEach((b) => b.remove());
@@ -85,6 +93,8 @@ function limparPrompt() {
 }
 function atalhoDe(t) { return SISTEMA.find(([re]) => re.test(t)); }
 
+/** As opções novas chegaram: o lugar delas não precisa mais segurar a altura (ver limparPrompt). */
+function soltarAlturaPrompt() { setTimeout(() => { promptEl.style.minHeight = ""; promptEl.classList.remove("segurando"); }, 0); }
 /** O prompt mora no pé da página. (Na luta, as ações vão para a roda em volta da sua carta, dentro da arena.) */
 function posicionarPrompt() {
   if (promptEl.parentElement !== folha) folha.appendChild(promptEl);
@@ -95,6 +105,7 @@ let viaBarra = false;  // a habilidade foi escolhida direto na barra: "Voltar" d
 let habMirando = "";   // o nome do que está sendo mirado, para o lembrete "Bola de Fogo: escolha o alvo"
 function mostrarOpcoes(m) {
   posicionarPrompt();
+  soltarAlturaPrompt();
   // Pedido pendente (ex.: clicou num destino do mapa a partir do menu do local): responde sozinho.
   if (atalhoGuardado && !pendente) {
     const alvo = performance.now() - atalhoGuardado.t < 30000 ? atalhoNoMenu(m.opcoes, atalhoGuardado.rotulo) : -1;
@@ -625,6 +636,7 @@ function ehVoltar(o) {
 
 function mostrarContinuar(m) {
   posicionarPrompt();
+  soltarAlturaPrompt();
   if ((pendente && pendente.chave === "_atalho" && docaTela) || (atalhoGuardado && !(estado && estado.combate))) {  // a caminho de um atalho
     pergunta = { id: m.id, tipo: "continuar" };
     responder(m.id, null);
@@ -641,6 +653,7 @@ function mostrarContinuar(m) {
 
 function mostrarPergunta(m) {
   posicionarPrompt();
+  soltarAlturaPrompt();
   promptEl.innerHTML = "";
   promptEl.appendChild(el("div", "pergunta-rotulo", esc(m.pergunta)));
   const linha = el("div", "entrada-texto");
