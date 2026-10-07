@@ -96,7 +96,7 @@ document.addEventListener("keydown", (ev) => {
   if (!pergunta) return;
   if (pergunta.tipo === "continuar" && (k === " " || k === "Enter")) { ev.preventDefault(); responder(pergunta.id, null); return; }
   if (pergunta.tipo !== "opcoes" || !pergunta.numeros) return;
-  const botoes = [...promptEl.querySelectorAll(".escolha, .atalho, .botao-acao")];
+  const botoes = [...promptEl.querySelectorAll(".escolha, .atalho")];
   if (/^[0-9]$/.test(k) && pergunta.teclasNum) {  // barra de ações da luta: cada tecla faz o que o botão faz
     const f = pergunta.teclasNum[k === "0" ? 9 : Number(k) - 1];
     if (f) { ev.preventDefault(); f(); }
