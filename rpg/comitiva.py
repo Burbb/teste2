@@ -522,6 +522,30 @@ def fala_ociosa(g, m):
     return g.sortear(COMPANHEIROS[m["id"]]["ocioso"][faixa])
 
 
+CARINHO = {
+    "lobo": ["{n} deita a cabeça no seu joelho e fecha os olhos. O rabo bate devagar no chão.",
+             "Você coça atrás das orelhas de {n}. Ele solta um suspiro longo de cachorro velho."],
+    "urso": ["{n} rola de barriga para cima, esperando. Você coça. O chão treme com o ronco de satisfação.",
+             "Você encosta na lateral quente de {n}. Ele te puxa com a pata, como se você fosse um filhote."],
+    "falcao": ["{n} desce do galho para o seu braço e esfrega a cabeça na sua bochecha. Raro, para um falcão.",
+               "Você alisa as penas do peito de {n}. Ele arrepia tudo, finge que não gostou, e fica."],
+}
+
+
+def carinho(g):
+    """Uma vez por noite: o animal do patrulheiro acorda animado e entra na próxima luta com +15% de dano.
+    (A vida ele já recupera dormindo; o carinho é o laço.)"""
+    f = g.j.companheiro
+    if f.get("carinho") == g.dia:
+        g.dizer(f"{f['nome']} já dorme encostado em você, roncando baixinho.", "cinza")
+        return
+    f["carinho"] = g.dia
+    f["animado"] = True
+    texto = g.sortear(CARINHO.get(f["tipo"], CARINHO["lobo"])).format(n=f["nome"])
+    g.dizer(texto + " (amanhã, na primeira luta, ele entra animado: +15% de dano)", "verde")
+    g.ui.celebrar("carinho", {"nome": f["nome"]})
+
+
 def fogueira(g, intro=None):
     """O acampamento à noite: quem anda com você e quem espera na reserva, em volta do fogo.
     Conversar, trocar quem vai junto amanhã e, por fim, dormir. Devolve True se houve conversa de história."""
@@ -557,6 +581,8 @@ def fogueira(g, intro=None):
                                    {"chamar": m["id"], "sai": a["id"]}))
         for m in ms:
             opcoes.append((f"Deixar {nome(m['id'])} no acampamento", ("reservar", m["id"]), {"reservar": m["id"]}))
+        if getattr(g.j, "companheiro", None):
+            opcoes.append((f"Fazer carinho em {g.j.companheiro['nome']}", ("carinho", None), {"carinho": "fera"}))
         opcoes.append(("Dormir até o amanhecer", None, {"dormir": True}))
         # Em volta do fogo é a hora de fazer curativos: a bolsa do painel funciona aqui (bandagem, poção, unguento).
         opcoes += g.opcoes_bolsa()
@@ -566,6 +592,9 @@ def fogueira(g, intro=None):
         acao, cid = op[0], op[1]
         if acao in ("usar", "usar_em"):
             g.executar_comum(op)
+            continue
+        if acao == "carinho":
+            carinho(g)
             continue
         m = membro(g, cid) or na_reserva(g, cid)
         if acao == "falar":

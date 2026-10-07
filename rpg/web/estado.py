@@ -10,6 +10,15 @@ from ..mundo import nivel_regiao
 from ..jogo import NOMES_TESTE
 
 
+def _alvo_animal(g, k):
+    """O animal do patrulheiro como alvo da poção e da bandagem da bolsa."""
+    f = g.j.companheiro
+    if not f:
+        return []
+    return [{"id": "fera", "nome": f["nome"], "hp": f["hp"], "max_hp": f["max_hp"], "ferido": f["hp"] <= 0,
+             "caido": "ferido, não luta", "motivo": g.motivo_inutil(k, f)}]
+
+
 def _efeitos(c):
     lista = []
     for n, ef in c.efeitos.items():
@@ -108,7 +117,7 @@ def heroi(g):
                    "alvos": [{"id": m["id"], "nome": comitiva.nome(m["id"]), "hp": m["hp"], "max_hp": m["max_hp"],
                               "ferido": m["ferido"], "caido": comitiva.flexao(m["id"], "caíd{a}, não luta"),
                               "motivo": g.motivo_inutil(k, m)}
-                             for m in comitiva.membros(g)] if k in ("pocao_vida", "bandagem") and not g.combate_ativo else []}
+                             for m in comitiva.membros(g)] + _alvo_animal(g, k) if k in ("pocao_vida", "bandagem") and not g.combate_ativo else []}
                   for k, v in j.consumiveis.items() if v > 0 and k in CONSUMIVEIS],
         "equip": {slot: _item(it, j.nome_recurso) for slot, it in j.equip.items()},
         "mochila": [_item(it, j.nome_recurso) for it in j.mochila], "limite_mochila": 12,
@@ -117,7 +126,8 @@ def heroi(g):
         "grimorio": grimorio.dados(j),
         "ferimentos": ferimentos, "males": sobrevivencia.descrever(j),
         "pontos_talento": j.pontos_talento, "sigilos": len(j.sigilos),
-        "companheiro": ({"nome": j.companheiro["nome"], "hp": j.companheiro["hp"], "max_hp": j.companheiro["max_hp"]}
+        "companheiro": ({"nome": j.companheiro["nome"], "hp": j.companheiro["hp"], "max_hp": j.companheiro["max_hp"],
+                         "tipo": j.companheiro["tipo"], "animado": bool(j.companheiro.get("animado"))}
                         if j.companheiro else None),
         "efeitos": _efeitos(j),
         "comitiva": comitiva.estado(g),

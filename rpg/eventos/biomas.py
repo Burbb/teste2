@@ -136,7 +136,7 @@ def ninho_de_grifo(g):
             "Nenhum sinal da mãe... por enquanto.", "amarelo")
     op = g.menu("O que faz?", [
         ("Pegar um ovo (valem uma fortuna)", "pegar"),
-        ("Esperar a mãe e tentar domá-la (Patrulheiro)", "domar") if g.j.spec == "patrulheiro" else None,
+        ("Esperar a mãe e tentar fazer amizade (Patrulheiro)", "domar") if g.j.spec == "patrulheiro" else None,
         ("Deixar o ninho em paz", "nao"),
     ])
     if op == "pegar":
@@ -149,10 +149,12 @@ def ninho_de_grifo(g):
             g.dizer("Uma sombra cobre o sol. A mãe voltou.", "vermelho+negrito")
             g.combate([g.inimigo("grifo", afixo="feroz")], emboscada="inimigo")
     elif op == "domar":
-        g.dizer("Você espera imóvel até a mãe pousar, e fala com ela na língua dos patrulheiros.", "verde")
+        g.dizer("Você espera imóvel até a mãe pousar, de mãos abertas e olhos baixos, como os patrulheiros ensinam.",
+                "verde")
         if g.teste("percepcao", 13):
-            g.dizer("Ela te encara por longos segundos, depois abaixa a cabeça. Te deixa tocar suas penas. "
-                    "Uma pena solta cai em suas mãos.", "verde+negrito")
+            g.dizer("Ela te encara por longos segundos, depois abaixa a cabeça e deixa você tocar suas penas. Não é sua, "
+                    "nunca vai ser, mas hoje vocês se entendem. Quando ela levanta voo, uma pena solta fica nas suas mãos.",
+                    "verde+negrito")
             g.dar("pena_fenix")
             g.ganhar_xp(25)
         else:

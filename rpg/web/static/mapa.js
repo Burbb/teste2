@@ -190,11 +190,12 @@ const MapaPx = (() => {
       const esq = (px / W) * 100, topo = (py / H) * 100;
       const b = document.createElement("button");
       b.type = "button";
-      b.className = "no-btn" + (n.atual ? " atual" : "") + (clic.has(n.id) ? " clicavel" : "") + (marcas.has(n.id) ? " contrato" : "");
+      b.className = "no-btn" + (n.atual ? " atual" : "") + (clic.has(n.id) ? " clicavel" : "") + (marcas.has(n.id) ? " tem-contrato" : "");  // não "contrato": essa é a classe do cartaz do mural (sombra, giro)
       b.dataset.id = n.id;
       b.style.left = esq + "%"; b.style.top = topo + "%";
       const nv = n.nivel ? ` · inimigos Nv.${n.nivel}` : "";
-      b.title = `${n.nome} — ${n.descricao}${nv}${n.distancia ? ` · ${n.distancia} trecho(s) daqui` : ""}${clic.has(n.id) ? "\nClique para viajar" : ""}`;
+      // Sem a dica nativa do navegador (o nome e o nível já estão escritos no mapa); fica só para leitores de tela.
+      b.setAttribute("aria-label", `${n.nome} — ${n.descricao}${nv}${n.distancia ? ` · ${n.distancia} trecho(s) daqui` : ""}${marcas.has(n.id) ? " · você tem um contrato aqui" : ""}`);
       if (clic.has(n.id) && opts.aoClicar) b.addEventListener("click", (ev) => { ev.stopPropagation(); opts.aoClicar(n.id); });
       if (marcas.has(n.id)) {
         // Elemento próprio (e não ::after, que o anel de "você está aqui" já usa): um selo "!" no canto do lugar.
@@ -202,7 +203,6 @@ const MapaPx = (() => {
         m.className = "marca-contrato";
         m.textContent = "!";
         b.appendChild(m);
-        b.title += "\nVocê tem um contrato aqui";
       }
       caixa.appendChild(b);
       if (grande || n.atual || clic.has(n.id)) {

@@ -87,10 +87,11 @@ document.addEventListener("keydown", (ev) => {
   if (pergunta && pergunta.letras && pergunta.letras[k.toLowerCase()] !== undefined && !processando) {
     ev.preventDefault(); responder(pergunta.id, pergunta.letras[k.toLowerCase()]); return;
   }
-  if (docaTela && !processando && k.length === 1) {
-    // Dentro de uma tela aberta pela doca, as teclas dos atalhos (I, C, T...) continuam valendo.
-    const b = [...doca.querySelectorAll(".atalho:not([data-sempre])")].find((x) => (x.querySelector("kbd")?.textContent || "").toLowerCase() === k.toLowerCase());
-    if (b) { ev.preventDefault(); b.click(); return; }
+  if (k.length === 1 && /[a-z]/i.test(k) && estado && !estado.combate && !corpo.classList.contains("modo-titulo")) {
+    // As teclas dos atalhos (I, C, T...) valem dentro das telas da doca e também com texto correndo (o pedido fica
+    // guardado). Salvar e Sair só dentro das telas: uma tecla solta no meio da leitura não deve sair do jogo.
+    const at = SISTEMA.find((x) => x[2] === k.toLowerCase() && x[1] !== "Mapa");
+    if (at && (docaTela || !["Salvar", "Sair"].includes(at[1]))) { ev.preventDefault(); pedirAtalho(at[1]); return; }
   }
   if (k === "F2" || k === "h" || k === "H") { ev.preventDefault(); alternarHistorico(); return; }
   if (k === "m" || k === "M") { alternarMapa(); return; }

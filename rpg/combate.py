@@ -99,6 +99,8 @@ class Combate:
                                       c["alcance"], c["crit"])
             self.companheiro.hp = int(c["hp"] * laco)
             self.aliados.append(self.companheiro)
+            if c.pop("animado", False):  # o carinho da noite: entra na luta com vontade
+                self.companheiro.aplicar("fortalecido", 3, 0.15)
         g.combate_ativo = self
         telemetria.novo_combate(self)
 
@@ -462,7 +464,9 @@ class Combate:
         if not getattr(self.ui, "hud", False):
             self.dizer("Inimigos: " + ", ".join(f"{e.nome} (Nv.{e.nivel})" for e in self.inimigos), "vermelho")
         if self.companheiro:
-            self.dizer(f"{self.companheiro.nome} rosna ao seu lado.", "verde")
+            animado = self.companheiro.efeito("fortalecido")
+            self.dizer(f"{self.companheiro.nome} " + ("salta à frente, animado depois da noite ao seu lado. (+15% de dano)"
+                                                      if animado else "rosna ao seu lado."), "verde")
         if self.sozinho:
             if comitiva.membros(self.g) or self.j.companheiro:
                 self.dizer("Um duelo é coisa de dois. Os seus ficam de fora, assistindo.", "cinza")

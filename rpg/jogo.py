@@ -326,6 +326,9 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
                 if k in ("bandagem", "pocao_vida"):
                     opcoes += [(f"Usar {CONSUMIVEIS[k]['nome']} em {comitiva.nome(m['id'])}", ("usar_em", k, m["id"]),
                                 {"usar": k, "em": m["id"]}) for m in comitiva.membros(self)]
+                    if self.j.companheiro:  # o animal do patrulheiro também
+                        opcoes.append((f"Usar {CONSUMIVEIS[k]['nome']} em {self.j.companheiro['nome']}",
+                                       ("usar_em", k, "fera"), {"usar": k, "em": "fera"}))
         return opcoes
 
     def executar_comum(self, op):

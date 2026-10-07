@@ -19,18 +19,50 @@ function montarDoca(atalhos) {
 function marcarDocaAtual() {
   doca.querySelectorAll(".atalho").forEach((b) => b.classList.toggle("atual", !!docaTela && b.dataset.rotulo === docaTela));
 }
+/* Pedido guardado: clicou num atalho (Talentos piscando depois de subir de nível...) enquanto o texto ainda corria ou
+   um "Continuar" esperava. Antes o clique era ignorado e parecia travado; agora o texto corre de uma vez, o
+   Continuar é aceito, e a tela abre sozinha assim que o menu do lugar voltar (o pedido vale por meio minuto). */
+let atalhoGuardado = null;
+function guardarAtalho(rotulo) {
+  const novo = !atalhoGuardado || atalhoGuardado.rotulo !== rotulo;
+  atalhoGuardado = { rotulo, t: performance.now() };
+  pular = true;
+  if (novo) aviso(`${rotulo} abre assim que a cena terminar`, "info", rotulo === "Talentos" ? "estrela" : "pergaminho");
+  if (pergunta && pergunta.tipo === "continuar") responder(pergunta.id, null);
+}
+function atalhoNoMenu(opcoes, rotulo) {
+  return opcoes.findIndex((o) => { const at = atalhoDe(o.texto); return at && at[1] === rotulo; });
+}
+const menuDoLugar = (opcoes) => opcoes.filter((o) => atalhoDe(o.texto)).length >= 4;
+/** Abrir um atalho de qualquer lugar (aviso de talento no painel, tecla): usa o botão da doca se houver. */
+function pedirAtalho(rotulo) {
+  const b = doca.querySelector(`.atalho[data-rotulo="${rotulo}"]`);
+  if (b) { b.click(); return; }
+  if (pergunta && pergunta.tipo === "opcoes" && !processando && menuDoLugar(pergunta.opcoes)) return;
+  guardarAtalho(rotulo);
+}
+
 /** Clique num atalho da doca: no menu do lugar, escolhe direto; numa tela aberta pela doca, volta e abre o outro. */
 function acionarAtalho(rotulo, mid, i) {
-  if (!pergunta || processando) return;
+  if (estado && estado.combate) return;
+  if (!pergunta || processando) { guardarAtalho(rotulo); return; }
   if (pergunta.tipo === "continuar" && docaTela) {
     // telas de leitura (Bestiário...) terminam em "Continuar": ele faz as vezes do Voltar
     pendente = rotulo === docaTela ? null : { chave: "_atalho", valor: rotulo, saltos: 4 };
     responder(pergunta.id, null);
     return;
   }
+  if (pergunta.tipo === "continuar") { guardarAtalho(rotulo); return; }
   if (pergunta.tipo !== "opcoes") return;
   if (pergunta.id === mid) { docaTela = rotulo; marcarDocaAtual(); responder(mid, i); return; }
-  if (!docaTela) return;
+  const aqui = atalhoNoMenu(pergunta.opcoes, rotulo);
+  if (aqui >= 0) { docaTela = rotulo; marcarDocaAtual(); responder(pergunta.id, aqui); return; }
+  if (menuDoLugar(pergunta.opcoes)) return;  // o lugar não tem esse atalho (ex.: Comitiva sem ninguém)
+  if (!docaTela) {
+    // Uma escolha da cena está esperando (um evento, o item encontrado): ela vem primeiro.
+    guardarAtalho(rotulo);
+    return;
+  }
   const v = pergunta.opcoes.findIndex(ehVoltar);
   if (v < 0) return;
   // clicar no atalho da tela aberta fecha a tela (como o Voltar); noutro, volta e abre o outro
@@ -64,6 +96,16 @@ let habMirando = "";   // o nome do que está sendo mirado, para o lembrete "Bol
 function mostrarOpcoes(m) {
   posicionarPrompt();
   // Pedido pendente (ex.: clicou num destino do mapa a partir do menu do local): responde sozinho.
+  if (atalhoGuardado && !pendente) {
+    const alvo = performance.now() - atalhoGuardado.t < 30000 ? atalhoNoMenu(m.opcoes, atalhoGuardado.rotulo) : -1;
+    if (performance.now() - atalhoGuardado.t >= 30000) atalhoGuardado = null;
+    if (alvo >= 0) {
+      docaTela = atalhoGuardado.rotulo; atalhoGuardado = null;
+      pergunta = { id: m.id, tipo: "opcoes", opcoes: m.opcoes };
+      responder(m.id, alvo); marcarDocaAtual();
+      return;
+    }
+  }
   if (pendente) {
     const p = pendente;
     pendente = null;
@@ -583,7 +625,7 @@ function ehVoltar(o) {
 
 function mostrarContinuar(m) {
   posicionarPrompt();
-  if (pendente && pendente.chave === "_atalho" && docaTela) {  // a caminho de outro atalho da doca
+  if ((pendente && pendente.chave === "_atalho" && docaTela) || (atalhoGuardado && !(estado && estado.combate))) {  // a caminho de um atalho
     pergunta = { id: m.id, tipo: "continuar" };
     responder(m.id, null);
     return;

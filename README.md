@@ -120,7 +120,7 @@ na interface miúda; **Jersey 15** nos números. O botão "Fonte" no topo volta 
   para tirar ou para a caveira (largar); dois cliques também funcionam. Passe o mouse para ver
   os atributos e a **comparação com o que está equipado** (▲ verde, ▼ vermelho).
 - **Mercado interativo:** vitrine de suprimentos e equipamentos com preço e comparação.
-  Suprimentos têm **quantidade** (`−`/`+`, segurar acelera, rodinha do mouse, Shift+clique compra 5).
+  Suprimentos têm **quantidade** (`−`/`+`, segurar acelera, Shift+clique compra 5).
   Equipamento comprado para um espaço vazio do corpo **já sai vestido**: o ícone voa da vitrine
   até o espaço do boneco, que brilha ao receber. Na mochila, clicar num item abre um menu com
   **Equipar** ou **Vender**, e nada é vendido sem você confirmar. A venda paga exatamente o
@@ -169,8 +169,18 @@ na interface miúda; **Jersey 15** nos números. O botão "Fonte" no topo volta 
   separados, um logo atrás do outro.
 - **Quem age fica por cima:** quando você manda outro agir (Ordem da Fera, poção na comitiva), a
   carta dele e a faixa da ação ("Provocando") passam à frente da sua, mesmo com a sua em foco.
-- **O animal na fogueira:** o lobo, o urso ou o falcão do Patrulheiro dorme perto do fogo, com o
-  nome em cima (passe o mouse para ver a vida).
+- **O animal do Patrulheiro é da família:** aparece na ficha, na Comitiva (retrato, nome, vida);
+  poção e bandagem da bolsa servem nele (a bandagem põe de pé quem caiu); na fogueira ele dorme
+  perto do fogo e, clicando nele, dá para **fazer carinho** (corações; uma vez por noite, e ele
+  entra na primeira luta do dia seguinte **animado**, com +15% de dano), enfaixar ou dar poção.
+  Ele não come das provisões: caça a própria comida.
+- **Clique que não se perde:** clicar num atalho (o ponto de talento piscando, Talentos, Inventário,
+  ou a tecla dele) enquanto o texto ainda corre ou uma cena espera não é mais ignorado: o texto
+  corre de uma vez, o "Continuar" é aceito, um aviso diz que a tela abre assim que a cena terminar,
+  e ela abre sozinha quando o lugar voltar. Escolhas da cena (um evento, o item encontrado) vêm
+  primeiro.
+- **Mapa limpo:** sem a dica do navegador sobre os lugares (o nome e o nível já estão escritos), e o
+  lugar com contrato não ganha mais a sombra do cartaz do mural.
 - **Trocar pelo item encontrado:** "Equipar agora" faz o ícone voar do cartão até o espaço do
   corpo, que brilha; o cartão vira "Vestido" e o antigo, apagado, "Foi para a mochila".
 - **Duelo é duelo:** nos duelos de honra a comitiva e o animal ficam de fora, assistindo.

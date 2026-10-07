@@ -623,7 +623,6 @@ const Telas = (() => {
       });
       // A roda do mouse só mexe na quantidade em cima do controle (rolar a página não pode mudar a compra).
       const ctrl = el.querySelector(".qtd-ctrl");
-      if (ctrl) ctrl.addEventListener("wheel", (ev) => { if (max > 1) { ev.preventDefault(); mudar(Math.min(qtdLoja[id] || 1, max) + (ev.deltaY < 0 ? 1 : -1)); } }, { passive: false });
       const comprar = (ev) => {
         if (el.classList.contains("caro")) { App.som("falha"); return; }
         const q = ev.shiftKey ? Math.min(5, max) : Math.min(qtdLoja[id] || 1, max);
@@ -769,7 +768,7 @@ const Telas = (() => {
         style="left:${(f.p[0] / 320) * 100}%;top:${((f.p[1] + 8) / 120) * 100}%">
         ${f.conversa ? '<i class="carta-aviso">✉</i>' : ""}<span class="figura-nome">${h(f.nome.split(" ").pop())}</span>
         <span class="figura-estado">${f.onde === "ativo" ? "vai com você" : "no acampamento"}</span></button>`).join("");
-    const fera = d.fera ? `<span class="figura fera" style="left:${(PONTO_FERA[0] / 320) * 100}%;top:${((PONTO_FERA[1] - 10) / 120) * 100}%"
+    const fera = d.fera ? `<span class="figura fera" role="button" tabindex="0" data-fera="1" style="left:${(PONTO_FERA[0] / 320) * 100}%;top:${((PONTO_FERA[1] - 10) / 120) * 100}%"
         ${dica(`<b>${h(d.fera.nome)}</b><div>Seu ${h({ lobo: "lobo", urso: "urso", falcao: "falcão" }[d.fera.tipo] || "animal")} dorme perto do fogo. Vida ${d.fera.hp}/${d.fera.max_hp}.</div>`, true)}>
         <span class="figura-nome">${h(d.fera.nome.split(" ").pop())}</span></span>` : "";
     return `<div class="tela acampamento"><div class="fogueira-palco"><canvas class="fogueira-cena" width="320" height="120"></canvas>${botoes}${fera}</div>
@@ -826,6 +825,38 @@ const Telas = (() => {
     timer = setInterval(() => { if (!document.hidden) cena(); }, 125);
   }
 
+  /** O animal do patrulheiro na fogueira: carinho, poção, bandagem (o que estiver disponível agora). */
+  function menuFera(ancora) {
+    fecharMenuItem();
+    const ops = App.opcoes() || [];
+    const f = App.estado && App.estado.heroi.companheiro;
+    if (!f) return;
+    const itens = [];
+    ops.forEach((o) => {
+      const m = o.meta || {};
+      if (m.carinho === "fera") itens.push([`${S("coracao", 1)} Fazer carinho`, { carinho: "fera" }]);
+      if (m.em === "fera" && m.usar) itens.push([`${S(ICONE_ITEM[m.usar] || "pocao", 1)} ${m.usar === "bandagem" ? "Enfaixar" : "Dar a Poção de Vida"}`, { usar: m.usar, em: "fera" }]);
+    });
+    if (!itens.length) return;
+    const menu = document.createElement("div");
+    menu.className = "menu-item moldura";
+    menu.innerHTML = `<b>${h(f.nome)}</b><small class="menu-sub">vida ${Math.max(0, f.hp)}/${f.max_hp}</small>` + itens.map(([t], i) => `<button type="button" data-i="${i}">${t}</button>`).join("") +
+      '<button type="button" class="secundaria" data-i="-1">Cancelar</button>';
+    document.body.appendChild(menu);
+    const r = ancora.getBoundingClientRect();
+    menu.style.left = Math.max(8, Math.min(innerWidth - menu.offsetWidth - 8, r.left)) + "px";
+    menu.style.top = (r.bottom + 6 + menu.offsetHeight > innerHeight ? r.top - menu.offsetHeight - 6 : r.bottom + 6) + "px";
+    menu.addEventListener("click", (ev) => {
+      const b = ev.target.closest("button");
+      if (!b) return;
+      ev.stopPropagation();
+      fecharMenuItem();
+      const i = Number(b.dataset.i);
+      if (i >= 0) App.acao(itens[i][1], itens[i][1].carinho ? "escolha" : "item");
+    });
+    fecharAoClicarFora();
+  }
+
   function menuFigura(ancora, cid) {
     fecharMenuItem();
     const ops = App.opcoes() || [];
@@ -860,6 +891,10 @@ const Telas = (() => {
   }
 
   function ligarFigurasComitiva(raiz) {
+    raiz.querySelectorAll(".figura.fera").forEach((el) => {
+      el.addEventListener("click", (ev) => { ev.stopPropagation(); menuFera(el); });
+      el.addEventListener("keydown", (ev) => { if (ev.key === "Enter") menuFera(el); });
+    });
     raiz.querySelectorAll("[data-cid].figura, .cartao[data-cid]").forEach((el) => {
       el.addEventListener("click", (ev) => {
         ev.stopPropagation();
@@ -975,6 +1010,23 @@ const Telas = (() => {
   function celebrar(m, instantaneo) {
     const d = m.dados;
     if (m.tipo === "equipou") return instantaneo ? Promise.resolve() : voarParaEspaco(d);
+    if (m.tipo === "carinho") {
+      // corações subindo do animal na fogueira
+      if (instantaneo) return Promise.resolve();
+      const alvos = document.querySelectorAll("#texto .figura.fera");
+      const alvo = alvos[alvos.length - 1];
+      App.som("cura");
+      if (alvo) for (let i = 0; i < 6; i++) {
+        const c = document.createElement("span");
+        c.className = "coracao-carinho";
+        c.textContent = "♥";
+        c.style.left = 20 + Math.random() * 60 + "%";
+        c.style.animationDelay = i * 110 + "ms";
+        alvo.appendChild(c);
+        setTimeout(() => c.remove(), 1600);
+      }
+      return new Promise((r) => setTimeout(r, 700));
+    }
     if (m.tipo === "vitoria") {
       if (instantaneo) return Promise.resolve();
       App.som("vitoria");

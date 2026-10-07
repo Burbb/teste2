@@ -107,3 +107,9 @@
 .slot-px.usavel:hover { border-color: var(--ouro); transform: translateY(-2px); }
 .slot-px.usavel:active { transform: translateY(0) scale(.95); }
 .slot-px.usavel.inutil { opacity: .5; }
+/* O animal do patrulheiro na ficha: como um membro da comitiva, com moldura verde de mato */
+.membro.fera .icone { border-color: #3a6a2a; }
+.membro.fera .membro-nome { color: #cfe6b8; }
+.fera-animado { color: #ff8fa3; font-size: 13px; animation: alerta 1.6s steps(2) infinite; }
+.fera-especie { font-size: 11px; color: var(--tinta-3); text-transform: lowercase; }
+.menu-item .menu-sub { display: block; margin: -2px 0 4px; font-size: 11px; color: var(--tinta-3); }

@@ -139,24 +139,37 @@ function desenharHeroi(h) {
     const dica = `<b>${esc(b.nome)}</b><div>${Realce.texto(b.desc)}</div><div class="rodape">${b.motivo ? esc(b.motivo) : "Clique para usar."}</div>`;
     return `<div role="button" tabindex="0" class="slot-px usavel${b.motivo && !(b.alvos || []).some((a) => !a.motivo) ? " inutil" : ""}" data-bolsa="${esc(b.id)}" ${Telas.dica(dica)}>${spr(Telas.ICONE_ITEM[b.id] || "pocao", 2)}<span class="qtd">${b.qtd}</span></div>`;
   }).join("");
-  const comitiva = h.comitiva && h.comitiva.length ? `<div class="secao"><h3>Comitiva</h3>${h.comitiva.map((m) =>
+  // O animal do patrulheiro anda junto como mais um da comitiva: retrato, nome, vida (e "animado" depois do carinho).
+  const f = h.companheiro;
+  const ESPECIE = { lobo: "lobo", urso: "urso", falcao: "falcão" };
+  const fera = f ? `<div class="membro fera${f.hp <= 0 ? " ferido" : ""}" data-fera="1" ${Telas.dica(`<b>${esc(f.nome)}</b><div class="tipo">seu ${ESPECIE[f.tipo] || "animal"}</div>` +
+    `<div>Vida ${f.hp}/${f.max_hp}${f.hp <= 0 ? " · ferido, não luta até descansar" : ""}.</div>` +
+    (f.animado ? '<div class="melhor">Animado: +15% de dano na próxima luta.</div>' : "") +
+    '<div class="rodape">Poção e bandagem da bolsa também servem nele. Na fogueira, um carinho.</div>', true)}>
+      <div class="icone">${spr(f.tipo === "falcao" ? "voador" : "fera", 2)}</div>
+      <div class="membro-nome"><span>${esc(f.nome)}</span>${f.animado ? '<b class="fera-animado">♥</b>' : ""}</div>
+      ${barra("vida fina", Math.max(0, f.hp), f.max_hp)}<div class="fera-especie">${ESPECIE[f.tipo] || ""}</div></div>` : "";
+  const membros = (h.comitiva || []).map((m) =>
     `<div class="membro${m.ferido ? " ferido" : ""}" data-cid="${esc(m.id)}">
       <div class="icone">${spr(m.id, 2)}</div>
       <div class="membro-nome"><span>${esc(m.nome)}</span>${m.conversa ? `<button type="button" class="membro-carta" data-conversar="${esc(m.id)}" title="${esc(m.nome.split(" ").pop())} quer conversar">✉</button>` : ""}</div>
-      ${barra("vida fina", m.hp, m.max_hp)}${Telas.aprovacao(m)}</div>`).join("")}</div>` : "";
+      ${barra("vida fina", m.hp, m.max_hp)}${Telas.aprovacao(m)}</div>`).join("");
+  const comitiva = membros || fera ? `<div class="secao"><h3>Comitiva</h3>${membros}${fera}</div>` : "";
   $("#heroi").innerHTML = `
     <div class="identidade"><div class="retrato-grande">${spr(h.classe, 3)}</div>
       <div><div class="heroi-nome">${esc(h.nome)}</div><div class="heroi-titulo">${esc(h.titulo)} · nível ${h.nivel}</div></div></div>
     <div class="xp-linha"><div class="legenda-linha"><span>Experiência</span><span>${h.xp}/${h.xp_proximo}</span></div>${barra("xp", h.xp, h.xp_proximo)}</div>
-    ${h.pontos_talento ? `<div class="talento-aviso" title="Abra Talentos (T) num local">${spr("estrela", 1)} ${h.pontos_talento} ponto(s) de talento</div>` : ""}
+    ${h.pontos_talento ? `<div class="talento-aviso" role="button" tabindex="0" data-atalho="Talentos">${spr("estrela", 1)} ${h.pontos_talento} ponto(s) de talento</div>` : ""}
     <div class="secao"><h3>Atributos</h3><div class="atributos">${attrs}</div></div>
-    <div class="secao"><h3>Equipado</h3><div class="equip-mini" title="Abra o Inventário (I) para trocar">${Object.keys(Telas.AREA).map(slot).join("")}</div></div>
+    <div class="secao"><h3>Equipado</h3><div class="equip-mini">${Object.keys(Telas.AREA).map(slot).join("")}</div></div>
     ${comitiva}
     <div class="secao"><h3>Ferimentos</h3>${feridas}</div>
     <div class="secao"><h3>Bolsa</h3><div class="slots">${bolsa || '<span class="vazio">vazia</span>'}</div></div>
     <div class="secao"><div class="linhas">${Telas.reputacaoHtml(h)}</div></div>`;
   animarBarras($("#heroi"));
   Telas.ligarDicas($("#heroi"));
+  // O aviso de ponto de talento abre a árvore (ou guarda o pedido, se ainda houver cena correndo).
+  $("#heroi").querySelectorAll("[data-atalho]").forEach((el) => el.addEventListener("click", (ev) => { ev.stopPropagation(); pedirAtalho(el.dataset.atalho); }));
   $("#heroi").querySelectorAll("[data-bolsa]").forEach((el) => {
     const usar = () => usarDaBolsa(h.bolsa.find((b) => b.id === el.dataset.bolsa), el);
     el.addEventListener("click", usar);

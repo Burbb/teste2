@@ -97,6 +97,8 @@ class Inventario:
         if m is not None:
             if k not in ("pocao_vida", "bandagem"):
                 return "Isso só serve em você."
+            if m is j.companheiro:  # o animal do patrulheiro
+                return f"{m['nome']} não precisa disso agora." if m["hp"] >= m["max_hp"] else None
             if m["hp"] >= m["max_hp"] and not m["ferido"]:
                 return f"{comitiva.nome(m['id'])} não precisa disso agora."
             return None
@@ -113,8 +115,31 @@ class Inventario:
             return "Você não tem nenhuma infecção para tratar."
         return None
 
+    def usar_no_animal(self, k):
+        """Poção e bandagem também servem no animal do patrulheiro. A bandagem põe de pé quem não podia lutar."""
+        f = self.j.companheiro
+        if not f or not self.j.tem(k):
+            return False
+        motivo = self.motivo_inutil(k, f)
+        if motivo:
+            self.dizer(motivo, "cinza")
+            return False
+        self.j.consumiveis[k] -= 1
+        registrar(self, "consumivel", item=k, em_combate=False, em="fera")
+        antes = f["hp"]
+        if k == "pocao_vida":
+            f["hp"] = min(f["max_hp"], f["hp"] + int(f["max_hp"] * 0.35))
+            self.dizer(f"{f['nome']} lambe a Poção de Vida da sua mão. (+{f['hp'] - antes} vida)", "verde")
+        else:
+            f["hp"] = min(f["max_hp"], f["hp"] + bal.BANDAGEM_VIDA)
+            self.dizer(f"Você enfaixa {f['nome']}, que reclama mas deixa."
+                       + (" Já consegue ficar de pé." if antes <= 0 else "") + f" (+{f['hp'] - antes} vida)", "verde")
+        return True
+
     def usar_em_companheiro(self, k, cid):
         """Fora de combate, poção e bandagem também servem na comitiva. A bandagem põe de pé quem caiu."""
+        if cid == "fera":
+            return self.usar_no_animal(k)
         m = comitiva.membro(self, cid)
         if not m or not self.j.tem(k):
             return False
