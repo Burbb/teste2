@@ -194,17 +194,18 @@ def agregar(lutas):
 def formatar(chave, v):
     if v is None:
         return "—"
-    if chave in ("vitorias", "vida_perdida", "maior_golpe", "um_golpe"):
+    if chave in ("vitorias", "vida_perdida", "maior_golpe", "um_golpe", "morre_emendando"):
         return f"{round(v * 100)}%"
     if chave == "lutas":
         return str(v)
     return f"{v:.1f}"
 
 
-def tabela(linhas, primeira="Nv"):
+def tabela(linhas, primeira="Nv", colunas=None):
     """linhas: lista de (rótulo, agregado). Devolve a tabela em markdown."""
-    cab = [primeira] + [t for _, t in COLUNAS]
+    colunas = colunas or COLUNAS
+    cab = [primeira] + [t for _, t in colunas]
     out = ["| " + " | ".join(cab) + " |", "|" + "---|" * len(cab)]
     for rotulo, a in linhas:
-        out.append("| " + " | ".join([str(rotulo)] + [formatar(k, a.get(k)) for k, _ in COLUNAS]) + " |")
+        out.append("| " + " | ".join([str(rotulo)] + [formatar(k, a.get(k)) for k, _ in colunas]) + " |")
     return "\n".join(out)
