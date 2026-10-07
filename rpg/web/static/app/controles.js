@@ -87,6 +87,11 @@ document.addEventListener("keydown", (ev) => {
   if (pergunta && pergunta.letras && pergunta.letras[k.toLowerCase()] !== undefined && !processando) {
     ev.preventDefault(); responder(pergunta.id, pergunta.letras[k.toLowerCase()]); return;
   }
+  if (docaTela && !processando && k.length === 1) {
+    // Dentro de uma tela aberta pela doca, as teclas dos atalhos (I, C, T...) continuam valendo.
+    const b = [...doca.querySelectorAll(".atalho:not([data-sempre])")].find((x) => (x.querySelector("kbd")?.textContent || "").toLowerCase() === k.toLowerCase());
+    if (b) { ev.preventDefault(); b.click(); return; }
+  }
   if (k === "F2" || k === "h" || k === "H") { ev.preventDefault(); alternarHistorico(); return; }
   if (k === "m" || k === "M") { alternarMapa(); return; }
   if (k === "F3" || k === "v" || k === "V") { ev.preventDefault(); mudarVelocidade(); return; }

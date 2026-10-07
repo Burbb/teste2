@@ -116,6 +116,25 @@ async function cenarioTitulo(browser) {
     conferir(!!(await esperar(".atalhos .atalho")), "o save carrega e o lugar aparece com a doca de atalhos");
     conferir((await page.$$(".atalhos .doca-sep")).length >= 1, "a doca separa os atalhos em grupos");
     conferir(!(await page.$("#texto .eco")), "entrar no save não deixa ecos do menu na página");
+    // A doca continua viva dentro das telas que ela abre: do Inventário direto para o Bestiário, sem Voltar.
+    const cab = () => page.evaluate(() => document.getElementById("cena-cab").textContent);
+    const ate = async (re) => { for (let k = 0; k < 40 && !re.test(await cab()); k++) await page.waitForTimeout(100); return re.test(await cab()); };
+    await (await page.$('#doca .atalho[data-rotulo="Inventário"]')).click();
+    conferir(await ate(/Jean/), "o atalho Inventário abre a ficha");
+    await page.waitForTimeout(400);
+    conferir(!(await page.$("#doca.inativa")), "dentro do Inventário a doca segue acesa");
+    conferir(!!(await page.$('#doca .atalho.atual[data-rotulo="Inventário"]')), "a doca marca a tela aberta");
+    await (await page.$('#doca .atalho[data-rotulo="Bestiário"]')).click();
+    conferir(await ate(/Bestiário/), "do Inventário, o atalho Bestiário abre o Bestiário direto");
+    await page.waitForTimeout(300);
+    await page.keyboard.press("d");
+    conferir(await ate(/Diário/), "a tecla D também troca de tela de dentro de outra");
+    await page.waitForTimeout(300);
+    await (await page.$('#doca .atalho[data-rotulo="Diário"]')).click();
+    conferir(!!(await esperar('#prompt .escolha:has-text("Viajar")')), "clicar no atalho da tela aberta volta ao lugar");
+    await (await page.$('#doca .atalho[data-rotulo="Mapa"]')).click();
+    conferir(await page.evaluate(() => !document.getElementById("sobre-mapa").hidden), "o atalho Mapa abre o mapa por cima, sem sair do lugar");
+    await page.keyboard.press("Escape");
   } finally {
     conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
     await page.close();

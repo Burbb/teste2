@@ -438,14 +438,15 @@ const Batalha = (() => {
       }
       case "cura": {
         marcar(m.em);
+        if (m.modo === "roubo") return roubo(m, em, carta(m.fonte));
         if (de && de !== em) { brilho(de, "cura"); await dormir(pausa(160)); }
         if (em) {
           barra(em, m.hp, m.max_hp);
-          brilho(em, m.modo === "roubo" ? "roubo" : "cura");
-          numero(em, `+${m.valor}`, m.modo === "roubo" ? "roubo" : "cura");
-          if (m.rotulo && m.modo !== "roubo" && !de) rotulo(em, m.rotulo);
+          brilho(em, "cura");
+          numero(em, `+${m.valor}`, "cura");
+          if (m.rotulo && !de) rotulo(em, m.rotulo);
         }
-        som(m.modo === "roubo" ? "roubo" : "cura");
+        som("cura");
         await dormir(pausa(420));
         return;
       }
@@ -526,9 +527,58 @@ const Batalha = (() => {
     else if (el !== "fisico") particulas(em, el, 8);
     if (m.crit) numero(em, `${m.dano}!`, "crit");
     else numero(em, `−${m.dano}`, "menos");
+    if (m.crit && m.crit_motivo) numero(em, m.crit_motivo, "motivo");  // crítico garantido: de onde ele veio
     if (m.absorvido) numero(em, `(${m.absorvido})`, "escudo");
     if (m.eficacia === "super") rotulo(em, "fraqueza!", "boa");
     else if (m.eficacia === "pouco") rotulo(em, "resiste", "ruim");
+  }
+
+  /** Roubo de vida: gotas de sangue saem de quem apanhou e correm até quem bateu; só então a vida sobe.
+      É o momento de a build "sentir" que funciona, então tem caminho, brilho, número e o nome da fonte. */
+  async function roubo(m, em, fonte) {
+    if (!em) return;
+    if (fonte && fonte !== em && !rapido()) {
+      const ra = arena.getBoundingClientRect(), a = fonte.getBoundingClientRect(), b = em.getBoundingClientRect();
+      const x0 = a.left + a.width / 2 - ra.left, y0 = a.top + a.height * 0.4 - ra.top;
+      const x1 = b.left + b.width / 2 - ra.left, y1 = b.top + b.height * 0.45 - ra.top;
+      const n = Math.min(8, 4 + Math.floor(m.valor / 4));
+      som("roubo");
+      const voos = [];
+      for (let i = 0; i < n; i++) {
+        const g = document.createElement("i");
+        g.className = "gota-roubo";
+        camadaFx.appendChild(g);
+        const arco = -30 - Math.random() * 40, dx = (Math.random() - 0.5) * 30;
+        voos.push(g.animate([
+          { transform: `translate(${x0 + dx}px, ${y0}px) scale(.6)`, opacity: 0 },
+          { transform: `translate(${(x0 + x1) / 2 + dx}px, ${(y0 + y1) / 2 + arco}px) scale(1.15)`, opacity: 1, offset: 0.45 },
+          { transform: `translate(${x1}px, ${y1}px) scale(.5)`, opacity: 0.9 },
+        ], { duration: pausa(420), delay: i * 45, easing: "cubic-bezier(.4,0,.6,1)", fill: "backwards" }).finished
+          .catch(() => {}).then(() => g.remove()));
+      }
+      await Promise.all(voos);
+    } else som("roubo");
+    barra(em, m.hp, m.max_hp);
+    brilho(em, "roubo");
+    numero(em, `+${m.valor} ♥`, "roubo");
+    if (m.rotulo) numero(em, m.rotulo, "motivo roubo-fonte");
+    await dormir(pausa(360));
+  }
+
+  /** Vários roubos seguidos (Redemoinho, chuva) viram um só: um caminho de sangue e o total, sem fila lenta. */
+  function juntarRoubos(lances) {
+    const fora = [], somas = new Map();
+    lances.forEach((x) => {
+      if (x.tipo === "cura" && x.modo === "roubo") {
+        const s = somas.get(x.em);
+        if (s) { s.valor += x.valor; s.hp = x.hp; s.max_hp = x.max_hp; return; }
+        const novo = { ...x };
+        somas.set(x.em, novo); fora.push(novo);
+        return;
+      }
+      fora.push(x);
+    });
+    return fora;
   }
 
   /** Um projétil que cai do alto sobre a carta (chuva de flechas, luz do julgamento). */
@@ -568,7 +618,7 @@ const Batalha = (() => {
       if (x.tipo === "giro") rodadas.push([]);
       else if (rodadas.length && (x.tipo === "golpe" || x.tipo === "erro")) rodadas[rodadas.length - 1].push(x);
     });
-    const resto = m.lances.filter((x) => !["giro", "golpe", "erro"].includes(x.tipo));
+    const resto = juntarRoubos(m.lances.filter((x) => !["giro", "golpe", "erro"].includes(x.tipo)));
     const de = carta((m.lances.find((x) => x.de) || {}).de);
     if (de) { reiniciar(de, "aura-forca", 700); clarao(de, "fisico"); }
     som("esquiva");
@@ -598,7 +648,7 @@ const Batalha = (() => {
   async function salva(m) {
     if (m.hab === "redemoinho") return redemoinho(m);
     const golpes = m.lances.filter((x) => x.tipo === "golpe" || x.tipo === "erro");
-    const resto = m.lances.filter((x) => !golpes.includes(x));
+    const resto = juntarRoubos(m.lances.filter((x) => !golpes.includes(x)));
     if (!golpes.length) { for (const x of resto) await lance(x); return; }
     const de = carta(golpes[0].de);
     const el = golpes.find((x) => x.elemento)?.elemento || "fisico";

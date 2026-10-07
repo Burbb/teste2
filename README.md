@@ -147,7 +147,10 @@ na interface miúda; **Jersey 15** nos números. O botão "Fonte" no topo volta 
 - **Doca de atalhos:** Talentos, Grimório, Inventário, Comitiva · Mapa, Diário, Bestiário · Salvar, Sair,
   em botões de ícone com a tecla no canto e selos de aviso (pontos de talento, carta). A doca
   é uma barra própria, fixa embaixo da página (fora do texto da história): não pula de lugar a
-  cada cena e só apaga enquanto não há escolha a fazer.
+  cada cena. Ela **continua viva dentro das telas que abre**: do Inventário, clique em Comitiva
+  (ou aperte `C`) e o jogo volta e abre a outra sozinho; clicar no atalho da tela aberta (marcado
+  em dourado) fecha a tela. O **Mapa** abre por cima de qualquer tela (é consulta; de lá também
+  se viaja). **Viajar** continua no menu do lugar: é a ação, e mostra o mapa com os destinos.
 - **Flechas na carta:** o arqueiro vê as flechas na própria carta da luta, piscando quando
   estão acabando. Sem flechas, o ataque vira um golpe de adaga fraco e os tiros ficam bloqueados.
 - **Voltar sem caçar o botão:** na luta, "Voltar" vira a última carta da grade (e Esc ou o botão
@@ -184,6 +187,14 @@ na interface miúda; **Jersey 15** nos números. O botão "Fonte" no topo volta 
   janelinha e desfazem a escolha antes de gastar qualquer coisa; as ações em arco continuam ali.
   O alvo de cada habilidade usa os termos de sempre: **Inimigo único**, **Todos os inimigos**,
   **Você**, **Aliado único**, **Todos os aliados**.
+- **Roubo de vida que se vê:** gotas de sangue saem de quem apanhou e voam até quem bateu; só então
+  a vida sobe, com `+N ♥` em verde e o nome da fonte (Sede Insaciável, Sede de Sangue, Drenar
+  Vida). No fim da luta: "Você roubou N de vida nesta luta", também na faixa de Vitória. O roubo
+  passivo arredonda (e é pelo menos 1): antes, golpes pequenos truncavam para zero.
+- **Crítico explicado:** o crítico garantido diz de onde veio (`CRÍTICO (Tiro de Abertura)!`,
+  Iniciativa, Furtivo), com um selo dourado na carta. A dica da Agilidade e o Grimório listam o
+  que soma além da ficha (Tiro Certeiro +30%, Execução +20%, primeiro tiro garantido...), e o
+  registro da partida separa críticos garantidos dos da sorte.
 - **Ritmo do golpe:** quem ataca volta para o lugar logo depois do impacto, sem ficar parado à
   frente esperando o roubo de vida ou o contra-ataque; o contra-ataque também volta inteiro.
 - **Grimório (P):** um livro com cada habilidade e o ataque básico: o dano de agora (faixa,

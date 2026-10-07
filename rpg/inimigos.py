@@ -227,7 +227,7 @@ def _drenar(cb, e, alvo):
     stat = "poder" if e.poder > e.atk else "atk"
     dano = cb.atacar(e, alvo, 1.0, tipo="sombra", stat=stat, rotulo="Toque Drenante")
     if dano:
-        cb.curou(e, e.curar(dano * 0.6), "roubo")
+        cb.curou(e, e.curar(dano * 0.6), "roubo", fonte=alvo)
 
 
 def _maldicao(cb, e, alvo):

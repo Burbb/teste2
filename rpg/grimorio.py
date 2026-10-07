@@ -21,6 +21,22 @@ def _num(x):
     return f"{x:.1f}".replace(".", ",").replace(",0", "")
 
 
+# Habilidades que somam chance de crítico (as mesmas de classes.py), para a ficha e o Grimório explicarem a taxa real.
+CRIT_HABILIDADE = {"tiro_certeiro": 0.3, "execucao": 0.2}
+
+
+def fontes_critico(j):
+    """De onde vêm os críticos além da chance da ficha: habilidades com bônus e críticos garantidos."""
+    linhas = [f"{HABILIDADES[h]['nome']}: {round(chance_critico(j, extra) * 100)}% de chance."
+              for h, extra in CRIT_HABILIDADE.items() if h in j.habilidades]
+    if j.tal("tiro_abertura"):
+        linhas.append("Tiro de Abertura: o primeiro ataque de cada luta é sempre crítico.")
+    if "desaparecer" in j.habilidades or j.tal("assassino"):
+        linhas.append("Furtivo (Desaparecer, Assassino): o próximo ataque é crítico garantido.")
+    linhas.append("Pegar o inimigo de surpresa: o primeiro golpe é crítico.")
+    return linhas
+
+
 def chance_critico(u, extra=0.0):
     return min(bal.MAX_CRITICO, bal.CRITICO_BASE + u.agi * bal.CRITICO_POR_AGI + extra + 0.04 * u.tal("olho_aguia")
                + u.especial("critico") / 100)
@@ -211,6 +227,12 @@ def dados(j):
         gerais.append(f"Talentos: corpo a corpo ×{_num(tal_corpo)}.")
     if tal_dist > 1:
         gerais.append(f"Talentos: à distância ×{_num(tal_dist)}.")
+    gerais += [f"Crítico a mais — {l}" for l in fontes_critico(j)[:-1]]
+    roubo_tal, roubo_itens = 5 * j.tal("sede_insaciavel"), j.especial("roubo_vida")
+    if roubo_tal or roubo_itens:
+        partes = ([f"Sede Insaciável {_num(roubo_tal)}%"] if roubo_tal else []) + ([f"itens {_num(roubo_itens)}%"] if roubo_itens else [])
+        gerais.append(f"Roubo de vida: {_num(roubo_tal + roubo_itens)}% de todo dano que você causa volta como vida "
+                      f"({' + '.join(partes)}).")
     if j.spec == "berserker":
         gerais.append("Pacto de Sangue: até +60% de dano quanto mais ferido você estiver.")
     return {"recurso": j.nome_recurso, "basico": basico, "habilidades": habs, "gerais": gerais,

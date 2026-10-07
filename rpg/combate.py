@@ -76,6 +76,7 @@ class Combate:
         self.flechas_gastas = 0
         self.turno = 0
         self.abertura = bool(self.j.tal("tiro_abertura"))
+        self.motivo_abertura = "Tiro de Abertura" if self.abertura else None
         self.usou_martirio = False
         self.usou_imortal = False
         self.frenesi = 0
@@ -86,6 +87,7 @@ class Combate:
         self._serie = _SERIE[0]
         self._fala_turno = -1
         self._cura_j = 0
+        self._roubo_j = 0
         self._salva = self._salva_textos = None
         self._nomear()
         for e in self.inimigos:
@@ -173,12 +175,15 @@ class Combate:
         finally:
             self.lance("fim_acao", de=self.uid(u))
 
-    def curou(self, c, valor, tipo="cura", de=None, rotulo=None):
+    def curou(self, c, valor, tipo="cura", de=None, rotulo=None, fonte=None):
+        """fonte: de quem a vida foi tirada (roubo de vida), para a tela desenhar o sangue voltando."""
         if valor and valor > 0:
             if c is self.j:
                 self._cura_j += valor
+                if tipo == "roubo":
+                    self._roubo_j += valor
             self.lance("cura", em=self.uid(c), de=self.uid(de), valor=int(valor), modo=tipo, rotulo=rotulo,
-                       hp=max(0, c.hp), max_hp=c.max_hp)
+                       fonte=self.uid(fonte), hp=max(0, c.hp), max_hp=c.max_hp)
 
     def recuperou(self, c, valor, rotulo=None, discreto=False):
         """Ganho de recurso (mana, vigor, foco) visível na carta: Meditar, Tônico, talentos. Discreto: o pouco que
@@ -293,6 +298,8 @@ class Combate:
         chance_crit = min(bal.MAX_CRITICO, bal.CRITICO_BASE + u.agi * bal.CRITICO_POR_AGI + crit_extra + 0.04 * u.tal("olho_aguia")
                           + u.especial("critico") / 100)
         crit = bool(furtivo) or abertura or self.rng.random() < chance_crit
+        # Crítico garantido diz de onde veio: sem isso, parece que a sorte ignora a chance da ficha.
+        motivo_crit = ("Furtivo" if furtivo else self.motivo_abertura or "Iniciativa") if (furtivo or abertura) else None
         base = getattr(u, stat) * mult + bonus
         dano = base * m * self.rng.uniform(0.85, 1.15) * 100 / (100 + defesa * bal.DEFESA_FATOR)
         if crit:
@@ -323,7 +330,7 @@ class Combate:
         if tipo != "fisico":
             txt += f" ({tipo})"
         if crit:
-            txt = "CRÍTICO! " + txt
+            txt = (f"CRÍTICO ({motivo_crit})! " if motivo_crit else "CRÍTICO! ") + txt
         if absorvido:
             txt += f" [{absorvido} absorvido]"
         if eficacia >= 1.3:
@@ -331,8 +338,8 @@ class Combate:
         elif eficacia <= 0.7:
             txt += " — pouco eficaz."
         defensor = alvo is self.j or alvo in self.aliados
-        self.lance("golpe", de=self.uid(u), em=self.uid(alvo), dano=dano, crit=crit, elemento=tipo, alcance=alcance,
-                   absorvido=absorvido, eficacia="super" if eficacia >= 1.3 else "pouco" if eficacia <= 0.7 else None,
+        self.lance("golpe", de=self.uid(u), em=self.uid(alvo), dano=dano, crit=crit, crit_motivo=motivo_crit, elemento=tipo,
+                   alcance=alcance, absorvido=absorvido, eficacia="super" if eficacia >= 1.3 else "pouco" if eficacia <= 0.7 else None,
                    rotulo=rotulo, hp=max(0, alvo.hp), max_hp=alvo.max_hp)
         if detalhar:
             self.detalhe(txt, "vermelho" if defensor else "amarelo")
@@ -341,7 +348,9 @@ class Combate:
         if u is self.j and dano:
             roubo = 0.05 * u.tal("sede_insaciavel") + u.especial("roubo_vida") / 100
             if roubo:
-                self.curou(u, u.curar(dano * roubo), "roubo")
+                # arredonda (e pelo menos 1): truncar zerava o roubo dos golpes pequenos e a build parecia não funcionar
+                self.curou(u, u.curar(max(1, round(dano * roubo))), "roubo", fonte=alvo,
+                           rotulo="Sede Insaciável" if u.tal("sede_insaciavel") else "Roubo de vida")
         if alvo is self.j and dano and alcance == "corpo" and u in self.inimigos and u.vivo and alvo.especial("espinhos"):
             espinhos = alvo.especial("espinhos")
             u.hp = max(0, u.hp - espinhos)
@@ -473,6 +482,7 @@ class Combate:
                        "verde+negrito")
             pular_inimigos = True
             self.abertura = True
+            self.motivo_abertura = "Iniciativa"
         if self.j.tal("aura_protecao"):
             self.j.aplicar("barreira", 99, int(self.j.poder * 2.5))
             self.dizer(f"Uma aura dourada te envolve. (barreira de {int(self.j.poder * 2.5)})", "amarelo")
@@ -931,7 +941,11 @@ class Combate:
             ouro = sum(e.ouro + e.roubado for e in derrotados)
             if any(e.roubado for e in derrotados):
                 self.dizer("Você recupera o ouro que lhe foi roubado.", "verde")
-            g.ui.celebrar("vitoria", {"inimigos": len(derrotados), "chefe": any(e.chefe for e in derrotados)})
+            if self._roubo_j:
+                # a build de roubo de vida precisa se ver funcionando: o total da luta, à vista
+                self.dizer(f"Você roubou {self._roubo_j} de vida nesta luta.", "verde")
+            g.ui.celebrar("vitoria", {"inimigos": len(derrotados), "chefe": any(e.chefe for e in derrotados),
+                                      "roubo": self._roubo_j})
             g.ganhar_ouro(ouro)
             g.registrar_abates(derrotados)
             g.saque_de_combate(derrotados)

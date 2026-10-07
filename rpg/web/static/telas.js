@@ -948,7 +948,7 @@ const Telas = (() => {
     if (m.tipo === "vitoria") {
       if (instantaneo) return Promise.resolve();
       App.som("vitoria");
-      faixa(d.chefe ? "Guardião derrotado!" : "Vitória", null, "espada");
+      faixa(d.chefe ? "Guardião derrotado!" : "Vitória", d.roubo ? `+${d.roubo} de vida roubada nesta luta` : null, "espada");
       particulas(["#f2c94c", "#fff3a0", "#d4af37"], d.chefe ? 70 : 30);
       return new Promise((r) => setTimeout(r, d.chefe ? 1500 : 1000));
     }

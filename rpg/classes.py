@@ -151,7 +151,7 @@ def _sede_sangue(cb, u, alvo):
     dano = cb.atacar(u, alvo, 1.4, rotulo="Sede de Sangue")
     if dano:
         cura = u.curar(dano * 0.4)
-        cb.curou(u, cura, "roubo")
+        cb.curou(u, cura, "roubo", fonte=alvo, rotulo="Sede de Sangue")
         cb.aplicar(alvo, "sangramento", 3, valor=max(2, u.atk * 0.3))
         if cura:
             cb.dizer(f"Você bebe a fúria do golpe. (+{cura} vida)", "verde")
@@ -326,7 +326,7 @@ def _drenar_vida(cb, u, alvo):
     dano = cb.atacar(u, alvo, 1.2, tipo="sombra", alcance="distancia", stat="poder", rotulo="Drenar Vida")
     if dano:
         cura = u.curar(dano * (0.4 + 0.1 * u.tal("pacto_sombrio")))
-        cb.curou(u, cura, "roubo")
+        cb.curou(u, cura, "roubo", fonte=alvo, rotulo="Drenar Vida")
         if cura:
             cb.dizer(f"A vitalidade roubada flui para você. (+{cura} vida)", "verde")
 

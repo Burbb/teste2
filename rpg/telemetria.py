@@ -34,7 +34,7 @@ def novo_combate(cb):
     j = cb.j
     cb.tel = {"hp_inicio": j.hp, "rec_inicio": j.rec, "dano_causado": 0, "dano_aliados": 0, "dano_recebido": 0,
               "maior_golpe": 0, "habilidades": {}, "rec_gasto": 0, "esquivas": 0, "criticos_recebidos": 0,
-              "stats_inicio": instantaneo(j), "criticos": 0, "erros": 0, "absorvido": 0, "cura_recebida": 0,
+              "stats_inicio": instantaneo(j), "criticos": 0, "criticos_garantidos": 0, "golpes": 0, "erros": 0, "absorvido": 0, "cura_recebida": 0,
               "roubo_vida": 0, "cura_por_aliados": 0, "dano_por_elemento": {}, "dano_por_aliado": {}}
 
 
@@ -50,6 +50,8 @@ def lance(cb, tipo, d):
             el = d.get("elemento") or "fisico"
             tel["dano_por_elemento"][el] = tel["dano_por_elemento"].get(el, 0) + d["dano"]
             tel["criticos"] += bool(d.get("crit"))
+            tel["golpes"] += 1
+            tel["criticos_garantidos"] += bool(d.get("crit_motivo"))
         elif de in cb.aliados:
             tel["dano_por_aliado"][de.nome] = tel["dano_por_aliado"].get(de.nome, 0) + d["dano"]
         if em is j:
@@ -198,6 +200,15 @@ def resumo(registro):
             habs[h] = habs.get(h, 0) + q
     if habs:
         w("Habilidades usadas: " + ", ".join(f"{h} ×{q}" for h, q in sorted(habs.items(), key=lambda x: -x[1])))
+        w("")
+    com_golpes = [c for c in combates if c.get("golpes")]
+    if com_golpes:
+        golpes = sum(c["golpes"] for c in com_golpes)
+        crits = sum(c["criticos"] for c in com_golpes)
+        garantidos = sum(c.get("criticos_garantidos", 0) for c in com_golpes)
+        w(f"Críticos seus: {crits} em {golpes} golpes ({_pct(crits, golpes)}); {garantidos} garantidos "
+          f"(abertura, furtivo, surpresa) e {crits - garantidos} na sorte "
+          f"({_pct(crits - garantidos, golpes - garantidos)} dos golpes sem garantia).")
         w("")
     novos = [c for c in combates if "cura_recebida" in c]  # registro v2 em diante
     if novos:

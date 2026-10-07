@@ -2,17 +2,43 @@
 
 /* ------------------------------------------------------------------ escolhas */
 /* A doca de atalhos (Talentos, Grimório, Inventário...) mora numa barra fixa sob a página, não no meio do texto.
-   Ela acende nos menus de lugar; no resto (eventos, telas), fica apagada no lugar, com o Grimório ainda à mão. */
+   Ela acende nos menus de lugar e continua acesa dentro das telas que ela mesma abriu (Inventário, Comitiva...):
+   dali, clicar noutro atalho volta ao lugar e abre o outro sozinho. Em eventos e na luta, fica apagada,
+   com o Grimório e o Mapa ainda à mão. */
 const doca = $("#doca");
 let docaSono = 0;
+let docaTela = null;  // o atalho cuja tela está aberta agora (null: no menu do lugar ou fora da doca)
 function montarDoca(atalhos) {
   clearTimeout(docaSono);
+  docaTela = null;
   doca.replaceChildren(atalhos);
   doca.classList.remove("inativa");
   doca.dataset.viva = "1";
   Telas.ligarDicas(doca);
 }
+function marcarDocaAtual() {
+  doca.querySelectorAll(".atalho").forEach((b) => b.classList.toggle("atual", !!docaTela && b.dataset.rotulo === docaTela));
+}
+/** Clique num atalho da doca: no menu do lugar, escolhe direto; numa tela aberta pela doca, volta e abre o outro. */
+function acionarAtalho(rotulo, mid, i) {
+  if (!pergunta || processando) return;
+  if (pergunta.tipo === "continuar" && docaTela) {
+    // telas de leitura (Bestiário...) terminam em "Continuar": ele faz as vezes do Voltar
+    pendente = rotulo === docaTela ? null : { chave: "_atalho", valor: rotulo, saltos: 4 };
+    responder(pergunta.id, null);
+    return;
+  }
+  if (pergunta.tipo !== "opcoes") return;
+  if (pergunta.id === mid) { docaTela = rotulo; marcarDocaAtual(); responder(mid, i); return; }
+  if (!docaTela) return;
+  const v = pergunta.opcoes.findIndex(ehVoltar);
+  if (v < 0) return;
+  // clicar no atalho da tela aberta fecha a tela (como o Voltar); noutro, volta e abre o outro
+  pendente = rotulo === docaTela ? null : { chave: "_atalho", valor: rotulo, saltos: 4 };
+  responder(pergunta.id, v);
+}
 function adormecerDoca() {
+  if (docaTela) return;  // dentro de uma tela da doca, ela continua viva
   doca.dataset.viva = "0";
   clearTimeout(docaSono);
   // um instante de folga: entre um menu e o redesenho dele, a doca não pisca
@@ -41,8 +67,16 @@ function mostrarOpcoes(m) {
   if (pendente) {
     const p = pendente;
     pendente = null;
-    const i = p.chave === "_voltar" ? m.opcoes.findIndex(ehVoltar) : m.opcoes.findIndex((o) => o.meta && o.meta[p.chave] === p.valor);
-    if (i >= 0) { pergunta = { id: m.id, tipo: "opcoes", opcoes: m.opcoes }; responder(m.id, i); return; }
+    if (p.chave === "_atalho") {
+      // A caminho de outro atalho da doca: volta quantas telas for preciso até o menu do lugar e escolhe lá.
+      const alvo = m.opcoes.findIndex((o) => { const at = atalhoDe(o.texto); return at && at[1] === p.valor; });
+      const v = m.opcoes.findIndex(ehVoltar);
+      if (alvo >= 0) { docaTela = p.valor; pergunta = { id: m.id, tipo: "opcoes", opcoes: m.opcoes }; responder(m.id, alvo); marcarDocaAtual(); return; }
+      if (v >= 0 && p.saltos > 0) { pendente = { ...p, saltos: p.saltos - 1 }; pergunta = { id: m.id, tipo: "opcoes", opcoes: m.opcoes }; responder(m.id, v); return; }
+    } else {
+      const i = p.chave === "_voltar" ? m.opcoes.findIndex(ehVoltar) : m.opcoes.findIndex((o) => o.meta && o.meta[p.chave] === p.valor);
+      if (i >= 0) { pergunta = { id: m.id, tipo: "opcoes", opcoes: m.opcoes }; responder(m.id, i); return; }
+    }
   }
   promptEl.innerHTML = "";
   pergunta = { id: m.id, tipo: "opcoes", n: m.opcoes.length, opcoes: m.opcoes, numeros: [], letras: {} };
@@ -98,7 +132,15 @@ function mostrarOpcoes(m) {
       b.title = o.texto + (at[2] ? ` (${at[2].toUpperCase()})` : "");
       if (atalhos.lastElementChild && Number(atalhos.lastElementChild.dataset.grupo) !== at[4]) atalhos.appendChild(el("span", "doca-sep"));
       b.dataset.grupo = at[4];
-      b.addEventListener("click", (ev) => { ev.stopPropagation(); responder(m.id, i); });
+      b.dataset.rotulo = at[1];
+      if (at[1] === "Mapa") {
+        // O mapa é consulta, não uma tela: abre por cima de qualquer coisa (e de lá também se viaja).
+        b.dataset.sempre = "1";
+        b.addEventListener("click", (ev) => { ev.stopPropagation(); alternarMapa(true); });
+        atalhos.appendChild(b);
+        return;
+      }
+      b.addEventListener("click", (ev) => { ev.stopPropagation(); acionarAtalho(at[1], m.id, i); });
       atalhos.appendChild(b);
       if (at[2]) pergunta.letras[at[2]] = i;
       if (at[1] === "Talentos") atalhos.appendChild(botaoGrimorio(at[4]));
@@ -547,6 +589,11 @@ function ehVoltar(o) {
 
 function mostrarContinuar(m) {
   posicionarPrompt();
+  if (pendente && pendente.chave === "_atalho" && docaTela) {  // a caminho de outro atalho da doca
+    pergunta = { id: m.id, tipo: "continuar" };
+    responder(m.id, null);
+    return;
+  }
   promptEl.innerHTML = "";
   const b = el("button", "continuar", "Continuar <span>▸</span>");
   b.type = "button";
