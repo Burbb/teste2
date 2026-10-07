@@ -2,20 +2,17 @@
 
 /* ------------------------------------------------------------------ escolhas */
 function limparPrompt() {
-  promptEl.innerHTML = ""; pergunta = null; Batalha.limparAlvos(); Batalha.vez(null);
+  promptEl.innerHTML = ""; pergunta = null; Batalha.limparAlvos(); Batalha.vez(null); limparRoda();
   document.querySelectorAll(".rastro-contrato.cacavel").forEach((c) => { c.classList.remove("cacavel"); c.querySelector(".rastro-cacar")?.remove(); });
   document.querySelectorAll(".voltar-seta").forEach((b) => b.remove());
   Telas.fecharMenuItem();
 }
 function atalhoDe(t) { return SISTEMA.find(([re]) => re.test(t)); }
 
-/** Na luta, as opções vão para a barra dentro da arena; fora dela, de volta ao pé da página. */
+/** O prompt mora no pé da página. (Na luta, as ações vão para a roda em volta da sua carta, dentro da arena.) */
 function posicionarPrompt() {
-  const barra = document.getElementById("barra-luta");
-  const naLuta = corpo.classList.contains("em-combate") && barra;
-  if (naLuta && promptEl.parentElement !== barra) barra.appendChild(promptEl);
-  else if (!naLuta && promptEl.parentElement !== folha) folha.appendChild(promptEl);
-  if (!naLuta) document.getElementById("barra-fantasma")?.replaceChildren();
+  if (promptEl.parentElement !== folha) folha.appendChild(promptEl);
+  if (!corpo.classList.contains("em-combate")) limparRoda();
 }
 
 let viaBarra = false;  // a habilidade foi escolhida direto na barra: "Voltar" do alvo volta à barra, não à lista
@@ -39,11 +36,11 @@ function mostrarOpcoes(m) {
   }
   Telas.fecharTalentos();
   const emLuta = !!(estado && estado.combate);
-  if (emLuta && document.getElementById("barra-luta")) {
-    // Na luta, tudo vira slot na barra de atalhos: ações, habilidades, itens; mirando, o lembrete e o Voltar.
-    if (m.pergunta === "Sua ação:" && m.opcoes.some((o) => o.meta && o.meta.acao)) { barraDeAcoes(m); return; }
-    if (m.opcoes.some((o) => o.meta && (o.meta.habilidade || o.meta.usar_item || o.meta.trocar !== undefined))) { barraSubmenu(m); return; }
-    if (m.opcoes.some((o) => o.meta && o.meta.alvo)) { barraMira(m); return; }
+  if (emLuta && rodaEl() && Batalha.elCarta("j")) {
+    // Na luta, as ações aparecem em volta da sua carta; habilidades e itens numa janelinha ao lado; mirando, um lembrete.
+    if (m.pergunta === "Sua ação:" && m.opcoes.some((o) => o.meta && o.meta.acao)) { rodaDeAcoes(m); return; }
+    if (m.opcoes.some((o) => o.meta && (o.meta.habilidade || o.meta.usar_item || o.meta.trocar !== undefined))) { rodaSubmenu(m); return; }
+    if (m.opcoes.some((o) => o.meta && o.meta.alvo)) { rodaMira(m); return; }
   }
   if (m.pergunta) promptEl.appendChild(el("div", "pergunta-rotulo", esc(m.pergunta)));
   const lista = el("ol", "escolhas");
@@ -247,143 +244,223 @@ function voltarPergunta() {
 
 // Botão direito em qualquer lugar da página volta um passo (quando a tela atual tem "Voltar").
 document.addEventListener("contextmenu", (ev) => {
-  if (!pergunta || pergunta.voltar === undefined || ev.target.closest("input, textarea")) return;
+  if (ev.target.closest("input, textarea")) return;
+  if (fecharJanela()) { ev.preventDefault(); return; }
+  if (!pergunta || pergunta.voltar === undefined) return;
   ev.preventDefault();
   voltarPergunta();
 });
 
-/* ------------------------------------------------------------------ barra de atalhos da luta */
-/** A grade de cartas da luta (teclas 1–9/0, dicas e o tremor de "não dá"), como as cartas de habilidade de sempre. */
-function novaBarra() {
+/* ------------------------------------------------------------------ roda de ações da luta */
+/* Na sua vez, sua carta vem para a frente e as ações (Atacar, Habilidades, Itens, Fugir) surgem em arco ao lado dela.
+   Habilidades e Itens abrem uma janelinha com ícone, nome e custo (passe o mouse para ver o que fazem). */
+function rodaEl() { return document.getElementById("roda"); }
+let janelaAberta = null;  // { fechar } da janelinha de habilidades/itens
+function limparRoda() {
+  const r = rodaEl();
+  if (r && r.childElementCount) { Telas.esconderDica(); r.replaceChildren(); }
+  janelaAberta = null;
+  Batalha.foco(null);
+}
+/** Fecha a janelinha (Esc, botão direito, ×). Devolve true se havia uma aberta. */
+function fecharJanela() {
+  if (!janelaAberta) return false;
+  const j = janelaAberta;
+  janelaAberta = null;
+  j.fechar();
+  return true;
+}
+function tremerNao(b, motivo) {
+  App.som("falha");
+  b.animate([{ translate: "0" }, { translate: "-4px 0" }, { translate: "4px 0" }, { translate: "0" }], { duration: 240, easing: "ease-in-out" });
+  aviso(motivo, "info", "pergaminho");
+}
+/** Geometria da carta do herói dentro da arena (sem contar o zoom do foco). */
+function geometriaHeroi() {
+  const c = Batalha.elCarta("j"), arena = rodaEl().parentElement;
+  return { x: c.offsetLeft, y: c.offsetTop, w: c.offsetWidth, h: c.offsetHeight, W: arena.clientWidth, H: arena.clientHeight };
+}
+function prepararRoda() {
+  limparRoda();
+  Batalha.vez("j");
+  Batalha.foco("j");
+  promptEl.appendChild(el("span", "marca-roda"));  // a próxima mensagem limpa o prompt, e com ele a roda
   pergunta.teclasNum = [];
-  const barra = el("div", "barra-acoes");
-  const tremer = (b, motivo) => {
-    App.som("falha");
-    b.animate([{ translate: "0" }, { translate: "-4px 0" }, { translate: "4px 0" }, { translate: "0" }], { duration: 240, easing: "ease-in-out" });
-    aviso(motivo, "info", "pergaminho");
-  };
-  const slot = ({ classe = "", nome = "", rotulo = "", icone, rodape = "", dica = "", bloqueio = null, tecla = true, aoClicar }) => {
-    const b = el("button", "escolha carta-acao " + classe + (bloqueio ? " bloqueada" : ""));
-    b.type = "button";
-    if (nome) b.dataset.slot = nome;
-    let t = "";
-    if (tecla) {
-      const n = pergunta.teclasNum.length;
-      t = n < 9 ? String(n + 1) : n === 9 ? "0" : "";
-      pergunta.teclasNum.push(() => (bloqueio ? tremer(b, bloqueio) : aoClicar(b)));
-    }
-    b.innerHTML = `<span class="tecla">${t}</span><span class="acao-icone">${icone}</span><span class="acao-nome">${esc(rotulo)}</span><span class="acao-rodape">${rodape}</span>`;
-    if (dica) b.dataset.dica = Telas.guardarDica(dica);
-    b.addEventListener("click", (ev) => { ev.stopPropagation(); if (bloqueio) tremer(b, bloqueio); else aoClicar(b); });
-    barra.appendChild(b);
-    return b;
-  };
-  const fechar = () => { promptEl.appendChild(barra); Telas.ligarDicas(barra); return barra; };
-  return { barra, slot, fechar };
 }
 
+function rodaDeAcoes(m) {
+  prepararRoda();
+  viaBarra = false;
+  habMirando = "";
+  const roda = rodaEl();
+  const acaoIdx = (a) => m.opcoes.findIndex((o) => o.meta && o.meta.acao === a);
+  const heroi = estado.heroi;
+  const atk = m.opcoes[acaoIdx("atacar")];
+  const habs = m.opcoes[acaoIdx("habilidades")].meta.habilidades || [];
+  const basico = heroi.grimorio && heroi.grimorio.basico.linhas.find((l) => l.tipo === "dano");
+  const botoes = [];
+  const botao = (id, icone, rotulo, dica, aoClicar) => {
+    const b = el("button", "roda-botao");
+    b.type = "button";
+    b.dataset.slot = id;
+    const n = pergunta.teclasNum.length + 1;
+    b.innerHTML = `<span class="rb-icone">${icone}<span class="tecla">${n}</span></span><span class="rb-nome">${esc(rotulo)}</span>`;
+    if (dica) b.dataset.dica = Telas.guardarDica(dica);
+    b.addEventListener("click", (ev) => { ev.stopPropagation(); aoClicar(b); });
+    pergunta.teclasNum.push(() => aoClicar(b));
+    roda.appendChild(b);
+    botoes.push(b);
+    return b;
+  };
+  const arma = { guerreiro: "espada", arqueiro: "arco", mago: "cajado" }[heroi.classe] || "espada";
+  botao("atacar", spr(arma, 2), "Atacar", `<b>${esc(atk.meta.nome)}</b><div class="tipo">grátis · devolve um pouco de ${esc(heroi.recurso.toLowerCase())}</div>` +
+    (basico ? `<div class="melhor">Dano: ${basico.min}–${basico.max} (crítico ${basico.critico})</div>` : ""),
+    () => { App.som("escolha"); habMirando = atk.meta.nome; responder(m.id, acaoIdx("atacar")); });
+  if (habs.length) {
+    botao("habilidades", spr("grimorio", 2), "Habilidades", "", (b) => {
+      if (janelaAberta && b.classList.contains("ativo")) { fecharJanela(); return; }
+      App.som("pagina");
+      abrirJanela(b, "Habilidades", habs.map((h) => linhaHabilidade(h, () => {
+        App.som("escolha");
+        viaBarra = true;
+        habMirando = h.nome;
+        pendente = { chave: "habilidade", valor: h.habilidade };
+        responder(m.id, acaoIdx("habilidades"));
+      })));
+    });
+  }
+  botao("itens", spr("pocao", 2), "Itens", "<b>Itens</b><div>Poções, tônicos, bandagens e troca de arma. Usar gasta o turno.</div>",
+    () => { App.som("pagina"); responder(m.id, acaoIdx("itens")); });
+  if (acaoIdx("analisar") >= 0) botao("analisar", spr("olho", 2), "Analisar", "", () => responder(m.id, acaoIdx("analisar")));
+  if (acaoIdx("fugir") >= 0) {
+    botao("fugir", spr("fuga", 2), "Fugir", "<b>Fugir</b><div>A chance depende da sua Agilidade contra a dos inimigos. Falhar custa o turno.</div>",
+      () => { App.som("escolha"); responder(m.id, acaoIdx("fugir")); });
+  }
+  arcoDeBotoes(botoes);
+  Telas.ligarDicas(roda);
+}
+
+/** Os botões em arco, colados à direita da carta (que cresceu 12% com o foco). */
+function arcoDeBotoes(botoes) {
+  const g = geometriaHeroi();
+  const cx = g.x + g.w / 2, cy = g.y + g.h / 2;
+  const direita = cx + (g.w / 2) * 1.12;
+  const passo = 50, total = (botoes.length - 1) * passo;
+  const topo = Math.max(28, Math.min(g.H - 28 - total, cy - total / 2));
+  botoes.forEach((b, i) => {
+    const y = topo + i * passo;
+    const t = total ? (y - (topo + total / 2)) / (total / 2) : 0;
+    const x = direita + 12 + 22 * (1 - t * t);  // um arco ")": os do meio mais afastados
+    b.style.left = x + "px";
+    b.style.top = y + "px";
+    b.style.setProperty("--dx", (cx - x) + "px");
+    b.style.setProperty("--dy", (cy - y) + "px");
+    b.style.animationDelay = i * 35 + "ms";
+  });
+}
+
+function linhaHabilidade(h, aoClicar) {
+  const [ic, fam] = HAB_ICONE[h.habilidade] || ["estrela", "arcano"];
+  const custo = h.custo ? `${spr(RECURSO_ICONE[h.recurso] || "estrela", 1)}${h.custo}` : '<span class="gratis">grátis</span>';
+  return { icone: spr(ic, 2), fam, nome: h.nome, info: custo + (h.flechas ? ` ${spr("flecha", 1)}${h.flechas}` : ""), dica: dicaHabilidade(h),
+    bloqueio: h.pode ? null : (h.motivo || "Indisponível"), hab: h.habilidade, aoClicar };
+}
 function dicaHabilidade(h) {
   return `<b>${esc(h.nome)}</b><div class="tipo">${h.custo ? `${h.custo} de ${esc(h.recurso)}` : "Sem custo"}${h.flechas ? ` · ${h.flechas} flecha${h.flechas > 1 ? "s" : ""}` : ""} · alvo: ${ALVO_TXT[h.alvo_tipo] || "—"}</div>
     <div class="bonus">${esc(h.desc)}</div>${danoGrimorio(h.habilidade)}${h.pode ? "" : `<div class="pior">${esc(h.motivo || "Indisponível")}</div>`}`;
 }
-function slotHabilidade(b, h, aoClicar) {
-  const [ic, fam] = HAB_ICONE[h.habilidade] || ["estrela", "arcano"];
-  const custo = (h.custo ? `${spr(RECURSO_ICONE[h.recurso] || "estrela", 1)}<b>${h.custo}</b>` : `<b class="gratis">grátis</b>`) +
-    (h.flechas ? ` ${spr("flecha", 1)}<b>${h.flechas}</b>` : "");
-  const s = b.slot({ classe: `el-${fam}`, rotulo: h.nome, icone: spr(ic, 2),
-    rodape: `<span class="acao-custo">${custo}</span><span class="acao-alvo">${ALVO_TXT[h.alvo_tipo] || ""}</span>`,
-    dica: dicaHabilidade(h), bloqueio: h.pode ? null : (h.motivo || "Indisponível"), aoClicar });
-  s.dataset.hab = h.habilidade;
-  return s;
+
+/** A janelinha ao lado dos botões: uma linha por habilidade ou item (ícone, nome, custo). Teclas 1–9 escolhem. */
+function abrirJanela(ancora, titulo, linhas, aoFechar) {
+  fecharJanela();
+  const roda = rodaEl();
+  const teclasAntes = pergunta.teclasNum;
+  pergunta.teclasNum = [];
+  const j = el("div", "roda-janela");
+  j.innerHTML = `<div class="rj-titulo"><span>${esc(titulo)}</span><button type="button" class="rj-fechar" title="Fechar (Esc)">×</button></div>`;
+  const lista = el("ul", "rj-lista");
+  linhas.forEach((l, i) => {
+    const li = el("li");
+    const b = el("button", `rj-linha el-${l.fam || "fisico"}${l.bloqueio ? " bloqueada" : ""}`);
+    b.type = "button";
+    if (l.hab) b.dataset.hab = l.hab;
+    if (l.slot) b.dataset.slot = l.slot;
+    b.innerHTML = `<span class="rj-icone">${l.icone}</span><span class="rj-nome">${esc(l.nome)}</span><span class="rj-info">${l.info || ""}</span>${i < 9 ? `<span class="tecla">${i + 1}</span>` : ""}`;
+    if (l.dica) b.dataset.dica = Telas.guardarDica(l.dica);
+    const usar = () => (l.bloqueio ? tremerNao(b, l.bloqueio) : l.aoClicar());
+    b.addEventListener("click", (ev) => { ev.stopPropagation(); usar(); });
+    pergunta.teclasNum.push(usar);
+    li.appendChild(b);
+    lista.appendChild(li);
+  });
+  j.appendChild(lista);
+  roda.appendChild(j);
+  ancora.classList.add("ativo");
+  // Ao lado dos botões, na altura da sua carta, sem sair da tela.
+  const g = geometriaHeroi();
+  const x = ancora.offsetLeft + ancora.offsetWidth + 10;
+  j.style.left = Math.min(x, g.W - j.offsetWidth - 6) + "px";
+  const topoTela = j.offsetParent.getBoundingClientRect().top;
+  const teto = (document.getElementById("topo")?.getBoundingClientRect().bottom || 0) + 6 - topoTela;  // nunca sob o cabeçalho
+  const y = Math.max(teto, Math.min(g.y + g.h / 2 - j.offsetHeight / 2, innerHeight - topoTela - j.offsetHeight - 8));
+  j.style.top = y + "px";
+  const fechar = () => {
+    Telas.esconderDica();
+    j.remove();
+    ancora.classList.remove("ativo");
+    if (pergunta) pergunta.teclasNum = teclasAntes;
+    if (aoFechar) aoFechar();
+  };
+  j.querySelector(".rj-fechar").addEventListener("click", (ev) => { ev.stopPropagation(); fecharJanela(); });
+  janelaAberta = { fechar };
+  Telas.ligarDicas(j);
 }
 
-/** Sua vez: Atacar, cada habilidade, Itens e Fugir. Habilidade com alvo: um clique e os inimigos acendem. */
-function barraDeAcoes(m) {
-  Batalha.vez("j");
-  viaBarra = false;
-  habMirando = "";
-  const b = novaBarra();
-  const acaoIdx = (a) => m.opcoes.findIndex((o) => o.meta && o.meta.acao === a);
-  const heroi = estado.heroi;
-  const atk = m.opcoes[acaoIdx("atacar")];
-  const arma = { guerreiro: "espada", arqueiro: "arco", mago: "cajado" }[heroi.classe] || "espada";
-  const basico = heroi.grimorio && heroi.grimorio.basico.linhas.find((l) => l.tipo === "dano");
-  b.slot({ classe: "principal el-fisico", nome: "atacar", rotulo: atk.meta.nome, icone: spr(arma, 2),
-    rodape: `<span class="acao-custo"><b class="gratis">grátis</b></span><span class="acao-alvo">${basico ? `${basico.min}–${basico.max} de dano` : "um inimigo"}</span>`,
-    dica: `<b>${esc(atk.meta.nome)}</b><div class="tipo">grátis · devolve um pouco de ${esc(heroi.recurso.toLowerCase())}</div>` +
-      (basico ? `<div class="melhor">Dano: ${basico.min}–${basico.max} (crítico ${basico.critico})</div>` : ""),
-    aoClicar: () => { App.som("escolha"); habMirando = atk.meta.nome; responder(m.id, acaoIdx("atacar")); } });
-  const habs = m.opcoes[acaoIdx("habilidades")].meta.habilidades || [];
-  habs.forEach((h) => slotHabilidade(b, h, () => {
-    App.som("escolha");
-    viaBarra = true;
-    habMirando = h.nome;
-    pendente = { chave: "habilidade", valor: h.habilidade };
-    responder(m.id, acaoIdx("habilidades"));
-  }));
-  b.slot({ classe: "el-cura", nome: "itens", rotulo: "Itens", icone: spr("pocao", 2),
-    rodape: '<span class="acao-alvo">poções, trocar arma</span>', dica: "<b>Itens</b><div>Poções, tônicos, bandagens e troca de arma. Usar gasta o turno.</div>",
-    aoClicar: () => { App.som("escolha"); responder(m.id, acaoIdx("itens")); } });
-  if (acaoIdx("analisar") >= 0) b.slot({ classe: "el-forca", rotulo: "Analisar", icone: spr("olho", 2), dica: "<b>Analisar</b>", aoClicar: () => responder(m.id, acaoIdx("analisar")) });
-  if (acaoIdx("fugir") >= 0) {
-    b.slot({ classe: "el-protecao", nome: "fugir", rotulo: "Fugir", icone: spr("fuga", 2),
-      rodape: '<span class="acao-alvo">pela Agilidade</span>', dica: "<b>Fugir</b><div>A chance depende da sua Agilidade contra a dos inimigos. Falhar custa o turno.</div>",
-      aoClicar: () => { App.som("escolha"); responder(m.id, acaoIdx("fugir")); } });
-  }
-  const barra = b.fechar();
-  // A mesma fileira, apagada, fica no lugar enquanto os outros agem: a barra nunca some nem pula.
-  const copia = barra.cloneNode(true);
-  copia.querySelectorAll("[data-hab], [data-slot], [data-dica]").forEach((x) => { delete x.dataset.hab; delete x.dataset.slot; delete x.dataset.dica; });
-  copia.querySelectorAll("button").forEach((x) => { x.disabled = true; x.tabIndex = -1; });
-  document.getElementById("barra-fantasma")?.replaceChildren(copia);
-}
-
-/** Habilidades ou itens (pela tecla ou pelo slot de Itens): slots com o mesmo visual, e o Voltar no fim. */
-function barraSubmenu(m) {
-  Batalha.vez("j");
-  const b = novaBarra();
+/** Itens (ou habilidades pela tecla): a mesma janelinha, aberta pelo motor; fechar é "Voltar". */
+function rodaSubmenu(m) {
+  prepararRoda();
   const voltar = m.opcoes.findIndex(ehVoltar);
+  if (voltar >= 0) pergunta.voltar = voltar;
+  const linhas = [];
   m.opcoes.forEach((o, i) => {
     const meta = o.meta;
     if (!meta || i === voltar) return;
     if (meta.habilidade) {
-      slotHabilidade(b, meta, () => { App.som("escolha"); habMirando = meta.nome; responder(m.id, i); });
+      linhas.push(linhaHabilidade(meta, () => { App.som("escolha"); habMirando = meta.nome; responder(m.id, i); }));
     } else if (meta.usar_item) {
-      b.slot({ classe: "el-cura", nome: "item", rotulo: meta.nome, icone: spr(Telas.ICONE_ITEM[meta.usar_item] || "pocao", 2),
-        rodape: `<span class="acao-custo"><b>×${meta.qtd}</b></span><span class="acao-alvo">gasta o turno</span>`,
+      linhas.push({ icone: spr(Telas.ICONE_ITEM[meta.usar_item] || "pocao", 2), fam: "cura", nome: meta.nome, info: `×${meta.qtd}`, slot: "item",
         dica: `<b>${esc(meta.nome)}</b><div class="tipo">Você tem ${meta.qtd} · gasta o turno</div><div class="bonus">${esc(meta.desc)}</div>`,
         bloqueio: meta.motivo, aoClicar: () => { App.som("item"); responder(m.id, i); } });
     } else if (meta.trocar !== undefined) {
-      b.slot({ classe: "el-fisico troca", rotulo: "Trocar: " + meta.equip.nome, icone: spr(Telas.iconeItem(meta.equip), 2),
-        rodape: '<span class="acao-alvo">gasta o turno</span>',
+      linhas.push({ icone: spr(Telas.iconeItem(meta.equip), 2), fam: "fisico", nome: "Trocar: " + meta.equip.nome, info: "turno",
         dica: Telas.htmlItem(meta.equip, "Trocar de arma no meio da luta gasta o seu turno."), aoClicar: () => { App.som("equipar"); responder(m.id, i); } });
     }
   });
-  if (voltar >= 0) {
-    pergunta.voltar = voltar;
-    b.slot({ classe: "voltar-carta voltar-slot", rotulo: "Voltar", icone: "◀", tecla: false,
-      rodape: "<kbd>Esc</kbd> ou botão direito", dica: "<b>Voltar</b><div>Esc ou botão direito também voltam.</div>", aoClicar: () => voltarPergunta() });
-  }
-  b.fechar();
+  // Uma âncora invisível onde ficaria o botão de Itens, para a janelinha abrir no mesmo lugar.
+  const g = geometriaHeroi();
+  const ancora = el("span", "roda-ancora");
+  ancora.style.left = g.x + g.w * 1.06 + 20 + "px";
+  ancora.style.top = g.y + g.h / 2 + "px";
+  rodaEl().appendChild(ancora);
+  abrirJanela(ancora, m.pergunta && /item/i.test(m.pergunta) ? "Itens" : "Habilidades", linhas, () => { if (voltar >= 0) voltarPergunta(); });
 }
 
-/** Mirando: os inimigos acendem; na barra, o lembrete e o Voltar. As teclas 1, 2... escolhem o alvo. */
-function barraMira(m) {
+/** Mirando: os inimigos acendem; no alto da arena, o lembrete e o Voltar. As teclas 1, 2... escolhem o alvo. */
+function rodaMira(m) {
+  prepararRoda();
   Batalha.alvos(m.opcoes, (i) => responder(m.id, i));
-  pergunta.teclasNum = [];
   m.opcoes.forEach((o, i) => { if (o.meta && o.meta.alvo) pergunta.teclasNum.push(() => responder(m.id, i)); });
   const voltar = m.opcoes.findIndex(ehVoltar);
-  const caixa = el("div", "mira-barra",
-    `<span class="mira-texto">${habMirando ? `<b>${esc(habMirando)}</b>: ` : ""}escolha o alvo <small>clique num inimigo</small></span>`);
+  const chip = el("div", "roda-mira", `<span>${habMirando ? `<b>${esc(habMirando)}</b> · ` : ""}escolha o alvo</span>`);
   if (voltar >= 0) {
     pergunta.voltar = voltar;
     if (viaBarra) pergunta.aoVoltar = () => { pendente = { chave: "_voltar", valor: true }; };
     const v = el("button", "mira-voltar", "◀ Voltar");
     v.type = "button";
     v.addEventListener("click", (ev) => { ev.stopPropagation(); voltarPergunta(); });
-    caixa.appendChild(v);
+    chip.appendChild(v);
   }
-  promptEl.appendChild(caixa);
+  rodaEl().appendChild(chip);
 }
 
 function iconeAcaoCombate(t) {

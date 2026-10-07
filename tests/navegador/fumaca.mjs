@@ -53,29 +53,34 @@ async function cenarioCombate(browser) {
   const { proc, url } = await subir("combate");
   const { page, erros, esperar } = await abrir(browser, url);
   try {
-    conferir(!!(await esperar("#prompt .barra-acoes .carta-acao")), "na sua vez, a barra de atalhos acende");
-    conferir(!!(await page.$("#batalha #arena + #barra-luta #prompt .barra-acoes")), "a barra fica colada embaixo da arena");
+    conferir(!!(await esperar("#roda .roda-botao")), "na sua vez, as ações surgem em volta da sua carta");
+    conferir(await page.evaluate(() => document.querySelector('#batalha .carta[data-uid="j"]').classList.contains("foco")), "sua carta vem para a frente");
     conferir((await page.$$("#batalha .carta")).length >= 4, "a arena mostra herói, comitiva e inimigos");
-    conferir(!!(await page.$('.carta-acao[data-hab="bola_fogo"]')), "as habilidades ficam à mostra na barra");
     await page.keyboard.press("p");
     conferir(!!(await esperar("#sobre-grimorio:not([hidden]) .g-faixa")), "o Grimório abre com P e mostra o dano");
     await page.keyboard.press("Escape");
     conferir(await page.evaluate(() => document.getElementById("sobre-grimorio").hidden), "Esc fecha o Grimório");
-    await (await page.$('.carta-acao[data-slot="itens"]')).click();
-    conferir(!!(await esperar('#barra-luta .carta-acao[data-slot="item"]')), "Itens vira slots na barra");
-    await (await esperar(".voltar-slot")).click();
-    conferir(!!(await esperar("#prompt .barra-acoes .carta-acao")), "Voltar dos itens devolve a barra");
-    await (await page.$('.carta-acao[data-hab="bola_fogo"]')).click();
+    await (await page.$('.roda-botao[data-slot="habilidades"]')).click();
+    conferir(!!(await esperar('.roda-janela .rj-linha[data-hab="bola_fogo"]')), "Habilidades abre a janelinha com nome e custo");
+    await page.keyboard.press("Escape");
+    conferir(!(await page.$(".roda-janela")) && !!(await page.$("#roda .roda-botao")), "Esc fecha a janelinha e as ações continuam");
+    await (await page.$('.roda-botao[data-slot="itens"]')).click();
+    conferir(!!(await esperar('.roda-janela .rj-linha[data-slot="item"]')), "Itens abre a janelinha com os itens");
+    await (await page.$(".rj-fechar")).click();
+    conferir(!!(await esperar('#roda .roda-botao[data-slot="atacar"]')), "fechar os itens devolve as ações");
+    await (await page.$('.roda-botao[data-slot="habilidades"]')).click();
+    await (await esperar('.rj-linha[data-hab="bola_fogo"]')).click();
     conferir(!!(await esperar(".carta.alvejavel")), "a habilidade acende os alvos");
-    await (await esperar("#barra-luta .mira-voltar")).click();
-    conferir(!!(await esperar("#prompt .barra-acoes .carta-acao")), "Voltar na escolha do alvo devolve a barra");
-    await (await page.$('.carta-acao[data-hab="bola_fogo"]')).click();
+    await (await esperar("#roda .mira-voltar")).click();
+    conferir(!!(await esperar('#roda .roda-botao[data-slot="atacar"]')), "Voltar na escolha do alvo devolve as ações");
+    await (await page.$('.roda-botao[data-slot="habilidades"]')).click();
+    await (await esperar('.rj-linha[data-hab="bola_fogo"]')).click();
     await (await esperar('.carta.alvejavel:has-text("Javali")')).click();
     conferir(!!(await esperar(".ef.fam-fogo", 15000)), "clicar no inimigo dispara: o alvo fica em chamas");
     // termina a luta atacando (clicando no alvo quando houver mais de um)
     for (let k = 0; k < 160; k++) {
       if (!(await page.evaluate(() => document.body.classList.contains("em-combate")))) break;
-      const b = await page.$("#prompt .barra-acoes .carta-acao.principal");
+      const b = await page.$('#roda .roda-botao[data-slot="atacar"]');
       if (b) await b.click().catch(() => {});
       const alvo = await page.$(".carta.alvejavel");
       if (alvo) await alvo.click().catch(() => {});
@@ -84,6 +89,8 @@ async function cenarioCombate(browser) {
       await page.waitForTimeout(250);
     }
     conferir(!(await page.evaluate(() => document.body.classList.contains("em-combate"))), "a luta termina");
+    await page.mouse.move(4, 400);  // o HUD volta ao topo: o mouse sai de cima dele para a dica ter motivo de fechar
+    await page.waitForTimeout(400);
     conferir(await page.evaluate(() => { const d = document.getElementById("dica-item"); return !d || d.hidden; }),
       "nenhuma dica fica presa depois da luta");
     conferir(!!(await esperar(".rastro-contrato.cacavel")), "o contrato do lugar oferece seguir os rastros");

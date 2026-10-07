@@ -41,38 +41,69 @@
   animation: cortar 0.38s steps(8) forwards; }
 @keyframes cortar { 0% { scale: 0 1; opacity: 1; } 45% { scale: 1 1; opacity: 1; } 100% { scale: 1 0.2; opacity: 0; } }
 
-/* ---------------------------------------------------------------- luta: a tira da arena + barra de atalhos logo abaixo */
+/* ---------------------------------------------------------------- luta: a roda de ações em volta da sua carta */
 body.em-combate #cena-cab { display: none; }                 /* o título do lugar já ficou para trás: o log é só a luta */
 body.em-combate #folha { padding-top: 6px; }
 body.em-combate #texto p { margin-bottom: 0.35em; }
-body.em-combate #arena { border-bottom-width: 0; }
-/* A barra fica sempre no lugar (nada pula): na sua vez, os slots acendem; na vez dos outros, a fileira esmaece. */
-#barra-luta { position: relative; display: grid; place-items: center; min-height: 74px; padding: 7px 10px 8px;
-  background: linear-gradient(180deg, #1a1411, #0f0c0a); border: 3px solid #0d0b0a; border-top: 2px solid #3a2e24;
-  box-shadow: inset 0 1px 0 rgba(255, 220, 160, 0.06); }
-#barra-luta > * { grid-area: 1 / 1; }
-#barra-luta > #prompt { margin: 0; width: 100%; max-width: 100%; animation: none; }
-#barra-fantasma { width: 100%; }
-#barra-fantasma { pointer-events: none; opacity: 0; filter: grayscale(0.9) brightness(0.55); transition: opacity .2s ease; }
-#barra-luta:has(> #prompt:empty) #barra-fantasma { opacity: 1; }
-#barra-luta:has(> #prompt:not(:empty)) #barra-fantasma { visibility: hidden; }
-#barra-luta .pergunta-rotulo { margin: 0 0 6px; text-align: center; }
-#barra-luta .continuar { margin: 0 auto; }
-/* As ações da luta são as cartas de sempre (ícone, nome, custo, alvo), numa grade logo abaixo da arena. */
-.barra-acoes { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 6px; width: 100%; }
-#prompt .barra-acoes { animation: barra-acende .3s ease-out; }
-@keyframes barra-acende { from { filter: grayscale(0.9) brightness(0.55); } }
-.barra-acoes .carta-acao { opacity: 1; animation: none; min-height: 58px; }
-.barra-acoes .carta-acao.principal { --el: var(--ouro); border-color: #6e5a24; }
-.barra-acoes .carta-acao.principal .acao-nome { color: var(--ouro); }
-.barra-acoes .carta-acao .acao-qtd { font-family: var(--num); font-size: 15px; color: var(--tinta); }
-/* Mirando: no lugar dos slots, o lembrete e o Voltar. */
-.mira-barra { display: flex; align-items: center; gap: 12px; min-height: 54px; }
-.mira-barra .mira-texto { font-family: var(--ui); font-size: 16px; color: var(--tinta); }
-.mira-barra .mira-texto b { color: var(--ouro); }
-.mira-barra .mira-texto small { margin-left: 6px; font-size: 13px; color: var(--tinta-3); }
-.mira-barra .mira-voltar { font: inherit; font-size: 14px; color: var(--tinta); background: #120e0b; border: 2px solid #4a4038; padding: 4px 10px; cursor: pointer; box-shadow: 2px 2px 0 #000; }
-.mira-barra .mira-voltar:hover { border-color: var(--ouro); }
-@media (max-width: 700px) {
-  .barra-acoes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
+body.em-combate #hud { position: relative; z-index: 8; }     /* a janelinha pode passar da arena sem ficar atrás do log */
+.marca-roda { display: none; }
+#roda { position: absolute; inset: 0; z-index: 7; pointer-events: none; }
+#roda > * { pointer-events: auto; }
+/* Sua vez: a carta vem para a frente e cresce, com um brilho de ouro. */
+.carta { transition: transform .25s cubic-bezier(.2, .8, .3, 1.25), box-shadow .25s ease; }
+.carta.foco { transform: scale(1.12); z-index: 6; animation: none;
+  box-shadow: 0 0 0 2px #000, 0 0 0 4px var(--ouro), 0 10px 22px rgba(0, 0, 0, 0.6), 0 0 26px rgba(242, 201, 76, 0.35); }
+/* Os botões de ação: medalhões em arco ao lado da carta. */
+.roda-botao { position: absolute; translate: 0 -50%; display: flex; flex-direction: row; align-items: center; gap: 0; padding: 0;
+  font: inherit; background: none; border: 0; cursor: pointer; animation: roda-surge .3s cubic-bezier(.2, .9, .3, 1.3) backwards; }
+.roda-botao .rb-icone { position: relative; z-index: 1; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 13px;
+  background: radial-gradient(circle at 50% 32%, #4a3a26, #15100c 72%); border: 3px solid #8a6a14;
+  box-shadow: 0 0 0 2px #000, 0 4px 0 #000, inset 0 2px 0 rgba(255, 230, 170, 0.2); transition: transform .12s ease, border-color .12s ease, box-shadow .12s ease; }
+.roda-botao .rb-icone img.sprite { filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.6)); }
+.roda-botao .rb-nome { margin-left: -10px; padding: 4px 12px 5px 16px; border-radius: 0 10px 10px 0; font-family: var(--ui); font-size: 14px; font-weight: 700; line-height: 1.1;
+  color: #fff3d6; background: linear-gradient(180deg, rgba(34, 26, 18, 0.95), rgba(13, 11, 10, 0.95)); border: 2px solid #000; border-left: 0;
+  text-shadow: 1px 1px 0 #000; white-space: nowrap; transition: background .12s ease, color .12s ease; }
+.roda-botao:hover .rb-nome, .roda-botao.ativo .rb-nome { color: var(--ouro); background: linear-gradient(180deg, rgba(60, 44, 22, 0.97), rgba(24, 17, 10, 0.97)); }
+.roda-botao .tecla { position: absolute; top: -7px; left: -7px; min-width: 16px; height: 16px; padding: 0 3px; border-radius: 8px; font-family: var(--num); font-size: 12px;
+  line-height: 15px; text-align: center; color: #120e0b; background: var(--ouro); border: 1px solid #000; }
+.roda-botao:hover .rb-icone, .roda-botao:focus-visible .rb-icone, .roda-botao.ativo .rb-icone { transform: translateY(-3px) scale(1.07); border-color: #fff3a0;
+  box-shadow: 0 0 0 2px #000, 0 6px 0 #000, 0 0 16px rgba(242, 201, 76, 0.55), inset 0 2px 0 rgba(255, 230, 170, 0.25); }
+.roda-botao.ativo .rb-icone { background: radial-gradient(circle at 50% 32%, #6e5424, #2a1d10 72%); }
+.roda-botao:focus-visible { outline: none; }
+@keyframes roda-surge { from { opacity: 0; transform: translate(var(--dx, 0), var(--dy, 0)) scale(.4); } }
+.roda-ancora { position: absolute; width: 1px; height: 1px; }
+/* A janelinha de habilidades e itens. */
+.roda-janela { position: absolute; z-index: 2; width: 250px; padding: 8px 8px 9px; border-radius: 12px; background: rgba(15, 11, 9, 0.97); border: 3px solid #8a6a14;
+  box-shadow: 0 0 0 2px #000, 0 12px 30px rgba(0, 0, 0, 0.65); animation: janela-surge .2s cubic-bezier(.2, .9, .3, 1.2); }
+@keyframes janela-surge { from { opacity: 0; transform: translateX(-10px) scale(.94); } }
+.rj-titulo { display: flex; align-items: center; justify-content: space-between; margin: 0 2px 6px 4px; font-family: var(--cabeca); font-size: 16px; color: var(--ouro); }
+.rj-fechar { width: 24px; height: 24px; padding: 0; border-radius: 6px; font: inherit; font-size: 18px; line-height: 1; color: var(--tinta-2); background: #241a12; border: 1px solid #4a3a26; cursor: pointer; }
+.rj-fechar:hover { color: #fff; border-color: var(--ouro); }
+.rj-lista { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.rj-linha { --el: #8a7a60; position: relative; width: 100%; display: grid; grid-template-columns: 38px 1fr auto; align-items: center; gap: 9px; padding: 3px 10px 3px 3px;
+  text-align: left; font: inherit; color: var(--tinta); background: #1c1612; border: 2px solid #2e241b; border-radius: 9px; cursor: pointer;
+  transition: background .12s ease, border-color .12s ease, transform .12s ease; }
+.rj-linha .rj-icone { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 8px;
+  background: radial-gradient(circle at 50% 38%, color-mix(in srgb, var(--el) 55%, #0d0b0a), #0d0b0a 74%); border: 2px solid color-mix(in srgb, var(--el) 65%, #000); }
+.rj-linha .rj-nome { font-family: var(--cabeca); font-size: 15px; line-height: 1.1; }
+.rj-linha .rj-info { display: inline-flex; align-items: center; gap: 2px; font-family: var(--num); font-size: 16px; color: #a8c4ff; white-space: nowrap; }
+.rj-linha .rj-info img.sprite { --s: 16; }
+.rj-linha .rj-info .gratis { font-family: var(--ui); font-size: 12px; color: var(--bom); }
+.rj-linha .tecla { position: absolute; top: 1px; right: 4px; font-family: var(--num); font-size: 11px; color: var(--tinta-3); }
+.rj-linha:hover, .rj-linha:focus-visible { background: #2a1f15; border-color: var(--ouro); transform: translateX(3px); outline: none; }
+.rj-linha.bloqueada { cursor: not-allowed; }
+.rj-linha.bloqueada > :not(.tecla) { filter: grayscale(.85) brightness(.6); }
+.rj-linha.bloqueada:hover { transform: none; border-color: #5a2020; }
+.rj-linha.bloqueada .rj-info { color: #e2574c; }
+.rj-linha.el-fogo { --el: #e0782f; } .rj-linha.el-gelo { --el: #6f9bff; } .rj-linha.el-sagrado { --el: #f2c94c; }
+.rj-linha.el-sombra { --el: #8e6fd8; } .rj-linha.el-arcano { --el: #7d97ff; } .rj-linha.el-veneno { --el: #6fbf4a; }
+.rj-linha.el-natureza { --el: #4f9a5b; } .rj-linha.el-sangue { --el: #c03030; } .rj-linha.el-protecao { --el: #5a7fe0; }
+.rj-linha.el-forca { --el: #e09040; } .rj-linha.el-fisico { --el: #a08868; } .rj-linha.el-cura { --el: #6fae4a; }
+body.recurso-vigor .rj-linha .rj-info { color: #ffc98a; } body.recurso-foco .rj-linha .rj-info { color: #b8e6a0; }
+/* Mirando: um lembrete no alto da arena, com o Voltar. */
+.roda-mira { position: absolute; left: 50%; top: 8px; translate: -50% 0; display: flex; align-items: center; gap: 10px; padding: 4px 5px 4px 14px; border-radius: 999px;
+  font-family: var(--ui); font-size: 15px; color: var(--tinta); background: rgba(13, 11, 10, 0.92); border: 2px solid #8a6a14; box-shadow: 0 0 0 2px #000;
+  white-space: nowrap; animation: janela-surge .2s ease-out; }
+.roda-mira b { color: var(--ouro); }
+.mira-voltar { font: inherit; font-size: 13px; color: var(--tinta); background: #241a12; border: 1px solid #4a3a26; border-radius: 999px; padding: 2px 10px; cursor: pointer; }
+.mira-voltar:hover { border-color: var(--ouro); }

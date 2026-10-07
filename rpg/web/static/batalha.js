@@ -43,9 +43,8 @@ const Batalha = (() => {
   function montar() {
     if (arena) return;
     const raiz = document.getElementById("batalha");
-    // A barra de atalhos fica colada embaixo da arena: na sua vez, as opções da luta acendem ali, perto das cartas.
-    raiz.innerHTML = `<div id="arena"><div class="fileira aliados"></div><div class="fileira inimigos"></div><div class="camada-fx"></div></div>
-      <div id="barra-luta"><div id="barra-fantasma" aria-hidden="true"></div></div>`;
+    // #roda: na sua vez, as ações aparecem ali, em volta da sua carta (ver escolhas.js).
+    raiz.innerHTML = `<div id="arena"><div class="fileira aliados"></div><div class="fileira inimigos"></div><div class="camada-fx"></div><div id="roda"></div></div>`;
     arena = raiz.firstElementChild;
     colAliados = arena.querySelector(".aliados");
     colInimigos = arena.querySelector(".inimigos");
@@ -683,6 +682,11 @@ const Batalha = (() => {
   function vez(uid) {
     cartas.forEach((el, u) => el.classList.toggle("vez", u === uid));
   }
+  /** A carta de quem escolhe a ação vem para a frente e cresce. */
+  function foco(uid) {
+    cartas.forEach((el, u) => el.classList.toggle("foco", u === uid));
+  }
+  function elCarta(uid) { return cartas.get(uid) || null; }
   function alvos(opcoes, escolher) {
     limparAlvos();
     opcoes.forEach((o, i) => {
@@ -799,5 +803,5 @@ const Batalha = (() => {
     if (carta) reiniciar(carta, delta > 0 ? "reagiu-bem" : "reagiu-mal", 900);
   }
 
-  return { configurar, desenhar, lance, vez, alvos, limparAlvos, mirar, balao, opiniao };
+  return { configurar, desenhar, lance, vez, foco, elCarta, alvos, limparAlvos, mirar, balao, opiniao };
 })();

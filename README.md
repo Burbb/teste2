@@ -171,10 +171,11 @@ na interface miúda; **Jersey 15** nos números. O botão "Fonte" no topo volta 
 - **Item encontrado:** o saque aparece como um cartão com o sprite, a raridade (raios na cor
   dela), os bônus e a diferença para o que você usa, que fica ao lado. Deixar para trás só
   existe com a mochila cheia.
-- **Ações da luta logo abaixo da arena:** as cartas de sempre (ícone, nome, custo, alvo), todas à
-  mostra: Atacar, cada habilidade, Itens e Fugir, com teclas 1–9. Na vez dos outros elas ficam
-  apagadas no lugar, sem sumir nem pular. Clique na carta, os inimigos acendem, clique no alvo.
-  Voltar (carta, Esc ou botão direito) desfaz a escolha antes de gastar qualquer coisa.
+- **Sua vez na luta:** sua carta vem para a frente e cresce, e as ações surgem em arco ao lado
+  dela (Atacar, Habilidades, Itens, Fugir, teclas 1–4). Habilidades e Itens abrem uma janelinha
+  com ícone, nome e custo de cada um (passe o mouse para ver o que fazem e o dano). Escolhida a
+  habilidade, os inimigos acendem: clique no alvo. Esc ou botão direito fecham a janelinha e
+  desfazem a escolha antes de gastar qualquer coisa.
 - **Grimório (P):** um livro com cada habilidade e o ataque básico: o dano de agora (faixa,
   crítico e chance), de onde ele vem (Poder 40 × 150% × talentos) e quanto cresce a cada ponto de
   atributo, além de efeitos como queimadura, sangramento e cura com os números do seu herói.
