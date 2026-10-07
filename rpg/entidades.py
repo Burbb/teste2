@@ -2,6 +2,7 @@
 
 from . import balanceamento as bal
 from .classes import CLASSES, SPECS
+from .estados import NEGATIVOS as EFEITOS_NEGATIVOS  # os males do catálogo de estados
 
 STATS = ("max_hp", "atk", "defesa", "agi", "poder", "max_rec")
 NOMES_STATS = {
@@ -9,7 +10,6 @@ NOMES_STATS = {
     "poder": "Poder", "max_rec": "Mana/Vigor/Foco", "roubo_vida": "roubo de vida", "critico": "chance de crítico",
     "espinhos": "Espinhos", "regen_vida": "Vida por turno", "vida_abate": "Vida por abate",
 }
-EFEITOS_NEGATIVOS = ("veneno", "sangramento", "queimadura", "atordoado", "enfraquecido", "maldito", "marcado")
 
 
 def nome_stat(stat, recurso=None):

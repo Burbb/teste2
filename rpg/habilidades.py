@@ -27,6 +27,7 @@ para o gabarito de regressão continuar idêntico quando nada de jogo mudou.
 """
 
 from . import balanceamento as bal
+from .estados import descrever_aplicar, descrever_buff
 from .modificadores import mod, mult
 
 NOME_STAT = {"atk": "Ataque", "poder": "Poder", "agi": "Agilidade", "max_hp": "Vida máx.", "defesa": "Defesa"}
@@ -150,34 +151,6 @@ def _efeito(texto):
     return {"tipo": "efeito", "texto": texto}
 
 
-def _chance(c, texto):
-    """'45% de chance de ' + texto, ou o texto com maiúscula quando é certo."""
-    return f"{_pct(c)} de chance de {texto}" if c < 1 else texto[0].upper() + texto[1:]
-
-
-# Como cada estado se descreve no Grimório (o catálogo completo de estados vem na Etapa C).
-def _texto_estado(efeito, turnos, v, escala, chance, todos, rotulo):
-    t = f"{turnos} turno{'s' if turnos != 1 else ''}"
-    quem = "cada inimigo" if todos else "o alvo"
-    origem = f" ({escala})" if escala else ""
-    if efeito == "atordoado":
-        if rotulo == "congelado":
-            return _chance(chance, f"congelar {quem} (perde o próximo turno).")
-        return _chance(chance, f"atordoar {quem} por {t}.")
-    if efeito == "sangramento":
-        return _chance(chance, f"sangramento: {_num(v)} por turno, {t}{origem}.")
-    if efeito == "veneno":
-        return _chance(chance, f"veneno: {_num(v)} por turno, {t}{origem}.")
-    if efeito == "enfraquecido":
-        return _chance(chance, f"enfraquecer {quem} por {t} (causa −25% de dano).")
-    if efeito == "marcado":
-        return f"{quem[0].upper() + quem[1:]} recebe +{_pct(v)} de dano de todos por {t}."
-    if efeito == "maldito":
-        return (f"{'Todos os inimigos' if todos else 'O alvo'}: {_num(v)} de dano por turno, {t}{origem}, "
-                "e −40% de defesa.")
-    return _chance(chance, f"{efeito} por {t}.")
-
-
 class Aplicar:
     """Um estado num inimigo. `em`: "atual" (o alvo do golpe) ou "todos". `direto`: sem anúncio nem lance."""
 
@@ -197,8 +170,8 @@ class Aplicar:
 
     def linhas(self, u):
         escala = self.valor.texto() if isinstance(self.valor, Escala) else ""
-        return [_efeito(_texto_estado(self.efeito, self.turnos, valor(self.valor, u), escala, self.chance,
-                                      self.em == "todos", self.rotulo))]
+        return [_efeito(descrever_aplicar(self.efeito, self.turnos, valor(self.valor, u), escala, self.chance,
+                                          self.em == "todos", self.rotulo))]
 
 
 class Buff:
@@ -212,21 +185,7 @@ class Buff:
         ctx.u.aplicar(self.efeito, ctx.turnos, valor(self.valor, ctx.u))
 
     def linhas(self, u):
-        t = valor(self.turnos, u)
-        v = valor(self.valor, u)
-        dur = f"{t} turno{'s' if t != 1 else ''}"
-        if self.efeito == "guarda":
-            return [_efeito(f"Dano recebido −{_pct(v)} por {dur}.")]
-        if self.efeito == "fortalecido":
-            return [_efeito(f"Seu dano +{_pct(v)} por {dur}.")]
-        if self.efeito == "esquiva":
-            base = min(bal.ESQUIVA_MAX_AGI, u.agi * bal.ESQUIVA_POR_AGI)
-            return [_efeito(f"Esquiva +{_pct(v)} por {dur}: de {_pct(base)} para {_pct(min(bal.MAX_ESQUIVA, base + v))} "
-                            f"(teto de {_pct(bal.MAX_ESQUIVA)}).")]
-        if self.efeito == "furtivo":
-            from .grimorio import mult_critico
-            return [_efeito(f"O próximo ataque é crítico garantido de ×{_num(mult_critico(u, furtivo=True))}.")]
-        return [_efeito(f"{self.efeito} por {dur}.")]
+        return [_efeito(descrever_buff(u, self.efeito, valor(self.turnos, u), valor(self.valor, u)))]
 
 
 class Acender:

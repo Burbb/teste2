@@ -12,14 +12,10 @@ const Batalha = (() => {
   let rapido = () => false, pausa = (ms) => ms;
   let emArea = false;
 
-  // Ícone e família de cada efeito de estado (a família dá a cor do brilho na carta).
-  const EFEITO = {
-    guarda: ["escudo", "protecao"], barreira: ["escudo_azul", "protecao"], esquiva: ["folha", "protecao"],
-    fortalecido: ["espada", "forca"], furtivo: ["olho", "sombra"], veneno: ["gota_verde", "veneno"],
-    sangramento: ["gota", "sangue"], queimadura: ["chama", "fogo"], atordoado: ["estrela", "atordoado"],
-    maldito: ["gota_roxa", "maldicao"], enfraquecido: ["osso", "maldicao"], marcado: ["flecha", "marca"],
-    provocando: ["caveira", "forca"],
-  };
+  // Ícone, família (a cor do brilho na carta) e dica de cada estado: vêm do motor (catálogo em rpg/estados.py).
+  let ESTADOS = {};
+  function catalogo(c) { if (c) ESTADOS = c; }
+  const efeito = (id) => { const e = ESTADOS[id]; return e ? [e.icone, e.familia] : ["estrela", "forca"]; };
   const SOM_ELEMENTO = { fisico: "golpe", fogo: "chama", gelo: "gelo", sagrado: "sagrado", sombra: "sombra",
     arcano: "arcano", veneno: "veneno" };
   const PROJETIL = { fisico: "flecha", fogo: "chama", gelo: "gelo", sagrado: "orbe_luz", sombra: "orbe_sombra",
@@ -93,9 +89,9 @@ const Batalha = (() => {
 
   function efeitosHtml(lista) {
     return lista.map((f) => {
-      const [ic, fam] = EFEITO[f.id] || ["estrela", "forca"];
+      const [ic, fam] = efeito(f.id);
       const dano = f.por_turno ? ` · ${f.por_turno} de dano por turno` : "";
-      const extra = f.id === "queimadura" ? " · a Combustão detona o que falta arder" : "";
+      const extra = ESTADOS[f.id] && ESTADOS[f.id].dica ? ` · ${ESTADOS[f.id].dica}` : "";
       const camadas = f.camadas ? `<i class="camadas">×${f.camadas}</i>` : "";
       return `<span class="ef fam-${fam}${f.camadas ? " acumulado" : ""}" data-ef="${esc(f.id)}" title="${esc(f.nome)} (${f.turnos} turno${f.turnos === 1 ? "" : "s"})${dano}${extra}">${S(ic, 1)}<b>${f.turnos > 9 ? "∞" : f.turnos}</b>${camadas}</span>`;
     }).join("");
@@ -146,7 +142,7 @@ const Batalha = (() => {
     if (c.chefe) classes.push("chefe");
     if (c.unico) classes.push("unico");
     if (!c.vivo) classes.push("morta");
-    const fams = new Set(c.efeitos.map((f) => (EFEITO[f.id] || [])[1]).filter(Boolean));
+    const fams = new Set(c.efeitos.map((f) => efeito(f.id)[1]));
     fams.forEach((f) => classes.push("com-" + f));
     // preserva as classes de animação em curso
     ["morrendo", "agindo", "vez", "alvejavel", "atingida"].forEach((k) => { if (el.classList.contains(k)) classes.push(k); });
@@ -214,7 +210,7 @@ const Batalha = (() => {
       if (!fresco && c.hp > ant.hp && c.max_hp === ant.max_hp) { brilho(el, "cura"); numero(el, `+${c.hp - ant.hp}`, "cura"); }
       const tinha = new Set(ant.efeitos.map((f) => f.id));
       c.efeitos.filter((f) => !tinha.has(f.id)).forEach((f) => {
-        const fam = (EFEITO[f.id] || [])[1] || "forca";
+        const fam = efeito(f.id)[1];
         brilho(el, fam);
         const tag = el.querySelector(`.ef[data-ef="${f.id}"]`);
         if (tag) { tag.classList.add("novo"); tag.onanimationend = () => tag.classList.remove("novo"); }
@@ -389,7 +385,7 @@ const Batalha = (() => {
       case "buff": {
         if (!em) return;
         marcar(m.em);
-        const fams = [...new Set((m.efeitos || []).map((id) => (EFEITO[id] || [])[1] || "protecao"))];
+        const fams = [...new Set((m.efeitos || []).map((id) => (ESTADOS[id] ? ESTADOS[id].familia : "protecao")))];
         fams.forEach((f, i) => setTimeout(() => brilho(em, f), i * 160));
         if (m.hab !== "grito_guerra") rotulo(em, m.rotulo);
         som(m.hab === "erguer_escudo" ? "falange" : fams.includes("sombra") ? "sombra" : fams.includes("forca") ? "feitico" : "protecao");
@@ -487,7 +483,7 @@ const Batalha = (() => {
         if (!em) return;
         marcar(m.em);
         barra(em, m.hp, m.max_hp);
-        const fam = (EFEITO[m.efeito] || [])[1] || "sangue";
+        const fam = ESTADOS[m.efeito] ? ESTADOS[m.efeito].familia : "sangue";
         clarao(em, fam === "fogo" ? "fogo" : fam === "veneno" ? "veneno" : fam === "maldicao" ? "sombra" : "fisico");
         tremer(em);
         if (fam === "fogo") labaredas(em); else particulas(em, fam, 6);
@@ -500,7 +496,7 @@ const Batalha = (() => {
       case "efeito": {
         if (!em) return;
         marcar(m.em);
-        const fam = (EFEITO[m.efeito] || [])[1] || "maldicao";
+        const fam = ESTADOS[m.efeito] ? ESTADOS[m.efeito].familia : "maldicao";
         brilho(em, fam);
         if (m.efeito === "queimadura") labaredas(em);
         numero(em, m.rotulo, "info");
@@ -887,5 +883,5 @@ const Batalha = (() => {
     if (carta) reiniciar(carta, delta > 0 ? "reagiu-bem" : "reagiu-mal", 900);
   }
 
-  return { configurar, desenhar, lance, vez, foco, elCarta, alvos, limparAlvos, mirar, balao, opiniao };
+  return { configurar, catalogo, desenhar, lance, vez, foco, elCarta, alvos, limparAlvos, mirar, balao, opiniao };
 })();

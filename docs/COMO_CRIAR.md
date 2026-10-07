@@ -88,6 +88,36 @@ python -m unittest tests.test_modificadores    # chaves e eventos conhecidos, to
 python -m tests.gabarito
 ```
 
+## Um estado
+
+Em `rpg/estados.py`, no catálogo `ESTADOS`:
+
+```python
+"congelado": estado(
+    "congelado", "gelo", "frio", negativo=True, perde_turno=True,
+    imune=lambda a: a.resist.get("gelo", 1) < 0.5,
+    resiste=lambda cb, a: a.chefe and cb.rng.random() < 0.5,
+    dica="perde o próximo turno",
+    descrever=lambda t, v, esc, ch, todos, rot: f"{ch:.0%} de chance de congelar o alvo por {t} turno(s)."),
+```
+
+| Campo | O quê |
+|---|---|
+| `nome`, `icone`, `familia` | como aparece ("congelado"), o desenho (de `sprites-dados.js`) e a cor do brilho na carta |
+| `negativo` | é um mal (a Prece e o antídoto tiram) |
+| `tique=(rótulo, cor)` | dano por turno igual ao valor do estado; `ajuste_tique(cb, dano)` muda (a chuva apaga as chamas) |
+| `perde_turno` | quem está assim não age |
+| `imune(alvo)` / `resiste(cb, alvo)` | quem não pega / quem resiste na hora (com sorteio) |
+| `camadas`, `rotulo_camadas` | acumula (`"em chamas ×{s}"`) quando aplicado com `acumula=True` |
+| `dica`, `descrever`, `buff` | a frase do ícone; a linha do Grimório num inimigo; a linha num estado seu |
+
+Tique, perda de turno, imunidade, resistência e camadas já funcionam sozinhos. Se o estado muda a **conta de
+dano** (como fortalecido ou guarda), falta perguntar por ele no lugar certo de `Combate.atacar`; numa etapa futura
+isso também vira modificador.
+
+Conferir: `python -m unittest tests.test_estados` (todo estado aplicado no código existe no catálogo; todo
+ícone tem desenho).
+
 ## Um evento
 
 Em `rpg/eventos/<tema>.py`:

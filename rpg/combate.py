@@ -7,6 +7,7 @@ from .classes import CLASSES
 from .habilidades import HABILIDADES, descricao_habilidade
 from .grimorio import chance_critico, mult_critico
 from .modificadores import disparar, mod, mult, nomes
+from .estados import ESTADOS, NOMES
 from .dados import TRACOS
 from .entidades import Combatente
 from .inimigos import HABS_INIMIGO, NOMES_HABS_INIMIGO, ROTULOS_HABS_INIMIGO
@@ -15,18 +16,7 @@ from . import comitiva, sobrevivencia, telemetria
 from .talentos import custo_habilidade
 from . import balanceamento as bal
 
-DOTS = {
-    "veneno": ("veneno", "verde"),
-    "sangramento": ("sangramento", "vermelho"),
-    "queimadura": ("queimadura", "amarelo"),
-    "maldito": ("maldição", "magenta"),
-}
-NOMES_EFEITOS = {
-    "veneno": "envenenado", "sangramento": "sangrando", "queimadura": "em chamas", "atordoado": "atordoado",
-    "enfraquecido": "enfraquecido", "maldito": "amaldiçoado", "marcado": "marcado", "guarda": "em guarda",
-    "fortalecido": "fortalecido", "esquiva": "esquivo", "barreira": "com barreira", "furtivo": "furtivo",
-    "provocando": "provocando",
-}
+NOMES_EFEITOS = NOMES  # o catálogo de estados mora em estados.py
 USAVEIS_EM_COMBATE = ("pocao_vida", "tonico", "antidoto", "bandagem", "bomba_fumaca")
 
 
@@ -218,7 +208,7 @@ class Combate:
                 letras[e.nome] = n + 1
                 e.nome = f"{e.nome} {'ABCDEFGHIJ'[min(n, 9)]}"
 
-    MAX_CHAMAS = bal.MAX_CHAMAS
+    MAX_CHAMAS = bal.MAX_CHAMAS  # o mesmo teto de camadas do catálogo (estados.py)
 
     def valor_queimadura(self, u):
         """Dano por turno de UMA camada de chamas. É pouco de propósito: o fogo do mago rende quando as
@@ -372,29 +362,24 @@ class Combate:
             return False
         if chance < 1 and self.rng.random() >= chance:
             return False
-        t = alvo.tracos
-        imune = (
-            (efeito == "veneno" and ("morto-vivo" in t or "construto" in t))
-            or (efeito == "sangramento" and ("construto" in t or "etereo" in t))
-            or (efeito == "queimadura" and alvo.resist.get("fogo", 1) < 0.5)
-        )
-        if imune:
+        est = ESTADOS[efeito]
+        if est["imune"] and est["imune"](alvo):
             self.detalhe(f"{self.nome(alvo)} não é afetad{'o' if alvo.g == 'm' else 'a'} ({NOMES_EFEITOS[efeito]}).",
                          "cinza")
             return False
-        if efeito == "atordoado" and (alvo.chefe or "gigante" in t) and self.rng.random() < 0.5:
-            self.detalhe(f"{self.nome(alvo)} resiste ao atordoamento!", "cinza")
+        if est["resiste"] and est["resiste"](self, alvo):
+            self.detalhe(f"{self.nome(alvo)} resiste ao {'atordoamento' if efeito == 'atordoado' else est['nome']}!", "cinza")
             return False
         atual = alvo.efeitos.get(efeito)
-        if acumula and atual and efeito == "queimadura":
+        if acumula and atual and est["camadas"]:
             # Mais uma camada: o dano por turno soma (até o teto) e a duração se renova.
-            s = min(self.MAX_CHAMAS, atual.get("s", 1) + 1)
+            s = min(est["camadas"], atual.get("s", 1) + 1)
             base = max(atual.get("b", atual["v"]), valor)
             atual.update(s=s, b=base, v=base * s, t=max(atual["t"], turnos))
-            rotulo = f"em chamas ×{s}"
+            rotulo = est["rotulo_camadas"].format(s=s)
         else:
             alvo.aplicar(efeito, turnos, valor)
-            if acumula and efeito == "queimadura":
+            if acumula and est["camadas"]:
                 alvo.efeitos[efeito].setdefault("s", 1)
                 alvo.efeitos[efeito].setdefault("b", valor)
         if rotulo:
@@ -523,16 +508,19 @@ class Combate:
 
     def processar_efeitos(self, c):
         """Aplica efeitos de início de turno. Devolve True se o turno é perdido."""
-        pular = "atordoado" in c.efeitos
-        rotulo = c.efeitos.get("atordoado", {}).get("r", "atordoado")
+        # Perde o turno quem tem um estado que tira o turno (o rótulo diz como: "congelado", "preso na armadilha").
+        trava = next((n for n in c.efeitos if ESTADOS.get(n, {}).get("perde_turno")), None)
+        pular = trava is not None
+        rotulo = c.efeitos[trava].get("r", NOMES[trava]) if trava else ""
         for nome in list(c.efeitos):
             ef = c.efeitos[nome]
-            if nome in DOTS and c.vivo:
+            est = ESTADOS.get(nome, {})
+            if est.get("tique") and c.vivo:
                 dano = max(1, int(ef["v"]))
-                if nome == "queimadura" and self.g.clima == "chuva":
-                    dano = max(1, int(dano * 0.7))
+                if est["ajuste_tique"]:
+                    dano = est["ajuste_tique"](self, dano)
                 c.hp = max(0, c.hp - dano)
-                rot, cor = DOTS[nome]
+                rot, cor = est["tique"]
                 self.lance("tique", em=self.uid(c), dano=dano, efeito=nome, hp=c.hp, max_hp=c.max_hp)
                 self.detalhe(f"{self.nome(c)} sofre {dano} de dano ({rot}).", cor)
                 if not c.vivo:

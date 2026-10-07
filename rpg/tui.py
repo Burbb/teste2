@@ -20,7 +20,7 @@ from textual.widgets import Footer, Header, Input, OptionList, RichLog, Static
 from textual.widgets.option_list import Option
 
 from . import comitiva, mapa, sobrevivencia
-from .combate import NOMES_EFEITOS
+from .estados import NOMES as NOMES_EFEITOS
 from .dados import CLIMAS, PERIODOS
 from .ui import UI
 

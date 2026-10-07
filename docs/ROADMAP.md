@@ -16,8 +16,8 @@ Cada etapa mantém o gabarito de regressão idêntico: nada de jogo muda, só on
 |---|---|---|
 | **A** | Habilidades como dados: blocos que executam e se descrevem; Grimório gerado; conta de crítico única | ✅ feito |
 | **B** | Modificadores e gatilhos: talentos e passivas de especialização declaram "+x% de dano corpo a corpo", "ao matar", "no início da luta"... e o combate só pergunta `mod`/`disparar`. Zero `tal("...")` fora de `talentos.py` (eram 28 talentos em 5 arquivos). Chaves validadas por teste. Falta: itens e estados como fontes (hoje `especial()`), e as verificações de spec fora do combate (testes de atributo, eventos). | ✅ feito |
-| **C** (próxima) | Catálogo de estados: cada estado declara nome, ícone, efeito por turno, se acumula, como se descreve. Tira a sequência de `if` de `processar_efeitos`. | |
-| **D** | Mundo e narrativa como dados: flags com nome, facções, reputação por facção, missões com etapas; eventos e diálogos com condições e consequências declaradas; validador de conteúdo (referências existem, ramos alcançáveis). | quando a história começar |
+| **C** | Catálogo de estados (`rpg/estados.py`): nome, ícone e cor, mal ou bênção, dano por turno, perda de turno, imunidade, resistência, camadas e descrição. `aplicar` e `processar_efeitos` genéricos; a tela recebe ícones e dicas do motor; o Grimório descreve pelo catálogo. Falta: o efeito dos estados na conta de dano (fortalecido, guarda, marcado...) ainda é perguntado à mão em `atacar`; vira modificador junto com os itens. | ✅ feito |
+| **D** (próxima) | Mundo e narrativa como dados: flags com nome, facções, reputação por facção, missões com etapas; eventos e diálogos com condições e consequências declaradas; validador de conteúdo (referências existem, ramos alcançáveis). | quando a história começar |
 | **E** | Front-end: `telas.js` dividido por tela; animação de habilidade como campo de dados (hoje há casos fixos em `batalha.js`). | |
 
 ## Depois do núcleo

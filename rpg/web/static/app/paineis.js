@@ -45,6 +45,7 @@ function aplicarEstado(e) {
   $("#corrupcao-topo .valor").textContent = e.mundo.corrupcao + "%";
   $("#sigilos-topo").innerHTML = [0, 1, 2].map((i) => `<i class="sigilo${i < e.heroi.sigilos ? " tem" : ""}"></i>`).join("");
   desenharHud(e.heroi, antes && antes.heroi);
+  Batalha.catalogo(e.estados);
   Batalha.desenhar(e.combate, e.heroi, replay);
   desenharModificadores(e.mundo.modificadores || []);
   const chaveHeroi = JSON.stringify(e.heroi);

@@ -4,7 +4,7 @@ from .. import balanceamento as bal
 from .. import comitiva, grimorio, mapa, sobrevivencia
 from ..classes import CLASSES
 from ..habilidades import HABILIDADES, descricao_habilidade
-from ..combate import NOMES_EFEITOS
+from ..estados import NOMES as NOMES_EFEITOS, para_tela
 from ..dados import BIOMAS, CLIMAS, PERIODOS
 from ..itens import CONSUMIVEIS, ficha
 from ..mundo import nivel_regiao
@@ -236,5 +236,6 @@ def estado(g):
                   "nivel": None if loc["tipo"] == "vila" else g.nivel_local()},
         "mapa": mapa_conhecido(g),
         "combate": combate(g),
+        "estados": para_tela(),  # ícone, cor e dica de cada estado (catálogo em estados.py)
         "contratos": [g.cartao_contrato(c) for c in g.contratos],
     }

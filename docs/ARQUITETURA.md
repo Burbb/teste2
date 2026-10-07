@@ -37,8 +37,10 @@ sorteia entre os que valem para o contexto.
 - `atacar()` é **a** conta de dano (esquiva, eficácia, modificadores, defesa, crítico, barreira, roubo de vida).
 - Cada coisa visível vira um **lance** estruturado (`acao`, `golpe`, `erro`, `cura`, `buff`, `salva`, `fim_acao`...)
   que a tela anima (`rpg/web/static/batalha.js`) e a telemetria contabiliza.
-- Estados (veneno, queimadura, guarda, provocando...) ficam em `efeitos` de cada combatente; `aplicar()` anuncia,
-  `processar_efeitos()` faz o efeito por turno.
+- Estados (veneno, queimadura, guarda, provocando...) ficam em `efeitos` de cada combatente. O **catálogo**
+  `rpg/estados.py` (Etapa C) declara, para cada um: nome, ícone e cor na tela, se é um mal, dano por turno,
+  perda de turno, imunidade, resistência, camadas e como o Grimório o descreve. `aplicar()` e
+  `processar_efeitos()` são genéricos: só leem o catálogo. A tela recebe ícones e dicas pelo estado (`"estados"`).
 
 ### Habilidades: dados, não código (Etapa A)
 
@@ -80,6 +82,7 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
 | `rpg/classes.py` | classes, especializações, animais do Patrulheiro |
 | `rpg/habilidades.py` | habilidades (execução + descrição) |
 | `rpg/talentos.py` | árvores de talentos e passivas de especialização, cada um declarando o próprio efeito |
+| `rpg/estados.py` | catálogo de estados (veneno, guarda, atordoado...): regras, tela e descrição |
 | `rpg/modificadores.py` | `mod`/`mult`/`disparar`: como talentos e passivas mudam o jogo (as chaves e eventos válidos) |
 | `rpg/inimigos.py`, `rpg/dados.py` | famílias de inimigos, biomas, climas, traços |
 | `rpg/itens.py` | consumíveis, equipamento, afixos, únicos |
