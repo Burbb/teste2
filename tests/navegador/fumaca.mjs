@@ -53,29 +53,29 @@ async function cenarioCombate(browser) {
   const { proc, url } = await subir("combate");
   const { page, erros, esperar } = await abrir(browser, url);
   try {
-    conferir(!!(await esperar(".barra-acoes .botao-acao")), "na sua vez, a barra de ações sobe dentro da arena");
-    conferir(!!(await page.$("#arena #barra-luta .barra-acoes")), "a barra fica dentro da arena, perto das cartas");
+    conferir(!!(await esperar("#prompt .barra-acoes .botao-acao")), "na sua vez, a barra de atalhos acende");
+    conferir(!!(await page.$("#batalha #arena + #barra-luta #prompt .barra-acoes")), "a barra fica colada embaixo da arena");
     conferir((await page.$$("#batalha .carta")).length >= 4, "a arena mostra herói, comitiva e inimigos");
     conferir(!!(await page.$('.botao-acao[data-hab="bola_fogo"]')), "as habilidades ficam à mostra na barra");
     await page.keyboard.press("p");
     conferir(!!(await esperar("#sobre-grimorio:not([hidden]) .g-faixa")), "o Grimório abre com P e mostra o dano");
     await page.keyboard.press("Escape");
     conferir(await page.evaluate(() => document.getElementById("sobre-grimorio").hidden), "Esc fecha o Grimório");
-    await (await page.$(".botao-acao.item")).click();
-    conferir(!!(await esperar("#barra-luta .grade-acoes .carta-acao")), "Itens abre as cartas dentro da arena");
-    await (await esperar(".voltar-carta")).click();
-    conferir(!!(await esperar(".barra-acoes .botao-acao")), "Voltar dos itens devolve a barra");
+    await (await page.$('.botao-acao[data-slot="itens"]')).click();
+    conferir(!!(await esperar('#barra-luta .botao-acao[data-slot="item"]')), "Itens vira slots na barra");
+    await (await esperar(".voltar-slot")).click();
+    conferir(!!(await esperar("#prompt .barra-acoes .botao-acao")), "Voltar dos itens devolve a barra");
     await (await page.$('.botao-acao[data-hab="bola_fogo"]')).click();
     conferir(!!(await esperar(".carta.alvejavel")), "a habilidade acende os alvos");
-    await (await esperar("#barra-luta .voltar-luta")).click();
-    conferir(!!(await esperar(".barra-acoes .botao-acao")), "Voltar na escolha do alvo devolve a barra");
+    await (await esperar("#barra-luta .mira-voltar")).click();
+    conferir(!!(await esperar("#prompt .barra-acoes .botao-acao")), "Voltar na escolha do alvo devolve a barra");
     await (await page.$('.botao-acao[data-hab="bola_fogo"]')).click();
     await (await esperar('.carta.alvejavel:has-text("Javali")')).click();
     conferir(!!(await esperar(".ef.fam-fogo", 15000)), "clicar no inimigo dispara: o alvo fica em chamas");
     // termina a luta atacando (clicando no alvo quando houver mais de um)
     for (let k = 0; k < 160; k++) {
       if (!(await page.evaluate(() => document.body.classList.contains("em-combate")))) break;
-      const b = await page.$(".barra-acoes .botao-acao.principal");
+      const b = await page.$("#prompt .barra-acoes .botao-acao.principal");
       if (b) await b.click().catch(() => {});
       const alvo = await page.$(".carta.alvejavel");
       if (alvo) await alvo.click().catch(() => {});

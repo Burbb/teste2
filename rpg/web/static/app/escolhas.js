@@ -15,6 +15,7 @@ function posicionarPrompt() {
   const naLuta = corpo.classList.contains("em-combate") && barra;
   if (naLuta && promptEl.parentElement !== barra) barra.appendChild(promptEl);
   else if (!naLuta && promptEl.parentElement !== folha) folha.appendChild(promptEl);
+  if (!naLuta) document.getElementById("barra-fantasma")?.replaceChildren();
 }
 
 let viaBarra = false;  // a habilidade foi escolhida direto na barra: "Voltar" do alvo volta à barra, não à lista
@@ -37,10 +38,15 @@ function mostrarOpcoes(m) {
     return;
   }
   Telas.fecharTalentos();
+  const emLuta = !!(estado && estado.combate);
+  if (emLuta && document.getElementById("barra-luta")) {
+    // Na luta, tudo vira slot na barra de atalhos: ações, habilidades, itens; mirando, o lembrete e o Voltar.
+    if (m.pergunta === "Sua ação:" && m.opcoes.some((o) => o.meta && o.meta.acao)) { barraDeAcoes(m); return; }
+    if (m.opcoes.some((o) => o.meta && (o.meta.habilidade || o.meta.usar_item || o.meta.trocar !== undefined))) { barraSubmenu(m); return; }
+    if (m.opcoes.some((o) => o.meta && o.meta.alvo)) { barraMira(m); return; }
+  }
   if (m.pergunta) promptEl.appendChild(el("div", "pergunta-rotulo", esc(m.pergunta)));
   const lista = el("ol", "escolhas");
-  const emLuta = !!(estado && estado.combate);
-  if (emLuta && m.pergunta === "Sua ação:" && m.opcoes.some((o) => o.meta && o.meta.acao)) { barraDeAcoes(m); return; }
   if (emLuta && m.pergunta === "Sua ação:") { lista.classList.add("acoes-combate"); Batalha.vez("j"); }
   if (emLuta && m.opcoes.some((o) => o.meta && o.meta.alvo)) {
     Batalha.alvos(m.opcoes, (i) => responder(m.id, i));
@@ -246,69 +252,133 @@ document.addEventListener("contextmenu", (ev) => {
   voltarPergunta();
 });
 
-/* ------------------------------------------------------------------ barra de ações da luta */
-/** Sua vez: Atacar, cada habilidade (ícone, custo, tecla), Itens e Fugir numa barra dentro da arena.
- *  Habilidade com alvo: um clique na barra e os inimigos acendem; o clique no inimigo dispara. */
-function barraDeAcoes(m) {
-  Batalha.vez("j");
-  promptEl.querySelector(".pergunta-rotulo")?.remove();  // a barra fala por si
-  habMirando = "";
-  viaBarra = false;
+/* ------------------------------------------------------------------ barra de atalhos da luta */
+/** Uma fileira de slots com teclas 1–9/0, dicas e o tremor de "não dá". */
+function novaBarra() {
   pergunta.teclasNum = [];
   const barra = el("div", "barra-acoes");
-  const acaoIdx = (a) => m.opcoes.findIndex((o) => o.meta && o.meta.acao === a);
-  const heroi = estado.heroi;
-  const botao = (classe, icone, nome, extra, dicaHtml, aoClicar) => {
-    const b = el("button", "botao-acao " + classe);
-    b.type = "button";
-    const n = pergunta.teclasNum.length;
-    const tecla = n < 9 ? String(n + 1) : n === 9 ? "0" : "";
-    b.innerHTML = `<span class="tecla">${tecla}</span><span class="ba-icone">${icone}</span><span class="ba-nome">${esc(nome)}</span>${extra || ""}`;
-    if (dicaHtml) b.dataset.dica = Telas.guardarDica(dicaHtml);
-    b.addEventListener("click", (ev) => { ev.stopPropagation(); aoClicar(b); });
-    pergunta.teclasNum.push(() => aoClicar(b));
-    barra.appendChild(b);
-    return b;
-  };
-  const sep = () => barra.appendChild(el("span", "ba-sep"));
   const tremer = (b, motivo) => {
     App.som("falha");
     b.animate([{ translate: "0" }, { translate: "-4px 0" }, { translate: "4px 0" }, { translate: "0" }], { duration: 240, easing: "ease-in-out" });
     aviso(motivo, "info", "pergaminho");
   };
+  const slot = ({ classe = "", nome = "", icone, extra = "", dica = "", bloqueio = null, tecla = true, aoClicar }) => {
+    const b = el("button", "botao-acao " + classe + (bloqueio ? " bloqueada" : ""));
+    b.type = "button";
+    if (nome) b.dataset.slot = nome;
+    let t = "";
+    if (tecla) {
+      const n = pergunta.teclasNum.length;
+      t = n < 9 ? String(n + 1) : n === 9 ? "0" : "";
+      pergunta.teclasNum.push(() => (bloqueio ? tremer(b, bloqueio) : aoClicar(b)));
+    }
+    b.innerHTML = `${t ? `<span class="tecla">${t}</span>` : ""}<span class="ba-icone">${icone}</span>${extra}`;
+    if (dica) b.dataset.dica = Telas.guardarDica(dica);
+    b.addEventListener("click", (ev) => { ev.stopPropagation(); if (bloqueio) tremer(b, bloqueio); else aoClicar(b); });
+    barra.appendChild(b);
+    return b;
+  };
+  const sep = () => barra.appendChild(el("span", "ba-sep"));
+  const fechar = () => { promptEl.appendChild(barra); Telas.ligarDicas(barra); return barra; };
+  return { barra, slot, sep, fechar };
+}
+
+function dicaHabilidade(h) {
+  return `<b>${esc(h.nome)}</b><div class="tipo">${h.custo ? `${h.custo} de ${esc(h.recurso)}` : "Sem custo"}${h.flechas ? ` · ${h.flechas} flecha${h.flechas > 1 ? "s" : ""}` : ""} · alvo: ${ALVO_TXT[h.alvo_tipo] || "—"}</div>
+    <div class="bonus">${esc(h.desc)}</div>${danoGrimorio(h.habilidade)}${h.pode ? "" : `<div class="pior">${esc(h.motivo || "Indisponível")}</div>`}`;
+}
+function slotHabilidade(b, h, aoClicar) {
+  const [ic, fam] = HAB_ICONE[h.habilidade] || ["estrela", "arcano"];
+  const extra = (h.custo ? `<span class="ba-custo">${h.custo}</span>` : "") + (h.flechas ? `<span class="ba-flechas">${spr("flecha", 1)}${h.flechas}</span>` : "");
+  const s = b.slot({ classe: `hab el-${fam}`, icone: spr(ic, 2), extra, dica: dicaHabilidade(h), bloqueio: h.pode ? null : (h.motivo || "Indisponível"), aoClicar });
+  s.dataset.hab = h.habilidade;
+  return s;
+}
+
+/** Sua vez: Atacar, cada habilidade, Itens e Fugir. Habilidade com alvo: um clique e os inimigos acendem. */
+function barraDeAcoes(m) {
+  Batalha.vez("j");
+  viaBarra = false;
+  habMirando = "";
+  const b = novaBarra();
+  const acaoIdx = (a) => m.opcoes.findIndex((o) => o.meta && o.meta.acao === a);
+  const heroi = estado.heroi;
   const atk = m.opcoes[acaoIdx("atacar")];
   const arma = { guerreiro: "espada", arqueiro: "arco", mago: "cajado" }[heroi.classe] || "espada";
   const basico = heroi.grimorio && heroi.grimorio.basico.linhas.find((l) => l.tipo === "dano");
-  botao("principal", spr(arma, 2), "Atacar", "", `<b>${esc(atk.meta.nome)}</b><div class="tipo">grátis · devolve um pouco de ${esc(heroi.recurso.toLowerCase())}</div>` +
-    (basico ? `<div class="melhor">Dano: ${basico.min}–${basico.max} (crítico ${basico.critico})</div>` : ""), () => { App.som("escolha"); habMirando = atk.meta.nome; responder(m.id, acaoIdx("atacar")); });
-  const habs = (m.opcoes[acaoIdx("habilidades")].meta.habilidades) || [];
-  if (habs.length) sep();
-  habs.forEach((h) => {
-    const [ic, fam] = HAB_ICONE[h.habilidade] || ["estrela", "arcano"];
-    const custo = h.custo ? `<span class="ba-custo">${h.custo}</span>` : "";
-    const flechas = h.flechas ? `<span class="ba-flechas">${spr("flecha", 1)}${h.flechas}</span>` : "";
-    const dicaHtml = `<b>${esc(h.nome)}</b><div class="tipo">${h.custo ? `${h.custo} de ${esc(h.recurso)}` : "Sem custo"}${h.flechas ? ` · ${h.flechas} flecha${h.flechas > 1 ? "s" : ""}` : ""} · alvo: ${ALVO_TXT[h.alvo_tipo] || "—"}</div>
-      <div class="bonus">${esc(h.desc)}</div>${danoGrimorio(h.habilidade)}${h.pode ? "" : `<div class="pior">${esc(h.motivo || "Indisponível")}</div>`}`;
-    const b = botao(`hab el-${fam}${h.pode ? "" : " bloqueada"}`, spr(ic, 2), h.nome, custo + flechas, dicaHtml, (bt) => {
-      if (!h.pode) { tremer(bt, h.motivo || "Indisponível"); return; }
-      App.som("escolha");
-      viaBarra = true;
-      habMirando = h.nome;
-      pendente = { chave: "habilidade", valor: h.habilidade };
-      responder(m.id, acaoIdx("habilidades"));
-    });
-    b.dataset.hab = h.habilidade;
-  });
-  sep();
-  botao("item", spr("pocao", 2), "Itens", "", "<b>Itens</b><div>Poções, tônicos, bandagens e troca de arma. Usar gasta o turno.</div>",
-    () => { App.som("escolha"); responder(m.id, acaoIdx("itens")); });
-  if (acaoIdx("analisar") >= 0) botao("item", spr("olho", 2), "Analisar", "", "", () => responder(m.id, acaoIdx("analisar")));
+  b.slot({ classe: "principal", nome: "atacar", icone: spr(arma, 2),
+    dica: `<b>${esc(atk.meta.nome)}</b><div class="tipo">grátis · devolve um pouco de ${esc(heroi.recurso.toLowerCase())}</div>` +
+      (basico ? `<div class="melhor">Dano: ${basico.min}–${basico.max} (crítico ${basico.critico})</div>` : ""),
+    aoClicar: () => { App.som("escolha"); habMirando = atk.meta.nome; responder(m.id, acaoIdx("atacar")); } });
+  const habs = m.opcoes[acaoIdx("habilidades")].meta.habilidades || [];
+  if (habs.length) b.sep();
+  habs.forEach((h) => slotHabilidade(b, h, () => {
+    App.som("escolha");
+    viaBarra = true;
+    habMirando = h.nome;
+    pendente = { chave: "habilidade", valor: h.habilidade };
+    responder(m.id, acaoIdx("habilidades"));
+  }));
+  b.sep();
+  b.slot({ classe: "el-cura", nome: "itens", icone: spr("pocao", 2), dica: "<b>Itens</b><div>Poções, tônicos, bandagens e troca de arma. Usar gasta o turno.</div>",
+    aoClicar: () => { App.som("escolha"); responder(m.id, acaoIdx("itens")); } });
+  if (acaoIdx("analisar") >= 0) b.slot({ icone: spr("olho", 2), dica: "<b>Analisar</b>", aoClicar: () => responder(m.id, acaoIdx("analisar")) });
   if (acaoIdx("fugir") >= 0) {
-    botao("fugir", spr("fuga", 2), "Fugir", "", "<b>Fugir</b><div>A chance depende da sua Agilidade contra a dos inimigos. Falhar custa o turno.</div>",
-      () => { App.som("escolha"); responder(m.id, acaoIdx("fugir")); });
+    b.slot({ nome: "fugir", icone: spr("fuga", 2), dica: "<b>Fugir</b><div>A chance depende da sua Agilidade contra a dos inimigos. Falhar custa o turno.</div>",
+      aoClicar: () => { App.som("escolha"); responder(m.id, acaoIdx("fugir")); } });
   }
-  promptEl.appendChild(barra);
-  Telas.ligarDicas(barra);
+  const barra = b.fechar();
+  // A mesma fileira, apagada, fica no lugar enquanto os outros agem: a barra nunca some nem pula.
+  const copia = barra.cloneNode(true);
+  copia.querySelectorAll("[data-hab], [data-slot], [data-dica]").forEach((x) => { delete x.dataset.hab; delete x.dataset.slot; delete x.dataset.dica; });
+  copia.querySelectorAll("button").forEach((x) => { x.disabled = true; x.tabIndex = -1; });
+  document.getElementById("barra-fantasma")?.replaceChildren(copia);
+}
+
+/** Habilidades ou itens (pela tecla ou pelo slot de Itens): slots com o mesmo visual, e o Voltar no fim. */
+function barraSubmenu(m) {
+  Batalha.vez("j");
+  const b = novaBarra();
+  const voltar = m.opcoes.findIndex(ehVoltar);
+  m.opcoes.forEach((o, i) => {
+    const meta = o.meta;
+    if (!meta || i === voltar) return;
+    if (meta.habilidade) {
+      slotHabilidade(b, meta, () => { App.som("escolha"); habMirando = meta.nome; responder(m.id, i); });
+    } else if (meta.usar_item) {
+      b.slot({ classe: "el-cura", nome: "item", icone: spr(Telas.ICONE_ITEM[meta.usar_item] || "pocao", 2), extra: `<span class="ba-qtd">${meta.qtd}</span>`,
+        dica: `<b>${esc(meta.nome)}</b><div class="tipo">Você tem ${meta.qtd} · gasta o turno</div><div class="bonus">${esc(meta.desc)}</div>`,
+        bloqueio: meta.motivo, aoClicar: () => { App.som("item"); responder(m.id, i); } });
+    } else if (meta.trocar !== undefined) {
+      b.slot({ classe: "el-fisico", icone: spr(Telas.iconeItem(meta.equip), 2),
+        dica: Telas.htmlItem(meta.equip, "Trocar de arma no meio da luta gasta o seu turno."), aoClicar: () => { App.som("equipar"); responder(m.id, i); } });
+    }
+  });
+  if (voltar >= 0) {
+    pergunta.voltar = voltar;
+    b.sep();
+    b.slot({ classe: "voltar-slot", icone: "◀", tecla: false, dica: "<b>Voltar</b><div>Esc ou botão direito também voltam.</div>", aoClicar: () => voltarPergunta() });
+  }
+  b.fechar();
+}
+
+/** Mirando: os inimigos acendem; na barra, o lembrete e o Voltar. As teclas 1, 2... escolhem o alvo. */
+function barraMira(m) {
+  Batalha.alvos(m.opcoes, (i) => responder(m.id, i));
+  pergunta.teclasNum = [];
+  m.opcoes.forEach((o, i) => { if (o.meta && o.meta.alvo) pergunta.teclasNum.push(() => responder(m.id, i)); });
+  const voltar = m.opcoes.findIndex(ehVoltar);
+  const caixa = el("div", "mira-barra",
+    `<span class="mira-texto">${habMirando ? `<b>${esc(habMirando)}</b>: ` : ""}escolha o alvo <small>clique num inimigo</small></span>`);
+  if (voltar >= 0) {
+    pergunta.voltar = voltar;
+    if (viaBarra) pergunta.aoVoltar = () => { pendente = { chave: "_voltar", valor: true }; };
+    const v = el("button", "mira-voltar", "◀ Voltar");
+    v.type = "button";
+    v.addEventListener("click", (ev) => { ev.stopPropagation(); voltarPergunta(); });
+    caixa.appendChild(v);
+  }
+  promptEl.appendChild(caixa);
 }
 
 function iconeAcaoCombate(t) {

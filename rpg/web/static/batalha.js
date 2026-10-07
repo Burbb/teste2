@@ -43,8 +43,9 @@ const Batalha = (() => {
   function montar() {
     if (arena) return;
     const raiz = document.getElementById("batalha");
-    // A barra de ações mora dentro da arena: na sua vez, as opções da luta sobem ali, perto das cartas.
-    raiz.innerHTML = `<div id="arena"><div class="fileira aliados"></div><div class="fileira inimigos"></div><div class="camada-fx"></div><div id="barra-luta"></div></div>`;
+    // A barra de atalhos fica colada embaixo da arena: na sua vez, as opções da luta acendem ali, perto das cartas.
+    raiz.innerHTML = `<div id="arena"><div class="fileira aliados"></div><div class="fileira inimigos"></div><div class="camada-fx"></div></div>
+      <div id="barra-luta"><div id="barra-fantasma" aria-hidden="true"></div></div>`;
     arena = raiz.firstElementChild;
     colAliados = arena.querySelector(".aliados");
     colInimigos = arena.querySelector(".inimigos");
@@ -131,7 +132,10 @@ const Batalha = (() => {
     const r = el.getBoundingClientRect();
     const esq = r.left - 300 < 6 ? r.right + 10 : r.left - 300;
     caixa.style.left = Math.max(6, Math.min(innerWidth - 296, esq)) + "px";
-    caixa.style.top = Math.max(6, Math.min(innerHeight - caixa.offsetHeight - 6, r.top)) + "px";
+    // Nunca por cima da barra de atalhos: na mira, o lembrete e o Voltar precisam ficar à vista.
+    const barra = document.getElementById("barra-luta");
+    const limite = barra && barra.offsetParent ? barra.getBoundingClientRect().top - 6 : innerHeight - 6;
+    caixa.style.top = Math.max(6, Math.min(limite - caixa.offsetHeight, r.top)) + "px";
   }
   function esconderFicha() { Telas.esconderDica(); }
 

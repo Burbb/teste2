@@ -41,72 +41,62 @@
   animation: cortar 0.38s steps(8) forwards; }
 @keyframes cortar { 0% { scale: 0 1; opacity: 1; } 45% { scale: 1 1; opacity: 1; } 100% { scale: 1 0.2; opacity: 0; } }
 
-/* ---------------------------------------------------------------- luta: arena grande com a barra de ações dentro */
-body.em-combate #arena { min-height: clamp(320px, 54vh, 560px); padding-bottom: 112px; }
+/* ---------------------------------------------------------------- luta: a tira da arena + barra de atalhos logo abaixo */
 body.em-combate #cena-cab { display: none; }                 /* o título do lugar já ficou para trás: o log é só a luta */
 body.em-combate #folha { padding-top: 6px; }
 body.em-combate #texto p { margin-bottom: 0.35em; }
-#barra-luta { position: absolute; left: 0; right: 0; bottom: 0; z-index: 5; display: flex; justify-content: center; align-items: flex-end;
-  padding: 26px 10px 10px; pointer-events: none; background: linear-gradient(180deg, transparent, rgba(5, 4, 3, 0.7) 45%);
-  transition: transform .22s cubic-bezier(.2, .8, .3, 1), opacity .22s ease; }
-#barra-luta:has(> #prompt:empty) { transform: translateY(26px); opacity: 0; }
-#barra-luta > #prompt { pointer-events: auto; margin: 0; max-width: 100%; animation: none; }
-#barra-luta .pergunta-rotulo { text-align: center; margin: 0 0 6px; color: var(--tinta); text-shadow: 2px 2px 0 #000; }
-#barra-luta .pergunta-rotulo.mira { color: var(--ouro); }
-#barra-luta .escolhas { margin: 0; }
-#barra-luta .escolhas:not(.grade-acoes) { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
-#barra-luta .escolhas:not(.grade-acoes) .escolha { padding: 6px 12px; font-size: 16px; background: rgba(18, 14, 11, 0.95); border: 2px solid #4a4038; box-shadow: 2px 2px 0 #000; }
-#barra-luta .escolhas:not(.grade-acoes) .escolha::before { display: none; }
-#barra-luta .escolhas.grade-acoes { max-height: 34vh; overflow-y: auto; padding: 8px; background: rgba(13, 11, 10, 0.94); border: 3px solid #4a4038; box-shadow: 3px 3px 0 #000;
-  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); width: min(780px, 92vw); }
+body.em-combate #arena { border-bottom-width: 0; }
+/* A barra fica sempre no lugar (nada pula): na sua vez, os slots acendem; na vez dos outros, a fileira esmaece. */
+#barra-luta { position: relative; display: grid; place-items: center; min-height: 74px; padding: 7px 10px 8px;
+  background: linear-gradient(180deg, #1a1411, #0f0c0a); border: 3px solid #0d0b0a; border-top: 2px solid #3a2e24;
+  box-shadow: inset 0 1px 0 rgba(255, 220, 160, 0.06); }
+#barra-luta > * { grid-area: 1 / 1; }
+#barra-luta > #prompt { margin: 0; max-width: 100%; animation: none; }
+#barra-fantasma { pointer-events: none; opacity: 0; filter: grayscale(0.9) brightness(0.55); transition: opacity .2s ease; }
+#barra-luta:has(> #prompt:empty) #barra-fantasma { opacity: 1; }
+#barra-luta:has(> #prompt:not(:empty)) #barra-fantasma { visibility: hidden; }
+#barra-luta .pergunta-rotulo { margin: 0 0 6px; text-align: center; }
 #barra-luta .continuar { margin: 0 auto; }
-.barra-acoes { display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-end; gap: 5px; padding: 6px 8px; background: rgba(13, 11, 10, 0.92);
-  border: 3px solid #4a4038; box-shadow: 3px 3px 0 #000; animation: barra-sobe .28s cubic-bezier(.2, .8, .3, 1.15); }
-@keyframes barra-sobe { from { transform: translateY(18px); opacity: 0; } }
-.ba-sep { align-self: stretch; width: 2px; margin: 4px 3px; background: repeating-linear-gradient(180deg, #4a4038 0 4px, transparent 4px 7px); }
-.botao-acao { --el: #4a4038; position: relative; width: 62px; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 5px 2px 4px;
-  font: inherit; color: var(--tinta); background: #120e0b; border: 2px solid #2a2018; cursor: pointer; transition: transform .12s, border-color .12s, background .12s; }
-.botao-acao .ba-icone { display: grid; place-items: center; width: 44px; height: 44px; background: #0a0807; border: 2px solid var(--el); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.6); }
-.botao-acao .ba-nome { max-width: 58px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--ui); font-size: 11px; line-height: 1.1; color: var(--tinta-2); }
-.botao-acao .tecla { position: absolute; top: 1px; left: 4px; font-family: var(--num); font-size: 12px; color: var(--tinta-3); }
-.botao-acao .ba-custo { position: absolute; top: 34px; right: 3px; min-width: 18px; padding: 0 3px; font-family: var(--num); font-size: 14px; line-height: 15px; text-align: center;
-  color: #cfe0ff; background: #1c2a6b; border: 1px solid #000; box-shadow: 1px 1px 0 #000; }
-.botao-acao .ba-flechas { position: absolute; top: 2px; right: 2px; display: flex; align-items: center; font-family: var(--num); font-size: 12px; color: var(--tinta-2); }
+.barra-acoes { display: flex; align-items: center; justify-content: center; gap: 6px; }
+#prompt .barra-acoes { animation: barra-acende .3s ease-out; }
+@keyframes barra-acende { from { filter: grayscale(0.9) brightness(0.55); } }
+.ba-sep { align-self: stretch; width: 2px; margin: 6px 4px; background: repeating-linear-gradient(180deg, #4a4038 0 4px, transparent 4px 7px); }
+/* Slot de atalho: a mesma moldura dos espaços de equipamento e da bolsa. */
+.botao-acao { --el: #3a2e24; position: relative; display: grid; place-items: center; width: 54px; height: 54px; padding: 0; font: inherit; color: var(--tinta);
+  background: #0d0b0a; border: 3px solid var(--el); box-shadow: inset 0 0 0 2px #000, inset 0 -10px 14px rgba(0, 0, 0, 0.55); cursor: pointer;
+  transition: transform .12s ease, border-color .12s ease, box-shadow .12s ease; }
+.botao-acao .ba-icone { display: grid; place-items: center; }
+.botao-acao .ba-nome { display: none; }
+.botao-acao .tecla { position: absolute; top: 0; left: 3px; font-family: var(--num); font-size: 13px; line-height: 1; color: var(--tinta-2); text-shadow: 1px 1px 0 #000; }
+.botao-acao .ba-custo { position: absolute; right: -4px; bottom: -6px; min-width: 18px; padding: 0 3px; font-family: var(--num); font-size: 14px; line-height: 15px; text-align: center;
+  color: #cfe0ff; background: #1c2a6b; border: 2px solid #000; }
+.botao-acao .ba-qtd { position: absolute; right: 2px; bottom: -3px; font-family: var(--num); font-size: 17px; color: #fff; text-shadow: 2px 2px 0 #000; }
+.botao-acao .ba-flechas { position: absolute; top: 1px; right: 2px; display: flex; align-items: center; font-family: var(--num); font-size: 12px; color: var(--tinta-2); text-shadow: 1px 1px 0 #000; }
 .botao-acao .ba-flechas img.sprite { --s: 16; }
-.botao-acao:hover, .botao-acao:focus-visible { transform: translateY(-4px); border-color: var(--ouro); background: #1c140d; outline: none; }
-.botao-acao:hover .ba-nome { color: var(--tinta); }
-.botao-acao:active { transform: translateY(-1px) scale(.96); }
-.botao-acao.principal { width: 70px; border-color: #8a6a14; }
-.botao-acao.principal .ba-icone { width: 50px; height: 50px; border-color: var(--ouro); }
-.botao-acao.fugir .ba-icone { border-color: #5a4a38; }
-.botao-acao.bloqueada { filter: grayscale(.85) brightness(.6); cursor: not-allowed; }
-.botao-acao.bloqueada:hover { transform: none; border-color: #5a2020; }
+.botao-acao:hover, .botao-acao:focus-visible { transform: translateY(-3px); border-color: var(--ouro); outline: none; box-shadow: inset 0 0 0 2px #000, 0 0 0 2px #000, 0 0 10px rgba(242, 201, 76, 0.35); }
+.botao-acao:active { transform: translateY(-1px) scale(.95); }
+.botao-acao.principal { width: 60px; height: 60px; --el: #8a6a14; }
+.botao-acao.voltar-slot { --el: #4a4038; font-size: 22px; color: var(--ouro); }
+.botao-acao.bloqueada { filter: grayscale(.9) brightness(.55); cursor: not-allowed; }
+.botao-acao.bloqueada:hover { transform: none; border-color: #5a2020; box-shadow: inset 0 0 0 2px #000; }
 .botao-acao.bloqueada .ba-custo { background: #6e0d0d; color: #ffb0a8; }
-.botao-acao.el-fogo { --el: #e0782f; } .botao-acao.el-gelo { --el: #7fb0ff; } .botao-acao.el-sagrado { --el: #f2c94c; }
-.botao-acao.el-sombra { --el: #8e6fd8; } .botao-acao.el-arcano { --el: #6f9bff; } .botao-acao.el-veneno { --el: #6fbf4a; }
-.botao-acao.el-natureza { --el: #4f9a5b; } .botao-acao.el-sangue { --el: #b3262b; } .botao-acao.el-protecao { --el: #3d63c9; }
-.botao-acao.el-forca { --el: #ffb35c; } .botao-acao.el-fisico { --el: #a89878; }
+.botao-acao.el-fogo { --el: #8a4418; } .botao-acao.el-gelo { --el: #3d5a8a; } .botao-acao.el-sagrado { --el: #8a6a14; }
+.botao-acao.el-sombra { --el: #4a3470; } .botao-acao.el-arcano { --el: #3a4e8a; } .botao-acao.el-veneno { --el: #3a6a2a; }
+.botao-acao.el-natureza { --el: #2e5a34; } .botao-acao.el-sangue { --el: #6e1d1d; } .botao-acao.el-protecao { --el: #2a3f7a; }
+.botao-acao.el-forca { --el: #8a5a1c; } .botao-acao.el-fisico { --el: #5a4a38; } .botao-acao.el-cura { --el: #3d6a2a; }
 body.recurso-vigor .botao-acao .ba-custo { background: #6a3c10; color: #ffe0b0; }
 body.recurso-foco .botao-acao .ba-custo { background: #1f4a25; color: #d8f5c0; }
+/* Mirando: no lugar dos slots, o lembrete e o Voltar. */
+.mira-barra { display: flex; align-items: center; gap: 12px; min-height: 54px; }
+.mira-barra .mira-texto { font-family: var(--ui); font-size: 16px; color: var(--tinta); }
+.mira-barra .mira-texto b { color: var(--ouro); }
+.mira-barra .mira-texto small { margin-left: 6px; font-size: 13px; color: var(--tinta-3); }
+.mira-barra .mira-voltar { font: inherit; font-size: 14px; color: var(--tinta); background: #120e0b; border: 2px solid #4a4038; padding: 4px 10px; cursor: pointer; box-shadow: 2px 2px 0 #000; }
+.mira-barra .mira-voltar:hover { border-color: var(--ouro); }
 @media (max-width: 700px) {
-  body.em-combate #arena { min-height: 48vh; padding-bottom: 104px; }
-  #barra-luta > #prompt { width: 100%; }
-  .barra-acoes { flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; scrollbar-width: none; }
+  .barra-acoes { justify-content: flex-start; overflow-x: auto; scrollbar-width: none; max-width: calc(100vw - 48px); padding: 4px 2px 8px; }
   .barra-acoes > * { flex: none; }
-  .botao-acao { width: 54px; } .botao-acao .ba-icone { width: 38px; height: 38px; } .botao-acao .ba-custo { top: 28px; }
+  .botao-acao { width: 48px; height: 48px; } .botao-acao.principal { width: 52px; height: 52px; }
 }
-/* Na arena grande, as cartas crescem junto. */
-body.em-combate .fileira { grid-template-columns: minmax(0, 250px); gap: 10px; }
-body.em-combate .fileira.duas { grid-template-columns: repeat(2, minmax(0, 205px)); }
-body.em-combate .carta { padding: 6px 9px 7px; }
-body.em-combate .carta-nome { font-size: 14px; }
-body.em-combate .carta-hp .barra-px { height: 12px; }
-/* Mirando: lembrete e Voltar lado a lado; os nomes dos alvos saem (o clique é na carta). */
-#barra-luta #prompt:has(.mira-alvo) { display: flex; align-items: center; gap: 10px; padding: 6px 8px 6px 14px; background: rgba(13, 11, 10, 0.92); border: 3px solid #8a6a14; box-shadow: 3px 3px 0 #000; animation: barra-sobe .25s ease-out; }
-#barra-luta #prompt:has(.mira-alvo) .pergunta-rotulo { margin: 0; font-size: 16px; letter-spacing: 0; text-transform: none; color: var(--tinta); }
-#barra-luta .pergunta-rotulo b { color: var(--ouro); }
-#barra-luta .pergunta-rotulo small { margin-left: 6px; font-size: 13px; color: var(--tinta-3); }
-#barra-luta .escolhas.mira-alvo li:not(:last-child) { display: none; }
-#barra-luta .escolhas.mira-alvo .voltar-luta { padding: 4px 10px; font-size: 14px; }
-#barra-luta .pergunta-rotulo.mira::after { content: none; }
-#barra-luta #prompt:has(.mira-alvo) .pergunta-rotulo { font-family: var(--ui); }
+/* Sua vez: a borda de cima da barra acende em ouro. */
+#barra-luta:has(> #prompt:not(:empty)) { border-top-color: #8a6a14; box-shadow: inset 0 1px 0 rgba(242, 201, 76, 0.25), inset 0 12px 18px -14px rgba(242, 201, 76, 0.35); }
