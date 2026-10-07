@@ -561,6 +561,63 @@ class TestSistemas(unittest.TestCase):
         asyncio.run(rodar())
 
 
+class TestSaves(unittest.TestCase):
+    def _save_v1(self, pasta):
+        """Monta um save no formato antigo (versão 1): sem coordenadas, 3 espaços de equipamento, sem talentos."""
+        import json
+        import os
+        g = jogar(5, "guerreiro", decisoes=60, pasta=pasta)
+        g.salvar(silencioso=True)
+        caminho = g.caminho_save()
+        with open(caminho, encoding="utf-8") as f:
+            d = json.load(f)
+        d["versao"] = 1
+        for loc in d["mundo"]["locais"]:
+            loc.pop("x", None)
+            loc.pop("y", None)
+        d["jogador"]["equip"] = {k: d["jogador"]["equip"].get(k) for k in ("arma", "armadura", "amuleto")}
+        for k in ("talentos", "pontos_talento", "provisoes", "fome", "ferimentos"):
+            d["jogador"].pop(k, None)
+        d.pop("comitiva", None)
+        d.pop("reserva", None)
+        d["campo_que_nao_existe_mais"] = 123
+        with open(caminho, "w", encoding="utf-8") as f:
+            json.dump(d, f)
+        return caminho, os
+
+    def test_save_antigo_e_migrado(self):
+        from rpg.migracoes import VERSAO_SAVE
+        with tempfile.TemporaryDirectory() as pasta:
+            caminho, os = self._save_v1(pasta)
+            g = Jogo.carregar(BotUI(random.Random(1), max_decisoes=80), caminho, pasta)
+            self.assertTrue(all("x" in l and "y" in l for l in g.mundo["locais"]))
+            self.assertEqual(len(g.j.equip), 10)
+            self.assertEqual(g.j.talentos, {})
+            self.assertEqual(g.reserva, [])
+            self.assertFalse(hasattr(g, "campo_que_nao_existe_mais"))
+            try:
+                g.rodar()  # e o jogo segue normalmente a partir dele
+            except LimiteBot:
+                pass
+            g.salvar(silencioso=True)
+            import json
+            with open(g.caminho_save(), encoding="utf-8") as f:
+                self.assertEqual(json.load(f)["versao"], VERSAO_SAVE)
+
+    def test_save_mais_novo_avisa(self):
+        import json
+        from rpg.migracoes import SaveIncompativel, VERSAO_SAVE
+        with tempfile.TemporaryDirectory() as pasta:
+            caminho, _ = self._save_v1(pasta)
+            with open(caminho, encoding="utf-8") as f:
+                d = json.load(f)
+            d["versao"] = VERSAO_SAVE + 1
+            with open(caminho, "w", encoding="utf-8") as f:
+                json.dump(d, f)
+            with self.assertRaises(SaveIncompativel):
+                Jogo.carregar(BotUI(random.Random(1)), caminho, pasta)
+
+
 class TestGabarito(unittest.TestCase):
     def test_partidas_identicas_ao_gabarito(self):
         """Refatorações não podem mudar a jogabilidade: as partidas de referência saem iguais, evento por evento.

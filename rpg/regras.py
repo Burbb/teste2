@@ -2,7 +2,6 @@
 
 from . import itens
 
-VERSAO_SAVE = 1
 NOMES_TESTE = {
     "forca": "Força", "destreza": "Destreza", "arcano": "Arcano",
     "percepcao": "Percepção", "vontade": "Vontade", "carisma": "Carisma",

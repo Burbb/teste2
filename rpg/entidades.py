@@ -167,12 +167,5 @@ class Jogador(Combatente):
     @classmethod
     def de_dict(cls, d):
         obj = cls.__new__(cls)
-        obj.__dict__.update(d)
-        obj.__dict__.setdefault("talentos", {})
-        obj.__dict__.setdefault("pontos_talento", max(0, obj.nivel - 1))
-        obj.__dict__.setdefault("provisoes", 4)
-        obj.__dict__.setdefault("fome", 0)
-        obj.__dict__.setdefault("ferimentos", [])
-        for s in ("cabeca", "amuleto", "armadura", "maos", "arma", "secundaria", "pernas", "pes", "anel1", "anel2"):
-            obj.equip.setdefault(s, None)  # saves antigos tinham só arma, armadura e amuleto
+        obj.__dict__.update(d)  # saves antigos já chegam aqui migrados (veja migracoes.py)
         return obj

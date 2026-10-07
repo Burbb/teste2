@@ -6,6 +6,7 @@ import os
 import sys
 
 from .jogo import FimDeJogo, Jogo
+from .migracoes import SaveIncompativel
 from .ui import UI
 
 COMO_JOGAR = """\
@@ -58,7 +59,12 @@ def menu_principal(ui, args):
                 nomes = [os.path.splitext(os.path.basename(s))[0] for s in saves]
                 i = ui.escolher("Qual jogo?", nomes + ["Voltar"])
                 if i < len(saves):
-                    jogo = Jogo.carregar(ui, saves[i], args.saves)
+                    try:
+                        jogo = Jogo.carregar(ui, saves[i], args.saves)
+                    except (SaveIncompativel, ValueError, KeyError) as erro:
+                        ui.dizer(f"Não deu para abrir esse save: {erro}", "vermelho")
+                        ui.pausar()
+                        continue
                     jogo.autosalvar = ui.interativo
                     ui.jogo = jogo
                     ui.dizer(f"Bem-vindo de volta, {jogo.j.nome}.", "verde")

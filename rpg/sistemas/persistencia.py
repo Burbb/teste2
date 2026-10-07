@@ -5,7 +5,8 @@ import os
 import re
 from ..entidades import Jogador
 from .. import telemetria
-from ..regras import VERSAO_SAVE, FimDeJogo
+from ..migracoes import CAMPOS_SAVE, VERSAO_SAVE, migrar
+from ..regras import FimDeJogo
 
 
 class Persistencia:
@@ -36,10 +37,7 @@ class Persistencia:
             "rng": [estado[0], list(estado[1]), estado[2]],
             "jogador": self.j.para_dict(),
         }
-        for campo in ("mundo", "dia", "periodo", "clima", "corrupcao", "passos", "flags", "historico", "contagem",
-                      "impulsos", "sementes", "rumores", "contratos", "ofertas", "lojas", "nemesis",
-                      "aliados_finais", "forcados", "proximo_id", "estatisticas", "hardcore", "bestiario", "lendas",
-                      "registro", "arquivo_run", "comitiva", "reserva"):
+        for campo in CAMPOS_SAVE:
             dados[campo] = getattr(self, campo)
         caminho = self.caminho_save()
         temporario = caminho + ".tmp"
@@ -55,18 +53,15 @@ class Persistencia:
 
     @classmethod
     def carregar(cls, ui, caminho, pasta_saves="saves"):
+        """Lê um save de qualquer versão: as migrações o trazem até o formato atual antes de montar o jogo.
+        Levanta migracoes.SaveIncompativel se o arquivo for de uma versão mais nova (ou não for um save)."""
         with open(caminho, encoding="utf-8") as f:
-            dados = json.load(f)
+            dados = migrar(json.load(f))
         g = cls(ui, dados["seed"], pasta_saves)
-        r = dados.pop("rng")
+        r = dados["rng"]
         g.rng.setstate((r[0], tuple(r[1]), r[2]))
-        g.j = Jogador.de_dict(dados.pop("jogador"))
-        dados.pop("versao", None)
-        dados.pop("seed", None)
-        for campo, valor in dados.items():
-            setattr(g, campo, valor)
-        # Saves da versão anterior não tinham coordenadas no mapa.
-        for loc in g.mundo["locais"]:
-            loc.setdefault("x", 0.03 + 0.9 * (loc["perigo"] - 1) / 4 if loc["id"] else 0.03)
-            loc.setdefault("y", 0.08 + 0.84 * ((loc["id"] * 5) % 11) / 10)
+        g.j = Jogador.de_dict(dados["jogador"])
+        for campo in CAMPOS_SAVE:  # só o que o jogo conhece; campos estranhos no arquivo são ignorados
+            if campo in dados:
+                setattr(g, campo, dados[campo])
         return g
