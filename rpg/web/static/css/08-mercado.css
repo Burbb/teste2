@@ -26,15 +26,21 @@
 .inv-lado h4 small, .loja h4 small { font-family: var(--texto); font-size: 13px; color: var(--tinta-3); text-shadow: none; }
 .ficha-mini .heroi-nome { font-size: 40px; }
 .dica-uso { margin-top: 12px; font-size: 13px; color: var(--tinta-3); }
-#dica-item { position: fixed; z-index: 50; width: 280px; padding: 8px 10px; font-size: 14px; line-height: 1.45; pointer-events: none; box-shadow: var(--sombra); }
-#dica-item b { display: block; font-family: var(--titulo); font-weight: 400; font-size: 28px; line-height: 1; color: #fff3d6; }
-#dica-item .tipo { font-size: 12px; color: var(--tinta-3); text-transform: uppercase; letter-spacing: 0.06em; margin: 2px 0 4px; }
-#dica-item .bonus { font-family: var(--num); font-size: 18px; color: var(--tinta); line-height: 1.15; }
-#dica-item .comparacao { margin-top: 6px; padding-top: 4px; border-top: 2px dashed #3a2e24; display: flex; flex-direction: column; font-family: var(--num); font-size: 17px; line-height: 1.15; }
-#dica-item .comparacao small { font-family: var(--texto); font-size: 11px; color: var(--tinta-3); }
-#dica-item .melhor { color: var(--bom); } #dica-item .pior { color: var(--sangue-2); }
-#dica-item .lore { margin-top: 6px; font-style: italic; color: var(--tinta-2); }
-#dica-item .rodape { margin-top: 6px; font-size: 12px; color: var(--ouro); }
+:is(#dica-item, #dica-equipado) { position: fixed; z-index: 50; width: 280px; padding: 8px 10px; font-size: 14px; line-height: 1.45; pointer-events: none; box-shadow: var(--sombra); }
+:is(#dica-item, #dica-equipado) b { display: block; font-family: var(--titulo); font-weight: 400; font-size: 28px; line-height: 1; color: #fff3d6; }
+:is(#dica-item, #dica-equipado) .tipo { font-size: 12px; color: var(--tinta-3); text-transform: uppercase; letter-spacing: 0.06em; margin: 2px 0 4px; }
+:is(#dica-item, #dica-equipado) .bonus { font-family: var(--num); font-size: 18px; color: var(--tinta); line-height: 1.15; }
+:is(#dica-item, #dica-equipado) .comparacao { margin-top: 6px; padding-top: 4px; border-top: 2px dashed #3a2e24; display: flex; flex-direction: column; font-family: var(--num); font-size: 17px; line-height: 1.15; }
+:is(#dica-item, #dica-equipado) .comparacao small { font-family: var(--texto); font-size: 11px; color: var(--tinta-3); }
+:is(#dica-item, #dica-equipado) .melhor { color: var(--bom); } :is(#dica-item, #dica-equipado) .pior { color: var(--sangue-2); }
+:is(#dica-item, #dica-equipado) .lore { margin-top: 6px; font-style: italic; color: var(--tinta-2); }
+:is(#dica-item, #dica-equipado) .rodape { margin-top: 6px; font-size: 12px; color: var(--ouro); }
+/* Segurando Shift sobre um item: o que você está usando aparece ao lado, para comparar por inteiro. */
+#dica-equipado { position: fixed; z-index: 50; }
+#dica-equipado .selo-equipado { display: block; font-size: 11px; color: var(--ouro); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 2px; }
+#dica-equipado + #dica-equipado, #dica-equipado .outro { margin-top: 8px; padding-top: 6px; border-top: 2px dashed #3a2e24; }
+#dica-item .atalho-shift { margin-top: 6px; font-size: 11px; color: var(--tinta-3); }
+#dica-item .atalho-shift kbd { font-family: var(--num); font-size: 13px; padding: 0 4px; border: 1px solid #5a4a3a; border-bottom-width: 2px; color: var(--tinta-2); }
 .loja-topo { display: flex; align-items: center; gap: 12px; padding: 8px 12px; background: #120e0b; border: 3px solid #3a2e24; box-shadow: 3px 3px 0 #000; }
 .loja-topo b { font-family: var(--titulo); font-weight: 400; font-size: 34px; line-height: 1; color: var(--ouro); display: block; }
 .ouro-loja { margin-left: auto; display: flex; align-items: center; gap: 6px; font-family: var(--num); font-size: 30px; color: var(--ouro); }
@@ -62,7 +68,7 @@
 @keyframes seta-volta { 50% { transform: translateX(-3px); } }
 #cena-cab { clear: none; }
 @media (max-width: 920px) { .voltar-seta { margin-left: -4px; } .voltar-seta kbd { display: none; } }
-.aviso-flutuante { position: fixed; z-index: 70; display: flex; align-items: center; gap: 5px; white-space: nowrap; pointer-events: none; font-family: var(--num); font-size: 21px; line-height: 1; padding: 3px 9px 4px 4px; background: #120e0b; border: 2px solid #4a4038; color: var(--tinta); box-shadow: 3px 3px 0 #000; animation: aviso-sobe 2s steps(12) forwards; }
+.aviso-flutuante { position: fixed; z-index: 70; display: flex; align-items: center; gap: 5px; white-space: nowrap; pointer-events: none; font-family: var(--num); font-size: 21px; line-height: 1; padding: 3px 9px 4px 4px; background: #120e0b; border: 2px solid #4a4038; color: var(--tinta); box-shadow: 3px 3px 0 #000; animation: aviso-sobe 1.6s cubic-bezier(.2,.7,.3,1) forwards; }
 .aviso-flutuante img.sprite { --s: 16; }
 .aviso-flutuante.ouro { color: var(--ouro); border-color: #8a6a14; }
 .aviso-flutuante.perda, .aviso-flutuante.dano { color: #ff9c90; border-color: #8a1414; }
@@ -85,3 +91,38 @@
 .menu-item button.vender { color: var(--ouro); }
 .menu-item button.secundaria { color: var(--tinta-3); }
 .menu-item .pior { font-size: 13px; color: var(--sangue-2); }
+
+/* ------------------------------------------------------------------ saque: o item encontrado */
+.tela.achado { display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: 18px; margin: 12px 0 6px; }
+.achado-cartao { --cor: #8a8070; position: relative; width: 300px; padding: 14px 16px 12px; text-align: center; overflow: hidden;
+  background: #1a1512; border: 3px solid var(--cor); box-shadow: 0 0 0 2px #000, var(--sombra); font-size: 14px; line-height: 1.45; }
+.achado-cartao.rar-magico { --cor: var(--magico); } .achado-cartao.rar-raro { --cor: var(--raro); }
+.achado-cartao.rar-lendario { --cor: var(--lendario); }
+.achado-cartao.novo.rar-raro, .achado-cartao.novo.rar-lendario { box-shadow: 0 0 0 2px #000, 0 0 22px color-mix(in srgb, var(--cor) 45%, transparent), var(--sombra); }
+.achado-cartao > :not(.achado-raios) { position: relative; z-index: 1; }
+.achado-cartao.novo { animation: achado-entra .55s cubic-bezier(.2, .9, .3, 1.2) both; }
+.achado-cartao.atual { width: 250px; background: #15110e; animation: achado-lado .45s .3s ease-out both; }
+.achado-raios { position: absolute; left: 50%; top: 74px; width: 420px; height: 420px; margin: -210px 0 0 -210px; z-index: 0; pointer-events: none;
+  background: repeating-conic-gradient(color-mix(in srgb, var(--cor) 22%, transparent) 0deg 10deg, transparent 10deg 30deg);
+  -webkit-mask-image: radial-gradient(circle, #000 0, transparent 62%); mask-image: radial-gradient(circle, #000 0, transparent 62%);
+  animation: achado-gira 14s linear infinite, achado-raios-entra .8s ease-out both; }
+.achado-cartao.rar-comum .achado-raios { opacity: .5; }
+.achado-selo { display: block; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--tinta-3); }
+.achado-cartao.novo .achado-selo { color: var(--cor); }
+.achado-arte { width: 64px; height: 64px; margin: 6px auto 8px; filter: drop-shadow(0 0 8px color-mix(in srgb, var(--cor) 70%, transparent));
+  animation: achado-arte .7s .1s cubic-bezier(.2, .9, .3, 1.4) both; }
+.achado-arte.pequena { width: 48px; height: 48px; margin: 4px auto 6px; filter: none; animation: none; }
+.achado-cartao b { display: block; font-family: var(--titulo); font-weight: 400; font-size: 28px; line-height: 1; color: #fff3d6; }
+.achado-cartao .tipo { font-size: 12px; color: var(--tinta-3); text-transform: uppercase; letter-spacing: .06em; margin: 3px 0 6px; }
+.achado-cartao .bonus { font-family: var(--num); font-size: 19px; color: var(--tinta); line-height: 1.2; }
+.achado-cartao .comparacao { margin-top: 8px; padding-top: 6px; border-top: 2px dashed #3a2e24; display: flex; flex-direction: column; font-family: var(--num); font-size: 17px; line-height: 1.2; }
+.achado-cartao .comparacao small { font-family: var(--texto); font-size: 11px; color: var(--tinta-3); }
+.achado-cartao .melhor { color: var(--bom); } .achado-cartao .pior { color: var(--sangue-2); }
+.achado-cartao .lore { margin-top: 8px; font-style: italic; color: var(--tinta-2); }
+.achado-cartao .atalho-shift { display: none; }
+@keyframes achado-entra { 0% { transform: translateY(14px) scale(.7); opacity: 0; } 100% { transform: none; opacity: 1; } }
+@keyframes achado-lado { 0% { transform: translateX(-18px); opacity: 0; } 100% { transform: none; opacity: 1; } }
+@keyframes achado-arte { 0% { transform: translateY(-26px) scale(.4); opacity: 0; } 60% { transform: translateY(4px) scale(1.12); opacity: 1; } 100% { transform: none; } }
+@keyframes achado-gira { to { transform: rotate(360deg); } }
+@keyframes achado-raios-entra { 0% { opacity: 0; scale: .3; } 100% { scale: 1; } }
+@media (prefers-reduced-motion: reduce) { .achado-cartao, .achado-arte, .achado-raios { animation: none !important; } }

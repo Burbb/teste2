@@ -2,7 +2,23 @@
 
 /* ------------------------------------------------------------------ página */
 function anexar(no) { textoEl.appendChild(no); rolarFim(); return no; }
-function rolarFim() { if (seguir) pagina.scrollTop = pagina.scrollHeight; }
+function rolarFim() {
+  if (rolagemFixa !== null) pagina.scrollTop = rolagemFixa;
+  else if (seguir) pagina.scrollTop = pagina.scrollHeight;
+}
+/* Telas que se redesenham no lugar (mural, mercado, inventário) não podem pular: a rolagem fica onde a pessoa
+   estava até as novas opções chegarem; a altura antiga segura a página enquanto o conteúdo é trocado. */
+let rolagemFixa = null;
+function fixarRolagem() {
+  rolagemFixa = pagina.scrollTop;
+  textoEl.style.minHeight = textoEl.offsetHeight + "px";
+}
+function soltarRolagem() {
+  if (rolagemFixa === null) return;
+  textoEl.style.minHeight = "";
+  pagina.scrollTop = rolagemFixa;
+  rolagemFixa = null;
+}
 pagina.addEventListener("scroll", () => { seguir = pagina.scrollTop + pagina.clientHeight >= pagina.scrollHeight - 80; }, { passive: true });
 
 /** Gótico em CAIXA ALTA é ilegível: "O ÚLTIMO GUARDA" vira "O Último Guarda". */
@@ -44,10 +60,12 @@ async function novaCena(m) {
     // O que aconteceu na ação (equipou, comprou...) vira um aviso rápido antes de a tela se redesenhar.
     const avisos = [...textoEl.querySelectorAll(":scope > p:not(.eco):not(.lido)")].map((p) => p.textContent).filter(Boolean).slice(-2);
     if (!replay) avisos.forEach((t) => Telas.toast("", t, "estrela", true));
+    fixarRolagem();
     textoEl.innerHTML = ""; promptEl.innerHTML = "";
     cabecalho(m);
     return;
   }
+  soltarRolagem();
   Telas.novaVisita();  // saiu da tela: a quantidade do mercado volta a 1 na próxima visita
   if (!instantaneo() && textoEl.childElementCount) { folha.classList.add("saindo"); await espera(200); }
   textoEl.innerHTML = "";
@@ -237,6 +255,7 @@ function eco(m) {
   historico("h-eco", "› " + m.texto);
   if (estado && estado.combate) return;  // na luta, a carta que avança já mostra o que você escolheu
   if (emTela()) return;  // nas telas desenhadas (mercado, inventário), o aviso solto já contou o que aconteceu
+  if (corpo.classList.contains("modo-titulo")) return;  // no título, a própria tela muda: eco seria ruído
   anexar(el("p", "eco", esc(m.texto)));
 }
 

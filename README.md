@@ -142,7 +142,7 @@ na interface miúda; **Jersey 15** nos números. O botão "Fonte" no topo volta 
 - **Itens com bom senso:** o jogo avisa em vez de gastar poção com vida cheia ou bandagem sem
   ferida. Fora de combate, poção e bandagem também servem na comitiva (clique na poção e escolha
   em quem); a bandagem põe de pé um companheiro caído.
-- **Doca de atalhos:** Personagem, Talentos, Comitiva · Mapa, Diário, Bestiário · Salvar, Sair,
+- **Doca de atalhos:** Inventário, Talentos, Comitiva · Mapa, Diário, Bestiário · Salvar, Sair,
   em botões de ícone com a tecla no canto e selos de aviso (pontos de talento, carta).
 - **Flechas na carta:** o arqueiro vê as flechas na própria carta da luta, piscando quando
   estão acabando. Sem flechas, o ataque vira um golpe de adaga fraco e os tiros ficam bloqueados.
@@ -166,9 +166,20 @@ na interface miúda; **Jersey 15** nos números. O botão "Fonte" no topo volta 
   no mercado, bônus de Carisma e o que muda no mundo.
 - **Clima que pesa:** os efeitos do clima e da hora ficam no topo (e no canto da luta) com
   ícone e número, como `Fogo −15%` na neve ou `Inimigos +10%` à noite. Passe o mouse para ler.
-- **Ficha do inimigo:** na luta, passe o mouse na carta de um inimigo: traços, fraquezas e
-  resistências por elemento (×1,5 contra fogo...) e os golpes que ele usa, se você já conhece a
-  espécie (Bestiário).
+- **Ficha do inimigo:** na luta, passe o mouse na carta de um inimigo: traços e, depois de
+  algumas caçadas (Bestiário), as fraquezas e resistências por elemento (×1,5 contra fogo...).
+- **Item encontrado:** o saque aparece como um cartão com o sprite, a raridade (raios na cor
+  dela), os bônus e a diferença para o que você usa, que fica ao lado. Deixar para trás só
+  existe com a mochila cheia.
+- **Comparar com Shift:** passe o mouse num item (mochila, mercado) e segure Shift para ver o que
+  você está usando naquele espaço, inteiro, ao lado.
+- **Bolsa à mão:** a bolsa do painel esquerdo se usa com um clique, em qualquer menu de lugar; na
+  luta, o clique passa pelo "Itens" (e gasta o turno).
+- **Ferimentos explicados:** cada ferimento diz o que tira (−25% Ataque...), quanto falta para
+  sarar e se pode infeccionar, quando acontece e ao passar o mouse.
+- **Espinhos à vista:** o dano devolvido pela armadura com Espinhos salta em farpas até o agressor.
+- **Ataque básico alimenta o combo:** cada golpe simples que acerta devolve um pouco de mana,
+  vigor ou foco (4% do máximo).
 - **Testes de dado explicados:** passe o mouse no selo do teste (`FOR +8`) para ver de onde vem
   o bônus e a chance aproximada. Os atributos ajudam com retorno decrescente e a dificuldade
   sobe um pouco com o seu nível, então o fim de jogo não vira sucesso garantido.
@@ -179,7 +190,7 @@ na interface miúda; **Jersey 15** nos números. O botão "Fonte" no topo volta 
 |---|---|
 | `1`–`9`, `0`, setas + Enter, clique | Escolher uma opção |
 | clique na carta do inimigo | Escolher o alvo na luta |
-| `T` `P` `C` `D` `B` `G` `Q` | Talentos, Personagem, Comitiva, Diário, Bestiário, Salvar, Sair (nos menus de local) |
+| `T` `I` `C` `D` `B` `G` `Q` | Talentos, Inventário, Comitiva, Diário, Bestiário, Salvar, Sair (nos menus de local) |
 | clique no mapa | Viajar para aquele destino |
 | qualquer tecla durante o texto | Mostrar o texto inteiro |
 | `Espaço`/`Enter` | Continuar ▸ |

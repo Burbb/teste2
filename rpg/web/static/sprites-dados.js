@@ -1309,6 +1309,24 @@ const SPRITES_GRADES = (() => {
     "......kuk.......",
     ".......k........",
     "................"];
+  // Farpa dos espinhos da armadura: um cacho de pontas que salta de volta no agressor.
+  S.farpa = [
+    "................",
+    "................",
+    "................",
+    ".......k........",
+    "......kGk.......",
+    "...k..kgk..k....",
+    "...kGkkbkkGk....",
+    "....kgbBbgk.....",
+    "..kkkbBnBbkkk...",
+    ".kGggbnBnbggGk..",
+    "..kkkbBnBbkkk...",
+    "....kgbBbgk.....",
+    "...kGkkbkkGk....",
+    "...k..kgk..k....",
+    "......kGk.......",
+    ".......k........"];
   S.gota_verde = trocar(S.gota, { R: "E", r: "e", D: "f" });
   S.gota_azul = trocar(S.gota, { R: "U", r: "u", D: "v" });
   // A poção é um frasco de vidro (rolha, gargalo, líquido com brilho); as variantes trocam só o líquido.

@@ -304,11 +304,15 @@ def _invocar(cb, e, alvo):
     if not e.invoca or len(cb.inimigos_vivos()) >= 4:
         return False
     novo = criar(cb.rng, e.invoca, max(1, e.nivel - 2))
-    # Cada invocado tem letra própria: "Esqueleto A", "Esqueleto B"... nunca dois com o mesmo nome.
+    # No modo texto, cada invocado tem letra própria ("Esqueleto A", "Esqueleto B") para o menu de alvos;
+    # na tela gráfica o alvo é a carta, e a letra só poluiria.
     base = novo.nome
-    usados = {x.nome for x in cb.inimigos}
-    letra = next((l for l in "ABCDEFGHIJKLMNOP" if f"{base} {l} (invocado)" not in usados), "Z")
-    novo.nome = f"{base} {letra} (invocado)"
+    if getattr(cb.ui, "web", False):
+        novo.nome = f"{base} (invocado)"
+    else:
+        usados = {x.nome for x in cb.inimigos}
+        letra = next((l for l in "ABCDEFGHIJKLMNOP" if f"{base} {l} (invocado)" not in usados), "Z")
+        novo.nome = f"{base} {letra} (invocado)"
     novo.xp //= 2
     novo.ouro = 0
     cb.inimigos.append(novo)

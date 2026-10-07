@@ -33,7 +33,7 @@ body.em-combate #hud-linha { justify-content: flex-end; }
 .carta-efeitos:empty { display: none; }
 .ef { display: inline-flex; align-items: center; gap: 1px; padding: 0 3px 0 1px; border: 2px solid; background: #0d0b0a; font-family: var(--num); font-size: 14px; line-height: 1; }
 .ef img.sprite { --s: 16; }
-.ef.novo { animation: ef-novo 0.6s steps(4); }
+.ef.novo { animation: ef-novo 0.6s cubic-bezier(.2,.8,.3,1); }
 .ef .camadas { font-style: normal; margin-left: 2px; padding: 0 2px; background: #e0782f; color: #1a0d05; font-size: 13px; }
 .ef.acumulado.fam-fogo { box-shadow: 0 0 0 1px #000, 0 0 6px #ff7a2e; animation: brasa-viva 1.2s steps(3) infinite; }
 @keyframes brasa-viva { 50% { filter: brightness(1.35); } }
@@ -64,9 +64,10 @@ body.em-combate #hud-linha { justify-content: flex-end; }
 .carta.alvejavel:hover, .carta.mirando { border-color: #fff3a0; transform: translateY(-3px); box-shadow: 0 0 0 2px #000, 0 0 0 5px var(--ouro); }
 .carta.alvejavel:hover::before, .carta.mirando::before { content: "▼"; position: absolute; top: -20px; left: 50%; translate: -50% 0; color: var(--ouro); font-size: 16px; text-shadow: 2px 2px 0 #000; animation: seta-alvo 0.5s steps(2) infinite; }
 @keyframes seta-alvo { 50% { translate: -50% 3px; } }
-.faixa-acao { position: absolute; left: 50%; bottom: calc(100% + 6px); translate: -50% 0; white-space: nowrap; font-family: var(--num); font-size: 18px; line-height: 1; padding: 2px 8px 3px; color: #120e0b; background: var(--ouro); border: 2px solid #000; box-shadow: 2px 2px 0 #000; z-index: 6; pointer-events: none; animation: faixa 1.5s steps(6) forwards; }
+.faixa-acao { position: absolute; left: 50%; bottom: calc(100% + 6px); translate: -50% 0; white-space: nowrap; font-family: var(--num); font-size: 18px; line-height: 1; padding: 2px 8px 3px; color: #120e0b; background: var(--ouro); border: 2px solid #000; box-shadow: 2px 2px 0 #000; z-index: 6; pointer-events: none; animation: faixa 1.5s cubic-bezier(.2,.8,.3,1) forwards; }
 .faixa-acao.inimiga { background: #e2574c; color: #fff; }
 .faixa-acao.boa { background: var(--bom); }
+.faixa-acao.espinhos { background: #5a3a1c; color: #e8d6a8; font-size: 12px; }
 .faixa-acao.ruim { background: #4a4038; color: var(--tinta); }
 @keyframes faixa { 0% { opacity: 0; transform: translateY(6px); } 15% { opacity: 1; transform: none; } 80% { opacity: 1; } 100% { opacity: 0; transform: translateY(-4px); } }
 /* golpes */
@@ -75,7 +76,7 @@ body.em-combate #hud-linha { justify-content: flex-end; }
 @keyframes tremer { 25% { transform: translateX(-5px); } 50% { transform: translateX(5px); } 75% { transform: translateX(-2px); } }
 @keyframes tremer-forte { 15% { transform: translate(-8px, 2px); } 30% { transform: translate(8px, -2px); } 45% { transform: translate(-6px, 0); } 60% { transform: translate(5px, 2px); } 80% { transform: translate(-2px, 0); } }
 .carta-fx { position: absolute; inset: -3px; pointer-events: none; opacity: 0; z-index: 2; }
-.carta-fx[class*="el-"] { animation: clarao-el 0.4s steps(10) forwards; }
+.carta-fx[class*="el-"] { animation: clarao-el 0.4s ease-out forwards; }
 @keyframes clarao-el { 0% { opacity: 0.85; } 100% { opacity: 0; } }
 .carta-fx.el-fisico { background: #fff; }
 .carta-fx.el-fogo { background: linear-gradient(0deg, #ff5a1a, #ffb35c 60%, #fff3a0); animation-duration: 0.7s; }
@@ -84,24 +85,24 @@ body.em-combate #hud-linha { justify-content: flex-end; }
 .carta-fx.el-sombra { background: #6a3aa8; }
 .carta-fx.el-arcano { background: #8e6fd8; }
 .carta-fx.el-veneno { background: #4f9a5b; }
-.carta.esquivou { animation: esquivar 0.35s steps(8); }
+.carta.esquivou { animation: esquivar 0.35s ease-out; }
 @keyframes esquivar { 40% { transform: translate(0, -10px) skewX(-6deg); opacity: 0.5; } 100% { transform: none; } }
-.carta.tonto .icone { animation: tonto 0.9s steps(6); }
+.carta.tonto .icone { animation: tonto 0.9s ease-in-out; }
 @keyframes tonto { 25% { transform: rotate(-12deg); } 50% { transform: rotate(10deg); } 75% { transform: rotate(-6deg); } }
-.carta.furia { animation: furia 1.1s steps(20); }
+.carta.furia { animation: furia 1.1s ease-in-out; }
 @keyframes furia { 0%, 100% { transform: none; } 10%, 50% { transform: scale(1.08) translateX(-4px); filter: brightness(1.6) sepia(1) hue-rotate(-40deg) saturate(5); } 30%, 70% { transform: scale(1.08) translateX(4px); } }
 .carta.girando .icone img { animation: girar 0.25s steps(4) infinite; }
-.carta.giro { animation: giro 0.3s steps(8); }
+.carta.giro { animation: giro 0.3s ease-out; }
 @keyframes girar { to { transform: rotate(360deg); } }
 @keyframes giro { 0% { rotate: 0deg; } 100% { rotate: 360deg; } }
-.carta[class*="aura-"]::after { content: ""; position: absolute; inset: -6px; pointer-events: none; border: 3px solid var(--aura); outline: 3px solid rgba(0,0,0,0.6); background: color-mix(in srgb, var(--aura) 22%, transparent); animation: aura 0.8s steps(18) forwards; }
+.carta[class*="aura-"]::after { content: ""; position: absolute; inset: -6px; pointer-events: none; border: 3px solid var(--aura); outline: 3px solid rgba(0,0,0,0.6); background: color-mix(in srgb, var(--aura) 22%, transparent); animation: aura 0.8s ease-out forwards; }
 @keyframes aura { 0% { opacity: 0; } 20% { opacity: 1; } 60% { opacity: 0.7; } 100% { opacity: 0; } }
 .carta.aura-mana { --aura: #6f9bff; } .carta.aura-vigor { --aura: #ffb35c; } .carta.aura-foco { --aura: #a6d985; }
 .carta.aura-cura { --aura: #8fbf6a; } .carta.aura-roubo { --aura: #e2574c; } .carta.aura-protecao { --aura: #7fb0ff; }
 .carta.aura-forca { --aura: #ffb35c; } .carta.aura-fogo { --aura: #ff7a2e; } .carta.aura-veneno { --aura: #6fbf4a; }
 .carta.aura-sangue { --aura: #b3262b; } .carta.aura-maldicao, .carta.aura-sombra { --aura: #8e6fd8; }
 .carta.aura-atordoado, .carta.aura-marca { --aura: #f2c94c; }
-.particula-carta { position: absolute; bottom: 4px; width: 4px; height: 4px; z-index: 3; pointer-events: none; animation: particula-sobe 0.9s steps(20) forwards; box-shadow: 0 0 0 1px rgba(0,0,0,0.5); }
+.particula-carta { position: absolute; bottom: 4px; width: 4px; height: 4px; z-index: 3; pointer-events: none; animation: particula-sobe 0.9s ease-out forwards; box-shadow: 0 0 0 1px rgba(0,0,0,0.5); }
 .particula-carta.desce { animation-name: particula-roubo; }
 @keyframes particula-sobe { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-46px); opacity: 0; } }
 @keyframes particula-roubo { 0% { transform: translate(0, -46px); opacity: 0; } 30% { opacity: 1; } 100% { transform: translate(0, 0); opacity: 0; } }
@@ -113,21 +114,25 @@ body.em-combate #hud-linha { justify-content: flex-end; }
 .carta.morta { filter: grayscale(1) brightness(0.5); }
 .carta.morta .icone img { opacity: 0.2; }
 .carta.morta .icone::after { content: ""; position: absolute; inset: 0; background: var(--caveira) center / 30px no-repeat; }
-.carta.morrendo { animation: morrer 0.7s steps(16) forwards; }
+.carta.morrendo { animation: morrer 0.7s ease-in forwards; }
 @keyframes morrer { 0% { filter: brightness(2.5); transform: translateY(-3px); } 40% { transform: translateX(3px) rotate(-3deg); } 100% { filter: grayscale(1) brightness(0.5); transform: none; } }
 .carta .flutua { top: -14px; }
 .flutua.crit { color: var(--ouro); font-size: 34px; animation-duration: 1.4s; }
 .flutua.roubo { color: #ff7a8a; }
 .flutua.escudo { color: var(--frio); font-size: 18px; }
+.flutua.espinhos { color: #c9a46a; font-size: 20px; }
+/* A carta golpeada eriça os espinhos por um instante antes de as farpas saltarem. */
+.carta.espinhando { animation: erguer-espinhos .42s ease-out; }
+@keyframes erguer-espinhos { 30% { transform: scale(1.04); filter: drop-shadow(0 0 6px #8a5a2c); } 100% { transform: none; filter: none; } }
 .flutua.info { color: #f0e0c0; font-size: 17px; }
 
 /* ------------------------------------------------------------------ comitiva na HUD, balões e selos */
-.reagiu-bem { animation: reagiu-bem 0.6s steps(14); }
-.reagiu-mal { animation: reagiu-mal 0.6s steps(14); }
+.reagiu-bem { animation: reagiu-bem 0.6s ease-out; }
+.reagiu-mal { animation: reagiu-mal 0.6s ease-out; }
 @keyframes reagiu-bem { 30% { transform: translateY(-6px); filter: brightness(1.5) drop-shadow(0 0 4px #8fbf6a); } }
 @keyframes reagiu-mal { 20% { transform: translateX(-3px); filter: brightness(0.7) sepia(1) hue-rotate(220deg) saturate(3); } 40% { transform: translateX(3px); } 60% { transform: translateX(-2px); } }
 .falando { outline: 2px solid #fff3d6; outline-offset: 2px; }
-.balao { position: fixed; z-index: 60; max-width: 280px; padding: 6px 10px 7px; background: #f1e4c4; color: #241c16; border: 3px solid #0d0b0a; box-shadow: 3px 3px 0 rgba(0,0,0,0.55); font-size: 15px; line-height: 1.3; cursor: pointer; animation: balao 0.25s steps(3); }
+.balao { position: fixed; z-index: 60; max-width: 280px; padding: 6px 10px 7px; background: #f1e4c4; color: #241c16; border: 3px solid #0d0b0a; box-shadow: 3px 3px 0 rgba(0,0,0,0.55); font-size: 15px; line-height: 1.3; cursor: pointer; animation: balao 0.25s cubic-bezier(.2,.8,.3,1.3); }
 .balao b { display: block; font-family: var(--num); font-weight: 400; font-size: 15px; line-height: 1; color: #8a5a2c; margin-bottom: 2px; }
 .balao::after, .balao::before { content: ""; position: absolute; left: var(--rabo, 20px); width: 0; height: 0; border: 8px solid transparent; }
 .balao::before { top: 100%; margin-left: -9px; border-top: 10px solid #0d0b0a; border-width: 10px 9px 0; }
@@ -137,6 +142,6 @@ body.em-combate #hud-linha { justify-content: flex-end; }
 .balao.narrado { background: #2a2420; color: var(--tinta); font-style: italic; }
 .balao.narrado::after { border-top-color: #2a2420; } .balao.narrado.abaixo::after { border-bottom-color: #2a2420; }
 .balao.narrado b { color: var(--ouro); font-style: normal; }
-.balao.sumindo { animation: some 0.3s steps(3) forwards; }
+.balao.sumindo { animation: some 0.3s ease-in forwards; }
 @keyframes balao { from { opacity: 0; transform: translateY(6px) scale(0.9); } to { opacity: 1; transform: none; } }
 @keyframes some { to { opacity: 0; transform: translateY(-4px); } }

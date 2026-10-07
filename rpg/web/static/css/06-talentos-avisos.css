@@ -13,7 +13,7 @@
 .arvore-celula { position: relative; display: flex; justify-content: center; padding: 16px 0; }
 .arvore-celula.conecta::before { content: ""; position: absolute; left: 50%; top: -18px; height: 36px; width: 6px; margin-left: -3px; background: #2a2420; border: 1px solid #000; }
 .arvore-celula.conecta.aceso::before { background: var(--ouro-3); }
-.no-talento { position: relative; width: 74px; height: 74px; background: #0d0b0a; border: 4px solid #3a2e24; display: grid; place-items: center; cursor: help; box-shadow: 3px 3px 0 #000; }
+.no-talento { position: relative; width: 74px; height: 74px; background: #0d0b0a; border: 4px solid #3a2e24; display: grid; place-items: center; cursor: default; box-shadow: 3px 3px 0 #000; }
 .no-talento .rank { position: absolute; right: -10px; bottom: -10px; font-family: var(--num); font-size: 18px; color: var(--tinta); background: #120e0b; border: 2px solid #4a4038; padding: 0 4px; line-height: 1.1; }
 .no-talento.comprado { border-color: var(--ouro); box-shadow: 0 0 0 2px #000, 0 0 14px rgba(242, 201, 76, 0.45); }
 .no-talento.comprado .rank { color: #120e0b; background: var(--ouro); border-color: #fff3a0; }
@@ -36,18 +36,18 @@
 
 /* ------------------------------------------------------------------ celebrações e avisos */
 #celebracao { z-index: 40; background: rgba(5, 4, 3, 0.85); }
-.festa { position: relative; text-align: center; padding: 22px 36px 20px; width: min(580px, 92vw); animation: festa-entra 0.45s steps(5); }
+.festa { position: relative; text-align: center; padding: 22px 36px 20px; width: min(580px, 92vw); animation: festa-entra 0.45s cubic-bezier(.2,.8,.3,1.2); }
 @keyframes festa-entra { from { transform: scale(0.6); opacity: 0; } to { transform: none; opacity: 1; } }
-.festa .grande { font-family: var(--titulo); font-size: 96px; line-height: 0.9; color: var(--ouro); text-shadow: 4px 4px 0 #000, 0 0 30px rgba(242, 201, 76, 0.55); animation: pulsar 1.2s steps(3) infinite; }
+.festa .grande { font-family: var(--titulo); font-size: 96px; line-height: 0.9; color: var(--ouro); text-shadow: 4px 4px 0 #000, 0 0 30px rgba(242, 201, 76, 0.55); animation: pulsar 1.2s ease-in-out infinite; }
 .festa .grande.arcano { color: var(--arcano); text-shadow: 4px 4px 0 #000, 0 0 30px rgba(180, 156, 255, 0.5); }
 @keyframes pulsar { 50% { transform: scale(1.04); } }
 .festa .rotulo-festa { font-size: 15px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--tinta-2); margin-bottom: 4px; }
 .festa .texto-festa { color: var(--tinta-2); margin: 8px 0 0; }
 .festa .lista { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 16px 0 6px; }
-.festa .ganho { display: inline-flex; align-items: center; gap: 6px; font-family: var(--num); font-size: 25px; padding: 3px 10px 3px 6px; background: #120e0b; border: 3px solid #3d6a2a; color: var(--bom); box-shadow: 3px 3px 0 #000; opacity: 0; animation: surgir 0.3s steps(3) forwards; }
+.festa .ganho { display: inline-flex; align-items: center; gap: 6px; font-family: var(--num); font-size: 25px; padding: 3px 10px 3px 6px; background: #120e0b; border: 3px solid #3d6a2a; color: var(--bom); box-shadow: 3px 3px 0 #000; opacity: 0; animation: surgir 0.3s cubic-bezier(.2,.8,.3,1.2) forwards; }
 .festa .ganho img.sprite { --s: 32; }
 .festa .ganho.ouro { border-color: #8a6a14; color: var(--ouro); }
-.festa .habilidade-nova { margin-top: 10px; padding: 8px 12px; background: #120e0b; border: 3px solid #5a3a8a; text-align: left; opacity: 0; animation: surgir 0.3s steps(3) forwards; }
+.festa .habilidade-nova { margin-top: 10px; padding: 8px 12px; background: #120e0b; border: 3px solid #5a3a8a; text-align: left; opacity: 0; animation: surgir 0.3s cubic-bezier(.2,.8,.3,1.2) forwards; }
 .festa .habilidade-nova b { font-family: var(--titulo); font-size: 30px; font-weight: 400; color: var(--arcano); display: block; line-height: 1; }
 .festa .retrato-festa { width: 112px; height: 112px; margin: 0 auto 10px; background: #0d0b0a; border: 4px solid #1f5f63; display: grid; place-items: center; }
 .festa .losangos { display: flex; justify-content: center; gap: 22px; margin: 16px 0 4px; }
@@ -56,14 +56,14 @@
 .festa .losangos i.novo { animation: aprendeu 0.9s steps(6) 0.4s both; }
 .festa .dica { margin-top: 12px; font-size: 13px; color: var(--tinta-3); }
 .festa .continuar { margin-top: 14px; }
-.particula { position: fixed; width: 6px; height: 6px; pointer-events: none; z-index: 41; animation: explodir 1.2s steps(12) forwards; }
+.particula { position: fixed; width: 6px; height: 6px; pointer-events: none; z-index: 41; animation: explodir 1.2s cubic-bezier(.15,.7,.3,1) forwards; }
 @keyframes explodir { from { transform: translate(0, 0); opacity: 1; } to { transform: translate(var(--dx), var(--dy)); opacity: 0; } }
-.faixa-festa { position: fixed; left: 0; right: 0; top: 38%; z-index: 39; text-align: center; pointer-events: none; padding: 10px 0 14px; background: linear-gradient(90deg, transparent, rgba(13, 11, 10, 0.94) 20%, rgba(13, 11, 10, 0.94) 80%, transparent); animation: faixa 1.6s steps(8) forwards; }
+.faixa-festa { position: fixed; left: 0; right: 0; top: 38%; z-index: 39; text-align: center; pointer-events: none; padding: 10px 0 14px; background: linear-gradient(90deg, transparent, rgba(13, 11, 10, 0.94) 20%, rgba(13, 11, 10, 0.94) 80%, transparent); animation: faixa 1.6s cubic-bezier(.2,.8,.3,1) forwards; }
 .faixa-festa b { display: inline-flex; align-items: center; gap: 14px; font-family: var(--titulo); font-size: 84px; font-weight: 400; line-height: 1; color: var(--ouro); text-shadow: 4px 4px 0 #000; }
 .faixa-festa span { display: block; font-size: 15px; color: var(--tinta-2); }
 @keyframes faixa { 0% { opacity: 0; transform: scaleY(0.2); } 15% { opacity: 1; transform: none; } 80% { opacity: 1; } 100% { opacity: 0; } }
 #toasts { position: fixed; z-index: 35; top: 64px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; gap: 6px; align-items: center; pointer-events: none; }
-.toast { display: flex; align-items: center; gap: 10px; padding: 6px 14px 6px 8px; background: #120e0b; border: 3px solid var(--sangue-2); box-shadow: 4px 4px 0 #000; font-size: 16px; animation: toast 3.2s steps(10) forwards; }
+.toast { display: flex; align-items: center; gap: 10px; padding: 6px 14px 6px 8px; background: #120e0b; border: 3px solid var(--sangue-2); box-shadow: 4px 4px 0 #000; font-size: 16px; animation: toast 3.2s ease-out forwards; }
 .toast b { font-family: var(--titulo); font-size: 30px; font-weight: 400; color: var(--sangue-2); line-height: 1; display: block; }
 .toast.bom { border-color: var(--bom); } .toast.bom b { color: var(--bom); }
 @keyframes toast { 0% { opacity: 0; transform: translateY(-10px); } 10% { opacity: 1; transform: none; } 85% { opacity: 1; } 100% { opacity: 0; } }

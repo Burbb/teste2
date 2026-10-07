@@ -248,6 +248,14 @@ function mostrarPergunta(m) {
   const ok = el("button", "continuar", "Confirmar <span>▸</span>");
   ok.addEventListener("click", (ev) => { ev.stopPropagation(); responder(m.id, input.value || m.padrao || ""); });
   linha.append(input, ok);
+  if (m.voltar) {
+    document.querySelectorAll(".voltar-seta").forEach((x) => x.remove());
+    const volta = el("button", "voltar-seta", "<span>◀</span> Voltar<kbd>Esc</kbd>");
+    volta.type = "button";
+    volta.addEventListener("click", (ev) => { ev.stopPropagation(); responder(m.id, { voltar: true }); });
+    input.addEventListener("keydown", (ev) => { if (ev.key === "Escape") { ev.preventDefault(); responder(m.id, { voltar: true }); } });
+    folha.prepend(volta);
+  }
   promptEl.appendChild(linha);
   pergunta = { id: m.id, tipo: "pergunta" };
   setTimeout(() => input.focus(), 50);

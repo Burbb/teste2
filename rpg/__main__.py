@@ -7,71 +7,54 @@ import sys
 
 from .jogo import FimDeJogo, Jogo
 from .migracoes import SaveIncompativel
+from .sistemas.persistencia import resumo_save
 from .ui import UI
 
-COMO_JOGAR = """\
-COMO JOGAR
-
-• Escolha opções pelo número (ou clicando, na interface moderna).
-• Cada ação (explorar, viajar um trecho, passear) consome um período do dia:
-  manhã, tarde, anoitecer e noite. À noite os inimigos são mais fortes.
-• Acampe ou durma na taverna para recuperar vida e começar um novo dia.
-• O nível dos inimigos depende da REGIÃO (veja "Nv." no mapa), não do seu.
-  Regiões longe do início e a corrupção alta deixam tudo mais perigoso.
-• Derrote os 3 guardiões para obter os Sigilos e abrir caminho até a Cidadela.
-• A corrupção cresce a cada dia. Se chegar a 100%, o jogo acaba.
-  Cada guardião derrotado faz a corrupção recuar.
-• No nível 4 sua classe se ramifica em uma de duas especializações.
-• Ganhe pontos de talento ao subir de nível e ao derrotar guardiões.
-• Escolhas têm consequências: quem você ajuda (ou rouba) pode voltar mais tarde.
-• Derrote criaturas para aprender suas fraquezas (veja o Bestiário).
-• Ouça rumores nas tavernas: revelam tesouros, feras e pontos fracos.
-• A MORTE É PERMANENTE. (Com --brando, você é resgatado ao cair, perdendo
-  ouro e dois dias.)
-• Coma: cada dia consome 1 provisão. Sem comida você enfraquece e morre.
-• Golpes pesados deixam FERIMENTOS que duram dias. Feridas abertas sem
-  bandagem podem infeccionar — e infecção mata. Curandeiros tratam tudo.
-• À noite, nas ruínas e na cidadela é escuro: leve tochas.
-• A mana do mago só volta descansando (ou com tônicos).
-• Seus heróis anteriores deixam lendas, estátuas e túmulos nas próximas partidas.
-• Pelo caminho você pode encontrar COMPANHEIROS. Cada um tem valores próprios e
-  reage às suas escolhas. Quem confia em você luta melhor e conta a própria
-  história; quem perde a confiança vai embora. Uma comitiva come, cobra e
-  atrai mais inimigos, e a experiência é dividida.
-"""
+def escolher_save(ui, saves):
+    """A lista de saves: na tela gráfica, cartões com classe, nível, dia e lugar; no texto, os nomes.
+    Devolve o caminho escolhido ou None (voltar)."""
+    resumos = [resumo_save(s) for s in saves]
+    if ui.painel("saves", {"saves": resumos}):
+        ui.meta_opcoes = [{"save": i} for i in range(len(saves))] + [{"voltar": True}]
+        try:
+            i = ui.escolher("", [r["nome"] for r in resumos] + ["Voltar"])
+        finally:
+            ui.meta_opcoes = None
+    else:
+        i = ui.escolher("Qual jogo?", [r["arquivo"] for r in resumos] + ["Voltar"])
+    return saves[i] if i < len(saves) else None
 
 
 def menu_principal(ui, args):
     while True:
-        ui.cena("Crônicas da Fenda", "um RPG de texto onde nenhuma jornada é igual à outra", "titulo")
-        saves = sorted(s for s in glob.glob(os.path.join(args.saves, "*.json"))
-                       if os.path.basename(s) != "legado.json")
-        opcoes = ["Novo jogo"] + (["Carregar jogo"] if saves else []) + ["Como jogar", "Sair"]
+        ui.cena("Crônicas da Fenda", None, "titulo")
+        saves = sorted((s for s in glob.glob(os.path.join(args.saves, "*.json"))
+                        if os.path.basename(s) != "legado.json"), key=os.path.getmtime, reverse=True)
+        opcoes = ["Novo jogo"] + (["Carregar jogo"] if saves else []) + ["Sair"]
         esc = opcoes[ui.escolher("", opcoes)]
         try:
             if esc == "Novo jogo":
                 jogo = Jogo(ui, seed=args.seed, pasta_saves=args.saves, hardcore=not args.brando)
                 jogo.autosalvar = ui.interativo
                 ui.jogo = jogo
-                jogo.novo_jogo()
+                if not jogo.novo_jogo():
+                    ui.jogo = None
+                    continue
                 jogo.rodar()
             elif esc == "Carregar jogo":
-                nomes = [os.path.splitext(os.path.basename(s))[0] for s in saves]
-                i = ui.escolher("Qual jogo?", nomes + ["Voltar"])
-                if i < len(saves):
+                caminho = escolher_save(ui, saves)
+                if caminho:
                     try:
-                        jogo = Jogo.carregar(ui, saves[i], args.saves)
+                        jogo = Jogo.carregar(ui, caminho, args.saves)
                     except (SaveIncompativel, ValueError, KeyError) as erro:
                         ui.dizer(f"Não deu para abrir esse save: {erro}", "vermelho")
                         ui.pausar()
                         continue
                     jogo.autosalvar = ui.interativo
                     ui.jogo = jogo
-                    ui.dizer(f"Bem-vindo de volta, {jogo.j.nome}.", "verde")
+                    if not getattr(ui, "web", False):  # na tela gráfica, o próprio lugar aparece: sem cumprimento
+                        ui.dizer(f"Bem-vindo de volta, {jogo.j.nome}.", "verde")
                     jogo.rodar()
-            elif esc == "Como jogar":
-                ui.dizer(COMO_JOGAR)
-                ui.pausar()
             else:
                 ui.dizer("Até a próxima jornada!", "magenta")
                 return

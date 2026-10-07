@@ -27,9 +27,7 @@ class Loja:
         j = self.j
         cons = ["tocha", "bandagem", "unguento", "pocao_vida", "tonico", "antidoto", "bomba_fumaca", "pena_fenix"]
         def item(it, preco):
-            return {"nome": itens.rotulo(it), "slot": it["slot"], "raridade": it.get("raridade", "comum"),
-                    "bonus": descrever_bonus(it["bonus"], j.nome_recurso), "bonus_bruto": it["bonus"], "base": it.get("base"),
-                    "preco": preco, "classe": it.get("classe"), "lore": it.get("lore")}
+            return itens.ficha(it, j.nome_recurso, preco=preco)
         return {
             "ouro": j.ouro, "limite": LIMITE_MOCHILA, "ocupado": len(j.mochila),
             "consumiveis": [{"id": k, "nome": CONSUMIVEIS[k]["nome"], "desc": CONSUMIVEIS[k]["desc"],

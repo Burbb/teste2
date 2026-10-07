@@ -224,7 +224,7 @@ def chamado_do_sangue(g):
         arma = g.j.equip["arma"]
         g.j.equip["arma"] = None
         g.j.recalcular()
-        r = g.combate([e], pode_fugir=False, titulo="FÚRIA DE MÃOS NUAS")
+        r = g.combate([e], pode_fugir=False, titulo="FÚRIA DE MÃOS NUAS", sozinho=True)
         g.j.equip["arma"] = arma
         g.j.recalcular()
         if r == "vitoria":

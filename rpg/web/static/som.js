@@ -118,6 +118,19 @@ const Som = (() => {
       [523, 659, 784].forEach((f) => tom(t + 0.5, f, 0.045, 1.4, "sine"));
       sopro(t + 0.45, 1.2, 2500, 8000, 0.03, 0.6, "highpass");
     },
+    // Item encontrado: baú que se abre (baque + tilintar); quanto mais raro, mais longo o brilho.
+    achado() {
+      const t = ctx.currentTime;
+      tom(t, 120, 0.16, 0.18, "sine", 70); estalo(t, 1800, 0.18, 0.04);
+      [784, 1047, 1319].forEach((f, i) => tom(t + 0.08 + i * 0.05, f, 0.05, 0.3, "triangle"));
+    },
+    achado_raro() {
+      const t = ctx.currentTime;
+      tom(t, 110, 0.2, 0.25, "sine", 60); estalo(t, 1800, 0.2, 0.05);
+      [523, 659, 784, 1047, 1319, 1568].forEach((f, i) => tom(t + 0.08 + i * 0.06, f, 0.05, 0.7, "triangle"));
+      [1047, 1319, 1568].forEach((f) => tom(t + 0.5, f, 0.03, 1.2, "sine"));
+      sopro(t + 0.3, 1.0, 3000, 9000, 0.03, 0.6, "highpass");
+    },
     tique() { estalo(ctx.currentTime, 3600, 0.18, 0.02); },
     moeda() { const t = ctx.currentTime; tom(t, 1900, 0.06, 0.12, "square"); tom(t + 0.05, 2600, 0.05, 0.2, "square"); },
     equipar() { const t = ctx.currentTime; estalo(t, 3200, 0.25, 0.06); estalo(t + 0.05, 2200, 0.2, 0.08); tom(t, 180, 0.12, 0.15, "square", 120); },

@@ -7,7 +7,7 @@ from . import texto as tx
 from .classes import CLASSES, SPECS
 from .dados import BIOMAS, CLIMAS, FAMILIAS, PERIODOS
 from .entidades import Jogador
-from .itens import gerar_equip
+from .itens import CONSUMIVEIS, gerar_equip
 from . import comitiva
 from . import sobrevivencia
 from . import telemetria
@@ -157,8 +157,11 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
 
     # ================================================================ início
     def novo_jogo(self):
+        """Criação do personagem. Devolve False se a pessoa voltou ao título."""
         self.ui.cena("Criação de personagem", None, "menu")
-        nome = self.ui.perguntar("Qual é o seu nome, aventureiro(a)?", "Aventureiro")
+        nome = self.ui.perguntar("Qual é o seu nome, aventureiro(a)?", "Aventureiro", voltar=True)
+        if nome is None:
+            return False
         self.dizer()
         self.dizer("Escolha sua classe. No nível 4 ela se ramifica em uma de duas especializações:", "ciano")
         classes = list(CLASSES)
@@ -167,9 +170,12 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
             specs = " | ".join(SPECS[s]["nome"] for s in d["specs"])
             self.dizer(f"  {d['nome']} → {specs}", d["cor"] + "+negrito")
             self.dizer(f"    {d['desc']}", "cinza")
-        esc = self.ui.escolher("Sua classe:", [CLASSES[c]["nome"] for c in classes])
-        self.iniciar(nome, classes[esc])
+        classe = self.menu("Sua classe:", [(CLASSES[c]["nome"], c) for c in classes] + [("Voltar", None, {"voltar": True})])
+        if classe is None:
+            return False
+        self.iniciar(nome, classe)
         self.introducao()
+        return True
 
     def iniciar(self, nome, classe):
         self.j = Jogador(nome, classe)
@@ -305,9 +311,30 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
             ("Bestiário", "bestiario"),
             ("Salvar jogo", "salvar"),
             ("Sair do jogo", "sair"),
-        ]
+        ] + self.opcoes_bolsa()
+
+    USAVEIS_FORA = ("bandagem", "unguento", "pocao_vida", "tonico", "antidoto")
+
+    def opcoes_bolsa(self):
+        """Na tela gráfica, a bolsa do painel lateral é clicável: cada consumível vira uma opção escondida."""
+        if not getattr(self.ui, "web", False):
+            return []
+        opcoes = []
+        for k in self.USAVEIS_FORA:
+            if self.j.tem(k):
+                opcoes.append((f"Usar {CONSUMIVEIS[k]['nome']}", ("usar", k), {"usar": k}))
+                if k in ("bandagem", "pocao_vida"):
+                    opcoes += [(f"Usar {CONSUMIVEIS[k]['nome']} em {comitiva.nome(m['id'])}", ("usar_em", k, m["id"]),
+                                {"usar": k, "em": m["id"]}) for m in comitiva.membros(self)]
+        return opcoes
 
     def executar_comum(self, op):
+        if isinstance(op, tuple):  # usado pela bolsa do painel lateral
+            if op[0] == "usar":
+                self.usar_consumivel(op[1])
+            else:
+                self.usar_em_companheiro(op[1], op[2])
+            return
         acoes = {"viajar": self.viajar, "personagem": self.personagem, "comitiva": lambda: comitiva.menu(self), "talentos": self.menu_talentos, "bestiario": self.ver_bestiario, "mapa": self.mapa,
                  "diario": self.diario, "salvar": self.salvar, "sair": self.sair}
         acoes[op]()

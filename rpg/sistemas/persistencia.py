@@ -9,6 +9,24 @@ from ..migracoes import CAMPOS_SAVE, VERSAO_SAVE, migrar
 from ..regras import FimDeJogo
 
 
+def resumo_save(caminho):
+    """O que a tela de carregar mostra de um save, sem montar o jogo: nome, classe, nível, dia e lugar."""
+    from ..classes import CLASSES
+    nome = os.path.splitext(os.path.basename(caminho))[0]
+    resumo = {"arquivo": nome, "nome": nome, "modificado": os.path.getmtime(caminho)}
+    try:
+        with open(caminho, encoding="utf-8") as f:
+            d = json.load(f)
+        j = d["jogador"]
+        locais = d["mundo"]["locais"]
+        resumo.update(nome=j["nome"], classe=j["classe"], classe_nome=CLASSES.get(j["classe"], {}).get("nome", ""),
+                      nivel=j["nivel"], dia=d.get("dia"), lugar=locais[d["mundo"]["atual"]]["nome"],
+                      hardcore=d.get("hardcore", True))
+    except (OSError, ValueError, KeyError, IndexError, TypeError):
+        resumo["ilegivel"] = True
+    return resumo
+
+
 class Persistencia:
     # ================================================================ salvar / carregar
     def sair(self):

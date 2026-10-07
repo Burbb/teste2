@@ -257,6 +257,15 @@ def rotulo(item):
     return nome
 
 
+def ficha(it, recurso=None, **extra):
+    """O item como as telas gráficas o desenham (mercado, mochila, saque). `recurso`: Mana, Vigor ou Foco."""
+    if not it:
+        return None
+    return dict({"nome": rotulo(it), "raridade": it.get("raridade", "comum"), "bonus": descrever_bonus(it["bonus"], recurso),
+                 "nivel": it.get("nivel"), "slot": it.get("slot"), "base": it.get("base"), "bonus_bruto": it["bonus"],
+                 "classe": it.get("classe"), "lore": it.get("lore")}, **extra)
+
+
 def cor(item):
     return COR_RARIDADE[item.get("raridade", "comum")]
 

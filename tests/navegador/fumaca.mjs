@@ -89,9 +89,60 @@ async function cenarioTitulo(browser) {
   try {
     conferir(!!(await esperar('#prompt .escolha:has-text("Carregar")')), "o menu principal oferece carregar");
     await (await page.$('#prompt .escolha:has-text("Carregar")')).click();
-    await (await esperar('#prompt .escolha:has-text("jean")')).click();
+    conferir(!(await page.$('#prompt .escolha:has-text("Como jogar")')), "o menu não tem mais Como jogar");
+    const cartao = await esperar('.save-cartao:has-text("Jean")');
+    conferir(!!cartao, "os saves aparecem como cartões");
+    conferir(!!(await page.$('#prompt .escolha:has-text("Voltar")')), "dá para voltar da lista de saves");
+    await cartao.click();
     conferir(!!(await esperar(".atalhos .atalho")), "o save carrega e o lugar aparece com a doca de atalhos");
     conferir((await page.$$(".atalhos .doca-sep")).length >= 1, "a doca separa os atalhos em grupos");
+    conferir(!(await page.$("#texto .eco")), "entrar no save não deixa ecos do menu na página");
+  } finally {
+    conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
+    await page.close();
+    proc.kill();
+  }
+}
+
+async function cenarioVila(browser) {
+  console.log("cenário: saque, mural e mercado");
+  const { proc, url } = await subir("vila");
+  const { page, erros, esperar } = await abrir(browser, url);
+  try {
+    conferir(!!(await esperar(".achado-cartao.novo")), "o item encontrado aparece como cartão");
+    conferir(!!(await page.$(".achado-cartao.atual")), "o item que você usa aparece ao lado");
+    conferir(!(await page.$('#prompt .escolha:has-text("Deixar para trás")')), "sem 'deixar para trás' com a mochila livre");
+    await (await esperar('#prompt .escolha:has-text("Guardar")')).click();
+    const aceitar = await esperar("[data-aceitar]");
+    await page.evaluate(() => { const p = document.getElementById("pagina"); p.scrollTop = p.scrollHeight; });
+    await page.waitForTimeout(300);
+    const antes = await page.evaluate(() => document.getElementById("pagina").scrollTop);
+    await aceitar.evaluate((b) => b.click());  // clique sem o "rolar até o botão" do Playwright
+    await esperar(".contrato.recem");
+    await page.waitForTimeout(400);
+    const depois = await page.evaluate(() => document.getElementById("pagina").scrollTop);
+    conferir(Math.abs(depois - antes) < 4, `aceitar um contrato não pula a página (${antes} → ${depois})`);
+    await page.keyboard.press("Escape");
+    const mercado = await esperar('#prompt .escolha:has-text("Mercado")');
+    const vida = () => page.evaluate(() => App.estado.heroi.hp);
+    const antesPocao = await vida();
+    await (await page.$('#heroi [data-bolsa="pocao_vida"]')).click();
+    for (let k = 0; k < 30 && (await vida()) === antesPocao; k++) await page.waitForTimeout(100);
+    conferir((await vida()) > antesPocao, "a poção da bolsa lateral se usa com um clique");
+    await page.waitForTimeout(300);
+    await (await esperar('#prompt .escolha:has-text("Mercado")') || mercado).click();
+    const mais = await esperar('[data-comprar="tocha"] [data-q="1"]');
+    const qtd = () => page.evaluate(() => Number(document.querySelector('[data-comprar="tocha"] .qtd-ctrl b').textContent));
+    await mais.hover(); await page.mouse.down();
+    await page.waitForTimeout(600);
+    await page.evaluate(() => document.querySelector('[data-comprar="bandagem"]').click());  // a loja se redesenha com o botão apertado
+    await page.waitForTimeout(500);
+    const parado = await qtd(); await page.waitForTimeout(500);
+    await page.mouse.up();
+    conferir(parado === (await qtd()), "segurar + não segue somando depois que a loja se redesenha");
+    await (await page.$('[data-comprar="tocha"] [data-q="-1"]')).click();
+    await page.waitForTimeout(300);
+    conferir((await qtd()) === parado - 1, "o − desce a quantidade");
   } finally {
     conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
     await page.close();
@@ -109,6 +160,7 @@ try {
 try {
   await cenarioCombate(browser);
   await cenarioTitulo(browser);
+  await cenarioVila(browser);
 } catch (e) {
   falhas.push(String(e));
   console.log("ERRO", e);

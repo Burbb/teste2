@@ -83,7 +83,8 @@ class Progressao:
                 antes = j.max_hp
                 j.recalcular()
                 j.hp += max(0, j.max_hp - antes)
-                self.dizer(f"Você aprendeu {t['nome']} ({j.tal(t['id'])}/{t['max']}).", "verde+negrito")
+                if not getattr(self.ui, "web", False):  # na tela gráfica, o próprio talento festeja (som, faíscas, aviso)
+                    self.dizer(f"Você aprendeu {t['nome']} ({j.tal(t['id'])}/{t['max']}).", "verde+negrito")
 
     def _aprender_habilidades(self):
         j = self.j

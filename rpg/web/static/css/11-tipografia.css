@@ -24,11 +24,11 @@ body:not(.fonte-pixel) .escolha { font-size: 20px; }
 body:not(.fonte-pixel) .escolha.secundaria { font-size: 18px; }
 body:not(.fonte-pixel) .acoes-combate .escolha { font-family: var(--cabeca); font-size: 17px; }
 body:not(.fonte-pixel) :is(.hud-nome b, .continuar, .secao h3, .tela h4, .cartao .cab b, .arvore-col-titulo, #talento-info b,
-  .festa .habilidade-nova b, .toast b, #historico-lista .h-cena, #dica-item b, .menu-item b, .cc-topo b, .heroi-nome) {
+  .festa .habilidade-nova b, .toast b, #historico-lista .h-cena, #dica-item b, #dica-equipado b, .menu-item b, .cc-topo b, .heroi-nome) {
   font-family: var(--cabeca); font-weight: 700; letter-spacing: 0.01em; }
 body:not(.fonte-pixel) .secao h3 { font-size: 21px; }
 body:not(.fonte-pixel) .tela h4 { font-size: 23px; }
-body:not(.fonte-pixel) .cartao .cab b, body:not(.fonte-pixel) #dica-item b, body:not(.fonte-pixel) .cc-topo b { font-size: 21px; }
+body:not(.fonte-pixel) .cartao .cab b, body:not(.fonte-pixel) #dica-item b, body:not(.fonte-pixel) #dica-equipado b, body:not(.fonte-pixel) .cc-topo b { font-size: 21px; }
 body:not(.fonte-pixel) .menu-item b { font-size: 19px; }
 body:not(.fonte-pixel) .hud-nome b, body:not(.fonte-pixel) .toast b, body:not(.fonte-pixel) #talento-info b,
 body:not(.fonte-pixel) .arvore-col-titulo, body:not(.fonte-pixel) #historico-lista .h-cena, body:not(.fonte-pixel) .festa .habilidade-nova b { font-size: 23px; }

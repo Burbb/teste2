@@ -180,21 +180,37 @@ const Telas = (() => {
     return `<div class="comparacao"><small>contra ${h(alvo.nome)}:</small>${linhas.join("") || "<span>igual</span>"}</div>`;
   }
 
-  const dicas = [];
-  /** Guarda o HTML de uma dica e devolve o id (para elementos montados via DOM). */
+  const dicas = new Map();
+  let proximaDica = 0;
+  /** Guarda o HTML de uma dica e devolve o id (para elementos montados via DOM). Os ids nunca se repetem;
+   *  as dicas mais antigas (que já não estão na tela) são esquecidas aos poucos. */
   function guardarDica(html) {
-    if (dicas.length > 3000) dicas.splice(0, 2000);  // antigas não estão mais na tela
-    dicas.push(html);
-    return dicas.length - 1;
+    if (dicas.size > 3000) {
+      for (const k of [...dicas.keys()].slice(0, 2000)) { dicas.delete(k); itensDica.delete(k); }
+    }
+    dicas.set(proximaDica, html);
+    return proximaDica++;
   }
   function dica(html) { return `data-dica="${guardarDica(html)}"`; }
-  function dicaItem(it, rodape = "", comparando = true) { return `data-dica="${guardarDica(htmlItem(it, rodape, comparando))}"`; }
+  const itensDica = new Map();  // id da dica → item, para o Shift mostrar o equipado ao lado
+  function dicaItem(it, rodape = "", comparando = true) {
+    const id = guardarDica(htmlItem(it, rodape, comparando));
+    if (comparando) itensDica.set(id, it);
+    return `data-dica="${id}"`;
+  }
+  /** Os itens que o herói está usando no(s) espaço(s) onde `it` iria. */
+  function equipadosPara(it) {
+    const heroi = App.estado && App.estado.heroi;
+    if (!heroi || !it || !it.slot) return [];
+    return (ESPACOS[it.slot] || [it.slot]).map((s) => heroi.equip[s]).filter(Boolean);
+  }
   function htmlItem(it, rodape = "", comparando = true) {
     const heroi = App.estado && App.estado.heroi;
     const naoUsa = it.classe && heroi && it.classe !== heroi.classe ? `<div class="pior">Só ${CLASSE_NOME[it.classe] || it.classe} sabem usar isto.</div>` : "";
     return `<b class="r-${h(it.raridade)}">${h(it.nome)}</b><div class="tipo">${NOME_ESPACO[it.slot] || ""} · ${RARIDADE[it.raridade] || ""}</div>
       <div class="bonus">${h(it.bonus).split(", ").join("<br>")}</div>${comparando ? comparar(it) : ""}${naoUsa}
-      ${it.lore ? `<div class="lore">"${h(it.lore)}"</div>` : ""}${rodape ? `<div class="rodape">${rodape}</div>` : ""}`;
+      ${it.lore ? `<div class="lore">"${h(it.lore)}"</div>` : ""}${rodape ? `<div class="rodape">${rodape}</div>` : ""}
+      ${comparando && equipadosPara(it).length ? '<div class="atalho-shift">Segure <kbd>Shift</kbd> para ver o seu.</div>' : ""}`;
   }
   /** A caixa de dica é uma só; ela lembra quem a abriu. Se esse dono sai da tela (a cena trocou, o combate
    *  acabou) sem o mouse "sair" dele, um vigia fecha a dica em vez de deixá-la presa. */
@@ -217,22 +233,49 @@ const Telas = (() => {
   function ligarDicas(raiz) {
     const caixa = caixaDica();
     raiz.querySelectorAll("[data-dica]").forEach((el) => {
-      el.addEventListener("mouseenter", () => {
-        caixa.innerHTML = dicas[Number(el.dataset.dica)] || "";
+      el.addEventListener("mouseenter", (ev) => {
+        caixa.innerHTML = dicas.get(Number(el.dataset.dica)) || "";
         caixa.classList.remove("ficha-inimigo");
+        caixa._item = itensDica.get(Number(el.dataset.dica)) || null;
+        caixa._esquerda = false;
         abrirDica(el);
         const r = el.getBoundingClientRect();
-        const esq = r.right + 10 + 290 > window.innerWidth ? r.left - 300 : r.right + 10;
+        caixa._esquerda = r.right + 10 + 290 > window.innerWidth;
+        const esq = caixa._esquerda ? r.left - 300 : r.right + 10;
         caixa.style.left = Math.max(6, esq) + "px";
         caixa.style.top = Math.max(6, Math.min(window.innerHeight - caixa.offsetHeight - 6, r.top - 6)) + "px";
+        mostrarEquipado(ev.shiftKey);
       });
       el.addEventListener("mouseleave", esconderDica);
     });
   }
+  /** Com Shift seguro, o item que você usa naquele espaço abre ao lado da dica, inteiro (não só a diferença). */
+  function mostrarEquipado(ligado) {
+    const caixa = document.getElementById("dica-item");
+    let lado = document.getElementById("dica-equipado");
+    const eq = ligado && caixa && !caixa.hidden && caixa._item ? equipadosPara(caixa._item) : [];
+    if (!eq.length) { if (lado) lado.hidden = true; return; }
+    if (!lado) { lado = document.createElement("div"); lado.id = "dica-equipado"; lado.className = "moldura"; document.body.appendChild(lado); }
+    lado.innerHTML = eq.map((it, i) => `<div class="${i ? "outro" : ""}"><span class="selo-equipado">Equipado</span>${htmlItem(it, "", false)}</div>`).join("");
+    lado.hidden = false;
+    const r = caixa.getBoundingClientRect();
+    const larg = lado.offsetWidth || 280;
+    // Fica do lado oposto ao do item, para não cobrir o que você está olhando.
+    let esq = caixa._esquerda ? r.left - larg - 8 : r.right + 8;
+    if (esq + larg > window.innerWidth - 6) esq = r.left - larg - 8;
+    if (esq < 6) esq = r.right + 8;
+    lado.style.left = Math.max(6, esq) + "px";
+    lado.style.top = Math.max(6, Math.min(window.innerHeight - lado.offsetHeight - 6, r.top)) + "px";
+  }
+  window.addEventListener("keydown", (e) => { if (e.key === "Shift" && !e.repeat) mostrarEquipado(true); });
+  window.addEventListener("keyup", (e) => { if (e.key === "Shift") mostrarEquipado(false); });
+  window.addEventListener("blur", () => mostrarEquipado(false));
   function esconderDica() {
     clearInterval(vigia);
     const c = document.getElementById("dica-item");
-    if (c) { c.hidden = true; c._dono = null; c.classList.remove("ficha-inimigo"); }
+    if (c) { c.hidden = true; c._dono = null; c._item = null; c.classList.remove("ficha-inimigo"); }
+    const lado = document.getElementById("dica-equipado");
+    if (lado) lado.hidden = true;
   }
 
   // ------------------------------------------------------------------ inventário (boneco + mochila)
@@ -331,9 +374,59 @@ const Telas = (() => {
     }));
   }
 
+  // ------------------------------------------------------------------ carregar jogo
+  function haQuanto(seg) {
+    const m = Math.floor((Date.now() / 1000 - seg) / 60);
+    if (m < 2) return "agora há pouco";
+    if (m < 60) return `há ${m} min`;
+    const hs = Math.floor(m / 60);
+    if (hs < 24) return `há ${hs} h`;
+    const d = Math.floor(hs / 24);
+    return d === 1 ? "ontem" : `há ${d} dias`;
+  }
+  /** Os saves como cartões: retrato da classe, nome, nível, dia, lugar e quando foi jogado (o mais recente primeiro). */
+  function saves(d) {
+    const cartoes = d.saves.map((s, i) => `<button type="button" class="save-cartao${s.ilegivel ? " ilegivel" : ""}" data-save="${i}">
+        <span class="save-retrato">${S(s.classe || "pergaminho", 3)}</span>
+        <span class="save-info"><b>${h(s.nome)}</b>
+          <span class="save-classe">${s.ilegivel ? "save danificado" : `${h(s.classe_nome)} · nível ${s.nivel}`}${s.hardcore === false ? ' <i class="save-tag">brando</i>' : ""}</span>
+          <small>${s.ilegivel ? "" : `Dia ${s.dia} · ${h(s.lugar)} · `}${haQuanto(s.modificado)}</small></span></button>`).join("");
+    return `<div class="tela saves"><div class="saves-lista">${cartoes}</div></div>`;
+  }
+  function ligarSaves(raiz) {
+    raiz.querySelectorAll("[data-save]").forEach((b) => b.addEventListener("click", (ev) => { ev.stopPropagation(); App.acao({ save: Number(b.dataset.save) }, "pagina"); }));
+  }
+
+  // ------------------------------------------------------------------ saque
+  const BRILHO_RARIDADE = { comum: ["#f1e4c4", "#c0b8a8"], magico: ["#7fb0ff", "#c8e0ff", "#ffffff"],
+    raro: ["#f2c94c", "#fff3a0", "#ffffff"], lendario: ["#ffb35c", "#e0782f", "#fff3a0", "#ffffff"] };
+  /** Item encontrado: o cartão dele (sprite, raridade, bônus, diferença para o seu) e, ao lado, o que você usa. */
+  function achado(d) {
+    const it = d.item;
+    const rar = h(it.raridade);
+    const eq = (d.equipados || []).map((e) => `<div class="achado-cartao atual rar-${h(e.raridade)}">
+        <span class="achado-selo">Você usa</span>
+        <div class="achado-arte pequena">${S(iconeItem(e), 3)}</div>${htmlItem(e, "", false)}</div>`).join("");
+    const aviso = !d.pode_usar ? "" : !d.cabe ? '<div class="pior">Mochila cheia: equipar deixa o item antigo para trás.</div>' : "";
+    return `<div class="tela achado rar-${rar}">
+      <div class="achado-cartao novo rar-${rar}">
+        <div class="achado-raios" aria-hidden="true"></div>
+        <span class="achado-selo">Você encontrou</span>
+        <div class="achado-arte">${S(iconeItem(it), 4)}</div>
+        ${htmlItem(it, "", true)}${aviso}
+      </div>${eq}</div>`;
+  }
+  function revelarAchado(raiz, d) {
+    const cartao = raiz.querySelector(".achado-cartao.novo");
+    if (!cartao) return;
+    const raro = ["raro", "lendario"].includes(d.item.raridade);
+    App.som(raro ? "achado_raro" : "achado");
+    setTimeout(() => { if (cartao.isConnected) faiscas(cartao.querySelector(".achado-arte"), BRILHO_RARIDADE[d.item.raridade] || BRILHO_RARIDADE.comum, raro ? 22 : 12); }, 260);
+  }
+
   // ------------------------------------------------------------------ mercado
   const qtdLoja = {};  // quantidade escolhida em cada suprimento (sobrevive ao redesenho, não à saída do mercado)
-  function novaVisita() { for (const k in qtdLoja) delete qtdLoja[k]; }
+  function novaVisita() { for (const k in qtdLoja) delete qtdLoja[k]; contratosVistos = null; }
   function maxCompra(c, ouro) { return Math.max(0, Math.min(99, c.limite ?? 99, Math.floor(ouro / c.preco))); }
   function loja(d) {
     const cons = d.consumiveis.map((c) => {
@@ -418,7 +511,11 @@ const Telas = (() => {
     setTimeout(() => document.addEventListener("click", fecharMenuItem, { once: true }), 0);
   }
 
+  let repeticao = null;  // o "segurar +/−" do mercado em andamento
+  function pararRepeticao() { clearTimeout(repeticao); repeticao = null; }
+  ["pointerup", "pointercancel", "blur"].forEach((t) => window.addEventListener(t, pararRepeticao));
   function ligarLoja(raiz) {
+    pararRepeticao();
     const dados = App.ultimaLoja;
     raiz.querySelectorAll("[data-comprar]").forEach((el) => {
       const preco = Number(el.dataset.preco), max = Number(el.dataset.max), id = el.dataset.comprar;
@@ -428,14 +525,20 @@ const Telas = (() => {
         qtdLoja[id] = q; num.textContent = q; total.textContent = preco * q;
       };
       el.querySelectorAll("[data-q]").forEach((b) => {
-        let rep = null;
         const passo = () => mudar(Math.min(qtdLoja[id] || 1, max || 1) + Number(b.dataset.q));
         b.addEventListener("click", (ev) => { ev.stopPropagation(); });
         b.addEventListener("pointerdown", (ev) => {
-          ev.stopPropagation(); passo(); App.som("escolha");
-          rep = setTimeout(function repetir() { passo(); rep = setTimeout(repetir, 70); }, 380);  // segurar acelera
+          ev.stopPropagation(); pararRepeticao(); passo(); App.som("escolha");
+          // Segurar acelera. A repetição para ao soltar em qualquer lugar, ao sair da janela, ao chegar no
+          // limite e se o botão sumir (a tela se redesenhou): nunca fica rodando sozinha.
+          repeticao = setTimeout(function repetir() {
+            const antes = qtdLoja[id];
+            if (!b.isConnected) { pararRepeticao(); return; }
+            passo();
+            repeticao = qtdLoja[id] === antes ? null : setTimeout(repetir, 70);
+          }, 380);
         });
-        ["pointerup", "pointerleave", "pointercancel"].forEach((t) => b.addEventListener(t, () => clearTimeout(rep)));
+        ["pointerup", "pointerleave", "pointercancel"].forEach((t) => b.addEventListener(t, pararRepeticao));
       });
       // A roda do mouse só mexe na quantidade em cima do controle (rolar a página não pode mudar a compra).
       const ctrl = el.querySelector(".qtd-ctrl");
@@ -527,7 +630,8 @@ const Telas = (() => {
     if (ativo) botao = c.concluido ? '<span class="contrato-feito">Feito! Volte a uma vila para receber</span>'
       : `<button type="button" class="contrato-botao abandonar" data-abandonar="${c.id}" title="Reputação −${c.penalidade}">Abandonar</button>`;
     else botao = `<button type="button" class="contrato-botao" data-aceitar="${c.id}"${cheio ? " disabled title=\"Você já tem 3 contratos\"" : ""}>Aceitar</button>`;
-    return `<div class="contrato tipo-${h(c.tipo)}${ativo ? " ativo" : ""}${c.concluido ? " concluido" : ""}">
+    const recem = ativo && contratosVistos && !contratosVistos.has(c.id);
+    return `<div class="contrato tipo-${h(c.tipo)}${ativo ? " ativo" : ""}${c.concluido ? " concluido" : ""}${recem ? " recem" : ""}">
       <span class="prego"></span><div class="contrato-tipo">${TIPO_CONTRATO[c.tipo] || h(c.tipo)}</div>
       <div class="contrato-arte">${S(arte, 3)}</div>
       <div class="contrato-titulo">${h(titulo)}</div>
@@ -536,10 +640,12 @@ const Telas = (() => {
       <div class="contrato-premio"><span>${S("moeda", 1)} ${c.ouro}</span><span>${S("estrela", 1)} ${c.xp} XP</span></div>
       ${botao}</div>`;
   }
+  let contratosVistos = null;  // os contratos que você já tinha: o recém-aceito chega pregado com destaque
   function mural(d) {
     const cheio = d.ativos.length >= d.limite;
     const oferta = d.oferta.map((c) => cartaz(c, false, cheio, d.nivel_heroi)).join("");
     const ativos = d.ativos.map((c) => cartaz(c, true, cheio, d.nivel_heroi)).join("");
+    contratosVistos = new Set(d.ativos.map((c) => c.id));
     return `<div class="tela mural">
       <div class="quadro"><div class="quadro-cab"><b>Contratos</b><span>${d.renova ? `novos cartazes em ${d.renova} dia${d.renova === 1 ? "" : "s"}` : "cartazes novos amanhã"}</span></div>
         <div class="cartazes">${oferta || '<span class="vazio">O mural está vazio. Volte em alguns dias.</span>'}</div></div>
@@ -688,7 +794,9 @@ const Telas = (() => {
   function painel(m) {
     esconderDica();  // a tela foi redesenhada: a dica antiga ficaria órfã
     const div = document.createElement("div");
-    div.innerHTML = ({ personagem, diario, bestiario, comitiva, loja, acampamento, mural }[m.tipo] || (() => ""))(m.dados);
+    div.innerHTML = ({ personagem, diario, bestiario, comitiva, loja, acampamento, mural, achado, saves }[m.tipo] || (() => ""))(m.dados);
+    if (m.tipo === "saves") ligarSaves(div);
+    if (m.tipo === "achado") setTimeout(() => revelarAchado(div, m.dados), 0);
     if (m.tipo === "acampamento") { App.ultimaFogueira = m.dados; desenharFogueira(div.querySelector(".fogueira-cena"), m.dados); }
     if (m.tipo === "acampamento" || m.tipo === "comitiva") ligarFigurasComitiva(div);
     if (m.tipo === "mural" || m.tipo === "diario") ligarMural(div);
@@ -815,6 +923,6 @@ const Telas = (() => {
     setTimeout(() => t.remove(), 3300);
   }
 
-  return { rastreador, atributosHtml, reputacaoHtml, dica, guardarDica, htmlItem, abrirDica, novaVisita, fecharMenuItem, guardarArvore, abrirTalentos, fecharTalentos, painel, celebrar, toast, iconeCriatura, iconeItem, dicaItem, ligarDicas, esconderDica,
+  return { rastreador, atributosHtml, reputacaoHtml, dica, guardarDica, htmlItem, menuUso, abrirDica, novaVisita, fecharMenuItem, guardarArvore, abrirTalentos, fecharTalentos, painel, celebrar, toast, iconeCriatura, iconeItem, dicaItem, ligarDicas, esconderDica,
     ICONE_ITEM, ARMA, VAZIO, NOME_ESPACO, AREA, barra, aprovacao };
 })();

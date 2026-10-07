@@ -180,7 +180,8 @@ class UI:
                 return int(resposta) - 1
             self.dizer("Digite o número de uma das opções.", "cinza")
 
-    def perguntar(self, pergunta, padrao=""):
+    def perguntar(self, pergunta, padrao="", voltar=False):
+        """Texto livre. Com voltar=True, a interface pode devolver None (a pessoa desistiu); aqui nunca."""
         try:
             resposta = input(self.pintar(f"{pergunta} ", "ciano")).strip()
         except EOFError:
@@ -223,7 +224,7 @@ class BotUI(UI):
             print(f"  [robô] -> {opcoes[escolha]}")
         return escolha
 
-    def perguntar(self, pergunta, padrao=""):
+    def perguntar(self, pergunta, padrao="", voltar=False):
         return padrao or "Robô"
 
     def pausar(self):

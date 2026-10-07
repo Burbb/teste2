@@ -74,7 +74,8 @@ function desenharModificadores(mods) {
 
 function recurso(id, icones, qtd, opts = {}) {
   const imgs = icones.map((n) => spr(n, 2)).join("");
-  return `<div class="recurso${opts.alerta ? " alerta" : ""}${opts.vazio ? " vazio" : ""}" data-rec="${id}" title="${esc(opts.titulo || "")}">
+  const dica = opts.titulo ? Telas.dica(`<div>${esc(opts.titulo)}</div>`) : "";
+  return `<div class="recurso${opts.alerta ? " alerta" : ""}${opts.vazio ? " vazio" : ""}" data-rec="${id}" ${dica}>
     <div class="icones">${imgs}</div><div class="qtd">${qtd}</div></div>`;
 }
 
@@ -85,7 +86,7 @@ function desenharHud(h, antes) {
   const ouro = [h.ouro ? "moedas" : "bolsa_vazia"];
   const pocoes = [h.pocoes ? "pocao" : "frasco_vazio"];
   const vidaCritica = h.hp <= h.max_hp * 0.3;
-  const feridas = h.ferimentos.length ? `<div class="recurso alerta" data-rec="feridas" title="${esc(h.males.join(" · "))}"><div class="icones">${spr("gota", 2)}</div><div class="qtd">${h.ferimentos.length}</div></div>` : "";
+  const feridas = h.ferimentos.length ? `<div class="recurso alerta" data-rec="feridas" ${Telas.dica(h.ferimentos.map((f) => `<b>${esc(f.nome)}</b><div class="bonus pior">${esc((f.explica || [""])[0])}</div>`).join("") + '<div class="rodape">Detalhes no painel do herói, à esquerda.</div>')}><div class="icones">${spr("gota", 2)}</div><div class="qtd">${h.ferimentos.length}</div></div>` : "";
   $("#hud-linha").innerHTML = `
     <div class="hud-retrato" title="${esc(h.titulo)} nível ${h.nivel}">${spr(h.classe, 3)}<span class="nivel">${h.nivel}</span></div>
     <div class="hud-vitais">
@@ -103,6 +104,7 @@ function desenharHud(h, antes) {
       ${feridas}
     </div>`;
   animarBarras($("#hud-linha"));
+  Telas.ligarDicas($("#hud-linha"));
   // Feedback: o que mudou desde o último estado
   const agora = { provisoes: h.provisoes, tochas: h.tochas, ouro: h.ouro, pocoes: h.pocoes, bandagens: h.bandagens, flechas: h.flechas };
   if (antes && !replay) {
@@ -128,10 +130,13 @@ function desenharHeroi(h) {
     if (!it) return `<div class="slot-px mini vazio" title="${esc(Telas.NOME_ESPACO[s])} (vazio)">${spr(Telas.VAZIO[s], 1, "fantasma")}</div>`;
     return `<div class="slot-px mini r-${esc(it.raridade)}" ${Telas.dicaItem(it, "", false)}>${spr(Telas.iconeItem(it), 1)}</div>`;
   };
-  const feridas = h.ferimentos.length ? h.ferimentos.map((f) => `<div class="ferimento">${spr("gota", 1)}${esc(f.nome)} <small>${f.dias ? f.dias + "d" : ""}${f.aberto ? " · aberto" : ""}</small></div>`).join("")
+  const feridas = h.ferimentos.length ? h.ferimentos.map((f) => `<div class="ferimento${f.aberto ? " aberto" : ""}" ${Telas.dica(`<b>${esc(f.nome)}</b><div class="tipo">${f.dias ? `${f.dias} dia${f.dias === 1 ? "" : "s"} para sarar` : "não sara sozinha"}${f.aberto ? " · ferida aberta" : ""}</div>${(f.explica || []).map((l, i) => `<div class="${i ? "" : "bonus pior"}">${esc(l)}</div>`).join("")}`)}>${spr("gota", 1)}${esc(f.nome)} <small>${f.dias ? f.dias + "d" : ""}${f.aberto ? " · aberto" : ""}</small></div>`).join("")
     : '<div class="vazio">nenhum, por enquanto</div>';
   const habs = h.habilidades.map((x) => `<div class="habilidade" title="${esc(x.desc)}"><span>${esc(x.nome)}</span><small>${x.custo} ${esc(h.recurso)}</small></div>`).join("");
-  const bolsa = h.bolsa.filter((b) => b.id !== "tocha").map((b) => `<div class="slot-px" title="${esc(b.nome)}: ${esc(b.desc)}">${spr(Telas.ICONE_ITEM[b.id] || "pocao", 2)}<span class="qtd">${b.qtd}</span></div>`).join("");
+  const bolsa = h.bolsa.filter((b) => b.id !== "tocha").map((b) => {
+    const dica = `<b>${esc(b.nome)}</b><div>${esc(b.desc)}</div><div class="rodape">${b.motivo ? esc(b.motivo) : "Clique para usar."}</div>`;
+    return `<div role="button" tabindex="0" class="slot-px usavel${b.motivo && !(b.alvos || []).some((a) => !a.motivo) ? " inutil" : ""}" data-bolsa="${esc(b.id)}" ${Telas.dica(dica)}>${spr(Telas.ICONE_ITEM[b.id] || "pocao", 2)}<span class="qtd">${b.qtd}</span></div>`;
+  }).join("");
   const comitiva = h.comitiva && h.comitiva.length ? `<div class="secao"><h3>Comitiva</h3>${h.comitiva.map((m) =>
     `<div class="membro${m.ferido ? " ferido" : ""}" data-cid="${esc(m.id)}">
       <div class="icone">${spr(m.id, 2)}</div>
@@ -143,7 +148,7 @@ function desenharHeroi(h) {
     <div class="xp-linha"><div class="legenda-linha"><span>Experiência</span><span>${h.xp}/${h.xp_proximo}</span></div>${barra("xp", h.xp, h.xp_proximo)}</div>
     ${h.pontos_talento ? `<div class="talento-aviso" title="Abra Talentos (T) num local">${spr("estrela", 1)} ${h.pontos_talento} ponto(s) de talento</div>` : ""}
     <div class="secao"><h3>Atributos</h3><div class="atributos">${attrs}</div></div>
-    <div class="secao"><h3>Equipado</h3><div class="equip-mini" title="Abra Personagem (P) para trocar">${Object.keys(Telas.AREA).map(slot).join("")}</div></div>
+    <div class="secao"><h3>Equipado</h3><div class="equip-mini" title="Abra o Inventário (I) para trocar">${Object.keys(Telas.AREA).map(slot).join("")}</div></div>
     ${comitiva}
     <div class="secao"><h3>Ferimentos</h3>${feridas}</div>
     <div class="secao"><h3>Habilidades</h3>${habs}</div>
@@ -151,6 +156,32 @@ function desenharHeroi(h) {
     <div class="secao"><div class="linhas">${Telas.reputacaoHtml(h)}</div></div>`;
   animarBarras($("#heroi"));
   Telas.ligarDicas($("#heroi"));
+  $("#heroi").querySelectorAll("[data-bolsa]").forEach((el) => {
+    const usar = () => usarDaBolsa(h.bolsa.find((b) => b.id === el.dataset.bolsa), el);
+    el.addEventListener("click", usar);
+    el.addEventListener("keydown", (ev) => { if (ev.key === "Enter") usar(); });
+  });
+}
+
+/** A bolsa do painel lateral: clicou, usou. Na luta, passa pelo "Itens" (gasta o turno); fora dela, vale em
+ *  qualquer menu de lugar. Se agora não dá (no meio de um evento, fora da sua vez), diz por quê. */
+const USAVEIS_NA_LUTA = ["pocao_vida", "tonico", "antidoto", "bandagem", "bomba_fumaca"];
+function usarDaBolsa(b, el) {
+  if (!b) return;
+  const alvosBons = (b.alvos || []).some((a) => !a.motivo);
+  if (b.motivo && !alvosBons) { Som.tocar("falha"); aviso(b.motivo, "info", "pergaminho"); return; }
+  const opcoes = (pergunta && pergunta.tipo === "opcoes" && pergunta.opcoes) || [];
+  if (estado && estado.combate) {
+    if (!USAVEIS_NA_LUTA.includes(b.id)) { Som.tocar("falha"); aviso("Isso não se usa no meio da luta.", "info", "pergaminho"); return; }
+    if (!opcoes.some((o) => (o.meta && o.meta.usar_item === b.id) || o.texto.startsWith("Itens"))) {
+      Som.tocar("falha"); aviso("Espere a sua vez.", "info", "pergaminho"); return;
+    }
+    Som.tocar("item");
+    pedir("Itens", "usar_item", b.id);
+    return;
+  }
+  if (alvosBons && b.alvos.length && opcoes.some((o) => o.meta && o.meta.usar === b.id)) { Telas.menuUso(el, b); return; }
+  if (!acao({ usar: b.id }, "item")) { Som.tocar("falha"); aviso("Agora não: termine o que está fazendo primeiro.", "info", "pergaminho"); }
 }
 
 function nivelPerigo(nivel) {

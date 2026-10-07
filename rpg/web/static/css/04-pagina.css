@@ -6,8 +6,8 @@ body.modo-titulo #vista { position: fixed; left: 0; right: 0; bottom: 0; width: 
 body.modo-titulo #folha { position: relative; z-index: 1; }
 body.modo-titulo .vinheta { background: radial-gradient(ellipse 80% 70% at 50% 40%, transparent 50%, rgba(0, 0, 0, 0.55) 100%); }
 #folha { max-width: 68ch; margin: 0 auto; padding: 20px 34px 34px; font-size: 19px; line-height: 1.6; }
-#folha.saindo { animation: sair 0.2s steps(4) forwards; }
-#folha.entrando { animation: entrar 0.35s steps(5); }
+#folha.saindo { animation: sair 0.2s ease-in forwards; }
+#folha.entrando { animation: entrar 0.35s ease-out; }
 @keyframes sair { to { opacity: 0; } }
 @keyframes entrar { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 
@@ -43,7 +43,7 @@ body.modo-titulo .vinheta { background: radial-gradient(ellipse 80% 70% at 50% 4
 #texto .eco { color: var(--tinta-3); font-size: 0.85em; margin: 0.2em 0 1em; }
 #texto .eco::before { content: "▶ "; color: var(--brasa); }
 #texto .passado { opacity: 0.35; }
-#texto p.detalhe { font-family: var(--num); font-size: 18px; line-height: 1.15; margin: 0 0 0.25em; color: var(--tinta-2); animation: surgir 0.2s steps(2); }
+#texto p.detalhe { font-family: var(--num); font-size: 18px; line-height: 1.15; margin: 0 0 0.25em; color: var(--tinta-2); animation: surgir 0.2s ease-out; }
 #texto p.detalhe.perigo { color: #ff9c90; } #texto p.detalhe.destaque { color: #f2d7a8; } #texto p.detalhe.bom { color: #bfe59b; }
 #texto p.detalhe.sussurro { color: var(--tinta-3); font-style: normal; } #texto p.detalhe.arcano { color: #cdbcf5; }
 #texto p + p.detalhe { margin-top: -0.3em; }
@@ -52,7 +52,7 @@ body.modo-titulo .vinheta { background: radial-gradient(ellipse 80% 70% at 50% 4
 
 /* etiquetas */
 .chips { display: flex; flex-wrap: wrap; gap: 6px; margin: -0.2em 0 1em; }
-.chip { display: inline-flex; align-items: center; gap: 6px; font-family: var(--num); font-size: 20px; line-height: 1; padding: 3px 9px 3px 4px; border: 2px solid; background: #120e0b; box-shadow: 2px 2px 0 #000; animation: surgir 0.3s steps(3); }
+.chip { display: inline-flex; align-items: center; gap: 6px; font-family: var(--num); font-size: 20px; line-height: 1; padding: 3px 9px 3px 4px; border: 2px solid; background: #120e0b; box-shadow: 2px 2px 0 #000; animation: surgir 0.3s cubic-bezier(.2,.8,.3,1.2); }
 .chip img.sprite { --s: 16; }
 @keyframes surgir { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 .chip.ouro { color: var(--ouro); border-color: #8a6a14; }
@@ -98,13 +98,13 @@ body.modo-titulo .vinheta { background: radial-gradient(ellipse 80% 70% at 50% 4
 
 /* ------------------------------------------------------------------ escolhas */
 #prompt:empty { display: none; }
-#prompt { margin-top: 1.2em; animation: entrar 0.3s steps(3); }
+#prompt { margin-top: 1.2em; animation: entrar 0.3s ease-out; }
 .pergunta-rotulo { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--tinta-3); margin-bottom: 6px; }
 .escolhas { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 3px; }
 .escolha {
   position: relative; display: flex; align-items: baseline; gap: 12px; width: 100%; text-align: left; cursor: pointer;
   background: transparent; border: 2px solid transparent; padding: 5px 12px 5px 30px; font-size: 19px; line-height: 1.35; color: #f2d7a8;
-  opacity: 0; animation: escolha-surge 0.25s steps(3) forwards;
+  opacity: 0; animation: escolha-surge 0.25s ease-out forwards;
 }
 @keyframes escolha-surge { from { opacity: 0; transform: translateX(-6px); } to { opacity: 1; transform: none; } }
 .escolha::before { content: ""; position: absolute; left: 8px; top: 50%; margin-top: -6px; border: 6px solid transparent; border-left: 8px solid var(--ouro); opacity: 0; }

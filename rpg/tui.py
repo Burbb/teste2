@@ -305,7 +305,7 @@ class TextualUI(UI):
         self.novo_desde_escolha = False
         self.escolhas_na_cena += 1  # quem tocou em Continuar já leu: a próxima cena abre página nova
 
-    def perguntar(self, pergunta, padrao=""):
+    def perguntar(self, pergunta, padrao="", voltar=False):
         self.app.call_from_thread(self.app.pedir_texto, pergunta, padrao)
         resposta = self._esperar() or padrao
         self.escolhas_na_cena += 1

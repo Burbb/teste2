@@ -5,7 +5,7 @@ from .. import comitiva, mapa, sobrevivencia
 from ..classes import CLASSES, HABILIDADES, descricao_habilidade
 from ..combate import NOMES_EFEITOS
 from ..dados import BIOMAS, CLIMAS, PERIODOS
-from ..itens import CONSUMIVEIS, descrever_bonus, rotulo
+from ..itens import CONSUMIVEIS, ficha
 from ..mundo import nivel_regiao
 from ..jogo import NOMES_TESTE
 
@@ -22,12 +22,7 @@ def _efeitos(c):
     return lista
 
 
-def _item(it, recurso=None):
-    if not it:
-        return None
-    return {"nome": rotulo(it), "raridade": it.get("raridade", "comum"), "bonus": descrever_bonus(it["bonus"], recurso),
-            "nivel": it.get("nivel"), "slot": it.get("slot"), "base": it.get("base"), "bonus_bruto": it["bonus"],
-            "classe": it.get("classe"), "lore": it.get("lore")}
+_item = ficha
 
 
 def _pct(x):
@@ -93,7 +88,8 @@ def heroi(g):
     for f in j.ferimentos:
         d = sobrevivencia.FERIMENTOS[f["id"]]
         ferimentos.append({"nome": d["nome"], "dias": f.get("dias") if d["dias"] else None,
-                           "aberto": bool(d.get("aberto") and not f.get("tratado"))})
+                           "aberto": bool(d.get("aberto") and not f.get("tratado")),
+                           "explica": sobrevivencia.explicar(f, j.nome_recurso)})
     return {
         "nome": j.nome, "classe": j.classe, "classe_nome": CLASSES[j.classe]["nome"], "titulo": j.nome_classe,
         "nivel": j.nivel, "xp": j.xp, "xp_proximo": j.xp_proximo(),

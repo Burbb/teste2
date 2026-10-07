@@ -3,13 +3,13 @@
 .cartao-comitiva { pointer-events: auto; cursor: pointer; display: flex; gap: 10px; align-items: flex-start; width: min(360px, 82vw); padding: 8px 12px 9px 8px; background: #17120e; border: 3px solid #5a4632; box-shadow: 4px 4px 0 #000, 0 0 0 2px #000; }
 .cartao-comitiva.aprova { border-color: #5f8f3e; }
 .cartao-comitiva.desaprova { border-color: #8a3a7a; }
-.cartao-comitiva.chegou { animation: cc-entra 0.3s steps(12); }
-.cartao-comitiva.sumindo { animation: cc-sai 0.25s steps(10) forwards; }
+.cartao-comitiva.chegou { animation: cc-entra 0.3s cubic-bezier(.2,.8,.3,1); }
+.cartao-comitiva.sumindo { animation: cc-sai 0.25s ease-in forwards; }
 @keyframes cc-entra { from { opacity: 0; transform: translateX(26px); } to { opacity: 1; transform: none; } }
 @keyframes cc-sai { to { opacity: 0; transform: translateX(26px); } }
 .cc-retrato { flex: none; width: 54px; height: 54px; display: grid; place-items: center; background: #0d0b0a; border: 2px solid #2a2420; }
-.cartao-comitiva.aprova .cc-retrato { animation: reagiu-bem 0.6s steps(14); }
-.cartao-comitiva.desaprova .cc-retrato { animation: reagiu-mal 0.6s steps(14); }
+.cartao-comitiva.aprova .cc-retrato { animation: reagiu-bem 0.6s ease-out; }
+.cartao-comitiva.desaprova .cc-retrato { animation: reagiu-mal 0.6s ease-out; }
 .cc-corpo { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
 .cc-topo { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
 .cc-topo b { font-family: var(--titulo); font-weight: 400; font-size: 26px; line-height: 1; color: #fff3d6; text-shadow: 2px 2px 0 #000; }
@@ -27,10 +27,10 @@
 /* Na luta, a linha de suprimentos some: o palco ganha a altura (o botão Itens mostra o que dá para usar). */
 body.em-combate #hud-linha { display: none; }
 body.em-combate #batalha { margin-top: 0; }
-.cartao-comitiva.atualizou { animation: cc-pulso 0.4s steps(3); }
+.cartao-comitiva.atualizou { animation: cc-pulso 0.4s ease-out; }
 @keyframes cc-pulso { 50% { filter: brightness(1.35); } }
 
-.atributo[data-dica], .reputacao[data-dica] { cursor: help; }
+.atributo[data-dica], .reputacao[data-dica] { cursor: default; }
 .atributo[data-dica]:hover { border-color: var(--ouro-3); }
 .dica-lista { margin: 4px 0 0; padding-left: 16px; font-size: 13px; line-height: 1.4; color: var(--tinta-2); }
 .dica-lista li { margin-bottom: 3px; }

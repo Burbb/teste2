@@ -250,8 +250,12 @@ class WebUI(UI):
         self.novo_desde_escolha = False
         self.escolhas_na_cena += 1  # quem tocou em Continuar já leu: a próxima cena abre página nova
 
-    def perguntar(self, pergunta, padrao=""):
-        resposta = self._perguntar("pergunta", pergunta=pergunta, padrao=padrao)
+    def perguntar(self, pergunta, padrao="", voltar=False):
+        resposta = self._perguntar("pergunta", pergunta=pergunta, padrao=padrao, voltar=voltar)
+        if voltar and isinstance(resposta, dict) and resposta.get("voltar"):
+            self.escolhas_na_cena += 1
+            self.novo_desde_escolha = False
+            return None
         resposta = (str(resposta).strip() if resposta is not None else "") or padrao
         self._enviar("escolhido", texto=resposta)
         self.escolhas_na_cena += 1

@@ -26,6 +26,9 @@ NOITE_INIMIGOS = 1.1          # à noite, os monstros batem 10% mais forte
 # Fôlego depois da luta: vigor e foco voltam pela metade; a mana do mago, um quinto.
 FOLEGO_POS_LUTA = 0.5
 MANA_POS_LUTA = 0.2
+# O ataque básico que acerta devolve um pouco de mana, vigor ou foco: o golpe simples alimenta o próximo combo.
+ATAQUE_RECURSO = 0.04         # do recurso máximo
+ATAQUE_RECURSO_MIN = 2
 
 # Queimadura (mago): uma camada arde pouco; o forte é acumular até MAX_CHAMAS e detonar com a Combustão.
 MAX_CHAMAS = 3

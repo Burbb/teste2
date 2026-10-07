@@ -2,6 +2,7 @@
 
     python -m tests.navegador.cenarios combate   # mago em luta, com contrato de caça no lugar
     python -m tests.navegador.cenarios titulo    # menu principal com um save de dia para carregar
+    python -m tests.navegador.cenarios vila      # guerreiro acha um item raro e abre o mural de contratos
 
 Imprime o endereço do servidor na primeira linha e fica no ar até ser encerrado.
 """
@@ -69,7 +70,37 @@ def titulo(ui):
     menu_principal(ui, argparse.Namespace(seed=1, saves=pasta, brando=False))
 
 
-CENARIOS = {"combate": combate, "titulo": titulo}
+def vila(ui):
+    """Guerreiro numa vila: acha um item raro (cartão do saque) e depois abre o mural de contratos."""
+    g = Jogo(ui, seed=8, pasta_saves=tempfile.mkdtemp())
+    ui.jogo = g
+    g.iniciar("Jean", "guerreiro")
+    g.mundo["atual"] = next(l for l in g.mundo["locais"] if l["tipo"] == "vila")["id"]
+    g.periodo, g.clima = 1, "limpo"
+    g.j.ouro = 300
+    rng = random.Random(5)
+    for _ in range(80):  # algo vestido em quase todo espaço, para o mercado e o Shift terem com o que comparar
+        it = gerar_equip(rng, "guerreiro", 2)
+        espaco = "anel1" if it["slot"] == "anel" else it["slot"]
+        if espaco != "arma" and not g.j.equip.get(espaco):
+            g.j.equip[espaco] = it
+    g.j.recalcular()
+    g.j.hp = g.j.max_hp // 2  # ferido, para a poção da bolsa ter uso
+    for _ in range(60):  # um item raro de um espaço que já está ocupado, para comparar
+        it = gerar_equip(rng, "guerreiro", 4, qualidade=1)
+        if it["slot"] in ("arma", "armadura") and g.j.equip.get(it["slot"]):
+            break
+    ui.cena("Ruínas do caminho", g.contexto_cena(), "evento")
+    g.dizer("Entre as pedras, algo reluz.")
+    g.oferecer_equip(it)
+    g.mural()
+    try:
+        g.rodar()
+    except FimDeJogo:
+        pass
+
+
+CENARIOS = {"combate": combate, "titulo": titulo, "vila": vila}
 
 
 def main():

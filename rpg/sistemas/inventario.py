@@ -13,20 +13,27 @@ from .. import balanceamento as bal
 class Inventario:
     # ================================================================ equipamento e itens
     def oferecer_equip(self, item):
-        raridade = itens.NOMES_RARIDADE[item.get("raridade", "comum")]
-        self.dizer(f"Você encontrou: {itens.rotulo(item)} [{NOMES_SLOT[item['slot']]}, {raridade}]",
-                   itens.cor(item) or "branco+negrito")
-        self.dizer(f"  {descrever_bonus(item['bonus'], self.j.nome_recurso)}", itens.cor(item))
-        if item.get("lore"):
-            self.dizer(f"  \"{item['lore']}\"", "cinza")
-        atual = self.j.equip[self.espaco_para(item)]
-        if atual:
-            self.dizer(f"  Equipado agora: {itens.rotulo(atual)} — {descrever_bonus(atual['bonus'], self.j.nome_recurso)}", "cinza")
+        """Um item encontrado: a tela gráfica mostra o cartão do saque (com o que você usa ao lado); a de texto, as
+        linhas. Deixar para trás só existe quando não há onde guardar."""
+        rec = self.j.nome_recurso
+        usa = self.pode_usar(item)
+        cabe = len(self.j.mochila) < LIMITE_MOCHILA
+        equipados = [it for it in (self.j.equip[s] for s in itens.espacos(item["slot"])) if it]
+        if not self.ui.painel("achado", {"item": itens.ficha(item, rec), "equipados": [itens.ficha(it, rec) for it in equipados],
+                                         "pode_usar": usa, "cabe": cabe}):
+            raridade = itens.NOMES_RARIDADE[item.get("raridade", "comum")]
+            self.dizer(f"Você encontrou: {itens.rotulo(item)} [{NOMES_SLOT[item['slot']]}, {raridade}]",
+                       itens.cor(item) or "branco+negrito")
+            self.dizer(f"  {descrever_bonus(item['bonus'], rec)}", itens.cor(item))
+            if item.get("lore"):
+                self.dizer(f"  \"{item['lore']}\"", "cinza")
+            atual = self.j.equip[self.espaco_para(item)]
+            if atual:
+                self.dizer(f"  Equipado agora: {itens.rotulo(atual)} — {descrever_bonus(atual['bonus'], rec)}", "cinza")
         op = self.menu("O que fazer com o item?", [
-            ("Equipar agora", "equipar"),
-            ("Guardar na mochila (para vender ou usar depois)", "guardar") if len(self.j.mochila) < LIMITE_MOCHILA
-            else None,
-            ("Deixar para trás", "deixar"),
+            ("Equipar agora", "equipar") if usa else None,
+            ("Guardar na mochila" + ("" if usa else " (para vender)"), "guardar") if cabe else None,
+            ("Deixar para trás (mochila cheia)", "deixar") if not cabe else None,
         ])
         registrar(self, "saque", item=item["nome"], raridade=item.get("raridade", "comum"), slot=item["slot"],
                   nivel=item.get("nivel"), escolha=op or "deixar")
@@ -216,13 +223,7 @@ class Inventario:
         for slot, it in j.equip.items():
             if it:
                 opcoes.append((f"Tirar {it['nome']}", ("tirar", slot), {"tirar": slot}))
-        for k in ("bandagem", "unguento", "pocao_vida", "tonico", "antidoto"):
-            if j.tem(k):
-                opcoes.append((f"Usar {CONSUMIVEIS[k]['nome']}", ("usar", k), {"usar": k}))
-                if k in ("bandagem", "pocao_vida"):
-                    for m in comitiva.membros(self):
-                        opcoes.append((f"Usar {CONSUMIVEIS[k]['nome']} em {comitiva.nome(m['id'])}",
-                                       ("usar_em", k, m["id"]), {"usar": k, "em": m["id"]}))
+        opcoes += self.opcoes_bolsa()
         for i, it in enumerate(j.mochila):
             opcoes.append((f"Largar {it['nome']}", ("largar", it), {"largar": i}))
         op = self.menu("", opcoes + [("Voltar", None, {"voltar": True})])

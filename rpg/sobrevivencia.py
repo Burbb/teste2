@@ -20,6 +20,28 @@ MAX_PROVISOES = 12
 CHANCE_INFECCAO = 0.3
 
 
+def penalidades(fid, recurso=None):
+    """'−25% Ataque, −10% Poder': o que o ferimento tira de você."""
+    from .entidades import nome_stat
+    return ", ".join(f"−{round((1 - v) * 100)}% {nome_stat(stat, recurso)}" for stat, v in FERIMENTOS[fid]["mult"].items())
+
+
+def explicar(f, recurso=None):
+    """As linhas que explicam um ferimento do herói: o que ele tira, como sara e o perigo que corre."""
+    d = FERIMENTOS[f["id"]]
+    linhas = [penalidades(f["id"], recurso) + "."]
+    if f["id"] == "infeccao":
+        linhas += ["Arde em febre: perde 12% da vida a cada amanhecer.",
+                   "Não passa sozinha: use um unguento ou pague um curandeiro."]
+        return linhas
+    if d.get("aberto") and not f.get("tratado"):
+        linhas.append(f"Ferida aberta: uma bandagem trata. Sem tratar, {round(CHANCE_INFECCAO * 100)}% de chance de "
+                      "infeccionar a cada noite.")
+    linhas.append(f"Sara em {f['dias']} dia{'s' if f['dias'] != 1 else ''} de descanso (dormir numa cama conta dobrado; "
+                  "com fome não sara). Um curandeiro resolve na hora.")
+    return linhas
+
+
 def multiplicadores(jogador):
     """Penalidades de ferimentos e fome sobre os atributos."""
     mult = {}
@@ -51,7 +73,7 @@ def ferir(g, fid, motivo=""):
         g.ui.efeito(f"Ferimento piora: {d['nome']}{motivo}", "ferimento")
     else:
         j.ferimentos.append({"id": fid, "dias": d["dias"], "tratado": False})
-        g.ui.efeito(f"FERIMENTO: {d['nome']}{motivo} — "
+        g.ui.efeito(f"FERIMENTO: {d['nome']}{motivo} ({penalidades(fid, j.nome_recurso)}) — "
                     + ("trate com bandagem ou pode infeccionar" if d.get("aberto") else
                        "só o tempo ou um curandeiro resolvem"), "ferimento")
     antes_hp = j.hp

@@ -180,11 +180,12 @@ class Combate:
             self.lance("cura", em=self.uid(c), de=self.uid(de), valor=int(valor), modo=tipo, rotulo=rotulo,
                        hp=max(0, c.hp), max_hp=c.max_hp)
 
-    def recuperou(self, c, valor, rotulo=None):
-        """Ganho de recurso (mana, vigor, foco) visível na carta: Meditar, Tônico, talentos."""
+    def recuperou(self, c, valor, rotulo=None, discreto=False):
+        """Ganho de recurso (mana, vigor, foco) visível na carta: Meditar, Tônico, talentos. Discreto: o pouco que
+        o ataque básico devolve, só o número e a barra (sem aura nem som, que cansariam a cada golpe)."""
         if valor and valor > 0 and c is self.j:
             self.lance("recurso", em=self.uid(c), valor=int(valor), rotulo=rotulo, recurso=c.nome_recurso,
-                       rec=c.rec, max_rec=c.max_rec)
+                       rec=c.rec, max_rec=c.max_rec, discreto=discreto)
 
     def nome(self, c, obj=False):
         if c is self.j:
@@ -195,6 +196,10 @@ class Combate:
         return [e for e in self.inimigos if e.vivo]
 
     def _nomear(self):
+        # Na tela gráfica cada inimigo é uma carta e se escolhe o alvo clicando: "Lobo A" e "Lobo B" só
+        # poluiriam. No modo texto, a letra é o que diferencia os alvos no menu.
+        if getattr(self.ui, "web", False):
+            return
         contagem = {}
         for e in self.inimigos:
             contagem[e.nome] = contagem.get(e.nome, 0) + 1
@@ -341,7 +346,8 @@ class Combate:
             espinhos = alvo.especial("espinhos")
             u.hp = max(0, u.hp - espinhos)
             self.lance("golpe", de=None, em=self.uid(u), dano=espinhos, crit=False, elemento="fisico", alcance="corpo",
-                       absorvido=0, eficacia=None, rotulo="Espinhos", hp=u.hp, max_hp=u.max_hp)
+                       absorvido=0, eficacia=None, rotulo="Espinhos", hp=u.hp, max_hp=u.max_hp,
+                       refletido=self.uid(alvo))
             self.detalhe(f"Espinhos ferem {u.nome}. ({espinhos})", "amarelo")
             if not u.vivo:
                 self.ao_morrer(u, por=alvo)
@@ -627,6 +633,10 @@ class Combate:
             dano = self.atacar(j, alvo, mult, tipo=tipo, alcance=alcance, stat=stat, rotulo=nome)
             if dano and j.tal("laminas_envenenadas"):
                 self.aplicar(alvo, "veneno", 3, valor=max(2, j.atk * 0.35), chance=0.2 * j.tal("laminas_envenenadas"))
+            if dano and j.rec < j.max_rec:
+                ganho = min(j.max_rec - j.rec, max(bal.ATAQUE_RECURSO_MIN, round(j.max_rec * bal.ATAQUE_RECURSO)))
+                j.rec += ganho
+                self.recuperou(j, ganho, discreto=True)
 
     def motivo_bloqueio(self, h_id):
         """Por que não dá para usar a habilidade agora (ou None se dá)."""

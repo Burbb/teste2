@@ -455,9 +455,10 @@ const Batalha = (() => {
           r.querySelector(".num").textContent = `${m.rec}/${m.max_rec}`;
           reiniciar(r, "enchendo", 900);
         }
+        numero(em, `+${m.valor} ${m.recurso ? m.recurso.toLowerCase() : "mana"}`, fam + (m.discreto ? " pequeno" : ""));
+        if (m.discreto) return;  // o pouco que o ataque básico devolve: número e barra, sem pausa
         reiniciar(em, "aura-" + fam, 900);
         particulas(em, fam, 14);
-        numero(em, `+${m.valor} ${m.recurso ? m.recurso.toLowerCase() : "mana"}`, fam);
         if (m.rotulo) rotulo(em, m.rotulo);
         som("mana");
         await dormir(pausa(480));
@@ -648,12 +649,28 @@ const Batalha = (() => {
         await projetil(de, em, PROJETIL[el] || "flecha");
       } else await investir(de, em);
     }
+    if (m.refletido) return espinhos(m, carta(m.refletido), em);
     impacto(m, em);
     som(m.crit ? "critico_golpe" : SOM_ELEMENTO[el] || "golpe");
     if (el !== "fisico" && !m.crit) setTimeout(() => som("golpe_leve"), 60);
     if (m.em === "j") { App.doer(); som("dor"); }
     if (de && de !== em && !de.classList.contains("girando") && !distancia && !emArea) ir(de, 26 * lado(de), 0, pausa(170));
     await dormir(pausa(de && de.classList.contains("girando") ? 110 : m.crit ? 460 : 380));
+  }
+
+  /** Dano devolvido pelos espinhos da armadura: farpas saltam da carta de quem foi golpeado até o agressor. */
+  async function espinhos(m, de, em) {
+    if (de && !rapido()) {
+      reiniciar(de, "espinhando", 420);
+      for (let i = 0; i < 3; i++) { projetil(de, em, "farpa"); await dormir(45); }
+      await dormir(pausa(150));
+    }
+    barra(em, m.hp, m.max_hp);
+    tremer(em, false);
+    numero(em, `−${m.dano}`, "espinhos");
+    rotulo(em, "Espinhos", "espinhos");
+    som("golpe_leve");
+    await dormir(pausa(320));
   }
 
   /* ------------------------------------------------------------ vez e alvos */

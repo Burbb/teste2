@@ -31,7 +31,7 @@ const D20 = '<svg viewBox="-30 -30 60 60"><polygon class="face" points="0,-27 23
   '<text x="0" y="1">20</text></svg>';
 // [padrão, rótulo, tecla, ícone, grupo]: personagem · mundo · sistema
 const SISTEMA = [
-  [/^Personagem e inventário/, "Personagem", "p", "armadura", 0], [/^Talentos/, "Talentos", "t", "estrela", 0],
+  [/^Personagem e inventário/, "Inventário", "i", "saco", 0], [/^Talentos/, "Talentos", "t", "estrela", 0],
   [/^Comitiva/, "Comitiva", "c", "humano", 0], [/^Mapa$/, "Mapa", "m", "pergaminho", 1], [/^Diário/, "Diário", "d", "livro", 1],
   [/^Bestiário/, "Bestiário", "b", "caveira", 1], [/^Salvar jogo/, "Salvar", "g", "cadeado", 2], [/^Sair do jogo/, "Sair", "q", "fuga", 2],
 ];
@@ -109,7 +109,7 @@ function acao(filtro, som, extra) {
   return true;
 }
 const ACOES_OCULTAS = ["equipar", "tirar", "usar", "largar", "comprar", "comprar_item", "vender", "aceitar", "abandonar",
-  "conversar", "chamar", "reservar", "acampamento"];
+  "conversar", "chamar", "reservar", "acampamento", "save"];
 
 /* ------------------------------------------------------------------ fila */
 async function processar() {
@@ -155,9 +155,9 @@ async function tratar(m) {
     case "bloco": bloco(m); break;
     case "mapa": mapaNaPagina(m); break;
     case "escolhido": eco(m); break;
-    case "opcoes": mostrarOpcoes(m); break;
-    case "continuar": mostrarContinuar(m); break;
-    case "pergunta": mostrarPergunta(m); break;
+    case "opcoes": mostrarOpcoes(m); soltarRolagem(); break;
+    case "continuar": mostrarContinuar(m); soltarRolagem(); break;
+    case "pergunta": mostrarPergunta(m); soltarRolagem(); break;
     case "erro": anexar(el("p", "erro", "Algo deu errado: " + esc(m.texto))); break;
     case "fim": $("#aviso-fim").hidden = false; break;
   }
