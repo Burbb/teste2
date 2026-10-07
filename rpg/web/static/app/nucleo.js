@@ -110,7 +110,7 @@ function acao(filtro, som, extra) {
   return true;
 }
 const ACOES_OCULTAS = ["equipar", "tirar", "usar", "largar", "comprar", "comprar_item", "vender", "aceitar", "abandonar",
-  "conversar", "chamar", "reservar", "acampamento", "save"];
+  "conversar", "chamar", "reservar", "acampamento", "save", "carinho", "dormir"];
 
 /* ------------------------------------------------------------------ fila */
 async function processar() {

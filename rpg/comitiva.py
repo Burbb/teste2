@@ -435,7 +435,7 @@ def partir(g, m):
 
 
 # ---------------------------------------------------------------- tempo
-def amanhecer(g, descanso):
+def amanhecer(g, descanso, refeicao=False):
     for m in membros(g):
         m["dias"] += 1
         if descanso:
@@ -443,7 +443,8 @@ def amanhecer(g, descanso):
     for m in reserva(g):  # no acampamento, todo mundo se recupera
         m["hp"] = m["max_hp"]
         m["ferido"] = False
-    comer(g)
+    if not refeicao:
+        comer(g)
     if presente(g, "morel"):
         pagar_soldo(g)
 
@@ -537,14 +538,20 @@ def carinho(g):
     """Uma vez por noite: o animal do patrulheiro acorda animado e entra na próxima luta com +15% de dano.
     (A vida ele já recupera dormindo; o carinho é o laço.)"""
     f = g.j.companheiro
+    web = getattr(g.ui, "web", False)  # na tela gráfica, a reação vira um balão sobre o animal, não um aviso solto
     if f.get("carinho") == g.dia:
-        g.dizer(f"{f['nome']} já dorme encostado em você, roncando baixinho.", "cinza")
+        texto = f"{f['nome']} já dorme encostado em você, roncando baixinho."
+        g.ui.celebrar("carinho", {"nome": f["nome"], "texto": texto, "repetido": True})
+        if not web:
+            g.dizer(texto, "cinza")
         return
     f["carinho"] = g.dia
     f["animado"] = True
     texto = g.sortear(CARINHO.get(f["tipo"], CARINHO["lobo"])).format(n=f["nome"])
-    g.dizer(texto + " (amanhã, na primeira luta, ele entra animado: +15% de dano)", "verde")
-    g.ui.celebrar("carinho", {"nome": f["nome"]})
+    efeito = "Amanhã, na primeira luta, ele entra animado: +15% de dano."
+    g.ui.celebrar("carinho", {"nome": f["nome"], "texto": texto, "efeito": efeito})
+    if not web:
+        g.dizer(f"{texto} ({efeito[0].lower()}{efeito[1:-1]})", "verde")
 
 
 # O que dá para fazer no acampamento além da fogueira (a própria fogueira faz as vezes da Comitiva; viajar, só de dia).

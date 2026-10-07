@@ -169,10 +169,11 @@ TONICO = 0.5                  # fração do recurso máximo
 BANDAGEM_VIDA = 8
 
 # ---------------------------------------------------------------- mercado
-# Quanto cada mercado tem de cada consumível por dia (mínimo, máximo): sorteado por vila e dia, reabastece toda
-# manhã. Provisões e flechas não acabam.
+# Quanto cada mercado tem de cada suprimento por dia (mínimo, máximo): sorteado por vila e dia, reabastece toda
+# manhã. Comida e flechas também acabam, mas vêm em quantidade: são sobrevivência e munição.
 ESTOQUE_MERCADO = {"tocha": (4, 8), "bandagem": (2, 5), "unguento": (0, 2), "pocao_vida": (1, 3), "tonico": (1, 2),
-                   "antidoto": (1, 3), "bomba_fumaca": (0, 1), "pena_fenix": (0, 1)}
+                   "antidoto": (1, 3), "bomba_fumaca": (0, 1), "pena_fenix": (0, 1),
+                   "provisoes": (4, 8), "flechas": (15, 30)}
 
 # ---------------------------------------------------------------- contratos
 # Peso de cada lugar no mural pela diferença entre o nível dele e o seu.

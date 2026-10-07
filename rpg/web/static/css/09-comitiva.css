@@ -54,7 +54,16 @@ button.membro-carta:hover { color: #fff3a0; transform: scale(1.2); }
 .figura.ativo .figura-nome { border-color: #8a6a14; }
 .figura:hover .figura-nome, .figura:focus-visible .figura-nome { border-color: var(--ouro); color: var(--ouro); }
 .figura .carta-aviso { font-style: normal; font-size: 14px; color: #120e0b; background: var(--ouro); border: 2px solid #000; padding: 0 3px; animation: alerta 1.2s steps(2) infinite; }
-.figura.fera { height: auto; }
+/* O animal ocupa a área do desenho dele, como os companheiros: clicar no bicho (não só no nome) abre o menu. */
+.figura.fera { height: 30%; }
+.dormir-barraca { position: absolute; transform: translate(-50%, -100%); white-space: nowrap; cursor: pointer; font-family: var(--num); font-size: 17px; line-height: 1;
+  color: #fff3d6; background: rgba(13, 11, 10, 0.85); border: 2px solid #4a4038; padding: 3px 8px 4px; display: inline-flex; align-items: center; gap: 5px;
+  box-shadow: 2px 2px 0 #000; animation: boiar 2.4s ease-in-out infinite; }
+.dormir-barraca img.sprite { --s: 16; }
+.dormir-barraca:hover, .dormir-barraca:focus-visible { border-color: var(--ouro); color: var(--ouro); }
+@keyframes boiar { 0%, 100% { margin-top: 0; } 50% { margin-top: -4px; } }
+.balao.da-fera { max-width: 250px; }
+.balao-efeito { display: block; margin-top: 4px; font-size: 12px; color: #3d6a2a; font-style: normal; }
 .figura.fera .figura-nome { font-size: 13px; padding: 0 4px 1px; border-width: 1px; border-color: #3a5a2a; }
 .figura.fera { cursor: pointer; }
 .figura.fera:hover .figura-nome, .figura.fera:focus-visible .figura-nome { border-color: var(--ouro); color: var(--ouro); }

@@ -215,7 +215,7 @@ def _investida(cb, e, alvo):
 
 def _esmagar(cb, e, alvo):
     e.carregando = {"mult": 2.2, "rotulo": "GOLPE ESMAGADOR"}
-    cb.dizer(f"{e.nome} recua e prepara um golpe devastador! (Defenda-se ou aja rápido!)", "amarelo+negrito")
+    cb.dizer(f"{e.nome} recua e prepara um golpe devastador! (Defenda-se, ou atordoe para interromper!)", "amarelo+negrito")
 
 
 def _regenerar(cb, e, alvo):

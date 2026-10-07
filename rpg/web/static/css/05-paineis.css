@@ -15,6 +15,10 @@
 .atributo img.sprite { --s: 16; }
 .atributo .nome { font-size: 11px; color: var(--tinta-3); text-transform: uppercase; }
 .atributo .valor { font-family: var(--num); font-size: 24px; line-height: 1; color: var(--tinta); margin-left: auto; }
+/* Abaixo do normal (ferimento, fome): o número em vermelho apagado, a moldura puxando para o sangue. */
+.atributo.abaixo { border-color: #4a1c1c; }
+.atributo.abaixo .valor { color: #c0484a; filter: brightness(0.85); }
+.penal { color: var(--sangue-2); font-weight: 400; }
 .linhas { display: flex; flex-direction: column; gap: 3px; font-size: 14px; }
 .linha { display: flex; justify-content: space-between; gap: 8px; color: var(--tinta-2); align-items: center; }
 .linha b { color: var(--tinta); font-family: var(--num); font-size: 19px; font-weight: 400; }

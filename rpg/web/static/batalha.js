@@ -66,6 +66,7 @@ const Batalha = (() => {
     const e = document.createElement("div");
     e.dataset.uid = c.uid;
     if (c.cid) e.dataset.cid = c.cid;
+    if (c.tipo) e.dataset.tipo = c.tipo;
     e.innerHTML = `<div class="carta-fx"></div><div class="icone">${S(icone(c), 2)}</div>
       <div class="carta-nome"><span></span><small></small></div>
       <div class="carta-hp"><span class="barra-px vida"><span class="rastro"></span><span class="enchimento"></span></span><span class="num"></span></div>
@@ -437,7 +438,7 @@ const Batalha = (() => {
       }
       case "erro": {
         marcar(m.em);
-        if (de && em) { if (m.alcance === "distancia" || emArea) await projetil(de, em, "flecha"); else await investir(de, em); }
+        if (de && em) { if (aDistancia(m, de) || emArea) await projetil(de, em, "flecha"); else await investir(de, em); }
         if (em) {
           if (m.motivo === "esquiva") reiniciar(em, "esquivou", 420);
           numero(em, m.motivo === "imune" ? "imune" : "esquiva", "info");
@@ -719,11 +720,14 @@ const Batalha = (() => {
     for (const x of resto) await lance(x);
   }
 
+  /** O golpe vem de longe (projétil) ou de perto (a carta avança)? O falcão conta como "à distância" na regra
+   *  (voa: bom contra voadores), mas na tela ele dá um rasante até o alvo. */
+  function aDistancia(m, de) { return m.alcance === "distancia" && !(de && de.dataset.tipo === "falcao"); }
   async function golpe(m, de, em) {
     if (!em) return;
     marcar(m.em);
     const el = m.elemento || "fisico";
-    const distancia = m.alcance === "distancia";
+    const distancia = aDistancia(m, de);
     if (de && de !== em) {
       if (de.classList.contains("girando")) {
         await dormir(pausa(40));

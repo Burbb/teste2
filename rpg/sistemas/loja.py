@@ -34,7 +34,7 @@ class Loja:
         vila e dia: não mexe no resto da partida) e o dia novo traz estoque novo: reabastece toda manhã."""
         sorteio = random.Random(f"{self.seed}:{self.loc['id']}:{self.dia}")
         vendidos = self.lojas.get(self._chave_vendidos(), {})
-        return {k: max(0, sorteio.randint(*bal.ESTOQUE_MERCADO[k]) - vendidos.get(k, 0)) for k in self.SUPRIMENTOS}
+        return {k: max(0, sorteio.randint(*bal.ESTOQUE_MERCADO[k]) - vendidos.get(k, 0)) for k in self.COM_ESTOQUE}
 
     def dados_loja(self):
         j = self.j
@@ -47,15 +47,18 @@ class Loja:
                              "preco": self.preco(CONSUMIVEIS[k]["preco"]), "tem": j.consumiveis.get(k, 0),
                              "estoque": estoque[k], "limite": estoque[k]} for k in self.SUPRIMENTOS]
             + [{"id": "provisoes", "nome": "Provisões (1 dia)", "desc": "Pão duro, carne seca e um odre de água.",
-                "preco": self.preco(4), "tem": j.provisoes, "limite": sobrevivencia.MAX_PROVISOES - j.provisoes}]
+                "preco": self.preco(4), "tem": j.provisoes, "estoque": estoque["provisoes"],
+                "limite": min(estoque["provisoes"], sobrevivencia.MAX_PROVISOES - j.provisoes)}]
             + ([{"id": "flechas", "nome": "Flecha", "desc": f"Flecha de freixo, ponta de ferro. A aljava leva {self.max_flechas()}.",
                  "preco": self.preco(PRECO_FLECHAS), "tem": j.flechas,
-                 "limite": self.max_flechas() - j.flechas}] if j.classe == "arqueiro" else []),
+                 "estoque": estoque["flechas"], "limite": min(estoque["flechas"], self.max_flechas() - j.flechas)}]
+               if j.classe == "arqueiro" else []),
             "equipamentos": [item(it, self.preco(it["preco"])) for it in self.estoque()],
             "mochila": [dict(item(it, it["preco"] // 2), usavel=self.pode_usar(it)) for it in j.mochila],
         }
 
     SUPRIMENTOS = ("tocha", "bandagem", "unguento", "pocao_vida", "tonico", "antidoto", "bomba_fumaca", "pena_fenix")
+    COM_ESTOQUE = SUPRIMENTOS + ("provisoes", "flechas")  # tudo o que o mercado vende a granel acaba e reabastece
 
     def preco_suprimento(self, k):
         """Preço (já com a reputação) de um consumível, de um dia de provisões ou de uma flecha."""
@@ -81,16 +84,17 @@ class Loja:
             if qtd <= 0:
                 self.dizer("Sua aljava já está cheia.", "vermelho")
                 return False
-        if k in self.SUPRIMENTOS:
+        if k in self.COM_ESTOQUE:
             qtd = min(qtd, self.estoque_suprimentos()[k])
             if qtd <= 0:
-                self.dizer(f"\"{CONSUMIVEIS[k]['nome']}? Acabou. Amanhã cedo chega mais.\"", "vermelho")
+                nome = {"provisoes": "Comida", "flechas": "Flechas"}.get(k) or CONSUMIVEIS[k]["nome"]
+                self.dizer(f"\"{nome}? Acabou. Amanhã cedo chega mais.\"", "vermelho")
                 return False
         qtd = min(qtd, j.ouro // preco)
         if qtd <= 0:
             self.dizer("\"Sem ouro, sem negócio.\"", "vermelho")
             return False
-        if k in self.SUPRIMENTOS:
+        if k in self.COM_ESTOQUE:
             chave = self._chave_vendidos()
             prefixo = f"vendidos:{self.loc['id']}:"  # o que se vendeu em outros dias já não importa
             self.lojas = {c: v for c, v in self.lojas.items() if not c.startswith(prefixo) or c == chave}
@@ -160,11 +164,11 @@ class Loja:
                 resta = f"{estoque[k]} à venda" if estoque[k] else "esgotado até amanhã"
                 opcoes.append((f"{c['nome']} — {self.preco_suprimento(k)} ouro ({resta}; você tem {j.consumiveis.get(k, 0)})",
                                ("suprimento", k)))
-            opcoes.append((f"Provisões para 1 dia — {self.preco_suprimento('provisoes')} ouro (você tem {j.provisoes}/"
-                           f"{sobrevivencia.MAX_PROVISOES})", ("suprimento", "provisoes")))
+            opcoes.append((f"Provisões para 1 dia — {self.preco_suprimento('provisoes')} ouro ({estoque['provisoes']} à "
+                           f"venda; você tem {j.provisoes}/{sobrevivencia.MAX_PROVISOES})", ("suprimento", "provisoes")))
             if j.classe == "arqueiro":
-                opcoes.append((f"5 flechas — {self.preco_suprimento('flechas')} ouro cada (você tem "
-                               f"{j.flechas}/{self.max_flechas()})", ("suprimento", "flechas")))
+                opcoes.append((f"5 flechas — {self.preco_suprimento('flechas')} ouro cada ({estoque['flechas']} à venda; "
+                               f"você tem {j.flechas}/{self.max_flechas()})", ("suprimento", "flechas")))
             for it in a_venda:
                 opcoes.append((f"{itens.rotulo(it)} [{NOMES_SLOT[it['slot']]}] {descrever_bonus(it['bonus'], j.nome_recurso)} — "
                                f"{self.preco(it['preco'])} ouro", ("equip", it)))

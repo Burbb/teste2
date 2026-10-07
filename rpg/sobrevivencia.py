@@ -45,14 +45,23 @@ def explicar(f, recurso=None):
 def multiplicadores(jogador):
     """Penalidades de ferimentos e fome sobre os atributos."""
     mult = {}
+    for stat, fontes in fontes_penalidade(jogador).items():
+        for _, v in fontes:
+            mult[stat] = mult.get(stat, 1.0) * v
+    return mult
+
+
+def fontes_penalidade(jogador):
+    """De onde vem cada penalidade, na ordem em que entram na conta: {atributo: [(nome, fator), ...]}."""
+    fontes = {}
     for f in jogador.ferimentos:
         for stat, v in FERIMENTOS[f["id"]]["mult"].items():
-            mult[stat] = mult.get(stat, 1.0) * v
+            fontes.setdefault(stat, []).append((FERIMENTOS[f["id"]]["nome"], v))
     if jogador.fome:
         fator = {1: 0.9, 2: 0.8}.get(jogador.fome, 0.65)
         for stat in ("atk", "poder", "max_hp", "agi"):
-            mult[stat] = mult.get(stat, 1.0) * fator
-    return mult
+            fontes.setdefault(stat, []).append(("Fome", fator))
+    return fontes
 
 
 def tem(jogador, fid):
@@ -156,11 +165,16 @@ def descrever(jogador):
     return partes
 
 
-def amanhecer(g, descanso):
-    """Processa a passagem de um dia. descanso: 0 (nenhum), 1 (acampamento), 2 (cama)."""
+def amanhecer(g, descanso, refeicao=False):
+    """Processa a passagem de um dia. descanso: 0 (nenhum), 1 (acampamento), 2 (cama).
+    refeicao: alguém já serviu a comida do dia (a taverna); as provisões ficam intactas."""
     j = g.j
     # Comida
-    if j.provisoes > 0:
+    if refeicao:
+        if j.fome:
+            g.dizer("Você finalmente come. As mãos param de tremer.", "verde")
+        j.fome = 0
+    elif j.provisoes > 0:
         j.provisoes -= 1
         if j.fome:
             g.dizer("Você finalmente come. As mãos param de tremer.", "verde")

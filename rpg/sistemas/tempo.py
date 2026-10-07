@@ -20,7 +20,8 @@ class Tempo:
         if self.periodo == 3:
             self.dizer("A noite cai. Algo começa a se mover nas trevas, e não é gente.", "magenta")
 
-    def novo_dia(self, descanso=1):
+    def novo_dia(self, descanso=1, refeicao=False):
+        """refeicao: a noite já incluiu a comida de todos (a taverna); ninguém come das provisões."""
         self.dia += 1
         self.periodo = 0
         self.rolar_clima()
@@ -31,8 +32,8 @@ class Tempo:
                 self.impulsos[r["evento"]] = self.impulsos.get(r["evento"], 1) * 3
         self.ui.separador()
         self.dizer(f"Amanhece o dia {self.dia}. {CLIMAS[self.clima]['desc']}", "amarelo")
-        sobrevivencia.amanhecer(self, descanso)
-        comitiva.amanhecer(self, descanso)
+        sobrevivencia.amanhecer(self, descanso, refeicao)
+        comitiva.amanhecer(self, descanso, refeicao)
         registrar(self, "dia", descanso=descanso, provisoes=self.j.provisoes, fome=self.j.fome,
                   ferimentos=len(self.j.ferimentos), local=self.loc["nome"])
 
@@ -98,12 +99,11 @@ class Tempo:
             return
         self.ui.cena("A taverna", self.contexto_cena(), "evento")
         self.perder_ouro(preco)
-        self.dizer("Uma cama de palha sem pulgas demais e um ensopado ralo. É o melhor que este mundo oferece.",
+        self.dizer("Uma cama de palha sem pulgas demais e um ensopado ralo para todos. É o melhor que este mundo "
+                   "oferece.",
                    "verde")
-        if self.j.provisoes < sobrevivencia.MAX_PROVISOES:
-            self.j.provisoes += 1  # a refeição da taverna conta como o dia de comida
         self.periodo = 3
         self.encruzilhada_no_descanso()
         self.descansar(bal.TAVERNA_VIDA)
-        self.novo_dia(descanso=2)
+        self.novo_dia(descanso=2, refeicao=True)  # o ensopado é de todos: ninguém come das provisões
         self.pausar()

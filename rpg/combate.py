@@ -876,6 +876,11 @@ class Combate:
             if not e.vivo or not self.j.vivo:
                 continue
             if self.processar_efeitos(e):
+                if e.vivo and e.carregando:  # atordoado no meio da preparação: o golpe devastador se perde
+                    e.carregando = None
+                    self.lance("atordoado", em=self.uid(e), rotulo="golpe interrompido!")
+                    self.dizer(f"Atordoad{'o' if e.g == 'm' else 'a'}, {self.nome(e, True)} perde o golpe que "
+                               "preparava!", "verde+negrito")
                 continue
             self.checar_fase(e)
             self.agir_inimigo(e)

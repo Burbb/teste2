@@ -147,17 +147,25 @@ class Jogador(Combatente):
         """Soma de um atributo especial dos itens (roubo de vida, crítico, espinhos...)."""
         return sum(item["bonus"].get(chave, 0) for item in self.equip.values() if item)
 
-    def recalcular(self):
-        from .sobrevivencia import multiplicadores
+    def totais(self):
+        """Cada atributo antes das penalidades (ferimentos, fome): base + talentos + equipamento."""
         from .talentos import bonus_stats
         extras = bonus_stats(self)
-        penal = multiplicadores(self)
+        totais = {}
         for stat in STATS:
             total = self.base[stat] + extras.get(stat, 0)
             for item in self.equip.values():
                 if item:
                     total += item["bonus"].get(stat, 0)
-            setattr(self, stat, max(1, int(round(total * penal.get(stat, 1.0)))))
+            totais[stat] = total
+        return totais, extras
+
+    def recalcular(self):
+        from .sobrevivencia import multiplicadores
+        totais, extras = self.totais()
+        penal = multiplicadores(self)
+        for stat in STATS:
+            setattr(self, stat, max(1, int(round(totais[stat] * penal.get(stat, 1.0)))))
         self.regen = CLASSES[self.classe]["base"]["regen"] + extras.get("regen", 0)
         self.hp = min(self.hp, self.max_hp)
         self.rec = min(self.rec, self.max_rec)

@@ -341,10 +341,12 @@ const Telas = (() => {
   const ICONE_ATTR = { Ataque: "espada", Defesa: "escudo", Agilidade: "folha", Poder: "chama" };
   /** Atributos com dica: para que servem e o que você ganha com cada ponto. */
   function atributosHtml(p) {
-    const info = p.atributos_info || {};
+    const info = p.atributos_info || {}, penal = p.atributos_penal || {};
     return Object.entries(p.atributos).map(([k, v]) => {
-      const linhas = (info[k] || []).map((l) => `<li>${h(l)}</li>`).join("");
-      return `<div class="atributo" ${dica(`<b>${h(k)} ${v}</b><ul class="dica-lista">${linhas}</ul>`)}>${S(ICONE_ATTR[k] || "estrela", 1)}<span class="nome">${h(k)}</span><span class="valor">${v}</span></div>`;
+      const linhas = (info[k] || []).map((l, i) => `<li${penal[k] && !i ? ' class="pior"' : ""}>${h(l)}</li>`).join("");
+      // Abaixo do normal (ferimento, fome): o número já vem com a penalidade, em vermelho, e a dica diz quanto.
+      const pen = penal[k] ? ` <span class="penal">(−${penal[k].pct}%)</span>` : "";
+      return `<div class="atributo${penal[k] ? " abaixo" : ""}" ${dica(`<b>${h(k)} ${v}${pen}</b><ul class="dica-lista">${linhas}</ul>`)}>${S(ICONE_ATTR[k] || "estrela", 1)}<span class="nome">${h(k)}</span><span class="valor">${v}</span></div>`;
     }).join("");
   }
   function reputacaoHtml(p) {
@@ -773,6 +775,7 @@ const Telas = (() => {
   const PONTOS_ATIVOS = [[198, 93], [176, 104]];
   const PONTOS_RESERVA = [[256, 98], [284, 102], [270, 108]];
   const PONTO_FERA = [108, 104];  // o animal do patrulheiro, deitado ao lado do herói
+  const BARRACA = [262, 76];       // o alto da barraca, onde fica o "Dormir"
   function acampamento(d) {
     const figuras = [];
     d.ativos.forEach((m, i) => figuras.push({ ...m, onde: "ativo", p: PONTOS_ATIVOS[i % 2] }));
@@ -781,10 +784,12 @@ const Telas = (() => {
         style="left:${(f.p[0] / 320) * 100}%;top:${((f.p[1] + 8) / 120) * 100}%">
         ${f.conversa ? '<i class="carta-aviso">✉</i>' : ""}<span class="figura-nome">${h(f.nome.split(" ").pop())}</span>
         <span class="figura-estado">${f.onde === "ativo" ? "vai com você" : "no acampamento"}</span></button>`).join("");
-    const fera = d.fera ? `<span class="figura fera" role="button" tabindex="0" data-fera="1" style="left:${(PONTO_FERA[0] / 320) * 100}%;top:${((PONTO_FERA[1] - 10) / 120) * 100}%"
+    const fera = d.fera ? `<span class="figura fera" role="button" tabindex="0" data-fera="1" style="left:${(PONTO_FERA[0] / 320) * 100}%;top:${((PONTO_FERA[1] + 8) / 120) * 100}%"
         ${dica(`<b>${h(d.fera.nome)}</b><div>Seu ${h({ lobo: "lobo", urso: "urso", falcao: "falcão" }[d.fera.tipo] || "animal")} dorme perto do fogo. Vida ${d.fera.hp}/${d.fera.max_hp}.</div>`, true)}>
         <span class="figura-nome">${h(d.fera.nome.split(" ").pop())}</span></span>` : "";
-    return `<div class="tela acampamento"><div class="fogueira-palco"><canvas class="fogueira-cena" width="320" height="120"></canvas>${botoes}${fera}</div>
+    // Dormir: um selo sobre a barraca, que balança de leve (o fim da noite fica onde a gente dorme, não numa lista).
+    const dormir = `<button type="button" class="dormir-barraca" style="left:${(BARRACA[0] / 320) * 100}%;top:${(BARRACA[1] / 120) * 100}%">${S("lua", 1)} Dormir até o amanhecer</button>`;
+    return `<div class="tela acampamento"><div class="fogueira-palco"><canvas class="fogueira-cena" width="320" height="120"></canvas>${botoes}${fera}${dormir}</div>
       <div class="dica-uso">${figuras.length ? `Clique em alguém para conversar ou decidir quem vai com você amanhã. Quem fica no acampamento descansa, não come das suas provisões e não opina nas suas escolhas. ${d.ativos.length}/${d.limite} na comitiva.` : "Só você, o fogo e os barulhos da mata. Quem você encontrar pelo caminho pode se sentar aqui um dia."}</div></div>`;
   }
 
@@ -904,6 +909,9 @@ const Telas = (() => {
   }
 
   function ligarFigurasComitiva(raiz) {
+    raiz.querySelectorAll(".dormir-barraca").forEach((b) => b.addEventListener("click", (ev) => {
+      ev.stopPropagation(); fecharMenuItem(); App.acao({ dormir: true }, "escolha");
+    }));
     raiz.querySelectorAll(".figura.fera").forEach((el) => {
       el.addEventListener("click", (ev) => { ev.stopPropagation(); menuFera(el); });
       el.addEventListener("keydown", (ev) => { if (ev.key === "Enter") menuFera(el); });
@@ -1020,14 +1028,34 @@ const Telas = (() => {
       });
   }
 
+  /** O balão da reação do animal: acima dele, no palco da fogueira. Some sozinho ou com qualquer clique. */
+  function balaoFera(alvo, d) {
+    document.querySelectorAll(".balao.da-fera").forEach((b) => b.remove());
+    const b = document.createElement("div");
+    b.className = "balao narrado da-fera";
+    b.innerHTML = `<i>${h(d.texto)}</i>${d.efeito ? `<small class="balao-efeito">${h(d.efeito)}</small>` : ""}`;
+    document.body.appendChild(b);
+    const r = alvo.getBoundingClientRect();
+    // Sobre o animal, alinhado pela esquerda (o rabicho aponta para ele): o meio do palco e a barraca ficam livres.
+    b.style.left = Math.max(8, r.left + r.width / 2 - 22) + "px";
+    b.style.top = Math.max(8, r.top + r.height * 0.35 - b.offsetHeight - 10) + "px";
+    const nasceu = performance.now();
+    const sair = () => { b.classList.add("sumindo"); setTimeout(() => b.remove(), 300); document.removeEventListener("pointerdown", aoClicar, true); };
+    const aoClicar = () => { if (performance.now() - nasceu > 300) sair(); };
+    document.addEventListener("pointerdown", aoClicar, true);
+    setTimeout(sair, Math.min(9000, 3000 + d.texto.length * 45));
+  }
+
   function celebrar(m, instantaneo) {
     const d = m.dados;
     if (m.tipo === "equipou") return instantaneo ? Promise.resolve() : voarParaEspaco(d);
     if (m.tipo === "carinho") {
-      // corações subindo do animal na fogueira
+      // corações subindo do animal na fogueira, e a reação num balão sobre ele (não tampa nada; um clique dispensa)
       if (instantaneo) return Promise.resolve();
       const alvos = document.querySelectorAll("#texto .figura.fera");
       const alvo = alvos[alvos.length - 1];
+      if (alvo && d.texto) balaoFera(alvo, d);
+      if (d.repetido) return Promise.resolve();
       App.som("cura");
       if (alvo) for (let i = 0; i < 6; i++) {
         const c = document.createElement("span");

@@ -72,7 +72,31 @@ def explicar_atributos(g):
     else:
         poder += ["Pouco importa para a sua classe (alguns itens e eventos usam)."]
     poder.append(f"Testes de Arcano: {g.mod_teste('arcano'):+d} no d20.")
-    return {"Ataque": ataque, "Defesa": defesa, "Agilidade": agilidade, "Poder": poder}
+    info = {"Ataque": ataque, "Defesa": defesa, "Agilidade": agilidade, "Poder": poder}
+    for nome, p in penalidades_atributos(j).items():  # abaixo do normal: a primeira linha diz por quê
+        info[nome].insert(0, f"Abaixo do normal: {', '.join(p['fontes'])} (sem isso, {p['normal']}).")
+    return info
+
+
+ATRIBUTOS_FICHA = (("Ataque", "atk"), ("Defesa", "defesa"), ("Agilidade", "agi"), ("Poder", "poder"))
+
+
+def penalidades_atributos(j):
+    """Atributos abaixo do normal por ferimento ou fome: o percentual somado, o valor normal e de onde vem cada
+    parte ("Perna torcida −30%", "Fome −10%")."""
+    fontes = sobrevivencia.fontes_penalidade(j)
+    totais, _ = j.totais()
+    saida = {}
+    for nome, stat in ATRIBUTOS_FICHA:
+        normal = max(1, int(round(totais[stat])))
+        if stat not in fontes or getattr(j, stat) >= normal:
+            continue
+        fator = 1.0
+        for _, v in fontes[stat]:
+            fator *= v
+        saida[nome] = {"pct": round((1 - fator) * 100), "normal": normal,
+                       "fontes": [f"{n} −{round((1 - v) * 100)}%" for n, v in fontes[stat]]}
+    return saida
 
 
 def explicar_reputacao(g):
@@ -105,7 +129,8 @@ def heroi(g):
         "nivel": j.nivel, "xp": j.xp, "xp_proximo": j.xp_proximo(),
         "hp": j.hp, "max_hp": j.max_hp, "rec": j.rec, "max_rec": j.max_rec, "recurso": j.nome_recurso,
         "atributos": {"Ataque": j.atk, "Defesa": j.defesa, "Agilidade": j.agi, "Poder": j.poder},
-        "atributos_info": explicar_atributos(g), "reputacao_info": explicar_reputacao(g),
+        "atributos_info": explicar_atributos(g), "atributos_penal": penalidades_atributos(j),
+        "reputacao_info": explicar_reputacao(g),
         "testes": {NOMES_TESTE[a]: {"mod": g.mod_teste(a), "partes": g.partes_teste(a)} for a in NOMES_TESTE},
         "dificuldade_extra": g.dificuldade(0),
         "ouro": j.ouro, "reputacao": j.reputacao, "flechas": j.flechas if j.classe == "arqueiro" else None,
