@@ -1,5 +1,6 @@
 """Eventos gerais: encontros, estranhos na estrada e consequências de escolhas passadas."""
 
+from .. import balanceamento as bal
 from .. import texto as tx
 from ..dados import BIOMAS, FAMILIAS
 from ..itens import gerar_equip
@@ -20,7 +21,7 @@ def encontro_hostil(g):
     if g.teste("percepcao", cd):
         g.dizer(f"{abertura}, você avista {desc} antes que notem sua presença.", "amarelo")
         opcoes = [
-            ("Atacar de surpresa: um turno livre e o primeiro golpe é crítico", "atacar"),
+            (f"Atacar de surpresa: um turno livre e o primeiro golpe {round(bal.INICIATIVA_BONUS * 100)}% mais forte", "atacar"),
             ("Tentar passar despercebido (Destreza)", "evitar"),
         ]
         if g.j.classe == "arqueiro":

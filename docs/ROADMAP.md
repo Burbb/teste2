@@ -30,6 +30,8 @@ Em 1.14, o padrão virou hardcore com metas declaradas (em COMO_CRIAR): grupos m
 caro (mais inimigos e mais vida neles), inimigos mais duros desde a base, curva do meio mais forte e a do fim mais
 plana (menos pico, mais desgaste); Paladino menos invulnerável, Barreira do mago crescendo com o Poder, servo do
 Necromante que provoca. O simulador mede também "lutas até descansar".
+Em 1.15: dano geral do herói ×0,9 e dos inimigos ×1,1; a iniciativa dá +25% no primeiro golpe (era crítico
+garantido); a taverna devolve 35% da vida (era 65%), deixando o templo como a cura de verdade.
 Pendente: passe por especialização (Paladino ainda fácil; Sombra, Piromante e Necromante duras no fim); um modo
 mais brando para quem quiser; um robô de mapa que jogue partidas inteiras com juízo, para medir o ritmo de nível.
 

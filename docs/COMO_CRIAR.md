@@ -161,9 +161,12 @@ encarar campeões, únicos e guardiões), não de uma luta comum sorteada. No si
 
 | Fase | Vida perdida por luta comum | Lutas até descansar | Vitórias em luta comum, de vida cheia | Guardião da região |
 |---|---|---|---|---|
-| Começo (nv 1–3) | ~20–30% | 3–5 | ≥ 93% | perigoso cedo demais |
-| Meio (nv 4–8) | ~20–28% | 3–5 | ≥ 93% | 60–80% de vitórias, sai com metade da vida |
-| Fim (nv 9–12) | ~25–32% | 3–4 | ≥ 88% | idem |
+| Começo (nv 1–3) | ~20–35% | 2–4 | ≥ 90% | perigoso cedo demais |
+| Meio (nv 4–8) | ~20–30% | 3–5 | ≥ 89% | 55–70% de vitórias, sai com dois terços da vida a menos |
+| Fim (nv 9–12) | ~30% | ~3,5 | ≥ 85% | idem |
+
+Os botões mais diretos: `DANO_HEROI` e `DANO_INIMIGOS` (todo golpe, físico e mágico), `INIMIGO_VIDA`, os de
+grupo (`GRUPO_*`, `COMITIVA_*`) e os de descanso (`TAVERNA_VIDA`, `ACAMPAR_VIDA`; o templo cura por ouro).
 
 Nenhuma especialização deve ficar muito longe da média: hoje o Paladino é a mais tolerante e Sombra, Piromante
 e Necromante as mais duras (veja o ROADMAP).

@@ -26,6 +26,13 @@ def fator_xp(diferenca):
 
 
 # ---------------------------------------------------------------- combate
+# Dano geral, físico e mágico: o do herói (golpes e magias; a prévia do Grimório já mostra com isto) e o de
+# todos os inimigos (comuns, guardiões e o antagonista: entra no Ataque e no Poder deles, que a ficha mostra).
+DANO_HEROI = 0.9
+DANO_INIMIGOS = 1.1
+# Pegar o inimigo de surpresa: um turno livre e o primeiro golpe mais forte (era um crítico garantido).
+INICIATIVA_BONUS = 0.25
+
 # Defesa: dano × P / (P + defesa × DEFESA_FATOR). P é quanto o golpe atravessa a armadura: 100 nos golpes do
 # herói e dos aliados; nos dos inimigos, cresce com o nível deles. Assim a armadura que bastava no nível 3 não
 # basta no 9: sem isso, a defesa do herói (nível + equipamento) anulava o crescimento do ataque inimigo.
@@ -145,7 +152,7 @@ ACAMPAR_VIDA = 0.3
 ACAMPAR_VIDA_RUIM = 0.18      # chuva, neve, tempestade
 ACAMPAR_MANA = 0.5
 ACAMPAR_FOLEGO = 0.75
-TAVERNA_VIDA = 0.65
+TAVERNA_VIDA = 0.35            # uma cama não fecha ferida: vida de verdade, só o templo (pago)
 EXAUSTO_VIDA = 0.15           # dormir no estábulo
 EXAUSTO_RECURSO = 0.4
 POCAO_VIDA = 0.35             # fração da vida máxima

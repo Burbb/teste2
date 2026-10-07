@@ -70,6 +70,7 @@ class Combate:
         self.flechas_gastas = 0
         self.turno = 0
         self.abertura = bool(mod(self.j, "abertura"))
+        self.iniciativa = False  # pegou o inimigo de surpresa: o primeiro golpe sai mais forte
         self.motivo_abertura = "Tiro de Abertura" if self.abertura else None
         self.usou_martirio = False
         self.usou_imortal = False
@@ -285,6 +286,10 @@ class Combate:
             m *= 1.1
         if u.jogador:
             m *= 1 + mod(u, "dano_corpo" if alcance == "corpo" else "dano_distancia")
+            m *= bal.DANO_HEROI
+            if self.iniciativa:
+                self.iniciativa = False
+                m *= 1 + bal.INICIATIVA_BONUS
 
         defesa = alvo.defesa * (0.6 if alvo.efeito("maldito") else 1.0)
         furtivo = u.efeito("furtivo")
@@ -436,11 +441,10 @@ class Combate:
             if r:
                 return self.fim(r)
         elif self.emboscada == "jogador":
-            self.dizer("Você tem a iniciativa! Um ataque livre antes que reajam, e o primeiro golpe é crítico.",
-                       "verde+negrito")
+            self.dizer(f"Você tem a iniciativa! Um ataque livre antes que reajam, e o primeiro golpe sai "
+                       f"{round(bal.INICIATIVA_BONUS * 100)}% mais forte.", "verde+negrito")
             pular_inimigos = True
-            self.abertura = True
-            self.motivo_abertura = "Iniciativa"
+            self.iniciativa = True
         disparar(self, self.j, "inicio_combate")  # Aura de Proteção, Armadilheiro...
 
         while True:

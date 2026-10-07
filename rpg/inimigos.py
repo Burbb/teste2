@@ -22,10 +22,10 @@ def criar(rng, familia_id, nivel, afixo=None, nome_unico=None):
     f = FAMILIAS[familia_id]
     m = escala(nivel)
     hp = f["hp"] * m * bal.INIMIGO_VIDA
-    atk = f["atk"] * bal.INIMIGO_ATK_BASE * escala_atk(nivel) * bal.INIMIGO_DANO
+    atk = f["atk"] * bal.INIMIGO_ATK_BASE * escala_atk(nivel) * bal.INIMIGO_DANO * bal.DANO_INIMIGOS
     defesa = f["defesa"] * (1 + bal.INIMIGO_DEFESA_POR_NIVEL * (nivel - 1))
     agi = f["agi"] + (nivel - 1) // bal.INIMIGO_AGI_A_CADA
-    poder = f["poder"] * m * bal.INIMIGO_DANO
+    poder = f["poder"] * m * bal.INIMIGO_DANO * bal.DANO_INIMIGOS
     xp = f["xp"] * (1 + bal.INIMIGO_XP_POR_NIVEL * (nivel - 1))
     ouro = rng.randint(*f["ouro"]) * (1 + bal.INIMIGO_OURO_POR_NIVEL * (nivel - 1))
     tracos = list(f["tracos"])
@@ -109,7 +109,7 @@ def gerar_guardiao(rng, bioma):
 def instanciar_guardiao(spec, nivel):
     t = GUARDIOES[spec["bioma"]][spec["idx"]]
     m = escala(nivel)
-    m_atk = bal.GUARDIAO_ATK * escala_atk(nivel)
+    m_atk = bal.GUARDIAO_ATK * escala_atk(nivel) * bal.DANO_INIMIGOS
     e = Inimigo(spec["nome"], t["hp"] * m * bal.GUARDIAO_VIDA, t["atk"] * m_atk,
                 t["defesa"] * (1 + bal.GUARDIAO_DEFESA_POR_NIVEL * (nivel - 1)),
                 t["agi"] + nivel // bal.INIMIGO_AGI_A_CADA, t["poder"] * m_atk, t["g"])
@@ -125,7 +125,7 @@ def instanciar_guardiao(spec, nivel):
 def instanciar_antagonista(ant, nivel, corrupcao):
     fator = 1 + corrupcao / 400
     m = escala(nivel) * fator
-    m_atk = bal.ANTAGONISTA_ATK * escala_atk(nivel) * fator
+    m_atk = bal.ANTAGONISTA_ATK * escala_atk(nivel) * fator * bal.DANO_INIMIGOS
     e = Inimigo(ant["nome"], 150 * m, 11 * m_atk, 7 * (1 + bal.GUARDIAO_DEFESA_POR_NIVEL * (nivel - 1)),
                 6 + nivel // bal.INIMIGO_AGI_A_CADA, 11 * m_atk, ant["g"])
     t = dict(

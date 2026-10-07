@@ -32,7 +32,8 @@ def fontes_critico(j):
         linhas.append(f"{', '.join(nomes(j, 'abertura'))}: o primeiro ataque de cada luta é sempre crítico.")
     if "desaparecer" in j.habilidades or mod(j, "furtivo_ao_abater"):
         linhas.append("Furtivo (Desaparecer, Assassino): o próximo ataque é crítico garantido.")
-    linhas.append("Pegar o inimigo de surpresa: o primeiro golpe é crítico.")
+    linhas.append(f"Pegar o inimigo de surpresa: um turno livre, e o primeiro golpe sai "
+                  f"{round(bal.INICIATIVA_BONUS * 100)}% mais forte.")
     return linhas
 
 
@@ -59,7 +60,7 @@ def golpe(u, mult, stat="atk", alcance="corpo", tipo="fisico", bonus=0.0, bonus_
     valor = getattr(u, stat)
     tal, nome_tal = mult_talentos(u, alcance)
     base = valor * mult + bonus
-    medio = base * tal * extra
+    medio = base * tal * extra * bal.DANO_HEROI
     formula = [f"{NOME_STAT[stat]} {valor} × {_pct(mult)}"]
     if bonus:
         formula.append(f"+ {bonus_txt or 'bônus'} ({_num(bonus)})")
@@ -67,9 +68,11 @@ def golpe(u, mult, stat="atk", alcance="corpo", tipo="fisico", bonus=0.0, bonus_
         formula.append(f"× {_num(tal)} ({nome_tal})")
     if extra != 1.0:
         formula.append(f"× {_num(extra)} ({extra_txt})")
-    escala = [f"+1 de {NOME_STAT[stat]}: +{_num(mult * tal * extra)} de dano"]
+    if bal.DANO_HEROI != 1.0:
+        formula.append(f"× {_num(bal.DANO_HEROI)} (a Fenda resiste)")
+    escala = [f"+1 de {NOME_STAT[stat]}: +{_num(mult * tal * extra * bal.DANO_HEROI)} de dano"]
     if bonus_txt and "Poder" in bonus_txt and stat != "poder":
-        escala.append(f"+1 de Poder: +{_num(bonus / max(1, u.poder) * tal * extra)}")
+        escala.append(f"+1 de Poder: +{_num(bonus / max(1, u.poder) * tal * extra * bal.DANO_HEROI)}")
     crit = chance_critico(u, crit_extra)
     return {"tipo": "dano", "rotulo": rotulo, "elemento": ELEMENTO.get(tipo, tipo), "alcance": alcance,
             "min": int(medio * 0.85), "max": int(medio * 1.15), "medio": int(medio),
