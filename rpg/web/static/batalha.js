@@ -43,7 +43,8 @@ const Batalha = (() => {
   function montar() {
     if (arena) return;
     const raiz = document.getElementById("batalha");
-    raiz.innerHTML = `<div id="arena"><div class="fileira aliados"></div><div class="fileira inimigos"></div><div class="camada-fx"></div></div>`;
+    // A barra de ações mora dentro da arena: na sua vez, as opções da luta sobem ali, perto das cartas.
+    raiz.innerHTML = `<div id="arena"><div class="fileira aliados"></div><div class="fileira inimigos"></div><div class="camada-fx"></div><div id="barra-luta"></div></div>`;
     arena = raiz.firstElementChild;
     colAliados = arena.querySelector(".aliados");
     colInimigos = arena.querySelector(".inimigos");

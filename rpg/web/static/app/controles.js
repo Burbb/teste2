@@ -79,7 +79,7 @@ document.addEventListener("keydown", (ev) => {
   const k = ev.key;
   if (k === "Escape" || k === "Backspace") {
     const aberto = !$("#gaveta-historico").hidden || !$("#sobre-mapa").hidden || !$("#sobre-talentos").hidden || !$("#sobre-grimorio").hidden || document.querySelector(".menu-item");
-    if (!aberto && pergunta && pergunta.voltar !== undefined && !processando) { ev.preventDefault(); responder(pergunta.id, pergunta.voltar); return; }
+    if (!aberto && pergunta && pergunta.voltar !== undefined && !processando) { ev.preventDefault(); voltarPergunta(); return; }
     if (k === "Escape") { Telas.fecharMenuItem(); fecharTudo(); }
     return;
   }
@@ -96,7 +96,12 @@ document.addEventListener("keydown", (ev) => {
   if (!pergunta) return;
   if (pergunta.tipo === "continuar" && (k === " " || k === "Enter")) { ev.preventDefault(); responder(pergunta.id, null); return; }
   if (pergunta.tipo !== "opcoes" || !pergunta.numeros) return;
-  const botoes = [...promptEl.querySelectorAll(".escolha, .atalho")];
+  const botoes = [...promptEl.querySelectorAll(".escolha, .atalho, .botao-acao")];
+  if (/^[0-9]$/.test(k) && pergunta.teclasNum) {  // barra de ações da luta: cada tecla faz o que o botão faz
+    const f = pergunta.teclasNum[k === "0" ? 9 : Number(k) - 1];
+    if (f) { ev.preventDefault(); f(); }
+    return;
+  }
   if (/^[0-9]$/.test(k)) {
     const i = k === "0" ? 9 : Number(k) - 1;
     if (i < pergunta.numeros.length) { ev.preventDefault(); responder(pergunta.id, pergunta.numeros[i]); }

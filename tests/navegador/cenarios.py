@@ -50,8 +50,10 @@ def combate(ui):
     g.dizer("Um javali enorme fareja o ar.")
     e = g.inimigo("javali", nivel=2)
     e.hp = e.max_hp = 160
+    lobo = g.inimigo("lobo", nivel=1)  # um segundo inimigo, para a luta pedir o alvo
+    lobo.hp = lobo.max_hp = 20
     g.j.hp = g.j.max_hp = 400
-    g.combate([e])
+    g.combate([e, lobo])
     try:
         g.rodar()
     except FimDeJogo:

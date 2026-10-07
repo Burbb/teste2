@@ -9,12 +9,23 @@ function limparPrompt() {
 }
 function atalhoDe(t) { return SISTEMA.find(([re]) => re.test(t)); }
 
+/** Na luta, as opções vão para a barra dentro da arena; fora dela, de volta ao pé da página. */
+function posicionarPrompt() {
+  const barra = document.getElementById("barra-luta");
+  const naLuta = corpo.classList.contains("em-combate") && barra;
+  if (naLuta && promptEl.parentElement !== barra) barra.appendChild(promptEl);
+  else if (!naLuta && promptEl.parentElement !== folha) folha.appendChild(promptEl);
+}
+
+let viaBarra = false;  // a habilidade foi escolhida direto na barra: "Voltar" do alvo volta à barra, não à lista
+let habMirando = "";   // o nome do que está sendo mirado, para o lembrete "Bola de Fogo: escolha o alvo"
 function mostrarOpcoes(m) {
+  posicionarPrompt();
   // Pedido pendente (ex.: clicou num destino do mapa a partir do menu do local): responde sozinho.
   if (pendente) {
     const p = pendente;
     pendente = null;
-    const i = m.opcoes.findIndex((o) => o.meta && o.meta[p.chave] === p.valor);
+    const i = p.chave === "_voltar" ? m.opcoes.findIndex(ehVoltar) : m.opcoes.findIndex((o) => o.meta && o.meta[p.chave] === p.valor);
     if (i >= 0) { pergunta = { id: m.id, tipo: "opcoes", opcoes: m.opcoes }; responder(m.id, i); return; }
   }
   promptEl.innerHTML = "";
@@ -29,6 +40,7 @@ function mostrarOpcoes(m) {
   if (m.pergunta) promptEl.appendChild(el("div", "pergunta-rotulo", esc(m.pergunta)));
   const lista = el("ol", "escolhas");
   const emLuta = !!(estado && estado.combate);
+  if (emLuta && m.pergunta === "Sua ação:" && m.opcoes.some((o) => o.meta && o.meta.acao)) { barraDeAcoes(m); return; }
   if (emLuta && m.pergunta === "Sua ação:") { lista.classList.add("acoes-combate"); Batalha.vez("j"); }
   if (emLuta && m.opcoes.some((o) => o.meta && o.meta.alvo)) {
     Batalha.alvos(m.opcoes, (i) => responder(m.id, i));
@@ -38,7 +50,10 @@ function mostrarOpcoes(m) {
   const atalhos = el("div", "atalhos");
   document.querySelectorAll(".voltar-seta").forEach((x) => x.remove());
   const voltar = m.opcoes.length > 1 && !corpo.classList.contains("modo-titulo") ? m.opcoes.findIndex(ehVoltar) : -1;
-  if (voltar >= 0) {
+  if (voltar >= 0 && emLuta) {
+    pergunta.voltar = voltar;  // na luta, o Voltar fica dentro da barra (logo abaixo)
+    if (viaBarra && m.opcoes.some((o) => o.meta && o.meta.alvo)) pergunta.aoVoltar = () => { pendente = { chave: "_voltar", valor: true }; };
+  } else if (voltar >= 0) {
     // "Voltar" vira uma seta fixa no canto da página (e Esc/Backspace), em vez de ficar no fim da lista.
     const b = el("button", "voltar-seta", `<span>◀</span> ${esc(/^Sair do mercado/.test(m.opcoes[voltar].texto) ? "Sair do mercado" : "Voltar")}<kbd>Esc</kbd>`);
     b.type = "button";
@@ -114,14 +129,23 @@ function mostrarOpcoes(m) {
     li.appendChild(b);
     lista.appendChild(li);
   });
-  if (emLuta && voltar >= 0 && lista.classList.contains("grade-acoes")) {
-    // Na luta, "Voltar" fica junto das cartas: ir de Habilidades para Itens sem subir o mouse até o topo.
+  if (emLuta && voltar >= 0) {
+    // Na luta, "Voltar" fica junto das opções, dentro da barra: sem subir o mouse até o topo.
     const li = el("li");
-    const b = el("button", "escolha carta-acao voltar-carta", `<span class="acao-icone">◀</span><span class="acao-nome">Voltar</span><span class="acao-rodape"><kbd>Esc</kbd> ou botão direito</span>`);
+    const grade = lista.classList.contains("grade-acoes");
+    const b = el("button", grade ? "escolha carta-acao voltar-carta" : "escolha secundaria voltar-luta",
+      grade ? `<span class="acao-icone">◀</span><span class="acao-nome">Voltar</span><span class="acao-rodape"><kbd>Esc</kbd> ou botão direito</span>`
+        : `<span class="rotulo">◀ Voltar</span>`);
     b.type = "button";
-    b.addEventListener("click", (ev) => { ev.stopPropagation(); responder(m.id, voltar); });
+    b.addEventListener("click", (ev) => { ev.stopPropagation(); voltarPergunta(); });
     li.appendChild(b);
     lista.appendChild(li);
+  }
+  if (emLuta && m.opcoes.some((o) => o.meta && o.meta.alvo)) {
+    // Mirando: o clique é na carta do inimigo (ou as teclas 1, 2...). Na barra fica só o lembrete e o Voltar.
+    lista.classList.add("mira-alvo");
+    const rot = promptEl.querySelector(".pergunta-rotulo");
+    if (rot) rot.innerHTML = `${habMirando ? `<b>${esc(habMirando)}</b>: ` : ""}escolha o alvo <small>clique num inimigo</small>`;
   }
   if (lista.childElementCount) { promptEl.appendChild(lista); Telas.ligarDicas(lista); }
   if (atalhos.childElementCount) promptEl.appendChild(atalhos);
@@ -208,12 +232,84 @@ function cartaAcao(o, i, m, pos) {
   return b;
 }
 
+/** Responde "Voltar" na pergunta atual (botão, Esc ou botão direito), com o desvio da barra de luta. */
+function voltarPergunta() {
+  if (!pergunta || pergunta.voltar === undefined) return;
+  if (pergunta.aoVoltar) pergunta.aoVoltar();
+  responder(pergunta.id, pergunta.voltar);
+}
+
 // Botão direito em qualquer lugar da página volta um passo (quando a tela atual tem "Voltar").
 document.addEventListener("contextmenu", (ev) => {
   if (!pergunta || pergunta.voltar === undefined || ev.target.closest("input, textarea")) return;
   ev.preventDefault();
-  responder(pergunta.id, pergunta.voltar);
+  voltarPergunta();
 });
+
+/* ------------------------------------------------------------------ barra de ações da luta */
+/** Sua vez: Atacar, cada habilidade (ícone, custo, tecla), Itens e Fugir numa barra dentro da arena.
+ *  Habilidade com alvo: um clique na barra e os inimigos acendem; o clique no inimigo dispara. */
+function barraDeAcoes(m) {
+  Batalha.vez("j");
+  promptEl.querySelector(".pergunta-rotulo")?.remove();  // a barra fala por si
+  habMirando = "";
+  viaBarra = false;
+  pergunta.teclasNum = [];
+  const barra = el("div", "barra-acoes");
+  const acaoIdx = (a) => m.opcoes.findIndex((o) => o.meta && o.meta.acao === a);
+  const heroi = estado.heroi;
+  const botao = (classe, icone, nome, extra, dicaHtml, aoClicar) => {
+    const b = el("button", "botao-acao " + classe);
+    b.type = "button";
+    const n = pergunta.teclasNum.length;
+    const tecla = n < 9 ? String(n + 1) : n === 9 ? "0" : "";
+    b.innerHTML = `<span class="tecla">${tecla}</span><span class="ba-icone">${icone}</span><span class="ba-nome">${esc(nome)}</span>${extra || ""}`;
+    if (dicaHtml) b.dataset.dica = Telas.guardarDica(dicaHtml);
+    b.addEventListener("click", (ev) => { ev.stopPropagation(); aoClicar(b); });
+    pergunta.teclasNum.push(() => aoClicar(b));
+    barra.appendChild(b);
+    return b;
+  };
+  const sep = () => barra.appendChild(el("span", "ba-sep"));
+  const tremer = (b, motivo) => {
+    App.som("falha");
+    b.animate([{ translate: "0" }, { translate: "-4px 0" }, { translate: "4px 0" }, { translate: "0" }], { duration: 240, easing: "ease-in-out" });
+    aviso(motivo, "info", "pergaminho");
+  };
+  const atk = m.opcoes[acaoIdx("atacar")];
+  const arma = { guerreiro: "espada", arqueiro: "arco", mago: "cajado" }[heroi.classe] || "espada";
+  const basico = heroi.grimorio && heroi.grimorio.basico.linhas.find((l) => l.tipo === "dano");
+  botao("principal", spr(arma, 2), "Atacar", "", `<b>${esc(atk.meta.nome)}</b><div class="tipo">grátis · devolve um pouco de ${esc(heroi.recurso.toLowerCase())}</div>` +
+    (basico ? `<div class="melhor">Dano: ${basico.min}–${basico.max} (crítico ${basico.critico})</div>` : ""), () => { App.som("escolha"); habMirando = atk.meta.nome; responder(m.id, acaoIdx("atacar")); });
+  const habs = (m.opcoes[acaoIdx("habilidades")].meta.habilidades) || [];
+  if (habs.length) sep();
+  habs.forEach((h) => {
+    const [ic, fam] = HAB_ICONE[h.habilidade] || ["estrela", "arcano"];
+    const custo = h.custo ? `<span class="ba-custo">${h.custo}</span>` : "";
+    const flechas = h.flechas ? `<span class="ba-flechas">${spr("flecha", 1)}${h.flechas}</span>` : "";
+    const dicaHtml = `<b>${esc(h.nome)}</b><div class="tipo">${h.custo ? `${h.custo} de ${esc(h.recurso)}` : "Sem custo"}${h.flechas ? ` · ${h.flechas} flecha${h.flechas > 1 ? "s" : ""}` : ""} · alvo: ${ALVO_TXT[h.alvo_tipo] || "—"}</div>
+      <div class="bonus">${esc(h.desc)}</div>${danoGrimorio(h.habilidade)}${h.pode ? "" : `<div class="pior">${esc(h.motivo || "Indisponível")}</div>`}`;
+    const b = botao(`hab el-${fam}${h.pode ? "" : " bloqueada"}`, spr(ic, 2), h.nome, custo + flechas, dicaHtml, (bt) => {
+      if (!h.pode) { tremer(bt, h.motivo || "Indisponível"); return; }
+      App.som("escolha");
+      viaBarra = true;
+      habMirando = h.nome;
+      pendente = { chave: "habilidade", valor: h.habilidade };
+      responder(m.id, acaoIdx("habilidades"));
+    });
+    b.dataset.hab = h.habilidade;
+  });
+  sep();
+  botao("item", spr("pocao", 2), "Itens", "", "<b>Itens</b><div>Poções, tônicos, bandagens e troca de arma. Usar gasta o turno.</div>",
+    () => { App.som("escolha"); responder(m.id, acaoIdx("itens")); });
+  if (acaoIdx("analisar") >= 0) botao("item", spr("olho", 2), "Analisar", "", "", () => responder(m.id, acaoIdx("analisar")));
+  if (acaoIdx("fugir") >= 0) {
+    botao("fugir", spr("fuga", 2), "Fugir", "", "<b>Fugir</b><div>A chance depende da sua Agilidade contra a dos inimigos. Falhar custa o turno.</div>",
+      () => { App.som("escolha"); responder(m.id, acaoIdx("fugir")); });
+  }
+  promptEl.appendChild(barra);
+  Telas.ligarDicas(barra);
+}
 
 function iconeAcaoCombate(t) {
   if (/^Atacar/.test(t)) return spr({ guerreiro: "espada", arqueiro: "arco", mago: "cajado" }[estado.heroi.classe] || "espada", 2);
@@ -248,6 +344,7 @@ function ehVoltar(o) {
 }
 
 function mostrarContinuar(m) {
+  posicionarPrompt();
   promptEl.innerHTML = "";
   const b = el("button", "continuar", "Continuar <span>▸</span>");
   b.type = "button";
@@ -258,6 +355,7 @@ function mostrarContinuar(m) {
 }
 
 function mostrarPergunta(m) {
+  posicionarPrompt();
   promptEl.innerHTML = "";
   promptEl.appendChild(el("div", "pergunta-rotulo", esc(m.pergunta)));
   const linha = el("div", "entrada-texto");

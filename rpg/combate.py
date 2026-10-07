@@ -587,13 +587,24 @@ class Combate:
             # Na interface gráfica, a ficha do inimigo aparece ao passar o mouse na carta: sem "Analisar".
             analisar = not getattr(self.ui, "web", False)
             opcoes = [f"Atacar ({nome_atk})", "Habilidades", "Itens"] + (["Analisar inimigos"] if analisar else [])
+            # Na tela gráfica as ações viram uma barra dentro da arena, com as habilidades já à mostra.
+            metas = [{"acao": "atacar", "nome": nome_atk}, {"acao": "habilidades", "habilidades": self.metas_habilidades()},
+                     {"acao": "itens"}] + ([{"acao": "analisar"}] if analisar else [])
             if self.pode_fugir:
                 opcoes.append("Fugir")
-            esc = self.ui.escolher("Sua ação:", opcoes)
+                metas.append({"acao": "fugir"})
+            self.ui.meta_opcoes = metas
+            try:
+                esc = self.ui.escolher("Sua ação:", opcoes)
+            finally:
+                self.ui.meta_opcoes = None
             if esc >= 3 and not analisar:
                 esc += 1  # mantém a numeração das ações abaixo
             if esc == 0:
-                self.ataque_basico(self.escolher_alvo())
+                alvo = self.escolher_alvo(cancelavel=True)
+                if alvo is None:
+                    continue
+                self.ataque_basico(alvo)
                 return None
             if esc == 1:
                 if self.menu_habilidades():
@@ -609,16 +620,17 @@ class Combate:
             elif esc == 4:
                 return "fuga" if self.tentar_fuga() else None
 
-    def escolher_alvo(self):
+    def escolher_alvo(self, cancelavel=False):
+        """Com cancelavel, a lista ganha "Voltar" e devolve None se a pessoa desistir (nada foi gasto ainda)."""
         vivos = self.inimigos_vivos()
         if len(vivos) == 1:
             return vivos[0]
-        self.ui.meta_opcoes = [{"alvo": self.uid(e)} for e in vivos]
+        self.ui.meta_opcoes = [{"alvo": self.uid(e)} for e in vivos] + ([{"voltar": True}] if cancelavel else [])
         try:
-            esc = self.ui.escolher("Alvo:", [f"{e.nome} ({e.hp}/{e.max_hp})" for e in vivos])
+            esc = self.ui.escolher("Alvo:", [f"{e.nome} ({e.hp}/{e.max_hp})" for e in vivos] + (["Voltar"] if cancelavel else []))
         finally:
             self.ui.meta_opcoes = None
-        return vivos[esc]
+        return vivos[esc] if esc < len(vivos) else None
 
     def ataque_basico(self, alvo):
         j = self.j
@@ -649,21 +661,29 @@ class Combate:
             return h["req"](self)
         return None
 
+    def metas_habilidades(self):
+        """Cada habilidade como a interface gráfica a desenha: ícone, custo, alvo, dica e se dá para usar agora."""
+        j = self.j
+        metas = []
+        for h_id in j.habilidades:
+            h = HABILIDADES[h_id]
+            motivo = self.motivo_bloqueio(h_id)
+            metas.append({"habilidade": h_id, "nome": h["nome"], "custo": custo_habilidade(j, h_id),
+                          "recurso": j.nome_recurso, "flechas": h.get("flechas", 0), "alvo_tipo": h["alvo"],
+                          "desc": descricao_habilidade(h_id, j), "pode": motivo is None, "motivo": motivo})
+        return metas
+
     def menu_habilidades(self):
         j = self.j
         ids = list(j.habilidades)
-        opcoes, metas = [], []
+        opcoes = []
         for h_id in ids:
             h = HABILIDADES[h_id]
             custo = f"{custo_habilidade(j, h_id)} {j.nome_recurso}"
             if h.get("flechas"):
                 custo += f", {h['flechas']} flecha{'s' if h['flechas'] > 1 else ''}"
             opcoes.append(f"{h['nome']} [{custo}] — {h['desc']}")
-            motivo = self.motivo_bloqueio(h_id)
-            # A interface gráfica desenha cada habilidade como uma carta com ícone, custo e dica.
-            metas.append({"habilidade": h_id, "nome": h["nome"], "custo": custo_habilidade(j, h_id),
-                          "recurso": j.nome_recurso, "flechas": h.get("flechas", 0), "alvo_tipo": h["alvo"],
-                          "desc": descricao_habilidade(h_id, j), "pode": motivo is None, "motivo": motivo})
+        metas = self.metas_habilidades()
         opcoes.append("Voltar")
         self.ui.meta_opcoes = metas + [None]
         try:
@@ -685,7 +705,11 @@ class Combate:
             if erro:
                 self.dizer(erro, "cinza")
                 return False
-        alvo = self.escolher_alvo() if h["alvo"] == "inimigo" else None
+        alvo = None
+        if h["alvo"] == "inimigo":
+            alvo = self.escolher_alvo(cancelavel=True)
+            if alvo is None:
+                return False
         j.rec -= custo
         self.tel["habilidades"][ids[esc]] = self.tel["habilidades"].get(ids[esc], 0) + 1
         self.tel["rec_gasto"] += custo

@@ -28,6 +28,9 @@ function aplicarEstado(e) {
   corpo.dataset.periodo = e.mundo.periodo_n;
   corpo.classList.toggle("escuro", !!e.mundo.escuro);
   corpo.classList.toggle("em-combate", !!e.combate);
+  if (!e.combate) posicionarPrompt();  // a luta acabou: as opções voltam ao pé da página
+  corpo.classList.toggle("recurso-vigor", e.heroi.recurso === "Vigor");
+  corpo.classList.toggle("recurso-foco", e.heroi.recurso === "Foco");
   corpo.style.setProperty("--corrupcao", (e.mundo.corrupcao / 100).toFixed(2));
   Som.ambiente(bioma);
   Vista.atualizar(e);
