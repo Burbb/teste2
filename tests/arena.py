@@ -19,7 +19,7 @@ COLUNAS = [
     ("turnos", "Turnos"),
     ("vida_perdida", "Vida perdida"),
     ("maior_golpe", "Maior golpe"),
-    ("golpes_matar", "Seus golpes p/ matar"),
+    ("turnos_matar", "Seus turnos p/ matar"),
     ("golpes_cair", "Golpes p/ você cair"),
     ("um_golpe", "Golpes que matam de vida cheia"),
 ]
@@ -134,7 +134,7 @@ def lutar(g, inimigos, emboscada=None, titulo=None, seed=0):
     j = g.j
     hp_ini, max_hp = j.hp, j.max_hp
     r = Combate(g, inimigos, emboscada, pode_fugir=False, titulo=titulo).executar()
-    tel = g.registro[-1]
+    tel = next(e for e in reversed(g.registro) if e["t"] == "combate")
     return {
         "resultado": r,
         "nv_inimigo": sum(e.nivel for e in inimigos) / len(inimigos),
@@ -144,8 +144,18 @@ def lutar(g, inimigos, emboscada=None, titulo=None, seed=0):
         "golpes": list(ui.golpes),
         "recebidos": list(ui.recebidos),
         "vida_inimigos": [e.max_hp for e in inimigos],
+        "dano": tel["dano_causado"],
         "max_hp": max_hp,
     }
+
+
+def turnos_matar(lutas):
+    """A vida média de um inimigo ÷ o seu dano por turno (aliados à parte)."""
+    vida = [v for x in lutas for v in x["vida_inimigos"]]
+    dano, turnos = sum(x["dano"] for x in lutas), sum(x["turnos"] for x in lutas)
+    if not vida or not dano:
+        return None
+    return (sum(vida) / len(vida)) / (dano / turnos)
 
 
 def agregar(lutas):
@@ -153,9 +163,7 @@ def agregar(lutas):
     n = len(lutas)
     golpes = [d for x in lutas for d, _ in x["golpes"]]
     recebidos = [d for x in lutas for d in x["recebidos"]]
-    vida_inim = [v for x in lutas for v in x["vida_inimigos"]]
     max_hp = sum(x["max_hp"] for x in lutas) / n
-    media_golpe = sum(golpes) / len(golpes) if golpes else 0
     media_recebido = sum(recebidos) / len(recebidos) if recebidos else 0
     um_golpe = [1 for x in lutas for d, v in x["golpes"] if d >= v]
     return {
@@ -165,7 +173,7 @@ def agregar(lutas):
         "turnos": sum(x["turnos"] for x in lutas) / n,
         "vida_perdida": sum(x["vida_perdida"] for x in lutas) / n,
         "maior_golpe": max(x["maior_golpe"] for x in lutas),
-        "golpes_matar": (sum(vida_inim) / len(vida_inim)) / media_golpe if media_golpe else None,
+        "turnos_matar": turnos_matar(lutas),
         "golpes_cair": max_hp / media_recebido if media_recebido else None,
         "um_golpe": len(um_golpe) / len(golpes) if golpes else 0,
     }

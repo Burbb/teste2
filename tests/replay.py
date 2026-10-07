@@ -180,23 +180,16 @@ def real(ev):
     """A luta como ela aconteceu, no formato da arena (o que o registro permite saber)."""
     st = ev.get("stats_inicio") or {}
     max_hp = st.get("max_hp", ev["hp_max"])
-    golpes = ev.get("golpes") or 0
-    dano = sum((ev.get("dano_por_elemento") or {}).values())
-    media = dano / golpes if golpes else 0
     vida = [x["hp_max"] for x in ev["inimigos"] if "(invocado)" not in x["nome"]]
     return {"resultado": ev["resultado"], "nv_inimigo": sum(x["nivel"] for x in ev["inimigos"]) / len(ev["inimigos"]),
             "turnos": ev["turnos"], "vida_perdida": max(0, ev["hp_inicio"] - ev["hp_fim"]) / max_hp,
-            "maior_golpe": ev["maior_golpe"] / max_hp, "golpes": [(media, None)] * golpes,
+            "maior_golpe": ev["maior_golpe"] / max_hp, "golpes": [], "dano": ev["dano_causado"],
             "recebidos": [], "vida_inimigos": vida, "max_hp": max_hp}
 
 
 def agregar_real(lutas):
-    a = arena.agregar([dict(x, golpes=[]) for x in lutas])
-    golpes = [d for x in lutas for d, _ in x["golpes"]]
-    vida = [v for x in lutas for v in x["vida_inimigos"]]
-    if golpes and vida:
-        a["golpes_matar"] = (sum(vida) / len(vida)) / (sum(golpes) / len(golpes))
-    a["golpes_cair"] = a["um_golpe"] = None
+    a = arena.agregar(lutas)
+    a["golpes_cair"] = a["um_golpe"] = None  # o registro não guarda golpe a golpe
     return a
 
 
@@ -212,7 +205,7 @@ def relatorio(caminho, vezes=20, por_luta=False, ficha=False):
               "sua build, refeita com os números de agora). Compare o robô antes e depois de mexer em",
               "`rpg/balanceamento.py`; a linha \"você\" é a régua de quanto o robô joga pior ou melhor.",
               "",
-              "- Seus golpes p/ matar: a vida média de um inimigo ÷ o dano médio do seu golpe.",
+              "- Seus turnos p/ matar: a vida média de um inimigo ÷ o seu dano por turno (sem os aliados).",
               "- Golpes p/ você cair: sua vida máxima ÷ o dano médio de um golpe inimigo em você.",
               "- Golpes que matam de vida cheia: quantos dos seus golpes derrubariam um inimigo inteiro.",
               ""]
