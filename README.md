@@ -367,38 +367,54 @@ Novas habilidades chegam nos níveis 2, 3, 4 e 7 (a habilidade suprema da especi
 
 ```
 rpg/
-  jogo.py        estado, ciclo principal, vilas, loja, contratos, salvar/carregar
-  comitiva.py    companheiros: valores, aprovação, reações, combate, conversas, partida e morte
-  web/           interface principal: servidor local (só biblioteca padrão) + página
-    ponte.py     WebUI: cada chamada da UI vira uma mensagem JSON (cenas, texto, dados, escolhas)
-    estado.py    fotografia do jogo em JSON (herói, mapa, combate) para os painéis
-    servidor.py  HTTP + SSE em 127.0.0.1, com token por sessão
-    static/      index.html, estilo.css, app.js (fila, HUD, texto), batalha.js (palco da luta,
-                 balões e selos), telas.js (talentos, fichas, celebrações), sprites.js (pixel art),
-                 vista.js (paisagem), mapa.js, som.js, fontes OFL
-  tui.py         interface de terminal com painéis (Textual), via --terminal
-  ui.py          interface clássica (cores ANSI, menus) e o "jogador robô" dos testes
-  mapa.py        desenho do mapa em caracteres
-  talentos.py    árvores de talentos
-  legado.py      registro de heróis anteriores
-  sobrevivencia.py  fome, ferimentos, infecção e escuridão
-  telemetria.py  registro da partida e resumo para análise de equilíbrio
-  combate.py     combate por turnos, efeitos, traços e fraquezas
-  classes.py     classes, especializações, habilidades e companheiros
-  inimigos.py    geração de inimigos, guardiões, chefe final e habilidades inimigas
-  mundo.py       geração espacial do mundo e nível de cada região
-  itens.py       consumíveis e equipamentos procedurais
-  dados.py       biomas, criaturas, afixos, clima e guardiões
-  texto.py       nomes procedurais e utilidades de texto
-  eventos/
-    motor.py     registro e sorteio de eventos (condições, pesos, anti-repetição)
-    comuns.py    encontros, estranhos na estrada, consequências
-    biomas.py    eventos de floresta, pântano, montanha, planície, ruínas e clima
-    classe.py    eventos de classe e especialização, e as encruzilhadas
-    noite.py     eventos do acampamento
-    vila.py      eventos de vila e gerador de rumores
-    comitiva.py  recrutamento, conversas, missões pessoais e discussões da comitiva
+  jogo.py          o estado da partida e o ciclo principal (menus do lugar, explorar, viajar)
+  sistemas/        cada sistema do jogo é um mixin da classe Jogo:
+    loja.py          mercado: regras de compra e venda (as mesmas para terminal e web)
+    contratos.py     mural, caçadas, recompensa, diário e abandono
+    inventario.py    equipamento, mochila, consumíveis e a tela de personagem
+    confronto.py     inimigos do lugar, grupos, o combate em si, abates e saque
+    progressao.py    níveis, talentos, habilidades, especialização
+    tempo.py         clima, períodos, dias, descanso, acampamento e taverna
+    recompensas.py   ouro, XP, vida, itens, reputação, corrupção, sementes e rumores
+    testes.py        testes de atributo (d20 + bônus contra a dificuldade)
+    navegacao.py     viagem e mapa · chefes.py guardiões e batalha final
+    bestiario.py     legado e bestiário · servicos.py ferreiro, curandeiro, rumores
+    finais.py        morte, vitória e resumo · persistencia.py salvar, carregar, sair
+  balanceamento.py todos os números de dificuldade e generosidade, num lugar só
+  migracoes.py     versão do save e as migrações de saves antigos
+  regras.py        constantes e exceções compartilhadas
+  combate.py       combate por turnos, efeitos, traços, fraquezas e os "lances" para a tela
+  comitiva.py      companheiros: valores, aprovação, reações, combate, conversas, partida e morte
+  web/             interface principal: servidor local (só biblioteca padrão) + página
+    ponte.py       WebUI: cada chamada da UI vira uma mensagem JSON (cenas, texto, dados, escolhas)
+    estado.py      fotografia do jogo em JSON (herói, mapa, combate) para os painéis
+    servidor.py    HTTP + SSE em 127.0.0.1, com token por sessão
+    static/
+      css/         estilos por componente (01-base ... 12-acoes-combate), carregados nessa ordem
+      app/         a aplicação: nucleo (conexão e fila), pagina, escolhas, paineis, controles
+      batalha.js   palco da luta, balões e selos · telas.js talentos, fichas, mercado, fogueira
+      sprites-dados.js os desenhos em pixel art · sprites.js quem os desenha
+      vista.js, mapa.js, som.js, fontes OFL
+  tui.py           interface de terminal com painéis (Textual), via --terminal
+  ui.py            interface clássica (cores ANSI, menus) e o "jogador robô" dos testes
+  classes.py, inimigos.py, itens.py, talentos.py, dados.py, mundo.py, mapa.py, texto.py,
+  legado.py, sobrevivencia.py, telemetria.py
+  eventos/         motor de eventos e os eventos (comuns, biomas, classe, noite, vila, comitiva)
+tests/
+  test_simulacao.py  robôs jogando, sistemas, saves antigos
+  gabarito.py        18 partidas de referência: refatorar não pode mudar nenhuma (veja abaixo)
+  navegador/         teste de fumaça da interface web (Playwright), pulado se não houver Node
 ```
+
+### Refatorar com segurança
+
+`python -m tests.gabarito` joga 18 partidas com sementes fixas (3 classes × 3 sementes, pelo
+terminal e simulando a interface web) e compara a transcrição completa de cada uma (texto,
+opções, escolhas, lances de combate e o save final) com `tests/gabarito.json`. Uma refatoração
+que não muda a jogabilidade passa sem tocar no gabarito. Quando a mudança de jogabilidade é de
+propósito (um número em `balanceamento.py`, por exemplo), rode `python -m tests.gabarito
+--atualizar` e diga no commit o que mudou. `--mostrar` grava as transcrições para comparar com
+`diff`.
 
 ### Criando um evento novo
 
