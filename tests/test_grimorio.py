@@ -5,7 +5,8 @@ import tempfile
 import unittest
 
 from rpg import grimorio
-from rpg.classes import HABILIDADES, SPECS, habilidades_ate
+from rpg.classes import SPECS, habilidades_ate
+from rpg.habilidades import HABILIDADES
 from rpg.jogo import Jogo
 from rpg.ui import BotUI
 

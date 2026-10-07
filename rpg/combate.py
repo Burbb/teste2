@@ -3,7 +3,9 @@
 from contextlib import contextmanager
 
 from . import texto as tx
-from .classes import CLASSES, HABILIDADES, descricao_habilidade
+from .classes import CLASSES
+from .habilidades import HABILIDADES, descricao_habilidade
+from .grimorio import chance_critico, mult_critico
 from .dados import TRACOS
 from .entidades import Combatente
 from .inimigos import HABS_INIMIGO, NOMES_HABS_INIMIGO, ROTULOS_HABS_INIMIGO
@@ -295,15 +297,14 @@ class Combate:
         furtivo = u.efeito("furtivo")
         abertura = u.jogador and self.abertura
         self.abertura = self.abertura and not u.jogador
-        chance_crit = min(bal.MAX_CRITICO, bal.CRITICO_BASE + u.agi * bal.CRITICO_POR_AGI + crit_extra + 0.04 * u.tal("olho_aguia")
-                          + u.especial("critico") / 100)
+        chance_crit = chance_critico(u, crit_extra)  # a mesma conta que o Grimório e a ficha mostram
         crit = bool(furtivo) or abertura or self.rng.random() < chance_crit
         # Crítico garantido diz de onde veio: sem isso, parece que a sorte ignora a chance da ficha.
         motivo_crit = ("Furtivo" if furtivo else self.motivo_abertura or "Iniciativa") if (furtivo or abertura) else None
         base = getattr(u, stat) * mult + bonus
         dano = base * m * self.rng.uniform(0.85, 1.15) * 100 / (100 + defesa * bal.DEFESA_FATOR)
         if crit:
-            dano *= (2.3 if furtivo else 1.6) + 0.2 * u.tal("golpe_sombras")
+            dano *= mult_critico(u, furtivo=bool(furtivo))
         if furtivo:
             u.remover("furtivo")
         guarda = alvo.efeito("guarda")

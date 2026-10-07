@@ -6,7 +6,8 @@ fora, porque mudam a cada luta; o livro diz isso em vez de esconder.
 """
 
 from . import balanceamento as bal
-from .classes import CLASSES, HABILIDADES, ganho_meditar
+from .classes import CLASSES
+from .habilidades import HABILIDADES, crit_extra
 
 NOME_STAT = {"atk": "Ataque", "poder": "Poder", "agi": "Agilidade", "max_hp": "Vida máx."}
 ELEMENTO = {"fisico": "físico", "fogo": "fogo", "gelo": "gelo", "sagrado": "sagrado", "sombra": "sombra",
@@ -21,14 +22,11 @@ def _num(x):
     return f"{x:.1f}".replace(".", ",").replace(",0", "")
 
 
-# Habilidades que somam chance de crítico (as mesmas de classes.py), para a ficha e o Grimório explicarem a taxa real.
-CRIT_HABILIDADE = {"tiro_certeiro": 0.3, "execucao": 0.2}
-
-
 def fontes_critico(j):
-    """De onde vêm os críticos além da chance da ficha: habilidades com bônus e críticos garantidos."""
-    linhas = [f"{HABILIDADES[h]['nome']}: {round(chance_critico(j, extra) * 100)}% de chance."
-              for h, extra in CRIT_HABILIDADE.items() if h in j.habilidades]
+    """De onde vêm os críticos além da chance da ficha: habilidades com bônus (lido dos próprios golpes delas)
+    e críticos garantidos."""
+    linhas = [f"{HABILIDADES[h]['nome']}: {round(chance_critico(j, crit_extra(HABILIDADES[h])) * 100)}% de chance."
+              for h in j.habilidades if crit_extra(HABILIDADES[h])]
     if j.tal("tiro_abertura"):
         linhas.append("Tiro de Abertura: o primeiro ataque de cada luta é sempre crítico.")
     if "desaparecer" in j.habilidades or j.tal("assassino"):
@@ -38,11 +36,13 @@ def fontes_critico(j):
 
 
 def chance_critico(u, extra=0.0):
+    """A chance de crítico de um golpe. A conta única: o combate, a ficha e o Grimório usam esta."""
     return min(bal.MAX_CRITICO, bal.CRITICO_BASE + u.agi * bal.CRITICO_POR_AGI + extra + 0.04 * u.tal("olho_aguia")
                + u.especial("critico") / 100)
 
 
 def mult_critico(u, furtivo=False):
+    """Quanto o crítico multiplica (furtivo: o golpe das sombras, mais forte)."""
     return (2.3 if furtivo else 1.6) + 0.2 * u.tal("golpe_sombras")
 
 
@@ -94,119 +94,6 @@ def _queimadura(u, chance):
                   f"{bal.MAX_CHAMAS} camadas ({', '.join(origem)}).")
 
 
-def _linhas(h_id, u):
-    j = u
-    if h_id == "golpe_pesado":
-        return [golpe(j, 1.7)]
-    if h_id == "erguer_escudo":
-        return [efeito(f"Dano recebido −50% por {2 + j.tal('muralha')} turnos.")]
-    if h_id == "investida":
-        return [golpe(j, 1.2), efeito("45% de chance de atordoar o alvo por 1 turno.")]
-    if h_id == "grito_guerra":
-        return [efeito("Seu dano +30% por 3 turnos."),
-                efeito("80% de chance de enfraquecer cada inimigo por 2 turnos (eles causam −25%).")]
-    if h_id == "golpe_sagrado":
-        return [golpe(j, 1.3, tipo="sagrado", bonus=j.poder * 0.8, bonus_txt="Poder × 80%"),
-                efeito(f"Cura {_pct(0.35 * (1 + 0.25 * j.tal('luz_curativa')))} do dano causado.")]
-    if h_id == "prece":
-        cura = (j.max_hp * 0.3 + j.poder * 1.5) * (1 + 0.25 * j.tal("luz_curativa"))
-        return [efeito(f"Cura {int(cura)} de vida (30% da vida máxima + Poder × 150%) e remove os males.")]
-    if h_id == "julgamento":
-        return [golpe(j, 1.2, tipo="sagrado", alcance="distancia", bonus=j.poder, bonus_txt="Poder × 100%",
-                      rotulo="Em cada inimigo", nota="Não pode ser esquivado.")]
-    if h_id == "sede_sangue":
-        return [golpe(j, 1.4), efeito("Rouba 40% do dano causado como vida."),
-                efeito(f"Sangramento: {_num(max(2, j.atk * 0.3))} por turno, 3 turnos (Ataque × 30%).")]
-    if h_id == "redemoinho":
-        return [golpe(j, 1.1, rotulo="Em cada inimigo (5 giros de 22%)")]
-    if h_id == "furia_cega":
-        return [efeito(f"Custa {int(j.max_hp * 0.15)} de vida (15% da máxima)."), efeito("Seu dano +60% por 3 turnos."),
-                golpe(j, 1.3, extra=1.6, extra_txt="Fúria", rotulo="Golpe (já com a Fúria)")]
-    if h_id == "tiro_certeiro":
-        return [golpe(j, 1.7, alcance="distancia", crit_extra=0.3)]
-    if h_id == "marcar_presa":
-        return [efeito("O alvo recebe +25% de dano de todos por 3 turnos.")]
-    if h_id == "chuva_flechas":
-        return [golpe(j, 1.0, alcance="distancia", rotulo="Em cada inimigo")]
-    if h_id == "passo_agil":
-        base = min(bal.ESQUIVA_MAX_AGI, j.agi * bal.ESQUIVA_POR_AGI)
-        return [efeito(f"Esquiva +30% por 2 turnos: de {_pct(base)} para {_pct(min(bal.MAX_ESQUIVA, base + 0.3))} "
-                       f"(teto de {_pct(bal.MAX_ESQUIVA)}).")]
-    if h_id == "tiro_duplo":
-        return [golpe(j, 0.9, alcance="distancia", rotulo="Cada um dos 2 disparos")]
-    if h_id == "comando_fera":
-        fera = getattr(j, "companheiro", None)
-        if not fera:
-            return [efeito("Urso: provoca os inimigos e protege. Lobo: dilacera e faz sangrar. Falcão: cega (enfraquece).")]
-        f = fera if isinstance(fera, dict) else {"nome": fera.nome, "atk": fera.atk, "tipo": fera.tipo}
-        mult = 1.6 if f["tipo"] == "lobo" else 1.0
-        linhas = [efeito(f"{f['nome']} ataca: {int(f['atk'] * mult * 0.85)}–{int(f['atk'] * mult * 1.15)} de dano "
-                         f"(ataque dele {_num(f['atk'])} × {round(mult * 100)}%).")]
-        if f["tipo"] == "urso":
-            linhas.append(efeito("Provoca por 2 turnos: os inimigos atacam o urso (chefes, metade das vezes), "
-                                 "e ele recebe 30% menos dano."))
-        elif f["tipo"] == "lobo":
-            linhas.append(efeito(f"Sangramento forte: {_num(max(3, f['atk'] * 0.55))} por turno, 4 turnos."))
-        else:
-            linhas.append(efeito("Não pode ser esquivado. O alvo fica enfraquecido (−25% de dano) por 2 turnos."))
-        return linhas
-    if h_id == "furia_natureza":
-        return [golpe(j, 1.3, alcance="distancia", rotulo="Em cada inimigo"),
-                efeito(f"50% de chance de sangramento: {_num(max(2, j.atk * 0.3))} por turno, 3 turnos."),
-                efeito("Cura o companheiro animal por completo.")]
-    if h_id == "desaparecer":
-        return [efeito(f"O próximo ataque é crítico garantido de ×{_num(mult_critico(j, furtivo=True))}."),
-                efeito("+50% de esquiva por 1 turno.")]
-    if h_id == "flecha_envenenada":
-        return [golpe(j, 1.0, alcance="distancia"),
-                efeito(f"Veneno: {_num(max(3, j.atk * 0.45 + j.agi * 0.2))} por turno, 4 turnos "
-                       "(Ataque × 45% + Agilidade × 20%).")]
-    if h_id == "execucao":
-        return [golpe(j, 1.2, alcance="distancia", crit_extra=0.2, rotulo="Alvo com mais de 35% de vida"),
-                golpe(j, 3.2, alcance="distancia", crit_extra=0.2, rotulo="Alvo abaixo de 35% de vida")]
-    if h_id == "bola_fogo":
-        return [golpe(j, 1.5, stat="poder", alcance="distancia", tipo="fogo"),
-                _queimadura(j, 1.0 if j.tal("ignicao") else 0.6)]
-    if h_id == "meditar":
-        return [efeito(f"Recupera {ganho_meditar(j)} de mana (6 + 12% do máximo). Gasta o turno.")]
-    if h_id == "lanca_gelo":
-        return [golpe(j, 1.3, stat="poder", alcance="distancia", tipo="gelo"),
-                efeito("35% de chance de congelar o alvo (perde o próximo turno).")]
-    if h_id == "barreira":
-        valor = int((j.max_hp * 0.15 + j.poder * 0.2) * (1.3 if j.tal("escudo_reflexo") else 1))
-        return [efeito(f"Absorve {valor} de dano por {2 + j.tal('escudo_reflexo')} turnos "
-                       "(15% da vida máxima + Poder × 20%). Não acumula.")]
-    if h_id == "inferno":
-        return [golpe(j, 0.6, stat="poder", alcance="distancia", tipo="fogo", rotulo="Em cada inimigo"),
-                _queimadura(j, 0.5)]
-    if h_id == "combustao":
-        from .combate import Combate
-        v = Combate.valor_queimadura(None, j)
-        t = Combate.duracao_queimadura(None, j)
-        cheio = v * t * bal.MAX_CHAMAS
-        bonus = cheio * (bal.COMBUSTAO_BASE + bal.COMBUSTAO_POR_CAMADA * bal.MAX_CHAMAS)
-        return [golpe(j, 0.8, stat="poder", alcance="distancia", tipo="fogo", rotulo="Sem chamas no alvo"),
-                golpe(j, 1.0, stat="poder", alcance="distancia", tipo="fogo", bonus=bonus,
-                      bonus_txt=f"{bal.MAX_CHAMAS} camadas recém-acesas", crit_extra=0.05 * bal.MAX_CHAMAS,
-                      rotulo=f"Detonando {bal.MAX_CHAMAS} camadas novas",
-                      nota="O que as chamas ainda queimariam × (1,6 + 0,2 por camada). Quanto mais camadas e "
-                           "mais cedo, maior a explosão.")]
-    if h_id == "fenix":
-        return [golpe(j, 2.5, stat="poder", alcance="distancia", tipo="fogo"),
-                efeito(f"Cura {int(j.max_hp * 0.2)} de vida (20% da máxima).")]
-    if h_id == "drenar_vida":
-        return [golpe(j, 1.2, stat="poder", alcance="distancia", tipo="sombra"),
-                efeito(f"Cura {_pct(0.4 + 0.1 * j.tal('pacto_sombrio'))} do dano causado.")]
-    if h_id == "erguer_servo":
-        vida = (j.poder * 1.2 + 8) * (1 + 0.15 * j.tal("pacto_sombrio"))
-        return [efeito(f"Invoca um servo com {int(vida)} de vida e {int(j.poder * 0.3) + 2} de ataque "
-                       f"(no máximo {1 + j.tal('exercito')} ao mesmo tempo).")]
-    if h_id == "maldicao":
-        return [efeito(f"Todos os inimigos: {_num(max(3, j.poder * 0.4))} de dano por turno, 4 turnos (Poder × 40%), "
-                       "e −40% de defesa.")]
-    return [efeito(HABILIDADES[h_id]["desc"])]
-
-
 # Como os RPGs de turno descrevem o alcance (Final Fantasy, Pokémon): quem, e se é um só ou todos.
 ALVOS = {"inimigo": "Inimigo único", "todos": "Todos os inimigos", "proprio": "Você",
          "aliado": "Aliado único", "aliados": "Todos os aliados"}
@@ -226,7 +113,7 @@ def dados(j):
         h = HABILIDADES[h_id]
         habs.append({"id": h_id, "nome": h["nome"], "custo": h["custo"], "flechas": h.get("flechas", 0),
                      "alvo": ALVOS.get(h["alvo"], ""), "desc": h["desc"],  # os números de agora vão nas linhas
-                     "linhas": _linhas(h_id, j)})
+                     "linhas": h["linhas"](j)})
     tal_corpo, _ = mult_talentos(j, "corpo")
     tal_dist, _ = mult_talentos(j, "distancia")
     gerais = [f"Crítico: {round(chance_critico(j) * 100)}% de chance, dano ×{_num(mult_critico(j))}.",

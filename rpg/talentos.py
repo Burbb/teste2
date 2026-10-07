@@ -8,7 +8,8 @@ Os efeitos "stats" são somados aos atributos; os demais talentos são lidos
 pelo combate e pelas habilidades através de `jogador.tal("id")`.
 """
 
-from .classes import CLASSES, HABILIDADES, SPECS
+from .classes import CLASSES, SPECS
+from .habilidades import HABILIDADES
 
 NIVEL_CAMADA = {1: 2, 2: 4, 3: 6, 4: 9}
 

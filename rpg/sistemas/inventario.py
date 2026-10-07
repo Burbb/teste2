@@ -1,6 +1,6 @@
 """Equipamento, mochila, consumíveis e a tela de personagem."""
 
-from ..classes import HABILIDADES
+from ..habilidades import HABILIDADES
 from .. import itens
 from ..itens import CONSUMIVEIS, descrever_bonus
 from .. import comitiva

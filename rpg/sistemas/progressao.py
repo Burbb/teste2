@@ -1,6 +1,7 @@
 """Níveis, talentos, habilidades, especialização e companheiro animal."""
 
-from ..classes import CLASSES, COMPANHEIROS, HABILIDADES, SPECS, habilidades_ate
+from ..classes import CLASSES, COMPANHEIROS, SPECS, habilidades_ate
+from ..habilidades import HABILIDADES
 from ..entidades import NOMES_STATS
 from .. import comitiva
 from .. import talentos

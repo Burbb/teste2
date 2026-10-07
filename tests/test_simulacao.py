@@ -164,7 +164,7 @@ class TestSimulacao(unittest.TestCase):
             # Os giros saem numa salva só: a tela anima cada giro cortando todos ao mesmo tempo.
             salva = next(d for t, d in lances if t == "salva")["lances"]
             internos = [x["tipo"] for x in salva]
-            from rpg.classes import GIROS_REDEMOINHO
+            from rpg.habilidades import GIROS_REDEMOINHO
             self.assertEqual(internos.count("giro"), GIROS_REDEMOINHO)
             self.assertEqual(internos.count("golpe") + internos.count("erro"), 2 * GIROS_REDEMOINHO)
             golpe = next(x for x in salva if x["tipo"] == "golpe")
@@ -176,7 +176,7 @@ class TestSimulacao(unittest.TestCase):
 
     def test_chamas_acumulam_e_combustao_detona(self):
         """O fogo do mago rende em camadas (até 3) e a Combustão transforma o que falta arder em dano na hora."""
-        from rpg import classes
+        from rpg.habilidades import HABILIDADES
         from rpg.combate import Combate
         lances = []
 
@@ -201,12 +201,12 @@ class TestSimulacao(unittest.TestCase):
             self.assertAlmostEqual(alvo.efeito("queimadura")["v"], base * Combate.MAX_CHAMAS)
             restante = cb.restante_queimadura(alvo)
             antes = alvo.hp
-            classes._combustao(cb, g.j, alvo)
+            HABILIDADES["combustao"]["fn"](cb, g.j, alvo)
             self.assertIsNone(alvo.efeito("queimadura"))
             self.assertGreater(antes - alvo.hp, restante * 0.5)
             # Meditar mostra a mana voltando na carta.
             g.j.rec = 0
-            classes._meditar(cb, g.j, None)
+            HABILIDADES["meditar"]["fn"](cb, g.j, None)
             rec = [d for t, d in lances if t == "recurso"]
             self.assertTrue(rec and rec[-1]["valor"] > 0 and rec[-1]["em"] == "j")
             g.combate_ativo = None
@@ -254,7 +254,7 @@ class TestSimulacao(unittest.TestCase):
 
     def test_area_acerta_todos_juntos(self):
         """Habilidade em área vira um lance "salva" com os golpes de todos os alvos (a tela anima tudo junto)."""
-        from rpg import classes
+        from rpg.habilidades import HABILIDADES
         from rpg.combate import Combate
         lances = []
 
@@ -270,7 +270,7 @@ class TestSimulacao(unittest.TestCase):
                 e.hp = e.max_hp = 500
             cb = Combate(g, inimigos)
             with cb.agindo(g.j, "Chuva de Flechas", area=True, hab="chuva_flechas"):
-                classes._chuva_flechas(cb, g.j, None)
+                HABILIDADES["chuva_flechas"]["fn"](cb, g.j, None)
             tipos = [t for t, _ in lances]
             self.assertEqual(tipos, ["acao", "salva", "fim_acao"])
             golpes = [x for x in lances[1][1]["lances"] if x["tipo"] in ("golpe", "erro")]

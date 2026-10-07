@@ -471,6 +471,8 @@ rpg/
       vista.js, mapa.js, som.js, fontes OFL
   tui.py           interface de terminal com painéis (Textual), via --terminal
   ui.py            interface clássica (cores ANSI, menus) e o "jogador robô" dos testes
+  habilidades.py   habilidades como dados: blocos que executam na luta e se descrevem no Grimório
+  grimorio.py      o livro de habilidades e a conta de crítico (a mesma do combate e da ficha)
   classes.py, inimigos.py, itens.py, talentos.py, dados.py, mundo.py, mapa.py, texto.py,
   legado.py, sobrevivencia.py, telemetria.py
   eventos/         motor de eventos e os eventos (comuns, biomas, classe, noite, vila, comitiva)
@@ -479,6 +481,10 @@ tests/
   gabarito.py        18 partidas de referência: refatorar não pode mudar nenhuma (veja abaixo)
   navegador/         teste de fumaça da interface web (Playwright), pulado se não houver Node
 ```
+
+Mais detalhes em [`docs/ARQUITETURA.md`](docs/ARQUITETURA.md) (como o motor funciona),
+[`docs/COMO_CRIAR.md`](docs/COMO_CRIAR.md) (receitas: habilidade, evento, número) e
+[`docs/ROADMAP.md`](docs/ROADMAP.md) (as etapas da refatoração e o que vem depois).
 
 ### Refatorar com segurança
 
