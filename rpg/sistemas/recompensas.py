@@ -7,6 +7,7 @@ from ..itens import CONSUMIVEIS
 from .. import sobrevivencia
 from ..regras import NIVEL_MAXIMO
 from .. import balanceamento as bal
+from ..modificadores import mod
 
 
 class Recompensas:
@@ -83,7 +84,7 @@ class Recompensas:
 
     def max_flechas(self):
         """A aljava tem fundo: não dá para comprar cem flechas e esquecer delas."""
-        return bal.ALJAVA + bal.ALJAVA_POR_TALENTO * self.j.tal("aljava_funda")
+        return bal.ALJAVA + mod(self.j, "aljava")
 
     def dar_flechas(self, n):
         if self.j.classe != "arqueiro" or n <= 0:

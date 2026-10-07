@@ -56,6 +56,19 @@ Cada bloco sabe **executar** (na luta) e **se descrever** (no Grimório). O núm
 Habilidades muito particulares (Redemoinho, Ordem da Fera, Combustão, Execução, Meditar, Barreira, Erguer
 Servo, Fúria Cega) usam `fn` + `linhas` escritas à mão, lado a lado no mesmo arquivo.
 
+### Talentos e passivas: modificadores e gatilhos (Etapa B)
+
+Ninguém no combate pergunta "você tem o talento X?". Perguntam por **chaves**:
+
+```python
+m *= 1 + mod(u, "dano_corpo")              # Golpe Brutal (e qualquer fonte futura de dano corpo a corpo)
+disparar(self, j, "abate", alvo=c, tipo=tipo)   # Frenesi, Assassino, Coração Ardente...
+```
+
+`rpg/modificadores.py` junta as **fontes** de um combatente (a passiva da especialização e os talentos comprados) e
+responde. Cada talento declara `mods`, `mults` e `gatilhos` ao lado da própria definição em `rpg/talentos.py`.
+Itens ainda usam `especial()` (crítico, roubo de vida, espinhos) e entram como fonte numa etapa futura.
+
 O **Grimório** (`rpg/grimorio.py`) monta o livro a partir dessas descrições, e é também onde mora a conta de
 crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usam.
 
@@ -66,7 +79,8 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
 | `rpg/balanceamento.py` | todos os números de dificuldade e generosidade |
 | `rpg/classes.py` | classes, especializações, animais do Patrulheiro |
 | `rpg/habilidades.py` | habilidades (execução + descrição) |
-| `rpg/talentos.py` | árvores de talentos (os efeitos ainda estão espalhados: Etapa B) |
+| `rpg/talentos.py` | árvores de talentos e passivas de especialização, cada um declarando o próprio efeito |
+| `rpg/modificadores.py` | `mod`/`mult`/`disparar`: como talentos e passivas mudam o jogo (as chaves e eventos válidos) |
 | `rpg/inimigos.py`, `rpg/dados.py` | famílias de inimigos, biomas, climas, traços |
 | `rpg/itens.py` | consumíveis, equipamento, afixos, únicos |
 | `rpg/comitiva.py` | companheiros: valores, aprovação, conversas, combate |

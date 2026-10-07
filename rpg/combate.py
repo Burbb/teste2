@@ -6,6 +6,7 @@ from . import texto as tx
 from .classes import CLASSES
 from .habilidades import HABILIDADES, descricao_habilidade
 from .grimorio import chance_critico, mult_critico
+from .modificadores import disparar, mod, mult, nomes
 from .dados import TRACOS
 from .entidades import Combatente
 from .inimigos import HABS_INIMIGO, NOMES_HABS_INIMIGO, ROTULOS_HABS_INIMIGO
@@ -78,7 +79,7 @@ class Combate:
         self.titulo = titulo or "COMBATE"
         self.flechas_gastas = 0
         self.turno = 0
-        self.abertura = bool(self.j.tal("tiro_abertura"))
+        self.abertura = bool(mod(self.j, "abertura"))
         self.motivo_abertura = "Tiro de Abertura" if self.abertura else None
         self.usou_martirio = False
         self.usou_imortal = False
@@ -96,7 +97,7 @@ class Combate:
             g.ver_criatura(e.familia)
         c = self.j.companheiro
         if c and c["hp"] > 0 and not sozinho:
-            laco = 1 + 0.2 * self.j.tal("laco_animal")
+            laco = 1 + mod(self.j, "laco_animal")
             self.companheiro = Aliado(c["nome"], int(c["max_hp"] * laco), c["atk"] * laco, c["agi"], c["tipo"],
                                       c["alcance"], c["crit"])
             self.companheiro.hp = int(c["hp"] * laco)
@@ -223,9 +224,8 @@ class Combate:
         """Dano por turno de UMA camada de chamas. É pouco de propósito: o fogo do mago rende quando as
         camadas se acumulam (até 3) e a Combustão as detona de uma vez."""
         v = max(2, u.poder * bal.QUEIMADURA_POR_PODER)
-        if getattr(u, "spec", None) == "piromante":
-            v *= bal.QUEIMADURA_PIROMANTE
-        return v * (1 + bal.QUEIMADURA_BRASAS * u.tal("brasas"))
+        v *= mult(u, "queimadura_mult")
+        return v * (1 + mod(u, "queimadura_dano"))
 
     def camadas(self, alvo):
         ef = alvo.efeito("queimadura")
@@ -237,7 +237,7 @@ class Combate:
         return int(ef["v"]) * ef["t"] if ef else 0
 
     def duracao_queimadura(self, u):
-        return 3 + (1 if u.tal("brasas") else 0)
+        return 3 + mod(u, "queimadura_turnos")
 
     def invocar_aliado(self, nome, hp, atk, tipo="servo"):
         self.aliados.append(Aliado(nome, hp, atk, 3, tipo))
@@ -272,8 +272,9 @@ class Combate:
             m *= 1 + f["v"]
         if u.efeito("enfraquecido"):
             m *= 0.75
-        if u.jogador and u.spec == "berserker":
-            m *= 1 + 0.6 * (1 - u.hp / u.max_hp)
+        ferido = mod(u, "dano_ferido") if u.jogador else 0
+        if ferido:
+            m *= 1 + ferido * (1 - u.hp / u.max_hp)
         if not u.jogador and u not in self.aliados and self.g.noite:
             m *= bal.NOITE_INIMIGOS
         clima = self.g.clima
@@ -291,7 +292,7 @@ class Combate:
         if u.jogador and self.g.mestre_caca(getattr(alvo, "familia", None)):
             m *= 1.1
         if u.jogador:
-            m *= 1 + (0.06 * u.tal("golpe_brutal") if alcance == "corpo" else 0.08 * u.tal("mira_firme"))
+            m *= 1 + mod(u, "dano_corpo" if alcance == "corpo" else "dano_distancia")
 
         defesa = alvo.defesa * (0.6 if alvo.efeito("maldito") else 1.0)
         furtivo = u.efeito("furtivo")
@@ -319,11 +320,8 @@ class Combate:
             dano -= absorvido
             if barreira["v"] <= 0:
                 alvo.remover("barreira")
-        if alvo is self.j and dano >= alvo.hp and alvo.tal("imortal") and not self.usou_imortal:
-            self.usou_imortal = True
-            dano = alvo.hp - 1
-            alvo.aplicar("fortalecido", 3, 0.5)
-            self.dizer("Um golpe que deveria te matar... mas você se recusa a cair! (Imortal)", "vermelho+negrito")
+        if alvo is self.j and dano >= alvo.hp:
+            dano = disparar(self, alvo, "golpe_fatal", dano=dano, de=u)["dano"]  # Imortal...
         alvo.hp = max(0, alvo.hp - dano)
         telemetria.contabilizar_dano(self, u, alvo, dano, crit)
 
@@ -347,11 +345,11 @@ class Combate:
         else:
             self.ui.atualizar()
         if u is self.j and dano:
-            roubo = 0.05 * u.tal("sede_insaciavel") + u.especial("roubo_vida") / 100
+            roubo = mod(u, "roubo_vida") + u.especial("roubo_vida") / 100
             if roubo:
                 # arredonda (e pelo menos 1): truncar zerava o roubo dos golpes pequenos e a build parecia não funcionar
                 self.curou(u, u.curar(max(1, round(dano * roubo))), "roubo", fonte=alvo,
-                           rotulo="Sede Insaciável" if u.tal("sede_insaciavel") else "Roubo de vida")
+                           rotulo=(nomes(u, "roubo_vida") or ["Roubo de vida"])[0])
         if alvo is self.j and dano and alcance == "corpo" and u in self.inimigos and u.vivo and alvo.especial("espinhos"):
             espinhos = alvo.especial("espinhos")
             u.hp = max(0, u.hp - espinhos)
@@ -362,15 +360,7 @@ class Combate:
             if not u.vivo:
                 self.ao_morrer(u, por=alvo)
         if alvo is self.j and alvo.vivo:
-            if (alvo.tal("martirio") and not self.usou_martirio and alvo.hp < alvo.max_hp * 0.25):
-                self.usou_martirio = True
-                cura = alvo.curar(alvo.max_hp * 0.4)
-                self.curou(alvo, cura, rotulo="Martírio")
-                self.dizer(f"Seu sacrifício é visto. Uma luz desce e te restaura. (Martírio, +{cura} vida)",
-                           "amarelo+negrito")
-            if (alcance == "corpo" and alvo.tal("contra_ataque") and u in self.inimigos and u.vivo
-                    and self.rng.random() < 0.15 * alvo.tal("contra_ataque")):
-                self.atacar(alvo, u, 0.7, rotulo="Contra-ataque")
+            disparar(self, alvo, "golpe_recebido", de=u, alcance=alcance, dano=dano)  # Martírio, Contra-ataque...
         if alvo is self.j and dano:
             sobrevivencia.talvez_ferir(self.g, dano, tipo, crit, u)
         if not alvo.vivo:
@@ -429,35 +419,12 @@ class Combate:
             f"{c.nome} solta um último grito gorgolejante.",
         ]), "verde+negrito")
         j = self.j
-        if j.spec == "necromante":
-            antes = j.rec
-            j.rec = min(j.max_rec, j.rec + 5)
-            self.recuperou(j, j.rec - antes, "Colheita")
-        if j.tal("senhor_mortos") and len(self.mortos) == 1 and not c.chefe:
-            self.dizer(f"{c.nome} se ergue de novo — agora sob o seu comando!", "magenta")
-            self.invocar_aliado(f"{c.nome} (servo)", hp=int(c.max_hp * 0.4), atk=c.atk * 0.5)
+        disparar(self, j, "morte", alvo=c, por=por, tipo=tipo)  # Colheita, Rei dos Mortos...
         if por is not j:
             return
         if j.especial("vida_abate"):
             j.curar(j.especial("vida_abate"))
-        if j.tal("frenesi"):
-            self.frenesi = min(3, self.frenesi + 1)
-            j.aplicar("fortalecido", 99, 0)
-            j.efeitos["fortalecido"]["v"] = 0.1 * j.tal("frenesi") * self.frenesi
-            self.dizer(f"O sangue ferve: Frenesi x{self.frenesi}!", "vermelho")
-        if j.tal("assassino"):
-            antes = j.rec
-            j.rec = min(j.max_rec, j.rec + j.max_rec // 2)
-            self.recuperou(j, j.rec - antes)
-            j.aplicar("furtivo", 2, 1)
-            self.dizer("Você some antes que o corpo toque o chão. (Assassino)", "magenta")
-        if tipo == "fogo" and j.tal("coracao_ardente") and not self.explodindo:
-            self.explodindo = True
-            self.dizer(f"{c.nome} explode em chamas!", "vermelho+negrito")
-            for outro in self.inimigos_vivos():
-                self.atacar(j, outro, 0.6, tipo="fogo", alcance="distancia", stat="poder", pode_esquivar=False,
-                            rotulo="Explosão")
-            self.explodindo = False
+        disparar(self, j, "abate", alvo=c, tipo=tipo)  # Frenesi, Assassino, Coração Ardente...
 
     # ------------------------------------------------------------ fluxo
     def executar(self):
@@ -486,14 +453,7 @@ class Combate:
             pular_inimigos = True
             self.abertura = True
             self.motivo_abertura = "Iniciativa"
-        if self.j.tal("aura_protecao"):
-            self.j.aplicar("barreira", 99, int(self.j.poder * 2.5))
-            self.dizer(f"Uma aura dourada te envolve. (barreira de {int(self.j.poder * 2.5)})", "amarelo")
-        if self.j.tal("armadilheiro"):
-            alvo = self.rng.choice(self.inimigos_vivos())
-            self.dizer(f"{alvo.nome} pisa numa das suas armadilhas!", "verde")
-            self.aplicar(alvo, "atordoado", 1, rotulo="preso na armadilha")
-            self.aplicar(alvo, "sangramento", 3, valor=max(2, self.j.atk * 0.3))
+        disparar(self, self.j, "inicio_combate")  # Aura de Proteção, Armadilheiro...
 
         while True:
             self.turno += 1
@@ -656,8 +616,8 @@ class Combate:
                 nome, alcance, mult = "Adaga", "corpo", 0.6
         with self.agindo(j, nome, alvo, hab="ataque"):
             dano = self.atacar(j, alvo, mult, tipo=tipo, alcance=alcance, stat=stat, rotulo=nome)
-            if dano and j.tal("laminas_envenenadas"):
-                self.aplicar(alvo, "veneno", 3, valor=max(2, j.atk * 0.35), chance=0.2 * j.tal("laminas_envenenadas"))
+            if dano:
+                disparar(self, j, "ataque_basico", alvo=alvo)  # Pontas Venenosas...
             if dano and j.rec < j.max_rec:
                 ganho = min(j.max_rec - j.rec, max(bal.ATAQUE_RECURSO_MIN, round(j.max_rec * bal.ATAQUE_RECURSO)))
                 j.rec += ganho
@@ -889,7 +849,7 @@ class Combate:
                 with self.agindo(a):
                     comitiva.agir(self, a)
                 continue
-            ataques = 2 if a is self.companheiro and self.j.tal("matilha") else 1
+            ataques = 1 + mod(self.j, "ataques_fera") if a is self.companheiro else 1
             for _ in range(ataques):
                 if not self.inimigos_vivos():
                     break
@@ -971,7 +931,7 @@ class Combate:
         if resultado == "vitoria" and any(e.chefe for e in self.inimigos):
             comitiva.reagir(g, "coragem", forca=0.75)
         if self.companheiro:
-            laco = 1 + 0.2 * j.tal("laco_animal")
+            laco = 1 + mod(j, "laco_animal")
             j.companheiro["hp"] = min(j.companheiro["max_hp"], int(self.companheiro.hp / laco))
             if not self.companheiro.vivo:
                 self.dizer(f"{self.companheiro.nome} está ferido demais para lutar até você descansar.", "cinza")
@@ -981,7 +941,7 @@ class Combate:
         else:
             j.rec = min(j.max_rec, j.rec + int(j.max_rec * bal.MANA_POS_LUTA))
         if j.classe == "arqueiro" and self.flechas_gastas and resultado == "vitoria":
-            chance = bal.RECOLHER_FLECHA + bal.RECOLHER_FLECHA_TALENTO * j.tal("aljava_funda")
+            chance = bal.RECOLHER_FLECHA + mod(j, "recolher_flecha")
             recuperadas = sum(1 for _ in range(self.flechas_gastas) if self.rng.random() < chance)
             recuperadas = min(recuperadas, self.g.max_flechas() - j.flechas)
             if recuperadas > 0:

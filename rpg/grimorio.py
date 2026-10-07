@@ -8,6 +8,7 @@ fora, porque mudam a cada luta; o livro diz isso em vez de esconder.
 from . import balanceamento as bal
 from .classes import CLASSES
 from .habilidades import HABILIDADES, crit_extra
+from .modificadores import mod, mult, nomes
 
 NOME_STAT = {"atk": "Ataque", "poder": "Poder", "agi": "Agilidade", "max_hp": "Vida máx."}
 ELEMENTO = {"fisico": "físico", "fogo": "fogo", "gelo": "gelo", "sagrado": "sagrado", "sombra": "sombra",
@@ -27,9 +28,9 @@ def fontes_critico(j):
     e críticos garantidos."""
     linhas = [f"{HABILIDADES[h]['nome']}: {round(chance_critico(j, crit_extra(HABILIDADES[h])) * 100)}% de chance."
               for h in j.habilidades if crit_extra(HABILIDADES[h])]
-    if j.tal("tiro_abertura"):
-        linhas.append("Tiro de Abertura: o primeiro ataque de cada luta é sempre crítico.")
-    if "desaparecer" in j.habilidades or j.tal("assassino"):
+    if mod(j, "abertura"):
+        linhas.append(f"{', '.join(nomes(j, 'abertura'))}: o primeiro ataque de cada luta é sempre crítico.")
+    if "desaparecer" in j.habilidades or mod(j, "furtivo_ao_abater"):
         linhas.append("Furtivo (Desaparecer, Assassino): o próximo ataque é crítico garantido.")
     linhas.append("Pegar o inimigo de surpresa: o primeiro golpe é crítico.")
     return linhas
@@ -37,20 +38,19 @@ def fontes_critico(j):
 
 def chance_critico(u, extra=0.0):
     """A chance de crítico de um golpe. A conta única: o combate, a ficha e o Grimório usam esta."""
-    return min(bal.MAX_CRITICO, bal.CRITICO_BASE + u.agi * bal.CRITICO_POR_AGI + extra + 0.04 * u.tal("olho_aguia")
+    return min(bal.MAX_CRITICO, bal.CRITICO_BASE + u.agi * bal.CRITICO_POR_AGI + extra + mod(u, "critico")
                + u.especial("critico") / 100)
 
 
 def mult_critico(u, furtivo=False):
     """Quanto o crítico multiplica (furtivo: o golpe das sombras, mais forte)."""
-    return (2.3 if furtivo else 1.6) + 0.2 * u.tal("golpe_sombras")
+    return (2.3 if furtivo else 1.6) + mod(u, "mult_critico")
 
 
 def mult_talentos(u, alcance):
-    """O que os talentos de dano somam a todo golpe desse alcance (Golpe Brutal no corpo a corpo, Mira Firme à distância)."""
-    if alcance == "corpo":
-        return 1 + 0.06 * u.tal("golpe_brutal"), "Golpe Brutal" if u.tal("golpe_brutal") else None
-    return 1 + 0.08 * u.tal("mira_firme"), "Mira Firme" if u.tal("mira_firme") else None
+    """O que os modificadores de dano somam a todo golpe desse alcance, e quem são eles (Golpe Brutal, Mira Firme...)."""
+    chave = "dano_corpo" if alcance == "corpo" else "dano_distancia"
+    return 1 + mod(u, chave), ", ".join(nomes(u, chave)) or None
 
 
 def golpe(u, mult, stat="atk", alcance="corpo", tipo="fisico", bonus=0.0, bonus_txt=None, crit_extra=0.0, rotulo="Dano",
@@ -86,10 +86,10 @@ def _queimadura(u, chance):
     v = Combate.valor_queimadura(None, u)
     t = Combate.duracao_queimadura(None, u)
     origem = [f"Poder × {_pct(bal.QUEIMADURA_POR_PODER)}"]
-    if u.spec == "piromante":
-        origem.append(f"+{_pct(bal.QUEIMADURA_PIROMANTE - 1)} piromante")
-    if u.tal("brasas"):
-        origem.append(f"+{_pct(bal.QUEIMADURA_BRASAS * u.tal('brasas'))} Brasas Eternas")
+    if mult(u, "queimadura_mult") != 1:
+        origem.append(f"+{_pct(mult(u, 'queimadura_mult') - 1)} {', '.join(nomes(u, 'queimadura_mult'))}")
+    if mod(u, "queimadura_dano"):
+        origem.append(f"+{_pct(mod(u, 'queimadura_dano'))} {', '.join(nomes(u, 'queimadura_dano'))}")
     return efeito(f"{_pct(chance)} de chance de acender: {_num(v)} de fogo por turno, {t} turnos, acumula até "
                   f"{bal.MAX_CHAMAS} camadas ({', '.join(origem)}).")
 
@@ -124,12 +124,13 @@ def dados(j):
     if tal_dist > 1:
         gerais.append(f"Talentos: à distância ×{_num(tal_dist)}.")
     gerais += [f"Crítico a mais — {l}" for l in fontes_critico(j)[:-1]]
-    roubo_tal, roubo_itens = 5 * j.tal("sede_insaciavel"), j.especial("roubo_vida")
+    roubo_tal, roubo_itens = 100 * mod(j, "roubo_vida"), j.especial("roubo_vida")
     if roubo_tal or roubo_itens:
-        partes = ([f"Sede Insaciável {_num(roubo_tal)}%"] if roubo_tal else []) + ([f"itens {_num(roubo_itens)}%"] if roubo_itens else [])
+        partes = ([f"{', '.join(nomes(j, 'roubo_vida'))} {_num(roubo_tal)}%"] if roubo_tal else []) + ([f"itens {_num(roubo_itens)}%"] if roubo_itens else [])
         gerais.append(f"Roubo de vida: {_num(roubo_tal + roubo_itens)}% de todo dano que você causa volta como vida "
                       f"({' + '.join(partes)}).")
-    if j.spec == "berserker":
-        gerais.append("Pacto de Sangue: até +60% de dano quanto mais ferido você estiver.")
+    from .talentos import PASSIVAS
+    if j.spec in PASSIVAS:
+        gerais.append(f"Passiva — {PASSIVAS[j.spec]['nome']}: {PASSIVAS[j.spec]['desc']}")
     return {"recurso": j.nome_recurso, "basico": basico, "habilidades": habs, "gerais": gerais,
             "atributos": {"Ataque": j.atk, "Poder": j.poder, "Agilidade": j.agi}}

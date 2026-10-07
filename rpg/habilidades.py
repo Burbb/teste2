@@ -27,6 +27,7 @@ para o gabarito de regressão continuar idêntico quando nada de jogo mudou.
 """
 
 from . import balanceamento as bal
+from .modificadores import mod, mult
 
 NOME_STAT = {"atk": "Ataque", "poder": "Poder", "agi": "Agilidade", "max_hp": "Vida máx.", "defesa": "Defesa"}
 
@@ -56,14 +57,15 @@ class Escala:
         return " + ".join(f"{NOME_STAT.get(k, k)} × {_pct(f)}" for k, f in self.fatores.items())
 
 
-class Tal:
-    """Base + um tanto por ponto de talento (ex.: Erguer Escudo dura 2 turnos + 1 por ponto de Muralha)."""
+class Mod:
+    """Base + o que os modificadores somam nessa chave (ex.: Erguer Escudo dura 2 turnos + "escudo_turnos",
+    que a Muralha aumenta). Quem aumenta é declarado no talento, não aqui."""
 
-    def __init__(self, base, talento, por_ponto):
-        self.base, self.talento, self.por = base, talento, por_ponto
+    def __init__(self, base, chave):
+        self.base, self.chave = base, chave
 
     def valor(self, u):
-        return self.base + self.por * u.tal(self.talento)
+        return self.base + mod(u, self.chave)
 
 
 def valor(x, u):
@@ -230,11 +232,11 @@ class Buff:
 class Acender:
     """Queimadura do mago: duração e valor vêm do combate (Poder, piromante, Brasas); acumula em camadas."""
 
-    def __init__(self, chance, chance_talento=None):
-        self.chance, self.chance_talento = chance, chance_talento
+    def __init__(self, chance, garantido=None):
+        self.chance, self.garantido = chance, garantido  # garantido: chave de modificador que torna certo
 
     def _chance(self, u):
-        return 1.0 if self.chance_talento and u.tal(self.chance_talento) else self.chance
+        return 1.0 if self.garantido and mod(u, self.garantido) else self.chance
 
     def executar(self, ctx):
         cb, u = ctx.cb, ctx.u
@@ -262,13 +264,14 @@ class Roubo:
 
 
 class CurarPeloDano:
-    """Cura uma fração do dano causado (sem o sangue na tela: é luz, não roubo). `talento`: (id, +x por ponto)."""
+    """Cura uma fração do dano causado (sem o sangue na tela: é luz, não roubo). `bonus`: chave de modificador
+    que aumenta a cura (+x)."""
 
-    def __init__(self, fracao, talento=None):
-        self.fracao, self.talento = fracao, talento
+    def __init__(self, fracao, bonus=None):
+        self.fracao, self.bonus = fracao, bonus
 
     def _fator(self, u):
-        return 1 + self.talento[1] * u.tal(self.talento[0]) if self.talento else None
+        return 1 + mod(u, self.bonus) if self.bonus else None
 
     def executar(self, ctx):
         u, f = ctx.u, self._fator(ctx.u)
@@ -280,14 +283,14 @@ class CurarPeloDano:
 
 
 class Curar:
-    """Cura um valor (uma Escala sobre o herói), com bônus de talento opcional: (id, +x por ponto)."""
+    """Cura um valor (uma Escala sobre o herói); `bonus`: chave de modificador que aumenta a cura (+x)."""
 
-    def __init__(self, quanto, talento=None):
-        self.quanto, self.talento = quanto, talento
+    def __init__(self, quanto, bonus=None):
+        self.quanto, self.bonus = quanto, bonus
 
     def _valor(self, u):
         v = valor(self.quanto, u)
-        return v * (1 + self.talento[1] * u.tal(self.talento[0])) if self.talento else v
+        return v * (1 + mod(u, self.bonus)) if self.bonus else v
 
     def executar(self, ctx):
         ctx.cura = ctx.u.curar(self._valor(ctx.u))
@@ -517,13 +520,13 @@ def _meditar(cb, u, alvo):
 
 
 def _valor_barreira(u):
-    return int((u.max_hp * 0.15 + u.poder * 0.2) * (1.3 if u.tal("escudo_reflexo") else 1))
+    return int((u.max_hp * 0.15 + u.poder * 0.2) * mult(u, "barreira_mult"))
 
 
 def _barreira(cb, u, alvo):
     v = _valor_barreira(u)
     u.remover("barreira")  # não acumula
-    u.aplicar("barreira", 2 + u.tal("escudo_reflexo"), v)
+    u.aplicar("barreira", 2 + mod(u, "barreira_turnos"), v)
     cb.dizer(f"Runas brilhantes giram ao seu redor. (absorve {v} de dano)", "azul")
 
 
@@ -558,12 +561,12 @@ def _linhas_combustao(u):
 
 
 def _vida_servo(u):
-    return (u.poder * 1.2 + 8) * (1 + 0.15 * u.tal("pacto_sombrio"))
+    return (u.poder * 1.2 + 8) * (1 + mod(u, "servo_vida"))
 
 
 def _erguer_servo(cb, u, alvo):
     servos = [a for a in cb.aliados if getattr(a, "tipo", "") == "servo" and a.vivo]
-    maximo = 1 + u.tal("exercito")
+    maximo = 1 + mod(u, "servos_max")
     if len(servos) >= maximo:
         cb.dizer("Você não consegue controlar mais servos. O esforço se perde no ar.", "cinza")
         return
@@ -580,7 +583,7 @@ HABILIDADES = {
     "golpe_pesado": hab("Golpe Pesado", 10, "inimigo", "170% de dano físico.",
                         [Dano(1.7, rotulo="Golpe Pesado")]),
     "erguer_escudo": hab("Erguer Escudo", 8, "proprio", "Reduz o dano recebido pela metade por 2 turnos.", [
-        Buff("guarda", Tal(2, "muralha", 1), 0.5),
+        Buff("guarda", Mod(2, "escudo_turnos"), 0.5),
         Dizer("Você ergue o escudo e firma os pés. (dano recebido -50% por {turnos} turnos)", "ciano")]),
     "investida": hab("Investida", 12, "inimigo", "120% de dano, 45% de chance de atordoar.", [
         Dano(1.2, rotulo="Investida", depois=[Se("acertou", Aplicar("atordoado", 1, chance=0.45))])]),
@@ -590,10 +593,10 @@ HABILIDADES = {
         Aplicar("enfraquecido", 2, chance=0.8, em="todos")]),
     "golpe_sagrado": hab("Golpe Sagrado", 15, "inimigo", "Dano sagrado que cura você em 35% do dano.", [
         Dano(1.3, tipo="sagrado", bonus=Escala(poder=0.8), rotulo="Golpe Sagrado", depois=[
-            Se("acertou", CurarPeloDano(0.35, talento=("luz_curativa", 0.25)),
+            Se("acertou", CurarPeloDano(0.35, bonus="cura_luz"),
                Dizer("A luz fecha suas feridas. (+{cura} vida)", "verde", se="cura"))])]),
     "prece": hab("Prece", 20, "proprio", "Cura 30% da vida + poder e remove males.", [
-        Curar(Escala(max_hp=0.3, poder=1.5), talento=("luz_curativa", 0.25)),
+        Curar(Escala(max_hp=0.3, poder=1.5), bonus="cura_luz"),
         LimparMales(),
         Dizer("Você reza em voz baixa. Uma luz quente te envolve. (+{cura} vida, males removidos)", "verde")]),
     "julgamento": hab("Julgamento Divino", 28, "todos", "Luz sagrada atinge todos os inimigos.", [
@@ -644,7 +647,7 @@ HABILIDADES = {
     "bola_fogo": hab("Bola de Fogo", 14, "inimigo",
                      "150% de dano de fogo; costuma acender o alvo (as chamas acumulam até 3 camadas).", [
                          Dano(1.5, tipo="fogo", alcance="distancia", stat="poder", rotulo="Bola de Fogo", depois=[
-                             Se("acertou", Acender(0.6, chance_talento="ignicao"))])]),
+                             Se("acertou", Acender(0.6, garantido="acender_garantido"))])]),
     "meditar": hab("Meditar", 0, "proprio", "Recupera mana (6 + 12% do máximo).", fn=_meditar,
                    linhas=lambda u: [_efeito(f"Recupera {ganho_meditar(u)} de mana (6 + 12% do máximo). Gasta o turno.")],
                    desc_fn=lambda u: f"Recupera {ganho_meditar(u)} de mana (6 + 12% do máximo). Não custa nada, mas gasta o turno."),
@@ -653,7 +656,7 @@ HABILIDADES = {
             Se("acertou", Aplicar("atordoado", 1, chance=0.35, rotulo="congelado"))])]),
     "barreira": hab("Barreira Arcana", 20, "proprio", "Escudo que absorve dano por 2 turnos (não acumula).",
                     fn=_barreira,
-                    linhas=lambda u: [_efeito(f"Absorve {_valor_barreira(u)} de dano por {2 + u.tal('escudo_reflexo')} "
+                    linhas=lambda u: [_efeito(f"Absorve {_valor_barreira(u)} de dano por {2 + mod(u, 'barreira_turnos')} "
                                               "turnos (15% da vida máxima + Poder × 20%). Não acumula.")]),
     "inferno": hab("Inferno", 35, "todos", "60% de dano de fogo em todos (pode errar); pode acender cada um.", [
         Dizer("O chão se abre em chamas sob seus inimigos!", "vermelho+negrito"),
@@ -668,13 +671,13 @@ HABILIDADES = {
         Dizer("O fogo renova sua carne. (+{cura} vida)", "verde", se="cura")]),
     "drenar_vida": hab("Drenar Vida", 14, "inimigo", "Dano sombrio que cura 40% do causado.", [
         Dano(1.2, tipo="sombra", alcance="distancia", stat="poder", rotulo="Drenar Vida", depois=[
-            Se("acertou", Roubo(Tal(0.4, "pacto_sombrio", 0.1), rotulo="Drenar Vida"),
+            Se("acertou", Roubo(Mod(0.4, "dreno_cura"), rotulo="Drenar Vida"),
                Dizer("A vitalidade roubada flui para você. (+{cura} vida)", "verde", se="cura"))])]),
     "erguer_servo": hab("Erguer Servo", 22, "proprio", "Invoca um esqueleto aliado (máx. 1, mais com talentos).",
                         fn=_erguer_servo,
                         linhas=lambda u: [_efeito(f"Invoca um servo com {int(_vida_servo(u))} de vida e "
                                                   f"{int(u.poder * 0.3) + 2} de ataque (no máximo "
-                                                  f"{1 + u.tal('exercito')} ao mesmo tempo).")]),
+                                                  f"{1 + mod(u, 'servos_max')} ao mesmo tempo).")]),
     "maldicao": hab("Maldição", 18, "todos", "Amaldiçoa todos: dano contínuo e -40% de defesa.", [
         Aplicar("maldito", 4, valor=Escala(minimo=3, poder=0.4), em="todos"),
         Dizer("Você pronuncia palavras que não deveriam existir. Seus inimigos murcham.", "magenta")]),
