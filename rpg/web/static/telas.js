@@ -301,17 +301,17 @@ const Telas = (() => {
     const espacos = Object.keys(AREA).map((s) => {
       const it = p.equip[s];
       const conteudo = it ? S(iconeItem(it), 2) : S(VAZIO[s], 2, "fantasma");
-      const extra = it ? `draggable="true" ${dicaItem(it, "Arraste para a mochila ou dê dois cliques para tirar.", false)}` : `title="${NOME_ESPACO[s]} (vazio)"`;
+      const extra = it ? `draggable="true" ${dicaItem(it, "Arraste para a mochila, dê dois cliques ou use o botão direito para tirar.", false)}` : `title="${NOME_ESPACO[s]} (vazio)"`;
       return `<div class="espaco slot-px ${it ? "r-" + h(it.raridade) : "vazio"}" data-espaco="${s}" style="grid-area:${AREA[s]}" ${extra}>${conteudo}<span class="espaco-nome">${NOME_ESPACO[s]}</span></div>`;
     }).join("");
     const celulas = [];
     for (let i = 0; i < limite; i++) {
       const it = p.mochila[i];
       celulas.push(it
-        ? `<div class="slot-px celula r-${h(it.raridade)}${it.classe && it.classe !== p.classe ? " inutil" : ""}" draggable="true" data-mochila="${i}" ${dicaItem(it, "Arraste para o corpo ou dê dois cliques para equipar.")}>${S(iconeItem(it), 2)}</div>`
+        ? `<div class="slot-px celula r-${h(it.raridade)}${it.classe && it.classe !== p.classe ? " inutil" : ""}" draggable="true" data-mochila="${i}" ${dicaItem(it, "Arraste para o corpo, dê dois cliques ou use o botão direito para equipar.")}>${S(iconeItem(it), 2)}</div>`
         : '<div class="slot-px celula vazia"></div>');
     }
-    const bolsa = p.bolsa.map((b) => `<div class="slot-px clicavel" data-usar="${h(b.id)}" ${dica(`<b>${h(b.nome)}</b><div>${Realce.texto(b.desc)}</div>${b.id === "tocha" ? "" : '<div class="rodape">Clique para usar.</div>'}`)}>${S(ICONE_ITEM[b.id] || "pocao", 2)}<span class="qtd">${b.qtd}</span></div>`).join("");
+    const bolsa = p.bolsa.map((b) => `<div class="slot-px clicavel" data-usar="${h(b.id)}" ${dica(`<b>${h(b.nome)}</b><div>${Realce.texto(b.desc)}</div>${b.id === "tocha" ? "" : '<div class="rodape">Clique para usar · botão direito: usar em você.</div>'}`)}>${S(ICONE_ITEM[b.id] || "pocao", 2)}<span class="qtd">${b.qtd}</span></div>`).join("");
     return `<div class="tela inventario">
       <div class="boneco">${espacos}<div class="boneco-retrato">${S(p.classe, 6)}</div></div>
       <div class="inv-lado">
@@ -320,7 +320,7 @@ const Telas = (() => {
         <h4>Mochila <small>${p.mochila.length}/${limite}</small></h4>
         <div class="mochila-grade">${celulas.join("")}<div class="slot-px lixeira" title="Arraste um item aqui para largar">${S("caveira", 2, "fantasma")}<span class="espaco-nome">Largar</span></div></div>
         <h4>Bolsa</h4><div class="slots">${bolsa || '<span class="vazio">vazia</span>'}</div>
-        <div class="dica-uso">Arraste itens entre a mochila e o corpo. Dois cliques também funcionam. Passe o mouse para comparar.</div>
+        <div class="dica-uso">Arraste itens entre a mochila e o corpo. Dois cliques ou o botão direito também funcionam. Passe o mouse para comparar.</div>
       </div></div>`;
   }
 
@@ -365,6 +365,7 @@ const Telas = (() => {
       aceitar(alvo, (a) => a.de === "mochila" && (ESPACOS[heroi.mochila[a.i].slot] || []).includes(alvo.dataset.espaco));
       alvo.addEventListener("drop", (ev) => { ev.preventDefault(); const a = arrastando; limpar(); App.acao({ equipar: a.i, destino: alvo.dataset.espaco }, "equipar"); });
       alvo.addEventListener("dblclick", () => { if (heroi.equip[alvo.dataset.espaco]) App.acao({ tirar: alvo.dataset.espaco }, "equipar"); });
+      alvo.addEventListener("contextmenu", (ev) => { ev.preventDefault(); if (heroi.equip[alvo.dataset.espaco]) App.acao({ tirar: alvo.dataset.espaco }, "equipar"); });
     });
     const grade = raiz.querySelector(".mochila-grade");
     aceitar(grade, (a) => a.de === "espaco");
@@ -376,11 +377,21 @@ const Telas = (() => {
       const a = arrastando; limpar();
       if (a && a.de === "mochila" && window.confirm(`Largar ${heroi.mochila[a.i].nome}? Não há volta.`)) App.acao({ largar: a.i });
     });
-    raiz.querySelectorAll("[data-mochila]").forEach((el) => el.addEventListener("dblclick", () => App.acao({ equipar: Number(el.dataset.mochila) }, "equipar")));
+    raiz.querySelectorAll("[data-mochila]").forEach((el) => {
+      el.addEventListener("dblclick", () => App.acao({ equipar: Number(el.dataset.mochila) }, "equipar"));
+      el.addEventListener("contextmenu", (ev) => { ev.preventDefault(); App.acao({ equipar: Number(el.dataset.mochila) }, "equipar"); });
+    });
     raiz.querySelectorAll("[data-usar]").forEach((el) => el.addEventListener("click", (ev) => {
       ev.stopPropagation();
       const b = (App.estado.heroi.bolsa || []).find((x) => x.id === el.dataset.usar);
       if (b && b.alvos && b.alvos.length) { menuUso(el, b); return; }
+      if (b && b.motivo) { App.som("falha"); App.avisar(b.motivo, el); return; }
+      App.acao({ usar: el.dataset.usar }, "item");
+    }));
+    // Botão direito num consumível: usa em você, sem o menu de "em quem".
+    raiz.querySelectorAll("[data-usar]").forEach((el) => el.addEventListener("contextmenu", (ev) => {
+      ev.preventDefault();
+      const b = (App.estado.heroi.bolsa || []).find((x) => x.id === el.dataset.usar);
       if (b && b.motivo) { App.som("falha"); App.avisar(b.motivo, el); return; }
       App.acao({ usar: el.dataset.usar }, "item");
     }));
@@ -503,7 +514,7 @@ const Telas = (() => {
         <span class="slot-px r-${h(it.raridade)}">${S(iconeItem(it), 2)}</span>
         <span class="merc-nome r-${h(it.raridade)}">${h(it.nome)}</span><span class="merc-bonus">${h(it.bonus)}</span><span class="preco">${S("moeda", 1)}${it.preco}</span></button>`;
     }).join("");
-    const mochila = d.mochila.map((it, i) => `<div role="button" tabindex="0" class="slot-px celula r-${h(it.raridade)}${it.usavel ? "" : " inutil"}" draggable="true" data-mochila-loja="${i}" ${dicaItem(it, "Clique para equipar ou vender.")}>${S(iconeItem(it), 2)}</div>`);
+    const mochila = d.mochila.map((it, i) => `<div role="button" tabindex="0" class="slot-px celula r-${h(it.raridade)}${it.usavel ? "" : " inutil"}" draggable="true" data-mochila-loja="${i}" ${dicaItem(it, "Clique para equipar ou vender · botão direito: vender na hora.")}>${S(iconeItem(it), 2)}</div>`);
     for (let i = d.mochila.length; i < d.limite; i++) mochila.push('<div class="slot-px celula vazia"></div>');
     return `<div class="tela loja">
       <div class="loja-topo">${S("saco", 3)}<div><b>O mercador</b><span class="lore">"Tudo tem preço. Até você."</span></div>
@@ -512,7 +523,7 @@ const Telas = (() => {
         <h4>Suprimentos</h4><div class="vitrine">${cons}</div>
         <h4>Equipamentos</h4><div class="vitrine">${equips || '<span class="vazio">Nada que preste hoje. Volte em alguns dias.</span>'}</div>
       </div>
-      <h4>Sua mochila <small>${d.ocupado}/${d.limite} · clique num item para equipar ou vender (o mercador paga metade)</small></h4>
+      <h4>Sua mochila <small>${d.ocupado}/${d.limite} · clique num item para equipar ou vender; botão direito vende na hora (o mercador paga metade)</small></h4>
       <div class="mochila-grade mochila-loja">${mochila.join("")}</div></div>`;
   }
 
@@ -631,13 +642,15 @@ const Telas = (() => {
       const it = dados && dados.mochila[i];
       el.addEventListener("click", (ev) => { ev.stopPropagation(); if (it) menuItem(el, it, i); });
       el.addEventListener("keydown", (ev) => { if (ev.key === "Enter" && it) menuItem(el, it, i); });
+      // Botão direito vende na hora, sem abrir o menu (o tilintar vem do ouro recebido: um som só).
+      el.addEventListener("contextmenu", (ev) => { ev.preventDefault(); fecharMenuItem(); esconderDica(); if (it) App.acao({ vender: i }); });
       el.addEventListener("dragstart", (ev) => { esconderDica(); fecharMenuItem(); vendendo = i; ev.dataTransfer.setData("text/plain", "item"); balcao.classList.add("alvo"); });
       el.addEventListener("dragend", () => { balcao.classList.remove("alvo"); setTimeout(() => { vendendo = null; }, 0); });
     });
     balcao.addEventListener("dragover", (ev) => { if (vendendo !== null) ev.preventDefault(); });
     balcao.addEventListener("drop", (ev) => {
       ev.preventDefault(); balcao.classList.remove("alvo");
-      if (vendendo !== null) App.acao({ vender: vendendo }, "moeda");
+      if (vendendo !== null) App.acao({ vender: vendendo });  // um som só: o do ouro recebido
       vendendo = null;
     });
   }
@@ -923,7 +936,19 @@ const Telas = (() => {
   function voarParaEspaco(d) {
     const alvo = document.querySelector(`#heroi [data-mini="${d.espaco}"]`);
     if (!alvo) return Promise.resolve();
-    const origem = App.ultimoClique && performance.now() - App.ultimoClique.t < 4000 ? App.ultimoClique : { x: innerWidth / 2, y: innerHeight / 2 };
+    let origem = App.ultimoClique && performance.now() - App.ultimoClique.t < 4000 ? App.ultimoClique : { x: innerWidth / 2, y: innerHeight / 2 };
+    if (d.achado) {
+      // Item encontrado: o novo vira "Vestido", o antigo vai para a mochila, e o ícone voa do próprio cartão.
+      const telas = document.querySelectorAll("#texto .tela.achado");
+      const tela = telas[telas.length - 1];
+      if (tela) {
+        const novo = tela.querySelector(".achado-cartao.novo"), velho = tela.querySelector(".achado-cartao.atual");
+        if (novo) { novo.classList.add("vestido"); const selo = novo.querySelector(".achado-selo"); if (selo) selo.textContent = "Vestido"; }
+        if (velho) { velho.classList.add("guardado"); const selo = velho.querySelector(".achado-selo"); if (selo) selo.textContent = "Foi para a mochila"; }
+        const arte = novo && novo.querySelector(".achado-arte");
+        if (arte) { const a = arte.getBoundingClientRect(); if (a.width) origem = { x: a.left + a.width / 2, y: a.top + a.height / 2 }; }
+      }
+    }
     const r = alvo.getBoundingClientRect();
     const voo = document.createElement("div");
     voo.className = "voo-item";

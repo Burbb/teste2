@@ -133,3 +133,9 @@
 .voo-item { position: fixed; z-index: 80; width: 48px; height: 48px; display: grid; place-items: center; pointer-events: none; filter: drop-shadow(0 0 8px rgba(242, 201, 76, 0.8)); }
 .slot-px.recebeu { animation: recebeu .9s ease-out; }
 @keyframes recebeu { 0% { box-shadow: 0 0 0 2px #fff3a0, 0 0 18px rgba(242, 201, 76, 0.9); transform: scale(1.18); } 100% { box-shadow: none; transform: none; } }
+/* Trocou pelo item encontrado: o novo ganha o selo "Vestido" e um brilho curto; o antigo se apaga a caminho da mochila. */
+.achado-cartao { transition: opacity .45s ease, filter .45s ease, transform .45s ease; }
+.achado-cartao.atual.guardado { opacity: .5; filter: grayscale(.6); transform: scale(.96); }
+.achado-cartao.novo.vestido { animation: vestido .9s ease-out; }
+.achado-cartao.novo.vestido .achado-selo { color: var(--bom); }
+@keyframes vestido { 0% { box-shadow: 0 0 0 2px #000, 0 0 0 0 rgba(143, 191, 106, .0); } 35% { box-shadow: 0 0 0 2px #000, 0 0 26px 6px rgba(143, 191, 106, .55); } 100% { box-shadow: 0 0 0 2px #000, 0 0 0 0 rgba(143, 191, 106, 0); } }

@@ -188,6 +188,13 @@ async function cenarioVila(browser) {
     await (await page.$('[data-comprar="tocha"] [data-q="-1"]')).click();
     await page.waitForTimeout(300);
     conferir((await qtd()) === parado - 1, "o − desce a quantidade");
+    // Botão direito num item da mochila vende na hora (sem menu) e não sai do mercado.
+    const ouro = () => page.evaluate(() => App.estado.heroi.ouro);
+    const antesVenda = await ouro();
+    await (await page.$("[data-mochila-loja]")).click({ button: "right" });
+    for (let k = 0; k < 30 && (await ouro()) === antesVenda; k++) await page.waitForTimeout(100);
+    conferir((await ouro()) > antesVenda && !(await page.$(".menu-item")), "botão direito vende o item da mochila na hora");
+    conferir(!!(await esperar("[data-comprar]")), "o botão direito não tira você do mercado");
   } finally {
     conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
     await page.close();

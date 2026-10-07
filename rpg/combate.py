@@ -22,6 +22,7 @@ NOMES_EFEITOS = {
     "veneno": "envenenado", "sangramento": "sangrando", "queimadura": "em chamas", "atordoado": "atordoado",
     "enfraquecido": "enfraquecido", "maldito": "amaldiçoado", "marcado": "marcado", "guarda": "em guarda",
     "fortalecido": "fortalecido", "esquiva": "esquivo", "barreira": "com barreira", "furtivo": "furtivo",
+    "provocando": "provocando",
 }
 USAVEIS_EM_COMBATE = ("pocao_vida", "tonico", "antidoto", "bandagem", "bomba_fumaca")
 
@@ -746,7 +747,8 @@ class Combate:
         j = self.j
         usaveis, armas = self.itens_da_luta()
         metas = [{"usar_item": k, "item": k, "qtd": j.consumiveis[k], "nome": CONSUMIVEIS[k]["nome"],
-                  "desc": CONSUMIVEIS[k]["desc"], "motivo": None if k == "bomba_fumaca" else self.g.motivo_inutil(k)}
+                  "desc": CONSUMIVEIS[k]["desc"],
+                  "motivo": None if k == "bomba_fumaca" or self.aliados_precisam(k) else self.g.motivo_inutil(k)}
                  for k in usaveis]
         metas += [{"trocar": j.mochila.index(it), "equip": ficha(it, j.nome_recurso)} for it in armas]
         return metas
@@ -781,6 +783,16 @@ class Combate:
             self.dizer("Você estoura a bomba de fumaça e some na nuvem cinzenta!", "cinza")
             return "fuga"
         motivo = self.g.motivo_inutil(k)
+        if k in ("pocao_vida", "bandagem"):
+            # Poção e bandagem também servem em quem luta ao seu lado (comitiva e animal); servos não.
+            precisam = self.aliados_precisam(k)
+            if precisam:
+                quem = self.escolher_quem_trata(k, ([] if motivo else [j]) + precisam)
+                if quem is None:
+                    return None
+                if quem is not j:
+                    return self.tratar_aliado(k, quem)
+                motivo = None
         if motivo:
             self.dizer(motivo, "cinza")
             return None
@@ -789,6 +801,43 @@ class Combate:
             self.g.usar_consumivel(k)
             self.curou(j, j.hp - antes, rotulo=CONSUMIVEIS[k]["nome"])
             self.recuperou(j, j.rec - antes_rec, rotulo=CONSUMIVEIS[k]["nome"])
+        return "turno"
+
+    def aliados_precisam(self, k):
+        """Quem luta ao seu lado (comitiva e animal; servos não) e precisa da poção ou da bandagem agora."""
+        if k not in ("pocao_vida", "bandagem"):
+            return []
+        return [a for a in self.aliados if a.vivo and a.tipo != "servo"
+                and (a.hp < a.max_hp or (k == "bandagem" and a.efeito("sangramento")))]
+
+    def escolher_quem_trata(self, k, candidatos):
+        """Em quem usar a poção ou a bandagem. Na tela gráfica, as cartas acendem como na mira de um golpe."""
+        self.ui.meta_opcoes = [{"alvo": self.uid(c)} for c in candidatos] + [{"voltar": True}]
+        try:
+            esc = self.ui.escolher(f"Em quem usar {CONSUMIVEIS[k]['nome']}?",
+                                   [("Você" if c is self.j else c.nome) + f" ({c.hp}/{c.max_hp})" for c in candidatos]
+                                   + ["Voltar"])
+        finally:
+            self.ui.meta_opcoes = None
+        return candidatos[esc] if esc < len(candidatos) else None
+
+    def tratar_aliado(self, k, a):
+        j = self.j
+        nome = CONSUMIVEIS[k]["nome"]
+        j.consumiveis[k] -= 1
+        telemetria.registrar(self.g, "consumivel", item=k, em_combate=True, em=getattr(a, "cid", None) or a.tipo)
+        with self.agindo(j, nome, a, hab="item"):
+            antes = a.hp
+            if k == "pocao_vida":
+                a.curar(a.max_hp * bal.POCAO_VIDA)
+                self.dizer(f"Você joga a {nome} para {a.nome}, que bebe num gole. (+{a.hp - antes} vida)", "verde")
+            else:
+                estancou = a.efeito("sangramento")
+                a.remover("sangramento")
+                a.curar(bal.BANDAGEM_VIDA)
+                self.dizer(f"Você enfaixa {a.nome} às pressas{', e o sangue para' if estancou else ''}. "
+                           f"(+{a.hp - antes} vida)", "verde")
+            self.curou(a, a.hp - antes, de=j, rotulo=nome)
         return "turno"
 
     def analisar(self):
@@ -873,6 +922,9 @@ class Combate:
 
     def escolher_alvo_inimigo(self, e=None):
         aliados = [a for a in self.aliados if a.vivo]
+        provocador = next((a for a in aliados if a.efeito("provocando")), None)
+        if provocador and (e is None or not e.chefe or self.rng.random() < 0.5):
+            return provocador  # o urso de pé, rugindo: todo mundo olha para ele (chefes, só às vezes)
         tanque = comitiva.alvo_inimigo(self, aliados, e)
         if tanque:
             return tanque

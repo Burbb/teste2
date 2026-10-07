@@ -161,6 +161,14 @@ function desenharHeroi(h) {
     const usar = () => usarDaBolsa(h.bolsa.find((b) => b.id === el.dataset.bolsa), el);
     el.addEventListener("click", usar);
     el.addEventListener("keydown", (ev) => { if (ev.key === "Enter") usar(); });
+    el.addEventListener("contextmenu", (ev) => {  // botão direito: usa em você, sem perguntar em quem
+      ev.preventDefault();
+      const b = h.bolsa.find((x) => x.id === el.dataset.bolsa);
+      if (!b) return;
+      if (estado && estado.combate) { usarDaBolsa(b, el); return; }  // na luta, o mesmo caminho do clique
+      if (b.motivo) { Som.tocar("falha"); aviso(b.motivo, "info", "pergaminho"); return; }
+      App.acao({ usar: b.id }, "item");
+    });
   });
 }
 

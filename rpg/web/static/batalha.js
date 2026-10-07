@@ -18,6 +18,7 @@ const Batalha = (() => {
     fortalecido: ["espada", "forca"], furtivo: ["olho", "sombra"], veneno: ["gota_verde", "veneno"],
     sangramento: ["gota", "sangue"], queimadura: ["chama", "fogo"], atordoado: ["estrela", "atordoado"],
     maldito: ["gota_roxa", "maldicao"], enfraquecido: ["osso", "maldicao"], marcado: ["flecha", "marca"],
+    provocando: ["caveira", "forca"],
   };
   const SOM_ELEMENTO = { fisico: "golpe", fogo: "chama", gelo: "gelo", sagrado: "sagrado", sombra: "sombra",
     arcano: "arcano", veneno: "veneno" };
@@ -382,6 +383,7 @@ const Batalha = (() => {
         if (m.hab !== "grito_guerra") rotulo(em, m.rotulo);
         som(m.hab === "erguer_escudo" ? "falange" : fams.includes("sombra") ? "sombra" : fams.includes("forca") ? "feitico" : "protecao");
         if (m.hab === "erguer_escudo") reiniciar(arena, "tremor", 300);  // o baque dos escudos no chão
+        if (m.hab === "provocar") { som("rugido"); reiniciar(arena, "tremor", 360); }  // o urso ruge e todos olham para ele
         await dormir(pausa(560 + 160 * Math.max(0, fams.length - 1)));
         return;
       }
@@ -645,8 +647,27 @@ const Batalha = (() => {
     for (const x of resto) await lance(x);
   }
 
+  /** Tiro Duplo: as duas flechas saem quase juntas (a segunda logo atrás da primeira), dois impactos seguidos. */
+  async function rajada(m) {
+    const tiros = m.lances.filter((x) => x.tipo === "golpe" || x.tipo === "erro");
+    const resto = juntarRoubos(m.lances.filter((x) => !tiros.includes(x)));
+    await Promise.all(tiros.map(async (x, k) => {
+      await dormir(k * pausa(85));
+      som("disparo");
+      const de = carta(x.de), em = carta(x.em);
+      if (de && em) await projetil(de, em, "flecha");
+      if (!em) return;
+      marcar(x.em);
+      if (x.tipo === "golpe") { impacto(x, em); som(x.crit ? "critico_golpe" : "golpe"); }
+      else { reiniciar(em, "esquivou", 420); numero(em, "esquiva", "info"); som("esquiva"); }
+    }));
+    await dormir(pausa(tiros.some((x) => x.crit) ? 460 : 360));
+    for (const x of resto) await lance(x);
+  }
+
   async function salva(m) {
     if (m.hab === "redemoinho") return redemoinho(m);
+    if (m.hab === "tiro_duplo") return rajada(m);
     const golpes = m.lances.filter((x) => x.tipo === "golpe" || x.tipo === "erro");
     const resto = juntarRoubos(m.lances.filter((x) => !golpes.includes(x)));
     if (!golpes.length) { for (const x of resto) await lance(x); return; }

@@ -196,7 +196,7 @@ function mostrarOpcoes(m) {
     const li = el("li");
     const grade = lista.classList.contains("grade-acoes");
     const b = el("button", grade ? "escolha carta-acao voltar-carta" : "escolha secundaria voltar-luta",
-      grade ? `<span class="acao-icone">◀</span><span class="acao-nome">Voltar</span><span class="acao-rodape"><kbd>Esc</kbd> ou botão direito</span>`
+      grade ? `<span class="acao-icone">◀</span><span class="acao-nome">Voltar</span><span class="acao-rodape"><kbd>Esc</kbd></span>`
         : `<span class="rotulo">◀ Voltar</span>`);
     b.type = "button";
     b.addEventListener("click", (ev) => { ev.stopPropagation(); voltarPergunta(); });
@@ -295,21 +295,15 @@ function cartaAcao(o, i, m, pos) {
   return b;
 }
 
-/** Responde "Voltar" na pergunta atual (botão, Esc ou botão direito), com o desvio da barra de luta. */
+/** Responde "Voltar" na pergunta atual (botão ou Esc), com o desvio da barra de luta. */
 function voltarPergunta() {
   if (!pergunta || pergunta.voltar === undefined) return;
   if (pergunta.aoVoltar) pergunta.aoVoltar();
   responder(pergunta.id, pergunta.voltar);
 }
 
-// Botão direito em qualquer lugar da página volta um passo (quando a tela atual tem "Voltar").
-document.addEventListener("contextmenu", (ev) => {
-  if (ev.target.closest("input, textarea")) return;
-  if (fecharJanela()) { ev.preventDefault(); return; }
-  if (!pergunta || pergunta.voltar === undefined) return;
-  ev.preventDefault();
-  voltarPergunta();
-});
+// O botão direito não volta mais de tela: ele faz atalhos onde há o que fazer (vender no mercado, equipar,
+// usar um consumível em você). O Voltar fica no Esc, na seta do canto e no botão da própria tela.
 
 /* ------------------------------------------------------------------ roda de ações da luta */
 /* Na sua vez, sua carta vem para a frente e as ações (Atacar, Habilidades, Itens, Fugir) surgem em arco ao lado dela.
@@ -324,7 +318,7 @@ function limparRoda() {
   janelaAberta = null;
   Batalha.foco(null);
 }
-/** Fecha a janelinha (Esc, botão direito, ×). Devolve true se havia uma aberta. */
+/** Fecha a janelinha (Esc, clique fora, ×). Devolve true se havia uma aberta. */
 function fecharJanela() {
   if (!janelaAberta) return false;
   const j = janelaAberta;
@@ -398,6 +392,7 @@ function rodaDeAcoes(m) {
     App.som("pagina");
     abrirJanela(b, "Itens", itens.map((meta) => linhaItem(meta, () => {
       App.som(meta.trocar !== undefined ? "equipar" : "item");
+      habMirando = meta.nome || "";  // poção e bandagem podem pedir em quem: o lembrete diz o quê
       pendente = meta.trocar !== undefined ? { chave: "trocar", valor: meta.trocar } : { chave: "usar_item", valor: meta.usar_item };
       responder(m.id, acaoIdx("itens"));
     })));

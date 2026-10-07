@@ -38,7 +38,10 @@ class Inventario:
         registrar(self, "saque", item=item["nome"], raridade=item.get("raridade", "comum"), slot=item["slot"],
                   nivel=item.get("nivel"), escolha=op or "deixar")
         if op == "equipar":
+            espaco = self.espaco_para(item)
             self.equipar(item)
+            # o mesmo voo do mercado: o ícone sai do cartão e pousa no espaço do corpo, que brilha ao receber
+            self.ui.celebrar("equipou", {"espaco": espaco, "item": itens.ficha(item, rec), "achado": True})
         elif op == "guardar":
             self.j.mochila.append(item)
             self.dizer("Guardado na mochila.", "cinza")

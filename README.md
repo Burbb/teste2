@@ -153,8 +153,21 @@ na interface miúda; **Jersey 15** nos números. O botão "Fonte" no topo volta 
   se viaja). **Viajar** continua no menu do lugar: é a ação, e mostra o mapa com os destinos.
 - **Flechas na carta:** o arqueiro vê as flechas na própria carta da luta, piscando quando
   estão acabando. Sem flechas, o ataque vira um golpe de adaga fraco e os tiros ficam bloqueados.
-- **Voltar sem caçar o botão:** na luta, "Voltar" vira a última carta da grade (e Esc ou o botão
-  direito do mouse voltam um passo em qualquer tela).
+- **Voltar sem caçar o botão:** na luta, "Voltar" vira a última carta da grade (e Esc volta um
+  passo em qualquer tela).
+- **Botão direito faz atalhos:** no mercado, vende o item da mochila na hora (sem abrir o menu);
+  no inventário, equipa o item da mochila ou tira o do corpo; na bolsa, usa o consumível em você.
+  Ele não volta mais de tela.
+- **Poção e bandagem na comitiva, em plena luta:** se alguém ao seu lado (comitiva ou animal) está
+  ferido, a poção e a bandagem perguntam em quem usar, e as cartas acendem como na mira de um
+  golpe. Gasta o seu turno. A bandagem estanca o sangramento de quem a recebe.
+- **Ordem da Fera (Patrulheiro):** no lugar do antigo "Comando: Atacar!", que repetia o que o
+  animal já faz sozinho, uma ordem que ele não dá por conta própria: o **urso protege** (ataca e
+  provoca: por 2 turnos os inimigos atacam ele, que recebe 30% menos dano), o **lobo dilacera**
+  (160% e sangramento forte) e o **falcão cega** (não pode ser esquivado e enfraquece o alvo).
+- **Tiro Duplo em rajada:** as duas flechas saem quase juntas, uma logo atrás da outra.
+- **Trocar pelo item encontrado:** "Equipar agora" faz o ícone voar do cartão até o espaço do
+  corpo, que brilha; o cartão vira "Vestido" e o antigo, apagado, "Foi para a mochila".
 - **Duelo é duelo:** nos duelos de honra a comitiva e o animal ficam de fora, assistindo.
 - **Fogueira sempre:** acampar mostra a fogueira desenhada mesmo quando você está sozinho. Na
   fogueira dá para usar poção e bandagem (em você ou na comitiva) antes de dormir.
@@ -183,7 +196,7 @@ na interface miúda; **Jersey 15** nos números. O botão "Fonte" no topo volta 
   dela (Atacar, Habilidades, Itens, Fugir, teclas 1–4). Habilidades e Itens abrem uma janelinha
   logo abaixo da arena (os alvos ficam à vista), com ícone, nome e custo; passar o mouse mostra o que
   faz, o dano e acende quem seria atingido. Escolhida a
-  habilidade, os inimigos acendem: clique no alvo. Esc, botão direito ou um clique fora fecham a
+  habilidade, os inimigos acendem: clique no alvo. Esc ou um clique fora fecham a
   janelinha e desfazem a escolha antes de gastar qualquer coisa; as ações em arco continuam ali.
   O alvo de cada habilidade usa os termos de sempre: **Inimigo único**, **Todos os inimigos**,
   **Você**, **Aliado único**, **Todos os aliados**.

@@ -137,10 +137,19 @@ def _linhas(h_id, u):
     if h_id == "comando_fera":
         fera = getattr(j, "companheiro", None)
         if not fera:
-            return [efeito("Seu companheiro animal ataca com 200% do ataque dele.")]
-        atk = fera["atk"] if isinstance(fera, dict) else fera.atk
-        return [efeito(f"{fera['nome'] if isinstance(fera, dict) else fera.nome} ataca: {int(atk * 2 * 0.85)}–"
-                       f"{int(atk * 2 * 1.15)} de dano (ataque dele {atk} × 200%). Lobo faz sangrar; urso atordoa.")]
+            return [efeito("Urso: provoca os inimigos e protege. Lobo: dilacera e faz sangrar. Falcão: cega (enfraquece).")]
+        f = fera if isinstance(fera, dict) else {"nome": fera.nome, "atk": fera.atk, "tipo": fera.tipo}
+        mult = 1.6 if f["tipo"] == "lobo" else 1.0
+        linhas = [efeito(f"{f['nome']} ataca: {int(f['atk'] * mult * 0.85)}–{int(f['atk'] * mult * 1.15)} de dano "
+                         f"(ataque dele {_num(f['atk'])} × {round(mult * 100)}%).")]
+        if f["tipo"] == "urso":
+            linhas.append(efeito("Provoca por 2 turnos: os inimigos atacam o urso (chefes, metade das vezes), "
+                                 "e ele recebe 30% menos dano."))
+        elif f["tipo"] == "lobo":
+            linhas.append(efeito(f"Sangramento forte: {_num(max(3, f['atk'] * 0.55))} por turno, 4 turnos."))
+        else:
+            linhas.append(efeito("Não pode ser esquivado. O alvo fica enfraquecido (−25% de dano) por 2 turnos."))
+        return linhas
     if h_id == "furia_natureza":
         return [golpe(j, 1.3, alcance="distancia", rotulo="Em cada inimigo"),
                 efeito(f"50% de chance de sangramento: {_num(max(2, j.atk * 0.3))} por turno, 3 turnos."),

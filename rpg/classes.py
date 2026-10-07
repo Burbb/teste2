@@ -207,19 +207,44 @@ def _passo_agil(cb, u, alvo):
 
 
 def _tiro_duplo(cb, u, alvo):
-    cb.atacar(u, alvo, 0.9, alcance="distancia", rotulo="Tiro Duplo (1)")
-    if alvo.vivo:
-        cb.atacar(u, alvo, 0.9, alcance="distancia", rotulo="Tiro Duplo (2)")
+    with cb.salva("tiro_duplo"):  # as duas flechas saem quase juntas, numa rajada só
+        cb.atacar(u, alvo, 0.9, alcance="distancia", rotulo="Tiro Duplo (1)")
+        if alvo.vivo:
+            cb.atacar(u, alvo, 0.9, alcance="distancia", rotulo="Tiro Duplo (2)")
+
+
+# A fera já ataca sozinha no turno dela; a ordem é o que ela não faz por conta própria, e muda com o animal.
+ORDENS_FERA = {
+    "urso": ("Proteger!", "O urso avança sobre o alvo (100%) e ruge: por 2 turnos, os inimigos atacam ele "
+             "(chefes, metade das vezes), e ele recebe 30% menos dano."),
+    "lobo": ("Dilacerar!", "O lobo morde a garganta do alvo (160%) e abre um sangramento forte por 4 turnos."),
+    "falcao": ("Os olhos!", "O falcão mergulha nos olhos do alvo (100%, não pode ser esquivado): "
+               "o alvo fica enfraquecido (−25% de dano) por 2 turnos."),
+}
+
+
+def _desc_ordem(u):
+    fera = getattr(u, "companheiro", None)
+    tipo = fera.get("tipo") if isinstance(fera, dict) else getattr(fera, "tipo", None)
+    return ORDENS_FERA[tipo][1] if tipo in ORDENS_FERA else HABILIDADES["comando_fera"]["desc"]
 
 
 def _comando_fera(cb, u, alvo):
     fera = cb.companheiro
-    cb.dizer(f"\"Agora!\" — {fera.nome} salta sobre o inimigo!", "ciano")
-    dano = cb.atacar(fera, alvo, 2.0, alcance="corpo", rotulo="Comando")
-    if dano and fera.tipo == "urso":
-        cb.aplicar(alvo, "atordoado", 1, chance=0.6)
-    elif dano and fera.tipo == "lobo":
-        cb.aplicar(alvo, "sangramento", 3, valor=max(2, fera.atk * 0.4))
+    grito = ORDENS_FERA.get(fera.tipo, ("Agora!",))[0]
+    cb.dizer(f"\"{grito}\" — {fera.nome} obedece na hora!", "ciano")
+    if fera.tipo == "urso":
+        cb.atacar(fera, alvo, 1.0, alcance="corpo", rotulo="Proteger")
+        fera.aplicar("provocando", 2)
+        fera.aplicar("guarda", 2, 0.3)
+        cb.lance("buff", em=cb.uid(fera), efeitos=["provocando", "guarda"], rotulo="Provocando", hab="provocar")
+        cb.dizer(f"{fera.nome} ruge e se põe na frente. Os inimigos só têm olhos para ele.", "ciano")
+    elif fera.tipo == "lobo":
+        if cb.atacar(fera, alvo, 1.6, alcance="corpo", rotulo="Dilacerar"):
+            cb.aplicar(alvo, "sangramento", 4, valor=max(3, fera.atk * 0.55))
+    else:
+        if cb.atacar(fera, alvo, 1.0, alcance="corpo", rotulo="Os olhos", pode_esquivar=False):
+            cb.aplicar(alvo, "enfraquecido", 2)
 
 
 def _req_fera(cb):
@@ -367,7 +392,10 @@ HABILIDADES = {
     "chuva_flechas": dict(nome="Chuva de Flechas", custo=14, flechas=3, alvo="todos", desc="Atinge todos os inimigos (3 flechas).", fn=_chuva_flechas),
     "passo_agil": dict(nome="Passo Ágil", custo=6, alvo="proprio", desc="+30% de esquiva por 2 turnos (a esquiva total não passa de 60%).", fn=_passo_agil),
     "tiro_duplo": dict(nome="Tiro Duplo", custo=10, flechas=2, alvo="inimigo", desc="Dois disparos de 90%.", fn=_tiro_duplo),
-    "comando_fera": dict(nome="Comando: Atacar!", custo=12, alvo="inimigo", desc="Seu companheiro desfere um ataque de 200%.", fn=_comando_fera, req=_req_fera),
+    "comando_fera": dict(nome="Ordem da Fera", custo=12, alvo="inimigo",
+                         desc="Uma ordem que o animal não faz sozinho: o urso protege, o lobo dilacera, o falcão cega.",
+                         desc_fn=lambda u: _desc_ordem(u),
+                         fn=_comando_fera, req=_req_fera),
     "furia_natureza": dict(nome="Fúria da Natureza", custo=25, flechas=4, alvo="todos", desc="130% em todos, sangramento e cura o companheiro.", fn=_furia_natureza),
     "desaparecer": dict(nome="Desaparecer", custo=10, alvo="proprio", desc="Próximo ataque é crítico devastador; +esquiva.", fn=_desaparecer),
     "flecha_envenenada": dict(nome="Flecha Envenenada", custo=10, flechas=1, alvo="inimigo", desc="Dano e veneno forte por 4 turnos.", fn=_flecha_envenenada),
