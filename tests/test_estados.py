@@ -4,7 +4,7 @@ import os
 import re
 import unittest
 
-from rpg.estados import ESTADOS, NEGATIVOS, NOMES, descrever_aplicar, para_tela
+from rpg.estados import ESTADOS, GOLPE_ETAPAS, NEGATIVOS, NOMES, descrever_aplicar, para_tela
 
 RAIZ = os.path.join(os.path.dirname(__file__), "..")
 
@@ -36,6 +36,8 @@ class TestEstados(unittest.TestCase):
                 self.assertEqual(len(e["tique"]), 2, k)
             if e["camadas"]:
                 self.assertIn("{s}", e["rotulo_camadas"], k)
+            for etapa in e["golpe"]:
+                self.assertIn(etapa, GOLPE_ETAPAS, f"{k}: etapa do golpe '{etapa}' não existe")
         self.assertIn("veneno", NEGATIVOS)
         self.assertNotIn("guarda", NEGATIVOS)
         self.assertEqual(NOMES["queimadura"], "em chamas")

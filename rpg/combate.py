@@ -7,7 +7,7 @@ from .classes import CLASSES
 from .habilidades import HABILIDADES, descricao_habilidade
 from .grimorio import chance_critico, mult_critico
 from .modificadores import disparar, mod, mult, nomes
-from .estados import ESTADOS, NOMES
+from .estados import ESTADOS, NOMES, no_golpe
 from .dados import TRACOS
 from .entidades import Combatente
 from .inimigos import HABS_INIMIGO, NOMES_HABS_INIMIGO, ROTULOS_HABS_INIMIGO
@@ -241,10 +241,11 @@ class Combate:
             return 0
         prefixo = f"[{rotulo}] " if rotulo else ""
         quem = self.nome(u)
-        if pode_esquivar and not alvo.efeito("atordoado"):
+        # Os estados entram na conta pelo catálogo (estados.py, campo `golpe`), cada um na sua etapa.
+        if pode_esquivar and not no_golpe(alvo, "sem_esquiva"):
             esq = min(bal.ESQUIVA_MAX_AGI, alvo.agi * bal.ESQUIVA_POR_AGI)
-            if alvo.efeito("esquiva"):
-                esq += alvo.efeito("esquiva")["v"]
+            for _, e, f in no_golpe(alvo, "esquiva"):
+                esq += f(e["v"])
             if self.g.clima == "nevoa":
                 esq += 0.05
             esq = min(bal.MAX_ESQUIVA, esq)
@@ -259,11 +260,8 @@ class Combate:
             self.detalhe(f"{prefixo}{self.nome(alvo)} é imune!", "cinza")
             return 0
         m = eficacia
-        f = u.efeito("fortalecido")
-        if f:
-            m *= 1 + f["v"]
-        if u.efeito("enfraquecido"):
-            m *= 0.75
+        for _, e, f in no_golpe(u, "dano_causado"):
+            m *= f(e["v"])
         ferido = mod(u, "dano_ferido") if u.jogador else 0
         if ferido:
             m *= 1 + ferido * (1 - u.hp / u.max_hp)
@@ -276,9 +274,8 @@ class Combate:
             m *= {"fogo": 0.85, "gelo": 1.2}.get(tipo, 1)
         elif clima == "tempestade" and alcance == "distancia":
             m *= 0.85
-        marcado = alvo.efeito("marcado")
-        if marcado:
-            m *= 1 + marcado["v"]
+        for _, e, f in no_golpe(alvo, "dano_recebido"):
+            m *= f(e["v"])
         if getattr(alvo, "chave", None) and self.g.flag(f"fraqueza:{alvo.chave}"):
             m *= 1.25
         if u.jogador and self.g.mestre_caca(getattr(alvo, "familia", None)):
@@ -292,33 +289,35 @@ class Combate:
                 m *= 1 + bal.INICIATIVA_BONUS
                 bonus_motivo = "Iniciativa!"
 
-        defesa = alvo.defesa * (0.6 if alvo.efeito("maldito") else 1.0)
-        furtivo = u.efeito("furtivo")
+        fator_def = 1.0
+        for _, e, f in no_golpe(alvo, "defesa"):
+            fator_def *= f(e["v"])
+        defesa = alvo.defesa * fator_def
+        garantido = no_golpe(u, "critico_garantido")  # furtivo
         abertura = u.jogador and self.abertura
         self.abertura = self.abertura and not u.jogador
         chance_crit = chance_critico(u, crit_extra)  # a mesma conta que o Grimório e a ficha mostram
-        crit = bool(furtivo) or abertura or self.rng.random() < chance_crit
+        crit = bool(garantido) or abertura or self.rng.random() < chance_crit
         # Crítico garantido diz de onde veio: sem isso, parece que a sorte ignora a chance da ficha.
-        motivo_crit = ("Furtivo" if furtivo else self.motivo_abertura or "Iniciativa") if (furtivo or abertura) else None
+        motivo_crit = (garantido[0][2] if garantido else self.motivo_abertura or "Iniciativa") if (garantido or abertura) else None
         base = getattr(u, stat) * mult + bonus
         inimigo = not u.jogador and u not in self.aliados
         dano = base * m * self.rng.uniform(0.85, 1.15) * bal.fator_defesa(defesa, u.nivel if inimigo else None)
         if crit:
-            dano *= mult_critico(u, furtivo=bool(furtivo))
-        if furtivo:
-            u.remover("furtivo")
-        guarda = alvo.efeito("guarda")
-        if guarda:
-            dano *= 1 - guarda["v"]
+            dano *= mult_critico(u, furtivo=bool(garantido))
+        for k, _, _ in garantido:
+            u.remover(k)
+        for _, e, f in no_golpe(alvo, "dano_final"):
+            dano *= f(e["v"])
         dano = max(1, round(dano))
         absorvido = 0
-        barreira = alvo.efeito("barreira")
-        if barreira:
-            absorvido = min(barreira["v"], dano)
-            barreira["v"] -= absorvido
-            dano -= absorvido
-            if barreira["v"] <= 0:
-                alvo.remover("barreira")
+        for k, e, _ in no_golpe(alvo, "absorve"):
+            parte = min(e["v"], dano)
+            e["v"] -= parte
+            dano -= parte
+            absorvido += parte
+            if e["v"] <= 0:
+                alvo.remover(k)
         if alvo is self.j and dano >= alvo.hp:
             dano = disparar(self, alvo, "golpe_fatal", dano=dano, de=u)["dano"]  # Imortal...
         alvo.hp = max(0, alvo.hp - dano)

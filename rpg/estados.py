@@ -12,10 +12,11 @@ Cada estado declara, num lugar só, tudo o que o jogo precisa saber dele:
     dica        uma frase a mais na dica do ícone
     descrever   como o Grimório escreve uma habilidade que aplica o estado num inimigo
     buff        como o Grimório escreve o estado aplicado em você
+    golpe       o que o estado muda num golpe, por etapa da conta (GOLPE_ETAPAS); `v` é o valor do estado
 
 O combate só lê o catálogo: aplicar() pergunta imune/resiste/camadas, processar_efeitos() faz o tique e a
-perda de turno, a tela recebe ícone, família e dica. Estado novo = uma entrada aqui (e, se ele muda a conta
-de dano, a pergunta no lugar certo do combate).
+perda de turno, atacar() pergunta cada etapa do golpe (no_golpe), a tela recebe ícone, família e dica.
+Estado novo = uma entrada aqui. Dentro de uma etapa, as contas seguem a ordem do catálogo.
 """
 
 from . import balanceamento as bal
@@ -46,11 +47,25 @@ def _origem(escala):
     return f" ({escala})" if escala else ""
 
 
+# As etapas de Combate.atacar em que um estado pode entrar, na ordem da conta. Quem está assim é o atacante (de
+# quem bate) ou o alvo (de quem apanha). O valor: uma função do valor do estado (v), salvo onde diz outra coisa.
+GOLPE_ETAPAS = {
+    "sem_esquiva":       "alvo: não consegue se esquivar (True)",
+    "esquiva":           "alvo: soma à chance de esquiva",
+    "dano_causado":      "atacante: multiplica o dano",
+    "dano_recebido":     "alvo: multiplica o dano (antes da defesa)",
+    "defesa":            "alvo: multiplica a defesa",
+    "critico_garantido": "atacante: o golpe é crítico (o motivo que a tela mostra) e o estado se gasta",
+    "dano_final":        "alvo: multiplica o dano depois do crítico (antes de arredondar)",
+    "absorve":           "alvo: o valor do estado absorve dano e se gasta (True)",
+}
+
+
 def estado(nome, icone, familia, negativo=False, tique=None, perde_turno=False, imune=None, resiste=None,
-           camadas=0, rotulo_camadas=None, dica="", descrever=None, buff=None, ajuste_tique=None):
+           camadas=0, rotulo_camadas=None, dica="", descrever=None, buff=None, ajuste_tique=None, golpe=None):
     return dict(nome=nome, icone=icone, familia=familia, negativo=negativo, tique=tique, perde_turno=perde_turno,
                 imune=imune, resiste=resiste, camadas=camadas, rotulo_camadas=rotulo_camadas, dica=dica,
-                descrever=descrever, buff=buff, ajuste_tique=ajuste_tique)
+                descrever=descrever, buff=buff, ajuste_tique=ajuste_tique, golpe=golpe or {})
 
 
 def _chuva_apaga(cb, dano):
@@ -59,6 +74,19 @@ def _chuva_apaga(cb, dano):
 
 
 ESTADOS = {
+    # --- bênçãos (antes dos males: na conta do golpe, o bônus multiplica primeiro)
+    "guarda": estado("em guarda", "escudo", "protecao", dica="recebe menos dano",
+                     buff=lambda u, t, v: f"Dano recebido −{_pct(v)} por {_turnos(t)}.",
+                     golpe={"dano_final": lambda v: 1 - v}),
+    "fortalecido": estado("fortalecido", "espada", "forca", dica="causa mais dano",
+                          buff=lambda u, t, v: f"Seu dano +{_pct(v)} por {_turnos(t)}.",
+                          golpe={"dano_causado": lambda v: 1 + v}),
+    "esquiva": estado("esquivo", "folha", "protecao", dica="mais difícil de acertar", buff=lambda u, t, v: _buff_esquiva(u, t, v),
+                      golpe={"esquiva": lambda v: v}),
+    "barreira": estado("com barreira", "escudo_azul", "protecao", dica="absorve dano", golpe={"absorve": True}),
+    "furtivo": estado("furtivo", "olho", "sombra", dica="o próximo ataque é crítico garantido",
+                      buff=lambda u, t, v: _buff_furtivo(u), golpe={"critico_garantido": "Furtivo"}),
+    "provocando": estado("provocando", "caveira", "forca", dica="os inimigos atacam ele"),
     # --- males (dano por turno)
     "veneno": estado(
         "envenenado", "gota_verde", "veneno", negativo=True, tique=("veneno", "verde"),
@@ -74,33 +102,25 @@ ESTADOS = {
         ajuste_tique=_chuva_apaga, dica="a Combustão detona o que falta arder"),
     "maldito": estado(
         "amaldiçoado", "gota_roxa", "maldicao", negativo=True, tique=("maldição", "magenta"),
-        dica="defesa −40%",
+        dica="defesa −40%", golpe={"defesa": lambda v: 0.6},
         descrever=lambda t, v, esc, ch, todos, rot: (f"{'Todos os inimigos' if todos else 'O alvo'}: {_num(v)} de dano "
                                                      f"por turno, {_turnos(t)}{_origem(esc)}, e −40% de defesa.")),
     # --- males (controle e fraqueza)
     "atordoado": estado(
         "atordoado", "estrela", "atordoado", negativo=True, perde_turno=True,
         resiste=lambda cb, a: (a.chefe or "gigante" in a.tracos) and cb.rng.random() < 0.5,
-        dica="perde o próximo turno",
+        dica="perde o próximo turno", golpe={"sem_esquiva": True},
         descrever=lambda t, v, esc, ch, todos, rot: (
             _chance(ch, f"congelar {_quem(todos)} (perde o próximo turno).") if rot == "congelado"
             else _chance(ch, f"atordoar {_quem(todos)} por {_turnos(t)}."))),
     "enfraquecido": estado(
         "enfraquecido", "osso", "maldicao", negativo=True, dica="causa −25% de dano",
+        golpe={"dano_causado": lambda v: 0.75},
         descrever=lambda t, v, esc, ch, todos, rot: _chance(ch, f"enfraquecer {_quem(todos)} por {_turnos(t)} (causa −25% de dano).")),
     "marcado": estado(
         "marcado", "flecha", "marca", negativo=True, dica="recebe mais dano de todos",
+        golpe={"dano_recebido": lambda v: 1 + v},
         descrever=lambda t, v, esc, ch, todos, rot: f"{_quem(todos)[0].upper() + _quem(todos)[1:]} recebe +{_pct(v)} de dano de todos por {_turnos(t)}."),
-    # --- bênçãos
-    "guarda": estado("em guarda", "escudo", "protecao", dica="recebe menos dano",
-                     buff=lambda u, t, v: f"Dano recebido −{_pct(v)} por {_turnos(t)}."),
-    "fortalecido": estado("fortalecido", "espada", "forca", dica="causa mais dano",
-                          buff=lambda u, t, v: f"Seu dano +{_pct(v)} por {_turnos(t)}."),
-    "esquiva": estado("esquivo", "folha", "protecao", dica="mais difícil de acertar", buff=lambda u, t, v: _buff_esquiva(u, t, v)),
-    "barreira": estado("com barreira", "escudo_azul", "protecao", dica="absorve dano"),
-    "furtivo": estado("furtivo", "olho", "sombra", dica="o próximo ataque é crítico garantido",
-                      buff=lambda u, t, v: _buff_furtivo(u)),
-    "provocando": estado("provocando", "caveira", "forca", dica="os inimigos atacam ele"),
 }
 
 
@@ -118,6 +138,17 @@ def _buff_furtivo(u):
 # Derivados do catálogo (para quem só precisa de uma lista)
 NOMES = {k: e["nome"] for k, e in ESTADOS.items()}
 NEGATIVOS = tuple(k for k, e in ESTADOS.items() if e["negativo"])
+GOLPE = {etapa: [(k, e["golpe"][etapa]) for k, e in ESTADOS.items() if etapa in e["golpe"]] for etapa in GOLPE_ETAPAS}
+
+
+def no_golpe(u, etapa):
+    """(estado de u, o que ele faz nessa etapa) de cada estado que `u` tem e que mexe nessa etapa do golpe."""
+    lista = []
+    for k, valor in GOLPE[etapa]:
+        e = u.efeito(k)
+        if e:
+            lista.append((k, e, valor))
+    return lista
 
 
 def descrever_aplicar(efeito, turnos, valor, escala, chance, todos, rotulo):

@@ -132,10 +132,15 @@ Em `rpg/estados.py`, no catálogo `ESTADOS`:
 | `imune(alvo)` / `resiste(cb, alvo)` | quem não pega / quem resiste na hora (com sorteio) |
 | `camadas`, `rotulo_camadas` | acumula (`"em chamas ×{s}"`) quando aplicado com `acumula=True` |
 | `dica`, `descrever`, `buff` | a frase do ícone; a linha do Grimório num inimigo; a linha num estado seu |
+| `golpe` | o que muda na conta de um golpe, por etapa: `{"dano_causado": lambda v: 1 + v}` |
 
-Tique, perda de turno, imunidade, resistência e camadas já funcionam sozinhos. Se o estado muda a **conta de
-dano** (como fortalecido ou guarda), falta perguntar por ele no lugar certo de `Combate.atacar`; numa etapa futura
-isso também vira modificador.
+Tique, perda de turno, imunidade, resistência e camadas já funcionam sozinhos. Um estado que mexe na **conta de
+dano** declara em `golpe` as etapas em que entra (a lista, na ordem da conta, é `GOLPE_ETAPAS` em `rpg/estados.py`):
+`dano_causado`/`dano_recebido` multiplicam (quem bate / quem apanha), `defesa` multiplica a defesa do alvo, `esquiva`
+soma à esquiva, `sem_esquiva` tira a esquiva, `dano_final` multiplica depois do crítico, `critico_garantido` e
+`absorve` gastam o estado. `Combate.atacar` pergunta cada etapa (`no_golpe`) e não conhece estado nenhum pelo nome.
+Dentro de uma etapa, as contas seguem a ordem do catálogo (bênçãos antes dos males). Etapa nova: acrescente em
+`GOLPE_ETAPAS` e pergunte por ela uma vez no lugar certo de `atacar`.
 
 Conferir: `python -m unittest tests.test_estados` (todo estado aplicado no código existe no catálogo; todo
 ícone tem desenho).
