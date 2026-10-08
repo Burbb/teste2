@@ -6,6 +6,8 @@ Cada estado declara, num lugar só, tudo o que o jogo precisa saber dele:
     negativo    é um mal (a Prece e o "limpar males" tiram)
     tique       dano a cada turno: (rótulo no registro, cor) — o valor vem do próprio estado (v)
     perde_turno quem está assim não age (atordoado, congelado, preso na armadilha)
+    depois      o estado que fica quando este faz perder o turno (atordoado deixa "firme": sem trava em sequência)
+    protege     estados que não pegam em quem está assim (firme: atordoado)
     imune       quem não pega (veneno não pega em mortos-vivos e construtos...)
     resiste     quem pode resistir na hora, com sorteio (chefes e gigantes contra o atordoamento)
     camadas     acumula até N camadas (queimadura), com o rótulo "em chamas ×N"
@@ -62,10 +64,12 @@ GOLPE_ETAPAS = {
 
 
 def estado(nome, icone, familia, negativo=False, tique=None, perde_turno=False, imune=None, resiste=None,
-           camadas=0, rotulo_camadas=None, dica="", descrever=None, buff=None, ajuste_tique=None, golpe=None):
+           camadas=0, rotulo_camadas=None, dica="", descrever=None, buff=None, ajuste_tique=None, golpe=None,
+           depois=None, protege=()):
     return dict(nome=nome, icone=icone, familia=familia, negativo=negativo, tique=tique, perde_turno=perde_turno,
                 imune=imune, resiste=resiste, camadas=camadas, rotulo_camadas=rotulo_camadas, dica=dica,
-                descrever=descrever, buff=buff, ajuste_tique=ajuste_tique, golpe=golpe or {})
+                descrever=descrever, buff=buff, ajuste_tique=ajuste_tique, golpe=golpe or {}, depois=depois,
+                protege=protege)
 
 
 def _chuva_apaga(cb, dano):
@@ -87,6 +91,9 @@ ESTADOS = {
     "furtivo": estado("furtivo", "olho", "sombra", dica="o próximo ataque é crítico garantido",
                       buff=lambda u, t, v: _buff_furtivo(u), golpe={"critico_garantido": "Furtivo"}),
     "provocando": estado("provocando", "caveira", "forca", dica="os inimigos atacam ele"),
+    # Quem acaba de perder o turno não perde o seguinte (como em Darkest Dungeon e WoW): sem trava em sequência.
+    "firme": estado("firme", "cadeado", "protecao", dica="acabou de se soltar: não pode ser atordoado nem congelado agora",
+                    protege=("atordoado",)),
     # --- males (dano por turno)
     "veneno": estado(
         "envenenado", "gota_verde", "veneno", negativo=True, tique=("veneno", "verde"),
@@ -109,7 +116,7 @@ ESTADOS = {
     "atordoado": estado(
         "atordoado", "estrela", "atordoado", negativo=True, perde_turno=True,
         resiste=lambda cb, a: (a.chefe or "gigante" in a.tracos) and cb.rng.random() < 0.5,
-        dica="perde o próximo turno", golpe={"sem_esquiva": True},
+        dica="perde o próximo turno (depois fica firme por um turno)", golpe={"sem_esquiva": True}, depois="firme",
         descrever=lambda t, v, esc, ch, todos, rot: (
             _chance(ch, f"congelar {_quem(todos)} (perde o próximo turno).") if rot == "congelado"
             else _chance(ch, f"atordoar {_quem(todos)} por {_turnos(t)}."))),

@@ -385,6 +385,12 @@ class Combate:
         if est["resiste"] and est["resiste"](self, alvo):
             self.detalhe(f"{self.nome(alvo)} resiste ao {'atordoamento' if efeito == 'atordoado' else est['nome']}!", "cinza")
             return False
+        guarda = next((k for k in alvo.efeitos if efeito in ESTADOS.get(k, {}).get("protege", ())), None)
+        if guarda:
+            self.lance("efeito_negado", em=self.uid(alvo), efeito=efeito, por=guarda, rotulo=NOMES[guarda])
+            self.detalhe(f"{self.nome(alvo)} acabou de se soltar e não fica {rotulo or NOMES_EFEITOS[efeito]} de novo.",
+                         "cinza")
+            return False
         atual = alvo.efeitos.get(efeito)
         if acumula and atual and est["camadas"]:
             # Mais uma camada: o dano por turno soma (até o teto) e a duração se renova.
@@ -546,6 +552,8 @@ class Combate:
         if pular and c.vivo:
             self.lance("atordoado", em=self.uid(c), rotulo=rotulo)
             self.detalhe(f"{self.nome(c)} está {rotulo} e perde o turno!", "magenta")
+            if ESTADOS[trava]["depois"]:  # firme até o próximo turno dele: um turno perdido de cada vez
+                c.aplicar(ESTADOS[trava]["depois"], 1)
         return pular or not c.vivo
 
     # ------------------------------------------------------------ jogador

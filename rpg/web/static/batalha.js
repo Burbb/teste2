@@ -512,6 +512,14 @@ const Batalha = (() => {
         som("sombra");
         return;
       }
+      case "efeito_negado": {  // firme: acabou de se soltar e não perde o turno de novo
+        if (!em) return;
+        marcar(m.em);
+        brilho(em, "protecao");
+        numero(em, m.rotulo || "firme", "info");
+        await dormir(pausa(300));
+        return;
+      }
       case "atordoado": {
         if (!em) return;
         reiniciar(em, "tonto", 900);
