@@ -109,6 +109,9 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   doca de atalhos, roda de ações da luta · `app/paineis.js` ficha e mapa laterais · `app/controles.js` teclado
 - `telas.js` telas desenhadas (inventário, mercado, talentos, Grimório, fogueira, mural...)
 - `batalha.js` o palco da luta · `realce.js` cores dos termos de jogo · `sprites*.js`, `vista.js`, `mapa.js`, `som.js`
+- `sensacao.js` o peso dos momentos (parada no impacto, tremor, câmera no golpe final...): as telas dizem o que
+  aconteceu e perguntam a ele como aquilo se sente; os números ficam numa tabela só (`AJUSTES`). Os fatos vêm
+  do motor (no lance do golpe: `crit`, `abate`, `final`).
 - `css/01..13-*.css` por componente
 
 ## Rede de segurança

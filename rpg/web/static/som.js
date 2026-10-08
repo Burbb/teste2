@@ -181,6 +181,12 @@ const Som = (() => {
       tom(t, 160, 0.6, 0.3, "sine", 40); estalo(t, 700, 0.45, 0.12); estalo(t + 0.03, 2400, 0.25, 0.08);
       tom(t + 0.02, 880, 0.06, 0.25, "square", 1320);
     },
+    // O golpe que encerra a luta: um baque fundo, o estalo do impacto e um ar que se esvai.
+    golpe_final() {
+      const t = ctx.currentTime;
+      tom(t, 72, 0.7, 0.9, "sine", 34); estalo(t, 600, 0.5, 0.16); estalo(t + 0.04, 2600, 0.3, 0.1);
+      sopro(t + 0.05, 0.9, 1200, 200, 0.12, 0.8, "lowpass");
+    },
     dor_leve() { const t = ctx.currentTime; tom(t, 110, 0.25, 0.2, "sine", 60); },
     chama() { const t = ctx.currentTime; sopro(t, 0.45, 300, 2400, 0.35, 0.7); for (let i = 0; i < 6; i++) estalo(t + 0.05 + Math.random() * 0.35, 3000 + Math.random() * 2000, 0.12, 0.02); tom(t, 90, 0.3, 0.3, "sine", 50); },
     gelo() { const t = ctx.currentTime; [2093, 2637, 3136, 2349].forEach((f, i) => tom(t + i * 0.035, f, 0.05, 0.35, "triangle")); estalo(t, 5000, 0.25, 0.06); tom(t, 120, 0.25, 0.18, "sine", 60); },

@@ -378,7 +378,7 @@ const Batalha = (() => {
         if (m.hab === "grito_guerra") {
           // O grito vem antes de tudo: a arena treme e o herói brilha; só então os inimigos se encolhem.
           som("rugido");
-          reiniciar(arena, "tremor", 420);
+          Sensacao.tremor(arena, Sensacao.AJUSTES.tremor.leve, 420);
           brilho(de, "forca");
           rotulo(de, "AAARGH!", "boa");
           await dormir(pausa(520));
@@ -392,8 +392,8 @@ const Batalha = (() => {
         fams.forEach((f, i) => setTimeout(() => brilho(em, f), i * 160));
         if (m.hab !== "grito_guerra") rotulo(em, m.rotulo);
         som(m.hab === "erguer_escudo" ? "falange" : fams.includes("sombra") ? "sombra" : fams.includes("forca") ? "feitico" : "protecao");
-        if (m.hab === "erguer_escudo") reiniciar(arena, "tremor", 300);  // o baque dos escudos no chão
-        if (m.hab === "provocar") { som("rugido"); reiniciar(arena, "tremor", 360); }  // o urso ruge e todos olham para ele
+        if (m.hab === "erguer_escudo") Sensacao.tremor(arena, Sensacao.AJUSTES.tremor.leve, 300);  // o baque dos escudos no chão
+        if (m.hab === "provocar") { som("rugido"); Sensacao.tremor(arena, Sensacao.AJUSTES.tremor.leve, 360); }  // o urso ruge e todos olham para ele
         await dormir(pausa(560 + 160 * Math.max(0, fams.length - 1)));
         return;
       }
@@ -545,8 +545,10 @@ const Batalha = (() => {
     tremer(em, m.crit);
     if (el === "fogo") labaredas(em);
     else if (el !== "fisico") particulas(em, el, 8);
-    if (m.crit) numero(em, `${m.dano}!`, "crit");
-    else numero(em, `−${m.dano}`, "menos");
+    // O número cresce com o peso do golpe: crítico, o que derruba, e o que encerra a luta.
+    const peso = (m.abate ? " abate" : "") + (m.final ? " final" : "");
+    if (m.crit) numero(em, `${m.dano}!`, "crit" + peso);
+    else numero(em, `−${m.dano}`, "menos" + peso);
     if (m.crit && m.crit_motivo) numero(em, m.crit_motivo, "motivo");  // crítico garantido: de onde ele veio
     else if (m.bonus_motivo) numero(em, m.bonus_motivo, "motivo");  // golpe reforçado (iniciativa): de onde veio
     if (m.absorvido) numero(em, `(${m.absorvido})`, "escudo");
@@ -665,6 +667,7 @@ const Batalha = (() => {
       await dormir(pausa(150));
     }
     Object.values(soma).forEach((s) => numero(s.em, s.crit ? `${s.dano}!` : `−${s.dano}`, s.crit ? "crit" : "menos"));
+    await pesoDaSalva(rodadas.flat());
     await dormir(pausa(420));
     for (const x of resto) await lance(x);
   }
@@ -683,8 +686,15 @@ const Batalha = (() => {
       if (x.tipo === "golpe") { impacto(x, em); som(x.crit ? "critico_golpe" : "golpe"); }
       else { reiniciar(em, "esquivou", 560); numero(em, "esquiva", "info"); som("esquiva"); }
     }));
+    await pesoDaSalva(tiros);
     await dormir(pausa(tiros.some((x) => x.crit) ? 460 : 360));
     for (const x of resto) await lance(x);
+  }
+
+  /** Vários golpes de uma vez: o mais pesado (o que encerra a luta, o que derruba, o crítico) dá o tom. */
+  async function pesoDaSalva(golpes) {
+    const pior = Sensacao.maisPesado(golpes.filter((x) => x.tipo === "golpe"));
+    if (pior) await Sensacao.golpe(pior, arena, carta(pior.em));
   }
 
   async function salva(m) {
@@ -734,6 +744,7 @@ const Batalha = (() => {
     const critou = golpes.some((x) => x.crit);
     som(critou ? "critico_golpe" : SOM_ELEMENTO[el] || "golpe");
     setTimeout(() => som("golpe_leve"), 70);
+    await pesoDaSalva(golpes);
     if (golpes.some((x) => x.em === "j" && x.tipo === "golpe")) { App.doer(); som("dor"); }
     await dormir(pausa(critou ? 520 : 420));
     // 3) o que veio depois (queimaduras, curas...) em sequência
@@ -764,6 +775,7 @@ const Batalha = (() => {
     som(m.crit ? "critico_golpe" : SOM_ELEMENTO[el] || "golpe");
     if (el !== "fisico" && !m.crit) setTimeout(() => som("golpe_leve"), 60);
     if (m.em === "j") { App.doer(); som("dor"); }
+    await Sensacao.golpe(m, arena, em);
     // Golpeou: volta direto para o lugar (não para o "passo à frente"). Roubo de vida, sangramento e passivas
     // que vêm depois já aparecem com a carta em casa; um contra-ataque, fora da própria vez, também não fica adiantado.
     if (de && de !== em && !de.classList.contains("girando") && !emArea) ir(de, 0, 0, pausa(distancia ? 140 : 190));

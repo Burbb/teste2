@@ -344,7 +344,7 @@ class Combate:
         self.lance("golpe", de=self.uid(u), em=self.uid(alvo), dano=dano, crit=crit, crit_motivo=motivo_crit, elemento=tipo,
                    alcance=alcance, absorvido=absorvido, eficacia="super" if eficacia >= 1.3 else "pouco" if eficacia <= 0.7 else None,
                    rotulo=rotulo, hp=max(0, alvo.hp), max_hp=alvo.max_hp,
-                   **({"bonus_motivo": bonus_motivo} if bonus_motivo else {}))
+                   **({"bonus_motivo": bonus_motivo} if bonus_motivo else {}), **self.peso_do_golpe(alvo))
         if detalhar:
             self.detalhe(txt, "vermelho" if defensor else "amarelo")
         else:
@@ -371,6 +371,15 @@ class Combate:
         if not alvo.vivo:
             self.ao_morrer(alvo, por=u, tipo=tipo)
         return dano
+
+    def peso_do_golpe(self, alvo):
+        """O que o golpe significa para a luta (a tela dá o peso): derrubou alguém (abate) e, se era o último
+        inimigo de pé, encerrou a luta (final). Só vai no lance quando é verdade."""
+        if alvo.vivo:
+            return {}
+        if alvo in self.inimigos and not self.inimigos_vivos():
+            return {"abate": True, "final": True}
+        return {"abate": True}
 
     def dano_previsto(self, u, alvo):
         """Quanto o ataque comum de `u` tira de `alvo`, em média (sem sorteio, sem crítico): o juízo dos inimigos.

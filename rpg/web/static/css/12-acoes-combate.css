@@ -33,8 +33,6 @@
 .carta-acao.voltar-carta { --el: #5a4a38; }
 .carta-acao.voltar-carta .acao-icone { font-size: 20px; color: var(--ouro); }
 .carta-acao.voltar-carta .acao-rodape kbd { margin: 0 2px 0 0; }
-#arena.tremor { animation: tremor-arena 0.42s steps(10); }
-@keyframes tremor-arena { 20% { translate: -3px 1px; } 40% { translate: 3px -1px; } 60% { translate: -2px 0; } 80% { translate: 2px 1px; } }
 /* corte do Redemoinho: uma lâmina de luz em pixel que atravessa a carta */
 .corte { position: absolute; left: 4%; width: 92%; height: 4px; z-index: 4; pointer-events: none; transform-origin: center;
   background: linear-gradient(90deg, transparent 0 8%, #fff 8% 70%, #ffe08a 70% 88%, transparent 88%); box-shadow: 0 0 0 1px rgba(0,0,0,0.5), 0 0 6px #fff3a0;

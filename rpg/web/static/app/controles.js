@@ -170,6 +170,7 @@ setInterval(() => {
 async function iniciar() {
   tema();
   Batalha.configurar({ rapido: instantaneo, pausa: ritmo });
+  Sensacao.configurar({ rapido: instantaneo, pausa: ritmo });
   try {
     const r = await fetch(`/config?token=${encodeURIComponent(TOKEN)}`);
     const cfg = await r.json();

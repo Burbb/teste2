@@ -163,3 +163,16 @@ body.em-combate #hud-linha { justify-content: flex-end; }
 .balao.sumindo { animation: some 0.3s ease-in forwards; }
 @keyframes balao { from { opacity: 0; transform: translateY(6px) scale(0.9); } to { opacity: 1; transform: none; } }
 @keyframes some { to { opacity: 0; transform: translateY(-4px); } }
+
+/* ---------------------------------------------------------------- o peso dos golpes (sensacao.js) */
+/* Parada no impacto: tudo na arena congela no quadro do golpe, e quem levou pisca em branco. */
+#arena.parado, #arena.parado * { animation-play-state: paused !important; }
+.carta.lampejo { filter: brightness(2.4) saturate(0.4) !important; }
+/* O golpe final: a câmera chega perto de quem cai (transform-origin vem do JS), o resto escurece. */
+#arena { transition: transform 0.45s cubic-bezier(.2,.8,.3,1); }
+#arena.foco-final { transform: scale(var(--zoom-final, 1.07)); transition: transform 0.16s ease-out; }
+#arena.foco-final .carta:not(.alvo-final) { filter: brightness(0.55); transition: filter 0.16s; }
+/* O número cresce com o peso: o que derruba, e o que encerra a luta. */
+.flutua.abate { font-size: 30px; }
+.flutua.crit.abate { font-size: 40px; }
+.flutua.final { font-size: 48px; color: #fff3a0; animation-duration: 1.8s; text-shadow: 3px 3px 0 #000, 0 0 14px rgba(255, 200, 80, 0.8); }
