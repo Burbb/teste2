@@ -59,7 +59,10 @@ document.addEventListener("click", (ev) => {
     else if (a === "fechar-grimorio") $("#sobre-grimorio").hidden = true;
     return;
   }
-  if (ev.target.id === "sobre-grimorio") { ev.target.hidden = true; return; }  // clique fora do livro fecha
+  // Clique fora da caixa (no véu escuro em volta) fecha, como Esc: livro, mapa e árvore de talentos.
+  if (ev.target.id === "sobre-grimorio") { ev.target.hidden = true; return; }
+  if (ev.target.id === "sobre-mapa") { alternarMapa(false); return; }
+  if (ev.target.id === "sobre-talentos") { fecharTudo(); return; }
   if (ev.target.closest(".talento-aviso")) { pedir("Talentos", "_", null); return; }
   const carta = ev.target.closest("[data-conversar]");
   if (carta) {

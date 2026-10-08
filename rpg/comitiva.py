@@ -559,21 +559,24 @@ def fogueira(g, intro=None):
     Conversar, trocar quem vai junto amanhã e, por fim, dormir. Devolve True se houve conversa de história."""
     conversou = False
     ociosos = set()
+    primeira = True
     while True:
         ms, rs = membros(g), reserva(g)
         g.ui.cena("Fogueira", g.contexto_cena(), "menu")
-        if intro:
-            g.dizer(intro, "cinza")
-            intro = None
+        # A frase da noite é parte da tela: quem a desenha mostra de novo a cada volta (carinho, trocar quem vai),
+        # senão a página encolhe e pula; no texto, ela sai só uma vez.
         dados = {"ativos": estado(g), "reserva": estado(g, reserva(g)), "limite": LIMITE,
-                 "clima": g.clima, "bioma": g.loc["bioma"]}
+                 "clima": g.clima, "bioma": g.loc["bioma"], "intro": intro}
         fera = getattr(g.j, "companheiro", None)
         if fera:  # o animal do patrulheiro dorme junto do fogo
             dados["fera"] = {"nome": fera["nome"], "tipo": fera["tipo"], "hp": fera["hp"], "max_hp": fera["max_hp"]}
         if not g.ui.painel("acampamento", dados):
+            if intro and primeira:
+                g.dizer(intro, "cinza")
             for m in ms + rs:
                 onde = "na comitiva" if m in ms else "no acampamento"
                 g.dizer(f"{nome(m['id'])} ({onde}) — vida {m['hp']}/{m['max_hp']} · {nivel(m)[0]}", "cinza")
+        primeira = False
         opcoes = []
         for m in ms + rs:
             tem = proxima_conversa(g, m) and m["ultima_conversa"] != g.dia

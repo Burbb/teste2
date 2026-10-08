@@ -514,13 +514,13 @@ const Telas = (() => {
   function maxCompra(c, ouro) { return Math.max(0, Math.min(99, c.limite ?? 99, Math.floor(ouro / c.preco))); }
   function loja(d) {
     // Na vitrine, o número no canto do ícone é o que o mercador tem (como nos jogos do gênero); o que você carrega
-    // está na bolsa e no topo, e a dica de cada item repete.
+    // está na bolsa e no topo.
     const cons = d.consumiveis.map((c) => {
       const max = maxCompra(c, d.ouro);
       const q = Math.max(1, Math.min(qtdLoja[c.id] || 1, max || 1));
       const caro = max < 1;
       const icone = c.id === "provisoes" ? "pernil" : c.id === "flechas" ? "aljava" : (ICONE_ITEM[c.id] || "pocao");
-      return `<div role="button" tabindex="0" class="mercadoria suprimento${caro ? " caro" : ""}" data-comprar="${h(c.id)}" data-preco="${c.preco}" data-max="${max}" ${dica(`<b>${h(c.nome)}</b><div>${Realce.texto(c.desc)}</div><div class="tipo">Você tem ${c.tem}.${c.estoque !== undefined ? ` O mercador tem ${c.estoque} hoje.` : ""}</div><div class="rodape">${caro ? (c.estoque === 0 ? "Esgotado: o mercador reabastece amanhã cedo." : c.limite === 0 ? "Você não carrega mais." : "Ouro insuficiente.") : "Escolha a quantidade e clique para comprar. Shift+clique compra 5."}</div>`)}>
+      return `<div role="button" tabindex="0" class="mercadoria suprimento${caro ? " caro" : ""}" data-comprar="${h(c.id)}" data-preco="${c.preco}" data-max="${max}" ${dica(`<b>${h(c.nome)}</b><div>${Realce.texto(c.desc)}</div><div class="rodape">${caro ? (c.estoque === 0 ? "Esgotado: o mercador reabastece amanhã cedo." : c.limite === 0 ? "Você não carrega mais." : "Ouro insuficiente.") : "Escolha a quantidade e clique para comprar. Shift+clique compra 5."}</div>`)}>
         <span class="slot-px">${S(icone, 2)}${c.estoque ? `<span class="qtd">${c.estoque}</span>` : ""}</span>
         <span class="merc-nome">${h(c.nome)}${c.estoque === 0 ? '<small class="merc-estoque esgotado">esgotado</small>' : ""}</span>
         <span class="preco">${S("moeda", 1)}<span class="total">${c.preco * q}</span></span>
@@ -791,7 +791,7 @@ const Telas = (() => {
         <span class="figura-nome">${h(d.fera.nome.split(" ").pop())}</span></span>` : "";
     // Dormir: um selo sobre a barraca, que balança de leve (o fim da noite fica onde a gente dorme, não numa lista).
     const dormir = `<button type="button" class="dormir-barraca" style="left:${(BARRACA[0] / 320) * 100}%;top:${(BARRACA[1] / 120) * 100}%">${S("lua", 1)} Dormir até o amanhecer</button>`;
-    return `<div class="tela acampamento"><div class="fogueira-palco"><canvas class="fogueira-cena" width="320" height="120"></canvas>${botoes}${fera}${dormir}</div>
+    return `<div class="tela acampamento">${d.intro ? `<p class="sussurro">${h(d.intro)}</p>` : ""}<div class="fogueira-palco"><canvas class="fogueira-cena" width="320" height="120"></canvas>${botoes}${fera}${dormir}</div>
       <div class="dica-uso">${figuras.length ? `Clique em alguém para conversar ou decidir quem vai com você amanhã. Quem fica no acampamento descansa, não come das suas provisões e não opina nas suas escolhas. ${d.ativos.length}/${d.limite} na comitiva.` : "Só você, o fogo e os barulhos da mata. Quem você encontrar pelo caminho pode se sentar aqui um dia."}</div></div>`;
   }
 

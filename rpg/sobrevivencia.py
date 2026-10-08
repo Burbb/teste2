@@ -14,7 +14,7 @@ FERIMENTOS = {
     "perna": dict(nome="Perna torcida", dias=5, mult={"agi": 0.7}),
     "concussao": dict(nome="Concussão", dias=3, mult={"poder": 0.75, "max_rec": 0.85}),
     "queimadura": dict(nome="Queimadura grave", dias=5, mult={"max_hp": 0.88}, aberto=True),
-    "infeccao": dict(nome="INFECÇÃO", dias=None, mult={"atk": 0.85, "poder": 0.85, "agi": 0.85}),
+    "infeccao": dict(nome="Infecção", dias=None, mult={"atk": 0.85, "poder": 0.85, "agi": 0.85}),
 }
 MAX_PROVISOES = 12
 CHANCE_INFECCAO = 0.3
@@ -158,10 +158,10 @@ def descrever(jogador):
         d = FERIMENTOS[f["id"]]
         txt = d["nome"]
         if d["dias"]:
-            txt += f" ({f['dias']}d" + (", tratado" if f["tratado"] or not d.get("aberto") else ", ABERTO") + ")"
+            txt += f" ({f['dias']}d" + (", tratado" if f["tratado"] or not d.get("aberto") else ", aberto") + ")"
         partes.append(txt)
     if jogador.fome:
-        partes.append("FAMINTO" if jogador.fome < 3 else "MORRENDO DE FOME")
+        partes.append("Faminto" if jogador.fome < 3 else "Morrendo de fome")
     return partes
 
 

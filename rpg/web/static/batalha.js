@@ -440,7 +440,7 @@ const Batalha = (() => {
         marcar(m.em);
         if (de && em) { if (aDistancia(m, de) || emArea) await projetil(de, em, "flecha"); else await investir(de, em); }
         if (em) {
-          if (m.motivo === "esquiva") reiniciar(em, "esquivou", 420);
+          if (m.motivo === "esquiva") reiniciar(em, "esquivou", 560);
           numero(em, m.motivo === "imune" ? "imune" : "esquiva", "info");
         }
         som("esquiva");
@@ -594,12 +594,15 @@ const Batalha = (() => {
     return fora;
   }
 
-  /** Um projétil que cai do alto sobre a carta (chuva de flechas, luz do julgamento). */
-  async function queda(para, sprite, atraso) {
+  /** Um projétil que cai do alto sobre a carta (chuva de flechas, luz do julgamento). `erra`: quem se esquivou
+   *  saiu do lugar, e o projétil crava no chão ao lado da carta. */
+  async function queda(para, sprite, atraso, erra = false) {
     if (rapido()) return;
     await dormir(atraso);
     const ra = arena.getBoundingClientRect(), b = para.getBoundingClientRect();
-    const x1 = b.left + b.width * (0.2 + Math.random() * 0.6) - ra.left - 16, y1 = b.top + b.height / 2 - ra.top - 16;
+    const x1 = erra ? b.left + b.width * (0.55 + Math.random() * 0.4) - ra.left - 16
+      : b.left + b.width * (0.2 + Math.random() * 0.6) - ra.left - 16;
+    const y1 = erra ? b.bottom - ra.top - 22 + Math.random() * 8 : b.top + b.height / 2 - ra.top - 16;
     const x0 = x1 - 50 - Math.random() * 30, y0 = -30;
     const ang = sprite === "flecha" ? Math.atan2(y1 - y0, x1 - x0) * 180 / Math.PI + 45 : 0;
     const p = document.createElement("div");
@@ -670,7 +673,7 @@ const Batalha = (() => {
       if (!em) return;
       marcar(x.em);
       if (x.tipo === "golpe") { impacto(x, em); som(x.crit ? "critico_golpe" : "golpe"); }
-      else { reiniciar(em, "esquivou", 420); numero(em, "esquiva", "info"); som("esquiva"); }
+      else { reiniciar(em, "esquivou", 560); numero(em, "esquiva", "info"); som("esquiva"); }
     }));
     await dormir(pausa(tiros.some((x) => x.crit) ? 460 : 360));
     for (const x of resto) await lance(x);
@@ -686,17 +689,22 @@ const Batalha = (() => {
     const el = golpes.find((x) => x.elemento)?.elemento || "fisico";
     const distancia = golpes.some((x) => x.alcance === "distancia");
     const alvosEl = [...new Set(golpes.map((x) => x.em))].map(carta).filter(Boolean);
+    // Quem se esquiva sai do lugar enquanto a salva cai (o projétil crava no chão ao lado), não depois dela.
+    const esquivas = new Set(golpes.filter((x) => x.tipo === "erro" && x.motivo === "esquiva").map((x) => carta(x.em)));
+    const desviar = (ms) => esquivas.forEach((a) => a && setTimeout(() => reiniciar(a, "esquivou", 560), ms));
     // 1) a salva no ar
     if (el === "fisico" && distancia) {
       som("disparo");
       await dormir(pausa(180));  // a saraivada sobe antes de cair
-      await Promise.all(alvosEl.flatMap((a) => [0, 1, 2].map((k) => queda(a, "flecha", k * 110 + Math.random() * 60))));
+      desviar(pausa(200));
+      await Promise.all(alvosEl.flatMap((a) => [0, 1, 2].map((k) => queda(a, "flecha", k * 110 + Math.random() * 60, esquivas.has(a)))));
     } else if (el === "fisico") {
       if (de) reiniciar(de, "giro", 300);
       await dormir(pausa(160));
     } else if (["sagrado", "sombra", "arcano", "gelo", "veneno"].includes(el)) {
       som("lancar");
-      await Promise.all(alvosEl.map((a, k) => queda(a, PROJETIL[el] || "orbe_arcano", k * 40)));
+      desviar(pausa(150));
+      await Promise.all(alvosEl.map((a, k) => queda(a, PROJETIL[el] || "orbe_arcano", k * 40, esquivas.has(a))));
     } else {
       // fogo (Inferno): o chão se abre sob todos de uma vez
       som("lancar");
@@ -709,8 +717,12 @@ const Batalha = (() => {
       if (!em) return;
       marcar(x.em);
       if (x.tipo === "golpe") impacto(x, em);
-      else { if (x.motivo === "esquiva") reiniciar(em, "esquivou", 420); numero(em, x.motivo === "imune" ? "imune" : "esquiva", "info"); }
+      else {
+        if (x.motivo === "esquiva" && !em.classList.contains("esquivou")) reiniciar(em, "esquivou", 560);
+        numero(em, x.motivo === "imune" ? "imune" : "esquiva", "info");
+      }
     });
+    if (esquivas.size) som("esquiva");
     const critou = golpes.some((x) => x.crit);
     som(critou ? "critico_golpe" : SOM_ELEMENTO[el] || "golpe");
     setTimeout(() => som("golpe_leve"), 70);

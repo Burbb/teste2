@@ -6,19 +6,26 @@ function rolarFim() {
   if (rolagemFixa !== null) pagina.scrollTop = rolagemFixa;
   else if (seguir) pagina.scrollTop = pagina.scrollHeight;
 }
-/* Telas que se redesenham no lugar (mural, mercado, inventário) não podem pular: a rolagem fica onde a pessoa
-   estava até as novas opções chegarem; a altura antiga segura a página enquanto o conteúdo é trocado. */
+/* Telas que se redesenham no lugar (mural, mercado, inventário, fogueira) não podem pular: a rolagem fica onde a
+   pessoa estava até as novas opções chegarem, e a altura que a página já teve fica segura enquanto a tela é a mesma
+   (se o conteúdo encolhe, sobra espaço embaixo em vez de a página saltar). Só uma cena nova solta a altura. */
 let rolagemFixa = null;
+let ancora = null;  // onde a tela desenhada (.tela) estava na janela: a nova volta para o mesmo lugar
 let cenaInterrompida = false;  // houve luta ou saque desde a última cena (ver novaCena)
+const topoTela = () => { const t = textoEl.querySelector(".tela"); return t ? t.getBoundingClientRect().top - pagina.getBoundingClientRect().top : null; };
 function fixarRolagem() {
   rolagemFixa = pagina.scrollTop;
-  textoEl.style.minHeight = textoEl.offsetHeight + "px";
+  ancora = topoTela();
+  // A altura vai na folha inteira, não no texto: no texto, o min-height mudaria a margem da última linha.
+  folha.style.minHeight = folha.offsetHeight + "px";
 }
 function soltarRolagem() {
   if (rolagemFixa === null) return;
-  textoEl.style.minHeight = "";
   pagina.scrollTop = rolagemFixa;
-  rolagemFixa = null;
+  // Se algo acima da tela sumiu no redesenho (um aviso da cena anterior), a tela não sobe: a rolagem compensa.
+  const agora = topoTela();
+  if (ancora !== null && agora !== null) pagina.scrollTop += agora - ancora;
+  rolagemFixa = null; ancora = null;
 }
 pagina.addEventListener("scroll", () => { seguir = pagina.scrollTop + pagina.clientHeight >= pagina.scrollHeight - 80; }, { passive: true });
 
@@ -71,6 +78,7 @@ async function novaCena(m) {
     return;
   }
   soltarRolagem();
+  folha.style.minHeight = "";
   promptEl.style.minHeight = ""; promptEl.classList.remove("segurando");
   Telas.novaVisita();  // saiu da tela: a quantidade do mercado volta a 1 na próxima visita
   if (!instantaneo() && textoEl.childElementCount) { folha.classList.add("saindo"); await espera(200); }
