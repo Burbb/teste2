@@ -381,6 +381,7 @@ function prepararRoda() {
   Batalha.foco("j");
   promptEl.appendChild(el("span", "marca-roda"));  // a próxima mensagem limpa o prompt, e com ele a roda
   pergunta.teclasNum = [];
+  requestAnimationFrame(() => Batalha.abrirCaminho());  // a roda já montada: balão de fala que a cubra sai da frente
 }
 
 function rodaDeAcoes(m) {

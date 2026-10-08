@@ -889,7 +889,6 @@ const Batalha = (() => {
     document.body.appendChild(b);
     posicionarBalao(b, naLuta);
     baloes[cid] = b;
-    b.addEventListener("click", () => b.remove());
     setTimeout(() => { b.classList.add("sumindo"); setTimeout(() => b.remove(), 300); }, Math.min(8000, 2600 + texto.length * 45));
     return Math.min(1600, 500 + texto.length * 18);
   }
@@ -930,6 +929,19 @@ const Batalha = (() => {
       b.style.setProperty("--rabo", Math.max(14, Math.min(w - 14, r.left + r.width / 2 - c.x)) + "px");
     }
   }
+  /** A roda de ações acabou de aparecer: um balão que caiu por cima dela (a fala veio antes da sua vez) muda de
+   *  lugar; se não houver lugar livre, some. A vez é sua, e as suas ações não ficam atrás de ninguém. */
+  function abrirCaminho() {
+    const acoes = [...document.querySelectorAll("#roda > *, .roda-janela")].filter((o) => o.offsetParent !== null)
+      .map((o) => o.getBoundingClientRect());
+    const cobre = (b) => { const r = b.getBoundingClientRect(); return acoes.some((o) => r.left < o.right && o.left < r.right && r.top < o.bottom && o.top < r.bottom); };
+    for (const [cid, b] of Object.entries(baloes)) {
+      if (!b.isConnected || !cobre(b)) continue;
+      const quem = document.querySelector(`#arena .carta[data-cid="${cid}"]`);
+      if (quem) { b.classList.remove("lado", "a-direita", "a-esquerda", "abaixo"); posicionarBalao(b, quem); }
+      if (cobre(b)) { b.classList.add("sumindo"); setTimeout(() => b.remove(), 300); }
+    }
+  }
   function opiniao(cid, nome, delta) {
     som(delta > 0 ? "aprova" : "desaprova");
     cartao(cid, nome, { delta });
@@ -937,5 +949,5 @@ const Batalha = (() => {
     if (carta) reiniciar(carta, delta > 0 ? "reagiu-bem" : "reagiu-mal", 900);
   }
 
-  return { configurar, catalogo, desenhar, lance, vez, foco, elCarta, alvos, limparAlvos, mirar, balao, opiniao };
+  return { configurar, catalogo, desenhar, lance, vez, foco, elCarta, alvos, limparAlvos, mirar, balao, opiniao, abrirCaminho };
 })();
