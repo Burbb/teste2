@@ -80,9 +80,9 @@ hardcore, morrer apaga o save: a morte é permanente de verdade.
 Pixel art, no espírito de Daggerfall e Tibia, e tudo desenhado em código: não há arquivos de
 imagem. Os sprites são grades de pixels no `sprites.js`, sempre desenhados em pixels inteiros da
 tela (mesmo com zoom de 125% ou 150% no sistema). As fontes são livres (OFL) e cada uma tem um
-papel: a gótica **Jacquard 24** só nos títulos grandes; **Alegreya SC** (versalete) nos
-cabeçalhos, nomes e botões; **Alegreya** na história, feita para leitura longa; **Alegreya Sans**
-na interface miúda; **Jersey 15** nos números. O botão "Fonte" no topo volta às fontes pixel.
+papel: a gótica **Jacquard 24** nos títulos e nomes; **Jersey 15** nos números e rótulos curtos;
+**Pixelify Sans** na interface; e **Alegreya** na história, feita para leitura longa. O botão "Fonte"
+no topo troca só a fonte da história, pela pixel.
 
 - **A história em primeiro lugar.** Uma cena por página, com uma **paisagem em pixel art** no
   topo que muda com o bioma, o período do dia e o clima (chuva, neve, névoa,

@@ -126,7 +126,7 @@ body.em-combate #hud-linha { justify-content: flex-end; }
 .flutua.crit { color: var(--ouro); font-size: 34px; animation-duration: 1.4s; }
 /* roubo de vida: número de cura (verde, é vida que entra) com contorno de sangue, e o nome da fonte embaixo */
 .flutua.roubo { color: #9be37a; font-size: 30px; text-shadow: 2px 2px 0 #000, 0 0 8px #c0182a, 0 0 2px #ff4a5a; }
-.flutua.motivo { top: 22px; font-family: var(--ui); font-size: 13px; font-weight: 700; letter-spacing: .02em; color: var(--ouro);
+.flutua.motivo { top: 22px; font-family: var(--texto); font-size: 13px; font-weight: 700; letter-spacing: .02em; color: var(--ouro);
   background: rgba(10, 6, 4, .78); border: 1px solid rgba(242, 201, 76, .45); padding: 1px 6px; text-shadow: none;
   animation-duration: 1.5s; left: 50% !important; }
 .flutua.motivo.roubo-fonte { color: #ffb3bd; border-color: rgba(224, 72, 88, .6); top: -40px; }

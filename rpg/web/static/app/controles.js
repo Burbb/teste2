@@ -15,7 +15,6 @@ function mudarVelocidade() {
   velocidade = ORDEM_VEL[(ORDEM_VEL.indexOf(velocidade) + 1) % ORDEM_VEL.length];
   guardar("cdf-velocidade", velocidade);
   $("#vel-rotulo").textContent = NOME_VEL[velocidade];
-  alternarFonte(ler("cdf-fonte") === "pixel");
 }
 function alternarFonte(forcar) {
   const pixel = forcar === undefined ? !corpo.classList.contains("fonte-pixel") : forcar;
@@ -161,6 +160,7 @@ async function iniciar() {
     if (!ler("cdf-velocidade") && VELOCIDADES[cfg.velocidade] !== undefined) velocidade = cfg.velocidade;
   } catch (e) { /* usa o padrão */ }
   $("#vel-rotulo").textContent = NOME_VEL[velocidade];
+  alternarFonte(ler("cdf-fonte") === "pixel");
   $("#botao-som").classList.toggle("desligado", !Som.ligado);
   brasas();
   conectar();

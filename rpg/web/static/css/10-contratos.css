@@ -48,7 +48,7 @@
 .rastro-contrato.cacavel { cursor: pointer; animation: chamar-caca 1.8s ease-in-out infinite; }
 .rastro-contrato.cacavel:hover { background: linear-gradient(90deg, rgba(226, 189, 99, 0.16), transparent 85%); }
 @keyframes chamar-caca { 50% { box-shadow: inset 3px 0 0 var(--ouro), -4px 0 14px -6px rgba(226, 189, 99, 0.8); } }
-.rastro-cacar { display: block; font-family: var(--ui); font-size: 12px; font-weight: 700; color: var(--ouro); }
+.rastro-cacar { display: block; font-family: var(--texto); font-size: 12px; font-weight: 700; color: var(--ouro); }
 .escolha.op-contrato { border-color: #8a5a0c; }
 .escolha.op-contrato .rotulo::after { content: " ◆"; color: var(--ouro); }
 .rastro-arte { flex: none; width: 36px; height: 36px; display: grid; place-items: center; background: radial-gradient(circle at 50% 42%, rgba(255, 232, 190, 0.07), rgba(0, 0, 0, 0.45) 70%); }

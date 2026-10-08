@@ -127,11 +127,13 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
 - Perguntas que moram numa janela por cima, e não no pé da página, vêm marcadas nos metadados das opções: a
   confirmação de algo pedido pela tela (`Jogo.confirmar`: abandonar contrato, viagem perigosa) e o item achado
   (`achado`: o cartão e os botões numa janela própria, fora do log)
-- `css/01..13-*.css` por componente. A identidade é de fantasia sombria: nada de moldura nem caixa dentro de caixa.
-  Painel é uma superfície escura com grão (`.moldura`), separada do resto por sombra (`--sombra-painel`) e espaço;
-  divisória é um fio de luz que some nas pontas (`--divisor`); nicho de item tem sombra para dentro e a raridade
-  é um aro de luz (`--aro` no `.slot-px`); etiqueta é tingida na própria cor, sem borda. Títulos em Grenze Gotisch,
-  prosa e rótulos em Alegreya, números em Jersey 15 (no modo "Fonte: pixel", Jacquard 24 e Pixelify Sans).
+- `css/01..13-*.css` por componente. A identidade é pixel art em paleta indexada (a dos sprites, publicada por
+  `Sprites.publicar()` como `--p-<letra>`): toda caixa é um dos materiais de `01-base.css` (`m-painel`, `m-janela`,
+  `m-placa`, `m-nicho`, `m-sulco`, `m-etiqueta`), com um anel só, preto, de 1 texel (`--P`) e canto chanfrado.
+  Pedra, pergaminho, fuligem e luz são ladrilhos pontilhados gerados em `sprites.js`; nada de gradiente liso,
+  desfoque, canto redondo ou cor translúcida (`tests/test_estilo_pixel.py` trava isso, arquivo por arquivo).
+  Títulos em Jacquard 24 (com os algarismos da Jersey), números e rótulos curtos em Jersey 15, interface em
+  Pixelify Sans, prosa em Alegreya ("Fonte: pixel" troca só a prosa).
 
 ## Rede de segurança
 

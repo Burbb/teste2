@@ -1,11 +1,13 @@
 /* Crônicas da Fenda — pixel art: pedra e pergaminho em paleta indexada, cada caixa com um anel só de 1 texel
    (os materiais, mais abaixo), nada de moldura dentro de moldura.
-   Fontes (OFL, embutidas): Grenze Gotisch (títulos), Alegreya (prosa e rótulos, ver 11-tipografia.css), Jersey 15
-   (números); no modo "Fonte: pixel", Jacquard 24 e Pixelify Sans. */
+   Fontes (OFL, embutidas), todas pixel menos a da prosa: Jacquard 24 (títulos), Jersey 15 (números e rótulos curtos),
+   Pixelify Sans (interface) e Alegreya (a prosa, ver 11-tipografia.css). */
 
 @font-face { font-family: "Jacquard 24"; src: url(../fontes/jacquard-24-latin-400-normal.woff2) format("woff2"); font-display: swap; }
-/* Títulos: um gótico moderno, legível também nos números. Um peso só, servindo a qualquer peso pedido. */
-@font-face { font-family: "Titulo"; font-weight: 100 900; src: url(../fontes/grenze-gotisch-latin-600-normal.woff2) format("woff2"); font-display: swap; }
+/* Títulos: letras góticas, mas os algarismos e o %+/ da fonte de números (o 5 gótico é difícil de ler). A face da
+   Jersey vem por último: entre faces da mesma família, a última declarada é a primeira consultada. */
+@font-face { font-family: "Titulo"; src: url(../fontes/jacquard-24-latin-400-normal.woff2) format("woff2"); font-display: swap; }
+@font-face { font-family: "Titulo"; src: url(../fontes/jersey-15-latin-400-normal.woff2) format("woff2"); unicode-range: U+0030-0039, U+0025, U+002B, U+002F; font-display: swap; }
 @font-face { font-family: "Pixelify Sans"; font-weight: 400; src: url(../fontes/pixelify-sans-latin-400-normal.woff2) format("woff2"); font-display: swap; }
 @font-face { font-family: "Pixelify Sans"; font-weight: 600; src: url(../fontes/pixelify-sans-latin-600-normal.woff2) format("woff2"); font-display: swap; }
 @font-face { font-family: "Jersey 15"; src: url(../fontes/jersey-15-latin-400-normal.woff2) format("woff2"); font-display: swap; }
@@ -40,7 +42,7 @@
      sombra, sulco e ladrilho é múltiplo dele. A paleta indexada (--p-<letra>) e as texturas vêm de sprites.js. */
   --P: calc(var(--px, 1px) * 2);
   --borda: calc(var(--P) + 0.01px);  /* o navegador arredonda a borda para baixo: sem o 0,01px, zoom de 110% perde um pixel */
-  --titulo: "Titulo", "Jacquard 24", "Pixelify Sans", serif;
+  --titulo: "Titulo", "Pixelify Sans", serif;
   --texto: "Pixelify Sans", "Trebuchet MS", sans-serif;
   --num: "Jersey 15", "Pixelify Sans", monospace;
   --sombra: 0 22px 44px -18px rgba(0, 0, 0, 0.95), 0 3px 10px rgba(0, 0, 0, 0.5);
@@ -59,6 +61,7 @@ body {
   font-size: 17px;
   overflow: hidden;
   image-rendering: pixelated;
+  font-synthesis: none;  /* nada de negrito ou itálico falso: borra a fonte pixel */
 }
 img.sprite, canvas { image-rendering: pixelated; image-rendering: crisp-edges; }
 /* Sprites em pixels inteiros da tela: --px vale 1 pixel do aparelho (ou 2, 3...), nunca 1,25. */

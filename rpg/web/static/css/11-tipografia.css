@@ -1,42 +1,20 @@
 /* ================================================================== tipografia
-   Um papel para cada fonte, como nos RPGs de texto (Darkest Dungeon, Pentiment, Disco Elysium):
-   - gótica (Jacquard 24): só títulos grandes e o logo, a identidade do jogo;
-   - Alegreya SC (versalete): cabeçalhos, nomes e botões, legível em qualquer tamanho;
-   - Alegreya: a prosa, desenhada para leitura longa, com itálico de verdade;
-   - Alegreya Sans: interface miúda (dicas, rótulos);
-   - Jersey 15: números da HUD e do combate (dano, vida, ouro).
-   "Fonte: pixel" no topo volta às fontes pixel antigas. */
+   A moldura em pixel, a leitura em serifa, como nos RPGs de texto em pixel art:
+   - Jacquard 24 ("Titulo", 01-base.css): títulos, nomes e cabeçalhos, com os algarismos da Jersey;
+   - Jersey 15: números e rótulos curtos (HUD, dano, preço, etiquetas, nomes da doca);
+   - Pixelify Sans: a interface com frase (botões, dicas, nomes de carta);
+   - Alegreya: a prosa (a folha, as escolhas, falas, bilhetes, lore), desenhada para leitura longa, com itálico de
+     verdade. "Fonte: pixel" no topo troca só ela, pela Pixelify. */
 @font-face { font-family: "Alegreya"; font-weight: 400; src: url(../fontes/alegreya-latin-400-normal.woff2) format("woff2"); font-display: swap; }
 @font-face { font-family: "Alegreya"; font-weight: 400; font-style: italic; src: url(../fontes/alegreya-latin-400-italic.woff2) format("woff2"); font-display: swap; }
 @font-face { font-family: "Alegreya"; font-weight: 600; src: url(../fontes/alegreya-latin-600-normal.woff2) format("woff2"); font-display: swap; }
 @font-face { font-family: "Alegreya"; font-weight: 700; src: url(../fontes/alegreya-latin-700-normal.woff2) format("woff2"); font-display: swap; }
-@font-face { font-family: "Alegreya SC"; font-weight: 500; src: url(../fontes/alegreya-sc-latin-500-normal.woff2) format("woff2"); font-display: swap; }
-@font-face { font-family: "Alegreya SC"; font-weight: 700; src: url(../fontes/alegreya-sc-latin-700-normal.woff2) format("woff2"); font-display: swap; }
-@font-face { font-family: "Alegreya Sans"; font-weight: 500; src: url(../fontes/alegreya-sans-latin-500-normal.woff2) format("woff2"); font-display: swap; }
-@font-face { font-family: "Alegreya Sans"; font-weight: 700; src: url(../fontes/alegreya-sans-latin-700-normal.woff2) format("woff2"); font-display: swap; }
-:root { --cabeca: "Alegreya SC", Georgia, serif; --prosa: "Alegreya", Georgia, serif; --ui: "Alegreya Sans", "Trebuchet MS", sans-serif; }
-body.fonte-pixel { --titulo: "Jacquard 24", "Pixelify Sans", serif; --cabeca: var(--titulo); --prosa: var(--texto); --ui: var(--texto); }
-body:not(.fonte-pixel) { font-family: var(--ui); }
+:root { --prosa: "Alegreya", Georgia, serif; }
+body.fonte-pixel { --prosa: var(--texto); }
 body:not(.fonte-pixel) #folha, body:not(.fonte-pixel) .escolha, body:not(.fonte-pixel) .balao span, body:not(.fonte-pixel) .cc-fala,
 body:not(.fonte-pixel) .bilhete, body:not(.fonte-pixel) .contrato-desc, body:not(.fonte-pixel) .lore { font-family: var(--prosa); }
 body:not(.fonte-pixel) #folha { font-size: 21px; line-height: 1.55; }
 body:not(.fonte-pixel) .escolha { font-size: 20px; }
 body:not(.fonte-pixel) .escolha.secundaria { font-size: 18px; }
-body:not(.fonte-pixel) .acoes-combate .escolha { font-family: var(--cabeca); font-size: 17px; }
-body:not(.fonte-pixel) :is(.hud-nome b, .continuar, .secao h3, .tela h4, .cartao .cab b, .arvore-col-titulo, #talento-info b,
-  .festa .habilidade-nova b, .toast b, #historico-lista .h-cena, #dica-item b, #dica-equipado b, .menu-item b, .cc-topo b, .heroi-nome) {
-  font-family: var(--cabeca); font-weight: 700; letter-spacing: 0.01em; }
-body:not(.fonte-pixel) .secao h3 { font-size: 21px; }
-body:not(.fonte-pixel) .tela h4 { font-size: 23px; }
-body:not(.fonte-pixel) .cartao .cab b, body:not(.fonte-pixel) #dica-item b, body:not(.fonte-pixel) #dica-equipado b, body:not(.fonte-pixel) .cc-topo b { font-size: 21px; }
-body:not(.fonte-pixel) .menu-item b { font-size: 19px; }
-body:not(.fonte-pixel) .hud-nome b, body:not(.fonte-pixel) .toast b, body:not(.fonte-pixel) #talento-info b,
-body:not(.fonte-pixel) .arvore-col-titulo, body:not(.fonte-pixel) #historico-lista .h-cena, body:not(.fonte-pixel) .festa .habilidade-nova b { font-size: 23px; }
-body:not(.fonte-pixel) .heroi-nome { font-size: 26px; }
-body:not(.fonte-pixel) .continuar { font-size: 24px; padding: 6px 26px 7px; }
-body:not(.fonte-pixel) .pergunta-rotulo, body:not(.fonte-pixel) .rol-attr { font-family: var(--cabeca); font-size: 14px; letter-spacing: 0.08em; text-transform: none; }
-body:not(.fonte-pixel) .carta-nome, body:not(.fonte-pixel) .figura-nome { font-family: var(--cabeca); }
-/* no modo livro, quem pedia a fonte de interface pixel passa a usar a Alegreya Sans */
-body:not(.fonte-pixel) { --texto: "Alegreya Sans", "Trebuchet MS", sans-serif; }
-body:not(.fonte-pixel) #texto p.detalhe { font-family: var(--ui); font-size: 16px; line-height: 1.25; }
-body:not(.fonte-pixel) .chip { font-family: var(--ui); font-weight: 700; font-size: 16px; }
+/* As cartas de ação do combate são botões, não prosa: ficam na fonte da interface. */
+body:not(.fonte-pixel) .acoes-combate .escolha { font-family: var(--texto); }
