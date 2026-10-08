@@ -443,20 +443,29 @@ def amanhecer(g, descanso, refeicao=False):
     for m in reserva(g):  # no acampamento, todo mundo se recupera
         m["hp"] = m["max_hp"]
         m["ferido"] = False
-    if not refeicao:
-        comer(g)
+    return comer(g) if not refeicao else []
+
+
+def depois_do_amanhecer(g, famintos):
+    """O que a comitiva diz quando o dia já raiou: a queixa de quem passou fome, e o soldo do Morel."""
+    for cid in famintos:
+        mudar_aprovacao(g, cid, -6, fala=f"{nome(cid)} passa o dia sem comer. Não reclama em voz alta.")
     if presente(g, "morel"):
         pagar_soldo(g)
 
 
 def comer(g):
-    """Cada companheiro come uma provisão por dia. Uma comitiva come; fome tem preço."""
+    """Cada companheiro come uma provisão por dia. Uma comitiva come; fome tem preço (a queixa vem depois, em
+    depois_do_amanhecer). Devolve quem passou fome."""
+    famintos = []
     for m in membros(g):
         if g.j.provisoes > 0:
             g.j.provisoes -= 1
         else:
             m["hp"] = max(1, m["hp"] - m["max_hp"] // 4)
-            mudar_aprovacao(g, m["id"], -6, fala=f"{nome(m['id'])} passa o dia sem comer. Não reclama em voz alta.")
+            g.relatar(None, None, "perigo", m["id"], f"{nome(m['id'])} sem comida: −{m['max_hp'] // 4} vida")
+            famintos.append(m["id"])
+    return famintos
 
 
 def pagar_soldo(g):

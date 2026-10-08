@@ -135,6 +135,11 @@ const Som = (() => {
       src.start(t); src.stop(t + 0.4);
     },
     escolha() { estalo(ctx.currentTime, 2500, 0.12, 0.03); },
+    amanhecer() {
+      const t = ctx.currentTime;
+      [262, 330, 392, 523].forEach((f, i) => tom(t + i * 0.18, f, 0.05, 1.4, "sine"));
+      sopro(t + 0.35, 1.4, 2000, 7000, 0.02, 0.5, "highpass");
+    },
     nivel() { const t = ctx.currentTime; [392, 494, 587, 784].forEach((f, i) => tom(t + i * 0.11, f, 0.09, 0.9, "triangle")); },
     // Aprender talento: "plim" de moeda + um brilho mágico que sobe (curto: é para viciar, não para cansar).
     aprender() {

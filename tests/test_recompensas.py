@@ -84,3 +84,35 @@ class TestNivel(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestAmanhecer(unittest.TestCase):
+    def test_tela_grafica_resume_a_noite_num_quadro(self):
+        ui = AnotadorGrafico(random.Random(1))
+        g = Jogo(ui, seed=8, pasta_saves=tempfile.mkdtemp())
+        g.iniciar("Teste", "guerreiro")
+        g.j.hp = 10
+        g.j.provisoes = 3
+        ui.textos.clear()
+        g.abrir_relato()
+        g.descansar(0.3)
+        g.novo_dia(descanso=1)
+        quadros = [d for t, d in ui.festas if t == "amanhecer"]
+        self.assertEqual(len(quadros), 1)
+        icones = [x["icone"] for x in quadros[0]["itens"]]
+        self.assertIn("coracao", icones)   # a vida que voltou
+        self.assertIn("pernil", icones)    # a provisão gasta
+        self.assertFalse([t for t in ui.textos if "Amanhece" in t or "recupera" in t], ui.textos)
+        self.assertIsNone(g.relato)
+
+    def test_texto_continua_contando(self):
+        ui = Anotador(random.Random(1))
+        g = Jogo(ui, seed=8, pasta_saves=tempfile.mkdtemp())
+        g.iniciar("Teste", "guerreiro")
+        g.j.hp = 10
+        g.abrir_relato()
+        g.descansar(0.3)
+        g.novo_dia(descanso=1)
+        self.assertTrue(any(t.startswith("Você recupera") for t in ui.textos))
+        self.assertTrue(any(t.startswith("Amanhece o dia") for t in ui.textos))
+        self.assertFalse(ui.festas and any(t == "amanhecer" for t, _ in ui.festas))

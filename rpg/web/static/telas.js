@@ -1086,6 +1086,7 @@ const Telas = (() => {
     }
     const caixa = document.getElementById("celebracao");
     if (m.tipo === "contratos") return instantaneo ? Promise.resolve() : pagarContratos(caixa, d);
+    if (m.tipo === "amanhecer") return instantaneo ? Promise.resolve() : amanhecer(caixa, d);
     let html = "";
     if (m.tipo === "nivel") {
       const icones = { Vida: "coracao", Ataque: "espada", Defesa: "escudo", Agilidade: "folha", Poder: "chama", Mana: "pocao_azul", Vigor: "chama", Foco: "olho" };
@@ -1171,6 +1172,40 @@ const Telas = (() => {
     });
   }
 
+  /** A virada do dia: a aurora na paisagem, a faixa "Dia N" e o que a noite fez, em ícones (verde o que fez bem,
+   *  amarelo o que pede atenção, vermelho o que dói). Noite tranquila: some sozinho; noite ruim: espera o clique. */
+  const ICONE_NOITE = { bom: "bom", neutro: "", aviso: "aviso", perigo: "perigo" };
+  function amanhecer(caixa, d) {
+    if (typeof Vista !== "undefined") Vista.amanhecer(1800);
+    App.som("amanhecer");
+    const ruim = d.itens.some((x) => x.tipo === "perigo");
+    const itens = d.itens.map((x, i) => `<span class="noite-item ${ICONE_NOITE[x.tipo] || ""}" style="animation-delay:${0.55 + i * 0.12}s"${x.texto && x.texto !== x.curto ? ` title="${h(x.texto)}"` : ""}>${S(x.icone, 1)}${h(x.curto)}</span>`).join("");
+    caixa.innerHTML = `<div class="festa festa-amanhecer">
+      <div class="rotulo-festa">amanhece</div>
+      <div class="dia-numero">Dia ${d.dia}</div>
+      <div class="dia-clima">${h(d.clima)}</div>
+      ${itens ? `<div class="noite">${itens}</div>` : ""}
+      ${ruim ? '<button class="continuar" type="button">Continuar <span>▸</span></button>' : ""}</div>`;
+    caixa.classList.add("amanhecendo");
+    caixa.hidden = false;
+    return new Promise((resolver) => {
+      let feito = false;
+      const fechar = () => {
+        if (feito) return;
+        feito = true;
+        document.removeEventListener("keydown", tecla, true);
+        document.removeEventListener("pointerdown", clique, true);
+        const festa = caixa.querySelector(".festa-amanhecer");
+        if (festa) festa.classList.add("saindo");
+        setTimeout(() => { caixa.hidden = true; caixa.innerHTML = ""; caixa.classList.remove("amanhecendo"); resolver(); }, 260);
+      };
+      const tecla = (ev) => { if ([" ", "Enter", "Escape"].includes(ev.key)) { ev.preventDefault(); ev.stopPropagation(); fechar(); } };
+      const clique = (ev) => { ev.preventDefault(); ev.stopPropagation(); fechar(); };
+      setTimeout(() => { document.addEventListener("keydown", tecla, true); document.addEventListener("pointerdown", clique, true); }, 500);
+      if (!ruim) setTimeout(fechar, 2400 + d.itens.length * 350);
+    });
+  }
+
   /** Moedas voando de um ponto da tela até outro (o ouro do topo). */
   function moedasPara(de, para) {
     if (!de || !para) return;
@@ -1196,6 +1231,7 @@ const Telas = (() => {
     if (m.tipo === "contratos") return `▸ ${d.contratos.length === 1 ? "Contrato cumprido" : d.contratos.length + " contratos cumpridos"}: +${d.ouro} ouro, +${d.xp} XP`;
     if (m.tipo === "sigilo") return `▸ Sigilo ${d.sigilos}/3 (${d.guardiao}): +1 ponto de talento`;
     if (m.tipo === "spec") return `▸ Você agora é ${d.nome}`;
+    if (m.tipo === "amanhecer") return `▸ Dia ${d.dia} · ${d.clima}${d.itens.length ? " · " + d.itens.map((x) => x.curto).join(", ") : ""}`;
     return "";
   }
 

@@ -209,6 +209,26 @@ const Vista = (() => {
       else if (Math.random() < 0.006) relampago = 5;
     }
     if (estado.mundo.escuro) { ctx.fillStyle = "rgba(0,0,0,0.55)"; ctx.fillRect(0, 0, W, H); }
+    if (aurora) pintarAurora();
+  }
+
+  /** O amanhecer: a paisagem já é a da manhã; por cima, a noite se desfaz e um clarão quente sobe do horizonte. */
+  let aurora = null;
+  function pintarAurora() {
+    const t = (performance.now() - aurora.inicio) / aurora.ms;
+    if (t >= 1) { aurora = null; return; }
+    ctx.fillStyle = `rgba(8, 10, 30, ${0.9 * Math.pow(1 - t, 1.6)})`;
+    ctx.fillRect(0, 0, W, H);
+    const g = ctx.createRadialGradient(W / 2, H * (1.1 - 0.5 * t), 4, W / 2, H * (1.1 - 0.5 * t), W * 0.6);
+    g.addColorStop(0, `rgba(255, 190, 110, ${0.55 * Math.sin(Math.PI * t)})`);
+    g.addColorStop(1, "rgba(255, 140, 80, 0)");
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, W, H);
+  }
+  function amanhecer(ms = 1800) {
+    aurora = { inicio: performance.now(), ms };
+    const passo = () => { if (!aurora) { desenhar(); return; } desenhar(); requestAnimationFrame(passo); };
+    requestAnimationFrame(passo);
   }
 
   function atualizar(e) {
@@ -236,5 +256,5 @@ const Vista = (() => {
     return corDoCeu();
   }
 
-  return { atualizar, titulo, corDoCeu };
+  return { atualizar, titulo, corDoCeu, amanhecer };
 })();

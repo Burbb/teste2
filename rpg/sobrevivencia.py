@@ -172,29 +172,32 @@ def amanhecer(g, descanso, refeicao=False):
     # Comida
     if refeicao:
         if j.fome:
-            g.dizer("Você finalmente come. As mãos param de tremer.", "verde")
+            g.relatar("Você finalmente come. As mãos param de tremer.", "verde", "bom", "pernil", "A fome passou")
         j.fome = 0
     elif j.provisoes > 0:
         j.provisoes -= 1
         if j.fome:
-            g.dizer("Você finalmente come. As mãos param de tremer.", "verde")
+            g.relatar("Você finalmente come. As mãos param de tremer.", "verde", "bom", "pernil", "A fome passou")
         j.fome = 0
     else:
         j.fome += 1
         if j.fome == 1:
-            g.dizer("Sem provisões. Você vai dormir com fome. (-10% atributos, quase não se recupera dormindo)",
-                    "vermelho")
+            g.relatar("Sem provisões. Você vai dormir com fome. (-10% atributos, quase não se recupera dormindo)",
+                      "vermelho", "perigo", "pernil", "Com fome: −10% atributos")
         elif j.fome < 3:
-            g.dizer(f"Dia {j.fome} sem comer. Suas mãos tremem e a vista escurece. (-20% atributos)", "vermelho")
+            g.relatar(f"Dia {j.fome} sem comer. Suas mãos tremem e a vista escurece. (-20% atributos)", "vermelho",
+                      "perigo", "pernil", f"{j.fome}º dia sem comer: −20% atributos")
         else:
             perda = max(3, int(j.max_hp * 0.2))
-            g.dizer(f"Dia {j.fome} sem comer. Seu corpo começa a se consumir. (-{perda} vida)", "vermelho+negrito")
+            g.relatar(f"Dia {j.fome} sem comer. Seu corpo começa a se consumir. (-{perda} vida)", "vermelho+negrito",
+                      "perigo", "caveira", f"{j.fome}º dia sem comer: −{perda} vida")
             j.hp -= perda
             if j.hp <= 0:
                 j.hp = 0
                 g.fim_de_jogo("Você morreu de fome, sozinho, longe de qualquer lugar que pudesse chamar de casa.")
     if j.provisoes in (1, 2) and not j.fome:
-        g.dizer(f"Restam só {j.provisoes} dia(s) de provisões.", "amarelo")
+        g.relatar(f"Restam só {j.provisoes} dia(s) de provisões.", "amarelo", "aviso", "pernil",
+                  quadro=False)  # no quadro, o ícone das provisões gastas já diz quantas restam
 
     # Ferimentos
     for f in list(j.ferimentos):
@@ -202,15 +205,16 @@ def amanhecer(g, descanso, refeicao=False):
         if f["id"] == "infeccao":
             perda = max(3, int(j.max_hp * 0.12))
             j.hp -= perda
-            g.dizer(f"A infecção arde em febre. (-{perda} vida) Procure um curandeiro ou use um unguento!",
-                    "vermelho+negrito")
+            g.relatar(f"A infecção arde em febre. (-{perda} vida) Procure um curandeiro ou use um unguento!",
+                      "vermelho+negrito", "perigo", "gota", f"Febre da infecção: −{perda} vida")
             if j.hp <= 0:
                 j.hp = 0
                 g.fim_de_jogo("A ferida apodreceu. A febre veio, depois os delírios, depois o silêncio. "
                               "A infecção te levou.")
             continue
         if d.get("aberto") and not f["tratado"] and g.rng.random() < CHANCE_INFECCAO:
-            g.dizer(f"Seu {d['nome'].lower()} está vermelho, quente e cheira mal.", "vermelho+negrito")
+            g.relatar(f"Seu {d['nome'].lower()} está vermelho, quente e cheira mal.", "vermelho+negrito", "perigo",
+                      "gota", f"{d['nome']} infeccionou")
             if not tem(j, "infeccao"):
                 j.ferimentos.append({"id": "infeccao", "dias": None, "tratado": False})
             f["tratado"] = True  # a ferida em si segue curando; o problema agora é a infecção
@@ -218,7 +222,7 @@ def amanhecer(g, descanso, refeicao=False):
             f["dias"] -= descanso
         if f["dias"] is not None and f["dias"] <= 0:
             j.ferimentos.remove(f)
-            g.dizer(f"{d['nome']}: curado.", "verde")
+            g.relatar(f"{d['nome']}: curado.", "verde", "bom", "bandagem", f"{d['nome']}: curado")
     antes = j.max_hp
     j.recalcular()
     if j.max_hp > antes:

@@ -231,6 +231,7 @@ def guarda_desconfiado(g):
         g.dizer("\"Tá, tá. Mas estamos de olho.\"", "cinza")
     else:
         g.dizer("A cela é úmida e cheira mal. Pelo menos é segura.", "cinza")
+        g.abrir_relato()
         g.descansar(0.5)
         g.novo_dia()
 

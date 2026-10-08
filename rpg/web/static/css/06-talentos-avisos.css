@@ -161,3 +161,20 @@
   .grimorio-livro { grid-template-columns: 1fr; grid-template-rows: auto 1fr; height: 92vh; }
   .grimorio-pagina.esquerda { max-height: 38vh; }
 }
+
+/* ---------------------------------------------------------------- a virada do dia */
+/* Véu leve: a paisagem do topo (onde a aurora acontece) continua à vista. */
+#celebracao.amanhecendo { background: rgba(5, 4, 3, 0.3); }
+.festa-amanhecer { margin-top: 24vh; width: min(560px, 92vw); padding: 16px 28px 18px; background: rgba(18, 13, 9, 0.92); border: 3px solid #5a4630; box-shadow: 4px 4px 0 #000; }
+.festa-amanhecer.saindo { animation: some 0.26s ease-in forwards; }
+.festa-amanhecer .dia-numero { font-family: var(--titulo); font-size: 72px; line-height: 0.95; color: #ffd27a; text-shadow: 4px 4px 0 #000, 0 0 26px rgba(255, 180, 90, 0.55);
+  animation: dia-sobe 0.9s cubic-bezier(.2,.8,.3,1) both; }
+@keyframes dia-sobe { from { transform: translateY(18px); opacity: 0; filter: brightness(0.4); } to { transform: none; opacity: 1; filter: none; } }
+.festa-amanhecer .dia-clima { color: var(--tinta-2); font-style: italic; margin-top: 2px; }
+.festa-amanhecer .noite { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 14px; }
+.noite-item { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px 3px 6px; font-family: var(--num); font-size: 18px; background: #120e0b; border: 3px solid #4a3c2c;
+  color: var(--tinta); box-shadow: 3px 3px 0 #000; opacity: 0; animation: surgir 0.3s cubic-bezier(.2,.8,.3,1.2) forwards; }
+.noite-item.bom { border-color: #3d6a2a; color: var(--bom); }
+.noite-item.aviso { border-color: #8a6a14; color: var(--ouro); }
+.noite-item.perigo { border-color: #8a2a1c; color: #ff8e80; }
+.festa-amanhecer .continuar { margin-top: 14px; }
