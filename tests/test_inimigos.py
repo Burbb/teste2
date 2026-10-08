@@ -63,3 +63,46 @@ class TestJuizo(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestIniciativa(unittest.TestCase):
+    """A surpresa é o primeiro turno: atacar nele leva o bônus; usar para outra coisa o perde."""
+
+    def _luta(self, buff_primeiro):
+        golpes = []
+
+        class Roteiro(BotUI):
+            def escolher(self, pergunta, opcoes):
+                metas = self.meta_opcoes or []
+                if pergunta == "Sua ação:":
+                    return 1 if buff_primeiro and cb.turno == 1 else 0
+                if pergunta == "Habilidades:":
+                    return next(i for i, m in enumerate(metas) if m and m.get("habilidade") == "erguer_escudo")
+                return super().escolher(pergunta, opcoes)
+
+            def lance(self, tipo, **d):
+                if tipo == "golpe" and d.get("de") == "j":
+                    golpes.append(d)
+
+        g = Jogo(Roteiro(random.Random(1)), seed=1, pasta_saves=tempfile.mkdtemp())
+        g.iniciar("Teste", "guerreiro")
+        e = g.inimigo("lobo", nivel=1)
+        e.hp = e.max_hp = 500
+        cb = Combate(g, [e], emboscada="jogador", pode_fugir=False)
+        g.combate_ativo = cb
+        try:
+            original = cb.fase_inimigos
+            cb.fase_inimigos = lambda *a, **k: (original(*a, **k), setattr(e, "hp", 0) if cb.turno >= 2 else None)
+            cb.executar()
+        finally:
+            g.combate_ativo = None
+        return golpes
+
+    def test_atacando_no_turno_livre_o_golpe_sai_reforcado(self):
+        golpes = self._luta(buff_primeiro=False)
+        self.assertEqual(golpes[0].get("bonus_motivo"), "Iniciativa!")
+
+    def test_buff_no_turno_livre_perde_o_bonus(self):
+        golpes = self._luta(buff_primeiro=True)
+        self.assertTrue(golpes)
+        self.assertFalse(any(x.get("bonus_motivo") for x in golpes))

@@ -21,7 +21,7 @@ def encontro_hostil(g):
     if g.teste("percepcao", cd):
         g.dizer(f"{abertura}, você avista {desc} antes que notem sua presença.", "amarelo")
         opcoes = [
-            (f"Atacar de surpresa: um turno livre e o primeiro golpe {round(bal.INICIATIVA_BONUS * 100)}% mais forte", "atacar"),
+            (f"Atacar de surpresa: um turno livre, e o golpe dele {round(bal.INICIATIVA_BONUS * 100)}% mais forte", "atacar"),
             ("Tentar passar despercebido (Destreza)", "evitar"),
         ]
         if g.j.classe == "arqueiro":

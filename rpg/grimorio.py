@@ -32,8 +32,8 @@ def fontes_critico(j):
         linhas.append(f"{', '.join(nomes(j, 'abertura'))}: o primeiro ataque de cada luta é sempre crítico.")
     if "desaparecer" in j.habilidades or mod(j, "furtivo_ao_abater"):
         linhas.append("Furtivo (Desaparecer, Assassino): o próximo ataque é crítico garantido.")
-    linhas.append(f"Pegar o inimigo de surpresa: um turno livre, e o primeiro golpe sai "
-                  f"{round(bal.INICIATIVA_BONUS * 100)}% mais forte.")
+    linhas.append(f"Pegar o inimigo de surpresa: um turno livre, e atacando nele o golpe sai "
+                  f"{round(bal.INICIATIVA_BONUS * 100)}% mais forte (usado para outra coisa, o bônus se perde).")
     return linhas
 
 

@@ -70,7 +70,7 @@ class Combate:
         self.flechas_gastas = 0
         self.turno = 0
         self.abertura = bool(mod(self.j, "abertura"))
-        self.iniciativa = False  # pegou o inimigo de surpresa: o primeiro golpe sai mais forte
+        self.iniciativa = False  # pegou o inimigo de surpresa: o golpe do turno livre sai mais forte
         self.motivo_abertura = "Tiro de Abertura" if self.abertura else None
         self.usou_martirio = False
         self.usou_imortal = False
@@ -478,7 +478,7 @@ class Combate:
             if r:
                 return self.fim(r)
         elif self.emboscada == "jogador":
-            self.dizer(f"Você tem a iniciativa! Um ataque livre antes que reajam, e o primeiro golpe sai "
+            self.dizer(f"Você tem a iniciativa! Um turno livre antes que reajam: ataque agora e o golpe sai "
                        f"{round(bal.INICIATIVA_BONUS * 100)}% mais forte.", "verde+negrito")
             pular_inimigos = True
             self.iniciativa = True
@@ -488,6 +488,9 @@ class Combate:
             self.turno += 1
             if self.fase_jogador() == "fuga":
                 return self.fim("fuga")
+            # A surpresa é aquele turno: quem o usa para outra coisa (um buff, uma poção) perde o bônus, em vez
+            # de guardá-lo para o golpe do turno seguinte.
+            self.iniciativa = False
             r = self._checar_fim()
             if r:
                 return self.fim(r)
