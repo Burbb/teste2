@@ -145,6 +145,21 @@ Dentro de uma etapa, as contas seguem a ordem do catálogo (bênçãos antes dos
 Conferir: `python -m unittest tests.test_estados` (todo estado aplicado no código existe no catálogo; todo
 ícone tem desenho).
 
+## Uma habilidade de inimigo
+
+Em `rpg/inimigos.py`, a função (`fn(cb, inimigo, alvo)`, devolve False se não deu para usar) e a entrada no
+catálogo `HABS`:
+
+```python
+"uivo": hab_inimigo(_uivo, "Uivo", "uivo de matilha", quando=_alguem_sem("fortalecido")),
+"mordida_sangrenta": hab_inimigo(_mordida_sangrenta, "Mordida Sangrenta", "garras que fazem sangrar", golpe=True),
+```
+
+`quando(cb, e, alvo)` é o juízo: a habilidade só entra no sorteio quando faz sentido (`_sem("maldito")`: o alvo
+ainda não está assim; `_alguem_sem("fortalecido")`: alguém do bando ainda sem o bônus). `golpe=True` marca o
+que fere: com o alvo a um golpe comum da morte (`Combate.dano_previsto`), o inimigo só escolhe entre esses.
+Depois é só pôr o id em `habs` da família (`rpg/dados.py`). `tests/test_inimigos.py` confere que todo id existe.
+
 ## Um evento
 
 Em `rpg/eventos/<tema>.py`:

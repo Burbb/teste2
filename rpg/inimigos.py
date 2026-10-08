@@ -333,48 +333,64 @@ def _invocar(cb, e, alvo):
     cb.dizer(f"{e.nome} convoca reforços: {novo.desc} entra na luta!", "vermelho+negrito")
 
 
-HABS_INIMIGO = {
-    "mordida_sangrenta": _mordida_sangrenta,
-    "uivo": _uivo,
-    "grito_guerra": _grito_guerra,
-    "teia": _teia,
-    "veneno": _veneno,
-    "golpe_sujo": _golpe_sujo,
-    "roubar": _roubar,
-    "investida": _investida,
-    "esmagar": _esmagar,
-    "regenerar": _regenerar,
-    "agarrar": _agarrar,
-    "drenar": _drenar,
-    "maldicao": _maldicao,
-    "bola_fogo": _bola_fogo,
-    "bola_sombra": _bola_sombra,
-    "cura": _cura,
-    "grito_terror": _grito_terror,
-    "mordida_gelida": _mordida_gelida,
-    "invocar": _invocar,
-    "varredura": _varredura,
-    "reviver": _reviver,
-    "devorar": _devorar,
+# ----------------------------------------------------------------------
+# Juízo: quando cada habilidade faz sentido. Sem isto o inimigo sorteava qualquer uma, e um lobo já furioso
+# uivava de novo em vez de morder quem estava a um golpe da morte.
+# ----------------------------------------------------------------------
+
+def _sem(estado):
+    """O alvo ainda não está assim, nem protegido disso (firme não pode ser travado de novo)."""
+    from .estados import ESTADOS
+
+    def ok(cb, e, alvo):
+        return not alvo.efeito(estado) and not any(estado in ESTADOS.get(k, {}).get("protege", ()) for k in alvo.efeitos)
+    return ok
+
+
+def _alguem_sem(estado):
+    """Algum do bando ainda sem o bônus (uivar com todos já furiosos é perder a vez)."""
+    return lambda cb, e, alvo: any(not a.efeito(estado) for a in cb.inimigos_vivos())
+
+
+def _cura_serve(cb, e, alvo):
+    return (cb.turno - getattr(e, "curou_turno", -99) >= bal.INIMIGO_CURA_RECARGA
+            and any(a.hp < a.max_hp * 0.6 for a in cb.inimigos_vivos()))
+
+
+def hab_inimigo(fn, rotulo, nome, quando=None, golpe=False):
+    """Uma habilidade inimiga. rotulo: a faixa sobre a carta; nome: a ficha (Analisar, bestiário).
+    quando(cb, e, alvo): se faz sentido agora (sem ela, sempre). golpe: causa dano (vale quando dá para matar)."""
+    return dict(fn=fn, rotulo=rotulo, nome=nome, quando=quando or (lambda cb, e, alvo: True), golpe=golpe)
+
+
+HABS = {
+    "mordida_sangrenta": hab_inimigo(_mordida_sangrenta, "Mordida Sangrenta", "garras que fazem sangrar", golpe=True),
+    "uivo": hab_inimigo(_uivo, "Uivo", "uivo de matilha", quando=_alguem_sem("fortalecido")),
+    "grito_guerra": hab_inimigo(_grito_guerra, "Grito de Guerra", "grito de guerra", quando=_alguem_sem("fortalecido")),
+    "teia": hab_inimigo(_teia, "Teia", "teia paralisante", quando=_sem("atordoado")),
+    "veneno": hab_inimigo(_veneno, "Veneno", "veneno", golpe=True),
+    "golpe_sujo": hab_inimigo(_golpe_sujo, "Golpe Sujo", "golpe sujo", golpe=True),
+    "roubar": hab_inimigo(_roubar, "Roubo", "rouba ouro", quando=lambda cb, e, alvo: alvo is cb.j and cb.j.ouro > 0),
+    "investida": hab_inimigo(_investida, "Investida", "investida atordoante", golpe=True),
+    "esmagar": hab_inimigo(_esmagar, "Preparar Golpe", "golpe esmagador (avisa antes)"),
+    "regenerar": hab_inimigo(_regenerar, "Regenerar", "regeneração", quando=lambda cb, e, alvo: e.hp <= e.max_hp * 0.7),
+    "agarrar": hab_inimigo(_agarrar, "Agarrão", "agarrão imobilizante", golpe=True),
+    "drenar": hab_inimigo(_drenar, "Drenar", "drena vida", golpe=True),
+    "maldicao": hab_inimigo(_maldicao, "Maldição", "maldição", quando=_sem("maldito")),
+    "bola_fogo": hab_inimigo(_bola_fogo, "Bola de Fogo", "bola de fogo", golpe=True),
+    "bola_sombra": hab_inimigo(_bola_sombra, "Esfera Sombria", "esfera sombria", golpe=True),
+    "cura": hab_inimigo(_cura, "Cura", "cura aliados", quando=_cura_serve),
+    "grito_terror": hab_inimigo(_grito_terror, "Grito de Terror", "grito de terror", quando=_sem("enfraquecido")),
+    "mordida_gelida": hab_inimigo(_mordida_gelida, "Mordida Gélida", "mordida congelante", golpe=True),
+    "invocar": hab_inimigo(_invocar, "Invocar", "invoca reforços",
+                           quando=lambda cb, e, alvo: bool(e.invoca) and len(cb.inimigos_vivos()) < 4),
+    "varredura": hab_inimigo(_varredura, "Varredura", "golpe em área (atinge você e seus aliados)", golpe=True),
+    "reviver": hab_inimigo(_reviver, "Reviver", "ressuscita caídos"),
+    "devorar": hab_inimigo(_devorar, "Devorar", "devora cadáveres para se curar",
+                           quando=lambda cb, e, alvo: bool(cb.mortos) and e.hp <= e.max_hp * 0.75),
 }
 
-NOMES_HABS_INIMIGO = {
-    "mordida_sangrenta": "garras que fazem sangrar", "uivo": "uivo de matilha", "grito_guerra": "grito de guerra",
-    "teia": "teia paralisante", "veneno": "veneno", "golpe_sujo": "golpe sujo", "roubar": "rouba ouro",
-    "investida": "investida atordoante", "esmagar": "golpe esmagador (avisa antes)", "regenerar": "regeneração",
-    "agarrar": "agarrão imobilizante", "drenar": "drena vida", "maldicao": "maldição", "bola_fogo": "bola de fogo",
-    "bola_sombra": "esfera sombria", "cura": "cura aliados", "grito_terror": "grito de terror",
-    "mordida_gelida": "mordida congelante", "invocar": "invoca reforços",
-    "varredura": "golpe em área (atinge você e seus aliados)",
-    "reviver": "ressuscita caídos", "devorar": "devora cadáveres para se curar",
-}
-
-# Nomes curtos das habilidades, para a faixa que aparece sobre a carta de quem age.
-ROTULOS_HABS_INIMIGO = {
-    "mordida_sangrenta": "Mordida Sangrenta", "uivo": "Uivo", "grito_guerra": "Grito de Guerra", "teia": "Teia",
-    "veneno": "Veneno", "golpe_sujo": "Golpe Sujo", "roubar": "Roubo", "investida": "Investida",
-    "esmagar": "Preparar Golpe", "regenerar": "Regenerar", "agarrar": "Agarrão", "drenar": "Drenar",
-    "maldicao": "Maldição", "bola_fogo": "Bola de Fogo", "bola_sombra": "Esfera Sombria", "cura": "Cura",
-    "grito_terror": "Grito de Terror", "mordida_gelida": "Mordida Gélida", "invocar": "Invocar",
-    "varredura": "Varredura", "reviver": "Reviver", "devorar": "Devorar",
-}
+# Derivados do catálogo (para quem só precisa de uma lista)
+HABS_INIMIGO = {k: h["fn"] for k, h in HABS.items()}
+NOMES_HABS_INIMIGO = {k: h["nome"] for k, h in HABS.items()}
+ROTULOS_HABS_INIMIGO = {k: h["rotulo"] for k, h in HABS.items()}  # a faixa sobre a carta de quem age

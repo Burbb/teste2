@@ -10,7 +10,7 @@ from .modificadores import disparar, mod, mult, nomes
 from .estados import ESTADOS, NOMES, no_golpe
 from .dados import TRACOS
 from .entidades import Combatente
-from .inimigos import HABS_INIMIGO, NOMES_HABS_INIMIGO, ROTULOS_HABS_INIMIGO
+from .inimigos import HABS, HABS_INIMIGO, NOMES_HABS_INIMIGO, ROTULOS_HABS_INIMIGO
 from .itens import CONSUMIVEIS, PENA_FENIX_AGE_SOZINHA, ficha
 from . import comitiva, sobrevivencia, telemetria
 from .talentos import custo_habilidade
@@ -371,6 +371,26 @@ class Combate:
         if not alvo.vivo:
             self.ao_morrer(alvo, por=u, tipo=tipo)
         return dano
+
+    def dano_previsto(self, u, alvo):
+        """Quanto o ataque comum de `u` tira de `alvo`, em média (sem sorteio, sem crítico): o juízo dos inimigos.
+        Segue as etapas de atacar() que não dependem de sorte: estados de quem bate e de quem apanha, e a defesa."""
+        magico = getattr(u, "ataque", "fisico") != "fisico" and u.poder > u.atk
+        dano = u.poder if magico else u.atk
+        inimigo = not u.jogador and u not in self.aliados
+        if inimigo and self.g.noite:
+            dano *= bal.NOITE_INIMIGOS
+        for _, e, f in no_golpe(u, "dano_causado"):
+            dano *= f(e["v"])
+        for _, e, f in no_golpe(alvo, "dano_recebido"):
+            dano *= f(e["v"])
+        fator_def = 1.0
+        for _, e, f in no_golpe(alvo, "defesa"):
+            fator_def *= f(e["v"])
+        dano *= bal.fator_defesa(alvo.defesa * fator_def, u.nivel if inimigo else None)
+        for _, e, f in no_golpe(alvo, "dano_final"):
+            dano *= f(e["v"])
+        return dano - sum(e["v"] for _, e, _ in no_golpe(alvo, "absorve"))
 
     def aplicar(self, alvo, efeito, turnos, valor=0, chance=1.0, rotulo=None, acumula=False):
         if not alvo.vivo:
@@ -947,10 +967,16 @@ class Combate:
                 self.atacar(e, alvo, c["mult"], rotulo=c["rotulo"])
             return
         if e.habilidades and self.rng.random() < (0.45 if e.chefe else 0.35):
-            h = self.rng.choice(e.habilidades)
-            with self.agindo(e, ROTULOS_HABS_INIMIGO.get(h), alvo, area=h == "varredura", hab=h):
-                if HABS_INIMIGO[h](self, e, alvo) is not False:
-                    return
+            # Só o que faz sentido agora (estados.py/inimigos.py: `quando`); e com o alvo a um golpe da morte,
+            # só o que fere: ninguém uiva para o bando quando pode acabar a luta.
+            uteis = [h for h in e.habilidades if HABS[h]["quando"](self, e, alvo)]
+            if alvo.hp <= self.dano_previsto(e, alvo):
+                uteis = [h for h in uteis if HABS[h]["golpe"]]
+            if uteis:
+                h = self.rng.choice(uteis)
+                with self.agindo(e, ROTULOS_HABS_INIMIGO.get(h), alvo, area=h == "varredura", hab=h):
+                    if HABS_INIMIGO[h](self, e, alvo) is not False:
+                        return
         magico = e.ataque != "fisico" and e.poder > e.atk
         with self.agindo(e, None, alvo, hab="ataque"):
             self.atacar(e, alvo, 1.0, tipo=e.ataque if magico else "fisico",
