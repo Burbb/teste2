@@ -1031,9 +1031,15 @@ class Combate:
             if any(e.roubado for e in derrotados):
                 self.dizer("Você recupera o ouro que lhe foi roubado.", "verde")
             g.ui.celebrar("vitoria", {"inimigos": len(derrotados), "chefe": any(e.chefe for e in derrotados)})
-            g.ganhar_ouro(ouro)
+            # O espólio na ordem em que se sente: o ouro e o XP (a barra enchendo; o nível, se subir), depois o
+            # que se acha nos corpos. Na tela gráfica, ouro e XP vêm num quadro só, em vez de dois avisos soltos.
+            festa = g.ui.conquistas_na_tela
+            xp = int(comitiva.parte_do_xp(g) * sum(e.xp * bal.fator_xp(e.nivel - j.nivel) for e in derrotados))
+            if festa and (g.ouro_achado(ouro) > 0 or xp > 0):  # o quadro antes: o ouro do topo sobe quando as moedas chegam
+                g.ui.celebrar("espolio", {"ouro": g.ouro_achado(ouro), "xp": xp, "nivel": j.nivel,
+                                          "trechos": g.trechos_xp(xp)})
+            g.ganhar_ouro(ouro, avisar=not festa)
             g.registrar_abates(derrotados)
+            g.ganhar_xp(xp, avisar=not festa)
             g.saque_de_combate(derrotados)
-            g.ganhar_xp(comitiva.parte_do_xp(g) *
-                        sum(e.xp * bal.fator_xp(e.nivel - j.nivel) for e in derrotados))
         return resultado

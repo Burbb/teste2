@@ -1087,6 +1087,7 @@ const Telas = (() => {
     const caixa = document.getElementById("celebracao");
     if (m.tipo === "contratos") return instantaneo ? Promise.resolve() : pagarContratos(caixa, d);
     if (m.tipo === "amanhecer") return instantaneo ? Promise.resolve() : amanhecer(caixa, d);
+    if (m.tipo === "espolio") return instantaneo ? Promise.resolve() : Sensacao.espolio(caixa, d);
     let html = "";
     if (m.tipo === "nivel") {
       const icones = { Vida: "coracao", Ataque: "espada", Defesa: "escudo", Agilidade: "folha", Poder: "chama", Mana: "pocao_azul", Vigor: "chama", Foco: "olho" };
@@ -1186,7 +1187,7 @@ const Telas = (() => {
       <div class="dia-clima">${h(d.clima)}</div>
       ${itens ? `<div class="noite">${itens}</div>` : ""}
       ${ruim ? '<button class="continuar" type="button">Continuar <span>▸</span></button>' : ""}</div>`;
-    caixa.classList.add("amanhecendo");
+    caixa.classList.add("leve");
     caixa.hidden = false;
     return new Promise((resolver) => {
       let feito = false;
@@ -1197,7 +1198,7 @@ const Telas = (() => {
         document.removeEventListener("pointerdown", clique, true);
         const festa = caixa.querySelector(".festa-amanhecer");
         if (festa) festa.classList.add("saindo");
-        setTimeout(() => { caixa.hidden = true; caixa.innerHTML = ""; caixa.classList.remove("amanhecendo"); resolver(); }, 260);
+        setTimeout(() => { caixa.hidden = true; caixa.innerHTML = ""; caixa.classList.remove("leve"); resolver(); }, 260);
       };
       const tecla = (ev) => { if ([" ", "Enter", "Escape"].includes(ev.key)) { ev.preventDefault(); ev.stopPropagation(); fechar(); } };
       const clique = (ev) => { ev.preventDefault(); ev.stopPropagation(); fechar(); };
@@ -1231,6 +1232,7 @@ const Telas = (() => {
     if (m.tipo === "contratos") return `▸ ${d.contratos.length === 1 ? "Contrato cumprido" : d.contratos.length + " contratos cumpridos"}: +${d.ouro} ouro, +${d.xp} XP`;
     if (m.tipo === "sigilo") return `▸ Sigilo ${d.sigilos}/3 (${d.guardiao}): +1 ponto de talento`;
     if (m.tipo === "spec") return `▸ Você agora é ${d.nome}`;
+    if (m.tipo === "espolio") return `▸ Espólio: ${d.ouro ? `+${d.ouro} ouro, ` : ""}+${d.xp} XP`;
     if (m.tipo === "amanhecer") return `▸ Dia ${d.dia} · ${d.clima}${d.itens.length ? " · " + d.itens.map((x) => x.curto).join(", ") : ""}`;
     return "";
   }
@@ -1243,6 +1245,6 @@ const Telas = (() => {
     setTimeout(() => t.remove(), 3300);
   }
 
-  return { rastreador, atributosHtml, reputacaoHtml, dica, guardarDica, htmlItem, menuUso, abrirGrimorio, alternarGrimorio, abrirDica, dicaAbertaPor, mouseNaArea, novaVisita, fecharMenuItem, guardarArvore, abrirTalentos, fecharTalentos, painel, celebrar, resumoCelebracao, toast, iconeCriatura, iconeItem, dicaItem, ligarDicas, esconderDica,
+  return { rastreador, atributosHtml, reputacaoHtml, dica, guardarDica, htmlItem, menuUso, abrirGrimorio, alternarGrimorio, abrirDica, dicaAbertaPor, mouseNaArea, novaVisita, fecharMenuItem, guardarArvore, abrirTalentos, fecharTalentos, painel, celebrar, resumoCelebracao, toast, moedasPara, iconeCriatura, iconeItem, dicaItem, ligarDicas, esconderDica,
     ICONE_ITEM, ARMA, VAZIO, NOME_ESPACO, AREA, barra, aprovacao };
 })();

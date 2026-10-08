@@ -14,13 +14,18 @@ class Recompensas:
     def ganhar_ouro(self, n, exato=False, avisar=True):
         """exato: o valor já é o combinado (contrato); senão, o mundo é pobre e só fica parte (OURO_MUNDO).
         avisar=False: a tela já mostrou o ganho (o quadro do contrato)."""
-        n = int(n) if exato else int(n * bal.OURO_MUNDO)
+        n = int(n) if exato else self.ouro_achado(n)
         if n <= 0:
-            return
+            return 0
         self.j.ouro += n
         self.estatisticas["ouro_ganho"] += n
         if avisar:
             self.ui.efeito(f"+{n} ouro", "ouro")
+        return n
+
+    def ouro_achado(self, n):
+        """Quanto fica de um ouro achado (saque, evento): o mundo é pobre (OURO_MUNDO)."""
+        return int(n * bal.OURO_MUNDO)
 
     def perder_ouro(self, n):
         n = min(self.j.ouro, int(n))
@@ -39,6 +44,22 @@ class Recompensas:
         while self.j.nivel < NIVEL_MAXIMO and self.j.xp >= self.j.xp_proximo():
             self.j.xp -= self.j.xp_proximo()
             self.subir_nivel()
+
+    def trechos_xp(self, n):
+        """Como a barra de XP vai encher com +n: um trecho por nível tocado, [de, até, tamanho do nível].
+        Ex.: com 80/92 e +30, [[80, 92, 92], [0, 18, 104]] (enche, sobe de nível, recomeça). A tela anima isso."""
+        j = self.j
+        nivel, xp, n = j.nivel, j.xp, int(n)
+        trechos = []
+        while n > 0 and nivel < NIVEL_MAXIMO:
+            total = bal.xp_para_subir(nivel)
+            ate = min(total, xp + n)
+            trechos.append([xp, ate, total])
+            n -= ate - xp
+            if ate < total:
+                break
+            nivel, xp = nivel + 1, 0
+        return trechos
 
     def ferir(self, n, motivo=""):
         """Dano de evento (fora do combate). Não mata, mas pode deixar um ferimento duradouro."""

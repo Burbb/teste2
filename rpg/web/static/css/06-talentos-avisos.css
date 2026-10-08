@@ -164,7 +164,7 @@
 
 /* ---------------------------------------------------------------- a virada do dia */
 /* Véu leve: a paisagem do topo (onde a aurora acontece) continua à vista. */
-#celebracao.amanhecendo { background: rgba(5, 4, 3, 0.3); }
+#celebracao.leve { background: rgba(5, 4, 3, 0.3); }
 .festa-amanhecer { margin-top: 24vh; width: min(560px, 92vw); padding: 16px 28px 18px; background: rgba(18, 13, 9, 0.92); border: 3px solid #5a4630; box-shadow: 4px 4px 0 #000; }
 .festa-amanhecer.saindo { animation: some 0.26s ease-in forwards; }
 .festa-amanhecer .dia-numero { font-family: var(--titulo); font-size: 72px; line-height: 0.95; color: #ffd27a; text-shadow: 4px 4px 0 #000, 0 0 26px rgba(255, 180, 90, 0.55);
@@ -178,3 +178,18 @@
 .noite-item.aviso { border-color: #8a6a14; color: var(--ouro); }
 .noite-item.perigo { border-color: #8a2a1c; color: #ff8e80; }
 .festa-amanhecer .continuar { margin-top: 14px; }
+
+/* ---------------------------------------------------------------- o espólio da vitória (sensacao.js) */
+.festa-espolio { margin-top: 18vh; width: min(420px, 90vw); padding: 14px 24px 16px; background: rgba(18, 13, 9, 0.94); border: 3px solid #5a4630; box-shadow: 4px 4px 0 #000; }
+.festa-espolio.saindo { animation: some 0.22s ease-in forwards; }
+.espolio-ouro { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 6px 0 10px; color: var(--ouro); }
+.espolio-ouro b { font-family: var(--num); font-size: 34px; font-weight: 400; text-shadow: 3px 3px 0 #000; }
+.espolio-ouro small { color: var(--tinta-2); font-size: 15px; }
+.espolio-xp { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 10px; }
+.espolio-nivel { font-family: var(--num); font-size: 16px; color: var(--tinta-2); white-space: nowrap; }
+.espolio-nivel b { color: var(--ouro); font-weight: 400; font-size: 20px; }
+.espolio-barra { position: relative; height: 14px; background: #0d0a08; border: 2px solid #000; box-shadow: inset 0 0 0 1px #3a2e22; overflow: hidden; }
+.espolio-barra i { position: absolute; inset: 0 auto 0 0; width: 0; background: linear-gradient(180deg, #ffe38a, #d8a62c 60%, #9a6d12); box-shadow: 0 0 8px rgba(255, 210, 100, 0.6); }
+.espolio-mais { font-family: var(--num); font-size: 18px; color: var(--ouro); white-space: nowrap; }
+.festa-espolio.subiu { animation: espolio-subiu 0.5s ease-out; }
+@keyframes espolio-subiu { 30% { box-shadow: 4px 4px 0 #000, 0 0 30px rgba(255, 210, 100, 0.9); border-color: var(--ouro); } }

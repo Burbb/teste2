@@ -116,3 +116,31 @@ class TestAmanhecer(unittest.TestCase):
         self.assertTrue(any(t.startswith("Você recupera") for t in ui.textos))
         self.assertTrue(any(t.startswith("Amanhece o dia") for t in ui.textos))
         self.assertFalse(ui.festas and any(t == "amanhecer" for t, _ in ui.festas))
+
+
+class TestEspolio(unittest.TestCase):
+    def test_trechos_da_barra_de_xp(self):
+        g = Jogo(Anotador(random.Random(1)), seed=8, pasta_saves=tempfile.mkdtemp())
+        g.iniciar("Teste", "guerreiro")
+        total = g.j.xp_proximo()
+        g.j.xp = total - 3
+        trechos = g.trechos_xp(10)
+        self.assertEqual(trechos[0], [total - 3, total, total])  # enche este nível...
+        self.assertEqual(trechos[1][:2], [0, 7])                 # ...e recomeça no seguinte com o resto
+        self.assertEqual(g.trechos_xp(0), [])
+
+    def test_vitoria_na_tela_grafica_mostra_o_espolio_antes_do_nivel(self):
+        from rpg.combate import Combate
+        ui = AnotadorGrafico(random.Random(1))
+        g = Jogo(ui, seed=8, pasta_saves=tempfile.mkdtemp())
+        g.iniciar("Teste", "guerreiro")
+        g.j.xp = g.j.xp_proximo() - 1
+        e = g.inimigo("bandido", nivel=1)
+        e.ouro, e.hp = 40, 0
+        cb = Combate(g, [e])
+        cb.fim("vitoria")
+        tipos = [t for t, _ in ui.festas]
+        self.assertLess(tipos.index("espolio"), tipos.index("nivel"))
+        esp = dict(ui.festas)["espolio"]
+        self.assertEqual(esp["ouro"], g.ouro_achado(40))
+        self.assertFalse([t for t in ui.textos if t.endswith(" ouro") or t.endswith(" XP")], ui.textos)
