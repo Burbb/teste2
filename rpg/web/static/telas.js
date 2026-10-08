@@ -1299,13 +1299,14 @@ const Telas = (() => {
   const ICONE_NOITE = { bom: "bom", neutro: "", aviso: "aviso", perigo: "perigo" };
   /** Os quadros rápidos sobre o jogo (amanhecer, espólio) ficam no meio da coluna do jogo, e não no meio da janela:
    *  os painéis dos lados têm larguras diferentes, e o quadro ficava torto em relação à cena. `sobreTitulo`: na altura
-   *  do título do lugar (o amanhecer, curto); senão, no meio da coluna. Numa tela estreita, sem a coluna, ficam no meio
-   *  da janela. */
+   *  em que o título do lugar fica no quadro da página (o amanhecer, curto); senão, no meio da coluna. A altura vem do
+   *  quadro da página, que não rola: o título rola junto com o texto, e o quadro saía fora do lugar. Numa tela estreita,
+   *  sem a coluna, ficam no meio da janela. */
   function noPalco(festa, sobreTitulo = false) {
     const palco = document.getElementById("palco"), p = palco && palco.getBoundingClientRect();
     if (!festa || !p || !p.width) return;
-    const t = sobreTitulo && document.querySelector("#cena-cab .cena-titulo"), r = t && t.getBoundingClientRect();
-    const y = r && r.height && r.top > 0 && r.bottom < innerHeight ? r.top + r.height / 2 : p.top + p.height * 0.45;
+    const pg = document.getElementById("pagina").getBoundingClientRect();
+    const y = sobreTitulo && pg.height ? pg.top + Math.min(pg.height * 0.4, 230) : p.top + p.height * 0.45;
     const meio = festa.offsetHeight / 2 + 8;
     festa.classList.add("no-palco");
     festa.style.left = p.left + p.width / 2 + "px";

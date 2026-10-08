@@ -166,7 +166,7 @@
 /* Véu leve: a paisagem do topo (onde a aurora acontece) continua à vista. */
 #celebracao.leve { background: rgba(5, 4, 3, 0.3); }
 /* Quadro no meio da coluna do jogo (telas.js noPalco): a posição vem do JS. */
-.no-palco { position: fixed; margin: 0; translate: -50% -50%; }
+.no-palco { position: fixed; margin: 0 !important; translate: -50% -50%; }  /* vence a margem do próprio quadro */
 /* Janelas por cima do jogo (escolhas.js): a confirmação e o item achado, com os botões da pergunta dentro. */
 #janela-confirmar { z-index: 46; }
 .caixa-confirmar { width: min(520px, 92vw); padding: 20px 26px 18px; text-align: center; background: rgba(18, 13, 9, 0.97); border: 3px solid #5a4630;
