@@ -42,7 +42,7 @@ def odete_na_estrada(g):
                     "e fica um tempo ali, parada.", "cinza")
             simpatia = 5
     elif op == "perguntar":
-        g.dizer("\"Odette. Sister Odette.\" Ela não tira as mãos da ferida. \"Ele já está morto, sabia? Só não percebeu "
+        g.dizer("\"Odette. Irmã Odette.\" Ela não tira as mãos da ferida. \"Ele já está morto, sabia? Só não percebeu "
                 "ainda.\" Ele percebe pouco depois.", "cinza")
         simpatia = 0
     elif op == "roubar":
@@ -159,7 +159,7 @@ def odete_conversa_final(g, m):
         g.dizer("\"Ontem eu dormi a noite inteira\", diz Odette, espantada consigo mesma. \"A primeira vez desde a "
                 "Fenda.\" Ela tira o rosário do pescoço e põe na sua mão.")
         g.dizer("\"Quando você for até ele, eu vou estar lá. E dessa vez a minha prece não vai tremer.\"", "amarelo")
-        g.aliado_final("Sister Odette", "Odette ergue o rosário e a Luz que ela achava ter perdido enche o salão do trono. "
+        g.aliado_final("Irmã Odette", "Odette ergue o rosário e a Luz que ela achava ter perdido enche o salão do trono. "
                                      "Suas feridas se fecham.", "cura", 0)
         cm.mudar_aprovacao(g, "odete", 5)
     else:
@@ -175,7 +175,7 @@ def morel_na_taverna(g):
     g.dizer("No canto da taverna, um homem grande come sozinho, de costas para a parede. Cicatriz de orelha a orelha, "
             "armadura remendada com pedaços de outras armaduras. Ele fala sem levantar os olhos do prato.")
     g.dizer("\"Você tem cara de quem vai morrer na estrada. Eu tenho cara de quem impede isso. Quarenta moedas e a "
-            "minha espada é sua. Bastian Morel, ex-capitão dos Iron Hounds.\"", "amarelo")
+            "minha espada é sua. Bastian Morel, ex-capitão dos Cães de Ferro.\"", "amarelo")
     op = g.menu("O que faz?", [
         ("Pagar 40 ouro", "pagar") if g.j.ouro >= 40 else None,
         ("\"Queda de braço. Se eu ganhar, você vem de graça.\" (Força)", "braco"),
@@ -219,8 +219,8 @@ def morel_na_taverna(g):
 
 @conversa("morel", 0, dias=1)
 def morel_conversa_caes(g, m):
-    g.dizer("Morel afia a espada. \"Os Iron Hounds. Duzentos homens. A melhor companhia do reino. Ganhamos a "
-            "Battle of the Fords por um saco de prata e uma barrica de vinho.\"")
+    g.dizer("Morel afia a espada. \"Os Cães de Ferro. Duzentos homens. A melhor companhia do reino. Ganhamos a "
+            "a Batalha dos Vaus por um saco de prata e uma barrica de vinho.\"")
     op = g.menu("O que diz?", [
         ("\"E onde estão agora?\"", "onde"),
         ("\"Quanto vocês cobravam?\"", "preco"),
@@ -242,9 +242,9 @@ def morel_conversa_caes(g, m):
 @conversa("morel", 1, dias=3, aprov=10)
 def morel_conversa_ponte(g, m):
     g.dizer("Morel bebe mais do que costuma. Depois de um tempo, fala, olhando para o fogo.")
-    g.narrar("\"Varn Bridge. O duque mandou segurar a passagem contra as crias do Vazio até a coluna dele "
+    g.narrar("\"A Ponte de Varn. O duque mandou segurar a passagem contra as crias do Vazio até a coluna dele "
              "passar. A coluna nunca veio. Ao amanhecer eu tinha quarenta homens e uma escolha.\"", "amarelo")
-    g.narrar("\"Mandei recuar. Eu, o capitão. Saímos eu e mais seis. Red Theodore, meu tenente, ficou na ponte com "
+    g.narrar("\"Mandei recuar. Eu, o capitão. Saímos eu e mais seis. Meu tenente, Theodore, o Ruivo, ficou na ponte com "
              "o resto, gritando o meu nome. Dizem que sobreviveu. Dizem que me procura.\"", "amarelo")
     op = g.menu("O que diz?", [
         ("\"Você salvou seis homens. Ficar seria morrer junto.\"", "salvou"),
@@ -270,7 +270,7 @@ def morel_conversa_ponte(g, m):
 def teodoro_ruivo(g):
     g.colher("teodoro_ruivo")
     m = cm.membro(g, "morel")
-    g.dizer("Um assobio de três notas: o toque dos Iron Hounds. Da mata saem seis homens com tabardos desbotados. "
+    g.dizer("Um assobio de três notas: o toque dos Cães de Ferro. Da mata saem seis homens com tabardos desbotados. "
             "O da frente tem metade do rosto queimada e um cabelo que um dia foi ruivo.")
     g.dizer("\"Capitão\", diz Theodore, e a palavra sai como cuspe. \"Procurei você por dois invernos.\" Ele olha para "
             "você. \"Isso não é com você, estranho. Entrega o covarde e vai embora com a bolsa cheia.\"", "vermelho")
@@ -292,7 +292,7 @@ def teodoro_ruivo(g):
         if g.teste("carisma", 15):
             g.dizer("Theodore fica muito tempo calado. \"Depois que isso acabar, capitão. Depois.\" E então, mais baixo: "
                     "\"Os Cães ainda sabem lutar. Se você for mesmo contra a sombra, mande chamar.\"", "verde")
-            g.aliado_final("Red Theodore", "Os Iron Hounds invadem o salão sob o grito de Red Theodore, e por um "
+            g.aliado_final("Theodore, o Ruivo", "Os Cães de Ferro invadem o salão sob o grito de Theodore, o Ruivo, e por um "
                                             "instante a velha companhia luta de novo, inteira.", "dano", 0.08)
             m["caminho"] = "adiado"
             cm.mudar_aprovacao(g, "morel", 6)
@@ -312,9 +312,9 @@ def teodoro_ruivo(g):
                 ("Não dizer nada. A decisão é dele.", "decidir"),
             ])
             if op2 == "poupar" and m["aprovacao"] >= 30:
-                g.narrar("Morel abaixa a espada. \"Alguém tem que sair vivo da Varn Bridge sem ter fugido\", diz. "
+                g.narrar("Morel abaixa a espada. \"Alguém tem que sair vivo da Ponte de Varn sem ter fugido\", diz. "
                          "Theodore chora como criança. Seus homens também.", "verde")
-                g.aliado_final("Red Theodore", "Os Iron Hounds invadem o salão sob o grito de Red Theodore, e "
+                g.aliado_final("Theodore, o Ruivo", "Os Cães de Ferro invadem o salão sob o grito de Theodore, o Ruivo, e "
                                                 "por um instante a velha companhia luta de novo, inteira.", "dano", 0.1)
                 m["caminho"] = "redencao"
                 cm.mudar_aprovacao(g, "morel", 12)
@@ -337,7 +337,7 @@ def teodoro_ruivo(g):
         m["missao"] = 3
         return
     # Luta
-    lider = g.inimigo("mercenario", nome_unico="Red Theodore", nivel=g.j.nivel + 1)
+    lider = g.inimigo("mercenario", nome_unico="Theodore, o Ruivo", nivel=g.j.nivel + 1)
     grupo = [lider] + [g.inimigo("bandido", nivel=g.j.nivel) for _ in range(2)]
     for e in grupo[1:]:
         e.nome = "Desertor dos Cães"
@@ -359,7 +359,7 @@ def morel_conversa_final(g, m):
                 "amarelo")
     else:
         g.dizer("\"Não sei mais o que ela significa\", diz Morel. \"Fica com você. Você parece saber.\"", "amarelo")
-    g.aliado_final("Bastian Morel", "Morel solta o velho grito dos Iron Hounds, e o seu sangue ferve com ele.",
+    g.aliado_final("Bastian Morel", "Morel solta o velho grito dos Cães de Ferro, e o seu sangue ferve com ele.",
                    "forca", 0)
     cm.mudar_aprovacao(g, "morel", 5)
 
@@ -573,7 +573,7 @@ def yara_conversa_final(g, m):
     else:
         g.dizer("\"Ele ainda fala comigo\", diz Yara. \"Mas agora eu também falo com ele. E às vezes, só às vezes, "
                 "ele tem medo de mim.\"", "magenta")
-        g.aliado_final("Yara", "Yara volta contra Ulook o poder que ele mesmo deu a ela. O Herald of the Void sangra "
+        g.aliado_final("Yara", "Yara volta contra Ulook o poder que ele mesmo deu a ela. O Arauto do Vazio sangra "
                                "escuridão.", "dano", 0.2)
     cm.mudar_aprovacao(g, "yara", 3)
 

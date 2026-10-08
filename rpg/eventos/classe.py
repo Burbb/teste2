@@ -38,8 +38,8 @@ def encruzilhada_guerreiro(g):
     g.narrar("\"Propósito?\" O tatuado cospe. \"A dor é o propósito. Deixa a fúria entrar e nada mais vai "
              "te parar.\"", "vermelho")
     _escolher_caminho(g, "paladino", "berserker",
-                      "o Oath of Light (cura, poder sagrado)",
-                      "o Blood Pact (fúria, roubo de vida)")
+                      "o Juramento da Luz (cura, poder sagrado)",
+                      "o Pacto de Sangue (fúria, roubo de vida)")
     if g.j.spec == "paladino":
         g.narrar("Você se ajoelha ao lado do cavaleiro. Quando se levanta, ele não está mais lá — só a luz.")
     else:
@@ -69,8 +69,8 @@ def encruzilhada_mago(g):
     g.narrar("Ao mesmo tempo, da terra sob seus pés, uma voz fria e paciente: \"O fogo consome. Eu "
              "preservo. Os mortos não esquecem quem lhes dá um propósito...\"", "cinza")
     _escolher_caminho(g, "piromante", "necromante",
-                      "abraçar a Living Flame (fogo em área, combustão)",
-                      "ouvir o Grave Whisper (drenar vida, servos, maldições)")
+                      "abraçar a Chama Viva (fogo em área, combustão)",
+                      "ouvir o Sussurro do Túmulo (drenar vida, servos, maldições)")
     if g.j.spec == "piromante":
         g.narrar("Você engole as palavras de fogo. Desde então, suas mãos nunca mais ficaram frias.")
     else:
@@ -81,7 +81,7 @@ def encruzilhada_mago(g):
 @evento(peso=6, cooldown=14, cond=_classe("guerreiro"))
 def duelo_de_honra(g):
     nome = tx.nome_proprio(g.rng)
-    g.dizer(f"Um mercenário de armadura polida bloqueia a ponte. \"Sou {nome}, the Unbeaten. Dizem que você "
+    g.dizer(f"Um mercenário de armadura polida bloqueia a ponte. \"Sou {nome}, o Invicto. Dizem que você "
             f"luta bem. Duelo de honra: o perdedor paga {15 + 5 * g.j.nivel} ouro.\"", "amarelo")
     op = g.menu("O que faz?", [("Aceitar o duelo", "aceitar"), ("Recusar", "recusar")])
     if op == "recusar":
@@ -93,7 +93,7 @@ def duelo_de_honra(g):
         g.dizer(f"{nome} se ajoelha. \"Você me venceu limpo. Quando precisar de uma espada, chame.\"", "verde")
         g.ganhar_ouro(15 + 5 * g.j.nivel)
         g.mudar_reputacao(3)
-        g.aliado_final(nome, f"{nome}, the Unbeaten, aparece com seu escudo erguido: \"Eu disse que viria!\" "
+        g.aliado_final(nome, f"{nome}, o Invicto, aparece com seu escudo erguido: \"Eu disse que viria!\" "
                              f"Juntos, vocês abrem caminho.", "dano", 0.08)
 
 
@@ -431,7 +431,7 @@ def circulo_dos_druidas(g):
 @evento(peso=7, cooldown=16, cond=_spec("sombra"), max_vezes=3)
 def contrato_da_irmandade(g):
     alvo = g.npc()
-    titulo = "Lorde" if alvo["g"] == "m" else "Lady"
+    titulo = "Lorde" if alvo["g"] == "m" else "Dama"
     g.dizer(f"Uma flecha de penas negras com um bilhete: \"{titulo} {alvo['nome']} vende crianças para o culto "
             f"do Vazio. Está viajando pela estrada com escolta. Pagamento: 60 moedas.\"", "magenta")
     op = g.menu("O que faz?", [("Aceitar o contrato", "aceitar"), ("Queimar o bilhete", "nao")])

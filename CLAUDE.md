@@ -13,6 +13,8 @@ Leia antes de mexer:
 - Converse com o Jean **em português**, de forma direta. Ele escreve rápido e com erros de digitação; entenda a
   intenção. Quando ele pede opinião ("como os profissionais fariam?"), dê uma recomendação, não um cardápio.
 - Código, comentários, nomes e commits em português, no estilo do código em volta.
+- Nomes no jogo como numa localização profissional: o que descreve é traduzido e soa natural ("Bosque do Lobo
+  Branco", "Kalra, o Rei Troll"); nome inventado (Kalra, Varn, Theodore) fica como está.
 - O motor decide as regras; a tela só desenha. Número que aparece na tela vem pronto do motor.
 - Conteúdo é dado: habilidades (`rpg/habilidades.py`), talentos e passivas (`rpg/talentos.py`, com `mod`/`disparar`
   de `rpg/modificadores.py`), estados (`rpg/estados.py`). Nada de perguntar "tem o talento X?" no combate.

@@ -585,16 +585,16 @@ def pacote_suspeito(g):
 def sinais_do_guardiao(g):
     gu = g.loc["guardiao"]
     sinais = {
-        "Arachnid Queen": "Casulos do tamanho de homens pendem das árvores. Alguns ainda se mexem.",
-        "Elder Ent": "As árvores aqui têm rostos. Todos virados na mesma direção.",
-        "Bog Hydra": "Escamas do tamanho de escudos boiam na água. E três trilhas paralelas de lodo.",
-        "Drowned Witch": "Uma canção de ninar ecoa sobre a água. Ninguém à vista.",
-        "Troll King": "Ossos roídos empilhados formando uma espécie de... muralha.",
-        "Ice Wyrm": "Uma faixa de gelo corta a rocha, como se algo tivesse soprado inverno puro.",
-        "Warlord": "Estacas com elmos espetados marcam a trilha. Um aviso.",
-        "Ash Prophet": "Cinzas caem do céu limpo. Cânticos distantes.",
-        "Lesser Lich": "Esqueletos montam guarda imóveis, lanças erguidas, esperando ordens.",
-        "Primordial Golem": "O chão treme em intervalos regulares. Passos.",
+        "Rainha Aracnídea": "Casulos do tamanho de homens pendem das árvores. Alguns ainda se mexem.",
+        "Ent Ancião": "As árvores aqui têm rostos. Todos virados na mesma direção.",
+        "Hidra do Brejo": "Escamas do tamanho de escudos boiam na água. E três trilhas paralelas de lodo.",
+        "Bruxa Afogada": "Uma canção de ninar ecoa sobre a água. Ninguém à vista.",
+        "Rei Troll": "Ossos roídos empilhados formando uma espécie de... muralha.",
+        "Dragão de Gelo": "Uma faixa de gelo corta a rocha, como se algo tivesse soprado inverno puro.",
+        "Senhor da Guerra": "Estacas com elmos espetados marcam a trilha. Um aviso.",
+        "Profeta das Cinzas": "Cinzas caem do céu limpo. Cânticos distantes.",
+        "Lich Menor": "Esqueletos montam guarda imóveis, lanças erguidas, esperando ordens.",
+        "Golem Primordial": "O chão treme em intervalos regulares. Passos.",
     }
     g.dizer(sinais.get(gu["base"], "Algo enorme vive aqui."), "magenta")
     if not g.flag(f"fraqueza:guardiao:{g.loc['id']}") and g.teste("percepcao", 14):
@@ -607,7 +607,7 @@ def sinais_do_guardiao(g):
 
 @evento(peso=6, cooldown=10)
 def peregrinos(g):
-    destino = g.sortear(["do Temple of Dawn", "da Well of Seven Moons", "do túmulo de um santo esquecido"])
+    destino = g.sortear(["do Templo da Aurora", "do Poço das Sete Luas", "do túmulo de um santo esquecido"])
     g.dizer(f"Um grupo de peregrinos descalços canta a caminho {destino}.", "amarelo")
     op = g.menu("O que faz?", [
         ("Caminhar com eles um trecho e ouvir histórias", "ouvir"),

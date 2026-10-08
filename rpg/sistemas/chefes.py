@@ -73,7 +73,7 @@ class Chefes:
         extras = []
         if "yara" in traidores:
             yara = self.inimigo("bruxa_brejo", nome_unico="Yara", nivel=chefe.nivel - 1)
-            yara.nome = "Yara, Voice of the Rift"
+            yara.nome = "Yara, Voz da Fenda"
             yara.max_hp = yara.hp = int(yara.max_hp * 1.6)
             yara.poder = int(yara.poder * 1.4)
             extras.append(yara)

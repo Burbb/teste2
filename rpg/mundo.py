@@ -10,8 +10,8 @@ import math
 from collections import deque
 
 from . import texto as tx
-from .dados import ANTAGONISTAS, BIOMAS, NOMES_CIDADELA, ORIGENS_ANTAGONISTA, SUFIXOS_LUGAR, VILA_PREFIXOS, \
-    VILA_SUFIXOS
+from .dados import ANTAGONISTAS, BIOMAS, NOMES_CIDADELA, ORIGENS_ANTAGONISTA, SUFIXOS_LUGAR, VILA_LUGARES, \
+    VILA_QUALIFICA
 from .inimigos import gerar_guardiao
 
 SELVAGENS = ["floresta", "pantano", "montanha", "planicie", "ruinas"]
@@ -22,7 +22,9 @@ N_COVIS = 3
 
 def _nome_vila(rng, usados):
     while True:
-        nome = rng.choice(VILA_PREFIXOS) + rng.choice(VILA_SUFIXOS)
+        masc, fem = rng.choice(VILA_QUALIFICA)
+        lugar, g = rng.choice(VILA_LUGARES)
+        nome = f"{lugar} {masc if g == 'm' else fem}"
         if nome not in usados:
             usados.add(nome)
             return nome

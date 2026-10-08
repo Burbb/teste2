@@ -22,6 +22,7 @@ import copy
 import glob
 import json
 import os
+import re
 
 from rpg import balanceamento as bal
 from rpg import comitiva
@@ -55,8 +56,16 @@ def ajustar_item(bonus, nivel):
     return {k: (max(1, round(v * fator)) if k in ESCALAVEIS and v > 0 else v) for k, v in bonus.items()}
 
 
+# Runs de antes da tradução dos nomes (1.20) registraram o guardião em inglês ("Kalra, the Troll King").
+NOMES_ANTIGOS = {"Arachnid Queen": "Rainha Aracnídea", "Elder Ent": "Ent Ancião", "Bog Hydra": "Hidra do Brejo",
+                 "Drowned Witch": "Bruxa Afogada", "Troll King": "Rei Troll", "Ice Wyrm": "Dragão de Gelo",
+                 "Warlord": "Senhor da Guerra", "Ash Prophet": "Profeta das Cinzas", "Lesser Lich": "Lich Menor",
+                 "Primordial Golem": "Golem Primordial"}
+
+
 def _guardiao(nome, nivel):
-    base = nome.split(", the ", 1)[-1]
+    base = re.split(r", (?:the|o|a) ", nome, maxsplit=1)[-1]
+    base = NOMES_ANTIGOS.get(base, base)
     for bioma, lista in GUARDIOES.items():
         for idx, t in enumerate(lista):
             if t["base"] == base:

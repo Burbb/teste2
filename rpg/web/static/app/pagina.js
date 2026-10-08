@@ -33,7 +33,7 @@ pagina.addEventListener("scroll", () => { seguir = pagina.scrollTop + pagina.cli
 const MIUDAS = new Set(["de", "da", "do", "das", "dos", "e", "em", "of", "the", "a", "o", "os", "as"]);
 function suavizar(t) {
   t = String(t ?? "");
-  // Palavra a palavra: "GUARDIÃO: Ulric, the Lesser Lich" vira "Guardião: Ulric, the Lesser Lich".
+  // Palavra a palavra: "GUARDIÃO: Ulric, o Lich Menor" vira "Guardião: Ulric, o Lich Menor".
   // Siglas curtas (PV, XP) ficam; palavras já em caixa baixa ou capitalizadas também.
   return t.replace(/[\p{L}']+/gu, (p, i) => {
     const baixa = p.toLowerCase();

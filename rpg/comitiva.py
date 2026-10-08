@@ -18,7 +18,7 @@ LIMITE = 2  # companheiros ao mesmo tempo (fora o animal do patrulheiro)
 
 COMPANHEIROS = {
     "odete": dict(
-        nome="Sister Odette", curto="Odette", g="f", titulo="clériga desertora", papel="cura",
+        nome="Irmã Odette", curto="Odette", g="f", titulo="clériga desertora", papel="cura",
         desc="Fugiu da catedral na noite em que a Fenda se abriu. Fecha feridas; não perdoa crueldade.",
         base=dict(hp=30, atk=4, poder=6, defesa=3, agi=4), cresc=dict(hp=6, atk=0.6, poder=1.2, defesa=0.6),
         valores={"misericordia": 3, "generosidade": 2, "fe": 3, "honestidade": 2, "purificar": 2, "honra": 1,
@@ -59,7 +59,7 @@ COMPANHEIROS = {
         valores={"coragem": 3, "pragmatismo": 2, "honra": 2, "ganancia": 1, "violencia": 1, "fuga": -4,
                  "cautela": -1, "generosidade": -1, "autoridade": -2, "trapaca": -1, "fe": -1},
         aprova={
-            "coragem": "Morel solta uma gargalhada rouca. \"Isso! Os Iron Hounds teriam gostado de você.\"",
+            "coragem": "Morel solta uma gargalhada rouca. \"Isso! Os Cães de Ferro teriam gostado de você.\"",
             "pragmatismo": "\"Cabeça fria\", aprova Morel. \"Herói morto não paga dívida nenhuma.\"",
             "ganancia": "Morel conta as moedas junto com você, de olho. \"Agora sim estamos conversando.\"",
             "honra": "Morel bate o punho no peito, à moda antiga. \"Palavra dada. Ainda existe isso.\"",
@@ -71,7 +71,7 @@ COMPANHEIROS = {
             "cautela": "Morel boceja, alto. \"Se for para fugir de toda sombra, melhor virar pastor de cabras.\"",
             "generosidade": "\"Caridade não enche a barriga de ninguém\", resmunga Morel. \"Muito menos a minha.\"",
             "autoridade": "Morel cospe no chão. \"Guarda, nobre, bispo. Tudo a mesma laia. Nunca dobre o joelho.\"",
-            "fe": "\"Rezar\", Morel ri sem graça. \"Rezei a noite toda na Varn Bridge. Ninguém respondeu.\"",
+            "fe": "\"Rezar\", Morel ri sem graça. \"Rezei a noite toda na Ponte de Varn. Ninguém respondeu.\"",
             "trapaca": "\"Trapaça é para quem não sabe lutar\", diz Morel, e se afasta um passo.",
             None: "Morel cruza os braços.",
         },

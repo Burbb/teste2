@@ -3,7 +3,7 @@
 BIOMAS = {
     "floresta": {
         "nome": "Floresta",
-        "lugares": [("Wood", "m"), ("Grove", "m"), ("Forest", "f"), ("Glade", "f"), ("Vale", "m")],
+        "lugares": [("Bosque", "m"), ("Arvoredo", "m"), ("Floresta", "f"), ("Clareira", "f"), ("Vale", "m")],
         "familias": ["lobo", "aranha", "bandido", "javali", "ent_jovem", "caido"],
         "ambiente": [
             "Corpos pendem dos galhos mais altos. Os corvos já levaram os olhos.",
@@ -20,7 +20,7 @@ BIOMAS = {
     },
     "pantano": {
         "nome": "Pântano",
-        "lugares": [("Fen", "m"), ("Mire", "m"), ("Marsh", "m"), ("Bog", "m"), ("Swamp", "m")],
+        "lugares": [("Brejo", "m"), ("Lamaçal", "m"), ("Charco", "m"), ("Lodaçal", "m"), ("Pântano", "m")],
         "familias": ["afogado", "sapo", "bruxa_brejo", "sanguessuga", "bandido", "carnical"],
         "ambiente": [
             "Bolhas sobem da água escura. Às vezes, junto delas, sobe um dedo.",
@@ -37,7 +37,7 @@ BIOMAS = {
     },
     "montanha": {
         "nome": "Montanhas",
-        "lugares": [("Peak", "m"), ("Pass", "m"), ("Ridge", "f"), ("Gorge", "f"), ("Cliffs", "m")],
+        "lugares": [("Pico", "m"), ("Passo", "m"), ("Serra", "f"), ("Garganta", "f"), ("Penhascos", "m")],
         "familias": ["harpia", "troll", "lobo_gelido", "grifo", "bandido", "cao_infernal"],
         "ambiente": [
             "O vento uiva entre as rochas e traz um cheiro de sangue velho.",
@@ -54,7 +54,7 @@ BIOMAS = {
     },
     "planicie": {
         "nome": "Planícies",
-        "lugares": [("Fields", "m"), ("Meadow", "f"), ("Plains", "f"), ("Hill", "f"), ("Road", "f")],
+        "lugares": [("Campos", "m"), ("Prado", "m"), ("Planície", "f"), ("Colina", "f"), ("Estrada", "f")],
         "familias": ["bandido", "javali", "lobo", "cultista", "mercenario", "caido"],
         "ambiente": [
             "Uma fazenda queimada. Na porta do celeiro, alguém riscou: NÃO ABRA.",
@@ -71,7 +71,7 @@ BIOMAS = {
     },
     "ruinas": {
         "nome": "Ruínas",
-        "lugares": [("Ruins", "f"), ("Necropolis", "f"), ("Fortress", "f"), ("Temple", "m"), ("Catacombs", "f")],
+        "lugares": [("Ruínas", "f"), ("Necrópole", "f"), ("Fortaleza", "f"), ("Templo", "m"), ("Catacumbas", "f")],
         "familias": ["esqueleto", "espectro", "golem", "cultista", "rato", "carnical", "caido"],
         "ambiente": [
             "Colunas quebradas se erguem como costelas de um deus morto.",
@@ -88,7 +88,7 @@ BIOMAS = {
     },
     "cidadela": {
         "nome": "Cidadela",
-        "lugares": [("Citadel", "f")],
+        "lugares": [("Cidadela", "f")],
         "familias": ["cultista", "espectro", "cavaleiro_sombrio", "cria_vazio", "abominacao", "cao_infernal"],
         "ambiente": [
             "O céu aqui é da cor de uma ferida. Não há sol, nem estrelas, nem esperança.",
@@ -99,16 +99,21 @@ BIOMAS = {
     },
 }
 
-# Nomes próprios em inglês (o texto do jogo continua em português).
+# Nomes de lugar, como as localizações profissionais fazem: o que descreve é traduzido e soa como lugar de
+# verdade ("Bosque do Lobo Branco", "Vau de Pedra"); nome inventado (Kalra, Varn, Ulook) fica como está.
 SUFIXOS_LUGAR = [
-    "of the Raven", "of Laments", "of the Old Moon", "of the Fallen King", "of Bones", "of Silver",
-    "of Ashes", "of the White Wolf", "of Whispers", "of Mist", "of the Oath",
-    "of a Thousand Voices", "of Echoes", "of the Serpent", "of the Hanged", "of the Last Watch",
-    "of the Broken Bell", "of the Witches", "of the Giant", "of the Dawn",
+    "do Corvo", "dos Lamentos", "da Lua Velha", "do Rei Caído", "dos Ossos", "de Prata",
+    "das Cinzas", "do Lobo Branco", "dos Sussurros", "da Névoa", "do Juramento",
+    "das Mil Vozes", "dos Ecos", "da Serpente", "dos Enforcados", "da Última Vigília",
+    "do Sino Partido", "das Bruxas", "do Gigante", "da Aurora",
 ]
 
-VILA_PREFIXOS = ["Stone", "White", "Black", "Grey", "Cold", "Old", "Ash", "Oak", "Raven", "Gold"]
-VILA_SUFIXOS = ["ford", "vale", "hollow", "watch", "haven", "stead", "moor", "brook", "fall", "gate"]
+# Vilas: um lugar (com gênero) e o que o qualifica (masculino, feminino): "Grota Fria", "Vigia do Corvo".
+VILA_QUALIFICA = [("de Pedra", "de Pedra"), ("Branco", "Branca"), ("Negro", "Negra"), ("Cinzento", "Cinzenta"),
+                  ("Frio", "Fria"), ("Velho", "Velha"), ("das Cinzas", "das Cinzas"), ("do Carvalho", "do Carvalho"),
+                  ("do Corvo", "do Corvo"), ("Dourado", "Dourada")]
+VILA_LUGARES = [("Vau", "m"), ("Vale", "m"), ("Grota", "f"), ("Vigia", "f"), ("Abrigo", "m"), ("Herdade", "f"),
+                ("Charneca", "f"), ("Ribeira", "f"), ("Cascata", "f"), ("Portela", "f")]
 
 # Traços alteram o dano recebido conforme tipo e alcance do ataque.
 TRACOS = {
@@ -227,58 +232,58 @@ PERIODOS = ["Manhã", "Tarde", "Anoitecer", "Noite"]
 # Guardiões: três deles guardam os Sigilos que abrem o caminho até a Cidadela.
 GUARDIOES = {
     "floresta": [
-        dict(base="Arachnid Queen", g="f", hp=120, atk=10, defesa=4, agi=8, poder=6, tracos=["fera"],
+        dict(base="Rainha Aracnídea", g="f", hp=120, atk=10, defesa=4, agi=8, poder=6, tracos=["fera"],
              habs=["teia", "veneno", "invocar"], invoca="aranha", resist={"fogo": 1.4},
              intro="Teias grossas como cordas cobrem as árvores. Algo enorme desce do alto, com olhos demais para contar.",
              fases=[dict(limiar=0.5, texto="A rainha guincha e seus filhotes despencam das copas!",
                          atk=1.2, habs=["mordida_sangrenta"])]),
-        dict(base="Elder Ent", g="m", hp=160, atk=12, defesa=8, agi=1, poder=4, tracos=["planta", "blindado"],
+        dict(base="Ent Ancião", g="m", hp=160, atk=12, defesa=8, agi=1, poder=4, tracos=["planta", "blindado"],
              habs=["esmagar", "regenerar", "agarrar", "varredura"], resist={"fogo": 1.6},
              intro="A floresta inteira parece se mover. Uma árvore milenar abre olhos de seiva âmbar e fala com voz de terremoto.",
              fases=[dict(limiar=0.4, texto="A casca do Ent racha e uma luz verde e furiosa escapa das fendas!",
                          atk=1.3, defesa=0.7, habs=["investida"])]),
     ],
     "pantano": [
-        dict(base="Bog Hydra", g="f", hp=140, atk=10, defesa=4, agi=4, poder=4, tracos=["fera"],
+        dict(base="Hidra do Brejo", g="f", hp=140, atk=10, defesa=4, agi=4, poder=4, tracos=["fera"],
              habs=["regenerar", "veneno", "mordida_sangrenta", "varredura"],
              intro="A água ferve. Uma, duas, três cabeças de serpente emergem, sibilando em uníssono.",
              fases=[dict(limiar=0.5, texto="Onde uma cabeça foi cortada, duas novas brotam!", atk=1.35)]),
-        dict(base="Drowned Witch", g="f", hp=110, atk=6, defesa=3, agi=6, poder=12, tracos=["morto-vivo", "conjurador"],
+        dict(base="Bruxa Afogada", g="f", hp=110, atk=6, defesa=3, agi=6, poder=12, tracos=["morto-vivo", "conjurador"],
              habs=["maldicao", "bola_sombra", "invocar", "drenar"], invoca="afogado", ataque="sombra",
              intro="Uma mulher de pele azulada flutua sobre o charco, cabelos de algas escorrendo, cantando uma canção de ninar.",
              fases=[dict(limiar=0.5, texto="O canto vira um grito. Mãos podres emergem da água ao seu redor!",
                          poder=1.3, habs=["grito_terror"])]),
     ],
     "montanha": [
-        dict(base="Troll King", g="m", hp=170, atk=13, defesa=6, agi=1, poder=0, tracos=["gigante"],
+        dict(base="Rei Troll", g="m", hp=170, atk=13, defesa=6, agi=1, poder=0, tracos=["gigante"],
              habs=["esmagar", "regenerar", "investida", "varredura"], resist={"fogo": 1.4},
              intro="Sobre um trono de ossos de gigante, um troll colossal usa uma coroa feita de um elmo amassado.",
              fases=[dict(limiar=0.45, texto="O Rei Troll arranca uma rocha do chão e ruge de fúria!", atk=1.3)]),
-        dict(base="Ice Wyrm", g="m", hp=130, atk=11, defesa=5, agi=6, poder=8, tracos=["voador"],
+        dict(base="Dragão de Gelo", g="m", hp=130, atk=11, defesa=5, agi=6, poder=8, tracos=["voador"],
              habs=["mordida_gelida", "esmagar", "grito_terror", "varredura"], resist={"gelo": 0.3, "fogo": 1.4},
              intro="O pico inteiro treme. Um dragão serpentino de escamas azul-gelo desdobra as asas sobre você.",
-             fases=[dict(limiar=0.5, texto="O wyrm inspira fundo e o ar congela ao seu redor!", atk=1.25,
+             fases=[dict(limiar=0.5, texto="O dragão inspira fundo e o ar congela ao seu redor!", atk=1.25,
                          habs=["investida"])]),
     ],
     "planicie": [
-        dict(base="Warlord", g="m", hp=130, atk=11, defesa=7, agi=4, poder=0, tracos=["humano", "blindado"],
+        dict(base="Senhor da Guerra", g="m", hp=130, atk=11, defesa=7, agi=4, poder=0, tracos=["humano", "blindado"],
              habs=["golpe_sujo", "esmagar", "invocar", "grito_guerra", "varredura"], invoca="bandido",
              intro="Um acampamento fortificado. No centro, um homem de armadura remendada com troféus de seus inimigos aguarda.",
              fases=[dict(limiar=0.5, texto="\"Ninguém me derruba!\" Ele joga fora o escudo e pega um machado em cada mão.",
                          atk=1.35, defesa=0.7)]),
-        dict(base="Ash Prophet", g="m", hp=115, atk=6, defesa=3, agi=5, poder=12, tracos=["humano", "conjurador"],
+        dict(base="Profeta das Cinzas", g="m", hp=115, atk=6, defesa=3, agi=5, poder=12, tracos=["humano", "conjurador"],
              habs=["bola_sombra", "cura", "invocar", "maldicao"], invoca="cultista", ataque="sombra",
              intro="Um círculo de fiéis entoa cânticos ao redor de um homem cego que chora cinzas.",
              fases=[dict(limiar=0.5, texto="O Profeta abre os braços e o Vazio responde ao seu chamado!",
                          poder=1.3, habs=["drenar"])]),
     ],
     "ruinas": [
-        dict(base="Lesser Lich", g="m", hp=115, atk=5, defesa=4, agi=4, poder=13, tracos=["morto-vivo", "conjurador"],
+        dict(base="Lich Menor", g="m", hp=115, atk=5, defesa=4, agi=4, poder=13, tracos=["morto-vivo", "conjurador"],
              habs=["bola_sombra", "maldicao", "invocar", "drenar"], invoca="esqueleto", ataque="sombra",
              intro="Num salão de colunas tombadas, um esqueleto coroado ergue os olhos de um grimório. Duas chamas verdes acendem nas órbitas.",
              fases=[dict(limiar=0.5, texto="O lich esmaga uma joia em sua mão e sua forma se torna translúcida!",
                          tracos=["etereo"], poder=1.2)]),
-        dict(base="Primordial Golem", g="m", hp=180, atk=13, defesa=11, agi=0, poder=0, tracos=["construto", "blindado"],
+        dict(base="Golem Primordial", g="m", hp=180, atk=13, defesa=11, agi=0, poder=0, tracos=["construto", "blindado"],
              habs=["esmagar", "investida", "varredura"],
              intro="Runas se acendem no chão. O que você pensava ser uma parede se levanta: um golem do tamanho de uma casa.",
              fases=[dict(limiar=0.5, texto="As placas de pedra caem e o núcleo pulsante do golem fica exposto!",
@@ -287,9 +292,9 @@ GUARDIOES = {
 }
 
 ANTAGONISTAS = [
-    ("Lord of Terror", "m"), ("Queen of Flies", "f"), ("Devourer of Souls", "m"),
-    ("Defiled Archbishop", "m"), ("Mother of Broods", "f"), ("Herald of the Void", "m"),
-    ("Plague Bride", "f"), ("Hanged King", "m"),
+    ("Senhor do Terror", "m"), ("Rainha das Moscas", "f"), ("Devorador de Almas", "m"),
+    ("Arcebispo Profanado", "m"), ("Mãe das Ninhadas", "f"), ("Arauto do Vazio", "m"),
+    ("Noiva da Peste", "f"), ("Rei Enforcado", "m"),
 ]
 ORIGENS_ANTAGONISTA = [
     "que um dia foi um herói como você, até cravar uma pedra do Inferno na própria testa para aprisionar um demônio — e perder",
@@ -298,7 +303,7 @@ ORIGENS_ANTAGONISTA = [
     "o bispo que abriu as catacumbas da catedral procurando Deus e encontrou outra coisa",
     "que abriu a Fenda há cem anos e agora quer atravessá-la por completo, arrastando o mundo junto",
 ]
-NOMES_CIDADELA = ["Black Tower", "Broken Citadel", "Throne of the Void", "Bastion of Ashes", "Obsidian Crown"]
+NOMES_CIDADELA = ["Torre Negra", "Cidadela Partida", "Trono do Vazio", "Bastião das Cinzas", "Coroa de Obsidiana"]
 
 # Anotações do bestiário (reveladas ao encontrar cada criatura).
 LORE = {

@@ -103,7 +103,7 @@ def _aplicar_template(e, t, nivel):
 def gerar_guardiao(rng, bioma):
     idx = rng.randrange(len(GUARDIOES[bioma]))
     t = GUARDIOES[bioma][idx]
-    nome = f"{tx.nome_proprio(rng)}, the {t['base']}"
+    nome = f"{tx.nome_proprio(rng)}, {'o' if t['g'] == 'm' else 'a'} {t['base']}"  # "Kalra, o Rei Troll"
     return {"bioma": bioma, "idx": idx, "nome": nome, "g": t["g"], "derrotado": False, "base": t["base"]}
 
 
