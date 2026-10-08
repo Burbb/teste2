@@ -6,7 +6,7 @@
 
 const Batalha = (() => {
   const cartas = new Map();  // uid -> elemento da carta
-  const recentes = {};       // uid -> instante do último lance (o estado que chega depois não repete o efeito)
+  const recentes = {};       // uid -> instante do último lance (o estado que chega depois não repete o som do efeito)
   let anteriores = {};       // uid -> ficha do estado anterior
   let arena = null, colAliados = null, colInimigos = null, camadaFx = null;
   let rapido = () => false, pausa = (ms) => ms;
@@ -72,8 +72,7 @@ const Batalha = (() => {
       <div class="carta-hp"><span class="barra-px vida"><span class="rastro"></span><span class="enchimento"></span></span><span class="num"></span></div>
       ${c.uid === "j" ? '<div class="carta-rec"><span class="barra-px mana"><span class="enchimento"></span></span><span class="num"></span></div><div class="carta-flechas" hidden></div>' : ""}
       <div class="carta-efeitos"></div><div class="preparando" hidden>⚠ prepara um golpe devastador</div>`;
-    const b = e.querySelector(".carta-hp .barra-px");
-    [...b.children].forEach((x) => { x.style.width = pct(c.hp, c.max_hp) + "%"; });
+    barra(e, c.hp, c.max_hp);
     if (c.lado === "inimigo") {  // a ficha do inimigo aparece ao passar o mouse (no lugar do antigo "Analisar")
       e.addEventListener("mouseenter", () => mostrarFicha(e));
       // A carta sair de baixo do mouse (avançando para atacar) não fecha a ficha: só o mouse sair do lugar.
@@ -82,7 +81,10 @@ const Batalha = (() => {
     return e;
   }
 
+  /** A vida na carta. A carta lembra o que mostra (_hp): quando o estado chega depois dos lances, só o que eles
+   *  ainda não mostraram vira número (o Redemoinho não "apanha de novo" depois do roubo de vida). */
   function barra(carta, hp, max) {
+    carta._hp = hp;
     const b = carta.querySelector(".carta-hp .barra-px");
     if (!b) return;
     b.querySelectorAll(".rastro, .enchimento").forEach((x) => { x.style.width = pct(hp, max) + "%"; });
@@ -200,6 +202,7 @@ const Batalha = (() => {
       vistos.add(c.uid);
       let el = cartas.get(c.uid);
       const ant = anteriores[c.uid];
+      const naTela = el ? el._hp : undefined;  // antes de atualizarCarta, que põe a vida nova na barra
       const nova = !el;
       if (nova) { el = criarCarta(c); cartas.set(c.uid, el); }
       atualizarCarta(el, c, heroi);
@@ -209,8 +212,9 @@ const Batalha = (() => {
       const fresco = recentes[c.uid] && agora() - recentes[c.uid] < 1500;
       if (ant.vivo && !c.vivo) { morrer(el); morte = true; continue; }
       if (!ant.vivo && c.vivo) el.classList.remove("morta", "morrendo");
-      if (!fresco && c.hp < ant.hp) { tremer(el); numero(el, `−${ant.hp - c.hp}`, "menos"); golpe = true; }
-      if (!fresco && c.hp > ant.hp && c.max_hp === ant.max_hp) { brilho(el, "cura"); numero(el, `+${c.hp - ant.hp}`, "cura"); }
+      const mostrava = naTela ?? ant.hp;
+      if (c.hp < mostrava) { tremer(el); numero(el, `−${mostrava - c.hp}`, "menos"); golpe = true; }
+      if (c.hp > mostrava && c.max_hp === ant.max_hp) { brilho(el, "cura"); numero(el, `+${c.hp - mostrava}`, "cura"); }
       const tinha = new Set(ant.efeitos.map((f) => f.id));
       c.efeitos.filter((f) => !tinha.has(f.id)).forEach((f) => {
         const fam = efeito(f.id)[1];
