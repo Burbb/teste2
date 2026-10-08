@@ -44,6 +44,9 @@ sorteia entre os que valem para o contexto.
 - `atacar()` é **a** conta de dano (esquiva, eficácia, modificadores, defesa, crítico, barreira, roubo de vida).
 - Cada coisa visível vira um **lance** estruturado (`acao`, `golpe`, `erro`, `cura`, `buff`, `salva`, `fim_acao`...)
   que a tela anima (`rpg/web/static/batalha.js`) e a telemetria contabiliza.
+- O espólio da vitória (ouro, XP, contratos que andaram, o que se acha nos corpos, e o que o evento ainda der logo
+  depois) é juntado pelo motor (`Recompensas.abrir_espolio`/`fechar_espolio`): na tela gráfica vira um quadro só,
+  mostrado antes da próxima pergunta ao jogador ou no fim do evento; no texto, cada ganho é dito na hora.
 - Estados (veneno, queimadura, guarda, provocando...) ficam em `efeitos` de cada combatente. O **catálogo**
   `rpg/estados.py` (Etapa C) declara, para cada um: nome, ícone e cor na tela, se é um mal, dano por turno,
   perda de turno, imunidade, resistência, camadas e como o Grimório o descreve. `aplicar()` e

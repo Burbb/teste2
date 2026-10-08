@@ -102,6 +102,7 @@ class Confronto:
         return grupo
 
     def combate(self, inimigos, emboscada=None, pode_fugir=True, titulo=None, sozinho=False):
+        self.fechar_espolio()  # o espólio de uma luta anterior aparece antes da próxima começar
         r = Combate(self, inimigos, emboscada, pode_fugir, titulo, sozinho=sozinho).executar()
         if r == "derrota":
             causa = f"Você tombou diante de {tx.lista_natural([e.nome for e in inimigos])}."
@@ -143,25 +144,33 @@ class Confronto:
                 c["feito"] = min(c["total"], c["feito"] + n)
                 if c["feito"] >= c["total"]:
                     c["concluido"] = True
-                    self.dizer(f"Contrato concluído: {c['desc']} Receba a recompensa em qualquer vila.", "verde")
-                else:
-                    self.ui.efeito(f"Contrato: {c['feito']}/{c['total']} {FAMILIAS[c['familia']]['plural']}", "info")
+                self.anunciar_contrato(c, f"{c['feito']}/{c['total']} {FAMILIAS[c['familia']]['plural']}")
             elif c["tipo"] == "alvo" and any(e.chave == c["chave"] for e in derrotados):
                 c["concluido"] = True
-                self.dizer(f"Contrato concluído: {c['desc']} Receba a recompensa em qualquer vila.", "verde")
+                self.anunciar_contrato(c)
+
+    def anunciar_contrato(self, c, progresso=""):
+        """O contrato andou nesta luta: entra no quadro do espólio (tela gráfica) ou vira uma linha (texto)."""
+        if self.espolio_aberto is not None:
+            self.espolio_aberto["contratos"].append({"desc": c["desc"], "progresso": progresso,
+                                                     "concluido": bool(c.get("concluido"))})
+        elif c.get("concluido"):
+            self.dizer(f"Contrato concluído: {c['desc']} Receba a recompensa em qualquer vila.", "verde")
+        else:
+            self.ui.efeito(f"Contrato: {progresso}", "info")
 
     def saque_de_combate(self, derrotados):
         elites = sum(1 for e in derrotados if e.afixo or e.unico)
         chefe = any(e.chefe for e in derrotados)
         if any("humano" in e.tracos for e in derrotados) and self.chance(0.35):
-            self.dizer(tx.concordar("Nos alforjes {do morto|dos mortos}, um pouco de comida.", derrotados), "cinza")
+            self.contar_achado(tx.concordar("Nos alforjes {do morto|dos mortos}, um pouco de comida.", derrotados), "cinza")
             self.dar_provisoes(1)
         if self.chance(0.15 + 0.1 * elites):
             self.dar(self.sortear(["bandagem", "bandagem", "tocha", "tocha", "pocao_vida", "tonico", "antidoto"]))
         if self.j.classe == "arqueiro" and any(e.familia in ("bandido", "mercenario") for e in derrotados) \
                 and self.chance(0.3):
-            self.dizer(tx.concordar("Você encontra algumas flechas entre os pertences {do inimigo|dos inimigos}.",
-                                    derrotados), "verde")
+            self.contar_achado(tx.concordar("Você encontra algumas flechas entre os pertences {do inimigo|dos inimigos}.",
+                                            derrotados), "verde")
             self.dar_flechas(self.rng.randint(2, 5))
         if chefe or self.chance(0.07 + 0.2 * elites):
             nivel = min(max(e.nivel for e in derrotados), self.j.nivel + 2)

@@ -14,7 +14,11 @@ class Inventario:
     # ================================================================ equipamento e itens
     def oferecer_equip(self, item):
         """Um item encontrado: a tela gráfica mostra o cartão do saque (com o que você usa ao lado); a de texto, as
-        linhas. Deixar para trás só existe quando não há onde guardar."""
+        linhas. Deixar para trás só existe quando não há onde guardar. Achado depois de uma vitória, na tela gráfica,
+        espera o quadro do espólio (é uma escolha: vem logo depois dele)."""
+        if self.espolio_aberto is not None:
+            self.espolio_aberto["equip"].append(item)
+            return
         rec = self.j.nome_recurso
         usa = self.pode_usar(item)
         cabe = len(self.j.mochila) < LIMITE_MOCHILA

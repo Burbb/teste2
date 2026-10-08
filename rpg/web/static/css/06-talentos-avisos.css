@@ -165,6 +165,8 @@
 /* ---------------------------------------------------------------- a virada do dia */
 /* Véu leve: a paisagem do topo (onde a aurora acontece) continua à vista. */
 #celebracao.leve { background: rgba(5, 4, 3, 0.3); }
+/* Quadro no meio da coluna do jogo (telas.js noPalco): a posição vem do JS. */
+.festa.no-palco { position: fixed; margin: 0; translate: -50% -50%; }
 .festa-amanhecer { margin-top: 24vh; width: min(560px, 92vw); padding: 16px 28px 18px; background: rgba(18, 13, 9, 0.92); border: 3px solid #5a4630; box-shadow: 4px 4px 0 #000; }
 .festa-amanhecer.saindo { animation: some 0.26s ease-in forwards; }
 .festa-amanhecer .dia-numero { font-family: var(--titulo); font-size: 72px; line-height: 0.95; color: #ffd27a; text-shadow: 4px 4px 0 #000, 0 0 26px rgba(255, 180, 90, 0.55);
@@ -199,6 +201,20 @@
 .espolio-barra { position: relative; height: 12px; background: #0d0a08; border: 2px solid #000; box-shadow: inset 0 0 0 1px #3a2e4a; overflow: hidden; }
 .espolio-barra i { position: absolute; inset: 0 auto 0 0; width: 0; background: linear-gradient(180deg, #ead8ff, #a57ce6 60%, #553090); box-shadow: 0 0 8px rgba(190, 150, 255, 0.6); }
 .festa-espolio.subiu { animation: espolio-subiu 0.5s ease-out; }
+/* O que mais a vitória deu: os achados em etiquetas, e os contratos que andaram. */
+.espolio-extras { margin-top: 12px; transition: opacity 0.25s ease-out, translate 0.25s ease-out; }
+.espolio-extras.esperando { opacity: 0; translate: 0 8px; }
+.espolio-achados { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.achado-espolio { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px 3px 4px; font-size: 15px; color: var(--tinta); background: #120e0b; border: 2px solid #4a3c2c; }
+.achado-espolio b { font-family: var(--num); font-size: 19px; font-weight: 400; color: var(--bom); }
+.achado-espolio.equip { border-color: var(--ouro-3); }
+.achado-espolio.equip b { color: var(--ouro); }
+.achado-espolio small { font-size: 12px; color: var(--tinta-3); }
+.espolio-contrato { display: grid; grid-template-columns: 32px auto 1fr; align-items: center; gap: 8px; margin-top: 8px; padding: 4px 10px; font-size: 15px;
+  color: var(--tinta-2); background: rgba(255, 255, 255, 0.03); border: 2px solid #2e251c; text-align: left; }
+.espolio-contrato b { font-family: var(--num); font-size: 18px; font-weight: 400; color: var(--tinta); text-align: right; }
+.espolio-contrato.feito { border-color: #3d6a2a; }
+.espolio-contrato.feito span, .espolio-contrato.feito b { color: var(--bom); }
 @keyframes espolio-subiu { 30% { box-shadow: 4px 4px 0 #000, 0 0 30px rgba(255, 210, 100, 0.9); border-color: var(--ouro); } }
 
 /* Atributo permanente (telas.js seloAtributo): o selo surge no meio da tela e voa até o atributo, que brilha e conta. */

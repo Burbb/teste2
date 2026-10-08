@@ -74,6 +74,7 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         self.reserva = []  # companheiros que esperam no acampamento
         self.evento_atual = None
         self.sem_luz = False
+        self.espolio_aberto = None  # o quadro de espólio sendo juntado (tela gráfica; ver Recompensas.abrir_espolio)
         self.registro = []
         self.arquivo_run = None
         self.bestiario = {}
@@ -104,6 +105,7 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         self.ui.narrar(texto, cor)
 
     def pausar(self):
+        self.fechar_espolio()
         self.ui.pausar()
 
     def chance(self, p):
@@ -127,6 +129,7 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
 
     def menu(self, pergunta, opcoes):
         """opcoes: lista de (rótulo, chave) ou None (opção indisponível)."""
+        self.fechar_espolio()  # o que se ganhou aparece antes de a pessoa escolher de novo
         validas = [o for o in opcoes if o]
         rotulos = [self._anotar_teste(o[0]) for o in validas]
         metas = [o[2] if len(o) > 2 else None for o in validas]

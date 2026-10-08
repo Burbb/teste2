@@ -1,3 +1,3 @@
 """Crônicas da Fenda — um RPG de texto offline com eventos procedurais."""
 
-__version__ = "1.32.5"
+__version__ = "1.33.0"

@@ -610,6 +610,35 @@ class TestSistemas(unittest.TestCase):
         self.assertNotIn(f"Você chega a {novo['nome']}.", linhas)
         self.assertEqual(g.descrever_lugar(vila), "Vila")
 
+    def test_espolio_junta_tudo(self):
+        """Na tela gráfica, o que a vitória e o evento logo depois dão vira um quadro só, antes da próxima pergunta: o
+        ouro e o XP só chegam quando ele aparece, os achados entram nele, e o equipamento vem depois (é uma escolha).
+        No texto, cada ganho é dito na hora."""
+        from rpg.itens import gerar_equip
+        g = Jogo(BotUI(random.Random(1)), seed=1, pasta_saves=tempfile.mkdtemp())
+        g.iniciar("Robô", "guerreiro")
+        ordem = []
+        g.ui.celebrar = lambda tipo, dados: ordem.append((tipo, dados))
+        g.abrir_espolio()
+        self.assertIsNone(g.espolio_aberto)  # no texto não há quadro
+        g.ui.conquistas_na_tela = True
+        ouro, xp = g.j.ouro, g.j.xp
+        g.abrir_espolio()
+        g.ganhar_ouro(100)
+        g.ganhar_xp(10)
+        g.dar("bandagem"); g.dar("bandagem")
+        g.dar_provisoes(1)
+        item = gerar_equip(g.rng, "guerreiro", 1)
+        g.oferecer_equip(item)  # espera o quadro
+        self.assertEqual((g.j.ouro, g.j.xp, ordem), (ouro, xp, []))  # nada entregue antes do quadro
+        g.oferecer_equip = lambda it: ordem.append(("equip", it["nome"]))  # o cartão do achado, depois do quadro
+        g.menu("", [("ok", 1)])  # a próxima pergunta mostra o quadro
+        (tipo, d), equip = ordem
+        self.assertEqual((tipo, d["ouro"], d["xp"], d["equip"]), ("espolio", g.ouro_achado(100), 10, 1))
+        self.assertEqual([(x["id"], x["qtd"]) for x in d["itens"]], [("bandagem", 2), ("comida", 1)])
+        self.assertEqual(equip, ("equip", item["nome"]))
+        self.assertEqual((g.j.ouro, g.j.xp), (ouro + g.ouro_achado(100), xp + 10))
+
     def test_concordar(self):
         """Um lobo sozinho é "ele", não "eles"; duas aranhas são "elas"; um lobo e uma aranha, "eles"."""
         from rpg import texto as tx

@@ -17,11 +17,56 @@ class Recompensas:
         n = int(n) if exato else self.ouro_achado(n)
         if n <= 0:
             return 0
+        if self.espolio_aberto is not None:  # vai para o quadro do espólio, que entrega quando aparece
+            self.espolio_aberto["ouro"] += n
+            return n
         self.j.ouro += n
         self.estatisticas["ouro_ganho"] += n
         if avisar:
             self.ui.efeito(f"+{n} ouro", "ouro")
         return n
+
+    # ------------------------------------------------------------ o quadro do espólio
+    # Na tela gráfica, o que se ganha depois de uma vitória (o ouro dos inimigos, o XP, os contratos que andaram, o que
+    # se acha nos corpos e o que o evento ainda der logo depois, como o cofre que o lobo guardava) vai para um quadro só,
+    # mostrado antes da próxima pergunta ao jogador (menu, Continuar, outra luta) ou no fim do evento. O ouro e o XP são
+    # entregues quando o quadro aparece (o ouro do topo sobe quando as moedas chegam; o nível sobe depois dele), e o
+    # equipamento achado vem logo em seguida (é uma escolha). No texto, cada ganho é dito na hora, como sempre.
+    def abrir_espolio(self):
+        if self.ui.conquistas_na_tela and self.espolio_aberto is None:
+            self.espolio_aberto = {"ouro": 0, "xp": 0, "itens": [], "contratos": [], "equip": []}
+
+    def fechar_espolio(self):
+        e, self.espolio_aberto = self.espolio_aberto, None
+        if e is None:
+            return
+        if any(e.values()):
+            self.ui.celebrar("espolio", {"ouro": e["ouro"], "xp": e["xp"], "nivel": self.j.nivel,
+                                         "trechos": self.trechos_xp(e["xp"]), "itens": e["itens"],
+                                         "contratos": e["contratos"], "equip": len(e["equip"])})
+        self.ganhar_ouro(e["ouro"], exato=True, avisar=False)
+        self.ganhar_xp(e["xp"], avisar=False)
+        for item in e["equip"]:
+            self.oferecer_equip(item)
+
+    def achou(self, chave, nome, qtd):
+        """Um consumível, comida ou flechas achados: com o quadro do espólio aberto, entram nele (somando com o que já
+        estava lá) e devolve True; senão devolve False, e quem chamou avisa do jeito de sempre."""
+        e = self.espolio_aberto
+        if e is None:
+            return False
+        ja = next((x for x in e["itens"] if x["id"] == chave), None)
+        if ja:
+            ja["qtd"] += qtd
+        else:
+            e["itens"].append({"id": chave, "nome": nome, "qtd": qtd})
+        return True
+
+    def contar_achado(self, texto, cor):
+        """De onde veio um achado (os alforjes, os pertences): no quadro do espólio, o achado já aparece com nome e
+        ícone, então o texto só vai quando não há quadro."""
+        if self.espolio_aberto is None:
+            self.dizer(texto, cor)
 
     def ouro_achado(self, n):
         """Quanto fica de um ouro achado (saque, evento): o mundo é pobre (OURO_MUNDO)."""
@@ -37,6 +82,9 @@ class Recompensas:
     def ganhar_xp(self, n, avisar=True):
         n = int(n)
         if n <= 0 or self.j.nivel >= NIVEL_MAXIMO:
+            return
+        if self.espolio_aberto is not None:  # o quadro enche a barra antes; o nível sobe depois dele
+            self.espolio_aberto["xp"] += n
             return
         self.j.xp += n
         if avisar:
@@ -84,7 +132,8 @@ class Recompensas:
 
     def dar(self, item, qtd=1):
         self.j.consumiveis[item] = self.j.consumiveis.get(item, 0) + qtd
-        self.ui.efeito(f"{CONSUMIVEIS[item]['nome']} ×{qtd}", "item")
+        if not self.achou(item, CONSUMIVEIS[item]["nome"], qtd):
+            self.ui.efeito(f"{CONSUMIVEIS[item]['nome']} ×{qtd}", "item")
 
     def bonus_permanente(self, stat, valor):
         """Bônus de atributo vindo de eventos, com teto por partida (evita acumular sem fim)."""
@@ -107,8 +156,9 @@ class Recompensas:
     def dar_provisoes(self, n):
         antes = self.j.provisoes
         self.j.provisoes = min(sobrevivencia.MAX_PROVISOES, antes + n)
-        if self.j.provisoes > antes:
-            self.ui.efeito(f"+{self.j.provisoes - antes} dia(s) de comida (total {self.j.provisoes})", "item")
+        n = self.j.provisoes - antes
+        if n > 0 and not self.achou("comida", "Comida", n):
+            self.ui.efeito(f"+{n} dia(s) de comida (total {self.j.provisoes})", "item")
 
     def max_flechas(self):
         """A aljava tem fundo: não dá para comprar cem flechas e esquecer delas."""
@@ -122,7 +172,8 @@ class Recompensas:
             self.dizer("Sua aljava já está cheia.", "cinza")
             return 0
         self.j.flechas += n
-        self.ui.efeito(f"+{n} flechas (total {self.j.flechas}/{self.max_flechas()})", "item")
+        if not self.achou("flechas", "Flechas", n):
+            self.ui.efeito(f"+{n} flechas (total {self.j.flechas}/{self.max_flechas()})", "item")
         return n
 
     def mudar_reputacao(self, d, avisar=True):

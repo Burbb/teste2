@@ -1027,20 +1027,18 @@ class Combate:
         if resultado == "vitoria":
             derrotados = [e for e in self.inimigos if not e.fugiu]
             self.ui.separador("verde")
-            self.dizer("VITÓRIA!", "verde+negrito")
+            if not g.ui.conquistas_na_tela:  # na tela, a faixa de Vitória e o quadro do espólio dizem isso
+                self.dizer("VITÓRIA!", "verde+negrito")
             ouro = sum(e.ouro + e.roubado for e in derrotados)
             if any(e.roubado for e in derrotados):
                 self.dizer("Você recupera o ouro que lhe foi roubado.", "verde")
             g.ui.celebrar("vitoria", {"inimigos": len(derrotados), "chefe": any(e.chefe for e in derrotados)})
-            # O espólio na ordem em que se sente: o ouro e o XP (a barra enchendo; o nível, se subir), depois o
-            # que se acha nos corpos. Na tela gráfica, ouro e XP vêm num quadro só, em vez de dois avisos soltos.
-            festa = g.ui.conquistas_na_tela
+            # O espólio: o ouro, o XP, os contratos que andaram e o que se acha nos corpos. Na tela gráfica tudo
+            # isso (e o que o evento ainda der logo depois) vai para um quadro só, antes da próxima pergunta.
+            g.abrir_espolio()
             xp = int(comitiva.parte_do_xp(g) * sum(e.xp * bal.fator_xp(e.nivel - j.nivel) for e in derrotados))
-            if festa and (g.ouro_achado(ouro) > 0 or xp > 0):  # o quadro antes: o ouro do topo sobe quando as moedas chegam
-                g.ui.celebrar("espolio", {"ouro": g.ouro_achado(ouro), "xp": xp, "nivel": j.nivel,
-                                          "trechos": g.trechos_xp(xp)})
-            g.ganhar_ouro(ouro, avisar=not festa)
+            g.ganhar_ouro(ouro)
             g.registrar_abates(derrotados)
-            g.ganhar_xp(xp, avisar=not festa)
+            g.ganhar_xp(xp)
             g.saque_de_combate(derrotados)
         return resultado

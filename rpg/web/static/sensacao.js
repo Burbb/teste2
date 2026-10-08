@@ -20,7 +20,7 @@ const Sensacao = (() => {
     // Números que contam subindo (ouro do espólio): duração e o máximo de tiques de som.
     contarMs: 650, tiquesMax: 10,
     // A barra de XP enchendo (por trecho de nível) e quanto o espólio fica na tela depois de tudo.
-    barraMs: 700, espolioEsperaMs: 450, espolioEntreMs: 180, espolioFicaMs: 900,
+    barraMs: 700, espolioEsperaMs: 450, espolioEntreMs: 180, espolioFicaMs: 900, espolioAchadoMs: 350,
     // Vida por um fio: o compasso do pulso (ms entre batidas), mais rápido quanto mais perto do fim, e quantas
     // vezes o coração soa ao entrar na faixa (depois só a tela pulsa: som contínuo cansa e angustia).
     batimentoLentoMs: 1150, batimentoRapidoMs: 700, batidasAoEntrar: 3,
@@ -248,60 +248,82 @@ const Sensacao = (() => {
   }
 
   /* ------------------------------------------------------------ o espólio da vitória */
-  /** Como a tela de resultado dos jogos: uma linha por recompensa (o ouro, depois a experiência), e a barra de nível
-   *  presa à linha da experiência, com os números do nível. O ouro conta e voa até a bolsa; só então a experiência
-   *  aparece, conta e enche a barra (se o nível vira: enche, brilha e recomeça). Some sozinho no fim; um clique ou
-   *  uma tecla adianta. Os trechos da barra vêm do motor. */
+  // O que se acha (o motor manda o id; a tela escolhe o ícone e escreve a quantidade do jeito de cada coisa).
+  const ICONE_ACHADO = { comida: "pernil", flechas: "flecha" };
+  const quantoAchou = (x) => (x.id === "comida" ? `+${x.qtd} dia${x.qtd > 1 ? "s" : ""}` : x.id === "flechas" ? `+${x.qtd}` : `×${x.qtd}`);
+  const esc = (t) => String(t ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+  /** Como a tela de resultado dos jogos, tudo o que a vitória deu num quadro só: uma linha por recompensa (o ouro,
+   *  depois a experiência com a barra de nível presa embaixo dela), e por fim o que se achou (comida, bandagem,
+   *  flechas; o equipamento, que vem logo a seguir porque é uma escolha) e os contratos que andaram. O ouro conta e voa
+   *  até a bolsa; a barra enche (se o nível vira: enche, brilha e recomeça). Some sozinho no fim; um clique ou uma
+   *  tecla adianta. Os trechos da barra vêm do motor. */
   async function espolio(caixa, d) {
     const S = (n, e = 1) => Sprites.img(n, e);
-    const ultimo = d.trechos[d.trechos.length - 1] || [0, 0, 1], primeiro = d.trechos[0] || ultimo;
+    const trechos = d.trechos || [], ultimo = trechos[trechos.length - 1] || [0, 0, 1], primeiro = trechos[0] || ultimo;
+    const achados = (d.itens || []).map((x) => `<span class="achado-espolio">${S(ICONE_ACHADO[x.id] || Telas.ICONE_ITEM[x.id] || "saco", 2)}${esc(x.nome)}<b>${quantoAchou(x)}</b></span>`);
+    if (d.equip) achados.push(`<span class="achado-espolio equip">${S("saco", 2)}Equipamento<b>×${d.equip}</b><small>a seguir</small></span>`);
+    const contratos = (d.contratos || []).map((c) => `<div class="espolio-contrato${c.concluido ? " feito" : ""}">${S("pergaminho", 2)}
+      <span>${c.concluido ? "Contrato cumprido" : "Contrato"}</span><b>${esc(c.concluido ? "receba em qualquer vila" : c.progresso)}</b></div>`).join("");
+    const extras = achados.length || contratos;
     caixa.innerHTML = `<div class="festa festa-espolio">
       <div class="rotulo-festa">espólio</div>
       ${d.ouro ? `<div class="espolio-linha ouro">${S("moeda", 2)}<span class="nome">Ouro</span><b>+<span class="conta">0</span></b></div>` : ""}
-      <div class="espolio-xp${d.ouro ? " esperando" : ""}">
+      ${d.xp ? `<div class="espolio-xp${d.ouro ? " esperando" : ""}">
         <div class="espolio-linha xp">${S("estrela", 2)}<span class="nome">Experiência</span><b>+<span class="conta">0</span> <small>XP</small></b></div>
         <div class="espolio-nivel"><span>Nível <b>${d.nivel}</b></span><div class="espolio-barra"><i></i></div>
           <span class="espolio-faltam"><span class="conta">${primeiro[0]}</span>/<span class="total">${primeiro[2]}</span></span></div>
-      </div></div>`;
+      </div>` : ""}
+      ${extras ? `<div class="espolio-extras${d.ouro || d.xp ? " esperando" : ""}">${achados.length ? `<div class="espolio-achados">${achados.join("")}</div>` : ""}${contratos}</div>` : ""}
+    </div>`;
     caixa.classList.add("leve");
     caixa.hidden = false;
+    const festa = caixa.querySelector(".festa-espolio");
+    Telas.noPalco(festa);
     let pular = false;
     const adiantar = (ev) => { if (ev.type === "keydown" && ![" ", "Enter", "Escape"].includes(ev.key)) return; ev.preventDefault(); ev.stopPropagation(); pular = true; };
     document.addEventListener("pointerdown", adiantar, true);
     document.addEventListener("keydown", adiantar, true);
-    const festa = caixa.querySelector(".festa-espolio"), blocoXp = caixa.querySelector(".espolio-xp");
-    const barra = caixa.querySelector(".espolio-barra"), nivelEl = caixa.querySelector(".espolio-nivel b");
-    const noNivel = caixa.querySelector(".espolio-faltam .conta"), totalEl = caixa.querySelector(".espolio-faltam .total");
-    barra.firstElementChild.style.width = (primeiro[0] / primeiro[2]) * 100 + "%";
+    const mostrar = (el) => el && el.classList.remove("esperando");
     await dormir(pausa(AJUSTES.espolioEsperaMs));  // a faixa de "Vitória" sai antes
     if (d.ouro) {
       Som.tocar("moeda");
       await contar(caixa.querySelector(".espolio-linha.ouro .conta"), d.ouro);
       Telas.moedasPara(caixa.querySelector(".espolio-linha.ouro"), document.querySelector('.recurso[data-rec="ouro"]'));
       await dormir(pausa(AJUSTES.espolioEntreMs));
-      blocoXp.classList.remove("esperando");  // a experiência chega depois, numa linha dela
     }
-    contar(caixa.querySelector(".espolio-linha.xp .conta"), d.xp, AJUSTES.barraMs * d.trechos.length, { tiques: false });
-    let nivel = d.nivel;
-    for (const [de, ate, total] of d.trechos) {
-      if (pular) break;
-      totalEl.textContent = total;
-      contar(noNivel, ate, AJUSTES.barraMs, { de, tiques: false });
-      await encher(barra, de / total, ate / total, AJUSTES.barraMs);
-      if (ate >= total) {  // o nível virou: a barra brilha, o número sobe, e ela recomeça
-        nivel += 1;
-        nivelEl.textContent = nivel;
-        festa.classList.remove("subiu"); void festa.offsetWidth; festa.classList.add("subiu");
-        Som.tocar("nivel");
-        await dormir(pausa(350));
+    if (d.xp) {
+      mostrar(caixa.querySelector(".espolio-xp"));  // a experiência chega depois do ouro, numa linha dela
+      const barra = caixa.querySelector(".espolio-barra"), nivelEl = caixa.querySelector(".espolio-nivel b");
+      const noNivel = caixa.querySelector(".espolio-faltam .conta"), totalEl = caixa.querySelector(".espolio-faltam .total");
+      barra.firstElementChild.style.width = (primeiro[0] / primeiro[2]) * 100 + "%";
+      contar(caixa.querySelector(".espolio-linha.xp .conta"), d.xp, AJUSTES.barraMs * trechos.length, { tiques: false });
+      let nivel = d.nivel;
+      for (const [de, ate, total] of trechos) {
+        if (pular) break;
+        totalEl.textContent = total;
+        contar(noNivel, ate, AJUSTES.barraMs, { de, tiques: false });
+        await encher(barra, de / total, ate / total, AJUSTES.barraMs);
+        if (ate >= total) {  // o nível virou: a barra brilha, o número sobe, e ela recomeça
+          nivel += 1;
+          nivelEl.textContent = nivel;
+          festa.classList.remove("subiu"); void festa.offsetWidth; festa.classList.add("subiu");
+          Som.tocar("nivel");
+          await dormir(pausa(350));
+        }
+      }
+      if (pular) {  // adiantou: os números vão direto ao fim
+        caixa.querySelector(".espolio-linha.xp .conta").textContent = d.xp;
+        noNivel.textContent = ultimo[1]; totalEl.textContent = ultimo[2];
       }
     }
-    if (pular) {  // adiantou: os números vão direto ao fim
-      caixa.querySelector(".espolio-linha.xp .conta").textContent = d.xp;
-      noNivel.textContent = ultimo[1]; totalEl.textContent = ultimo[2];
-      blocoXp.classList.remove("esperando");
+    if (extras) {
+      if (!pular) await dormir(pausa(AJUSTES.espolioEntreMs));
+      mostrar(caixa.querySelector(".espolio-extras"));
+      Som.tocar("item");
     }
-    if (!pular) await Promise.race([dormir(pausa(AJUSTES.espolioFicaMs)), new Promise((r) => { const t = setInterval(() => { if (pular) { clearInterval(t); r(); } }, 50); })]);
+    const fica = AJUSTES.espolioFicaMs + (extras ? AJUSTES.espolioAchadoMs * (achados.length + (d.contratos || []).length) : 0);
+    if (!pular) await Promise.race([dormir(pausa(fica)), new Promise((r) => { const t = setInterval(() => { if (pular) { clearInterval(t); r(); } }, 50); })]);
     document.removeEventListener("pointerdown", adiantar, true);
     document.removeEventListener("keydown", adiantar, true);
     festa.classList.add("saindo");

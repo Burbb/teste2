@@ -1252,6 +1252,21 @@ const Telas = (() => {
   /** A virada do dia: a aurora na paisagem, a faixa "Dia N" e o que a noite fez, em ícones (verde o que fez bem,
    *  amarelo o que pede atenção, vermelho o que dói). Noite tranquila: some sozinho; noite ruim: espera o clique. */
   const ICONE_NOITE = { bom: "bom", neutro: "", aviso: "aviso", perigo: "perigo" };
+  /** Os quadros rápidos sobre o jogo (amanhecer, espólio) ficam no meio da coluna do jogo, e não no meio da janela:
+   *  os painéis dos lados têm larguras diferentes, e o quadro ficava torto em relação à cena. `sobreTitulo`: na altura
+   *  do título do lugar (o amanhecer, curto); senão, no meio da coluna. Numa tela estreita, sem a coluna, ficam no meio
+   *  da janela. */
+  function noPalco(festa, sobreTitulo = false) {
+    const palco = document.getElementById("palco"), p = palco && palco.getBoundingClientRect();
+    if (!festa || !p || !p.width) return;
+    const t = sobreTitulo && document.querySelector("#cena-cab .cena-titulo"), r = t && t.getBoundingClientRect();
+    const y = r && r.height && r.top > 0 && r.bottom < innerHeight ? r.top + r.height / 2 : p.top + p.height * 0.45;
+    const meio = festa.offsetHeight / 2 + 8;
+    festa.classList.add("no-palco");
+    festa.style.left = p.left + p.width / 2 + "px";
+    festa.style.top = Math.max(meio, Math.min(innerHeight - meio, y)) + "px";
+  }
+
   function amanhecer(caixa, d) {
     if (typeof Vista !== "undefined") Vista.amanhecer(1800);
     App.som("amanhecer");
@@ -1265,6 +1280,7 @@ const Telas = (() => {
       ${ruim ? '<button class="continuar" type="button">Continuar <span>▸</span></button>' : ""}</div>`;
     caixa.classList.add("leve");
     caixa.hidden = false;
+    noPalco(caixa.querySelector(".festa-amanhecer"), true);
     return new Promise((resolver) => {
       let feito = false;
       const fechar = () => {
@@ -1324,5 +1340,5 @@ const Telas = (() => {
   }
 
   return { rastreador, atributosHtml, reputacaoHtml, dica, guardarDica, htmlItem, menuUso, abrirGrimorio, alternarGrimorio, abrirDica, dicaAbertaPor, mouseNaArea, novaVisita, fecharMenuItem, guardarArvore, abrirTalentos, fecharTalentos, painel, revelarAchado, celebrar, resumoCelebracao, toast, moedasPara, iconeCriatura, iconeItem, dicaItem, ligarDicas, esconderDica,
-    ICONE_ITEM, ARMA, VAZIO, NOME_ESPACO, AREA, barra, aprovacao };
+    ICONE_ITEM, ARMA, VAZIO, NOME_ESPACO, AREA, barra, aprovacao, noPalco };
 })();

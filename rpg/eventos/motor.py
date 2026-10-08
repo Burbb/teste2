@@ -78,6 +78,7 @@ def disparar(g, contexto):
     anterior, g.evento_atual = g.evento_atual, ev.id  # a comitiva reage às escolhas deste evento
     try:
         ev.fn(g)
+        g.fechar_espolio()  # o que o evento deu depois de uma luta (o cofre que o lobo guardava) entra no mesmo quadro
     finally:
         g.evento_atual = anterior
     return ev.id

@@ -139,6 +139,8 @@ class TestEspolio(unittest.TestCase):
         e.ouro, e.hp = 40, 0
         cb = Combate(g, [e])
         cb.fim("vitoria")
+        self.assertNotIn("espolio", [t for t, _ in ui.festas])  # o quadro junta até a próxima pergunta...
+        g.fechar_espolio()                                       # ...e aparece nela; o nível sobe depois dele
         tipos = [t for t, _ in ui.festas]
         self.assertLess(tipos.index("espolio"), tipos.index("nivel"))
         esp = dict(ui.festas)["espolio"]
