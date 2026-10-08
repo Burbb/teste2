@@ -589,6 +589,27 @@ class TestSistemas(unittest.TestCase):
         self.assertEqual(festas, [("atributo", {"stat": "atk", "nome": "Ataque", "valor": 1, "total": antes + 3})])
         self.assertEqual(g.bonus_permanente("atk", 5), 1)  # teto de +4 por partida
 
+    def test_chegada(self):
+        """Chegar a um lugar: na tela gráfica, o nome vira título de área (celebrar), marcado na primeira vez; no
+        texto, a linha de sempre."""
+        g = Jogo(BotUI(random.Random(1)), seed=1, pasta_saves=tempfile.mkdtemp())
+        g.iniciar("Robô", "guerreiro")
+        festas, linhas = [], []
+        g.ui.celebrar = lambda tipo, dados: festas.append((tipo, dados))
+        g.dizer = lambda texto, *a, **k: linhas.append(texto)
+        g.pausar = lambda *a, **k: None
+        vila = g.loc
+        g.chegar(vila)
+        self.assertIn(f"Você chega a {vila['nome']}.", linhas)
+        g.ui.conquistas_na_tela = True
+        novo = next(l for l in g.mundo["locais"] if l["tipo"] == "selvagem" and not l["visitado"])
+        linhas.clear()
+        g.chegar(novo)
+        tipo, d = next(f for f in festas if f[0] == "chegada")
+        self.assertEqual((d["nome"], d["primeira"]), (novo["nome"], True))
+        self.assertNotIn(f"Você chega a {novo['nome']}.", linhas)
+        self.assertEqual(g.descrever_lugar(vila), "Vila")
+
     def test_concordar(self):
         """Um lobo sozinho é "ele", não "eles"; duas aranhas são "elas"; um lobo e uma aranha, "eles"."""
         from rpg import texto as tx

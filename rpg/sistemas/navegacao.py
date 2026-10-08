@@ -4,6 +4,7 @@ from .. import eventos
 from .. import texto as tx
 from .. import mapa
 from .. import sobrevivencia
+from ..dados import BIOMAS
 from ..telemetria import registrar
 from ..mundo import nivel_regiao, vizinhos
 
@@ -69,14 +70,19 @@ class Navegacao:
         if self.chance(0.5):
             self.rolar_clima()
         self.ui.separador()
-        self.dizer(f"Você chega a {loc['nome']}.", "amarelo+negrito")
+        perigo = self.nivel_local() >= self.j.nivel + 3
+        if self.ui.conquistas_na_tela:  # o nome do lugar vira título de área, como nos jogos; o texto não repete
+            self.ui.celebrar("chegada", {"nome": loc["nome"], "sub": self.descrever_lugar(loc), "tipo": loc["tipo"],
+                                         "nivel": self.nivel_local(), "primeira": primeira})
+        else:
+            self.dizer(f"Você chega a {loc['nome']}.", "amarelo+negrito")
         if primeira and loc["tipo"] != "vila":
             self.dizer(self.ambiente(), "cinza")
         if loc["tipo"] == "covil" and not loc["guardiao"]["derrotado"]:
             g = loc["guardiao"]
             self.dizer(f"Este é o covil de {g['nome']} (Nv.{self.nivel_guardiao(loc)}). Um dos Sigilos está aqui.",
                        "magenta")
-        if self.nivel_local() >= self.j.nivel + 3:
+        if perigo:
             self.dizer("A vila tem muros, mas as estradas em volta são de criaturas muito mais fortes do que você."
                        if loc["tipo"] == "vila" else
                        "Um arrepio sobe pela espinha. As criaturas daqui são muito mais fortes do que você.",
@@ -89,6 +95,16 @@ class Navegacao:
             if self.chance(0.35):
                 eventos.disparar(self, "vila")
         self.pausar()
+
+    @staticmethod
+    def descrever_lugar(loc):
+        """"Vila", "Floresta", "Covil · Ruínas", "Cidadela": o que o lugar é, numa linha."""
+        bioma = BIOMAS[loc["bioma"]]["nome"] if loc.get("bioma") in BIOMAS else ""
+        if loc["tipo"] == "vila":
+            return "Vila"
+        if loc["tipo"] == "cidadela":
+            return "Cidadela"
+        return " · ".join(x for x in ("Covil" if loc["tipo"] == "covil" else "", bioma) if x)
 
     def mapa(self):
         self.ui.cena("Mapa do reino", self.contexto_cena(), "menu")

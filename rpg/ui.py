@@ -58,8 +58,9 @@ class UI:
     fogueira_sozinho = False  # a cena da fogueira aparece mesmo sem ninguém da comitiva
     bolsa_clicavel = False    # os consumíveis do painel viram opções escondidas no menu do lugar
     conversa_no_painel = False  # o ✉ da comitiva no painel abre a conversa direto (opção escondida no menu do lugar)
-    conquistas_na_tela = False  # nível, Sigilo, especialização e contrato cumprido viram uma festa com os números
-                                # (celebrar): o texto não repete o que ela mostra
+    conquistas_na_tela = False  # nível, Sigilo, contrato cumprido, espólio, amanhecer, atributo para sempre e a
+                                # chegada num lugar viram um momento na tela (celebrar): o texto não repete o que
+                                # ela mostra
 
     def __init__(self, cor=None, rapido=False):
         self.cor = _suporta_cor() if cor is None else cor

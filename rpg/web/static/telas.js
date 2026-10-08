@@ -1015,6 +1015,35 @@ const Telas = (() => {
     return new Promise((r) => setTimeout(r, 450));
   }
 
+  /** Chegar a um lugar: o nome surge no meio da tela entre dois fios dourados, como o título de área dos jogos
+   *  (Elden Ring, Diablo). Na primeira vez, "lugar descoberto", som e um pouco mais de tempo; na volta, curto. O nível
+   *  da região vem na cor do perigo (o aviso por extenso fica no texto). Some sozinho; um clique ou uma tecla adianta. */
+  function chegada(d) {
+    const el = document.createElement("div");
+    el.className = "chegada" + (d.primeira ? " primeira" : "");
+    const tag = d.nivel ? `<span class="perigo-tag ${nivelPerigo(d.nivel)}">${d.tipo === "vila" ? "arredores" : "inimigos"} Nv.${d.nivel}</span>` : "";
+    el.innerHTML = `${d.primeira ? '<div class="rotulo-festa">lugar descoberto</div>' : ""}<i class="linha-ouro"></i>
+      <div class="nome-lugar">${h(d.nome)}</div><i class="linha-ouro"></i>
+      <div class="sub-lugar">${h(d.sub)}${tag}</div>`;
+    document.body.appendChild(el);
+    if (d.primeira) App.som("achado");
+    return new Promise((resolver) => {
+      let feito = false;
+      const fechar = () => {
+        if (feito) return;
+        feito = true;
+        document.removeEventListener("keydown", tecla, true);
+        document.removeEventListener("pointerdown", clique, true);
+        el.classList.add("saindo");
+        setTimeout(() => { el.remove(); resolver(); }, 420);
+      };
+      const tecla = (ev) => { if ([" ", "Enter", "Escape"].includes(ev.key)) { ev.preventDefault(); ev.stopPropagation(); fechar(); } };
+      const clique = (ev) => { ev.preventDefault(); ev.stopPropagation(); fechar(); };
+      setTimeout(() => { document.addEventListener("keydown", tecla, true); document.addEventListener("pointerdown", clique, true); }, 300);
+      setTimeout(fechar, d.primeira ? 2400 : 1300);
+    });
+  }
+
   function faixa(titulo, sub, icone) {
     const f = document.createElement("div");
     f.className = "faixa-festa";
@@ -1134,6 +1163,7 @@ const Telas = (() => {
     if (m.tipo === "amanhecer") return instantaneo ? Promise.resolve() : amanhecer(caixa, d);
     if (m.tipo === "espolio") return instantaneo ? Promise.resolve() : Sensacao.espolio(caixa, d);
     if (m.tipo === "atributo") return instantaneo ? Promise.resolve() : seloAtributo(d);
+    if (m.tipo === "chegada") return instantaneo ? Promise.resolve() : chegada(d);
     let html = "";
     if (m.tipo === "nivel") {
       const icones = { Vida: "coracao", Ataque: "espada", Defesa: "escudo", Agilidade: "folha", Poder: "chama", Mana: "pocao_azul", Vigor: "chama", Foco: "olho" };
@@ -1280,6 +1310,7 @@ const Telas = (() => {
     if (m.tipo === "spec") return `▸ Você agora é ${d.nome}`;
     if (m.tipo === "espolio") return `▸ Espólio: ${d.ouro ? `+${d.ouro} ouro, ` : ""}+${d.xp} XP`;
     if (m.tipo === "atributo") return `▸ +${d.valor} ${d.nome} permanente`;
+    if (m.tipo === "chegada") return `▸ ${d.primeira ? "Descoberto" : "Chegada"}: ${d.nome}`;
     if (m.tipo === "amanhecer") return `▸ Dia ${d.dia} · ${d.clima}${d.itens.length ? " · " + d.itens.map((x) => x.curto).join(", ") : ""}`;
     return "";
   }
