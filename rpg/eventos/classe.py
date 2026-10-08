@@ -247,7 +247,7 @@ def furia_noturna(g):
         g.dizer("Você destroça árvores com a arma até cair exausto.", "vermelho")
         g.ferir(g.j.max_hp * 0.15)
         if g.chance(0.5):
-            g.dizer("O barulho atrai visitantes.", "vermelho")
+            g.dizer("O barulho atrai uma visita indesejada.", "vermelho")
             g.combate(g.grupo(n=1))
 
 
@@ -403,9 +403,10 @@ def companheiro_fareja(g):
         g.dizer(f"{c['nome']} encurralou uma presa — que agora é sua refeição.", "verde")
         g.dar_provisoes(2)
     else:
-        g.dizer(f"{c['nome']} rosna para o mato. Inimigos à espreita! Graças a ele, você os vê primeiro.",
-                "amarelo")
-        g.combate(g.grupo(), emboscada="jogador")
+        grupo = g.grupo()
+        g.dizer(tx.concordar("{nome} rosna para o mato: {grupo} à espreita! Graças a ele, você {os} vê primeiro.",
+                             grupo, nome=c["nome"]), "amarelo")
+        g.combate(grupo, emboscada="jogador")
 
 
 @evento(peso=5, cooldown=20, cond=_spec("patrulheiro"), max_vezes=1)

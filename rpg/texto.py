@@ -1,5 +1,7 @@
 """Geração procedural de nomes e pequenas utilidades de texto."""
 
+import re
+
 INICIOS = [
     "Ar", "Bel", "Cor", "Dra", "El", "Fen", "Gal", "Hal", "Ir", "Jor", "Kal", "Lor",
     "Mor", "Nar", "Or", "Par", "Quel", "Ral", "Sar", "Tor", "Ul", "Val", "Xar", "Zor",
@@ -110,6 +112,34 @@ def descrever_grupo(inimigos):
             adj = f" {plural_adjetivo(AFIXOS[afixo][ini.g])}" if afixo else ""
             partes.append(f"{numero(len(lista), ini.g)} {ini.plural}{adj}")
     return lista_natural(partes + unicos)
+
+
+# Formas que concordam com o grupo: um homem, uma mulher, homens (ou misto), só mulheres.
+_FORMAS = {"eles": ("ele", "ela", "eles", "elas"), "os": ("o", "a", "os", "as"),
+           "deles": ("dele", "dela", "deles", "delas"), "-los": ("-lo", "-la", "-los", "-las")}
+
+
+def concordar(frase, grupo, **campos):
+    """A frase concordando em número e gênero com quem está em cena, como nas localizações profissionais (que
+    marcam a frase em vez de escrever "eles" para um lobo sozinho). Marcadores:
+
+        {eles} ele/ela/eles/elas   {os} o/a/os/as   {deles} dele/dela/deles/delas   {-los} -lo/-la/-los/-las
+        {vira|viram}  a forma do singular ou do plural (um lado pode ficar vazio: {| ao mesmo tempo})
+        {grupo}       "dois lobos e uma aranha gigante"     {nome}  qualquer campo passado por nome
+
+    Inicial maiúscula no marcador ({Eles}, {Grupo}) sai com maiúscula. O plural é feminino só se todos forem."""
+    um = len(grupo) == 1
+    i = (0 if um else 2) + (1 if all(getattr(e, "g", "m") == "f" for e in grupo) else 0)
+
+    def trocar(m):
+        chave = m.group(1)
+        if "|" in chave:
+            return chave.split("|")[0 if um else 1]
+        if chave in campos:
+            return str(campos[chave])
+        forma = descrever_grupo(grupo) if chave.lower() == "grupo" else _FORMAS[chave.lower()][i]
+        return maiuscula(forma) if chave[0].isupper() else forma
+    return re.sub(r"\{([^{}]*)\}", trocar, frase)
 
 
 def estrelas(n, total=5):

@@ -552,6 +552,25 @@ class TestSistemas(unittest.TestCase):
         self.assertEqual(linhas[1], f"No seu herói: Ataque {atk} → {int(round(totais['atk'] * 0.85))}. "
                                     "Poder 1 e Agilidade 3: baixos demais para cair.")
 
+    def test_concordar(self):
+        """Um lobo sozinho é "ele", não "eles"; duas aranhas são "elas"; um lobo e uma aranha, "eles"."""
+        from rpg import texto as tx
+        g = Jogo(BotUI(random.Random(1)), seed=1, pasta_saves=tempfile.mkdtemp())
+        g.iniciar("Robô", "guerreiro")
+        frase = ("{abertura}, {grupo} {surge|surgem}. Você {os} vê; distraí{-los} chama a atenção {deles}. "
+                 "{Eles} se {vira|viram}.")
+        casos = [
+            ([g.inimigo("lobo")], "Na névoa, um lobo surge. Você o vê; distraí-lo chama a atenção dele. Ele se vira."),
+            ([g.inimigo("aranha"), g.inimigo("aranha")],
+             "Na névoa, duas aranhas gigantes surgem. Você as vê; distraí-las chama a atenção delas. Elas se viram."),
+            ([g.inimigo("lobo"), g.inimigo("aranha")], "Na névoa, um lobo e uma aranha gigante surgem. Você os vê; "
+                                                       "distraí-los chama a atenção deles. Eles se viram."),
+        ]
+        for grupo, esperado in casos:
+            self.assertEqual(tx.concordar(frase, grupo, abertura="Na névoa"), esperado)
+        self.assertEqual(tx.concordar("{Grupo} olha para cima{| ao mesmo tempo}.", [g.inimigo("lobo")]),
+                         "Um lobo olha para cima.")
+
     def test_mapa_renderiza(self):
         from rpg import mapa
         for seed in range(60):

@@ -7,19 +7,15 @@ from ..itens import gerar_equip
 from .motor import evento
 
 
-def _verbo(grupo, sing, plur):
-    return sing if len(grupo) == 1 else plur
-
-
 # ---------------------------------------------------------------------- encontros
 @evento(peso=lambda g: 38 if g.noite else 28, cooldown=0)
 def encontro_hostil(g):
     grupo = g.grupo()
     abertura = g.sortear(BIOMAS[g.bioma]["abertura"])
-    desc = tx.descrever_grupo(grupo)
     cd = 11 + (3 if g.noite else 0) + (2 if g.clima in ("nevoa", "tempestade") else 0)
     if g.teste("percepcao", cd):
-        g.dizer(f"{abertura}, você avista {desc} antes que notem sua presença.", "amarelo")
+        g.dizer(tx.concordar("{abertura}, você avista {grupo} antes que {note|notem} sua presença.", grupo,
+                             abertura=abertura), "amarelo")
         opcoes = [
             (f"Atacar de surpresa: um turno livre, e o golpe dele {round(bal.INICIATIVA_BONUS * 100)}% mais forte", "atacar"),
             ("Tentar passar despercebido (Destreza)", "evitar"),
@@ -30,20 +26,22 @@ def encontro_hostil(g):
             opcoes.insert(1, ("Subir num ponto alto (Destreza): quem luta corpo a corpo perde o 1º turno "
                               "escalando; +15% de dano por 3 turnos", "alto"))
         if g.j.classe == "mago":
-            opcoes.append(("Lançar uma ilusão para distraí-los (Arcano)", "ilusao"))
+            opcoes.append((tx.concordar("Lançar uma ilusão para distraí{-los} (Arcano)", grupo), "ilusao"))
         if all("humano" in e.tracos for e in grupo):
             opcoes.append(("Conversar (Carisma)", "conversar"))
         op = g.menu("O que você faz?", opcoes)
         if op == "alto":
             if g.teste("destreza", 11):
-                g.dizer("Você escala as pedras sem um ruído. Lá de cima, eles são alvos fáceis.", "verde")
+                g.dizer(tx.concordar("Você escala as pedras sem um ruído. Lá de cima, {eles} {é um alvo fácil|são "
+                                     "alvos fáceis}.", grupo), "verde")
                 for e in grupo:
                     e.aplicar("marcado", 3, 0.15)
                     if not {"voador", "conjurador"} & set(e.tracos):
                         e.aplicar("atordoado", 1, 0)
                         e.efeitos["atordoado"]["r"] = "escalando"
             else:
-                g.dizer("Uma pedra solta rola encosta abaixo. Eles olham para cima ao mesmo tempo.", "vermelho")
+                g.dizer(tx.concordar("Uma pedra solta rola encosta abaixo. {Eles} {olha|olham} para cima"
+                                     "{| ao mesmo tempo}.", grupo), "vermelho")
             g.combate(grupo)
         elif op == "atacar":
             g.combate(grupo, emboscada="jogador")
@@ -52,27 +50,29 @@ def encontro_hostil(g):
                 g.dizer("Você se esgueira para longe sem ser visto.", "verde")
                 g.ganhar_xp(5)
             else:
-                g.dizer(f"Um galho estala sob seu pé. {tx.maiuscula(desc)} se {_verbo(grupo, 'vira', 'viram')}!",
-                        "vermelho")
+                g.dizer(tx.concordar("Um galho estala sob seu pé. {Grupo} se {vira|viram}!", grupo), "vermelho")
                 g.combate(grupo)
         elif op == "ilusao":
             if g.teste("arcano", 12):
-                g.dizer("Uma figura fantasmagórica surge ao longe e atrai a atenção deles. Você passa ileso.", "azul")
+                g.dizer(tx.concordar("Uma figura fantasmagórica surge ao longe e atrai a atenção {deles}. Você passa "
+                                     "ileso.", grupo), "azul")
                 g.ganhar_xp(8)
             else:
-                g.dizer("A ilusão tremeluz e se desfaz. Eles olham direto para você.", "vermelho")
+                g.dizer(tx.concordar("A ilusão tremeluz e se desfaz. {Eles} {olha|olham} direto para você.", grupo),
+                        "vermelho")
                 g.combate(grupo)
         elif op == "conversar":
             if g.teste("carisma", 13):
-                g.dizer("Depois de alguma tensão, eles aceitam uma moeda e seguem caminho. Ninguém sangra hoje.",
-                        "verde")
+                g.dizer(tx.concordar("Depois de alguma tensão, {eles} {aceita|aceitam} uma moeda e {segue|seguem} "
+                                     "caminho. Ninguém sangra hoje.", grupo), "verde")
                 g.perder_ouro(5)
                 g.ganhar_xp(8)
             else:
-                g.dizer("\"Belas palavras. Agora passa a bolsa.\" As armas saem das bainhas.", "vermelho")
+                g.dizer(tx.concordar("\"Belas palavras. Agora passa a bolsa.\" {A arma sai da bainha|As armas saem "
+                                     "das bainhas}.", grupo), "vermelho")
                 g.combate(grupo)
     else:
-        g.dizer(f"{abertura}, {desc} {_verbo(grupo, 'surge', 'surgem')} de repente!", "vermelho")
+        g.dizer(tx.concordar("{abertura}, {grupo} {surge|surgem} de repente!", grupo, abertura=abertura), "vermelho")
         g.combate(grupo, emboscada="inimigo" if g.chance(0.5) else None)
 
 
@@ -100,10 +100,10 @@ def alvo_contrato(g):
     c = g.contrato_alvo_aqui()
     e = g.inimigo(c["familia"], afixo="anciao", nome_unico=c["nome"], bonus=1)
     e.chave = c["chave"]
-    g.dizer(f"Marcas enormes, carcaças roídas... Os sinais batem com a descrição do contrato. "
-            f"Então você o vê: {e.nome}.", "amarelo+negrito")
+    g.dizer(tx.concordar("Marcas enormes, carcaças roídas... Os sinais batem com a descrição do contrato. "
+                         "Então você {os} vê: {nome}.", [e], nome=e.nome), "amarelo+negrito")
     if g.teste("percepcao", 13):
-        g.dizer("Você o vê antes que ele te veja.", "verde")
+        g.dizer(tx.concordar("Você {os} vê antes que {eles} te veja.", [e]), "verde")
         g.combate([e], emboscada="jogador")
     else:
         g.combate([e])
@@ -133,8 +133,9 @@ def viajante_ferido(g):
         g.ganhar_xp(10)
         g.plantar("viajante_grato", 6, nome=p["nome"], g=p["g"], prof=p["prof"])
     elif op == "cacar":
-        g.dizer("As pegadas são frescas. Não demora até você encontrar os responsáveis.", "amarelo")
         grupo = g.grupo("bandido", n=g.rng.randint(1, 2))
+        g.dizer(tx.concordar("As pegadas são frescas. Não demora até você encontrar {o responsável|os "
+                             "responsáveis}.", grupo), "amarelo")
         if g.combate(grupo) == "vitoria":
             g.dizer(f"Você devolve os pertences a {p['nome']}, que chora de gratidão.", "verde")
             g.mudar_reputacao(5)

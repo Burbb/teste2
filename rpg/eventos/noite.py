@@ -9,26 +9,29 @@ ACAMP = ("acampamento",)
 @evento(contextos=ACAMP, peso=14, cooldown=4)
 def olhos_na_escuridao(g):
     grupo = g.grupo()
-    g.dizer("Você acorda com um galho estalando. Olhos refletem a luz da fogueira, ao redor do acampamento.",
-            "vermelho")
+    g.dizer(tx.concordar("Você acorda com um galho estalando. {Um par de olhos reflete a luz da fogueira, na beira|"
+                         "Olhos refletem a luz da fogueira, ao redor} do acampamento.", grupo), "vermelho")
     op = g.menu("O que faz?", [
         ("Pegar a arma e lutar", "lutar"),
-        ("Atiçar a fogueira para assustá-los (Vontade)", "fogo"),
+        (tx.concordar("Atiçar a fogueira para assustá{-los} (Vontade)", grupo), "fogo"),
     ])
     if op == "fogo":
         g.dizer("Você joga galhos secos no fogo, que sobe alto e estala.", "amarelo")
         if all("fera" in e.tracos for e in grupo):
             if g.teste("vontade", 12):
-                g.dizer("Os olhos recuam, um a um, e somem na mata. Bichos respeitam o fogo.", "verde")
+                g.dizer(tx.concordar("Os olhos recuam{|, um a um,} e somem na mata. Bichos respeitam o fogo.", grupo),
+                        "verde")
                 return
-            g.dizer("A fome fala mais alto que o medo. Eles avançam.", "vermelho")
+            g.dizer(tx.concordar("A fome fala mais alto que o medo. {Eles} {avança|avançam}.", grupo), "vermelho")
         elif g.teste("vontade", 14):
             # Gente (e coisa pior) não foge de fogueira, mas a luz mostra onde cada um está.
-            g.dizer("Eles não fogem do fogo, mas a luz os denuncia: você vê cada um antes do primeiro passo.", "verde")
+            g.dizer(tx.concordar("{Eles} não {foge|fogem} do fogo, mas a luz {os} denuncia: você {os} vê antes do "
+                                 "primeiro passo.", grupo), "verde")
             g.combate(grupo, emboscada="jogador")
             return
         else:
-            g.dizer("A chama sobe, mas eles não são bichos. Avançam com o fogo refletido nos olhos.", "vermelho")
+            g.dizer(tx.concordar("A chama sobe, mas {eles} não {é bicho|são bichos}. {Avança|Avançam} com o fogo "
+                                 "refletido nos olhos.", grupo), "vermelho")
         g.combate(grupo, emboscada="inimigo" if g.chance(0.25) else None)
         return
     g.combate(grupo, emboscada="inimigo" if g.chance(0.4) else None)

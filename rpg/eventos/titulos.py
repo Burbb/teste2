@@ -34,7 +34,7 @@ TITULOS = {
     "aldeoes_temerosos": "Portas que se fecham", "olhos_na_escuridao": "Olhos na escuridão",
     "visitante_misterioso": "Um visitante", "ladrao_noturno": "Passos no escuro", "ladrao_redimido": "Um aviso",
     "sonho_profetico": "Um sonho", "ceu_estrelado": "Estrelas", "sussurros_do_vazio": "A voz na fogueira",
-    "companheiro_de_vigia": "Vigília", "briga_de_taverna": "Briga na taverna", "festival": "Candlewatch",
+    "companheiro_de_vigia": "Vigília", "briga_de_taverna": "Briga na taverna", "festival": "Vigília das Velas",
     "pregador_do_vazio": "O pregador", "familia_grata": "Gratidão", "mendigo_misterioso": "O mendigo",
     "guarda_desconfiado": "Guardas", "pedido_de_socorro": "Um pedido",
 }

@@ -465,7 +465,7 @@ class Combate:
     def executar(self):
         self.ui.cena(self.titulo, tx.lista_natural([f"{e.nome} (Nv.{e.nivel})" for e in self.inimigos]), "combate")
         if not self.ui.hud:
-            self.dizer("Inimigos: " + ", ".join(f"{e.nome} (Nv.{e.nivel})" for e in self.inimigos), "vermelho")
+            self.dizer(tx.concordar("{Inimigo|Inimigos}: ", self.inimigos) + ", ".join(f"{e.nome} (Nv.{e.nivel})" for e in self.inimigos), "vermelho")
         if self.companheiro:
             animado = self.companheiro.efeito("fortalecido")
             self.dizer(f"{self.companheiro.nome} " + ("salta à frente, animado depois da noite ao seu lado. (+15% de dano)"
@@ -487,8 +487,9 @@ class Combate:
             if r:
                 return self.fim(r)
         elif self.emboscada == "jogador":
-            self.dizer(f"Você tem a iniciativa! Um turno livre antes que reajam: ataque agora e o golpe sai "
-                       f"{round(bal.INICIATIVA_BONUS * 100)}% mais forte.", "verde+negrito")
+            self.dizer(tx.concordar("Você tem a iniciativa! Um turno livre antes que {reaja|reajam}: ataque agora e "
+                                    "o golpe sai {bonus}% mais forte.", self.inimigos,
+                                    bonus=round(bal.INICIATIVA_BONUS * 100)), "verde+negrito")
             pular_inimigos = True
             self.iniciativa = True
         disparar(self, self.j, "inicio_combate")  # Aura de Proteção, Armadilheiro...
@@ -897,7 +898,7 @@ class Combate:
             self.dizer("Você recua e consegue escapar!", "verde")
             comitiva.reagir(self.g, "fuga", forca=0.5)
             return True
-        self.dizer("Você tenta fugir, mas é cercado!", "vermelho")
+        self.dizer(tx.concordar("Você tenta fugir, mas {eles} {corta o seu caminho|cercam você}!", vivos), "vermelho")
         return False
 
     # ------------------------------------------------------------ aliados e inimigos

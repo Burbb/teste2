@@ -174,6 +174,19 @@ def vulto_na_nevoa(g):
 ```
 
 Título da cena em `rpg/eventos/titulos.py`; reações da comitiva em `REACOES` (`rpg/comitiva.py`).
+
+Texto sobre um grupo que pode ter um inimigo só (`g.grupo()` sorteia o tamanho): não escreva "eles". Marque a
+frase e deixe `tx.concordar` acertar número e gênero, como as localizações profissionais fazem:
+
+```python
+grupo = g.grupo()   # sorteie antes de narrar
+g.dizer(tx.concordar("Um galho estala. {Grupo} se {vira|viram}, e {eles} {olha|olham} para você.", grupo))
+# um lobo:       "Um galho estala. Um lobo se vira, e ele olha para você."
+# duas aranhas:  "Um galho estala. Duas aranhas gigantes se viram, e elas olham para você."
+```
+
+Marcadores: `{eles}`, `{os}`, `{deles}`, `{-los}` (distraí{-los}), `{singular|plural}`, `{grupo}` e campos por nome
+(`{abertura}`); maiúscula no marcador dá maiúscula no texto.
 (A Etapa D vai trazer eventos e diálogos como dados, com condições e consequências declaradas.)
 
 ## Um número de balanceamento

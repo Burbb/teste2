@@ -184,10 +184,12 @@ class Contratos:
                             "amarelo")
                 grupo = self.grupo(c["familia"], n=n)
             if self.teste("percepcao", 12):
-                self.dizer("Você os vê antes que eles te vejam. O primeiro golpe é seu.", "verde")
+                self.dizer(tx.concordar("Você {os} vê antes que {eles} te {veja|vejam}. O primeiro golpe é seu.",
+                                        grupo), "verde")
                 self.combate(grupo, emboscada="jogador")
             else:
-                self.dizer("Um galho estala sob o seu pé. Eles se viram ao mesmo tempo.", "vermelho")
+                self.dizer(tx.concordar("Um galho estala sob o seu pé. {Eles} se {vira|viram}{| ao mesmo tempo}.",
+                                        grupo), "vermelho")
                 self.combate(grupo)
         finally:
             self.sem_luz = False

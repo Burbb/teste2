@@ -154,13 +154,14 @@ class Confronto:
         elites = sum(1 for e in derrotados if e.afixo or e.unico)
         chefe = any(e.chefe for e in derrotados)
         if any("humano" in e.tracos for e in derrotados) and self.chance(0.35):
-            self.dizer("Nos alforjes dos mortos, um pouco de comida.", "cinza")
+            self.dizer(tx.concordar("Nos alforjes {do morto|dos mortos}, um pouco de comida.", derrotados), "cinza")
             self.dar_provisoes(1)
         if self.chance(0.15 + 0.1 * elites):
             self.dar(self.sortear(["bandagem", "bandagem", "tocha", "tocha", "pocao_vida", "tonico", "antidoto"]))
         if self.j.classe == "arqueiro" and any(e.familia in ("bandido", "mercenario") for e in derrotados) \
                 and self.chance(0.3):
-            self.dizer("Você encontra algumas flechas entre os pertences dos inimigos.", "verde")
+            self.dizer(tx.concordar("Você encontra algumas flechas entre os pertences {do inimigo|dos inimigos}.",
+                                    derrotados), "verde")
             self.dar_flechas(self.rng.randint(2, 5))
         if chefe or self.chance(0.07 + 0.2 * elites):
             nivel = min(max(e.nivel for e in derrotados), self.j.nivel + 2)

@@ -1,5 +1,6 @@
 """Eventos ligados a biomas e ao clima."""
 
+from .. import texto as tx
 from ..itens import gerar_equip
 from .motor import evento
 
@@ -240,8 +241,9 @@ def biblioteca_ruida(g):
             g.dizer("As runas explodem em faíscas.", "vermelho")
             g.ferir(5 + 2 * g.j.nivel)
     else:
-        g.dizer("A proteção estoura e acorda os guardiões da biblioteca.", "vermelho")
-        g.combate(g.grupo("espectro", n=1 if g.nivel_local() <= 2 else 2))
+        grupo = g.grupo("espectro", n=1 if g.nivel_local() <= 2 else 2)
+        g.dizer(tx.concordar("A proteção estoura e acorda {o guardião|os guardiões} da biblioteca.", grupo), "vermelho")
+        g.combate(grupo)
 
 
 @evento(peso=6, cooldown=14, cond=_bioma("ruinas"))
