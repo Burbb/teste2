@@ -143,21 +143,8 @@ function brasas() {
   }
 }
 
-/** Unidade de pixel da arte: um número inteiro de pixels do aparelho (com zoom de 125% ou 150% no sistema,
-    1px de CSS não é 1 pixel de verdade, e a pixel art fica torta). */
-function unidadePixel() {
-  const dpr = window.devicePixelRatio || 1;
-  const k = Math.max(1, Math.round(dpr));
-  document.documentElement.style.setProperty("--px", (k / dpr) + "px");
-}
-window.addEventListener("resize", unidadePixel);
-
-function tema() {
-  unidadePixel();
-  const raiz = document.documentElement.style;
-  raiz.setProperty("--caveira", `url(${Sprites.url("caveira")})`);
-  raiz.setProperty("--cadeado", `url(${Sprites.url("cadeado")})`);
-}
+/** A unidade de pixel, a paleta e os materiais da interface (texturas, pontilhados, molduras): ver sprites.js. */
+function tema() { Sprites.publicar(); }
 
 // As tochas da HUD tremulam: troca de quadro a cada 400 ms.
 setInterval(() => {

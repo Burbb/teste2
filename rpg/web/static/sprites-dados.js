@@ -1389,5 +1389,12 @@ const SPRITES_GRADES = (() => {
   S.orbe_luz = trocar(S.orbe.slice(0, 10).concat(Array(6).fill("................")), { M: "Y", m: "y", W: "W", x: "c" });
   S.orbe_arcano = trocar(S.orbe.slice(0, 10).concat(Array(6).fill("................")), {});
 
+  // Molduras da interface em 9-slice (border-image): um anel só, de 1 texel, com o canto chanfrado; "#" é a cor do
+  // anel. A janela traz na própria imagem 1 texel de sombra dura (k) para baixo e para a direita.
+  const MOLD = [".#.", "#.#", ".#."];
+  const JANELA = [".##..", "#..#.", "#..#k", ".##kk", "..kk."];
+  S.mold = trocar(MOLD, { "#": "k" });
+  for (const [sufixo, cor] of [["", "k"], ["_magico", "U"], ["_raro", "y"], ["_lendario", "O"]]) S["janela" + sufixo] = trocar(JANELA, { "#": cor });
+
   return S;
 })();

@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Mostruário dos materiais</title>
+<!-- Os materiais da interface em pixel art (css/01-base.css, "materiais"), montados fora do jogo para conferir de perto.
+     Abra direto no navegador (file://) ou pelo Playwright; não precisa do servidor. -->
+<link rel="stylesheet" href="../../rpg/web/static/css/01-base.css">
+<link rel="stylesheet" href="../../rpg/web/static/css/11-tipografia.css">
+<style>
+  html, body { height: auto; }
+  body { overflow: auto; margin: 0; padding: 24px; background: var(--tx-fundo) 0 0 / calc(var(--P) * 128), var(--p-z); color: var(--p-w); }
+  .grade { display: grid; grid-template-columns: 300px 460px 1fr; gap: 24px; align-items: start; }
+  .rotulo { font: 15px "Jersey 15"; letter-spacing: 0.06em; color: var(--p-g); margin: 0 0 6px; text-transform: uppercase; }
+  .contorno { text-shadow: var(--P) 0 0 var(--p-k), calc(var(--P) * -1) 0 0 var(--p-k), 0 var(--P) 0 var(--p-k), 0 calc(var(--P) * -1) 0 var(--p-k), var(--P) calc(var(--P) * 2) 0 var(--p-k); }
+  .titulo { font: 48px "Jacquard 24"; line-height: 1; color: var(--p-y); }
+  .cabeca { font: 24px "Jacquard 24"; line-height: 1; color: var(--p-y); margin: 14px 0 6px; }
+  .sub { font: 15px "Pixelify Sans"; color: var(--p-G); }
+  .painel { padding: 14px; }
+  .linha-attr { display: flex; align-items: center; gap: 8px; padding: 5px 0; font: 15px "Pixelify Sans"; color: var(--p-G); }
+  .linha-attr b { margin-left: auto; font: 30px "Jersey 15"; line-height: 0.8; color: var(--p-w); font-weight: 400; }
+  .linha-attr + .linha-attr { border-top: var(--P) solid var(--p-s); }
+  .nichos { display: flex; gap: 6px; flex-wrap: wrap; }
+  .nicho { position: relative; width: 52px; height: 52px; display: grid; place-items: center; }
+  .nicho .qtd { position: absolute; right: 3px; bottom: 0; font: 15px "Jersey 15"; color: var(--p-W); }
+  .janela { padding: 18px 22px 20px; }
+  .prosa { font: 21px/1.55 Alegreya, Georgia, serif; color: var(--p-w); margin: 10px 0 12px; }
+  .escolha { display: flex; gap: 12px; align-items: baseline; padding: 4px 10px; font: 20px Alegreya, Georgia, serif; color: #f2d7a8; }
+  .escolha i { font: normal 15px "Jersey 15"; color: var(--p-O); }
+  .escolha.foco { background: var(--p-Q); box-shadow: inset var(--P) 0 0 var(--p-y); }
+  .botao { display: inline-block; margin-top: 12px; padding: 6px 22px 8px; font: 24px "Jacquard 24"; color: var(--p-y); cursor: pointer; }
+  .doca { display: flex; gap: 6px; padding: 8px 10px; align-items: flex-end; }
+  .atalho { display: flex; flex-direction: column; align-items: center; gap: 4px; width: 58px; font: 15px "Jersey 15"; color: var(--p-G); }
+  .atalho .placa { width: 44px; height: 44px; display: grid; place-items: center; }
+  .atalho.atual { color: var(--p-y); }
+  .atalho.atual .placa { --anel: var(--p-y); --luz: var(--p-c); background-color: var(--p-C); }
+  .doca .sep { width: calc(var(--P) * 2); align-self: stretch; margin: 6px 4px; background: linear-gradient(90deg, var(--p-k) 0 50%, var(--p-d) 0); }
+  .etiquetas { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .m-etiqueta { font-size: 15px; }
+  .veus { display: flex; gap: 10px; }
+  .veu { width: 96px; height: 64px; display: grid; place-items: end center; font: 15px "Jersey 15"; color: var(--p-w); background-size: calc(var(--P) * 4); }
+  .amostra { width: 96px; height: 64px; }
+</style>
+</head>
+<body>
+<div id="mostruario"></div>
+<script src="../../rpg/web/static/sprites-dados.js"></script>
+<script src="../../rpg/web/static/sprites.js"></script>
+<script>
+"use strict";
+Sprites.publicar();
+const S = (n, e = 2, sombra = false) => Sprites.img(n, e, "", { sombra });
+const nicho = (sprite, extra = "", qtd = "") => `<div class="nicho m-nicho ${extra}">${S(sprite)}${qtd ? `<span class="qtd contorno">${qtd}</span>` : ""}</div>`;
+const attr = (sprite, nome, valor) => `<div class="linha-attr">${S(sprite, 1)} ${nome}<b>${valor}</b></div>`;
+const atalho = (sprite, nome, atual = false) => `<div class="atalho${atual ? " atual" : ""}"><div class="placa m-placa">${S(sprite, 2, true)}</div>${nome}</div>`;
+document.getElementById("mostruario").innerHTML = `
+<div class="grade">
+  <div>
+    <p class="rotulo">painel · m-painel</p>
+    <div class="painel m-painel">
+      <div class="titulo contorno">Jean</div>
+      <div class="sub">Arqueiro · nível 3</div>
+      <div class="cabeca contorno">Atributos</div><div class="m-sulco"></div>
+      ${attr("espada", "Ataque", 16)}${attr("escudo", "Defesa", 11)}${attr("folha", "Agilidade", 14)}${attr("chama", "Poder", 5)}
+      <div class="cabeca contorno">Equipado</div><div class="m-sulco"></div>
+      <div class="nichos" style="margin-top:8px">${nicho("arco")}${nicho("armadura", "r-magico")}${nicho("anel", "r-raro")}${nicho("elmo", "r-lendario")}${nicho("bota")}</div>
+      <div class="cabeca contorno">Bolsa</div><div class="m-sulco"></div>
+      <div class="nichos" style="margin-top:8px">${nicho("pocao", "", 4)}${nicho("bandagem", "", 2)}${nicho("tocha", "", 3)}</div>
+    </div>
+  </div>
+  <div>
+    <p class="rotulo">janela · m-janela (pergaminho, atrás da prosa)</p>
+    <div class="janela m-janela">
+      <div class="titulo contorno">Herdade Negra</div>
+      <div class="sub">Vila · dia 1, manhã · névoa</div>
+      <p class="prosa">Um corpo pende da forca da praça. A placa no pescoço diz: <i>ladrão de pão</i>. Ninguém o tira de lá, e as crianças já nem olham.</p>
+      <div class="escolha"><i>1</i>Passear pela vila</div>
+      <div class="escolha foco"><i>2</i>Taverna: dormir até amanhã (14 ouro)</div>
+      <div class="escolha"><i>3</i>Mural de contratos</div>
+      <div class="botao m-placa contorno">Continuar</div>
+    </div>
+  </div>
+  <div>
+    <p class="rotulo">doca · placas com sprite de sombra</p>
+    <div class="doca m-painel">
+      ${atalho("estrela", "Talentos")}${atalho("grimorio", "Grimório")}${atalho("saco", "Inventário", true)}${atalho("humano", "Comitiva")}
+      <div class="sep"></div>${atalho("pergaminho", "Mapa")}${atalho("livro", "Diário")}${atalho("caveira", "Bestiário")}
+    </div>
+    <p class="rotulo" style="margin-top:22px">janelas por raridade</p>
+    <div class="etiquetas">
+      <div class="janela m-janela r-magico" style="padding:10px 14px">${S("armadura")}</div>
+      <div class="janela m-janela r-raro" style="padding:10px 14px">${S("anel")}</div>
+      <div class="janela m-janela r-lendario" style="padding:10px 14px">${S("elmo")}</div>
+    </div>
+    <p class="rotulo" style="margin-top:22px">etiquetas · m-etiqueta</p>
+    <div class="etiquetas">
+      <span class="m-etiqueta" style="background:var(--p-y)">+25 ouro</span>
+      <span class="m-etiqueta" style="background:var(--p-M)">+40 XP</span>
+      <span class="m-etiqueta" style="background:var(--p-E)">Nv.1</span>
+      <span class="m-etiqueta" style="background:var(--p-R)">−12 vida</span>
+      <span class="m-etiqueta" style="background:var(--p-U)">Esquiva +5%</span>
+    </div>
+    <p class="rotulo" style="margin-top:22px">véus pontilhados (25, 50, 75%) e rampas</p>
+    <div class="veus">
+      <div class="veu" style="background-image:var(--veu-4), var(--tx-placa); background-color: var(--p-s)">25%</div>
+      <div class="veu" style="background-image:var(--veu-8), var(--tx-placa); background-color: var(--p-s)">50%</div>
+      <div class="veu" style="background-image:var(--veu-12), var(--tx-placa); background-color: var(--p-s)">75%</div>
+      <div class="amostra m-painel"></div>
+    </div>
+  </div>
+</div>`;
+</script>
+</body>
+</html>
