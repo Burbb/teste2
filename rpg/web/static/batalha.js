@@ -299,7 +299,7 @@ const Batalha = (() => {
   /* ------------------------------------------------------------ efeitos visuais */
   function reiniciar(el, classe, ms) {
     el.classList.remove(classe); void el.offsetWidth; el.classList.add(classe);
-    setTimeout(() => el.classList.remove(classe), ms);
+    Sensacao.depois(ms, () => el.classList.remove(classe));
   }
   function tremer(el, forte) { reiniciar(el, forte ? "atingida-forte" : "atingida", 420); }
   function clarao(el, elemento) {
@@ -316,7 +316,8 @@ const Batalha = (() => {
     n.textContent = texto;
     n.style.left = 30 + Math.random() * 40 + "%";
     el.appendChild(n);
-    setTimeout(() => n.remove(), 1300);
+    n.addEventListener("animationend", () => n.remove());  // o do golpe final dura mais
+    Sensacao.depois(4000, () => n.remove());
   }
   function rotulo(el, texto, classe = "") {
     if (!texto || rapido()) return;
@@ -326,7 +327,7 @@ const Batalha = (() => {
     f.className = "faixa-acao " + classe;
     f.textContent = texto;
     el.appendChild(f);
-    setTimeout(() => f.remove(), 1500);
+    Sensacao.depois(1500, () => f.remove());
   }
   function particulas(el, fam, n = 7) {
     if (rapido()) return;
@@ -338,7 +339,7 @@ const Batalha = (() => {
       p.style.background = cores[i % cores.length];
       p.style.animationDelay = Math.random() * 300 + "ms";
       el.appendChild(p);
-      setTimeout(() => p.remove(), 1300);
+      Sensacao.depois(1300, () => p.remove());
     }
   }
   function labaredas(el) {
@@ -350,7 +351,7 @@ const Batalha = (() => {
       f.style.left = 6 + i * 19 + Math.random() * 8 + "%";
       f.style.animationDelay = i * 60 + "ms";
       el.appendChild(f);
-      setTimeout(() => f.remove(), 1100);
+      Sensacao.depois(1100, () => f.remove());
     }
   }
   function morrer(el) { reiniciar(el, "morrendo", 900); }
@@ -639,7 +640,7 @@ const Batalha = (() => {
     c.style.rotate = angulo + "deg";
     c.style.top = 30 + Math.random() * 40 + "%";
     el.appendChild(c);
-    setTimeout(() => c.remove(), 420);
+    Sensacao.depois(420, () => c.remove());
   }
 
   async function redemoinho(m) {
@@ -764,6 +765,7 @@ const Batalha = (() => {
     marcar(m.em);
     const el = m.elemento || "fisico";
     const distancia = aDistancia(m, de);
+    await Sensacao.antesDoGolpe(m, arena, em);  // o golpe que encerra a luta já chega em câmera lenta
     if (de && de !== em) {
       if (de.classList.contains("girando")) {
         await dormir(pausa(40));

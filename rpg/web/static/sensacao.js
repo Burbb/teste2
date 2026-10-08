@@ -7,13 +7,16 @@
 
 const Sensacao = (() => {
   const AJUSTES = {
-    // Quanto tempo tudo congela no quadro do impacto (hit-stop, como em Hades e Dead Cells), em ms.
-    parada: { critico: 80, abate: 70, final: 300 },
+    // Quanto tempo tudo congela no quadro do impacto (hit-stop, como em Hades e Dead Cells), em ms. O golpe final
+    // não congela: tem câmera lenta (abaixo).
+    parada: { critico: 80, abate: 70 },
     // Quanto a arena treme, em px (e por quanto tempo, em ms).
     tremor: { leve: 3, critico: 5, abate: 7, final: 11 },
     tremorMs: 340,
-    // O golpe final: a câmera chega perto de quem cai, o resto escurece.
-    zoomFinal: 1.07,
+    // O golpe final: em vez de congelar, o tempo da arena desacelera enquanto o golpe chega (ritmo `lento`, em
+    // `entradaMs`), segue devagar no choque (`seguraMs`) e volta acelerando (`saidaMs`). A câmera chega perto de
+    // quem cai em tempo real, e o resto escurece.
+    final: { lento: 0.3, entradaMs: 220, seguraMs: 380, saidaMs: 450, zoom: 1.08, zoomMs: 520 },
     // Números que contam subindo (ouro do espólio): duração e o máximo de tiques de som.
     contarMs: 650, tiquesMax: 10,
     // A barra de XP enchendo (por trecho de nível) e quanto o espólio fica na tela depois de tudo.
@@ -64,18 +67,99 @@ const Sensacao = (() => {
     if (alvo) alvo.classList.remove("lampejo");
   }
 
-  /** O golpe que encerra a luta: a câmera chega perto de quem cai, o resto escurece, o tempo quase para. */
-  async function golpeFinal(palco, alvo) {
+  /* ------------------------------------------------------------ o relógio da arena */
+  // Na câmera lenta o tempo da arena anda devagar: as animações dela (as que estão rodando e as que nascerem) e os
+  // prazos que a batalha marca com depois() (tirar o tremor da carta, sumir com o número), para nada ser cortado no
+  // meio. Fora dela, tudo anda a 1 e depois() é um setTimeout comum. A câmera (TEMPO_REAL) anda no tempo de fora.
+  const TEMPO_REAL = "tempo-real";
+  let ritmo = 1, palcoLento = null, quadro = null, ultimo = 0;
+  const prazos = new Set();
+  function tique(t) {
+    const dt = t - ultimo;
+    ultimo = t;
+    if (palcoLento) {
+      for (const a of palcoLento.getAnimations({ subtree: true })) if (a.id !== TEMPO_REAL && a.playbackRate !== ritmo) a.playbackRate = ritmo;
+    }
+    for (const p of [...prazos]) { p.resta -= dt * ritmo; if (p.resta <= 0) { prazos.delete(p); p.fn(); } }
+    quadro = palcoLento || prazos.size ? requestAnimationFrame(tique) : null;
+  }
+  function andar() { if (!quadro) { ultimo = performance.now(); quadro = requestAnimationFrame(tique); } }
+  /** Faz `fn` depois de `ms` do tempo da arena. */
+  function depois(ms, fn) {
+    if (!palcoLento) return setTimeout(fn, ms);
+    prazos.add({ resta: ms, fn });
+    andar();
+  }
+  /** Leva o ritmo da arena até `alvo` em `ms` (tempo de fora), suave. Voltando a 1, a arena se solta. */
+  function mudarRitmo(palco, alvo, ms, curva = (k) => 1 - (1 - k) * (1 - k)) {
+    palcoLento = palco;
+    andar();
+    const de = ritmo, t0 = performance.now();
+    return new Promise((fim) => {
+      const passo = (t) => {
+        const k = ms > 0 ? Math.min(1, (t - t0) / ms) : 1;
+        ritmo = de + (alvo - de) * curva(k);
+        if (k < 1) return requestAnimationFrame(passo);
+        if (alvo === 1) soltar();
+        fim();
+      };
+      requestAnimationFrame(passo);
+    });
+  }
+  function soltar() {
+    for (const a of palcoLento.getAnimations({ subtree: true })) if (a.id !== TEMPO_REAL) a.playbackRate = 1;
+    palcoLento = null;
+    ritmo = 1;
+    for (const p of prazos) setTimeout(p.fn, Math.max(0, p.resta));  // o que faltava, agora em tempo normal
+    prazos.clear();
+  }
+
+  /* ------------------------------------------------------------ o golpe final */
+  // Câmera lenta, como nos jogos de luta: o tempo desacelera enquanto o golpe chega (a investida, a flecha no ar),
+  // segue devagar no choque e volta acelerando; a câmera chega perto de quem cai e o resto escurece. Nada para de
+  // vez: congelar a tela no impacto parecia o jogo travando.
+  let foco = null;
+  function aproximar(palco, alvo) {
+    if (foco) return;
+    const cfg = AJUSTES.final;
     const p = palco.getBoundingClientRect(), a = alvo.getBoundingClientRect();
     palco.style.transformOrigin = `${a.left + a.width / 2 - p.left}px ${a.top + a.height / 2 - p.top}px`;
-    palco.style.setProperty("--zoom-final", AJUSTES.zoomFinal);
     palco.classList.add("foco-final");
     alvo.classList.add("alvo-final");
-    Som.tocar("golpe_final");
-    await parada(palco, alvo, AJUSTES.parada.final);
-    tremor(palco, AJUSTES.tremor.final, AJUSTES.tremorMs * 1.4);
+    const zoom = palco.animate([{ transform: "scale(1)" }, { transform: `scale(${cfg.zoom})` }],
+      { duration: pausa(cfg.zoomMs), easing: "cubic-bezier(.2,.7,.3,1)", fill: "forwards", id: TEMPO_REAL });
+    foco = { palco, alvo, zoom };
+    mudarRitmo(palco, cfg.lento, pausa(cfg.entradaMs));
+  }
+  async function afastar() {
+    if (!foco) return;
+    const { palco, alvo, zoom } = foco, cfg = AJUSTES.final;
+    foco = null;
+    const volta = palco.animate([{ transform: `scale(${cfg.zoom})` }, { transform: "scale(1)" }],
+      { duration: pausa(cfg.saidaMs), easing: "ease-in-out", fill: "forwards", id: TEMPO_REAL });
+    zoom.cancel();
     palco.classList.remove("foco-final");
-    setTimeout(() => alvo.classList.remove("alvo-final"), pausa(500));
+    await mudarRitmo(palco, 1, pausa(cfg.saidaMs), (k) => k * k);
+    volta.cancel();
+    alvo.classList.remove("alvo-final");
+  }
+
+  /** Antes de o golpe sair (a carta ainda vai avançar, a flecha ainda vai voar): se é o golpe que encerra a luta,
+   *  a câmera chega perto e o tempo desacelera primeiro, para a investida e o choque acontecerem em câmera lenta. */
+  async function antesDoGolpe(m, palco, alvo) {
+    if (!m || peso(m) !== "final" || rapido() || !palco || !alvo) return;
+    aproximar(palco, alvo);
+    await dormir(pausa(AJUSTES.final.entradaMs));
+  }
+
+  async function golpeFinal(palco, alvo) {
+    aproximar(palco, alvo);  // numa salva não há "antes": a câmera lenta começa no impacto
+    Som.tocar("golpe_final");
+    alvo.classList.add("lampejo");
+    setTimeout(() => alvo.classList.remove("lampejo"), pausa(110));
+    tremor(palco, AJUSTES.tremor.final, AJUSTES.tremorMs * 1.4);
+    await dormir(pausa(AJUSTES.final.seguraMs));
+    await afastar();
   }
 
   /** Depois que o golpe acertou (o número já subiu): o momento que ele merece. */
@@ -208,5 +292,6 @@ const Sensacao = (() => {
     caixa.hidden = true; caixa.innerHTML = ""; caixa.classList.remove("leve");
   }
 
-  return { AJUSTES, configurar, peso, maisPesado, tremor, parada, golpe, contar, encher, espolio, vidaDoHeroi, cerimoniaSaque };
+  return { AJUSTES, configurar, peso, maisPesado, tremor, parada, antesDoGolpe, golpe, depois, contar, encher, espolio,
+    vidaDoHeroi, cerimoniaSaque };
 })();
