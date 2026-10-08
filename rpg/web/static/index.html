@@ -18,6 +18,10 @@
 <link rel="stylesheet" href="/static/css/11-tipografia.css">
 <link rel="stylesheet" href="/static/css/12-acoes-combate.css">
 <link rel="stylesheet" href="/static/css/13-realce.css">
+<!-- a paleta indexada e os materiais em pixel (sprites.js) vão para o :root antes da primeira pintura -->
+<script src="/static/sprites-dados.js"></script>
+<script src="/static/sprites.js"></script>
+<script>Sprites.publicar();</script>
 </head>
 <body class="sem-heroi" data-bioma="vila" data-periodo="0">
 
@@ -107,8 +111,6 @@
 </div>
 
 <script src="/static/texto.js"></script>
-<script src="/static/sprites-dados.js"></script>
-<script src="/static/sprites.js"></script>
 <script src="/static/som.js"></script>
 <script src="/static/vista.js"></script>
 <script src="/static/mapa.js"></script>

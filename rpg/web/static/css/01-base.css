@@ -11,26 +11,32 @@
 @font-face { font-family: "Jersey 15"; src: url(../fontes/jersey-15-latin-400-normal.woff2) format("woff2"); font-display: swap; }
 
 :root {
-  --fundo: #0b0908;
-  --painel: #15110e;
-  --linha: #3a2e24;
-  --tinta: #e6dac2;
-  --tinta-2: #b3a68b;
-  --tinta-3: #7a6e5c;
-  --ouro: #e2bd63;
-  --xp: #d4bfff;  /* experiência: lilás, para nunca se confundir com o ouro */
-  --ouro-2: #d4af37;
-  --ouro-3: #8a6a14;
-  --brasa: #ff9d4d;
-  --sangue: #b3262b;
-  --sangue-2: #e2574c;
-  --bom: #8fbf6a;
-  --arcano: #b49cff;
-  --frio: #7fb0ff;
-  --teal: #74c4c9;
-  --magico: #7d97ff;
-  --raro: #f2c94c;
-  --lendario: #ff9d4d;
+  /* A paleta da interface é a dos sprites (sprites.js, publicada no :root como --p-<letra> antes da primeira pintura):
+     os nomes abaixo só dizem o papel de cada cor. Nenhum hex mora aqui. */
+  --fundo: var(--p-z);       /* pedra funda: o fundo da página e o recheio dos nichos */
+  --perg: var(--p-q);        /* pergaminho escuro, atrás da prosa */
+  --perg-grao: var(--p-Q);
+  --painel: var(--p-K);      /* pedra dos painéis */
+  --pedra-luz: var(--p-s);
+  --pedra-alta: var(--p-d);
+  --tinta: var(--p-w);
+  --tinta-2: var(--p-G);
+  --tinta-3: var(--p-g);     /* só para desligado ou texto grande: pouco contraste na pedra */
+  --ouro: var(--p-y);
+  --ouro-2: var(--p-c);
+  --ouro-3: var(--p-C);
+  --aceso: var(--p-Y);       /* o quadro aceso de um piscar: no lugar de todo brilho */
+  --sangue: var(--p-r);
+  --sangue-2: var(--p-R);
+  --bom: var(--p-E);
+  --frio: var(--p-U);
+  --arcano: var(--p-M);
+  --brasa: var(--p-O);
+  --teal: var(--p-T);
+  --xp: var(--arcano);       /* experiência: lilás, para nunca se confundir com o ouro */
+  --magico: var(--frio);     /* raridades */
+  --raro: var(--ouro);
+  --lendario: var(--brasa);
   /* Pixel art: P é um texel da interface (o pixel dos sprites em escala 2), em pixels inteiros do aparelho; toda borda,
      sombra, sulco e ladrilho é múltiplo dele. A paleta indexada (--p-<letra>) e as texturas vêm de sprites.js. */
   --P: calc(var(--px, 1px) * 2);

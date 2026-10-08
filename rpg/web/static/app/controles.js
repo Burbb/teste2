@@ -143,8 +143,6 @@ function brasas() {
   }
 }
 
-/** A unidade de pixel, a paleta e os materiais da interface (texturas, pontilhados, molduras): ver sprites.js. */
-function tema() { Sprites.publicar(); }
 
 // As tochas da HUD tremulam: troca de quadro a cada 400 ms.
 setInterval(() => {
@@ -155,7 +153,6 @@ setInterval(() => {
 }, 400);
 
 async function iniciar() {
-  tema();
   Batalha.configurar({ rapido: instantaneo, pausa: ritmo });
   Sensacao.configurar({ rapido: instantaneo, pausa: ritmo });
   try {
