@@ -15,10 +15,9 @@ const Sprites = (() => {
   };
   /** Limiar de Bayer 4×4 (0 a 15): o pontilhado ordenado de toda a arte. */
   const BAYER4 = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
-  /** As molduras em 9-slice (sprites-dados.js), publicadas como --<nome>. */
-  const MOLDURAS = ["mold", "janela", "janela_magico", "janela_raro", "janela_lendario"];
-
   const S = SPRITES_GRADES;  // os desenhos moram em sprites-dados.js
+  /** As molduras em 9-slice (sprites-dados.js), publicadas como --anel-k, --placa-C, --janela-y... */
+  const MOLDURAS = Object.keys(S).filter((n) => /^(anel|placa|janela)_\w$/.test(n));
 
   const cache = {};
   function canvas(nome) {
@@ -84,16 +83,17 @@ const Sprites = (() => {
       for (let i = 0; i < 16; i++) if (BAYER4[i] < nivel) set(i & 3, i >> 2, letra);
     });
   }
-  /** Uma cor que some em n texels pelo limiar de Bayer: a luz no topo de um painel, a sombra sob a barra do topo. */
+  /** Uma cor que some em n texels: a luz no topo de um painel, a sombra sob a barra do topo. A i texels do lado denso
+   *  acendem os k de menor limiar de uma linha do Bayer escolhida por i: a cobertura só diminui (4, 3, 2, 2, 1, 0 em
+   *  seis), e as direções opostas são o espelho uma da outra. */
   function rampa(letra, n, sentido = "desce") {
     const vertical = sentido === "desce" || sentido === "sobe", invertida = sentido === "sobe" || sentido === "esquerda";
     return tile(`rp${letra}${n}${sentido}`, vertical ? 4 : n, vertical ? n : 4, (set) => {
       for (let i = 0; i < n; i++) {
-        const nivel = Math.round(16 * (1 - (i + 0.5) / n)), p = invertida ? n - 1 - i : i;
-        for (let j = 0; j < 4; j++) {
-          const [x, y] = vertical ? [j, p] : [p, j];
-          if (BAYER4[(y & 3) * 4 + (x & 3)] < nivel) set(x, y, letra);
-        }
+        const k = Math.round(4 * (1 - (i + 0.5) / n)), linha = BAYER4.slice((i & 3) * 4, (i & 3) * 4 + 4);
+        if (k <= 0) continue;
+        const corte = [...linha].sort((a, b) => a - b)[k - 1], p = invertida ? n - 1 - i : i;
+        for (let j = 0; j < 4; j++) if (linha[j] <= corte) set(...(vertical ? [j, p] : [p, j]), letra);
       }
     });
   }
@@ -135,7 +135,7 @@ const Sprites = (() => {
     raiz.setProperty("--tx-placa", u(pedra(["d", "K"], 32, 3)));             // placas (fundo s)
     raiz.setProperty("--tx-funda", u(pedra(["K", "k"], 32, 5)));             // nichos (fundo z)
     raiz.setProperty("--tx-fundo", u(pedra(["K", "k"], 128, 7, 4, 0.32)));   // a página (fundo z)
-    for (const n of MOLDURAS) raiz.setProperty(`--${n}`, u(url(n)));
+    for (const n of MOLDURAS) raiz.setProperty(`--${n.replace("_", "-")}`, u(url(n)));
     for (const n of [4, 8, 12]) raiz.setProperty(`--veu-${n}`, u(pontilhado("k", n)));
     raiz.setProperty("--luz-topo", u(rampa("s", 6)));
     raiz.setProperty("--sombra-desce", u(rampa("k", 4)));

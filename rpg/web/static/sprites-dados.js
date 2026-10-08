@@ -1389,12 +1389,14 @@ const SPRITES_GRADES = (() => {
   S.orbe_luz = trocar(S.orbe.slice(0, 10).concat(Array(6).fill("................")), { M: "Y", m: "y", W: "W", x: "c" });
   S.orbe_arcano = trocar(S.orbe.slice(0, 10).concat(Array(6).fill("................")), {});
 
-  // Molduras da interface em 9-slice (border-image): um anel só, de 1 texel, com o canto chanfrado; "#" é a cor do
-  // anel. A janela traz na própria imagem 1 texel de sombra dura (k) para baixo e para a direita.
-  const MOLD = [".#.", "#.#", ".#."];
+  // Molduras da interface em 9-slice (border-image): um anel só, de 1 texel, com o canto chanfrado. "#" é a cor do
+  // anel, e cada cor vira uma variante (anel_k, placa_C, janela_y...). A placa traz na própria imagem 1 texel de
+  // espessura (k) embaixo; a janela, 1 texel de sombra dura para baixo e para a direita.
+  const ANEL = [".#.", "#.#", ".#."];
+  const PLACA = [".#.", "#.#", "k#k", ".k."];
   const JANELA = [".##..", "#..#.", "#..#k", ".##kk", "..kk."];
-  S.mold = trocar(MOLD, { "#": "k" });
-  for (const [sufixo, cor] of [["", "k"], ["_magico", "U"], ["_raro", "y"], ["_lendario", "O"]]) S["janela" + sufixo] = trocar(JANELA, { "#": cor });
+  for (const cor of "kCyYUOErR") { S["anel_" + cor] = trocar(ANEL, { "#": cor }); S["placa_" + cor] = trocar(PLACA, { "#": cor }); }
+  for (const cor of "kUyO") S["janela_" + cor] = trocar(JANELA, { "#": cor });
 
   return S;
 })();

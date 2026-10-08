@@ -78,26 +78,31 @@ kbd { font-family: var(--num); font-size: 0.85em; padding: 0 5px; color: var(--t
    Toda caixa da interface é um destes quatro, e só eles desenham anel: um anel só, preto, de 1 texel, com o canto
    chanfrado. Estado e raridade trocam a cor do anel, nunca somam um segundo; dentro de um painel os grupos se separam
    por espaço e sulco. A luz vem de cima e da esquerda: placa é clara em cima e escura embaixo; nicho, o contrário. */
+/* O anel de cada material é uma moldura em 9-slice (sprites-dados.js) guardada em --anel: estado e raridade trocam
+   a imagem (--anel-k, --placa-C, --janela-y...), nunca a espessura. */
 /* Painel: pedra granulada, luz pontilhada no topo. */
-.m-painel { border: var(--borda) solid var(--p-k); border-image: var(--mold) 1 / 1 stretch;
+.m-painel { --anel: var(--anel-k); border: var(--borda) solid var(--p-k); border-image: var(--anel) 1 / 1 stretch;
   background: var(--luz-topo) 0 0 / calc(var(--P) * 4) calc(var(--P) * 6) repeat-x, var(--tx-pedra) 0 0 / calc(var(--P) * 64), var(--p-K);
   background-clip: padding-box; }
 /* Janela: pergaminho escuro quase liso (carrega texto) e 1 texel de sombra dura desenhado na própria moldura. */
-.m-janela { border: var(--borda) solid var(--p-k); border-image: var(--janela) 2 / 2 / 0 1 1 0 stretch;
+.m-janela { --anel: var(--janela-k); border: var(--borda) solid var(--p-k); border-image: var(--anel) 2 / 2 / 0 1 1 0 stretch;
   background: var(--tx-perg) 0 0 / calc(var(--P) * 64), var(--p-q); background-clip: padding-box; }
-.m-janela.r-magico { border-image-source: var(--janela_magico); }
-.m-janela.r-raro { border-image-source: var(--janela_raro); }
-.m-janela.r-lendario { border-image-source: var(--janela_lendario); }
-/* Placa: botão, ícone da doca, carta. Em relevo, com 1 texel de espessura embaixo; afunda ao apertar. */
-.m-placa { --anel: var(--p-k); --luz: var(--p-d); --escuro: var(--p-z);
-  border: var(--borda) solid var(--anel); background: var(--tx-placa) 0 0 / calc(var(--P) * 32), var(--p-s);
-  box-shadow: inset var(--P) var(--P) 0 var(--luz), inset calc(var(--P) * -1) calc(var(--P) * -1) 0 var(--escuro), 0 var(--P) 0 var(--p-k); }
-.m-placa:is(:hover, :focus-visible) { --anel: var(--p-C); }
-.m-placa:active { translate: 0 var(--P); box-shadow: inset var(--P) var(--P) 0 var(--escuro); }
-/* Nicho: espaço de item e retrato, cavado na superfície; o anel (--aro) é o contorno preto, ou a cor da raridade. */
-.m-nicho { --aro: var(--p-k); background: var(--tx-funda) 0 0 / calc(var(--P) * 32), var(--p-z);
-  box-shadow: inset 0 0 0 var(--P) var(--aro), inset calc(var(--P) * 2) calc(var(--P) * 2) 0 var(--p-k), inset calc(var(--P) * -2) calc(var(--P) * -2) 0 var(--p-s); }
-.m-nicho.r-magico { --aro: var(--p-U); } .m-nicho.r-raro { --aro: var(--p-y); } .m-nicho.r-lendario { --aro: var(--p-O); }
+.m-janela.r-magico { --anel: var(--janela-U); } .m-janela.r-raro { --anel: var(--janela-y); } .m-janela.r-lendario { --anel: var(--janela-O); }
+/* Placa: botão, ícone da doca, carta. Em relevo (claro em cima, escuro embaixo) e com 1 texel de espessura, que vem
+   na moldura. Apertada, o relevo inverte e o conteúdo desce; a caixa fica parada, para o clique não escapar. */
+.m-placa { --anel: var(--placa-k); --luz: var(--p-d); --escuro: var(--p-z);
+  border: var(--borda) solid var(--p-k); border-image: var(--anel) 1 1 2 1 / 1 1 2 1 / 0 0 1 0 stretch;
+  background: var(--tx-placa) 0 0 / calc(var(--P) * 32), var(--p-s); background-clip: padding-box;
+  box-shadow: inset var(--P) var(--P) 0 var(--luz), inset calc(var(--P) * -1) calc(var(--P) * -1) 0 var(--escuro); }
+.m-placa:is(:hover, :focus-visible) { --anel: var(--placa-C); }
+.m-placa:active { box-shadow: inset var(--P) var(--P) 0 var(--escuro); }
+.m-placa:active > * { translate: 0 var(--P); }
+/* Nicho: espaço de item e retrato, cavado na superfície (escuro em cima, luz embaixo); o anel é o contorno preto, ou a
+   cor da raridade. */
+.m-nicho { --anel: var(--anel-k); border: var(--borda) solid var(--p-k); border-image: var(--anel) 1 / 1 stretch;
+  background: var(--tx-funda) 0 0 / calc(var(--P) * 32), var(--p-z); background-clip: padding-box;
+  box-shadow: inset var(--P) var(--P) 0 var(--p-k), inset calc(var(--P) * -1) calc(var(--P) * -1) 0 var(--p-s); }
+.m-nicho.r-magico { --anel: var(--anel-U); } .m-nicho.r-raro { --anel: var(--anel-y); } .m-nicho.r-lendario { --anel: var(--anel-O); }
 /* Sulco: a divisória, 1 texel de sombra sobre 1 de luz, sólido de ponta a ponta. */
 .m-sulco { height: calc(var(--P) * 2); background: linear-gradient(var(--p-k) 0 50%, var(--p-d) 0); }
 /* Etiqueta: adesivo de cor sólida da paleta, sem borda. */
