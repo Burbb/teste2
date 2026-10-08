@@ -448,8 +448,12 @@ class Combate:
             comitiva.preparar_combate(self)
         pular_inimigos = False
         if self.emboscada == "inimigo":
-            self.dizer("Você foi pego de surpresa!", "vermelho+negrito")
-            self.fase_inimigos()
+            # Como a sua surpresa: um golpe livre, do mais rápido deles, e não a rodada do bando inteiro
+            # (quatro cães de uma vez matavam antes de você agir uma vez).
+            primeiro = max(self.inimigos_vivos(), key=lambda e: e.agi)
+            self.dizer(f"Você foi pego de surpresa! {tx.maiuscula(self.nome(primeiro))} ataca antes que você reaja.",
+                       "vermelho+negrito")
+            self.fase_inimigos(apenas=primeiro)
             r = self._checar_fim()
             if r:
                 return self.fim(r)
@@ -887,8 +891,10 @@ class Combate:
                     elif dano and a.tipo == "urso":
                         self.aplicar(alvo, "atordoado", 1, chance=0.15)
 
-    def fase_inimigos(self):
+    def fase_inimigos(self, apenas=None):
         for e in list(self.inimigos):
+            if apenas is not None and e is not apenas:
+                continue
             if not e.vivo or not self.j.vivo:
                 continue
             if self.processar_efeitos(e):

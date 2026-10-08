@@ -16,11 +16,10 @@ class Navegacao:
         for loc, dist in sorted(vizinhos(self.mundo, self.loc), key=lambda v: v[0]["id"]):
             numero = f"[{loc['id'] + 1}] {mapa.glifo(self, loc)} " if self.ui.numerar_destinos else ""
             texto = f"{numero}{loc['nome']} — {mapa.descricao(self, loc)}"
-            if loc["tipo"] != "vila":
-                nv = nivel_regiao(loc)
-                texto += f" · Nv.{nv}"
-                if nv >= self.j.nivel + 2:
-                    texto += " (PERIGOSO!)"
+            nv = nivel_regiao(loc)
+            texto += f" · arredores Nv.{nv}" if loc["tipo"] == "vila" else f" · Nv.{nv}"
+            if nv >= self.j.nivel + 2:
+                texto += " (PERIGOSO!)"
             texto += f" · {dist} trecho{'s' if dist > 1 else ''}"
             if not loc["visitado"]:
                 texto += " · inexplorado"
@@ -31,8 +30,11 @@ class Navegacao:
             return
         loc, dist = destino
         nv = nivel_regiao(loc)
-        if loc["tipo"] != "vila" and nv >= self.j.nivel + 3:
-            if not self.menu(f"{loc['nome']} tem inimigos de nível {nv}. Você é nível {self.j.nivel}. "
+        if nv >= self.j.nivel + 3:
+            # Vila também: dentro dela se está seguro, mas as estradas em volta são da região (e é por elas que se sai).
+            onde = (f"As estradas em volta de {loc['nome']} têm inimigos de nível {nv}" if loc["tipo"] == "vila"
+                    else f"{loc['nome']} tem inimigos de nível {nv}")
+            if not self.menu(f"{onde}. Você é nível {self.j.nivel}. "
                              f"Lá, quase qualquer encontro pode te matar. Ir mesmo assim?",
                              [("Não, voltar", False), ("Sim, eu sei o que estou fazendo", True)]):
                 return
@@ -74,8 +76,10 @@ class Navegacao:
             g = loc["guardiao"]
             self.dizer(f"Este é o covil de {g['nome']} (Nv.{self.nivel_guardiao(loc)}). Um dos Sigilos está aqui.",
                        "magenta")
-        if loc["tipo"] != "vila" and self.nivel_local() >= self.j.nivel + 3:
-            self.dizer("Um arrepio sobe pela espinha. As criaturas daqui são muito mais fortes do que você.",
+        if self.nivel_local() >= self.j.nivel + 3:
+            self.dizer("A vila tem muros, mas as estradas em volta são de criaturas muito mais fortes do que você."
+                       if loc["tipo"] == "vila" else
+                       "Um arrepio sobe pela espinha. As criaturas daqui são muito mais fortes do que você.",
                        "vermelho+negrito")
         if loc["tipo"] == "cidadela":
             self.dizer(f"Os três Sigilos ardem em sua mão e a muralha de sombras se abre. "

@@ -193,7 +193,7 @@ const MapaPx = (() => {
       b.className = "no-btn" + (n.atual ? " atual" : "") + (clic.has(n.id) ? " clicavel" : "") + (marcas.has(n.id) ? " tem-contrato" : "");  // não "contrato": essa é a classe do cartaz do mural (sombra, giro)
       b.dataset.id = n.id;
       b.style.left = esq + "%"; b.style.top = topo + "%";
-      const nv = n.nivel ? ` · inimigos Nv.${n.nivel}` : "";
+      const nv = n.nivel ? ` · ${n.tipo === "vila" ? "arredores" : "inimigos"} Nv.${n.nivel}` : "";
       // Sem a dica nativa do navegador (o nome e o nível já estão escritos no mapa); fica só para leitores de tela.
       b.setAttribute("aria-label", `${n.nome} — ${n.descricao}${nv}${n.distancia ? ` · ${n.distancia} trecho(s) daqui` : ""}${marcas.has(n.id) ? " · você tem um contrato aqui" : ""}`);
       if (clic.has(n.id) && opts.aoClicar) b.addEventListener("click", (ev) => { ev.stopPropagation(); opts.aoClicar(n.id); });
@@ -215,7 +215,30 @@ const MapaPx = (() => {
         caixa.appendChild(r);
       }
     });
+    requestAnimationFrame(() => encaixarRotulos(caixa));
     return caixa;
+  }
+
+  /** Rótulo de um lugar na beirada (a cidadela, no canto) não corta: desliza para dentro do mapa. E dois
+   *  lugares vizinhos não escrevem um por cima do outro: o segundo desce até ficar livre. */
+  function encaixarRotulos(caixa) {
+    if (!caixa.isConnected) return;
+    const c = caixa.getBoundingClientRect();
+    const postos = [];
+    const cruza = (a, b) => a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom;
+    [...caixa.querySelectorAll(".rotulo-mapa")].sort((a, b) => a.offsetTop - b.offsetTop).forEach((r) => {
+      const b = r.getBoundingClientRect();
+      const dx = b.right > c.right - 4 ? c.right - 4 - b.right : b.left < c.left + 4 ? c.left + 4 - b.left : 0;
+      let dy = 0;
+      for (let k = 0; k < 4; k++) {
+        const aqui = { left: b.left + dx, right: b.right + dx, top: b.top + dy, bottom: b.bottom + dy };
+        const outro = postos.find((p) => cruza(aqui, p));
+        if (!outro) break;
+        dy += outro.bottom - aqui.top + 1;
+      }
+      if (dx || dy) r.style.transform = `translate(calc(-50% + ${Math.round(dx)}px), ${Math.round(dy)}px)`;
+      postos.push({ left: b.left + dx, right: b.right + dx, top: b.top + dy, bottom: b.bottom + dy });
+    });
   }
   return { criar, sprite, ambiente(m) { if (m) ambiente = m; } };
 })();

@@ -176,7 +176,7 @@ def mapa_conhecido(g):
             "id": loc["id"], "n": loc["id"] + 1, "nome": loc["nome"], "x": loc["x"], "y": loc["y"],
             "tipo": loc["tipo"], "bioma": loc["bioma"], "visitado": loc["visitado"], "atual": loc["id"] == atual,
             "distancia": vizinhos.get(loc["id"]), "descricao": mapa.descricao(g, loc),
-            "nivel": None if loc["tipo"] == "vila" else nivel_regiao(loc),
+            "nivel": nivel_regiao(loc),  # numa vila, o dos arredores (as estradas por onde se chega e se sai)
             "covil": ("vencido" if loc["guardiao"]["derrotado"] else "ativo") if covil else None,
         })
         for vid in loc["con"]:
@@ -261,7 +261,7 @@ def estado(g):
                   "escuro": bool(g.sem_luz), "modificadores": modificadores(g)},
         "local": {"id": loc["id"], "nome": loc["nome"], "tipo": loc["tipo"], "bioma": loc["bioma"],
                   "bioma_nome": BIOMAS[loc["bioma"]]["nome"], "descricao": mapa.descricao(g, loc),
-                  "nivel": None if loc["tipo"] == "vila" else g.nivel_local()},
+                  "nivel": g.nivel_local()},
         "mapa": mapa_conhecido(g),
         "combate": combate(g),
         "estados": para_tela(),  # ícone, cor e dica de cada estado (catálogo em estados.py)

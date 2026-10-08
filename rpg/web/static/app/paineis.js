@@ -231,7 +231,7 @@ function desenharMundo(e) {
       <span class="dist">${n.distancia} trecho${n.distancia > 1 ? "s" : ""}</span></div>`).join("");
   const raiz = $("#mundo");
   raiz.innerHTML = `<div class="local-nome">${esc(l.nome)}</div><div class="local-desc">${esc(l.descricao)}</div>
-    ${l.nivel ? `<span class="perigo-tag ${nivelPerigo(l.nivel)}">inimigos Nv.${l.nivel}</span>` : ""}<div id="mapa-mini"></div>
+    ${l.nivel ? `<span class="perigo-tag ${nivelPerigo(l.nivel)}">${l.tipo === "vila" ? "arredores" : "inimigos"} Nv.${l.nivel}</span>` : ""}<div id="mapa-mini"></div>
     ${Telas.rastreador(e.contratos, e.heroi.nivel)}
     <div class="secao"><h3>Caminhos</h3><div class="caminhos">${caminhos || '<div class="vazio">nenhum</div>'}</div></div>`;
   const mini = MapaPx.criar(e.mapa, { clicaveis: clic, aoClicar: viajarPara, nivelHeroi: e.heroi.nivel, marcas: marcasContrato(e) });
