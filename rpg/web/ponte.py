@@ -11,7 +11,7 @@ import queue
 import re
 import threading
 
-from ..ui import UI
+from ..ui import InterfaceGrafica, UI
 from .estado import estado
 
 TESTE = re.compile(r"\((Força|Destreza|Arcano|Percepção|Vontade|Carisma) ([+-]\d+) no d20\)")
@@ -56,9 +56,8 @@ class Canal:
             return self.mensagens[cursor:], self.encerrado
 
 
-class WebUI(UI):
+class WebUI(InterfaceGrafica, UI):
     hud = True
-    web = True
 
     def __init__(self, canal=None):
         super().__init__(cor=False, rapido=True)

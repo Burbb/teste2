@@ -19,7 +19,7 @@ import sys
 import tempfile
 
 from rpg.jogo import Jogo
-from rpg.ui import BotUI, LimiteBot
+from rpg.ui import BotUI, InterfaceGrafica, LimiteBot
 
 ARQUIVO = os.path.join(os.path.dirname(__file__), "gabarito.json")
 CLASSES = ("guerreiro", "arqueiro", "mago")
@@ -78,11 +78,15 @@ class Gravador(BotUI):
         return True
 
 
+class GravadorWeb(InterfaceGrafica, Gravador):
+    """O robô imitando a tela gráfica: os mesmos caminhos do motor que a WebUI segue."""
+
+
 def transcrever(seed, classe, web=False):
     from rpg import combate
     combate._SERIE[0] = 0  # numeração dos combates (ids das cartas): cada partida começa do zero
     with tempfile.TemporaryDirectory() as pasta:
-        ui = Gravador(random.Random(seed * 7 + 1), web=web)
+        ui = (GravadorWeb if web else Gravador)(random.Random(seed * 7 + 1), web=web)
         # A semente 3 joga no hardcore (morte permanente); as outras no modo brando, para partidas mais longas.
         g = Jogo(ui, seed=seed, pasta_saves=pasta, hardcore=seed == 3)
         g.iniciar("Robô", classe)

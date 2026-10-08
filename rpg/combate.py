@@ -195,9 +195,8 @@ class Combate:
         return [e for e in self.inimigos if e.vivo]
 
     def _nomear(self):
-        # Na tela gráfica cada inimigo é uma carta e se escolhe o alvo clicando: "Lobo A" e "Lobo B" só
-        # poluiriam. No modo texto, a letra é o que diferencia os alvos no menu.
-        if getattr(self.ui, "web", False):
+        # No modo texto, a letra é o que diferencia os alvos no menu; onde o alvo é uma carta, só poluiria.
+        if not self.ui.letras_nos_alvos:
             return
         contagem = {}
         for e in self.inimigos:
@@ -427,7 +426,7 @@ class Combate:
     # ------------------------------------------------------------ fluxo
     def executar(self):
         self.ui.cena(self.titulo, tx.lista_natural([f"{e.nome} (Nv.{e.nivel})" for e in self.inimigos]), "combate")
-        if not getattr(self.ui, "hud", False):
+        if not self.ui.hud:
             self.dizer("Inimigos: " + ", ".join(f"{e.nome} (Nv.{e.nivel})" for e in self.inimigos), "vermelho")
         if self.companheiro:
             animado = self.companheiro.efeito("fortalecido")
@@ -496,7 +495,7 @@ class Combate:
         j = self.j
         ui = self.ui
         ui.novo_turno(self.turno)
-        if getattr(ui, "hud", False):
+        if ui.hud:
             return  # o painel lateral mostra vida, efeitos e inimigos
         linha = (f"  Você  {ui.barra(j.hp, j.max_hp, 14, 'verde')} {j.hp}/{j.max_hp}  "
                  f"{j.nome_recurso} {j.rec}/{j.max_rec}")
@@ -557,8 +556,7 @@ class Combate:
             nome_atk = CLASSES[j.classe]["ataque"][0]
             if j.classe == "arqueiro" and j.flechas <= 0:
                 nome_atk = "Golpe de Adaga — sem flechas!"
-            # Na interface gráfica, a ficha do inimigo aparece ao passar o mouse na carta: sem "Analisar".
-            analisar = not getattr(self.ui, "web", False)
+            analisar = self.ui.analisar_no_menu
             opcoes = [f"Atacar ({nome_atk})", "Habilidades", "Itens"] + (["Analisar inimigos"] if analisar else [])
             # Na tela gráfica as ações viram uma barra dentro da arena, com as habilidades já à mostra.
             metas = [{"acao": "atacar", "nome": nome_atk}, {"acao": "habilidades", "habilidades": self.metas_habilidades()},

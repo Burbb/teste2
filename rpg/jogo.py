@@ -264,7 +264,7 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         perigo = "" if loc["tipo"] == "vila" else f" · inimigos Nv.{self.nivel_local()}"
         ui.cena(loc["nome"], f"{tipo}{perigo} · dia {self.dia}, {PERIODOS[min(self.periodo, 3)].lower()} · "
                              f"{CLIMAS[self.clima]['nome'].lower()}", "local")
-        if getattr(ui, "hud", False):
+        if ui.hud:
             return  # o painel lateral já mostra o resto
         ui.dizer(f" {j.nome}, {j.nome_classe} Nv.{j.nivel}  (XP {j.xp}/{j.xp_proximo()})  "
                  f"Sigilos {len(j.sigilos)}/3", "ciano")
@@ -315,7 +315,7 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
 
     def opcoes_bolsa(self):
         """Na tela gráfica, a bolsa do painel lateral é clicável: cada consumível vira uma opção escondida."""
-        if not getattr(self.ui, "web", False):
+        if not self.ui.bolsa_clicavel:
             return []
         opcoes = []
         for k in self.USAVEIS_FORA:

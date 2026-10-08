@@ -14,8 +14,7 @@ class Navegacao:
         self.desenhar_mapa()
         opcoes = []
         for loc, dist in sorted(vizinhos(self.mundo, self.loc), key=lambda v: v[0]["id"]):
-            web = getattr(self.ui, "web", False)  # na web, o mapa é clicável e desenha os próprios ícones
-            numero = "" if web else f"[{loc['id'] + 1}] {mapa.glifo(self, loc)} "
+            numero = f"[{loc['id'] + 1}] {mapa.glifo(self, loc)} " if self.ui.numerar_destinos else ""
             texto = f"{numero}{loc['nome']} — {mapa.descricao(self, loc)}"
             if loc["tipo"] != "vila":
                 nv = nivel_regiao(loc)
@@ -99,9 +98,5 @@ class Navegacao:
         self.pausar()
 
     def desenhar_mapa(self, grande=False):
-        """A interface web desenha o próprio mapa (em SVG); as de terminal, em caracteres."""
-        if getattr(self.ui, "web", False):
-            self.ui.mostrar_mapa(grande)
-            return True
-        self.ui.desenhar(mapa.renderizar(self))
-        return False
+        """Devolve True se a interface desenha o próprio mapa (a web, em SVG); senão vai em caracteres."""
+        return self.ui.desenhar_mapa(grande, lambda: mapa.renderizar(self))

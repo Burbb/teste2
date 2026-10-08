@@ -55,13 +55,8 @@ class Progressao:
     def menu_talentos(self):
         while True:
             j = self.j
-            if getattr(self.ui, "web", False):
-                # na tela gráfica a árvore abre por cima, como o Grimório: a página do lugar fica como estava
-                self.ui.arvore_talentos(talentos.dados_arvore(j))
-            else:
-                self.ui.cena("Talentos", f"{j.nome_classe} · pontos disponíveis: {j.pontos_talento}", "menu")
-                self.ui.desenhar(talentos.desenhar(j))
-                self.dizer("verde = aprendido · amarelo = disponível · cinza = bloqueado", "cinza")
+            self.ui.mostrar_talentos(lambda: talentos.dados_arvore(j), lambda: talentos.desenhar(j),
+                                     f"{j.nome_classe} · pontos disponíveis: {j.pontos_talento}")
             opcoes = []
             for t in talentos.TALENTOS[j.classe]:
                 est = talentos.estado(j, t)
@@ -86,8 +81,7 @@ class Progressao:
                 antes = j.max_hp
                 j.recalcular()
                 j.hp += max(0, j.max_hp - antes)
-                if not getattr(self.ui, "web", False):  # na tela gráfica, o próprio talento festeja (som, faíscas, aviso)
-                    self.dizer(f"Você aprendeu {t['nome']} ({j.tal(t['id'])}/{t['max']}).", "verde+negrito")
+                self.ui.talento_aprendido(t["nome"], j.tal(t["id"]), t["max"])
 
     def _aprender_habilidades(self):
         j = self.j

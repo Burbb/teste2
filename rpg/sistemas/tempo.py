@@ -73,8 +73,7 @@ class Tempo:
             intro = "Você segue a fumaça até o seu acampamento. A fogueira de quem esperou por você ainda arde."
         else:
             intro = "Você junta gravetos, acende uma fogueira fraca e se enrola na capa. O frio entra mesmo assim."
-        # A fogueira desenhada aparece sempre na interface web, mesmo sozinho: é o momento de respirar do dia.
-        if comitiva.membros(self) or comitiva.reserva(self) or getattr(self.ui, "web", False):
+        if comitiva.membros(self) or comitiva.reserva(self) or self.ui.fogueira_sozinho:
             conversou = comitiva.fogueira(self, intro)
             self.ui.cena("Acampamento", self.contexto_cena(), "evento")
         else:

@@ -55,8 +55,7 @@ def menu_principal(ui, args):
                         continue
                     jogo.autosalvar = ui.interativo
                     ui.jogo = jogo
-                    if not getattr(ui, "web", False):  # na tela gráfica, o próprio lugar aparece: sem cumprimento
-                        ui.dizer(f"Bem-vindo de volta, {jogo.j.nome}.", "verde")
+                    ui.boas_vindas(jogo.j.nome)
                     jogo.rodar()
             else:
                 ui.dizer("Até a próxima jornada!", "magenta")

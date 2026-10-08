@@ -15,6 +15,13 @@ Ele chama uma interface (`ui`) com pedidos de alto nível: `cena`, `dizer`, `esc
 | Terminal | `rpg/ui.py`, `rpg/tui.py` | texto colorido, menus numerados |
 | Robô | `rpg/ui.py` (`BotUI`) | joga sozinho nos testes, simulações e no gabarito |
 
+Quando o jeito de mostrar muda de uma interface para outra, o motor não pergunta "é a web?". Ele pergunta o
+que a interface **sabe fazer** (atributos em `UI`: `hud`, `letras_nos_alvos`, `analisar_no_menu`,
+`numerar_destinos`, `fogueira_sozinho`, `bolsa_clicavel`) ou entrega o conteúdo e deixa ela mostrar
+(`desenhar_mapa`, `mostrar_talentos`, `talento_aprendido`, `reacao_animal`, `boas_vindas`). A classe `UI` faz do
+jeito do texto; o mixin `InterfaceGrafica` faz do jeito gráfico e é usado pela `WebUI` e pelo robô do gabarito
+quando imita a tela web. Uma interface nova (celular, outra tela) escolhe as capacidades, sem tocar no motor.
+
 Regra: **a regra do jogo mora no motor**, a tela só desenha. Quando a tela precisa de um número (dano de uma
 habilidade, preço, chance), ele vem pronto do motor (metadados das opções ou `rpg/web/estado.py`).
 

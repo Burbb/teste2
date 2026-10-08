@@ -50,6 +50,14 @@ class UI:
     extra_resposta = None  # dados extras que a interface mandou junto da escolha (ex.: quantidade)
     meta_opcoes = None  # dados extras de cada opção (local de viagem, talento...), para interfaces gráficas
 
+    # O que a interface sabe fazer. O motor pergunta por isto, nunca "que tela é esta?".
+    hud = False               # há um painel fixo com vida, recursos e inimigos: o texto não repete
+    letras_nos_alvos = True   # "Lobo A", "Lobo B": no texto, a letra é o que diferencia os alvos no menu
+    analisar_no_menu = True   # "Analisar inimigos" como ação (sem ficha ao passar o mouse na carta)
+    numerar_destinos = True   # "[3] ▲ Floresta": o número e o glifo ligam a opção ao mapa em caracteres
+    fogueira_sozinho = False  # a cena da fogueira aparece mesmo sem ninguém da comitiva
+    bolsa_clicavel = False    # os consumíveis do painel viram opções escondidas no menu do lugar
+
     def __init__(self, cor=None, rapido=False):
         self.cor = _suporta_cor() if cor is None else cor
         self.rapido = rapido
@@ -159,6 +167,31 @@ class UI:
     def arvore_talentos(self, dados):
         """Interfaces gráficas desenham a árvore; as de texto usam o desenho em caracteres."""
 
+    # ------------------------------------------------------------ jeitos de mostrar
+    # O motor entrega o conteúdo; cada interface decide como aparece. Aqui, o jeito do texto.
+    def desenhar_mapa(self, grande, linhas):
+        """O mapa do mundo. `linhas()` desenha em caracteres. Devolve True se a interface tem mapa próprio."""
+        self.desenhar(linhas())
+        return False
+
+    def mostrar_talentos(self, dados, linhas, subtitulo):
+        """A árvore de talentos. `dados()` para quem desenha a árvore; `linhas()` para o desenho em caracteres."""
+        self.cena("Talentos", subtitulo, "menu")
+        self.desenhar(linhas())
+        self.dizer("verde = aprendido · amarelo = disponível · cinza = bloqueado", "cinza")
+
+    def talento_aprendido(self, nome, rank, maximo):
+        self.dizer(f"Você aprendeu {nome} ({rank}/{maximo}).", "verde+negrito")
+
+    def reacao_animal(self, dados, texto, cor):
+        """O animal reage a um carinho. `texto` é a frase pronta para quem não desenha balão."""
+        self.celebrar("carinho", dados)
+        self.dizer(texto, cor)
+
+    def boas_vindas(self, nome):
+        """Ao carregar um save."""
+        self.dizer(f"Bem-vindo de volta, {nome}.", "verde")
+
     def desenhar(self, linhas):
         """Desenha um bloco de linhas, cada uma uma lista de pedaços (texto, cor)."""
         for linha in linhas:
@@ -193,6 +226,34 @@ class UI:
             input(self.pintar("  [Enter para continuar]", "cinza"))
         except EOFError:
             raise SystemExit(0)
+
+
+class InterfaceGrafica:
+    """O jeito de uma interface gráfica (a tela web, e o robô do gabarito quando a imita): cartas clicáveis
+    em vez de letras, mapa e árvore desenhados por ela, reações em balões. Vai antes de UI na herança."""
+
+    letras_nos_alvos = False   # cada inimigo é uma carta; o alvo se escolhe clicando
+    analisar_no_menu = False   # a ficha do inimigo aparece ao passar o mouse na carta
+    numerar_destinos = False   # o mapa é clicável e desenha os próprios ícones
+    fogueira_sozinho = True    # a fogueira desenhada é o momento de respirar do dia, mesmo sozinho
+    bolsa_clicavel = True
+
+    def desenhar_mapa(self, grande, linhas):
+        self.mostrar_mapa(grande)
+        return True
+
+    def mostrar_talentos(self, dados, linhas, subtitulo):
+        # a árvore abre por cima, como o Grimório: a página do lugar fica como estava
+        self.arvore_talentos(dados())
+
+    def talento_aprendido(self, nome, rank, maximo):
+        pass  # o próprio talento festeja na árvore (som, faíscas, aviso)
+
+    def reacao_animal(self, dados, texto, cor):
+        self.celebrar("carinho", dados)  # vira um balão sobre o animal, não um aviso solto
+
+    def boas_vindas(self, nome):
+        pass  # o próprio lugar aparece
 
 
 class BotUI(UI):
