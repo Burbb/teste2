@@ -142,13 +142,17 @@ ITEM_AFIXO_POR_NIVEL = 0.3        # afixos (do Urso, da Águia...): base × (1 +
 ITEM_AFIXO_FIXO_POR_NIVEL = 0.25  # crítico e roubo de vida: base + 0,25 × nível
 ITEM_UNICO_FORCA = 1.3            # lendários: força × 1,3
 
-# Ferimentos duradouros. Em combate, cada golpe tem chance de deixar marca:
-#   base + gravidade × fator (gravidade = dano / vida máxima) + crítico + pouca vida, até o teto.
-FERIMENTO_BASE = 0.015
+# Ferimentos duradouros (como em Battle Brothers: arranhão não fere, golpe pesado sim). Em combate:
+#   só golpe que tira pelo menos LIMIAR da vida máxima (ou crítico) pode deixar marca; a chance é
+#   base + (gravidade − limiar) × fator + crítico + pouca vida, até o teto, e cai pela metade (POR_FERIDA) a cada
+#   ferimento que você já carrega (quem está ferido se protege: três ou quatro de uma vez fica raro).
+FERIMENTO_LIMIAR = 0.10
+FERIMENTO_BASE = 0.03
 FERIMENTO_GRAVIDADE = 0.45
 FERIMENTO_CRITICO = 0.10
 FERIMENTO_POUCA_VIDA = 0.08   # quando a vida está abaixo de 25%
 FERIMENTO_TETO = 0.45
+FERIMENTO_POR_FERIDA = 0.5
 # Dano de eventos (queda, armadilha, briga...) também pode ferir: chance = gravidade × fator.
 FERIMENTO_EVENTO = 1.2
 

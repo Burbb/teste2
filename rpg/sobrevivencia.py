@@ -26,10 +26,30 @@ def penalidades(fid, recurso=None):
     return ", ".join(f"−{round((1 - v) * 100)}% {nome_stat(stat, recurso)}" for stat, v in FERIMENTOS[fid]["mult"].items())
 
 
-def explicar(f, recurso=None):
-    """As linhas que explicam um ferimento do herói: o que ele tira, como sara e o perigo que corre."""
+def efeito_no_heroi(jogador, fid):
+    """O que o ferimento faz nos números DESTE herói (atributos são inteiros: −15% de um Poder 1 não chega a
+    tirar nada). Ex.: "No seu herói: Ataque 11 → 9. Poder 1 e Agilidade 3: baixos demais para cair." """
+    from .entidades import nome_stat
+    totais, _ = jogador.totais()
+    caem, ficam = [], []
+    for stat, v in FERIMENTOS[fid]["mult"].items():
+        normal = max(1, int(round(totais[stat])))
+        com = max(1, int(round(totais[stat] * v)))
+        (caem if com < normal else ficam).append((nome_stat(stat, jogador.nome_recurso), normal, com))
+    partes = [f"{n} {a} → {b}" for n, a, b in caem]
+    if ficam:
+        nomes = " e ".join(", ".join(f"{n} {a}" for n, a, _ in ficam).rsplit(", ", 1))
+        partes.append(f"{nomes}: {'baixo' if len(ficam) == 1 else 'baixos'} demais para cair")
+    return "No seu herói: " + ". ".join(partes) + "."
+
+
+def explicar(f, recurso=None, jogador=None):
+    """As linhas que explicam um ferimento do herói: o que ele tira (e, com o herói, o que isso dá nos números
+    dele), como sara e o perigo que corre."""
     d = FERIMENTOS[f["id"]]
     linhas = [penalidades(f["id"], recurso) + "."]
+    if jogador is not None:
+        linhas.append(efeito_no_heroi(jogador, f["id"]))
     if f["id"] == "infeccao":
         linhas += ["Arde em febre: perde 12% da vida a cada amanhecer.",
                    "Não passa sozinha: use um unguento ou pague um curandeiro."]
@@ -96,9 +116,12 @@ def talvez_ferir(g, dano, tipo, critico, atacante):
     if not j.vivo or dano <= 0:
         return
     gravidade = dano / max(1, j.max_hp)
-    chance = (bal.FERIMENTO_BASE + gravidade * bal.FERIMENTO_GRAVIDADE + (bal.FERIMENTO_CRITICO if critico else 0)
-              + (bal.FERIMENTO_POUCA_VIDA if j.hp < j.max_hp * 0.25 else 0))
-    if g.rng.random() >= min(bal.FERIMENTO_TETO, chance):
+    if gravidade < bal.FERIMENTO_LIMIAR and not critico:
+        return  # arranhão: dói, mas não marca
+    chance = (bal.FERIMENTO_BASE + max(0.0, gravidade - bal.FERIMENTO_LIMIAR) * bal.FERIMENTO_GRAVIDADE
+              + (bal.FERIMENTO_CRITICO if critico else 0) + (bal.FERIMENTO_POUCA_VIDA if j.hp < j.max_hp * 0.25 else 0))
+    chance = min(bal.FERIMENTO_TETO, chance) * bal.FERIMENTO_POR_FERIDA ** len(j.ferimentos)
+    if g.rng.random() >= chance:
         return
     if tipo == "fogo":
         fid = "queimadura"

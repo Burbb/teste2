@@ -125,7 +125,7 @@ def heroi(g):
         d = sobrevivencia.FERIMENTOS[f["id"]]
         ferimentos.append({"nome": d["nome"], "dias": f.get("dias") if d["dias"] else None,
                            "aberto": bool(d.get("aberto") and not f.get("tratado")),
-                           "explica": sobrevivencia.explicar(f, j.nome_recurso)})
+                           "explica": sobrevivencia.explicar(f, j.nome_recurso, j)})
     return {
         "nome": j.nome, "classe": j.classe, "classe_nome": CLASSES[j.classe]["nome"], "titulo": j.nome_classe,
         "nivel": j.nivel, "xp": j.xp, "xp_proximo": j.xp_proximo(),

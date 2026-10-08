@@ -514,6 +514,44 @@ class TestSistemas(unittest.TestCase):
                 except (LimiteBot, Derrota, FimDeJogo):
                     pass
 
+    def test_ferimentos(self):
+        """Arranhão não marca; golpe pesado pode; quem já carrega um ferimento se fere menos; a dica diz o que o
+        ferimento faz nos números deste herói (−15% de um Poder 1 não tira nada)."""
+        from rpg import balanceamento as bal, sobrevivencia
+
+        class Sorteio:  # tira sempre o mesmo número
+            def __init__(self, x):
+                self.x = x
+
+            def random(self):
+                return self.x
+
+            def choice(self, seq):
+                return seq[0]
+
+        g = Jogo(BotUI(random.Random(1)), seed=1, pasta_saves=tempfile.mkdtemp())
+        g.iniciar("Robô", "guerreiro")
+        j = g.j
+        g.rng = Sorteio(0.0)
+        sobrevivencia.talvez_ferir(g, int(j.max_hp * bal.FERIMENTO_LIMIAR) - 1, "fisico", False, None)
+        self.assertEqual(j.ferimentos, [])
+        pesado = int(j.max_hp * 0.3)
+        chance = bal.FERIMENTO_BASE + (pesado / j.max_hp - bal.FERIMENTO_LIMIAR) * bal.FERIMENTO_GRAVIDADE
+        g.rng = Sorteio(chance * 0.75)  # fere quem está inteiro, não quem já está ferido
+        sobrevivencia.talvez_ferir(g, pesado, "fisico", False, None)
+        self.assertEqual(len(j.ferimentos), 1)
+        antes = [dict(f) for f in j.ferimentos]
+        sobrevivencia.talvez_ferir(g, pesado, "fisico", False, None)
+        self.assertEqual(j.ferimentos, antes)
+
+        linhas = sobrevivencia.explicar({"id": "infeccao", "dias": None}, j.nome_recurso, j)
+        self.assertEqual(linhas[0], "−15% Ataque, −15% Poder, −15% Agilidade.")
+        totais, _ = j.totais()
+        atk, poder, agi = (int(round(totais[s])) for s in ("atk", "poder", "agi"))
+        self.assertEqual((poder, agi), (1, 3))  # o guerreiro novo: pouco Poder e pouca Agilidade
+        self.assertEqual(linhas[1], f"No seu herói: Ataque {atk} → {int(round(totais['atk'] * 0.85))}. "
+                                    "Poder 1 e Agilidade 3: baixos demais para cair.")
+
     def test_mapa_renderiza(self):
         from rpg import mapa
         for seed in range(60):
