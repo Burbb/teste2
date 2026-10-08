@@ -180,6 +180,9 @@ ESTOQUE_MERCADO = {"tocha": (4, 8), "bandagem": (2, 5), "unguento": (0, 2), "poc
                    "provisoes": (4, 8), "flechas": (15, 30)}
 
 # ---------------------------------------------------------------- contratos
+# O mundo é pobre: de todo ouro achado (saque, eventos), fica esta fração. O contrato já nasce com ela na conta,
+# e paga exatamente o que o cartaz promete.
+OURO_MUNDO = 0.75
 # Peso de cada lugar no mural pela diferença entre o nível dele e o seu.
 PESO_NIVEL_CONTRATO = {-1: 1.0, 0: 3.0, 1: 3.0, 2: 1.5}
 CONTRATO_OURO_BASE = 10

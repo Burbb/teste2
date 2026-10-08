@@ -148,7 +148,7 @@ async function tratar(m) {
     case "opiniao": await opiniao(m); break;
     case "turno": turno(m); break;
     case "fim_combate": if (!instantaneo()) await espera(m.resultado === "vitoria" ? 800 : 400); break;
-    case "celebrar": await Telas.celebrar(m, instantaneo()); break;
+    case "celebrar": { const r = Telas.resumoCelebracao(m); if (r) historico("h-chip", r); await Telas.celebrar(m, instantaneo()); break; }
     case "talentos": Telas.guardarArvore(m.arvore); break;
     case "painel": if (m.tipo === "achado") cenaInterrompida = true; anexar(Telas.painel(m)); break;
     case "subtitulo": anexar(el("div", "subtitulo", esc(suavizar(m.texto)))); break;

@@ -32,25 +32,32 @@ class Progressao:
             j.companheiro["max_hp"] += bal.ANIMAL_VIDA_SUBIR
             j.companheiro["atk"] += bal.ANIMAL_ATK_SUBIR
             j.companheiro["hp"] = j.companheiro["max_hp"]
-        self.ui.titulo(f"NÍVEL {j.nivel}!", "verde+negrito")
-        self.dizer("Você se sente mais forte. (Subir de nível não cura feridas: isso, só o descanso.)", "verde")
-        self.ganhar_ponto_talento()
-        novas = self._aprender_habilidades()
+        # Na tela gráfica, a festa do nível diz tudo (atributos, ponto de talento, habilidades novas): o texto não
+        # repete. No texto, as linhas são a festa.
+        festa = self.ui.conquistas_na_tela
+        if not festa:
+            self.ui.titulo(f"NÍVEL {j.nivel}!", "verde+negrito")
+            self.dizer("Você se sente mais forte. (Subir de nível não cura feridas: isso, só o descanso.)", "verde")
+        self.ganhar_ponto_talento(anunciar=not festa)
+        novas = self._aprender_habilidades(anunciar=not festa)
         ganhos = {NOMES_STATS.get(k, k) if k != "max_rec" else j.nome_recurso: getattr(j, k) - v
                   for k, v in antes.items() if getattr(j, k) > v}
         self.ui.celebrar("nivel", {"nivel": j.nivel, "ganhos": ganhos, "pontos": j.pontos_talento,
                                    "habilidades": [{"nome": HABILIDADES[h]["nome"], "desc": HABILIDADES[h]["desc"]}
                                                    for h in novas],
-                                   "especializacao": j.nivel >= 4 and not j.spec})
+                                   "especializacao": j.nivel >= 4 and not j.spec,
+                                   "nota": "Subir de nível não cura feridas: isso, só o descanso."})
         if j.nivel >= 4 and not j.spec and f"encruzilhada_{j.classe}" not in self.forcados:
             self.forcados.append(f"encruzilhada_{j.classe}")
-            self.dizer("Você sente que uma encruzilhada se aproxima. Talvez ela venha na próxima noite de descanso...",
-                       "magenta")
+            if not festa:
+                self.dizer("Você sente que uma encruzilhada se aproxima. Talvez ela venha na próxima noite de "
+                           "descanso...", "magenta")
 
-    def ganhar_ponto_talento(self, n=1):
+    def ganhar_ponto_talento(self, n=1, anunciar=True):
         self.j.pontos_talento += n
-        self.dizer(f"+{n} ponto de talento! (use em \"Talentos\" — você tem {self.j.pontos_talento})",
-                   "amarelo+negrito")
+        if anunciar:
+            self.dizer(f"+{n} ponto de talento! (use em \"Talentos\" — você tem {self.j.pontos_talento})",
+                       "amarelo+negrito")
 
     def menu_talentos(self):
         while True:
@@ -83,14 +90,16 @@ class Progressao:
                 j.hp += max(0, j.max_hp - antes)
                 self.ui.talento_aprendido(t["nome"], j.tal(t["id"]), t["max"])
 
-    def _aprender_habilidades(self):
+    def _aprender_habilidades(self, anunciar=True):
         j = self.j
         novas = []
         for h in habilidades_ate(j.classe, j.spec, j.nivel):
             if h not in j.habilidades:
                 j.habilidades.append(h)
                 novas.append(h)
-                self.dizer(f"Nova habilidade: {HABILIDADES[h]['nome']} — {HABILIDADES[h]['desc']}", "amarelo+negrito")
+                if anunciar:
+                    self.dizer(f"Nova habilidade: {HABILIDADES[h]['nome']} — {HABILIDADES[h]['desc']}",
+                               "amarelo+negrito")
         return novas
 
     def especializar(self, spec):
@@ -102,9 +111,11 @@ class Progressao:
         j.recalcular()
         j.hp = j.max_hp
         j.rec = j.max_rec
-        self.ui.titulo(f"VOCÊ AGORA É {SPECS[spec]['nome'].upper()}", "magenta+negrito")
-        self.dizer(SPECS[spec]["desc"], "magenta")
-        novas = self._aprender_habilidades()
+        festa = self.ui.conquistas_na_tela
+        if not festa:
+            self.ui.titulo(f"VOCÊ AGORA É {SPECS[spec]['nome'].upper()}", "magenta+negrito")
+            self.dizer(SPECS[spec]["desc"], "magenta")
+        novas = self._aprender_habilidades(anunciar=not festa)
         self.ui.celebrar("spec", {"nome": SPECS[spec]["nome"], "desc": SPECS[spec]["desc"],
                                   "habilidades": [{"nome": HABILIDADES[h]["nome"], "desc": HABILIDADES[h]["desc"]}
                                                   for h in novas]})

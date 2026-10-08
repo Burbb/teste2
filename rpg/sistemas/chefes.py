@@ -33,10 +33,12 @@ class Chefes:
             gspec["derrotado"] = True
             self.j.sigilos.append(loc["bioma"])
             self.estatisticas["chefes"] += 1
-            self.ui.titulo(f"SIGILO OBTIDO ({len(self.j.sigilos)}/3)", "amarelo+negrito")
-            self.dizer("Uma runa ardente se grava na palma da sua mão.", "amarelo")
+            festa = self.ui.conquistas_na_tela  # a festa do Sigilo já mostra a runa e o ponto de talento
+            if not festa:
+                self.ui.titulo(f"SIGILO OBTIDO ({len(self.j.sigilos)}/3)", "amarelo+negrito")
+                self.dizer("Uma runa ardente se grava na palma da sua mão.", "amarelo")
             self.mudar_reputacao(5)
-            self.ganhar_ponto_talento()
+            self.ganhar_ponto_talento(anunciar=not festa)
             self.ui.celebrar("sigilo", {"sigilos": len(self.j.sigilos), "guardiao": gspec["nome"],
                                         "pontos": self.j.pontos_talento})
             if len(self.j.sigilos) >= 3:

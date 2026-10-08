@@ -11,13 +11,16 @@ from ..modificadores import mod
 
 class Recompensas:
     # ================================================================ recompensas e perdas
-    def ganhar_ouro(self, n):
-        n = int(n * 0.75)  # o mundo é pobre: ninguém carrega muito ouro
+    def ganhar_ouro(self, n, exato=False, avisar=True):
+        """exato: o valor já é o combinado (contrato); senão, o mundo é pobre e só fica parte (OURO_MUNDO).
+        avisar=False: a tela já mostrou o ganho (o quadro do contrato)."""
+        n = int(n) if exato else int(n * bal.OURO_MUNDO)
         if n <= 0:
             return
         self.j.ouro += n
         self.estatisticas["ouro_ganho"] += n
-        self.ui.efeito(f"+{n} ouro", "ouro")
+        if avisar:
+            self.ui.efeito(f"+{n} ouro", "ouro")
 
     def perder_ouro(self, n):
         n = min(self.j.ouro, int(n))
@@ -26,12 +29,13 @@ class Recompensas:
             self.ui.efeito(f"−{n} ouro", "perda")
         return n
 
-    def ganhar_xp(self, n):
+    def ganhar_xp(self, n, avisar=True):
         n = int(n)
         if n <= 0 or self.j.nivel >= NIVEL_MAXIMO:
             return
         self.j.xp += n
-        self.ui.efeito(f"+{n} XP", "xp")
+        if avisar:
+            self.ui.efeito(f"+{n} XP", "xp")
         while self.j.nivel < NIVEL_MAXIMO and self.j.xp >= self.j.xp_proximo():
             self.j.xp -= self.j.xp_proximo()
             self.subir_nivel()
@@ -96,9 +100,11 @@ class Recompensas:
         self.ui.efeito(f"+{n} flechas (total {self.j.flechas}/{self.max_flechas()})", "item")
         return n
 
-    def mudar_reputacao(self, d):
+    def mudar_reputacao(self, d, avisar=True):
         antes = self.j.reputacao
         self.j.reputacao = max(-50, min(50, antes + d))
+        if not avisar:
+            return
         if self.j.reputacao > antes:
             self.ui.efeito(f"Reputação +{self.j.reputacao - antes}", "rep")
         elif self.j.reputacao < antes:

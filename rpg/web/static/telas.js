@@ -721,16 +721,17 @@ const Telas = (() => {
     const perigo = c.nivel == null ? "" : c.nivel - nivelHeroi >= 2 ? "alto" : c.nivel >= nivelHeroi ? "medio" : "baixo";
     const lugar = `${S(MapaPx.sprite({ tipo: c.lugar_tipo, bioma: c.bioma }), 1)} ${h(c.lugar)}${c.distancia != null ? ` · ${c.distancia} trecho${c.distancia === 1 ? "" : "s"}` : ""}${c.nivel != null ? ` <span class="perigo-tag ${perigo}">Nv.${c.nivel}</span>` : ""}`;
     let progresso = "";
-    if (ativo && c.tipo === "caca" && c.progresso) {
+    if (ativo && c.tipo === "caca" && c.progresso && !c.recebendo) {
       const [feito, total] = c.progresso.split("/").map(Number);
       progresso = `<div class="contrato-progresso">${barra("xp", feito, total)}<span>${feito}/${total}</span></div>`;
     }
     let botao;
-    if (ativo) botao = c.concluido ? '<span class="contrato-feito">Feito! Volte a uma vila para receber</span>'
+    if (c.recebendo) botao = '<span class="carimbo">Cumprido</span>';  // no quadro de pagamento: o carimbo bate
+    else if (ativo) botao = c.concluido ? '<span class="contrato-feito">Feito! Volte a uma vila para receber</span>'
       : `<button type="button" class="contrato-botao abandonar" data-abandonar="${c.id}" title="Reputação −${c.penalidade}">Abandonar</button>`;
     else botao = `<button type="button" class="contrato-botao" data-aceitar="${c.id}"${cheio ? " disabled title=\"Você já tem 3 contratos\"" : ""}>Aceitar</button>`;
     const recem = ativo && contratosVistos && !contratosVistos.has(c.id);
-    return `<div class="contrato tipo-${h(c.tipo)}${ativo ? " ativo" : ""}${c.concluido ? " concluido" : ""}${recem ? " recem" : ""}">
+    return `<div class="contrato tipo-${h(c.tipo)}${ativo ? " ativo" : ""}${c.concluido && !c.recebendo ? " concluido" : ""}${recem ? " recem" : ""}">
       <span class="prego"></span><div class="contrato-tipo">${TIPO_CONTRATO[c.tipo] || h(c.tipo)}</div>
       <div class="contrato-arte">${S(arte, 3)}</div>
       <div class="contrato-titulo">${h(titulo)}</div>
@@ -1084,6 +1085,7 @@ const Telas = (() => {
       return new Promise((r) => setTimeout(r, 1500));
     }
     const caixa = document.getElementById("celebracao");
+    if (m.tipo === "contratos") return instantaneo ? Promise.resolve() : pagarContratos(caixa, d);
     let html = "";
     if (m.tipo === "nivel") {
       const icones = { Vida: "coracao", Ataque: "espada", Defesa: "escudo", Agilidade: "folha", Poder: "chama", Mana: "pocao_azul", Vigor: "chama", Foco: "olho" };
@@ -1095,6 +1097,7 @@ const Telas = (() => {
         <div class="nivel-bloco"><span class="nivel-palavra">Nível</span><span class="nivel-numero">${d.nivel}</span></div>
         <div class="lista">${ganhos}<span class="ganho ouro" style="animation-delay:${atraso + 0.08}s">${S("estrela", 1)}+1 ponto de talento</span></div>${habs}
         ${d.especializacao ? '<div class="texto-festa" style="color:var(--arcano)">Uma encruzilhada se aproxima: em breve você escolherá sua especialização.</div>' : ""}
+        ${d.nota ? `<div class="texto-festa">${h(d.nota)}</div>` : ""}
         <div class="dica">Seus pontos de talento: ${d.pontos}. Gaste em Talentos (tecla T no menu de um local).</div>
         <button class="continuar" type="button">Continuar <span>▸</span></button></div>`;
       App.som("subir");
@@ -1134,6 +1137,68 @@ const Telas = (() => {
     });
   }
 
+  /** Contratos cumpridos: os cartazes chegam, o carimbo bate em cada um, o total aparece, e "Receber" faz as
+   *  moedas voarem até o seu ouro. Um momento só, em vez de três blocos de texto no registro. */
+  function pagarContratos(caixa, d) {
+    const um = d.contratos.length === 1;
+    const cartazes = d.contratos.map((c, i) => `<div class="pago" style="--i:${i}">${cartaz({ ...c, recebendo: true }, true, false, App.estado ? App.estado.heroi.nivel : 1)}</div>`).join("");
+    const atraso = 0.5 + d.contratos.length * 0.35;
+    const ganhos = [[d.ouro, "moeda", "ouro", "ouro"], [d.xp, "estrela", "XP", ""], [d.reputacao, "coroa", "reputação", "rep"]]
+      .filter(([v]) => v > 0)
+      .map(([v, ic, nome, cls], i) => `<span class="ganho ${cls}" style="animation-delay:${atraso + i * 0.15}s">${S(ic, 1)}+${v} ${nome}</span>`).join("");
+    caixa.innerHTML = `<div class="festa festa-contratos moldura">
+      <div class="rotulo-festa">${um ? "contrato cumprido" : `${d.contratos.length} contratos cumpridos`}</div>
+      <div class="cartazes-pagos">${cartazes}</div>
+      <div class="lista">${ganhos}</div>
+      <button class="continuar" type="button">Receber recompensa <span>▸</span></button></div>`;
+    caixa.hidden = false;
+    App.som("achado");
+    d.contratos.forEach((_, i) => setTimeout(() => App.som("equipar"), (0.45 + i * 0.35) * 1000));
+    return new Promise((resolver) => {
+      let feito = false;
+      const receber = () => {
+        if (feito) return;
+        feito = true;
+        document.removeEventListener("keydown", tecla, true);
+        App.som("moeda");
+        moedasPara(caixa.querySelector(".ganho.ouro") || caixa.querySelector(".continuar"), document.querySelector('.recurso[data-rec="ouro"]'));
+        particulas(["#f2c94c", "#fff3a0", "#d4af37"], 40);
+        setTimeout(() => { caixa.hidden = true; caixa.innerHTML = ""; resolver(); }, 650);
+      };
+      const tecla = (ev) => { if ([" ", "Enter", "Escape"].includes(ev.key)) { ev.preventDefault(); ev.stopPropagation(); receber(); } };
+      setTimeout(() => document.addEventListener("keydown", tecla, true), 600);
+      caixa.querySelector(".continuar").addEventListener("click", (ev) => { ev.stopPropagation(); receber(); });
+    });
+  }
+
+  /** Moedas voando de um ponto da tela até outro (o ouro do topo). */
+  function moedasPara(de, para) {
+    if (!de || !para) return;
+    const a = de.getBoundingClientRect(), b = para.getBoundingClientRect();
+    for (let i = 0; i < 10; i++) {
+      const m = document.createElement("span");
+      m.className = "moeda-voando";
+      m.innerHTML = S("moeda", 1);
+      m.style.left = a.left + a.width / 2 + (Math.random() - 0.5) * 40 + "px";
+      m.style.top = a.top + a.height / 2 + "px";
+      document.body.appendChild(m);
+      m.animate([{ transform: "translate(0, 0) scale(1)", opacity: 1 },
+        { transform: `translate(${b.left + b.width / 2 - a.left - a.width / 2}px, ${b.top + b.height / 2 - a.top - a.height / 2}px) scale(0.6)`, opacity: 0.9 }],
+        { duration: 520 + i * 40, delay: i * 35, easing: "cubic-bezier(.5,0,.8,.6)", fill: "forwards" }).finished
+        .then(() => { m.remove(); para.classList.remove("ganhou"); void para.offsetWidth; para.classList.add("ganhou"); }).catch(() => m.remove());
+    }
+  }
+
+  /** Uma linha curta para o registro (histórico) de cada festa: o registro guarda o fato, a festa mostra. */
+  function resumoCelebracao(m) {
+    const d = m.dados || {};
+    if (m.tipo === "nivel") return `▸ Nível ${d.nivel}: +1 ponto de talento${(d.habilidades || []).length ? ", " + d.habilidades.map((x) => x.nome).join(", ") : ""}`;
+    if (m.tipo === "contratos") return `▸ ${d.contratos.length === 1 ? "Contrato cumprido" : d.contratos.length + " contratos cumpridos"}: +${d.ouro} ouro, +${d.xp} XP`;
+    if (m.tipo === "sigilo") return `▸ Sigilo ${d.sigilos}/3 (${d.guardiao}): +1 ponto de talento`;
+    if (m.tipo === "spec") return `▸ Você agora é ${d.nome}`;
+    return "";
+  }
+
   function toast(titulo, texto, icone, bom) {
     const t = document.createElement("div");
     t.className = "toast" + (bom ? " bom" : "");
@@ -1142,6 +1207,6 @@ const Telas = (() => {
     setTimeout(() => t.remove(), 3300);
   }
 
-  return { rastreador, atributosHtml, reputacaoHtml, dica, guardarDica, htmlItem, menuUso, abrirGrimorio, alternarGrimorio, abrirDica, dicaAbertaPor, mouseNaArea, novaVisita, fecharMenuItem, guardarArvore, abrirTalentos, fecharTalentos, painel, celebrar, toast, iconeCriatura, iconeItem, dicaItem, ligarDicas, esconderDica,
+  return { rastreador, atributosHtml, reputacaoHtml, dica, guardarDica, htmlItem, menuUso, abrirGrimorio, alternarGrimorio, abrirDica, dicaAbertaPor, mouseNaArea, novaVisita, fecharMenuItem, guardarArvore, abrirTalentos, fecharTalentos, painel, celebrar, resumoCelebracao, toast, iconeCriatura, iconeItem, dicaItem, ligarDicas, esconderDica,
     ICONE_ITEM, ARMA, VAZIO, NOME_ESPACO, AREA, barra, aprovacao };
 })();

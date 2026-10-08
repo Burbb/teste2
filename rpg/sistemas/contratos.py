@@ -16,7 +16,8 @@ class Contratos:
     def recompensa_contrato(self, nivel, mult=1.0):
         """Ouro e XP crescem com o nível do CONTRATO (do lugar), não com o seu: um trabalho fácil paga pouco.
         O XP fica em torno de 1/8 do que falta para subir naquele nível, para não catapultar ninguém."""
-        ouro = int((bal.CONTRATO_OURO_BASE + bal.CONTRATO_OURO_POR_NIVEL * nivel) * mult * self.rng.uniform(0.9, 1.2))
+        ouro = int((bal.CONTRATO_OURO_BASE + bal.CONTRATO_OURO_POR_NIVEL * nivel) * mult * self.rng.uniform(0.9, 1.2)
+                   * bal.OURO_MUNDO)
         xp = int((bal.CONTRATO_XP_BASE + bal.CONTRATO_XP_FRACAO * bal.xp_para_subir(nivel)) * mult)
         return ouro, xp
 
@@ -127,15 +128,28 @@ class Contratos:
             self.aceitar_contrato(c, oferta)
         return False
 
+    REPUTACAO_CONTRATO = 3
+
     def receber_contratos(self):
-        for c in list(self.contratos):
-            entregue = c["tipo"] == "entrega" and c["destino"] == self.loc["id"]
-            if entregue or c.get("concluido"):
-                self.contratos.remove(c)
+        """Ao chegar numa vila: os contratos cumpridos pagam. Na tela gráfica, todos de uma vez, num quadro com os
+        cartazes carimbados e o total (o pagamento é um momento, não uma enxurrada de linhas no registro)."""
+        feitos = [c for c in self.contratos
+                  if c.get("concluido") or (c["tipo"] == "entrega" and c["destino"] == self.loc["id"])]
+        if not feitos:
+            return
+        festa = self.ui.conquistas_na_tela
+        if festa:
+            self.ui.celebrar("contratos", {
+                "contratos": [dict(self.cartao_contrato(c), concluido=True) for c in feitos],
+                "ouro": sum(c["ouro"] for c in feitos), "xp": sum(c["xp"] for c in feitos),
+                "reputacao": min(50 - self.j.reputacao, self.REPUTACAO_CONTRATO * len(feitos))})
+        for c in feitos:
+            self.contratos.remove(c)
+            if not festa:
                 self.dizer(f"Recompensa de contrato: {c['desc']}", "verde+negrito")
-                self.ganhar_ouro(c["ouro"])
-                self.mudar_reputacao(3)
-                self.ganhar_xp(c["xp"])
+            self.ganhar_ouro(c["ouro"], exato=True, avisar=not festa)
+            self.mudar_reputacao(self.REPUTACAO_CONTRATO, avisar=not festa)
+            self.ganhar_xp(c["xp"], avisar=not festa)
 
     def contratos_aqui(self):
         """Contratos de caça (bando ou alvo nomeado) ainda abertos neste lugar."""
