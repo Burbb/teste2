@@ -181,6 +181,11 @@ const Som = (() => {
       tom(t, 160, 0.6, 0.3, "sine", 40); estalo(t, 700, 0.45, 0.12); estalo(t + 0.03, 2400, 0.25, 0.08);
       tom(t + 0.02, 880, 0.06, 0.25, "square", 1320);
     },
+    // Vida por um fio: o coração (tum-tum, grave e curto).
+    batimento() {
+      const t = ctx.currentTime;
+      tom(t, 58, 0.55, 0.13, "sine", 40); tom(t + 0.17, 52, 0.42, 0.15, "sine", 36);
+    },
     // O golpe que encerra a luta: um baque fundo, o estalo do impacto e um ar que se esvai.
     golpe_final() {
       const t = ctx.currentTime;

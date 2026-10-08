@@ -160,6 +160,9 @@ RECOLHER_FLECHA = 0.35        # chance de recolher cada flecha depois da vitóri
 RECOLHER_FLECHA_TALENTO = 0.15
 PRECO_FLECHAS = 1.4           # por flecha (o antigo feixe de 5 custava 7); com a reputação, arredonda
 
+# Vida por um fio: abaixo desta fração da vida máxima, a tela avisa (borda vermelha, batimento) e a barra pisca.
+VIDA_POR_UM_FIO = 0.3
+
 # ---------------------------------------------------------------- descanso e consumíveis
 ACAMPAR_VIDA = 0.3
 ACAMPAR_VIDA_RUIM = 0.18      # chuva, neve, tempestade

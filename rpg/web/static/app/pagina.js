@@ -52,6 +52,7 @@ function cabecalho(m) {
   corpo.classList.toggle("modo-titulo", m.tipo === "titulo");
   if (m.tipo === "titulo") {
     corpo.classList.add("sem-heroi"); corpo.classList.remove("em-combate"); estado = null;
+    Sensacao.vidaDoHeroi(1, 1);  // no título não há herói: sem borda vermelha nem coração
     const [r, g, b] = Vista.titulo();  // a paisagem desce até o rodapé; o céu de cima continua na mesma cor
     corpo.style.setProperty("--ceu-titulo", `rgb(${r}, ${g}, ${b})`);
   }

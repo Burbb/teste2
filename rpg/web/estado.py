@@ -130,6 +130,7 @@ def heroi(g):
         "nome": j.nome, "classe": j.classe, "classe_nome": CLASSES[j.classe]["nome"], "titulo": j.nome_classe,
         "nivel": j.nivel, "xp": j.xp, "xp_proximo": j.xp_proximo(),
         "hp": j.hp, "max_hp": j.max_hp, "rec": j.rec, "max_rec": j.max_rec, "recurso": j.nome_recurso,
+        "vida_por_um_fio": bal.VIDA_POR_UM_FIO,
         "atributos": {"Ataque": j.atk, "Defesa": j.defesa, "Agilidade": j.agi, "Poder": j.poder},
         "atributos_info": explicar_atributos(g), "atributos_penal": penalidades_atributos(j),
         "reputacao_info": explicar_reputacao(g),

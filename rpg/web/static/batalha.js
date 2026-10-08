@@ -541,6 +541,7 @@ const Batalha = (() => {
   function impacto(m, em) {
     const el = m.elemento || "fisico";
     barra(em, m.hp, m.max_hp);
+    if (m.em === "j") Sensacao.vidaDoHeroi(m.hp, m.max_hp);  // no instante do golpe, não quando o estado chegar
     clarao(em, el);
     tremer(em, m.crit);
     if (el === "fogo") labaredas(em);

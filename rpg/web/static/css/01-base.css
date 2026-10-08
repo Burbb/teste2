@@ -108,3 +108,8 @@ body.sem-heroi #tempo, body.sem-heroi #sigilos-topo { visibility: hidden; }
 body.sem-heroi .painel, body.modo-titulo .painel { opacity: 0; pointer-events: none; }
 body.sem-heroi #hud, body.modo-titulo #hud { display: none; }
 #palco { display: flex; flex-direction: column; min-height: 0; gap: 10px; align-items: center; }
+/* Vida por um fio (sensacao.js): a borda da tela pulsa em vermelho no ritmo do coração. */
+.fio { opacity: 0; pointer-events: none; background: radial-gradient(ellipse 75% 70% at 50% 50%, transparent 55%, rgba(170, 10, 10, 0.55) 100%); }
+body.por-um-fio .fio { animation: por-um-fio var(--batimento, 1150ms) ease-out infinite; }
+@keyframes por-um-fio { 0% { opacity: 0.35; } 12% { opacity: 1; } 30% { opacity: 0.55; } 42% { opacity: 0.9; } 100% { opacity: 0.35; } }
+body.modo-titulo .fio { display: none; }

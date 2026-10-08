@@ -18,6 +18,8 @@ const Sensacao = (() => {
     contarMs: 650, tiquesMax: 10,
     // A barra de XP enchendo (por trecho de nível) e quanto o espólio fica na tela depois de tudo.
     barraMs: 700, espolioEsperaMs: 450, espolioFicaMs: 900,
+    // Vida por um fio: o batimento (ms entre batidas), mais rápido quanto mais perto do fim.
+    batimentoLentoMs: 1150, batimentoRapidoMs: 700,
   };
   // O que pesa mais, quando vários golpes caem de uma vez (uma salva em área): o mais pesado dá o tom.
   const ORDEM = ["final", "abate", "critico"];
@@ -79,6 +81,26 @@ const Sensacao = (() => {
     if (tipo === "final") return golpeFinal(palco, alvo);
     await parada(palco, alvo, AJUSTES.parada[tipo]);
     tremor(palco, AJUSTES.tremor[tipo]);
+  }
+
+  /* ------------------------------------------------------------ vida por um fio */
+  // Abaixo do limiar (o motor diz qual: heroi.vida_por_um_fio), a borda da tela pulsa em vermelho e o coração
+  // bate, mais depressa quanto menos vida resta. Acima dele, ou caído, silêncio.
+  let limiar = 0.3, fracao = 1, batendo = null;
+  function vidaDoHeroi(hp, max, novoLimiar) {
+    if (novoLimiar) limiar = novoLimiar;
+    fracao = max ? hp / max : 1;
+    const porUmFio = hp > 0 && fracao <= limiar;
+    document.body.classList.toggle("por-um-fio", porUmFio);
+    if (porUmFio && !batendo) bater();
+    if (!porUmFio && batendo) { clearTimeout(batendo); batendo = null; }
+  }
+  function bater() {
+    if (!document.hidden) Som.tocar("batimento");
+    const urgencia = Math.max(0, Math.min(1, 1 - fracao / limiar));
+    const ms = AJUSTES.batimentoLentoMs - (AJUSTES.batimentoLentoMs - AJUSTES.batimentoRapidoMs) * urgencia;
+    document.body.style.setProperty("--batimento", ms + "ms");
+    batendo = setTimeout(bater, ms);
   }
 
   /* ------------------------------------------------------------ contar e encher */
@@ -153,5 +175,5 @@ const Sensacao = (() => {
     caixa.hidden = true; caixa.innerHTML = ""; caixa.classList.remove("leve");
   }
 
-  return { AJUSTES, configurar, peso, maisPesado, tremor, parada, golpe, contar, encher, espolio };
+  return { AJUSTES, configurar, peso, maisPesado, tremor, parada, golpe, contar, encher, espolio, vidaDoHeroi };
 })();
