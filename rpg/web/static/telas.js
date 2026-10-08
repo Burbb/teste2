@@ -502,6 +502,34 @@ const Telas = (() => {
         ${htmlItem(it, "", true)}${aviso}
       </div>${eq}</div>`;
   }
+  /** O item achado abre numa janela própria, por cima do jogo e fora do log: o cartão dele, o que você usa ao lado e,
+   *  logo abaixo, o que fazer (os botões vêm da pergunta do motor, ver escolhas.js). Raro e lendário: o feixe de luz
+   *  cai antes no lugar do cartão. A janela fecha quando o ícone pousa (no corpo ou na mochila), ou ao deixar o item. */
+  async function abrirAchado(d, semCerimonia = false) {
+    fecharAchado();
+    const fundo = document.createElement("div");
+    fundo.id = "sobre-achado";
+    fundo.className = "sobreposicao";
+    fundo.innerHTML = `<div class="janela-achado">${achado(d)}<div class="achado-acoes"></div></div>`;
+    document.body.appendChild(fundo);
+    const janela = fundo.firstElementChild, tela = janela.querySelector(".tela.achado");
+    noPalco(janela);
+    if (semCerimonia) return;
+    tela.classList.add("esperando-feixe");
+    await Sensacao.cerimoniaSaque(d.item.raridade, tela.querySelector(".achado-cartao.novo"));
+    tela.classList.remove("esperando-feixe");
+    revelarAchado(tela, d);
+  }
+  /** Onde a pergunta "o que fazer com o item?" põe os botões (null se a janela não está aberta). */
+  function acoesDoAchado() { return document.querySelector("#sobre-achado .achado-acoes"); }
+  function fecharAchado() {
+    const f = document.getElementById("sobre-achado");
+    if (!f) return;
+    f.id = "";  // a próxima janela (outro item logo em seguida) já pode abrir enquanto esta some
+    f.classList.add("saindo");
+    setTimeout(() => f.remove(), 220);
+  }
+
   /** O cartão do item aparece de vez: o som da raridade e as faíscas (depois da cerimônia, se houve uma). */
   function revelarAchado(raiz, d) {
     const cartao = raiz.querySelector(".achado-cartao.novo");
@@ -1070,39 +1098,55 @@ const Telas = (() => {
     });
   }
 
-  /** Comprou e já vestiu: o ícone voa do mercado até o espaço do corpo no painel, que brilha ao receber. */
-  function voarParaEspaco(d) {
-    const alvo = document.querySelector(`#heroi [data-mini="${d.espaco}"]`);
-    if (!alvo) return Promise.resolve();
-    let origem = App.ultimoClique && performance.now() - App.ultimoClique.t < 4000 ? App.ultimoClique : { x: innerWidth / 2, y: innerHeight / 2 };
-    if (d.achado) {
-      // Item encontrado: o novo vira "Vestido", o antigo vai para a mochila, e o ícone voa do próprio cartão.
-      const telas = document.querySelectorAll("#texto .tela.achado");
-      const tela = telas[telas.length - 1];
-      if (tela) {
-        const novo = tela.querySelector(".achado-cartao.novo"), velho = tela.querySelector(".achado-cartao.atual");
-        if (novo) { novo.classList.add("vestido"); const selo = novo.querySelector(".achado-selo"); if (selo) selo.textContent = "Vestido"; }
-        if (velho) { velho.classList.add("guardado"); const selo = velho.querySelector(".achado-selo"); if (selo) selo.textContent = "Foi para a mochila"; }
-        const arte = novo && novo.querySelector(".achado-arte");
-        if (arte) { const a = arte.getBoundingClientRect(); if (a.width) origem = { x: a.left + a.width / 2, y: a.top + a.height / 2 }; }
-      }
-    }
+  /** O ícone de um item voando de um ponto da tela até um elemento (o espaço do corpo, a mochila), num arco. */
+  function voarIcone(item, origem, alvo) {
     const r = alvo.getBoundingClientRect();
     const voo = document.createElement("div");
     voo.className = "voo-item";
-    voo.innerHTML = S(iconeItem(d.item), 3);
+    voo.innerHTML = S(iconeItem(item), 3);
     document.body.appendChild(voo);
-    App.som("equipar");
     const dx = r.left + r.width / 2 - origem.x, dy = r.top + r.height / 2 - origem.y;
     voo.style.left = origem.x - 24 + "px"; voo.style.top = origem.y - 24 + "px";
     return voo.animate([{ transform: "translate(0, 0) scale(1.2)", opacity: 1 },
       { transform: `translate(${dx * 0.5}px, ${dy * 0.5 - 60}px) scale(1)`, opacity: 1 },
       { transform: `translate(${dx}px, ${dy}px) scale(.45)`, opacity: 0.9 }],
-      { duration: 560, easing: "cubic-bezier(.4,0,.2,1)" }).finished.catch(() => {}).then(() => {
-        voo.remove();
-        const novo = document.querySelector(`#heroi [data-mini="${d.espaco}"]`);
-        if (novo) { novo.classList.remove("recebeu"); void novo.offsetWidth; novo.classList.add("recebeu"); setTimeout(() => novo.classList.remove("recebeu"), 900); }
-      });
+      { duration: 560, easing: "cubic-bezier(.4,0,.2,1)" }).finished.catch(() => {}).then(() => voo.remove());
+  }
+  /** O cartão do item achado (na janela) recebe o selo do destino; devolve de onde o ícone sai. */
+  function seloDoAchado(texto, classe, velhoTexto) {
+    const tela = document.querySelector("#sobre-achado .tela.achado");
+    if (!tela) return null;
+    const novo = tela.querySelector(".achado-cartao.novo"), velho = tela.querySelector(".achado-cartao.atual");
+    if (novo) { novo.classList.add(classe); const selo = novo.querySelector(".achado-selo"); if (selo) selo.textContent = texto; }
+    if (velho && velhoTexto) { velho.classList.add("guardado"); const selo = velho.querySelector(".achado-selo"); if (selo) selo.textContent = velhoTexto; }
+    const a = novo && novo.querySelector(".achado-arte").getBoundingClientRect();
+    return a && a.width ? { x: a.left + a.width / 2, y: a.top + a.height / 2 } : null;
+  }
+  /** Vestiu (comprou no mercado ou achou): o ícone voa até o espaço do corpo no painel, que brilha ao receber. Achado:
+   *  o cartão vira "Vestido", o antigo "Foi para a mochila", o ícone sai do próprio cartão e a janela fecha. */
+  async function voarParaEspaco(d) {
+    const alvo = document.querySelector(`#heroi [data-mini="${d.espaco}"]`);
+    let origem = App.ultimoClique && performance.now() - App.ultimoClique.t < 4000 ? App.ultimoClique : { x: innerWidth / 2, y: innerHeight / 2 };
+    if (d.achado) origem = seloDoAchado("Vestido", "vestido", "Foi para a mochila") || origem;
+    if (alvo) {
+      App.som("equipar");
+      await voarIcone(d.item, origem, alvo);
+      const novo = document.querySelector(`#heroi [data-mini="${d.espaco}"]`);
+      if (novo) { novo.classList.remove("recebeu"); void novo.offsetWidth; novo.classList.add("recebeu"); setTimeout(() => novo.classList.remove("recebeu"), 900); }
+    }
+    if (d.achado) fecharAchado();
+  }
+  /** Guardou o item achado: o cartão vira "Na mochila", o ícone voa até o Inventário e a janela fecha. */
+  async function voarParaMochila(d) {
+    const origem = seloDoAchado("Na mochila", "na-mochila");
+    const alvo = document.querySelector('.atalho[data-rotulo="Inventário"]');
+    App.som("item");
+    if (origem && alvo && alvo.offsetParent) {
+      await voarIcone(d.item, origem, alvo);
+      alvo.classList.remove("recebeu"); void alvo.offsetWidth; alvo.classList.add("recebeu");
+      setTimeout(() => alvo.classList.remove("recebeu"), 900);
+    } else await new Promise((r) => setTimeout(r, 500));
+    fecharAchado();
   }
 
   /** O balão da reação do animal: acima dele, no palco da fogueira. Some sozinho ou com qualquer clique. */
@@ -1125,7 +1169,8 @@ const Telas = (() => {
 
   function celebrar(m, instantaneo) {
     const d = m.dados;
-    if (m.tipo === "equipou") return instantaneo ? Promise.resolve() : voarParaEspaco(d);
+    if (m.tipo === "equipou") return instantaneo ? (fecharAchado(), Promise.resolve()) : voarParaEspaco(d);
+    if (m.tipo === "guardou") return instantaneo ? (fecharAchado(), Promise.resolve()) : voarParaMochila(d);
     if (m.tipo === "carinho") {
       // corações subindo do animal na fogueira, e a reação num balão sobre ele (não tampa nada; um clique dispensa)
       if (instantaneo) return Promise.resolve();
@@ -1327,6 +1372,8 @@ const Telas = (() => {
     if (m.tipo === "espolio") return `▸ Espólio: ${d.ouro ? `+${d.ouro} ouro, ` : ""}+${d.xp} XP`;
     if (m.tipo === "atributo") return `▸ +${d.valor} ${d.nome} permanente`;
     if (m.tipo === "chegada") return `▸ ${d.primeira ? "Descoberto" : "Chegada"}: ${d.nome}`;
+    if (m.tipo === "equipou" && d.achado) return `▸ Vestiu: ${d.item.nome}`;
+    if (m.tipo === "guardou") return `▸ Na mochila: ${d.item.nome}`;
     if (m.tipo === "amanhecer") return `▸ Dia ${d.dia} · ${d.clima}${d.itens.length ? " · " + d.itens.map((x) => x.curto).join(", ") : ""}`;
     return "";
   }
@@ -1340,5 +1387,5 @@ const Telas = (() => {
   }
 
   return { rastreador, atributosHtml, reputacaoHtml, dica, guardarDica, htmlItem, menuUso, abrirGrimorio, alternarGrimorio, abrirDica, dicaAbertaPor, mouseNaArea, novaVisita, fecharMenuItem, guardarArvore, abrirTalentos, fecharTalentos, painel, revelarAchado, celebrar, resumoCelebracao, toast, moedasPara, iconeCriatura, iconeItem, dicaItem, ligarDicas, esconderDica,
-    ICONE_ITEM, ARMA, VAZIO, NOME_ESPACO, AREA, barra, aprovacao, noPalco };
+    ICONE_ITEM, ARMA, VAZIO, NOME_ESPACO, AREA, barra, aprovacao, noPalco, abrirAchado, acoesDoAchado, fecharAchado };
 })();

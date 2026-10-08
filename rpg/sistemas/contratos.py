@@ -255,7 +255,8 @@ class Contratos:
         # entrega vai no próprio botão.
         sim = ("Sim: fico com a encomenda (viro ladrão aos olhos de todos)" if c["tipo"] == "entrega"
                else "Sim, abandonar")
-        if not self.menu(f"Abandonar este contrato? (reputação −{penalidade})", [(sim, True), ("Não", False)]):
+        if not self.confirmar(f"Abandonar este contrato? (reputação −{penalidade})", [(sim, True), ("Não", False)],
+                              perigo=True):
             return
         self.contratos.remove(c)
         self.dizer("Você risca o contrato do diário. Alguém, em algum lugar, vai saber que você desistiu.", "cinza")

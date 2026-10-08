@@ -388,7 +388,7 @@ def reagir(g, *etiquetas, forca=1.0):
     """Cada companheiro julga a escolha conforme os próprios valores."""
     if not etiquetas or not membros(g):
         return
-    falou = False
+    falou = None
     for m in membros(g):
         d = COMPANHEIROS[m["id"]]
         pesos = [(t, d["valores"].get(t, 0)) for t in etiquetas]
@@ -399,11 +399,12 @@ def reagir(g, *etiquetas, forca=1.0):
         # A fala vem da etiqueta que mais pesou; falas fortes sempre aparecem, as fracas às vezes.
         principal = max(pesos, key=lambda tp: abs(tp[1]))[0]
         banco = d["aprova"] if delta > 0 else d["desaprova"]
-        fala = None
         if not falou and (abs(delta) >= 6 or g.chance(0.4)):
-            fala = banco.get(principal) or banco[None]
-            falou = True
-        mudar_aprovacao(g, m["id"], delta, fala=fala)
+            falou = (m["id"], banco.get(principal) or banco[None])
+        mudar_aprovacao(g, m["id"], delta)
+    # Quem fala, fala depois de todos reagirem: as aprovações chegam juntas, sem a espera da leitura entre elas.
+    if falou:
+        g.ui.fala(falou[0], nome(falou[0]), falou[1])
     verificar_partidas(g)
 
 

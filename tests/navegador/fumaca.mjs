@@ -154,10 +154,13 @@ async function cenarioVila(browser) {
   const { proc, url } = await subir("vila");
   const { page, erros, esperar } = await abrir(browser, url);
   try {
-    conferir(!!(await esperar(".achado-cartao.novo")), "o item encontrado aparece como cartão");
-    conferir(!!(await page.$(".achado-cartao.atual")), "o item que você usa aparece ao lado");
-    conferir(!(await page.$('#prompt .escolha:has-text("Deixar para trás")')), "sem 'deixar para trás' com a mochila livre");
-    await (await esperar('#prompt .escolha:has-text("Guardar")')).click();
+    conferir(!!(await esperar("#sobre-achado .achado-cartao.novo")), "o item encontrado aparece como cartão, numa janela própria");
+    conferir(!!(await page.$("#sobre-achado .achado-cartao.atual")), "o item que você usa aparece ao lado");
+    conferir(!(await page.$("#texto .tela.achado")), "o cartão do item não fica no log");
+    conferir(!(await page.$('#sobre-achado .botao-janela:has-text("Deixar para trás")')), "sem 'deixar para trás' com a mochila livre");
+    await (await esperar('#sobre-achado .botao-janela:has-text("Guardar")')).click();
+    for (let t = 0; t < 30 && (await page.$("#sobre-achado")); t++) await page.waitForTimeout(100);
+    conferir(!(await page.$("#sobre-achado")), "guardar fecha a janela do item");
     const aceitar = await esperar("[data-aceitar]");
     // Cartazes do mural com a mesma altura e o botão no pé: três cliques seguidos, sem mexer o mouse, pegam os três.
     const fundos = await page.$$eval(".mural .quadro [data-aceitar]", (bs) => bs.map((b) => Math.round(b.getBoundingClientRect().bottom)));
@@ -170,6 +173,15 @@ async function cenarioVila(browser) {
     await page.waitForTimeout(400);
     const depois = await page.evaluate(() => document.getElementById("pagina").scrollTop);
     conferir(Math.abs(depois - antes) < 4, `aceitar um contrato não pula a página (${antes} → ${depois})`);
+    // Abandonar pergunta numa janela por cima (antes ficava no pé da página, esquecida); Esc é "não".
+    const meus = () => page.$$eval("[data-abandonar]", (x) => x.length);
+    const tinha = await meus();
+    await (await esperar("[data-abandonar]")).click();
+    conferir(!!(await esperar("#janela-confirmar .botao-janela.perigo")), "abandonar um contrato pergunta numa janela própria");
+    await page.keyboard.press("Escape");
+    for (let t = 0; t < 20 && (await page.$("#janela-confirmar")); t++) await page.waitForTimeout(100);
+    await page.waitForTimeout(400);
+    conferir(!(await page.$("#janela-confirmar")) && (await meus()) === tinha, "Esc fecha a janela e o contrato fica");
     await page.keyboard.press("Escape");
     const mercado = await esperar('#prompt .escolha:has-text("Mercado")');
     const vida = () => page.evaluate(() => App.estado.heroi.hp);

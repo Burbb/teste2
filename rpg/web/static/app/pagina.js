@@ -156,7 +156,7 @@ async function opiniao(m) {
   historico("h-chip", `▸ ${m.nome} ${bom ? "aprova" : "desaprova"}${Math.abs(m.delta) >= 8 ? " muito" : ""}`);
   if (replay) return;
   Batalha.opiniao(m.cid, m.nome, m.delta);
-  if (!instantaneo()) await espera(ritmo(380));
+  if (!instantaneo()) await espera(ritmo(220));  // vários reagindo ao mesmo fato: os cartões chegam quase juntos
 }
 
 function iconeChip(m) {

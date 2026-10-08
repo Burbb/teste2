@@ -168,3 +168,7 @@
 @keyframes feixe-clarao { 0% { opacity: 0; } 25% { opacity: 0.9; } 100% { opacity: 0; } }
 /* O cartão espera o feixe: já ocupa o lugar (o feixe mira nele), invisível e com as entradas paradas no começo. */
 .esperando-feixe .achado-cartao, .esperando-feixe .achado-cartao * { visibility: hidden; animation-play-state: paused !important; }
+/* Guardou o item achado: o cartão ganha o selo "Na mochila", e o Inventário da doca brilha quando o ícone chega. */
+.achado-cartao.novo.na-mochila { animation: vestido .9s ease-out; }
+.achado-cartao.novo.na-mochila .achado-selo { color: var(--ouro); }
+.atalho.recebeu { animation: recebeu .9s ease-out; }

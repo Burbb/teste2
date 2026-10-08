@@ -125,6 +125,10 @@ function mostrarOpcoes(m) {
     return;
   }
   Telas.fecharTalentos();
+  // Perguntas que moram numa janela por cima: a confirmação (abandonar um contrato...) e o item achado.
+  if (m.opcoes.length && m.opcoes.every((o) => o.meta && o.meta.confirmar)) { janelaConfirmar(m); return; }
+  if (m.opcoes.some((o) => o.meta && o.meta.achado) && Telas.acoesDoAchado()) { botoesNaJanela(m, Telas.acoesDoAchado()); return; }
+  Telas.fecharAchado();  // qualquer outra pergunta: a janela do item (se ficou aberta) sai
   const emLuta = !!(estado && estado.combate);
   if (emLuta && rodaEl() && Batalha.elCarta("j")) {
     // Na luta, as ações aparecem em volta da sua carta; habilidades e itens numa janelinha ao lado; mirando, um lembrete.
@@ -343,6 +347,40 @@ function voltarPergunta() {
 
 // O botão direito não volta mais de tela: ele faz atalhos onde há o que fazer (vender no mercado, equipar,
 // usar um consumível em você). O Voltar fica no Esc, na seta do canto e no botão da própria tela.
+
+/* ------------------------------------------------------------------ janelas por cima */
+/** As opções de uma pergunta como botões dentro de uma janela (as teclas 1, 2... continuam valendo). */
+function botoesNaJanela(m, caixa) {
+  caixa.replaceChildren();
+  m.opcoes.forEach((o, i) => {
+    const pos = pergunta.numeros.push(i);
+    const b = el("button", "botao-janela" + (o.meta.perigo ? " perigo" : "") + (o.meta.confirmar === "nao" ? " nao" : ""),
+      `<kbd>${pos}</kbd>${esc(o.texto)}`);
+    b.type = "button";
+    b.addEventListener("click", (ev) => {
+      ev.stopPropagation();
+      if (o.meta.achado === "deixar") Telas.fecharAchado();  // deixar para trás: nada voa, a janela só fecha
+      responder(m.id, i);
+    });
+    caixa.appendChild(b);
+  });
+}
+/** Uma confirmação (abandonar um contrato, viajar para onde é perigoso): uma janela por cima de tudo, em vez de uma
+ *  pergunta no pé da página, que ficava esquecida enquanto a pessoa clicava em outra coisa. Esc ou clicar fora: não. */
+function janelaConfirmar(m) {
+  fecharConfirmacao();
+  const fundo = el("div", "sobreposicao", `<div class="caixa-confirmar"><div class="pergunta-confirmar">${esc(m.pergunta)}</div>
+    <div class="botoes-confirmar"></div></div>`);
+  fundo.id = "janela-confirmar";
+  document.body.appendChild(fundo);
+  botoesNaJanela(m, fundo.querySelector(".botoes-confirmar"));
+  const nao = m.opcoes.findIndex((o) => o.meta.confirmar === "nao");
+  pergunta.voltar = nao;
+  fundo.addEventListener("click", (ev) => { if (ev.target === fundo) { ev.stopPropagation(); responder(m.id, nao); } });
+  const b = fundo.querySelector(".botao-janela.nao");
+  if (b) b.focus();
+}
+function fecharConfirmacao() { const j = document.getElementById("janela-confirmar"); if (j) j.remove(); }
 
 /* ------------------------------------------------------------------ roda de ações da luta */
 /* Na sua vez, sua carta vem para a frente e as ações (Atacar, Habilidades, Itens, Fugir) surgem em arco ao lado dela.

@@ -76,6 +76,7 @@ function conectar() {
 async function responder(id, valor) {
   if (!pergunta || pergunta.id !== id) return;
   pergunta = null;
+  fecharConfirmacao();     // a janela de confirmação some com a resposta (botão, tecla, Esc ou clique fora)
   Telas.fecharMenuItem();  // um menu de figura aberto não sobrevive à escolha (inclusive Voltar)
   Telas.esconderDica();  // nem a dica de um item que estava sob o mouse
   // O que já está na página foi lido: se a mesma tela se redesenhar, só o que vier depois vira aviso.
@@ -151,18 +152,15 @@ async function tratar(m) {
     case "celebrar": { const r = Telas.resumoCelebracao(m); if (r) historico("h-chip", r); await Telas.celebrar(m, instantaneo()); break; }
     case "talentos": Telas.guardarArvore(m.arvore); break;
     case "painel": {
-      const no = anexar(Telas.painel(m));
       if (m.tipo === "achado") {
-        // O cartão já está no lugar, mas escondido: o feixe (raro, lendário) cai em cima dele, e só então ele surge.
-        cenaInterrompida = true;
-        const cartao = no.querySelector(".achado-cartao.novo");
-        if (cartao && !replay) {
-          no.classList.add("esperando-feixe");
-          await Sensacao.cerimoniaSaque(m.dados.item.raridade, cartao);
-          no.classList.remove("esperando-feixe");
-        }
-        if (!replay) Telas.revelarAchado(no, m.dados);
+        // O item achado abre numa janela própria, fora do log; o registro guarda só o fato.
+        historico("h-chip", `▸ Encontrou: ${m.dados.item.nome}`);
+        // Refazendo a página (replay), a janela abre sem cerimônia: a pergunta pode estar esperando; se não estiver,
+        // a próxima mensagem (o voo, outra pergunta) a fecha.
+        await Telas.abrirAchado(m.dados, replay);
+        break;
       }
+      anexar(Telas.painel(m));
       break;
     }
     case "subtitulo": anexar(el("div", "subtitulo", esc(suavizar(m.texto)))); break;

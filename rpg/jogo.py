@@ -127,6 +127,14 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         self.proximo_id += 1
         return self.proximo_id
 
+    def confirmar(self, pergunta, opcoes, perigo=False):
+        """Confirmar algo que a pessoa pediu pela tela (abandonar um contrato, viajar para onde é perigoso). A tela
+        gráfica pergunta numa janela própria, por cima de tudo, em vez de no pé da página, onde a pergunta ficava
+        esquecida enquanto a pessoa clicava em outra coisa; o texto pergunta como sempre.
+        opcoes: [(rótulo, True|False)], na ordem em que aparecem. perigo: o "sim" tem consequência (fica vermelho)."""
+        return self.menu(pergunta, [(r, v, {"confirmar": "sim" if v else "nao", **({"perigo": True} if v and perigo else {})})
+                                    for r, v in opcoes])
+
     def menu(self, pergunta, opcoes):
         """opcoes: lista de (rótulo, chave) ou None (opção indisponível)."""
         self.fechar_espolio()  # o que se ganhou aparece antes de a pessoa escolher de novo

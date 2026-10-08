@@ -639,6 +639,23 @@ class TestSistemas(unittest.TestCase):
         self.assertEqual(equip, ("equip", item["nome"]))
         self.assertEqual((g.j.ouro, g.j.xp), (ouro + g.ouro_achado(100), xp + 10))
 
+    def test_confirmar_e_reacoes(self):
+        """A confirmação marca as opções (a tela gráfica pergunta numa janela); a comitiva reage toda antes de falar."""
+        from rpg import comitiva
+        g = Jogo(BotUI(random.Random(1)), seed=1, pasta_saves=tempfile.mkdtemp())
+        g.iniciar("Robô", "guerreiro")
+        vistos = []
+        g.ui.escolher = lambda pergunta, opcoes: (vistos.append(g.ui.meta_opcoes), 1)[1]
+        self.assertFalse(g.confirmar("Abandonar?", [("Sim", True), ("Não", False)], perigo=True))
+        self.assertEqual(vistos[0], [{"confirmar": "sim", "perigo": True}, {"confirmar": "nao"}])
+
+        comitiva.recrutar(g, "odete"); comitiva.recrutar(g, "morel")
+        ordem = []
+        g.ui.opiniao = lambda cid, nome, delta: ordem.append(("opiniao", cid))
+        g.ui.fala = lambda cid, nome, texto: ordem.append(("fala", cid))
+        comitiva.reagir(g, "crueldade", "violencia")
+        self.assertEqual(ordem, [("opiniao", "odete"), ("opiniao", "morel"), ("fala", "odete")])
+
     def test_concordar(self):
         """Um lobo sozinho é "ele", não "eles"; duas aranhas são "elas"; um lobo e uma aranha, "eles"."""
         from rpg import texto as tx

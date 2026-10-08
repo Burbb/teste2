@@ -116,6 +116,9 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   que aconteceu e perguntam a ele como aquilo se sente; os números ficam numa tabela só (`AJUSTES`). Os fatos vêm
   do motor (no lance do golpe: `crit`, `abate`, `final`). A câmera lenta mexe no relógio da arena: prazos de
   animação na batalha usam `Sensacao.depois(ms, fn)` (não `setTimeout`), para andarem no mesmo ritmo.
+- Perguntas que moram numa janela por cima, e não no pé da página, vêm marcadas nos metadados das opções: a
+  confirmação de algo pedido pela tela (`Jogo.confirmar`: abandonar contrato, viagem perigosa) e o item achado
+  (`achado`: o cartão e os botões numa janela própria, fora do log)
 - `css/01..13-*.css` por componente
 
 ## Rede de segurança

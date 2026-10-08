@@ -35,9 +35,9 @@ class Navegacao:
             # Vila também: dentro dela se está seguro, mas as estradas em volta são da região (e é por elas que se sai).
             onde = (f"As estradas em volta de {loc['nome']} têm inimigos de nível {nv}" if loc["tipo"] == "vila"
                     else f"{loc['nome']} tem inimigos de nível {nv}")
-            if not self.menu(f"{onde}. Você é nível {self.j.nivel}. "
-                             f"Lá, quase qualquer encontro pode te matar. Ir mesmo assim?",
-                             [("Não, voltar", False), ("Sim, eu sei o que estou fazendo", True)]):
+            if not self.confirmar(f"{onde}. Você é nível {self.j.nivel}. "
+                                  f"Lá, quase qualquer encontro pode te matar. Ir mesmo assim?",
+                                  [("Não, voltar", False), ("Sim, eu sei o que estou fazendo", True)], perigo=True):
                 return
         if loc["tipo"] == "cidadela" and len(self.j.sigilos) < 3:
             self.dizer(f"Uma muralha de sombras bloqueia o caminho. Você precisa dos três Sigilos "

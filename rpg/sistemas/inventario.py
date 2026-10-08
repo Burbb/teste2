@@ -34,21 +34,25 @@ class Inventario:
             atual = self.j.equip[self.espaco_para(item)]
             if atual:
                 self.dizer(f"  Equipado agora: {itens.rotulo(atual)} — {descrever_bonus(atual['bonus'], rec)}", "cinza")
+        # Na tela gráfica, o cartão e estas opções moram numa janela própria (fora do log): {"achado": ...}.
         op = self.menu("O que fazer com o item?", [
-            ("Equipar agora", "equipar") if usa else None,
-            ("Guardar na mochila" + ("" if usa else " (para vender)"), "guardar") if cabe else None,
-            ("Deixar para trás (mochila cheia)", "deixar") if not cabe else None,
+            ("Equipar agora", "equipar", {"achado": "equipar"}) if usa else None,
+            ("Guardar na mochila" + ("" if usa else " (para vender)"), "guardar", {"achado": "guardar"}) if cabe else None,
+            ("Deixar para trás (mochila cheia)", "deixar", {"achado": "deixar"}) if not cabe else None,
         ])
         registrar(self, "saque", item=item["nome"], raridade=item.get("raridade", "comum"), slot=item["slot"],
                   nivel=item.get("nivel"), escolha=op or "deixar")
         if op == "equipar":
             espaco = self.espaco_para(item)
-            self.equipar(item)
+            self.equipar(item, avisar=not self.ui.conquistas_na_tela)
             # o mesmo voo do mercado: o ícone sai do cartão e pousa no espaço do corpo, que brilha ao receber
             self.ui.celebrar("equipou", {"espaco": espaco, "item": itens.ficha(item, rec), "achado": True})
         elif op == "guardar":
             self.j.mochila.append(item)
-            self.dizer("Guardado na mochila.", "cinza")
+            if self.ui.conquistas_na_tela:  # o ícone voa do cartão até a mochila
+                self.ui.celebrar("guardou", {"item": itens.ficha(item, rec)})
+            else:
+                self.dizer("Guardado na mochila.", "cinza")
 
     def espaco_para(self, item, destino=None):
         """Em qual espaço do corpo o item entra (anéis: o vazio, ou o primeiro)."""
@@ -78,7 +82,8 @@ class Inventario:
             self.j.mochila.remove(item)
             self.dizer(f"Você larga {item['nome']} no chão. Alguém vai achar.", "cinza")
 
-    def equipar(self, item, destino=None):
+    def equipar(self, item, destino=None, avisar=True):
+        """avisar=False: a tela já mostra (o cartão do item achado vira "Vestido" e o ícone voa até o corpo)."""
         j = self.j
         espaco = self.espaco_para(item, destino)
         antigo = j.equip[espaco]
@@ -91,7 +96,8 @@ class Inventario:
             else:
                 self.dizer(f"Mochila cheia: {antigo['nome']} fica para trás.", "cinza")
         j.recalcular()
-        self.dizer(f"Você equipa {item['nome']}.", "verde")
+        if avisar:
+            self.dizer(f"Você equipa {item['nome']}.", "verde")
         registrar(self, "equipar", item=item["nome"], slot=espaco, raridade=item.get("raridade", "comum"),
                   bonus=item["bonus"])
 

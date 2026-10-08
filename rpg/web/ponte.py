@@ -240,8 +240,10 @@ class WebUI(InterfaceGrafica, UI):
             if isinstance(i, int) and not isinstance(i, bool) and 0 <= i < len(opcoes):
                 break
         meta = itens[i].get("meta") or {}
-        # Voltar e escolher talento na árvore são navegação, não decisões da história: sem eco na página.
-        self._enviar("escolhido", texto=itens[i]["texto"], navegacao=bool(meta.get("voltar") or meta.get("talento")))
+        # Voltar e escolher talento na árvore são navegação, não decisões da história; o que se escolhe numa janela
+        # (o item achado, uma confirmação) a própria janela mostra. Nenhum deles vira eco na página.
+        self._enviar("escolhido", texto=itens[i]["texto"],
+                     navegacao=bool(meta.get("voltar") or meta.get("talento") or meta.get("achado") or meta.get("confirmar")))
         self.escolhas_na_cena += 1
         self.novo_desde_escolha = False
         return i
