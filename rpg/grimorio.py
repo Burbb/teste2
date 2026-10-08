@@ -127,6 +127,7 @@ def dados(j):
     for h_id in j.habilidades:
         h = HABILIDADES[h_id]
         habs.append({"id": h_id, "nome": h["nome"], "custo": h["custo"], "flechas": h.get("flechas", 0),
+                     "flechas_por_alvo": h.get("flechas_por_alvo", 0),
                      "alvo": ALVOS.get(h["alvo"], ""), "desc": h["desc"],  # os números de agora vão nas linhas
                      "linhas": h["linhas"](j)})
     tal_corpo, _ = mult_talentos(j, "corpo")

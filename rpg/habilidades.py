@@ -324,6 +324,11 @@ def hab(nome, custo, alvo, desc, passos=None, fn=None, linhas=None, **extra):
     return h
 
 
+def custo_flechas(h, inimigos=1):
+    """Flechas que a habilidade gasta: o número fixo (`flechas`) ou tantas por inimigo de pé (`flechas_por_alvo`)."""
+    return inimigos * h["flechas_por_alvo"] if h.get("flechas_por_alvo") else h.get("flechas", 0)
+
+
 def crit_extra(h):
     """O maior bônus de crítico dos golpes da habilidade (para a ficha explicar a taxa real)."""
     maior = 0.0
@@ -427,8 +432,9 @@ def _linhas_comando_fera(u):
         return [_efeito("Urso: provoca os inimigos e protege. Lobo: dilacera e faz sangrar. Falcão: cega (enfraquece).")]
     f = fera if isinstance(fera, dict) else {"nome": fera.nome, "atk": fera.atk, "tipo": fera.tipo}
     mult = 1.6 if f["tipo"] == "lobo" else 1.0
-    linhas = [_efeito(f"{f['nome']} ataca: {int(f['atk'] * mult * 0.85)}–{int(f['atk'] * mult * 1.15)} de dano "
-                      f"(ataque dele {_num(f['atk'])} × {round(mult * 100)}%).")]
+    medio = f["atk"] * mult * bal.DANO_ANIMAL
+    linhas = [_efeito(f"{f['nome']} ataca: {int(medio * 0.85)}–{int(medio * 1.15)} de dano "
+                      f"(ataque dele {_num(f['atk'])} × {round(mult * bal.DANO_ANIMAL * 100)}%).")]
     if f["tipo"] == "urso":
         linhas.append(_efeito("Provoca por 2 turnos: os inimigos atacam o urso (chefes, metade das vezes), "
                               "e ele recebe 30% menos dano."))
@@ -577,9 +583,9 @@ HABILIDADES = {
     "marcar_presa": hab("Marcar Presa", 6, "inimigo", "O alvo recebe +25% de dano por 3 turnos.", [
         Aplicar("marcado", 3, 0.25, direto=True),
         Dizer("Você estuda os movimentos de {alvo} e encontra os pontos fracos. (+25% dano recebido)", "ciano")]),
-    "chuva_flechas": hab("Chuva de Flechas", 14, "todos", "Atinge todos os inimigos (3 flechas).", [
+    "chuva_flechas": hab("Chuva de Flechas", 14, "todos", "Atinge todos os inimigos. Gasta uma flecha por inimigo.", [
         Dizer("Você dispara uma saraivada de flechas para o alto...", "ciano"),
-        Dano(1.0, alcance="distancia", em="todos")], flechas=3),
+        Dano(1.0, alcance="distancia", em="todos")], flechas_por_alvo=1),
     "passo_agil": hab("Passo Ágil", 6, "proprio", "+30% de esquiva por 2 turnos (a esquiva total não passa de 60%).", [
         Buff("esquiva", 2, 0.3),
         Dizer("Você se move em zigue-zague, difícil de acertar. (+30% esquiva, até o teto de 60%)", "ciano")]),

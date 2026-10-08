@@ -4,7 +4,7 @@ from contextlib import contextmanager
 
 from . import texto as tx
 from .classes import CLASSES
-from .habilidades import HABILIDADES, descricao_habilidade
+from .habilidades import HABILIDADES, custo_flechas, descricao_habilidade
 from .grimorio import chance_critico, mult_critico
 from .modificadores import disparar, mod, mult, nomes
 from .estados import ESTADOS, NOMES, no_golpe
@@ -288,6 +288,10 @@ class Combate:
                 self.iniciativa = False
                 m *= 1 + bal.INICIATIVA_BONUS
                 bonus_motivo = "Iniciativa!"
+        elif u is self.companheiro:
+            m *= bal.DANO_ANIMAL
+        elif getattr(u, "tipo", None) == "comitiva":
+            m *= bal.DANO_COMITIVA
 
         fator_def = 1.0
         for _, e, f in no_golpe(alvo, "defesa"):
@@ -457,10 +461,11 @@ class Combate:
             r = self._checar_fim()
             if r:
                 return self.fim(r)
-            self.fase_aliados()
-            r = self._checar_fim()
-            if r:
-                return self.fim(r)
+            if not pular_inimigos:  # o turno da surpresa é só seu: a comitiva e o animal entram no seguinte
+                self.fase_aliados()
+                r = self._checar_fim()
+                if r:
+                    return self.fim(r)
             if pular_inimigos:
                 pular_inimigos = False
             else:
@@ -625,11 +630,15 @@ class Combate:
         j, h = self.j, HABILIDADES[h_id]
         if j.rec < custo_habilidade(j, h_id):
             return f"{j.nome_recurso} insuficiente"
-        if h.get("flechas", 0) > j.flechas:
+        if self.flechas_de(h) > j.flechas:
             return "Flechas insuficientes"
         if h.get("req"):
             return h["req"](self)
         return None
+
+    def flechas_de(self, h):
+        """Flechas que a habilidade gasta agora (a Chuva de Flechas, uma por inimigo de pé)."""
+        return custo_flechas(h, len(self.inimigos_vivos()))
 
     def metas_habilidades(self):
         """Cada habilidade como a interface gráfica a desenha: ícone, custo, alvo, dica e se dá para usar agora."""
@@ -639,7 +648,7 @@ class Combate:
             h = HABILIDADES[h_id]
             motivo = self.motivo_bloqueio(h_id)
             metas.append({"habilidade": h_id, "nome": h["nome"], "custo": custo_habilidade(j, h_id),
-                          "recurso": j.nome_recurso, "flechas": h.get("flechas", 0), "alvo_tipo": h["alvo"],
+                          "recurso": j.nome_recurso, "flechas": self.flechas_de(h), "alvo_tipo": h["alvo"],
                           "desc": descricao_habilidade(h_id, j), "pode": motivo is None, "motivo": motivo})
         return metas
 
@@ -650,8 +659,9 @@ class Combate:
         for h_id in ids:
             h = HABILIDADES[h_id]
             custo = f"{custo_habilidade(j, h_id)} {j.nome_recurso}"
-            if h.get("flechas"):
-                custo += f", {h['flechas']} flecha{'s' if h['flechas'] > 1 else ''}"
+            flechas = self.flechas_de(h)
+            if flechas:
+                custo += f", {flechas} flecha{'s' if flechas > 1 else ''}"
             opcoes.append(f"{h['nome']} [{custo}] — {h['desc']}")
         metas = self.metas_habilidades()
         opcoes.append("Voltar")
@@ -667,7 +677,7 @@ class Combate:
         if j.rec < custo:
             self.dizer(f"{j.nome_recurso} insuficiente.", "cinza")
             return False
-        if h.get("flechas", 0) > j.flechas:
+        if self.flechas_de(h) > j.flechas:
             self.dizer("Flechas insuficientes!", "cinza")
             return False
         if h.get("req"):
@@ -683,8 +693,9 @@ class Combate:
         j.rec -= custo
         self.tel["habilidades"][ids[esc]] = self.tel["habilidades"].get(ids[esc], 0) + 1
         self.tel["rec_gasto"] += custo
-        j.flechas -= h.get("flechas", 0)
-        self.flechas_gastas += h.get("flechas", 0)
+        flechas = self.flechas_de(h)
+        j.flechas -= flechas
+        self.flechas_gastas += flechas
         with self.agindo(j, h["nome"], alvo, area=h["alvo"] == "todos", hab=ids[esc]):
             antes, self._cura_j = j.hp, 0
             efeitos_antes = {k: dict(v) for k, v in j.efeitos.items()}

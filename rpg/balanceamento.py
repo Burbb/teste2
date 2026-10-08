@@ -30,7 +30,11 @@ def fator_xp(diferenca):
 # todos os inimigos (comuns, guardiões e o antagonista: entra no Ataque e no Poder deles, que a ficha mostra).
 DANO_HEROI = 0.9
 DANO_INIMIGOS = 1.1
-# Pegar o inimigo de surpresa: um turno livre e o primeiro golpe mais forte (era um crítico garantido).
+# O dano de quem luta ao seu lado: a comitiva (Odete, Morel, Yara) e o animal do Patrulheiro. Os servos do
+# Necromante são a build dele e ficam de fora.
+DANO_COMITIVA = 0.8
+DANO_ANIMAL = 0.8
+# Pegar o inimigo de surpresa: um turno livre só seu (a comitiva ainda se ajeita) e o primeiro golpe mais forte.
 INICIATIVA_BONUS = 0.25
 
 # Defesa: dano × P / (P + defesa × DEFESA_FATOR). P é quanto o golpe atravessa a armadura: 100 nos golpes do

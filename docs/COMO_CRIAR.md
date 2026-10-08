@@ -192,8 +192,9 @@ encarar campeões, únicos e guardiões), não de uma luta comum sorteada. No si
 | Meio (nv 4–8) | ~20–30% | 3–5 | ≥ 89% | 55–70% de vitórias, sai com dois terços da vida a menos |
 | Fim (nv 9–12) | ~30% | ~3,5 | ≥ 85% | idem |
 
-Os botões mais diretos: `DANO_HEROI` e `DANO_INIMIGOS` (todo golpe, físico e mágico), `INIMIGO_VIDA`, os de
-grupo (`GRUPO_*`, `COMITIVA_*`) e os de descanso (`TAVERNA_VIDA`, `ACAMPAR_VIDA`; o templo cura por ouro).
+Os botões mais diretos: `DANO_HEROI` e `DANO_INIMIGOS` (todo golpe, físico e mágico), `DANO_COMITIVA` e
+`DANO_ANIMAL` (quem luta ao seu lado), `INIMIGO_VIDA`, os de grupo (`GRUPO_*`, `COMITIVA_*`) e os de descanso
+(`TAVERNA_VIDA`, `ACAMPAR_VIDA`; o templo cura por ouro).
 
 Nenhuma especialização deve ficar muito longe da média: hoje o Paladino é a mais tolerante e Sombra, Piromante
 e Necromante as mais duras (veja o ROADMAP).
