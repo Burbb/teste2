@@ -63,7 +63,7 @@ def espacos(slot):
     """Chaves de equip onde um item deste tipo pode ir."""
     return ["anel1", "anel2"] if slot == "anel" else [slot]
 
-# Afixos: (nome, atributo, valor base). Os especiais são lidos pelo combate.
+# Afixos: (nome, atributo, valor base). Os especiais viram modificadores do item (fonte_item).
 AFIXOS_ITEM = [
     ("do Urso", "max_hp", 6), ("da Águia", "agi", 1.2), ("do Lobo", "atk", 1.2), ("da Coruja", "poder", 1.2),
     ("da Tartaruga", "defesa", 1.0), ("da Fonte", "max_rec", 4), ("do Vampiro", "roubo_vida", 2.5),
@@ -71,6 +71,7 @@ AFIXOS_ITEM = [
     ("do Carniceiro", "vida_abate", 2.5),
 ]
 ESPECIAIS = ("roubo_vida", "critico", "espinhos", "regen_vida", "vida_abate")
+PERCENTUAIS = ("roubo_vida", "critico")  # no item, em %; no modificador, em fração
 
 NOMES_RAROS_A = ["Presa", "Agonia", "Lamento", "Sussurro", "Grito", "Mordida", "Ruína", "Fome", "Pranto", "Cicatriz",
                  "Sombra", "Juramento", "Maldição", "Brasa", "Osso"]
@@ -125,6 +126,23 @@ UNICOS = [
          lore="O reino caiu. O anel não."),
 ]
 
+UNICOS_POR_NOME = {u["nome"]: u for u in UNICOS}
+
+
+def fonte_item(item):
+    """O item como fonte de modificadores (modificadores.fontes): os bônus especiais viram mods (o resto, como
+    Ataque e Vida, entra nos atributos). Um único pode declarar no catálogo `mods`, `mults` e `gatilhos` próprios,
+    no mesmo formato dos talentos: é assim que nasce um item que gera build. None quando o item não mexe em nada."""
+    mods = {k: (v / 100 if k in PERCENTUAIS else v) for k, v in item["bonus"].items() if k in ESPECIAIS}
+    unico = UNICOS_POR_NOME.get(item["nome"]) if item.get("raridade") == "lendario" else None
+    if unico:
+        mods.update(unico.get("mods", {}))
+        if unico.get("mults") or unico.get("gatilhos"):
+            return {"mods": mods, "mults": unico.get("mults", {}), "gatilhos": unico.get("gatilhos", {}),
+                    "ordem": unico.get("ordem", 50)}
+    return {"mods": mods} if mods else None
+
+
 PESO_PRECO = {"max_hp": 0.25, "max_rec": 0.4, "atk": 1.0, "poder": 1.0, "defesa": 1.2, "agi": 1.1,
               "roubo_vida": 1.5, "critico": 1.5, "espinhos": 1.0, "regen_vida": 2.5, "vida_abate": 1.0}
 
@@ -146,7 +164,7 @@ def _afixos(rng, nivel, n):
     escolhidos = rng.sample(AFIXOS_ITEM, n)
     bonus = {}
     for _, stat, base in escolhidos:
-        valor = (base * (1 + nivel * bal.ITEM_AFIXO_POR_NIVEL) if stat not in ("critico", "roubo_vida")
+        valor = (base * (1 + nivel * bal.ITEM_AFIXO_POR_NIVEL) if stat not in PERCENTUAIS
                  else base + nivel * bal.ITEM_AFIXO_FIXO_POR_NIVEL)
         bonus[stat] = bonus.get(stat, 0) + max(1, round(valor))
     return escolhidos, bonus
@@ -281,7 +299,7 @@ def descrever_bonus(bonus, recurso=None):
     from .entidades import nome_stat
     partes = []
     for k, v in bonus.items():
-        if k in ("roubo_vida", "critico"):
+        if k in PERCENTUAIS:
             partes.append(f"+{v}% {nome_stat(k, recurso)}")
         else:
             partes.append(f"{'+' if v >= 0 else ''}{v} {nome_stat(k, recurso)}")

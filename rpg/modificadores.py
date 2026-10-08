@@ -1,4 +1,4 @@
-"""Modificadores e gatilhos: como talentos, especializações (e, adiante, itens e estados) mudam o jogo
+"""Modificadores e gatilhos: como talentos, especializações, itens (e, adiante, estados) mudam o jogo
 sem que o combate precise saber de cada um.
 
 O combate só faz duas perguntas:
@@ -6,8 +6,8 @@ O combate só faz duas perguntas:
     mod(u, "dano_corpo")                    quanto somam os modificadores dessa chave (+6% por ponto de Golpe Brutal...)
     disparar(cb, u, "abate", alvo=c, ...)   quem reage a esse acontecimento (Frenesi, Assassino, Coração Ardente...)
 
-Quem responde são as **fontes**: a passiva da especialização e cada talento comprado, na ordem em que foram
-declarados. Cada fonte é um dicionário com:
+Quem responde são as **fontes**: a passiva da especialização, cada talento comprado (na ordem em que foram
+declarados) e cada item vestido (na ordem dos espaços). Cada fonte é um dicionário com:
 
     mods      {chave: valor por ponto}   (Fixo(v): vale v uma vez, com qualquer número de pontos)
     mults     {chave: fator}             multiplicadores (mult(u, chave) = produto dos fatores)
@@ -15,6 +15,8 @@ declarados. Cada fonte é um dicionário com:
 
 Para um talento novo, basta declarar os efeitos dele em talentos.py: nenhum outro arquivo muda, a menos que a
 chave seja nova (aí o lugar do jogo que a usa pergunta por ela uma vez, e qualquer fonte futura também vale).
+Itens: os bônus especiais (`ESPECIAIS` em itens.py: crítico, roubo de vida, espinhos...) viram mods do item, e um
+item único pode declarar mods, mults e gatilhos próprios no catálogo (itens.fonte_item).
 
 Chaves em uso (o que cada uma significa):
     dano_corpo, dano_distancia    +x de dano por golpe desse alcance
@@ -30,6 +32,8 @@ Chaves em uso (o que cada uma significa):
     servos_max, ataques_fera, laco_animal               +1 servo, +1 ataque do animal, +x de vida/ataque do animal
     aljava, recolher_flecha       +espaço na aljava; +chance de recolher flecha
     contra_ataque, veneno_basico  chance de revidar corpo a corpo; chance do ataque básico envenenar
+    espinhos                      dano devolvido a quem acerta você corpo a corpo
+    regen_vida, vida_abate        vida no começo de cada turno seu; vida a cada inimigo que você abate
 mults:
     queimadura_mult, barreira_mult
 
@@ -43,7 +47,8 @@ ataque_basico (alvo; só quando acertou) · morte (alvo, por, tipo; qualquer ini
 CHAVES = {"dano_corpo", "dano_distancia", "dano_ferido", "critico", "mult_critico", "roubo_vida", "abertura",
           "furtivo_ao_abater", "custo_pct", "escudo_turnos", "barreira_turnos", "queimadura_turnos",
           "queimadura_dano", "cura_luz", "dreno_cura", "servo_vida", "acender_garantido", "servos_max",
-          "ataques_fera", "laco_animal", "aljava", "recolher_flecha", "contra_ataque", "veneno_basico"}
+          "ataques_fera", "laco_animal", "aljava", "recolher_flecha", "contra_ataque", "veneno_basico",
+          "espinhos", "regen_vida", "vida_abate"}
 PREFIXOS = ("custo:",)  # custo:<id da habilidade>
 MULTS = {"queimadura_mult", "barreira_mult"}
 EVENTOS = {"inicio_combate", "golpe_fatal", "golpe_recebido", "ataque_basico", "morte", "abate"}
@@ -57,19 +62,27 @@ class Fixo:
 
 
 def fontes(u):
-    """(nome, fonte, pontos) de quem modifica este combatente: a passiva da especialização e os talentos comprados."""
-    talentos = getattr(u, "talentos", None)
-    if talentos is None:
-        return []
-    from .talentos import PASSIVAS, TALENTOS
+    """(nome, fonte, pontos) de quem modifica este combatente: a passiva da especialização, os talentos comprados
+    e os itens vestidos."""
     lista = []
-    spec = getattr(u, "spec", None)
-    if spec in PASSIVAS:
-        lista.append((PASSIVAS[spec]["nome"], PASSIVAS[spec], 1))
-    for t in TALENTOS.get(getattr(u, "classe", None), []):
-        rank = talentos.get(t["id"], 0)
-        if rank:
-            lista.append((t["nome"], t, rank))
+    talentos = getattr(u, "talentos", None)
+    if talentos is not None:
+        from .talentos import PASSIVAS, TALENTOS
+        spec = getattr(u, "spec", None)
+        if spec in PASSIVAS:
+            lista.append((PASSIVAS[spec]["nome"], PASSIVAS[spec], 1))
+        for t in TALENTOS.get(getattr(u, "classe", None), []):
+            rank = talentos.get(t["id"], 0)
+            if rank:
+                lista.append((t["nome"], t, rank))
+    equip = getattr(u, "equip", None)
+    if equip:
+        from .itens import fonte_item
+        for item in equip.values():
+            if item:
+                f = fonte_item(item)
+                if f:
+                    lista.append((item["nome"], f, 1))
     return lista
 
 
@@ -95,6 +108,11 @@ def mult(u, chave):
         if v is not None:
             total *= v.valor if isinstance(v, Fixo) else v
     return total
+
+
+def contribuicoes(u, chave):
+    """(nome, valor) de cada fonte que mexe nessa chave, na ordem: para dizer de onde vem cada pedaço do número."""
+    return [(nome, _valor(f["mods"][chave], rank)) for nome, f, rank in fontes(u) if chave in f.get("mods", {})]
 
 
 def nomes(u, chave):

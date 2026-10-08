@@ -88,6 +88,28 @@ python -m unittest tests.test_modificadores    # chaves e eventos conhecidos, to
 python -m tests.gabarito
 ```
 
+## Um item com efeito especial
+
+Item é fonte de modificadores, como talento. Os bônus especiais (`ESPECIAIS` em `rpg/itens.py`: crítico, roubo de
+vida, espinhos, vida por turno, vida por abate) já viram mods do item sozinhos; crítico e roubo ficam no item em %
+e viram fração (`PERCENTUAIS`). Um **único** (`UNICOS`) pode ir além e declarar, no catálogo, os mesmos campos de
+um talento (`mods`, `mults`, `gatilhos`, `ordem`), sem pontos:
+
+```python
+dict(nome="Coração do Carrasco", slot="amuleto", classe=None, base="Amuleto",
+     bonus={"atk": 1.2, "critico": 4},                 # o que aparece na ficha e entra nos atributos
+     mods={"mult_critico": 0.3},                       # crítico ×0,3 a mais
+     gatilhos={"abate": _carrasco},                    # função(cb, u, 1, dados), como num talento
+     lore="..."),
+```
+
+O item vestido entra em `mod`, `nomes` e `disparar` na ordem dos espaços, depois dos talentos. O Grimório diz de onde
+vem cada pedaço (`contribuicoes`). Atributo novo de item (ex.: "dano_fogo"): acrescente em `ESPECIAIS`, em `CHAVES` de
+`rpg/modificadores.py`, em `NOME_STAT` (`rpg/entidades.py`) e em `PESO_PRECO`; o lugar do jogo que decide pergunta
+`mod(u, "dano_fogo")`.
+
+`python -m unittest tests.test_modificadores` recusa chave, mult ou evento desconhecido num único.
+
 ## Um estado
 
 Em `rpg/estados.py`, no catálogo `ESTADOS`:

@@ -43,9 +43,6 @@ class Combatente:
         """Nível de um talento (só o jogador tem talentos)."""
         return 0
 
-    def especial(self, chave):
-        return 0
-
     def efeito(self, nome):
         return self.efeitos.get(nome)
 
@@ -142,10 +139,6 @@ class Jogador(Combatente):
 
     def tal(self, talento):
         return self.talentos.get(talento, 0)
-
-    def especial(self, chave):
-        """Soma de um atributo especial dos itens (roubo de vida, crítico, espinhos...)."""
-        return sum(item["bonus"].get(chave, 0) for item in self.equip.values() if item)
 
     def totais(self):
         """Cada atributo antes das penalidades (ferimentos, fome): base + talentos + equipamento."""

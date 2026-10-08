@@ -8,7 +8,7 @@ fora, porque mudam a cada luta; o livro diz isso em vez de esconder.
 from . import balanceamento as bal
 from .classes import CLASSES
 from .habilidades import HABILIDADES, crit_extra
-from .modificadores import mod, mult, nomes
+from .modificadores import contribuicoes, mod, mult, nomes
 
 NOME_STAT = {"atk": "Ataque", "poder": "Poder", "agi": "Agilidade", "max_hp": "Vida máx."}
 ELEMENTO = {"fisico": "físico", "fogo": "fogo", "gelo": "gelo", "sagrado": "sagrado", "sombra": "sombra",
@@ -39,8 +39,7 @@ def fontes_critico(j):
 
 def chance_critico(u, extra=0.0):
     """A chance de crítico de um golpe. A conta única: o combate, a ficha e o Grimório usam esta."""
-    return min(bal.MAX_CRITICO, bal.CRITICO_BASE + u.agi * bal.CRITICO_POR_AGI + extra + mod(u, "critico")
-               + u.especial("critico") / 100)
+    return min(bal.MAX_CRITICO, bal.CRITICO_BASE + u.agi * bal.CRITICO_POR_AGI + extra + mod(u, "critico"))
 
 
 def mult_critico(u, furtivo=False):
@@ -127,11 +126,11 @@ def dados(j):
     if tal_dist > 1:
         gerais.append(f"Talentos: à distância ×{_num(tal_dist)}.")
     gerais += [f"Crítico a mais — {l}" for l in fontes_critico(j)[:-1]]
-    roubo_tal, roubo_itens = 100 * mod(j, "roubo_vida"), j.especial("roubo_vida")
-    if roubo_tal or roubo_itens:
-        partes = ([f"{', '.join(nomes(j, 'roubo_vida'))} {_num(roubo_tal)}%"] if roubo_tal else []) + ([f"itens {_num(roubo_itens)}%"] if roubo_itens else [])
-        gerais.append(f"Roubo de vida: {_num(roubo_tal + roubo_itens)}% de todo dano que você causa volta como vida "
-                      f"({' + '.join(partes)}).")
+    roubo = contribuicoes(j, "roubo_vida")
+    if roubo:
+        partes = " + ".join(f"{nome} {_num(100 * v)}%" for nome, v in roubo)
+        gerais.append(f"Roubo de vida: {_num(100 * mod(j, 'roubo_vida'))}% de todo dano que você causa volta como vida "
+                      f"({partes}).")
     from .talentos import PASSIVAS
     if j.spec in PASSIVAS:
         gerais.append(f"Passiva — {PASSIVAS[j.spec]['nome']}: {PASSIVAS[j.spec]['desc']}")

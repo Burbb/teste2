@@ -347,13 +347,13 @@ class Combate:
         else:
             self.ui.atualizar()
         if u is self.j and dano:
-            roubo = mod(u, "roubo_vida") + u.especial("roubo_vida") / 100
+            roubo = mod(u, "roubo_vida")
             if roubo:
                 # arredonda (e pelo menos 1): truncar zerava o roubo dos golpes pequenos e a build parecia não funcionar
                 self.curou(u, u.curar(max(1, round(dano * roubo))), "roubo", fonte=alvo,
                            rotulo=(nomes(u, "roubo_vida") or ["Roubo de vida"])[0])
-        if alvo is self.j and dano and alcance == "corpo" and u in self.inimigos and u.vivo and alvo.especial("espinhos"):
-            espinhos = alvo.especial("espinhos")
+        espinhos = mod(alvo, "espinhos") if alvo is self.j and dano and alcance == "corpo" and u in self.inimigos else 0
+        if espinhos and u.vivo:
             u.hp = max(0, u.hp - espinhos)
             self.lance("golpe", de=None, em=self.uid(u), dano=espinhos, crit=False, elemento="fisico", alcance="corpo",
                        absorvido=0, eficacia=None, rotulo="Espinhos", hp=u.hp, max_hp=u.max_hp,
@@ -419,8 +419,8 @@ class Combate:
         disparar(self, j, "morte", alvo=c, por=por, tipo=tipo)  # Colheita, Rei dos Mortos...
         if por is not j:
             return
-        if j.especial("vida_abate"):
-            j.curar(j.especial("vida_abate"))
+        if mod(j, "vida_abate"):
+            j.curar(mod(j, "vida_abate"))
         disparar(self, j, "abate", alvo=c, tipo=tipo)  # Frenesi, Assassino, Coração Ardente...
 
     # ------------------------------------------------------------ fluxo
@@ -548,8 +548,8 @@ class Combate:
     def fase_jogador(self):
         j = self.j
         self.mostrar_estado()
-        if j.especial("regen_vida") and j.hp < j.max_hp:
-            j.curar(j.especial("regen_vida"))
+        if mod(j, "regen_vida") and j.hp < j.max_hp:
+            j.curar(mod(j, "regen_vida"))
         if self.processar_efeitos(j) or not j.vivo:
             return None
         while True:
