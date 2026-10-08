@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------ título */
-body.modo-titulo #cena { background: transparent; box-shadow: none; }
+body.modo-titulo #cena { background: transparent; border-color: transparent; border-image: none; }
 body.modo-titulo #folha { display: flex; flex-direction: column; justify-content: center; min-height: 100%; text-align: center; }
 body.modo-titulo #cena-cab { margin-bottom: 30px; }
 body.modo-titulo .cena-titulo { font-size: clamp(72px, 11vw, 144px); color: var(--ouro); text-shadow: 0 6px 24px rgba(0, 0, 0, 0.9), 0 0 48px rgba(255, 140, 40, 0.3); }

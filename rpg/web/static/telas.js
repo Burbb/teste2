@@ -221,7 +221,7 @@ const Telas = (() => {
    *  acabou) sem o mouse "sair" dele, um vigia fecha a dica em vez de deixá-la presa. */
   function caixaDica() {
     let caixa = document.getElementById("dica-item");
-    if (!caixa) { caixa = document.createElement("div"); caixa.id = "dica-item"; caixa.className = "moldura"; caixa.hidden = true; document.body.appendChild(caixa); }
+    if (!caixa) { caixa = document.createElement("div"); caixa.id = "dica-item"; caixa.className = "m-janela"; caixa.hidden = true; document.body.appendChild(caixa); }
     return caixa;
   }
   let vigia = 0;
@@ -281,7 +281,7 @@ const Telas = (() => {
     let lado = document.getElementById("dica-equipado");
     const eq = ligado && caixa && !caixa.hidden && caixa._item ? equipadosPara(caixa._item) : [];
     if (!eq.length) { if (lado) lado.hidden = true; return; }
-    if (!lado) { lado = document.createElement("div"); lado.id = "dica-equipado"; lado.className = "moldura"; document.body.appendChild(lado); }
+    if (!lado) { lado = document.createElement("div"); lado.id = "dica-equipado"; lado.className = "m-janela"; document.body.appendChild(lado); }
     lado.innerHTML = eq.map((it, i) => `<div class="${i ? "outro" : ""}"><span class="selo-equipado">Equipado</span>${htmlItem(it, "", false)}</div>`).join("");
     lado.hidden = false;
     const r = caixa.getBoundingClientRect();
@@ -583,7 +583,7 @@ const Telas = (() => {
     const heroi = App.estado.heroi;
     const linha = (rotulo, vida, motivo, attr) => `<button type="button" ${attr}${motivo ? ` disabled title="${h(motivo)}"` : ""}>${rotulo}<small>${vida}</small></button>`;
     const m = document.createElement("div");
-    m.className = "menu-item moldura menu-uso";
+    m.className = "menu-item m-janela menu-uso";
     m.innerHTML = `<b>${h(b.nome)}</b>
       ${linha("Em você", `${heroi.hp}/${heroi.max_hp}`, b.motivo, 'data-em=""')}
       ${b.alvos.map((a) => linha(`Em ${h(a.nome)}`, a.ferido ? h(a.caido) : `${a.hp}/${a.max_hp}`, a.motivo, `data-em="${h(a.id)}"`)).join("")}
@@ -621,7 +621,7 @@ const Telas = (() => {
     fecharMenuItem();
     esconderDica();
     const m = document.createElement("div");
-    m.className = "menu-item moldura";
+    m.className = "menu-item m-janela";
     m.innerHTML = `<b class="r-${h(it.raridade)}">${h(it.nome)}</b>
       ${it.usavel ? `<button type="button" data-a="equipar">${S("armadura", 1)} Equipar</button>` : '<span class="pior">Não é para a sua classe.</span>'}
       <button type="button" data-a="vender" class="vender">${S("moeda", 1)} Vender por ${it.preco}</button>
@@ -891,7 +891,7 @@ const Telas = (() => {
     });
     if (!itens.length) return;
     const menu = document.createElement("div");
-    menu.className = "menu-item moldura";
+    menu.className = "menu-item m-janela";
     menu.innerHTML = `<b>${h(f.nome)}</b><small class="menu-sub">vida ${Math.max(0, f.hp)}/${f.max_hp}</small>` + itens.map(([t], i) => `<button type="button" data-i="${i}">${t}</button>`).join("") +
       '<button type="button" class="secundaria" data-i="-1">Cancelar</button>';
     document.body.appendChild(menu);
@@ -924,7 +924,7 @@ const Telas = (() => {
     });
     if (!itens.length) return;
     const menu = document.createElement("div");
-    menu.className = "menu-item moldura";
+    menu.className = "menu-item m-janela";
     menu.innerHTML = `<b>${h(nomeDe(cid))}</b>` + itens.map(([t], i) => `<button type="button" data-i="${i}">${t}</button>`).join("") +
       '<button type="button" class="secundaria" data-i="-1">Cancelar</button>';
     document.body.appendChild(menu);
@@ -1215,7 +1215,7 @@ const Telas = (() => {
       const ganhos = Object.entries(d.ganhos).map(([k, v], i) => `<span class="ganho" style="animation-delay:${0.75 + i * 0.12}s">${S(icones[k] || "estrela", 1)}<b class="conta" data-alvo="${v}" data-atraso="${750 + i * 120}">+0</b>${h(k)}</span>`).join("");
       const atraso = 0.75 + Object.keys(d.ganhos).length * 0.12;
       const habs = d.habilidades.map((x, i) => `<div class="habilidade-nova" style="animation-delay:${atraso + 0.35 + i * 0.2}s"><span class="rotulo-festa">nova habilidade</span><b>${h(x.nome)}</b>${Realce.texto(x.desc)}</div>`).join("");
-      html = `<div class="festa festa-nivel moldura"><div class="raios"></div><div class="anel"></div>
+      html = `<div class="festa festa-nivel m-janela"><div class="raios"></div><div class="anel"></div>
         <div class="rotulo-festa">você subiu de nível</div>
         <div class="nivel-bloco"><span class="nivel-palavra">Nível</span><span class="nivel-numero">${d.nivel}</span></div>
         <div class="lista">${ganhos}<span class="ganho ouro" style="animation-delay:${atraso + 0.08}s">${S("estrela", 1)}+1 ponto de talento</span></div>${habs}
@@ -1228,7 +1228,7 @@ const Telas = (() => {
       setTimeout(() => contarGanhos(caixa), 0);
     } else if (m.tipo === "sigilo") {
       const los = [0, 1, 2].map((i) => `<i class="${i < d.sigilos ? "tem" : ""}${i === d.sigilos - 1 ? " novo" : ""}"></i>`).join("");
-      html = `<div class="festa moldura"><div class="rotulo-festa">${h(d.guardiao)} caiu</div><div class="grande">Sigilo ${d.sigilos}/3</div>
+      html = `<div class="festa m-janela"><div class="rotulo-festa">${h(d.guardiao)} caiu</div><div class="grande">Sigilo ${d.sigilos}/3</div>
         <div class="losangos">${los}</div><div class="texto-festa">Uma runa ardente se grava na sua mão.</div>
         <div class="lista"><span class="ganho ouro">${S("estrela", 1)}+1 ponto de talento</span></div>
         <button class="continuar" type="button">Continuar <span>▸</span></button></div>`;
@@ -1236,7 +1236,7 @@ const Telas = (() => {
       particulas(["#f2c94c", "#ff4020", "#fff3a0"], 110);
     } else if (m.tipo === "spec") {
       const habs = d.habilidades.map((x, i) => `<div class="habilidade-nova" style="animation-delay:${0.6 + i * 0.25}s"><span class="rotulo-festa">nova habilidade</span><b>${h(x.nome)}</b>${Realce.texto(x.desc)}</div>`).join("");
-      html = `<div class="festa moldura"><div class="rotulo-festa">você agora é</div><div class="grande arcano">${h(d.nome)}</div>
+      html = `<div class="festa m-janela"><div class="rotulo-festa">você agora é</div><div class="grande arcano">${h(d.nome)}</div>
         <div class="texto-festa">${h(d.desc)}</div>${habs}<button class="continuar" type="button">Continuar <span>▸</span></button></div>`;
       App.som("fanfarra");
       particulas(["#b49cff", "#c8b0ff", "#ffffff"], 90);
@@ -1269,7 +1269,7 @@ const Telas = (() => {
     const ganhos = [[d.ouro, "moeda", "ouro", "ouro"], [d.xp, "estrela", "XP", ""], [d.reputacao, "coroa", "reputação", "rep"]]
       .filter(([v]) => v > 0)
       .map(([v, ic, nome, cls], i) => `<span class="ganho ${cls}" style="animation-delay:${atraso + i * 0.15}s">${S(ic, 1)}+${v} ${nome}</span>`).join("");
-    caixa.innerHTML = `<div class="festa festa-contratos moldura">
+    caixa.innerHTML = `<div class="festa festa-contratos m-janela">
       <div class="rotulo-festa">${um ? "contrato cumprido" : `${d.contratos.length} contratos cumpridos`}</div>
       <div class="cartazes-pagos">${cartazes}</div>
       <div class="lista">${ganhos}</div>

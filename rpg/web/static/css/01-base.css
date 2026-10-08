@@ -1,5 +1,5 @@
-/* Crônicas da Fenda — fantasia sombria: superfícies escuras com grão, separadas por sombra e espaço (nada de
-   moldura dentro de moldura); a arte em pixel fica nos sprites e nas paisagens.
+/* Crônicas da Fenda — pixel art: pedra e pergaminho em paleta indexada, cada caixa com um anel só de 1 texel
+   (os materiais, mais abaixo), nada de moldura dentro de moldura.
    Fontes (OFL, embutidas): Grenze Gotisch (títulos), Alegreya (prosa e rótulos, ver 11-tipografia.css), Jersey 15
    (números); no modo "Fonte: pixel", Jacquard 24 e Pixelify Sans. */
 
@@ -44,23 +44,17 @@
   --titulo: "Titulo", "Jacquard 24", "Pixelify Sans", serif;
   --texto: "Pixelify Sans", "Trebuchet MS", sans-serif;
   --num: "Jersey 15", "Pixelify Sans", monospace;
-  /* Sem moldura: um painel se separa do fundo pela sombra embaixo e por um fio de luz quase invisível em cima. */
   --sombra: 0 22px 44px -18px rgba(0, 0, 0, 0.95), 0 3px 10px rgba(0, 0, 0, 0.5);
-  --sombra-painel: var(--sombra), inset 0 1px 0 rgba(255, 232, 190, 0.05), inset 0 0 0 1px rgba(255, 232, 190, 0.025);
   --sombra-texto: 0 2px 8px rgba(0, 0, 0, 0.85);
   /* Divisória: uma linha de luz que some nas pontas, em vez de traço ou moldura. */
   --divisor: linear-gradient(90deg, rgba(226, 189, 99, 0.4), rgba(226, 189, 99, 0.06) 75%, transparent);
   --divisor-centro: linear-gradient(90deg, transparent, rgba(226, 189, 99, 0.42), transparent);
-  /* Texturas orgânicas (ruído fractal, sem imagem externa): grão fino nos painéis, manchas largas no fundo. */
-  --grao: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 0.92 0 0 0 0 0.78 0 0 0 0.08 0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23g)'/%3E%3C/svg%3E");
-  --manchas: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='720' height='720'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.006' numOctaves='4' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1.2 0.7'/%3E%3C/filter%3E%3Crect width='720' height='720' filter='url(%23m)'/%3E%3C/svg%3E");
 }
 
 * { box-sizing: border-box; }
 html, body { height: 100%; margin: 0; }
 body {
-  background: var(--grao), var(--manchas), radial-gradient(ellipse 110% 85% at 50% 18%, #1b1510 0%, #0e0b09 58%, #070605 100%) fixed;
-  background-color: var(--fundo);
+  background: var(--tx-fundo) 0 0 / calc(var(--P) * 128), var(--fundo);
   color: var(--tinta);
   font-family: var(--texto);
   font-size: 17px;
@@ -74,11 +68,6 @@ button { font: inherit; color: inherit; }
 kbd { font-family: var(--num); font-size: 0.85em; padding: 0 5px; color: var(--tinta-3); margin-left: 4px; background: rgba(255, 232, 190, 0.06); border-radius: 2px; box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.6); }
 [hidden] { display: none !important; }
 
-/* Painel: superfície escura com grão e uma luz leve vindo de cima; a sombra o separa do fundo (sem moldura). */
-.moldura {
-  background: var(--grao), linear-gradient(180deg, rgba(255, 228, 185, 0.03), rgba(0, 0, 0, 0.14)), var(--painel);
-  box-shadow: var(--sombra-painel);
-}
 
 /* ------------------------------------------------------------------ materiais (pixel art)
    Toda caixa da interface é um destes quatro, e só eles desenham anel: um anel só, preto, de 1 texel, com o canto
@@ -90,6 +79,8 @@ kbd { font-family: var(--num); font-size: 0.85em; padding: 0 5px; color: var(--t
 .m-painel { --anel: var(--anel-k); border: var(--borda) solid var(--p-k); border-image: var(--anel) 1 / 1 stretch;
   background: var(--luz-topo) 0 0 / calc(var(--P) * 4) calc(var(--P) * 6) repeat-x, var(--tx-pedra) 0 0 / calc(var(--P) * 64), var(--p-K);
   background-clip: padding-box; }
+/* Painel de pergaminho: o da cena, atrás da prosa (quase liso; nada de pontilhado atrás de texto corrido). */
+.m-painel.m-perg { background: var(--tx-perg) 0 0 / calc(var(--P) * 64), var(--perg); background-clip: padding-box; }
 /* Janela: pergaminho escuro quase liso (carrega texto) e 1 texel de sombra dura desenhado na própria moldura. */
 .m-janela { --anel: var(--janela-k); border: var(--borda) solid var(--p-k); border-image: var(--anel) 2 / 2 / 0 1 1 0 stretch;
   background: var(--tx-perg) 0 0 / calc(var(--P) * 64), var(--p-q); background-clip: padding-box; }
@@ -133,9 +124,11 @@ body.modo-titulo #brasas { opacity: 1; }
 
 /* ------------------------------------------------------------------ topo */
 #topo {
-  position: relative; z-index: 2; height: 46px; display: flex; align-items: center; gap: 22px; padding: 0 18px;
-  background: linear-gradient(180deg, #060504, rgba(8, 6, 5, 0.92)); box-shadow: 0 12px 28px -10px rgba(0, 0, 0, 0.95);
+  position: relative; z-index: 2; height: 46px; display: flex; align-items: center; gap: 22px; padding: 0 18px; background: var(--p-k);
 }
+/* A sombra da barra do topo cai sobre a mesa em pontilhado. */
+#topo::after { content: ""; position: absolute; left: 0; right: 0; top: 100%; height: calc(var(--P) * 4); pointer-events: none;
+  background: var(--sombra-desce) 0 0 / calc(var(--P) * 4) 100% repeat-x; }
 .marca { font-family: var(--titulo); font-size: 28px; color: var(--ouro); text-shadow: var(--sombra-texto); white-space: nowrap; line-height: 1; letter-spacing: 0.01em; }
 .topo-info { font-family: var(--num); font-size: 21px; color: var(--tinta-2); display: flex; align-items: center; gap: 8px; white-space: nowrap; }
 .topo-info .rotulo { color: var(--tinta-3); }

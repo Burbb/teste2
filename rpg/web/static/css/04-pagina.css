@@ -175,11 +175,11 @@ body.modo-titulo .vinheta { background: radial-gradient(ellipse 80% 70% at 50% 4
 .escolhas.acoes-combate { flex-direction: row; flex-wrap: wrap; gap: 6px; }
 .escolhas.acoes-combate li { flex: 1 1 140px; }
 .acoes-combate .escolha { flex-direction: column; align-items: center; gap: 2px; padding: 6px 6px 8px; text-align: center; font-size: 16px; line-height: 1.15;
-  background: linear-gradient(180deg, rgba(255, 232, 190, 0.05), rgba(0, 0, 0, 0.2)); box-shadow: var(--sombra-painel); }
+  background: linear-gradient(180deg, rgba(255, 232, 190, 0.05), rgba(0, 0, 0, 0.2)); box-shadow: var(--sombra); }
 .acoes-combate .escolha::before { display: none; }
 .acoes-combate .escolha img.sprite { --s: 32; }
 .acoes-combate .escolha .tecla { position: absolute; top: 2px; left: 6px; font-size: 16px; text-align: left; min-width: 0; }
-.acoes-combate .escolha:hover, .acoes-combate .escolha:focus-visible { box-shadow: var(--sombra-painel), inset 0 0 0 1px rgba(226, 189, 99, 0.5); transform: translateY(-2px); }
+.acoes-combate .escolha:hover, .acoes-combate .escolha:focus-visible { box-shadow: var(--sombra), inset 0 0 0 1px rgba(226, 189, 99, 0.5); transform: translateY(-2px); }
 .pergunta-rotulo.mira::after { content: " · ou clique na carta do inimigo"; text-transform: none; letter-spacing: 0; font-weight: 400; color: var(--ouro); }
 .dica-pular { text-align: center; font-size: 13px; color: var(--tinta-3); margin-top: 1em; }
 /* A doca: uma barra fixa sob a página, em vez de botões no meio do texto. */
