@@ -17,7 +17,7 @@ Ele chama uma interface (`ui`) com pedidos de alto nível: `cena`, `dizer`, `esc
 
 Quando o jeito de mostrar muda de uma interface para outra, o motor não pergunta "é a web?". Ele pergunta o
 que a interface **sabe fazer** (atributos em `UI`: `hud`, `letras_nos_alvos`, `analisar_no_menu`,
-`numerar_destinos`, `fogueira_sozinho`, `bolsa_clicavel`, `conquistas_na_tela`) ou entrega o conteúdo e deixa ela mostrar
+`numerar_destinos`, `fogueira_sozinho`, `bolsa_clicavel`, `conversa_no_painel`, `conquistas_na_tela`) ou entrega o conteúdo e deixa ela mostrar
 (`desenhar_mapa`, `mostrar_talentos`, `talento_aprendido`, `reacao_animal`, `boas_vindas`). A classe `UI` faz do
 jeito do texto; o mixin `InterfaceGrafica` faz do jeito gráfico e é usado pela `WebUI` e pelo robô do gabarito
 quando imita a tela web. Uma interface nova (celular, outra tela) escolhe as capacidades, sem tocar no motor.

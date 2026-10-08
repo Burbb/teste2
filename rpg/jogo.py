@@ -309,7 +309,7 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
             ("Bestiário", "bestiario"),
             ("Salvar jogo", "salvar"),
             ("Sair do jogo", "sair"),
-        ] + self.opcoes_bolsa()
+        ] + self.opcoes_bolsa() + self.opcoes_conversa()
 
     USAVEIS_FORA = ("bandagem", "unguento", "pocao_vida", "tonico", "antidoto")
 
@@ -329,9 +329,19 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
                                        ("usar_em", k, "fera"), {"usar": k, "em": "fera"}))
         return opcoes
 
+    def opcoes_conversa(self):
+        """Na tela gráfica, o ✉ de quem quer conversar (no painel da comitiva) abre a conversa direto, sem passar
+        pela tela da Comitiva: cada conversa que espera vira uma opção escondida no menu do lugar."""
+        if not self.ui.conversa_no_painel:
+            return []
+        return [(f"Conversar com {comitiva.nome(c['id'])}", ("falar", c["id"]), {"conversar": c["id"]})
+                for c in comitiva.estado(self) if c["conversa"]]
+
     def executar_comum(self, op):
-        if isinstance(op, tuple):  # usado pela bolsa do painel lateral
-            if op[0] == "usar":
+        if isinstance(op, tuple):  # o painel lateral: a bolsa e o ✉ da comitiva
+            if op[0] == "falar":
+                comitiva.falar(self, op[1])
+            elif op[0] == "usar":
                 self.usar_consumivel(op[1])
             else:
                 self.usar_em_companheiro(op[1], op[2])

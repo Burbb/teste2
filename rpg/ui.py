@@ -57,6 +57,7 @@ class UI:
     numerar_destinos = True   # "[3] ▲ Floresta": o número e o glifo ligam a opção ao mapa em caracteres
     fogueira_sozinho = False  # a cena da fogueira aparece mesmo sem ninguém da comitiva
     bolsa_clicavel = False    # os consumíveis do painel viram opções escondidas no menu do lugar
+    conversa_no_painel = False  # o ✉ da comitiva no painel abre a conversa direto (opção escondida no menu do lugar)
     conquistas_na_tela = False  # nível, Sigilo, especialização e contrato cumprido viram uma festa com os números
                                 # (celebrar): o texto não repete o que ela mostra
 
@@ -239,6 +240,7 @@ class InterfaceGrafica:
     numerar_destinos = False   # o mapa é clicável e desenha os próprios ícones
     fogueira_sozinho = True    # a fogueira desenhada é o momento de respirar do dia, mesmo sozinho
     bolsa_clicavel = True
+    conversa_no_painel = True
     conquistas_na_tela = True
 
     def desenhar_mapa(self, grande, linhas):

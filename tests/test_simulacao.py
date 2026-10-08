@@ -552,6 +552,27 @@ class TestSistemas(unittest.TestCase):
         self.assertEqual(linhas[1], f"No seu herói: Ataque {atk} → {int(round(totais['atk'] * 0.85))}. "
                                     "Poder 1 e Agilidade 3: baixos demais para cair.")
 
+    def test_conversa_direta_pelo_painel(self):
+        """O ✉ do painel abre a conversa direto: a tela gráfica ganha uma opção escondida no menu do lugar, e ela
+        leva à conversa sem passar pela tela da Comitiva. No texto, o menu fica como sempre."""
+        from rpg import comitiva
+        g = Jogo(BotUI(random.Random(1)), seed=1, pasta_saves=tempfile.mkdtemp())
+        g.iniciar("Robô", "guerreiro")
+        comitiva.recrutar(g, "odete")
+        comitiva.membros(g)[0].update(dias=30, aprovacao=60)
+        self.assertEqual(g.opcoes_conversa(), [])
+        g.ui.conversa_no_painel = True
+        (texto, op, meta), = g.opcoes_conversa()
+        self.assertEqual((op, meta), (("falar", "odete"), {"conversar": "odete"}))
+        cenas = []
+        g.ui.cena = lambda titulo, *a, **k: cenas.append(titulo)
+        try:
+            g.executar_comum(op)
+        except LimiteBot:
+            pass
+        self.assertEqual(cenas[0], "Conversa com Odette")
+        self.assertEqual(g.opcoes_conversa(), [])  # uma conversa por dia
+
     def test_concordar(self):
         """Um lobo sozinho é "ele", não "eles"; duas aranhas são "elas"; um lobo e uma aranha, "eles"."""
         from rpg import texto as tx

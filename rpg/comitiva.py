@@ -519,6 +519,13 @@ def conversar(g, m):
     return False
 
 
+def falar(g, cid):
+    """Puxar conversa com alguém da comitiva: a conversa que espera, ou uma fala à toa se não há nenhuma."""
+    m = membro(g, cid)
+    if not conversar(g, m):
+        g.ui.fala(cid, nome(cid), fala_ociosa(g, m))
+
+
 def noite(g):
     """No acampamento, alguém da comitiva pode puxar conversa. Devolve True se houve conversa."""
     pendentes = [m for m in membros(g) if proxima_conversa(g, m) and m["ultima_conversa"] != g.dia]
@@ -667,10 +674,8 @@ def menu(g):
         if op is None:
             return
         acao, cid = op
-        m = membro(g, cid)
         if acao == "falar":
-            if not conversar(g, m):
-                g.ui.fala(cid, nome(cid), fala_ociosa(g, m))
+            falar(g, cid)
         else:
             g.narrar(f"{nome(cid)} pega as coisas e volta para o acampamento. Quando você montar a fogueira, "
                      "vai estar lá.", "cinza")
