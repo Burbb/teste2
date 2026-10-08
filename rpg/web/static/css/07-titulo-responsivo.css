@@ -1,8 +1,8 @@
 /* ------------------------------------------------------------------ título */
-body.modo-titulo #cena { background: transparent; border-color: transparent; border-image: none; box-shadow: none; }
+body.modo-titulo #cena { background: transparent; box-shadow: none; }
 body.modo-titulo #folha { display: flex; flex-direction: column; justify-content: center; min-height: 100%; text-align: center; }
 body.modo-titulo #cena-cab { margin-bottom: 30px; }
-body.modo-titulo .cena-titulo { font-size: clamp(72px, 11vw, 144px); color: var(--ouro); text-shadow: 6px 6px 0 #000, 0 0 40px rgba(255, 140, 40, 0.35); }
+body.modo-titulo .cena-titulo { font-size: clamp(72px, 11vw, 144px); color: var(--ouro); text-shadow: 0 6px 24px rgba(0, 0, 0, 0.9), 0 0 48px rgba(255, 140, 40, 0.3); }
 body.modo-titulo .cena-sub { font-size: 18px; color: var(--tinta-2); }
 body.modo-titulo #prompt { max-width: 380px; margin: 0 auto; }
 body.modo-titulo .escolha { justify-content: center; font-family: var(--titulo); font-size: 44px; line-height: 1.1; color: #e8dcc0; padding-left: 12px; text-shadow: 3px 3px 0 #000, 0 0 12px rgba(0,0,0,0.8); }
@@ -48,7 +48,7 @@ body.modo-titulo .dica-pular { display: none; }
   *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
 }
 /* A paisagem do título se dissolve no céu (sem a linha de corte onde a imagem começa). */
-body.modo-titulo #vista { -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 38%); mask-image: linear-gradient(to bottom, transparent 0, #000 38%); }
+body.modo-titulo #cena > #vista { -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 38%); mask-image: linear-gradient(to bottom, transparent 0, #000 38%); }
 /* Sem barra de rolagem perdida no meio da tela; a lista ainda rola com a roda do mouse. */
 body.modo-titulo #pagina { scrollbar-width: none; }
 body.modo-titulo #pagina::-webkit-scrollbar { display: none; }

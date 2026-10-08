@@ -1,23 +1,23 @@
-/* Crônicas da Fenda — tema pixel art.
-   Fontes (OFL, embutidas): Jacquard 24 (títulos góticos), Pixelify Sans (prosa e interface), Jersey 15 (números).
-   Molduras e texturas são geradas em pixel art pelo sprites.js e entram como variáveis CSS. */
+/* Crônicas da Fenda — fantasia sombria: superfícies escuras com grão, separadas por sombra e espaço (nada de
+   moldura dentro de moldura); a arte em pixel fica nos sprites e nas paisagens.
+   Fontes (OFL, embutidas): Grenze Gotisch (títulos), Alegreya (prosa e rótulos, ver 11-tipografia.css), Jersey 15
+   (números); no modo "Fonte: pixel", Jacquard 24 e Pixelify Sans. */
 
 @font-face { font-family: "Jacquard 24"; src: url(../fontes/jacquard-24-latin-400-normal.woff2) format("woff2"); font-display: swap; }
-/* Títulos: letras góticas, mas números da fonte de números (o 5 gótico é difícil de ler). */
-@font-face { font-family: "Titulo"; src: url(../fontes/jersey-15-latin-400-normal.woff2) format("woff2"); unicode-range: U+0030-0039, U+0025, U+002B, U+002F; font-display: swap; }
-@font-face { font-family: "Titulo"; src: url(../fontes/jacquard-24-latin-400-normal.woff2) format("woff2"); font-display: swap; }
+/* Títulos: um gótico moderno, legível também nos números. Um peso só, servindo a qualquer peso pedido. */
+@font-face { font-family: "Titulo"; font-weight: 100 900; src: url(../fontes/grenze-gotisch-latin-600-normal.woff2) format("woff2"); font-display: swap; }
 @font-face { font-family: "Pixelify Sans"; font-weight: 400; src: url(../fontes/pixelify-sans-latin-400-normal.woff2) format("woff2"); font-display: swap; }
 @font-face { font-family: "Pixelify Sans"; font-weight: 600; src: url(../fontes/pixelify-sans-latin-600-normal.woff2) format("woff2"); font-display: swap; }
 @font-face { font-family: "Jersey 15"; src: url(../fontes/jersey-15-latin-400-normal.woff2) format("woff2"); font-display: swap; }
 
 :root {
-  --fundo: #120e0b;
-  --painel: #1b1511;
+  --fundo: #0b0908;
+  --painel: #15110e;
   --linha: #3a2e24;
-  --tinta: #eadfc6;
-  --tinta-2: #b8a888;
-  --tinta-3: #7d6f5c;
-  --ouro: #f2c94c;
+  --tinta: #e6dac2;
+  --tinta-2: #b3a68b;
+  --tinta-3: #7a6e5c;
+  --ouro: #e2bd63;
   --xp: #d4bfff;  /* experiência: lilás, para nunca se confundir com o ouro */
   --ouro-2: #d4af37;
   --ouro-3: #8a6a14;
@@ -34,15 +34,23 @@
   --titulo: "Titulo", "Jacquard 24", "Pixelify Sans", serif;
   --texto: "Pixelify Sans", "Trebuchet MS", sans-serif;
   --num: "Jersey 15", "Pixelify Sans", monospace;
-  --sombra: 4px 4px 0 rgba(0, 0, 0, 0.55);
+  /* Sem moldura: um painel se separa do fundo pela sombra embaixo e por um fio de luz quase invisível em cima. */
+  --sombra: 0 22px 44px -18px rgba(0, 0, 0, 0.95), 0 3px 10px rgba(0, 0, 0, 0.5);
+  --sombra-painel: var(--sombra), inset 0 1px 0 rgba(255, 232, 190, 0.05), inset 0 0 0 1px rgba(255, 232, 190, 0.025);
+  --sombra-texto: 0 2px 8px rgba(0, 0, 0, 0.85);
+  /* Divisória: uma linha de luz que some nas pontas, em vez de traço ou moldura. */
+  --divisor: linear-gradient(90deg, rgba(226, 189, 99, 0.4), rgba(226, 189, 99, 0.06) 75%, transparent);
+  --divisor-centro: linear-gradient(90deg, transparent, rgba(226, 189, 99, 0.42), transparent);
+  /* Texturas orgânicas (ruído fractal, sem imagem externa): grão fino nos painéis, manchas largas no fundo. */
+  --grao: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 0.92 0 0 0 0 0.78 0 0 0 0.08 0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23g)'/%3E%3C/svg%3E");
+  --manchas: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='720' height='720'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.006' numOctaves='4' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1.2 0.7'/%3E%3C/filter%3E%3Crect width='720' height='720' filter='url(%23m)'/%3E%3C/svg%3E");
 }
 
 * { box-sizing: border-box; }
 html, body { height: 100%; margin: 0; }
 body {
+  background: var(--grao), var(--manchas), radial-gradient(ellipse 110% 85% at 50% 18%, #1b1510 0%, #0e0b09 58%, #070605 100%) fixed;
   background-color: var(--fundo);
-  background-image: var(--textura-fundo);
-  background-size: 192px;
   color: var(--tinta);
   font-family: var(--texto);
   font-size: 17px;
@@ -53,15 +61,13 @@ img.sprite, canvas { image-rendering: pixelated; image-rendering: crisp-edges; }
 /* Sprites em pixels inteiros da tela: --px vale 1 pixel do aparelho (ou 2, 3...), nunca 1,25. */
 img.sprite { width: calc(var(--px, 1px) * var(--s, 16)); height: calc(var(--px, 1px) * var(--s, 16)); }
 button { font: inherit; color: inherit; }
-kbd { font-family: var(--num); font-size: 0.85em; padding: 0 4px; border: 2px solid var(--linha); color: var(--tinta-3); margin-left: 4px; background: #0d0b0a; }
+kbd { font-family: var(--num); font-size: 0.85em; padding: 0 5px; color: var(--tinta-3); margin-left: 4px; background: rgba(255, 232, 190, 0.06); border-radius: 2px; box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.6); }
 [hidden] { display: none !important; }
 
-/* Molduras pixeladas (imagem gerada no sprites.js) */
+/* Painel: superfície escura com grão e uma luz leve vindo de cima; a sombra o separa do fundo (sem moldura). */
 .moldura {
-  border: 12px solid #2a2420;
-  border-image: var(--moldura) 4 / 12px stretch;
-  background-color: var(--painel);
-  background-clip: padding-box;
+  background: var(--grao), linear-gradient(180deg, rgba(255, 228, 185, 0.03), rgba(0, 0, 0, 0.14)), var(--painel);
+  box-shadow: var(--sombra-painel);
 }
 
 /* ------------------------------------------------------------------ atmosfera */
@@ -84,17 +90,17 @@ body.modo-titulo #brasas { opacity: 1; }
 /* ------------------------------------------------------------------ topo */
 #topo {
   position: relative; z-index: 2; height: 46px; display: flex; align-items: center; gap: 22px; padding: 0 18px;
-  background: #0d0b0a; border-bottom: 4px solid #2a2420; box-shadow: 0 4px 0 #000;
+  background: linear-gradient(180deg, #060504, rgba(8, 6, 5, 0.92)); box-shadow: 0 12px 28px -10px rgba(0, 0, 0, 0.95);
 }
-.marca { font-family: var(--titulo); font-size: 30px; color: var(--ouro); text-shadow: 2px 2px 0 #000; white-space: nowrap; line-height: 1; }
+.marca { font-family: var(--titulo); font-size: 28px; color: var(--ouro); text-shadow: var(--sombra-texto); white-space: nowrap; line-height: 1; letter-spacing: 0.01em; }
 .topo-info { font-family: var(--num); font-size: 21px; color: var(--tinta-2); display: flex; align-items: center; gap: 8px; white-space: nowrap; }
 .topo-info .rotulo { color: var(--tinta-3); }
 #sigilos-topo { gap: 6px; }
 #sigilos-topo .sigilo { width: 12px; height: 12px; border: 2px solid #4a4038; transform: rotate(45deg); background: #1b1511; }
 #sigilos-topo .sigilo.tem { background: var(--ouro); border-color: #fff3a0; box-shadow: 0 0 0 2px #8a6a14; }
 #acoes-topo { margin-left: auto; display: flex; gap: 4px; }
-#acoes-topo button { background: transparent; border: 2px solid transparent; padding: 3px 10px; color: var(--tinta-2); cursor: pointer; font-size: 15px; }
-#acoes-topo button:hover { border-color: var(--linha); background: #1b1511; color: var(--tinta); }
+#acoes-topo button { background: transparent; border: 0; padding: 4px 10px; color: var(--tinta-2); cursor: pointer; font-size: 15px; transition: color .15s, text-shadow .15s; }
+#acoes-topo button:hover { color: #f3e6c9; text-shadow: 0 0 12px rgba(226, 189, 99, 0.45); }
 #acoes-topo button.desligado { opacity: 0.5; text-decoration: line-through; }
 .so-estreito { display: none; }
 body.sem-heroi #tempo, body.sem-heroi #sigilos-topo { visibility: hidden; }
@@ -105,7 +111,7 @@ body.sem-heroi #tempo, body.sem-heroi #sigilos-topo { visibility: hidden; }
   grid-template-columns: minmax(250px, 290px) minmax(0, 1fr) minmax(280px, 330px);
   gap: 14px; padding: 12px 16px; max-width: 1740px; margin: 0 auto;
 }
-.painel { padding: 10px 10px 12px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #4a4038 #120e0b; transition: opacity 0.4s ease; }
+.painel { padding: 16px 16px 18px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #4a4038 #120e0b; transition: opacity 0.4s ease; }
 body.sem-heroi .painel, body.modo-titulo .painel { opacity: 0; pointer-events: none; }
 body.sem-heroi #hud, body.modo-titulo #hud { display: none; }
 #palco { display: flex; flex-direction: column; min-height: 0; gap: 10px; align-items: center; }

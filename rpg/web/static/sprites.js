@@ -39,36 +39,5 @@ const Sprites = (() => {
   function img(nome, escala = 2, classe = "") {
     return `<img class="sprite ${classe}" src="${url(nome)}" width="${16 * escala}" height="${16 * escala}" style="--s:${16 * escala}" alt="" draggable="false">`;
   }
-  /** Moldura em pixel art (9-slice) para border-image. */
-  function moldura(fundo, borda, brilho, rebite) {
-    const c = document.createElement("canvas");
-    c.width = c.height = 12;
-    const x = c.getContext("2d");
-    x.fillStyle = "#0d0b0a"; x.fillRect(0, 0, 12, 12);
-    x.fillStyle = borda; x.fillRect(1, 1, 10, 10);
-    x.fillStyle = brilho; x.fillRect(1, 1, 10, 1); x.fillRect(1, 1, 1, 10);
-    x.fillStyle = "#0d0b0a"; x.fillRect(3, 3, 6, 6);
-    x.fillStyle = fundo; x.fillRect(4, 4, 4, 4);
-    x.clearRect(0, 0, 1, 1); x.clearRect(11, 0, 1, 1); x.clearRect(0, 11, 1, 1); x.clearRect(11, 11, 1, 1);
-    if (rebite) {
-      x.fillStyle = rebite;
-      [[1, 1], [9, 1], [1, 9], [9, 9]].forEach(([a, b]) => x.fillRect(a, b, 2, 2));
-    }
-    return c.toDataURL();
-  }
-  /** Textura de pedra escura em pixels, para fundos. */
-  function textura(cores, tamanho = 48, semente = 7) {
-    const c = document.createElement("canvas");
-    c.width = c.height = tamanho;
-    const x = c.getContext("2d");
-    let s = semente;
-    const rnd = () => (s = (s * 16807) % 2147483647) / 2147483647;
-    x.fillStyle = cores[0]; x.fillRect(0, 0, tamanho, tamanho);
-    for (let i = 0; i < tamanho * tamanho * 0.18; i++) {
-      x.fillStyle = cores[1 + Math.floor(rnd() * (cores.length - 1))];
-      x.fillRect(Math.floor(rnd() * tamanho), Math.floor(rnd() * tamanho), 1, 1);
-    }
-    return c.toDataURL();
-  }
-  return { img, url, canvas, moldura, textura, existe: (n) => !!S[n], PALETA };
+  return { img, url, canvas, existe: (n) => !!S[n], PALETA };
 })();

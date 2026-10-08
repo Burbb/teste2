@@ -155,8 +155,6 @@ window.addEventListener("resize", unidadePixel);
 function tema() {
   unidadePixel();
   const raiz = document.documentElement.style;
-  raiz.setProperty("--moldura", `url(${Sprites.moldura("#1b1511", "#5a4632", "#8a6e4a", "#c9a227")})`);
-  raiz.setProperty("--textura-fundo", `url(${Sprites.textura(["#120e0b", "#16110d", "#0e0b09", "#1a140f"], 64, 11)})`);
   raiz.setProperty("--caveira", `url(${Sprites.url("caveira")})`);
   raiz.setProperty("--cadeado", `url(${Sprites.url("cadeado")})`);
 }

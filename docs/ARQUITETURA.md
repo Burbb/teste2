@@ -127,7 +127,11 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
 - Perguntas que moram numa janela por cima, e não no pé da página, vêm marcadas nos metadados das opções: a
   confirmação de algo pedido pela tela (`Jogo.confirmar`: abandonar contrato, viagem perigosa) e o item achado
   (`achado`: o cartão e os botões numa janela própria, fora do log)
-- `css/01..13-*.css` por componente
+- `css/01..13-*.css` por componente. A identidade é de fantasia sombria: nada de moldura nem caixa dentro de caixa.
+  Painel é uma superfície escura com grão (`.moldura`), separada do resto por sombra (`--sombra-painel`) e espaço;
+  divisória é um fio de luz que some nas pontas (`--divisor`); nicho de item tem sombra para dentro e a raridade
+  é um aro de luz (`--aro` no `.slot-px`); etiqueta é tingida na própria cor, sem borda. Títulos em Grenze Gotisch,
+  prosa e rótulos em Alegreya, números em Jersey 15 (no modo "Fonte: pixel", Jacquard 24 e Pixelify Sans).
 
 ## Rede de segurança
 

@@ -15,7 +15,7 @@
 @font-face { font-family: "Alegreya Sans"; font-weight: 500; src: url(../fontes/alegreya-sans-latin-500-normal.woff2) format("woff2"); font-display: swap; }
 @font-face { font-family: "Alegreya Sans"; font-weight: 700; src: url(../fontes/alegreya-sans-latin-700-normal.woff2) format("woff2"); font-display: swap; }
 :root { --cabeca: "Alegreya SC", Georgia, serif; --prosa: "Alegreya", Georgia, serif; --ui: "Alegreya Sans", "Trebuchet MS", sans-serif; }
-body.fonte-pixel { --cabeca: var(--titulo); --prosa: var(--texto); --ui: var(--texto); }
+body.fonte-pixel { --titulo: "Jacquard 24", "Pixelify Sans", serif; --cabeca: var(--titulo); --prosa: var(--texto); --ui: var(--texto); }
 body:not(.fonte-pixel) { font-family: var(--ui); }
 body:not(.fonte-pixel) #folha, body:not(.fonte-pixel) .escolha, body:not(.fonte-pixel) .balao span, body:not(.fonte-pixel) .cc-fala,
 body:not(.fonte-pixel) .bilhete, body:not(.fonte-pixel) .contrato-desc, body:not(.fonte-pixel) .lore { font-family: var(--prosa); }
