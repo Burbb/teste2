@@ -182,14 +182,21 @@
 /* ---------------------------------------------------------------- o espólio da vitória (sensacao.js) */
 .festa-espolio { margin-top: 18vh; width: min(420px, 90vw); padding: 14px 24px 16px; background: rgba(18, 13, 9, 0.94); border: 3px solid #5a4630; box-shadow: 4px 4px 0 #000; }
 .festa-espolio.saindo { animation: some 0.22s ease-in forwards; }
-.espolio-ouro { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 6px 0 10px; color: var(--ouro); }
-.espolio-ouro b { font-family: var(--num); font-size: 34px; font-weight: 400; text-shadow: 3px 3px 0 #000; }
-.espolio-ouro small { color: var(--tinta-2); font-size: 15px; }
-.espolio-xp { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 10px; }
-.espolio-nivel { font-family: var(--num); font-size: 16px; color: var(--tinta-2); white-space: nowrap; }
-.espolio-nivel b { color: var(--ouro); font-weight: 400; font-size: 20px; }
-.espolio-barra { position: relative; height: 14px; background: #0d0a08; border: 2px solid #000; box-shadow: inset 0 0 0 1px #3a2e22; overflow: hidden; }
-.espolio-barra i { position: absolute; inset: 0 auto 0 0; width: 0; background: linear-gradient(180deg, #ffe38a, #d8a62c 60%, #9a6d12); box-shadow: 0 0 8px rgba(255, 210, 100, 0.6); }
-.espolio-mais { font-family: var(--num); font-size: 18px; color: var(--ouro); white-space: nowrap; }
+/* Uma linha por recompensa (ícone, nome, valor), como numa tela de resultado; a barra de nível pertence à linha da
+   experiência, embaixo dela, com os números do nível. */
+.espolio-linha { display: grid; grid-template-columns: 32px 1fr auto; align-items: center; gap: 10px; padding: 6px 10px; margin-top: 8px;
+  background: rgba(255, 255, 255, 0.03); border: 2px solid #2e251c; }
+.espolio-linha .nome { font-size: 16px; color: var(--tinta); text-align: left; }
+.espolio-linha b { font-family: var(--num); font-size: 28px; font-weight: 400; text-shadow: 3px 3px 0 #000; white-space: nowrap; }
+.espolio-linha b small { font-size: 16px; }
+.espolio-linha.ouro b { color: var(--ouro); }
+.espolio-linha.xp b { color: var(--xp); }
+.espolio-xp { transition: opacity 0.25s ease-out, translate 0.25s ease-out; }
+.espolio-xp.esperando { opacity: 0; translate: 0 8px; }
+.espolio-nivel { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 10px; padding: 6px 10px 2px 52px; }
+.espolio-nivel > span { font-family: var(--num); font-size: 15px; color: var(--tinta-2); white-space: nowrap; }
+.espolio-nivel b { color: var(--xp); font-weight: 400; font-size: 18px; }
+.espolio-barra { position: relative; height: 12px; background: #0d0a08; border: 2px solid #000; box-shadow: inset 0 0 0 1px #3a2e4a; overflow: hidden; }
+.espolio-barra i { position: absolute; inset: 0 auto 0 0; width: 0; background: linear-gradient(180deg, #ead8ff, #a57ce6 60%, #553090); box-shadow: 0 0 8px rgba(190, 150, 255, 0.6); }
 .festa-espolio.subiu { animation: espolio-subiu 0.5s ease-out; }
 @keyframes espolio-subiu { 30% { box-shadow: 4px 4px 0 #000, 0 0 30px rgba(255, 210, 100, 0.9); border-color: var(--ouro); } }

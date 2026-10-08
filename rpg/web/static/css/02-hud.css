@@ -47,5 +47,5 @@ body.por-um-fio .vital[data-vital="hp"] .enchimento { animation: pulso-vida var(
 .barra-px.mana { --c1: #a8c4ff; --c2: #4d74e0; --c3: #1c2a6b; }
 .barra-px.foco { --c1: #b8f0a0; --c2: #62b86e; --c3: #1f4a25; }
 .barra-px.aliado { --c1: #b8f0f0; --c2: #4fb3b9; --c3: #1f5f63; }
-.barra-px.xp { --c1: #fff3a0; --c2: #d4af37; --c3: #8a6a14; height: 8px; }
+.barra-px.xp { --c1: #ead8ff; --c2: #a57ce6; --c3: #553090; height: 8px; }  /* experiência é lilás; dourado é ouro */
 .barra-px.fina { height: 8px; }

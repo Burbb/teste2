@@ -20,7 +20,7 @@ const Sensacao = (() => {
     // Números que contam subindo (ouro do espólio): duração e o máximo de tiques de som.
     contarMs: 650, tiquesMax: 10,
     // A barra de XP enchendo (por trecho de nível) e quanto o espólio fica na tela depois de tudo.
-    barraMs: 700, espolioEsperaMs: 450, espolioFicaMs: 900,
+    barraMs: 700, espolioEsperaMs: 450, espolioEntreMs: 180, espolioFicaMs: 900,
     // Vida por um fio: o compasso do pulso (ms entre batidas), mais rápido quanto mais perto do fim, e quantas
     // vezes o coração soa ao entrar na faixa (depois só a tela pulsa: som contínuo cansa e angustia).
     batimentoLentoMs: 1150, batimentoRapidoMs: 700, batidasAoEntrar: 3,
@@ -221,16 +221,17 @@ const Sensacao = (() => {
   }
 
   /* ------------------------------------------------------------ contar e encher */
-  /** Um número que sobe contando até o valor, com um tique a cada passo (poucos tiques, para não cansar). */
-  function contar(el, ate, ms = AJUSTES.contarMs) {
-    if (rapido() || !ate) { el.textContent = ate; return Promise.resolve(); }
-    const passos = Math.min(AJUSTES.tiquesMax, ate);
+  /** Um número que sobe contando até o valor (a partir de `de`), com um tique a cada passo (poucos tiques, para não
+   *  cansar; `tiques: false` conta calado). */
+  function contar(el, ate, ms = AJUSTES.contarMs, { de = 0, tiques = true } = {}) {
+    if (rapido() || ate === de) { el.textContent = ate; return Promise.resolve(); }
+    const passos = tiques ? Math.min(AJUSTES.tiquesMax, ate - de) : 0;
     return new Promise((fim) => {
       const inicio = performance.now();
       let dado = 0;
       const passo = (agora) => {
         const t = Math.min(1, (agora - inicio) / pausa(ms));
-        el.textContent = Math.round(ate * (1 - Math.pow(1 - t, 2)));
+        el.textContent = Math.round(de + (ate - de) * (1 - Math.pow(1 - t, 2)));
         const n = Math.floor(t * passos);
         if (n > dado) { dado = n; Som.tocar("tique"); }
         if (t < 1) requestAnimationFrame(passo); else fim();
@@ -247,34 +248,45 @@ const Sensacao = (() => {
   }
 
   /* ------------------------------------------------------------ o espólio da vitória */
-  /** O ouro conta subindo e voa até a bolsa; a barra de XP enche (e, se o nível vira, enche, brilha e
-   *  recomeça). Some sozinho no fim; um clique ou uma tecla adianta. Os trechos da barra vêm do motor. */
+  /** Como a tela de resultado dos jogos: uma linha por recompensa (o ouro, depois a experiência), e a barra de nível
+   *  presa à linha da experiência, com os números do nível. O ouro conta e voa até a bolsa; só então a experiência
+   *  aparece, conta e enche a barra (se o nível vira: enche, brilha e recomeça). Some sozinho no fim; um clique ou
+   *  uma tecla adianta. Os trechos da barra vêm do motor. */
   async function espolio(caixa, d) {
     const S = (n, e = 1) => Sprites.img(n, e);
+    const ultimo = d.trechos[d.trechos.length - 1] || [0, 0, 1], primeiro = d.trechos[0] || ultimo;
     caixa.innerHTML = `<div class="festa festa-espolio">
       <div class="rotulo-festa">espólio</div>
-      ${d.ouro ? `<div class="espolio-ouro">${S("moeda", 2)}<b>+<span class="conta">0</span></b><small>ouro</small></div>` : ""}
-      <div class="espolio-xp"><div class="espolio-nivel">Nível <b>${d.nivel}</b></div>
-        <div class="espolio-barra"><i></i></div><div class="espolio-mais">+${d.xp} XP</div></div></div>`;
+      ${d.ouro ? `<div class="espolio-linha ouro">${S("moeda", 2)}<span class="nome">Ouro</span><b>+<span class="conta">0</span></b></div>` : ""}
+      <div class="espolio-xp${d.ouro ? " esperando" : ""}">
+        <div class="espolio-linha xp">${S("estrela", 2)}<span class="nome">Experiência</span><b>+<span class="conta">0</span> <small>XP</small></b></div>
+        <div class="espolio-nivel"><span>Nível <b>${d.nivel}</b></span><div class="espolio-barra"><i></i></div>
+          <span class="espolio-faltam"><span class="conta">${primeiro[0]}</span>/<span class="total">${primeiro[2]}</span></span></div>
+      </div></div>`;
     caixa.classList.add("leve");
     caixa.hidden = false;
     let pular = false;
     const adiantar = (ev) => { if (ev.type === "keydown" && ![" ", "Enter", "Escape"].includes(ev.key)) return; ev.preventDefault(); ev.stopPropagation(); pular = true; };
     document.addEventListener("pointerdown", adiantar, true);
     document.addEventListener("keydown", adiantar, true);
-    const festa = caixa.querySelector(".festa-espolio");
+    const festa = caixa.querySelector(".festa-espolio"), blocoXp = caixa.querySelector(".espolio-xp");
     const barra = caixa.querySelector(".espolio-barra"), nivelEl = caixa.querySelector(".espolio-nivel b");
-    const primeiro = d.trechos[0];
-    if (primeiro) barra.firstElementChild.style.width = (primeiro[0] / primeiro[2]) * 100 + "%";
+    const noNivel = caixa.querySelector(".espolio-faltam .conta"), totalEl = caixa.querySelector(".espolio-faltam .total");
+    barra.firstElementChild.style.width = (primeiro[0] / primeiro[2]) * 100 + "%";
     await dormir(pausa(AJUSTES.espolioEsperaMs));  // a faixa de "Vitória" sai antes
     if (d.ouro) {
       Som.tocar("moeda");
-      await contar(caixa.querySelector(".espolio-ouro .conta"), d.ouro);
-      Telas.moedasPara(caixa.querySelector(".espolio-ouro"), document.querySelector('.recurso[data-rec="ouro"]'));
+      await contar(caixa.querySelector(".espolio-linha.ouro .conta"), d.ouro);
+      Telas.moedasPara(caixa.querySelector(".espolio-linha.ouro"), document.querySelector('.recurso[data-rec="ouro"]'));
+      await dormir(pausa(AJUSTES.espolioEntreMs));
+      blocoXp.classList.remove("esperando");  // a experiência chega depois, numa linha dela
     }
+    contar(caixa.querySelector(".espolio-linha.xp .conta"), d.xp, AJUSTES.barraMs * d.trechos.length, { tiques: false });
     let nivel = d.nivel;
     for (const [de, ate, total] of d.trechos) {
       if (pular) break;
+      totalEl.textContent = total;
+      contar(noNivel, ate, AJUSTES.barraMs, { de, tiques: false });
       await encher(barra, de / total, ate / total, AJUSTES.barraMs);
       if (ate >= total) {  // o nível virou: a barra brilha, o número sobe, e ela recomeça
         nivel += 1;
@@ -283,6 +295,11 @@ const Sensacao = (() => {
         Som.tocar("nivel");
         await dormir(pausa(350));
       }
+    }
+    if (pular) {  // adiantou: os números vão direto ao fim
+      caixa.querySelector(".espolio-linha.xp .conta").textContent = d.xp;
+      noNivel.textContent = ultimo[1]; totalEl.textContent = ultimo[2];
+      blocoXp.classList.remove("esperando");
     }
     if (!pular) await Promise.race([dormir(pausa(AJUSTES.espolioFicaMs)), new Promise((r) => { const t = setInterval(() => { if (pular) { clearInterval(t); r(); } }, 50); })]);
     document.removeEventListener("pointerdown", adiantar, true);
