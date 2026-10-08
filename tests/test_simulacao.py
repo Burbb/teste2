@@ -573,6 +573,22 @@ class TestSistemas(unittest.TestCase):
         self.assertEqual(cenas[0], "Conversa com Odette")
         self.assertEqual(g.opcoes_conversa(), [])  # uma conversa por dia
 
+    def test_atributo_permanente(self):
+        """Na tela gráfica, o atributo para sempre vira festa (o selo que voa até o painel) com o valor novo; no
+        texto, a linha de sempre. O teto por partida continua valendo."""
+        g = Jogo(BotUI(random.Random(1)), seed=1, pasta_saves=tempfile.mkdtemp())
+        g.iniciar("Robô", "guerreiro")
+        festas, linhas = [], []
+        g.ui.celebrar = lambda tipo, dados: festas.append((tipo, dados))
+        g.ui.efeito = lambda texto, tipo="info": linhas.append(texto)
+        antes = g.j.atk
+        self.assertEqual(g.bonus_permanente("atk", 2), 2)
+        self.assertEqual(linhas, ["+2 Ataque permanente"])
+        g.ui.conquistas_na_tela = True
+        g.bonus_permanente("atk", 1)
+        self.assertEqual(festas, [("atributo", {"stat": "atk", "nome": "Ataque", "valor": 1, "total": antes + 3})])
+        self.assertEqual(g.bonus_permanente("atk", 5), 1)  # teto de +4 por partida
+
     def test_concordar(self):
         """Um lobo sozinho é "ele", não "eles"; duas aranhas são "elas"; um lobo e uma aranha, "eles"."""
         from rpg import texto as tx

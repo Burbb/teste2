@@ -200,3 +200,14 @@
 .espolio-barra i { position: absolute; inset: 0 auto 0 0; width: 0; background: linear-gradient(180deg, #ead8ff, #a57ce6 60%, #553090); box-shadow: 0 0 8px rgba(190, 150, 255, 0.6); }
 .festa-espolio.subiu { animation: espolio-subiu 0.5s ease-out; }
 @keyframes espolio-subiu { 30% { box-shadow: 4px 4px 0 #000, 0 0 30px rgba(255, 210, 100, 0.9); border-color: var(--ouro); } }
+
+/* Atributo permanente (telas.js seloAtributo): o selo surge no meio da tela e voa até o atributo, que brilha e conta. */
+.selo-atributo { position: fixed; top: 30%; z-index: 40; pointer-events: none; display: flex; align-items: center; gap: 12px; padding: 10px 22px 10px 14px;
+  background: rgba(18, 13, 9, 0.95); border: 3px solid var(--ouro-2); box-shadow: 4px 4px 0 #000, 0 0 26px rgba(255, 190, 110, 0.45);
+  animation: selo-entra 0.35s cubic-bezier(.2,1.5,.4,1); }
+.selo-atributo b { font-family: var(--num); font-size: 44px; font-weight: 400; color: #ffe8b0; text-shadow: 3px 3px 0 #000, 0 0 12px rgba(255, 190, 110, 0.7); }
+.selo-atributo span { display: flex; flex-direction: column; font-size: 20px; color: var(--tinta); line-height: 1.1; }
+.selo-atributo small { font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--tinta-2); }
+@keyframes selo-entra { from { scale: 0.5; opacity: 0; } }
+.atributo.ganhou, .vital.ganhou { animation: atributo-ganhou 1s ease-out; }
+@keyframes atributo-ganhou { 0% { box-shadow: 0 0 0 2px #ffe8b0, 0 0 20px rgba(255, 200, 120, 0.9); scale: 1.08; } 100% { box-shadow: 0 0 0 0 transparent; scale: 1; } }

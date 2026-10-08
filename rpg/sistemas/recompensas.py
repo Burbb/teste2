@@ -97,7 +97,11 @@ class Recompensas:
         ganhos[stat] = ganhos.get(stat, 0) + ganho
         self.j.base[stat] += ganho
         self.j.recalcular()
-        self.ui.efeito(f"+{ganho} {nome_stat(stat, self.j.nome_recurso)} permanente", "nivel")
+        nome = nome_stat(stat, self.j.nome_recurso)
+        if self.ui.conquistas_na_tela:  # o selo voa até o atributo no painel, que conta até o valor novo
+            self.ui.celebrar("atributo", {"stat": stat, "nome": nome, "valor": ganho, "total": getattr(self.j, stat)})
+        else:
+            self.ui.efeito(f"+{ganho} {nome} permanente", "nivel")
         return ganho
 
     def dar_provisoes(self, n):

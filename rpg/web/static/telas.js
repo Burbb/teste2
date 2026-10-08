@@ -340,13 +340,15 @@ const Telas = (() => {
 
   const ICONE_ATTR = { Ataque: "espada", Defesa: "escudo", Agilidade: "folha", Poder: "chama" };
   /** Atributos com dica: para que servem e o que você ganha com cada ponto. */
+  // Atributos a caminho: enquanto o selo de "+2 Ataque" voa, o painel mostra o valor de antes (ver seloAtributo).
+  const chegando = new Map();
   function atributosHtml(p) {
     const info = p.atributos_info || {}, penal = p.atributos_penal || {};
     return Object.entries(p.atributos).map(([k, v]) => {
       const linhas = (info[k] || []).map((l, i) => `<li${penal[k] && !i ? ' class="pior"' : ""}>${h(l)}</li>`).join("");
       // Abaixo do normal (ferimento, fome): o número já vem com a penalidade, em vermelho, e a dica diz quanto.
       const pen = penal[k] ? ` <span class="penal">(−${penal[k].pct}%)</span>` : "";
-      return `<div class="atributo${penal[k] ? " abaixo" : ""}" ${dica(`<b>${h(k)} ${v}${pen}</b><ul class="dica-lista">${linhas}</ul>`)}>${S(ICONE_ATTR[k] || "estrela", 1)}<span class="nome">${h(k)}</span><span class="valor">${v}</span></div>`;
+      return `<div class="atributo${penal[k] ? " abaixo" : ""}" data-atributo="${h(k)}" ${dica(`<b>${h(k)} ${v}${pen}</b><ul class="dica-lista">${linhas}</ul>`)}>${S(ICONE_ATTR[k] || "estrela", 1)}<span class="nome">${h(k)}</span><span class="valor">${chegando.has(k) ? chegando.get(k) : v}</span></div>`;
     }).join("");
   }
   function reputacaoHtml(p) {
@@ -970,6 +972,49 @@ const Telas = (() => {
     }
   }
 
+  /** Um atributo para sempre (+2 Ataque de um evento): um selo surge no meio da tela, voa até o atributo (no painel;
+   *  vida e recurso máximos, na barra da HUD), que brilha e conta até o valor novo. Não segura o jogo: o texto segue
+   *  enquanto o selo voa. */
+  const ICONE_SELO = { atk: "espada", defesa: "escudo", agi: "folha", poder: "chama", max_hp: "coracao", max_rec: "estrela" };
+  function destinoAtributo(d) {
+    if (d.stat === "max_hp" || d.stat === "max_rec") return document.querySelector(`#hud .vital[data-vital="${d.stat === "max_hp" ? "hp" : "rec"}"]`);
+    return document.querySelector(`#heroi .atributo[data-atributo="${d.nome}"]`);
+  }
+  function seloAtributo(d) {
+    const selo = document.createElement("div");
+    selo.className = "selo-atributo";
+    selo.innerHTML = `${S(ICONE_SELO[d.stat] || "estrela", 4)}<b>+${d.valor}</b><span>${h(d.nome)}<small>permanente</small></span>`;
+    document.body.appendChild(selo);
+    selo.style.left = (innerWidth - selo.offsetWidth) / 2 + "px";  // centrado sem transform: o voo usa translate e scale
+    App.som("aprender");
+    const antes = d.total - d.valor, noPainel = !["max_hp", "max_rec"].includes(d.stat);
+    if (noPainel) {  // o painel espera o selo chegar para mostrar o valor novo
+      chegando.set(d.nome, antes);
+      const v = destinoAtributo(d)?.querySelector(".valor");
+      if (v) v.textContent = antes;
+    }
+    const voar = async () => {
+      await new Promise((r) => setTimeout(r, 900));  // o selo fica um instante no meio, para ser lido
+      const alvo = destinoAtributo(d), visivel = alvo && alvo.offsetParent;
+      if (visivel) {
+        const a = selo.getBoundingClientRect(), b = alvo.getBoundingClientRect();
+        const dx = b.left + b.width / 2 - (a.left + a.width / 2), dy = b.top + b.height / 2 - (a.top + a.height / 2);
+        await selo.animate([{ translate: "0 0", scale: 1, opacity: 1 }, { translate: `${dx}px ${dy}px`, scale: 0.25, opacity: 0.6 }],
+          { duration: 520, easing: "cubic-bezier(.5,0,.75,0)", fill: "forwards" }).finished.catch(() => {});
+      } else await selo.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, fill: "forwards" }).finished.catch(() => {});
+      selo.remove();
+      if (noPainel) chegando.delete(d.nome);
+      const aqui = destinoAtributo(d);  // o painel pode ter sido redesenhado enquanto o selo voava
+      if (!aqui) return;
+      aqui.classList.remove("ganhou"); void aqui.offsetWidth; aqui.classList.add("ganhou");
+      setTimeout(() => aqui.classList.remove("ganhou"), 1100);
+      const valor = aqui.querySelector(".valor");
+      if (valor && noPainel) Sensacao.contar(valor, d.total, 520, { de: antes });
+    };
+    voar();
+    return new Promise((r) => setTimeout(r, 450));
+  }
+
   function faixa(titulo, sub, icone) {
     const f = document.createElement("div");
     f.className = "faixa-festa";
@@ -1088,6 +1133,7 @@ const Telas = (() => {
     if (m.tipo === "contratos") return instantaneo ? Promise.resolve() : pagarContratos(caixa, d);
     if (m.tipo === "amanhecer") return instantaneo ? Promise.resolve() : amanhecer(caixa, d);
     if (m.tipo === "espolio") return instantaneo ? Promise.resolve() : Sensacao.espolio(caixa, d);
+    if (m.tipo === "atributo") return instantaneo ? Promise.resolve() : seloAtributo(d);
     let html = "";
     if (m.tipo === "nivel") {
       const icones = { Vida: "coracao", Ataque: "espada", Defesa: "escudo", Agilidade: "folha", Poder: "chama", Mana: "pocao_azul", Vigor: "chama", Foco: "olho" };
@@ -1233,6 +1279,7 @@ const Telas = (() => {
     if (m.tipo === "sigilo") return `▸ Sigilo ${d.sigilos}/3 (${d.guardiao}): +1 ponto de talento`;
     if (m.tipo === "spec") return `▸ Você agora é ${d.nome}`;
     if (m.tipo === "espolio") return `▸ Espólio: ${d.ouro ? `+${d.ouro} ouro, ` : ""}+${d.xp} XP`;
+    if (m.tipo === "atributo") return `▸ +${d.valor} ${d.nome} permanente`;
     if (m.tipo === "amanhecer") return `▸ Dia ${d.dia} · ${d.clima}${d.itens.length ? " · " + d.itens.map((x) => x.curto).join(", ") : ""}`;
     return "";
   }
