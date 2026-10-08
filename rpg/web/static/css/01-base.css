@@ -74,10 +74,12 @@ kbd { font-family: var(--num); font-size: 0.85em; padding: 0 5px; color: var(--t
    por espaço e sulco. A luz vem de cima e da esquerda: placa é clara em cima e escura embaixo; nicho, o contrário. */
 /* O anel de cada material é uma moldura em 9-slice (sprites-dados.js) guardada em --anel: estado e raridade trocam
    a imagem (--anel-k, --placa-C, --janela-y...), nunca a espessura. */
-/* Painel: pedra granulada e fuligem pontilhada por cima, luz pontilhada no topo. */
+/* Painel: pedra granulada com fuligem pontilhada por cima, em relevo: luz pontilhada no topo e na esquerda, sombra
+   pontilhada na direita e no pé. */
 .m-painel { --anel: var(--anel-k); border: var(--borda) solid var(--p-k); border-image: var(--anel) 1 / 1 stretch;
-  background: var(--luz-topo) 0 0 / calc(var(--P) * 4) calc(var(--P) * 6) repeat-x, var(--fumo-painel) 0 0 / calc(var(--P) * 128),
-    var(--tx-pedra) 0 0 / calc(var(--P) * 64), var(--painel);
+  background: var(--luz-topo) 0 0 / calc(var(--P) * 4) calc(var(--P) * 6) repeat-x, var(--luz-esq) 0 0 / calc(var(--P) * 4) repeat-y,
+    var(--sombra-dir) 100% 0 / calc(var(--P) * 4) repeat-y, var(--sombra-baixo) 0 100% / calc(var(--P) * 4) repeat-x,
+    var(--fumo-painel) 0 0 / calc(var(--P) * 128), var(--tx-pedra) 0 0 / calc(var(--P) * 64), var(--painel);
   background-clip: padding-box; }
 /* Painel de pergaminho: o da cena, atrás da prosa (quase liso; nada de pontilhado atrás de texto corrido). */
 .m-painel.m-perg { background: var(--tx-perg) 0 0 / calc(var(--P) * 64), var(--perg); background-clip: padding-box; }

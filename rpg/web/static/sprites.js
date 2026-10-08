@@ -158,7 +158,11 @@ const Sprites = (() => {
     raiz.setProperty("--fumo-fundo", u(fumo("k", 128, 9, 32, 0.75)));
     for (const n of MOLDURAS) raiz.setProperty(`--${n.replace("_", "-")}`, u(url(n)));
     for (const n of [4, 8, 12]) raiz.setProperty(`--veu-${n}`, u(pontilhado("k", n)));
+    // O relevo dos painéis: a luz vem de cima e da esquerda; a direita e o pé ficam na sombra.
     raiz.setProperty("--luz-topo", u(rampa("s", 6)));
+    raiz.setProperty("--luz-esq", u(rampa("s", 4, "direita")));
+    raiz.setProperty("--sombra-dir", u(rampa("k", 4, "esquerda")));
+    raiz.setProperty("--sombra-baixo", u(rampa("k", 4, "sobe")));
     raiz.setProperty("--sombra-desce", u(rampa("k", 4)));
     for (const n of ["caveira", "cadeado"]) raiz.setProperty(`--${n}`, u(url(n)));
   }
