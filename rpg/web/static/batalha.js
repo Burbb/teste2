@@ -109,7 +109,7 @@ const Batalha = (() => {
     veneno: ["gota_verde", "veneno"] };
   function mostrarFicha(el) {
     const c = el._ficha;
-    if (!c || !c.ficha) return;
+    if (!c || !c.ficha || !escolhendo) return;
     if (Telas.dicaAbertaPor(el)) return;  // já aberta (a carta voltou para baixo do mouse): fica onde está
     const f = c.ficha;
     const caixa = Telas.abrirDica(el, true);
@@ -801,8 +801,16 @@ const Batalha = (() => {
   }
 
   /* ------------------------------------------------------------ vez e alvos */
+  // A pessoa está escolhendo (a ação, ou o alvo dela)? Só aí a ficha do inimigo abre ao passar o mouse: enquanto os
+  // golpes animam, as cartas passam voando por baixo do mouse parado perto da sua, e a ficha pulava na frente.
+  let escolhendo = false;
+  function podeEscolher(sim) {
+    escolhendo = sim;
+    if (!sim) cartas.forEach((el) => { if (Telas.dicaAbertaPor(el)) esconderFicha(); });
+  }
   function vez(uid) {
     cartas.forEach((el, u) => el.classList.toggle("vez", u === uid));
+    podeEscolher(uid === "j");
   }
   /** A carta de quem escolhe a ação vem para a frente e cresce. */
   function foco(uid) {
@@ -811,6 +819,7 @@ const Batalha = (() => {
   function elCarta(uid) { return cartas.get(uid) || null; }
   function alvos(opcoes, escolher) {
     limparAlvos();
+    podeEscolher(true);
     opcoes.forEach((o, i) => {
       const el = o.meta && carta(o.meta.alvo);
       if (!el) return;
