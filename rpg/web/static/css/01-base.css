@@ -14,9 +14,8 @@
   /* A paleta da interface é a dos sprites (sprites.js, publicada no :root como --p-<letra> antes da primeira pintura):
      os nomes abaixo só dizem o papel de cada cor. Nenhum hex mora aqui. */
   --fundo: var(--p-z);       /* pedra funda: o fundo da página e o recheio dos nichos */
-  --perg: var(--p-q);        /* pergaminho escuro, atrás da prosa */
-  --perg-grao: var(--p-Q);
-  --painel: var(--p-K);      /* pedra dos painéis */
+  --perg: var(--p-Q);        /* pergaminho escuro, atrás da prosa: a parte mais clara da mesa, onde cai a luz */
+  --painel: var(--p-q);      /* pedra dos painéis, em fuligem: mais escura que a cena */
   --pedra-luz: var(--p-s);
   --pedra-alta: var(--p-d);
   --tinta: var(--p-w);
@@ -54,7 +53,7 @@
 * { box-sizing: border-box; }
 html, body { height: 100%; margin: 0; }
 body {
-  background: var(--tx-fundo) 0 0 / calc(var(--P) * 128), var(--fundo);
+  background: var(--fumo-fundo) 0 0 / calc(var(--P) * 128), var(--tx-fundo) 0 0 / calc(var(--P) * 128), var(--fundo);
   color: var(--tinta);
   font-family: var(--texto);
   font-size: 17px;
@@ -75,15 +74,16 @@ kbd { font-family: var(--num); font-size: 0.85em; padding: 0 5px; color: var(--t
    por espaço e sulco. A luz vem de cima e da esquerda: placa é clara em cima e escura embaixo; nicho, o contrário. */
 /* O anel de cada material é uma moldura em 9-slice (sprites-dados.js) guardada em --anel: estado e raridade trocam
    a imagem (--anel-k, --placa-C, --janela-y...), nunca a espessura. */
-/* Painel: pedra granulada, luz pontilhada no topo. */
+/* Painel: pedra granulada e fuligem pontilhada por cima, luz pontilhada no topo. */
 .m-painel { --anel: var(--anel-k); border: var(--borda) solid var(--p-k); border-image: var(--anel) 1 / 1 stretch;
-  background: var(--luz-topo) 0 0 / calc(var(--P) * 4) calc(var(--P) * 6) repeat-x, var(--tx-pedra) 0 0 / calc(var(--P) * 64), var(--p-K);
+  background: var(--luz-topo) 0 0 / calc(var(--P) * 4) calc(var(--P) * 6) repeat-x, var(--fumo-painel) 0 0 / calc(var(--P) * 128),
+    var(--tx-pedra) 0 0 / calc(var(--P) * 64), var(--painel);
   background-clip: padding-box; }
 /* Painel de pergaminho: o da cena, atrás da prosa (quase liso; nada de pontilhado atrás de texto corrido). */
 .m-painel.m-perg { background: var(--tx-perg) 0 0 / calc(var(--P) * 64), var(--perg); background-clip: padding-box; }
 /* Janela: pergaminho escuro quase liso (carrega texto) e 1 texel de sombra dura desenhado na própria moldura. */
 .m-janela { --anel: var(--janela-k); border: var(--borda) solid var(--p-k); border-image: var(--anel) 2 / 2 / 0 1 1 0 stretch;
-  background: var(--tx-perg) 0 0 / calc(var(--P) * 64), var(--p-q); background-clip: padding-box; }
+  background: var(--tx-perg) 0 0 / calc(var(--P) * 64), var(--perg); background-clip: padding-box; }
 .m-janela.r-magico { --anel: var(--janela-U); } .m-janela.r-raro { --anel: var(--janela-y); } .m-janela.r-lendario { --anel: var(--janela-O); }
 /* Placa: botão, ícone da doca, carta. Em relevo (claro em cima, escuro embaixo) e com 1 texel de espessura, que vem
    na moldura. Apertada, o relevo inverte e o conteúdo desce; a caixa fica parada, para o clique não escapar. */

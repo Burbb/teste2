@@ -97,18 +97,36 @@ const Sprites = (() => {
       }
     });
   }
-  /** Pedra (ou pergaminho) granulada que emenda nas bordas: ruído de valor periódico em três tons. O claro e o
-   *  escuro vão para o ladrilho; o do meio fica transparente, porque é a cor de fundo do próprio material. */
+  /** Ruído de valor periódico, de 0 a 1, liso dentro de células de `celula` texels: o ladrilho emenda nas bordas. */
+  function ruido(tam, semente, celula) {
+    if (tam % celula) throw new Error("a célula do ruído precisa dividir o ladrilho (senão aparece a emenda)");
+    const per = tam / celula, suave = (t) => t * t * (3 - 2 * t);
+    const h = (i, j) => { const v = Math.sin((i % per) * 127.1 + (j % per) * 311.7 + semente * 74.7) * 43758.5453; return v - Math.floor(v); };
+    return (x, y) => {
+      const gx = x / celula, gy = y / celula, i = Math.floor(gx), j = Math.floor(gy), ux = suave(gx - i), uy = suave(gy - j);
+      const a = h(i, j), b = h(i + 1, j), c = h(i, j + 1), d = h(i + 1, j + 1);
+      return a + (b - a) * ux + (c - a) * uy + (a - b - c + d) * ux * uy;
+    };
+  }
+  /** Pedra (ou pergaminho) granulada: o ruído em três tons. O claro e o escuro vão para o ladrilho; o do meio fica
+   *  transparente, porque é a cor de fundo do próprio material. */
   function pedra([claro, escuro], tam, semente, celula = 4, faixa = 0.3) {
-    if (tam % celula) throw new Error("a célula da pedra precisa dividir o ladrilho (senão aparece a emenda)");
+    const r = ruido(tam, semente, celula);
     return tile(`pd${claro}${escuro}${tam}.${semente}.${celula}.${faixa}`, tam, tam, (set) => {
-      const per = tam / celula, suave = (t) => t * t * (3 - 2 * t);
-      const h = (i, j) => { const v = Math.sin((i % per) * 127.1 + (j % per) * 311.7 + semente * 74.7) * 43758.5453; return v - Math.floor(v); };
       for (let y = 0; y < tam; y++) for (let x = 0; x < tam; x++) {
-        const gx = x / celula, gy = y / celula, i = Math.floor(gx), j = Math.floor(gy), ux = suave(gx - i), uy = suave(gy - j);
-        const a = h(i, j), b = h(i + 1, j), c = h(i, j + 1), d = h(i + 1, j + 1);
-        const n = a + (b - a) * ux + (c - a) * uy + (a - b - c + d) * ux * uy + (BAYER4[(y & 3) * 4 + (x & 3)] / 16 - 0.5) * 0.15;
+        const n = r(x, y) + (BAYER4[(y & 3) * 4 + (x & 3)] / 16 - 0.5) * 0.15;
         if (n > 0.5 + faixa) set(x, y, claro); else if (n < 0.5 - faixa) set(x, y, escuro);
+      }
+    });
+  }
+  /** Fuligem: manchas grandes e suaves de uma cor, pontilhadas pelo Bayer, com no máximo `forca` de cobertura. É o
+   *  esfumado da pixel art: a pedra escurece em nuvens, sem gradiente nem faixa. */
+  function fumo(letra, tam, semente, celula = 32, forca = 0.5) {
+    const grosso = ruido(tam, semente, celula), fino = ruido(tam, semente, celula / 2);
+    return tile(`fm${letra}${tam}.${semente}.${celula}.${forca}`, tam, tam, (set) => {
+      for (let y = 0; y < tam; y++) for (let x = 0; x < tam; x++) {
+        const n = grosso(x, y) * 0.7 + fino(x, y) * 0.3, t = Math.min(1, Math.max(0, (n - 0.3) / 0.55)) * forca;
+        if (BAYER4[(y & 3) * 4 + (x & 3)] < Math.floor(t * 16)) set(x, y, letra);
       }
     });
   }
@@ -130,11 +148,14 @@ const Sprites = (() => {
     const raiz = document.documentElement.style, u = (d) => `url(${d})`;
     for (const [letra, cor] of Object.entries(PALETA)) raiz.setProperty(`--p-${letra}`, cor);
     // Grão fino e esparso (só os extremos do ruído viram pinta): granito, e não camuflagem.
-    raiz.setProperty("--tx-pedra", u(pedra(["s", "z"], 64, 11, 4, 0.32)));   // painéis (fundo K)
-    raiz.setProperty("--tx-perg", u(pedra(["Q", "z"], 64, 23, 4, 0.36)));    // cena e janelas: quase liso, atrás da prosa
+    raiz.setProperty("--tx-pedra", u(pedra(["Q", "z"], 64, 11, 4, 0.38)));   // painéis (fundo q)
+    raiz.setProperty("--tx-perg", u(pedra(["s", "q"], 64, 23, 4, 0.4)));     // cena e janelas: quase liso, atrás da prosa (fundo Q)
     raiz.setProperty("--tx-placa", u(pedra(["d", "K"], 32, 3)));             // placas (fundo s)
     raiz.setProperty("--tx-funda", u(pedra(["K", "k"], 32, 5)));             // nichos (fundo z)
-    raiz.setProperty("--tx-fundo", u(pedra(["K", "k"], 128, 7, 4, 0.32)));   // a página (fundo z)
+    raiz.setProperty("--tx-fundo", u(pedra(["K", "k"], 128, 7, 4, 0.44)));   // a página (fundo z)
+    // Fuligem por cima da pedra: os painéis afundam na sombra e a luz fica na cena; a página, mais escura ainda.
+    raiz.setProperty("--fumo-painel", u(fumo("k", 128, 5, 32, 0.5)));
+    raiz.setProperty("--fumo-fundo", u(fumo("k", 128, 9, 32, 0.75)));
     for (const n of MOLDURAS) raiz.setProperty(`--${n.replace("_", "-")}`, u(url(n)));
     for (const n of [4, 8, 12]) raiz.setProperty(`--veu-${n}`, u(pontilhado("k", n)));
     raiz.setProperty("--luz-topo", u(rampa("s", 6)));
@@ -142,5 +163,5 @@ const Sprites = (() => {
     for (const n of ["caveira", "cadeado"]) raiz.setProperty(`--${n}`, u(url(n)));
   }
 
-  return { img, url, canvas, existe: (n) => !!S[n], PALETA, BAYER4, MOLDURAS, tex: { tile, pontilhado, rampa, pedra }, publicar };
+  return { img, url, canvas, existe: (n) => !!S[n], PALETA, BAYER4, MOLDURAS, tex: { tile, pontilhado, rampa, pedra, fumo }, publicar };
 })();
