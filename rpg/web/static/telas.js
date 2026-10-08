@@ -500,6 +500,7 @@ const Telas = (() => {
         ${htmlItem(it, "", true)}${aviso}
       </div>${eq}</div>`;
   }
+  /** O cartão do item aparece de vez: o som da raridade e as faíscas (depois da cerimônia, se houve uma). */
   function revelarAchado(raiz, d) {
     const cartao = raiz.querySelector(".achado-cartao.novo");
     if (!cartao) return;
@@ -943,7 +944,6 @@ const Telas = (() => {
     const div = document.createElement("div");
     div.innerHTML = ({ personagem, diario, bestiario, comitiva, loja, acampamento, mural, achado, saves }[m.tipo] || (() => ""))(m.dados);
     if (m.tipo === "saves") ligarSaves(div);
-    if (m.tipo === "achado") setTimeout(() => revelarAchado(div, m.dados), 0);
     if (m.tipo === "acampamento") { App.ultimaFogueira = m.dados; desenharFogueira(div.querySelector(".fogueira-cena"), m.dados); }
     if (m.tipo === "acampamento" || m.tipo === "comitiva") ligarFigurasComitiva(div);
     if (m.tipo === "mural" || m.tipo === "diario") ligarMural(div);
@@ -1245,6 +1245,6 @@ const Telas = (() => {
     setTimeout(() => t.remove(), 3300);
   }
 
-  return { rastreador, atributosHtml, reputacaoHtml, dica, guardarDica, htmlItem, menuUso, abrirGrimorio, alternarGrimorio, abrirDica, dicaAbertaPor, mouseNaArea, novaVisita, fecharMenuItem, guardarArvore, abrirTalentos, fecharTalentos, painel, celebrar, resumoCelebracao, toast, moedasPara, iconeCriatura, iconeItem, dicaItem, ligarDicas, esconderDica,
+  return { rastreador, atributosHtml, reputacaoHtml, dica, guardarDica, htmlItem, menuUso, abrirGrimorio, alternarGrimorio, abrirDica, dicaAbertaPor, mouseNaArea, novaVisita, fecharMenuItem, guardarArvore, abrirTalentos, fecharTalentos, painel, revelarAchado, celebrar, resumoCelebracao, toast, moedasPara, iconeCriatura, iconeItem, dicaItem, ligarDicas, esconderDica,
     ICONE_ITEM, ARMA, VAZIO, NOME_ESPACO, AREA, barra, aprovacao };
 })();

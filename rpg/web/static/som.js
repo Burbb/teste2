@@ -181,6 +181,12 @@ const Som = (() => {
       tom(t, 160, 0.6, 0.3, "sine", 40); estalo(t, 700, 0.45, 0.12); estalo(t + 0.03, 2400, 0.25, 0.08);
       tom(t + 0.02, 880, 0.06, 0.25, "square", 1320);
     },
+    // O feixe do saque raro: um ar que sobe e um acorde que se abre (o tilintar vem quando o cartão aparece).
+    feixe() {
+      const t = ctx.currentTime;
+      sopro(t, 0.9, 400, 6000, 0.05, 0.7, "bandpass");
+      [196, 294, 392, 587].forEach((f, i) => tom(t + 0.1 + i * 0.12, f, 0.045, 1.1, "sine"));
+    },
     // Vida por um fio: o coração (tum-tum, grave e curto).
     batimento() {
       const t = ctx.currentTime;

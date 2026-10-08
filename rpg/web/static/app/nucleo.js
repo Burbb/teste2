@@ -150,7 +150,21 @@ async function tratar(m) {
     case "fim_combate": if (!instantaneo()) await espera(m.resultado === "vitoria" ? 800 : 400); break;
     case "celebrar": { const r = Telas.resumoCelebracao(m); if (r) historico("h-chip", r); await Telas.celebrar(m, instantaneo()); break; }
     case "talentos": Telas.guardarArvore(m.arvore); break;
-    case "painel": if (m.tipo === "achado") cenaInterrompida = true; anexar(Telas.painel(m)); break;
+    case "painel": {
+      const no = anexar(Telas.painel(m));
+      if (m.tipo === "achado") {
+        // O cartão já está no lugar, mas escondido: o feixe (raro, lendário) cai em cima dele, e só então ele surge.
+        cenaInterrompida = true;
+        const cartao = no.querySelector(".achado-cartao.novo");
+        if (cartao && !replay) {
+          no.classList.add("esperando-feixe");
+          await Sensacao.cerimoniaSaque(m.dados.item.raridade, cartao);
+          no.classList.remove("esperando-feixe");
+        }
+        if (!replay) Telas.revelarAchado(no, m.dados);
+      }
+      break;
+    }
     case "subtitulo": anexar(el("div", "subtitulo", esc(suavizar(m.texto)))); break;
     case "separador": anexar(el("hr")); break;
     case "bloco": bloco(m); break;

@@ -20,6 +20,9 @@ const Sensacao = (() => {
     barraMs: 700, espolioEsperaMs: 450, espolioFicaMs: 900,
     // Vida por um fio: o batimento (ms entre batidas), mais rápido quanto mais perto do fim.
     batimentoLentoMs: 1150, batimentoRapidoMs: 700,
+    // Saque com cerimônia: por raridade, quanto o feixe de luz demora antes de o cartão aparecer (sem entrada,
+    // o item aparece direto). O lendário ainda ganha um clarão na tela inteira.
+    saque: { raro: { ms: 750 }, lendario: { ms: 1150, clarao: true } },
   };
   // O que pesa mais, quando vários golpes caem de uma vez (uma salva em área): o mais pesado dá o tom.
   const ORDEM = ["final", "abate", "critico"];
@@ -103,6 +106,27 @@ const Sensacao = (() => {
     batendo = setTimeout(bater, ms);
   }
 
+  /* ------------------------------------------------------------ saque com cerimônia */
+  /** Antes de o cartão de um item raro aparecer: a tela escurece, um feixe de luz na cor da raridade desce do
+   *  alto até onde o cartão vai surgir (como os feixes de saque do Diablo), e só então ele aparece. */
+  async function cerimoniaSaque(raridade, onde) {
+    const cfg = AJUSTES.saque[raridade];
+    if (!cfg || rapido()) return;
+    // O feixe cai no meio de `onde` (o cartão, ainda escondido no lugar em que vai surgir).
+    if (onde) onde.scrollIntoView({ block: "nearest" });
+    const r = onde ? onde.getBoundingClientRect() : { left: 0, width: innerWidth, top: innerHeight * 0.4, height: 0 };
+    const x = r.left + r.width / 2, y = Math.max(140, Math.min(r.top + r.height * 0.45, innerHeight - 60));
+    const veu = document.createElement("div");
+    veu.className = `cerimonia-saque rar-${raridade}`;
+    veu.innerHTML = `<i class="feixe" style="left:${x}px;height:${y}px"></i><i class="chao" style="left:${x}px;top:${y}px"></i>` +
+      (cfg.clarao ? '<i class="clarao"></i>' : "");
+    document.body.appendChild(veu);
+    Som.tocar("feixe");
+    await dormir(pausa(cfg.ms));
+    veu.classList.add("saindo");
+    setTimeout(() => veu.remove(), 400);
+  }
+
   /* ------------------------------------------------------------ contar e encher */
   /** Um número que sobe contando até o valor, com um tique a cada passo (poucos tiques, para não cansar). */
   function contar(el, ate, ms = AJUSTES.contarMs) {
@@ -175,5 +199,5 @@ const Sensacao = (() => {
     caixa.hidden = true; caixa.innerHTML = ""; caixa.classList.remove("leve");
   }
 
-  return { AJUSTES, configurar, peso, maisPesado, tremor, parada, golpe, contar, encher, espolio, vidaDoHeroi };
+  return { AJUSTES, configurar, peso, maisPesado, tremor, parada, golpe, contar, encher, espolio, vidaDoHeroi, cerimoniaSaque };
 })();
