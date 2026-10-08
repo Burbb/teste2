@@ -2,6 +2,7 @@
 
 from .. import balanceamento as bal
 from .. import comitiva, grimorio, mapa, sobrevivencia
+from .. import texto as tx
 from ..classes import CLASSES
 from ..habilidades import HABILIDADES, descricao_habilidade
 from ..estados import NOMES as NOMES_EFEITOS, para_tela
@@ -64,11 +65,12 @@ def explicar_atributos(g):
                  f"Testes de Destreza: {g.mod_teste('destreza'):+d}, Percepção: {g.mod_teste('percepcao'):+d}.",
                  "+1 de Agilidade = +1,2% de esquiva e +1% de crítico."]
     poder = ["Força da magia e da fé."]
-    if j.classe == "mago":
+    usam_poder = grimorio.habilidades_que_usam(j, "poder")
+    if ataque_usa == "poder":
         poder += ["É a base de todas as suas magias e do ataque básico.",
                   f"Queimaduras causam {max(2, int(j.poder * 0.4))} por turno."]
-    elif j.spec == "paladino":
-        poder += ["Aumenta o Golpe Sagrado, o Julgamento e a cura da Prece."]
+    elif usam_poder:
+        poder += [f"Aumenta {tx.lista_natural(usam_poder)}."]
     else:
         poder += ["Pouco importa para a sua classe (alguns itens e eventos usam)."]
     poder.append(f"Testes de Arcano: {g.mod_teste('arcano'):+d} no d20.")

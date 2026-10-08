@@ -1,6 +1,7 @@
 """Testes de atributo: d20 + bônus contra a dificuldade."""
 
 import math
+from ..classes import CLASSES, SPECS
 from ..regras import NOMES_TESTE
 
 
@@ -24,20 +25,13 @@ class Testes:
             partes.append((f"Poder {j.poder}", b(j.poder)))
         elif attr == "percepcao":
             partes.append((f"Agilidade {j.agi}", b(j.agi)))
-            if j.classe == "arqueiro":
-                partes.append(("olhos de arqueiro", 3))
-            if j.spec == "patrulheiro":
-                partes.append(("patrulheiro", 2))
         elif attr == "vontade":
             partes.append((f"Defesa {j.defesa}", b(j.defesa * 0.8)))
-            if j.spec == "paladino":
-                partes.append(("paladino", 3))
-            if j.classe == "mago":
-                partes.append(("mente treinada", 2))
         elif attr == "carisma":
             partes.append((f"Reputação {j.reputacao:+d}", j.reputacao // 10))
-            if j.spec == "paladino":
-                partes.append(("paladino", 2))
+        for fonte in (CLASSES[j.classe], SPECS.get(j.spec, {})):  # "olhos de arqueiro", "paladino"...
+            if attr in fonte.get("testes", {}):
+                partes.append(fonte["testes"][attr])
         if self.sem_luz and attr in ("percepcao", "destreza"):
             partes.append(("escuridão", -4))
         return [p for p in partes if p[1]]

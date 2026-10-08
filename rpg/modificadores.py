@@ -6,8 +6,9 @@ O combate só faz duas perguntas:
     mod(u, "dano_corpo")                    quanto somam os modificadores dessa chave (+6% por ponto de Golpe Brutal...)
     disparar(cb, u, "abate", alvo=c, ...)   quem reage a esse acontecimento (Frenesi, Assassino, Coração Ardente...)
 
-Quem responde são as **fontes**: a passiva da especialização, cada talento comprado (na ordem em que foram
-declarados) e cada item vestido (na ordem dos espaços). Cada fonte é um dicionário com:
+Quem responde são as **fontes**: a classe e a especialização (o que declaram em `mods`, em classes.py), a passiva
+da especialização, cada talento comprado (na ordem em que foram declarados) e cada item vestido (na ordem dos
+espaços). Cada fonte é um dicionário com:
 
     mods      {chave: valor por ponto}   (Fixo(v): vale v uma vez, com qualquer número de pontos)
     mults     {chave: fator}             multiplicadores (mult(u, chave) = produto dos fatores)
@@ -33,6 +34,7 @@ Chaves em uso (o que cada uma significa):
     aljava, recolher_flecha       +espaço na aljava; +chance de recolher flecha
     contra_ataque, veneno_basico  chance de revidar corpo a corpo; chance do ataque básico envenenar
     espinhos                      dano devolvido a quem acerta você corpo a corpo
+    resiste_terror                chance de ignorar o grito de terror
     regen_vida, vida_abate        vida no começo de cada turno seu; vida a cada inimigo que você abate
 mults:
     queimadura_mult, barreira_mult
@@ -48,7 +50,7 @@ CHAVES = {"dano_corpo", "dano_distancia", "dano_ferido", "critico", "mult_critic
           "furtivo_ao_abater", "custo_pct", "escudo_turnos", "barreira_turnos", "queimadura_turnos",
           "queimadura_dano", "cura_luz", "dreno_cura", "servo_vida", "acender_garantido", "servos_max",
           "ataques_fera", "laco_animal", "aljava", "recolher_flecha", "contra_ataque", "veneno_basico",
-          "espinhos", "regen_vida", "vida_abate"}
+          "espinhos", "regen_vida", "vida_abate", "resiste_terror"}
 PREFIXOS = ("custo:",)  # custo:<id da habilidade>
 MULTS = {"queimadura_mult", "barreira_mult"}
 EVENTOS = {"inicio_combate", "golpe_fatal", "golpe_recebido", "ataque_basico", "morte", "abate"}
@@ -62,13 +64,17 @@ class Fixo:
 
 
 def fontes(u):
-    """(nome, fonte, pontos) de quem modifica este combatente: a passiva da especialização, os talentos comprados
-    e os itens vestidos."""
+    """(nome, fonte, pontos) de quem modifica este combatente: classe e especialização, a passiva, os talentos
+    comprados e os itens vestidos."""
     lista = []
     talentos = getattr(u, "talentos", None)
     if talentos is not None:
+        from .classes import CLASSES, SPECS
         from .talentos import PASSIVAS, TALENTOS
         spec = getattr(u, "spec", None)
+        for f in (CLASSES.get(getattr(u, "classe", None)), SPECS.get(spec)):
+            if f and f.get("mods"):
+                lista.append((f["nome"], f, 1))
         if spec in PASSIVAS:
             lista.append((PASSIVAS[spec]["nome"], PASSIVAS[spec], 1))
         for t in TALENTOS.get(getattr(u, "classe", None), []):

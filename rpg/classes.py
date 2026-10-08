@@ -4,6 +4,12 @@
     Guerreiro -> Paladino  | Berserker
     Arqueiro  -> Patrulheiro | Sombra
     Mago      -> Piromante | Necromante
+
+Além dos números, classe e especialização declaram o que mudam fora deles:
+    testes      {teste: (de onde vem, bônus)} nos testes de atributo ("olhos de arqueiro" +3 em Percepção)
+    mods        modificadores, como os de um talento (modificadores.py): valem sempre, sem aparecer como passiva
+    reage       o que a comitiva sente quando você escolhe a especialização (etiquetas de comitiva.reagir)
+    companheiro a especialização vem com um animal (o jogo pergunta qual)
 """
 
 CLASSES = {
@@ -27,6 +33,7 @@ CLASSES = {
         "cresc": dict(max_hp=8, atk=2.0, defesa=1.1, agi=1.2, poder=0.4, max_rec=2),
         "habilidades": [(1, "tiro_certeiro"), (1, "marcar_presa"), (2, "chuva_flechas"), (3, "passo_agil")],
         "specs": ["patrulheiro", "sombra"],
+        "testes": {"percepcao": ("olhos de arqueiro", 3)},
         "ataque": ("Disparo", "distancia", "fisico", "atk", 1.1),
     },
     "mago": {
@@ -38,6 +45,7 @@ CLASSES = {
         "cresc": dict(max_hp=8, atk=0.5, defesa=0.8, agi=0.6, poder=2.0, max_rec=5),
         "habilidades": [(1, "bola_fogo"), (1, "meditar"), (2, "lanca_gelo"), (3, "barreira")],
         "specs": ["piromante", "necromante"],
+        "testes": {"vontade": ("mente treinada", 2)},
         "ataque": ("Dardo Arcano", "distancia", "arcano", "poder", 1.0),
     },
 }
@@ -49,6 +57,9 @@ SPECS = {
         "bonus": dict(max_hp=15, poder=6, defesa=3),
         "cresc": dict(poder=1.5, max_hp=2),
         "habilidades": [(4, "golpe_sagrado"), (4, "prece"), (7, "julgamento")],
+        "testes": {"vontade": ("paladino", 3), "carisma": ("paladino", 2)},
+        "mods": {"resiste_terror": 0.6},  # a fé não vacila diante do grito de terror
+        "reage": ("fe", "honra"),
     },
     "berserker": {
         "nome": "Berserker", "classe": "guerreiro",
@@ -56,6 +67,7 @@ SPECS = {
         "bonus": dict(atk=5, max_hp=10, defesa=-2),
         "cresc": dict(atk=1.0),
         "habilidades": [(4, "sede_sangue"), (4, "redemoinho"), (7, "furia_cega")],
+        "reage": ("violencia", "coragem"),
     },
     "patrulheiro": {
         "nome": "Patrulheiro", "classe": "arqueiro",
@@ -63,6 +75,8 @@ SPECS = {
         "bonus": dict(max_hp=10, atk=2, defesa=2),
         "cresc": dict(max_hp=2, atk=0.4),
         "habilidades": [(4, "tiro_duplo"), (4, "comando_fera"), (7, "furia_natureza")],
+        "testes": {"percepcao": ("patrulheiro", 2)},
+        "companheiro": True,
     },
     "sombra": {
         "nome": "Sombra", "classe": "arqueiro",
@@ -70,6 +84,7 @@ SPECS = {
         "bonus": dict(agi=5, atk=3, max_hp=10, defesa=2),
         "cresc": dict(agi=0.6, atk=0.4),
         "habilidades": [(4, "desaparecer"), (4, "flecha_envenenada"), (7, "execucao")],
+        "reage": ("trapaca",),
     },
     "piromante": {
         "nome": "Piromante", "classe": "mago",
@@ -77,6 +92,7 @@ SPECS = {
         "bonus": dict(poder=4, max_rec=10),
         "cresc": dict(poder=0.8),
         "habilidades": [(4, "inferno"), (4, "combustao"), (7, "fenix")],
+        "reage": ("curiosidade",),
     },
     "necromante": {
         "nome": "Necromante", "classe": "mago",
@@ -84,6 +100,7 @@ SPECS = {
         "bonus": dict(max_hp=12, poder=3, defesa=2),
         "cresc": dict(max_hp=2, poder=0.5),
         "habilidades": [(4, "drenar_vida"), (4, "erguer_servo"), (7, "maldicao")],
+        "reage": ("magia_proibida", "sacrilegio"),
     },
 }
 

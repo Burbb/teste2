@@ -101,6 +101,19 @@ ALVOS = {"inimigo": "Inimigo único", "todos": "Todos os inimigos", "proprio": "
          "aliado": "Aliado único", "aliados": "Todos os aliados"}
 
 
+def habilidades_que_usam(j, stat):
+    """Os nomes das habilidades do herói cujos números crescem com esse atributo (lido das próprias contas)."""
+    nome = NOME_STAT[stat]
+    usam = []
+    for h_id in j.habilidades:
+        h = HABILIDADES[h_id]
+        textos = [l.get("formula", "") + " " + " ".join(l.get("escala", [])) + " " + l.get("texto", "")
+                  for l in h["linhas"](j)]
+        if any(nome in t for t in textos):
+            usam.append(h["nome"])
+    return usam
+
+
 def dados(j):
     """Tudo o que o livro mostra: o ataque básico, cada habilidade e os números gerais do herói."""
     nome, alcance, tipo, stat, mult = CLASSES[j.classe]["ataque"]

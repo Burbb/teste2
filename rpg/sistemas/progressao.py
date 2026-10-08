@@ -108,11 +108,9 @@ class Progressao:
         self.ui.celebrar("spec", {"nome": SPECS[spec]["nome"], "desc": SPECS[spec]["desc"],
                                   "habilidades": [{"nome": HABILIDADES[h]["nome"], "desc": HABILIDADES[h]["desc"]}
                                                   for h in novas]})
-        etiquetas = {"necromante": ("magia_proibida", "sacrilegio"), "paladino": ("fe", "honra"),
-                     "piromante": ("curiosidade",), "berserker": ("violencia", "coragem"), "sombra": ("trapaca",)}
-        if spec in etiquetas:
-            comitiva.reagir(self, *etiquetas[spec], forca=1.5)
-        if spec == "patrulheiro":
+        if SPECS[spec].get("reage"):
+            comitiva.reagir(self, *SPECS[spec]["reage"], forca=1.5)
+        if SPECS[spec].get("companheiro"):
             self.escolher_companheiro()
 
     def escolher_companheiro(self, tipo=None):

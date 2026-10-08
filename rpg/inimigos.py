@@ -4,6 +4,7 @@ from . import balanceamento as bal
 from . import texto as tx
 from .dados import AFIXOS, FAMILIAS, GUARDIOES
 from .entidades import Inimigo
+from .modificadores import mod
 
 
 def escala(nivel):
@@ -271,7 +272,8 @@ def _cura(cb, e, alvo):
 
 def _grito_terror(cb, e, alvo):
     cb.dizer(f"{e.nome} solta um grito que congela a alma!", "magenta")
-    if alvo is cb.j and cb.j.spec == "paladino" and cb.rng.random() < 0.6:
+    resiste = mod(alvo, "resiste_terror") if alvo is cb.j else 0
+    if resiste and cb.rng.random() < resiste:
         cb.dizer("Sua fé não vacila.", "amarelo")
         return
     cb.aplicar(alvo, "enfraquecido", 2)

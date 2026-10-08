@@ -5,6 +5,7 @@ import tempfile
 import unittest
 
 from rpg import itens, modificadores as M
+from rpg.classes import CLASSES, SPECS
 from rpg.habilidades import HABILIDADES
 from rpg.jogo import Jogo
 from rpg.talentos import PASSIVAS, POR_ID, TALENTOS, custo_habilidade
@@ -79,6 +80,19 @@ class TestModificadores(unittest.TestCase):
                 self.assertIn(chave, M.MULTS, f"{u['nome']}: {chave}")
             for ev in u.get("gatilhos", {}):
                 self.assertIn(ev, M.EVENTOS, f"{u['nome']}: {ev}")
+
+    def test_classe_e_especializacao_so_com_chaves_conhecidas(self):
+        for k, c in list(CLASSES.items()) + list(SPECS.items()):
+            for chave in c.get("mods", {}):
+                self.assertIn(chave, M.CHAVES, f"{k}: {chave}")
+
+    def test_fe_do_paladino(self):
+        g = Jogo(BotUI(random.Random(1)), seed=1, pasta_saves=tempfile.mkdtemp())
+        g.iniciar("Teste", "guerreiro")
+        self.assertEqual(M.mod(g.j, "resiste_terror"), 0)
+        g.j.spec = "paladino"
+        self.assertEqual(M.mod(g.j, "resiste_terror"), 0.6)
+        self.assertIn(("paladino", 3), g.partes_teste("vontade"))
 
     def test_item_vestido_e_fonte(self):
         g = Jogo(BotUI(random.Random(1)), seed=1, pasta_saves=tempfile.mkdtemp())
