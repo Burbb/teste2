@@ -195,7 +195,7 @@ const MapaPx = (() => {
       b.style.left = esq + "%"; b.style.top = topo + "%";
       const nv = n.nivel ? ` · ${n.tipo === "vila" ? "arredores" : "inimigos"} Nv.${n.nivel}` : "";
       // Sem a dica nativa do navegador (o nome e o nível já estão escritos no mapa); fica só para leitores de tela.
-      b.setAttribute("aria-label", `${n.nome} — ${n.descricao}${nv}${n.distancia ? ` · ${n.distancia} trecho(s) daqui` : ""}${marcas.has(n.id) ? " · você tem um contrato aqui" : ""}`);
+      b.setAttribute("aria-label", `${n.nome} — ${n.descricao}${nv}${n.distancia ? ` · ${Texto.plural(n.distancia, "trecho")} daqui` : ""}${marcas.has(n.id) ? " · você tem um contrato aqui" : ""}`);
       if (clic.has(n.id) && opts.aoClicar) b.addEventListener("click", (ev) => { ev.stopPropagation(); opts.aoClicar(n.id); });
       if (marcas.has(n.id)) {
         // Elemento próprio (e não ::after, que o anel de "você está aqui" já usa): um selo "!" no canto do lugar.

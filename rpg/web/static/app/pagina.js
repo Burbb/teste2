@@ -66,6 +66,7 @@ function suavizar(t) {
 }
 App.suavizar = suavizar;
 
+let ultimoLugar = "";  // o último lugar com título no histórico
 function cabecalho(m) {
   Telas.esconderDica();
   cab.dataset.tipo = cenaEl.dataset.tipo = m.tipo || "evento";
@@ -77,13 +78,16 @@ function cabecalho(m) {
     `<div class="ornamento"><i></i><b></b><i></i></div>`;
   corpo.classList.toggle("modo-titulo", m.tipo === "titulo");
   if (m.tipo === "titulo") {
-    corpo.classList.add("sem-heroi"); corpo.classList.remove("em-combate"); estado = null;
+    corpo.classList.add("sem-heroi"); corpo.classList.remove("em-combate"); estado = null; ultimoLugar = "";
     Sensacao.vidaDoHeroi(1, 1);  // no título não há herói: sem borda vermelha nem coração
     const [r, g, b] = Vista.titulo();  // a paisagem desce até o rodapé; o céu de cima continua na mesma cor
     corpo.style.setProperty("--ceu-titulo", `rgb(${r}, ${g}, ${b})`);
   }
   capitular = ["evento", "local", "chefe", "vitoria", "morte"].includes(m.tipo);
-  historico("h-cena", m.titulo);
+  // O histórico é o diário da jornada: tela de menu não ganha título (a escolha que levou até ela já conta), e o
+  // nome do lugar só volta quando o lugar muda (voltar ao menu da vila depois do mercado não repete o nome).
+  if (m.tipo === "local") { if (m.titulo !== ultimoLugar) historico("h-cena", m.titulo); ultimoLugar = m.titulo; }
+  else if (m.tipo !== "menu") historico("h-cena", m.titulo);
   if (m.titulo !== "Talentos") Telas.fecharTalentos();
 }
 
@@ -320,11 +324,11 @@ function bloco(m) {
 }
 
 function eco(m) {
+  // Navegação (Voltar, abrir Talentos ou outra tela da doca, o menu do título) não é um passo da história: não vira
+  // eco na página nem entra no histórico. Na luta, a carta que avança e o registro do golpe já contam a escolha.
+  if (m.navegacao || atalhoDe(m.texto) || corpo.classList.contains("modo-titulo") || (estado && estado.combate)) return;
   historico("h-eco", "› " + m.texto);
-  if (estado && estado.combate) return;  // na luta, a carta que avança já mostra o que você escolheu
   if (emTela()) return;  // nas telas desenhadas (mercado, inventário), o aviso solto já contou o que aconteceu
-  if (corpo.classList.contains("modo-titulo")) return;  // no título, a própria tela muda: eco seria ruído
-  if (m.navegacao || atalhoDe(m.texto)) return;  // abrir Talentos, Voltar...: navegação, não um passo da história
   anexar(el("p", "eco", esc(m.texto)));
 }
 

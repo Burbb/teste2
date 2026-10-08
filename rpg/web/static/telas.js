@@ -52,7 +52,7 @@ const Telas = (() => {
       return `<div class="arvore-col-titulo${trancada ? " trancada" : ""}">${h(nome)}<small>${sub}</small></div>`;
     }).join("");
     let html = `<div class="arvore-topo"><span>Nível ${a.nivel} · passe o mouse num talento para ver o que ele faz</span>
-      <span class="pontos${a.pontos ? "" : " zero"}">${S("estrela", 2)} ${a.pontos} ponto${a.pontos === 1 ? "" : "s"}</span></div>
+      <span class="pontos${a.pontos ? "" : " zero"}">${S("estrela", 2)} ${Texto.plural(a.pontos, "ponto")}</span></div>
       <div class="arvore-grade"><div></div>${colunas}`;
     for (let camada = 1; camada <= 4; camada++) {
       const nivelReq = a.camadas[String(camada)];
@@ -203,7 +203,7 @@ const Telas = (() => {
     if (comparando) itensDica.set(id, it);
     return `data-dica="${id}"`;
   }
-  /** Os itens que o herói está usando no(s) espaço(s) onde `it` iria. */
+  /** Os itens que o herói está usando onde `it` iria (o anel tem dois espaços). */
   function equipadosPara(it) {
     const heroi = App.estado && App.estado.heroi;
     if (!heroi || !it || !it.slot) return [];
@@ -444,7 +444,7 @@ const Telas = (() => {
         ${l.nota ? `<div class="g-nota">${h(l.nota)}</div>` : ""}</li>`).join("");
     const det = document.getElementById("grimorio-detalhe");
     det.innerHTML = `<div class="g-topo"><span class="g-icone">${S(icone(x), 4)}</span>
-        <div><b class="g-nome">${h(x.nome)}</b><div class="g-meta">${custo(x)}${x.flechas_por_alvo ? ` · ${x.flechas_por_alvo} flecha por inimigo` : x.flechas ? ` · ${x.flechas} flecha${x.flechas > 1 ? "s" : ""}` : ""} · Alvo: ${h(x.alvo)}</div></div></div>
+        <div><b class="g-nome">${h(x.nome)}</b><div class="g-meta">${custo(x)}${x.flechas_por_alvo ? ` · ${x.flechas_por_alvo} flecha por inimigo` : x.flechas ? ` · ${Texto.plural(x.flechas, "flecha")}` : ""} · Alvo: ${h(x.alvo)}</div></div></div>
       <p class="g-desc">${Realce.texto(x.desc)}</p><ul class="g-linhas">${linhas}</ul>
       <p class="g-rodape">Números antes da defesa do inimigo e de efeitos do momento (fortalecido, clima, alvo marcado).</p>`;
     det.classList.remove("virando"); void det.offsetWidth; det.classList.add("virando");
@@ -705,7 +705,7 @@ const Telas = (() => {
 
   function diario(d) {
     const contratos = d.contratos.map((c) => cartaz(c, true, false, d.nivel_heroi)).join("");
-    const rumores = d.rumores.map((r) => `<div class="bilhete"><span class="prego"></span>${S("olho", 1)} ${h(r.texto)}<small>${r.expira > 0 ? `some em ${r.expira} dia${r.expira === 1 ? "" : "s"}` : "some hoje"}</small></div>`).join("");
+    const rumores = d.rumores.map((r) => `<div class="bilhete"><span class="prego"></span>${S("olho", 1)} ${h(r.texto)}<small>${r.expira > 0 ? `some em ${Texto.plural(r.expira, "dia")}` : "some hoje"}</small></div>`).join("");
     const losangos = [0, 1, 2].map((i) => `<i class="sigilo${i < d.sigilos ? " tem" : ""}"></i>`).join("");
     return `<div class="tela diario">
       <div class="faixa-jornada"><span>Dia ${d.dia}</span><span class="sigilos-diario" title="Sigilos dos guardiões">${losangos} ${d.sigilos}/3</span></div>
@@ -724,7 +724,7 @@ const Telas = (() => {
           f.resiste.map((t) => `<span class="tag forte">resiste: ${h(t)}</span>`).join("")
         : '<span class="tag">??? derrote mais destas para aprender</span>';
       return `<div class="cartao${f.conhecido ? "" : " desconhecido"}${f.mestre ? " mestre" : ""}"><div class="cab">${S(iconeCriatura(f.tracos, f.id), 3)}
-        <div><b>${h(f.nome)}</b><span class="sub">${f.abates} abate${f.abates === 1 ? "" : "s"}</span></div></div>
+        <div><b>${h(f.nome)}</b><span class="sub">${Texto.plural(f.abates, "abate")}</span></div></div>
         <span class="lore">${h(f.lore)}</span><div class="tags">${f.mestre ? '<span class="tag mestre">mestre caçador +10% dano</span>' : ""}${tags}</div></div>`;
     }).join("");
     return `<div class="tela"><div class="meter" style="margin-bottom:10px">Criaturas conhecidas ${barra("xp", d.fichas.length, d.total)} ${d.fichas.length}/${d.total}</div><div class="cartas">${cartas}</div></div>`;
@@ -750,7 +750,7 @@ const Telas = (() => {
     const arte = c.tipo === "entrega" ? "saco" : iconeCriatura(c.tracos, c.familia || "");
     const titulo = c.tipo === "alvo" ? c.alvo : c.tipo === "entrega" ? (c.objeto || "Entrega") : c.desc.replace(/^Eliminar /, "").replace(/ em .*$/, "");
     const perigo = c.nivel == null ? "" : c.nivel - nivelHeroi >= 2 ? "alto" : c.nivel >= nivelHeroi ? "medio" : "baixo";
-    const lugar = `${S(MapaPx.sprite({ tipo: c.lugar_tipo, bioma: c.bioma }), 1)} ${h(c.lugar)}${c.distancia != null ? ` · ${c.distancia} trecho${c.distancia === 1 ? "" : "s"}` : ""}${c.nivel != null ? ` <span class="perigo-tag ${perigo}">Nv.${c.nivel}</span>` : ""}`;
+    const lugar = `${S(MapaPx.sprite({ tipo: c.lugar_tipo, bioma: c.bioma }), 1)} ${h(c.lugar)}${c.distancia != null ? ` · ${Texto.plural(c.distancia, "trecho")}` : ""}${c.nivel != null ? ` <span class="perigo-tag ${perigo}">Nv.${c.nivel}</span>` : ""}`;
     let progresso = "";
     if (ativo && c.tipo === "caca" && c.progresso && !c.recebendo) {
       const [feito, total] = c.progresso.split("/").map(Number);
@@ -778,7 +778,7 @@ const Telas = (() => {
     const ativos = d.ativos.map((c) => cartaz(c, true, cheio, d.nivel_heroi)).join("");
     contratosVistos = new Set(d.ativos.map((c) => c.id));
     return `<div class="tela mural">
-      <div class="quadro"><div class="quadro-cab"><b>Contratos</b><span>${d.renova ? `novos cartazes em ${d.renova} dia${d.renova === 1 ? "" : "s"}` : "cartazes novos amanhã"}</span></div>
+      <div class="quadro"><div class="quadro-cab"><b>Contratos</b><span>${d.renova ? `novos cartazes em ${Texto.plural(d.renova, "dia")}` : "cartazes novos amanhã"}</span></div>
         <div class="cartazes">${oferta || '<span class="vazio">O mural está vazio. Volte em alguns dias.</span>'}</div></div>
       <h4>Seus contratos <small>${d.ativos.length}/${d.limite}</small></h4>
       <div class="cartazes seus">${ativos || '<span class="vazio">Nenhum. Pegue um cartaz do mural.</span>'}</div></div>`;
@@ -800,7 +800,7 @@ const Telas = (() => {
       return `<div class="rastro-contrato${c.concluido ? " feito" : ""}" data-local="${c.lugar_id}" data-contrato="${c.id}" title="${h(c.desc)}">
         <span class="rastro-arte">${S(arte, 2)}</span>
         <span class="rastro-info"><b>${h(alvo)}</b>
-          <span class="rastro-lugar">${c.concluido ? "Feito! Receba numa vila" : `${h(c.lugar)}${c.distancia ? ` · ${c.distancia} trecho${c.distancia === 1 ? "" : "s"}` : c.distancia === 0 ? " · você está aqui" : ""}`}${c.nivel != null && !c.concluido ? ` <span class="perigo-tag ${perigo}">Nv.${c.nivel}</span>` : ""}</span>
+          <span class="rastro-lugar">${c.concluido ? "Feito! Receba numa vila" : `${h(c.lugar)}${c.distancia ? ` · ${Texto.plural(c.distancia, "trecho")}` : c.distancia === 0 ? " · você está aqui" : ""}`}${c.nivel != null && !c.concluido ? ` <span class="perigo-tag ${perigo}">Nv.${c.nivel}</span>` : ""}</span>
           ${prog ? `<span class="rastro-prog">${prog}</span>` : ""}</span></div>`;
     }).join("")}</div>`;
   }

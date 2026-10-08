@@ -308,7 +308,7 @@ function cartaAcao(o, i, m, pos) {
       (meta.flechas ? ` ${spr("flecha", 1)}<b>${meta.flechas}</b>` : "");
     rodape = `<span class="acao-custo">${custo}</span><span class="acao-alvo">${ALVO_TXT[meta.alvo_tipo] || ""}</span>`;
     if (!meta.pode) bloqueio = meta.motivo || "Indisponível";
-    dicaHtml = `<b>${esc(meta.nome)}</b><div class="tipo">${meta.custo ? `${meta.custo} de ${esc(meta.recurso)}` : "Sem custo"}${meta.flechas ? ` · ${meta.flechas} flecha${meta.flechas > 1 ? "s" : ""}` : ""} · Alvo: ${ALVO_TXT[meta.alvo_tipo] || "—"}</div>
+    dicaHtml = `<b>${esc(meta.nome)}</b><div class="tipo">${meta.custo ? `${meta.custo} de ${esc(meta.recurso)}` : "Sem custo"}${meta.flechas ? ` · ${Texto.plural(meta.flechas, "flecha")}` : ""} · Alvo: ${ALVO_TXT[meta.alvo_tipo] || "—"}</div>
       <div class="bonus">${Realce.texto(meta.desc)}</div>${danoGrimorio(meta.habilidade)}${bloqueio ? `<div class="pior">${esc(bloqueio)}</div>` : ""}`;
   } else if (meta.usar_item) {
     b.classList.add("el-cura");
@@ -518,7 +518,7 @@ function linhaItem(meta, aoClicar) {
     bloqueio: meta.motivo, aoClicar };
 }
 function dicaHabilidade(h) {
-  return `<b>${esc(h.nome)}</b><div class="tipo">${h.custo ? `${h.custo} de ${esc(h.recurso)}` : "Sem custo"}${h.flechas ? ` · ${h.flechas} flecha${h.flechas > 1 ? "s" : ""}` : ""} · Alvo: ${ALVO_TXT[h.alvo_tipo] || "—"}</div>
+  return `<b>${esc(h.nome)}</b><div class="tipo">${h.custo ? `${h.custo} de ${esc(h.recurso)}` : "Sem custo"}${h.flechas ? ` · ${Texto.plural(h.flechas, "flecha")}` : ""} · Alvo: ${ALVO_TXT[h.alvo_tipo] || "—"}</div>
     <div class="bonus">${Realce.texto(h.desc)}</div>${danoGrimorio(h.habilidade)}${h.pode ? "" : `<div class="pior">${esc(h.motivo || "Indisponível")}</div>`}`;
 }
 

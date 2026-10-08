@@ -157,6 +157,13 @@ async function cenarioTitulo(browser) {
     await page.waitForTimeout(300);
     await (await page.$('#doca .atalho[data-rotulo="Diário"]')).click();
     conferir(!!(await esperar('#prompt .escolha:has-text("Viajar")')), "clicar no atalho da tela aberta volta ao lugar");
+    // O histórico é o diário da jornada: abrir telas pela doca e voltar não deixa rastro, nem repete o lugar.
+    const hist = await page.$$eval("#historico-lista > p", (ps) => ps.map((p) => p.textContent));
+    conferir(!hist.some((t) => /^› (Voltar|Personagem|Bestiário|Diário|Fechar)/.test(t) || /^(Jean|Bestiário|Diário)$/.test(t)),
+      "telas da doca e o Voltar não entram no histórico");
+    const lugar = await page.evaluate(() => document.querySelector("#cena-cab .cena-titulo").textContent);
+    const vezes = hist.filter((t) => t === lugar).length;
+    conferir(vezes === 1, `o nome do lugar aparece uma vez só no histórico (${lugar}: ${vezes})`);
     await (await page.$('#doca .atalho[data-rotulo="Mapa"]')).click();
     conferir(await page.evaluate(() => !document.getElementById("sobre-mapa").hidden), "o atalho Mapa abre o mapa por cima, sem sair do lugar");
     await page.keyboard.press("Escape");

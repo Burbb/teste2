@@ -1022,7 +1022,7 @@ class Combate:
             recuperadas = min(recuperadas, self.g.max_flechas() - j.flechas)
             if recuperadas > 0:
                 j.flechas += recuperadas
-                self.dizer(f"Você recolhe {recuperadas} flecha(s) intacta(s) do campo.", "verde")
+                self.dizer(f"Você recolhe {tx.plural(recuperadas, 'flecha intacta', 'flechas intactas')} do campo.", "verde")
 
         if resultado == "vitoria":
             derrotados = [e for e in self.inimigos if not e.fugiu]

@@ -9,6 +9,7 @@ import random
 from .itens import gerar_equip, rolar_raridade
 from .mundo import nivel_regiao
 from . import talentos
+from . import texto as tx
 
 # Quantos dos espaços de equipamento um herói costuma ter ocupados em cada nível (fora a arma, sempre):
 # no nível 3, uns cinco; do 7 em diante, todos (é o que a partida do Xatuba mostra).
@@ -83,5 +84,5 @@ def comecar_no_nivel(g, nivel):
     j.consumiveis["pocao_vida"] = j.consumiveis.get("pocao_vida", 0) + 2
     j.provisoes += 4
     ir_para_regiao(g, nivel)
-    g.dizer(f"[dev] Você começa no nível {j.nivel}, em {g.loc['nome']}, com {j.pontos_talento} pontos de talento "
-            "para gastar.", "magenta")
+    g.dizer(f"[dev] Você começa no nível {j.nivel}, em {g.loc['nome']}, com "
+            f"{tx.plural(j.pontos_talento, 'ponto de talento', 'pontos de talento')} para gastar.", "magenta")

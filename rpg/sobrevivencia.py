@@ -5,6 +5,7 @@ fome, a ferida que infecciona, a noite sem luz. Este módulo cuida disso.
 """
 
 from . import balanceamento as bal
+from . import texto as tx
 
 FERIMENTOS = {
     "corte": dict(nome="Corte profundo", dias=4, mult={"max_hp": 0.9}, aberto=True),
@@ -219,8 +220,8 @@ def amanhecer(g, descanso, refeicao=False):
                 j.hp = 0
                 g.fim_de_jogo("Você morreu de fome, sozinho, longe de qualquer lugar que pudesse chamar de casa.")
     if j.provisoes in (1, 2) and not j.fome:
-        g.relatar(f"Restam só {j.provisoes} dia(s) de provisões.", "amarelo", "aviso", "pernil",
-                  quadro=False)  # no quadro, o ícone das provisões gastas já diz quantas restam
+        g.relatar(f"{'Resta' if j.provisoes == 1 else 'Restam'} só {tx.plural(j.provisoes, 'dia')} de provisões.",
+                  "amarelo", "aviso", "pernil", quadro=False)  # no quadro, o ícone das provisões já diz quantas restam
 
     # Ferimentos
     for f in list(j.ferimentos):

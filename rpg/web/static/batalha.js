@@ -97,7 +97,7 @@ const Batalha = (() => {
       const dano = f.por_turno ? ` · ${f.por_turno} de dano por turno` : "";
       const extra = ESTADOS[f.id] && ESTADOS[f.id].dica ? ` · ${ESTADOS[f.id].dica}` : "";
       const camadas = f.camadas ? `<i class="camadas">×${f.camadas}</i>` : "";
-      return `<span class="ef fam-${fam}${f.camadas ? " acumulado" : ""}" data-ef="${esc(f.id)}" title="${esc(f.nome)} (${f.turnos} turno${f.turnos === 1 ? "" : "s"})${dano}${extra}">${S(ic, 1)}<b>${f.turnos > 9 ? "∞" : f.turnos}</b>${camadas}</span>`;
+      return `<span class="ef fam-${fam}${f.camadas ? " acumulado" : ""}" data-ef="${esc(f.id)}" title="${esc(f.nome)} (${Texto.plural(f.turnos, "turno")})${dano}${extra}">${S(ic, 1)}<b>${f.turnos > 9 ? "∞" : f.turnos}</b>${camadas}</span>`;
     }).join("");
   }
 

@@ -121,6 +121,9 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   Voltar, fora da área que rola) e a página (`#pagina`, a única parte que rola). Cena de tipo `menu` (mercado,
   inventário, mural...) não mostra a arte, abre no topo e leva o Voltar para a barra; numa cena da história um
   "Voltar por onde veio" é uma escolha como as outras. Na luta, a arte vira o chão da arena e depois volta.
+- O histórico (H) é o diário da jornada: entram as cenas da história, as escolhas e o que elas deram. Navegação
+  (Voltar, telas da doca, menu do título), cliques da luta e títulos de telas de menu ficam de fora; o nome do
+  lugar só volta quando o lugar muda.
 - Perguntas que moram numa janela por cima, e não no pé da página, vêm marcadas nos metadados das opções: a
   confirmação de algo pedido pela tela (`Jogo.confirmar`: abandonar contrato, viagem perigosa) e o item achado
   (`achado`: o cartão e os botões numa janela própria, fora do log)

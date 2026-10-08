@@ -5,6 +5,7 @@ from .. import itens
 from ..itens import CONSUMIVEIS, PENA_FENIX_AGE_SOZINHA, descrever_bonus
 from .. import comitiva
 from .. import sobrevivencia
+from .. import texto as tx
 from ..telemetria import registrar
 from ..regras import LIMITE_MOCHILA, NOMES_SLOT
 from .. import balanceamento as bal
@@ -287,7 +288,7 @@ class Inventario:
         j = self.j
         self.dizer(f"Vida {j.hp}/{j.max_hp}   {j.nome_recurso} {j.rec}/{j.max_rec}   Ataque {j.atk}   "
                    f"Defesa {j.defesa}   Agilidade {j.agi}   Poder {j.poder}")
-        self.dizer(f"Provisões: {j.provisoes} dia(s)   Tochas: {j.consumiveis.get('tocha', 0)}", "amarelo")
+        self.dizer(f"Provisões: {tx.plural(j.provisoes, 'dia')}   Tochas: {j.consumiveis.get('tocha', 0)}", "amarelo")
         males = sobrevivencia.descrever(j)
         self.dizer("Condição: " + (", ".join(males) if males else "sem ferimentos"),
                    "vermelho" if males else "verde")

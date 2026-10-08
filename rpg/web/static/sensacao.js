@@ -250,7 +250,7 @@ const Sensacao = (() => {
   /* ------------------------------------------------------------ o espólio da vitória */
   // O que se acha (o motor manda o id; a tela escolhe o ícone e escreve a quantidade do jeito de cada coisa).
   const ICONE_ACHADO = { comida: "pernil", flechas: "flecha" };
-  const quantoAchou = (x) => (x.id === "comida" ? `+${x.qtd} dia${x.qtd > 1 ? "s" : ""}` : x.id === "flechas" ? `+${x.qtd}` : `×${x.qtd}`);
+  const quantoAchou = (x) => (x.id === "comida" ? `+${Texto.plural(x.qtd, "dia")}` : x.id === "flechas" ? `+${x.qtd}` : `×${x.qtd}`);
   const esc = (t) => String(t ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
   /** Como a tela de resultado dos jogos, tudo o que a vitória deu num quadro só: uma linha por recompensa (o ouro,

@@ -675,6 +675,31 @@ class TestSistemas(unittest.TestCase):
         self.assertEqual(tx.concordar("{Grupo} olha para cima{| ao mesmo tempo}.", [g.inimigo("lobo")]),
                          "Um lobo olha para cima.")
 
+    def test_plural_sem_parenteses(self):
+        """'1 dia', '0 dias', '3 flechas intactas': nenhum texto do jogo (motor ou tela) escreve 'dia(s)'."""
+        import pathlib
+        import re
+        import tokenize
+        from rpg import texto as tx
+        self.assertEqual([tx.plural(1, "trecho"), tx.plural(0, "dia"), tx.plural(2, "moeda")], ["1 trecho", "0 dias", "2 moedas"])
+        self.assertEqual(tx.plural(3, "flecha intacta", "flechas intactas"), "3 flechas intactas")
+        self.assertEqual(tx.plural(1, "ponto de talento", "pontos de talento"), "1 ponto de talento")
+        raiz = pathlib.Path(__file__).resolve().parent.parent / "rpg"
+        parenteses = re.compile(r"[a-zà-ú]\((s|es|ns)\)")  # "dia(s)"; só dentro de textos ("remove(s)" é código)
+        achados = []
+        for p in raiz.rglob("*.py"):
+            with open(p, encoding="utf-8") as f:
+                for tok in tokenize.generate_tokens(f.readline):
+                    if tok.type in (tokenize.STRING, getattr(tokenize, "FSTRING_MIDDLE", -1)) and parenteses.search(tok.string):
+                        achados.append(f"{p.relative_to(raiz)}:{tok.start[0]}")
+        literal = re.compile(r'"(?:[^"\\\n]|\\.)*"|\'(?:[^\'\\\n]|\\.)*\'|`(?:[^`\\]|\\.)*`')
+        for p in raiz.rglob("*.js"):
+            if p.name == "sprites-dados.js":
+                continue
+            codigo = re.sub(r"/\*[\s\S]*?\*/|(?<![:\\])//[^\n]*", "", p.read_text(encoding="utf-8"))
+            achados += [f"{p.relative_to(raiz)}: {m.group(0)[:60]}" for m in literal.finditer(codigo) if parenteses.search(m.group(0))]
+        self.assertEqual(achados, [], "use texto.plural (motor) ou Texto.plural (tela)")
+
     def test_mapa_renderiza(self):
         from rpg import mapa
         for seed in range(60):

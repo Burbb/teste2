@@ -187,6 +187,10 @@ g.dizer(tx.concordar("Um galho estala. {Grupo} se {vira|viram}, e {eles} {olha|o
 
 Marcadores: `{eles}`, `{os}`, `{deles}`, `{-los}` (distraí{-los}), `{singular|plural}`, `{grupo}` e campos por nome
 (`{abertura}`); maiúscula no marcador dá maiúscula no texto.
+
+Número com palavra: nunca "dia(s)". `tx.plural(n, "dia")` dá "1 dia" / "0 dias"; quando o plural não é só pôr s,
+ele vai junto: `tx.plural(n, "flecha intacta", "flechas intactas")`. Na tela, o mesmo: `Texto.plural(n, "trecho")`.
+Um teste procura "(s)" nos textos do motor e da tela.
 (A Etapa D vai trazer eventos e diálogos como dados, com condições e consequências declaradas.)
 
 ## Um número de balanceamento

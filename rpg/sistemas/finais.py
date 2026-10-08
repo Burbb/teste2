@@ -22,7 +22,7 @@ class Finais:
     def resumo(self):
         e = self.estatisticas
         j = self.j
-        self.dizer(f"{j.nome}, {j.nome_classe} nível {j.nivel} — {self.dia} dias de jornada.", "ciano")
+        self.dizer(f"{j.nome}, {j.nome_classe} nível {j.nivel} — {tx.plural(self.dia, 'dia')} de jornada.", "ciano")
         self.dizer(f"Inimigos derrotados: {e['abates']}  ·  Guardiões: {e['chefes']}  ·  "
                    f"Eventos vividos: {e['eventos']}  ·  Ouro ganho: {e['ouro_ganho']}  ·  "
                    f"Quedas: {e.get('quedas', 0)}", "ciano")

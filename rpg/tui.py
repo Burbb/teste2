@@ -20,6 +20,7 @@ from textual.widgets import Footer, Header, Input, OptionList, RichLog, Static
 from textual.widgets.option_list import Option
 
 from . import comitiva, mapa, sobrevivencia
+from . import texto as tx
 from .estados import NOMES as NOMES_EFEITOS
 from .dados import CLIMAS, PERIODOS
 from .ui import UI
@@ -113,7 +114,7 @@ def painel_status(g):
     t.append(f" · {j.nome_classe} Nv.{j.nivel}\n", style="cyan")
     t.append(f"XP {j.xp}/{j.xp_proximo()}", style="grey58")
     if j.pontos_talento:
-        t.append(f"   ★ {j.pontos_talento} talento(s)!", style="bold yellow")
+        t.append(f"   ★ {tx.plural(j.pontos_talento, 'ponto de talento', 'pontos de talento')}!", style="bold yellow")
     t.append(f"\nOuro {j.ouro}   Reputação {j.reputacao:+d}\n", style="yellow")
     if j.companheiro:
         c = j.companheiro

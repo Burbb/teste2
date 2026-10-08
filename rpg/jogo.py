@@ -75,6 +75,7 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         self.evento_atual = None
         self.sem_luz = False
         self.espolio_aberto = None  # o quadro de espólio sendo juntado (tela gráfica; ver Recompensas.abrir_espolio)
+        self.ambiente_visto = None  # (lugar, dia, período) da última frase de ambiente da vila (ver menu_vila)
         self.registro = []
         self.arquivo_run = None
         self.bestiario = {}
@@ -209,7 +210,8 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
                     f"a {self.mundo['locais'][-1]['nome']}. Cavaleiros melhores que você já tentaram. Os corvos "
                     "ainda se lembram do gosto deles.")
         self.narrar(f"Você, {self.j.nome}, {self.j.nome_classe.lower()}, parte de {self.loc['nome']} com "
-                    f"{self.j.provisoes} dias de comida, {self.j.ouro} moedas e nenhuma garantia de voltar.")
+                    f"{tx.plural(self.j.provisoes, 'dia')} de comida, {tx.plural(self.j.ouro, 'moeda')} e nenhuma "
+                    "garantia de voltar.")
         self.dizer("A fome mata. Feridas infeccionam. A noite cega. E a morte é permanente.", "vermelho+negrito")
         estatua = self.flag("estatua")
         if estatua:
@@ -311,7 +313,7 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         pontos = self.j.pontos_talento
         return [
             ("Viajar", "viajar"),
-            ("Talentos" + (f"  ★ {pontos} ponto(s) para gastar!" if pontos else ""), "talentos"),
+            ("Talentos" + (f"  ★ {tx.plural(pontos, 'ponto')} para gastar!" if pontos else ""), "talentos"),
             ("Personagem e inventário", "personagem"),
             ("Comitiva" + ("  ✉ alguém quer conversar" if any(
                 c["conversa"] for c in comitiva.estado(self)) else ""), "comitiva") if self.comitiva or self.reserva else None,
@@ -407,7 +409,12 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
             ("Curandeiro: tratar ferimentos e infecções", "curandeiro") if j.ferimentos else None,
             ("Ferreiro: reforçar arma ou armadura", "ferreiro"),
         ]
-        self.dizer(self.sortear(AMBIENTE_VILA), "cinza")
+        # A frase da vila aparece na chegada e quando o tempo passa, não a cada volta ao menu (do mercado, do
+        # inventário). O sorteio segue a cada volta: com a mesma semente, a partida continua a mesma.
+        ambiente = self.sortear(AMBIENTE_VILA)
+        if self.ambiente_visto != (self.loc["id"], self.dia, self.periodo):
+            self.ambiente_visto = (self.loc["id"], self.dia, self.periodo)
+            self.dizer(ambiente, "cinza")
         op = self.menu(f"Você está em {self.loc['nome']}. O que faz?", opcoes + self.opcoes_comuns())
         if op == "passear":
             if not eventos.disparar(self, "vila"):

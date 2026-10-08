@@ -142,6 +142,12 @@ def concordar(frase, grupo, **campos):
     return re.sub(r"\{([^{}]*)\}", trocar, frase)
 
 
+def plural(n, um, varios=None):
+    """'1 trecho', '3 trechos', '0 trechos': o plural certo, nunca com o s entre parênteses. Quando o plural não é só
+    acrescentar s, ele vai junto: plural(n, "flecha intacta", "flechas intactas")."""
+    return f"{n} {um if n == 1 else varios or um + 's'}"
+
+
 def estrelas(n, total=5):
     return "★" * n + "☆" * (total - n)
 

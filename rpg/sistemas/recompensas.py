@@ -4,6 +4,7 @@ from .. import eventos
 from ..entidades import nome_stat
 from ..itens import CONSUMIVEIS
 from .. import sobrevivencia
+from .. import texto as tx
 from ..regras import NIVEL_MAXIMO
 from .. import balanceamento as bal
 from ..modificadores import mod
@@ -158,7 +159,7 @@ class Recompensas:
         self.j.provisoes = min(sobrevivencia.MAX_PROVISOES, antes + n)
         n = self.j.provisoes - antes
         if n > 0 and not self.achou("comida", "Comida", n):
-            self.ui.efeito(f"+{n} dia(s) de comida (total {self.j.provisoes})", "item")
+            self.ui.efeito(f"+{tx.plural(n, 'dia')} de comida (total {self.j.provisoes})", "item")
 
     def max_flechas(self):
         """A aljava tem fundo: não dá para comprar cem flechas e esquecer delas."""
@@ -173,7 +174,7 @@ class Recompensas:
             return 0
         self.j.flechas += n
         if not self.achou("flechas", "Flechas", n):
-            self.ui.efeito(f"+{n} flechas (total {self.j.flechas}/{self.max_flechas()})", "item")
+            self.ui.efeito(f"+{tx.plural(n, 'flecha')} (total {self.j.flechas}/{self.max_flechas()})", "item")
         return n
 
     def mudar_reputacao(self, d, avisar=True):
