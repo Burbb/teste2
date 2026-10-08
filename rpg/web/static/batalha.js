@@ -53,7 +53,7 @@ const Batalha = (() => {
     const v = document.getElementById("vista");
     if (!v) return;
     if (naArena && v.parentElement !== arena) arena.prepend(v);
-    if (!naArena && arena && v.parentElement === arena) document.getElementById("pagina").prepend(v);
+    if (!naArena && arena && v.parentElement === arena) document.getElementById("cena").prepend(v);
   }
 
   function icone(c) {

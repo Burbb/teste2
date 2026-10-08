@@ -61,13 +61,13 @@
 #historico-lista .h-turno { font-family: var(--num); color: var(--tinta-3); text-align: center; }
 
 /* ------------------------------------------------------------------ voltar, avisos soltos e mercado */
-.voltar-seta { position: sticky; top: 6px; z-index: 6; display: inline-flex; align-items: center; gap: 6px; margin: -8px 0 -30px -18px; float: left; cursor: pointer; font-family: var(--texto); font-size: 15px; color: var(--tinta); background: #120e0b; border: 3px solid #5a4632; padding: 3px 10px 4px 6px; box-shadow: 3px 3px 0 #000; }
+/* O Voltar mora na barra do topo da cena (04-pagina.css), à esquerda do título. */
+.voltar-seta { grid-row: 1; grid-column: 1; justify-self: start; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; font-family: var(--texto); font-size: 15px; color: var(--tinta); background: #120e0b; border: 3px solid #5a4632; padding: 3px 10px 4px 6px; box-shadow: 3px 3px 0 #000; }
 .voltar-seta span { color: var(--ouro); font-size: 14px; animation: seta-volta 0.9s steps(2) infinite; }
 .voltar-seta kbd { margin-left: 2px; }
 .voltar-seta:hover, .voltar-seta:focus-visible { border-color: var(--ouro); color: #fff3d6; outline: none; }
 @keyframes seta-volta { 50% { transform: translateX(-3px); } }
-#cena-cab { clear: none; }
-@media (max-width: 920px) { .voltar-seta { margin-left: -4px; } .voltar-seta kbd { display: none; } }
+@media (max-width: 920px) { .voltar-seta kbd { display: none; } }
 .aviso-flutuante { position: fixed; z-index: 70; display: flex; align-items: center; gap: 5px; white-space: nowrap; pointer-events: none; font-family: var(--num); font-size: 21px; line-height: 1; padding: 3px 9px 4px 4px; background: #120e0b; border: 2px solid #4a4038; color: var(--tinta); box-shadow: 3px 3px 0 #000; animation: aviso-sobe 1.6s cubic-bezier(.2,.7,.3,1) forwards; }
 .aviso-flutuante img.sprite { --s: 16; }
 /* Frase longa: quebra em linhas, letra de leitura, e fica parada o tempo de ler (--dura) antes de sumir. */

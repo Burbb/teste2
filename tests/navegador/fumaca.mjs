@@ -96,6 +96,8 @@ async function cenarioCombate(browser) {
       await page.waitForTimeout(250);
     }
     conferir(!(await page.evaluate(() => document.body.classList.contains("em-combate"))), "a luta termina");
+    conferir(await page.evaluate(() => document.getElementById("vista").parentElement.id === "cena"),
+      "a paisagem sai da arena e volta para o topo da cena, fora da área que rola");
     await page.mouse.move(4, 400);  // o HUD volta ao topo: o mouse sai de cima dele para a dica ter motivo de fechar
     await page.waitForTimeout(400);
     conferir(await page.evaluate(() => { const d = document.getElementById("dica-item"); return !d || d.hidden; }),
@@ -131,6 +133,22 @@ async function cenarioTitulo(browser) {
     await page.waitForTimeout(400);
     conferir(!(await page.$("#doca.inativa")), "dentro do Inventário a doca segue acesa");
     conferir(!!(await page.$('#doca .atalho.atual[data-rotulo="Inventário"]')), "a doca marca a tela aberta");
+    // Espaço de leitura (numa tela de notebook): a tela de menu abre no topo e sem a arte; título e Voltar ficam numa
+    // barra fora da área que rola; a doca cabe numa linha; o painel do mundo continua à vista.
+    await page.setViewportSize({ width: 1280, height: 720 });
+    await page.waitForTimeout(300);
+    const layout = await page.evaluate(() => {
+      const fundos = [...document.querySelectorAll("#doca .atalho")].map((b) => b.getBoundingClientRect().bottom);
+      return { topo: document.getElementById("pagina").scrollTop, voltar: !!document.querySelector("#barra-tela .voltar-seta"),
+        voltarNaPagina: !!document.querySelector("#pagina .voltar-seta"), arte: getComputedStyle(document.getElementById("vista")).display,
+        docaAltura: Math.max(...fundos) - Math.min(...fundos), mundo: getComputedStyle(document.getElementById("mundo")).display };
+    });
+    conferir(layout.topo === 0, `o Inventário abre no topo da página (${layout.topo})`);
+    conferir(layout.voltar && !layout.voltarNaPagina, "o Voltar fica na barra do topo, fora da área que rola");
+    conferir(layout.arte === "none", "a tela de menu não mostra a arte do lugar");
+    conferir(layout.docaAltura < 8, `a doca cabe numa linha só (${Math.round(layout.docaAltura)})`);
+    conferir(layout.mundo !== "none", "em 1280 px o painel do mundo continua à vista");
+    await page.setViewportSize({ width: 1500, height: 950 });
     await (await page.$('#doca .atalho[data-rotulo="Bestiário"]')).click();
     conferir(await ate(/Bestiário/), "do Inventário, o atalho Bestiário abre o Bestiário direto");
     await page.waitForTimeout(300);
@@ -163,6 +181,9 @@ async function cenarioVila(browser) {
     conferir(!(await page.$("#sobre-achado")), "guardar fecha a janela do item");
     const aceitar = await esperar("[data-aceitar]");
     // Cartazes do mural com a mesma altura e o botão no pé: três cliques seguidos, sem mexer o mouse, pegam os três.
+    // (Medidos sem o mouse em cima: o cartaz sob o mouse se endireita e sobe.)
+    await page.mouse.move(4, 400);
+    await page.waitForTimeout(250);
     const fundos = await page.$$eval(".mural .quadro [data-aceitar]", (bs) => bs.map((b) => Math.round(b.getBoundingClientRect().bottom)));
     conferir(fundos.length < 2 || Math.max(...fundos) - Math.min(...fundos) <= 4, `os botões de aceitar ficam na mesma linha (${fundos.join(", ")})`);
     await page.evaluate(() => { const p = document.getElementById("pagina"); p.scrollTop = p.scrollHeight; });

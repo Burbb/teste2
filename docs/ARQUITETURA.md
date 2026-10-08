@@ -116,6 +116,11 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   que aconteceu e perguntam a ele como aquilo se sente; os números ficam numa tabela só (`AJUSTES`). Os fatos vêm
   do motor (no lance do golpe: `crit`, `abate`, `final`). A câmera lenta mexe no relógio da arena: prazos de
   animação na batalha usam `Sensacao.depois(ms, fn)` (não `setTimeout`), para andarem no mesmo ritmo.
+- A coluna do meio: HUD, a **cena** e a doca. A cena (`#cena`) tem três andares: a arte do lugar (`#vista`, presa
+  no topo; recolhe numa faixa quando o texto passa a rolar), a barra das telas de menu (`#barra-tela`: título e
+  Voltar, fora da área que rola) e a página (`#pagina`, a única parte que rola). Cena de tipo `menu` (mercado,
+  inventário, mural...) não mostra a arte, abre no topo e leva o Voltar para a barra; numa cena da história um
+  "Voltar por onde veio" é uma escolha como as outras. Na luta, a arte vira o chão da arena e depois volta.
 - Perguntas que moram numa janela por cima, e não no pé da página, vêm marcadas nos metadados das opções: a
   confirmação de algo pedido pela tela (`Jogo.confirmar`: abandonar contrato, viagem perigosa) e o item achado
   (`achado`: o cartão e os botões numa janela própria, fora do log)

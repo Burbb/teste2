@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------ título */
-body.modo-titulo #pagina { background: transparent; border-color: transparent; border-image: none; box-shadow: none; }
+body.modo-titulo #cena { background: transparent; border-color: transparent; border-image: none; box-shadow: none; }
 body.modo-titulo #folha { display: flex; flex-direction: column; justify-content: center; min-height: 100%; text-align: center; }
 body.modo-titulo #cena-cab { margin-bottom: 30px; }
 body.modo-titulo .cena-titulo { font-size: clamp(72px, 11vw, 144px); color: var(--ouro); text-shadow: 6px 6px 0 #000, 0 0 40px rgba(255, 140, 40, 0.35); }
@@ -12,11 +12,20 @@ body.modo-titulo #texto { text-align: left; }
 body.modo-titulo .dica-pular { display: none; }
 
 /* ------------------------------------------------------------------ telas menores */
+/* Até 1280 px os três andares cabem: os painéis estreitam. Abaixo de 1100, o do mundo sai e o botão Mundo (N),
+   no topo, o traz por cima. */
 @media (max-width: 1280px) {
+  #mesa { grid-template-columns: minmax(230px, 250px) minmax(0, 1fr) minmax(250px, 270px); gap: 10px; padding: 10px 12px; }
+  .recurso { min-width: 44px; }
+}
+.so-medio { display: none; }
+@media (max-width: 1100px) {
   #mesa { grid-template-columns: minmax(230px, 260px) minmax(0, 1fr); }
   #mundo { display: none; }
   body.mostrar-mundo #mundo { display: block; position: fixed; z-index: 15; top: 56px; right: 10px; width: 330px; max-height: calc(100% - 66px); }
-  .recurso { min-width: 44px; }
+  .so-medio { display: inline-block; }
+  #acoes-topo button { white-space: nowrap; }
+  #acoes-topo kbd { display: none; }
 }
 @media (max-width: 920px) {
   body { overflow: auto; }

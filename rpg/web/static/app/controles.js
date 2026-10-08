@@ -55,6 +55,7 @@ document.addEventListener("click", (ev) => {
     else if (a === "som") alternarSom();
     else if (a === "fonte") alternarFonte();
     else if (a === "heroi") corpo.classList.toggle("mostrar-heroi");
+    else if (a === "mundo") corpo.classList.toggle("mostrar-mundo");
     else if (a === "fechar-talentos") fecharTudo();
     else if (a === "fechar-grimorio") $("#sobre-grimorio").hidden = true;
     return;
@@ -72,7 +73,7 @@ document.addEventListener("click", (ev) => {
     else Telas.toast("", "Dá para conversar quando estiver num lugar seguro (vila ou acampamento).", cid, true);
     return;
   }
-  if (processando && ev.target.closest("#pagina")) pular = true;
+  if (processando && ev.target.closest("#cena")) pular = true;
 });
 
 document.addEventListener("keydown", (ev) => {
@@ -101,6 +102,7 @@ document.addEventListener("keydown", (ev) => {
   if (k === "F3" || k === "v" || k === "V") { ev.preventDefault(); mudarVelocidade(); return; }
   if (k === "s" || k === "S") { alternarSom(); return; }
   if (k === "i" || k === "I") { corpo.classList.toggle("mostrar-heroi"); return; }
+  if (k === "n" || k === "N") { corpo.classList.toggle("mostrar-mundo"); return; }
   if ((k === "p" || k === "P") && estado && !corpo.classList.contains("modo-titulo")) { Telas.alternarGrimorio(); return; }
   if (processando && !pergunta) { if (k.length === 1 || k === "Enter") { ev.preventDefault(); pular = true; } return; }
   if (!pergunta) return;

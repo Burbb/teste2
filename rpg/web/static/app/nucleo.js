@@ -37,6 +37,7 @@ const SISTEMA = [
 ];
 
 const corpo = document.body;
+const cenaEl = $("#cena"), barraTela = $("#barra-tela");
 const pagina = $("#pagina"), folha = $("#folha"), cab = $("#cena-cab"), textoEl = $("#texto"), promptEl = $("#prompt");
 const histLista = $("#historico-lista");
 
@@ -160,6 +161,7 @@ async function tratar(m) {
         await Telas.abrirAchado(m.dados, replay);
         break;
       }
+      if (emMenu()) seguir = false;  // a tela desenhada (inventário, mercado, mural) se lê de cima: a página não desce
       anexar(Telas.painel(m));
       break;
     }

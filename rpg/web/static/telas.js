@@ -1305,7 +1305,7 @@ const Telas = (() => {
   function noPalco(festa, sobreTitulo = false) {
     const palco = document.getElementById("palco"), p = palco && palco.getBoundingClientRect();
     if (!festa || !p || !p.width) return;
-    const pg = document.getElementById("pagina").getBoundingClientRect();
+    const pg = document.getElementById("cena").getBoundingClientRect();
     const y = sobreTitulo && pg.height ? pg.top + Math.min(pg.height * 0.4, 230) : p.top + p.height * 0.45;
     const meio = festa.offsetHeight / 2 + 8;
     festa.classList.add("no-palco");

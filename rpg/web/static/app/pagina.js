@@ -27,7 +27,30 @@ function soltarRolagem() {
   if (ancora !== null && agora !== null) pagina.scrollTop += agora - ancora;
   rolagemFixa = null; ancora = null;
 }
-pagina.addEventListener("scroll", () => { seguir = pagina.scrollTop + pagina.clientHeight >= pagina.scrollHeight - 80; }, { passive: true });
+pagina.addEventListener("scroll", () => {
+  seguir = pagina.scrollTop + pagina.clientHeight >= pagina.scrollHeight - 80;
+  if (pagina.scrollTop > 48) recolherArte(true);
+}, { passive: true });
+// A arte volta inteira rolando para cima já no começo da página (nunca sozinha: crescer de volta encolheria o
+// texto, que voltaria a rolar, e a arte ficaria indo e vindo).
+pagina.addEventListener("wheel", (ev) => { if (ev.deltaY < 0 && pagina.scrollTop <= 0) recolherArte(false); }, { passive: true });
+
+/** A arte do lugar fica presa no topo da cena. Quando o texto passa a precisar de rolagem, ela se recolhe numa
+ *  faixa baixa e o espaço vai para a leitura; volta inteira na cena seguinte. */
+function recolherArte(sim) { cenaEl.classList.toggle("recolhido", sim); }
+
+/** O Voltar das telas de menu mora na barra do topo da cena, fora da área que rola: nunca cobre o conteúdo.
+ *  Sem `acao`, sai. Entre uma resposta e o redesenho da mesma tela ele fica (um clique ali não vale: a pergunta
+ *  já é outra), para a barra não piscar. */
+function porVoltar(rotulo, acao) {
+  barraTela.querySelector(".voltar-seta")?.remove();
+  if (!acao) return;
+  const b = el("button", "voltar-seta", `<span>◀</span> ${esc(rotulo)}<kbd>Esc</kbd>`);
+  b.type = "button";
+  b.addEventListener("click", (ev) => { ev.stopPropagation(); acao(); });
+  barraTela.prepend(b);
+}
+const emMenu = () => cenaEl.dataset.tipo === "menu";
 
 /** Gótico em CAIXA ALTA é ilegível: "O ÚLTIMO GUARDA" vira "O Último Guarda". */
 const MIUDAS = new Set(["de", "da", "do", "das", "dos", "e", "em", "of", "the", "a", "o", "os", "as"]);
@@ -44,9 +67,12 @@ function suavizar(t) {
 App.suavizar = suavizar;
 
 function cabecalho(m) {
-  document.querySelectorAll(".voltar-seta").forEach((x) => x.remove());
   Telas.esconderDica();
-  cab.dataset.tipo = m.tipo || "evento";
+  cab.dataset.tipo = cenaEl.dataset.tipo = m.tipo || "evento";
+  // Telas de menu (mercado, inventário, mural...): o título vai para a barra do topo, junto do Voltar, e a arte sai;
+  // a cena inteira fica para a tela. Nas cenas da história, o título abre a página, embaixo da arte.
+  if (m.tipo === "menu") { if (cab.parentElement !== barraTela) barraTela.appendChild(cab); }
+  else if (cab.parentElement !== folha) folha.prepend(cab);
   cab.innerHTML = `<h1 class="cena-titulo">${esc(suavizar(m.titulo))}</h1>` + (m.subtitulo ? `<div class="cena-sub">${esc(m.subtitulo)}</div>` : "") +
     `<div class="ornamento"><i></i><b></b><i></i></div>`;
   corpo.classList.toggle("modo-titulo", m.tipo === "titulo");
@@ -79,6 +105,7 @@ async function novaCena(m) {
     return;
   }
   soltarRolagem();
+  porVoltar(null);
   folha.style.minHeight = "";
   promptEl.style.minHeight = ""; promptEl.classList.remove("segurando");
   Telas.novaVisita();  // saiu da tela: a quantidade do mercado volta a 1 na próxima visita
@@ -86,6 +113,7 @@ async function novaCena(m) {
   textoEl.innerHTML = "";
   promptEl.innerHTML = "";
   folha.classList.remove("saindo");
+  recolherArte(false);  // antes do cabeçalho: vindo de uma tela de menu (sem arte), ela já aparece inteira
   cabecalho(m);
   folha.classList.remove("entrando"); void folha.offsetWidth; folha.classList.add("entrando");
   pagina.scrollTop = 0;

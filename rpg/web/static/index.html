@@ -35,6 +35,7 @@
   <div id="sigilos-topo" class="topo-info" title="Sigilos dos guardiões"></div>
   <nav id="acoes-topo">
     <button data-acao="heroi" class="so-estreito" title="Herói (I)">Herói</button>
+    <button data-acao="mundo" class="so-medio" title="O lugar e os caminhos (N)">Mundo <kbd>N</kbd></button>
     <button data-acao="mapa" title="Mapa grande (M)">Mapa <kbd>M</kbd></button>
     <button data-acao="historico" title="Histórico da partida (H)">Histórico <kbd>H</kbd></button>
     <button data-acao="velocidade" title="Velocidade do texto (V)">Texto: <span id="vel-rotulo">normal</span></button>
@@ -51,12 +52,16 @@
       <div id="hud-linha"></div>
       <div id="batalha"></div>
     </div>
-    <article id="pagina" class="moldura">
+    <!-- A cena: a arte do lugar presa no topo, a barra das telas de menu (título e Voltar) e a página que rola. -->
+    <article id="cena" class="moldura">
       <canvas id="vista" width="320" height="72" aria-hidden="true"></canvas>
-      <div id="folha">
-        <header id="cena-cab"></header>
-        <div id="texto" aria-live="polite"></div>
-        <div id="prompt"></div>
+      <div id="barra-tela"></div>
+      <div id="pagina">
+        <div id="folha">
+          <header id="cena-cab"></header>
+          <div id="texto" aria-live="polite"></div>
+          <div id="prompt"></div>
+        </div>
       </div>
     </article>
     <nav id="doca" class="moldura" aria-label="Atalhos"></nav>

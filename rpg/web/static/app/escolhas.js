@@ -84,7 +84,6 @@ function limparPrompt() {
   if (emTela() && promptEl.offsetHeight) { promptEl.style.minHeight = promptEl.offsetHeight + "px"; promptEl.classList.add("segurando"); }
   promptEl.innerHTML = ""; pergunta = null; Batalha.limparAlvos(); Batalha.vez(null); limparRoda(); adormecerDoca();
   document.querySelectorAll(".rastro-contrato.cacavel").forEach((c) => { c.classList.remove("cacavel"); c.querySelector(".rastro-cacar")?.remove(); });
-  document.querySelectorAll(".voltar-seta").forEach((b) => b.remove());
   Telas.fecharMenuItem();
 }
 function atalhoDe(t) { return SISTEMA.find(([re]) => re.test(t)); }
@@ -119,6 +118,7 @@ function mostrarOpcoes(m) {
   }
   promptEl.innerHTML = "";
   pergunta = { id: m.id, tipo: "opcoes", n: m.opcoes.length, opcoes: m.opcoes, numeros: [], letras: {} };
+  porVoltar(null);  // o da pergunta anterior (sai e volta no mesmo instante, se esta também tiver: a barra não pisca)
   if (m.opcoes.some((o) => o.meta && o.meta.talento) && Telas.abrirTalentos(m)) {
     // A árvore abre por cima, como o Grimório: nada muda na página do lugar. Esc ou o ✕ fecham (= Voltar).
     pergunta.voltar = m.opcoes.findIndex(ehVoltar);
@@ -145,17 +145,16 @@ function mostrarOpcoes(m) {
   }
   const sistema = m.opcoes.filter((o) => atalhoDe(o.texto)).length >= 4;
   const atalhos = el("div", "atalhos");
-  document.querySelectorAll(".voltar-seta").forEach((x) => x.remove());
-  const voltar = m.opcoes.length > 1 && !corpo.classList.contains("modo-titulo") ? m.opcoes.findIndex(ehVoltar) : -1;
+  // "Voltar" é navegação nas telas de menu (mesmo sozinho: "Fechar o diário") e na luta; numa cena da história
+  // ("Voltar por onde veio") é uma escolha como as outras.
+  const v = corpo.classList.contains("modo-titulo") ? -1 : m.opcoes.findIndex(ehVoltar);
+  const voltar = v >= 0 && (emLuta ? m.opcoes.length > 1 : emMenu()) ? v : -1;
   if (voltar >= 0 && emLuta) {
     pergunta.voltar = voltar;  // na luta, o Voltar fica dentro da barra (logo abaixo)
     if (viaBarra && m.opcoes.some((o) => o.meta && o.meta.alvo)) pergunta.aoVoltar = () => { pendente = { chave: "_voltar", valor: true }; };
   } else if (voltar >= 0) {
-    // "Voltar" vira uma seta fixa no canto da página (e Esc/Backspace), em vez de ficar no fim da lista.
-    const b = el("button", "voltar-seta", `<span>◀</span> ${esc(/^Sair do mercado/.test(m.opcoes[voltar].texto) ? "Sair do mercado" : "Voltar")}<kbd>Esc</kbd>`);
-    b.type = "button";
-    b.addEventListener("click", (ev) => { ev.stopPropagation(); responder(m.id, voltar); });
-    folha.prepend(b);
+    // Na tela de menu, o Voltar vai para a barra do topo (e Esc/Backspace), em vez de ficar no fim da lista.
+    porVoltar(/^Sair do mercado/.test(m.opcoes[voltar].texto) ? "Sair do mercado" : "Voltar", () => responder(m.id, voltar));
     pergunta.voltar = voltar;
   }
   m.opcoes.forEach((o, i) => {
@@ -668,6 +667,7 @@ function mostrarContinuar(m) {
     return;
   }
   promptEl.innerHTML = "";
+  porVoltar(null);
   const b = el("button", "continuar", "Continuar <span>▸</span>");
   b.type = "button";
   b.addEventListener("click", (ev) => { ev.stopPropagation(); responder(m.id, null); });
@@ -689,14 +689,8 @@ function mostrarPergunta(m) {
   const ok = el("button", "continuar", "Confirmar <span>▸</span>");
   ok.addEventListener("click", (ev) => { ev.stopPropagation(); responder(m.id, input.value || m.padrao || ""); });
   linha.append(input, ok);
-  if (m.voltar) {
-    document.querySelectorAll(".voltar-seta").forEach((x) => x.remove());
-    const volta = el("button", "voltar-seta", "<span>◀</span> Voltar<kbd>Esc</kbd>");
-    volta.type = "button";
-    volta.addEventListener("click", (ev) => { ev.stopPropagation(); responder(m.id, { voltar: true }); });
-    input.addEventListener("keydown", (ev) => { if (ev.key === "Escape") { ev.preventDefault(); responder(m.id, { voltar: true }); } });
-    folha.prepend(volta);
-  }
+  porVoltar("Voltar", m.voltar ? () => responder(m.id, { voltar: true }) : null);
+  if (m.voltar) input.addEventListener("keydown", (ev) => { if (ev.key === "Escape") { ev.preventDefault(); responder(m.id, { voltar: true }); } });
   promptEl.appendChild(linha);
   pergunta = { id: m.id, tipo: "pergunta" };
   setTimeout(() => input.focus(), 50);

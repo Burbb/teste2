@@ -1,8 +1,25 @@
-/* ------------------------------------------------------------------ página */
-#pagina { position: relative; flex: 1; min-height: 0; width: 100%; max-width: 860px; overflow-y: auto; box-shadow: var(--sombra); scrollbar-width: thin; scrollbar-color: #4a4038 #120e0b; background-color: #17120e; }
-#vista { display: block; width: 100%; height: auto; aspect-ratio: 320 / 72; border-bottom: 4px solid #0d0b0a; }
+/* ------------------------------------------------------------------ cena: arte, barra e página */
+/* A moldura da cena tem três andares: a arte do lugar (presa no topo, não rola), a barra das telas de menu (título e
+   Voltar) e a página, que é a única parte que rola. */
+#cena { position: relative; flex: 1; min-height: 0; width: 100%; max-width: 860px; display: flex; flex-direction: column;
+  box-shadow: var(--sombra); background-color: #17120e; container-type: inline-size; }
+#pagina { position: relative; flex: 1; min-height: 0; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #4a4038 #120e0b; }
+/* A arte: inteira no começo da cena; quando o texto passa a rolar, recolhe numa faixa (pagina.js) e o espaço vai
+   para a leitura. Nas telas de menu ela sai: a cena inteira fica para a tela. */
+#vista { display: block; flex: none; width: 100%; height: min(calc(100cqw * 72 / 320), 22vh); object-fit: cover; object-position: 50% 80%;
+  border-bottom: 4px solid #0d0b0a; transition: height 0.35s ease; }
+#cena.recolhido #vista { height: 52px; }
+#cena[data-tipo="menu"] #vista { display: none; }
+/* A barra das telas de menu: Voltar à esquerda, o título no meio, o que importa da tela (ouro, dia...) à direita. */
+#barra-tela { flex: none; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 14px; min-height: 56px; padding: 6px 14px;
+  background: linear-gradient(180deg, #1f1811, #130f0b); border-bottom: 4px solid #0d0b0a; }
+#barra-tela:empty, body.em-combate #barra-tela { display: none; }
+#barra-tela #cena-cab { display: contents; }
+#barra-tela #cena-cab .cena-titulo { grid-row: 1; grid-column: 2; font-size: 36px; white-space: nowrap; }
+#barra-tela .cena-sub { grid-row: 1; grid-column: 3; justify-self: end; text-align: right; text-wrap: balance; margin: 0; font-size: 14px; line-height: 1.25; color: var(--tinta-2); }
+#barra-tela .ornamento { display: none; }
 body.modo-titulo { background: var(--ceu-titulo, #04050c); transition: background-color 1.2s ease; }
-body.modo-titulo #vista { position: fixed; left: 0; right: 0; bottom: 0; width: 100%; height: auto; aspect-ratio: 320 / 72; z-index: 0; border: 0; pointer-events: none; }
+body.modo-titulo #vista { position: fixed; left: 0; right: 0; bottom: 0; width: 100%; height: auto; aspect-ratio: 320 / 72; z-index: 0; border: 0; pointer-events: none; transition: none; }
 body.modo-titulo #folha { position: relative; z-index: 1; }
 body.modo-titulo .vinheta { background: radial-gradient(ellipse 80% 70% at 50% 40%, transparent 50%, rgba(0, 0, 0, 0.55) 100%); }
 #folha { max-width: 68ch; margin: 0 auto; padding: 20px 34px 34px; font-size: 19px; line-height: 1.6; }
@@ -154,9 +171,14 @@ body.modo-titulo .vinheta { background: radial-gradient(ellipse 80% 70% at 50% 4
 .pergunta-rotulo.mira::after { content: " · ou clique na carta do inimigo"; text-transform: none; letter-spacing: 0; font-weight: 400; color: var(--ouro); }
 .dica-pular { text-align: center; font-size: 13px; color: var(--tinta-3); margin-top: 1em; }
 /* A doca: uma barra fixa sob a página, com moldura própria (HUD), em vez de botões no meio do texto. */
-#doca { width: 100%; max-width: 860px; display: none; padding: 6px 10px 7px; box-shadow: var(--sombra); transition: opacity .2s ease; }
+#doca { width: 100%; max-width: 860px; display: none; padding: 6px 6px 7px; box-shadow: var(--sombra); transition: opacity .2s ease; }
 body:not(.sem-heroi):not(.modo-titulo):not(.em-combate) #doca:not(:empty) { display: block; }
-#doca .atalhos { margin: 0 auto; padding: 0; border: 0; background: none; box-shadow: none; }
+#doca .atalhos { margin: 0 auto; padding: 0; border: 0; background: none; box-shadow: none; flex-wrap: nowrap; gap: 4px; }
+/* Sempre numa linha só: numa coluna estreita os botões estreitam (o nome vira reticências) em vez de quebrar em duas
+   fileiras. */
+#doca .atalho { flex: 0 1 auto; min-width: 46px; }
+#doca .doca-sep { margin: 4px 3px; }
+#doca .atalho-nome { max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
 #doca.inativa .atalho:not([data-sempre]) { opacity: 0.45; filter: grayscale(0.6); }  /* apagada, mas o clique vale: o pedido fica guardado */
 #doca .atalho.atual { border-color: var(--ouro); box-shadow: inset 0 0 0 1px var(--ouro), 0 0 10px rgba(242, 201, 76, .25); }
 #doca .atalho.atual .atalho-nome { color: var(--ouro); }
