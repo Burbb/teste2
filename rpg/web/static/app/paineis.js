@@ -86,14 +86,13 @@ function desenharHud(h, antes) {
   const tochas = [h.tochas ? "tocha" : "tocha_apagada"];
   const ouro = [h.ouro ? "moedas" : "bolsa_vazia"];
   const pocoes = [h.pocoes ? "pocao" : "frasco_vazio"];
-  const vidaCritica = h.hp <= h.max_hp * h.vida_por_um_fio;
   Sensacao.vidaDoHeroi(h.hp, h.max_hp, h.vida_por_um_fio);
   const feridas = h.ferimentos.length ? `<div class="recurso alerta" data-rec="feridas" ${Telas.dica(h.ferimentos.map((f) => `<b>${esc(f.nome)}</b><div class="bonus pior">${esc((f.explica || [""])[0])}</div>`).join("") + '<div class="rodape">Detalhes no painel do herói, à esquerda.</div>')}><div class="icones">${spr("gota", 2)}</div><div class="qtd">${h.ferimentos.length}</div></div>` : "";
   $("#hud-linha").innerHTML = `
     <div class="hud-retrato" title="${esc(h.titulo)} nível ${h.nivel}">${spr(h.classe, 3)}<span class="nivel">${h.nivel}</span></div>
     <div class="hud-vitais">
       <div class="hud-nome"><b>${esc(h.nome)}</b><span>${h.fome ? "com fome" : ""}</span></div>
-      <div class="vital${vidaCritica ? " critico" : ""}" data-vital="hp" ${Telas.dica("Vida", true)}>${spr("coracao", 1)}${barra("vida", h.hp, h.max_hp, antes ? antes.hp : undefined)}<span class="num">${h.hp}/${h.max_hp}</span></div>
+      <div class="vital" data-vital="hp" ${Telas.dica("Vida", true)}>${spr("coracao", 1)}${barra("vida", h.hp, h.max_hp, antes ? antes.hp : undefined)}<span class="num">${h.hp}/${h.max_hp}</span></div>
       <div class="vital" data-vital="rec" ${Telas.dica(esc(h.recurso), true)}>${spr(RECURSO_ICONE[h.recurso] || "estrela", 1)}${barra(RECURSO_BARRA[h.recurso] || "mana", h.rec, h.max_rec, antes ? antes.rec : undefined)}<span class="num">${h.rec}/${h.max_rec}</span></div>
     </div>
     <div class="hud-recursos">

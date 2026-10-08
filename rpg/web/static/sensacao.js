@@ -18,8 +18,9 @@ const Sensacao = (() => {
     contarMs: 650, tiquesMax: 10,
     // A barra de XP enchendo (por trecho de nível) e quanto o espólio fica na tela depois de tudo.
     barraMs: 700, espolioEsperaMs: 450, espolioFicaMs: 900,
-    // Vida por um fio: o batimento (ms entre batidas), mais rápido quanto mais perto do fim.
-    batimentoLentoMs: 1150, batimentoRapidoMs: 700,
+    // Vida por um fio: o compasso do pulso (ms entre batidas), mais rápido quanto mais perto do fim, e quantas
+    // vezes o coração soa ao entrar na faixa (depois só a tela pulsa: som contínuo cansa e angustia).
+    batimentoLentoMs: 1150, batimentoRapidoMs: 700, batidasAoEntrar: 3,
     // Saque com cerimônia: por raridade, quanto o feixe de luz demora antes de o cartão aparecer (sem entrada,
     // o item aparece direto). O lendário ainda ganha um clarão na tela inteira.
     saque: { raro: { ms: 750 }, lendario: { ms: 1150, clarao: true } },
@@ -87,23 +88,31 @@ const Sensacao = (() => {
   }
 
   /* ------------------------------------------------------------ vida por um fio */
-  // Abaixo do limiar (o motor diz qual: heroi.vida_por_um_fio), a borda da tela pulsa em vermelho e o coração
-  // bate, mais depressa quanto menos vida resta. Acima dele, ou caído, silêncio.
-  let limiar = 0.3, fracao = 1, batendo = null;
+  // Abaixo do limiar (o motor diz qual: heroi.vida_por_um_fio), a borda da tela e a barra de vida pulsam em
+  // vermelho no compasso de um coração, mais depressa quanto menos vida resta. O coração só SOA ao entrar na
+  // faixa (o aviso, umas poucas batidas) e se cala; o pulso na tela continua. Acima do limiar, ou caído, nada.
+  let limiar = 0.3, desde = null, batidas = null;
   function vidaDoHeroi(hp, max, novoLimiar) {
     if (novoLimiar) limiar = novoLimiar;
-    fracao = max ? hp / max : 1;
-    const porUmFio = hp > 0 && fracao <= limiar;
-    document.body.classList.toggle("por-um-fio", porUmFio);
-    if (porUmFio && !batendo) bater();
-    if (!porUmFio && batendo) { clearTimeout(batendo); batendo = null; }
-  }
-  function bater() {
-    if (!document.hidden) Som.tocar("batimento");
+    const fracao = max ? hp / max : 1, corpo = document.body;
+    if (!(hp > 0 && fracao <= limiar)) {
+      if (desde !== null) { desde = null; clearTimeout(batidas); corpo.classList.remove("por-um-fio"); }
+      return;
+    }
     const urgencia = Math.max(0, Math.min(1, 1 - fracao / limiar));
-    const ms = AJUSTES.batimentoLentoMs - (AJUSTES.batimentoLentoMs - AJUSTES.batimentoRapidoMs) * urgencia;
-    document.body.style.setProperty("--batimento", ms + "ms");
-    batendo = setTimeout(bater, ms);
+    const ms = Math.round(AJUSTES.batimentoLentoMs - (AJUSTES.batimentoLentoMs - AJUSTES.batimentoRapidoMs) * urgencia);
+    corpo.style.setProperty("--batimento", ms + "ms");
+    if (desde === null) {  // acabou de entrar na faixa
+      desde = performance.now();
+      corpo.classList.add("por-um-fio");
+      bater(AJUSTES.batidasAoEntrar, ms);
+    }
+    // A barra de vida nasce de novo a cada redesenho da HUD; o atraso negativo a põe no compasso da borda.
+    corpo.style.setProperty("--fio-fase", -Math.round(performance.now() - desde) + "ms");
+  }
+  function bater(n, ms) {
+    if (!document.hidden) Som.tocar("batimento");
+    batidas = n > 1 ? setTimeout(() => bater(n - 1, ms), ms) : null;
   }
 
   /* ------------------------------------------------------------ saque com cerimônia */

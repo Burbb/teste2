@@ -11,8 +11,9 @@
 .vital img.sprite { --s: 16; }
 .vital .barra-px { flex: 1; height: 16px; }
 .vital .num { font-family: var(--num); font-size: 20px; min-width: 62px; text-align: right; color: var(--tinta); line-height: 1; }
-.vital.critico .barra-px { animation: piscar-vida 0.8s steps(2) infinite; }
-@keyframes piscar-vida { 50% { filter: brightness(1.7); } }
+/* Vida por um fio (sensacao.js): a barra pulsa junto com a borda da tela, no mesmo compasso e na mesma fase. */
+body.por-um-fio .vital[data-vital="hp"] .enchimento { animation: pulso-vida var(--batimento, 1150ms) ease-out var(--fio-fase, 0ms) infinite; }
+@keyframes pulso-vida { 0%, 100% { filter: brightness(1); } 12% { filter: brightness(1.75); } 30% { filter: brightness(1.2); } 42% { filter: brightness(1.5); } }
 .hud-recursos { display: flex; gap: 4px; align-items: flex-end; flex-wrap: wrap; justify-content: flex-end; }
 .recurso { position: relative; display: flex; flex-direction: column; align-items: center; min-width: 52px; padding: 2px 3px; cursor: default; }
 .recurso .icones { height: 34px; display: flex; align-items: flex-end; justify-content: center; }
