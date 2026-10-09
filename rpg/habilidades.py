@@ -345,6 +345,18 @@ def crit_extra(h):
     return maior or h.get("crit_extra", 0.0)
 
 
+def da_estado(h, efeito):
+    """Se a habilidade põe esse estado em quem a usa (um Buff nos passos dela): para a ficha dizer de onde ele vem."""
+    def ver(passos):
+        for p in passos:
+            if isinstance(p, Buff) and p.efeito == efeito:
+                return True
+            if isinstance(p, Dano) and ver(p.depois) or isinstance(p, (Se, Salva)) and ver(p.passos):
+                return True
+        return False
+    return ver(h.get("passos", []))
+
+
 # ====================================================================== habilidades escritas à mão
 # --- Guerreiro
 GIROS_REDEMOINHO = 5

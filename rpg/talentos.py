@@ -22,6 +22,18 @@ from .modificadores import Fixo, mod
 
 
 # ---------------------------------------------------------------------- gatilhos (reações dos talentos)
+# Um gatilho que lembra algo durante a luta guarda em `cb.memoria`, pelo id do talento: o combate não tem campo
+# para talento nenhum.
+def uma_vez_por_luta(chave):
+    """O gatilho age no máximo uma vez por luta: quando devolve True (agiu), fica quieto até a próxima."""
+    def envolver(fn):
+        def gatilho(cb, u, rank, d):
+            if not cb.memoria.get(chave) and fn(cb, u, rank, d):
+                cb.memoria[chave] = True
+        return gatilho
+    return envolver
+
+
 def _aura_protecao(cb, u, rank, d):
     u.aplicar("barreira", 99, int(u.poder * 1.5))
     cb.dizer(f"Uma aura dourada te envolve. (barreira de {int(u.poder * 1.5)})", "amarelo")
@@ -34,21 +46,22 @@ def _armadilheiro(cb, u, rank, d):
     cb.aplicar(alvo, "sangramento", 3, valor=max(2, u.atk * 0.3))
 
 
+@uma_vez_por_luta("imortal")
 def _imortal(cb, u, rank, d):
-    if cb.usou_imortal:
-        return
-    cb.usou_imortal = True
     d["dano"] = u.hp - 1
     u.aplicar("furia", 3, 0.5)
     cb.dizer("Um golpe que deveria te matar... mas você se recusa a cair! (Imortal)", "vermelho+negrito")
+    return True
 
 
+@uma_vez_por_luta("martirio")
 def _martirio(cb, u, rank, d):
-    if not cb.usou_martirio and u.hp < u.max_hp * 0.25:
-        cb.usou_martirio = True
-        cura = u.curar(u.max_hp * 0.4)
-        cb.curou(u, cura, rotulo="Martírio")
-        cb.dizer(f"Seu sacrifício é visto. Uma luz desce e te restaura. (Martírio, +{cura} vida)", "amarelo+negrito")
+    if u.hp >= u.max_hp * 0.25:
+        return False
+    cura = u.curar(u.max_hp * 0.4)
+    cb.curou(u, cura, rotulo="Martírio")
+    cb.dizer(f"Seu sacrifício é visto. Uma luz desce e te restaura. (Martírio, +{cura} vida)", "amarelo+negrito")
+    return True
 
 
 def _contra_ataque(cb, u, rank, d):
@@ -75,10 +88,10 @@ def _senhor_mortos(cb, u, rank, d):
 
 
 def _frenesi(cb, u, rank, d):
-    cb.frenesi = min(3, cb.frenesi + 1)
+    cargas = cb.memoria["frenesi"] = min(3, cb.memoria.get("frenesi", 0) + 1)
     u.aplicar("frenesi", 99, 0)
-    u.efeitos["frenesi"]["v"] = 0.1 * rank * cb.frenesi  # o próprio estado, que só cresce: não mexe na Fúria nem no Grito
-    cb.dizer(f"O sangue ferve: Frenesi x{cb.frenesi}!", "vermelho")
+    u.efeitos["frenesi"]["v"] = 0.1 * rank * cargas  # o próprio estado, que só cresce: não mexe na Fúria nem no Grito
+    cb.dizer(f"O sangue ferve: Frenesi x{cargas}!", "vermelho")
 
 
 def _assassino(cb, u, rank, d):
@@ -91,13 +104,13 @@ def _assassino(cb, u, rank, d):
 
 def _coracao_ardente(cb, u, rank, d):
     c = d["alvo"]
-    if d["tipo"] == "fogo" and not cb.explodindo:
-        cb.explodindo = True
+    if d["tipo"] == "fogo" and not cb.memoria.get("explodindo"):  # quem cai na explosão não explode de novo
+        cb.memoria["explodindo"] = True
         cb.dizer(f"{c.nome} explode em chamas!", "vermelho+negrito")
         for outro in cb.inimigos_vivos():
             cb.atacar(u, outro, 0.6, tipo="fogo", alcance="distancia", stat="poder", pode_esquivar=False,
                       rotulo="Explosão")
-        cb.explodindo = False
+        cb.memoria["explodindo"] = False
 
 
 # A passiva de cada especialização: vem com ela, sem ponto de talento.

@@ -66,7 +66,7 @@ class TestModificadores(unittest.TestCase):
         g.j.hp = 5
         d = M.disparar(cb, g.j, "golpe_fatal", dano=50, de=e)
         self.assertEqual(d["dano"], 4)
-        self.assertTrue(cb.usou_imortal)
+        self.assertTrue(cb.memoria.get("imortal"))
         self.assertEqual(M.disparar(cb, g.j, "golpe_fatal", dano=50, de=e)["dano"], 50)  # só uma vez por luta
         g.combate_ativo = None
 

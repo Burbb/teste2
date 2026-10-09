@@ -7,7 +7,7 @@ fora, porque mudam a cada luta; o livro diz isso em vez de esconder.
 
 from . import balanceamento as bal
 from .classes import CLASSES
-from .habilidades import HABILIDADES, crit_extra
+from .habilidades import HABILIDADES, crit_extra, da_estado
 from .modificadores import contribuicoes, mod, mult, nomes
 from .talentos import custo_habilidade
 
@@ -31,8 +31,10 @@ def fontes_critico(j):
               for h in j.habilidades if crit_extra(HABILIDADES[h])]
     if mod(j, "abertura"):
         linhas.append(f"{', '.join(nomes(j, 'abertura'))}: o primeiro ataque de cada luta é sempre crítico.")
-    if "desaparecer" in j.habilidades or mod(j, "furtivo_ao_abater"):
-        linhas.append("Furtivo (Desaparecer, Assassino): o próximo ataque é crítico garantido.")
+    furtivo = [HABILIDADES[h]["nome"] for h in j.habilidades if da_estado(HABILIDADES[h], "furtivo")]
+    furtivo += nomes(j, "furtivo_ao_abater")
+    if furtivo:
+        linhas.append(f"Furtivo ({', '.join(furtivo)}): o próximo ataque é crítico garantido.")
     linhas.append(f"Pegar o inimigo de surpresa: um turno livre, e atacando nele o golpe sai "
                   f"{round(bal.INICIATIVA_BONUS * 100)}% mais forte (usado para outra coisa, o bônus se perde).")
     return linhas

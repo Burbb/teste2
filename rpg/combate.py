@@ -84,11 +84,10 @@ class Combate:
         self.flechas_gastas = 0
         self.turno = 0
         self.abertura = bool(mod(self.j, "abertura"))
-        self.motivo_abertura = "Tiro de Abertura" if self.abertura else None
-        self.usou_martirio = False
-        self.usou_imortal = False
-        self.frenesi = 0
-        self.explodindo = False
+        self.motivo_abertura = ", ".join(nomes(self.j, "abertura")) or None  # quem dá o crítico (Tiro de Abertura...)
+        # O que talentos, itens e passivas lembram durante esta luta ("já usei o Martírio", as cargas do Frenesi):
+        # cada um guarda o seu pelo próprio id, e a luta seguinte começa do zero (talentos.uma_vez_por_luta).
+        self.memoria = {}
         self._n_uid = 0
         self._por_uid = {}
         _SERIE[0] += 1

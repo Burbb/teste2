@@ -96,6 +96,20 @@ Os argumentos na ordem: id, nome, **ramo**, **camada**, pontos máximos, descri�
 | `mults` | multiplicadores (`{"barreira_mult": 1.3}`) |
 | `gatilhos` | `{evento: função(cb, u, pontos, dados)}`, com `ordem=` quando dois reagem ao mesmo evento |
 
+Um gatilho que precisa lembrar algo durante a luta guarda em `cb.memoria`, pelo id do talento (as cargas do Frenesi:
+`cb.memoria["frenesi"]`); a luta seguinte começa do zero. "Uma vez por combate" é um decorador:
+
+```python
+@uma_vez_por_luta("martirio")
+def _martirio(cb, u, rank, d):
+    if u.hp >= u.max_hp * 0.25:
+        return False          # não agiu: continua valendo
+    ...                       # cura
+    return True               # agiu: quieto até a próxima luta
+```
+
+O `Combate` não tem campo para talento nenhum.
+
 As chaves e os eventos existentes estão listados no topo de `rpg/modificadores.py` (`CHAVES`, `MULTS`, `EVENTOS`).
 **Chave nova** (ex.: "dano_contra_mortos_vivos"): acrescente em `CHAVES` e faça o lugar do jogo que decide aquilo
 perguntar `mod(u, "dano_contra_mortos_vivos")` uma vez; daí em diante qualquer talento, item ou passiva usa.
