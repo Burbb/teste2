@@ -4,8 +4,7 @@
 "use strict";
 
 const $ = (s, r = document) => r.querySelector(s);
-const ESC = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ESC[c]);
+const esc = Texto.html;
 const espera = (ms) => new Promise((r) => setTimeout(r, ms));
 const spr = (nome, escala = 2, classe = "") => Sprites.img(nome, escala, classe);
 function el(tag, classe, html) {

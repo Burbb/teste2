@@ -4,8 +4,7 @@
 "use strict";
 
 const Realce = (() => {
-  const ESC = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
-  const h = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ESC[c]);
+  const h = Texto.html;
   const NUM = "[+−-]?\\d+(?:[.,]\\d+)?(?:\\s*[–-]\\s*\\d+(?:[.,]\\d+)?)?%?";
   const COM_NUM = (termo, liga = "de\\s+") => `(?:${NUM}\\s+(?:${liga})?)?(?:${termo})`;
 

@@ -3,7 +3,7 @@
 "use strict";
 
 const Telas = (() => {
-  const h = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const h = Texto.html;
   const S = (nome, escala = 2, classe = "") => Sprites.img(nome, escala, classe);
 
   /** O ícone de um consumível ou recurso (comida, flechas): vem do catálogo do motor (itens.py), no estado. */

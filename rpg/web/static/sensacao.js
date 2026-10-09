@@ -336,7 +336,7 @@ const Sensacao = (() => {
   /* ------------------------------------------------------------ o espólio da vitória */
   // O que se acha (o motor manda o id; a tela escolhe o ícone e escreve a quantidade do jeito de cada coisa).
   const quantoAchou = (x) => (x.id === "comida" ? `+${Texto.plural(x.qtd, "dia")}` : x.id === "flechas" ? `+${x.qtd}` : `×${x.qtd}`);
-  const esc = (t) => String(t ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const esc = Texto.html;
 
   /** Como a tela de resultado dos jogos, tudo o que a vitória deu num quadro só: uma linha por recompensa (o ouro,
    *  depois a experiência com a barra de nível presa embaixo dela), e por fim o que se achou (comida, bandagem,

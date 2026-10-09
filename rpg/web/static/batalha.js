@@ -31,7 +31,7 @@ const Batalha = (() => {
   const agora = () => performance.now();
   const dormir = (ms) => (ms > 0 ? new Promise((r) => setTimeout(r, ms)) : Promise.resolve());
   const som = (n) => { if (!rapido()) Som.tocar(n); };
-  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const esc = Texto.html;
   const pct = (a, b) => (b ? Math.max(0, Math.min(100, (100 * a) / b)) : 0);
 
   function configurar(opts) { rapido = opts.rapido; pausa = opts.pausa; }
