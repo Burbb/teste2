@@ -148,7 +148,8 @@ e viram fração (`PERCENTUAIS`). Um **único** (`UNICOS`) pode ir além e decla
 um talento (`mods`, `mults`, `gatilhos`, `ordem`), sem pontos:
 
 ```python
-dict(nome="Coração do Carrasco", slot="amuleto", classe=None, base="Amuleto",
+dict(id="coracao_do_carrasco", nome="Coração do Carrasco", icone="amuleto",   # id fixo: o item guarda ele
+     slot="amuleto", classe=None, base="Amuleto",
      bonus={"atk": 1.2, "critico": 4},                 # o que aparece na ficha e entra nos atributos
      mods={"mult_critico": 0.3},                       # crítico ×0,3 a mais
      gatilhos={"abate": _carrasco},                    # função(cb, u, 1, dados), como num talento
@@ -160,7 +161,12 @@ vem cada pedaço (`contribuicoes`). Atributo novo de item (ex.: "dano_fogo"): ac
 `rpg/modificadores.py`, em `NOME_STAT` (`rpg/entidades.py`) e em `PESO_PRECO`; o lugar do jogo que decide pergunta
 `mod(u, "dano_fogo")`.
 
-`python -m unittest tests.test_modificadores` recusa chave, mult ou evento desconhecido num único.
+`python -m unittest tests.test_modificadores` recusa chave, mult ou evento desconhecido num único;
+`tests.test_conteudo` cobra o ícone com desenho e o id sem repetição.
+
+Uma **base** nova (um tipo de arma, de bota...) é uma tupla `(nome, gênero, ícone)` nas listas do topo de
+`rpg/itens.py` (`ARMAS`, `ARMADURAS`, `PECAS`, `ANEIS`, `AMULETOS`). O item gerado leva o ícone, o nível e, quando é
+único, o id; a tela só desenha o que chega.
 
 ## Um estado
 

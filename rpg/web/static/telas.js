@@ -150,29 +150,9 @@ const Telas = (() => {
     roubo_vida: "% roubo de vida", critico: "% crítico", espinhos: "Espinhos", regen_vida: "Vida por turno", vida_abate: "Vida por abate" };
   const CLASSE_NOME = { guerreiro: "guerreiros", arqueiro: "arqueiros", mago: "magos" };
 
+  /** O desenho de um equipamento: vem do motor (itens.py: a base ou o único diz o ícone). */
   function iconeItem(it) {
-    const b = `${it.base || ""} ${it.nome || ""}`;
-    switch (it.slot) {
-      case "arma":
-        if (/Machado|Cutelo/.test(b)) return "machado";
-        if (/Maça/.test(b)) return "maca";
-        if (/Martelo/.test(b)) return "martelo";
-        if (/Besta/.test(b)) return "besta";
-        if (/Arco/.test(b)) return "arco";
-        if (/Varinha/.test(b)) return "varinha";
-        if (/Orbe/.test(b)) return "orbe";
-        if (/Grimório/.test(b)) return "livro";
-        if (/Cajado/.test(b)) return "cajado";
-        return "espada";
-      case "cabeca": return /Diadema|Coroa/.test(b) ? "coroa" : /Pontudo/.test(b) ? "chapeu" : /Capuz|Couro/.test(b) ? "capuz" : "elmo";
-      case "armadura": return /Manto|Túnica|Veste/.test(b) ? "manto" : /Gibão|Capa|Colete|Couro/.test(b) ? "gibao" : "armadura";
-      case "maos": return /Manopla/.test(b) ? "manopla" : "luva";
-      case "pernas": return /Couro/.test(b) ? "calca_couro" : /Viagem/.test(b) ? "calca_tecido" : "calca";
-      case "pes": return /Ferrada/.test(b) ? "bota_ferro" : /Sandália/.test(b) ? "sandalia" : "bota";
-      case "secundaria": return /Aljava/.test(b) ? "aljava" : /Foco/.test(b) ? "orbe" : /Tomo/.test(b) ? "livro" : "escudo";
-      case "anel": return "anel";
-      default: return "amuleto";
-    }
+    return (it && it.icone) || "saco";
   }
 
   function comparar(it) {

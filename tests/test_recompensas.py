@@ -198,3 +198,20 @@ class TestBau(unittest.TestCase):
         chefe.chefe = True
         g.saque_de_combate([chefe])
         self.assertEqual(g.j.consumiveis.get("bau"), 1)
+
+
+class TestEquipamentoComoDado(unittest.TestCase):
+    def test_unico_renomeado_continua_unico(self):
+        """O "+" do ferreiro muda o nome: o único segue achado pelo id (e os mods dele continuam valendo)."""
+        from rpg import itens
+        it = itens._unico(random.Random(1), "guerreiro", 5, "arma")
+        it["nome"] += " +"
+        self.assertIs(itens.unico_de(it), itens.UNICOS_POR_ID[it["unico"]])
+
+    def test_save_antigo_sem_icone_acha_pela_base(self):
+        from rpg import itens
+        velho = {"nome": "Bota Ferrada de Aço do Lobo", "base": "Bota Ferrada de Aço", "slot": "pes", "bonus": {},
+                 "raridade": "magico"}
+        self.assertEqual(itens.icone_de(velho), "bota_ferro")
+        self.assertEqual(itens.icone_de({"nome": "Coroa dos Afogados", "base": "Diadema", "slot": "cabeca",
+                                         "bonus": {}, "raridade": "lendario"}), "coroa")

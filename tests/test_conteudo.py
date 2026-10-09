@@ -18,6 +18,7 @@ from rpg.classes import CLASSES
 from rpg.habilidades import ANIMACOES, FAMILIAS_TELA, HABILIDADES
 from rpg import balanceamento as bal
 from rpg.inimigos import HABS
+from rpg import itens
 from rpg.itens import CONSUMIVEIS, RECURSOS
 from rpg.regras import NIVEL_MIN_FAMILIA
 from rpg.sistemas.confronto import CRIATURAS_DA_FENDA
@@ -180,6 +181,17 @@ class TestApresentacao(Catalogo):
         self._confere(mapa, "ICONE_TRACO")
         for t in TRACOS:
             self.existe(t, mapa, f"traço '{t}' sem ícone em ICONE_TRACO (batalha.js)")
+
+    def test_equipamentos(self):
+        """Toda base e todo único têm desenho; ids de único não se repetem."""
+        for base, icone in itens._ICONE_BASE.items():
+            self.existe(icone, self.sprites, f"base '{base}': ícone '{icone}' sem desenho")
+        for u in itens.UNICOS:
+            self.existe(u.get("icone"), self.sprites, f"único '{u['nome']}': ícone '{u.get('icone')}' sem desenho")
+        ids = [u["id"] for u in itens.UNICOS]
+        self.assertEqual(sorted({i for i in ids if ids.count(i) > 1}), [], "únicos com o mesmo id")
+        for icone in itens.ICONE_ESPACO.values():
+            self.existe(icone, self.sprites, f"ICONE_ESPACO: '{icone}' sem desenho")
 
     def test_consumiveis(self):
         """Todo consumível tem desenho; o mercado tem estoque de tudo o que vende; o contador do topo existe."""

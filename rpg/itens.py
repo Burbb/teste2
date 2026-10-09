@@ -61,29 +61,43 @@ MATERIAIS_COURO = [("Rasgado", "Rasgada", 0.75), ("Curtido", "Curtida", 0.9), ("
                    ("Tachonado", "Tachonada", 1.1), ("Rúnico", "Rúnica", 1.2)]
 MATERIAIS_TECIDO = [("Puído", "Puída", 0.75), ("de Linho", "de Linho", 0.9), ("de Lã Negra", "de Lã Negra", 1.0),
                     ("Bordado", "Bordada", 1.1), ("Rúnico", "Rúnica", 1.2)]
+# As bases de equipamento: (nome, gênero, ícone). O gênero concorda o material ("Espada de Aço", "Cota Rúnica"); o
+# ícone é o desenho na mochila, no corpo e no saque (sprites-dados.js).
 ARMAS = {
-    "guerreiro": [("Espada", "f"), ("Machado", "m"), ("Maça", "f"), ("Montante", "m"), ("Martelo", "m")],
-    "arqueiro": [("Arco Curto", "m"), ("Arco Longo", "m"), ("Arco Recurvo", "m"), ("Besta Leve", "f")],
-    "mago": [("Cajado", "m"), ("Varinha", "f"), ("Orbe", "m"), ("Grimório", "m")],
+    "guerreiro": [("Espada", "f", "espada"), ("Machado", "m", "machado"), ("Maça", "f", "maca"),
+                  ("Montante", "m", "espada"), ("Martelo", "m", "martelo")],
+    "arqueiro": [("Arco Curto", "m", "arco"), ("Arco Longo", "m", "arco"), ("Arco Recurvo", "m", "arco"),
+                 ("Besta Leve", "f", "besta")],
+    "mago": [("Cajado", "m", "cajado"), ("Varinha", "f", "varinha"), ("Orbe", "m", "orbe"), ("Grimório", "m", "livro")],
 }
 ARMADURAS = {
-    "guerreiro": [("Cota de Malha", "f"), ("Peitoral", "m"), ("Couraça", "f"), ("Brigantina", "f")],
-    "arqueiro": [("Gibão de Couro", "m"), ("Capa de Patrulha", "f"), ("Colete Acolchoado", "m")],
-    "mago": [("Manto", "m"), ("Túnica", "f"), ("Veste Rúnica", "f")],
+    "guerreiro": [("Cota de Malha", "f", "armadura"), ("Peitoral", "m", "armadura"), ("Couraça", "f", "armadura"),
+                  ("Brigantina", "f", "armadura")],
+    "arqueiro": [("Gibão de Couro", "m", "gibao"), ("Capa de Patrulha", "f", "gibao"),
+                 ("Colete Acolchoado", "m", "gibao")],
+    "mago": [("Manto", "m", "manto"), ("Túnica", "f", "manto"), ("Veste Rúnica", "f", "manto")],
 }
-AMULETOS = [("Amuleto", "m"), ("Talismã", "m"), ("Pingente", "m"), ("Medalhão", "m")]
-ANEIS = [("Anel", "m"), ("Sinete", "m"), ("Aro", "m")]
+AMULETOS = [("Amuleto", "m", "amuleto"), ("Talismã", "m", "amuleto"), ("Pingente", "m", "amuleto"),
+            ("Medalhão", "m", "amuleto")]
+ANEIS = [("Anel", "m", "anel"), ("Sinete", "m", "anel"), ("Aro", "m", "anel")]
 PECAS = {  # partes da armadura e mão secundária, por classe
-    "cabeca": {"guerreiro": [("Elmo", "m"), ("Capacete", "m"), ("Barbuta", "f")],
-               "arqueiro": [("Capuz", "m"), ("Chapéu de Couro", "m")],
-               "mago": [("Capuz", "m"), ("Chapéu Pontudo", "m"), ("Diadema", "m")]},
-    "maos": {"guerreiro": [("Manopla", "f")], "arqueiro": [("Braçadeira", "f")], "mago": [("Luva de Seda", "f")]},
-    "pernas": {"guerreiro": [("Perneira", "f"), ("Greva", "f")], "arqueiro": [("Calça de Couro", "f")],
-               "mago": [("Calça de Viagem", "f")]},
-    "pes": {"guerreiro": [("Bota Ferrada", "f")], "arqueiro": [("Bota de Caça", "f")], "mago": [("Sandália", "f")]},
-    "secundaria": {"guerreiro": [("Escudo", "m"), ("Broquel", "m")], "arqueiro": [("Aljava", "f")],
-                   "mago": [("Tomo", "m"), ("Foco Arcano", "m")]},
+    "cabeca": {"guerreiro": [("Elmo", "m", "elmo"), ("Capacete", "m", "elmo"), ("Barbuta", "f", "elmo")],
+               "arqueiro": [("Capuz", "m", "capuz"), ("Chapéu de Couro", "m", "capuz")],
+               "mago": [("Capuz", "m", "capuz"), ("Chapéu Pontudo", "m", "chapeu"), ("Diadema", "m", "coroa")]},
+    "maos": {"guerreiro": [("Manopla", "f", "manopla")], "arqueiro": [("Braçadeira", "f", "luva")],
+             "mago": [("Luva de Seda", "f", "luva")]},
+    "pernas": {"guerreiro": [("Perneira", "f", "calca"), ("Greva", "f", "calca")],
+               "arqueiro": [("Calça de Couro", "f", "calca_couro")],
+               "mago": [("Calça de Viagem", "f", "calca_tecido")]},
+    "pes": {"guerreiro": [("Bota Ferrada", "f", "bota_ferro")], "arqueiro": [("Bota de Caça", "f", "bota")],
+            "mago": [("Sandália", "f", "sandalia")]},
+    "secundaria": {"guerreiro": [("Escudo", "m", "escudo"), ("Broquel", "m", "escudo")],
+                   "arqueiro": [("Aljava", "f", "aljava")],
+                   "mago": [("Tomo", "m", "livro"), ("Foco Arcano", "m", "orbe")]},
 }
+# O desenho de um espaço quando a base não diz (itens de saves antigos, antes do ícone ir no item).
+ICONE_ESPACO = {"arma": "espada", "cabeca": "elmo", "armadura": "armadura", "maos": "luva", "pernas": "calca",
+                "pes": "bota", "secundaria": "escudo", "amuleto": "amuleto", "anel": "anel"}
 # Espaços do corpo (chaves de jogador.equip). Itens de anel cabem em anel1 ou anel2.
 SLOTS = ["cabeca", "amuleto", "armadura", "maos", "arma", "secundaria", "pernas", "pes", "anel1", "anel2"]
 NOMES_SLOT = {"arma": "Arma", "secundaria": "Apoio", "cabeca": "Cabeça", "armadura": "Peito", "maos": "Mãos",
@@ -112,54 +126,88 @@ NOMES_RAROS_B = ["do Abismo", "da Carne", "do Corvo", "Sangrenta", "da Forca", "
                  "Sem Nome", "do Mártir", "Faminta", "da Fenda", "do Carrasco", "Antiga", "da Viúva"]
 
 UNICOS = [
-    dict(nome="Lamento de Gharbad", slot="arma", classe="guerreiro", base="Machado",
+    dict(id="lamento_de_gharbad", nome="Lamento de Gharbad", icone="machado",
+         slot="arma", classe="guerreiro", base="Machado",
          bonus={"atk": 1.5, "roubo_vida": 6, "vida_abate": 5},
          lore="Um caído quis ser ferreiro. Forjou isto com os ossos dos próprios irmãos."),
-    dict(nome="O Açougueiro", slot="arma", classe="guerreiro", base="Cutelo",
+    dict(id="acougueiro", nome="O Açougueiro", icone="machado", slot="arma", classe="guerreiro", base="Cutelo",
          bonus={"atk": 1.8, "critico": 6},
          lore="\"Ahh... carne fresca!\" — a última coisa que muitos ouviram."),
-    dict(nome="Ventre da Tempestade", slot="arma", classe="arqueiro", base="Arco Longo",
+    dict(id="ventre_da_tempestade", nome="Ventre da Tempestade", icone="arco",
+         slot="arma", classe="arqueiro", base="Arco Longo",
          bonus={"atk": 1.4, "agi": 1.5, "critico": 8},
          lore="A corda foi trançada com cabelo de uma bruxa afogada. Ela ainda canta quando você atira."),
-    dict(nome="Sussurro do Vazio", slot="arma", classe="arqueiro", base="Arco Recurvo",
+    dict(id="sussurro_do_vazio", nome="Sussurro do Vazio", icone="arco",
+         slot="arma", classe="arqueiro", base="Arco Recurvo",
          bonus={"atk": 1.5, "roubo_vida": 5, "agi": 0.8},
          lore="As flechas voltam com menos sangue do que deveriam."),
-    dict(nome="Olho do Abismo", slot="arma", classe="mago", base="Orbe",
+    dict(id="olho_do_abismo", nome="Olho do Abismo", icone="orbe", slot="arma", classe="mago", base="Orbe",
          bonus={"poder": 1.6, "max_rec": 10, "regen_vida": 2},
          lore="Ele olha de volta. Sempre olhou."),
-    dict(nome="Cajado da Peste", slot="arma", classe="mago", base="Cajado",
+    dict(id="cajado_da_peste", nome="Cajado da Peste", icone="cajado", slot="arma", classe="mago", base="Cajado",
          bonus={"poder": 1.5, "vida_abate": 6, "max_rec": 6},
          lore="Pertenceu a um curandeiro que descobriu que era mais fácil matar a doença junto com o doente."),
-    dict(nome="Pele do Penitente", slot="armadura", classe=None, base="Couraça de Couro Humano",
+    dict(id="pele_do_penitente", nome="Pele do Penitente", icone="gibao",
+         slot="armadura", classe=None, base="Couraça de Couro Humano",
          bonus={"defesa": 1.2, "max_hp": 14, "espinhos": 5},
          lore="Ninguém sabe quem ela era. Ela ainda sente dor por você."),
-    dict(nome="Manto de Cinzas", slot="armadura", classe=None, base="Manto",
+    dict(id="manto_de_cinzas", nome="Manto de Cinzas", icone="manto", slot="armadura", classe=None, base="Manto",
          bonus={"defesa": 0.8, "max_rec": 12, "regen_vida": 2},
          lore="Tecido com as cinzas da última vila que a Fenda engoliu."),
-    dict(nome="Coroa dos Afogados", slot="cabeca", classe=None, base="Diadema",
+    dict(id="coroa_dos_afogados", nome="Coroa dos Afogados", icone="coroa", slot="cabeca", classe=None, base="Diadema",
          bonus={"max_hp": 12, "regen_vida": 2, "defesa": 1},
          lore="Achada na cabeça de um rei no fundo do pântano. Ele não estava morto."),
-    dict(nome="Égide do Mártir", slot="secundaria", classe="guerreiro", base="Escudo de Torre",
+    dict(id="egide_do_martir", nome="Égide do Mártir", icone="escudo",
+         slot="secundaria", classe="guerreiro", base="Escudo de Torre",
          bonus={"defesa": 1.4, "max_hp": 10, "espinhos": 6},
          lore="Cada amassado é uma oração que alguém não terminou de fazer."),
-    dict(nome="Aljava dos Mil Corvos", slot="secundaria", classe="arqueiro", base="Aljava",
+    dict(id="aljava_dos_mil_corvos", nome="Aljava dos Mil Corvos", icone="aljava",
+         slot="secundaria", classe="arqueiro", base="Aljava",
          bonus={"agi": 1.2, "critico": 7, "atk": 0.6},
          lore="Penas negras. As flechas voltam sozinhas, às vezes, de madrugada."),
-    dict(nome="Tomo do Nome Esquecido", slot="secundaria", classe="mago", base="Tomo",
+    dict(id="tomo_do_nome_esquecido", nome="Tomo do Nome Esquecido", icone="livro",
+         slot="secundaria", classe="mago", base="Tomo",
          bonus={"poder": 1.1, "max_rec": 14, "roubo_vida": 3},
          lore="As páginas estão em branco até você sangrar nelas."),
-    dict(nome="Botas do Andarilho Morto", slot="pes", classe=None, base="Bota",
+    dict(id="botas_do_andarilho_morto", nome="Botas do Andarilho Morto", icone="bota",
+         slot="pes", classe=None, base="Bota",
          bonus={"agi": 1.4, "regen_vida": 2, "max_hp": 6},
          lore="Ainda caminham à noite. Calce-as antes que vão embora sem você."),
-    dict(nome="Mãos do Estrangulador", slot="maos", classe=None, base="Luvas",
+    dict(id="maos_do_estrangulador", nome="Mãos do Estrangulador", icone="luva", slot="maos", classe=None, base="Luvas",
          bonus={"atk": 0.8, "poder": 0.8, "critico": 6},
          lore="Os dedos se fecham sozinhos quando alguém mente perto de você."),
-    dict(nome="Anel do Último Rei", slot="anel", classe=None, base="Anel",
+    dict(id="anel_do_ultimo_rei", nome="Anel do Último Rei", icone="anel", slot="anel", classe=None, base="Anel",
          bonus={"atk": 1, "poder": 1, "critico": 5, "roubo_vida": 3},
          lore="O reino caiu. O anel não."),
 ]
 
-UNICOS_POR_NOME = {u["nome"]: u for u in UNICOS}
+UNICOS_POR_ID = {u["id"]: u for u in UNICOS}
+UNICOS_POR_NOME = {u["nome"]: u for u in UNICOS}  # saves de antes do id: o único era achado pelo nome
+
+
+def unico_de(item):
+    """A ficha do catálogo de um item único: pelo id (que o ferreiro não muda ao renomear "+1"), ou pelo nome nos saves
+    antigos."""
+    if item.get("raridade") != "lendario":
+        return None
+    return UNICOS_POR_ID.get(item.get("unico")) or UNICOS_POR_NOME.get(item["nome"])
+
+
+_ICONE_BASE = {b: ic for lista in (*ARMAS.values(), *ARMADURAS.values(), AMULETOS, ANEIS,
+                                     *(l for p in PECAS.values() for l in p.values())) for b, _, ic in lista}
+
+
+def icone_de(item):
+    """O desenho do item: o que veio com ele; nos saves antigos, o da base do catálogo (a mais longa que bate com o
+    tipo: "Bota Ferrada de Aço" é Bota Ferrada) ou o do espaço."""
+    if item.get("icone"):
+        return item["icone"]
+    u = unico_de(item)
+    if u:
+        return u["icone"]
+    base = item.get("base") or ""
+    achadas = [b for b in _ICONE_BASE if base.startswith(b)]
+    return _ICONE_BASE[max(achadas, key=len)] if achadas else ICONE_ESPACO.get(item.get("slot"), "saco")
 
 
 def fonte_item(item):
@@ -167,7 +215,7 @@ def fonte_item(item):
     Ataque e Vida, entra nos atributos). Um único pode declarar no catálogo `mods`, `mults` e `gatilhos` próprios,
     no mesmo formato dos talentos: é assim que nasce um item que gera build. None quando o item não mexe em nada."""
     mods = {k: (v / 100 if k in PERCENTUAIS else v) for k, v in item["bonus"].items() if k in ESPECIAIS}
-    unico = UNICOS_POR_NOME.get(item["nome"]) if item.get("raridade") == "lendario" else None
+    unico = unico_de(item)
     if unico:
         mods.update(unico.get("mods", {}))
         if unico.get("mults") or unico.get("gatilhos"):
@@ -219,7 +267,8 @@ def _unico(rng, classe, nivel, slot):
         else:
             bonus[stat] = round(v + nivel * 0.3)
     return {"nome": u["nome"], "base": u["base"], "slot": u["slot"], "bonus": bonus, "classe": u["classe"],
-            "raridade": "lendario", "lore": u["lore"], "preco": _preco(bonus, "lendario")}
+            "raridade": "lendario", "lore": u["lore"], "preco": _preco(bonus, "lendario"), "unico": u["id"],
+            "icone": u["icone"], "nivel": nivel}
 
 
 def _preco(bonus, raridade):
@@ -244,7 +293,7 @@ def gerar_equip(rng, classe, nivel, slot=None, qualidade=0, raridade=None):
     forca = _escala(nivel) * mult
     bonus = {}
     if slot == "arma":
-        base, g = rng.choice(ARMAS[classe])
+        base, g, icone = rng.choice(ARMAS[classe])
         if classe == "guerreiro":
             bonus["atk"] = round(forca)
         elif classe == "arqueiro":
@@ -253,12 +302,12 @@ def gerar_equip(rng, classe, nivel, slot=None, qualidade=0, raridade=None):
         else:
             bonus["poder"] = round(forca)
     elif slot == "armadura":
-        base, g = rng.choice(ARMADURAS[classe])
+        base, g, icone = rng.choice(ARMADURAS[classe])
         fator = {"guerreiro": 0.7, "arqueiro": 0.5, "mago": 0.35}[classe]
         bonus["defesa"] = max(1, round(forca * fator))
         bonus["max_hp"] = round(forca * 2)
     elif slot in PECAS:
-        base, g = rng.choice(PECAS[slot][classe])
+        base, g, icone = rng.choice(PECAS[slot][classe])
         forca *= 0.65  # peças complementares: somadas, não devem valer mais que arma e armadura
         fator = {"guerreiro": 0.7, "arqueiro": 0.5, "mago": 0.35}[classe]
         principal = {"guerreiro": "atk", "arqueiro": "agi", "mago": "poder"}[classe]
@@ -286,7 +335,7 @@ def gerar_equip(rng, classe, nivel, slot=None, qualidade=0, raridade=None):
         if slot == "secundaria" and classe == "mago":
             mat_m = mat_f = ""
     else:
-        base, g = rng.choice(ANEIS if slot == "anel" else AMULETOS)
+        base, g, icone = rng.choice(ANEIS if slot == "anel" else AMULETOS)
         mat_m = mat_f = ""
     tipo_base = f"{base} {mat_m if g == 'm' else mat_f}".strip()
     n_afixos = {"comum": 1 if slot in ("amuleto", "anel") else 0, "magico": 1, "raro": rng.choice([2, 3])}[raridade]
@@ -300,7 +349,8 @@ def gerar_equip(rng, classe, nivel, slot=None, qualidade=0, raridade=None):
     else:
         nome = tipo_base
     return {"nome": nome, "base": tipo_base, "slot": slot, "bonus": bonus, "preco": _preco(bonus, raridade),
-            "classe": classe if slot not in ("amuleto", "anel") else None, "raridade": raridade}
+            "classe": classe if slot not in ("amuleto", "anel") else None, "raridade": raridade, "icone": icone,
+            "nivel": nivel}
 
 
 def rotulo(item):
@@ -319,7 +369,7 @@ def ficha(it, recurso=None, **extra):
     if not it:
         return None
     return dict({"nome": rotulo(it), "raridade": it.get("raridade", "comum"), "bonus": descrever_bonus(it["bonus"], recurso),
-                 "nivel": it.get("nivel"), "slot": it.get("slot"), "base": it.get("base"), "bonus_bruto": it["bonus"],
+                 "nivel": it.get("nivel"), "icone": icone_de(it), "slot": it.get("slot"), "base": it.get("base"), "bonus_bruto": it["bonus"],
                  "classe": it.get("classe"), "lore": it.get("lore")}, **extra)
 
 
