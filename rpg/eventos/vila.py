@@ -189,8 +189,6 @@ def familia_grata(g):
     g.ganhar_ouro(20 + 3 * g.j.nivel)
     g.dar("pocao_vida", 2)
     g.mudar_reputacao(3)
-    g.aliado_final(f"A família de {d['nome']}", f"Você ouve, de muito longe, a voz de {d['nome']} gritando seu "
-                                                f"nome. Parece bobo, mas te enche de coragem.", "forca", 2)
 
 
 @evento(contextos=VILA, peso=6, cooldown=12)

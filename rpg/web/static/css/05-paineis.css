@@ -21,16 +21,19 @@
 .legenda-linha span + span { color: var(--tinta); }
 /* Ponto de talento para gastar: um botão de moldura de ouro (como os atributos), a estrela pulsando devagar e um
    brilho que atravessa de tempos em tempos. Chama o olho sem piscar o texto (o pisca-pisca cansava). */
-.talento-aviso { --anel: var(--anel-a); position: relative; overflow: hidden; margin-top: 10px; display: flex; align-items: center; gap: 8px;
+.talento-linha { margin-top: 10px; display: flex; align-items: center; gap: 4px; }
+.talento-aviso { --anel: var(--anel-a); position: relative; overflow: hidden; flex: 1; display: flex; align-items: center; gap: 8px;
   padding: 4px 10px 4px 6px; font-weight: 600; font-size: 15px; cursor: pointer; color: var(--ouro); text-shadow: var(--contorno);
   border: var(--borda) solid var(--p-j); border-image: var(--anel) 1 / 1 stretch; background: var(--p-k); background-clip: padding-box; }
 .talento-aviso .estrela { display: grid; animation: estrela-pulsa 1.8s steps(6) infinite; }
 .talento-aviso .estrela img.sprite { --s: 32; margin: -6px 0; }
-.talento-aviso .gastar { margin-left: auto; font-size: 13px; font-weight: 400; color: var(--tinta-2); }
+/* A seta de uma pendência importante: fora do botão, balançando na direção dele em quatro passos. */
+.seta-pendencia { flex: none; display: grid; filter: drop-shadow(2px 2px 0 #000); animation: seta-aponta 0.9s steps(4) infinite; pointer-events: none; }
+.seta-pendencia img.sprite { --s: 32; }
+@keyframes seta-aponta { 0%, 100% { translate: 0 0; } 50% { translate: -7px 0; } }
 .talento-aviso::after { content: ""; position: absolute; top: 0; bottom: 0; left: -40px; width: 22px; pointer-events: none;
   background: linear-gradient(90deg, transparent, rgba(255, 243, 160, 0.32), transparent); animation: brilho-passa 3.4s steps(18) infinite; }
 .talento-aviso:hover, .talento-aviso:focus-visible { --anel: var(--anel-Y); color: var(--aceso); outline: none; }
-.talento-aviso:hover .gastar { color: var(--aceso); }
 @keyframes estrela-pulsa { 50% { transform: scale(1.18); filter: drop-shadow(0 0 4px rgba(255, 210, 110, 0.85)); } }
 @keyframes brilho-passa { 0%, 55% { left: -40px; } 100% { left: calc(100% + 40px); } }
 /* Atributos: cada um numa caixinha de filete escuro, ícone, nome e o número à direita. */

@@ -89,6 +89,24 @@ const SPRITES_GRADES = (() => {
       ".kkkkkkyyyyyyCk.",
       "......kkkkkkkkk.",
       "................",],
+    // A seta que aponta uma pendência importante (pontos de talento para gastar): ouro, luz de cima.
+    seta_esq: [
+      "................",
+      "................",
+      "......kk........",
+      ".....kyk........",
+      "....kyYk........",
+      "...kyYYkkkkkkkk.",
+      "..kyYYYYYYYYYYk.",
+      ".kyYYYYYYYYYYYk.",
+      ".kcyyyyyyyyyyyk.",
+      "..kcyyyyyyyyyyk.",
+      "...kcyykkkkkkkk.",
+      "....kcyk........",
+      ".....kck........",
+      "......kk........",
+      "................",
+      "................"],
     // O Baú Trancado: madeira, cintas de ferro e a fechadura de latão.
     bau: [
       "................",

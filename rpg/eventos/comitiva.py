@@ -159,8 +159,6 @@ def odete_conversa_final(g, m):
         g.dizer("\"Ontem eu dormi a noite inteira\", diz Odette, espantada consigo mesma. \"A primeira vez desde a "
                 "Fenda.\" Ela tira o rosário do pescoço e põe na sua mão.")
         g.dizer("\"Quando você for até ele, eu vou estar lá. E dessa vez a minha prece não vai tremer.\"", "amarelo")
-        g.aliado_final("Irmã Odette", "Odette ergue o rosário e a Luz que ela achava ter perdido enche o salão do trono. "
-                                     "Suas feridas se fecham.", "cura", 0)
         cm.mudar_aprovacao(g, "odete", 5)
     else:
         g.dizer("\"Ela ainda acende a vela todo dia\", diz Odette. \"Por uma mentira minha. Pelo menos ela dorme.\" "
@@ -292,8 +290,6 @@ def teodoro_ruivo(g):
         if g.teste("carisma", 15):
             g.dizer("Theodore fica muito tempo calado. \"Depois que isso acabar, capitão. Depois.\" E então, mais baixo: "
                     "\"Os Cães ainda sabem lutar. Se você for mesmo contra a sombra, mande chamar.\"", "verde")
-            g.aliado_final("Theodore, o Ruivo", "Os Cães de Ferro invadem o salão sob o grito de Theodore, o Ruivo, e por um "
-                                            "instante a velha companhia luta de novo, inteira.", "dano", 0.08)
             m["caminho"] = "adiado"
             cm.mudar_aprovacao(g, "morel", 6)
             m["missao"] = 3
@@ -314,8 +310,6 @@ def teodoro_ruivo(g):
             if op2 == "poupar" and m["aprovacao"] >= 30:
                 g.narrar("Morel abaixa a espada. \"Alguém tem que sair vivo da Ponte de Varn sem ter fugido\", diz. "
                          "Theodore chora como criança. Seus homens também.", "verde")
-                g.aliado_final("Theodore, o Ruivo", "Os Cães de Ferro invadem o salão sob o grito de Theodore, o Ruivo, e "
-                                                "por um instante a velha companhia luta de novo, inteira.", "dano", 0.1)
                 m["caminho"] = "redencao"
                 cm.mudar_aprovacao(g, "morel", 12)
                 cm.reagir(g, "misericordia")
@@ -359,8 +353,6 @@ def morel_conversa_final(g, m):
                 "amarelo")
     else:
         g.dizer("\"Não sei mais o que ela significa\", diz Morel. \"Fica com você. Você parece saber.\"", "amarelo")
-    g.aliado_final("Bastian Morel", "Morel solta o velho grito dos Cães de Ferro, e o seu sangue ferve com ele.",
-                   "forca", 0)
     cm.mudar_aprovacao(g, "morel", 5)
 
 
@@ -549,8 +541,6 @@ def yara_circulo_negro(g):
                  "Quando ela se levanta, os olhos são castanhos de novo.", "verde")
         g.narrar("\"Silêncio\", diz ela, chorando e rindo ao mesmo tempo. \"Silêncio de verdade.\"", "verde+negrito")
         m["caminho"] = "liberta"
-        g.aliado_final("Yara", "Yara grita o nome verdadeiro de Ulook, que ouviu em sonhos, e por um instante "
-                               "ele hesita.", "dano", 0.12)
     else:
         g.narrar("As pedras se acendem. Yara abre os braços e a escuridão entra nela como água num jarro. Quando acaba, "
                  "ela flutua um palmo acima do chão, e sorri. Você nunca a viu tão bonita. Nem tão longe.", "magenta")
@@ -573,8 +563,6 @@ def yara_conversa_final(g, m):
     else:
         g.dizer("\"Ele ainda fala comigo\", diz Yara. \"Mas agora eu também falo com ele. E às vezes, só às vezes, "
                 "ele tem medo de mim.\"", "magenta")
-        g.aliado_final("Yara", "Yara volta contra Ulook o poder que ele mesmo deu a ela. O Arauto do Vazio sangra "
-                               "escuridão.", "dano", 0.2)
     cm.mudar_aprovacao(g, "yara", 3)
 
 

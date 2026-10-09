@@ -79,27 +79,6 @@ class Chefes:
             yara.max_hp = yara.hp = int(yara.max_hp * 1.6)
             yara.poder = int(yara.poder * 1.4)
             extras.append(yara)
-        if self.aliados_finais:
-            self.ui.separador("verde")
-            self.dizer("Mas você não está só.", "verde+negrito")
-            dano_max = int(chefe.max_hp * 0.45)  # os aliados ajudam, mas o golpe final é seu
-            for al in self.aliados_finais:
-                self.narrar(al["texto"], "verde")
-                if al["efeito"] == "dano":
-                    perda = min(int(chefe.max_hp * al["valor"]), dano_max - (chefe.max_hp - chefe.hp))
-                    if perda > 0:
-                        chefe.hp -= perda
-                        self.dizer(f"  ({a['curto']} perde {perda} de vida)", "verde")
-                elif al["efeito"] == "cura":
-                    j.hp = j.max_hp
-                    self.dizer("  (vida restaurada)", "verde")
-                elif al["efeito"] == "forca":
-                    atual = j.efeito("fortalecido")
-                    bonus = min(0.3, (atual["v"] if atual else 0) + 0.1)
-                    j.aplicar("fortalecido", 99, bonus)
-                    j.efeitos["fortalecido"]["v"] = bonus
-                    self.dizer(f"  (seu dano aumenta em {int(bonus * 100)}% nesta batalha)", "verde")
-            self.pausar()
         j.hp = max(j.hp, j.max_hp // 2)
         self.combate([chefe] + extras, pode_fugir=False, titulo="O FIM DE TODAS AS COISAS")
         self.vitoria()

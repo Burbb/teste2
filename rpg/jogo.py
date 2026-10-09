@@ -68,7 +68,6 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         self.na_fogueira = False  # em volta do fogo, à noite: um dos lugares seguros para abrir um baú
         self.titulo_espolio = None
         self.nemesis = None
-        self.aliados_finais = []
         self.forcados = []
         self.proximo_id = 1
         self.combate_ativo = None
@@ -323,7 +322,7 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
             ("Comitiva" + ("  ✉ alguém quer conversar" if any(
                 c["conversa"] for c in comitiva.estado(self)) else ""), "comitiva") if self.comitiva or self.reserva else None,
             ("Mapa", "mapa"),
-            ("Diário (contratos, rumores, aliados)", "diario"),
+            ("Diário (contratos, rumores)", "diario"),
             ("Bestiário", "bestiario"),
             ("Salvar jogo", "salvar"),
             ("Sair do jogo", "sair"),

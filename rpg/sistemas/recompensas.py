@@ -224,12 +224,6 @@ class Recompensas:
             return s["dados"]
         return None
 
-    def aliado_final(self, nome, texto, efeito, valor):
-        if any(a["nome"] == nome for a in self.aliados_finais):
-            return
-        self.aliados_finais.append({"nome": nome, "texto": texto, "efeito": efeito, "valor": valor})
-        self.dizer(f"({nome} pode ajudar você quando a hora final chegar.)", "ciano")
-
     def rumor_aqui(self, evento):
         for r in self.rumores:
             if r.get("evento") == evento and r.get("local") == self.loc["id"]:

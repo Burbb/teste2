@@ -160,10 +160,8 @@ def viajante_grato(g):
         g.dizer("\"Eu disse que não esqueceria. Tome. Era do meu avô, e ele também era teimoso como você.\"", "verde")
         g.oferecer_equip(gerar_equip(g.rng, g.j.classe, g.j.nivel, qualidade=1))
     else:
-        g.dizer("\"Contei sua história em cada vila. Quando a hora chegar, me chame. Eu e meus amigos "
-                "estaremos lá.\"", "verde")
-        g.aliado_final(d["nome"], f"{d['nome']} surge com uma dúzia de aldeões armados com forcados e tochas! "
-                                  f"Eles distraem as sombras enquanto você avança.", "dano", 0.08)
+        g.dizer("\"Contei sua história em cada vila. O povo juntou isto para você. Não é muito, mas é de "
+                "coração.\"", "verde")
         g.ganhar_ouro(15)
 
 
@@ -372,9 +370,8 @@ def bandido_poupado(g):
     g.dizer(f"Um assobio. Do mato sai {d['lider']}, o bandido de chapéu de pena, com metade do bando.", "amarelo")
     if g.j.reputacao >= 0 or g.chance(0.5):
         g.dizer("\"Ouvimos falar do que você anda fazendo contra a sombra. O Vazio é mau pros negócios. "
-                "Quando for enfrentar o chefão, conta com a gente.\"", "verde")
-        g.aliado_final(d["lider"], f"{d['lider']} e seu bando caem do teto em cordas, gritando como loucos! "
-                                   f"Flechas e facas voam contra {g.antagonista['curto']}.", "dano", 0.1)
+                "Leva isto: tirou a gente de muita enrascada.\"", "verde")
+        g.dar("bomba_fumaca")
     else:
         g.dizer("\"Mudei de ideia sobre você. Sua cabeça vale mais do que sua amizade.\"", "vermelho")
         grupo = g.grupo("bandido", n=2) + [g.inimigo("bandido", afixo="feroz", nome_unico=d["lider"])]
@@ -639,10 +636,9 @@ def refugiados(g):
         g.dizer("Crias do Vazio surgem das sombras na retaguarda da coluna!", "vermelho")
         if g.combate([g.inimigo("cria_vazio") for _ in range(2)]) == "vitoria":
             g.mudar_reputacao(6)
-            g.dizer("Um ferreiro entre os refugiados insiste em te recompensar: \"Quando você for até o fim "
-                    "disso, eu forjo o que você precisar.\"", "verde")
-            g.aliado_final("Os refugiados", "Os refugiados que você salvou trazem armas recém-forjadas e "
-                                            "uma bênção coletiva. Você se sente invencível.", "forca", 3)
+            g.dizer("Um ferreiro entre os refugiados insiste em te recompensar com uma peça que forjou na estrada.",
+                    "verde")
+            g.oferecer_equip(gerar_equip(g.rng, g.j.classe, g.j.nivel, qualidade=1))
     elif op == "doar":
         g.perder_ouro(15 + 3 * g.j.nivel)
         g.mudar_reputacao(4)
@@ -739,8 +735,6 @@ def tumulo_do_heroi(g):
         g.dizer(f"Você se ajoelha. Por um instante, sente a mão de {t['nome']} no seu ombro.", "verde")
         g.ganhar_xp(20 + 10 * g.j.nivel)
         g.mudar_reputacao(2)
-        g.aliado_final(f"O espírito de {t['nome']}", f"Uma figura translúcida surge ao seu lado: {t['nome']}. "
-                                                      f"\"Desta vez, terminamos juntos.\"", "dano", 0.08)
         return
     arma = t.get("arma")
     if arma and arma.get("classe") == g.j.classe:

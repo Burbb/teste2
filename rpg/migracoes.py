@@ -9,8 +9,8 @@ VERSAO_SAVE = 3
 
 # Tudo o que o estado da partida guarda além do jogador, da semente e do gerador aleatório.
 CAMPOS_SAVE = ("mundo", "dia", "periodo", "clima", "passos", "flags", "historico", "contagem",
-               "impulsos", "sementes", "rumores", "contratos", "ofertas", "lojas", "nemesis", "aliados_finais",
-               "forcados", "proximo_id", "estatisticas", "hardcore", "bestiario", "lendas", "registro",
+               "impulsos", "sementes", "rumores", "contratos", "ofertas", "lojas", "nemesis", "forcados",
+               "proximo_id", "estatisticas", "hardcore", "bestiario", "lendas", "registro",
                "arquivo_run", "comitiva", "reserva")
 
 ESPACOS_EQUIP = ("cabeca", "amuleto", "armadura", "maos", "arma", "secundaria", "pernas", "pes", "anel1", "anel2")

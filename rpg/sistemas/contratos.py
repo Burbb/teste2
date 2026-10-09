@@ -246,8 +246,6 @@ class Contratos:
         if self.nemesis:
             n = self.nemesis
             self.dizer(f"Nêmesis: {n['nome']}, {FAMILIAS[n['familia']]['nome']} que te persegue.", "vermelho")
-        if self.aliados_finais:
-            self.dizer("Aliados para a batalha final: " + ", ".join(x["nome"] for x in self.aliados_finais), "verde")
 
     def abandonar_contrato(self, c):
         penalidade = 6 if c["tipo"] == "entrega" else 3

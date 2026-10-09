@@ -48,6 +48,10 @@ mais brando para quem quiser; um robô de mapa que jogue partidas inteiras com j
 - Comida para o animal (descartado por ora: provisões ficariam apertadas demais).
 - Ícones próprios para cada habilidade.
 - "Ordens" leves para a comitiva.
+- Aliados na batalha final, repaginado (o sistema antigo saiu na 1.45: cada evento somava um aliado que tirava vida
+  do chefe num texto antes da luta, invisível no resto do jogo). Se voltar: poucos aliados, ganhos por arcos
+  inteiros (a comitiva, uma vila salva), que aparecem de verdade na luta final (carta na arena, uma ação ou
+  habilidade própria), com o compromisso visível no Diário e a promessa cobrada (quem foi abandonado não vem).
 - Armazém para guardar mais coisa, quando a gama de itens crescer (junto com o saque de ARPG: mais drop, mais
   variedade). Como Titan Quest (a Caravana) e Diablo/Path of Exile/Grim Dawn: só nas vilas, nunca no acampamento
   (a mochila de 12 é a tensão da viagem), e o mesmo conteúdo em todas as vilas (uma carroça de caravaneiro leva

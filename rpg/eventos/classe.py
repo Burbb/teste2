@@ -93,8 +93,6 @@ def duelo_de_honra(g):
         g.dizer(f"{nome} se ajoelha. \"Você me venceu limpo. Quando precisar de uma espada, chame.\"", "verde")
         g.ganhar_ouro(15 + 5 * g.j.nivel)
         g.mudar_reputacao(3)
-        g.aliado_final(nome, f"{nome}, o Invicto, aparece com seu escudo erguido: \"Eu disse que viria!\" "
-                             f"Juntos, vocês abrem caminho.", "dano", 0.08)
 
 
 @evento(peso=5, cooldown=20, cond=_classe("guerreiro"), max_vezes=2)
@@ -158,8 +156,6 @@ def aldeia_assombrada(g):
                 "amarelo")
         g.mudar_reputacao(7)
         g.ganhar_xp(30)
-        g.aliado_final("Os aldeões de Lumen", "Os aldeões que você libertou cantam um hino ao longe. A luz "
-                                              "dele te envolve e fecha suas feridas.", "cura", 0)
 
 
 @evento(peso=6, cooldown=14, cond=_spec("paladino"))
@@ -424,8 +420,6 @@ def circulo_dos_druidas(g):
             g.dizer(f"{c['nome']} uiva para o céu. Seus olhos agora brilham verdes. (+15 vida, +3 ataque)", "verde")
         g.bonus_permanente("max_hp", 5)
         g.j.recalcular()
-        g.aliado_final("Os druidas", "Raízes rompem o chão de obsidiana e prendem as pernas do inimigo — os "
-                                     "druidas cumpriram a promessa.", "dano", 0.08)
 
 
 # --- sombra
@@ -594,10 +588,8 @@ def aprendiz_em_apuros(g):
 def aprendiz_grato(g):
     d = g.colher("aprendiz_grato")
     g.dizer(f"\"Mestre!\" É {d['nome']}, o aprendiz do celeiro — agora com túnica nova e olhar confiante. "
-            f"\"Estudei dia e noite. Quero lutar ao seu lado no fim.\"", "verde")
+            f"\"Estudei dia e noite. Trouxe isto para a sua jornada.\"", "verde")
     g.dar("tonico", 2)
-    g.aliado_final(d["nome"], f"{d['nome']}, seu aprendiz, ergue uma barreira que absorve a primeira onda de "
-                              f"sombras e lança um raio impressionante.", "dano", 0.07)
 
 
 @evento(peso=lambda g: 5 + max(0, -g.j.reputacao) // 5, cooldown=16, cond=_classe("mago"))
@@ -672,15 +664,9 @@ def incendio(g):
 def cemiterio_antigo(g):
     g.dizer("Um cemitério esquecido, lápides tortas e nomes apagados. Você ouve os mortos murmurando, "
             "entediados.", "magenta")
-    op = g.menu("O que faz?", [("Recrutar os mortos para a batalha final", "recrutar"),
-                               ("Aprender os segredos que eles guardam", "aprender"),
+    op = g.menu("O que faz?", [("Aprender os segredos que eles guardam", "aprender"),
                                ("Deixá-los descansar", "nao")])
-    if op == "recrutar":
-        g.dizer("Uma dezena de mãos ossudas rompe a terra. \"Quando você chamar, viremos.\"", "magenta")
-        g.mudar_reputacao(-3)
-        g.aliado_final("A legião do cemitério", "A terra treme e dezenas de mortos marcham contra as sombras, "
-                                                "obedecendo a você.", "dano", 0.1)
-    elif op == "aprender":
+    if op == "aprender":
         if g.teste("arcano", 13):
             g.dizer("Os mortos falam de magias perdidas.", "verde")
             g.bonus_permanente("poder", 2)

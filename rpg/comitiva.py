@@ -156,7 +156,6 @@ REACOES = {
     ("elemental_selvagem", "absorver"): ("magia_proibida",), ("elemental_selvagem", "lutar"): ("violencia",),
     ("incendio", "dominar"): ("coragem",), ("incendio", "evacuar"): ("misericordia", "generosidade"),
     ("incendio", "nao"): ("crueldade",),
-    ("cemiterio_antigo", "recrutar"): ("magia_proibida", "sacrilegio"),
     ("cemiterio_antigo", "aprender"): ("magia_proibida", "curiosidade"), ("cemiterio_antigo", "nao"): ("fe",),
     ("aldeoes_temerosos", "ajudar"): ("generosidade", "honestidade"),
     ("aldeoes_temerosos", "assustar"): ("crueldade", "trapaca"),

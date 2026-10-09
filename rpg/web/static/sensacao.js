@@ -26,7 +26,7 @@ const Sensacao = (() => {
     batimentoLentoMs: 1150, batimentoRapidoMs: 700, batidasAoEntrar: 3,
     // Saque com cerimônia: por raridade, quanto o feixe de luz demora antes de o cartão aparecer (sem entrada,
     // o item aparece direto). O lendário ainda ganha um clarão na tela inteira.
-    saque: { raro: { ms: 750 }, lendario: { ms: 1150, clarao: true } },
+    saque: { raro: { ms: 1000 }, lendario: { ms: 1400, clarao: true } },
   };
   // O que pesa mais, quando vários golpes caem de uma vez (uma salva em área): o mais pesado dá o tom.
   const ORDEM = ["final", "abate", "critico"];
@@ -202,22 +202,108 @@ const Sensacao = (() => {
   /* ------------------------------------------------------------ saque com cerimônia */
   /** Antes de o cartão de um item raro aparecer: a tela escurece, um feixe de luz na cor da raridade desce do
    *  alto até onde o cartão vai surgir (como os feixes de saque do Diablo), e só então ele aparece. */
+  /* O saque raro chega com cerimônia, em pixel art como a paisagem: a tela escurece num pontilhado, um feixe em
+     bandas de cor (o miolo claro, a cor da raridade, a borda pontilhada) desce do alto e bate no chão onde o cartão vai
+     surgir; um anel se abre em degraus e fagulhas de um texel sobem. Tudo num canvas de baixa resolução ampliado sem
+     suavizar, a 15 quadros por segundo. (O feixe liso, com desfoque e degradê, destoava da arte.) */
+  const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
+  const pontilha = (x, y, n) => BAYER[(y & 3) * 4 + (x & 3)] < n;  // n de 0 a 16: quantos de cada 16 texels acendem
+  function corP(letra) {
+    const h = getComputedStyle(document.documentElement).getPropertyValue("--p-" + letra).trim() || "#ffffff";
+    const v = parseInt(h.slice(1), 16);
+    return (255 << 24) | ((v & 255) << 16) | (v & 0xff00) | (v >> 16);  // ABGR, como o ImageData guarda
+  }
   async function cerimoniaSaque(raridade, onde) {
     const cfg = AJUSTES.saque[raridade];
     if (!cfg || rapido()) return;
     // O feixe cai no meio de `onde` (o cartão, ainda escondido no lugar em que vai surgir).
     if (onde) onde.scrollIntoView({ block: "nearest" });
     const r = onde ? onde.getBoundingClientRect() : { left: 0, width: innerWidth, top: innerHeight * 0.4, height: 0 };
-    const x = r.left + r.width / 2, y = Math.max(140, Math.min(r.top + r.height * 0.45, innerHeight - 60));
-    const veu = document.createElement("div");
-    veu.className = `cerimonia-saque rar-${raridade}`;
-    veu.innerHTML = `<i class="feixe" style="left:${x}px;height:${y}px"></i><i class="chao" style="left:${x}px;top:${y}px"></i>` +
-      (cfg.clarao ? '<i class="clarao"></i>' : "");
-    document.body.appendChild(veu);
+    const px = r.left + r.width / 2, py = Math.max(140, Math.min(r.top + r.height * 0.45, innerHeight - 60));
+    const dpr = window.devicePixelRatio || 1, T = 3 * Math.max(1, Math.round(dpr));  // um texel do efeito, em pixels do aparelho
+    const W = Math.ceil((innerWidth * dpr) / T), H = Math.ceil((innerHeight * dpr) / T);
+    const c = document.createElement("canvas");
+    c.width = W; c.height = H;
+    c.className = "cerimonia-saque";
+    c.style.width = (W * T) / dpr + "px"; c.style.height = (H * T) / dpr + "px";
+    document.body.appendChild(c);
+    const ctx = c.getContext("2d"), img = ctx.createImageData(W, H), buf = new Uint32Array(img.data.buffer);
+    const lend = raridade === "lendario";
+    const pal = lend ? { miolo: corP("Y"), claro: corP("O"), cor: corP("o"), borda: corP("r") }
+      : { miolo: corP("W"), claro: corP("Y"), cor: corP("y"), borda: corP("C") };
+    const PRETO = 255 << 24;
+    const cx = Math.round((px * dpr) / T), chao = Math.round((py * dpr) / T);
+    const miolo = lend ? 3 : 2, raio = lend ? 34 : 24, veuMax = lend ? 11 : 9;
+    const ms = pausa(cfg.ms), saida = 400, total = ms + saida;
+    const faiscas = [];
+    const por = (x, y, cor) => { if (x >= 0 && y >= 0 && x < W && y < H) buf[y * W + x] = cor; };
+
+    function desenhar(t, q) {
+      buf.fill(0);
+      const vis = Math.min(1, t / 250) * (t > ms ? Math.max(0, 1 - (t - ms) / saida) : 1);
+      const nVis = Math.round(16 * vis);
+      // o véu: preto em pontilhado ordenado, que fecha na entrada e abre na saída
+      const nVeu = Math.round(veuMax * vis);
+      for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (pontilha(x, y, nVeu)) buf[y * W + x] = PRETO;
+      // o feixe: desce do alto até o chão; listras um texel mais largas escorrem para baixo
+      const desce = Math.max(0, Math.min(1, (t - 80) / 320)), comp = Math.round(chao * (1 - Math.pow(1 - desce, 3)));
+      for (let y = 0; y < comp; y++) {
+        const largo = miolo + ((((y >> 2) - q) % 6 + 6) % 6 === 0 ? 1 : 0);
+        for (let d = -(largo + 7); d <= largo + 7; d++) {
+          const x = cx + d, a = Math.abs(d);
+          if (!pontilha(x, y, nVis)) continue;
+          if (a <= largo) por(x, y, pal.miolo);
+          else if (a <= largo + 2) por(x, y, pal.claro);
+          else if (a <= largo + 4) por(x, y, pal.cor);
+          else if (pontilha(x, y, 16 - (a - largo - 4) * 5)) por(x, y, pal.borda);
+        }
+      }
+      const tc = t - 400;  // o feixe bateu no chão
+      if (tc < 0) return;
+      // o chão: um brilho pontilhado e um anel que se abre em degraus (depois pulsa um texel)
+      const rx = Math.min(raio, 3 + Math.floor(tc / 30)) + (tc > 900 && q % 4 < 2 ? 1 : 0), ry = Math.max(2, Math.round(rx * 0.3));
+      for (let dy = -ry; dy <= ry; dy++) for (let dx = -rx; dx <= rx; dx++) {
+        const e = (dx * dx) / (rx * rx) + (dy * dy) / (ry * ry);
+        if (e > 1) continue;
+        const x = cx + dx, y = chao + dy;
+        if (!pontilha(x, y, nVis)) continue;
+        const dentro = ((dx * dx) / ((rx - 1) * (rx - 1)) + (dy * dy) / Math.max(1, (ry - 1) * (ry - 1))) <= 1;
+        if (!dentro) por(x, y, pal.claro);
+        else if (pontilha(x, y, Math.round(14 * (1 - e)))) por(x, y, e < 0.25 ? pal.miolo : pal.cor);
+      }
+      // fagulhas: um texel (às vezes uma cruzinha) subindo e apagando de cor em cor
+      if (t < ms) for (let i = 0; i < (lend ? 3 : 2); i++) {
+        faiscas.push({ x: cx + Math.round((Math.random() - 0.5) * 2 * (miolo + 8)), y: chao - Math.floor(Math.random() * 3),
+          v: 1 + Math.floor(Math.random() * 2), vida: 10 + Math.floor(Math.random() * 8), cruz: Math.random() < 0.25 });
+      }
+      for (const f of faiscas) {
+        if (f.vida-- <= 0) continue;
+        f.y -= f.v;
+        if (q % 3 === 0) f.x += Math.random() < 0.5 ? -1 : 1;
+        const cor = f.vida > 8 ? pal.miolo : f.vida > 4 ? pal.claro : pal.cor;
+        if (!pontilha(f.x, f.y, nVis)) continue;
+        por(f.x, f.y, cor);
+        if (f.cruz && f.vida > 6) { por(f.x - 1, f.y, pal.cor); por(f.x + 1, f.y, pal.cor); por(f.x, f.y - 1, pal.cor); por(f.x, f.y + 1, pal.cor); }
+      }
+      // lendário: um clarão na cor dele cobre a tela num pontilhado que se desfaz
+      if (lend && tc < 330) {
+        const n = Math.round(4 * (1 - tc / 330));
+        for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (pontilha(x + 2, y + 1, n)) buf[y * W + x] = pal.claro;
+      }
+    }
+
     Som.tocar("feixe");
-    await dormir(pausa(cfg.ms));
-    veu.classList.add("saindo");
-    setTimeout(() => veu.remove(), 400);
+    await new Promise((fim) => {
+      const inicio = performance.now();
+      let ultimo = -1;
+      const passo = (agora) => {
+        const t = agora - inicio, q = Math.floor(t / 66);  // 15 quadros por segundo
+        if (q !== ultimo) { ultimo = q; desenhar(t, q); ctx.putImageData(img, 0, 0); }
+        if (t < total) requestAnimationFrame(passo); else fim();
+      };
+      requestAnimationFrame(passo);
+    });
+    c.remove();
   }
 
   /* ------------------------------------------------------------ contar e encher */

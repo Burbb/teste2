@@ -150,23 +150,9 @@
 @keyframes vestido { 0% { box-shadow: 0 0 0 2px #000, 0 0 0 0 rgba(143, 191, 106, .0); } 35% { box-shadow: 0 0 0 2px #000, 0 0 26px 6px rgba(143, 191, 106, .55); } 100% { box-shadow: 0 0 0 2px #000, 0 0 0 0 rgba(143, 191, 106, 0); } }
 
 /* ---------------------------------------------------------------- saque com cerimônia (sensacao.js) */
-/* A tela escurece, um feixe de luz na cor da raridade desce do alto e bate no chão onde o cartão vai surgir. */
-.cerimonia-saque { --cor: var(--raro); position: fixed; inset: 0; z-index: 45; pointer-events: none; background: rgba(5, 4, 3, 0.55); animation: cerimonia-entra 0.25s ease-out both; }
-.cerimonia-saque.rar-lendario { --cor: var(--lendario); background: rgba(5, 4, 3, 0.7); }
-.cerimonia-saque.saindo { animation: cerimonia-sai 0.4s ease-in forwards; }
-.cerimonia-saque .feixe { position: absolute; top: 0; width: 34px; translate: -50% 0; transform-origin: top; transform: scaleY(0);
-  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--cor) 55%, transparent) 30%, #fff8e0 50%, color-mix(in srgb, var(--cor) 55%, transparent) 70%, transparent);
-  box-shadow: 0 0 40px 12px color-mix(in srgb, var(--cor) 45%, transparent); animation: feixe-desce 0.45s 0.1s cubic-bezier(.5,0,.3,1) forwards, feixe-pulsa 0.5s 0.55s ease-in-out infinite alternate; }
-.cerimonia-saque.rar-lendario .feixe { width: 52px; }
-.cerimonia-saque .chao { position: absolute; width: 220px; height: 60px; translate: -50% -50%; border-radius: 50%; opacity: 0;
-  background: radial-gradient(ellipse at center, #fff8e0 0%, color-mix(in srgb, var(--cor) 70%, transparent) 30%, transparent 70%); animation: feixe-chao 0.5s 0.5s ease-out forwards; }
-.cerimonia-saque .clarao { position: absolute; inset: 0; background: radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--cor) 55%, #fff) 0%, transparent 60%); opacity: 0; animation: feixe-clarao 0.7s 0.5s ease-out forwards; }
-@keyframes cerimonia-entra { from { opacity: 0; } }
-@keyframes cerimonia-sai { to { opacity: 0; } }
-@keyframes feixe-desce { to { transform: scaleY(1); } }
-@keyframes feixe-pulsa { from { filter: brightness(1); } to { filter: brightness(1.4); } }
-@keyframes feixe-chao { 0% { opacity: 0; transform: scale(0.3); } 40% { opacity: 1; transform: scale(1.15); } 100% { opacity: 0.85; transform: scale(1); } }
-@keyframes feixe-clarao { 0% { opacity: 0; } 25% { opacity: 0.9; } 100% { opacity: 0; } }
+/* A tela escurece num pontilhado, o feixe desce e bate no chão onde o cartão vai surgir: um canvas de baixa resolução
+   (sensacao.js) ampliado sem suavizar, texel a texel, como a paisagem. */
+.cerimonia-saque { position: fixed; left: 0; top: 0; z-index: 45; pointer-events: none; image-rendering: pixelated; }
 /* O cartão espera o feixe: já ocupa o lugar (o feixe mira nele), invisível e com as entradas paradas no começo. */
 .esperando-feixe .achado-cartao, .esperando-feixe .achado-cartao * { visibility: hidden; animation-play-state: paused !important; }
 /* Guardou o item achado: o cartão ganha o selo "Na mochila", e o Inventário da doca brilha quando o ícone chega. */
