@@ -870,11 +870,12 @@ const Telas = (() => {
   }
 
   // ------------------------------------------------------------------ acampamento (fogueira)
-  // Em volta do fogo (o herói em 128,93, o fogo em 160): um companheiro de cada lado, para os nomes não se
-  // empilharem; o animal deitado na frente, à esquerda; quem fica no acampamento, perto da barraca.
-  const PONTOS_ATIVOS = [[194, 93], [78, 94]];
-  const PONTOS_RESERVA = [[242, 98], [292, 102], [268, 110]];
-  const PONTO_FERA = [104, 106];
+  // Em roda, colados no fogo (o herói em 128,93, o fogo em 160): quem vai com você do outro lado e na frente, o animal
+  // deitado ao lado do herói, quem fica no acampamento perto da barraca. Os nomes se acomodam sozinhos (acomodarNomes).
+  const HEROI_FOGUEIRA = [128, 93];
+  const PONTOS_ATIVOS = [[198, 93], [176, 104]];
+  const PONTOS_RESERVA = [[256, 98], [284, 102], [270, 108]];
+  const PONTO_FERA = [108, 104];
   function acampamento(d) {
     const figuras = [];
     d.ativos.forEach((m, i) => figuras.push({ ...m, onde: "ativo", p: PONTOS_ATIVOS[i % 2] }));
@@ -899,7 +900,7 @@ const Telas = (() => {
     const W = 320, H = 120;
     const px = (cx, cy, w, hh, cor) => { x.fillStyle = cor; x.fillRect(cx | 0, cy | 0, w, hh); };
     const heroi = App.estado && App.estado.heroi;
-    const quem = [[heroi ? heroi.classe : "guerreiro", 128, 93]];
+    const quem = [[heroi ? heroi.classe : "guerreiro", ...HEROI_FOGUEIRA]];
     d.ativos.forEach((m, i) => quem.push([m.id, ...PONTOS_ATIVOS[i % 2]]));
     d.reserva.forEach((m, i) => quem.push([m.id, ...PONTOS_RESERVA[i % 3]]));
     if (d.fera) quem.push([d.fera.tipo === "falcao" ? "voador" : "fera", ...PONTO_FERA]);
@@ -946,24 +947,47 @@ const Telas = (() => {
     timer = setInterval(() => { if (!document.hidden) cena(); }, 125);
   }
 
-  /** Os nomes de quem senta em volta do fogo não se cobrem. Um nome que encosta noutro já posto escorrega primeiro
-   *  para o lado (até meio nome, para continuar em cima de quem é) e só então sobe o que faltar. */
-  function afastarNomes(raiz) {
-    const postos = [];
-    raiz.querySelectorAll(".fogueira-palco .figura .figura-nome").forEach((nome) => {
-      const caixa = () => { const r = nome.getBoundingClientRect(); return { l: r.left, r: r.right, t: r.top, b: r.bottom, w: r.width }; };
-      const bate = (c) => postos.find((p) => c.l < p.r + 3 && c.r > p.l - 3 && c.t < p.b + 2 && c.b > p.t - 2);
-      let dx = 0, dy = 0;
-      for (let volta = 0; volta < 4; volta++) {
-        const c = caixa(), outro = bate(c);
-        if (!outro) break;
-        const paraDireita = c.l + c.r > outro.l + outro.r;
-        const lado = paraDireita ? outro.r + 4 - c.l : outro.l - 4 - c.r;
-        if (Math.abs(dx + lado) <= c.w / 2) dx += lado;
-        else dy -= c.b - outro.t + 3;
-        nome.style.translate = `${dx}px ${dy}px`;
-      }
-      postos.push(caixa());
+  /** Os nomes de quem senta em volta do fogo, pequenos, cada um onde couber: acima da cabeça, ao lado ou embaixo da
+   *  figura, sem cobrir outro nome, outra figura, o fogo nem o "Dormir" (como os balões da luta). Assim a roda fica
+   *  colada no fogo e ninguém precisa sentar longe para o nome caber. */
+  function acomodarNomes(raiz) {
+    const palco = raiz.querySelector(".fogueira-palco");
+    if (!palco) return;
+    const P = palco.getBoundingClientRect(), esc = P.width / 320;
+    const ret = (x, y, w, h) => ({ l: x, t: y, r: x + w, b: y + h });
+    const daArte = (x, y, w, h) => ret(x * esc, y * esc, w * esc, h * esc);
+    const relativo = (r) => ret(r.left - P.left, r.top - P.top, r.width, r.height);
+    const cruza = (a, b) => a.l < b.r && a.r > b.l && a.t < b.b && a.b > b.t;
+    const area = (a, b) => Math.max(0, Math.min(a.r, b.r) - Math.max(a.l, b.l)) * Math.max(0, Math.min(a.b, b.b) - Math.max(a.t, b.t));
+    const figuras = [...palco.querySelectorAll(".figura")];
+    const obstaculos = [
+      daArte(HEROI_FOGUEIRA[0] - 8, HEROI_FOGUEIRA[1] - 9, 16, 16),  // o herói
+      daArte(146, 78, 28, 26),                                          // o fogo
+      ...figuras.map((f) => relativo(f.getBoundingClientRect())),
+    ];
+    const dormir = palco.querySelector(".dormir-barraca");
+    if (dormir) obstaculos.push(relativo(dormir.getBoundingClientRect()));
+    figuras.forEach((f) => {
+      const nome = f.querySelector(".figura-nome");
+      if (!nome) return;
+      const s = relativo(f.getBoundingClientRect()), w = nome.offsetWidth, h = nome.offsetHeight, cx = (s.l + s.r) / 2;
+      const opcoes = [
+        ret(cx - w / 2, s.t - h - 2, w, h),          // acima da cabeça
+        ret(cx - w / 4, s.t - h - 2, w, h),          // acima, puxado para a direita
+        ret(cx - (3 * w) / 4, s.t - h - 2, w, h),    // acima, puxado para a esquerda
+        ret(s.r + 2, s.t + 2, w, h),                 // à direita, na altura dos ombros
+        ret(s.r + 2, s.b - h, w, h),                 // à direita, na altura dos pés
+        ret(s.l - w - 2, s.t + 2, w, h),             // à esquerda
+        ret(s.l - w - 2, s.b - h, w, h),
+        ret(cx - w / 2, s.b + 1, w, h),              // embaixo
+      ];
+      const dentro = (c) => c.l >= 2 && c.t >= 2 && c.r <= P.width - 2 && c.b <= P.height - 2;
+      const custo = (c) => (dentro(c) ? 0 : 1e6) + obstaculos.reduce((n, o) => n + (o === s ? 0 : area(c, o)), 0);
+      const livre = opcoes.find((c) => custo(c) === 0) || opcoes.reduce((m, c) => (custo(c) < custo(m) ? c : m));
+      nome.classList.add("posto");
+      nome.style.left = livre.l - s.l + "px";
+      nome.style.top = livre.t - s.t + "px";
+      obstaculos.push(livre);
     });
   }
 
@@ -1071,7 +1095,7 @@ const Telas = (() => {
     if (m.tipo === "acampamento") {
       App.ultimaFogueira = m.dados;
       desenharFogueira(div.querySelector(".fogueira-cena"), m.dados);
-      requestAnimationFrame(() => afastarNomes(div));
+      requestAnimationFrame(() => acomodarNomes(div));
     }
     if (m.tipo === "acampamento" || m.tipo === "comitiva") ligarFigurasComitiva(div);
     if (m.tipo === "mural" || m.tipo === "diario") ligarMural(div, m.dados);

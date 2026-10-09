@@ -110,7 +110,7 @@ function desenharHud(h, antes) {
   $("#hud-linha").innerHTML = `
     <div class="hud-retrato" title="${esc(h.titulo)} nível ${h.nivel}">${spr(h.classe, 3)}<span class="nivel">${h.nivel}</span></div>
     <div class="hud-vitais">
-      <div class="hud-nome"><b>${esc(h.nome)}</b><span>${h.fome ? "com fome" : ""}</span></div>
+      ${h.fome ? '<span class="hud-fome">com fome</span>' : ""}
       <div class="vital" data-vital="hp" ${Telas.dica("Vida", true)}>${spr("coracao", 1)}${barra("vida", h.hp, h.max_hp, antes ? antes.hp : undefined, "hud-hp")}<span class="num">${h.hp}/${h.max_hp}</span></div>
       <div class="vital" data-vital="rec" ${Telas.dica(esc(h.recurso), true)}>${spr(RECURSO_ICONE[h.recurso] || "estrela", 1)}${barra(RECURSO_BARRA[h.recurso] || "mana", h.rec, h.max_rec, antes ? antes.rec : undefined, "hud-rec")}<span class="num">${h.rec}/${h.max_rec}</span></div>
     </div>
