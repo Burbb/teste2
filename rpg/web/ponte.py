@@ -243,7 +243,10 @@ class WebUI(InterfaceGrafica, UI):
 
     def escolher(self, pergunta, opcoes):
         pergunta = pergunta or ""
-        if len(pergunta) > 60:  # perguntas longas são parte da história
+        # Perguntas longas são parte da história e vão para a página. A da confirmação (viagem perigosa, abandonar um
+        # contrato) não: ela mora na janela, em cima dos botões.
+        confirmacao = bool(self.meta_opcoes) and all(m and m.get("confirmar") for m in self.meta_opcoes)
+        if len(pergunta) > 60 and not confirmacao:
             self.dizer(pergunta, "ciano")
             pergunta = ""
         itens = []

@@ -38,7 +38,7 @@ class Progressao:
         festa = self.ui.conquistas_na_tela
         if not festa:
             self.ui.titulo(f"NÍVEL {j.nivel}!", "verde+negrito")
-            self.dizer("Você se sente mais forte. (Subir de nível não cura feridas: isso, só o descanso.)", "verde")
+            self.dizer("Você se sente mais forte.", "verde")
         self.ganhar_ponto_talento(anunciar=not festa)
         novas = self._aprender_habilidades(anunciar=not festa)
         ganhos = {NOMES_STATS.get(k, k) if k != "max_rec" else j.nome_recurso: getattr(j, k) - v
@@ -46,8 +46,7 @@ class Progressao:
         self.ui.celebrar("nivel", {"nivel": j.nivel, "ganhos": ganhos, "pontos": j.pontos_talento,
                                    "habilidades": [{"nome": HABILIDADES[h]["nome"], "desc": HABILIDADES[h]["desc"]}
                                                    for h in novas],
-                                   "especializacao": j.nivel >= 4 and not j.spec,
-                                   "nota": "Subir de nível não cura feridas: isso, só o descanso."})
+                                   "especializacao": j.nivel >= 4 and not j.spec})
         if j.nivel >= 4 and not j.spec and f"encruzilhada_{j.classe}" not in self.forcados:
             self.forcados.append(f"encruzilhada_{j.classe}")
             if not festa:

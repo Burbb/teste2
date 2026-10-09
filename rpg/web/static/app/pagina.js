@@ -100,9 +100,18 @@ function cabecalho(m) {
  *  lugar e as ações. O texto não fica sobrando em cima do lugar: quem quiser rever abre o histórico (H). */
 const GUARDA_LEITURA = 700;  // ms em que um clique não vira a página: o resultado aparece e fica à vista
 async function virarParaLugar(m) {
-  const novo = [...textoEl.querySelectorAll(":scope > :not(.lido):not(.eco):not(.passado)")]
-    .reduce((n, x) => n + x.textContent.trim().length, 0);
-  if (!replay && novo) {
+  const vivos = [...textoEl.querySelectorAll(":scope > :not(.lido):not(.eco):not(.passado)")];
+  // Uma tela de serviço (a curandeira, a forja) mostra o resultado num aviso solto, perto do clique: o texto da
+  // própria tela não é leitura (contado, a tela ficava parada uns 6 s com a barrinha enchendo).
+  const ehTela = (x) => x.matches(".tela") || !!x.querySelector(".tela");
+  const novo = vivos.filter((x) => !ehTela(x)).reduce((n, x) => n + x.textContent.trim().length, 0);
+  if (!replay && !novo && vivos.some(ehTela)) {
+    // Um instante para ver o resultado; o aviso continua flutuando por cima do lugar depois que a página vira.
+    pular = false;
+    const ate = performance.now() + ritmo(700);
+    while (performance.now() < ate && !pular && !pularPedido) await espera(40);
+    pularPedido = false;
+  } else if (!replay && novo) {
     // Leu enquanto o texto corria: o tempo desde a escolha conta. Depois de uma luta, a faixa da vitória e o espólio
     // já foram a leitura.
     const ja = performance.now() - ultimaResposta;

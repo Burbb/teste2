@@ -872,7 +872,6 @@ const Telas = (() => {
   const PONTOS_ATIVOS = [[198, 93], [176, 104]];
   const PONTOS_RESERVA = [[256, 98], [284, 102], [270, 108]];
   const PONTO_FERA = [108, 104];  // o animal do patrulheiro, deitado ao lado do herói
-  const BARRACA = [262, 76];       // o alto da barraca, onde fica o "Dormir"
   function acampamento(d) {
     const figuras = [];
     d.ativos.forEach((m, i) => figuras.push({ ...m, onde: "ativo", p: PONTOS_ATIVOS[i % 2] }));
@@ -884,8 +883,9 @@ const Telas = (() => {
     const fera = d.fera ? `<span class="figura fera" role="button" tabindex="0" data-fera="1" style="left:${(PONTO_FERA[0] / 320) * 100}%;top:${((PONTO_FERA[1] + 8) / 120) * 100}%"
         ${dica(`<b>${h(d.fera.nome)}</b><div>Seu ${h({ lobo: "lobo", urso: "urso", falcao: "falcão" }[d.fera.tipo] || "animal")} dorme perto do fogo. Vida ${d.fera.hp}/${d.fera.max_hp}.</div>`, true)}>
         <span class="figura-nome">${h(d.fera.nome.split(" ").pop())}</span></span>` : "";
-    // Dormir: um selo sobre a barraca, que balança de leve (o fim da noite fica onde a gente dorme, não numa lista).
-    const dormir = `<button type="button" class="dormir-barraca" style="left:${(BARRACA[0] / 320) * 100}%;top:${(BARRACA[1] / 120) * 100}%">${S("lua", 1)} Dormir até o amanhecer</button>`;
+    // Dormir: um selo que balança de leve dentro do palco (o fim da noite fica na cena, não numa lista). Mora no céu,
+    // no canto de cima: em cima da barraca ele encostava no nome de quem senta ali perto.
+    const dormir = `<button type="button" class="dormir-barraca">${S("lua", 1)} Dormir até o amanhecer</button>`;
     return `<div class="tela acampamento">${d.intro ? `<p class="sussurro">${h(d.intro)}</p>` : ""}<div class="fogueira-palco"><canvas class="fogueira-cena" width="320" height="120"></canvas>${botoes}${fera}${dormir}</div>
       <div class="dica-uso">${figuras.length ? `Clique em alguém para conversar ou decidir quem vai com você amanhã. Quem fica no acampamento descansa, não come das suas provisões e não opina nas suas escolhas. ${d.ativos.length}/${d.limite} na comitiva.` : "Só você, o fogo e os barulhos da mata. Quem você encontrar pelo caminho pode se sentar aqui um dia."}</div></div>`;
   }
@@ -940,6 +940,29 @@ const Telas = (() => {
     }
     cena(true);
     timer = setInterval(() => { if (!document.hidden) cena(); }, 125);
+  }
+
+  /** Os nomes de quem senta em volta do fogo não se cobrem: um nome que encosta noutro já posto sobe o necessário
+   *  (com dois na comitiva, o da frente tampava o "vai com você" do outro). */
+  function afastarNomes(raiz) {
+    const postos = [];
+    raiz.querySelectorAll(".fogueira-palco .figura").forEach((f) => {
+      const nome = f.querySelector(".figura-nome");
+      if (!nome) return;
+      const caixa = () => {
+        const a = nome.getBoundingClientRect(), e = f.querySelector(".figura-estado");
+        const b = e ? e.getBoundingClientRect() : a;
+        return { l: Math.min(a.left, b.left), r: Math.max(a.right, b.right), t: a.top, b: Math.max(a.bottom, b.bottom) };
+      };
+      let subir = 0;
+      for (let volta = 0; volta < 4; volta++) {
+        const c = caixa(), bate = postos.find((p) => c.l < p.r + 4 && c.r > p.l - 4 && c.t < p.b + 2 && c.b > p.t - 2);
+        if (!bate) break;
+        subir += c.b - bate.t + 3;
+        nome.style.marginTop = -subir + "px";
+      }
+      postos.push(caixa());
+    });
   }
 
   /** O animal do patrulheiro na fogueira: carinho, poção, bandagem (o que estiver disponível agora). */
@@ -1041,7 +1064,11 @@ const Telas = (() => {
     if (m.tipo === "ferreiro") ligarServicos(div, "reforcar", "predio_ferreiro");
     if (m.tipo === "curandeira") ligarServicos(div, "tratar", "cura");
     if (m.tipo === "saves") ligarSaves(div);
-    if (m.tipo === "acampamento") { App.ultimaFogueira = m.dados; desenharFogueira(div.querySelector(".fogueira-cena"), m.dados); }
+    if (m.tipo === "acampamento") {
+      App.ultimaFogueira = m.dados;
+      desenharFogueira(div.querySelector(".fogueira-cena"), m.dados);
+      requestAnimationFrame(() => afastarNomes(div));
+    }
     if (m.tipo === "acampamento" || m.tipo === "comitiva") ligarFigurasComitiva(div);
     if (m.tipo === "mural" || m.tipo === "diario") ligarMural(div, m.dados);
     if (m.tipo === "personagem") ligarInventario(div);
@@ -1302,8 +1329,6 @@ const Telas = (() => {
         <div class="nivel-bloco"><span class="nivel-palavra">Nível</span><span class="nivel-numero">${d.nivel}</span></div>
         <div class="lista">${ganhos}<span class="ganho ouro" style="animation-delay:${atraso + 0.08}s">${S("estrela", 1)}+1 ponto de talento</span></div>${habs}
         ${d.especializacao ? '<div class="texto-festa" style="color:var(--arcano)">Uma encruzilhada se aproxima: em breve você escolherá sua especialização.</div>' : ""}
-        ${d.nota ? `<div class="texto-festa">${h(d.nota)}</div>` : ""}
-        <div class="dica">Seus pontos de talento: ${d.pontos}. Gaste em Talentos (tecla T no menu de um local).</div>
         <button class="continuar" type="button">Continuar <span>▸</span></button></div>`;
       App.som("subir");
       particulas(["#f2c94c", "#fff3a0", "#ff9d4d", "#8fbf6a"], 90);
