@@ -215,7 +215,7 @@ async function cenarioVila(browser) {
     const mercado = await esperar('#predios .predio[data-predio="mercado"]');
     conferir(!(await page.$('#prompt .escolha:has-text("Mercado")')), "na vila, os serviços ficam nos prédios, não na lista");
     await (await page.$('#predios .predio[data-predio="taverna"]')).click();
-    conferir(!!(await esperar("#prompt .voltar-vila", 3000)) && !!(await page.$('#prompt .escolha:has-text("Dormir")')), "a taverna mostra as opções dela e o Voltar à vila");
+    conferir(!!(await esperar("#prompt .voltar-vila", 3000)) && !!(await page.$('#prompt .servico:has-text("Dormir")')), "a taverna mostra as opções dela e o Voltar à vila");
     await page.keyboard.press("Escape");
     conferir(!!(await esperar('#predios:not(.focado) .predio[data-predio="mercado"]', 3000)) && !(await page.$("#prompt .voltar-vila")), "Esc sai da taverna e volta à vila");
     const vida = () => page.evaluate(() => App.estado.heroi.hp);

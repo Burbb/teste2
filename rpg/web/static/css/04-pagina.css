@@ -28,8 +28,6 @@
 .balao-nome::after { content: ""; position: absolute; left: 50%; top: 100%; translate: -50% 0;
   width: calc(var(--P) * 7); height: calc(var(--P) * 4); background: var(--bico) 0 0 / 100% 100%; image-rendering: pixelated; }
 .predio:is(:hover, :focus-visible) .balao-nome { --anel: var(--anel-a); --bico: var(--bico-a); color: var(--ouro); }
-.predio-fechado { margin: 4px 0 10px; font-family: var(--prosa); font-style: italic; color: var(--tinta-2); }
-.tempo-acao { margin-left: auto; padding-left: 12px; font-size: 14px; color: var(--tinta-2); white-space: nowrap; }
 #cena[data-tipo="menu"] #vista { display: none; }
 /* A barra das telas de menu: Voltar à esquerda, o título no meio, o que importa da tela (ouro, dia...) à direita. */
 #barra-tela { position: relative; z-index: 1; flex: none; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 14px; min-height: 56px; padding: 6px 16px 10px;

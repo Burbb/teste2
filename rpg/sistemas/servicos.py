@@ -8,27 +8,50 @@ from ..telemetria import registrar
 
 
 class Servicos:
+    def pecas_da_forja(self):
+        """O que o ferreiro pode reforçar: (espaço, item, atributo, ganho, custo), com ganho e custo nulos no limite."""
+        j = self.j
+        secundaria = {"guerreiro": "defesa", "arqueiro": "atk", "mago": "poder"}[j.classe]
+        pecas = []
+        for slot, stat in (("arma", "poder" if j.classe == "mago" else "atk"), ("armadura", "defesa"),
+                           ("secundaria", secundaria)):
+            item = j.equip[slot]
+            if not item:
+                continue
+            ref = item.get("reforco", 0)
+            if ref >= 5:
+                pecas.append((slot, item, stat, None, None))
+                continue
+            pecas.append((slot, item, stat, max(1, round(item["bonus"].get(stat, 0) * 0.12)),
+                          self.preco(int(40 * (ref + 1) ** 1.6))))
+        return pecas
+
     def ferreiro(self):
         j = self.j
-        self.ui.cena("A forja", self.loc["nome"], "menu")
         while True:
-            opcoes = []
-            secundaria = {"guerreiro": "defesa", "arqueiro": "atk", "mago": "poder"}[j.classe]
-            for slot, stat in (("arma", "poder" if j.classe == "mago" else "atk"), ("armadura", "defesa"),
-                               ("secundaria", secundaria)):
-                item = j.equip[slot]
-                if not item:
-                    continue
-                ref = item.get("reforco", 0)
-                if ref >= 5:
-                    opcoes.append((f"{itens.rotulo(item)} — já está no limite (+5)", None))
-                    continue
-                custo = self.preco(int(40 * (ref + 1) ** 1.6))
-                ganho = max(1, round(item["bonus"].get(stat, 0) * 0.12))
-                opcoes.append((f"{itens.rotulo(item)} +{ref} → +{ref + 1}: +{ganho} {nome_stat(stat, self.j.nome_recurso)} — {custo} ouro",
-                               (item, stat, ganho, custo)))
-            esc = self.menu(f"O ferreiro, um homem sem dois dedos, cospe na forja. \"Ouro primeiro.\" "
-                            f"(você tem {j.ouro})", opcoes + [("Voltar", "voltar")])
+            self.ui.cena("A forja", self.loc["nome"], "menu")  # a cada volta: na tela gráfica, a forja se redesenha
+            pecas = self.pecas_da_forja()
+            dados = {"ouro": j.ouro, "pecas": [
+                {"slot": slot, "item": itens.ficha(item, j.nome_recurso), "reforco": item.get("reforco", 0),
+                 "ganho": ganho and f"+{ganho} {nome_stat(stat, j.nome_recurso)}", "custo": custo,
+                 "pode": custo is not None and j.ouro >= custo}
+                for slot, item, stat, ganho, custo in pecas]}
+            if self.ui.painel("ferreiro", dados):
+                # Tela gráfica: cada peça é um cartão; o clique reforça. Fora isso, só sair.
+                opcoes = [(f"Reforçar {item['nome']}", (item, stat, ganho, custo), {"reforcar": slot})
+                          for slot, item, stat, ganho, custo in pecas if custo is not None]
+                esc = self.menu("", opcoes + [("Voltar", "voltar", {"voltar": True})])
+            else:
+                opcoes = []
+                for slot, item, stat, ganho, custo in pecas:
+                    ref = item.get("reforco", 0)
+                    if custo is None:
+                        opcoes.append((f"{itens.rotulo(item)} — já está no limite (+5)", None))
+                        continue
+                    opcoes.append((f"{itens.rotulo(item)} +{ref} → +{ref + 1}: +{ganho} {nome_stat(stat, j.nome_recurso)} — "
+                                   f"{custo} ouro", (item, stat, ganho, custo)))
+                esc = self.menu(f"O ferreiro, um homem sem dois dedos, cospe na forja. \"Ouro primeiro.\" "
+                                f"(você tem {j.ouro})", opcoes + [("Voltar", "voltar")])
             if esc == "voltar":
                 return
             if esc is None:
@@ -47,15 +70,22 @@ class Servicos:
 
     def curandeiro(self):
         j = self.j
-        self.ui.cena("A curandeira", self.loc["nome"], "menu")
         while j.ferimentos:
-            opcoes = []
-            for f in j.ferimentos:
-                d = sobrevivencia.FERIMENTOS[f["id"]]
-                custo = self.preco((25 + 4 * j.nivel) if f["id"] == "infeccao" else (12 + 3 * j.nivel))
-                opcoes.append((f"{d['nome']} — {custo} ouro", (f["id"], custo)))
-            esc = self.menu("A curandeira, uma velha de mãos manchadas de sangue seco, examina você. "
-                            "\"O que vai ser?\"", opcoes + [("Voltar", None)])
+            self.ui.cena("A curandeira", self.loc["nome"], "menu")  # a cada volta: na tela gráfica, a cabana se redesenha
+            custos = [self.preco((25 + 4 * j.nivel) if f["id"] == "infeccao" else (12 + 3 * j.nivel)) for f in j.ferimentos]
+            dados = {"ouro": j.ouro, "ferimentos": [
+                {"id": f["id"], "nome": sobrevivencia.FERIMENTOS[f["id"]]["nome"], "custo": custo, "pode": j.ouro >= custo,
+                 "explica": sobrevivencia.explicar(f, j.nome_recurso, j)} for f, custo in zip(j.ferimentos, custos)]}
+            if self.ui.painel("curandeira", dados):
+                # Tela gráfica: cada ferimento é um cartão; o clique trata. Fora isso, só sair.
+                esc = self.menu("", [(f"Tratar {sobrevivencia.FERIMENTOS[f['id']]['nome']}", (f["id"], custo),
+                                      {"tratar": f["id"]}) for f, custo in zip(j.ferimentos, custos)]
+                                + [("Voltar", None, {"voltar": True})])
+            else:
+                opcoes = [(f"{sobrevivencia.FERIMENTOS[f['id']]['nome']} — {custo} ouro", (f["id"], custo))
+                          for f, custo in zip(j.ferimentos, custos)]
+                esc = self.menu("A curandeira, uma velha de mãos manchadas de sangue seco, examina você. "
+                                "\"O que vai ser?\"", opcoes + [("Voltar", None)])
             if not esc:
                 return
             fid, custo = esc

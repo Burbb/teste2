@@ -399,20 +399,23 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         preco_dormir = self.preco(8 + 2 * j.nivel)
         faltando = j.max_hp - j.hp
         preco_templo = self.preco(max(1, faltando // 2)) if faltando else 0
-        # Cada serviço diz a que prédio da vila pertence (na tela gráfica, a vila é um lugar com prédios clicáveis), o
-        # rótulo curto para quando já se está diante do prédio, e o tempo que gasta.
+        # Cada serviço diz a que prédio da vila pertence (na tela gráfica, a vila é um lugar com prédios clicáveis).
+        # Os que se escolhem diante do prédio (a taverna, o templo) levam o rótulo curto, o preço, o que dão e o tempo
+        # que gastam: a tela os desenha em cartões. Os outros abrem a tela do serviço direto.
         opcoes = [
             ("Passear pela vila", "passear", {"tempo": "1 período"}),
             (f"Taverna: dormir até amanhã ({preco_dormir} ouro)", "dormir",
-             {"predio": "taverna", "curto": f"Dormir até amanhã ({preco_dormir} ouro)", "tempo": "até amanhã"}),
+             {"predio": "taverna", "servico": "dormir", "curto": "Dormir até amanhã", "preco": preco_dormir, "tempo": "até amanhã",
+              "efeito": f"Descanso, {j.nome_recurso.lower()} de volta e ensopado para todos"}),
             (f"Taverna: pagar uma bebida e ouvir rumores ({self.preco(3)} ouro)", "rumores",
-             {"predio": "taverna", "curto": f"Pagar uma bebida e ouvir rumores ({self.preco(3)} ouro)"}),
+             {"predio": "taverna", "servico": "rumores", "curto": "Uma bebida e os rumores", "preco": self.preco(3),
+              "efeito": "O que se conta nas mesas"}),
             ("Mercado", "loja", {"predio": "mercado"}),
             ("Mural de contratos", "mural", {"predio": "mural"}),
             (f"Templo: cuidar da vida ({preco_templo} ouro)", "templo",
-             {"predio": "templo", "curto": f"Cuidar da vida ({preco_templo} ouro)"}) if faltando else None,
-            ("Curandeiro: tratar ferimentos e infecções", "curandeiro",
-             {"predio": "curandeiro", "curto": "Tratar ferimentos e infecções"}) if j.ferimentos else None,
+             {"predio": "templo", "servico": "templo", "curto": "Cuidar da vida", "preco": preco_templo,
+              "efeito": f"+{faltando} de vida ({j.max_hp}/{j.max_hp})"}) if faltando else None,
+            ("Curandeira: tratar ferimentos e infecções", "curandeiro", {"predio": "curandeiro"}) if j.ferimentos else None,
             ("Ferreiro: reforçar arma ou armadura", "ferreiro", {"predio": "ferreiro"}),
         ]
         # A frase da vila aparece na chegada e quando o tempo passa, não a cada volta ao menu (do mercado, do

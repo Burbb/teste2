@@ -114,8 +114,11 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   `predio` (e `curto`, `tempo`) e diz, no estado (`local.predios_fechados`), por que um prédio está sem serviço
   agora; `vista.js` desenha os prédios e registra a área de cada um e o ponto do balão (`Vista.predios()`), acende as
   luzes do que está sob o mouse (`destacar`) e leva a câmera ao escolhido (`focar`: troca de enquadramento num
-  pontilhado, sempre em pixel inteiro); `vila.js` põe os botões e os balões de nome por cima, toca o som do prédio e
-  mostra no texto só as opções dele (ou o porquê de estar fechado). O que não é de prédio fica em texto.
+  pontilhado, sempre em pixel inteiro); `vila.js` põe os botões e os balões de nome por cima e toca o som do prédio.
+  Diante da taverna e do templo, o balcão mostra os serviços em cartões (o motor marca cada opção com `servico`,
+  `curto`, `preco`, `efeito`, `tempo`), ou o porquê de estar fechado; a forja e a curandeira são telas desenhadas
+  como o mercado (`painel` "ferreiro" e "curandeira", com `reforcar` e `tratar` nas opções). O que não é de prédio
+  (passear) fica em texto.
 - O fim de um evento ou de uma luta não pede Continuar: a ponte manda a cena do lugar com `virar`, a tela deixa o
   que aconteceu o tempo de ler (um fio se enche; clique ou tecla adianta) e vira para a página limpa do lugar, no
   topo. O que aconteceu fica no histórico (H).

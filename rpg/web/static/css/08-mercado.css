@@ -173,3 +173,29 @@
 .achado-cartao.novo.na-mochila { animation: vestido .9s ease-out; }
 .achado-cartao.novo.na-mochila .achado-selo { color: var(--ouro); }
 .atalho.recebeu { animation: recebeu .9s ease-out; }
+
+/* ------------------------------------------------------------------ serviços da vila */
+/* A forja e a curandeira (telas como o mercado) e, diante do prédio, o templo e a taverna: um cartão por serviço,
+   numa coluna. O ícone, o nome e o que ele dá; o preço e o tempo à direita. */
+.servicos { display: grid; gap: 8px; }
+.servico { display: grid; grid-template-columns: 56px 1fr auto; align-items: center; gap: 0 12px; width: 100%; text-align: left; cursor: pointer;
+  padding: 6px 14px 6px 6px; background: var(--p-k); border: var(--borda) solid var(--p-j); border-image: var(--anel-j) 1 / 1 stretch; background-clip: padding-box;
+  color: var(--tinta); font-family: var(--texto); }
+.servico .slot-px { width: 56px; height: 56px; }
+.servico:is(:hover, :focus-visible) { border-image-source: var(--anel-Y); transform: translateY(-2px); outline: none; }
+.servico.caro { opacity: 0.45; cursor: not-allowed; }
+.servico.caro:hover { border-image-source: var(--anel-r); transform: none; }
+.servico.limite { cursor: default; }
+.servico.limite:hover { border-image-source: var(--anel-j); transform: none; }
+.servico.limite .serv-nome { color: var(--tinta-2); }
+.serv-texto { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.serv-nome { font-size: 16px; font-weight: 600; line-height: 1.2; }
+.serv-efeito { font-size: 14px; line-height: 1.3; color: var(--tinta-2); }
+.serv-fim { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+.serv-tempo { font-size: 13px; color: var(--tinta-2); white-space: nowrap; }
+.balcao-servico h4 { margin-top: 0.8em; }
+/* Diante de um prédio da vila: o balcão sob a arte, com o Voltar à vila embaixo. */
+.balcao-predio { margin-top: 4px; }
+.balcao-predio .loja-topo { margin-bottom: 10px; }
+.balcao-predio .loja-topo b { font-size: calc(var(--px) * 32); }
+.balcao-predio .voltar-vila { margin-top: 10px; }
