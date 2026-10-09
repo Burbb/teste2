@@ -11,22 +11,17 @@ const MapaPx = (() => {
     vila: ["#33240f", "#523a1e", "#7e6034"],
   };
   const TINTA = [["#c09a80", 0.12], [null, 0], ["#82363e", 0.2], ["#0d1328", 0.5]];  // manhã, tarde, crepúsculo, noite
-  const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
   const NEVOA = "#0f0c0a";
   let ambiente = { periodo_n: 1, clima_id: "limpo" };
   const cache = {};
+  const { BAYER4, rgb, misturar } = Sprites;
 
-  function hex(c) { return [1, 3, 5].map((i) => parseInt(c.slice(i, i + 2), 16)); }
-  function mix(a, b, t) {
-    const x = hex(a), y = hex(b);
-    return "#" + x.map((v, i) => Math.round(v + (y[i] - v) * t).toString(16).padStart(2, "0")).join("");
-  }
   function tons(n) {
     const b = n.tipo === "vila" ? "vila" : n.bioma;
     let t = (PALETA[b] || PALETA.planicie).slice();
     const [cor, f] = TINTA[ambiente.periodo_n] || TINTA[1];
-    if (cor) t = t.map((c) => mix(c, cor, f));
-    if (!n.visitado && !n.atual) t = t.map((c) => mix(c, NEVOA, 0.35));
+    if (cor) t = t.map((c) => misturar(c, cor, f));
+    if (!n.visitado && !n.atual) t = t.map((c) => misturar(c, NEVOA, 0.35));
     return t;
   }
   // Ruído suave (manchas) para o pontilhado ter "relevo", como as faixas do céu da vista.
@@ -81,8 +76,8 @@ const MapaPx = (() => {
     const x = c.getContext("2d");
     const img = x.createImageData(W, H);
     const pos = nos.map((n) => [(n.x * 100 - vb[0]) / vb[2] * W, (n.y * 50 - vb[1]) / vb[3] * H, n]);
-    const paletas = pos.map((p) => tons(p[2]).map(hex));
-    const nevoa = hex(NEVOA);
+    const paletas = pos.map((p) => tons(p[2]).map(rgb));
+    const nevoa = rgb(NEVOA);
     const alcance = (W / vb[2]) * 13;
     const escala = W / 14;
     const dono = new Int16Array(W * H).fill(-1);
@@ -94,7 +89,7 @@ const MapaPx = (() => {
           if (d < d1) { d2 = d1; d1 = d; i1 = i; } else if (d < d2) d2 = d;
         });
         const k = (py * W + px) * 4;
-        const bayer = BAYER[(py % 4) * 4 + (px % 4)] / 16;
+        const bayer = BAYER4[(py % 4) * 4 + (px % 4)] / 16;
         let cor = nevoa;
         if (i1 >= 0) {
           // borda recortada (como um litoral), não um círculo

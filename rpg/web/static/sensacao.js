@@ -206,8 +206,7 @@ const Sensacao = (() => {
      bandas de cor (o miolo claro, a cor da raridade, a borda pontilhada) desce do alto e bate no chão onde o cartão vai
      surgir; um anel se abre em degraus e fagulhas de um texel sobem. Tudo num canvas de baixa resolução ampliado sem
      suavizar, a 15 quadros por segundo. (O feixe liso, com desfoque e degradê, destoava da arte.) */
-  const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
-  const pontilha = (x, y, n) => BAYER[(y & 3) * 4 + (x & 3)] < n;  // n de 0 a 16: quantos de cada 16 texels acendem
+  const { pontilha } = Sprites;  // pontilha(x, y, n): o texel acende em n de cada 16
   function corP(letra) {
     const h = getComputedStyle(document.documentElement).getPropertyValue("--p-" + letra).trim() || "#ffffff";
     const v = parseInt(h.slice(1), 16);

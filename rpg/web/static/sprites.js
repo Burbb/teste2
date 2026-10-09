@@ -17,6 +17,15 @@ const Sprites = (() => {
   };
   /** Limiar de Bayer 4×4 (0 a 15): o pontilhado ordenado de toda a arte. */
   const BAYER4 = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
+  /** Se o texel (x, y) acende num pontilhado de `nivel` em 16 (0: nenhum; 16: todos). */
+  const pontilha = (x, y, nivel) => BAYER4[(y & 3) * 4 + (x & 3)] < nivel;
+  /** "#rrggbb" em [r, g, b]. */
+  function rgb(c) { return [1, 3, 5].map((i) => parseInt(c.slice(i, i + 2), 16)); }
+  /** A cor a `t` do caminho de `a` até `b` (as duas em "#rrggbb"). */
+  function misturar(a, b, t) {
+    const x = rgb(a), y = rgb(b);
+    return "#" + x.map((v, i) => Math.round(v + (y[i] - v) * t).toString(16).padStart(2, "0")).join("");
+  }
   const S = SPRITES_GRADES;  // os desenhos moram em sprites-dados.js
   /** As molduras em 9-slice (sprites-dados.js), publicadas como --anel-k, --placa-C, --janela-y... */
   const MOLDURAS = Object.keys(S).filter((n) => /^(anel|placa|janela|quadro|retrato)_\w$/.test(n));
@@ -128,7 +137,7 @@ const Sprites = (() => {
     return tile(`fm${letra}${tam}.${semente}.${celula}.${forca}`, tam, tam, (set) => {
       for (let y = 0; y < tam; y++) for (let x = 0; x < tam; x++) {
         const n = grosso(x, y) * 0.7 + fino(x, y) * 0.3, t = Math.min(1, Math.max(0, (n - 0.3) / 0.55)) * forca;
-        if (BAYER4[(y & 3) * 4 + (x & 3)] < Math.floor(t * 16)) set(x, y, letra);
+        if (pontilha(x, y, Math.floor(t * 16))) set(x, y, letra);
       }
     });
   }
@@ -169,5 +178,5 @@ const Sprites = (() => {
     for (const n of ["caveira", "cadeado", "lanterna", "estrelinha", "fio_cabeca", "fim_cabeca", "fio", "fio_v", "ponta", "ornamento", "faixa", "bico_j", "bico_a"]) raiz.setProperty(`--${n.replace("_", "-")}`, u(url(n)));
   }
 
-  return { img, url, canvas, existe: (n) => !!S[n], PALETA, BAYER4, MOLDURAS, tex: { tile, pontilhado, rampa, pedra, fumo }, publicar };
+  return { img, url, canvas, existe: (n) => !!S[n], PALETA, BAYER4, pontilha, rgb, misturar, MOLDURAS, tex: { tile, pontilhado, rampa, pedra, fumo }, publicar };
 })();

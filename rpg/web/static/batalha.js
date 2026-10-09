@@ -27,12 +27,11 @@ const Batalha = (() => {
     maldicao: ["#8e6fd8", "#5a2a6e"], mana: ["#a8c4ff", "#4d74e0", "#ffffff"], vigor: ["#ffb35c", "#f2c94c", "#fff3a0"],
     foco: ["#c8f0a0", "#8fbf6a", "#ffffff"], atordoado: ["#fff3a0", "#f2c94c"], marca: ["#f2c94c", "#e0782f"] };
 
-  const S = (n, e = 2, c = "") => Sprites.img(n, e, c);
+  const { S, pct } = Telas;
   const agora = () => performance.now();
   const dormir = (ms) => (ms > 0 ? new Promise((r) => setTimeout(r, ms)) : Promise.resolve());
   const som = (n) => { if (!rapido()) Som.tocar(n); };
   const esc = Texto.html;
-  const pct = (a, b) => (b ? Math.max(0, Math.min(100, (100 * a) / b)) : 0);
 
   function configurar(opts) { rapido = opts.rapido; pausa = opts.pausa; }
 

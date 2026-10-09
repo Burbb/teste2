@@ -6,7 +6,7 @@
 const $ = (s, r = document) => r.querySelector(s);
 const esc = Texto.html;
 const espera = (ms) => new Promise((r) => setTimeout(r, ms));
-const spr = (nome, escala = 2, classe = "") => Sprites.img(nome, escala, classe);
+const spr = Telas.S;  // o desenho de um sprite (o mesmo S das telas)
 function el(tag, classe, html) {
   const e = document.createElement(tag);
   if (classe) e.className = classe;

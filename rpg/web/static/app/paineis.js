@@ -1,7 +1,7 @@
 "use strict";
 
 /* ------------------------------------------------------------------ estado e painéis */
-function pct(a, b) { return b ? Math.max(0, Math.min(100, (100 * a) / b)) : 0; }
+const { pct } = Telas;
 /** Uma barra. Com `chave`, ela sai da largura que estava na tela (larguraViva): um estado novo no meio da animação
  *  (a poção e, logo depois, outra mudança) continua de onde a barra está, em vez de saltar para o fim. */
 function barra(classe, atual, maximo, anterior, chave) {

@@ -13,8 +13,7 @@ const Vista = (() => {
   ];
   // O sol (ou a lua) de cada período: posição, raio, cor do disco e cor da metade de baixo.
   const ASTROS = [[60, 30, 7, "#ffe8a0", "#f0c890"], [210, 12, 6, "#fff6c8", "#ece2b4"], [248, 40, 10, "#e8784a", "#d8603a"], [70, 14, 5, "#e8ecf4", "#c8ccd8"]];
-  const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
-  const pont = (x, y, nivel) => BAYER[(y & 3) * 4 + (x & 3)] < nivel;  // nivel de 0 a 16
+  const { pontilha, misturar } = Sprites;
   // `ctx` é a arte em 320x72 (fora da tela); `tela` é o canvas da página, que recebe a arte já no tamanho dela.
   let canvas, ctx, tela, arte, fundo, frente, chave = "", estado = null, quadro = 0, timer = null;
   let nuvens = [], neblinas = [], particulas = [], fumacas = [], estrelas = [], aves = [], relampago = 0;
@@ -30,11 +29,6 @@ const Vista = (() => {
     let s = (semente * 9301 + 49297) % 233280 || 1;
     return () => (s = (s * 16807) % 2147483647) / 2147483647;
   }
-  function hex(c) { return [1, 3, 5].map((i) => parseInt(c.slice(i, i + 2), 16)); }
-  function mix(a, b, t) {
-    const x = hex(a), y = hex(b);
-    return "#" + x.map((v, i) => Math.round(v + (y[i] - v) * t).toString(16).padStart(2, "0")).join("");
-  }
   function px(c, x, y, w = 1, h = 1, cor) { c.fillStyle = cor; c.fillRect(x | 0, y | 0, w, h); }
 
   /** O céu em faixas; a passagem de uma para a outra é pontilhada pelo Bayer, sem degrau duro. */
@@ -42,24 +36,24 @@ const Vista = (() => {
     const p = e.mundo.periodo_n;
     let bandas = CEUS[p].slice();
     const clima = e.mundo.clima_id;
-    if (["chuva", "tempestade", "nublado"].includes(clima)) bandas = bandas.map((b) => mix(b, "#3a3f48", clima === "tempestade" ? 0.75 : 0.55));
-    if (clima === "nevoa") bandas = bandas.map((b) => mix(b, "#8a9098", 0.5));
-    if (clima === "neve") bandas = bandas.map((b) => mix(b, "#a8b0bc", 0.45));
-    if (e.local.bioma === "cidadela") bandas = bandas.map((b, i) => mix(b, i > 2 ? "#a01818" : "#2a0508", 0.7));
+    if (["chuva", "tempestade", "nublado"].includes(clima)) bandas = bandas.map((b) => misturar(b, "#3a3f48", clima === "tempestade" ? 0.75 : 0.55));
+    if (clima === "nevoa") bandas = bandas.map((b) => misturar(b, "#8a9098", 0.5));
+    if (clima === "neve") bandas = bandas.map((b) => misturar(b, "#a8b0bc", 0.45));
+    if (e.local.bioma === "cidadela") bandas = bandas.map((b, i) => misturar(b, i > 2 ? "#a01818" : "#2a0508", 0.7));
     const altura = 50;
     for (let y = 0; y < H; y++) {
       const f = (Math.min(y, altura) / altura) * (bandas.length - 1), i = Math.floor(f), resto = Math.floor((f - i) * 16);
       const a = bandas[i], b = bandas[Math.min(i + 1, bandas.length - 1)];
-      for (let x = 0; x < W; x++) px(c, x, y, 1, 1, pont(x, y, resto) ? b : a);
+      for (let x = 0; x < W; x++) px(c, x, y, 1, 1, pontilha(x, y, resto) ? b : a);
     }
     // O sol (ou a lua): um disco morno, a metade de baixo um tom abaixo; o sol tem um halo de um anel só, pontilhado,
     // e a lua em quarto fica limpa no escuro.
     if (["limpo", "neve"].includes(clima) || p === 3) {
-      const [sx, sy, raio, cor, baixo] = ASTROS[p], halo = mix(bandas[bandas.length - 2], cor, 0.45);
+      const [sx, sy, raio, cor, baixo] = ASTROS[p], halo = misturar(bandas[bandas.length - 2], cor, 0.45);
       for (let y = sy - raio - 6; y <= sy + raio + 6; y++) for (let x = sx - raio - 6; x <= sx + raio + 6; x++) {
         const d = Math.hypot(x - sx, y - sy);
-        if (d <= raio) px(c, x, y, 1, 1, y > sy + raio / 3 && pont(x, y, 8) ? baixo : cor);
-        else if (p !== 3 && d < raio + 5 && pont(x, y, Math.round(9 - (d - raio) * 1.6))) px(c, x, y, 1, 1, halo);
+        if (d <= raio) px(c, x, y, 1, 1, y > sy + raio / 3 && pontilha(x, y, 8) ? baixo : cor);
+        else if (p !== 3 && d < raio + 5 && pontilha(x, y, Math.round(9 - (d - raio) * 1.6))) px(c, x, y, 1, 1, halo);
       }
       if (p === 3) for (let y = -raio; y <= raio; y++) for (let x = -raio; x <= raio; x++) {  // a lua em quarto
         if ((x - 3) * (x - 3) + (y + 1) * (y + 1) <= raio * raio * 0.8) px(c, sx + x, sy + y, 1, 1, bandas[0]);
@@ -88,7 +82,7 @@ const Vista = (() => {
     const meio = (y0 + y1) / 2, meia = (y1 - y0) / 2;
     for (let y = y0; y < y1; y++) for (let x = x0; x < x1; x++) {
       const n = Math.round(forca * (1 - Math.abs(y - meio) / meia) + Math.sin((x + fase) / 11) * 1.5);
-      if (n > 0 && pont(x, y, n)) px(c, x, y, 1, 1, cor);
+      if (n > 0 && pontilha(x, y, n)) px(c, x, y, 1, 1, cor);
     }
   }
 
@@ -127,20 +121,20 @@ const Vista = (() => {
   function bioma(c, e, r, bandas) {
     const p = e.mundo.periodo_n, noite = p === 3, acesa = p >= 2;
     const horizonte = bandas[bandas.length - 1];
-    const escuro = (t) => mix(horizonte, "#050404", t);
+    const escuro = (t) => misturar(horizonte, "#050404", t);
     const b = e.local.tipo === "vila" ? "vila" : e.local.bioma;
     const longe = escuro(0.45), meio = escuro(0.65), perto = escuro(0.82), chao = escuro(0.9);
-    const sol = ASTROS[p], ladoSol = noite ? -999 : sol[0], luz = mix(longe, sol[3], noite ? 0 : 0.4);
+    const sol = ASTROS[p], ladoSol = noite ? -999 : sol[0], luz = misturar(longe, sol[3], noite ? 0 : 0.4);
     fumacas = []; aves = []; predios = [];
     const corvos = (n, y0, y1) => { for (let i = 0; i < n; i++) aves.push({ x: r() * W, y: y0 + r() * (y1 - y0), v: 0.15 + r() * 0.2, f: Math.floor(r() * 8) }); };
     // A névoa rasteira de cada bioma, um tom acima da camada de trás.
-    const bruma = mix(longe, horizonte, 0.5);
+    const bruma = misturar(longe, horizonte, 0.5);
     if (b === "montanha") {
       // duas cordilheiras: a de trás alta, de neve pontilhada no topo; a da frente baixa, com pinheiros miúdos
       const picos = perfil(r, 28, 18, 2.6);
       silhueta(c, picos, longe);
-      const neve = mix(longe, "#e8ecf4", noite ? 0.35 : 0.75);
-      picos.forEach((y, x) => { for (let k = 0; k < 8; k++) if (y + k < 26 && pont(x, y + k, 16 - k * 2)) px(c, x, y + k, 1, 1, neve); });
+      const neve = misturar(longe, "#e8ecf4", noite ? 0.35 : 0.75);
+      picos.forEach((y, x) => { for (let k = 0; k < 8; k++) if (y + k < 26 && pontilha(x, y + k, 16 - k * 2)) px(c, x, y + k, 1, 1, neve); });
       const meioYs = perfil(r, 46, 10, 1.6);
       silhueta(c, meioYs, meio);
       crista(c, meioYs, luz, ladoSol);
@@ -148,7 +142,7 @@ const Vista = (() => {
       corvos(2, 6, 20);
     } else if (b === "floresta") {
       silhueta(c, perfil(r, 40, 6, 0.8), longe);
-      for (let x = -4; x < W; x += 4 + Math.floor(r() * 4)) pinheiro(c, x, 46 + Math.floor(r() * 4), 8 + Math.floor(r() * 6), mix(longe, meio, 0.5));
+      for (let x = -4; x < W; x += 4 + Math.floor(r() * 4)) pinheiro(c, x, 46 + Math.floor(r() * 4), 8 + Math.floor(r() * 6), misturar(longe, meio, 0.5));
       nevoa(c, 42, 52, bruma, 4);
       for (let x = -4; x < W; x += 5 + Math.floor(r() * 4)) pinheiro(c, x, 54 + Math.floor(r() * 4), 10 + Math.floor(r() * 8), meio);
       silhueta(c, perfil(r, 60, 3, 0.6), chao);
@@ -157,13 +151,13 @@ const Vista = (() => {
     } else if (b === "pantano") {
       // a água espelha o céu em riscos; árvores mortas, juncos e névoa rasteira
       silhueta(c, perfil(r, 44, 3, 0.5), longe);
-      const agua = mix(horizonte, "#0a1a18", 0.6), brilho = mix(horizonte, "#5a7a78", 0.4);
+      const agua = misturar(horizonte, "#0a1a18", 0.6), brilho = misturar(horizonte, "#5a7a78", 0.4);
       px(c, 0, 52, W, H - 52, agua);
       for (let y = 53; y < H; y += 2) for (let x = (y * 7) % 13; x < W; x += 13 + (y % 5)) px(c, x, y, 3 + (x % 4), 1, brilho);
       for (let x = 8; x < W; x += 26 + Math.floor(r() * 30)) {
         const h = 12 + Math.floor(r() * 12);
         arvoreSeca(c, x, 54, h, perto, r() < 0.5 ? 1 : -1);
-        for (let k = 0; k < h / 2; k += 2) if (pont(x, 55 + k, 8)) px(c, x, 55 + k, 1, 1, mix(agua, perto, 0.5));  // reflexo
+        for (let k = 0; k < h / 2; k += 2) if (pontilha(x, 55 + k, 8)) px(c, x, 55 + k, 1, 1, misturar(agua, perto, 0.5));  // reflexo
       }
       for (let x = 0; x < W; x += 3) if (r() < 0.45) px(c, x, 49 + Math.floor(r() * 4), 1, 4 + Math.floor(r() * 3), meio);
       nevoa(c, 47, 55, bruma, 4);
@@ -174,11 +168,11 @@ const Vista = (() => {
       silhueta(c, longeYs, longe);
       crista(c, longeYs, luz, ladoSol);
       const mx = 220 + Math.floor(r() * 50), my = longeYs[mx] + 1;
-      px(c, mx, my - 9, 4, 9, mix(longe, meio, 0.6)); px(c, mx + 1, my - 11, 2, 2, mix(longe, meio, 0.6));
+      px(c, mx, my - 9, 4, 9, misturar(longe, meio, 0.6)); px(c, mx + 1, my - 11, 2, 2, misturar(longe, meio, 0.6));
       const pa = Math.floor(r() * 2);
-      for (let k = -5; k <= 5; k++) px(c, mx + 2 + k, my - 10 + (pa ? k : -k), 1, 1, mix(longe, meio, 0.6));
+      for (let k = -5; k <= 5; k++) px(c, mx + 2 + k, my - 10 + (pa ? k : -k), 1, 1, misturar(longe, meio, 0.6));
       silhueta(c, perfil(r, 52, 4, 0.5), meio);
-      for (let x = 0; x < W; x += 2) if (r() < 0.55) px(c, x, 55 + Math.floor(r() * 10), 1, 2, mix(meio, "#8a9a4a", noite ? 0.15 : 0.4));
+      for (let x = 0; x < W; x += 2) if (r() < 0.55) px(c, x, 55 + Math.floor(r() * 10), 1, 2, misturar(meio, "#8a9a4a", noite ? 0.15 : 0.4));
       const ax = 40 + Math.floor(r() * 80);
       px(c, ax, 42, 2, 12, perto);
       [[-6, 34, 14, 3], [-8, 37, 18, 3], [-7, 40, 16, 2], [-4, 32, 9, 2]].forEach(([dx, y, w, h]) => px(c, ax + dx, y, w, h, perto));
@@ -217,7 +211,7 @@ const Vista = (() => {
       });
       px(c, cx - 4, 47, 8, 13, "#7a1a12"); px(c, cx - 2, 49, 4, 11, "#b83a1a");
       silhueta(c, perfil(r, 60, 2, 0.4), chao);
-      for (let y = 60; y < H; y++) { const x = Math.round(cx + Math.sin((y - 60) / 3.5) * (y - 59) * 1.4); px(c, x - 1, y, 2 + Math.floor((y - 60) / 4), 1, mix(chao, "#5a1414", 0.35)); }
+      for (let y = 60; y < H; y++) { const x = Math.round(cx + Math.sin((y - 60) / 3.5) * (y - 59) * 1.4); px(c, x - 1, y, 2 + Math.floor((y - 60) / 4), 1, misturar(chao, "#5a1414", 0.35)); }
       arvoreSeca(c, 36, 64, 20, chao, 1);
       corvos(4, 8, 22);
     } else {
@@ -231,17 +225,17 @@ const Vista = (() => {
    *  luzes que acendem no hover e o que se mexe nele. */
   function vila(c, r, { longe, meio, perto, chao, acesa, horizonte }) {
     silhueta(c, perfil(r, 42, 4, 0.5), longe);
-    const telha = mix(meio, "#5a1a10", 0.35), escuro = "#0d0b0a", JANELA = acesa ? LUZ_JANELA : mix(meio, "#7a5a30", 0.5);
-    const madeira = mix(meio, "#7a5a3a", 0.4), papel = mix(meio, "#c8b898", 0.45);
-    const fundoCasa = mix(longe, meio, 0.45), casaLonge = mix(longe, meio, 0.18);
+    const telha = misturar(meio, "#5a1a10", 0.35), escuro = "#0d0b0a", JANELA = acesa ? LUZ_JANELA : misturar(meio, "#7a5a30", 0.5);
+    const madeira = misturar(meio, "#7a5a3a", 0.4), papel = misturar(meio, "#c8b898", 0.45);
+    const fundoCasa = misturar(longe, meio, 0.45), casaLonge = misturar(longe, meio, 0.18);
     // a fileira de longe, no morro: telhados miúdos aparecendo entre os prédios e por cima deles
-    const luzLonge = acesa ? mix(LUZ_JANELA, longe, 0.45) : null;
+    const luzLonge = acesa ? misturar(LUZ_JANELA, longe, 0.45) : null;
     [[-2, 51, 8, 5], [33, 52, 7, 4], [50, 49, 9, 5], [66, 50, 7, 4], [75, 52, 6, 4], [99, 51, 7, 5], [140, 49, 8, 4],
       [177, 52, 6, 4], [193, 50, 9, 5], [212, 51, 7, 4], [224, 49, 10, 6], [238, 51, 7, 4], [255, 50, 8, 5],
       [270, 52, 6, 4], [298, 50, 9, 5], [312, 52, 8, 4]]
-      .forEach(([x, b, w, h], i) => casinha(c, x, b, w, h, casaLonge, mix(casaLonge, "#5a1a10", 0.2), i % 3 === 1 ? luzLonge : null));
+      .forEach(([x, b, w, h], i) => casinha(c, x, b, w, h, casaLonge, misturar(casaLonge, "#5a1a10", 0.2), i % 3 === 1 ? luzLonge : null));
     [[215, 58, 10, 7], [229, 58, 12, 9], [246, 58, 10, 7], [262, 58, 9, 6]]
-      .forEach(([x, b, w, h], i) => casa(c, x, b, w, h, i === 1, fundoCasa, mix(fundoCasa, "#5a1a10", 0.3), null));
+      .forEach(([x, b, w, h], i) => casa(c, x, b, w, h, i === 1, fundoCasa, misturar(fundoCasa, "#5a1a10", 0.3), null));
     for (let x = 0; x < W; x += 5) px(c, x, 55, 1, 4, perto);
     px(c, 0, 56, W, 1, perto);
     const reg = (id, nome, area, extra = {}) => predios.push({ id, nome, ...area, luzes: [], ...extra });
@@ -253,7 +247,7 @@ const Vista = (() => {
     px(c, 31, 54, 7, 1, perto); px(c, 32, 55, 5, 1, perto); px(c, 33, 56, 3, 2, perto);
     reg("ferreiro", "Ferreiro", { x: 4, y: 33, w: 36, h: 25 }, { balao: [16, 40], luzes: [[10, 52, 3, 6, "#ffa040"]], fagulha: [25, 34] });
     // as barracas do mercado: toldo listrado, balcão e mercadoria
-    const listra = [mix(meio, "#7a2a22", 0.5), mix(meio, "#9a7a4a", 0.5)];
+    const listra = [misturar(meio, "#7a2a22", 0.5), misturar(meio, "#9a7a4a", 0.5)];
     [44, 58].forEach((x) => {
       px(c, x, 46, 1, 12, meio); px(c, x + 11, 46, 1, 12, meio);
       for (let k = 0; k < 13; k++) { px(c, x - 1 + k, 44, 1, 3, listra[Math.floor(k / 2) % 2]); if (k % 2 === 0) px(c, x - 1 + k, 47, 1, 1, listra[Math.floor(k / 2) % 2]); }
@@ -262,12 +256,12 @@ const Vista = (() => {
     reg("mercado", "Mercado", { x: 42, y: 41, w: 31, h: 17 }, { balao: [57, 43], luzes: [[49, 51, 1, 1, "#ffd860"], [63, 51, 1, 1, "#ffd860"]] });
     // o mural de avisos, na praça
     px(c, 84, 46, 1, 12, meio); px(c, 95, 46, 1, 12, meio);
-    px(c, 82, 43, 16, 1, telha); px(c, 83, 44, 14, 8, mix(meio, "#5a4030", 0.3));
+    px(c, 82, 43, 16, 1, telha); px(c, 83, 44, 14, 8, misturar(meio, "#5a4030", 0.3));
     [[85, 45, 3, 3], [89, 46, 2, 3], [92, 45, 3, 4]].forEach(([x, y, w, h]) => px(c, x, y, w, h, papel));
     reg("mural", "Mural", { x: 80, y: 40, w: 20, h: 18 }, { balao: [90, 42], luzes: [[85, 45, 3, 3, "#e8dcc0"], [89, 46, 2, 3, "#e8dcc0"], [92, 45, 3, 4, "#e8dcc0"]] });
     // a forca da praça
     px(c, 104, 40, 2, 18, perto); px(c, 104, 40, 12, 2, perto);
-    px(c, 113, 42, 1, 3, mix(perto, "#8a7a6a", 0.4)); px(c, 112, 45, 3, 5, perto); px(c, 112, 50, 1, 3, perto); px(c, 114, 50, 1, 3, perto);
+    px(c, 113, 42, 1, 3, misturar(perto, "#8a7a6a", 0.4)); px(c, 112, 45, 3, 5, perto); px(c, 112, 50, 1, 3, perto); px(c, 114, 50, 1, 3, perto);
     // a taverna: dois andares, placa pendurada, janelas acesas e a chaminé fumando
     px(c, 120, 42, 24, 16, meio);
     for (let i = 0; i < 9; i++) px(c, 119 + i, 41 - i, 26 - i * 2, 1, telha);
@@ -284,7 +278,7 @@ const Vista = (() => {
     for (let i = 0; i < 9; i++) px(c, 159 + i, 39 - i, 26 - i * 2, 1, telha);
     px(c, 176, 18, 8, 22, meio); for (let i = 0; i < 5; i++) px(c, 175 + i, 18 - i * 2, 10 - i * 2, 2, telha);
     px(c, 179, 4, 1, 6, meio); px(c, 177, 6, 5, 1, meio);
-    px(c, 178, 23, 4, 4, escuro); px(c, 179, 24, 2, 2, mix(meio, "#8a7a50", 0.5));
+    px(c, 178, 23, 4, 4, escuro); px(c, 179, 24, 2, 2, misturar(meio, "#8a7a50", 0.5));
     px(c, 171, 51, 4, 7, escuro);
     const vitrais = [[166, 45, 2, 4], [176, 45, 2, 4]];
     vitrais.forEach(([x, y, w, h]) => px(c, x, y, w, h, JANELA));
@@ -292,16 +286,16 @@ const Vista = (() => {
     // a cabana da curandeira: teto de palha, ervas penduradas e uma janela esverdeada
     px(c, 194, 50, 14, 8, meio);
     [[193, 49, 16], [194, 48, 14], [196, 47, 10], [198, 46, 6]].forEach(([x, y, w]) => px(c, x, y, w, 1, telha));
-    [195, 199, 205].forEach((x) => px(c, x, 50, 1, 2, mix(meio, "#4a7a3a", 0.5)));
-    px(c, 201, 52, 2, 2, acesa ? "#a8d080" : mix(meio, "#4a6a3a", 0.5)); px(c, 196, 53, 3, 5, escuro);
+    [195, 199, 205].forEach((x) => px(c, x, 50, 1, 2, misturar(meio, "#4a7a3a", 0.5)));
+    px(c, 201, 52, 2, 2, acesa ? "#a8d080" : misturar(meio, "#4a6a3a", 0.5)); px(c, 196, 53, 3, 5, escuro);
     reg("curandeiro", "Curandeira", { x: 192, y: 44, w: 18, h: 14 }, { balao: [201, 45], luzes: [[201, 52, 2, 2, "#c8f0a0"]] });
     // a estrada saindo da vila pela direita, a placa de encruzilhada com a lanterna e um marco de pedra
-    const terra = mix(chao, "#6a5a48", 0.3);
+    const terra = misturar(chao, "#6a5a48", 0.3);
     for (let y = 58; y < H; y++) { const x0 = Math.round(292 + (71 - y) * 1.3); px(c, x0, y, W - x0, 1, terra); }
     px(c, 284, 42, 2, 16, perto);
     px(c, 277, 43, 9, 2, madeira); px(c, 276, 44, 1, 1, madeira);
     px(c, 286, 47, 10, 2, madeira); px(c, 296, 48, 1, 1, madeira);
-    px(c, 286, 41, 4, 1, perto); px(c, 289, 42, 2, 3, perto); px(c, 289, 43, 2, 1, acesa ? LUZ_JANELA : mix(perto, "#5a4028", 0.6));
+    px(c, 286, 41, 4, 1, perto); px(c, 289, 42, 2, 3, perto); px(c, 289, 43, 2, 1, acesa ? LUZ_JANELA : misturar(perto, "#5a4028", 0.6));
     px(c, 306, 54, 4, 4, meio); px(c, 307, 53, 2, 1, meio);
     reg("estrada", "Estrada", { x: 272, y: 38, w: 48, h: 20 }, { balao: [285, 40], luzes: [[289, 43, 2, 1, "#ffd070"]], lanterna: [289, 43] });
     px(c, 0, 58, 292, H - 58, chao);
@@ -319,15 +313,15 @@ const Vista = (() => {
     // fiapos de nuvem: longos e finos, escuros por cima; mais e mais grossos com o tempo fechado
     nuvens = [];
     const fechado = ["chuva", "tempestade", "nublado", "nevoa", "neve"].includes(clima);
-    const corNuvem = p === 2 ? mix(bandas[1], "#000000", 0.3) : p === 3 ? mix(bandas[1], "#2a3048", 0.5)
-      : mix(bandas[1], fechado ? "#3a3f48" : "#e8ecf4", fechado ? 0.4 : 0.3);
+    const corNuvem = p === 2 ? misturar(bandas[1], "#000000", 0.3) : p === 3 ? misturar(bandas[1], "#2a3048", 0.5)
+      : misturar(bandas[1], fechado ? "#3a3f48" : "#e8ecf4", fechado ? 0.4 : 0.3);
     const n = clima === "nevoa" ? 3 : fechado ? 8 : clima === "limpo" && r() < 0.4 ? 0 : 4;
     for (let i = 0; i < n; i++) nuvens.push({ x: r() * (W + 80), y: 5 + r() * 36, w: 40 + r() * 80, v: 0.04 + r() * 0.08, esp: fechado && r() < 0.5 ? 3 : 2, cor: corNuvem });
     // Névoa: bancos compridos e baixos, do traço das nuvens, passando devagar atrás das silhuetas (a vila e os prédios
     // ficam limpos na frente); os de cima mais ralos, os de perto do morro mais cheios.
     neblinas = [];
     if (clima === "nevoa") {
-      const clara = mix(bandas[3], "#dfe2e8", p === 3 ? 0.16 : 0.42), rala = mix(bandas[2], clara, 0.55);
+      const clara = misturar(bandas[3], "#dfe2e8", p === 3 ? 0.16 : 0.42), rala = misturar(bandas[2], clara, 0.55);
       for (let i = 0; i < 9; i++) {
         const y = 12 + Math.round((i / 8) * 30 + r() * 4);
         neblinas.push({ x: r() * (W + 160), y, w: 90 + r() * 130, v: 0.03 + r() * 0.05, cor: y > 30 ? clara : rala, alta: y <= 30 });
@@ -355,7 +349,7 @@ const Vista = (() => {
     t.width = 4; t.height = n;
     const x = t.getContext("2d");
     x.fillStyle = `rgb(${r}, ${g}, ${b})`;
-    for (let i = 0; i < n; i++) { const k = Math.round(16 * (1 - (i + 0.5) / n)); for (let j = 0; j < 4; j++) if (pont(j, i, k)) x.fillRect(j, i, 1, 1); }
+    for (let i = 0; i < n; i++) { const k = Math.round(16 * (1 - (i + 0.5) / n)); for (let j = 0; j < 4; j++) if (pontilha(j, i, k)) x.fillRect(j, i, 1, 1); }
     cena.style.setProperty("--chao-rampa", `url(${t.toDataURL()})`);
     cena.style.setProperty("--chao", `rgb(${r}, ${g}, ${b})`);
   }
@@ -400,7 +394,7 @@ const Vista = (() => {
     if (!tramas[n]) {
       const t = document.createElement("canvas"); t.width = t.height = 4;
       const c = t.getContext("2d"); c.fillStyle = "#000";
-      for (let y = 0; y < 4; y++) for (let x = 0; x < 4; x++) if (pont(x, y, n)) c.fillRect(x, y, 1, 1);
+      for (let y = 0; y < 4; y++) for (let x = 0; x < 4; x++) if (pontilha(x, y, n)) c.fillRect(x, y, 1, 1);
       tramas[n] = ctx.createPattern(t, "repeat");
     }
     return tramas[n];
@@ -475,7 +469,7 @@ const Vista = (() => {
     fumacas.forEach((f) => {  // fumaça pontilhada, rareando enquanto sobe
       for (let i = 0; i < 6; i++) {
         const t = (quadro * 0.5 + f.t + i * 3) % 18, x = f.x + Math.round(Math.sin((t + i) / 3) * 2 + t * 0.3), y = Math.round(f.y - t);
-        if (pont(x, y, Math.round(12 - t * 0.6))) px(ctx, x, y, 2, 2, "#8a8288");
+        if (pontilha(x, y, Math.round(12 - t * 0.6))) px(ctx, x, y, 2, 2, "#8a8288");
       }
     });
     particulas.forEach((p) => {
