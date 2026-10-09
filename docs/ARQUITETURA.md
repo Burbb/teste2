@@ -42,7 +42,11 @@ sorteia entre os que valem para o contexto.
 
 ## Combate
 
-`Combate` (`rpg/combate.py`) roda turnos: sua ação → aliados (comitiva, animal, servos) → inimigos.
+`Combate` (pacote `rpg/combate/`) roda turnos: sua ação → aliados (comitiva, animal, servos) → inimigos. A classe
+junta partes por responsabilidade, como o `Jogo` junta os sistemas: `luta.py` (quem está na luta, o laço, os lances,
+o fim), `golpe.py` (a conta de um golpe, os estados que ele deixa, as mortes), `heroi.py` (a sua vez), `turnos.py` (a
+vez da comitiva, do animal, dos servos e dos inimigos) e `eficacia.py` (traços e resistências). Quem usa importa do
+pacote: `from rpg.combate import Combate`.
 
 - `atacar()` é **a** conta de dano (esquiva, eficácia, modificadores, defesa, crítico, barreira, roubo de vida).
 - Cada coisa visível vira um **lance** estruturado (`acao`, `golpe`, `erro`, `cura`, `buff`, `salva`, `fim_acao`...)
