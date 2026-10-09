@@ -14,6 +14,7 @@ from urllib.parse import parse_qs, urlparse
 
 PASTA = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static")
 mimetypes.add_type("font/woff2", ".woff2")
+mimetypes.add_type("font/ttf", ".ttf")
 mimetypes.add_type("text/javascript", ".js")
 
 

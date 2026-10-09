@@ -2,7 +2,7 @@
 .quadro { padding: 10px 12px 14px; background: #3a2a18; border: 6px solid #5a3a1c; box-shadow: inset 0 0 0 3px #2a1a0c, 4px 4px 0 #000;
   background-image: repeating-linear-gradient(90deg, rgba(0,0,0,0.12) 0 2px, transparent 2px 9px), repeating-linear-gradient(0deg, rgba(255,220,160,0.05) 0 1px, transparent 1px 7px); }
 .quadro-cab { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 8px; }
-.quadro-cab b { font-family: var(--titulo); font-weight: 400; font-size: 34px; color: var(--ouro); text-shadow: 2px 2px 0 #000; line-height: 1; }
+.quadro-cab b { font-family: var(--titulo); font-weight: 400; font-size: calc(var(--px) * 32); color: var(--ouro); text-shadow: 2px 2px 0 #000; line-height: 1; }
 .quadro-cab span { font-size: 13px; color: #d8c49a; }
 .cartazes { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 14px; }
 .contrato { position: relative; display: flex; flex-direction: column; gap: 4px; padding: 14px 10px 10px; background: #e8d8b0; color: #2a1e12; border: 2px solid #8a6a40;
@@ -10,7 +10,7 @@
 .contrato:nth-child(2n) { transform: rotate(0.7deg); }
 .contrato:hover { transform: rotate(0) translateY(-3px); z-index: 2; }
 .contrato .prego { position: absolute; top: 4px; left: 50%; width: 8px; height: 8px; margin-left: -4px; background: #6e1d1d; border: 2px solid #2a0808; }
-.contrato-tipo { font-family: var(--titulo); font-size: 26px; line-height: 1; text-align: center; color: #6e1d1d; }
+.contrato-tipo { font-family: var(--titulo); font-size: calc(var(--px) * 32); line-height: 1; text-align: center; color: #6e1d1d; }
 .contrato.tipo-entrega .contrato-tipo { color: #2e4a20; }
 .contrato.tipo-caca .contrato-tipo { color: #5a3a10; }
 .contrato-arte { align-self: center; width: 60px; height: 60px; display: grid; place-items: center; background: #d4c094; border: 2px solid #8a6a40; }

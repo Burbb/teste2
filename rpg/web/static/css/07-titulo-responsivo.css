@@ -5,7 +5,7 @@ body.modo-titulo #cena-cab { margin-bottom: 30px; }
 body.modo-titulo .cena-titulo { font-size: clamp(72px, 11vw, 144px); color: var(--ouro); text-shadow: 0 6px 24px rgba(0, 0, 0, 0.9), 0 0 48px rgba(255, 140, 40, 0.3); }
 body.modo-titulo .cena-sub { font-size: 18px; color: var(--tinta-2); }
 body.modo-titulo #prompt { max-width: 380px; margin: 0 auto; }
-body.modo-titulo #prompt .escolha { justify-content: center; font-family: var(--titulo); font-size: 44px; line-height: 1.1; color: #e8dcc0; padding-left: 12px; text-shadow: 3px 3px 0 #000, 0 0 12px rgba(0,0,0,0.8); }
+body.modo-titulo #prompt .escolha { justify-content: center; font-family: var(--titulo); font-size: calc(var(--px) * 48); line-height: 1.1; color: #e8dcc0; padding-left: 12px; text-shadow: 3px 3px 0 #000, 0 0 12px rgba(0,0,0,0.8); }
 body.modo-titulo .escolha .tecla { display: none; }
 body.modo-titulo .escolha:hover { color: var(--ouro); }
 body.modo-titulo #texto { text-align: left; }
@@ -57,7 +57,7 @@ body.modo-titulo .escolha::before { position: static; flex: none; align-self: ce
 /* Muitos saves: em colunas, com letra menor. */
 body.modo-titulo #prompt:has(.escolhas > li:nth-child(5)) { max-width: 760px; width: 100%; }
 body.modo-titulo .escolhas:has(> li:nth-child(5)) { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 2px 16px; }
-body.modo-titulo #prompt .escolhas:has(> li:nth-child(5)) .escolha { font-size: 32px; }
+body.modo-titulo #prompt .escolhas:has(> li:nth-child(5)) .escolha { font-size: calc(var(--px) * 32); }
 
 /* Carregar jogo: os saves em cartões, o mais recente primeiro; muitos saves rolam dentro da caixa. */
 .tela.saves { width: min(760px, 100%); margin: 0 auto 6px; }
@@ -70,7 +70,7 @@ body.modo-titulo #prompt .escolhas:has(> li:nth-child(5)) .escolha { font-size: 
 .save-cartao:hover, .save-cartao:focus-visible { border-color: var(--ouro); background: rgba(34, 26, 18, 0.95); transform: translateY(-2px); outline: none; }
 .save-retrato { flex: none; display: grid; place-items: center; width: 56px; height: 56px; background: #0d0b0a; border: 2px solid #3a2e24; }
 .save-info { display: flex; flex-direction: column; min-width: 0; gap: 1px; }
-.save-info b { font-family: var(--titulo); font-weight: 400; font-size: 30px; line-height: 1; color: #fff3d6; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.save-info b { font-family: var(--titulo); font-weight: 400; font-size: calc(var(--px) * 32); line-height: 1; color: #fff3d6; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .save-cartao:hover .save-info b { color: var(--ouro); }
 .save-classe { font-size: 15px; color: var(--tinta-2); }
 .save-info small { font-size: 13px; color: var(--tinta-3); }

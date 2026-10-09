@@ -16,7 +16,7 @@
   background: var(--ponta) 0 100% / calc(var(--P) * 3) no-repeat, var(--ponta) 100% 100% / calc(var(--P) * 3) no-repeat, var(--fio) 0 100% / var(--P) calc(var(--P) * 3) repeat-x; }
 #barra-tela:empty, body.em-combate #barra-tela { display: none; }
 #barra-tela #cena-cab { display: contents; }
-#barra-tela #cena-cab .cena-titulo { grid-row: 1; grid-column: 2; font-size: 36px; white-space: nowrap; }
+#barra-tela #cena-cab .cena-titulo { grid-row: 1; grid-column: 2; font-size: calc(var(--px) * 32); white-space: nowrap; }
 #barra-tela .cena-sub { grid-row: 1; grid-column: 3; justify-self: end; text-align: right; text-wrap: balance; margin: 0; font-size: 14px; line-height: 1.25; color: var(--tinta-2); }
 #barra-tela .ornamento { display: none; }
 body.modo-titulo { background: var(--ceu-titulo, #04050c); transition: background-color 1.2s ease; }
@@ -31,7 +31,7 @@ body.modo-titulo .vinheta { background: radial-gradient(ellipse 80% 70% at 50% 4
 
 #cena-cab { text-align: center; margin-bottom: 18px; }
 #cena-cab:empty { display: none; }
-.cena-titulo { font-family: var(--titulo); font-weight: 400; font-size: 48px; line-height: 1; color: var(--ouro); margin: 0; text-shadow: var(--contorno); }
+.cena-titulo { font-family: var(--titulo); font-weight: 400; font-size: calc(var(--px) * 48); line-height: 1; color: var(--ouro); margin: 0; text-shadow: var(--contorno); }
 .cena-sub { font-size: 16px; color: var(--tinta-2); margin-top: 8px; }
 /* Ornamento sob o título: um losango vazado de ouro entre dois fios de bronze com ponta. */
 .ornamento { display: flex; align-items: center; justify-content: center; margin: 10px auto 0; }
@@ -39,9 +39,9 @@ body.modo-titulo .vinheta { background: radial-gradient(ellipse 80% 70% at 50% 4
   background: var(--ponta) 0 0 / calc(var(--P) * 3) no-repeat, var(--fio) 0 0 / var(--P) calc(var(--P) * 3) repeat-x; }
 .ornamento i:last-child { background-position: 100% 0, 0 0; }
 .ornamento b { width: calc(var(--P) * 11); height: calc(var(--P) * 7); background: var(--ornamento) 0 0 / 100%; }
-#cena-cab[data-tipo="menu"] .cena-titulo { font-size: 42px; }
+#cena-cab[data-tipo="menu"] .cena-titulo { font-size: calc(var(--px) * 48); }
 #cena-cab[data-tipo="chefe"] .cena-titulo, #cena-cab[data-tipo="morte"] .cena-titulo { color: var(--sangue-2); }
-#cena-cab[data-tipo="morte"] .cena-titulo, #cena-cab[data-tipo="vitoria"] .cena-titulo { font-size: 72px; }
+#cena-cab[data-tipo="morte"] .cena-titulo, #cena-cab[data-tipo="vitoria"] .cena-titulo { font-size: calc(var(--px) * 64); }
 
 #texto p { margin: 0 0 0.8em; white-space: pre-wrap; }
 #texto p.capitular::first-letter { font-family: var(--titulo); float: left; font-size: 3.4em; line-height: 0.8; padding: 0.04em 0.1em 0 0; color: var(--ouro); text-shadow: 3px 3px 0 #000; }
@@ -59,7 +59,7 @@ body.modo-titulo .vinheta { background: radial-gradient(ellipse 80% 70% at 50% 4
 #texto pre .c-amarelo { color: var(--ouro); } #texto pre .c-ciano { color: var(--teal); }
 #texto pre .c-magenta { color: var(--arcano); } #texto pre .c-azul { color: var(--magico); }
 #texto pre .c-branco { color: #fff; } #texto pre .c-cinza { color: var(--tinta-3); }
-#texto .subtitulo { font-family: var(--titulo); text-align: center; color: var(--ouro); margin: 0.8em 0; font-size: 34px; line-height: 1; text-shadow: 2px 2px 0 #000; }
+#texto .subtitulo { font-family: var(--titulo); text-align: center; color: var(--ouro); margin: 0.8em 0; font-size: calc(var(--px) * 32); line-height: 1; text-shadow: 2px 2px 0 #000; }
 #texto hr { border: 0; height: 1px; background: var(--divisor-centro); margin: 1.2em 0; }
 #texto .eco { color: var(--tinta-3); font-size: 0.85em; margin: 0.2em 0 1em; }
 #texto .eco::before { content: "▶ "; color: var(--brasa); }
@@ -108,13 +108,13 @@ body.modo-titulo .vinheta { background: radial-gradient(ellipse 80% 70% at 50% 4
 .rol-attr { font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--tinta-2); }
 .rol-conta { font-family: var(--num); font-size: 19px; color: var(--tinta-3); }
 .rol-conta b { color: var(--tinta); font-weight: 400; }
-.rol-res { font-family: var(--titulo); font-size: 38px; line-height: 1; opacity: 0; text-shadow: 2px 2px 0 #000; }
+.rol-res { font-family: var(--titulo); font-size: calc(var(--px) * 32); line-height: 1; opacity: 0; text-shadow: 2px 2px 0 #000; }
 .rolagem.pousou .rol-res { opacity: 1; }
 .rolagem.ok .rol-res { color: var(--bom); } .rolagem.falha .rol-res { color: var(--sangue-2); } .rolagem.critico .rol-res { color: var(--ouro); }
 .rolagem.falha.pousou { animation: tremer 0.3s steps(4); }
 
 /* combate no texto */
-.faixa-combate { display: flex; align-items: center; gap: 10px; font-family: var(--titulo); font-size: 36px; line-height: 1; color: var(--sangue-2); margin: 1em 0 0.2em; text-shadow: 2px 2px 0 #000; }
+.faixa-combate { display: flex; align-items: center; gap: 10px; font-family: var(--titulo); font-size: calc(var(--px) * 32); line-height: 1; color: var(--sangue-2); margin: 1em 0 0.2em; text-shadow: 2px 2px 0 #000; }
 .faixa-combate::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, rgba(226, 87, 76, 0.55), transparent); }
 .faixa-combate-sub { color: var(--tinta-2); font-size: 15px; margin: 0 0 1em; }
 .divisor-turno { display: flex; align-items: center; gap: 10px; color: var(--tinta-3); font-family: var(--num); font-size: 18px; margin: 1em 0 0.7em; }
@@ -166,7 +166,7 @@ body.modo-titulo .vinheta { background: radial-gradient(ellipse 80% 70% at 50% 4
 .escolhas.escolhido ~ .atalhos { pointer-events: none; opacity: 0.3; }
 /* Botão principal: letras douradas sobre um brilho que se apaga nas pontas, sem caixa. */
 /* Botão principal: o título gótico numa placa escura de filete de ouro velho. */
-.continuar { --anel: var(--anel-a); display: block; margin: 0.8em auto 0; cursor: pointer; font-family: var(--titulo); font-size: 30px; line-height: 1; color: var(--ouro); padding: 8px 30px 9px;
+.continuar { --anel: var(--anel-a); display: block; margin: 0.8em auto 0; cursor: pointer; font-family: var(--titulo); font-size: calc(var(--px) * 32); line-height: 1; color: var(--ouro); padding: 8px 30px 9px;
   border: var(--borda) solid var(--p-a); border-image: var(--anel) 1 / 1 stretch; background: var(--p-k); background-clip: padding-box; text-shadow: var(--contorno); }
 .continuar:hover, .continuar:focus-visible { --anel: var(--anel-Y); color: var(--aceso); outline: none; }
 .continuar span { display: inline-block; animation: seta 0.8s steps(2) infinite; }

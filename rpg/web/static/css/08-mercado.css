@@ -25,10 +25,10 @@
 .lixeira { position: relative; --anel: var(--anel-r); }
 .lixeira.alvo { --anel: var(--anel-R) !important; }
 .inv-lado h4 small, .loja h4 small { font-family: var(--texto); font-size: 13px; color: var(--tinta-3); text-shadow: none; }
-.ficha-mini .heroi-nome { font-size: 40px; }
+.ficha-mini .heroi-nome { font-size: calc(var(--px) * 48); }
 .dica-uso { margin-top: 12px; font-size: 13px; color: var(--tinta-3); }
 :is(#dica-item, #dica-equipado) { position: fixed; z-index: 50; width: 280px; padding: 8px 10px; font-size: 14px; line-height: 1.45; pointer-events: none; box-shadow: var(--sombra); }
-:is(#dica-item, #dica-equipado) b { display: block; font-family: var(--titulo); font-weight: 400; font-size: 28px; line-height: 1; color: #fff3d6; }
+:is(#dica-item, #dica-equipado) b { display: block; font-family: var(--titulo); font-weight: 400; font-size: calc(var(--px) * 32); line-height: 1; color: #fff3d6; }
 :is(#dica-item, #dica-equipado) .tipo { font-size: 12px; color: var(--tinta-3); text-transform: uppercase; letter-spacing: 0.06em; margin: 2px 0 4px; }
 :is(#dica-item, #dica-equipado) .bonus { font-family: var(--num); font-size: 18px; color: var(--tinta); line-height: 1.15; }
 :is(#dica-item, #dica-equipado) .comparacao { margin-top: 6px; padding-top: 4px; border-top: 2px dashed #3a2e24; display: flex; flex-direction: column; font-family: var(--num); font-size: 17px; line-height: 1.15; }
@@ -43,7 +43,7 @@
 #dica-item .atalho-shift { margin-top: 6px; font-size: 11px; color: var(--tinta-3); }
 #dica-item .atalho-shift kbd { font-family: var(--num); font-size: 13px; padding: 0 4px; border: 1px solid #5a4a3a; border-bottom-width: 2px; color: var(--tinta-2); }
 .loja-topo { display: flex; align-items: center; gap: 12px; padding: 8px 12px; background: var(--p-k); border: var(--borda) solid var(--p-j); border-image: var(--anel-j) 1 / 1 stretch; background-clip: padding-box; }
-.loja-topo b { font-family: var(--titulo); font-weight: 400; font-size: 34px; line-height: 1; color: var(--ouro); display: block; }
+.loja-topo b { font-family: var(--titulo); font-weight: 400; font-size: calc(var(--px) * 32); line-height: 1; color: var(--ouro); display: block; }
 .ouro-loja { margin-left: auto; display: flex; align-items: center; gap: 6px; font-family: var(--num); font-size: 30px; color: var(--ouro); }
 .loja.alvo .balcao { outline: 3px dashed var(--ouro); outline-offset: 6px; }
 .vitrine { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
@@ -94,7 +94,7 @@
 .mochila-loja .celula { cursor: pointer; }
 .mochila-loja .celula:hover { --anel: var(--anel-Y); transform: translateY(-2px); }
 .menu-item { position: fixed; z-index: 65; display: flex; flex-direction: column; gap: 4px; min-width: 190px; padding: 6px 8px 8px; box-shadow: var(--sombra); }
-.menu-item b { font-family: var(--titulo); font-weight: 400; font-size: 24px; line-height: 1; margin-bottom: 2px; }
+.menu-item b { font-family: var(--titulo); font-weight: 400; font-size: calc(var(--px) * 32); line-height: 1; margin-bottom: 2px; }
 .menu-item button { display: flex; align-items: center; gap: 6px; text-align: left; cursor: pointer; font-size: 15px; color: var(--tinta); background: var(--p-k); border: var(--borda) solid var(--p-j); border-image: var(--anel-j) 1 / 1 stretch; background-clip: padding-box; padding: 4px 8px; }
 .menu-item button:hover { border-color: var(--ouro); color: #fff3d6; }
 .menu-item button.vender { color: var(--ouro); }
@@ -121,7 +121,7 @@
 .achado-arte { width: 64px; height: 64px; margin: 6px auto 8px; filter: drop-shadow(0 0 8px color-mix(in srgb, var(--cor) 70%, transparent));
   animation: achado-arte .7s .1s cubic-bezier(.2, .9, .3, 1.4) both; }
 .achado-arte.pequena { width: 48px; height: 48px; margin: 4px auto 6px; filter: none; animation: none; }
-.achado-cartao b { display: block; font-family: var(--titulo); font-weight: 400; font-size: 28px; line-height: 1; color: #fff3d6; }
+.achado-cartao b { display: block; font-family: var(--titulo); font-weight: 400; font-size: calc(var(--px) * 32); line-height: 1; color: #fff3d6; }
 .achado-cartao .tipo { font-size: 12px; color: var(--tinta-3); text-transform: uppercase; letter-spacing: .06em; margin: 3px 0 6px; }
 .achado-cartao .bonus { font-family: var(--num); font-size: 19px; color: var(--tinta); line-height: 1.2; }
 .achado-cartao .comparacao { margin-top: 8px; padding-top: 6px; border-top: 2px dashed #3a2e24; display: flex; flex-direction: column; font-family: var(--num); font-size: 17px; line-height: 1.2; }

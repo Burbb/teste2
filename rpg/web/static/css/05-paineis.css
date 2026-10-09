@@ -1,7 +1,7 @@
 /* ------------------------------------------------------------------ painel do herói */
 .secao { margin-top: 16px; }
 /* Cabeçalho de seção: estrelinha, o título gótico e um fio duplo de bronze que acaba num losango. */
-.secao h3 { margin: 0 0 8px; font-family: var(--titulo); font-weight: 400; font-size: 28px; line-height: 1; color: var(--ouro); text-shadow: var(--contorno); display: flex; align-items: center; gap: 8px; }
+.secao h3 { margin: 0 0 8px; font-family: var(--titulo); font-weight: 400; font-size: calc(var(--px) * 32); line-height: 1; color: var(--ouro); text-shadow: var(--contorno); display: flex; align-items: center; gap: 8px; }
 .secao h3::before { content: ""; flex: none; width: calc(var(--P) * 5); height: calc(var(--P) * 5); background: var(--estrelinha) 0 0 / 100%; }
 .secao h3::after { content: ""; flex: 1; height: calc(var(--P) * 7); padding-right: calc(var(--P) * 6);
   background: var(--fim-cabeca) 100% 0 / calc(var(--P) * 7) calc(var(--P) * 7) no-repeat, var(--fio-cabeca) 0 50% / var(--P) calc(var(--P) * 5) repeat-x;
@@ -11,7 +11,7 @@
 .retrato-grande { width: 64px; height: 64px; flex: none; display: grid; place-items: center;
   border: var(--borda) solid var(--p-J); border-image: var(--retrato-a) 3 / calc(var(--P) * 3) stretch;
   background: var(--tx-funda) 0 0 / calc(var(--P) * 32), var(--p-z); background-clip: padding-box; }
-.heroi-nome { font-family: var(--titulo); font-size: 30px; line-height: 1; color: var(--tinta); text-shadow: var(--contorno); }
+.heroi-nome { font-family: var(--titulo); font-size: calc(var(--px) * 32); line-height: 1; color: var(--tinta); text-shadow: var(--contorno); }
 .heroi-titulo { color: var(--tinta-2); font-size: 15px; margin-top: 4px; }
 /* Divisória: fio de bronze com uma ponta de ouro em cada lado. */
 .xp-linha { margin-top: 10px; padding-bottom: 14px;
@@ -90,7 +90,7 @@
 .rep-titulo { color: var(--tinta-2); font-size: 14px; }
 
 /* ------------------------------------------------------------------ painel do mundo */
-.local-nome { font-family: var(--titulo); font-size: 34px; line-height: 1; color: var(--ouro); text-shadow: var(--contorno); }
+.local-nome { font-family: var(--titulo); font-size: calc(var(--px) * 32); line-height: 1; color: var(--ouro); text-shadow: var(--contorno); }
 .local-desc { color: var(--tinta-2); font-size: 15px; margin-top: 4px; }
 /* Nível de perigo: só a cor, verde, ouro ou vermelho. */
 .perigo-tag { display: inline-block; margin-top: 2px; font-family: var(--num); font-size: 15px; font-weight: 600; }
@@ -130,15 +130,15 @@
 
 /* ------------------------------------------------------------------ telas (personagem, diário, bestiário, comitiva) */
 .tela { margin: 0 0 1em; }
-.tela h4 { font-family: var(--titulo); font-weight: 400; font-size: 32px; line-height: 1; margin: 0.9em 0 0.4em; color: var(--ouro); text-shadow: var(--contorno); }
+.tela h4 { font-family: var(--titulo); font-weight: 400; font-size: calc(var(--px) * 32); line-height: 1; margin: 0.9em 0 0.4em; color: var(--ouro); text-shadow: var(--contorno); }
 .ficha-topo { display: flex; gap: 16px; align-items: center; }
 .ficha-topo .retrato-grande { width: 112px; height: 112px; }
-.ficha-topo .heroi-nome { font-size: 48px; }
+.ficha-topo .heroi-nome { font-size: calc(var(--px) * 48); }
 .ficha-colunas { display: grid; grid-template-columns: 1fr 1fr; gap: 0 22px; }
 .cartas { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; }
 .cartao { --anel: var(--anel-j); position: relative; background: var(--p-k); border: var(--borda) solid var(--p-j); border-image: var(--anel) 1 / 1 stretch; background-clip: padding-box; padding: 10px 12px; font-size: 15px; line-height: 1.45; }
 .cartao .cab { display: flex; gap: 10px; align-items: center; margin-bottom: 6px; }
-.cartao .cab b { font-family: var(--titulo); font-weight: 400; font-size: 28px; line-height: 1; color: var(--tinta); text-shadow: var(--contorno); display: block; }
+.cartao .cab b { font-family: var(--titulo); font-weight: 400; font-size: calc(var(--px) * 32); line-height: 1; color: var(--tinta); text-shadow: var(--contorno); display: block; }
 .cartao .sub { font-size: 12px; color: var(--tinta-3); }
 .cartao.inimigo { --anel: var(--anel-r); }
 .cartao.feito { --anel: var(--anel-E); }

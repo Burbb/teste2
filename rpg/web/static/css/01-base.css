@@ -1,14 +1,14 @@
 /* Crônicas da Fenda — a interface da referência do Jean: painéis quase pretos num quadro de bronze com rebites nos
    cantos, títulos góticos em ouro com contorno, tudo o mais numa serifa clássica. A arte (sprites, paisagem, quadros
    e enfeites) é pixel art na paleta indexada de sprites.js.
-   Fontes (embutidas): gótica nos títulos ("Titulo"), Alegreya na interface e na prosa (11-tipografia.css), e
+   Fontes (embutidas): Alagard nos títulos ("Titulo"), Alegreya na interface e na prosa (11-tipografia.css), e
    Pixelify Sans quando o jogador pede "Fonte: pixel" para a história. */
 
 @font-face { font-family: "Jacquard 24"; src: url(../fontes/jacquard-24-latin-400-normal.woff2) format("woff2"); font-display: swap; }
-/* Títulos: letras góticas, mas os algarismos e o %+/ da fonte de números (o 5 gótico é difícil de ler). A face da
-   Jersey vem por último: entre faces da mesma família, a última declarada é a primeira consultada. */
-@font-face { font-family: "Titulo"; src: url(../fontes/jacquard-24-latin-400-normal.woff2) format("woff2"); font-display: swap; }
-@font-face { font-family: "Titulo"; src: url(../fontes/jersey-15-latin-400-normal.woff2) format("woff2"); unicode-range: U+0030-0039, U+0025, U+002B, U+002F; font-display: swap; }
+/* Títulos: a Alagard (Hewett Tsoi), gótica em pixel e legível, a da referência do Jean. A original só tem ASCII: os
+   acentos do português foram desenhados no grid dela (fontes/LEIA-Alagard.txt). Ela tem 16 pixels por eme, então os
+   títulos usam tamanhos múltiplos de 16 (calc(var(--px) * 32)...), para cada pixel da letra cair inteiro na tela. */
+@font-face { font-family: "Titulo"; src: url(../fontes/alagard-pt.ttf) format("truetype"); font-display: swap; }
 @font-face { font-family: "Pixelify Sans"; font-weight: 400; src: url(../fontes/pixelify-sans-latin-400-normal.woff2) format("woff2"); font-display: swap; }
 @font-face { font-family: "Pixelify Sans"; font-weight: 600; src: url(../fontes/pixelify-sans-latin-600-normal.woff2) format("woff2"); font-display: swap; }
 @font-face { font-family: "Jersey 15"; src: url(../fontes/jersey-15-latin-400-normal.woff2) format("woff2"); font-display: swap; }
@@ -44,7 +44,7 @@
   --P: calc(var(--px, 1px) * 2);
   --borda: calc(var(--P) + 0.01px);  /* o navegador arredonda a borda para baixo: sem o 0,01px, zoom de 110% perde um pixel */
   --quadro: calc(var(--P) * 4 + 0.01px);  /* a espessura do quadro de bronze dos painéis (o filete; o rebite avança 2 texels) */
-  --titulo: "Titulo", "Pixelify Sans", serif;
+  --titulo: "Titulo", "Jacquard 24", serif;
   --texto: "Alegreya", Georgia, serif;
   --num: "Alegreya", Georgia, serif;
   --sombra: 0 22px 44px -18px rgba(0, 0, 0, 0.95), 0 3px 10px rgba(0, 0, 0, 0.5);
@@ -140,7 +140,7 @@ body.modo-titulo #brasas { opacity: 1; }
 /* A sombra da barra do topo cai sobre a mesa em pontilhado. */
 #topo::after { content: ""; position: absolute; left: 0; right: 0; top: 100%; height: calc(var(--P) * 4); pointer-events: none;
   background: var(--sombra-desce) 0 0 / calc(var(--P) * 4) 100% repeat-x; }
-#topo .marca { display: flex; align-items: center; gap: 8px; font-family: var(--titulo); font-size: 28px; color: var(--ouro); text-shadow: var(--contorno); white-space: nowrap; line-height: 1; letter-spacing: 0.01em; }
+#topo .marca { display: flex; align-items: center; gap: 8px; font-family: var(--titulo); font-size: calc(var(--px) * 32); color: var(--ouro); text-shadow: var(--contorno); white-space: nowrap; line-height: 1; letter-spacing: 0.01em; }
 #topo .marca::before { content: ""; flex: none; width: calc(var(--P) * 16); height: calc(var(--P) * 16); background: var(--lanterna) 0 0 / 100%; }
 .topo-info { font-family: var(--texto); font-size: 17px; color: var(--tinta-2); display: flex; align-items: center; gap: 8px; white-space: nowrap; }
 .topo-info .rotulo { color: var(--tinta-3); }

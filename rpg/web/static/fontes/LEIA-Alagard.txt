@@ -1,0 +1,8 @@
+Alagard, de Hewett Tsoi (Pix3M), versão 001.000.
+
+O arquivo original (alagard.ttf, distribuído como gratuito na página da fonte no dafont.com) só tem os caracteres
+ASCII. O alagard-pt.ttf é ele com as letras acentuadas do português acrescentadas (á à â ã é ê í ó ô õ ú ü ç e as
+maiúsculas), desenhadas no grid de pixels da própria fonte (64 unidades por pixel) e montadas como composição da
+letra base com o acento. O script que faz isso é ferramentas/acentuar_alagard.py (precisa do fontTools).
+
+Antes de publicar o jogo, confira os termos de uso na página do autor.
