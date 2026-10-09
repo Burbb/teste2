@@ -239,14 +239,15 @@ async function opiniao(m) {
 /* Um item ganho fora da luta (o tônico do evento, a comida do alforje) não passa em branco: o ícone sai do chip e
    voa até onde o item mora, o recurso do topo ou o espaço da bolsa no painel do herói, que pulsa quando ele chega
    (como as moedas do ouro). O "+N" do topo espera o ícone chegar, em vez de aparecer antes dele. */
-const LAR_ITEM = { pocao_vida: "pocoes", bandagem: "bandagens", tocha: "tochas", comida: "provisoes", flechas: "flechas" };
-const ICONE_GANHO = { comida: "pernil", flechas: "aljava" };
+// O contador do topo de cada item (tochas, poções, comida...) vem do catálogo do motor (itens.py: hud), no estado.
+const contadorDo = (id) => ((estado && estado.itens && estado.itens[id]) || {}).hud;
 const itensChegando = new Set(), ganhosAdiados = {};
 function larDoItem(id) {
-  return LAR_ITEM[id] ? document.querySelector(`.recurso[data-rec="${LAR_ITEM[id]}"]`) : document.querySelector(`#heroi [data-bolsa="${id}"]`);
+  const hud = contadorDo(id);
+  return hud ? document.querySelector(`.recurso[data-rec="${hud}"]`) : document.querySelector(`#heroi [data-bolsa="${id}"]`);
 }
 function itemVoa(chip, id) {
-  const chave = LAR_ITEM[id];
+  const chave = contadorDo(id);
   if (chave) itensChegando.add(chave);
   const soltar = () => {
     if (!chave) return;
@@ -263,7 +264,7 @@ function itemVoa(chip, id) {
     if (!para || !para.offsetParent) { if (performance.now() - inicio < 900) return setTimeout(tentar, 60); return soltar(); }
     const a = chip.getBoundingClientRect(), b = para.getBoundingClientRect();
     if (b.bottom < 0 || b.top > innerHeight || !a.width) return soltar();
-    const v = el("span", "item-voando", spr(ICONE_GANHO[id] || Telas.ICONE_ITEM[id] || "saco", 2));
+    const v = el("span", "item-voando", spr(Telas.iconeConsumivel(id, "saco"), 2));
     v.style.left = a.left + 10 + "px";
     v.style.top = a.top + a.height / 2 + "px";
     document.body.appendChild(v);
@@ -284,7 +285,7 @@ function itemVoa(chip, id) {
 }
 
 function iconeChip(m) {
-  if (m.item) return ICONE_GANHO[m.item] || Telas.ICONE_ITEM[m.item] || "saco";
+  if (m.item) return Telas.iconeConsumivel(m.item, "saco");
   const t = m.texto;
   const porNome = [["Odette", "odete"], ["Morel", "morel"], ["Yara", "yara"]].find(([n]) => t.includes(n));
   if ((m.tipo === "aprova" || m.tipo === "desaprova") && porNome) return porNome[1];

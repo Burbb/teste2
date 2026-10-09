@@ -7,7 +7,7 @@ from . import texto as tx
 from .classes import CLASSES, SPECS
 from .dados import BIOMAS, CLIMAS, FAMILIAS, PERIODOS
 from .entidades import Jogador
-from .itens import CONSUMIVEIS, gerar_equip
+from .itens import CONSUMIVEIS, EM_ALIADO, USAVEIS_FORA, gerar_equip
 from . import comitiva
 from . import sobrevivencia
 from . import telemetria
@@ -330,7 +330,7 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
             ("Sair do jogo", "sair"),
         ] + self.opcoes_bolsa() + self.opcoes_conversa()
 
-    USAVEIS_FORA = ("bandagem", "unguento", "pocao_vida", "tonico", "antidoto", "bau")
+    USAVEIS_FORA = USAVEIS_FORA  # o catálogo diz (itens.py: uso)
 
     def opcoes_bolsa(self):
         """Na tela gráfica, a bolsa do painel lateral é clicável: cada consumível vira uma opção escondida."""
@@ -340,7 +340,7 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         for k in self.USAVEIS_FORA:
             if self.j.tem(k):
                 opcoes.append((f"{'Abrir' if k == 'bau' else 'Usar'} {CONSUMIVEIS[k]['nome']}", ("usar", k), {"usar": k}))
-                if k in ("bandagem", "pocao_vida"):
+                if k in EM_ALIADO:
                     opcoes += [(f"Usar {CONSUMIVEIS[k]['nome']} em {comitiva.nome(m['id'])}", ("usar_em", k, m["id"]),
                                 {"usar": k, "em": m["id"]}) for m in comitiva.membros(self)]
                     if self.j.companheiro:  # o animal do patrulheiro também

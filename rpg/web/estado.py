@@ -8,7 +8,8 @@ from ..habilidades import HABILIDADES, descricao_habilidade
 from .. import estados
 from ..estados import NOMES as NOMES_EFEITOS, para_tela
 from ..dados import BIOMAS, CLIMAS, PERIODOS
-from ..itens import CONSUMIVEIS, ficha
+from .. import itens
+from ..itens import CONSUMIVEIS, EM_ALIADO, ficha
 from ..mundo import nivel_regiao
 from ..jogo import NOMES_TESTE
 from ..combate import Combate
@@ -144,15 +145,15 @@ def heroi(g):
         "dificuldade_extra": g.dificuldade(0),
         "ouro": j.ouro, "reputacao": j.reputacao, "flechas": j.flechas if j.classe == "arqueiro" else None,
         "max_flechas": g.max_flechas() if j.classe == "arqueiro" else None,
-        "provisoes": j.provisoes, "fome": j.fome, "tochas": j.consumiveis.get("tocha", 0),
-        "pocoes": j.consumiveis.get("pocao_vida", 0), "bandagens": j.consumiveis.get("bandagem", 0),
+        "provisoes": j.provisoes, "fome": j.fome,
+        **{c["hud"]: j.consumiveis.get(k, 0) for k, c in CONSUMIVEIS.items() if c["hud"]},  # tochas, poções...
         "spec": j.spec, "reputacao_txt": "herói do povo" if j.reputacao >= 20 else "temido" if j.reputacao <= -20 else "",
         "bolsa": [{"id": k, "nome": CONSUMIVEIS[k]["nome"], "qtd": v, "desc": CONSUMIVEIS[k]["desc"],
                    "motivo": None if k == "tocha" else g.combate_ativo.motivo_item(k) if g.combate_ativo else g.motivo_inutil(k),
                    "alvos": [{"id": m["id"], "nome": comitiva.nome(m["id"]), "hp": m["hp"], "max_hp": m["max_hp"],
                               "ferido": m["ferido"], "caido": comitiva.flexao(m["id"], "caíd{a}, não luta"),
                               "motivo": g.motivo_inutil(k, m)}
-                             for m in comitiva.membros(g)] + _alvo_animal(g, k) if k in ("pocao_vida", "bandagem") and not g.combate_ativo else []}
+                             for m in comitiva.membros(g)] + _alvo_animal(g, k) if k in EM_ALIADO and not g.combate_ativo else []}
                   for k, v in j.consumiveis.items() if v > 0 and k in CONSUMIVEIS],
         "equip": {slot: _item(it, j.nome_recurso) for slot, it in j.equip.items()},
         "mochila": [_item(it, j.nome_recurso) for it in j.mochila], "limite_mochila": 12,
@@ -305,5 +306,6 @@ def estado(g):
         "combate": combate(g),
         "estados": para_tela(),  # ícone, cor e dica de cada estado (catálogo em estados.py)
         "glossario": glossario(),
+        "itens": itens.para_tela(),  # ícone e contador de cada consumível e recurso
         "contratos": [g.cartao_contrato(c) for c in g.contratos],
     }

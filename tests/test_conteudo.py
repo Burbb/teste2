@@ -16,7 +16,9 @@ from rpg.eventos import motor
 from rpg.eventos.titulos import TITULOS
 from rpg.classes import CLASSES
 from rpg.habilidades import ANIMACOES, FAMILIAS_TELA, HABILIDADES
+from rpg import balanceamento as bal
 from rpg.inimigos import HABS
+from rpg.itens import CONSUMIVEIS, RECURSOS
 from rpg.regras import NIVEL_MIN_FAMILIA
 from rpg.sistemas.confronto import CRIATURAS_DA_FENDA
 from rpg.talentos import NIVEL_CAMADA, PASSIVAS, RAMOS_COMUNS, TALENTOS
@@ -179,8 +181,19 @@ class TestApresentacao(Catalogo):
         for t in TRACOS:
             self.existe(t, mapa, f"traço '{t}' sem ícone em ICONE_TRACO (batalha.js)")
 
-    def test_itens(self):
-        self._confere(_mapa_js("telas.js", "ICONE_ITEM"), "ICONE_ITEM")
+    def test_consumiveis(self):
+        """Todo consumível tem desenho; o mercado tem estoque de tudo o que vende; o contador do topo existe."""
+        hud = _ler("app/paineis.js")
+        fichas = list(CONSUMIVEIS.items()) + list(RECURSOS.items())
+        for k, c in fichas:
+            self.existe(c.get("icone"), self.sprites, f"consumível '{k}': ícone '{c.get('icone')}' sem desenho")
+            if c.get("hud"):
+                self.existe(f'recurso("{c["hud"]}"', hud, f"consumível '{k}': contador '{c['hud']}' não existe no topo")
+        for k, c in CONSUMIVEIS.items():
+            if c["mercado"]:
+                self.existe(k, bal.ESTOQUE_MERCADO, f"o mercado vende '{k}', mas falta o estoque em ESTOQUE_MERCADO")
+            if c["em_aliado"]:
+                self.assertTrue(c["luta"] or c["fora"], f"'{k}' serve num aliado, mas não se usa em lugar nenhum")
 
 
 if __name__ == "__main__":

@@ -335,7 +335,6 @@ const Sensacao = (() => {
 
   /* ------------------------------------------------------------ o espólio da vitória */
   // O que se acha (o motor manda o id; a tela escolhe o ícone e escreve a quantidade do jeito de cada coisa).
-  const ICONE_ACHADO = { comida: "pernil", flechas: "flecha" };
   const quantoAchou = (x) => (x.id === "comida" ? `+${Texto.plural(x.qtd, "dia")}` : x.id === "flechas" ? `+${x.qtd}` : `×${x.qtd}`);
   const esc = (t) => String(t ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
@@ -347,7 +346,7 @@ const Sensacao = (() => {
   async function espolio(caixa, d) {
     const S = (n, e = 1) => Sprites.img(n, e);
     const trechos = d.trechos || [], ultimo = trechos[trechos.length - 1] || [0, 0, 1], primeiro = trechos[0] || ultimo;
-    const achados = (d.itens || []).map((x) => `<span class="achado-espolio">${S(ICONE_ACHADO[x.id] || Telas.ICONE_ITEM[x.id] || "saco", 2)}${esc(x.nome)}<b>${quantoAchou(x)}</b></span>`);
+    const achados = (d.itens || []).map((x) => `<span class="achado-espolio">${S(Telas.iconeConsumivel(x.id, "saco"), 2)}${esc(x.nome)}<b>${quantoAchou(x)}</b></span>`);
     const contratos = (d.contratos || []).map((c) => `<div class="espolio-contrato${c.concluido ? " feito" : ""}">${S("pergaminho", 2)}
       <span>${c.concluido ? "Contrato cumprido" : "Contrato"}</span><b>${esc(c.concluido ? "receba em qualquer vila" : c.progresso)}</b></div>`).join("");
     const extras = achados.length || contratos;

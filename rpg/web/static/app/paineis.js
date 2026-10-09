@@ -158,7 +158,7 @@ function desenharHeroi(h, antes) {
   const bolsa = h.bolsa.filter((b) => b.id !== "tocha").map((b) => {
     const bau = b.id === "bau";  // o baú se abre (e, onde dá para abrir, ganha o anel dourado)
     const dica = `<b>${esc(b.nome)}</b><div>${Realce.texto(b.desc)}</div><div class="rodape">${b.motivo ? esc(b.motivo) : bau ? "Clique para abrir." : estado && estado.combate ? "Clique para usar (gasta o turno)." : "Clique para usar."}</div>`;
-    return `<div role="button" tabindex="0" class="slot-px usavel${b.motivo && !(b.alvos || []).some((a) => !a.motivo) ? " inutil" : ""}${bau && !b.motivo ? " pronto" : ""}" data-bolsa="${esc(b.id)}" ${Telas.dica(dica)}>${spr(Telas.ICONE_ITEM[b.id] || "pocao", 2)}<span class="qtd">${b.qtd}</span></div>`;
+    return `<div role="button" tabindex="0" class="slot-px usavel${b.motivo && !(b.alvos || []).some((a) => !a.motivo) ? " inutil" : ""}${bau && !b.motivo ? " pronto" : ""}" data-bolsa="${esc(b.id)}" ${Telas.dica(dica)}>${spr(Telas.iconeConsumivel(b.id), 2)}<span class="qtd">${b.qtd}</span></div>`;
   }).join("");
   // Comitiva e animal no mesmo molde: retrato e nome com a ficha no hover, a vida em números no canto (como os
   // atributos), a barra, e embaixo a aprovação (só companheiros). O ♥ do carinho fica ao lado da vida do animal.

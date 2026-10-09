@@ -11,13 +11,13 @@ from .estados import ESTADOS, NOMES, dano_do_tique, no_golpe
 from .dados import CLIMAS, TRACOS
 from .entidades import Combatente
 from .inimigos import HABS, HABS_INIMIGO, NOMES_HABS_INIMIGO, ROTULOS_HABS_INIMIGO
-from .itens import CONSUMIVEIS, PENA_FENIX_AGE_SOZINHA, ficha
+from .itens import CONSUMIVEIS, EM_ALIADO, PENA_FENIX_AGE_SOZINHA, USAVEIS_NA_LUTA, ficha
 from . import comitiva, sobrevivencia, telemetria
 from .talentos import custo_habilidade
 from . import balanceamento as bal
 
 NOMES_EFEITOS = NOMES  # o catálogo de estados mora em estados.py
-USAVEIS_EM_COMBATE = ("pocao_vida", "tonico", "antidoto", "bandagem", "bomba_fumaca")
+USAVEIS_EM_COMBATE = USAVEIS_NA_LUTA  # o catálogo diz (itens.py: uso)
 
 
 def mult_tracos(alvo, tipo, alcance):
@@ -830,7 +830,7 @@ class Combate:
             self.dizer("Você estoura a bomba de fumaça e some na nuvem cinzenta!", "cinza")
             return "fuga"
         motivo = self.g.motivo_inutil(k)
-        if k in ("pocao_vida", "bandagem"):
+        if k in EM_ALIADO:
             # Poção e bandagem também servem em quem luta ao seu lado (comitiva e animal); servos não.
             precisam = self.aliados_precisam(k)
             if precisam:
@@ -852,7 +852,7 @@ class Combate:
 
     def aliados_precisam(self, k):
         """Quem luta ao seu lado (comitiva e animal; servos não) e precisa da poção ou da bandagem agora."""
-        if k not in ("pocao_vida", "bandagem"):
+        if k not in EM_ALIADO:
             return []
         return [a for a in self.aliados if a.vivo and a.tipo != "servo"
                 and (a.hp < a.max_hp or (k == "bandagem" and a.efeito("sangramento")))]

@@ -223,7 +223,7 @@ function mostrarOpcoes(m) {
       const n = estado.mapa.nos.find((x) => x.id === o.meta.local);
       if (n) icone = spr(MapaPx.sprite(n), 1);
     }
-    if (o.meta && o.meta.item) icone = spr(Telas.ICONE_ITEM[o.meta.item] || "pocao", 1);
+    if (o.meta && o.meta.item) icone = spr(Telas.iconeConsumivel(o.meta.item), 1);
     if (o.meta && o.meta.cacar !== undefined) { icone = spr("arco", 1); b.classList.add("op-contrato"); }
     if (emLuta) icone = iconeAcaoCombate(o.texto) || icone;
     if (o.meta && o.meta.alvo) {
@@ -311,7 +311,7 @@ function cartaAcao(o, i, m, pos) {
       <div class="bonus">${Realce.texto(meta.desc)}</div>${danoGrimorio(meta.habilidade)}${bloqueio ? `<div class="pior">${esc(bloqueio)}</div>` : ""}`;
   } else if (meta.usar_item) {
     b.classList.add("el-cura");
-    icone = spr(Telas.ICONE_ITEM[meta.usar_item] || "pocao", 2);
+    icone = spr(Telas.iconeConsumivel(meta.usar_item), 2);
     nome = meta.nome;
     rodape = `<span class="acao-custo"><b>×${meta.qtd}</b></span><span class="acao-alvo">gasta o turno</span>`;
     if (meta.motivo) bloqueio = meta.motivo;
@@ -512,7 +512,7 @@ function linhaItem(meta, aoClicar) {
     return { icone: spr(Telas.iconeItem(meta.equip), 2), fam: "fisico", nome: "Trocar: " + meta.equip.nome, info: "turno", slot: "troca",
       dica: Telas.htmlItem(meta.equip, "Trocar de arma no meio da luta gasta o seu turno."), aoClicar };
   }
-  return { icone: spr(Telas.ICONE_ITEM[meta.usar_item] || "pocao", 2), fam: "cura", nome: meta.nome, info: `×${meta.qtd}`, slot: "item",
+  return { icone: spr(Telas.iconeConsumivel(meta.usar_item), 2), fam: "cura", nome: meta.nome, info: `×${meta.qtd}`, slot: "item",
     dica: `<b>${esc(meta.nome)}</b><div class="tipo">Você tem ${meta.qtd} · gasta o turno</div><div class="bonus">${Realce.texto(meta.desc)}</div>`,
     bloqueio: meta.motivo, aoClicar };
 }

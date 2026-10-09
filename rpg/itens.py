@@ -2,18 +2,49 @@
 
 from . import balanceamento as bal
 
+# Os consumíveis: o catálogo de onde saem todas as listas (o que se usa na luta e fora dela, em quem, o que o mercado
+# vende, o ícone e o contador do topo). A ordem daqui é a da prateleira do mercado, da bolsa e dos itens da luta.
+#   icone      o desenho (sprites-dados.js)
+#   luta       a posição na barra de itens da luta, onde o que salva vem primeiro (None: não se usa na luta)
+#   fora       se usa fora da luta, pela bolsa (a tocha e a pena agem sozinhas)
+#   em_aliado  serve também num companheiro ou no animal
+#   mercado    o mercado vende (o estoque de cada um mora em balanceamento.ESTOQUE_MERCADO)
+#   hud        o contador do topo da tela onde ele aparece, quando tem um
+def _c(nome, preco, desc, icone, luta=None, fora=False, em_aliado=False, mercado=True, hud=None):
+    return {"nome": nome, "preco": preco, "desc": desc, "icone": icone, "luta": luta, "fora": fora,
+            "em_aliado": em_aliado, "mercado": mercado, "hud": hud}
+
+
 CONSUMIVEIS = {
-    "pocao_vida": {"nome": "Poção de Vida", "preco": 40, "desc": "Recupera 35% da vida. Gosto de ferrugem."},
-    "tonico": {"nome": "Tônico Restaurador", "preco": 35, "desc": "Recupera metade da sua mana, vigor ou foco."},
-    "antidoto": {"nome": "Antídoto", "preco": 15, "desc": "Cura veneno."},
-    "bandagem": {"nome": "Bandagem", "preco": 10, "desc": "Estanca sangramento e trata uma ferida aberta (evita infecção)."},
-    "unguento": {"nome": "Unguento de Prata", "preco": 30, "desc": "Cura uma infecção."},
-    "tocha": {"nome": "Tocha", "preco": 4, "desc": "Luz para uma ação no escuro (noite, ruínas, cidadela)."},
-    "bomba_fumaca": {"nome": "Bomba de Fumaça", "preco": 35, "desc": "Garante a fuga de um combate (exceto chefes)."},
-    "pena_fenix": {"nome": "Pena de Fênix", "preco": 220, "desc": "Revive você com metade da vida se cair em combate."},
-    "bau": {"nome": "Baú Trancado", "preco": 60,
-            "desc": "Abra numa vila ou à luz da fogueira: ouro, suprimentos e, às vezes, um equipamento."},
+    "tocha": _c("Tocha", 4, "Luz para uma ação no escuro (noite, ruínas, cidadela).", "tocha", hud="tochas"),
+    "bandagem": _c("Bandagem", 10, "Estanca sangramento e trata uma ferida aberta (evita infecção).", "bandagem",
+                   luta=4, fora=True, em_aliado=True, hud="bandagens"),
+    "unguento": _c("Unguento de Prata", 30, "Cura uma infecção.", "unguento", fora=True),
+    "pocao_vida": _c("Poção de Vida", 40, f"Recupera {round(bal.POCAO_VIDA * 100)}% da vida. Gosto de ferrugem.",
+                     "pocao", luta=1, fora=True, em_aliado=True, hud="pocoes"),
+    "tonico": _c("Tônico Restaurador", 35, "Recupera metade da sua mana, vigor ou foco.", "pocao_azul",
+                 luta=2, fora=True),
+    "antidoto": _c("Antídoto", 15, "Cura veneno.", "folha", luta=3, fora=True),
+    "bomba_fumaca": _c("Bomba de Fumaça", 35, "Garante a fuga de um combate (exceto chefes).", "caveira", luta=5),
+    "pena_fenix": _c("Pena de Fênix", 220, "Revive você com metade da vida se cair em combate.", "chama"),
+    "bau": _c("Baú Trancado", 60, "Abra numa vila ou à luz da fogueira: ouro, suprimentos e, às vezes, um equipamento.",
+              "bau", fora=True, mercado=False),
 }
+USAVEIS_NA_LUTA = tuple(sorted((k for k, c in CONSUMIVEIS.items() if c["luta"]), key=lambda k: CONSUMIVEIS[k]["luta"]))
+USAVEIS_FORA = tuple(k for k, c in CONSUMIVEIS.items() if c["fora"])
+EM_ALIADO = tuple(k for k, c in CONSUMIVEIS.items() if c["em_aliado"])
+DO_MERCADO = tuple(k for k, c in CONSUMIVEIS.items() if c["mercado"])
+# O que se ganha sem ser consumível (comida, flechas) também voa até o seu contador quando chega.
+RECURSOS = {"comida": {"icone": "pernil", "hud": "provisoes"}, "flechas": {"icone": "aljava", "hud": "flechas"}}
+
+
+def para_tela():
+    """O ícone e o contador de cada consumível e recurso, para a tela desenhar a bolsa, o espólio e o que chega."""
+    d = {k: {"icone": c["icone"], "nome": c["nome"], "desc": c["desc"], "hud": c["hud"]}
+         for k, c in CONSUMIVEIS.items()}
+    d.update({k: dict(r) for k, r in RECURSOS.items()})
+    return d
+
 
 # A pena não se usa: ela ergue você sozinha se cair em combate (a bolsa e o menu de itens dizem isto).
 PENA_FENIX_AGE_SOZINHA = "A Pena de Fênix age sozinha: se você cair em combate, ela te ergue com metade da vida."

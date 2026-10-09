@@ -6,8 +6,11 @@ const Telas = (() => {
   const h = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const S = (nome, escala = 2, classe = "") => Sprites.img(nome, escala, classe);
 
-  const ICONE_ITEM = { pocao_vida: "pocao", tonico: "pocao_azul", antidoto: "folha", bandagem: "bandagem", unguento: "unguento",
-    tocha: "tocha", bomba_fumaca: "caveira", pena_fenix: "chama", bau: "bau" };
+  /** O ícone de um consumível ou recurso (comida, flechas): vem do catálogo do motor (itens.py), no estado. */
+  function iconeConsumivel(id, padrao = "pocao") {
+    const c = App.estado && App.estado.itens && App.estado.itens[id];
+    return (c && c.icone) || padrao;
+  }
 
   function iconeCriatura(tracos = [], familia = "") {
     const t = new Set(tracos);
@@ -336,7 +339,7 @@ const Telas = (() => {
         ? `<div class="slot-px celula r-${h(it.raridade)}${it.classe && it.classe !== p.classe ? " inutil" : ""}" draggable="true" data-mochila="${i}" ${dicaItem(it, "Arraste para o corpo, dê dois cliques ou use o botão direito para equipar.")}>${S(iconeItem(it), 2)}</div>`
         : '<div class="slot-px celula vazia"></div>');
     }
-    const bolsa = p.bolsa.map((b) => `<div class="slot-px clicavel" data-usar="${h(b.id)}" ${dica(`<b>${h(b.nome)}</b><div>${Realce.texto(b.desc)}</div>${b.id === "tocha" ? "" : '<div class="rodape">Clique para usar · botão direito: usar em você.</div>'}`)}>${S(ICONE_ITEM[b.id] || "pocao", 2)}<span class="qtd">${b.qtd}</span></div>`).join("");
+    const bolsa = p.bolsa.map((b) => `<div class="slot-px clicavel" data-usar="${h(b.id)}" ${dica(`<b>${h(b.nome)}</b><div>${Realce.texto(b.desc)}</div>${b.id === "tocha" ? "" : '<div class="rodape">Clique para usar · botão direito: usar em você.</div>'}`)}>${S(iconeConsumivel(b.id), 2)}<span class="qtd">${b.qtd}</span></div>`).join("");
     return `<div class="tela inventario">
       <div class="boneco">${espacos}<div class="boneco-retrato">${S(p.classe, 6)}</div></div>
       <div class="inv-lado">
@@ -562,7 +565,7 @@ const Telas = (() => {
       const max = maxCompra(c, d.ouro);
       const q = Math.max(1, Math.min(qtdLoja[c.id] || 1, max || 1));
       const caro = max < 1;
-      const icone = c.id === "provisoes" ? "pernil" : c.id === "flechas" ? "aljava" : (ICONE_ITEM[c.id] || "pocao");
+      const icone = c.icone || "pocao";
       return `<div role="button" tabindex="0" class="mercadoria suprimento${caro ? " caro" : ""}" data-comprar="${h(c.id)}" data-preco="${c.preco}" data-max="${max}" ${dica(`<b>${h(c.nome)}</b><div>${Realce.texto(c.desc)}</div><div class="rodape">${caro ? (c.estoque === 0 ? "Esgotado: o mercador reabastece amanhã cedo." : c.limite === 0 ? "Você não carrega mais." : "Ouro insuficiente.") : "Escolha a quantidade e clique para comprar. Shift+clique compra 5."}</div>`)}>
         <span class="slot-px">${S(icone, 2)}${c.estoque ? `<span class="qtd">${c.estoque}</span>` : ""}</span>
         <span class="merc-nome">${h(c.nome)}${c.estoque === 0 ? '<small class="merc-estoque esgotado">esgotado</small>' : ""}</span>
@@ -1004,7 +1007,7 @@ const Telas = (() => {
     ops.forEach((o) => {
       const m = o.meta || {};
       if (m.carinho === "fera") itens.push([`${S("coracao", 1)} Fazer carinho`, { carinho: "fera" }]);
-      if (m.em === "fera" && m.usar) itens.push([`${S(ICONE_ITEM[m.usar] || "pocao", 1)} ${m.usar === "bandagem" ? "Enfaixar" : "Dar a Poção de Vida"}`, { usar: m.usar, em: "fera" }]);
+      if (m.em === "fera" && m.usar) itens.push([`${S(iconeConsumivel(m.usar), 1)} ${m.usar === "bandagem" ? "Enfaixar" : "Dar a Poção de Vida"}`, { usar: m.usar, em: "fera" }]);
     });
     if (!itens.length) return;
     const menu = document.createElement("div");
@@ -1528,5 +1531,5 @@ const Telas = (() => {
   }
 
   return { topoBalcao, cartaoServico, rastreador, atributosHtml, reputacaoHtml, dica, guardarDica, htmlItem, menuUso, abrirGrimorio, alternarGrimorio, abrirDica, dicaAbertaPor, mouseNaArea, novaVisita, fecharMenuItem, guardarArvore, abrirTalentos, fecharTalentos, painel, revelarAchado, celebrar, resumoCelebracao, toast, moedasPara, iconeCriatura, iconeItem, dicaItem, ligarDicas, esconderDica,
-    ICONE_ITEM, VAZIO, NOME_ESPACO, AREA, barra, aprovacao, noPalco, abrirAchado, acoesDoAchado, fecharAchado };
+    iconeConsumivel, VAZIO, NOME_ESPACO, AREA, barra, aprovacao, noPalco, abrirAchado, acoesDoAchado, fecharAchado };
 })();

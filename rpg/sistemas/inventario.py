@@ -2,7 +2,7 @@
 
 from ..habilidades import HABILIDADES
 from .. import itens
-from ..itens import CONSUMIVEIS, PENA_FENIX_AGE_SOZINHA, descrever_bonus
+from ..itens import CONSUMIVEIS, EM_ALIADO, PENA_FENIX_AGE_SOZINHA, descrever_bonus
 from .. import comitiva
 from .. import sobrevivencia
 from .. import texto as tx
@@ -106,7 +106,7 @@ class Inventario:
         """Por que usar o item agora não faria nada (ou None). m: um companheiro, em vez de você."""
         j = self.j
         if m is not None:
-            if k not in ("pocao_vida", "bandagem"):
+            if k not in EM_ALIADO:
                 return "Isso só serve em você."
             if m is j.companheiro:  # o animal do patrulheiro
                 return f"{m['nome']} não precisa disso agora." if m["hp"] >= m["max_hp"] else None
@@ -172,7 +172,7 @@ class Inventario:
         registrar(self, "consumivel", item=k, em_combate=False, em="fera")
         antes = f["hp"]
         if k == "pocao_vida":
-            f["hp"] = min(f["max_hp"], f["hp"] + int(f["max_hp"] * 0.35))
+            f["hp"] = min(f["max_hp"], f["hp"] + int(f["max_hp"] * bal.POCAO_VIDA))
             self.dizer(f"{f['nome']} lambe a Poção de Vida da sua mão. (+{f['hp'] - antes} vida)", "verde")
         else:
             f["hp"] = min(f["max_hp"], f["hp"] + bal.BANDAGEM_VIDA)
@@ -196,7 +196,7 @@ class Inventario:
         registrar(self, "consumivel", item=k, em_combate=False, em=cid)
         antes = m["hp"]
         if k == "pocao_vida":
-            m["hp"] = min(m["max_hp"], m["hp"] + int(m["max_hp"] * 0.35))
+            m["hp"] = min(m["max_hp"], m["hp"] + int(m["max_hp"] * bal.POCAO_VIDA))
             m["ferido"] = False
             self.dizer(f"{nome} bebe a Poção de Vida e respira melhor. (+{m['hp'] - antes} vida)", "verde")
         else:
@@ -234,7 +234,7 @@ class Inventario:
             sangrando = j.efeito("sangramento")
             j.remover("sangramento")
             tratou = sobrevivencia.tratar_com_bandagem(self)
-            c = j.curar(8)
+            c = j.curar(bal.BANDAGEM_VIDA)
             if not tratou and not sangrando:
                 self.dizer(f"Você troca as faixas velhas. (+{c} vida)", "verde")
             elif sangrando:

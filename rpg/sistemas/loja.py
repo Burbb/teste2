@@ -4,7 +4,7 @@ import random
 
 from .. import balanceamento as bal
 from .. import itens
-from ..itens import CONSUMIVEIS, descrever_bonus, gerar_equip
+from ..itens import CONSUMIVEIS, DO_MERCADO, RECURSOS, descrever_bonus, gerar_equip
 from .. import sobrevivencia
 from ..telemetria import registrar
 from ..regras import LIMITE_MOCHILA, NOMES_SLOT
@@ -43,13 +43,14 @@ class Loja:
             return itens.ficha(it, j.nome_recurso, preco=preco)
         return {
             "ouro": j.ouro, "limite": LIMITE_MOCHILA, "ocupado": len(j.mochila),
-            "consumiveis": [{"id": k, "nome": CONSUMIVEIS[k]["nome"], "desc": CONSUMIVEIS[k]["desc"],
+            "consumiveis": [{"id": k, "nome": CONSUMIVEIS[k]["nome"], "icone": CONSUMIVEIS[k]["icone"],
+                             "desc": CONSUMIVEIS[k]["desc"],
                              "preco": self.preco(CONSUMIVEIS[k]["preco"]), "tem": j.consumiveis.get(k, 0),
                              "estoque": estoque[k], "limite": estoque[k]} for k in self.SUPRIMENTOS]
-            + [{"id": "provisoes", "nome": "Provisões (1 dia)", "desc": "Pão duro, carne seca e um odre de água.",
+            + [{"id": "provisoes", "nome": "Provisões (1 dia)", "icone": RECURSOS["comida"]["icone"], "desc": "Pão duro, carne seca e um odre de água.",
                 "preco": self.preco(4), "tem": j.provisoes, "estoque": estoque["provisoes"],
                 "limite": min(estoque["provisoes"], sobrevivencia.MAX_PROVISOES - j.provisoes)}]
-            + ([{"id": "flechas", "nome": "Flecha", "desc": f"Flecha de freixo, ponta de ferro. A aljava leva {self.max_flechas()}.",
+            + ([{"id": "flechas", "nome": "Flecha", "icone": RECURSOS["flechas"]["icone"], "desc": f"Flecha de freixo, ponta de ferro. A aljava leva {self.max_flechas()}.",
                  "preco": self.preco(PRECO_FLECHAS), "tem": j.flechas,
                  "estoque": estoque["flechas"], "limite": min(estoque["flechas"], self.max_flechas() - j.flechas)}]
                if j.classe == "arqueiro" else []),
@@ -58,7 +59,7 @@ class Loja:
             "recompra": [item(it, valor) for it, valor in self.recompra],
         }
 
-    SUPRIMENTOS = ("tocha", "bandagem", "unguento", "pocao_vida", "tonico", "antidoto", "bomba_fumaca", "pena_fenix")
+    SUPRIMENTOS = DO_MERCADO  # o catálogo diz (itens.py: mercado)
     COM_ESTOQUE = SUPRIMENTOS + ("provisoes", "flechas")  # tudo o que o mercado vende a granel acaba e reabastece
 
     def preco_suprimento(self, k):

@@ -123,6 +123,23 @@ python -m unittest tests.test_modificadores tests.test_conteudo  # chaves e even
 python -m tests.gabarito
 ```
 
+## Um consumível
+
+Uma entrada no catálogo `CONSUMIVEIS` de `rpg/itens.py`, e todas as listas saem dela: o que se usa na luta
+(`luta`, a posição na barra; o que salva vem primeiro), o que se usa fora (`fora`), em quem (`em_aliado`: companheiros
+e o animal), o que o mercado vende (`mercado`, com o estoque em `balanceamento.ESTOQUE_MERCADO`), o ícone e o contador
+do topo (`hud`). A tela recebe o catálogo no estado (`itens`) e não tem lista de itens.
+
+```python
+"elixir_ferro": _c("Elixir de Ferro", 45, "+3 de Defesa até o fim da luta.", "pocao", luta=6, mercado=True),
+```
+
+O efeito ao usar mora em `usar_consumivel` (`rpg/sistemas/inventario.py`), o mesmo na luta e fora dela (o menu de
+itens da luta chama ele); por que não serve agora, em `motivo_inutil` e `Combate.motivo_item`.
+
+Conferir: `python -m unittest tests.test_conteudo` (ícone com desenho, estoque para o que o mercado vende, contador
+que existe no topo).
+
 ## Um item com efeito especial
 
 Item é fonte de modificadores, como talento. Os bônus especiais (`ESPECIAIS` em `rpg/itens.py`: crítico, roubo de
