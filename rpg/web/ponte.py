@@ -67,6 +67,10 @@ class WebUI(InterfaceGrafica, UI):
         self.pergunta_id = 0
         self.escolhas_na_cena = 0
         self.novo_desde_escolha = False
+        # Um "pausar" do motor só vira Continuar se depois vier mais história, uma luta ou outra cena. Se o que vem é
+        # o menu do lugar (o fim de um evento), não: o texto fica na página e o lugar aparece embaixo, com as ações.
+        self.pausa_pendente = False
+        self.tipo_cena = None
         self.ultimo_estado = None
         self.ultimo_titulo = None
         self._segurando = None  # durante uma salva de golpes: o que chegar espera a animação
@@ -90,6 +94,9 @@ class WebUI(InterfaceGrafica, UI):
         if self._segurando is not None and not (t == "lance" and dados.get("tipo") == "salva"):
             self._segurando.append({"t": t, **dados})
             return
+        if self.pausa_pendente and t in ("texto", "efeito", "rolagem", "bloco", "mapa", "subtitulo", "separador"):
+            self.pausa_pendente = False
+            self._continuar()
         self.canal.publicar({"t": t, **dados})
         if t in ("texto", "efeito", "rolagem", "bloco", "mapa", "painel", "celebrar"):
             self.novo_desde_escolha = True
@@ -174,13 +181,26 @@ class WebUI(InterfaceGrafica, UI):
 
     def cena(self, titulo, subtitulo=None, tipo="evento"):
         self.enviar_estado()
+        if tipo != "combate":
+            self.tipo_cena = tipo
         if tipo == "combate":
+            if self.pausa_pendente:
+                self.pausa_pendente = False
+                self._continuar()
             self._enviar("combate", titulo=titulo, subtitulo=subtitulo)
             return
         if self.escolhas_na_cena > 0:
             # Telas de menu que se redesenham (inventário, mercado) não param para "Continuar".
             mesma_tela = tipo == "menu" and titulo == self.ultimo_titulo
-            if self.novo_desde_escolha and not mesma_tela:
+            if (self.novo_desde_escolha or self.pausa_pendente) and not mesma_tela:
+                self.pausa_pendente = False
+                if tipo == "local":
+                    # O fim de um evento cai direto no lugar: sem Continuar, o texto do evento fica na página.
+                    self._enviar("nova_cena", titulo=titulo, subtitulo=subtitulo, tipo=tipo, anexar=True)
+                    self.ultimo_titulo = titulo
+                    self.escolhas_na_cena = 0
+                    self.novo_desde_escolha = False
+                    return
                 self._continuar()
             self._enviar("nova_cena", titulo=titulo, subtitulo=subtitulo, tipo=tipo)
             self.ultimo_titulo = titulo
@@ -201,6 +221,7 @@ class WebUI(InterfaceGrafica, UI):
 
     # ------------------------------------------------------------ entrada
     def _perguntar(self, t, **dados):
+        self.pausa_pendente = False  # a pergunta aparece embaixo do texto: ela mesma é a pausa
         self.enviar_estado()
         self.pergunta_id += 1
         pid = self.pergunta_id
@@ -269,4 +290,7 @@ class WebUI(InterfaceGrafica, UI):
 
     def pausar(self):
         if self.novo_desde_escolha:
-            self._continuar()
+            if self.tipo_cena == "menu":
+                self._continuar()  # numa tela de menu (bestiário, diário) a pausa é a tela aberta, esperando o Voltar
+            else:
+                self.pausa_pendente = True

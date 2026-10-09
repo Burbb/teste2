@@ -91,8 +91,24 @@ function cabecalho(m) {
   if (m.titulo !== "Talentos") Telas.fecharTalentos();
 }
 
+/** O fim de um evento cai direto no lugar (sem Continuar): o texto do evento fica na página e o lugar entra embaixo,
+ *  com o nome e a linha do dia, e as ações logo depois. */
+function lugarAbaixo(m) {
+  Telas.esconderDica();
+  cenaInterrompida = false;
+  tituloAtual = m.titulo;
+  textoEl.querySelectorAll(":scope > p").forEach((p) => p.classList.add("lido"));
+  promptEl.innerHTML = "";
+  cab.dataset.tipo = cenaEl.dataset.tipo = m.tipo;
+  anexar(el("div", "lugar-abaixo", `<b>${esc(suavizar(m.titulo))}</b>` + (m.subtitulo ? `<span>${esc(m.subtitulo)}</span>` : "")));
+  if (m.titulo !== ultimoLugar) historico("h-cena", m.titulo);
+  ultimoLugar = m.titulo;
+  seguir = true;
+}
+
 let tituloAtual = "";
 async function novaCena(m) {
+  if (m.anexar) { lugarAbaixo(m); return; }
   // Inventário e mercado se redesenham sem piscar. Mas se no meio houve luta ou saque, a página mudou de verdade:
   // aí é cena nova, e o texto do que aconteceu (a noite caiu, o item equipado) fica na página em vez de virar aviso.
   const mesmaTela = m.tipo === "menu" && m.titulo === tituloAtual && !cenaInterrompida;
