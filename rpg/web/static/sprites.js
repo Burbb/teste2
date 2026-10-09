@@ -12,12 +12,14 @@ const Sprites = (() => {
     e: "#4f9a5b", E: "#8fbf6a", f: "#1f4a25", m: "#8e6fd8", M: "#c8b0ff", s: "#3a3128", c: "#d4af37",
     C: "#8a6a14", t: "#2e5f63", T: "#74c4c9", h: "#f0c8a0", H: "#c89070", x: "#5a2a6e",
     z: "#17120f", q: "#211a14", Q: "#2b2219",  // fundos da interface: pedra funda, pergaminho escuro e o grão dele
+    N: "#08090a", A: "#121110",                 // o fundo da página e o dos painéis, quase pretos
+    j: "#48311f", J: "#6b4b31", a: "#d9a05c",  // o bronze dos quadros (sombra e luz) e o ouro velho dos espaços de item
   };
   /** Limiar de Bayer 4×4 (0 a 15): o pontilhado ordenado de toda a arte. */
   const BAYER4 = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
   const S = SPRITES_GRADES;  // os desenhos moram em sprites-dados.js
   /** As molduras em 9-slice (sprites-dados.js), publicadas como --anel-k, --placa-C, --janela-y... */
-  const MOLDURAS = Object.keys(S).filter((n) => /^(anel|placa|janela)_\w$/.test(n));
+  const MOLDURAS = Object.keys(S).filter((n) => /^(anel|placa|janela|quadro)_\w$/.test(n));
 
   const cache = {};
   function canvas(nome) {
@@ -148,8 +150,8 @@ const Sprites = (() => {
     const raiz = document.documentElement.style, u = (d) => `url(${d})`;
     for (const [letra, cor] of Object.entries(PALETA)) raiz.setProperty(`--p-${letra}`, cor);
     // Grão fino e esparso (só os extremos do ruído viram pinta): granito, e não camuflagem.
-    raiz.setProperty("--tx-pedra", u(pedra(["Q", "z"], 64, 11, 4, 0.38)));   // painéis (fundo q)
-    raiz.setProperty("--tx-perg", u(pedra(["s", "q"], 64, 23, 4, 0.4)));     // cena e janelas: quase liso, atrás da prosa (fundo Q)
+    raiz.setProperty("--tx-pedra", u(pedra(["z", "k"], 64, 11, 4, 0.4)));    // painéis (fundo A): grão quase invisível
+    raiz.setProperty("--tx-perg", u(pedra(["Q", "z"], 64, 23, 4, 0.38)));    // cena: pergaminho manchado, atrás da prosa (fundo q)
     raiz.setProperty("--tx-placa", u(pedra(["d", "K"], 32, 3)));             // placas (fundo s)
     raiz.setProperty("--tx-funda", u(pedra(["K", "k"], 32, 5)));             // nichos (fundo z)
     raiz.setProperty("--tx-fundo", u(pedra(["K", "k"], 128, 7, 4, 0.44)));   // a página (fundo z)
@@ -164,7 +166,7 @@ const Sprites = (() => {
     raiz.setProperty("--sombra-dir", u(rampa("k", 4, "esquerda")));
     raiz.setProperty("--sombra-baixo", u(rampa("k", 4, "sobe")));
     raiz.setProperty("--sombra-desce", u(rampa("k", 4)));
-    for (const n of ["caveira", "cadeado"]) raiz.setProperty(`--${n}`, u(url(n)));
+    for (const n of ["caveira", "cadeado", "lanterna", "estrelinha", "fio_cabeca", "fim_cabeca"]) raiz.setProperty(`--${n.replace("_", "-")}`, u(url(n)));
   }
 
   return { img, url, canvas, existe: (n) => !!S[n], PALETA, BAYER4, MOLDURAS, tex: { tile, pontilhado, rampa, pedra, fumo }, publicar };

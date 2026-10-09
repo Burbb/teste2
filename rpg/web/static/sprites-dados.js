@@ -1398,5 +1398,60 @@ const SPRITES_GRADES = (() => {
   for (const cor of "kCyYUOErR") { S["anel_" + cor] = trocar(ANEL, { "#": cor }); S["placa_" + cor] = trocar(PLACA, { "#": cor }); }
   for (const cor of "kUyO") S["janela_" + cor] = trocar(JANELA, { "#": cor });
 
+  // O quadro dos painéis (referência do Jean): filete de bronze de 4 texels (contorno, luz, bronze e sombra) com um
+  // rebite redondo em cada canto. Desenha-se só o canto de cima à esquerda e a faixa da borda; o resto é espelho.
+  function quadro(canto, faixa) {
+    const n = canto.length, L = 2 * n + 1, grade = [];
+    for (let r = 0; r < L; r++) {
+      let linha = "";
+      for (let c = 0; c < L; c++) {
+        const rr = r < n ? r : L - 1 - r, cc = c < n ? c : L - 1 - c;
+        linha += r === n && c === n ? "." : r === n ? faixa[cc] : c === n ? faixa[rr] : canto[rr][cc];
+      }
+      grade.push(linha);
+    }
+    return grade;
+  }
+  S.quadro_j = quadro([
+    ".kkkk.",
+    "kbnnbk",
+    "knkkbk",
+    "knkkbk",
+    "kbbbbk",
+    ".kkkk."], "kJjk..");
+  S.lanterna = [
+    ".......gg.......",
+    "......g..g......",
+    ".......gg.......",
+    ".....gGGGGg.....",
+    "....gGddddGg....",
+    "....dddddddd....",
+    "....dyoOOoyd....",
+    "....doOYYOod....",
+    "....dOYWWYOd....",
+    "....dOYWWYOd....",
+    "....doOYYOod....",
+    "....dyoOOoyd....",
+    "....dddddddd....",
+    ".....gGddGg.....",
+    "......gddg......",
+    "................"];
+  // Cabeçalho de seção: uma estrela de quatro pontas antes do título, e um fio duplo que acaba num losango vazado.
+  S.estrelinha = [
+    "..c..",
+    ".cyc.",
+    "cyYyc",
+    ".cyc.",
+    "..c.."];
+  S.fio_cabeca = [".", "J", ".", "j", "."];
+  S.fim_cabeca = [
+    "...k...",
+    "..kyk..",
+    ".ky.yk.",
+    "Jy...yk",
+    ".ky.yk.",
+    "..kyk..",
+    "...k..."];
+
   return S;
 })();

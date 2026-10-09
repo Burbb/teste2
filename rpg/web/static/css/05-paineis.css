@@ -1,8 +1,12 @@
 /* ------------------------------------------------------------------ painel do herói */
 /* As seções se separam pelo espaço e por uma linha de luz que some, e não por caixas. */
 .secao { margin-top: 18px; }
-.secao h3 { margin: 0 0 8px; font-family: var(--titulo); font-weight: 400; font-size: 28px; line-height: 1; color: var(--ouro); text-shadow: var(--sombra-texto); display: flex; align-items: center; gap: 10px; }
-.secao h3::after { content: ""; flex: 1; height: 1px; background: var(--divisor); }
+/* Cabeçalho de seção: estrelinha, o título gótico e um fio duplo de bronze que acaba num losango. */
+.secao h3 { margin: 0 0 8px; font-family: var(--titulo); font-weight: 400; font-size: 28px; line-height: 1; color: var(--ouro); text-shadow: var(--contorno); display: flex; align-items: center; gap: 8px; }
+.secao h3::before { content: ""; flex: none; width: calc(var(--P) * 5); height: calc(var(--P) * 5); background: var(--estrelinha) 0 0 / 100%; }
+.secao h3::after { content: ""; flex: 1; height: calc(var(--P) * 7); padding-right: calc(var(--P) * 6);
+  background: var(--fim-cabeca) 100% 0 / calc(var(--P) * 7) calc(var(--P) * 7) no-repeat, var(--fio-cabeca) 0 50% / var(--P) calc(var(--P) * 5) repeat-x;
+  background-clip: border-box, content-box; }
 .identidade { display: flex; gap: 10px; align-items: center; }
 .retrato-grande { width: 60px; height: 60px; flex: none; display: grid; place-items: center;
   background: radial-gradient(circle at 50% 42%, rgba(226, 189, 99, 0.12), rgba(0, 0, 0, 0.55) 68%); box-shadow: inset 0 0 0 1px rgba(255, 232, 190, 0.05); }

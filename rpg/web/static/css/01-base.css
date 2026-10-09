@@ -1,7 +1,8 @@
-/* Crônicas da Fenda — pixel art: pedra e pergaminho em paleta indexada, cada caixa com um anel só de 1 texel
-   (os materiais, mais abaixo), nada de moldura dentro de moldura.
-   Fontes (OFL, embutidas), todas pixel menos a da prosa: Jacquard 24 (títulos), Jersey 15 (números e rótulos curtos),
-   Pixelify Sans (interface) e Alegreya (a prosa, ver 11-tipografia.css). */
+/* Crônicas da Fenda — a interface da referência do Jean: painéis quase pretos num quadro de bronze com rebites nos
+   cantos, títulos góticos em ouro com contorno, tudo o mais numa serifa clássica. A arte (sprites, paisagem, quadros
+   e enfeites) é pixel art na paleta indexada de sprites.js.
+   Fontes (embutidas): gótica nos títulos ("Titulo"), Alegreya na interface e na prosa (11-tipografia.css), e
+   Pixelify Sans quando o jogador pede "Fonte: pixel" para a história. */
 
 @font-face { font-family: "Jacquard 24"; src: url(../fontes/jacquard-24-latin-400-normal.woff2) format("woff2"); font-display: swap; }
 /* Títulos: letras góticas, mas os algarismos e o %+/ da fonte de números (o 5 gótico é difícil de ler). A face da
@@ -15,9 +16,9 @@
 :root {
   /* A paleta da interface é a dos sprites (sprites.js, publicada no :root como --p-<letra> antes da primeira pintura):
      os nomes abaixo só dizem o papel de cada cor. Nenhum hex mora aqui. */
-  --fundo: var(--p-z);       /* pedra funda: o fundo da página e o recheio dos nichos */
-  --perg: var(--p-Q);        /* pergaminho escuro, atrás da prosa: a parte mais clara da mesa, onde cai a luz */
-  --painel: var(--p-q);      /* pedra dos painéis, em fuligem: mais escura que a cena */
+  --fundo: var(--p-N);       /* o fundo da página, mais escuro que os painéis */
+  --perg: var(--p-q);        /* pergaminho escuro, atrás da prosa da cena */
+  --painel: var(--p-A);      /* o fundo dos painéis, quase preto */
   --pedra-luz: var(--p-s);
   --pedra-alta: var(--p-d);
   --tinta: var(--p-w);
@@ -42,11 +43,15 @@
      sombra, sulco e ladrilho é múltiplo dele. A paleta indexada (--p-<letra>) e as texturas vêm de sprites.js. */
   --P: calc(var(--px, 1px) * 2);
   --borda: calc(var(--P) + 0.01px);  /* o navegador arredonda a borda para baixo: sem o 0,01px, zoom de 110% perde um pixel */
+  --quadro: calc(var(--P) * 4 + 0.01px);  /* a espessura do quadro de bronze dos painéis (o filete; o rebite avança 2 texels) */
   --titulo: "Titulo", "Pixelify Sans", serif;
-  --texto: "Pixelify Sans", "Trebuchet MS", sans-serif;
-  --num: "Jersey 15", "Pixelify Sans", monospace;
+  --texto: "Alegreya", Georgia, serif;
+  --num: "Alegreya", Georgia, serif;
   --sombra: 0 22px 44px -18px rgba(0, 0, 0, 0.95), 0 3px 10px rgba(0, 0, 0, 0.5);
   --sombra-texto: 0 2px 8px rgba(0, 0, 0, 0.85);
+  /* O contorno escuro dos títulos góticos: 1 pixel em volta e 1 texel de sombra embaixo. */
+  --contorno: var(--px) 0 0 var(--p-k), calc(var(--px) * -1) 0 0 var(--p-k), 0 var(--px) 0 var(--p-k),
+    0 calc(var(--px) * -1) 0 var(--p-k), var(--px) var(--P) 0 var(--p-k);
   /* Divisória: uma linha de luz que some nas pontas, em vez de traço ou moldura. */
   --divisor: linear-gradient(90deg, rgba(226, 189, 99, 0.4), rgba(226, 189, 99, 0.06) 75%, transparent);
   --divisor-centro: linear-gradient(90deg, transparent, rgba(226, 189, 99, 0.42), transparent);
@@ -55,7 +60,8 @@
 * { box-sizing: border-box; }
 html, body { height: 100%; margin: 0; }
 body {
-  background: var(--fumo-fundo) 0 0 / calc(var(--P) * 128), var(--tx-fundo) 0 0 / calc(var(--P) * 128), var(--fundo);
+  background: var(--fundo);
+  font-variant-numeric: lining-nums;
   color: var(--tinta);
   font-family: var(--texto);
   font-size: 17px;
@@ -67,7 +73,7 @@ img.sprite, canvas { image-rendering: pixelated; image-rendering: crisp-edges; }
 /* Sprites em pixels inteiros da tela: --px vale 1 pixel do aparelho (ou 2, 3...), nunca 1,25. */
 img.sprite { width: calc(var(--px, 1px) * var(--s, 16)); height: calc(var(--px, 1px) * var(--s, 16)); }
 button { font: inherit; color: inherit; }
-kbd { font-family: var(--num); font-size: 0.85em; padding: 0 5px; color: var(--tinta-3); margin-left: 4px; background: rgba(255, 232, 190, 0.06); border-radius: 2px; box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.6); }
+kbd { font-family: var(--texto); font-size: 0.8em; padding: 0 4px; color: var(--tinta-2); margin-left: 4px; background: var(--p-A); border: var(--px) solid var(--p-J); }
 [hidden] { display: none !important; }
 
 
@@ -77,19 +83,18 @@ kbd { font-family: var(--num); font-size: 0.85em; padding: 0 5px; color: var(--t
    por espaço e sulco. A luz vem de cima e da esquerda: placa é clara em cima e escura embaixo; nicho, o contrário. */
 /* O anel de cada material é uma moldura em 9-slice (sprites-dados.js) guardada em --anel: estado e raridade trocam
    a imagem (--anel-k, --placa-C, --janela-y...), nunca a espessura. */
-/* Painel: pedra granulada com fuligem pontilhada por cima, em relevo: luz pontilhada no topo e na esquerda, sombra
-   pontilhada na direita e no pé. */
-.m-painel { --anel: var(--anel-k); border: var(--borda) solid var(--p-k); border-image: var(--anel) 1 / 1 stretch;
-  background: var(--luz-topo) 0 0 / calc(var(--P) * 4) calc(var(--P) * 6) repeat-x, var(--luz-esq) 0 0 / calc(var(--P) * 4) repeat-y,
-    var(--sombra-dir) 100% 0 / calc(var(--P) * 4) repeat-y, var(--sombra-baixo) 0 100% / calc(var(--P) * 4) repeat-x,
-    var(--fumo-painel) 0 0 / calc(var(--P) * 128), var(--tx-pedra) 0 0 / calc(var(--P) * 64), var(--painel);
-  background-clip: padding-box; }
+/* Painel: quase preto, com grão bem leve, num quadro de bronze com um rebite em cada canto. O quadro (sprite quadro_j)
+   desenha 6 texels a partir da beirada: os 4 do filete ocupam a borda; o rebite avança 2 sobre o preenchimento. */
+.m-painel { --anel: var(--quadro-j); border: var(--quadro) solid var(--p-j); border-image: var(--anel) 6 / calc(var(--P) * 6) stretch;
+  background: var(--tx-pedra) 0 0 / calc(var(--P) * 64), var(--painel); background-clip: padding-box; }
 /* Painel de pergaminho: o da cena, atrás da prosa (quase liso; nada de pontilhado atrás de texto corrido). */
 .m-painel.m-perg { background: var(--tx-perg) 0 0 / calc(var(--P) * 64), var(--perg); background-clip: padding-box; }
-/* Janela: pergaminho escuro quase liso (carrega texto) e 1 texel de sombra dura desenhado na própria moldura. */
-.m-janela { --anel: var(--janela-k); border: var(--borda) solid var(--p-k); border-image: var(--anel) 2 / 2 / 0 1 1 0 stretch;
-  background: var(--tx-perg) 0 0 / calc(var(--P) * 64), var(--perg); background-clip: padding-box; }
-.m-janela.r-magico { --anel: var(--janela-U); } .m-janela.r-raro { --anel: var(--janela-y); } .m-janela.r-lendario { --anel: var(--janela-O); }
+/* Janela: o mesmo quadro dos painéis, por cima de tudo. */
+.m-janela { --anel: var(--quadro-j); border: var(--quadro) solid var(--p-j); border-image: var(--anel) 6 / calc(var(--P) * 6) stretch;
+  background: var(--tx-pedra) 0 0 / calc(var(--P) * 64), var(--painel); background-clip: padding-box; }
+.m-janela.r-magico { --anel: var(--janela-U); border-width: var(--borda); border-image: var(--anel) 2 / 2 / 0 1 1 0 stretch; }
+.m-janela.r-raro { --anel: var(--janela-y); border-width: var(--borda); border-image: var(--anel) 2 / 2 / 0 1 1 0 stretch; }
+.m-janela.r-lendario { --anel: var(--janela-O); border-width: var(--borda); border-image: var(--anel) 2 / 2 / 0 1 1 0 stretch; }
 /* Placa: botão, ícone da doca, carta. Em relevo (claro em cima, escuro embaixo) e com 1 texel de espessura, que vem
    na moldura. Apertada, o relevo inverte e o conteúdo desce; a caixa fica parada, para o clique não escapar. */
 .m-placa { --anel: var(--placa-k); --luz: var(--p-d); --escuro: var(--p-z);
@@ -130,12 +135,14 @@ body.modo-titulo #brasas { opacity: 1; }
 /* ------------------------------------------------------------------ topo */
 #topo {
   position: relative; z-index: 2; height: 46px; display: flex; align-items: center; gap: 22px; padding: 0 18px; background: var(--p-k);
+  border-bottom: var(--borda) solid var(--p-j);
 }
 /* A sombra da barra do topo cai sobre a mesa em pontilhado. */
 #topo::after { content: ""; position: absolute; left: 0; right: 0; top: 100%; height: calc(var(--P) * 4); pointer-events: none;
   background: var(--sombra-desce) 0 0 / calc(var(--P) * 4) 100% repeat-x; }
-.marca { font-family: var(--titulo); font-size: 28px; color: var(--ouro); text-shadow: var(--sombra-texto); white-space: nowrap; line-height: 1; letter-spacing: 0.01em; }
-.topo-info { font-family: var(--num); font-size: 21px; color: var(--tinta-2); display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+#topo .marca { display: flex; align-items: center; gap: 8px; font-family: var(--titulo); font-size: 28px; color: var(--ouro); text-shadow: var(--contorno); white-space: nowrap; line-height: 1; letter-spacing: 0.01em; }
+#topo .marca::before { content: ""; flex: none; width: calc(var(--P) * 16); height: calc(var(--P) * 16); background: var(--lanterna) 0 0 / 100%; }
+.topo-info { font-family: var(--texto); font-size: 17px; color: var(--tinta-2); display: flex; align-items: center; gap: 8px; white-space: nowrap; }
 .topo-info .rotulo { color: var(--tinta-3); }
 #sigilos-topo { gap: 6px; }
 #sigilos-topo .sigilo { width: 12px; height: 12px; border: 2px solid #4a4038; transform: rotate(45deg); background: #1b1511; }

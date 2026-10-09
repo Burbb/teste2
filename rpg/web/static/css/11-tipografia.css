@@ -1,18 +1,14 @@
 /* ================================================================== tipografia
-   A moldura em pixel, a leitura em serifa, como nos RPGs de texto em pixel art:
-   - Jacquard 24 ("Titulo", 01-base.css): títulos, nomes e cabeçalhos, com os algarismos da Jersey;
-   - Jersey 15: números e rótulos curtos (HUD, dano, preço, etiquetas, nomes da doca);
-   - Pixelify Sans: a interface com frase (botões, dicas, nomes de carta);
-   - Alegreya: a prosa (a folha, as escolhas, falas, bilhetes, lore), desenhada para leitura longa, com itálico de
-     verdade. "Fonte: pixel" no topo troca só ela, pela Pixelify. */
+   Como na referência do Jean: o gótico só nos títulos ("Titulo", 01-base.css) e uma serifa clássica em todo o resto,
+   a interface e a prosa. A Alegreya tem itálico de verdade e algarismos alinhados (lining-nums no body).
+   "Fonte: pixel" no topo troca só a prosa da história, pela Pixelify Sans. */
 @font-face { font-family: "Alegreya"; font-weight: 400; src: url(../fontes/alegreya-latin-400-normal.woff2) format("woff2"); font-display: swap; }
 @font-face { font-family: "Alegreya"; font-weight: 400; font-style: italic; src: url(../fontes/alegreya-latin-400-italic.woff2) format("woff2"); font-display: swap; }
 @font-face { font-family: "Alegreya"; font-weight: 600; src: url(../fontes/alegreya-latin-600-normal.woff2) format("woff2"); font-display: swap; }
 @font-face { font-family: "Alegreya"; font-weight: 700; src: url(../fontes/alegreya-latin-700-normal.woff2) format("woff2"); font-display: swap; }
 :root { --prosa: "Alegreya", Georgia, serif; }
-body.fonte-pixel { --prosa: var(--texto); }
-body:not(.fonte-pixel) #folha, body:not(.fonte-pixel) .escolha, body:not(.fonte-pixel) .balao span, body:not(.fonte-pixel) .cc-fala,
-body:not(.fonte-pixel) .bilhete, body:not(.fonte-pixel) .contrato-desc, body:not(.fonte-pixel) .lore { font-family: var(--prosa); }
+body.fonte-pixel { --prosa: "Pixelify Sans", "Trebuchet MS", sans-serif; }
+#folha, .escolha, .balao span, .cc-fala, .bilhete, .contrato-desc, .lore { font-family: var(--prosa); }
 body:not(.fonte-pixel) #folha { font-size: 21px; line-height: 1.55; }
 body:not(.fonte-pixel) .escolha { font-size: 20px; }
 body:not(.fonte-pixel) .escolha.secundaria { font-size: 18px; }
