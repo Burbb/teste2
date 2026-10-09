@@ -60,6 +60,7 @@ MAX_CRITICO = 0.6
 NOITE_INIMIGOS = 1.1          # à noite, os monstros batem 10% mais forte...
 NOITE_NIVEL = 1               # ... vêm um nível acima...
 NOITE_GRUPO = 0.4             # ... e mais vezes em bando: chance de um a mais no grupo (no começo, sem passar do teto)
+ESCURO_TESTES = 4             # sem luz: −4 nos testes de Percepção e Destreza
 
 # Fôlego depois da luta: vigor e foco voltam pela metade; a mana do mago, um quinto.
 FOLEGO_POS_LUTA = 0.5

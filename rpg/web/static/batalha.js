@@ -117,15 +117,15 @@ const Batalha = (() => {
     const caixa = Telas.abrirDica(el, true);
     // Os traços numa linha só, miúdos; embaixo, duas colunas (fraco contra / resiste a), uma linha por elemento.
     const tracos = f.tracos.map((t) => `<span class="ficha-traco" title="${esc(t.texto)}">${S(ICONE_TRACO[t.id] || "estrela", 1)}${esc(t.id)}</span>`).join("");
-    const lista = (filtro) => Object.entries(f.mult).filter(([, v]) => filtro(v)).map(([k, v]) => {
+    const lista = (grupo) => Object.entries(grupo || {}).map(([k, v]) => {
       const [ic, nome] = ELEMENTO[k] || ["estrela", k];
       return `<li>${S(ic, 1)}<span>${nome}</span><span class="valor">${v === 0 ? "imune" : "×" + String(v).replace(".", ",")}</span></li>`;
     }).join("");
     // O bestiário da espécie libera aos poucos: primeiro as fraquezas, depois as resistências.
     const coluna = (titulo, classe, sabe, itens) => `<div class="ficha-col ${classe}"><div class="ficha-titulo">${titulo}</div>` +
       (!sabe ? '<div class="ficha-nada">???</div>' : itens ? `<ul>${itens}</ul>` : '<div class="ficha-nada">nada</div>') + "</div>";
-    const corpo = `<div class="ficha-cols">${coluna("Fraco contra", "bom", f.conhecido, f.conhecido && lista((v) => v >= 1.15))}` +
-      `${coluna("Resiste a", "ruim", f.resistencias, f.resistencias && lista((v) => v <= 0.85))}</div>`;
+    const corpo = `<div class="ficha-cols">${coluna("Fraco contra", "bom", f.conhecido, f.conhecido && lista(f.fraco))}` +
+      `${coluna("Resiste a", "ruim", f.resistencias, f.resistencias && lista(f.resiste))}</div>`;
     // A caça desta espécie: o selo de mestre caçador, ou o quanto falta (a barra vai até o mestre).
     const caca = f.mestre ? `<div class="ficha-mestre">${S("estrela", 1)}Mestre caçador<span>+10% de dano</span></div>`
       : f.progresso ? `<div class="ficha-caca"><span class="barra-px xp"><span class="enchimento" style="width:${Math.min(100, (100 * f.abates) / (f.mestre_em || 5))}%"></span></span><small>${esc(f.progresso)}</small></div>` : "";
@@ -393,14 +393,16 @@ const Batalha = (() => {
       case "acao": {
         if (!de) return;
         emArea = !!m.area;
-        rotulo(de, m.nome, de.classList.contains("inimigo") ? "inimiga" : "");
+        const inimigo = de.classList.contains("inimigo");
+        rotulo(de, m.nome, inimigo ? "inimiga" : "");
         await passoFrente(de, m.area);
         if (m.hab === "grito_guerra") {
-          // O grito vem antes de tudo: a arena treme e o herói brilha; só então os inimigos se encolhem.
+          // O grito vem antes de tudo: a arena treme e quem grita brilha; só então o outro lado se encolhe. O grito
+          // dos bandidos tem o mesmo id: a faixa sai na cor de quem grita.
           som("rugido");
           Sensacao.tremor(arena, Sensacao.AJUSTES.tremor.leve, 420);
           brilho(de, "forca");
-          rotulo(de, "AAARGH!", "boa");
+          rotulo(de, "AAARGH!", inimigo ? "inimiga" : "boa");
           await dormir(pausa(520));
         }
         return;

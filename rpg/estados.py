@@ -190,6 +190,15 @@ def descrever_buff(u, efeito, turnos, valor):
     return f"{(e or {}).get('nome', efeito)} por {_turnos(turnos)}."
 
 
+def dano_do_tique(cb, nome, ef):
+    """Quanto um estado que fere a cada turno tira agora: o combate aplica esta conta e a tela mostra a mesma."""
+    est = ESTADOS[nome]
+    dano = max(1, int(ef["v"]))
+    if est["ajuste_tique"] and cb:
+        dano = est["ajuste_tique"](cb, dano)
+    return dano
+
+
 def agora(efeito, v):
     """A dica do estado com o número de agora ("+30% de dano"), ou a frase fixa do catálogo."""
     e = ESTADOS.get(efeito) or {}

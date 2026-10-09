@@ -5,6 +5,16 @@ from ..dados import FAMILIAS, LORE, TRACOS
 from .. import legado
 
 
+def _eficacias_familia(fam):
+    """As fraquezas e resistências de uma espécie, em palavras ("fogo", "veneno (imune)"), pela conta da luta."""
+    from types import SimpleNamespace
+    from ..combate import NOMES_TIPO_DANO, eficacias
+    f = FAMILIAS[fam]
+    fraco, resiste = eficacias(SimpleNamespace(tracos=f["tracos"], resist=f.get("resist", {})))
+    return ([NOMES_TIPO_DANO[k] for k in fraco],
+            [NOMES_TIPO_DANO[k] + (" (imune)" if v == 0 else "") for k, v in resiste.items()])
+
+
 class Bestiario:
     # ================================================================ legado e bestiário
     def preparar_legado(self):
@@ -70,11 +80,12 @@ class Bestiario:
         for fam, b in sorted(self.bestiario.items(), key=lambda x: FAMILIAS[x[0]]["nome"]):
             f = FAMILIAS[fam]
             conhece = self.conhece(fam)
+            fracos, resiste = _eficacias_familia(fam)
             fichas.append({"id": fam, "nome": tx.maiuscula(f["nome"]), "abates": b["abates"], "lore": LORE.get(fam, ""),
                            "conhecido": conhece, "mestre": self.mestre_caca(fam), "tracos": f["tracos"],
                            "tracos_nomes": [TRACOS[t].split(":")[0] for t in f["tracos"]] if conhece else [],
-                           "fraquezas": [k for k, v in f.get("resist", {}).items() if v > 1] if conhece else [],
-                           "resiste": [k for k, v in f.get("resist", {}).items() if v < 1] if conhece else []})
+                           "fraquezas": fracos if conhece else [],
+                           "resiste": resiste if self.conhece_resistencias(fam) else []})
         if self.ui.painel("bestiario", {"fichas": fichas, "total": len(LORE)}):
             self.pausar()
             return
@@ -87,7 +98,7 @@ class Bestiario:
             self.dizer(f"  {LORE.get(fam, '')}", "cinza")
             if self.conhece(fam):
                 tracos = ", ".join(TRACOS[t].split(":")[0] for t in f["tracos"])
-                fracos = [k for k, v in f.get("resist", {}).items() if v > 1]
+                fracos, _ = _eficacias_familia(fam)
                 info = f"  Traços: {tracos}"
                 if fracos:
                     info += f" · fraco contra {', '.join(fracos)}"

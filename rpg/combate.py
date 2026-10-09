@@ -7,7 +7,7 @@ from .classes import CLASSES
 from .habilidades import HABILIDADES, custo_flechas, descricao_habilidade
 from .grimorio import chance_critico, mult_critico
 from .modificadores import disparar, mod, mult, nomes
-from .estados import ESTADOS, NOMES, no_golpe
+from .estados import ESTADOS, NOMES, dano_do_tique, no_golpe
 from .dados import CLIMAS, TRACOS
 from .entidades import Combatente
 from .inimigos import HABS, HABS_INIMIGO, NOMES_HABS_INIMIGO, ROTULOS_HABS_INIMIGO
@@ -40,6 +40,20 @@ def mult_tracos(alvo, tipo, alcance):
     if "corrompido" in t:
         m *= {"sagrado": 1.4, "sombra": 0.6}.get(tipo, 1)
     return m * alvo.resist.get(tipo, 1)
+
+
+TIPOS_DANO = ("fisico", "fogo", "gelo", "sagrado", "sombra", "arcano", "veneno")
+NOMES_TIPO_DANO = {"fisico": "corpo a corpo", "distancia": "à distância", "fogo": "fogo", "gelo": "gelo",
+                   "sagrado": "sagrado", "sombra": "sombra", "arcano": "arcano", "veneno": "veneno"}
+FRACO, RESISTE = 1.15, 0.85  # a partir de quanto a ficha e o bestiário chamam de fraqueza e de resistência
+
+
+def eficacias(alvo):
+    """Quanto rende cada tipo de dano contra o alvo (traços e resistências), em dois grupos para a tela: as
+    fraquezas e as resistências (0 é imune). A ficha da luta e o bestiário leem daqui."""
+    m = {tipo: round(mult_tracos(alvo, tipo, "corpo"), 2) for tipo in TIPOS_DANO}
+    m["distancia"] = round(mult_tracos(alvo, "fisico", "distancia"), 2)
+    return {k: v for k, v in m.items() if v >= FRACO}, {k: v for k, v in m.items() if v <= RESISTE}
 
 
 class Aliado(Combatente):
@@ -578,9 +592,7 @@ class Combate:
             ef = c.efeitos[nome]
             est = ESTADOS.get(nome, {})
             if est.get("tique") and c.vivo:
-                dano = max(1, int(ef["v"]))
-                if est["ajuste_tique"]:
-                    dano = est["ajuste_tique"](self, dano)
+                dano = dano_do_tique(self, nome, ef)
                 c.hp = max(0, c.hp - dano)
                 rot, cor = est["tique"]
                 self.lance("tique", em=self.uid(c), dano=dano, efeito=nome, hp=c.hp, max_hp=c.max_hp)

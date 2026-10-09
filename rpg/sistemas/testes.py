@@ -1,6 +1,7 @@
 """Testes de atributo: d20 + bônus contra a dificuldade."""
 
 import math
+from .. import balanceamento as bal
 from ..classes import CLASSES, SPECS
 from ..regras import NOMES_TESTE
 
@@ -33,7 +34,7 @@ class Testes:
             if attr in fonte.get("testes", {}):
                 partes.append(fonte["testes"][attr])
         if self.sem_luz and attr in ("percepcao", "destreza"):
-            partes.append(("escuridão", -4))
+            partes.append(("escuridão", -bal.ESCURO_TESTES))
         return [p for p in partes if p[1]]
 
     def mod_teste(self, attr):

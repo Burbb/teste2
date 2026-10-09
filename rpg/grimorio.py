@@ -9,6 +9,7 @@ from . import balanceamento as bal
 from .classes import CLASSES
 from .habilidades import HABILIDADES, crit_extra
 from .modificadores import contribuicoes, mod, mult, nomes
+from .talentos import custo_habilidade
 
 NOME_STAT = {"atk": "Ataque", "poder": "Poder", "agi": "Agilidade", "max_hp": "Vida máx."}
 ELEMENTO = {"fisico": "físico", "fogo": "fogo", "gelo": "gelo", "sagrado": "sagrado", "sombra": "sombra",
@@ -122,11 +123,12 @@ def dados(j):
               "alvo": ALVOS["inimigo"], "desc": "O golpe de sempre. Não custa nada e, quando acerta, devolve um pouco "
                                                 f"de {j.nome_recurso.lower()}.",
               "linhas": [golpe(j, mult, stat=stat, alcance=alcance, tipo=tipo),
-                         efeito(f"Ao acertar, devolve {recupera} de {j.nome_recurso.lower()} (4% do máximo).")]}
+                         efeito(f"Ao acertar, devolve {recupera} de {j.nome_recurso.lower()} "
+                                f"({_pct(bal.ATAQUE_RECURSO)} do máximo).")]}
     habs = []
     for h_id in j.habilidades:
         h = HABILIDADES[h_id]
-        habs.append({"id": h_id, "nome": h["nome"], "custo": h["custo"], "flechas": h.get("flechas", 0),
+        habs.append({"id": h_id, "nome": h["nome"], "custo": custo_habilidade(j, h_id), "flechas": h.get("flechas", 0),
                      "flechas_por_alvo": h.get("flechas_por_alvo", 0),
                      "alvo": ALVOS.get(h["alvo"], ""), "desc": h["desc"],  # os números de agora vão nas linhas
                      "linhas": h["linhas"](j)})

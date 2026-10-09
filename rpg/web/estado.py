@@ -11,6 +11,8 @@ from ..dados import BIOMAS, CLIMAS, PERIODOS
 from ..itens import CONSUMIVEIS, ficha
 from ..mundo import nivel_regiao
 from ..jogo import NOMES_TESTE
+from ..combate import Combate
+from ..talentos import custo_habilidade
 
 
 def _alvo_animal(g, k):
@@ -22,12 +24,12 @@ def _alvo_animal(g, k):
              "caido": "ferido, não luta", "motivo": g.motivo_inutil(k, f)}]
 
 
-def _efeitos(c):
+def _efeitos(c, cb=None):
     lista = []
     for n, ef in c.efeitos.items():
         d = {"nome": ef.get("r", NOMES_EFEITOS.get(n, n)), "id": n, "turnos": ef["t"]}
-        if n in ("queimadura", "veneno", "sangramento"):
-            d["por_turno"] = max(1, int(ef["v"]))
+        if estados.ESTADOS.get(n, {}).get("tique"):
+            d["por_turno"] = estados.dano_do_tique(cb, n, ef)
         if ef.get("s", 1) > 1:
             d["camadas"] = ef["s"]
         d["texto"] = estados.agora(n, ef.get("v", 0))
@@ -61,16 +63,18 @@ def explicar_atributos(g):
               "atravessam mais a armadura; os de nível mais baixo, menos.",
               f"Cada ponto a mais reduz cerca de {_pct(reducao_mais)} a mais (o ganho diminui aos poucos).",
               f"Testes de Vontade: {g.mod_teste('vontade'):+d} no d20."]
-    agilidade = [f"Chance de se esquivar de um golpe: {_pct(esquiva)} (máximo 40% só pela Agilidade; com habilidades, até 60%).",
-                 f"Chance de acerto crítico: {_pct(critico)} (máximo 60%).",
+    agilidade = [f"Chance de se esquivar de um golpe: {_pct(esquiva)} (máximo {_pct(bal.ESQUIVA_MAX_AGI)} só pela "
+                 f"Agilidade; com habilidades, até {_pct(bal.MAX_ESQUIVA)}).",
+                 f"Chance de acerto crítico: {_pct(critico)} (máximo {_pct(bal.MAX_CRITICO)}).",
                  "Mais fácil fugir de uma luta.",
                  f"Testes de Destreza: {g.mod_teste('destreza'):+d}, Percepção: {g.mod_teste('percepcao'):+d}.",
-                 "+1 de Agilidade = +1,2% de esquiva e +1% de crítico."]
+                 f"+1 de Agilidade = +{_pct(bal.ESQUIVA_POR_AGI)} de esquiva e +{_pct(bal.CRITICO_POR_AGI)} de crítico."]
     poder = ["Força da magia e da fé."]
     usam_poder = grimorio.habilidades_que_usam(j, "poder")
     if ataque_usa == "poder":
+        queima = max(1, int(Combate.valor_queimadura(None, j)))
         poder += ["É a base de todas as suas magias e do ataque básico.",
-                  f"Queimaduras causam {max(2, int(j.poder * 0.4))} por turno."]
+                  f"Cada camada de queimadura arde {queima} por turno (acumula até {bal.MAX_CHAMAS} camadas)."]
     elif usam_poder:
         poder += [f"Aumenta {tx.lista_natural(usam_poder)}."]
     else:
@@ -152,7 +156,7 @@ def heroi(g):
                   for k, v in j.consumiveis.items() if v > 0 and k in CONSUMIVEIS],
         "equip": {slot: _item(it, j.nome_recurso) for slot, it in j.equip.items()},
         "mochila": [_item(it, j.nome_recurso) for it in j.mochila], "limite_mochila": 12,
-        "habilidades": [{"nome": HABILIDADES[h]["nome"], "custo": HABILIDADES[h]["custo"], "desc": descricao_habilidade(h, j)}
+        "habilidades": [{"nome": HABILIDADES[h]["nome"], "custo": custo_habilidade(j, h), "desc": descricao_habilidade(h, j)}
                         for h in j.habilidades],
         "grimorio": grimorio.dados(j),
         "ferimentos": ferimentos, "males": sobrevivencia.descrever(j),
@@ -160,7 +164,7 @@ def heroi(g):
         "companheiro": ({"nome": j.companheiro["nome"], "hp": j.companheiro["hp"], "max_hp": j.companheiro["max_hp"],
                          "tipo": j.companheiro["tipo"], "animado": bool(j.companheiro.get("animado"))}
                         if j.companheiro else None),
-        "efeitos": _efeitos(j),
+        "efeitos": _efeitos(j, g.combate_ativo),
         "comitiva": comitiva.estado(g),
     }
 
@@ -193,21 +197,16 @@ def mapa_conhecido(g):
 def _ficha_inimigo(g, e):
     """O que você sabe deste inimigo, conforme o bestiário da espécie: traços sempre; as fraquezas depois de
     conhecer a espécie; as resistências só com mais caçadas."""
-    from ..combate import mult_tracos
+    from ..combate import eficacias
     from ..dados import TRACOS
     conhecido = g.conhece(e.familia)
     resistencias = g.conhece_resistencias(e.familia)
-    mult = {}
-    if conhecido:
-        for tipo in ("fisico", "fogo", "gelo", "sagrado", "sombra", "arcano", "veneno"):
-            mult[tipo] = round(mult_tracos(e, tipo, "corpo"), 2)
-        mult["distancia"] = round(mult_tracos(e, "fisico", "distancia"), 2)
-        if not resistencias:
-            mult = {k: v for k, v in mult.items() if v >= 1}
+    fraco, resiste = eficacias(e)
     return {"conhecido": conhecido, "resistencias": resistencias, "progresso": g.progresso_bestiario(e.familia),
             "mestre": g.mestre_caca(e.familia), "abates": g.bestiario.get(e.familia, {}).get("abates", 0),
             "mestre_em": g.MESTRE_ABATES,
-            "tracos": [{"id": t, "texto": TRACOS.get(t, t)} for t in e.tracos], "mult": mult,
+            "tracos": [{"id": t, "texto": TRACOS.get(t, t)} for t in e.tracos],
+            "fraco": fraco if conhecido else None, "resiste": resiste if resistencias else None,
             "ponto_fraco": bool(getattr(e, "chave", None) and g.flag(f"fraqueza:{e.chave}")),
             "atk": round(max(e.atk, e.poder)), "defesa": round(e.defesa)}
 
@@ -218,7 +217,7 @@ def combate(g):
         return None
 
     def ficha(c, lado):
-        d = {"uid": cb.uid(c), "nome": c.nome, "hp": max(0, c.hp), "max_hp": c.max_hp, "efeitos": _efeitos(c), "lado": lado,
+        d = {"uid": cb.uid(c), "nome": c.nome, "hp": max(0, c.hp), "max_hp": c.max_hp, "efeitos": _efeitos(c, cb), "lado": lado,
              "vivo": c.vivo, "tracos": list(getattr(c, "tracos", []) or []), "cid": getattr(c, "cid", None),
              "tipo": getattr(c, "tipo", None)}
         if lado == "inimigo":
@@ -234,25 +233,38 @@ def combate(g):
     }
 
 
+# Como cada número do clima aparece no selo: nome curto, quem sofre (para a dica) e o ícone quando ajuda.
+DANO_CLIMA = {"fogo": ("Fogo", "magias e golpes de fogo causam", "chama"),
+              "gelo": ("Gelo", "o gelo causa", "gelo"),
+              "distancia": ("Distância", "flechas e magias de longe causam", "flecha")}
+
+
+def _variacao(f):
+    return f"{'+' if f > 1 else '−'}{round(abs(f - 1) * 100)}%"
+
+
 def modificadores(g):
-    """Efeitos do clima e da hora que valem agora (os mesmos números do combate e dos testes)."""
+    """Efeitos do clima e da hora que valem agora: os números vêm do catálogo CLIMAS e do balanceamento, os mesmos
+    que o combate e os testes usam."""
     m = []
-    clima = g.clima
-    if clima == "chuva":
-        m += [{"icone": "gota_azul", "texto": "Fogo −20%", "detalhe": "Chuva: magias e golpes de fogo causam 20% menos dano, gelo 10% mais. Queimaduras ardem menos."},
-              {"icone": "gelo", "texto": "Gelo +10%", "detalhe": "Chuva: o gelo causa 10% mais dano."}]
-    elif clima == "neve":
-        m += [{"icone": "floco", "texto": "Fogo −15%", "detalhe": "Neve: o fogo causa 15% menos dano."},
-              {"icone": "gelo", "texto": "Gelo +20%", "detalhe": "Neve: o gelo causa 20% mais dano."}]
-    elif clima == "tempestade":
-        m.append({"icone": "raio", "texto": "Distância −15%", "detalhe": "Tempestade: o vento desvia flechas e magias de longe (−15% de dano à distância)."})
-    elif clima == "nevoa":
-        m.append({"icone": "olho", "texto": "Esquiva +5%", "detalhe": "Névoa: todo mundo erra mais (+5% de esquiva para todos)."})
+    clima = CLIMAS[g.clima]
+    for k, f in clima.get("dano", {}).items():
+        nome, quem, icone = DANO_CLIMA[k]
+        detalhe = f"{clima['nome']}: {quem} {round(abs(f - 1) * 100)}% {'mais' if f > 1 else 'menos'} dano."
+        if k == "fogo" and clima.get("queimadura"):
+            detalhe += f" Queimaduras ardem {round((1 - clima['queimadura']) * 100)}% menos."
+        m.append({"icone": icone if f > 1 else clima["icone"], "texto": f"{nome} {_variacao(f)}", "detalhe": detalhe})
+    if clima.get("esquiva"):
+        pct = round(clima["esquiva"] * 100)
+        m.append({"icone": clima["icone"], "texto": f"Esquiva +{pct}%",
+                  "detalhe": f"{clima['nome']}: todo mundo erra mais (+{pct}% de esquiva para todos)."})
     if g.noite:
-        m.append({"icone": "lua", "texto": "Inimigos +1 nível",
-                  "detalhe": "Noite: os inimigos vêm um nível acima, mais vezes em bando, e causam 10% mais dano. É a hora deles."})
+        m.append({"icone": "lua", "texto": f"Inimigos +{bal.NOITE_NIVEL} nível",
+                  "detalhe": f"Noite: os inimigos vêm {'um nível' if bal.NOITE_NIVEL == 1 else f'{bal.NOITE_NIVEL} níveis'} acima, mais vezes em bando, e "
+                             f"causam {round((bal.NOITE_INIMIGOS - 1) * 100)}% mais dano. É a hora deles."})
     if g.sem_luz:
-        m.append({"icone": "tocha_apagada", "texto": "Escuro −4", "detalhe": "Sem luz: −4 nos testes de Percepção e Destreza. Acenda uma tocha."})
+        m.append({"icone": "tocha_apagada", "texto": f"Escuro −{bal.ESCURO_TESTES}",
+                  "detalhe": f"Sem luz: −{bal.ESCURO_TESTES} nos testes de Percepção e Destreza. Acenda uma tocha."})
     return m
 
 
