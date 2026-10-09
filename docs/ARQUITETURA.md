@@ -110,6 +110,10 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
 
 - `app/nucleo.js` conexão e fila de mensagens · `app/pagina.js` texto e cenas · `app/escolhas.js` menus,
   doca de atalhos, roda de ações da luta · `app/paineis.js` ficha e mapa laterais · `app/controles.js` teclado
+- `app/vila.js` a vila como lugar: os serviços moram nos prédios da paisagem. O motor marca cada opção da vila com
+  `predio` (e `curto`, `tempo`); `vista.js` desenha os prédios e registra a área de cada um (`Vista.predios()`), acende
+  o que está sob o mouse (`destacar`) e aproxima a câmera do escolhido (`focar`); `vila.js` põe os botões e as
+  plaquinhas por cima, toca o som do prédio e mostra no texto só as opções dele. O que não é de prédio fica em texto.
 - `telas.js` telas desenhadas (inventário, mercado, talentos, Grimório, fogueira, mural...)
 - `batalha.js` o palco da luta · `realce.js` cores dos termos de jogo · `sprites*.js`, `vista.js`, `mapa.js`, `som.js`
 - `sensacao.js` o peso dos momentos (parada no impacto, tremor, câmera lenta no golpe final...): as telas dizem o

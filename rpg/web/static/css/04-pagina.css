@@ -5,11 +5,25 @@
 #pagina { position: relative; flex: 1; min-height: 0; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #4a4038 #120e0b; }
 /* A arte: inteira no começo da cena; quando o texto passa a rolar, recolhe numa faixa (pagina.js) e o espaço vai
    para a leitura. Nas telas de menu ela sai: a cena inteira fica para a tela. */
-#vista { display: block; flex: none; width: 100%; height: min(calc(100cqw * 72 / 320), 22vh); object-fit: cover; object-position: 50% 80%;
+#vista { display: block; flex: none; width: 100%; height: calc(min(100cqw * 72 / 320, 22vh) + var(--P) * 12); object-fit: cover; object-position: 50% 80%;
   transition: height 0.35s ease; }
-/* Embaixo da arte, uma faixa de bronze como a do quadro (na própria caixa da arte, para o texto não passar por cima). */
-#cena > #vista { padding-bottom: calc(var(--P) * 4); background: var(--faixa) 0 100% / var(--P) calc(var(--P) * 4) repeat-x; }
-#cena.recolhido #vista { height: 52px; }
+/* Sem borda entre a arte e o texto: o chão da paisagem continua para fora dela e se desfaz em pontilhado até o
+   pergaminho (vista.js publica a rampa na cor do chão em --chao-rampa). Fica na própria caixa da arte, para o texto
+   não passar por cima. */
+#cena > #vista { padding-bottom: calc(var(--P) * 12); background: var(--chao-rampa) 0 100% / calc(var(--P) * 4) calc(var(--P) * 12) repeat-x; }
+#cena.recolhido #vista { height: calc(52px + var(--P) * 12); }
+/* Na vila, a arte é o próprio menu: inteira, sem recolher. */
+#cena.vila-hub #vista, #cena.vila-hub.recolhido #vista { height: calc(100cqw * 72 / 320 + var(--P) * 12); }
+/* Os prédios da vila (vila.js): botões invisíveis sobre a arte, cada um com a plaquinha do nome no chão, na frente. */
+#predios { position: absolute; z-index: 2; pointer-events: none; }
+#predios .predio { position: absolute; padding: 0; border: 0; background: transparent; cursor: pointer; pointer-events: auto; }
+#predios .predio:focus-visible { outline: var(--px) dashed var(--ouro); outline-offset: 0; }
+#predios.focado .predio { visibility: hidden; }
+.placa-nome { --anel: var(--anel-j); position: absolute; left: 50%; top: 100%; translate: -50% 3px; padding: 0 6px 1px; white-space: nowrap; pointer-events: none;
+  font-family: var(--texto); font-size: 13px; font-weight: 600; line-height: 1.3; color: var(--tinta-2);
+  border: var(--borda) solid var(--p-j); border-image: var(--anel) 1 / 1 stretch; background: var(--p-k); background-clip: padding-box; }
+.predio:is(:hover, :focus-visible, .aberto) .placa-nome { --anel: var(--anel-a); color: var(--ouro); }
+.tempo-acao { margin-left: auto; padding-left: 12px; font-size: 14px; color: var(--tinta-2); white-space: nowrap; }
 #cena[data-tipo="menu"] #vista { display: none; }
 /* A barra das telas de menu: Voltar à esquerda, o título no meio, o que importa da tela (ouro, dia...) à direita. */
 #barra-tela { position: relative; z-index: 1; flex: none; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 14px; min-height: 56px; padding: 6px 16px 10px;

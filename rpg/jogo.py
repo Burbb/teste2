@@ -312,7 +312,7 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
     def opcoes_comuns(self):
         pontos = self.j.pontos_talento
         return [
-            ("Viajar", "viajar"),
+            ("Viajar", "viajar", {"predio": "estrada"}),
             ("Talentos" + (f"  ★ {tx.plural(pontos, 'ponto')} para gastar!" if pontos else ""), "talentos"),
             ("Personagem e inventário", "personagem"),
             ("Comitiva" + ("  ✉ alguém quer conversar" if any(
@@ -399,15 +399,21 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         preco_dormir = self.preco(8 + 2 * j.nivel)
         faltando = j.max_hp - j.hp
         preco_templo = self.preco(max(1, faltando // 2)) if faltando else 0
+        # Cada serviço diz a que prédio da vila pertence (na tela gráfica, a vila é um lugar com prédios clicáveis), o
+        # rótulo curto para quando já se está diante do prédio, e o tempo que gasta.
         opcoes = [
-            ("Passear pela vila", "passear"),
-            (f"Taverna: dormir até amanhã ({preco_dormir} ouro)", "dormir"),
-            (f"Taverna: pagar uma bebida e ouvir rumores ({self.preco(3)} ouro)", "rumores"),
-            ("Mercado", "loja"),
-            ("Mural de contratos", "mural"),
-            (f"Templo: cuidar da vida ({preco_templo} ouro)", "templo") if faltando else None,
-            ("Curandeiro: tratar ferimentos e infecções", "curandeiro") if j.ferimentos else None,
-            ("Ferreiro: reforçar arma ou armadura", "ferreiro"),
+            ("Passear pela vila", "passear", {"tempo": "1 período"}),
+            (f"Taverna: dormir até amanhã ({preco_dormir} ouro)", "dormir",
+             {"predio": "taverna", "curto": f"Dormir até amanhã ({preco_dormir} ouro)", "tempo": "até amanhã"}),
+            (f"Taverna: pagar uma bebida e ouvir rumores ({self.preco(3)} ouro)", "rumores",
+             {"predio": "taverna", "curto": f"Pagar uma bebida e ouvir rumores ({self.preco(3)} ouro)"}),
+            ("Mercado", "loja", {"predio": "mercado"}),
+            ("Mural de contratos", "mural", {"predio": "mural"}),
+            (f"Templo: cuidar da vida ({preco_templo} ouro)", "templo",
+             {"predio": "templo", "curto": f"Cuidar da vida ({preco_templo} ouro)"}) if faltando else None,
+            ("Curandeiro: tratar ferimentos e infecções", "curandeiro",
+             {"predio": "curandeiro", "curto": "Tratar ferimentos e infecções"}) if j.ferimentos else None,
+            ("Ferreiro: reforçar arma ou armadura", "ferreiro", {"predio": "ferreiro"}),
         ]
         # A frase da vila aparece na chegada e quando o tempo passa, não a cada volta ao menu (do mercado, do
         # inventário). O sorteio segue a cada volta: com a mesma semente, a partida continua a mesma.

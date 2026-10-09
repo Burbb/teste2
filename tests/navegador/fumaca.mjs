@@ -156,7 +156,7 @@ async function cenarioTitulo(browser) {
     conferir(await ate(/Diário/), "a tecla D também troca de tela de dentro de outra");
     await page.waitForTimeout(300);
     await (await page.$('#doca .atalho[data-rotulo="Diário"]')).click();
-    conferir(!!(await esperar('#prompt .escolha:has-text("Viajar")')), "clicar no atalho da tela aberta volta ao lugar");
+    conferir(!!(await esperar('#prompt .escolha:has-text("Viajar"), #predios .predio[data-predio="estrada"]')), "clicar no atalho da tela aberta volta ao lugar");
     // O histórico é o diário da jornada: abrir telas pela doca e voltar não deixa rastro, nem repete o lugar.
     const hist = await page.$$eval("#historico-lista > p", (ps) => ps.map((p) => p.textContent));
     conferir(!hist.some((t) => /^› (Voltar|Personagem|Bestiário|Diário|Fechar)/.test(t) || /^(Jean|Bestiário|Diário)$/.test(t)),
@@ -211,7 +211,13 @@ async function cenarioVila(browser) {
     await page.waitForTimeout(400);
     conferir(!(await page.$("#janela-confirmar")) && (await meus()) === tinha, "Esc fecha a janela e o contrato fica");
     await page.keyboard.press("Escape");
-    const mercado = await esperar('#prompt .escolha:has-text("Mercado")');
+    // Na vila, os serviços estão nos prédios da paisagem: a taverna abre as opções dela, e Esc volta à vila.
+    const mercado = await esperar('#predios .predio[data-predio="mercado"]');
+    conferir(!(await page.$('#prompt .escolha:has-text("Mercado")')), "na vila, os serviços ficam nos prédios, não na lista");
+    await (await page.$('#predios .predio[data-predio="taverna"]')).click();
+    conferir(!!(await esperar("#prompt .voltar-vila", 3000)) && !!(await page.$('#prompt .escolha:has-text("Dormir")')), "a taverna mostra as opções dela e o Voltar à vila");
+    await page.keyboard.press("Escape");
+    conferir(!!(await esperar('#predios:not(.focado) .predio[data-predio="mercado"]', 3000)) && !(await page.$("#prompt .voltar-vila")), "Esc sai da taverna e volta à vila");
     const vida = () => page.evaluate(() => App.estado.heroi.hp);
     const antesPocao = await vida();
     let abriu = 0;
@@ -225,7 +231,7 @@ async function cenarioVila(browser) {
     for (let k = 0; k < 30 && (await vida()) === antesPocao; k++) await page.waitForTimeout(100);
     conferir((await vida()) > antesPocao, "a poção da bolsa lateral se usa com um clique");
     await page.waitForTimeout(300);
-    await (await esperar('#prompt .escolha:has-text("Mercado")') || mercado).click();
+    await (await esperar('#predios .predio[data-predio="mercado"]') || mercado).click();
     const mais = await esperar('[data-comprar="tocha"] [data-q="1"]');
     const qtd = () => page.evaluate(() => Number(document.querySelector('[data-comprar="tocha"] .qtd-ctrl b').textContent));
     await mais.hover(); await page.mouse.down();

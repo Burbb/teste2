@@ -78,3 +78,4 @@ body.modo-titulo #prompt .escolhas:has(> li:nth-child(5)) .escolha { font-size: 
 .save-cartao.ilegivel { opacity: .6; }
 @keyframes save-entra { from { opacity: 0; transform: translateY(8px); } }
 body.modo-titulo #prompt .escolha:hover, body.modo-titulo #prompt .escolha:focus-visible { background: transparent; }
+body.modo-titulo #cena > #vista { padding-bottom: 0; background: none; }

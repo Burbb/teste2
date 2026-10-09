@@ -112,6 +112,40 @@ const Som = (() => {
         estalo(t + x, 1800 + Math.random() * 2200, 0.35 * (1 - i / 11), 0.035);
       }
     },
+    // Os prédios da vila: o som de cada um ao clicar, curto e baixo, para combinar com o tom da paisagem.
+    predio_templo() {  // o sino: parciais de sino, longos, sumindo devagar
+      const t = ctx.currentTime;
+      [[392, 0.07, 2.2], [784, 0.035, 1.6], [941, 0.03, 1.4], [1176, 0.02, 1.1], [1647, 0.012, 0.8]].forEach(([f, v, d]) => tom(t, f, v, d, "sine"));
+      tom(t, 196, 0.04, 2.4, "sine");
+    },
+    predio_taverna() {  // conversa baixa ao fundo e o tilintar de copo e talher
+      const t = ctx.currentTime;
+      for (let i = 0; i < 6; i++) voz(t + i * 0.09 + Math.random() * 0.05, 110 + Math.random() * 90, 0.12, 0.018);
+      [[0.05, 2900], [0.21, 3400], [0.33, 2600]].forEach(([d, f]) => { estalo(t + d, f, 0.07, 0.03); tom(t + d, f, 0.012, 0.25, "triangle"); });
+    },
+    predio_mercado() {  // a moeda jogada para cima: o tinido girando no ar e os quiques no balcão
+      const t = ctx.currentTime;
+      for (let i = 0; i < 5; i++) tom(t + i * 0.06, 2400 + (i % 2) * 700, 0.03, 0.09, "triangle");
+      [0.42, 0.55, 0.64, 0.7].forEach((d, i) => { estalo(t + d, 3000, 0.12 * (1 - i * 0.22), 0.02); tom(t + d, 2700, 0.02 * (1 - i * 0.2), 0.12, "triangle"); });
+    },
+    predio_ferreiro() {  // o martelo na bigorna
+      const t = ctx.currentTime;
+      estalo(t, 3200, 0.25, 0.025); tom(t, 1760, 0.07, 0.7, "triangle"); tom(t, 2640, 0.035, 0.5, "triangle"); tom(t, 110, 0.15, 0.12, "sine", 60);
+      estalo(t + 0.32, 3000, 0.12, 0.02); tom(t + 0.32, 1760, 0.03, 0.4, "triangle");
+    },
+    predio_mural() {  // papel pregado sendo mexido
+      const t = ctx.currentTime;
+      sopro(t, 0.18, 2500, 6000, 0.05, 1.4, "highpass"); sopro(t + 0.16, 0.14, 3000, 5000, 0.035, 1.4, "highpass");
+    },
+    predio_curandeiro() {  // um frasco de vidro e um borbulhar
+      const t = ctx.currentTime;
+      tom(t, 1980, 0.035, 0.35, "sine"); tom(t + 0.02, 2970, 0.015, 0.25, "sine");
+      for (let i = 0; i < 4; i++) tom(t + 0.2 + i * 0.07, 380 + Math.random() * 300, 0.025, 0.08, "sine", 700 + Math.random() * 300);
+    },
+    predio_estrada() {  // passos no cascalho
+      const t = ctx.currentTime;
+      [0, 0.3, 0.6].forEach((d) => { sopro(t + d, 0.12, 1800, 500, 0.06, 0.9, "lowpass"); estalo(t + d + 0.02, 900, 0.03, 0.03); });
+    },
     sucesso() { const t = ctx.currentTime; tom(t, 523, 0.12, 0.35, "triangle"); tom(t + 0.09, 784, 0.1, 0.5, "triangle"); },
     falha() { const t = ctx.currentTime; tom(t, 196, 0.14, 0.5, "sawtooth", 130); },
     critico() { const t = ctx.currentTime; [523, 659, 784, 1046].forEach((f, i) => tom(t + i * 0.07, f, 0.1, 0.6, "triangle")); },

@@ -136,7 +136,10 @@ function mostrarOpcoes(m) {
     if (m.opcoes.some((o) => o.meta && (o.meta.habilidade || o.meta.usar_item || o.meta.trocar !== undefined))) { rodaSubmenu(m); return; }
     if (m.opcoes.some((o) => o.meta && o.meta.alvo)) { rodaMira(m); return; }
   }
-  if (m.pergunta) promptEl.appendChild(el("div", "pergunta-rotulo", esc(m.pergunta)));
+  // Na vila, os serviços estão nos prédios da paisagem (vila.js): ficam fora da lista, e a pergunta também.
+  const naVila = ehMenuDaVila(m), grupos = {};
+  if (!naVila) fecharVila();
+  if (m.pergunta && !naVila) promptEl.appendChild(el("div", "pergunta-rotulo", esc(m.pergunta)));
   const lista = el("ol", "escolhas");
   if (emLuta && m.pergunta === "Sua ação:") { lista.classList.add("acoes-combate"); Batalha.vez("j"); }
   if (emLuta && m.opcoes.some((o) => o.meta && o.meta.alvo)) {
@@ -160,6 +163,7 @@ function mostrarOpcoes(m) {
   m.opcoes.forEach((o, i) => {
     if (i === voltar) return;
     if (o.meta && ACOES_OCULTAS.some((k) => o.meta[k] !== undefined)) return;  // feitas pela tela (arrastar, clicar)
+    if (naVila && o.meta && o.meta.predio) { (grupos[o.meta.predio] = grupos[o.meta.predio] || []).push({ o, i }); return; }
     const at = sistema && atalhoDe(o.texto);
     if (at) {
       const pontos = /★\s*(\d+)/.exec(o.texto);
@@ -252,6 +256,7 @@ function mostrarOpcoes(m) {
     if (rot) rot.innerHTML = `${habMirando ? `<b>${esc(habMirando)}</b>: ` : ""}escolha o alvo <small>clique num inimigo</small>`;
   }
   if (lista.childElementCount) { promptEl.appendChild(lista); Telas.ligarDicas(lista); }
+  if (naVila) montarVila(m, grupos);
   if (atalhos.childElementCount) montarDoca(atalhos);
   if (!replay) guardar("cdf-dica", String(Number(ler("cdf-dica") || 0) + 1));
   if (estado) {
@@ -340,6 +345,7 @@ function cartaAcao(o, i, m, pos) {
 /** Responde "Voltar" na pergunta atual (botão ou Esc), com o desvio da barra de luta. */
 function voltarPergunta() {
   if (!pergunta || pergunta.voltar === undefined) return;
+  if (pergunta.voltarLocal) { pergunta.voltarLocal(); return; }  // sair de um prédio da vila: sem perguntar ao jogo
   if (pergunta.aoVoltar) pergunta.aoVoltar();
   responder(pergunta.id, pergunta.voltar);
 }
