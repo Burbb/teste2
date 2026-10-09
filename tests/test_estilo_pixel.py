@@ -13,13 +13,14 @@ import unittest
 
 ESTATICO = pathlib.Path(__file__).resolve().parent.parent / "rpg" / "web" / "static"
 CSS = sorted((ESTATICO / "css").glob("*.css"))
-JS = sorted(p for p in [*ESTATICO.glob("*.js"), *(ESTATICO / "app").glob("*.js")] if p.name != "sprites-dados.js")
+JS = sorted(p for p in [*ESTATICO.glob("*.js"), *(ESTATICO / "app").glob("*.js"), *(ESTATICO / "telas").glob("*.js")]
+            if p.name != "sprites-dados.js")
 
 PENDENTES = {
     "01-base.css", "02-hud.css", "03-batalha.css", "04-pagina.css", "05-paineis.css", "06-talentos-avisos.css",
     "07-titulo-responsivo.css", "08-mercado.css", "09-comitiva.css", "10-contratos.css", "12-acoes-combate.css",
 }
-PENDENTES_JS = {"telas.js"}  # filtros de cor em animações feitas pelo JS
+PENDENTES_JS = {"talentos.js"}  # filtros de cor em animações feitas pelo JS (o brilho do nó aprendido)
 
 FILTRO = r"\b(grayscale|sepia|hue-rotate|brightness|saturate|contrast|invert|opacity|drop-shadow)\(|filter\s*:\s*url\("
 PROIBIDO = {

@@ -146,7 +146,13 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   topo. O que aconteceu fica no histórico (H). O clique que adiantava o texto não pula a leitura nem as celebrações
   (contrato pago, espólio): a página só aceita virar depois de `GUARDA_LEITURA`, e celebração só se dispensa na
   velocidade "instantâneo".
-- `telas.js` telas desenhadas (inventário, mercado, talentos, Grimório, fogueira, mural...)
+- `telas/` as telas desenhadas, uma por arquivo (inventário, mercado, talentos, Grimório, fogueira, mural...), mais as
+  dicas, os menus de item e as celebrações. `base.js` cria o nome `Telas` e o painel: cada tela se registra com o tipo
+  que o motor manda (`Telas.registrar("loja", loja, { ligar, esquecer })`), e o painel acha a tela pelo tipo. Cada
+  arquivo tira de `Telas` o que usa dos outros (`const { h, S, dica } = Telas;`, no começo) e põe o que oferece
+  (`Object.assign(Telas, {...})`, no fim); a ordem dos `<script>` no `index.html` é a das dependências. Pedir a
+  `Telas` um nome que ninguém pôs é erro na hora, com o nome. Tela nova: um arquivo em `telas/`, o `registrar` no fim
+  e o `<script>` antes de quem a usa.
 - `batalha.js` o palco da luta (o jeito de animar vem do motor: `anim` nos lances) · `realce.js` cores dos termos de
   jogo (os nomes de habilidades e talentos chegam do motor no `glossario` do estado) · `sprites*.js`, `vista.js`, `mapa.js`, `som.js`
 - `sensacao.js` o peso dos momentos (parada no impacto, tremor, câmera lenta no golpe final...): as telas dizem o

@@ -1,4 +1,4 @@
-/* Sensação: o peso dos momentos do jogo. As telas (batalha.js, telas.js) dizem O QUE aconteceu; aqui mora
+/* Sensação: o peso dos momentos do jogo. As telas (batalha.js, telas/) dizem O QUE aconteceu; aqui mora
    COMO aquilo se sente: quanto o tempo para no impacto, quanto a arena treme, como a câmera chega perto do
    golpe que encerra a luta. Os números ficam todos em AJUSTES, para afinar sem caçar setTimeout pelo código.
 

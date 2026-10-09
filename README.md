@@ -468,7 +468,8 @@ rpg/
       css/         estilos por componente (01-base ... 13-realce), carregados nessa ordem
       app/         a aplicação: nucleo (conexão e fila), pagina, escolhas, paineis, controles
       realce.js    cores dos termos de jogo nos textos de regra
-      batalha.js   palco da luta, balões e selos · telas.js talentos, fichas, mercado, fogueira
+      telas/       uma tela por arquivo (inventário, mercado, talentos, fogueira...); base.js, as peças comuns
+      batalha.js   palco da luta, balões e selos
       sprites-dados.js os desenhos em pixel art · sprites.js quem os desenha
       vista.js, mapa.js, som.js, fontes OFL
   tui.py           interface de terminal com painéis (Textual), via --terminal
