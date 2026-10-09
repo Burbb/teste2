@@ -6,7 +6,8 @@ Motor em Python puro (só biblioteca padrão) + interface web local (`python jog
 Leia antes de mexer:
 - [docs/ARQUITETURA.md](docs/ARQUITETURA.md): como o motor funciona e onde cada coisa mora.
 - [docs/COMO_CRIAR.md](docs/COMO_CRIAR.md): receitas para habilidade, talento, estado, evento, balanceamento.
-- [docs/ROADMAP.md](docs/ROADMAP.md): onde estamos (Etapas A, B e C feitas; a D é a próxima) e ideias guardadas.
+- [docs/ROADMAP.md](docs/ROADMAP.md): onde estamos (Etapas A a H feitas; a I, mundo e narrativa como dados, fica
+  para quando a história começar) e ideias guardadas.
 
 ## Combinados
 
