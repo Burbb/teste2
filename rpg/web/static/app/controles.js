@@ -72,7 +72,12 @@ document.addEventListener("click", (ev) => {
     else Telas.toast("", "Dá para conversar quando estiver num lugar seguro (vila ou acampamento).", cid, true);
     return;
   }
-  if (processando && ev.target.closest("#cena")) pular = true;
+  if (processando && ev.target.closest("#cena")) {
+    // Na vila, clicar num prédio da paisagem enquanto a página corre adianta e entra nele quando a vila aparecer
+    // (os balões só voltam a ser botões depois): não precisa clicar na tela e depois no prédio.
+    const predio = ev.target.id === "vista" && predioNoPonto(ev.clientX, ev.clientY);
+    if (predio) { predioPedido = predio; pedirPular(); } else pular = true;
+  }
 });
 
 document.addEventListener("keydown", (ev) => {
@@ -84,6 +89,7 @@ document.addEventListener("keydown", (ev) => {
     if (fecharJanela()) { ev.preventDefault(); return; }  // a janelinha de habilidades/itens da luta fecha primeiro
     const aberto = !$("#gaveta-historico").hidden || !$("#sobre-mapa").hidden || !$("#sobre-talentos").hidden || !$("#sobre-grimorio").hidden || document.querySelector(".menu-item");
     if (!aberto && pergunta && pergunta.voltar !== undefined && !processando) { ev.preventDefault(); voltarPergunta(); return; }
+    if (!aberto && processando && !pergunta) { ev.preventDefault(); pedirPular(); return; }  // o Esc também adianta
     if (k === "Escape") { Telas.fecharMenuItem(); fecharTudo(); }
     return;
   }

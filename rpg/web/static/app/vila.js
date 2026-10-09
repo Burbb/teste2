@@ -45,6 +45,19 @@ function posicionarPredios() {
 }
 window.addEventListener("resize", posicionarPredios);
 
+/** O prédio da vila sob um ponto da tela (ou null): a mesma conta de posicionarPredios, ao contrário. */
+function predioNoPonto(x, y) {
+  if (!estado || estado.combate || estado.local.tipo !== "vila") return null;
+  const vista = $("#vista"), cs = getComputedStyle(vista), r = vista.getBoundingClientRect();
+  const larg = vista.clientWidth, alt = vista.clientHeight - parseFloat(cs.paddingBottom);
+  if (larg <= 0 || alt <= 0) return null;
+  const esc = Math.max(larg / Vista.LARGURA, alt / Vista.ALTURA);
+  const dx = (larg - Vista.LARGURA * esc) * 0.5, dy = (alt - Vista.ALTURA * esc) * 0.8;
+  const ax = (x - r.left - dx) / esc, ay = (y - r.top - dy) / esc;
+  const p = Vista.predios().find((q) => ax >= q.x && ax < q.x + q.w && ay >= q.y && ay < q.y + q.h);
+  return p ? p.id : null;
+}
+
 /** Monta a vila: os prédios com opção (ou com um porquê de estarem sem serviço) viram botões com balão; os outros
  *  ficam só de cenário. */
 function montarVila(m, grupos) {
@@ -91,7 +104,7 @@ function entrarNoPredio(id, pedido = false) {
   const v = vilaAberta;
   if (!v) return;
   // Com o texto ainda correndo (a página do que aconteceu esperando para virar), o clique adianta e fica guardado.
-  if (processando && !pedido) { predioPedido = id; pular = true; return; }
+  if (processando && !pedido) { predioPedido = id; pedirPular(); return; }
   const g = v.grupos[id] || [];
   Som.tocar("predio_" + id);
   Vista.focar(id);

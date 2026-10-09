@@ -50,7 +50,8 @@ function porVoltar(rotulo, acao) {
   if (!acao) return;
   const b = el("button", "voltar-seta", `<span>◀</span> ${esc(rotulo)}<kbd>Esc</kbd>`);
   b.type = "button";
-  b.addEventListener("click", (ev) => { ev.stopPropagation(); acao(); });
+  // Com a página ainda correndo (ou a barrinha de leitura enchendo), o Voltar adianta, como o clique na tela.
+  b.addEventListener("click", (ev) => { ev.stopPropagation(); if (processando) { pedirPular(); return; } acao(); });
   barraTela.prepend(b);
 }
 const emMenu = () => cenaEl.dataset.tipo === "menu";
@@ -114,9 +115,10 @@ async function virarParaLugar(m) {
     pular = false;
     const agora = performance.now(), guarda = agora + GUARDA_LEITURA, ate = agora + ms;
     while (performance.now() < ate) {
-      if (pular) { if (performance.now() < guarda) pular = false; else break; }
+      if (pular || pularPedido) { if (performance.now() < guarda) pular = false; else break; }
       await espera(40);
     }
+    pularPedido = false;
   }
   await novaCena(Object.assign({}, m, { virar: false }));
 }

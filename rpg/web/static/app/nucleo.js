@@ -44,6 +44,11 @@ const histLista = $("#historico-lista");
 let velocidade = ler("cdf-velocidade") || "normal";
 const fila = [];
 let processando = false, pular = false, replay = false;
+// Um pedido deliberado de seguir (o Voltar, o Esc, um prédio clicado na paisagem) enquanto a página ainda corre ou
+// espera a leitura: adianta como o clique na tela, mas não se perde na guarda de leitura (vira a página quando ela
+// acaba).
+let pularPedido = false;
+function pedirPular() { pular = true; pularPedido = true; }
 let estado = null, pergunta = null, pendente = null;
 let ultimaResposta = 0;  // quando a última escolha saiu: a leitura do que veio depois começa aí
 let capitular = false, seguir = true;
@@ -132,6 +137,7 @@ async function processar() {
   }
   processando = false;
   pular = false;
+  pularPedido = false;
 }
 
 function instantaneo() { return pular || replay || velocidade === "instantaneo"; }

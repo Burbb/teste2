@@ -903,8 +903,10 @@ const Telas = (() => {
     function cena(primeira) {
       if (!primeira && !canvas.isConnected) { clearInterval(timer); return; }  // a tela saiu: para de animar
       quadro++;
-      const vista = document.getElementById("vista");
-      if (vista) x.drawImage(vista, 0, 0, W, 72); else px(0, 0, W, 72, "#080b1a");
+      // O céu vem da arte da paisagem em 320x72, que anda mesmo escondida; o canvas da página fica parado enquanto
+      // a fogueira está na tela (copiado dele, a chuva congelava).
+      const ceu = typeof Vista !== "undefined" && Vista.arte();
+      if (ceu) x.drawImage(ceu, 0, 0, W, 72); else px(0, 0, W, 72, "#080b1a");
       // chão escuro com pontilhado
       for (let y = 72; y < H; y++) px(0, y, W, 1, y < 76 ? "#14100c" : "#0d0b09");
       for (let y = 78; y < H; y += 2) for (let i = (y * 7) % 5; i < W; i += 5) px(i, y, 1, 1, "#1a140f");
