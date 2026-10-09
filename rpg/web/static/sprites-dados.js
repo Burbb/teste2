@@ -1441,6 +1441,17 @@ const SPRITES_GRADES = (() => {
   // Divisória: um fio de bronze com sombra, e uma ponta de ouro em cada extremo.
   S.fio = [".", "J", "k"];
   S.ponta = [".a.", "aYa", ".a."];
+  // O ornamento sob o título da cena: um losango vazado de ouro entre dois fios de bronze (os fios vêm do CSS).
+  S.ornamento = [
+    ".....c.....",
+    "....cyc....",
+    "...cy.yc...",
+    "JJ.y.Y.y.JJ",
+    "...cy.yc...",
+    "....cyc....",
+    ".....c....."];
+  // A faixa de bronze sob a arte da cena: o mesmo filete do quadro (contorno, luz, bronze, sombra).
+  S.faixa = ["k", "J", "j", "k"];
   // Cabeçalho de seção: uma estrela de quatro pontas antes do título, e um fio duplo que acaba num losango vazado.
   S.estrelinha = [
     "..c..",

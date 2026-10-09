@@ -265,8 +265,8 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         self.pausar()
 
     def contexto_cena(self):
-        return (f"{self.loc['nome']} · dia {self.dia}, {PERIODOS[min(self.periodo, 3)].lower()} · "
-                f"{CLIMAS[self.clima]['nome'].lower()}")
+        return (f"{self.loc['nome']} • Dia {self.dia} • {PERIODOS[min(self.periodo, 3)]} • "
+                f"{CLIMAS[self.clima]['nome']}")
 
     def cabecalho(self):
         j = self.j
@@ -274,9 +274,9 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         ui = self.ui
         tipo = {"vila": "Vila", "selvagem": BIOMAS[loc["bioma"]]["nome"], "covil": BIOMAS[loc["bioma"]]["nome"],
                 "cidadela": "Cidadela"}[loc["tipo"]]
-        perigo = "" if loc["tipo"] == "vila" else f" · inimigos Nv.{self.nivel_local()}"
-        ui.cena(loc["nome"], f"{tipo}{perigo} · dia {self.dia}, {PERIODOS[min(self.periodo, 3)].lower()} · "
-                             f"{CLIMAS[self.clima]['nome'].lower()}", "local")
+        perigo = "" if loc["tipo"] == "vila" else f" • inimigos Nv.{self.nivel_local()}"
+        ui.cena(loc["nome"], f"{tipo}{perigo} • Dia {self.dia} • {PERIODOS[min(self.periodo, 3)]} • "
+                             f"{CLIMAS[self.clima]['nome']}", "local")
         if ui.hud:
             return  # o painel lateral já mostra o resto
         ui.dizer(f" {j.nome}, {j.nome_classe} Nv.{j.nivel}  (XP {j.xp}/{j.xp_proximo()})  "

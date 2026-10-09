@@ -74,8 +74,8 @@ function cabecalho(m) {
   // a cena inteira fica para a tela. Nas cenas da história, o título abre a página, embaixo da arte.
   if (m.tipo === "menu") { if (cab.parentElement !== barraTela) barraTela.appendChild(cab); }
   else if (cab.parentElement !== folha) folha.prepend(cab);
-  cab.innerHTML = `<h1 class="cena-titulo">${esc(suavizar(m.titulo))}</h1>` + (m.subtitulo ? `<div class="cena-sub">${esc(m.subtitulo)}</div>` : "") +
-    `<div class="ornamento"><i></i><b></b><i></i></div>`;
+  cab.innerHTML = `<h1 class="cena-titulo">${esc(suavizar(m.titulo))}</h1><div class="ornamento"><i></i><b></b><i></i></div>` +
+    (m.subtitulo ? `<div class="cena-sub">${esc(m.subtitulo)}</div>` : "");
   corpo.classList.toggle("modo-titulo", m.tipo === "titulo");
   if (m.tipo === "titulo") {
     corpo.classList.add("sem-heroi"); corpo.classList.remove("em-combate"); estado = null; ultimoLugar = "";

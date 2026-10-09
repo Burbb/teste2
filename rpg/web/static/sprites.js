@@ -166,7 +166,7 @@ const Sprites = (() => {
     raiz.setProperty("--sombra-dir", u(rampa("k", 4, "esquerda")));
     raiz.setProperty("--sombra-baixo", u(rampa("k", 4, "sobe")));
     raiz.setProperty("--sombra-desce", u(rampa("k", 4)));
-    for (const n of ["caveira", "cadeado", "lanterna", "estrelinha", "fio_cabeca", "fim_cabeca", "fio", "ponta"]) raiz.setProperty(`--${n.replace("_", "-")}`, u(url(n)));
+    for (const n of ["caveira", "cadeado", "lanterna", "estrelinha", "fio_cabeca", "fim_cabeca", "fio", "ponta", "ornamento", "faixa"]) raiz.setProperty(`--${n.replace("_", "-")}`, u(url(n)));
   }
 
   return { img, url, canvas, existe: (n) => !!S[n], PALETA, BAYER4, MOLDURAS, tex: { tile, pontilhado, rampa, pedra, fumo }, publicar };
