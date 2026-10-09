@@ -111,5 +111,33 @@ class TestWeb(unittest.TestCase):
         self.assertEqual(repetidas[-1]["t"], "opcoes")
 
 
+class TestPagina(unittest.TestCase):
+    """Quando a ponte abre página nova e quando só troca o título."""
+
+    def cenas(self, passos):
+        ui = WebUI()
+        ui.jogo = None
+        passos(ui)
+        return [(m["t"], m.get("titulo"), m.get("virar", False)) for m in ui.canal.mensagens
+                if m["t"] in ("nova_cena", "cabecalho")]
+
+    def test_fim_de_evento_sem_escolha_vira_a_pagina(self):
+        # O "Exausto" e a noite no acampamento: a cena abre, o texto conta o que houve e o jogo pausa, sem ninguém
+        # ter escolhido nada. A volta ao lugar é página nova (a tela deixa ler e vira); antes, o texto do evento
+        # ficava embaixo do título do lugar, empurrando as opções.
+        def passos(ui):
+            ui.cena("Exausto")
+            ui.dizer("A noite passou e você não parou para dormir.")
+            ui.pausar()
+            ui.cena("Vale do Corvo", tipo="local")
+        self.assertEqual(self.cenas(passos)[-1], ("nova_cena", "Vale do Corvo", True))
+
+    def test_introducao_sem_texto_so_troca_o_titulo(self):
+        def passos(ui):
+            ui.cena("Estrada")
+            ui.cena("Vale do Corvo", tipo="local")
+        self.assertEqual(self.cenas(passos)[-1], ("cabecalho", "Vale do Corvo", False))
+
+
 if __name__ == "__main__":
     unittest.main()

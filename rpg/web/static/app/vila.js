@@ -105,6 +105,9 @@ function entrarNoPredio(id, pedido = false) {
   if (!v) return;
   // Com o texto ainda correndo (a página do que aconteceu esperando para virar), o clique adianta e fica guardado.
   if (processando && !pedido) { predioPedido = id; pedirPular(); return; }
+  // Só o menu da vila responde: se a pergunta da tela já é outra (uma tela da doca abriu, um evento começou), a vila
+  // que sobrou na paisagem sai em vez de responder por uma pergunta que o motor não espera mais.
+  if (!pergunta || pergunta.id !== v.m.id) { fecharVila(); return; }
   const g = v.grupos[id] || [];
   Som.tocar("predio_" + id);
   Vista.focar(id);

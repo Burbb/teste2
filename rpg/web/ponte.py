@@ -192,7 +192,9 @@ class WebUI(InterfaceGrafica, UI):
                 self._continuar()
             self._enviar("combate", titulo=titulo, subtitulo=subtitulo)
             return
-        if self.escolhas_na_cena > 0:
+        # A cena nova abre página nova quando houve escolha nesta, ou quando ela terminou com uma pausa (o evento da
+        # noite, o "Exausto": ninguém escolheu nada, mas o texto pede leitura antes de seguir).
+        if self.escolhas_na_cena > 0 or self.pausa_pendente:
             # Telas de menu que se redesenham (inventário, mercado) não param para "Continuar".
             mesma_tela = tipo == "menu" and titulo == self.ultimo_titulo
             if (self.novo_desde_escolha or self.pausa_pendente) and not mesma_tela:
@@ -211,7 +213,8 @@ class WebUI(InterfaceGrafica, UI):
             self.escolhas_na_cena = 0
             self.novo_desde_escolha = False
         else:
-            # A cena anterior era só uma introdução: o novo título a substitui na mesma página.
+            # A cena anterior era só uma introdução, sem nada a ler antes de seguir: o novo título a substitui na mesma
+            # página.
             self._enviar("cabecalho", titulo=titulo, subtitulo=subtitulo, tipo=tipo)
             self.ultimo_titulo = titulo
 

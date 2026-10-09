@@ -143,7 +143,8 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   quebrada fazia colunas da arte parada tremerem de um quadro para o outro.
 - O fim de um evento ou de uma luta não pede Continuar: a ponte manda a cena do lugar com `virar`, a tela deixa o
   que aconteceu o tempo de ler (um fio se enche; clique ou tecla adianta) e vira para a página limpa do lugar, no
-  topo. O que aconteceu fica no histórico (H). O clique que adiantava o texto não pula a leitura nem as celebrações
+  topo. Vale também para o evento que termina sem escolha nenhuma (o "Exausto", a noite no acampamento): o
+  `pausar()` do motor marca a página como lida-antes-de-seguir. O que aconteceu fica no histórico (H). O clique que adiantava o texto não pula a leitura nem as celebrações
   (contrato pago, espólio): a página só aceita virar depois de `GUARDA_LEITURA`, e celebração só se dispensa na
   velocidade "instantâneo".
 - `telas/` as telas desenhadas, uma por arquivo (inventário, mercado, talentos, Grimório, fogueira, mural...), mais as

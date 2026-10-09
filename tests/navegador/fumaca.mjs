@@ -67,6 +67,17 @@ async function cenarioCombate(browser) {
       document.querySelectorAll(".balao").forEach((x) => x.remove());
       return outros.every((o) => b.right <= o.left || b.left >= o.right || b.bottom <= o.top || b.top >= o.bottom);
     }), "o balão de fala da comitiva não cobre outra carta nem as ações");
+    // Pular no meio do golpe final solta a câmera lenta na hora (antes, a arena seguia lenta e de perto até a luta
+    // seguinte).
+    conferir(await page.evaluate(async () => {
+      const arena = document.getElementById("arena"), alvo = arena.querySelector(".carta.inimigo"), m = { final: true };
+      await Sensacao.antesDoGolpe(m, arena, alvo);
+      const lenta = arena.classList.contains("foco-final");
+      pular = true;
+      await Sensacao.golpe(m, arena, alvo);
+      pular = false;
+      return lenta && !arena.classList.contains("foco-final") && arena.getAnimations({ subtree: true }).every((a) => a.playbackRate === 1);
+    }), "pular no meio do golpe final solta a câmera lenta");
     await (await page.$('.roda-botao[data-slot="habilidades"]')).click();
     conferir(!!(await esperar('.roda-janela .rj-linha[data-hab="bola_fogo"]')), "Habilidades abre a janelinha com nome e custo");
     await page.keyboard.press("Escape");
@@ -221,6 +232,15 @@ async function cenarioVila(browser) {
     conferir(!!(await esperar("#prompt .voltar-vila", 3000)) && !!(await page.$('#prompt .servico:has-text("Dormir")')), "a taverna mostra as opções dela e o Voltar à vila");
     await page.keyboard.press("Escape");
     conferir(!!(await esperar('#predios:not(.focado) .predio[data-predio="mercado"]', 3000)) && !(await page.$("#prompt .voltar-vila")), "Esc sai da taverna e volta à vila");
+    // Uma tela da doca (o bestiário) por cima da vila: os balões dos prédios saem com a paisagem e voltam depois.
+    await page.locator('#doca button:has-text("Bestiário")').first().click();
+    await esperar('#barra-tela .cena-titulo:has-text("Bestiário")', 3000);
+    await page.waitForTimeout(300);
+    conferir(await page.evaluate(() => { const p = document.getElementById("predios"); return p.hidden || !p.querySelector(".predio"); }),
+      "no bestiário, os balões dos prédios da vila não ficam na tela");
+    await (await esperar("#prompt .continuar", 3000))?.click();
+    conferir(!!(await esperar('#predios:not(.focado) .predio[data-predio="mercado"]', 3000)), "saindo do bestiário, a vila volta com os prédios");
+    await page.waitForTimeout(300);
     const vida = () => page.evaluate(() => App.estado.heroi.hp);
     const antesPocao = await vida();
     let abriu = 0;
@@ -234,8 +254,10 @@ async function cenarioVila(browser) {
     for (let k = 0; k < 30 && (await vida()) === antesPocao; k++) await page.waitForTimeout(100);
     conferir((await vida()) > antesPocao, "a poção da bolsa lateral se usa com um clique");
     await page.waitForTimeout(300);
-    await (await esperar('#predios .predio[data-predio="mercado"]') || mercado).click();
+    // O balão com o nome também entra no prédio (antes, só o desenho do prédio aceitava o clique).
+    await (await esperar('#predios .predio[data-predio="mercado"] .balao-nome') || mercado).click();
     const mais = await esperar('[data-comprar="tocha"] [data-q="1"]');
+    conferir(!!mais, "clicar no balão com o nome do prédio entra nele");
     const qtd = () => page.evaluate(() => Number(document.querySelector('[data-comprar="tocha"] .qtd-ctrl b').textContent));
     await mais.hover(); await page.mouse.down();
     await page.waitForTimeout(600);

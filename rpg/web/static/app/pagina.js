@@ -74,6 +74,7 @@ let ultimoLugar = "";  // o último lugar com título no histórico
 function cabecalho(m) {
   Telas.esconderDica();
   cab.dataset.tipo = cenaEl.dataset.tipo = m.tipo || "evento";
+  if (m.tipo !== "local") fecharVila();  // os prédios da vila só valem na cena do lugar (não no bestiário, no mercado...)
   // Telas de menu (mercado, inventário, mural...): o título vai para a barra do topo, junto do Voltar, e a arte sai;
   // a cena inteira fica para a tela. Nas cenas da história, o título abre a página, embaixo da arte.
   if (m.tipo === "menu") { if (cab.parentElement !== barraTela) barraTela.appendChild(cab); }

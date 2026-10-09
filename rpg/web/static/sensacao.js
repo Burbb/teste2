@@ -73,6 +73,7 @@ const Sensacao = (() => {
   // meio. Fora dela, tudo anda a 1 e depois() é um setTimeout comum. A câmera (TEMPO_REAL) anda no tempo de fora.
   const TEMPO_REAL = "tempo-real";
   let ritmo = 1, palcoLento = null, quadro = null, ultimo = 0;
+  let mudanca = 0;  // a mudança de ritmo em curso; repor() a interrompe
   const prazos = new Set();
   function tique(t) {
     const dt = t - ultimo;
@@ -94,9 +95,10 @@ const Sensacao = (() => {
   function mudarRitmo(palco, alvo, ms, curva = (k) => 1 - (1 - k) * (1 - k)) {
     palcoLento = palco;
     andar();
-    const de = ritmo, t0 = performance.now();
+    const de = ritmo, t0 = performance.now(), esta = ++mudanca;
     return new Promise((fim) => {
       const passo = (t) => {
+        if (esta !== mudanca) return fim();  // outra mudança (ou o repor) tomou o lugar desta
         const k = ms > 0 ? Math.min(1, (t - t0) / ms) : 1;
         ritmo = de + (alvo - de) * curva(k);
         if (k < 1) return requestAnimationFrame(passo);
@@ -107,6 +109,7 @@ const Sensacao = (() => {
     });
   }
   function soltar() {
+    if (!palcoLento) return;
     for (const a of palcoLento.getAnimations({ subtree: true })) if (a.id !== TEMPO_REAL) a.playbackRate = 1;
     palcoLento = null;
     ritmo = 1;
@@ -131,6 +134,19 @@ const Sensacao = (() => {
     foco = { palco, alvo, zoom };
     mudarRitmo(palco, cfg.lento, pausa(cfg.entradaMs));
   }
+  /** Sai da câmera lenta na hora, sem a volta suave. O golpe final pulado no meio (o clique que adianta) não passa
+   *  pelo afastar(): sem isto, a arena seguia lenta e de perto até a luta seguinte. */
+  function repor() {
+    mudanca++;
+    if (foco) {
+      const { palco, alvo, zoom } = foco;
+      foco = null;
+      zoom.cancel();
+      palco.classList.remove("foco-final");
+      alvo.classList.remove("alvo-final");
+    }
+    soltar();
+  }
   async function afastar() {
     if (!foco) return;
     const { palco, alvo, zoom } = foco, cfg = AJUSTES.final;
@@ -147,6 +163,7 @@ const Sensacao = (() => {
   /** Antes de o golpe sair (a carta ainda vai avançar, a flecha ainda vai voar): se é o golpe que encerra a luta,
    *  a câmera chega perto e o tempo desacelera primeiro, para a investida e o choque acontecerem em câmera lenta. */
   async function antesDoGolpe(m, palco, alvo) {
+    repor();  // o que sobrou de um golpe final que não chegou ao fim (refletido, pulado) não entra neste
     if (!m || peso(m) !== "final" || rapido() || !palco || !alvo) return;
     aproximar(palco, alvo);
     await dormir(pausa(AJUSTES.final.entradaMs));
@@ -165,7 +182,8 @@ const Sensacao = (() => {
   /** Depois que o golpe acertou (o número já subiu): o momento que ele merece. */
   async function golpe(m, palco, alvo) {
     const tipo = m && peso(m);
-    if (!tipo || rapido() || !palco || !alvo) return;
+    if (rapido()) { repor(); return; }  // pulou: se a câmera lenta já tinha começado (antesDoGolpe), ela sai agora
+    if (!tipo || !palco || !alvo) return;
     if (tipo === "final") return golpeFinal(palco, alvo);
     await parada(palco, alvo, AJUSTES.parada[tipo]);
     tremor(palco, AJUSTES.tremor[tipo]);
@@ -415,6 +433,6 @@ const Sensacao = (() => {
     caixa.hidden = true; caixa.innerHTML = ""; caixa.classList.remove("leve");
   }
 
-  return { AJUSTES, configurar, peso, maisPesado, tremor, parada, antesDoGolpe, golpe, depois, contar, encher, espolio,
-    vidaDoHeroi, cerimoniaSaque };
+  return { AJUSTES, configurar, peso, maisPesado, tremor, parada, antesDoGolpe, golpe, repor, depois, contar, encher,
+    espolio, vidaDoHeroi, cerimoniaSaque };
 })();

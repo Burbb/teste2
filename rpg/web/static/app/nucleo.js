@@ -154,7 +154,10 @@ async function tratar(m) {
     case "texto": await texto(m); break;
     case "efeito": await efeito(m); break;
     case "rolagem": await rolagem(m); break;
-    case "combate": cenaInterrompida = true; faixaCombate(m); break;
+    case "combate":
+      // Luta nova: nada da anterior (a câmera lenta de um golpe final que não terminou) nem da vila fica na arena.
+      Sensacao.repor(); fecharVila();
+      cenaInterrompida = true; faixaCombate(m); break;
     case "lance": if (!replay) await Batalha.lance(m); break;
     case "fala": await fala(m); break;
     case "opiniao": await opiniao(m); break;
