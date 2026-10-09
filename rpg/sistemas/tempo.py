@@ -1,7 +1,7 @@
 """Clima, períodos do dia, dias, descanso, acampamento e taverna."""
 
 from .. import eventos
-from ..dados import CLIMAS, PESOS_CLIMA
+from ..dados import CLIMAS, PESOS_CLIMA, descricao_clima
 from .. import comitiva
 from .. import sobrevivencia
 from .. import telemetria
@@ -52,7 +52,7 @@ class Tempo:
         self.abrir_relato()
         if self.relato is None:  # no texto, a linha do dia; na tela gráfica, a faixa "Dia N" do quadro
             self.ui.separador()
-            self.dizer(f"Amanhece o dia {self.dia}. {CLIMAS[self.clima]['desc']}", "amarelo")
+            self.dizer(f"Amanhece o dia {self.dia}. {descricao_clima(self.clima)}", "amarelo")
         provisoes = self.j.provisoes
         sobrevivencia.amanhecer(self, descanso, refeicao)
         famintos = comitiva.amanhecer(self, descanso, refeicao)
@@ -63,7 +63,7 @@ class Tempo:
         relato, self.relato = self.relato, None
         if relato is not None:
             self.ui.celebrar("amanhecer", {"dia": self.dia, "clima": CLIMAS[self.clima]["nome"],
-                                           "clima_desc": CLIMAS[self.clima]["desc"], "itens": relato})
+                                           "clima_desc": descricao_clima(self.clima), "itens": relato})
         comitiva.depois_do_amanhecer(self, famintos)  # queixas e soldo: conversa, não relato
         registrar(self, "dia", descanso=descanso, provisoes=self.j.provisoes, fome=self.j.fome,
                   ferimentos=len(self.j.ferimentos), local=self.loc["nome"], poder_equip=telemetria.poder_equip(self.j),

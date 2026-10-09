@@ -8,7 +8,7 @@ from .habilidades import HABILIDADES, custo_flechas, descricao_habilidade
 from .grimorio import chance_critico, mult_critico
 from .modificadores import disparar, mod, mult, nomes
 from .estados import ESTADOS, NOMES, no_golpe
-from .dados import TRACOS
+from .dados import CLIMAS, TRACOS
 from .entidades import Combatente
 from .inimigos import HABS, HABS_INIMIGO, NOMES_HABS_INIMIGO, ROTULOS_HABS_INIMIGO
 from .itens import CONSUMIVEIS, PENA_FENIX_AGE_SOZINHA, ficha
@@ -248,8 +248,7 @@ class Combate:
             esq = min(bal.ESQUIVA_MAX_AGI, alvo.agi * bal.ESQUIVA_POR_AGI)
             for _, e, f in no_golpe(alvo, "esquiva"):
                 esq += f(e["v"])
-            if self.g.clima == "nevoa":
-                esq += 0.05
+            esq += CLIMAS[self.g.clima].get("esquiva", 0)
             esq = min(bal.MAX_ESQUIVA, esq)
             if self.rng.random() < esq:
                 self.lance("erro", de=self.uid(u), em=self.uid(alvo), motivo="esquiva", rotulo=rotulo, **reage)
@@ -269,13 +268,10 @@ class Combate:
             m *= 1 + ferido * (1 - u.hp / u.max_hp)
         if not u.jogador and u not in self.aliados and self.g.noite:
             m *= bal.NOITE_INIMIGOS
-        clima = self.g.clima
-        if clima == "chuva":
-            m *= {"fogo": 0.8, "gelo": 1.1}.get(tipo, 1)
-        elif clima == "neve":
-            m *= {"fogo": 0.85, "gelo": 1.2}.get(tipo, 1)
-        elif clima == "tempestade" and alcance == "distancia":
-            m *= 0.85
+        clima = CLIMAS[self.g.clima].get("dano", {})
+        m *= clima.get(tipo, 1)
+        if alcance == "distancia":
+            m *= clima.get("distancia", 1)
         for _, e, f in no_golpe(alvo, "dano_recebido"):
             m *= f(e["v"])
         if getattr(alvo, "chave", None) and self.g.flag(f"fraqueza:{alvo.chave}"):

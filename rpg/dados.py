@@ -212,14 +212,37 @@ AFIXOS = {
                        xp=1.4),
 }
 
+# O clima na luta: `dano` multiplica o dano por tipo ("distancia" vale para todo golpe de longe), `esquiva` soma à
+# esquiva de todos, `queimadura` multiplica o que as chamas ardem. O combate, a tela e o amanhecer leem daqui.
 CLIMAS = {
     "limpo": {"nome": "Céu limpo", "desc": "O céu está limpo."},
     "nublado": {"nome": "Nublado", "desc": "Nuvens cinzentas cobrem o céu."},
-    "chuva": {"nome": "Chuva", "desc": "Uma chuva fina e persistente cai. (fogo -20%, gelo +10%)"},
-    "nevoa": {"nome": "Névoa", "desc": "Uma névoa densa engole tudo a poucos passos. (esquiva +5%)"},
-    "tempestade": {"nome": "Tempestade", "desc": "Trovões rasgam o céu. (ataques à distância -15%)"},
-    "neve": {"nome": "Neve", "desc": "Flocos de neve caem em silêncio. (gelo +20%, fogo -15%)"},
+    "chuva": {"nome": "Chuva", "desc": "Uma chuva fina e persistente cai.", "icone": "gota_azul",
+              "dano": {"fogo": 0.8, "gelo": 1.1}, "queimadura": 0.7},
+    "nevoa": {"nome": "Névoa", "desc": "Uma névoa densa engole tudo a poucos passos.", "icone": "olho", "esquiva": 0.05},
+    "tempestade": {"nome": "Tempestade", "desc": "Trovões rasgam o céu.", "icone": "raio", "dano": {"distancia": 0.85}},
+    "neve": {"nome": "Neve", "desc": "Flocos de neve caem em silêncio.", "icone": "floco",
+             "dano": {"gelo": 1.2, "fogo": 0.85}},
 }
+NOMES_DANO_CLIMA = {"fogo": "fogo", "gelo": "gelo", "distancia": "ataques à distância"}
+
+
+def _pct_clima(f):
+    return f"{'+' if f > 1 else '-'}{round(abs(f - 1) * 100)}%"
+
+
+def efeitos_clima(clima):
+    """Os números do clima em poucas palavras ("fogo -20%, gelo +10%"), na ordem do catálogo."""
+    c = CLIMAS[clima]
+    partes = [f"{NOMES_DANO_CLIMA[k]} {_pct_clima(f)}" for k, f in c.get("dano", {}).items()]
+    if c.get("esquiva"):
+        partes.append(f"esquiva +{round(c['esquiva'] * 100)}%")
+    return ", ".join(partes)
+
+
+def descricao_clima(clima):
+    efeitos = efeitos_clima(clima)
+    return CLIMAS[clima]["desc"] + (f" ({efeitos})" if efeitos else "")
 PESOS_CLIMA = {
     "padrao": {"limpo": 40, "nublado": 25, "chuva": 15, "nevoa": 10, "tempestade": 6},
     "montanha": {"limpo": 30, "nublado": 20, "nevoa": 15, "tempestade": 10, "neve": 25},

@@ -23,6 +23,7 @@ Estado novo = uma entrada aqui. Dentro de uma etapa, as contas seguem a ordem do
 """
 
 from . import balanceamento as bal
+from .dados import CLIMAS
 
 
 def _pct(x):
@@ -73,9 +74,10 @@ def estado(nome, icone, familia, negativo=False, tique=None, perde_turno=False, 
                 protege=protege, agora=agora)
 
 
-def _chuva_apaga(cb, dano):
-    """A chuva enfraquece as chamas."""
-    return max(1, int(dano * 0.7)) if cb.g.clima == "chuva" else dano
+def _clima_apaga(cb, dano):
+    """A chuva enfraquece as chamas (CLIMAS, campo `queimadura`)."""
+    f = CLIMAS[cb.g.clima].get("queimadura")
+    return max(1, int(dano * f)) if f else dano
 
 
 ESTADOS = {
@@ -120,7 +122,7 @@ ESTADOS = {
     "queimadura": estado(
         "em chamas", "chama", "fogo", negativo=True, tique=("queimadura", "amarelo"),
         imune=lambda a: a.resist.get("fogo", 1) < 0.5, camadas=bal.MAX_CHAMAS, rotulo_camadas="em chamas ×{s}",
-        ajuste_tique=_chuva_apaga, dica="a Combustão detona o que falta arder"),
+        ajuste_tique=_clima_apaga, dica="a Combustão detona o que falta arder"),
     "maldito": estado(
         "amaldiçoado", "gota_roxa", "maldicao", negativo=True, tique=("maldição", "magenta"),
         dica="defesa −40%", golpe={"defesa": lambda v: 0.6},
