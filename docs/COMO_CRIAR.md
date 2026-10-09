@@ -68,19 +68,29 @@ Grimório com o mesmo multiplicador.
 
 ## Um talento
 
-Em `rpg/talentos.py`, na árvore da classe, o talento declara o que faz:
+Em `rpg/talentos.py`, na árvore da classe, o talento diz onde mora (ramo e camada) e o que faz:
 
 ```python
-_t("olho_aguia", "Olho de Águia", 1, 0, 3, "+4% de chance de crítico por ponto.",
-   mods={"critico": 0.04}),
-_t("muralha", "Muralha", 3, 1, 1, "Erguer Escudo dura 1 turno a mais e custa 4 a menos.",
-   mods={"escudo_turnos": 1, "custo:erguer_escudo": Fixo(-4)}),
-_t("frenesi", "Frenesi", 3, 2, 2, "Cada inimigo que você abate dá +10% de dano por ponto (acumula 3x).",
-   "berserker", gatilhos={"abate": _frenesi}),
+_t("olho_aguia", "Olho de Águia", "base", 1, 3, "+4% de chance de crítico por ponto.",
+   mods={"critico": 0.04}, icone="olho"),
+_t("muralha", "Muralha", "tronco", 3, 1, "Erguer Escudo dura 1 turno a mais e custa 4 a menos.",
+   mods={"escudo_turnos": 1, "custo:erguer_escudo": Fixo(-4)}, icone="escudo"),
+_t("frenesi", "Frenesi", "berserker", 3, 2, "Cada inimigo que você abate dá +10% de dano por ponto (acumula 3x).",
+   gatilhos={"abate": _frenesi}, icone="chama"),
 ```
+
+Os argumentos na ordem: id, nome, **ramo**, **camada**, pontos máximos, descrição.
+
+- **Ramo**: `"base"` (para todos, antes da especialização, na faixa de cima), `"tronco"` (para todos, depois) ou o id
+  de uma especialização da classe (o talento fica exclusivo dela).
+- **Camada**: o nível que ela pede está em `NIVEL_CAMADA`. Camada nova = uma linha lá.
+- A árvore não tem teto: dois talentos no mesmo ramo e na mesma camada ficam lado a lado, na ordem do catálogo, e a
+  tela (e o desenho em texto) abre colunas e fileiras sozinha.
 
 | Campo | O quê |
 |---|---|
+| `icone` | o desenho do nó (de `sprites-dados.js`) |
+| `realce` | opcional: a cor do nome nos textos de regra (como nas habilidades) |
 | `stats` | somados aos atributos, por ponto (`{"defesa": 2, "max_hp": 6}`) |
 | `mods` | modificadores por ponto; `Fixo(v)` vale uma vez (`{"dano_corpo": 0.06}`) |
 | `mults` | multiplicadores (`{"barreira_mult": 1.3}`) |
@@ -95,7 +105,7 @@ A passiva de uma especialização (`PASSIVAS`, no mesmo arquivo) segue o mesmo f
 ### Conferir
 
 ```
-python -m unittest tests.test_modificadores    # chaves e eventos conhecidos, todo talento faz algo
+python -m unittest tests.test_modificadores tests.test_conteudo  # chaves e eventos conhecidos; ramo, camada e ícone
 python -m tests.gabarito
 ```
 

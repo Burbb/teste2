@@ -6,6 +6,7 @@ simulador de equilíbrio (tests/equilibrio.py), que monta heróis típicos de ca
 
 import random
 
+from . import balanceamento as bal
 from .itens import gerar_equip, rolar_raridade
 from .mundo import nivel_regiao
 from . import talentos
@@ -24,7 +25,7 @@ def subir_ate(g, nivel, spec=None, animal=None):
     j = g.j
     while j.nivel < nivel:
         g.subir_nivel()
-        if j.nivel >= 4 and not j.spec and spec is not False:
+        if j.nivel >= bal.NIVEL_ESPECIALIZACAO and not j.spec and spec is not False:
             from .classes import CLASSES
             g.especializar(spec or CLASSES[j.classe]["specs"][0])
             if animal and j.companheiro and j.companheiro["tipo"] != animal:

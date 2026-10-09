@@ -19,7 +19,7 @@ from rpg.habilidades import ANIMACOES, FAMILIAS_TELA, HABILIDADES
 from rpg.inimigos import HABS
 from rpg.regras import NIVEL_MIN_FAMILIA
 from rpg.sistemas.confronto import CRIATURAS_DA_FENDA
-from rpg.talentos import PASSIVAS, TALENTOS
+from rpg.talentos import NIVEL_CAMADA, PASSIVAS, RAMOS_COMUNS, TALENTOS
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ESTATICO = os.path.join(RAIZ, "rpg", "web", "static")
@@ -96,6 +96,22 @@ class TestInimigos(Catalogo):
             for t in lista:
                 for tr in t.get("tracos", []) + [x for fase in t.get("fases", []) for x in fase.get("tracos", [])]:
                     self.existe(tr, TRACOS, f"guardião de {bioma}: traço '{tr}' não existe em TRACOS")
+
+
+class TestTalentos(Catalogo):
+    def test_ramo_e_camada_de_cada_talento(self):
+        """O ramo é a base, o tronco ou uma especialização da própria classe; a camada tem nível em NIVEL_CAMADA."""
+        for classe, lista in TALENTOS.items():
+            validos = set(RAMOS_COMUNS) | set(CLASSES[classe]["specs"])
+            for t in lista:
+                self.existe(t["ramo"], validos, f"talento '{t['id']}' ({classe}): ramo '{t['ramo']}' não é base, "
+                                                f"tronco nem especialização de {classe}")
+                self.existe(t["camada"], NIVEL_CAMADA, f"talento '{t['id']}': camada {t['camada']} sem nível em "
+                                                       "NIVEL_CAMADA (rpg/talentos.py)")
+
+    def test_ids_unicos(self):
+        ids = [t["id"] for lista in TALENTOS.values() for t in lista]
+        self.assertEqual(sorted({i for i in ids if ids.count(i) > 1}), [], "talentos com o mesmo id")
 
 
 class TestEventos(Catalogo):

@@ -16,6 +16,7 @@ from .mundo import gerar_mundo
 from .regras import (AMBIENTE_VILA, LIMITE_MOCHILA, NIVEL_MAXIMO, NIVEL_MIN_FAMILIA, NOMES_SLOT, NOMES_TESTE,
                      Derrota, FimDeJogo)
 from .migracoes import VERSAO_SAVE
+from . import balanceamento as bal
 from .balanceamento import PRECO_FLECHAS
 from .sistemas.testes import Testes
 from .sistemas.recompensas import Recompensas
@@ -176,7 +177,8 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         if nome is None:
             return False
         self.dizer()
-        self.dizer("Escolha sua classe. No nível 4 ela se ramifica em uma de duas especializações:", "ciano")
+        self.dizer(f"Escolha sua classe. No nível {bal.NIVEL_ESPECIALIZACAO} ela se ramifica em uma de duas "
+                   "especializações:", "ciano")
         classes = list(CLASSES)
         for c in classes:
             d = CLASSES[c]

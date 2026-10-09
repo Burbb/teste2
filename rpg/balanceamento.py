@@ -5,6 +5,7 @@ Mudar algo aqui muda a jogabilidade: rode `python -m tests.gabarito --atualizar`
 
 # ---------------------------------------------------------------- progressão
 XP_BASE = 30          # XP para sair do nível 1
+NIVEL_ESPECIALIZACAO = 4      # a encruzilhada: a classe se ramifica numa especialização
 XP_EXPOENTE = 1.62    # quanto a curva de XP acelera (era 1,52: do meio para o fim, o herói passava as regiões)
 
 

@@ -46,8 +46,8 @@ class Progressao:
         self.ui.celebrar("nivel", {"nivel": j.nivel, "ganhos": ganhos, "pontos": j.pontos_talento,
                                    "habilidades": [{"nome": HABILIDADES[h]["nome"], "desc": HABILIDADES[h]["desc"]}
                                                    for h in novas],
-                                   "especializacao": j.nivel >= 4 and not j.spec})
-        if j.nivel >= 4 and not j.spec and f"encruzilhada_{j.classe}" not in self.forcados:
+                                   "especializacao": j.nivel >= bal.NIVEL_ESPECIALIZACAO and not j.spec})
+        if j.nivel >= bal.NIVEL_ESPECIALIZACAO and not j.spec and f"encruzilhada_{j.classe}" not in self.forcados:
             self.forcados.append(f"encruzilhada_{j.classe}")
             if not festa:
                 self.dizer("Você sente que uma encruzilhada se aproxima. Talvez ela venha na próxima noite de "

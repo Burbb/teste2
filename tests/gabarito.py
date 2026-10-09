@@ -97,6 +97,9 @@ class GravadorWeb(InterfaceGrafica, Gravador):
                 self.linhas.append(f"ESTADO {parte} {linha}")
         return super().escolher(pergunta, opcoes)
 
+    def arvore_talentos(self, dados):
+        self.linhas.append("ARVORE " + json.dumps(dados, ensure_ascii=False, sort_keys=True, default=str))
+
 
 def transcrever(seed, classe, web=False):
     from rpg import combate

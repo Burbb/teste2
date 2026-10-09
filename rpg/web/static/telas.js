@@ -36,22 +36,16 @@ const Telas = (() => {
     App.acaoFecharTalentos = () => App.responder(m.id, voltar);
     const a = arvore;
     document.getElementById("talentos-titulo").textContent = `Talentos · ${a.classe}`;
-    const colunas = a.colunas.map((nome, i) => {
-      const trancada = i !== 1 && (!a.spec || nome.toLowerCase() !== a.spec);
-      const sub = i === 1 ? "para todos" : !a.spec ? "especialização no nível 4" : trancada ? "caminho não escolhido" : "sua especialização";
-      return `<div class="arvore-col-titulo${trancada ? " trancada" : ""}">${h(nome)}<small>${sub}</small></div>`;
-    }).join("");
-    // A primeira fileira é a base, de todos (vem antes da especialização): numa faixa própria, acima das colunas dos
-    // caminhos. Debaixo do título "Paladino", ela parecia do paladino, e um berserker achava que pegava talento alheio.
-    const nivelBase = a.camadas["1"];
-    let html = `<div class="arvore-topo"><span>Nível ${a.nivel} · passe o mouse num talento para ver o que ele faz</span>
-      <span class="pontos${a.pontos ? "" : " zero"}">${S("estrela", 2)} ${Texto.plural(a.pontos, "ponto")}</span></div>
-      <div class="arvore-grade arvore-base"><div></div><div class="arvore-base-titulo">Base<small>para todos, antes da especialização</small></div>
-      <div class="arvore-nivel${a.nivel >= nivelBase ? " ok" : ""}">Nv.${nivelBase}</div>${[0, 1, 2].map((col) => celula(1, col)).join("")}</div>
-      <div class="arvore-grade"><div></div>${colunas}`;
-    function celula(camada, col) {
-      const n = a.nos.find((x) => x.camada === camada && x.coluna === col);
-      const acima = camada > 2 && a.nos.find((x) => x.camada === camada - 1 && x.coluna === col);
+    // A grade sai dos dados (talentos.py): cada ramo ocupa tantas colunas quanto o maior número de talentos lado a lado
+    // numa camada dele; as fileiras são as camadas usadas, cada uma com o nível que pede. Sem teto de tamanho.
+    const base = a.nos.filter((n) => n.ramo === "base"), dosRamos = a.nos.filter((n) => n.ramo !== "base");
+    const largura = {};
+    a.ramos.forEach((r) => { largura[r.id] = 1; });
+    dosRamos.forEach((n) => { largura[n.ramo] = Math.max(largura[n.ramo] || 1, n.pos + 1); });
+    const total = a.ramos.reduce((soma, r) => soma + largura[r.id], 0);
+    const camadasDe = (nos) => [...new Set(nos.map((n) => n.camada))].sort((x, y) => x - y);
+    const nivel = (c) => `<div class="arvore-nivel${a.nivel >= a.camadas[String(c)] ? " ok" : ""}">Nv.${a.camadas[String(c)]}</div>`;
+    function celula(n, acima) {
       const conecta = n && acima ? " conecta" + (acima.rank > 0 ? " aceso" : "") : "";
       if (!n) return `<div class="arvore-celula${conecta}"></div>`;
       const pode = n.estado === "disponivel" && a.pontos > 0 && idx[n.id] !== undefined;
@@ -60,10 +54,29 @@ const Telas = (() => {
       return `<div class="arvore-celula${conecta}"><div class="no-talento ${classe}${pode ? " pode" : ""}${novo}" data-id="${h(n.id)}">
           ${S(n.icone || "estrela", 3)}<span class="rank">${n.rank}/${n.max}</span></div></div>`;
     }
-    for (let camada = 2; camada <= 4; camada++) {
-      const nivelReq = a.camadas[String(camada)];
-      html += `<div class="arvore-nivel${a.nivel >= nivelReq ? " ok" : ""}">Nv.${nivelReq}</div>` + [0, 1, 2].map((col) => celula(camada, col)).join("");
+    // A base, de todos (vem antes da especialização), numa faixa própria acima dos caminhos. Debaixo do título
+    // "Paladino", ela parecia do paladino, e um berserker achava que pegava talento alheio.
+    const colsBase = Math.max(1, ...base.map((n) => n.pos + 1));
+    const grade = (cols) => `style="grid-template-columns: 64px repeat(${cols}, 1fr)"`;
+    let html = `<div class="arvore-topo"><span>Nível ${a.nivel} · passe o mouse num talento para ver o que ele faz</span>
+      <span class="pontos${a.pontos ? "" : " zero"}">${S("estrela", 2)} ${Texto.plural(a.pontos, "ponto")}</span></div>`;
+    if (base.length) {
+      html += `<div class="arvore-grade arvore-base" ${grade(colsBase)}><div></div><div class="arvore-base-titulo">Base<small>para todos, antes da especialização</small></div>` +
+        camadasDe(base).map((c) => nivel(c) + Array.from({ length: colsBase }, (_, i) => celula(base.find((n) => n.camada === c && n.pos === i))).join("")).join("") + "</div>";
     }
+    html += `<div class="arvore-grade" ${grade(total)}><div></div>` + a.ramos.map((r) =>
+      `<div class="arvore-col-titulo${r.trancado ? " trancada" : ""}" style="grid-column: span ${largura[r.id]}">${h(r.nome)}<small>${h(r.sub)}</small></div>`).join("");
+    const fileiras = camadasDe(dosRamos);
+    fileiras.forEach((c, k) => {
+      html += nivel(c);
+      a.ramos.forEach((r) => {
+        for (let p = 0; p < largura[r.id]; p++) {
+          const n = dosRamos.find((x) => x.ramo === r.id && x.camada === c && x.pos === p);
+          const acima = k > 0 && dosRamos.find((x) => x.ramo === r.id && x.camada === fileiras[k - 1] && x.pos === p);
+          html += celula(n, acima);
+        }
+      });
+    });
     html += "</div>";
     document.getElementById("arvore").innerHTML = html;
     ranksAntes = Object.fromEntries(a.nos.map((n) => [n.id, n.rank]));
