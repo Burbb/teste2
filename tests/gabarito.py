@@ -129,19 +129,55 @@ def transcrever(seed, classe, web=False):
         return linhas
 
 
+def transcrever_comitiva(seed):
+    """Lutas com a comitiva (o robô quase nunca a recruta nas partidas acima): Odette e Morel, Morel e Yara (do Vazio
+    nas sementes ímpares), Odette e Yara, cada dupla com um herói de uma classe, três lutas seguidas."""
+    from rpg import combate, comitiva
+    combate._SERIE[0] = 0
+    with tempfile.TemporaryDirectory() as pasta:
+        ui = Gravador(random.Random(seed))
+        g = Jogo(ui, seed=seed, pasta_saves=pasta, hardcore=False)
+        g.iniciar("Robô", CLASSES[seed % 3])
+        for _ in range(3):
+            g.subir_nivel()
+        dupla = [["odete", "morel"], ["morel", "yara"], ["odete", "yara"]][seed % 3]
+        for cid in dupla:
+            comitiva.recrutar(g, cid)
+        if "yara" in dupla and seed % 2:
+            comitiva.membro(g, "yara")["caminho"] = "vazio"
+        g.mundo["atual"] = next(l for l in g.mundo["locais"] if l["tipo"] == "selvagem")["id"]
+        for _ in range(3):
+            try:
+                g.combate(g.grupo(), pode_fugir=False)
+            except Exception as e:  # a derrota encerra a sequência (o nome dela entra na transcrição)
+                ui.linhas.append(f"FIM {type(e).__name__}")
+                break
+            g.j.hp = g.j.max_hp
+        return [re.sub(r"\d{4}-\d{2}-\d{2}_\d{4}", "<DATA>", x.replace(pasta, "<PASTA>")) for x in ui.linhas]
+
+
+SEMENTES_COMITIVA = (1, 2, 3, 4, 5, 6)
+
+
 def casos():
     for seed in SEMENTES:
         for classe in CLASSES:
             for web in (False, True):
                 yield f"{classe}-{seed}-{'web' if web else 'texto'}", seed, classe, web
+    for seed in SEMENTES_COMITIVA:
+        yield f"comitiva-{seed}", seed, "comitiva", False
 
 
 def resumo_hash(linhas):
     return hashlib.sha256("\n".join(linhas).encode("utf-8")).hexdigest()
 
 
+def transcricao(seed, classe, web):
+    return transcrever_comitiva(seed) if classe == "comitiva" else transcrever(seed, classe, web)
+
+
 def calcular():
-    return {nome: resumo_hash(transcrever(seed, classe, web)) for nome, seed, classe, web in casos()}
+    return {nome: resumo_hash(transcricao(seed, classe, web)) for nome, seed, classe, web in casos()}
 
 
 def main():
@@ -154,13 +190,13 @@ def main():
         destino = tempfile.mkdtemp(prefix="gabarito_")
         for nome, seed, classe, web in casos():
             with open(os.path.join(destino, nome + ".txt"), "w", encoding="utf-8") as f:
-                f.write("\n".join(transcrever(seed, classe, web)))
+                f.write("\n".join(transcricao(seed, classe, web)))
         print("transcrições em", destino)
         return
     with open(ARQUIVO, encoding="utf-8") as f:
         esperado = json.load(f)
     atual = calcular()
-    ruins = [n for n in esperado if esperado[n] != atual.get(n)]
+    ruins = [n for n in set(esperado) | set(atual) if esperado.get(n) != atual.get(n)]
     print("OK" if not ruins else "DIFERENTE: " + ", ".join(ruins))
 
 

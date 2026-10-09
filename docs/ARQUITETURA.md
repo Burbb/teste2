@@ -116,7 +116,7 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
 | `rpg/modificadores.py` | `mod`/`mult`/`disparar`: como talentos e passivas mudam o jogo (as chaves e eventos válidos) |
 | `rpg/inimigos.py`, `rpg/dados.py` | famílias de inimigos, biomas, climas, traços |
 | `rpg/itens.py` | consumíveis, equipamento, afixos, únicos |
-| `rpg/comitiva.py` | companheiros: valores, aprovação, conversas, combate |
+| `rpg/comitiva/` | companheiros: `catalogo` (quem são, reações), `grupo` (entrar, sair, aprovação), `conversas`, `luta` (a ação de cada um em `ACOES`), `fogueira`, `tela` |
 
 ## Saves
 
@@ -188,7 +188,7 @@ lados, turnos até cair) e "Encontros por tipo".
 
 | Teste | O que garante |
 |---|---|
-| `python -m tests.gabarito` | 18 partidas com sementes fixas saem **idênticas** (refatorar não muda o jogo). Nas 9 partidas da tela gráfica, cada escolha anota também o `estado` que a tela recebe (linhas `ESTADO parte {...}`, só quando a parte mudou) e cada árvore de talentos aberta (`ARVORE {...}`) |
+| `python -m tests.gabarito` | 24 partidas com sementes fixas saem **idênticas** (refatorar não muda o jogo): 18 partidas do robô e 6 sequências de lutas com a comitiva. Nas 9 partidas da tela gráfica, cada escolha anota também o `estado` que a tela recebe (linhas `ESTADO parte {...}`, só quando a parte mudou) e cada árvore de talentos aberta (`ARVORE {...}`) |
 | `python -m unittest discover -s tests` | sistemas, saves antigos, catálogo de habilidades, Grimório, gabarito |
 | `python -m unittest tests.test_conteudo` | o validador de conteúdo: toda referência entre catálogos existe (habilidades de famílias, afixos e fases de guardião; famílias dos biomas; traços; lore; títulos e reações da comitiva apontando para eventos; ícones de habilidade, talento, item e traço com desenho; cor, animação e realce de cada habilidade entre os que a tela sabe fazer) |
 | `tests/navegador/fumaca.mjs` | a interface web de ponta a ponta (Playwright) |

@@ -26,7 +26,7 @@ Leia antes de mexer:
 
 ```
 python -m unittest discover -s tests          # inclui o gabarito
-python -m tests.gabarito                       # 18 partidas com semente fixa saem idênticas
+python -m tests.gabarito                       # 24 partidas com semente fixa saem idênticas
 python -m pyflakes rpg tests                   # ignore o aviso de import em rpg/eventos/__init__.py
 PLAYWRIGHT_MODULO=<caminho do playwright>/index.mjs node tests/navegador/fumaca.mjs   # interface de ponta a ponta
 ```

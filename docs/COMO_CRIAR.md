@@ -255,7 +255,7 @@ def vulto_na_nevoa(g):
     ...
 ```
 
-Título da cena em `rpg/eventos/titulos.py`; reações da comitiva em `REACOES` (`rpg/comitiva.py`).
+Título da cena em `rpg/eventos/titulos.py`; reações da comitiva em `REACOES` (`rpg/comitiva/catalogo.py`).
 
 Texto sobre um grupo que pode ter um inimigo só (`g.grupo()` sorteia o tamanho): não escreva "eles". Marque a
 frase e deixe `tx.concordar` acertar número e gênero, como as localizações profissionais fazem:
