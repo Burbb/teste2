@@ -130,23 +130,23 @@
 
 /* ------------------------------------------------------------------ telas (personagem, diário, bestiário, comitiva) */
 .tela { margin: 0 0 1em; }
-.tela h4 { font-family: var(--titulo); font-weight: 400; font-size: 32px; line-height: 1; margin: 0.9em 0 0.4em; color: var(--ouro); text-shadow: 2px 2px 0 #000; }
+.tela h4 { font-family: var(--titulo); font-weight: 400; font-size: 32px; line-height: 1; margin: 0.9em 0 0.4em; color: var(--ouro); text-shadow: var(--contorno); }
 .ficha-topo { display: flex; gap: 16px; align-items: center; }
 .ficha-topo .retrato-grande { width: 112px; height: 112px; }
 .ficha-topo .heroi-nome { font-size: 48px; }
 .ficha-colunas { display: grid; grid-template-columns: 1fr 1fr; gap: 0 22px; }
 .cartas { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; }
-.cartao { position: relative; background: #120e0b; border: 3px solid #3a2e24; padding: 10px 12px; box-shadow: 3px 3px 0 #000; font-size: 15px; line-height: 1.45; }
+.cartao { --anel: var(--anel-j); position: relative; background: var(--p-k); border: var(--borda) solid var(--p-j); border-image: var(--anel) 1 / 1 stretch; background-clip: padding-box; padding: 10px 12px; font-size: 15px; line-height: 1.45; }
 .cartao .cab { display: flex; gap: 10px; align-items: center; margin-bottom: 6px; }
-.cartao .cab b { font-family: var(--titulo); font-weight: 400; font-size: 28px; line-height: 1; color: #fff3d6; display: block; }
+.cartao .cab b { font-family: var(--titulo); font-weight: 400; font-size: 28px; line-height: 1; color: var(--tinta); text-shadow: var(--contorno); display: block; }
 .cartao .sub { font-size: 12px; color: var(--tinta-3); }
-.cartao.inimigo { border-color: #6e1d1d; }
-.cartao.feito { border-color: #3d6a2a; }
+.cartao.inimigo { --anel: var(--anel-r); }
+.cartao.feito { --anel: var(--anel-E); }
 .cartao.feito::after { content: "CONCLUÍDO"; position: absolute; top: 8px; right: -6px; font-family: var(--num); font-size: 16px; color: #120e0b; background: var(--bom); padding: 0 6px; transform: rotate(8deg); border: 2px solid #000; }
 .cartao.desconhecido .cab img { filter: brightness(0) drop-shadow(0 0 0 #3a2e24); }
-.cartao.mestre { border-color: var(--ouro-2); }
+.cartao.mestre { --anel: var(--anel-y); }
 .tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
-.tag { font-family: var(--num); font-size: 16px; padding: 0 6px; border: 2px solid #3a2e24; color: var(--tinta-2); }
+.tag { font-family: var(--num); font-size: 15px; padding: 0 6px; border: var(--borda) solid var(--p-j); color: var(--tinta-2); }
 .tag.fraco { color: var(--bom); border-color: #3d6a2a; }
 .tag.forte { color: #ff9c90; border-color: #8a1414; }
 .tag.mestre { color: #120e0b; background: var(--ouro); border-color: #fff3a0; }

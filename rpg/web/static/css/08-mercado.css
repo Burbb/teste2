@@ -42,16 +42,16 @@
 #dica-equipado + #dica-equipado, #dica-equipado .outro { margin-top: 8px; padding-top: 6px; border-top: 2px dashed #3a2e24; }
 #dica-item .atalho-shift { margin-top: 6px; font-size: 11px; color: var(--tinta-3); }
 #dica-item .atalho-shift kbd { font-family: var(--num); font-size: 13px; padding: 0 4px; border: 1px solid #5a4a3a; border-bottom-width: 2px; color: var(--tinta-2); }
-.loja-topo { display: flex; align-items: center; gap: 12px; padding: 8px 12px; background: #120e0b; border: 3px solid #3a2e24; box-shadow: 3px 3px 0 #000; }
+.loja-topo { display: flex; align-items: center; gap: 12px; padding: 8px 12px; background: var(--p-k); border: var(--borda) solid var(--p-j); border-image: var(--anel-j) 1 / 1 stretch; background-clip: padding-box; }
 .loja-topo b { font-family: var(--titulo); font-weight: 400; font-size: 34px; line-height: 1; color: var(--ouro); display: block; }
 .ouro-loja { margin-left: auto; display: flex; align-items: center; gap: 6px; font-family: var(--num); font-size: 30px; color: var(--ouro); }
 .loja.alvo .balcao { outline: 3px dashed var(--ouro); outline-offset: 6px; }
 .vitrine { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
-.mercadoria { display: grid; grid-template-columns: 56px 1fr; grid-template-rows: auto 1fr auto; gap: 2px 8px; text-align: left; cursor: pointer; padding: 6px; background: #120e0b; border: 3px solid #3a2e24; box-shadow: 3px 3px 0 #000; color: var(--tinta); font-family: var(--texto); }
+.mercadoria { display: grid; grid-template-columns: 56px 1fr; grid-template-rows: auto 1fr auto; gap: 2px 8px; text-align: left; cursor: pointer; padding: 6px; background: var(--p-k); border: var(--borda) solid var(--p-j); border-image: var(--anel-j) 1 / 1 stretch; background-clip: padding-box; color: var(--tinta); font-family: var(--texto); }
 .mercadoria .slot-px { grid-row: span 3; width: 56px; height: 56px; }
-.mercadoria:hover { border-color: var(--ouro); transform: translateY(-2px); }
+.mercadoria:hover { border-image-source: var(--anel-Y); transform: translateY(-2px); }
 .mercadoria.caro { opacity: 0.45; cursor: not-allowed; }
-.mercadoria.caro:hover { border-color: var(--sangue); transform: none; }
+.mercadoria.caro:hover { border-image-source: var(--anel-r); transform: none; }
 .merc-nome { font-size: 13px; font-weight: 600; line-height: 1.2; }
 .merc-bonus { font-family: var(--num); font-size: 15px; color: var(--tinta-3); line-height: 1.1; }
 .preco { display: inline-flex; align-items: center; gap: 3px; font-family: var(--num); font-size: 20px; color: var(--ouro); }
@@ -69,7 +69,7 @@
 .voltar-seta:hover, .voltar-seta:focus-visible { color: #fff3d6; outline: none; background: linear-gradient(90deg, rgba(226, 189, 99, 0.15), transparent); }
 @keyframes seta-volta { 50% { transform: translateX(-3px); } }
 @media (max-width: 920px) { .voltar-seta kbd { display: none; } }
-.aviso-flutuante { position: fixed; z-index: 70; display: flex; align-items: center; gap: 5px; white-space: nowrap; pointer-events: none; font-family: var(--num); font-size: 21px; line-height: 1; padding: 3px 9px 4px 4px; background: #120e0b; border: 2px solid #4a4038; color: var(--tinta); box-shadow: 3px 3px 0 #000; animation: aviso-sobe 1.6s cubic-bezier(.2,.7,.3,1) forwards; }
+.aviso-flutuante { position: fixed; z-index: 70; display: flex; align-items: center; gap: 5px; white-space: nowrap; pointer-events: none; font-family: var(--num); font-size: 21px; line-height: 1; padding: 3px 9px 4px 4px; background: var(--p-k); border: var(--borda) solid var(--p-j); border-image: var(--anel-j) 1 / 1 stretch; background-clip: padding-box; color: var(--tinta); animation: aviso-sobe 1.6s cubic-bezier(.2,.7,.3,1) forwards; }
 .aviso-flutuante img.sprite { --s: 16; }
 /* Frase longa: quebra em linhas, letra de leitura, e fica parada o tempo de ler (--dura) antes de sumir. */
 .aviso-flutuante.longo { white-space: normal; max-width: min(460px, calc(100vw - 16px)); align-items: flex-start; gap: 8px; padding: 7px 12px 8px 8px;
@@ -86,7 +86,7 @@
 .merc-estoque { display: block; font-family: var(--texto); font-size: 11px; color: var(--tinta-2); letter-spacing: .02em; }
 .merc-estoque.esgotado { color: var(--sangue-2); }
 .qtd-ctrl { grid-column: 2; display: inline-flex; align-items: center; gap: 2px; margin-top: 2px; justify-self: start; }
-.qtd-ctrl button { width: 22px; height: 22px; padding: 0; line-height: 1; font-family: var(--num); font-size: 18px; color: var(--tinta); background: #2a2420; border: 2px solid #4a4038; cursor: pointer; user-select: none; touch-action: none; }
+.qtd-ctrl button { width: 22px; height: 22px; padding: 0; line-height: 1; font-family: var(--num); font-size: 18px; color: var(--tinta); background: var(--p-K); border: var(--borda) solid var(--p-J); cursor: pointer; user-select: none; touch-action: none; }
 .qtd-ctrl button:hover { border-color: var(--ouro); color: var(--ouro); }
 .qtd-ctrl b { min-width: 26px; text-align: center; font-family: var(--num); font-size: 20px; font-weight: 400; color: #fff3d6; }
 .mercadoria.caro .qtd-ctrl { visibility: hidden; }
@@ -95,7 +95,7 @@
 .mochila-loja .celula:hover { --anel: var(--anel-Y); transform: translateY(-2px); }
 .menu-item { position: fixed; z-index: 65; display: flex; flex-direction: column; gap: 4px; min-width: 190px; padding: 6px 8px 8px; box-shadow: var(--sombra); }
 .menu-item b { font-family: var(--titulo); font-weight: 400; font-size: 24px; line-height: 1; margin-bottom: 2px; }
-.menu-item button { display: flex; align-items: center; gap: 6px; text-align: left; cursor: pointer; font-size: 15px; color: var(--tinta); background: #120e0b; border: 2px solid #3a2e24; padding: 4px 8px; }
+.menu-item button { display: flex; align-items: center; gap: 6px; text-align: left; cursor: pointer; font-size: 15px; color: var(--tinta); background: var(--p-k); border: var(--borda) solid var(--p-j); border-image: var(--anel-j) 1 / 1 stretch; background-clip: padding-box; padding: 4px 8px; }
 .menu-item button:hover { border-color: var(--ouro); color: #fff3d6; }
 .menu-item button.vender { color: var(--ouro); }
 .menu-item button.secundaria { color: var(--tinta-3); }
