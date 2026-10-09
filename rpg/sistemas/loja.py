@@ -150,7 +150,7 @@ class Loja:
     def loja(self):
         while True:
             j = self.j
-            self.ui.cena("Mercado", f"{self.loc['nome']} · seu ouro: {j.ouro}", "menu")
+            self.ui.cena("Mercado", self.loc["nome"], "menu")  # o ouro já está no topo e no balcão
             a_venda = self.estoque()
             if self.ui.painel("loja", self.dados_loja()):
                 if self._loja_web(a_venda):

@@ -15,7 +15,8 @@ const Vista = (() => {
   const ASTROS = [[60, 30, 7, "#ffe8a0", "#f0c890"], [210, 12, 6, "#fff6c8", "#ece2b4"], [248, 40, 10, "#e8784a", "#d8603a"], [70, 14, 5, "#e8ecf4", "#c8ccd8"]];
   const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
   const pont = (x, y, nivel) => BAYER[(y & 3) * 4 + (x & 3)] < nivel;  // nivel de 0 a 16
-  let canvas, ctx, fundo, frente, chave = "", estado = null, quadro = 0, timer = null;
+  // `ctx` é a arte em 320x72 (fora da tela); `tela` é o canvas da página, que recebe a arte já no tamanho dela.
+  let canvas, ctx, tela, arte, fundo, frente, chave = "", estado = null, quadro = 0, timer = null;
   let nuvens = [], neblinas = [], particulas = [], fumacas = [], estrelas = [], aves = [], relampago = 0;
   const LUZ_JANELA = "#e8a050";
   // A vila como lugar: os prédios clicáveis (área, luzes, ponto do balão), o que está sob o mouse e a câmera (foco).
@@ -239,8 +240,8 @@ const Vista = (() => {
       [177, 52, 6, 4], [193, 50, 9, 5], [212, 51, 7, 4], [224, 49, 10, 6], [238, 51, 7, 4], [255, 50, 8, 5],
       [270, 52, 6, 4], [298, 50, 9, 5], [312, 52, 8, 4]]
       .forEach(([x, b, w, h], i) => casinha(c, x, b, w, h, casaLonge, mix(casaLonge, "#5a1a10", 0.2), i % 3 === 1 ? luzLonge : null));
-    [[204, 58, 12, 8], [218, 58, 9, 6], [229, 58, 12, 9], [246, 58, 10, 7], [262, 58, 9, 6]]
-      .forEach(([x, b, w, h], i) => casa(c, x, b, w, h, i === 2, fundoCasa, mix(fundoCasa, "#5a1a10", 0.3), null));
+    [[215, 58, 10, 7], [229, 58, 12, 9], [246, 58, 10, 7], [262, 58, 9, 6]]
+      .forEach(([x, b, w, h], i) => casa(c, x, b, w, h, i === 1, fundoCasa, mix(fundoCasa, "#5a1a10", 0.3), null));
     for (let x = 0; x < W; x += 5) px(c, x, 55, 1, 4, perto);
     px(c, 0, 56, W, 1, perto);
     const reg = (id, nome, area, extra = {}) => predios.push({ id, nome, ...area, luzes: [], ...extra });
@@ -274,25 +275,26 @@ const Vista = (() => {
     const janelasTaverna = [[123, 45, 3, 3], [137, 45, 3, 3], [124, 51, 4, 3]];
     janelasTaverna.forEach(([x, y, w, h]) => px(c, x, y, w, h, JANELA));
     px(c, 133, 51, 4, 7, escuro);
-    px(c, 115, 44, 6, 1, perto); px(c, 115, 45, 4, 3, madeira); px(c, 116, 46, 2, 1, perto);
+    // a placa pendurada do lado direito (do esquerdo, batia na forca da praça)
+    px(c, 144, 44, 6, 1, perto); px(c, 146, 45, 4, 3, madeira); px(c, 147, 46, 2, 1, perto);
     fumacas.push({ x: 137, y: 27, t: r() * 20 });
-    reg("taverna", "Taverna", { x: 112, y: 29, w: 34, h: 29 }, { balao: [127, 32], luzes: janelasTaverna.map((j) => [...j, "#ffd070"]) });
-    // o templo: a igreja com o sino no campanário
-    px(c, 150, 40, 24, 18, meio);
-    for (let i = 0; i < 9; i++) px(c, 149 + i, 39 - i, 26 - i * 2, 1, telha);
-    px(c, 166, 18, 8, 22, meio); for (let i = 0; i < 5; i++) px(c, 165 + i, 18 - i * 2, 10 - i * 2, 2, telha);
-    px(c, 169, 4, 1, 6, meio); px(c, 167, 6, 5, 1, meio);
-    px(c, 168, 23, 4, 4, escuro); px(c, 169, 24, 2, 2, mix(meio, "#8a7a50", 0.5));
-    px(c, 161, 51, 4, 7, escuro);
-    const vitrais = [[156, 45, 2, 4], [166, 45, 2, 4]];
+    reg("taverna", "Taverna", { x: 118, y: 29, w: 34, h: 29 }, { balao: [127, 32], luzes: janelasTaverna.map((j) => [...j, "#ffd070"]) });
+    // o templo: a igreja com o sino no campanário, um pouco afastada da taverna
+    px(c, 160, 40, 24, 18, meio);
+    for (let i = 0; i < 9; i++) px(c, 159 + i, 39 - i, 26 - i * 2, 1, telha);
+    px(c, 176, 18, 8, 22, meio); for (let i = 0; i < 5; i++) px(c, 175 + i, 18 - i * 2, 10 - i * 2, 2, telha);
+    px(c, 179, 4, 1, 6, meio); px(c, 177, 6, 5, 1, meio);
+    px(c, 178, 23, 4, 4, escuro); px(c, 179, 24, 2, 2, mix(meio, "#8a7a50", 0.5));
+    px(c, 171, 51, 4, 7, escuro);
+    const vitrais = [[166, 45, 2, 4], [176, 45, 2, 4]];
     vitrais.forEach(([x, y, w, h]) => px(c, x, y, w, h, JANELA));
-    reg("templo", "Templo", { x: 148, y: 2, w: 28, h: 56 }, { balao: [156, 30], foco: [166, 20], luzes: vitrais.map((j) => [...j, "#ffd070"]) });
+    reg("templo", "Templo", { x: 158, y: 2, w: 28, h: 56 }, { balao: [166, 30], foco: [176, 20], luzes: vitrais.map((j) => [...j, "#ffd070"]) });
     // a cabana da curandeira: teto de palha, ervas penduradas e uma janela esverdeada
-    px(c, 184, 50, 14, 8, meio);
-    [[183, 49, 16], [184, 48, 14], [186, 47, 10], [188, 46, 6]].forEach(([x, y, w]) => px(c, x, y, w, 1, telha));
-    [185, 189, 195].forEach((x) => px(c, x, 50, 1, 2, mix(meio, "#4a7a3a", 0.5)));
-    px(c, 191, 52, 2, 2, acesa ? "#a8d080" : mix(meio, "#4a6a3a", 0.5)); px(c, 186, 53, 3, 5, escuro);
-    reg("curandeiro", "Curandeira", { x: 182, y: 44, w: 18, h: 14 }, { balao: [191, 45], luzes: [[191, 52, 2, 2, "#c8f0a0"]] });
+    px(c, 194, 50, 14, 8, meio);
+    [[193, 49, 16], [194, 48, 14], [196, 47, 10], [198, 46, 6]].forEach(([x, y, w]) => px(c, x, y, w, 1, telha));
+    [195, 199, 205].forEach((x) => px(c, x, 50, 1, 2, mix(meio, "#4a7a3a", 0.5)));
+    px(c, 201, 52, 2, 2, acesa ? "#a8d080" : mix(meio, "#4a6a3a", 0.5)); px(c, 196, 53, 3, 5, escuro);
+    reg("curandeiro", "Curandeira", { x: 192, y: 44, w: 18, h: 14 }, { balao: [201, 45], luzes: [[201, 52, 2, 2, "#c8f0a0"]] });
     // a estrada saindo da vila pela direita, a placa de encruzilhada com a lanterna e um marco de pedra
     const terra = mix(chao, "#6a5a48", 0.3);
     for (let y = 58; y < H; y++) { const x0 = Math.round(292 + (71 - y) * 1.3); px(c, x0, y, W - x0, 1, terra); }
@@ -426,6 +428,25 @@ const Vista = (() => {
       ctx.drawImage(mascara, 0, 0);
     }
     if (aurora) pintarAurora();
+    apresentar();
+  }
+
+  /** A arte vai para a tela já no tamanho em que aparece, pixel a pixel da tela: o navegador não estica nada.
+   *  Esticada por ele numa escala quebrada (×2,09 e tal), a placa de vídeo podia escolher, a cada quadro, um texel ou
+   *  o vizinho nas colunas que caem bem na divisa, e a paisagem parada tremia. O enquadramento continua sendo o do
+   *  CSS (object-fit: cover, object-position). */
+  function apresentar() {
+    const cs = getComputedStyle(canvas), dpr = window.devicePixelRatio || 1;
+    const larg = canvas.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+    const alt = canvas.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+    if (larg <= 0 || alt <= 0) return;  // escondida (telas de menu): desenha quando voltar
+    const cw = Math.round(larg * dpr), ch = Math.round(alt * dpr);
+    if (canvas.width !== cw || canvas.height !== ch) { canvas.width = cw; canvas.height = ch; }
+    const esc = Math.max(cw / W, ch / H), dw = Math.round(W * esc), dh = Math.round(H * esc);
+    const [fx, fy] = cs.objectPosition.split(" ").map((v) => (v.endsWith("%") ? parseFloat(v) / 100 : 0.5));
+    tela.imageSmoothingEnabled = false;
+    tela.clearRect(0, 0, cw, ch);
+    tela.drawImage(arte, Math.round((cw - dw) * fx), Math.round((ch - dh) * fy), dw, dh);
   }
 
   function desenharEm(ctx) {
@@ -487,7 +508,12 @@ const Vista = (() => {
   function atualizar(e) {
     canvas = canvas || document.getElementById("vista");
     if (!canvas || !e) return;
-    ctx = ctx || canvas.getContext("2d");
+    if (!ctx) {
+      arte = document.createElement("canvas"); arte.width = W; arte.height = H;
+      ctx = arte.getContext("2d");
+      tela = canvas.getContext("2d");
+      new ResizeObserver(() => { if (estado) apresentar(); }).observe(canvas);  // a arte cresce ou recolhe: já no tamanho novo
+    }
     estado = e;
     const k = [e.local.id, e.local.tipo, e.mundo.periodo_n, e.mundo.clima_id, e.local.bioma].join("|");
     if (k !== chave) {
@@ -529,5 +555,6 @@ const Vista = (() => {
   /** Os prédios clicáveis da paisagem atual (só na vila), em pixels da arte (320x72). */
   function listaPredios() { return predios.map(({ id, nome, x, y, w, h, balao }) => ({ id, nome, x, y, w, h, balao })); }
 
-  return { atualizar, titulo, corDoCeu, amanhecer, predios: listaPredios, destacar, focar, LARGURA: W, ALTURA: H };
+  return { atualizar, titulo, corDoCeu, amanhecer, predios: listaPredios, destacar, focar, LARGURA: W, ALTURA: H,
+    arte: () => arte };  // o quadro em 320x72 (as páginas de teste da paisagem leem daqui)
 })();

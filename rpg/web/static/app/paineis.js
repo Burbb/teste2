@@ -242,6 +242,16 @@ function nivelPerigo(nivel) {
 }
 
 function marcasContrato(e) { return new Set((e.contratos || []).filter((c) => !c.concluido).map((c) => c.lugar_id)); }
+/** A dica de um lugar no mapa (hover): o nome, o tipo, o perigo, a distância e os contratos que você tem lá. */
+function dicaDoLugar(e, clic) {
+  const porLugar = {};
+  (e.contratos || []).filter((c) => !c.concluido).forEach((c) => { (porLugar[c.lugar_id] = porLugar[c.lugar_id] || []).push(c); });
+  return (n) => `<b>${esc(n.nome)}</b><div class="tipo">${esc(n.descricao)}` +
+    (n.nivel ? ` · <span class="nivel-cam ${nivelPerigo(n.nivel)}">${n.tipo === "vila" ? "arredores" : "inimigos"} Nv.${n.nivel}</span>` : "") +
+    (n.distancia ? ` · ${Texto.plural(n.distancia, "trecho")}` : n.atual ? " · você está aqui" : "") + "</div>" +
+    (porLugar[n.id] || []).map((c) => `<div class="dica-contrato">${spr("pergaminho", 1)}<span>${esc(c.desc)}</span></div>`).join("") +
+    (clic.has(n.id) ? '<div class="rodape">Clique para viajar</div>' : "");
+}
 
 function desenharMundo(e) {
   const l = e.local;
@@ -255,12 +265,17 @@ function desenharMundo(e) {
     ${l.nivel ? `<span class="perigo-tag ${nivelPerigo(l.nivel)}">${l.tipo === "vila" ? "arredores" : "inimigos"} Nv.${l.nivel}</span>` : ""}<div id="mapa-mini"></div>
     ${Telas.rastreador(e.contratos, e.heroi.nivel)}
     <div class="secao"><h3>Caminhos</h3><div class="caminhos">${caminhos || '<div class="vazio">nenhum</div>'}</div></div>`;
-  const mini = MapaPx.criar(e.mapa, { clicaveis: clic, aoClicar: viajarPara, nivelHeroi: e.heroi.nivel, marcas: marcasContrato(e) });
+  const mini = MapaPx.criar(e.mapa, { clicaveis: clic, aoClicar: viajarPara, nivelHeroi: e.heroi.nivel, marcas: marcasContrato(e), dicaDe: dicaDoLugar(e, clic) });
   mini.title = "Abrir o mapa (M)";
   mini.addEventListener("click", (ev) => { if (!ev.target.closest(".clicavel")) alternarMapa(true); });
   $("#mapa-mini").appendChild(mini);
   if (clic.size) $("#mapa-mini").appendChild(el("div", "mapa-dica", "Clique num destino para viajar"));
   raiz.querySelectorAll(".caminho.clicavel").forEach((c) => c.addEventListener("click", () => viajarPara(Number(c.dataset.local))));
+  // Passar o mouse num caminho da lista acende o lugar no mapa (os nomes dos vizinhos não estão mais escritos nele).
+  raiz.querySelectorAll(".caminho").forEach((c) => {
+    c.addEventListener("mouseenter", () => document.querySelectorAll(`.no-btn[data-id="${c.dataset.local}"]`).forEach((b) => b.classList.add("destacado")));
+    c.addEventListener("mouseleave", () => document.querySelectorAll(".no-btn.destacado").forEach((b) => b.classList.remove("destacado")));
+  });
   raiz.querySelectorAll(".rastro-contrato").forEach((c) => {
     const id = Number(c.dataset.local);
     if (clic.has(id)) c.classList.add("clicavel");
@@ -284,6 +299,7 @@ function desenharMapaGrande() {
   const caixa = $("#mapa-grande");
   caixa.innerHTML = "";
   caixa.appendChild(MapaPx.criar(estado.mapa, { grande: true, clicaveis: destinosClicaveis(), nivelHeroi: estado.heroi.nivel, marcas: marcasContrato(estado),
+    dicaDe: dicaDoLugar(estado, destinosClicaveis()),
     aoClicar: (id) => { alternarMapa(false); viajarPara(id); } }));
   $("#mapa-legenda").innerHTML = legendaMapa();
 }

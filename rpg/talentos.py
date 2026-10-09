@@ -52,7 +52,7 @@ def _martirio(cb, u, rank, d):
 def _contra_ataque(cb, u, rank, d):
     de = d["de"]
     if d["alcance"] == "corpo" and de in cb.inimigos and de.vivo and cb.rng.random() < mod(u, "contra_ataque"):
-        cb.atacar(u, de, 0.7, rotulo="Contra-ataque")
+        cb.atacar(u, de, 0.7, rotulo="Contra-ataque", reacao=True)
 
 
 def _laminas(cb, u, rank, d):

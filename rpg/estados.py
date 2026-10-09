@@ -175,6 +175,6 @@ def descrever_buff(u, efeito, turnos, valor):
 
 
 def para_tela():
-    """O que a interface precisa de cada estado: ícone, família (cor do brilho), nome e dica."""
-    return {k: {"icone": e["icone"], "familia": e["familia"], "nome": e["nome"], "dica": e["dica"]}
+    """O que a interface precisa de cada estado: ícone, família (cor do brilho), nome, dica e se é um mal (o som)."""
+    return {k: {"icone": e["icone"], "familia": e["familia"], "nome": e["nome"], "dica": e["dica"], "negativo": e["negativo"]}
             for k, e in ESTADOS.items()}

@@ -397,8 +397,6 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
     def menu_vila(self):
         j = self.j
         preco_dormir = self.preco(8 + 2 * j.nivel)
-        faltando = j.max_hp - j.hp
-        preco_templo = self.preco(max(1, faltando // 2)) if faltando else 0
         # Cada serviço diz a que prédio da vila pertence (na tela gráfica, a vila é um lugar com prédios clicáveis).
         # Os que se escolhem diante do prédio (a taverna, o templo) levam o rótulo curto, o preço, o que dão e o tempo
         # que gastam: a tela os desenha em cartões. Os outros abrem a tela do serviço direto.
@@ -412,9 +410,7 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
               "efeito": "O que se conta nas mesas"}),
             ("Mercado", "loja", {"predio": "mercado"}),
             ("Mural de contratos", "mural", {"predio": "mural"}),
-            (f"Templo: cuidar da vida ({preco_templo} ouro)", "templo",
-             {"predio": "templo", "servico": "templo", "curto": "Cuidar da vida", "preco": preco_templo,
-              "efeito": f"+{faltando} de vida ({j.max_hp}/{j.max_hp})"}) if faltando else None,
+            *self.opcoes_templo(),
             ("Curandeira: tratar ferimentos e infecções", "curandeiro", {"predio": "curandeiro"}) if j.ferimentos else None,
             ("Ferreiro: reforçar arma ou armadura", "ferreiro", {"predio": "ferreiro"}),
         ]
@@ -442,13 +438,8 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
             self.curandeiro()
         elif op == "ferreiro":
             self.ferreiro()
-        elif op == "templo":
-            if self.j.ouro < preco_templo:
-                self.dizer("Você não tem ouro suficiente.", "vermelho")
-            else:
-                self.perder_ouro(preco_templo)
-                self.curar(faltando)
-                self.dizer("Um clérigo trata suas feridas com unguentos e orações.", "verde")
+        elif isinstance(op, tuple) and op[0] == "templo":
+            self.templo(*op[1:])
         else:
             self.executar_comum(op)
 

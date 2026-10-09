@@ -212,7 +212,7 @@ body.modo-titulo .vinheta { background: radial-gradient(ellipse 80% 70% at 50% 4
 body:not(.sem-heroi):not(.modo-titulo):not(.em-combate) #doca:not(:empty) { display: block; }
 #doca .atalhos { margin: 0 auto; flex-wrap: nowrap; gap: 0; }
 /* Um fio de bronze antes de cada atalho (menos o primeiro); os grupos já não precisam de separador próprio. */
-#doca .atalho + .atalho, #doca .doca-sep + .atalho { background: linear-gradient(var(--p-j) 0 0) 0 50% / var(--borda) 70% no-repeat; }
+#doca .atalho + .atalho, #doca .doca-sep + .atalho { background: var(--divisoria); }
 #doca .doca-sep { display: none; }
 #doca .atalho kbd { visibility: hidden; }
 #doca .atalho:is(:hover, :focus-visible) kbd { visibility: visible; }

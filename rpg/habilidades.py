@@ -565,7 +565,7 @@ HABILIDADES = {
         Curar(Escala(max_hp=0.25, poder=1.0), bonus="cura_luz"),
         LimparMales(),
         Dizer("Você reza em voz baixa. Uma luz quente te envolve. (+{cura} vida, males removidos)", "verde")]),
-    "julgamento": hab("Julgamento Divino", 28, "todos", "Luz sagrada atinge todos os inimigos.", [
+    "julgamento": hab("Julgamento Divino", 36, "todos", "Luz sagrada atinge todos os inimigos.", [
         Dizer("Você ergue a arma aos céus. Colunas de luz caem sobre seus inimigos!", "amarelo+negrito"),
         Dano(1.2, tipo="sagrado", bonus=Escala(poder=1), alcance="distancia", esquiva=False, em="todos")]),
     "sede_sangue": hab("Sede de Sangue", 12, "inimigo", "140% de dano, rouba vida e causa sangramento.", [
@@ -573,7 +573,7 @@ HABILIDADES = {
             Se("acertou", Roubo(0.4, rotulo="Sede de Sangue"),
                Aplicar("sangramento", 3, valor=SANGRAMENTO),
                Dizer("Você bebe a fúria do golpe. (+{cura} vida)", "verde", se="cura"))])]),
-    "redemoinho": hab("Redemoinho", 16, "todos", "Atinge todos os inimigos com 110% de dano.",
+    "redemoinho": hab("Redemoinho", 22, "todos", "Atinge todos os inimigos com 110% de dano.",
                       fn=_redemoinho, linhas=_linhas_redemoinho),
     "furia_cega": hab("Fúria Cega", 0, "inimigo", "Sacrifica 15% da vida: +60% de dano por 3 turnos e ataca.",
                       fn=_furia_cega, linhas=_linhas_furia_cega),
@@ -583,7 +583,7 @@ HABILIDADES = {
     "marcar_presa": hab("Marcar Presa", 6, "inimigo", "O alvo recebe +25% de dano por 3 turnos.", [
         Aplicar("marcado", 3, 0.25, direto=True),
         Dizer("Você estuda os movimentos de {alvo} e encontra os pontos fracos. (+25% dano recebido)", "ciano")]),
-    "chuva_flechas": hab("Chuva de Flechas", 14, "todos", "Atinge todos os inimigos. Gasta uma flecha por inimigo.", [
+    "chuva_flechas": hab("Chuva de Flechas", 20, "todos", "Atinge todos os inimigos. Gasta uma flecha por inimigo.", [
         Dizer("Você dispara uma saraivada de flechas para o alto...", "ciano"),
         Dano(1.0, alcance="distancia", em="todos")], flechas_por_alvo=1),
     "passo_agil": hab("Passo Ágil", 6, "proprio", "+30% de esquiva por 2 turnos (a esquiva total não passa de 60%).", [
@@ -595,7 +595,7 @@ HABILIDADES = {
               Se("vivo", Dano(0.9, alcance="distancia", rotulo="Tiro Duplo (2)"), mostrar=False))], flechas=2),
     "comando_fera": hab("Ordem da Fera", 12, "inimigo", DESC_ORDEM, fn=_comando_fera, linhas=_linhas_comando_fera,
                         desc_fn=_desc_ordem, req=_req_fera),
-    "furia_natureza": hab("Fúria da Natureza", 25, "todos", "130% em todos, sangramento e cura o companheiro.", [
+    "furia_natureza": hab("Fúria da Natureza", 32, "todos", "130% em todos, sangramento e cura o companheiro.", [
         Dizer("Você assobia. A mata responde: vento, espinhos e flechas em uníssono!", "verde+negrito"),
         Dano(1.3, alcance="distancia", em="todos", depois=[
             Se("vivo", Aplicar("sangramento", 3, valor=SANGRAMENTO, chance=0.5))]),

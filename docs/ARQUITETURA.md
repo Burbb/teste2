@@ -119,6 +119,9 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   `curto`, `preco`, `efeito`, `tempo`), ou o porquê de estar fechado; a forja e a curandeira são telas desenhadas
   como o mercado (`painel` "ferreiro" e "curandeira", com `reforcar` e `tratar` nas opções). O que não é de prédio
   (passear) fica em texto.
+- A paisagem (`vista.js`) compõe a arte em 320×72 e a desenha no canvas já no tamanho em que aparece, pixel a pixel
+  da tela (o enquadramento vem do CSS: `object-fit`, `object-position`). Deixar o navegador esticar numa escala
+  quebrada fazia colunas da arte parada tremerem de um quadro para o outro.
 - O fim de um evento ou de uma luta não pede Continuar: a ponte manda a cena do lugar com `virar`, a tela deixa o
   que aconteceu o tempo de ler (um fio se enche; clique ou tecla adianta) e vira para a página limpa do lugar, no
   topo. O que aconteceu fica no histórico (H). O clique que adiantava o texto não pula a leitura nem as celebrações

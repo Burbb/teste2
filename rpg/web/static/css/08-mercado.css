@@ -85,7 +85,7 @@
 .mercadoria.suprimento { grid-template-rows: auto auto 1fr; }
 .merc-estoque { display: block; font-family: var(--texto); font-size: 11px; color: var(--tinta-2); letter-spacing: .02em; }
 .merc-estoque.esgotado { color: var(--sangue-2); }
-.qtd-ctrl { grid-column: 2; display: inline-flex; align-items: center; gap: 2px; margin-top: 2px; justify-self: start; }
+.qtd-ctrl { grid-column: 2; display: inline-flex; align-items: center; gap: 2px; margin-top: 2px; justify-self: start; align-self: end; }  /* só os botões e o número protegem da compra (esticado, o vazio em volta deles também não comprava) */
 .qtd-ctrl button { width: 22px; height: 22px; padding: 0; line-height: 1; font-family: var(--num); font-size: 18px; color: var(--tinta); background: var(--p-K); border: var(--borda) solid var(--p-J); cursor: pointer; user-select: none; touch-action: none; }
 .qtd-ctrl button:hover { border-color: var(--ouro); color: var(--ouro); }
 .qtd-ctrl b { min-width: 26px; text-align: center; font-family: var(--num); font-size: 20px; font-weight: 400; color: #fff3d6; }
@@ -199,3 +199,6 @@
 .balcao-predio .loja-topo { margin-bottom: 10px; }
 .balcao-predio .loja-topo b { font-size: calc(var(--px) * 32); }
 .balcao-predio .voltar-vila { margin-top: 10px; }
+/* Na dica de um item da mochila, no mercado: quanto o mercador paga. */
+.preco-venda { display: flex; align-items: center; gap: 4px; margin-bottom: 4px; font-family: var(--num); font-size: 17px; color: var(--ouro); }
+.preco-venda b { font-weight: 400; }

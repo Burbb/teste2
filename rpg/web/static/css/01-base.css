@@ -43,6 +43,9 @@
      sombra, sulco e ladrilho é múltiplo dele. A paleta indexada (--p-<letra>) e as texturas vêm de sprites.js. */
   --P: calc(var(--px, 1px) * 2);
   --borda: calc(var(--P) + 0.01px);  /* o navegador arredonda a borda para baixo: sem o 0,01px, zoom de 110% perde um pixel */
+  /* Divisória em pé: o fio de bronze gravado (luz e sombra) com uma ponta de ouro no meio, como os rebites do quadro. */
+  --divisoria: var(--ponta) 0 50% / calc(var(--P) * 3) calc(var(--P) * 3) no-repeat,
+    var(--fio-v) 0 50% / calc(var(--P) * 3) 64% no-repeat;
   --quadro: calc(var(--P) * 4 + 0.01px);  /* a espessura do quadro de bronze dos painéis (o filete; o rebite avança 2 texels) */
   --titulo: "Titulo", "Jacquard 24", serif;
   --texto: "Alegreya", Georgia, serif;

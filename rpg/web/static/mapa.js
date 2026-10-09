@@ -196,6 +196,7 @@ const MapaPx = (() => {
       const nv = n.nivel ? ` · ${n.tipo === "vila" ? "arredores" : "inimigos"} Nv.${n.nivel}` : "";
       // Sem a dica nativa do navegador (o nome e o nível já estão escritos no mapa); fica só para leitores de tela.
       b.setAttribute("aria-label", `${n.nome} — ${n.descricao}${nv}${n.distancia ? ` · ${Texto.plural(n.distancia, "trecho")} daqui` : ""}${marcas.has(n.id) ? " · você tem um contrato aqui" : ""}`);
+      if (opts.dicaDe) b.dataset.dica = Telas.guardarDica(opts.dicaDe(n));  // o nome, o perigo, a distância e o contrato
       if (clic.has(n.id) && opts.aoClicar) b.addEventListener("click", (ev) => { ev.stopPropagation(); opts.aoClicar(n.id); });
       if (marcas.has(n.id)) {
         // Elemento próprio (e não ::after, que o anel de "você está aqui" já usa): um selo "!" no canto do lugar.
@@ -205,7 +206,9 @@ const MapaPx = (() => {
         b.appendChild(m);
       }
       caixa.appendChild(b);
-      if (grande || n.atual || clic.has(n.id)) {
+      // No mapa pequeno, só o nome de onde você está: com uma encruzilhada de cinco caminhos, os nomes cobriam o mapa.
+      // Os outros aparecem no hover (e na lista de caminhos logo abaixo).
+      if (grande || n.atual) {
         const r = document.createElement("span");
         const perigo = n.nivel && opts.nivelHeroi && n.nivel >= opts.nivelHeroi + 2;
         r.className = "rotulo-mapa" + (n.atual ? " atual" : "") + (perigo ? " perigo" : "") + (!n.visitado && !n.atual ? " apagado" : "");
@@ -216,6 +219,7 @@ const MapaPx = (() => {
       }
     });
     requestAnimationFrame(() => encaixarRotulos(caixa));
+    if (opts.dicaDe) Telas.ligarDicas(caixa);
     return caixa;
   }
 

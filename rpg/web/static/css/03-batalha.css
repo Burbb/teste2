@@ -75,6 +75,10 @@ body.em-combate #hud-linha { justify-content: flex-end; }
 .faixa-acao { position: absolute; left: 50%; bottom: calc(100% + 6px); translate: -50% 0; white-space: nowrap; font-family: var(--num); font-size: 18px; line-height: 1; padding: 2px 8px 3px; color: #120e0b; background: var(--ouro); border: 2px solid #000; box-shadow: 2px 2px 0 #000; z-index: 6; pointer-events: none; animation: faixa 1.5s cubic-bezier(.2,.8,.3,1) forwards; }
 .faixa-acao.inimiga { background: #e2574c; color: #fff; }
 .faixa-acao.boa { background: var(--bom); }
+/* Ganhou um estado bom: o ícone de cada um com a seta verde para cima. */
+.faixa-acao.selos { display: flex; align-items: center; gap: 8px; padding: 2px 6px; background: #120e0b; }
+.faixa-acao.selos span { display: inline-flex; align-items: center; gap: 1px; }
+.faixa-acao.selos b { font-size: 15px; color: var(--bom); }
 .faixa-acao.espinhos { background: #5a3a1c; color: #e8d6a8; font-size: 12px; }
 .faixa-acao.ruim { background: #4a4038; color: var(--tinta); }
 @keyframes faixa { 0% { opacity: 0; transform: translateY(6px); } 15% { opacity: 1; transform: none; } 80% { opacity: 1; } 100% { opacity: 0; transform: translateY(-4px); } }

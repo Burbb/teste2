@@ -255,14 +255,13 @@ const Sensacao = (() => {
 
   /** Como a tela de resultado dos jogos, tudo o que a vitória deu num quadro só: uma linha por recompensa (o ouro,
    *  depois a experiência com a barra de nível presa embaixo dela), e por fim o que se achou (comida, bandagem,
-   *  flechas; o equipamento, que vem logo a seguir porque é uma escolha) e os contratos que andaram. O ouro conta e voa
+   *  flechas; o equipamento tem a janela dele, logo depois) e os contratos que andaram. O ouro conta e voa
    *  até a bolsa; a barra enche (se o nível vira: enche, brilha e recomeça). Some sozinho no fim; um clique ou uma
    *  tecla adianta. Os trechos da barra vêm do motor. */
   async function espolio(caixa, d) {
     const S = (n, e = 1) => Sprites.img(n, e);
     const trechos = d.trechos || [], ultimo = trechos[trechos.length - 1] || [0, 0, 1], primeiro = trechos[0] || ultimo;
     const achados = (d.itens || []).map((x) => `<span class="achado-espolio">${S(ICONE_ACHADO[x.id] || Telas.ICONE_ITEM[x.id] || "saco", 2)}${esc(x.nome)}<b>${quantoAchou(x)}</b></span>`);
-    if (d.equip) achados.push(`<span class="achado-espolio equip">${S("saco", 2)}Equipamento<b>×${d.equip}</b><small>a seguir</small></span>`);
     const contratos = (d.contratos || []).map((c) => `<div class="espolio-contrato${c.concluido ? " feito" : ""}">${S("pergaminho", 2)}
       <span>${c.concluido ? "Contrato cumprido" : "Contrato"}</span><b>${esc(c.concluido ? "receba em qualquer vila" : c.progresso)}</b></div>`).join("");
     const extras = achados.length || contratos;

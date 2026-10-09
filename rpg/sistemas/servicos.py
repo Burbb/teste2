@@ -1,5 +1,6 @@
 """Serviços da vila: ferreiro, curandeiro e rumores."""
 
+from .. import comitiva
 from .. import eventos
 from ..entidades import nome_stat
 from ..eventos.vila import ouvir_rumor
@@ -97,6 +98,36 @@ class Servicos:
             sobrevivencia.curar_ferimento(self, fid)
             self.dizer(f"Ela costura, cauteriza e enfaixa sem anestesia. Você grita. "
                        f"{sobrevivencia.FERIMENTOS[fid]['nome']}: tratado.", "verde")
+
+    def opcoes_templo(self):
+        """O templo cuida de cada um pelo que falta a cada um: você e quem anda com você (desacordado também), cada um
+        com o seu preço. Uma opção por pessoa; sem ninguém precisando, nenhuma."""
+        j = self.j
+        precisam = [(None, "você", j.max_hp - j.hp, j.max_hp)] if j.hp < j.max_hp else []
+        precisam += [(m, comitiva.nome(m["id"]), m["max_hp"] - m["hp"], m["max_hp"])
+                     for m in comitiva.membros(self) if m["hp"] < m["max_hp"] or m["ferido"]]
+        opcoes = []
+        for m, quem, falta, maximo in precisam:
+            preco = self.preco(max(1, falta // 2))
+            meta = {"predio": "templo", "servico": "templo", "curto": f"Cuidar de {quem}", "preco": preco,
+                    "efeito": f"+{falta} de vida ({maximo}/{maximo})" + (", de pé de novo" if m and m["ferido"] else "")}
+            if m:
+                meta["alvo"] = m["id"]
+            rotulo = f"Templo: cuidar da vida ({preco} ouro)" if m is None else f"Templo: cuidar de {quem} ({preco} ouro)"
+            opcoes.append((rotulo, ("templo", m and m["id"], preco, falta), meta))
+        return opcoes
+
+    def templo(self, cid, preco, falta):
+        if self.j.ouro < preco:
+            self.dizer("Você não tem ouro suficiente.", "vermelho")
+            return
+        self.perder_ouro(preco)
+        if cid is None:
+            self.curar(falta)
+            self.dizer("Um clérigo trata suas feridas com unguentos e orações.", "verde")
+            return
+        comitiva.cuidar(self, comitiva.membro(self, cid))
+        self.dizer(f"Um clérigo trata {comitiva.nome(cid)} com unguentos e orações. De pé, inteiro de novo.", "verde")
 
     # ================================================================ vila: rumores, loja, mural
     def ouvir_rumores(self):

@@ -127,8 +127,12 @@ class Confronto:
             if e.familia in self.bestiario:
                 self.bestiario[e.familia]["abates"] += 1
                 if self.bestiario[e.familia]["abates"] == 5:
-                    self.dizer(f"Você agora conhece {FAMILIAS[e.familia]['plural']} como ninguém. "
-                               f"(mestre caçador: +10% de dano contra eles)", "verde")
+                    f = FAMILIAS[e.familia]
+                    if self.ui.conquistas_na_tela:  # uma faixa com a criatura, como as outras conquistas
+                        self.ui.celebrar("mestre", {"familia": e.familia, "plural": f["plural"], "tracos": f["tracos"]})
+                    else:
+                        self.dizer(f"Você agora conhece {f['plural']} como ninguém. "
+                                   f"(mestre caçador: +10% de dano contra eles)", "verde")
             if e.chave == "nemesis":
                 self.nemesis = None
                 self.dizer("Seu nêmesis finalmente tomba. Você sente um peso sair dos ombros.", "verde+negrito")

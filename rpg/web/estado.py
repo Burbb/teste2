@@ -203,6 +203,8 @@ def _ficha_inimigo(g, e):
         if not resistencias:
             mult = {k: v for k, v in mult.items() if v >= 1}
     return {"conhecido": conhecido, "resistencias": resistencias, "progresso": g.progresso_bestiario(e.familia),
+            "mestre": g.mestre_caca(e.familia), "abates": g.bestiario.get(e.familia, {}).get("abates", 0),
+            "mestre_em": g.MESTRE_ABATES,
             "tracos": [{"id": t, "texto": TRACOS.get(t, t)} for t in e.tracos], "mult": mult,
             "ponto_fraco": bool(getattr(e, "chave", None) and g.flag(f"fraqueza:{e.chave}")),
             "atk": round(max(e.atk, e.poder)), "defesa": round(e.defesa)}
@@ -257,8 +259,8 @@ def predios_fechados(g):
     if g.loc["tipo"] != "vila":
         return {}
     fechados = {}
-    if g.j.hp >= g.j.max_hp:
-        fechados["templo"] = "O templo está em silêncio. Você não precisa de cuidados agora."
+    if not g.opcoes_templo():
+        fechados["templo"] = "O templo está em silêncio. Ninguém aqui precisa de cuidados agora."
     if not g.j.ferimentos:
         fechados["curandeiro"] = "A curandeira ergue os olhos e volta às ervas. \"Nada para tratar em você.\""
     return fechados

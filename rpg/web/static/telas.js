@@ -294,6 +294,9 @@ const Telas = (() => {
     lado.style.top = Math.max(6, Math.min(window.innerHeight - lado.offsetHeight - 6, r.top)) + "px";
   }
   window.addEventListener("keydown", (e) => { if (e.key === "Shift" && !e.repeat) mostrarEquipado(true); });
+  // Rolar tira o dono da dica de baixo do mouse: ela some na hora (o navegador demora a avisar que o mouse saiu).
+  window.addEventListener("wheel", () => { if (!document.getElementById("dica-item")?.hidden) esconderDica(); }, { capture: true, passive: true });
+  document.addEventListener("scroll", (ev) => { if (ev.target !== document && !document.getElementById("dica-item")?.hidden) esconderDica(); }, { capture: true, passive: true });
   window.addEventListener("keyup", (e) => { if (e.key === "Shift") mostrarEquipado(false); });
   window.addEventListener("blur", () => mostrarEquipado(false));
   function esconderDica() {
@@ -563,7 +566,8 @@ const Telas = (() => {
         <span class="slot-px r-${h(it.raridade)}">${S(iconeItem(it), 2)}</span>
         <span class="merc-nome r-${h(it.raridade)}">${h(it.nome)}</span><span class="merc-bonus">${h(it.bonus)}</span><span class="preco">${S("moeda", 1)}${it.preco}</span></button>`;
     }).join("");
-    const mochila = d.mochila.map((it, i) => `<div role="button" tabindex="0" class="slot-px celula r-${h(it.raridade)}${it.usavel ? "" : " inutil"}" draggable="true" data-mochila-loja="${i}" ${dicaItem(it, "Clique para equipar ou vender · botão direito: vender na hora.")}>${S(iconeItem(it), 2)}</div>`);
+    const venda = (it) => `<div class="preco-venda">${S("moeda", 1)} O mercador paga <b>${it.preco}</b></div>Clique para equipar ou vender · botão direito: vender na hora.`;
+    const mochila = d.mochila.map((it, i) => `<div role="button" tabindex="0" class="slot-px celula r-${h(it.raridade)}${it.usavel ? "" : " inutil"}" draggable="true" data-mochila-loja="${i}" ${dicaItem(it, venda(it))}>${S(iconeItem(it), 2)}</div>`);
     for (let i = d.mochila.length; i < d.limite; i++) mochila.push('<div class="slot-px celula vazia"></div>');
     return `<div class="tela loja">
       <div class="loja-topo">${S("saco", 3)}<div><b>O mercador</b><span class="lore">"Tudo tem preço. Até você."</span></div>
@@ -1252,6 +1256,12 @@ const Telas = (() => {
       particulas(["#f2c94c", "#fff3a0", "#d4af37"], d.chefe ? 70 : 30);
       return new Promise((r) => setTimeout(r, d.chefe ? 1500 : 1000));
     }
+    if (m.tipo === "mestre") {  // mestre caçador de uma espécie: a faixa de ouro com a criatura dos dois lados
+      if (instantaneo) return Promise.resolve();
+      App.som("nivel");
+      faixa("Mestre caçador", `${d.plural.charAt(0).toUpperCase() + d.plural.slice(1)}: +10% de dano contra eles`, iconeCriatura(d.tracos, d.familia));
+      return new Promise((r) => setTimeout(r, 1800));
+    }
     if (m.tipo === "exausto") {  // o dia acabou à força: uma faixa sombria, devagar, e a fogueira (ou o feno) em seguida
       if (instantaneo) return Promise.resolve();
       App.som("exausto");
@@ -1435,6 +1445,7 @@ const Telas = (() => {
     if (m.tipo === "atributo") return `▸ +${d.valor} ${d.nome} permanente`;
     if (m.tipo === "chegada") return `▸ ${d.primeira ? "Descoberto" : "Chegada"}: ${d.nome}`;
     if (m.tipo === "exausto") return `▸ Exausto: ${d.texto}`;
+    if (m.tipo === "mestre") return `▸ Mestre caçador: ${d.plural} (+10% de dano contra eles)`;
     if (m.tipo === "equipou" && d.achado) return `▸ Vestiu: ${d.item.nome}`;
     if (m.tipo === "guardou") return `▸ Na mochila: ${d.item.nome}`;
     if (m.tipo === "amanhecer") return `▸ Dia ${d.dia} · ${d.clima}${d.itens.length ? " · " + d.itens.map((x) => x.curto).join(", ") : ""}`;

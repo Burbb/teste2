@@ -113,22 +113,22 @@ const Batalha = (() => {
     if (Telas.dicaAbertaPor(el)) return;  // já aberta (a carta voltou para baixo do mouse): fica onde está
     const f = c.ficha;
     const caixa = Telas.abrirDica(el, true);
-    const tracos = f.tracos.map((t) => `<span class="ficha-traco" title="${esc(t.texto)}">${S(ICONE_TRACO[t.id] || "estrela", 2)}<small>${esc(t.id)}</small></span>`).join("");
-    let corpo;
-    const linha = (filtro, classe) => Object.entries(f.mult).filter(([, v]) => filtro(v)).map(([k, v]) => {
+    // Os traços numa linha só, miúdos; embaixo, duas colunas (fraco contra / resiste a), uma linha por elemento.
+    const tracos = f.tracos.map((t) => `<span class="ficha-traco" title="${esc(t.texto)}">${S(ICONE_TRACO[t.id] || "estrela", 1)}${esc(t.id)}</span>`).join("");
+    const lista = (filtro) => Object.entries(f.mult).filter(([, v]) => filtro(v)).map(([k, v]) => {
       const [ic, nome] = ELEMENTO[k] || ["estrela", k];
-      return `<span class="ficha-mult ${classe}">${S(ic, 2)}<b>${v === 0 ? "imune" : "×" + String(v).replace(".", ",")}</b><small>${nome}</small></span>`;
+      return `<li>${S(ic, 1)}<span>${nome}</span><span class="valor">${v === 0 ? "imune" : "×" + String(v).replace(".", ",")}</span></li>`;
     }).join("");
     // O bestiário da espécie libera aos poucos: primeiro as fraquezas, depois as resistências.
-    const fracos = f.conhecido ? linha((v) => v >= 1.15, "fraco") : "";
-    const fortes = f.resistencias ? linha((v) => v <= 0.85, "forte") : "";
-    corpo = (f.conhecido ? (fracos ? `<div class="ficha-titulo bom">Fraco contra</div><div class="ficha-linha">${fracos}</div>`
-        : '<div class="ficha-titulo">Sem fraquezas</div>') : '<div class="ficha-titulo">Fraquezas: ???</div>') +
-      (f.resistencias ? (fortes ? `<div class="ficha-titulo ruim">Resiste a</div><div class="ficha-linha">${fortes}</div>`
-        : '<div class="ficha-titulo">Sem resistências</div>') : f.conhecido ? '<div class="ficha-titulo">Resistências: ???</div>' : "") +
-      (f.progresso ? `<div class="pior ficha-progresso">${esc(f.progresso)}</div>` : "");
+    const coluna = (titulo, classe, sabe, itens) => `<div class="ficha-col ${classe}"><div class="ficha-titulo">${titulo}</div>` +
+      (!sabe ? '<div class="ficha-nada">???</div>' : itens ? `<ul>${itens}</ul>` : '<div class="ficha-nada">nada</div>') + "</div>";
+    const corpo = `<div class="ficha-cols">${coluna("Fraco contra", "bom", f.conhecido, f.conhecido && lista((v) => v >= 1.15))}` +
+      `${coluna("Resiste a", "ruim", f.resistencias, f.resistencias && lista((v) => v <= 0.85))}</div>`;
+    // A caça desta espécie: o selo de mestre caçador, ou o quanto falta (a barra vai até o mestre).
+    const caca = f.mestre ? `<div class="ficha-mestre">${S("estrela", 1)}Mestre caçador<span>+10% de dano</span></div>`
+      : f.progresso ? `<div class="ficha-caca"><span class="barra-px xp"><span class="enchimento" style="width:${Math.min(100, (100 * f.abates) / (f.mestre_em || 5))}%"></span></span><small>${esc(f.progresso)}</small></div>` : "";
     caixa.innerHTML = `<b>${esc(c.nome)}</b><div class="tipo">Nível ${c.nivel}${c.chefe ? " · chefe" : ""} · ataque ${f.atk} · defesa ${f.defesa}</div>
-      <div class="ficha-tracos">${tracos}</div>${corpo}${f.ponto_fraco ? '<div class="rodape">Você conhece o ponto fraco: +25% de dano!</div>' : ""}`;
+      <div class="ficha-tracos">${tracos}</div>${corpo}${caca}${f.ponto_fraco ? '<div class="rodape">Você conhece o ponto fraco: +25% de dano!</div>' : ""}`;
     caixa.classList.add("ficha-inimigo");
     const r = el.getBoundingClientRect();
     const esq = r.left - 300 < 6 ? r.right + 10 : r.left - 300;
@@ -319,6 +319,18 @@ const Batalha = (() => {
     n.addEventListener("animationend", () => n.remove());  // o do golpe final dura mais
     Sensacao.depois(4000, () => n.remove());
   }
+  /** Ganhou um estado bom: o ícone de cada um com uma seta para cima, em cima da carta (o nome do golpe ali
+   *  confundia: parecia que o golpe tinha saído de novo). */
+  function selos(el, ids) {
+    if (!ids || !ids.length || rapido()) return;
+    const velho = el.querySelector(".faixa-acao");
+    if (velho) velho.remove();
+    const f = document.createElement("div");
+    f.className = "faixa-acao selos";
+    f.innerHTML = ids.map((id) => `<span>${S(efeito(id)[0], 1)}<b>▲</b></span>`).join("");
+    el.appendChild(f);
+    Sensacao.depois(1500, () => f.remove());
+  }
   function rotulo(el, texto, classe = "") {
     if (!texto || rapido()) return;
     const velho = el.querySelector(".faixa-acao");
@@ -395,8 +407,8 @@ const Batalha = (() => {
         marcar(m.em);
         const fams = [...new Set((m.efeitos || []).map((id) => (ESTADOS[id] ? ESTADOS[id].familia : "protecao")))];
         fams.forEach((f, i) => setTimeout(() => brilho(em, f), i * 160));
-        if (m.hab !== "grito_guerra") rotulo(em, m.rotulo);
-        som(m.hab === "erguer_escudo" ? "falange" : fams.includes("sombra") ? "sombra" : fams.includes("forca") ? "feitico" : "protecao");
+        if (m.hab !== "grito_guerra") selos(em, m.efeitos);
+        som(m.hab === "erguer_escudo" ? "falange" : "buff");  // ganhar um estado bom soa para cima; um mal, para baixo
         if (m.hab === "erguer_escudo") Sensacao.tremor(arena, Sensacao.AJUSTES.tremor.leve, 300);  // o baque dos escudos no chão
         if (m.hab === "provocar") { som("rugido"); Sensacao.tremor(arena, Sensacao.AJUSTES.tremor.leve, 360); }  // o urso ruge e todos olham para ele
         await dormir(pausa(560 + 160 * Math.max(0, fams.length - 1)));
@@ -443,6 +455,7 @@ const Batalha = (() => {
       }
       case "erro": {
         marcar(m.em);
+        if (m.reacao && de) rotulo(de, m.rotulo, de.classList.contains("inimigo") ? "inimiga" : "boa");
         if (de && em) { if (aDistancia(m, de) || emArea) await projetil(de, em, "flecha"); else await investir(de, em); }
         if (em) {
           if (m.motivo === "esquiva") reiniciar(em, "esquivou", 560);
@@ -508,7 +521,7 @@ const Batalha = (() => {
         brilho(em, fam);
         if (m.efeito === "queimadura") labaredas(em);
         numero(em, m.rotulo, "info");
-        som(m.efeito === "atordoado" ? "atordoar" : "feitico");
+        som(m.efeito === "atordoado" ? "atordoar" : ESTADOS[m.efeito] && ESTADOS[m.efeito].negativo === false ? "buff" : "debuff");
         await dormir(pausa(300));
         return;
       }
@@ -763,6 +776,7 @@ const Batalha = (() => {
   async function golpe(m, de, em) {
     if (!em) return;
     marcar(m.em);
+    if (m.reacao && de) rotulo(de, m.rotulo, de.classList.contains("inimigo") ? "inimiga" : "boa");  // o contra-ataque
     const el = m.elemento || "fisico";
     const distancia = aDistancia(m, de);
     await Sensacao.antesDoGolpe(m, arena, em);  // o golpe que encerra a luta já chega em câmera lenta

@@ -302,7 +302,7 @@ Você não precisa caminhar sozinho, e talvez não deva. Três companheiros pode
   no acampamento se recupera, não come das suas provisões e não opina nas suas escolhas.
 - **O preço:** cada companheiro come uma provisão por dia, Morel cobra soldo, grupos
   atraem mais inimigos, os inimigos resistem mais e o XP é dividido (só quem anda com você). Quem cai em combate
-  pode morrer de verdade (Odette por perto ajuda a evitar).
+  fica desacordado e só volta a lutar depois de uma noite de descanso (ou de passar pelo templo).
 
 ## O objetivo
 

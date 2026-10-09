@@ -153,6 +153,16 @@ const Som = (() => {
       const t = ctx.currentTime;
       [0, 0.3, 0.6].forEach((d) => { sopro(t + d, 0.12, 1800, 500, 0.06, 0.9, "lowpass"); estalo(t + d + 0.02, 900, 0.03, 0.03); });
     },
+    buff() {  // um estado bom: duas notas que sobem e um brilho
+      const t = ctx.currentTime;
+      tom(t, 523, 0.07, 0.22, "triangle", 659); tom(t + 0.09, 784, 0.07, 0.4, "triangle", 1046);
+      sopro(t + 0.05, 0.35, 3000, 7000, 0.025, 1, "highpass");
+    },
+    debuff() {  // um mal: duas notas que descem, ásperas e quase juntas
+      const t = ctx.currentTime;
+      tom(t, 330, 0.06, 0.35, "sawtooth", 233); tom(t + 0.07, 311, 0.05, 0.45, "square", 196);
+      sopro(t, 0.4, 900, 250, 0.03, 1.2, "lowpass");
+    },
     exausto() {  // um suspiro longo e grave: o corpo que não vai mais
       const t = ctx.currentTime;
       sopro(t, 1.1, 700, 180, 0.07, 0.7, "lowpass");

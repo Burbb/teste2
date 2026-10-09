@@ -80,17 +80,25 @@
 .carta.fugindo { opacity: 0; transition: opacity 0.4s ease; }
 
 /* ficha do inimigo (hover na carta) */
-#dica-item.ficha-inimigo { width: 290px; }
-.ficha-tracos { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0; }
-.ficha-traco { display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 3px 4px; background: #0d0b0a; border: 2px solid #3a2e24; cursor: default; }
-.ficha-traco small { font-size: 10px; color: var(--tinta-3); }
-.ficha-titulo { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--tinta-3); margin-top: 6px; }
-.ficha-titulo.bom { color: var(--bom); } .ficha-titulo.ruim { color: var(--sangue-2); }
-.ficha-linha { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 3px; }
-.ficha-mult { display: inline-flex; align-items: center; gap: 4px; padding: 2px 6px 2px 2px; border: 2px solid; background: #0d0b0a; }
-.ficha-mult b { font-family: var(--num); font-size: 18px; font-weight: 400; line-height: 1; }
-.ficha-mult small { font-size: 11px; color: var(--tinta-3); }
-.ficha-mult.fraco { border-color: #3d6a2a; color: #bfe59b; } .ficha-mult.forte { border-color: #8a1414; color: #ff9c90; }
+/* A ficha do inimigo (hover da carta): os traços numa linha, fraquezas e resistências em duas colunas compactas e,
+   embaixo, a caça da espécie (o selo de mestre caçador ou a barra até ele). */
+#dica-item.ficha-inimigo { width: 300px; }
+.ficha-tracos { display: flex; flex-wrap: wrap; gap: 2px 10px; margin: 4px 0 2px; }
+.ficha-traco { display: inline-flex; align-items: center; gap: 3px; font-size: 12px; color: var(--tinta-2); cursor: default; }
+.ficha-titulo { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--tinta-3); }
+.ficha-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px; }
+.ficha-col.bom .ficha-titulo { color: var(--bom); } .ficha-col.ruim .ficha-titulo { color: var(--sangue-2); }
+.ficha-col ul { list-style: none; margin: 3px 0 0; padding: 0; display: grid; gap: 2px; }
+.ficha-col li { display: flex; align-items: center; gap: 4px; font-size: 12px; line-height: 1.2; color: var(--tinta-2); }
+.ficha-col .valor { margin-left: auto; font-family: var(--num); font-size: 14px; white-space: nowrap; }
+.ficha-col.bom .valor { color: #bfe59b; } .ficha-col.ruim .valor { color: #ff9c90; }
+.ficha-nada { margin-top: 3px; font-size: 12px; color: var(--tinta-3); }
+.ficha-mestre { display: flex; align-items: center; gap: 6px; margin-top: 10px; padding: 3px 8px; font-size: 13px; font-weight: 600; color: var(--ouro);
+  background: #1a1408; border: var(--borda) solid var(--p-a); }
+.ficha-mestre span { margin-left: auto; font-family: var(--num); font-size: 15px; font-weight: 400; }
+.ficha-caca { margin-top: 10px; }
+.ficha-caca .barra-px { height: 6px; margin-bottom: 4px; }
+.ficha-caca small { font-size: 12px; color: var(--tinta-2); }
 .ficha-habs { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 3px; }
 .ficha-habs span { font-size: 12px; padding: 1px 6px; background: #2a1f3a; color: #cdbcf5; border: 1px solid #4a3a6a; }
 

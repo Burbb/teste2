@@ -797,7 +797,7 @@ def agir(cb, a):
 
 
 def encerrar_combate(cb, resultado):
-    """Devolve a vida aos membros; quem caiu pode ter morrido de verdade."""
+    """Devolve a vida aos membros; quem caiu fica desacordado e só volta a lutar depois de descansar."""
     g = cb.g
     for a in cb.aliados:
         m = getattr(a, "membro", None)
@@ -808,41 +808,19 @@ def encerrar_combate(cb, resultado):
             continue
         if resultado == "derrota":
             continue
-        cuidado = presente(g, "odete") and m["id"] != "odete" and not membro(g, "odete")["ferido"]
-        if g.chance(0.12 if cuidado else 0.25):
-            morrer(g, m)
-        else:
-            m["hp"] = 1
-            m["ferido"] = True
-            g.dizer(f"{a.nome} está caíd{'a' if a.g == 'f' else 'o'}, mas respira. Vai precisar de uma noite "
-                    "de descanso antes de lutar de novo.", "amarelo")
+        m["hp"] = 1
+        m["ferido"] = True
+        g.dizer(f"{a.nome} está caíd{'a' if a.g == 'f' else 'o'}, mas respira. Vai precisar de uma noite "
+                "de descanso antes de lutar de novo.", "amarelo")
     if presente(g, "yara") and membro(g, "yara").get("caminho") == "vazio" and resultado == "vitoria":
         # o poder da Fenda cobra o seu preço: Yara bebe um pouco da sua vida a cada luta
         g.j.hp = max(1, g.j.hp - max(1, int(g.j.max_hp * bal.YARA_VAZIO_CUSTO)))
 
 
-def morrer(g, m):
-    cid = m["id"]
-    d = COMPANHEIROS[cid]
-    g.ui.separador("vermelho")
-    finais = {
-        "odete": "Odette cai de joelhos, as mãos ainda erguidas numa prece que não termina. Quando você chega até ela, "
-                 "os olhos já estão parados, voltados para o norte, para a catedral.",
-        "morel": "Morel ainda tenta se levantar, apoiado na espada. \"Segura a linha\", ele diz, para ninguém. "
-                 "Depois desaba, e a linha que ele segurava era você.",
-        "yara": "Yara cai sem um som. Por um instante, a sombra dela continua de pé. Depois se desfaz, como fumaça.",
-    }
-    g.narrar(finais[cid], "vermelho")
-    g.ui.efeito(f"{d['nome']} morreu", "ferimento")
-    sair(g, cid, "morto")
-    for outro in membros(g):
-        if outro["id"] == "odete":
-            g.dizer(f"Odette fecha os olhos de {d['curto']} e reza por um bom tempo.", "cinza")
-        elif outro["id"] == "morel":
-            g.dizer("Morel cava a cova sozinho. Não deixa ninguém ajudar.", "cinza")
-        else:
-            g.dizer(f"Yara canta baixinho, numa língua que você não conhece, sobre o corpo de {d['curto']}.", "cinza")
-        mudar_aprovacao(g, outro["id"], -4, mostrar=False)
+def cuidar(g, m):
+    """O templo (ou quem mais cuidar dela): a vida cheia e de pé de novo, sem esperar a noite."""
+    m["hp"] = m["max_hp"]
+    m["ferido"] = False
 
 
 # ---------------------------------------------------------------- final

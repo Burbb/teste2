@@ -62,6 +62,9 @@ class Combatente:
             self.efeitos.pop(nome, None)
 
     def curar(self, n):
+        """Quem já caiu não recupera vida: o roubo de vida de um golpe cujo contra-ataque matou o atacante não o levanta."""
+        if self.hp <= 0:
+            return 0
         n = max(0, min(int(n), self.max_hp - self.hp))
         self.hp += n
         return n

@@ -59,8 +59,10 @@ class Bestiario:
             return f"Mais {5 - abates} e você vira mestre caçador desta espécie (+10% de dano)."
         return "Mestre caçador: +10% de dano contra esta espécie."
 
+    MESTRE_ABATES = 5  # abates de uma espécie para virar mestre caçador dela
+
     def mestre_caca(self, familia):
-        return self.bestiario.get(familia, {}).get("abates", 0) >= 5
+        return self.bestiario.get(familia, {}).get("abates", 0) >= self.MESTRE_ABATES
 
     def ver_bestiario(self):
         self.ui.cena("Bestiário", f"{len(self.bestiario)}/{len(LORE)} criaturas", "menu")

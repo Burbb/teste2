@@ -236,9 +236,12 @@ class Combate:
 
     # ------------------------------------------------------------ dano
     def atacar(self, u, alvo, mult, tipo="fisico", alcance="corpo", stat="atk", crit_extra=0.0, bonus=0,
-               rotulo=None, pode_esquivar=True, detalhar=True):
+               rotulo=None, pode_esquivar=True, detalhar=True, reacao=False):
+        """reacao: um golpe que sai sozinho, fora da vez de quem o dá (o contra-ataque): a tela põe o nome dele na
+        cabeça de quem golpeia, como põe o das habilidades."""
         if alvo is None or not alvo.vivo:
             return 0
+        reage = {"reacao": True} if reacao else {}
         prefixo = f"[{rotulo}] " if rotulo else ""
         quem = self.nome(u)
         # Os estados entram na conta pelo catálogo (estados.py, campo `golpe`), cada um na sua etapa.
@@ -250,13 +253,13 @@ class Combate:
                 esq += 0.05
             esq = min(bal.MAX_ESQUIVA, esq)
             if self.rng.random() < esq:
-                self.lance("erro", de=self.uid(u), em=self.uid(alvo), motivo="esquiva", rotulo=rotulo)
+                self.lance("erro", de=self.uid(u), em=self.uid(alvo), motivo="esquiva", rotulo=rotulo, **reage)
                 if detalhar:
                     self.detalhe(f"{prefixo}{quem} erra — {self.nome(alvo, True)} se esquiva!", "cinza")
                 return 0
         eficacia = mult_tracos(alvo, tipo, alcance)
         if eficacia == 0:
-            self.lance("erro", de=self.uid(u), em=self.uid(alvo), motivo="imune", rotulo=rotulo)
+            self.lance("erro", de=self.uid(u), em=self.uid(alvo), motivo="imune", rotulo=rotulo, **reage)
             self.detalhe(f"{prefixo}{self.nome(alvo)} é imune!", "cinza")
             return 0
         m = eficacia
@@ -343,7 +346,7 @@ class Combate:
         defensor = alvo is self.j or alvo in self.aliados
         self.lance("golpe", de=self.uid(u), em=self.uid(alvo), dano=dano, crit=crit, crit_motivo=motivo_crit, elemento=tipo,
                    alcance=alcance, absorvido=absorvido, eficacia="super" if eficacia >= 1.3 else "pouco" if eficacia <= 0.7 else None,
-                   rotulo=rotulo, hp=max(0, alvo.hp), max_hp=alvo.max_hp,
+                   rotulo=rotulo, hp=max(0, alvo.hp), max_hp=alvo.max_hp, **reage,
                    **({"bonus_motivo": bonus_motivo} if bonus_motivo else {}), **self.peso_do_golpe(alvo))
         if detalhar:
             self.detalhe(txt, "vermelho" if defensor else "amarelo")

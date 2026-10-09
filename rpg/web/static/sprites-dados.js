@@ -1440,6 +1440,8 @@ const SPRITES_GRADES = (() => {
   S.retrato_a = quadro(["aaa", "a..", "a.."], "J..");
   // Divisória: um fio de bronze com sombra, e uma ponta de ouro em cada extremo.
   S.fio = [".", "J", "k"];
+  // A mesma divisória em pé (luz à esquerda, sombra à direita): separa os atalhos da doca e os recursos do topo.
+  S.fio_v = [".Jk"];
   // O bico do balão de nome da vila: um V que se abre na caixa (a linha de cima cobre a borda de baixo dela).
   const BICO = ["#kkkkk#", ".#kkk#.", "..#k#..", "...#..."];
   for (const cor of "ja") S["bico_" + cor] = trocar(BICO, { "#": cor });
