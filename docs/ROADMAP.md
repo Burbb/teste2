@@ -48,3 +48,9 @@ mais brando para quem quiser; um robô de mapa que jogue partidas inteiras com j
 - Comida para o animal (descartado por ora: provisões ficariam apertadas demais).
 - Ícones próprios para cada habilidade.
 - "Ordens" leves para a comitiva.
+- Armazém para guardar mais coisa, quando a gama de itens crescer (junto com o saque de ARPG: mais drop, mais
+  variedade). Como Titan Quest (a Caravana) e Diablo/Path of Exile/Grim Dawn: só nas vilas, nunca no acampamento
+  (a mochila de 12 é a tensão da viagem), e o mesmo conteúdo em todas as vilas (uma carroça de caravaneiro leva
+  suas coisas de uma para outra). Outro nome que não "baú", para não confundir com o Baú Trancado (o saque que se
+  abre na vila ou na fogueira, que fica). Junto dele, "Vender o lixo" no mercado (o jogo marca o que é comum e
+  pior que o equipado, você desmarca o que quiser), com um plin por item.
