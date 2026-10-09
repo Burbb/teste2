@@ -295,7 +295,9 @@ def _varredura(cb, e, alvo):
 
 
 def _caidos_para_reviver(cb, e):
-    return [m for m in cb.inimigos if not m.vivo and not m.fugiu and m.familia == "caido" and m is not e]
+    """Os mortos da família que esta levanta (`revive` na ficha: o xamã ergue os caídos)."""
+    revive = FAMILIAS.get(e.familia, {}).get("revive")
+    return [m for m in cb.inimigos if not m.vivo and not m.fugiu and m.familia == revive and m is not e]
 
 
 def _reviver(cb, e, alvo):

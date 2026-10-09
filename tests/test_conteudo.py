@@ -11,7 +11,7 @@ import re
 import unittest
 
 from rpg import comitiva
-from rpg.dados import AFIXOS, BIOMAS, FAMILIAS, GUARDIOES, LORE, TRACOS
+from rpg.dados import AFIXOS, BIOMAS, CRIATURAS_DA_FENDA, FAMILIAS, GUARDIOES, LORE, TRACOS
 from rpg.eventos import motor
 from rpg.eventos.titulos import TITULOS
 from rpg.classes import CLASSES
@@ -20,8 +20,6 @@ from rpg import balanceamento as bal
 from rpg.inimigos import HABS
 from rpg import itens
 from rpg.itens import CONSUMIVEIS, RECURSOS
-from rpg.regras import NIVEL_MIN_FAMILIA
-from rpg.sistemas.confronto import CRIATURAS_DA_FENDA
 from rpg.talentos import NIVEL_CAMADA, PASSIVAS, RAMOS_COMUNS, TALENTOS
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -71,8 +69,15 @@ class TestInimigos(Catalogo):
         for bioma, b in BIOMAS.items():
             for f in b["familias"]:
                 self.existe(f, FAMILIAS, f"bioma {bioma}: família '{f}' não existe")
-        for f in NIVEL_MIN_FAMILIA:
-            self.existe(f, FAMILIAS, f"NIVEL_MIN_FAMILIA: família '{f}' não existe")
+        for bioma, b in BIOMAS.items():
+            for f in b.get("noite", []):
+                self.existe(f, FAMILIAS, f"bioma {bioma}: família da noite '{f}' não existe")
+        for k, f in FAMILIAS.items():
+            if f.get("escolta"):
+                self.existe(f["escolta"]["familia"], FAMILIAS, f"família {k}: escolta '{f['escolta']['familia']}' não existe")
+            if f.get("revive"):
+                self.existe(f["revive"], FAMILIAS, f"família {k}: revive '{f['revive']}' não existe")
+                self.existe("reviver", f["habs"], f"família {k}: declara `revive` mas não tem a habilidade reviver")
         for _, f in CRIATURAS_DA_FENDA:
             self.existe(f, FAMILIAS, f"CRIATURAS_DA_FENDA: família '{f}' não existe")
         for bioma, lista in GUARDIOES.items():
@@ -85,11 +90,19 @@ class TestInimigos(Catalogo):
     def test_toda_familia_que_aparece_tem_lore(self):
         """O bestiário conta e descreve pelo LORE: uma família que aparece sem lore fica sem texto e desconta o total."""
         aparecem = {f for b in BIOMAS.values() for f in b["familias"]}
-        aparecem |= {f for _, f in CRIATURAS_DA_FENDA} | {"espectro", "xama_caido"}
+        aparecem |= {f for _, f in CRIATURAS_DA_FENDA} | {f for b in BIOMAS.values() for f in b.get("noite", [])}
+        aparecem |= {f["escolta"]["familia"] for f in FAMILIAS.values() if f.get("escolta")}
         aparecem |= {t["invoca"] for lista in GUARDIOES.values() for t in lista if t.get("invoca")}
         for f in sorted(aparecem):
             self.existe(f, LORE, f"família '{f}' aparece no mundo mas não tem LORE (rpg/dados.py)")
 
+
+    def test_afixos(self):
+        for k, a in AFIXOS.items():
+            for s in a["sorteio"]:
+                self.existe(s, ("elite", "campeoes", "unico"), f"afixo {k}: sorteio '{s}' desconhecido")
+            for h in a.get("habs", []):
+                self.existe(h, HABS, f"afixo {k}: habilidade '{h}' não existe em HABS")
 
     def test_tracos_citados_existem(self):
         for k, f in FAMILIAS.items():

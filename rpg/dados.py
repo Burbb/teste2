@@ -22,6 +22,7 @@ BIOMAS = {
         "nome": "Pântano",
         "lugares": [("Brejo", "m"), ("Lamaçal", "m"), ("Charco", "m"), ("Lodaçal", "m"), ("Pântano", "m")],
         "familias": ["afogado", "sapo", "bruxa_brejo", "sanguessuga", "bandido", "carnical"],
+        "noite": ["espectro"],  # só à noite, além das de sempre
         "ambiente": [
             "Bolhas sobem da água escura. Às vezes, junto delas, sobe um dedo.",
             "Moscas cobrem um cavalo inchado meio afundado no lodo.",
@@ -56,6 +57,7 @@ BIOMAS = {
         "nome": "Planícies",
         "lugares": [("Campos", "m"), ("Prado", "m"), ("Planície", "f"), ("Colina", "f"), ("Estrada", "f")],
         "familias": ["bandido", "javali", "lobo", "cultista", "mercenario", "caido"],
+        "noite": ["espectro"],  # só à noite, além das de sempre
         "ambiente": [
             "Uma fazenda queimada. Na porta do celeiro, alguém riscou: NÃO ABRA.",
             "Corvos disputam algo no meio do trigo podre. É melhor não olhar.",
@@ -73,6 +75,7 @@ BIOMAS = {
         "nome": "Ruínas",
         "lugares": [("Ruínas", "f"), ("Necrópole", "f"), ("Fortaleza", "f"), ("Templo", "m"), ("Catacumbas", "f")],
         "familias": ["esqueleto", "espectro", "golem", "cultista", "rato", "carnical", "caido"],
+        "noite": ["espectro"],  # só à noite, além das de sempre
         "ambiente": [
             "Colunas quebradas se erguem como costelas de um deus morto.",
             "Nas paredes, nomes riscados à unha por quem ficou preso aqui.",
@@ -115,6 +118,9 @@ VILA_QUALIFICA = [("de Pedra", "de Pedra"), ("Branco", "Branca"), ("Negro", "Neg
 VILA_LUGARES = [("Vau", "m"), ("Vale", "m"), ("Grota", "f"), ("Vigia", "f"), ("Abrigo", "m"), ("Herdade", "f"),
                 ("Charneca", "f"), ("Ribeira", "f"), ("Cascata", "f"), ("Portela", "f")]
 
+# Criaturas da Fenda e o perigo mínimo do lugar para elas aparecerem fora do bioma delas (nesta ordem).
+CRIATURAS_DA_FENDA = ((3, "caido"), (4, "cao_infernal"), (4, "cria_vazio"), (5, "abominacao"))
+
 # Traços alteram o dano recebido conforme tipo e alcance do ataque.
 TRACOS = {
     "fera": "Fera: instintiva e rápida.",
@@ -131,86 +137,142 @@ TRACOS = {
     "demonio": "Demônio: cria do Inferno; o sagrado o queima, o fogo pouco o fere.",
 }
 
-# nome, plural, gênero, atributos base (nível 1), traços, habilidades, xp, ouro, tamanho de grupo
+# nome, plural, gênero, atributos base (nível 1), traços, habilidades, xp, ouro, tamanho de grupo e, quando há:
+#   nivel_min  o nível da região a partir do qual a espécie aparece (sem ele, desde o começo)
+#   escolta    quem às vezes vem junto (familia, chance até o nível `ate_nivel`, chance depois): o xamã dos caídos
+#   revive     a família que o Reviver dela levanta
+#   flechas    carrega flechas: o arqueiro acha algumas entre os pertences
+#   lore       o que o bestiário conta
 FAMILIAS = {
     "lobo": dict(nome="lobo", plural="lobos", g="m", hp=20, atk=6, defesa=2, agi=6, poder=0,
-                 tracos=["fera"], habs=["mordida_sangrenta", "uivo"], xp=12, ouro=(0, 2), grupo=(1, 3)),
+                 tracos=["fera"], habs=["mordida_sangrenta", "uivo"], xp=12, ouro=(0, 2), grupo=(1, 3),
+                 lore="Caçam em matilha e uivam para chamar as outras. Um lobo sozinho raramente está sozinho."),
     "aranha": dict(nome="aranha gigante", plural="aranhas gigantes", g="f", hp=18, atk=6, defesa=2, agi=7, poder=0,
-                   tracos=["fera"], habs=["teia", "veneno"], xp=13, ouro=(0, 2), grupo=(1, 2)),
+                   tracos=["fera"], habs=["teia", "veneno"], xp=13, ouro=(0, 2), grupo=(1, 2),
+                   lore="Tecem armadilhas entre as árvores. Seu veneno paralisa antes de matar."),
     "bandido": dict(nome="bandido", plural="bandidos", g="m", hp=24, atk=7, defesa=3, agi=5, poder=0,
-                    tracos=["humano"], habs=["roubar", "golpe_sujo"], xp=14, ouro=(4, 12), grupo=(1, 3)),
+                    tracos=["humano"], habs=["roubar", "golpe_sujo"], xp=14, ouro=(4, 12), grupo=(1, 3),
+                    flechas=True,
+                    lore="Desertores, camponeses arruinados e gente pior. Gostam mais do seu ouro do que de lutar."),
     "javali": dict(nome="javali selvagem", plural="javalis selvagens", g="m", hp=28, atk=7, defesa=4, agi=3, poder=0,
-                   tracos=["fera"], habs=["investida"], xp=13, ouro=(0, 1), grupo=(1, 2)),
+                   tracos=["fera"], habs=["investida"], xp=13, ouro=(0, 1), grupo=(1, 2),
+                   lore="Teimosos e brutais. A investida de um javali derruba até cavaleiros."),
     "ent_jovem": dict(nome="ent jovem", plural="ents jovens", g="m", hp=40, atk=8, defesa=7, agi=1, poder=0,
-                      tracos=["planta", "blindado"], habs=["esmagar", "regenerar"], xp=22, ouro=(0, 3), grupo=(1, 1)),
+                      tracos=["planta", "blindado"], habs=["esmagar", "regenerar"], xp=22, ouro=(0, 3), grupo=(1, 1),
+                      nivel_min=3,
+                      lore="Árvores que acordaram com raiva. Madeira verde queima mal — mas queima."),
     "afogado": dict(nome="afogado", plural="afogados", g="m", hp=26, atk=7, defesa=3, agi=2, poder=3,
-                    tracos=["morto-vivo"], habs=["agarrar", "drenar"], xp=15, ouro=(1, 6), grupo=(1, 3)),
+                    tracos=["morto-vivo"], habs=["agarrar", "drenar"], xp=15, ouro=(1, 6), grupo=(1, 3),
+                    lore="Os que o pântano não devolveu. Agarram e puxam para o fundo."),
     "sapo": dict(nome="sapo-touro gigante", plural="sapos-touro gigantes", g="m", hp=30, atk=6, defesa=3, agi=4, poder=0,
-                 tracos=["fera"], habs=["veneno", "agarrar"], xp=14, ouro=(0, 1), grupo=(1, 2)),
+                 tracos=["fera"], habs=["veneno", "agarrar"], xp=14, ouro=(0, 1), grupo=(1, 2),
+                 lore="A língua é mais rápida que uma flecha, e o couro é venenoso ao toque."),
     "bruxa_brejo": dict(nome="bruxa do brejo", plural="bruxas do brejo", g="f", hp=24, atk=4, defesa=2, agi=5, poder=9,
                         tracos=["humano", "conjurador"], habs=["maldicao", "bola_fogo", "cura"], xp=20, ouro=(6, 15),
-                        grupo=(1, 1), ataque="sombra"),
+                        grupo=(1, 1), ataque="sombra",
+                        nivel_min=2,
+                        lore="Vendem curas, maldições e às vezes as duas coisas no mesmo frasco."),
     "sanguessuga": dict(nome="sanguessuga gigante", plural="sanguessugas gigantes", g="f", hp=16, atk=5, defesa=1, agi=3,
-                        poder=0, tracos=["fera"], habs=["drenar"], xp=9, ouro=(0, 0), grupo=(2, 3)),
+                        poder=0, tracos=["fera"], habs=["drenar"], xp=9, ouro=(0, 0), grupo=(2, 3),
+                        lore="Lentas e nojentas. Sozinhas são inofensivas; em bando, secam um homem."),
     "harpia": dict(nome="harpia", plural="harpias", g="f", hp=20, atk=7, defesa=2, agi=9, poder=0,
-                   tracos=["voador"], habs=["grito_terror", "mordida_sangrenta"], xp=15, ouro=(1, 5), grupo=(1, 3)),
+                   tracos=["voador"], habs=["grito_terror", "mordida_sangrenta"], xp=15, ouro=(1, 5), grupo=(1, 3),
+                   nivel_min=2,
+                   lore="Metade mulher, metade abutre, inteira cruel. Difíceis de acertar com uma espada."),
     "troll": dict(nome="troll da montanha", plural="trolls da montanha", g="m", hp=55, atk=10, defesa=5, agi=1, poder=0,
                   tracos=["gigante"], habs=["esmagar", "regenerar"], xp=30, ouro=(2, 10), grupo=(1, 1),
-                  resist={"fogo": 1.4}),
+                  resist={"fogo": 1.4},
+                  nivel_min=4,
+                  lore="Regeneram quase tudo — menos o fogo. Fique longe quando ele recuar para golpear."),
     "lobo_gelido": dict(nome="lobo gélido", plural="lobos gélidos", g="m", hp=24, atk=7, defesa=3, agi=6, poder=0,
                         tracos=["fera"], habs=["mordida_gelida", "uivo"], xp=15, ouro=(0, 2), grupo=(1, 3),
-                        resist={"gelo": 0.5, "fogo": 1.3}),
+                        resist={"gelo": 0.5, "fogo": 1.3},
+                        lore="O frio da montanha mora dentro deles. Odeiam fogo mais que qualquer coisa."),
     "grifo": dict(nome="grifo", plural="grifos", g="m", hp=38, atk=9, defesa=4, agi=7, poder=0,
-                  tracos=["voador", "fera"], habs=["investida", "mordida_sangrenta"], xp=26, ouro=(0, 4), grupo=(1, 1)),
+                  tracos=["voador", "fera"], habs=["investida", "mordida_sangrenta"], xp=26, ouro=(0, 4), grupo=(1, 1),
+                  nivel_min=4,
+                  lore="Rei dos céus das montanhas. Protege o ninho até a morte."),
     "cultista": dict(nome="cultista", plural="cultistas", g="m", hp=22, atk=5, defesa=2, agi=4, poder=8,
                      tracos=["humano", "conjurador"], habs=["bola_sombra", "cura", "grito_terror"], xp=16,
-                     ouro=(3, 10), grupo=(1, 3), ataque="sombra"),
+                     ouro=(3, 10), grupo=(1, 3), ataque="sombra",
+                     lore="Servos da Fenda. Curam uns aos outros: derrube o curandeiro primeiro."),
     "mercenario": dict(nome="mercenário", plural="mercenários", g="m", hp=32, atk=8, defesa=5, agi=4, poder=0,
                        tracos=["humano", "blindado"], habs=["esmagar", "golpe_sujo", "grito_guerra"], xp=18,
-                       ouro=(5, 15), grupo=(1, 2)),
+                       ouro=(5, 15), grupo=(1, 2),
+                       flechas=True,
+                       lore="Armadura boa, moral flexível. Lutam pelo maior lance."),
     "esqueleto": dict(nome="esqueleto", plural="esqueletos", g="m", hp=22, atk=7, defesa=4, agi=3, poder=0,
-                      tracos=["morto-vivo"], habs=["investida"], xp=13, ouro=(0, 4), grupo=(1, 3)),
+                      tracos=["morto-vivo"], habs=["investida"], xp=13, ouro=(0, 4), grupo=(1, 3),
+                      lore="Ossos animados por ódio antigo. Veneno não faz nada; luz sagrada faz muito."),
     "espectro": dict(nome="espectro", plural="espectros", g="m", hp=20, atk=4, defesa=1, agi=8, poder=8,
                      tracos=["morto-vivo", "etereo"], habs=["drenar", "grito_terror"], xp=17, ouro=(0, 6),
-                     grupo=(1, 2), ataque="sombra"),
+                     grupo=(1, 2), ataque="sombra",
+                     nivel_min=3,
+                     lore="Lâminas atravessam seu corpo. Magia arcana e fé o ferem de verdade."),
     "golem": dict(nome="golem de pedra", plural="golens de pedra", g="m", hp=60, atk=10, defesa=9, agi=0, poder=0,
-                  tracos=["construto", "blindado"], habs=["esmagar"], xp=30, ouro=(0, 5), grupo=(1, 1)),
+                  tracos=["construto", "blindado"], habs=["esmagar"], xp=30, ouro=(0, 5), grupo=(1, 1),
+                  nivel_min=4,
+                  lore="Pedra e runas. Lento, mas cada golpe é uma avalanche. A magia racha a pedra."),
     "rato": dict(nome="rato gigante", plural="ratos gigantes", g="m", hp=12, atk=4, defesa=1, agi=6, poder=0,
-                 tracos=["fera"], habs=["mordida_sangrenta", "veneno"], xp=6, ouro=(0, 1), grupo=(2, 4)),
+                 tracos=["fera"], habs=["mordida_sangrenta", "veneno"], xp=6, ouro=(0, 1), grupo=(2, 4),
+                 lore="Onde há um, há vinte. Mordidas sujas que infeccionam."),
     "cavaleiro_sombrio": dict(nome="cavaleiro sombrio", plural="cavaleiros sombrios", g="m", hp=45, atk=11, defesa=7,
                               agi=3, poder=5, tracos=["morto-vivo", "blindado"], habs=["esmagar", "drenar"], xp=32,
-                              ouro=(5, 20), grupo=(1, 1)),
+                              ouro=(5, 20), grupo=(1, 1),
+                              nivel_min=6,
+                              lore="Guerreiros que juraram lealdade ao Vazio e não puderam morrer depois."),
     "abominacao": dict(nome="abominação", plural="abominações", g="f", hp=60, atk=11, defesa=4, agi=2, poder=0,
                        tracos=["corrompido", "gigante"], habs=["esmagar", "veneno", "regenerar"], xp=35,
-                       ouro=(2, 12), grupo=(1, 1)),
+                       ouro=(2, 12), grupo=(1, 1),
+                       nivel_min=6,
+                       lore="Carne costurada pela corrupção. Ninguém sabe o que ela foi antes."),
     "cria_vazio": dict(nome="cria do Vazio", plural="crias do Vazio", g="f", hp=26, atk=8, defesa=2, agi=7, poder=7,
                        tracos=["corrompido", "etereo"], habs=["bola_sombra", "drenar"], xp=20, ouro=(0, 5),
-                       grupo=(1, 2), ataque="sombra"),
+                       grupo=(1, 2), ataque="sombra",
+                       nivel_min=3,
+                       lore="Pedaços da Fenda que aprenderam a andar. Quanto mais perto dela, mais delas."),
     "caido": dict(nome="caído", plural="caídos", g="m", hp=13, atk=5, defesa=1, agi=6, poder=0,
-                  tracos=["demonio"], habs=["golpe_sujo"], xp=7, ouro=(0, 3), grupo=(2, 4)),
+                  tracos=["demonio"], habs=["golpe_sujo"], xp=7, ouro=(0, 3), grupo=(2, 4),
+                  escolta=dict(familia="xama_caido", chance=0.35, ate_nivel=4, chance_depois=0.6),
+                  lore="Diabretes covardes que atacam em bando, rindo. Mate o xamã primeiro, ou eles voltam."),
     "xama_caido": dict(nome="xamã caído", plural="xamãs caídos", g="m", hp=18, atk=3, defesa=1, agi=5, poder=7,
                        tracos=["demonio", "conjurador"], habs=["bola_fogo", "reviver", "reviver"], xp=16,
-                       ouro=(2, 8), grupo=(1, 1), ataque="fogo"),
+                       ouro=(2, 8), grupo=(1, 1), ataque="fogo",
+                       revive="caido",
+                       lore="Pequeno feiticeiro dos caídos. Cospe fogo e ergue os irmãos mortos do chão."),
     "cao_infernal": dict(nome="cão infernal", plural="cães infernais", g="m", hp=26, atk=8, defesa=3, agi=7, poder=6,
                          tracos=["demonio", "fera"], habs=["mordida_sangrenta", "bola_fogo"], xp=18, ouro=(0, 2),
-                         grupo=(1, 3), resist={"fogo": 0.3, "gelo": 1.3}),
+                         grupo=(1, 3), resist={"fogo": 0.3, "gelo": 1.3},
+                         nivel_min=3,
+                         lore="Cães de brasa com dentes de obsidiana. O fogo é a casa deles."),
     "carnical": dict(nome="carniçal", plural="carniçais", g="m", hp=30, atk=8, defesa=3, agi=4, poder=0,
-                     tracos=["morto-vivo"], habs=["devorar", "mordida_sangrenta"], xp=17, ouro=(0, 4), grupo=(1, 2)),
+                     tracos=["morto-vivo"], habs=["devorar", "mordida_sangrenta"], xp=17, ouro=(0, 4), grupo=(1, 2),
+                     lore="Mortos famintos que devoram os caídos no meio da luta para fechar as próprias feridas."),
     "esqueleto_servo": dict(nome="servo esquelético", plural="servos esqueléticos", g="m", hp=18, atk=6, defesa=3,
                             agi=3, poder=0, tracos=["morto-vivo"], habs=[], xp=0, ouro=(0, 0), grupo=(1, 1)),
 }
 
-# Afixos dão variedade: o mesmo lobo pode ser feroz, ancião ou corrompido.
+# Afixos dão variedade: o mesmo lobo pode ser feroz, ancião ou corrompido. `sorteio` diz onde cada um pode cair:
+# "elite" (o inimigo comum que vem com afixo), "campeoes" (o bando inteiro com o mesmo) e "unico" (os dois do nomeado);
+# `fenda` é a chance de cair perto da Fenda (perigo mínimo do lugar), à parte do sorteio comum. A ordem daqui é a dos
+# sorteios.
+_TODOS = ("elite", "campeoes", "unico")
 AFIXOS = {
-    "feroz": dict(m="feroz", f="feroz", atk=1.3, xp=1.3),
-    "robusto": dict(m="robusto", f="robusta", hp=1.5, xp=1.3),
-    "agil": dict(m="ágil", f="ágil", agi=5, xp=1.2),
-    "venenoso": dict(m="venenoso", f="venenosa", habs=["veneno"], xp=1.2),
-    "anciao": dict(m="ancião", f="anciã", hp=1.4, atk=1.2, defesa=1.3, xp=1.8, ouro=2.0),
-    "corrompido": dict(m="corrompido", f="corrompida", hp=1.2, atk=1.2, tracos=["corrompido"], habs=["drenar"], xp=1.5),
+    "feroz": dict(m="feroz", f="feroz", atk=1.3, xp=1.3, sorteio=_TODOS),
+    "robusto": dict(m="robusto", f="robusta", hp=1.5, xp=1.3, sorteio=_TODOS),
+    "agil": dict(m="ágil", f="ágil", agi=5, xp=1.2, sorteio=_TODOS),
+    "venenoso": dict(m="venenoso", f="venenosa", habs=["veneno"], xp=1.2, sorteio=_TODOS),
+    "anciao": dict(m="ancião", f="anciã", hp=1.4, atk=1.2, defesa=1.3, xp=1.8, ouro=2.0, sorteio=("elite", "unico")),
     "flamejante": dict(m="flamejante", f="flamejante", habs=["bola_fogo"], poder=6, resist={"fogo": 0.3, "gelo": 1.4},
-                       xp=1.4),
+                       xp=1.4, sorteio=_TODOS),
+    "corrompido": dict(m="corrompido", f="corrompida", hp=1.2, atk=1.2, tracos=["corrompido"], habs=["drenar"], xp=1.5,
+                       sorteio=("campeoes", "unico"), fenda=dict(perigo=4, chance=0.3)),
 }
+
+
+def afixos_de(sorteio):
+    """Os afixos que podem cair nesse sorteio ("elite", "campeoes", "unico"), na ordem do catálogo."""
+    return [k for k, a in AFIXOS.items() if sorteio in a["sorteio"]]
 
 # O clima na luta: `dano` multiplica o dano por tipo ("distancia" vale para todo golpe de longe), `esquiva` soma à
 # esquiva de todos, `queimadura` multiplica o que as chamas ardem. O combate, a tela e o amanhecer leem daqui.
@@ -329,31 +391,6 @@ ORIGENS_ANTAGONISTA = [
 NOMES_CIDADELA = ["Torre Negra", "Cidadela Partida", "Trono do Vazio", "Bastião das Cinzas", "Coroa de Obsidiana"]
 
 # Anotações do bestiário (reveladas ao encontrar cada criatura).
-LORE = {
-    "lobo": "Caçam em matilha e uivam para chamar as outras. Um lobo sozinho raramente está sozinho.",
-    "aranha": "Tecem armadilhas entre as árvores. Seu veneno paralisa antes de matar.",
-    "bandido": "Desertores, camponeses arruinados e gente pior. Gostam mais do seu ouro do que de lutar.",
-    "javali": "Teimosos e brutais. A investida de um javali derruba até cavaleiros.",
-    "ent_jovem": "Árvores que acordaram com raiva. Madeira verde queima mal — mas queima.",
-    "afogado": "Os que o pântano não devolveu. Agarram e puxam para o fundo.",
-    "sapo": "A língua é mais rápida que uma flecha, e o couro é venenoso ao toque.",
-    "bruxa_brejo": "Vendem curas, maldições e às vezes as duas coisas no mesmo frasco.",
-    "sanguessuga": "Lentas e nojentas. Sozinhas são inofensivas; em bando, secam um homem.",
-    "harpia": "Metade mulher, metade abutre, inteira cruel. Difíceis de acertar com uma espada.",
-    "troll": "Regeneram quase tudo — menos o fogo. Fique longe quando ele recuar para golpear.",
-    "lobo_gelido": "O frio da montanha mora dentro deles. Odeiam fogo mais que qualquer coisa.",
-    "grifo": "Rei dos céus das montanhas. Protege o ninho até a morte.",
-    "cultista": "Servos da Fenda. Curam uns aos outros: derrube o curandeiro primeiro.",
-    "mercenario": "Armadura boa, moral flexível. Lutam pelo maior lance.",
-    "esqueleto": "Ossos animados por ódio antigo. Veneno não faz nada; luz sagrada faz muito.",
-    "espectro": "Lâminas atravessam seu corpo. Magia arcana e fé o ferem de verdade.",
-    "golem": "Pedra e runas. Lento, mas cada golpe é uma avalanche. A magia racha a pedra.",
-    "rato": "Onde há um, há vinte. Mordidas sujas que infeccionam.",
-    "cavaleiro_sombrio": "Guerreiros que juraram lealdade ao Vazio e não puderam morrer depois.",
-    "abominacao": "Carne costurada pela corrupção. Ninguém sabe o que ela foi antes.",
-    "cria_vazio": "Pedaços da Fenda que aprenderam a andar. Quanto mais perto dela, mais delas.",
-    "caido": "Diabretes covardes que atacam em bando, rindo. Mate o xamã primeiro, ou eles voltam.",
-    "xama_caido": "Pequeno feiticeiro dos caídos. Cospe fogo e ergue os irmãos mortos do chão.",
-    "cao_infernal": "Cães de brasa com dentes de obsidiana. O fogo é a casa deles.",
-    "carnical": "Mortos famintos que devoram os caídos no meio da luta para fechar as próprias feridas.",
-}
+# O que o bestiário conta de cada espécie (o lore mora na ficha da família; quem não tem, como o servo invocado, não
+# entra no bestiário).
+LORE = {k: f["lore"] for k, f in FAMILIAS.items() if f.get("lore")}

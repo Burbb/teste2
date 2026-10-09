@@ -3,16 +3,16 @@
 from .. import balanceamento as bal
 from .. import texto as tx
 from ..combate import Combate
-from ..dados import BIOMAS, FAMILIAS
+from ..dados import AFIXOS, BIOMAS, CRIATURAS_DA_FENDA, FAMILIAS, afixos_de
 from .. import inimigos
 from ..inimigos import criar
 from ..itens import gerar_equip
 from ..mundo import nivel_regiao, vizinhos
-from ..regras import NIVEL_MIN_FAMILIA, Derrota
+from ..regras import Derrota
 
 
-# Criaturas da Fenda e o perigo mínimo do lugar para elas aparecerem fora do bioma delas.
-CRIATURAS_DA_FENDA = ((3, "caido"), (4, "cao_infernal"), (4, "cria_vazio"), (5, "abominacao"))
+def _aparece(familia, nivel):
+    return FAMILIAS[familia].get("nivel_min", 1) <= nivel
 
 
 class Confronto:
@@ -35,18 +35,19 @@ class Confronto:
         p = 0.10 + self.loc["perigo"] * 0.03
         if self.j.nivel <= 1 or not self.chance(p):
             return None
-        if self.loc["perigo"] >= 4 and self.chance(0.3):  # perto da Fenda, o Vazio toca as feras
-            return "corrompido"
-        return self.sortear(["feroz", "robusto", "agil", "venenoso", "anciao", "flamejante"])
+        for k, a in AFIXOS.items():  # perto da Fenda, o Vazio toca as feras (`fenda` no catálogo)
+            if a.get("fenda") and self.loc["perigo"] >= a["fenda"]["perigo"] and self.chance(a["fenda"]["chance"]):
+                return k
+        return self.sortear(afixos_de("elite"))
 
     def familias_locais(self):
         nv = self.nivel_local()
-        familias = [f for f in BIOMAS[self.bioma]["familias"] if NIVEL_MIN_FAMILIA.get(f, 1) <= nv]
+        familias = [f for f in BIOMAS[self.bioma]["familias"] if _aparece(f, nv)]
         # Quanto mais perto da Fenda (os lugares perigosos, a caminho da Cidadela), mais criaturas dela.
         familias += [f for perigo, f in CRIATURAS_DA_FENDA
-                     if self.loc["perigo"] >= perigo and NIVEL_MIN_FAMILIA.get(f, 1) <= nv and f not in familias]
-        if self.noite and self.bioma in ("ruinas", "pantano", "planicie"):
-            familias.append("espectro")
+                     if self.loc["perigo"] >= perigo and _aparece(f, nv) and f not in familias]
+        if self.noite:  # o que só sai à noite neste bioma (os espectros das ruínas, do pântano, da planície)
+            familias += BIOMAS[self.bioma].get("noite", [])
         return familias
 
     def grupo(self, familia=None, n=None, bonus=0):
@@ -76,7 +77,7 @@ class Confronto:
                 tipo = "campeoes"
 
         if tipo == "campeoes":
-            afixo = self.sortear(["feroz", "robusto", "agil", "venenoso", "flamejante", "corrompido"])
+            afixo = self.sortear(afixos_de("campeoes"))
             grupo = [self.inimigo(familia, bonus, afixo) for _ in range(max(2, min(n, 3)))]
             for e in grupo:
                 e.max_hp = int(e.max_hp * 1.25)
@@ -87,7 +88,7 @@ class Confronto:
             self.dizer("Um bando de CAMPEÕES: eles se movem juntos, com um brilho azulado nos olhos.",
                        "azul+negrito")
         elif tipo == "unico":
-            a1, a2 = self.rng.sample(["feroz", "robusto", "agil", "venenoso", "anciao", "flamejante", "corrompido"], 2)
+            a1, a2 = self.rng.sample(afixos_de("unico"), 2)
             chefe = self.inimigo(familia, bonus + 1, a1, nome_unico=tx.nome_proprio(self.rng))
             inimigos.adicionar_afixo(chefe, a2)
             escolta = []
@@ -102,8 +103,9 @@ class Confronto:
                 outra = self.sortear(BIOMAS[self.bioma]["familias"])
                 if FAMILIAS[outra]["grupo"][1] > 1:
                     grupo.append(self.inimigo(outra, bonus))
-        if familia == "caido" and self.chance(0.35 if nv <= 4 else 0.6):
-            grupo.append(self.inimigo("xama_caido", bonus))
+        esc = f.get("escolta")
+        if esc and self.chance(esc["chance"] if nv <= esc["ate_nivel"] else esc["chance_depois"]):
+            grupo.append(self.inimigo(esc["familia"], bonus))
         return grupo
 
     def combate(self, inimigos, emboscada=None, pode_fugir=True, titulo=None, sozinho=False):
@@ -176,7 +178,7 @@ class Confronto:
             self.dar_provisoes(1)
         if self.chance(0.15 + 0.1 * elites):
             self.dar(self.sortear(["bandagem", "bandagem", "tocha", "tocha", "pocao_vida", "tonico", "antidoto"]))
-        if self.j.classe == "arqueiro" and any(e.familia in ("bandido", "mercenario") for e in derrotados) \
+        if self.j.classe == "arqueiro" and any(FAMILIAS.get(e.familia, {}).get("flechas") for e in derrotados) \
                 and self.chance(0.3):
             self.contar_achado(tx.concordar("Você encontra algumas flechas entre os pertences {do inimigo|dos inimigos}.",
                                             derrotados), "verde")

@@ -13,7 +13,7 @@ from . import sobrevivencia
 from . import telemetria
 from .telemetria import registrar
 from .mundo import gerar_mundo
-from .regras import (AMBIENTE_VILA, LIMITE_MOCHILA, NIVEL_MAXIMO, NIVEL_MIN_FAMILIA, NOMES_SLOT, NOMES_TESTE,
+from .regras import (AMBIENTE_VILA, LIMITE_MOCHILA, NIVEL_MAXIMO, NOMES_SLOT, NOMES_TESTE,
                      Derrota, FimDeJogo)
 from .migracoes import VERSAO_SAVE
 from . import balanceamento as bal
@@ -35,7 +35,7 @@ from .sistemas.persistencia import Persistencia
 
 
 # O resto do código importa constantes e exceções daqui; elas moram em regras.py.
-__all__ = ["Jogo", "Derrota", "FimDeJogo", "AMBIENTE_VILA", "LIMITE_MOCHILA", "NIVEL_MAXIMO", "NIVEL_MIN_FAMILIA",
+__all__ = ["Jogo", "Derrota", "FimDeJogo", "AMBIENTE_VILA", "LIMITE_MOCHILA", "NIVEL_MAXIMO",
            "NOMES_SLOT", "NOMES_TESTE", "PRECO_FLECHAS", "VERSAO_SAVE"]
 
 

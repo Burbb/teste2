@@ -4,7 +4,6 @@ from .. import texto as tx
 from ..dados import BIOMAS, FAMILIAS
 from .. import sobrevivencia
 from ..mundo import distancias, nivel_regiao
-from ..regras import NIVEL_MIN_FAMILIA
 from .. import balanceamento as bal
 
 
@@ -46,7 +45,7 @@ class Contratos:
                     "desc": f"Levar {objeto} até {dest['nome']}."}
         loc = self.lugar_para_contrato(selvagens)
         nv = nivel_regiao(loc)  # só bichos que de fato aparecem por lá
-        fam = self.sortear([f for f in BIOMAS[loc["bioma"]]["familias"] if NIVEL_MIN_FAMILIA.get(f, 1) <= nv]
+        fam = self.sortear([f for f in BIOMAS[loc["bioma"]]["familias"] if FAMILIAS[f].get("nivel_min", 1) <= nv]
                            or BIOMAS[loc["bioma"]]["familias"])
         f = FAMILIAS[fam]
         if tipo == "alvo":
