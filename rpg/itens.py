@@ -120,10 +120,24 @@ AFIXOS_ITEM = [
 ESPECIAIS = ("roubo_vida", "critico", "espinhos", "regen_vida", "vida_abate")
 PERCENTUAIS = ("roubo_vida", "critico")  # no item, em %; no modificador, em fração
 
-NOMES_RAROS_A = ["Presa", "Agonia", "Lamento", "Sussurro", "Grito", "Mordida", "Ruína", "Fome", "Pranto", "Cicatriz",
-                 "Sombra", "Juramento", "Maldição", "Brasa", "Osso"]
-NOMES_RAROS_B = ["do Abismo", "da Carne", "do Corvo", "Sangrenta", "da Forca", "do Túmulo", "Negra", "da Peste",
-                 "Sem Nome", "do Mártir", "Faminta", "da Fenda", "do Carrasco", "Antiga", "da Viúva"]
+# Os nomes dos itens raros: um substantivo (com o gênero) e um complemento. O complemento que varia tem as duas formas,
+# e o nome concorda: "Lamento Sangrento", "Presa Sangrenta".
+NOMES_RAROS_A = [("Presa", "f"), ("Agonia", "f"), ("Lamento", "m"), ("Sussurro", "m"), ("Grito", "m"), ("Mordida", "f"),
+                 ("Ruína", "f"), ("Fome", "f"), ("Pranto", "m"), ("Cicatriz", "f"), ("Sombra", "f"), ("Juramento", "m"),
+                 ("Maldição", "f"), ("Brasa", "f"), ("Osso", "m")]
+NOMES_RAROS_B = ["do Abismo", "da Carne", "do Corvo", ("Sangrento", "Sangrenta"), "da Forca", "do Túmulo",
+                 ("Negro", "Negra"), "da Peste", "Sem Nome", "do Mártir", ("Faminto", "Faminta"), "da Fenda",
+                 "do Carrasco", ("Antigo", "Antiga"), "da Viúva"]
+
+
+def nome_raro(rng):
+    """Um nome de item raro, com o complemento concordando com o substantivo (o sorteio é o de sempre: A, depois B)."""
+    nome, g = rng.choice(NOMES_RAROS_A)
+    comp = rng.choice(NOMES_RAROS_B)
+    if isinstance(comp, tuple):
+        comp = comp[0] if g == "m" else comp[1]
+    return f"{nome} {comp}"
+
 
 UNICOS = [
     dict(id="lamento_de_gharbad", nome="Lamento de Gharbad", icone="machado",
@@ -343,7 +357,7 @@ def gerar_equip(rng, classe, nivel, slot=None, qualidade=0, raridade=None):
     for k, v in extras.items():
         bonus[k] = bonus.get(k, 0) + v
     if raridade == "raro":
-        nome = f"{rng.choice(NOMES_RAROS_A)} {rng.choice(NOMES_RAROS_B)}"
+        nome = nome_raro(rng)
     elif escolhidos:
         nome = f"{tipo_base} {escolhidos[0][0]}"
     else:
