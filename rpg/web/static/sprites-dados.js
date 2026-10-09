@@ -1282,23 +1282,25 @@ const SPRITES_GRADES = (() => {
       "gg........kk....",
       "................",
       "................",],
+    // Bota de couro: a dobra do cano com a boca aberta, o cano com luz de um lado e sombra do outro, a tira com
+    // fivela de latão, o calcanhar redondo, o bico com brilho, e o salto e a sola separados pelo arco do pé.
     bota: [
-      "................",
-      "................",
-      ".....kkkkk......",
-      ".....kbnbk......",
-      ".....kbnbk......",
-      ".....kbnbk......",
-      ".....kbnbk......",
-      ".....kbnbk......",
-      ".....kbnbkkkk...",
-      ".....kbnnnnnbk..",
-      "....kbnnnnnnbk..",
-      "....kBBBBBBBBk..",
-      "....kkkkkkkkkk..",
-      "................",
-      "................",
-      "................",
+      "...kkkkkkkk.....",
+      "..knnhnnnnnk....",
+      "..knsssssnBk....",
+      "..kBnnnnnBBk....",
+      "...kBBBBBBk.....",
+      "...kBnbbbBk.....",
+      "...kBnbbbBk.....",
+      "...kBnbbbBk.....",
+      "...kdddcdBk.....",
+      "...kBnbbbbBk....",
+      "..kBbnbbbbbBkk..",
+      "..kBbbnbbbbnhBk.",
+      "..kBbbbbbbbbnnBk",
+      "..kBBbbbbbbbbBk.",
+      "..kssBBBBBBsssk.",
+      "...kk......kkk..",
     ],
     anel: [
       "................",
@@ -1324,7 +1326,7 @@ const SPRITES_GRADES = (() => {
   S.luva = trocar(S.manopla, { G: "n", g: "b", d: "B" });
   S.calca_couro = trocar(S.calca, { G: "n", g: "b", d: "B", c: "B" });
   S.calca_tecido = trocar(S.calca, { G: "U", g: "u", d: "v", c: "y" });
-  S.bota_ferro = trocar(S.bota, { b: "g", n: "G", B: "d" });
+  S.bota_ferro = trocar(S.bota, { b: "g", n: "G", B: "d", h: "W" });
   S.sandalia = trocar(S.bota, { b: "B", n: "h" });
 
   // Efeitos de combate: projéteis e ícones de estado.
