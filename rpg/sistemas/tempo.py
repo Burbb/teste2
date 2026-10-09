@@ -87,13 +87,22 @@ class Tempo:
     def exausto(self):
         self.ui.separador()
         if self.loc["tipo"] == "vila":
-            self.dizer("Exausto, você pede abrigo num estábulo e dorme sobre o feno, entre ratos.", "cinza")
+            self.avisar_exausto("Você pede abrigo num estábulo e dorme sobre o feno, entre ratos.",
+                                "Exausto, você pede abrigo num estábulo e dorme sobre o feno, entre ratos.")
             self.abrir_relato()
             self.descansar(bal.EXAUSTO_VIDA, mana=bal.EXAUSTO_RECURSO, folego=bal.EXAUSTO_RECURSO)
             self.novo_dia(descanso=1)
         else:
-            self.dizer("Você está exausto demais para continuar. É preciso acampar.", "cinza")
+            self.avisar_exausto("Não dá para seguir: é preciso acampar.",
+                                "Você está exausto demais para continuar. É preciso acampar.")
             self.acampar()
+
+    def avisar_exausto(self, curto, frase):
+        """Na tela gráfica, uma faixa que atravessa a tela (sombria, sem festa); no texto, a frase."""
+        if self.ui.conquistas_na_tela:
+            self.ui.celebrar("exausto", {"texto": curto})
+        else:
+            self.dizer(frase, "cinza")
 
     def acampar(self):
         juntos = [comitiva.nome(m["id"]) for m in comitiva.membros(self)]

@@ -46,6 +46,8 @@ body.por-um-fio .vital[data-vital="hp"] .enchimento { animation: pulso-vida var(
 .barra-px { position: relative; display: block; height: 12px; background: var(--p-k); overflow: hidden; box-shadow: 0 0 0 var(--px) var(--p-j); }
 .barra-px .enchimento, .barra-px .rastro { position: absolute; top: 0; bottom: 0; left: 0; transition: width 0.22s cubic-bezier(.3,.7,.4,1); }
 .barra-px .rastro { background: #f1e4c4; transition: width 0.4s ease-out 0.12s; }
+.barra-px.subindo .rastro { transition: width 0.12s ease-out; }
+.barra-px.subindo .enchimento { transition: width 0.7s cubic-bezier(.3,.7,.4,1) 0.12s; }
 .barra-px .enchimento { background: linear-gradient(180deg, var(--c1) 0 30%, var(--c2) 30% 72%, var(--c3) 72%); }
 .barra-px.vida { --c1: #ff7a6e; --c2: #d0342f; --c3: #8a1414; }
 .barra-px.vigor { --c1: #ffe08a; --c2: #e0a22d; --c3: #8a5a0c; }

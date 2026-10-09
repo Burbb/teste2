@@ -121,7 +121,9 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   (passear) fica em texto.
 - O fim de um evento ou de uma luta não pede Continuar: a ponte manda a cena do lugar com `virar`, a tela deixa o
   que aconteceu o tempo de ler (um fio se enche; clique ou tecla adianta) e vira para a página limpa do lugar, no
-  topo. O que aconteceu fica no histórico (H).
+  topo. O que aconteceu fica no histórico (H). O clique que adiantava o texto não pula a leitura nem as celebrações
+  (contrato pago, espólio): a página só aceita virar depois de `GUARDA_LEITURA`, e celebração só se dispensa na
+  velocidade "instantâneo".
 - `telas.js` telas desenhadas (inventário, mercado, talentos, Grimório, fogueira, mural...)
 - `batalha.js` o palco da luta · `realce.js` cores dos termos de jogo · `sprites*.js`, `vista.js`, `mapa.js`, `som.js`
 - `sensacao.js` o peso dos momentos (parada no impacto, tremor, câmera lenta no golpe final...): as telas dizem o
@@ -132,7 +134,8 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   no topo; recolhe numa faixa quando o texto passa a rolar), a barra das telas de menu (`#barra-tela`: título e
   Voltar, fora da área que rola) e a página (`#pagina`, a única parte que rola). Cena de tipo `menu` (mercado,
   inventário, mural...) não mostra a arte, abre no topo e leva o Voltar para a barra; numa cena da história um
-  "Voltar por onde veio" é uma escolha como as outras. Na luta, a arte vira o chão da arena e depois volta.
+  "Voltar por onde veio" é uma escolha como as outras. Na luta, a arte vira o chão da arena e depois volta; a
+  arena e o log ficam num painel só (o quadro se abre entre os dois e o chão continua pontilhado no log).
 - O histórico (H) é o diário da jornada: entram as cenas da história, as escolhas e o que elas deram. Navegação
   (Voltar, telas da doca, menu do título), cliques da luta e títulos de telas de menu ficam de fora; o nome do
   lugar só volta quando o lugar muda.

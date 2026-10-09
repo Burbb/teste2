@@ -97,6 +97,7 @@ function cabecalho(m) {
 /** O fim de um evento ou de uma luta cai direto no lugar, sem Continuar: o que aconteceu fica o tempo de ler (um fio
  *  vai se enchendo embaixo; clique ou tecla adianta) e a página vira limpa, no topo, com a arte inteira, o nome do
  *  lugar e as ações. O texto não fica sobrando em cima do lugar: quem quiser rever abre o histórico (H). */
+const GUARDA_LEITURA = 700;  // ms em que um clique não vira a página: o resultado aparece e fica à vista
 async function virarParaLugar(m) {
   const novo = [...textoEl.querySelectorAll(":scope > :not(.lido):not(.eco):not(.passado)")]
     .reduce((n, x) => n + x.textContent.trim().length, 0);
@@ -104,12 +105,18 @@ async function virarParaLugar(m) {
     // Leu enquanto o texto corria: o tempo desde a escolha conta. Depois de uma luta, a faixa da vitória e o espólio
     // já foram a leitura.
     const ja = performance.now() - ultimaResposta;
-    const ms = cenaInterrompida ? 900 : novo < 80 ? Math.max(700, Math.min(1500, 800 + novo * 30 - ja))
+    const ms = cenaInterrompida ? 1000 : novo < 80 ? Math.max(700, Math.min(1500, 800 + novo * 30 - ja))
       : Math.max(1300, Math.min(5500, 800 + novo * 30 - ja));
     Telas.esconderDica();
     promptEl.innerHTML = `<div class="virando" aria-hidden="true"><i style="--dura:${Math.round(ms)}ms"></i></div>`;
-    const ate = performance.now() + ms;
-    while (performance.now() < ate && !pular) await espera(40);
+    // O clique que caiu enquanto o texto corria só terminou o texto: a leitura começa agora. E nos primeiros instantes
+    // a página não aceita clique, para um clique certeiro na hora em que o resultado aparece não o pular sem ser lido.
+    pular = false;
+    const agora = performance.now(), guarda = agora + GUARDA_LEITURA, ate = agora + ms;
+    while (performance.now() < ate) {
+      if (pular) { if (performance.now() < guarda) pular = false; else break; }
+      await espera(40);
+    }
   }
   await novaCena(Object.assign({}, m, { virar: false }));
 }

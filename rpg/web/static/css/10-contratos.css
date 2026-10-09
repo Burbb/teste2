@@ -26,7 +26,8 @@
 .contrato-botao { margin-top: 4px; cursor: pointer; font-family: var(--texto); font-weight: 600; font-size: 14px; color: #fff3d6; background: #6e1d1d; border: 2px solid #2a0808; padding: 4px 8px; box-shadow: 2px 2px 0 #000; }
 .contrato-botao:hover { background: #8a2626; }
 .contrato-botao.abandonar { background: #4a4038; }
-.contrato-botao:disabled { opacity: 0.45; cursor: not-allowed; }
+.contrato-botao:disabled, .contrato-botao.bloqueado { opacity: 0.45; cursor: not-allowed; }
+.contrato-botao.bloqueado:hover { background: #6e1d1d; }
 .contrato-feito { text-align: center; font-size: 13px; font-weight: 600; color: #2e4a20; }
 .contrato.concluido::after { content: "FEITO"; position: absolute; top: 34px; right: 6px; transform: rotate(14deg); font-family: var(--num); font-size: 22px; color: #2e6a20; border: 3px solid #2e6a20; padding: 0 6px; }
 .cartazes.seus .contrato { background: #d8c8a0; }

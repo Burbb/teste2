@@ -2,13 +2,31 @@
 
 /* ------------------------------------------------------------------ estado e painéis */
 function pct(a, b) { return b ? Math.max(0, Math.min(100, (100 * a) / b)) : 0; }
-function barra(classe, atual, maximo, anterior) {
-  const de = anterior === undefined ? pct(atual, maximo) : pct(anterior, maximo);
-  return `<span class="barra-px ${classe}" data-alvo="${pct(atual, maximo)}"><span class="rastro" style="width:${de}%"></span><span class="enchimento" style="width:${de}%"></span></span>`;
+/** Uma barra. Com `chave`, ela sai da largura que estava na tela (larguraViva): um estado novo no meio da animação
+ *  (a poção e, logo depois, outra mudança) continua de onde a barra está, em vez de saltar para o fim. */
+function barra(classe, atual, maximo, anterior, chave) {
+  const viva = chave ? larguraViva[chave] : undefined;
+  const de = viva !== undefined ? viva : anterior === undefined ? pct(atual, maximo) : pct(anterior, maximo);
+  return `<span class="barra-px ${classe}"${chave ? ` data-chave="${chave}"` : ""} data-alvo="${pct(atual, maximo)}"><span class="rastro" style="width:${de}%"></span><span class="enchimento" style="width:${de}%"></span></span>`;
 }
+const larguraViva = {};
+/** Antes de redesenhar um painel: a largura que cada barra com chave mostra agora, em %. */
+function guardarLarguras(raiz) {
+  for (const k in larguraViva) delete larguraViva[k];
+  raiz.querySelectorAll(".barra-px[data-chave]").forEach((b) => {
+    const total = b.getBoundingClientRect().width;
+    if (total) larguraViva[b.dataset.chave] = (100 * b.querySelector(".enchimento").getBoundingClientRect().width) / total;
+  });
+}
+/** As barras vão do valor de antes ao de agora. Subindo (cura, poção), o rastro claro marca logo onde ela vai chegar
+ *  e a cor enche devagar até lá; descendo, a cor cai e o rastro vai atrás. */
 function animarBarras(raiz) {
   requestAnimationFrame(() => requestAnimationFrame(() => {
-    raiz.querySelectorAll(".barra-px[data-alvo]").forEach((b) => b.querySelectorAll(".rastro, .enchimento").forEach((x) => { x.style.width = b.dataset.alvo + "%"; }));
+    raiz.querySelectorAll(".barra-px[data-alvo]").forEach((b) => {
+      const enc = b.querySelector(".enchimento"), alvo = Number(b.dataset.alvo);
+      b.classList.toggle("subindo", alvo > parseFloat(enc.style.width) + 0.01);
+      b.querySelectorAll(".rastro, .enchimento").forEach((x) => { x.style.width = alvo + "%"; });
+    });
   }));
 }
 function flutuar(alvo, texto, classe) {
@@ -46,7 +64,7 @@ function aplicarEstado(e) {
   Batalha.desenhar(e.combate, e.heroi, replay);
   desenharModificadores(e.mundo.modificadores || []);
   const chaveHeroi = JSON.stringify(e.heroi);
-  if (chaveHeroi !== ultimoHeroi) { ultimoHeroi = chaveHeroi; desenharHeroi(e.heroi); }
+  if (chaveHeroi !== ultimoHeroi) { ultimoHeroi = chaveHeroi; desenharHeroi(e.heroi, antes && antes.heroi); }
   const mudouMapa = !antes || antes.local.id !== e.local.id || JSON.stringify(antes.mapa) !== JSON.stringify(e.mapa) || antes.heroi.nivel !== e.heroi.nivel ||
     antes.mundo.periodo_n !== e.mundo.periodo_n || antes.mundo.clima_id !== e.mundo.clima_id ||
     JSON.stringify(antes.contratos) !== JSON.stringify(e.contratos);
@@ -87,13 +105,14 @@ function desenharHud(h, antes) {
   const ouro = [h.ouro ? "moedas" : "bolsa_vazia"];
   const pocoes = [h.pocoes ? "pocao" : "frasco_vazio"];
   Sensacao.vidaDoHeroi(h.hp, h.max_hp, h.vida_por_um_fio);
+  guardarLarguras($("#hud-linha"));
   const feridas = h.ferimentos.length ? `<div class="recurso alerta" data-rec="feridas" ${Telas.dica(h.ferimentos.map((f) => `<b>${esc(f.nome)}</b><div class="bonus pior">${esc((f.explica || [""])[0])}</div>`).join("") + '<div class="rodape">Detalhes no painel do herói, à esquerda.</div>')}><div class="icones">${spr("gota", 2)}</div><div class="qtd">${h.ferimentos.length}</div></div>` : "";
   $("#hud-linha").innerHTML = `
     <div class="hud-retrato" title="${esc(h.titulo)} nível ${h.nivel}">${spr(h.classe, 3)}<span class="nivel">${h.nivel}</span></div>
     <div class="hud-vitais">
       <div class="hud-nome"><b>${esc(h.nome)}</b><span>${h.fome ? "com fome" : ""}</span></div>
-      <div class="vital" data-vital="hp" ${Telas.dica("Vida", true)}>${spr("coracao", 1)}${barra("vida", h.hp, h.max_hp, antes ? antes.hp : undefined)}<span class="num">${h.hp}/${h.max_hp}</span></div>
-      <div class="vital" data-vital="rec" ${Telas.dica(esc(h.recurso), true)}>${spr(RECURSO_ICONE[h.recurso] || "estrela", 1)}${barra(RECURSO_BARRA[h.recurso] || "mana", h.rec, h.max_rec, antes ? antes.rec : undefined)}<span class="num">${h.rec}/${h.max_rec}</span></div>
+      <div class="vital" data-vital="hp" ${Telas.dica("Vida", true)}>${spr("coracao", 1)}${barra("vida", h.hp, h.max_hp, antes ? antes.hp : undefined, "hud-hp")}<span class="num">${h.hp}/${h.max_hp}</span></div>
+      <div class="vital" data-vital="rec" ${Telas.dica(esc(h.recurso), true)}>${spr(RECURSO_ICONE[h.recurso] || "estrela", 1)}${barra(RECURSO_BARRA[h.recurso] || "mana", h.rec, h.max_rec, antes ? antes.rec : undefined, "hud-rec")}<span class="num">${h.rec}/${h.max_rec}</span></div>
     </div>
     <div class="hud-recursos">
       ${recurso("provisoes", comida, `${h.provisoes}<small>d</small>`, { alerta: h.provisoes <= 1, vazio: !h.provisoes, titulo: h.provisoes ? `Comida para ${Texto.plural(h.provisoes, "dia")}. Cada dia consome 1 (e cada companheiro come também).` : "Sem comida! Você vai passar fome." })}
@@ -124,7 +143,8 @@ function desenharHud(h, antes) {
   ultimosRecursos = agora;
 }
 
-function desenharHeroi(h) {
+function desenharHeroi(h, antes) {
+  guardarLarguras($("#heroi"));
   const attrs = Telas.atributosHtml(h);
   const slot = (s) => {
     const it = h.equip[s];
@@ -151,22 +171,23 @@ function desenharHeroi(h) {
   const fera = f ? `<div class="membro fera${f.hp <= 0 ? " ferido" : ""}" data-fera="1">
       <div class="icone" ${dicaFera}>${spr(f.tipo === "falcao" ? "voador" : "fera", 2)}</div>
       ${linhaNome(f.nome, f.animado ? ' <b class="fera-animado" title="animado">♥</b>' : "", f.hp, f.max_hp, dicaFera)}
-      ${barra("vida fina", Math.max(0, f.hp), f.max_hp)}</div>` : "";
+      ${barra("vida fina", Math.max(0, f.hp), f.max_hp, antes && antes.companheiro ? Math.max(0, antes.companheiro.hp) : undefined, "fera")}</div>` : "";
   const membros = (h.comitiva || []).map((m) => {
     const d = Telas.dica(`<b>${esc(m.nome)}</b><div class="tipo">${esc(m.titulo)}</div><div>${esc(m.desc || "")}</div>` +
       (m.ferido ? "<div class=\"bonus pior\">Ferido: fora de combate até descansar.</div>" : "") +
       `<div class="rodape">${m.conversa ? "Quer conversar: clique no ✉." : "Mais na aba Comitiva."}</div>`);
     const carta = m.conversa ? ` <button type="button" class="membro-carta" data-conversar="${esc(m.id)}" title="${esc(m.nome.split(" ").pop())} quer conversar">✉</button>` : "";
+    const velho = antes && (antes.comitiva || []).find((x) => x.id === m.id);  // a barra sai de onde estava
     return `<div class="membro${m.ferido ? " ferido" : ""}" data-cid="${esc(m.id)}">
       <div class="icone" ${d}>${spr(m.id, 2)}</div>
       ${linhaNome(m.nome, carta, m.hp, m.max_hp, d)}
-      ${barra("vida fina", m.hp, m.max_hp)}${Telas.aprovacao(m)}</div>`;
+      ${barra("vida fina", m.hp, m.max_hp, velho ? velho.hp : undefined, "m-" + m.id)}${Telas.aprovacao(m)}</div>`;
   }).join("");
   const comitiva = membros || fera ? `<div class="secao"><h3>Comitiva</h3>${membros}${fera}</div>` : "";
   $("#heroi").innerHTML = `
     <div class="identidade"><div class="retrato-grande">${spr(h.classe, 3)}</div>
       <div><div class="heroi-nome">${esc(h.nome)}</div><div class="heroi-titulo">${esc(h.titulo)} • nível ${h.nivel}</div></div></div>
-    <div class="xp-linha"><div class="legenda-linha"><span>Experiência</span><span>${h.xp}/${h.xp_proximo}</span></div>${barra("xp", h.xp, h.xp_proximo)}</div>
+    <div class="xp-linha"><div class="legenda-linha"><span>Experiência</span><span>${h.xp}/${h.xp_proximo}</span></div>${barra("xp", h.xp, h.xp_proximo, antes && antes.nivel === h.nivel ? antes.xp : undefined, antes && antes.nivel === h.nivel ? "xp" : undefined)}</div>
     ${h.pontos_talento ? `<div class="talento-aviso" role="button" tabindex="0" data-atalho="Talentos">${spr("estrela", 1)} ${Texto.plural(h.pontos_talento, "ponto de talento", "pontos de talento")}</div>` : ""}
     <div class="secao"><h3>Atributos</h3><div class="atributos">${attrs}</div></div>
     <div class="secao"><h3>Equipado</h3><div class="equip-mini">${Object.keys(Telas.AREA).map(slot).join("")}</div></div>

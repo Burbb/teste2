@@ -61,7 +61,6 @@ function montarVila(m, grupos) {
     const b = el("button", "predio", `<span class="balao-nome">${esc(p.nome)}</span>`);
     b.type = "button";
     b.dataset.predio = p.id;
-    b.title = g ? g.map(({ o }) => o.texto).join(" · ") : fechados[p.id];
     b.setAttribute("aria-label", p.nome);
     b.addEventListener("mouseenter", () => Vista.destacar(p.id));
     b.addEventListener("mouseleave", () => Vista.destacar(null));

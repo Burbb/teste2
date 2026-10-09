@@ -160,6 +160,11 @@ class Recompensas:
         n = self.j.provisoes - antes
         if n > 0 and not self.achou("comida", "Comida", n):
             self.ui.efeito(f"+{tx.plural(n, 'dia')} de comida (total {self.j.provisoes})", "item")
+        if n > 0 and self.j.fome:
+            # Com fome, quem compra (ou acha) comida come ali mesmo: não espera o amanhecer para a fome passar.
+            self.j.provisoes -= 1
+            self.j.fome = 0
+            self.ui.efeito("Comida na hora: a fome passou", "item")
 
     def max_flechas(self):
         """A aljava tem fundo: não dá para comprar cem flechas e esquecer delas."""

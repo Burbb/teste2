@@ -153,6 +153,11 @@ const Som = (() => {
       const t = ctx.currentTime;
       [0, 0.3, 0.6].forEach((d) => { sopro(t + d, 0.12, 1800, 500, 0.06, 0.9, "lowpass"); estalo(t + d + 0.02, 900, 0.03, 0.03); });
     },
+    exausto() {  // um suspiro longo e grave: o corpo que não vai mais
+      const t = ctx.currentTime;
+      sopro(t, 1.1, 700, 180, 0.07, 0.7, "lowpass");
+      tom(t + 0.05, 130, 0.05, 1.2, "triangle", 82);
+    },
     sucesso() { const t = ctx.currentTime; tom(t, 523, 0.12, 0.35, "triangle"); tom(t + 0.09, 784, 0.1, 0.5, "triangle"); },
     falha() { const t = ctx.currentTime; tom(t, 196, 0.14, 0.5, "sawtooth", 130); },
     critico() { const t = ctx.currentTime; [523, 659, 784, 1046].forEach((f, i) => tom(t + i * 0.07, f, 0.1, 0.6, "triangle")); },

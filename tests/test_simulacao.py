@@ -69,7 +69,7 @@ class TestSimulacao(unittest.TestCase):
         g.j.reputacao = rng.choice([-30, 0, 30])
         g.clima = rng.choice(["limpo", "chuva", "nevoa", "tempestade", "neve"])
         g.periodo = rng.choice([0, 3])
-        tipos = ["vila"] if contextos == ("vila",) else ["selvagem", "covil", "cidadela"]
+        tipos = ["vila"] if set(contextos) <= {"vila", "taverna"} else ["selvagem", "covil", "cidadela"]
         g.mundo["atual"] = rng.choice([l for l in g.mundo["locais"] if l["tipo"] in tipos])["id"]
         aqui = g.loc["id"]
         vila = next(l for l in g.mundo["locais"] if l["tipo"] == "vila")

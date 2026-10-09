@@ -16,7 +16,7 @@ const Vista = (() => {
   const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
   const pont = (x, y, nivel) => BAYER[(y & 3) * 4 + (x & 3)] < nivel;  // nivel de 0 a 16
   let canvas, ctx, fundo, frente, chave = "", estado = null, quadro = 0, timer = null;
-  let nuvens = [], particulas = [], fumacas = [], estrelas = [], aves = [], relampago = 0, corDaNevoa = "#c8ccd4";
+  let nuvens = [], neblinas = [], particulas = [], fumacas = [], estrelas = [], aves = [], relampago = 0;
   const LUZ_JANELA = "#e8a050";
   // A vila como lugar: os prédios clicáveis (área, luzes, ponto do balão), o que está sob o mouse e a câmera (foco).
   // A câmera não desliza (escala quebrada faz o pixel tremer): ela troca de enquadramento num pontilhado que se fecha,
@@ -132,9 +132,8 @@ const Vista = (() => {
     const sol = ASTROS[p], ladoSol = noite ? -999 : sol[0], luz = mix(longe, sol[3], noite ? 0 : 0.4);
     fumacas = []; aves = []; predios = [];
     const corvos = (n, y0, y1) => { for (let i = 0; i < n; i++) aves.push({ x: r() * W, y: y0 + r() * (y1 - y0), v: 0.15 + r() * 0.2, f: Math.floor(r() * 8) }); };
-    corDaNevoa = mix(horizonte, "#c8ccd4", 0.3);
-    // A névoa rasteira de cada bioma, um tom acima da camada de trás (com o clima de névoa, a do clima já basta).
-    const bruma = mix(longe, horizonte, 0.5), forcaBruma = e.mundo.clima_id === "nevoa" ? 0 : 1;
+    // A névoa rasteira de cada bioma, um tom acima da camada de trás.
+    const bruma = mix(longe, horizonte, 0.5);
     if (b === "montanha") {
       // duas cordilheiras: a de trás alta, de neve pontilhada no topo; a da frente baixa, com pinheiros miúdos
       const picos = perfil(r, 28, 18, 2.6);
@@ -149,7 +148,7 @@ const Vista = (() => {
     } else if (b === "floresta") {
       silhueta(c, perfil(r, 40, 6, 0.8), longe);
       for (let x = -4; x < W; x += 4 + Math.floor(r() * 4)) pinheiro(c, x, 46 + Math.floor(r() * 4), 8 + Math.floor(r() * 6), mix(longe, meio, 0.5));
-      nevoa(c, 42, 52, bruma, 4 * forcaBruma);
+      nevoa(c, 42, 52, bruma, 4);
       for (let x = -4; x < W; x += 5 + Math.floor(r() * 4)) pinheiro(c, x, 54 + Math.floor(r() * 4), 10 + Math.floor(r() * 8), meio);
       silhueta(c, perfil(r, 60, 3, 0.6), chao);
       for (let x = 0; x < W; x += 11 + Math.floor(r() * 14)) pinheiro(c, x, 70, 16 + Math.floor(r() * 10), perto);
@@ -166,7 +165,7 @@ const Vista = (() => {
         for (let k = 0; k < h / 2; k += 2) if (pont(x, 55 + k, 8)) px(c, x, 55 + k, 1, 1, mix(agua, perto, 0.5));  // reflexo
       }
       for (let x = 0; x < W; x += 3) if (r() < 0.45) px(c, x, 49 + Math.floor(r() * 4), 1, 4 + Math.floor(r() * 3), meio);
-      nevoa(c, 47, 55, bruma, 4 * forcaBruma);
+      nevoa(c, 47, 55, bruma, 4);
       corvos(2, 10, 26);
     } else if (b === "planicie") {
       // morros suaves, um moinho ao longe, um carvalho sozinho e uma cerca
@@ -199,7 +198,7 @@ const Vista = (() => {
       px(c, ax, 30, 4, 24, meio); px(c, ax + 24, 30, 4, 24, meio);
       for (let k = 0; k <= 26; k++) if (k < 11 || k > 15) px(c, ax + 1 + k, 30 - Math.round(Math.sin((k / 26) * Math.PI) * 9), 1, 3, meio);
       px(c, ax + 10, 51, 5, 3, meio); px(c, ax + 16, 52, 3, 2, meio);
-      nevoa(c, 48, 56, bruma, 3 * forcaBruma);
+      nevoa(c, 48, 56, bruma, 3);
       silhueta(c, perfil(r, 58, 3, 0.5), chao);
       corvos(3, 8, 22);
     } else if (b === "cidadela") {
@@ -287,7 +286,7 @@ const Vista = (() => {
     px(c, 161, 51, 4, 7, escuro);
     const vitrais = [[156, 45, 2, 4], [166, 45, 2, 4]];
     vitrais.forEach(([x, y, w, h]) => px(c, x, y, w, h, JANELA));
-    reg("templo", "Templo", { x: 148, y: 2, w: 28, h: 56 }, { balao: [156, 30], luzes: vitrais.map((j) => [...j, "#ffd070"]), sino: [169, 24] });
+    reg("templo", "Templo", { x: 148, y: 2, w: 28, h: 56 }, { balao: [156, 30], foco: [166, 20], luzes: vitrais.map((j) => [...j, "#ffd070"]) });
     // a cabana da curandeira: teto de palha, ervas penduradas e uma janela esverdeada
     px(c, 184, 50, 14, 8, meio);
     [[183, 49, 16], [184, 48, 14], [186, 47, 10], [188, 46, 6]].forEach(([x, y, w]) => px(c, x, y, w, 1, telha));
@@ -320,8 +319,18 @@ const Vista = (() => {
     const fechado = ["chuva", "tempestade", "nublado", "nevoa", "neve"].includes(clima);
     const corNuvem = p === 2 ? mix(bandas[1], "#000000", 0.3) : p === 3 ? mix(bandas[1], "#2a3048", 0.5)
       : mix(bandas[1], fechado ? "#3a3f48" : "#e8ecf4", fechado ? 0.4 : 0.3);
-    const n = fechado ? 8 : clima === "limpo" && r() < 0.4 ? 0 : 4;
+    const n = clima === "nevoa" ? 3 : fechado ? 8 : clima === "limpo" && r() < 0.4 ? 0 : 4;
     for (let i = 0; i < n; i++) nuvens.push({ x: r() * (W + 80), y: 5 + r() * 36, w: 40 + r() * 80, v: 0.04 + r() * 0.08, esp: fechado && r() < 0.5 ? 3 : 2, cor: corNuvem });
+    // Névoa: bancos compridos e baixos, do traço das nuvens, passando devagar atrás das silhuetas (a vila e os prédios
+    // ficam limpos na frente); os de cima mais ralos, os de perto do morro mais cheios.
+    neblinas = [];
+    if (clima === "nevoa") {
+      const clara = mix(bandas[3], "#dfe2e8", p === 3 ? 0.16 : 0.42), rala = mix(bandas[2], clara, 0.55);
+      for (let i = 0; i < 9; i++) {
+        const y = 12 + Math.round((i / 8) * 30 + r() * 4);
+        neblinas.push({ x: r() * (W + 160), y, w: 90 + r() * 130, v: 0.03 + r() * 0.05, cor: y > 30 ? clara : rala, alta: y <= 30 });
+      }
+    }
     bioma(frente.getContext("2d"), e, r, bandas);
     pintarChao();
     estrelas = [];
@@ -334,10 +343,11 @@ const Vista = (() => {
   }
 
   /** O chão da paisagem continua para fora dela: uma rampa pontilhada na cor da última linha, que a cena usa embaixo
-   *  da arte (--chao-rampa), para a página parecer começar no chão. */
+   *  da arte (--chao-rampa), para a página parecer começar no chão. Vai no corpo da página: fora da luta a arte está
+   *  na cena, na luta ela é o fundo da arena, e o chão continua nos dois casos. */
   function pintarChao() {
-    const cena = canvas && canvas.parentElement;
-    if (!cena) return;
+    const cena = document.body;
+    if (!canvas || !cena) return;
     const [r, g, b] = frente.getContext("2d").getImageData(W >> 1, H - 1, 1, 1).data;
     const t = document.createElement("canvas"), n = 12;
     t.width = 4; t.height = n;
@@ -347,14 +357,13 @@ const Vista = (() => {
     cena.style.setProperty("--chao-rampa", `url(${t.toDataURL()})`);
     cena.style.setProperty("--chao", `rgb(${r}, ${g}, ${b})`);
   }
-  /** O prédio sob o mouse: as luzes dele acendem (só os pixels da janela, sem clarão em volta) e cada um mexe uma
-   *  coisa só: o sino balança, a lanterna da estrada tremula. */
+  /** O prédio sob o mouse: as luzes dele acendem (só os pixels da janela, sem clarão em volta); a lanterna da estrada
+   *  tremula. */
   function pintarDestaque(b) {
     const p = predios.find((x) => x.id === destaque);
     if (!p) return;
     const tremula = [1, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 1, 0, 1][quadro % 14];
     p.luzes.forEach(([x, y, w, h, cor]) => px(b, x, y, w, h, !p.lanterna || tremula ? cor : LUZ_JANELA));
-    if (p.sino) { const [x, y] = p.sino, lado = Math.round(Math.sin(quadro / 2)); px(b, x - 1, y, 4, 2, "#0d0b0a"); px(b, x + lado, y, 2, 2, "#c8a860"); }
   }
   /** Fagulhas da forja: sempre umas poucas; com o mouse em cima, um punhado. */
   function pintarFagulhas(b) {
@@ -372,6 +381,7 @@ const Vista = (() => {
   function andar() {
     quadro++;
     nuvens.forEach((n) => { n.x = (n.x + n.v) % (W + n.w); });
+    neblinas.forEach((n) => { n.x = (n.x + n.v) % (W + n.w); });
     aves.forEach((a) => { a.x = (a.x + a.v) % (W + 20); });
     const neve = estado.mundo.clima_id === "neve";
     particulas.forEach((p) => {
@@ -427,6 +437,13 @@ const Vista = (() => {
       px(ctx, x, n.y, n.w, 1, n.cor); px(ctx, x + 6, n.y - 1, n.w - 18, 1, n.cor);
       if (n.esp === 3) px(ctx, x + n.w / 4, n.y - 2, n.w / 3, 1, n.cor);
     });
+    neblinas.forEach((n) => {  // um banco: o corpo de duas linhas, a crista mais curta e a barra rala embaixo
+      const x = Math.floor(n.x - n.w), w = Math.round(n.w);
+      px(ctx, x, n.y, w, n.alta ? 1 : 2, n.cor);
+      px(ctx, x + 10, n.y - 1, w - 26, 1, n.cor);
+      px(ctx, x + 22, n.y - 2, Math.round(w * 0.35), 1, n.cor);
+      px(ctx, x + 6, n.y + (n.alta ? 1 : 2), w - 30, 1, n.cor);
+    });
     ctx.drawImage(frente, 0, 0);
     pintarFagulhas(ctx);
     if (destaque) pintarDestaque(ctx);
@@ -440,9 +457,6 @@ const Vista = (() => {
         if (pont(x, y, Math.round(12 - t * 0.6))) px(ctx, x, y, 2, 2, "#8a8288");
       }
     });
-    if (clima === "nevoa") {
-      for (let i = 0; i < 3; i++) nevoa(ctx, 26 + i * 10, 32 + i * 10, corDaNevoa, 3, 0, W, quadro * (0.3 + i * 0.1));
-    }
     particulas.forEach((p) => {
       if (clima === "neve") px(ctx, p.x, p.y, 1, 1, "#f0f4ff");
       else px(ctx, p.x, p.y, 1, 3, "rgba(170,190,220,0.7)");
@@ -498,10 +512,12 @@ const Vista = (() => {
     return corDoCeu();
   }
 
-  /** A câmera vai até o prédio (em dobro, centrada nele) ou volta à vila inteira (id nulo), num pontilhado. */
+  /** A câmera vai até o prédio (em dobro, centrada nele ou no ponto `foco` dele: no templo, a cruz no alto) ou volta
+   *  à vila inteira (id nulo), num pontilhado. */
   function focar(id) {
     const p = id && predios.find((x) => x.id === id);
-    const para = p ? { s: 2, x: Math.max(0, Math.min(W / 2, Math.round(p.x + p.w / 2 - W / 4))), y: Math.max(0, Math.min(H / 2, Math.round(p.y + p.h / 2 - H / 4))) } : { s: 1, x: 0, y: 0 };
+    const [fx, fy] = p ? p.foco || [p.x + p.w / 2, p.y + p.h / 2] : [0, 0];
+    const para = p ? { s: 2, x: Math.max(0, Math.min(W / 2, Math.round(fx - W / 4))), y: Math.max(0, Math.min(H / 2, Math.round(fy - H / 4))) } : { s: 1, x: 0, y: 0 };
     if (camera.s === para.s && camera.x === para.x && camera.y === para.y) return;
     camera.de = { x: camera.x, y: camera.y, s: camera.s }; camera.inicio = performance.now();
     Object.assign(camera, para);

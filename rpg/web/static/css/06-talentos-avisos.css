@@ -63,6 +63,10 @@
 .faixa-festa b { display: inline-flex; align-items: center; gap: 14px; font-family: var(--titulo); font-size: calc(var(--px) * 80); font-weight: 400; line-height: 1; color: var(--ouro); text-shadow: 4px 4px 0 #000; }
 .faixa-festa span { display: block; font-size: 15px; color: var(--tinta-2); }
 @keyframes faixa { 0% { opacity: 0; transform: scaleY(0.2); } 15% { opacity: 1; transform: none; } 80% { opacity: 1; } 100% { opacity: 0; } }
+/* Exausto: a mesma faixa, sem ouro e mais lenta (o dia acabou à força, não é festa). */
+.faixa-festa.sombria { animation-duration: 2.4s; }
+.faixa-festa.sombria b { color: var(--tinta-2); }
+.faixa-festa.sombria span { font-size: 17px; font-style: italic; }
 #toasts { position: fixed; z-index: 35; top: 64px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; gap: 6px; align-items: center; pointer-events: none; }
 .toast { display: flex; align-items: center; gap: 10px; padding: 6px 14px 6px 8px; background: #120e0b; border: 3px solid var(--sangue-2); box-shadow: 4px 4px 0 #000; font-size: 16px; animation: toast 3.2s ease-out forwards; }
 .toast b { font-family: var(--titulo); font-size: calc(var(--px) * 32); font-weight: 400; color: var(--sangue-2); line-height: 1; display: block; }

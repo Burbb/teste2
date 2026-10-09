@@ -96,7 +96,7 @@ def _registrar(g, texto, evento_id, local, falso, **dados):
 
 
 # ---------------------------------------------------------------------- eventos de vila
-@evento(contextos=VILA, peso=8, cooldown=8)
+@evento(contextos=("taverna",), peso=8, cooldown=8)  # só dentro da taverna: é a bebida que vira briga (servicos)
 def briga_de_taverna(g):
     g.dizer("Uma caneca voa pela taverna. Dois grandalhões se engalfinham e logo metade do salão está "
             "envolvida.", "amarelo")

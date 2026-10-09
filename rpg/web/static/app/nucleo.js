@@ -59,7 +59,7 @@ const App = {
   ultimaFogueira: null,
   opcoes: () => (pergunta && pergunta.tipo === "opcoes" ? pergunta.opcoes : null),
   som: (n) => Som.tocar(n),
-  avisar: (texto) => aviso(texto, "info", "pergaminho"),
+  avisar: (texto, chave) => aviso(texto, "info", "pergaminho", typeof chave === "string" ? chave : undefined),
   doer: () => doer(),
   acaoFecharTalentos: null,
 };
@@ -153,7 +153,9 @@ async function tratar(m) {
     case "opiniao": await opiniao(m); break;
     case "turno": turno(m); break;
     case "fim_combate": if (!instantaneo()) await espera(m.resultado === "vitoria" ? 800 : 400); break;
-    case "celebrar": { const r = Telas.resumoCelebracao(m); if (r) historico("h-chip", r); await Telas.celebrar(m, instantaneo()); break; }
+    // Celebração não se pula com o clique que adiantava o texto (o contrato pago, o espólio, a vitória): ela tem as
+    // próprias teclas e o próprio tempo. Só a velocidade "instantâneo" e o replay a dispensam.
+    case "celebrar": { const r = Telas.resumoCelebracao(m); if (r) historico("h-chip", r); await Telas.celebrar(m, replay || velocidade === "instantaneo"); break; }
     case "talentos": Telas.guardarArvore(m.arvore); break;
     case "painel": {
       if (m.tipo === "achado") {

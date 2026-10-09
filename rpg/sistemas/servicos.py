@@ -1,5 +1,6 @@
 """Serviços da vila: ferreiro, curandeiro e rumores."""
 
+from .. import eventos
 from ..entidades import nome_stat
 from ..eventos.vila import ouvir_rumor
 from .. import itens
@@ -109,4 +110,7 @@ class Servicos:
             return
         self.perder_ouro(preco)
         self.marcar(chave, self.flag(chave, 0) + 1)
+        # Às vezes a bebida vira briga: o salão inteiro se engalfinha antes que alguém conte alguma coisa.
+        if self.chance(0.2) and eventos.disparar(self, "taverna"):
+            return
         ouvir_rumor(self)

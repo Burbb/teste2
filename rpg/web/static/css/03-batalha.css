@@ -1,5 +1,13 @@
 /* ------------------------------------------------------------------ batalha: cartas sobre a paisagem */
 #batalha { display: none; margin-top: 4px; }
+/* Na luta, a arena e o log são um painel só, como a arte e o texto fora dela: o quadro de bronze se abre entre os
+   dois, a arena encosta nas laterais e o chão dela continua, pontilhado, para dentro do log. */
+body.em-combate #palco { gap: 0; }
+body.em-combate #hud { padding: 0; border-bottom-width: 0; border-image-width: calc(var(--P) * 6) calc(var(--P) * 6) 0; }
+body.em-combate #cena { border-top-width: 0; border-image-width: 0 calc(var(--P) * 6) calc(var(--P) * 6); }
+body.em-combate #cena::before { content: ""; flex: none; height: calc(var(--P) * 12);
+  background: var(--chao-rampa) 0 0 / calc(var(--P) * 4) calc(var(--P) * 12) repeat-x; }
+body.em-combate #arena { border: 0; padding-left: 24px; padding-right: 24px; }
 body.em-combate #batalha { display: block; }
 body.em-combate .hud-vitais, body.em-combate .hud-retrato { display: none; }
 body.em-combate #hud-linha { justify-content: flex-end; }

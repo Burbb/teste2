@@ -597,7 +597,7 @@ const Telas = (() => {
   function ferreiro(d) {
     const cartoes = d.pecas.map((p) => cartaoServico({
       icone: iconeItem(p.item), raridade: p.item.raridade, nome: p.item.nome, preco: p.custo, limite: p.custo == null,
-      efeito: p.custo == null ? "No limite (+5): a forja não tira mais nada dela" : `Reforço +${p.reforco + 1}: ${p.ganho}`,
+      efeito: p.custo == null ? "No limite (+5): a forja não tira mais nada dela" : p.ganho,
       motivo: p.custo != null && !p.pode ? "Ouro insuficiente." : "",
       attrs: p.custo == null ? "" : `data-reforcar="${h(p.slot)}"`,
       dicaAttr: dicaItem(p.item, p.custo == null ? "No limite do reforço." : p.pode ? "Clique para reforçar." : "Ouro insuficiente.", false),
@@ -807,7 +807,7 @@ const Telas = (() => {
     if (c.recebendo) botao = '<span class="carimbo">Cumprido</span>';  // no quadro de pagamento: o carimbo bate
     else if (ativo) botao = c.concluido ? '<span class="contrato-feito">Feito! Volte a uma vila para receber</span>'
       : `<button type="button" class="contrato-botao abandonar" data-abandonar="${c.id}" title="Reputação −${c.penalidade}">Abandonar</button>`;
-    else botao = `<button type="button" class="contrato-botao" data-aceitar="${c.id}"${cheio ? " disabled title=\"Você já tem 3 contratos\"" : ""}>Aceitar</button>`;
+    else botao = `<button type="button" class="contrato-botao${cheio ? " bloqueado" : ""}" data-aceitar="${c.id}"${cheio ? ' aria-disabled="true"' : ""}>Aceitar</button>`;
     const recem = ativo && contratosVistos && !contratosVistos.has(c.id);
     return `<div class="contrato tipo-${h(c.tipo)}${ativo ? " ativo" : ""}${c.concluido && !c.recebendo ? " concluido" : ""}${recem ? " recem" : ""}">
       <span class="prego"></span><div class="contrato-tipo">${TIPO_CONTRATO[c.tipo] || h(c.tipo)}</div>
@@ -830,8 +830,14 @@ const Telas = (() => {
       <h4>Seus contratos <small>${d.ativos.length}/${d.limite}</small></h4>
       <div class="cartazes seus">${ativos || '<span class="vazio">Nenhum. Pegue um cartaz do mural.</span>'}</div></div>`;
   }
-  function ligarMural(raiz) {
-    raiz.querySelectorAll("[data-aceitar]").forEach((b) => b.addEventListener("click", (ev) => { ev.stopPropagation(); App.acao({ aceitar: Number(b.dataset.aceitar) }, "pagina"); }));
+  function ligarMural(raiz, d) {
+    // No limite de contratos, aceitar não vai ao jogo: o "não" e o aviso de por quê, perto do clique, a cada tentativa.
+    const cheio = d && d.limite && (d.ativos || []).length >= d.limite;
+    raiz.querySelectorAll("[data-aceitar]").forEach((b) => b.addEventListener("click", (ev) => {
+      ev.stopPropagation();
+      if (cheio) { App.som("falha"); App.avisar(`Você já tem ${d.limite} contratos: entregue ou abandone um antes.`, "contratos"); return; }
+      App.acao({ aceitar: Number(b.dataset.aceitar) }, "pagina");
+    }));
     raiz.querySelectorAll("[data-abandonar]").forEach((b) => b.addEventListener("click", (ev) => { ev.stopPropagation(); App.acao({ abandonar: Number(b.dataset.abandonar) }, "escolha"); }));
   }
 
@@ -1025,7 +1031,7 @@ const Telas = (() => {
     if (m.tipo === "saves") ligarSaves(div);
     if (m.tipo === "acampamento") { App.ultimaFogueira = m.dados; desenharFogueira(div.querySelector(".fogueira-cena"), m.dados); }
     if (m.tipo === "acampamento" || m.tipo === "comitiva") ligarFigurasComitiva(div);
-    if (m.tipo === "mural" || m.tipo === "diario") ligarMural(div);
+    if (m.tipo === "mural" || m.tipo === "diario") ligarMural(div, m.dados);
     if (m.tipo === "personagem") ligarInventario(div);
     if (m.tipo === "loja") { App.ultimaLoja = m.dados; ligarLoja(div); }
     ligarDicas(div);
@@ -1121,9 +1127,9 @@ const Telas = (() => {
     });
   }
 
-  function faixa(titulo, sub, icone) {
+  function faixa(titulo, sub, icone, classe = "") {
     const f = document.createElement("div");
-    f.className = "faixa-festa";
+    f.className = "faixa-festa " + classe;
     f.innerHTML = `<b>${icone ? S(icone, 3) : ""}${h(titulo)}${icone ? S(icone, 3) : ""}</b>${sub ? `<span>${h(sub)}</span>` : ""}`;
     document.body.appendChild(f);
     setTimeout(() => f.remove(), 1700);
@@ -1245,6 +1251,12 @@ const Telas = (() => {
       faixa(d.chefe ? "Guardião derrotado!" : "Vitória", null, "espada");
       particulas(["#f2c94c", "#fff3a0", "#d4af37"], d.chefe ? 70 : 30);
       return new Promise((r) => setTimeout(r, d.chefe ? 1500 : 1000));
+    }
+    if (m.tipo === "exausto") {  // o dia acabou à força: uma faixa sombria, devagar, e a fogueira (ou o feno) em seguida
+      if (instantaneo) return Promise.resolve();
+      App.som("exausto");
+      faixa("Exausto", d.texto, "lua", "sombria");
+      return new Promise((r) => setTimeout(r, 2300));
     }
     if (m.tipo === "comitiva") {
       if (instantaneo) return Promise.resolve();
@@ -1422,6 +1434,7 @@ const Telas = (() => {
     if (m.tipo === "espolio") return `▸ Espólio: ${d.ouro ? `+${d.ouro} ouro, ` : ""}+${d.xp} XP`;
     if (m.tipo === "atributo") return `▸ +${d.valor} ${d.nome} permanente`;
     if (m.tipo === "chegada") return `▸ ${d.primeira ? "Descoberto" : "Chegada"}: ${d.nome}`;
+    if (m.tipo === "exausto") return `▸ Exausto: ${d.texto}`;
     if (m.tipo === "equipou" && d.achado) return `▸ Vestiu: ${d.item.nome}`;
     if (m.tipo === "guardou") return `▸ Na mochila: ${d.item.nome}`;
     if (m.tipo === "amanhecer") return `▸ Dia ${d.dia} · ${d.clima}${d.itens.length ? " · " + d.itens.map((x) => x.curto).join(", ") : ""}`;

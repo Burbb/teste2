@@ -1,7 +1,7 @@
 """Motor de eventos: registro, condições, pesos dinâmicos e anti-repetição.
 
 Cada evento declara em quais contextos pode ocorrer ("explorar", "viagem",
-"acampamento", "vila"), um peso (fixo ou calculado a partir do estado do
+"acampamento", "vila", "taverna"), um peso (fixo ou calculado a partir do estado do
 jogo), uma condição opcional e um tempo de recarga. Na hora de sortear:
 
 * eventos vistos recentemente ou muitas vezes perdem peso (novidade primeiro);
