@@ -218,6 +218,29 @@ catálogo `HABS`:
 ainda não está assim; `_alguem_sem("fortalecido")`: alguém do bando ainda sem o bônus). `golpe=True` marca o
 que fere: com o alvo a um golpe comum da morte (`Combate.dano_previsto`), o inimigo só escolhe entre esses.
 Depois é só pôr o id em `habs` da família (`rpg/dados.py`). `tests/test_inimigos.py` confere que todo id existe.
+O jeito de animar, quando não é o padrão, vai em `anim=` (o mesmo vocabulário das habilidades do herói).
+
+## Uma família de inimigo
+
+Uma entrada em `FAMILIAS` (`rpg/dados.py`) diz tudo sobre a espécie, e o resto do jogo lê de lá:
+
+```python
+"cao_de_guerra": dict(nome="cão de guerra", plural="cães de guerra", g="m", hp=22, atk=7, defesa=3, agi=7, poder=0,
+                      tracos=["fera"], habs=["mordida_sangrenta", "uivo"], xp=14, ouro=(0, 2), grupo=(2, 3),
+                      nivel_min=3,                                            # aparece a partir do nível 3 da região
+                      escolta=dict(familia="mercenario", chance=0.3, ate_nivel=5, chance_depois=0.5),
+                      lore="Treinados para a guerra e soltos quando ela acabou."),
+```
+
+Para ela aparecer, ponha o id em `familias` de um bioma (ou em `noite`, para só sair à noite). Outros campos:
+`revive` (a família que o Reviver levanta), `flechas` (o arqueiro acha flechas nos pertences), `resist`, `ataque`.
+O desenho da criatura sai dos traços (`TRACOS_FICHA`: `retrato`, na ordem de `RETRATOS`); a conta de dano por traço
+também mora lá (`tipo` e `alcance`, multiplicando na ordem do catálogo).
+
+Um **afixo** (`AFIXOS`) declara onde cai (`sorteio`: "elite", "campeoes", "unico"). Um **guardião** (`GUARDIOES`) tem
+`id` fixo: o covil guarda o id no save.
+
+Conferir: `python -m unittest tests.test_conteudo` (habilidades, famílias, escoltas, traços, lore, ids e desenhos).
 
 ## Um evento
 

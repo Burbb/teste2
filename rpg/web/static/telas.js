@@ -12,21 +12,6 @@ const Telas = (() => {
     return (c && c.icone) || padrao;
   }
 
-  function iconeCriatura(tracos = [], familia = "") {
-    const t = new Set(tracos);
-    if (t.has("demonio")) return "demonio";
-    if (t.has("etereo")) return "etereo";
-    if (t.has("corrompido")) return "corrompido";
-    if (t.has("morto-vivo")) return "caveira";
-    if (t.has("construto")) return "construto";
-    if (t.has("voador")) return "voador";
-    if (t.has("planta")) return "planta";
-    if (t.has("fera")) return "fera";
-    if (t.has("humano") || t.has("conjurador")) return "humano";
-    if (/bandid|mercen|cultis|cavaleiro/.test(familia)) return "humano";
-    return "caveira";
-  }
-
   // ------------------------------------------------------------------ talentos
   let arvore = null, ranksAntes = {};
   function guardarArvore(a) { arvore = a; }
@@ -767,7 +752,7 @@ const Telas = (() => {
         ? f.tracos_nomes.map((t) => `<span class="tag">${h(t)}</span>`).join("") + f.fraquezas.map((t) => `<span class="tag fraco">fraco: ${h(t)}</span>`).join("") +
           f.resiste.map((t) => `<span class="tag forte">resiste: ${h(t)}</span>`).join("")
         : '<span class="tag">??? derrote mais destas para aprender</span>';
-      return `<div class="cartao${f.conhecido ? "" : " desconhecido"}${f.mestre ? " mestre" : ""}"><div class="cab">${S(iconeCriatura(f.tracos, f.id), 3)}
+      return `<div class="cartao${f.conhecido ? "" : " desconhecido"}${f.mestre ? " mestre" : ""}"><div class="cab">${S(f.retrato || "caveira", 3)}
         <div><b>${h(f.nome)}</b><span class="sub">${Texto.plural(f.abates, "abate")}</span></div></div>
         <span class="lore">${h(f.lore)}</span><div class="tags">${f.mestre ? '<span class="tag mestre">mestre caçador +10% dano</span>' : ""}${tags}</div></div>`;
     }).join("");
@@ -791,7 +776,7 @@ const Telas = (() => {
   // ------------------------------------------------------------------ mural de contratos
   const TIPO_CONTRATO = { caca: "Caça", alvo: "Procurado", entrega: "Entrega" };
   function cartaz(c, ativo, cheio, nivelHeroi) {
-    const arte = c.tipo === "entrega" ? "saco" : iconeCriatura(c.tracos, c.familia || "");
+    const arte = c.tipo === "entrega" ? "saco" : c.retrato || "caveira";
     const titulo = c.tipo === "alvo" ? c.alvo : c.tipo === "entrega" ? (c.objeto || "Entrega") : c.desc.replace(/^Eliminar /, "").replace(/ em .*$/, "");
     const perigo = c.nivel == null ? "" : c.nivel - nivelHeroi >= 2 ? "alto" : c.nivel >= nivelHeroi ? "medio" : "baixo";
     const lugar = `${S(MapaPx.sprite({ tipo: c.lugar_tipo, bioma: c.bioma }), 1)} ${h(c.lugar)}${c.distancia != null ? ` · ${Texto.plural(c.distancia, "trecho")}` : ""}${c.nivel != null ? ` <span class="perigo-tag ${perigo}">Nv.${c.nivel}</span>` : ""}`;
@@ -842,7 +827,7 @@ const Telas = (() => {
   function rastreador(contratos, nivelHeroi) {
     if (!contratos || !contratos.length) return "";
     return `<div class="secao rastreador"><h3>Contratos</h3>${contratos.map((c) => {
-      const arte = c.tipo === "entrega" ? "saco" : iconeCriatura(c.tracos, c.familia || "");
+      const arte = c.tipo === "entrega" ? "saco" : c.retrato || "caveira";
       const alvo = c.tipo === "alvo" ? c.alvo : c.tipo === "entrega" ? `Levar ${c.objeto}` : c.desc.replace(/^Eliminar /, "").replace(/ em .*$/, "");
       let prog = "";
       if (c.tipo === "caca" && c.progresso) { const [f, t] = c.progresso.split("/").map(Number); prog = `${barra("xp", f, t)}<small>${f}/${t}</small>`; }
@@ -1311,7 +1296,7 @@ const Telas = (() => {
     if (m.tipo === "mestre") {  // mestre caçador de uma espécie: a faixa de ouro com a criatura dos dois lados
       if (instantaneo) return Promise.resolve();
       App.som("nivel");
-      faixa("Mestre caçador", `${d.plural.charAt(0).toUpperCase() + d.plural.slice(1)}: +10% de dano contra eles`, iconeCriatura(d.tracos, d.familia));
+      faixa("Mestre caçador", `${d.plural.charAt(0).toUpperCase() + d.plural.slice(1)}: +10% de dano contra eles`, d.retrato || "caveira");
       return new Promise((r) => setTimeout(r, 1800));
     }
     if (m.tipo === "exausto") {  // o dia acabou à força: uma faixa sombria, devagar, e a fogueira (ou o feno) em seguida
@@ -1510,6 +1495,6 @@ const Telas = (() => {
     setTimeout(() => t.remove(), 3300);
   }
 
-  return { topoBalcao, cartaoServico, rastreador, atributosHtml, reputacaoHtml, dica, guardarDica, htmlItem, menuUso, abrirGrimorio, alternarGrimorio, abrirDica, dicaAbertaPor, mouseNaArea, novaVisita, fecharMenuItem, guardarArvore, abrirTalentos, fecharTalentos, painel, revelarAchado, celebrar, resumoCelebracao, toast, moedasPara, iconeCriatura, iconeItem, dicaItem, ligarDicas, esconderDica,
+  return { topoBalcao, cartaoServico, rastreador, atributosHtml, reputacaoHtml, dica, guardarDica, htmlItem, menuUso, abrirGrimorio, alternarGrimorio, abrirDica, dicaAbertaPor, mouseNaArea, novaVisita, fecharMenuItem, guardarArvore, abrirTalentos, fecharTalentos, painel, revelarAchado, celebrar, resumoCelebracao, toast, moedasPara, iconeItem, dicaItem, ligarDicas, esconderDica,
     iconeConsumivel, VAZIO, NOME_ESPACO, AREA, barra, aprovacao, noPalco, abrirAchado, acoesDoAchado, fecharAchado };
 })();

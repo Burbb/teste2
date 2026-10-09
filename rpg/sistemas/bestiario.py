@@ -1,7 +1,7 @@
 """Legado entre partidas e o bestiário."""
 
 from .. import texto as tx
-from ..dados import FAMILIAS, LORE, TRACOS
+from ..dados import FAMILIAS, LORE, TRACOS_FICHA, retrato
 from .. import legado
 
 
@@ -83,7 +83,8 @@ class Bestiario:
             fracos, resiste = _eficacias_familia(fam)
             fichas.append({"id": fam, "nome": tx.maiuscula(f["nome"]), "abates": b["abates"], "lore": LORE.get(fam, ""),
                            "conhecido": conhece, "mestre": self.mestre_caca(fam), "tracos": f["tracos"],
-                           "tracos_nomes": [TRACOS[t].split(":")[0] for t in f["tracos"]] if conhece else [],
+                           "retrato": retrato(f["tracos"]),
+                           "tracos_nomes": [TRACOS_FICHA[t]["nome"] for t in f["tracos"]] if conhece else [],
                            "fraquezas": fracos if conhece else [],
                            "resiste": resiste if self.conhece_resistencias(fam) else []})
         if self.ui.painel("bestiario", {"fichas": fichas, "total": len(LORE)}):
@@ -97,7 +98,7 @@ class Bestiario:
             self.dizer(f"{tx.maiuscula(f['nome'])} — abates: {b['abates']}{selo}", "amarelo+negrito")
             self.dizer(f"  {LORE.get(fam, '')}", "cinza")
             if self.conhece(fam):
-                tracos = ", ".join(TRACOS[t].split(":")[0] for t in f["tracos"])
+                tracos = ", ".join(TRACOS_FICHA[t]["nome"] for t in f["tracos"])
                 fracos, _ = _eficacias_familia(fam)
                 info = f"  Traços: {tracos}"
                 if fracos:

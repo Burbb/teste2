@@ -59,7 +59,7 @@ const Batalha = (() => {
   function icone(c) {
     if (c.uid === "j") return c.classe;
     if (c.lado === "aliado") return c.cid || (c.tipo === "servo" ? "caveira" : c.tipo === "falcao" ? "voador" : "fera");
-    return Telas.iconeCriatura(c.tracos, c.familia || "");
+    return c.retrato || "caveira";  // o motor escolhe pelos traços (dados.py: retrato)
   }
 
   function criarCarta(c) {
@@ -103,9 +103,6 @@ const Batalha = (() => {
     }).join("");
   }
 
-  const ICONE_TRACO = { fera: "fera", humano: "humano", voador: "voador", blindado: "escudo", "morto-vivo": "caveira",
-    etereo: "etereo", planta: "planta", construto: "construto", gigante: "martelo", corrompido: "corrompido",
-    conjurador: "cajado", demonio: "demonio" };
   const ELEMENTO = { fisico: ["espada", "corpo a corpo"], distancia: ["flecha", "à distância"], fogo: ["chama", "fogo"],
     gelo: ["gelo", "gelo"], sagrado: ["orbe_luz", "sagrado"], sombra: ["orbe_sombra", "sombra"], arcano: ["orbe_arcano", "arcano"],
     veneno: ["gota_verde", "veneno"] };
@@ -116,7 +113,7 @@ const Batalha = (() => {
     const f = c.ficha;
     const caixa = Telas.abrirDica(el, true);
     // Os traços numa linha só, miúdos; embaixo, duas colunas (fraco contra / resiste a), uma linha por elemento.
-    const tracos = f.tracos.map((t) => `<span class="ficha-traco" title="${esc(t.texto)}">${S(ICONE_TRACO[t.id] || "estrela", 1)}${esc(t.id)}</span>`).join("");
+    const tracos = f.tracos.map((t) => `<span class="ficha-traco" title="${esc(t.texto)}">${S(t.icone || "estrela", 1)}${esc(t.id)}</span>`).join("");
     const lista = (grupo) => Object.entries(grupo || {}).map(([k, v]) => {
       const [ic, nome] = ELEMENTO[k] || ["estrela", k];
       return `<li>${S(ic, 1)}<span>${nome}</span><span class="valor">${v === 0 ? "imune" : "×" + String(v).replace(".", ",")}</span></li>`;

@@ -8,7 +8,7 @@ from .habilidades import HABILIDADES, custo_flechas, descricao_habilidade
 from .grimorio import chance_critico, mult_critico
 from .modificadores import disparar, mod, mult, nomes
 from .estados import ESTADOS, NOMES, dano_do_tique, no_golpe
-from .dados import CLIMAS, TRACOS
+from .dados import CLIMAS, TRACOS, TRACOS_FICHA
 from .entidades import Combatente
 from .inimigos import HABS, HABS_INIMIGO, NOMES_HABS_INIMIGO, ROTULOS_HABS_INIMIGO
 from .itens import CONSUMIVEIS, EM_ALIADO, PENA_FENIX_AGE_SOZINHA, USAVEIS_NA_LUTA, ficha
@@ -21,24 +21,14 @@ USAVEIS_EM_COMBATE = USAVEIS_NA_LUTA  # o catálogo diz (itens.py: uso)
 
 
 def mult_tracos(alvo, tipo, alcance):
+    """Quanto o golpe rende contra os traços do alvo (catálogo TRACOS_FICHA, na ordem dele) e as resistências."""
     m = 1.0
-    t = alvo.tracos
-    if "voador" in t:
-        m *= 0.7 if alcance == "corpo" else 1.25
-    if "blindado" in t:
-        m *= 0.75 if tipo == "fisico" else 1.15
-    if "morto-vivo" in t:
-        m *= {"sagrado": 1.7, "sombra": 0.5, "veneno": 0}.get(tipo, 1)
-    if "etereo" in t:
-        m *= {"fisico": 0.75, "arcano": 1.3, "sagrado": 1.3}.get(tipo, 1)
-    if "planta" in t and tipo == "fogo":
-        m *= 1.5
-    if "construto" in t:
-        m *= {"veneno": 0, "arcano": 1.2}.get(tipo, 1)
-    if "demonio" in t:
-        m *= {"sagrado": 1.5, "fogo": 0.8}.get(tipo, 1)
-    if "corrompido" in t:
-        m *= {"sagrado": 1.4, "sombra": 0.6}.get(tipo, 1)
+    for nome, tr in TRACOS_FICHA.items():
+        if nome in alvo.tracos:
+            if "alcance" in tr:
+                m *= tr["alcance"].get(alcance, tr["alcance"].get("*", 1))
+            if "tipo" in tr:
+                m *= tr["tipo"].get(tipo, tr["tipo"].get("*", 1))
     return m * alvo.resist.get(tipo, 1)
 
 

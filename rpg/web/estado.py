@@ -7,7 +7,7 @@ from ..classes import CLASSES
 from ..habilidades import HABILIDADES, descricao_habilidade
 from .. import estados
 from ..estados import NOMES as NOMES_EFEITOS, para_tela
-from ..dados import BIOMAS, CLIMAS, PERIODOS
+from ..dados import BIOMAS, CLIMAS, PERIODOS, retrato
 from .. import itens
 from ..itens import CONSUMIVEIS, EM_ALIADO, ficha
 from ..mundo import nivel_regiao
@@ -199,14 +199,14 @@ def _ficha_inimigo(g, e):
     """O que você sabe deste inimigo, conforme o bestiário da espécie: traços sempre; as fraquezas depois de
     conhecer a espécie; as resistências só com mais caçadas."""
     from ..combate import eficacias
-    from ..dados import TRACOS
+    from ..dados import TRACOS, TRACOS_FICHA
     conhecido = g.conhece(e.familia)
     resistencias = g.conhece_resistencias(e.familia)
     fraco, resiste = eficacias(e)
     return {"conhecido": conhecido, "resistencias": resistencias, "progresso": g.progresso_bestiario(e.familia),
             "mestre": g.mestre_caca(e.familia), "abates": g.bestiario.get(e.familia, {}).get("abates", 0),
             "mestre_em": g.MESTRE_ABATES,
-            "tracos": [{"id": t, "texto": TRACOS.get(t, t)} for t in e.tracos],
+            "tracos": [{"id": t, "texto": TRACOS.get(t, t), "icone": TRACOS_FICHA[t]["icone"]} for t in e.tracos],
             "fraco": fraco if conhecido else None, "resiste": resiste if resistencias else None,
             "ponto_fraco": bool(getattr(e, "chave", None) and g.flag(f"fraqueza:{e.chave}")),
             "atk": round(max(e.atk, e.poder)), "defesa": round(e.defesa)}
@@ -220,6 +220,7 @@ def combate(g):
     def ficha(c, lado):
         d = {"uid": cb.uid(c), "nome": c.nome, "hp": max(0, c.hp), "max_hp": c.max_hp, "efeitos": _efeitos(c, cb), "lado": lado,
              "vivo": c.vivo, "tracos": list(getattr(c, "tracos", []) or []), "cid": getattr(c, "cid", None),
+             "retrato": retrato(getattr(c, "tracos", []) or []),
              "tipo": getattr(c, "tipo", None)}
         if lado == "inimigo":
             d.update(nivel=c.nivel, chefe=c.chefe, unico=getattr(c, "unico", False), afixo=c.afixo,

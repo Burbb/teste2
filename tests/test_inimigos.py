@@ -51,6 +51,13 @@ class TestJuizo(unittest.TestCase):
         self.assertTrue(HABS["reviver"]["quando"](cb, xama, g.j))
         g.combate_ativo = None
 
+    def test_guardiao_de_save_antigo_acha_pela_posicao(self):
+        from rpg.inimigos import ficha_guardiao, gerar_guardiao
+        spec = gerar_guardiao(random.Random(3), "montanha")
+        self.assertEqual(ficha_guardiao(spec)["id"], spec["id"])
+        antigo = {k: v for k, v in spec.items() if k != "id"}
+        self.assertIs(ficha_guardiao(antigo), ficha_guardiao(spec))
+
     def test_com_o_heroi_a_um_golpe_so_ataca(self):
         """Com você quase morto, o lobo nunca gasta a vez uivando: sempre fere."""
         for semente in range(40):

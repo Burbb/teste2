@@ -11,7 +11,7 @@ import re
 import unittest
 
 from rpg import comitiva
-from rpg.dados import AFIXOS, BIOMAS, CRIATURAS_DA_FENDA, FAMILIAS, GUARDIOES, LORE, TRACOS
+from rpg.dados import AFIXOS, BIOMAS, CRIATURAS_DA_FENDA, FAMILIAS, GUARDIOES, LORE, RETRATOS, TRACOS, TRACOS_FICHA
 from rpg.eventos import motor
 from rpg.eventos.titulos import TITULOS
 from rpg.classes import CLASSES
@@ -35,14 +35,6 @@ def _sprites():
     """Os nomes de todo desenho: os da grade (`nome: [`) e os derivados (`S.nome = trocar(...)`)."""
     js = _ler("sprites-dados.js")
     return set(re.findall(r"^\s{4}(\w+):\s*\[", js, re.M)) | set(re.findall(r"\bS\.(\w+)\s*=", js))
-
-
-def _mapa_js(arquivo, nome):
-    """Um mapa {id: "ícone"} declarado em JS, como dicionário Python (os que ainda moram na tela)."""
-    js = _ler(*arquivo.split("/"))
-    m = re.search(rf"const {nome}\s*=\s*\{{(.*?)\}};", js, re.S)
-    assert m, f"{arquivo}: mapa {nome} não encontrado"
-    return dict(re.findall(r"\"?([\w-]+)\"?:\s*\[?\"(\w+)\"", m.group(1)))
 
 
 class Catalogo(unittest.TestCase):
@@ -86,6 +78,8 @@ class TestInimigos(Catalogo):
                     self.existe(t["invoca"], FAMILIAS, f"guardião de {bioma}: invoca '{t['invoca']}' não existe")
         for bioma in GUARDIOES:
             self.existe(bioma, BIOMAS, f"GUARDIOES: bioma '{bioma}' não existe")
+        ids = [t["id"] for lista in GUARDIOES.values() for t in lista]
+        self.assertEqual(sorted({i for i in ids if ids.count(i) > 1}), [], "guardiões com o mesmo id")
 
     def test_toda_familia_que_aparece_tem_lore(self):
         """O bestiário conta e descreve pelo LORE: uma família que aparece sem lore fica sem texto e desconta o total."""
@@ -190,10 +184,17 @@ class TestApresentacao(Catalogo):
                 self.existe(t["realce"], self.cores_texto, f"talento '{k}': realce '{t['realce']}' sem cor .rx-")
 
     def test_tracos(self):
-        mapa = _mapa_js("batalha.js", "ICONE_TRACO")
-        self._confere(mapa, "ICONE_TRACO")
-        for t in TRACOS:
-            self.existe(t, mapa, f"traço '{t}' sem ícone em ICONE_TRACO (batalha.js)")
+        tipos = {"fisico", "fogo", "gelo", "sagrado", "sombra", "arcano", "veneno", "*"}
+        for k, t in TRACOS_FICHA.items():
+            self.existe(t.get("icone"), self.sprites, f"traço '{k}': ícone '{t.get('icone')}' sem desenho")
+            if t.get("retrato"):
+                self.existe(t["retrato"], self.sprites, f"traço '{k}': retrato '{t['retrato']}' sem desenho")
+            for tipo in t.get("tipo", {}):
+                self.existe(tipo, tipos, f"traço '{k}': tipo de dano '{tipo}' desconhecido")
+            for alc in t.get("alcance", {}):
+                self.existe(alc, {"corpo", "distancia", "*"}, f"traço '{k}': alcance '{alc}' desconhecido")
+        for t in RETRATOS:
+            self.existe(t, TRACOS_FICHA, f"RETRATOS: traço '{t}' não existe")
 
     def test_equipamentos(self):
         """Toda base e todo único têm desenho; ids de único não se repetem."""

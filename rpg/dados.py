@@ -121,21 +121,43 @@ VILA_LUGARES = [("Vau", "m"), ("Vale", "m"), ("Grota", "f"), ("Vigia", "f"), ("A
 # Criaturas da Fenda e o perigo mínimo do lugar para elas aparecerem fora do bioma delas (nesta ordem).
 CRIATURAS_DA_FENDA = ((3, "caido"), (4, "cao_infernal"), (4, "cria_vazio"), (5, "abominacao"))
 
-# Traços alteram o dano recebido conforme tipo e alcance do ataque.
-TRACOS = {
-    "fera": "Fera: instintiva e rápida.",
-    "humano": "Humano: astuto, pode fugir ou negociar.",
-    "voador": "Voador: resiste a golpes corpo a corpo, vulnerável a ataques à distância.",
-    "blindado": "Blindado: resiste a dano físico, vulnerável a magia.",
-    "morto-vivo": "Morto-vivo: imune a veneno, fraco contra sagrado, resiste a sombra.",
-    "etereo": "Etéreo: armas físicas atravessam seu corpo; arcano e sagrado o ferem.",
-    "planta": "Planta: queima com facilidade.",
-    "construto": "Construto: imune a veneno e sangramento, sensível ao arcano.",
-    "gigante": "Gigante: difícil de atordoar.",
-    "corrompido": "Corrompido: tocado pelo Vazio; sagrado o fere, sombra o alimenta.",
-    "conjurador": "Conjurador: usa magia.",
-    "demonio": "Demônio: cria do Inferno; o sagrado o queima, o fogo pouco o fere.",
+# Traços: o que a espécie é. Cada um diz:
+#   nome, texto   o que a ficha e o bestiário mostram ("Voador: resiste a golpes corpo a corpo...")
+#   icone         o desenho do traço na ficha do inimigo
+#   tipo, alcance quanto rende o dano que ela recebe, por tipo ("fogo") ou alcance ("corpo"); "*" vale para o resto.
+#                 A conta (combate.mult_tracos) multiplica na ordem daqui.
+#   retrato       o desenho da criatura quando ela tem este traço; vale o primeiro traço com retrato na ordem de
+#                 RETRATOS (um demônio etéreo é desenhado como demônio)
+TRACOS_FICHA = {
+    "fera": dict(nome="Fera", texto="instintiva e rápida.", icone="fera", retrato="fera"),
+    "humano": dict(nome="Humano", texto="astuto, pode fugir ou negociar.", icone="humano", retrato="humano"),
+    "voador": dict(nome="Voador", texto="resiste a golpes corpo a corpo, vulnerável a ataques à distância.",
+                   icone="voador", retrato="voador", alcance={"corpo": 0.7, "*": 1.25}),
+    "blindado": dict(nome="Blindado", texto="resiste a dano físico, vulnerável a magia.", icone="escudo",
+                     tipo={"fisico": 0.75, "*": 1.15}),
+    "morto-vivo": dict(nome="Morto-vivo", texto="imune a veneno, fraco contra sagrado, resiste a sombra.",
+                       icone="caveira", retrato="caveira", tipo={"sagrado": 1.7, "sombra": 0.5, "veneno": 0}),
+    "etereo": dict(nome="Etéreo", texto="armas físicas atravessam seu corpo; arcano e sagrado o ferem.",
+                   icone="etereo", retrato="etereo", tipo={"fisico": 0.75, "arcano": 1.3, "sagrado": 1.3}),
+    "planta": dict(nome="Planta", texto="queima com facilidade.", icone="planta", retrato="planta",
+                   tipo={"fogo": 1.5}),
+    "construto": dict(nome="Construto", texto="imune a veneno e sangramento, sensível ao arcano.", icone="construto",
+                      retrato="construto", tipo={"veneno": 0, "arcano": 1.2}),
+    "gigante": dict(nome="Gigante", texto="difícil de atordoar.", icone="martelo"),
+    "demonio": dict(nome="Demônio", texto="cria do Inferno; o sagrado o queima, o fogo pouco o fere.", icone="demonio",
+                    retrato="demonio", tipo={"sagrado": 1.5, "fogo": 0.8}),
+    "corrompido": dict(nome="Corrompido", texto="tocado pelo Vazio; sagrado o fere, sombra o alimenta.",
+                       icone="corrompido", retrato="corrompido", tipo={"sagrado": 1.4, "sombra": 0.6}),
+    "conjurador": dict(nome="Conjurador", texto="usa magia.", icone="cajado", retrato="humano"),
 }
+TRACOS = {k: f"{t['nome']}: {t['texto']}" for k, t in TRACOS_FICHA.items()}  # a frase de cada traço
+RETRATOS = ("demonio", "etereo", "corrompido", "morto-vivo", "construto", "voador", "planta", "fera", "humano",
+            "conjurador")
+
+
+def retrato(tracos):
+    """O desenho de uma criatura pelos traços dela (o primeiro de RETRATOS que ela tem; sem nenhum, uma caveira)."""
+    return next((TRACOS_FICHA[t]["retrato"] for t in RETRATOS if t in tracos), "caveira")
 
 # nome, plural, gênero, atributos base (nível 1), traços, habilidades, xp, ouro, tamanho de grupo e, quando há:
 #   nivel_min  o nível da região a partir do qual a espécie aparece (sem ele, desde o começo)
@@ -317,58 +339,68 @@ PERIODOS = ["Manhã", "Tarde", "Anoitecer", "Noite"]
 # Guardiões: três deles guardam os Sigilos que abrem o caminho até a Cidadela.
 GUARDIOES = {
     "floresta": [
-        dict(base="Rainha Aracnídea", g="f", hp=120, atk=10, defesa=4, agi=8, poder=6, tracos=["fera"],
+        dict(id="rainha_aracnidea",
+             base="Rainha Aracnídea", g="f", hp=120, atk=10, defesa=4, agi=8, poder=6, tracos=["fera"],
              habs=["teia", "veneno", "invocar"], invoca="aranha", resist={"fogo": 1.4},
              intro="Teias grossas como cordas cobrem as árvores. Algo enorme desce do alto, com olhos demais para contar.",
              fases=[dict(limiar=0.5, texto="A rainha guincha e seus filhotes despencam das copas!",
                          atk=1.2, habs=["mordida_sangrenta"])]),
-        dict(base="Ent Ancião", g="m", hp=160, atk=12, defesa=8, agi=1, poder=4, tracos=["planta", "blindado"],
+        dict(id="ent_anciao",
+             base="Ent Ancião", g="m", hp=160, atk=12, defesa=8, agi=1, poder=4, tracos=["planta", "blindado"],
              habs=["esmagar", "regenerar", "agarrar", "varredura"], resist={"fogo": 1.6},
              intro="A floresta inteira parece se mover. Uma árvore milenar abre olhos de seiva âmbar e fala com voz de terremoto.",
              fases=[dict(limiar=0.4, texto="A casca do Ent racha e uma luz verde e furiosa escapa das fendas!",
                          atk=1.3, defesa=0.7, habs=["investida"])]),
     ],
     "pantano": [
-        dict(base="Hidra do Brejo", g="f", hp=140, atk=10, defesa=4, agi=4, poder=4, tracos=["fera"],
+        dict(id="hidra_do_brejo",
+             base="Hidra do Brejo", g="f", hp=140, atk=10, defesa=4, agi=4, poder=4, tracos=["fera"],
              habs=["regenerar", "veneno", "mordida_sangrenta", "varredura"],
              intro="A água ferve. Uma, duas, três cabeças de serpente emergem, sibilando em uníssono.",
              fases=[dict(limiar=0.5, texto="Onde uma cabeça foi cortada, duas novas brotam!", atk=1.35)]),
-        dict(base="Bruxa Afogada", g="f", hp=110, atk=6, defesa=3, agi=6, poder=12, tracos=["morto-vivo", "conjurador"],
+        dict(id="bruxa_afogada",
+             base="Bruxa Afogada", g="f", hp=110, atk=6, defesa=3, agi=6, poder=12, tracos=["morto-vivo", "conjurador"],
              habs=["maldicao", "bola_sombra", "invocar", "drenar"], invoca="afogado", ataque="sombra",
              intro="Uma mulher de pele azulada flutua sobre o charco, cabelos de algas escorrendo, cantando uma canção de ninar.",
              fases=[dict(limiar=0.5, texto="O canto vira um grito. Mãos podres emergem da água ao seu redor!",
                          poder=1.3, habs=["grito_terror"])]),
     ],
     "montanha": [
-        dict(base="Rei Troll", g="m", hp=170, atk=13, defesa=6, agi=1, poder=0, tracos=["gigante"],
+        dict(id="rei_troll",
+             base="Rei Troll", g="m", hp=170, atk=13, defesa=6, agi=1, poder=0, tracos=["gigante"],
              habs=["esmagar", "regenerar", "investida", "varredura"], resist={"fogo": 1.4},
              intro="Sobre um trono de ossos de gigante, um troll colossal usa uma coroa feita de um elmo amassado.",
              fases=[dict(limiar=0.45, texto="O Rei Troll arranca uma rocha do chão e ruge de fúria!", atk=1.3)]),
-        dict(base="Dragão de Gelo", g="m", hp=130, atk=11, defesa=5, agi=6, poder=8, tracos=["voador"],
+        dict(id="dragao_de_gelo",
+             base="Dragão de Gelo", g="m", hp=130, atk=11, defesa=5, agi=6, poder=8, tracos=["voador"],
              habs=["mordida_gelida", "esmagar", "grito_terror", "varredura"], resist={"gelo": 0.3, "fogo": 1.4},
              intro="O pico inteiro treme. Um dragão serpentino de escamas azul-gelo desdobra as asas sobre você.",
              fases=[dict(limiar=0.5, texto="O dragão inspira fundo e o ar congela ao seu redor!", atk=1.25,
                          habs=["investida"])]),
     ],
     "planicie": [
-        dict(base="Senhor da Guerra", g="m", hp=130, atk=11, defesa=7, agi=4, poder=0, tracos=["humano", "blindado"],
+        dict(id="senhor_da_guerra",
+             base="Senhor da Guerra", g="m", hp=130, atk=11, defesa=7, agi=4, poder=0, tracos=["humano", "blindado"],
              habs=["golpe_sujo", "esmagar", "invocar", "grito_guerra", "varredura"], invoca="bandido",
              intro="Um acampamento fortificado. No centro, um homem de armadura remendada com troféus de seus inimigos aguarda.",
              fases=[dict(limiar=0.5, texto="\"Ninguém me derruba!\" Ele joga fora o escudo e pega um machado em cada mão.",
                          atk=1.35, defesa=0.7)]),
-        dict(base="Profeta das Cinzas", g="m", hp=115, atk=6, defesa=3, agi=5, poder=12, tracos=["humano", "conjurador"],
+        dict(id="profeta_das_cinzas",
+             base="Profeta das Cinzas", g="m", hp=115, atk=6, defesa=3, agi=5, poder=12, tracos=["humano", "conjurador"],
              habs=["bola_sombra", "cura", "invocar", "maldicao"], invoca="cultista", ataque="sombra",
              intro="Um círculo de fiéis entoa cânticos ao redor de um homem cego que chora cinzas.",
              fases=[dict(limiar=0.5, texto="O Profeta abre os braços e o Vazio responde ao seu chamado!",
                          poder=1.3, habs=["drenar"])]),
     ],
     "ruinas": [
-        dict(base="Lich Menor", g="m", hp=115, atk=5, defesa=4, agi=4, poder=13, tracos=["morto-vivo", "conjurador"],
+        dict(id="lich_menor",
+             base="Lich Menor", g="m", hp=115, atk=5, defesa=4, agi=4, poder=13, tracos=["morto-vivo", "conjurador"],
              habs=["bola_sombra", "maldicao", "invocar", "drenar"], invoca="esqueleto", ataque="sombra",
              intro="Num salão de colunas tombadas, um esqueleto coroado ergue os olhos de um grimório. Duas chamas verdes acendem nas órbitas.",
              fases=[dict(limiar=0.5, texto="O lich esmaga uma joia em sua mão e sua forma se torna translúcida!",
                          tracos=["etereo"], poder=1.2)]),
-        dict(base="Golem Primordial", g="m", hp=180, atk=13, defesa=11, agi=0, poder=0, tracos=["construto", "blindado"],
+        dict(id="golem_primordial",
+             base="Golem Primordial", g="m", hp=180, atk=13, defesa=11, agi=0, poder=0, tracos=["construto", "blindado"],
              habs=["esmagar", "investida", "varredura"],
              intro="Runas se acendem no chão. O que você pensava ser uma parede se levanta: um golem do tamanho de uma casa.",
              fases=[dict(limiar=0.5, texto="As placas de pedra caem e o núcleo pulsante do golem fica exposto!",

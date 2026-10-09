@@ -3,7 +3,7 @@
 from .. import balanceamento as bal
 from .. import texto as tx
 from ..combate import Combate
-from ..dados import AFIXOS, BIOMAS, CRIATURAS_DA_FENDA, FAMILIAS, afixos_de
+from ..dados import AFIXOS, BIOMAS, CRIATURAS_DA_FENDA, FAMILIAS, afixos_de, retrato
 from .. import inimigos
 from ..inimigos import criar
 from ..itens import gerar_equip
@@ -136,7 +136,8 @@ class Confronto:
                 if self.bestiario[e.familia]["abates"] == 5:
                     f = FAMILIAS[e.familia]
                     if self.ui.conquistas_na_tela:  # uma faixa com a criatura, como as outras conquistas
-                        self.ui.celebrar("mestre", {"familia": e.familia, "plural": f["plural"], "tracos": f["tracos"]})
+                        self.ui.celebrar("mestre", {"familia": e.familia, "plural": f["plural"], "tracos": f["tracos"],
+                                                    "retrato": retrato(f["tracos"])})
                     else:
                         self.dizer(f"Você agora conhece {f['plural']} como ninguém. "
                                    f"(mestre caçador: +10% de dano contra eles)", "verde")

@@ -104,11 +104,19 @@ def gerar_guardiao(rng, bioma):
     idx = rng.randrange(len(GUARDIOES[bioma]))
     t = GUARDIOES[bioma][idx]
     nome = f"{tx.nome_proprio(rng)}, {'o' if t['g'] == 'm' else 'a'} {t['base']}"  # "Kalra, o Rei Troll"
-    return {"bioma": bioma, "idx": idx, "nome": nome, "g": t["g"], "derrotado": False, "base": t["base"]}
+    return {"bioma": bioma, "id": t["id"], "idx": idx, "nome": nome, "g": t["g"], "derrotado": False,
+            "base": t["base"]}
+
+
+def ficha_guardiao(spec):
+    """O guardião do catálogo de um covil: pelo id (que não muda se a lista ganhar guardiões novos), ou pela posição
+    na lista nos saves de antes do id."""
+    lista = GUARDIOES[spec["bioma"]]
+    return next((t for t in lista if t["id"] == spec.get("id")), None) or lista[spec["idx"]]
 
 
 def instanciar_guardiao(spec, nivel):
-    t = GUARDIOES[spec["bioma"]][spec["idx"]]
+    t = ficha_guardiao(spec)
     m = escala(nivel)
     m_atk = bal.GUARDIAO_ATK * escala_atk(nivel) * bal.DANO_INIMIGOS
     e = Inimigo(spec["nome"], t["hp"] * m * bal.GUARDIAO_VIDA, t["atk"] * m_atk,

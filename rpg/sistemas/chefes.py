@@ -2,8 +2,7 @@
 
 from .. import balanceamento as bal
 from .. import texto as tx
-from ..dados import GUARDIOES
-from ..inimigos import instanciar_antagonista, instanciar_guardiao
+from ..inimigos import ficha_guardiao, instanciar_antagonista, instanciar_guardiao
 from .. import comitiva
 from ..mundo import nivel_regiao
 
@@ -16,7 +15,7 @@ class Chefes:
     def enfrentar_guardiao(self):
         loc = self.loc
         gspec = loc["guardiao"]
-        t = GUARDIOES[gspec["bioma"]][gspec["idx"]]
+        t = ficha_guardiao(gspec)
         self.ui.cena(gspec["nome"], f"guardião · {loc['nome']}", "chefe")
         self.narrar(t["intro"], "vermelho")
         chave = f"guardiao:{loc['id']}"
