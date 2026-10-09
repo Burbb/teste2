@@ -8,16 +8,21 @@ from .. import texto as tx
 from ..regras import NIVEL_MAXIMO
 from .. import balanceamento as bal
 from ..modificadores import mod
+from ..telemetria import registrar
 
 
 class Recompensas:
     # ================================================================ recompensas e perdas
-    def ganhar_ouro(self, n, exato=False, avisar=True):
+    def ganhar_ouro(self, n, exato=False, avisar=True, fonte="eventos"):
         """exato: o valor já é o combinado (contrato); senão, o mundo é pobre e só fica parte (OURO_MUNDO).
-        avisar=False: a tela já mostrou o ganho (o quadro do contrato)."""
+        avisar=False: a tela já mostrou o ganho (o quadro do contrato). fonte: de onde veio, para a telemetria
+        (lutas, contratos, baus, eventos); None quando já foi contado (o quadro do espólio entregando)."""
         n = int(n) if exato else self.ouro_achado(n)
         if n <= 0:
             return 0
+        if fonte:
+            fontes = self.estatisticas.setdefault("ouro_fontes", {})
+            fontes[fonte] = fontes.get(fonte, 0) + n
         if self.espolio_aberto is not None:  # vai para o quadro do espólio, que entrega quando aparece
             self.espolio_aberto["ouro"] += n
             return n
@@ -33,19 +38,23 @@ class Recompensas:
     # mostrado antes da próxima pergunta ao jogador (menu, Continuar, outra luta) ou no fim do evento. O ouro e o XP são
     # entregues quando o quadro aparece (o ouro do topo sobe quando as moedas chegam; o nível sobe depois dele), e o
     # equipamento achado vem logo em seguida (é uma escolha). No texto, cada ganho é dito na hora, como sempre.
-    def abrir_espolio(self):
+    def abrir_espolio(self, titulo=None):
+        """titulo: o rótulo do quadro quando não é o espólio de uma vitória ("baú aberto")."""
         if self.ui.conquistas_na_tela and self.espolio_aberto is None:
             self.espolio_aberto = {"ouro": 0, "xp": 0, "itens": [], "contratos": [], "equip": []}
+            self.titulo_espolio = titulo
 
     def fechar_espolio(self):
         e, self.espolio_aberto = self.espolio_aberto, None
         if e is None:
             return
         if any(e.values()):
-            self.ui.celebrar("espolio", {"ouro": e["ouro"], "xp": e["xp"], "nivel": self.j.nivel,
-                                         "trechos": self.trechos_xp(e["xp"]), "itens": e["itens"],
-                                         "contratos": e["contratos"], "equip": len(e["equip"])})
-        self.ganhar_ouro(e["ouro"], exato=True, avisar=False)
+            dados = {"ouro": e["ouro"], "xp": e["xp"], "nivel": self.j.nivel, "trechos": self.trechos_xp(e["xp"]),
+                     "itens": e["itens"], "contratos": e["contratos"], "equip": len(e["equip"])}
+            if self.titulo_espolio:
+                dados["titulo"] = self.titulo_espolio
+            self.ui.celebrar("espolio", dados)
+        self.ganhar_ouro(e["ouro"], exato=True, avisar=False, fonte=None)
         self.ganhar_xp(e["xp"], avisar=False)
         for item in e["equip"]:
             self.oferecer_equip(item)
@@ -73,9 +82,13 @@ class Recompensas:
         """Quanto fica de um ouro achado (saque, evento): o mundo é pobre (OURO_MUNDO)."""
         return int(n * bal.OURO_MUNDO)
 
-    def perder_ouro(self, n):
+    def perder_ouro(self, n, destino="eventos"):
+        """destino: para onde foi, para a telemetria (mercado, ferreiro, templo, curandeira, taverna...)."""
         n = min(self.j.ouro, int(n))
         self.j.ouro -= n
+        if n:
+            gastos = self.estatisticas.setdefault("ouro_gastos", {})
+            gastos[destino] = gastos.get(destino, 0) + n
         if n:
             self.ui.efeito(f"−{n} ouro", "perda")
         return n
@@ -134,7 +147,7 @@ class Recompensas:
     def dar(self, item, qtd=1):
         self.j.consumiveis[item] = self.j.consumiveis.get(item, 0) + qtd
         if not self.achou(item, CONSUMIVEIS[item]["nome"], qtd):
-            self.ui.efeito(f"{CONSUMIVEIS[item]['nome']} ×{qtd}", "item")
+            self.ui.efeito(f"{CONSUMIVEIS[item]['nome']} ×{qtd}", "item", item=item)
 
     def bonus_permanente(self, stat, valor):
         """Bônus de atributo vindo de eventos, com teto por partida (evita acumular sem fim)."""
@@ -147,6 +160,7 @@ class Recompensas:
         ganhos[stat] = ganhos.get(stat, 0) + ganho
         self.j.base[stat] += ganho
         self.j.recalcular()
+        registrar(self, "atributo", stat=stat, ganho=ganho)
         nome = nome_stat(stat, self.j.nome_recurso)
         if self.ui.conquistas_na_tela:  # o selo voa até o atributo no painel, que conta até o valor novo
             self.ui.celebrar("atributo", {"stat": stat, "nome": nome, "valor": ganho, "total": getattr(self.j, stat)})
@@ -159,7 +173,7 @@ class Recompensas:
         self.j.provisoes = min(sobrevivencia.MAX_PROVISOES, antes + n)
         n = self.j.provisoes - antes
         if n > 0 and not self.achou("comida", "Comida", n):
-            self.ui.efeito(f"+{tx.plural(n, 'dia')} de comida (total {self.j.provisoes})", "item")
+            self.ui.efeito(f"+{tx.plural(n, 'dia')} de comida (total {self.j.provisoes})", "item", item="comida")
         if n > 0 and self.j.fome:
             # Com fome, quem compra (ou acha) comida come ali mesmo: não espera o amanhecer para a fome passar.
             self.j.provisoes -= 1
@@ -179,7 +193,8 @@ class Recompensas:
             return 0
         self.j.flechas += n
         if not self.achou("flechas", "Flechas", n):
-            self.ui.efeito(f"+{tx.plural(n, 'flecha')} (total {self.j.flechas}/{self.max_flechas()})", "item")
+            self.ui.efeito(f"+{tx.plural(n, 'flecha')} (total {self.j.flechas}/{self.max_flechas()})", "item",
+                           item="flechas")
         return n
 
     def mudar_reputacao(self, d, avisar=True):

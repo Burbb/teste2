@@ -13,7 +13,11 @@ import json
 import os
 import re
 
-VERSAO = 2  # 2: cura, roubo de vida, absorção, críticos, dano por elemento e por aliado, economia, saque
+VERSAO = 3  # 2: cura, roubo de vida, absorção, críticos, dano por elemento e por aliado, economia, saque
+           # 3: escala de poder (de onde vem cada atributo, força do equipamento), tipo de encontro e noite, vida
+           #    mínima e dano por habilidade em cada luta, ouro por fonte e por destino, baús, atributos de eventos
+
+STATS_PODER = ("atk", "poder", "defesa", "agi", "max_hp")
 
 
 def registrar(g, tipo, **dados):
@@ -30,12 +34,33 @@ def instantaneo(j):
             "max_rec": j.max_rec, "regen": j.regen}
 
 
+def poder_equip(j):
+    """Um número só para a força do que se veste: os bônus pesados como no preço (PESO_PRECO). Sobe com o
+    equipamento; comparado ao nível, diz se o saque acompanha a curva dos inimigos."""
+    from .itens import PESO_PRECO
+    return round(sum(PESO_PRECO.get(k, 1.0) * v for it in j.equip.values() if it for k, v in it["bonus"].items()), 1)
+
+
+def fontes_poder(g):
+    """De onde vem cada atributo: nível e especialização (base), equipamento, talentos e eventos (santuários...)."""
+    from .talentos import bonus_stats
+    j = g.j
+    talentos = bonus_stats(j)
+    eventos = g.flags.get("bonus_eventos", {})
+    saida = {}
+    for st in STATS_PODER:
+        itens = sum(it["bonus"].get(st, 0) for it in j.equip.values() if it)
+        ev = eventos.get(st, 0)
+        saida[st] = {"base": j.base[st] - ev, "itens": itens, "talentos": talentos.get(st, 0), "eventos": ev}
+    return saida
+
 def novo_combate(cb):
     j = cb.j
     cb.tel = {"hp_inicio": j.hp, "rec_inicio": j.rec, "dano_causado": 0, "dano_aliados": 0, "dano_recebido": 0,
               "maior_golpe": 0, "habilidades": {}, "rec_gasto": 0, "esquivas": 0, "criticos_recebidos": 0,
               "stats_inicio": instantaneo(j), "criticos": 0, "criticos_garantidos": 0, "golpes": 0, "erros": 0, "absorvido": 0, "cura_recebida": 0,
-              "roubo_vida": 0, "cura_por_aliados": 0, "dano_por_elemento": {}, "dano_por_aliado": {}}
+              "roubo_vida": 0, "cura_por_aliados": 0, "dano_por_elemento": {}, "dano_por_aliado": {},
+              "hp_min": j.hp, "dano_por_hab": {}, "poder_equip": poder_equip(j)}
 
 
 def lance(cb, tipo, d):
@@ -52,10 +77,14 @@ def lance(cb, tipo, d):
             tel["criticos"] += bool(d.get("crit"))
             tel["golpes"] += 1
             tel["criticos_garantidos"] += bool(d.get("crit_motivo"))
+            hab = d.get("rotulo") or "Ataque"
+            tel["dano_por_hab"][hab] = tel["dano_por_hab"].get(hab, 0) + d["dano"]
         elif de in cb.aliados:
             tel["dano_por_aliado"][de.nome] = tel["dano_por_aliado"].get(de.nome, 0) + d["dano"]
         if em is j:
             tel["absorvido"] += d.get("absorvido") or 0
+            if d.get("hp") is not None:
+                tel["hp_min"] = min(tel["hp_min"], d["hp"])  # o mais perto que a luta chegou de matar
     elif tipo == "erro":
         if de is j:
             tel["erros"] += 1
@@ -91,13 +120,25 @@ def fim_combate(cb, resultado):
         return
     g, j = cb.g, cb.j
     inimigos = [{"nome": e.nome, "familia": e.familia, "nivel": e.nivel, "afixo": e.afixo, "chefe": e.chefe,
-                 "hp_max": e.max_hp, "atk": round(e.atk, 1), "poder": round(e.poder, 1), "morto": not e.vivo}
+                 "unico": bool(e.unico), "hp_max": e.max_hp, "atk": round(e.atk, 1), "poder": round(e.poder, 1),
+                 "morto": not e.vivo}
                 for e in cb.inimigos]
+    if any(e.chefe for e in cb.inimigos):
+        encontro = "chefe"
+    elif any(e.unico for e in cb.inimigos):
+        encontro = "unico"
+    elif any(getattr(e, "campeao", False) for e in cb.inimigos):
+        encontro = "campeoes"
+    elif any(e.afixo for e in cb.inimigos):
+        encontro = "elite"
+    else:
+        encontro = "comum"
     aliados = [{"nome": a.nome, "tipo": a.tipo, "hp_fim": max(0, a.hp), "hp_max": a.max_hp, "caiu": not a.vivo}
                for a in cb.aliados]
     registrar(g, "combate", resultado=resultado, titulo=cb.titulo, emboscada=cb.emboscada,
               nivel_regiao=g.nivel_local(), local=g.loc["nome"], clima=g.clima, inimigos=inimigos,
-              aliados=aliados, turnos=cb.turno, hp_fim=j.hp, rec_fim=j.rec, sem_luz=g.sem_luz, **tel)
+              aliados=aliados, turnos=cb.turno, hp_fim=j.hp, rec_fim=j.rec, sem_luz=g.sem_luz, encontro=encontro,
+              noite=bool(g.noite), **tel)
 
 
 def _nome_arquivo(g):
@@ -165,6 +206,31 @@ def resumo(registro):
             w(f"| {e['nv']} | {e['dia']} | {s['atk']} | {s['defesa']} | {s['agi']} | {s['poder']} | {s['max_hp']} | "
               f"{s['max_rec']} |")
     w("")
+    niveis3 = [e for e in ev if e["t"] == "nivel" and "fontes" in e]  # registro v3 em diante
+    if niveis3:
+        w("### De onde vem o poder (v3)")
+        w("")
+        w("Cada atributo = nível e especialização + equipamento + talentos + eventos. A força do equipamento soma os "
+          "bônus do que você veste, pesados como no preço: se ela para de subir, o saque não acompanha a curva.")
+        w("")
+        w("| Nível | Dia | Ataque | Poder | Defesa | Agilidade | Vida máx | Força do equipamento |")
+        w("|---|---|---|---|---|---|---|---|")
+
+        def parte(f):
+            p = [round(f[k]) for k in ("base", "itens", "talentos", "eventos")]
+            return f"{sum(p)} = {p[0]}+{p[1]}+{p[2]}+{p[3]}"
+        for e in niveis3:
+            fo = e["fontes"]
+            w(f"| {e['nv']} | {e['dia']} | {parte(fo['atk'])} | {parte(fo['poder'])} | {parte(fo['defesa'])} | "
+              f"{parte(fo['agi'])} | {parte(fo['max_hp'])} | {e.get('poder_equip', '-')} |")
+        w("")
+    atributos = [e for e in ev if e["t"] == "atributo"]
+    if atributos:
+        nomes = {"atk": "Ataque", "poder": "Poder", "defesa": "Defesa", "agi": "Agilidade", "max_hp": "Vida",
+                 "max_rec": "Mana/Vigor/Foco"}
+        w("Atributos para sempre (eventos): "
+          + ", ".join(f"+{e['ganho']} {nomes.get(e['stat'], e['stat'])} (dia {e['dia']})" for e in atributos))
+        w("")
     talentos = [e for e in ev if e["t"] == "talento"]
     if spec:
         dia_spec = next(e["dia"] for e in ev if e["t"] == "spec")
@@ -244,6 +310,57 @@ def resumo(registro):
         if por_aliado:
             w("Dano por aliado: " + ", ".join(f"{k} {v}" for k, v in sorted(por_aliado.items(), key=lambda x: -x[1])))
             w("")
+    v3 = [c for c in combates if "hp_min" in c]  # registro v3 em diante
+    if v3:
+        w("### Ritmo das lutas (v3)")
+        w("")
+        w("Dano por turno dos dois lados e quantos turnos você aguentaria apanhando assim (vida máxima ÷ dano recebido "
+          "por turno). Vida mínima: o mais perto que cada luta chegou de matar você.")
+        w("")
+        w("| Nv herói | Lutas | Seu dano/turno | Dano recebido/turno | Turnos até cair | Vida mínima média | "
+          "Lutas abaixo de 25% |")
+        w("|---|---|---|---|---|---|---|")
+        por = {}
+        for c in v3:
+            por.setdefault(c["nv"], []).append(c)
+        for nv in sorted(por):
+            cs = por[nv]
+            turnos = max(1, sum(c["turnos"] for c in cs))
+            dpt = sum(c["dano_causado"] for c in cs) / turnos
+            rpt = sum(c["dano_recebido"] for c in cs) / turnos
+            hp_max = sum(c["hp_max"] for c in cs) / len(cs)
+            minimo = sum(c["hp_min"] / max(1, c["hp_max"]) for c in cs) / len(cs)
+            perto = sum(1 for c in cs if c["hp_min"] < 0.25 * c["hp_max"])
+            w(f"| {nv} | {len(cs)} | {dpt:.1f} | {rpt:.1f} | {hp_max / rpt:.1f} | {minimo:.0%} | {perto} |"
+              if rpt else f"| {nv} | {len(cs)} | {dpt:.1f} | 0 | - | {minimo:.0%} | {perto} |")
+        w("")
+        w("| Encontro | Lutas | Derrotas / fugas | Nv inimigo − herói | Turnos | Vida perdida | Vida mínima |")
+        w("|---|---|---|---|---|---|---|")
+        grupos = {}
+        for c in v3:
+            grupos.setdefault(c.get("encontro", "comum"), []).append(c)
+            grupos.setdefault("à noite" if c.get("noite") else "de dia", []).append(c)
+        for nome in ("comum", "elite", "campeoes", "unico", "chefe", "de dia", "à noite"):
+            cs = grupos.get(nome)
+            if not cs:
+                continue
+            n = len(cs)
+            gap = sum(sum(i["nivel"] for i in c["inimigos"]) / max(1, len(c["inimigos"])) - c["nv"] for c in cs) / n
+            perda = sum((c["hp_inicio"] - c["hp_fim"]) / max(1, c["hp_max"]) for c in cs) / n
+            minimo = sum(c["hp_min"] / max(1, c["hp_max"]) for c in cs) / n
+            ruins = sum(c["resultado"] in ("derrota", "fuga") for c in cs)
+            w(f"| {nome} | {n} | {ruins} | {gap:+.1f} | {sum(c['turnos'] for c in cs) / n:.1f} | {perda:.0%} | "
+              f"{minimo:.0%} |")
+        w("")
+        por_hab = {}
+        for c in v3:
+            for h, d in c.get("dano_por_hab", {}).items():
+                por_hab[h] = por_hab.get(h, 0) + d
+        total = sum(por_hab.values())
+        if total:
+            w("Seu dano por habilidade: " + ", ".join(f"{h} {d} ({_pct(d, total)})"
+                                                     for h, d in sorted(por_hab.items(), key=lambda x: -x[1])))
+            w("")
     secos = sum(1 for c in combates if c["rec_fim"] < 0.2 * c["rec_max"])
     w(f"Lutas que terminaram com mana/vigor/foco abaixo de 20%: {secos} de {len(combates)} ({_pct(secos, len(combates))})")
     w("")
@@ -298,9 +415,34 @@ def resumo(registro):
             w(f"- Ferreiro ({sum(e.get('custo', 0) for e in forja)} de ouro): "
               + ", ".join(f"{e['item']} +{e['ganho']} {e['stat']}" for e in forja))
         w("")
+    com_fluxo = [e for e in ev if "ouro_fontes" in e] + ([fim] if fim and "ouro_fontes" in fim else [])
+    if com_fluxo:
+        ultimo_fluxo = com_fluxo[-1]
+        entrou, saiu = ultimo_fluxo.get("ouro_fontes", {}), ultimo_fluxo.get("ouro_gastos", {})
+        w("## Ouro: de onde vem e para onde vai (v3)")
+        w("")
+        w(f"- Entrou ({sum(entrou.values())}): " + (", ".join(f"{k} {v} ({_pct(v, sum(entrou.values()))})"
+                                                             for k, v in sorted(entrou.items(), key=lambda x: -x[1]))
+                                                   or "nada"))
+        w(f"- Saiu ({sum(saiu.values())}): " + (", ".join(f"{k} {v} ({_pct(v, sum(saiu.values()))})"
+                                                         for k, v in sorted(saiu.items(), key=lambda x: -x[1]))
+                                               or "nada"))
+        w("")
+    baus = [e for e in ev if e["t"] == "bau"]
+    if baus:
+        w(f"Baús abertos: {len(baus)} — " + "; ".join(
+            f"dia {e['dia']}: {e['ouro_bau']} ouro, {', '.join(e['suprimentos'])}"
+            + (f", {e['equip']['item']} [{e['equip']['raridade']}]" if e.get("equip") else "") for e in baus))
+        w("")
     saques = [e for e in ev if e["t"] == "saque"]
     if saques:
         w("## Saque encontrado")
+        w("")
+        cont = {}
+        for e in saques:
+            cont[e["raridade"]] = cont.get(e["raridade"], 0) + 1
+        w("Por raridade: " + ", ".join(f"{r} {cont[r]}" for r in ("comum", "magico", "raro", "lendario") if r in cont)
+          + f" (em {len(combates)} lutas)")
         w("")
         for e in saques:
             w(f"- Dia {e['dia']}, nv {e['nv']}: {e['item']} [{e['raridade']}, {e['slot']}] → {e['escolha']}")
@@ -346,11 +488,11 @@ def resumo(registro):
     if dias:
         w("## Por dia")
         w("")
-        w("| Dia | Nv | Vida | Ouro | Provisões | Ferimentos |")
-        w("|---|---|---|---|---|---|")
+        w("| Dia | Nv | Vida | Ouro | Provisões | Ferimentos | Força do equipamento |")
+        w("|---|---|---|---|---|---|---|")
         for e in dias:
             w(f"| {e['dia']} | {e['nv']} | {e['hp']}/{e['hp_max']} | {e['ouro']} | {e.get('provisoes')} | "
-              f"{e.get('ferimentos', 0)} |")
+              f"{e.get('ferimentos', 0)} | {e.get('poder_equip', '-')} |")
         w("")
     return "\n".join(linhas)
 

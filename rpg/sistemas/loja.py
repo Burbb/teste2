@@ -101,7 +101,7 @@ class Loja:
             self.lojas = {c: v for c, v in self.lojas.items() if not c.startswith(prefixo) or c == chave}
             vendidos = self.lojas.setdefault(chave, {})
             vendidos[k] = vendidos.get(k, 0) + qtd
-        self.perder_ouro(preco * qtd)
+        self.perder_ouro(preco * qtd, destino="mercado")
         categoria = k if k in ("provisoes", "flechas") else "consumivel"
         registrar(self, "compra", item=k, categoria=categoria, qtd=qtd, preco=preco * qtd)
         if k == "flechas":
@@ -124,7 +124,7 @@ class Loja:
         if not vago and len(j.mochila) >= LIMITE_MOCHILA:
             self.dizer("Sua mochila está cheia. Venda ou largue algo antes.", "vermelho")
             return False
-        self.perder_ouro(preco)
+        self.perder_ouro(preco, destino="mercado")
         registrar(self, "compra", item=it["nome"], categoria="equipamento", qtd=1, preco=preco,
                   raridade=it.get("raridade", "comum"), vestiu=vago)
         a_venda.remove(it)
@@ -161,7 +161,7 @@ class Loja:
             self.dizer("Sua mochila está cheia. Venda ou largue algo antes.", "vermelho")
             return False
         del self.recompra[i]
-        self.perder_ouro(valor)
+        self.perder_ouro(valor, destino="mercado")
         j.mochila.append(it)
         self.ui.efeito(f"{it['nome']} volta para a mochila", "item")
         return True

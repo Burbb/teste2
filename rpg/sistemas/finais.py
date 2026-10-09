@@ -16,6 +16,9 @@ class Finais:
         return {"equipamento": {s: (f"{it['nome']} [{it.get('raridade', 'comum')}] {descrever_bonus(it['bonus'], self.j.nome_recurso)}"
                                     if it else None) for s, it in j.equip.items()},
                 "stats": telemetria.instantaneo(j), "talentos": dict(j.talentos), "spec": j.spec,
+                "fontes": telemetria.fontes_poder(self), "poder_equip": telemetria.poder_equip(j),
+                "ouro_fontes": dict(self.estatisticas.get("ouro_fontes", {})),
+                "ouro_gastos": dict(self.estatisticas.get("ouro_gastos", {})),
                 "comitiva": [{"id": m["id"], "aprovacao": m["aprovacao"]} for m in comitiva.membros(self)]}
 
     # ================================================================ finais

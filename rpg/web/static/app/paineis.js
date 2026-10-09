@@ -133,6 +133,7 @@ function desenharHud(h, antes) {
       if (velho === undefined || v === null || v === undefined || v === velho) continue;
       const alvo = $(`.recurso[data-rec="${k}"]`);
       if (!alvo) continue;
+      if (itensChegando.has(k) && v > velho) { ganhosAdiados[k] = (ganhosAdiados[k] || 0) + v - velho; continue; }  // o ícone ainda voa
       alvo.classList.add(v > velho ? "ganhou" : "perdeu");
       flutuar(alvo, `${v > velho ? "+" : "−"}${Math.abs(v - velho)}`, v > velho ? "mais" : "menos");
     }
@@ -154,8 +155,9 @@ function desenharHeroi(h, antes) {
   const feridas = h.ferimentos.length ? h.ferimentos.map((f) => `<div class="ferimento${f.aberto ? " aberto" : ""}" ${Telas.dica(`<b>${esc(f.nome)}</b><div class="tipo">${f.dias ? `${Texto.plural(f.dias, "dia")} para sarar` : "não sara sozinha"}${f.aberto ? " · ferida aberta" : ""}</div>${(f.explica || []).map((l, i) => `<div class="${i ? "" : "bonus pior"}">${esc(l)}</div>`).join("")}`)}>${spr("gota", 1)}${esc(f.nome)} <small>${f.dias ? f.dias + "d" : ""}${f.aberto ? " · aberto" : ""}</small></div>`).join("")
     : '<div class="vazio">Nenhum, por enquanto.</div>';
   const bolsa = h.bolsa.filter((b) => b.id !== "tocha").map((b) => {
-    const dica = `<b>${esc(b.nome)}</b><div>${Realce.texto(b.desc)}</div><div class="rodape">${b.motivo ? esc(b.motivo) : estado && estado.combate ? "Clique para usar (gasta o turno)." : "Clique para usar."}</div>`;
-    return `<div role="button" tabindex="0" class="slot-px usavel${b.motivo && !(b.alvos || []).some((a) => !a.motivo) ? " inutil" : ""}" data-bolsa="${esc(b.id)}" ${Telas.dica(dica)}>${spr(Telas.ICONE_ITEM[b.id] || "pocao", 2)}<span class="qtd">${b.qtd}</span></div>`;
+    const bau = b.id === "bau";  // o baú se abre (e, onde dá para abrir, ganha o anel dourado)
+    const dica = `<b>${esc(b.nome)}</b><div>${Realce.texto(b.desc)}</div><div class="rodape">${b.motivo ? esc(b.motivo) : bau ? "Clique para abrir." : estado && estado.combate ? "Clique para usar (gasta o turno)." : "Clique para usar."}</div>`;
+    return `<div role="button" tabindex="0" class="slot-px usavel${b.motivo && !(b.alvos || []).some((a) => !a.motivo) ? " inutil" : ""}${bau && !b.motivo ? " pronto" : ""}" data-bolsa="${esc(b.id)}" ${Telas.dica(dica)}>${spr(Telas.ICONE_ITEM[b.id] || "pocao", 2)}<span class="qtd">${b.qtd}</span></div>`;
   }).join("");
   // Comitiva e animal no mesmo molde: retrato e nome com a ficha no hover, a vida em números no canto (como os
   // atributos), a barra, e embaixo a aprovação (só companheiros). O ♥ do carinho fica ao lado da vida do animal.

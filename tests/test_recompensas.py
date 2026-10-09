@@ -16,7 +16,7 @@ class Anotador(BotUI):
     def dizer(self, texto="", cor=None):
         self.textos.append(str(texto))
 
-    def efeito(self, texto, tipo="info"):
+    def efeito(self, texto, tipo="info", item=None):
         self.textos.append(str(texto))
 
     def celebrar(self, tipo, dados):
@@ -146,3 +146,55 @@ class TestEspolio(unittest.TestCase):
         esp = dict(ui.festas)["espolio"]
         self.assertEqual(esp["ouro"], g.ouro_achado(40))
         self.assertFalse([t for t in ui.textos if t.endswith(" ouro") or t.endswith(" XP")], ui.textos)
+
+
+class TestBau(unittest.TestCase):
+    """O Baú Trancado mora na bolsa e só abre num lugar seguro: numa vila ou à luz da fogueira."""
+
+    def _selvagem(self, g):
+        g.mundo["atual"] = next(l for l in g.mundo["locais"] if l["tipo"] == "selvagem")["id"]
+
+    def test_na_estrada_nao_abre(self):
+        g = _jogo(Anotador(random.Random(1)))
+        self._selvagem(g)
+        g.dar("bau")
+        self.assertTrue(g.motivo_inutil("bau"))
+        self.assertFalse(g.usar_consumivel("bau"))
+        self.assertEqual(g.j.consumiveis["bau"], 1)
+
+    def test_na_fogueira_abre(self):
+        g = _jogo(Anotador(random.Random(1)))
+        self._selvagem(g)
+        g.dar("bau")
+        g.na_fogueira = True
+        self.assertIsNone(g.motivo_inutil("bau"))
+
+    def test_na_vila_abre_e_entrega(self):
+        g = _jogo(Anotador(random.Random(1)))
+        g.dar("bau")
+        antes = g.j.ouro
+        self.assertTrue(g.usar_consumivel("bau"))
+        self.assertEqual(g.j.consumiveis["bau"], 0)
+        self.assertGreater(g.j.ouro, antes)
+        aberto = [e for e in g.registro if e["t"] == "bau"]
+        self.assertEqual(len(aberto), 1)
+        self.assertEqual(g.j.ouro - antes, aberto[0]["ouro_bau"])
+        self.assertEqual(g.estatisticas["ouro_fontes"]["baus"], aberto[0]["ouro_bau"])
+
+    def test_tela_grafica_abre_num_quadro(self):
+        ui = AnotadorGrafico(random.Random(1))
+        g = _jogo(ui)
+        g.dar("bau")
+        ui.festas.clear()
+        g.usar_consumivel("bau")
+        quadros = [d for t, d in ui.festas if t == "espolio"]
+        self.assertEqual(len(quadros), 1)
+        self.assertEqual(quadros[0]["titulo"], "baú aberto")
+        self.assertTrue(quadros[0]["ouro"] > 0 and quadros[0]["itens"])
+
+    def test_guardiao_sempre_deixa_um_bau(self):
+        g = _jogo(Anotador(random.Random(1)))
+        chefe = g.inimigo("lobo", nivel=2)
+        chefe.chefe = True
+        g.saque_de_combate([chefe])
+        self.assertEqual(g.j.consumiveis.get("bau"), 1)

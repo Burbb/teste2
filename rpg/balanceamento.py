@@ -188,6 +188,21 @@ ESTOQUE_MERCADO = {"tocha": (4, 8), "bandagem": (2, 5), "unguento": (0, 2), "poc
                    "antidoto": (1, 3), "bomba_fumaca": (0, 1), "pena_fenix": (0, 1),
                    "provisoes": (4, 8), "flechas": (15, 30)}
 
+# ---------------------------------------------------------------- saque
+# Equipamento depois de uma luta: chance base e a mais por inimigo de elite (afixo ou único). Luta comum dá mais
+# vezes, mas quase sempre coisa comum (SAQUE_QUALIDADE_COMUM, no sorteio de raridade); o que é raro vem de elite,
+# guardião e baú. Como nos jogos do gênero: muito saque comum, o bom é raro e tem de onde vir.
+SAQUE_EQUIP = 0.15
+SAQUE_EQUIP_ELITE = 0.2
+SAQUE_QUALIDADE_COMUM = -1
+# Baú Trancado: cai de guardião e criatura única (sempre), de elite (por inimigo) e, raramente, de luta comum.
+# Abre numa vila ou à luz da fogueira: ouro, um ou dois suprimentos e, às vezes, um equipamento melhor.
+BAU_ELITE = 0.12
+BAU_COMUM = 0.03
+BAU_OURO = (12, 24)           # sorteado, mais BAU_OURO_POR_NIVEL × nível (e o mundo é pobre: OURO_MUNDO)
+BAU_OURO_POR_NIVEL = 5
+BAU_EQUIP = 0.5               # chance de um equipamento (qualidade 1: mágico ou melhor mais vezes)
+
 # ---------------------------------------------------------------- contratos
 # O mundo é pobre: de todo ouro achado (saque, eventos), fica esta fração. O contrato já nasce com ela na conta,
 # e paga exatamente o que o cartaz promete.

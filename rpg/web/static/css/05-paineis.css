@@ -158,6 +158,10 @@
 .slot-px.usavel:hover { --anel: var(--anel-Y); transform: translateY(-2px); }
 .slot-px.usavel:active { transform: translateY(0) scale(.95); }
 .slot-px.usavel.inutil { opacity: .5; }
+/* O item ganho num evento chega voando à bolsa: o espaço pulsa. */
+.slot-px.ganhou { animation: atributo-ganhou 0.9s ease-out; }
+.slot-px.pronto { --anel: var(--anel-Y); }  /* um baú que dá para abrir aqui */
+.item-voando { position: fixed; z-index: 200; pointer-events: none; translate: -50% -50%; filter: drop-shadow(2px 2px 0 #000); }
 /* O animal do patrulheiro na ficha: como um membro da comitiva, com moldura verde de mato */
 .membro.fera .icone { border-color: #3a6a2a; grid-row: span 2; }
 .membro.fera .membro-nome { color: #cfe6b8; }

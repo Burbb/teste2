@@ -266,7 +266,7 @@ const Sensacao = (() => {
       <span>${c.concluido ? "Contrato cumprido" : "Contrato"}</span><b>${esc(c.concluido ? "receba em qualquer vila" : c.progresso)}</b></div>`).join("");
     const extras = achados.length || contratos;
     caixa.innerHTML = `<div class="festa festa-espolio">
-      <div class="rotulo-festa">espólio</div>
+      <div class="rotulo-festa">${esc(d.titulo || "espólio")}</div>
       ${d.ouro ? `<div class="espolio-linha ouro">${S("moeda", 2)}<span class="nome">Ouro</span><b>+<span class="conta">0</span></b></div>` : ""}
       ${d.xp ? `<div class="espolio-xp${d.ouro ? " esperando" : ""}">
         <div class="espolio-linha xp">${S("estrela", 2)}<span class="nome">Experiência</span><b>+<span class="conta">0</span> <small>XP</small></b></div>
@@ -284,6 +284,7 @@ const Sensacao = (() => {
     document.addEventListener("pointerdown", adiantar, true);
     document.addEventListener("keydown", adiantar, true);
     const mostrar = (el) => el && el.classList.remove("esperando");
+    if (d.titulo) Som.tocar("bau");  // um baú aberto: a tampa range antes das moedas
     await dormir(pausa(AJUSTES.espolioEsperaMs));  // a faixa de "Vitória" sai antes
     if (d.ouro) {
       Som.tocar("moeda");

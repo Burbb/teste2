@@ -16,7 +16,7 @@ const Telas = (() => {
     eficiencia: "estrela", exercito: "caveira", coracao_ardente: "chama", senhor_mortos: "caveira",
   };
   const ICONE_ITEM = { pocao_vida: "pocao", tonico: "pocao_azul", antidoto: "folha", bandagem: "bandagem", unguento: "unguento",
-    tocha: "tocha", bomba_fumaca: "caveira", pena_fenix: "chama" };
+    tocha: "tocha", bomba_fumaca: "caveira", pena_fenix: "chama", bau: "bau" };
   const ARMA = { guerreiro: "espada", arqueiro: "arco", mago: "cajado" };
 
   function iconeCriatura(tracos = [], familia = "") {
@@ -1143,7 +1143,9 @@ const Telas = (() => {
     f.className = "faixa-festa " + classe;
     f.innerHTML = `<b>${icone ? S(icone, 3) : ""}${h(titulo)}${icone ? S(icone, 3) : ""}</b>${sub ? `<span>${h(sub)}</span>` : ""}`;
     document.body.appendChild(f);
-    setTimeout(() => f.remove(), 1700);
+    // Sai quando a animação acaba (a sombria, do exausto, dura mais: um tempo fixo a cortava no meio da frase).
+    f.addEventListener("animationend", (ev) => { if (ev.target === f) f.remove(); });
+    setTimeout(() => f.remove(), 4000);
   }
 
   /** Mostra a celebração. Devolve uma Promise que resolve quando o jogador fecha (ou na hora, se rápida). */

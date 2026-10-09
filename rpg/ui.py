@@ -119,8 +119,9 @@ class UI:
             self._imprimir(self.pintar(f"  {subtitulo}", "cinza"))
         self._imprimir("")
 
-    def efeito(self, texto, tipo="info"):
-        """Consequência mecânica (ouro, vida, testes...), separada da prosa."""
+    def efeito(self, texto, tipo="info", item=None):
+        """Consequência mecânica (ouro, vida, testes...), separada da prosa. item: o id do que se ganhou (poção,
+        comida, flechas...), para a tela gráfica mandar o ícone até onde ele mora."""
         self._imprimir("   " + self.pintar(f"▸ {texto}", COR_EFEITO.get(tipo)))
 
     def rolagem(self, atributo, cd, d20, mod, total, sucesso):
@@ -232,6 +233,11 @@ class UI:
             input(self.pintar("  [Enter para continuar]", "cinza"))
         except EOFError:
             raise SystemExit(0)
+
+    def continuar(self):
+        """Um Continuar de verdade, mesmo onde a pausa da tela gráfica viraria a página sozinha: o fim do prólogo,
+        que quem começa precisa ler no seu tempo antes de a vila aparecer."""
+        self.pausar()
 
 
 class InterfaceGrafica:

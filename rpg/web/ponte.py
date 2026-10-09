@@ -137,8 +137,11 @@ class WebUI(InterfaceGrafica, UI):
         self.enviar_estado()
         self._enviar("mapa", grande=grande)
 
-    def efeito(self, texto, tipo="info"):
-        self._enviar("efeito", texto=texto, tipo=tipo)
+    def efeito(self, texto, tipo="info", item=None):
+        if item:
+            self._enviar("efeito", texto=texto, tipo=tipo, item=item)
+        else:
+            self._enviar("efeito", texto=texto, tipo=tipo)
         self.enviar_estado()  # a HUD reage junto com a etiqueta
 
     def atualizar(self):
@@ -288,6 +291,10 @@ class WebUI(InterfaceGrafica, UI):
         self.escolhas_na_cena += 1
         self.novo_desde_escolha = False
         return resposta
+
+    def continuar(self):
+        self.pausa_pendente = False
+        self._continuar()  # o botão aparece já; tocado, a próxima cena abre página nova
 
     def pausar(self):
         if self.novo_desde_escolha:

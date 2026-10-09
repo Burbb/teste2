@@ -96,6 +96,9 @@ async function cenarioCombate(browser) {
       await page.waitForTimeout(250);
     }
     conferir(!(await page.evaluate(() => document.body.classList.contains("em-combate"))), "a luta termina");
+    // A luta pode deixar um item (o saque é sorteado): a janela dele vem logo depois do espólio.
+    const guardar = await esperar('#sobre-achado .botao-janela:has-text("Guardar")', 8000);
+    if (guardar) { await guardar.click(); for (let t = 0; t < 30 && (await page.$("#sobre-achado")); t++) await page.waitForTimeout(100); }
     conferir(await page.evaluate(() => document.getElementById("vista").parentElement.id === "cena"),
       "a paisagem sai da arena e volta para o topo da cena, fora da área que rola");
     await page.mouse.move(4, 400);  // o HUD volta ao topo: o mouse sai de cima dele para a dica ter motivo de fechar

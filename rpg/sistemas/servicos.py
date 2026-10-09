@@ -62,7 +62,7 @@ class Servicos:
             if j.ouro < custo:
                 self.dizer("\"Volta quando tiver o dinheiro.\"", "vermelho")
                 continue
-            self.perder_ouro(custo)
+            self.perder_ouro(custo, destino="ferreiro")
             item["bonus"][stat] = item["bonus"].get(stat, 0) + ganho
             item["reforco"] = item.get("reforco", 0) + 1
             item["nome"] = item["nome"].split(" +")[0] + f" +{item['reforco']}"
@@ -94,7 +94,7 @@ class Servicos:
             if j.ouro < custo:
                 self.dizer("\"Sem ouro, sem cura. Ninguém aqui faz caridade mais.\"", "vermelho")
                 continue
-            self.perder_ouro(custo)
+            self.perder_ouro(custo, destino="curandeira")
             sobrevivencia.curar_ferimento(self, fid)
             self.dizer(f"Ela costura, cauteriza e enfaixa sem anestesia. Você grita. "
                        f"{sobrevivencia.FERIMENTOS[fid]['nome']}: tratado.", "verde")
@@ -121,7 +121,7 @@ class Servicos:
         if self.j.ouro < preco:
             self.dizer("Você não tem ouro suficiente.", "vermelho")
             return
-        self.perder_ouro(preco)
+        self.perder_ouro(preco, destino="templo")
         if cid is None:
             self.curar(falta)
             self.dizer("Um clérigo trata suas feridas com unguentos e orações.", "verde")
@@ -139,7 +139,7 @@ class Servicos:
         if self.j.ouro < preco:
             self.dizer("Sem ouro nem para uma caneca.", "vermelho")
             return
-        self.perder_ouro(preco)
+        self.perder_ouro(preco, destino="taverna")
         self.marcar(chave, self.flag(chave, 0) + 1)
         # O que se passa dentro da taverna só acontece ali, a quem senta para beber: às vezes a bebida vira briga, uma
         # queda de braço, ou o homem do canto (Morel) puxa conversa, em vez dos rumores. Enquanto ninguém conheceu

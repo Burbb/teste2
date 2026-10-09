@@ -225,7 +225,55 @@ async function opiniao(m) {
   await espera(instantaneo() ? 200 : ritmo(480));
 }
 
+/* Um item ganho fora da luta (o tônico do evento, a comida do alforje) não passa em branco: o ícone sai do chip e
+   voa até onde o item mora, o recurso do topo ou o espaço da bolsa no painel do herói, que pulsa quando ele chega
+   (como as moedas do ouro). O "+N" do topo espera o ícone chegar, em vez de aparecer antes dele. */
+const LAR_ITEM = { pocao_vida: "pocoes", bandagem: "bandagens", tocha: "tochas", comida: "provisoes", flechas: "flechas" };
+const ICONE_GANHO = { comida: "pernil", flechas: "aljava" };
+const itensChegando = new Set(), ganhosAdiados = {};
+function larDoItem(id) {
+  return LAR_ITEM[id] ? document.querySelector(`.recurso[data-rec="${LAR_ITEM[id]}"]`) : document.querySelector(`#heroi [data-bolsa="${id}"]`);
+}
+function itemVoa(chip, id) {
+  const chave = LAR_ITEM[id];
+  if (chave) itensChegando.add(chave);
+  const soltar = () => {
+    if (!chave) return;
+    itensChegando.delete(chave);
+    const d = ganhosAdiados[chave];
+    delete ganhosAdiados[chave];
+    const alvo = larDoItem(id);
+    if (alvo && d) flutuar(alvo, `+${d}`, "mais");
+  };
+  const inicio = performance.now();
+  const tentar = () => {
+    const para = larDoItem(id);
+    // O espaço de um item que a bolsa não tinha só nasce quando o estado chega, logo depois do chip.
+    if (!para || !para.offsetParent) { if (performance.now() - inicio < 900) return setTimeout(tentar, 60); return soltar(); }
+    const a = chip.getBoundingClientRect(), b = para.getBoundingClientRect();
+    if (b.bottom < 0 || b.top > innerHeight || !a.width) return soltar();
+    const v = el("span", "item-voando", spr(ICONE_GANHO[id] || Telas.ICONE_ITEM[id] || "saco", 2));
+    v.style.left = a.left + 10 + "px";
+    v.style.top = a.top + a.height / 2 + "px";
+    document.body.appendChild(v);
+    const dx = b.left + b.width / 2 - a.left - 10, dy = b.top + b.height / 2 - a.top - a.height / 2;
+    v.animate([{ transform: "translate(0, 0) scale(1)", opacity: 0 },
+      { offset: 0.2, transform: "translate(0, -14px) scale(1.3)", opacity: 1 },
+      { transform: `translate(${dx}px, ${dy}px) scale(0.8)`, opacity: 1 }],
+      { duration: 760, easing: "cubic-bezier(.4,0,.7,.6)", fill: "forwards" }).finished
+      .then(() => {
+        v.remove();
+        const alvo = larDoItem(id);  // o painel pode ter sido redesenhado no caminho
+        if (alvo) { alvo.classList.remove("ganhou"); void alvo.offsetWidth; alvo.classList.add("ganhou"); }
+        Som.tocar("tique");
+        soltar();
+      }).catch(() => { v.remove(); soltar(); });
+  };
+  tentar();
+}
+
 function iconeChip(m) {
+  if (m.item) return ICONE_GANHO[m.item] || Telas.ICONE_ITEM[m.item] || "saco";
   const t = m.texto;
   const porNome = [["Odette", "odete"], ["Morel", "morel"], ["Yara", "yara"]].find(([n]) => t.includes(n));
   if ((m.tipo === "aprova" || m.tipo === "desaprova") && porNome) return porNome[1];
@@ -300,6 +348,7 @@ async function efeito(m) {
   // Ouro ganho num evento (o baú aberto, a recompensa): o chip fica no texto e as moedas voam até o ouro do topo,
   // sem parar a cena (a festa de tela cheia fica para o que é raro: atributo para sempre, nível, Sigilo).
   if (m.tipo === "ouro" && !replay) Telas.moedasPara(chip, document.querySelector('.recurso[data-rec="ouro"]'));
+  if (m.item && !replay && !instantaneo()) itemVoa(chip, m.item);
   historico("h-chip", "▸ " + m.texto);
   if (replay) return;
   if (m.tipo === "ouro") Som.tocar("moeda");

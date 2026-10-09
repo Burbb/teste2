@@ -83,6 +83,7 @@ class Confronto:
                 e.hp = e.max_hp
                 e.xp = int(e.xp * 1.4)
                 e.nome = "Campeão " + e.nome if e.g == "m" else "Campeã " + e.nome
+                e.campeao = True
             self.dizer("Um bando de CAMPEÕES: eles se movem juntos, com um brilho azulado nos olhos.",
                        "azul+negrito")
         elif tipo == "unico":
@@ -140,7 +141,7 @@ class Confronto:
             if e.chave == "nemesis":
                 self.nemesis = None
                 self.dizer("Seu nêmesis finalmente tomba. Você sente um peso sair dos ombros.", "verde+negrito")
-                self.ganhar_ouro(30 + 10 * self.j.nivel)
+                self.ganhar_ouro(30 + 10 * self.j.nivel, fonte="lutas")
         # Contratos: conta a luta inteira de uma vez e anuncia uma vez só (ou progresso, ou concluído).
         for c in self.contratos:
             if c.get("concluido"):
@@ -180,6 +181,10 @@ class Confronto:
             self.contar_achado(tx.concordar("Você encontra algumas flechas entre os pertences {do inimigo|dos inimigos}.",
                                             derrotados), "verde")
             self.dar_flechas(self.rng.randint(2, 5))
-        if chefe or self.chance(0.07 + 0.2 * elites):
+        if chefe or self.chance(bal.SAQUE_EQUIP + bal.SAQUE_EQUIP_ELITE * elites):
             nivel = min(max(e.nivel for e in derrotados), self.j.nivel + 2)
-            self.oferecer_equip(gerar_equip(self.rng, self.j.classe, nivel, qualidade=1 if chefe else 0))
+            qualidade = 1 if chefe else 0 if elites else bal.SAQUE_QUALIDADE_COMUM
+            self.oferecer_equip(gerar_equip(self.rng, self.j.classe, nivel, qualidade=qualidade))
+        if chefe or any(e.unico for e in derrotados) or self.chance(bal.BAU_ELITE * elites if elites else bal.BAU_COMUM):
+            self.contar_achado("Entre os despojos, um baú pequeno, de ferro, trancado.", "amarelo")
+            self.dar("bau")

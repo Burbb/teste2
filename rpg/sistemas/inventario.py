@@ -128,7 +128,36 @@ class Inventario:
             return "Nada para enfaixar: sem sangramento, sem feridas abertas."
         if k == "unguento" and not sobrevivencia.tem(j, "infeccao"):
             return "Você não tem nenhuma infecção para tratar."
+        if k == "bau" and not self.lugar_seguro():
+            return "Aqui não: forçar a fechadura leva tempo e faz barulho. Abra numa vila ou à luz da fogueira."
         return None
+
+    def lugar_seguro(self):
+        """Onde se abre um baú: numa vila ou em volta da fogueira, nunca no meio da luta nem na estrada."""
+        return self.combate_ativo is None and (self.loc["tipo"] == "vila" or self.na_fogueira)
+
+    BAU_SUPRIMENTOS = ["pocao_vida", "pocao_vida", "tonico", "bandagem", "bandagem", "antidoto", "unguento",
+                       "tocha", "bomba_fumaca"]
+
+    def abrir_bau(self):
+        """O baú trancado: ouro, um ou dois suprimentos e, às vezes, um equipamento melhor que o das lutas comuns.
+        Na tela gráfica, tudo sai num quadro só (o do espólio); o equipamento vem logo depois, na janela dele."""
+        nv = self.j.nivel
+        self.dizer("À luz da fogueira, você força a fechadura. A tampa range e cede." if self.na_fogueira else
+                   "Num canto sossegado, você força a fechadura. A tampa range e cede.", "amarelo")
+        self.abrir_espolio(titulo="baú aberto")
+        ouro = self.ganhar_ouro(self.rng.randint(*bal.BAU_OURO) + bal.BAU_OURO_POR_NIVEL * nv, fonte="baus")
+        suprimentos = [self.sortear(self.BAU_SUPRIMENTOS) for _ in range(self.rng.randint(1, 2))]
+        for k in suprimentos:
+            self.dar(k)
+        equip = None
+        if self.chance(bal.BAU_EQUIP):
+            equip = itens.gerar_equip(self.rng, self.j.classe, nv, qualidade=1)
+        registrar(self, "bau", ouro_bau=ouro, suprimentos=suprimentos,
+                  equip=equip and {"item": equip["nome"], "raridade": equip.get("raridade", "comum")})
+        if equip:
+            self.oferecer_equip(equip)
+        self.fechar_espolio()
 
     def usar_no_animal(self, k):
         """Poção e bandagem também servem no animal do patrulheiro. A bandagem põe de pé quem não podia lutar."""
@@ -210,6 +239,8 @@ class Inventario:
                 self.dizer(f"Você troca as faixas velhas. (+{c} vida)", "verde")
             elif sangrando:
                 self.dizer(f"O sangramento para. (+{c} vida)", "verde")
+        elif k == "bau":
+            self.abrir_bau()
         elif k == "unguento":
             if not sobrevivencia.tem(j, "infeccao"):
                 j.consumiveis[k] += 1
@@ -241,7 +272,7 @@ class Inventario:
             if op is None:
                 return
             if op == "usar":
-                usaveis = [k for k in ("bandagem", "unguento", "pocao_vida", "tonico", "antidoto") if j.tem(k)]
+                usaveis = [k for k in self.USAVEIS_FORA if j.tem(k)]
                 k = self.menu("Usar:", [(CONSUMIVEIS[k]["nome"], k, {"item": k}) for k in usaveis] + [("Voltar", None)])
                 if k:
                     self.usar_consumivel(k)

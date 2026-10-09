@@ -147,7 +147,7 @@ class Contratos:
             self.contratos.remove(c)
             if not festa:
                 self.dizer(f"Recompensa de contrato: {c['desc']}", "verde+negrito")
-            self.ganhar_ouro(c["ouro"], exato=True, avisar=not festa)
+            self.ganhar_ouro(c["ouro"], exato=True, avisar=not festa, fonte="contratos")
             self.mudar_reputacao(self.REPUTACAO_CONTRATO, avisar=not festa)
             self.ganhar_xp(c["xp"], avisar=not festa)
 

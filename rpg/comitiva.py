@@ -427,7 +427,7 @@ def partir(g, m):
     g.ui.cena(f"{d['curto']} vai embora", None, "evento")
     g.narrar(d["partida"], "vermelho")
     if cid == "morel":
-        g.perder_ouro(min(g.j.ouro, 20 + 5 * g.j.nivel))
+        g.perder_ouro(min(g.j.ouro, 20 + 5 * g.j.nivel), destino="comitiva")
     if cid == "yara" and m.get("caminho") == "vazio":
         g.marcar("yara_com_ulook", True)
         g.narrar("Você tem um pressentimento ruim sobre onde ela foi parar.", "magenta")
@@ -478,7 +478,7 @@ def pagar_soldo(g):
     opcoes = [(f"Pagar {valor} ouro", "pagar") if g.j.ouro >= valor else None,
               ("Dizer que não há dinheiro agora", "dever")]
     if g.menu("O soldo de Morel", opcoes) == "pagar":
-        g.perder_ouro(valor)
+        g.perder_ouro(valor, destino="comitiva")
         mudar_aprovacao(g, "morel", 3, fala="Morel morde uma moeda, satisfeito. \"Patrão bom paga em dia.\"")
     else:
         mudar_aprovacao(g, "morel", -10, fala="\"Dívida com mercenário\", diz Morel, \"cobra juros de um jeito ou de outro.\"")
@@ -573,7 +573,16 @@ ATALHOS_FOGUEIRA = ("talentos", "personagem", "mapa", "diario", "bestiario", "sa
 
 def fogueira(g, intro=None):
     """O acampamento à noite: quem anda com você e quem espera na reserva, em volta do fogo.
-    Conversar, trocar quem vai junto amanhã e, por fim, dormir. Devolve True se houve conversa de história."""
+    Conversar, trocar quem vai junto amanhã e, por fim, dormir. Devolve True se houve conversa de história.
+    Em volta do fogo é um lugar seguro: dá para abrir os baús (g.na_fogueira)."""
+    g.na_fogueira = True
+    try:
+        return _fogueira(g, intro)
+    finally:
+        g.na_fogueira = False
+
+
+def _fogueira(g, intro):
     conversou = False
     ociosos = set()
     primeira = True

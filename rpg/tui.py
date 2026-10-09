@@ -237,7 +237,7 @@ class TextualUI(UI):
     def desenhar(self, linhas):
         self._enviar(texto_de(linhas))
 
-    def efeito(self, texto, tipo="info"):
+    def efeito(self, texto, tipo="info", item=None):
         self._enviar(Text(f" {texto} ", style=CHIPS.get(tipo, CHIPS["info"])), chip=True, tipo="chip")
 
     def cena(self, titulo, subtitulo=None, tipo="evento"):

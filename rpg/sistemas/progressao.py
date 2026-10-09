@@ -27,7 +27,8 @@ class Progressao:
         j.hp = min(j.max_hp, j.hp + max(0, j.max_hp - antes_hp))  # só ganha o que o máximo aumentou
         comitiva.atualizar_vida_maxima(self)
         j.rec = min(j.max_rec, j.rec + max(0, j.max_rec - antes_rec))
-        registrar(self, "nivel", stats=telemetria.instantaneo(j))
+        registrar(self, "nivel", stats=telemetria.instantaneo(j), fontes=telemetria.fontes_poder(self),
+                  poder_equip=telemetria.poder_equip(j))
         if j.companheiro:
             j.companheiro["max_hp"] += bal.ANIMAL_VIDA_SUBIR
             j.companheiro["atk"] += bal.ANIMAL_ATK_SUBIR

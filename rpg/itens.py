@@ -11,6 +11,8 @@ CONSUMIVEIS = {
     "tocha": {"nome": "Tocha", "preco": 4, "desc": "Luz para uma ação no escuro (noite, ruínas, cidadela)."},
     "bomba_fumaca": {"nome": "Bomba de Fumaça", "preco": 35, "desc": "Garante a fuga de um combate (exceto chefes)."},
     "pena_fenix": {"nome": "Pena de Fênix", "preco": 220, "desc": "Revive você com metade da vida se cair em combate."},
+    "bau": {"nome": "Baú Trancado", "preco": 60,
+            "desc": "Abra numa vila ou à luz da fogueira: ouro, suprimentos e, às vezes, um equipamento."},
 }
 
 # A pena não se usa: ela ergue você sozinha se cair em combate (a bolsa e o menu de itens dizem isto).

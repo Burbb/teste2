@@ -4,6 +4,7 @@ from .. import eventos
 from ..dados import CLIMAS, PESOS_CLIMA
 from .. import comitiva
 from .. import sobrevivencia
+from .. import telemetria
 from ..telemetria import registrar
 from .. import balanceamento as bal
 
@@ -65,7 +66,9 @@ class Tempo:
                                            "clima_desc": CLIMAS[self.clima]["desc"], "itens": relato})
         comitiva.depois_do_amanhecer(self, famintos)  # queixas e soldo: conversa, não relato
         registrar(self, "dia", descanso=descanso, provisoes=self.j.provisoes, fome=self.j.fome,
-                  ferimentos=len(self.j.ferimentos), local=self.loc["nome"])
+                  ferimentos=len(self.j.ferimentos), local=self.loc["nome"], poder_equip=telemetria.poder_equip(self.j),
+                  ouro_fontes=dict(self.estatisticas.get("ouro_fontes", {})),
+                  ouro_gastos=dict(self.estatisticas.get("ouro_gastos", {})))
 
     def descansar(self, fracao, mana=1.0, folego=1.0):
         """Descanso devolve pouca vida: ferimentos de verdade levam dias. Com fome, quase nada.
@@ -84,14 +87,32 @@ class Tempo:
             j.companheiro["hp"] = j.companheiro["max_hp"]
         comitiva.descansar(self, fracao)
 
+    # Onde se dorme quando o corpo desaba numa vila: (o lugar, para o quadro do amanhecer; a frase da cena).
+    POUSOS_EXAUSTO = [
+        ("Noite no feno do estábulo", "Você pede abrigo num estábulo e dorme sobre o feno, entre ratos."),
+        ("Noite no alpendre da capela", "O sineiro deixa você deitar no alpendre da capela, encostado na pedra fria."),
+        ("Noite no canto do celeiro", "Você se enrola num canto do celeiro, entre sacos de grão e cheiro de mofo."),
+    ]
+
     def exausto(self):
         self.ui.separador()
         if self.loc["tipo"] == "vila":
-            self.avisar_exausto("Você pede abrigo num estábulo e dorme sobre o feno, entre ratos.",
-                                "Exausto, você pede abrigo num estábulo e dorme sobre o feno, entre ratos.")
+            lugar, frase = self.sortear(self.POUSOS_EXAUSTO)
+            if self.ui.conquistas_na_tela:  # a faixa sombria; o texto fica com a cena logo abaixo
+                self.ui.celebrar("exausto", {"texto": lugar})
+            # Como a taverna: uma cena curta diz por que (a noite passou sem você parar), onde você dormiu e o que
+            # isso custa; o quadro do amanhecer abre com o lugar.
+            self.ui.cena("Exausto", self.contexto_cena(), "evento")
+            self.dizer("A noite passou e você não parou para dormir. As pernas decidem por você: não dá para "
+                       "procurar a estalagem.", "cinza")
+            self.dizer(frase, "cinza")
+            self.ui.efeito(f"Sono ruim: só {bal.EXAUSTO_VIDA:.0%} da vida volta (a estalagem devolve "
+                           f"{bal.TAVERNA_VIDA:.0%})", "info")
             self.abrir_relato()
+            self.relatar(None, None, "aviso", "lua", lugar)
             self.descansar(bal.EXAUSTO_VIDA, mana=bal.EXAUSTO_RECURSO, folego=bal.EXAUSTO_RECURSO)
             self.novo_dia(descanso=1)
+            self.pausar()
         else:
             self.avisar_exausto("Não dá para seguir: é preciso acampar.",
                                 "Você está exausto demais para continuar. É preciso acampar.")
@@ -114,7 +135,8 @@ class Tempo:
             intro = "Você segue a fumaça até o seu acampamento. A fogueira de quem esperou por você ainda arde."
         else:
             intro = "Você junta gravetos, acende uma fogueira fraca e se enrola na capa. O frio entra mesmo assim."
-        if comitiva.membros(self) or comitiva.reserva(self) or self.ui.fogueira_sozinho:
+        # Sozinho, no texto, a fogueira só vira cena quando há o que fazer nela: um baú para abrir.
+        if comitiva.membros(self) or comitiva.reserva(self) or self.ui.fogueira_sozinho or self.j.tem("bau"):
             conversou = comitiva.fogueira(self, intro)
             self.ui.cena("Acampamento", self.contexto_cena(), "evento")
         else:
@@ -140,7 +162,7 @@ class Tempo:
             self.dizer("Sem ouro suficiente. O taverneiro aponta para a porta.", "vermelho")
             return
         self.ui.cena("A taverna", self.contexto_cena(), "evento")
-        self.perder_ouro(preco)
+        self.perder_ouro(preco, destino="taverna")
         self.dizer("Uma cama de palha sem pulgas demais e um ensopado ralo para todos. É o melhor que este mundo "
                    "oferece.",
                    "verde")

@@ -168,6 +168,12 @@ const Som = (() => {
       tom(t, 330, 0.06, 0.35, "sawtooth", 233); tom(t + 0.07, 311, 0.05, 0.45, "square", 196);
       sopro(t, 0.4, 900, 250, 0.03, 1.2, "lowpass");
     },
+    bau() {  // a fechadura cede e a tampa range: dois estalos de metal e um rangido que sobe devagar
+      const t = ctx.currentTime;
+      estalo(t, 2400, 0.3, 0.04); estalo(t + 0.09, 1700, 0.25, 0.05);
+      tom(t + 0.18, 160, 0.09, 0.55, "sawtooth", 260); tom(t + 0.2, 171, 0.06, 0.5, "sawtooth", 285);
+      tom(t + 0.7, 90, 0.18, 0.25, "sine", 60);
+    },
     exausto() {  // um suspiro longo e grave: o corpo que não vai mais
       const t = ctx.currentTime;
       sopro(t, 1.1, 700, 180, 0.07, 0.7, "lowpass");

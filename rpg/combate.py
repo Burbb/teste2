@@ -1045,7 +1045,7 @@ class Combate:
             # isso (e o que o evento ainda der logo depois) vai para um quadro só, antes da próxima pergunta.
             g.abrir_espolio()
             xp = int(comitiva.parte_do_xp(g) * sum(e.xp * bal.fator_xp(e.nivel - j.nivel) for e in derrotados))
-            g.ganhar_ouro(ouro)
+            g.ganhar_ouro(ouro, fonte="lutas")
             g.registrar_abates(derrotados)
             g.ganhar_xp(xp)
             g.saque_de_combate(derrotados)

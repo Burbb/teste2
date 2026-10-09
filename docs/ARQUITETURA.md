@@ -19,7 +19,9 @@ Quando o jeito de mostrar muda de uma interface para outra, o motor não pergunt
 que a interface **sabe fazer** (atributos em `UI`: `hud`, `letras_nos_alvos`, `analisar_no_menu`,
 `numerar_destinos`, `fogueira_sozinho`, `bolsa_clicavel`, `conversa_no_painel`, `conquistas_na_tela`,
 `surpresa_na_tela`) ou entrega o conteúdo e deixa ela mostrar
-(`desenhar_mapa`, `mostrar_talentos`, `talento_aprendido`, `reacao_animal`, `boas_vindas`). A classe `UI` faz do
+(`desenhar_mapa`, `mostrar_talentos`, `talento_aprendido`, `reacao_animal`, `boas_vindas`). `efeito(texto, tipo,
+item=)` leva o id do que se ganhou (a tela manda o ícone até onde ele mora) e `continuar()` é um Continuar de
+verdade, onde a pausa normal viraria a página sozinha (o fim do prólogo). A classe `UI` faz do
 jeito do texto; o mixin `InterfaceGrafica` faz do jeito gráfico e é usado pela `WebUI` e pelo robô do gabarito
 quando imita a tela web. Uma interface nova (celular, outra tela) escolhe as capacidades, sem tocar no motor.
 
@@ -48,6 +50,11 @@ sorteia entre os que valem para o contexto.
 - O espólio da vitória (ouro, XP, contratos que andaram, o que se acha nos corpos, e o que o evento ainda der logo
   depois) é juntado pelo motor (`Recompensas.abrir_espolio`/`fechar_espolio`): na tela gráfica vira um quadro só,
   mostrado antes da próxima pergunta ao jogador ou no fim do evento; no texto, cada ganho é dito na hora.
+  O mesmo quadro abre um baú (`abrir_espolio(titulo="baú aberto")`).
+- Saque (`Confronto.saque_de_combate`, números `SAQUE_*` e `BAU_*` em `balanceamento.py`): luta comum dá
+  equipamento mais vezes, mas quase sempre comum; o raro vem de elite, guardião e baú. O Baú Trancado é um
+  consumível da bolsa que só abre em lugar seguro (`Inventario.lugar_seguro`: numa vila ou com `na_fogueira`, que
+  `comitiva.fogueira` liga enquanto a cena da fogueira está aberta).
 - Estados (veneno, queimadura, guarda, provocando...) ficam em `efeitos` de cada combatente. O **catálogo**
   `rpg/estados.py` (Etapa C) declara, para cada um: nome, ícone e cor na tela, se é um mal, dano por turno,
   perda de turno, imunidade, resistência, camadas e como o Grimório o descreve. `aplicar()` e
@@ -161,6 +168,16 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   (`tests/test_estilo_pixel.py` trava isso, arquivo por arquivo). Títulos em Alagard (`fontes/alagard-pt.ttf`, com os
   acentos desenhados por `ferramentas/acentuar_alagard.py`), em múltiplos de 16 px de arte; interface, números e prosa
   em Alegreya ("Fonte: pixel" troca só a prosa, para Pixelify Sans).
+
+## Telemetria
+
+`rpg/telemetria.py` registra a partida em `<saves>/runs/` (um `.jsonl` completo e um `.md` legível; reler um registro:
+`python -m rpg.telemetria arquivo.jsonl`). A versão 3 do registro mede a escala de poder do meio e do fim de jogo:
+de onde vem cada atributo a cada nível (base, equipamento, talentos, eventos) e a força do equipamento; em cada
+luta, o tipo de encontro (comum, elite, campeões, único, chefe), se era noite, a vida mínima e o dano por
+habilidade; o ouro por fonte (`ganhar_ouro(fonte=)`) e por destino (`perder_ouro(destino=)`); baús e atributos
+ganhos em eventos. O resumo traz as tabelas "De onde vem o poder", "Ritmo das lutas" (dano por turno dos dois
+lados, turnos até cair) e "Encontros por tipo".
 
 ## Rede de segurança
 

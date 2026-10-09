@@ -65,6 +65,8 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         self.ofertas = {}
         self.lojas = {}
         self.recompra = []  # o que você vendeu nesta visita ao mercado: dá para desfazer pelo mesmo preço (não vai no save)
+        self.na_fogueira = False  # em volta do fogo, à noite: um dos lugares seguros para abrir um baú
+        self.titulo_espolio = None
         self.nemesis = None
         self.aliados_finais = []
         self.forcados = []
@@ -225,7 +227,9 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
                         f"antes de você.", "cinza")
         self.dizer("Dica: compre provisões e tochas antes de sair, trate feridas abertas com bandagens e não vá "
                    "aonde o mapa diz que os inimigos são fortes demais. Suas escolhas voltarão para você.", "cinza")
-        self.pausar()
+        # O prólogo termina num Continuar: tocado, a página limpa e a vila aparece sozinha (antes, as ações da vila
+        # vinham embaixo da história, na mesma página).
+        self.ui.continuar()
 
     # ================================================================ ciclo principal
     def rodar(self):
@@ -251,7 +255,7 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         self.narrar(f"Você acorda numa cama de palha em {vila['nome']}, com o corpo enfaixado. {p['um'].capitalize()} "
                     f"{p['prof']} {p['traco']} te encontrou desacordado na estrada e te arrastou até "
                     f"aqui. Dois dias se passaram.", "cinza")
-        perda = self.perder_ouro(j.ouro * 0.3)
+        perda = self.perder_ouro(j.ouro * 0.3, destino="resgate")
         if perda:
             self.dizer("Parte do seu ouro sumiu enquanto você estava desacordado.", "cinza")
         self.mundo["atual"] = vila["id"]
@@ -325,7 +329,7 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
             ("Sair do jogo", "sair"),
         ] + self.opcoes_bolsa() + self.opcoes_conversa()
 
-    USAVEIS_FORA = ("bandagem", "unguento", "pocao_vida", "tonico", "antidoto")
+    USAVEIS_FORA = ("bandagem", "unguento", "pocao_vida", "tonico", "antidoto", "bau")
 
     def opcoes_bolsa(self):
         """Na tela gráfica, a bolsa do painel lateral é clicável: cada consumível vira uma opção escondida."""
@@ -334,7 +338,7 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         opcoes = []
         for k in self.USAVEIS_FORA:
             if self.j.tem(k):
-                opcoes.append((f"Usar {CONSUMIVEIS[k]['nome']}", ("usar", k), {"usar": k}))
+                opcoes.append((f"{'Abrir' if k == 'bau' else 'Usar'} {CONSUMIVEIS[k]['nome']}", ("usar", k), {"usar": k}))
                 if k in ("bandagem", "pocao_vida"):
                     opcoes += [(f"Usar {CONSUMIVEIS[k]['nome']} em {comitiva.nome(m['id'])}", ("usar_em", k, m["id"]),
                                 {"usar": k, "em": m["id"]}) for m in comitiva.membros(self)]
