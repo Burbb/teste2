@@ -1440,6 +1440,9 @@ const SPRITES_GRADES = (() => {
   S.retrato_a = quadro(["aaa", "a..", "a.."], "J..");
   // Divisória: um fio de bronze com sombra, e uma ponta de ouro em cada extremo.
   S.fio = [".", "J", "k"];
+  // O bico do balão de nome da vila: um V que se abre na caixa (a linha de cima cobre a borda de baixo dela).
+  const BICO = ["#kkkkk#", ".#kkk#.", "..#k#..", "...#..."];
+  for (const cor of "ja") S["bico_" + cor] = trocar(BICO, { "#": cor });
   S.ponta = [".a.", "aYa", ".a."];
   // O ornamento sob o título da cena: um losango vazado de ouro entre dois fios de bronze (os fios vêm do CSS).
   S.ornamento = [

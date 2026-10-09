@@ -251,6 +251,19 @@ def modificadores(g):
     return m
 
 
+def predios_fechados(g):
+    """Na vila, os prédios sem serviço agora (o templo com a vida cheia, a curandeira sem ferimento para tratar) e o
+    que eles dizem a quem chega: a tela gráfica deixa o prédio clicável mesmo assim."""
+    if g.loc["tipo"] != "vila":
+        return {}
+    fechados = {}
+    if g.j.hp >= g.j.max_hp:
+        fechados["templo"] = "O templo está em silêncio. Você não precisa de cuidados agora."
+    if not g.j.ferimentos:
+        fechados["curandeiro"] = "A curandeira ergue os olhos e volta às ervas. \"Nada para tratar em você.\""
+    return fechados
+
+
 def estado(g):
     if not (g and g.j and g.mundo):
         return None
@@ -262,7 +275,7 @@ def estado(g):
                   "escuro": bool(g.sem_luz), "modificadores": modificadores(g)},
         "local": {"id": loc["id"], "nome": loc["nome"], "tipo": loc["tipo"], "bioma": loc["bioma"],
                   "bioma_nome": BIOMAS[loc["bioma"]]["nome"], "descricao": mapa.descricao(g, loc),
-                  "nivel": g.nivel_local()},
+                  "nivel": g.nivel_local(), "predios_fechados": predios_fechados(g)},
         "mapa": mapa_conhecido(g),
         "combate": combate(g),
         "estados": para_tela(),  # ícone, cor e dica de cada estado (catálogo em estados.py)

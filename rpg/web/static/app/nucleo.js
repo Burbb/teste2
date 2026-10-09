@@ -45,6 +45,7 @@ let velocidade = ler("cdf-velocidade") || "normal";
 const fila = [];
 let processando = false, pular = false, replay = false;
 let estado = null, pergunta = null, pendente = null;
+let ultimaResposta = 0;  // quando a última escolha saiu: a leitura do que veio depois começa aí
 let capitular = false, seguir = true;
 let ultimosRecursos = {};
 
@@ -77,6 +78,8 @@ function conectar() {
 async function responder(id, valor) {
   if (!pergunta || pergunta.id !== id) return;
   pergunta = null;
+  ultimaResposta = performance.now();
+  presoNoTopo = false;  // o que a escolha trouxer aparece embaixo, à vista
   fecharConfirmacao();     // a janela de confirmação some com a resposta (botão, tecla, Esc ou clique fora)
   Telas.fecharMenuItem();  // um menu de figura aberto não sobrevive à escolha (inclusive Voltar)
   Telas.esconderDica();  // nem a dica de um item que estava sob o mouse

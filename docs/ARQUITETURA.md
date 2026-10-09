@@ -111,9 +111,14 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
 - `app/nucleo.js` conexão e fila de mensagens · `app/pagina.js` texto e cenas · `app/escolhas.js` menus,
   doca de atalhos, roda de ações da luta · `app/paineis.js` ficha e mapa laterais · `app/controles.js` teclado
 - `app/vila.js` a vila como lugar: os serviços moram nos prédios da paisagem. O motor marca cada opção da vila com
-  `predio` (e `curto`, `tempo`); `vista.js` desenha os prédios e registra a área de cada um (`Vista.predios()`), acende
-  o que está sob o mouse (`destacar`) e aproxima a câmera do escolhido (`focar`); `vila.js` põe os botões e as
-  plaquinhas por cima, toca o som do prédio e mostra no texto só as opções dele. O que não é de prédio fica em texto.
+  `predio` (e `curto`, `tempo`) e diz, no estado (`local.predios_fechados`), por que um prédio está sem serviço
+  agora; `vista.js` desenha os prédios e registra a área de cada um e o ponto do balão (`Vista.predios()`), acende as
+  luzes do que está sob o mouse (`destacar`) e leva a câmera ao escolhido (`focar`: troca de enquadramento num
+  pontilhado, sempre em pixel inteiro); `vila.js` põe os botões e os balões de nome por cima, toca o som do prédio e
+  mostra no texto só as opções dele (ou o porquê de estar fechado). O que não é de prédio fica em texto.
+- O fim de um evento ou de uma luta não pede Continuar: a ponte manda a cena do lugar com `virar`, a tela deixa o
+  que aconteceu o tempo de ler (um fio se enche; clique ou tecla adianta) e vira para a página limpa do lugar, no
+  topo. O que aconteceu fica no histórico (H).
 - `telas.js` telas desenhadas (inventário, mercado, talentos, Grimório, fogueira, mural...)
 - `batalha.js` o palco da luta · `realce.js` cores dos termos de jogo · `sprites*.js`, `vista.js`, `mapa.js`, `som.js`
 - `sensacao.js` o peso dos momentos (parada no impacto, tremor, câmera lenta no golpe final...): as telas dizem o
@@ -133,11 +138,12 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   (`achado`: o cartão e os botões numa janela própria, fora do log)
 - `css/01..13-*.css` por componente. A identidade é pixel art em paleta indexada (a dos sprites, publicada por
   `Sprites.publicar()` como `--p-<letra>`): toda caixa é um dos materiais de `01-base.css` (`m-painel`, `m-janela`,
-  `m-placa`, `m-nicho`, `m-sulco`, `m-etiqueta`), com um anel só, preto, de 1 texel (`--P`) e canto chanfrado.
-  Pedra, pergaminho, fuligem e luz são ladrilhos pontilhados gerados em `sprites.js`; nada de gradiente liso,
-  desfoque, canto redondo ou cor translúcida (`tests/test_estilo_pixel.py` trava isso, arquivo por arquivo).
-  Títulos em Jacquard 24 (com os algarismos da Jersey), números e rótulos curtos em Jersey 15, interface em
-  Pixelify Sans, prosa em Alegreya ("Fonte: pixel" troca só a prosa).
+  `m-placa`, `m-nicho`, `m-sulco`, `m-etiqueta`): os painéis num quadro de bronze com rebites (`quadro_j`), o resto
+  com um anel só, de 1 texel (`--P`) e canto chanfrado. Pedra, pergaminho, fuligem e luz são ladrilhos pontilhados
+  gerados em `sprites.js`; nada de gradiente liso, desfoque, canto redondo ou cor translúcida
+  (`tests/test_estilo_pixel.py` trava isso, arquivo por arquivo). Títulos em Alagard (`fontes/alagard-pt.ttf`, com os
+  acentos desenhados por `ferramentas/acentuar_alagard.py`), em múltiplos de 16 px de arte; interface, números e prosa
+  em Alegreya ("Fonte: pixel" troca só a prosa, para Pixelify Sans).
 
 ## Rede de segurança
 

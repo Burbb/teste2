@@ -68,7 +68,7 @@ class WebUI(InterfaceGrafica, UI):
         self.escolhas_na_cena = 0
         self.novo_desde_escolha = False
         # Um "pausar" do motor só vira Continuar se depois vier mais história, uma luta ou outra cena. Se o que vem é
-        # o menu do lugar (o fim de um evento), não: o texto fica na página e o lugar aparece embaixo, com as ações.
+        # o menu do lugar (o fim de um evento), não: a tela dá o tempo de ler e vira a página para o lugar.
         self.pausa_pendente = False
         self.tipo_cena = None
         self.ultimo_estado = None
@@ -195,8 +195,9 @@ class WebUI(InterfaceGrafica, UI):
             if (self.novo_desde_escolha or self.pausa_pendente) and not mesma_tela:
                 self.pausa_pendente = False
                 if tipo == "local":
-                    # O fim de um evento cai direto no lugar: sem Continuar, o texto do evento fica na página.
-                    self._enviar("nova_cena", titulo=titulo, subtitulo=subtitulo, tipo=tipo, anexar=True)
+                    # O fim de um evento (ou de uma luta) cai direto no lugar, sem Continuar: a tela deixa o texto o
+                    # tempo de ler e vira a página sozinha.
+                    self._enviar("nova_cena", titulo=titulo, subtitulo=subtitulo, tipo=tipo, virar=True)
                     self.ultimo_titulo = titulo
                     self.escolhas_na_cena = 0
                     self.novo_desde_escolha = False

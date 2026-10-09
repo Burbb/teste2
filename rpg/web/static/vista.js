@@ -1,6 +1,6 @@
 /* Vista: uma paisagem em pixel art (320x72) gerada para cada lugar, com céu do período do dia, clima, silhuetas do
    bioma e partículas (chuva, neve, névoa, fumaça, estrelas, corvos). Minimalista e melancólica: silhuetas em poucas
-   camadas, o céu em faixas pontilhadas (Bayer), o sol morno com um halo só e fiapos de nuvem atravessando. */
+   camadas, o céu em faixas pontilhadas (Bayer), o sol morno com um halo só (a lua, sem halo) e fiapos de nuvem. */
 "use strict";
 
 const Vista = (() => {
@@ -18,9 +18,12 @@ const Vista = (() => {
   let canvas, ctx, fundo, frente, chave = "", estado = null, quadro = 0, timer = null;
   let nuvens = [], particulas = [], fumacas = [], estrelas = [], aves = [], relampago = 0, corDaNevoa = "#c8ccd4";
   const LUZ_JANELA = "#e8a050";
-  // A vila como lugar: os prédios clicáveis (área, luzes, contorno aceso), o que está sob o mouse e a câmera (foco).
-  let predios = [], destaque = null, quadroBuf = null, luzAro = "#ffd890";
-  const camera = { x: 0, y: 0, s: 1, de: null, para: null, inicio: 0, ms: 450 };
+  // A vila como lugar: os prédios clicáveis (área, luzes, ponto do balão), o que está sob o mouse e a câmera (foco).
+  // A câmera não desliza (escala quebrada faz o pixel tremer): ela troca de enquadramento num pontilhado que se fecha,
+  // do enquadramento de antes (`de`) para o novo, sempre em pixel inteiro.
+  let predios = [], destaque = null, quadroBuf = null, mascara = null;
+  const camera = { x: 0, y: 0, s: 1, de: null, inicio: 0, ms: 380 };
+  const tramas = [];
 
   function rng(semente) {
     let s = (semente * 9301 + 49297) % 233280 || 1;
@@ -48,13 +51,14 @@ const Vista = (() => {
       const a = bandas[i], b = bandas[Math.min(i + 1, bandas.length - 1)];
       for (let x = 0; x < W; x++) px(c, x, y, 1, 1, pont(x, y, resto) ? b : a);
     }
-    // O sol (ou a lua): um disco morno, a metade de baixo um tom abaixo, e um halo de um anel só, pontilhado.
+    // O sol (ou a lua): um disco morno, a metade de baixo um tom abaixo; o sol tem um halo de um anel só, pontilhado,
+    // e a lua em quarto fica limpa no escuro.
     if (["limpo", "neve"].includes(clima) || p === 3) {
       const [sx, sy, raio, cor, baixo] = ASTROS[p], halo = mix(bandas[bandas.length - 2], cor, 0.45);
       for (let y = sy - raio - 6; y <= sy + raio + 6; y++) for (let x = sx - raio - 6; x <= sx + raio + 6; x++) {
         const d = Math.hypot(x - sx, y - sy);
         if (d <= raio) px(c, x, y, 1, 1, y > sy + raio / 3 && pont(x, y, 8) ? baixo : cor);
-        else if (d < raio + 5 && pont(x, y, Math.round(9 - (d - raio) * 1.6))) px(c, x, y, 1, 1, halo);
+        else if (p !== 3 && d < raio + 5 && pont(x, y, Math.round(9 - (d - raio) * 1.6))) px(c, x, y, 1, 1, halo);
       }
       if (p === 3) for (let y = -raio; y <= raio; y++) for (let x = -raio; x <= raio; x++) {  // a lua em quarto
         if ((x - 3) * (x - 3) + (y + 1) * (y + 1) <= raio * raio * 0.8) px(c, sx + x, sy + y, 1, 1, bandas[0]);
@@ -102,6 +106,12 @@ const Vista = (() => {
       const yy = y - h + 2 + i * 4, dir = (i + (lado > 0 ? 0 : 1)) % 2 ? 1 : -1, comp = Math.max(2, 5 - i + ((x + i) % 2));
       for (let k = 0; k < comp; k++) px(c, x + (dir > 0 ? 1 + k : -1 - k), yy - Math.floor(k / 2), 1, 1, cor);
     }
+  }
+  /** Casinha do fundo da vila: paredes, telhado em ponta e, à noite, às vezes uma janelinha de um pixel. */
+  function casinha(c, x, base, w, h, cor, telha, luz) {
+    px(c, x, base - h, w, h, cor);
+    for (let i = 0; i < Math.ceil(w / 2); i++) px(c, x - 1 + i, base - h - 1 - i, w + 2 - i * 2, 1, telha);
+    if (luz) px(c, x + Math.floor(w / 2) - 1, base - h + 2, 1, 1, luz);
   }
   function casa(c, x, base, w, h, alto, cor, telha, janela) {
     px(c, x, base - h, w, h, cor);
@@ -215,15 +225,23 @@ const Vista = (() => {
     }
   }
 
-  /** A vila: cada serviço tem o seu prédio (a forja, as barracas do mercado, o mural da praça, a taverna, o templo, o
-   *  curandeiro e a estrada com a placa), entre casas comuns, a forca e a cerca. Cada prédio se registra em `predios`:
-   *  a área de clique, as luzes que acendem no hover e o que se mexe nele. */
+  /** A vila: cada serviço tem o seu prédio (a forja, as barracas do mercado, o mural da praça, a taverna, o templo, a
+   *  curandeira e a estrada com a placa), entre casas comuns, a forca e a cerca; atrás, duas fileiras de casas dão o
+   *  fundo. Cada prédio se registra em `predios`: a área de clique, o ponto onde o balão do nome aponta (`balao`), as
+   *  luzes que acendem no hover e o que se mexe nele. */
   function vila(c, r, { longe, meio, perto, chao, acesa, horizonte }) {
     silhueta(c, perfil(r, 42, 4, 0.5), longe);
     const telha = mix(meio, "#5a1a10", 0.35), escuro = "#0d0b0a", JANELA = acesa ? LUZ_JANELA : mix(meio, "#7a5a30", 0.5);
     const madeira = mix(meio, "#7a5a3a", 0.4), papel = mix(meio, "#c8b898", 0.45);
-    const fundoCasa = mix(longe, meio, 0.45);
-    [[204, 58, 12, 8], [246, 58, 10, 7], [262, 58, 9, 6]].forEach(([x, b, w, h]) => casa(c, x, b, w, h, false, fundoCasa, mix(fundoCasa, "#5a1a10", 0.3), null));
+    const fundoCasa = mix(longe, meio, 0.45), casaLonge = mix(longe, meio, 0.18);
+    // a fileira de longe, no morro: telhados miúdos aparecendo entre os prédios e por cima deles
+    const luzLonge = acesa ? mix(LUZ_JANELA, longe, 0.45) : null;
+    [[-2, 51, 8, 5], [33, 52, 7, 4], [50, 49, 9, 5], [66, 50, 7, 4], [75, 52, 6, 4], [99, 51, 7, 5], [140, 49, 8, 4],
+      [177, 52, 6, 4], [193, 50, 9, 5], [212, 51, 7, 4], [224, 49, 10, 6], [238, 51, 7, 4], [255, 50, 8, 5],
+      [270, 52, 6, 4], [298, 50, 9, 5], [312, 52, 8, 4]]
+      .forEach(([x, b, w, h], i) => casinha(c, x, b, w, h, casaLonge, mix(casaLonge, "#5a1a10", 0.2), i % 3 === 1 ? luzLonge : null));
+    [[204, 58, 12, 8], [218, 58, 9, 6], [229, 58, 12, 9], [246, 58, 10, 7], [262, 58, 9, 6]]
+      .forEach(([x, b, w, h], i) => casa(c, x, b, w, h, i === 2, fundoCasa, mix(fundoCasa, "#5a1a10", 0.3), null));
     for (let x = 0; x < W; x += 5) px(c, x, 55, 1, 4, perto);
     px(c, 0, 56, W, 1, perto);
     const reg = (id, nome, area, extra = {}) => predios.push({ id, nome, ...area, luzes: [], ...extra });
@@ -233,7 +251,7 @@ const Vista = (() => {
     px(c, 23, 35, 6, 1, meio); px(c, 24, 36, 4, 11, meio);
     px(c, 9, 51, 5, 7, "#5a1e0c"); px(c, 10, 52, 3, 6, "#a8401a");
     px(c, 31, 54, 7, 1, perto); px(c, 32, 55, 5, 1, perto); px(c, 33, 56, 3, 2, perto);
-    reg("ferreiro", "Ferreiro", { x: 4, y: 33, w: 36, h: 25 }, { luzes: [[10, 52, 3, 6, "#ffa040"]], fagulha: [25, 34] });
+    reg("ferreiro", "Ferreiro", { x: 4, y: 33, w: 36, h: 25 }, { balao: [16, 40], luzes: [[10, 52, 3, 6, "#ffa040"]], fagulha: [25, 34] });
     // as barracas do mercado: toldo listrado, balcão e mercadoria
     const listra = [mix(meio, "#7a2a22", 0.5), mix(meio, "#9a7a4a", 0.5)];
     [44, 58].forEach((x) => {
@@ -241,12 +259,12 @@ const Vista = (() => {
       for (let k = 0; k < 13; k++) { px(c, x - 1 + k, 44, 1, 3, listra[Math.floor(k / 2) % 2]); if (k % 2 === 0) px(c, x - 1 + k, 47, 1, 1, listra[Math.floor(k / 2) % 2]); }
       px(c, x, 52, 12, 6, meio); px(c, x + 2, 50, 3, 2, perto); px(c, x + 7, 50, 2, 2, perto);
     });
-    reg("mercado", "Mercado", { x: 42, y: 41, w: 31, h: 17 }, { luzes: [[49, 51, 1, 1, "#ffd860"], [63, 51, 1, 1, "#ffd860"]] });
+    reg("mercado", "Mercado", { x: 42, y: 41, w: 31, h: 17 }, { balao: [57, 43], luzes: [[49, 51, 1, 1, "#ffd860"], [63, 51, 1, 1, "#ffd860"]] });
     // o mural de avisos, na praça
     px(c, 84, 46, 1, 12, meio); px(c, 95, 46, 1, 12, meio);
     px(c, 82, 43, 16, 1, telha); px(c, 83, 44, 14, 8, mix(meio, "#5a4030", 0.3));
     [[85, 45, 3, 3], [89, 46, 2, 3], [92, 45, 3, 4]].forEach(([x, y, w, h]) => px(c, x, y, w, h, papel));
-    reg("mural", "Mural", { x: 80, y: 40, w: 20, h: 18 }, { luzes: [[85, 45, 3, 3, "#e8dcc0"], [89, 46, 2, 3, "#e8dcc0"], [92, 45, 3, 4, "#e8dcc0"]] });
+    reg("mural", "Mural", { x: 80, y: 40, w: 20, h: 18 }, { balao: [90, 42], luzes: [[85, 45, 3, 3, "#e8dcc0"], [89, 46, 2, 3, "#e8dcc0"], [92, 45, 3, 4, "#e8dcc0"]] });
     // a forca da praça
     px(c, 104, 40, 2, 18, perto); px(c, 104, 40, 12, 2, perto);
     px(c, 113, 42, 1, 3, mix(perto, "#8a7a6a", 0.4)); px(c, 112, 45, 3, 5, perto); px(c, 112, 50, 1, 3, perto); px(c, 114, 50, 1, 3, perto);
@@ -259,7 +277,7 @@ const Vista = (() => {
     px(c, 133, 51, 4, 7, escuro);
     px(c, 115, 44, 6, 1, perto); px(c, 115, 45, 4, 3, madeira); px(c, 116, 46, 2, 1, perto);
     fumacas.push({ x: 137, y: 27, t: r() * 20 });
-    reg("taverna", "Taverna", { x: 112, y: 29, w: 34, h: 29 }, { luzes: janelasTaverna.map((j) => [...j, "#ffd070"]), placa: [115, 45] });
+    reg("taverna", "Taverna", { x: 112, y: 29, w: 34, h: 29 }, { balao: [127, 32], luzes: janelasTaverna.map((j) => [...j, "#ffd070"]) });
     // o templo: a igreja com o sino no campanário
     px(c, 150, 40, 24, 18, meio);
     for (let i = 0; i < 9; i++) px(c, 149 + i, 39 - i, 26 - i * 2, 1, telha);
@@ -269,13 +287,13 @@ const Vista = (() => {
     px(c, 161, 51, 4, 7, escuro);
     const vitrais = [[156, 45, 2, 4], [166, 45, 2, 4]];
     vitrais.forEach(([x, y, w, h]) => px(c, x, y, w, h, JANELA));
-    reg("templo", "Templo", { x: 148, y: 2, w: 28, h: 56 }, { luzes: vitrais.map((j) => [...j, "#ffd070"]), sino: [169, 24] });
-    // a cabana do curandeiro: teto de palha, ervas penduradas e uma janela esverdeada
+    reg("templo", "Templo", { x: 148, y: 2, w: 28, h: 56 }, { balao: [156, 30], luzes: vitrais.map((j) => [...j, "#ffd070"]), sino: [169, 24] });
+    // a cabana da curandeira: teto de palha, ervas penduradas e uma janela esverdeada
     px(c, 184, 50, 14, 8, meio);
     [[183, 49, 16], [184, 48, 14], [186, 47, 10], [188, 46, 6]].forEach(([x, y, w]) => px(c, x, y, w, 1, telha));
     [185, 189, 195].forEach((x) => px(c, x, 50, 1, 2, mix(meio, "#4a7a3a", 0.5)));
     px(c, 191, 52, 2, 2, acesa ? "#a8d080" : mix(meio, "#4a6a3a", 0.5)); px(c, 186, 53, 3, 5, escuro);
-    reg("curandeiro", "Curandeiro", { x: 182, y: 44, w: 18, h: 14 }, { luzes: [[191, 52, 2, 2, "#c8f0a0"]] });
+    reg("curandeiro", "Curandeira", { x: 182, y: 44, w: 18, h: 14 }, { balao: [191, 45], luzes: [[191, 52, 2, 2, "#c8f0a0"]] });
     // a estrada saindo da vila pela direita, a placa de encruzilhada com a lanterna e um marco de pedra
     const terra = mix(chao, "#6a5a48", 0.3);
     for (let y = 58; y < H; y++) { const x0 = Math.round(292 + (71 - y) * 1.3); px(c, x0, y, W - x0, 1, terra); }
@@ -284,7 +302,7 @@ const Vista = (() => {
     px(c, 286, 47, 10, 2, madeira); px(c, 296, 48, 1, 1, madeira);
     px(c, 286, 41, 4, 1, perto); px(c, 289, 42, 2, 3, perto); px(c, 289, 43, 2, 1, acesa ? LUZ_JANELA : mix(perto, "#5a4028", 0.6));
     px(c, 306, 54, 4, 4, meio); px(c, 307, 53, 2, 1, meio);
-    reg("estrada", "Estrada", { x: 272, y: 38, w: 48, h: 20 }, { luzes: [[289, 43, 2, 1, "#ffd070"]], lanterna: [289, 43] });
+    reg("estrada", "Estrada", { x: 272, y: 38, w: 48, h: 20 }, { balao: [285, 40], luzes: [[289, 43, 2, 1, "#ffd070"]], lanterna: [289, 43] });
     px(c, 0, 58, 292, H - 58, chao);
     for (let y = 58; y < H; y++) { const x0 = Math.round(292 + (71 - y) * 1.3); px(c, 290, y, Math.max(0, x0 - 290), 1, chao); }
   }
@@ -305,8 +323,6 @@ const Vista = (() => {
     const n = fechado ? 8 : clima === "limpo" && r() < 0.4 ? 0 : 4;
     for (let i = 0; i < n; i++) nuvens.push({ x: r() * (W + 80), y: 5 + r() * 36, w: 40 + r() * 80, v: 0.04 + r() * 0.08, esp: fechado && r() < 0.5 ? 3 : 2, cor: corNuvem });
     bioma(frente.getContext("2d"), e, r, bandas);
-    luzAro = mix(bandas[bandas.length - 1], "#ffe0a0", 0.65);
-    contornar();
     pintarChao();
     estrelas = [];
     if (p === 3 && !["chuva", "tempestade", "nublado", "nevoa"].includes(clima)) {
@@ -317,15 +333,6 @@ const Vista = (() => {
     for (let i = 0; i < qtd; i++) particulas.push({ x: r() * W, y: r() * H, v: clima === "neve" ? 0.3 + r() * 0.4 : 3 + r() * 2 });
   }
 
-  /** O contorno de cima de cada prédio (os pixels da silhueta com céu logo acima): é o que acende no hover. */
-  function contornar() {
-    if (!predios.length) return;
-    const d = frente.getContext("2d").getImageData(0, 0, W, H).data, cheio = (x, y) => y >= 0 && d[(y * W + x) * 4 + 3] > 0;
-    predios.forEach((p) => {
-      p.aro = [];
-      for (let y = p.y; y < p.y + p.h; y++) for (let x = p.x; x < Math.min(W, p.x + p.w); x++) if (cheio(x, y) && !cheio(x, y - 1)) p.aro.push([x, y]);
-    });
-  }
   /** O chão da paisagem continua para fora dela: uma rampa pontilhada na cor da última linha, que a cena usa embaixo
    *  da arte (--chao-rampa), para a página parecer começar no chão. */
   function pintarChao() {
@@ -340,15 +347,14 @@ const Vista = (() => {
     cena.style.setProperty("--chao-rampa", `url(${t.toDataURL()})`);
     cena.style.setProperty("--chao", `rgb(${r}, ${g}, ${b})`);
   }
-  /** O prédio sob o mouse: o contorno de cima acende, as luzes dele também, e cada um mexe uma coisa só. */
+  /** O prédio sob o mouse: as luzes dele acendem (só os pixels da janela, sem clarão em volta) e cada um mexe uma
+   *  coisa só: o sino balança, a lanterna da estrada tremula. */
   function pintarDestaque(b) {
     const p = predios.find((x) => x.id === destaque);
     if (!p) return;
-    (p.aro || []).forEach(([x, y]) => px(b, x, y, 1, 1, luzAro));
-    p.luzes.forEach(([x, y, w, h, cor]) => px(b, x, y, w, h, quadro % 8 < 6 || p.id !== "estrada" ? cor : LUZ_JANELA));
+    const tremula = [1, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 1, 0, 1][quadro % 14];
+    p.luzes.forEach(([x, y, w, h, cor]) => px(b, x, y, w, h, !p.lanterna || tremula ? cor : LUZ_JANELA));
     if (p.sino) { const [x, y] = p.sino, lado = Math.round(Math.sin(quadro / 2)); px(b, x - 1, y, 4, 2, "#0d0b0a"); px(b, x + lado, y, 2, 2, "#c8a860"); }
-    if (p.placa) { const [x, y] = p.placa; if (quadro % 10 < 5) { px(b, x, y, 4, 3, "#0d0b0a"); px(b, x + 1, y, 4, 3, mix(luzAro, "#7a5a3a", 0.6)); } }
-    if (p.lanterna) { const [x, y] = p.lanterna; for (let yy = y - 3; yy <= y + 3; yy++) for (let xx = x - 3; xx <= x + 4; xx++) if (Math.hypot(xx - x, yy - y) < 4 && pont(xx, yy, 5)) px(b, xx, yy, 1, 1, "#ffd070"); }
   }
   /** Fagulhas da forja: sempre umas poucas; com o mouse em cima, um punhado. */
   function pintarFagulhas(b) {
@@ -361,22 +367,54 @@ const Vista = (() => {
     });
   }
 
+  /** Um passo do relógio da paisagem (dez por segundo): nuvens, corvos, chuva e relâmpago andam só aqui, para que
+   *  redesenhar (o hover, a troca de câmera, o amanhecer) não apresse nada. */
+  function andar() {
+    quadro++;
+    nuvens.forEach((n) => { n.x = (n.x + n.v) % (W + n.w); });
+    aves.forEach((a) => { a.x = (a.x + a.v) % (W + 20); });
+    const neve = estado.mundo.clima_id === "neve";
+    particulas.forEach((p) => {
+      p.y += p.v;
+      p.x += neve ? Math.sin((quadro + p.y) / 9) * 0.3 : -p.v * 0.4;
+      if (p.y > H) { p.y = -3; p.x = Math.random() * (W + 30); }
+    });
+    if (relampago > 0) relampago--;
+    else if (estado.mundo.clima_id === "tempestade" && Math.random() < 0.006) relampago = 5;
+  }
+
+  /** Uma trama de Bayer com `n` de 16 pixels cheios: a máscara do pontilhado da troca de câmera. */
+  function trama(n) {
+    if (!tramas[n]) {
+      const t = document.createElement("canvas"); t.width = t.height = 4;
+      const c = t.getContext("2d"); c.fillStyle = "#000";
+      for (let y = 0; y < 4; y++) for (let x = 0; x < 4; x++) if (pont(x, y, n)) c.fillRect(x, y, 1, 1);
+      tramas[n] = ctx.createPattern(t, "repeat");
+    }
+    return tramas[n];
+  }
+  /** O quadro pela câmera: a vila inteira, ou o recorte do prédio em dobro. Sempre pixel inteiro. */
+  function enquadrar(c, cam) {
+    c.imageSmoothingEnabled = false;
+    c.drawImage(quadroBuf, cam.x, cam.y, W / cam.s, H / cam.s, 0, 0, W, H);
+  }
+
   function desenhar() {
     if (!estado || !ctx) return;
-    quadro++;
     if (!quadroBuf) { quadroBuf = document.createElement("canvas"); quadroBuf.width = W; quadroBuf.height = H; }
-    const tela = ctx, ctxb = quadroBuf.getContext("2d");
-    desenharEm(ctxb);
-    // a câmera: a vila inteira, ou o prédio escolhido em dobro (pixel inteiro), indo de um para o outro
-    if (camera.para) {
-      const t = Math.min(1, (performance.now() - camera.inicio) / camera.ms), e = t * t * (3 - 2 * t);
-      ["x", "y", "s"].forEach((k) => { camera[k] = camera.de[k] + (camera.para[k] - camera.de[k]) * e; });
-      if (t >= 1) camera.para = null;
+    desenharEm(quadroBuf.getContext("2d"));
+    ctx.clearRect(0, 0, W, H);
+    const t = camera.de ? (performance.now() - camera.inicio) / camera.ms : 1;
+    if (t >= 1) { camera.de = null; enquadrar(ctx, camera); }
+    else {
+      // a troca de câmera: o enquadramento de antes embaixo, o novo por cima numa trama que vai fechando
+      if (!mascara) { mascara = document.createElement("canvas"); mascara.width = W; mascara.height = H; }
+      const m = mascara.getContext("2d");
+      enquadrar(ctx, camera.de);
+      m.globalCompositeOperation = "source-over"; m.clearRect(0, 0, W, H); enquadrar(m, camera);
+      m.globalCompositeOperation = "destination-in"; m.fillStyle = trama(Math.max(1, Math.ceil(t * 16))); m.fillRect(0, 0, W, H);
+      ctx.drawImage(mascara, 0, 0);
     }
-    const sw = Math.round(W / camera.s), sh = Math.round(H / camera.s);
-    tela.imageSmoothingEnabled = false;
-    tela.clearRect(0, 0, W, H);
-    tela.drawImage(quadroBuf, Math.round(camera.x), Math.round(camera.y), sw, sh, 0, 0, W, H);
     if (aurora) pintarAurora();
   }
 
@@ -385,7 +423,6 @@ const Vista = (() => {
     const clima = estado.mundo.clima_id;
     estrelas.forEach((s) => { if ((quadro + s.f) % 14 > 2) px(ctx, s.x, s.y, 1, 1, (quadro + s.f) % 30 < 4 ? "#ffffff" : "#9aa4c0"); });
     nuvens.forEach((n) => {
-      n.x = (n.x + n.v) % (W + n.w);
       const x = Math.floor(n.x - n.w);
       px(ctx, x, n.y, n.w, 1, n.cor); px(ctx, x + 6, n.y - 1, n.w - 18, 1, n.cor);
       if (n.esp === 3) px(ctx, x + n.w / 4, n.y - 2, n.w / 3, 1, n.cor);
@@ -394,7 +431,6 @@ const Vista = (() => {
     pintarFagulhas(ctx);
     if (destaque) pintarDestaque(ctx);
     aves.forEach((a, k) => {  // corvos, devagar, batendo as asas
-      a.x = (a.x + a.v) % (W + 20);
       const x = Math.floor(a.x) - 10, y = Math.round(a.y + Math.sin((quadro + k * 9) / 12)), asa = (Math.floor(quadro / 4) + a.f) % 2, cor = "#0c0606";
       px(ctx, x, y, 1, 1, cor); px(ctx, x - 2, y - asa, 2, 1, cor); px(ctx, x + 1, y - asa, 2, 1, cor);
     });
@@ -408,14 +444,10 @@ const Vista = (() => {
       for (let i = 0; i < 3; i++) nevoa(ctx, 26 + i * 10, 32 + i * 10, corDaNevoa, 3, 0, W, quadro * (0.3 + i * 0.1));
     }
     particulas.forEach((p) => {
-      if (clima === "neve") { p.y += p.v; p.x += Math.sin((quadro + p.y) / 9) * 0.3; px(ctx, p.x, p.y, 1, 1, "#f0f4ff"); }
-      else { p.y += p.v; p.x -= p.v * 0.4; px(ctx, p.x, p.y, 1, 3, "rgba(170,190,220,0.7)"); }
-      if (p.y > H) { p.y = -3; p.x = Math.random() * (W + 30); }
+      if (clima === "neve") px(ctx, p.x, p.y, 1, 1, "#f0f4ff");
+      else px(ctx, p.x, p.y, 1, 3, "rgba(170,190,220,0.7)");
     });
-    if (clima === "tempestade") {
-      if (relampago > 0) { ctx.fillStyle = `rgba(230,235,255,${relampago / 6})`; ctx.fillRect(0, 0, W, H); relampago--; }
-      else if (Math.random() < 0.006) relampago = 5;
-    }
+    if (relampago > 0) { ctx.fillStyle = `rgba(230,235,255,${relampago / 6})`; ctx.fillRect(0, 0, W, H); }
     if (estado.mundo.escuro) { ctx.fillStyle = "rgba(0,0,0,0.55)"; ctx.fillRect(0, 0, W, H); }
   }
 
@@ -445,10 +477,10 @@ const Vista = (() => {
     estado = e;
     const k = [e.local.id, e.local.tipo, e.mundo.periodo_n, e.mundo.clima_id, e.local.bioma].join("|");
     if (k !== chave) {
-      if (chave.split("|")[0] !== String(e.local.id)) { camera.x = camera.y = 0; camera.s = 1; camera.para = null; destaque = null; }
+      if (chave.split("|")[0] !== String(e.local.id)) { camera.x = camera.y = 0; camera.s = 1; camera.de = null; destaque = null; }
       chave = k; preparar(e);
     }
-    if (!timer) timer = setInterval(() => { if (!document.hidden) desenhar(); }, 100);
+    if (!timer) timer = setInterval(() => { if (!document.hidden) { andar(); desenhar(); } }, 100);
     desenhar();
   }
   // Tela de título: uma das paisagens favoritas, sorteada a cada abertura.
@@ -466,18 +498,20 @@ const Vista = (() => {
     return corDoCeu();
   }
 
-  /** A câmera vai até o prédio (em dobro, centrada nele) ou volta à vila inteira (id nulo). */
+  /** A câmera vai até o prédio (em dobro, centrada nele) ou volta à vila inteira (id nulo), num pontilhado. */
   function focar(id) {
     const p = id && predios.find((x) => x.id === id);
-    const para = p ? { s: 2, x: Math.max(0, Math.min(W / 2, p.x + p.w / 2 - W / 4)), y: Math.max(0, Math.min(H / 2, p.y + p.h / 2 - H / 4)) } : { s: 1, x: 0, y: 0 };
-    if (camera.para ? camera.para.s === para.s && camera.para.x === para.x : camera.s === para.s && camera.x === para.x && camera.y === para.y) return;
-    camera.de = { x: camera.x, y: camera.y, s: camera.s }; camera.para = para; camera.inicio = performance.now();
-    const passo = () => { desenhar(); if (camera.para) requestAnimationFrame(passo); };
+    const para = p ? { s: 2, x: Math.max(0, Math.min(W / 2, Math.round(p.x + p.w / 2 - W / 4))), y: Math.max(0, Math.min(H / 2, Math.round(p.y + p.h / 2 - H / 4))) } : { s: 1, x: 0, y: 0 };
+    if (camera.s === para.s && camera.x === para.x && camera.y === para.y) return;
+    camera.de = { x: camera.x, y: camera.y, s: camera.s }; camera.inicio = performance.now();
+    Object.assign(camera, para);
+    if (!ctx || !estado) { camera.de = null; return; }
+    const passo = () => { desenhar(); if (camera.de) requestAnimationFrame(passo); };
     requestAnimationFrame(passo);
   }
   function destacar(id) { if (destaque !== id) { destaque = id; desenhar(); } }
   /** Os prédios clicáveis da paisagem atual (só na vila), em pixels da arte (320x72). */
-  function listaPredios() { return predios.map(({ id, nome, x, y, w, h }) => ({ id, nome, x, y, w, h })); }
+  function listaPredios() { return predios.map(({ id, nome, x, y, w, h, balao }) => ({ id, nome, x, y, w, h, balao })); }
 
   return { atualizar, titulo, corDoCeu, amanhecer, predios: listaPredios, destacar, focar, LARGURA: W, ALTURA: H };
 })();

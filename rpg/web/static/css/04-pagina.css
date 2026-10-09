@@ -18,11 +18,17 @@
 #predios { position: absolute; z-index: 2; pointer-events: none; }
 #predios .predio { position: absolute; padding: 0; border: 0; background: transparent; cursor: pointer; pointer-events: auto; }
 #predios .predio:focus-visible { outline: var(--px) dashed var(--ouro); outline-offset: 0; }
-#predios.focado .predio { visibility: hidden; }
-.placa-nome { --anel: var(--anel-j); position: absolute; left: 50%; top: 100%; translate: -50% 3px; padding: 0 6px 1px; white-space: nowrap; pointer-events: none;
-  font-family: var(--texto); font-size: 13px; font-weight: 600; line-height: 1.3; color: var(--tinta-2);
+#predios.focado { visibility: hidden; }
+/* O nome de cada prédio num balão preto acima dele, com o bico em V apontando para o telhado (Vista.predios(): balao).
+   Em repouso, apagado; com o mouse no prédio, acende em ouro. */
+.balao-nome { --anel: var(--anel-j); --bico: var(--bico-j); position: absolute; translate: -50% calc(-100% - var(--P) * 3);
+  padding: 0 5px; white-space: nowrap; pointer-events: none;
+  font-family: var(--texto); font-size: 12px; font-weight: 600; line-height: 1.3; color: var(--tinta-2);
   border: var(--borda) solid var(--p-j); border-image: var(--anel) 1 / 1 stretch; background: var(--p-k); background-clip: padding-box; }
-.predio:is(:hover, :focus-visible, .aberto) .placa-nome { --anel: var(--anel-a); color: var(--ouro); }
+.balao-nome::after { content: ""; position: absolute; left: 50%; top: 100%; translate: -50% 0;
+  width: calc(var(--P) * 7); height: calc(var(--P) * 4); background: var(--bico) 0 0 / 100% 100%; image-rendering: pixelated; }
+.predio:is(:hover, :focus-visible) .balao-nome { --anel: var(--anel-a); --bico: var(--bico-a); color: var(--ouro); }
+.predio-fechado { margin: 4px 0 10px; font-family: var(--prosa); font-style: italic; color: var(--tinta-2); }
 .tempo-acao { margin-left: auto; padding-left: 12px; font-size: 14px; color: var(--tinta-2); white-space: nowrap; }
 #cena[data-tipo="menu"] #vista { display: none; }
 /* A barra das telas de menu: Voltar à esquerda, o título no meio, o que importa da tela (ouro, dia...) à direita. */
@@ -53,12 +59,10 @@ body.modo-titulo .vinheta { background: radial-gradient(ellipse 80% 70% at 50% 4
   background: var(--ponta) 0 0 / calc(var(--P) * 3) no-repeat, var(--fio) 0 0 / var(--P) calc(var(--P) * 3) repeat-x; }
 .ornamento i:last-child { background-position: 100% 0, 0 0; }
 .ornamento b { width: calc(var(--P) * 11); height: calc(var(--P) * 7); background: var(--ornamento) 0 0 / 100%; }
-/* O lugar que entra embaixo do texto de um evento (sem Continuar): um fio com pontas, o nome e a linha do dia. */
-.lugar-abaixo { margin: 1.6em 0 0.4em; text-align: center; }
-.lugar-abaixo::before { content: ""; display: block; width: 60%; height: calc(var(--P) * 3); margin: 0 auto 14px;
-  background: var(--ponta) 0 0 / calc(var(--P) * 3) no-repeat, var(--ponta) 100% 0 / calc(var(--P) * 3) no-repeat, var(--fio) 0 0 / var(--P) calc(var(--P) * 3) repeat-x; }
-.lugar-abaixo b { display: block; font-family: var(--titulo); font-weight: 400; font-size: calc(var(--px) * 32); line-height: 1; color: var(--ouro); text-shadow: var(--contorno); }
-.lugar-abaixo span { display: block; margin-top: 6px; font-size: 15px; color: var(--tinta-2); }
+/* O fim de um evento: um fio de bronze se enche enquanto dá para ler, e a página vira para o lugar. */
+.virando { width: calc(var(--P) * 48); height: var(--P); margin: 22px auto 0; background: var(--p-j); }
+.virando i { display: block; height: 100%; background: var(--ouro); transform-origin: left; animation: virando var(--dura) steps(24) forwards; }
+@keyframes virando { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 #cena-cab[data-tipo="menu"] .cena-titulo { font-size: calc(var(--px) * 48); }
 #cena-cab[data-tipo="chefe"] .cena-titulo, #cena-cab[data-tipo="morte"] .cena-titulo { color: var(--sangue-2); }
 #cena-cab[data-tipo="morte"] .cena-titulo, #cena-cab[data-tipo="vitoria"] .cena-titulo { font-size: calc(var(--px) * 64); }

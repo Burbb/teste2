@@ -118,10 +118,17 @@ const Som = (() => {
       [[392, 0.07, 2.2], [784, 0.035, 1.6], [941, 0.03, 1.4], [1176, 0.02, 1.1], [1647, 0.012, 0.8]].forEach(([f, v, d]) => tom(t, f, v, d, "sine"));
       tom(t, 196, 0.04, 2.4, "sine");
     },
-    predio_taverna() {  // conversa baixa ao fundo e o tilintar de copo e talher
+    predio_taverna() {  // o burburinho do salão, como nos jogos antigos: sílabas de ruído abafado e resmungos graves
       const t = ctx.currentTime;
-      for (let i = 0; i < 6; i++) voz(t + i * 0.09 + Math.random() * 0.05, 110 + Math.random() * 90, 0.12, 0.018);
-      [[0.05, 2900], [0.21, 3400], [0.33, 2600]].forEach(([d, f]) => { estalo(t + d, f, 0.07, 0.03); tom(t + d, f, 0.012, 0.25, "triangle"); });
+      for (let i = 0; i < 14; i++) {  // a falação: rajadas curtas de ruído na faixa da voz, sem voz nenhuma
+        const d = i * 0.075 + Math.random() * 0.05, v = 0.05 * Math.sin(Math.PI * (i + 0.5) / 14);
+        sopro(t + d, 0.12 + Math.random() * 0.1, 260 + Math.random() * 260, 200 + Math.random() * 160, v, 2.5);
+      }
+      [0.18, 0.52, 0.86].forEach((d) => {  // resmungos: um tom grave que desce e volta, abafado
+        const f = 95 + Math.random() * 45;
+        tom(t + d + Math.random() * 0.05, f, 0.03, 0.16, "triangle", f * 0.78);
+      });
+      estalo(t + 0.62, 2900, 0.04, 0.03); tom(t + 0.62, 2900, 0.008, 0.2, "triangle");  // uma caneca lá no fundo
     },
     predio_mercado() {  // a moeda jogada para cima: o tinido girando no ar e os quiques no balcão
       const t = ctx.currentTime;

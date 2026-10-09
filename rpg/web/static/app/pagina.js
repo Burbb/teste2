@@ -4,8 +4,11 @@
 function anexar(no) { textoEl.appendChild(no); rolarFim(); return no; }
 function rolarFim() {
   if (rolagemFixa !== null) pagina.scrollTop = rolagemFixa;
-  else if (seguir) pagina.scrollTop = pagina.scrollHeight;
+  else if (seguir && !presoNoTopo) pagina.scrollTop = pagina.scrollHeight;
 }
+/* A página de um lugar fica no topo (a arte, o nome, as ações), mesmo que as ações passem um pouco do pé da tela; o
+   que vier depois de uma escolha volta a puxar a página (responder solta). */
+let presoNoTopo = false;
 /* Telas que se redesenham no lugar (mural, mercado, inventário, fogueira) não podem pular: a rolagem fica onde a
    pessoa estava até as novas opções chegarem, e a altura que a página já teve fica segura enquanto a tela é a mesma
    (se o conteúdo encolhe, sobra espaço embaixo em vez de a página saltar). Só uma cena nova solta a altura. */
@@ -91,24 +94,29 @@ function cabecalho(m) {
   if (m.titulo !== "Talentos") Telas.fecharTalentos();
 }
 
-/** O fim de um evento cai direto no lugar (sem Continuar): o texto do evento fica na página e o lugar entra embaixo,
- *  com o nome e a linha do dia, e as ações logo depois. */
-function lugarAbaixo(m) {
-  Telas.esconderDica();
-  cenaInterrompida = false;
-  tituloAtual = m.titulo;
-  textoEl.querySelectorAll(":scope > p").forEach((p) => p.classList.add("lido"));
-  promptEl.innerHTML = "";
-  cab.dataset.tipo = cenaEl.dataset.tipo = m.tipo;
-  anexar(el("div", "lugar-abaixo", `<b>${esc(suavizar(m.titulo))}</b>` + (m.subtitulo ? `<span>${esc(m.subtitulo)}</span>` : "")));
-  if (m.titulo !== ultimoLugar) historico("h-cena", m.titulo);
-  ultimoLugar = m.titulo;
-  seguir = true;
+/** O fim de um evento ou de uma luta cai direto no lugar, sem Continuar: o que aconteceu fica o tempo de ler (um fio
+ *  vai se enchendo embaixo; clique ou tecla adianta) e a página vira limpa, no topo, com a arte inteira, o nome do
+ *  lugar e as ações. O texto não fica sobrando em cima do lugar: quem quiser rever abre o histórico (H). */
+async function virarParaLugar(m) {
+  const novo = [...textoEl.querySelectorAll(":scope > :not(.lido):not(.eco):not(.passado)")]
+    .reduce((n, x) => n + x.textContent.trim().length, 0);
+  if (!replay && novo) {
+    // Leu enquanto o texto corria: o tempo desde a escolha conta. Depois de uma luta, a faixa da vitória e o espólio
+    // já foram a leitura.
+    const ja = performance.now() - ultimaResposta;
+    const ms = cenaInterrompida ? 900 : novo < 80 ? Math.max(700, Math.min(1500, 800 + novo * 30 - ja))
+      : Math.max(1300, Math.min(5500, 800 + novo * 30 - ja));
+    Telas.esconderDica();
+    promptEl.innerHTML = `<div class="virando" aria-hidden="true"><i style="--dura:${Math.round(ms)}ms"></i></div>`;
+    const ate = performance.now() + ms;
+    while (performance.now() < ate && !pular) await espera(40);
+  }
+  await novaCena(Object.assign({}, m, { virar: false }));
 }
 
 let tituloAtual = "";
 async function novaCena(m) {
-  if (m.anexar) { lugarAbaixo(m); return; }
+  if (m.virar) { await virarParaLugar(m); return; }
   // Inventário e mercado se redesenham sem piscar. Mas se no meio houve luta ou saque, a página mudou de verdade:
   // aí é cena nova, e o texto do que aconteceu (a noite caiu, o item equipado) fica na página em vez de virar aviso.
   const mesmaTela = m.tipo === "menu" && m.titulo === tituloAtual && !cenaInterrompida;
@@ -138,6 +146,7 @@ async function novaCena(m) {
   folha.classList.remove("entrando"); void folha.offsetWidth; folha.classList.add("entrando");
   pagina.scrollTop = 0;
   seguir = true;
+  presoNoTopo = m.tipo === "local";
   if (!replay) Som.tocar("pagina");
 }
 
