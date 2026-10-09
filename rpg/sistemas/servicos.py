@@ -110,7 +110,11 @@ class Servicos:
             return
         self.perder_ouro(preco)
         self.marcar(chave, self.flag(chave, 0) + 1)
-        # Às vezes a bebida vira briga: o salão inteiro se engalfinha antes que alguém conte alguma coisa.
-        if self.chance(0.2) and eventos.disparar(self, "taverna"):
+        # O que se passa dentro da taverna só acontece ali, a quem senta para beber: às vezes a bebida vira briga, uma
+        # queda de braço, ou o homem do canto (Morel) puxa conversa, em vez dos rumores. Enquanto ninguém conheceu
+        # Morel, toda bebida sorteia (e ele é o mais provável): um companheiro não pode depender de sorte para aparecer.
+        morel_esperando = any(ev.id == "morel_na_taverna" and not self.contagem.get(ev.id)
+                              for ev, _ in eventos.motor.candidatos(self, "taverna"))
+        if (morel_esperando or self.chance(0.35)) and eventos.disparar(self, "taverna"):
             return
         ouvir_rumor(self)

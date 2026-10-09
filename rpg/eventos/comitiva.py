@@ -169,8 +169,8 @@ def odete_conversa_final(g, m):
 
 
 # ====================================================================== MOREL
-@evento(contextos=("vila",), peso=lambda g: 18 if g.dia <= 10 else 7, cooldown=4, max_vezes=3,
-        cond=lambda g: g.dia >= 2 and cm.disponivel(g, "morel"))
+@evento(contextos=("taverna",), peso=lambda g: 18 if g.dia <= 10 else 7, cooldown=4, max_vezes=3,
+        cond=lambda g: g.dia >= 2 and cm.disponivel(g, "morel"))  # no canto da taverna: quem bebe ali o encontra
 def morel_na_taverna(g):
     g.dizer("No canto da taverna, um homem grande come sozinho, de costas para a parede. Cicatriz de orelha a orelha, "
             "armadura remendada com pedaços de outras armaduras. Ele fala sem levantar os olhos do prato.")

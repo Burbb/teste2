@@ -251,7 +251,7 @@ def furia_noturna(g):
             g.combate(g.grupo(n=1))
 
 
-@evento(contextos=("vila", "viagem"), peso=6, cooldown=14, cond=_classe("guerreiro"))
+@evento(contextos=("taverna",), peso=6, cooldown=14, cond=_classe("guerreiro"))  # numa mesa da taverna
 def queda_de_braco(g):
     rival = g.npc()
     g.dizer(f"Numa mesa cercada de gente, {rival['um']} {rival['prof']} enorme {rival['traco']} desafia "
