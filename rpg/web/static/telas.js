@@ -353,8 +353,8 @@ const Telas = (() => {
   }
   function reputacaoHtml(p) {
     const r = p.reputacao_info || { titulo: "", linhas: [] };
-    return `<div class="linha reputacao" ${dica(`<b>Reputação ${p.reputacao > 0 ? "+" : ""}${p.reputacao}</b><div class="tipo">${h(r.titulo)}</div><ul class="dica-lista">${r.linhas.map((l) => `<li>${h(l)}</li>`).join("")}</ul>`)}>
-      <span>Reputação</span><b>${p.reputacao > 0 ? "+" : ""}${p.reputacao} <small>${h(r.titulo)}</small></b></div>`;
+    return `<div class="reputacao" ${dica(`<b>Reputação ${p.reputacao > 0 ? "+" : ""}${p.reputacao}</b><div class="tipo">${h(r.titulo)}</div><ul class="dica-lista">${r.linhas.map((l) => `<li>${h(l)}</li>`).join("")}</ul>`)}>
+      <span class="rep-icone">${S("coroa", 2)}</span><b>${p.reputacao > 0 ? "+" : ""}${p.reputacao}</b><span class="rep-titulo">${h(r.titulo)}</span></div>`;
   }
 
   function ligarInventario(raiz) {

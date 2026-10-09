@@ -1395,7 +1395,7 @@ const SPRITES_GRADES = (() => {
   const ANEL = [".#.", "#.#", ".#."];
   const PLACA = [".#.", "#.#", "k#k", ".k."];
   const JANELA = [".##..", "#..#.", "#..#k", ".##kk", "..kk."];
-  for (const cor of "kCyYUOErR") { S["anel_" + cor] = trocar(ANEL, { "#": cor }); S["placa_" + cor] = trocar(PLACA, { "#": cor }); }
+  for (const cor of "kCyYUOErRajJ") { S["anel_" + cor] = trocar(ANEL, { "#": cor }); S["placa_" + cor] = trocar(PLACA, { "#": cor }); }
   for (const cor of "kUyO") S["janela_" + cor] = trocar(JANELA, { "#": cor });
 
   // O quadro dos painéis (referência do Jean): filete de bronze de 4 texels (contorno, luz, bronze e sombra) com um
@@ -1436,6 +1436,11 @@ const SPRITES_GRADES = (() => {
     ".....gGddGg.....",
     "......gddg......",
     "................"];
+  // Moldura de retrato: filete de bronze com um esquadro de ouro velho em cada canto.
+  S.retrato_a = quadro(["aaa", "a..", "a.."], "J..");
+  // Divisória: um fio de bronze com sombra, e uma ponta de ouro em cada extremo.
+  S.fio = [".", "J", "k"];
+  S.ponta = [".a.", "aYa", ".a."];
   // Cabeçalho de seção: uma estrela de quatro pontas antes do título, e um fio duplo que acaba num losango vazado.
   S.estrelinha = [
     "..c..",

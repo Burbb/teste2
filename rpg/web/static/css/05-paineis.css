@@ -1,75 +1,93 @@
 /* ------------------------------------------------------------------ painel do herói */
-/* As seções se separam pelo espaço e por uma linha de luz que some, e não por caixas. */
-.secao { margin-top: 18px; }
+.secao { margin-top: 16px; }
 /* Cabeçalho de seção: estrelinha, o título gótico e um fio duplo de bronze que acaba num losango. */
 .secao h3 { margin: 0 0 8px; font-family: var(--titulo); font-weight: 400; font-size: 28px; line-height: 1; color: var(--ouro); text-shadow: var(--contorno); display: flex; align-items: center; gap: 8px; }
 .secao h3::before { content: ""; flex: none; width: calc(var(--P) * 5); height: calc(var(--P) * 5); background: var(--estrelinha) 0 0 / 100%; }
 .secao h3::after { content: ""; flex: 1; height: calc(var(--P) * 7); padding-right: calc(var(--P) * 6);
   background: var(--fim-cabeca) 100% 0 / calc(var(--P) * 7) calc(var(--P) * 7) no-repeat, var(--fio-cabeca) 0 50% / var(--P) calc(var(--P) * 5) repeat-x;
   background-clip: border-box, content-box; }
-.identidade { display: flex; gap: 10px; align-items: center; }
-.retrato-grande { width: 60px; height: 60px; flex: none; display: grid; place-items: center;
-  background: radial-gradient(circle at 50% 42%, rgba(226, 189, 99, 0.12), rgba(0, 0, 0, 0.55) 68%); box-shadow: inset 0 0 0 1px rgba(255, 232, 190, 0.05); }
-.heroi-nome { font-family: var(--titulo); font-size: 32px; line-height: 1; color: #f3e6c9; text-shadow: var(--sombra-texto); }
-.heroi-titulo { color: var(--tinta-2); font-size: 14px; }
-.xp-linha { margin-top: 10px; }
-.legenda-linha { display: flex; justify-content: space-between; font-family: var(--num); font-size: 17px; color: var(--tinta-3); margin-bottom: 3px; }
-/* Ponto de talento para gastar: um brilho dourado que respira, sem bloco amarelo piscando. */
-.talento-aviso { margin-top: 10px; display: flex; align-items: center; gap: 7px; justify-content: center; padding: 5px 10px; font-weight: 600; font-size: 14px; cursor: pointer;
-  color: #f4d98e; background: radial-gradient(ellipse at 50% 50%, rgba(226, 189, 99, 0.2), rgba(226, 189, 99, 0.04) 70%, transparent);
-  text-shadow: 0 0 10px rgba(226, 189, 99, 0.55); animation: respira 2.4s ease-in-out infinite; }
-.talento-aviso:hover { color: #fff1c4; background: radial-gradient(ellipse at 50% 50%, rgba(226, 189, 99, 0.3), rgba(226, 189, 99, 0.06) 70%, transparent); }
-@keyframes respira { 50% { filter: brightness(1.25); } }
+.identidade { display: flex; gap: 12px; align-items: center; }
+/* Retrato: num nicho escuro, com filete de bronze e esquadros de ouro velho nos cantos. */
+.retrato-grande { width: 64px; height: 64px; flex: none; display: grid; place-items: center;
+  border: var(--borda) solid var(--p-J); border-image: var(--retrato-a) 3 / calc(var(--P) * 3) stretch;
+  background: var(--tx-funda) 0 0 / calc(var(--P) * 32), var(--p-z); background-clip: padding-box; }
+.heroi-nome { font-family: var(--titulo); font-size: 30px; line-height: 1; color: var(--tinta); text-shadow: var(--contorno); }
+.heroi-titulo { color: var(--tinta-2); font-size: 15px; margin-top: 4px; }
+/* Divisória: fio de bronze com uma ponta de ouro em cada lado. */
+.xp-linha { margin-top: 10px; padding-bottom: 14px;
+  background: var(--ponta) 0 100% / calc(var(--P) * 3) no-repeat, var(--ponta) 100% 100% / calc(var(--P) * 3) no-repeat,
+    var(--fio) 0 100% / var(--P) calc(var(--P) * 3) repeat-x; }
+.legenda-linha { display: flex; justify-content: space-between; font-family: var(--texto); font-size: 15px; color: var(--tinta-2); margin-bottom: 4px; }
+.legenda-linha span + span { color: var(--tinta); }
+/* Ponto de talento para gastar: o texto em ouro, piscando em dois quadros. */
+.talento-aviso { margin-top: 10px; display: flex; align-items: center; gap: 7px; justify-content: center; padding: 4px 10px; font-weight: 600; font-size: 15px; cursor: pointer;
+  color: var(--ouro); text-shadow: var(--contorno); animation: aviso-ouro 1.4s steps(2) infinite; }
+.talento-aviso:hover { color: var(--aceso); }
+@keyframes aviso-ouro { 50% { color: var(--aceso); } }
 .talento-aviso img.sprite { --s: 16; }
-.atributos { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 14px; }
-.atributo { display: flex; align-items: center; gap: 6px; padding: 4px 2px; box-shadow: inset 0 -1px 0 rgba(255, 232, 190, 0.05); }
+/* Atributos: cada um numa caixinha de filete escuro, ícone, nome e o número à direita. */
+.atributos { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.atributo { --anel: var(--anel-j); display: flex; align-items: center; gap: 7px; padding: 4px 8px 4px 6px;
+  border: var(--borda) solid var(--p-j); border-image: var(--anel) 1 / 1 stretch; background: var(--p-k); background-clip: padding-box; }
 .atributo img.sprite { --s: 16; }
-.atributo .nome { font-size: 11px; color: var(--tinta-3); text-transform: uppercase; }
-.atributo .valor { font-family: var(--num); font-size: 24px; line-height: 1; color: var(--tinta); margin-left: auto; }
-/* Abaixo do normal (ferimento, fome): o número em vermelho apagado, a linha de baixo puxando para o sangue. */
-.atributo.abaixo { box-shadow: inset 0 -1px 0 rgba(226, 87, 76, 0.4); }
-.atributo.abaixo .valor { color: #c0484a; filter: brightness(0.85); }
+.atributo .nome { font-size: 15px; color: var(--tinta-2); }
+.atributo .valor { font-family: var(--num); font-size: 19px; font-weight: 600; line-height: 1; color: var(--tinta); margin-left: auto; }
+/* Abaixo do normal (ferimento, fome): o filete e o número em vermelho. */
+.atributo.abaixo { --anel: var(--anel-r); }
+.atributo.abaixo .valor { color: var(--sangue-2); }
 .penal { color: var(--sangue-2); font-weight: 400; }
-.linhas { display: flex; flex-direction: column; gap: 3px; font-size: 14px; }
+.linhas { display: flex; flex-direction: column; gap: 3px; font-size: 15px; }
 .linha { display: flex; justify-content: space-between; gap: 8px; color: var(--tinta-2); align-items: center; }
-.linha b { color: var(--tinta); font-family: var(--num); font-size: 19px; font-weight: 400; }
+.linha b { color: var(--tinta); font-family: var(--num); font-size: 18px; font-weight: 600; }
 .slots { display: flex; gap: 6px; flex-wrap: wrap; }
-/* Espaço de item: um nicho cavado na superfície (sombra para dentro). A raridade é um aro de luz na cor dela;
-   --aro muda nos estados (passar o mouse, alvo de arrastar) em vez de uma borda. */
-.slot-px { --aro: rgba(255, 232, 190, 0.05); --brilho: transparent; --fora: 0 0 0 transparent;
-  position: relative; width: 52px; height: 52px; display: grid; place-items: center; cursor: default;
-  background: radial-gradient(circle at 50% 38%, rgba(255, 232, 190, 0.035), rgba(0, 0, 0, 0.45) 72%), #0c0a08;
-  box-shadow: inset 0 0 0 2px var(--aro), inset 0 0 14px var(--brilho), inset 0 4px 12px rgba(0, 0, 0, 0.8), var(--fora);
-  transition: box-shadow .15s, transform .15s; }
+/* Espaço de item: um nicho escuro com filete de 1 texel, de canto chanfrado. O filete diz o estado: ouro velho com
+   item, bronze apagado vazio, a cor da raridade (azul, ouro, brasa), e acende ao passar o mouse. */
+.slot-px { --anel: var(--anel-a); position: relative; width: 52px; height: 52px; display: grid; place-items: center; cursor: default;
+  border: var(--borda) solid var(--p-a); border-image: var(--anel) 1 / 1 stretch;
+  background: var(--tx-funda) 0 0 / calc(var(--P) * 32), var(--p-k); background-clip: padding-box; transition: transform .15s; }
+.slot-px.vazio { --anel: var(--anel-j); }
 .slot-px.vazio img { opacity: 0.18; filter: grayscale(1); }
-.slot-px.r-magico { --aro: var(--magico); --brilho: rgba(125, 151, 255, 0.28); }
-.slot-px.r-raro { --aro: var(--raro); --brilho: rgba(242, 201, 76, 0.24); }
-.slot-px.r-lendario { --aro: var(--lendario); --brilho: rgba(255, 157, 77, 0.32); --fora: 0 0 14px rgba(255, 157, 77, 0.45); }
-.slot-px .qtd { position: absolute; right: 3px; bottom: -1px; font-family: var(--num); font-size: 18px; color: #fff; text-shadow: 0 1px 3px #000, 0 0 2px #000; }
-.slot-px.clicavel { cursor: pointer; } .slot-px.clicavel:hover { --aro: var(--ouro); transform: translateY(-2px); }
+.slot-px.r-magico { --anel: var(--anel-U); }
+.slot-px.r-raro { --anel: var(--anel-y); }
+.slot-px.r-lendario { --anel: var(--anel-O); }
+.slot-px .qtd { position: absolute; right: 4px; bottom: 1px; font-family: var(--num); font-size: 15px; font-weight: 700; line-height: 1; color: var(--p-W); text-shadow: var(--contorno); }
+.slot-px.clicavel { cursor: pointer; } .slot-px.clicavel:hover { --anel: var(--anel-Y); transform: translateY(-2px); }
 .r-magico { color: var(--magico) !important; } .r-raro { color: var(--raro) !important; } .r-lendario { color: var(--lendario) !important; }
-.ferimento { display: flex; align-items: center; gap: 4px; color: var(--sangue-2); font-size: 14px; }
+/* No painel do herói, o equipamento em 5 colunas que enchem a largura, com os ícones no tamanho da bolsa. */
+#heroi .equip-mini { grid-template-columns: repeat(5, 1fr); gap: 6px; }
+#heroi .slot-px.mini { width: auto; height: auto; aspect-ratio: 1; }
+.ferimento { display: flex; align-items: center; gap: 4px; color: var(--sangue-2); font-size: 15px; }
 .ferimento img.sprite { --s: 16; }
 .ferimento small { color: var(--tinta-3); }
 .vazio { color: var(--tinta-3); font-style: italic; font-size: 13px; }
+#heroi .vazio { color: var(--tinta-2); font-style: normal; font-size: 15px; padding-left: 4px; }
 .habilidade { font-size: 14px; display: flex; justify-content: space-between; gap: 8px; cursor: default; }
-.habilidade small { color: var(--tinta-3); font-family: var(--num); font-size: 16px; white-space: nowrap; }
-.membro { display: grid; grid-template-columns: 38px 1fr; gap: 2px 10px; padding: 7px 0; cursor: default; align-items: center; }
-.membro + .membro { box-shadow: 0 -1px 0 rgba(255, 232, 190, 0.05); }
-.membro .icone { grid-row: span 3; width: 38px; height: 38px; display: grid; place-items: center;
-  background: radial-gradient(circle at 50% 42%, rgba(116, 196, 201, 0.16), rgba(0, 0, 0, 0.5) 70%); }
+.habilidade small { color: var(--tinta-3); font-family: var(--num); font-size: 15px; white-space: nowrap; }
+/* Comitiva: o retrato na moldura de cantos de ouro e, ao lado, uma caixinha com nome, vida e aprovação. */
+.membro { --anel: var(--anel-j); display: grid; grid-template-columns: 44px 1fr; gap: 3px 10px; padding: 6px 8px 6px 6px; cursor: default; align-items: center;
+  border: var(--borda) solid var(--p-j); border-image: var(--anel) 1 / 1 stretch; background: var(--p-k); background-clip: padding-box; }
+.membro + .membro { margin-top: 6px; }
+.membro .icone { grid-row: span 3; width: 44px; height: 44px; display: grid; place-items: center;
+  border: var(--borda) solid var(--p-J); border-image: var(--retrato-a) 3 / calc(var(--P) * 3) stretch;
+  background: var(--tx-funda) 0 0 / calc(var(--P) * 32), var(--p-z); background-clip: padding-box; }
 .membro.ferido { opacity: 0.55; }
-.membro-nome { font-weight: 600; font-size: 14px; color: #bfe6e8; display: flex; justify-content: space-between; align-items: baseline; gap: 6px; }
+.membro-nome { font-weight: 600; font-size: 15px; color: var(--tinta); display: flex; justify-content: space-between; align-items: baseline; gap: 6px; }
 .membro-quem { display: inline-flex; align-items: baseline; gap: 2px; }
 /* A vida em números, no canto, alinhada com o rótulo da aprovação embaixo: branca como os valores dos atributos */
-.membro-vida { font-family: var(--num); font-size: 17px; font-weight: 400; line-height: 1; color: var(--tinta); white-space: nowrap; }
+.membro-vida { font-family: var(--num); font-size: 15px; font-weight: 400; line-height: 1; color: var(--tinta); white-space: nowrap; }
 .membro-carta { color: var(--ouro); animation: alerta 1.2s steps(2) infinite; }
-.aprovacao { display: flex; align-items: center; gap: 6px; font-size: 12px; }
-.aprovacao .trilho { position: relative; flex: 1; height: 5px; background: linear-gradient(90deg, #6a2a7a 0 33%, #3a3530 33% 66%, #3d6a2a 66%); box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6); }
-.aprovacao .marca { position: absolute; top: -4px; width: 4px; height: 13px; margin-left: -2px; background: #f3e6c9; box-shadow: 0 0 0 1px #000, 0 0 6px rgba(243, 230, 201, 0.5); transition: left 0.6s cubic-bezier(.2,.8,.3,1); }
+.aprovacao { display: flex; align-items: center; gap: 6px; font-size: 13px; }
+.aprovacao .trilho { position: relative; flex: 1; height: 5px; background: linear-gradient(90deg, #6a2a7a 0 33%, #3a3530 33% 66%, #3d6a2a 66%); box-shadow: 0 0 0 var(--px) var(--p-k); }
+.aprovacao .marca { position: absolute; top: -4px; width: 4px; height: 13px; margin-left: -2px; background: var(--tinta); box-shadow: 0 0 0 var(--px) var(--p-k); transition: left 0.6s cubic-bezier(.2,.8,.3,1); }
 .aprovacao .rotulo { color: var(--tinta-2); white-space: nowrap; }
 .aprovacao.partindo .rotulo, .aprovacao.baixo .rotulo { color: #d29ae0; }
 .aprovacao.bom .rotulo, .aprovacao.alto .rotulo, .aprovacao.maximo .rotulo { color: var(--bom); }
+/* Reputação: o selo numa caixinha, o número grande e o título ao lado. */
+.reputacao { --anel: var(--anel-j); display: flex; align-items: center; gap: 10px; padding-right: 8px; cursor: default;
+  border: var(--borda) solid var(--p-j); border-image: var(--anel) 1 / 1 stretch; background: var(--p-k); background-clip: padding-box; }
+.rep-icone { width: 44px; height: 40px; display: grid; place-items: center; border-right: var(--borda) solid var(--p-j); }
+.reputacao b { font-family: var(--num); font-size: 21px; font-weight: 600; color: var(--tinta); }
+.rep-titulo { color: var(--tinta-2); font-size: 14px; }
 
 /* ------------------------------------------------------------------ painel do mundo */
 .local-nome { font-family: var(--titulo); font-size: 34px; line-height: 1; color: #f3e6c9; text-shadow: var(--sombra-texto); }
@@ -134,7 +152,7 @@
 .meter .barra-px { flex: 1; }
 /* A bolsa do painel lateral se usa com um clique. */
 .slot-px.usavel { cursor: pointer; }
-.slot-px.usavel:hover { --aro: var(--ouro); transform: translateY(-2px); }
+.slot-px.usavel:hover { --anel: var(--anel-Y); transform: translateY(-2px); }
 .slot-px.usavel:active { transform: translateY(0) scale(.95); }
 .slot-px.usavel.inutil { opacity: .5; }
 /* O animal do patrulheiro na ficha: como um membro da comitiva, com moldura verde de mato */

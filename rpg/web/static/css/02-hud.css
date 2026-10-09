@@ -39,9 +39,8 @@ body.por-um-fio .vital[data-vital="hp"] .enchimento { animation: pulso-vida var(
 @keyframes enchendo { 0%, 100% { filter: none; } 30% { filter: brightness(1.8) drop-shadow(0 0 4px #7fb0ff); } }
 @keyframes flutuar { from { transform: translate(-50%, 0); opacity: 1; } to { transform: translate(-50%, -30px); opacity: 0; } }
 
-/* Barras: o enchimento em faixas de pixel; o trilho, um sulco escuro (sem moldura). */
-.barra-px { position: relative; display: block; height: 12px; background: rgba(0, 0, 0, 0.5); overflow: hidden;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(0, 0, 0, 0.55), 0 1px 0 rgba(255, 232, 190, 0.05); }
+/* Barras: trilho preto com filete de bronze de 1 pixel; o enchimento em três faixas (luz, cor, sombra). */
+.barra-px { position: relative; display: block; height: 12px; background: var(--p-k); overflow: hidden; box-shadow: 0 0 0 var(--px) var(--p-j); }
 .barra-px .enchimento, .barra-px .rastro { position: absolute; top: 0; bottom: 0; left: 0; transition: width 0.22s cubic-bezier(.3,.7,.4,1); }
 .barra-px .rastro { background: #f1e4c4; transition: width 0.4s ease-out 0.12s; }
 .barra-px .enchimento { background: linear-gradient(180deg, var(--c1) 0 30%, var(--c2) 30% 72%, var(--c3) 72%); }

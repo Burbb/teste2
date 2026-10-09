@@ -128,11 +128,11 @@ function desenharHeroi(h) {
   const attrs = Telas.atributosHtml(h);
   const slot = (s) => {
     const it = h.equip[s];
-    if (!it) return `<div class="slot-px mini vazio" data-mini="${s}" title="${esc(Telas.NOME_ESPACO[s])} (vazio)">${spr(Telas.VAZIO[s], 1, "fantasma")}</div>`;
-    return `<div class="slot-px mini r-${esc(it.raridade)}" data-mini="${s}" ${Telas.dicaItem(it, "", false)}>${spr(Telas.iconeItem(it), 1)}</div>`;
+    if (!it) return `<div class="slot-px mini vazio" data-mini="${s}" title="${esc(Telas.NOME_ESPACO[s])} (vazio)">${spr(Telas.VAZIO[s], 2, "fantasma")}</div>`;
+    return `<div class="slot-px mini r-${esc(it.raridade)}" data-mini="${s}" ${Telas.dicaItem(it, "", false)}>${spr(Telas.iconeItem(it), 2)}</div>`;
   };
   const feridas = h.ferimentos.length ? h.ferimentos.map((f) => `<div class="ferimento${f.aberto ? " aberto" : ""}" ${Telas.dica(`<b>${esc(f.nome)}</b><div class="tipo">${f.dias ? `${Texto.plural(f.dias, "dia")} para sarar` : "não sara sozinha"}${f.aberto ? " · ferida aberta" : ""}</div>${(f.explica || []).map((l, i) => `<div class="${i ? "" : "bonus pior"}">${esc(l)}</div>`).join("")}`)}>${spr("gota", 1)}${esc(f.nome)} <small>${f.dias ? f.dias + "d" : ""}${f.aberto ? " · aberto" : ""}</small></div>`).join("")
-    : '<div class="vazio">nenhum, por enquanto</div>';
+    : '<div class="vazio">Nenhum, por enquanto.</div>';
   const bolsa = h.bolsa.filter((b) => b.id !== "tocha").map((b) => {
     const dica = `<b>${esc(b.nome)}</b><div>${Realce.texto(b.desc)}</div><div class="rodape">${b.motivo ? esc(b.motivo) : estado && estado.combate ? "Clique para usar (gasta o turno)." : "Clique para usar."}</div>`;
     return `<div role="button" tabindex="0" class="slot-px usavel${b.motivo && !(b.alvos || []).some((a) => !a.motivo) ? " inutil" : ""}" data-bolsa="${esc(b.id)}" ${Telas.dica(dica)}>${spr(Telas.ICONE_ITEM[b.id] || "pocao", 2)}<span class="qtd">${b.qtd}</span></div>`;
@@ -165,7 +165,7 @@ function desenharHeroi(h) {
   const comitiva = membros || fera ? `<div class="secao"><h3>Comitiva</h3>${membros}${fera}</div>` : "";
   $("#heroi").innerHTML = `
     <div class="identidade"><div class="retrato-grande">${spr(h.classe, 3)}</div>
-      <div><div class="heroi-nome">${esc(h.nome)}</div><div class="heroi-titulo">${esc(h.titulo)} · nível ${h.nivel}</div></div></div>
+      <div><div class="heroi-nome">${esc(h.nome)}</div><div class="heroi-titulo">${esc(h.titulo)} • nível ${h.nivel}</div></div></div>
     <div class="xp-linha"><div class="legenda-linha"><span>Experiência</span><span>${h.xp}/${h.xp_proximo}</span></div>${barra("xp", h.xp, h.xp_proximo)}</div>
     ${h.pontos_talento ? `<div class="talento-aviso" role="button" tabindex="0" data-atalho="Talentos">${spr("estrela", 1)} ${Texto.plural(h.pontos_talento, "ponto de talento", "pontos de talento")}</div>` : ""}
     <div class="secao"><h3>Atributos</h3><div class="atributos">${attrs}</div></div>
@@ -173,7 +173,7 @@ function desenharHeroi(h) {
     ${comitiva}
     <div class="secao"><h3>Ferimentos</h3>${feridas}</div>
     <div class="secao"><h3>Bolsa</h3><div class="slots">${bolsa || '<span class="vazio">vazia</span>'}</div></div>
-    <div class="secao"><div class="linhas">${Telas.reputacaoHtml(h)}</div></div>`;
+    <div class="secao"><h3>Reputação</h3>${Telas.reputacaoHtml(h)}</div>`;
   animarBarras($("#heroi"));
   Telas.ligarDicas($("#heroi"));
   // O aviso de ponto de talento abre a árvore (ou guarda o pedido, se ainda houver cena correndo).

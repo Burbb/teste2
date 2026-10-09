@@ -19,7 +19,7 @@ const Sprites = (() => {
   const BAYER4 = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
   const S = SPRITES_GRADES;  // os desenhos moram em sprites-dados.js
   /** As molduras em 9-slice (sprites-dados.js), publicadas como --anel-k, --placa-C, --janela-y... */
-  const MOLDURAS = Object.keys(S).filter((n) => /^(anel|placa|janela|quadro)_\w$/.test(n));
+  const MOLDURAS = Object.keys(S).filter((n) => /^(anel|placa|janela|quadro|retrato)_\w$/.test(n));
 
   const cache = {};
   function canvas(nome) {
@@ -166,7 +166,7 @@ const Sprites = (() => {
     raiz.setProperty("--sombra-dir", u(rampa("k", 4, "esquerda")));
     raiz.setProperty("--sombra-baixo", u(rampa("k", 4, "sobe")));
     raiz.setProperty("--sombra-desce", u(rampa("k", 4)));
-    for (const n of ["caveira", "cadeado", "lanterna", "estrelinha", "fio_cabeca", "fim_cabeca"]) raiz.setProperty(`--${n.replace("_", "-")}`, u(url(n)));
+    for (const n of ["caveira", "cadeado", "lanterna", "estrelinha", "fio_cabeca", "fim_cabeca", "fio", "ponta"]) raiz.setProperty(`--${n.replace("_", "-")}`, u(url(n)));
   }
 
   return { img, url, canvas, existe: (n) => !!S[n], PALETA, BAYER4, MOLDURAS, tex: { tile, pontilhado, rampa, pedra, fumo }, publicar };
