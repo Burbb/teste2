@@ -241,12 +241,13 @@ function nivelPerigo(nivel) {
   return d >= 2 ? "alto" : d >= 0 ? "medio" : "baixo";
 }
 
+const maiuscula = (t) => (t ? t[0].toUpperCase() + t.slice(1) : t);  // "vila" → "Vila" no painel do mundo
 function marcasContrato(e) { return new Set((e.contratos || []).filter((c) => !c.concluido).map((c) => c.lugar_id)); }
 /** A dica de um lugar no mapa (hover): o nome, o tipo, o perigo, a distância e os contratos que você tem lá. */
 function dicaDoLugar(e, clic) {
   const porLugar = {};
   (e.contratos || []).filter((c) => !c.concluido).forEach((c) => { (porLugar[c.lugar_id] = porLugar[c.lugar_id] || []).push(c); });
-  return (n) => `<b>${esc(n.nome)}</b><div class="tipo">${esc(n.descricao)}` +
+  return (n) => `<b>${esc(n.nome)}</b><div class="tipo">${esc(maiuscula(n.descricao))}` +
     (n.nivel ? ` · <span class="nivel-cam ${nivelPerigo(n.nivel)}">${n.tipo === "vila" ? "arredores" : "inimigos"} Nv.${n.nivel}</span>` : "") +
     (n.distancia ? ` · ${Texto.plural(n.distancia, "trecho")}` : n.atual ? " · você está aqui" : "") + "</div>" +
     (porLugar[n.id] || []).map((c) => `<div class="dica-contrato">${spr("pergaminho", 1)}<span>${esc(c.desc)}</span></div>`).join("") +
@@ -261,8 +262,8 @@ function desenharMundo(e) {
       <span class="nome">${esc(n.nome)}<small>${n.nivel ? `<span class="nivel-cam ${nivelPerigo(n.nivel)}">Nível ${n.nivel}</span> · ` : ""}${esc(n.descricao)}</small></span>
       <span class="dist">${Texto.plural(n.distancia, "trecho")}</span></div>`).join("");
   const raiz = $("#mundo");
-  raiz.innerHTML = `<div class="local-nome">${esc(l.nome)}</div><div class="local-desc">${esc(l.descricao)}</div>
-    ${l.nivel ? `<span class="perigo-tag ${nivelPerigo(l.nivel)}">${l.tipo === "vila" ? "arredores" : "inimigos"} Nv.${l.nivel}</span>` : ""}<div id="mapa-mini"></div>
+  raiz.innerHTML = `<div class="local-nome">${esc(l.nome)}</div><div class="local-desc">${esc(maiuscula(l.descricao))}</div>
+    ${l.nivel ? `<span class="perigo-tag ${nivelPerigo(l.nivel)}">${l.tipo === "vila" ? "Arredores" : "Inimigos"} Nv.${l.nivel}</span>` : ""}<div id="mapa-mini"></div>
     ${Telas.rastreador(e.contratos, e.heroi.nivel)}
     <div class="secao"><h3>Caminhos</h3><div class="caminhos">${caminhos || '<div class="vazio">nenhum</div>'}</div></div>`;
   const mini = MapaPx.criar(e.mapa, { clicaveis: clic, aoClicar: viajarPara, nivelHeroi: e.heroi.nivel, marcas: marcasContrato(e), dicaDe: dicaDoLugar(e, clic) });

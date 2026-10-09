@@ -37,7 +37,7 @@ def _imortal(cb, u, rank, d):
         return
     cb.usou_imortal = True
     d["dano"] = u.hp - 1
-    u.aplicar("fortalecido", 3, 0.5)
+    u.aplicar("furia", 3, 0.5)
     cb.dizer("Um golpe que deveria te matar... mas você se recusa a cair! (Imortal)", "vermelho+negrito")
 
 
@@ -74,8 +74,8 @@ def _senhor_mortos(cb, u, rank, d):
 
 def _frenesi(cb, u, rank, d):
     cb.frenesi = min(3, cb.frenesi + 1)
-    u.aplicar("fortalecido", 99, 0)
-    u.efeitos["fortalecido"]["v"] = 0.1 * rank * cb.frenesi
+    u.aplicar("frenesi", 99, 0)
+    u.efeitos["frenesi"]["v"] = 0.1 * rank * cb.frenesi  # o próprio estado, que só cresce: não mexe na Fúria nem no Grito
     cb.dizer(f"O sangue ferve: Frenesi x{cb.frenesi}!", "vermelho")
 
 

@@ -55,6 +55,7 @@ class Loja:
                if j.classe == "arqueiro" else []),
             "equipamentos": [item(it, self.preco(it["preco"])) for it in self.estoque()],
             "mochila": [dict(item(it, it["preco"] // 2), usavel=self.pode_usar(it)) for it in j.mochila],
+            "recompra": [item(it, valor) for it, valor in self.recompra],
         }
 
     SUPRIMENTOS = ("tocha", "bandagem", "unguento", "pocao_vida", "tonico", "antidoto", "bomba_fumaca", "pena_fenix")
@@ -137,17 +138,37 @@ class Loja:
             self.ui.efeito(f"{it['nome']} vai para a mochila", "item")
         return True
 
+    RECOMPRA_MAX = 6  # quantos dos últimos vendidos o mercador ainda guarda no balcão
+
     def vender_item(self, it):
-        """O mercador paga metade do valor."""
+        """O mercador paga metade do valor. O item fica no balcão até você sair: dá para recomprar pelo mesmo preço."""
         j = self.j
         j.mochila.remove(it)
         valor = it["preco"] // 2  # exatamente o que o botão "Vender por" anunciou
         j.ouro += valor
+        self.recompra = [(it, valor)] + self.recompra[:self.RECOMPRA_MAX - 1]
         self.ui.efeito(f"Vendeu {it['nome']}: +{valor} ouro", "ouro")
         registrar(self, "venda", item=it["nome"], raridade=it.get("raridade", "comum"), preco=valor)
 
+    def recomprar_item(self, i):
+        """Desfaz uma venda desta visita, pelo que o mercador pagou."""
+        j = self.j
+        it, valor = self.recompra[i]
+        if j.ouro < valor:
+            self.dizer("\"Sem ouro, sem negócio.\"", "vermelho")
+            return False
+        if len(j.mochila) >= LIMITE_MOCHILA:
+            self.dizer("Sua mochila está cheia. Venda ou largue algo antes.", "vermelho")
+            return False
+        del self.recompra[i]
+        self.perder_ouro(valor)
+        j.mochila.append(it)
+        self.ui.efeito(f"{it['nome']} volta para a mochila", "item")
+        return True
+
     # ------------------------------------------------------------ telas
     def loja(self):
+        self.recompra = []  # visita nova: o balcão de recompra começa vazio
         while True:
             j = self.j
             self.ui.cena("Mercado", self.loc["nome"], "menu")  # o ouro já está no topo e no balcão
@@ -202,11 +223,15 @@ class Loja:
             if self.pode_usar(it):
                 opcoes.append((f"Equipar {it['nome']}", ("equipar", it), {"equipar": i}))
             opcoes.append((f"Vender {it['nome']}", ("vender", it), {"vender": i}))
+        for i, (it, _) in enumerate(self.recompra):
+            opcoes.append((f"Recomprar {it['nome']}", ("recomprar", i), {"recomprar": i}))
         op = self.menu("", opcoes + [("Sair do mercado", None, {"voltar": True})])
         if op is None:
             return True
         if op[0] == "vender":
             self.vender_item(op[1])
+        elif op[0] == "recomprar":
+            self.recomprar_item(op[1])
         elif op[0] == "equipar":
             self.equipar(op[1])
         elif op[0] == "equip":

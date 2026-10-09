@@ -108,7 +108,7 @@ async function virarParaLugar(m) {
     const ms = cenaInterrompida ? 1000 : novo < 80 ? Math.max(700, Math.min(1500, 800 + novo * 30 - ja))
       : Math.max(1300, Math.min(5500, 800 + novo * 30 - ja));
     Telas.esconderDica();
-    promptEl.innerHTML = `<div class="virando" aria-hidden="true"><i style="--dura:${Math.round(ms)}ms"></i></div>`;
+    promptEl.innerHTML = `<div class="fio-leitura" aria-hidden="true"><i style="--dura:${Math.round(ms)}ms"></i></div>`;
     // O clique que caiu enquanto o texto corria só terminou o texto: a leitura começa agora. E nos primeiros instantes
     // a página não aceita clique, para um clique certeiro na hora em que o resultado aparece não o pular sem ser lido.
     pular = false;
@@ -220,7 +220,9 @@ async function opiniao(m) {
   historico("h-chip", `▸ ${m.nome} ${bom ? "aprova" : "desaprova"}${Math.abs(m.delta) >= 8 ? " muito" : ""}`);
   if (replay) return;
   Batalha.opiniao(m.cid, m.nome, m.delta);
-  if (!instantaneo()) await espera(ritmo(220));  // vários reagindo ao mesmo fato: os cartões chegam quase juntos
+  // Vários reagindo ao mesmo fato: um de cada vez, com um respiro entre eles (dá para ler cada um e os sons não se
+  // atropelam). Nem o clique que adianta o texto junta tudo de uma vez.
+  await espera(instantaneo() ? 200 : ritmo(480));
 }
 
 function iconeChip(m) {
@@ -293,8 +295,11 @@ async function efeito(m) {
   }
   let linha = textoEl.lastElementChild;
   if (!linha || !linha.classList.contains("chips") || linha.classList.contains("passado")) linha = anexar(el("div", "chips"));
-  linha.appendChild(el("span", `chip ${m.tipo || "info"}`, spr(iconeChip(m), 1) + esc(m.texto)));
+  const chip = linha.appendChild(el("span", `chip ${m.tipo || "info"}`, spr(iconeChip(m), 1) + esc(m.texto)));
   rolarFim();
+  // Ouro ganho num evento (o baú aberto, a recompensa): o chip fica no texto e as moedas voam até o ouro do topo,
+  // sem parar a cena (a festa de tela cheia fica para o que é raro: atributo para sempre, nível, Sigilo).
+  if (m.tipo === "ouro" && !replay) Telas.moedasPara(chip, document.querySelector('.recurso[data-rec="ouro"]'));
   historico("h-chip", "▸ " + m.texto);
   if (replay) return;
   if (m.tipo === "ouro") Som.tocar("moeda");

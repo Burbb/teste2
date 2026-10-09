@@ -114,7 +114,7 @@ function acao(filtro, som, extra) {
   responder(pergunta.id, extra ? { i, ...extra } : i);  // extra: dados que vão junto (ex.: quantidade)
   return true;
 }
-const ACOES_OCULTAS = ["equipar", "tirar", "usar", "largar", "comprar", "comprar_item", "vender", "aceitar", "abandonar",
+const ACOES_OCULTAS = ["equipar", "tirar", "usar", "largar", "comprar", "comprar_item", "vender", "recomprar", "aceitar", "abandonar",
   "conversar", "chamar", "reservar", "acampamento", "save", "carinho", "dormir", "reforcar", "tratar"];
 
 /* ------------------------------------------------------------------ fila */

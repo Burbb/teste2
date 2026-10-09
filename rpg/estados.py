@@ -12,6 +12,7 @@ Cada estado declara, num lugar só, tudo o que o jogo precisa saber dele:
     resiste     quem pode resistir na hora, com sorteio (chefes e gigantes contra o atordoamento)
     camadas     acumula até N camadas (queimadura), com o rótulo "em chamas ×N"
     dica        uma frase a mais na dica do ícone
+    agora       a dica com o número de agora, a partir do valor do estado (v): "+30% de dano", não "causa mais dano"
     descrever   como o Grimório escreve uma habilidade que aplica o estado num inimigo
     buff        como o Grimório escreve o estado aplicado em você
     golpe       o que o estado muda num golpe, por etapa da conta (GOLPE_ETAPAS); `v` é o valor do estado
@@ -65,11 +66,11 @@ GOLPE_ETAPAS = {
 
 def estado(nome, icone, familia, negativo=False, tique=None, perde_turno=False, imune=None, resiste=None,
            camadas=0, rotulo_camadas=None, dica="", descrever=None, buff=None, ajuste_tique=None, golpe=None,
-           depois=None, protege=()):
+           depois=None, protege=(), agora=None):
     return dict(nome=nome, icone=icone, familia=familia, negativo=negativo, tique=tique, perde_turno=perde_turno,
                 imune=imune, resiste=resiste, camadas=camadas, rotulo_camadas=rotulo_camadas, dica=dica,
                 descrever=descrever, buff=buff, ajuste_tique=ajuste_tique, golpe=golpe or {}, depois=depois,
-                protege=protege)
+                protege=protege, agora=agora)
 
 
 def _chuva_apaga(cb, dano):
@@ -81,13 +82,26 @@ ESTADOS = {
     # --- bênçãos (antes dos males: na conta do golpe, o bônus multiplica primeiro)
     "guarda": estado("em guarda", "escudo", "protecao", dica="recebe menos dano",
                      buff=lambda u, t, v: f"Dano recebido −{_pct(v)} por {_turnos(t)}.",
-                     golpe={"dano_final": lambda v: 1 - v}),
+                     golpe={"dano_final": lambda v: 1 - v}, agora=lambda v: f"dano recebido −{_pct(v)}"),
+    # Cada fonte de dano a mais é um estado próprio, com o seu ícone e o seu número: elas se somam lado a lado (cada
+    # uma multiplica o golpe), e a mesma fonte de novo só renova (fica o maior valor e a maior duração). Assim o
+    # Frenesi não apaga a Fúria, e o Grito de Guerra junto da Fúria rende as duas.
     "fortalecido": estado("fortalecido", "espada", "forca", dica="causa mais dano",
                           buff=lambda u, t, v: f"Seu dano +{_pct(v)} por {_turnos(t)}.",
-                          golpe={"dano_causado": lambda v: 1 + v}),
+                          golpe={"dano_causado": lambda v: 1 + v}, agora=lambda v: f"+{_pct(v)} de dano"),
+    "furia": estado("em fúria", "machado", "forca", dica="causa mais dano",
+                    buff=lambda u, t, v: f"Fúria: seu dano +{_pct(v)} por {_turnos(t)}.",
+                    golpe={"dano_causado": lambda v: 1 + v}, agora=lambda v: f"fúria: +{_pct(v)} de dano"),
+    "frenesi": estado("em frenesi", "raio", "forca", dica="cada abate soma dano",
+                      golpe={"dano_causado": lambda v: 1 + v}, agora=lambda v: f"frenesi: +{_pct(v)} de dano até o fim da luta"),
+    # O turno livre de quem pegou o inimigo de surpresa: o primeiro golpe dele sai mais forte (a conta fica em
+    # combate.atacar, que gasta o estado); usado para outra coisa, o turno passa e o estado vai junto.
+    "iniciativa": estado("com a iniciativa", "bota", "forca", dica="o primeiro golpe deste turno sai mais forte",
+                         agora=lambda v: f"+{_pct(v)} no primeiro golpe deste turno"),
     "esquiva": estado("esquivo", "folha", "protecao", dica="mais difícil de acertar", buff=lambda u, t, v: _buff_esquiva(u, t, v),
-                      golpe={"esquiva": lambda v: v}),
-    "barreira": estado("com barreira", "escudo_azul", "protecao", dica="absorve dano", golpe={"absorve": True}),
+                      golpe={"esquiva": lambda v: v}, agora=lambda v: f"esquiva +{_pct(v)}"),
+    "barreira": estado("com barreira", "escudo_azul", "protecao", dica="absorve dano", golpe={"absorve": True},
+                       agora=lambda v: f"absorve mais {_num(v)} de dano"),
     "furtivo": estado("furtivo", "olho", "sombra", dica="o próximo ataque é crítico garantido",
                       buff=lambda u, t, v: _buff_furtivo(u), golpe={"critico_garantido": "Furtivo"}),
     "provocando": estado("provocando", "caveira", "forca", dica="os inimigos atacam ele"),
@@ -126,7 +140,7 @@ ESTADOS = {
         descrever=lambda t, v, esc, ch, todos, rot: _chance(ch, f"enfraquecer {_quem(todos)} por {_turnos(t)} (causa −25% de dano).")),
     "marcado": estado(
         "marcado", "flecha", "marca", negativo=True, dica="recebe mais dano de todos",
-        golpe={"dano_recebido": lambda v: 1 + v},
+        golpe={"dano_recebido": lambda v: 1 + v}, agora=lambda v: f"recebe +{_pct(v)} de dano de todos",
         descrever=lambda t, v, esc, ch, todos, rot: f"{_quem(todos)[0].upper() + _quem(todos)[1:]} recebe +{_pct(v)} de dano de todos por {_turnos(t)}."),
 }
 
@@ -172,6 +186,12 @@ def descrever_buff(u, efeito, turnos, valor):
     if e and e["buff"]:
         return e["buff"](u, turnos, valor)
     return f"{(e or {}).get('nome', efeito)} por {_turnos(turnos)}."
+
+
+def agora(efeito, v):
+    """A dica do estado com o número de agora ("+30% de dano"), ou a frase fixa do catálogo."""
+    e = ESTADOS.get(efeito) or {}
+    return e["agora"](v) if e.get("agora") else e.get("dica", "")
 
 
 def para_tela():

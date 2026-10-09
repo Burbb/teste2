@@ -132,6 +132,7 @@ Em `rpg/estados.py`, no catálogo `ESTADOS`:
 | `imune(alvo)` / `resiste(cb, alvo)` | quem não pega / quem resiste na hora (com sorteio) |
 | `camadas`, `rotulo_camadas` | acumula (`"em chamas ×{s}"`) quando aplicado com `acumula=True` |
 | `dica`, `descrever`, `buff` | a frase do ícone; a linha do Grimório num inimigo; a linha num estado seu |
+| `agora` | a frase com o número, para a carta: `lambda v: f"+{_pct(v)} de dano"` (sem ela, vale a `dica`) |
 | `golpe` | o que muda na conta de um golpe, por etapa: `{"dano_causado": lambda v: 1 + v}` |
 
 Tique, perda de turno, imunidade, resistência e camadas já funcionam sozinhos. Um estado que mexe na **conta de

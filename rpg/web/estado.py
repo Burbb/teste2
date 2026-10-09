@@ -5,6 +5,7 @@ from .. import comitiva, grimorio, mapa, sobrevivencia
 from .. import texto as tx
 from ..classes import CLASSES
 from ..habilidades import HABILIDADES, descricao_habilidade
+from .. import estados
 from ..estados import NOMES as NOMES_EFEITOS, para_tela
 from ..dados import BIOMAS, CLIMAS, PERIODOS
 from ..itens import CONSUMIVEIS, ficha
@@ -29,6 +30,7 @@ def _efeitos(c):
             d["por_turno"] = max(1, int(ef["v"]))
         if ef.get("s", 1) > 1:
             d["camadas"] = ef["s"]
+        d["texto"] = estados.agora(n, ef.get("v", 0))
         lista.append(d)
     return lista
 
@@ -247,7 +249,8 @@ def modificadores(g):
     elif clima == "nevoa":
         m.append({"icone": "olho", "texto": "Esquiva +5%", "detalhe": "Névoa: todo mundo erra mais (+5% de esquiva para todos)."})
     if g.noite:
-        m.append({"icone": "lua", "texto": "Inimigos +10%", "detalhe": "Noite: os inimigos causam 10% mais dano. É a hora deles."})
+        m.append({"icone": "lua", "texto": "Inimigos +1 nível",
+                  "detalhe": "Noite: os inimigos vêm um nível acima, mais vezes em bando, e causam 10% mais dano. É a hora deles."})
     if g.sem_luz:
         m.append({"icone": "tocha_apagada", "texto": "Escuro −4", "detalhe": "Sem luz: −4 nos testes de Percepção e Destreza. Acenda uma tocha."})
     return m

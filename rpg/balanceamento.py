@@ -57,7 +57,9 @@ MAX_ESQUIVA = 0.6             # teto com habilidades e clima: nem o mais ágil �
 CRITICO_BASE = 0.05
 CRITICO_POR_AGI = 0.01
 MAX_CRITICO = 0.6
-NOITE_INIMIGOS = 1.1          # à noite, os monstros batem 10% mais forte
+NOITE_INIMIGOS = 1.1          # à noite, os monstros batem 10% mais forte...
+NOITE_NIVEL = 1               # ... vêm um nível acima...
+NOITE_GRUPO = 0.4             # ... e mais vezes em bando: chance de um a mais no grupo (no começo, sem passar do teto)
 
 # Fôlego depois da luta: vigor e foco voltam pela metade; a mana do mago, um quinto.
 FOLEGO_POS_LUTA = 0.5

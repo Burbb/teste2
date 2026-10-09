@@ -186,3 +186,12 @@ body.em-combate #hud-linha { justify-content: flex-end; }
 .flutua.abate { font-size: 30px; }
 .flutua.crit.abate { font-size: 40px; }
 .flutua.final { font-size: 48px; color: #fff3a0; animation-duration: 1.8s; text-shadow: 3px 3px 0 #000, 0 0 14px rgba(255, 200, 80, 0.8); }
+/* Pego de surpresa: a carta treme e um "!" salta em cima dela. */
+.carta.surpreso { animation: surpreso 0.7s steps(10); }
+@keyframes surpreso { 0%, 100% { translate: 0 0; } 10% { translate: -5px -3px; } 20% { translate: 5px 0; } 30% { translate: -4px -2px; }
+  40% { translate: 4px 0; } 50% { translate: -2px -1px; } 60% { translate: 2px 0; } }
+/* O "!" fica ao lado da carta, para o centro da arena: em cima, o de uma carta cobria a vida da carta acima dela. */
+.faixa-acao.surpresa { font-family: var(--titulo); font-size: calc(var(--px) * 32); padding: 0 10px 2px; background: var(--ouro); color: #120e0b;
+  bottom: auto; top: 50%; left: calc(100% + 8px); translate: 0 -50%; }
+.carta.inimigo .faixa-acao.surpresa { left: auto; right: calc(100% + 8px); }
+.faixa-acao.surpresa.ruim { background: #e2574c; color: #fff; }

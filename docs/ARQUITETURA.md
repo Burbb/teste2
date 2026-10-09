@@ -17,7 +17,8 @@ Ele chama uma interface (`ui`) com pedidos de alto nível: `cena`, `dizer`, `esc
 
 Quando o jeito de mostrar muda de uma interface para outra, o motor não pergunta "é a web?". Ele pergunta o
 que a interface **sabe fazer** (atributos em `UI`: `hud`, `letras_nos_alvos`, `analisar_no_menu`,
-`numerar_destinos`, `fogueira_sozinho`, `bolsa_clicavel`, `conversa_no_painel`, `conquistas_na_tela`) ou entrega o conteúdo e deixa ela mostrar
+`numerar_destinos`, `fogueira_sozinho`, `bolsa_clicavel`, `conversa_no_painel`, `conquistas_na_tela`,
+`surpresa_na_tela`) ou entrega o conteúdo e deixa ela mostrar
 (`desenhar_mapa`, `mostrar_talentos`, `talento_aprendido`, `reacao_animal`, `boas_vindas`). A classe `UI` faz do
 jeito do texto; o mixin `InterfaceGrafica` faz do jeito gráfico e é usado pela `WebUI` e pelo robô do gabarito
 quando imita a tela web. Uma interface nova (celular, outra tela) escolhe as capacidades, sem tocar no motor.
@@ -50,7 +51,14 @@ sorteia entre os que valem para o contexto.
 - Estados (veneno, queimadura, guarda, provocando...) ficam em `efeitos` de cada combatente. O **catálogo**
   `rpg/estados.py` (Etapa C) declara, para cada um: nome, ícone e cor na tela, se é um mal, dano por turno,
   perda de turno, imunidade, resistência, camadas e como o Grimório o descreve. `aplicar()` e
-  `processar_efeitos()` são genéricos: só leem o catálogo. A tela recebe ícones e dicas pelo estado (`"estados"`).
+  `processar_efeitos()` são genéricos: só leem o catálogo. A tela recebe ícones e dicas pelo estado (`"estados"`)
+  e, em cada carta, a frase do agora com o número (`agora`: "+60% de dano por 2 turnos", não "causa mais dano").
+- Acúmulo de bônus, como nos jogos do gênero: **a mesma fonte renova** (aplicar o mesmo estado de novo fica com o
+  maior valor e o maior prazo) e **fontes diferentes somam lado a lado**, cada uma com o seu estado (`fortalecido`
+  do Grito de Guerra, `furia` da Fúria Cega, `frenesi` do talento): cada uma multiplica o dano na sua vez. Bônus novo
+  de outra fonte é um estado novo, nunca o valor de um que já existe.
+- A iniciativa (emboscada a favor) é o estado `iniciativa` do herói: o primeiro golpe do turno sai mais forte e o
+  estado some no fim do primeiro turno. A tela vê o lance `surpresa` (as cartas pegas de surpresa tremem).
 
 ### Habilidades: dados, não código (Etapa A)
 

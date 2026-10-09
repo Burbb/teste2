@@ -51,23 +51,28 @@ const Telas = (() => {
       const sub = i === 1 ? "para todos" : !a.spec ? "especialização no nível 4" : trancada ? "caminho não escolhido" : "sua especialização";
       return `<div class="arvore-col-titulo${trancada ? " trancada" : ""}">${h(nome)}<small>${sub}</small></div>`;
     }).join("");
+    // A primeira fileira é a base, de todos (vem antes da especialização): numa faixa própria, acima das colunas dos
+    // caminhos. Debaixo do título "Paladino", ela parecia do paladino, e um berserker achava que pegava talento alheio.
+    const nivelBase = a.camadas["1"];
     let html = `<div class="arvore-topo"><span>Nível ${a.nivel} · passe o mouse num talento para ver o que ele faz</span>
       <span class="pontos${a.pontos ? "" : " zero"}">${S("estrela", 2)} ${Texto.plural(a.pontos, "ponto")}</span></div>
+      <div class="arvore-grade arvore-base"><div></div><div class="arvore-base-titulo">Base<small>para todos, antes da especialização</small></div>
+      <div class="arvore-nivel${a.nivel >= nivelBase ? " ok" : ""}">Nv.${nivelBase}</div>${[0, 1, 2].map((col) => celula(1, col)).join("")}</div>
       <div class="arvore-grade"><div></div>${colunas}`;
-    for (let camada = 1; camada <= 4; camada++) {
-      const nivelReq = a.camadas[String(camada)];
-      html += `<div class="arvore-nivel${a.nivel >= nivelReq ? " ok" : ""}">Nv.${nivelReq}</div>`;
-      for (let col = 0; col < 3; col++) {
-        const n = a.nos.find((x) => x.camada === camada && x.coluna === col);
-        const acima = a.nos.find((x) => x.camada === camada - 1 && x.coluna === col);
-        const conecta = n && acima ? " conecta" + (acima.rank > 0 ? " aceso" : "") : "";
-        if (!n) { html += `<div class="arvore-celula${conecta}"></div>`; continue; }
-        const pode = n.estado === "disponivel" && a.pontos > 0 && idx[n.id] !== undefined;
-        const classe = n.estado === "comprado" ? "comprado" : n.estado === "disponivel" ? "disponivel" : n.estado === "bloqueado" ? "bloqueado" : "trancado";
-        const novo = ranksAntes[n.id] !== undefined && n.rank > ranksAntes[n.id] ? " aprendeu" : "";
-        html += `<div class="arvore-celula${conecta}"><div class="no-talento ${classe}${pode ? " pode" : ""}${novo}" data-id="${h(n.id)}">
+    function celula(camada, col) {
+      const n = a.nos.find((x) => x.camada === camada && x.coluna === col);
+      const acima = camada > 2 && a.nos.find((x) => x.camada === camada - 1 && x.coluna === col);
+      const conecta = n && acima ? " conecta" + (acima.rank > 0 ? " aceso" : "") : "";
+      if (!n) return `<div class="arvore-celula${conecta}"></div>`;
+      const pode = n.estado === "disponivel" && a.pontos > 0 && idx[n.id] !== undefined;
+      const classe = n.estado === "comprado" ? "comprado" : n.estado === "disponivel" ? "disponivel" : n.estado === "bloqueado" ? "bloqueado" : "trancado";
+      const novo = ranksAntes[n.id] !== undefined && n.rank > ranksAntes[n.id] ? " aprendeu" : "";
+      return `<div class="arvore-celula${conecta}"><div class="no-talento ${classe}${pode ? " pode" : ""}${novo}" data-id="${h(n.id)}">
           ${S(ICONE_TALENTO[n.id] || "estrela", 3)}<span class="rank">${n.rank}/${n.max}</span></div></div>`;
-      }
+    }
+    for (let camada = 2; camada <= 4; camada++) {
+      const nivelReq = a.camadas[String(camada)];
+      html += `<div class="arvore-nivel${a.nivel >= nivelReq ? " ok" : ""}">Nv.${nivelReq}</div>` + [0, 1, 2].map((col) => celula(camada, col)).join("");
     }
     html += "</div>";
     document.getElementById("arvore").innerHTML = html;
@@ -566,9 +571,15 @@ const Telas = (() => {
         <span class="slot-px r-${h(it.raridade)}">${S(iconeItem(it), 2)}</span>
         <span class="merc-nome r-${h(it.raridade)}">${h(it.nome)}</span><span class="merc-bonus">${h(it.bonus)}</span><span class="preco">${S("moeda", 1)}${it.preco}</span></button>`;
     }).join("");
-    const venda = (it) => `<div class="preco-venda">${S("moeda", 1)} O mercador paga <b>${it.preco}</b></div>Clique para equipar ou vender · botão direito: vender na hora.`;
-    const mochila = d.mochila.map((it, i) => `<div role="button" tabindex="0" class="slot-px celula r-${h(it.raridade)}${it.usavel ? "" : " inutil"}" draggable="true" data-mochila-loja="${i}" ${dicaItem(it, venda(it))}>${S(iconeItem(it), 2)}</div>`);
-    for (let i = d.mochila.length; i < d.limite; i++) mochila.push('<div class="slot-px celula vazia"></div>');
+    // A mochila no mercado é para vender: cada item com o preço embaixo; clique vende na hora (o que você vendeu fica no
+    // balcão para recomprar pelo mesmo preço, a rede do clique único) e o botão direito equipa, como no inventário.
+    const venda = (it) => `<div class="preco-venda">${S("moeda", 1)} O mercador paga <b>${it.preco}</b></div>` +
+      `Clique: vender${it.usavel ? " · botão direito: equipar" : " · não é para a sua classe"}`;
+    const mochila = d.mochila.map((it, i) => `<div class="venda-item"><div role="button" tabindex="0" class="slot-px celula r-${h(it.raridade)}${it.usavel ? "" : " inutil"}" draggable="true" data-mochila-loja="${i}" ${dicaItem(it, venda(it))}>${S(iconeItem(it), 2)}</div>` +
+      `<span class="preco">${S("moeda", 1)}${it.preco}</span></div>`);
+    for (let i = d.mochila.length; i < d.limite; i++) mochila.push('<div class="venda-item"><div class="slot-px celula vazia"></div></div>');
+    const recompra = (d.recompra || []).map((it, i) => `<div class="venda-item"><div role="button" tabindex="0" class="slot-px celula r-${h(it.raridade)}${it.preco > d.ouro ? " caro" : ""}" data-recomprar="${i}" ${dicaItem(it, `<div class="preco-venda">${S("moeda", 1)} Recomprar por <b>${it.preco}</b></div>Clique para desfazer a venda.`)}>${S(iconeItem(it), 2)}</div>` +
+      `<span class="preco">${S("moeda", 1)}${it.preco}</span></div>`).join("");
     return `<div class="tela loja">
       <div class="loja-topo">${S("saco", 3)}<div><b>O mercador</b><span class="lore">"Tudo tem preço. Até você."</span></div>
         <span class="ouro-loja">${S("moedas", 2)}${d.ouro}</span></div>
@@ -576,8 +587,9 @@ const Telas = (() => {
         <h4>Suprimentos</h4><div class="vitrine">${cons}</div>
         <h4>Equipamentos</h4><div class="vitrine">${equips || '<span class="vazio">Nada que preste hoje. Volte em alguns dias.</span>'}</div>
       </div>
-      <h4>Sua mochila <small>${d.ocupado}/${d.limite} · clique num item para equipar ou vender; botão direito vende na hora (o mercador paga metade)</small></h4>
-      <div class="mochila-grade mochila-loja">${mochila.join("")}</div></div>`;
+      <h4>Sua mochila <small>${d.ocupado}/${d.limite} · clique vende (o mercador paga metade) · botão direito equipa</small></h4>
+      <div class="mochila-grade mochila-loja">${mochila.join("")}</div>
+      ${recompra ? `<h4>Vendidos agora <small>clique para recomprar pelo mesmo preço (até você sair do mercado)</small></h4><div class="mochila-grade mochila-loja recompra">${recompra}</div>` : ""}</div>`;
   }
 
   // ------------------------------------------------------------------ serviços da vila
@@ -668,29 +680,7 @@ const Telas = (() => {
     document.querySelectorAll(".menu-item").forEach((m) => m.remove());
     if (vigiaFora) { document.removeEventListener("pointerdown", vigiaFora, true); vigiaFora = null; }
   }
-  function menuItem(ancora, it, i) {
-    fecharMenuItem();
-    esconderDica();
-    const m = document.createElement("div");
-    m.className = "menu-item m-janela";
-    m.innerHTML = `<b class="r-${h(it.raridade)}">${h(it.nome)}</b>
-      ${it.usavel ? `<button type="button" data-a="equipar">${S("armadura", 1)} Equipar</button>` : '<span class="pior">Não é para a sua classe.</span>'}
-      <button type="button" data-a="vender" class="vender">${S("moeda", 1)} Vender por ${it.preco}</button>
-      <button type="button" data-a="nada" class="secundaria">Cancelar</button>`;
-    document.body.appendChild(m);
-    const r = ancora.getBoundingClientRect();
-    m.style.left = Math.max(8, Math.min(innerWidth - m.offsetWidth - 8, r.left)) + "px";
-    m.style.top = (r.bottom + 6 + m.offsetHeight > innerHeight ? r.top - m.offsetHeight - 6 : r.bottom + 6) + "px";
-    m.addEventListener("click", (ev) => {
-      const b = ev.target.closest("button");
-      if (!b) return;
-      ev.stopPropagation();
-      fecharMenuItem();
-      if (b.dataset.a === "equipar") App.acao({ equipar: i }, "equipar");
-      else if (b.dataset.a === "vender") App.acao({ vender: i });  // o tilintar vem do ouro recebido: um som só
-    });
-    fecharAoClicarFora();
-  }
+
 
   let repeticao = null;  // o "segurar +/−" do mercado em andamento
   function pararRepeticao() { clearTimeout(repeticao); repeticao = null; }
@@ -739,13 +729,29 @@ const Telas = (() => {
     raiz.querySelectorAll("[data-mochila-loja]").forEach((el) => {
       const i = Number(el.dataset.mochilaLoja);
       const it = dados && dados.mochila[i];
-      el.addEventListener("click", (ev) => { ev.stopPropagation(); if (it) menuItem(el, it, i); });
-      el.addEventListener("keydown", (ev) => { if (ev.key === "Enter" && it) menuItem(el, it, i); });
-      // Botão direito vende na hora, sem abrir o menu (o tilintar vem do ouro recebido: um som só).
-      el.addEventListener("contextmenu", (ev) => { ev.preventDefault(); fecharMenuItem(); esconderDica(); if (it) App.acao({ vender: i }); });
+      // Clique vende na hora: as moedas voam até o ouro do topo (o tilintar vem do ouro recebido: um som só).
+      const vender = () => {
+        if (!it) return;
+        fecharMenuItem(); esconderDica();
+        if (App.acao({ vender: i })) moedasPara(el, document.querySelector('.recurso[data-rec="ouro"]'));
+      };
+      el.addEventListener("click", (ev) => { ev.stopPropagation(); vender(); });
+      el.addEventListener("keydown", (ev) => { if (ev.key === "Enter") vender(); });
+      // Botão direito equipa, como no inventário.
+      el.addEventListener("contextmenu", (ev) => {
+        ev.preventDefault(); fecharMenuItem(); esconderDica();
+        if (!it) return;
+        if (!it.usavel) { App.som("falha"); App.avisar("Não é para a sua classe.", "equipar"); return; }
+        App.acao({ equipar: i }, "equipar");
+      });
       el.addEventListener("dragstart", (ev) => { esconderDica(); fecharMenuItem(); vendendo = i; ev.dataTransfer.setData("text/plain", "item"); balcao.classList.add("alvo"); });
       el.addEventListener("dragend", () => { balcao.classList.remove("alvo"); setTimeout(() => { vendendo = null; }, 0); });
     });
+    raiz.querySelectorAll("[data-recomprar]").forEach((el) => el.addEventListener("click", (ev) => {
+      ev.stopPropagation(); esconderDica();
+      if (el.classList.contains("caro")) { App.som("falha"); App.avisar("Ouro insuficiente para recomprar.", "recomprar"); return; }
+      App.acao({ recomprar: Number(el.dataset.recomprar) }, "moeda");
+    }));
     balcao.addEventListener("dragover", (ev) => { if (vendendo !== null) ev.preventDefault(); });
     balcao.addEventListener("drop", (ev) => {
       ev.preventDefault(); balcao.classList.remove("alvo");
@@ -1098,8 +1104,9 @@ const Telas = (() => {
       const valor = aqui.querySelector(".valor");
       if (valor && noPainel) Sensacao.contar(valor, d.total, 520, { de: antes });
     };
-    voar();
-    return new Promise((r) => setTimeout(r, 450));
+    // O próximo só aparece quando este chega ao painel (dois seguidos, +1 Poder e +4 Vida, um tampava o outro
+    // enquanto o primeiro ainda saía do meio).
+    return voar().then(() => new Promise((r) => setTimeout(r, 150)));
   }
 
   /** Chegar a um lugar: o nome surge no meio da tela entre dois fios dourados, como o título de área dos jogos
@@ -1108,7 +1115,7 @@ const Telas = (() => {
   function chegada(d) {
     const el = document.createElement("div");
     el.className = "chegada" + (d.primeira ? " primeira" : "");
-    const tag = d.nivel ? `<span class="perigo-tag ${nivelPerigo(d.nivel)}">${d.tipo === "vila" ? "arredores" : "inimigos"} Nv.${d.nivel}</span>` : "";
+    const tag = d.nivel ? `<span class="perigo-tag ${nivelPerigo(d.nivel)}">${d.tipo === "vila" ? "Arredores" : "Inimigos"} Nv.${d.nivel}</span>` : "";
     el.innerHTML = `${d.primeira ? '<div class="rotulo-festa">lugar descoberto</div>' : ""}<i class="linha-ouro"></i>
       <div class="nome-lugar">${h(d.nome)}</div><i class="linha-ouro"></i>
       <div class="sub-lugar">${h(d.sub)}${tag}</div>`;

@@ -57,10 +57,11 @@ body.modo-titulo .vinheta { background: radial-gradient(ellipse 80% 70% at 50% 4
   background: var(--ponta) 0 0 / calc(var(--P) * 3) no-repeat, var(--fio) 0 0 / var(--P) calc(var(--P) * 3) repeat-x; }
 .ornamento i:last-child { background-position: 100% 0, 0 0; }
 .ornamento b { width: calc(var(--P) * 11); height: calc(var(--P) * 7); background: var(--ornamento) 0 0 / 100%; }
-/* O fim de um evento: um fio de bronze se enche enquanto dá para ler, e a página vira para o lugar. */
-.virando { width: calc(var(--P) * 48); height: var(--P); margin: 22px auto 0; background: var(--p-j); }
-.virando i { display: block; height: 100%; background: var(--ouro); transform-origin: left; animation: virando var(--dura) steps(24) forwards; }
-@keyframes virando { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+/* O fim de um evento: um fio de bronze se enche enquanto dá para ler, e a página vira para o lugar. (O nome não é
+   "virando": essa classe é a da página do Grimório virando, e o tamanho do fio a encolhia.) */
+.fio-leitura { width: calc(var(--P) * 48); height: var(--P); margin: 22px auto 0; background: var(--p-j); }
+.fio-leitura i { display: block; height: 100%; background: var(--ouro); transform-origin: left; animation: fio-leitura var(--dura) steps(24) forwards; }
+@keyframes fio-leitura { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 #cena-cab[data-tipo="menu"] .cena-titulo { font-size: calc(var(--px) * 48); }
 #cena-cab[data-tipo="chefe"] .cena-titulo, #cena-cab[data-tipo="morte"] .cena-titulo { color: var(--sangue-2); }
 #cena-cab[data-tipo="morte"] .cena-titulo, #cena-cab[data-tipo="vitoria"] .cena-titulo { font-size: calc(var(--px) * 64); }

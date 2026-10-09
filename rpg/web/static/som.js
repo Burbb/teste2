@@ -153,6 +153,11 @@ const Som = (() => {
       const t = ctx.currentTime;
       [0, 0.3, 0.6].forEach((d) => { sopro(t + d, 0.12, 1800, 500, 0.06, 0.9, "lowpass"); estalo(t + d + 0.02, 900, 0.03, 0.03); });
     },
+    surpresa() {  // o "!" de quem foi pego desprevenido: duas notas agudas e secas, e um baque
+      const t = ctx.currentTime;
+      tom(t, 988, 0.06, 0.09, "square"); tom(t + 0.08, 1480, 0.06, 0.16, "square");
+      estalo(t, 1200, 0.08, 0.04); tom(t, 110, 0.08, 0.18, "sine", 70);
+    },
     buff() {  // um estado bom: duas notas que sobem e um brilho
       const t = ctx.currentTime;
       tom(t, 523, 0.07, 0.22, "triangle", 659); tom(t + 0.09, 784, 0.07, 0.4, "triangle", 1046);

@@ -64,6 +64,7 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         self.contratos = []
         self.ofertas = {}
         self.lojas = {}
+        self.recompra = []  # o que você vendeu nesta visita ao mercado: dá para desfazer pelo mesmo preço (não vai no save)
         self.nemesis = None
         self.aliados_finais = []
         self.forcados = []

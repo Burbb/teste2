@@ -70,7 +70,6 @@ class Combate:
         self.flechas_gastas = 0
         self.turno = 0
         self.abertura = bool(mod(self.j, "abertura"))
-        self.iniciativa = False  # pegou o inimigo de surpresa: o golpe do turno livre sai mais forte
         self.motivo_abertura = "Tiro de Abertura" if self.abertura else None
         self.usou_martirio = False
         self.usou_imortal = False
@@ -287,8 +286,8 @@ class Combate:
         if u.jogador:
             m *= 1 + mod(u, "dano_corpo" if alcance == "corpo" else "dano_distancia")
             m *= bal.DANO_HEROI
-            if self.iniciativa:
-                self.iniciativa = False
+            if u.efeito("iniciativa"):  # pegou o inimigo de surpresa: o golpe do turno livre sai mais forte
+                u.remover("iniciativa")
                 m *= 1 + bal.INICIATIVA_BONUS
                 bonus_motivo = "Iniciativa!"
         elif u is self.companheiro:
@@ -483,18 +482,24 @@ class Combate:
             # Como a sua surpresa: um golpe livre, do mais rápido deles, e não a rodada do bando inteiro
             # (quatro cães de uma vez matavam antes de você agir uma vez).
             primeiro = max(self.inimigos_vivos(), key=lambda e: e.agi)
-            self.dizer(f"Você foi pego de surpresa! {tx.maiuscula(self.nome(primeiro))} ataca antes que você reaja.",
-                       "vermelho+negrito")
+            if not self.ui.surpresa_na_tela:  # na tela gráfica, a surpresa é a sua carta tremendo (o lance abaixo)
+                self.dizer(f"Você foi pego de surpresa! {tx.maiuscula(self.nome(primeiro))} ataca antes que você reaja.",
+                           "vermelho+negrito")
+            self.lance("surpresa", de=self.uid(primeiro), alvos=["j"])
             self.fase_inimigos(apenas=primeiro)
             r = self._checar_fim()
             if r:
                 return self.fim(r)
         elif self.emboscada == "jogador":
-            self.dizer(tx.concordar("Você tem a iniciativa! Um turno livre antes que {reaja|reajam}: ataque agora e "
-                                    "o golpe sai {bonus}% mais forte.", self.inimigos,
-                                    bonus=round(bal.INICIATIVA_BONUS * 100)), "verde+negrito")
+            if not self.ui.surpresa_na_tela:
+                self.dizer(tx.concordar("Você tem a iniciativa! Um turno livre antes que {reaja|reajam}: ataque agora e "
+                                        "o golpe sai {bonus}% mais forte.", self.inimigos,
+                                        bonus=round(bal.INICIATIVA_BONUS * 100)), "verde+negrito")
             pular_inimigos = True
-            self.iniciativa = True
+            # A iniciativa é um estado à vista na sua carta (o tique do começo do seu turno a deixa em 1) e a tela
+            # mostra os inimigos pegos de surpresa, no lugar da frase.
+            self.j.aplicar("iniciativa", 2, bal.INICIATIVA_BONUS)
+            self.lance("surpresa", de="j", alvos=[self.uid(e) for e in self.inimigos_vivos()])
         disparar(self, self.j, "inicio_combate")  # Aura de Proteção, Armadilheiro...
 
         while True:
@@ -503,7 +508,7 @@ class Combate:
                 return self.fim("fuga")
             # A surpresa é aquele turno: quem o usa para outra coisa (um buff, uma poção) perde o bônus, em vez
             # de guardá-lo para o golpe do turno seguinte.
-            self.iniciativa = False
+            self.j.remover("iniciativa")
             r = self._checar_fim()
             if r:
                 return self.fim(r)

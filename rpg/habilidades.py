@@ -374,7 +374,7 @@ def _linhas_redemoinho(u):
 def _furia_cega(cb, u, alvo):
     custo = int(u.max_hp * 0.15)
     u.hp = max(1, u.hp - custo)
-    u.aplicar("fortalecido", 3, 0.6)
+    u.aplicar("furia", 3, 0.6)
     cb.dizer(f"Você morde o próprio lábio até sangrar e deixa a fúria tomar conta. (-{custo} vida, dano +60%)",
              "vermelho+negrito")
     cb.atacar(u, alvo, 1.3, rotulo="Fúria Cega")

@@ -95,7 +95,9 @@ const Batalha = (() => {
     return lista.map((f) => {
       const [ic, fam] = efeito(f.id);
       const dano = f.por_turno ? ` · ${f.por_turno} de dano por turno` : "";
-      const extra = ESTADOS[f.id] && ESTADOS[f.id].dica ? ` · ${ESTADOS[f.id].dica}` : "";
+      // o número de agora ("+30% de dano"), que vem do motor; sem ele, a frase do catálogo
+      const texto = f.texto || (ESTADOS[f.id] && ESTADOS[f.id].dica);
+      const extra = texto ? ` · ${texto}` : "";
       const camadas = f.camadas ? `<i class="camadas">×${f.camadas}</i>` : "";
       return `<span class="ef fam-${fam}${f.camadas ? " acumulado" : ""}" data-ef="${esc(f.id)}" title="${esc(f.nome)} (${Texto.plural(f.turnos, "turno")})${dano}${extra}">${S(ic, 1)}<b>${f.turnos > 9 ? "∞" : f.turnos}</b>${camadas}</span>`;
     }).join("");
@@ -161,7 +163,6 @@ const Batalha = (() => {
       r.querySelector(".barra-px").className = "barra-px fina " + tipo;
       r.querySelector(".enchimento").style.width = pct(heroi.rec, heroi.max_rec) + "%";
       r.querySelector(".num").textContent = `${heroi.rec}/${heroi.max_rec}`;
-      el.title = `${c.nome} · ${heroi.recurso} ${heroi.rec}/${heroi.max_rec}`;
       // Arqueiro: as flechas ficam à vista na própria carta, e piscam quando estão acabando.
       const fl = el.querySelector(".carta-flechas");
       if (fl) {
@@ -175,7 +176,7 @@ const Batalha = (() => {
           fl.title = `Flechas: ${heroi.flechas} (a aljava leva ${heroi.max_flechas || 30}). Sem flechas, o ataque vira um golpe de adaga fraco e as habilidades de tiro ficam bloqueadas.`;
         }
       }
-    } else el.title = c.nome;
+    }  // sem title nas cartas: a ficha (inimigo) e a própria carta já dizem quem é
     const ef = el.querySelector(".carta-efeitos");
     const html = c.vivo ? efeitosHtml(c.efeitos) : "";
     if (ef.innerHTML !== html) ef.innerHTML = html;
@@ -412,6 +413,15 @@ const Batalha = (() => {
         if (m.hab === "erguer_escudo") Sensacao.tremor(arena, Sensacao.AJUSTES.tremor.leve, 300);  // o baque dos escudos no chão
         if (m.hab === "provocar") { som("rugido"); Sensacao.tremor(arena, Sensacao.AJUSTES.tremor.leve, 360); }  // o urso ruge e todos olham para ele
         await dormir(pausa(560 + 160 * Math.max(0, fams.length - 1)));
+        return;
+      }
+      case "surpresa": {  // pegou alguém de surpresa: as cartas pegas tremem com um "!", e quem pegou ganha o selo
+        const pegos = (m.alvos || []).map(carta).filter(Boolean);
+        if (!pegos.length) return;
+        som("surpresa");
+        pegos.forEach((c) => { reiniciar(c, "surpreso", 700); rotulo(c, "!", c.classList.contains("inimigo") ? "surpresa" : "surpresa ruim"); });
+        if (de && m.de === "j") selos(de, ["iniciativa"]);
+        await dormir(pausa(720));
         return;
       }
       case "fim_acao": {
@@ -879,7 +889,7 @@ const Batalha = (() => {
   const cartoesAbertos = {};
   function cartao(cid, nome, { delta, texto }) {
     let c = cartoesAbertos[cid];
-    if (!c || !c.isConnected) {
+    if (!c || !c.isConnected || c.classList.contains("sumindo")) {  // o que já está saindo não volta: a fala nova abre outro
       c = document.createElement("div");
       c.className = "cartao-comitiva";
       c.innerHTML = `<div class="cc-retrato">${S(cid, 3)}</div><div class="cc-corpo"><div class="cc-topo"><b>${esc(nome)}</b></div></div>`;
@@ -910,10 +920,15 @@ const Batalha = (() => {
     c._timer = setTimeout(() => fechar(c), Math.min(6500, 1700 + letras * 30));
     return c;
   }
+  /** O cartão sai deslizando, pelo clique ou pelo tempo: o mesmo para todos. (Sem tirar o "atualizou", a animação
+   *  dele, de um cartão que já estava aberto e ganhou a aprovação, passava por cima da saída e o cartão só sumia.) */
   function fechar(c) {
     clearTimeout(c._timer);
+    if (c.classList.contains("sumindo")) return;
+    c.classList.remove("chegou", "atualizou");
+    void c.offsetWidth;
     c.classList.add("sumindo");
-    setTimeout(() => c.remove(), 260);
+    setTimeout(() => c.remove(), 340);
   }
 
   function balao(cid, nome, texto) {

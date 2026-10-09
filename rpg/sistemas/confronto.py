@@ -55,6 +55,8 @@ class Confronto:
         f = FAMILIAS[familia]
         nv = self.nivel_local()
         tipo = "normal"
+        if self.noite:  # a noite é a hora deles: um nível acima (e mais vezes em bando, logo abaixo)
+            bonus += bal.NOITE_NIVEL
         if n is None:
             lo, hi = f["grupo"]
             n = self.rng.randint(lo, hi)
@@ -65,6 +67,8 @@ class Confronto:
             for _ in self.comitiva:  # uma comitiva chama atenção: mais inimigos aparecem
                 if self.chance(bal.COMITIVA_ATRAI):
                     n = min(n + 1, hi + 1)
+            if self.noite and self.chance(bal.NOITE_GRUPO):
+                n = min(n + 1, hi + 1 if nv > 4 else max(n, bal.GRUPO_MAX_CEDO))
             r = self.rng.random()
             if nv >= 5 and r < 0.03 + nv * 0.006:
                 tipo = "unico"

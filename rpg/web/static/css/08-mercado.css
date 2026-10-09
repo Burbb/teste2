@@ -202,3 +202,9 @@
 /* Na dica de um item da mochila, no mercado: quanto o mercador paga. */
 .preco-venda { display: flex; align-items: center; gap: 4px; margin-bottom: 4px; font-family: var(--num); font-size: 17px; color: var(--ouro); }
 .preco-venda b { font-weight: 400; }
+/* A mochila no mercado: cada item com o preço que o mercador paga embaixo; os vendidos agora, para recomprar. */
+.venda-item { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.venda-item .preco { font-size: 14px; line-height: 1; }
+.venda-item .preco img.sprite { --s: 12; }
+.mochila-loja .celula.caro { opacity: 0.45; cursor: not-allowed; }
+.mochila-loja.recompra .celula { border-style: dashed; }
