@@ -1,48 +1,49 @@
 # 06 — Jornada, comitiva e apresentação
 
+## Tecnologia: manter
+
+Python puro no motor e HTML/CSS/JavaScript na interface local são adequados à proposta. Cards, banners e telas interativas não exigem outra engine.
+
+A revisão não executou benchmark nem certificou qualquer volume de conteúdo. Se houver lentidão, medir caminho concreto antes de otimizar. Não trocar linguagem, interface ou framework por causa de um arquivo grande ou de um número futuro de habilidades.
+
+Catálogos podem ser separados por classe/região sem mudar tecnologia. Telas usam registro e dependência de scripts; preservar contratos de dados e ordem de carregamento ao acrescentar uma tela.
+
 ## Sobrevivência
 
-A sobrevivência deve produzir preparação e decisões de expedição. Comida, luz, ferimentos e recursos são interessantes quando influenciam rota, risco e retorno.
+Comida, luz, ferimentos, infecção, descanso e recursos já existem. Reorientar seu ritmo para expedições relevantes e momentos seguros de conversa.
 
-Separar momentos de tensão dos momentos de conversa e exploração segura. Não exigir manutenção constante para ler diálogos ou conhecer uma cidade.
+Não começar desligando tudo. Observar na região se o retorno à vila é decisão de risco ou obrigação repetitiva de recuperar números. Ajustar uma causa por vez.
 
-Na região demonstrativa, observar se o jogador retorna por uma decisão de risco ou por uma obrigação repetitiva de recuperar números.
+## Morte e persistência
 
-## Morte
+Hardcore e modo brando já existem. Modo brando oferece resgate com perdas; usar como ponto de partida para a campanha.
 
-Campanhas longas aumentam o custo emocional da perda. Reavaliar o padrão de morte permanente junto da duração da aventura.
+Proposta: campanha normal recuperável e hardcore explícito. Jean ainda precisa escolher padrão, custo, retorno e regras de save. O texto de introdução e a interface devem corresponder ao modo efetivo.
 
-Proposta: campanha normal com derrota recuperável e custo coerente; hardcore como opção explícita. O modo brando existente pode ser ponto de partida, mas precisa ser avaliado para a campanha.
-
-Pendentes: saves, locais de retorno, perdas, recuperação e condições excepcionais. Não mudar o modelo automaticamente por este documento.
+Save tem versão, migrações e gravação por arquivo temporário. Reutilizar. Toda nova estrutura persistente exige migração e cenário de save/load; não editar saves antigos informalmente.
 
 ## Companheiros
 
-Preservar opiniões, conflitos, acampamento, conversas e missões pessoais. Fazer a confiança influenciar comportamento e disponibilidade, sem reduzir personalidade a otimização de aprovação.
+Odette, Morel e Yara já têm valores, aprovação, conversas, histórias pessoais, ações em combate e reserva no acampamento.
 
-Personagens podem discordar por motivos compreensíveis e ocasionalmente contrariar a expectativa do jogador. Evitar reações em toda pequena ação e falas genéricas demais.
+Preservar o elenco. Integrar os encontros e as missões a lugares escritos. Uma região pode aprofundar um arco por vez sem excluir os demais.
 
-Conectar conflitos pessoais à campanha e aos lugares. Uma escolha sobre um companheiro deve produzir consequência visível, não apenas alterar sua barra.
+Aprovação deve influenciar comportamento e relações, mas personagens não devem virar respostas previsíveis de uma conta. Usar conflitos, contexto e repercussões; evitar reação em todo clique.
 
 ## Acampamento
 
-Lugar para preparação, relações e repercussão da jornada. Fazer o jogador ter vontade de voltar por uma conversa ou acontecimento. Preservar a fogueira como cena simples e reconhecível.
+Fogueira e interações existem. Torná-las lugar de preparação e repercussão da história. Novas conversas podem usar requisitos atuais de dias, aprovação e condições.
+
+Não criar uma segunda infraestrutura de acampamento para a campanha.
 
 ## Apresentação
 
-- Cenários minimalistas como identidade dos lugares.
-- Cards como personagens e alvos.
-- Movimento breve, impacto e efeitos legíveis nas ações.
-- Contratos, itens e telas interativas na mesma linguagem.
-- Texto de história confortável para leitura longa.
-- Som e ambiente reforçando a cena.
+Preservar cenários, cards, contratos, inventário e mercado. Feedback curto e legível; texto confortável para leitura longa; som e ambiente reforçam lugar e ação.
 
-Não ampliar animação ou decoração sem função clara. Transformações de habilidades devem reutilizar a linguagem visual quando possível.
+Adicionar animação quando explica efeito ou marca um momento. Conteúdo deve ser compreensível em notebook e sem depender de uma cena ilustrada.
 
-## Cadência
+## Cadência e avaliação
 
-Alternar combate, descoberta, decisão, conversa e preparação. Evitar tanto longos blocos de texto sem participação quanto lutas repetidas sem contexto.
+Alternar combate, leitura, descoberta, decisão e preparação. Registrar tempo aproximado, lutas por expedição, retornos, telas confusas e momentos lembrados.
 
-## Validação
-
-Jean deve avaliar uma sessão comum: quanto tempo passou lendo, escolhendo, lutando e administrando? Quais momentos lembrou depois? Houve vontade de continuar por curiosidade e vínculo, além de XP e loot?
+Testes garantem regras e persistência; Jean avalia diversão e ritmo. Campanha longa exige verificar crescimento e custos no começo, meio e fim.

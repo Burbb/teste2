@@ -1,36 +1,52 @@
 # roadmapIDEIAS — Crônicas da Fenda
 
-Síntese da conversa de design com Jean em 09/10/2026. Estes arquivos descrevem o rumo desejado e propostas para validá-lo; não representam funcionalidades já implementadas.
+Revisão 2 — 09/10/2026. Plano de design e desenvolvimento atualizado após leitura estática do jogo refatorado (versão 1.46.0, commit d8d65b9778e85bb7eb8118fdd7a84acfd17e80ac).
 
-## Como usar
+## Direção e escopo acordados
 
-1. Leia [01 — Visão](01-VISAO.md).
-2. Consulte o documento do sistema que será discutido.
-3. Escolha apenas uma etapa de [07 — Sequência de trabalho](07-ETAPAS.md).
-4. Use [08 — Trabalho com Claude](08-TRABALHO-COM-CLAUDE.md) para preparar uma tarefa pequena.
-5. Jean avalia jogando; só depois o escopo cresce.
+RPG de campanha em fantasia sombria, por turnos, com história escrita, mundo que responde a decisões, companheiros e liberdade de build. Preservar cenários minimalistas, cards, texto, som e telas interativas.
 
-| Arquivo | Assunto |
+**Três classes iniciais: Guerreiro, Arqueiro e Mago.** Reaproveitar as seis especializações existentes: Paladino, Berserker, Patrulheiro, Sombra, Piromante e Necromante. A sugestão anterior de reduzir a duas classes foi substituída pela decisão de Jean.
+
+**Tecnologia:** manter Python no motor e HTML/CSS/JavaScript na interface local. A revisão não encontrou necessidade de migração. Não planejar troca de linguagem, framework ou engine como pré-requisito.
+
+## Como seguir
+
+1. Ler [01 — Visão](01-VISAO.md) e [09 — Base existente](09-BASE-EXISTENTE.md).
+2. Escolher uma entrega de [07 — Etapas](07-ETAPAS.md).
+3. Consultar os temas pertinentes e [10 — Decisões](10-DECISOES.md).
+4. Usar um pedido de [08 — Trabalho com Claude](08-TRABALHO-COM-CLAUDE.md).
+5. Validar tecnicamente e jogar antes de ampliar.
+6. Registrar o resultado e revisar a próxima entrega.
+
+| Arquivo | Conteúdo |
 |---|---|
-| [01-VISAO.md](01-VISAO.md) | Identidade, pilares, referências e limites |
-| [02-MUNDO-E-NARRATIVA.md](02-MUNDO-E-NARRATIVA.md) | Campanha fixa, liberdade e consequências |
-| [03-CLASSES-E-BUILDS.md](03-CLASSES-E-BUILDS.md) | Classes, especializações e identidade |
-| [04-HABILIDADES-E-TALENTOS.md](04-HABILIDADES-E-TALENTOS.md) | Habilidades, transformações e combinações |
-| [05-ITENS-E-RECOMPENSAS.md](05-ITENS-E-RECOMPENSAS.md) | Saque, raridade, aprimoramento e economia |
-| [06-JORNADA-E-APRESENTACAO.md](06-JORNADA-E-APRESENTACAO.md) | Sobrevivência, morte, comitiva e linguagem visual |
-| [07-ETAPAS.md](07-ETAPAS.md) | Dependências, entregas pequenas e critérios de conclusão |
-| [08-TRABALHO-COM-CLAUDE.md](08-TRABALHO-COM-CLAUDE.md) | Modelos de tarefas e registro das decisões |
+| [01-VISAO.md](01-VISAO.md) | Identidade, pilares e destino dentro do escopo |
+| [02-MUNDO-E-NARRATIVA.md](02-MUNDO-E-NARRATIVA.md) | Campanha, cenas, missões e estados do mundo |
+| [03-CLASSES-E-BUILDS.md](03-CLASSES-E-BUILDS.md) | Três classes, seis especializações e limites da evolução |
+| [04-HABILIDADES-E-TALENTOS.md](04-HABILIDADES-E-TALENTOS.md) | Reuso, habilidades efetivas, preparação e árvores |
+| [05-ITENS-E-RECOMPENSAS.md](05-ITENS-E-RECOMPENSAS.md) | Afixos, únicos, efeitos, reforço e ritmo do saque |
+| [06-JORNADA-E-APRESENTACAO.md](06-JORNADA-E-APRESENTACAO.md) | Sobrevivência, morte, comitiva e tecnologia |
+| [07-ETAPAS.md](07-ETAPAS.md) | Entregas da primeira região até a campanha completa |
+| [08-TRABALHO-COM-CLAUDE.md](08-TRABALHO-COM-CLAUDE.md) | Pedidos prontos, limites e registro |
+| [09-BASE-EXISTENTE.md](09-BASE-EXISTENTE.md) | O que existe, o que estender e evidências |
+| [10-DECISOES.md](10-DECISOES.md) | Decisões pendentes, sugestões e momento de decidir |
 
-## O que está decidido e o que está em aberto
+## Estados e evidências
 
-**Direção acordada:** RPG de campanha com início, meio e fim; arte simples e minimalista; cenários e cards preservados como linguagem; liberdade de interpretação e builds; mundo que responde às decisões; crescimento gradual.
+- **Decidido:** direção e escopo escolhidos por Jean.
+- **Existe:** implementação observada na revisão; não significa validação nesta sessão.
+- **Parcial:** infraestrutura útil, mas a experiência completa ainda falta.
+- **Proposto:** desenho a testar ou escolher.
+- **Concluído:** entrega implementada e validada com evidência registrada.
+- **Futuro:** fora do ciclo inicial de campanha.
 
-**Propostas a validar:** duas classes na primeira região demonstrativa; limite de habilidades preparadas; primeira bifurcação de classe estrutural e evoluções posteriores mais concentradas; sobrevivência centrada em expedições; aprimoramento previsível; hardcore opcional.
+Não há porcentagens de conclusão nem testes declarados como aprovados sem execução. A revisão leu código e testes, mas não executou o jogo ou a suíte. A refatoração estrutural está entregue; conferir a validação atual com Claude.
 
-**Ambições futuras, sem promessa de quantidade:** aproximadamente seis classes iniciais, várias etapas de evolução, ampla variedade de habilidades e equipamentos. As cerca de 300 habilidades sugeridas por Jean são uma referência de ambição, não uma meta de produção.
+## Limites da atualização
 
-**Não definidos:** classes e raças finais, origens disponíveis, duração da campanha, tamanho do conjunto de habilidades preparadas, modelo definitivo de morte, limites de aprimoramento e enredo.
+Somente Markdown em roadmapIDEIAS. Nenhum arquivo fora desta pasta pode ser alterado por esta tarefa. Os documentos não concedem ao Claude autorização automática para implementar o plano inteiro. Seguir os guias técnicos atuais quando Jean solicitar uma implementação.
 
-## Limite desta entrega
+Não substituir docs/ROADMAP.md: ele trata da evolução técnica e contém notas que podem estar desatualizadas. O código atual deve ser conferido antes de cada tarefa.
 
-Foram acrescentados somente arquivos Markdown dentro de roadmapIDEIAS. Nenhum arquivo preexistente do jogo foi alterado. Estes documentos não autorizam implementação automática, não substituem docs/ROADMAP.md e não interrompem a refatoração em andamento. O estado atual do código deve ser conferido antes de cada implementação.
+Seis classes iniciais, centenas de habilidades e várias gerações de evolução permanecem ideias futuras. O resultado deste ciclo é uma campanha completa e consistente com as três classes atuais, não a reprodução da escala de Baldur's Gate ou Path of Exile.

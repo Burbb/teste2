@@ -1,60 +1,64 @@
-# 05 — Itens, saque e recompensas
+# 05 — Itens e recompensas
 
-## Objetivo
+## Base pronta
 
-Saque frequente o suficiente para criar expectativa, com decisões interessantes e pouco trabalho repetitivo. Aumentar quantidade somente junto de variedade útil e ferramentas adequadas de comparação e organização.
+Geração de equipamento, afixos, raridades, únicos com id/lore, comparação, compra/venda, slots e reforço.
 
-## Três funções de equipamento
+fonte_item integra bônus especiais aos modificadores. Únicos podem declarar mods, mults e gatilhos; há teste dessa capacidade. Os únicos atuais são principalmente atributos e efeitos conhecidos: isso não significa que um catálogo de itens transformadores já esteja pronto.
+
+## Três funções
 
 | Função | Resultado |
 |---|---|
-| Poder | Melhora direta de atributos |
-| Ajuste | Favorece crítico, bloqueio, veneno, recuperação ou outro estilo |
-| Transformação | Altera uma habilidade ou o ciclo da build |
+| Poder | Melhoria de atributos |
+| Ajuste | Favorece comportamento ou sinergia |
+| Transformação | Muda uma habilidade ou ciclo de build |
 
-Um raro com afixos excelentes pode superar um lendário para determinada build. Evitar que raridade seja uma escala automática em que a cor mais alta sempre vence.
+Um raro bem combinado pode ser preferível a um lendário. Cada cor não precisa substituir automaticamente a anterior.
 
-## Afixos, sufixos e únicos
+Afixos atuais podem ser ampliados com critérios de compatibilidade e valor. Uma estrutura extensa de prefixos/sufixos com restrições ainda é trabalho de design, não funcionalidade comprovada.
 
-Afixos/sufixos: combinações aleatórias dentro de grupos compatíveis, com limites e faixas claras.
-Únicos: peças de identidade definida, nome, história e efeito próprio.
-Lendário: apresentação laranja desejada, com descoberta marcante e propriedade relevante.
+## Único transformador completo
 
-Definir a relação entre único e lendário: único pode descrever identidade fixa, enquanto lendário é raridade. Não criar categorias contraditórias.
+Primeiro especificar um item que use gatilhos existentes. Se ele transformar uma magia, depender da resolução de habilidade efetiva.
 
-### Exemplo ilustrativo
+Um item completo exige:
+- aquisição e identidade estável;
+- efeito, limites e condições;
+- descrição na ficha;
+- indicação do que muda na build;
+- feedback durante a luta;
+- equipar/retirar e salvar/carregar;
+- interação com talentos e efeitos semelhantes.
 
-Um escudo armazena parte do dano bloqueado e permite devolvê-lo. Ele conversa com talentos de bloqueio e habilidades defensivas. A especificação ainda deve decidir limite, consumo e interação com múltiplos impactos.
+ficha() hoje expõe principalmente bônus, classe, base, raridade e lore. Estender a apresentação dos efeitos especiais: não deixar um gatilho funcionar invisivelmente.
 
-Não criar um efeito transformador para todo item. A raridade desse encontro preserva sua importância.
+Exemplo futuro: escudo armazena dano bloqueado. Antes de usá-lo, definir o que conta como bloqueio, limites, consumo e hook necessário. Não inventar a ação de bloqueio só para reproduzir o exemplo.
 
-## Aprimoramento
+## Reforço já existente
 
-Proposta: +1, +2, +3 e outros níveis a definir; incremento previsível, custo crescente e feedback visual no card/slot, com brilho e som.
+Ferreiro reforça arma, peito e mão secundária até +5. Incremento previsível, custo crescente, atributo principal e nome +N. Reutilizar.
 
-Separar aprimoramento de raridade. Permitir investir numa peça escolhida, sem tornar inútil todo saque futuro.
+Revisar economia e feedback; não pedir ao Claude para criar reforço do zero. Brilho persistente ao redor da peça é proposta visual separada, não suporte confirmado.
 
-Começar sem destruição ou falha aleatória. Não assumir nível máximo, moeda, preço ou taxa definitiva antes de testar a economia.
+Manter reforço separado de raridade. Não acrescentar destruição ou falha aleatória como padrão.
 
-## Ritmo de recompensa
+## Cor e categorias
 
-Alternar equipamento, recursos, habilidade, descoberta, conversa, reputação e acesso. Não transformar todo encontro em chuva de itens.
+Laranja é a intenção visual para lendários. Conferir CSS e telas antes de alterar; não presumir que todas as representações já usam a mesma cor.
 
-Observar:
-- frequência de upgrades e de decisões de equipamento;
-- tempo comparando e descartando;
-- momentos sem progresso percebido;
-- relevância dos efeitos encontrados;
-- renda, despesas e oportunidades de gasto.
+Único descreve identidade fixa; lendário pode descrever raridade. Definir categorias sem criar duplicação confusa.
 
-## Economia e interface
+## Saque e economia
 
-Drop, preços de venda, custos de recuperação e aprimoramento precisam ser avaliados juntos. Evitar ouro sem uso ou uma obrigação de farm para continuar a história.
+Aumentar drop junto de variedade útil e organização. Observar frequência de upgrades, decisões de build, tempo descartando e momentos sem progresso.
 
-Quando a variedade crescer, considerar armazenamento nas vilas e venda rápida de itens marcados. São extensões futuras; conferir soluções já existentes antes de implementar.
+Recompensar também com descobertas, conversas, reputação, acesso e habilidades. Preservar expectativa e surpresa.
 
-Preservar comparação legível, apresentação do efeito real e pouco atrito na coleta. Revisar a mochila de 12 espaços em conjunto com o aumento do saque, sem remover automaticamente sua função na viagem.
+Avaliar loot, venda, recuperação, reforço e suprimentos juntos. Mochila de 12 espaços cria tensão; mais saque pode transformar isso em atrito. Armazém nas vilas e venda rápida são futuras extensões sob demanda, não pré-requisitos da primeira região.
 
-## Primeira entrega
+## Entrega inicial
 
-Poucas bases, afixos úteis para os estilos testados e um pequeno conjunto de itens transformadores. Validar o efeito desses itens antes de multiplicar nomes e combinações.
+Usar bases e afixos existentes. Demonstrar um único relevante, depois variar efeitos para Guerreiro, Arqueiro e Mago. Não exigir um item exclusivo por habilidade.
+
+Antes da campanha final, verificar que recompensas cobrem os estilos e que uma escolha de classe não deixa o jogador sem equipamento útil.

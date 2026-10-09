@@ -1,44 +1,52 @@
-# 01 — Visão do jogo
+# 01 — Visão e resultado desejado
 
 ## Proposta
 
-Um RPG narrativo de fantasia sombria, por turnos, com campanha escrita, exploração, companheiros e liberdade de construção de personagem. A apresentação usa cenários minimalistas, cards, texto e som.
+RPG narrativo de fantasia sombria, por turnos, com campanha escrita, exploração, companheiros e liberdade de construção de personagem. Cenários minimalistas, cards, texto e som são a linguagem escolhida.
 
-O projeto começou como RPG de texto e cresceu por experimentação. A interface e os sistemas receberam mais atenção que o final; o final atual não é a referência de qualidade da futura campanha.
+O projeto começou como RPG de texto e evoluiu por experimentação. O final atual não determina a qualidade pretendida para a nova campanha. Preservar o que já funciona na interação e reconstruir o percurso narrativo gradualmente.
 
 ## Três pilares
 
-| Pilar | Experiência desejada | Como sustentar |
+| Pilar | Experiência desejada | Sistemas |
 |---|---|---|
-| Interpretar um personagem | Minha identidade influencia a aventura | Raça, origem, classe, diálogos e relações |
-| Construir um estilo de jogo | Minhas escolhas mudam como luto | Habilidades, talentos, especializações e itens |
-| Explorar um mundo que responde | Sair do caminho e tomar decisões deixa marcas | Lugares próprios, missões, facções, segredos e consequências |
+| Interpretar um personagem | Minha identidade muda oportunidades e relações | Classe, especialização, raça/origem em escopo pequeno, diálogos e comitiva |
+| Construir um estilo de jogo | Minhas escolhas mudam ações e prioridades | Habilidades, talentos, equipamento e preparação |
+| Explorar um mundo que responde | Descobrir e decidir produz consequências | Lugares escritos, missões, estados locais e facções |
 
-Uma funcionalidade nova deve fortalecer pelo menos um pilar. Se não houver contribuição clara, fica no backlog.
+Toda adição deve fortalecer um desses pilares. Não compensar a arte simples com quantidade indiscriminada de conteúdo.
 
-## O que aproveitar das referências
+## Referências
 
-- Baldur's Gate: expressão de intenção, reconhecimento da identidade, companheiros e soluções diferentes para problemas.
-- Diablo e Path of Exile: combinações entre habilidades e equipamentos, expectativa do saque e itens que fazem reconsiderar a build.
-- Lineage 2: evolução de classe como conquista de identidade e trajetória do personagem.
-- RPGs antigos: linguagem visual simples, atmosfera e espaço para imaginação.
+- Baldur's Gate: expressão de intenção, soluções alternativas, relações e reconhecimento de escolhas.
+- Diablo/Path of Exile: combinações, expectativa do saque e efeitos que fazem reconsiderar a build.
+- Lineage 2: progressão como conquista de identidade.
+- RPGs antigos: atmosfera, linguagem visual simples e espaço para imaginação.
 
-São referências de qualidades desejadas. O projeto não pretende reproduzir a escala desses jogos.
+Importar qualidades, não escala de produção.
 
-## Linguagem visual
+## Escopo atual
 
-Preservar cenários, cards de combate, interações entre cards, contratos, mercado e fogueira. A arte minimalista é uma escolha de identidade. Não é necessário compensá-la com quantidade indiscriminada de conteúdo.
+- Guerreiro, Arqueiro e Mago, preservados.
+- Suas seis especializações existentes, preservadas.
+- Odette, Morel e Yara como elenco reaproveitável; nenhuma exclusão de companheiro está autorizada por este plano.
+- Uma região demonstrativa primeiro; campanha escrita completa depois.
+- Poucas raças/origens quando houver conteúdo capaz de reconhecê-las.
+- Novas habilidades e itens por necessidade de build; sem cota de 300.
+- Primeira evolução de classe mantida. Evoluções posteriores exigem especificação própria antes de entrar no ciclo.
 
-Priorizar legibilidade, ambiente reconhecível, impacto das ações, boa leitura e som. Expandir a apresentação somente quando ela ajudar o jogador a entender ou sentir algo.
+## Tecnologia
+
+Manter Python + interface local HTML/CSS/JavaScript. A base é adequada ao formato atual. Escala de catálogo não justifica migração por si só. Medir um problema concreto antes de discutir substituição de tecnologia.
+
+## Resultado ao fim deste ciclo
+
+Uma campanha com início, desenvolvimento, conclusão e epílogos; locais reconhecíveis; missões com mais de uma solução; consequências observáveis; relações com companheiros; progressão satisfatória nas três classes e seis especializações; escolhas de build legíveis; saque útil e ritmo de expedição.
+
+O número de regiões e a duração são decisões de escopo, não promessas deste documento.
 
 ## Régua de qualidade
 
-- Uma segunda partida deve permitir decisões e estratégias diferentes.
-- Uma escolha relevante muda custo, acesso, relação, percurso ou estado do mundo.
-- Uma build precisa ser percebida nas ações, não só na ficha.
-- O jogador deve entender os riscos e a origem das regras importantes.
-- Conteúdo novo deve caber na interface e ser sustentável para um desenvolvedor.
+Uma segunda partida permite decisões e estratégias diferentes. Uma escolha relevante muda relação, acesso, custo, percurso ou estado do mundo. Uma build se percebe durante a luta. Riscos são compreensíveis. O jogador encontra motivos narrativos e mecânicos para continuar.
 
-## Escopo
-
-Primeiro provar uma região completa e pequena; depois ampliar. Não prometer centenas de magias, dezenas de classes finais ou campanhas independentes por raça antes dessa prova.
+Aprovação técnica não substitui o teste de Jean jogando.

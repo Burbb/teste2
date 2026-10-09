@@ -1,71 +1,67 @@
-# 02 — Mundo e narrativa
+# 02 — Mundo, campanha e consequências
 
-## Direção
+## Base que existe
 
-Migrar gradualmente da estrutura de partidas procedurais para uma campanha com lugares, personagens e conflitos escritos. Manter variação controlada onde ela agrega rejogabilidade: clima, encontros secundários, parte do saque e algumas situações.
+Mapa em grafo, viagem, descoberta, clima, eventos condicionais, flags persistentes, consequências futuras por plantar/colher, contratos e histórias pessoais da comitiva. Tudo pode ser reaproveitado.
 
-Não remover o mundo procedural antes de existir um trecho escrito jogável que possa substituí-lo. Durante a transição, manter formas separadas de testar o conteúdo atual e o novo.
+O início ainda chama gerar_mundo. Locais usam ids numéricos associados à posição na lista; existem convenções de vila inicial no índice zero e Cidadela no final. A campanha fixa precisa respeitar ou adaptar essas dependências explicitamente.
+
+## Transição proposta
+
+1. Definir uma região escrita.
+2. Permitir carregá-la sem reconstruir mapa e viagem.
+3. Separar cenas obrigatórias de encontros variáveis.
+4. Implementar uma missão com duas soluções e consequência local.
+5. Preservar caminhos de teste do modo atual durante a transição.
+6. Retirar ou relegar o procedural somente quando a campanha puder substituí-lo.
+
+Não é necessário trocar todos os ids do jogo de uma vez. Usar identificadores narrativos estáveis e uma forma consistente de resolver os locais quando a campanha exigir. Não depender do nome exibido como identidade de missão ou NPC.
+
+## Cenas e eventos
+
+Eventos atuais são funções registradas com contexto, condição, peso e repetição. Isso funciona para encontros e pequenas cenas. Histórias principais não devem depender apenas de uma rolagem para avançar.
+
+Introduzir condições explícitas de disponibilidade, lugar e etapa para cenas escritas. Reutilizar a interface de cena/menu e os efeitos existentes. O mecanismo de eventos forçados também precisa respeitar o contexto necessário ao novo conteúdo; não presumir que ele já é um diretor completo de campanha.
+
+Não converter todas as histórias existentes para um novo formato antes de demonstrar uma missão. Dados para requisitos/etapas/consequências podem conviver inicialmente com funções de cenas.
+
+## Missão mínima
+
+| Campo | Finalidade |
+|---|---|
+| Id estável | Reconhecer no save, Diário e condições |
+| Estado/etapa | Disponível, ativa, etapa atual, concluída ou falhada |
+| Condições | Quando aparece e quais soluções podem ser escolhidas |
+| Objetivos | O que falta fazer, com texto claro |
+| Transições | Qual ação leva a qual etapa |
+| Resultado | Solução adotada e consequências persistentes |
+| Recompensa | Evitar pagamento duplicado |
+| Diário | Mostrar estado e objetivo corretos |
+
+Contratos são um caso existente de objetivo e progresso; reaproveitar apresentação e funções úteis, sem forçar toda missão narrativa a caber em caça/alvo/entrega.
+
+## Estados locais e facções
+
+Escolher poucos estados por conflito. Exemplo provisório: uma vila protegida por soldados, sob influência de contrabandistas ou abandonada em parte. Cada estado muda falas, serviços, personagens ou caminhos.
+
+Reputação atual é um número global. Reputação por facção é extensão futura próxima, a implementar apenas quando o conflito da região realmente usar duas relações diferentes. Definir como convive com a reputação global, sem apagá-la incidentalmente.
 
 ## Liberdade viável
 
-Uma história central pode ter pontos de passagem comuns. A liberdade aparece em como chegar a eles, quem acompanha o personagem, o que custa chegar e quais consequências permanecem.
+Compartilhar pontos principais da história. Variar solução, custo, companhia e consequência. Uma ponte bloqueada pode ser atravessada por negociação, conhecimento militar, magia ou exploração. As alternativas podem levar à mesma cidade, em condições diferentes.
 
-Não fazer uma campanha totalmente diferente para cada combinação de raça, origem e classe. Escrever uma base compartilhada com reconhecimento e oportunidades específicas.
+Classe pode oferecer ferramenta; origem, conhecimento ou contato; raça, relação cultural. Nem todo personagem precisa ver uma opção exclusiva em toda cena.
 
-### Exemplo ilustrativo: ponte bloqueada
+Oferecer ao menos uma solução geral para os objetivos obrigatórios. Falha de teste pode gerar complicação ou rota alternativa. Não prender uma classe por não possuir uma ferramenta exclusiva.
 
-| Solução | Condição | Consequência possível |
-|---|---|---|
-| Pagar ou negociar | Disponível de forma geral | Custo e relação com os soldados |
-| Usar passado militar | Origem pertinente | Reconhecimento e favor futuro |
-| Enganar com magia | Técnica apropriada | Suspeita, denúncia ou dívida |
-| Buscar outra passagem | Exploração | Novo encontro, custo de tempo e descoberta |
+## Conteúdo e cronologia
 
-As soluções podem levar à mesma cidade. O jogador chega em condições e relações diferentes.
+Definir conflito central, regras da Fenda, cronologia e interesses dos personagens. Na base revisada, o prólogo fala em cem anos desde a abertura e Odette narra ter presenciado aquela noite: tratar como decisão de lore pendente.
 
-## Identidade do personagem
-
-- Raça: relação com culturas e parte da resposta do mundo.
-- Origem: conhecimentos, contatos, dívidas e vínculos anteriores.
-- Classe: ferramentas para lutar e resolver problemas.
-- Especialização: técnica, filosofia ou compromisso desenvolvido.
-
-Cada identidade oferecida cria uma promessa de reconhecimento. Começar com poucas e cumprir essa promessa ao longo da região.
-
-## Consequências em três distâncias
-
-1. Imediata: recurso gasto, reação, acesso aberto ou risco assumido.
-2. Na região: um serviço muda, alguém reaparece, uma missão ganha outra solução.
-3. Posterior: uma relação ou decisão relevante é lembrada em outro capítulo.
-
-Nem toda escolha precisa ter três consequências. Evitar que todo gesto exija um novo ramo de campanha.
-
-## Estados do mundo
-
-Uma vila pode ser protegida por soldados, controlada por contrabandistas ou parcialmente abandonada. O estado deve alterar elementos observáveis: personagens, falas, serviços, contratos e caminhos.
-
-Escolher poucos estados coerentes por conflito. Não permitir combinações ilimitadas de flags sem prever sua interação.
-
-## Missões
-
-Cada missão relevante deve registrar:
-- conflito e personagens interessados;
-- condições de início e etapas;
-- soluções disponíveis e requisitos;
-- resultados de sucesso e falha;
-- consequências persistentes e quando aparecem;
-- como o Diário comunica o progresso.
-
-Uma falha de teste pode gerar custo, complicação ou outra rota. Reservar bloqueios definitivos para decisões em que o jogador compreende o risco.
-
-## Mundo vivido
-
-Personagens têm objetivos além de servir ao herói. Locais possuem economia, hábitos e conflitos próprios. Retornar deve permitir perceber mudanças. Mostrar isso em cenas pequenas, serviços e relações; não exigir uma simulação completa de todos os NPCs.
-
-## Trabalho pendente
-
-Definir história central, cronologia, culturas e facções antes de expandir capítulos. A leitura inicial encontrou uma possível contradição entre a Fenda aberta há cem anos e Odette ter presenciado a abertura: verificar o estado atual e decidir a explicação, sem assumir que continua sem correção.
+Incluir personagens com objetivos próprios, lugares com hábitos e consequências percebidas ao retornar. Não exigir rotina simulada de todos os NPCs.
 
 ## Validação
 
-Duas soluções diferentes de uma missão devem produzir pelo menos uma diferença reconhecível depois. O Diário e as cenas precisam concordar com o estado salvo. O jogador deve conseguir explicar o conflito sem reler um documento de lore.
+Cobrir soluções alternativas, ordem diferente de objetivos, retorno após conclusão, pagamento único e save/load. Diário, cenas e serviços devem concordar. Testar a missão com as três classes, preservando alternativas acessíveis.
+
+Ao ampliar capítulos, incluir decisões anteriores nos encontros e epílogos; não criar um final independente para cada combinação de flags.

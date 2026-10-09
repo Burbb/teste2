@@ -1,58 +1,58 @@
-# 03 — Classes, identidade e builds
+# 03 — Três classes e liberdade de build
 
-## Ambição de Jean
+## Decisão de escopo
 
-Aproximadamente seis classes iniciais, cada uma com ramificações e novas etapas de evolução. A experiência desejada é acompanhar uma trajetória e construir uma identidade, como nas progressões de classe de Lineage 2.
+Manter as três classes iniciais atuais e suas seis especializações. Não reduzir a duas nem criar mais classes neste ciclo.
 
-## Estrutura proposta
-
-Primeira bifurcação: mudança estrutural de papel ou mecânica.
-Etapas posteriores: aprofundamento, técnicas, escolas ou compromissos; não precisam sempre dobrar o número de classes.
-
-Se seis classes bifurcarem três vezes, serão 48 caminhos finais. Isso multiplica conteúdo, balanceamento, itens e reconhecimento narrativo.
-
-### Exemplo ilustrativo, não catálogo aprovado
-
-| Etapa | Identidade | Mudança |
+| Classe | Especializações | Base a preservar |
 |---|---|---|
-| Inicial | Guerreiro | Fundamentos de armas, defesa e vigor |
-| Primeira divisão | Cavaleiro | Papel e mecânica central |
-| Avançada | Cavaleiro do Juramento | Forma particular de exercer o papel |
-| Final | Guardião do Último Sol | Evolução marcante e reconhecimento |
+| Guerreiro | Paladino / Berserker | Vigor, defesa, combate físico e caminhos de luz/sangue |
+| Arqueiro | Patrulheiro / Sombra | Foco, flechas, posicionamento narrado, animal ou furtividade |
+| Mago | Piromante / Necromante | Mana, estados, combustão ou drenagem/invocação |
 
-As alternativas finais podem ser escolhas dentro de uma especialização, sem exigir classes independentes.
+Não reescrever essas identidades antes de avaliar o que existe. Melhorar caminhos em pequenas entregas.
 
-## Ficha de design de uma classe
+## O que já funciona
 
-Antes de criar habilidades, definir:
-1. Fantasia: quem o jogador quer ser?
-2. Papel: quais problemas resolve bem?
-3. Recurso: como ganha, gasta e recupera?
-4. Ciclo: qual sequência de decisões é prazerosa?
-5. Fraqueza: o que exige preparação ou apoio?
-6. Ferramentas fora da luta: como a identidade aparece na aventura?
-7. Especializações: por que oferecem estilos diferentes?
-8. Interações com equipamento e companheiros.
+Catálogos de classe/especialização, atributos, crescimento, ataque básico, aprendizado por nível, reação da comitiva e evento de especialização no descanso.
 
-Uma classe não precisa ser excelente em tudo. Todas precisam oferecer formas viáveis de atravessar a campanha.
+A aventura inicial deve reconhecer as três classes fora da luta, por conhecimento, técnica ou solução alternativa. Não exigir três campanhas separadas.
 
-## Especialização como conquista
+## Ficha de design
 
-Desenvolver a especialização por evento, aprendizado, prova ou compromisso narrativo. A escolha deve antecipar mudanças de jogabilidade. Evitar uma decisão irreversível cuja informação chega apenas depois.
+Para cada classe/caminho: fantasia, papel, recurso, ciclo de decisões, fraqueza, ferramentas narrativas, relações com itens e companheiros, e duas configurações possíveis.
 
-## Builds
+A segunda configuração pode surgir de talentos e equipamento; não precisa de uma nova especialização. Identificar primeiro se alternativas já existem.
 
-Build = habilidades escolhidas + talentos + equipamento + estratégia.
-Definir alternativas dentro da mesma especialização. Uma especialização não deve equivaler a uma única sequência ótima de botões.
+Não exigir desempenho idêntico em toda situação. Garantir caminhos viáveis, custos compreensíveis e oportunidades de cada identidade.
 
-Não exigir balanceamento perfeito entre todas as situações. Evitar caminhos inviáveis e escolhas claramente inferiores sem vantagem correspondente.
+## Especialização
 
-## Aprendizado e preparação
+Reaproveitar a encruzilhada existente e integrá-la à campanha. Escolha com informação sobre mecânica, vantagens e custos. Marco narrativo deve ser alcançável com as três classes.
 
-Proposta a testar: aprender mais habilidades do que se leva preparadas. Escolher o conjunto em um local ou momento apropriado, sem menus intermináveis no combate.
+O conteúdo inicial pode testar as classes antes de alcançar todas as especializações. Antes da campanha final, validar os seis caminhos por cenários de combate e sessões direcionadas.
 
-Pendentes: quantidade preparada, custo de trocar, momento permitido e regras de reespecialização. Favorecer experimentação; evitar obrigar uma nova campanha para corrigir uma escolha mal compreendida.
+## Evoluções posteriores: limite real
 
-## Primeira entrega
+O personagem tem um único spec. habilidades_ate consulta classe + essa especialização. especializar substitui spec e acrescenta bônus; chamar repetidamente não modela uma trajetória completa.
 
-Usar duas classes e duas especializações por classe como teto inicial proposto para a região demonstrativa. Reaproveitar classes existentes quando possível. Escolher contrastes que testem o sistema; não construir seis classes completas antes de comprovar os fundamentos.
+Se Jean incluir uma evolução avançada, decidir antes:
+- etapas e requisitos;
+- o que permanece da etapa anterior;
+- passivas, habilidades, crescimento e talentos herdados;
+- id/título usado por diálogos;
+- migração de save e reespecialização.
+
+Proposta futura: primeira bifurcação estrutural e aprofundamento depois, sem dobrar caminhos em cada etapa. Não implementar essa infraestrutura sem uma evolução concreta aprovada.
+
+## Preparação e experimentação
+
+Hoje toda habilidade aprendida entra no menu de luta. Separar aprendidas/preparadas é proposta a testar se o catálogo maior causar excesso de opções.
+
+Definir quantidade, troca, local permitido e migração antes da implementação. Não escolher um número definitivo por conveniência técnica.
+
+Definir reespecialização como parte da experimentação. Evitar obrigar uma nova campanha para corrigir uma escolha mal explicada.
+
+## Critérios
+
+Na primeira região, Jean percebe diferenças entre Guerreiro, Arqueiro e Mago. Na campanha, cada especialização oferece uma identidade de combate e tem alternativas de build. Nenhum caminho obrigatório exige classe específica. Progressão futura não apaga nem duplica efeitos anteriores por acidente.
