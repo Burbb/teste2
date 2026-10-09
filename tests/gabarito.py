@@ -1,7 +1,7 @@
 """Gabarito de regressão: partidas jogadas pelo robô com sementes fixas.
 
 Cada partida vira uma transcrição completa (texto, opções oferecidas, escolhas, lances de combate,
-efeitos e o save final). O hash de cada transcrição fica guardado em tests/gabarito.json. Uma
+efeitos, o que a tela gráfica recebe e o save final). O hash de cada transcrição fica guardado em tests/gabarito.json. Uma
 refatoração que não muda a jogabilidade precisa reproduzir as mesmas transcrições, evento por evento.
 
 Rode com:
@@ -79,7 +79,23 @@ class Gravador(BotUI):
 
 
 class GravadorWeb(InterfaceGrafica, Gravador):
-    """O robô imitando a tela gráfica: os mesmos caminhos do motor que a WebUI segue."""
+    """O robô imitando a tela gráfica: os mesmos caminhos do motor que a WebUI segue.
+
+    Antes de cada escolha, anota o estado que a tela estaria desenhando (HUD, mundo, lugar, luta, contratos), parte
+    por parte e só quando a parte mudou. É a rede da tela: os números que ela mostra vêm prontos daqui."""
+
+    jogo = None
+    _vistos = {}
+
+    def escolher(self, pergunta, opcoes):
+        from rpg.web.estado import estado
+        e = estado(self.jogo) if self.jogo else None
+        for parte, valor in sorted((e or {}).items()):
+            linha = json.dumps(valor, ensure_ascii=False, sort_keys=True, default=str)
+            if self._vistos.get(parte) != linha:
+                self._vistos[parte] = linha
+                self.linhas.append(f"ESTADO {parte} {linha}")
+        return super().escolher(pergunta, opcoes)
 
 
 def transcrever(seed, classe, web=False):
@@ -89,6 +105,8 @@ def transcrever(seed, classe, web=False):
         ui = (GravadorWeb if web else Gravador)(random.Random(seed * 7 + 1), web=web)
         # A semente 3 joga no hardcore (morte permanente); as outras no modo brando, para partidas mais longas.
         g = Jogo(ui, seed=seed, pasta_saves=pasta, hardcore=seed == 3)
+        if web:
+            ui.jogo, ui._vistos = g, {}
         g.iniciar("Robô", classe)
         try:
             g.rodar()

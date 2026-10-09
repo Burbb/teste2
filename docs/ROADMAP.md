@@ -17,8 +17,21 @@ Cada etapa mantém o gabarito de regressão idêntico: nada de jogo muda, só on
 | **A** | Habilidades como dados: blocos que executam e se descrevem; Grimório gerado; conta de crítico única | ✅ feito |
 | **B** | Modificadores e gatilhos: talentos e passivas de especialização declaram "+x% de dano corpo a corpo", "ao matar", "no início da luta"... e o combate só pergunta `mod`/`disparar`. Zero `tal("...")` fora de `talentos.py` (eram 28 talentos em 5 arquivos). Chaves validadas por teste. Falta: itens e estados como fontes (hoje `especial()`), e as verificações de spec fora do combate (testes de atributo, eventos). | ✅ feito |
 | **C** | Catálogo de estados (`rpg/estados.py`): nome, ícone e cor, mal ou bênção, dano por turno, perda de turno, imunidade, resistência, camadas e descrição. `aplicar` e `processar_efeitos` genéricos; a tela recebe ícones e dicas do motor; o Grimório descreve pelo catálogo. Falta: o efeito dos estados na conta de dano (fortalecido, guarda, marcado...) ainda é perguntado à mão em `atacar`; vira modificador junto com os itens. | ✅ feito |
-| **D** (próxima) | Mundo e narrativa como dados: flags com nome, facções, reputação por facção, missões com etapas; eventos e diálogos com condições e consequências declaradas; validador de conteúdo (referências existem, ramos alcançáveis). | quando a história começar |
-| **E** | Front-end: `telas.js` dividido por tela; animação de habilidade como campo de dados (hoje há casos fixos em `batalha.js`). | |
+| **D** | Rede de segurança: validador de conteúdo (toda referência entre catálogos existe: habilidades de famílias, afixos e fases, famílias dos biomas, lore, eventos, sprites dos ícones); o gabarito guarda também o estado que a tela recebe. Corrige os números que a auditoria achou errados na tela. | em andamento |
+| **E** | Habilidades e talentos sem teto: árvore de talentos montada pelos dados (hoje 4 camadas × 3 colunas, 12 espaços por classe, 11 usados); ícone, elemento e animação nos dados (fim dos mapas em JS e dos casos fixos em `batalha.js`); gatilhos de talento com os blocos das habilidades e memória por luta genérica. | |
+| **F** | Itens como dados: catálogo de consumíveis do qual saem todas as listas (hoje 8 cópias em motor e tela); equipamento com `base_id`, nível e único por id; ícone mandado pelo motor (hoje regex no nome); tabelas únicas de atributos, raridades e espaços. | |
+| **G** | Inimigos como dados: regras da família na ficha (nível mínimo, lore, Fenda, escolta, noite, saque), uma função só para "quem vive aqui", afixos com onde sorteiam, catálogo de traços, guardiões com id estável, habilidades de inimigo com id próprio. | |
+| **H** | Estrutura: `combate.py` e `comitiva.py` em pacotes por responsabilidade (cada companheiro declara a própria ação); opções de sistema com meta (a tela não reconhece mais pelo texto); helpers JS únicos e `telas.js` dividido por tela. | |
+| **I** | Mundo e narrativa como dados: flags com nome, facções, reputação por facção, missões com etapas; eventos e diálogos com condições e consequências declaradas; ramos alcançáveis. | quando a história começar |
+
+A régua de cada etapa de D a H: o gabarito passa sem atualizar (refatoração pura). Quando a etapa só acrescenta
+campos ao que a tela recebe, o gabarito muda e se confere que, tirando os campos novos, as partidas são idênticas.
+Correção de jogo fica em commit separado, com o diff explicado.
+
+Auditoria que motivou D–H (1.45): com o núcleo já em dados (A–C), o que trava "conteúdo em massa" são as bordas:
+o teto da árvore de talentos, listas copiadas à mão entre arquivos (consumíveis, espaços, biomas, ícones), regras
+especiais escritas na lógica (`familia == "caido"`, `cid == "morel"`, regex no nome do item) e arquivos que fazem
+coisas demais (`combate.py`, `comitiva.py`, `telas.js`, `batalha.js`).
 
 ## Equilíbrio (1.13)
 

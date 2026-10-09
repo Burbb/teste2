@@ -183,8 +183,9 @@ lados, turnos até cair) e "Encontros por tipo".
 
 | Teste | O que garante |
 |---|---|
-| `python -m tests.gabarito` | 18 partidas com sementes fixas saem **idênticas** (refatorar não muda o jogo) |
+| `python -m tests.gabarito` | 18 partidas com sementes fixas saem **idênticas** (refatorar não muda o jogo). Nas 9 partidas da tela gráfica, cada escolha anota também o `estado` que a tela recebe (linhas `ESTADO parte {...}`, só quando a parte mudou) |
 | `python -m unittest discover -s tests` | sistemas, saves antigos, catálogo de habilidades, Grimório, gabarito |
+| `python -m unittest tests.test_conteudo` | o validador de conteúdo: toda referência entre catálogos existe (habilidades de famílias, afixos e fases de guardião; famílias dos biomas; traços; lore; títulos e reações da comitiva apontando para eventos; ícones de habilidade, talento, item e traço com desenho) |
 | `tests/navegador/fumaca.mjs` | a interface web de ponta a ponta (Playwright) |
 | `python -m tests.equilibrio` | não é teste, é régua: heróis típicos por especialização e nível lutando (`tests/arena.py`) |
 | `python -m tests.replay` | régua humana: as partidas de `tests/runs/` refeitas com os números de agora |
