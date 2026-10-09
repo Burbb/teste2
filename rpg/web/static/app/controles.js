@@ -68,7 +68,7 @@ document.addEventListener("click", (ev) => {
   if (carta) {
     const cid = carta.dataset.conversar;
     const direta = pergunta && pergunta.tipo === "opcoes" && pergunta.opcoes.some((o) => o.meta && o.meta.conversar === cid);
-    if (direta || (pergunta && pergunta.tipo === "opcoes" && pergunta.opcoes.some((o) => o.texto.startsWith("Comitiva")))) pedir("Comitiva", "conversar", cid);
+    if (direta || (pergunta && pergunta.tipo === "opcoes" && pergunta.opcoes.some((o) => atalhoDe(o) && o.meta.sistema === "comitiva"))) pedir("Comitiva", "conversar", cid);
     else Telas.toast("", "Dá para conversar quando estiver num lugar seguro (vila ou acampamento).", cid, true);
     return;
   }

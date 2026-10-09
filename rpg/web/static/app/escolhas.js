@@ -32,9 +32,9 @@ function recusarAtalho(rotulo) {
   avisarAtalho(rotulo);
 }
 function atalhoNoMenu(opcoes, rotulo) {
-  return opcoes.findIndex((o) => { const at = atalhoDe(o.texto); return at && at[1] === rotulo; });
+  return opcoes.findIndex((o) => { const at = atalhoDe(o); return at && at[1] === rotulo; });
 }
-const menuDoLugar = (opcoes) => opcoes.filter((o) => atalhoDe(o.texto)).length >= 4;
+const menuDoLugar = (opcoes) => opcoes.filter((o) => atalhoDe(o)).length >= 4;
 /** Abrir um atalho de qualquer lugar (aviso de talento no painel, tecla): usa o botão da doca se houver. */
 function pedirAtalho(rotulo) {
   const b = doca.querySelector(`.atalho[data-rotulo="${rotulo}"]`);
@@ -86,7 +86,10 @@ function limparPrompt() {
   document.querySelectorAll(".rastro-contrato.cacavel").forEach((c) => { c.classList.remove("cacavel"); c.querySelector(".rastro-cacar")?.remove(); });
   Telas.fecharMenuItem();
 }
-function atalhoDe(t) { return SISTEMA.find(([re]) => re.test(t)); }
+/** O atalho da doca de uma opção, pela meta `sistema` (null quando a opção não é de sistema). */
+function atalhoDe(o) { return (o && o.meta && o.meta.sistema && SISTEMA.find(([id]) => id === o.meta.sistema)) || null; }
+/** As ações da sua vez na luta (atacar, habilidades, itens...): o motor marca cada uma com a meta `acao`. */
+const ehAcaoDaLuta = (m) => m.opcoes.some((o) => o.meta && o.meta.acao);
 
 /** As opções novas chegaram: o lugar delas não precisa mais segurar a altura (ver limparPrompt). */
 function soltarAlturaPrompt() { setTimeout(() => { promptEl.style.minHeight = ""; promptEl.classList.remove("segurando"); }, 0); }
@@ -107,7 +110,7 @@ function mostrarOpcoes(m) {
     pendente = null;
     if (p.chave === "_atalho") {
       // A caminho de outro atalho da doca: volta quantas telas for preciso até o menu do lugar e escolhe lá.
-      const alvo = m.opcoes.findIndex((o) => { const at = atalhoDe(o.texto); return at && at[1] === p.valor; });
+      const alvo = m.opcoes.findIndex((o) => { const at = atalhoDe(o); return at && at[1] === p.valor; });
       const v = m.opcoes.findIndex(ehVoltar);
       if (alvo >= 0) { docaTela = p.valor; pergunta = { id: m.id, tipo: "opcoes", opcoes: m.opcoes }; responder(m.id, alvo); marcarDocaAtual(); return; }
       if (v >= 0 && p.saltos > 0) { pendente = { ...p, saltos: p.saltos - 1 }; pergunta = { id: m.id, tipo: "opcoes", opcoes: m.opcoes }; responder(m.id, v); return; }
@@ -132,7 +135,7 @@ function mostrarOpcoes(m) {
   const emLuta = !!(estado && estado.combate);
   if (emLuta && rodaEl() && Batalha.elCarta("j")) {
     // Na luta, as ações aparecem em volta da sua carta; habilidades e itens numa janelinha ao lado; mirando, um lembrete.
-    if (m.pergunta === "Sua ação:" && m.opcoes.some((o) => o.meta && o.meta.acao)) { rodaDeAcoes(m); return; }
+    if (ehAcaoDaLuta(m)) { rodaDeAcoes(m); return; }
     if (m.opcoes.some((o) => o.meta && (o.meta.habilidade || o.meta.usar_item || o.meta.trocar !== undefined))) { rodaSubmenu(m); return; }
     if (m.opcoes.some((o) => o.meta && o.meta.alvo)) { rodaMira(m); return; }
   }
@@ -141,12 +144,12 @@ function mostrarOpcoes(m) {
   if (!naVila) fecharVila();
   if (m.pergunta && !naVila) promptEl.appendChild(el("div", "pergunta-rotulo", esc(m.pergunta)));
   const lista = el("ol", "escolhas");
-  if (emLuta && m.pergunta === "Sua ação:") { lista.classList.add("acoes-combate"); Batalha.vez("j"); }
+  if (emLuta && ehAcaoDaLuta(m)) { lista.classList.add("acoes-combate"); Batalha.vez("j"); }
   if (emLuta && m.opcoes.some((o) => o.meta && o.meta.alvo)) {
     Batalha.alvos(m.opcoes, (i) => responder(m.id, i));
     promptEl.firstElementChild && promptEl.firstElementChild.classList.add("mira");
   }
-  const sistema = m.opcoes.filter((o) => atalhoDe(o.texto)).length >= 4;
+  const sistema = m.opcoes.filter((o) => atalhoDe(o)).length >= 4;
   const atalhos = el("div", "atalhos");
   // "Voltar" é navegação nas telas de menu (mesmo sozinho: "Fechar o diário") e na luta; numa cena da história
   // ("Voltar por onde veio") é uma escolha como as outras.
@@ -164,14 +167,12 @@ function mostrarOpcoes(m) {
     if (i === voltar) return;
     if (o.meta && ACOES_OCULTAS.some((k) => o.meta[k] !== undefined)) return;  // feitas pela tela (arrastar, clicar)
     if (naVila && o.meta && o.meta.predio) { (grupos[o.meta.predio] = grupos[o.meta.predio] || []).push({ o, i }); return; }
-    const at = sistema && atalhoDe(o.texto);
+    const at = sistema && atalhoDe(o);
     if (at) {
-      const pontos = /★\s*(\d+)/.exec(o.texto);
-      const carta = /✉/.test(o.texto);
-      const qtd = /^Comitiva \((\d+)\)/.exec(o.texto);
+      const pontos = o.meta.pontos, carta = o.meta.carta;
       const b = el("button", "atalho" + (pontos || carta ? " destaque" : ""));
       b.type = "button";
-      const selo = pontos ? `<b class="selo">★${pontos[1]}</b>` : carta ? '<b class="selo">✉</b>' : "";
+      const selo = pontos ? `<b class="selo">★${pontos}</b>` : carta ? '<b class="selo">✉</b>' : "";
       b.innerHTML = `<span class="atalho-icone">${spr(at[3], 2)}${selo}</span><span class="atalho-nome">${esc(at[1])}</span>` +
         (at[2] ? `<kbd>${at[2].toUpperCase()}</kbd>` : "");
       b.title = o.texto + (at[2] ? ` (${at[2].toUpperCase()})` : "");
@@ -225,7 +226,7 @@ function mostrarOpcoes(m) {
     }
     if (o.meta && o.meta.item) icone = spr(Telas.iconeConsumivel(o.meta.item), 1);
     if (o.meta && o.meta.cacar !== undefined) { icone = spr("arco", 1); b.classList.add("op-contrato"); }
-    if (emLuta) icone = iconeAcaoCombate(o.texto) || icone;
+    if (emLuta) icone = iconeAcaoCombate(o.meta) || icone;
     if (o.meta && o.meta.alvo) {
       b.addEventListener("mouseenter", () => Batalha.mirar(o.meta.alvo, true));
       b.addEventListener("mouseleave", () => Batalha.mirar(o.meta.alvo, false));
@@ -624,13 +625,11 @@ function rodaMira(m) {
   rodaEl().appendChild(chip);
 }
 
-function iconeAcaoCombate(t) {
-  if (/^Atacar/.test(t)) return spr(iconeAtaque(), 2);
-  if (/^Habilidades/.test(t)) return spr("grimorio", 2);
-  if (/^Itens/.test(t)) return spr("pocao", 2);
-  if (/^Analisar/.test(t)) return spr("olho", 2);
-  if (/^Fugir/.test(t)) return spr("fuga", 2);
-  return "";
+const ICONE_ACAO = { habilidades: "grimorio", itens: "pocao", analisar: "olho", fugir: "fuga" };
+function iconeAcaoCombate(meta) {
+  const acao = meta && meta.acao;
+  if (acao === "atacar") return spr(iconeAtaque(), 2);
+  return ICONE_ACAO[acao] ? spr(ICONE_ACAO[acao], 2) : "";
 }
 
 /** A linha de dano do Grimório na dica da carta de habilidade: "Dano 16–22 (crítico 31)". */

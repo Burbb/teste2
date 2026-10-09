@@ -30,10 +30,12 @@ const D20 = '<svg viewBox="-30 -30 60 60"><polygon class="face" points="0,-27 23
   '<path class="aresta" d="M0,-15 L13,8 L-13,8 Z M0,-27 L0,-15 M0,-15 L23,-13 M0,-15 L-23,-13 M13,8 L23,-13 M13,8 L23,13 M13,8 L0,27 M-13,8 L-23,-13 M-13,8 L-23,13 M-13,8 L0,27"/>' +
   '<text x="0" y="1">20</text></svg>';
 // [padrão, rótulo, tecla, ícone, grupo]: personagem · mundo · sistema
+// A doca: [id da meta `sistema` que o motor manda, rótulo, tecla, ícone, grupo]. A opção é reconhecida pela meta,
+// nunca pelo texto.
 const SISTEMA = [
-  [/^Personagem e inventário/, "Inventário", "i", "saco", 0], [/^Talentos/, "Talentos", "t", "estrela", 0],
-  [/^Comitiva/, "Comitiva", "c", "humano", 0], [/^Mapa$/, "Mapa", "m", "pergaminho", 1], [/^Diário/, "Diário", "d", "livro", 1],
-  [/^Bestiário/, "Bestiário", "b", "caveira", 1], [/^Salvar jogo/, "Salvar", "g", "cadeado", 2], [/^Sair do jogo/, "Sair", "q", "fuga", 2],
+  ["inventario", "Inventário", "i", "saco", 0], ["talentos", "Talentos", "t", "estrela", 0],
+  ["comitiva", "Comitiva", "c", "humano", 0], ["mapa", "Mapa", "m", "pergaminho", 1], ["diario", "Diário", "d", "livro", 1],
+  ["bestiario", "Bestiário", "b", "caveira", 1], ["salvar", "Salvar", "g", "cadeado", 2], ["sair", "Sair", "q", "fuga", 2],
 ];
 
 const corpo = document.body;

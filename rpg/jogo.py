@@ -316,18 +316,22 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
             self.menu_selvagem()
 
     def opcoes_comuns(self):
+        """As opções de sistema de todo lugar. A meta `sistema` diz qual é cada uma: a tela gráfica monta a doca por
+        ela (nunca pelo texto, que pode mudar)."""
         pontos = self.j.pontos_talento
+        carta = (self.comitiva or self.reserva) and any(c["conversa"] for c in comitiva.estado(self))
         return [
             ("Viajar", "viajar", {"predio": "estrada"}),
-            ("Talentos" + (f"  ★ {tx.plural(pontos, 'ponto')} para gastar!" if pontos else ""), "talentos"),
-            ("Personagem e inventário", "personagem"),
-            ("Comitiva" + ("  ✉ alguém quer conversar" if any(
-                c["conversa"] for c in comitiva.estado(self)) else ""), "comitiva") if self.comitiva or self.reserva else None,
-            ("Mapa", "mapa"),
-            ("Diário (contratos, rumores)", "diario"),
-            ("Bestiário", "bestiario"),
-            ("Salvar jogo", "salvar"),
-            ("Sair do jogo", "sair"),
+            ("Talentos" + (f"  ★ {tx.plural(pontos, 'ponto')} para gastar!" if pontos else ""), "talentos",
+             {"sistema": "talentos", "pontos": pontos}),
+            ("Personagem e inventário", "personagem", {"sistema": "inventario"}),
+            ("Comitiva" + ("  ✉ alguém quer conversar" if carta else ""), "comitiva",
+             {"sistema": "comitiva", "carta": bool(carta)}) if self.comitiva or self.reserva else None,
+            ("Mapa", "mapa", {"sistema": "mapa"}),
+            ("Diário (contratos, rumores)", "diario", {"sistema": "diario"}),
+            ("Bestiário", "bestiario", {"sistema": "bestiario"}),
+            ("Salvar jogo", "salvar", {"sistema": "salvar"}),
+            ("Sair do jogo", "sair", {"sistema": "sair"}),
         ] + self.opcoes_bolsa() + self.opcoes_conversa()
 
     USAVEIS_FORA = USAVEIS_FORA  # o catálogo diz (itens.py: uso)

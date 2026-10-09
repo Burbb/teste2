@@ -226,7 +226,7 @@ function usarDaBolsa(b, el) {
   if (b.motivo && !alvosBons) { Som.tocar("falha"); aviso(b.motivo, "info", "pergaminho"); return; }
   const opcoes = (pergunta && pergunta.tipo === "opcoes" && pergunta.opcoes) || [];
   if (estado && estado.combate) {
-    if (!opcoes.some((o) => (o.meta && o.meta.usar_item === b.id) || o.texto.startsWith("Itens"))) {
+    if (!opcoes.some((o) => o.meta && (o.meta.usar_item === b.id || o.meta.acao === "itens"))) {
       Som.tocar("falha"); aviso("Espere a sua vez.", "info", "pergaminho"); return;
     }
     Som.tocar("item");

@@ -424,7 +424,7 @@ function bloco(m) {
 function eco(m) {
   // Navegação (Voltar, abrir Talentos ou outra tela da doca, o menu do título) não é um passo da história: não vira
   // eco na página nem entra no histórico. Na luta, a carta que avança e o registro do golpe já contam a escolha.
-  if (m.navegacao || atalhoDe(m.texto) || corpo.classList.contains("modo-titulo") || (estado && estado.combate)) return;
+  if (m.navegacao || corpo.classList.contains("modo-titulo") || (estado && estado.combate)) return;
   historico("h-eco", "› " + m.texto);
   if (emTela()) return;  // nas telas desenhadas (mercado, inventário), o aviso solto já contou o que aconteceu
   anexar(el("p", "eco", esc(m.texto)));
