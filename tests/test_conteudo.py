@@ -14,11 +14,12 @@ from rpg import comitiva
 from rpg.dados import AFIXOS, BIOMAS, FAMILIAS, GUARDIOES, LORE, TRACOS
 from rpg.eventos import motor
 from rpg.eventos.titulos import TITULOS
-from rpg.habilidades import HABILIDADES
+from rpg.classes import CLASSES
+from rpg.habilidades import ANIMACOES, FAMILIAS_TELA, HABILIDADES
 from rpg.inimigos import HABS
 from rpg.regras import NIVEL_MIN_FAMILIA
 from rpg.sistemas.confronto import CRIATURAS_DA_FENDA
-from rpg.talentos import TALENTOS
+from rpg.talentos import PASSIVAS, TALENTOS
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ESTATICO = os.path.join(RAIZ, "rpg", "web", "static")
@@ -36,7 +37,7 @@ def _sprites():
 
 
 def _mapa_js(arquivo, nome):
-    """Um mapa {id: "ícone"} ou {id: ["ícone", ...]} declarado em JS, como dicionário Python."""
+    """Um mapa {id: "ícone"} declarado em JS, como dicionário Python (os que ainda moram na tela)."""
     js = _ler(*arquivo.split("/"))
     m = re.search(rf"const {nome}\s*=\s*\{{(.*?)\}};", js, re.S)
     assert m, f"{arquivo}: mapa {nome} não encontrado"
@@ -111,30 +112,50 @@ class TestEventos(Catalogo):
         self.assertEqual(repetidos, [], f"eventos com o mesmo id: {repetidos}")
 
 
-class TestIconesDaTela(Catalogo):
-    """Os mapas de ícone que ainda moram no JS (até virarem campo dos catálogos): toda entrada do catálogo tem
-    ícone, e todo ícone tem desenho. Sem isso, uma habilidade nova aparece com a estrela genérica, calada."""
+class TestApresentacao(Catalogo):
+    """Como o conteúdo aparece na tela: todo ícone tem desenho, toda cor e animação é uma que a tela sabe fazer. Sem
+    isso, uma habilidade nova aparece com a estrela genérica, calada (ou sem a cor, ou sem o jeito de animar)."""
 
     @classmethod
     def setUpClass(cls):
         cls.sprites = _sprites()
+        css = "".join(open(os.path.join(ESTATICO, "css", f), encoding="utf-8").read()
+                      for f in os.listdir(os.path.join(ESTATICO, "css")))
+        cls.cores_texto = set(re.findall(r"\.rx-([a-z]+)", css))
+        cls.cores_carta = set(re.findall(r"\.el-([a-z]+)", css))
 
     def _confere(self, mapa, onde):
         for k, icone in mapa.items():
             self.existe(icone, self.sprites, f"{onde}: '{k}' usa o ícone '{icone}', que não tem desenho")
 
     def test_habilidades(self):
-        mapa = _mapa_js("app/escolhas.js", "HAB_ICONE")
-        self._confere(mapa, "HAB_ICONE")
-        for h in HABILIDADES:
-            self.existe(h, mapa, f"habilidade '{h}' sem ícone em HAB_ICONE (app/escolhas.js)")
+        for k, h in HABILIDADES.items():
+            onde = f"habilidade '{k}' (rpg/habilidades.py)"
+            self.existe(h.get("icone"), self.sprites, f"{onde}: ícone '{h.get('icone')}' sem desenho")
+            self.existe(h.get("familia"), FAMILIAS_TELA, f"{onde}: família '{h.get('familia')}' fora de FAMILIAS_TELA")
+            self.existe(h["familia"], self.cores_carta, f"{onde}: a cor el-{h['familia']} não existe no CSS")
+            if h.get("anim"):
+                self.existe(h["anim"], ANIMACOES, f"{onde}: anim '{h['anim']}' fora de ANIMACOES")
+            if h.get("realce"):
+                self.existe(h["realce"], self.cores_texto, f"{onde}: realce '{h['realce']}' sem cor .rx- no CSS")
+        for k, h in HABS.items():
+            if h.get("anim"):
+                self.existe(h["anim"], ANIMACOES, f"habilidade de inimigo '{k}': anim '{h['anim']}' fora de ANIMACOES")
+        for k, c in CLASSES.items():
+            self.existe(c.get("icone_ataque"), self.sprites, f"classe '{k}': icone_ataque sem desenho")
+
+    def test_animacoes_que_a_tela_sabe_fazer(self):
+        js = _ler("batalha.js")
+        for a in ANIMACOES:
+            self.existe(f'm.anim === "{a}"', js, f"anim '{a}' em ANIMACOES, mas batalha.js não sabe animá-la")
 
     def test_talentos(self):
-        mapa = _mapa_js("telas.js", "ICONE_TALENTO")
-        self._confere(mapa, "ICONE_TALENTO")
-        for lista in TALENTOS.values():
-            for t in lista:
-                self.existe(t["id"], mapa, f"talento '{t['id']}' sem ícone em ICONE_TALENTO (telas.js)")
+        fichas = [(t["id"], t) for lista in TALENTOS.values() for t in lista] + list(PASSIVAS.items())
+        for k, t in fichas:
+            if "camada" in t:  # nó da árvore (a passiva não aparece na árvore)
+                self.existe(t.get("icone"), self.sprites, f"talento '{k}': ícone '{t.get('icone')}' sem desenho")
+            if t.get("realce"):
+                self.existe(t["realce"], self.cores_texto, f"talento '{k}': realce '{t['realce']}' sem cor .rx-")
 
     def test_tracos(self):
         mapa = _mapa_js("batalha.js", "ICONE_TRACO")

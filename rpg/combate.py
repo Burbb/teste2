@@ -152,7 +152,7 @@ class Combate:
         self.ui.lance(tipo, **dados)
 
     @contextmanager
-    def salva(self, hab=None):
+    def salva(self, hab=None, anim=None):
         """Golpes em área saem juntos: os lances (e as linhas do registro) ficam guardados e vão à interface
         num só lance "salva", que anima todos os alvos ao mesmo tempo, como uma chuva de flechas de verdade."""
         if self._salva is not None:
@@ -166,18 +166,20 @@ class Combate:
             lances, textos = self._salva, self._salva_textos
             self._salva = self._salva_textos = None
             if lances:
-                self.ui.lance("salva", hab=hab, lances=lances)
+                self.ui.lance("salva", hab=hab, lances=lances, **({"anim": anim} if anim else {}))
             self.ui.fim_salva()
             for fn, texto, cor in textos:
                 fn(texto, cor)
             self.ui.atualizar()
 
     @contextmanager
-    def agindo(self, u, nome=None, alvo=None, area=False, hab=None):
-        self.lance("acao", de=self.uid(u), nome=nome, alvo=self.uid(alvo), area=area, hab=hab)
+    def agindo(self, u, nome=None, alvo=None, area=False, hab=None, anim=None):
+        """anim: o jeito de a tela animar a ação (o `anim` do catálogo da habilidade: "grito", "redemoinho"...)."""
+        self.lance("acao", de=self.uid(u), nome=nome, alvo=self.uid(alvo), area=area, hab=hab,
+                   **({"anim": anim} if anim else {}))
         try:
             if area:  # golpes em área acertam todos juntos (no Redemoinho, giro a giro)
-                with self.salva(hab):
+                with self.salva(hab, anim):
                     yield
             else:
                 yield
@@ -708,7 +710,8 @@ class Combate:
         for h_id in j.habilidades:
             h = HABILIDADES[h_id]
             motivo = self.motivo_bloqueio(h_id)
-            metas.append({"habilidade": h_id, "nome": h["nome"], "custo": custo_habilidade(j, h_id),
+            metas.append({"habilidade": h_id, "nome": h["nome"], "icone": h["icone"], "familia": h["familia"],
+                          "custo": custo_habilidade(j, h_id),
                           "recurso": j.nome_recurso, "flechas": self.flechas_de(h), "alvo_tipo": h["alvo"],
                           "desc": descricao_habilidade(h_id, j), "pode": motivo is None, "motivo": motivo})
         return metas
@@ -757,7 +760,7 @@ class Combate:
         flechas = self.flechas_de(h)
         j.flechas -= flechas
         self.flechas_gastas += flechas
-        with self.agindo(j, h["nome"], alvo, area=h["alvo"] == "todos", hab=ids[esc]):
+        with self.agindo(j, h["nome"], alvo, area=h["alvo"] == "todos", hab=ids[esc], anim=h.get("anim")):
             antes, self._cura_j = j.hp, 0
             efeitos_antes = {k: dict(v) for k, v in j.efeitos.items()}
             h["fn"](self, j, alvo)
@@ -765,7 +768,8 @@ class Combate:
             # Buffs em si mesmo (grito, escudo, esquiva, sombras) também viram um lance: a tela anima e espera.
             novos = [k for k, v in j.efeitos.items() if efeitos_antes.get(k) != v]
             if novos:
-                self.lance("buff", em="j", efeitos=novos, rotulo=h["nome"], hab=ids[esc])
+                self.lance("buff", em="j", efeitos=novos, rotulo=h["nome"], hab=ids[esc],
+                           **({"anim": h["anim"]} if h.get("anim") else {}))
         return True
 
     def itens_da_luta(self):
@@ -1003,7 +1007,8 @@ class Combate:
                 uteis = [h for h in uteis if HABS[h]["golpe"]]
             if uteis:
                 h = self.rng.choice(uteis)
-                with self.agindo(e, ROTULOS_HABS_INIMIGO.get(h), alvo, area=h == "varredura", hab=h):
+                with self.agindo(e, ROTULOS_HABS_INIMIGO.get(h), alvo, area=h == "varredura", hab=h,
+                                 anim=HABS[h]["anim"]):
                     if HABS_INIMIGO[h](self, e, alvo) is not False:
                         return
         magico = e.ataque != "fisico" and e.poder > e.atk

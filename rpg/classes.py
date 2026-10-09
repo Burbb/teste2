@@ -22,6 +22,7 @@ CLASSES = {
         "cresc": dict(max_hp=9, atk=2.0, defesa=1.2, agi=0.4, poder=0.3, max_rec=2),
         "habilidades": [(1, "golpe_pesado"), (1, "erguer_escudo"), (2, "investida"), (3, "grito_guerra")],
         "specs": ["paladino", "berserker"],
+        "icone_ataque": "espada",
         "ataque": ("Golpe de espada", "corpo", "fisico", "atk", 1.0),
     },
     "arqueiro": {
@@ -34,6 +35,7 @@ CLASSES = {
         "habilidades": [(1, "tiro_certeiro"), (1, "marcar_presa"), (2, "chuva_flechas"), (3, "passo_agil")],
         "specs": ["patrulheiro", "sombra"],
         "testes": {"percepcao": ("olhos de arqueiro", 3)},
+        "icone_ataque": "arco",
         "ataque": ("Disparo", "distancia", "fisico", "atk", 1.1),
     },
     "mago": {
@@ -46,6 +48,7 @@ CLASSES = {
         "habilidades": [(1, "bola_fogo"), (1, "meditar"), (2, "lanca_gelo"), (3, "barreira")],
         "specs": ["piromante", "necromante"],
         "testes": {"vontade": ("mente treinada", 2)},
+        "icone_ataque": "cajado",
         "ataque": ("Dardo Arcano", "distancia", "arcano", "poder", 1.0),
     },
 }

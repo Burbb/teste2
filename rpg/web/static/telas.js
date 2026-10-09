@@ -6,18 +6,8 @@ const Telas = (() => {
   const h = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const S = (nome, escala = 2, classe = "") => Sprites.img(nome, escala, classe);
 
-  const ICONE_TALENTO = {
-    pele_ferro: "escudo", golpe_brutal: "espada", folego: "coracao", luz_curativa: "estrela", contra_ataque: "espada",
-    sede_insaciavel: "gota", aura_protecao: "escudo", muralha: "escudo", frenesi: "chama", martirio: "coracao",
-    imortal: "caveira", olho_aguia: "olho", pes_leves: "folha", aljava_funda: "aljava", laco_animal: "fera",
-    tiro_abertura: "flecha", laminas_envenenadas: "gota", armadilheiro: "cadeado", mira_firme: "flecha",
-    golpe_sombras: "caveira", matilha: "fera", assassino: "caveira", mente_vasta: "livro", potencia_arcana: "pocao_azul",
-    canalizacao: "olho", brasas: "chama", escudo_reflexo: "escudo", pacto_sombrio: "gota", ignicao: "chama",
-    eficiencia: "estrela", exercito: "caveira", coracao_ardente: "chama", senhor_mortos: "caveira",
-  };
   const ICONE_ITEM = { pocao_vida: "pocao", tonico: "pocao_azul", antidoto: "folha", bandagem: "bandagem", unguento: "unguento",
     tocha: "tocha", bomba_fumaca: "caveira", pena_fenix: "chama", bau: "bau" };
-  const ARMA = { guerreiro: "espada", arqueiro: "arco", mago: "cajado" };
 
   function iconeCriatura(tracos = [], familia = "") {
     const t = new Set(tracos);
@@ -68,7 +58,7 @@ const Telas = (() => {
       const classe = n.estado === "comprado" ? "comprado" : n.estado === "disponivel" ? "disponivel" : n.estado === "bloqueado" ? "bloqueado" : "trancado";
       const novo = ranksAntes[n.id] !== undefined && n.rank > ranksAntes[n.id] ? " aprendeu" : "";
       return `<div class="arvore-celula${conecta}"><div class="no-talento ${classe}${pode ? " pode" : ""}${novo}" data-id="${h(n.id)}">
-          ${S(ICONE_TALENTO[n.id] || "estrela", 3)}<span class="rank">${n.rank}/${n.max}</span></div></div>`;
+          ${S(n.icone || "estrela", 3)}<span class="rank">${n.rank}/${n.max}</span></div></div>`;
     }
     for (let camada = 2; camada <= 4; camada++) {
       const nivelReq = a.camadas[String(camada)];
@@ -436,7 +426,7 @@ const Telas = (() => {
     const todas = [g.basico, ...g.habilidades];
     if (!todas.some((x) => x.id === paginaGrimorio)) paginaGrimorio = "ataque";
     const heroi = App.estado.heroi;
-    const icone = (x) => x.id === "ataque" ? ({ guerreiro: "espada", arqueiro: "arco", mago: "cajado" }[heroi.classe] || "espada") : (HAB_ICONE[x.id] || ["estrela"])[0];
+    const icone = (x) => x.icone || "estrela";
     const custo = (x) => x.custo ? `${x.custo} ${h(g.recurso.toLowerCase())}` : "grátis";
     document.getElementById("grimorio-indice").innerHTML = `
       <div class="grimorio-cab"><b>Grimório</b><small>${h(heroi.titulo)} · nível ${heroi.nivel}</small></div>
@@ -1525,5 +1515,5 @@ const Telas = (() => {
   }
 
   return { topoBalcao, cartaoServico, rastreador, atributosHtml, reputacaoHtml, dica, guardarDica, htmlItem, menuUso, abrirGrimorio, alternarGrimorio, abrirDica, dicaAbertaPor, mouseNaArea, novaVisita, fecharMenuItem, guardarArvore, abrirTalentos, fecharTalentos, painel, revelarAchado, celebrar, resumoCelebracao, toast, moedasPara, iconeCriatura, iconeItem, dicaItem, ligarDicas, esconderDica,
-    ICONE_ITEM, ARMA, VAZIO, NOME_ESPACO, AREA, barra, aprovacao, noPalco, abrirAchado, acoesDoAchado, fecharAchado };
+    ICONE_ITEM, VAZIO, NOME_ESPACO, AREA, barra, aprovacao, noPalco, abrirAchado, acoesDoAchado, fecharAchado };
 })();

@@ -396,9 +396,9 @@ const Batalha = (() => {
         const inimigo = de.classList.contains("inimigo");
         rotulo(de, m.nome, inimigo ? "inimiga" : "");
         await passoFrente(de, m.area);
-        if (m.hab === "grito_guerra") {
-          // O grito vem antes de tudo: a arena treme e quem grita brilha; só então o outro lado se encolhe. O grito
-          // dos bandidos tem o mesmo id: a faixa sai na cor de quem grita.
+        if (m.anim === "grito") {
+          // O grito vem antes de tudo: a arena treme e quem grita brilha; só então o outro lado se encolhe. A faixa
+          // sai na cor de quem grita (o herói ou os bandidos).
           som("rugido");
           Sensacao.tremor(arena, Sensacao.AJUSTES.tremor.leve, 420);
           brilho(de, "forca");
@@ -412,10 +412,11 @@ const Batalha = (() => {
         marcar(m.em);
         const fams = [...new Set((m.efeitos || []).map((id) => (ESTADOS[id] ? ESTADOS[id].familia : "protecao")))];
         fams.forEach((f, i) => setTimeout(() => brilho(em, f), i * 160));
-        if (m.hab !== "grito_guerra") selos(em, m.efeitos);
-        som(m.hab === "erguer_escudo" ? "falange" : "buff");  // ganhar um estado bom soa para cima; um mal, para baixo
-        if (m.hab === "erguer_escudo") Sensacao.tremor(arena, Sensacao.AJUSTES.tremor.leve, 300);  // o baque dos escudos no chão
-        if (m.hab === "provocar") { som("rugido"); Sensacao.tremor(arena, Sensacao.AJUSTES.tremor.leve, 360); }  // o urso ruge e todos olham para ele
+        // O jeito de animar vem do motor (o `anim` do catálogo), não do nome da habilidade.
+        if (m.anim !== "grito") selos(em, m.efeitos);
+        som(m.anim === "falange" ? "falange" : "buff");  // ganhar um estado bom soa para cima; um mal, para baixo
+        if (m.anim === "falange") Sensacao.tremor(arena, Sensacao.AJUSTES.tremor.leve, 300);  // o baque dos escudos no chão
+        if (m.anim === "rugido") { som("rugido"); Sensacao.tremor(arena, Sensacao.AJUSTES.tremor.leve, 360); }  // o urso ruge e todos olham para ele
         await dormir(pausa(560 + 160 * Math.max(0, fams.length - 1)));
         return;
       }
@@ -731,8 +732,8 @@ const Batalha = (() => {
   }
 
   async function salva(m) {
-    if (m.hab === "redemoinho") return redemoinho(m);
-    if (m.hab === "tiro_duplo") return rajada(m);
+    if (m.anim === "redemoinho") return redemoinho(m);
+    if (m.anim === "rajada") return rajada(m);
     const golpes = m.lances.filter((x) => x.tipo === "golpe" || x.tipo === "erro");
     const resto = juntarRoubos(m.lances.filter((x) => !golpes.includes(x)));
     if (!golpes.length) { for (const x of resto) await lance(x); return; }

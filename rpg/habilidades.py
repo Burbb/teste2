@@ -290,7 +290,7 @@ class Salva:
         self.hab, self.passos = hab, list(passos)
 
     def executar(self, ctx):
-        with ctx.cb.salva(self.hab):
+        with ctx.cb.salva(self.hab, HABILIDADES[self.hab].get("anim")):
             for p in self.passos:
                 p.executar(ctx)
 
@@ -416,7 +416,7 @@ def _comando_fera(cb, u, alvo):
         cb.atacar(fera, alvo, 1.0, alcance="corpo", rotulo="Proteger")
         fera.aplicar("provocando", 2)
         fera.aplicar("guarda", 2, 0.3)
-        cb.lance("buff", em=cb.uid(fera), efeitos=["provocando", "guarda"], rotulo="Provocando", hab="provocar")
+        cb.lance("buff", em=cb.uid(fera), efeitos=["provocando", "guarda"], rotulo="Provocando", anim="rugido")
         cb.dizer(f"{fera.nome} ruge e se põe na frente. Os inimigos só têm olhos para ele.", "ciano")
     elif fera.tipo == "lobo":
         if cb.atacar(fera, alvo, 1.6, alcance="corpo", rotulo="Dilacerar"):
@@ -544,110 +544,141 @@ def _erguer_servo(cb, u, alvo):
 # ====================================================================== o catálogo
 SANGRAMENTO = Escala(minimo=2, atk=0.3)
 
+# Como cada habilidade aparece na tela (campos do catálogo, conferidos por tests/test_conteudo.py):
+#   icone     o desenho (sprites-dados.js)
+#   familia   a cor da carta de ação (classe CSS el-<familia>)
+#   anim      um jeito próprio de animar, além do padrão de golpe, magia ou bênção (batalha.js)
+#   realce    a cor do nome quando ele aparece num texto de regra (Realce, na tela); sem ele, o nome fica neutro
+FAMILIAS_TELA = {"fisico", "forca", "protecao", "sagrado", "sangue", "natureza", "sombra", "veneno", "fogo", "gelo",
+                 "arcano", "cura"}
+ANIMACOES = {"grito", "falange", "rugido", "redemoinho", "rajada"}
+
 HABILIDADES = {
     # Guerreiro
     "golpe_pesado": hab("Golpe Pesado", 10, "inimigo", "170% de dano físico.",
-                        [Dano(1.7, rotulo="Golpe Pesado")]),
+                        [Dano(1.7, rotulo="Golpe Pesado")], icone="martelo", familia="fisico"),
     "erguer_escudo": hab("Erguer Escudo", 8, "proprio", "Reduz o dano recebido pela metade por 2 turnos.", [
         Buff("guarda", Mod(2, "escudo_turnos"), 0.5),
-        Dizer("Você ergue o escudo e firma os pés. (dano recebido -50% por {turnos} turnos)", "ciano")]),
+        Dizer("Você ergue o escudo e firma os pés. (dano recebido -50% por {turnos} turnos)", "ciano")],
+        icone="escudo", familia="protecao", anim="falange"),
     "investida": hab("Investida", 12, "inimigo", "120% de dano, 45% de chance de atordoar.", [
-        Dano(1.2, rotulo="Investida", depois=[Se("acertou", Aplicar("atordoado", 1, chance=0.45))])]),
+        Dano(1.2, rotulo="Investida", depois=[Se("acertou", Aplicar("atordoado", 1, chance=0.45))])],
+        icone="espada", familia="fisico"),
     "grito_guerra": hab("Grito de Guerra", 14, "proprio", "+30% de dano por 3 turnos e enfraquece inimigos.", [
         Dizer("Você solta um grito de guerra que faz o chão tremer!", "ciano"),
         Buff("fortalecido", 3, 0.3),
-        Aplicar("enfraquecido", 2, chance=0.8, em="todos")]),
+        Aplicar("enfraquecido", 2, chance=0.8, em="todos")], icone="manopla", familia="forca", anim="grito"),
     "golpe_sagrado": hab("Golpe Sagrado", 15, "inimigo", "Dano sagrado que cura você em 20% do dano.", [
         Dano(1.3, tipo="sagrado", bonus=Escala(poder=0.8), rotulo="Golpe Sagrado", depois=[
             Se("acertou", CurarPeloDano(0.2, bonus="cura_luz"),
-               Dizer("A luz fecha suas feridas. (+{cura} vida)", "verde", se="cura"))])]),
+               Dizer("A luz fecha suas feridas. (+{cura} vida)", "verde", se="cura"))])],
+        icone="orbe_luz", familia="sagrado"),
     "prece": hab("Prece", 20, "proprio", "Cura 25% da vida + poder e remove males.", [
         Curar(Escala(max_hp=0.25, poder=1.0), bonus="cura_luz"),
         LimparMales(),
-        Dizer("Você reza em voz baixa. Uma luz quente te envolve. (+{cura} vida, males removidos)", "verde")]),
+        Dizer("Você reza em voz baixa. Uma luz quente te envolve. (+{cura} vida, males removidos)", "verde")],
+        icone="coracao", familia="sagrado"),
     "julgamento": hab("Julgamento Divino", 36, "todos", "Luz sagrada atinge todos os inimigos.", [
         Dizer("Você ergue a arma aos céus. Colunas de luz caem sobre seus inimigos!", "amarelo+negrito"),
-        Dano(1.2, tipo="sagrado", bonus=Escala(poder=1), alcance="distancia", esquiva=False, em="todos")]),
+        Dano(1.2, tipo="sagrado", bonus=Escala(poder=1), alcance="distancia", esquiva=False, em="todos")],
+        icone="raio", familia="sagrado"),
     "sede_sangue": hab("Sede de Sangue", 12, "inimigo", "140% de dano, rouba vida e causa sangramento.", [
         Dano(1.4, rotulo="Sede de Sangue", depois=[
             Se("acertou", Roubo(0.4, rotulo="Sede de Sangue"),
                Aplicar("sangramento", 3, valor=SANGRAMENTO),
-               Dizer("Você bebe a fúria do golpe. (+{cura} vida)", "verde", se="cura"))])]),
+               Dizer("Você bebe a fúria do golpe. (+{cura} vida)", "verde", se="cura"))])],
+        icone="gota", familia="sangue", realce="sangue"),
     "redemoinho": hab("Redemoinho", 22, "todos", "Atinge todos os inimigos com 110% de dano.",
-                      fn=_redemoinho, linhas=_linhas_redemoinho),
+                      fn=_redemoinho, linhas=_linhas_redemoinho, icone="machado", familia="fisico", anim="redemoinho"),
     "furia_cega": hab("Fúria Cega", 0, "inimigo", "Sacrifica 15% da vida: +60% de dano por 3 turnos e ataca.",
-                      fn=_furia_cega, linhas=_linhas_furia_cega),
+                      fn=_furia_cega, linhas=_linhas_furia_cega, icone="caveira", familia="sangue"),
     # Arqueiro
     "tiro_certeiro": hab("Tiro Certeiro", 8, "inimigo", "170% de dano, +30% chance de crítico.",
-                         [Dano(1.7, alcance="distancia", crit_extra=0.3, rotulo="Tiro Certeiro")], flechas=1),
+                         [Dano(1.7, alcance="distancia", crit_extra=0.3, rotulo="Tiro Certeiro")], flechas=1,
+                         icone="flecha", familia="fisico"),
     "marcar_presa": hab("Marcar Presa", 6, "inimigo", "O alvo recebe +25% de dano por 3 turnos.", [
         Aplicar("marcado", 3, 0.25, direto=True),
-        Dizer("Você estuda os movimentos de {alvo} e encontra os pontos fracos. (+25% dano recebido)", "ciano")]),
+        Dizer("Você estuda os movimentos de {alvo} e encontra os pontos fracos. (+25% dano recebido)", "ciano")],
+        icone="olho", familia="forca"),
     "chuva_flechas": hab("Chuva de Flechas", 20, "todos", "Atinge todos os inimigos. Gasta uma flecha por inimigo.", [
         Dizer("Você dispara uma saraivada de flechas para o alto...", "ciano"),
-        Dano(1.0, alcance="distancia", em="todos")], flechas_por_alvo=1),
+        Dano(1.0, alcance="distancia", em="todos")], flechas_por_alvo=1, icone="aljava", familia="fisico"),
     "passo_agil": hab("Passo Ágil", 6, "proprio", "+30% de esquiva por 2 turnos (a esquiva total não passa de 60%).", [
         Buff("esquiva", 2, 0.3),
-        Dizer("Você se move em zigue-zague, difícil de acertar. (+30% esquiva, até o teto de 60%)", "ciano")]),
+        Dizer("Você se move em zigue-zague, difícil de acertar. (+30% esquiva, até o teto de 60%)", "ciano")],
+        icone="fuga", familia="protecao"),
     "tiro_duplo": hab("Tiro Duplo", 10, "inimigo", "Dois disparos de 90%.", [
         Salva("tiro_duplo",  # as duas flechas saem quase juntas, numa rajada só
               Dano(0.9, alcance="distancia", rotulo="Tiro Duplo (1)", grimorio="Cada um dos 2 disparos"),
-              Se("vivo", Dano(0.9, alcance="distancia", rotulo="Tiro Duplo (2)"), mostrar=False))], flechas=2),
+              Se("vivo", Dano(0.9, alcance="distancia", rotulo="Tiro Duplo (2)"), mostrar=False))], flechas=2,
+        icone="arco", familia="fisico", anim="rajada"),
     "comando_fera": hab("Ordem da Fera", 12, "inimigo", DESC_ORDEM, fn=_comando_fera, linhas=_linhas_comando_fera,
-                        desc_fn=_desc_ordem, req=_req_fera),
+                        desc_fn=_desc_ordem, req=_req_fera, icone="fera", familia="natureza"),
     "furia_natureza": hab("Fúria da Natureza", 32, "todos", "130% em todos, sangramento e cura o companheiro.", [
         Dizer("Você assobia. A mata responde: vento, espinhos e flechas em uníssono!", "verde+negrito"),
         Dano(1.3, alcance="distancia", em="todos", depois=[
             Se("vivo", Aplicar("sangramento", 3, valor=SANGRAMENTO, chance=0.5))]),
-        Codigo(_curar_fera, lambda u: [_efeito("Cura o companheiro animal por completo.")])], flechas=4),
+        Codigo(_curar_fera, lambda u: [_efeito("Cura o companheiro animal por completo.")])], flechas=4,
+        icone="folha", familia="natureza"),
     "desaparecer": hab("Desaparecer", 10, "proprio", "Próximo ataque é crítico devastador; +esquiva.", [
         Buff("furtivo", 3, 1),
         Buff("esquiva", 1, 0.5),
-        Dizer("Você se funde às sombras. Seu próximo ataque será crítico.", "magenta")]),
+        Dizer("Você se funde às sombras. Seu próximo ataque será crítico.", "magenta")],
+        icone="capuz", familia="sombra"),
     "flecha_envenenada": hab("Flecha Envenenada", 10, "inimigo", "Dano e veneno forte por 4 turnos.", [
         Dano(1.0, alcance="distancia", rotulo="Flecha Envenenada", depois=[
-            Se("acertou", Aplicar("veneno", 4, valor=Escala(minimo=3, atk=0.45, agi=0.2)))])], flechas=1),
+            Se("acertou", Aplicar("veneno", 4, valor=Escala(minimo=3, atk=0.45, agi=0.2)))])], flechas=1,
+        icone="gota_verde", familia="veneno", realce="veneno"),
     "execucao": hab("Execução", 16, "inimigo", "320% de dano se o alvo estiver abaixo de 35% de vida.",
-                    fn=_execucao, linhas=_linhas_execucao, flechas=1, crit_extra=0.2),
+                    fn=_execucao, linhas=_linhas_execucao, flechas=1, crit_extra=0.2,
+                    icone="caveira", familia="sangue"),
     # Mago
     "bola_fogo": hab("Bola de Fogo", 14, "inimigo",
                      "150% de dano de fogo; costuma acender o alvo (as chamas acumulam até 3 camadas).", [
                          Dano(1.5, tipo="fogo", alcance="distancia", stat="poder", rotulo="Bola de Fogo", depois=[
-                             Se("acertou", Acender(0.6, garantido="acender_garantido"))])]),
+                             Se("acertou", Acender(0.6, garantido="acender_garantido"))])],
+                     icone="chama", familia="fogo", realce="fogo"),
     "meditar": hab("Meditar", 0, "proprio", "Recupera mana (6 + 12% do máximo).", fn=_meditar,
                    linhas=lambda u: [_efeito(f"Recupera {ganho_meditar(u)} de mana (6 + 12% do máximo). Gasta o turno.")],
-                   desc_fn=lambda u: f"Recupera {ganho_meditar(u)} de mana (6 + 12% do máximo). Não custa nada, mas gasta o turno."),
+                   desc_fn=lambda u: f"Recupera {ganho_meditar(u)} de mana (6 + 12% do máximo). Não custa nada, mas gasta o turno.",
+                   icone="lua", familia="arcano"),
     "lanca_gelo": hab("Lança de Gelo", 10, "inimigo", "130% de dano de gelo, pode congelar.", [
         Dano(1.3, tipo="gelo", alcance="distancia", stat="poder", rotulo="Lança de Gelo", depois=[
-            Se("acertou", Aplicar("atordoado", 1, chance=0.35, rotulo="congelado"))])]),
+            Se("acertou", Aplicar("atordoado", 1, chance=0.35, rotulo="congelado"))])],
+        icone="gelo", familia="gelo", realce="gelo"),
     "barreira": hab("Barreira Arcana", 20, "proprio", "Escudo que absorve dano por 2 turnos (não acumula).",
                     fn=_barreira,
                     linhas=lambda u: [_efeito(f"Absorve {_valor_barreira(u)} de dano por {2 + mod(u, 'barreira_turnos')} "
-                                              "turnos (20% da vida máxima + Poder × 60%). Não acumula.")]),
+                                              "turnos (20% da vida máxima + Poder × 60%). Não acumula.")],
+                    icone="escudo_azul", familia="arcano"),
     "inferno": hab("Inferno", 35, "todos", "60% de dano de fogo em todos (pode errar); pode acender cada um.", [
         Dizer("O chão se abre em chamas sob seus inimigos!", "vermelho+negrito"),
         Dano(0.6, tipo="fogo", alcance="distancia", stat="poder", em="todos", depois=[
-            Se("acertou_vivo", Acender(0.5))])]),
+            Se("acertou_vivo", Acender(0.5))])], icone="fogueira", familia="fogo", realce="fogo"),
     "combustao": hab("Combustão", 14, "inimigo", "Detona as chamas do alvo: o que a queimadura ainda causaria vira "
-                     "dano na hora (mais forte com várias camadas).", fn=_combustao, linhas=_linhas_combustao),
+                     "dano na hora (mais forte com várias camadas).", fn=_combustao, linhas=_linhas_combustao,
+                     icone="estrela", familia="fogo", realce="fogo"),
     "fenix": hab("Fênix", 40, "inimigo", "250% de dano de fogo e cura 20% da vida.", [
         Dizer("Asas de fogo se abrem às suas costas. Você se torna a própria chama!", "amarelo+negrito"),
         Dano(2.5, tipo="fogo", alcance="distancia", stat="poder", rotulo="Fênix"),
         Curar(Escala(max_hp=0.2)),
-        Dizer("O fogo renova sua carne. (+{cura} vida)", "verde", se="cura")]),
+        Dizer("O fogo renova sua carne. (+{cura} vida)", "verde", se="cura")], icone="voador", familia="fogo"),
     "drenar_vida": hab("Drenar Vida", 14, "inimigo", "Dano sombrio que cura 40% do causado.", [
         Dano(1.2, tipo="sombra", alcance="distancia", stat="poder", rotulo="Drenar Vida", depois=[
             Se("acertou", Roubo(Mod(0.4, "dreno_cura"), rotulo="Drenar Vida"),
-               Dizer("A vitalidade roubada flui para você. (+{cura} vida)", "verde", se="cura"))])]),
+               Dizer("A vitalidade roubada flui para você. (+{cura} vida)", "verde", se="cura"))])],
+        icone="gota_roxa", familia="sombra", realce="sangue"),
     "erguer_servo": hab("Erguer Servo", 22, "proprio", "Invoca um esqueleto aliado que atrai os golpes (máx. 1, mais com talentos).",
                         fn=_erguer_servo,
                         linhas=lambda u: [_efeito(f"Invoca um servo com {int(_vida_servo(u))} de vida e "
                                                   f"{int(u.poder * 0.3) + 2} de ataque (no máximo "
                                                   f"{1 + mod(u, 'servos_max')} ao mesmo tempo)."),
-                                          _efeito("Entra provocando por 2 turnos: os inimigos atacam o servo.")]),
+                                          _efeito("Entra provocando por 2 turnos: os inimigos atacam o servo.")],
+                        icone="osso", familia="sombra"),
     "maldicao": hab("Maldição", 18, "todos", "Amaldiçoa todos: dano contínuo e -40% de defesa.", [
         Aplicar("maldito", 4, valor=Escala(minimo=3, poder=0.4), em="todos"),
-        Dizer("Você pronuncia palavras que não deveriam existir. Seus inimigos murcham.", "magenta")]),
+        Dizer("Você pronuncia palavras que não deveriam existir. Seus inimigos murcham.", "magenta")],
+        icone="orbe_sombra", familia="sombra"),
 }
 
 

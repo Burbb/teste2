@@ -283,19 +283,14 @@ function marcarCacadas() {
   });
 }
 
-/* Cartas de ação do combate: habilidades e itens com ícone, custo e dica (como numa barra de ações). */
-const HAB_ICONE = {
-  golpe_pesado: ["martelo", "fisico"], erguer_escudo: ["escudo", "protecao"], investida: ["espada", "fisico"],
-  grito_guerra: ["manopla", "forca"], golpe_sagrado: ["orbe_luz", "sagrado"], prece: ["coracao", "sagrado"],
-  julgamento: ["raio", "sagrado"], sede_sangue: ["gota", "sangue"], redemoinho: ["machado", "fisico"],
-  furia_cega: ["caveira", "sangue"], tiro_certeiro: ["flecha", "fisico"], marcar_presa: ["olho", "forca"],
-  chuva_flechas: ["aljava", "fisico"], passo_agil: ["fuga", "protecao"], tiro_duplo: ["arco", "fisico"],
-  comando_fera: ["fera", "natureza"], furia_natureza: ["folha", "natureza"], desaparecer: ["capuz", "sombra"],
-  flecha_envenenada: ["gota_verde", "veneno"], execucao: ["caveira", "sangue"], bola_fogo: ["chama", "fogo"],
-  meditar: ["lua", "arcano"], lanca_gelo: ["gelo", "gelo"], barreira: ["escudo_azul", "arcano"],
-  inferno: ["fogueira", "fogo"], combustao: ["estrela", "fogo"], fenix: ["voador", "fogo"],
-  drenar_vida: ["gota_roxa", "sombra"], erguer_servo: ["osso", "sombra"], maldicao: ["orbe_sombra", "sombra"],
-};
+/** O ícone do ataque básico da classe (classes.py: icone_ataque, no Grimório que o motor manda). */
+function iconeAtaque() {
+  const g = estado && estado.heroi && estado.heroi.grimorio;
+  return (g && g.basico.icone) || "espada";
+}
+
+/* Cartas de ação do combate: habilidades e itens com ícone, custo e dica (como numa barra de ações). O ícone e a cor
+   de cada habilidade vêm do catálogo do motor (habilidades.py: icone, familia). */
 // Alcance como nos RPGs de turno (Final Fantasy, Pokémon): quem, e se é um só ou todos.
 const ALVO_TXT = { inimigo: "Inimigo único", todos: "Todos os inimigos", proprio: "Você", aliado: "Aliado único", aliados: "Todos os aliados" };
 function cartaAcao(o, i, m, pos) {
@@ -305,9 +300,8 @@ function cartaAcao(o, i, m, pos) {
   const tecla = pos < 9 ? String(pos + 1) : pos === 9 ? "0" : "";
   let icone, nome, rodape = "", dicaHtml, bloqueio = null;
   if (meta.habilidade) {
-    const [ic, fam] = HAB_ICONE[meta.habilidade] || ["estrela", "arcano"];
-    b.classList.add("el-" + fam);
-    icone = spr(ic, 2);
+    b.classList.add("el-" + (meta.familia || "arcano"));
+    icone = spr(meta.icone || "estrela", 2);
     nome = meta.nome;
     const custo = (meta.custo ? `${spr(RECURSO_ICONE[meta.recurso] || "estrela", 1)}<b>${meta.custo}</b>` : `<b class="gratis">grátis</b>`) +
       (meta.flechas ? ` ${spr("flecha", 1)}<b>${meta.flechas}</b>` : "");
@@ -451,7 +445,7 @@ function rodaDeAcoes(m) {
     botoes.push(b);
     return b;
   };
-  const arma = { guerreiro: "espada", arqueiro: "arco", mago: "cajado" }[heroi.classe] || "espada";
+  const arma = iconeAtaque();
   botao("atacar", spr(arma, 2), "Atacar", `<b>${esc(atk.meta.nome)}</b><div class="tipo">grátis · devolve um pouco de ${esc(heroi.recurso.toLowerCase())}</div>` +
     (basico ? `<div class="melhor">Dano: ${basico.min}–${basico.max} (crítico ${basico.critico})</div>` : ""),
     () => { App.som("escolha"); habMirando = atk.meta.nome; responder(m.id, acaoIdx("atacar")); });
@@ -509,9 +503,8 @@ function arcoDeBotoes(botoes) {
 }
 
 function linhaHabilidade(h, aoClicar) {
-  const [ic, fam] = HAB_ICONE[h.habilidade] || ["estrela", "arcano"];
   const custo = h.custo ? `${spr(RECURSO_ICONE[h.recurso] || "estrela", 1)}${h.custo}` : '<span class="gratis">grátis</span>';
-  return { icone: spr(ic, 2), fam, nome: h.nome, alvo: h.alvo_tipo, info: custo + (h.flechas ? ` ${spr("flecha", 1)}${h.flechas}` : ""), dica: dicaHabilidade(h),
+  return { icone: spr(h.icone || "estrela", 2), fam: h.familia || "arcano", nome: h.nome, alvo: h.alvo_tipo, info: custo + (h.flechas ? ` ${spr("flecha", 1)}${h.flechas}` : ""), dica: dicaHabilidade(h),
     bloqueio: h.pode ? null : (h.motivo || "Indisponível"), hab: h.habilidade, aoClicar };
 }
 function linhaItem(meta, aoClicar) {
@@ -632,7 +625,7 @@ function rodaMira(m) {
 }
 
 function iconeAcaoCombate(t) {
-  if (/^Atacar/.test(t)) return spr({ guerreiro: "espada", arqueiro: "arco", mago: "cajado" }[estado.heroi.classe] || "espada", 2);
+  if (/^Atacar/.test(t)) return spr(iconeAtaque(), 2);
   if (/^Habilidades/.test(t)) return spr("grimorio", 2);
   if (/^Itens/.test(t)) return spr("pocao", 2);
   if (/^Analisar/.test(t)) return spr("olho", 2);

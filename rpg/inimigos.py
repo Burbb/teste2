@@ -361,16 +361,18 @@ def _cura_serve(cb, e, alvo):
             and any(a.hp < a.max_hp * 0.6 for a in cb.inimigos_vivos()))
 
 
-def hab_inimigo(fn, rotulo, nome, quando=None, golpe=False):
+def hab_inimigo(fn, rotulo, nome, quando=None, golpe=False, anim=None):
     """Uma habilidade inimiga. rotulo: a faixa sobre a carta; nome: a ficha (Analisar, bestiário).
-    quando(cb, e, alvo): se faz sentido agora (sem ela, sempre). golpe: causa dano (vale quando dá para matar)."""
-    return dict(fn=fn, rotulo=rotulo, nome=nome, quando=quando or (lambda cb, e, alvo: True), golpe=golpe)
+    quando(cb, e, alvo): se faz sentido agora (sem ela, sempre). golpe: causa dano (vale quando dá para matar).
+    anim: o jeito de a tela animar (o mesmo vocabulário das habilidades do herói: "grito"...)."""
+    return dict(fn=fn, rotulo=rotulo, nome=nome, quando=quando or (lambda cb, e, alvo: True), golpe=golpe, anim=anim)
 
 
 HABS = {
     "mordida_sangrenta": hab_inimigo(_mordida_sangrenta, "Mordida Sangrenta", "garras que fazem sangrar", golpe=True),
     "uivo": hab_inimigo(_uivo, "Uivo", "uivo de matilha", quando=_alguem_sem("fortalecido")),
-    "grito_guerra": hab_inimigo(_grito_guerra, "Grito de Guerra", "grito de guerra", quando=_alguem_sem("fortalecido")),
+    "grito_guerra": hab_inimigo(_grito_guerra, "Grito de Guerra", "grito de guerra", quando=_alguem_sem("fortalecido"),
+                                anim="grito"),
     "teia": hab_inimigo(_teia, "Teia", "teia paralisante", quando=_sem("atordoado")),
     "veneno": hab_inimigo(_veneno, "Veneno", "veneno", golpe=True),
     "golpe_sujo": hab_inimigo(_golpe_sujo, "Golpe Sujo", "golpe sujo", golpe=True),

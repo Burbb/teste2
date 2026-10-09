@@ -9,16 +9,17 @@ const Realce = (() => {
   const NUM = "[+−-]?\\d+(?:[.,]\\d+)?(?:\\s*[–-]\\s*\\d+(?:[.,]\\d+)?)?%?";
   const COM_NUM = (termo, liga = "de\\s+") => `(?:${NUM}\\s+(?:${liga})?)?(?:${termo})`;
 
-  // [classe, padrão]. A ordem é a prioridade: quando dois trechos se cruzam, vale o que vem antes.
-  const REGRAS = [
+  // [classe, padrão]. A ordem é a prioridade: quando dois trechos se cruzam, vale o que vem antes. Os nomes de
+  // habilidades e talentos não moram aqui: chegam do motor (glossario) e entram na frente de todas.
+  const BASE = [
     ["sangue", COM_NUM("roubo de vida")],
     ["sangue", "rouba(?:m)?\\b[^.;:]{0,40}?vida"],
-    ["sangue", COM_NUM("sangramento|sangrar|sangrando|sangra|Sede de Sangue|Sede Insaciável|Pacto de Sangue|Drenar Vida")],
+    ["sangue", COM_NUM("sangramento|sangrar|sangrando|sangra")],
     ["crit", `crítico:?\\s+${NUM}(?:\\s+de\\s+chance)?`],
     ["crit", COM_NUM("(?:chance\\s+de\\s+)?(?:acerto\\s+)?crítico(?:s)?(?:\\s+garantido)?(?:\\s*\\([^)]{1,24}\\))?", "de\\s+")],
-    ["fogo", COM_NUM("(?:dano\\s+de\\s+)?(?:fogo|chamas|queimaduras|queimadura|labaredas|Combustão|Bola de Fogo|Inferno|incendeia|acende)")],
-    ["gelo", COM_NUM("(?:dano\\s+de\\s+)?(?:gelo|congelamento|congelado|congelada|congelar|congela|Lança de Gelo)")],
-    ["veneno", COM_NUM("(?:dano\\s+de\\s+)?(?:veneno|envenenado|envenenada|envenenar|envenena|Flecha Envenenada)")],
+    ["fogo", COM_NUM("(?:dano\\s+de\\s+)?(?:fogo|chamas|queimaduras|queimadura|labaredas|incendeia|acende)")],
+    ["gelo", COM_NUM("(?:dano\\s+de\\s+)?(?:gelo|congelamento|congelado|congelada|congelar|congela)")],
+    ["veneno", COM_NUM("(?:dano\\s+de\\s+)?(?:veneno|envenenado|envenenada|envenenar|envenena)")],
     ["sombra", COM_NUM("(?:dano\\s+de\\s+)?(?:sombra|sombrio|maldição|maldito|maldita|amaldiçoa\\p{L}*)")],
     ["sagrado", COM_NUM("(?:dano\\s+)?(?:sagrado|sagrada|luz sagrada)")],
     ["mana", `(?:(?:recupera(?:m)?|devolve)\\s+)?${NUM}\\s+(?:de\\s+)?mana`],
@@ -35,7 +36,22 @@ const Realce = (() => {
     ["controle", "atordoamento|atordoado|atordoada|atordoar|atordoa"],
     ["dano", `${NUM}\\s+de\\s+dano(?:\\s+físico)?`],
     ["num", `${NUM.replace("%?", "%")}|×\\s?\\d+(?:[.,]\\d+)?%?`],
-  ].map(([c, src], prio) => [c, new RegExp(`(?<![\\p{L}\\d])(?:${src})(?![\\p{L}])`, "giu"), prio]);
+  ];
+  const compilar = (regras) => regras.map(([c, src], prio) => [c, new RegExp(`(?<![\\p{L}\\d])(?:${src})(?![\\p{L}])`, "giu"), prio]);
+  let REGRAS = compilar(BASE);
+  let chaveGlossario = "";
+
+  /** Os nomes que o motor manda colorir ({"Bola de Fogo": "fogo", ...}: o campo `realce` das habilidades, talentos e
+   *  passivas). Um nome novo no catálogo já sai colorido, sem tocar aqui. */
+  function glossario(g) {
+    const chave = JSON.stringify(g || {});
+    if (chave === chaveGlossario) return;
+    chaveGlossario = chave;
+    const porCor = {};
+    Object.entries(g || {}).forEach(([nome, cor]) => (porCor[cor] = porCor[cor] || []).push(nome.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+    const nomes = Object.entries(porCor).map(([cor, lista]) => [cor, COM_NUM(lista.sort((a, b) => b.length - a.length).join("|"))]);
+    REGRAS = compilar([...nomes, ...BASE]);
+  }
 
   function texto(s) {
     s = String(s ?? "");
@@ -60,5 +76,5 @@ const Realce = (() => {
       (m, sinal, n) => `<span class="rx rx-${sinal === "+" ? "bom" : "ruim"}">${sinal}${n}</span>`);
   }
 
-  return { texto, sinais };
+  return { texto, sinais, glossario };
 })();

@@ -143,7 +143,8 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   (contrato pago, espólio): a página só aceita virar depois de `GUARDA_LEITURA`, e celebração só se dispensa na
   velocidade "instantâneo".
 - `telas.js` telas desenhadas (inventário, mercado, talentos, Grimório, fogueira, mural...)
-- `batalha.js` o palco da luta · `realce.js` cores dos termos de jogo · `sprites*.js`, `vista.js`, `mapa.js`, `som.js`
+- `batalha.js` o palco da luta (o jeito de animar vem do motor: `anim` nos lances) · `realce.js` cores dos termos de
+  jogo (os nomes de habilidades e talentos chegam do motor no `glossario` do estado) · `sprites*.js`, `vista.js`, `mapa.js`, `som.js`
 - `sensacao.js` o peso dos momentos (parada no impacto, tremor, câmera lenta no golpe final...): as telas dizem o
   que aconteceu e perguntam a ele como aquilo se sente; os números ficam numa tabela só (`AJUSTES`). Os fatos vêm
   do motor (no lance do golpe: `crit`, `abate`, `final`). A câmera lenta mexe no relógio da arena: prazos de
@@ -185,7 +186,7 @@ lados, turnos até cair) e "Encontros por tipo".
 |---|---|
 | `python -m tests.gabarito` | 18 partidas com sementes fixas saem **idênticas** (refatorar não muda o jogo). Nas 9 partidas da tela gráfica, cada escolha anota também o `estado` que a tela recebe (linhas `ESTADO parte {...}`, só quando a parte mudou) |
 | `python -m unittest discover -s tests` | sistemas, saves antigos, catálogo de habilidades, Grimório, gabarito |
-| `python -m unittest tests.test_conteudo` | o validador de conteúdo: toda referência entre catálogos existe (habilidades de famílias, afixos e fases de guardião; famílias dos biomas; traços; lore; títulos e reações da comitiva apontando para eventos; ícones de habilidade, talento, item e traço com desenho) |
+| `python -m unittest tests.test_conteudo` | o validador de conteúdo: toda referência entre catálogos existe (habilidades de famílias, afixos e fases de guardião; famílias dos biomas; traços; lore; títulos e reações da comitiva apontando para eventos; ícones de habilidade, talento, item e traço com desenho; cor, animação e realce de cada habilidade entre os que a tela sabe fazer) |
 | `tests/navegador/fumaca.mjs` | a interface web de ponta a ponta (Playwright) |
 | `python -m tests.equilibrio` | não é teste, é régua: heróis típicos por especialização e nível lutando (`tests/arena.py`) |
 | `python -m tests.replay` | régua humana: as partidas de `tests/runs/` refeitas com os números de agora |

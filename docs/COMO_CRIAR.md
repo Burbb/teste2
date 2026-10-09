@@ -9,14 +9,25 @@ Receitas para crescer o jogo sem quebrar nada. Cada receita termina com o que ro
 ```python
 "lamina_gelida": hab("Lâmina Gélida", 12, "inimigo", "130% de dano de gelo; pode congelar.", [
     Dano(1.3, tipo="gelo", rotulo="Lâmina Gélida", depois=[
-        Se("acertou", Aplicar("atordoado", 1, chance=0.3, rotulo="congelado"))])]),
+        Se("acertou", Aplicar("atordoado", 1, chance=0.3, rotulo="congelado"))])],
+    icone="gelo", familia="gelo", realce="gelo"),
 ```
 
 2. Dê a habilidade a uma classe ou especialização em `rpg/classes.py` (`"habilidades": [(nível, "lamina_gelida")]`).
-3. Ícone na tela: `HAB_ICONE` em `rpg/web/static/app/escolhas.js` (sem ícone, usa uma estrela).
+
+Como ela aparece na tela também é dado, na própria ficha:
+
+| Campo | O quê |
+|---|---|
+| `icone` | o desenho (um nome de `sprites-dados.js`) |
+| `familia` | a cor da carta de ação (`FAMILIAS_TELA`: fisico, forca, protecao, sagrado, sangue, natureza, sombra, veneno, fogo, gelo, arcano, cura) |
+| `anim` | opcional: um jeito próprio de animar (`ANIMACOES`: grito, falange, rugido, redemoinho, rajada). Sem ele, a tela anima pelo tipo (golpe, magia, bênção) |
+| `realce` | opcional: a cor do nome quando ele aparece num texto de regra ("a **Lâmina Gélida** congela") |
 
 Pronto: a luta executa, o Grimório mostra o dano de agora (faixa, crítico, fórmula, escala), a janelinha de
-habilidades mostra a dica. Não escreva os números em outro lugar.
+habilidades mostra a dica com o ícone e a cor. Não escreva os números nem os ícones em outro lugar: a tela não tem
+mais lista de habilidades. Um jeito de animar novo é a única coisa que pede JS: acrescente o nome em `ANIMACOES` e
+o caso em `batalha.js` (`m.anim === "..."`); o validador cobra os dois.
 
 ### Os blocos
 
@@ -48,7 +59,7 @@ um bloco.
 ### Conferir
 
 ```
-python -m unittest tests.test_habilidades tests.test_grimorio
+python -m unittest tests.test_habilidades tests.test_grimorio tests.test_conteudo
 python -m tests.gabarito        # deve passar se você só ACRESCENTOU (habilidade nova não muda partidas antigas)
 ```
 

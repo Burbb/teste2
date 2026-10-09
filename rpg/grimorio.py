@@ -119,7 +119,7 @@ def dados(j):
     """Tudo o que o livro mostra: o ataque básico, cada habilidade e os números gerais do herói."""
     nome, alcance, tipo, stat, mult = CLASSES[j.classe]["ataque"]
     recupera = max(bal.ATAQUE_RECURSO_MIN, round(j.max_rec * bal.ATAQUE_RECURSO))
-    basico = {"id": "ataque", "nome": nome, "custo": 0, "flechas": 1 if j.classe == "arqueiro" else 0,
+    basico = {"id": "ataque", "nome": nome, "icone": CLASSES[j.classe]["icone_ataque"], "custo": 0, "flechas": 1 if j.classe == "arqueiro" else 0,
               "alvo": ALVOS["inimigo"], "desc": "O golpe de sempre. Não custa nada e, quando acerta, devolve um pouco "
                                                 f"de {j.nome_recurso.lower()}.",
               "linhas": [golpe(j, mult, stat=stat, alcance=alcance, tipo=tipo),
@@ -128,7 +128,7 @@ def dados(j):
     habs = []
     for h_id in j.habilidades:
         h = HABILIDADES[h_id]
-        habs.append({"id": h_id, "nome": h["nome"], "custo": custo_habilidade(j, h_id), "flechas": h.get("flechas", 0),
+        habs.append({"id": h_id, "nome": h["nome"], "icone": h["icone"], "custo": custo_habilidade(j, h_id), "flechas": h.get("flechas", 0),
                      "flechas_por_alvo": h.get("flechas_por_alvo", 0),
                      "alvo": ALVOS.get(h["alvo"], ""), "desc": h["desc"],  # os números de agora vão nas linhas
                      "linhas": h["linhas"](j)})

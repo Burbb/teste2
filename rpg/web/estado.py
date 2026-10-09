@@ -281,6 +281,14 @@ def predios_fechados(g):
     return fechados
 
 
+def glossario():
+    """A cor de cada nome de habilidade, talento e passiva que a tela realça nos textos de regra ("Bola de Fogo" em
+    laranja, "Drenar Vida" em vermelho): o campo `realce` dos catálogos. Quem não declara fica neutro."""
+    from ..talentos import PASSIVAS, POR_ID
+    fichas = list(HABILIDADES.values()) + list(POR_ID.values()) + list(PASSIVAS.values())
+    return {f["nome"]: f["realce"] for f in fichas if f.get("realce")}
+
+
 def estado(g):
     if not (g and g.j and g.mundo):
         return None
@@ -296,5 +304,6 @@ def estado(g):
         "mapa": mapa_conhecido(g),
         "combate": combate(g),
         "estados": para_tela(),  # ícone, cor e dica de cada estado (catálogo em estados.py)
+        "glossario": glossario(),
         "contratos": [g.cartao_contrato(c) for c in g.contratos],
     }
