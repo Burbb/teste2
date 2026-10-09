@@ -90,24 +90,27 @@
 .rep-titulo { color: var(--tinta-2); font-size: 14px; }
 
 /* ------------------------------------------------------------------ painel do mundo */
-.local-nome { font-family: var(--titulo); font-size: 34px; line-height: 1; color: #f3e6c9; text-shadow: var(--sombra-texto); }
-.local-desc { color: var(--tinta-2); font-size: 14px; margin-top: 2px; }
-/* Nível de perigo: a cor diz tudo; um fundo tingido da mesma cor, sem borda. */
-.perigo-tag { display: inline-block; margin-top: 4px; font-family: var(--num); font-size: 16px; padding: 0 7px; background: color-mix(in srgb, currentColor 13%, transparent); }
-.perigo-tag.baixo { color: var(--bom); }
-.perigo-tag.medio { color: var(--ouro); }
-.perigo-tag.alto { color: #ff8e80; }
-.caminhos { display: flex; flex-direction: column; gap: 2px; }
-.caminho { display: grid; grid-template-columns: 30px 1fr auto; gap: 8px; align-items: center; font-size: 14px; padding: 4px 6px; }
+.local-nome { font-family: var(--titulo); font-size: 34px; line-height: 1; color: var(--ouro); text-shadow: var(--contorno); }
+.local-desc { color: var(--tinta-2); font-size: 15px; margin-top: 4px; }
+/* Nível de perigo: só a cor, verde, ouro ou vermelho. */
+.perigo-tag { display: inline-block; margin-top: 2px; font-family: var(--num); font-size: 15px; font-weight: 600; }
+.perigo-tag.baixo, .nivel-cam.baixo { color: var(--bom); }
+.perigo-tag.medio, .nivel-cam.medio { color: var(--ouro); }
+.perigo-tag.alto, .nivel-cam.alto { color: var(--sangue-2); }
+.nivel-cam { font-weight: 600; }
+/* Caminhos: um cartão de filete escuro por destino, com o ícone do lugar, o nome, o nível e a distância. */
+.caminhos { display: flex; flex-direction: column; gap: 6px; }
+.caminho { --anel: var(--anel-j); display: grid; grid-template-columns: 34px 1fr auto; gap: 10px; align-items: center; font-size: 16px; padding: 6px 10px 6px 6px; color: var(--tinta);
+  border: var(--borda) solid var(--p-j); border-image: var(--anel) 1 / 1 stretch; background: var(--p-k); background-clip: padding-box; }
 .caminho img.sprite { --s: 32; }
-.caminho .nome small { display: block; color: var(--tinta-3); font-size: 12px; }
-.caminho .dist { font-family: var(--num); font-size: 16px; color: var(--tinta-3); white-space: nowrap; }
+.caminho .nome small { display: block; color: var(--tinta-2); font-size: 14px; margin-top: 1px; }
+.caminho .dist { font-family: var(--num); font-size: 15px; color: var(--tinta-2); white-space: nowrap; }
 .caminho.clicavel { cursor: pointer; }
-.caminho.clicavel:hover { background: linear-gradient(90deg, rgba(226, 189, 99, 0.13), transparent 85%); }
+.caminho.clicavel:hover { --anel: var(--anel-a); background-color: var(--p-z); }
 
-/* mapa pixelado: as bordas se perdem na sombra, como um mapa à luz de vela */
-.mapa-px { position: relative; margin-top: 12px; background: #0a0807; overflow: hidden; }
-.mapa-px::after { content: ""; position: absolute; inset: 0; pointer-events: none; box-shadow: inset 0 0 26px 10px #0b0908; }
+/* Mapa pixelado, num nicho escuro com filete de bronze e esquadros de ouro velho nos cantos. */
+.mapa-px { position: relative; margin-top: 12px; background: var(--p-k); overflow: hidden; }
+#mapa-mini .mapa-px { border: var(--borda) solid var(--p-J); border-image: var(--retrato-a) 3 / calc(var(--P) * 3) stretch; }
 .mapa-px .no-btn, .mapa-px .rotulo-mapa { z-index: 1; }  /* os nomes e os destinos ficam acima da sombra das bordas */
 .mapa-px canvas { display: block; width: 100%; height: auto; }
 .mapa-px .no-btn { position: absolute; width: 28px; height: 28px; margin: -14px 0 0 -14px; border: 0; background: transparent; padding: 0; cursor: default; }

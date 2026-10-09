@@ -227,7 +227,7 @@ function desenharMundo(e) {
   const clic = destinosClicaveis();
   const caminhos = e.mapa.nos.filter((n) => n.distancia).sort((a, b) => a.distancia - b.distancia || a.nome.localeCompare(b.nome))
     .map((n) => `<div class="caminho${clic.has(n.id) ? " clicavel" : ""}" data-local="${n.id}">${spr(MapaPx.sprite(n), 2)}
-      <span class="nome">${esc(n.nome)} ${n.nivel ? `<span class="perigo-tag ${nivelPerigo(n.nivel)}">Nv.${n.nivel}</span>` : ""}<small>${esc(n.descricao)}</small></span>
+      <span class="nome">${esc(n.nome)}<small>${n.nivel ? `<span class="nivel-cam ${nivelPerigo(n.nivel)}">Nível ${n.nivel}</span> · ` : ""}${esc(n.descricao)}</small></span>
       <span class="dist">${Texto.plural(n.distancia, "trecho")}</span></div>`).join("");
   const raiz = $("#mundo");
   raiz.innerHTML = `<div class="local-nome">${esc(l.nome)}</div><div class="local-desc">${esc(l.descricao)}</div>
