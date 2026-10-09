@@ -294,8 +294,12 @@ def _varredura(cb, e, alvo):
         cb.atacar(e, a, 0.8, rotulo="Varredura")
 
 
+def _caidos_para_reviver(cb, e):
+    return [m for m in cb.inimigos if not m.vivo and not m.fugiu and m.familia == "caido" and m is not e]
+
+
 def _reviver(cb, e, alvo):
-    caidos = [m for m in cb.inimigos if not m.vivo and not m.fugiu and m.familia == "caido" and m is not e]
+    caidos = _caidos_para_reviver(cb, e)
     if not caidos:
         return False
     m = cb.rng.choice(caidos)
@@ -385,7 +389,8 @@ HABS = {
     "invocar": hab_inimigo(_invocar, "Invocar", "invoca reforços",
                            quando=lambda cb, e, alvo: bool(e.invoca) and len(cb.inimigos_vivos()) < 4),
     "varredura": hab_inimigo(_varredura, "Varredura", "golpe em área (atinge você e seus aliados)", golpe=True),
-    "reviver": hab_inimigo(_reviver, "Reviver", "ressuscita caídos"),
+    "reviver": hab_inimigo(_reviver, "Reviver", "ressuscita caídos",
+                           quando=lambda cb, e, alvo: bool(_caidos_para_reviver(cb, e))),
     "devorar": hab_inimigo(_devorar, "Devorar", "devora cadáveres para se curar",
                            quando=lambda cb, e, alvo: bool(cb.mortos) and e.hp <= e.max_hp * 0.75),
 }

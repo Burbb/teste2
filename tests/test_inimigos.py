@@ -40,6 +40,17 @@ class TestJuizo(unittest.TestCase):
         self.assertFalse(HABS["teia"]["quando"](cb, e, g.j))
         g.combate_ativo = None
 
+    def test_xama_so_reza_pelos_caidos_quando_ha_quem_levantar(self):
+        g = Jogo(BotUI(random.Random(1)), seed=1, pasta_saves=tempfile.mkdtemp())
+        g.iniciar("Teste", "guerreiro")
+        xama, caido = g.inimigo("xama_caido", nivel=3), g.inimigo("caido", nivel=3)
+        cb = Combate(g, [xama, caido])
+        g.combate_ativo = cb
+        self.assertFalse(HABS["reviver"]["quando"](cb, xama, g.j))  # sem a faixa "Reviver" à toa
+        caido.hp = 0
+        self.assertTrue(HABS["reviver"]["quando"](cb, xama, g.j))
+        g.combate_ativo = None
+
     def test_com_o_heroi_a_um_golpe_so_ataca(self):
         """Com você quase morto, o lobo nunca gasta a vez uivando: sempre fere."""
         for semente in range(40):
