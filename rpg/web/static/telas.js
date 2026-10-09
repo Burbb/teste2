@@ -361,7 +361,8 @@ const Telas = (() => {
   }
   function reputacaoHtml(p) {
     const r = p.reputacao_info || { titulo: "", linhas: [] };
-    return `<div class="reputacao" ${dica(`<b>Reputação ${p.reputacao > 0 ? "+" : ""}${p.reputacao}</b><div class="tipo">${h(r.titulo)}</div><ul class="dica-lista">${r.linhas.map((l) => `<li>${h(l)}</li>`).join("")}</ul>`)}>
+    const valor = Realce.sinais(`${p.reputacao > 0 ? "+" : p.reputacao < 0 ? "−" : ""}${Math.abs(p.reputacao)}`);
+    return `<div class="reputacao" ${dica(`<b>Reputação</b><div class="aprov-agora">${h(r.titulo)} <span class="aprov-num">${valor}</span></div><ul class="dica-lista">${r.linhas.map((l) => `<li>${Realce.sinais(l)}</li>`).join("")}</ul>`)}>
       <span class="rep-icone">${S("coroa", 2)}</span><b>${p.reputacao > 0 ? "+" : ""}${p.reputacao}</b><span class="rep-titulo">${h(r.titulo)}</span></div>`;
   }
 
@@ -869,17 +870,20 @@ const Telas = (() => {
   }
 
   // ------------------------------------------------------------------ acampamento (fogueira)
-  const PONTOS_ATIVOS = [[198, 93], [176, 104]];
-  const PONTOS_RESERVA = [[256, 98], [284, 102], [270, 108]];
-  const PONTO_FERA = [108, 104];  // o animal do patrulheiro, deitado ao lado do herói
+  // Em volta do fogo (o herói em 128,93, o fogo em 160): um companheiro de cada lado, para os nomes não se
+  // empilharem; o animal deitado na frente, à esquerda; quem fica no acampamento, perto da barraca.
+  const PONTOS_ATIVOS = [[194, 93], [78, 94]];
+  const PONTOS_RESERVA = [[242, 98], [292, 102], [268, 110]];
+  const PONTO_FERA = [104, 106];
   function acampamento(d) {
     const figuras = [];
     d.ativos.forEach((m, i) => figuras.push({ ...m, onde: "ativo", p: PONTOS_ATIVOS[i % 2] }));
     d.reserva.forEach((m, i) => figuras.push({ ...m, onde: "reserva", p: PONTOS_RESERVA[i % 3] }));
+    // O nome logo acima da cabeça (moldura de ouro: vai com você amanhã; cinza: fica no acampamento) e o ✉ preso no
+    // canto do nome, sem ocupar uma linha a mais.
     const botoes = figuras.map((f) => `<button type="button" class="figura ${f.onde}${f.conversa ? " tem-conversa" : ""}" data-cid="${h(f.id)}"
-        style="left:${(f.p[0] / 320) * 100}%;top:${((f.p[1] + 8) / 120) * 100}%">
-        ${f.conversa ? '<i class="carta-aviso">✉</i>' : ""}<span class="figura-nome">${h(f.nome.split(" ").pop())}</span>
-        <span class="figura-estado">${f.onde === "ativo" ? "vai com você" : "no acampamento"}</span></button>`).join("");
+        style="left:${(f.p[0] / 320) * 100}%;top:${((f.p[1] + 8) / 120) * 100}%" ${dica(`<b>${h(f.nome)}</b><div>${f.onde === "ativo" ? "Vai com você amanhã." : "Fica no acampamento: descansa, não come das suas provisões e não opina."}</div>${f.conversa ? '<div class="rodape">Quer conversar.</div>' : ""}`, true)}>
+        <span class="figura-nome">${h(f.nome.split(" ").pop())}${f.conversa ? '<i class="carta-aviso">✉</i>' : ""}</span></button>`).join("");
     const fera = d.fera ? `<span class="figura fera" role="button" tabindex="0" data-fera="1" style="left:${(PONTO_FERA[0] / 320) * 100}%;top:${((PONTO_FERA[1] + 8) / 120) * 100}%"
         ${dica(`<b>${h(d.fera.nome)}</b><div>Seu ${h({ lobo: "lobo", urso: "urso", falcao: "falcão" }[d.fera.tipo] || "animal")} dorme perto do fogo. Vida ${d.fera.hp}/${d.fera.max_hp}.</div>`, true)}>
         <span class="figura-nome">${h(d.fera.nome.split(" ").pop())}</span></span>` : "";
@@ -887,7 +891,7 @@ const Telas = (() => {
     // no canto de cima: em cima da barraca ele encostava no nome de quem senta ali perto.
     const dormir = `<button type="button" class="dormir-barraca">${S("lua", 1)} Dormir até o amanhecer</button>`;
     return `<div class="tela acampamento">${d.intro ? `<p class="sussurro">${h(d.intro)}</p>` : ""}<div class="fogueira-palco"><canvas class="fogueira-cena" width="320" height="120"></canvas>${botoes}${fera}${dormir}</div>
-      <div class="dica-uso">${figuras.length ? `Clique em alguém para conversar ou decidir quem vai com você amanhã. Quem fica no acampamento descansa, não come das suas provisões e não opina nas suas escolhas. ${d.ativos.length}/${d.limite} na comitiva.` : "Só você, o fogo e os barulhos da mata. Quem você encontrar pelo caminho pode se sentar aqui um dia."}</div></div>`;
+      <div class="dica-uso">${figuras.length ? `Clique em alguém para conversar ou decidir quem vai com você amanhã (nome com moldura de ouro). Quem fica no acampamento descansa, não come das suas provisões e não opina nas suas escolhas. ${d.ativos.length}/${d.limite} na comitiva.` : "Só você, o fogo e os barulhos da mata. Quem você encontrar pelo caminho pode se sentar aqui um dia."}</div></div>`;
   }
 
   function desenharFogueira(canvas, d) {
@@ -942,24 +946,22 @@ const Telas = (() => {
     timer = setInterval(() => { if (!document.hidden) cena(); }, 125);
   }
 
-  /** Os nomes de quem senta em volta do fogo não se cobrem: um nome que encosta noutro já posto sobe o necessário
-   *  (com dois na comitiva, o da frente tampava o "vai com você" do outro). */
+  /** Os nomes de quem senta em volta do fogo não se cobrem. Um nome que encosta noutro já posto escorrega primeiro
+   *  para o lado (até meio nome, para continuar em cima de quem é) e só então sobe o que faltar. */
   function afastarNomes(raiz) {
     const postos = [];
-    raiz.querySelectorAll(".fogueira-palco .figura").forEach((f) => {
-      const nome = f.querySelector(".figura-nome");
-      if (!nome) return;
-      const caixa = () => {
-        const a = nome.getBoundingClientRect(), e = f.querySelector(".figura-estado");
-        const b = e ? e.getBoundingClientRect() : a;
-        return { l: Math.min(a.left, b.left), r: Math.max(a.right, b.right), t: a.top, b: Math.max(a.bottom, b.bottom) };
-      };
-      let subir = 0;
+    raiz.querySelectorAll(".fogueira-palco .figura .figura-nome").forEach((nome) => {
+      const caixa = () => { const r = nome.getBoundingClientRect(); return { l: r.left, r: r.right, t: r.top, b: r.bottom, w: r.width }; };
+      const bate = (c) => postos.find((p) => c.l < p.r + 3 && c.r > p.l - 3 && c.t < p.b + 2 && c.b > p.t - 2);
+      let dx = 0, dy = 0;
       for (let volta = 0; volta < 4; volta++) {
-        const c = caixa(), bate = postos.find((p) => c.l < p.r + 4 && c.r > p.l - 4 && c.t < p.b + 2 && c.b > p.t - 2);
-        if (!bate) break;
-        subir += c.b - bate.t + 3;
-        nome.style.marginTop = -subir + "px";
+        const c = caixa(), outro = bate(c);
+        if (!outro) break;
+        const paraDireita = c.l + c.r > outro.l + outro.r;
+        const lado = paraDireita ? outro.r + 4 - c.l : outro.l - 4 - c.r;
+        if (Math.abs(dx + lado) <= c.w / 2) dx += lado;
+        else dy -= c.b - outro.t + 3;
+        nome.style.translate = `${dx}px ${dy}px`;
       }
       postos.push(caixa());
     });
@@ -1053,8 +1055,10 @@ const Telas = (() => {
     return `<span class="barra-px ${classe}"><span class="enchimento" style="width:${p}%"></span></span>`;
   }
   function aprovacao(m) {
-    const info = (m.aprovacao_info || []).map((l) => `<li>${h(l)}</li>`).join("");
-    return `<div class="aprovacao ${h(m.classe)}" ${dica(`<b>Aprovação de ${h(m.nome.split(" ").pop())}</b><div class="tipo">${h(m.nivel)} · ${m.aprovacao > 0 ? "+" : ""}${m.aprovacao}</div><ul class="dica-lista">${info}</ul><div class="rodape">Roxo: desconfiança · verde: confiança.</div>`)}><span class="trilho"><span class="marca" style="left:${(m.aprovacao + 100) / 2}%"></span></span><span class="rotulo">${h(m.nivel)}</span></div>`;
+    // Os números com sinal em cor (a favor em verde, contra em vermelho): o valor se lê de relance, sem garimpar a frase.
+    const info = (m.aprovacao_info || []).map((l) => `<li>${Realce.sinais(l)}</li>`).join("");
+    const valor = Realce.sinais(`${m.aprovacao > 0 ? "+" : m.aprovacao < 0 ? "−" : ""}${Math.abs(m.aprovacao)}`);
+    return `<div class="aprovacao ${h(m.classe)}" ${dica(`<b>Aprovação de ${h(m.nome.split(" ").pop())}</b><div class="aprov-agora">${h(m.nivel)} <span class="aprov-num">${valor}</span></div><ul class="dica-lista">${info}</ul><div class="rodape">Roxo: desconfiança · verde: confiança.</div>`)}><span class="trilho"><span class="marca" style="left:${(m.aprovacao + 100) / 2}%"></span></span><span class="rotulo">${h(m.nivel)}</span></div>`;
   }
 
   function painel(m) {

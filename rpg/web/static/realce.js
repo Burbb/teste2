@@ -53,5 +53,12 @@ const Realce = (() => {
     return out + h(s.slice(i));
   }
 
-  return { texto };
+  /** Números com sinal num relance: o que soma em verde, o que tira em vermelho (aprovação +48, "de −100 a +100").
+   *  Como nos RPGs atuais: a cor diz o lado antes de a pessoa ler o número. */
+  function sinais(s) {
+    return h(s).replace(/(?<![\p{L}\d])([+−-])(\d+(?:[.,]\d+)?%?)(?![\p{L}\d])/gu,
+      (m, sinal, n) => `<span class="rx rx-${sinal === "+" ? "bom" : "ruim"}">${sinal}${n}</span>`);
+  }
+
+  return { texto, sinais };
 })();

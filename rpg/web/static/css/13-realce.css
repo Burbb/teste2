@@ -19,6 +19,8 @@
 .rx-controle { color: #e0b3ff; }
 .rx-dano { color: #fff4dc; }
 .rx-num { color: #fff4dc; }
+.rx-bom { color: #7fe07a; }   /* número com sinal a favor (aprovação, bônus) */
+.rx-ruim { color: #ff7a6e; }  /* e contra */
 .rx-crit b { color: inherit; }
 
 /* No pergaminho do Grimório (fundo claro), as mesmas cores em tinta escura; a caixa de dano, escura, fica com as vivas. */

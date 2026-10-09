@@ -190,6 +190,8 @@ const Batalha = (() => {
       if (arena) paisagem(false);
       cartas.clear(); anteriores = {}; emArea = false;
       if (arena) { colAliados.innerHTML = ""; colInimigos.innerHTML = ""; camadaFx.innerHTML = ""; }
+      // As falas da luta (o Morel reclamando da fuga) saem com ela, em vez de ficarem sobre a página seguinte.
+      Object.keys(baloes).forEach((cid) => { baloes[cid].remove(); delete baloes[cid]; });
       return;
     }
     montar();
