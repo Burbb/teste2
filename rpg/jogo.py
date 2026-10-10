@@ -495,7 +495,7 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         elif op == "ferreiro":
             self.ferreiro()
         elif isinstance(op, tuple) and op[0] == "templo":
-            self.templo(*op[1:])
+            self.balcao_templo(op[1:])
         else:
             self.executar_comum(op)
 

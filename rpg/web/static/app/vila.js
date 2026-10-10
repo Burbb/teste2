@@ -13,7 +13,7 @@ let predioPedido = null;  // clicado enquanto a página ainda virava: entra assi
 /** A pergunta é o menu da vila? (o lugar é uma vila, a cena é a do lugar, e há opções de prédio) */
 function ehMenuDaVila(m) {
   return !!(estado && !estado.combate && estado.local.tipo === "vila" && cenaEl.dataset.tipo === "local"
-    && m.opcoes.some((o) => o.meta && o.meta.predio) && Vista.predios().length);
+    && m.opcoes.some((o) => o.meta && (o.meta.predio || o.meta.balcao)) && Vista.predios().length);
 }
 
 function fecharVila() {
@@ -61,12 +61,16 @@ function predioNoPonto(x, y) {
 /** Monta a vila: os prédios com opção (ou com um porquê de estarem sem serviço) viram botões com balão; os outros
  *  ficam só de cenário. */
 function montarVila(m, grupos) {
-  vilaAberta = { m, grupos, predio: null };
+  // O motor manteve um balcão aberto (o templo, depois de cuidar de alguém): a pergunta traz o Voltar dele, com a meta
+  // `balcao`. A vila se remonta já diante do prédio, sem afastar e reaproximar a câmera.
+  const bi = m.opcoes.findIndex((o) => o.meta && o.meta.balcao);
+  const balcao = bi >= 0 ? { id: m.opcoes[bi].meta.balcao, i: bi } : null;
+  vilaAberta = { m, grupos, predio: null, balcao };
   cenaEl.classList.add("vila-hub");
   predioEl.hidden = false;
   predioEl.classList.remove("focado");
   predioEl.innerHTML = "";
-  Vista.focar(null);
+  Vista.focar(balcao ? balcao.id : null);
   const fechados = (estado && estado.local.predios_fechados) || {};
   Vista.predios().forEach((p) => {
     const g = grupos[p.id];
@@ -86,7 +90,8 @@ function montarVila(m, grupos) {
   $("#vista").addEventListener("transitionend", posicionarPredios, { once: true });
   const pedido = predioPedido;
   predioPedido = null;
-  if (pedido && predioEl.querySelector(`[data-predio="${pedido}"]`)) entrarNoPredio(pedido, true);
+  if (balcao && predioEl.querySelector(`[data-predio="${balcao.id}"]`)) entrarNoPredio(balcao.id, true, true);
+  else if (pedido && predioEl.querySelector(`[data-predio="${pedido}"]`)) entrarNoPredio(pedido, true);
 }
 
 /* Diante de um prédio: o balcão (o ícone, quem atende e o que diz) e um cartão por serviço, com preço e tempo. */
@@ -100,7 +105,7 @@ const ICONE_SERVICO = { dormir: "lua", rumores: "pergaminho", templo: "coracao" 
 /** Clicou num prédio: o som dele e a câmera chegando perto. Uma opção só, sem nada a escolher ali (o mercado, o mural,
  *  a forja, a curandeira, a estrada): vai direto para a tela dele. A taverna e o templo mostram o balcão com os
  *  serviços em cartões; sem serviço agora, o balcão diz por quê. Embaixo, o Voltar à vila (também no Esc). */
-function entrarNoPredio(id, pedido = false) {
+function entrarNoPredio(id, pedido = false, continua = false) {
   const v = vilaAberta;
   if (!v) return;
   // Com o texto ainda correndo (a página do que aconteceu esperando para virar), o clique adianta e fica guardado.
@@ -109,7 +114,7 @@ function entrarNoPredio(id, pedido = false) {
   // que sobrou na paisagem sai em vez de responder por uma pergunta que o motor não espera mais.
   if (!pergunta || pergunta.id !== v.m.id) { fecharVila(); return; }
   const g = v.grupos[id] || [];
-  Som.tocar("predio_" + id);
+  if (!continua) Som.tocar("predio_" + id);  // de volta ao mesmo balcão (o templo depois de cuidar de alguém): sem o som de entrar
   Vista.focar(id);
   predioEl.classList.add("focado");  // com a câmera perto, os balões da vila inteira saem na hora
   Vista.destacar(null);
@@ -130,13 +135,15 @@ function entrarNoPredio(id, pedido = false) {
     if (b.classList.contains("caro")) { Som.tocar("falha"); return; }
     responder(v.m.id, Number(b.dataset.i));
   }));
+  // Voltar à vila: com o balcão mantido pelo motor, é a resposta à pergunta dele; senão, só a tela volta para a vila.
+  const sair = v.balcao && v.balcao.id === id ? () => { Som.tocar("escolha"); responder(v.m.id, v.balcao.i); } : sairDoPredio;
   const volta = el("button", "escolha secundaria voltar-vila", `<span class="rotulo">◀ Voltar à vila</span>`);
   volta.type = "button";
-  volta.addEventListener("click", (ev) => { ev.stopPropagation(); sairDoPredio(); });
+  volta.addEventListener("click", (ev) => { ev.stopPropagation(); sair(); });
   caixa.appendChild(volta);
   promptEl.appendChild(caixa);
   // As teclas 1, 2... escolhem os cartões, na ordem; Esc volta à vila.
-  pergunta = { id: v.m.id, tipo: "opcoes", n: v.m.opcoes.length, opcoes: v.m.opcoes, numeros: g.map(({ i }) => i), letras: {}, voltar: -1, voltarLocal: sairDoPredio };
+  pergunta = { id: v.m.id, tipo: "opcoes", n: v.m.opcoes.length, opcoes: v.m.opcoes, numeros: g.map(({ i }) => i), letras: {}, voltar: -1, voltarLocal: sair };
   // o balcão inteiro à vista: o topo dele no alto da página, se ele não couber embaixo do texto
   const sobra = caixa.getBoundingClientRect().bottom - pagina.getBoundingClientRect().bottom + 12;
   if (sobra > 0) pagina.scrollTop += Math.min(sobra, caixa.getBoundingClientRect().top - pagina.getBoundingClientRect().top - 8);

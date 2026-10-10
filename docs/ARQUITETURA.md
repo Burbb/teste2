@@ -155,7 +155,7 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   (`Object.assign(Telas, {...})`, no fim); a ordem dos `<script>` no `index.html` é a das dependências. Pedir a
   `Telas` um nome que ninguém pôs é erro na hora, com o nome. Tela nova: um arquivo em `telas/`, o `registrar` no fim
   e o `<script>` antes de quem a usa.
-- `batalha.js` o palco da luta (o jeito de animar vem do motor: `anim` nos lances) · `realce.js` cores dos termos de
+- `batalha.js` o palco da luta (o jeito de animar vem do motor: `anim` nos lances). A arena só cresce durante a luta e cresce devagar; quando uma carta entra ou ganha a linha de efeitos, as outras deslizam até o lugar novo (`acomodar`, desvio em `top`/`left` e em pixel inteiro: `transform` e `translate` são do foco e dos golpes) · `realce.js` cores dos termos de
   jogo (os nomes de habilidades e talentos chegam do motor no `glossario` do estado) · `sprites*.js`, `vista.js`, `mapa.js`, `som.js`
 - `sensacao.js` o peso dos momentos (parada no impacto, tremor, câmera lenta no golpe final...): as telas dizem o
   que aconteceu e perguntam a ele como aquilo se sente; os números ficam numa tabela só (`AJUSTES`). Os fatos vêm

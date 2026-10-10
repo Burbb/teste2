@@ -167,6 +167,7 @@ function mostrarOpcoes(m) {
     if (i === voltar) return;
     if (o.meta && ACOES_OCULTAS.some((k) => o.meta[k] !== undefined)) return;  // feitas pela tela (arrastar, clicar)
     if (naVila && o.meta && o.meta.predio) { (grupos[o.meta.predio] = grupos[o.meta.predio] || []).push({ o, i }); return; }
+    if (naVila && o.meta && o.meta.balcao) return;  // o Voltar do balcão aberto mora no próprio balcão (vila.js)
     const at = sistema && atalhoDe(o);
     if (at) {
       const pontos = o.meta.pontos, carta = o.meta.carta;
@@ -408,10 +409,12 @@ function tremerNao(b, motivo) {
   b.animate([{ translate: "0" }, { translate: "-4px 0" }, { translate: "4px 0" }, { translate: "0" }], { duration: 240, easing: "ease-in-out" });
   aviso(motivo, "info", "pergaminho");
 }
-/** Geometria da carta do herói dentro da arena (sem contar o zoom do foco). */
+/** Geometria da carta do herói dentro da arena (sem contar o zoom do foco). Com a arena se acomodando (uma carta
+ *  entrou, batalha.js), vale o lugar final da carta e a altura final da arena: a roda não fica no meio do caminho. */
 function geometriaHeroi() {
   const c = Batalha.elCarta("j"), arena = rodaEl().parentElement;
-  return { x: c.offsetLeft, y: c.offsetTop, w: c.offsetWidth, h: c.offsetHeight, W: arena.clientWidth, H: arena.clientHeight };
+  return { x: c.offsetLeft - (c._acX || 0), y: c.offsetTop - (c._acY || 0), w: c.offsetWidth, h: c.offsetHeight,
+    W: arena.clientWidth, H: arena._altura || arena.clientHeight };
 }
 function prepararRoda() {
   limparRoda();

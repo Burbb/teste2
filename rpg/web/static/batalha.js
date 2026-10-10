@@ -179,10 +179,61 @@ const Batalha = (() => {
     el.querySelector(".preparando").hidden = !(c.preparando && c.vivo);
   }
 
+  /* ------------------------------------------------------------ o palco não pula
+     Uma carta que entra (o servo invocado) ou a linha de efeitos que aparece numa carta mudam a altura de uma coluna.
+     A arena centraliza as colunas e acompanha a mais alta: antes, tudo saltava num quadro só (as cartas, o registro
+     embaixo dela e a paisagem, que se ajusta à altura nova). Agora a arena só cresce durante a luta (encolher quando um
+     efeito acaba ou alguém cai era mudança à toa, e outro pulo) e cresce devagar; cada carta desliza de onde estava até
+     o lugar novo. O desvio vai em top/left (a carta é position: relative): transform e translate já são do foco e dos
+     golpes. Tudo em pixel inteiro, para a pixel art não borrar. */
+  const ACOMODAR_MS = 320;
+  let alturaArena = 0, acomodando = 0;
+  /** Onde cada carta está agora (com o desvio de uma acomodação em curso) e a altura da arena. */
+  function fotografar() {
+    const pos = new Map();
+    for (const [uid, el] of cartas) if (el.isConnected) pos.set(uid, [el.offsetLeft, el.offsetTop]);
+    return { pos, altura: arena.offsetHeight };
+  }
+  /** Depois de as cartas mudarem: a arena vai à altura que elas pedem (nunca menos que a maior da luta) e cada carta
+   *  que já estava em cena sai de onde estava (foto) e chega ao lugar novo. Sem foto ou sem animação, vai direto. */
+  function acomodar(foto, animar) {
+    cancelAnimationFrame(acomodando);
+    const fim = [];
+    for (const [uid, el] of cartas) {
+      if (el._acX || el._acY) el.style.left = el.style.top = "";
+      el._acX = el._acY = 0;
+      if (foto && el.isConnected && foto.pos.has(uid)) fim.push([el, ...foto.pos.get(uid)]);
+    }
+    arena.style.height = "";
+    alturaArena = Math.max(alturaArena, arena.offsetHeight);
+    arena._altura = alturaArena;  // a altura final: a roda de ações se mede por ela (escolhas.js)
+    arena.style.height = alturaArena + "px";
+    fim.forEach((f) => f.push(f[0].offsetLeft, f[0].offsetTop));  // o lugar de cada uma na altura final
+    const de = foto ? foto.altura : alturaArena;
+    if (!animar || (de === alturaArena && fim.every(([, x0, y0, x1, y1]) => x0 === x1 && y0 === y1))) return;
+    const inicio = performance.now();
+    const passo = () => {
+      const t = Math.min(1, (performance.now() - inicio) / ACOMODAR_MS), e = 1 - Math.pow(1 - t, 3);
+      arena.style.height = Math.round(de + (alturaArena - de) * e) + "px";
+      for (const [el, x0, y0, x1, y1] of fim) {
+        // o lugar da carta neste quadro (a coluna recentraliza enquanto a arena cresce), sem o desvio que ela já tem
+        const lx = el.offsetLeft - el._acX, ly = el.offsetTop - el._acY;
+        const dx = t < 1 ? Math.round(x0 + (x1 - x0) * e - lx) : 0, dy = t < 1 ? Math.round(y0 + (y1 - y0) * e - ly) : 0;
+        if (dx !== el._acX) { el._acX = dx; el.style.left = dx ? dx + "px" : ""; }
+        if (dy !== el._acY) { el._acY = dy; el.style.top = dy ? dy + "px" : ""; }
+      }
+      if (t < 1) acomodando = requestAnimationFrame(passo);
+    };
+    passo();  // o primeiro quadro já no lugar de antes: nada pisca entre a mudança e a animação
+  }
+
   /** Desenha (ou atualiza no lugar) as cartas a partir do estado do combate. */
   function desenhar(cb, heroi, replay) {
     if (!cb) {
       esconderFicha();  // a carta sob o mouse some com a arena; a ficha não pode ficar presa
+      cancelAnimationFrame(acomodando);
+      alturaArena = 0;
+      if (arena) { arena.style.height = ""; arena._altura = 0; }
       if (arena) paisagem(false);
       cartas.clear(); anteriores = {}; emArea = false;
       if (arena) { colAliados.innerHTML = ""; colInimigos.innerHTML = ""; camadaFx.innerHTML = ""; }
@@ -192,6 +243,7 @@ const Batalha = (() => {
     }
     montar();
     paisagem(true);
+    const foto = anteriores.__iniciado ? fotografar() : null;  // onde as cartas estavam antes desta atualização
     const aliados = [cb.heroi, ...cb.aliados.filter((a) => a.vivo || a.cid || (anteriores[a.uid] && anteriores[a.uid].vivo))];
     const lista = [...aliados, ...cb.inimigos];
     const vistos = new Set();
@@ -235,6 +287,7 @@ const Batalha = (() => {
     });
     colInimigos.classList.toggle("duas", cb.inimigos.length > 3);
     colAliados.classList.toggle("duas", aliados.length > 4);
+    acomodar(foto, !!foto && !replay && !rapido());
     anteriores = { __iniciado: true };
     lista.forEach((c) => { if (c && c.uid) anteriores[c.uid] = c; });
     if (!replay) { if (morte) som("morte"); else if (golpe) som("golpe"); }

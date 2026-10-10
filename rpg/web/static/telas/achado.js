@@ -33,7 +33,10 @@
     const fundo = document.createElement("div");
     fundo.id = "sobre-achado";
     fundo.className = "sobreposicao";
-    fundo.innerHTML = `<div class="janela-achado">${achado(d)}<div class="achado-acoes"></div></div>`;
+    // Os botões chegam com a pergunta, depois da revelação; até lá, os mesmos rótulos (que vêm com o cartão) guardam o
+    // lugar deles, invisíveis: a moldura já nasce no tamanho final e não cresce quando eles chegam.
+    const reserva = (d.acoes || []).map((t, i) => `<button type="button" class="botao-janela reserva" tabindex="-1" aria-hidden="true"><kbd>${i + 1}</kbd>${h(t)}</button>`).join("");
+    fundo.innerHTML = `<div class="janela-achado">${achado(d)}<div class="achado-acoes">${reserva}</div></div>`;
     document.body.appendChild(fundo);
     const janela = fundo.firstElementChild, tela = janela.querySelector(".tela.achado");
     const novo = tela.querySelector(".achado-cartao.novo");

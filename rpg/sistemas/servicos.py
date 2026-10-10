@@ -117,6 +117,17 @@ class Servicos:
             opcoes.append((rotulo, ("templo", m and m["id"], preco, falta), meta))
         return opcoes
 
+    def balcao_templo(self, escolha):
+        """Diante do balcão do templo: cuida de quem foi escolhido e continua ali, com o ouro e os preços de agora e só
+        quem ainda precisa, até a pessoa voltar à vila. Sem mais ninguém para cuidar, o balcão diz isso e fica o Voltar.
+        A meta `balcao` diz à tela gráfica que o balcão continua aberto (vila.js)."""
+        while escolha:
+            self.templo(*escolha)
+            opcoes = self.opcoes_templo()
+            op = self.menu("Mais alguém precisa de cuidados?" if opcoes else "Ninguém mais precisa de cuidados.",
+                           opcoes + [("Voltar à vila", None, {"voltar": True, "balcao": "templo"})])
+            escolha = op[1:] if op else None
+
     def templo(self, cid, preco, falta):
         if self.j.ouro < preco:
             self.dizer("Você não tem ouro suficiente.", "vermelho")

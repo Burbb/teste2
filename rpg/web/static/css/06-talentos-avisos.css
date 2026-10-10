@@ -190,6 +190,7 @@
 .janela-achado { padding: 16px 18px 18px; background: rgba(18, 13, 9, 0.96); border: 3px solid #5a4630; box-shadow: 4px 4px 0 #000; }
 .janela-achado .tela.achado { margin: 0; }
 .janela-achado .achado-acoes { margin-top: 16px; min-height: 34px; }  /* o lugar dos botões já reservado: a janela não cresce quando eles chegam */
+.janela-achado .botao-janela.reserva { visibility: hidden; pointer-events: none; }  /* os rótulos guardando o lugar (achado.js) */
 /* Primeiro o achado sozinho (achado.js): o que você usa e os botões esperam, já no lugar, sem ocupar a vista. */
 .janela-achado.so-o-achado .achado-cartao.atual, .janela-achado.so-o-achado .achado-acoes { visibility: hidden; animation: none; }
 .janela-achado .achado-acoes { animation: achado-botoes .3s .35s ease-out both; }

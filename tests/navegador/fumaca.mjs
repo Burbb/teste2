@@ -93,8 +93,27 @@ async function cenarioCombate(browser) {
     conferir(!!(await esperar('#roda .roda-botao[data-slot="atacar"]')), "Voltar na escolha do alvo devolve as ações");
     await (await page.$('.roda-botao[data-slot="habilidades"]')).click();
     await (await esperar('.rj-linha[data-hab="bola_fogo"]')).click();
+    // O palco não pula: o efeito novo aumenta a carta, e as cartas e a arena vão ao lugar novo devagar (batalha.js).
+    // Mede o lugar de layout (sem os avanços dos golpes, que são de propósito), quadro a quadro.
+    await page.evaluate(() => {
+      window.__palco = { carta: 0, arena: 0 }; let ant = null; const fim = performance.now() + 2500;
+      const passo = () => {
+        const a = document.getElementById("arena"); const agora = { h: a.offsetHeight, c: {} };
+        a.querySelectorAll(".carta").forEach((c) => { agora.c[c.dataset.uid] = c.offsetTop; });
+        if (ant) {
+          window.__palco.arena = Math.max(window.__palco.arena, Math.abs(agora.h - ant.h));
+          for (const u in agora.c) if (u in ant.c) window.__palco.carta = Math.max(window.__palco.carta, Math.abs(agora.c[u] - ant.c[u]));
+        }
+        ant = agora;
+        if (performance.now() < fim) requestAnimationFrame(passo);
+      };
+      requestAnimationFrame(passo);
+    });
     await (await esperar('.carta.alvejavel:has-text("Javali")')).click();
     conferir(!!(await esperar(".ef.fam-fogo", 15000)), "clicar no inimigo dispara: o alvo fica em chamas");
+    await page.waitForTimeout(2600);
+    const palco = await page.evaluate(() => window.__palco);
+    conferir(palco.carta <= 12 && palco.arena <= 16, `o efeito novo não faz o palco pular (maior passo num quadro: carta ${palco.carta}px, arena ${palco.arena}px)`);
     // termina a luta atacando (clicando no alvo quando houver mais de um)
     for (let k = 0; k < 160; k++) {
       if (!(await page.evaluate(() => document.body.classList.contains("em-combate")))) break;
@@ -114,7 +133,7 @@ async function cenarioCombate(browser) {
     if (continuarEspolio) await continuarEspolio.click().catch(() => {});
     for (let t = 0; t < 20 && (await page.$(".festa-espolio")); t++) await page.waitForTimeout(100);
     // A luta pode deixar um item (o saque é sorteado): a janela dele vem logo depois do espólio.
-    const guardar = await esperar('#sobre-achado .botao-janela:has-text("Guardar")', 8000);
+    const guardar = await esperar('#sobre-achado .botao-janela:not(.reserva):has-text("Guardar")', 8000);
     if (guardar) { await guardar.click(); for (let t = 0; t < 30 && (await page.$("#sobre-achado")); t++) await page.waitForTimeout(100); }
     conferir(await page.evaluate(() => document.getElementById("vista").parentElement.id === "cena"),
       "a paisagem sai da arena e volta para o topo da cena, fora da área que rola");
@@ -198,12 +217,27 @@ async function cenarioVila(browser) {
   console.log("cenário: saque, mural e mercado");
   const { proc, url } = await subir("vila");
   const { page, erros, esperar } = await abrir(browser, url);
+  // A moldura do item achado, quadro a quadro, da revelação até uns quadros depois de os botões chegarem.
+  await page.evaluate(() => {
+    window.__moldura = new Set(); let depois = 0;
+    const passo = () => {
+      const j = document.querySelector("#sobre-achado .janela-achado");
+      if (j) { const r = j.getBoundingClientRect(); window.__moldura.add(`${Math.round(r.width)}x${Math.round(r.height)} em ${Math.round(r.left)},${Math.round(r.top)}`); }
+      if (document.querySelector("#sobre-achado .botao-janela:not(.reserva)")) depois++;
+      if (depois < 20) requestAnimationFrame(passo);
+    };
+    requestAnimationFrame(passo);
+  });
   try {
     conferir(!!(await esperar("#sobre-achado .achado-cartao.novo")), "o item encontrado aparece como cartão, numa janela própria");
     conferir(!!(await page.$("#sobre-achado .achado-cartao.atual")), "o item que você usa aparece ao lado");
     conferir(!(await page.$("#texto .tela.achado")), "o cartão do item não fica no log");
-    conferir(!(await page.$('#sobre-achado .botao-janela:has-text("Deixar para trás")')), "sem 'deixar para trás' com a mochila livre");
-    await (await esperar('#sobre-achado .botao-janela:has-text("Guardar")')).click();
+    conferir(!(await page.$('#sobre-achado .botao-janela:not(.reserva):has-text("Deixar para trás")')), "sem 'deixar para trás' com a mochila livre");
+    const guardar = await esperar('#sobre-achado .botao-janela:not(.reserva):has-text("Guardar")');
+    await page.waitForTimeout(500);
+    const molduras = await page.evaluate(() => [...window.__moldura]);
+    conferir(molduras.length === 1, `a moldura do item fica do mesmo tamanho da revelação aos botões (${molduras.join(" | ")})`);
+    await guardar.click();
     for (let t = 0; t < 30 && (await page.$("#sobre-achado")); t++) await page.waitForTimeout(100);
     conferir(!(await page.$("#sobre-achado")), "guardar fecha a janela do item");
     const aceitar = await esperar("[data-aceitar]");
@@ -289,6 +323,23 @@ async function cenarioVila(browser) {
       for (let k = 0; k < 30 && (await ouro()) !== antesVenda; k++) await page.waitForTimeout(100);
       conferir((await ouro()) === antesVenda, "recomprar devolve o item pelo mesmo preço");
     }
+    // O templo: depois de cuidar de alguém, o balcão continua aberto, com o ouro de agora e só quem ainda precisa.
+    await page.keyboard.press("Escape");  // sai do mercado
+    const templo = await esperar('#predios .predio[data-predio="templo"]', 8000);
+    if (templo) await templo.click();
+    const servicos = () => page.$$eval("#prompt .balcao-predio .servico", (bs) => bs.length);
+    const naFila = (await esperar("#prompt .balcao-predio .servico", 8000)) ? await servicos() : 0;
+    const ouroAntes = await ouro();
+    if (naFila) await (await page.$("#prompt .balcao-predio .servico:not(.caro)")).click();
+    let restam = naFila;
+    // entre a resposta e a pergunta seguinte o prompt fica vazio um instante: espera o balcão voltar
+    for (let k = 0; k < 50 && (restam === naFila || restam < 0); k++) { await page.waitForTimeout(100); restam = (await page.$("#prompt .balcao-predio")) ? await servicos() : -1; }
+    conferir(naFila >= 1 && restam === naFila - 1 && (await ouro()) < ouroAntes,
+      `depois de cuidar de alguém, o templo continua no balcão, com menos gente e menos ouro (${naFila} → ${restam})`);
+    const volta = await page.$("#prompt .balcao-predio .voltar-vila");
+    if (volta) await volta.click();
+    conferir(!!(await esperar('#predios .predio[data-predio="mercado"]', 5000)) && !(await page.$("#prompt .balcao-predio")),
+      "Voltar à vila sai do balcão do templo");
   } finally {
     conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
     await page.close();
@@ -310,6 +361,9 @@ async function cenarioCampanha(browser) {
     conferir(!!jean && /brando/.test(await jean.textContent()) && !/Vale do Turvo/.test(await jean.textContent()),
       "o save do mundo gerado continua como era");
     await (await page.$('#prompt .escolha:has-text("Voltar")')).click();
+    // o título se redesenha: só então o "Campanha" é o botão novo (antes, às vezes o clique caía na tela que saía)
+    for (let t = 0; t < 50 && (await page.$(".save-cartao")); t++) await page.waitForTimeout(100);
+    await page.waitForTimeout(300);
     await (await esperar('#prompt .escolha:has-text("Campanha")')).click();
     await (await esperar(".entrada-texto input")).fill("Ana");
     await page.keyboard.press("Enter");

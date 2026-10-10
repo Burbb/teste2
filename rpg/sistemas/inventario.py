@@ -24,8 +24,16 @@ class Inventario:
         usa = self.pode_usar(item)
         cabe = len(self.j.mochila) < LIMITE_MOCHILA
         equipados = [it for it in (self.j.equip[s] for s in itens.espacos(item["slot"])) if it]
+        # Na tela gráfica, o cartão e estas opções moram numa janela própria (fora do log): {"achado": ...}.
+        opcoes = [o for o in (
+            ("Equipar agora", "equipar", {"achado": "equipar"}) if usa else None,
+            ("Guardar na mochila" + ("" if usa else " (para vender)"), "guardar", {"achado": "guardar"}) if cabe else None,
+            ("Deixar para trás (mochila cheia)", "deixar", {"achado": "deixar"}) if not cabe else None,
+        ) if o]
+        # Os rótulos vão também com o cartão: a janela reserva desde o começo o lugar exato dos botões, que só chegam
+        # depois da revelação (antes, a moldura crescia quando eles chegavam).
         if not self.ui.painel("achado", {"item": itens.ficha(item, rec), "equipados": [itens.ficha(it, rec) for it in equipados],
-                                         "pode_usar": usa, "cabe": cabe}):
+                                         "pode_usar": usa, "cabe": cabe, "acoes": [o[0] for o in opcoes]}):
             raridade = itens.NOMES_RARIDADE[item.get("raridade", "comum")]
             self.dizer(f"Você encontrou: {itens.rotulo(item)} [{NOMES_SLOT[item['slot']]}, {raridade}]",
                        itens.cor(item) or "branco+negrito")
@@ -35,12 +43,7 @@ class Inventario:
             atual = self.j.equip[self.espaco_para(item)]
             if atual:
                 self.dizer(f"  Equipado agora: {itens.rotulo(atual)} — {descrever_bonus(atual['bonus'], rec)}", "cinza")
-        # Na tela gráfica, o cartão e estas opções moram numa janela própria (fora do log): {"achado": ...}.
-        op = self.menu("O que fazer com o item?", [
-            ("Equipar agora", "equipar", {"achado": "equipar"}) if usa else None,
-            ("Guardar na mochila" + ("" if usa else " (para vender)"), "guardar", {"achado": "guardar"}) if cabe else None,
-            ("Deixar para trás (mochila cheia)", "deixar", {"achado": "deixar"}) if not cabe else None,
-        ])
+        op = self.menu("O que fazer com o item?", opcoes)
         registrar(self, "saque", item=item["nome"], raridade=item.get("raridade", "comum"), slot=item["slot"],
                   nivel=item.get("nivel"), escolha=op or "deixar")
         if op == "equipar":

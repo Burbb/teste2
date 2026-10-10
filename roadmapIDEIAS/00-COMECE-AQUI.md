@@ -79,7 +79,9 @@ Três commits posteriores à atualização do roadmap foram consultados. Os comp
 | E2 — região fixa | **Protótipo entregue na 1.48.0** (commit `2661b59`): início da campanha, mapa fixo, viagem, descoberta e save. Validado tecnicamente; falta Jean jogar. |
 | E3–E11 | Plano de trabalho futuro; infraestrutura existente não equivale a etapas concluídas. Notas aprovadas para a E3 na seção 19 do [11](11-E1-REGIAO-INICIAL.md). |
 | Bugs ainda abertos | Nenhum bug aberto específico foi informado para registro nesta passagem. Isso não comprova ausência de bugs. |
-| Feedback pendente | Jean jogar o protótipo da campanha (1.48.0) e registrar o que observar, com passos para reproduzir. |
+| Polimento antes da E3 | Entregue na 1.48.1 (registro abaixo): leitura, item achado, balcão do templo, palco da luta. Falta Jean conferir jogando. |
+| Pendente, entrega separada | Abrir vários baús de uma vez (pedido de Jean; fora do polimento). |
+| Feedback pendente | Jean conferir o polimento da 1.48.1 jogando. |
 
 ### Primeiro trabalho recomendado: E1
 
@@ -190,3 +192,35 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
 - **Fora desta entrega, de propósito:** missão, rito, eixos, Caspar, Marta, encontros fixos da comitiva, finais e Morro da Forca.
 - **Feedback de Jean jogando:** pendente.
 - **Próxima entrega:** só por pedido de Jean. A candidata natural é a E3 (missão mínima), que depende das decisões "antes da E3" da seção 8 do [12](12-E1-CAMPANHA.md).
+
+### 10/10/2026 — Polimento antes da E3 (1.48.1)
+
+- **Feedback de Jean jogando a 1.48.0:**
+  - jogou o protótipo até o dia 14, nível 5 e meio, e enfrentou Theodore;
+  - provocou uma derrota em outro save, e o resgate o devolveu à cidade após dois dias;
+  - pediu quatro ajustes (abaixo). A abertura conjunta de baús fica para uma entrega separada.
+- **Implementado** (só o autorizado):
+  1. **Leitura:** a guarda em que um clique não vira a página (`GUARDA_LEITURA`, `pagina.js`) caiu de 700 para 550 ms.
+     - Medido no navegador: um clique 450 ms depois do resultado antes era ignorado (a página esperava a leitura toda, 5,7 s) e agora vira na hora.
+     - A 300 ms continua ignorado: o clique que termina o texto não vira a página junto.
+  2. **Item achado:** o motor manda os rótulos dos botões com o cartão (`acoes` no painel `achado`), e a janela os reserva invisíveis desde o começo.
+     - Antes, com o espaço vazio, a moldura ia de 342 para 405 px de largura quando os botões chegavam, e em todos os casos crescia 10 px de altura.
+     - Medido quadro a quadro em raro/comum, com e sem equipamento no espaço: agora um tamanho e uma posição só.
+  3. **Templo:** depois de cuidar de alguém, o motor mantém o balcão (`balcao_templo`) com o ouro, os preços e só quem ainda precisa. Sem ninguém, o balcão diz "O templo está em silêncio…" e fica o Voltar à vila. A vila reabre o balcão sem afastar a câmera nem repetir o som.
+  4. **Palco da luta:** a arena só cresce durante a luta e cresce em ~320 ms; as cartas deslizam até o lugar novo (`acomodar` em `batalha.js`, desvio em `top`/`left`, pixel inteiro).
+     - Antes: Erguer Servo fazia a arena saltar 59 px e uma carta 29 px num quadro; Maldição fazia uma carta saltar 48 px.
+     - Agora: no máximo 10–11 px de arena e 4–7 px de carta por quadro, inclusive com cinco inimigos (duas colunas).
+     - A roda de ações usa o lugar final da carta do herói.
+- **Gabarito atualizado de propósito**, com as transcrições conferidas:
+  - todas divergem logo depois de uma escolha de templo (a pergunta nova "Mais alguém precisa de cuidados?");
+  - antes disso, a única diferença é a chave `acoes` nos painéis de item achado;
+  - as 6 sequências de comitiva e 4 partidas ficaram idênticas.
+- **Verificações:**
+  - `unittest`: 118 OK, 1 pulado (`textual`);
+  - `tests.gabarito`: OK;
+  - `pyflakes`: só o aviso conhecido;
+  - `fumaca.mjs`: 81 checagens OK. Checagens novas: moldura do achado estável, templo no balcão, palco sem pulo na Bola de Fogo. A do palco falha no código antigo (16 px) e passa no novo (2 px);
+  - um passo intermitente do cenário da campanha foi reforçado (esperar o título se redesenhar);
+  - testes novos em `tests/test_vila.py`.
+- **Observação, sem mudança:** um clique dentro da guarda é descartado, e a página espera a leitura inteira até um segundo clique. Se isso ainda pesar, a próxima medida seria guardar esse clique para quando a guarda acabar. Decisão de Jean.
+- **Não executado:** `tests.equilibrio` e `tests.replay` (nenhuma regra de combate ou número mudou).

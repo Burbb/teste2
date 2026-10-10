@@ -99,7 +99,7 @@ function cabecalho(m) {
 /** O fim de um evento ou de uma luta cai direto no lugar, sem Continuar: o que aconteceu fica o tempo de ler (um fio
  *  vai se enchendo embaixo; clique ou tecla adianta) e a página vira limpa, no topo, com a arte inteira, o nome do
  *  lugar e as ações. O texto não fica sobrando em cima do lugar: quem quiser rever abre o histórico (H). */
-const GUARDA_LEITURA = 700;  // ms em que um clique não vira a página: o resultado aparece e fica à vista
+const GUARDA_LEITURA = 550;  // ms em que um clique não vira a página: o resultado aparece e fica à vista (era 700: a espera ao adiantar pesava)
 async function virarParaLugar(m) {
   const vivos = [...textoEl.querySelectorAll(":scope > :not(.lido):not(.eco):not(.passado)")];
   // Uma tela de serviço (a curandeira, a forja) mostra o resultado num aviso solto, perto do clique: o texto da
