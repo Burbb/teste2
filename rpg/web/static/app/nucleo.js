@@ -65,6 +65,7 @@ const App = {
   ultimaFogueira: null,
   opcoes: () => (pergunta && pergunta.tipo === "opcoes" ? pergunta.opcoes : null),
   som: (n) => Som.tocar(n),
+  ritmo: (ms) => ritmo(ms),  // um tempo de animação na velocidade escolhida (0 no instantâneo e ao pular)
   avisar: (texto, chave) => aviso(texto, "info", "pergaminho", typeof chave === "string" ? chave : undefined),
   doer: () => doer(),
   acaoFecharTalentos: null,

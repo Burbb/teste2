@@ -189,7 +189,11 @@
 #sobre-achado.saindo { animation: some 0.22s ease-in forwards; }
 .janela-achado { padding: 16px 18px 18px; background: rgba(18, 13, 9, 0.96); border: 3px solid #5a4630; box-shadow: 4px 4px 0 #000; }
 .janela-achado .tela.achado { margin: 0; }
-.janela-achado .achado-acoes { margin-top: 16px; }
+.janela-achado .achado-acoes { margin-top: 16px; min-height: 34px; }  /* o lugar dos botões já reservado: a janela não cresce quando eles chegam */
+/* Primeiro o achado sozinho (achado.js): o que você usa e os botões esperam, já no lugar, sem ocupar a vista. */
+.janela-achado.so-o-achado .achado-cartao.atual, .janela-achado.so-o-achado .achado-acoes { visibility: hidden; animation: none; }
+.janela-achado .achado-acoes { animation: achado-botoes .3s .35s ease-out both; }
+@keyframes achado-botoes { 0% { transform: translateY(6px); opacity: 0; } 100% { transform: none; opacity: 1; } }
 .festa-amanhecer { margin-top: 24vh; width: min(560px, 92vw); padding: 16px 28px 18px; background: rgba(18, 13, 9, 0.92); border: 3px solid #5a4630; box-shadow: 4px 4px 0 #000; }
 .festa-amanhecer.saindo { animation: some 0.26s ease-in forwards; }
 .festa-amanhecer .dia-numero { font-family: var(--titulo); font-size: calc(var(--px) * 64); line-height: 0.95; color: #ffd27a; text-shadow: 4px 4px 0 #000, 0 0 26px rgba(255, 180, 90, 0.55);
