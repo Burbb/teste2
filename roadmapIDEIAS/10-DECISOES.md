@@ -13,6 +13,9 @@ Não bloquear tudo com todas as perguntas de uma vez. Resolver as decisões quan
 | Tecnologia | Manter Python + HTML/CSS/JavaScript |
 | Produção | Primeira região pequena; expansão por trechos |
 | Quantidade | Sem obrigação de 300 habilidades neste ciclo |
+| Protótipo da região (10/10/2026) | Vau do Turvo, Charco dos Juncos, Bosque do Moinho e Capela Afogada, com as ligações propostas; Morro da Forca adiado |
+| Campanha e procedural (10/10/2026) | Campanha como nova forma de começar, no mesmo motor; procedural preservado na transição, sem obrigação de portar conteúdo da campanha |
+| Modo da campanha (10/10/2026) | Resgate como padrão e hardcore como opção explícita, guardados no save. Fome e infecção ainda encerram a partida (ver 12-E1-CAMPANHA, seção 6) |
 
 ## Hipóteses de trabalho (10/10/2026)
 

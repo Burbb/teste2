@@ -160,6 +160,18 @@ Hipótese aceita por Jean, sem decisão definitiva e sem autorização para muda
 - **Hardcore:** opção explícita na criação da campanha.
 - **Texto:** o prólogo da campanha diz o modo verdadeiro. A frase atual sobre morte permanente está em [13](13-PENDENCIAS-FORA-DA-CAMPANHA.md).
 
+### O que o resgate atual cobre (conferido no código da 1.48.0)
+
+| Causa | O que acontece hoje no modo resgate (= brando) | Diferença para a proposta |
+|---|---|---|
+| Derrota em combate (inclusive duelo) | Resgate (`Jogo.resgate`): acorda na vila mais próxima (no vale, o Vau), perde 30% do ouro, passam dois dias, vida em pelo menos 40%, recurso cheio, estados limpos, o animal do Patrulheiro curado. Quem resgata é um NPC sorteado | Coberto. Pita e Marta como quem resgata ficam para a E4 |
+| Fome (vida zerada pela fome) | `fim_de_jogo` direto (`sobrevivencia.py:221`): a partida acaba, com a tela de morte | **Não coberto.** A partida acaba também no modo resgate; o save não é apagado (só o hardcore apaga), então dá para carregar o último salvamento automático |
+| Infecção (vida zerada pela febre da infecção) | `fim_de_jogo` direto (`sobrevivencia.py:236`) | **Não coberto**, igual à fome |
+| Dano de evento (`ferir`) | Nunca mata: deixa no mínimo 1 de vida | Coberto (não há morte) |
+| Os dois dias do resgate | Passam com `novo_dia`: consomem provisões, pioram fome e infecção | Efeito colateral: um resgate sem comida pode emendar em morte por fome. O robô de teste morreu de fome em 10 de 12 partidas no modo resgate (ele joga mal; uma pessoa compra comida) |
+
+Nada disso foi mudado nesta entrega: o prólogo da campanha diz a verdade ("A fome e uma infecção sem tratamento ainda encerram a partida; o último save continua lá"). Decidir se fome e infecção também levam ao resgate na campanha, e com que custo, é decisão de Jean para antes da E9.
+
 ## 7. Transição do procedural [hipótese, com regras propostas]
 
 1. **Duas portas de entrada, um motor.** A campanha começa por um novo início; o procedural continua como está.
@@ -172,7 +184,7 @@ Legado entre partidas, nomes sorteados, vilão sorteado e mapa gerado ficam só 
 
 ## 8. O que decidir, e quando
 
-**Antes da E2** (carregar a região fixa). Só três:
+**Antes da E2** (carregar a região fixa). Só três, **aprovadas por Jean em 10/10/2026 para o protótipo** (Morro da Forca adiado):
 
 | # | Decisão | Recomendação |
 |---|---|---|

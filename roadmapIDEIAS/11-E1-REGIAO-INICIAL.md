@@ -42,7 +42,7 @@ Peças existentes que a região aproveita [existe]:
 | **Vau do Turvo** | vila | Casa do herói; a Fonte Nova; Marta de cama; Caspar na praça | — |
 | **Charco dos Juncos** | pântano | Yara na fogueira; sapos, sanguessugas; afogados à noite | 1–2 |
 | **Bosque do Moinho** | floresta | Moinho, represa, comporta e o canal que leva à capela; lobos, bandidos | 2–3 |
-| **Morro da Forca** | planície | **Opcional.** A árvore da forca antiga; bandidos | 2–3 |
+| **Morro da Forca** | planície | **Opcional; adiado por Jean** (fora do protótipo da E2). A árvore da forca antiga; bandidos | 2–3 |
 | **Capela Afogada** | covil (ruínas/pântano) | Masmorra linear de três salas e a guardiã | 3–4 |
 | **Estrada de Varn** | saída | Fechada até o fim; leva à região 2 | — |
 
@@ -90,7 +90,7 @@ Compatibilidade: o texto atual da Yara ("o poço secou porque o moleiro desviou 
 | Ação | Efeito |
 |---|---|
 | Tirar o Sigilo do corpo de Ilse (as duas soluções da guardiã) | Corta a **fonte**: a água volta a ficar limpa em poucos dias e a febre acaba |
-| Fechar a comporta do canal (ação opcional, antes ou depois) | Corta o **caminho**: a água para de passar pela cripta, o riacho volta e o poço enche de novo em alguns dias; o moinho perde força |
+| Fechar a comporta do canal (ação opcional, antes ou depois) | Corta o **caminho**: a água para de passar pela cripta, o riacho volta e o poço enche de novo em alguns dias; o moinho perde força. É **solução parcial**: o jogo diz que a febre deixa de piorar, mas que quem já bebeu continua doente e a cripta continua vazando (a água parada volta a contaminar o brejo e os afogados seguem saindo). Por isso a missão continua até a guardiã |
 
 Diferença entre as soluções da guardiã:
 - **Destruir** rompe o corpo à força. O lodo acumulado nele sai de uma vez: a Fonte Nova corre escura por uma noite, a febre piora (Marta inclusive) e depois some em uns 3 dias. **Se a comporta estiver fechada antes, o golpe fica preso na cripta e não há piora.**
@@ -155,12 +155,12 @@ Exige três ações próprias, além de saber o nome:
 |---|---|---|---|
 | **D1. A verdade** | Quem era Ilse, por que foi afogada, onde está presa e o que ela usava | Sacristia (nome e acusação) **e** Vó Berta, que, diante do nome, conta das correntes e das mós e entrega a fita de Ilse | Yara presente (ouve na água); mago: eco no poço (Arcano); arqueiro: nome entalhado no Morro da Forca (Percepção) |
 | **D2. Soltar o corpo** | No ossuário, o sarilho velho prende as correntes às mós | Soltar à mão: leva tempo, faz barulho e atrai uma onda de afogados (uma luta a mais) | Guerreiro: Força; mago: Arcano (o ferro apodrece); arqueiro: tiro no pino da trava (Destreza) |
-| **D3. O rito** | Diante da guardiã, com a fita e o nome | A luta começa normalmente. Quando ela cai à metade, em vez da 2ª fase aparece "Devolver o nome e a fita": ela para, larga o Sigilo e afunda em paz | — |
+| **D3. O rito** | Diante da guardiã, com a fita e o nome | A luta começa normalmente. Quando ela cai à metade, em vez da 2ª fase aparece "Devolver o nome e a fita": ela para, larga o Sigilo e afunda em paz. Um golpe que passe do limiar (ou que a mataria) não tira essa chance: ela fica à metade e a escolha aparece | — |
 
 **Falhas:**
 - Sem D1, a opção não aparece.
 - Sem D2, ela tenta e não consegue sair das correntes, e a luta segue para a 2ª fase: vira Destruir.
-- Usar a bênção de Caspar fere a morta e impede o rito. Quem pega a bênção escolheu destruir.
+- **Pegar** a bênção de Caspar não impede o rito; **usá-la** na luta impede, porque a água benta fere a morta. Antes de usar, o jogo avisa que isso fecha o caminho do rito (regra aprovada por Jean para a E3).
 
 **Vantagens:**
 - a água limpa sem piora;
@@ -355,7 +355,15 @@ Não cortar:
 - o save no meio da missão;
 - o caminho geral para as três classes.
 
-## 19. Riscos
+## 19. Notas aprovadas para a E3 (10/10/2026)
+
+Jean pediu que estas regras entrem na implementação da missão:
+
+1. **Bênção:** pegar a bênção de Caspar não impede o rito; usá-la na luta impede, com aviso antes de usar.
+2. **Rito garantido:** a oportunidade do rito não pode ser perdida por dano que ultrapasse o limiar da fase. O golpe que passaria do limiar (ou mataria) deixa a guardiã à metade e oferece a escolha.
+3. **Comporta:** fechar a comporta é reconhecido como solução parcial, com motivo claro para continuar a missão (seção 4).
+
+## 20. Riscos
 
 - **Tamanho:** dois eixos e três passos já pedem bastante texto. A implementação pode começar com vila, Charco, Bosque e Capela.
 - **Dificuldade:** a guardiã entra no nível da região + 1 (`chefes.py:13`). No nível 4 é preciso medir com e sem bênção, e o Dar descanso parando à metade.

@@ -75,10 +75,11 @@ Três commits posteriores à atualização do roadmap foram consultados. Os comp
 |---|---|
 | Refatoração estrutural | Entregue segundo os guias e a leitura registrada; não reabrir uma refatoração geral sem problema concreto. |
 | Correções recentes | Implementadas nos três commits acima, com validação relatada nas mensagens. |
-| E1 — região e arco | Proposta entregue em 10/10/2026 ([11](11-E1-REGIAO-INICIAL.md), [12](12-E1-CAMPANHA.md)); aguarda aprovação de Jean. Nada implementado. |
-| E2–E11 | Plano de trabalho futuro; infraestrutura existente não equivale a etapas concluídas. |
+| E1 — região e arco | Proposta em [11](11-E1-REGIAO-INICIAL.md) e [12](12-E1-CAMPANHA.md). Aprovados por Jean para o protótipo: os quatro lugares e as ligações (Morro da Forca adiado), campanha como novo início, resgate como padrão e hardcore opcional. O resto aguarda aprovação. |
+| E2 — região fixa | **Protótipo entregue na 1.48.0** (commit `2661b59`): início da campanha, mapa fixo, viagem, descoberta e save. Validado tecnicamente; falta Jean jogar. |
+| E3–E11 | Plano de trabalho futuro; infraestrutura existente não equivale a etapas concluídas. Notas aprovadas para a E3 na seção 19 do [11](11-E1-REGIAO-INICIAL.md). |
 | Bugs ainda abertos | Nenhum bug aberto específico foi informado para registro nesta passagem. Isso não comprova ausência de bugs. |
-| Feedback pendente | Registrar qualquer problema que Jean ainda observar na 1.47.1, com passos para reproduzir. |
+| Feedback pendente | Jean jogar o protótipo da campanha (1.48.0) e registrar o que observar, com passos para reproduzir. |
 
 ### Primeiro trabalho recomendado: E1
 
@@ -158,3 +159,34 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   - Sigilos como pregos do selo;
   - linha do tempo com testes de idade.
 - **Nada implementado; nenhuma decisão nova aprovada.** O que decidir antes da E2, antes da E3 e antes da região 2 está na seção 8 do [12](12-E1-CAMPANHA.md).
+
+### 10/10/2026 — E2, primeira entrega (protótipo do Vale do Turvo)
+
+- **Etapa:** E2, só o começo da campanha e o mapa fixo, com navegação e persistência. Implementado.
+- **Commit e versão:** `2661b59`, 1.48.0, branch `claude/tender-einstein-tx3tjl`.
+- **O que entrou:**
+  - opção "Campanha" no título;
+  - criação com escolha de modo: resgate (padrão) ou hardcore, gravado no save;
+  - prólogo provisório;
+  - mapa fixo em `rpg/campanha.py`: Vau do Turvo, Charco dos Juncos (Nv.1), Bosque do Moinho (Nv.2) e Capela Afogada (Nv.3), mais a Estrada de Varn como saída fechada;
+  - viagem, descoberta (a Capela aparece depois do Bosque), clima, paisagens e mapa reaproveitados;
+  - 5 eventos que falam do vilão sorteado ficam fora da campanha; os outros continuam;
+  - legado entre partidas e rumor de lore só no mundo gerado;
+  - save `turvo_<nome>.json` com `mundo.campanha`.
+- **Verificações executadas:**
+  - `unittest discover -s tests`: 116 OK, 1 pulado (`textual` ausente);
+  - `tests.gabarito`: OK, idêntico, sem atualizar;
+  - `pyflakes`: só o aviso conhecido;
+  - `fumaca.mjs`: 77 checagens OK, com o cenário novo "campanha";
+  - testes novos em `tests/test_campanha.py`;
+  - capturas do Playwright conferidas: título, saves, criação, prólogo, vila, viagem, saída fechada, bosque, capela, charco, mapa grande e vila em 1280 px.
+- **Não executado:** `tests.equilibrio` e `tests.replay` (nenhum número de balanceamento mudou).
+- **Limitações conhecidas:**
+  - fome e infecção encerram a partida também no modo resgate ([12](12-E1-CAMPANHA.md), seção 6);
+  - quem resgata ainda é um NPC sorteado;
+  - na campanha, a tela do mapa ainda se chama "Mapa do reino" e a legenda mostra cidadela e covil;
+  - a vila usa os serviços e o mural genéricos (contratos só de caça e alvo, no vale);
+  - os encontros da comitiva continuam aleatórios (os fixos são da E4).
+- **Fora desta entrega, de propósito:** missão, rito, eixos, Caspar, Marta, encontros fixos da comitiva, finais e Morro da Forca.
+- **Feedback de Jean jogando:** pendente.
+- **Próxima entrega:** só por pedido de Jean. A candidata natural é a E3 (missão mínima), que depende das decisões "antes da E3" da seção 8 do [12](12-E1-CAMPANHA.md).

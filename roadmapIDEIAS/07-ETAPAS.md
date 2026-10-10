@@ -22,6 +22,7 @@ Plano proposto, sem datas. Cada etapa é dividida em tarefas pequenas e depende 
 ## E2 — Carregar uma região fixa
 
 **Depende:** E1.
+**Estado:** protótipo entregue na 1.48.0 (commit `2661b59`): começo da campanha, mapa fixo do Vale do Turvo (sem o Morro da Forca), viagem, descoberta, Estrada de Varn fechada, modo resgate/hardcore no save. Validação técnica feita; falta Jean jogar. Detalhes no registro de [00-COMECE-AQUI](00-COMECE-AQUI.md).
 **Entrega:** uma forma de iniciar o mapa escrito reaproveitando navegação, descoberta, clima e desenho.
 **Tarefas pequenas:** contrato dos locais; seleção/carregamento; adaptação mínima de pressupostos de início/final; persistência.
 **Pronto:** viajar, retornar e salvar/carregar funciona com as três classes.
@@ -30,6 +31,7 @@ Plano proposto, sem datas. Cada etapa é dividida em tarefas pequenas e depende 
 ## E3 — Missão encadeada mínima
 
 **Depende:** E2.
+**Notas aprovadas:** bênção, rito garantido e comporta parcial, em [11-E1-REGIAO-INICIAL](11-E1-REGIAO-INICIAL.md), seção 19.
 **Entrega:** uma missão com etapas, objetivos no Diário e duas soluções.
 **Tarefas:** ids/estados; transições; cenas explícitas; recompensas únicas; apresentação.
 **Pronto:** dois percursos concluem, falhas previstas não travam e save/load mantém progresso.
