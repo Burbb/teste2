@@ -1,164 +1,200 @@
-# 12 — E1: campanha, cronologia, protagonista e transição
+# 12 — E1: campanha, cronologia, Sigilos, protagonista e transição
 
-Proposta de design, 10/10/2026, sobre a versão 1.47.1 (commit `622b1b6`). Complementa [11-E1-REGIAO-INICIAL.md](11-E1-REGIAO-INICIAL.md). Não altera a história nem o jogo. Legenda: **[existe]** conferido no código; **[hipótese]** aceita por Jean como hipótese de trabalho; **[proposta]** depende de aprovação.
+Revisão 2 — 10/10/2026, sobre a versão 1.47.1. Complementa [11-E1-REGIAO-INICIAL.md](11-E1-REGIAO-INICIAL.md). Não altera a história nem o jogo.
 
-## 1. Cronologia: Fenda antiga e reabertura recente
+Legenda:
+- **[existe]**: conferido no código.
+- **[hipótese]**: aceita por Jean como hipótese de trabalho.
+- **[proposta]**: depende de aprovação.
 
-### A hipótese avaliada
+**Revisão 2:**
+- linha do tempo para testar a cronologia;
+- lógica dos Sigilos;
+- ganhos e limites do laço do herói com Marta;
+- decisões separadas pelo momento em que precisam ser fechadas.
 
-Uma Fenda original antiga, selada, e uma reabertura recente na catedral, presenciada por Odette.
+## 1. Linha do tempo para testar a cronologia [proposta]
 
-### Compatibilidade com o conteúdo existente
+Hipótese: uma Fenda original antiga e uma reabertura recente presenciada por Odette. A coluna "Origem" diz se o fato já está no jogo ou se é sugestão.
 
-| Trecho | Onde | Com a hipótese |
+| Quando (antes de agora) | Acontecimento | Origem |
 |---|---|---|
-| "Há cem anos uma Fenda se abriu sob a catedral, e desde então o reino apodrece devagar" | `jogo.py:212` | **Compatível** como Fenda original; "apodrece devagar" vira o vazamento lento da cicatriz. Falta citar a reabertura |
-| Origem do vilão: "que abriu a Fenda há cem anos" | `dados.py:421` | Compatível para um vilão antigo |
-| Origem do vilão: "o bispo que abriu as catacumbas da catedral procurando Deus" | `dados.py:420` | **Combina muito** com a reabertura |
-| Odette desaprova ganância: "Foi por ouro que o bispo vendeu as relíquias. Lembra do que veio depois?" | `comitiva/catalogo.py` | **Combina muito**: relíquias vendidas = selo rompido = reabertura |
-| Ficha da Odette: "Fugiu da catedral na noite em que a Fenda se abriu" | `comitiva/catalogo.py:12` | Conflito só literal: vira "se reabriu" |
-| Confissão: "Antes do chão abrir… Tranquei a porta da cripta… Os acólitos estavam lá dentro" | `eventos/comitiva.py:95` | Compatível: o chão abriu de novo |
-| Mãe de Thomas ainda acende vela pelo filho | `eventos/comitiva.py` | Exige evento recente: compatível |
-| Yara: "Desde que a Fenda abriu, eu ouço uma voz… Ulook" | `eventos/comitiva.py:457` | Yara é jovem: só funciona com a reabertura. Conflito literal ("abriu") |
-| Morel: Ponte de Varn contra crias do Vazio; Theodore "procurou por dois invernos" | `eventos/comitiva.py` | Compatível com reabertura há 2–4 anos |
-| Veterano de uma perna: "Lutei na Primeira Fenda" | `eventos/classe.py:101` | **Conflito real com "cem anos"**: ninguém vivo lutou há cem anos. Compatível se a Primeira Fenda estiver na memória viva |
-| "Meu avô enfrentou {guardião} e voltou vivo" | `eventos/vila.py:30` | Compatível com guardiões antigos; forçado com cem anos, natural com duas gerações |
-| Três Sigilos "que selam o caminho" | `jogo.py:215` | Compatível: os Sigilos viram pedaços do selo antigo |
+| ~60 anos | **A Primeira Fenda** se abre sob a catedral. Guerra curta e terrível | **Fato** no jogo: abertura sob a catedral (`jogo.py:212`) e o termo "Primeira Fenda" (`eventos/classe.py:101`). **Sugestão:** 60 anos em vez de "cem anos" |
+| ~58 anos | A Igreja fecha a Fenda: relíquias no centro (cripta da catedral) e três Sigilos levados a três lugares, cada um com um guardião | **Sugestão.** Base existente: os Sigilos "selam o caminho" (`jogo.py:215`) |
+| ~55 anos | O Vau do Turvo afoga Ilse, guardiã da capela, como bruxa. Berta tem 8 anos | **Sugestão** (região 1) |
+| décadas | O selo vaza devagar; os guardiões se deformam. O "avô" de alguém enfrenta um guardião e volta vivo | **Fato:** "o reino apodrece devagar" (`jogo.py:212`), "guardiões, deformados pela Fenda" (`jogo.py:215`), "Meu avô enfrentou…" (`eventos/vila.py:30`) |
+| ~3 anos | **A Reabertura.** O bispo vende as relíquias; a cripta se abre; Odette ouve a voz, tranca a porta com 40 acólitos dentro e foge. A voz começa a falar com Yara | **Fato:** a venda das relíquias (fala da Odette, `comitiva/catalogo.py`), a cripta e os acólitos (`eventos/comitiva.py:95`), a voz de Ulook (`eventos/comitiva.py:457`). **Sugestão:** o nome "Reabertura" e trocar "se abriu"/"abriu" por "reabriu" na ficha da Odette e na fala da Yara |
+| ~2–3 anos | Crias do Vazio; a Ponte de Varn cai; Morel recua | **Fato:** Ponte de Varn, crias do Vazio, Theodore procura Morel "há dois invernos" (`eventos/comitiva.py`) |
+| ~1 ano | Anselmo represa o riacho e abre o canal; o poço seca; surge a Fonte Nova | **Fato:** poço seco e moleiro (texto da Yara). **Sugestão:** canal, cripta e Fonte Nova |
+| este ano | Febre no Vau; dois pescadores levados por afogados | **Fato:** "as crianças têm febre" (texto da Yara). **Sugestão:** o resto |
+| agora | A carta de Marta | **Sugestão** |
+
+### Testes de idade
+
+| Personagem | Com 60 e 3 anos | Com "cem anos" |
+|---|---|---|
+| Veterano que lutou na Primeira Fenda (fato) | Lutou com ~16; tem ~76 hoje | Teria ~116: impossível |
+| Vó Berta (sugestão) | 8 anos então; ~63 hoje | ~108: precisaria virar um diário |
+| "Avô" que enfrentou um guardião (fato) | Uns 40 anos atrás: natural | Possível, mas forçado |
+| Odette, irmã de vigília na Reabertura (fato) | Adulta há 3 anos: natural | Natural (a reabertura não muda) |
+| Mãe de Thomas viva (fato) | Natural | Natural |
+| Yara, jovem, ouve a voz "desde que a Fenda abriu" (fato) | Natural, com "reabriu" | Natural, com "reabriu" |
 
 ### Conclusão
 
-A hipótese funciona. Ela explica melhor o que já está escrito do que uma Fenda única: a venda das relíquias, a idade da Yara, a mãe de Thomas, a Ponte de Varn e o termo "Primeira Fenda". O único conflito real é o **número "cem anos"** com o veterano vivo, e com o avô de forma menos grave.
+A estrutura de dois tempos funciona com o conteúdo atual. Ela explica a venda das relíquias, a idade da Yara, a mãe de Thomas e a Ponte de Varn. O que quebra é só o número "cem anos", diante do veterano vivo.
 
-### Recomendação [proposta]
+**Recomendação:** Primeira Fenda há ~60 anos e Reabertura há ~3 anos.
 
-| Quando | O quê |
-|---|---|
-| ~60 anos atrás (duas gerações) | **A Primeira Fenda** abre sob o lugar onde depois ergueram a catedral. Guerra curta e terrível. O selo é feito em três **Sigilos**, guardados em três lugares. A catedral é construída sobre a cicatriz e guarda as relíquias que mantêm o selo |
-| Décadas seguintes | O reino "apodrece devagar": a cicatriz vaza; criaturas deformadas viram os guardiões. Medo e caça às bruxas (é a época da Ilse, na região 1) |
-| ~3 anos atrás | **A Reabertura.** O bispo vende as relíquias. A cripta se abre. Odette ouve a voz, tranca a porta e foge. A voz começa a falar com a Yara. As crias do Vazio descem; a Ponte de Varn cai |
-| Agora | A campanha |
+**Alternativa**, se Jean quiser manter "cem anos": o veterano passa a ter lutado na Reabertura, e a testemunha da Ilse vira um diário.
 
-Por que 60 e não 100 anos: com 60, a Primeira Fenda ainda está na **memória viva**. O veterano lutou nela, o avô enfrentou um guardião e a Vó Berta era menina quando afogaram a Ilse. A região 1 depende disso: a vila repete um crime de que ainda há testemunha. Com 100 anos, a frase do veterano teria que mudar e a região perderia essa testemunha.
+Mudanças de texto que a recomendação exigirá, em tarefa própria e só depois de aprovada:
+- "cem anos" no prólogo e na origem do vilão (`jogo.py:212`, `dados.py:421`);
+- "se abriu" na ficha da Odette;
+- "abriu" na fala da Yara.
 
-**Alternativa**, se Jean preferir manter "cem anos": a estrutura de dois tempos continua igual. Nesse caso, o veterano "lutou na noite da Reabertura" e a testemunha da Ilse passa a ser um diário, não uma pessoa.
+## 2. Ulook e o vilão [proposta]
 
-### Ulook e o vilão gerado
+Hoje o vilão é sorteado entre 8 títulos e 5 origens (`dados.py:411–422`), mas a Yara sempre cita **Ulook** [existe].
 
-Hoje o vilão é sorteado entre 8 títulos e 5 origens (`dados.py:411–422`), mas a Yara sempre cita **Ulook** [existe]. Numa campanha escrita isso precisa de uma explicação só.
+Proposta para a campanha:
+- **Ulook** é a voz do outro lado.
+- **O bispo**, hoje Arcebispo Profanado, é o rosto humano: vendeu as relíquias e procura os Sigilos.
 
-Proposta:
-- **Ulook** é a coisa do outro lado, a voz.
-- **O bispo**, hoje o Arcebispo Profanado, é o rosto humano: quem vendeu as relíquias e quem procura os Sigilos.
+O vilão é fixo. O título "Arcebispo Profanado" e a origem "o bispo que abriu as catacumbas" já existem no catálogo.
 
-Os dois títulos e as origens que combinam já existem no catálogo.
+## 3. O protagonista e Marta [proposta, não aprovada]
 
-Nada disso muda a história agora. A correção do texto do jogo depende da aprovação de Jean e fica em tarefa própria.
+**Proposta:** o herói nasceu no Vau do Turvo, é irmão ou irmã de Marta, saiu do vale há anos e volta por causa da carta ("A febre voltou. Não venha.").
 
-## 2. Protagonista: motivação local e concreta [proposta]
+**O que essa origem fixa ganha:**
+- Motivo imediato e concreto, sem exposição longa.
+- O herói conhece a vila e é reconhecido. A consequência na volta pesa mais porque é a casa dele.
+- Marta serve de âncora para o resgate, o atendimento e o epílogo.
+- Uma linha de passado por classe liga o herói à campanha:
+  - **Guerreiro:** recrutado pelo duque; ouviu falar de Varn.
+  - **Arqueiro:** caçava no vale; conhece as trilhas.
+  - **Mago:** estudou na escola da catedral; sabe quem era o bispo.
 
-**O herói volta para casa.**
+**O que ela limita:**
+- Fixa lugar de nascimento e família. Toda origem futura (E8) teria que caber em "nasceu no Turvo e tem uma irmã curandeira". Forasteiro, nobre de longe ou outra raça ficam difíceis.
+- Tira a interpretação do "estranho sem laços", que muitos jogadores escolhem.
+- Parentesco de sangue tende a puxar cenas de família (pais, casa, herança) e aumenta o escopo.
+- Se o jogador não se importar com Marta, o motivo inicial fica fraco. Por isso a febre também ameaça a vila inteira.
 
-- A irmã, **Marta**, curandeira do Vau do Turvo, escreve: "A febre voltou. Não venha." O herói vem.
-- O motivo inicial é pessoal e pequeno: salvar a irmã e a vila onde cresceu.
-- Uma linha por classe explica por que o herói saiu de lá e já prepara a campanha:
-  - **Guerreiro:** foi recrutado pelo duque. Ouviu falar da Ponte de Varn (região 2, Morel).
-  - **Arqueiro:** caçava nesse vale e conhece as trilhas. Partiu como batedor de caravanas.
-  - **Mago:** foi mandado à escola da catedral. Estava longe na noite da Reabertura e sabe quem era o bispo (Odette).
+**Recomendação:** manter a **função** de Marta e não o **sangue**.
+- Marta é quem escreveu, e o laço é uma linha de texto escolhida pela origem.
+- Enquanto não houver origens, o padrão é um laço só. Jean escolhe entre: irmã; quem criou o herói; amiga de infância a quem o herói deve a vida.
+- **Regra:** nenhuma cena depende de parentesco de sangue (nada de pais nem herança); só as falas mudam.
 
-O motivo cresce aos poucos:
-1. **Região 1:** "minha irmã tem febre" vira "a água passa por um selo rachado".
-2. **Fim da região 1:** a Ilse, ao entregar o Sigilo, diz que **outra pessoa perguntou por ele**: homens com a marca do bispo. Os cultistas da sacristia confirmam.
-3. **Região 2:** o selo não é um problema local; os três lugares estão sangrando.
-4. **Região 3:** a voz da Yara sabe o nome do herói.
-5. **Final:** quem juntar os três Sigilos abre a catedral. O herói precisa chegar lá primeiro.
+Uma origem futura troca a frase sem reescrever a região. Exemplo: "forasteiro: Marta salvou sua vida na estrada e você prometeu voltar".
 
-O herói não é escolhido nem profetizado [existe no tom atual: "Não houve profecia"]. Ele continua porque cada resposta cria um problema mais perto de casa.
+**Atendimento e resgate enquanto Marta está doente:**
+- Pita, a aprendiz, mantém o serviço da curandeira com as mesmas regras.
+- O resgate leva o herói à casa de Marta, chamado por Pita.
 
-## 3. Arco da campanha: início, meio e fim [proposta]
+Detalhes no [11](11-E1-REGIAO-INICIAL.md), seção 12.
 
-A estrutura existente já é "três guardiões com Sigilos, depois a Cidadela, chefe no nível 11" (`balanceamento.py`, `ANTAGONISTA_NIVEL = 11`) [existe]. A proposta é dar uma região escrita a cada Sigilo, em vez de inventar outra estrutura.
+## 4. A lógica dos Sigilos [proposta]
+
+Esboço suficiente para a região 1 não contradizer as seguintes.
+
+1. **O selo.** Depois da Primeira Fenda, a Igreja fechou a passagem com um selo de duas partes:
+   - **o centro:** as relíquias, na cripta da catedral;
+   - **três Sigilos:** prendem o selo de longe, como três pregos de uma tampa.
+
+   Os Sigilos foram levados para lugares distantes, para que ninguém os juntasse. Quem leva os três ao centro comanda o selo: pode refazê-lo ou abri-lo.
+2. **Os guardiões.** Cada Sigilo ficou com um guardião, pessoa ou ordem. Um Sigilo puxa a Fenda para quem o segura. Em décadas, os guardiões se deformaram, ou morreram e foram substituídos por coisas que se agarraram ao Sigilo. Isso é o que o jogo já diz: "Três guardiões, deformados pela Fenda, guardam os Sigilos" [existe]. Ilse é o caso humano: guardiã afogada, deformada com o Sigilo no peito.
+3. **A Reabertura.** O bispo vendeu as relíquias. Sem o centro, a Fenda reabriu em parte e toda a carga caiu sobre os três Sigilos. Eles racharam e vazam por onde estão presos:
+   - no Turvo, a febre;
+   - perto de Varn, as crias do Vazio;
+   - nas Pedras Negras, as vozes.
+4. **Por que o herói os tira.** Preso a um corpo ou lugar, o Sigilo rachado vaza ali. Na mão de um vivo, ele se aquieta e o vazamento local para. Mas cada Sigilo retirado afrouxa um pouco mais o selo na catedral, e a Fenda cresce: é a escalada do Ato III.
+
+   Na região 1, deixá-lo seria pior: a febre continuaria e os cultistas do bispo, que já estão na sacristia, o levariam.
+5. **O interesse de Ulook.** Do outro lado, Ulook não pode tocar os Sigilos, porque o selo o repele. Precisa de mãos vivas que os levem ao centro:
+   - tentou com o bispo (relíquias vendidas, cultistas);
+   - fala com a Yara;
+   - não se importa com quem os leva: o herói também serve.
+
+   A muralha de sombras que só se abre com os três Sigilos [existe: `sistemas/navegacao.py:42`] é exatamente isso: só quem leva os três chega ao centro.
+6. **Selar.** No centro, com os três Sigilos, refazer o selo. As relíquias foram vendidas, então alguém precisa ocupar o lugar delas: uma vontade viva que fica. Pode ser o herói; a Odette, se seguiu o caminho penitente; ou a Yara, se se libertou da voz.
+
+   Ideia guardada, não obrigatória: recuperar relíquias vendidas na região 2 muda quem precisa ficar.
+7. **Romper.** Quebrar os três Sigilos dentro da Fenda aberta. O selo deixa de existir, e a porta também: a passagem desaba sobre si mesma e Ulook perde o caminho. Só é possível agora, porque só com a Fenda aberta se chega ao centro; por isso a Igreja não fez isso há 60 anos.
+
+   Custo proposto, só nos epílogos: a catedral cai e o que veio do Vazio se cala (a voz da Yara, os afogados, a força do caminho `vazio`). As habilidades das classes não mudam.
+8. **Abrir (variante sombria, opcional).** Entregar os três a Ulook. Pode ser cortada.
+
+**Revelação do meio** (fim da região 2): o herói descobre que está fazendo o que Ulook quer. Não há como devolver os Sigilos, porque os lugares já vazam. A pergunta muda de "como entrar" para "o que fazer lá dentro".
+
+## 5. Arco da campanha: início, meio e fim [proposta]
+
+A estrutura atual já é "três guardiões com Sigilos, depois a Cidadela, chefe no nível 11" [existe: `balanceamento.py`, `ANTAGONISTA_NIVEL = 11`]. A proposta é uma região escrita por Sigilo.
 
 | Ato | Região | Níveis | Conflito local | Companheiro em destaque | Sigilo |
 |---|---|---|---|---|---|
-| **I — Início** | Vale do Turvo | 1–4 | A febre e a bruxa afogada | Yara (encontro), Odette (Caspar) | 1º |
-| **II — Meio** | Terras de Varn (planície/montanha) | 5–7 | O duque que não mandou a coluna; desertores dos Cães de Ferro; uma cidade com a mãe de Thomas | Morel (Theodore), Odette (mãe de Thomas) | 2º |
-| **II — Meio** | Brejo das Pedras Negras (pântano/ruínas) | 7–9 | Seguidores do bispo; o círculo de pedras negras | Yara (voz de Ulook, círculo negro) | 3º |
-| **III — Fim** | Catedral Partida (a Cidadela) | 10–11 | O bispo e Ulook | Os três, conforme os caminhos | — |
+| **I — Início** | Vale do Turvo | 1–4 | A febre, Ilse e Caspar | Yara (encontro), Odette (Caspar) | 1º |
+| **II — Meio** | Terras de Varn (planície/montanha) | 5–7 | O duque que não mandou a coluna; desertores dos Cães de Ferro; a cidade da mãe de Thomas | Morel (Theodore), Odette | 2º |
+| **II — Meio** | Brejo das Pedras Negras (pântano/ruínas) | 7–9 | Seguidores do bispo; o círculo de pedras negras | Yara (Ulook, círculo negro) | 3º |
+| **III — Fim** | Catedral Partida (a Cidadela) | 10–11 | O bispo e Ulook; selar ou romper | Os três, conforme os caminhos | — |
 
-Ordem das regiões do Ato II: fixa na primeira versão, porque o nível dos inimigos depende do lugar. Escolher a ordem é melhoria futura.
-
-**Revelação do meio** (fim da região 2): os Sigilos são chave e selo ao mesmo tempo. Juntá-los abre o caminho para a catedral, que é o que Ulook quer. O herói não tem como devolvê-los. A pergunta deixa de ser "como entrar" e passa a ser "o que fazer lá dentro".
-
-### Como o jogo pode terminar
-
-Dois finais principais e uma variante. Os epílogos vêm das decisões de cada região, não de um final por combinação.
-
-1. **Selar.** Os três Sigilos refazem o selo. Alguém precisa ficar como tranca:
-   - o próprio herói;
-   - Odette, se seguiu o caminho penitente;
-   - Yara, se se libertou da voz.
-
-   Final agridoce.
-2. **Romper.** Destruir os Sigilos e o selo. A catedral desaba sobre a Fenda; Ulook perde a porta, e a voz da Yara e certas magias também se calam. Custo coletivo, ninguém fica para trás.
-3. **Variante sombria (opcional).** Tomar o lugar do bispo. Só existe se o jogador tiver se aproximado do Vazio, por exemplo com a Yara em "vazio" ou ouvindo os sussurros. Pode ser cortada.
+A ordem das regiões do Ato II é fixa na primeira versão, porque o nível dos inimigos depende do lugar.
 
 **Epílogos:**
-- Vau do Turvo (fogueira ou memorial);
-- Terras de Varn (Cães de Ferro e duque);
-- Brejo (o círculo);
-- Odette, Morel e Yara, cada um pelo seu caminho [os caminhos existem: `penitente`/`calada`, `redencao`/`capitao`/`adiado`/`quites`, `liberta`/`vazio`];
+- Vau do Turvo (os dois eixos);
+- Varn;
+- Pedras Negras;
+- Odette, Morel e Yara pelos caminhos que já existem: `penitente`/`calada`, `redencao`/`capitao`/`adiado`/`quites`, `liberta`/`vazio`;
 - Marta.
 
-**Aliados no confronto final:** a ideia guardada em `docs/ROADMAP.md` ("poucos aliados, ganhos por arcos inteiros, que aparecem na luta") cabe aqui. Os Cães de Ferro vêm se o Morel teve o caminho `adiado` ou `redencao`. É opcional e fica para o Ato III.
+Não há um final por combinação. A ideia guardada de aliados no confronto final cabe aqui como opcional: por exemplo, os Cães de Ferro vêm se o Morel teve o caminho `adiado` ou `redencao`.
 
 **Tamanho:** quatro regiões, a última curta. A duração real só se estima depois de jogar a região 1 (E9).
 
-## 4. Derrota na campanha [hipótese]
+## 6. Derrota na campanha [hipótese]
 
-Hipótese de trabalho aceita por Jean, sem decisão definitiva e sem autorização para mudar o padrão atual:
-- **Campanha:** cair em combate leva ao resgate, como no modo brando (`jogo.py:248`): perde parte do ouro e dois dias. Na região 1, quem resgata é a Marta.
+Hipótese aceita por Jean, sem decisão definitiva e sem autorização para mudar o padrão atual:
+- **Campanha:** resgate com as perdas atuais (`jogo.py:248`). Na região 1, o resgate leva à casa de Marta, chamado por Pita.
 - **Masmorra:** salas vencidas continuam vencidas; a guardiã volta inteira.
 - **Hardcore:** opção explícita na criação da campanha.
-- **Texto:** o prólogo e a interface precisam dizer o modo de verdade. Hoje o prólogo sempre diz "a morte é permanente" (ver [13-PENDENCIAS-FORA-DA-CAMPANHA.md](13-PENDENCIAS-FORA-DA-CAMPANHA.md)).
+- **Texto:** o prólogo da campanha diz o modo verdadeiro. A frase atual sobre morte permanente está em [13](13-PENDENCIAS-FORA-DA-CAMPANHA.md).
 
-Pontos que dependem de Jean antes da E9: o custo exato; se o resgate muda alguma cena; e saves e pontos de retorno no hardcore.
+## 7. Transição do procedural [hipótese, com regras propostas]
 
-## 5. Transição do procedural [hipótese de trabalho, com proposta de regras]
+1. **Duas portas de entrada, um motor.** A campanha começa por um novo início; o procedural continua como está.
+2. **Procedural congelado.** Só recebe correção de defeito. Nada da campanha precisa funcionar nele.
+3. **Gabarito como cerca.** As partidas atuais do gabarito são procedurais. Mudança em código compartilhado mantém o gabarito, ou explica a diferença como mudança de propósito. A campanha ganha cenários de teste próprios.
+4. **Conteúdo marcado.** Cenas da campanha só disparam na campanha. Eventos aleatórios existentes podem rodar nas duas.
+5. **Decisão depois da E9.** Aposentar o procedural ou mantê-lo congelado como "modo livre". Recomendação: aposentar quando a campanha cobrir o jogo inteiro (E11).
 
-Jean pediu: preservar o funcionamento atual até a campanha ser validada, sem virar obrigação de manter duas experiências completas.
+Legado entre partidas, nomes sorteados, vilão sorteado e mapa gerado ficam só no procedural.
 
-**Proposta de regras:**
+## 8. O que decidir, e quando
 
-1. **Duas portas de entrada, um motor.** A campanha começa por um novo início de partida. O procedural continua como está. Combate, itens, comitiva, sobrevivência e interface são os mesmos.
-2. **Procedural congelado.** Recebe só correção de defeito. Nenhum conteúdo novo da campanha precisa funcionar no procedural, e nada é portado para ele.
-3. **Gabarito como cerca.** As partidas atuais do gabarito são procedurais. Mudança em código compartilhado feita para a campanha precisa manter o gabarito idêntico, ou explicar a diferença como mudança de propósito. A campanha ganha cenários próprios de teste.
-4. **Conteúdo novo marcado.** Cenas da campanha só disparam na campanha. Eventos aleatórios existentes podem rodar nas duas, filtrados por lugar e nível.
-5. **Decisão depois da E9.** Com a região validada, Jean escolhe: aposentar o procedural ou mantê-lo congelado como "modo livre", sem novos recursos. Recomendação: aposentar quando a campanha cobrir o jogo do começo ao fim (E11). Até lá, congelado.
+**Antes da E2** (carregar a região fixa). Só três:
 
-O que não vira obrigação:
-- legado entre partidas (túmulo e estátua);
-- nomes e vilão sorteados;
-- mapa gerado.
-
-Esses recursos continuam só no procedural. A campanha não os herda até alguém decidir que precisa.
-
-## 6. O que precisa da aprovação de Jean
-
-| # | Ponto | Recomendação |
+| # | Decisão | Recomendação |
 |---|---|---|
-| 1 | Cronologia | Primeira Fenda há ~60 anos e Reabertura há ~3 anos, em vez de "cem anos" |
-| 2 | Ulook e o vilão | Ulook é a voz; o bispo (Arcebispo Profanado) é o rosto humano; vilão fixo na campanha |
-| 3 | Protagonista | Volta para casa; irmã Marta; uma linha de passado por classe |
-| 4 | Região 1 | Vale do Turvo, conforme o documento 11 |
-| 5 | Soluções | Destruir ou Dar descanso, e as consequências da tabela |
-| 6 | Estrutura | Uma região escrita por Sigilo, mais a Catedral |
-| 7 | Finais | Selar ou Romper; a variante sombria é opcional |
-| 8 | Tempo | Sem prazo duro na região 1 |
-| 9 | Regras da transição | As cinco acima |
+| 1 | Geografia da região: quatro lugares, saída fechada, ligações e faixas de nível. Nomes podem seguir provisórios | Como no [11](11-E1-REGIAO-INICIAL.md), seção 2 |
+| 2 | Campanha como novo início, com o procedural congelado | As regras da seção 7 |
+| 3 | Modo da campanha ao começar | Resgate por padrão e hardcore como opção. O prólogo provisório da E2 diz isso |
 
-Não precisa ser decidido agora:
+**Antes da E3** (escrever as cenas da missão):
+- a causa da febre (seção 4 do 11);
+- os dois eixos e os três passos do Dar descanso;
+- a cronologia de 60 e 3 anos;
+- o laço padrão com Marta.
+
+**Antes da região 2:**
+- a lógica dos Sigilos;
+- Ulook e o bispo como vilão fixo;
+- os finais;
+- a ordem das regiões.
+
+**Não precisa agora:**
 - raças e origens (E8);
-- preparação de habilidades e transformações (E6);
-- facções (só se a região 2 pedir);
-- duração exata (depois da E9);
+- preparação e transformações (E6);
+- facções;
+- duração exata;
 - detalhes do custo da derrota (E9).

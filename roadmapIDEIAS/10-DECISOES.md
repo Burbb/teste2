@@ -20,11 +20,11 @@ Aceitas por Jean para planejar. Não são decisões definitivas e não autorizam
 
 | Tema | Hipótese | Onde está detalhada |
 |---|---|---|
-| Derrota na campanha | Resgate, como no modo brando, com hardcore opcional | [12-E1-CAMPANHA](12-E1-CAMPANHA.md), seção 4 |
-| Procedural | Preservado até a campanha ser validada, sem obrigação de manter duas experiências completas | [12-E1-CAMPANHA](12-E1-CAMPANHA.md), seção 5 |
+| Derrota na campanha | Resgate, como no modo brando, com hardcore opcional | [12-E1-CAMPANHA](12-E1-CAMPANHA.md), seção 6 |
+| Procedural | Preservado até a campanha ser validada, sem obrigação de manter duas experiências completas | [12-E1-CAMPANHA](12-E1-CAMPANHA.md), seção 7 |
 | Cronologia | Avaliar Fenda original antiga e reabertura recente (avaliada; a proposta aguarda aprovação) | [12-E1-CAMPANHA](12-E1-CAMPANHA.md), seção 1 |
 
-As propostas da E1 que aguardam aprovação estão listadas em [12-E1-CAMPANHA](12-E1-CAMPANHA.md), seção 6.
+As propostas da E1 que aguardam aprovação, separadas pelo momento de decidir (antes da E2, antes da E3, antes da região 2), estão em [12-E1-CAMPANHA](12-E1-CAMPANHA.md), seção 8.
 
 ## Decisões e momento
 

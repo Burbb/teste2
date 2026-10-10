@@ -135,6 +135,26 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
 - **Hipóteses aceitas por Jean (não definitivas):**
   - resgate como derrota na campanha, com hardcore opcional;
   - procedural preservado até a validação, sem obrigação de manter duas experiências completas.
-- **Aguardam aprovação de Jean:** a lista da seção 6 de [12-E1-CAMPANHA.md](12-E1-CAMPANHA.md).
+- **Aguardam aprovação de Jean:** a seção 8 de [12-E1-CAMPANHA.md](12-E1-CAMPANHA.md).
 - **Feedback jogando:** nenhum nesta entrega.
 - **Próxima entrega:** depois da aprovação (ou ajuste) da E1, a E2: carregar o Vale do Turvo como região fixa, preservando viagem e save.
+
+### 10/10/2026 — E1, revisão 2 (só design)
+
+- **Pedido de Jean:**
+  - "Dar descanso" com investigação e ações próprias;
+  - Destruir defensável;
+  - guardiã separada da postura diante de Caspar;
+  - causa da febre detalhada;
+  - laço com Marta tratado como proposta;
+  - lógica dos Sigilos;
+  - linha do tempo.
+- **Feito:** [11](11-E1-REGIAO-INICIAL.md) e [12](12-E1-CAMPANHA.md) reescritos:
+  - dois eixos independentes, com consequências que se somam;
+  - Dar descanso em três passos (verdade, soltar o corpo, rito), com falha que vira Destruir;
+  - cadeia Sigilo → Ilse → canal → Fonte Nova;
+  - informações essenciais só em cenas obrigatórias;
+  - Pita atende e resgata enquanto Marta está doente;
+  - Sigilos como pregos do selo;
+  - linha do tempo com testes de idade.
+- **Nada implementado; nenhuma decisão nova aprovada.** O que decidir antes da E2, antes da E3 e antes da região 2 está na seção 8 do [12](12-E1-CAMPANHA.md).
