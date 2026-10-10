@@ -232,11 +232,13 @@ class Combate(Golpes, AcoesDoHeroi, TurnosDosOutros):
             # A surpresa é aquele turno: quem o usa para outra coisa (um buff, uma poção) perde o bônus, em vez
             # de guardá-lo para o golpe do turno seguinte.
             self.j.remover("iniciativa")
+            self.checar_limiares()
             r = self._checar_fim()
             if r:
                 return self.fim(r)
             if not pular_inimigos:  # o turno da surpresa é só seu: a comitiva e o animal entram no seguinte
                 self.fase_aliados()
+                self.checar_limiares()
                 r = self._checar_fim()
                 if r:
                     return self.fim(r)
@@ -244,10 +246,20 @@ class Combate(Golpes, AcoesDoHeroi, TurnosDosOutros):
                 pular_inimigos = False
             else:
                 self.fase_inimigos()
+                self.checar_limiares()
                 r = self._checar_fim()
                 if r:
                     return self.fim(r)
             self.j.rec = min(self.j.max_rec, self.j.rec + self.j.regen)
+
+    def checar_limiares(self):
+        """Um inimigo com piso de vida (Inimigo.piso) que chegou nele tem o seu momento, uma vez, no primeiro ponto
+        seguro depois do golpe: o fim da sua vez, da vez da comitiva, ou antes de qualquer inimigo agir. O que
+        acontece ali (o rito da guardiã) é decisão do conteúdo que pôs o piso (`ao_limiar`)."""
+        for e in list(self.inimigos):
+            if e.vivo and e.piso is not None and e.hp <= e.piso and e.ao_limiar:
+                momento, e.ao_limiar = e.ao_limiar, None
+                momento(self, e)
 
     def _checar_fim(self):
         j = self.j

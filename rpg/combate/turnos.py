@@ -33,6 +33,7 @@ class TurnosDosOutros:
         for e in list(self.inimigos):
             if apenas is not None and e is not apenas:
                 continue
+            self.checar_limiares()  # o momento de um piso vem antes de qualquer inimigo agir
             if not e.vivo or not self.j.vivo:
                 continue
             if self.processar_efeitos(e):
@@ -41,6 +42,9 @@ class TurnosDosOutros:
                     self.lance("atordoado", em=self.uid(e), rotulo="golpe interrompido!")
                     self.dizer(f"Atordoad{'o' if e.g == 'm' else 'a'}, {self.nome(e, True)} perde o golpe que "
                                "preparava!", "verde+negrito")
+                continue
+            self.checar_limiares()  # o efeito periódico do começo da vez pode tê-la levado ao piso
+            if not e.vivo:
                 continue
             self.checar_fase(e)
             self.agir_inimigo(e)

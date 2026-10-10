@@ -67,6 +67,9 @@
 .missao-pistas { margin-top: 8px; padding-top: 6px; border-top: 2px dashed rgba(74, 42, 16, 0.35); font-size: 14px; line-height: 1.35; }
 .missao-pistas span { font-size: 13px; font-style: italic; color: #6a5236; }
 .missao-pistas ul { margin: 4px 0 0; padding-left: 18px; }
+.missao-rito ul { list-style: none; padding-left: 4px; }
+.missao-rito li.feito { color: #3f5a2a; }
+.missao-rito li small { color: #6a5236; font-style: italic; }
 .rastro-cacar { display: block; font-family: var(--texto); font-size: 12px; font-weight: 700; color: var(--ouro); }
 .escolha.op-contrato { border-color: #8a5a0c; }
 .escolha.op-contrato .rotulo::after { content: " ◆"; color: var(--ouro); }

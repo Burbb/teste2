@@ -246,6 +246,11 @@ class Contratos:
                 self.dizer("  O que você já fez:", "cinza")
             for p in m["preparos"]:
                 self.dizer(f"  • {p}", "cinza")
+            if m["descanso"]:
+                self.dizer("  Para dar descanso a Ilse, em vez de destruí-la:", "cinza")
+            for r in m["descanso"]:
+                self.dizer(f"  {'✓' if r['feito'] else '○'} {r['texto']}" + ("" if r["feito"] else f" ({r['onde']})"),
+                           "verde" if r["feito"] else "cinza")
         self.dizer(f"Sigilos: {len(self.j.sigilos)}/3   Dia {self.dia}", "magenta")
         self.dizer("Contratos:", "ciano")
         if not self.contratos:

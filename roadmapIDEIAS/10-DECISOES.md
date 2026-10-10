@@ -18,7 +18,7 @@ Não bloquear tudo com todas as perguntas de uma vez. Resolver as decisões quan
 | Modo da campanha (10/10/2026) | Resgate como padrão e hardcore como opção explícita, guardados no save. Fome e infecção ainda encerram a partida (ver 12-E1-CAMPANHA, seção 6) |
 | Cronologia (10/10/2026, antes da E3 interior) | Primeira Fenda há cerca de 60 anos; Reabertura há cerca de 3 anos. Os textos que ainda dizem "cem anos" (prólogo do mundo gerado, origem do vilão sorteado) e "se abriu"/"abriu" (Odette, Yara) **não foram trocados**: ajuste de texto em tarefa própria, quando Jean pedir |
 | Marta (10/10/2026) | Alguém que ajudou o protagonista no passado, o que cria o vínculo afetivo. Sem parentesco de sangue: nenhuma cena depende dele |
-| Ilse (10/10/2026) | Foi afogada injustamente pela vila e se tornou a guardiã. Destruir ou Dar descanso (a guardiã) e a postura diante de Caspar (Apoiar, Denunciar, Calar) seguem como decisões separadas |
+| Ilse (10/10/2026) | Foi afogada injustamente pela vila e se tornou a guardiã. **Confirmado:** em vida, tinha a custódia do Sigilo; afogada, virou a Bruxa Afogada. Os textos usam "custódia do Sigilo" para separar a função antiga da criatura de agora, e a responsabilidade pelo crime é da vila. Destruir ou Dar descanso (a guardiã) e a postura diante de Caspar (Apoiar, Denunciar, Calar) seguem como decisões separadas |
 | A Fenda e o título (10/10/2026) | A Fenda continua como fenômeno do mundo. "Crônicas da Fenda" é título provisório |
 
 ## Hipóteses de trabalho (10/10/2026)
@@ -29,6 +29,7 @@ Aceitas por Jean para planejar. Não são decisões definitivas e não autorizam
 |---|---|---|
 | Derrota na campanha | Resgate, como no modo brando, com hardcore opcional | [12-E1-CAMPANHA](12-E1-CAMPANHA.md), seção 6 |
 | Procedural | Preservado até a campanha ser validada, sem obrigação de manter duas experiências completas | [12-E1-CAMPANHA](12-E1-CAMPANHA.md), seção 7 |
+| Bênção de Caspar | **Adiada** até a introdução de Caspar. Nenhum campo nem opção a simula antes disso (a regra aprovada na seção 19 do 11 continua valendo para quando ela existir) | Quando Caspar entrar |
 | Selo sustentado por sacrifícios ocultos | **Direção temática proposta por Jean, não decisão.** Não autoriza inventar nem implementar agora o passado do selo, quem foi sacrificado ou por quem; nenhum texto do jogo a afirma | Quando a lógica dos Sigilos for decidida (antes da região 2, [12-E1-CAMPANHA](12-E1-CAMPANHA.md), seção 4) |
 
 A cronologia, antes hipótese, virou decisão (tabela acima).

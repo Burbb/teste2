@@ -7,7 +7,7 @@
     python -m tests.navegador.cenarios baus      # vila com três baús na bolsa: a pilha abre inteira
     python -m tests.navegador.cenarios missao    # campanha no Bosque do Moinho, na etapa de seguir o canal
     python -m tests.navegador.cenarios recarga   # título com um save da campanha (Bosque, à noite) e um do mundo gerado
-    python -m tests.navegador.cenarios capela    # herói nível 5 na Capela Afogada (CLASSE e ETAPA no ambiente)
+    python -m tests.navegador.cenarios capela    # herói na Capela Afogada (CLASSE, ETAPA, NIVEL, PREPARO, LUGAR)
 
 Imprime o endereço do servidor na primeira linha e fica no ar até ser encerrado.
 """
@@ -201,25 +201,37 @@ def recarga(ui):
 
 
 def capela(ui):
-    """Herói de nível 5 (CLASSE, padrão guerreiro) na Capela Afogada, de manhã, com a missão na ETAPA (padrão
-    "sacristia": a nave já vencida) e o que se sabe até ali. Sair do jogo leva ao título, com o save para carregar."""
+    """Herói de nível NIVEL (padrão 5; CLASSE, padrão guerreiro) na Capela Afogada (ou na chave LUGAR), de manhã, com a
+    missão na ETAPA (padrão "sacristia": a nave já vencida) e o que se sabe até ali. PREPARO: "correntes" (soltas) ou
+    "pronto" (Berta ouvida, a fita e as correntes: o rito disponível). Sair do jogo leva ao título, com o save."""
     from rpg import dev, missoes
     from rpg.__main__ import menu_principal
     from rpg.ui import BotUI
     pasta = tempfile.mkdtemp()
     g = Jogo(BotUI(random.Random(1)), seed=11, pasta_saves=pasta, hardcore=False)
     g.iniciar("Jean", os.environ.get("CLASSE", "guerreiro"), "turvo")
-    dev.subir_ate(g, 5)  # já especializado (a primeira da classe): o acampamento não para na encruzilhada
+    nivel = int(os.environ.get("NIVEL", "5"))
+    dev.subir_ate(g, nivel)  # já especializado (a primeira da classe): o acampamento não para na encruzilhada
     dev.gastar_talentos(g, random.Random(3))
-    dev.vestir(g, random.Random(3), 5)
+    dev.vestir(g, random.Random(3), nivel)
     g.j.consumiveis["pocao_vida"] = 3
     etapa = os.environ.get("ETAPA", "sacristia")
-    pistas = ["agua_do_leste", "represa", "canal_da_capela"] + (["agua_da_capela"] if etapa != "capela" else [])
-    missoes.registro(g, "febre_do_turvo").update(etapa=etapa, cenas=["abertura", "capela_exterior"], pistas=pistas)
+    ordem = list(missoes.MISSOES["febre_do_turvo"]["etapas"])
+    def depois(e):
+        return ordem.index(etapa) > ordem.index(e)
+    pistas = (["agua_do_leste", "represa", "canal_da_capela"] + (["agua_da_capela"] if depois("capela") else [])
+              + (["ilse", "sigilo_do_turvo", "marcados"] if depois("sacristia") else [])
+              + (["correntes"] if depois("ossuario") else []))
+    preparo = os.environ.get("PREPARO", "")
+    preparos = ["corpo_solto"] if preparo in ("correntes", "pronto") else []
+    if preparo == "pronto":
+        pistas += ["verdade_de_ilse", "nome_e_fita"]
+        preparos.append("fita")
+    missoes.registro(g, "febre_do_turvo").update(etapa=etapa, cenas=["abertura", "capela_exterior"], pistas=pistas,
+                                                  preparos=preparos)
     for chave in ("bosque_do_moinho", "capela_afogada"):
-        lugar = next(l for l in g.mundo["locais"] if l["chave"] == chave)
-        lugar["visitado"] = True
-    g.mundo["atual"] = lugar["id"]
+        next(l for l in g.mundo["locais"] if l["chave"] == chave)["visitado"] = True
+    g.mundo["atual"] = next(l for l in g.mundo["locais"] if l["chave"] == os.environ.get("LUGAR", "capela_afogada"))["id"]
     g.periodo, g.clima = 0, "limpo"
     g.ui, ui.jogo = ui, g
     try:

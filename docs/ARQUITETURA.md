@@ -49,6 +49,13 @@ vez da comitiva, do animal, dos servos e dos inimigos) e `eficacia.py` (traços 
 pacote: `from rpg.combate import Combate`.
 
 - `atacar()` é **a** conta de dano (esquiva, eficácia, modificadores, defesa, crítico, barreira, roubo de vida).
+- **Piso de vida** (`Inimigo.piso`, `retido`, `ao_limiar` em `entidades.py`): com piso, nenhuma atribuição a `hp`
+  (golpe, vários golpes, efeito periódico, comitiva, servo, espinhos, execução) a leva abaixo dele; o excesso fica em
+  `retido`. `Combate.checar_limiares` chama `ao_limiar` uma vez, no primeiro ponto seguro (depois da sua vez, da vez
+  dos aliados, e antes de cada inimigo agir). Hoje só o rito da guardiã do Turvo usa (`missoes._momento_do_rito`):
+  dar descanso encerra a luta; desistir tira o piso e o retido cai na hora. Sem piso, nada muda.
+- `Chefes.receber_sigilo` é a recompensa de progressão de um guardião (Sigilo, reputação, ponto de talento, festa),
+  usada pelo covil e pela guardiã da campanha; `itens.fazer_unico` monta um único do catálogo pelo id.
 - Cada coisa visível vira um **lance** estruturado (`acao`, `golpe`, `erro`, `cura`, `buff`, `salva`, `fim_acao`...)
   que a tela anima (`rpg/web/static/batalha.js`) e a telemetria contabiliza.
 - O espólio da vitória (ouro, XP, contratos que andaram, o que se acha nos corpos, e o que o evento ainda der logo
@@ -112,7 +119,7 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
 | `rpg/balanceamento.py` | todos os números de dificuldade e generosidade, inclusive a curva por nível (inimigos, equipamento, XP, defesa) |
 | `rpg/dev.py` | herói de nível N com equipamento de acordo (`--dev N` e o simulador de equilíbrio) |
 | `rpg/classes.py` | classes, especializações, animais do Patrulheiro |
-| `rpg/missoes.py` | missões da campanha escrita: id estável, etapas (objetivo e lugar), pistas; as cenas e ações declaram lugar e etapa e só valem no menu do lugar (`cena_pendente`, `opcoes`, `executar`); `confirmar` faz o texto terminar num Continuar explícito (`ui.continuar(confirmar=True)`, a mensagem `continuar` leva `confirmar`); uma ação pode pedir classe, um preparo que falte e uma condição. A masmorra é uma sequência de ações no menu do lugar (uma sala por etapa; só a vitória avança), sem mapa interno. O estado vai em `mundo.missoes` (`etapa`, `cenas`, `pistas` = o que se sabe, `preparos` = o que se fez) |
+| `rpg/missoes.py` | missões da campanha escrita: id estável, etapas (objetivo e lugar), pistas; as cenas e ações declaram lugar e etapa e só valem no menu do lugar (`cena_pendente`, `opcoes`, `executar`); `confirmar` faz o texto terminar num Continuar explícito (`ui.continuar(confirmar=True)`, a mensagem `continuar` leva `confirmar`); uma ação pode pedir classe, um preparo que falte e uma condição. A masmorra é uma sequência de ações no menu do lugar (uma sala por etapa; só a vitória avança), sem mapa interno. O estado vai em `mundo.missoes` (`etapa`, `cenas`, `pistas` = o que se sabe, `preparos` = o que se fez ou se tem, `desfecho` = o fim único da guardiã) |
 | `rpg/campanha.py` | a campanha escrita (protótipo): regiões de mapa fixo no mesmo formato do mundo gerado (`chave` estável, `nivel` fixo, saída `fechado`), e os eventos do mundo gerado que ficam de fora (`EVENTOS_FORA`) |
 | `rpg/habilidades.py` | habilidades (execução + descrição) |
 | `rpg/talentos.py` | árvores de talentos e passivas de especialização, cada um declarando o próprio efeito |

@@ -77,7 +77,7 @@ Três commits posteriores à atualização do roadmap foram consultados. Os comp
 | Correções recentes | Implementadas nos três commits acima, com validação relatada nas mensagens. |
 | E1 — região e arco | Proposta em [11](11-E1-REGIAO-INICIAL.md) e [12](12-E1-CAMPANHA.md). Aprovados por Jean para o protótipo: os quatro lugares e as ligações (Morro da Forca adiado), campanha como novo início, resgate como padrão e hardcore opcional. O resto aguarda aprovação. |
 | E2 — região fixa | **Protótipo entregue na 1.48.0** (commit `2661b59`): início da campanha, mapa fixo, viagem, descoberta e save. Validado tecnicamente; falta Jean jogar. |
-| E3 — missão mínima | Entregas na 1.50.0, 1.51.0 e 1.52.0 (registros abaixo): da Fonte Nova ao canal, à Capela Afogada e ao seu interior (nave, sacristia, ossuário, soltar as correntes). O fundo (Ilse), o rito, a comporta, Caspar e os desfechos ainda não. Falta Jean jogar. |
+| E3 — missão mínima | Entregas na 1.50.0 a 1.53.0 (registros abaixo): da Fonte Nova ao canal, à capela, ao interior, a Vó Berta e à guardiã, com Destruir ou Dar descanso e a volta ao Vau. A bênção, a comporta, o julgamento de Caspar, as consequências na vila e Varn ainda não. Falta Jean jogar. |
 | E4–E11 | Plano de trabalho futuro; infraestrutura existente não equivale a etapas concluídas. Notas aprovadas para a E3 na seção 19 do [11](11-E1-REGIAO-INICIAL.md). |
 | Bugs ainda abertos | Nenhum bug aberto específico foi informado para registro nesta passagem. Isso não comprova ausência de bugs. |
 | Polimento antes da E3 | Entregue na 1.48.1 (registro abaixo): leitura, item achado, balcão do templo, palco da luta. Falta Jean conferir jogando. |
@@ -367,3 +367,42 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   - o texto trata Ilse como guardiã do Sigilo em vida, como no doc 11/12 (e que se tornou a guardiã depois de afogada): confirmar com Jean;
   - os textos antigos com "cem anos" e "se abriu"/"abriu" seguem iguais (tarefa própria).
 - **Não executado:** `tests.equilibrio` e `tests.replay` (nenhum número de balanceamento mudou; a medição acima usa a mesma arena).
+
+### 10/10/2026 — E3, quarta entrega: Vó Berta, a fita e a guardiã (1.53.0)
+
+- **Pedido de Jean:** conversa com Vó Berta depois da sacristia; a fita; os requisitos do Dar descanso visíveis; o confronto com a Bruxa Afogada existente, Destruir sem preparo e o rito com preparo completo; uma regra para o limiar que resista a dano alto, vários golpes, efeitos periódicos, comitiva e invocações sem tirar força de quem destrói; desfecho único com o Sigilo e a recompensa; Pele do Penitente ou a herança de Berta; objetivo de voltar ao Vau. Confirmou Ilse: em vida, a custódia do Sigilo; afogada, a Bruxa Afogada; a culpa é da vila. A bênção de Caspar fica para quando ele entrar.
+- **Implementado:**
+  - **Vó Berta** (`missoes._berta`): cartão "Falar com Vó Berta" no balcão da taverna do Vau, como os serviços, depois de saber de Ilse e enquanto a fita não foi entregue. Ela conta o que viu (a vila inteira; o pai dela segurou a corda), sugere que Ilse descansaria com o nome, a fita e as pedras soltas, e entrega a fita. Conhecimento (`verdade_de_ilse`, `nome_e_fita`) e objeto (`preparos: fita`) ficam separados; a conversa não se repete.
+  - **Requisitos do rito** (`REQUISITOS_DESCANSO`): a verdade (sacristia e Berta), a fita e o corpo solto. O Diário mostra "Para dar descanso a Ilse, em vez de destruí-la:" com ✓/○ e onde conseguir o que falta, desde a sacristia até o desfecho. A descida ao fundo diz o que falta e só oferece o rito com tudo pronto; sem isso, as opções são "Lutar para destruí-la" e "Voltar por enquanto".
+  - **O confronto** (`missoes._fundo`): Ilse é a guardiã Bruxa Afogada existente (`instanciar_guardiao`, com as fases e as invocações), no nível de guardião do lugar (região 3 + 1). Como todo guardião, não dá para fugir depois de começar. Derrota leva ao resgate, sem desfecho, com salas e preparos intactos; a próxima tentativa cria a guardiã de novo, inteira.
+  - **A regra do limiar** (`Inimigo.piso` em `entidades.py`, `Combate.checar_limiares`):
+    - só vale quando a pessoa escolhe tentar o rito antes da luta. Quem escolhe destruir luta sem piso nenhum, como qualquer guardião;
+    - com o rito escolhido, a vida dela tem um piso no limiar da 1ª fase (metade). Toda atribuição de vida passa por ele: golpe forte, vários golpes, efeito periódico, comitiva, servo invocado, espinhos, execução. O que passaria do piso fica `retido`;
+    - o momento do rito vem uma vez, no primeiro ponto seguro (fim da sua vez, fim da vez dos aliados, ou antes de qualquer inimigo agir, ela inclusive);
+    - "Dizer o nome dela e devolver a fita": a luta acaba em paz (ela e o que chamou da água afundam) e conta como vitória. "Desistir do rito e seguir lutando": o piso sai, o dano retido cai na hora (pode matá-la) e a luta segue para a 2ª fase. Quem desiste não perde nada do que a build fez;
+    - a escolha e o efeito são do motor (`missoes._momento_do_rito`); a tela só mostra as opções.
+  - **Desfecho** (`missoes._resolver`): `desfecho` guardado antes de tudo ("destruida" ou "descansada"), uma vez. Nos dois, o Sigilo e a recompensa de progressão de guardião (`Chefes.receber_sigilo`, extraído do covil: Sigilo, reputação +5, ponto de talento, festa) e o espólio normal da luta. Destruir: a Pele do Penitente (`itens.fazer_unico`). Dar descanso: o relato curto de Ilse (o Sigilo é um de três; os três seguram fechada uma porta; há mãos procurando juntá-los; sem nomes) e, de volta à taverna, "Contar a Vó Berta": a herança, um raro da classe (`gerar_equip(..., raridade="raro")`), uma vez.
+  - Etapa nova `retorno`: "Voltar ao Vau do Turvo com o Sigilo." Ao chegar, nada mais acontece por ora.
+  - "custódia do Sigilo" no texto da sacristia (pista) e no relato; o crime fica com a vila.
+  - Saves: `completar` acrescenta `desfecho: None` aos saves da 1.50–1.52; correntes soltas e pistas ficam.
+- **Dificuldade:** sem mudança de números. Arena (6 heróis por especialização e nível, com comitiva, de dia), vitórias:
+
+  | Herói | Destruir | Rito (até a metade) | Guardião comum nível 4 |
+  |---|---|---|---|
+  | Nv 3 | 0% | 25% | 0% |
+  | Nv 4 | 56% | 81% | 67% |
+  | Nv 5 | 92% | 97% | 92% |
+  | Nv 6 | 97% | 100% | 100% |
+
+  Ilse fica na faixa dos outros guardiões do mesmo nível. O rito pede metade da luta: o custo dele é a preparação (Berta, as correntes e a onda de afogados), não a luta.
+- **Verificações:**
+  - `unittest`: 161 OK, 1 pulado (`textual`). Novo `tests/test_guardia.py` (14), com lutas de verdade pelo robô da arena: Berta só depois da sacristia e uma vez; o Diário com o que falta; o piso contra golpe enorme, vários golpes, efeito periódico, servo, espinhos, comitiva e execução, com o momento uma vez; desistir devolve o retido e o rito encerra a luta; as três classes dão descanso e destroem sem preparo; preparado e mesmo assim destrói; desistir no momento destrói; voltar por enquanto não resolve; derrota não resolve e a guardiã volta inteira; save depois do desfecho não repete Sigilo, descida nem herança; destruir não tem herança; save da 1.52 mantém as correntes;
+  - `tests.gabarito`: OK, sem atualizar (os refactors do covil e do único preservam a ordem do sorteio);
+  - `pyflakes`: só o aviso conhecido;
+  - `fumaca.mjs`: 116 checagens. Novo cenário da guardiã: a descida oferece o rito; o momento chega com ela exatamente na metade (83/166); o relato com "custódia"; desfecho, Sigilo e objetivo; salvar, sair e carregar sem repetir nada. A checagem antiga do templo (cenário da vila, mundo gerado) falhou em 4 de 13 rodadas completas: o estado capturado mostrou a tela ainda no Mercado, porque o Esc da checagem chegava enquanto o mercado se redesenhava depois da recompra (nesse instante, o Esc só adianta o texto). Era uma corrida do teste, não do jogo; a checagem agora espera a tela parar antes do Esc. Depois da correção: 116 checagens OK em 3 rodadas completas seguidas;
+  - navegador, com capturas em 1500 px: Berta na taverna, conversa e Diário; descida sem preparo (arqueiro); o rito (guerreiro); desistir no momento (mago); os desfechos e a volta.
+- **Limitações:**
+  - nada acontece ao chegar ao Vau além da herança de quem deu descanso: o julgamento de Caspar, as consequências na vila (a febre, a Fonte, os afogados do Charco) e Varn ficam para depois;
+  - a bênção de Caspar não existe (adiada);
+  - os atalhos de D1 (Yara, mago no poço, arqueiro no Morro da Forca) não existem; a verdade vem só da sacristia e de Berta;
+  - observado, não mudado: um Esc dado enquanto uma tela de serviço se redesenha só adianta o texto e se perde (a pessoa precisa apertar de novo).

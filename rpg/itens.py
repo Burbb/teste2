@@ -269,7 +269,12 @@ def _unico(rng, classe, nivel, slot):
     opcoes = [u for u in UNICOS if (slot is None or u["slot"] == slot) and u["classe"] in (None, classe)]
     if not opcoes:
         return None
-    u = rng.choice(opcoes)
+    return fazer_unico(rng.choice(opcoes), nivel)
+
+
+def fazer_unico(u, nivel):
+    """Um único do catálogo (UNICOS) no nível dado: o que o sorteio de lendário entrega, e o que uma missão dá pelo
+    nome (a Pele do Penitente, a quem destrói a guardiã do Turvo)."""
     forca = _escala(nivel) * bal.ITEM_UNICO_FORCA
     bonus = {}
     for stat, v in u["bonus"].items():

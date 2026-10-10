@@ -71,6 +71,24 @@ class Combatente:
 
 
 class Inimigo(Combatente):
+    # Piso de vida: enquanto houver um, nada a leva abaixo dele (golpe, vários golpes, efeito periódico, comitiva,
+    # invocação, espinhos, execução: todo dano passa por esta atribuição). O que passaria do piso fica em `retido`, e
+    # quem pôs o piso decide o que fazer com ele. Sem piso (o normal), a vida é só um número.
+    piso = None
+    retido = 0
+    ao_limiar = None  # o que acontece quando ela chega ao piso (Combate.checar_limiares)
+
+    @property
+    def hp(self):
+        return self._hp
+
+    @hp.setter
+    def hp(self, valor):
+        if self.piso is not None and valor < self.piso:
+            self.retido += self.piso - valor
+            valor = self.piso
+        self._hp = valor
+
     def __init__(self, nome, max_hp, atk, defesa, agi, poder, g="m"):
         super().__init__(nome, max_hp, atk, defesa, agi, poder, g)
         self.familia = None

@@ -30,21 +30,26 @@ class Chefes:
         r = self.combate([chefe], pode_fugir=False, titulo=f"Guardião: {gspec['nome']}")
         if r == "vitoria":
             gspec["derrotado"] = True
-            self.j.sigilos.append(loc["bioma"])
-            self.estatisticas["chefes"] += 1
-            festa = self.ui.conquistas_na_tela  # a festa do Sigilo já mostra a runa e o ponto de talento
-            if not festa:
-                self.ui.titulo(f"SIGILO OBTIDO ({len(self.j.sigilos)}/3)", "amarelo+negrito")
-                self.dizer("Uma runa ardente se grava na palma da sua mão.", "amarelo")
-            self.mudar_reputacao(5)
-            self.ganhar_ponto_talento(anunciar=not festa)
-            self.ui.celebrar("sigilo", {"sigilos": len(self.j.sigilos), "guardiao": gspec["nome"],
-                                        "pontos": self.j.pontos_talento})
-            if len(self.j.sigilos) >= 3:
-                self.dizer(f"Os três Sigilos pulsam juntos. O caminho para {self.mundo['locais'][-1]['nome']} "
-                           f"está aberto!", "magenta+negrito")
+            self.receber_sigilo(loc["bioma"], gspec["nome"])
         self.avancar_periodo()
         self.pausar()
+
+    def receber_sigilo(self, sigilo, guardiao):
+        """A recompensa de progressão de um guardião vencido: o Sigilo, reputação, um ponto de talento e a festa.
+        Serve ao covil do mundo gerado e à guardiã da campanha (que pode ser vencida sem morrer: o rito)."""
+        self.j.sigilos.append(sigilo)
+        self.estatisticas["chefes"] += 1
+        festa = self.ui.conquistas_na_tela  # a festa do Sigilo já mostra a runa e o ponto de talento
+        if not festa:
+            self.ui.titulo(f"SIGILO OBTIDO ({len(self.j.sigilos)}/3)", "amarelo+negrito")
+            self.dizer("Uma runa ardente se grava na palma da sua mão.", "amarelo")
+        self.mudar_reputacao(5)
+        self.ganhar_ponto_talento(anunciar=not festa)
+        self.ui.celebrar("sigilo", {"sigilos": len(self.j.sigilos), "guardiao": guardiao,
+                                    "pontos": self.j.pontos_talento})
+        if len(self.j.sigilos) >= 3 and not self.campanha:  # na campanha, o caminho ainda não existe
+            self.dizer(f"Os três Sigilos pulsam juntos. O caminho para {self.mundo['locais'][-1]['nome']} "
+                       f"está aberto!", "magenta+negrito")
 
     def batalha_final(self):
         a = self.antagonista

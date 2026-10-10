@@ -19,8 +19,8 @@ const RAIZ = path.resolve(path.dirname(new URL(import.meta.url).pathname), "../.
 const falhas = [];
 const conferir = (ok, msg) => { if (!ok) falhas.push(msg); console.log((ok ? "  ok  " : "  FALHOU ") + msg); };
 
-async function subir(cenario) {
-  const proc = spawn("python3", ["-m", "tests.navegador.cenarios", cenario], { cwd: RAIZ, env: { VELOCIDADE: "rapido", ...process.env, PYTHONPATH: RAIZ } });
+async function subir(cenario, ambiente = {}) {
+  const proc = spawn("python3", ["-m", "tests.navegador.cenarios", cenario], { cwd: RAIZ, env: { VELOCIDADE: "rapido", ...process.env, ...ambiente, PYTHONPATH: RAIZ } });
   let url = null;
   proc.stdout.on("data", (d) => { const m = String(d).match(/http:\S+/); if (m) url = m[0]; });
   proc.stderr.on("data", (d) => process.stderr.write(d));
@@ -326,10 +326,17 @@ async function cenarioVila(browser) {
       conferir((await ouro()) === antesVenda, "recomprar devolve o item pelo mesmo preço");
     }
     // O templo: depois de cuidar de alguém, o balcão continua aberto, com o ouro de agora e só quem ainda precisa.
-    await page.keyboard.press("Escape");  // sai do mercado
+    // Sai do mercado. O Esc só vale com a tela parada numa pergunta: dado enquanto o mercado ainda se redesenha (a
+    // recompra acabou de chegar), ele só adianta o texto e a tela continua no mercado (era a falha intermitente).
+    const telaParada = () => page.waitForFunction(() => !processando && pergunta, null, { timeout: 8000 }).catch(() => {});
+    for (let k = 0; k < 3 && (await page.evaluate(() => tituloAtual)) === "Mercado"; k++) {
+      await telaParada();
+      await page.keyboard.press("Escape");
+      await page.waitForTimeout(400);
+    }
+    const servicos = () => page.$$eval("#prompt .balcao-predio .servico", (bs) => bs.length);
     const templo = await esperar('#predios .predio[data-predio="templo"]', 8000);
     if (templo) await templo.click();
-    const servicos = () => page.$$eval("#prompt .balcao-predio .servico", (bs) => bs.length);
     const naFila = (await esperar("#prompt .balcao-predio .servico", 8000)) ? await servicos() : 0;
     const ouroAntes = await ouro();
     if (naFila) await (await page.$("#prompt .balcao-predio .servico:not(.caro)")).click();
@@ -554,6 +561,64 @@ async function cenarioCapela(browser) {
   }
 }
 
+async function cenarioGuardia(browser) {
+  console.log("cenário: a guardiã (o rito com tudo pronto, e salvar e carregar depois)");
+  const { proc, url } = await subir("capela", { ETAPA: "fundo", PREPARO: "pronto", NIVEL: "6" });
+  const { page, erros } = await abrir(browser, url);
+  const MENU = "#prompt .escolhas:not(.escolhido) .escolha";
+  const missao = () => page.evaluate(() => (estado.missoes || [])[0]);
+  try {
+    await (await page.waitForSelector(`${MENU}:has-text("Descer ao fundo")`, { timeout: 20000 })).click();
+    await page.waitForSelector(`${MENU}:has-text("Lutar para destruí-la")`, { timeout: 20000 });
+    conferir(!!(await page.$(`${MENU}:has-text("Chamar Ilse pelo nome")`)), "com a verdade, a fita e as correntes, a descida oferece o rito e a luta para destruir");
+    await page.click(`${MENU}:has-text("Chamar Ilse pelo nome")`);
+    let momento = null;
+    for (let k = 0; k < 400 && !(await page.$("#prompt .continuar.confirmar")); k++) {
+      if (!momento && (await page.$(`${MENU}:has-text("Dizer o nome dela")`))) {
+        momento = await page.evaluate(() => estado.combate.inimigos.map((i) => [i.hp, i.max_hp])[0]);
+        await page.click(`${MENU}:has-text("Dizer o nome dela")`);
+        continue;
+      }
+      if (await page.evaluate(() => document.body.classList.contains("em-combate"))) {
+        const b = await page.$('#roda .roda-botao[data-slot="atacar"]'); if (b) await b.click().catch(() => {});
+        const alvo = await page.$(".carta.alvejavel"); if (alvo) await alvo.click().catch(() => {});
+      }
+      const f = await page.$(".festa .continuar, .festa-espolio .continuar"); if (f) { await page.waitForTimeout(1000); await f.click().catch(() => {}); }
+      const achado = await page.$('#sobre-achado .botao-janela:not(.reserva)'); if (achado) await achado.click().catch(() => {});
+      const fim = await page.$("#prompt .continuar:not(.confirmar)"); if (fim) await fim.click().catch(() => {});
+      await page.waitForTimeout(250);
+    }
+    conferir(!!momento && momento[0] === Math.floor(momento[1] * 0.5), `o momento do rito chega com ela exatamente na metade (${momento && momento.join("/")})`);
+    conferir(/Ilse/.test(await page.textContent("#cena-cab .cena-titulo")) && /custódia/.test(await page.textContent("#texto")),
+      "ela descansa: o relato de Ilse, esperando o Continuar");
+    await page.waitForTimeout(800);
+    await page.click("#prompt .continuar");
+    for (let k = 0; k < 60 && !(await page.$(`${MENU}:has-text("Explorar")`)); k++) {
+      const f = await page.$(".festa .continuar, .festa-espolio .continuar"); if (f) { await page.waitForTimeout(1000); await f.click().catch(() => {}); }
+      await page.waitForTimeout(250);
+    }
+    let m = await missao();
+    conferir(m.desfecho === "descansada" && /Voltar ao Vau/.test(m.objetivo) && (await page.evaluate(() => estado.heroi.sigilos)) === 1
+      && !(await page.$(`${MENU}.op-contrato`)), "desfecho guardado, o Sigilo na mão e o objetivo de voltar ao Vau");
+    await (await page.waitForSelector('#doca .atalho[data-rotulo="Sair"]')).click();
+    await (await page.waitForSelector(`${MENU}:has-text("Salvar e sair")`)).click();
+    for (let t = 0; t < 60 && !(await page.$(`${MENU}:has-text("Carregar")`)); t++) {
+      const c = await page.$("#prompt .continuar"); if (c) await c.click().catch(() => {});
+      await page.waitForTimeout(200);
+    }
+    await (await page.waitForSelector(`${MENU}:has-text("Carregar")`)).click();
+    await (await page.waitForSelector(".save-cartao")).click();
+    await page.waitForSelector(`${MENU}:has-text("Explorar")`, { timeout: 20000 });
+    m = await missao();
+    conferir(m.desfecho === "descansada" && !(await page.$(`${MENU}:has-text("Descer ao fundo")`)) && (await page.evaluate(() => estado.heroi.sigilos)) === 1,
+      "carregado: ela segue descansada, sem descida nem Sigilo repetido");
+  } finally {
+    conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
+    await page.close();
+    proc.kill();
+  }
+}
+
 async function cenarioBaus(browser) {
   console.log("cenário: baús abertos juntos");
   const { proc, url } = await subir("baus");
@@ -618,6 +683,7 @@ try {
   await cenarioMissao(browser);
   await cenarioRecarga(browser);
   await cenarioCapela(browser);
+  await cenarioGuardia(browser);
   await cenarioBaus(browser);
 } catch (e) {
   falhas.push(String(e));

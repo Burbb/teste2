@@ -32,7 +32,7 @@ Plano proposto, sem datas. Cada etapa é dividida em tarefas pequenas e depende 
 
 **Depende:** E2.
 **Notas aprovadas:** bênção, rito garantido e comporta parcial, em [11-E1-REGIAO-INICIAL](11-E1-REGIAO-INICIAL.md), seção 19.
-**Estado:** primeira entrega na 1.50.0: registro da missão, cena de abertura, objetivo no Diário e no rastreador, exame da Fonte Nova (etapa `fonte` → `canal`). Segunda na 1.51.0: o canal no Bosque (`canal` → `capela`), o exterior da Capela Afogada e as cenas da missão com Continuar explícito. Terceira na 1.52.0: o interior (nave, sacristia, ossuário) e soltar as correntes (D2) como preparo. O fundo (Ilse), o rito, a comporta, Caspar e os desfechos não começaram.
+**Estado:** primeira entrega na 1.50.0: registro da missão, cena de abertura, objetivo no Diário e no rastreador, exame da Fonte Nova (etapa `fonte` → `canal`). Segunda na 1.51.0: o canal no Bosque (`canal` → `capela`), o exterior da Capela Afogada e as cenas da missão com Continuar explícito. Terceira na 1.52.0: o interior (nave, sacristia, ossuário) e soltar as correntes (D2) como preparo. Quarta na 1.53.0: Vó Berta e a fita, a guardiã com Destruir ou Dar descanso (o rito garantido) e o desfecho único. A comporta, a bênção, o julgamento de Caspar e as consequências na vila não começaram.
 **Entrega:** uma missão com etapas, objetivos no Diário e duas soluções.
 **Tarefas:** ids/estados; transições; cenas explícitas; recompensas únicas; apresentação.
 **Pronto:** dois percursos concluem, falhas previstas não travam e save/load mantém progresso.

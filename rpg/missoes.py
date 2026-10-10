@@ -3,17 +3,23 @@
 E3 (roadmapIDEIAS/11-E1-REGIAO-INICIAL.md, seção 5): "A Febre do Turvo" começa com uma cena curta no Vau do Turvo; a
 investigação segue a água da Fonte Nova até o canal no Bosque do Moinho e o canal até a Capela Afogada. Dentro dela, três
 salas em sequência (a nave, a sacristia, o ossuário), cada uma uma ação do menu da capela: sair e voltar é só escolher
-outra coisa no menu, e a sala vencida fica vencida (a etapa já passou dela). Esta parte termina antes do fundo: a
-guardiã, o rito, a comporta, Caspar e os desfechos ainda não existem.
+outra coisa no menu, e a sala vencida fica vencida (a etapa já passou dela). No fundo, a guardiã: Ilse, que em vida
+tinha a custódia do Sigilo do Turvo e, afogada pela vila, virou a Bruxa Afogada. Destruí-la ou dar-lhe descanso (o rito,
+com a verdade, a fita e as correntes soltas) é um desfecho único e guardado. Depois, a volta ao Vau. A comporta, Caspar,
+as consequências na vila e a Estrada de Varn ainda não existem.
 
 O estado de cada missão mora no mundo da campanha (`mundo["missoes"]`, vai no save junto com ele):
-    {"etapa": "fundo", "cenas": ["abertura"], "pistas": ["agua_do_leste", ...], "preparos": ["corpo_solto"]}
-`pistas` é o que se sabe; `preparos` é o que se fez para depois (soltar o corpo das correntes). Saber o nome de Ilse não
-prepara nada: o rito, nas próximas entregas, ainda pede o resto.
+    {"etapa": "fundo", "cenas": ["abertura"], "pistas": ["agua_do_leste", ...], "preparos": ["corpo_solto", "fita"],
+     "desfecho": None}
+`pistas` é o que se sabe; `preparos` é o que se fez ou se tem para depois (as correntes soltas, a fita de Ilse). Saber o
+nome não prepara nada: o rito pede a verdade (sacristia e Vó Berta), a fita e as correntes. `desfecho`: "destruida" ou
+"descansada", uma vez só; com ele vêm o Sigilo e a recompensa.
 O mundo gerado não tem missões. Cenas e ações declaram a campanha (pela missão), o lugar (`chave` do lugar) e as
 etapas em que valem; o jogo só as oferece no menu do lugar, nunca no meio de uma luta, de uma viagem ou de um evento.
 Passar antes por um lugar não adianta nem gasta nada: a cena ou a ação esperam a etapa delas.
 """
+
+from . import texto as tx
 
 MISSOES = {
     "febre_do_turvo": dict(
@@ -33,6 +39,7 @@ MISSOES = {
                              lugar="capela_afogada"),
             "fundo": dict(objetivo="Descer ao fundo alagado da Capela Afogada, para onde vão as correntes.",
                           lugar="capela_afogada"),
+            "retorno": dict(objetivo="Voltar ao Vau do Turvo com o Sigilo.", lugar="vau_do_turvo"),
         },
         pistas={
             "agua_do_leste": "A Fonte Nova não nasce ali: a água chega por baixo da terra, do leste, do lado do Bosque "
@@ -46,17 +53,24 @@ MISSOES = {
                               "água da Fonte Nova.",
             "ilse": "A capela tinha uma guardiã, Ilse. A vila a acusou de bruxaria e a afogou; o padre que escreveu o "
                     "livro da sacristia diz que ela não fez nada do que disseram.",
-            "sigilo_do_turvo": "Ilse guardava o Sigilo do Turvo, deixado na capela pela Igreja quando a Fenda foi "
-                               "fechada, para não sair dali. Ele foi para a água com ela.",
+            "sigilo_do_turvo": "Em vida, Ilse tinha a custódia do Sigilo do Turvo, deixado na capela pela Igreja quando a "
+                               "Fenda foi fechada, para não sair dali. Ele foi para a água com ela.",
             "marcados": "Dois homens com uma marca queimada no pulso reviravam a sacristia atrás de alguma coisa. "
                         "Não eram da vila, e não estavam sozinhos.",
             "correntes": "No ossuário, um sarilho velho prende correntes que descem ao fundo alagado da capela, "
                          "amarradas a duas mós de moinho. Alguma coisa está presa lá embaixo.",
+            "verdade_de_ilse": "Vó Berta viu, aos oito anos: a vila inteira tirou Ilse de casa, amarrou-a às mós do "
+                               "moinho e a desceu na cripta. O pai dela segurou a corda. Ninguém mandou parar.",
+            "nome_e_fita": "Berta acredita que Ilse pode descansar se alguém a chamar pelo nome, devolver a fita dela e "
+                           "a soltar das pedras. A guardiã não precisaria ser destruída.",
+            "relato_de_ilse": "Ilse disse que o Sigilo é um de três, que os três seguram fechada uma porta que agora "
+                              "range, e que há mãos procurando juntá-los.",
         },
         # O que se faz para depois. Não é saber: conhecer o nome de Ilse é pista, não preparo.
         preparos={
             "corpo_solto": "As correntes do sarilho estão soltas: o que está no fundo da capela não está mais preso às "
                            "mós.",
+            "fita": "Você tem a fita de Ilse, que Vó Berta guardou desde a noite do afogamento.",
         },
     ),
 }
@@ -64,14 +78,36 @@ MISSOES = {
 
 def estado_inicial(regiao):
     """As missões de uma campanha no começo: cada uma na primeira etapa, sem cenas vistas nem pistas."""
-    return {mid: {"etapa": next(iter(m["etapas"])), "cenas": [], "pistas": [], "preparos": []}
+    return {mid: {"etapa": next(iter(m["etapas"])), "cenas": [], "pistas": [], "preparos": [], "desfecho": None}
             for mid, m in MISSOES.items() if m["campanha"] == regiao}
 
 
 def completar(estado):
-    """Saves de antes dos preparos (1.50–1.51): a chave entra vazia. O resto do progresso fica como estava."""
+    """Saves de antes dos preparos (1.50–1.51) e do desfecho (1.50–1.52): as chaves entram vazias. O resto do
+    progresso (etapa, cenas, pistas, as correntes soltas) fica como estava."""
     for m in estado.values():
         m.setdefault("preparos", [])
+        m.setdefault("desfecho", None)
+
+
+# Dar descanso a Ilse pede três coisas (11-E1-REGIAO-INICIAL.md, seção 6): saber a verdade, ter a fita e ter soltado o
+# corpo. Cada uma: o que é, onde se consegue, e se já está feita. O Diário mostra a lista depois da sacristia (é lá que
+# se descobre que há alguém a quem dar descanso); a descida ao fundo diz o que falta.
+REQUISITOS_DESCANSO = [
+    ("A verdade sobre a morte de Ilse", "Vó Berta, na taverna do Vau, estava lá",
+     lambda m: {"ilse", "verdade_de_ilse"} <= set(m["pistas"])),
+    ("A fita de Ilse", "quem a viu morrer guardou alguma coisa dela", lambda m: "fita" in m["preparos"]),
+    ("O corpo solto das pedras", "o sarilho, no ossuário da capela", lambda m: "corpo_solto" in m["preparos"]),
+]
+
+
+def descanso(m):
+    """Os requisitos do rito, como a tela e o texto mostram: [(o quê, onde, feito)]."""
+    return [(o_que, onde, bool(feito(m))) for o_que, onde, feito in REQUISITOS_DESCANSO]
+
+
+def descanso_pronto(m):
+    return all(feito for _, _, feito in descanso(m))
 
 
 def registro(g, mid):
@@ -106,7 +142,11 @@ def cartoes(g):
                       "lugar": loc and loc["nome"], "lugar_id": loc and loc["id"], "lugar_tipo": loc and loc["tipo"],
                       "bioma": loc and loc["bioma"], "distancia": dist,
                       "pistas": [d["pistas"][p] for p in m["pistas"]],
-                      "preparos": [d["preparos"][p] for p in m.get("preparos", [])]})
+                      "preparos": [d["preparos"][p] for p in m.get("preparos", [])],
+                      "desfecho": m.get("desfecho"),
+                      # o caminho do rito: só depois de saber de Ilse, e só enquanto a guardiã não foi resolvida
+                      "descanso": ([{"texto": o_que, "onde": onde, "feito": feito} for o_que, onde, feito in descanso(m)]
+                                   if "ilse" in m["pistas"] and not m.get("desfecho") else [])})
     return saida
 
 
@@ -353,6 +393,153 @@ def _correntes_atalho(g, mid):
     _onda_de_afogados(g, mid)
 
 
+# ------------------------------------------------------------------ Vó Berta, a guardiã e o desfecho
+
+def _berta(g, mid):
+    """A testemunha: o que a vila fez (conhecimento) e a fita (o que se leva). Uma vez só: a ação some com a fita."""
+    m = registro(g, mid)
+    g.ui.cena("Vó Berta", g.contexto_cena(), "evento")
+    g.narrar("Vó Berta tem o canto mais quente da taverna e a caneca mais vazia. Quando você diz o nome de Ilse, ela "
+             "fica muito tempo olhando para a mesa.")
+    g.narrar("\"Eu tinha oito anos\", diz por fim. \"Foi no inverno da febre, poucos anos depois que fecharam a Fenda. "
+             "A Ilse cuidava da capela e de uma coisa que a Igreja tinha deixado com ela. Ninguém sabia o quê. Bastou "
+             "para dizerem que era bruxa.\"")
+    g.narrar("\"Não foi um homem só. Foi a vila. Tiraram ela de casa de noite, amarraram nas mós velhas do moinho e "
+             "desceram tudo pela cripta, com corrente e sarilho. Meu pai segurou a corda. Eu vi da porta da capela, e "
+             "ninguém mandou ninguém parar.\"")
+    g.narrar("\"Na véspera, ela tinha amarrado esta fita no meu cabelo.\" Berta tira do bolso uma fita desbotada, dobrada "
+             "com cuidado. \"Guardei esse tempo todo. Dizem que afogado descansa quando alguém o chama pelo nome e o "
+             "solta das pedras. Se ela ainda está lá embaixo, que receba de volta o que é dela: o nome e isto. Ela "
+             "nunca quis ser o que virou.\"")
+    g.narrar("\"Só lhe peço uma coisa: o nome do meu pai, deixe fora disso.\"")
+    for pid in ("verdade_de_ilse", "nome_e_fita"):
+        _pista(m, pid)
+    if "fita" not in m["preparos"]:
+        m["preparos"].append("fita")
+        from .telemetria import registrar
+        registrar(g, "missao", missao=mid, preparo="fita")
+    g.dizer("Diário: a verdade sobre Ilse e a fita dela.", "ciano")
+    g.ui.efeito("Fita de Ilse", "info")
+
+
+def _fundo(g, mid):
+    """A descida ao fundo: a guardiã. O que falta para o rito é dito antes; o rito só é oferecido com tudo pronto."""
+    from .inimigos import instanciar_guardiao
+    m = registro(g, mid)
+    g.ui.cena("O Fundo da Capela", g.contexto_cena(), "evento")
+    g.narrar("A escada do ossuário termina na água. A cripta é um poço escuro, com água pela cintura e um frio que não é "
+             "de água. No meio, entre duas mós de moinho, há uma forma enrolada em correntes.")
+    if "corpo_solto" in m["preparos"]:
+        g.narrar("As correntes que você soltou pendem frouxas. A forma já não está presa às pedras.")
+    g.narrar("Ela abre os olhos. A pele é azulada, os cabelos são algas, e ela começa a cantar uma canção de ninar. É "
+             "Ilse, ou o que a vila fez dela: a Bruxa Afogada.")
+    pronto = descanso_pronto(m)
+    if not pronto:
+        falta = [o_que[0].lower() + o_que[1:] for o_que, _, feito in descanso(m) if not feito]
+        g.dizer("Para tentar dar descanso a Ilse ainda falta: " + tx.lista_natural(falta) + ". Sem isso, só resta "
+                "destruí-la.", "cinza")
+    opcoes = ([("Chamar Ilse pelo nome e tentar dar descanso", "descanso")] if pronto else []) + [
+        ("Lutar para destruí-la", "destruir"), ("Voltar por enquanto", None)]
+    op = g.menu("Ela ainda não se levantou da água. Depois de começar, não há como recuar.", opcoes)
+    if op is None:
+        g.narrar("Você sobe a escada de costas. O canto continua lá embaixo.")
+        return
+    spec = {"bioma": "pantano", "id": "bruxa_afogada", "idx": 1, "nome": "Ilse, a Bruxa Afogada", "g": "f",
+            "base": "Bruxa Afogada"}
+    chefe = instanciar_guardiao(spec, g.nivel_guardiao(g.loc))
+    chefe.chave = "ilse"
+    if op == "descanso":
+        # O rito garantido (seção 19 do 11): até o momento do rito, nada a leva abaixo do limiar da fase. O que
+        # passaria dele fica retido; o momento vem no primeiro ponto seguro (Combate.checar_limiares).
+        chefe.piso = max(1, int(chefe.max_hp * chefe.fases[0]["limiar"]))
+        chefe.ao_limiar = lambda cb, e: _momento_do_rito(g, cb, e)
+        g.narrar("Você segura a fita e espera o momento de dizer o nome dela.")
+    from . import sobrevivencia
+    luz = sobrevivencia.acender_tocha(g)
+    try:
+        r = g.combate([chefe], emboscada=None if luz else "inimigo", pode_fugir=False,
+                      titulo="Guardiã: Ilse, a Bruxa Afogada")
+    finally:
+        g.sem_luz = False
+    g.fechar_espolio()
+    if r == "vitoria":
+        _resolver(g, mid, "descansada" if getattr(chefe, "descansou", False) else "destruida", chefe.nivel)
+
+
+def _momento_do_rito(g, cb, e):
+    """No limiar: a escolha é do motor; a tela só a mostra. Devolver o nome e a fita encerra a luta em paz (ela e o que
+    ela chamou da água afundam). Desistir tira o piso: o dano que ele segurou cai na hora e a luta segue para a
+    segunda fase, como em qualquer guardião. Nada do que a build faz se perde para quem escolhe destruir."""
+    cb.dizer("Ilse vacila à metade. As correntes soltas pendem dos pulsos dela, e os olhos dela vão para a fita na sua "
+             "mão.", "ciano+negrito")
+    op = g.menu("Este é o momento do rito.", [("Dizer o nome dela e devolver a fita (dar descanso)", "rito"),
+                                              ("Desistir do rito e seguir lutando (destruir)", "lutar")])
+    if op == "rito":
+        e.piso, e.retido, e.descansou = None, 0, True
+        cb.lance("fase", em=cb.uid(e))
+        cb.dizer("\"Ilse.\" Ela para de cantar. O que ela chamou da água afunda junto com o canto.", "ciano+negrito")
+        for o in cb.inimigos:
+            o.hp = 0
+        cb.ui.atualizar()
+        return
+    e.piso = None
+    dano, e.retido = e.retido, 0
+    cb.dizer("Você guarda a fita. Ilse entende antes de você terminar o gesto, e o canto vira um grito.", "vermelho+negrito")
+    if dano:
+        e.hp = max(0, e.hp - dano)
+        cb.lance("golpe", de=None, em=cb.uid(e), dano=dano, crit=False, elemento="fisico", alcance="corpo",
+                 absorvido=0, eficacia=None, rotulo="O golpe que o rito segurava", hp=e.hp, max_hp=e.max_hp)
+        cb.dizer(f"O golpe que o rito segurava cai agora: {dano} de dano.", "amarelo")
+        if not e.vivo:
+            cb.ao_morrer(e, por=cb.j)
+
+
+def _resolver(g, mid, desfecho, nivel):
+    """O desfecho único da guardiã: guardado antes de tudo, com o Sigilo e a recompensa de cada caminho, uma vez."""
+    from . import itens
+    m = registro(g, mid)
+    if m.get("desfecho"):
+        return
+    m["desfecho"] = desfecho
+    from .telemetria import registrar
+    registrar(g, "missao", missao=mid, desfecho=desfecho)
+    if desfecho == "descansada":
+        g.ui.cena("Ilse", g.contexto_cena(), "evento")
+        g.narrar("Por um momento, ela é só uma mulher cansada com a água pela cintura. Ela pega a fita da sua mão e a "
+                 "enrola nos dedos.")
+        g.narrar("\"Eu tinha a custódia dele\", diz, sem raiva. \"É um de três. Os três seguram fechada uma porta que "
+                 "nunca devia ter sido aberta, e agora ela range. Há mãos procurando os três. Não os deixe juntar por "
+                 "quem não sabe o que está fechando.\"")
+        g.narrar("Ela abre a mão. O Sigilo do Turvo, rachado e frio como pedra de rio, passa para a sua. Depois ela "
+                 "afunda devagar, com a fita entre os dedos, e a água da cripta fica parada e clara.")
+        _pista(m, "relato_de_ilse")
+    else:
+        g.ui.cena("A Guardiã Destruída", g.contexto_cena(), "evento")
+        g.narrar("Ilse se desfaz na água escura, e o canto vira bolhas. Por um instante, a água que desce para a vila "
+                 "corre mais turva.")
+        g.narrar("Onde ela esteve, entre as mós, sobra o Sigilo do Turvo, rachado e frio como pedra de rio. Presa às "
+                 "pedras, há também uma veste de couro endurecido pela água, que ainda guarda a forma de alguém.")
+    g.receber_sigilo("turvo", "Ilse, a Bruxa Afogada")
+    if desfecho == "destruida":
+        g.oferecer_equip(itens.fazer_unico(itens.UNICOS_POR_ID["pele_do_penitente"], min(nivel, g.j.nivel + 2)))
+    g.avancar_periodo()
+    if avancar(g, mid, "fundo", "retorno"):
+        g.dizer(f"Diário: {MISSOES[mid]['etapas']['retorno']['objetivo']}", "ciano")
+        g.ui.efeito("Diário atualizado", "info")
+
+
+def _heranca(g, mid):
+    """Quem deu descanso a Ilse conta a Berta: a herança da família dela, uma vez (a cena fica marcada antes)."""
+    from .itens import gerar_equip
+    m = registro(g, mid)
+    m["cenas"].append("heranca")
+    g.ui.cena("Vó Berta", g.contexto_cena(), "evento")
+    g.narrar("Berta escuta tudo sem interromper. Quando você conta da fita entre os dedos de Ilse, ela fecha os olhos.")
+    g.narrar("\"Minha mãe guardou isto para quando a vila pagasse o que devia\", diz, e empurra um embrulho pela mesa. "
+             "\"Ninguém nunca pagou. Fica com você.\"")
+    g.oferecer_equip(gerar_equip(g.rng, g.j.classe, g.j.nivel, raridade="raro"))
+
+
 # Cada cena toca uma vez, quando a pessoa está no menu daquele lugar, naquela etapa. Cada ação é uma opção do menu do
 # lugar, com a mesma condição; executar confere tudo de novo. `confirmar`: o texto termina num Continuar de verdade
 # (a tela não vira a página sozinha, por tempo, e o clique que adianta o texto não fecha a cena).
@@ -385,6 +572,19 @@ ACOES = [
     dict(missao="febre_do_turvo", id="correntes_tiro", rotulo="Um tiro no pino da trava (Destreza, 1 flecha)",
          lugar="capela_afogada", etapas=("fundo",), falta="corpo_solto", classe="arqueiro",
          pode=lambda g: g.j.flechas > 0, fn=_correntes_atalho, confirmar=True),
+    dict(missao="febre_do_turvo", id="fundo", rotulo="Descer ao fundo da capela (a guardiã)", lugar="capela_afogada",
+         etapas=("fundo",), fn=_fundo, confirmar=True),
+    # Na taverna do Vau: o cartão no balcão, como os serviços (`meta`). Berta depois da sacristia, uma vez; a herança
+    # para quem deu descanso a Ilse, uma vez.
+    dict(missao="febre_do_turvo", id="berta", rotulo="Taverna: falar com Vó Berta", lugar="vau_do_turvo",
+         etapas=("ossuario", "fundo"), falta="fita", pode=lambda g: "ilse" in registro(g, "febre_do_turvo")["pistas"],
+         meta={"predio": "taverna", "servico": "berta", "curto": "Falar com Vó Berta",
+               "efeito": "Ela estava lá quando a vila afogou Ilse"}, fn=_berta, confirmar=True),
+    dict(missao="febre_do_turvo", id="heranca", rotulo="Taverna: contar a Vó Berta", lugar="vau_do_turvo",
+         etapas=("retorno",), pode=lambda g: (registro(g, "febre_do_turvo")["desfecho"] == "descansada"
+                                              and "heranca" not in registro(g, "febre_do_turvo")["cenas"]),
+         meta={"predio": "taverna", "servico": "berta", "curto": "Contar a Vó Berta",
+               "efeito": "Ilse descansou com a fita dela"}, fn=_heranca, confirmar=True),
 ]
 
 
@@ -422,7 +622,8 @@ def opcoes(g):
     """As ações de missão que valem no lugar e na etapa de agora, como opções do menu do lugar."""
     if not g.campanha:
         return []
-    return [(d["rotulo"], ("missao", d["missao"], d["id"]), {"missao": d["missao"]}) for d in ACOES if _vale(g, d)]
+    return [(d["rotulo"], ("missao", d["missao"], d["id"]), {**d.get("meta", {}), "missao": d["missao"]})
+            for d in ACOES if _vale(g, d)]
 
 
 def executar(g, mid, aid):
