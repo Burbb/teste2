@@ -290,8 +290,8 @@ class WebUI(InterfaceGrafica, UI):
         self.novo_desde_escolha = False
         return i
 
-    def _continuar(self):
-        self._perguntar("continuar")
+    def _continuar(self, confirmar=False):
+        self._perguntar("continuar", **({"confirmar": True} if confirmar else {}))
         self.novo_desde_escolha = False
         self.escolhas_na_cena += 1  # quem tocou em Continuar já leu: a próxima cena abre página nova
 
@@ -307,9 +307,11 @@ class WebUI(InterfaceGrafica, UI):
         self.novo_desde_escolha = False
         return resposta
 
-    def continuar(self):
+    def continuar(self, confirmar=False):
         self.pausa_pendente = False
-        self._continuar()  # o botão aparece já; tocado, a próxima cena abre página nova
+        # O botão aparece já; tocado, a próxima cena abre página nova. Com `confirmar` (cena de missão), a tela só o
+        # aceita depois de uma guarda curta: o clique ou a tecla que adiantou o texto não fecha a cena junto.
+        self._continuar(confirmar)
 
     def pausar(self):
         if self.novo_desde_escolha:

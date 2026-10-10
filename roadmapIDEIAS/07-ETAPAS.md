@@ -32,7 +32,7 @@ Plano proposto, sem datas. Cada etapa é dividida em tarefas pequenas e depende 
 
 **Depende:** E2.
 **Notas aprovadas:** bênção, rito garantido e comporta parcial, em [11-E1-REGIAO-INICIAL](11-E1-REGIAO-INICIAL.md), seção 19.
-**Estado:** primeira entrega na 1.50.0: registro da missão, cena de abertura, objetivo no Diário e no rastreador, exame da Fonte Nova (etapa `fonte` → `canal`). O resto da E3 não começou.
+**Estado:** primeira entrega na 1.50.0: registro da missão, cena de abertura, objetivo no Diário e no rastreador, exame da Fonte Nova (etapa `fonte` → `canal`). Segunda na 1.51.0: o canal no Bosque (`canal` → `capela`), o exterior da Capela Afogada e as cenas da missão com Continuar explícito. Salas internas, comporta, guardiã, Caspar e desfechos não começaram.
 **Entrega:** uma missão com etapas, objetivos no Diário e duas soluções.
 **Tarefas:** ids/estados; transições; cenas explícitas; recompensas únicas; apresentação.
 **Pronto:** dois percursos concluem, falhas previstas não travam e save/load mantém progresso.

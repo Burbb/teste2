@@ -11,7 +11,7 @@
     const pistas = m.pistas.map((p) => `<li>${h(p)}</li>`).join("");
     return `<div class="missao-diario" data-missao="${h(m.id)}"><div class="missao-cab">${S("pergaminho", 2)}<b>${h(m.nome)}</b></div>
       <div class="missao-objetivo">${h(m.objetivo)}</div><div class="missao-lugar">${lugar}</div>
-      ${pistas ? `<div class="missao-pistas"><span>Pistas</span><ul>${pistas}</ul></div>` : ""}</div>`;
+      ${pistas ? `<div class="missao-pistas"><span>O que você sabe:</span><ul>${pistas}</ul></div>` : ""}</div>`;
   }
 
   function diario(d) {

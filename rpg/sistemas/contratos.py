@@ -238,6 +238,8 @@ class Contratos:
         for m in missoes.cartoes(self) if self.campanha else []:
             self.dizer(f"Missão: {m['nome']}", "amarelo+negrito")
             self.dizer(f"  {m['objetivo']}", "amarelo")
+            if m["pistas"]:
+                self.dizer("  O que você sabe:", "cinza")
             for p in m["pistas"]:
                 self.dizer(f"  • {p}", "cinza")
         self.dizer(f"Sigilos: {len(self.j.sigilos)}/3   Dia {self.dia}", "magenta")

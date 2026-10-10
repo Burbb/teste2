@@ -111,7 +111,12 @@ document.addEventListener("keydown", (ev) => {
   if ((k === "p" || k === "P") && estado && !corpo.classList.contains("modo-titulo")) { Telas.alternarGrimorio(); return; }
   if (processando && !pergunta) { if (k.length === 1 || k === "Enter") { ev.preventDefault(); pular = true; } return; }
   if (!pergunta) return;
-  if (pergunta.tipo === "continuar" && (k === " " || k === "Enter")) { ev.preventDefault(); responder(pergunta.id, null); return; }
+  if (pergunta.tipo === "continuar" && (k === " " || k === "Enter")) {
+    ev.preventDefault();
+    if (pergunta.confirmar && (ev.repeat || pergunta.guardar())) return;  // a tecla que adiantou o texto
+    responder(pergunta.id, null);
+    return;
+  }
   if (pergunta.tipo !== "opcoes" || !pergunta.numeros) return;
   const botoes = [...promptEl.querySelectorAll(".escolha, .atalho")];
   if (/^[0-9]$/.test(k) && pergunta.teclasNum) {  // barra de ações da luta: cada tecla faz o que o botão faz

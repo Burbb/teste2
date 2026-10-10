@@ -5,6 +5,7 @@
     python -m tests.navegador.cenarios vila      # guerreiro acha um item raro e abre o mural de contratos
     python -m tests.navegador.cenarios campanha  # menu principal com saves dos dois modos; começar a campanha
     python -m tests.navegador.cenarios baus      # vila com três baús na bolsa: a pilha abre inteira
+    python -m tests.navegador.cenarios missao    # campanha no Bosque do Moinho, na etapa de seguir o canal
 
 Imprime o endereço do servidor na primeira linha e fica no ar até ser encerrado.
 """
@@ -158,7 +159,24 @@ def baus(ui):
         pass
 
 
-CENARIOS = {"combate": combate, "titulo": titulo, "vila": vila, "campanha": campanha, "baus": baus}
+def missao(ui):
+    """Campanha (mago) no Bosque do Moinho, de dia, com a Fonte Nova já examinada: a missão está na etapa "canal"."""
+    from rpg import missoes
+    g = Jogo(ui, seed=8, pasta_saves=tempfile.mkdtemp(), hardcore=False)
+    ui.jogo = g
+    g.iniciar("Jean", "mago", "turvo")
+    m = missoes.registro(g, "febre_do_turvo")
+    m.update(etapa="canal", cenas=["abertura"], pistas=["agua_do_leste"])
+    bosque = next(l for l in g.mundo["locais"] if l["chave"] == "bosque_do_moinho")
+    g.mundo["atual"], bosque["visitado"] = bosque["id"], True
+    g.periodo, g.clima = 0, "limpo"
+    try:
+        g.rodar()
+    except FimDeJogo:
+        pass
+
+
+CENARIOS = {"combate": combate, "titulo": titulo, "vila": vila, "campanha": campanha, "baus": baus, "missao": missao}
 
 
 def main():

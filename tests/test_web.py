@@ -145,6 +145,27 @@ class TestPagina(unittest.TestCase):
             ui.cena("Abrigo Branco", tipo="local")
         self.assertEqual(self.cenas(passos)[-2:], [("nova_cena", "Abrigo Branco", True), ("cabecalho", "Abrigo Branco", False)])
 
+    def test_cena_que_pede_confirmacao_espera_o_continuar(self):
+        # A cena de missão declara `confirmar`: o fim dela é um Continuar marcado (a tela só o aceita depois da guarda
+        # de leitura) e a volta ao lugar não vira a página por tempo. O Continuar do prólogo segue como era.
+        def passos(ui):
+            ui.respostas.put((1, None))
+            ui.respostas.put((2, None))
+            ui.cena("A Fonte Nova")
+            ui.dizer("A Fonte Nova brota entre pedras soltas.")
+            ui.continuar(confirmar=True)
+            ui.cena("Vau do Turvo", tipo="local")
+            ui.cena("O vale")
+            ui.dizer("Protótipo.")
+            ui.continuar()
+        ui = WebUI()
+        ui.jogo = None
+        passos(ui)
+        continuares = [m for m in ui.canal.mensagens if m["t"] == "continuar"]
+        self.assertEqual([m.get("confirmar") for m in continuares], [True, None])
+        voltas = [(m["t"], m.get("virar", False)) for m in ui.canal.mensagens if m.get("titulo") == "Vau do Turvo"]
+        self.assertEqual(voltas, [("nova_cena", False)])
+
     def test_introducao_sem_texto_so_troca_o_titulo(self):
         def passos(ui):
             ui.cena("Estrada")

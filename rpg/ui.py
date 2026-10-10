@@ -234,9 +234,10 @@ class UI:
         except EOFError:
             raise SystemExit(0)
 
-    def continuar(self):
+    def continuar(self, confirmar=False):
         """Um Continuar de verdade, mesmo onde a pausa da tela gráfica viraria a página sozinha: o fim do prólogo,
-        que quem começa precisa ler no seu tempo antes de a vila aparecer."""
+        que quem começa precisa ler no seu tempo antes de a vila aparecer. `confirmar`: a cena pede confirmação
+        explícita (as cenas de missão); na tela gráfica, o clique ou a tecla que adiantou o texto não a fecha."""
         self.pausar()
 
 

@@ -1,5 +1,6 @@
-"""A missão "A Febre do Turvo" (primeira entrega da E3): o registro com etapas, a cena de abertura no Vau, o objetivo no
-Diário e no estado da tela, o exame da Fonte Nova, o save e os saves da campanha de antes das missões."""
+"""A missão "A Febre do Turvo" (E3): o registro com etapas, a cena de abertura no Vau, o objetivo no Diário e no estado
+da tela, o exame da Fonte Nova, o canal no Bosque do Moinho, o exterior da Capela Afogada, as visitas antecipadas, o
+save e os saves da campanha de antes das missões."""
 
 import json
 import os
@@ -22,7 +23,7 @@ class Roteiro(BotUI):
     def __init__(self, roteiro=()):
         super().__init__(random.Random(1), max_decisoes=200)
         self.roteiro = list(roteiro)
-        self.ditos, self.ofertas, self.paineis, self.cenas = [], [], [], []
+        self.ditos, self.ofertas, self.paineis, self.cenas, self.continuares = [], [], [], [], []
 
     def dizer(self, texto="", cor=None):
         self.ditos.append(texto)
@@ -35,6 +36,9 @@ class Roteiro(BotUI):
     def painel(self, tipo, dados):
         self.paineis.append((tipo, dados))
         return False
+
+    def continuar(self, confirmar=False):
+        self.continuares.append((self.cenas[-1] if self.cenas else None, confirmar))
 
     def escolher(self, pergunta, opcoes):
         self.ofertas.append(list(opcoes))
@@ -50,6 +54,14 @@ def campanha(classe="guerreiro", ui=None, pasta=None):
 
 def lugar(g, chave):
     return next(l for l in g.mundo["locais"] if l.get("chave") == chave)
+
+
+def ir(g, chave):
+    g.mundo["atual"] = lugar(g, chave)["id"]
+    lugar(g, chave)["visitado"] = True
+
+
+CANAL = "Seguir a água e examinar o canal"
 
 
 class TestMissao(unittest.TestCase):
@@ -141,6 +153,118 @@ class TestMissao(unittest.TestCase):
         self.assertFalse(missoes.cena_pendente(g))
         g.na_estrada = False
         self.assertEqual(missoes.registro(g, MID)["cenas"], [])
+
+    def test_tres_classes_vao_da_fonte_ao_exterior_da_capela(self):
+        for classe in CLASSES:
+            ui = Roteiro(["Examinar a Fonte Nova", CANAL])
+            g = campanha(classe, ui)
+            g.tela(); g.tela()  # abertura; exame da fonte
+            ir(g, "bosque_do_moinho")
+            antes = len(ui.ditos)
+            g.tela()  # o menu do bosque, com o passo da missão; o roteiro segue o canal
+            self.assertIn(CANAL, ui.ofertas[-1])
+            m = missoes.registro(g, MID)
+            self.assertEqual((m["etapa"], m["pistas"]), ("capela", ["agua_do_leste", "represa", "canal_da_capela"]))
+            self.assertEqual(ui.cenas[-1], "O Canal do Moinho")
+            texto = " ".join(ui.ditos[antes:])
+            self.assertIn("represa", texto)
+            self.assertNotIn("Ilse", texto)  # o canal mostra o caminho da água, não a causa
+            self.assertNotIn("Sigilo do", texto)
+            ir(g, "capela_afogada")
+            g.tela()  # a cena de fora da capela, uma vez
+            self.assertEqual(ui.cenas[-1], "A Capela Afogada")
+            self.assertEqual(m["cenas"], ["abertura", "capela_exterior"])
+            self.assertIn("O canal que você seguiu desde o moinho", " ".join(ui.ditos))
+            self.assertFalse(missoes.cena_pendente(g))
+            self.assertFalse(missoes.opcoes(g))  # o interior ainda não existe: nada a fazer aqui por ora
+            cartao = estado(g)["missoes"][0]
+            self.assertEqual((cartao["etapa"], cartao["lugar_id"]), ("capela", lugar(g, "capela_afogada")["id"]))
+            self.assertEqual(len(cartao["pistas"]), 3)
+
+    def test_visitar_antes_nao_adianta_nem_gasta(self):
+        """Passar pelo bosque e pela capela antes da hora não mostra nem consome nada; voltando na etapa certa, a ação
+        e a cena estão lá."""
+        ui = Roteiro(["Examinar a Fonte Nova", CANAL])
+        g = campanha(ui=ui)
+        g.tela()  # abertura
+        for chave in ("bosque_do_moinho", "capela_afogada"):  # etapa "fonte"
+            ir(g, chave)
+            self.assertFalse(missoes.cena_pendente(g))
+            self.assertFalse(missoes.opcoes(g))
+            self.assertFalse(missoes.executar(g, MID, "seguir_canal"))
+        ir(g, "vau_do_turvo")
+        g.tela()  # exame: etapa "canal"
+        ir(g, "capela_afogada")  # a capela antes do canal: ainda nada
+        self.assertFalse(missoes.cena_pendente(g))
+        self.assertEqual(missoes.registro(g, MID)["cenas"], ["abertura"])
+        ir(g, "bosque_do_moinho")
+        g.tela()
+        self.assertEqual(missoes.registro(g, MID)["etapa"], "capela")
+        self.assertFalse(missoes.opcoes(g))  # repetir no bosque: a ação some
+        self.assertFalse(missoes.executar(g, MID, "seguir_canal"))
+        self.assertFalse(missoes.avancar(g, MID, "canal", "capela"))
+        self.assertEqual(missoes.registro(g, MID)["pistas"], ["agua_do_leste", "represa", "canal_da_capela"])
+        self.assertEqual(len([e for e in g.registro if e["t"] == "missao"]), 2)
+        ir(g, "capela_afogada")
+        self.assertTrue(missoes.cena_pendente(g))
+        self.assertFalse(missoes.cena_pendente(g))
+
+    def test_cenas_da_missao_pedem_confirmacao(self):
+        """Toda cena e ação da missão declara `confirmar` e termina num Continuar que pede confirmação explícita (a
+        tela gráfica não vira a página sozinha)."""
+        self.assertTrue(all(d["confirmar"] for d in missoes.CENAS + missoes.ACOES))
+        ui = Roteiro(["Examinar a Fonte Nova", CANAL])
+        g = campanha(ui=ui)
+        g.tela(); g.tela()
+        ir(g, "bosque_do_moinho"); g.tela()
+        ir(g, "capela_afogada"); g.tela()
+        self.assertEqual(ui.continuares[-4:], [("A Febre do Turvo", True), ("A Fonte Nova", True),
+                                               ("O Canal do Moinho", True), ("A Capela Afogada", True)])
+
+    def test_fonte_respeita_a_hora(self):
+        for periodo, hora in enumerate(("a manhã", "a tarde", "o anoitecer", "a noite")):
+            ui = Roteiro(["Examinar a Fonte Nova"])
+            g = campanha(ui=ui)
+            g.tela()
+            g.periodo = periodo
+            g.tela()
+            texto = " ".join(ui.ditos)
+            self.assertIn(f"fria demais para {hora}.", texto)
+            self.assertNotIn("fim da tarde", texto)
+
+    def test_save_da_etapa_canal_continua(self):
+        """Um save da 1.50 (etapa "canal", com a pista da fonte) segue de onde parou, sem perder a pista."""
+        pasta = tempfile.mkdtemp()
+        ui = Roteiro(["Examinar a Fonte Nova"])
+        g = campanha("mago", ui, pasta)
+        g.tela(); g.tela()
+        g.salvar(silencioso=True)
+        h = Jogo.carregar(Roteiro([CANAL]), g.caminho_save(), pasta)
+        self.assertEqual(missoes.registro(h, MID), {"etapa": "canal", "cenas": ["abertura"], "pistas": ["agua_do_leste"]})
+        ir(h, "bosque_do_moinho")
+        h.tela()
+        h.salvar(silencioso=True)
+        k = Jogo.carregar(Roteiro(), h.caminho_save(), pasta)
+        self.assertEqual(missoes.registro(k, MID),
+                         {"etapa": "capela", "cenas": ["abertura"], "pistas": ["agua_do_leste", "represa", "canal_da_capela"]})
+        ir(k, "capela_afogada")
+        self.assertTrue(missoes.cena_pendente(k))
+        k.salvar(silencioso=True)
+        z = Jogo.carregar(Roteiro(), k.caminho_save(), pasta)
+        self.assertEqual(missoes.registro(z, MID)["cenas"], ["abertura", "capela_exterior"])
+        self.assertFalse(missoes.cena_pendente(z))
+
+    def test_diario_diz_o_que_voce_sabe(self):
+        ui = Roteiro(["Examinar a Fonte Nova", "Fechar"])
+        g = campanha(ui=ui)
+        g.diario()
+        self.assertNotIn("O que você sabe:", " ".join(ui.ditos))  # nada descoberto ainda
+        g.tela(); g.tela()
+        ui.ditos.clear()
+        g.diario()
+        self.assertIn("O que você sabe:", " ".join(ui.ditos))
+        self.assertNotIn("Pistas", " ".join(ui.ditos))
+        self.assertEqual(ui.paineis[-1][1]["missoes"][0]["pistas"], [missoes.MISSOES[MID]["pistas"]["agua_do_leste"]])
 
     def test_procedural_nao_tem_missao(self):
         pasta = tempfile.mkdtemp()

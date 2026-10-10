@@ -667,6 +667,7 @@ function ehVoltar(o) {
   return (o.meta && o.meta.voltar) || /^(Voltar|Sair do mercado|Cancelar|Fechar)\b/.test(o.texto);
 }
 
+const RAJADA_LEITURA = 350;  // ms que cada toque da rajada acrescenta à guarda de um Continuar que pede confirmação
 function mostrarContinuar(m) {
   posicionarPrompt();
   soltarAlturaPrompt();
@@ -679,9 +680,24 @@ function mostrarContinuar(m) {
   porVoltar(null);
   const b = el("button", "continuar", "Continuar <span>▸</span>");
   b.type = "button";
-  b.addEventListener("click", (ev) => { ev.stopPropagation(); responder(m.id, null); });
+  pergunta = { id: m.id, tipo: "continuar", confirmar: !!m.confirmar };
+  if (m.confirmar) {
+    // Cena que pede confirmação (as de missão): adiantar o texto e continuar são gestos distintos. O botão chega com o
+    // texto inteiro à vista e só aceita depois da guarda de leitura; cada toque dentro dela (o clique duplo, a tecla
+    // martelada para adiantar) a estende, como no quadro do espólio, e a tecla segurada nunca conta. Continua quem
+    // para e toca de novo.
+    b.classList.add("confirmar");  // chega apagado e acende quando a guarda inicial acaba
+    b.style.setProperty("--guarda", `${GUARDA_LEITURA}ms`);
+    pergunta.guardar = () => {
+      if (performance.now() >= pergunta.guardaAte) return false;
+      pergunta.guardaAte = Math.max(pergunta.guardaAte, performance.now() + RAJADA_LEITURA);
+      return true;
+    };
+    pergunta.guardaAte = performance.now() + GUARDA_LEITURA;
+  }
+  const p = pergunta;
+  b.addEventListener("click", (ev) => { ev.stopPropagation(); if (!(p.guardar && p.guardar())) responder(m.id, null); });
   promptEl.appendChild(b);
-  pergunta = { id: m.id, tipo: "continuar" };
   rolarFim();
 }
 

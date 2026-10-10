@@ -40,6 +40,8 @@ async function abrir(browser, url) {
       const e = await page.$(sel);
       if (e) return e;
       const c = await page.$("#prompt .continuar");
+      // O Continuar de uma cena de missão não aceita toque na rajada: espera a guarda e toca uma vez.
+      if (c && (await c.evaluate((b) => b.classList.contains("confirmar")).catch(() => false))) await page.waitForTimeout(700);
       if (c) await c.click().catch(() => {});
       await page.waitForTimeout(100);
     }
@@ -371,6 +373,12 @@ async function cenarioCampanha(browser) {
     conferir(!!resgate && !!(await page.$('#prompt .escolha:has-text("Hardcore")')), "a criação pergunta o modo: resgate ou hardcore");
     await resgate.click();
     conferir(!!(await esperar('#texto :text("Resgate: se você cair")', 8000)), "o prólogo diz o modo escolhido");
+    // A abertura da missão pede confirmação: o texto termina num Continuar e a página não vira sozinha.
+    conferir(!!(await esperar('#cena-cab .cena-titulo:has-text("A Febre do Turvo")', 10000)), "a abertura da missão toca depois do prólogo");
+    await page.waitForSelector("#prompt .continuar.confirmar", { timeout: 20000 });
+    await page.waitForTimeout(6500);  // mais que a leitura mais longa de uma página que vira sozinha (5,5 s)
+    conferir(/A Febre do Turvo/.test(await page.textContent("#cena-cab .cena-titulo")) && !!(await page.$("#prompt .continuar.confirmar")),
+      "a abertura fica aberta esperando o Continuar");
     conferir(!!(await esperar('#cena-cab .cena-titulo:has-text("Vau do Turvo")')) && !!(await esperar('#predios .predio[data-predio="estrada"]')),
       "a campanha começa no Vau do Turvo, com a vila desenhada");
     conferir(await page.evaluate(() => estado.mapa.nos.map((n) => n.nome).sort().join(",")) === "Bosque do Moinho,Charco dos Juncos,Estrada de Varn,Vau do Turvo",
@@ -387,10 +395,55 @@ async function cenarioCampanha(browser) {
     conferir(/Fonte Nova/.test(await objetivo()) && !!(await page.$('#prompt .escolha:has-text("Examinar a Fonte Nova")')),
       "a missão aparece no rastreador e o exame da Fonte Nova no menu da vila");
     const atalho = await esperar("#mundo .rastro-missao.cacavel", 5000);
+    await page.evaluate(() => { velocidade = "instantaneo"; });  // o texto aparece todo de uma vez
     if (atalho) await atalho.click();
     conferir(!!(await esperar('#cena-cab .cena-titulo:has-text("A Fonte Nova")', 10000)), "o cartão da missão leva ao exame da fonte");
+    await page.waitForSelector("#prompt .continuar.confirmar", { timeout: 10000 });
+    for (let i = 0; i < 6; i++) { await page.keyboard.press("Enter"); await page.waitForTimeout(80); }  // Enter martelado
+    conferir(/A Fonte Nova/.test(await page.textContent("#cena-cab .cena-titulo")), "no instantâneo, o Enter martelado não fecha o exame da fonte");
+    await page.waitForTimeout(700);
+    await page.keyboard.press("Enter");  // depois de uma pausa, o Enter continua
     conferir(!!(await esperar('#predios .predio[data-predio="estrada"]', 20000)) && /Bosque do Moinho/.test(await objetivo())
       && !(await page.$('#prompt .escolha:has-text("Examinar a Fonte Nova")')), "depois do exame, o objetivo aponta o canal e o exame some");
+  } finally {
+    conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
+    await page.close();
+    proc.kill();
+  }
+}
+
+async function cenarioMissao(browser) {
+  console.log("cenário: missão no Bosque do Moinho (o canal)");
+  const { proc, url } = await subir("missao");
+  const { page, erros, esperar } = await abrir(browser, url);
+  const titulo = () => page.evaluate(() => (document.querySelector("#cena-cab .cena-titulo") || {}).textContent || "");
+  const alvo = () => page.evaluate(() => (estado.missoes || []).map((m) => m.lugar).join(","));
+  try {
+    conferir(!!(await esperar('#prompt .escolha:has-text("Seguir a água e examinar o canal")')) && (await alvo()) === "Bosque do Moinho",
+      "no bosque, na etapa do canal, a ação aparece e o marcador está aqui");
+    await page.evaluate(() => { velocidade = "normal"; });
+    await page.click('#prompt .escolha:has-text("Seguir a água e examinar o canal")');
+    await page.waitForFunction(() => /O Canal do Moinho/.test(document.querySelector("#cena-cab .cena-titulo").textContent), null, { timeout: 10000 });
+    await page.waitForTimeout(300);
+    const correndo = await page.evaluate(() => processando);
+    await page.mouse.click(700, 450);  // adianta o texto
+    for (let i = 0; i < 15; i++) {  // e segue clicando e apertando Enter em rajada
+      const b = await page.$("#prompt .continuar");
+      if (b) await b.click({ timeout: 300 }).catch(() => {});
+      await page.keyboard.press("Enter");
+      await page.waitForTimeout(80);
+    }
+    conferir(correndo && /O Canal do Moinho/.test(await titulo()) && !!(await page.$("#prompt .continuar.confirmar")),
+      "adiantar o texto (clique e Enter em rajada) não fecha a cena do canal");
+    await page.waitForTimeout(6500);
+    conferir(/O Canal do Moinho/.test(await titulo()), "deixada aberta, a cena do canal não fecha por tempo");
+    await page.click("#prompt .continuar");
+    conferir(!!(await esperar('#prompt .escolha:has-text("Explorar")')) && (await alvo()) === "Capela Afogada"
+      && !(await page.$('#prompt .escolha:has-text("Seguir a água")')), "depois do Continuar, o objetivo e o marcador vão para a capela");
+    await page.keyboard.press("d");
+    const sabe = await esperar(".missao-pistas", 10000);
+    conferir(!!sabe && (await page.textContent(".missao-pistas > span")) === "O que você sabe:" && (await page.$$(".missao-pistas li")).length === 3,
+      "o Diário diz o que você sabe: as três descobertas");
   } finally {
     conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
     await page.close();
@@ -459,6 +512,7 @@ try {
   await cenarioTitulo(browser);
   await cenarioVila(browser);
   await cenarioCampanha(browser);
+  await cenarioMissao(browser);
   await cenarioBaus(browser);
 } catch (e) {
   falhas.push(String(e));

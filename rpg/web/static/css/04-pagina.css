@@ -198,6 +198,9 @@ body.modo-titulo .vinheta { background: radial-gradient(ellipse 80% 70% at 50% 4
   border: var(--borda) solid var(--p-a); border-image: var(--anel) 1 / 1 stretch; background: var(--p-k); background-clip: padding-box; text-shadow: var(--contorno); }
 .continuar:hover, .continuar:focus-visible { --anel: var(--anel-Y); color: var(--aceso); outline: none; }
 .continuar span { display: inline-block; animation: seta 0.8s steps(2) infinite; }
+/* Continuar de cena que pede confirmação: chega apagado e acende ao fim da guarda de leitura (antes, não aceita). */
+.continuar.confirmar { animation: continuar-guarda var(--guarda, 550ms) steps(1, end) both; }
+@keyframes continuar-guarda { from { opacity: 0.45; cursor: default; } to { opacity: 1; } }
 .entrada-texto { display: flex; gap: 10px; align-items: center; }
 .entrada-texto input { flex: 1; background: rgba(0, 0, 0, 0.4); border: 0; color: var(--tinta); font-family: var(--texto); font-size: 22px; padding: 8px 12px; outline: none;
   box-shadow: inset 0 -1px 0 rgba(226, 189, 99, 0.35), inset 0 3px 10px rgba(0, 0, 0, 0.6); }
