@@ -108,7 +108,12 @@ class Dano:
 
     def executar(self, ctx):
         cb, u = ctx.cb, ctx.u
-        alvos = cb.inimigos_vivos() if self.em == "todos" else [ctx.alvo]
+        if self.em == "todos":
+            alvos = cb.inimigos_vivos()
+        elif self.em == "outro":
+            alvos = [t for t in [segundo_alvo(cb, ctx.alvo)] if t]
+        else:
+            alvos = [ctx.alvo]
         for t in alvos:
             ctx.dano = cb.atacar(u, t, self.mult, tipo=self.tipo, alcance=self.alcance, stat=self.stat,
                                  crit_extra=self.crit_extra, bonus=valor(self.bonus, u) if self.bonus else 0,
@@ -119,6 +124,8 @@ class Dano:
 
     def linhas(self, u):
         from .grimorio import golpe
+        if self.em == "outro" and not self.grimorio:  # os números são os do golpe anterior: aqui, só para onde vai
+            return [_efeito(SEGUNDO_ALVO)] + descrever(self.depois, u)
         rotulo = self.grimorio or ("Em cada inimigo" if self.em == "todos" else "Dano")
         nota = self.nota or (None if self.esquiva else "Não pode ser esquivado.")
         linha = golpe(u, self.mult, stat=self.stat, alcance=self.alcance, tipo=self.tipo,
@@ -126,6 +133,25 @@ class Dano:
                       bonus_txt=self.bonus.texto() if self.bonus else None, crit_extra=self.crit_extra,
                       rotulo=rotulo, nota=nota)
         return [linha] + descrever(self.depois, u)
+
+
+def mais_ferido(combatentes):
+    """O mais ferido: a menor fração de vida (vida / vida máxima), como na cura dos inimigos e nas preces da Odette.
+    No empate, o primeiro na ordem da luta (a das cartas, da esquerda para a direita; no texto, as letras A, B...)."""
+    return min(combatentes, key=lambda c: c.hp / c.max_hp)
+
+
+SEGUNDO_ALVO = ("O 2º disparo vai em outro inimigo de pé, o mais ferido (a menor fração de vida; no empate, o mais à "
+                "esquerda). Se o 1º derrubar o alvo, o 2º segue para outro. Sem outro inimigo, volta no mesmo alvo.")
+
+
+def segundo_alvo(cb, primeiro):
+    """Para onde vai um golpe com `em="outro"` (o 2º disparo do Tiro Duplo): outro inimigo de pé, o mais ferido;
+    sem outro, o próprio alvo, se ainda estiver de pé; sem ninguém, nenhum (o golpe não sai)."""
+    outros = [e for e in cb.inimigos_vivos() if e is not primeiro]
+    if outros:
+        return mais_ferido(outros)
+    return primeiro if primeiro.vivo else None
 
 
 class Se:
@@ -654,10 +680,11 @@ HABILIDADES = {
         Buff("esquiva", 2, 0.3),
         Dizer("Você se move em zigue-zague, difícil de acertar. (+30% esquiva, até o teto de 60%)", "ciano")],
         icone="fuga", familia="protecao"),
-    "tiro_duplo": hab("Tiro Duplo", 10, "inimigo", "Dois disparos de 90%.", [
+    "tiro_duplo": hab("Tiro Duplo", 10, "inimigo",
+                      "Dois disparos de 90%: o 1º no alvo, o 2º em outro inimigo (o mais ferido); sozinho, os dois no alvo.", [
         Salva("tiro_duplo",  # as duas flechas saem quase juntas, numa rajada só
               Dano(0.9, alcance="distancia", rotulo="Tiro Duplo (1)", grimorio="Cada um dos 2 disparos"),
-              Se("vivo", Dano(0.9, alcance="distancia", rotulo="Tiro Duplo (2)"), mostrar=False))], flechas=2,
+              Dano(0.9, alcance="distancia", rotulo="Tiro Duplo (2)", em="outro"))], flechas=2,
         icone="arco", familia="fisico", anim="rajada"),
     "comando_fera": hab("Ordem da Fera", 12, "inimigo", DESC_ORDEM, fn=_comando_fera, linhas=_linhas_comando_fera,
                         desc_fn=_desc_ordem, req=_req_fera, icone="fera", familia="natureza"),

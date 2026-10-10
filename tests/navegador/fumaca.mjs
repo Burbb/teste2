@@ -874,6 +874,27 @@ async function cenarioEncruzilhada(browser) {
   }
 }
 
+async function cenarioTiroDuplo(browser) {
+  console.log("cenário: o Tiro Duplo (o 1º derruba o alvo, o 2º segue para o mais ferido)");
+  const { proc, url } = await subir("tiro_duplo");
+  const { page, erros, esperar } = await abrir(browser, url);
+  try {
+    conferir(!!(await esperar('#roda .roda-botao[data-slot="habilidades"]')), "a luta abre com as ações do Patrulheiro");
+    await (await page.$('#roda .roda-botao[data-slot="habilidades"]')).click();
+    await (await page.waitForSelector('.rj-linha[data-hab="tiro_duplo"]')).click();
+    await (await page.waitForSelector('.carta.alvejavel:has-text("Alfa")', { timeout: 5000 })).click();
+    await esperar('#roda .roda-botao[data-slot="habilidades"]');
+    const texto = await page.textContent("#texto");
+    const vidas = await page.evaluate(() => Object.fromEntries(App.estado.combate.inimigos.map((e) => [e.nome, e.hp])));
+    conferir(/Você atinge Alfa/.test(texto) && /Você atinge Gama/.test(texto) && !/Você atinge Beta/.test(texto) && vidas.Alfa === 0,
+      "o 1º disparo derruba Alfa e o 2º vai em Gama, o mais ferido; Beta, inteiro, não leva flecha");
+  } finally {
+    conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
+    await page.close();
+    proc.kill();
+  }
+}
+
 async function cenarioBaus(browser) {
   console.log("cenário: baús abertos juntos");
   const { proc, url } = await subir("baus");
@@ -944,6 +965,7 @@ try {
   await cenarioYara(browser);
   await cenarioGolpePreparado(browser);
   await cenarioEncruzilhada(browser);
+  await cenarioTiroDuplo(browser);
   await cenarioBaus(browser);
 } catch (e) {
   falhas.push(String(e));

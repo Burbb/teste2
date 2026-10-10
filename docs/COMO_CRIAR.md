@@ -33,7 +33,7 @@ o caso em `batalha.js` (`m.anim === "..."`); o validador cobra os dois.
 
 | Bloco | Faz | Exemplo |
 |---|---|---|
-| `Dano(mult, stat, tipo, alcance, crit_extra, bonus, rotulo, esquiva, em, depois)` | um golpe; `em="todos"` acerta todos; `depois` roda para cada alvo | `Dano(1.0, alcance="distancia", em="todos")` |
+| `Dano(mult, stat, tipo, alcance, crit_extra, bonus, rotulo, esquiva, em, depois)` | um golpe; `em="todos"` acerta todos; `em="outro"` vai em outro inimigo de pé, o mais ferido (`segundo_alvo`: o 2º disparo do Tiro Duplo); `depois` roda para cada alvo | `Dano(1.0, alcance="distancia", em="todos")` |
 | `Se(condicao, *passos)` | `"acertou"`, `"vivo"`, `"acertou_vivo"` | `Se("acertou", ...)` |
 | `Aplicar(estado, turnos, valor, chance, rotulo, acumula, em, direto)` | um estado no inimigo | `Aplicar("sangramento", 3, valor=Escala(minimo=2, atk=0.3))` |
 | `Buff(estado, turnos, valor)` | um estado em você | `Buff("fortalecido", 3, 0.3)` |

@@ -11,6 +11,7 @@
     python -m tests.navegador.cenarios retorno   # chegando ao Vau com Ilse resolvida (DESFECHO, DIAS, LODO, YARA)
     python -m tests.navegador.cenarios praca     # depois da resposta a Caspar (POSTURA, YARA, LUGAR)
     python -m tests.navegador.cenarios encruzilhada  # a escolha de especialização, comparando (CLASSE, NIVEL)
+    python -m tests.navegador.cenarios tiro_duplo    # Patrulheiro contra três lobos feridos de jeitos diferentes (NIVEL, VIDAS)
 
 Imprime o endereço do servidor na primeira linha e fica no ar até ser encerrado.
 """
@@ -339,8 +340,39 @@ def encruzilhada(ui):
     menu_principal(ui, argparse.Namespace(seed=1, saves=pasta, brando=False))
 
 
+def tiro_duplo(ui):
+    """Patrulheiro (com o lobo) no nível NIVEL (padrão 5), numa floresta, contra três lobos chamados Alfa, Beta e
+    Gama, com a vida em VIDAS (frações, padrão "0.05,1,0.4": Alfa cai com um disparo). Inimigos sem esquiva, para o
+    tiro sair onde se espera; a luta segue até o fim e o jogo continua."""
+    from rpg import dev
+    from rpg.ui import BotUI
+    pasta = tempfile.mkdtemp()
+    g = Jogo(BotUI(random.Random(1)), seed=11, pasta_saves=pasta, hardcore=False)
+    g.iniciar("Jean", "arqueiro", "turvo")
+    dev.subir_ate(g, int(os.environ.get("NIVEL", "5")), spec="patrulheiro", animal="lobo")
+    loc = next(l for l in g.mundo["locais"] if l["tipo"] == "selvagem" and l["bioma"] == "floresta")
+    g.mundo["atual"] = loc["id"]
+    loc["visitado"] = True
+    g.periodo, g.clima = 1, "limpo"
+    g.j.hp, g.j.rec = g.j.max_hp, g.j.max_rec
+    g.ui, ui.jogo = ui, g
+    ui.cena("Clareira", g.contexto_cena(), "evento")
+    inimigos = []
+    for nome, frac in zip(("Alfa", "Beta", "Gama"), os.environ.get("VIDAS", "0.05,1,0.4").split(",")):
+        e = g.inimigo("lobo", nivel=max(1, g.j.nivel - 1))
+        e.nome, e.agi = nome, 0
+        e.hp = max(1, int(e.max_hp * float(frac)))
+        inimigos.append(e)
+    g.combate(inimigos)
+    try:
+        g.rodar()
+    except FimDeJogo:
+        pass
+
+
 CENARIOS = {"combate": combate, "titulo": titulo, "vila": vila, "campanha": campanha, "baus": baus, "missao": missao,
-            "recarga": recarga, "capela": capela, "retorno": retorno, "praca": praca, "encruzilhada": encruzilhada}
+            "recarga": recarga, "capela": capela, "retorno": retorno, "praca": praca, "encruzilhada": encruzilhada,
+            "tiro_duplo": tiro_duplo}
 
 
 def main():

@@ -61,7 +61,8 @@ class TestCatalogo(unittest.TestCase):
                 def coletar(passos):
                     for p in passos:
                         if isinstance(p, H.Dano):
-                            visiveis.append(p)
+                            if p.em != "outro" or p.grimorio:  # o 2º disparo do Tiro Duplo repete os números do
+                                visiveis.append(p)              # 1º: o Grimório diz só para onde ele vai
                             coletar(p.depois)
                         elif isinstance(p, H.Se) and p.mostrar or isinstance(p, H.Salva):
                             coletar(p.passos)

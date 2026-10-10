@@ -79,7 +79,7 @@ Três commits posteriores à atualização do roadmap foram consultados. Os comp
 | E2 — região fixa | **Protótipo entregue na 1.48.0** (commit `2661b59`): início da campanha, mapa fixo, viagem, descoberta e save. Validado tecnicamente; falta Jean jogar. |
 | E3 — missão mínima | Entregas na 1.50.0 a 1.54.0 (registros abaixo): da Fonte Nova ao canal, à capela, ao interior, a Vó Berta, à guardiã (Destruir ou Dar descanso) e à volta ao Vau, que conclui a missão. A bênção e a comporta não existem. Falta Jean jogar. |
 | E4 — consequência local | Na 1.54.0, a Fonte Nova, a frase do Vau, Pita e Marta. Na 1.55.0, Caspar: a acusação, a praça (Apoiar, Denunciar com prova, Calar), a situação da Yara e as reações da comitiva. Na 1.56.0, a consolidação: a Yara barrada fica de fato fora do Vau, o encontro no Charco depois da denúncia, a conversa da Yara sobre a praça e os textos que contradiziam o Vau. **O critério mínimo da E4 (07-ETAPAS) está atendido**; as outras ideias do 11 (bênção, sementes, mercado, taverna, Charco à noite, Odette e Caspar, Anselmo, a cena da vigília) ficam adiadas, não são requisito. Falta Jean jogar. |
-| E5 — classes | Diagnóstico (só design) em [14](14-E5-DIAGNOSTICO-CLASSES.md), sobre a 1.56.0. **P1 implementada na 1.57.0:** o golpe preparado em duas lutas fixas da capela (seção 10 do 14). **P3 implementada na 1.58.0:** a encruzilhada compara os dois caminhos e o Grimório explica (seção 11 do 14). A P2 não começou (não está autorizada). A E5 **não** está concluída. A validação da E4 jogando, por Jean, fica registrada à parte. |
+| E5 — classes | Diagnóstico (só design) em [14](14-E5-DIAGNOSTICO-CLASSES.md), sobre a 1.56.0. **P1 implementada na 1.57.0:** o golpe preparado em duas lutas fixas da capela (seção 10 do 14). **P3 implementada na 1.58.0:** a encruzilhada compara os dois caminhos e o Grimório explica (seção 11 do 14). **P2 começada na 1.59.0, só pelo Tiro Duplo** (seção 12 do 14): o 2º disparo vai no outro inimigo mais ferido. Drenar Vida, Desaparecer e Passo Ágil não mudaram. A E5 **não** está concluída. A validação da E4 jogando, por Jean, fica registrada à parte. |
 | E6–E11 | Plano de trabalho futuro; infraestrutura existente não equivale a etapas concluídas. Notas aprovadas para a E3 na seção 19 do [11](11-E1-REGIAO-INICIAL.md). |
 | Bugs ainda abertos | Nenhum bug aberto específico foi informado para registro nesta passagem. Isso não comprova ausência de bugs. |
 | Polimento antes da E3 | Entregue na 1.48.1 (registro abaixo): leitura, item achado, balcão do templo, palco da luta. Falta Jean conferir jogando. |
@@ -608,4 +608,53 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   2. Compare os dois cartões. Abra "Olhar de perto" num, leia os números, aperte Esc e veja os cartões de novo, sem nada mudado na ficha.
   3. Confirme um caminho e confira na ficha os atributos que a prévia prometeu.
   4. Abra o Grimório: a página do caminho no fim da lista; com o Arqueiro, Marcar Presa; com o Mago Piromante, a Combustão.
+
+### 10/10/2026 — E5, P2: o Tiro Duplo (1.59.0)
+
+- **Pedido de Jean:** começar a P2 por uma habilidade só, o Tiro Duplo do Patrulheiro, sem mexer em outras habilidades, classes, regeneração, talentos, itens nem imunidades.
+  - Dar a ele um papel distinto do Tiro Certeiro (concentra num alvo) e da Chuva de Flechas (o grupo inteiro), sem virar a melhor ação de todo turno.
+  - O 1º disparo no alvo escolhido; o 2º no outro inimigo de pé, o mais ferido pelo critério existente (documentado, com desempate); sozinho, no mesmo alvo; a morte do 1º não cancela o 2º.
+  - Sem segunda seleção de alvo nem infraestrutura geral de vários alvos.
+  - Comparar antes com custo, flechas e coeficientes atuais, nos níveis 4–6 e em cenários direcionados; propor ajuste só se preciso.
+  - Coerência entre execução, Grimório, descrição e prévia; conferir na tela; parar antes de Drenar Vida, Desaparecer e Passo Ágil.
+- **Implementado** (detalhes na seção 12 do 14):
+  - **`Dano(..., em="outro")`** (`habilidades.py`): o golpe vai em `segundo_alvo`, que é outro inimigo de pé, o mais ferido; sem outro, o próprio alvo; sem ninguém, nenhum.
+  - **`mais_ferido`:** a menor fração de vida, o critério da cura dos inimigos e das preces da Odette. No empate, o primeiro na ordem da luta (a carta mais à esquerda).
+  - **Tiro Duplo:** os dois disparos na mesma rajada (`Salva`), o 2º com `em="outro"`.
+  - **Textos:** descrição curta nova; o Grimório ganhou a linha de para onde vai o 2º, e a prévia da encruzilhada usa as mesmas linhas. `docs/COMO_CRIAR.md` (tabela dos blocos) explica o `em="outro"`.
+  - **Números:** custo, flechas e coeficientes não mudaram.
+- **Resultados** (nível 4; tabelas dos níveis 4, 5, 6 e 9 na seção 12 do 14). Valores: turnos para limpar e ações inimigas.
+  - **O Tiro Duplo ganha:**
+    - **Um quase morto e outro de pé:** 2,33 turnos e 1,42 ações inimigas, contra 2,86 e 1,95 do Tiro Certeiro e 3,03 e 2,12 da Chuva, com o Foco do Tiro Certeiro.
+    - **Dois feridos ao alcance de um disparo, com menos de 20 de Foco:** 1,61 e 0,73, contra 2,18 e 1,27 do Tiro Certeiro.
+  - **Outra habilidade continua melhor:**
+    - **Um alvo resistente:** o Tiro Certeiro (4,41 turnos, contra 4,78).
+    - **Dois com bastante vida:** o Tiro Certeiro, porque concentrar derruba antes (4,60 ações inimigas, contra 5,75).
+    - **Três ou mais, com Foco:** a Chuva.
+    - **Dois feridos fora do alcance de um disparo** (níveis 5 e 9): o Tiro Certeiro, por pouco.
+  - **Simulador e replay:** dentro do ruído; as lutas ficam um pouco mais curtas, e o robô quase não usa o Tiro Duplo.
+- **Verificações:**
+  - `unittest`: 246 OK, 1 pulado. Novo `tests/test_tiro_duplo.py` (10). O `test_habilidades` não conta o 2º disparo como linha de dano própria.
+  - `tests.gabarito`: idêntico, sem atualizar. O arqueiro do robô não passa do nível 2 nas 24 partidas.
+  - `pyflakes`: só o aviso conhecido.
+  - `fumaca.mjs`: 151 checagens OK, com o cenário novo do Tiro Duplo.
+  - `tests.equilibrio --spec patrulheiro` (30 e 150 lutas, com e sem comitiva) e `tests.replay`, antes e depois.
+  - Navegador em 1500 e 1280 px:
+    - um disparo em cada inimigo;
+    - o 1º derruba e o 2º segue;
+    - a rajada e o registro;
+    - Foco e flechas;
+    - o Grimório e a prévia.
+- **Limitações:**
+  - "Mais ferido" é por fração de vida: um grande a 30% recebe antes de um pequeno a 40%.
+  - Um 1º disparo que erra não é repetido no mesmo alvo quando há outro de pé.
+  - As duas flechas saem mesmo quando o 1º derruba o último.
+  - Não há aviso de "ao alcance de um disparo": o jogador decide pela vida nas cartas e pela faixa de dano do Grimório.
+  - A E5 não está concluída.
+- **Como testar (rota curta):**
+  1. `python -m tests.navegador.cenarios tiro_duplo` e abra o endereço. Alfa está quase morto, Beta inteiro e Gama a 40%.
+  2. Use o Tiro Duplo em Alfa: o 1º derruba Alfa e o 2º vai em Gama. O registro diz quem recebeu cada tiro.
+  3. Suba de novo e compare: o Tiro Certeiro em Alfa (derruba, mas Gama fica inteira), a Chuva de Flechas (acerta os três, por 20 de Foco).
+  4. Com `VIDAS=1,1,1`, compare o Tiro Certeiro e o Tiro Duplo em lobos inteiros: o Duplo espalha e o primeiro abate demora.
+  5. Grimório (P), página do Tiro Duplo: a faixa de dano e a linha de para onde vai o 2º.
 

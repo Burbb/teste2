@@ -7,7 +7,11 @@ atributo, habilidade, talento, item ou save foi alterado.
 a 1.57 mudou o que elas dizem (o golpe preparado no Vale), a seção 10 diz o que vale agora.
 
 **Atualização 1.58.0:** a P3 foi implementada (seção 11): a encruzilhada compara os dois caminhos e o Grimório explica
-imunidades, a Marca, a Combustão e o caminho. A P2 continua não autorizada.
+imunidades, a Marca, a Combustão e o caminho.
+
+**Atualização 1.59.0:** a P2 começou por uma habilidade só, o Tiro Duplo do Patrulheiro (seção 12). Onde as seções 1 a 9
+dizem que ele "nunca ganha do Tiro Certeiro", isso vale para a 1.58 e antes. Drenar Vida, Desaparecer e Passo Ágil não
+mudaram.
 
 **Cuidado ao ler as comparações de dano (seções 1, 4 e 9).** Somar o dano de sequências contra um alvo de treino não
 demonstra que uma habilidade é inútil quando o valor dela é defesa, cura ou efeito sobre aliados. Erguer Escudo,
@@ -1085,4 +1089,165 @@ P1 não comprovou utilidade. Continua como questão para a P2 (não autorizada).
   - os atributos depois de confirmar iguais aos da prévia;
   - as páginas do Grimório (o caminho, a Combustão, a Marca, a Investida, a Lança).
   - `fumaca.mjs` ganhou o cenário da encruzilhada; `cenarios.py` ganhou `encruzilhada` (CLASSE, NIVEL).
+
+## 12. P2, primeira habilidade: o Tiro Duplo (1.59.0)
+
+Só o Tiro Duplo mudou. Custo (10 de Foco), flechas (2) e coeficientes (dois disparos de 90%) ficaram como eram: as
+medidas abaixo mostram que eles sustentam o papel, então nenhum número foi proposto nem alterado.
+
+### 12.1 O comportamento
+
+- O 1º disparo vai no alvo que você escolhe.
+- O 2º (`Dano(..., em="outro")`, `habilidades.segundo_alvo`):
+  - havendo outro inimigo de pé, vai nele;
+  - havendo vários, no **mais ferido** (`habilidades.mais_ferido`);
+  - restando só o 1º alvo, volta nele;
+  - sem ninguém de pé, não sai, e a luta acaba como sempre.
+- A morte do 1º alvo não cancela o 2º disparo, que segue para outro inimigo.
+- **O critério "mais ferido"** é o que o jogo já usa na cura dos inimigos e nas preces da Odette: a **menor fração de
+  vida** (vida ÷ vida máxima). No empate, o primeiro na ordem da luta (a carta mais à esquerda; no texto, A antes de B).
+- Cada disparo é um golpe próprio, com crítico, esquiva, a Marca e o abate no alvo dele.
+  - O Tiro de Abertura vale só para o 1º.
+  - Cada abate dispara os efeitos uma vez.
+- As 2 flechas e os 10 de Foco saem uma vez, no começo, como antes. Se o 1º derruba o último inimigo, o 2º não sai, mas
+  as duas flechas já foram (e entram na conta de recolher no fim da luta).
+- **Na tela**, a rajada é a de sempre: duas flechas quase juntas, cada uma voando para a carta que acerta. O registro
+  diz quem recebeu cada tiro ("[Tiro Duplo (1)] Você atinge Alfa", "[Tiro Duplo (2)] Você atinge Gama"); a queda do 1º
+  aparece entre os dois.
+- **Descrição curta, Grimório e prévia** dizem o mesmo. O Grimório tem a linha de dano ("Cada um dos 2 disparos") e uma
+  linha de para onde vai o 2º. A prévia da especialização usa as mesmas linhas.
+
+### 12.2 Como foi medido
+
+- **Execução real:** o menu de habilidades do combate (`fase_jogador`), com um roteiro que escolhe a ação e o alvo.
+- **Herói:** Patrulheiro nos níveis 4, 5, 6 e 9.
+  - Sem talentos: os pontos ficam guardados, porque Mira Firme e Olho de Águia valem igual para as três habilidades e
+    o Tiro de Abertura distorceria o 1º golpe.
+  - Equipamento de `dev.vestir` com semente fixa.
+  - Nível 4: Ataque 20, Agilidade 16, crítico 21%, Foco 31 (+5 por turno). Nível 6: Ataque 29, crítico 26%. Nível 9:
+    Ataque 36, crítico 38%.
+- **Luta `sozinho`** (sem o animal), com inimigos um nível abaixo e sem afixo.
+- **As mesmas sementes** para as três habilidades: 3000 por linha numa ação, 1000 na luta inteira.
+- **Alvo do jogador:**
+  - o inimigo com menos vida, para o Tiro Certeiro e o 1º do Tiro Duplo;
+  - o inteiro, nos cenários 7 a 9, para ver o 2º terminar o ferido.
+- **Duas medidas:**
+  - **Uma ação:** dano que conta (sem o excesso além da vida) e abates.
+  - **A luta inteira** repetindo a ação, com Disparo quando falta Foco e inimigos parados:
+    - turnos para limpar;
+    - **ações inimigas**: a soma, turno a turno, dos inimigos que seguem de pé e agiriam. É o que a luta custa em vida;
+    - Foco e flechas gastos.
+- **Antes:** a 1.58.0, na mesma régua; lá os dois disparos iam no mesmo alvo.
+- Script fora do repositório; a seção 9 descreve o método e os limites.
+
+### 12.3 Resultados (nível 4; o 6 é parecido)
+
+Cada célula: turnos para limpar / ações inimigas / Foco na luta. Entre colchetes, uma ação: dano, abates.
+
+| Cenário | Tiro Certeiro | Tiro Duplo antes | **Tiro Duplo agora** | Chuva de Flechas |
+|---|---|---|---|---|
+| 1 inimigo resistente (troll) | **4,41 / 3,41 / 35** [28,6] | 4,78 / 3,78 / 48 [25,8] | 4,78 / 3,78 / 48 [25,8] | 7,75 / 6,75 / 62 |
+| 2 feridos (lobos a 35%) | 2,18 / 1,27 / 17 [0,92] | 2,10 / 1,15 / 21 [0,96] | 1,61 / 0,73 / 16 [1,30] | **1,27 / 0,28 / 20** [1,77] |
+| 2 com bastante vida (bandidos) | **4,41 / 4,60 / 35** | 4,33 / 4,49 / 43 | 4,16 / 5,75 / 42 | 5,19 / 6,56 / 47 |
+| 3 lobos inteiros | **5,33 / 7,66 / 43** | 6,03 / 8,95 / 52 | 5,12 / 8,53 / 49 | 5,27 / 8,78 / 47 |
+| 4 lobos inteiros | 7,08 / 13,75 / 56 | 8,17 / 16,11 / 63 | 7,17 / 15,53 / 59 | **6,13 / 13,22 / 55** |
+| 3 lobos a 35% | 3,26 / 3,52 / 26 | 3,14 / 3,29 / 31 | 2,35 / 2,09 / 23 | **1,37 / 0,40 / 21** |
+| 1º cai no 1º disparo (lobo a 8% + lobo inteiro) | 2,86 / 1,95 / 23 | 2,99 / 1,99 / 30 | **2,33 / 1,42 / 23** | 3,03 / 2,12 / 35 |
+| 2º derruba (1º no inteiro, outro a 12%) | 2,86 / 1,95 / 23 | 2,97 / 2,94 / 30 | **2,32 / 1,38 / 23** | 3,00 / 2,06 / 35 |
+| 2º pode errar (1º num lobo, harpia a 30%) | 2,90 / 2,03 / 23 | 2,98 / 2,95 / 30 | **2,36 / 1,48 / 24** | 3,06 / 2,17 / 35 |
+
+**Com pouco Foco** (a luta começa com 15, depois de outra; a Chuva fica fora de alcance no 1º turno):
+
+| Cenário (nível 4) | Tiro Certeiro | Tiro Duplo agora | Chuva de Flechas |
+|---|---|---|---|
+| 2 feridos | 2,18 / 1,27 / 17 | **1,61 / 0,73 / 16** | 2,15 / 1,23 / 20 |
+| 2 com bastante vida | **4,78 / 4,98 / 30** | 4,72 / 6,22 / 32 | 6,06 / 7,51 / 40 |
+| 3 lobos a 35% | 3,26 / 3,52 / 24 | **2,41 / 2,15 / 21** | 2,26 / 2,35 / 20 |
+
+**Nos níveis 5 e 9**, os lobos a 35% já não caem com um disparo de 90%.
+
+- **2 feridos, nível 5:**
+  - Tiro Duplo: 1,98 turnos e 1,39 ações inimigas;
+  - Tiro Certeiro: 2,21 turnos e 1,32 ações inimigas.
+- **2 feridos, nível 9:** o Tiro Duplo faz 1,53 ações inimigas, o Tiro Certeiro 1,36.
+- **Um quase morto e outro de pé:** o Tiro Duplo continua o melhor, nos níveis 5 e 9 (2,66 a 2,74 turnos, contra 3,18 a 3,48).
+
+### 12.4 O papel demonstrado
+
+- **O Tiro Duplo é preferível** quando há dois alvos e cada um está ao alcance de um disparo de 90%. Isso inclui um
+  inimigo quase morto e outro de pé: o 1º termina, o 2º não se perde.
+  - Nesses casos é o melhor em turnos e em ações inimigas, com o Foco do Tiro Certeiro e a metade do da Chuva.
+  - Com menos de 20 de Foco, é o melhor também com dois ou três feridos.
+- **Outra habilidade continua melhor:**
+  - **Um alvo resistente:** o Tiro Certeiro (mais dano, menos Foco, uma flecha).
+  - **Dois inimigos com bastante vida:** o Tiro Certeiro. O Tiro Duplo espalha o dano, o primeiro abate demora, e a
+    luta custa mais ações inimigas (5,75 contra 4,60).
+  - **Três ou mais, com Foco para isso:** a Chuva de Flechas. Com três inteiros, o Tiro Certeiro empata ou ganha (menos ações inimigas).
+  - **Dois feridos fora do alcance de um disparo** (nível 5 e 9 acima): o Tiro Certeiro, por pouco.
+- Não virou a melhor ação de todo turno.
+- A decisão se lê na tela: a vida nas cartas e a faixa de dano do Grimório (12–16 por disparo no nível 4).
+
+### 12.5 No simulador e no replay
+
+Mexe pouco, porque o robô quase não escolhe o Tiro Duplo:
+
+- com dois ou mais inimigos, ele usa a Chuva;
+- com o animal de pé, prefere a Ordem da Fera, que é mais cara.
+
+`tests.equilibrio --spec patrulheiro --lutas 150`, lutas comuns, antes → agora:
+
+| Nv | Vitórias | Turnos | Vida perdida | Seus turnos p/ matar |
+|---|---|---|---|---|
+| 4 | 100% → 100% | 4,6 → 4,6 | 16% → 16% | 3,6 → 3,6 |
+| 5 | 91% → 93% | 5,9 → 5,7 | 25% → 24% | 5,4 → 5,2 |
+| 6 | 93% → 93% | 6,5 → 6,4 | 23% → 23% | 5,6 → 5,5 |
+| 8 | 91% → 89% | 6,3 → 6,0 | 26% → 26% | 4,8 → 4,7 |
+| 10 | 92% → 93% | 5,2 → 5,2 | 18% → 18% | 4,3 → 4,3 |
+| 12 | 91% → 91% | 5,2 → 5,1 | 23% → 23% | 4,6 → 4,5 |
+
+- **Simulador:** dentro do ruído; as lutas ficam um pouco mais curtas. Os guardiões são 6 por nível e oscilam como
+  antes.
+- **Sem comitiva** (`--sozinho`, 30 lutas): praticamente igual (diferenças de 0,1 turno e 1 ponto de vida perdida).
+- **`tests.replay`:**
+  - Xatuba (Patrulheiro): 89% → 88% de vitórias do robô, 7,0 → 6,9 turnos;
+  - Fuckerson (Patrulheiro): igual.
+- **Gabarito: não mudou.** O arqueiro do robô não passa do nível 2 em nenhuma das 24 partidas, então a mudança, que
+  vale também no mundo gerado, não aparece nelas.
+
+### 12.6 Limitações
+
+- **"Mais ferido" é por fração de vida, não por vida que falta.** Um inimigo grande a 30% recebe o 2º disparo antes de
+  um pequeno a 40% com menos vida. É o critério que o jogo já usa; o Grimório diz isso.
+- **Um 1º disparo que erra não é repetido no mesmo alvo** quando há outro de pé: o 2º vai no outro. Antes, ele repetia
+  no mesmo alvo.
+- **As duas flechas saem** mesmo quando o 1º derruba o último inimigo, como antes.
+- **O papel depende da vida dos inimigos:** com um disparo de 90% que não derruba, os dois feridos ficam para o Tiro
+  Certeiro. Não há aviso de "ao alcance"; a decisão é do jogador, pela vida e pela faixa de dano.
+- **As medidas usam inimigos parados e herói sem talentos:** servem para comparar as três habilidades nas mesmas
+  condições, não para dizer quanto uma luta real custa.
+
+### 12.7 Verificações
+
+- **`tests/test_tiro_duplo.py`** (10 testes), pelo menu do combate:
+  - o critério e o desempate;
+  - sem outro inimigo, o mesmo alvo; sem ninguém, nada;
+  - um disparo em cada inimigo, com Foco e flechas uma vez e o registro com quem recebeu;
+  - sozinho, os dois no mesmo alvo;
+  - o 1º cai e o 2º segue;
+  - dois abates sem duplicar;
+  - o último cai no 1º e a luta acaba;
+  - o 2º pode errar;
+  - a Marca e o Tiro de Abertura no alvo certo;
+  - descrição, Grimório e prévia.
+- **`test_habilidades`:** o 2º disparo não conta como linha de dano própria.
+- **Navegador, em 1500 e 1280 px:**
+  - o 1º derruba Alfa e o 2º vai em Gama, o mais ferido;
+  - com os três de pé, o 1º em Beta (a escolha) e o 2º em Gama (o crítico no alvo certo);
+  - a rajada, o registro, as flechas (20 → 18) e o Foco (33 → 23);
+  - o Grimório e a prévia da encruzilhada.
+  - `cenarios.py` ganhou `tiro_duplo` (NIVEL, VIDAS); `fumaca.mjs` ganhou o cenário.
+
+### 12.8 O que fica para depois
+
+Drenar Vida, Desaparecer e Passo Ágil, na ordem que Jean decidir. O Passo Ágil continua como questão aberta (seção 11.5).
 
