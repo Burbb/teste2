@@ -13,7 +13,8 @@
     // O que um caminho pede (o rito, a denúncia): o que já está feito e o que falta, com onde se consegue (o motor
     // diz; a tela só desenha).
     const req = m.requisitos;
-    const rito = req ? req.itens.map((r) => `<li class="${r.feito ? "feito" : "falta"}">${r.feito ? "✓" : "○"} ${h(r.texto)}${r.feito ? "" : ` <small>(${h(r.onde)})</small>`}</li>`).join("") : "";
+    const rito = req ? req.itens.map((r) => `<li class="${r.feito ? "feito" : "falta"}">${r.feito ? "✓" : "○"} ${h(r.texto)}${!r.feito && r.onde ? ` <small>· ${h(r.onde)}</small>` : ""}</li>`).join("") : "";
+    const perguntas = (m.perguntas || []).map((p) => `<li>${h(p)}</li>`).join("");
     const feitos = !req ? (m.preparos || []).map((p) => `<li>${h(p)}</li>`).join("") : "";
     // Concluída: no lugar do objetivo, a conclusão (o desfecho), o estado da Fonte e o que ainda espera por você.
     const topo = m.concluida
@@ -24,7 +25,8 @@
     const hist = (m.historico || []).map((e) => `<li><span>${e.dia != null ? `Dia ${e.dia}` : "Antes deste registro (sem data)"}</span><ul>${e.itens.map((i) => `<li>${h(i)}</li>`).join("")}</ul></li>`).reverse().join("");
     return `<div class="missao-diario${m.concluida ? " concluida" : ""}" data-missao="${h(m.id)}"><div class="missao-cab">${S("pergaminho", 2)}<b>${h(m.nome)}</b>${m.concluida ? "<small>concluída</small>" : ""}</div>
       ${topo}${espera}${recente}
-      ${rito ? `<div class="missao-pistas missao-rito${req.opcional ? " opcional" : ""}"><span>${h(req.titulo)}</span><ul>${rito}</ul></div>` : ""}
+      ${rito ? `<div class="missao-pistas missao-rito"><span>${h(req.titulo)}</span><ul>${rito}</ul></div>` : ""}
+      ${perguntas ? `<div class="missao-pistas missao-perguntas"><span>Perguntas em aberto:</span><ul>${perguntas}</ul></div>` : ""}
       ${feitos ? `<div class="missao-pistas missao-feitos"><span>O que você já fez:</span><ul>${feitos}</ul></div>` : ""}
       ${hist ? `<details class="missao-historico"><summary>Histórico da investigação</summary><ol>${hist}</ol></details>` : ""}</div>`;
   }

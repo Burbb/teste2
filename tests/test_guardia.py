@@ -85,16 +85,15 @@ class TestBerta(unittest.TestCase):
         self.assertNotIn("berta", [o[1][2] for o in missoes.opcoes(g)])
 
     def test_diario_mostra_o_que_falta_para_o_rito(self):
+        """O rito aparece no Diário depois de Vó Berta (é ela quem o conta), com o que já está feito marcado."""
         g = na_capela(etapa="ossuario")
-        self.assertIsNone(missoes.cartoes(g)[0]["requisitos"])  # antes da sacristia, nada sobre Ilse
         m = missoes.registro(g, MID)
         m["pistas"].append("ilse")
-        lista = missoes.cartoes(g)[0]["requisitos"]["itens"]
-        self.assertEqual([r["feito"] for r in lista], [False, False, False])
-        self.assertIn("Vó Berta", lista[0]["onde"])
+        self.assertIsNone(missoes.cartoes(g)[0]["requisitos"])  # saber de Ilse não ensina o rito
         m["preparos"] += ["corpo_solto"]
-        self.assertEqual([r["feito"] for r in missoes.cartoes(g)[0]["requisitos"]["itens"]], [False, False, True])
-        m["pistas"] += ["verdade_de_ilse"]
+        m["pistas"] += ["verdade_de_ilse", "nome_e_fita"]
+        lista = missoes.cartoes(g)[0]["requisitos"]["itens"]
+        self.assertEqual([r["feito"] for r in lista], [True, False, True])
         m["preparos"] += ["fita"]
         self.assertTrue(missoes.descanso_pronto(m))
         m["desfecho"] = "destruida"
@@ -193,11 +192,20 @@ class TestConfronto(unittest.TestCase):
             self.assertEqual((m["desfecho"], m["etapa"]), ("destruida", "retorno"), classe)
             descida = next(p for p in g.ui.perguntas if p[0].startswith("Ela ainda não se levantou"))
             self.assertEqual(descida[1], ["Lutar para destruí-la", "Voltar por enquanto"])  # sem um rito fadado a falhar
-            self.assertTrue(any("ainda falta" in d for d in g.ui.ditos))
+            self.assertFalse(any("ainda falta" in d for d in g.ui.ditos))  # sem Berta, ninguém falou do rito
             self.assertFalse(any(p[0] == "Este é o momento do rito." for p in g.ui.perguntas))
             todos = [it for it in g.j.mochila + list(g.j.equip.values()) if it]
             self.assertEqual(sum(it.get("unico") == "pele_do_penitente" for it in todos), 1)
             self.assertEqual(g.j.sigilos, ["turvo"])
+
+    def test_com_berta_e_sem_as_correntes_diz_o_que_falta(self):
+        g = no_fundo("mago", ["Voltar por enquanto"], preparos=("fita",), berta=True)
+        missoes.executar(g, MID, "fundo")
+        dito = next(d for d in g.ui.ditos if "ainda falta" in d)
+        self.assertIn("Vó Berta", dito)
+        self.assertIn("soltá-la das pedras de moinho", dito)
+        descida = next(p for p in g.ui.perguntas if p[0].startswith("Ela ainda não se levantou"))
+        self.assertEqual(descida[1], ["Lutar para destruí-la", "Voltar por enquanto"])
 
     def test_preparado_e_mesmo_assim_destroi(self):
         g = no_fundo("arqueiro", DESTRUIR, **PRONTO)

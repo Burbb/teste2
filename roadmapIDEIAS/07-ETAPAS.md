@@ -69,6 +69,11 @@ Plano proposto, sem datas. Cada etapa é dividida em tarefas pequenas e depende 
 
 Nenhuma regra, custo, teste, encontro, recompensa ou número mudou.
 
+Na 1.60.1, uma revisão de apresentação e texto, depois do teste de Jean. O critério adotado vale daqui em diante:
+- **Ações fáceis de comparar.** O nome de cada ação é curto e começa pelo que se faz ("Soltar as correntes", "Descer ao fundo alagado", "Recolher uma amostra do lodo"), sem explicação entre parênteses.
+- **Custos e riscos claros antes da escolha.** Ficam numa nota discreta embaixo da ação, junto com o teste: flecha gasta, luta que vem, o que acontece se falhar. Não se esconde consumo nem se transforma consequência conhecida em surpresa, e não se diz "sempre funciona" quando ainda é preciso vencer uma luta.
+- **Conhecimento conforme as descobertas.** As telas e o Diário só mostram o que o personagem já descobriu, atribuído a quem ensinou. O rito aparece como o que Vó Berta contou, só depois da conversa com ela. Antes disso, o Diário mostra as perguntas que as pistas abrem, sem a receita. A finalidade da amostra do lodo aparece no Diário de Caspar, como o que se pode mostrar à praça.
+
 **Próximas entregas (registradas, não implementadas; cada uma é uma entrega à parte, nenhuma é requisito da E6):**
 1. **A bandagem da Odette.** O custo fica explícito na opção. Quando faltar a bandagem, a opção aparece indisponível e diz por quê. A exigência e o consumo já existem no motor: falta só mostrá-los.
 2. **A proteção do mendigo.**

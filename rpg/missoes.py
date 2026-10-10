@@ -60,7 +60,7 @@ MISSOES = {
                                "Fenda foi fechada, para não sair dali. Ele foi para a água com ela.",
             "marcados": "Dois homens com uma marca queimada no pulso reviravam a sacristia atrás de alguma coisa. "
                         "Não eram da vila, e não estavam sozinhos.",
-            "correntes": "No ossuário, um sarilho velho (o eixo de madeira em que as correntes se enrolam) segura "
+            "correntes": "No ossuário, um sarilho velho, o eixo de madeira em que as correntes se enrolam, segura "
                          "correntes que descem ao fundo alagado da capela, amarradas a duas pedras de moinho. Alguma "
                          "coisa está presa lá embaixo.",
             "verdade_de_ilse": "Vó Berta viu, aos oito anos: a vila inteira tirou Ilse de casa, amarrou-a a duas "
@@ -82,7 +82,7 @@ MISSOES = {
             "marcados": "Homens com uma marca no pulso procuram alguma coisa",
             "correntes": "Correntes prendem algo no fundo alagado",
             "verdade_de_ilse": "Vó Berta contou como Ilse morreu",
-            "nome_e_fita": "Com o nome e a fita, Ilse pode descansar",
+            "nome_e_fita": "Vó Berta contou como um afogado descansa",
             "relato_de_ilse": "Ilse falou dos três Sigilos",
             "corpo_solto": "As correntes estão soltas",
             "fita": "Você tem a fita de Ilse",
@@ -117,19 +117,21 @@ def completar(estado):
 
 
 # Dar descanso a Ilse pede três coisas (11-E1-REGIAO-INICIAL.md, seção 6): saber a verdade, ter a fita e ter soltado o
-# corpo. Cada uma: o que é, onde se consegue, e se já está feita. O Diário mostra a lista depois da sacristia (é lá que
-# se descobre que há alguém a quem dar descanso); a descida ao fundo diz o que falta.
+# corpo. Quem ensina isso é Vó Berta ("afogado descansa quando alguém o chama pelo nome e o solta das pedras"; a fita, ela
+# entrega): o Diário só mostra a lista depois da conversa, atribuída a ela, e a descida ao fundo só fala do que falta a
+# quem já sabe. Cada coisa: o que é, onde (só quando o personagem já viu o lugar; senão None) e se já está feita.
 REQUISITOS_DESCANSO = [
-    ("A verdade sobre a morte de Ilse", "Vó Berta, na taverna do Vau, estava lá",
+    ("Chamá-la pelo nome, sabendo o que fizeram com ela", lambda m: None,
      lambda m: {"ilse", "verdade_de_ilse"} <= set(m["pistas"])),
-    ("A fita de Ilse", "quem a viu morrer guardou alguma coisa dela", lambda m: "fita" in m["preparos"]),
-    ("O corpo solto das pedras de moinho", "o sarilho, o mecanismo das correntes, no ossuário da capela", lambda m: "corpo_solto" in m["preparos"]),
+    ("Devolver a fita que ela deu a Berta", lambda m: None, lambda m: "fita" in m["preparos"]),
+    ("Soltá-la das pedras de moinho", lambda m: "as correntes do sarilho, no ossuário" if "correntes" in m["pistas"]
+     else None, lambda m: "corpo_solto" in m["preparos"]),
 ]
 
 
 def descanso(m):
     """Os requisitos do rito, como a tela e o texto mostram: [(o quê, onde, feito)]."""
-    return [(o_que, onde, bool(feito(m))) for o_que, onde, feito in REQUISITOS_DESCANSO]
+    return [(o_que, onde(m), bool(feito(m))) for o_que, onde, feito in REQUISITOS_DESCANSO]
 
 
 def descanso_pronto(m):
@@ -183,6 +185,7 @@ def cartoes(g, todas=False):
                       "desfecho": m.get("desfecho"),
                       "requisitos": None if m.get("concluida") else d.get("requisitos", lambda g, m: None)(g, m),
                       "aguardando": None if m.get("concluida") else d.get("aguardando", lambda g, m: None)(g, m),
+                      "perguntas": d.get("perguntas", lambda g, m: [])(g, m),
                       **_historia(mid, m),
                       "concluida": m.get("concluida"),
                       **({"conclusao": f"Concluída no dia {m['concluida']}. " + d["conclusoes"][m["desfecho"]],
@@ -226,13 +229,32 @@ def _historia(mid, m):
     return {"recente": recente, "historico": historico}
 
 
+def sabe_do_rito(m):
+    """O personagem sabe como dar descanso a Ilse: Vó Berta contou (saves de antes incluídos: a pista é a mesma)."""
+    return "nome_e_fita" in m["pistas"]
+
+
 def _requisitos_descanso(g, m):
-    """O caminho do rito: só depois de saber de Ilse, e só enquanto a guardiã não foi resolvida."""
-    if "ilse" not in m["pistas"] or m.get("desfecho"):
+    """O rito, como Vó Berta o contou: só depois da conversa com ela, e só enquanto a guardiã não foi resolvida."""
+    if not sabe_do_rito(m) or m.get("desfecho"):
         return None
-    return {"titulo": "Caminho opcional: dar descanso a Ilse em vez de destruí-la. A missão termina pelos dois "
-                      "caminhos; este pede três coisas:", "opcional": True,
+    return {"titulo": "Vó Berta contou que um afogado descansa quando alguém o chama pelo nome e o solta das pedras:",
             "itens": [{"texto": o_que, "onde": onde, "feito": feito} for o_que, onde, feito in descanso(m)]}
+
+
+def _perguntas_febre(g, m):
+    """O que o personagem ainda se pergunta, a partir do que já viu (nada de pista nova nem de receita)."""
+    if m.get("concluida"):
+        return []
+    p, feito = set(m["pistas"]), set(m.get("preparos", []))
+    return [q for q, vale in (
+        ("O livro diz que a vila afogou Ilse. Alguém no Vau ainda se lembra daquela noite?",
+         "ilse" in p and "verdade_de_ilse" not in p),
+        ("O que as correntes prendem às pedras de moinho, lá no fundo?",
+         "correntes" in p and not m.get("desfecho") and "corpo_solto" not in feito and not sabe_do_rito(m)),
+        ("Quem são os homens com a marca no pulso, e o que procuravam na sacristia?",
+         "marcados" in p and "relato_de_ilse" not in p),
+    ) if vale]
 
 
 def _linhas_febre(g, m):
@@ -249,7 +271,7 @@ CONCLUSAO = {
     "destruida": "Ilse foi destruída, e o Sigilo do Turvo ficou no fundo da capela até você o pegar.",
 }
 MISSOES["febre_do_turvo"].update(conclusoes=CONCLUSAO, requisitos=_requisitos_descanso, linhas=_linhas_febre,
-                                 pendente=_pendente_febre)
+                                 pendente=_pendente_febre, perguntas=_perguntas_febre)
 
 
 # ------------------------------------------------------------------ cenas e ações
@@ -456,8 +478,6 @@ def _ossuario(g, mid):
     _pista(m, "correntes")
     g.avancar_periodo()
     avancar(g, mid, "ossuario", "fundo")
-    g.dizer("As correntes podem ser soltas daqui, antes de descer (não é obrigatório para enfrentar a guardiã).",
-            "cinza")
 
 
 # Soltar o corpo (o passo D2 do Dar descanso, 11-E1-REGIAO-INICIAL.md seção 6): o caminho geral serve a qualquer
@@ -520,32 +540,35 @@ def _correntes_atalho(g, mid, cena=True):
     _onda_de_afogados(g, mid)
 
 
-# A forma da classe, como a escolha dentro do sarilho a oferece: o que se faz, o risco e o teste no fim (a tela anota o
-# seu bônus e tira o teste do texto).
+# A forma da classe, como a escolha dentro do sarilho a oferece: a ação (com o teste no fim, que a tela anota com o seu
+# bônus) e, embaixo, o custo e o risco, para comparar antes de escolher.
 METODO_CLASSE = {
-    "guerreiro": "Arrancar a trava do sarilho",
-    "mago": "Apodrecer o ferro da trava",
-    "arqueiro": "Um tiro no pino da trava",
+    "guerreiro": "Arrancar a trava (Força)",
+    "mago": "Apodrecer o ferro da trava (Arcano)",
+    "arqueiro": "Acertar o pino da trava (Destreza)",
 }
-TESTE_CLASSE = {"guerreiro": "(Força)", "mago": "(Arcano)", "arqueiro": "(Destreza, gasta 1 flecha)"}
-RISCO_CLASSE = "sem barulho e sem luta, se der certo. Se falhar, o rangido chama os afogados e você termina à mão"
+RISCO_CLASSE = "Se der certo, a corrente desce sem barulho. Se falhar, o rangido chama os afogados, e o resto é à mão."
+NOTA_MAO = "Demora e faz barulho: o rangido chama os afogados, e é preciso vencê-los para terminar."
 
 
 def _soltar_correntes(g, mid):
-    """Uma ação só no menu da capela: aqui dentro se vê o problema e se escolhe como resolver. As duas formas deixam o
-    mesmo preparo feito; voltar não gasta nada (nem tempo, nem flecha, nem sorteio). Devolve False quando volta."""
+    """Uma ação só no menu da capela: aqui se vê o mecanismo e se escolhe como mexer nele. A ligação com o rito só
+    aparece para quem já ouviu Vó Berta. Deixar como está não gasta nada (nem tempo, nem flecha, nem sorteio) e não
+    pede Continuar: a função devolve False."""
+    m = registro(g, mid)
     g.ui.cena("O Sarilho", g.contexto_cena(), "evento")
-    g.narrar("O sarilho, um eixo grosso de madeira em que as correntes se enrolam, prende o que está nas duas pedras de "
-             "moinho, lá embaixo na água. Soltar as correntes é um dos preparos para dar descanso a Ilse; para "
-             "destruí-la, não é preciso.")
-    opcoes = [("À mão: desenrolar a corrente elo por elo. Sempre funciona, mas faz barulho: os afogados vêm, e é "
-               "preciso vencê-los", "mao")]
+    g.narrar("As correntes saem do sarilho, um eixo grosso de madeira no fundo do ossuário, e descem pelo buraco do chão "
+             "até as duas pedras de moinho, lá embaixo na água. Uma trava de ferro segura o eixo para ele não girar.")
+    if sabe_do_rito(m):
+        g.narrar("Vó Berta disse que um afogado descansa quando alguém o chama pelo nome e o solta das pedras.")
+    opcoes = [("Desenrolar as correntes à mão", "mao", {"nota": NOTA_MAO})]
     if g.j.classe == "arqueiro" and g.j.flechas <= 0:
-        g.dizer("Sem flechas, o tiro no pino da trava não dá: sobra o jeito à mão.", "cinza")
+        g.dizer("Sem flechas, não dá para acertar o pino da trava: sobra o jeito à mão.", "cinza")
     else:
-        opcoes.append((f"{METODO_CLASSE[g.j.classe]}: {RISCO_CLASSE} {TESTE_CLASSE[g.j.classe]}", "classe"))
-    opcoes.append(("Voltar sem mexer no sarilho", None))
-    op = g.menu("Como você solta as correntes? As duas formas deixam o mesmo preparo feito.", opcoes)
+        nota = ("Gasta 1 flecha. " if g.j.classe == "arqueiro" else "") + RISCO_CLASSE
+        opcoes.append((METODO_CLASSE[g.j.classe], "classe", {"nota": nota}))
+    opcoes.append(("Deixar como está", None))
+    op = g.menu("O que você faz com as correntes?", opcoes)
     if op is None:
         return False
     if op == "mao":
@@ -594,10 +617,10 @@ def _fundo(g, mid):
     g.narrar("Ela abre os olhos. A pele é azulada, os cabelos são algas, e ela começa a cantar uma canção de ninar. É "
              "Ilse, ou o que a vila fez dela: a Bruxa Afogada.")
     pronto = descanso_pronto(m)
-    if not pronto:
+    if not pronto and sabe_do_rito(m):
         falta = [o_que[0].lower() + o_que[1:] for o_que, _, feito in descanso(m) if not feito]
-        g.dizer("Para tentar dar descanso a Ilse ainda falta: " + tx.lista_natural(falta) + ". Sem isso, só resta "
-                "destruí-la.", "cinza")
+        g.dizer("Do que Vó Berta contou, ainda falta " + tx.lista_natural(falta) + ". Sem isso, não há como dar "
+                "descanso a ela.", "cinza")
     opcoes = ([("Chamar Ilse pelo nome e tentar dar descanso", "descanso")] if pronto else []) + [
         ("Lutar para destruí-la", "destruir"), ("Voltar por enquanto", None)]
     op = g.menu("Ela ainda não se levantou da água. Depois de começar, não há como recuar.", opcoes)
@@ -751,13 +774,13 @@ ACOES = [
          lugar="bosque_do_moinho", etapas=("canal",), fn=_seguir_canal, confirmar=True),
     dict(missao="febre_do_turvo", id="nave", rotulo="Entrar na capela pelo buraco do canal", lugar="capela_afogada",
          etapas=("capela",), fn=_nave, confirmar=True),
-    dict(missao="febre_do_turvo", id="sacristia", rotulo="Atravessar o salão alagado até a sacristia",
+    dict(missao="febre_do_turvo", id="sacristia", rotulo="Atravessar o salão alagado",
          lugar="capela_afogada", etapas=("sacristia",), fn=_sacristia, confirmar=True),
-    dict(missao="febre_do_turvo", id="ossuario", rotulo="Descer ao ossuário, a sala dos ossos", lugar="capela_afogada",
+    dict(missao="febre_do_turvo", id="ossuario", rotulo="Descer ao ossuário", lugar="capela_afogada",
          etapas=("ossuario",), fn=_ossuario, confirmar=True),
-    dict(missao="febre_do_turvo", id="correntes", rotulo="Soltar as correntes do sarilho (escolher como)",
+    dict(missao="febre_do_turvo", id="correntes", rotulo="Soltar as correntes",
          lugar="capela_afogada", etapas=("fundo",), falta="corpo_solto", fn=_soltar_correntes, confirmar=True),
-    dict(missao="febre_do_turvo", id="fundo", rotulo="Descer ao fundo alagado e enfrentar a guardiã",
+    dict(missao="febre_do_turvo", id="fundo", rotulo="Descer ao fundo alagado",
          lugar="capela_afogada", etapas=("fundo",), fn=_fundo, confirmar=True),
     # Na taverna do Vau: o cartão no balcão, como os serviços (`meta`). Berta depois da sacristia, uma vez; a herança
     # para quem deu descanso a Ilse, uma vez.

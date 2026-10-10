@@ -89,7 +89,7 @@ def lutas(g, *resultados):
     return vistas
 
 
-def fazer(g, aid, como="À mão"):
+def fazer(g, aid, como="Desenrolar"):
     """Faz a ação; nas correntes, responde também como soltar (à mão, ou o começo do atalho da classe)."""
     if aid == "correntes":
         g.ui.roteiro.insert(0, como)
@@ -334,10 +334,10 @@ class TestMissao(unittest.TestCase):
             self.assertEqual([o[1][2] for o in opcoes_febre(g)], ["correntes", "fundo"])
             self.assertTrue(fazer(g, "correntes"))  # à mão: a onda de afogados, vencida
             metodos = g.ui.ofertas[-1]
-            self.assertEqual(len(metodos), 3)  # à mão, o atalho da classe e voltar
-            self.assertTrue(metodos[0].startswith("À mão"))
+            self.assertEqual(len(metodos), 3)  # à mão, o atalho da classe e deixar como está
+            self.assertTrue(metodos[0].startswith("Desenrolar as correntes à mão"))
             self.assertIn({"guerreiro": "(Força", "mago": "(Arcano", "arqueiro": "(Destreza"}[classe], metodos[1])
-            self.assertTrue(metodos[2].startswith("Voltar"))
+            self.assertTrue(metodos[2].startswith("Deixar como está"))
             self.assertEqual(vistas[-1][0], "O Sarilho")
             self.assertEqual(m["preparos"], ["corpo_solto"])
             self.assertEqual([o[1][2] for o in opcoes_febre(g)], ["fundo"])  # agora, só descer
@@ -399,9 +399,9 @@ class TestMissao(unittest.TestCase):
         g = na_capela("arqueiro", etapa="fundo")
         g.j.flechas = 0
         self.assertEqual([o[1][2] for o in opcoes_febre(g)], ["correntes", "fundo"])
-        self.assertTrue(fazer(g, "correntes", "Voltar"))  # a ação vale; dentro dela, sem o tiro
+        self.assertTrue(fazer(g, "correntes", "Deixar"))  # a ação vale; dentro dela, sem o tiro
         metodos = g.ui.ofertas[-1]
-        self.assertEqual((len(metodos), metodos[0][:5], metodos[1]), (2, "À mão", "Voltar sem mexer no sarilho"))
+        self.assertEqual((len(metodos), metodos[0][:9], metodos[1]), (2, "Desenrola", "Deixar como está"))
 
     def test_save_no_interior_e_save_sem_preparos(self):
         pasta = tempfile.mkdtemp()

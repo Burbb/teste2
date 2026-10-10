@@ -80,7 +80,7 @@ Três commits posteriores à atualização do roadmap foram consultados. Os comp
 | E3 — missão mínima | Entregas na 1.50.0 a 1.54.0 (registros abaixo): da Fonte Nova ao canal, à capela, ao interior, a Vó Berta, à guardiã (Destruir ou Dar descanso) e à volta ao Vau, que conclui a missão. A bênção e a comporta não existem. Falta Jean jogar. |
 | E4 — consequência local | Na 1.54.0, a Fonte Nova, a frase do Vau, Pita e Marta. Na 1.55.0, Caspar: a acusação, a praça (Apoiar, Denunciar com prova, Calar), a situação da Yara e as reações da comitiva. Na 1.56.0, a consolidação: a Yara barrada fica de fato fora do Vau, o encontro no Charco depois da denúncia, a conversa da Yara sobre a praça e os textos que contradiziam o Vau. **O critério mínimo da E4 (07-ETAPAS) está atendido**; as outras ideias do 11 (bênção, sementes, mercado, taverna, Charco à noite, Odette e Caspar, Anselmo, a cena da vigília) ficam adiadas, não são requisito. Falta Jean jogar. |
 | E5 — classes | Diagnóstico (só design) em [14](14-E5-DIAGNOSTICO-CLASSES.md), sobre a 1.56.0. **P1 implementada na 1.57.0:** o golpe preparado em duas lutas fixas da capela (seção 10 do 14). **P3 implementada na 1.58.0:** a encruzilhada compara os dois caminhos e o Grimório explica (seção 11 do 14). **P2 começada na 1.59.0, só pelo Tiro Duplo** (seção 12 do 14): o 2º disparo vai no outro inimigo mais ferido. **Drenar Vida, Desaparecer e Passo Ágil avaliados em lutas inteiras** (seção 13 do 14, sem mudar o jogo): os dois primeiros têm função. **O desvio do Passo Ágil foi validado e rejeitado** (seção 14): usado repetidamente, vira a ação padrão contra inimigos sozinhos; o Passo Ágil fica como era. **O critério mínimo da E5 (07-ETAPAS) está atendido**: as três classes atravessam o Vale (a guardiã medida por caminho) e os seis caminhos foram avaliados em cenários direcionados. A E5 está **concluída tecnicamente**; adiado, sem ser requisito: o Passo Ágil, a sinergia Desaparecer–Execução, Sombra e Piromante contra a guardiã no nível 4, a preparação de habilidades. Falta Jean jogar. A validação da E4 jogando, por Jean, fica registrada à parte. |
-| Clareza da campanha | Pausa antes da E6, a partir do teste de Jean. **Primeira entrega na 1.60.0** (registro abaixo): ações da capela organizadas, Diário reorganizado, linguagem do Vale simplificada, cartão de atualização de missão. As próximas entregas estão listadas em [07](07-ETAPAS.md) ("Entre a E5 e a E6"), sem implementar. Falta Jean testar. |
+| Clareza da campanha | Pausa antes da E6, a partir do teste de Jean. **Primeira entrega na 1.60.0** (registro abaixo): ações da capela organizadas, Diário reorganizado, linguagem do Vale simplificada, cartão de atualização de missão. **Revisão na 1.60.1**: ações curtas com custo e risco numa nota, e o conhecimento conforme as descobertas (o critério está no 07). As próximas entregas estão listadas em [07](07-ETAPAS.md) ("Entre a E5 e a E6"), sem implementar. Falta Jean testar. |
 | E6–E11 | Plano de trabalho futuro; infraestrutura existente não equivale a etapas concluídas. Notas aprovadas para a E3 na seção 19 do [11](11-E1-REGIAO-INICIAL.md). |
 | Bugs ainda abertos | Nenhum bug aberto específico foi informado para registro nesta passagem. Isso não comprova ausência de bugs. |
 | Polimento antes da E3 | Entregue na 1.48.1 (registro abaixo): leitura, item achado, balcão do templo, palco da luta. Falta Jean conferir jogando. |
@@ -780,3 +780,39 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   3. Na capela, no fundo, abra "Soltar as correntes" e volte.
   4. Abra de novo e solte.
   5. Salve, carregue e confira que nada se repete.
+
+### 10/10/2026 — Clareza da campanha, revisão (1.60.1)
+
+- **Pedido de Jean** (depois de testar a 1.60.0): algumas telas explicavam diretamente como resolver a missão. Ações claras e informações vindas das descobertas do personagem; só apresentação e texto, sem tocar em regras, custos, testes, encontros, recompensas, progresso ou equilíbrio.
+- **Menu da capela.**
+  - As ações ficaram com nomes curtos: "Soltar as correntes", "Descer ao fundo alagado", "Recolher uma amostra do lodo", "Atravessar o salão alagado", "Descer ao ossuário".
+  - A distinção visual da 1.60.0 continua: borda dourada, ícone e a etiqueta "Missão" das ações da missão.
+  - A finalidade da amostra saiu do rótulo. Ela aparece no Diário de Caspar, como "o que pode mostrar à praça que a febre veio da água, e não de Yara".
+- **Cena das correntes.**
+  - O texto descreve o mecanismo: o eixo, a trava de ferro, as correntes e as pedras de moinho.
+  - A ligação com o rito só aparece depois de Vó Berta, citando o que ela disse.
+  - As opções: "Desenrolar as correntes à mão", o método da classe com o teste ("Arrancar a trava", "Apodrecer o ferro da trava", "Acertar o pino da trava") e "Deixar como está".
+  - Custo e risco ficam numa nota embaixo de cada opção: a luta contra os afogados à mão, a flecha do arqueiro, o que acontece se o teste falhar. No modo texto, a nota vem depois de um travessão.
+  - O arqueiro passou a ver o próprio bônus de Destreza, como as outras classes.
+  - "Deixar como está" segue sem custo, sem tempo, sem sorteio e sem Continuar.
+  - Saiu do ossuário a linha "As correntes podem ser soltas daqui… (não é obrigatório…)".
+- **Diário.**
+  - A lista do rito só aparece depois da conversa com Vó Berta, atribuída a ela ("Vó Berta contou que um afogado descansa quando alguém o chama pelo nome e o solta das pedras"), com ✓ no que já está feito.
+  - O lugar das correntes só aparece para quem já viu o sarilho.
+  - Antes de Berta, aparecem "Perguntas em aberto", tiradas das pistas que o personagem já tem: quem se lembra da noite do afogamento; o que as correntes prendem; quem são os homens marcados.
+  - Um preparo feito antes de Berta continua em "O que você já fez".
+  - Saíram as dicas entre parênteses, o "caminho opcional… termina pelos dois caminhos" e o "Aguardando… (A Febre do Turvo). Até lá, junte a prova". A Vigília agora diz "Aguardando o fim da febre: Caspar prometeu que, quando ela acabar, a vila vai saber de quem era a culpa".
+  - Saves antigos: tudo sai das pistas e dos preparos registrados. Nada novo é inventado.
+- **Descida ao fundo.** O aviso do que falta para o rito só aparece para quem ouviu Vó Berta, e cita o que ela contou. As opções da descida são as mesmas de antes.
+- **Cartão de atualização.** O formato não mudou ("As correntes estão soltas"; o objetivo só quando muda). Mudaram os nomes curtos: "Vó Berta contou como um afogado descansa" e "Uma amostra do lodo do fundo da capela".
+- **Verificações:**
+  - `unittest` com testes novos: a cena sem o rito antes de Berta, as três classes deixando o mesmo preparo, o rito só depois de Berta, um preparo feito antes de Berta, a finalidade da amostra no Diário de Caspar;
+  - gabarito idêntico, sem atualizar;
+  - `pyflakes` limpo;
+  - fumaça, três vezes seguidas sem falha. O auxiliar `esperar` da 1.60.0 aguardava às cegas a guarda do Continuar e gastava a guarda que outra checagem media; agora ele confere durante a espera;
+  - capturas em 1500 e 1280 px: menu, sarilho das três classes, sarilho depois de Berta, Diário antes e depois de Berta.
+- **Como testar (rota curta):**
+  1. `python -m tests.navegador.cenarios capela` com `ETAPA=fundo`: veja o menu, abra "Soltar as correntes", compare as opções e escolha "Deixar como está".
+  2. Abra o Diário: aparecem as perguntas em aberto e nenhuma receita.
+  3. Repita com `PREPARO=berta`: a cena cita Vó Berta e o Diário mostra o que ela contou, com ✓ e ○.
+  4. Salve e carregue: nada se repete.

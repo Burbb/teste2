@@ -237,7 +237,7 @@ function mostrarOpcoes(m) {
       b.addEventListener("focus", () => Batalha.mirar(o.meta.alvo, true));
       b.addEventListener("blur", () => Batalha.mirar(o.meta.alvo, false));
     }
-    b.innerHTML = `<span class="tecla">${tecla}</span>${icone}<span class="rotulo">${esc(o.texto)}</span>${teste}${etiqueta ? `<span class="op-etiqueta">${etiqueta}</span>` : ""}`;
+    b.innerHTML = `<span class="tecla">${tecla}</span>${icone}<span class="rotulo">${esc(o.texto)}${o.meta && o.meta.nota ? `<small class="op-nota">${esc(o.meta.nota)}</small>` : ""}</span>${teste}${etiqueta ? `<span class="op-etiqueta">${etiqueta}</span>` : ""}`;
     b.addEventListener("click", (ev) => { ev.stopPropagation(); responder(m.id, i); });
     li.appendChild(b);
     lista.appendChild(li);

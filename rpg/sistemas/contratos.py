@@ -251,8 +251,13 @@ class Contratos:
             if m["requisitos"]:
                 self.dizer(f"  {m['requisitos']['titulo']}", "cinza")
             for r in (m["requisitos"] or {}).get("itens", []):
-                self.dizer(f"  {'✓' if r['feito'] else '○'} {r['texto']}" + ("" if r["feito"] else f" ({r['onde']})"),
+                self.dizer(f"  {'✓' if r['feito'] else '○'} {r['texto']}"
+                           + (f" · {r['onde']}" if r["onde"] and not r["feito"] else ""),
                            "verde" if r["feito"] else "cinza")
+            if m["perguntas"]:
+                self.dizer("  Perguntas em aberto:", "cinza")
+            for p in m["perguntas"]:
+                self.dizer(f"  ? {p}", "cinza")
             if m["preparos"] and not m["requisitos"]:
                 self.dizer("  O que você já fez:", "cinza")
                 for p in m["preparos"]:

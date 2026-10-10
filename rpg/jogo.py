@@ -157,6 +157,8 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         validas = [o for o in opcoes if o]
         rotulos = [self._anotar_teste(o[0]) for o in validas]
         metas = [o[2] if len(o) > 2 else None for o in validas]
+        if not self.ui.notas_proprias:  # a nota da opção (custo, risco): a tela gráfica a põe embaixo, o texto junta
+            rotulos = [f"{r} — {m['nota']}" if m and m.get("nota") else r for r, m in zip(rotulos, metas)]
         self.ui.meta_opcoes = metas if any(metas) else None
         try:
             esc = self.ui.escolher(pergunta, rotulos)

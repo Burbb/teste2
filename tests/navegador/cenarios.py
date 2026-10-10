@@ -206,8 +206,9 @@ def recarga(ui):
 
 def capela(ui):
     """Herói de nível NIVEL (padrão 5; CLASSE, padrão guerreiro; SEMENTE, padrão 11) na Capela Afogada (ou na chave LUGAR), de manhã, com a
-    missão na ETAPA (padrão "sacristia": a nave já vencida) e o que se sabe até ali. PREPARO: "correntes" (soltas) ou
-    "pronto" (Berta ouvida, a fita e as correntes: o rito disponível). Sair do jogo leva ao título, com o save."""
+    missão na ETAPA (padrão "sacristia": a nave já vencida) e o que se sabe até ali. PREPARO: "correntes" (soltas),
+    "berta" (Berta ouvida e a fita, as correntes ainda presas) ou "pronto" (Berta ouvida, a fita e as correntes: o rito
+    disponível). Sair do jogo leva ao título, com o save."""
     from rpg import dev, missoes
     from rpg.__main__ import menu_principal
     from rpg.ui import BotUI
@@ -228,7 +229,7 @@ def capela(ui):
               + (["correntes"] if depois("ossuario") else []))
     preparo = os.environ.get("PREPARO", "")
     preparos = ["corpo_solto"] if preparo in ("correntes", "pronto") else []
-    if preparo == "pronto":
+    if preparo in ("berta", "pronto"):
         pistas += ["verdade_de_ilse", "nome_e_fita"]
         preparos.append("fita")
     missoes.registro(g, "febre_do_turvo").update(etapa=etapa, cenas=["abertura", "capela_exterior"], pistas=pistas,

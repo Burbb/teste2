@@ -49,6 +49,7 @@ class UI:
     interativo = True
     extra_resposta = None  # dados extras que a interface mandou junto da escolha (ex.: quantidade)
     meta_opcoes = None  # dados extras de cada opção (local de viagem, talento...), para interfaces gráficas
+    notas_proprias = False  # a interface mostra a `nota` de uma opção à parte (senão o jogo a junta ao rótulo)
 
     # O que a interface sabe fazer. O motor pergunta por isto, nunca "que tela é esta?".
     hud = False               # há um painel fixo com vida, recursos e inimigos: o texto não repete
@@ -255,6 +256,7 @@ class UI:
 class InterfaceGrafica:
     """O jeito de uma interface gráfica (a tela web, e o robô do gabarito quando a imita): cartas clicáveis
     em vez de letras, mapa e árvore desenhados por ela, reações em balões. Vai antes de UI na herança."""
+    notas_proprias = True
 
     letras_nos_alvos = False   # cada inimigo é uma carta; o alvo se escolhe clicando
     analisar_no_menu = False   # a ficha do inimigo aparece ao passar o mouse na carta

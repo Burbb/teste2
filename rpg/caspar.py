@@ -43,11 +43,10 @@ MISSOES = {
             "praca": dict(objetivo="Responder a Caspar na praça do Vau.", lugar="vau_do_turvo"),
         },
         pistas={},
-        titulos={"lodo": "Um frasco do lodo do fundo: prova para a decisão sobre Caspar",
+        titulos={"lodo": "Uma amostra do lodo do fundo da capela",
                  "analise": "O lodo é água parada, não feitiço de ninguém"},
         preparos={
-            "lodo": "Um frasco do lodo do fundo da capela: a mesma sujeira que a Fonte Nova trazia. É a prova para a decisão "
-                    "sobre Caspar.",
+            "lodo": "Uma amostra do lodo do fundo da capela, num frasco: a mesma sujeira que a Fonte Nova trazia.",
             "analise": "Você analisou o lodo: é água parada que passou pelo que vazava no fundo da capela, não "
                        "feitiço de ninguém.",
         },
@@ -114,11 +113,12 @@ def prova(g):
 def _requisitos(g, m):
     if m["etapa"] == "antes" or m.get("desfecho"):
         return None
+    # O que o personagem pode mostrar à praça, pelo que já descobriu da água (a acusação vem depois do canal).
     f = _febre(g)
     canal = bool({"canal_da_capela", "agua_da_capela"} & set(f["pistas"]))
-    return {"titulo": "Para denunciar Caspar, você precisa de prova:", "itens": [
-        {"texto": "O caminho da água, do canal à Fonte Nova", "onde": "o canal do Bosque do Moinho", "feito": canal},
-        {"texto": "Um frasco do lodo do fundo da capela", "onde": "o fundo alagado da Capela Afogada", "feito": "lodo" in m["preparos"]},
+    return {"titulo": "O que pode mostrar à praça que a febre veio da água, e não de Yara:", "itens": [
+        {"texto": "O caminho da água, do moinho à Fonte Nova", "onde": None, "feito": canal},
+        {"texto": "Uma amostra do lodo que a água leva para a Fonte", "onde": None, "feito": "lodo" in m["preparos"]},
     ]}
 
 
@@ -196,8 +196,8 @@ CONCLUSOES = {
 def _aguardando(g, m):
     """Enquanto a febre não acaba, a resposta a Caspar espera: o Diário diz isso, para a missão não parecer parada."""
     if m["etapa"] == "acusacao" and not _febre(g).get("desfecho"):
-        return ("Aguardando: Caspar só cobra a resposta quando a febre for resolvida, na Capela Afogada "
-                "(A Febre do Turvo). Até lá, junte a prova se quiser denunciá-lo.")
+        return ("Aguardando o fim da febre: Caspar prometeu que, quando ela acabar, a vila vai saber de quem era a "
+                "culpa.")
     return None
 
 
@@ -385,9 +385,6 @@ def _chegou_ao_fundo(g):
     return _febre(g)["etapa"] in ("fundo", "retorno") and not registro(g).get("desfecho")
 
 
-# O frasco diz para que serve só quando se sabe: antes da acusação de Caspar, é a prova do que suja a água.
-ROTULO_LODO = {False: "Recolher um frasco do lodo do fundo (prova do que suja a água)",
-               True: "Recolher um frasco do lodo do fundo (prova para a decisão sobre Caspar)"}
 
 CENAS = [
     dict(missao=MID, id="acusacao", lugar="vau_do_turvo", etapas=("antes",), fn=_acusacao, confirmar=True,
@@ -401,7 +398,7 @@ CENAS = [
          confirmar=True, pode=lambda g: not fogueira_possivel(g) and cm.disponivel(g, "yara")),
 ]
 ACOES = [
-    dict(missao=MID, id="lodo", rotulo=lambda g: ROTULO_LODO[registro(g)["etapa"] != "antes"], lugar="capela_afogada",
+    dict(missao=MID, id="lodo", rotulo="Recolher uma amostra do lodo", lugar="capela_afogada",
          etapas=("antes", "acusacao", "praca"), falta="lodo", pode=_chegou_ao_fundo, fn=_recolher_lodo,
          confirmar=True),
     dict(missao=MID, id="praca", rotulo="Ir à praça responder a Caspar", lugar="vau_do_turvo", etapas=("praca",),
