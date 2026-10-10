@@ -79,7 +79,7 @@ Três commits posteriores à atualização do roadmap foram consultados. Os comp
 | E2 — região fixa | **Protótipo entregue na 1.48.0** (commit `2661b59`): início da campanha, mapa fixo, viagem, descoberta e save. Validado tecnicamente; falta Jean jogar. |
 | E3 — missão mínima | Entregas na 1.50.0 a 1.54.0 (registros abaixo): da Fonte Nova ao canal, à capela, ao interior, a Vó Berta, à guardiã (Destruir ou Dar descanso) e à volta ao Vau, que conclui a missão. A bênção e a comporta não existem. Falta Jean jogar. |
 | E4 — consequência local | Na 1.54.0, a Fonte Nova, a frase do Vau, Pita e Marta. Na 1.55.0, Caspar: a acusação, a praça (Apoiar, Denunciar com prova, Calar), a situação da Yara e as reações da comitiva. Na 1.56.0, a consolidação: a Yara barrada fica de fato fora do Vau, o encontro no Charco depois da denúncia, a conversa da Yara sobre a praça e os textos que contradiziam o Vau. **O critério mínimo da E4 (07-ETAPAS) está atendido**; as outras ideias do 11 (bênção, sementes, mercado, taverna, Charco à noite, Odette e Caspar, Anselmo, a cena da vigília) ficam adiadas, não são requisito. Falta Jean jogar. |
-| E5 — classes | Diagnóstico (só design) em [14](14-E5-DIAGNOSTICO-CLASSES.md), sobre a 1.56.0. **P1 implementada na 1.57.0:** o golpe preparado em duas lutas fixas da capela (seção 10 do 14). **P3 implementada na 1.58.0:** a encruzilhada compara os dois caminhos e o Grimório explica (seção 11 do 14). **P2 começada na 1.59.0, só pelo Tiro Duplo** (seção 12 do 14): o 2º disparo vai no outro inimigo mais ferido. Drenar Vida, Desaparecer e Passo Ágil não mudaram. A E5 **não** está concluída. A validação da E4 jogando, por Jean, fica registrada à parte. |
+| E5 — classes | Diagnóstico (só design) em [14](14-E5-DIAGNOSTICO-CLASSES.md), sobre a 1.56.0. **P1 implementada na 1.57.0:** o golpe preparado em duas lutas fixas da capela (seção 10 do 14). **P3 implementada na 1.58.0:** a encruzilhada compara os dois caminhos e o Grimório explica (seção 11 do 14). **P2 começada na 1.59.0, só pelo Tiro Duplo** (seção 12 do 14): o 2º disparo vai no outro inimigo mais ferido. **Drenar Vida, Desaparecer e Passo Ágil avaliados em lutas inteiras** (seção 13 do 14, sem mudar o jogo): os dois primeiros têm função; o Passo Ágil não, e há uma mudança recomendada, não aprovada. A E5 **não** está concluída. A validação da E4 jogando, por Jean, fica registrada à parte. |
 | E6–E11 | Plano de trabalho futuro; infraestrutura existente não equivale a etapas concluídas. Notas aprovadas para a E3 na seção 19 do [11](11-E1-REGIAO-INICIAL.md). |
 | Bugs ainda abertos | Nenhum bug aberto específico foi informado para registro nesta passagem. Isso não comprova ausência de bugs. |
 | Polimento antes da E3 | Entregue na 1.48.1 (registro abaixo): leitura, item achado, balcão do templo, palco da luta. Falta Jean conferir jogando. |
@@ -657,4 +657,39 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   3. Suba de novo e compare: o Tiro Certeiro em Alfa (derruba, mas Gama fica inteira), a Chuva de Flechas (acerta os três, por 20 de Foco).
   4. Com `VIDAS=1,1,1`, compare o Tiro Certeiro e o Tiro Duplo em lobos inteiros: o Duplo espalha e o primeiro abate demora.
   5. Grimório (P), página do Tiro Duplo: a faixa de dano e a linha de para onde vai o 2º.
+
+### 10/10/2026 — E5, P2: avaliação de Drenar Vida, Desaparecer e Passo Ágil (sobre a 1.59.0, sem mudar o jogo)
+
+- **Pedido de Jean:**
+  - avaliar os três candidatos restantes da P2 em combate completo (dano, sobrevivência, recursos, aliados, duração), sem alterar gameplay nem números;
+  - Drenar Vida contra as alternativas do Necromante: vida cheia, ferido, por um fio, luta longa, vivos e mortos-vivos, com e sem servo, cura real, abates e dano além da vida;
+  - Desaparecer e Passo Ágil contra atacar e priorizar o perigoso: golpe preparado, vários atacantes, pouca vida, com e sem aliado, o ataque seguinte e as sinergias;
+  - o risco de derrota, além das médias; o Vale separado do que vem depois; roteiros descritos, sem o robô julgando;
+  - classificar, recomendar manter ou ajustar, e uma única próxima implementação, ou encerrar.
+- **Entregue:** seção 13 do [14](14-E5-DIAGNOSTICO-CLASSES.md); respostas nas seções 11.5 e 12.8; estado no 07. Nenhum arquivo fora de `roadmapIDEIAS` mudou; scripts fora do repositório.
+- **Método:**
+  - lutas inteiras pelo combate do jogo, com a IA dos inimigos e roteiros fixos de decisão;
+  - herói com equipamento mediano (semente perto da mediana de vida e ataque), talentos declarados, sem poções;
+  - encontros do Vale (ossuário e sarilho com golpe preparado, lobos, bruxa e sapo) e de depois (bandidos, mercenário, carniçais, troll, guardião);
+  - vida cheia, ferido (45%), por um fio (25%) e com Morel;
+  - 600 lutas por linha; os casos perto do ruído refeitos com outras sementes e 3000 lutas.
+- **Resultados:**
+  - **Drenar Vida: função útil demonstrada.**
+    - Ferido, contra vivos, salva a luta: 3 lobos, 12% → 80% de vitórias; bruxa e sapo, 61% → 90%; bandidos (nível 7), 28% → 57%; troll, 45% → 63%.
+    - Com o servo é a melhor combinação contra vivos e nas lutas longas (guardião, de vida cheia: 77%, contra 46% só com Bola de Fogo).
+    - Contra mortos-vivos é armadilha: no ossuário, ferido, 13%, contra 81% da Bola e 93% da Barreira. O jogo já avisa.
+    - A cura conta o golpe inteiro, mesmo o que passa da vida do alvo (15–23% da cura); mana nunca falta.
+  - **Desaparecer:**
+    - No Vale, sem vantagem relevante: empata com atacar e perde no preparo.
+    - Depois, função restrita, mas legítima: abertura com crítico contra dois inimigos resistentes, ferido (carniçais 69% → 83%, confirmado). O ganho vem do crítico, não da esquiva.
+    - A sinergia com a Execução piorou em todo encontro: hipótese sem evidência.
+  - **Passo Ágil: sem vantagem relevante** no Vale e depois, com ou sem aliado. Atacar ganha até diante do golpe preparado (ossuário, arqueiro 3: 95% contra 87%).
+- **Recomendação:**
+  - Manter Drenar Vida e Desaparecer: recuperar mana e mudar a mira em furtividade não têm motivo medido.
+  - Ajustar só o Passo Ágil: trocar a chance de esquiva pelo **desvio de um golpe** (o próximo que acertaria, nas duas vezes seguintes dos inimigos).
+    - Testado só no script: contra o troll ferido, 60% → 79%.
+    - No Vale, sem efeito; usado todo turno, piora.
+    - A variante "sem gastar o turno" foi rejeitada: vira a ação de todo turno.
+    - Nada foi implementado.
+- **Próximo passo:** Jean decide entre implementar o desvio do Passo Ágil (a única próxima implementação recomendada) ou encerrar esta parte da P2. A E5 continua aberta.
 

@@ -13,6 +13,10 @@ imunidades, a Marca, a Combustão e o caminho.
 dizem que ele "nunca ganha do Tiro Certeiro", isso vale para a 1.58 e antes. Drenar Vida, Desaparecer e Passo Ágil não
 mudaram.
 
+**Avaliação sobre a 1.59.0 (só medida, nenhum código mudou):** Drenar Vida, Desaparecer e Passo Ágil em lutas inteiras
+(seção 13). Drenar Vida e Desaparecer têm função; o Passo Ágil não, e a seção 13.5 recomenda a única mudança que mostrou
+papel sem virar a ação de todo turno.
+
 **Cuidado ao ler as comparações de dano (seções 1, 4 e 9).** Somar o dano de sequências contra um alvo de treino não
 demonstra que uma habilidade é inútil quando o valor dela é defesa, cura ou efeito sobre aliados. Erguer Escudo,
 Barreira, Passo Ágil, Grito de Guerra (o enfraquecer), Marcar Presa (que vale para os golpes de todos) e Desaparecer
@@ -1062,7 +1066,8 @@ que nada cobre o aviso.
 
 Nos encontros medidos na P1 (seção 10.4), o Passo Ágil **não** mostrou utilidade: só reduz o golpe em média e custa o
 turno, e saiu pior que só atirar ou matar o preparador antes. Isso não prova que seja inútil em outros encontros, mas a
-P1 não comprovou utilidade. Continua como questão para a P2 (não autorizada).
+P1 não comprovou utilidade. **Respondida na seção 13.4:** em lutas inteiras, no Vale e depois, ele não tem vantagem
+relevante.
 
 ### 11.6 Verificações
 
@@ -1250,4 +1255,282 @@ Mexe pouco, porque o robô quase não escolhe o Tiro Duplo:
 ### 12.8 O que fica para depois
 
 Drenar Vida, Desaparecer e Passo Ágil, na ordem que Jean decidir. O Passo Ágil continua como questão aberta (seção 11.5).
+Avaliados na seção 13.
+
+## 13. P2: Drenar Vida, Desaparecer e Passo Ágil em lutas inteiras (avaliação, sobre a 1.59.0)
+
+Só medida e diagnóstico. Nenhum código, número ou save mudou. As propostas desta seção **não estão aprovadas**: recuperar
+mana com o Drenar Vida e mudar a mira em furtividade continuam propostas da seção 7, e a mudança do Passo Ágil (13.5)
+também.
+
+### 13.1 Método
+
+- **Lutas inteiras pelo combate de verdade:** os inimigos agem com a IA do jogo, até vitória ou derrota.
+  - O robô de `tests/arena.py` não decide. Um roteiro fixo escolhe ação e alvo a cada vez (as regras estão abaixo de
+    cada tabela).
+  - A medição usa o `Combate` do jogo e um roteiro em `escolher`. Os scripts ficaram fora do repositório.
+- **Herói fixo por linha:**
+  - O nível e os talentos estão na tabela.
+  - **Equipamento:** o de `dev.vestir`, na semente (de 40) cuja vida e cujo ataque principal ficam mais perto da
+    mediana. Um herói típico, sem item único que decida a luta. Os itens desse sorteio trazem 3% a 4% de roubo de vida,
+    que vale para todo golpe em todos os roteiros.
+  - Sem poções, de dia, tempo limpo. Arqueiros com 40 flechas.
+  - O Patrulheiro luta sem o animal, para medir só o Passo Ágil.
+- **Fichas:**
+
+| Herói | Vida | Ataque principal | Agilidade | Defesa | Recurso (+/turno) | Talentos |
+|---|---|---|---|---|---|---|
+| Arqueiro 3 | 73 | Ataque 15 | 14 | 8 | Foco 29 (+5) | nenhum |
+| Patrulheiro 4 | 96 | Ataque 20 | 15 | 15 | Foco 39 (+5) | nenhum |
+| Sombra 4 | 96 | Ataque 21 | 20 | 15 | Foco 39 (+5) | nenhum |
+| Sombra 7 | 130 | Ataque 33 | 27 | 26 | Foco 48 (+5) | Golpe Sombrio 2/2 |
+| Sombra 9 | 151 | Ataque 40 | 32 | 26 | Foco 55 (+5) | Golpe Sombrio 2/2, Assassino |
+| Necromante 4 | 88 | Poder 25 | 9 | 11 | Mana 58 (+3) | nenhum, ou Pacto Sombrio 2/2 |
+| Necromante 7 | 143 | Poder 40 | 15 | 16 | Mana 76 (+3) | Pacto Sombrio 2/2, Legião de Ossos |
+
+- **Encontros:**
+  - **O Vale**, com inimigos de nível 3, o da capela. O Sombra e o Necromante só existem a partir do nível 4.
+    - o ossuário e o sarilho como na missão: dois esqueletos ou dois afogados, um deles com o golpe preparado
+      (`missoes._que_prepara`). São mortos-vivos;
+    - três lobos (o bosque);
+    - a bruxa do brejo com um sapo (o charco).
+  - **Depois do Vale** (mundo gerado), com inimigos um nível abaixo do herói:
+    - três bandidos;
+    - um mercenário (blindado, com o golpe preparado do próprio catálogo) e um bandido;
+    - dois carniçais (mortos-vivos);
+    - um troll um nível acima (luta longa, regenera, golpe preparado);
+    - o guardião da floresta (só para o Necromante).
+- **Condições:** vida cheia; ferido (começa com 45%); por um fio (25%, só no Necromante 4); com aliado (Morel, o escudo
+  da comitiva, aprovação 30).
+- **Medidas:**
+  - vitórias, que dizem o risco de derrota;
+  - vida no fim, com derrota contando como 0;
+  - "por um fio": vitória com menos de 15% de vida;
+  - turnos, recurso no fim e usos de cada habilidade.
+  - No Drenar Vida, também a cura que chegou, a cura cheia e o dano além da vida do alvo.
+- **Amostra:**
+  - 600 lutas por linha, com as mesmas sementes para todos os roteiros de um mesmo encontro e condição.
+  - Diferenças de até 4 pontos de vitória são ruído.
+  - Os casos perto disso foram refeitos com outras sementes e 3000 lutas. Um deles, o troll, caiu: está marcado.
+
+### 13.2 Drenar Vida
+
+**Roteiros** (o alvo é sempre o inimigo com menos vida):
+
+- **Bola:** Bola de Fogo sempre (o Dardo, quando falta mana). É a alternativa que o diagnóstico chamou de dominante.
+- **Drenar sempre:** Drenar Vida no lugar da Bola.
+- **Drenar <60%:** Drenar Vida quando a vida está abaixo de 60%; acima, Bola.
+- **Barreira <50%:** Barreira Arcana abaixo de 50%, se não tiver uma; no resto, Bola.
+- **Servo + …:** ergue o servo no 1º turno e segue o roteiro.
+- No nível 7, todos os roteiros abrem com a Maldição contra grupos (depois do servo, nos que erguem servo).
+
+**Necromante 4, sem talentos, sozinho.** Cada célula: vitórias (vida no fim).
+
+| Encontro | Vida inicial | Bola | Drenar sempre | Drenar <60% | Barreira <50% | Servo + Bola | Servo + Drenar <60% |
+|---|---|---|---|---|---|---|---|
+| Ossuário (mortos-vivos) | cheia | 100% (69%) | 76% (26%) | 98% (69%) | 100% (70%) | 100% (72%) | 100% (73%) |
+| | 45% | 81% (19%) | 13% (2%) | 13% (2%) | **93%** (37%) | 83% (23%) | 54% (14%) |
+| | 25% | 39% | 3% | 3% | **80%** | 44% | 18% |
+| Sarilho (mortos-vivos) | 45% | 92% (25%) | 14% (3%) | 14% (3%) | **98%** (41%) | 82% (22%) | 57% (14%) |
+| 3 lobos (vivos) | cheia | 87% (33%) | 98% (74%) | 99% (56%) | 96% (44%) | 98% (66%) | 99% (70%) |
+| | 45% | 12% (2%) | 80% (35%) | 80% (34%) | 74% (22%) | 75% (19%) | **88%** (39%) |
+| | 25% | 2% | 48% | 48% | 41% | 41% | **64%** |
+| Bruxa + sapo (vivos) | cheia | 99% (59%) | 99% (83%) | 100% (67%) | 99% (60%) | 100% (74%) | 100% (76%) |
+| | 45% | 61% (12%) | 90% (48%) | 90% (46%) | 88% (30%) | 88% (26%) | **96%** (50%) |
+| | 25% | 20% | 72% | 72% | 63% | 58% | **87%** |
+
+**Necromante 7, Pacto Sombrio 2/2 e Legião de Ossos, sozinho.** Vitórias.
+
+| Encontro | Vida inicial | Bola | Drenar sempre | Drenar <60% | Barreira <50% | Servo + Bola | Servo + Drenar <60% |
+|---|---|---|---|---|---|---|---|
+| 3 bandidos | cheia | 97% (53%) | 100% (87%) | 100% (73%) | 100% (57%) | 99% (62%) | 100% (77%) |
+| | 45% | 28% | 57% | 57% | 65% | 41% | **74%** |
+| Mercenário + bandido | 45% | 69% | 84% | 84% | **94%** | 85% | 92% |
+| 2 carniçais (mortos-vivos) | 45% | 21% | 16% | 16% | 59% | **67%** | 50% |
+| Troll (luta longa) | 45% | 45% | 63% | 61% | 51% | 68% | **80%** |
+| Guardião da floresta | cheia | 46% (14%) | 43% | 60% | 48% | 73% | **77%** (42%) |
+| | 45% | 4% | 17% | 17% | 2% | 12% | **33%** |
+
+- **Pacto Sombrio 2/2 no nível 4** (cura 60% em vez de 40%):
+  - **3 lobos, ferido:** Drenar 93% contra 12% da Bola; servo e Drenar, 97%.
+  - **Ossuário, ferido:** Drenar 30% contra 81% da Bola.
+- **Com Morel e vida cheia:** todos os roteiros ganham 100%. O Drenar só muda a vida no fim (3 lobos: 96% contra 78%).
+
+**A cura de verdade** (nível 4, "Drenar sempre"):
+
+| Situação | Cura cheia (40% do dano) | Recebida | Perdida por vida cheia | Vinda do dano além da vida do alvo |
+|---|---|---|---|---|
+| 3 lobos, vida cheia | 54,1 | 40,3 | 26% | 22% |
+| 3 lobos, ferido | 48,8 | 47,0 | 4% | 21% |
+| Bruxa + sapo, ferido | 47,2 | 45,2 | 4% | 15% |
+| 3 lobos, vida cheia, com Morel | 53,7 | 23,1 | 57% | 23% |
+
+- **O golpe que passa da vida:** o Drenar Vida cura sobre o **dano inteiro**, não sobre a vida que o alvo tinha. Num
+  lobo com 1 de vida, cura o mesmo que num inteiro (8,4 no nível 4) [código: `Roubo` usa o dano devolvido por `atacar`,
+  que não para na vida do alvo; o roubo de vida dos itens e a Sede de Sangue seguem a mesma regra].
+  - Isso responde por 15% a 23% da cura nas lutas medidas.
+  - Somado à Colheita (+5 de mana por abate), faz do Drenar um bom golpe de misericórdia.
+- **Contra mortos-vivos**, o dano de sombra sai pela metade, e a cura também: num esqueleto, 9,6 de dano e 3,6 de
+  cura, contra 21,9 e 8,4 num lobo.
+- **Mana não é o limite:** em todas as linhas, o Necromante termina com 35% a 87% da mana.
+
+**Leitura:**
+
+- **Função útil demonstrada:** sustentar a luta contra vivos quando a vida já baixou.
+  - **No Vale** (bosque e charco), ferido, o Drenar transforma derrota em vitória:
+    - 3 lobos: 12% → 80%;
+    - bruxa e sapo: 61% → 90%;
+    - com 25% de vida: 2% → 48% e 20% → 72%.
+  - **Depois:** bandidos 28% → 57%; troll 45% → 63%; guardião, de vida cheia, 46% → 60%.
+  - Com o servo, ele é a melhor combinação medida contra vivos e nas lutas longas.
+- **Armadilha contra mortos-vivos:**
+  - No ossuário e no sarilho do Vale, ferido, o Drenar faz 13–14%, contra 81–92% da Bola; ali a resposta é a
+    Barreira (93–98%).
+  - Nos carniçais do nível 7, 16%; a resposta é o servo (67%) ou a Barreira (59%).
+  - O jogo já diz isso (limites do caminho e Grimório: "Dano de sombra rende menos contra mortos-vivos ×0,5").
+- **De vida cheia e sem perigo:** não muda o resultado. Perde um quarto da cura sozinho e mais da metade com aliado.
+  Contra 3 lobos, porém, já ganha da Bola desde o começo (98% contra 87%): a luta com vários vivos desgasta.
+- **Dano menor que o da Bola** não é defeito aqui: o valor dele é a vida que devolve na hora em que ela falta.
+
+### 13.3 Desaparecer
+
+**Roteiros** (o ataque é o Tiro Certeiro; a Flecha Envenenada fica de fora porque não pega em mortos-vivos):
+
+- **Atacar:** o inimigo com menos vida.
+- **Atacar quem prepara:** quem prepara um golpe; sem ninguém preparando, o de maior ataque.
+- **Desaparecer no preparo:** Desaparecer quando alguém prepara; o tiro furtivo seguinte vai em quem prepara.
+- **Desaparecer no 1º turno:** a abertura; o tiro furtivo vai no mais perigoso.
+- **Desaparecer <50%:** Desaparecer abaixo de 50% de vida, quando não está furtivo nem esquivo.
+- **Desaparecer guardado para a Execução** (nível 7 em diante): espera alguém cair abaixo de 35%, desaparece e executa.
+- **Passo Ágil no 1º turno:** a esquiva sozinha, para separar o efeito dela do efeito do crítico.
+- No nível 7, todos os roteiros usam a Execução em quem está abaixo de 35%.
+
+| Herói, encontro | Vida inicial | Atacar | Atacar quem prepara | Desaparecer no preparo | Desaparecer 1º turno | Desaparecer <50% | Passo Ágil 1º turno | Desaparecer p/ Execução |
+|---|---|---|---|---|---|---|---|---|
+| Sombra 4, ossuário | cheia | 100% (94%) | 100% | 100% (89%) | 100% (94%) | 100% | — | — |
+| | 45% * | 97% (49%) | 97% | 92% | 98% (51%) | 98% (52%) | 92% | — |
+| Sombra 4, sarilho | 45% | 99% | 99% | 96% | 99% | 100% | — | — |
+| Sombra 4, 3 lobos | 45% * | 92% | 92% | 92% | 93% | 94% | 86% | — |
+| Sombra 4, bruxa + sapo | 45% | 94% | 76% | 94% | 84% | 82% | — | — |
+| Sombra 7, 3 bandidos | 45% * | 75% | 75% | 75% | 76% | 73% | 72% | 70% |
+| Sombra 7, mercenário + bandido | 45% | 85% | 71% | 84% | 74% | 62% | — | 78% |
+| Sombra 7, 2 carniçais | cheia * | 99% (70%) | 99% | 99% | **100% (79%)** | 99% | 98% | 97% |
+| | 45% * | 69% (21%) | 68% | 69% | **83% (31%)** | **84% (32%)** | 62% | 55% |
+| Sombra 7, troll | 45% * | 66% | 64% | 67% | 62% | 54% | 59% | 49% |
+| Sombra 9 (Assassino), 3 bandidos | cheia | 96% | 96% | 96% | 98% | 95% | — | 95% |
+| Sombra 9 (Assassino), troll | cheia | 94% | 94% | 93% | 93% | 86% | — | 85% |
+
+\* refeito com outras sementes e 3000 lutas. Nas colunas que foram refeitas, a tabela traz o número da repetição; nas
+outras, o da primeira rodada (600 lutas). Na primeira rodada, o troll dava 70% contra 63–64% para o Desaparecer no
+preparo: era ruído.
+
+- **Com Morel**, nos níveis 4 e 7: todos os roteiros ganham 99–100%, e a diferença fica só na vida no fim (±3 pontos).
+
+**Leitura:**
+
+- **No Vale: sem vantagem relevante.**
+  - O Sombra 4 vence o Vale de vida cheia em todo roteiro.
+  - Ferido, a abertura com Desaparecer empata com atacar (dentro de 1–2 pontos). No preparo, perde de 4 a 5.
+  - Contra a bruxa (magia), a abertura perde 10 pontos.
+- **Depois do Vale: função restrita, mas legítima.**
+  - Contra **dois inimigos resistentes, com vida a menos**, a abertura com o crítico das sombras derruba um deles cedo.
+    Contra os carniçais, 69% → 83% (confirmado em 3000 lutas).
+  - O ganho é do **crítico**, não da esquiva: o Passo Ágil no mesmo turno faz 62%.
+  - De vida cheia, o mesmo encontro só ganha vida no fim (70% → 79%).
+  - Contra grupos de inimigos fracos (bandidos) e contra o troll sozinho, não muda nada.
+- **A esquiva de +50% por 1 turno:** sem evidência de valor. Não muda o golpe preparado (troll e mercenário empatam).
+- **A sinergia com a Execução:** hipótese sem evidência. Guardar o Desaparecer para executar piorou em todo encontro
+  medido (troll ferido: 49% contra 66%). O Assassino (nível 9) não mudou isso.
+- **Priorizar o inimigo perigoso** nem sempre é a resposta: contra o mercenário blindado, ferido, atacá-lo primeiro
+  ganha 71%, contra 85% de matar o bandido antes.
+
+### 13.4 Passo Ágil
+
+**Roteiros:** atacar; Passo Ágil quando alguém prepara; Passo Ágil no 1º turno; Passo Ágil sempre que há 2 ou mais
+inimigos (mantém o efeito); Passo Ágil abaixo de 50%.
+
+| Herói, encontro | Vida inicial | Atacar | Passo no preparo | Passo 1º turno | Passo com 2+ | Passo <50% |
+|---|---|---|---|---|---|---|
+| Arqueiro 3, ossuário | cheia | 95% (48%) | 87% (34%) | 89% | 77% | 87% |
+| | 45% | 40% | 21% | 20% | 13% | 6% |
+| Arqueiro 3, sarilho | cheia | 96% | 89% | 91% | 76% | 84% |
+| | 45% | 43% | 24% | 22% | 12% | 7% |
+| Arqueiro 3, 3 lobos | cheia | 76% | 76% | 63% | 39% | 52% |
+| Arqueiro 3 com Morel, ossuário | cheia | 100% (77%) | 100% (72%) | — | 99% (66%) | 100% |
+| Patrulheiro 4 (sem o animal), ossuário | 45% | 94% | 85% | 86% | 73% | 67% |
+| Patrulheiro 4, 3 lobos | 45% | 87% | 87% | 77% | 56% | 55% |
+| Sombra 7, troll | 45% | 66% | 66% | 59% | — | 43% |
+| Sombra 9, troll | cheia | 94% | 91% | — | — | 80% |
+
+**Leitura: sem vantagem relevante nas situações avaliadas,** no Vale e depois, com ou sem aliado.
+
+- O Passo Ágil troca um ataque por 30% de esquiva em duas vezes de inimigo.
+- Os inimigos medidos tiram pouco por golpe perto do que um Tiro Certeiro a menos custa em duração. Até diante do golpe
+  preparado, atacar ganha.
+- Com vida baixa, ele piora mais: a luta fica mais longa, e cada vez a mais é uma chance a mais de morrer.
+- **O que sobra é a proteção de um tiro só:** não há situação medida em que ele seja a melhor escolha.
+
+### 13.5 Recomendações
+
+| Habilidade | Classificação | Recomendação |
+|---|---|---|
+| Drenar Vida | **Função útil demonstrada**: sustentar contra vivos quando ferido; lutas longas. Armadilha contra mortos-vivos, já avisada pelo jogo | **Manter.** Mana não é o problema (termina com 35–87%): a proposta de recuperar mana não tem motivo medido. A cura sobre o dano inteiro é a regra de todo roubo de vida; se Jean quiser, o Grimório pode dizê-lo ("conta o golpe inteiro"), sem mudar número. |
+| Desaparecer | **No Vale: sem vantagem relevante. Depois: função restrita, mas legítima** (abertura com crítico contra dois inimigos resistentes, ferido: +14 pontos) | **Manter.** Tirar da mira em furtividade não tem motivo medido: a parte defensiva atual (esquiva) não mostrou valor, e o que funciona é o crítico. A sinergia com a Execução fica como hipótese sem evidência. |
+| Passo Ágil | **Sem vantagem relevante nas situações avaliadas** | **Ajustar**, com a menor mudança que mostrou papel (abaixo). |
+
+**Hipóteses testadas para o Passo Ágil**, só no script (o jogo não mudou), com os mesmos roteiros e 1500 lutas:
+
+| Variante | Arqueiro 3, ossuário, cheia: atacar 94% | Patrulheiro 4, ossuário, 45%: atacar 95% | Sombra 7, troll, 45%: atacar 60% | Sombra 7, 3 bandidos, 45%: atacar 76% | Risco de virar a ação de todo turno |
+|---|---|---|---|---|---|
+| Hoje (+30% por 2 turnos), no preparo | 87% | 85% | 63% | 76% | — |
+| +50% por 2 turnos, no preparo | 92% | 90% | 63% (já estava no teto de 60%) | 76% | não |
+| **Desvia o próximo golpe** que acertaria, por 2 turnos (um só, sem teto), no preparo | 94% | 93% | **79%** | 76% | não: usado sempre com 2+ inimigos, faz 47%, contra 76% |
+| Esquiva +30% e um Disparo junto (como se não gastasse o turno), com 2+ inimigos | 95% | 95% | 60% | **81%** | **sim**: com 3 lobos, 87% contra 77% de atacar; vira o que se aperta sempre |
+
+- **O problema concreto:** o Passo Ágil é a única resposta do Arqueiro ao golpe preparado antes da especialização, e a
+  resposta defensiva das três especializações. Ele não paga o turno em nenhum encontro medido. Esquiva por chance,
+  mesmo maior, não resolve: quem ganha é sempre atacar.
+- **A menor mudança que mostrou papel:** trocar a chance pelo **desvio de um golpe**.
+  - O próximo golpe esquivável que acertaria o herói nas duas vezes seguintes dos inimigos erra. Um só, e o teto de
+    esquiva não conta.
+  - Custo (6 de Foco), duração e nome iguais.
+- **Papel que ela daria:** responder ao golpe preparado de **um inimigo forte sozinho**. Contra o troll, ferido, 60% →
+  79%. O troll, o mercenário, o ent, o golem, o cavaleiro sombrio e a abominação têm o Golpe Esmagador no mundo gerado.
+- **O que ela não faria:**
+  - **No Vale** continua sem vantagem: no ossuário empata, e com o arqueiro 3 ferido piora (19% contra 40%). Ali, o que
+    resolve é matar mais rápido.
+  - **Contra grupos** não muda nada.
+  - **Usada todo turno**, piora a luta: não vira a melhor ação de todo turno.
+- **Riscos:**
+  - É uma regra nova de golpe: um estado que se gasta ao evitar um golpe, como a barreira se gasta ao absorver.
+  - Muda a ficha e o Grimório das três especializações do Arqueiro.
+  - Mexe nas lutas do robô de `tests/equilibrio`, que usa o Passo Ágil diante do golpe preparado. O gabarito não muda:
+    o arqueiro do robô não passa do nível 2.
+  - O teto de esquiva (60%) deixa de valer para esse golpe.
+- **Como verificar:**
+  - os mesmos roteiros, antes e depois, no Vale e nos encontros do nível 7, incluindo mercenário e guardião, que esta
+    avaliação não mediu com a variante;
+  - "Passo no preparo" melhor que atacar só contra um inimigo forte sozinho;
+  - "Passo com 2+" e "Passo no 1º turno" piores que atacar em todo encontro;
+  - o equilíbrio do Patrulheiro e do Sombra antes e depois.
+- **Rejeitada:** não gastar o turno (a última linha da tabela). Rende, mas vira a ação de todo turno.
+
+### 13.6 A próxima implementação
+
+**Uma só, se Jean quiser continuar a P2:** o desvio do Passo Ágil (13.5).
+
+- Drenar Vida e Desaparecer já cumprem funções e ficam como estão.
+- Se Jean preferir não mexer no Passo Ágil, a parte da P2 sobre estes três botões pode ser encerrada. Ele fica
+  registrado como sem vantagem relevante, e a decisão vai para a proposta de preparação de habilidades (fora da E5).
+
+### 13.7 Limites
+
+- **Roteiros fixos:** uma pessoa varia mais.
+  - Uma política que mistura Barreira, Drenar e servo pode render mais que as medidas.
+  - O teste de "ferido" começa a luta ferido, em vez de chegar lá dentro dela.
+- **Herói:** um só por nível, com equipamento mediano, sem poções e sem Meditar.
+- **Aliado:** só Morel; Odette (cura) e Yara não foram medidas.
+- **Guardiã da capela:** fora; o rito tem regras próprias.
+- **Variantes do Passo Ágil:** uma semente só, de 1500 lutas. O ganho contra o troll (+19) passa do ruído, mas precisa
+  da verificação de 13.5 antes de qualquer decisão.
 
