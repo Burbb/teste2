@@ -18,7 +18,7 @@ Legenda usada em todo o documento:
    Golpe Pesado de 10; o Arqueiro, 5 (+2) para um Tiro Certeiro de 8 [código]. As ações de preparo (Grito de
    Guerra, Marcar Presa, Desaparecer) rendem **menos** que repetir o golpe principal numa luta de 3 turnos contra um
    alvo [medido]. O ataque básico quase nunca é a melhor escolha.
-2. **O motor já tem momentos de decisão que o Vale quase não mostra.** O golpe preparado ("Defenda-se, ou atordoe
+2. **O motor já tem momentos de decisão que o Vale não mostra.** O golpe preparado ("Defenda-se, ou atordoe
    para interromper!"), com as respostas de cada classe (Investida, Erguer Escudo, Lança de Gelo, Barreira, Passo
    Ágil, o urso), **não aparece em nenhuma luta do Vale**. Nos biomas do Vale, só o ent jovem prepara golpe, e ele pede
    região de nível 3; o Bosque é nível 2, e a noite sobe o nível dos inimigos, não as espécies [código:
@@ -32,7 +32,7 @@ Legenda usada em todo o documento:
    menos que dois tiros). O laço de acender e detonar do Piromante só supera repetir Bola de Fogo a partir do nível 6
    (Ignição) e em lutas de 4 turnos ou mais [medido].
 5. **O Vale é dos mortos-vivos:** quatro das cinco lutas fixas da capela e a guardiã têm mortos-vivos [código]. Isso
-   dobra o Golpe Sagrado (×1,7), anula o veneno do Sombra (imune) e corta pela metade o dano de sombra do Necromante.
+   quase dobra o Golpe Sagrado (×1,7), anula o veneno do Sombra (imune) e corta pela metade o dano de sombra do Necromante.
 6. **A liberdade de build hoje é pequena.** Cada especialização tem três talentos (4 a 5 pontos), e no nível 12 o herói
    tem pontos para quase toda a árvore (11 de nível, mais um por Sigilo, contra 15 a 16 no total) [código]. Escolher
    talento é escolher a ordem, não abrir mão. O equipamento só soma atributos; nenhum item único usa os modificadores e
@@ -300,7 +300,7 @@ e sem esquiva (seção 9), sem talentos nem equipamento. Servem para comparar op
 - **Quando outra ação:** Escudo diante de golpe preparado; Prece quando a vida e os males pedem; Julgamento (nv 7) com
   dois ou mais inimigos.
 - **Dominância:** **o Golpe Pesado fica obsoleto.** Média 29 nos dois no nível 5 (25 = 25 medido no alvo de treino), e o
-  Golpe Sagrado ainda cura e dobra contra o que o Vale tem. O botão continua no menu sem situação própria.
+  Golpe Sagrado ainda cura e quase dobra contra o que o Vale tem. O botão continua no menu sem situação própria.
 
 ### 4.3 Berserker (Guerreiro, a partir do nível 4)
 
