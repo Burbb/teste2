@@ -37,6 +37,7 @@ Para uma nova conta ou sessão, começar por [00 — Comece aqui: continuidade](
 | [11-E1-REGIAO-INICIAL.md](11-E1-REGIAO-INICIAL.md) | E1: proposta da primeira região (Vale do Turvo), missão, comitiva, recompensas e percurso |
 | [12-E1-CAMPANHA.md](12-E1-CAMPANHA.md) | E1: linha do tempo, Sigilos, protagonista, arco da campanha, finais, derrota, transição e o que decidir antes da E2 |
 | [13-PENDENCIAS-FORA-DA-CAMPANHA.md](13-PENDENCIAS-FORA-DA-CAMPANHA.md) | Divergências entre documentação e código, e texto do prólogo; fora da campanha |
+| [14-E5-DIAGNOSTICO-CLASSES.md](14-E5-DIAGNOSTICO-CLASSES.md) | E5: diagnóstico das três classes e seis especializações (sistemas conferidos, promessas × código, fichas, builds, progressão) e as prioridades da E5 |
 
 ## Estados e evidências
 

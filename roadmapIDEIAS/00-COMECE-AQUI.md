@@ -79,7 +79,8 @@ Três commits posteriores à atualização do roadmap foram consultados. Os comp
 | E2 — região fixa | **Protótipo entregue na 1.48.0** (commit `2661b59`): início da campanha, mapa fixo, viagem, descoberta e save. Validado tecnicamente; falta Jean jogar. |
 | E3 — missão mínima | Entregas na 1.50.0 a 1.54.0 (registros abaixo): da Fonte Nova ao canal, à capela, ao interior, a Vó Berta, à guardiã (Destruir ou Dar descanso) e à volta ao Vau, que conclui a missão. A bênção e a comporta não existem. Falta Jean jogar. |
 | E4 — consequência local | Na 1.54.0, a Fonte Nova, a frase do Vau, Pita e Marta. Na 1.55.0, Caspar: a acusação, a praça (Apoiar, Denunciar com prova, Calar), a situação da Yara e as reações da comitiva. Na 1.56.0, a consolidação: a Yara barrada fica de fato fora do Vau, o encontro no Charco depois da denúncia, a conversa da Yara sobre a praça e os textos que contradiziam o Vau. **O critério mínimo da E4 (07-ETAPAS) está atendido**; as outras ideias do 11 (bênção, sementes, mercado, taverna, Charco à noite, Odette e Caspar, Anselmo, a cena da vigília) ficam adiadas, não são requisito. Falta Jean jogar. |
-| E4–E11 | Plano de trabalho futuro; infraestrutura existente não equivale a etapas concluídas. Notas aprovadas para a E3 na seção 19 do [11](11-E1-REGIAO-INICIAL.md). |
+| E5 — classes | Diagnóstico (só design) em [14](14-E5-DIAGNOSTICO-CLASSES.md), sobre a 1.56.0. Três prioridades propostas; a primeira (P1, momentos de decisão no Vale) aguarda aprovação. Nada implementado. A validação da E4 jogando, por Jean, fica registrada à parte. |
+| E6–E11 | Plano de trabalho futuro; infraestrutura existente não equivale a etapas concluídas. Notas aprovadas para a E3 na seção 19 do [11](11-E1-REGIAO-INICIAL.md). |
 | Bugs ainda abertos | Nenhum bug aberto específico foi informado para registro nesta passagem. Isso não comprova ausência de bugs. |
 | Polimento antes da E3 | Entregue na 1.48.1 (registro abaixo): leitura, item achado, balcão do templo, palco da luta. Falta Jean conferir jogando. |
 | Baús abertos juntos | Entregue na 1.49.0 (registro abaixo), separado da E3. Falta Jean conferir jogando. |
@@ -499,4 +500,26 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
 - **Adiado, não é requisito da E4:** bênção de Caspar; sementes (caçadores de bruxas, pregador do Vazio); a cena da vigília barrando a Yara antes da decisão; Odette reconhecendo Caspar; Anselmo e a prova dele; taverna (canção, história de Berta), mercado e desconto da curandeira; o Charco à noite; a comporta; falas próprias de Odette e Morel sobre Caspar; a fogueira só no Charco (hoje também no Bosque).
 - **Limitações:** a Yara barrada come das provisões e entra no ensopado da taverna como antes (ela continua na comitiva); a conversa da praça só existe para a Yara; Varn fechada.
 - **Como testar (rota curta):** campanha nova; investigue até a capela sem encontrar a Yara (se a fogueira aparecer, deixe para outra partida); recolha o lodo no fundo; resolva Ilse; no Vau, denuncie Caspar; vá ao Charco: "A Moça do Brejo"; aceite; num dia seguinte, no acampamento, o ✉ da Yara traz a conversa da praça. Noutra partida, com a Yara no grupo, apoie Caspar: no Vau o cartão dela esmaece e explica; viaje ao Charco e ela volta ao seu lado; acampe para a conversa. Salve e carregue no meio: nada repete.
+
+### 10/10/2026 — E5: diagnóstico das classes (só design, sobre a 1.56.0)
+
+- **Pedido de Jean:** começar a E5 pela análise e pelo design, sem alterar código, atributos, habilidades, talentos, itens nem saves; diagnosticar as três classes e as seis especializações separando código conferido, promessa, hipótese e proposta; fichas; liberdade de build; progressão e apresentação; até três prioridades com a primeira recomendada; parar antes de mexer no jogo. A E4 atende ao critério mínimo tecnicamente; a validação de Jean jogando fica registrada à parte.
+- **Entregue:** [14-E5-DIAGNOSTICO-CLASSES.md](14-E5-DIAGNOSTICO-CLASSES.md); índice (README) e estado da E5 no 07 atualizados. Nenhum arquivo fora de `roadmapIDEIAS` mudou.
+- **Achados principais:**
+  - Guerreiro e Arqueiro repetem a mesma ação quase todo turno. As lutas do Vale duram 3 a 5 turnos, e Vigor e Foco quase não apertam. Ações de preparo (Grito, Marcar, Desaparecer) rendem menos que repetir o golpe principal em 3 turnos.
+  - O golpe preparado (com aviso, interrompido por atordoar), a decisão defensiva mais clara do motor, não aparece em nenhuma luta do Vale.
+  - O Mago é a única classe em que o recurso pesa.
+  - Botões dominados na faixa 4–6: Golpe Pesado (Paladino), Tiro Duplo, Drenar Vida, Desaparecer. O laço de acender e detonar do Piromante só se paga a partir do 6 (Ignição) e em lutas de 4+ turnos.
+  - O Vale é de mortos-vivos: favorece o Paladino e anula o veneno do Sombra e metade do dano do Necromante.
+  - Liberdade de build pequena: 3 talentos por especialização; no 12, pontos para quase toda a árvore. Equipamento só de atributos: nenhum único usa os gatilhos que o sistema aceita.
+  - A encruzilhada é irreversível e não mostra habilidades, passiva nem custos.
+- **Prioridades propostas (nenhuma aprovada):**
+  - **P1, recomendada primeiro:** momentos de decisão no Vale. O golpe preparado existente em duas lutas fixas da capela (ossuário e sarilho), só dados da campanha, sem mexer em números de classe nem no gabarito.
+  - **P3:** encruzilhada e Grimório que explicam.
+  - **P2:** um papel para cada botão dominado; mexe no equilíbrio e no gabarito.
+- **Verificações:** só leitura. Os números saem das próprias funções do jogo: Grimório, uma sequência de ações num alvo de treino com 2000 sorteios e lutas do robô de `tests/arena.py`. Condições e limites do robô estão na seção 9 do 14; taxa de vitória não foi usada como medida de decisão. Os scripts ficaram fora do repositório. Testes, gabarito e fumaça não rodaram de novo: nada no jogo mudou desde `adaa93a`.
+- **Limitações:**
+  - Fúria Cega e Maldição como ações dominantes no 7–9, o Inferno contra grupos e a Marca com comitiva estão marcados como hipótese a medir.
+  - Os seis caminhos não foram jogados em cenários direcionados.
+- **Próximo passo:** Jean decide se aprova a P1 (ou outra ordem); só então implementar.
 
