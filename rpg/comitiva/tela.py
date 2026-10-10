@@ -1,7 +1,7 @@
 """O que a tela mostra da comitiva: o estado de cada um e a explicação da aprovação."""
 
 from .catalogo import COMPANHEIROS
-from .grupo import lealdade, membros, nivel
+from .grupo import fora, lealdade, membros, nivel
 from .conversas import CONVERSAS, proxima_conversa
 
 
@@ -41,9 +41,11 @@ def estado(g, quem=None):
     for m in (membros(g) if quem is None else quem):
         d = COMPANHEIROS[m["id"]]
         rotulo, classe = nivel(m)
+        ausente = fora(g, m)  # na comitiva, mas não aqui: sem conversa, e o painel diz onde está
         lista.append({"id": m["id"], "nome": d["nome"], "titulo": d["titulo"], "desc": d["desc"],
                       "hp": m["hp"], "max_hp": m["max_hp"],
                       "aprovacao": m["aprovacao"], "nivel": rotulo, "classe": classe, "ferido": m["ferido"],
-                      "papel": d["papel"], "conversa": bool(proxima_conversa(g, m)) and m["ultima_conversa"] != g.dia,
-                      "aprovacao_info": explicar_aprovacao(g, m)})
+                      "papel": d["papel"],
+                      "conversa": not ausente and bool(proxima_conversa(g, m)) and m["ultima_conversa"] != g.dia,
+                      "aprovacao_info": explicar_aprovacao(g, m), **({"fora": ausente} if ausente else {})})
     return lista

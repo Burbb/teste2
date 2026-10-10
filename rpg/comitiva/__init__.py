@@ -25,20 +25,20 @@ Quem usa importa daqui (`from rpg import comitiva`; `comitiva.reagir(...)`).
 
 from .catalogo import LIMITE, COMPANHEIROS, REACOES, NIVEIS, GRITOS, CARINHO, ATALHOS_FOGUEIRA
 from .grupo import (
-    dados, membros, membro, presente, reserva, na_reserva, disponivel, nome, flexao, nivel, lealdade, atributos,
+    dados, membros, membro, presente, AUSENCIAS, fora, junto, reserva, na_reserva, disponivel, nome, flexao, nivel, lealdade, atributos,
     atualizar_vida_maxima, recrutar, sair, oferecer_vaga, para_acampamento, chamar, dispensar, mudar_aprovacao,
     reagir, reagir_escolha, verificar_partidas, partir, amanhecer, depois_do_amanhecer, comer, pagar_soldo,
     parte_do_xp, descansar, cuidar)
-from .conversas import CONVERSAS, conversa, proxima_conversa, conversar, falar, noite, fala_ociosa, carinho
+from .conversas import CONVERSAS, AVULSAS, conversa, avulsa, proxima_conversa, conversar, falar, noite, fala_ociosa, carinho
 from .tela import explicar_aprovacao, estado
 from .luta import preparar_combate, alvo_inimigo, gritar, agir, encerrar_combate
 from .fogueira import fogueira, menu
 from .final import antes_da_batalha_final
 
 __all__ = ["LIMITE", "COMPANHEIROS", "REACOES", "NIVEIS", "GRITOS", "CARINHO", "ATALHOS_FOGUEIRA", "dados", "membros",
-           "membro", "presente", "reserva", "na_reserva", "disponivel", "nome", "flexao", "nivel", "lealdade", "atributos",
+           "membro", "presente", "AUSENCIAS", "fora", "junto", "reserva", "na_reserva", "disponivel", "nome", "flexao", "nivel", "lealdade", "atributos",
            "atualizar_vida_maxima", "recrutar", "sair", "oferecer_vaga", "para_acampamento", "chamar", "dispensar",
            "mudar_aprovacao", "reagir", "reagir_escolha", "verificar_partidas", "partir", "amanhecer", "depois_do_amanhecer",
-           "comer", "pagar_soldo", "parte_do_xp", "descansar", "cuidar", "CONVERSAS", "conversa", "proxima_conversa",
+           "comer", "pagar_soldo", "parte_do_xp", "descansar", "cuidar", "CONVERSAS", "AVULSAS", "conversa", "avulsa", "proxima_conversa",
            "conversar", "falar", "noite", "fala_ociosa", "carinho", "explicar_aprovacao", "estado", "preparar_combate",
            "alvo_inimigo", "gritar", "agir", "encerrar_combate", "fogueira", "menu", "antes_da_batalha_final"]

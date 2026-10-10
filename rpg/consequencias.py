@@ -15,6 +15,7 @@ destruir não teria a noite pior). O mundo gerado não tem nada disto.
 """
 
 from . import missoes
+from .regras import AMBIENTE_VILA
 
 MISSAO = "febre_do_turvo"
 
@@ -116,6 +117,22 @@ def frase_da_vila(g):
              or FRASES.get((desfecho, estado)))
     from . import caspar
     return " ".join(x for x in (fonte, caspar.frase_da_praca(g)) if x)
+
+
+def ambiente(g, frase):
+    """A frase de ambiente da vila (jogo.menu_vila; a frase sorteada vem pronta, o sorteio segue igual). No Vau da
+    campanha: depois do desfecho, a da Fonte e da praça; antes, a sorteada, trocada quando o mundo gerado contradiz o
+    Vau (a febre não é peste, a capela não tem padre que fugiu, o pregador da praça é Caspar e fala da bruxa)."""
+    if not no_vau(g):
+        return frase
+    return frase_da_vila(g) or AMBIENTE_VAU.get(frase, frase)
+
+
+AMBIENTE_VAU = {
+    AMBIENTE_VILA[0]: "Portas fechadas com pano molhado na fresta. Atrás de quase todas, alguém tosse.",
+    AMBIENTE_VILA[2]: "Uma tábua cobre a boca do poço seco da praça. As crianças sentam nela para descansar.",
+    AMBIENTE_VILA[7]: "Uma mulher passa com dois baldes cheios da Fonte Nova e não olha para ninguém.",
+}
 
 
 # ------------------------------------------------------------------ o Diário

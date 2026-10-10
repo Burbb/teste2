@@ -178,10 +178,11 @@ function desenharHeroi(h, antes) {
   const membros = (h.comitiva || []).map((m) => {
     const d = Telas.dica(`<b>${esc(m.nome)}</b><div class="tipo">${esc(m.titulo)}</div><div>${esc(m.desc || "")}</div>` +
       (m.ferido ? "<div class=\"bonus pior\">Ferido: fora de combate até descansar.</div>" : "") +
+      (m.fora ? `<div class="bonus pior">${esc(m.fora.texto)}</div>` : "") +
       `<div class="rodape">${m.conversa ? "Quer conversar: clique no ✉." : "Mais na aba Comitiva."}</div>`);
     const carta = m.conversa ? ` <button type="button" class="membro-carta" data-conversar="${esc(m.id)}" title="${esc(m.nome.split(" ").pop())} quer conversar">✉</button>` : "";
     const velho = antes && (antes.comitiva || []).find((x) => x.id === m.id);  // a barra sai de onde estava
-    return `<div class="membro${m.ferido ? " ferido" : ""}" data-cid="${esc(m.id)}">
+    return `<div class="membro${m.ferido || m.fora ? " ferido" : ""}" data-cid="${esc(m.id)}">
       <div class="icone" ${d}>${spr(m.id, 2)}</div>
       ${linhaNome(m.nome, carta, m.hp, m.max_hp, d)}
       ${barra("vida fina", m.hp, m.max_hp, velho ? velho.hp : undefined, "m-" + m.id)}${Telas.aprovacao(m)}</div>`;

@@ -76,6 +76,21 @@ def yara_barrada(g):
     return bool(m and m.get("desfecho") == "apoiar" and situacao_yara(g) in ("grupo", "reserva"))
 
 
+def _fora_do_vau(g, m):
+    """A regra de ausência (comitiva.fora): barrada, a Yara que anda com você espera do lado de fora enquanto você está
+    no Vau. Na estrada, ela volta para o seu lado; continua na comitiva o tempo todo."""
+    if m["id"] != "yara" or g.na_estrada or not g.campanha or g.loc.get("chave") != "vau_do_turvo":
+        return None
+    if cm.membro(g, "yara") is not m or not yara_barrada(g):
+        return None
+    return {"curto": "espera fora do Vau",
+            "texto": "Espera fora do Vau, na beira do brejo: a vigília de Caspar não a deixa entrar. Na estrada, volta "
+                     "para o seu lado."}
+
+
+cm.AUSENCIAS.append(_fora_do_vau)
+
+
 def fogueira_possivel(g):
     """O evento da fogueira (eventos/comitiva.py: o pregador queima a moça no brejo) só cabe enquanto Caspar tem a
     praça: depois de denunciado (aceito ou não, a vigília acabou), ele não acontece mais. No mundo gerado, sempre."""
@@ -140,7 +155,8 @@ def linha_yara(g):
     if onde == "recusou":
         return "Yara: vive por conta própria no brejo, " + ("sem ninguém atrás dela." if livre else
                                                              "e a vigília ainda fala dela.")
-    return ("Yara: a moça do brejo, que você não conhece, não é mais procurada por ninguém." if livre else
+    return ("Yara: a moça do brejo, que você não conhece, não é mais procurada por ninguém. Vive no Charco dos Juncos."
+            if livre else
             "Yara: a moça do brejo, que você não conhece, segue acusada" + (" e procurada pela vigília."
                                                                             if postura == "apoiar" else "."))
 
@@ -293,17 +309,21 @@ def _resolver(g, postura, forte=False):
             g.narrar("Ele manda buscar os ossos da bruxa no fundo da capela, para queimá-los na praça.")
     else:
         g.narrar("Você não diz nada. Caspar toma o silêncio como resposta, e a praça também.")
-    m["desfecho"], m["dia_desfecho"] = postura, g.dia
-    from .telemetria import registrar
-    registrar(g, "missao", missao=MID, desfecho=postura)
     if REPUTACAO[postura]:
         g.mudar_reputacao(REPUTACAO[postura])
-    # A comitiva reage pelo que cada um valoriza (só quem anda com você agora); a Yara, se estiver com você, também
-    # pelo que isto faz com ela.
+    # A comitiva reage pelo que cada um valoriza (só quem está na praça com você); a Yara, se estiver com você, também
+    # pelo que isto faz com ela. Antes de guardar o desfecho: apoiada a vigília, a Yara já não estaria "aqui" (fora do
+    # Vau), mas ela estava na praça e viu.
     cm.reagir(g, *{"apoiar": ("fanatismo", "autoridade"), "denunciado": ("honestidade", "rebeldia"),
                    "denuncia_falhou": ("honestidade", "rebeldia"), "calar": ("cautela",)}[postura])
     if postura == "denunciado" and yara in ("grupo", "reserva"):
         cm.mudar_aprovacao(g, "yara", 5)
+    m["desfecho"], m["dia_desfecho"] = postura, g.dia
+    m["yara_na_praca"] = yara  # a conversa de depois sabe se ela viu ou ficou sabendo
+    from .telemetria import registrar
+    registrar(g, "missao", missao=MID, desfecho=postura)
+    if postura in ("denunciado", "denuncia_falhou") and yara == "desconhecida":
+        g.narrar("Ninguém mais procura a moça do brejo. Dizem que ela vive no Charco dos Juncos, entre os sapos.")
     if yara_barrada(g):
         g.narrar("Yara entende antes de você explicar. \"Eu espero do lado de fora\", diz, seca. \"Na beira do brejo. "
                  "Como sempre.\"" if yara == "grupo" else
@@ -329,6 +349,31 @@ def _recolher_lodo(g, mid):
     g.ui.efeito("Frasco do lodo da cripta", "info")
 
 
+def _yara_no_charco(g, mid):
+    """Denunciada a perseguição (aceita ou não, a vigília acabou), a fogueira do brejo não acontece mais: quem ainda não
+    conhece a Yara a encontra livre no Charco, uma vez, na primeira chegada lá. Mesma apresentação e mesma oferta de
+    vaga da fogueira (eventos/comitiva.py: yara_na_fogueira), sem a execução."""
+    postura = registro(g)["desfecho"]
+    g.ui.cena("A Moça do Brejo", g.contexto_cena(), "evento")
+    g.narrar("Entre os juncos, uma moça de cabelo sujo de lama separa ervas em cima de uma pedra, com os pés na água. Os "
+             "sapos em volta não fogem dela. Ela vê você chegar muito antes de você chegar perto.")
+    g.narrar("\"Você é quem mostrou o lodo na praça\", diz. \"Caspar pegou a estrada. Aqui no brejo a notícia chega "
+             "antes da poeira baixar.\"" if postura == "denunciado" else
+             "\"Você é quem falou por mim na praça\", diz. \"Não convenceu todo mundo. Mas ninguém mais acende vela "
+             "contra mim.\"")
+    g.narrar("\"Yara\", diz, e enxuga as mãos na saia. \"Eu não tenho para onde ir que não seja este brejo.\" Um "
+             "sorriso torto. \"E você tem cara de quem precisa de alguém que fale com sapos.\"")
+    if cm.oferecer_vaga(g, "yara"):
+        cm.mudar_aprovacao(g, "yara", SIMPATIA_CHARCO[postura], mostrar=False)
+    else:
+        g.narrar("Yara assente e some no brejo, entre a névoa, sem fazer barulho nenhum.", "cinza")
+        g.marcar("comitiva:yara", "recusou")
+
+
+# A aprovação com que a Yara do Charco começa (na fogueira, de -2 a 12 conforme o resgate): calibragem desta entrega.
+SIMPATIA_CHARCO = {"denunciado": 5, "denuncia_falhou": 3}
+
+
 def _chegou_ao_fundo(g):
     """O lodo está lá desde que se chega ao fundo, e continua lá depois da guardiã: não se perde a chance."""
     return _febre(g)["etapa"] in ("fundo", "retorno") and not registro(g).get("desfecho")
@@ -341,6 +386,9 @@ CENAS = [
     # Depois da volta ao Vau (a cena `retorno` da febre vem antes, na ordem das cenas).
     dict(missao=MID, id="praca", lugar="vau_do_turvo", etapas=("praca",), fn=_praca, confirmar=True,
          pode=lambda g: "retorno" in _febre(g)["cenas"] and not registro(g).get("desfecho")),
+    # Depois da decisão: a Yara que você ainda não conhece, livre no Charco (a fogueira não acontece mais).
+    dict(missao=MID, id="yara_no_charco", lugar="charco_dos_juncos", etapas=("praca",), fn=_yara_no_charco,
+         confirmar=True, pode=lambda g: not fogueira_possivel(g) and cm.disponivel(g, "yara")),
 ]
 ACOES = [
     dict(missao=MID, id="lodo", rotulo="Recolher um frasco do lodo da cripta (prova)", lugar="capela_afogada",
@@ -350,3 +398,65 @@ ACOES = [
          pode=lambda g: "praca" in registro(g)["cenas"] and not registro(g).get("desfecho"), fn=_ir_a_praca,
          confirmar=True),
 ]
+
+
+# ------------------------------------------------------------------ a conversa da Yara sobre a praça
+# Uma vez, quando ela puder conversar (na comitiva ou na fogueira; não enquanto espera fora do Vau). Fala do que ela
+# viu na praça (estava ao seu lado) ou ficou sabendo depois (no acampamento, ou antes de vocês se conhecerem). Não muda
+# a aprovação: a reação dela à decisão já veio na praça.
+FALA_PRACA = {
+    ("apoiar", True): "\"Na praça, você olhou para mim e depois para ele\", diz Yara, sem tirar os olhos do fogo. \"E "
+                      "escolheu ele. Eu entendo a conta: a vila gosta de você agora. Só não me peça para gostar da "
+                      "vigília.\"",
+    ("apoiar", False): "\"Fiquei sabendo da praça\", diz Yara, sem tirar os olhos do fogo. \"O pregador ganhou a vila, e "
+                       "você ficou do lado dele. Agora eu durmo do lado de fora do Vau.\"",
+    ("denunciado", True): "\"Ninguém nunca tinha falado por mim numa praça\", diz Yara, girando um graveto no fogo. \"Eu "
+                          "fiquei esperando alguém gritar 'bruxa' de novo. Ninguém gritou.\"",
+    ("denunciado", False): "\"Fiquei sabendo da praça\", diz Yara, girando um graveto no fogo. \"Caspar foi embora, e "
+                           "dizem que foi você que mostrou o lodo. Ninguém nunca tinha falado por mim.\"",
+    ("denuncia_falhou", True): "\"Metade da praça cuspiu no chão quando você falou\", diz Yara. \"A outra metade me "
+                               "olhava como se olha um cachorro bravo. Mesmo assim, ninguém acendeu vela depois.\"",
+    ("denuncia_falhou", False): "\"Fiquei sabendo da praça\", diz Yara. \"Você falou por mim e não adiantou. Adiantou um "
+                                "pouco: a vigília apagou.\"",
+    ("calar", True): "\"Na praça, você não disse nada\", diz Yara, sem tom nenhum. \"Eu também não. Mas era eu que estava "
+                     "sendo acusada, então o meu silêncio era outra coisa.\"",
+    ("calar", False): "\"Fiquei sabendo da praça\", diz Yara, sem tom nenhum. \"Caspar disse o meu nome para a vila "
+                      "inteira, e você não disse nada.\"",
+}
+RESPOSTAS_PRACA = {
+    "apoiar": [("\"Era o que a vila precisava ouvir para ter paz.\"",
+                "\"Paz\", repete ela. \"A paz deles tem uma fogueira no meio. Eu fico do lado de fora, como sempre "
+                "fiquei.\""),
+               ("\"Foi um erro. Eu sinto muito.\"",
+                "Ela fica quieta um tempo. \"Sentir não abre a porteira da vila. Mas é mais do que eles disseram.\"")],
+    "denunciado": [("\"Eu só disse a verdade.\"",
+                    "\"A verdade eu também dizia\", diz ela. \"A diferença é quem fala.\""),
+                   ("\"Você não me deve nada por isso.\"",
+                    "Um sorriso torto. \"Não devo. Mas lembro.\"")],
+    "denuncia_falhou": [("\"Eu devia ter falado melhor.\"",
+                         "\"Você falou\", diz ela. \"Já é mais do que eu esperava daquela vila.\""),
+                        ("\"Eles não queriam ouvir.\"",
+                         "\"Nunca querem\", diz Yara. \"Mas agora sabem que alguém disse.\"")],
+    "calar": [("\"Não era a hora de brigar com a vila.\"",
+               "\"Para mim nunca é a hora\", diz ela. \"É sempre a hora de outra pessoa.\""),
+              ("\"Eu não tinha certeza de nada.\"",
+               "\"E agora tem?\", pergunta ela, e não espera a resposta.")],
+}
+
+
+def _quer_falar_da_praca(g, m):
+    c = registro(g) if g.campanha else None
+    if not c or not c.get("desfecho"):
+        return False
+    # Quem a conheceu depois da praça (no Charco, na fogueira) fala dela num outro dia, não junto com a apresentação.
+    return c.get("yara_na_praca") in ("grupo", "reserva") or m.get("desde", g.dia) < g.dia
+
+
+@cm.avulsa("yara", "praca", _quer_falar_da_praca)
+def _yara_fala_da_praca(g, m):
+    c = registro(g)
+    postura = c["desfecho"]
+    g.dizer(FALA_PRACA[(postura, c.get("yara_na_praca") == "grupo")])
+    respostas = RESPOSTAS_PRACA[postura]
+    op = g.menu("O que diz?", [(r, i) for i, (r, _) in enumerate(respostas)])
+    g.dizer(respostas[op or 0][1], "cinza")

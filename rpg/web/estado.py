@@ -153,7 +153,7 @@ def heroi(g):
                    "alvos": [{"id": m["id"], "nome": comitiva.nome(m["id"]), "hp": m["hp"], "max_hp": m["max_hp"],
                               "ferido": m["ferido"], "caido": comitiva.flexao(m["id"], "caíd{a}, não luta"),
                               "motivo": g.motivo_inutil(k, m)}
-                             for m in comitiva.membros(g)] + _alvo_animal(g, k) if k in EM_ALIADO and not g.combate_ativo else []}
+                             for m in comitiva.junto(g)] + _alvo_animal(g, k) if k in EM_ALIADO and not g.combate_ativo else []}
                   for k, v in j.consumiveis.items() if v > 0 and k in CONSUMIVEIS],
         "equip": {slot: _item(it, j.nome_recurso) for slot, it in j.equip.items()},
         "mochila": [_item(it, j.nome_recurso) for it in j.mochila], "limite_mochila": 12,

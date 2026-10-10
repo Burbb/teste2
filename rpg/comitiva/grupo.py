@@ -20,6 +20,22 @@ def presente(g, cid):
     return membro(g, cid) is not None
 
 
+# Quem anda com você mas, aqui, não está do seu lado: cada regra é uma função (g, m) que devolve o porquê (um texto
+# curto, para o painel) ou None. A campanha registra as suas (caspar.py: a Yara espera fora do Vau). Continua na
+# comitiva, com vida, aprovação e história; só não luta, não opina, não conversa e não é cuidada ali.
+AUSENCIAS = []
+
+
+def fora(g, m):
+    """Por que este membro não está aqui agora, ou None."""
+    return next((motivo for regra in AUSENCIAS for motivo in [regra(g, m)] if motivo), None)
+
+
+def junto(g):
+    """Quem da comitiva está de fato aqui, do seu lado (na estrada, todos)."""
+    return [m for m in membros(g) if not fora(g, m)]
+
+
 def reserva(g):
     """Quem espera no acampamento: não anda com você, não luta, não come do seu saco e não opina."""
     return list(getattr(g, "reserva", None) or [])
@@ -177,10 +193,10 @@ def mudar_aprovacao(g, cid, delta, mostrar=True, fala=None):
 
 def reagir(g, *etiquetas, forca=1.0):
     """Cada companheiro julga a escolha conforme os próprios valores."""
-    if not etiquetas or not membros(g):
+    if not etiquetas or not junto(g):
         return
     falou = None
-    for m in membros(g):
+    for m in junto(g):  # quem não viu não julga
         d = COMPANHEIROS[m["id"]]
         pesos = [(t, d["valores"].get(t, 0)) for t in etiquetas]
         delta = int(round(2 * forca * sum(p for _, p in pesos)))
@@ -277,7 +293,7 @@ def pagar_soldo(g):
 
 def parte_do_xp(g):
     """A experiência é dividida com quem lutou junto: quem anda só aprende mais rápido."""
-    return max(0.6, 1 - 0.12 * len(membros(g)))
+    return max(0.6, 1 - 0.12 * len(junto(g)))
 
 
 def descansar(g, fracao):

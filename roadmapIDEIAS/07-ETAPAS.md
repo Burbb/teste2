@@ -41,7 +41,7 @@ Plano proposto, sem datas. Cada etapa é dividida em tarefas pequenas e depende 
 ## E4 — Consequência local e comitiva
 
 **Depende:** E3.
-**Estado:** primeira consequência na 1.54.0 (a Fonte Nova, a frase do Vau, Pita e Marta na curandeira). Na 1.55.0, Caspar e a decisão pública (Apoiar, Denunciar com prova, Calar), com a situação da Yara e a reação da comitiva por etiquetas. Falas próprias da comitiva sobre Caspar, sementes e as outras consequências da seção 8 do 11 não começaram. **Não concluída.**
+**Estado:** primeira consequência na 1.54.0 (a Fonte Nova, a frase do Vau, Pita e Marta na curandeira). Na 1.55.0, Caspar e a decisão pública (Apoiar, Denunciar com prova, Calar), com a situação da Yara e a reação da comitiva por etiquetas. Na 1.56.0, a consolidação: a Yara barrada fica de fato fora do Vau (não luta, não opina, não conversa nem é cuidada ali; volta na estrada), o encontro no Charco depois da denúncia, a conversa da Yara sobre a praça e os textos corrigidos. **Critério mínimo atendido** (registro da 1.56.0 no 00). Adiado, sem ser requisito: bênção, sementes, taverna, mercado, Charco à noite, comporta, Odette e Caspar, Anselmo, a cena da vigília, falas próprias de Odette e Morel. Falta Jean jogar.
 **Entrega:** mudar um estado da vila e refletir em diálogo/serviço; integrar uma reação/conversa de companheiro.
 **Pronto:** retornar e recarregar o save revela a mesma consequência; a escolha tem efeito percebido.
 **Não fazer:** facções em massa ou simulação de rotina de todos os NPCs.

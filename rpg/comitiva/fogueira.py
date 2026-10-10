@@ -1,7 +1,7 @@
 """A fogueira: a cena do acampamento com a comitiva em volta do fogo e o menu da comitiva."""
 
 from .catalogo import ATALHOS_FOGUEIRA, COMPANHEIROS, LIMITE
-from .grupo import chamar, membro, membros, na_reserva, nivel, nome, para_acampamento, reserva
+from .grupo import chamar, fora, membro, membros, na_reserva, nivel, nome, para_acampamento, reserva
 from .conversas import carinho, conversar, fala_ociosa, falar, proxima_conversa
 from .tela import estado
 
@@ -105,10 +105,11 @@ def menu(g):
             d = COMPANHEIROS[m["id"]]
             rotulo, _ = nivel(m)
             situacao = " · FERID" + ("A" if d["g"] == "f" else "O") + ", fora de combate até descansar" if m["ferido"] else ""
+            situacao += f" · {fora(g, m)['curto']}" if fora(g, m) else ""
             g.dizer(f"{d['nome']}, {d['titulo']} — vida {m['hp']}/{m['max_hp']} · {rotulo}{situacao}")
             g.dizer(d["desc"], "cinza")
         opcoes = []
-        for m in ms:
+        for m in [m for m in ms if not fora(g, m)]:  # quem espera lá fora conversa quando vocês se encontrarem
             novidade = "  (tem algo a dizer)" if proxima_conversa(g, m) and m["ultima_conversa"] != g.dia else ""
             opcoes.append((f"Conversar com {nome(m['id'])}{novidade}", ("falar", m["id"]), {"conversar": m["id"]}))
         for m in ms:

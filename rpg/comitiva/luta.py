@@ -2,15 +2,16 @@
 
 from .. import balanceamento as bal
 from .catalogo import COMPANHEIROS, GRITOS
-from .grupo import atributos, lealdade, membro, membros, nome, presente
+from .grupo import atributos, fora, junto, lealdade, membro, nome
 
 
 def preparar_combate(cb):
-    """Cria os aliados da comitiva para esta luta. Feridos ficam na retaguarda."""
+    """Cria os aliados da comitiva para esta luta. Feridos ficam na retaguarda; quem não está aqui (grupo.fora), também
+    não luta."""
     from ..combate import Aliado
     g = cb.g
     lista = []
-    for m in membros(g):
+    for m in junto(g):
         if m["ferido"] or m["hp"] <= 0:
             continue
         d = COMPANHEIROS[m["id"]]
@@ -31,9 +32,9 @@ def preparar_combate(cb):
         fator = 1 + (bal.COMITIVA_VIDA_CHEFE if e.chefe else bal.COMITIVA_VIDA_INIMIGO) * len(lista)
         e.max_hp = int(e.max_hp * fator)
         e.hp = int(e.hp * fator)
-    if lista and len(lista) == len(membros(g)):
+    if lista and len(lista) == len(junto(g)):
         cb.dizer(f"{' e '.join(a.nome for a in lista)} se {'posicionam' if len(lista) > 1 else 'posiciona'} ao seu lado.", "ciano")
-    feridos = [m for m in membros(g) if m["ferido"]]
+    feridos = [m for m in junto(g) if m["ferido"]]
     if feridos:
         cb.dizer(f"{' e '.join(nome(m['id']) for m in feridos)} ainda se recupera{'m' if len(feridos) > 1 else ''} "
                  "e fica para trás.", "cinza")
@@ -135,6 +136,7 @@ def encerrar_combate(cb, resultado):
         m["ferido"] = True
         g.dizer(f"{a.nome} está caíd{'a' if a.g == 'f' else 'o'}, mas respira. Vai precisar de uma noite "
                 "de descanso antes de lutar de novo.", "amarelo")
-    if presente(g, "yara") and membro(g, "yara").get("caminho") == "vazio" and resultado == "vitoria":
+    yara = membro(g, "yara")
+    if yara and not fora(g, yara) and yara.get("caminho") == "vazio" and resultado == "vitoria":
         # o poder da Fenda cobra o seu preço: Yara bebe um pouco da sua vida a cada luta
         g.j.hp = max(1, g.j.hp - max(1, int(g.j.max_hp * bal.YARA_VAZIO_CUSTO)))

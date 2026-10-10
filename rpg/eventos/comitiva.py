@@ -372,14 +372,17 @@ def yara_na_fogueira(g):
     g.dizer("A moça vê você. Não pede ajuda. Só olha.", "cinza")
     op = g.menu("O que faz?", [
         ("\"Soltem a moça.\" (Força)", "forca"),
-        ("\"A febre vem do poço, não dela.\" (Carisma)", "falar"),
+        # Na campanha, a febre do Vau veio com a Fonte Nova (o poço só secou): a frase fala da água que a vila bebe.
+        ("\"A febre vem da água da Fonte Nova, não dela.\" (Carisma)" if g.campanha else
+         "\"A febre vem do poço, não dela.\" (Carisma)", "falar"),
         ("Assustá-los com magia (Arcano)", "magia") if g.j.classe == "mago" else None,
         ("\"Eu levo a bruxa daqui. Vinte moedas pelo incômodo.\"", "comprar") if g.j.ouro >= 20 else None,
         ("Deixar que façam justiça", "deixar"),
     ])
     if op == "deixar":
         g.narrar("A lenha pega rápido. Ela não grita. É isso que você vai lembrar depois: ela não gritou.", "vermelho")
-        g.narrar("Quando o fogo baixa, os aldeões rezam e voltam para casa. O poço continua seco.", "cinza")
+        g.narrar("Quando o fogo baixa, os aldeões rezam e voltam para casa. " + (
+            "No Vau, a febre continua." if g.campanha else "O poço continua seco."), "cinza")
         cm.reagir(g, "fanatismo", "crueldade")
         g.marcar("comitiva:yara", "morto")
         return
@@ -400,7 +403,9 @@ def yara_na_fogueira(g):
         cm.reagir(g, "rebeldia")
     elif op == "falar":
         if g.teste("carisma", 13):
-            g.dizer("Você fala do moleiro que desviou o riacho, da água parada, das crianças que bebem dela. Um a um, "
+            g.dizer("Você fala da Fonte Nova, que brotou quando o poço secou, e da febre que começou junto com ela: "
+                    "água, não feitiço. Um a um, os forcados baixam. Caspar é o último a ir embora." if g.campanha else
+                    "Você fala do moleiro que desviou o riacho, da água parada, das crianças que bebem dela. Um a um, "
                     "os forcados baixam. O pregador é o último a ir embora.", "verde")
             simpatia = 10
             cm.reagir(g, "diplomacia")

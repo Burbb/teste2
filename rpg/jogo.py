@@ -398,7 +398,7 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
                 opcoes.append((rotulo, ("usar", k), {"usar": k}))
                 if k in EM_ALIADO:
                     opcoes += [(f"Usar {CONSUMIVEIS[k]['nome']} em {comitiva.nome(m['id'])}", ("usar_em", k, m["id"]),
-                                {"usar": k, "em": m["id"]}) for m in comitiva.membros(self)]
+                                {"usar": k, "em": m["id"]}) for m in comitiva.junto(self)]
                     if self.j.companheiro:  # o animal do patrulheiro também
                         opcoes.append((f"Usar {CONSUMIVEIS[k]['nome']} em {self.j.companheiro['nome']}",
                                        ("usar_em", k, "fera"), {"usar": k, "em": "fera"}))
@@ -482,8 +482,7 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         ]
         # A frase da vila aparece na chegada e quando o tempo passa, não a cada volta ao menu (do mercado, do
         # inventário). O sorteio segue a cada volta: com a mesma semente, a partida continua a mesma.
-        ambiente = self.sortear(AMBIENTE_VILA)
-        ambiente = consequencias.frase_da_vila(self) or ambiente  # o Vau depois da guardiã (o sorteio segue igual)
+        ambiente = consequencias.ambiente(self, self.sortear(AMBIENTE_VILA))  # o Vau da campanha (o sorteio segue igual)
         if self.ambiente_visto != (self.loc["id"], self.dia, self.periodo):
             self.ambiente_visto = (self.loc["id"], self.dia, self.periodo)
             self.dizer(ambiente, "cinza")

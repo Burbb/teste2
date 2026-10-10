@@ -196,7 +196,7 @@ class Combate(Golpes, AcoesDoHeroi, TurnosDosOutros):
             self.dizer(f"{self.companheiro.nome} " + ("salta à frente, animado depois da noite ao seu lado. (+15% de dano)"
                                                       if animado else "rosna ao seu lado."), "verde")
         if self.sozinho:
-            if comitiva.membros(self.g) or self.j.companheiro:
+            if comitiva.junto(self.g) or self.j.companheiro:
                 self.dizer("Um duelo é coisa de dois. Os seus ficam de fora, assistindo.", "cinza")
         else:
             comitiva.preparar_combate(self)

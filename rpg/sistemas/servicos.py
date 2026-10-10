@@ -106,7 +106,7 @@ class Servicos:
         j = self.j
         precisam = [(None, "você", j.max_hp - j.hp, j.max_hp)] if j.hp < j.max_hp else []
         precisam += [(m, comitiva.nome(m["id"]), m["max_hp"] - m["hp"], m["max_hp"])
-                     for m in comitiva.membros(self) if m["hp"] < m["max_hp"] or m["ferido"]]
+                     for m in comitiva.junto(self) if m["hp"] < m["max_hp"] or m["ferido"]]
         opcoes = []
         for m, quem, falta, maximo in precisam:
             preco = self.preco(max(1, falta // 2))

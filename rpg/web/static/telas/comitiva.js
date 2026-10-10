@@ -6,7 +6,7 @@
   const { h, S, barra, dica, fecharAoClicarFora, fecharMenuItem, iconeConsumivel } = Telas;
 
   function cartaoMembro(m, reserva) {
-    return `<div class="cartao clicavel${reserva ? " na-reserva" : ""}" data-cid="${h(m.id)}"><div class="cab">${S(m.id, 3)}<div><b>${h(m.nome)}</b><span class="sub">${h(m.titulo)}${m.ferido ? " · ferido, fora de combate" : ""}${reserva ? " · no acampamento" : ""}</span></div></div>
+    return `<div class="cartao clicavel${reserva ? " na-reserva" : ""}" data-cid="${h(m.id)}"><div class="cab">${S(m.id, 3)}<div><b>${h(m.nome)}</b><span class="sub">${h(m.titulo)}${m.ferido ? " · ferido, fora de combate" : ""}${m.fora ? " · " + h(m.fora.curto) : ""}${reserva ? " · no acampamento" : ""}</span></div></div>
       <span class="lore">${h(m.desc)}</span>
       <div class="meter" style="margin-top:6px">Vida ${barra("vida", m.hp, m.max_hp)} ${m.hp}/${m.max_hp}</div>
       ${aprovacao(m)}${m.conversa && !reserva ? '<button type="button" class="tag aviso-conversa">✉ quer conversar · clique aqui</button>' : ""}</div>`;

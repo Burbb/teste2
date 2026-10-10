@@ -215,7 +215,7 @@ class Inventario:
         if cid == "fera":
             return self.usar_no_animal(k)
         m = comitiva.membro(self, cid)
-        if not m or not self.j.tem(k):
+        if not m or comitiva.fora(self, m) or not self.j.tem(k):
             return False
         motivo = self.motivo_inutil(k, m)
         if motivo:

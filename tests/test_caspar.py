@@ -147,7 +147,8 @@ class TestCombinacoes(unittest.TestCase):
         linhas = missoes.cartoes(g, todas=True)[1]["linhas"]
         self.assertEqual(linhas, ["Ilse: os ossos dela ficaram no fundo da capela, sem nome.",
                                   caspar.LINHA_CASPAR["denunciado"],
-                                  "Yara: a moça do brejo, que você não conhece, não é mais procurada por ninguém."])
+                                  "Yara: a moça do brejo, que você não conhece, não é mais procurada por ninguém. Vive "
+                                  "no Charco dos Juncos."])
         self.assertFalse(caspar.fogueira_possivel(g))  # o pregador não queima ninguém depois disso
         self.assertEqual([c["id"] for c in estado(g)["missoes"]], [])  # nada ativo
         self.assertIn("a praça está vazia", consequencias.frase_da_vila(g))

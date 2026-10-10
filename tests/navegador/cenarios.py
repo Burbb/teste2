@@ -9,6 +9,7 @@
     python -m tests.navegador.cenarios recarga   # título com um save da campanha (Bosque, à noite) e um do mundo gerado
     python -m tests.navegador.cenarios capela    # herói na Capela Afogada (CLASSE, ETAPA, NIVEL, PREPARO, LUGAR)
     python -m tests.navegador.cenarios retorno   # chegando ao Vau com Ilse resolvida (DESFECHO, DIAS, LODO, YARA)
+    python -m tests.navegador.cenarios praca     # depois da resposta a Caspar (POSTURA, YARA, LUGAR)
 
 Imprime o endereço do servidor na primeira linha e fica no ar até ser encerrado.
 """
@@ -277,8 +278,46 @@ def retorno(ui):
     menu_principal(ui, argparse.Namespace(seed=1, saves=pasta, brando=False))
 
 
+def praca(ui):
+    """Guerreiro depois da praça de Caspar: a febre concluída e a decisão POSTURA tomada (padrão "apoiar"; também
+    "denunciado", "denuncia_falhou", "calar"). YARA=grupo: Yara anda com ele (e viu a praça); sem YARA, ainda não a
+    conhece. LUGAR: onde começa (padrão o Vau; "charco_dos_juncos" para o encontro). Sair leva ao título."""
+    from rpg import caspar, missoes
+    from rpg import comitiva as cm
+    from rpg.__main__ import menu_principal
+    from rpg.ui import BotUI
+    pasta = tempfile.mkdtemp()
+    g = Jogo(BotUI(random.Random(1)), seed=12, pasta_saves=pasta, hardcore=False)
+    g.iniciar("Jean", "guerreiro", "turvo")
+    g.dia, g.periodo, g.clima = 12, 0, "limpo"
+    g.j.nivel = 4
+    missoes.registro(g, "febre_do_turvo").update(
+        etapa="retorno", cenas=["abertura", "capela_exterior", "retorno", "heranca"], desfecho="descansada",
+        dia_desfecho=9, concluida=10, preparos=["corpo_solto", "fita"],
+        pistas=["agua_do_leste", "represa", "canal_da_capela", "agua_da_capela", "ilse", "sigilo_do_turvo"])
+    g.j.sigilos.append("turvo")
+    caspar.sincronizar(g)
+    yara = os.environ.get("YARA")
+    if yara == "grupo":
+        cm.recrutar(g, "yara")
+        cm.membro(g, "yara")["desde"] = 5
+    postura = os.environ.get("POSTURA", "apoiar")
+    caspar.registro(g).update(cenas=["acusacao", "praca"], preparos=["lodo"], desfecho=postura, dia_desfecho=10,
+                              concluida=10, yara_na_praca=yara or "desconhecida")
+    for l in g.mundo["locais"]:
+        l["visitado"] = l["chave"] != "estrada_de_varn"
+    g.mundo["atual"] = next(l["id"] for l in g.mundo["locais"] if l["chave"] == os.environ.get("LUGAR", "vau_do_turvo"))
+    g.ui, ui.jogo = ui, g
+    try:
+        g.rodar()
+    except FimDeJogo:
+        pass
+    ui.jogo = None
+    menu_principal(ui, argparse.Namespace(seed=1, saves=pasta, brando=False))
+
+
 CENARIOS = {"combate": combate, "titulo": titulo, "vila": vila, "campanha": campanha, "baus": baus, "missao": missao,
-            "recarga": recarga, "capela": capela, "retorno": retorno}
+            "recarga": recarga, "capela": capela, "retorno": retorno, "praca": praca}
 
 
 def main():

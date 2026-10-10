@@ -728,6 +728,68 @@ async function cenarioCaspar(browser) {
   }
 }
 
+async function cenarioYara(browser) {
+  console.log("cenário: a Yara depois da praça (barrada no Vau e de volta na estrada; livre no Charco)");
+  let { proc, url } = await subir("praca", { POSTURA: "apoiar", YARA: "grupo" });
+  let { page, erros } = await abrir(browser, url);
+  const MENU = "#prompt .escolhas:not(.escolhido) .escolha";
+  const yara = () => page.evaluate(() => (estado.heroi.comitiva || []).find((c) => c.id === "yara"));
+  try {
+    await page.waitForSelector('#heroi .membro[data-cid="yara"]', { timeout: 20000 });
+    await page.waitForTimeout(600);
+    let y = await yara();
+    conferir(!!y && y.fora && /espera fora do Vau/.test(y.fora.curto) && !y.conversa
+      && !!(await page.$('#heroi .membro.ferido[data-cid="yara"]')) && !(await page.$('[data-conversar="yara"]')),
+      "apoiada a vigília, a Yara continua na comitiva, mas o painel diz que espera fora do Vau (sem conversa ali)");
+    conferir(/Yara espera do lado de fora/.test(await page.textContent("#texto")), "a vila conta onde ela está");
+    await page.click('.caminho:has-text("Charco dos Juncos")');
+    for (let t = 0; t < 150; t++) {
+      const onde = await page.evaluate(() => !estado.local.estrada && estado.local.nome);
+      if (onde === "Charco dos Juncos" && !(await page.$("#prompt .continuar"))) break;
+      const c = await page.$("#prompt .continuar"); if (c) { await page.waitForTimeout(300); await c.click().catch(() => {}); }
+      await page.waitForTimeout(200);
+    }
+    await page.waitForTimeout(800);
+    y = await yara();
+    conferir(!!y && !y.fora && y.conversa && !(await page.$('#heroi .membro.ferido[data-cid="yara"]')),
+      "fora do Vau ela volta para o seu lado, e quer conversar sobre a praça");
+  } finally {
+    conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
+    await page.close();
+    proc.kill();
+  }
+  ({ proc, url } = await subir("praca", { POSTURA: "denunciado", LUGAR: "charco_dos_juncos" }));
+  ({ page, erros } = await abrir(browser, url));
+  try {
+    await page.waitForSelector(`${MENU}:has-text("Aceitar Yara")`, { timeout: 20000 });
+    conferir(/A Moça do Brejo/.test(await page.textContent("#cena-cab .cena-titulo")) && !/lenha|forcado/.test(await page.textContent("#texto")),
+      "denunciada a perseguição, a Yara que você não conhecia está livre no Charco, sem fogueira");
+    await page.click(`${MENU}:has-text("Aceitar Yara")`);
+    for (let t = 0; t < 60 && !(await page.$(`${MENU}:has-text("Explorar")`)); t++) {
+      const c = await page.$(".festa .continuar, #prompt .continuar"); if (c) { await page.waitForTimeout(700); await c.click().catch(() => {}); }
+      await page.waitForTimeout(250);
+    }
+    conferir(!!(await yara()), "aceita, ela entra na comitiva");
+    await (await page.waitForSelector('#doca .atalho[data-rotulo="Sair"]')).click();
+    await (await page.waitForSelector(`${MENU}:has-text("Salvar e sair")`)).click();
+    for (let t = 0; t < 60 && !(await page.$(`${MENU}:has-text("Carregar")`)); t++) {
+      const c = await page.$("#prompt .continuar"); if (c) await c.click().catch(() => {});
+      await page.waitForTimeout(200);
+    }
+    await (await page.waitForSelector(`${MENU}:has-text("Carregar")`)).click();
+    await (await page.waitForSelector(".save-cartao")).click();
+    await page.waitForSelector(`${MENU}:has-text("Explorar")`, { timeout: 20000 });
+    await page.waitForTimeout(600);
+    conferir(!/A Moça do Brejo/.test(await page.textContent("#cena-cab .cena-titulo"))
+      && (await page.evaluate(() => estado.heroi.comitiva.filter((c) => c.id === "yara").length)) === 1,
+      "carregado: o encontro não se repete e a Yara está lá uma vez só");
+  } finally {
+    conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
+    await page.close();
+    proc.kill();
+  }
+}
+
 async function cenarioBaus(browser) {
   console.log("cenário: baús abertos juntos");
   const { proc, url } = await subir("baus");
@@ -795,6 +857,7 @@ try {
   await cenarioGuardia(browser);
   await cenarioRetorno(browser);
   await cenarioCaspar(browser);
+  await cenarioYara(browser);
   await cenarioBaus(browser);
 } catch (e) {
   falhas.push(String(e));

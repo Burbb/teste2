@@ -2,10 +2,14 @@
 
 from ..telemetria import registrar
 from .catalogo import CARINHO, COMPANHEIROS
-from .grupo import membro, membros, nivel, nome
+from .grupo import junto, membro, nivel, nome
 
 
 CONVERSAS = {}  # cid -> lista de (etapa, requisitos, função); preenchida por eventos/comitiva.py
+# Conversas de uma vez só, fora da história pessoal: falam de algo que aconteceu (a campanha registra as suas, como a
+# da Yara sobre a praça em caspar.py). Não contam etapa (não adiantam nem atrasam a história) e, feitas, ficam
+# anotadas no membro (`avulsas`), para não repetir nem depois de carregar o save. cid -> lista de (id, cond, função).
+AVULSAS = {}
 
 
 def conversa(cid, etapa, dias=0, aprov=-100, cond=None):
@@ -17,7 +21,23 @@ def conversa(cid, etapa, dias=0, aprov=-100, cond=None):
     return deco
 
 
+def avulsa(cid, aid, cond):
+    """Registra uma conversa avulsa: `cond(g, m)` diz quando ela espera."""
+    def deco(fn):
+        AVULSAS.setdefault(cid, []).append((aid, cond, fn))
+        return fn
+    return deco
+
+
+def _avulsa(g, m):
+    feitas = m.get("avulsas", ())
+    return next(((aid, fn) for aid, cond, fn in AVULSAS.get(m["id"], []) if aid not in feitas and cond(g, m)), None)
+
+
 def proxima_conversa(g, m):
+    av = _avulsa(g, m)  # o que acabou de acontecer vem antes da história pessoal
+    if av:
+        return av[1]
     for etapa, req, fn in CONVERSAS.get(m["id"], []):
         if etapa != m["conversas"]:
             continue
@@ -32,9 +52,15 @@ def proxima_conversa(g, m):
 def conversar(g, m):
     fn = proxima_conversa(g, m)
     if fn and m["ultima_conversa"] != g.dia:
+        av = _avulsa(g, m)
         m["ultima_conversa"] = g.dia
+        if av:  # anotada antes de tocar: se cair num save no meio, não repete
+            m.setdefault("avulsas", []).append(av[0])
         g.ui.cena(f"Conversa com {nome(m['id'])}", g.contexto_cena(), "evento")
         fn(g, m)
+        if av:
+            registrar(g, "comitiva", acao="conversa", id=m["id"], avulsa=av[0])
+            return True
         m["conversas"] += 1
         registrar(g, "comitiva", acao="conversa", id=m["id"], etapa=m["conversas"])
         return True
@@ -50,7 +76,7 @@ def falar(g, cid):
 
 def noite(g):
     """No acampamento, alguém da comitiva pode puxar conversa. Devolve True se houve conversa."""
-    pendentes = [m for m in membros(g) if proxima_conversa(g, m) and m["ultima_conversa"] != g.dia]
+    pendentes = [m for m in junto(g) if proxima_conversa(g, m) and m["ultima_conversa"] != g.dia]
     if pendentes and g.chance(0.65):
         return conversar(g, g.sortear(pendentes))
     return False
