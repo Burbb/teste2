@@ -54,7 +54,9 @@ pacote: `from rpg.combate import Combate`.
 - O espólio da vitória (ouro, XP, contratos que andaram, o que se acha nos corpos, e o que o evento ainda der logo
   depois) é juntado pelo motor (`Recompensas.abrir_espolio`/`fechar_espolio`): na tela gráfica vira um quadro só,
   mostrado antes da próxima pergunta ao jogador ou no fim do evento; no texto, cada ganho é dito na hora.
-  O mesmo quadro abre um baú (`abrir_espolio(titulo="baú aberto")`).
+  O mesmo quadro abre um baú (`abrir_espolio(titulo="baú aberto")`). Com vários na bolsa, a pilha abre inteira
+  (`Inventario.abrir_baus`): cada baú com o próprio sorteio (`sortear_bau`, o mesmo de um baú sozinho, na mesma ordem),
+  um quadro só ("Baús ×N", com `baus` e a lista `equipamentos`) e depois a janela de cada equipamento.
 - Saque (`Confronto.saque_de_combate`, números `SAQUE_*` e `BAU_*` em `balanceamento.py`): luta comum dá
   equipamento mais vezes, mas quase sempre comum; o raro vem de elite, guardião e baú. O Baú Trancado é um
   consumível da bolsa que só abre em lugar seguro (`Inventario.lugar_seguro`: numa vila ou com `na_fogueira`, que

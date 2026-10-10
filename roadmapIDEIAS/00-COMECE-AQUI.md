@@ -80,7 +80,7 @@ Três commits posteriores à atualização do roadmap foram consultados. Os comp
 | E3–E11 | Plano de trabalho futuro; infraestrutura existente não equivale a etapas concluídas. Notas aprovadas para a E3 na seção 19 do [11](11-E1-REGIAO-INICIAL.md). |
 | Bugs ainda abertos | Nenhum bug aberto específico foi informado para registro nesta passagem. Isso não comprova ausência de bugs. |
 | Polimento antes da E3 | Entregue na 1.48.1 (registro abaixo): leitura, item achado, balcão do templo, palco da luta. Falta Jean conferir jogando. |
-| Pendente, entrega separada | Abrir vários baús de uma vez (pedido de Jean; fora do polimento). |
+| Baús abertos juntos | Entregue na 1.49.0 (registro abaixo), separado da E3. Falta Jean conferir jogando. |
 | Feedback pendente | Jean conferir o polimento da 1.48.1 jogando. |
 
 ### Primeiro trabalho recomendado: E1
@@ -224,3 +224,35 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   - testes novos em `tests/test_vila.py`.
 - **Observação, sem mudança:** um clique dentro da guarda é descartado, e a página espera a leitura inteira até um segundo clique. Se isso ainda pesar, a próxima medida seria guardar esse clique para quando a guarda acabar. Decisão de Jean.
 - **Não executado:** `tests.equilibrio` e `tests.replay` (nenhuma regra de combate ou número mudou).
+
+### 10/10/2026 — Baús abertos juntos (1.49.0), entrega separada da E3
+
+- **Pedido de Jean:** com vários baús, um clique na pilha abre todos os que estavam nela, num quadro só ("Baús ×N"), e depois cada equipamento com as decisões de sempre.
+- **Implementado:**
+  - `usar_consumivel("bau")` tira a pilha inteira da bolsa antes de qualquer sorteio e chama `abrir_baus(n)`;
+  - com um baú, é o `abrir_bau` de sempre (mesmo quadro "baú aberto");
+  - com vários, cada baú passa por `sortear_bau` (o mesmo sorteio e a mesma ordem de um baú aberto sozinho), dentro de um quadro de espólio só;
+  - o quadro manda `baus` e a lista `equipamentos` (nome como na janela do item, raridade, ícone), e a tela mostra "Baús ×N" com o ouro e os suprimentos somados e os equipamentos listados ("a seguir, um por um");
+  - depois, cada equipamento abre na janela dele (`oferecer_equip`): comparar, equipar, guardar ou deixar, com a regra de mochila cheia aplicada a cada um na hora;
+  - rótulos: "Abrir os N baús trancados" na bolsa; "Baú Trancado (abre os N)" no inventário do modo texto; a dica da bolsa diz "Clique para abrir os N de uma vez".
+- **Preservado:**
+  - lugar seguro (fora dele não abre nenhum e nada é registrado);
+  - sem custo nem passagem de tempo;
+  - um evento `bau` por baú e um `consumivel` por baú na telemetria;
+  - um segundo clique (ou Enter) logo depois não abre nada de novo;
+  - mouse, Enter e botão direito pelo mesmo caminho.
+- **Comparação com a abertura um por um** (`tests/test_baus.py`): a partir do mesmo estado e do mesmo sorteio, abrir 4 baús juntos e abrir os 4 um depois do outro deram o mesmo ouro, a mesma bolsa, a mesma mochila, os mesmos registros de cada baú e o mesmo estado final do sorteio. Conferido em 4 sementes, no modo texto e no gráfico.
+- **Conferido no navegador** (capturas):
+  - 1 baú: "baú aberto", como antes;
+  - 4 baús: um quadro, +113 de ouro somado, 4 suprimentos, 2 equipamentos listados, depois 2 janelas;
+  - 5 baús com a mochila com uma vaga: a 1ª janela guarda e a 2ª oferece "Deixar para trás (mochila cheia)";
+  - 3 baús pelo teclado (Enter duas vezes): um quadro só e a pilha vazia;
+  - em todos, a moldura de cada janela de item ficou estável.
+- **Verificações:**
+  - `unittest`: 124 OK, 1 pulado (`textual`);
+  - `tests.gabarito`: OK, sem atualizar (o caminho de um baú ficou idêntico; nenhuma partida dos robôs abria mais de um);
+  - `pyflakes`: só o aviso conhecido;
+  - `fumaca.mjs`: 87 checagens OK em 3 rodadas seguidas, com o cenário novo "baus".
+- **Correção de teste:** a falha intermitente do cenário da campanha era do próprio teste. O ajudante `esperar` clica em qualquer `.continuar`, e o "Confirmar" do nome também é um. O reforço da entrega anterior não tratava isso; agora o campo do nome é esperado sem cliques.
+- **Observação, sem mudança:** a janela do item mostra "Mochila cheia: equipar deixa o item antigo para trás" mesmo quando o espaço do corpo está vazio (texto que já existia; equipar ali não deixa nada para trás).
+- **Não executado:** `tests.equilibrio` e `tests.replay` (nenhum número mudou).

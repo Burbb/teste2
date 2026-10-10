@@ -2,7 +2,7 @@
 
 from .. import eventos
 from ..entidades import nome_stat
-from ..itens import CONSUMIVEIS
+from ..itens import CONSUMIVEIS, icone_de, rotulo
 from .. import sobrevivencia
 from .. import texto as tx
 from ..regras import NIVEL_MAXIMO
@@ -57,6 +57,10 @@ class Recompensas:
                 dados["titulo"] = self.titulo_espolio
             if self.frase_espolio:
                 dados["frase"] = self.frase_espolio
+            if e.get("baus"):  # vários baús abertos juntos: o resumo diz quantos e lista os equipamentos que saíram
+                dados["baus"] = e["baus"]
+                dados["equipamentos"] = [{"nome": rotulo(it), "raridade": it.get("raridade", "comum"),
+                                          "icone": icone_de(it)} for it in e["equip"]]
             self.ui.celebrar("espolio", dados)
         self.ganhar_ouro(e["ouro"], exato=True, avisar=False, fonte=None)
         self.ganhar_xp(e["xp"], avisar=False)

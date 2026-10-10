@@ -4,6 +4,7 @@
     python -m tests.navegador.cenarios titulo    # menu principal com um save de dia para carregar
     python -m tests.navegador.cenarios vila      # guerreiro acha um item raro e abre o mural de contratos
     python -m tests.navegador.cenarios campanha  # menu principal com saves dos dois modos; começar a campanha
+    python -m tests.navegador.cenarios baus      # vila com três baús na bolsa: a pilha abre inteira
 
 Imprime o endereço do servidor na primeira linha e fica no ar até ser encerrado.
 """
@@ -118,7 +119,46 @@ def campanha(ui):
     menu_principal(ui, argparse.Namespace(seed=1, saves=pasta, brando=False))
 
 
-CENARIOS = {"combate": combate, "titulo": titulo, "vila": vila, "campanha": campanha}
+def baus(ui):
+    """Guerreiro numa vila com três baús na bolsa, numa semente em que saem ao menos dois equipamentos (conferida antes
+    com o mesmo estado: o menu da vila sorteia a frase de ambiente e então a pilha abre)."""
+    from rpg.regras import AMBIENTE_VILA
+    from rpg.ui import BotUI, InterfaceGrafica
+
+    def montar(u, seed):
+        g = Jogo(u, seed=seed, pasta_saves=tempfile.mkdtemp())
+        g.iniciar("Jean", "guerreiro")
+        g.mundo["atual"] = next(l for l in g.mundo["locais"] if l["tipo"] == "vila")["id"]
+        g.periodo, g.clima = 1, "limpo"
+        g.j.nivel = 4
+        g.j.consumiveis["bau"] = 3
+        return g
+
+    class Conta(InterfaceGrafica, BotUI):
+        achados = 0
+
+        def painel(self, tipo, dados):
+            Conta.achados += tipo == "achado"
+            return True
+
+        def escolher(self, pergunta, opcoes):
+            return next(i for i, o in enumerate(opcoes) if o.startswith(("Guardar", "Deixar")))
+    for seed in range(1, 300):
+        Conta.achados = 0
+        t = montar(Conta(random.Random(1)), seed)
+        t.sortear(AMBIENTE_VILA)
+        t.usar_consumivel("bau")
+        if Conta.achados >= 2:
+            break
+    g = montar(ui, seed)
+    ui.jogo = g
+    try:
+        g.rodar()
+    except FimDeJogo:
+        pass
+
+
+CENARIOS = {"combate": combate, "titulo": titulo, "vila": vila, "campanha": campanha, "baus": baus}
 
 
 def main():

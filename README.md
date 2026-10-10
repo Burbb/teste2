@@ -349,6 +349,10 @@ Itens têm raridade, como em Diablo:
 **★ lendário** (itens únicos com nome, história e efeitos especiais).
 Afixos especiais: roubo de vida, chance de crítico, espinhos, vida por turno e vida por abate.
 
+O **Baú Trancado** se abre numa vila ou à luz da fogueira. Com vários na bolsa, um clique na pilha abre todos de
+uma vez: um quadro só com o ouro e os suprimentos somados e os equipamentos listados, e depois cada equipamento
+na janela dele, para comparar, equipar, guardar ou deixar.
+
 ## Mapa
 
 O reino é gerado no espaço: regiões de bioma contínuas e estradas que não se cruzam.

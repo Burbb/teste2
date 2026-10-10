@@ -238,6 +238,11 @@
 .achado-espolio { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px 3px 4px; font-size: 15px; color: var(--tinta); background: #120e0b; border: 2px solid #4a3c2c; }
 .achado-espolio b { font-family: var(--num); font-size: 19px; font-weight: 400; color: var(--bom); }
 .achado-espolio small { font-size: 12px; color: var(--tinta-3); }
+/* Baús ×N: os equipamentos que saíram, na cor da raridade; as janelas de cada um vêm depois do resumo. */
+.espolio-equips { margin-top: 10px; }
+.espolio-equips-rotulo { margin-bottom: 6px; text-align: center; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--tinta-3); }
+.equip-espolio.rar-magico { border-color: var(--magico); color: #c8dcff; } .equip-espolio.rar-raro { border-color: var(--raro); color: #fff0b8; }
+.equip-espolio.rar-lendario { border-color: var(--lendario); color: #ffd3a8; }
 .espolio-contrato { display: grid; grid-template-columns: 32px auto 1fr; align-items: center; gap: 8px; margin-top: 8px; padding: 4px 10px; font-size: 15px;
   color: var(--tinta-2); background: rgba(255, 255, 255, 0.03); border: 2px solid #2e251c; text-align: left; }
 .espolio-contrato b { font-family: var(--num); font-size: 18px; font-weight: 400; color: var(--tinta); text-align: right; }

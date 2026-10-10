@@ -367,7 +367,10 @@ const Sensacao = (() => {
     const achados = (d.itens || []).map((x) => `<span class="achado-espolio">${S(Telas.iconeConsumivel(x.id, "saco"), 2)}${esc(x.nome)}<b>${quantoAchou(x)}</b></span>`);
     const contratos = (d.contratos || []).map((c) => `<div class="espolio-contrato${c.concluido ? " feito" : ""}">${S("pergaminho", 2)}
       <span>${c.concluido ? "Contrato cumprido" : "Contrato"}</span><b>${esc(c.concluido ? "receba em qualquer vila" : c.progresso)}</b></div>`).join("");
-    const extras = achados.length || contratos;
+    // Vários baús abertos juntos: os equipamentos que saíram ficam listados no resumo (cada um vem depois, na janela
+    // dele, para comparar e decidir).
+    const equips = (d.equipamentos || []).map((it) => `<span class="achado-espolio equip-espolio rar-${esc(it.raridade)}">${S(it.icone, 2)}${esc(it.nome)}</span>`);
+    const extras = achados.length || contratos || equips.length;
     caixa.innerHTML = `<div class="festa festa-espolio">
       <div class="rotulo-festa">${esc(d.titulo || "espólio")}</div>
       ${d.frase ? `<p class="espolio-frase">${esc(d.frase)}</p>` : ""}
@@ -377,7 +380,7 @@ const Sensacao = (() => {
         <div class="espolio-nivel"><span>Nível <b>${d.nivel}</b></span><div class="espolio-barra"><i></i></div>
           <span class="espolio-faltam"><span class="conta">${primeiro[0]}</span>/<span class="total">${primeiro[2]}</span></span></div>
       </div>` : ""}
-      ${extras ? `<div class="espolio-extras${d.ouro || d.xp ? " esperando" : ""}">${achados.length ? `<div class="espolio-achados">${achados.join("")}</div>` : ""}${contratos}</div>` : ""}
+      ${extras ? `<div class="espolio-extras${d.ouro || d.xp ? " esperando" : ""}">${achados.length ? `<div class="espolio-achados">${achados.join("")}</div>` : ""}${equips.length ? `<div class="espolio-equips"><div class="espolio-equips-rotulo">${equips.length === 1 ? "Equipamento" : `${equips.length} equipamentos`}: a seguir, um por um</div><div class="espolio-achados">${equips.join("")}</div></div>` : ""}${contratos}</div>` : ""}
     </div>`;
     caixa.classList.add("leve");
     caixa.hidden = false;

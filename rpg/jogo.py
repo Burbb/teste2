@@ -389,7 +389,10 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         opcoes = []
         for k in self.USAVEIS_FORA:
             if self.j.tem(k):
-                opcoes.append((f"{'Abrir' if k == 'bau' else 'Usar'} {CONSUMIVEIS[k]['nome']}", ("usar", k), {"usar": k}))
+                # a pilha de baús abre inteira (Inventario.usar_consumivel): o rótulo diz quantos
+                rotulo = (f"Abrir os {self.j.consumiveis[k]} baús trancados" if k == "bau" and self.j.consumiveis[k] > 1
+                          else f"{'Abrir' if k == 'bau' else 'Usar'} {CONSUMIVEIS[k]['nome']}")
+                opcoes.append((rotulo, ("usar", k), {"usar": k}))
                 if k in EM_ALIADO:
                     opcoes += [(f"Usar {CONSUMIVEIS[k]['nome']} em {comitiva.nome(m['id'])}", ("usar_em", k, m["id"]),
                                 {"usar": k, "em": m["id"]}) for m in comitiva.membros(self)]

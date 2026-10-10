@@ -361,11 +361,10 @@ async function cenarioCampanha(browser) {
     conferir(!!jean && /brando/.test(await jean.textContent()) && !/Vale do Turvo/.test(await jean.textContent()),
       "o save do mundo gerado continua como era");
     await (await page.$('#prompt .escolha:has-text("Voltar")')).click();
-    // o título se redesenha: só então o "Campanha" é o botão novo (antes, às vezes o clique caía na tela que saía)
-    for (let t = 0; t < 50 && (await page.$(".save-cartao")); t++) await page.waitForTimeout(100);
-    await page.waitForTimeout(300);
     await (await esperar('#prompt .escolha:has-text("Campanha")')).click();
-    await (await esperar(".entrada-texto input")).fill("Ana");
+    // Sem `esperar` aqui: ele clica em qualquer .continuar, e o "Confirmar" do nome também é um. Se o botão chegasse
+    // um instante antes do campo, o teste confirmava o nome padrão sozinho (a falha que aparecia às vezes).
+    await (await page.waitForSelector(".entrada-texto input", { timeout: 20000 })).fill("Ana");
     await page.keyboard.press("Enter");
     await (await esperar('#prompt .escolha:has-text("Arqueiro")')).click();
     const resgate = await esperar('#prompt .escolha:has-text("Resgate")');
@@ -390,6 +389,55 @@ async function cenarioCampanha(browser) {
   }
 }
 
+async function cenarioBaus(browser) {
+  console.log("cenário: baús abertos juntos");
+  const { proc, url } = await subir("baus");
+  const { page, erros, esperar } = await abrir(browser, url);
+  await page.evaluate(() => {  // quantos quadros de espólio aparecem, e a moldura de cada item achado, quadro a quadro
+    window.__festas = 0; window.__janelas = {};
+    new MutationObserver((ms) => ms.forEach((m) => m.addedNodes.forEach((n) => { if (n.nodeType === 1 && (n.matches(".festa-espolio") || n.querySelector(".festa-espolio"))) window.__festas++; })))
+      .observe(document.body, { childList: true, subtree: true });
+    const passo = () => {
+      const j = document.querySelector("#sobre-achado:not(.saindo) .janela-achado");
+      if (j) { const r = j.getBoundingClientRect(), n = j.querySelector(".achado-cartao.novo b").textContent;
+        (window.__janelas[n] = window.__janelas[n] || new Set()).add(`${Math.round(r.width)}x${Math.round(r.height)}@${Math.round(r.left)},${Math.round(r.top)}`); }
+      requestAnimationFrame(passo);
+    };
+    requestAnimationFrame(passo);
+  });
+  try {
+    const pilha = await esperar('#heroi [data-bolsa="bau"]');
+    await page.waitForTimeout(600);
+    await pilha.click(); await pilha.click().catch(() => {});  // dois cliques rápidos na pilha
+    const continuar = await esperar(".festa-espolio .continuar", 20000);
+    const resumo = await page.evaluate(() => ({ rotulo: document.querySelector(".festa-espolio .rotulo-festa").textContent,
+      equips: [...document.querySelectorAll(".festa-espolio .equip-espolio")].map((x) => x.textContent) }));
+    conferir(!!continuar && resumo.rotulo === "Baús ×3", `a pilha abre num quadro só: ${resumo.rotulo}`);
+    conferir(resumo.equips.length >= 2, `o resumo lista os equipamentos (${resumo.equips.join(", ")})`);
+    await page.waitForTimeout(1000);  // depois da guarda do espólio
+    for (let t = 0; t < 20 && (await page.$(".festa-espolio .continuar")); t++) { await page.click(".festa-espolio .continuar").catch(() => {}); await page.waitForTimeout(300); }
+    const vistos = [];
+    for (;;) {
+      const guardar = await esperar('#sobre-achado .botao-janela:not(.reserva):has-text("Guardar")', 6000);
+      if (!guardar) break;
+      vistos.push(await page.$eval("#sobre-achado .achado-cartao.novo b", (b) => b.textContent));
+      await page.waitForTimeout(400);
+      await guardar.click();
+      for (let t = 0; t < 40 && (await page.$("#sobre-achado:not(.saindo)")); t++) await page.waitForTimeout(100);
+    }
+    conferir(vistos.join("|") === resumo.equips.join("|"), "depois do resumo, cada equipamento vem na janela dele, na mesma ordem");
+    await page.waitForTimeout(600);
+    const fim = await page.evaluate(() => ({ festas: window.__festas, baus: (App.estado.heroi.bolsa.find((b) => b.id === "bau") || {}).qtd || 0,
+      instaveis: Object.entries(window.__janelas).filter(([, s]) => s.size !== 1).map(([n]) => n) }));
+    conferir(fim.festas === 1 && fim.baus === 0, `um quadro de espólio só e a pilha vazia (${fim.festas} quadro, ${fim.baus} baús)`);
+    conferir(!fim.instaveis.length, "a moldura de cada item fica estável" + (fim.instaveis.length ? `: ${fim.instaveis.join(", ")}` : ""));
+  } finally {
+    conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
+    await page.close();
+    proc.kill();
+  }
+}
+
 let browser;
 try {
   browser = await chromium.launch(process.env.CHROMIUM ? { executablePath: process.env.CHROMIUM } : {});
@@ -402,6 +450,7 @@ try {
   await cenarioTitulo(browser);
   await cenarioVila(browser);
   await cenarioCampanha(browser);
+  await cenarioBaus(browser);
 } catch (e) {
   falhas.push(String(e));
   console.log("ERRO", e);

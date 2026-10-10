@@ -145,12 +145,38 @@ class Inventario:
     def abrir_bau(self):
         """O baú trancado: ouro, um ou dois suprimentos e, às vezes, um equipamento melhor que o das lutas comuns.
         Na tela gráfica, tudo sai num quadro só (o do espólio); o equipamento vem logo depois, na janela dele."""
-        nv = self.j.nivel
         frase = ("À luz da fogueira, você força a fechadura. A tampa range e cede." if self.na_fogueira else
                  "Num canto sossegado, você força a fechadura. A tampa range e cede.")
         if not self.ui.conquistas_na_tela:
             self.dizer(frase, "amarelo")
         self.abrir_espolio(titulo="baú aberto", frase=frase)  # na tela gráfica, a frase abre o quadro do que saiu
+        self.sortear_bau()
+        self.fechar_espolio()
+
+    def abrir_baus(self, n):
+        """Os baús da pilha, todos de uma vez (n: quantos havia nela quando a pessoa clicou; já saíram da bolsa). Um só
+        é o baú de sempre. Vários: cada um com o próprio sorteio, o mesmo de um baú aberto sozinho, na mesma ordem; na
+        tela gráfica, um quadro só ("Baús ×N") com o ouro e os suprimentos somados e os equipamentos listados, e depois
+        a janela de cada equipamento, um por um, com as regras de sempre (comparar, equipar, guardar, deixar)."""
+        if n <= 1:
+            self.abrir_bau()
+            return
+        frase = (f"À luz da fogueira, você força as {n} fechaduras, uma por uma. As tampas rangem e cedem."
+                 if self.na_fogueira else
+                 f"Num canto sossegado, você força as {n} fechaduras, uma por uma. As tampas rangem e cedem.")
+        if not self.ui.conquistas_na_tela:
+            self.dizer(frase, "amarelo")
+        self.abrir_espolio(titulo=f"Baús ×{n}", frase=frase)
+        if self.espolio_aberto is not None:
+            self.espolio_aberto["baus"] = n  # o quadro lista os equipamentos (Recompensas.fechar_espolio)
+        for _ in range(n):
+            self.sortear_bau()
+        self.fechar_espolio()
+
+    def sortear_bau(self):
+        """O que sai de um baú: ouro, suprimentos e, às vezes, um equipamento. Registra o baú na telemetria e oferece o
+        equipamento (com o quadro do espólio aberto, ele espera o quadro aparecer)."""
+        nv = self.j.nivel
         ouro = self.ganhar_ouro(self.rng.randint(*bal.BAU_OURO) + bal.BAU_OURO_POR_NIVEL * nv, fonte="baus")
         suprimentos = [self.sortear(self.BAU_SUPRIMENTOS) for _ in range(self.rng.randint(1, 2))]
         for k in suprimentos:
@@ -162,7 +188,6 @@ class Inventario:
                   equip=equip and {"item": equip["nome"], "raridade": equip.get("raridade", "comum")})
         if equip:
             self.oferecer_equip(equip)
-        self.fechar_espolio()
 
     def usar_no_animal(self, k):
         """Poção e bandagem também servem no animal do patrulheiro. A bandagem põe de pé quem não podia lutar."""
@@ -245,7 +270,13 @@ class Inventario:
             elif sangrando:
                 self.dizer(f"O sangramento para. (+{c} vida)", "verde")
         elif k == "bau":
-            self.abrir_bau()
+            # A pilha inteira: os baús que estavam na bolsa neste momento abrem juntos, e saem dela todos de uma vez
+            # (antes de qualquer sorteio). Cada um conta como um consumível usado no registro da partida.
+            outros = j.consumiveis.get("bau", 0)
+            j.consumiveis["bau"] = 0
+            for _ in range(outros):
+                registrar(self, "consumivel", item=k, em_combate=False)
+            self.abrir_baus(1 + outros)
         elif k == "unguento":
             if not sobrevivencia.tem(j, "infeccao"):
                 j.consumiveis[k] += 1
@@ -278,7 +309,8 @@ class Inventario:
                 return
             if op == "usar":
                 usaveis = [k for k in self.USAVEIS_FORA if j.tem(k)]
-                k = self.menu("Usar:", [(CONSUMIVEIS[k]["nome"], k, {"item": k}) for k in usaveis] + [("Voltar", None)])
+                k = self.menu("Usar:", [(CONSUMIVEIS[k]["nome"] + (f" (abre os {j.consumiveis[k]})" if k == "bau" and j.consumiveis[k] > 1
+                                                                 else ""), k, {"item": k}) for k in usaveis] + [("Voltar", None)])
                 if k:
                     self.usar_consumivel(k)
             else:
