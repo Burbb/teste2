@@ -75,6 +75,8 @@ def ajustar_save(g):
     pessoa estiver no Vau do Turvo. O mundo gerado não tem missões."""
     if g.campanha and "missoes" not in g.mundo:
         g.mundo["missoes"] = missoes.estado_inicial(g.campanha)
+    elif g.campanha:
+        missoes.completar(g.mundo["missoes"])  # 1.50–1.51: sem `preparos`
 
 
 def nome(regiao):

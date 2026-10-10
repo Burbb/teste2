@@ -16,6 +16,10 @@ Não bloquear tudo com todas as perguntas de uma vez. Resolver as decisões quan
 | Protótipo da região (10/10/2026) | Vau do Turvo, Charco dos Juncos, Bosque do Moinho e Capela Afogada, com as ligações propostas; Morro da Forca adiado |
 | Campanha e procedural (10/10/2026) | Campanha como nova forma de começar, no mesmo motor; procedural preservado na transição, sem obrigação de portar conteúdo da campanha |
 | Modo da campanha (10/10/2026) | Resgate como padrão e hardcore como opção explícita, guardados no save. Fome e infecção ainda encerram a partida (ver 12-E1-CAMPANHA, seção 6) |
+| Cronologia (10/10/2026, antes da E3 interior) | Primeira Fenda há cerca de 60 anos; Reabertura há cerca de 3 anos. Os textos que ainda dizem "cem anos" (prólogo do mundo gerado, origem do vilão sorteado) e "se abriu"/"abriu" (Odette, Yara) **não foram trocados**: ajuste de texto em tarefa própria, quando Jean pedir |
+| Marta (10/10/2026) | Alguém que ajudou o protagonista no passado, o que cria o vínculo afetivo. Sem parentesco de sangue: nenhuma cena depende dele |
+| Ilse (10/10/2026) | Foi afogada injustamente pela vila e se tornou a guardiã. Destruir ou Dar descanso (a guardiã) e a postura diante de Caspar (Apoiar, Denunciar, Calar) seguem como decisões separadas |
+| A Fenda e o título (10/10/2026) | A Fenda continua como fenômeno do mundo. "Crônicas da Fenda" é título provisório |
 
 ## Hipóteses de trabalho (10/10/2026)
 
@@ -25,7 +29,9 @@ Aceitas por Jean para planejar. Não são decisões definitivas e não autorizam
 |---|---|---|
 | Derrota na campanha | Resgate, como no modo brando, com hardcore opcional | [12-E1-CAMPANHA](12-E1-CAMPANHA.md), seção 6 |
 | Procedural | Preservado até a campanha ser validada, sem obrigação de manter duas experiências completas | [12-E1-CAMPANHA](12-E1-CAMPANHA.md), seção 7 |
-| Cronologia | Avaliar Fenda original antiga e reabertura recente (avaliada; a proposta aguarda aprovação) | [12-E1-CAMPANHA](12-E1-CAMPANHA.md), seção 1 |
+| Selo sustentado por sacrifícios ocultos | **Direção temática proposta por Jean, não decisão.** Não autoriza inventar nem implementar agora o passado do selo, quem foi sacrificado ou por quem; nenhum texto do jogo a afirma | Quando a lógica dos Sigilos for decidida (antes da região 2, [12-E1-CAMPANHA](12-E1-CAMPANHA.md), seção 4) |
+
+A cronologia, antes hipótese, virou decisão (tabela acima).
 
 As propostas da E1 que aguardam aprovação, separadas pelo momento de decidir (antes da E2, antes da E3, antes da região 2), estão em [12-E1-CAMPANHA](12-E1-CAMPANHA.md), seção 8.
 
@@ -69,5 +75,7 @@ Só promover uma ideia ao plano ativo com objetivo, dependência, escopo e crit�
 ## Registro de decisão
 
 Data / tema / decisão de Jean / motivo / documentos afetados / etapa dependente / como avaliar.
+
+- **10/10/2026 — narrativa da região 1.** Jean decidiu a cronologia (60 e 3 anos), o vínculo com Marta (ajudou o protagonista no passado, sem sangue), Ilse (afogada injustamente, tornou-se a guardiã; os dois eixos separados) e manteve a Fenda como fenômeno e o título como provisório. A ideia de um selo sustentado por sacrifícios ocultos ficou como direção temática, não como decisão. Documentos: este, [12-E1-CAMPANHA](12-E1-CAMPANHA.md) (seções 1, 3 e 4) e [11-E1-REGIAO-INICIAL](11-E1-REGIAO-INICIAL.md). Etapa: E3 (interior da capela usa a cronologia sem citar anos). Avaliar: textos novos não contradizem nada disso; os textos antigos com "cem anos" esperam tarefa própria.
 
 Se uma hipótese falhar jogando, registrar revisão. Nunca marcar proposta como implementada ou teste como aprovado sem evidência.

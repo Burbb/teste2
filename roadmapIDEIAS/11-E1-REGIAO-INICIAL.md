@@ -58,12 +58,12 @@ dos Juncos       │            (represa, canal)
 
 | Personagem | Quem é | Função |
 |---|---|---|
-| **Marta** | Curandeira da vila; escreveu a carta (laço com o herói: ver [12](12-E1-CAMPANHA.md), seção 3) | Motivo pessoal; de cama até a febre acabar |
+| **Marta** | Curandeira da vila; escreveu a carta. **Decidido (10/10/2026):** ajudou o protagonista no passado; vínculo afetivo, sem parentesco de sangue ([12](12-E1-CAMPANHA.md), seção 3) | Motivo pessoal; de cama até a febre acabar |
 | **Pita** | Aprendiz de Marta, menina de uns 14 anos | Atende pela curandeira e organiza o resgate enquanto Marta está doente |
 | **Irmão Caspar** | Pregador itinerante, ex-irmão da catedral; perdeu a mulher para a febre | Chefia a caça à bruxa. Não é o clérigo do templo: o templo continua funcionando como hoje |
 | **Vó Berta** | Velha da taverna; tinha oito anos quando a vila afogou Ilse; o pai dela segurou a corda | Testemunha; guarda a fita de Ilse e a vergonha da família |
 | **Anselmo** | Moleiro; ergueu a represa e abriu o canal no ano passado | Causa material, sem saber; opcional como cena, essencial como fato |
-| **Ilse, a Afogada** | Guardiã da capela e do Sigilo do Turvo, afogada como bruxa | A guardiã Bruxa Afogada existente, com nome e história |
+| **Ilse, a Afogada** | Guardiã da capela e do Sigilo do Turvo, afogada como bruxa. **Decidido (10/10/2026):** afogada injustamente pela vila, tornou-se a guardiã; os dois eixos (guardiã e Caspar) são decisões separadas | A guardiã Bruxa Afogada existente, com nome e história |
 
 Ninguém aqui é vilão puro:
 - Caspar está de luto e acredita no que prega.
@@ -356,6 +356,8 @@ Não cortar:
 - o caminho geral para as três classes.
 
 ## 19. Notas aprovadas para a E3 (10/10/2026)
+
+Decisões de narrativa da mesma data (cronologia 60/3, Marta, Ilse, a Fenda e o título, e a direção temática do selo) estão no [10-DECISOES](10-DECISOES.md) e no [12](12-E1-CAMPANHA.md).
 
 Jean pediu que estas regras entrem na implementação da missão:
 

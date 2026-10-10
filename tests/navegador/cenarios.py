@@ -7,6 +7,7 @@
     python -m tests.navegador.cenarios baus      # vila com três baús na bolsa: a pilha abre inteira
     python -m tests.navegador.cenarios missao    # campanha no Bosque do Moinho, na etapa de seguir o canal
     python -m tests.navegador.cenarios recarga   # título com um save da campanha (Bosque, à noite) e um do mundo gerado
+    python -m tests.navegador.cenarios capela    # herói nível 5 na Capela Afogada (CLASSE e ETAPA no ambiente)
 
 Imprime o endereço do servidor na primeira linha e fica no ar até ser encerrado.
 """
@@ -199,8 +200,38 @@ def recarga(ui):
     menu_principal(ui, argparse.Namespace(seed=1, saves=pasta, brando=False))
 
 
+def capela(ui):
+    """Herói de nível 5 (CLASSE, padrão guerreiro) na Capela Afogada, de manhã, com a missão na ETAPA (padrão
+    "sacristia": a nave já vencida) e o que se sabe até ali. Sair do jogo leva ao título, com o save para carregar."""
+    from rpg import dev, missoes
+    from rpg.__main__ import menu_principal
+    from rpg.ui import BotUI
+    pasta = tempfile.mkdtemp()
+    g = Jogo(BotUI(random.Random(1)), seed=11, pasta_saves=pasta, hardcore=False)
+    g.iniciar("Jean", os.environ.get("CLASSE", "guerreiro"), "turvo")
+    dev.subir_ate(g, 5)  # já especializado (a primeira da classe): o acampamento não para na encruzilhada
+    dev.gastar_talentos(g, random.Random(3))
+    dev.vestir(g, random.Random(3), 5)
+    g.j.consumiveis["pocao_vida"] = 3
+    etapa = os.environ.get("ETAPA", "sacristia")
+    pistas = ["agua_do_leste", "represa", "canal_da_capela"] + (["agua_da_capela"] if etapa != "capela" else [])
+    missoes.registro(g, "febre_do_turvo").update(etapa=etapa, cenas=["abertura", "capela_exterior"], pistas=pistas)
+    for chave in ("bosque_do_moinho", "capela_afogada"):
+        lugar = next(l for l in g.mundo["locais"] if l["chave"] == chave)
+        lugar["visitado"] = True
+    g.mundo["atual"] = lugar["id"]
+    g.periodo, g.clima = 0, "limpo"
+    g.ui, ui.jogo = ui, g
+    try:
+        g.rodar()
+    except FimDeJogo:
+        pass
+    ui.jogo = None
+    menu_principal(ui, argparse.Namespace(seed=1, saves=pasta, brando=False))  # depois de Sair: o título, para carregar
+
+
 CENARIOS = {"combate": combate, "titulo": titulo, "vila": vila, "campanha": campanha, "baus": baus, "missao": missao,
-            "recarga": recarga}
+            "recarga": recarga, "capela": capela}
 
 
 def main():

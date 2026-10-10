@@ -499,6 +499,61 @@ async function cenarioRecarga(browser) {
   }
 }
 
+async function cenarioCapela(browser) {
+  console.log("cenário: dentro da Capela Afogada (a sacristia, e salvar e carregar lá dentro)");
+  const { proc, url } = await subir("capela");
+  const { page, erros } = await abrir(browser, url);
+  const MENU = "#prompt .escolhas:not(.escolhido) .escolha";
+  const objetivo = () => page.evaluate(() => (estado.missoes || [])[0].objetivo);
+  const baus = () => page.evaluate(() => (estado.heroi.bolsa.find((b) => b.id === "bau") || { qtd: 0 }).qtd);
+  try {
+    await page.waitForSelector(`${MENU}:has-text("Atravessar a nave até a sacristia")`, { timeout: 20000 });
+    conferir(/sacristia/.test(await objetivo()) && !!(await page.$("#mundo .rastro-missao")), "na capela, com a nave vencida: o passo seguinte é a sacristia");
+    const antes = await baus();
+    await page.click(`${MENU}:has-text("Atravessar a nave até a sacristia")`);
+    // a luta da sala: ataca até acabar; o espólio fecha com Continuar depois da guarda dele
+    for (let k = 0; k < 400 && !(await page.$("#prompt .continuar.confirmar")); k++) {
+      if (await page.evaluate(() => document.body.classList.contains("em-combate"))) {
+        const b = await page.$('#roda .roda-botao[data-slot="atacar"]'); if (b) await b.click().catch(() => {});
+        const alvo = await page.$(".carta.alvejavel"); if (alvo) await alvo.click().catch(() => {});
+      }
+      const f = await page.$(".festa-espolio .continuar"); if (f) { await page.waitForTimeout(1000); await f.click().catch(() => {}); }
+      const achado = await page.$('#sobre-achado .botao-janela:not(.reserva)'); if (achado) await achado.click().catch(() => {});
+      const fim = await page.$("#prompt .continuar:not(.confirmar)"); if (fim) await fim.click().catch(() => {});  // o fim da luta
+      await page.waitForTimeout(250);
+    }
+    conferir(/A Sacristia/.test(await page.textContent("#cena-cab .cena-titulo")) && /Ilse/.test(await page.textContent("#texto")),
+      "vencida a luta, a sacristia mostra o livro da capela, com Ilse, e espera o Continuar");
+    await page.waitForTimeout(800);
+    await page.click("#prompt .continuar");
+    await page.waitForSelector(`${MENU}:has-text("Descer ao ossuário")`, { timeout: 20000 });
+    conferir(/ossuário/.test(await objetivo()) && !(await page.$(`${MENU}:has-text("Atravessar a nave")`)) && (await baus()) >= antes + 1,
+      "o objetivo passa ao ossuário, a sacristia some do menu e o baú dela está na bolsa");
+    const bausDepois = await baus();
+    await (await page.waitForSelector('#doca .atalho[data-rotulo="Sair"]')).click();
+    await (await page.waitForSelector(`${MENU}:has-text("Salvar e sair")`)).click();
+    for (let t = 0; t < 60 && !(await page.$(`${MENU}:has-text("Carregar")`)); t++) {
+      const c = await page.$("#prompt .continuar"); if (c) await c.click().catch(() => {});
+      await page.waitForTimeout(200);
+    }
+    await (await page.waitForSelector(`${MENU}:has-text("Carregar")`, { timeout: 20000 })).click();
+    await (await page.waitForSelector(".save-cartao")).click();
+    await page.waitForSelector(`${MENU}:has-text("Descer ao ossuário")`, { timeout: 20000 });
+    conferir(!(await page.$(`${MENU}:has-text("Atravessar a nave")`)) && /ossuário/.test(await objetivo()) && (await baus()) === bausDepois
+      && !!(await page.$("#doca .atalho")) && !(await page.evaluate(() => document.body.classList.contains("sem-heroi"))),
+      "salvar, sair e carregar lá dentro: a sala vencida continua vencida, o baú não se repete e a tela vem inteira");
+    await page.keyboard.press("d");
+    await page.waitForSelector(".missao-pistas", { timeout: 10000 });
+    const diario = await page.textContent(".missao-diario");
+    conferir(/Ilse/.test(diario) && /Sigilo do Turvo/.test(diario) && !/O que você já fez/.test(diario),
+      "o Diário sabe de Ilse e do Sigilo, e ainda não tem nada feito (saber o nome não prepara o rito)");
+  } finally {
+    conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
+    await page.close();
+    proc.kill();
+  }
+}
+
 async function cenarioBaus(browser) {
   console.log("cenário: baús abertos juntos");
   const { proc, url } = await subir("baus");
@@ -562,6 +617,7 @@ try {
   await cenarioCampanha(browser);
   await cenarioMissao(browser);
   await cenarioRecarga(browser);
+  await cenarioCapela(browser);
   await cenarioBaus(browser);
 } catch (e) {
   falhas.push(String(e));

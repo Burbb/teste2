@@ -13,7 +13,9 @@ Legenda:
 - ganhos e limites do laço do herói com Marta;
 - decisões separadas pelo momento em que precisam ser fechadas.
 
-## 1. Linha do tempo para testar a cronologia [proposta]
+## 1. Linha do tempo para testar a cronologia [decidido em 10/10/2026: 60 e 3 anos]
+
+**Decisão de Jean (10/10/2026):** Primeira Fenda há cerca de 60 anos e Reabertura há cerca de 3 anos. A tabela abaixo continua como referência; as linhas marcadas como **sugestão** só valem como fato do jogo quando forem escritas numa entrega. A troca de "cem anos" e de "se abriu"/"abriu" nos textos existentes ainda não foi feita (tarefa própria).
 
 Hipótese: uma Fenda original antiga e uma reabertura recente presenciada por Odette. A coluna "Origem" diz se o fato já está no jogo ou se é sugestão.
 
@@ -63,7 +65,9 @@ Proposta para a campanha:
 
 O vilão é fixo. O título "Arcebispo Profanado" e a origem "o bispo que abriu as catacumbas" já existem no catálogo.
 
-## 3. O protagonista e Marta [proposta, não aprovada]
+## 3. O protagonista e Marta [decidido em 10/10/2026: vínculo afetivo, sem sangue]
+
+**Decisão de Jean (10/10/2026):** Marta é alguém que ajudou o protagonista no passado, e isso cria o vínculo afetivo. As cenas não exigem parentesco de sangue. A proposta de irmã, abaixo, fica só como registro do que foi avaliado; a recomendação de "função, não sangue" foi a adotada. A frase exata do vínculo (como ela ajudou) ainda não foi escrita.
 
 **Proposta:** o herói nasceu no Vau do Turvo, é irmão ou irmã de Marta, saiu do vale há anos e volta por causa da carta ("A febre voltou. Não venha.").
 
@@ -96,6 +100,11 @@ Uma origem futura troca a frase sem reescrever a região. Exemplo: "forasteiro: 
 Detalhes no [11](11-E1-REGIAO-INICIAL.md), seção 12.
 
 ## 4. A lógica dos Sigilos [proposta]
+
+**Distinções registradas em 10/10/2026:**
+- **Decidido:** Ilse foi afogada injustamente pela vila e se tornou a guardiã. Destruir ou Dar descanso e a postura diante de Caspar são decisões separadas. A Fenda continua como fenômeno; "Crônicas da Fenda" é título provisório.
+- **Direção temática, não decisão:** um selo sustentado por sacrifícios ocultos. Não autoriza escrever agora o passado do selo, quem foi sacrificado ou por quem. Os itens abaixo continuam proposta.
+- **Pendente:** a identidade do antagonista central (Ulook, o bispo, ou outro arranjo, seção 2). O interior da capela (E3) cita homens com uma marca queimada no pulso que procuram algo, sem dizer quem os mandou.
 
 Esboço suficiente para a região 1 não contradizer as seguintes.
 
