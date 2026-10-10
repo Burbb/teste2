@@ -166,6 +166,24 @@ class TestPagina(unittest.TestCase):
         voltas = [(m["t"], m.get("virar", False)) for m in ui.canal.mensagens if m.get("titulo") == "Vau do Turvo"]
         self.assertEqual(voltas, [("nova_cena", False)])
 
+    def test_carregar_o_mesmo_save_depois_do_titulo_manda_o_estado(self):
+        # Salvar, sair para o título e carregar o mesmo save: o estado é idêntico ao último enviado, mas a tela o
+        # apagou no título; a ponte tem de mandá-lo de novo antes do lugar aparecer.
+        from rpg.jogo import Jogo
+        from rpg.ui import BotUI
+        g = Jogo(BotUI(random.Random(1)), seed=6, pasta_saves=tempfile.mkdtemp())
+        g.iniciar("Jean", "guerreiro", "turvo")
+        ui = WebUI()
+        ui.jogo = g
+        ui.cena("Vau do Turvo", tipo="local")
+        ui.jogo = None
+        ui.cena("Crônicas da Fenda", None, "titulo")
+        ui.jogo = g
+        ui.cena("Vau do Turvo", tipo="local")
+        tipos = [m["t"] for m in ui.canal.mensagens]
+        titulo = next(i for i, m in enumerate(ui.canal.mensagens) if m.get("titulo") == "Crônicas da Fenda")
+        self.assertIn("estado", tipos[titulo:])
+
     def test_introducao_sem_texto_so_troca_o_titulo(self):
         def passos(ui):
             ui.cena("Estrada")

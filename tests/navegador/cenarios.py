@@ -6,6 +6,7 @@
     python -m tests.navegador.cenarios campanha  # menu principal com saves dos dois modos; começar a campanha
     python -m tests.navegador.cenarios baus      # vila com três baús na bolsa: a pilha abre inteira
     python -m tests.navegador.cenarios missao    # campanha no Bosque do Moinho, na etapa de seguir o canal
+    python -m tests.navegador.cenarios recarga   # título com um save da campanha (Bosque, à noite) e um do mundo gerado
 
 Imprime o endereço do servidor na primeira linha e fica no ar até ser encerrado.
 """
@@ -176,7 +177,30 @@ def missao(ui):
         pass
 
 
-CENARIOS = {"combate": combate, "titulo": titulo, "vila": vila, "campanha": campanha, "baus": baus, "missao": missao}
+def recarga(ui):
+    """Título com dois saves para carregar: a campanha no Bosque do Moinho (etapa "capela", noite de chuva, dia 25) e
+    um do mundo gerado. Para conferir que o lugar carregado aparece com a tela inteira, antes de qualquer ação."""
+    from rpg import missoes
+    from rpg.__main__ import menu_principal
+    from rpg.ui import BotUI
+    pasta = tempfile.mkdtemp()
+    c = Jogo(BotUI(random.Random(1), max_decisoes=10), seed=6, pasta_saves=pasta, hardcore=False)
+    c.iniciar("Maria", "guerreiro", "turvo")
+    missoes.registro(c, "febre_do_turvo").update(etapa="capela", cenas=["abertura"],
+                                                  pistas=["agua_do_leste", "represa", "canal_da_capela"])
+    bosque = next(l for l in c.mundo["locais"] if l["chave"] == "bosque_do_moinho")
+    c.mundo["atual"], bosque["visitado"] = bosque["id"], True
+    c.dia, c.periodo, c.clima = 25, 3, "chuva"
+    c.salvar(silencioso=True)
+    g = Jogo(BotUI(random.Random(1), max_decisoes=10), seed=4, pasta_saves=pasta, hardcore=False)
+    g.iniciar("Jean", "mago")
+    g.salvar(silencioso=True)
+    os.utime(g.caminho_save(), (1, 1))  # o da campanha fica primeiro na lista
+    menu_principal(ui, argparse.Namespace(seed=1, saves=pasta, brando=False))
+
+
+CENARIOS = {"combate": combate, "titulo": titulo, "vila": vila, "campanha": campanha, "baus": baus, "missao": missao,
+            "recarga": recarga}
 
 
 def main():

@@ -183,6 +183,11 @@ class WebUI(InterfaceGrafica, UI):
         self._enviar("rolagem", atributo=atributo, cd=cd, d20=d20, mod=mod, total=total, sucesso=sucesso)
 
     def cena(self, titulo, subtitulo=None, tipo="evento"):
+        if tipo == "titulo":
+            # A tela de título apaga o herói da tela (o estado de lá vira nulo). A ponte esquece junto: carregar em
+            # seguida o mesmo save (salvar, sair, carregar) dá o mesmo estado, que tem de ir de novo; antes, a
+            # comparação o descartava e a tela ficava sem painéis, doca e mapa até a primeira ação mudar algo.
+            self.ultimo_estado = None
         # O menu do lugar logo depois da chegada a ele é a mesma página: o que se leu ao chegar fica junto das opções.
         mesmo_lugar = tipo == "local" and self.tipo_cena == "local" and titulo == self.ultimo_titulo
         # A cena nova abre página nova quando houve escolha nesta, ou quando ela terminou com uma pausa (o evento da

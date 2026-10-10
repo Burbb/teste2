@@ -451,6 +451,54 @@ async function cenarioMissao(browser) {
   }
 }
 
+async function cenarioRecarga(browser) {
+  console.log("cenário: carregar um save e ver a tela inteira antes de qualquer ação");
+  const { proc, url } = await subir("recarga");
+  const { page, erros } = await abrir(browser, url);
+  // O que precisa estar na tela no primeiro instante do lugar: herói, doca, mapa e (na campanha) a missão.
+  const tela = () => page.evaluate(() => ({
+    titulo: document.body.classList.contains("modo-titulo"), semHeroi: document.body.classList.contains("sem-heroi"),
+    estado: !!estado, heroi: (document.querySelector("#heroi") || {}).textContent || "",
+    doca: document.querySelectorAll("#doca .atalho").length, mapa: !!document.querySelector("#mundo #mapa-mini > *"),
+    missao: (document.querySelector("#mundo .rastro-missao .rastro-objetivo") || {}).textContent || "",
+    lugar: (document.querySelector("#mundo .local-nome") || {}).textContent || "", tempo: document.querySelector("#tempo").textContent }));
+  const inteira = (t, nome) => !t.titulo && !t.semHeroi && t.estado && t.heroi.includes(nome) && t.doca >= 5 && t.mapa;
+  const carregar = async (nome) => {
+    await (await page.waitForSelector('#prompt .escolha:has-text("Carregar")', { timeout: 20000 })).click();
+    await (await page.waitForSelector(`.save-cartao:has-text("${nome}")`)).click();
+    await page.waitForSelector('#prompt .escolha:has-text("Viajar"), #predios .predio', { timeout: 20000 });
+    return tela();  // logo que as opções aparecem, sem clicar em nada
+  };
+  const sairSalvando = async () => {
+    await (await page.waitForSelector('#doca .atalho[data-rotulo="Sair"]')).click();
+    await (await page.waitForSelector('#prompt .escolha:has-text("Salvar e sair")')).click();
+    for (let t = 0; t < 60 && !(await page.$('#prompt .escolha:has-text("Carregar")')); t++) {
+      const c = await page.$("#prompt .continuar"); if (c) await c.click().catch(() => {});
+      await page.waitForTimeout(200);
+    }
+  };
+  try {
+    let t = await carregar("Maria");
+    conferir(inteira(t, "Maria") && /Capela Afogada/.test(t.missao) && t.lugar === "Bosque do Moinho" && /Dia 25 · Noite · Chuva/.test(t.tempo),
+      `a campanha carregada aparece inteira: painéis, doca, mapa e missão (${t.lugar}, ${t.tempo})`);
+    await sairSalvando();
+    t = await carregar("Maria");
+    conferir(inteira(t, "Maria") && /Capela Afogada/.test(t.missao) && t.lugar === "Bosque do Moinho",
+      "salvar, sair e carregar o mesmo save: a tela volta inteira (antes, só o centro até a primeira ação)");
+    await page.reload();
+    await page.waitForSelector('#prompt .escolha:has-text("Viajar")', { timeout: 20000 });
+    t = await tela();
+    conferir(inteira(t, "Maria") && /Capela Afogada/.test(t.missao), "recarregar a página mantém a tela inteira");
+    await sairSalvando();
+    t = await carregar("Jean");
+    conferir(inteira(t, "Jean") && !t.missao, "o save do mundo gerado também carrega inteiro, sem missão");
+  } finally {
+    conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
+    await page.close();
+    proc.kill();
+  }
+}
+
 async function cenarioBaus(browser) {
   console.log("cenário: baús abertos juntos");
   const { proc, url } = await subir("baus");
@@ -513,6 +561,7 @@ try {
   await cenarioVila(browser);
   await cenarioCampanha(browser);
   await cenarioMissao(browser);
+  await cenarioRecarga(browser);
   await cenarioBaus(browser);
 } catch (e) {
   falhas.push(String(e));
