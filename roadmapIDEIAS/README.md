@@ -12,6 +12,8 @@ RPG de campanha em fantasia sombria, por turnos, com história escrita, mundo qu
 
 ## Como seguir
 
+Para uma nova conta ou sessão, começar por [00 — Comece aqui: continuidade](00-COMECE-AQUI.md). O arquivo registra a versão 1.47.1, as correções posteriores à revisão estática e o ponto de partida recomendado.
+
 1. Ler [01 — Visão](01-VISAO.md) e [09 — Base existente](09-BASE-EXISTENTE.md).
 2. Escolher uma entrega de [07 — Etapas](07-ETAPAS.md).
 3. Consultar os temas pertinentes e [10 — Decisões](10-DECISOES.md).
@@ -21,6 +23,7 @@ RPG de campanha em fantasia sombria, por turnos, com história escrita, mundo qu
 
 | Arquivo | Conteúdo |
 |---|---|
+| [00-COMECE-AQUI.md](00-COMECE-AQUI.md) | Contexto para nova sessão, estado atual, correções recentes e primeira entrega |
 | [01-VISAO.md](01-VISAO.md) | Identidade, pilares e destino dentro do escopo |
 | [02-MUNDO-E-NARRATIVA.md](02-MUNDO-E-NARRATIVA.md) | Campanha, cenas, missões e estados do mundo |
 | [03-CLASSES-E-BUILDS.md](03-CLASSES-E-BUILDS.md) | Três classes, seis especializações e limites da evolução |
