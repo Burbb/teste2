@@ -67,7 +67,9 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         self.lojas = {}
         self.recompra = []  # o que você vendeu nesta visita ao mercado: dá para desfazer pelo mesmo preço (não vai no save)
         self.na_fogueira = False  # em volta do fogo, à noite: um dos lugares seguros para abrir um baú
+        self.na_estrada = False  # entre um lugar e outro: a tela desenha a estrada (a região), não a vila de partida ou de chegada
         self.titulo_espolio = None
+        self.frase_espolio = None
         self.nemesis = None
         self.forcados = []
         self.proximo_id = 1

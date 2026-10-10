@@ -122,7 +122,7 @@ const Vista = (() => {
     const p = e.mundo.periodo_n, noite = p === 3, acesa = p >= 2;
     const horizonte = bandas[bandas.length - 1];
     const escuro = (t) => misturar(horizonte, "#050404", t);
-    const b = e.local.tipo === "vila" ? "vila" : e.local.bioma;
+    const b = e.local.tipo === "vila" && !e.local.estrada ? "vila" : e.local.bioma;  // na estrada, a região sem a vila
     const longe = escuro(0.45), meio = escuro(0.65), perto = escuro(0.82), chao = escuro(0.9);
     const sol = ASTROS[p], ladoSol = noite ? -999 : sol[0], luz = misturar(longe, sol[3], noite ? 0 : 0.4);
     fumacas = []; aves = []; predios = [];
@@ -509,7 +509,7 @@ const Vista = (() => {
       new ResizeObserver(() => { if (estado) apresentar(); }).observe(canvas);  // a arte cresce ou recolhe: já no tamanho novo
     }
     estado = e;
-    const k = [e.local.id, e.local.tipo, e.mundo.periodo_n, e.mundo.clima_id, e.local.bioma].join("|");
+    const k = [e.local.id, e.local.tipo, e.mundo.periodo_n, e.mundo.clima_id, e.local.bioma, !!e.local.estrada].join("|");
     if (k !== chave) {
       if (chave.split("|")[0] !== String(e.local.id)) { camera.x = camera.y = 0; camera.s = 1; camera.de = null; destaque = null; }
       chave = k; preparar(e);

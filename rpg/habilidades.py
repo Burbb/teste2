@@ -548,8 +548,8 @@ def _erguer_servo(cb, u, alvo):
         cb.dizer("Você não consegue controlar mais servos. O esforço se perde no ar.", "cinza")
         return
     origem = "dos ossos de um inimigo caído" if cb.mortos else "da própria terra"
-    cb.dizer(f"Você ergue um servo esquelético {origem}!", "magenta")
-    servo = cb.invocar_aliado("Servo Esquelético", hp=int(_vida_servo(u)), atk=int(u.poder * 0.3) + 2, tipo="servo")
+    cb.dizer(f"Você ergue um esqueleto {origem}!", "magenta")
+    servo = cb.invocar_aliado("Esqueleto (Invocado)", hp=int(_vida_servo(u)), atk=int(u.poder * 0.3) + 2, tipo="servo")
     servo.aplicar("provocando", 2)  # ossos que se jogam na frente: os inimigos olham para ele primeiro
 
 

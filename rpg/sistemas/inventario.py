@@ -143,9 +143,11 @@ class Inventario:
         """O baú trancado: ouro, um ou dois suprimentos e, às vezes, um equipamento melhor que o das lutas comuns.
         Na tela gráfica, tudo sai num quadro só (o do espólio); o equipamento vem logo depois, na janela dele."""
         nv = self.j.nivel
-        self.dizer("À luz da fogueira, você força a fechadura. A tampa range e cede." if self.na_fogueira else
-                   "Num canto sossegado, você força a fechadura. A tampa range e cede.", "amarelo")
-        self.abrir_espolio(titulo="baú aberto")
+        frase = ("À luz da fogueira, você força a fechadura. A tampa range e cede." if self.na_fogueira else
+                 "Num canto sossegado, você força a fechadura. A tampa range e cede.")
+        if not self.ui.conquistas_na_tela:
+            self.dizer(frase, "amarelo")
+        self.abrir_espolio(titulo="baú aberto", frase=frase)  # na tela gráfica, a frase abre o quadro do que saiu
         ouro = self.ganhar_ouro(self.rng.randint(*bal.BAU_OURO) + bal.BAU_OURO_POR_NIVEL * nv, fonte="baus")
         suprimentos = [self.sortear(self.BAU_SUPRIMENTOS) for _ in range(self.rng.randint(1, 2))]
         for k in suprimentos:

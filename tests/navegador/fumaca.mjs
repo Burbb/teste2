@@ -107,6 +107,12 @@ async function cenarioCombate(browser) {
       await page.waitForTimeout(250);
     }
     conferir(!(await page.evaluate(() => document.body.classList.contains("em-combate"))), "a luta termina");
+    // O espólio fica até o Continuar (antes sumia sozinho, e o clique de adiantar o pulava sem ver).
+    const continuarEspolio = await esperar(".festa-espolio .continuar", 8000);
+    await page.waitForTimeout(1200);
+    conferir(!!continuarEspolio && !!(await page.$(".festa-espolio")), "o espólio espera o Continuar");
+    if (continuarEspolio) await continuarEspolio.click().catch(() => {});
+    for (let t = 0; t < 20 && (await page.$(".festa-espolio")); t++) await page.waitForTimeout(100);
     // A luta pode deixar um item (o saque é sorteado): a janela dele vem logo depois do espólio.
     const guardar = await esperar('#sobre-achado .botao-janela:has-text("Guardar")', 8000);
     if (guardar) { await guardar.click(); for (let t = 0; t < 30 && (await page.$("#sobre-achado")); t++) await page.waitForTimeout(100); }

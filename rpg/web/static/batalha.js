@@ -206,7 +206,7 @@ const Batalha = (() => {
       if (nova) { el = criarCarta(c); cartas.set(c.uid, el); }
       atualizarCarta(el, c, heroi);
       const col = c.lado === "aliado" ? colAliados : colInimigos;
-      if (el.parentElement !== col) { col.appendChild(el); if (!replay && ant === undefined && anteriores.__iniciado) entrar(el, c.lado); }
+      if (el.parentElement !== col) { col.appendChild(el); if (!replay && ant === undefined && anteriores.__iniciado) entrar(el, c.lado, c.tipo === "servo"); }
       if (!ant || replay) continue;
       const fresco = recentes[c.uid] && agora() - recentes[c.uid] < 1500;
       if (ant.vivo && !c.vivo) { morrer(el); morte = true; continue; }
@@ -254,7 +254,17 @@ const Batalha = (() => {
     return el.animate([{ translate: de }, { translate: para }], { duration: ms, easing: curva }).finished.catch(() => {});
   }
   function lado(el) { return el.classList.contains("inimigo") ? -1 : 1; }
-  function entrar(el, l) {
+  /** Uma carta que chega no meio da luta. A invocada (o esqueleto do necromante) sobe da terra devagar, num sopro
+   *  escuro, e o lance seguinte espera ela terminar de entrar: antes, ela surgia de estalo e já agia ainda surgindo. */
+  let entrando = [];
+  function entrar(el, l, invocada) {
+    if (invocada) {
+      brilho(el, "sombra");
+      const a = el.animate([{ opacity: 0, translate: "0px 34px", clipPath: "inset(100% 0 0 0)" },
+        { opacity: 1, translate: "0px 0px", clipPath: "inset(0 0 0 0)" }], { duration: pausa(700), easing: "cubic-bezier(.2,.7,.3,1)" });
+      entrando.push(a.finished.catch(() => {}));
+      return;
+    }
     el.animate([{ opacity: 0, translate: `${l === "aliado" ? -30 : 30}px 0px` }, { opacity: 1, translate: "0px 0px" }], { duration: 300, easing: "steps(5)" });
   }
 
@@ -383,6 +393,7 @@ const Batalha = (() => {
 
   async function lance(m) {
     if (!arena) return;
+    if (entrando.length) { const e = entrando; entrando = []; await Promise.all(e); }  // quem acabou de ser invocado termina de chegar
     const de = carta(m.de), em = carta(m.em);
     if (["buff", "cura", "recurso", "golpe", "erro"].includes(m.tipo)) { emCena(de); emCena(em); }
     switch (m.tipo) {

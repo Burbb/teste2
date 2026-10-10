@@ -263,8 +263,10 @@ def morel_conversa_ponte(g, m):
     g.plantar("teodoro_ruivo", 3)
 
 
+# Theodore e os desertores lutam como um grupo de elite: antes do nível 5, nem jogando bem dava (a semente espera).
 @evento(contextos=("explorar", "viagem"), peso=40, cooldown=0, unico=True,
-        cond=lambda g: cm.presente(g, "morel") and cm.membro(g, "morel")["missao"] == 1 and g.semente("teodoro_ruivo"))
+        cond=lambda g: cm.presente(g, "morel") and cm.membro(g, "morel")["missao"] == 1 and g.semente("teodoro_ruivo")
+        and g.j.nivel >= 5)
 def teodoro_ruivo(g):
     g.colher("teodoro_ruivo")
     m = cm.membro(g, "morel")
@@ -335,7 +337,7 @@ def teodoro_ruivo(g):
     grupo = [lider] + [g.inimigo("bandido", nivel=g.j.nivel) for _ in range(2)]
     for e in grupo[1:]:
         e.nome = "Desertor dos Cães"
-    resultado = g.combate(grupo, pode_fugir=False, titulo="OS IRON HOUNDS")
+    resultado = g.combate(grupo, pode_fugir=False, titulo="OS CÃES DE FERRO")
     if resultado == "vitoria" and cm.presente(g, "morel"):
         g.narrar("Morel se ajoelha ao lado de Theodore. \"Eu devia isso a você, Theo.\" Não fica claro se fala da luta "
                  "ou da ponte.", "cinza")

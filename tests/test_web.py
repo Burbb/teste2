@@ -132,6 +132,19 @@ class TestPagina(unittest.TestCase):
             ui.cena("Vale do Corvo", tipo="local")
         self.assertEqual(self.cenas(passos)[-1], ("nova_cena", "Vale do Corvo", True))
 
+    def test_chegada_vira_a_pagina_da_estrada_e_fica_com_o_menu(self):
+        # A viagem: o que aconteceu na estrada pede leitura; a chegada é página nova. O menu do lugar, logo depois,
+        # é a mesma página da chegada (o que se leu ao chegar fica junto das opções).
+        def passos(ui):
+            ui.cena("Rumo a Abrigo Branco")
+            ui.dizer("Um clique sob a sua bota.")
+            ui.pausar()
+            ui.cena("Abrigo Branco", tipo="local")
+            ui.dizer("Os muros são brancos de cal.")
+            ui.pausar()
+            ui.cena("Abrigo Branco", tipo="local")
+        self.assertEqual(self.cenas(passos)[-2:], [("nova_cena", "Abrigo Branco", True), ("cabecalho", "Abrigo Branco", False)])
+
     def test_introducao_sem_texto_so_troca_o_titulo(self):
         def passos(ui):
             ui.cena("Estrada")

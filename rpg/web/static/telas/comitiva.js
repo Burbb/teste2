@@ -41,7 +41,8 @@
     if (!itens.length) return;
     const menu = document.createElement("div");
     menu.className = "menu-item m-janela";
-    menu.innerHTML = `<b>${h(f.nome)}</b><small class="menu-sub">vida ${Math.max(0, f.hp)}/${f.max_hp}</small>` + itens.map(([t], i) => `<button type="button" data-i="${i}">${t}</button>`).join("") +
+    const bicho = { lobo: "lobo", urso: "urso", falcao: "falcão" }[f.tipo] || "animal";
+    menu.innerHTML = `<b>${h(f.nome)}</b><small class="menu-sub">Seu ${bicho} dorme perto do fogo · vida ${Math.max(0, f.hp)}/${f.max_hp}</small>` + itens.map(([t], i) => `<button type="button" data-i="${i}">${t}</button>`).join("") +
       '<button type="button" class="secundaria" data-i="-1">Cancelar</button>';
     document.body.appendChild(menu);
     const r = ancora.getBoundingClientRect();
@@ -74,7 +75,10 @@
     if (!itens.length) return;
     const menu = document.createElement("div");
     menu.className = "menu-item m-janela";
-    menu.innerHTML = `<b>${h(nomeDe(cid))}</b>` + itens.map(([t], i) => `<button type="button" data-i="${i}">${t}</button>`).join("") +
+    // Onde a pessoa está agora (o que a dica da fogueira dizia), logo embaixo do nome.
+    const vai = App.estado.heroi.comitiva.some((m) => m.id === cid);
+    const onde = vai ? "Vai com você amanhã." : "Fica no acampamento: descansa, não come das suas provisões e não opina.";
+    menu.innerHTML = `<b>${h(nomeDe(cid))}</b><small class="menu-sub">${onde}</small>` + itens.map(([t], i) => `<button type="button" data-i="${i}">${t}</button>`).join("") +
       '<button type="button" class="secundaria" data-i="-1">Cancelar</button>';
     document.body.appendChild(menu);
     const r = ancora.getBoundingClientRect();

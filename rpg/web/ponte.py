@@ -183,7 +183,20 @@ class WebUI(InterfaceGrafica, UI):
         self._enviar("rolagem", atributo=atributo, cd=cd, d20=d20, mod=mod, total=total, sucesso=sucesso)
 
     def cena(self, titulo, subtitulo=None, tipo="evento"):
-        self.enviar_estado()
+        # O menu do lugar logo depois da chegada a ele é a mesma página: o que se leu ao chegar fica junto das opções.
+        mesmo_lugar = tipo == "local" and self.tipo_cena == "local" and titulo == self.ultimo_titulo
+        # A cena nova abre página nova quando houve escolha nesta, ou quando ela terminou com uma pausa (o evento da
+        # noite, o "Exausto": ninguém escolheu nada, mas o texto pede leitura antes de seguir).
+        pagina_nova = tipo != "combate" and (self.escolhas_na_cena > 0 or (self.pausa_pendente and not mesmo_lugar))
+        # Telas de menu que se redesenham (inventário, mercado) não param para "Continuar".
+        mesma_tela = tipo == "menu" and titulo == self.ultimo_titulo
+        ler_antes = pagina_nova and (self.novo_desde_escolha or self.pausa_pendente) and not mesma_tela
+        # O fim de um evento (ou de uma luta) que cai direto no lugar não pede Continuar: a tela deixa o texto o tempo
+        # de ler e vira a página sozinha. O estado do lugar (a arte, o painel, o mapa) vai junto com a página nova:
+        # mandado antes, a cidade aparecia enquanto ainda se lia o que aconteceu na estrada.
+        virar = ler_antes and tipo == "local"
+        if not virar:
+            self.enviar_estado()
         if tipo != "combate":
             self.tipo_cena = tipo
         if tipo == "combate":
@@ -192,20 +205,15 @@ class WebUI(InterfaceGrafica, UI):
                 self._continuar()
             self._enviar("combate", titulo=titulo, subtitulo=subtitulo)
             return
-        # A cena nova abre página nova quando houve escolha nesta, ou quando ela terminou com uma pausa (o evento da
-        # noite, o "Exausto": ninguém escolheu nada, mas o texto pede leitura antes de seguir).
-        if self.escolhas_na_cena > 0 or self.pausa_pendente:
-            # Telas de menu que se redesenham (inventário, mercado) não param para "Continuar".
-            mesma_tela = tipo == "menu" and titulo == self.ultimo_titulo
-            if (self.novo_desde_escolha or self.pausa_pendente) and not mesma_tela:
+        if pagina_nova:
+            if ler_antes:
                 self.pausa_pendente = False
-                if tipo == "local":
-                    # O fim de um evento (ou de uma luta) cai direto no lugar, sem Continuar: a tela deixa o texto o
-                    # tempo de ler e vira a página sozinha.
+                if virar:
                     self._enviar("nova_cena", titulo=titulo, subtitulo=subtitulo, tipo=tipo, virar=True)
                     self.ultimo_titulo = titulo
                     self.escolhas_na_cena = 0
                     self.novo_desde_escolha = False
+                    self.enviar_estado()
                     return
                 self._continuar()
             self._enviar("nova_cena", titulo=titulo, subtitulo=subtitulo, tipo=tipo)
@@ -213,8 +221,9 @@ class WebUI(InterfaceGrafica, UI):
             self.escolhas_na_cena = 0
             self.novo_desde_escolha = False
         else:
-            # A cena anterior era só uma introdução, sem nada a ler antes de seguir: o novo título a substitui na mesma
-            # página.
+            # A cena anterior era só uma introdução, sem nada a ler antes de seguir (ou é o mesmo lugar): o novo título
+            # a substitui na mesma página.
+            self.pausa_pendente = False
             self._enviar("cabecalho", titulo=titulo, subtitulo=subtitulo, tipo=tipo)
             self.ultimo_titulo = titulo
 

@@ -113,14 +113,15 @@ def _coracao_ardente(cb, u, rank, d):
         cb.memoria["explodindo"] = False
 
 
-# A passiva de cada especialização: vem com ela, sem ponto de talento.
+# A passiva de cada especialização: vem com ela, sem ponto de talento. No Grimório, é uma página como as habilidades
+# (com "Passiva" no lugar do custo); `icone` é o desenho dela lá.
 PASSIVAS = {
     "berserker": {"nome": "Pacto de Sangue", "desc": "Até +60% de dano quanto mais ferido você estiver.",
-                  "mods": {"dano_ferido": 0.6}, "realce": "sangue"},
+                  "mods": {"dano_ferido": 0.6}, "realce": "sangue", "icone": "coracao"},
     "piromante": {"nome": "Chama Viva", "desc": f"Queimaduras causam {round((bal.QUEIMADURA_PIROMANTE - 1) * 100)}% a mais.",
-                  "mults": {"queimadura_mult": bal.QUEIMADURA_PIROMANTE}},
+                  "mults": {"queimadura_mult": bal.QUEIMADURA_PIROMANTE}, "icone": "chama"},
     "necromante": {"nome": "Colheita", "desc": "Cada inimigo que cai devolve 5 de mana.",
-                   "gatilhos": {"morte": _colheita}},
+                   "gatilhos": {"morte": _colheita}, "icone": "caveira"},
 }
 
 # O nível que cada camada pede. Camada nova: uma linha aqui (o validador cobra).

@@ -149,8 +149,11 @@ def dados(j):
         partes = " + ".join(f"{nome} {_num(100 * v)}%" for nome, v in roubo)
         gerais.append(f"Roubo de vida: {_num(100 * mod(j, 'roubo_vida'))}% de todo dano que você causa volta como vida "
                       f"({partes}).")
+    # A passiva da especialização: uma página como as das habilidades, sem custo nem alvo.
     from .talentos import PASSIVAS
-    if j.spec in PASSIVAS:
-        gerais.append(f"Passiva — {PASSIVAS[j.spec]['nome']}: {PASSIVAS[j.spec]['desc']}")
-    return {"recurso": j.nome_recurso, "basico": basico, "habilidades": habs, "gerais": gerais,
+    passivas = [{"id": "passiva_" + j.spec, "nome": p["nome"], "icone": p["icone"], "passiva": True, "custo": 0,
+                 "alvo": "", "desc": p["desc"],
+                 "linhas": [efeito("Sempre ativa: vem com a especialização, sem custo e sem ponto de talento.")]}
+                for p in [PASSIVAS.get(j.spec)] if p]
+    return {"recurso": j.nome_recurso, "basico": basico, "habilidades": habs, "passivas": passivas, "gerais": gerais,
             "atributos": {"Ataque": j.atk, "Poder": j.poder, "Agilidade": j.agi}}

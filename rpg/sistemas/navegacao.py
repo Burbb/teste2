@@ -43,22 +43,26 @@ class Navegacao:
             self.dizer(f"Uma muralha de sombras bloqueia o caminho. Você precisa dos três Sigilos "
                        f"({len(self.j.sigilos)}/3).", "magenta")
             return
-        for trecho in range(dist):
-            if self.periodo > 3:
-                self.dizer("A noite está avançada demais para seguir viagem.", "cinza")
-                self.acampar()
-            if trecho >= dist / 2:
-                self.mundo["atual"] = loc["id"]
-            self.ui.cena(f"Rumo a {loc['nome']}", f"trecho {trecho + 1} de {dist} · {self.contexto_cena()}", "evento")
-            sobrevivencia.acender_tocha(self)
-            try:
-                if self.chance(0.65):
-                    eventos.disparar(self, "viagem")
-                else:
-                    self.dizer(self.ambiente() + " A viagem segue sem incidentes.", "cinza")
-            finally:
-                self.sem_luz = False
-            self.avancar_periodo()
+        self.na_estrada = True
+        try:
+            for trecho in range(dist):
+                if self.periodo > 3:
+                    self.dizer("A noite está avançada demais para seguir viagem.", "cinza")
+                    self.acampar()
+                if trecho >= dist / 2:
+                    self.mundo["atual"] = loc["id"]
+                self.ui.cena(f"Rumo a {loc['nome']}", f"trecho {trecho + 1} de {dist} · {self.contexto_cena()}", "evento")
+                sobrevivencia.acender_tocha(self)
+                try:
+                    if self.chance(0.65):
+                        eventos.disparar(self, "viagem")
+                    else:
+                        self.dizer(self.ambiente() + " A viagem segue sem incidentes.", "cinza")
+                finally:
+                    self.sem_luz = False
+                self.avancar_periodo()
+        finally:
+            self.na_estrada = False
         self.chegar(loc)
 
     def chegar(self, loc):
@@ -72,6 +76,10 @@ class Navegacao:
         self.ui.separador()
         perigo = self.nivel_local() >= self.j.nivel + 3
         if self.ui.conquistas_na_tela:  # o nome do lugar vira título de área, como nos jogos; o texto não repete
+            # Chegar é página nova: o que aconteceu na estrada fica o tempo de ler, a página vira para o lugar e só
+            # então o nome dele surge (antes, a chegada e os contratos pagos pipocavam por cima do texto da estrada).
+            self.pausar()
+            self.cabecalho()
             self.ui.celebrar("chegada", {"nome": loc["nome"], "sub": self.descrever_lugar(loc), "tipo": loc["tipo"],
                                          "nivel": self.nivel_local(), "primeira": primeira})
         else:

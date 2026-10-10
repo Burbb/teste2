@@ -2,7 +2,7 @@
 "use strict";
 
 (() => {
-  const { h, S, dica, ligarFigurasComitiva } = Telas;
+  const { h, S, ligarFigurasComitiva } = Telas;
 
   // Em roda, colados no fogo (o herói em 128,93, o fogo em 160): quem vai com você do outro lado e na frente, o animal
   // deitado ao lado do herói, quem fica no acampamento perto da barraca. Os nomes se acomodam sozinhos (acomodarNomes).
@@ -15,12 +15,12 @@
     d.ativos.forEach((m, i) => figuras.push({ ...m, onde: "ativo", p: PONTOS_ATIVOS[i % 2] }));
     d.reserva.forEach((m, i) => figuras.push({ ...m, onde: "reserva", p: PONTOS_RESERVA[i % 3] }));
     // O nome logo acima da cabeça (moldura de ouro: vai com você amanhã; cinza: fica no acampamento) e o ✉ preso no
-    // canto do nome, sem ocupar uma linha a mais.
+    // canto do nome, sem ocupar uma linha a mais. Sem dica no passar do mouse: o que ela dizia (vai com você, fica no
+    // acampamento, a vida do animal) está no menu que abre no clique.
     const botoes = figuras.map((f) => `<button type="button" class="figura ${f.onde}${f.conversa ? " tem-conversa" : ""}" data-cid="${h(f.id)}"
-        style="left:${(f.p[0] / 320) * 100}%;top:${((f.p[1] + 8) / 120) * 100}%" ${dica(`<b>${h(f.nome)}</b><div>${f.onde === "ativo" ? "Vai com você amanhã." : "Fica no acampamento: descansa, não come das suas provisões e não opina."}</div>${f.conversa ? '<div class="rodape">Quer conversar.</div>' : ""}`, true)}>
+        style="left:${(f.p[0] / 320) * 100}%;top:${((f.p[1] + 8) / 120) * 100}%">
         <span class="figura-nome">${h(f.nome.split(" ").pop())}${f.conversa ? '<i class="carta-aviso">✉</i>' : ""}</span></button>`).join("");
-    const fera = d.fera ? `<span class="figura fera" role="button" tabindex="0" data-fera="1" style="left:${(PONTO_FERA[0] / 320) * 100}%;top:${((PONTO_FERA[1] + 8) / 120) * 100}%"
-        ${dica(`<b>${h(d.fera.nome)}</b><div>Seu ${h({ lobo: "lobo", urso: "urso", falcao: "falcão" }[d.fera.tipo] || "animal")} dorme perto do fogo. Vida ${d.fera.hp}/${d.fera.max_hp}.</div>`, true)}>
+    const fera = d.fera ? `<span class="figura fera" role="button" tabindex="0" data-fera="1" style="left:${(PONTO_FERA[0] / 320) * 100}%;top:${((PONTO_FERA[1] + 8) / 120) * 100}%">
         <span class="figura-nome">${h(d.fera.nome.split(" ").pop())}</span></span>` : "";
     // Dormir: um selo que balança de leve dentro do palco (o fim da noite fica na cena, não numa lista). Mora no céu,
     // no canto de cima: em cima da barraca ele encostava no nome de quem senta ali perto.

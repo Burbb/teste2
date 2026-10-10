@@ -177,9 +177,8 @@ class TestApresentacao(Catalogo):
 
     def test_talentos(self):
         fichas = [(t["id"], t) for lista in TALENTOS.values() for t in lista] + list(PASSIVAS.items())
-        for k, t in fichas:
-            if "camada" in t:  # nó da árvore (a passiva não aparece na árvore)
-                self.existe(t.get("icone"), self.sprites, f"talento '{k}': ícone '{t.get('icone')}' sem desenho")
+        for k, t in fichas:  # o nó da árvore e a página da passiva no Grimório têm desenho
+            self.existe(t.get("icone"), self.sprites, f"talento '{k}': ícone '{t.get('icone')}' sem desenho")
             if t.get("realce"):
                 self.existe(t["realce"], self.cores_texto, f"talento '{k}': realce '{t['realce']}' sem cor .rx-")
 

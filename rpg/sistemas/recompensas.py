@@ -38,11 +38,13 @@ class Recompensas:
     # mostrado antes da próxima pergunta ao jogador (menu, Continuar, outra luta) ou no fim do evento. O ouro e o XP são
     # entregues quando o quadro aparece (o ouro do topo sobe quando as moedas chegam; o nível sobe depois dele), e o
     # equipamento achado vem logo em seguida (é uma escolha). No texto, cada ganho é dito na hora, como sempre.
-    def abrir_espolio(self, titulo=None):
-        """titulo: o rótulo do quadro quando não é o espólio de uma vitória ("baú aberto")."""
+    def abrir_espolio(self, titulo=None, frase=None):
+        """titulo: o rótulo do quadro quando não é o espólio de uma vitória ("baú aberto"); frase: uma linha que abre o
+        quadro (como o baú foi aberto), no lugar de um texto solto na página."""
         if self.ui.conquistas_na_tela and self.espolio_aberto is None:
             self.espolio_aberto = {"ouro": 0, "xp": 0, "itens": [], "contratos": [], "equip": []}
             self.titulo_espolio = titulo
+            self.frase_espolio = frase
 
     def fechar_espolio(self):
         e, self.espolio_aberto = self.espolio_aberto, None
@@ -53,6 +55,8 @@ class Recompensas:
                      "itens": e["itens"], "contratos": e["contratos"], "equip": len(e["equip"])}
             if self.titulo_espolio:
                 dados["titulo"] = self.titulo_espolio
+            if self.frase_espolio:
+                dados["frase"] = self.frase_espolio
             self.ui.celebrar("espolio", dados)
         self.ganhar_ouro(e["ouro"], exato=True, avisar=False, fonte=None)
         self.ganhar_xp(e["xp"], avisar=False)

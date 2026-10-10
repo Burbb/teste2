@@ -119,7 +119,9 @@ async function virarParaLugar(m) {
     const ms = cenaInterrompida ? 1000 : novo < 80 ? Math.max(700, Math.min(1500, 800 + novo * 30 - ja))
       : Math.max(1300, Math.min(5500, 800 + novo * 30 - ja));
     Telas.esconderDica();
-    promptEl.innerHTML = `<div class="fio-leitura" aria-hidden="true"><i style="--dura:${Math.round(ms)}ms"></i></div>`;
+    // Embaixo do fio, para quem está começando: dá para clicar em vez de esperar (aparece depois da guarda de leitura).
+    promptEl.innerHTML = `<div class="fio-leitura" aria-hidden="true"><i style="--dura:${Math.round(ms)}ms"></i></div>` +
+      `<div class="fio-dica" style="animation-delay:${GUARDA_LEITURA}ms">clique para continuar</div>`;
     // O clique que caiu enquanto o texto corria só terminou o texto: a leitura começa agora. E nos primeiros instantes
     // a página não aceita clique, para um clique certeiro na hora em que o resultado aparece não o pular sem ser lido.
     pular = false;

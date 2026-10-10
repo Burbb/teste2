@@ -19,8 +19,9 @@ const Sensacao = (() => {
     final: { lento: 0.3, entradaMs: 220, seguraMs: 380, saidaMs: 450, zoom: 1.08, zoomMs: 520 },
     // Números que contam subindo (ouro do espólio): duração e o máximo de tiques de som.
     contarMs: 650, tiquesMax: 10,
-    // A barra de XP enchendo (por trecho de nível) e quanto o espólio fica na tela depois de tudo.
-    barraMs: 700, espolioEsperaMs: 450, espolioEntreMs: 180, espolioFicaMs: 900, espolioAchadoMs: 350,
+    // A barra de XP enchendo (por trecho de nível) e os respiros do espólio, que fica até o Continuar: o clique não
+    // conta por `espolioGuardaMs` depois de tudo aparecer, e cada clique da rajada estende a espera em `espolioRajadaMs`.
+    barraMs: 700, espolioEsperaMs: 450, espolioEntreMs: 180, espolioGuardaMs: 900, espolioRajadaMs: 350,
     // Vida por um fio: o compasso do pulso (ms entre batidas), mais rápido quanto mais perto do fim, e quantas
     // vezes o coração soa ao entrar na faixa (depois só a tela pulsa: som contínuo cansa e angustia).
     batimentoLentoMs: 1150, batimentoRapidoMs: 700, batidasAoEntrar: 3,
@@ -358,8 +359,8 @@ const Sensacao = (() => {
   /** Como a tela de resultado dos jogos, tudo o que a vitória deu num quadro só: uma linha por recompensa (o ouro,
    *  depois a experiência com a barra de nível presa embaixo dela), e por fim o que se achou (comida, bandagem,
    *  flechas; o equipamento tem a janela dele, logo depois) e os contratos que andaram. O ouro conta e voa
-   *  até a bolsa; a barra enche (se o nível vira: enche, brilha e recomeça). Some sozinho no fim; um clique ou uma
-   *  tecla adianta. Os trechos da barra vêm do motor. */
+   *  até a bolsa; a barra enche (se o nível vira: enche, brilha e recomeça). Um clique ou uma tecla adianta os
+   *  números; o quadro só sai no Continuar. Os trechos da barra vêm do motor. */
   async function espolio(caixa, d) {
     const S = (n, e = 1) => Sprites.img(n, e);
     const trechos = d.trechos || [], ultimo = trechos[trechos.length - 1] || [0, 0, 1], primeiro = trechos[0] || ultimo;
@@ -369,6 +370,7 @@ const Sensacao = (() => {
     const extras = achados.length || contratos;
     caixa.innerHTML = `<div class="festa festa-espolio">
       <div class="rotulo-festa">${esc(d.titulo || "espólio")}</div>
+      ${d.frase ? `<p class="espolio-frase">${esc(d.frase)}</p>` : ""}
       ${d.ouro ? `<div class="espolio-linha ouro">${S("moeda", 2)}<span class="nome">Ouro</span><b>+<span class="conta">0</span></b></div>` : ""}
       ${d.xp ? `<div class="espolio-xp${d.ouro ? " esperando" : ""}">
         <div class="espolio-linha xp">${S("estrela", 2)}<span class="nome">Experiência</span><b>+<span class="conta">0</span> <small>XP</small></b></div>
@@ -386,7 +388,7 @@ const Sensacao = (() => {
     document.addEventListener("pointerdown", adiantar, true);
     document.addEventListener("keydown", adiantar, true);
     const mostrar = (el) => el && el.classList.remove("esperando");
-    if (d.titulo) Som.tocar("bau");  // um baú aberto: a tampa range antes das moedas
+    if (d.titulo) Som.tocar("bau");  // um baú aberto: o tilintar da recompensa antes das moedas
     await dormir(pausa(AJUSTES.espolioEsperaMs));  // a faixa de "Vitória" sai antes
     if (d.ouro) {
       Som.tocar("moeda");
@@ -424,8 +426,22 @@ const Sensacao = (() => {
       mostrar(caixa.querySelector(".espolio-extras"));
       Som.tocar("item");
     }
-    const fica = AJUSTES.espolioFicaMs + (extras ? AJUSTES.espolioAchadoMs * (achados.length + (d.contratos || []).length) : 0);
-    if (!pular) await Promise.race([dormir(pausa(fica)), new Promise((r) => { const t = setInterval(() => { if (pular) { clearInterval(t); r(); } }, 50); })]);
+    // Tudo à vista: o quadro espera o Continuar (qualquer clique, Espaço, Enter ou Esc). Quem clica rápido para
+    // adiantar não fecha o espólio sem ver: logo depois de tudo aparecer o clique não conta, e enquanto os cliques
+    // seguem em rajada a espera se estende. Fecha o clique dado depois de uma pausa.
+    festa.insertAdjacentHTML("beforeend", '<button class="continuar" type="button">Continuar <span>▸</span></button>');
+    pular = false;
+    let guarda = performance.now() + AJUSTES.espolioGuardaMs;
+    await new Promise((r) => {
+      const t = setInterval(() => {
+        if (!pular) return;
+        pular = false;
+        const agora = performance.now();
+        if (agora < guarda) { guarda = Math.max(guarda, agora + AJUSTES.espolioRajadaMs); return; }
+        clearInterval(t);
+        r();
+      }, 40);
+    });
     document.removeEventListener("pointerdown", adiantar, true);
     document.removeEventListener("keydown", adiantar, true);
     festa.classList.add("saindo");

@@ -183,6 +183,7 @@ class Combate(Golpes, AcoesDoHeroi, TurnosDosOutros):
     def invocar_aliado(self, nome, hp, atk, tipo="servo"):
         a = Aliado(nome, hp, atk, 3, tipo)
         self.aliados.append(a)
+        self.ui.atualizar()  # a carta entra na arena já, antes de o invocado agir (a tela a faz subir da terra)
         return a
 
     # ------------------------------------------------------------ fluxo

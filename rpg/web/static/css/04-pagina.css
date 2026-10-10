@@ -63,6 +63,10 @@ body.modo-titulo .vinheta { background: radial-gradient(ellipse 80% 70% at 50% 4
 .fio-leitura { width: calc(var(--P) * 48); height: var(--P); margin: 22px auto 0; background: var(--p-j); }
 .fio-leitura i { display: block; height: 100%; background: var(--ouro); transform-origin: left; animation: fio-leitura var(--dura) steps(24) forwards; }
 @keyframes fio-leitura { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+/* "clique para continuar" embaixo do fio: pisca devagar e apagado, só para quem ainda não sabe que pode clicar. */
+.fio-dica { margin-top: 10px; text-align: center; font-size: 12px; letter-spacing: 0.04em; color: var(--tinta-3); opacity: 0;
+  animation: fio-dica 2.2s ease-in-out infinite; }
+@keyframes fio-dica { 0%, 100% { opacity: 0.2; } 50% { opacity: 0.75; } }
 #cena-cab[data-tipo="menu"] .cena-titulo { font-size: calc(var(--px) * 48); }
 #cena-cab[data-tipo="chefe"] .cena-titulo, #cena-cab[data-tipo="morte"] .cena-titulo { color: var(--sangue-2); }
 #cena-cab[data-tipo="morte"] .cena-titulo, #cena-cab[data-tipo="vitoria"] .cena-titulo { font-size: calc(var(--px) * 64); }

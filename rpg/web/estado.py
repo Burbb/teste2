@@ -302,7 +302,8 @@ def estado(g):
                   "escuro": bool(g.sem_luz), "modificadores": modificadores(g)},
         "local": {"id": loc["id"], "nome": loc["nome"], "tipo": loc["tipo"], "bioma": loc["bioma"],
                   "bioma_nome": BIOMAS[loc["bioma"]]["nome"], "descricao": mapa.descricao(g, loc),
-                  "nivel": g.nivel_local(), "predios_fechados": predios_fechados(g)},
+                  "nivel": g.nivel_local(), "predios_fechados": predios_fechados(g),
+                  "estrada": g.na_estrada},  # viajando: a paisagem é a da região, sem a vila
         "mapa": mapa_conhecido(g),
         "combate": combate(g),
         "estados": para_tela(),  # ícone, cor e dica de cada estado (catálogo em estados.py)

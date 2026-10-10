@@ -12,15 +12,15 @@
     const g = App.estado && App.estado.heroi && App.estado.heroi.grimorio;
     if (!g) return;
     if (id) paginaGrimorio = id;
-    const todas = [g.basico, ...g.habilidades];
+    const todas = [g.basico, ...g.habilidades, ...(g.passivas || [])];
     if (!todas.some((x) => x.id === paginaGrimorio)) paginaGrimorio = "ataque";
     const heroi = App.estado.heroi;
     const icone = (x) => x.icone || "estrela";
-    const custo = (x) => x.custo ? `${x.custo} ${h(g.recurso.toLowerCase())}` : "grátis";
+    const custo = (x) => x.passiva ? "Passiva" : x.custo ? `${x.custo} ${h(g.recurso.toLowerCase())}` : "grátis";
     document.getElementById("grimorio-indice").innerHTML = `
       <div class="grimorio-cab"><b>Grimório</b><small>${h(heroi.titulo)} · nível ${heroi.nivel}</small></div>
       <ul class="grimorio-lista">${todas.map((x) => `<li><button type="button" class="grimorio-item${x.id === paginaGrimorio ? " aberto" : ""}" data-pagina="${h(x.id)}">
-        <span class="gi-icone">${S(icone(x), 2)}</span><span class="gi-nome">${h(x.nome)}</span><span class="gi-custo">${custo(x)}</span></button></li>`).join("")}</ul>
+        <span class="gi-icone">${S(icone(x), 2)}</span><span class="gi-nome">${h(x.nome)}</span><span class="gi-custo${x.passiva ? " passiva" : ""}">${custo(x)}</span></button></li>`).join("")}</ul>
       <div class="grimorio-atributos">${Object.entries(g.atributos).map(([k, v]) => `<span><small>${h(k)}</small><b>${v}</b></span>`).join("")}</div>
       <ul class="grimorio-gerais">${g.gerais.map((l) => `<li>${Realce.texto(l)}</li>`).join("")}</ul>`;
     const x = todas.find((t) => t.id === paginaGrimorio);
@@ -32,9 +32,9 @@
         ${l.nota ? `<div class="g-nota">${h(l.nota)}</div>` : ""}</li>`).join("");
     const det = document.getElementById("grimorio-detalhe");
     det.innerHTML = `<div class="g-topo"><span class="g-icone">${S(icone(x), 4)}</span>
-        <div><b class="g-nome">${h(x.nome)}</b><div class="g-meta">${custo(x)}${x.flechas_por_alvo ? ` · ${x.flechas_por_alvo} flecha por inimigo` : x.flechas ? ` · ${Texto.plural(x.flechas, "flecha")}` : ""} · Alvo: ${h(x.alvo)}</div></div></div>
+        <div><b class="g-nome">${h(x.nome)}</b><div class="g-meta">${custo(x)}${x.flechas_por_alvo ? ` · ${x.flechas_por_alvo} flecha por inimigo` : x.flechas ? ` · ${Texto.plural(x.flechas, "flecha")}` : ""}${x.alvo ? ` · Alvo: ${h(x.alvo)}` : ""}</div></div></div>
       <p class="g-desc">${Realce.texto(x.desc)}</p><ul class="g-linhas">${linhas}</ul>
-      <p class="g-rodape">Números antes da defesa do inimigo e de efeitos do momento (fortalecido, clima, alvo marcado).</p>`;
+      ${x.passiva ? "" : '<p class="g-rodape">Números antes da defesa do inimigo e de efeitos do momento (fortalecido, clima, alvo marcado).</p>'}`;
     det.classList.remove("virando"); void det.offsetWidth; det.classList.add("virando");
     const caixa = document.getElementById("sobre-grimorio");
     if (caixa.hidden) { caixa.hidden = false; App.som("pagina"); }
