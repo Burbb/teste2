@@ -31,6 +31,8 @@ class Bestiario:
             self.marcar("tumulo", dict(ultimo, local=self.sortear(selvagens)["id"]))
 
     def registrar_legado(self, resultado, causa):
+        if self.campanha:  # o legado marca os próximos mundos gerados; a campanha escrita não entra nele
+            return
         j = self.j
         legado.registrar(self.pasta_saves, {
             "nome": j.nome, "classe": j.classe, "spec": j.spec, "nome_classe": j.nome_classe, "nivel": j.nivel,

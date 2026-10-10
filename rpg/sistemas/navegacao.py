@@ -18,6 +18,9 @@ class Navegacao:
             numero = f"[{loc['id'] + 1}] {mapa.glifo(self, loc)} " if self.ui.numerar_destinos else ""
             texto = f"{numero}{loc['nome']} — {mapa.descricao(self, loc)}"
             nv = nivel_regiao(loc)
+            if loc.get("fechado"):  # a saída que ainda não leva a lugar nenhum (campanha): sem nível nem perigo
+                opcoes.append((texto, (loc, dist), {"local": loc["id"]}))
+                continue
             texto += f" · arredores Nv.{nv}" if loc["tipo"] == "vila" else f" · Nv.{nv}"
             if nv >= self.j.nivel + 2:
                 texto += " (PERIGOSO!)"
@@ -30,6 +33,10 @@ class Navegacao:
         if not destino:
             return
         loc, dist = destino
+        if loc.get("fechado"):
+            self.dizer(loc["fechado"], "cinza")
+            self.pausar()
+            return
         nv = nivel_regiao(loc)
         if nv >= self.j.nivel + 3:
             # Vila também: dentro dela se está seguro, mas as estradas em volta são da região (e é por elas que se sai).

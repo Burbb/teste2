@@ -37,6 +37,8 @@ def glifo(g, loc):
 
 
 def descricao(g, loc):
+    if loc.get("fechado"):
+        return "saída, fechada por enquanto"
     if loc["tipo"] == "vila":
         tipo = "vila"
     elif loc["tipo"] == "cidadela":
@@ -156,7 +158,7 @@ def legenda(g, apenas_vizinhos=False):
             continue
         nv = nivel_regiao(loc)
         texto = f"{glifo(g, loc)} {loc['nome']} — {descricao(g, loc)}"
-        if loc["tipo"] != "vila":
+        if loc["tipo"] != "vila" and not loc.get("fechado"):
             texto += f" · Nv.{nv}"
         if loc["id"] == atual:
             texto += "  ◄ você"

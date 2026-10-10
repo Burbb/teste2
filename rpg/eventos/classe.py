@@ -518,7 +518,7 @@ def anomalia_arcana(g):
         g.dizer("A energia te rejeita com violência.", "vermelho")
         g.ferir(g.j.max_hp * 0.3)
     elif resultado == "teleporte":
-        destino = g.sortear([l for l in g.mundo["locais"] if l["tipo"] != "cidadela"])
+        destino = g.sortear([l for l in g.mundo["locais"] if l["tipo"] not in ("cidadela", "saida")])
         g.dizer(f"Um clarão... e você está em {destino['nome']}!", "magenta+negrito")
         g.mundo["atual"] = destino["id"]
         destino["visitado"] = True

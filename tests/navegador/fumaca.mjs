@@ -296,6 +296,46 @@ async function cenarioVila(browser) {
   }
 }
 
+async function cenarioCampanha(browser) {
+  console.log("cenário: campanha (protótipo do Vale do Turvo)");
+  const { proc, url } = await subir("campanha");
+  const { page, erros, esperar } = await abrir(browser, url);
+  try {
+    conferir(!!(await esperar('#prompt .escolha:has-text("Campanha")')) && !!(await page.$('#prompt .escolha:has-text("Novo jogo")')),
+      "o título oferece o novo jogo e a campanha");
+    await (await page.$('#prompt .escolha:has-text("Carregar")')).click();
+    const maria = await esperar('.save-cartao:has-text("Maria")');
+    conferir(!!maria && /Vale do Turvo · resgate/.test(await maria.textContent()), "o save da campanha diz a região e o modo");
+    const jean = await page.$('.save-cartao:has-text("Jean")');
+    conferir(!!jean && /brando/.test(await jean.textContent()) && !/Vale do Turvo/.test(await jean.textContent()),
+      "o save do mundo gerado continua como era");
+    await (await page.$('#prompt .escolha:has-text("Voltar")')).click();
+    await (await esperar('#prompt .escolha:has-text("Campanha")')).click();
+    await (await esperar(".entrada-texto input")).fill("Ana");
+    await page.keyboard.press("Enter");
+    await (await esperar('#prompt .escolha:has-text("Arqueiro")')).click();
+    const resgate = await esperar('#prompt .escolha:has-text("Resgate")');
+    conferir(!!resgate && !!(await page.$('#prompt .escolha:has-text("Hardcore")')), "a criação pergunta o modo: resgate ou hardcore");
+    await resgate.click();
+    conferir(!!(await esperar('#texto :text("Resgate: se você cair")', 8000)), "o prólogo diz o modo escolhido");
+    conferir(!!(await esperar('#cena-cab .cena-titulo:has-text("Vau do Turvo")')) && !!(await esperar('#predios .predio[data-predio="estrada"]')),
+      "a campanha começa no Vau do Turvo, com a vila desenhada");
+    conferir(await page.evaluate(() => estado.mapa.nos.map((n) => n.nome).sort().join(",")) === "Bosque do Moinho,Charco dos Juncos,Estrada de Varn,Vau do Turvo",
+      "o mapa mostra a vila e as estradas dela; a capela ainda está na névoa");
+    await (await page.$('#predios .predio[data-predio="estrada"]')).click();
+    const varn = await esperar('#prompt .escolha:has-text("Estrada de Varn")');
+    conferir(!!varn && /fechada/.test(await varn.textContent()) && !/Nv\./.test(await varn.textContent()), "a Estrada de Varn aparece como saída fechada");
+    await varn.click();
+    conferir(!!(await esperar('#texto :text("não leva a lugar nenhum")', 8000)), "escolher a saída fechada explica e não viaja");
+    conferir(!!(await esperar('#predios .predio[data-predio="estrada"]')) && (await page.evaluate(() => estado.local.nome)) === "Vau do Turvo",
+      "depois do aviso, continua na vila");
+  } finally {
+    conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
+    await page.close();
+    proc.kill();
+  }
+}
+
 let browser;
 try {
   browser = await chromium.launch(process.env.CHROMIUM ? { executablePath: process.env.CHROMIUM } : {});
@@ -307,6 +347,7 @@ try {
   await cenarioCombate(browser);
   await cenarioTitulo(browser);
   await cenarioVila(browser);
+  await cenarioCampanha(browser);
 } catch (e) {
   falhas.push(String(e));
   console.log("ERRO", e);

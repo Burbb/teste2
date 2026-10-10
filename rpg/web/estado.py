@@ -184,7 +184,8 @@ def mapa_conhecido(g):
             "id": loc["id"], "n": loc["id"] + 1, "nome": loc["nome"], "x": loc["x"], "y": loc["y"],
             "tipo": loc["tipo"], "bioma": loc["bioma"], "visitado": loc["visitado"], "atual": loc["id"] == atual,
             "distancia": vizinhos.get(loc["id"]), "descricao": mapa.descricao(g, loc),
-            "nivel": nivel_regiao(loc),  # numa vila, o dos arredores (as estradas por onde se chega e se sai)
+            # numa vila, o dos arredores (as estradas por onde se chega e se sai); a saída fechada não tem
+            "nivel": None if loc.get("fechado") else nivel_regiao(loc),
             "covil": ("vencido" if loc["guardiao"]["derrotado"] else "ativo") if covil else None,
         })
         for vid in loc["con"]:

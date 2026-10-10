@@ -239,7 +239,10 @@ def vizinhos(mundo, loc):
 
 
 def nivel_regiao(loc):
-    """Nível típico dos inimigos de um lugar: cresce com a distância da vila inicial."""
+    """Nível típico dos inimigos de um lugar: cresce com a distância da vila inicial. Os lugares da campanha escrita
+    declaram o próprio nível (campanha.py)."""
+    if "nivel" in loc:
+        return loc["nivel"]
     base = 1 + round((loc["perigo"] - 1) * 1.9)
     if loc["tipo"] == "cidadela":
         base = 10

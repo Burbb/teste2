@@ -34,8 +34,9 @@ def evento(contextos=("explorar", "viagem"), peso=10, cond=None, cooldown=6, uni
 
 def candidatos(g, contexto):
     lista = []
+    fora = g.eventos_fora()  # os que não cabem na campanha escrita (campanha.EVENTOS_FORA); nenhum no mundo gerado
     for ev in REGISTRO:
-        if contexto not in ev.contextos:
+        if contexto not in ev.contextos or ev.id in fora:
             continue
         vezes = g.contagem.get(ev.id, 0)
         if ev.unico and vezes:

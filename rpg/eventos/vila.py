@@ -16,7 +16,7 @@ def ouvir_rumor(g, preferir=None):
     covis = [l for l in locais if l["tipo"] == "covil" and not l["guardiao"]["derrotado"]]
     p = g.npc()
     fonte = f"{p['um'].capitalize()} {p['prof']} {p['traco']}"
-    tipos = ["tesouro", "fera", "mercador", "lore", "fofoca"]
+    tipos = ["tesouro", "fera", "mercador"] + (["lore"] if g.antagonista else []) + ["fofoca"]  # a campanha ainda não tem vilão
     if g.lendas:
         tipos.append("lenda")
     if covis:

@@ -53,6 +53,10 @@ Precisa do Python 3.8 ou mais novo. Não precisa instalar nada:
 python jogar.py          # ou: python -m rpg
 ```
 
+No título, **Novo jogo** gera um reino novo, como sempre. **Campanha** abre o protótipo da campanha escrita:
+o Vale do Turvo, de mapa fixo (vila, charco, bosque e uma capela afundada), com viagem e save; a história e a
+missão da região ainda vão chegar. Na campanha você escolhe o modo: resgate (padrão) ou hardcore.
+
 O jogo abre no navegador. Ele roda **no seu computador**: o servidor escuta só em
 `127.0.0.1` e cada sessão tem uma chave própria. Para jogar numa **janela própria**, como
 um programa, instale o `pywebview` (opcional):

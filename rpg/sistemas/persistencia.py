@@ -3,6 +3,7 @@
 import json
 import os
 import re
+from ..campanha import nome as nome_campanha
 from ..entidades import Jogador
 from .. import telemetria
 from ..migracoes import CAMPOS_SAVE, VERSAO_SAVE, migrar
@@ -22,6 +23,9 @@ def resumo_save(caminho):
         resumo.update(nome=j["nome"], classe=j["classe"], classe_nome=CLASSES.get(j["classe"], {}).get("nome", ""),
                       nivel=j["nivel"], dia=d.get("dia"), lugar=locais[d["mundo"]["atual"]]["nome"],
                       hardcore=d.get("hardcore", True))
+        regiao = d["mundo"].get("campanha")
+        if regiao:  # save da campanha escrita: a tela diz qual (e o modo dela); o do mundo gerado fica como sempre foi
+            resumo["campanha"] = nome_campanha(regiao) or regiao
     except (OSError, ValueError, KeyError, IndexError, TypeError):
         resumo["ilegivel"] = True
     return resumo
@@ -44,7 +48,10 @@ class Persistencia:
 
     def caminho_save(self):
         slug = re.sub(r"[^a-z0-9]+", "_", self.j.nome.lower()).strip("_") or "heroi"
-        return os.path.join(self.pasta_saves, f"{slug}.json")
+        # A campanha escrita grava com o nome da região na frente: um herói da campanha nunca sobrescreve o save de
+        # um herói do mundo gerado com o mesmo nome.
+        prefixo = f"{self.campanha}_" if self.campanha else ""
+        return os.path.join(self.pasta_saves, f"{prefixo}{slug}.json")
 
     def salvar(self, silencioso=False):
         os.makedirs(self.pasta_saves, exist_ok=True)

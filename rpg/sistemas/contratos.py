@@ -208,7 +208,8 @@ class Contratos:
             a = self.antagonista
             n = self.nemesis
             dados = {
-                "antagonista": {"nome": a["nome"], "origem": a["origem"]}, "sigilos": len(self.j.sigilos),
+                "antagonista": {"nome": a["nome"], "origem": a["origem"]} if a else None,
+                "sigilos": len(self.j.sigilos),
                 "dia": self.dia,
                 "contratos": [self.cartao_contrato(c) for c in self.contratos], "limite": 3,
                 "nivel_heroi": self.j.nivel,
@@ -229,7 +230,8 @@ class Contratos:
             self.abandonar_contrato(c)
 
     def _diario_texto(self, a):
-        self.dizer(f"Inimigo final: {a['nome']}, {a['origem']}.", "magenta")
+        if a:  # a campanha escrita ainda não tem vilão
+            self.dizer(f"Inimigo final: {a['nome']}, {a['origem']}.", "magenta")
         self.dizer(f"Sigilos: {len(self.j.sigilos)}/3   Dia {self.dia}", "magenta")
         self.dizer("Contratos:", "ciano")
         if not self.contratos:

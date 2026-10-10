@@ -10,6 +10,8 @@ from .migracoes import SaveIncompativel
 from .sistemas.persistencia import resumo_save
 from .ui import UI
 
+CAMPANHA = "Campanha"  # o protótipo do Vale do Turvo, a região escrita (campanha.py)
+
 def escolher_save(ui, saves):
     """A lista de saves: na tela gráfica, cartões com classe, nível, dia e lugar; no texto, os nomes.
     Devolve o caminho escolhido ou None (voltar)."""
@@ -30,14 +32,17 @@ def menu_principal(ui, args):
         ui.cena("Crônicas da Fenda", None, "titulo")
         saves = sorted((s for s in glob.glob(os.path.join(args.saves, "*.json"))
                         if os.path.basename(s) != "legado.json"), key=os.path.getmtime, reverse=True)
-        opcoes = ["Novo jogo"] + (["Carregar jogo"] if saves else []) + ["Sair"]
+        # A campanha escrita (protótipo do Vale do Turvo) é outra forma de começar; o "Novo jogo" segue no mundo gerado.
+        opcoes = ["Novo jogo", CAMPANHA] + (["Carregar jogo"] if saves else []) + ["Sair"]
         esc = opcoes[ui.escolher("", opcoes)]
         try:
-            if esc == "Novo jogo":
-                jogo = Jogo(ui, seed=args.seed, pasta_saves=args.saves, hardcore=not args.brando)
+            if esc in ("Novo jogo", CAMPANHA):
+                regiao = "turvo" if esc == CAMPANHA else None
+                # Na campanha, o modo (resgate ou hardcore) se escolhe na criação do personagem.
+                jogo = Jogo(ui, seed=args.seed, pasta_saves=args.saves, hardcore=not args.brando and not regiao)
                 jogo.autosalvar = ui.interativo
                 ui.jogo = jogo
-                if not jogo.novo_jogo():
+                if not jogo.novo_jogo(regiao):
                     ui.jogo = None
                     continue
                 if getattr(args, "dev", None):

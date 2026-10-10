@@ -3,6 +3,7 @@
     python -m tests.navegador.cenarios combate   # mago em luta, com contrato de caça no lugar
     python -m tests.navegador.cenarios titulo    # menu principal com um save de dia para carregar
     python -m tests.navegador.cenarios vila      # guerreiro acha um item raro e abre o mural de contratos
+    python -m tests.navegador.cenarios campanha  # menu principal com saves dos dois modos; começar a campanha
 
 Imprime o endereço do servidor na primeira linha e fica no ar até ser encerrado.
 """
@@ -103,7 +104,21 @@ def vila(ui):
         pass
 
 
-CENARIOS = {"combate": combate, "titulo": titulo, "vila": vila}
+def campanha(ui):
+    """Menu principal com um save do mundo gerado (brando) e um da campanha (resgate), para criar outra campanha."""
+    from rpg.__main__ import menu_principal
+    from rpg.ui import BotUI
+    pasta = tempfile.mkdtemp()
+    g = Jogo(BotUI(random.Random(1), max_decisoes=10), seed=4, pasta_saves=pasta, hardcore=False)
+    g.iniciar("Jean", "guerreiro")
+    g.salvar(silencioso=True)
+    c = Jogo(BotUI(random.Random(1), max_decisoes=10), seed=6, pasta_saves=pasta, hardcore=False)
+    c.iniciar("Maria", "arqueiro", "turvo")
+    c.salvar(silencioso=True)
+    menu_principal(ui, argparse.Namespace(seed=1, saves=pasta, brando=False))
+
+
+CENARIOS = {"combate": combate, "titulo": titulo, "vila": vila, "campanha": campanha}
 
 
 def main():

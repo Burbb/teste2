@@ -2,6 +2,7 @@
 
 import random
 
+from . import campanha
 from . import eventos
 from . import texto as tx
 from .classes import CLASSES, SPECS
@@ -104,6 +105,14 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
     def antagonista(self):
         return self.mundo["antagonista"]
 
+    @property
+    def campanha(self):
+        """O id da região escrita ("turvo"), ou None no mundo gerado."""
+        return self.mundo.get("campanha") if self.mundo else None
+
+    def eventos_fora(self):
+        return campanha.eventos_fora(self)
+
     def dizer(self, texto="", cor=None):
         self.ui.dizer(texto, cor)
 
@@ -172,9 +181,10 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         return self.sortear(BIOMAS[self.bioma]["ambiente"])
 
     # ================================================================ início
-    def novo_jogo(self):
-        """Criação do personagem. Devolve False se a pessoa voltou ao título."""
-        self.ui.cena("Criação de personagem", None, "menu")
+    def novo_jogo(self, regiao=None):
+        """Criação do personagem. Devolve False se a pessoa voltou ao título. regiao: começa a campanha escrita
+        daquela região (campanha.py) em vez do mundo gerado; a pessoa escolhe também o modo (resgate ou hardcore)."""
+        self.ui.cena("Criação de personagem", campanha.nome(regiao), "menu")
         nome = self.ui.perguntar("Qual é o seu nome, aventureiro(a)?", "Aventureiro", voltar=True)
         if nome is None:
             return False
@@ -187,24 +197,58 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
             specs = " | ".join(SPECS[s]["nome"] for s in d["specs"])
             self.dizer(f"  {d['nome']} → {specs}", d["cor"] + "+negrito")
             self.dizer(f"    {d['desc']}", "cinza")
-        classe = self.menu("Sua classe:", [(CLASSES[c]["nome"], c) for c in classes] + [("Voltar", None, {"voltar": True})])
-        if classe is None:
-            return False
-        self.iniciar(nome, classe)
-        self.introducao()
+        while True:
+            classe = self.menu("Sua classe:", [(CLASSES[c]["nome"], c) for c in classes] + [("Voltar", None, {"voltar": True})])
+            if classe is None:
+                return False
+            if not regiao:
+                self.iniciar(nome, classe)
+                self.introducao()
+                return True
+            modo = self.menu("Se você cair em combate:", [
+                ("Resgate: alguém da vila te encontra e cuida de você (perde parte do ouro e dois dias)", "resgate"),
+                ("Hardcore: a morte é permanente e o save é apagado", "hardcore"),
+                ("Voltar", None, {"voltar": True}),
+            ])
+            if modo:
+                break
+        self.hardcore = modo == "hardcore"
+        self.iniciar(nome, classe, regiao)
+        self.introducao_campanha()
         return True
 
-    def iniciar(self, nome, classe):
+    def iniciar(self, nome, classe, regiao=None):
         self.j = Jogador(nome, classe)
-        self.mundo = gerar_mundo(self.rng)
+        self.mundo = campanha.montar_mundo(regiao) if regiao else gerar_mundo(self.rng)
         self.loc["visitado"] = True
         self.rolar_clima()
         self.j.equip["arma"] = gerar_equip(self.rng, classe, 1, "arma", qualidade=-2)
         self.j.recalcular()
         self.j.hp = self.j.max_hp
-        self.preparar_legado()
+        if not regiao:  # o legado (túmulo, estátua, baladas) é do mundo gerado
+            self.preparar_legado()
         registrar(self, "inicio", nome=nome, classe=classe, seed=self.seed, hardcore=self.hardcore,
-                  stats=telemetria.instantaneo(self.j))
+                  stats=telemetria.instantaneo(self.j), **({"campanha": regiao} if regiao else {}))
+
+    def introducao_campanha(self):
+        """Prólogo provisório do protótipo: diz onde se está, o modo escolhido e o que ainda não existe. A história
+        da região (Marta, a febre, a capela) entra com a missão, na E3."""
+        r = campanha.REGIOES[self.campanha]
+        self.ui.cena(r["nome"], "protótipo da campanha", "evento")
+        self.narrar(f"A estrada termina no {self.loc['nome']}, uma vila de beira-rio no fundo do vale. Você, "
+                    f"{self.j.nome}, {self.j.nome_classe.lower()}, chega com "
+                    f"{tx.plural(self.j.provisoes, 'dia')} de comida e {tx.plural(self.j.ouro, 'moeda')}.")
+        self.dizer("Protótipo: o mapa do vale, a viagem, a descoberta e o save. A história, a missão e os encontros "
+                   "escritos chegam nas próximas entregas; por ora, o vale tem os encontros de sempre.", "ciano")
+        if self.hardcore:
+            self.dizer("Hardcore: a morte é permanente e o save é apagado.", "vermelho+negrito")
+        else:
+            self.dizer("Resgate: se você cair em combate, alguém da vila te encontra e cuida de você, ao custo de "
+                       "parte do ouro e de dois dias. A fome e uma infecção sem tratamento ainda encerram a partida "
+                       "(o último save continua lá).", "amarelo")
+        self.dizer("A Estrada de Varn, ao sul, segue fechada por enquanto.", "cinza")
+        self.dizer("Dica: compre provisões e tochas antes de sair e trate feridas abertas com bandagens.", "cinza")
+        self.ui.continuar()
 
     def introducao(self):
         a = self.antagonista
