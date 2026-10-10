@@ -39,7 +39,8 @@
       motivo: f.pode ? "" : "Ouro insuficiente.", attrs: `data-tratar="${h(f.id)}"`,
       dicaAttr: dica(`<b>${h(f.nome)}</b>${(f.explica || []).map((l, i) => `<div class="${i ? "" : "bonus pior"}">${h(l)}</div>`).join("")}<div class="rodape">${f.pode ? "Clique para tratar na hora." : "Ouro insuficiente."}</div>`),
     }));
-    return `<div class="tela balcao-servico curandeira">${topoBalcao("unguento", "A curandeira", "Uma velha de mãos manchadas de sangue seco examina você. \"O que vai ser?\"", d.ouro)}
+    // Quem atende e o que diz vêm do motor quando não é a curandeira de sempre (no Vau da campanha: Pita ou Marta).
+    return `<div class="tela balcao-servico curandeira">${topoBalcao("unguento", d.quem || "A curandeira", d.fala || "Uma velha de mãos manchadas de sangue seco examina você. \"O que vai ser?\"", d.ouro)}
       <h4>Tratar</h4><div class="servicos">${cartoes.join("")}</div></div>`;
   }
   /** Clique num cartão: a ação, ou o "não" de quem não tem ouro. */

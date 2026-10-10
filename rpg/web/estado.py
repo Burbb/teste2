@@ -1,7 +1,7 @@
 """Fotografia do estado do jogo em JSON, para a interface web desenhar painéis, mapa e combate."""
 
 from .. import balanceamento as bal
-from .. import comitiva, grimorio, mapa, missoes, sobrevivencia
+from .. import comitiva, consequencias, grimorio, mapa, missoes, sobrevivencia
 from .. import texto as tx
 from ..classes import CLASSES
 from ..habilidades import HABILIDADES, descricao_habilidade
@@ -280,8 +280,16 @@ def predios_fechados(g):
     if not g.opcoes_templo():
         fechados["templo"] = "O templo está em silêncio. Ninguém aqui precisa de cuidados agora."
     if not g.j.ferimentos:
-        fechados["curandeiro"] = "A curandeira ergue os olhos e volta às ervas. \"Nada para tratar em você.\""
+        quem = consequencias.atendente(g)  # no Vau da campanha: Pita, ou Marta de pé
+        fechados["curandeiro"] = (quem["fechado"] if quem else
+                                  "A curandeira ergue os olhos e volta às ervas. \"Nada para tratar em você.\"")
     return fechados
+
+
+def atendentes(g):
+    """Quem atende em cada prédio, quando não é o de sempre (o nome no balcão): só a curandeira do Vau, por ora."""
+    quem = consequencias.atendente(g)
+    return {"curandeiro": quem["quem"]} if quem else {}
 
 
 def glossario():
@@ -304,6 +312,7 @@ def estado(g):
         "local": {"id": loc["id"], "nome": loc["nome"], "tipo": loc["tipo"], "bioma": loc["bioma"],
                   "bioma_nome": BIOMAS[loc["bioma"]]["nome"], "descricao": mapa.descricao(g, loc),
                   "nivel": g.nivel_local(), "predios_fechados": predios_fechados(g),
+                  **({"atendentes": atendentes(g)} if atendentes(g) else {}),  # só no Vau da campanha
                   "estrada": g.na_estrada},  # viajando: a paisagem é a da região, sem a vila
         "mapa": mapa_conhecido(g),
         "combate": combate(g),

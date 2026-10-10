@@ -76,7 +76,10 @@ def ajustar_save(g):
     if g.campanha and "missoes" not in g.mundo:
         g.mundo["missoes"] = missoes.estado_inicial(g.campanha)
     elif g.campanha:
-        missoes.completar(g.mundo["missoes"])  # 1.50–1.51: sem `preparos`
+        missoes.completar(g.mundo["missoes"])  # 1.50–1.53: sem `preparos`, `desfecho`, `concluida`
+        for m in g.mundo["missoes"].values():
+            if m["desfecho"] and m["dia_desfecho"] is None:  # 1.53: resolvida antes do dia ser guardado; conta de hoje
+                m["dia_desfecho"] = g.dia
 
 
 def nome(regiao):

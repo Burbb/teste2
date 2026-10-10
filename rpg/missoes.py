@@ -5,15 +5,18 @@ investigação segue a água da Fonte Nova até o canal no Bosque do Moinho e o 
 salas em sequência (a nave, a sacristia, o ossuário), cada uma uma ação do menu da capela: sair e voltar é só escolher
 outra coisa no menu, e a sala vencida fica vencida (a etapa já passou dela). No fundo, a guardiã: Ilse, que em vida
 tinha a custódia do Sigilo do Turvo e, afogada pela vila, virou a Bruxa Afogada. Destruí-la ou dar-lhe descanso (o rito,
-com a verdade, a fita e as correntes soltas) é um desfecho único e guardado. Depois, a volta ao Vau. A comporta, Caspar,
-as consequências na vila e a Estrada de Varn ainda não existem.
+com a verdade, a fita e as correntes soltas) é um desfecho único e guardado. Depois, a volta ao Vau: uma cena, uma vez,
+que conclui a missão (`concluida`, o dia). O que o desfecho muda no Vau mora em consequencias.py. A comporta, Caspar, o
+julgamento na praça e a Estrada de Varn ainda não existem.
 
 O estado de cada missão mora no mundo da campanha (`mundo["missoes"]`, vai no save junto com ele):
     {"etapa": "fundo", "cenas": ["abertura"], "pistas": ["agua_do_leste", ...], "preparos": ["corpo_solto", "fita"],
-     "desfecho": None}
+     "desfecho": None, "dia_desfecho": None, "concluida": None}
 `pistas` é o que se sabe; `preparos` é o que se fez ou se tem para depois (as correntes soltas, a fita de Ilse). Saber o
 nome não prepara nada: o rito pede a verdade (sacristia e Vó Berta), a fita e as correntes. `desfecho`: "destruida" ou
-"descansada", uma vez só; com ele vêm o Sigilo e a recompensa.
+"descansada", uma vez só; com ele vêm o Sigilo e a recompensa, e `dia_desfecho` (de onde sai o estado da Fonte Nova).
+`concluida`: o dia em que a missão terminou (a cena de volta ao Vau); concluída, ela sai do rastreador e do mapa e fica no
+Diário. A herança de Berta continua valendo depois da conclusão, até ser entregue.
 O mundo gerado não tem missões. Cenas e ações declaram a campanha (pela missão), o lugar (`chave` do lugar) e as
 etapas em que valem; o jogo só as oferece no menu do lugar, nunca no meio de uma luta, de uma viagem ou de um evento.
 Passar antes por um lugar não adianta nem gasta nada: a cena ou a ação esperam a etapa delas.
@@ -70,7 +73,7 @@ MISSOES = {
         preparos={
             "corpo_solto": "As correntes do sarilho estão soltas: o que está no fundo da capela não está mais preso às "
                            "mós.",
-            "fita": "Você tem a fita de Ilse, que Vó Berta guardou desde a noite do afogamento.",
+            "fita": "A fita de Ilse, que Vó Berta guardou desde a noite do afogamento e entregou a você.",
         },
     ),
 }
@@ -78,16 +81,20 @@ MISSOES = {
 
 def estado_inicial(regiao):
     """As missões de uma campanha no começo: cada uma na primeira etapa, sem cenas vistas nem pistas."""
-    return {mid: {"etapa": next(iter(m["etapas"])), "cenas": [], "pistas": [], "preparos": [], "desfecho": None}
+    return {mid: {"etapa": next(iter(m["etapas"])), "cenas": [], "pistas": [], "preparos": [], "desfecho": None,
+                  "dia_desfecho": None, "concluida": None}
             for mid, m in MISSOES.items() if m["campanha"] == regiao}
 
 
 def completar(estado):
-    """Saves de antes dos preparos (1.50–1.51) e do desfecho (1.50–1.52): as chaves entram vazias. O resto do
-    progresso (etapa, cenas, pistas, as correntes soltas) fica como estava."""
+    """Saves de antes dos preparos (1.50–1.51), do desfecho (1.50–1.52) e da conclusão (1.50–1.53): as chaves entram
+    vazias. O resto do progresso (etapa, cenas, pistas, as correntes soltas) fica como estava. O dia do desfecho de um
+    save que já o tinha é posto por campanha.ajustar_save (é preciso o dia de agora)."""
     for m in estado.values():
         m.setdefault("preparos", [])
         m.setdefault("desfecho", None)
+        m.setdefault("dia_desfecho", None)
+        m.setdefault("concluida", None)
 
 
 # Dar descanso a Ilse pede três coisas (11-E1-REGIAO-INICIAL.md, seção 6): saber a verdade, ter a fita e ter soltado o
@@ -129,11 +136,19 @@ def _lugar(g, chave):
     return next((l for l in g.mundo["locais"] if l.get("chave") == chave), None)
 
 
-def cartoes(g):
-    """As missões em andamento como o Diário e o rastreador mostram: nome, objetivo da etapa, lugar e pistas."""
+def heranca_pendente(m):
+    return m.get("desfecho") == "descansada" and "heranca" not in m["cenas"]
+
+
+def cartoes(g, todas=False):
+    """As missões como o rastreador e o mapa mostram (só as ativas) e como o Diário mostra (`todas`: as concluídas
+    também, com o desfecho, o estado da Fonte e o que ainda espera): nome, objetivo da etapa, lugar e pistas."""
     from .mundo import distancias
+    from . import consequencias
     saida = []
     for mid, m in (g.mundo.get("missoes") or {}).items():
+        if m.get("concluida") and not todas:
+            continue
         d = MISSOES[mid]
         etapa = d["etapas"][m["etapa"]]
         loc = _lugar(g, etapa["lugar"])
@@ -146,8 +161,19 @@ def cartoes(g):
                       "desfecho": m.get("desfecho"),
                       # o caminho do rito: só depois de saber de Ilse, e só enquanto a guardiã não foi resolvida
                       "descanso": ([{"texto": o_que, "onde": onde, "feito": feito} for o_que, onde, feito in descanso(m)]
-                                   if "ilse" in m["pistas"] and not m.get("desfecho") else [])})
+                                   if "ilse" in m["pistas"] and not m.get("desfecho") else []),
+                      "concluida": m.get("concluida"),
+                      **({"conclusao": f"Concluída no dia {m['concluida']}. " + CONCLUSAO[m["desfecho"]],
+                          "fonte": consequencias.fonte_no_diario(g),
+                          "pendente": "Vó Berta ainda espera você na taverna." if heranca_pendente(m) else None}
+                         if m.get("concluida") else {})})
     return saida
+
+
+CONCLUSAO = {
+    "descansada": "Ilse descansou: com o nome e a fita, largou o Sigilo do Turvo e afundou em paz.",
+    "destruida": "Ilse foi destruída, e o Sigilo do Turvo ficou no fundo da capela até você o pegar.",
+}
 
 
 # ------------------------------------------------------------------ cenas e ações
@@ -160,6 +186,8 @@ def _abertura(g, mid):
              "abaixo das últimas casas. A vila a recebeu como bênção e passou a beber dela.")
     g.narrar("\"Desde que a fonte apareceu\", diz uma mulher enchendo dois baldes, sem levantar os olhos, \"ninguém aqui "
              "dorme direito.\"")
+    g.narrar("Marta, a curandeira, também está de cama. Anos atrás, foi ela quem tirou você de uma febre de estrada, "
+             "numa cama da casa dela, sem cobrar nada. Agora é Pita, a aprendiz dela, quem atende na cabana.")
     g.dizer(f"Diário: {MISSOES[mid]['etapas']['fonte']['objetivo']}", "ciano")
     g.ui.efeito(f"Missão: {MISSOES[mid]['nome']}", "info")
 
@@ -488,8 +516,8 @@ def _momento_do_rito(g, cb, e):
     if dano:
         e.hp = max(0, e.hp - dano)
         cb.lance("golpe", de=None, em=cb.uid(e), dano=dano, crit=False, elemento="fisico", alcance="corpo",
-                 absorvido=0, eficacia=None, rotulo="O golpe que o rito segurava", hp=e.hp, max_hp=e.max_hp)
-        cb.dizer(f"O golpe que o rito segurava cai agora: {dano} de dano.", "amarelo")
+                 absorvido=0, eficacia=None, rotulo="O rito se desfaz", hp=e.hp, max_hp=e.max_hp)
+        cb.dizer(f"Sem o rito, os golpes que ela vinha aguentando chegam de uma vez: {dano} de dano.", "amarelo")
         if not e.vivo:
             cb.ao_morrer(e, por=cb.j)
 
@@ -500,7 +528,7 @@ def _resolver(g, mid, desfecho, nivel):
     m = registro(g, mid)
     if m.get("desfecho"):
         return
-    m["desfecho"] = desfecho
+    m["desfecho"], m["dia_desfecho"] = desfecho, g.dia
     from .telemetria import registrar
     registrar(g, "missao", missao=mid, desfecho=desfecho)
     if desfecho == "descansada":
@@ -528,6 +556,40 @@ def _resolver(g, mid, desfecho, nivel):
         g.ui.efeito("Diário atualizado", "info")
 
 
+def _retorno(g, mid):
+    """A volta ao Vau depois da guardiã, uma vez: o que a água e a vila mostram agora (depende do desfecho e de quantos
+    dias passaram, consequencias.estado_fonte) e a conclusão da missão. Volta cedo ou tarde, a cena conta o de agora."""
+    from . import consequencias
+    m = registro(g, mid)
+    fonte = consequencias.estado_fonte(g)
+    g.ui.cena("De Volta ao Vau", g.contexto_cena(), "evento")
+    g.narrar("Você entra no Vau com o Sigilo do Turvo no bolso, ainda frio como pedra de rio.")
+    g.narrar({
+        ("descansada", "limpando"): "Na Fonte Nova, o lodo assentou no fundo da bacia, e a água que corre por cima já "
+                                    "sai mais clara. Ninguém piorou esta noite.",
+        ("destruida", "escura"): "A Fonte Nova corre escura, quase preta: o que estava no corpo de Ilse saiu de uma vez. "
+                                 "A vila inteira tosse mais esta noite, e ninguém enche balde.",
+        ("destruida", "limpando"): "A Fonte Nova ainda tem a cor de chá fraco, mas clareia. Contam que houve uma noite "
+                                   "em que a água correu preta e todos pioraram. O pior passou.",
+    }.get((m["desfecho"], fonte), "A Fonte Nova corre clara, e há fila de baldes de novo na praça."))
+    if consequencias.marta_de_pe(g):
+        g.narrar("Marta está na porta da casa dela, magra e de pé. \"Você de novo\", diz, e quase sorri. \"Da outra vez "
+                 "fui eu que cuidei de você.\" Pita, ao lado, não para de falar.")
+    elif fonte == "escura":
+        g.narrar("Pita passa correndo com dois baldes de água fervida. \"A Marta piorou de noite\", diz, sem parar. "
+                 "\"Mas a febre dela já está cedendo. Eu acho.\"")
+    else:
+        g.narrar("Pita vem te encontrar na praça. \"A Marta ainda está de cama, mas dormiu a noite inteira, pela "
+                 "primeira vez.\"")
+    if m["desfecho"] == "descansada" and heranca_pendente(m):
+        g.narrar("Na janela da taverna, Vó Berta ergue a caneca para você.")
+    m["concluida"] = g.dia
+    from .telemetria import registrar
+    registrar(g, "missao", missao=mid, concluida=g.dia)
+    g.dizer(f"Missão concluída: {MISSOES[mid]['nome']}. O que aconteceu fica no Diário.", "ciano")
+    g.ui.efeito(f"Missão concluída: {MISSOES[mid]['nome']}", "info")
+
+
 def _heranca(g, mid):
     """Quem deu descanso a Ilse conta a Berta: a herança da família dela, uma vez (a cena fica marcada antes)."""
     from .itens import gerar_equip
@@ -548,6 +610,8 @@ CENAS = [
          confirmar=True),
     dict(missao="febre_do_turvo", id="capela_exterior", lugar="capela_afogada", etapas=("capela",),
          fn=_capela_exterior, confirmar=True),
+    dict(missao="febre_do_turvo", id="retorno", lugar="vau_do_turvo", etapas=("retorno",), fn=_retorno,
+         confirmar=True),
 ]
 # Uma ação pode pedir também uma classe (`classe`), que um preparo ainda falte (`falta`) e uma condição a mais (`pode`).
 ACOES = [

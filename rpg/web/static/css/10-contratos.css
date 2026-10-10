@@ -68,6 +68,8 @@
 .missao-pistas span { font-size: 13px; font-style: italic; color: #6a5236; }
 .missao-pistas ul { margin: 4px 0 0; padding-left: 18px; }
 .missao-rito ul { list-style: none; padding-left: 4px; }
+.missao-cab small { margin-left: 8px; font-size: 12px; font-style: italic; color: #3f5a2a; }
+.missao-pendente { color: #8a4a12; font-style: italic; }
 .missao-rito li.feito { color: #3f5a2a; }
 .missao-rito li small { color: #6a5236; font-style: italic; }
 .rastro-cacar { display: block; font-family: var(--texto); font-size: 12px; font-weight: 700; color: var(--ouro); }

@@ -1,6 +1,6 @@
 """Serviços da vila: ferreiro, curandeiro e rumores."""
 
-from .. import comitiva
+from .. import comitiva, consequencias
 from .. import eventos
 from ..entidades import nome_stat
 from ..eventos.vila import ouvir_rumor
@@ -72,10 +72,11 @@ class Servicos:
 
     def curandeiro(self):
         j = self.j
+        quem = consequencias.atendente(self)  # no Vau da campanha: Pita, ou Marta depois que a água limpa
         while j.ferimentos:
             self.ui.cena("A curandeira", self.loc["nome"], "menu")  # a cada volta: na tela gráfica, a cabana se redesenha
             custos = [self.preco((25 + 4 * j.nivel) if f["id"] == "infeccao" else (12 + 3 * j.nivel)) for f in j.ferimentos]
-            dados = {"ouro": j.ouro, "ferimentos": [
+            dados = {"ouro": j.ouro, **({"quem": quem["quem"], "fala": quem["fala"]} if quem else {}), "ferimentos": [
                 {"id": f["id"], "nome": sobrevivencia.FERIMENTOS[f["id"]]["nome"], "custo": custo, "pode": j.ouro >= custo,
                  "explica": sobrevivencia.explicar(f, j.nome_recurso, j)} for f, custo in zip(j.ferimentos, custos)]}
             if self.ui.painel("curandeira", dados):
@@ -86,8 +87,8 @@ class Servicos:
             else:
                 opcoes = [(f"{sobrevivencia.FERIMENTOS[f['id']]['nome']} — {custo} ouro", (f["id"], custo))
                           for f, custo in zip(j.ferimentos, custos)]
-                esc = self.menu("A curandeira, uma velha de mãos manchadas de sangue seco, examina você. "
-                                "\"O que vai ser?\"", opcoes + [("Voltar", None)])
+                esc = self.menu(quem["fala"] if quem else "A curandeira, uma velha de mãos manchadas de sangue seco, "
+                                "examina você. \"O que vai ser?\"", opcoes + [("Voltar", None)])
             if not esc:
                 return
             fid, custo = esc

@@ -32,7 +32,7 @@ Plano proposto, sem datas. Cada etapa é dividida em tarefas pequenas e depende 
 
 **Depende:** E2.
 **Notas aprovadas:** bênção, rito garantido e comporta parcial, em [11-E1-REGIAO-INICIAL](11-E1-REGIAO-INICIAL.md), seção 19.
-**Estado:** primeira entrega na 1.50.0: registro da missão, cena de abertura, objetivo no Diário e no rastreador, exame da Fonte Nova (etapa `fonte` → `canal`). Segunda na 1.51.0: o canal no Bosque (`canal` → `capela`), o exterior da Capela Afogada e as cenas da missão com Continuar explícito. Terceira na 1.52.0: o interior (nave, sacristia, ossuário) e soltar as correntes (D2) como preparo. Quarta na 1.53.0: Vó Berta e a fita, a guardiã com Destruir ou Dar descanso (o rito garantido) e o desfecho único. A comporta, a bênção, o julgamento de Caspar e as consequências na vila não começaram.
+**Estado:** primeira entrega na 1.50.0: registro da missão, cena de abertura, objetivo no Diário e no rastreador, exame da Fonte Nova (etapa `fonte` → `canal`). Segunda na 1.51.0: o canal no Bosque (`canal` → `capela`), o exterior da Capela Afogada e as cenas da missão com Continuar explícito. Terceira na 1.52.0: o interior (nave, sacristia, ossuário) e soltar as correntes (D2) como preparo. Quarta na 1.53.0: Vó Berta e a fita, a guardiã com Destruir ou Dar descanso (o rito garantido) e o desfecho único. Na 1.54.0, a volta ao Vau conclui a missão. A comporta e a bênção não existem.
 **Entrega:** uma missão com etapas, objetivos no Diário e duas soluções.
 **Tarefas:** ids/estados; transições; cenas explícitas; recompensas únicas; apresentação.
 **Pronto:** dois percursos concluem, falhas previstas não travam e save/load mantém progresso.
@@ -41,6 +41,7 @@ Plano proposto, sem datas. Cada etapa é dividida em tarefas pequenas e depende 
 ## E4 — Consequência local e comitiva
 
 **Depende:** E3.
+**Estado:** primeira consequência na 1.54.0 (a Fonte Nova, a frase do Vau, Pita e Marta na curandeira, pelo desfecho e pelos dias). A reação da comitiva, Caspar e a praça não começaram. **Não concluída.**
 **Entrega:** mudar um estado da vila e refletir em diálogo/serviço; integrar uma reação/conversa de companheiro.
 **Pronto:** retornar e recarregar o save revela a mesma consequência; a escolha tem efeito percebido.
 **Não fazer:** facções em massa ou simulação de rotina de todos os NPCs.

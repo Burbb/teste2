@@ -218,7 +218,7 @@ class Contratos:
                 "nemesis": {"nome": n["nome"], "familia": FAMILIAS[n["familia"]]["nome"]} if n else None,
             }
             if self.campanha:  # a missão da campanha, no alto do diário (missoes.py)
-                dados["missoes"] = missoes.cartoes(self)
+                dados["missoes"] = missoes.cartoes(self, todas=True)  # as concluídas também ficam no Diário
             web = self.ui.painel("diario", dados)
             if not web:
                 self._diario_texto(a)
@@ -235,9 +235,14 @@ class Contratos:
     def _diario_texto(self, a):
         if a:  # a campanha escrita ainda não tem vilão
             self.dizer(f"Inimigo final: {a['nome']}, {a['origem']}.", "magenta")
-        for m in missoes.cartoes(self) if self.campanha else []:
-            self.dizer(f"Missão: {m['nome']}", "amarelo+negrito")
-            self.dizer(f"  {m['objetivo']}", "amarelo")
+        for m in missoes.cartoes(self, todas=True) if self.campanha else []:
+            self.dizer(f"Missão: {m['nome']}" + (" (concluída)" if m["concluida"] else ""), "amarelo+negrito")
+            if m["concluida"]:
+                for linha in (m["conclusao"], m["fonte"], m["pendente"]):
+                    if linha:
+                        self.dizer(f"  {linha}", "amarelo")
+            else:
+                self.dizer(f"  {m['objetivo']}", "amarelo")
             if m["pistas"]:
                 self.dizer("  O que você sabe:", "cinza")
             for p in m["pistas"]:

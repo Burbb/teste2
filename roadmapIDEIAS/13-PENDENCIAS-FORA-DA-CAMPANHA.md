@@ -30,6 +30,12 @@ Lido no código; não executado no modo brando.
 | 8 | `docs/ROADMAP.md`, etapas B e C: "Falta: itens e estados como fontes (hoje `especial()`)" e estados "perguntados à mão em `atacar`" | Estados entram pelo golpe com `estados.no_golpe` (`combate/golpe.py`). O que ainda vale da etapa B: verificações de especialização fora do combate (há 16 comparações `spec ==`/`spec in` fora de `talentos.py` e `classes.py`) |
 | 9 | `docs/ROADMAP.md`, "A meta": "centenas de habilidades… especializações de elite… cada partida diferente" | Diverge da direção de `roadmapIDEIAS` (campanha escrita, três classes, sem cota de habilidades). A Etapa I ("mundo e narrativa como dados") se sobrepõe às E2–E4. Combinar qual documento manda no técnico e apontar um para o outro |
 
+## Interface
+
+| # | Onde | O que acontece | Tipo |
+|---|---|---|---|
+| 10 | `rpg/web/static/app/controles.js` (Esc com `processando`) | Um Esc dado enquanto uma tela de serviço se redesenha (o mercado logo depois de uma compra ou recompra) só adianta o texto: a tela continua no mesmo lugar e a pessoa precisa apertar de novo. Achado em 10/10/2026 pela fumaça (o teste do templo ficava preso no mercado); o teste foi ajustado para esperar a tela parar, o jogo não mudou. Uma correção possível: guardar o Esc como o Voltar pedido (`pedirPular` + um pedido de voltar), como já se guarda o prédio clicado | Interface, sem efeito no gabarito |
+
 ## Observações sem correção pedida
 
 - Existe a branch `claude/rpg-texto-offline-classes-apgl62` no GitHub, na versão 1.12.1, com último commit em 07/10/2026. Está bem atrás da branch de trabalho. Não usar como referência.

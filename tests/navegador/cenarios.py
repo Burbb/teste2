@@ -8,6 +8,7 @@
     python -m tests.navegador.cenarios missao    # campanha no Bosque do Moinho, na etapa de seguir o canal
     python -m tests.navegador.cenarios recarga   # título com um save da campanha (Bosque, à noite) e um do mundo gerado
     python -m tests.navegador.cenarios capela    # herói na Capela Afogada (CLASSE, ETAPA, NIVEL, PREPARO, LUGAR)
+    python -m tests.navegador.cenarios retorno   # chegando ao Vau com Ilse resolvida (DESFECHO, DIAS)
 
 Imprime o endereço do servidor na primeira linha e fica no ar até ser encerrado.
 """
@@ -242,8 +243,35 @@ def capela(ui):
     menu_principal(ui, argparse.Namespace(seed=1, saves=pasta, brando=False))  # depois de Sair: o título, para carregar
 
 
+def retorno(ui):
+    """Guerreiro chegando ao Vau do Turvo com a guardiã resolvida há DIAS dias (padrão 0) pelo DESFECHO (padrão
+    "descansada"), com a herança de Berta por receber e um corte para a curandeira. Sair leva ao título."""
+    from rpg import missoes, sobrevivencia
+    from rpg.__main__ import menu_principal
+    from rpg.ui import BotUI
+    pasta = tempfile.mkdtemp()
+    g = Jogo(BotUI(random.Random(1)), seed=12, pasta_saves=pasta, hardcore=False)
+    g.iniciar("Jean", "guerreiro", "turvo")
+    g.dia, g.periodo, g.clima = 10, 0, "limpo"
+    missoes.registro(g, "febre_do_turvo").update(
+        etapa="retorno", cenas=["abertura", "capela_exterior"], desfecho=os.environ.get("DESFECHO", "descansada"),
+        dia_desfecho=10 - int(os.environ.get("DIAS", "0")), preparos=["corpo_solto", "fita"],
+        pistas=["agua_do_leste", "represa", "canal_da_capela", "agua_da_capela", "ilse", "sigilo_do_turvo"])
+    g.j.sigilos.append("turvo")
+    for l in g.mundo["locais"]:
+        l["visitado"] = l["chave"] != "estrada_de_varn"
+    sobrevivencia.ferir(g, "corte")
+    g.ui, ui.jogo = ui, g
+    try:
+        g.rodar()
+    except FimDeJogo:
+        pass
+    ui.jogo = None
+    menu_principal(ui, argparse.Namespace(seed=1, saves=pasta, brando=False))
+
+
 CENARIOS = {"combate": combate, "titulo": titulo, "vila": vila, "campanha": campanha, "baus": baus, "missao": missao,
-            "recarga": recarga, "capela": capela}
+            "recarga": recarga, "capela": capela, "retorno": retorno}
 
 
 def main():

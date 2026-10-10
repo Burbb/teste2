@@ -3,7 +3,7 @@
 import random
 
 from . import campanha
-from . import missoes
+from . import consequencias, missoes
 from . import eventos
 from . import texto as tx
 from .classes import CLASSES, SPECS
@@ -483,6 +483,7 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         # A frase da vila aparece na chegada e quando o tempo passa, não a cada volta ao menu (do mercado, do
         # inventário). O sorteio segue a cada volta: com a mesma semente, a partida continua a mesma.
         ambiente = self.sortear(AMBIENTE_VILA)
+        ambiente = consequencias.frase_da_vila(self) or ambiente  # o Vau depois da guardiã (o sorteio segue igual)
         if self.ambiente_visto != (self.loc["id"], self.dia, self.periodo):
             self.ambiente_visto = (self.loc["id"], self.dia, self.periodo)
             self.dizer(ambiente, "cinza")

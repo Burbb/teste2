@@ -121,7 +121,8 @@ function entrarNoPredio(id, pedido = false, continua = false) {
   if (g.length === 1 && !g[0].o.meta.curto) { responder(v.m.id, g[0].i); return; }
   v.predio = id;
   const nome = (Vista.predios().find((p) => p.id === id) || {}).nome || "";
-  const [icone, quem, fala] = BALCOES[id] || ["estrela", nome, ""];
+  const [icone, quemPadrao, fala] = BALCOES[id] || ["estrela", nome, ""];
+  const quem = (estado && estado.local.atendentes && estado.local.atendentes[id]) || quemPadrao;  // o motor diz quem atende
   const motivo = !g.length && ((estado && estado.local.predios_fechados) || {})[id];
   const ouro = estado ? estado.heroi.ouro : 0;
   promptEl.innerHTML = "";

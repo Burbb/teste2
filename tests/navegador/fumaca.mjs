@@ -619,6 +619,71 @@ async function cenarioGuardia(browser) {
   }
 }
 
+async function cenarioRetorno(browser) {
+  console.log("cenário: de volta ao Vau depois de dar descanso a Ilse (conclusão, Fonte, Pita, a herança)");
+  const { proc, url } = await subir("retorno", { DESFECHO: "descansada", DIAS: "0" });
+  const { page, erros } = await abrir(browser, url);
+  const MENU = "#prompt .escolhas:not(.escolhido) .escolha";
+  const diario = async () => {
+    await page.keyboard.press("d");
+    await page.waitForSelector(".missao-diario", { timeout: 10000 });
+    const t = await page.textContent(".missao-diario");
+    await page.keyboard.press("Escape");
+    await page.waitForSelector('#predios .predio[data-predio="taverna"]', { timeout: 20000 });
+    await page.waitForTimeout(600);
+    return t;
+  };
+  try {
+    await page.waitForSelector("#prompt .continuar.confirmar", { timeout: 20000 });
+    conferir(/De Volta ao Vau/.test(await page.textContent("#cena-cab .cena-titulo")) && /lodo assentou/.test(await page.textContent("#texto")),
+      "a volta ao Vau toca a cena do descanso, esperando o Continuar");
+    await page.waitForTimeout(800);
+    await page.click("#prompt .continuar");
+    await page.waitForSelector('#predios .predio[data-predio="taverna"]', { timeout: 20000 });
+    await page.waitForTimeout(600);
+    conferir(!(await page.$("#mundo .rastro-missao")) && (await page.evaluate(() => estado.missoes.length)) === 0
+      && /Ninguém piorou esta noite/.test(await page.textContent("#texto")),
+      "concluída: a missão sai do rastreador e do mapa, e a vila fala da Fonte que clareia");
+    conferir((await page.evaluate(() => estado.local.atendentes.curandeiro)).startsWith("Pita"), "Marta de cama: Pita atende na curandeira");
+    let d = await diario();
+    conferir(/concluída/.test(d) && /Ilse descansou/.test(d) && /Vó Berta ainda espera/.test(d), "o Diário guarda a conclusão e diz que a herança espera");
+    await page.click('#predios .predio[data-predio="taverna"]');
+    await (await page.waitForSelector('.balcao-predio .servico:has-text("Contar a Vó Berta")', { timeout: 10000 })).click();
+    for (let k = 0; k < 80 && !(await page.$("#prompt .continuar.confirmar")); k++) {
+      const ach = await page.$('#sobre-achado .botao-janela:not(.reserva)');
+      if (ach) { await page.waitForTimeout(700); await ach.click().catch(() => {}); }
+      await page.waitForTimeout(250);
+    }
+    await page.waitForTimeout(800);
+    await page.click("#prompt .continuar");
+    await page.waitForSelector('#predios .predio[data-predio="taverna"]', { timeout: 20000 });
+    await page.waitForTimeout(600);
+    d = await diario();
+    await page.click('#predios .predio[data-predio="taverna"]');
+    await page.waitForSelector(".balcao-predio .servico", { timeout: 10000 });
+    conferir(!/Vó Berta ainda espera/.test(d) && !(await page.$('.balcao-predio .servico:has-text("Vó Berta")')),
+      "a herança, depois de concluir, sai uma vez e o cartão some");
+    await page.keyboard.press("Escape");
+    await page.waitForTimeout(800);
+    await (await page.waitForSelector('#doca .atalho[data-rotulo="Sair"]')).click();
+    await (await page.waitForSelector(`${MENU}:has-text("Salvar e sair")`)).click();
+    for (let t = 0; t < 60 && !(await page.$(`${MENU}:has-text("Carregar")`)); t++) {
+      const c = await page.$("#prompt .continuar"); if (c) await c.click().catch(() => {});
+      await page.waitForTimeout(200);
+    }
+    await (await page.waitForSelector(`${MENU}:has-text("Carregar")`)).click();
+    await (await page.waitForSelector(".save-cartao")).click();
+    await page.waitForSelector('#predios .predio[data-predio="taverna"]', { timeout: 20000 });
+    await page.waitForTimeout(600);
+    conferir(!/De Volta ao Vau/.test(await page.textContent("#cena-cab .cena-titulo")) && (await page.evaluate(() => estado.missoes.length)) === 0
+      && !!(await page.$("#doca .atalho")), "carregado: sem repetir a cena, a missão continua concluída e a tela vem inteira");
+  } finally {
+    conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
+    await page.close();
+    proc.kill();
+  }
+}
+
 async function cenarioBaus(browser) {
   console.log("cenário: baús abertos juntos");
   const { proc, url } = await subir("baus");
@@ -684,6 +749,7 @@ try {
   await cenarioRecarga(browser);
   await cenarioCapela(browser);
   await cenarioGuardia(browser);
+  await cenarioRetorno(browser);
   await cenarioBaus(browser);
 } catch (e) {
   falhas.push(String(e));

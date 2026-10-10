@@ -77,7 +77,8 @@ Três commits posteriores à atualização do roadmap foram consultados. Os comp
 | Correções recentes | Implementadas nos três commits acima, com validação relatada nas mensagens. |
 | E1 — região e arco | Proposta em [11](11-E1-REGIAO-INICIAL.md) e [12](12-E1-CAMPANHA.md). Aprovados por Jean para o protótipo: os quatro lugares e as ligações (Morro da Forca adiado), campanha como novo início, resgate como padrão e hardcore opcional. O resto aguarda aprovação. |
 | E2 — região fixa | **Protótipo entregue na 1.48.0** (commit `2661b59`): início da campanha, mapa fixo, viagem, descoberta e save. Validado tecnicamente; falta Jean jogar. |
-| E3 — missão mínima | Entregas na 1.50.0 a 1.53.0 (registros abaixo): da Fonte Nova ao canal, à capela, ao interior, a Vó Berta e à guardiã, com Destruir ou Dar descanso e a volta ao Vau. A bênção, a comporta, o julgamento de Caspar, as consequências na vila e Varn ainda não. Falta Jean jogar. |
+| E3 — missão mínima | Entregas na 1.50.0 a 1.54.0 (registros abaixo): da Fonte Nova ao canal, à capela, ao interior, a Vó Berta, à guardiã (Destruir ou Dar descanso) e à volta ao Vau, que conclui a missão. A bênção e a comporta não existem. Falta Jean jogar. |
+| E4 — consequência local | **Primeira consequência na 1.54.0**: a Fonte Nova e a frase do Vau seguem o desfecho e os dias; Pita atende enquanto Marta está de cama, Marta depois. Caspar, a praça, a Yara e a comitiva ainda não. A E4 **não** está concluída. |
 | E4–E11 | Plano de trabalho futuro; infraestrutura existente não equivale a etapas concluídas. Notas aprovadas para a E3 na seção 19 do [11](11-E1-REGIAO-INICIAL.md). |
 | Bugs ainda abertos | Nenhum bug aberto específico foi informado para registro nesta passagem. Isso não comprova ausência de bugs. |
 | Polimento antes da E3 | Entregue na 1.48.1 (registro abaixo): leitura, item achado, balcão do templo, palco da luta. Falta Jean conferir jogando. |
@@ -406,3 +407,28 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   - a bênção de Caspar não existe (adiada);
   - os atalhos de D1 (Yara, mago no poço, arqueiro no Morro da Forca) não existem; a verdade vem só da sacristia e de Berta;
   - observado, não mudado: um Esc dado enquanto uma tela de serviço se redesenha só adianta o texto e se perde (a pessoa precisa apertar de novo).
+
+### 10/10/2026 — Fim da E3 e primeira consequência da E4 (1.54.0)
+
+- **Pedido de Jean:** cena de volta ao Vau, uma vez, coerente com o desfecho; concluir "A Febre do Turvo" (fora da lista ativa e do mapa, no Diário com conclusão, desfecho, descobertas e preparos); a herança de Berta valendo antes e depois; a Fonte Nova e uma fala local pelo desfecho e pelos dias; Pita e Marta no atendimento; uma diferença pequena e visível entre os desfechos; o texto natural da interrupção do rito; registrar o Esc perdido como pendência.
+- **Implementado:**
+  - **Volta ao Vau** (`missoes._retorno`, cena `retorno`, etapa `retorno`): toca uma vez, ao chegar ao Vau. Conta o que se vê agora (a Fonte, Pita ou Marta), pelo desfecho e pelos dias desde ele, e conclui a missão (`concluida` = o dia). Volta cedo ou tarde, o texto acompanha o estado da água. Quem deu descanso e ainda não recebeu a herança vê Vó Berta na janela da taverna.
+  - **Conclusão:** a missão concluída sai do rastreador e do "!" do mapa (`missoes.cartoes` devolve só as ativas; `cartoes(g, todas=True)` para o Diário). O Diário mostra "concluída", a conclusão com o desfecho, a linha da Fonte, o que se sabe, o que se fez e, se for o caso, "Vó Berta ainda espera você na taverna." No texto, as mesmas linhas.
+  - **Herança:** "Contar a Vó Berta" continua no balcão da taverna depois da conclusão, até ser entregue; uma vez só. Quem a recebeu antes (saves da 1.53) não a vê de novo.
+  - **A Fonte Nova** (`rpg/consequencias.py`): o estado sai do desfecho, de `dia_desfecho` (guardado na missão) e de `g.dia`. Dar descanso: "limpando" por 2 dias, sem piora, depois "limpa". Destruir: "escura" no dia do confronto (a noite pior), "limpando" até o 3º dia, depois "limpa". A comporta não existe como ação e não conta como fechada.
+  - **Fala local:** no Vau, depois do desfecho, a frase de ambiente da vila passa a falar da Fonte e de quem bebe dela (o sorteio da frase continua, para o mundo gerado não mudar). A diferença entre os desfechos, quando a água limpa: com o descanso, uma fita desbotada amarrada na pedra da fonte, que ninguém tira; com a destruição, a vila que não fala da capela.
+  - **Marta e Pita:** a abertura da missão (partidas novas) apresenta Marta, que anos atrás tirou o herói de uma febre de estrada, sem cobrar, e Pita, a aprendiz que atende enquanto ela está de cama. Na curandeira do Vau, quem atende e o que diz vêm do motor (`consequencias.atendente`): Pita enquanto a água não limpa (com a noite pior, se foi destruída), Marta depois. Preço, ferimentos e tratamento são os de sempre; no balcão sem ferimento, a frase é de quem está lá. Fora do Vau da campanha, a curandeira de sempre.
+  - **Rito interrompido:** "Sem o rito, os golpes que ela vinha aguentando chegam de uma vez: N de dano." (rótulo do golpe: "O rito se desfaz"). A conta e a devolução do dano não mudaram.
+  - **Pendência:** o Esc perdido durante o redesenho de uma tela de serviço ficou registrado em [13](13-PENDENCIAS-FORA-DA-CAMPANHA.md), item 10.
+- **Saves:** os da 1.53 já resolvidos (etapa `retorno`, sem `dia_desfecho` nem `concluida`) ganham o dia do desfecho como o dia em que forem carregados, e a volta ao Vau os conclui normalmente. `concluida`, `dia_desfecho` e a herança pendente vão no save.
+- **Procedural:** sem consequências (sem campo novo no estado da tela); gabarito idêntico.
+- **Verificações:**
+  - `unittest`: 176 OK, 1 pulado (`textual`). Novo `tests/test_retorno.py` (15): a volta conclui uma vez nos dois desfechos (rastreador e mapa vazios, Diário completo); volta imediata e tardia; herança depois e antes de concluir; destruir sem herança; a Fonte e quem atende dia a dia nos dois desfechos; a frase da vila difere e só vale no Vau; a frase no menu da vila; antes do desfecho, Pita e a vila de sempre; a curandeira com o preço e o tratamento de sempre (Pita e Marta); mundo gerado sem consequências; saves (conclusão, Fonte, herança pendente; save da 1.53 na etapa `retorno`); o texto novo do rito;
+  - `tests.gabarito`: OK, sem atualizar;
+  - `pyflakes`: só o aviso conhecido;
+  - `fumaca.mjs`: 123 checagens OK em 2 rodadas completas. Novo cenário `retorno` (descanso, mesmo dia): a cena e o Continuar; a missão fora do rastreador e do mapa; a frase da Fonte; Pita na curandeira; o Diário com a conclusão e a herança pendente; a herança uma vez; salvar, sair e carregar sem repetir a cena;
+  - navegador, com capturas em 1500 e 1280 px: destruir no mesmo dia (Fonte escura, Pita e a noite pior), descanso no mesmo dia (herança na taverna) e descanso 5 dias depois (Fonte limpa com a fita, Marta atendendo).
+- **Limitações:**
+  - Caspar, o julgamento na praça, a bênção, a perseguição à Yara, as sementes da região seguinte e novos encontros da comitiva não existem; a Estrada de Varn segue fechada;
+  - a consequência é só esta: a Fonte, a frase do Vau e quem atende. Mercado, Charco e afogados não mudam;
+  - partidas em andamento (já passadas da abertura) conhecem Marta e Pita pela curandeira e pela volta ao Vau, não pela abertura.

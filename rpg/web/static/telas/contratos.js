@@ -12,8 +12,12 @@
     const feitos = (m.preparos || []).map((p) => `<li>${h(p)}</li>`).join("");
     // O caminho do rito: o que já está feito e o que falta, com onde se consegue (o motor diz; a tela só desenha).
     const rito = (m.descanso || []).map((r) => `<li class="${r.feito ? "feito" : "falta"}">${r.feito ? "✓" : "○"} ${h(r.texto)}${r.feito ? "" : ` <small>(${h(r.onde)})</small>`}</li>`).join("");
-    return `<div class="missao-diario" data-missao="${h(m.id)}"><div class="missao-cab">${S("pergaminho", 2)}<b>${h(m.nome)}</b></div>
-      <div class="missao-objetivo">${h(m.objetivo)}</div><div class="missao-lugar">${lugar}</div>
+    // Concluída: no lugar do objetivo, a conclusão (o desfecho), o estado da Fonte e o que ainda espera por você.
+    const topo = m.concluida
+      ? `<div class="missao-objetivo missao-conclusao">${h(m.conclusao)}</div>${m.fonte ? `<div class="missao-lugar">${h(m.fonte)}</div>` : ""}${m.pendente ? `<div class="missao-lugar missao-pendente">${h(m.pendente)}</div>` : ""}`
+      : `<div class="missao-objetivo">${h(m.objetivo)}</div><div class="missao-lugar">${lugar}</div>`;
+    return `<div class="missao-diario${m.concluida ? " concluida" : ""}" data-missao="${h(m.id)}"><div class="missao-cab">${S("pergaminho", 2)}<b>${h(m.nome)}</b>${m.concluida ? "<small>concluída</small>" : ""}</div>
+      ${topo}
       ${pistas ? `<div class="missao-pistas"><span>O que você sabe:</span><ul>${pistas}</ul></div>` : ""}
       ${feitos ? `<div class="missao-pistas missao-feitos"><span>O que você já fez:</span><ul>${feitos}</ul></div>` : ""}
       ${rito ? `<div class="missao-pistas missao-rito"><span>Para dar descanso a Ilse, em vez de destruí-la:</span><ul>${rito}</ul></div>` : ""}</div>`;
@@ -26,7 +30,7 @@
     const losangos = [0, 1, 2].map((i) => `<i class="sigilo${i < d.sigilos ? " tem" : ""}"></i>`).join("");
     return `<div class="tela diario">
       <div class="faixa-jornada"><span>Dia ${d.dia}</span><span class="sigilos-diario" title="Sigilos dos guardiões">${losangos} ${d.sigilos}/3</span></div>
-      ${missoes ? `<div class="quadro quadro-missao"><div class="quadro-cab"><b>Missão</b><span>o lugar fica marcado no mapa</span></div>${missoes}</div>` : ""}
+      ${missoes ? `<div class="quadro quadro-missao"><div class="quadro-cab"><b>Missão</b><span>${(d.missoes || []).some((m) => !m.concluida) ? "o lugar fica marcado no mapa" : "concluída"}</span></div>${missoes}</div>` : ""}
       <div class="quadro"><div class="quadro-cab"><b>Contratos</b><span>${d.contratos.length}/${d.limite} · os lugares ficam marcados no mapa</span></div>
         <div class="cartazes">${contratos || '<span class="vazio">Nenhum contrato. Procure o mural de uma vila.</span>'}</div></div>
       ${rumores ? `<h4>Rumores</h4><div class="bilhetes">${rumores}</div>` : ""}

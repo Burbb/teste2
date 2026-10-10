@@ -98,7 +98,7 @@ class TestMissao(unittest.TestCase):
         for classe in CLASSES:
             ui = Roteiro(["Examinar a Fonte Nova"])
             g = campanha(classe, ui)
-            self.assertEqual(missoes.registro(g, MID), {"etapa": "fonte", "cenas": [], "pistas": [], "preparos": [], "desfecho": None})
+            self.assertEqual(missoes.registro(g, MID), {"etapa": "fonte", "cenas": [], "pistas": [], "preparos": [], "desfecho": None, "dia_desfecho": None, "concluida": None})
             g.tela()  # a cena de abertura toca no lugar do menu
             self.assertEqual(ui.cenas[-1], "A Febre do Turvo")
             self.assertEqual(missoes.registro(g, MID)["cenas"], ["abertura"])
@@ -146,7 +146,7 @@ class TestMissao(unittest.TestCase):
         g.tela(); g.tela()
         g.salvar(silencioso=True)
         h = Jogo.carregar(Roteiro(), g.caminho_save(), pasta)
-        self.assertEqual(missoes.registro(h, MID), {"etapa": "canal", "cenas": ["abertura"], "pistas": ["agua_do_leste"], "preparos": [], "desfecho": None})
+        self.assertEqual(missoes.registro(h, MID), {"etapa": "canal", "cenas": ["abertura"], "pistas": ["agua_do_leste"], "preparos": [], "desfecho": None, "dia_desfecho": None, "concluida": None})
         self.assertFalse(missoes.cena_pendente(h))
         self.assertFalse(missoes.opcoes(h))
 
@@ -163,7 +163,7 @@ class TestMissao(unittest.TestCase):
         with open(g.caminho_save(), encoding="utf-8") as f:
             self.assertNotIn("missoes", json.load(f)["mundo"])
         h = Jogo.carregar(Roteiro(), g.caminho_save(), pasta)
-        self.assertEqual(missoes.registro(h, MID), {"etapa": "fonte", "cenas": [], "pistas": [], "preparos": [], "desfecho": None})
+        self.assertEqual(missoes.registro(h, MID), {"etapa": "fonte", "cenas": [], "pistas": [], "preparos": [], "desfecho": None, "dia_desfecho": None, "concluida": None})
         self.assertEqual((h.loc["chave"], h.j.ouro, h.dia, h.j.classe), ("bosque_do_moinho", 77, 9, "mago"))
         self.assertEqual({l["chave"] for l in h.mundo["locais"] if l["visitado"]}, {"vau_do_turvo", "bosque_do_moinho"})
         self.assertFalse(missoes.cena_pendente(h))  # no bosque, não
@@ -269,14 +269,14 @@ class TestMissao(unittest.TestCase):
         g.tela(); g.tela()
         g.salvar(silencioso=True)
         h = Jogo.carregar(Roteiro([CANAL]), g.caminho_save(), pasta)
-        self.assertEqual(missoes.registro(h, MID), {"etapa": "canal", "cenas": ["abertura"], "pistas": ["agua_do_leste"], "preparos": [], "desfecho": None})
+        self.assertEqual(missoes.registro(h, MID), {"etapa": "canal", "cenas": ["abertura"], "pistas": ["agua_do_leste"], "preparos": [], "desfecho": None, "dia_desfecho": None, "concluida": None})
         ir(h, "bosque_do_moinho")
         h.tela()
         h.salvar(silencioso=True)
         k = Jogo.carregar(Roteiro(), h.caminho_save(), pasta)
         self.assertEqual(missoes.registro(k, MID),
                          {"etapa": "capela", "cenas": ["abertura"], "pistas": ["agua_do_leste", "represa", "canal_da_capela"],
-                          "preparos": [], "desfecho": None})
+                          "preparos": [], "desfecho": None, "dia_desfecho": None, "concluida": None})
         ir(k, "capela_afogada")
         self.assertTrue(missoes.cena_pendente(k))
         k.salvar(silencioso=True)
