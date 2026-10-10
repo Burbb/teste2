@@ -41,7 +41,7 @@ Plano proposto, sem datas. Cada etapa é dividida em tarefas pequenas e depende 
 ## E4 — Consequência local e comitiva
 
 **Depende:** E3.
-**Estado:** primeira consequência na 1.54.0 (a Fonte Nova, a frase do Vau, Pita e Marta na curandeira, pelo desfecho e pelos dias). A reação da comitiva, Caspar e a praça não começaram. **Não concluída.**
+**Estado:** primeira consequência na 1.54.0 (a Fonte Nova, a frase do Vau, Pita e Marta na curandeira). Na 1.55.0, Caspar e a decisão pública (Apoiar, Denunciar com prova, Calar), com a situação da Yara e a reação da comitiva por etiquetas. Falas próprias da comitiva sobre Caspar, sementes e as outras consequências da seção 8 do 11 não começaram. **Não concluída.**
 **Entrega:** mudar um estado da vila e refletir em diálogo/serviço; integrar uma reação/conversa de companheiro.
 **Pronto:** retornar e recarregar o save revela a mesma consequência; a escolha tem efeito percebido.
 **Não fazer:** facções em massa ou simulação de rotina de todos os NPCs.

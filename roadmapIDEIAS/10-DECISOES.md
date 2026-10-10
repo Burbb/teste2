@@ -29,7 +29,8 @@ Aceitas por Jean para planejar. Não são decisões definitivas e não autorizam
 |---|---|---|
 | Derrota na campanha | Resgate, como no modo brando, com hardcore opcional | [12-E1-CAMPANHA](12-E1-CAMPANHA.md), seção 6 |
 | Procedural | Preservado até a campanha ser validada, sem obrigação de manter duas experiências completas | [12-E1-CAMPANHA](12-E1-CAMPANHA.md), seção 7 |
-| Bênção de Caspar | **Adiada** até a introdução de Caspar. Nenhum campo nem opção a simula antes disso (a regra aprovada na seção 19 do 11 continua valendo para quando ela existir) | Quando Caspar entrar |
+| Caspar (10/10/2026, 1.55.0) | Aprovado por Jean: Caspar apresentado no Vau na investigação; a postura (Apoiar, Denunciar com prova, Calar) independente de Ilse; prova com caminho geral que não se perde. Os resultados de cada postura e o teste de Carisma seguem a proposta da seção 7 do 11; os números (reputação, dificuldade) são calibragem a confirmar (registro da 1.55.0 no 00) | 11, seção 7 |
+| Bênção de Caspar | **Adiada** (Caspar já existe desde a 1.55.0, a bênção não). Nenhum campo nem opção a simula antes disso (a regra aprovada na seção 19 do 11 continua valendo para quando ela existir) | Quando Caspar entrar |
 | Selo sustentado por sacrifícios ocultos | **Direção temática proposta por Jean, não decisão.** Não autoriza inventar nem implementar agora o passado do selo, quem foi sacrificado ou por quem; nenhum texto do jogo a afirma | Quando a lógica dos Sigilos for decidida (antes da região 2, [12-E1-CAMPANHA](12-E1-CAMPANHA.md), seção 4) |
 
 A cronologia, antes hipótese, virou decisão (tabela acima).

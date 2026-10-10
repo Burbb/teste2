@@ -1,6 +1,7 @@
 """Eventos da comitiva: encontros que trazem companheiros, conversas ao pé do fogo,
 missões pessoais em três atos e as brigas entre quem caminha com você."""
 
+from .. import caspar
 from .. import comitiva as cm
 from ..comitiva import conversa
 from .motor import evento
@@ -360,11 +361,13 @@ def morel_conversa_final(g, m):
 
 # ====================================================================== YARA
 @evento(contextos=("explorar",), peso=lambda g: 18 if g.dia <= 12 else 8, cooldown=0, unico=True,
-        cond=lambda g: g.dia >= 3 and g.bioma in ("pantano", "floresta") and cm.disponivel(g, "yara"))
+        cond=lambda g: g.dia >= 3 and g.bioma in ("pantano", "floresta") and cm.disponivel(g, "yara")
+        and caspar.fogueira_possivel(g))  # no Vale do Turvo, não depois de Caspar perder a vigília
 def yara_na_fogueira(g):
     g.dizer("Fumaça e gritos atrás das árvores. Numa clareira, aldeões com forcados e tochas cercam uma pilha de lenha. "
             "Amarrada a um poste no meio dela, uma moça de cabelo sujo de lama encara a multidão sem chorar.")
-    g.dizer("\"BRUXA!\", grita um homem de batina remendada. \"O gado morreu, o poço secou, as crianças têm febre! "
+    quem = "o Irmão Caspar, o homem de batina remendada" if g.campanha else "um homem de batina remendada"
+    g.dizer(f"\"BRUXA!\", grita {quem}. \"O gado morreu, o poço secou, as crianças têm febre! "
             "Foi ela!\"", "vermelho")
     g.dizer("A moça vê você. Não pede ajuda. Só olha.", "cinza")
     op = g.menu("O que faz?", [

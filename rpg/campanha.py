@@ -9,7 +9,7 @@ para missões e falas futuras) e um `nivel` fixo. O mundo leva `campanha` (o id 
 da campanha ainda não foi decidido.
 """
 
-from . import missoes
+from . import caspar, missoes
 
 REGIOES = {
     "turvo": dict(
@@ -76,10 +76,13 @@ def ajustar_save(g):
     if g.campanha and "missoes" not in g.mundo:
         g.mundo["missoes"] = missoes.estado_inicial(g.campanha)
     elif g.campanha:
+        for mid, m in missoes.estado_inicial(g.campanha).items():  # missões novas da região (1.55: Caspar)
+            g.mundo["missoes"].setdefault(mid, m)
         missoes.completar(g.mundo["missoes"])  # 1.50–1.53: sem `preparos`, `desfecho`, `concluida`
         for m in g.mundo["missoes"].values():
             if m["desfecho"] and m["dia_desfecho"] is None:  # 1.53: resolvida antes do dia ser guardado; conta de hoje
                 m["dia_desfecho"] = g.dia
+        caspar.sincronizar(g)  # com a guardiã já resolvida, a resposta a Caspar fica para a praça
 
 
 def nome(regiao):

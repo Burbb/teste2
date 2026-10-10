@@ -238,7 +238,7 @@ class Contratos:
         for m in missoes.cartoes(self, todas=True) if self.campanha else []:
             self.dizer(f"Missão: {m['nome']}" + (" (concluída)" if m["concluida"] else ""), "amarelo+negrito")
             if m["concluida"]:
-                for linha in (m["conclusao"], m["fonte"], m["pendente"]):
+                for linha in (m["conclusao"], *m["linhas"], m["pendente"]):
                     if linha:
                         self.dizer(f"  {linha}", "amarelo")
             else:
@@ -251,9 +251,9 @@ class Contratos:
                 self.dizer("  O que você já fez:", "cinza")
             for p in m["preparos"]:
                 self.dizer(f"  • {p}", "cinza")
-            if m["descanso"]:
-                self.dizer("  Para dar descanso a Ilse, em vez de destruí-la:", "cinza")
-            for r in m["descanso"]:
+            if m["requisitos"]:
+                self.dizer(f"  {m['requisitos']['titulo']}", "cinza")
+            for r in (m["requisitos"] or {}).get("itens", []):
                 self.dizer(f"  {'✓' if r['feito'] else '○'} {r['texto']}" + ("" if r["feito"] else f" ({r['onde']})"),
                            "verde" if r["feito"] else "cinza")
         self.dizer(f"Sigilos: {len(self.j.sigilos)}/3   Dia {self.dia}", "magenta")

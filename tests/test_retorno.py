@@ -181,6 +181,10 @@ class TestSaves(unittest.TestCase):
         self.assertEqual(consequencias.estado_fonte(h), "escura")
         h.dia += 3
         self.assertEqual(consequencias.estado_fonte(h), "limpa")
+        h.ui.roteiro = ["Ainda não"]  # o que toca agora é a praça de Caspar (o save conta a guardiã resolvida)
+        self.assertTrue(missoes.cena_pendente(h))
+        self.assertEqual(h.ui.cenas[-1], "A Praça do Vau")
+        self.assertEqual(missoes.registro(h, MID)["cenas"].count("retorno"), 1)  # a volta não repete
         self.assertFalse(missoes.cena_pendente(h))
         k = resolvida("descansada", pasta=pasta)
         missoes.cena_pendente(k)

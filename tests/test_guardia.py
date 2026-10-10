@@ -15,7 +15,7 @@ from rpg.inimigos import instanciar_guardiao
 from rpg.jogo import Jogo
 from rpg.regras import Derrota
 from tests import arena
-from tests.test_missoes import CLASSES, MID, Roteiro, ir, lutas, na_capela
+from tests.test_missoes import CLASSES, MID, Roteiro, ir, lutas, na_capela, opcoes_febre
 
 ESPEC = {"bioma": "pantano", "id": "bruxa_afogada", "idx": 1, "nome": "Ilse, a Bruxa Afogada", "g": "f",
          "base": "Bruxa Afogada"}
@@ -86,19 +86,19 @@ class TestBerta(unittest.TestCase):
 
     def test_diario_mostra_o_que_falta_para_o_rito(self):
         g = na_capela(etapa="ossuario")
-        self.assertEqual(missoes.cartoes(g)[0]["descanso"], [])  # antes da sacristia, nada sobre Ilse
+        self.assertIsNone(missoes.cartoes(g)[0]["requisitos"])  # antes da sacristia, nada sobre Ilse
         m = missoes.registro(g, MID)
         m["pistas"].append("ilse")
-        lista = missoes.cartoes(g)[0]["descanso"]
+        lista = missoes.cartoes(g)[0]["requisitos"]["itens"]
         self.assertEqual([r["feito"] for r in lista], [False, False, False])
         self.assertIn("Vó Berta", lista[0]["onde"])
         m["preparos"] += ["corpo_solto"]
-        self.assertEqual([r["feito"] for r in missoes.cartoes(g)[0]["descanso"]], [False, False, True])
+        self.assertEqual([r["feito"] for r in missoes.cartoes(g)[0]["requisitos"]["itens"]], [False, False, True])
         m["pistas"] += ["verdade_de_ilse"]
         m["preparos"] += ["fita"]
         self.assertTrue(missoes.descanso_pronto(m))
         m["desfecho"] = "destruida"
-        self.assertEqual(missoes.cartoes(g)[0]["descanso"], [])  # resolvida: a lista some
+        self.assertIsNone(missoes.cartoes(g)[0]["requisitos"])  # resolvida: a lista some
 
 
 class TestPisoDoRito(unittest.TestCase):
@@ -181,7 +181,7 @@ class TestConfronto(unittest.TestCase):
             self.assertFalse(any(it.get("unico") == "pele_do_penitente" for it in todos))
             pergunta = next(p for p in g.ui.perguntas if p[0] == "Este é o momento do rito.")
             self.assertEqual(len(pergunta[1]), 2)
-            self.assertFalse(missoes.opcoes(g))  # no fundo, nada mais
+            self.assertFalse(opcoes_febre(g))  # no fundo, nada mais da febre (o lodo, prova para Caspar, continua)
             self.assertFalse(missoes.executar(g, MID, "fundo"))
             self.assertEqual(len(g.j.sigilos), sigilos + 1)
 
@@ -243,7 +243,7 @@ class TestConfronto(unittest.TestCase):
         h = Jogo.carregar(Roteiro(["Guardar"]), g.caminho_save(), pasta)
         m = missoes.registro(h, MID)
         self.assertEqual((m["desfecho"], m["etapa"], h.j.sigilos), ("descansada", "retorno", ["turvo"]))
-        self.assertFalse(missoes.opcoes(h))
+        self.assertFalse(opcoes_febre(h))
         self.assertFalse(missoes.executar(h, MID, "fundo"))
         # A herança: na taverna, para quem deu descanso, uma vez.
         ir(h, "vau_do_turvo")

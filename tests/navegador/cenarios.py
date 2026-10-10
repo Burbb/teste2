@@ -8,7 +8,7 @@
     python -m tests.navegador.cenarios missao    # campanha no Bosque do Moinho, na etapa de seguir o canal
     python -m tests.navegador.cenarios recarga   # título com um save da campanha (Bosque, à noite) e um do mundo gerado
     python -m tests.navegador.cenarios capela    # herói na Capela Afogada (CLASSE, ETAPA, NIVEL, PREPARO, LUGAR)
-    python -m tests.navegador.cenarios retorno   # chegando ao Vau com Ilse resolvida (DESFECHO, DIAS)
+    python -m tests.navegador.cenarios retorno   # chegando ao Vau com Ilse resolvida (DESFECHO, DIAS, LODO, YARA)
 
 Imprime o endereço do servidor na primeira linha e fica no ar até ser encerrado.
 """
@@ -245,8 +245,10 @@ def capela(ui):
 
 def retorno(ui):
     """Guerreiro chegando ao Vau do Turvo com a guardiã resolvida há DIAS dias (padrão 0) pelo DESFECHO (padrão
-    "descansada"), com a herança de Berta por receber e um corte para a curandeira. Sair leva ao título."""
-    from rpg import missoes, sobrevivencia
+    "descansada"), com a herança de Berta por receber e um corte para a curandeira. LODO=1: já tem o frasco do lodo
+    (a prova contra Caspar); YARA=grupo: Yara anda com ele. Sair leva ao título."""
+    from rpg import caspar, missoes, sobrevivencia
+    from rpg import comitiva as cm
     from rpg.__main__ import menu_principal
     from rpg.ui import BotUI
     pasta = tempfile.mkdtemp()
@@ -258,6 +260,11 @@ def retorno(ui):
         dia_desfecho=10 - int(os.environ.get("DIAS", "0")), preparos=["corpo_solto", "fita"],
         pistas=["agua_do_leste", "represa", "canal_da_capela", "agua_da_capela", "ilse", "sigilo_do_turvo"])
     g.j.sigilos.append("turvo")
+    caspar.sincronizar(g)
+    if os.environ.get("LODO"):
+        caspar.registro(g)["preparos"].append("lodo")
+    if os.environ.get("YARA") == "grupo":
+        cm.recrutar(g, "yara")
     for l in g.mundo["locais"]:
         l["visitado"] = l["chave"] != "estrada_de_varn"
     sobrevivencia.ferir(g, "corte")

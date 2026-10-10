@@ -41,6 +41,13 @@ def estado_fonte(g):
     return "limpa"
 
 
+def noites(g):
+    """Quantas noites passaram desde o desfecho (o dia vira ao amanhecer): 0 no mesmo dia. Os textos não contam uma
+    noite que ainda não veio."""
+    m = _missao(g)
+    return g.dia - m["dia_desfecho"] if m and m.get("dia_desfecho") is not None else 0
+
+
 def marta_de_pe(g):
     """Marta adoeceu com a vila; levanta quando a água limpa."""
     return estado_fonte(g) == "limpa"
@@ -67,8 +74,8 @@ def atendente(g):
                 "fechado": "Marta ergue os olhos das ervas e sorri, cansada. \"Nada para tratar em você hoje.\""}
     piora = estado_fonte(g) == "escura"
     return {"quem": "Pita, a aprendiz de Marta",
-            "fala": ("Pita, uma menina de uns catorze anos, ferve água para os doentes. \"A Marta piorou de noite. "
-                     "Mas eu sei o que ela faria. Deixa eu ver isso.\"" if piora else
+            "fala": ("Pita, uma menina de uns catorze anos, ferve água para os doentes. \"A Marta piorou quando a água "
+                     "escureceu. Mas eu sei o que ela faria. Deixa eu ver isso.\"" if piora else
                      "Pita, uma menina de uns catorze anos, mói ervas no lugar de Marta, que está de cama. \"Eu sei o "
                      "que ela faria. Deixa eu ver isso.\""),
             "fechado": "Pita ergue os olhos das ervas. \"A Marta está de cama. Se precisar de cuidados, sou eu que "
@@ -81,12 +88,15 @@ def atendente(g):
 # a destruiu encontra a vila que não fala da capela.
 
 FRASES = {
-    ("descansada", "limpando"): "Na Fonte Nova, o lodo assentou e a água corre mais clara. \"Ninguém piorou esta "
+    # (desfecho, estado da Fonte[, "mesmo dia"]): a variante "mesmo dia" vale enquanto nenhuma noite passou.
+    ("descansada", "limpando", "mesmo dia"): "Na Fonte Nova, o lodo assentou e a água corre mais clara. \"Ninguém "
+                                             "piorou desde que a água mudou\", diz uma mulher enchendo o balde.",
+    ("descansada", "limpando"): "Na Fonte Nova, o lodo assentou e a água corre mais clara. \"Ninguém piorou de "
                                 "noite\", diz uma mulher enchendo o balde. \"A primeira desde o verão.\"",
     ("descansada", "limpa"): "A Fonte Nova corre clara. Alguém amarrou uma fita desbotada na pedra da fonte, e ninguém "
                              "tira.",
     ("destruida", "escura"): "A Fonte Nova corre escura, quase preta. Ninguém enche balde: Pita ferve água do rio para "
-                             "os doentes. \"Pioraram todos de noite\", diz alguém na porta da taverna.",
+                             "os doentes. \"Pioraram todos de uma hora para outra\", diz alguém na porta da taverna.",
     ("destruida", "limpando"): "A Fonte Nova clareia devagar. \"O pior passou\", diz o homem da ponte, \"mas aquela "
                                "noite foi feia.\"",
     ("destruida", "limpa"): "A Fonte Nova corre clara de novo. As crianças voltam à praça; ninguém fala da capela.",
@@ -94,16 +104,23 @@ FRASES = {
 
 
 def frase_da_vila(g):
-    """A frase de ambiente do Vau depois do desfecho, ou None (a de sempre)."""
+    """A frase de ambiente do Vau depois do desfecho, ou None (a de sempre): a Fonte (a guardiã) e, depois da resposta
+    a Caspar, a praça (caspar.frase_da_praca). Cada eixo diz o seu; não há texto por combinação."""
     if not no_vau(g):
         return None
     estado = estado_fonte(g)
-    return FRASES.get((_missao(g)["desfecho"], estado)) if estado else None
+    if not estado:
+        return None
+    desfecho = _missao(g)["desfecho"]
+    fonte = ((FRASES.get((desfecho, estado, "mesmo dia")) if noites(g) == 0 else None)
+             or FRASES.get((desfecho, estado)))
+    from . import caspar
+    return " ".join(x for x in (fonte, caspar.frase_da_praca(g)) if x)
 
 
 # ------------------------------------------------------------------ o Diário
 FONTE_DIARIO = {
-    "escura": "A Fonte Nova corre escura: a noite depois do confronto foi pior para os doentes.",
+    "escura": "A Fonte Nova corre escura desde o confronto, e os doentes pioraram.",
     "limpando": "A Fonte Nova está limpando.",
     "limpa": "A Fonte Nova está limpa, e Marta voltou a atender.",
 }

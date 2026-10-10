@@ -142,15 +142,18 @@ def heranca_pendente(m):
 
 def cartoes(g, todas=False):
     """As missões como o rastreador e o mapa mostram (só as ativas) e como o Diário mostra (`todas`: as concluídas
-    também, com o desfecho, o estado da Fonte e o que ainda espera): nome, objetivo da etapa, lugar e pistas."""
+    também, com o desfecho, as linhas do que mudou e o que ainda espera): nome, objetivo da etapa, lugar e pistas.
+    Uma missão numa etapa sem objetivo (ainda não apresentada) não aparece. Cada missão pode declarar `requisitos`
+    (o que um caminho pede, com o que falta), `linhas` (o que a conclusão mudou) e `pendente` (o que ainda espera)."""
     from .mundo import distancias
-    from . import consequencias
     saida = []
     for mid, m in (g.mundo.get("missoes") or {}).items():
         if m.get("concluida") and not todas:
             continue
         d = MISSOES[mid]
         etapa = d["etapas"][m["etapa"]]
+        if not etapa["objetivo"]:
+            continue
         loc = _lugar(g, etapa["lugar"])
         dist = distancias(g.mundo["locais"], g.loc["id"]).get(loc["id"]) if loc else None
         saida.append({"id": mid, "nome": d["nome"], "etapa": m["etapa"], "objetivo": etapa["objetivo"],
@@ -159,21 +162,38 @@ def cartoes(g, todas=False):
                       "pistas": [d["pistas"][p] for p in m["pistas"]],
                       "preparos": [d["preparos"][p] for p in m.get("preparos", [])],
                       "desfecho": m.get("desfecho"),
-                      # o caminho do rito: só depois de saber de Ilse, e só enquanto a guardiã não foi resolvida
-                      "descanso": ([{"texto": o_que, "onde": onde, "feito": feito} for o_que, onde, feito in descanso(m)]
-                                   if "ilse" in m["pistas"] and not m.get("desfecho") else []),
+                      "requisitos": None if m.get("concluida") else d.get("requisitos", lambda g, m: None)(g, m),
                       "concluida": m.get("concluida"),
-                      **({"conclusao": f"Concluída no dia {m['concluida']}. " + CONCLUSAO[m["desfecho"]],
-                          "fonte": consequencias.fonte_no_diario(g),
-                          "pendente": "Vó Berta ainda espera você na taverna." if heranca_pendente(m) else None}
+                      **({"conclusao": f"Concluída no dia {m['concluida']}. " + d["conclusoes"][m["desfecho"]],
+                          "linhas": [x for x in d.get("linhas", lambda g, m: [])(g, m) if x],
+                          "pendente": d.get("pendente", lambda g, m: None)(g, m)}
                          if m.get("concluida") else {})})
     return saida
+
+
+def _requisitos_descanso(g, m):
+    """O caminho do rito: só depois de saber de Ilse, e só enquanto a guardiã não foi resolvida."""
+    if "ilse" not in m["pistas"] or m.get("desfecho"):
+        return None
+    return {"titulo": "Para dar descanso a Ilse, em vez de destruí-la:",
+            "itens": [{"texto": o_que, "onde": onde, "feito": feito} for o_que, onde, feito in descanso(m)]}
+
+
+def _linhas_febre(g, m):
+    from . import consequencias
+    return [consequencias.fonte_no_diario(g)]
+
+
+def _pendente_febre(g, m):
+    return "Vó Berta ainda espera você na taverna." if heranca_pendente(m) else None
 
 
 CONCLUSAO = {
     "descansada": "Ilse descansou: com o nome e a fita, largou o Sigilo do Turvo e afundou em paz.",
     "destruida": "Ilse foi destruída, e o Sigilo do Turvo ficou no fundo da capela até você o pegar.",
 }
+MISSOES["febre_do_turvo"].update(conclusoes=CONCLUSAO, requisitos=_requisitos_descanso, linhas=_linhas_febre,
+                                 pendente=_pendente_febre)
 
 
 # ------------------------------------------------------------------ cenas e ações
@@ -529,6 +549,7 @@ def _resolver(g, mid, desfecho, nivel):
     if m.get("desfecho"):
         return
     m["desfecho"], m["dia_desfecho"] = desfecho, g.dia
+    _caspar.sincronizar(g)  # a resposta a Caspar passa a ser na praça
     from .telemetria import registrar
     registrar(g, "missao", missao=mid, desfecho=desfecho)
     if desfecho == "descansada":
@@ -566,9 +587,9 @@ def _retorno(g, mid):
     g.narrar("Você entra no Vau com o Sigilo do Turvo no bolso, ainda frio como pedra de rio.")
     g.narrar({
         ("descansada", "limpando"): "Na Fonte Nova, o lodo assentou no fundo da bacia, e a água que corre por cima já "
-                                    "sai mais clara. Ninguém piorou esta noite.",
+                                    "sai mais clara." + (" Ninguém piorou de noite." if consequencias.noites(g) else " Ninguém piorou desde então."),
         ("destruida", "escura"): "A Fonte Nova corre escura, quase preta: o que estava no corpo de Ilse saiu de uma vez. "
-                                 "A vila inteira tosse mais esta noite, e ninguém enche balde.",
+                                 "A vila inteira tosse mais desde que a água escureceu, e ninguém enche balde.",
         ("destruida", "limpando"): "A Fonte Nova ainda tem a cor de chá fraco, mas clareia. Contam que houve uma noite "
                                    "em que a água correu preta e todos pioraram. O pior passou.",
     }.get((m["desfecho"], fonte), "A Fonte Nova corre clara, e há fila de baldes de novo na praça."))
@@ -576,11 +597,12 @@ def _retorno(g, mid):
         g.narrar("Marta está na porta da casa dela, magra e de pé. \"Você de novo\", diz, e quase sorri. \"Da outra vez "
                  "fui eu que cuidei de você.\" Pita, ao lado, não para de falar.")
     elif fonte == "escura":
-        g.narrar("Pita passa correndo com dois baldes de água fervida. \"A Marta piorou de noite\", diz, sem parar. "
-                 "\"Mas a febre dela já está cedendo. Eu acho.\"")
+        g.narrar("Pita passa correndo com dois baldes de água fervida. \"A Marta piorou quando a água escureceu\", diz, sem "
+                 "parar. \"Vai ser uma noite longa.\"")
     else:
-        g.narrar("Pita vem te encontrar na praça. \"A Marta ainda está de cama, mas dormiu a noite inteira, pela "
-                 "primeira vez.\"")
+        g.narrar("Pita vem te encontrar na praça. \"A Marta ainda está de cama, mas " +
+                 ("dormiu a noite inteira, pela primeira vez.\"" if consequencias.noites(g) else
+                  "a febre dela parou de subir.\""))
     if m["desfecho"] == "descansada" and heranca_pendente(m):
         g.narrar("Na janela da taverna, Vó Berta ergue a caneca para você.")
     m["concluida"] = g.dia
@@ -698,3 +720,13 @@ def executar(g, mid, aid):
             _encerrar(g, d)
             return True
     return False
+
+
+# ------------------------------------------------------------------ as outras missões da região
+# Cada uma num módulo próprio, com os mesmos dados (MISSOES, CENAS, ACOES) e as mesmas regras de lugar e etapa. A ordem
+# conta: as cenas da febre vêm antes (a volta ao Vau toca antes da praça de Caspar).
+from . import caspar as _caspar  # noqa: E402
+
+MISSOES.update(_caspar.MISSOES)
+CENAS += _caspar.CENAS
+ACOES += _caspar.ACOES

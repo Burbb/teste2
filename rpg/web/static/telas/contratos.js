@@ -10,17 +10,19 @@
     const lugar = m.lugar ? `${S(MapaPx.sprite({ tipo: m.lugar_tipo, bioma: m.bioma }), 1)} ${h(m.lugar)}${m.distancia ? ` · ${Texto.plural(m.distancia, "trecho")}` : m.distancia === 0 ? " · você está aqui" : ""}` : "";
     const pistas = m.pistas.map((p) => `<li>${h(p)}</li>`).join("");
     const feitos = (m.preparos || []).map((p) => `<li>${h(p)}</li>`).join("");
-    // O caminho do rito: o que já está feito e o que falta, com onde se consegue (o motor diz; a tela só desenha).
-    const rito = (m.descanso || []).map((r) => `<li class="${r.feito ? "feito" : "falta"}">${r.feito ? "✓" : "○"} ${h(r.texto)}${r.feito ? "" : ` <small>(${h(r.onde)})</small>`}</li>`).join("");
+    // O que um caminho pede (o rito, a denúncia): o que já está feito e o que falta, com onde se consegue (o motor
+    // diz; a tela só desenha).
+    const req = m.requisitos;
+    const rito = req ? req.itens.map((r) => `<li class="${r.feito ? "feito" : "falta"}">${r.feito ? "✓" : "○"} ${h(r.texto)}${r.feito ? "" : ` <small>(${h(r.onde)})</small>`}</li>`).join("") : "";
     // Concluída: no lugar do objetivo, a conclusão (o desfecho), o estado da Fonte e o que ainda espera por você.
     const topo = m.concluida
-      ? `<div class="missao-objetivo missao-conclusao">${h(m.conclusao)}</div>${m.fonte ? `<div class="missao-lugar">${h(m.fonte)}</div>` : ""}${m.pendente ? `<div class="missao-lugar missao-pendente">${h(m.pendente)}</div>` : ""}`
+      ? `<div class="missao-objetivo missao-conclusao">${h(m.conclusao)}</div>${(m.linhas || []).map((l) => `<div class="missao-lugar">${h(l)}</div>`).join("")}${m.pendente ? `<div class="missao-lugar missao-pendente">${h(m.pendente)}</div>` : ""}`
       : `<div class="missao-objetivo">${h(m.objetivo)}</div><div class="missao-lugar">${lugar}</div>`;
     return `<div class="missao-diario${m.concluida ? " concluida" : ""}" data-missao="${h(m.id)}"><div class="missao-cab">${S("pergaminho", 2)}<b>${h(m.nome)}</b>${m.concluida ? "<small>concluída</small>" : ""}</div>
       ${topo}
       ${pistas ? `<div class="missao-pistas"><span>O que você sabe:</span><ul>${pistas}</ul></div>` : ""}
       ${feitos ? `<div class="missao-pistas missao-feitos"><span>O que você já fez:</span><ul>${feitos}</ul></div>` : ""}
-      ${rito ? `<div class="missao-pistas missao-rito"><span>Para dar descanso a Ilse, em vez de destruí-la:</span><ul>${rito}</ul></div>` : ""}</div>`;
+      ${rito ? `<div class="missao-pistas missao-rito"><span>${h(req.titulo)}</span><ul>${rito}</ul></div>` : ""}</div>`;
   }
 
   function diario(d) {

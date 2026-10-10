@@ -93,6 +93,11 @@ def fazer(g, aid):
     return missoes.executar(g, MID, aid)
 
 
+def opcoes_febre(g):
+    """As opções desta missão (a de Caspar tem as dela no mesmo lugar: o frasco do lodo, no fundo)."""
+    return [o for o in missoes.opcoes(g) if o[1][1] == MID]
+
+
 class TestMissao(unittest.TestCase):
     def test_tres_classes_iniciam_e_avancam(self):
         for classe in CLASSES:
@@ -316,14 +321,14 @@ class TestMissao(unittest.TestCase):
             self.assertEqual(g.j.consumiveis.get("bau", 0), baus + 1)  # o baú da sacristia, uma vez
             self.assertEqual(g.j.consumiveis["tocha"], tochas - 3)  # a capela é escura: uma tocha por sala
             # No fundo: as correntes, à mão (qualquer classe) e pelo atalho da classe.
-            rotulos = [o[0] for o in missoes.opcoes(g)]
+            rotulos = [o[0] for o in opcoes_febre(g)]
             self.assertEqual(len(rotulos), 3)  # à mão, o atalho e a descida ao fundo
             self.assertTrue(rotulos[0].startswith("Soltar as correntes do sarilho à mão"))
             self.assertIn({"guerreiro": "(Força)", "mago": "(Arcano)", "arqueiro": "(Destreza"}[classe], rotulos[1])
             self.assertTrue(fazer(g, "correntes"))  # à mão: a onda de afogados, vencida
             self.assertEqual(vistas[-1][0], "O Sarilho")
             self.assertEqual(m["preparos"], ["corpo_solto"])
-            self.assertEqual([o[1][2] for o in missoes.opcoes(g)], ["fundo"])  # agora, só descer
+            self.assertEqual([o[1][2] for o in opcoes_febre(g)], ["fundo"])  # agora, só descer
             self.assertEqual(m["etapa"], "fundo")
             self.assertEqual(estado(g)["missoes"][0]["preparos"], [missoes.MISSOES[MID]["preparos"]["corpo_solto"]])
 
@@ -364,25 +369,25 @@ class TestMissao(unittest.TestCase):
                 testes = []
                 g.teste = lambda a, cd, t=testes, p=passa: t.append((a, cd)) or p
                 flechas = g.j.flechas
-                aid = next(o[1][2] for o in missoes.opcoes(g) if o[1][2] not in ("correntes", "fundo"))
+                aid = next(o[1][2] for o in opcoes_febre(g) if o[1][2] not in ("correntes", "fundo"))
                 self.assertTrue(fazer(g, aid))
                 self.assertEqual(testes, [(attr, missoes.CD_CORRENTES)])
                 self.assertEqual(missoes.registro(g, MID)["preparos"], ["corpo_solto"])
                 self.assertEqual(len(vistas), 0 if passa else 1)  # o atalho que falha chama a onda
                 self.assertEqual(g.j.flechas, flechas - (classe == "arqueiro"))
-                self.assertEqual([o[1][2] for o in missoes.opcoes(g)], ["fundo"])
+                self.assertEqual([o[1][2] for o in opcoes_febre(g)], ["fundo"])
 
     def test_correntes_sem_vitoria_ficam_presas(self):
         g = na_capela(etapa="fundo")
         lutas(g, "fuga")
         fazer(g, "correntes")
         self.assertEqual(missoes.registro(g, MID)["preparos"], [])
-        self.assertEqual(len(missoes.opcoes(g)), 3)  # as duas das correntes e a descida
+        self.assertEqual(len(opcoes_febre(g)), 3)  # as duas das correntes e a descida
 
     def test_arqueiro_sem_flechas_so_tem_o_caminho_geral(self):
         g = na_capela("arqueiro", etapa="fundo")
         g.j.flechas = 0
-        self.assertEqual([o[1][2] for o in missoes.opcoes(g)], ["correntes", "fundo"])
+        self.assertEqual([o[1][2] for o in opcoes_febre(g)], ["correntes", "fundo"])
 
     def test_save_no_interior_e_save_sem_preparos(self):
         pasta = tempfile.mkdtemp()
@@ -400,7 +405,7 @@ class TestMissao(unittest.TestCase):
         h.salvar(silencioso=True)
         k = Jogo.carregar(Roteiro(), h.caminho_save(), pasta)
         self.assertEqual(missoes.registro(k, MID)["preparos"], ["corpo_solto"])
-        self.assertEqual([o[1][2] for o in missoes.opcoes(k)], ["fundo"])
+        self.assertEqual([o[1][2] for o in opcoes_febre(k)], ["fundo"])
         # Um save da 1.51 (sem `preparos`) carrega com a chave vazia e o resto igual.
         del k.mundo["missoes"][MID]["preparos"]
         k.salvar(silencioso=True)

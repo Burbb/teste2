@@ -599,7 +599,7 @@ async function cenarioGuardia(browser) {
     }
     let m = await missao();
     conferir(m.desfecho === "descansada" && /Voltar ao Vau/.test(m.objetivo) && (await page.evaluate(() => estado.heroi.sigilos)) === 1
-      && !(await page.$(`${MENU}.op-contrato`)), "desfecho guardado, o Sigilo na mão e o objetivo de voltar ao Vau");
+      && !(await page.$(`${MENU}:has-text("Descer ao fundo")`)), "desfecho guardado, o Sigilo na mão e o objetivo de voltar ao Vau");
     await (await page.waitForSelector('#doca .atalho[data-rotulo="Sair"]')).click();
     await (await page.waitForSelector(`${MENU}:has-text("Salvar e sair")`)).click();
     for (let t = 0; t < 60 && !(await page.$(`${MENU}:has-text("Carregar")`)); t++) {
@@ -635,15 +635,24 @@ async function cenarioRetorno(browser) {
   };
   try {
     await page.waitForSelector("#prompt .continuar.confirmar", { timeout: 20000 });
-    conferir(/De Volta ao Vau/.test(await page.textContent("#cena-cab .cena-titulo")) && /lodo assentou/.test(await page.textContent("#texto")),
-      "a volta ao Vau toca a cena do descanso, esperando o Continuar");
+    const volta = await page.textContent("#texto");
+    conferir(/De Volta ao Vau/.test(await page.textContent("#cena-cab .cena-titulo")) && /lodo assentou/.test(volta) && !/de noite|noite inteira/.test(volta),
+      "a volta ao Vau toca a cena do descanso, esperando o Continuar, sem contar uma noite que não veio");
+    await page.waitForTimeout(800);
+    await page.click("#prompt .continuar");
+    // Logo depois, a praça: Caspar reivindica o fim da febre. Sem prova, a denúncia não aparece; responder depois.
+    await page.waitForSelector(`${MENU}:has-text("Ainda não")`, { timeout: 20000 });
+    conferir(/A Praça do Vau/.test(await page.textContent("#cena-cab .cena-titulo")) && !(await page.$(`${MENU}:has-text("Denunciar")`))
+      && /falta prova/.test(await page.textContent("#texto")), "a praça de Caspar vem depois da volta; sem prova, sem denúncia");
+    await page.click(`${MENU}:has-text("Ainda não")`);
+    await page.waitForSelector("#prompt .continuar.confirmar", { timeout: 20000 });
     await page.waitForTimeout(800);
     await page.click("#prompt .continuar");
     await page.waitForSelector('#predios .predio[data-predio="taverna"]', { timeout: 20000 });
     await page.waitForTimeout(600);
-    conferir(!(await page.$("#mundo .rastro-missao")) && (await page.evaluate(() => estado.missoes.length)) === 0
-      && /Ninguém piorou esta noite/.test(await page.textContent("#texto")),
-      "concluída: a missão sai do rastreador e do mapa, e a vila fala da Fonte que clareia");
+    const ativas = () => page.evaluate(() => estado.missoes.map((m) => m.id).join(","));
+    conferir((await ativas()) === "vigilia_de_caspar" && /Ninguém piorou desde que a água mudou/.test(await page.textContent("#texto")),
+      "a febre concluída sai do rastreador; fica a resposta a Caspar, e a vila fala da Fonte que clareia");
     conferir((await page.evaluate(() => estado.local.atendentes.curandeiro)).startsWith("Pita"), "Marta de cama: Pita atende na curandeira");
     let d = await diario();
     conferir(/concluída/.test(d) && /Ilse descansou/.test(d) && /Vó Berta ainda espera/.test(d), "o Diário guarda a conclusão e diz que a herança espera");
@@ -675,8 +684,43 @@ async function cenarioRetorno(browser) {
     await (await page.waitForSelector(".save-cartao")).click();
     await page.waitForSelector('#predios .predio[data-predio="taverna"]', { timeout: 20000 });
     await page.waitForTimeout(600);
-    conferir(!/De Volta ao Vau/.test(await page.textContent("#cena-cab .cena-titulo")) && (await page.evaluate(() => estado.missoes.length)) === 0
-      && !!(await page.$("#doca .atalho")), "carregado: sem repetir a cena, a missão continua concluída e a tela vem inteira");
+    conferir(!/De Volta ao Vau|A Praça/.test(await page.textContent("#cena-cab .cena-titulo")) && (await ativas()) === "vigilia_de_caspar"
+      && !!(await page.$("#doca .atalho")), "carregado: sem repetir a cena, a febre continua concluída e a tela vem inteira");
+  } finally {
+    conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
+    await page.close();
+    proc.kill();
+  }
+}
+
+async function cenarioCaspar(browser) {
+  console.log("cenário: a praça de Caspar (destruir e denunciar, com prova e Yara no grupo)");
+  const { proc, url } = await subir("retorno", { DESFECHO: "destruida", DIAS: "1", LODO: "1", YARA: "grupo" });
+  const { page, erros } = await abrir(browser, url);
+  const MENU = "#prompt .escolhas:not(.escolhido) .escolha";
+  try {
+    await page.waitForSelector("#prompt .continuar.confirmar", { timeout: 20000 });  // a volta ao Vau
+    await page.waitForTimeout(800);
+    await page.click("#prompt .continuar");
+    await page.waitForSelector(`${MENU}:has-text("Denunciar")`, { timeout: 20000 });
+    conferir(!!(await page.$(`${MENU}:has-text("Apoiar Caspar")`)) && !!(await page.$(`${MENU}:has-text("Calar-se")`)),
+      "com o lodo e o canal, a praça oferece apoiar, denunciar e calar");
+    await page.click(`${MENU}:has-text("Denunciar")`);
+    await page.waitForSelector("#prompt .continuar.confirmar", { timeout: 20000 });
+    await page.waitForTimeout(800);
+    await page.click("#prompt .continuar");
+    await page.waitForSelector('#predios .predio[data-predio="taverna"]', { timeout: 20000 });
+    await page.waitForTimeout(600);
+    const praca = await page.textContent("#texto");
+    conferir((await page.evaluate(() => estado.missoes.length)) === 0 && /praça/.test(praca),
+      "decidido: nenhuma missão ativa, e a vila fala da praça depois da decisão");
+    await page.keyboard.press("d");
+    await page.waitForSelector('.missao-diario[data-missao="vigilia_de_caspar"]', { timeout: 10000 });
+    const d = await page.textContent('.missao-diario[data-missao="vigilia_de_caspar"]');
+    conferir(/Ilse: os ossos dela ficaram no fundo da capela/.test(d) && /Caspar: /.test(d) && /Yara: /.test(d),
+      "o Diário conta à parte o que houve com Ilse, com Caspar e com a Yara");
+    conferir(await page.evaluate(() => (estado.heroi.comitiva || []).some((c) => c.id === "yara")) && !!(await page.$('[data-conversar="yara"], #heroi :text("Yara")')),
+      "a Yara continua no grupo e à vista no painel");
   } finally {
     conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
     await page.close();
@@ -750,6 +794,7 @@ try {
   await cenarioCapela(browser);
   await cenarioGuardia(browser);
   await cenarioRetorno(browser);
+  await cenarioCaspar(browser);
   await cenarioBaus(browser);
 } catch (e) {
   falhas.push(String(e));
