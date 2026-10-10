@@ -210,7 +210,9 @@ def _ficha_inimigo(g, e):
             "tracos": [{"id": t, "texto": TRACOS.get(t, t), "icone": TRACOS_FICHA[t]["icone"]} for t in e.tracos],
             "fraco": fraco if conhecido else None, "resiste": resiste if resistencias else None,
             "ponto_fraco": bool(getattr(e, "chave", None) and g.flag(f"fraqueza:{e.chave}")),
-            "atk": round(max(e.atk, e.poder)), "defesa": round(e.defesa)}
+            "atk": round(max(e.atk, e.poder)), "defesa": round(e.defesa),
+            # o que esta criatura faz de diferente da espécie (a variante da capela: o golpe preparado), sempre à vista
+            **({"nota": e.nota} if getattr(e, "nota", None) else {})}
 
 
 def combate(g):

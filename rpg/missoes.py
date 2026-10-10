@@ -294,6 +294,40 @@ def _lutar(g, grupo, titulo):
     return r == "vitoria"
 
 
+# Quem prepara golpe na capela (E5): um dos dois esqueletos do ossuário e um dos dois afogados do sarilho são a mesma
+# criatura da espécie, com o Golpe Esmagador que o troll e o mercenário já têm (inimigos.py: `esmagar`): avisa um turno
+# antes, atordoar interrompe, guarda, barreira e esquiva reduzem ou evitam. A ficha da luta diz isso (`nota`). Só
+# aqui: os esqueletos e afogados do resto do jogo continuam como são.
+GOLPE_PREPARADO = ("Prepara um golpe esmagador (×2,2): avisa um turno antes. Atordoar interrompe; guarda, barreira e "
+                   "esquiva reduzem ou evitam.")
+
+
+def _que_prepara(e, nome):
+    """A variante da capela: o nome dela no lugar do da espécie (o afixo, se houver, continua) e o golpe preparado."""
+    from .dados import FAMILIAS
+    especie = FAMILIAS[e.familia]["nome"]
+    e.nome = e.nome.replace(tx.maiuscula(especie), nome, 1)
+    e.desc = e.desc.replace(especie, nome.lower(), 1)
+    e.habilidades = e.habilidades + ["esmagar"]
+    e.abre_com = "esmagar"  # a primeira ação dela, quando dá (combate/turnos.py); depois, o sorteio de sempre
+    e.nota = GOLPE_PREPARADO
+    return e
+
+
+def grupo_ossuario(g):
+    """Os dois esqueletos do ossuário; o primeiro é o de guarda (sorteio igual ao de g.grupo)."""
+    grupo = g.grupo("esqueleto", n=2)
+    _que_prepara(grupo[0], "Esqueleto de Guarda")
+    return grupo
+
+
+def grupo_sarilho(g):
+    """Os dois afogados que o barulho do sarilho chama; o primeiro é o inchado."""
+    grupo = g.grupo("afogado", n=2)
+    _que_prepara(grupo[0], "Afogado Inchado")
+    return grupo
+
+
 def _recuo(g, titulo, texto):
     g.ui.cena(titulo, g.contexto_cena(), "evento")
     g.narrar(texto)
@@ -363,7 +397,7 @@ def _ossuario(g, mid):
     g.ui.cena("O Ossuário", g.contexto_cena(), "evento")
     g.narrar("O alçapão dá numa escada de pedra que desce para o frio. O ossuário é uma sala baixa, com nichos de ossos "
              "arrumados nas paredes. Alguns nichos estão vazios. Os ossos que faltam estão de pé, no meio da sala.")
-    if not _lutar(g, g.grupo("esqueleto", n=2), "O Ossuário"):
+    if not _lutar(g, grupo_ossuario(g), "O Ossuário"):
         _recuo(g, "O Ossuário", "Você sobe a escada de costas e fecha o alçapão. Embaixo, os ossos voltam a se arrumar.")
         return
     g.ui.cena("O Ossuário", g.contexto_cena(), "evento")
@@ -378,7 +412,6 @@ def _ossuario(g, mid):
         g.dizer(f"Diário: {MISSOES[mid]['etapas']['fundo']['objetivo']}", "ciano")
         g.ui.efeito("Diário atualizado", "info")
     g.dizer("As correntes podem ser soltas daqui, antes de descer.", "cinza")
-    g.ui.efeito("Protótipo: o fundo da capela fica para a próxima parte da missão.", "info")
 
 
 # Soltar o corpo (o passo D2 do Dar descanso, 11-E1-REGIAO-INICIAL.md seção 6): o caminho geral serve a qualquer
@@ -410,7 +443,7 @@ def _soltar(g, mid):
 def _onda_de_afogados(g, mid):
     """O barulho do sarilho desce pela água e chama os afogados. Só a vitória deixa terminar o trabalho."""
     g.narrar("Da escada vem o som de água se mexendo. Os afogados vieram atrás do barulho.")
-    if not _lutar(g, g.grupo("afogado", n=2), "O Sarilho"):
+    if not _lutar(g, grupo_sarilho(g), "O Sarilho"):
         _recuo(g, "O Sarilho", "Você sobe pelo alçapão e deixa o sarilho como estava. As correntes continuam presas.")
         return
     g.ui.cena("O Sarilho", g.contexto_cena(), "evento")

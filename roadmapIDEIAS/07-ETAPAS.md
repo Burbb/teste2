@@ -50,7 +50,7 @@ Plano proposto, sem datas. Cada etapa é dividida em tarefas pequenas e depende 
 ## E5 — Diagnosticar e aprofundar as três classes
 
 **Depende:** E1; integrar ao percurso de E4.
-**Estado:** diagnóstico entregue (só design, 1.56.0) em [14-E5-DIAGNOSTICO-CLASSES](14-E5-DIAGNOSTICO-CLASSES.md): fichas das três classes e das seis especializações, liberdade de build, progressão e três prioridades. Recomendada primeiro, **a aguardar aprovação de Jean**: P1, momentos de decisão no Vale (o golpe preparado em duas lutas fixas da capela, com conteúdo existente). Depois P3 (encruzilhada e Grimório que explicam) e P2 (um papel para cada botão dominado). Nada implementado; os seis caminhos ainda não foram avaliados em cenários jogáveis. **Não concluída.**
+**Estado:** diagnóstico entregue (só design, 1.56.0) em [14-E5-DIAGNOSTICO-CLASSES](14-E5-DIAGNOSTICO-CLASSES.md): fichas das três classes e das seis especializações, liberdade de build, progressão e três prioridades. Na 1.57.0, a **P1**: no ossuário e no sarilho, um inimigo prepara o Golpe Esmagador existente (abre a luta preparando), com o aviso e a ficha à vista; resultados na seção 10 do 14. Falta Jean jogar. Depois: P3 (encruzilhada e Grimório que explicam), a aprovar; P2 (um papel para cada botão dominado) não autorizada. Os seis caminhos ainda não foram avaliados em cenários jogáveis. **Não concluída.**
 **Entrega:** fichas curtas de Guerreiro/Arqueiro/Mago e seis especializações, com ciclo, forças, fraquezas e lacunas.
 **Tarefas:** aproveitar habilidades/talentos; integrar encruzilhadas; adicionar conteúdo apenas para lacunas reais.
 **Pronto:** três classes atravessam a região; seis caminhos avaliados em cenários direcionados.

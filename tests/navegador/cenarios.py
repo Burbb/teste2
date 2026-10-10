@@ -7,7 +7,7 @@
     python -m tests.navegador.cenarios baus      # vila com três baús na bolsa: a pilha abre inteira
     python -m tests.navegador.cenarios missao    # campanha no Bosque do Moinho, na etapa de seguir o canal
     python -m tests.navegador.cenarios recarga   # título com um save da campanha (Bosque, à noite) e um do mundo gerado
-    python -m tests.navegador.cenarios capela    # herói na Capela Afogada (CLASSE, ETAPA, NIVEL, PREPARO, LUGAR)
+    python -m tests.navegador.cenarios capela    # herói na Capela Afogada (CLASSE, ETAPA, NIVEL, PREPARO, LUGAR, SEMENTE)
     python -m tests.navegador.cenarios retorno   # chegando ao Vau com Ilse resolvida (DESFECHO, DIAS, LODO, YARA)
     python -m tests.navegador.cenarios praca     # depois da resposta a Caspar (POSTURA, YARA, LUGAR)
 
@@ -203,14 +203,14 @@ def recarga(ui):
 
 
 def capela(ui):
-    """Herói de nível NIVEL (padrão 5; CLASSE, padrão guerreiro) na Capela Afogada (ou na chave LUGAR), de manhã, com a
+    """Herói de nível NIVEL (padrão 5; CLASSE, padrão guerreiro; SEMENTE, padrão 11) na Capela Afogada (ou na chave LUGAR), de manhã, com a
     missão na ETAPA (padrão "sacristia": a nave já vencida) e o que se sabe até ali. PREPARO: "correntes" (soltas) ou
     "pronto" (Berta ouvida, a fita e as correntes: o rito disponível). Sair do jogo leva ao título, com o save."""
     from rpg import dev, missoes
     from rpg.__main__ import menu_principal
     from rpg.ui import BotUI
     pasta = tempfile.mkdtemp()
-    g = Jogo(BotUI(random.Random(1)), seed=11, pasta_saves=pasta, hardcore=False)
+    g = Jogo(BotUI(random.Random(1)), seed=int(os.environ.get("SEMENTE", "11")), pasta_saves=pasta, hardcore=False)
     g.iniciar("Jean", os.environ.get("CLASSE", "guerreiro"), "turvo")
     nivel = int(os.environ.get("NIVEL", "5"))
     dev.subir_ate(g, nivel)  # já especializado (a primeira da classe): o acampamento não para na encruzilhada

@@ -296,6 +296,8 @@ class AcoesDoHeroi:
         for e in self.inimigos_vivos():
             self.ui.separador()
             self.dizer(f"{e.nome} — Nível {e.nivel} — Vida {e.hp}/{e.max_hp}", "vermelho+negrito")
+            if getattr(e, "nota", None):  # o que esta faz de diferente da espécie (a variante da capela)
+                self.dizer(f"  ⚠ {e.nota}", "amarelo")
             for t in e.tracos:
                 self.dizer(f"  • {TRACOS.get(t, t)}", "cinza")
             if not self.g.conhece(e.familia):

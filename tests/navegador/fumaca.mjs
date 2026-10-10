@@ -790,6 +790,58 @@ async function cenarioYara(browser) {
   }
 }
 
+async function cenarioGolpePreparado(browser) {
+  console.log("cenário: o golpe preparado no ossuário (aviso na escolha, ficha, Investida que interrompe)");
+  const { proc, url } = await subir("capela", { ETAPA: "ossuario", NIVEL: "3", SEMENTE: "7" });
+  const { page, erros } = await abrir(browser, url);
+  const MENU = "#prompt .escolhas:not(.escolhido) .escolha";
+  const PREP = '#batalha .carta.inimigo:has(.preparando:not([hidden]))';
+  try {
+    await (await page.waitForSelector(`${MENU}:has-text("Descer ao ossuário")`, { timeout: 20000 })).click();
+    let viu = false, turno = 0;
+    for (let k = 0; k < 300 && !viu; k++) {
+      const roda = await page.$('#roda .roda-botao[data-slot="atacar"]');
+      if (roda) {
+        await page.waitForTimeout(600);
+        const prep = await page.$(PREP);
+        if (prep) {
+          viu = true;
+          conferir(/Esqueleto de Guarda/.test(await prep.textContent()) && !!(await page.$('#roda .roda-botao[data-slot="habilidades"]')),
+            "na sua vez, a carta de quem prepara mostra o aviso, e as ações estão abertas para responder");
+          const caixa = await prep.boundingBox();
+          await page.mouse.move(5, 5);
+          await page.mouse.move(caixa.x + caixa.width / 2, caixa.y + 12, { steps: 5 });
+          await page.waitForTimeout(900);
+          conferir(/Prepara um golpe esmagador/.test(await page.evaluate(() => { const d = document.getElementById("dica-item"); return d && !d.hidden ? d.textContent : ""; })),
+            "a ficha do inimigo diz que ele prepara o golpe e como responder");
+          await page.mouse.move(700, 880);
+          await (await page.$('.roda-botao[data-slot="habilidades"]')).click();
+          await (await page.waitForSelector('.rj-linha[data-hab="investida"]')).click();
+          await (await page.waitForSelector(`.carta.alvejavel:has(.preparando:not([hidden]))`, { timeout: 5000 })).click();
+          for (let t = 0; t < 60 && !(await page.$('#roda .roda-botao[data-slot="atacar"]')); t++) await page.waitForTimeout(200);
+          conferir(/perde o golpe que preparava/.test(await page.textContent("#texto")) && !(await page.$(PREP)),
+            "a Investida atordoa e interrompe: o golpe se perde e o aviso sai da carta");
+          break;
+        }
+        turno++;
+        await roda.click().catch(() => {});
+        await page.waitForTimeout(200);
+        const alvos = await page.$$(".carta.alvejavel");
+        const alvo = alvos[1] || alvos[0];
+        if (alvo) await alvo.click().catch(() => {});
+      }
+      const c = await page.$("#prompt .continuar");
+      if (c) await c.click().catch(() => {});
+      await page.waitForTimeout(150);
+    }
+    conferir(viu, "o Esqueleto de Guarda prepara o golpe na luta do ossuário");
+  } finally {
+    conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
+    await page.close();
+    proc.kill();
+  }
+}
+
 async function cenarioBaus(browser) {
   console.log("cenário: baús abertos juntos");
   const { proc, url } = await subir("baus");
@@ -858,6 +910,7 @@ try {
   await cenarioRetorno(browser);
   await cenarioCaspar(browser);
   await cenarioYara(browser);
+  await cenarioGolpePreparado(browser);
   await cenarioBaus(browser);
 } catch (e) {
   falhas.push(String(e));

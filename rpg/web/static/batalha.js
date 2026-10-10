@@ -126,7 +126,7 @@ const Batalha = (() => {
     const caca = f.mestre ? `<div class="ficha-mestre">${S("estrela", 1)}Mestre caçador<span>+10% de dano</span></div>`
       : f.progresso ? `<div class="ficha-caca"><span class="barra-px xp"><span class="enchimento" style="width:${Math.min(100, (100 * f.abates) / (f.mestre_em || 5))}%"></span></span><small>${esc(f.progresso)}</small></div>` : "";
     caixa.innerHTML = `<b>${esc(c.nome)}</b><div class="tipo">Nível ${c.nivel}${c.chefe ? " · chefe" : ""} · ataque ${f.atk} · defesa ${f.defesa}</div>
-      <div class="ficha-tracos">${tracos}</div>${corpo}${caca}${f.ponto_fraco ? '<div class="rodape">Você conhece o ponto fraco: +25% de dano!</div>' : ""}`;
+      <div class="ficha-tracos">${tracos}</div>${f.nota ? `<div class="ficha-nota">⚠ ${esc(f.nota)}</div>` : ""}${corpo}${caca}${f.ponto_fraco ? '<div class="rodape">Você conhece o ponto fraco: +25% de dano!</div>' : ""}`;
     caixa.classList.add("ficha-inimigo");
     const r = el.getBoundingClientRect();
     const esq = r.left - 300 < 6 ? r.right + 10 : r.left - 300;

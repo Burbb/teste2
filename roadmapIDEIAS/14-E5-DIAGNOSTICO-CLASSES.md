@@ -3,6 +3,15 @@
 Revisão 1 — 10/10/2026. Jogo na versão 1.56.0 (commit `adaa93a`). **Entrega só de análise e design:** nenhum código,
 atributo, habilidade, talento, item ou save foi alterado.
 
+**Atualização 1.57.0:** a P1 foi implementada (seção 10). As seções 1 a 9 continuam como o diagnóstico da 1.56.0; onde
+a 1.57 mudou o que elas dizem (o golpe preparado no Vale), a seção 10 diz o que vale agora.
+
+**Cuidado ao ler as comparações de dano (seções 1, 4 e 9).** Somar o dano de sequências contra um alvo de treino não
+demonstra que uma habilidade é inútil quando o valor dela é defesa, cura ou efeito sobre aliados. Erguer Escudo,
+Barreira, Passo Ágil, Grito de Guerra (o enfraquecer), Marcar Presa (que vale para os golpes de todos) e Desaparecer
+(a esquiva) só se medem no momento em que servem. A P1 mostrou isso com o golpe preparado (seção 10.4). Os "botões
+dominados" da seção 4 continuam hipótese de design para a P2, que não está autorizada.
+
 Legenda usada em todo o documento:
 
 - **[código]** comportamento conferido no código (o arquivo vem citado);
@@ -793,3 +802,189 @@ que são exatas para o que medem e não dizem nada sobre o resto da luta.
 - o Inferno contra três ou mais inimigos;
 - a Marca com comitiva e animal;
 - o Contra-ataque na configuração Bastião.
+
+## 10. P1 implementada: o golpe preparado na capela (1.57.0)
+
+### 10.1 O que mudou
+
+- **Ossuário:** um dos dois esqueletos é o **Esqueleto de Guarda**. **Sarilho** (a onda de afogados de quem solta as
+  correntes à mão ou falha o atalho): um dos dois afogados é o **Afogado Inchado**.
+- **A variante:** a mesma criatura da espécie (nível, vida, afixo e sorteio iguais aos de antes), com o Golpe Esmagador
+  que o troll e o mercenário já têm (`inimigos.py`: `esmagar`):
+  - prepara num turno e bate ×2,2 no seguinte;
+  - atordoar interrompe;
+  - guarda, barreira e esquiva reduzem ou evitam.
+
+  `missoes.grupo_ossuario` e `missoes.grupo_sarilho` montam os grupos; `missoes._que_prepara` faz a variante.
+- **A regra explícita, a menor que resolveu** (`combate/turnos.py`, `agir_inimigo`): a variante tem `abre_com =
+  "esmagar"`.
+  - Na primeira ação em que preparar faz sentido, ela prepara, sem sorteio. Com o herói a um golpe da morte, ela bate,
+    como as outras habilidades que não ferem, e prepara depois.
+  - Depois disso, o golpe fica no sorteio de sempre.
+  - Só a campanha põe esse campo: os esqueletos e afogados do mundo gerado, a guardiã e todos os outros inimigos não
+    mudam, e o sorteio deles é o mesmo (gabarito idêntico).
+- **A ficha:**
+  - Na tela gráfica, a ficha da carta (passar o mouse) tem a linha "⚠ Prepara um golpe esmagador (×2,2): avisa um
+    turno antes. Atordoar interrompe; guarda, barreira e esquiva reduzem ou evitam." (`estado.py`: campo `nota`, só
+    quando a criatura tem).
+  - No modo texto, o Analisar mostra a mesma linha.
+  - O aviso da luta é o de sempre: a faixa "⚠ prepara um golpe devastador" na carta, a frase "(Defenda-se, ou atordoe
+    para interromper!)" e, no texto, "<< preparando golpe! >>".
+- **Sem mudança:**
+  - quantidade de inimigos, progressão, recompensas, vitória, fuga, derrota e resgate;
+  - a guardiã;
+  - atributos, regeneração, habilidades, talentos, itens e imunidades.
+- Também saiu o aviso antigo do ossuário ("Protótipo: o fundo da capela fica para a próxima parte da missão.").
+
+### 10.2 Frequência: o momento de responder
+
+Conta-se uma **oportunidade** quando o herói tem uma ação para escolher com o golpe pendente e o preparador vivo. Não
+conta quando o herói está atordoado, ou quando o preparador morre antes.
+
+Robô de `tests/arena.py`; herói da campanha nos níveis 3 e 4 (no 4, ainda sem especialização: ela chega no descanso);
+talentos ao acaso; equipamento sorteado no nível; um companheiro (aprovação 30); de dia, com tocha; vida e recurso
+cheios; 150 lutas por linha.
+
+| Comportamento | Lutas com ao menos uma oportunidade |
+|---|---|
+| Golpe só no sorteio de sempre (35% de chance de usar habilidade, dividida entre as do inimigo) | 33% a 58% |
+| Com a regra (abre preparando) | **97% a 100%** |
+
+Com a regra, há de 1,3 a 1,8 preparações por luta: a primeira garantida, as outras pelo sorteio.
+
+Sem o companheiro (lutas mais longas, com o mesmo sorteio), o sorteio sozinho dava 37% a 69%. A regra entrou porque
+metade das lutas sem o momento não é previsível. Nem a vida nem a duração dos inimigos mudaram para isso.
+
+### 10.3 Antes e depois (robô, com um companheiro)
+
+Vitórias · vida perdida · turnos. "Antes": os dois inimigos comuns. "Depois": com a variante e a regra.
+
+| Classe, nível | Ossuário antes | Ossuário depois | Sarilho antes | Sarilho depois |
+|---|---|---|---|---|
+| Guerreiro 3 | 92% · 45% · 9,8 | 88% · 48% · 11,1 | 92% · 46% · 10,5 | 83% · 51% · 12,2 |
+| Guerreiro 4 | 99% · 29% · 7,2 | 99% · 28% · 8,3 | 99% · 27% · 7,6 | 99% · 27% · 8,9 |
+| Arqueiro 3 | 88% · 50% · 7,9 | 77% · 56% · 9,3 | 87% · 49% · 8,9 | 77% · 54% · 10,1 |
+| Arqueiro 4 | 97% · 31% · 6,0 | 95% · 35% · 7,7 | 99% · 29% · 6,5 | 95% · 31% · 8,0 |
+| Mago 3 | 80% · 52% · 8,2 | 75% · 52% · 9,8 | 85% · 46% · 9,3 | 67% · 59% · 10,8 |
+| Mago 4 | 97% · 26% · 6,4 | 97% · 26% · 8,1 | 99% · 24% · 6,9 | 95% · 25% · 8,7 |
+
+**O robô exagera a perda.**
+
+- Ele usa a habilidade de alvo único mais cara: o Guerreiro ataca com Investida, não com Golpe Pesado.
+- Ele se defende **toda vez** que vê o golpe preparado: o Mago gasta 20 de mana de Barreira em cada um.
+- Ele nunca tenta interromper de propósito nem escolhe o alvo para matar o preparador primeiro.
+
+Com um herói que só ataca com a habilidade principal (seção 10.4), a mesma luta quase não muda:
+
+| Herói roteirizado | Antes | Depois |
+|---|---|---|
+| Guerreiro 3, ossuário | 98% · 38% · 5,8 | 96% · 38% · 5,7 |
+| Arqueiro 3, ossuário | 98% · 38% · 5,5 | 94% · 35% · 5,4 |
+| Mago 3, ossuário | 88% · 49% · 5,6 | 85% · 50% · 5,4 |
+
+Com a resposta certa, o resultado até melhora: o Mago que se defende fica com 88% · 44%.
+
+### 10.4 As respostas comparadas (herói roteirizado, com um companheiro)
+
+**O herói roteirizado** (não o robô):
+
+- ataca o inimigo mais ferido com a habilidade principal (Golpe Pesado, Tiro Certeiro, Bola de Fogo; sem mana, Lança de
+  Gelo e depois o Dardo);
+- bebe poção abaixo de 35% de vida;
+- muda **só** a resposta ao golpe pendente.
+
+Mesmos heróis, inimigos e sementes em cada resposta; 200 lutas por linha.
+
+**Respostas comparadas:**
+
+- **atacar:** ignora o aviso.
+- **defender:** Erguer Escudo, Passo Ágil ou Barreira.
+- **interromper:** Investida ou Lança de Gelo no preparador. O Arqueiro não tem como atordoar antes da especialização.
+- **eliminar:** todo golpe no preparador desde o primeiro turno.
+
+Na tabela, "Golpe" é a média de um golpe que acertou o herói (em % da vida máxima). O golpe também pode cair num
+companheiro: o alvo é escolhido na hora de bater.
+
+**Ossuário** (o sarilho dá o mesmo desenho):
+
+| Classe, nível | Resposta | Vitórias · vida perdida · turnos | Golpe | Interrompidos por luta | Preparador morto com o golpe pendente, por luta |
+|---|---|---|---|---|---|
+| Guerreiro 3 | atacar | 96% · 38% · 5,7 | 27% | 0,04 | 0,28 |
+| | defender (Escudo) | 96% · 37% · 6,8 | 14% | 0,04 | 0,03 |
+| | interromper (Investida) | 98% · 35% · 5,9 | 28% | **0,53** | 0,20 |
+| | eliminar | 96% · 38% · 5,8 | 27% | 0,04 | 0,32 |
+| Guerreiro 4 | atacar / defender / interromper / eliminar | 100% · 22% / 21% / 22% / 23% | 21% / 10% / 23% / 22% | 0,01 / 0,02 / 0,34 / 0,01 | 0,42 / 0,04 / 0,30 / 0,47 |
+| Arqueiro 3 | atacar | 94% · 35% · 5,4 | 30% | 0,04 | 0,39 |
+| | defender (Passo Ágil) | 93% · 41% · 6,6 | 20% | 0,03 | 0,02 |
+| | eliminar | 94% · 36% · 5,4 | 32% | 0,03 | **0,43** |
+| Arqueiro 4 | atacar / defender / eliminar | 99% · 23% / 100% · 25% / 99% · 22% | 26% / 17% / 27% | — | 0,56 / 0,07 / **0,66** |
+| Mago 3 | atacar | 85% · 50% · 5,4 | **43%** | 0,05 | 0,30 |
+| | defender (Barreira) | 88% · 44% · 6,6 | **11%** | 0,07 | 0,09 |
+| | interromper (Lança de Gelo) | 87% · 48% · 5,6 | 39% | **0,30** | 0,24 |
+| | eliminar | 84% · 52% · 5,4 | 41% | 0,04 | 0,33 |
+| Mago 4 | atacar / defender / interromper / eliminar | 96% · 32% / 99% · 22% / 98% · 31% / 96% · 33% | 32% / 4% / 32% / 32% | 0,06 / 0,05 / 0,21 / 0,02 | 0,46 / 0,07 / 0,42 / 0,48 |
+
+**Leitura:** nenhuma resposta é sempre a melhor. Cada uma tem um custo que dá para entender.
+
+- **Guerreiro:**
+  - O Escudo corta o golpe pela metade, mas a luta dura um turno a mais.
+  - A Investida interrompe 0,5 vez por luta no nível 3 e 0,3 no 4: 45% **se acertar**, e no nível 4 o esqueleto
+    esquiva mais.
+  - Quando a Investida falha, o golpe vem inteiro. No navegador, um crítico tirou 43 de 90.
+- **Arqueiro:**
+  - Antes da especialização não tem como interromper.
+  - O Passo Ágil só reduz em média (30% de esquiva a mais) e custa o turno; sai pior que só atirar.
+  - Matar o preparador antes é a melhor média no nível 4.
+- **Mago:**
+  - É quem mais sofre sem responder: o golpe tira de 32 a 43% da vida.
+  - A Barreira quase anula o golpe, a 20 de mana.
+  - A Lança de Gelo interrompe de 0,2 a 0,3 vez por luta (35% **se acertar**), mais barata, com risco.
+- **Momento perdido:** o herói atordoado (Investida do esqueleto, agarrão do afogado) perde a vez de responder. Aconteceu
+  em 2 das 8 sementes testadas no navegador. Nas medições, de 0 a 3% das lutas ficaram sem nenhuma oportunidade.
+
+### 10.5 Na tela
+
+Conferido com Playwright:
+
+- capturas em 1500 e 1280 px;
+- Guerreiro com Escudo e com Investida (uma semente em que interrompe, outra em que falha);
+- Mago com Lança de Gelo;
+- Arqueiro com Passo Ágil no sarilho.
+
+**O que a tela mostra:**
+
+- **Quem prepara:** a carta dele tem a faixa amarela piscando "⚠ prepara um golpe devastador".
+  - Ela aparece de 0,5 a 0,9 s **antes** de as ações abrirem e fica até o golpe sair ou ser interrompido. Medido quadro
+    a quadro, nas velocidades normal e rápida.
+  - O registro destaca a frase "(Defenda-se, ou atordoe para interromper!)".
+- **A ficha** (passar o mouse na carta) diz o que a variante faz.
+- **Interrompido:** "Atordoado, Esqueleto de Guarda perde o golpe que preparava!", a faixa sai e o atordoado aparece na
+  carta.
+- **Limitação:** em 1280 px, a faixa de ação de outro inimigo (por exemplo, "Investida") pode cobrir a linha do aviso por
+  até 1,5 s logo que a vez chega. É a faixa comum de todas as ações, que some sozinha; depois o aviso fica limpo.
+
+### 10.6 Verificações
+
+- `tests/test_golpe_preparado.py` (9 testes):
+  - os grupos das duas salas;
+  - o sorteio igual ao de `g.grupo`;
+  - o mundo gerado sem variante;
+  - abre preparando, uma vez, e atordoar interrompe;
+  - a guarda reduz o golpe;
+  - a um golpe da morte, espera;
+  - a ficha e o Analisar;
+  - a ficha do mundo gerado sem nota;
+  - as salas usam a variante e a missão segue, sem o aviso antigo.
+- Fuga e derrota conferidas numa luta real do ossuário: a sala continua por vencer; a derrota sai para o resgate, ou
+  para o fim no hardcore.
+- `fumaca.mjs`: cenário novo do golpe preparado (o aviso na escolha, a ficha, a Investida que interrompe). O cenário
+  `capela` aceita `SEMENTE`.
+- Gabarito idêntico, sem atualizar.
+
+### 10.7 O que fica para depois
+
+- **P3:** a encruzilhada e o Grimório que explicam.
+- **P2:** um papel para cada botão dominado. Não autorizada; a ressalva do começo deste documento vale para ela.
+- O Arqueiro sem como interromper antes da especialização é um fato do conteúdo de agora, não um defeito a corrigir
+  nesta entrega.
+

@@ -79,7 +79,7 @@ Três commits posteriores à atualização do roadmap foram consultados. Os comp
 | E2 — região fixa | **Protótipo entregue na 1.48.0** (commit `2661b59`): início da campanha, mapa fixo, viagem, descoberta e save. Validado tecnicamente; falta Jean jogar. |
 | E3 — missão mínima | Entregas na 1.50.0 a 1.54.0 (registros abaixo): da Fonte Nova ao canal, à capela, ao interior, a Vó Berta, à guardiã (Destruir ou Dar descanso) e à volta ao Vau, que conclui a missão. A bênção e a comporta não existem. Falta Jean jogar. |
 | E4 — consequência local | Na 1.54.0, a Fonte Nova, a frase do Vau, Pita e Marta. Na 1.55.0, Caspar: a acusação, a praça (Apoiar, Denunciar com prova, Calar), a situação da Yara e as reações da comitiva. Na 1.56.0, a consolidação: a Yara barrada fica de fato fora do Vau, o encontro no Charco depois da denúncia, a conversa da Yara sobre a praça e os textos que contradiziam o Vau. **O critério mínimo da E4 (07-ETAPAS) está atendido**; as outras ideias do 11 (bênção, sementes, mercado, taverna, Charco à noite, Odette e Caspar, Anselmo, a cena da vigília) ficam adiadas, não são requisito. Falta Jean jogar. |
-| E5 — classes | Diagnóstico (só design) em [14](14-E5-DIAGNOSTICO-CLASSES.md), sobre a 1.56.0. Três prioridades propostas; a primeira (P1, momentos de decisão no Vale) aguarda aprovação. Nada implementado. A validação da E4 jogando, por Jean, fica registrada à parte. |
+| E5 — classes | Diagnóstico (só design) em [14](14-E5-DIAGNOSTICO-CLASSES.md), sobre a 1.56.0. **P1 implementada na 1.57.0:** o golpe preparado em duas lutas fixas da capela (seção 10 do 14). P3 e P2 não começaram (a P2 não está autorizada). A E5 **não** está concluída. A validação da E4 jogando, por Jean, fica registrada à parte. |
 | E6–E11 | Plano de trabalho futuro; infraestrutura existente não equivale a etapas concluídas. Notas aprovadas para a E3 na seção 19 do [11](11-E1-REGIAO-INICIAL.md). |
 | Bugs ainda abertos | Nenhum bug aberto específico foi informado para registro nesta passagem. Isso não comprova ausência de bugs. |
 | Polimento antes da E3 | Entregue na 1.48.1 (registro abaixo): leitura, item achado, balcão do templo, palco da luta. Falta Jean conferir jogando. |
@@ -522,4 +522,55 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   - Fúria Cega e Maldição como ações dominantes no 7–9, o Inferno contra grupos e a Marca com comitiva estão marcados como hipótese a medir.
   - Os seis caminhos não foram jogados em cenários direcionados.
 - **Próximo passo:** Jean decide se aprova a P1 (ou outra ordem); só então implementar.
+
+### 10/10/2026 — E5, P1: o golpe preparado na capela (1.57.0)
+
+- **Pedido de Jean:** implementar só a P1 da E5. Criar momentos de decisão nas lutas da capela com o golpe preparado e as respostas que já existem, sem só aumentar a dificuldade.
+  - No ossuário, um dos dois esqueletos prepara; no sarilho, um dos dois afogados.
+  - Preservar quantidade de inimigos, missão, recompensas e vitória.
+  - Não mexer na guardiã, em atributos, regeneração, habilidades, talentos, itens nem imunidades; o procedural fica igual.
+  - Aviso legível durante a escolha; ficha fiel à variante.
+  - Medir a frequência antes e, se raro, usar a menor regra explícita.
+  - Comparar continuar atacando, defender, interromper e eliminar antes.
+  - Antes e depois para as três classes nos níveis 3 e 4.
+  - Registrar que comparações de dano isoladas não provam inutilidade de defesa, cura ou efeitos sobre aliados.
+  - Tirar o aviso antigo do ossuário. Parar antes da P3.
+- **Implementado:**
+  - **Variantes da campanha** (`missoes.grupo_ossuario`, `grupo_sarilho`, `_que_prepara`): o Esqueleto de Guarda e o Afogado Inchado.
+    - É a mesma criatura sorteada antes (nível, vida, afixo e o sorteio seguinte iguais), com a habilidade existente `esmagar`.
+    - A ficha tem uma `nota`.
+  - **A regra** (`combate/turnos.py`, `agir_inimigo`): quem tem `abre_com` (só as variantes) prepara na primeira ação em que faz sentido, sem sorteio.
+    - Com o herói a um golpe da morte, espera, como as outras habilidades que não ferem.
+    - Depois, o sorteio de sempre.
+  - **A ficha:** na tela gráfica, a dica da carta mostra a nota (`estado._ficha_inimigo`, só quando há nota; `batalha.js`, `10-contratos.css`). No modo texto, o Analisar mostra a mesma linha.
+  - **O aviso:** o de sempre (a faixa na carta, a frase, o "<< preparando golpe! >>" do texto).
+  - **Aviso antigo:** saiu o "Protótipo: o fundo da capela fica para a próxima parte da missão.".
+  - **Cenário de teste:** `tests/navegador/cenarios.py`, cenário `capela`, aceita `SEMENTE`.
+- **Resultados** (detalhes e condições na seção 10 do 14):
+  - **Frequência**, em lutas com o herói podendo responder (robô, um companheiro, níveis 3 e 4): o golpe só no sorteio dava 33% a 58% das lutas. **Com a regra, 97% a 100%.**
+  - **Antes e depois (robô):**
+    - Nível 4: vitórias iguais ou −4 pontos, vida perdida igual, cerca de um turno a mais.
+    - Nível 3: −4 a −18 pontos de vitória; o pior caso é o Mago no sarilho.
+    - O robô se defende toda vez e o Guerreiro dele ataca com Investida. Com um herói que só ataca com a habilidade principal, a diferença fica entre 0 e 4 pontos.
+  - **Respostas:** nenhuma é sempre a melhor.
+    - **Guerreiro:** o Escudo corta o golpe pela metade e custa um turno. A Investida interrompe 0,5 vez por luta no nível 3 (45% **se acertar**); se falha, o golpe vem inteiro.
+    - **Mago:** sem resposta, o golpe tira de 32% a 43% da vida. A Barreira o reduz a 4–11%, por 20 de mana. A Lança de Gelo interrompe às vezes (35% se acertar).
+    - **Arqueiro:** não tem como interromper antes da especialização. O Passo Ágil só reduz em média; matar o preparador primeiro rende mais.
+- **Verificações:**
+  - `unittest`: 228 OK, 1 pulado. Novo `tests/test_golpe_preparado.py` (9).
+  - `tests.gabarito`: OK, idêntico, sem atualizar.
+  - `pyflakes`: só o aviso conhecido.
+  - `fumaca.mjs`: 142 checagens OK, com o cenário novo do golpe preparado.
+  - Fuga e derrota conferidas numa luta real do ossuário.
+  - Navegador: capturas em 1500 e 1280 px (Guerreiro com Escudo e com Investida, nos casos em que interrompe e em que falha; Mago com Lança; Arqueiro com Passo Ágil no sarilho); o aviso medido quadro a quadro.
+- **Limitações:**
+  - Em 1280 px, a faixa de ação de outro inimigo pode cobrir a linha do aviso por até 1,5 s quando a vez chega; é a faixa comum, que some sozinha.
+  - O herói atordoado perde a vez de responder; é raro, mas acontece.
+  - O bestiário da espécie não fala da variante; a ficha da carta fala.
+  - A E5 não está concluída.
+- **Como testar (rota curta):**
+  1. Com o Guerreiro na capela, desça ao ossuário. No primeiro turno, ataque o Esqueleto comum.
+  2. O Esqueleto de Guarda prepara: a carta dele avisa. Passe o mouse para ler a ficha. Responda com Erguer Escudo e veja o golpe sair pela metade.
+  3. Salve antes de descer, carregue e repita a luta respondendo com Investida no Esqueleto de Guarda: se atordoar, o golpe se perde; se não, ele vem inteiro.
+  4. Opcional: solte as correntes à mão e veja o Afogado Inchado no sarilho fazer o mesmo.
 

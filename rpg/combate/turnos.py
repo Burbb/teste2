@@ -88,6 +88,15 @@ class TurnosDosOutros:
             with self.agindo(e, c["rotulo"], alvo, hab="carregado"):
                 self.atacar(e, alvo, c["mult"], rotulo=c["rotulo"])
             return
+        # A variante que abre a luta com uma habilidade (só a campanha põe: missoes._que_prepara, o golpe preparado da
+        # capela): na primeira vez em que ela faz sentido, sem sorteio; depois, o sorteio de sempre. Com o alvo a um
+        # golpe da morte, espera, como as outras que não ferem.
+        abre = getattr(e, "abre_com", None)
+        if abre and HABS[abre]["quando"](self, e, alvo) and (HABS[abre]["golpe"] or alvo.hp > self.dano_previsto(e, alvo)):
+            e.abre_com = None
+            with self.agindo(e, ROTULOS_HABS_INIMIGO.get(abre), alvo, hab=abre, anim=HABS[abre]["anim"]):
+                if HABS_INIMIGO[abre](self, e, alvo) is not False:
+                    return
         if e.habilidades and self.rng.random() < (0.45 if e.chefe else 0.35):
             # Só o que faz sentido agora (estados.py/inimigos.py: `quando`); e com o alvo a um golpe da morte,
             # só o que fere: ninguém uiva para o bando quando pode acabar a luta.
