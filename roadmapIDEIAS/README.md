@@ -34,6 +34,9 @@ Para uma nova conta ou sessão, começar por [00 — Comece aqui: continuidade](
 | [08-TRABALHO-COM-CLAUDE.md](08-TRABALHO-COM-CLAUDE.md) | Pedidos prontos, limites e registro |
 | [09-BASE-EXISTENTE.md](09-BASE-EXISTENTE.md) | O que existe, o que estender e evidências |
 | [10-DECISOES.md](10-DECISOES.md) | Decisões pendentes, sugestões e momento de decidir |
+| [11-E1-REGIAO-INICIAL.md](11-E1-REGIAO-INICIAL.md) | E1: proposta da primeira região (Vale do Turvo), missão, comitiva, recompensas e percurso |
+| [12-E1-CAMPANHA.md](12-E1-CAMPANHA.md) | E1: cronologia, protagonista, arco da campanha, finais, derrota e transição do procedural |
+| [13-PENDENCIAS-FORA-DA-CAMPANHA.md](13-PENDENCIAS-FORA-DA-CAMPANHA.md) | Divergências entre documentação e código, e texto do prólogo; fora da campanha |
 
 ## Estados e evidências
 

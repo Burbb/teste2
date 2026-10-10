@@ -4,7 +4,7 @@ Plano proposto, sem datas. Cada etapa é dividida em tarefas pequenas e depende 
 
 ## E0 — Base refatorada: entregue estruturalmente
 
-**Estado:** reorganização observada na 1.46.0; testes não executados nesta revisão.
+**Estado:** reorganização observada na 1.46.0. Na 1.47.1 (10/10/2026), suíte, gabarito, pyflakes e fumaça passaram; detalhes no registro de [00-COMECE-AQUI](00-COMECE-AQUI.md).
 **Ação:** Claude informa commit e evidência da validação atual. Conferir 09-BASE-EXISTENTE.
 **Não fazer:** repetir refatoração geral ou reconstruir sistemas que já existem.
 **Saída:** ponto de partida conhecido e verificações pertinentes em dia.
@@ -12,6 +12,7 @@ Plano proposto, sem datas. Cada etapa é dividida em tarefas pequenas e depende 
 ## E1 — Especificar primeira região e arco da campanha
 
 **Depende:** E0.
+**Estado:** proposta em [11-E1-REGIAO-INICIAL](11-E1-REGIAO-INICIAL.md) e [12-E1-CAMPANHA](12-E1-CAMPANHA.md), aguardando aprovação de Jean.
 **Entrega:** documento de design com uma vila, poucas áreas externas, uma masmorra, conflito local e encerramento; pequeno esboço do início, meio e fim da campanha.
 **Incluir:** Guerreiro/Arqueiro/Mago, oportunidades narrativas das classes, integração dos companheiros existentes, duas soluções de missão, consequência ao retornar e loot pertinente.
 **Decisões:** cronologia, duração aproximada do trecho, condições de especialização e modelo provisório de derrota.

@@ -75,7 +75,7 @@ Três commits posteriores à atualização do roadmap foram consultados. Os comp
 |---|---|
 | Refatoração estrutural | Entregue segundo os guias e a leitura registrada; não reabrir uma refatoração geral sem problema concreto. |
 | Correções recentes | Implementadas nos três commits acima, com validação relatada nas mensagens. |
-| E1 — região e arco | Próxima entrega recomendada; não há região aprovada registrada nesta passagem. |
+| E1 — região e arco | Proposta entregue em 10/10/2026 ([11](11-E1-REGIAO-INICIAL.md), [12](12-E1-CAMPANHA.md)); aguarda aprovação de Jean. Nada implementado. |
 | E2–E11 | Plano de trabalho futuro; infraestrutura existente não equivale a etapas concluídas. |
 | Bugs ainda abertos | Nenhum bug aberto específico foi informado para registro nesta passagem. Isso não comprova ausência de bugs. |
 | Feedback pendente | Registrar qualquer problema que Jean ainda observar na 1.47.1, com passos para reproduzir. |
@@ -112,3 +112,29 @@ Acrescente um registro curto, ou atualize a tabela de estado, com:
 Para um bug: versão, classe/spec, cena, passos, esperado, observado e seed/save/captura quando disponíveis. Não exigir todos esses dados para começar a investigar um problema claramente descrito.
 
 Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa como pronta apenas porque o sistema de suporte já existe.
+
+## 8. Registros
+
+### 10/10/2026 — Conferência da base (E0) e proposta da E1
+
+- **Branch e versão:** `claude/tender-einstein-tx3tjl`, 1.47.1. Depois de `602d3aa` só entrou `622b1b6`, que acrescenta Markdown em `roadmapIDEIAS`; nenhum código mudou.
+- **Validação técnica executada (Claude, nuvem):**
+  - `python -m unittest discover -s tests`: 104 testes OK; 1 pulado (`textual` não instalado);
+  - `python -m tests.gabarito`: OK;
+  - `pyflakes rpg tests`: só o aviso conhecido em `rpg/eventos/__init__.py`;
+  - `tests/navegador/fumaca.mjs`: 66 checagens OK, "tudo certo".
+- **Não executado:**
+  - `tests.equilibrio` e `tests.replay`;
+  - jogar e ver telas.
+
+  As correções da 1.46.1–1.47.1 estão cobertas só até onde a fumaça e o gabarito chegam.
+- **Planejado (E1, só design):**
+  - [11-E1-REGIAO-INICIAL.md](11-E1-REGIAO-INICIAL.md): região;
+  - [12-E1-CAMPANHA.md](12-E1-CAMPANHA.md): campanha, cronologia, protagonista, derrota, transição.
+- **Registrado à parte:** divergências entre documentação e código e o texto do prólogo em [13-PENDENCIAS-FORA-DA-CAMPANHA.md](13-PENDENCIAS-FORA-DA-CAMPANHA.md). Não fazem parte da campanha.
+- **Hipóteses aceitas por Jean (não definitivas):**
+  - resgate como derrota na campanha, com hardcore opcional;
+  - procedural preservado até a validação, sem obrigação de manter duas experiências completas.
+- **Aguardam aprovação de Jean:** a lista da seção 6 de [12-E1-CAMPANHA.md](12-E1-CAMPANHA.md).
+- **Feedback jogando:** nenhum nesta entrega.
+- **Próxima entrega:** depois da aprovação (ou ajuste) da E1, a E2: carregar o Vale do Turvo como região fixa, preservando viagem e save.

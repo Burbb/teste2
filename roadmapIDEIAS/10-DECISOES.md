@@ -14,6 +14,18 @@ Não bloquear tudo com todas as perguntas de uma vez. Resolver as decisões quan
 | Produção | Primeira região pequena; expansão por trechos |
 | Quantidade | Sem obrigação de 300 habilidades neste ciclo |
 
+## Hipóteses de trabalho (10/10/2026)
+
+Aceitas por Jean para planejar. Não são decisões definitivas e não autorizam mudar o comportamento atual.
+
+| Tema | Hipótese | Onde está detalhada |
+|---|---|---|
+| Derrota na campanha | Resgate, como no modo brando, com hardcore opcional | [12-E1-CAMPANHA](12-E1-CAMPANHA.md), seção 4 |
+| Procedural | Preservado até a campanha ser validada, sem obrigação de manter duas experiências completas | [12-E1-CAMPANHA](12-E1-CAMPANHA.md), seção 5 |
+| Cronologia | Avaliar Fenda original antiga e reabertura recente (avaliada; a proposta aguarda aprovação) | [12-E1-CAMPANHA](12-E1-CAMPANHA.md), seção 1 |
+
+As propostas da E1 que aguardam aprovação estão listadas em [12-E1-CAMPANHA](12-E1-CAMPANHA.md), seção 6.
+
 ## Decisões e momento
 
 | Tema | Resolver antes de | Proposta de partida |
