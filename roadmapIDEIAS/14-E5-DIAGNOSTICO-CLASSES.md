@@ -17,6 +17,10 @@ mudaram.
 (seção 13). Drenar Vida e Desaparecer têm função; o Passo Ágil não, e a seção 13.5 recomenda a única mudança que mostrou
 papel sem virar a ação de todo turno.
 
+**Fechamento (sobre a 1.59.0, nenhum código mudou):** o desvio do Passo Ágil foi validado com outras sementes e **não**
+foi incorporado. Usado repetidamente, ele vira a ação padrão contra inimigos sozinhos (seção 14). A E5 fica concluída
+tecnicamente; a validação de Jean jogando fica registrada à parte.
+
 **Cuidado ao ler as comparações de dano (seções 1, 4 e 9).** Somar o dano de sequências contra um alvo de treino não
 demonstra que uma habilidade é inútil quando o valor dela é defesa, cura ou efeito sobre aliados. Erguer Escudo,
 Barreira, Passo Ágil, Grito de Guerra (o enfraquecer), Marcar Presa (que vale para os golpes de todos) e Desaparecer
@@ -1517,7 +1521,7 @@ inimigos (mantém o efeito); Passo Ágil abaixo de 50%.
 
 ### 13.6 A próxima implementação
 
-**Uma só, se Jean quiser continuar a P2:** o desvio do Passo Ágil (13.5).
+**Uma só, se Jean quiser continuar a P2:** o desvio do Passo Ágil (13.5). **Validado e rejeitado na seção 14.**
 
 - Drenar Vida e Desaparecer já cumprem funções e ficam como estão.
 - Se Jean preferir não mexer no Passo Ágil, a parte da P2 sobre estes três botões pode ser encerrada. Ele fica
@@ -1533,4 +1537,162 @@ inimigos (mantém o efeito); Passo Ágil abaixo de 50%.
 - **Guardiã da capela:** fora; o rito tem regras próprias.
 - **Variantes do Passo Ágil:** uma semente só, de 1500 lutas. O ganho contra o troll (+19) passa do ruído, mas precisa
   da verificação de 13.5 antes de qualquer decisão.
+
+## 14. Validação do desvio do Passo Ágil e fechamento da E5 (sobre a 1.59.0)
+
+**Decisão: o desvio não entra no jogo.** Ele faz o que se propôs (responder ao golpe preparado), mas usado repetidamente
+vira a ação padrão contra inimigos sozinhos. Pelo critério de Jean, a avaliação se encerra com os resultados, sem outra
+mecânica nesta entrega. O Passo Ágil continua como era (+30% de esquiva por 2 turnos). Drenar Vida e Desaparecer ficam
+como estão.
+
+### 14.1 Resultados medidos
+
+**Regra validada**, a pedida por Jean:
+
+- custa 6 de Foco e gasta o turno;
+- desvia o próximo golpe esquivável que acertaria o herói, durante dois turnos pela contagem dos estados;
+- evita um golpe só, não acumula ao reaplicar e não traz o antigo +30%;
+- a esquiva natural vem antes e não gasta o desvio.
+
+**Método:**
+
+- Os roteiros da seção 13: atacar o mais fraco; Passo Ágil quando alguém prepara; Passo Ágil sempre que não está
+  valendo ("repetido").
+- Sementes novas e 1200 lutas por linha, pelo combate de verdade (IA dos inimigos).
+- Antes (a regra de hoje) e agora (o desvio), na mesma régua.
+- **Heróis em condições reais**, sem talentos e com o equipamento mediano da seção 13:
+  - Arqueiro 3 com Morel;
+  - Patrulheiro 4 e 7 com o lobo;
+  - Patrulheiro 7 com o lobo e Morel;
+  - Sombra 7 sozinho.
+- **Encontros:**
+  - do Vale: ossuário, sarilho e 3 lobos;
+  - de depois: troll, mercenário sozinho, mercenário e bandido, o guardião da floresta (o 2º do catálogo, que tem o
+    golpe preparado) e 3 bandidos.
+- **O guardião** entrou com limite de 200 turnos (300 lutas por linha): passou disso, conta como **impasse**, porque com
+  o desvio repetido algumas lutas não acabam.
+
+**Vitórias:**
+
+| Herói, encontro | Vida inicial | Atacar | Passo no preparo: hoje → desvio | Passo repetido: hoje → desvio (turnos) |
+|---|---|---|---|---|
+| Arqueiro 3 com Morel, ossuário | 45% | 85% | 77% → **90%** | 61% → **93%** (10,9) |
+| Arqueiro 3 com Morel, sarilho | 45% | 86% | 81% → **93%** | 66% → **94%** (11,9) |
+| Arqueiro 3 com Morel, 3 lobos | 45% | 54% | 54% → 54% | 30% → 30% |
+| Patrulheiro 4 com o lobo, ossuário / sarilho / lobos | 45% | 99% / 100% / 98% | sem mudança | 95% → 91% / 96% → 90% / 91% → 29% |
+| Patrulheiro 7 com o lobo, troll | 45% | 71% | 70% → **86%** | 52% → **100%** (12,6) |
+| Patrulheiro 7 com o lobo, mercenário + bandido | 45% | 90% | 88% → 93% | 73% → 95% (12,9) |
+| Patrulheiro 7 com o lobo, guardião | cheia | 15% | 19% → 28% | 7% → **83%** (100 turnos; 16% de impasse) |
+| Patrulheiro 7 com o lobo, 3 bandidos | 45% | 76% | 76% → 76% | 61% → 34% |
+| Patrulheiro 7 com o lobo e Morel, troll | 45% | 85% | 83% → 93% | 79% → **100%** |
+| Patrulheiro 7 com o lobo e Morel, guardião | 45% | 6% | 6% → 11% | 1% → **63%** (113 turnos; 35% de impasse) |
+| Sombra 7 sozinho, troll | 45% | 42% | 50% → **70%** | 31% → **100%** (16,8) |
+| Sombra 7 sozinho, mercenário sozinho / + bandido | 45% | 97% / 71% | 97% → 99% / 70% → 78% | 83% → 100% / 51% → 81% |
+| Sombra 7 sozinho, guardião | 45% | 1% | 1% → 1% | 0% → **91%** (87 turnos; 9% de impasse) |
+| Sombra 7 sozinho, 3 bandidos | 45% | 55% | 55% → 55% | 41% → 22% |
+
+De vida cheia, no Vale e contra o mercenário, atacar e responder à preparação ganham 99–100% antes e depois. Repetir o
+Passo com desvio contra lobos ou bandidos cai para 50–56%.
+
+**Leitura:**
+
+- **O papel proposto existe.** Responder à preparação com o desvio rende mais que atacar e mais que o Passo de hoje:
+  - contra o troll, +8 a +28 pontos sobre atacar;
+  - contra o guardião, +5 a +13 (de vida cheia ou com aliado; ferido e sozinho, nada);
+  - no Vale, só com aliado e ferido: +5 a +7.
+  - Contra grupos de inimigos fracos não muda nada: o desvio se gasta no primeiro golpe que vier.
+- **Mas vira a ação padrão contra um inimigo sozinho.**
+  - Com um atacante, há um golpe por rodada, e o desvio pega esse golpe. O Passo custa 6 de Foco e o Foco volta 5 por
+    turno, então o herói desvia quase toda rodada e ataca só de vez em quando.
+  - Contra o troll, repetir chega a 100% de vitórias; contra o guardião, a 83–91%, contra 1–15% atacando.
+  - As lutas passam de 80 a 110 turnos, e de 9% a 35% delas não acabam: o guardião regenera mais do que apanha.
+  - Com Morel e ferido, repetir também ganha no Vale (93% contra 85% no ossuário): o herói segura os golpes enquanto o
+    aliado luta.
+- **Conclusão:** o ganho em situações apropriadas se sustenta, mas a condição "sem virar a ação padrão" não. Pelo
+  pedido de Jean, a mudança não entra.
+
+### 14.2 Conferência técnica (feita na cópia de trabalho, depois descartada)
+
+A regra foi implementada e conferida antes da decisão. Nada disso está no repositório.
+
+- **Motor:**
+  - um estado "desvio" no catálogo e uma etapa nova do golpe ("desvia"), depois da esquiva natural e da imunidade, só
+    em golpe esquivável;
+  - o fim sem uso avisado no registro e na carta.
+- **Tela:** "desviou!" na carta e o ícone com os turnos.
+- **10 testes passaram:**
+  - consumo uma vez;
+  - esquiva natural sem consumo;
+  - expiração;
+  - reaplicação sem acumular;
+  - golpe preparado;
+  - ataque não esquivável;
+  - vários golpes numa salva;
+  - dano por turno;
+  - herói atordoado;
+  - aliado não gasta.
+- **Navegador, em 1500 e 1280 px:**
+  - o golpe preparado desviado;
+  - outro esqueleto, agindo antes, gasta o desvio, e o golpe preparado acerta.
+- **Duração real:** aplicado na vez do herói, o estado vale na vez inteira dos inimigos naquele turno e na do turno
+  seguinte; some no começo da segunda vez seguinte do herói. São duas rodadas completas dos inimigos, não duas ações
+  individuais. Essa contagem é a mesma de todos os estados do herói, incluindo o Passo de hoje.
+- **Um achado do motor:** a luta não tem limite de turnos. Hoje nenhuma habilidade produz uma luta sem fim. Qualquer
+  defesa garantida e repetível pode produzir, e isso vale para propostas futuras.
+
+### 14.3 A travessia do Vale: a guardiã por caminho
+
+Para o critério "três classes atravessam a região", a guardiã da capela (Ilse, nível 4) foi medida na versão atual pelo
+método da E3 (1.53.0).
+
+- Seis heróis por especialização e nível, com talentos e equipamento sorteados, um membro da comitiva e as poções do
+  começo.
+- Robô da arena, caminho "destruir" (a luta inteira); 150 lutas por linha.
+
+| Especialização | Nível 4 | Nível 5 |
+|---|---|---|
+| Paladino | 83% | 100% |
+| Berserker | 81% | 96% |
+| Patrulheiro | 85% | 97% |
+| Necromante | 54% | 98% |
+| Piromante | 22% | 66% |
+| Sombra | 26% | 50% |
+
+- **Leitura:** as três classes passam; cada uma tem ao menos um caminho que passa no nível 4 ou 5.
+- **Os mais duros:** Sombra e Piromante. Isso já estava registrado (COMO_CRIAR: "Sombra, Piromante e Necromante as mais
+  duras").
+- **O que alivia:** o rito, que encerra a luta na metade, e jogar melhor que o robô.
+- **O que não serve de régua:** sem talentos e sem poções, com um herói só, a mesma guardiã fica em 0–19%. Ninguém chega
+  lá assim no jogo.
+
+### 14.4 O critério mínimo da E5
+
+**"Pronto: três classes atravessam a região; seis caminhos avaliados em cenários direcionados."**
+
+- **Três classes atravessam a região:** atendido tecnicamente.
+  - As salas da capela com golpe preparado (seção 10), as lutas do Vale (seção 13) e a guardiã (14.3).
+  - O robô e os roteiros são a régua; a validação de Jean jogando fica registrada à parte, como na E4.
+- **Seis caminhos avaliados em cenários direcionados:** atendido.
+  - Paladino, Berserker e Piromante: as sequências e fichas das seções 4 e 9, a Combustão conferida contra a execução
+    (seção 11) e a guardiã (14.3).
+  - Patrulheiro: o Tiro Duplo (seção 12) e o Passo Ágil (seções 13 e 14).
+  - Sombra e Necromante: as lutas inteiras da seção 13.
+- **A E5 está concluída tecnicamente.** Falta Jean jogar: a P1 (o golpe preparado), a P3 (a encruzilhada e o
+  Grimório), o Tiro Duplo e os seis caminhos.
+
+### 14.5 Adiado, sem ser requisito da E5
+
+- **Passo Ágil:** segue sem vantagem relevante.
+  - Uma versão futura precisa limitar a repetição: recarga, ou não reaplicar logo depois de gastar.
+  - Precisa também ser medida com o mesmo roteiro "repetido" e com um limite de turnos.
+- **Desaparecer:** a sinergia com a Execução fica como hipótese sem evidência; tirar da mira em furtividade, como
+  proposta sem motivo medido.
+- **Drenar Vida:**
+  - o Grimório pode dizer que a cura conta o golpe inteiro, sem mudar número;
+  - recuperar mana, como proposta sem motivo medido.
+- **Equilíbrio:** Sombra e Piromante contra a guardiã do Vale no nível 4. É assunto de equilíbrio, não autorizado
+  nesta etapa.
+- **Preparação de habilidades:** o excesso de botões, o Golpe Pesado no Paladino.
+- **Limite de turnos no combate:** só se alguma mecânica futura permitir luta sem fim.
+- **Tiro Duplo:** as limitações da seção 12.6.
 

@@ -79,7 +79,7 @@ Três commits posteriores à atualização do roadmap foram consultados. Os comp
 | E2 — região fixa | **Protótipo entregue na 1.48.0** (commit `2661b59`): início da campanha, mapa fixo, viagem, descoberta e save. Validado tecnicamente; falta Jean jogar. |
 | E3 — missão mínima | Entregas na 1.50.0 a 1.54.0 (registros abaixo): da Fonte Nova ao canal, à capela, ao interior, a Vó Berta, à guardiã (Destruir ou Dar descanso) e à volta ao Vau, que conclui a missão. A bênção e a comporta não existem. Falta Jean jogar. |
 | E4 — consequência local | Na 1.54.0, a Fonte Nova, a frase do Vau, Pita e Marta. Na 1.55.0, Caspar: a acusação, a praça (Apoiar, Denunciar com prova, Calar), a situação da Yara e as reações da comitiva. Na 1.56.0, a consolidação: a Yara barrada fica de fato fora do Vau, o encontro no Charco depois da denúncia, a conversa da Yara sobre a praça e os textos que contradiziam o Vau. **O critério mínimo da E4 (07-ETAPAS) está atendido**; as outras ideias do 11 (bênção, sementes, mercado, taverna, Charco à noite, Odette e Caspar, Anselmo, a cena da vigília) ficam adiadas, não são requisito. Falta Jean jogar. |
-| E5 — classes | Diagnóstico (só design) em [14](14-E5-DIAGNOSTICO-CLASSES.md), sobre a 1.56.0. **P1 implementada na 1.57.0:** o golpe preparado em duas lutas fixas da capela (seção 10 do 14). **P3 implementada na 1.58.0:** a encruzilhada compara os dois caminhos e o Grimório explica (seção 11 do 14). **P2 começada na 1.59.0, só pelo Tiro Duplo** (seção 12 do 14): o 2º disparo vai no outro inimigo mais ferido. **Drenar Vida, Desaparecer e Passo Ágil avaliados em lutas inteiras** (seção 13 do 14, sem mudar o jogo): os dois primeiros têm função; o Passo Ágil não, e há uma mudança recomendada, não aprovada. A E5 **não** está concluída. A validação da E4 jogando, por Jean, fica registrada à parte. |
+| E5 — classes | Diagnóstico (só design) em [14](14-E5-DIAGNOSTICO-CLASSES.md), sobre a 1.56.0. **P1 implementada na 1.57.0:** o golpe preparado em duas lutas fixas da capela (seção 10 do 14). **P3 implementada na 1.58.0:** a encruzilhada compara os dois caminhos e o Grimório explica (seção 11 do 14). **P2 começada na 1.59.0, só pelo Tiro Duplo** (seção 12 do 14): o 2º disparo vai no outro inimigo mais ferido. **Drenar Vida, Desaparecer e Passo Ágil avaliados em lutas inteiras** (seção 13 do 14, sem mudar o jogo): os dois primeiros têm função. **O desvio do Passo Ágil foi validado e rejeitado** (seção 14): usado repetidamente, vira a ação padrão contra inimigos sozinhos; o Passo Ágil fica como era. **O critério mínimo da E5 (07-ETAPAS) está atendido**: as três classes atravessam o Vale (a guardiã medida por caminho) e os seis caminhos foram avaliados em cenários direcionados. A E5 está **concluída tecnicamente**; adiado, sem ser requisito: o Passo Ágil, a sinergia Desaparecer–Execução, Sombra e Piromante contra a guardiã no nível 4, a preparação de habilidades. Falta Jean jogar. A validação da E4 jogando, por Jean, fica registrada à parte. |
 | E6–E11 | Plano de trabalho futuro; infraestrutura existente não equivale a etapas concluídas. Notas aprovadas para a E3 na seção 19 do [11](11-E1-REGIAO-INICIAL.md). |
 | Bugs ainda abertos | Nenhum bug aberto específico foi informado para registro nesta passagem. Isso não comprova ausência de bugs. |
 | Polimento antes da E3 | Entregue na 1.48.1 (registro abaixo): leitura, item achado, balcão do templo, palco da luta. Falta Jean conferir jogando. |
@@ -692,4 +692,42 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
     - A variante "sem gastar o turno" foi rejeitada: vira a ação de todo turno.
     - Nada foi implementado.
 - **Próximo passo:** Jean decide entre implementar o desvio do Passo Ágil (a única próxima implementação recomendada) ou encerrar esta parte da P2. A E5 continua aberta.
+
+### 10/10/2026 — E5, P2: validação do desvio do Passo Ágil e fechamento da E5 (sobre a 1.59.0, sem mudar o jogo)
+
+- **Pedido de Jean:**
+  - fechar esta parte da P2 pelo Passo Ágil, sem mexer em Drenar Vida e Desaparecer;
+  - validar o desvio com outras sementes antes de incorporá-lo: troll, mercenário sozinho e acompanhado, guardião com golpe preparado, ossuário ou sarilho, grupo fraco; atacar, responder à preparação e usar repetidamente; Patrulheiro com animal e Arqueiro com comitiva;
+  - implementar só se houvesse vantagem nas situações apropriadas sem virar a ação padrão; senão, encerrar com os resultados, sem forçar outra mecânica;
+  - informar se o critério mínimo da E5 está atendido, sem manter a etapa aberta por hipóteses.
+- **Resultados medidos** (seção 14 do [14](14-E5-DIAGNOSTICO-CLASSES.md); 1200 lutas por linha, sementes novas, antes e depois na mesma régua):
+  - **Responder à preparação com o desvio funciona.** Contra o troll, ferido: Sombra 7 vai de 42% (atacar) a 70%; Patrulheiro 7 com o lobo, de 71% a 86%. Contra o guardião, Patrulheiro 7: de 15% a 28%. No Vale, com Morel e ferido: de 85% a 90%. Contra grupos fracos, nada muda.
+  - **Usado repetidamente, vira a ação padrão contra um inimigo sozinho.** Com um golpe por rodada, o desvio pega todos, e o Foco quase não acaba (6 por uso, 5 por turno). Troll: 100%. Guardião: 83–91%, contra 1–15% atacando, em 80 a 110 turnos, com 9–35% de lutas que não acabam.
+  - **Decisão:** não incorporar. O Passo Ágil continua como era.
+- **Conferência técnica (descartada com a regra):**
+  - a regra foi implementada numa cópia de trabalho, com 10 testes (consumo uma vez, esquiva natural sem consumo, expiração, reaplicação sem acumular, golpe preparado, ataque não esquivável, vários golpes, dano por turno, atordoado, aliado);
+  - no navegador: o golpe preparado desviado e outro inimigo gastando o desvio antes;
+  - duração real: a vez inteira dos inimigos no turno em que se usa e no seguinte (duas rodadas completas, não duas ações);
+  - nada disso ficou no repositório.
+- **A travessia do Vale** (guardiã da capela pelo método da E3, versão atual, destruir), nível 4 / nível 5:
+  - Paladino 83%/100%; Berserker 81%/96%; Patrulheiro 85%/97%; Necromante 54%/98%; Piromante 22%/66%; Sombra 26%/50%.
+  - As três classes passam. Sombra e Piromante são os caminhos mais duros, como já se sabia.
+- **Critério mínimo da E5:** atendido. Três classes atravessam a região (régua: robô e roteiros) e seis caminhos avaliados em cenários direcionados (seções 4, 9, 11, 12, 13 e 14 do 14). **E5 concluída tecnicamente.**
+- **Adiado, sem ser requisito:**
+  - um Passo Ágil com limite de repetição;
+  - a sinergia Desaparecer–Execução;
+  - o texto da cura do Drenar sobre o golpe inteiro;
+  - Sombra e Piromante contra a guardiã no nível 4 (equilíbrio);
+  - a preparação de habilidades;
+  - um limite de turnos no combate, se alguma mecânica permitir luta sem fim.
+- **Validação de Jean jogando:** registrada à parte. Falta jogar a P1, a P3, o Tiro Duplo e os seis caminhos.
+- **Verificações:**
+  - nenhum código mudou nesta entrega;
+  - `unittest`, `pyflakes` e fumaça rodaram sobre a 1.59.0 antes do registro;
+  - os scripts de medida ficaram fora do repositório.
+- **Como testar (rota curta):**
+  1. Com um Arqueiro no nível 3, desça ao ossuário (cenário `capela` com `CLASSE=arqueiro NIVEL=3 ETAPA=ossuario`).
+  2. Quando o Esqueleto de Guarda avisar o golpe, use o Passo Ágil: é o de hoje (+30% de esquiva), uma chance, não uma garantia.
+  3. Compare com atacar o esqueleto comum primeiro, como as medidas indicam.
+  4. Com um Patrulheiro (encruzilhada ou `--dev 7`), use o Tiro Duplo num grupo ferido; e confira na Encruzilhada a comparação dos caminhos e no Grimório os textos da P3.
 
