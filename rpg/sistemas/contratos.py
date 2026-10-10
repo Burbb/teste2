@@ -2,6 +2,7 @@
 
 from .. import texto as tx
 from ..dados import BIOMAS, FAMILIAS, retrato
+from .. import missoes
 from .. import sobrevivencia
 from ..mundo import distancias, nivel_regiao
 from .. import balanceamento as bal
@@ -216,6 +217,8 @@ class Contratos:
                 "rumores": [{"texto": r["texto"], "expira": r["expira"] - self.dia} for r in self.rumores],
                 "nemesis": {"nome": n["nome"], "familia": FAMILIAS[n["familia"]]["nome"]} if n else None,
             }
+            if self.campanha:  # a missão da campanha, no alto do diário (missoes.py)
+                dados["missoes"] = missoes.cartoes(self)
             web = self.ui.painel("diario", dados)
             if not web:
                 self._diario_texto(a)
@@ -232,6 +235,11 @@ class Contratos:
     def _diario_texto(self, a):
         if a:  # a campanha escrita ainda não tem vilão
             self.dizer(f"Inimigo final: {a['nome']}, {a['origem']}.", "magenta")
+        for m in missoes.cartoes(self) if self.campanha else []:
+            self.dizer(f"Missão: {m['nome']}", "amarelo+negrito")
+            self.dizer(f"  {m['objetivo']}", "amarelo")
+            for p in m["pistas"]:
+                self.dizer(f"  • {p}", "cinza")
         self.dizer(f"Sigilos: {len(self.j.sigilos)}/3   Dia {self.dia}", "magenta")
         self.dizer("Contratos:", "ciano")
         if not self.contratos:

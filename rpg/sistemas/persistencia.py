@@ -3,7 +3,7 @@
 import json
 import os
 import re
-from ..campanha import nome as nome_campanha
+from ..campanha import ajustar_save, nome as nome_campanha
 from ..entidades import Jogador
 from .. import telemetria
 from ..migracoes import CAMPOS_SAVE, VERSAO_SAVE, migrar
@@ -89,4 +89,5 @@ class Persistencia:
         for campo in CAMPOS_SAVE:  # só o que o jogo conhece; campos estranhos no arquivo são ignorados
             if campo in dados:
                 setattr(g, campo, dados[campo])
+        ajustar_save(g)  # campanha de antes das missões: a missão começa (campanha.py)
         return g

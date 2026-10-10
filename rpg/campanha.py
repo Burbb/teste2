@@ -9,6 +9,8 @@ para missões e falas futuras) e um `nivel` fixo. O mundo leva `campanha` (o id 
 da campanha ainda não foi decidido.
 """
 
+from . import missoes
+
 REGIOES = {
     "turvo": dict(
         nome="Vale do Turvo",
@@ -63,7 +65,16 @@ def montar_mundo(regiao):
     for a, b, trechos in r["estradas"]:
         locais[ids[a]]["con"][str(ids[b])] = trechos
         locais[ids[b]]["con"][str(ids[a])] = trechos
-    return {"locais": locais, "antagonista": None, "atual": 0, "campanha": regiao}
+    return {"locais": locais, "antagonista": None, "atual": 0, "campanha": regiao,
+            "missoes": missoes.estado_inicial(regiao)}
+
+
+def ajustar_save(g):
+    """Saves da campanha de antes das missões (1.48–1.49): a missão entra na primeira etapa, sem cenas vistas. Nada do
+    que já existe muda (personagem, bolsa, mapa descoberto, lugar); a cena de abertura toca na próxima vez em que a
+    pessoa estiver no Vau do Turvo. O mundo gerado não tem missões."""
+    if g.campanha and "missoes" not in g.mundo:
+        g.mundo["missoes"] = missoes.estado_inicial(g.campanha)
 
 
 def nome(regiao):

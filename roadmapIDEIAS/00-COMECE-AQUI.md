@@ -77,7 +77,8 @@ Três commits posteriores à atualização do roadmap foram consultados. Os comp
 | Correções recentes | Implementadas nos três commits acima, com validação relatada nas mensagens. |
 | E1 — região e arco | Proposta em [11](11-E1-REGIAO-INICIAL.md) e [12](12-E1-CAMPANHA.md). Aprovados por Jean para o protótipo: os quatro lugares e as ligações (Morro da Forca adiado), campanha como novo início, resgate como padrão e hardcore opcional. O resto aguarda aprovação. |
 | E2 — região fixa | **Protótipo entregue na 1.48.0** (commit `2661b59`): início da campanha, mapa fixo, viagem, descoberta e save. Validado tecnicamente; falta Jean jogar. |
-| E3–E11 | Plano de trabalho futuro; infraestrutura existente não equivale a etapas concluídas. Notas aprovadas para a E3 na seção 19 do [11](11-E1-REGIAO-INICIAL.md). |
+| E3 — missão mínima | Primeira entrega na 1.50.0 (registro abaixo): a missão começa e o primeiro passo da investigação funciona. Canal, capela, guardiã e desfechos ainda não. Falta Jean jogar. |
+| E4–E11 | Plano de trabalho futuro; infraestrutura existente não equivale a etapas concluídas. Notas aprovadas para a E3 na seção 19 do [11](11-E1-REGIAO-INICIAL.md). |
 | Bugs ainda abertos | Nenhum bug aberto específico foi informado para registro nesta passagem. Isso não comprova ausência de bugs. |
 | Polimento antes da E3 | Entregue na 1.48.1 (registro abaixo): leitura, item achado, balcão do templo, palco da luta. Falta Jean conferir jogando. |
 | Baús abertos juntos | Entregue na 1.49.0 (registro abaixo), separado da E3. Falta Jean conferir jogando. |
@@ -255,4 +256,42 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   - `fumaca.mjs`: 87 checagens OK em 3 rodadas seguidas, com o cenário novo "baus".
 - **Correção de teste:** a falha intermitente do cenário da campanha era do próprio teste. O ajudante `esperar` clica em qualquer `.continuar`, e o "Confirmar" do nome também é um. O reforço da entrega anterior não tratava isso; agora o campo do nome é esperado sem cliques.
 - **Observação, sem mudança:** a janela do item mostra "Mochila cheia: equipar deixa o item antigo para trás" mesmo quando o espaço do corpo está vazio (texto que já existia; equipar ali não deixa nada para trás).
+- **Não executado:** `tests.equilibrio` e `tests.replay` (nenhum número mudou).
+
+### 10/10/2026 — E3, primeira entrega (1.50.0)
+
+- **Pedido de Jean:**
+  - registrar a missão "A Febre do Turvo";
+  - cena curta de abertura sobre a febre e a água;
+  - objetivo no Diário e no rastreador;
+  - primeiro passo real da investigação (examinar a Fonte Nova, com a pista do canal).
+
+  Sem parentesco com Marta, passado do herói nem cronologia: continuam pendentes.
+- **Implementado:**
+  - `rpg/missoes.py`: a missão como dados, com id `febre_do_turvo`, etapas explícitas (`fonte` → `canal`), objetivo e lugar de cada etapa e uma pista (`agua_do_leste`).
+    - O estado vai em `mundo.missoes` (`etapa`, `cenas`, `pistas`).
+    - `avancar` só anda a partir da etapa certa e registra `missao` na telemetria.
+  - Cena de abertura (sem Marta): toca uma vez, no menu do Vau do Turvo, na etapa `fonte`. Nunca toca em luta, viagem ou evento, nem em outro lugar.
+  - "Examinar a Fonte Nova": opção do menu da vila na etapa `fonte`, com o ícone e o losango das opções de contrato.
+    - Texto geral mais uma linha por classe; a mesma pista para as três.
+    - Passa a etapa a `canal` e guarda a pista.
+    - Sem recompensa e sem passagem de tempo.
+  - Diário: um quadro "Missão" acima dos contratos, com o objetivo, o lugar e as pistas. No texto, as mesmas linhas.
+  - Rastreador: uma seção "Missão" acima de "Contratos", no mesmo molde.
+    - Quando o passo está disponível ali, o cartão chama ("Examinar a Fonte Nova ▸") e o clique o faz.
+    - O lugar do objetivo ganha o "!" no mapa e a linha na dica do lugar.
+  - O prólogo do protótipo diz que a missão começou.
+- **Saves da campanha de antes (1.48–1.49):** ao carregar, a missão entra na etapa `fonte`, sem cenas vistas (`campanha.ajustar_save`). Personagem, bolsa, mapa descoberto, lugar e dia não mudam. A abertura toca na próxima vez em que a pessoa estiver no Vau, e o objetivo já aparece no Diário. Sem nova versão do save: o mundo gerado não muda.
+- **Procedural:** sem missões, sem a chave no estado da tela e sem quadro no Diário. Gabarito idêntico.
+- **Verificações:**
+  - `unittest`: 131 OK, 1 pulado (`textual`). Novos em `tests/test_missoes.py`: as três classes iniciam e avançam; repetir não anda nem duplica; Diário, estado da tela e lugar concordam; save preserva; save antigo da campanha; cena respeita lugar, luta e estrada; procedural sem missão;
+  - `tests.gabarito`: OK, sem atualizar;
+  - `pyflakes`: só o aviso conhecido;
+  - `fumaca.mjs`: 90 checagens OK em 2 rodadas, com a missão no cenário da campanha;
+  - navegador, com capturas em 1500 e 1280 px (guerreiro e mago): abertura, vila com a opção e o rastreador, Diário antes e depois, exame, "!" do Vau para o Bosque, rastreador no mesmo lugar antes e depois (sem salto) e recarregar a página.
+- **Limitações:**
+  - na etapa `canal` ainda não há o que fazer no Bosque (próxima entrega);
+  - a missão não tem fim nem recompensa ainda;
+  - o objetivo não reage à comporta, a Caspar ou à Yara;
+  - os encontros da comitiva seguem aleatórios.
 - **Não executado:** `tests.equilibrio` e `tests.replay` (nenhum número mudou).

@@ -227,6 +227,7 @@ function mostrarOpcoes(m) {
     }
     if (o.meta && o.meta.item) icone = spr(Telas.iconeConsumivel(o.meta.item), 1);
     if (o.meta && o.meta.cacar !== undefined) { icone = spr("arco", 1); b.classList.add("op-contrato"); }
+    if (o.meta && o.meta.missao) { icone = spr("pergaminho", 1); b.classList.add("op-contrato"); }  // o passo da missão
     if (emLuta) icone = iconeAcaoCombate(o.meta) || icone;
     if (o.meta && o.meta.alvo) {
       b.addEventListener("mouseenter", () => Batalha.mirar(o.meta.alvo, true));
@@ -275,12 +276,19 @@ function opcaoCacar(id) {
   if (!pergunta || pergunta.tipo !== "opcoes") return -1;
   return pergunta.opcoes.findIndex((o) => o.meta && o.meta.cacar === id);
 }
+/** O passo da missão que se dá aqui (examinar a Fonte Nova...): o cartão da missão no rastreador vira atalho para ele. */
+function opcaoMissao(id) {
+  if (!pergunta || pergunta.tipo !== "opcoes") return -1;
+  return pergunta.opcoes.findIndex((o) => o.meta && o.meta.missao === id);
+}
 function marcarCacadas() {
   document.querySelectorAll(".rastro-contrato").forEach((c) => {
-    const pode = opcaoCacar(Number(c.dataset.contrato)) >= 0;
+    const i = c.dataset.missao ? opcaoMissao(c.dataset.missao) : opcaoCacar(Number(c.dataset.contrato));
+    const pode = i >= 0;
     c.classList.toggle("cacavel", pode);
     const selo = c.querySelector(".rastro-cacar");
-    if (pode && !selo) c.querySelector(".rastro-info").insertAdjacentHTML("beforeend", '<span class="rastro-cacar">Seguir os rastros ▸</span>');
+    const texto = c.dataset.missao ? `${pode ? esc(pergunta.opcoes[i].texto) : ""} ▸` : "Seguir os rastros ▸";
+    if (pode && !selo) c.querySelector(".rastro-info").insertAdjacentHTML("beforeend", `<span class="rastro-cacar">${texto}</span>`);
     else if (!pode && selo) selo.remove();
   });
 }

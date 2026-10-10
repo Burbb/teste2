@@ -1,7 +1,7 @@
 """Fotografia do estado do jogo em JSON, para a interface web desenhar painéis, mapa e combate."""
 
 from .. import balanceamento as bal
-from .. import comitiva, grimorio, mapa, sobrevivencia
+from .. import comitiva, grimorio, mapa, missoes, sobrevivencia
 from .. import texto as tx
 from ..classes import CLASSES
 from ..habilidades import HABILIDADES, descricao_habilidade
@@ -311,4 +311,5 @@ def estado(g):
         "glossario": glossario(),
         "itens": itens.para_tela(),  # ícone e contador de cada consumível e recurso
         "contratos": [g.cartao_contrato(c) for c in g.contratos],
+        **({"missoes": missoes.cartoes(g)} if g.campanha else {}),  # a missão da campanha (o mundo gerado não tem)
     }

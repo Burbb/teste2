@@ -112,6 +112,7 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
 | `rpg/balanceamento.py` | todos os números de dificuldade e generosidade, inclusive a curva por nível (inimigos, equipamento, XP, defesa) |
 | `rpg/dev.py` | herói de nível N com equipamento de acordo (`--dev N` e o simulador de equilíbrio) |
 | `rpg/classes.py` | classes, especializações, animais do Patrulheiro |
+| `rpg/missoes.py` | missões da campanha escrita: id estável, etapas (objetivo e lugar), pistas; as cenas e ações declaram lugar e etapa e só valem no menu do lugar (`cena_pendente`, `opcoes`, `executar`); o estado vai em `mundo.missoes` |
 | `rpg/campanha.py` | a campanha escrita (protótipo): regiões de mapa fixo no mesmo formato do mundo gerado (`chave` estável, `nivel` fixo, saída `fechado`), e os eventos do mundo gerado que ficam de fora (`EVENTOS_FORA`) |
 | `rpg/habilidades.py` | habilidades (execução + descrição) |
 | `rpg/talentos.py` | árvores de talentos e passivas de especialização, cada um declarando o próprio efeito |
@@ -123,7 +124,7 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
 
 ## Saves
 
-`rpg/sistemas/persistencia.py` grava JSON (a campanha escrita grava como `<região>_<nome>.json` e leva `mundo.campanha`; sem esse campo, é o mundo gerado); `rpg/migracoes.py` leva saves antigos para a versão atual
+`rpg/sistemas/persistencia.py` grava JSON (a campanha escrita grava como `<região>_<nome>.json` e leva `mundo.campanha`; sem esse campo, é o mundo gerado. Save da campanha sem `mundo.missoes`, de antes da 1.50, ganha a missão na primeira etapa ao carregar: `campanha.ajustar_save`); `rpg/migracoes.py` leva saves antigos para a versão atual
 (`VERSAO_SAVE`). Toda mudança de formato ganha uma migração.
 
 ## A interface web

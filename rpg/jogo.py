@@ -3,6 +3,7 @@
 import random
 
 from . import campanha
+from . import missoes
 from . import eventos
 from . import texto as tx
 from .classes import CLASSES, SPECS
@@ -238,7 +239,7 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         self.narrar(f"A estrada termina no {self.loc['nome']}, uma vila de beira-rio no fundo do vale. Você, "
                     f"{self.j.nome}, {self.j.nome_classe.lower()}, chega com "
                     f"{tx.plural(self.j.provisoes, 'dia')} de comida e {tx.plural(self.j.ouro, 'moeda')}.")
-        self.dizer("Protótipo: o mapa do vale, a viagem, a descoberta e o save. A história, a missão e os encontros "
+        self.dizer("Protótipo: o mapa do vale e o começo da missão da região. O resto da história e os encontros "
                    "escritos chegam nas próximas entregas; por ora, o vale tem os encontros de sempre.", "ciano")
         if self.hardcore:
             self.dizer("Hardcore: a morte é permanente e o save é apagado.", "vermelho+negrito")
@@ -354,6 +355,8 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
                 pass
         if self.periodo > 3:
             self.exausto()
+        if missoes.cena_pendente(self):  # a cena de missão deste lugar e desta etapa (só na campanha, uma vez)
+            return
         self.cabecalho()
         tipo = self.loc["tipo"]
         if tipo == "vila":
@@ -472,6 +475,7 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
             *self.opcoes_templo(),
             ("Curandeira: tratar ferimentos e infecções", "curandeiro", {"predio": "curandeiro"}) if j.ferimentos else None,
             ("Ferreiro: reforçar arma ou armadura", "ferreiro", {"predio": "ferreiro"}),
+            *missoes.opcoes(self),  # o passo da missão que se dá aqui (campanha), como "Examinar a Fonte Nova"
         ]
         # A frase da vila aparece na chegada e quando o tempo passa, não a cada volta ao menu (do mercado, do
         # inventário). O sorteio segue a cada volta: com a mesma semente, a partida continua a mesma.
@@ -499,6 +503,8 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
             self.ferreiro()
         elif isinstance(op, tuple) and op[0] == "templo":
             self.balcao_templo(op[1:])
+        elif isinstance(op, tuple) and op[0] == "missao":
+            missoes.executar(self, op[1], op[2])
         else:
             self.executar_comum(op)
 

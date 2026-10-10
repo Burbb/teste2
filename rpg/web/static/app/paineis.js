@@ -68,7 +68,7 @@ function aplicarEstado(e) {
   if (chaveHeroi !== ultimoHeroi) { ultimoHeroi = chaveHeroi; desenharHeroi(e.heroi, antes && antes.heroi); }
   const mudouMapa = !antes || antes.local.id !== e.local.id || JSON.stringify(antes.mapa) !== JSON.stringify(e.mapa) || antes.heroi.nivel !== e.heroi.nivel ||
     antes.mundo.periodo_n !== e.mundo.periodo_n || antes.mundo.clima_id !== e.mundo.clima_id ||
-    JSON.stringify(antes.contratos) !== JSON.stringify(e.contratos);
+    JSON.stringify(antes.contratos) !== JSON.stringify(e.contratos) || JSON.stringify(antes.missoes) !== JSON.stringify(e.missoes);
   if (mudouMapa) { desenharMundo(e); ultimoMundo = ""; }
   if (!$("#sobre-mapa").hidden && mudouMapa) desenharMapaGrande();
 }
@@ -245,7 +245,11 @@ function nivelPerigo(nivel) {
 }
 
 const maiuscula = (t) => (t ? t[0].toUpperCase() + t.slice(1) : t);  // "vila" → "Vila" no painel do mundo
-function marcasContrato(e) { return new Set((e.contratos || []).filter((c) => !c.concluido).map((c) => c.lugar_id)); }
+/** Os lugares com "!" no mapa: os dos contratos em andamento e o do objetivo da missão. */
+function marcasContrato(e) {
+  return new Set([...(e.contratos || []).filter((c) => !c.concluido).map((c) => c.lugar_id),
+    ...(e.missoes || []).map((m) => m.lugar_id).filter((id) => id !== null && id !== undefined)]);
+}
 /** A dica de um lugar no mapa (hover): o nome, o tipo, o perigo, a distância e os contratos que você tem lá. */
 function dicaDoLugar(e, clic) {
   const porLugar = {};
@@ -254,6 +258,7 @@ function dicaDoLugar(e, clic) {
     (n.nivel ? ` · <span class="nivel-cam ${nivelPerigo(n.nivel)}">${n.tipo === "vila" ? "arredores" : "inimigos"} Nv.${n.nivel}</span>` : "") +
     (n.distancia ? ` · ${Texto.plural(n.distancia, "trecho")}` : n.atual ? " · você está aqui" : "") + "</div>" +
     (porLugar[n.id] || []).map((c) => `<div class="dica-contrato">${spr("pergaminho", 1)}<span>${esc(c.desc)}</span></div>`).join("") +
+    (e.missoes || []).filter((m) => m.lugar_id === n.id).map((m) => `<div class="dica-contrato">${spr("pergaminho", 1)}<span>${esc(m.nome)}: ${esc(m.objetivo)}</span></div>`).join("") +
     (clic.has(n.id) ? '<div class="rodape">Clique para viajar</div>' : "");
 }
 
@@ -267,7 +272,7 @@ function desenharMundo(e) {
   const raiz = $("#mundo");
   raiz.innerHTML = `<div class="local-nome">${esc(l.nome)}</div><div class="local-desc">${esc(maiuscula(l.descricao))}</div>
     ${l.nivel ? `<span class="perigo-tag ${nivelPerigo(l.nivel)}">${l.tipo === "vila" ? "Arredores" : "Inimigos"} Nv.${l.nivel}</span>` : ""}<div id="mapa-mini"></div>
-    ${Telas.rastreador(e.contratos, e.heroi.nivel)}
+    ${Telas.rastreador(e.contratos, e.heroi.nivel, e.missoes)}
     <div class="secao"><h3>Caminhos</h3><div class="caminhos">${caminhos || '<div class="vazio">nenhum</div>'}</div></div>`;
   const mini = MapaPx.criar(e.mapa, { clicaveis: clic, aoClicar: viajarPara, nivelHeroi: e.heroi.nivel, marcas: marcasContrato(e), dicaDe: dicaDoLugar(e, clic) });
   mini.title = "Abrir o mapa (M)";
@@ -284,7 +289,7 @@ function desenharMundo(e) {
     const id = Number(c.dataset.local);
     if (clic.has(id)) c.classList.add("clicavel");
     c.addEventListener("click", () => {
-      const i = opcaoCacar(Number(c.dataset.contrato));
+      const i = c.dataset.missao ? opcaoMissao(c.dataset.missao) : opcaoCacar(Number(c.dataset.contrato));
       if (i >= 0) responder(pergunta.id, i);
       else if (clic.has(id)) viajarPara(id);
     });

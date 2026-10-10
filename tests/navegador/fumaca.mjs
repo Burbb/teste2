@@ -382,6 +382,15 @@ async function cenarioCampanha(browser) {
     conferir(!!(await esperar('#texto :text("não leva a lugar nenhum")', 8000)), "escolher a saída fechada explica e não viaja");
     conferir(!!(await esperar('#predios .predio[data-predio="estrada"]')) && (await page.evaluate(() => estado.local.nome)) === "Vau do Turvo",
       "depois do aviso, continua na vila");
+    // A missão (E3): a abertura já tocou; o rastreador e a opção da vila mostram o primeiro passo.
+    const objetivo = () => page.evaluate(() => (document.querySelector("#mundo .rastro-missao .rastro-objetivo") || {}).textContent || "");
+    conferir(/Fonte Nova/.test(await objetivo()) && !!(await page.$('#prompt .escolha:has-text("Examinar a Fonte Nova")')),
+      "a missão aparece no rastreador e o exame da Fonte Nova no menu da vila");
+    const atalho = await esperar("#mundo .rastro-missao.cacavel", 5000);
+    if (atalho) await atalho.click();
+    conferir(!!(await esperar('#cena-cab .cena-titulo:has-text("A Fonte Nova")', 10000)), "o cartão da missão leva ao exame da fonte");
+    conferir(!!(await esperar('#predios .predio[data-predio="estrada"]', 20000)) && /Bosque do Moinho/.test(await objetivo())
+      && !(await page.$('#prompt .escolha:has-text("Examinar a Fonte Nova")')), "depois do exame, o objetivo aponta o canal e o exame some");
   } finally {
     conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
     await page.close();
