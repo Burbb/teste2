@@ -15,7 +15,7 @@ from rpg.inimigos import instanciar_guardiao
 from rpg.jogo import Jogo
 from rpg.regras import Derrota
 from tests import arena
-from tests.test_missoes import CLASSES, MID, Roteiro, ir, lutas, na_capela, opcoes_febre
+from tests.test_missoes import CLASSES, MID, Roteiro, fazer, ir, lutas, na_capela, opcoes_febre
 
 ESPEC = {"bioma": "pantano", "id": "bruxa_afogada", "idx": 1, "nome": "Ilse, a Bruxa Afogada", "g": "f",
          "base": "Bruxa Afogada"}
@@ -271,7 +271,7 @@ class TestConfronto(unittest.TestCase):
         pasta = tempfile.mkdtemp()
         g = na_capela(pasta=pasta, etapa="fundo")
         lutas(g, "vitoria")
-        missoes.executar(g, MID, "correntes")
+        fazer(g, "correntes")
         del g.mundo["missoes"][MID]["desfecho"]
         g.salvar(silencioso=True)
         h = Jogo.carregar(Roteiro(), g.caminho_save(), pasta)

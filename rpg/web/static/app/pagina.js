@@ -377,6 +377,23 @@ async function efeito(m) {
   await espera(ritmo(m.tipo === "ferimento" ? 700 : 320));
 }
 
+/** O cartão de novidade da missão (missoes.anotar_novidades): o que a cena mostrou ou fez e o objetivo novo, juntos,
+ *  dentro do texto, como um bilhete do Diário. Não é janela: não cobre escolhas nem para a cena; o Diário e o
+ *  rastreador guardam o mesmo para quem adiantou o texto. */
+async function cartaoMissao(m) {
+  m.cartoes.forEach((c) => {
+    const estado = c.nova ? "missão nova" : c.concluida ? "concluída" : "Diário atualizado";
+    const itens = c.itens.map((t) => `<li>${esc(t)}</li>`).join("");
+    const obj = c.objetivo ? `<div class="novidade-objetivo"><span>Objetivo</span> ${esc(c.objetivo)}</div>` : "";
+    anexar(el("div", `novidade-missao${c.concluida ? " concluida" : ""}`,
+      `<div class="missao-cab">${spr("pergaminho", 1)}<b>${esc(c.nome)}</b><small>${estado}</small></div>${itens ? `<ul>${itens}</ul>` : ""}${obj}`));
+    historico("h-chip", `▸ ${c.nome}: ${[...c.itens, c.objetivo ? `Objetivo: ${c.objetivo}` : ""].filter(Boolean).join(" · ")}`);
+  });
+  if (replay) return;
+  Som.tocar("item");
+  if (!instantaneo()) await espera(ritmo(320));
+}
+
 async function rolagem(m) {
   const caixa = el("div", "rolagem rolando");
   const sinal = m.mod >= 0 ? "+" : "−";

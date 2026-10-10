@@ -56,6 +56,30 @@ Plano proposto, sem datas. Cada etapa é dividida em tarefas pequenas e depende 
 **Pronto:** três classes atravessam a região; seis caminhos avaliados em cenários direcionados.
 **Não fazer:** recriar passivas condicionais, adicionar classes ou evoluções sucessivas sem design.
 
+## Entre a E5 e a E6: clareza da campanha (teste de Jean)
+
+**Origem:** o primeiro teste real de Jean no Vale. O avanço para a E6 ficou pausado para esta frente.
+**Estado:** primeira entrega na 1.60.0 (registro no 00):
+- as correntes viraram uma ação só, com o como escolhido dentro (à mão, o método da classe ou voltar sem gastar nada);
+- as ações da missão vêm primeiro no menu do lugar, marcadas "Missão"; os contratos, "Contrato";
+- o frasco do lodo diz que é a prova para a decisão sobre Caspar;
+- o Diário segue a ordem objetivo e lugar, o mais recente, caminhos e preparos, histórico. O rito aparece como caminho opcional e a Vigília diz quando aguarda a febre;
+- um cartão compacto de atualização da missão por cena;
+- os textos do Vale e da capela foram simplificados.
+
+Nenhuma regra, custo, teste, encontro, recompensa ou número mudou.
+
+**Próximas entregas (registradas, não implementadas; cada uma é uma entrega à parte, nenhuma é requisito da E6):**
+1. **A bandagem da Odette.** O custo fica explícito na opção. Quando faltar a bandagem, a opção aparece indisponível e diz por quê. A exigência e o consumo já existem no motor: falta só mostrá-los.
+2. **A proteção do mendigo.**
+   - A aquisição e a ativação ficam visíveis: o que você ganhou, quando vale e quando acaba.
+   - A origem tem de ser coerente com o que o mendigo diz e faz.
+3. **"Continuar → Exausto → Continuar".** Reproduzir o fluxo que Jean viu, entender por que o Exausto aparece entre dois Continuar e corrigir só se for defeito.
+4. **A dívida do Morel.** Uma dívida de verdade: pagamento depois e uma proposta de juros. Hoje a conversa sugere mais do que o jogo guarda.
+5. **Revisão de loot.**
+   - Levantar a distribuição de consumíveis e de equipamento e a frequência de baús ao longo do Vale.
+   - Só então propor mudanças, pelo ciclo de balanceamento (COMO_CRIAR).
+
 ## E6 — Demonstrar transformação de habilidade
 
 **Depende:** E5.

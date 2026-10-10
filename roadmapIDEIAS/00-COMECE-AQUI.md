@@ -80,6 +80,7 @@ Três commits posteriores à atualização do roadmap foram consultados. Os comp
 | E3 — missão mínima | Entregas na 1.50.0 a 1.54.0 (registros abaixo): da Fonte Nova ao canal, à capela, ao interior, a Vó Berta, à guardiã (Destruir ou Dar descanso) e à volta ao Vau, que conclui a missão. A bênção e a comporta não existem. Falta Jean jogar. |
 | E4 — consequência local | Na 1.54.0, a Fonte Nova, a frase do Vau, Pita e Marta. Na 1.55.0, Caspar: a acusação, a praça (Apoiar, Denunciar com prova, Calar), a situação da Yara e as reações da comitiva. Na 1.56.0, a consolidação: a Yara barrada fica de fato fora do Vau, o encontro no Charco depois da denúncia, a conversa da Yara sobre a praça e os textos que contradiziam o Vau. **O critério mínimo da E4 (07-ETAPAS) está atendido**; as outras ideias do 11 (bênção, sementes, mercado, taverna, Charco à noite, Odette e Caspar, Anselmo, a cena da vigília) ficam adiadas, não são requisito. Falta Jean jogar. |
 | E5 — classes | Diagnóstico (só design) em [14](14-E5-DIAGNOSTICO-CLASSES.md), sobre a 1.56.0. **P1 implementada na 1.57.0:** o golpe preparado em duas lutas fixas da capela (seção 10 do 14). **P3 implementada na 1.58.0:** a encruzilhada compara os dois caminhos e o Grimório explica (seção 11 do 14). **P2 começada na 1.59.0, só pelo Tiro Duplo** (seção 12 do 14): o 2º disparo vai no outro inimigo mais ferido. **Drenar Vida, Desaparecer e Passo Ágil avaliados em lutas inteiras** (seção 13 do 14, sem mudar o jogo): os dois primeiros têm função. **O desvio do Passo Ágil foi validado e rejeitado** (seção 14): usado repetidamente, vira a ação padrão contra inimigos sozinhos; o Passo Ágil fica como era. **O critério mínimo da E5 (07-ETAPAS) está atendido**: as três classes atravessam o Vale (a guardiã medida por caminho) e os seis caminhos foram avaliados em cenários direcionados. A E5 está **concluída tecnicamente**; adiado, sem ser requisito: o Passo Ágil, a sinergia Desaparecer–Execução, Sombra e Piromante contra a guardiã no nível 4, a preparação de habilidades. Falta Jean jogar. A validação da E4 jogando, por Jean, fica registrada à parte. |
+| Clareza da campanha | Pausa antes da E6, a partir do teste de Jean. **Primeira entrega na 1.60.0** (registro abaixo): ações da capela organizadas, Diário reorganizado, linguagem do Vale simplificada, cartão de atualização de missão. As próximas entregas estão listadas em [07](07-ETAPAS.md) ("Entre a E5 e a E6"), sem implementar. Falta Jean testar. |
 | E6–E11 | Plano de trabalho futuro; infraestrutura existente não equivale a etapas concluídas. Notas aprovadas para a E3 na seção 19 do [11](11-E1-REGIAO-INICIAL.md). |
 | Bugs ainda abertos | Nenhum bug aberto específico foi informado para registro nesta passagem. Isso não comprova ausência de bugs. |
 | Polimento antes da E3 | Entregue na 1.48.1 (registro abaixo): leitura, item achado, balcão do templo, palco da luta. Falta Jean conferir jogando. |
@@ -731,3 +732,51 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   3. Compare com atacar o esqueleto comum primeiro, como as medidas indicam.
   4. Com um Patrulheiro (encruzilhada ou `--dev 7`), use o Tiro Duplo num grupo ferido; e confira na Encruzilhada a comparação dos caminhos e no Grimório os textos da P3.
 
+### 10/10/2026 — Clareza da campanha, primeira entrega (1.60.0)
+
+- **Pedido de Jean** (a partir do teste real dele; o avanço para a E6 ficou pausado e o Passo Ágil não voltou):
+  - organizar as ações da capela;
+  - reorganizar o Diário;
+  - simplificar a linguagem do Vale e da capela;
+  - destacar as atualizações de missão;
+  - registrar as próximas entregas sem implementar;
+  - nenhuma mudança de equilíbrio.
+- **As correntes viraram uma ação só** ("Soltar as correntes do sarilho (escolher como)"). Dentro dela:
+  - a cena explica o sarilho (o eixo em que as correntes se enrolam) e diz que é um preparo opcional para o descanso de Ilse;
+  - a pergunta oferece o jeito à mão (sempre funciona, chama os afogados), o método da classe (com o teste e o risco) e "Voltar sem mexer no sarilho";
+  - voltar não gasta tempo, tocha, flecha nem sorteio: não há Continuar nem cartão, e a ação continua no menu (teste e fumaça conferem);
+  - as duas formas deixam o mesmo preparo; regras, CD, encontros e recompensas não mudaram (as funções são as mesmas, só chamadas de dentro da escolha).
+- **O menu do lugar.**
+  - As ações da missão vêm primeiro, com borda dourada e a etiqueta "Missão"; os contratos levam a etiqueta "Contrato"; o resto fica como era.
+  - O frasco do lodo diz para que serve. Antes da acusação de Caspar: "prova do que suja a água". Depois: "prova para a decisão sobre Caspar".
+  - A descida ao fundo ficou "Descer ao fundo alagado e enfrentar a guardiã".
+- **O Diário, por missão, nesta ordem:**
+  1. o objetivo e o lugar;
+  2. o mais recente, com o dia;
+  3. caminhos e preparos. O rito aparece como "Caminho opcional: dar descanso a Ilse em vez de destruí-la. A missão termina pelos dois caminhos". A Vigília de Caspar mostra "Aguardando: Caspar só cobra a resposta quando a febre for resolvida" enquanto a febre não acaba;
+  4. o histórico da investigação, fechado, do mais novo para o mais antigo, com o texto inteiro de cada descoberta.
+- **O histórico é novo** (`historico` no registro da missão; o que mudou em cada ação ou cena, com o dia). Em saves de antes, o que já se sabia aparece num bloco "Antes deste registro (sem data)", sem datas inventadas.
+- **O cartão de atualização.**
+  - Depois de cada ação ou cena de missão, um cartão compacto dentro do texto (o mesmo papel do Diário). Ele junta o que se descobriu ou fez (nomes curtos) e o objetivo novo, quando muda.
+  - Um cartão por cena, mesmo com várias pistas. Não é janela, não cobre as escolhas e não aparece no meio da luta (vem depois dela).
+  - Carregar um save não repete nada: o cartão sai da diferença antes e depois da cena, não do estado.
+  - As linhas soltas "Diário: ..." e o efeito "Diário atualizado" saíram, porque o cartão os substitui.
+- **Textos.**
+  - "nave" virou "salão principal" ou "salão alagado" (a cena "A Nave Alagada" é agora "O Salão Alagado");
+  - "mós" virou "pedras de moinho"; "cripta", "fundo alagado"; "rombo" e "nicho", "buraco"; "adro", "pátio da frente";
+  - o sarilho é explicado onde aparece;
+  - objetivos e rótulos foram revistos: "o ossuário, a sala dos ossos", "a sacristia, atrás do altar".
+  - Identificadores internos (`nave`, `correntes`, `fundo`...) e os acontecimentos não mudaram.
+- **Verificações:**
+  - `unittest`: 14 testes novos em `tests/test_clareza.py` (voltar sem gastar, um cartão por cena, fuga sem cartão, carregar sem repetir, histórico com dia, save antigo sem datas, rito opcional, Vigília aguardando, rótulo do lodo, ordem do menu); os testes da capela foram adaptados à escolha interna;
+  - gabarito idêntico, sem atualizar (ele joga o mundo gerado, sem missões);
+  - `pyflakes` limpo;
+  - fumaça com o cenário novo do sarilho e os cartões da sacristia e do Diário;
+  - capturas em 1500 e 1280 px (menu da capela, escolha do sarilho, cartão, Diário com histórico e a Vigília aguardando).
+- **Próximas entregas:** registradas em [07](07-ETAPAS.md) ("Entre a E5 e a E6"), sem implementar: a bandagem da Odette, a proteção do mendigo, o fluxo "Continuar → Exausto → Continuar", a dívida do Morel e a revisão de loot.
+- **Como testar (rota curta):** veja a mensagem da entrega. Em resumo:
+  1. Comece a campanha e examine a Fonte Nova: aparece o cartão.
+  2. Abra o Diário (D).
+  3. Na capela, no fundo, abra "Soltar as correntes" e volte.
+  4. Abra de novo e solte.
+  5. Salve, carregue e confira que nada se repete.

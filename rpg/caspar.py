@@ -43,10 +43,13 @@ MISSOES = {
             "praca": dict(objetivo="Responder a Caspar na praça do Vau.", lugar="vau_do_turvo"),
         },
         pistas={},
+        titulos={"lodo": "Um frasco do lodo do fundo: prova para a decisão sobre Caspar",
+                 "analise": "O lodo é água parada, não feitiço de ninguém"},
         preparos={
-            "lodo": "Um frasco do lodo da cripta da capela: a mesma sujeira que a Fonte Nova trazia.",
-            "analise": "Você analisou o lodo: é água parada que passou pelo que vazava na cripta, não feitiço de "
-                       "ninguém.",
+            "lodo": "Um frasco do lodo do fundo da capela: a mesma sujeira que a Fonte Nova trazia. É a prova para a decisão "
+                    "sobre Caspar.",
+            "analise": "Você analisou o lodo: é água parada que passou pelo que vazava no fundo da capela, não "
+                       "feitiço de ninguém.",
         },
     ),
 }
@@ -115,7 +118,7 @@ def _requisitos(g, m):
     canal = bool({"canal_da_capela", "agua_da_capela"} & set(f["pistas"]))
     return {"titulo": "Para denunciar Caspar, você precisa de prova:", "itens": [
         {"texto": "O caminho da água, do canal à Fonte Nova", "onde": "o canal do Bosque do Moinho", "feito": canal},
-        {"texto": "Um frasco do lodo da cripta", "onde": "o fundo da Capela Afogada", "feito": "lodo" in m["preparos"]},
+        {"texto": "Um frasco do lodo do fundo da capela", "onde": "o fundo alagado da Capela Afogada", "feito": "lodo" in m["preparos"]},
     ]}
 
 
@@ -190,7 +193,15 @@ CONCLUSOES = {
     "denuncia_falhou": "Você denunciou a perseguição, com prova, mas a praça não quis ouvir.",
     "calar": "Você se calou diante da praça.",
 }
-MISSOES[MID].update(conclusoes=CONCLUSOES, requisitos=_requisitos, linhas=_linhas)
+def _aguardando(g, m):
+    """Enquanto a febre não acaba, a resposta a Caspar espera: o Diário diz isso, para a missão não parecer parada."""
+    if m["etapa"] == "acusacao" and not _febre(g).get("desfecho"):
+        return ("Aguardando: Caspar só cobra a resposta quando a febre for resolvida, na Capela Afogada "
+                "(A Febre do Turvo). Até lá, junte a prova se quiser denunciá-lo.")
+    return None
+
+
+MISSOES[MID].update(conclusoes=CONCLUSOES, requisitos=_requisitos, linhas=_linhas, aguardando=_aguardando)
 
 
 # ------------------------------------------------------------------ cenas e ações
@@ -225,8 +236,6 @@ def _acusacao(g, mid):
     g.narrar("\"Quando a febre acabar\", promete Caspar, \"a vila vai saber de quem era a culpa. E quem estava do lado "
              "dela.\"")
     _missoes().avancar(g, mid, "antes", "acusacao")
-    g.dizer(f"Diário: {MISSOES[MID]['etapas']['acusacao']['objetivo']}", "ciano")
-    g.ui.efeito(f"Missão: {MISSOES[MID]['nome']}", "info")
 
 
 def _praca(g, mid):
@@ -274,7 +283,7 @@ def _decidir(g):
     op = g.menu("O que você diz diante da vila?", [o for o in opcoes if o])
     if op is None:
         g.narrar("Você não diz nada por enquanto. Caspar continua pregando; a praça volta aos baldes.")
-        g.dizer("Diário: responder a Caspar na praça do Vau, quando quiser.", "ciano")
+        g.dizer("Você pode responder a Caspar na praça do Vau quando quiser.", "cinza")
         return
     _resolver(g, op, forte)
 
@@ -290,7 +299,7 @@ def _resolver(g, postura, forte=False):
         return
     yara = situacao_yara(g)
     if postura == "denunciar":
-        g.narrar("Você ergue o frasco do lodo da cripta e conta o caminho da água: a represa, o canal, a capela "
+        g.narrar("Você ergue o frasco do lodo e conta o caminho da água: a represa, o canal, a capela "
                  "afundada, a Fonte Nova. A febre veio do que todos beberam, não de uma moça no brejo.")
         if forte:
             g.narrar("Yara mostra as ervas que a água da fonte matava em um dia." if yara == "grupo" else
@@ -329,24 +338,21 @@ def _resolver(g, postura, forte=False):
                  "Como sempre.\"" if yara == "grupo" else
                  "Quando voltar ao acampamento, você vai ter de contar à Yara que ela não entra mais no Vau.")
     m["concluida"] = g.dia
-    g.dizer(f"Missão concluída: {MISSOES[MID]['nome']}. O que mudou fica no Diário.", "ciano")
-    g.ui.efeito(f"Missão concluída: {MISSOES[MID]['nome']}", "info")
 
 
 def _recolher_lodo(g, mid):
     """O frasco do lodo, no fundo da capela: a prova geral. A qualquer momento depois de chegar ao fundo."""
     m = registro(g)
     g.ui.cena("O Fundo da Capela", g.contexto_cena(), "evento")
-    g.narrar("Você desce até a água da cripta e enche um frasco com o lodo escuro e fino do fundo, o mesmo que a Fonte "
+    g.narrar("Você desce até a água do fundo e enche um frasco com o lodo escuro e fino do fundo, o mesmo que a Fonte "
              "Nova trazia.")
     if "lodo" not in m["preparos"]:
         m["preparos"].append("lodo")
     if g.j.classe == "mago" and "analise" not in m["preparos"]:
         g.narrar("À luz da tocha, você lê o lodo como se lê uma página: água parada, podre, que passou pelo que vazava "
-                 "na cripta. Nenhum feitiço de ninguém. Isso a praça vai entender.")
+                 "lá no fundo. Nenhum feitiço de ninguém. Isso a praça vai entender.")
         m["preparos"].append("analise")
-    g.dizer("Diário: o frasco do lodo, prova para a praça.", "ciano")
-    g.ui.efeito("Frasco do lodo da cripta", "info")
+    g.ui.efeito("Frasco do lodo", "item")
 
 
 def _yara_no_charco(g, mid):
@@ -379,6 +385,10 @@ def _chegou_ao_fundo(g):
     return _febre(g)["etapa"] in ("fundo", "retorno") and not registro(g).get("desfecho")
 
 
+# O frasco diz para que serve só quando se sabe: antes da acusação de Caspar, é a prova do que suja a água.
+ROTULO_LODO = {False: "Recolher um frasco do lodo do fundo (prova do que suja a água)",
+               True: "Recolher um frasco do lodo do fundo (prova para a decisão sobre Caspar)"}
+
 CENAS = [
     dict(missao=MID, id="acusacao", lugar="vau_do_turvo", etapas=("antes",), fn=_acusacao, confirmar=True,
          pode=lambda g: _febre(g)["etapa"] in ("capela", "sacristia", "ossuario", "fundo")
@@ -391,7 +401,7 @@ CENAS = [
          confirmar=True, pode=lambda g: not fogueira_possivel(g) and cm.disponivel(g, "yara")),
 ]
 ACOES = [
-    dict(missao=MID, id="lodo", rotulo="Recolher um frasco do lodo da cripta (prova)", lugar="capela_afogada",
+    dict(missao=MID, id="lodo", rotulo=lambda g: ROTULO_LODO[registro(g)["etapa"] != "antes"], lugar="capela_afogada",
          etapas=("antes", "acusacao", "praca"), falta="lodo", pode=_chegou_ao_fundo, fn=_recolher_lodo,
          confirmar=True),
     dict(missao=MID, id="praca", rotulo="Ir à praça responder a Caspar", lugar="vau_do_turvo", etapas=("praca",),

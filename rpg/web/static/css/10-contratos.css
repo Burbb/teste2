@@ -70,11 +70,33 @@
 .missao-rito ul { list-style: none; padding-left: 4px; }
 .missao-cab small { margin-left: 8px; font-size: 12px; font-style: italic; color: #3f5a2a; }
 .missao-pendente { color: #8a4a12; font-style: italic; }
+/* O cartão de novidade da missão, dentro do texto da página: o mesmo papel do Diário, menor. */
+.novidade-missao { max-width: 640px; margin: 0.4em 0 1.1em; padding: 8px 12px 10px; background: #f1e3c0; color: #2a1f14;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.45); border-left: 4px solid #8a5a0c; font-size: 15px; line-height: 1.35; }
+.novidade-missao .missao-cab b { font-size: calc(var(--px) * 24); }
+.novidade-missao ul { margin: 6px 0 0; padding-left: 18px; }
+.novidade-missao.concluida { border-left-color: #3f5a2a; }
+.novidade-objetivo { margin-top: 6px; padding-top: 5px; border-top: 2px dashed rgba(74, 42, 16, 0.35); }
+.novidade-objetivo span { font-size: 12px; font-style: italic; color: #6a5236; margin-right: 4px; }
 .missao-rito li.feito { color: #3f5a2a; }
 .missao-rito li small { color: #6a5236; font-style: italic; }
+.missao-aguardando { margin-top: 6px; padding: 4px 8px; border-left: 3px solid #8a4a12; background: rgba(138, 74, 18, 0.1); font-size: 14px; line-height: 1.35; color: #5a3410; }
+.missao-recente { margin-top: 8px; font-size: 14px; line-height: 1.35; }
+.missao-recente span { display: block; font-size: 12px; font-style: italic; color: #6a5236; }
+.missao-rito.opcional span { color: #4a5a2a; }
+.missao-historico { margin-top: 8px; padding-top: 6px; border-top: 2px dashed rgba(74, 42, 16, 0.35); font-size: 13px; line-height: 1.35; }
+.missao-historico summary { cursor: pointer; font-style: italic; color: #6a5236; }
+.missao-historico ol { list-style: none; margin: 4px 0 0; padding-left: 4px; }
+.missao-historico ol > li { margin-top: 4px; }
+.missao-historico ol > li > span { font-size: 12px; font-weight: bold; color: #4a2a10; }
+.missao-historico ul { margin: 2px 0 0; padding-left: 18px; }
 .rastro-cacar { display: block; font-family: var(--texto); font-size: 12px; font-weight: 700; color: var(--ouro); }
 .escolha.op-contrato { border-color: #8a5a0c; }
-.escolha.op-contrato .rotulo::after { content: " ◆"; color: var(--ouro); }
+.escolha.op-missao { border-color: #b8862a; background: rgba(184, 134, 42, 0.12); }
+.escolha .op-etiqueta { margin-left: auto; padding: 1px 7px; font-size: 12px; line-height: 1.4; letter-spacing: 0.04em;
+  text-transform: uppercase; border: 1px solid currentColor; border-radius: 2px; opacity: 0.85; white-space: nowrap; }
+.escolha.op-missao .op-etiqueta { color: var(--ouro); }
+.escolha.op-contrato .op-etiqueta { color: #c9a26a; }
 .rastro-arte { flex: none; width: 36px; height: 36px; display: grid; place-items: center; background: radial-gradient(circle at 50% 42%, rgba(255, 232, 190, 0.07), rgba(0, 0, 0, 0.45) 70%); }
 .rastro-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
 .rastro-info b { font-size: 14px; color: #f2e6cc; line-height: 1.2; }

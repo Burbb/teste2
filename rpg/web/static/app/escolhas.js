@@ -226,8 +226,10 @@ function mostrarOpcoes(m) {
       if (n) icone = spr(MapaPx.sprite(n), 1);
     }
     if (o.meta && o.meta.item) icone = spr(Telas.iconeConsumivel(o.meta.item), 1);
-    if (o.meta && o.meta.cacar !== undefined) { icone = spr("arco", 1); b.classList.add("op-contrato"); }
-    if (o.meta && o.meta.missao) { icone = spr("pergaminho", 1); b.classList.add("op-contrato"); }  // o passo da missão
+    // A missão, os contratos e o de sempre se distinguem: borda e etiqueta próprias (o resto fica como era).
+    let etiqueta = "";
+    if (o.meta && o.meta.cacar !== undefined) { icone = spr("arco", 1); b.classList.add("op-contrato"); etiqueta = "Contrato"; }
+    if (o.meta && o.meta.missao) { icone = spr("pergaminho", 1); b.classList.add("op-missao"); etiqueta = "Missão"; }
     if (emLuta) icone = iconeAcaoCombate(o.meta) || icone;
     if (o.meta && o.meta.alvo) {
       b.addEventListener("mouseenter", () => Batalha.mirar(o.meta.alvo, true));
@@ -235,7 +237,7 @@ function mostrarOpcoes(m) {
       b.addEventListener("focus", () => Batalha.mirar(o.meta.alvo, true));
       b.addEventListener("blur", () => Batalha.mirar(o.meta.alvo, false));
     }
-    b.innerHTML = `<span class="tecla">${tecla}</span>${icone}<span class="rotulo">${esc(o.texto)}</span>${teste}`;
+    b.innerHTML = `<span class="tecla">${tecla}</span>${icone}<span class="rotulo">${esc(o.texto)}</span>${teste}${etiqueta ? `<span class="op-etiqueta">${etiqueta}</span>` : ""}`;
     b.addEventListener("click", (ev) => { ev.stopPropagation(); responder(m.id, i); });
     li.appendChild(b);
     lista.appendChild(li);

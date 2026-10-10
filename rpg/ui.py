@@ -124,6 +124,17 @@ class UI:
         comida, flechas...), para a tela gráfica mandar o ícone até onde ele mora."""
         self._imprimir("   " + self.pintar(f"▸ {texto}", COR_EFEITO.get(tipo)))
 
+    def missao_atualizada(self, cartoes):
+        """O que uma ação ou cena mudou nas missões, junto, no fim do texto: o que se descobriu ou fez e o objetivo
+        novo. Cada cartão: missao, nome, itens, objetivo (ou None), nova, concluida (missoes.anotar_novidades)."""
+        for c in cartoes:
+            estado = " (missão nova)" if c["nova"] else " (concluída)" if c["concluida"] else ""
+            self.dizer(f"◆ Diário: {c['nome']}{estado}", "ciano")
+            for item in c["itens"]:
+                self.dizer(f"   + {item}", "ciano")
+            if c["objetivo"]:
+                self.dizer(f"   Objetivo: {c['objetivo']}", "ciano")
+
     def rolagem(self, atributo, cd, d20, mod, total, sucesso):
         """Resultado de um teste de atributo (a interface web anima o dado)."""
         extra = " · crítico!" if d20 == 20 else " · desastre!" if d20 == 1 else ""

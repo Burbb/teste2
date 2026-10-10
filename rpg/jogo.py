@@ -432,13 +432,14 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
             opcoes.append((f"Enfrentar {loc['guardiao']['nome']} (guardião)", "chefe"))
         if loc["tipo"] == "cidadela":
             opcoes.append((f"Invadir o salão do trono e enfrentar {self.antagonista['curto']}", "final"))
+        # Primeiro o que a missão pede aqui (campanha), depois os contratos, depois o de sempre: a tela marca cada grupo.
+        opcoes += missoes.opcoes(self)
         for c in self.contratos_aqui():
             if c["tipo"] == "alvo":
                 rotulo = f"Rastrear {c['nome']} (contrato)"
             else:
                 rotulo = f"Caçar {FAMILIAS[c['familia']]['plural']} (contrato, {c['feito']}/{c['total']})"
             opcoes.append((rotulo, f"cacar:{c['id']}", {"cacar": c["id"]}))
-        opcoes += missoes.opcoes(self)  # o passo da missão que se dá aqui (campanha), como "Seguir a água e examinar o canal"
         opcoes.append(("Explorar a região" + (" (à noite é mais perigoso)" if self.noite else ""), "explorar"))
         opcoes.append(("Acampar e descansar até o amanhecer", "acampar"))
         op = self.menu("O que você faz?", opcoes + self.opcoes_comuns())

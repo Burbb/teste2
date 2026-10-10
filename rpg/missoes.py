@@ -34,14 +34,14 @@ MISSOES = {
                           lugar="vau_do_turvo"),
             "canal": dict(objetivo="Seguir a água da Fonte Nova até o canal, no Bosque do Moinho.",
                           lugar="bosque_do_moinho"),
-            "capela": dict(objetivo="Investigar a Capela Afogada, onde o canal do moinho entra no brejo.",
+            "capela": dict(objetivo="Entrar na Capela Afogada, onde o canal do moinho entra no brejo.",
                            lugar="capela_afogada"),
-            "sacristia": dict(objetivo="Examinar a sacristia da Capela Afogada, atrás do altar.",
+            "sacristia": dict(objetivo="Atravessar o salão alagado da capela até a sacristia, atrás do altar.",
                               lugar="capela_afogada"),
-            "ossuario": dict(objetivo="Descer ao ossuário da Capela Afogada, embaixo da sacristia.",
+            "ossuario": dict(objetivo="Descer ao ossuário, a sala dos ossos embaixo da sacristia.",
                              lugar="capela_afogada"),
-            "fundo": dict(objetivo="Descer ao fundo alagado da Capela Afogada, para onde vão as correntes.",
-                          lugar="capela_afogada"),
+            "fundo": dict(objetivo="Descer ao fundo alagado da capela, para onde vão as correntes, e enfrentar o que "
+                                   "está lá.", lugar="capela_afogada"),
             "retorno": dict(objetivo="Voltar ao Vau do Turvo com o Sigilo.", lugar="vau_do_turvo"),
         },
         pistas={
@@ -49,30 +49,48 @@ MISSOES = {
                              "do Moinho, e traz um lodo escuro e fino que água de nascente não tem.",
             "represa": "No ano passado, o moleiro represou o riacho acima do moinho e abriu um canal para leste. O "
                        "trecho que descia para a vila minguou: é por isso que o poço da praça secou.",
-            "canal_da_capela": "O canal do moinho corre até o brejo e entra por um rombo no muro de uma capela "
+            "canal_da_capela": "O canal do moinho corre até o brejo e entra por um buraco no muro de uma capela "
                                "afundada, a Capela Afogada. Abaixo dela, a terra está encharcada na direção da vila.",
-            "agua_da_capela": "Dentro da capela, a água do canal atravessa a nave, desce por uma fenda do piso e sai "
+            "agua_da_capela": "Dentro da capela, a água do canal atravessa o salão principal, desce por uma fenda do piso e sai "
                               "por baixo do muro dos fundos, rumo à vila. Entra limpa e sai com o lodo escuro: é a "
                               "água da Fonte Nova.",
             "ilse": "A capela tinha uma guardiã, Ilse. A vila a acusou de bruxaria e a afogou; o padre que escreveu o "
                     "livro da sacristia diz que ela não fez nada do que disseram.",
-            "sigilo_do_turvo": "Em vida, Ilse tinha a custódia do Sigilo do Turvo, deixado na capela pela Igreja quando a "
+            "sigilo_do_turvo": "Em vida, Ilse guardava o Sigilo do Turvo, deixado na capela pela Igreja quando a "
                                "Fenda foi fechada, para não sair dali. Ele foi para a água com ela.",
             "marcados": "Dois homens com uma marca queimada no pulso reviravam a sacristia atrás de alguma coisa. "
                         "Não eram da vila, e não estavam sozinhos.",
-            "correntes": "No ossuário, um sarilho velho prende correntes que descem ao fundo alagado da capela, "
-                         "amarradas a duas mós de moinho. Alguma coisa está presa lá embaixo.",
-            "verdade_de_ilse": "Vó Berta viu, aos oito anos: a vila inteira tirou Ilse de casa, amarrou-a às mós do "
-                               "moinho e a desceu na cripta. O pai dela segurou a corda. Ninguém mandou parar.",
+            "correntes": "No ossuário, um sarilho velho (o eixo de madeira em que as correntes se enrolam) segura "
+                         "correntes que descem ao fundo alagado da capela, amarradas a duas pedras de moinho. Alguma "
+                         "coisa está presa lá embaixo.",
+            "verdade_de_ilse": "Vó Berta viu, aos oito anos: a vila inteira tirou Ilse de casa, amarrou-a a duas "
+                               "pedras de moinho e a desceu ao fundo da capela. O pai dela segurou a corda. Ninguém "
+                               "mandou parar.",
             "nome_e_fita": "Berta acredita que Ilse pode descansar se alguém a chamar pelo nome, devolver a fita dela e "
                            "a soltar das pedras. A guardiã não precisaria ser destruída.",
             "relato_de_ilse": "Ilse disse que o Sigilo é um de três, que os três seguram fechada uma porta que agora "
                               "range, e que há mãos procurando juntá-los.",
         },
+        # O nome curto de cada pista e preparo: o cartão de novidade (o que a cena acabou de mostrar) usa estes.
+        titulos={
+            "agua_do_leste": "A água da Fonte Nova vem do leste, com lodo",
+            "represa": "O moleiro represou o riacho e abriu um canal",
+            "canal_da_capela": "O canal entra na Capela Afogada",
+            "agua_da_capela": "A água suja passa por dentro da capela, rumo à vila",
+            "ilse": "Ilse, a guardiã da capela, foi afogada pela vila",
+            "sigilo_do_turvo": "O Sigilo do Turvo foi para a água com ela",
+            "marcados": "Homens com uma marca no pulso procuram alguma coisa",
+            "correntes": "Correntes prendem algo no fundo alagado",
+            "verdade_de_ilse": "Vó Berta contou como Ilse morreu",
+            "nome_e_fita": "Com o nome e a fita, Ilse pode descansar",
+            "relato_de_ilse": "Ilse falou dos três Sigilos",
+            "corpo_solto": "As correntes estão soltas",
+            "fita": "Você tem a fita de Ilse",
+        },
         # O que se faz para depois. Não é saber: conhecer o nome de Ilse é pista, não preparo.
         preparos={
             "corpo_solto": "As correntes do sarilho estão soltas: o que está no fundo da capela não está mais preso às "
-                           "mós.",
+                           "pedras de moinho.",
             "fita": "A fita de Ilse, que Vó Berta guardou desde a noite do afogamento e entregou a você.",
         },
     ),
@@ -82,7 +100,7 @@ MISSOES = {
 def estado_inicial(regiao):
     """As missões de uma campanha no começo: cada uma na primeira etapa, sem cenas vistas nem pistas."""
     return {mid: {"etapa": next(iter(m["etapas"])), "cenas": [], "pistas": [], "preparos": [], "desfecho": None,
-                  "dia_desfecho": None, "concluida": None}
+                  "dia_desfecho": None, "concluida": None, "historico": []}
             for mid, m in MISSOES.items() if m["campanha"] == regiao}
 
 
@@ -95,6 +113,7 @@ def completar(estado):
         m.setdefault("desfecho", None)
         m.setdefault("dia_desfecho", None)
         m.setdefault("concluida", None)
+        # O histórico datado começa nesta versão: um save de antes fica sem ele (as pistas antigas aparecem sem data).
 
 
 # Dar descanso a Ilse pede três coisas (11-E1-REGIAO-INICIAL.md, seção 6): saber a verdade, ter a fita e ter soltado o
@@ -104,7 +123,7 @@ REQUISITOS_DESCANSO = [
     ("A verdade sobre a morte de Ilse", "Vó Berta, na taverna do Vau, estava lá",
      lambda m: {"ilse", "verdade_de_ilse"} <= set(m["pistas"])),
     ("A fita de Ilse", "quem a viu morrer guardou alguma coisa dela", lambda m: "fita" in m["preparos"]),
-    ("O corpo solto das pedras", "o sarilho, no ossuário da capela", lambda m: "corpo_solto" in m["preparos"]),
+    ("O corpo solto das pedras de moinho", "o sarilho, o mecanismo das correntes, no ossuário da capela", lambda m: "corpo_solto" in m["preparos"]),
 ]
 
 
@@ -163,6 +182,8 @@ def cartoes(g, todas=False):
                       "preparos": [d["preparos"][p] for p in m.get("preparos", [])],
                       "desfecho": m.get("desfecho"),
                       "requisitos": None if m.get("concluida") else d.get("requisitos", lambda g, m: None)(g, m),
+                      "aguardando": None if m.get("concluida") else d.get("aguardando", lambda g, m: None)(g, m),
+                      **_historia(mid, m),
                       "concluida": m.get("concluida"),
                       **({"conclusao": f"Concluída no dia {m['concluida']}. " + d["conclusoes"][m["desfecho"]],
                           "linhas": [x for x in d.get("linhas", lambda g, m: [])(g, m) if x],
@@ -171,11 +192,46 @@ def cartoes(g, todas=False):
     return saida
 
 
+def _texto(mid, chave):
+    d = MISSOES[mid]
+    return d["pistas"].get(chave) or d["preparos"].get(chave, chave)
+
+
+def _historia(mid, m):
+    """O mais recente e o histórico da investigação, como o Diário mostra. Com datas só o que o histórico registrou
+    (desta versão em diante); o que um save de antes já sabia aparece sem data, na ordem em que foi descoberto."""
+    d = MISSOES[mid]
+    entradas = m.get("historico", [])
+    registrado = {c for e in entradas for c in e["pistas"] + e["preparos"]}
+    antigos = [c for c in m["pistas"] + m.get("preparos", []) if c not in registrado]
+    historico = ([{"dia": None, "itens": [_texto(mid, c) for c in antigos]}] if antigos else [])
+    for e in entradas:
+        itens = [_texto(mid, c) for c in e["pistas"] + e["preparos"]]
+        if e.get("desfecho"):
+            itens.append(d["conclusoes"][e["desfecho"]])
+        if e.get("etapa") and d["etapas"][e["etapa"]]["objetivo"] and not e.get("concluida"):
+            itens.append("Objetivo: " + d["etapas"][e["etapa"]]["objetivo"])
+        if e.get("inicio"):
+            itens.insert(0, "A missão começou.")
+        if itens and historico and historico[-1]["dia"] == e["dia"]:  # o mesmo dia fica junto
+            historico[-1]["itens"] += itens
+        elif itens:
+            historico.append({"dia": e["dia"], "itens": itens})
+    recente = None
+    for e in reversed(historico):  # a última descoberta ou o último feito (um objetivo novo sozinho não conta)
+        achados = [i for i in e["itens"] if not i.startswith("Objetivo: ") and i != "A missão começou."]
+        if achados:
+            recente = {"dia": e["dia"], "texto": achados[-1]}
+            break
+    return {"recente": recente, "historico": historico}
+
+
 def _requisitos_descanso(g, m):
     """O caminho do rito: só depois de saber de Ilse, e só enquanto a guardiã não foi resolvida."""
     if "ilse" not in m["pistas"] or m.get("desfecho"):
         return None
-    return {"titulo": "Para dar descanso a Ilse, em vez de destruí-la:",
+    return {"titulo": "Caminho opcional: dar descanso a Ilse em vez de destruí-la. A missão termina pelos dois "
+                      "caminhos; este pede três coisas:", "opcional": True,
             "itens": [{"texto": o_que, "onde": onde, "feito": feito} for o_que, onde, feito in descanso(m)]}
 
 
@@ -208,8 +264,6 @@ def _abertura(g, mid):
              "dorme direito.\"")
     g.narrar("Marta, a curandeira, também está de cama. Anos atrás, foi ela quem tirou você de uma febre de estrada, "
              "numa cama da casa dela, sem cobrar nada. Agora é Pita, a aprendiz dela, quem atende na cabana.")
-    g.dizer(f"Diário: {MISSOES[mid]['etapas']['fonte']['objetivo']}", "ciano")
-    g.ui.efeito(f"Missão: {MISSOES[mid]['nome']}", "info")
 
 
 # A hora do dia na prosa, pelo período de agora (dados.PERIODOS: Manhã, Tarde, Anoitecer, Noite).
@@ -237,9 +291,7 @@ def _examinar_fonte(g, mid):
     g.narrar("No fundo da bacia, quando a água assenta, fica um lodo escuro e fino. Nascente não deixa isso. Água que "
              "passou por algum lugar parado, sim.")
     _pista(m, "agua_do_leste")
-    if avancar(g, mid, "fonte", "canal"):
-        g.dizer(f"Diário: {MISSOES[mid]['etapas']['canal']['objetivo']}", "ciano")
-        g.ui.efeito("Diário atualizado", "info")
+    avancar(g, mid, "fonte", "canal")
 
 
 def _seguir_canal(g, mid):
@@ -259,21 +311,19 @@ def _seguir_canal(g, mid):
                 "uma palavra apagada, cada vez mais perto.",
     }.get(g.j.classe, "Rumo ao brejo, a água do canal fica mais escura e mais fria."))
     g.narrar("Você segue o canal até onde o bosque acaba. Adiante, meio engolida pelo brejo, há uma capela de pedra "
-             "com o telhado afundado, e o canal entra por um rombo no muro dela. Do outro lado, a terra encharcada "
+             "com o telhado afundado, e o canal entra por um buraco no muro dela. Do outro lado, a terra encharcada "
              "desce na direção da vila, como o fio que você viu na Fonte Nova.")
     _pista(m, "represa")
     _pista(m, "canal_da_capela")
-    if avancar(g, mid, "canal", "capela"):
-        g.dizer(f"Diário: {MISSOES[mid]['etapas']['capela']['objetivo']}", "ciano")
-        g.ui.efeito("Diário atualizado", "info")
+    avancar(g, mid, "canal", "capela")
 
 
 def _capela_exterior(g, mid):
     g.ui.cena("A Capela Afogada", g.contexto_cena(), "evento")
-    g.narrar("A capela está afundada até a metade das janelas. Juncos crescem no que foi o adro, e a porta da frente "
+    g.narrar("A capela está afundada até a metade das janelas. Juncos crescem no que foi o pátio da frente, e a porta "
              "sumiu sob a lama. O sino não está mais na torre.")
-    g.narrar("O canal que você seguiu desde o moinho termina aqui: a água entra pelo rombo no muro e desaparece no "
-             "escuro lá dentro, sem barulho. Do rombo vem um frio que não é do brejo.")
+    g.narrar("O canal que você seguiu desde o moinho termina aqui: a água entra por um buraco no muro e desaparece "
+             "no escuro lá dentro, sem barulho. Do buraco vem um frio que não é do brejo.")
     g.narrar("Na beira da água, os sapos estão quietos. Alguns têm patas a mais.")
 
 
@@ -336,25 +386,23 @@ def _recuo(g, titulo, texto):
 
 def _nave(g, mid):
     m = registro(g, mid)
-    g.ui.cena("A Nave Alagada", g.contexto_cena(), "evento")
-    g.narrar("Você entra pelo rombo, com a água do canal pelos joelhos. Lá dentro, a nave é um lago escuro entre "
-             "colunas. A água corre devagar entre os bancos podres e some numa fenda do piso, perto do altar.")
+    g.ui.cena("O Salão Alagado", g.contexto_cena(), "evento")
+    g.narrar("Você entra pelo buraco no muro, com a água do canal pelos joelhos. Lá dentro, o salão principal da capela "
+             "é um lago escuro entre colunas. A água corre devagar entre os bancos podres e some numa fenda do piso, perto do altar.")
     g.narrar("Alguma coisa se mexe entre os bancos. Corpos inchados se levantam da água, e o fundo se enche de "
              "sanguessugas.")
-    if not _lutar(g, g.grupo("afogado", n=1) + g.grupo("sanguessuga", n=2), "A Nave Alagada"):
-        _recuo(g, "A Nave Alagada", "Você recua pela brecha, de volta ao brejo. Lá dentro, a água se fecha de novo.")
+    if not _lutar(g, g.grupo("afogado", n=1) + g.grupo("sanguessuga", n=2), "O Salão Alagado"):
+        _recuo(g, "O Salão Alagado", "Você recua pela brecha, de volta ao brejo. Lá dentro, a água se fecha de novo.")
         return
-    g.ui.cena("A Nave Alagada", g.contexto_cena(), "evento")
-    g.narrar("Com a água quieta, dá para ver o caminho dela. Entra pelo muro rompido, atravessa a nave, desce pela "
+    g.ui.cena("O Salão Alagado", g.contexto_cena(), "evento")
+    g.narrar("Com a água quieta, dá para ver o caminho dela. Entra pelo muro rompido, atravessa o salão, desce pela "
              "fenda do piso e, mais adiante, sai por baixo do muro dos fundos, rumo à vila.")
-    g.narrar("Na boca do rombo, ela é clara. Na saída, deixa nas pedras o mesmo lodo escuro da Fonte Nova. A vila bebe "
+    g.narrar("Na entrada, ela é clara. Na saída, deixa nas pedras o mesmo lodo escuro da Fonte Nova. A vila bebe "
              "o que passa por baixo desta capela.")
     g.narrar("Atrás do altar, uma porta baixa leva à sacristia.")
     _pista(m, "agua_da_capela")
     g.avancar_periodo()
-    if avancar(g, mid, "capela", "sacristia"):
-        g.dizer(f"Diário: {MISSOES[mid]['etapas']['sacristia']['objetivo']}", "ciano")
-        g.ui.efeito("Diário atualizado", "info")
+    avancar(g, mid, "capela", "sacristia")
 
 
 def _sacristia(g, mid):
@@ -364,7 +412,7 @@ def _sacristia(g, mid):
              "escura reviram as prateleiras à luz de uma lanterna. Os dois têm a mesma marca queimada no pulso.")
     g.narrar("Um deles ergue a lanterna para o seu rosto. \"Não é ela\", diz. O outro já está com a faca na mão.")
     if not _lutar(g, g.grupo("cultista", n=2), "A Sacristia"):
-        _recuo(g, "A Sacristia", "Você volta pela nave até a brecha. Atrás de você, a lanterna se apaga.")
+        _recuo(g, "A Sacristia", "Você volta pelo salão alagado até a brecha. Atrás de você, a lanterna se apaga.")
         return
     g.ui.cena("A Sacristia", g.contexto_cena(), "evento")
     g.narrar({
@@ -374,7 +422,7 @@ def _sacristia(g, mid):
                     "de você chegar.",
         "mago": "A marca no pulso deles não é tinta. Foi queimada, e ainda tem um cheiro que não é de fogo.",
     }.get(g.j.classe, "Não vieram pela brecha: há uma escada de mão encostada na janela alta."))
-    g.narrar("O que eles procuravam ficou num nicho da parede, embrulhado num couro duro: o livro da capela. As "
+    g.narrar("O que eles procuravam ficou num buraco da parede, embrulhado num couro duro: o livro da capela. As "
              "primeiras páginas são de um padre de letra miúda. Ele anota a chegada de Ilse, \"guardiã desta casa\", "
              "no ano em que a Fenda foi fechada, e o que a Igreja deixou com ela: \"o Sigilo do Turvo, que não deve "
              "sair desta capela nem ir para mão nenhuma\".")
@@ -384,34 +432,32 @@ def _sacristia(g, mid):
     for pid in ("ilse", "sigilo_do_turvo", "marcados"):
         _pista(m, pid)
     g.narrar("Embaixo de um pano, num canto, há um baú pequeno de ferro, trancado. No chão, um alçapão desce para o "
-             "ossuário.")
+             "ossuário, a sala dos ossos.")
     g.dar("bau")
     g.avancar_periodo()
-    if avancar(g, mid, "sacristia", "ossuario"):
-        g.dizer(f"Diário: {MISSOES[mid]['etapas']['ossuario']['objetivo']}", "ciano")
-        g.ui.efeito("Diário atualizado", "info")
+    avancar(g, mid, "sacristia", "ossuario")
 
 
 def _ossuario(g, mid):
     m = registro(g, mid)
     g.ui.cena("O Ossuário", g.contexto_cena(), "evento")
-    g.narrar("O alçapão dá numa escada de pedra que desce para o frio. O ossuário é uma sala baixa, com nichos de ossos "
-             "arrumados nas paredes. Alguns nichos estão vazios. Os ossos que faltam estão de pé, no meio da sala.")
+    g.narrar("O alçapão dá numa escada de pedra que desce para o frio. O ossuário é uma sala baixa, com ossos "
+             "arrumados em buracos nas paredes. Alguns buracos estão vazios. Os ossos que faltam estão de pé, no meio da sala.")
     if not _lutar(g, grupo_ossuario(g), "O Ossuário"):
         _recuo(g, "O Ossuário", "Você sobe a escada de costas e fecha o alçapão. Embaixo, os ossos voltam a se arrumar.")
         return
     g.ui.cena("O Ossuário", g.contexto_cena(), "evento")
-    g.narrar("No fundo da sala há um sarilho de madeira preta, grosso como um tronco, com correntes enroladas no eixo. "
+    g.narrar("No fundo da sala há um sarilho: um eixo de madeira preta, grosso como um tronco, com correntes "
+             "enroladas nele, como num poço. "
              "Elas descem por um buraco no chão até a água parada lá embaixo, e estão esticadas: alguma coisa pesada "
              "as segura no fundo.")
-    g.narrar("Com a tocha no buraco, aparece a borda de duas mós velhas de moinho, presas às correntes. Quem fez isto "
-             "quis que nada saísse dali. Do buraco sobe o mesmo frio do rombo, e a água lá embaixo não devolve a luz.")
+    g.narrar("Com a tocha no buraco, aparece a borda de duas pedras velhas de moinho, presas às correntes. Quem fez "
+             "isto quis que nada saísse dali. Do buraco sobe o mesmo frio da entrada da capela, e a água lá embaixo não devolve a luz.")
     _pista(m, "correntes")
     g.avancar_periodo()
-    if avancar(g, mid, "ossuario", "fundo"):
-        g.dizer(f"Diário: {MISSOES[mid]['etapas']['fundo']['objetivo']}", "ciano")
-        g.ui.efeito("Diário atualizado", "info")
-    g.dizer("As correntes podem ser soltas daqui, antes de descer.", "cinza")
+    avancar(g, mid, "ossuario", "fundo")
+    g.dizer("As correntes podem ser soltas daqui, antes de descer (não é obrigatório para enfrentar a guardiã).",
+            "cinza")
 
 
 # Soltar o corpo (o passo D2 do Dar descanso, 11-E1-REGIAO-INICIAL.md seção 6): o caminho geral serve a qualquer
@@ -435,9 +481,7 @@ def _soltar(g, mid):
         m["preparos"].append("corpo_solto")
         from .telemetria import registrar
         registrar(g, "missao", missao=mid, preparo="corpo_solto")
-    g.narrar("Lá embaixo, a água se mexe uma vez e para.")
-    g.dizer("Diário: as correntes estão soltas.", "ciano")
-    g.ui.efeito("Diário atualizado", "info")
+    g.narrar("Lá embaixo, a água se mexe uma vez e para: o que estava preso às pedras de moinho está solto.")
 
 
 def _onda_de_afogados(g, mid):
@@ -453,16 +497,18 @@ def _onda_de_afogados(g, mid):
     _soltar(g, mid)
 
 
-def _correntes_a_mao(g, mid):
-    g.ui.cena("O Sarilho", g.contexto_cena(), "evento")
+def _correntes_a_mao(g, mid, cena=True):
+    if cena:
+        g.ui.cena("O Sarilho", g.contexto_cena(), "evento")
     g.narrar("Você firma os pés e começa a desenrolar a corrente, elo por elo. O sarilho range como um bicho, e o "
              "barulho desce pelo buraco e corre pela água da capela inteira.")
     _onda_de_afogados(g, mid)
 
 
-def _correntes_atalho(g, mid):
+def _correntes_atalho(g, mid, cena=True):
     attr, texto = ATALHOS_CORRENTES[g.j.classe]
-    g.ui.cena("O Sarilho", g.contexto_cena(), "evento")
+    if cena:
+        g.ui.cena("O Sarilho", g.contexto_cena(), "evento")
     if g.j.classe == "arqueiro":
         g.j.flechas -= 1
     if g.teste(attr, CD_CORRENTES):
@@ -472,6 +518,40 @@ def _correntes_atalho(g, mid):
     g.narrar("Não deu: a trava não cede, e o eixo solta um rangido que desce pelo buraco e corre pela água da capela "
              "inteira. Agora vai ter de ser à mão.")
     _onda_de_afogados(g, mid)
+
+
+# A forma da classe, como a escolha dentro do sarilho a oferece: o que se faz, o risco e o teste no fim (a tela anota o
+# seu bônus e tira o teste do texto).
+METODO_CLASSE = {
+    "guerreiro": "Arrancar a trava do sarilho",
+    "mago": "Apodrecer o ferro da trava",
+    "arqueiro": "Um tiro no pino da trava",
+}
+TESTE_CLASSE = {"guerreiro": "(Força)", "mago": "(Arcano)", "arqueiro": "(Destreza, gasta 1 flecha)"}
+RISCO_CLASSE = "sem barulho e sem luta, se der certo. Se falhar, o rangido chama os afogados e você termina à mão"
+
+
+def _soltar_correntes(g, mid):
+    """Uma ação só no menu da capela: aqui dentro se vê o problema e se escolhe como resolver. As duas formas deixam o
+    mesmo preparo feito; voltar não gasta nada (nem tempo, nem flecha, nem sorteio). Devolve False quando volta."""
+    g.ui.cena("O Sarilho", g.contexto_cena(), "evento")
+    g.narrar("O sarilho, um eixo grosso de madeira em que as correntes se enrolam, prende o que está nas duas pedras de "
+             "moinho, lá embaixo na água. Soltar as correntes é um dos preparos para dar descanso a Ilse; para "
+             "destruí-la, não é preciso.")
+    opcoes = [("À mão: desenrolar a corrente elo por elo. Sempre funciona, mas faz barulho: os afogados vêm, e é "
+               "preciso vencê-los", "mao")]
+    if g.j.classe == "arqueiro" and g.j.flechas <= 0:
+        g.dizer("Sem flechas, o tiro no pino da trava não dá: sobra o jeito à mão.", "cinza")
+    else:
+        opcoes.append((f"{METODO_CLASSE[g.j.classe]}: {RISCO_CLASSE} {TESTE_CLASSE[g.j.classe]}", "classe"))
+    opcoes.append(("Voltar sem mexer no sarilho", None))
+    op = g.menu("Como você solta as correntes? As duas formas deixam o mesmo preparo feito.", opcoes)
+    if op is None:
+        return False
+    if op == "mao":
+        _correntes_a_mao(g, mid, cena=False)
+    else:
+        _correntes_atalho(g, mid, cena=False)
 
 
 # ------------------------------------------------------------------ Vó Berta, a guardiã e o desfecho
@@ -485,8 +565,8 @@ def _berta(g, mid):
     g.narrar("\"Eu tinha oito anos\", diz por fim. \"Foi no inverno da febre, poucos anos depois que fecharam a Fenda. "
              "A Ilse cuidava da capela e de uma coisa que a Igreja tinha deixado com ela. Ninguém sabia o quê. Bastou "
              "para dizerem que era bruxa.\"")
-    g.narrar("\"Não foi um homem só. Foi a vila. Tiraram ela de casa de noite, amarraram nas mós velhas do moinho e "
-             "desceram tudo pela cripta, com corrente e sarilho. Meu pai segurou a corda. Eu vi da porta da capela, e "
+    g.narrar("\"Não foi um homem só. Foi a vila. Tiraram ela de casa de noite, amarraram em duas pedras velhas de "
+             "moinho e desceram tudo para o fundo da capela, com corrente e sarilho. Meu pai segurou a corda. Eu vi da porta da capela, e "
              "ninguém mandou ninguém parar.\"")
     g.narrar("\"Na véspera, ela tinha amarrado esta fita no meu cabelo.\" Berta tira do bolso uma fita desbotada, dobrada "
              "com cuidado. \"Guardei esse tempo todo. Dizem que afogado descansa quando alguém o chama pelo nome e o "
@@ -499,8 +579,7 @@ def _berta(g, mid):
         m["preparos"].append("fita")
         from .telemetria import registrar
         registrar(g, "missao", missao=mid, preparo="fita")
-    g.dizer("Diário: a verdade sobre Ilse e a fita dela.", "ciano")
-    g.ui.efeito("Fita de Ilse", "info")
+    g.ui.efeito("Fita de Ilse", "item")
 
 
 def _fundo(g, mid):
@@ -508,8 +587,8 @@ def _fundo(g, mid):
     from .inimigos import instanciar_guardiao
     m = registro(g, mid)
     g.ui.cena("O Fundo da Capela", g.contexto_cena(), "evento")
-    g.narrar("A escada do ossuário termina na água. A cripta é um poço escuro, com água pela cintura e um frio que não é "
-             "de água. No meio, entre duas mós de moinho, há uma forma enrolada em correntes.")
+    g.narrar("A escada do ossuário termina na água. O fundo é um poço escuro, com água pela cintura e um frio que não é "
+             "de água. No meio, entre duas pedras de moinho, há uma forma enrolada em correntes.")
     if "corpo_solto" in m["preparos"]:
         g.narrar("As correntes que você soltou pendem frouxas. A forma já não está presa às pedras.")
     g.narrar("Ela abre os olhos. A pele é azulada, os cabelos são algas, e ela começa a cantar uma canção de ninar. É "
@@ -589,25 +668,23 @@ def _resolver(g, mid, desfecho, nivel):
         g.ui.cena("Ilse", g.contexto_cena(), "evento")
         g.narrar("Por um momento, ela é só uma mulher cansada com a água pela cintura. Ela pega a fita da sua mão e a "
                  "enrola nos dedos.")
-        g.narrar("\"Eu tinha a custódia dele\", diz, sem raiva. \"É um de três. Os três seguram fechada uma porta que "
+        g.narrar("\"Eu era a guardiã dele\", diz, sem raiva. \"É um de três. Os três seguram fechada uma porta que "
                  "nunca devia ter sido aberta, e agora ela range. Há mãos procurando os três. Não os deixe juntar por "
                  "quem não sabe o que está fechando.\"")
         g.narrar("Ela abre a mão. O Sigilo do Turvo, rachado e frio como pedra de rio, passa para a sua. Depois ela "
-                 "afunda devagar, com a fita entre os dedos, e a água da cripta fica parada e clara.")
+                 "afunda devagar, com a fita entre os dedos, e a água do fundo fica parada e clara.")
         _pista(m, "relato_de_ilse")
     else:
         g.ui.cena("A Guardiã Destruída", g.contexto_cena(), "evento")
         g.narrar("Ilse se desfaz na água escura, e o canto vira bolhas. Por um instante, a água que desce para a vila "
                  "corre mais turva.")
-        g.narrar("Onde ela esteve, entre as mós, sobra o Sigilo do Turvo, rachado e frio como pedra de rio. Presa às "
+        g.narrar("Onde ela esteve, entre as pedras de moinho, sobra o Sigilo do Turvo, rachado e frio como pedra de rio. Presa às "
                  "pedras, há também uma veste de couro endurecido pela água, que ainda guarda a forma de alguém.")
     g.receber_sigilo("turvo", "Ilse, a Bruxa Afogada")
     if desfecho == "destruida":
         g.oferecer_equip(itens.fazer_unico(itens.UNICOS_POR_ID["pele_do_penitente"], min(nivel, g.j.nivel + 2)))
     g.avancar_periodo()
-    if avancar(g, mid, "fundo", "retorno"):
-        g.dizer(f"Diário: {MISSOES[mid]['etapas']['retorno']['objetivo']}", "ciano")
-        g.ui.efeito("Diário atualizado", "info")
+    avancar(g, mid, "fundo", "retorno")
 
 
 def _retorno(g, mid):
@@ -641,8 +718,6 @@ def _retorno(g, mid):
     m["concluida"] = g.dia
     from .telemetria import registrar
     registrar(g, "missao", missao=mid, concluida=g.dia)
-    g.dizer(f"Missão concluída: {MISSOES[mid]['nome']}. O que aconteceu fica no Diário.", "ciano")
-    g.ui.efeito(f"Missão concluída: {MISSOES[mid]['nome']}", "info")
 
 
 def _heranca(g, mid):
@@ -674,25 +749,16 @@ ACOES = [
          etapas=("fonte",), fn=_examinar_fonte, confirmar=True),
     dict(missao="febre_do_turvo", id="seguir_canal", rotulo="Seguir a água e examinar o canal",
          lugar="bosque_do_moinho", etapas=("canal",), fn=_seguir_canal, confirmar=True),
-    dict(missao="febre_do_turvo", id="nave", rotulo="Entrar na capela pela brecha do canal", lugar="capela_afogada",
+    dict(missao="febre_do_turvo", id="nave", rotulo="Entrar na capela pelo buraco do canal", lugar="capela_afogada",
          etapas=("capela",), fn=_nave, confirmar=True),
-    dict(missao="febre_do_turvo", id="sacristia", rotulo="Atravessar a nave até a sacristia", lugar="capela_afogada",
-         etapas=("sacristia",), fn=_sacristia, confirmar=True),
-    dict(missao="febre_do_turvo", id="ossuario", rotulo="Descer ao ossuário", lugar="capela_afogada",
+    dict(missao="febre_do_turvo", id="sacristia", rotulo="Atravessar o salão alagado até a sacristia",
+         lugar="capela_afogada", etapas=("sacristia",), fn=_sacristia, confirmar=True),
+    dict(missao="febre_do_turvo", id="ossuario", rotulo="Descer ao ossuário, a sala dos ossos", lugar="capela_afogada",
          etapas=("ossuario",), fn=_ossuario, confirmar=True),
-    dict(missao="febre_do_turvo", id="correntes", rotulo="Soltar as correntes do sarilho à mão (demora e faz barulho)",
-         lugar="capela_afogada", etapas=("fundo",), falta="corpo_solto", fn=_correntes_a_mao, confirmar=True),
-    dict(missao="febre_do_turvo", id="correntes_forca", rotulo="Arrancar a trava do sarilho (Força)",
-         lugar="capela_afogada", etapas=("fundo",), falta="corpo_solto", classe="guerreiro", fn=_correntes_atalho,
-         confirmar=True),
-    dict(missao="febre_do_turvo", id="correntes_arcano", rotulo="Apodrecer o ferro da trava (Arcano)",
-         lugar="capela_afogada", etapas=("fundo",), falta="corpo_solto", classe="mago", fn=_correntes_atalho,
-         confirmar=True),
-    dict(missao="febre_do_turvo", id="correntes_tiro", rotulo="Um tiro no pino da trava (Destreza, 1 flecha)",
-         lugar="capela_afogada", etapas=("fundo",), falta="corpo_solto", classe="arqueiro",
-         pode=lambda g: g.j.flechas > 0, fn=_correntes_atalho, confirmar=True),
-    dict(missao="febre_do_turvo", id="fundo", rotulo="Descer ao fundo da capela (a guardiã)", lugar="capela_afogada",
-         etapas=("fundo",), fn=_fundo, confirmar=True),
+    dict(missao="febre_do_turvo", id="correntes", rotulo="Soltar as correntes do sarilho (escolher como)",
+         lugar="capela_afogada", etapas=("fundo",), falta="corpo_solto", fn=_soltar_correntes, confirmar=True),
+    dict(missao="febre_do_turvo", id="fundo", rotulo="Descer ao fundo alagado e enfrentar a guardiã",
+         lugar="capela_afogada", etapas=("fundo",), fn=_fundo, confirmar=True),
     # Na taverna do Vau: o cartão no balcão, como os serviços (`meta`). Berta depois da sacristia, uma vez; a herança
     # para quem deu descanso a Ilse, uma vez.
     dict(missao="febre_do_turvo", id="berta", rotulo="Taverna: falar com Vó Berta", lugar="vau_do_turvo",
@@ -705,6 +771,54 @@ ACOES = [
          meta={"predio": "taverna", "servico": "berta", "curto": "Contar a Vó Berta",
                "efeito": "Ilse descansou com a fita dela"}, fn=_heranca, confirmar=True),
 ]
+
+
+def _retrato(g):
+    """O que importa para as novidades, missão a missão, antes de uma ação ou cena."""
+    return {mid: (m["etapa"], list(m["pistas"]), list(m.get("preparos", [])), m.get("desfecho"), m.get("concluida"),
+                  len(m["cenas"]))
+            for mid, m in (g.mundo.get("missoes") or {}).items()}
+
+
+def titulo(mid, chave):
+    """O nome curto de uma pista ou preparo (o cartão e o histórico); sem nome curto, o texto inteiro."""
+    d = MISSOES[mid]
+    return d.get("titulos", {}).get(chave) or d["pistas"].get(chave) or d["preparos"].get(chave, chave)
+
+
+def anotar_novidades(g, antes):
+    """Depois de uma ação ou cena: o que mudou em cada missão entra no histórico dela, com o dia, e vira um cartão só
+    (o que se descobriu ou fez e o objetivo novo), no fim do texto. Só o que acabou de acontecer: carregar um save não
+    passa por aqui."""
+    cartoes = []
+    for mid, m in (g.mundo.get("missoes") or {}).items():
+        if mid not in antes:
+            continue
+        etapa, pistas, preparos, desfecho, concluida, cenas = antes[mid]
+        d = MISSOES[mid]
+        novas = [p for p in m["pistas"] if p not in pistas]
+        feitos = [p for p in m.get("preparos", []) if p not in preparos]
+        nova_etapa = m["etapa"] if m["etapa"] != etapa else None
+        comecou = not cenas and bool(m["cenas"]) and not pistas and not preparos
+        desf = m.get("desfecho") if m.get("desfecho") != desfecho else None
+        fim = bool(m.get("concluida")) and not concluida
+        if not (novas or feitos or nova_etapa or comecou or desf or fim):
+            continue
+        entrada = {"dia": g.dia, "pistas": novas, "preparos": feitos}
+        entrada.update({k: v for k, v in (("etapa", nova_etapa), ("desfecho", desf)) if v})
+        if comecou:
+            entrada["inicio"] = True
+        if fim:
+            entrada["concluida"] = True
+        m.setdefault("historico", []).append(entrada)
+        if not d["etapas"][m["etapa"]]["objetivo"] and not fim:
+            continue  # uma missão ainda não apresentada (Caspar, antes da acusação) não aparece: o histórico guarda
+        objetivo = d["etapas"][m["etapa"]]["objetivo"] if (nova_etapa or comecou) and not m.get("concluida") else None
+        itens = [titulo(mid, p) for p in novas + feitos] + ([d["conclusoes"][desf]] if desf else [])
+        cartoes.append({"missao": mid, "nome": d["nome"], "itens": itens, "objetivo": objetivo, "nova": comecou,
+                        "concluida": fim})
+    if cartoes:
+        g.ui.missao_atualizada(cartoes)
 
 
 def _vale(g, d):
@@ -730,8 +844,10 @@ def cena_pendente(g):
         return False
     for d in CENAS:
         if _vale(g, d) and d["id"] not in registro(g, d["missao"])["cenas"]:
+            antes = _retrato(g)
             registro(g, d["missao"])["cenas"].append(d["id"])  # antes de tocar: se cair numa luta ou num save, não repete
             d["fn"](g, d["missao"])
+            anotar_novidades(g, antes)
             _encerrar(g, d)
             return True
     return False
@@ -741,7 +857,8 @@ def opcoes(g):
     """As ações de missão que valem no lugar e na etapa de agora, como opções do menu do lugar."""
     if not g.campanha:
         return []
-    return [(d["rotulo"], ("missao", d["missao"], d["id"]), {**d.get("meta", {}), "missao": d["missao"]})
+    return [(d["rotulo"](g) if callable(d["rotulo"]) else d["rotulo"], ("missao", d["missao"], d["id"]),
+             {**d.get("meta", {}), "missao": d["missao"]})
             for d in ACOES if _vale(g, d)]
 
 
@@ -749,8 +866,11 @@ def executar(g, mid, aid):
     """Faz a ação de missão escolhida, se ela ainda vale (um clique repetido numa ação já feita não faz nada)."""
     for d in ACOES:
         if (d["missao"], d["id"]) == (mid, aid) and _vale(g, d):
-            d["fn"](g, mid)
-            _encerrar(g, d)
+            antes = _retrato(g)
+            voltou = d["fn"](g, mid) is False  # a escolha dentro da ação (o sarilho) pode voltar sem fazer nada
+            anotar_novidades(g, antes)
+            if not voltou:
+                _encerrar(g, d)
             return True
     return False
 

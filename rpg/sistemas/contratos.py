@@ -242,20 +242,28 @@ class Contratos:
                     if linha:
                         self.dizer(f"  {linha}", "amarelo")
             else:
-                self.dizer(f"  {m['objetivo']}", "amarelo")
-            if m["pistas"]:
-                self.dizer("  O que você sabe:", "cinza")
-            for p in m["pistas"]:
-                self.dizer(f"  • {p}", "cinza")
-            if m["preparos"]:
-                self.dizer("  O que você já fez:", "cinza")
-            for p in m["preparos"]:
-                self.dizer(f"  • {p}", "cinza")
+                self.dizer(f"  {m['objetivo']}" + (f" Lugar: {m['lugar']}." if m["lugar"] else ""), "amarelo")
+            if m["aguardando"]:
+                self.dizer(f"  {m['aguardando']}", "amarelo")
+            if m["recente"]:
+                dia = f" (dia {m['recente']['dia']})" if m["recente"]["dia"] is not None else ""
+                self.dizer(f"  Mais recente{dia}: {m['recente']['texto']}", "branco")
             if m["requisitos"]:
                 self.dizer(f"  {m['requisitos']['titulo']}", "cinza")
             for r in (m["requisitos"] or {}).get("itens", []):
                 self.dizer(f"  {'✓' if r['feito'] else '○'} {r['texto']}" + ("" if r["feito"] else f" ({r['onde']})"),
                            "verde" if r["feito"] else "cinza")
+            if m["preparos"] and not m["requisitos"]:
+                self.dizer("  O que você já fez:", "cinza")
+                for p in m["preparos"]:
+                    self.dizer(f"  • {p}", "cinza")
+            if m["historico"]:
+                self.dizer("  Histórico da investigação:", "cinza")
+            for e in reversed(m["historico"]):  # do mais novo para o mais antigo; o de antes do registro, sem data
+                self.dizer(f"    {'Dia ' + str(e['dia']) if e['dia'] is not None else 'Antes deste registro (sem data)'}:",
+                           "cinza")
+                for i in e["itens"]:
+                    self.dizer(f"    • {i}", "cinza")
         self.dizer(f"Sigilos: {len(self.j.sigilos)}/3   Dia {self.dia}", "magenta")
         self.dizer("Contratos:", "ciano")
         if not self.contratos:

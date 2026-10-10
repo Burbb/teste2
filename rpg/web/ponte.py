@@ -147,6 +147,11 @@ class WebUI(InterfaceGrafica, UI):
     def atualizar(self):
         self.enviar_estado()
 
+    def missao_atualizada(self, cartoes):
+        """O cartão de novidade da missão vai inteiro, dentro do texto (o Diário e o rastreador também se atualizam)."""
+        self._enviar("missao", cartoes=cartoes)
+        self.enviar_estado()
+
     def lance(self, tipo, **dados):
         self._enviar("lance", tipo=tipo, **dados)
 

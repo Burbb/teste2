@@ -41,7 +41,11 @@ async function abrir(browser, url) {
       if (e) return e;
       const c = await page.$("#prompt .continuar");
       // O Continuar de uma cena de missão não aceita toque na rajada: espera a guarda e toca uma vez.
-      if (c && (await c.evaluate((b) => b.classList.contains("confirmar")).catch(() => false))) await page.waitForTimeout(700);
+      if (c && (await c.evaluate((b) => b.classList.contains("confirmar")).catch(() => false))) {
+        await page.waitForTimeout(700);
+        const achou = await page.$(sel);  // o que se esperava pode ter chegado durante a guarda: não fecha a cena dele
+        if (achou) return achou;
+      }
       if (c) await c.click().catch(() => {});
       await page.waitForTimeout(100);
     }
@@ -448,9 +452,10 @@ async function cenarioMissao(browser) {
     conferir(!!(await esperar('#prompt .escolha:has-text("Explorar")')) && (await alvo()) === "Capela Afogada"
       && !(await page.$('#prompt .escolha:has-text("Seguir a água")')), "depois do Continuar, o objetivo e o marcador vão para a capela");
     await page.keyboard.press("d");
-    const sabe = await esperar(".missao-pistas", 10000);
-    conferir(!!sabe && (await page.textContent(".missao-pistas > span")) === "O que você sabe:" && (await page.$$(".missao-pistas li")).length === 3,
-      "o Diário diz o que você sabe: as três descobertas");
+    const sabe = await esperar(".missao-recente", 10000);
+    const descobertas = await page.$$eval(".missao-historico li li", (ls) => ls.map((l) => l.textContent).filter((t) => !/^Objetivo:/.test(t)));
+    conferir(!!sabe && /Capela Afogada/.test(await page.textContent(".missao-recente")) && descobertas.length === 3,
+      `o Diário mostra o mais recente (o canal entra na capela) e guarda as três descobertas no histórico (${descobertas.length})`);
   } finally {
     conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
     await page.close();
@@ -514,10 +519,10 @@ async function cenarioCapela(browser) {
   const objetivo = () => page.evaluate(() => (estado.missoes || [])[0].objetivo);
   const baus = () => page.evaluate(() => (estado.heroi.bolsa.find((b) => b.id === "bau") || { qtd: 0 }).qtd);
   try {
-    await page.waitForSelector(`${MENU}:has-text("Atravessar a nave até a sacristia")`, { timeout: 20000 });
-    conferir(/sacristia/.test(await objetivo()) && !!(await page.$("#mundo .rastro-missao")), "na capela, com a nave vencida: o passo seguinte é a sacristia");
+    await page.waitForSelector(`${MENU}:has-text("Atravessar o salão alagado até a sacristia")`, { timeout: 20000 });
+    conferir(/sacristia/.test(await objetivo()) && !!(await page.$("#mundo .rastro-missao")), "na capela, com o salão vencido: o passo seguinte é a sacristia");
     const antes = await baus();
-    await page.click(`${MENU}:has-text("Atravessar a nave até a sacristia")`);
+    await page.click(`${MENU}:has-text("Atravessar o salão alagado até a sacristia")`);
     // a luta da sala: ataca até acabar; o espólio fecha com Continuar depois da guarda dele
     for (let k = 0; k < 400 && !(await page.$("#prompt .continuar.confirmar")); k++) {
       if (await page.evaluate(() => document.body.classList.contains("em-combate"))) {
@@ -531,10 +536,13 @@ async function cenarioCapela(browser) {
     }
     conferir(/A Sacristia/.test(await page.textContent("#cena-cab .cena-titulo")) && /Ilse/.test(await page.textContent("#texto")),
       "vencida a luta, a sacristia mostra o livro da capela, com Ilse, e espera o Continuar");
+    const cartoes = await page.$$eval("#texto .novidade-missao", (cs) => cs.map((c) => c.textContent));
+    conferir(cartoes.length === 1 && /Ilse/.test(cartoes[0]) && /Objetivo/.test(cartoes[0]) && /ossuário/.test(cartoes[0]),
+      `um cartão só junta o que a sacristia mostrou e o objetivo novo (${cartoes.length})`);
     await page.waitForTimeout(800);
     await page.click("#prompt .continuar");
     await page.waitForSelector(`${MENU}:has-text("Descer ao ossuário")`, { timeout: 20000 });
-    conferir(/ossuário/.test(await objetivo()) && !(await page.$(`${MENU}:has-text("Atravessar a nave")`)) && (await baus()) >= antes + 1,
+    conferir(/ossuário/.test(await objetivo()) && !(await page.$(`${MENU}:has-text("Atravessar o salão")`)) && (await baus()) >= antes + 1,
       "o objetivo passa ao ossuário, a sacristia some do menu e o baú dela está na bolsa");
     const bausDepois = await baus();
     await (await page.waitForSelector('#doca .atalho[data-rotulo="Sair"]')).click();
@@ -546,7 +554,7 @@ async function cenarioCapela(browser) {
     await (await page.waitForSelector(`${MENU}:has-text("Carregar")`, { timeout: 20000 })).click();
     await (await page.waitForSelector(".save-cartao")).click();
     await page.waitForSelector(`${MENU}:has-text("Descer ao ossuário")`, { timeout: 20000 });
-    conferir(!(await page.$(`${MENU}:has-text("Atravessar a nave")`)) && /ossuário/.test(await objetivo()) && (await baus()) === bausDepois
+    conferir(!(await page.$(`${MENU}:has-text("Atravessar o salão")`)) && /ossuário/.test(await objetivo()) && (await baus()) === bausDepois
       && !!(await page.$("#doca .atalho")) && !(await page.evaluate(() => document.body.classList.contains("sem-heroi"))),
       "salvar, sair e carregar lá dentro: a sala vencida continua vencida, o baú não se repete e a tela vem inteira");
     await page.keyboard.press("d");
@@ -554,6 +562,42 @@ async function cenarioCapela(browser) {
     const diario = await page.textContent(".missao-diario");
     conferir(/Ilse/.test(diario) && /Sigilo do Turvo/.test(diario) && !/O que você já fez/.test(diario),
       "o Diário sabe de Ilse e do Sigilo, e ainda não tem nada feito (saber o nome não prepara o rito)");
+    conferir(/Mais recente/.test(diario) && /Caminho opcional/.test(diario) && !!(await page.$(".missao-diario details.missao-historico:not([open])")),
+      "o Diário mostra o mais recente, o rito como caminho opcional e o histórico fechado");
+    conferir(!(await page.$("#texto .novidade-missao")), "carregar o save não repete o cartão da sacristia");
+  } finally {
+    conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
+    await page.close();
+    proc.kill();
+  }
+}
+
+async function cenarioSarilho(browser) {
+  console.log("cenário: as correntes do sarilho (uma ação só, os métodos dentro, e voltar sem gastar nada)");
+  const { proc, url } = await subir("capela", { ETAPA: "fundo" });
+  const { page, erros } = await abrir(browser, url);
+  const MENU = "#prompt .escolhas:not(.escolhido) .escolha";
+  const foto = () => page.evaluate(() => JSON.stringify([estado.heroi.bolsa, estado.heroi.hp, estado.mundo.dia, estado.mundo.periodo_n, estado.missoes]));
+  try {
+    await page.waitForSelector(`${MENU}:has-text("Soltar as correntes")`, { timeout: 20000 });
+    const menu = await page.$$eval(MENU, (bs) => bs.map((b) => [b.textContent, b.className]));
+    const correntes = menu.filter(([t]) => /correntes/i.test(t));
+    conferir(correntes.length === 1 && /op-missao/.test(correntes[0][1]) && /Missão/.test(correntes[0][0]),
+      "as correntes são uma ação só, marcada como da missão");
+    conferir(menu.findIndex(([, c]) => /op-missao/.test(c)) === 0 && /frasco do lodo/.test(menu.find(([t]) => /lodo/.test(t))[0]),
+      "as ações da missão vêm primeiro, e o frasco do lodo diz para que serve");
+    const antes = await foto();
+    await page.click(`${MENU}:has-text("Soltar as correntes")`);
+    await page.waitForSelector(`${MENU}:has-text("Voltar sem mexer no sarilho")`, { timeout: 20000 });
+    const metodos = await page.$$eval(MENU, (bs) => bs.map((b) => `${b.querySelector(".rotulo").textContent} ${(b.querySelector(".teste") || {}).textContent || ""}`));
+    conferir(metodos.length === 3 && /^À mão/.test(metodos[0]) && /Arrancar a trava/.test(metodos[1]) && /FOR [+−]\d+/.test(metodos[1]),
+      `dentro: à mão, o método da classe (com o teste) e voltar (${metodos.length})`);
+    conferir(/eixo grosso de madeira/.test(await page.textContent("#texto")), "o sarilho é explicado antes da escolha");
+    await page.screenshot({ path: process.env.CAPTURAS ? `${process.env.CAPTURAS}/sarilho-${(await page.viewportSize()).width}.png` : "/dev/null" }).catch(() => {});
+    await page.click(`${MENU}:has-text("Voltar sem mexer no sarilho")`);
+    await page.waitForSelector(`${MENU}:has-text("Soltar as correntes")`, { timeout: 20000 });
+    conferir((await foto()) === antes && !(await page.$("#texto .novidade-missao")) && !(await page.$("#prompt .continuar")),
+      "voltar não gasta nada, não mostra cartão e devolve o menu da capela");
   } finally {
     conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
     await page.close();
@@ -589,7 +633,7 @@ async function cenarioGuardia(browser) {
       await page.waitForTimeout(250);
     }
     conferir(!!momento && momento[0] === Math.floor(momento[1] * 0.5), `o momento do rito chega com ela exatamente na metade (${momento && momento.join("/")})`);
-    conferir(/Ilse/.test(await page.textContent("#cena-cab .cena-titulo")) && /custódia/.test(await page.textContent("#texto")),
+    conferir(/Ilse/.test(await page.textContent("#cena-cab .cena-titulo")) && /guardiã dele/.test(await page.textContent("#texto")),
       "ela descansa: o relato de Ilse, esperando o Continuar");
     await page.waitForTimeout(800);
     await page.click("#prompt .continuar");
@@ -959,6 +1003,7 @@ try {
   await cenarioMissao(browser);
   await cenarioRecarga(browser);
   await cenarioCapela(browser);
+  await cenarioSarilho(browser);
   await cenarioGuardia(browser);
   await cenarioRetorno(browser);
   await cenarioCaspar(browser);

@@ -154,6 +154,7 @@ async function tratar(m) {
     case "cabecalho": tituloAtual = m.titulo; cabecalho(m); break;  // a tela que se redesenha depois reconhece o título
     case "texto": await texto(m); break;
     case "efeito": await efeito(m); break;
+    case "missao": await cartaoMissao(m); break;
     case "rolagem": await rolagem(m); break;
     case "combate":
       // Luta nova: nada da anterior (a câmera lenta de um golpe final que não terminou) nem da vila fica na arena.

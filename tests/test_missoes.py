@@ -89,8 +89,15 @@ def lutas(g, *resultados):
     return vistas
 
 
-def fazer(g, aid):
+def fazer(g, aid, como="À mão"):
+    """Faz a ação; nas correntes, responde também como soltar (à mão, ou o começo do atalho da classe)."""
+    if aid == "correntes":
+        g.ui.roteiro.insert(0, como)
     return missoes.executar(g, MID, aid)
+
+
+def sem_historico(g):
+    return {k: v for k, v in missoes.registro(g, MID).items() if k != "historico"}
 
 
 def opcoes_febre(g):
@@ -103,7 +110,7 @@ class TestMissao(unittest.TestCase):
         for classe in CLASSES:
             ui = Roteiro(["Examinar a Fonte Nova"])
             g = campanha(classe, ui)
-            self.assertEqual(missoes.registro(g, MID), {"etapa": "fonte", "cenas": [], "pistas": [], "preparos": [], "desfecho": None, "dia_desfecho": None, "concluida": None})
+            self.assertEqual(missoes.registro(g, MID), {"etapa": "fonte", "cenas": [], "pistas": [], "preparos": [], "desfecho": None, "dia_desfecho": None, "concluida": None, "historico": []})
             g.tela()  # a cena de abertura toca no lugar do menu
             self.assertEqual(ui.cenas[-1], "A Febre do Turvo")
             self.assertEqual(missoes.registro(g, MID)["cenas"], ["abertura"])
@@ -151,7 +158,7 @@ class TestMissao(unittest.TestCase):
         g.tela(); g.tela()
         g.salvar(silencioso=True)
         h = Jogo.carregar(Roteiro(), g.caminho_save(), pasta)
-        self.assertEqual(missoes.registro(h, MID), {"etapa": "canal", "cenas": ["abertura"], "pistas": ["agua_do_leste"], "preparos": [], "desfecho": None, "dia_desfecho": None, "concluida": None})
+        self.assertEqual(sem_historico(h), {"etapa": "canal", "cenas": ["abertura"], "pistas": ["agua_do_leste"], "preparos": [], "desfecho": None, "dia_desfecho": None, "concluida": None})
         self.assertFalse(missoes.cena_pendente(h))
         self.assertFalse(missoes.opcoes(h))
 
@@ -168,7 +175,7 @@ class TestMissao(unittest.TestCase):
         with open(g.caminho_save(), encoding="utf-8") as f:
             self.assertNotIn("missoes", json.load(f)["mundo"])
         h = Jogo.carregar(Roteiro(), g.caminho_save(), pasta)
-        self.assertEqual(missoes.registro(h, MID), {"etapa": "fonte", "cenas": [], "pistas": [], "preparos": [], "desfecho": None, "dia_desfecho": None, "concluida": None})
+        self.assertEqual(missoes.registro(h, MID), {"etapa": "fonte", "cenas": [], "pistas": [], "preparos": [], "desfecho": None, "dia_desfecho": None, "concluida": None, "historico": []})
         self.assertEqual((h.loc["chave"], h.j.ouro, h.dia, h.j.classe), ("bosque_do_moinho", 77, 9, "mago"))
         self.assertEqual({l["chave"] for l in h.mundo["locais"] if l["visitado"]}, {"vau_do_turvo", "bosque_do_moinho"})
         self.assertFalse(missoes.cena_pendente(h))  # no bosque, não
@@ -274,12 +281,12 @@ class TestMissao(unittest.TestCase):
         g.tela(); g.tela()
         g.salvar(silencioso=True)
         h = Jogo.carregar(Roteiro([CANAL]), g.caminho_save(), pasta)
-        self.assertEqual(missoes.registro(h, MID), {"etapa": "canal", "cenas": ["abertura"], "pistas": ["agua_do_leste"], "preparos": [], "desfecho": None, "dia_desfecho": None, "concluida": None})
+        self.assertEqual(sem_historico(h), {"etapa": "canal", "cenas": ["abertura"], "pistas": ["agua_do_leste"], "preparos": [], "desfecho": None, "dia_desfecho": None, "concluida": None})
         ir(h, "bosque_do_moinho")
         h.tela()
         h.salvar(silencioso=True)
         k = Jogo.carregar(Roteiro(), h.caminho_save(), pasta)
-        self.assertEqual(missoes.registro(k, MID),
+        self.assertEqual(sem_historico(k),
                          {"etapa": "capela", "cenas": ["abertura"], "pistas": ["agua_do_leste", "represa", "canal_da_capela"],
                           "preparos": [], "desfecho": None, "dia_desfecho": None, "concluida": None})
         ir(k, "capela_afogada")
@@ -293,11 +300,14 @@ class TestMissao(unittest.TestCase):
         ui = Roteiro(["Examinar a Fonte Nova", "Fechar"])
         g = campanha(ui=ui)
         g.diario()
-        self.assertNotIn("O que você sabe:", " ".join(ui.ditos))  # nada descoberto ainda
+        self.assertNotIn("Mais recente", " ".join(ui.ditos))  # nada descoberto ainda
         g.tela(); g.tela()
         ui.ditos.clear()
         g.diario()
-        self.assertIn("O que você sabe:", " ".join(ui.ditos))
+        texto = " ".join(ui.ditos)
+        pista = missoes.MISSOES[MID]["pistas"]["agua_do_leste"]
+        self.assertIn(f"Mais recente (dia 1): {pista}", texto)
+        self.assertIn("Histórico da investigação:", texto)
         self.assertNotIn("Pistas", " ".join(ui.ditos))
         self.assertEqual(ui.paineis[-1][1]["missoes"][0]["pistas"], [missoes.MISSOES[MID]["pistas"]["agua_do_leste"]])
 
@@ -313,19 +323,21 @@ class TestMissao(unittest.TestCase):
                 cartao = estado(g)["missoes"][0]
                 self.assertEqual((cartao["etapa"], cartao["objetivo"]),
                                  (etapa, missoes.MISSOES[MID]["etapas"][etapa]["objetivo"]))
-            self.assertEqual([v[0] for v in vistas], ["A Nave Alagada", "A Sacristia", "O Ossuário"])
+            self.assertEqual([v[0] for v in vistas], ["O Salão Alagado", "A Sacristia", "O Ossuário"])
             self.assertEqual(vistas[1][1], ["cultista", "cultista"])
             m = missoes.registro(g, MID)
             self.assertEqual(m["pistas"][3:], ["agua_da_capela", "ilse", "sigilo_do_turvo", "marcados", "correntes"])
             self.assertEqual(m["preparos"], [])  # saber o nome não prepara nada
             self.assertEqual(g.j.consumiveis.get("bau", 0), baus + 1)  # o baú da sacristia, uma vez
             self.assertEqual(g.j.consumiveis["tocha"], tochas - 3)  # a capela é escura: uma tocha por sala
-            # No fundo: as correntes, à mão (qualquer classe) e pelo atalho da classe.
-            rotulos = [o[0] for o in opcoes_febre(g)]
-            self.assertEqual(len(rotulos), 3)  # à mão, o atalho e a descida ao fundo
-            self.assertTrue(rotulos[0].startswith("Soltar as correntes do sarilho à mão"))
-            self.assertIn({"guerreiro": "(Força)", "mago": "(Arcano)", "arqueiro": "(Destreza"}[classe], rotulos[1])
+            # No fundo: uma ação só para as correntes (o como é escolhido dentro dela) e a descida ao fundo.
+            self.assertEqual([o[1][2] for o in opcoes_febre(g)], ["correntes", "fundo"])
             self.assertTrue(fazer(g, "correntes"))  # à mão: a onda de afogados, vencida
+            metodos = g.ui.ofertas[-1]
+            self.assertEqual(len(metodos), 3)  # à mão, o atalho da classe e voltar
+            self.assertTrue(metodos[0].startswith("À mão"))
+            self.assertIn({"guerreiro": "(Força", "mago": "(Arcano", "arqueiro": "(Destreza"}[classe], metodos[1])
+            self.assertTrue(metodos[2].startswith("Voltar"))
             self.assertEqual(vistas[-1][0], "O Sarilho")
             self.assertEqual(m["preparos"], ["corpo_solto"])
             self.assertEqual([o[1][2] for o in opcoes_febre(g)], ["fundo"])  # agora, só descer
@@ -369,8 +381,7 @@ class TestMissao(unittest.TestCase):
                 testes = []
                 g.teste = lambda a, cd, t=testes, p=passa: t.append((a, cd)) or p
                 flechas = g.j.flechas
-                aid = next(o[1][2] for o in opcoes_febre(g) if o[1][2] not in ("correntes", "fundo"))
-                self.assertTrue(fazer(g, aid))
+                self.assertTrue(fazer(g, "correntes", missoes.METODO_CLASSE[classe][:12]))
                 self.assertEqual(testes, [(attr, missoes.CD_CORRENTES)])
                 self.assertEqual(missoes.registro(g, MID)["preparos"], ["corpo_solto"])
                 self.assertEqual(len(vistas), 0 if passa else 1)  # o atalho que falha chama a onda
@@ -382,12 +393,15 @@ class TestMissao(unittest.TestCase):
         lutas(g, "fuga")
         fazer(g, "correntes")
         self.assertEqual(missoes.registro(g, MID)["preparos"], [])
-        self.assertEqual(len(opcoes_febre(g)), 3)  # as duas das correntes e a descida
+        self.assertEqual([o[1][2] for o in opcoes_febre(g)], ["correntes", "fundo"])
 
     def test_arqueiro_sem_flechas_so_tem_o_caminho_geral(self):
         g = na_capela("arqueiro", etapa="fundo")
         g.j.flechas = 0
         self.assertEqual([o[1][2] for o in opcoes_febre(g)], ["correntes", "fundo"])
+        self.assertTrue(fazer(g, "correntes", "Voltar"))  # a ação vale; dentro dela, sem o tiro
+        metodos = g.ui.ofertas[-1]
+        self.assertEqual((len(metodos), metodos[0][:5], metodos[1]), (2, "À mão", "Voltar sem mexer no sarilho"))
 
     def test_save_no_interior_e_save_sem_preparos(self):
         pasta = tempfile.mkdtemp()
@@ -421,7 +435,7 @@ class TestMissao(unittest.TestCase):
         ui.ditos.clear()
         g.diario()
         texto = " ".join(ui.ditos)
-        self.assertIn("O que você já fez:", texto)
+        self.assertIn("O que você já fez:", texto)  # sem saber de Ilse, o rito ainda não aparece
         self.assertIn(missoes.MISSOES[MID]["preparos"]["corpo_solto"], texto)
 
     def test_procedural_nao_tem_missao(self):
