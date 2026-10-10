@@ -1,7 +1,6 @@
 """Equipamento, mochila, consumíveis e a tela de personagem."""
 
-from ..habilidades import HABILIDADES
-from .. import itens
+from .. import grimorio, itens
 from ..itens import CONSUMIVEIS, EM_ALIADO, PENA_FENIX_AGE_SOZINHA, descrever_bonus
 from .. import comitiva
 from .. import sobrevivencia
@@ -366,7 +365,9 @@ class Inventario:
         for slot, it in j.equip.items():
             self.dizer(f"  {NOMES_SLOT[slot]}: " + (f"{itens.rotulo(it)} ({descrever_bonus(it['bonus'], self.j.nome_recurso)})" if it
                                                     else "—"), itens.cor(it) if it else None)
-        self.dizer("Habilidades: " + ", ".join(HABILIDADES[h]["nome"] for h in j.habilidades), "ciano")
+        self.dizer("Grimório (o que cada habilidade faz agora):", "ciano")
+        for linha in grimorio.texto(j):
+            self.dizer(linha)
         cons = [f"{CONSUMIVEIS[k]['nome']} x{v}" for k, v in j.consumiveis.items() if v > 0]
         self.dizer("Bolsa: " + (", ".join(cons) if cons else "vazia"), "ciano")
         if j.mochila:

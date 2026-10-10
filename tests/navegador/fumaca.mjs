@@ -808,6 +808,9 @@ async function cenarioGolpePreparado(browser) {
           viu = true;
           conferir(/Esqueleto de Guarda/.test(await prep.textContent()) && !!(await page.$('#roda .roda-botao[data-slot="habilidades"]')),
             "na sua vez, a carta de quem prepara mostra o aviso, e as ações estão abertas para responder");
+          conferir(await prep.evaluate((carta) => { const a = carta.querySelector(".preparando").getBoundingClientRect();
+            const topo = document.elementFromPoint(a.x + a.width / 2, a.y + a.height / 2); return !!topo && carta.contains(topo); }),
+            "nada cobre o aviso (nem a faixa de ação de outro inimigo)");
           const caixa = await prep.boundingBox();
           await page.mouse.move(5, 5);
           await page.mouse.move(caixa.x + caixa.width / 2, caixa.y + 12, { steps: 5 });
@@ -835,6 +838,35 @@ async function cenarioGolpePreparado(browser) {
       await page.waitForTimeout(150);
     }
     conferir(viu, "o Esqueleto de Guarda prepara o golpe na luta do ossuário");
+  } finally {
+    conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
+    await page.close();
+    proc.kill();
+  }
+}
+
+async function cenarioEncruzilhada(browser) {
+  console.log("cenário: a Encruzilhada (comparar, olhar de perto, voltar sem efeito, confirmar uma vez)");
+  const { proc, url } = await subir("encruzilhada", { CLASSE: "guerreiro" });
+  const { page, erros, esperar } = await abrir(browser, url);
+  try {
+    conferir(!!(await esperar(".especializacao .esp-olhar")), "a escolha mostra os dois caminhos lado a lado");
+    const cartas = await page.$$eval(".esp-caminho", (cs) => cs.map((c) => c.textContent));
+    conferir(cartas.length === 2 && /Defesa\s*−2/.test(cartas[1]) && /grito de terror/.test(cartas[0]) && /definitiva/.test(await page.textContent(".especializacao")),
+      "cada carta tem atributos, habilidades, o que dá e limites (Berserker perde Defesa; Paladino resiste ao terror); a escolha é definitiva");
+    const heroi = () => page.evaluate(() => JSON.stringify(App.estado.heroi));
+    const antes = await heroi();
+    await (await page.$(".esp-olhar[data-caminho=berserker]")).click();
+    await page.waitForSelector(".esp-caminho.foco .esp-confirmar", { timeout: 10000 });
+    await page.keyboard.press("Escape");
+    await page.waitForSelector(".esp-olhar[data-caminho=paladino]", { timeout: 10000 });
+    conferir(antes === await heroi(), "olhar de perto e voltar não mudam o herói");
+    const vida = JSON.parse(antes).max_hp;
+    await (await page.$(".esp-olhar[data-caminho=paladino]")).click();
+    await (await page.waitForSelector(".esp-caminho.foco .esp-confirmar", { timeout: 10000 })).click();
+    await esperar("#doca .atalho");
+    const depois = await page.evaluate(() => ({ spec: App.estado.heroi.spec, max_hp: App.estado.heroi.max_hp }));
+    conferir(depois.spec === "paladino" && depois.max_hp === vida + 15, `confirmar aplica o caminho uma vez (vida ${vida} → ${depois.max_hp})`);
   } finally {
     conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
     await page.close();
@@ -911,6 +943,7 @@ try {
   await cenarioCaspar(browser);
   await cenarioYara(browser);
   await cenarioGolpePreparado(browser);
+  await cenarioEncruzilhada(browser);
   await cenarioBaus(browser);
 } catch (e) {
   falhas.push(String(e));

@@ -10,6 +10,7 @@
     python -m tests.navegador.cenarios capela    # herói na Capela Afogada (CLASSE, ETAPA, NIVEL, PREPARO, LUGAR, SEMENTE)
     python -m tests.navegador.cenarios retorno   # chegando ao Vau com Ilse resolvida (DESFECHO, DIAS, LODO, YARA)
     python -m tests.navegador.cenarios praca     # depois da resposta a Caspar (POSTURA, YARA, LUGAR)
+    python -m tests.navegador.cenarios encruzilhada  # a escolha de especialização, comparando (CLASSE, NIVEL)
 
 Imprime o endereço do servidor na primeira linha e fica no ar até ser encerrado.
 """
@@ -316,8 +317,30 @@ def praca(ui):
     menu_principal(ui, argparse.Namespace(seed=1, saves=pasta, brando=False))
 
 
+def encruzilhada(ui):
+    """Herói da CLASSE (padrão guerreiro) no nível NIVEL (padrão 4), ainda sem especialização, no Charco dos Juncos:
+    a encruzilhada abre logo (como no primeiro descanso depois do 4). Depois dela, o jogo segue; Sair leva ao título."""
+    from rpg import dev
+    from rpg.__main__ import menu_principal
+    from rpg.ui import BotUI
+    pasta = tempfile.mkdtemp()
+    g = Jogo(BotUI(random.Random(1)), seed=11, pasta_saves=pasta, hardcore=False)
+    g.iniciar("Jean", os.environ.get("CLASSE", "guerreiro"), "turvo")
+    dev.subir_ate(g, int(os.environ.get("NIVEL", "4")), spec=False)
+    g.mundo["atual"] = next(l for l in g.mundo["locais"] if l["chave"] == "charco_dos_juncos")["id"]
+    g.periodo, g.clima = 0, "limpo"
+    g.ui, ui.jogo = ui, g
+    try:
+        g.encruzilhada_no_descanso()
+        g.rodar()
+    except FimDeJogo:
+        pass
+    ui.jogo = None
+    menu_principal(ui, argparse.Namespace(seed=1, saves=pasta, brando=False))
+
+
 CENARIOS = {"combate": combate, "titulo": titulo, "vila": vila, "campanha": campanha, "baus": baus, "missao": missao,
-            "recarga": recarga, "capela": capela, "retorno": retorno, "praca": praca}
+            "recarga": recarga, "capela": capela, "retorno": retorno, "praca": praca, "encruzilhada": encruzilhada}
 
 
 def main():

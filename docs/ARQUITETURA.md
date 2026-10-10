@@ -109,7 +109,8 @@ disparar(self, j, "abate", alvo=c, tipo=tipo)   # Frenesi, Assassino, Coração 
 responde. Cada talento declara `mods`, `mults` e `gatilhos` ao lado da própria definição em `rpg/talentos.py`.
 Itens ainda usam `especial()` (crítico, roubo de vida, espinhos) e entram como fonte numa etapa futura.
 
-O **Grimório** (`rpg/grimorio.py`) monta o livro a partir dessas descrições, e é também onde mora a conta de
+O **Grimório** (`rpg/grimorio.py`) monta o livro a partir dessas descrições (e o modo texto mostra o mesmo, em
+`grimorio.texto`), e é também onde mora a conta de
 crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usam.
 
 ## Dados e números
@@ -118,7 +119,8 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
 |---|---|
 | `rpg/balanceamento.py` | todos os números de dificuldade e generosidade, inclusive a curva por nível (inimigos, equipamento, XP, defesa) |
 | `rpg/dev.py` | herói de nível N com equipamento de acordo (`--dev N` e o simulador de equilíbrio) |
-| `rpg/classes.py` | classes, especializações, animais do Patrulheiro |
+| `rpg/classes.py` | classes, especializações (com os `limites` que a escolha mostra), animais do Patrulheiro |
+| `rpg/especializacao.py` | aplicar uma especialização (`aplicar_bonus`, o animal) e a prévia da escolha: os números de cada caminho são a conta feita numa cópia do herói (`copia_especializada`), com o que dá, os limites e os talentos; a mesma página entra no Grimório (`pagina_grimorio`) |
 | `rpg/missoes.py` | missões da campanha escrita: id estável, etapas (objetivo e lugar), pistas; as cenas e ações declaram lugar e etapa e só valem no menu do lugar (`cena_pendente`, `opcoes`, `executar`); `confirmar` faz o texto terminar num Continuar explícito (`ui.continuar(confirmar=True)`, a mensagem `continuar` leva `confirmar`); uma ação pode pedir classe, um preparo que falte e uma condição. A masmorra é uma sequência de ações no menu do lugar (uma sala por etapa; só a vitória avança), sem mapa interno. O estado vai em `mundo.missoes` (`etapa`, `cenas`, `pistas` = o que se sabe, `preparos` = o que se fez ou se tem, `desfecho` = o fim único da guardiã, `dia_desfecho`, `concluida` = o dia em que terminou; concluída, sai do rastreador e do mapa e fica no Diário) |
 | `rpg/caspar.py` | a segunda missão do Vale do Turvo, "A Vigília de Caspar" (E4), nos mesmos moldes (MISSOES, CENAS, ACOES, que `missoes.py` junta às dela no fim): a acusação na investigação, a praça depois da guardiã, a prova (o lodo e o canal; a análise do mago ou as ervas da Yara), as posturas (`desfecho`: apoiar, denunciado, denuncia_falhou, calar), a situação da Yara, a frase da praça e a fogueira do brejo (`fogueira_possivel`). Os cartões das missões declaram `requisitos`, `linhas` e `pendente` |
 | `rpg/consequencias.py` | consequências locais da campanha (E4): o estado da Fonte Nova pelo desfecho e pelos dias desde ele (`estado_fonte`), quem atende na curandeira do Vau (`atendente`: Pita, ou Marta depois que a água limpa), a frase do Vau (`frase_da_vila`) e a linha da Fonte no Diário. Nada de simulação: dois números da missão e `g.dia` |

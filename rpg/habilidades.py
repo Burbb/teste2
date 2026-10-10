@@ -143,8 +143,21 @@ class Se:
             for p in self.passos:
                 p.executar(ctx)
 
+    # O que só acontece quando o golpe acerta (o alvo pode se esquivar): o Grimório diz isso na linha do estado.
+    PREFIXO = {"acertou": "Se acertar, ", "acertou_vivo": "Se acertar e o alvo seguir de pé, "}
+
     def linhas(self, u):
-        return descrever(self.passos, u) if self.mostrar else []
+        if not self.mostrar:
+            return []
+        prefixo = self.PREFIXO.get(self.condicao)
+        linhas = []
+        for p in self.passos:
+            ls = p.linhas(u)
+            if prefixo and isinstance(p, (Aplicar, Acender)):
+                ls = [dict(l, texto=prefixo + l["texto"][0].lower() + l["texto"][1:]) if l.get("tipo") == "efeito" else l
+                      for l in ls]
+            linhas += ls
+        return linhas
 
 
 def _efeito(texto):
@@ -451,7 +464,9 @@ def _linhas_comando_fera(u):
         linhas.append(_efeito("Provoca por 2 turnos: os inimigos atacam o urso (chefes, metade das vezes), "
                               "e ele recebe 30% menos dano."))
     elif f["tipo"] == "lobo":
-        linhas.append(_efeito(f"Sangramento forte: {_num(max(3, f['atk'] * 0.55))} por turno, 4 turnos."))
+        from .estados import ESTADOS
+        linhas.append(_efeito(f"Se a mordida acertar, sangramento forte: {_num(max(3, f['atk'] * 0.55))} por turno, 4 "
+                              f"turnos; não afeta {ESTADOS['sangramento']['imunes']}."))
     else:
         linhas.append(_efeito("Não pode ser esquivado. O alvo fica enfraquecido (−25% de dano) por 2 turnos."))
     return linhas
@@ -523,18 +538,38 @@ def _combustao(cb, u, alvo):
 
 
 def _linhas_combustao(u):
+    """Os dois casos que importam, com a conta de _combustao: a chama acesa no turno anterior já queimou uma vez no alvo
+    (resta a duração menos um turno). Uma camada é o caso comum; três pedem três Bolas de Fogo seguidas que acendam."""
     from .combate import Combate
     from .grimorio import golpe
     v = Combate.valor_queimadura(None, u)
-    t = Combate.duracao_queimadura(None, u)
-    cheio = v * t * bal.MAX_CHAMAS
-    bonus = cheio * (bal.COMBUSTAO_BASE + bal.COMBUSTAO_POR_CAMADA * bal.MAX_CHAMAS)
+    resta = Combate.duracao_queimadura(None, u) - 1
+    acende = next(p for p in _passos_de("bola_fogo") if isinstance(p, Acender))._chance(u)
+
+    def detonar(camadas):
+        restante = int(v * camadas) * resta  # Combate.restante_queimadura: o valor das camadas × os turnos que faltam
+        return restante * (bal.COMBUSTAO_BASE + bal.COMBUSTAO_POR_CAMADA * camadas)
+
     return [golpe(u, 0.8, stat="poder", alcance="distancia", tipo="fogo", rotulo="Sem chamas no alvo"),
-            golpe(u, 1.0, stat="poder", alcance="distancia", tipo="fogo", bonus=bonus,
-                  bonus_txt=f"{bal.MAX_CHAMAS} camadas recém-acesas", crit_extra=0.05 * bal.MAX_CHAMAS,
-                  rotulo=f"Detonando {bal.MAX_CHAMAS} camadas novas",
-                  nota="O que as chamas ainda queimariam × (1,6 + 0,2 por camada). Quanto mais camadas e "
-                       "mais cedo, maior a explosão.")]
+            golpe(u, 1.0, stat="poder", alcance="distancia", tipo="fogo", bonus=detonar(1), bonus_txt="1 camada",
+                  crit_extra=0.05, rotulo="1 camada, acesa no turno anterior"),
+            golpe(u, 1.0, stat="poder", alcance="distancia", tipo="fogo", bonus=detonar(bal.MAX_CHAMAS),
+                  bonus_txt=f"{bal.MAX_CHAMAS} camadas", crit_extra=0.05 * bal.MAX_CHAMAS,
+                  rotulo=f"{bal.MAX_CHAMAS} camadas: três Bolas de Fogo seguidas que acenderam, detonadas logo depois",
+                  nota=f"Cada camada pede uma Bola de Fogo que acenda ({acende * 100:.0f}% de chance agora). A explosão é "
+                       "o que as chamas ainda queimariam × (1,6 + 0,2 por camada).")]
+
+
+def _passos_de(h_id):
+    """Os blocos de uma habilidade do catálogo, os de dentro também."""
+    def ver(passos):
+        for p in passos:
+            yield p
+            if isinstance(p, Dano):
+                yield from ver(p.depois)
+            elif isinstance(p, (Se, Salva)):
+                yield from ver(p.passos)
+    return list(ver(HABILIDADES[h_id].get("passos", [])))
 
 
 def _vida_servo(u):
@@ -573,7 +608,7 @@ HABILIDADES = {
         Buff("guarda", Mod(2, "escudo_turnos"), 0.5),
         Dizer("Você ergue o escudo e firma os pés. (dano recebido -50% por {turnos} turnos)", "ciano")],
         icone="escudo", familia="protecao", anim="falange"),
-    "investida": hab("Investida", 12, "inimigo", "120% de dano, 45% de chance de atordoar.", [
+    "investida": hab("Investida", 12, "inimigo", "120% de dano; se acertar, 45% de chance de atordoar.", [
         Dano(1.2, rotulo="Investida", depois=[Se("acertou", Aplicar("atordoado", 1, chance=0.45))])],
         icone="espada", familia="fisico"),
     "grito_guerra": hab("Grito de Guerra", 14, "proprio", "+30% de dano por 3 turnos e enfraquece inimigos.", [
@@ -608,7 +643,7 @@ HABILIDADES = {
     "tiro_certeiro": hab("Tiro Certeiro", 8, "inimigo", "170% de dano, +30% chance de crítico.",
                          [Dano(1.7, alcance="distancia", crit_extra=0.3, rotulo="Tiro Certeiro")], flechas=1,
                          icone="flecha", familia="fisico"),
-    "marcar_presa": hab("Marcar Presa", 6, "inimigo", "O alvo recebe +25% de dano por 3 turnos.", [
+    "marcar_presa": hab("Marcar Presa", 6, "inimigo", "O alvo recebe +25% de dano de todos (você e aliados) por 3 turnos.", [
         Aplicar("marcado", 3, 0.25, direto=True),
         Dizer("Você estuda os movimentos de {alvo} e encontra os pontos fracos. (+25% dano recebido)", "ciano")],
         icone="olho", familia="forca"),
@@ -637,7 +672,8 @@ HABILIDADES = {
         Buff("esquiva", 1, 0.5),
         Dizer("Você se funde às sombras. Seu próximo ataque será crítico.", "magenta")],
         icone="capuz", familia="sombra"),
-    "flecha_envenenada": hab("Flecha Envenenada", 10, "inimigo", "Dano e veneno forte por 4 turnos.", [
+    "flecha_envenenada": hab("Flecha Envenenada", 10, "inimigo",
+                             "Dano e veneno forte por 4 turnos (não afeta mortos-vivos nem construtos).", [
         Dano(1.0, alcance="distancia", rotulo="Flecha Envenenada", depois=[
             Se("acertou", Aplicar("veneno", 4, valor=Escala(minimo=3, atk=0.45, agi=0.2)))])], flechas=1,
         icone="gota_verde", familia="veneno", realce="veneno"),
@@ -654,7 +690,7 @@ HABILIDADES = {
                    linhas=lambda u: [_efeito(f"Recupera {ganho_meditar(u)} de mana (6 + 12% do máximo). Gasta o turno.")],
                    desc_fn=lambda u: f"Recupera {ganho_meditar(u)} de mana (6 + 12% do máximo). Não custa nada, mas gasta o turno.",
                    icone="lua", familia="arcano"),
-    "lanca_gelo": hab("Lança de Gelo", 10, "inimigo", "130% de dano de gelo, pode congelar.", [
+    "lanca_gelo": hab("Lança de Gelo", 10, "inimigo", "130% de dano de gelo; se acertar, pode congelar.", [
         Dano(1.3, tipo="gelo", alcance="distancia", stat="poder", rotulo="Lança de Gelo", depois=[
             Se("acertou", Aplicar("atordoado", 1, chance=0.35, rotulo="congelado"))])],
         icone="gelo", familia="gelo", realce="gelo"),

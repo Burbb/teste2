@@ -181,3 +181,37 @@
 /* Na dica de um lugar do mapa: cada contrato que você tem ali, numa linha. */
 .dica-contrato { display: flex; align-items: flex-start; gap: 5px; margin-top: 5px; font-size: 13px; color: var(--ouro); }
 .dica-contrato img.sprite { flex: none; margin-top: 1px; }
+
+/* A Encruzilhada (telas/especializacao.js): os dois caminhos lado a lado, para comparar. Os cartões são os de sempre
+   (.cartao); o que se olha de perto fica aceso, o outro apaga um pouco. Os detalhes (números e talentos) ficam
+   recolhidos num <details>, para o resumo caber na tela. */
+.especializacao .esp-aviso { margin: 0 0 10px; font-size: 14px; color: var(--ouro); }
+.esp-cartas { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: start; }
+.esp-caminho { font-size: 14px; }
+.esp-caminho.apagado { opacity: 0.55; }
+.esp-caminho.foco { --anel: var(--anel-y); }
+.esp-caminho .cab b { font-size: calc(var(--px) * 30); }
+.esp-caminho .cab .sub { display: block; margin-top: 4px; font-size: 13px; line-height: 1.35; color: var(--tinta-2); }
+.esp-secao { margin-top: 8px; }
+.esp-titulo { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--tinta-3); margin-bottom: 3px; }
+.esp-titulo.bom { color: var(--bom); } .esp-titulo.ruim { color: var(--sangue-2); }
+.esp-attrs { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 1px 12px; }
+.esp-attrs li { display: flex; align-items: baseline; gap: 6px; }
+.esp-attrs b { font-family: var(--num); font-size: 17px; font-weight: 400; }
+.esp-attrs .melhor { color: var(--bom); } .esp-attrs .pior { color: var(--sangue-2); }
+.esp-attrs small, .esp-pequeno { font-size: 12px; color: var(--tinta-3); }
+.esp-habs { list-style: none; margin: 0; padding: 0; display: grid; gap: 5px; }
+.esp-hab { display: grid; grid-template-columns: 36px 1fr; gap: 6px; align-items: start; }
+.esp-hab.futura { opacity: 0.8; }
+.esp-hab small { font-size: 12px; color: var(--tinta-3); }
+.esp-desc { font-size: 13px; line-height: 1.35; color: var(--tinta-2); }
+.esp-lista { margin: 0; padding-left: 16px; display: grid; gap: 2px; font-size: 13px; line-height: 1.35; color: var(--tinta-2); }
+.esp-detalhe { margin-top: 8px; font-size: 13px; color: var(--tinta-2); }
+.esp-detalhe summary { cursor: pointer; color: var(--ouro); }
+.esp-ref { margin: 6px 0; font-size: 12px; color: var(--tinta-3); }
+.esp-num { margin-top: 6px; }
+.esp-num ul { margin: 2px 0 0; padding-left: 16px; display: grid; gap: 2px; }
+.esp-num small { color: var(--tinta-3); }
+.esp-olhar, .esp-confirmar { margin-top: 10px; }
+.esp-confirmar { border-color: var(--ouro-2); }
+@media (max-width: 1100px) { .esp-cartas { grid-template-columns: 1fr; } }

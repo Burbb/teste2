@@ -6,6 +6,9 @@ atributo, habilidade, talento, item ou save foi alterado.
 **Atualização 1.57.0:** a P1 foi implementada (seção 10). As seções 1 a 9 continuam como o diagnóstico da 1.56.0; onde
 a 1.57 mudou o que elas dizem (o golpe preparado no Vale), a seção 10 diz o que vale agora.
 
+**Atualização 1.58.0:** a P3 foi implementada (seção 11): a encruzilhada compara os dois caminhos e o Grimório explica
+imunidades, a Marca, a Combustão e o caminho. A P2 continua não autorizada.
+
 **Cuidado ao ler as comparações de dano (seções 1, 4 e 9).** Somar o dano de sequências contra um alvo de treino não
 demonstra que uma habilidade é inútil quando o valor dela é defesa, cura ou efeito sobre aliados. Erguer Escudo,
 Barreira, Passo Ágil, Grito de Guerra (o enfraquecer), Marcar Presa (que vale para os golpes de todos) e Desaparecer
@@ -960,8 +963,8 @@ Conferido com Playwright:
 - **A ficha** (passar o mouse na carta) diz o que a variante faz.
 - **Interrompido:** "Atordoado, Esqueleto de Guarda perde o golpe que preparava!", a faixa sai e o atordoado aparece na
   carta.
-- **Limitação:** em 1280 px, a faixa de ação de outro inimigo (por exemplo, "Investida") pode cobrir a linha do aviso por
-  até 1,5 s logo que a vez chega. É a faixa comum de todas as ações, que some sozinha; depois o aviso fica limpo.
+- **Limitação (corrigida na 1.58.0, seção 11.4):** em 1280 px, a faixa de ação de outro inimigo (por exemplo,
+  "Investida") podia cobrir a linha do aviso por até 1,5 s logo que a vez chegava.
 
 ### 10.6 Verificações
 
@@ -983,8 +986,103 @@ Conferido com Playwright:
 
 ### 10.7 O que fica para depois
 
-- **P3:** a encruzilhada e o Grimório que explicam.
+- **P3:** a encruzilhada e o Grimório que explicam. Feita na 1.58.0 (seção 11).
 - **P2:** um papel para cada botão dominado. Não autorizada; a ressalva do começo deste documento vale para ela.
 - O Arqueiro sem como interromper antes da especialização é um fato do conteúdo de agora, não um defeito a corrigir
   nesta entrega.
+
+## 11. P3 implementada: a encruzilhada e o Grimório que explicam (1.58.0)
+
+Nenhum número de equilíbrio mudou. Sem P2, sem habilidade nova, sem reespecializar, sem preparar habilidades.
+
+### 11.1 A escolha de especialização
+
+- **Fluxo** (`eventos/classe.py`, `_escolher_caminho`): a narração de cada classe fica como era. No fim dela, em vez das
+  duas opções diretas:
+  1. **comparar:** os dois caminhos lado a lado;
+  2. **olhar de perto** um deles: o mesmo resumo, com os números abertos e o botão Confirmar;
+  3. **Confirmar** aplica uma vez; **Voltar (Esc)** volta à comparação, quantas vezes quiser.
+  - "A escolha é definitiva: não há como trocar de caminho depois." aparece nas duas telas.
+  - A comitiva reage à escolha confirmada, não ao olhar (as chaves de olhar e voltar não são de evento).
+- **Cada caminho mostra** (`rpg/especializacao.py`, `previa`):
+  - o estilo de jogo (a descrição do `SPECS`);
+  - atributos antes → depois, com o que muda por nível;
+  - as duas habilidades de agora e a do nível 7, com custo e a descrição;
+  - **o que o caminho dá:** a passiva quando há; a resistência ao terror e os testes do Paladino; o animal do
+    Patrulheiro; o crítico e a esquiva que a Agilidade +5 do Sombra rende; contra quem o dano do caminho rende mais;
+  - **limites:** contra quem o dano rende menos, as imunidades dos estados que as habilidades aplicam (o veneno do
+    Sombra não pega em mortos-vivos nem construtos) e os limites escritos de cada caminho (`SPECS[...]["limites"]`:
+    o Berserker arrisca a vida, o Desaparecer não tira da mira, as armadilhas são talento);
+  - **detalhe, fechado por padrão:** os números de cada habilidade (as mesmas linhas do Grimório), os três animais e os
+    talentos do ramo.
+- **De onde vêm os números:** da conta de verdade, feita numa **cópia** do herói (`copia_especializada`: `deepcopy` e o
+  mesmo `aplicar_bonus` que a escolha usa). A habilidade do nível 7 vem "com os números de hoje", e a tela diz isso.
+- **Modo texto:** o resumo dos dois caminhos, depois o detalhe do que se olha; as perguntas dizem o que se escolhe.
+
+### 11.2 O Grimório
+
+- **Imunidades:** o catálogo de estados ganhou o campo `imunes` (veneno: mortos-vivos e construtos; sangramento:
+  construtos e etéreos; queimadura: quem resiste muito ao fogo). A descrição de cada habilidade e do talento Pontas
+  Venenosas o mostra.
+- **"Se acertar":** as linhas de efeito que dependem do golpe acertar começam assim (Investida, Lança de Gelo, Flecha
+  Envenenada, a mordida do lobo). Uma regra geral, só quando o herói tem uma habilidade assim, explica o resto: a chance
+  só vale no acerto; atordoar ou congelar faz perder um golpe preparado; chefes e gigantes resistem.
+- **Defesa:** a guarda diz que vale também contra o golpe preparado; a esquiva, que é uma chance a cada golpe; o
+  Desaparecer, que os inimigos continuam mirando você. Uma regra geral compara guarda, barreira e esquiva diante do
+  golpe preparado.
+- **Marcar Presa:** "+25% de dano de todos os golpes: os seus, os da comitiva e os do animal".
+- **Combustão:** três exemplos:
+  - sem chamas;
+  - 1 camada, acesa no turno anterior;
+  - 3 camadas, com a condição escrita: três Bolas de Fogo seguidas que acenderam, detonadas logo depois.
+  - A nota diz a chance de a Bola acender agora.
+  - Um teste confere os dois exemplos contra o golpe de verdade (3000 sorteios, dentro de 3%).
+- **O caminho como página:** depois de escolher, o Grimório tem a página do caminho (o que dá, o bônus, os limites). A
+  resistência ao terror do Paladino fica visível ali.
+- **Modo texto:** a tela de personagem troca a linha "Habilidades: ..." pelo Grimório em uma linha por habilidade, e as
+  regras gerais.
+
+### 11.3 O que não foi prometido
+
+O Desaparecer não tira da mira, as armadilhas do Patrulheiro são o talento Armadilheiro (um inimigo começa a luta preso)
+e não uma habilidade, e o servo do Necromante só atrai golpes nos dois primeiros turnos. Os textos dizem isso; nada foi
+acrescentado ao combate.
+
+### 11.4 O aviso do golpe preparado
+
+Na sua vez, a carta de quem prepara fica por cima da faixa de ação de outro inimigo (`03-batalha.css`, só enquanto a
+carta do herói está na vez). Sem espera nova e sem mudar animação. Conferido em 1280 px, e o `fumaca.mjs` agora checa
+que nada cobre o aviso.
+
+### 11.5 Passo Ágil: questão aberta para a P2
+
+Nos encontros medidos na P1 (seção 10.4), o Passo Ágil **não** mostrou utilidade: só reduz o golpe em média e custa o
+turno, e saiu pior que só atirar ou matar o preparador antes. Isso não prova que seja inútil em outros encontros, mas a
+P1 não comprovou utilidade. Continua como questão para a P2 (não autorizada).
+
+### 11.6 Verificações
+
+- `tests/test_especializacao.py` (8 testes):
+  - os seis caminhos comparáveis;
+  - os exemplos pedidos (Berserker com Defesa −2, Paladino com terror e testes, o animal, o veneno do Sombra);
+  - a prévia igual ao herói depois de escolher, com talentos e equipamento;
+  - a prévia não muda herói, sorteio, comitiva nem saves;
+  - olhar, voltar e confirmar uma vez (nada muda até confirmar; a aprovação da comitiva só depois);
+  - a tela gráfica recebe o painel;
+  - os textos do Grimório;
+  - a Combustão como a execução.
+- **Gabarito atualizado de propósito.** Mudaram só textos:
+  - as descrições curtas de Investida, Marcar Presa, Lança de Gelo, Flecha Envenenada e Pontas Venenosas;
+  - o Grimório no estado do herói;
+  - a tela de personagem do modo texto;
+  - uma quebra de linha a mais no modo texto, porque a descrição ficou mais longa.
+  - Tirando esses textos, as 24 transcrições ficam iguais linha a linha: mesmas escolhas, mesmo número de opções,
+    mesmos lances e mesmo sorteio. As partidas do gabarito não chegam à encruzilhada.
+- **Navegador**, nas três classes, em 1500 e 1280 px:
+  - comparar, olhar de perto, Voltar (Esc) e confirmar;
+  - os seis caminhos confirmados;
+  - o herói igual depois de olhar e voltar;
+  - os atributos depois de confirmar iguais aos da prévia;
+  - as páginas do Grimório (o caminho, a Combustão, a Marca, a Investida, a Lança).
+  - `fumaca.mjs` ganhou o cenário da encruzilhada; `cenarios.py` ganhou `encruzilhada` (CLASSE, NIVEL).
 

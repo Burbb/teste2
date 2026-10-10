@@ -1,5 +1,6 @@
 """Eventos exclusivos de cada classe e especialização, incluindo a escolha do caminho no nível 4."""
 
+from .. import especializacao
 from .. import texto as tx
 from ..classes import SPECS
 from ..itens import gerar_equip
@@ -17,12 +18,42 @@ def _spec(s):
 
 
 def _escolher_caminho(g, a, b, texto_a, texto_b):
-    op = g.menu("Qual caminho você escolhe?", [
-        (f"{SPECS[a]['nome']}: {texto_a}", a),
-        (f"{SPECS[b]['nome']}: {texto_b}", b),
-    ])
-    g.especializar(op)
-    return op
+    """Os dois caminhos lado a lado, com o que cada um dá e tira ao herói de agora (especializacao.previa, numa cópia).
+    Olhar um de perto não o escolhe; confirmar escolhe uma vez; voltar compara de novo. As chaves são tuplas: a reação
+    da comitiva às escolhas de evento (comitiva.reagir_escolha) não as lê, e quem reage é a especialização escolhida.
+    Na tela gráfica o painel diz o que fazer (a pergunta vai vazia, como nas outras telas desenhadas); no texto, a
+    comparação e a pergunta vão em linhas."""
+    textos = {a: texto_a, b: texto_b}
+    previas = {s: especializacao.previa(g.j, s) for s in (a, b)}
+    g.pausar()  # a narração se lê antes; a comparação abre numa página só dela
+    while True:
+        g.ui.cena("A Encruzilhada", g.contexto_cena(), "menu")
+        dados = {"caminhos": [previas[a], previas[b]], "foco": None, "definitiva": DEFINITIVA}
+        desenhou = g.ui.painel("especializacao", dados)
+        if not desenhou:
+            for spec in (a, b):
+                for linha in especializacao.texto_resumo(previas[spec]):
+                    g.dizer(linha)
+            g.dizer(DEFINITIVA, "amarelo")
+        _, spec = g.menu("" if desenhou else "Qual caminho você quer olhar de perto? (Olhar não escolhe.)",
+                         [(f"Olhar de perto: {SPECS[x]['nome']} — {textos[x]}", ("olhar", x), {"caminho": x})
+                          for x in (a, b)])
+        g.ui.cena("A Encruzilhada", g.contexto_cena(), "menu")
+        desenhou = g.ui.painel("especializacao", dict(dados, foco=spec))
+        if not desenhou:
+            for linha in especializacao.texto_resumo(previas[spec]) + especializacao.texto_detalhe(previas[spec]):
+                g.dizer(linha)
+        acao, _ = g.menu("" if desenhou else f"Seguir o caminho: {SPECS[spec]['nome']}? {DEFINITIVA}", [
+            (f"Confirmar: {SPECS[spec]['nome']}", ("confirmar", spec), {"confirmar": spec}),
+            ("Voltar e comparar os dois caminhos", ("voltar", spec), {"voltar": True}),
+        ])
+        if acao == "confirmar":
+            g.ui.cena("A Encruzilhada", g.contexto_cena(), "evento")  # a narração e a festa voltam à página de evento
+            g.especializar(spec)
+            return spec
+
+
+DEFINITIVA = "A escolha é definitiva: não há como trocar de caminho depois."
 
 
 # ====================================================================== encruzilhadas (forçadas)

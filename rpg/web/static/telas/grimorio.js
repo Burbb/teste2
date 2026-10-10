@@ -16,7 +16,7 @@
     if (!todas.some((x) => x.id === paginaGrimorio)) paginaGrimorio = "ataque";
     const heroi = App.estado.heroi;
     const icone = (x) => x.icone || "estrela";
-    const custo = (x) => x.passiva ? "Passiva" : x.custo ? `${x.custo} ${h(g.recurso.toLowerCase())}` : "grátis";
+    const custo = (x) => x.passiva ? (x.rotulo || "Passiva") : x.custo ? `${x.custo} ${h(g.recurso.toLowerCase())}` : "grátis";
     document.getElementById("grimorio-indice").innerHTML = `
       <div class="grimorio-cab"><b>Grimório</b><small>${h(heroi.titulo)} · nível ${heroi.nivel}</small></div>
       <ul class="grimorio-lista">${todas.map((x) => `<li><button type="button" class="grimorio-item${x.id === paginaGrimorio ? " aberto" : ""}" data-pagina="${h(x.id)}">

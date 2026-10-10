@@ -10,6 +10,8 @@ Além dos números, classe e especialização declaram o que mudam fora deles:
     mods        modificadores, como os de um talento (modificadores.py): valem sempre, sem aparecer como passiva
     reage       o que a comitiva sente quando você escolhe a especialização (etiquetas de comitiva.reagir)
     companheiro a especialização vem com um animal (o jogo pergunta qual)
+    limites     o que a escolha de especialização avisa e as contas não mostram sozinhas (especializacao.limites junta
+                a isto o que sai das habilidades: o tipo de dano contra quem resiste, os estados que não pegam em todos)
 """
 
 CLASSES = {
@@ -63,6 +65,7 @@ SPECS = {
         "testes": {"vontade": ("paladino", 3), "carisma": ("paladino", 2)},
         "mods": {"resiste_terror": 0.6},  # a fé não vacila diante do grito de terror
         "reage": ("fe", "honra"),
+        "limites": ("Até o nível 7, todo o dano é num alvo só: o Julgamento Divino é o primeiro golpe em todos.",),
     },
     "berserker": {
         "nome": "Berserker", "classe": "guerreiro",
@@ -71,6 +74,8 @@ SPECS = {
         "cresc": dict(atk=1.0),
         "habilidades": [(4, "sede_sangue"), (4, "redemoinho"), (7, "furia_cega")],
         "reage": ("violencia", "coragem"),
+        "limites": ("O Pacto de Sangue rende mais quanto mais ferido você estiver: o risco é seu.",
+                    "A Fúria Cega (nível 7) custa vida, não vigor."),
     },
     "patrulheiro": {
         "nome": "Patrulheiro", "classe": "arqueiro",
@@ -80,6 +85,8 @@ SPECS = {
         "habilidades": [(4, "tiro_duplo"), (4, "comando_fera"), (7, "furia_natureza")],
         "testes": {"percepcao": ("patrulheiro", 2)},
         "companheiro": True,
+        "limites": ("O animal ferido fica fora das lutas até você descansar.",
+                    "As armadilhas são um talento (Armadilheiro, nível 6): um inimigo começa cada luta preso."),
     },
     "sombra": {
         "nome": "Sombra", "classe": "arqueiro",
@@ -88,6 +95,10 @@ SPECS = {
         "cresc": dict(agi=0.6, atk=0.4),
         "habilidades": [(4, "desaparecer"), (4, "flecha_envenenada"), (7, "execucao")],
         "reage": ("trapaca",),
+        "limites": ("O talento Pontas Venenosas também é veneno, com o mesmo limite: contra mortos-vivos e construtos, "
+                    "o caminho perde boa parte do dano.",
+                    "Desaparecer garante o crítico e dá esquiva, mas não tira você da mira dos inimigos.",
+                    "A Execução (nível 7) só rende muito em alvo abaixo de 35% de vida."),
     },
     "piromante": {
         "nome": "Piromante", "classe": "mago",
@@ -96,6 +107,9 @@ SPECS = {
         "cresc": dict(poder=0.8),
         "habilidades": [(4, "inferno"), (4, "combustao"), (7, "fenix")],
         "reage": ("curiosidade",),
+        "limites": ("A Combustão rende pouco sem chamas no alvo: acender vem antes, e cada camada pede uma Bola de Fogo "
+                    "que acenda.",
+                    "Quem resiste muito ao fogo não pega fogo; a chuva enfraquece as chamas."),
     },
     "necromante": {
         "nome": "Necromante", "classe": "mago",
@@ -104,6 +118,8 @@ SPECS = {
         "cresc": dict(max_hp=2, poder=0.5),
         "habilidades": [(4, "drenar_vida"), (4, "erguer_servo"), (7, "maldicao")],
         "reage": ("magia_proibida", "sacrilegio"),
+        "limites": ("Um servo por vez (dois com o talento Legião de Ossos); ele atrai os golpes só nos dois primeiros "
+                    "turnos.",),
     },
 }
 

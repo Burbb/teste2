@@ -5,6 +5,7 @@ from ..classes import CLASSES, COMPANHEIROS, SPECS, habilidades_ate
 from ..habilidades import HABILIDADES
 from ..entidades import NOMES_STATS
 from .. import comitiva
+from .. import especializacao
 from .. import talentos
 from .. import telemetria
 from ..telemetria import registrar
@@ -106,9 +107,7 @@ class Progressao:
         j = self.j
         j.spec = spec
         registrar(self, "spec", spec=spec)
-        for k, v in SPECS[spec]["bonus"].items():
-            j.base[k] += v
-        j.recalcular()
+        especializacao.aplicar_bonus(j, spec)  # a mesma conta da prévia que a escolha mostra
         j.hp = j.max_hp
         j.rec = j.max_rec
         festa = self.ui.conquistas_na_tela
@@ -131,11 +130,7 @@ class Progressao:
                                    [f"{COMPANHEIROS[t]['nome']} — {COMPANHEIROS[t]['desc']}" for t in tipos])
             tipo = tipos[esc]
         c = COMPANHEIROS[tipo]
-        nv = self.j.nivel
         nome = self.ui.perguntar(f"Como vai chamar seu {c['nome'].split()[0].lower()}? (Enter para '{c['nome']}')",
                                  c["nome"])
-        hp = int(c["hp"] * (1 + bal.ANIMAL_VIDA_POR_NIVEL * (nv - 1)))
-        self.j.companheiro = {"nome": nome, "tipo": tipo, "max_hp": hp, "hp": hp,
-                              "atk": c["atk"] * (1 + bal.ANIMAL_ATK_POR_NIVEL * (nv - 1)), "agi": c["agi"],
-                              "alcance": c["alcance"], "crit": c["crit"]}
+        self.j.companheiro = {"nome": nome, **especializacao.animal(tipo, self.j.nivel)}  # a mesma conta da prévia
         self.dizer(f"{nome} agora caminha ao seu lado.", "verde+negrito")

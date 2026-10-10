@@ -79,7 +79,7 @@ Três commits posteriores à atualização do roadmap foram consultados. Os comp
 | E2 — região fixa | **Protótipo entregue na 1.48.0** (commit `2661b59`): início da campanha, mapa fixo, viagem, descoberta e save. Validado tecnicamente; falta Jean jogar. |
 | E3 — missão mínima | Entregas na 1.50.0 a 1.54.0 (registros abaixo): da Fonte Nova ao canal, à capela, ao interior, a Vó Berta, à guardiã (Destruir ou Dar descanso) e à volta ao Vau, que conclui a missão. A bênção e a comporta não existem. Falta Jean jogar. |
 | E4 — consequência local | Na 1.54.0, a Fonte Nova, a frase do Vau, Pita e Marta. Na 1.55.0, Caspar: a acusação, a praça (Apoiar, Denunciar com prova, Calar), a situação da Yara e as reações da comitiva. Na 1.56.0, a consolidação: a Yara barrada fica de fato fora do Vau, o encontro no Charco depois da denúncia, a conversa da Yara sobre a praça e os textos que contradiziam o Vau. **O critério mínimo da E4 (07-ETAPAS) está atendido**; as outras ideias do 11 (bênção, sementes, mercado, taverna, Charco à noite, Odette e Caspar, Anselmo, a cena da vigília) ficam adiadas, não são requisito. Falta Jean jogar. |
-| E5 — classes | Diagnóstico (só design) em [14](14-E5-DIAGNOSTICO-CLASSES.md), sobre a 1.56.0. **P1 implementada na 1.57.0:** o golpe preparado em duas lutas fixas da capela (seção 10 do 14). P3 e P2 não começaram (a P2 não está autorizada). A E5 **não** está concluída. A validação da E4 jogando, por Jean, fica registrada à parte. |
+| E5 — classes | Diagnóstico (só design) em [14](14-E5-DIAGNOSTICO-CLASSES.md), sobre a 1.56.0. **P1 implementada na 1.57.0:** o golpe preparado em duas lutas fixas da capela (seção 10 do 14). **P3 implementada na 1.58.0:** a encruzilhada compara os dois caminhos e o Grimório explica (seção 11 do 14). A P2 não começou (não está autorizada). A E5 **não** está concluída. A validação da E4 jogando, por Jean, fica registrada à parte. |
 | E6–E11 | Plano de trabalho futuro; infraestrutura existente não equivale a etapas concluídas. Notas aprovadas para a E3 na seção 19 do [11](11-E1-REGIAO-INICIAL.md). |
 | Bugs ainda abertos | Nenhum bug aberto específico foi informado para registro nesta passagem. Isso não comprova ausência de bugs. |
 | Polimento antes da E3 | Entregue na 1.48.1 (registro abaixo): leitura, item achado, balcão do templo, palco da luta. Falta Jean conferir jogando. |
@@ -573,4 +573,39 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   2. O Esqueleto de Guarda prepara: a carta dele avisa. Passe o mouse para ler a ficha. Responda com Erguer Escudo e veja o golpe sair pela metade.
   3. Salve antes de descer, carregue e repita a luta respondendo com Investida no Esqueleto de Guarda: se atordoar, o golpe se perde; se não, ele vem inteiro.
   4. Opcional: solte as correntes à mão e veja o Afogado Inchado no sarilho fazer o mesmo.
+
+### 10/10/2026 — E5, P3: a encruzilhada e o Grimório que explicam (1.58.0)
+
+- **Pedido de Jean:** implementar só a P3 da E5, sem P2, habilidade nova, reespecialização nem preparação de habilidades, e sem mexer em números de equilíbrio.
+  - Na escolha de especialização, comparar os dois caminhos antes de confirmar: estilo, habilidades de agora e a futura (com o nível), o que o caminho dá, atributos, limites. Detalhes acessíveis sem páginas obrigatórias. Dizer que a escolha é definitiva.
+  - Olhar não aplica; confirmar aplica uma vez; voltar compara de novo. Narração preservada.
+  - Números das funções de verdade, numa cópia; consultar não muda atributos, recursos, aprovação, sorteio nem save.
+  - Grimório: imunidade ao veneno, a Marca para os aliados, a Combustão com uma e três camadas, o terror do Paladino, defesa e chances "se acertar". Sem prometer o que não existe.
+  - O aviso do golpe preparado coberto em 1280 px, sem espera nova.
+  - Modo texto com a mesma informação; gabarito só com mudanças de texto.
+  - Registrar que a P1 não comprovou utilidade do Passo Ágil. Parar antes da P2.
+- **Implementado** (detalhes na seção 11 do 14):
+  - **`rpg/especializacao.py`** (novo): `aplicar_bonus` e `animal`, que a escolha de verdade passou a usar; `previa`, a conta feita numa cópia do herói; a página do caminho no Grimório.
+  - **`SPECS[...]["limites"]`** (`classes.py`): o que cada caminho não faz, em texto.
+  - **A escolha** (`eventos/classe.py`): comparar → olhar de perto → Confirmar ou Voltar (Esc). Tela nova `telas/especializacao.js` (dois cartões, o detalhe num `<details>`); no modo texto, o resumo e o detalhe.
+  - **Estados** (`estados.py`): campo `imunes`; textos da guarda, esquiva, furtivo e marcado.
+  - **Habilidades** (`habilidades.py`): o "Se acertar" nas linhas condicionadas; a Combustão com três exemplos; descrições de Investida, Marcar Presa, Lança de Gelo e Flecha Envenenada.
+  - **Grimório:** regras gerais só quando servem; a página do caminho; `grimorio.texto` na tela de personagem do modo texto.
+  - **O aviso:** `03-batalha.css`, a carta de quem prepara por cima na vez do herói.
+- **Passo Ágil:** a P1 não comprovou utilidade nos encontros medidos (pior que atirar ou matar o preparador antes). Fica como questão para a P2.
+- **Verificações:**
+  - `unittest`: 236 OK, 1 pulado. Novo `tests/test_especializacao.py` (8).
+  - `tests.gabarito`: atualizado de propósito. Só textos mudaram (descrições curtas, Grimório, tela de personagem do texto, uma quebra de linha). Tirando esses textos, as 24 transcrições ficam idênticas: escolhas, opções, lances e sorteio.
+  - `pyflakes`: só o aviso conhecido.
+  - `fumaca.mjs`: 148 checagens OK, com o cenário novo da encruzilhada e a checagem de que nada cobre o aviso do golpe preparado.
+  - Navegador em 1500 e 1280 px: as três classes, os seis caminhos confirmados, olhar e voltar sem efeito, prévia igual ao herói depois, as páginas do Grimório.
+- **Limitações:**
+  - A habilidade do nível 7 aparece com os números do nível de agora (a tela diz isso).
+  - A Ordem da Fera na prévia não sabe o animal, que só se escolhe ao confirmar.
+  - A E5 não está concluída.
+- **Como testar (rota curta):**
+  1. `python -m tests.navegador.cenarios encruzilhada` (com `CLASSE=arqueiro`, por exemplo) e abra o endereço.
+  2. Compare os dois cartões. Abra "Olhar de perto" num, leia os números, aperte Esc e veja os cartões de novo, sem nada mudado na ficha.
+  3. Confirme um caminho e confira na ficha os atributos que a prévia prometeu.
+  4. Abra o Grimório: a página do caminho no fim da lista; com o Arqueiro, Marcar Presa; com o Mago Piromante, a Combustão.
 

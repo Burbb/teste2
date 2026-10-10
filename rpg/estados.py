@@ -9,6 +9,7 @@ Cada estado declara, num lugar só, tudo o que o jogo precisa saber dele:
     depois      o estado que fica quando este faz perder o turno (atordoado deixa "firme": sem trava em sequência)
     protege     estados que não pegam em quem está assim (firme: atordoado)
     imune       quem não pega (veneno não pega em mortos-vivos e construtos...)
+    imunes      o mesmo, dito para quem joga ("mortos-vivos nem construtos"): o Grimório e a escolha de caminho mostram
     resiste     quem pode resistir na hora, com sorteio (chefes e gigantes contra o atordoamento)
     camadas     acumula até N camadas (queimadura), com o rótulo "em chamas ×N"
     dica        uma frase a mais na dica do ícone
@@ -67,11 +68,11 @@ GOLPE_ETAPAS = {
 
 def estado(nome, icone, familia, negativo=False, tique=None, perde_turno=False, imune=None, resiste=None,
            camadas=0, rotulo_camadas=None, dica="", descrever=None, buff=None, ajuste_tique=None, golpe=None,
-           depois=None, protege=(), agora=None):
+           depois=None, protege=(), agora=None, imunes=None):
     return dict(nome=nome, icone=icone, familia=familia, negativo=negativo, tique=tique, perde_turno=perde_turno,
                 imune=imune, resiste=resiste, camadas=camadas, rotulo_camadas=rotulo_camadas, dica=dica,
                 descrever=descrever, buff=buff, ajuste_tique=ajuste_tique, golpe=golpe or {}, depois=depois,
-                protege=protege, agora=agora)
+                protege=protege, agora=agora, imunes=imunes)
 
 
 def _clima_apaga(cb, dano):
@@ -83,7 +84,8 @@ def _clima_apaga(cb, dano):
 ESTADOS = {
     # --- bênçãos (antes dos males: na conta do golpe, o bônus multiplica primeiro)
     "guarda": estado("em guarda", "escudo", "protecao", dica="recebe menos dano",
-                     buff=lambda u, t, v: f"Dano recebido −{_pct(v)} por {_turnos(t)}.",
+                     buff=lambda u, t, v: f"Dano recebido −{_pct(v)} por {_turnos(t)}, em todo golpe que te acerta "
+                                          "(também o golpe preparado).",
                      golpe={"dano_final": lambda v: 1 - v}, agora=lambda v: f"dano recebido −{_pct(v)}"),
     # Cada fonte de dano a mais é um estado próprio, com o seu ícone e o seu número: elas se somam lado a lado (cada
     # uma multiplica o golpe), e a mesma fonte de novo só renova (fica o maior valor e a maior duração). Assim o
@@ -113,15 +115,15 @@ ESTADOS = {
     # --- males (dano por turno)
     "veneno": estado(
         "envenenado", "gota_verde", "veneno", negativo=True, tique=("veneno", "verde"),
-        imune=lambda a: "morto-vivo" in a.tracos or "construto" in a.tracos,
+        imune=lambda a: "morto-vivo" in a.tracos or "construto" in a.tracos, imunes="mortos-vivos nem construtos",
         descrever=lambda t, v, esc, ch, todos, rot: _chance(ch, f"veneno: {_num(v)} por turno, {_turnos(t)}{_origem(esc)}.")),
     "sangramento": estado(
         "sangrando", "gota", "sangue", negativo=True, tique=("sangramento", "vermelho"),
-        imune=lambda a: "construto" in a.tracos or "etereo" in a.tracos,
+        imune=lambda a: "construto" in a.tracos or "etereo" in a.tracos, imunes="construtos nem etéreos",
         descrever=lambda t, v, esc, ch, todos, rot: _chance(ch, f"sangramento: {_num(v)} por turno, {_turnos(t)}{_origem(esc)}.")),
     "queimadura": estado(
         "em chamas", "chama", "fogo", negativo=True, tique=("queimadura", "amarelo"),
-        imune=lambda a: a.resist.get("fogo", 1) < 0.5, camadas=bal.MAX_CHAMAS, rotulo_camadas="em chamas ×{s}",
+        imune=lambda a: a.resist.get("fogo", 1) < 0.5, imunes="quem resiste muito ao fogo", camadas=bal.MAX_CHAMAS, rotulo_camadas="em chamas ×{s}",
         ajuste_tique=_clima_apaga, dica="a Combustão detona o que falta arder"),
     "maldito": estado(
         "amaldiçoado", "gota_roxa", "maldicao", negativo=True, tique=("maldição", "magenta"),
@@ -143,19 +145,22 @@ ESTADOS = {
     "marcado": estado(
         "marcado", "flecha", "marca", negativo=True, dica="recebe mais dano de todos",
         golpe={"dano_recebido": lambda v: 1 + v}, agora=lambda v: f"recebe +{_pct(v)} de dano de todos",
-        descrever=lambda t, v, esc, ch, todos, rot: f"{_quem(todos)[0].upper() + _quem(todos)[1:]} recebe +{_pct(v)} de dano de todos por {_turnos(t)}."),
+        descrever=lambda t, v, esc, ch, todos, rot: (f"{_quem(todos)[0].upper() + _quem(todos)[1:]} recebe +{_pct(v)} de dano "
+                                                     f"de todos os golpes por {_turnos(t)}: os seus, os da comitiva e "
+                                                     f"os do animal.")),
 }
 
 
 def _buff_esquiva(u, t, v):
     base = min(bal.ESQUIVA_MAX_AGI, u.agi * bal.ESQUIVA_POR_AGI)
     return (f"Esquiva +{_pct(v)} por {_turnos(t)}: de {_pct(base)} para {_pct(min(bal.MAX_ESQUIVA, base + v))} "
-            f"(teto de {_pct(bal.MAX_ESQUIVA)}).")
+            f"(teto de {_pct(bal.MAX_ESQUIVA)}). É uma chance a cada golpe: um golpe pode acertar mesmo assim.")
 
 
 def _buff_furtivo(u):
     from .grimorio import mult_critico
-    return f"O próximo ataque é crítico garantido de ×{_num(mult_critico(u, furtivo=True))}."
+    return (f"O próximo ataque é crítico garantido de ×{_num(mult_critico(u, furtivo=True))}. Os inimigos continuam "
+            "mirando você.")
 
 
 # Derivados do catálogo (para quem só precisa de uma lista)
@@ -177,9 +182,11 @@ def no_golpe(u, etapa):
 def descrever_aplicar(efeito, turnos, valor, escala, chance, todos, rotulo):
     """A linha do Grimório para uma habilidade que aplica `efeito` num inimigo."""
     e = ESTADOS.get(efeito)
-    if e and e["descrever"]:
-        return e["descrever"](turnos, valor, escala, chance, todos, rotulo)
-    return _chance(chance, f"{efeito} por {_turnos(turnos)}.")
+    texto = (e["descrever"](turnos, valor, escala, chance, todos, rotulo) if e and e["descrever"]
+             else _chance(chance, f"{efeito} por {_turnos(turnos)}."))
+    if e and e.get("imunes"):  # quem não pega, dito na própria linha (o combate diz "não é afetado" na hora)
+        texto = texto.rstrip(".") + f"; não afeta {e['imunes']}."
+    return texto
 
 
 def descrever_buff(u, efeito, turnos, valor):

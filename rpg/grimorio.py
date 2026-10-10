@@ -95,8 +95,9 @@ def _queimadura(u, chance):
         origem.append(f"+{_pct(mult(u, 'queimadura_mult') - 1)} {', '.join(nomes(u, 'queimadura_mult'))}")
     if mod(u, "queimadura_dano"):
         origem.append(f"+{_pct(mod(u, 'queimadura_dano'))} {', '.join(nomes(u, 'queimadura_dano'))}")
+    from .estados import ESTADOS
     return efeito(f"{_pct(chance)} de chance de acender: {_num(v)} de fogo por turno, {t} turnos, acumula até "
-                  f"{bal.MAX_CHAMAS} camadas ({', '.join(origem)}).")
+                  f"{bal.MAX_CHAMAS} camadas ({', '.join(origem)}); não pega em {ESTADOS['queimadura']['imunes']}.")
 
 
 # Como os RPGs de turno descrevem o alcance (Final Fantasy, Pokémon): quem, e se é um só ou todos.
@@ -115,6 +116,24 @@ def habilidades_que_usam(j, stat):
         if any(nome in t for t in textos):
             usam.append(h["nome"])
     return usam
+
+
+def regras_das_habilidades(j):
+    """As regras que valem para várias habilidades, ditas uma vez (só as que tocam as habilidades do herói)."""
+    from .habilidades import Acender, Aplicar, Buff, Se, _passos_de
+    passos = [p for h in j.habilidades for p in _passos_de(h)]
+    efeitos = {p.efeito for p in passos if isinstance(p, (Aplicar, Buff))}
+    linhas = []
+    if any(isinstance(p, Se) and p.condicao in Se.PREFIXO and any(isinstance(x, (Aplicar, Acender)) for x in p.passos)
+           for p in passos):
+        linhas.append("\"Se acertar\": a chance só vale quando o golpe acerta; o alvo pode se esquivar.")
+    if "atordoado" in efeitos:
+        linhas.append("Atordoar ou congelar: o alvo perde a próxima vez, e um golpe que ele preparava se perde. Chefes e "
+                      "gigantes resistem metade das vezes; quem acabou de se soltar fica firme por um turno.")
+    if efeitos & {"guarda", "esquiva"} or "barreira" in j.habilidades:
+        linhas.append("Contra um golpe preparado: a guarda reduz o dano, a barreira absorve até acabar, a esquiva é só "
+                      "uma chance de evitar.")
+    return linhas
 
 
 def dados(j):
@@ -149,11 +168,35 @@ def dados(j):
         partes = " + ".join(f"{nome} {_num(100 * v)}%" for nome, v in roubo)
         gerais.append(f"Roubo de vida: {_num(100 * mod(j, 'roubo_vida'))}% de todo dano que você causa volta como vida "
                       f"({partes}).")
-    # A passiva da especialização: uma página como as das habilidades, sem custo nem alvo.
+    gerais += regras_das_habilidades(j)
+    # A passiva da especialização: uma página como as das habilidades, sem custo nem alvo. E a página do caminho: o que
+    # ele dá além das habilidades (testes, resistências, o animal) e onde rende menos (especializacao.py, a mesma conta
+    # da escolha).
+    from .especializacao import pagina_grimorio
     from .talentos import PASSIVAS
     passivas = [{"id": "passiva_" + j.spec, "nome": p["nome"], "icone": p["icone"], "passiva": True, "custo": 0,
                  "alvo": "", "desc": p["desc"],
                  "linhas": [efeito("Sempre ativa: vem com a especialização, sem custo e sem ponto de talento.")]}
                 for p in [PASSIVAS.get(j.spec)] if p]
+    caminho = pagina_grimorio(j)
+    if caminho:
+        passivas.append(caminho)
     return {"recurso": j.nome_recurso, "basico": basico, "habilidades": habs, "passivas": passivas, "gerais": gerais,
             "atributos": {"Ataque": j.atk, "Poder": j.poder, "Agilidade": j.agi}}
+
+
+def texto(j):
+    """O Grimório em linhas, para o modo texto (a tela de personagem): uma linha por página, e as regras uma vez."""
+    def linha(l):
+        if l["tipo"] == "dano":
+            return f"{l['rotulo']} {l['min']}–{l['max']} (média {l['medio']}), crítico {l['critico']} em {l['chance_critico']}%"
+        return l["texto"]
+    d = dados(j)
+    linhas = []
+    for x in [d["basico"]] + d["habilidades"] + d["passivas"]:
+        custo = (x.get("rotulo") or "passiva") if x.get("passiva") else f"{x['custo']} {d['recurso'].lower()}" if x["custo"] \
+            else "grátis"
+        linhas.append(f"  {x['nome']} ({custo}): " + "; ".join(linha(l).rstrip(".") for l in x["linhas"]) + ".")
+    linhas += [f"  · {g}" for g in d["gerais"]]
+    return linhas
+

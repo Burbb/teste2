@@ -63,6 +63,11 @@ body.em-combate #hud-linha { justify-content: flex-end; }
 .carta.com-atordoado .icone::before { content: "✦ ✦"; position: absolute; top: -10px; left: 0; right: 0; text-align: center; color: var(--ouro); font-size: 10px; animation: tontura 0.8s steps(4) infinite; }
 @keyframes tontura { 50% { transform: translateX(4px); } }
 .preparando { grid-column: 1 / -1; font-size: 12px; font-weight: 600; color: #ffcf5c; animation: alerta 0.8s steps(2) infinite; }
+/* Na sua vez, a carta de quem prepara um golpe fica por cima das outras: a faixa de ação de outro inimigo, que ainda
+   some sozinha, não cobre o aviso enquanto você escolhe. Quem acabou de agir sobe por um instante com z-index na própria
+   carta (batalha.js, emCena); por isso o !important, que só vale enquanto a vez é sua (ninguém mais está em cena). A
+   animação e o tempo das faixas continuam os de sempre. */
+#batalha:has(.carta.vez[data-uid="j"]) .carta.inimigo:has(.preparando:not([hidden])) { z-index: 49 !important; }
 /* vez, ação e alvo */
 .carta.vez { border-color: var(--ouro); animation: vez 1.2s steps(2) infinite; }
 @keyframes vez { 50% { box-shadow: 0 0 0 2px #000, 0 0 0 4px var(--ouro-3); } }

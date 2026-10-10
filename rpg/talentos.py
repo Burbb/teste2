@@ -177,7 +177,7 @@ TALENTOS = {
         _t("tiro_abertura", "Tiro de Abertura", "tronco", 2, 1, "Seu primeiro ataque em cada combate é sempre crítico.",
            mods={"abertura": Fixo(1)}, icone="flecha"),
         _t("laminas_envenenadas", "Pontas Venenosas", "sombra", 2, 2,
-           "Ataques básicos têm 20% de chance por ponto de envenenar.",
+           "Ataques básicos têm 20% de chance por ponto de envenenar (não afeta mortos-vivos nem construtos).",
            mods={"veneno_basico": 0.2}, gatilhos={"ataque_basico": _laminas}, icone="gota"),
         _t("armadilheiro", "Armadilheiro", "patrulheiro", 3, 1,
            "Cada combate começa com um inimigo preso numa armadilha.",
