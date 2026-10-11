@@ -147,7 +147,7 @@ class TestCombinacoes(unittest.TestCase):
         linhas = missoes.cartoes(g, todas=True)[1]["linhas"]
         self.assertEqual(linhas, ["Ilse: os ossos dela ficaram no fundo da capela, sem nome.",
                                   caspar.LINHA_CASPAR["denunciado"],
-                                  "Yara: a moça do brejo, que você não conhece, não é mais procurada por ninguém. Vive "
+                                  "Yara: você não a conhece. Ninguém mais a procura; ela vive "
                                   "no Charco dos Juncos."])
         self.assertFalse(caspar.fogueira_possivel(g))  # o pregador não queima ninguém depois disso
         self.assertEqual([c["id"] for c in estado(g)["missoes"]], [])  # nada ativo
@@ -184,7 +184,7 @@ class TestCombinacoes(unittest.TestCase):
     def test_calar_com_yara_morta(self):
         g, ui, testes, rep = self.decidir("destruida", "Calar", yara="morta")
         self.assertEqual((caspar.registro(g)["desfecho"], rep), ("calar", 0))
-        self.assertEqual(missoes.cartoes(g, todas=True)[1]["linhas"][2], "Yara: morreu na fogueira do brejo.")
+        self.assertEqual(missoes.cartoes(g, todas=True)[1]["linhas"][2], "Yara: morreu na fogueira de Caspar.")
         self.assertIn("fogueira no brejo fez o resto", " ".join(ui.ditos))
 
     def test_prova_forte_facilita(self):
@@ -276,3 +276,39 @@ class TestMesmoDia(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestDiarioConcluidas(unittest.TestCase):
+    """O Diário com missões concluídas: as em andamento primeiro, a pendência à vista, as concluídas no fim, sem
+    repetir o desfecho em "Mais recente" nem os preparos já no histórico (1.62.4)."""
+
+    def texto(self, g):
+        g.ui.ditos = []
+        g._diario_texto(None)
+        return g.ui.ditos
+
+    def test_ativa_pendencia_e_concluida(self):
+        g = resolvida("descansada")
+        cartao = next(c for c in missoes.cartoes(g, todas=True) if c["id"] == FEBRE)
+        self.assertIsNone(cartao["recente"])
+        self.assertTrue(cartao["historico"])  # o histórico continua para consultar
+        ditos = self.texto(g)
+        ordem = [d for d in ditos if d.startswith(("Missão:", "Pendente:", "Concluídas"))]
+        self.assertEqual(ordem, ["Missão: A Vigília de Caspar", "Pendente: A Febre do Turvo. Vó Berta ainda espera você "
+                                 "na taverna.", "Concluídas (1):", "Missão: A Febre do Turvo (concluída)"])
+        febre = ditos[ditos.index("Missão: A Febre do Turvo (concluída)"):]
+        self.assertFalse(any(d.startswith("  Mais recente") or d == "  O que você já fez:" for d in febre))
+        self.assertTrue(any(d.startswith("  Concluída no dia") for d in febre))
+
+    def test_heranca_recebida_e_todas_concluidas(self):
+        pasta = tempfile.mkdtemp()
+        g = resolvida("descansada", pasta=pasta)
+        missoes.registro(g, FEBRE)["cenas"].append("heranca")
+        caspar.registro(g).update(desfecho="calar", concluida=g.dia)
+        g.salvar(silencioso=True)
+        h = Jogo.carregar(Roteiro(), g.caminho_save(), pasta)
+        ditos = self.texto(h)
+        self.assertFalse(any(d.startswith("Pendente:") for d in ditos))
+        self.assertIn("Concluídas (2):", ditos)
+        self.assertEqual([d for d in ditos if d.startswith("Missão:")],
+                         ["Missão: A Febre do Turvo (concluída)", "Missão: A Vigília de Caspar (concluída)"])

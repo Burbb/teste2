@@ -188,6 +188,8 @@ def cartoes(g, todas=False):
                       "perguntas": d.get("perguntas", lambda g, m: [])(g, m),
                       **_historia(mid, m),
                       "concluida": m.get("concluida"),
+                      # Concluída, o resumo já diz o desfecho: "Mais recente" o repetiria (o histórico continua)
+                      **({"recente": None} if m.get("concluida") else {}),
                       **({"conclusao": f"Concluída no dia {m['concluida']}. " + d["conclusoes"][m["desfecho"]],
                           "linhas": [x for x in d.get("linhas", lambda g, m: [])(g, m) if x],
                           "pendente": d.get("pendente", lambda g, m: None)(g, m)}

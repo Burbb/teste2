@@ -235,10 +235,25 @@ class Contratos:
     def _diario_texto(self, a):
         if a:  # a campanha escrita ainda não tem vilão
             self.dizer(f"Inimigo final: {a['nome']}, {a['origem']}.", "magenta")
-        for m in missoes.cartoes(self, todas=True) if self.campanha else []:
+        cartoes = missoes.cartoes(self, todas=True) if self.campanha else []
+        ativas, feitas = [m for m in cartoes if not m["concluida"]], [m for m in cartoes if m["concluida"]]
+        # As em andamento primeiro; o que uma concluída ainda espera (a herança de Berta) logo depois, à vista; as
+        # concluídas no fim, com o desfecho, o que mudou e o histórico.
+        for m in feitas:
+            if m["pendente"]:
+                ativas.append(dict(m, so_pendente=True))
+        if feitas:
+            ativas.append({"titulo_concluidas": len(feitas)})
+        for m in ativas + feitas:
+            if m.get("titulo_concluidas"):
+                self.dizer(f"Concluídas ({m['titulo_concluidas']}):", "amarelo+negrito")
+                continue
+            if m.get("so_pendente"):
+                self.dizer(f"Pendente: {m['nome']}. {m['pendente']}", "amarelo")
+                continue
             self.dizer(f"Missão: {m['nome']}" + (" (concluída)" if m["concluida"] else ""), "amarelo+negrito")
             if m["concluida"]:
-                for linha in (m["conclusao"], *m["linhas"], m["pendente"]):
+                for linha in (m["conclusao"], *m["linhas"]):
                     if linha:
                         self.dizer(f"  {linha}", "amarelo")
             else:
@@ -258,7 +273,7 @@ class Contratos:
                 self.dizer("  Perguntas em aberto:", "cinza")
             for p in m["perguntas"]:
                 self.dizer(f"  ? {p}", "cinza")
-            if m["preparos"] and not m["requisitos"]:
+            if m["preparos"] and not m["requisitos"] and not m["concluida"]:  # concluída: está no histórico
                 self.dizer("  O que você já fez:", "cinza")
                 for p in m["preparos"]:
                     self.dizer(f"  • {p}", "cinza")

@@ -1126,3 +1126,36 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
 - **Ilse:** "Não deixe os três cair nas mãos de quem não entende o que eles mantêm fechado."
 - **Não mudou:** regras, prova, teste de denúncia e o funcionamento do Diário, do mapa e dos baús.
 
+### 11/10/2026 — Odette, missões concluídas no Diário e "brejo" (1.62.4)
+
+- **Pedido de Jean:**
+  - o encontro com Odette: a morte dita com clareza, as falas conforme a ação, e o fluxo de "perguntar" registrado à
+    parte;
+  - as missões concluídas recolhidas no Diário;
+  - outros textos parecidos, o "brejo" estranho e a "Fonte Nova".
+- **Odette:**
+  - "Perguntar quem ela é": ela diz o nome e que não dá mais para salvá-lo, e o homem morre diante dos dois;
+  - a fala da oferta acompanha a ação: quem ajudou ouve "Você vai para onde está a dor"; quem segurou e falhou, "Você
+    ficou até o fim"; quem só perguntou, "Você parou para perguntar. A maioria nem para.";
+  - aprovação, custos, reputação, reações e desfechos ficam iguais;
+  - o fluxo (perguntar fecha a chance de ajudar) está registrado no 07, sem mudar.
+- **O Diário:**
+  - as missões em andamento vêm primeiro;
+  - o que uma concluída ainda espera (a herança de Vó Berta) fica à vista, fora da seção recolhida;
+  - as concluídas ficam em "Concluídas (N)", recolhida por padrão;
+  - aberta, a missão concluída mostra o desfecho, o que mudou e o histórico. Sem "Mais recente" repetindo o desfecho e
+    sem os preparos antigos, que estão no histórico;
+  - o modo texto segue a mesma ordem;
+  - saves e progresso não mudam: a organização vem do estado que já existia.
+- **Textos:**
+  - na campanha, Caspar é chamado pelo nome na fogueira de Yara;
+  - "a moça do brejo" e "na beira do brejo" saíram do narrador e do Diário;
+  - "brejo" fica na voz de Caspar, na de Yara e na geografia da capela;
+  - "Fonte Nova": as 41 ocorrências usam o nome do lugar, e as referências genéricas usam "a fonte". Nada a corrigir.
+- **Verificações:**
+  - testes e gabarito;
+  - a fumaça, com a leitura do Diário ajustada à nova ordem;
+  - no navegador, a 1500 e 1280 px, nos três estados: uma em andamento com a herança pendente, uma em andamento sem
+    herança, e todas concluídas. Cada um também depois de salvar e carregar;
+  - o modo texto, nos testes.
+

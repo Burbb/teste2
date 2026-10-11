@@ -734,8 +734,13 @@ async function cenarioRetorno(browser) {
   const MENU = "#prompt .escolhas:not(.escolhido) .escolha";
   const diario = async () => {
     await page.keyboard.press("d");
-    await page.waitForSelector(".missao-diario", { timeout: 10000 });
-    const t = await page.textContent(".missao-diario");
+    await page.waitForSelector(".quadro-missao", { timeout: 10000 });
+    // o quadro inteiro: as em andamento, a pendência à vista e as concluídas (recolhidas)
+    const t = await page.evaluate(() => {
+      const q = document.querySelector(".quadro-missao"), det = q.querySelector(".missoes-concluidas");
+      return { texto: q.textContent, pendencia: [...q.querySelectorAll(".missao-pendencia")].map((p) => p.textContent).join(" "),
+        concluidas: det ? det.textContent : "", recolhida: !!det && !det.open };
+    });
     await page.keyboard.press("Escape");
     await page.waitForSelector('#predios .predio[data-predio="taverna"]', { timeout: 20000 });
     await page.waitForTimeout(600);
@@ -763,7 +768,9 @@ async function cenarioRetorno(browser) {
       "a febre concluída sai do rastreador; fica a resposta a Caspar, e a vila fala da Fonte que clareia");
     conferir((await page.evaluate(() => estado.local.atendentes.curandeiro)).startsWith("Pita"), "Marta de cama: Pita atende na curandeira");
     let d = await diario();
-    conferir(/concluída/.test(d) && /Ilse descansou/.test(d) && /Vó Berta ainda espera/.test(d), "o Diário guarda a conclusão e diz que a herança espera");
+    conferir(/Concluídas \(1\)/.test(d.concluidas) && d.recolhida && /Ilse descansou/.test(d.concluidas) && /Vó Berta ainda espera/.test(d.pendencia)
+      && !/Vó Berta ainda espera/.test(d.concluidas),
+      "o Diário guarda a conclusão (recolhida) e deixa à vista que a herança espera");
     await page.click('#predios .predio[data-predio="taverna"]');
     await (await page.waitForSelector('.balcao-predio .servico:has-text("Contar a Vó Berta")', { timeout: 10000 })).click();
     for (let k = 0; k < 80 && !(await page.$("#prompt .continuar.confirmar")); k++) {
@@ -778,7 +785,7 @@ async function cenarioRetorno(browser) {
     d = await diario();
     await page.click('#predios .predio[data-predio="taverna"]');
     await page.waitForSelector(".balcao-predio .servico", { timeout: 10000 });
-    conferir(!/Vó Berta ainda espera/.test(d) && !(await page.$('.balcao-predio .servico:has-text("Vó Berta")')),
+    conferir(!/Vó Berta ainda espera/.test(d.texto) && !(await page.$('.balcao-predio .servico:has-text("Vó Berta")')),
       "a herança, depois de concluir, sai uma vez e o cartão some");
     await page.keyboard.press("Escape");
     await page.waitForTimeout(800);
@@ -823,6 +830,10 @@ async function cenarioCaspar(browser) {
     conferir((await page.evaluate(() => estado.missoes.length)) === 0 && /praça/.test(praca),
       "decidido: nenhuma missão ativa, e a vila fala da praça depois da decisão");
     await page.keyboard.press("d");
+    // Concluída, a Vigília fica em "Concluídas", recolhida: abre-se como o jogador abriria
+    await page.waitForSelector(".missoes-concluidas > summary", { timeout: 10000 });
+    conferir(!(await page.$eval(".missoes-concluidas", (el) => el.open)), "a missão decidida vai para Concluídas, recolhida");
+    await page.click(".missoes-concluidas > summary");
     await page.waitForSelector('.missao-diario[data-missao="vigilia_de_caspar"]', { timeout: 10000 });
     const d = await page.textContent('.missao-diario[data-missao="vigilia_de_caspar"]');
     conferir(/Ilse: os ossos dela ficaram no fundo da capela/.test(d) && /Caspar: /.test(d) && /Yara: /.test(d),

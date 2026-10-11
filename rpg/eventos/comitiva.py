@@ -26,6 +26,8 @@ def odete_na_estrada(g):
         ("Seguir seu caminho", "nao"),
     ])
     simpatia = 0
+    # O que ela diz ao recrutar acompanha o que você fez ali (ajudou, ficou até o fim, só perguntou o nome).
+    fala = "\"Você vai para onde está a dor. Dá para ver. Eu também.\""
     if op == "bandagem":
         g.j.consumiveis["bandagem"] -= 1
         g.dizer("Vocês trabalham juntos, rápido, sem uma palavra. O sangue para. O homem abre os olhos e pergunta "
@@ -41,10 +43,13 @@ def odete_na_estrada(g):
         else:
             g.dizer("Você segura até as mãos ficarem dormentes. Não adianta. Ela fecha os olhos dele com dois dedos "
                     "e fica um tempo ali, parada.", "cinza")
+            fala = "\"Você ficou até o fim. Pouca gente fica.\""
             simpatia = 5
     elif op == "perguntar":
-        g.dizer("\"Odette. Irmã Odette.\" Ela não tira as mãos da ferida. \"Ele já está morto, sabia? Só não percebeu "
-                "ainda.\" Ele percebe pouco depois.", "cinza")
+        g.dizer("\"Odette. Irmã Odette.\" Ela não tira as mãos da ferida. \"Não dá mais para salvar este. Dá para não "
+                "deixar que morra sozinho.\" O homem respira mais devagar, depois para. Ela fecha os olhos dele com "
+                "dois dedos.", "cinza")
+        fala = "\"Você parou para perguntar. A maioria nem para.\""
         simpatia = 0
     elif op == "roubar":
         g.dizer("Você encontra três moedas e um dente de ouro. Odette se levanta, com sangue até os cotovelos, e te "
@@ -59,8 +64,8 @@ def odete_na_estrada(g):
         g.marcar("comitiva:odete", "recusou")
         return
     cm.reagir(g, "misericordia")
-    g.dizer("Ela limpa as mãos na terra. \"Você vai para onde está a dor. Dá para ver. Eu também.\" Pela primeira "
-            "vez ela olha para você. \"Alguém vai precisar fechar suas feridas no caminho.\"", "amarelo")
+    g.dizer(f"Ela limpa as mãos na terra. {fala} Pela primeira vez ela olha para você. \"Alguém vai precisar fechar "
+            "suas feridas no caminho.\"", "amarelo")
     if cm.oferecer_vaga(g, "odete"):
         cm.mudar_aprovacao(g, "odete", simpatia, mostrar=False)
     else:
@@ -367,6 +372,7 @@ def yara_na_fogueira(g):
     g.dizer("Fumaça e gritos atrás das árvores. Numa clareira, aldeões com forcados e tochas cercam uma pilha de lenha. "
             "Amarrada a um poste no meio dela, uma moça de cabelo sujo de lama encara a multidão sem chorar.")
     quem = "o Irmão Caspar, o homem de batina remendada" if g.campanha else "um homem de batina remendada"
+    pregador = "Caspar" if g.campanha else "o pregador"  # na campanha, o homem tem nome: o texto não o troca por outro
     g.dizer(f"\"BRUXA!\", grita {quem}. \"O gado morreu, o poço secou, as crianças têm febre! "
             "Foi ela!\"", "vermelho")
     g.dizer("A moça vê você. Não pede ajuda. Só olha.", "cinza")
@@ -410,8 +416,8 @@ def yara_na_fogueira(g):
             simpatia = 10
             cm.reagir(g, "diplomacia")
         else:
-            g.dizer("\"Outro bruxo!\", grita o pregador. Mas ninguém se mexe, e você corta as cordas enquanto discutem.",
-                    "amarelo")
+            g.dizer(f"\"Outro bruxo!\", grita {pregador}. Mas ninguém se mexe, e você corta as cordas enquanto "
+                    "discutem.", "amarelo")
             simpatia = 6
     elif op == "magia":
         if g.teste("arcano", 12):
@@ -424,7 +430,8 @@ def yara_na_fogueira(g):
             simpatia = 6
     else:
         g.perder_ouro(20)
-        g.dizer("O pregador conta as moedas e abençoa você. A moça é desamarrada como se fosse uma cabra vendida.", "cinza")
+        g.dizer(f"{pregador[0].upper() + pregador[1:]} conta as moedas e abençoa você. A moça é desamarrada como se "
+                "fosse uma cabra vendida.", "cinza")
         simpatia = -2
         cm.reagir(g, "pragmatismo")
     g.dizer("Ela esfrega os pulsos em carne viva. \"Yara\", diz. \"Eles vão voltar com mais lenha. Eu não tenho para "

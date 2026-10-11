@@ -76,6 +76,13 @@
 .missao-rito li.feito { color: #3f5a2a; }
 .missao-rito li small { font-size: 15px; color: #6b4a26; }
 .missao-pendente { color: #8a4a12; }
+/* O que uma missão concluída ainda espera, fora da seção recolhida; e as concluídas, recolhidas por padrão. */
+.missao-pendencia { display: flex; align-items: center; gap: 8px; margin-top: 10px; padding: 8px 14px; font-family: var(--leitura); font-size: 17px; color: #24180e; background: #f1e3c0; box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.45); }
+.missao-pendencia b { color: #8a4a12; }
+.missoes-concluidas { margin-top: 12px; }
+.missoes-concluidas > summary { cursor: pointer; padding: 4px 2px; font-size: 15px; letter-spacing: .06em; text-transform: uppercase; color: var(--tinta-2); }
+.missoes-concluidas > summary:hover, .missoes-concluidas > summary:focus-visible { color: var(--tinta); }
+.missoes-concluidas > .missao-diario { margin-top: 8px; }
 .missao-aguardando { margin-top: 8px; padding: 4px 10px; border-left: 3px solid #8a4a12; background: rgba(138, 74, 18, 0.1); color: #5a3410; }
 .missao-historico { margin-top: 10px; padding-top: 8px; border-top: 2px dashed rgba(74, 42, 16, 0.3); font-size: 16px; line-height: 1.45; }
 .missao-historico summary { display: list-item; cursor: pointer; }

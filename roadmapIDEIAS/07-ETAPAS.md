@@ -249,6 +249,32 @@ trecho, motivo e sugestão. Uma entrega à parte decide quais aplicar.
 
     Sugestão: o custo na `nota`.
 
+**Continuidade e "brejo" (1.62.4):**
+- *Feito:*
+  - Odette fala conforme o que o herói fez: ajudou, ficou até o fim sem conseguir, ou só perguntou o nome. A morte
+    do homem fica dita com clareza.
+  - Na fogueira de Yara, na campanha, Caspar é chamado pelo nome do começo ao fim, e não mais de "o pregador" nas
+    falas seguintes.
+  - O narrador e o Diário deixaram de usar "a moça do brejo" como apelido e "na beira do brejo" para um lugar que não
+    existe no mapa. Ficam Yara, o Charco dos Juncos ou "do lado de fora".
+- *Mantido de propósito:*
+  - "brejo" na voz de Caspar ("a bruxa do brejo"), nas falas e cenas de Yara dentro do Charco, e na geografia da
+    capela (o canal corre pelo brejo até ela);
+  - o título de Yara na comitiva, "bruxa do brejo". Escolha de estilo: é o mesmo nome da família de inimigos "bruxa do
+    brejo".
+- *Escolha de estilo, registrada:* depois da luta com os Cães de Ferro (`teodoro_ruivo`), a cena não diz se Theodore
+  morreu, e "Não fica claro se fala da luta ou da ponte" comenta a cena em vez de mostrá-la.
+
+**Fluxo (registrado na 1.62.4, sem mudar):**
+- **Odette na estrada.** `rpg/eventos/comitiva.py`, `odete_na_estrada`.
+  - O que acontece: "Perguntar quem ela é" está no mesmo menu das formas de ajudar. Escolhida, a cena termina: o
+    homem morre, e não há como ajudar depois de saber o nome dela.
+  - Por que importa: perguntar parece uma conversa, e não uma escolha que fecha as outras. Quem pergunta por cortesia
+    perde a ajuda sem saber.
+  - Sugestão: perguntar vira uma resposta que volta ao menu (ela diz o nome e repete "Segure aqui"), sem gastar
+    nada.
+  - Fica para uma entrega que possa mexer no encontro.
+
 **Escolhas de estilo:**
 14. **Recuo nas salas.** `rpg/missoes.py:406`, "Dá para voltar quando quiser.". É meta-texto, e a ação continua no
     menu. Sugestão: ficar com "A sala continua por vencer."

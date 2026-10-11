@@ -18,10 +18,10 @@
     const req = m.requisitos;
     const rito = req ? req.itens.map((r) => `<li class="${r.feito ? "feito" : "falta"}">${r.feito ? "✓" : "○"} ${h(r.texto)}${!r.feito && r.onde ? ` <small>· ${h(r.onde)}</small>` : ""}</li>`).join("") : "";
     const perguntas = (m.perguntas || []).map((p) => `<li>${h(p)}</li>`).join("");
-    const feitos = !req ? (m.preparos || []).map((p) => `<li>${h(p)}</li>`).join("") : "";
+    const feitos = !req && !m.concluida ? (m.preparos || []).map((p) => `<li>${h(p)}</li>`).join("") : "";  // concluída: no histórico
     // Concluída: no lugar do objetivo, a conclusão (o desfecho), o estado da Fonte e o que ainda espera por você.
     const topo = m.concluida
-      ? `<div class="missao-objetivo missao-conclusao">${h(m.conclusao)}</div>${(m.linhas || []).map((l) => `<div class="missao-lugar">${h(l)}</div>`).join("")}${m.pendente ? `<div class="missao-lugar missao-pendente">${h(m.pendente)}</div>` : ""}`
+      ? `<div class="missao-objetivo missao-conclusao">${h(m.conclusao)}</div>${(m.linhas || []).map((l) => `<div class="missao-lugar">${h(l)}</div>`).join("")}`
       : `<div class="missao-objetivo">${h(m.objetivo)}</div><div class="missao-lugar">${lugar}</div>`;
     const espera = m.aguardando ? `<div class="missao-aguardando">${h(m.aguardando)}</div>` : "";
     const recente = m.recente ? `<div class="missao-recente"><span>${m.recente.dia != null ? `Mais recente · dia ${m.recente.dia}` : "Mais recente"}</span>${h(m.recente.texto)}</div>` : "";
@@ -34,14 +34,23 @@
       ${hist ? `<details class="missao-historico"><summary>Histórico da investigação</summary><ol>${hist}</ol></details>` : ""}</div>`;
   }
 
+  /** As missões do Diário: as em andamento primeiro; o que uma concluída ainda espera (a herança de Berta), à vista;
+   *  as concluídas numa seção recolhida, com o desfecho, o que mudou e o histórico para consultar. */
+  function missoesDiario(lista) {
+    const ativas = lista.filter((m) => !m.concluida), feitas = lista.filter((m) => m.concluida);
+    const pendencias = feitas.filter((m) => m.pendente).map((m) => `<div class="missao-pendencia">${S("pergaminho", 1)}<span><b>${h(m.nome)}</b> · ${h(m.pendente)}</span></div>`).join("");
+    return ativas.map(missaoDiario).join("") + pendencias + (feitas.length
+      ? `<details class="missoes-concluidas"><summary>Concluídas (${feitas.length})</summary>${feitas.map(missaoDiario).join("")}</details>` : "");
+  }
+
   function diario(d) {
-    const missoes = (d.missoes || []).map(missaoDiario).join("");
+    const missoes = missoesDiario(d.missoes || []);
     const contratos = d.contratos.map((c) => cartaz(c, true, false, d.nivel_heroi)).join("");
     const rumores = d.rumores.map((r) => `<div class="bilhete"><span class="prego"></span>${S("olho", 1)} ${h(r.texto)}<small>${r.expira > 0 ? `some em ${Texto.plural(r.expira, "dia")}` : "some hoje"}</small></div>`).join("");
     const losangos = [0, 1, 2].map((i) => `<i class="sigilo${i < d.sigilos ? " tem" : ""}"></i>`).join("");
     return `<div class="tela diario">
       <div class="faixa-jornada"><span>Dia ${d.dia}</span><span class="sigilos-diario" title="Sigilos dos guardiões">${losangos} ${d.sigilos}/3</span></div>
-      ${missoes ? `<div class="quadro quadro-missao"><div class="quadro-cab"><b>Missão</b><span>${(d.missoes || []).every((m) => m.concluida) ? "concluída" : ""}</span></div>${missoes}</div>` : ""}
+      ${missoes ? `<div class="quadro quadro-missao"><div class="quadro-cab"><b>Missão</b><span></span></div>${missoes}</div>` : ""}
       <div class="quadro"><div class="quadro-cab"><b>Contratos</b><span>${d.contratos.length}/${d.limite}</span></div>
         <div class="cartazes">${contratos || '<span class="vazio">Nenhum contrato. Procure o mural de uma vila.</span>'}</div></div>
       ${rumores ? `<h4>Rumores</h4><div class="bilhetes">${rumores}</div>` : ""}

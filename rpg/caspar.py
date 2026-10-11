@@ -85,8 +85,7 @@ def _fora_do_vau(g, m):
     if cm.membro(g, "yara") is not m or not yara_barrada(g):
         return None
     return {"curto": "espera fora do Vau",
-            "texto": "Espera fora do Vau, na beira do brejo: a vigília de Caspar não a deixa entrar. Na estrada, volta "
-                     "para o seu lado."}
+            "texto": "Espera fora do Vau: a vigília de Caspar não a deixa entrar. Na estrada, volta para o seu lado."}
 
 
 cm.AUSENCIAS.append(_fora_do_vau)
@@ -145,22 +144,22 @@ LINHA_CASPAR = {
 def linha_yara(g):
     m, onde = registro(g), situacao_yara(g)
     if onde == "morta":
-        return "Yara: morreu na fogueira do brejo." + (" A praça sabe agora que ela não trouxe a febre."
+        return "Yara: morreu na fogueira de Caspar." + (" A praça sabe agora que ela não trouxe a febre."
                                                        if m.get("desfecho") == "denunciado" else "")
     postura = m.get("desfecho")
     if onde in ("grupo", "reserva"):
         return {"apoiar": "Yara: continua com você, mas a vigília não a deixa entrar no Vau. Quando você está na vila, "
-                          "ela espera do lado de fora, na beira do brejo.",
+                          "ela espera do lado de fora.",
                 "denunciado": "Yara: anda livre pelo Vau.",
                 "denuncia_falhou": "Yara: pode entrar no Vau, mas é vigiada.",
                 "calar": "Yara: entra no Vau, mas evita a praça; ninguém a defende."}.get(postura)
     livre = postura in ("denunciado", "denuncia_falhou")
     if onde == "recusou":
-        return "Yara: vive por conta própria no brejo, " + ("sem ninguém atrás dela." if livre else
+        return "Yara: vive por conta própria no Charco dos Juncos, " + ("sem ninguém atrás dela." if livre else
                                                              "e a vigília ainda fala dela.")
-    return ("Yara: a moça do brejo, que você não conhece, não é mais procurada por ninguém. Vive no Charco dos Juncos."
+    return ("Yara: você não a conhece. Ninguém mais a procura; ela vive no Charco dos Juncos."
             if livre else
-            "Yara: a moça do brejo, que você não conhece, segue acusada" + (" e procurada pela vigília."
+            "Yara: você não a conhece. Segue acusada" + (" e procurada pela vigília."
                                                                             if postura == "apoiar" else "."))
 
 
@@ -183,7 +182,7 @@ def frase_da_praca(g):
         return None
     frase = FRASE_PRACA[m["desfecho"]]
     if yara_barrada(g) and situacao_yara(g) == "grupo":
-        frase += " Yara espera do lado de fora, na beira do brejo: a vigília não a deixa entrar."
+        frase += " Yara espera do lado de fora: a vigília não a deixa entrar."
     return frase
 
 
@@ -246,7 +245,7 @@ def _praca(g, mid):
     yara = situacao_yara(g)
     g.ui.cena("A Praça do Vau", g.contexto_cena(), "evento")
     if "acusacao" not in m["cenas"]:  # quem não passou pelo Vau na investigação conhece Caspar aqui
-        g.narrar(_caspar_e_quem(g) + " Faz semanas que ele culpa uma moça do brejo, Yara, pela febre.")
+        g.narrar(_caspar_e_quem(g) + " Faz semanas que ele culpa pela febre uma moça do Charco dos Juncos, Yara.")
     g.narrar({
         "destruida": "\"A bruxa da capela foi destruída no fundo da água!\", grita Caspar para a vila reunida. \"Deus "
                      "fez justiça pelas mãos deste viajante. E a febre está indo embora com ela.\"",
@@ -334,7 +333,7 @@ def _resolver(g, postura, forte=False):
     from .telemetria import registrar
     registrar(g, "missao", missao=MID, desfecho=postura)
     if postura in ("denunciado", "denuncia_falhou") and yara == "desconhecida":
-        g.narrar("Ninguém mais procura a moça do brejo. Dizem que ela vive no Charco dos Juncos, entre os sapos.")
+        g.narrar("Ninguém mais procura a moça que Caspar acusava. Dizem que ela vive no Charco dos Juncos, entre os sapos.")
     if yara_barrada(g):
         g.narrar("Yara entende antes de você explicar. \"Eu espero do lado de fora\", diz, seca. \"Na beira do brejo. "
                  "Como sempre.\"" if yara == "grupo" else
