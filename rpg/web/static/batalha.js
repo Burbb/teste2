@@ -606,6 +606,20 @@ const Batalha = (() => {
         som("sombra");
         return;
       }
+      case "arremesso": {  // algo atirado que não é um golpe (a teia da aranha): voa de quem atira até o alvo
+        if (de && em) await projetil(de, em, m.sprite);
+        som("lancar");
+        return;
+      }
+      case "escapou": {  // o arremesso não prendeu: o alvo se esquiva e a carta diz
+        if (!em) return;
+        marcar(m.em);
+        reiniciar(em, "esquivou", 560);
+        numero(em, m.rotulo || "escapou", "info");
+        som("esquiva");
+        await dormir(pausa(260));
+        return;
+      }
       case "efeito_negado": {  // firme: acabou de se soltar e não perde o turno de novo
         if (!em) return;
         marcar(m.em);

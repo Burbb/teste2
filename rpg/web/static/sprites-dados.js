@@ -1370,6 +1370,25 @@ const SPRITES_GRADES = (() => {
   // A poção é um frasco de vidro (rolha, gargalo, líquido com brilho); as variantes trocam só o líquido.
   S.pocao_azul = trocar(S.pocao, { R: "U", r: "u", D: "v" });
   S.frasco_vazio = trocar(S.pocao, { R: "s", r: "K", D: "k", W: "g" });
+  // A teia que a aranha atira (o projétil, batalha.js: arremesso): fios brancos em roda.
+  S.teia = [
+    "................",
+    "...G...W...G....",
+    "....G..W..G.....",
+    ".GGWWWWWWWWWGG..",
+    "..G.G..W..G.G...",
+    "..W..GWWWG..W...",
+    "..W.GW.W.WG.W...",
+    "WWWWWWWWWWWWWWW.",
+    "..W.GW.W.WG.W...",
+    "..W..GWWWG..W...",
+    "..G.G..W..G.G...",
+    ".GGWWWWWWWWWGG..",
+    "....G..W..G.....",
+    "...G...W...G....",
+    "................",
+    "................",
+  ];
   S.floco = [
     "................",
     ".......W........",

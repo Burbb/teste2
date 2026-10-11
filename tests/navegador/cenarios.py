@@ -431,8 +431,8 @@ def tiro_duplo(ui):
 def covil(ui):
     """Mundo gerado, CLASSE (padrão guerreiro) no nível 1, no covil de um guardião ainda vivo (ou no primeiro lugar do
     tipo LUGAR: vila, selvagem), no PERIODO (0 manhã ... 3 noite; padrão 0). BOLSA: "bandagem=0,pocao_vida=2" acerta a
-    bolsa; OURO, o ouro. PROTECAO (mendigo, santuario ou 1) dá a proteção; LUTA (uma família: lobo, troll...) começa uma luta com o
-    herói quase sem vida. Com EVENTO (o nome da função: crianca_perdida, madeira_para_flechas, os_enfermos, odete_na_estrada,
+    bolsa; OURO, o ouro. PROTECAO (mendigo, santuario ou 1) dá a proteção; LUTA (uma família: lobo, troll, aranha...) começa uma luta com o
+    herói quase sem vida (VIDA, NIVEL_LUTA e QUANTOS mudam isso). Com EVENTO (o nome da função: crianca_perdida, madeira_para_flechas, os_enfermos, odete_na_estrada,
     mendigo_misterioso...), o evento toca antes do menu."""
     from rpg.eventos import classe as ev_classe, comitiva as ev_comitiva, comuns as ev_comuns, vila as ev_vila
     g = Jogo(ui, seed=int(os.environ.get("SEMENTE", "8")), pasta_saves=tempfile.mkdtemp(), hardcore=False)
@@ -451,10 +451,11 @@ def covil(ui):
     if os.environ.get("PROTECAO"):  # já com a proteção (a origem: mendigo, santuario, ou 1 para um save antigo)
         g.marcar("bencao_fenix", True if os.environ["PROTECAO"] == "1" else os.environ["PROTECAO"])
     if os.environ.get("LUTA"):  # cai numa luta já quase sem vida, contra um inimigo forte: a proteção se ativa
-        g.j.hp = 1
+        g.j.hp = int(os.environ.get("VIDA", "1"))  # VIDA e NIVEL_LUTA: uma luta comum (a teia da aranha, por exemplo)
         ui.cena(loc["nome"], g.contexto_cena(), "evento")
         g.dizer("Um vulto enorme sai da névoa.")
-        g.combate([g.inimigo(os.environ["LUTA"], nivel=6)])
+        g.combate([g.inimigo(os.environ["LUTA"], nivel=int(os.environ.get("NIVEL_LUTA", "6")))
+                   for _ in range(int(os.environ.get("QUANTOS", "1")))])
     if os.environ.get("EVENTO"):
         nome = os.environ["EVENTO"]
         fn = next(getattr(m, nome) for m in (ev_comuns, ev_classe, ev_comitiva, ev_vila) if hasattr(m, nome))

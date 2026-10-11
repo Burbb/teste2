@@ -181,8 +181,15 @@ def _grito_guerra(cb, e, alvo):
 
 
 def _teia(cb, e, alvo):
+    """A teia voa até o alvo (a tela desenha o arremesso). Se não prende, a carta do alvo diz isso: antes, só o
+    registro contava (a não ser quando o alvo está firme, que a tela já mostra)."""
+    from .estados import ESTADOS
     cb.dizer(f"{e.nome} dispara uma teia pegajosa!", "vermelho")
+    cb.lance("arremesso", de=cb.uid(e), em=cb.uid(alvo), sprite="teia")
+    firme = any("atordoado" in ESTADOS.get(k, {}).get("protege", ()) for k in alvo.efeitos)
     if not cb.aplicar(alvo, "atordoado", 1, chance=0.55, rotulo="preso na teia"):
+        if not firme:
+            cb.lance("escapou", em=cb.uid(alvo), rotulo="não pegou")
         cb.dizer(f"{cb.nome(alvo)} se desvencilha a tempo.", "cinza")
 
 
