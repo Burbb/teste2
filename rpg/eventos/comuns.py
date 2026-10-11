@@ -386,7 +386,7 @@ def crianca_perdida(g):
     vilas = [l for l in g.mundo["locais"] if l["tipo"] == "vila"]
     vila = g.sortear(vilas)
     op = g.menu("O que faz?", [
-        (f"Levá-la até {vila['nome']} (perde tempo)", "levar"),
+        (f"Levá-la até {vila['nome']}", "levar", {"nota": "Toma algumas horas do dia."}),
         ("Dar comida e indicar o caminho", "indicar"),
         ("Ignorar", "ignorar"),
     ])

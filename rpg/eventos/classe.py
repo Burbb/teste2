@@ -193,7 +193,7 @@ def aldeia_assombrada(g):
 def os_enfermos(g):
     g.dizer("Uma casa com um X pintado na porta. Febre negra. Uma mãe implora: \"Ninguém entra. Ninguém "
             "nos ajuda.\"", "amarelo")
-    op = g.menu("O que faz?", [("Entrar e curar os doentes (gasta suas forças)", "curar"),
+    op = g.menu("O que faz?", [("Entrar e curar os doentes", "curar", {"nota": "Horas de esforço: cobra da sua vida."}),
                                ("Deixar remédios na porta", "remedio") if g.j.tem("pocao_vida") else None,
                                ("Seguir em frente", "nao")])
     if op == "curar":
@@ -328,7 +328,8 @@ def rastro_de_caca(g):
 @evento(peso=lambda g: 14 if g.j.flechas < 15 else 5, cooldown=8, cond=_classe("arqueiro"))
 def madeira_para_flechas(g):
     g.dizer("Um bosque de freixos jovens, retos como lanças. Madeira perfeita para flechas.", "verde")
-    op = g.menu("O que faz?", [("Parar e fabricar flechas (leva tempo)", "fazer"), ("Seguir", "nao")])
+    op = g.menu("O que faz?", [("Parar e fabricar flechas", "fazer", {"nota": "Toma algumas horas do dia."}),
+                               ("Seguir", "nao")])
     if op == "fazer":
         g.avancar_periodo()
         bonus = 4 if g.teste("percepcao", 11) else 0

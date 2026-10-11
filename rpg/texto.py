@@ -2,6 +2,10 @@
 
 import re
 
+# A nota das opções que começam uma luta sem fuga (o guardião, a guardiã da capela): a regra fica junto da escolha, sem
+# janela a mais e sem tomar o lugar da cena.
+SEM_FUGA = "Sem fuga: a luta vai até o fim."
+
 INICIOS = [
     "Ar", "Bel", "Cor", "Dra", "El", "Fen", "Gal", "Hal", "Ir", "Jor", "Kal", "Lor",
     "Mor", "Nar", "Or", "Par", "Quel", "Ral", "Sar", "Tor", "Ul", "Val", "Xar", "Zor",

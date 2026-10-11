@@ -80,7 +80,7 @@ Três commits posteriores à atualização do roadmap foram consultados. Os comp
 | E3 — missão mínima | Entregas na 1.50.0 a 1.54.0 (registros abaixo): da Fonte Nova ao canal, à capela, ao interior, a Vó Berta, à guardiã (Destruir ou Dar descanso) e à volta ao Vau, que conclui a missão. A bênção e a comporta não existem. Falta Jean jogar. |
 | E4 — consequência local | Na 1.54.0, a Fonte Nova, a frase do Vau, Pita e Marta. Na 1.55.0, Caspar: a acusação, a praça (Apoiar, Denunciar com prova, Calar), a situação da Yara e as reações da comitiva. Na 1.56.0, a consolidação: a Yara barrada fica de fato fora do Vau, o encontro no Charco depois da denúncia, a conversa da Yara sobre a praça e os textos que contradiziam o Vau. **O critério mínimo da E4 (07-ETAPAS) está atendido**; as outras ideias do 11 (bênção, sementes, mercado, taverna, Charco à noite, Odette e Caspar, Anselmo, a cena da vigília) ficam adiadas, não são requisito. Falta Jean jogar. |
 | E5 — classes | Diagnóstico (só design) em [14](14-E5-DIAGNOSTICO-CLASSES.md), sobre a 1.56.0. **P1 implementada na 1.57.0:** o golpe preparado em duas lutas fixas da capela (seção 10 do 14). **P3 implementada na 1.58.0:** a encruzilhada compara os dois caminhos e o Grimório explica (seção 11 do 14). **P2 começada na 1.59.0, só pelo Tiro Duplo** (seção 12 do 14): o 2º disparo vai no outro inimigo mais ferido. **Drenar Vida, Desaparecer e Passo Ágil avaliados em lutas inteiras** (seção 13 do 14, sem mudar o jogo): os dois primeiros têm função. **O desvio do Passo Ágil foi validado e rejeitado** (seção 14): usado repetidamente, vira a ação padrão contra inimigos sozinhos; o Passo Ágil fica como era. **O critério mínimo da E5 (07-ETAPAS) está atendido**: as três classes atravessam o Vale (a guardiã medida por caminho) e os seis caminhos foram avaliados em cenários direcionados. A E5 está **concluída tecnicamente**; adiado, sem ser requisito: o Passo Ágil, a sinergia Desaparecer–Execução, Sombra e Piromante contra a guardiã no nível 4, a preparação de habilidades. Falta Jean jogar. A validação da E4 jogando, por Jean, fica registrada à parte. |
-| Clareza da campanha | Pausa antes da E6, a partir do teste de Jean. **Primeira entrega na 1.60.0** (registro abaixo): ações da capela organizadas, Diário reorganizado, linguagem do Vale simplificada, cartão de atualização de missão. **Revisão na 1.60.1**: ações curtas com custo e risco numa nota, e o conhecimento conforme as descobertas (o critério está no 07). **Na 1.60.2**: porta ou ação à vista no menu e grupos. **Na 1.60.3**: o cartão de novidade como nota da história e o Diário na Alegreya Sans. As próximas entregas estão listadas em [07](07-ETAPAS.md) ("Entre a E5 e a E6"), sem implementar. Falta Jean testar. |
+| Clareza da campanha | Pausa antes da E6, a partir do teste de Jean. **Primeira entrega na 1.60.0** (registro abaixo): ações da capela organizadas, Diário reorganizado, linguagem do Vale simplificada, cartão de atualização de missão. **Revisão na 1.60.1**: ações curtas com custo e risco numa nota, e o conhecimento conforme as descobertas (o critério está no 07). **Na 1.60.2**: porta ou ação à vista no menu e grupos. **Na 1.60.3**: o cartão de novidade como nota da história e o Diário na Alegreya Sans. **Na 1.60.4**: revisão editorial dos textos que antecipavam a resolução (critério no 07). As próximas entregas estão listadas em [07](07-ETAPAS.md) ("Entre a E5 e a E6"), sem implementar. Falta Jean testar. |
 | E6–E11 | Plano de trabalho futuro; infraestrutura existente não equivale a etapas concluídas. Notas aprovadas para a E3 na seção 19 do [11](11-E1-REGIAO-INICIAL.md). |
 | Bugs ainda abertos | Nenhum bug aberto específico foi informado para registro nesta passagem. Isso não comprova ausência de bugs. |
 | Polimento antes da E3 | Entregue na 1.48.1 (registro abaixo): leitura, item achado, balcão do templo, palco da luta. Falta Jean conferir jogando. |
@@ -860,3 +860,30 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
 - **Verificações:**
   - `unittest`, gabarito idêntico, `pyflakes` e fumaça;
   - capturas em 1500 e 1280 px: o cartão da sacristia, o Diário, o histórico aberto e o sarilho.
+
+### 11/10/2026 — Clareza da campanha: revisão editorial (1.60.4)
+
+- **Pedido de Jean:** uma revisão localizada dos textos que antecipavam a resolução de cenas ou explicavam demais o funcionamento do jogo, com prioridade para as correntes e o confronto com Ilse, além de quatro textos menores. Só apresentação: regras, custos, testes, encontros, recompensas e sorteios ficaram iguais. A apresentação da 1.60.3 (fontes, setas, grupos) não mudou.
+- **Critério:** a cena apresenta indícios e acontecimentos, a alternativa descreve a ação, a interface comunica custos e restrições, o resultado revela o que aconteceu. O texto completo está no 07.
+- **Correntes.** Os rótulos são os mesmos; só as notas mudaram.
+  - À mão: "Demorado e barulhento: o eixo range, e o som corre pela água da capela inteira." Antes: "o rangido chama os afogados, e é preciso vencê-los para terminar".
+  - Método da classe: "Silencioso, se a trava ceder. Se não ceder, o eixo range alto." Antes dizia quem vinha e que o resto era à mão.
+  - O teste (FOR, ARC, DES com o bônus) e o "Gasta 1 flecha" do arqueiro continuam. O encontro continua garantido no motor: nada de chance nova.
+  - O que acontece depois, a cena mostra (os afogados, "agora vai ter de ser à mão").
+- **Fundo da capela.**
+  - "Depois de começar, não há como recuar" saiu da frase da cena. A cena termina em "Ela ainda não se levantou da água.", e a pergunta é "O que você faz?".
+  - A regra virou a nota "Sem fuga: a luta vai até o fim." nas duas opções que começam a luta (o rito e destruir). "Voltar por enquanto" fica sem nota.
+  - Sem confirmação nem janela a mais. O aviso de Berta sobre o que falta para o rito continua.
+- **Guardiões do mundo gerado.** "Não haverá como fugir depois de começar." deixou de ser a pergunta. Agora a pergunta é "O que você faz?", e a mesma nota fica em "Lutar!" (`tx.SEM_FUGA`, um texto só para os dois lugares). Nenhum obstáculo inventado.
+- **Textos menores, com o custo na nota:**
+  - "Levá-la até X" — Toma algumas horas do dia.
+  - "Parar e fabricar flechas" — Toma algumas horas do dia.
+  - "Entrar e curar os doentes" — Horas de esforço: cobra da sua vida.
+  - O alerta de viagem perigosa continua dizendo o nível e o risco; as opções viraram "Não ir" e "Ir mesmo assim".
+- **Gabarito.** Mudou em 8 partidas, só nos rótulos e nas notas dessas opções. As escolhas são as mesmas (índices iguais), e o resto das transcrições não mudou. Foi atualizado depois da comparação.
+- **Verificações:**
+  - `unittest` com testes novos: notas sem antecipar o inimigo; a regra na nota do guardião e da guardiã; recuar do guardião sem gastar sorteio nem tempo;
+  - gabarito;
+  - `pyflakes` limpo;
+  - fumaça;
+  - capturas em 1500 e 1280 px: correntes, descida até Ilse, guardião, alerta de viagem, criança perdida, flechas, Paladino com os doentes. Para isso, o cenário novo `covil` em `tests/navegador/cenarios.py`, com `EVENTO` opcional.

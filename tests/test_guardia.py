@@ -10,6 +10,7 @@ import tempfile
 import unittest
 
 from rpg import dev, itens, missoes
+from rpg import texto as tx
 from rpg.combate import Combate
 from rpg.inimigos import instanciar_guardiao
 from rpg.jogo import Jogo
@@ -190,8 +191,9 @@ class TestConfronto(unittest.TestCase):
             self.assertTrue(missoes.executar(g, MID, "fundo"))
             m = missoes.registro(g, MID)
             self.assertEqual((m["desfecho"], m["etapa"]), ("destruida", "retorno"), classe)
-            descida = next(p for p in g.ui.perguntas if p[0].startswith("Ela ainda não se levantou"))
-            self.assertEqual(descida[1], ["Lutar para destruí-la", "Voltar por enquanto"])  # sem um rito fadado a falhar
+            descida = next(p for p in g.ui.perguntas if "Voltar por enquanto" in p[1])
+            self.assertEqual(descida, ("O que você faz?", [f"Lutar para destruí-la — {tx.SEM_FUGA}", "Voltar por enquanto"]))
+            self.assertIn("Ela ainda não se levantou da água.", g.ui.ditos)  # a cena; a regra fica na nota da luta
             self.assertFalse(any("ainda falta" in d for d in g.ui.ditos))  # sem Berta, ninguém falou do rito
             self.assertFalse(any(p[0] == "Este é o momento do rito." for p in g.ui.perguntas))
             todos = [it for it in g.j.mochila + list(g.j.equip.values()) if it]
@@ -204,8 +206,8 @@ class TestConfronto(unittest.TestCase):
         dito = next(d for d in g.ui.ditos if "ainda falta" in d)
         self.assertIn("Vó Berta", dito)
         self.assertIn("soltá-la das pedras de moinho", dito)
-        descida = next(p for p in g.ui.perguntas if p[0].startswith("Ela ainda não se levantou"))
-        self.assertEqual(descida[1], ["Lutar para destruí-la", "Voltar por enquanto"])
+        descida = next(p for p in g.ui.perguntas if "Voltar por enquanto" in p[1])
+        self.assertEqual(descida[1], [f"Lutar para destruí-la — {tx.SEM_FUGA}", "Voltar por enquanto"])
 
     def test_preparado_e_mesmo_assim_destroi(self):
         g = no_fundo("arqueiro", DESTRUIR, **PRONTO)

@@ -11,6 +11,7 @@
     python -m tests.navegador.cenarios retorno   # chegando ao Vau com Ilse resolvida (DESFECHO, DIAS, LODO, YARA)
     python -m tests.navegador.cenarios praca     # depois da resposta a Caspar (POSTURA, YARA, LUGAR)
     python -m tests.navegador.cenarios encruzilhada  # a escolha de especialização, comparando (CLASSE, NIVEL)
+    python -m tests.navegador.cenarios covil        # mundo gerado, no covil de um guardião (CLASSE, EVENTO, SEMENTE)
     python -m tests.navegador.cenarios tiro_duplo    # Patrulheiro contra três lobos feridos de jeitos diferentes (NIVEL, VIDAS)
 
 Imprime o endereço do servidor na primeira linha e fica no ar até ser encerrado.
@@ -371,9 +372,30 @@ def tiro_duplo(ui):
         pass
 
 
+def covil(ui):
+    """Mundo gerado, CLASSE (padrão guerreiro) no nível 1, no covil de um guardião ainda vivo, de manhã. Com EVENTO
+    (o nome da função: crianca_perdida, madeira_para_flechas, os_enfermos...), o evento toca antes do menu."""
+    from rpg.eventos import classe as ev_classe, comuns as ev_comuns
+    g = Jogo(ui, seed=int(os.environ.get("SEMENTE", "8")), pasta_saves=tempfile.mkdtemp(), hardcore=False)
+    ui.jogo = g
+    g.iniciar("Jean", os.environ.get("CLASSE", "guerreiro"))
+    loc = next(l for l in g.mundo["locais"] if l["tipo"] == "covil")
+    g.mundo["atual"], loc["visitado"] = loc["id"], True
+    g.periodo, g.clima = 0, "limpo"
+    if os.environ.get("EVENTO"):
+        nome = os.environ["EVENTO"]
+        fn = getattr(ev_comuns, nome, None) or getattr(ev_classe, nome)
+        ui.cena(loc["nome"], g.contexto_cena(), "evento")
+        fn(g)
+    try:
+        g.rodar()
+    except FimDeJogo:
+        pass
+
+
 CENARIOS = {"combate": combate, "titulo": titulo, "vila": vila, "campanha": campanha, "baus": baus, "missao": missao,
             "recarga": recarga, "capela": capela, "retorno": retorno, "praca": praca, "encruzilhada": encruzilhada,
-            "tiro_duplo": tiro_duplo}
+            "tiro_duplo": tiro_duplo, "covil": covil}
 
 
 def main():

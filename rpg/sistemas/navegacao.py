@@ -43,8 +43,8 @@ class Navegacao:
             onde = (f"As estradas em volta de {loc['nome']} têm inimigos de nível {nv}" if loc["tipo"] == "vila"
                     else f"{loc['nome']} tem inimigos de nível {nv}")
             if not self.confirmar(f"{onde}. Você é nível {self.j.nivel}. "
-                                  f"Lá, quase qualquer encontro pode te matar. Ir mesmo assim?",
-                                  [("Não, voltar", False), ("Sim, eu sei o que estou fazendo", True)], perigo=True):
+                                  f"Lá, quase qualquer encontro pode te matar.",
+                                  [("Não ir", False), ("Ir mesmo assim", True)], perigo=True):
                 return
         if loc["tipo"] == "cidadela" and len(self.j.sigilos) < 3:
             self.dizer(f"Uma muralha de sombras bloqueia o caminho. Você precisa dos três Sigilos "

@@ -547,8 +547,10 @@ METODO_CLASSE = {
     "mago": "Apodrecer o ferro da trava (Arcano)",
     "arqueiro": "Acertar o pino da trava (Destreza)",
 }
-RISCO_CLASSE = "Se der certo, a corrente desce sem barulho. Se falhar, o rangido chama os afogados, e o resto é à mão."
-NOTA_MAO = "Demora e faz barulho: o rangido chama os afogados, e é preciso vencê-los para terminar."
+# As notas dizem o que se percebe antes de agir (o tempo, o barulho, o teste, a flecha), não o que vem depois: quem
+# ouve o rangido e o que acontece em seguida, a cena mostra.
+RISCO_CLASSE = "Silencioso, se a trava ceder. Se não ceder, o eixo range alto."
+NOTA_MAO = "Demorado e barulhento: o eixo range, e o som corre pela água da capela inteira."
 
 
 def _soltar_correntes(g, mid):
@@ -621,9 +623,11 @@ def _fundo(g, mid):
         falta = [o_que[0].lower() + o_que[1:] for o_que, _, feito in descanso(m) if not feito]
         g.dizer("Do que Vó Berta contou, ainda falta " + tx.lista_natural(falta) + ". Sem isso, não há como dar "
                 "descanso a ela.", "cinza")
-    opcoes = ([("Chamar Ilse pelo nome e tentar dar descanso", "descanso")] if pronto else []) + [
-        ("Lutar para destruí-la", "destruir"), ("Voltar por enquanto", None)]
-    op = g.menu("Ela ainda não se levantou da água. Depois de começar, não há como recuar.", opcoes)
+    g.narrar("Ela ainda não se levantou da água.")
+    sem_fuga = {"nota": tx.SEM_FUGA}
+    opcoes = ([("Chamar Ilse pelo nome e tentar dar descanso", "descanso", sem_fuga)] if pronto else []) + [
+        ("Lutar para destruí-la", "destruir", sem_fuga), ("Voltar por enquanto", None)]
+    op = g.menu("O que você faz?", opcoes)
     if op is None:
         g.narrar("Você sobe a escada de costas. O canto continua lá embaixo.")
         return

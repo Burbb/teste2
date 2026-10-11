@@ -51,9 +51,11 @@ class TestCorrentes(unittest.TestCase):
             self.assertTrue(principais[1].startswith(missoes.METODO_CLASSE[classe].split(" (")[0]))
             self.assertRegex(principais[1], r"\((Força|Arcano|Destreza) [+-]\d+ no d20\)")
             self.assertEqual(principais[2], "Deixar como está")
-            self.assertIn("afogados", metodos[0])  # o risco do jeito manual
+            self.assertIn("barulhento", metodos[0])  # o que se percebe antes: tempo e barulho...
+            self.assertNotIn("afogados", metodos[0] + metodos[1])  # ...e não quem vem nem como acaba
             self.assertNotIn("sempre funciona", metodos[0].lower())
-            self.assertIn("Se falhar", metodos[1])  # o risco do atalho
+            self.assertIn("Se não ceder, o eixo range alto", metodos[1])  # o risco do atalho
+            self.assertNotIn("à mão", metodos[1])
             self.assertEqual("Gasta 1 flecha" in metodos[1], classe == "arqueiro")  # o consumo, à vista
 
     def test_a_cena_nao_ensina_o_rito_antes_de_berta(self):
@@ -246,3 +248,19 @@ class TestCartao(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestSemFuga(unittest.TestCase):
+    def test_guardiao_do_procedural_diz_a_regra_na_opcao(self):
+        """A regra (sem fuga) fica na nota da opção de lutar, não na frase da cena; recuar não gasta nada."""
+        from rpg import texto as tx
+        ui = Roteiro(["Recuar por enquanto"])
+        g = Jogo(ui, seed=5, pasta_saves=tempfile.mkdtemp())
+        g.iniciar("Teste", "guerreiro")
+        covil = next(l for l in g.mundo["locais"] if l["tipo"] == "covil")
+        g.mundo["atual"] = covil["id"]
+        antes = (g.rng.getstate(), g.periodo, g.j.hp)
+        g.enfrentar_guardiao()
+        self.assertEqual(ui.ofertas[-1], [f"Lutar! — {tx.SEM_FUGA}", "Recuar por enquanto"])
+        self.assertEqual((g.rng.getstate(), g.periodo, g.j.hp), antes)
+        self.assertFalse(covil["guardiao"]["derrotado"])

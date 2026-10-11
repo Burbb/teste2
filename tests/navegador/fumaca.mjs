@@ -596,8 +596,8 @@ async function cenarioSarilho(browser) {
     await page.click(`${MENU}:has-text("Soltar as correntes")`);
     await page.waitForSelector(`${MENU}:has-text("Deixar como está")`, { timeout: 20000 });
     const metodos = await page.$$eval(MENU, (bs) => bs.map((b) => `${b.querySelector(".rotulo").textContent} ${(b.querySelector(".teste") || {}).textContent || ""}`));
-    conferir(metodos.length === 3 && /^Desenrolar as correntes à mão/.test(metodos[0]) && /afogados/.test(metodos[0])
-      && /^Arrancar a trava/.test(metodos[1]) && /Se falhar/.test(metodos[1]) && /FOR [+−]\d+/.test(metodos[1]),
+    conferir(metodos.length === 3 && /^Desenrolar as correntes à mão/.test(metodos[0]) && /barulhento/.test(metodos[0]) && !/afogados/.test(metodos.join(" "))
+      && /^Arrancar a trava/.test(metodos[1]) && /Se não ceder/.test(metodos[1]) && /FOR [+−]\d+/.test(metodos[1]),
       `dentro: à mão e o método da classe, cada um com o risco embaixo, e deixar como está (${metodos.length})`);
     const cena = await page.textContent("#texto");
     conferir(/trava de ferro/.test(cena) && !/descanso|preparo/.test(cena), "o mecanismo é descrito, sem ensinar o rito antes de Berta");

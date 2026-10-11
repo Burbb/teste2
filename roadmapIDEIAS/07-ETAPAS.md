@@ -78,6 +78,13 @@ Na 1.60.1, uma revisão de apresentação e texto, depois do teste de Jean. O cr
   - Os papéis do Diário e as notas das opções usam a Alegreya Sans, irmã da Alegreya da história.
   - O cartão de novidade é uma nota dentro da história, na fonte dela, e não um papel por cima.
   - A Pixeloid Sans fica na "Fonte: pixel".
+- **Critério editorial** (1.60.4). Cada parte do texto tem um papel:
+  - a **cena** apresenta indícios e acontecimentos;
+  - a **alternativa** descreve a ação do personagem;
+  - a **interface** comunica custos e restrições importantes: tempo, recurso gasto, teste, esforço, luta sem fuga. Isso vai numa nota discreta junto da opção, não no meio da narração;
+  - o **resultado** revela o que aconteceu.
+
+  Nota não antecipa o inimigo exato nem a sequência de resolução: diz o que se percebe antes de agir ("barulhento", "o eixo range alto"). Custos, testes, efeitos de habilidade, escolhas de fato permanentes e o que se aprendeu em conversa (o rito de Berta) continuam explícitos. Nada de porcentagem inventada, de obstáculo físico criado só para justificar uma regra, ou de remoção geral de avisos.
 - **Conhecimento conforme as descobertas.** As telas e o Diário só mostram o que o personagem já descobriu, atribuído a quem ensinou. O rito aparece como o que Vó Berta contou, só depois da conversa com ela. Antes disso, o Diário mostra as perguntas que as pistas abrem, sem a receita. A finalidade da amostra do lodo aparece no Diário de Caspar, como o que se pode mostrar à praça.
 
 **Próximas entregas (registradas, não implementadas; cada uma é uma entrega à parte, nenhuma é requisito da E6):**

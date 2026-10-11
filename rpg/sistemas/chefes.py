@@ -21,8 +21,7 @@ class Chefes:
         chave = f"guardiao:{loc['id']}"
         if self.flag(f"fraqueza:{chave}"):
             self.dizer("Você se lembra do que ouviu sobre o ponto fraco desta criatura.", "verde")
-        if not self.menu("Não haverá como fugir depois de começar.", [("Lutar!", True), ("Recuar por enquanto",
-                                                                                         False)]):
+        if not self.menu("O que você faz?", [("Lutar!", True, {"nota": tx.SEM_FUGA}), ("Recuar por enquanto", False)]):
             return
         nivel = self.nivel_guardiao(loc)
         chefe = instanciar_guardiao(gspec, nivel)
