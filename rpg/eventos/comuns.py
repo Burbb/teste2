@@ -165,6 +165,16 @@ def viajante_grato(g):
         g.ganhar_ouro(15)
 
 
+def _pode_pagar(g, preco):
+    """A meta de uma compra do mercador: sem ouro bastante, a opção fica à vista, indisponível, com o que falta."""
+    falta = preco - g.j.ouro
+    return {"indisponivel": f"Faltam {falta} de ouro (você tem {g.j.ouro})."} if falta > 0 else None
+
+
+def _despedir(g):
+    g.dizer("Você se despede. A carroça colorida segue pela estrada, sacolejando.", "cinza")
+
+
 @evento(peso=7, cooldown=10)
 def mercador_ambulante(g):
     p = g.npc()
@@ -174,9 +184,9 @@ def mercador_ambulante(g):
             f"{p['traco']}, abre um sorriso largo: \"Para você, preço de amigo!\"", "amarelo")
     g.dizer(f"Oferta: {item['nome']} por {preco} ouro.", "amarelo")
     op = g.menu("O que faz?", [
-        (f"Comprar ({preco} ouro)", "comprar") if g.j.ouro >= preco else None,
+        (f"Comprar ({preco} ouro)", "comprar", _pode_pagar(g, preco)),
         ("Examinar a mercadoria com atenção (Percepção)", "examinar"),
-        ("Comprar uma poção de vida (15 ouro)", "pocao") if g.j.ouro >= 15 else None,
+        ("Comprar uma poção de vida (15 ouro)", "pocao", _pode_pagar(g, 15)),
         ("Recusar", "nao"),
     ])
     if op == "examinar":
@@ -186,19 +196,26 @@ def mercador_ambulante(g):
                         "de outro item.", "verde")
                 g.dar("pocao_vida")
             else:
-                g.dizer("A peça é legítima. O mercador até baixa o preço, impressionado com seu olho.", "verde")
                 preco = int(preco * 0.8)
-                if g.j.ouro >= preco and g.menu(f"Comprar por {preco}?", [("Sim", True), ("Não", False)]):
+                g.dizer(f"A peça é legítima. O mercador até baixa o preço, impressionado com seu olho: "
+                        f"{item['nome']} por {preco} ouro.", "verde")
+                if g.menu("O que faz?", [(f"Comprar ({preco} ouro)", True, _pode_pagar(g, preco)),
+                                         ("Despedir-se", False)]):
                     g.perder_ouro(preco)
                     g.oferecer_equip(item)
+                else:
+                    _despedir(g)
         else:
             g.dizer("Parece tudo certo. Mas você não tem certeza.", "cinza")
-            if g.j.ouro >= preco and g.menu(f"Comprar por {preco}?", [("Sim", True), ("Não", False)]):
+            if g.menu("O que faz?", [(f"Comprar ({preco} ouro)", True, _pode_pagar(g, preco)),
+                                     ("Despedir-se", False)]):
                 g.perder_ouro(preco)
                 if g.chance(0.25):
                     g.dizer("Dois dias depois, a peça se desfaz em suas mãos. Golpe!", "vermelho")
                 else:
                     g.oferecer_equip(item)
+            else:
+                _despedir(g)
     elif op == "comprar":
         g.perder_ouro(preco)
         if g.chance(0.2):
@@ -209,6 +226,8 @@ def mercador_ambulante(g):
     elif op == "pocao":
         g.perder_ouro(15)
         g.dar("pocao_vida")
+    else:
+        _despedir(g)
 
 
 @evento(peso=40, cooldown=3, cond=lambda g: g.semente("mercador_golpista"))
