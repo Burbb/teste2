@@ -39,6 +39,7 @@ Para uma nova conta ou sessão, começar por [00 — Comece aqui: continuidade](
 | [13-PENDENCIAS-FORA-DA-CAMPANHA.md](13-PENDENCIAS-FORA-DA-CAMPANHA.md) | Divergências entre documentação e código, e texto do prólogo; fora da campanha |
 | [14-E5-DIAGNOSTICO-CLASSES.md](14-E5-DIAGNOSTICO-CLASSES.md) | E5: diagnóstico das três classes e seis especializações (sistemas conferidos, promessas × código, fichas, builds, progressão) e as prioridades da E5 |
 | [15-E6-TRANSFORMACAO.md](15-E6-TRANSFORMACAO.md) | E6: a transformação de habilidade (a especificação; as decisões de Jean, o implementado na 1.62.0, o medido e o que falta jogar) |
+| [16-E7-ITEM-E-LOOT.md](16-E7-ITEM-E-LOOT.md) | O saque do Vale medido (baús, suprimentos, equipamento, ouro), duas propostas de ajuste e a especificação da primeira entrega da E7 (o Broquel do Vigia), com as decisões pendentes |
 
 ## Estados e evidências
 

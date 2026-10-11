@@ -1180,3 +1180,32 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
 - **Gabarito:** uma partida mudou (guerreiro, semente 42, modo texto). O robô revista o moribundo sem perguntar, e o
   narrador diz "A mulher se levanta" em vez de "Odette se levanta". Nada mais mudou.
 
+### 11/10/2026 — Saque do Vale medido e a primeira entrega da E7 especificada
+
+- **Pedido de Jean:**
+  - diagnosticar a impressão de que os baús dão consumíveis demais, sem mudar distribuição, frequência, economia ou
+    recompensas;
+  - especificar a primeira entrega da E7, sem implementar.
+- **O que existe agora:**
+  - `tests/saque_vale.py`, uma régua: um robô joga o Vale inteiro e conta baús, suprimentos, equipamento, vendas e
+    ouro. O roteiro está no topo do arquivo. Não muda o jogo;
+  - o [16](16-E7-ITEM-E-LOOT.md), com o diagnóstico, duas propostas e a especificação.
+- **Saque** (480 percursos, 136 completos):
+  - 6,4 baús por Vale. Metade vem de inimigos com nome, que sempre deixam baú: alvos de contrato, nêmesis, líderes;
+  - metade dos suprimentos achados sai de baús;
+  - poções e tônicos se gastam; antídoto, unguento e bomba se acumulam;
+  - no fim, a bolsa vale mais que o ouro na mão, e suprimento não se vende;
+  - todo equipamento é da classe do herói.
+- **Propostas, nenhuma aplicada:**
+  - um suprimento por baú (recomendada);
+  - se não bastar, o situacional repetido vira ouro.
+- **E7:** recomendado o Broquel do Vigia. É um escudo único do Guerreiro: com o escudo erguido, devolve cada golpe
+  corpo a corpo que acerta o herói (Revide, 30% do Ataque).
+  - Vem do esqueleto de guarda do ossuário, uma vez, fora do sorteio.
+  - Num save adiantado, o ferreiro do Vau o oferece uma vez.
+  - Um protótipo descartável, só na memória de um script, serviu para escolher o número de partida.
+- **Registrado, sem proposta:** o começo do Vale derruba o robô (fome nos níveis 1 e 2), em especial o Mago. Fica
+  para a E9.
+- **Decisões de Jean:** seção 6 do 16.
+- **Verificado:** testes, gabarito (sem mudança), pyflakes, fumaça.
+

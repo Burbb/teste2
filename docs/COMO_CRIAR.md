@@ -304,6 +304,8 @@ equipamento × XP) fica na seção "a curva". O ciclo:
    - `python -m tests.replay`: as partidas de verdade guardadas em `tests/runs/` (o .jsonl que o jogo grava em
      `<saves>/runs/`), refeitas luta a luta com os números de agora (`--lutas` mostra uma por uma; `--ficha`
      confere o herói remontado).
+   - Saque e economia (baús, suprimentos, preços): `python -m tests.saque_vale`. O Vale inteiro, por classe,
+     desfecho e roteiro, com o que entra, o que se gasta e o que sobra (`--sementes`, `--detalhe`).
 2. **Mude o número** e meça de novo. As colunas que mais dizem: *Vida perdida* (quanto uma luta custa),
    *Golpes p/ você cair* (quantos golpes inimigos você aguenta) e *Seus turnos p/ matar*. O robô joga um pouco
    diferente de uma pessoa: compare antes com depois, não com um número absoluto.

@@ -86,9 +86,12 @@ Na 1.60.1, uma revisão de apresentação e texto, depois do teste de Jean. O cr
 2. **A proteção do mendigo** — *feita na 1.61.0.* Um aviso quando ela chega e outro na luta quando ela levanta você. A frase muda conforme a origem (mendigo, santuário, ou neutra num save antigo). Não aparece como item na bolsa.
 3. **"Continuar → Exausto → Continuar"** — *reproduzido e corrigido na 1.61.0.* No mato, o segundo Continuar não tinha nada novo para ler. Na vila, a faixa "Exausto" passava por cima do texto do evento anterior.
 4. **A dívida do Morel** — *pendente.* Uma dívida de verdade: pagamento depois e uma proposta de juros. Hoje a conversa sugere mais do que o jogo guarda.
-5. **Revisão de loot** — *pendente.*
-   - Levantar a distribuição de consumíveis e de equipamento e a frequência de baús ao longo do Vale.
-   - Só então propor mudanças, pelo ciclo de balanceamento (COMO_CRIAR).
+5. **Revisão de loot** — *diagnosticada em 11/10/2026* ([16](16-E7-ITEM-E-LOOT.md), seções 2 e 3; medida com
+   `python -m tests.saque_vale`).
+   - O volume de suprimentos é alto: metade sai de baús, 1,5 por baú. O excesso que fica é de itens situacionais
+     (antídoto, unguento, bomba), sem saída: não se vendem e a bolsa não tem limite.
+   - Duas propostas, nenhuma aplicada: um suprimento por baú (recomendada) e, se não bastar, o situacional repetido
+     virar ouro. Decisão de Jean.
 
 ## E6 — Demonstrar transformação de habilidade
 
@@ -113,6 +116,10 @@ do 15).
 **Tarefas:** usar fonte_item/gatilhos; descrever efeito; aquisição; feedback; economia.
 **Pronto:** o jogador entende o efeito e pode reconsiderar a build; reforço existente continua funcionando.
 **Não fazer:** criar reforço do zero, avalanche de drop ou catálogo de únicos em massa.
+**Estado:** primeira entrega **especificada, não implementada** ([16](16-E7-ITEM-E-LOOT.md), seção 4). Candidata
+recomendada: o Broquel do Vigia (Guerreiro, apoio). Com o escudo erguido, devolve cada golpe corpo a corpo que acerta
+o herói (Revide, 30% do Ataque). Vem do esqueleto de guarda do ossuário, uma vez. Usa o gatilho `golpe_recebido`, sem
+evento nem chave nova de combate. A candidata e os números esperam a avaliação de Jean.
 
 ## E8 — Introduzir identidade em escopo pequeno
 
