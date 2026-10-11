@@ -309,8 +309,8 @@ def _examinar_fonte(g, mid):
                      "reta, como se a água tivesse aberto caminho à força, vinda do leste.",
         "arqueiro": "Você se agacha e segue o fio de água com os olhos, como se segue um rastro. Ele não sobe do chão: "
                     "corre por baixo da terra, vindo do leste, do lado do moinho.",
-        "mago": "Você põe a mão na água e algo nela não se deixa ler, como uma palavra apagada. A sensação vem de longe, "
-                "do leste, por onde a água chega.",
+        "mago": "Você põe a mão na água e sente magia nela, fraca e de um tipo que você não reconhece. Ela não nasce "
+                "aqui: chega com a água, do leste.",
     }.get(g.j.classe, "A água não sobe do chão: chega por baixo da terra, vinda do leste."))
     g.narrar("No fundo da bacia, quando a água assenta, fica um lodo escuro e fino. Nascente não deixa isso. Água que "
              "passou por algum lugar parado, sim.")
@@ -331,12 +331,14 @@ def _seguir_canal(g, mid):
                      "acima: o riacho que enchia o poço da vila agora passa quase todo pelo canal.",
         "arqueiro": "Você anda ao lado do canal até onde as árvores rareiam. Nenhum bicho bebe dele: as pegadas na lama "
                     "chegam até a beira e voltam.",
-        "mago": "Perto da represa a água é só água. Mais adiante, rumo ao pântano, volta aquela sensação da fonte nova: "
-                "uma palavra apagada, cada vez mais perto.",
+        "mago": "Perto da represa, a água é só água. Rumo ao pântano, você volta a sentir nela a magia da fonte nova, "
+                "mais forte a cada passo.",
     }.get(g.j.classe, "Rumo ao pântano, a água do canal fica mais escura e mais fria."))
     g.narrar("Você segue o canal até onde o bosque acaba. Adiante, meio engolida pelo pântano, há uma capela de pedra "
              "com o telhado afundado, e o canal entra por um buraco no muro dela. Do outro lado, a terra encharcada "
              "desce na direção da vila, como o fio que você viu na fonte nova.")
+    if g.j.classe == "mago":
+        g.narrar("Junto ao muro da capela, essa magia é a mais forte do caminho, e vem lá de dentro.")
     _pista(m, "represa")
     _pista(m, "canal_da_capela")
     avancar(g, mid, "canal", "capela")
