@@ -401,7 +401,7 @@ ACOES = [
     dict(missao=MID, id="lodo", rotulo="Recolher uma amostra do lodo", lugar="capela_afogada",
          etapas=("antes", "acusacao", "praca"), falta="lodo", pode=_chegou_ao_fundo, fn=_recolher_lodo,
          confirmar=True),
-    dict(missao=MID, id="praca", rotulo="Ir à praça responder a Caspar", lugar="vau_do_turvo", etapas=("praca",),
+    dict(missao=MID, id="praca", rotulo="Ir à praça responder a Caspar", abre=True, lugar="vau_do_turvo", etapas=("praca",),
          pode=lambda g: "praca" in registro(g)["cenas"] and not registro(g).get("desfecho"), fn=_ir_a_praca,
          confirmar=True),
 ]

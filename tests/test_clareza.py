@@ -40,7 +40,10 @@ class TestCorrentes(unittest.TestCase):
             g = na_capela(classe, etapa="fundo")
             lutas(g)
             rotulos = [o[0] for o in missoes.opcoes(g)]
-            self.assertEqual(rotulos[:3], ["Soltar as correntes", "Descer ao fundo alagado", "Recolher uma amostra do lodo"])
+            # o que se examina antes vem primeiro; o passo adiante (a descida), por último
+            self.assertEqual(rotulos[:3], ["Soltar as correntes", "Recolher uma amostra do lodo", "Descer ao fundo alagado"])
+            abre = {o[1][2]: bool(o[2].get("abre")) for o in missoes.opcoes(g)}
+            self.assertEqual(abre, {"correntes": True, "lodo": False, "fundo": True})  # quem leva a outra escolha
             fazer(g, "correntes", "Deixar")
             metodos = g.ui.ofertas[-1]  # no modo texto, a nota vem junto, depois do travessão
             principais = [m.split(" — ")[0] for m in metodos]
@@ -238,7 +241,8 @@ class TestCartao(unittest.TestCase):
         with self.assertRaises(Parar):
             g.tela()
         rotulos = g.ui.ofertas[-1]
-        self.assertEqual(rotulos[:3], ["Soltar as correntes", "Descer ao fundo alagado", "Recolher uma amostra do lodo"])
+        # no modo texto, a seta de quem abre outra escolha vem junto
+        self.assertEqual(rotulos[:3], ["Soltar as correntes ›", "Recolher uma amostra do lodo", "Descer ao fundo alagado ›"])
 
 if __name__ == "__main__":
     unittest.main()

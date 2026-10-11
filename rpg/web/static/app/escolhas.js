@@ -163,6 +163,7 @@ function mostrarOpcoes(m) {
     porVoltar(/^Sair do mercado/.test(m.opcoes[voltar].texto) ? "Sair do mercado" : "Voltar", () => responder(m.id, voltar));
     pergunta.voltar = voltar;
   }
+  let grupoAnterior = null;
   m.opcoes.forEach((o, i) => {
     if (i === voltar) return;
     if (o.meta && ACOES_OCULTAS.some((k) => o.meta[k] !== undefined)) return;  // feitas pela tela (arrastar, clicar)
@@ -201,6 +202,13 @@ function mostrarOpcoes(m) {
       lista.appendChild(li);
       return;
     }
+    // As ações da missão e os contratos vêm em grupos com um rótulo (o motor já os manda nessa ordem); o de sempre vem
+    // depois de um fio. Nada de etiqueta por linha: o grupo diz o que são.
+    const grupo = o.meta && o.meta.missao ? "missao" : o.meta && o.meta.cacar !== undefined ? "contrato" : "geral";
+    if (!emLuta && grupo !== grupoAnterior && (grupo !== "geral" || grupoAnterior)) {
+      lista.appendChild(el("li", `op-grupo grupo-${grupo}`, { missao: "Missão", contrato: "Contratos", geral: "" }[grupo]));
+    }
+    grupoAnterior = grupo;
     const li = el("li");
     const b = el("button", "escolha");
     b.type = "button";
@@ -226,10 +234,11 @@ function mostrarOpcoes(m) {
       if (n) icone = spr(MapaPx.sprite(n), 1);
     }
     if (o.meta && o.meta.item) icone = spr(Telas.iconeConsumivel(o.meta.item), 1);
-    // A missão, os contratos e o de sempre se distinguem: borda e etiqueta próprias (o resto fica como era).
-    let etiqueta = "";
-    if (o.meta && o.meta.cacar !== undefined) { icone = spr("arco", 1); b.classList.add("op-contrato"); etiqueta = "Contrato"; }
-    if (o.meta && o.meta.missao) { icone = spr("pergaminho", 1); b.classList.add("op-missao"); etiqueta = "Missão"; }
+    // A missão e os contratos se distinguem pelo grupo, pela borda e pelo ícone; quem abre outra escolha (de onde se
+    // volta) leva uma seta no fim.
+    if (o.meta && o.meta.cacar !== undefined) { icone = spr("arco", 1); b.classList.add("op-contrato"); }
+    if (o.meta && o.meta.missao) { icone = spr("pergaminho", 1); b.classList.add("op-missao"); }
+    const abre = o.meta && o.meta.abre ? '<span class="op-abre" aria-hidden="true">›</span>' : "";
     if (emLuta) icone = iconeAcaoCombate(o.meta) || icone;
     if (o.meta && o.meta.alvo) {
       b.addEventListener("mouseenter", () => Batalha.mirar(o.meta.alvo, true));
@@ -237,7 +246,7 @@ function mostrarOpcoes(m) {
       b.addEventListener("focus", () => Batalha.mirar(o.meta.alvo, true));
       b.addEventListener("blur", () => Batalha.mirar(o.meta.alvo, false));
     }
-    b.innerHTML = `<span class="tecla">${tecla}</span>${icone}<span class="rotulo">${esc(o.texto)}${o.meta && o.meta.nota ? `<small class="op-nota">${esc(o.meta.nota)}</small>` : ""}</span>${teste}${etiqueta ? `<span class="op-etiqueta">${etiqueta}</span>` : ""}`;
+    b.innerHTML = `<span class="tecla">${tecla}</span>${icone}<span class="rotulo">${esc(o.texto)}${o.meta && o.meta.nota ? `<small class="op-nota">${esc(o.meta.nota)}</small>` : ""}</span>${teste}${abre}`;
     b.addEventListener("click", (ev) => { ev.stopPropagation(); responder(m.id, i); });
     li.appendChild(b);
     lista.appendChild(li);

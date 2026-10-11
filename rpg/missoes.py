@@ -767,6 +767,8 @@ CENAS = [
          confirmar=True),
 ]
 # Uma ação pode pedir também uma classe (`classe`), que um preparo ainda falte (`falta`) e uma condição a mais (`pode`).
+# `abre`: ela leva a outra escolha, de onde se pode voltar (a tela marca com uma seta; o texto, com "›"). `avanca`: é o
+# passo que leva a história adiante; fica por último entre as ações da missão, depois do que se pode examinar antes.
 ACOES = [
     dict(missao="febre_do_turvo", id="examinar_fonte", rotulo="Examinar a Fonte Nova", lugar="vau_do_turvo",
          etapas=("fonte",), fn=_examinar_fonte, confirmar=True),
@@ -778,9 +780,9 @@ ACOES = [
          lugar="capela_afogada", etapas=("sacristia",), fn=_sacristia, confirmar=True),
     dict(missao="febre_do_turvo", id="ossuario", rotulo="Descer ao ossuário", lugar="capela_afogada",
          etapas=("ossuario",), fn=_ossuario, confirmar=True),
-    dict(missao="febre_do_turvo", id="correntes", rotulo="Soltar as correntes",
+    dict(missao="febre_do_turvo", id="correntes", rotulo="Soltar as correntes", abre=True,
          lugar="capela_afogada", etapas=("fundo",), falta="corpo_solto", fn=_soltar_correntes, confirmar=True),
-    dict(missao="febre_do_turvo", id="fundo", rotulo="Descer ao fundo alagado",
+    dict(missao="febre_do_turvo", id="fundo", rotulo="Descer ao fundo alagado", abre=True, avanca=True,
          lugar="capela_afogada", etapas=("fundo",), fn=_fundo, confirmar=True),
     # Na taverna do Vau: o cartão no balcão, como os serviços (`meta`). Berta depois da sacristia, uma vez; a herança
     # para quem deu descanso a Ilse, uma vez.
@@ -880,9 +882,10 @@ def opcoes(g):
     """As ações de missão que valem no lugar e na etapa de agora, como opções do menu do lugar."""
     if not g.campanha:
         return []
+    validas = sorted((d for d in ACOES if _vale(g, d)), key=lambda d: bool(d.get("avanca")))  # estável: o resto na ordem
     return [(d["rotulo"](g) if callable(d["rotulo"]) else d["rotulo"], ("missao", d["missao"], d["id"]),
-             {**d.get("meta", {}), "missao": d["missao"]})
-            for d in ACOES if _vale(g, d)]
+             {**d.get("meta", {}), "missao": d["missao"], **({"abre": True} if d.get("abre") else {})})
+            for d in validas]
 
 
 def executar(g, mid, aid):

@@ -1,13 +1,22 @@
 /* ================================================================== tipografia
    Como na referência do Jean: o gótico só nos títulos ("Titulo", 01-base.css) e uma serifa clássica em todo o resto,
    a interface e a prosa. A Alegreya tem itálico de verdade e algarismos alinhados (lining-nums no body).
-   "Fonte: pixel" no topo troca só a prosa da história, pela Pixelify Sans. */
+   "Fonte: pixel" no topo troca só a prosa da história, pela Pixeloid Sans.
+   A Pixeloid Sans (GGBotNet, OFL) é a fonte de leitura dos papéis do Diário e das notas das opções: traço cheio, sem
+   serifa fina sobre o pergaminho. Ela tem 9 pixels por eme: em 18px cada pixel da letra cai inteiro na tela. */
 @font-face { font-family: "Alegreya"; font-weight: 400; src: url(../fontes/alegreya-latin-400-normal.woff2) format("woff2"); font-display: swap; }
 @font-face { font-family: "Alegreya"; font-weight: 400; font-style: italic; src: url(../fontes/alegreya-latin-400-italic.woff2) format("woff2"); font-display: swap; }
 @font-face { font-family: "Alegreya"; font-weight: 600; src: url(../fontes/alegreya-latin-600-normal.woff2) format("woff2"); font-display: swap; }
 @font-face { font-family: "Alegreya"; font-weight: 700; src: url(../fontes/alegreya-latin-700-normal.woff2) format("woff2"); font-display: swap; }
-:root { --prosa: "Alegreya", Georgia, serif; }
-body.fonte-pixel { --prosa: "Pixelify Sans", "Trebuchet MS", sans-serif; }
+@font-face { font-family: "Pixeloid Sans"; font-weight: 400; src: url(../fontes/pixeloid-sans.ttf) format("truetype"); font-display: swap; }
+@font-face { font-family: "Pixeloid Sans"; font-weight: 700; src: url(../fontes/pixeloid-sans-bold.ttf) format("truetype"); font-display: swap; }
+:root { --prosa: "Alegreya", Georgia, serif; --leitura: "Pixeloid Sans", "Trebuchet MS", sans-serif; }
+body.fonte-pixel { --prosa: var(--leitura); }
+body.fonte-pixel #folha, body.fonte-pixel .escolha { font-size: 18px; line-height: 1.6; }
+/* Os papéis do Diário (a missão e o cartão de novidade) e a nota embaixo de uma opção: a fonte de leitura. Sem itálico
+   (ela não tem; o falso borra): o que era secundário fica na cor mais clara. */
+.missao-diario, .novidade-missao, .escolha .op-nota { font-family: var(--leitura); font-style: normal; }
+.missao-diario *, .novidade-missao * { font-style: normal; }
 #folha, .escolha, .balao span, .cc-fala, .bilhete, .contrato-desc, .lore { font-family: var(--prosa); }
 body:not(.fonte-pixel) #folha { font-size: 21px; line-height: 1.55; }
 body:not(.fonte-pixel) .escolha { font-size: 20px; }

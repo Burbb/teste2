@@ -584,12 +584,14 @@ async function cenarioSarilho(browser) {
   const foto = () => page.evaluate(() => JSON.stringify([estado.heroi.bolsa, estado.heroi.hp, estado.mundo.dia, estado.mundo.periodo_n, estado.missoes]));
   try {
     await page.waitForSelector(`${MENU}:has-text("Soltar as correntes")`, { timeout: 20000 });
-    const menu = await page.$$eval(MENU, (bs) => bs.map((b) => [b.textContent, b.className]));
+    const menu = await page.$$eval(MENU, (bs) => bs.map((b) => [b.querySelector(".rotulo").textContent, b.className, !!b.querySelector(".op-abre")]));
+    const grupos = await page.$$eval("#prompt .escolhas .op-grupo", (gs) => gs.map((g) => g.textContent));
     const correntes = menu.filter(([t]) => /correntes/i.test(t));
-    conferir(correntes.length === 1 && /op-missao/.test(correntes[0][1]) && /Missão/.test(correntes[0][0]),
-      "as correntes são uma ação só, marcada como da missão");
-    conferir(menu.findIndex(([, c]) => /op-missao/.test(c)) === 0 && menu.slice(0, 3).map(([t]) => t.replace(/^\d+/, "").replace(/Missão$/, "")).join("|") === "Soltar as correntes|Descer ao fundo alagado|Recolher uma amostra do lodo",
-      "as ações da missão vêm primeiro, com nomes curtos");
+    conferir(correntes.length === 1 && /op-missao/.test(correntes[0][1]) && grupos[0] === "Missão" && !(await page.$("#prompt .op-etiqueta")),
+      "as correntes são uma ação só, no grupo da missão (um rótulo para o grupo, nenhuma etiqueta por linha)");
+    conferir(menu.slice(0, 3).map(([t]) => t).join("|") === "Soltar as correntes|Recolher uma amostra do lodo|Descer ao fundo alagado"
+      && menu.slice(0, 3).map(([, , a]) => a).join() === "true,false,true" && grupos.length === 2 && !menu.slice(3).some(([, , a]) => a),
+      "nomes curtos; seta só nas que abrem outra escolha; a descida por último; um fio antes das ações de sempre");
     const antes = await foto();
     await page.click(`${MENU}:has-text("Soltar as correntes")`);
     await page.waitForSelector(`${MENU}:has-text("Deixar como está")`, { timeout: 20000 });

@@ -80,7 +80,7 @@ Três commits posteriores à atualização do roadmap foram consultados. Os comp
 | E3 — missão mínima | Entregas na 1.50.0 a 1.54.0 (registros abaixo): da Fonte Nova ao canal, à capela, ao interior, a Vó Berta, à guardiã (Destruir ou Dar descanso) e à volta ao Vau, que conclui a missão. A bênção e a comporta não existem. Falta Jean jogar. |
 | E4 — consequência local | Na 1.54.0, a Fonte Nova, a frase do Vau, Pita e Marta. Na 1.55.0, Caspar: a acusação, a praça (Apoiar, Denunciar com prova, Calar), a situação da Yara e as reações da comitiva. Na 1.56.0, a consolidação: a Yara barrada fica de fato fora do Vau, o encontro no Charco depois da denúncia, a conversa da Yara sobre a praça e os textos que contradiziam o Vau. **O critério mínimo da E4 (07-ETAPAS) está atendido**; as outras ideias do 11 (bênção, sementes, mercado, taverna, Charco à noite, Odette e Caspar, Anselmo, a cena da vigília) ficam adiadas, não são requisito. Falta Jean jogar. |
 | E5 — classes | Diagnóstico (só design) em [14](14-E5-DIAGNOSTICO-CLASSES.md), sobre a 1.56.0. **P1 implementada na 1.57.0:** o golpe preparado em duas lutas fixas da capela (seção 10 do 14). **P3 implementada na 1.58.0:** a encruzilhada compara os dois caminhos e o Grimório explica (seção 11 do 14). **P2 começada na 1.59.0, só pelo Tiro Duplo** (seção 12 do 14): o 2º disparo vai no outro inimigo mais ferido. **Drenar Vida, Desaparecer e Passo Ágil avaliados em lutas inteiras** (seção 13 do 14, sem mudar o jogo): os dois primeiros têm função. **O desvio do Passo Ágil foi validado e rejeitado** (seção 14): usado repetidamente, vira a ação padrão contra inimigos sozinhos; o Passo Ágil fica como era. **O critério mínimo da E5 (07-ETAPAS) está atendido**: as três classes atravessam o Vale (a guardiã medida por caminho) e os seis caminhos foram avaliados em cenários direcionados. A E5 está **concluída tecnicamente**; adiado, sem ser requisito: o Passo Ágil, a sinergia Desaparecer–Execução, Sombra e Piromante contra a guardiã no nível 4, a preparação de habilidades. Falta Jean jogar. A validação da E4 jogando, por Jean, fica registrada à parte. |
-| Clareza da campanha | Pausa antes da E6, a partir do teste de Jean. **Primeira entrega na 1.60.0** (registro abaixo): ações da capela organizadas, Diário reorganizado, linguagem do Vale simplificada, cartão de atualização de missão. **Revisão na 1.60.1**: ações curtas com custo e risco numa nota, e o conhecimento conforme as descobertas (o critério está no 07). As próximas entregas estão listadas em [07](07-ETAPAS.md) ("Entre a E5 e a E6"), sem implementar. Falta Jean testar. |
+| Clareza da campanha | Pausa antes da E6, a partir do teste de Jean. **Primeira entrega na 1.60.0** (registro abaixo): ações da capela organizadas, Diário reorganizado, linguagem do Vale simplificada, cartão de atualização de missão. **Revisão na 1.60.1**: ações curtas com custo e risco numa nota, e o conhecimento conforme as descobertas (o critério está no 07). **Na 1.60.2**: porta ou ação à vista no menu, grupos e a Pixeloid Sans no Diário. As próximas entregas estão listadas em [07](07-ETAPAS.md) ("Entre a E5 e a E6"), sem implementar. Falta Jean testar. |
 | E6–E11 | Plano de trabalho futuro; infraestrutura existente não equivale a etapas concluídas. Notas aprovadas para a E3 na seção 19 do [11](11-E1-REGIAO-INICIAL.md). |
 | Bugs ainda abertos | Nenhum bug aberto específico foi informado para registro nesta passagem. Isso não comprova ausência de bugs. |
 | Polimento antes da E3 | Entregue na 1.48.1 (registro abaixo): leitura, item achado, balcão do templo, palco da luta. Falta Jean conferir jogando. |
@@ -816,3 +816,28 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   2. Abra o Diário: aparecem as perguntas em aberto e nenhuma receita.
   3. Repita com `PREPARO=berta`: a cena cita Vó Berta e o Diário mostra o que ela contou, com ✓ e ○.
   4. Salve e carregue: nada se repete.
+
+### 11/10/2026 — Clareza da campanha: menu e leitura (1.60.2)
+
+- **Pedido de Jean** (depois de testar a 1.60.1):
+  - os "?" na frente das perguntas confundiam;
+  - o texto do Diário, numa serifa fina sobre o pergaminho, cansa a vista: testar a Pixeloid Sans;
+  - no menu da capela, "Soltar as correntes" e "Descer ao fundo alagado" pareciam decisões que se excluem, e não dava para saber qual opção abre mais escolhas e qual age na hora. Resolver pela linguagem da interface, sem avisos de "decisão sem volta".
+- **Menu do lugar.**
+  - As opções vêm em grupos. "Missão" e "Contratos" têm um rótulo pequeno, no estilo de "O que você faz?". As ações de sempre vêm depois de um fio tracejado.
+  - Saiu a etiqueta "Missão" de cada linha. A borda dourada e o ícone continuam.
+  - Quem abre outra escolha, de onde se volta, leva uma seta discreta no fim: "Soltar as correntes", "Descer ao fundo alagado" e "Ir à praça responder a Caspar". O frasco do lodo, que age na hora, não leva. No modo texto, a seta é um "›" depois do rótulo.
+  - A descida ao fundo, o passo que leva a história adiante, fica por último entre as ações da missão.
+  - Nenhum texto novo dizendo que uma coisa prepara a outra. Isso vem das descobertas, no Diário, como na 1.60.1.
+- **Leitura.**
+  - A Pixeloid Sans (GGBotNet, licença OFL, em `fontes/` com o `OFL-PixeloidSans.txt`) é a fonte dos papéis do Diário (a missão e o cartão de novidade) e das notas embaixo das opções.
+  - Tamanho principal de 18px: a fonte tem 9 pixels por eme, e cada pixel da letra cai inteiro na tela. Sem itálico falso: o secundário fica na cor mais clara.
+  - "Fonte: pixel", no topo, passou a usar a mesma Pixeloid Sans na história, para comparar com a Alegreya. A Pixelify Sans continua no repositório.
+  - As perguntas em aberto usam marcadores comuns, sem os "?".
+- **Regras:** nada mudou. Falhar o teste da classe nas correntes não trava nada: o rangido chama os afogados na hora, e quem os vence termina à mão na mesma cena. Quem foge sai com as correntes presas e pode voltar e escolher de novo, inclusive o método da classe. O arqueiro gasta uma flecha por tentativa.
+- **Verificações:**
+  - `unittest`: a ordem e as setas no menu, a seta no modo texto;
+  - gabarito idêntico, sem atualizar;
+  - `pyflakes` limpo;
+  - fumaça: grupos, setas e nenhuma etiqueta por linha;
+  - capturas em 1500 e 1280 px: o menu nas duas fontes, o sarilho das três classes, o Diário antes e depois de Berta e o histórico aberto.
