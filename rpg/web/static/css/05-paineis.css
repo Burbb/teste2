@@ -12,6 +12,14 @@
   border: var(--borda) solid var(--p-J); border-image: var(--retrato-a) 3 / calc(var(--P) * 3) stretch;
   background: var(--tx-funda) 0 0 / calc(var(--P) * 32), var(--p-z); background-clip: padding-box; }
 .heroi-nome { font-family: var(--titulo); font-size: calc(var(--px) * 32); line-height: 1; color: var(--tinta); text-shadow: var(--contorno); }
+/* O nome que não cabe ao lado do retrato (paineis.js: acomodarNome): uma linha própria em cima, na largura do painel; a
+   palavra que nem assim cabe desce ao passo de pixel seguinte. */
+.identidade > div { min-width: 0; }
+.identidade.nome-longo { flex-wrap: wrap; row-gap: 8px; }
+.identidade.nome-longo > div:last-child { display: contents; }
+.identidade.nome-longo .heroi-nome { order: -1; flex: 1 0 100%; min-width: 0; }
+.identidade.nome-longo .heroi-titulo { margin-top: 0; }
+.identidade.nome-enorme .heroi-nome { font-size: calc(var(--px) * 16); overflow-wrap: anywhere; }
 .heroi-titulo { color: var(--tinta-2); font-size: 15px; margin-top: 4px; }
 /* Divisória: fio de bronze com uma ponta de ouro em cada lado. */
 .xp-linha { margin-top: 10px; padding-bottom: 14px;

@@ -113,8 +113,7 @@ function desenharHud(h, antes) {
   $("#hud-linha").innerHTML = `
     <div class="hud-retrato" title="${esc(h.titulo)} nível ${h.nivel}">${spr(h.classe, 3)}<span class="nivel">${h.nivel}</span></div>
     <div class="hud-vitais">
-      ${h.fome ? '<span class="hud-fome">com fome</span>' : ""}
-      <div class="vital" data-vital="hp" ${Telas.dica("Vida", true)}>${spr("coracao", 1)}${barra("vida", h.hp, h.max_hp, antes ? antes.hp : undefined, "hud-hp")}<span class="num">${h.hp}/${h.max_hp}</span></div>
+      <div class="vital" data-vital="hp" ${Telas.dica("Vida", true)}>${spr("coracao", 1)}${barra("vida", h.hp, h.max_hp, antes ? antes.hp : undefined, "hud-hp")}${h.fome ? '<span class="hud-fome">com fome</span>' : ""}<span class="num">${h.hp}/${h.max_hp}</span></div>
       <div class="vital" data-vital="rec" ${Telas.dica(esc(h.recurso), true)}>${spr(RECURSO_ICONE[h.recurso] || "estrela", 1)}${barra(RECURSO_BARRA[h.recurso] || "mana", h.rec, h.max_rec, antes ? antes.rec : undefined, "hud-rec")}<span class="num">${h.rec}/${h.max_rec}</span></div>
     </div>
     <div class="hud-recursos">
@@ -201,6 +200,7 @@ function desenharHeroi(h, antes) {
     <div class="secao"><h3>Ferimentos</h3>${feridas}</div>
     <div class="secao"><h3>Bolsa</h3><div class="slots">${bolsa || '<span class="vazio">vazia</span>'}</div></div>
     <div class="secao"><h3>Reputação</h3>${Telas.reputacaoHtml(h)}</div>`;
+  acomodarNome();
   animarBarras($("#heroi"));
   Telas.ligarDicas($("#heroi"));
   // O aviso de ponto de talento abre a árvore (ou guarda o pedido, se ainda houver cena correndo).
@@ -219,6 +219,20 @@ function desenharHeroi(h, antes) {
     });
   });
 }
+
+/** O nome do herói ao lado do retrato, no tamanho de sempre. Se não cabe ali (passa da borda, ou quebra em mais de duas
+ *  linhas), ganha uma linha própria acima do retrato, na largura do painel, no mesmo tamanho; só uma palavra que nem
+ *  assim cabe (ou que ainda passa de duas linhas) desce ao passo de pixel seguinte (16). Os nomes que cabem não mudam. */
+function acomodarNome() {
+  const id = $("#heroi .identidade"), n = id && id.querySelector(".heroi-nome");
+  if (!n) return;
+  id.classList.remove("nome-longo", "nome-enorme");
+  const linhas = () => Math.round(n.getBoundingClientRect().height / parseFloat(getComputedStyle(n).lineHeight));
+  const sobra = () => n.scrollWidth > n.clientWidth + 1;
+  if (sobra() || linhas() > 2) id.classList.add("nome-longo");
+  if (sobra() || linhas() > 2) id.classList.add("nome-enorme");
+}
+window.addEventListener("resize", () => { if (estado) acomodarNome(); });
 
 /** A bolsa do painel lateral: clicou, usou. Na luta, é o mesmo caminho do "Itens" das ações (gasta o turno e,
  *  se um aliado precisa, pergunta em quem); o motor manda o motivo de não servir já pensando na luta.
