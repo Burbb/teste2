@@ -6,6 +6,10 @@ Revisão 2 — 09/10/2026. Plano de design e desenvolvimento atualizado após le
 
 RPG de campanha em fantasia sombria, por turnos, com história escrita, mundo que responde a decisões, companheiros e liberdade de build. Preservar cenários minimalistas, cards, texto, som e telas interativas.
 
+**Primeiro capítulo (11/10/2026):** o Vale do Turvo é o primeiro capítulo completo, para validação. Depois da
+primeira entrega da E7 vem a avaliação integrada dele; a E8 fica adiada; a campanha maior continua como direção (veja
+[01](01-VISAO.md), "Direção", e [07](07-ETAPAS.md), "Ordem atual").
+
 **Três classes iniciais: Guerreiro, Arqueiro e Mago.** Reaproveitar as seis especializações existentes: Paladino, Berserker, Patrulheiro, Sombra, Piromante e Necromante. A sugestão anterior de reduzir a duas classes foi substituída pela decisão de Jean.
 
 **Tecnologia:** manter Python no motor e HTML/CSS/JavaScript na interface local. A revisão não encontrou necessidade de migração. Não planejar troca de linguagem, framework ou engine como pré-requisito.

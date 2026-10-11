@@ -82,7 +82,11 @@ Três commits posteriores à atualização do roadmap foram consultados. Os comp
 | E5 — classes | Diagnóstico (só design) em [14](14-E5-DIAGNOSTICO-CLASSES.md), sobre a 1.56.0. **P1 implementada na 1.57.0:** o golpe preparado em duas lutas fixas da capela (seção 10 do 14). **P3 implementada na 1.58.0:** a encruzilhada compara os dois caminhos e o Grimório explica (seção 11 do 14). **P2 começada na 1.59.0, só pelo Tiro Duplo** (seção 12 do 14): o 2º disparo vai no outro inimigo mais ferido. **Drenar Vida, Desaparecer e Passo Ágil avaliados em lutas inteiras** (seção 13 do 14, sem mudar o jogo): os dois primeiros têm função. **O desvio do Passo Ágil foi validado e rejeitado** (seção 14): usado repetidamente, vira a ação padrão contra inimigos sozinhos; o Passo Ágil fica como era. **O critério mínimo da E5 (07-ETAPAS) está atendido**: as três classes atravessam o Vale (a guardiã medida por caminho) e os seis caminhos foram avaliados em cenários direcionados. A E5 está **concluída tecnicamente**; adiado, sem ser requisito: o Passo Ágil, a sinergia Desaparecer–Execução, Sombra e Piromante contra a guardiã no nível 4, a preparação de habilidades. Falta Jean jogar. A validação da E4 jogando, por Jean, fica registrada à parte. |
 | Clareza da campanha | Pausa antes da E6, a partir do teste de Jean. **Primeira entrega na 1.60.0** (registro abaixo): ações da capela organizadas, Diário reorganizado, linguagem do Vale simplificada, cartão de atualização de missão. **Revisão na 1.60.1**: ações curtas com custo e risco numa nota, e o conhecimento conforme as descobertas (o critério está no 07). **Na 1.60.2**: porta ou ação à vista no menu e grupos. **Na 1.60.3**: o cartão de novidade como nota da história e o Diário na Alegreya Sans. **Na 1.60.4**: revisão editorial dos textos que antecipavam a resolução (critério no 07). **Na 1.61.0**: custo dos consumíveis nas opções, a proteção do mendigo e o fluxo da exaustão. Pendentes: a dívida do Morel e a revisão de loot. As próximas entregas estão listadas em [07](07-ETAPAS.md) ("Entre a E5 e a E6"), sem implementar. Falta Jean testar. |
 | E6 — transformação | **Implementada na 1.62.0** (registro abaixo; seções 11 a 14 do [15](15-E6-TRANSFORMACAO.md)): a Prisão de Gelo, talento do tronco do Mago (nível 4) que libera outra versão da Lança de Gelo, trocada no Grimório na vila ou no acampamento. Medida em lutas inteiras: papel próprio contra o inimigo forte que prepara o golpe, sem dominar. **O critério mínimo da E6 (07-ETAPAS) está atendido tecnicamente.** Falta Jean jogar (seção 14 do 15), sobretudo golem e cavaleiro sombrio sozinhos. |
-| E7–E11 | Plano de trabalho futuro; infraestrutura existente não equivale a etapas concluídas. Notas aprovadas para a E3 na seção 19 do [11](11-E1-REGIAO-INICIAL.md). |
+| Direção (11/10/2026) | **Decidido por Jean:** o Vale do Turvo é o primeiro capítulo completo, para validação; depois da primeira entrega da E7 vem a avaliação integrada do Vale (E9 antecipada); a E8 fica adiada; a campanha maior continua como direção, sem obrigação de expandir antes da primeira versão de teste. **Em aberto:** a duração, que vem de partidas de jogadores novos. Detalhes no [01](01-VISAO.md) ("Direção") e no [07](07-ETAPAS.md) ("Ordem atual"). |
+| E7 — equipamento e build | **Primeira entrega implementada na 1.63.0:** o Broquel do Vigia, medido em lutas inteiras ([16](16-E7-ITEM-E-LOOT.md), seção 5). Antes, o saque do Vale foi medido e o baú da campanha passou a dar um suprimento (1.62.6). Falta Jean jogar (cenários `broquel` e `muralha`). Os exemplos para Arqueiro e Mago não foram começados. |
+| E8 — raças e origens | **Adiada explicitamente** (11/10/2026). |
+| E9 — avaliação do Vale | **Próxima frente,** antecipada. Nada feito ainda. O que já está registrado para ela e a medida da primeira partida estão no [07](07-ETAPAS.md). |
+| E10–E11 | Plano de trabalho futuro; infraestrutura existente não equivale a etapas concluídas. A E10 depende da avaliação do Vale. Notas aprovadas para a E3 na seção 19 do [11](11-E1-REGIAO-INICIAL.md). |
 | Bugs ainda abertos | Nenhum bug aberto específico foi informado para registro nesta passagem. Isso não comprova ausência de bugs. |
 | Polimento antes da E3 | Entregue na 1.48.1 (registro abaixo): leitura, item achado, balcão do templo, palco da luta. Falta Jean conferir jogando. |
 | Baús abertos juntos | Entregue na 1.49.0 (registro abaixo), separado da E3. Falta Jean conferir jogando. |
@@ -1267,4 +1271,36 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
 - **Falta:**
   - a validação de Jean jogando;
   - os exemplos da E7 para Arqueiro e Mago, que não foram começados.
+
+### 11/10/2026 — Direção depois da E7: o Vale como primeiro capítulo (planejamento)
+
+- **Pedido de Jean:** um adendo de planejamento, sem ampliar a implementação, depois da primeira entrega da E7.
+- **Decidido:**
+  - **o Vale do Turvo é o primeiro capítulo completo,** para validação, com o conflito local resolvido e um
+    encerramento reconhecível. Isso não define que o jogo final terá só essa região;
+  - **depois da primeira entrega da E7, vem a avaliação integrada do Vale,** que antecipa o trabalho pertinente da
+    E9;
+  - **a E8 (raças e origens) fica adiada** explicitamente;
+  - **a campanha maior continua como direção.** O esboço geral fica; as próximas regiões dependem da avaliação do
+    Vale e não são obrigação anterior à primeira versão de teste;
+  - **o texto claro e concreto é o padrão** (critério editorial no 07, linha nova no CLAUDE.md):
+    - metáfora e frase de efeito só quando acrescentam algo compreensível;
+    - nada de esconder informação importante em linguagem enigmática, sem eliminar a expressão literária;
+    - diálogos conforme o personagem, o contexto e a ação efetiva.
+- **Em aberto:**
+  - **a duração.** Precisa de medida com jogadores novos: tempo total, leitura, combate, exploração, conteúdo
+    opcional, dificuldades de navegação. Dias do jogo, partidas do robô e percursos de quem conhece a solução não
+    valem como duração de uma primeira partida;
+  - **como medir.** Nada foi implementado;
+  - não se acrescenta conteúdo só para alongar.
+- **Documentos:**
+  - [01](01-VISAO.md), "Direção";
+  - [07](07-ETAPAS.md): "Ordem atual", E8, E9, E10 e o critério editorial;
+  - [10](10-DECISOES.md): tabela e registro;
+  - [12](12-E1-CAMPANHA.md), o tamanho;
+  - este quadro de estado;
+  - CLAUDE.md.
+- **Não mudou:**
+  - nada no jogo;
+  - nenhuma validação jogando foi marcada como feita: as entregas da E3 à E7 seguem esperando Jean jogar.
 

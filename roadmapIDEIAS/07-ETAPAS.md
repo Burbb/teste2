@@ -2,6 +2,19 @@
 
 Plano proposto, sem datas. Cada etapa é dividida em tarefas pequenas e depende de pedido de Jean. Não executar o documento inteiro automaticamente.
 
+## Ordem atual (decisão de Jean, 11/10/2026)
+
+1. **A primeira entrega da E7** (o Broquel do Vigia, 1.63.0) e a validação de Jean jogando.
+2. **A avaliação integrada do Vale do Turvo** (o trabalho pertinente da E9, antecipado). O Vale é o primeiro capítulo
+   completo: resolução do conflito local e encerramento reconhecível. Os outros exemplos da E7 (Arqueiro, Mago) vêm
+   depois dela, se a avaliação os pedir.
+3. **A E8 (raças e origens) fica adiada explicitamente.** Ela não é requisito da avaliação do Vale.
+4. **As regiões seguintes (E10)** dependem da avaliação do Vale. O esboço da campanha maior continua como direção
+   ([12](12-E1-CAMPANHA.md)); as expansões não são obrigação anterior à primeira versão de teste.
+
+A duração não está definida: ela se mede com jogadores novos (E9, "Medir a primeira partida"). O histórico das etapas
+abaixo fica como estava; o estado de cada uma diz o que mudou.
+
 ## E0 — Base refatorada: entregue estruturalmente
 
 **Estado:** reorganização observada na 1.46.0. Na 1.47.1 (10/10/2026), suíte, gabarito, pyflakes e fumaça passaram; detalhes no registro de [00-COMECE-AQUI](00-COMECE-AQUI.md).
@@ -138,6 +151,8 @@ do 15).
 **Tarefas:** catálogo e criação; persistência; uma oportunidade e uma repercussão por identidade ofertada.
 **Pronto:** repetir com outra identidade muda oportunidades sem bloquear a história obrigatória.
 **Não fazer:** campanhas independentes por combinação. Na região inicial, classe pode provar o padrão antes de raça/origem.
+**Estado:** **adiada explicitamente** (decisão de Jean, 11/10/2026). Não é requisito da avaliação do Vale nem da
+primeira versão de teste. Volta ao plano por decisão de Jean, depois da avaliação.
 
 ## E9 — Validar a região completa
 
@@ -147,11 +162,36 @@ do 15).
 **Registrar:** evidência técnica e feedback de Jean.
 **Decisão:** consolidar ou ajustar antes de ampliar. Raça/origem podem ser adiadas explicitamente, sem ficar falsamente marcadas como prontas.
 **Não fazer:** adicionar sistemas para encobrir ritmo ruim.
+**Estado (11/10/2026):** **antecipada,** como avaliação integrada do Vale do Turvo, o primeiro capítulo completo,
+logo depois da primeira entrega da E7. A dependência da E8 cai: raças e origens estão adiadas (veja a E8). Nada
+desta etapa foi feito ainda.
+
+**O que já está registrado para ela:**
+- o começo do Vale derruba o robô (fome nos níveis 1 e 2, quase sem ouro, sem poção), em especial o Mago
+  ([16](16-E7-ITEM-E-LOOT.md), seções 2.7 e 3.1). Precisa ser confirmado com gente jogando antes de qualquer número;
+- a P2 do saque (situacional repetido vira ouro), de reserva;
+- a validação de Jean jogando das entregas da E3 à E7, que nenhuma medida substitui.
+
+**Medir a primeira partida** (em aberto: como medir ainda não foi decidido; nada implementado):
+- com jogadores novos, que não conhecem a solução:
+  - tempo total;
+  - leitura;
+  - combate;
+  - exploração;
+  - conteúdo opcional;
+  - dificuldades de navegação (onde a pessoa se perde, volta, relê ou desiste);
+- não substituem essa medida:
+  - os dias do jogo;
+  - as partidas do robô (`tests.saque_vale`);
+  - os percursos de quem já conhece a solução;
+- a duração que sair dela orienta o escopo. Não se acrescenta conteúdo só para aumentar a duração.
 
 ## E10 — Completar a campanha por trechos
 
 **Depende:** E9.
 **Entrega:** novas regiões/capítulos na quantidade definida em E1 e revisada após a experiência.
+**Estado (11/10/2026):** depende da avaliação do Vale. O esboço de quatro regiões continua como direção, não como
+obrigação anterior à primeira versão de teste (o Vale como capítulo completo).
 **Para cada trecho:** especificar → implementar → testar alternativas → jogar → integrar consequências.
 **Incluir:** continuidade de decisões, progressão dos seis caminhos, histórias pessoais, missões opcionais, equipamento e conflitos locais.
 **Pronto:** história tem início, desenvolvimento e fim alcançáveis pelas três classes; capítulos reutilizam estruturas.
@@ -207,6 +247,14 @@ físico criado só para justificar uma regra.
 
 **Linguagem direta**, com a atmosfera da história: o nome do lugar com maiúsculas (a Fonte Nova), a referência genérica
 com minúsculas (a fonte); a palavra comum no lugar da rara quando a rara não acrescenta nada ("o dono do moinho").
+
+**Claro e concreto como padrão** (consolidado em 11/10/2026, decisão de Jean):
+- **Frases de efeito e metáforas** entram quando acrescentam algo compreensível à cena ou à voz do personagem.
+- **Informação importante não vira linguagem enigmática:** quem morreu, o que custou, o que mudou. A morte do homem
+  diante de Odette é dita, não sugerida.
+- **Isso não é cortar toda expressão literária.** A atmosfera e a voz de cada personagem ficam.
+- **Diálogos respeitam o personagem, o contexto e a ação efetiva do jogador.** A fala depois de uma escolha reage ao
+  que o herói de fato fez e ao resultado; quem só perguntou o nome não ouve agradecimento por ter ajudado.
 
 ### Levantamento da 1.62.1 (pendente, nada implementado)
 

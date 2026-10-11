@@ -17,6 +17,9 @@ Leia antes de mexer:
 - Nomes no jogo como numa localização profissional: o que descreve é traduzido e soa natural ("Bosque do Lobo
   Branco", "Kalra, o Rei Troll"); nome inventado (Kalra, Varn, Theodore) fica como está.
 - O motor decide as regras; a tela só desenha. Número que aparece na tela vem pronto do motor.
+- Texto claro e concreto é o padrão: metáfora e frase de efeito só quando acrescentam algo compreensível à cena ou à
+  voz; nada de esconder informação importante em linguagem enigmática; diálogos conforme o personagem, o contexto e o
+  que o jogador de fato fez.
 - Texto segue o [critério editorial](roadmapIDEIAS/07-ETAPAS.md#critério-editorial): cena (o que se percebe),
   alternativa (a ação), nota (custo, requisito, restrição), resultado (o que aconteceu), confirmação só se a tela não
   mostra a mudança. Sem repetir entre camadas nem antecipar o que o personagem não sabe; custos e restrições ficam

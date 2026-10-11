@@ -161,6 +161,12 @@ Não há um final por combinação. A ideia guardada de aliados no confronto fin
 
 **Tamanho:** quatro regiões, a última curta. A duração real só se estima depois de jogar a região 1 (E9).
 
+*Nota de 11/10/2026 (decisão de Jean):*
+- O esboço continua como direção.
+- O Vale do Turvo é o primeiro capítulo completo, para validação.
+- As regiões seguintes dependem da avaliação dele e não são obrigação anterior à primeira versão de teste.
+- A duração não está definida: vem de partidas de jogadores novos (07, E9), não dos dias do jogo nem do robô.
+
 ## 6. Derrota na campanha [hipótese]
 
 Hipótese aceita por Jean, sem decisão definitiva e sem autorização para mudar o padrão atual:

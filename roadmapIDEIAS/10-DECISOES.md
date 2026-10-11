@@ -20,6 +20,10 @@ Não bloquear tudo com todas as perguntas de uma vez. Resolver as decisões quan
 | Marta (10/10/2026) | Alguém que ajudou o protagonista no passado, o que cria o vínculo afetivo. Sem parentesco de sangue: nenhuma cena depende dele |
 | Ilse (10/10/2026) | Foi afogada injustamente pela vila e se tornou a guardiã. **Confirmado:** em vida, tinha a custódia do Sigilo; afogada, virou a Bruxa Afogada. Os textos usam "custódia do Sigilo" para separar a função antiga da criatura de agora, e a responsabilidade pelo crime é da vila. Destruir ou Dar descanso (a guardiã) e a postura diante de Caspar (Apoiar, Denunciar, Calar) seguem como decisões separadas |
 | A Fenda e o título (10/10/2026) | A Fenda continua como fenômeno do mundo. "Crônicas da Fenda" é título provisório |
+| O Vale como primeiro capítulo (11/10/2026) | O Vale do Turvo é o primeiro capítulo completo, para validação: resolve o conflito local e termina de forma reconhecível. Não define que o jogo final terá só essa região |
+| Ordem depois da E7 (11/10/2026) | Depois da primeira entrega da E7, a avaliação integrada do Vale (o trabalho pertinente da E9, antecipado). A E8 (raças e origens) fica adiada explicitamente |
+| Campanha maior (11/10/2026) | Continua como direção, com o esboço geral do 12 preservado. As próximas regiões dependem da avaliação do Vale e não são obrigação anterior à primeira versão de teste |
+| Texto (11/10/2026) | Claro e concreto como padrão; metáfora e frase de efeito só quando acrescentam algo compreensível; diálogos conforme personagem, contexto e ação efetiva (critério editorial no 07) |
 
 ## Hipóteses de trabalho (10/10/2026)
 
@@ -45,11 +49,12 @@ As propostas da E1 que aguardam aprovação, separadas pelo momento de decidir (
 | Conflito principal e papel do herói | E1 | Objetivo compreensível e motivação concreta |
 | Cronologia da Fenda/Odette | E1 | Uma explicação consistente para o conteúdo |
 | Região inicial e arco geral | E1 | Poucos locais; conflito que termina e aponta para a campanha |
-| Duração/quantidade de capítulos | E10; estimativa em E1 | Ajustar ao ritmo validado da região |
+| Duração/quantidade de capítulos | Depois da avaliação do Vale (E9); **em aberto** (11/10/2026) | Sem duração definitiva. Medir partidas de jogadores novos: tempo total, leitura, combate, exploração, conteúdo opcional, dificuldades de navegação. Dias do jogo, robô e percursos de quem conhece a solução não valem como duração da primeira partida. Não acrescentar conteúdo só para alongar |
+| Como medir a primeira partida | Avaliação do Vale (E9) | **Em aberto:** quem joga, o que se cronometra e como se registra a navegação |
 | Morte e custo da derrota | E9; hipótese em E1 | Recuperável na campanha, hardcore opcional |
 | Saves e checkpoints | Novas regras de derrota | Usar persistência existente e informar consequências |
 | Facções e reputação | E4 se necessário | Poucas relações vinculadas ao conflito local |
-| Raças e origens | E8 | Conjunto pequeno; proposta inicial de duas de cada |
+| Raças e origens | E8, **adiada** (11/10/2026) | Conjunto pequeno; proposta inicial de duas de cada. Volta depois da avaliação do Vale, por decisão de Jean |
 | Habilidades preparadas | Catálogo causar excesso/E6 | Escolha em lugar seguro; número após experimentar |
 | Reespecialização | Escolhas de build ampliadas | Permitir experimentar com custo coerente |
 | Transformações/exclusões | E6 | Prioridade e incompatibilidade explícitas |
@@ -80,5 +85,22 @@ Só promover uma ideia ao plano ativo com objetivo, dependência, escopo e crit�
 Data / tema / decisão de Jean / motivo / documentos afetados / etapa dependente / como avaliar.
 
 - **10/10/2026 — narrativa da região 1.** Jean decidiu a cronologia (60 e 3 anos), o vínculo com Marta (ajudou o protagonista no passado, sem sangue), Ilse (afogada injustamente, tornou-se a guardiã; os dois eixos separados) e manteve a Fenda como fenômeno e o título como provisório. A ideia de um selo sustentado por sacrifícios ocultos ficou como direção temática, não como decisão. Documentos: este, [12-E1-CAMPANHA](12-E1-CAMPANHA.md) (seções 1, 3 e 4) e [11-E1-REGIAO-INICIAL](11-E1-REGIAO-INICIAL.md). Etapa: E3 (interior da capela usa a cronologia sem citar anos). Avaliar: textos novos não contradizem nada disso; os textos antigos com "cem anos" esperam tarefa própria.
+
+- **11/10/2026 — direção depois da E7.**
+  - **Decisões de Jean:**
+    - o Vale do Turvo como primeiro capítulo completo, para validação;
+    - a avaliação integrada do Vale (E9 antecipada) logo depois da primeira entrega da E7;
+    - a E8 adiada;
+    - a campanha maior como direção, sem obrigação de expandir antes da primeira versão de teste;
+    - o texto claro e concreto como padrão.
+  - **Em aberto:** a duração (medir jogadores novos) e como medir a primeira partida.
+  - **Documentos:**
+    - [01](01-VISAO.md), seção "Direção";
+    - [07](07-ETAPAS.md): "Ordem atual", E8, E9, E10 e o critério editorial;
+    - este;
+    - [12](12-E1-CAMPANHA.md), o tamanho;
+    - [00](00-COMECE-AQUI.md).
+  - **Como avaliar:** o Vale fecha o conflito local de forma reconhecível, com as três classes, e a medida com
+    jogadores novos diz a duração real.
 
 Se uma hipótese falhar jogando, registrar revisão. Nunca marcar proposta como implementada ou teste como aprovado sem evidência.
