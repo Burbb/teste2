@@ -163,12 +163,15 @@ primeira versão de teste. Volta ao plano por decisão de Jean, depois da avalia
 **Decisão:** consolidar ou ajustar antes de ampliar. Raça/origem podem ser adiadas explicitamente, sem ficar falsamente marcadas como prontas.
 **Não fazer:** adicionar sistemas para encobrir ritmo ruim.
 **Estado (11/10/2026):** **antecipada,** como avaliação integrada do Vale do Turvo, o primeiro capítulo completo,
-logo depois da primeira entrega da E7. A dependência da E8 cai: raças e origens estão adiadas (veja a E8). Nada
-desta etapa foi feito ainda.
+logo depois da primeira entrega da E7. A dependência da E8 cai: raças e origens estão adiadas (veja a E8).
+**Primeira entrega feita (diagnóstico, sem mudar o jogo):** [17](17-E9-VALIDACAO-DO-VALE.md). Antes de liberar o
+capítulo para teste: a fome e a infecção que prendem o save, o marco de fim do capítulo e a nota do custo do
+companheiro (seção 7 do 17). **Não concluída:** falta Jean jogar (seção 8 do 17) e os jogadores novos (seção 9).
 
 **O que já está registrado para ela:**
 - o começo do Vale derruba o robô (fome nos níveis 1 e 2, quase sem ouro, sem poção), em especial o Mago
-  ([16](16-E7-ITEM-E-LOOT.md), seções 2.7 e 3.1). Precisa ser confirmado com gente jogando antes de qualquer número;
+  ([16](16-E7-ITEM-E-LOOT.md), seções 2.7 e 3.1). Precisa ser confirmado com gente jogando antes de qualquer número.
+  Diagnosticado no [17](17-E9-VALIDACAO-DO-VALE.md), seção 4: o que é do robô e o que persiste;
 - a P2 do saque (situacional repetido vira ouro), de reserva;
 - a validação de Jean jogando das entregas da E3 à E7, que nenhuma medida substitui.
 

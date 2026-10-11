@@ -50,8 +50,8 @@ As propostas da E1 que aguardam aprovação, separadas pelo momento de decidir (
 | Cronologia da Fenda/Odette | E1 | Uma explicação consistente para o conteúdo |
 | Região inicial e arco geral | E1 | Poucos locais; conflito que termina e aponta para a campanha |
 | Duração/quantidade de capítulos | Depois da avaliação do Vale (E9); **em aberto** (11/10/2026) | Sem duração definitiva. Medir partidas de jogadores novos: tempo total, leitura, combate, exploração, conteúdo opcional, dificuldades de navegação. Dias do jogo, robô e percursos de quem conhece a solução não valem como duração da primeira partida. Não acrescentar conteúdo só para alongar |
-| Como medir a primeira partida | Avaliação do Vale (E9) | **Em aberto:** quem joga, o que se cronometra e como se registra a navegação |
-| Morte e custo da derrota | E9; hipótese em E1 | Recuperável na campanha, hardcore opcional |
+| Como medir a primeira partida | Avaliação do Vale (E9) | **Em aberto:** quem joga, o que se cronometra e como se registra a navegação. Proposta: a ficha da seção 9 do [17](17-E9-VALIDACAO-DO-VALE.md) e, se der, Jean junto olhando |
+| Morte e custo da derrota | E9; hipótese em E1; **urgente** (11/10/2026) | Recuperável na campanha, hardcore opcional. A fome e a infecção ainda matam na campanha e podem prender o save: recomendado levá-las ao resgate, e o resgate do Vau não comer provisões ([17](17-E9-VALIDACAO-DO-VALE.md), seções 4.5 e 4.6) |
 | Saves e checkpoints | Novas regras de derrota | Usar persistência existente e informar consequências |
 | Facções e reputação | E4 se necessário | Poucas relações vinculadas ao conflito local |
 | Raças e origens | E8, **adiada** (11/10/2026) | Conjunto pequeno; proposta inicial de duas de cada. Volta depois da avaliação do Vale, por decisão de Jean |

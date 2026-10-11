@@ -85,7 +85,7 @@ Três commits posteriores à atualização do roadmap foram consultados. Os comp
 | Direção (11/10/2026) | **Decidido por Jean:** o Vale do Turvo é o primeiro capítulo completo, para validação; depois da primeira entrega da E7 vem a avaliação integrada do Vale (E9 antecipada); a E8 fica adiada; a campanha maior continua como direção, sem obrigação de expandir antes da primeira versão de teste. **Em aberto:** a duração, que vem de partidas de jogadores novos. Detalhes no [01](01-VISAO.md) ("Direção") e no [07](07-ETAPAS.md) ("Ordem atual"). |
 | E7 — equipamento e build | **Primeira entrega implementada na 1.63.0:** o Broquel do Vigia, medido em lutas inteiras ([16](16-E7-ITEM-E-LOOT.md), seção 5). Antes, o saque do Vale foi medido e o baú da campanha passou a dar um suprimento (1.62.6). Falta Jean jogar (cenários `broquel` e `muralha`). Os exemplos para Arqueiro e Mago não foram começados. |
 | E8 — raças e origens | **Adiada explicitamente** (11/10/2026). |
-| E9 — avaliação do Vale | **Próxima frente,** antecipada. Nada feito ainda. O que já está registrado para ela e a medida da primeira partida estão no [07](07-ETAPAS.md). |
+| E9 — avaliação do Vale | **Começada, não concluída.** Primeira entrega (diagnóstico, sem mudar o jogo) em [17](17-E9-VALIDACAO-DO-VALE.md): o percurso completo fecha nas três classes e nos dois caminhos, salvar e carregar mantém o estado, e nenhum bloqueio de jogo foi reproduzido. **Antes de liberar o capítulo:** a fome e a infecção podem prender o save (decisão de Jean, seção 10 do 17), o capítulo não tem marco de fim, e o custo do companheiro não aparece na escolha. O começo apertado fica para confirmar jogando. Falta Jean jogar (roteiro na seção 8) e os jogadores novos (ficha na seção 9). |
 | E10–E11 | Plano de trabalho futuro; infraestrutura existente não equivale a etapas concluídas. A E10 depende da avaliação do Vale. Notas aprovadas para a E3 na seção 19 do [11](11-E1-REGIAO-INICIAL.md). |
 | Bugs ainda abertos | Nenhum bug aberto específico foi informado para registro nesta passagem. Isso não comprova ausência de bugs. |
 | Polimento antes da E3 | Entregue na 1.48.1 (registro abaixo): leitura, item achado, balcão do templo, palco da luta. Falta Jean conferir jogando. |
@@ -1304,3 +1304,33 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   - nada no jogo;
   - nenhuma validação jogando foi marcada como feita: as entregas da E3 à E7 seguem esperando Jean jogar.
 
+### 11/10/2026 — Avaliação integrada do Vale, primeira entrega da E9 (diagnóstico)
+
+- **Pedido de Jean:**
+  - avaliar o Vale como capítulo: o percurso completo e o encerramento, o começo (níveis 1 e 2), o ritmo, a
+    progressão e o saque;
+  - preparar a validação humana: um roteiro para Jean e uma ficha para jogadores novos;
+  - não mudar regras, números ou recompensas, nem começar outros únicos ou regiões.
+- **O que existe agora:**
+  - o [17](17-E9-VALIDACAO-DO-VALE.md), com o diagnóstico, os achados por prioridade, as propostas, o roteiro de
+    Jean e a ficha;
+  - a régua do Vale (`tests/saque_vale.py`) com três opções novas: `--estrategia` (o começo com outras regras de
+    compra, recrutamento e contrato), o roteiro `nivel6` e `--economia` (a conta de uma luta do começo). Cada
+    percurso agora traz a trajetória, as pausas, as escolhas e os encontros.
+- **Achados, por prioridade:**
+  - **perda de progresso:** a fome e a infecção matam na campanha, e o save automático fica na véspera. O resgate
+    come dois dias de provisões. Reproduzido; 162 de 540 percursos morreram sem sair de "sem comida e sem ouro";
+  - **clareza:** o capítulo não tem marco de fim; o custo do companheiro (1 provisão por dia) não aparece na escolha;
+  - **ritmo e equilíbrio:** nos níveis 1 e 2, lutar dá prejuízo, e o herói inteiro perde de 10% a 22% das lutas no
+    Charco. Persiste com as estratégias simples, mas é para confirmar jogando antes de mexer em número. O Mago fica
+    bem atrás. Eventos repetidos: 29% num Vale direto, cerca de 50% para quem explora muito;
+  - **funciona:** o percurso fecha nas três classes, nos dois caminhos de Ilse e nas três posturas; salvar e
+    carregar saiu idêntico em 220 pontos de 12 percursos; a derrota para Ilse não perde a missão.
+- **Propostas, nenhuma aplicada:**
+  - fome e infecção levam ao resgate na campanha;
+  - o resgate do Vau não come a bolsa;
+  - uma cena curta de fim de capítulo no Vau, com as linhas que já existem;
+  - a nota "Come 1 provisão por dia" no recrutamento.
+- **Decisões de Jean:** seção 10 do 17.
+- **Verificado:** testes, gabarito (sem mudança), pyflakes, fumaça; as opções novas da régua rodadas.
+- **Não mudou:** nada no jogo (1.63.0). A E9 **não** está concluída: falta Jean jogar e os jogadores novos.
