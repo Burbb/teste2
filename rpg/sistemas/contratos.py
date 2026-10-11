@@ -2,7 +2,7 @@
 
 from .. import texto as tx
 from ..dados import BIOMAS, FAMILIAS, retrato
-from .. import missoes
+from .. import capitulo, missoes
 from .. import sobrevivencia
 from ..mundo import distancias, nivel_regiao
 from .. import balanceamento as bal
@@ -219,6 +219,7 @@ class Contratos:
             }
             if self.campanha:  # a missão da campanha, no alto do diário (missoes.py)
                 dados["missoes"] = missoes.cartoes(self, todas=True)  # as concluídas também ficam no Diário
+                dados["capitulo"] = capitulo.para_tela(self)  # o fim do capítulo, acima das missões
             web = self.ui.painel("diario", dados)
             if not web:
                 self._diario_texto(a)
@@ -236,6 +237,9 @@ class Contratos:
         if a:  # a campanha escrita ainda não tem vilão
             self.dizer(f"Inimigo final: {a['nome']}, {a['origem']}.", "magenta")
         cartoes = missoes.cartoes(self, todas=True) if self.campanha else []
+        fim = capitulo.para_tela(self) if self.campanha else None
+        if fim:
+            self.dizer(f"{fim['nome']}: {fim['texto']} {fim['nota']}", "amarelo+negrito")
         ativas, feitas = [m for m in cartoes if not m["concluida"]], [m for m in cartoes if m["concluida"]]
         # As em andamento primeiro; o que uma concluída ainda espera (a herança de Berta) logo depois, à vista; as
         # concluídas no fim, com o desfecho, o que mudou e o histórico.

@@ -9,11 +9,12 @@
     python -m tests.navegador.cenarios recarga   # título com um save da campanha (Bosque, à noite) e um do mundo gerado
     python -m tests.navegador.cenarios capela    # herói na Capela Afogada (CLASSE, ETAPA, NIVEL, PREPARO, LUGAR, SEMENTE, PRISAO)
     python -m tests.navegador.cenarios retorno   # chegando ao Vau com Ilse resolvida (DESFECHO, DIAS, LODO, YARA)
-    python -m tests.navegador.cenarios praca     # depois da resposta a Caspar (POSTURA, YARA, LUGAR)
+    python -m tests.navegador.cenarios praca     # depois da resposta a Caspar (POSTURA, YARA, LUGAR); no Vau, abre no fim do capítulo
     python -m tests.navegador.cenarios encruzilhada  # a escolha de especialização, comparando (CLASSE, NIVEL)
     python -m tests.navegador.cenarios covil        # mundo gerado, no covil de um guardião (CLASSE, EVENTO, SEMENTE)
     python -m tests.navegador.cenarios tiro_duplo    # Patrulheiro contra três lobos feridos de jeitos diferentes (NIVEL, VIDAS)
     python -m tests.navegador.cenarios broquel       # Guerreiro nv 4 com o Broquel contra três lobos; repete com/sem o Revide (LUTA, ESPEC, NIVEL)
+    python -m tests.navegador.cenarios resgate       # a recuperação: fome ou infecção no Charco, à noite (CLASSE, CAUSA, COMITIVA)
     python -m tests.navegador.cenarios muralha       # Guerreiro nv 6, Muralha + Contra-ataque (CONTRA) e o Broquel, contra bandidos e um cultista
 
 Imprime o endereço do servidor na primeira linha e fica no ar até ser encerrado.
@@ -333,6 +334,47 @@ def praca(ui):
     menu_principal(ui, argparse.Namespace(seed=1, saves=pasta, brando=False))
 
 
+def resgate(ui):
+    """A recuperação da campanha (E9): CLASSE (padrão mago) no Charco dos Juncos, à noite, com Morel e Odette
+    (COMITIVA=0: sozinho). CAUSA=fome (padrão): três dias sem comer, sem provisões, 3 de ouro e pouca vida; a próxima
+    noite derruba. CAUSA=infeccao: uma infecção e um corte aberto, um dia de fome (que corta a cura do acampamento) e
+    40 de ouro. Acampar leva ao resgate no Vau, na casa de Marta (Pita cuida: a febre do Vau ainda não acabou). Sair
+    leva ao título."""
+    from rpg.__main__ import menu_principal
+    from rpg.ui import BotUI
+    pasta = tempfile.mkdtemp()
+    g = Jogo(BotUI(random.Random(1)), seed=21, pasta_saves=pasta, hardcore=False)
+    g.iniciar("Jean", os.environ.get("CLASSE", "mago"), "turvo")
+    g.dia, g.periodo, g.clima = 6, 3, "limpo"
+    from rpg import missoes
+    missoes.registro(g, "febre_do_turvo").update(etapa="capela", cenas=["abertura"],
+                                                 pistas=["agua_do_leste", "represa", "canal_da_capela"])
+    if os.environ.get("COMITIVA", "1") != "0":
+        cm.recrutar(g, "morel")
+        cm.recrutar(g, "odete")
+    j = g.j
+    if os.environ.get("CAUSA", "fome") == "infeccao":
+        j.ferimentos += [{"id": "infeccao", "dias": None, "tratado": False}, {"id": "corte", "dias": 4, "tratado": False}]
+        j.provisoes, j.fome, j.ouro = 0, 1, 40
+        j.recalcular()
+        j.hp = 1
+    else:
+        j.provisoes, j.fome, j.ouro = 0, 3, 3
+        j.recalcular()
+        j.hp = 2
+    for l in g.mundo["locais"]:
+        l["visitado"] = l["chave"] in ("vau_do_turvo", "charco_dos_juncos", "bosque_do_moinho")
+    g.mundo["atual"] = next(l["id"] for l in g.mundo["locais"] if l["chave"] == "charco_dos_juncos")
+    g.ui, ui.jogo = ui, g
+    g.autosalvar = True
+    try:
+        g.rodar()
+    except FimDeJogo:
+        pass
+    ui.jogo = None
+    menu_principal(ui, argparse.Namespace(seed=1, saves=pasta, brando=False))
+
+
 def encruzilhada(ui):
     """Herói da CLASSE (padrão guerreiro) no nível NIVEL (padrão 4), ainda sem especialização, no Charco dos Juncos:
     a encruzilhada abre logo (como no primeiro descanso depois do 4). Depois dela, o jogo segue; Sair leva ao título."""
@@ -491,7 +533,7 @@ def muralha(ui):
 
 CENARIOS = {"combate": combate, "titulo": titulo, "vila": vila, "campanha": campanha, "baus": baus, "missao": missao,
             "recarga": recarga, "capela": capela, "retorno": retorno, "praca": praca, "encruzilhada": encruzilhada,
-            "tiro_duplo": tiro_duplo, "covil": covil, "broquel": broquel, "muralha": muralha}
+            "tiro_duplo": tiro_duplo, "covil": covil, "broquel": broquel, "muralha": muralha, "resgate": resgate}
 
 
 def main():

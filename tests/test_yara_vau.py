@@ -36,7 +36,9 @@ class TestCharco(unittest.TestCase):
             self.assertEqual(caspar.registro(g)["desfecho"], desfecho)
             self.assertIn("Charco dos Juncos", " ".join(ui.ditos))  # a praça diz onde ela está
             self.assertIn("vive no Charco dos Juncos", missoes.cartoes(g, todas=True)[1]["linhas"][2])
-            self.assertFalse(missoes.cena_pendente(g))  # no Vau, nada
+            self.assertTrue(missoes.cena_pendente(g))  # no Vau, só o fim do capítulo
+            self.assertEqual(ui.cenas[-1], "O Vale do Turvo")
+            self.assertFalse(missoes.cena_pendente(g))
             ir(g, CHARCO)
             ui.roteiro = ["Aceitar"]
             self.assertTrue(missoes.cena_pendente(g))  # na primeira chegada, sem sorteio

@@ -36,15 +36,16 @@
 
   /** As missões do Diário: as em andamento primeiro; o que uma concluída ainda espera (a herança de Berta), à vista;
    *  as concluídas numa seção recolhida, com o desfecho, o que mudou e o histórico para consultar. */
-  function missoesDiario(lista) {
+  function missoesDiario(lista, capitulo) {
     const ativas = lista.filter((m) => !m.concluida), feitas = lista.filter((m) => m.concluida);
+    const fim = capitulo ? `<div class="missao-pendencia missao-capitulo">${S("pergaminho", 1)}<span><b>${h(capitulo.nome)}</b> · ${h(capitulo.texto)} ${h(capitulo.nota)}</span></div>` : "";
     const pendencias = feitas.filter((m) => m.pendente).map((m) => `<div class="missao-pendencia">${S("pergaminho", 1)}<span><b>${h(m.nome)}</b> · ${h(m.pendente)}</span></div>`).join("");
-    return ativas.map(missaoDiario).join("") + pendencias + (feitas.length
+    return fim + ativas.map(missaoDiario).join("") + pendencias + (feitas.length
       ? `<details class="missoes-concluidas"><summary>Concluídas (${feitas.length})</summary>${feitas.map(missaoDiario).join("")}</details>` : "");
   }
 
   function diario(d) {
-    const missoes = missoesDiario(d.missoes || []);
+    const missoes = missoesDiario(d.missoes || [], d.capitulo);
     const contratos = d.contratos.map((c) => cartaz(c, true, false, d.nivel_heroi)).join("");
     const rumores = d.rumores.map((r) => `<div class="bilhete"><span class="prego"></span>${S("olho", 1)} ${h(r.texto)}<small>${r.expira > 0 ? `some em ${Texto.plural(r.expira, "dia")}` : "some hoje"}</small></div>`).join("");
     const losangos = [0, 1, 2].map((i) => `<i class="sigilo${i < d.sigilos ? " tem" : ""}"></i>`).join("");
@@ -108,13 +109,18 @@
   }
 
   /** Rastreador sempre à vista: alvo, lugar, distância e progresso de cada contrato. */
-  /** O rastreador do painel do mundo: a missão da campanha (se houver) e os contratos aceitos. */
-  function rastreador(contratos, nivelHeroi, missoes) {
+  /** O rastreador do painel do mundo: a missão da campanha (se houver), o capítulo concluído e os contratos aceitos. */
+  function rastreador(contratos, nivelHeroi, missoes, capitulo) {
     const linhasMissao = (missoes || []).map((m) => `<div class="rastro-contrato rastro-missao" data-local="${m.lugar_id}" data-missao="${h(m.id)}" title="${h(m.objetivo)}">
         <span class="rastro-arte">${S("pergaminho", 2)}</span>
         <span class="rastro-info"><b>${h(m.nome)}</b><span class="rastro-objetivo">${h(m.objetivo)}</span>
           <span class="rastro-lugar">${h(m.lugar || "")}${m.distancia ? ` · ${Texto.plural(m.distancia, "trecho")}` : m.distancia === 0 ? " · você está aqui" : ""}</span></span></div>`).join("");
-    const missao = linhasMissao ? `<div class="secao rastreador"><h3>Missão</h3>${linhasMissao}</div>` : "";
+    // Sem missão em andamento e com o capítulo concluído: a linha do fim, no lugar dela (o motor diz quando).
+    const fim = capitulo && !linhasMissao ? `<div class="secao rastreador"><h3>Capítulo</h3><div class="rastro-contrato rastro-missao feito" title="${h(capitulo.texto)}">
+        <span class="rastro-arte">${S("pergaminho", 2)}</span>
+        <span class="rastro-info"><b>${h(capitulo.nome)}</b><span class="rastro-objetivo">${h(capitulo.texto)}</span>
+          <span class="rastro-lugar">${h(capitulo.nota)}</span></span></div></div>` : "";
+    const missao = linhasMissao ? `<div class="secao rastreador"><h3>Missão</h3>${linhasMissao}</div>` : fim;
     if (!contratos || !contratos.length) return missao;
     return missao + `<div class="secao rastreador"><h3>Contratos</h3>${contratos.map((c) => {
       const arte = c.tipo === "entrega" ? "saco" : c.retrato || "caveira";

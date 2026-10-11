@@ -207,6 +207,8 @@ class TestCombinacoes(unittest.TestCase):
     def test_decisao_nao_repete(self):
         g, *_ = self.decidir("descansada", "Apoiar")
         rep = g.j.reputacao
+        self.assertTrue(missoes.cena_pendente(g))  # a praça não volta: a próxima cena é o fim do capítulo
+        self.assertEqual(g.ui.cenas[-1], "O Vale do Turvo")
         self.assertFalse(missoes.cena_pendente(g))
         self.assertFalse(missoes.executar(g, CASPAR, "praca"))
         caspar._resolver(g, "denunciar")
@@ -223,6 +225,8 @@ class TestSaves(unittest.TestCase):
         g.salvar(silencioso=True)
         h = Jogo.carregar(Roteiro(), g.caminho_save(), pasta)
         self.assertEqual(caspar.registro(h)["desfecho"], "denunciado")
+        self.assertTrue(missoes.cena_pendente(h))  # só o fim do capítulo, que o save ainda não viu
+        self.assertEqual(h.ui.cenas, ["O Vale do Turvo"])
         self.assertFalse(missoes.cena_pendente(h))
         self.assertFalse(caspar.fogueira_possivel(h))
 

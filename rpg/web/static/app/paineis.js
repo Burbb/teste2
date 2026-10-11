@@ -69,7 +69,8 @@ function aplicarEstado(e) {
   if (chaveHeroi !== ultimoHeroi) { ultimoHeroi = chaveHeroi; desenharHeroi(e.heroi, antes && antes.heroi); }
   const mudouMapa = !antes || antes.local.id !== e.local.id || JSON.stringify(antes.mapa) !== JSON.stringify(e.mapa) || antes.heroi.nivel !== e.heroi.nivel ||
     antes.mundo.periodo_n !== e.mundo.periodo_n || antes.mundo.clima_id !== e.mundo.clima_id ||
-    JSON.stringify(antes.contratos) !== JSON.stringify(e.contratos) || JSON.stringify(antes.missoes) !== JSON.stringify(e.missoes);
+    JSON.stringify(antes.contratos) !== JSON.stringify(e.contratos) || JSON.stringify(antes.missoes) !== JSON.stringify(e.missoes) ||
+    JSON.stringify(antes.capitulo) !== JSON.stringify(e.capitulo);
   if (mudouMapa) { desenharMundo(e); ultimoMundo = ""; }
   if (!$("#sobre-mapa").hidden && mudouMapa) desenharMapaGrande();
 }
@@ -274,7 +275,7 @@ function desenharMundo(e) {
   const raiz = $("#mundo");
   raiz.innerHTML = `<div class="local-nome">${esc(l.nome)}</div><div class="local-desc">${esc(maiuscula(l.descricao))}</div>
     ${l.nivel ? `<span class="perigo-tag ${nivelPerigo(l.nivel)}">${l.tipo === "vila" ? "Arredores" : "Inimigos"} Nv.${l.nivel}</span>` : ""}<div id="mapa-mini"></div>
-    ${Telas.rastreador(e.contratos, e.heroi.nivel, e.missoes)}
+    ${Telas.rastreador(e.contratos, e.heroi.nivel, e.missoes, e.capitulo)}
     <div class="secao"><h3>Caminhos</h3><div class="caminhos">${caminhos || '<div class="vazio">nenhum</div>'}</div></div>`;
   const mini = MapaPx.criar(e.mapa, { clicaveis: clic, aoClicar: viajarPara, nivelHeroi: e.heroi.nivel, marcas: marcasContrato(e), dicaDe: dicaDoLugar(e, clic) });
   mini.title = "Abrir o mapa (M)";

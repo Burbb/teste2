@@ -830,15 +830,34 @@ async function cenarioCaspar(browser) {
     await page.waitForSelector("#prompt .continuar.confirmar", { timeout: 20000 });
     await page.waitForTimeout(800);
     await page.click("#prompt .continuar");
+    // Na tela seguinte, o fim do capítulo: uma cena curta, uma vez, que diz que o capítulo acabou e o Vale segue aberto
+    await page.waitForFunction(() => /O Vale do Turvo/.test(document.querySelector("#cena-cab .cena-titulo")?.textContent || ""),
+      null, { timeout: 20000 });
+    await page.waitForSelector("#prompt .continuar.confirmar", { timeout: 20000 });
+    await page.waitForTimeout(800);
+    const fim = await page.textContent("#texto");
+    conferir(/fim do capítulo disponível/.test(fim) && /Ilse/.test(fim) && /Caspar (foi embora|ficou no Vau)/.test(fim) && /Yara/.test(fim),
+      "o fim do capítulo: Ilse, Caspar e Yara, e o aviso de que o Vale continua aberto");
+    for (const largura of [1500, 1280]) {
+      await page.setViewportSize({ width: largura, height: largura === 1500 ? 950 : 720 });
+      await page.waitForTimeout(300);
+      await page.screenshot({ path: process.env.CAPTURAS ? `${process.env.CAPTURAS}/fim-capitulo-${largura}.png` : "/dev/null" }).catch(() => {});
+    }
+    await page.setViewportSize({ width: 1500, height: 950 });
+    await page.click("#prompt .continuar");
     await page.waitForSelector('#predios .predio[data-predio="taverna"]', { timeout: 20000 });
     await page.waitForTimeout(600);
     const praca = await page.textContent("#texto");
     conferir((await page.evaluate(() => estado.missoes.length)) === 0 && /praça/.test(praca),
       "decidido: nenhuma missão ativa, e a vila fala da praça depois da decisão");
+    conferir(/Primeiro capítulo concluído/.test(await page.textContent("#mundo")),
+      "o rastreador mostra o capítulo concluído no lugar da missão");
+    await page.screenshot({ path: process.env.CAPTURAS ? `${process.env.CAPTURAS}/fim-capitulo-vila.png` : "/dev/null" }).catch(() => {});
     await page.keyboard.press("d");
     // Concluída, a Vigília fica em "Concluídas", recolhida: abre-se como o jogador abriria
     await page.waitForSelector(".missoes-concluidas > summary", { timeout: 10000 });
     conferir(!(await page.$eval(".missoes-concluidas", (el) => el.open)), "a missão decidida vai para Concluídas, recolhida");
+    conferir(/Primeiro capítulo concluído/.test(await page.textContent(".missao-capitulo")), "o Diário abre com o capítulo concluído");
     await page.click(".missoes-concluidas > summary");
     await page.waitForSelector('.missao-diario[data-missao="vigilia_de_caspar"]', { timeout: 10000 });
     const d = await page.textContent('.missao-diario[data-missao="vigilia_de_caspar"]');
@@ -846,6 +865,35 @@ async function cenarioCaspar(browser) {
       "o Diário conta à parte o que houve com Ilse, com Caspar e com a Yara");
     conferir(await page.evaluate(() => (estado.heroi.comitiva || []).some((c) => c.id === "yara")) && !!(await page.$('[data-conversar="yara"], #heroi :text("Yara")')),
       "a Yara continua no grupo e à vista no painel");
+  } finally {
+    conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
+    await page.close();
+    proc.kill();
+  }
+}
+
+async function cenarioResgate(browser) {
+  console.log("cenário: a recuperação da campanha (infecção no Charco, com a comitiva)");
+  const { proc, url } = await subir("resgate", { CAUSA: "infeccao" });
+  const { page, erros } = await abrir(browser, url);
+  const MENU = "#prompt .escolhas:not(.escolhido) .escolha";
+  try {
+    const provisoes = await (async () => { await page.waitForSelector(`${MENU}:has-text("Acampar")`, { timeout: 20000 });
+      return page.evaluate(() => estado.heroi.provisoes); })();
+    await page.click(`${MENU}:has-text("Acampar")`);
+    for (let k = 0; k < 160 && !/ouro sumiu/.test(await page.textContent("#texto")); k++) {
+      const dormir = await page.$(".dormir-barraca"); if (dormir) await dormir.click().catch(() => {});
+      const q = page.locator("button:visible", { hasText: "Continuar" }).first();
+      if (await q.count()) await q.click({ timeout: 1000 }).catch(() => {});
+      await page.waitForTimeout(200);
+    }
+    const texto = await page.textContent("#texto");
+    const h = await page.evaluate(() => ({ local: estado.local.nome, prov: estado.heroi.provisoes, hp: estado.heroi.hp,
+      feridas: (estado.heroi.ferimentos || []).map((f) => f.nome || f.id).join(",") }));
+    conferir(/Pita trocou as faixas e deu caldo a você e à comitiva/.test(texto) && /limpou a ferida infeccionada/.test(texto),
+      "a infecção derruba e leva ao resgate, com Pita cuidando de todos");
+    conferir(h.local === "Vau do Turvo" && h.prov === provisoes && h.hp > 0 && !/Infec/.test(h.feridas),
+      `no Vau, sem gastar a bolsa e sem a infecção (${JSON.stringify(h)})`);
   } finally {
     conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
     await page.close();
@@ -909,6 +957,13 @@ async function cenarioYara(browser) {
   const MENU = "#prompt .escolhas:not(.escolhido) .escolha";
   const yara = () => page.evaluate(() => (estado.heroi.comitiva || []).find((c) => c.id === "yara"));
   try {
+    // O save já tem tudo resolvido: no Vau, o fim do capítulo vem primeiro, uma vez
+    await page.waitForFunction(() => /O Vale do Turvo/.test(document.querySelector("#cena-cab .cena-titulo")?.textContent || ""),
+      null, { timeout: 20000 });
+    await page.waitForSelector("#prompt .continuar.confirmar", { timeout: 20000 });
+    await page.waitForTimeout(800);
+    await page.click("#prompt .continuar");
+    await page.waitForSelector('#predios .predio[data-predio="taverna"]', { timeout: 20000 });
     await page.waitForSelector('#heroi .membro[data-cid="yara"]', { timeout: 20000 });
     await page.waitForTimeout(600);
     let y = await yara();
@@ -1138,6 +1193,7 @@ try {
   await cenarioGuardia(browser);
   await cenarioRetorno(browser);
   await cenarioCaspar(browser);
+  await cenarioResgate(browser);
   await cenarioYara(browser);
   await cenarioBroquel(browser);
   await cenarioGolpePreparado(browser);

@@ -952,3 +952,8 @@ from . import caspar as _caspar  # noqa: E402
 MISSOES.update(_caspar.MISSOES)
 CENAS += _caspar.CENAS
 ACOES += _caspar.ACOES
+
+# O fim do capítulo vem depois de todas as cenas das missões (capitulo.py).
+from . import capitulo as _capitulo  # noqa: E402
+
+CENAS.append(_capitulo.CENA)
