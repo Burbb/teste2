@@ -315,9 +315,10 @@ def posicoes(classe):
 
 
 def _sobre_ramo(jogador, r):
-    """O título e a situação de um ramo: o tronco é de todos; uma especialização é a sua, a escolher ou a outra."""
+    """O título e a situação de um ramo: o tronco é de todos (o nome da classe basta); uma especialização é a sua, a
+    escolher ou a outra."""
     if r == "tronco":
-        return {"id": r, "nome": CLASSES[jogador.classe]["nome"], "sub": "para todos", "trancado": False}
+        return {"id": r, "nome": CLASSES[jogador.classe]["nome"], "sub": None, "trancado": False}
     sub = (f"especialização no nível {bal.NIVEL_ESPECIALIZACAO}" if not jogador.spec else
            "sua especialização" if jogador.spec == r else "caminho não escolhido")
     return {"id": r, "nome": SPECS[r]["nome"], "sub": sub, "trancado": jogador.spec != r}

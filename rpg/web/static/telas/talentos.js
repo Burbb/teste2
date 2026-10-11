@@ -38,14 +38,14 @@
     // "Paladino", ela parecia do paladino, e um berserker achava que pegava talento alheio.
     const colsBase = Math.max(1, ...base.map((n) => n.pos + 1));
     const grade = (cols) => `style="grid-template-columns: 64px repeat(${cols}, 1fr)"`;
-    let html = `<div class="arvore-topo"><span>Nível ${a.nivel} · passe o mouse num talento para ver o que ele faz</span>
+    let html = `<div class="arvore-topo"><span>Nível ${a.nivel}</span>
       <span class="pontos${a.pontos ? "" : " zero"}">${S("estrela", 2)} ${Texto.plural(a.pontos, "ponto")}</span></div>`;
     if (base.length) {
-      html += `<div class="arvore-grade arvore-base" ${grade(colsBase)}><div></div><div class="arvore-base-titulo">Base<small>para todos, antes da especialização</small></div>` +
+      html += `<div class="arvore-grade arvore-base" ${grade(colsBase)}><div></div><div class="arvore-base-titulo">Base</div>` +
         camadasDe(base).map((c) => nivel(c) + Array.from({ length: colsBase }, (_, i) => celula(base.find((n) => n.camada === c && n.pos === i))).join("")).join("") + "</div>";
     }
     html += `<div class="arvore-grade" ${grade(total)}><div></div>` + a.ramos.map((r) =>
-      `<div class="arvore-col-titulo${r.trancado ? " trancada" : ""}" style="grid-column: span ${largura[r.id]}">${h(r.nome)}<small>${h(r.sub)}</small></div>`).join("");
+      `<div class="arvore-col-titulo${r.trancado ? " trancada" : ""}" style="grid-column: span ${largura[r.id]}">${h(r.nome)}${r.sub ? `<small>${h(r.sub)}</small>` : ""}</div>`).join("");
     const fileiras = camadasDe(dosRamos);
     fileiras.forEach((c, k) => {
       html += nivel(c);
