@@ -621,7 +621,7 @@ async function cenarioCustosEExausto(browser) {
   try {
     const b = await page.waitForSelector('#prompt .escolha:has-text("Estancar o sangue")', { timeout: 20000 });
     const info = await b.evaluate((x) => ({ desab: x.disabled, aria: x.getAttribute("aria-disabled"), texto: x.textContent }));
-    conferir(info.desab && info.aria === "true" && /Indisponível: Você não tem bandagem na bolsa/.test(info.texto),
+    conferir(info.desab && info.aria === "true" && /Você não tem bandagem na bolsa/.test(info.texto),
       "sem bandagem, a ajuda da Odette fica à vista, desabilitada e com o motivo escrito");
     await b.click({ force: true }).catch(() => {});
     await page.keyboard.press("1");

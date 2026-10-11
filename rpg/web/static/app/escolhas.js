@@ -250,7 +250,7 @@ function mostrarOpcoes(m) {
       b.addEventListener("focus", () => Batalha.mirar(o.meta.alvo, true));
       b.addEventListener("blur", () => Batalha.mirar(o.meta.alvo, false));
     }
-    b.innerHTML = `<span class="tecla">${tecla}</span>${icone}<span class="rotulo">${esc(o.texto)}${o.meta && o.meta.nota ? `<small class="op-nota">${esc(o.meta.nota)}</small>` : ""}${indisponivel ? `<small class="op-nota op-motivo">Indisponível: ${esc(indisponivel)}</small>` : ""}</span>${teste}${abre}`;
+    b.innerHTML = `<span class="tecla">${tecla}</span>${icone}<span class="rotulo"><span class="op-texto">${esc(o.texto)}</span>${o.meta && o.meta.nota ? `<small class="op-nota">${esc(o.meta.nota)}</small>` : ""}${indisponivel ? `<small class="op-nota op-motivo">${esc(indisponivel)}</small>` : ""}</span>${teste}${abre}`;
     b.addEventListener("click", (ev) => { ev.stopPropagation(); responder(m.id, i); });
     li.appendChild(b);
     lista.appendChild(li);

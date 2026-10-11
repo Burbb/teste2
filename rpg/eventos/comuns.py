@@ -166,9 +166,8 @@ def viajante_grato(g):
 
 
 def _pode_pagar(g, preco):
-    """A meta de uma compra do mercador: sem ouro bastante, a opção fica à vista, indisponível, com o que falta."""
-    falta = preco - g.j.ouro
-    return {"indisponivel": f"Faltam {falta} de ouro (você tem {g.j.ouro})."} if falta > 0 else None
+    """A meta de uma compra do mercador: sem ouro bastante, a opção fica à vista, indisponível (riscada na tela)."""
+    return {"indisponivel": "Ouro insuficiente"} if g.j.ouro < preco else None
 
 
 def _despedir(g):

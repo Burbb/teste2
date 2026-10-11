@@ -36,7 +36,7 @@ class TestMercador(unittest.TestCase):
         g, ui = mercador(0, ["Recusar"])
         rotulos = ui.ofertas[0]
         self.assertTrue(rotulos[0].startswith("Comprar ("))
-        self.assertIn("indisponível: Faltam", rotulos[0])
+        self.assertIn("indisponível: Ouro insuficiente", rotulos[0])
         self.assertIn("Comprar uma poção de vida", rotulos[2])
         self.assertIn("Você se despede", " ".join(ui.ditos))
 
@@ -46,7 +46,7 @@ class TestMercador(unittest.TestCase):
         self.assertIn("A peça é legítima", texto)
         self.assertRegex(texto, r"por \d+ ouro\.")  # o preço com o desconto
         segunda = ui.ofertas[1]
-        self.assertTrue(segunda[0].startswith("Comprar (") and "indisponível: Faltam" in segunda[0])
+        self.assertTrue(segunda[0].startswith("Comprar (") and "indisponível: Ouro insuficiente" in segunda[0])
         self.assertEqual(segunda[1], "Despedir-se")
         self.assertIn("Você se despede", texto)
         self.assertEqual(g.j.ouro, 0)
@@ -67,7 +67,7 @@ class TestMercador(unittest.TestCase):
     def test_texto_nao_deixa_escolher_a_indisponivel(self):
         g, ui = mercador(0, ["Examinar", "Comprar", "Despedir-se"])
         self.assertEqual(g.j.ouro, 0)
-        self.assertIn("Faltam", " ".join(ui.ditos))  # o motivo, e a pergunta de novo
+        self.assertIn("Ouro insuficiente", " ".join(ui.ditos))  # o motivo, e a pergunta de novo
 
     def test_sorteios_iguais_com_e_sem_ouro(self):
         """Mostrar a compra indisponível não gasta sorteio: o jogo segue igual depois do evento."""
