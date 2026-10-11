@@ -15,7 +15,7 @@ Não bloquear tudo com todas as perguntas de uma vez. Resolver as decisões quan
 | Quantidade | Sem obrigação de 300 habilidades neste ciclo |
 | Protótipo da região (10/10/2026) | Vau do Turvo, Charco dos Juncos, Bosque do Moinho e Capela Afogada, com as ligações propostas; Morro da Forca adiado |
 | Campanha e procedural (10/10/2026) | Campanha como nova forma de começar, no mesmo motor; procedural preservado na transição, sem obrigação de portar conteúdo da campanha |
-| Modo da campanha (10/10/2026) | Resgate como padrão e hardcore como opção explícita, guardados no save. Fome e infecção ainda encerram a partida (ver 12-E1-CAMPANHA, seção 6) |
+| Modo da campanha (10/10/2026) | Resgate como padrão e hardcore como opção explícita, guardados no save. Desde a 1.64.0, fome e infecção também levam ao resgate na campanha (decisão de Jean, 11/10/2026; [17](17-E9-VALIDACAO-DO-VALE.md), seção 14) |
 | Cronologia (10/10/2026, antes da E3 interior) | Primeira Fenda há cerca de 60 anos; Reabertura há cerca de 3 anos. Os textos que ainda dizem "cem anos" (prólogo do mundo gerado, origem do vilão sorteado) e "se abriu"/"abriu" (Odette, Yara) **não foram trocados**: ajuste de texto em tarefa própria, quando Jean pedir |
 | Marta (10/10/2026) | Alguém que ajudou o protagonista no passado, o que cria o vínculo afetivo. Sem parentesco de sangue: nenhuma cena depende dele |
 | Ilse (10/10/2026) | Foi afogada injustamente pela vila e se tornou a guardiã. **Confirmado:** em vida, tinha a custódia do Sigilo; afogada, virou a Bruxa Afogada. Os textos usam "custódia do Sigilo" para separar a função antiga da criatura de agora, e a responsabilidade pelo crime é da vila. Destruir ou Dar descanso (a guardiã) e a postura diante de Caspar (Apoiar, Denunciar, Calar) seguem como decisões separadas |
@@ -51,7 +51,7 @@ As propostas da E1 que aguardam aprovação, separadas pelo momento de decidir (
 | Região inicial e arco geral | E1 | Poucos locais; conflito que termina e aponta para a campanha |
 | Duração/quantidade de capítulos | Depois da avaliação do Vale (E9); **em aberto** (11/10/2026) | Sem duração definitiva. Medir partidas de jogadores novos: tempo total, leitura, combate, exploração, conteúdo opcional, dificuldades de navegação. Dias do jogo, robô e percursos de quem conhece a solução não valem como duração da primeira partida. Não acrescentar conteúdo só para alongar |
 | Como medir a primeira partida | Avaliação do Vale (E9) | **Em aberto:** quem joga, o que se cronometra e como se registra a navegação. Proposta: a ficha da seção 9 do [17](17-E9-VALIDACAO-DO-VALE.md) e, se der, Jean junto olhando |
-| Morte e custo da derrota | E9; hipótese em E1; **urgente** (11/10/2026) | Recuperável na campanha, hardcore opcional. A fome e a infecção ainda matam na campanha e podem prender o save: recomendado levá-las ao resgate, e o resgate do Vau não comer provisões ([17](17-E9-VALIDACAO-DO-VALE.md), seções 4.5 e 4.6) |
+| Morte e custo da derrota | **Decidido por Jean** (11/10/2026), feito na 1.64.0 | Na campanha com resgate, a fome e a infecção levam ao resgate, como a queda em combate; os dois dias alimentam e tratam, sem gastar a bolsa; o custo continua 30% do ouro e dois dias. Hardcore e mundo gerado como eram ([17](17-E9-VALIDACAO-DO-VALE.md), seção 14) |
 | Saves e checkpoints | Novas regras de derrota | Usar persistência existente e informar consequências |
 | Facções e reputação | E4 se necessário | Poucas relações vinculadas ao conflito local |
 | Raças e origens | E8, **adiada** (11/10/2026) | Conjunto pequeno; proposta inicial de duas de cada. Volta depois da avaliação do Vale, por decisão de Jean |
@@ -102,5 +102,19 @@ Data / tema / decisão de Jean / motivo / documentos afetados / etapa dependente
     - [00](00-COMECE-AQUI.md).
   - **Como avaliar:** o Vale fecha o conflito local de forma reconhecível, com as três classes, e a medida com
     jogadores novos diz a duração real.
+
+- **11/10/2026 — prioridades da E9 (1.64.0).**
+  - **Decisões de Jean:**
+    - preservar a dificuldade dos combates: nada de dano, vida dos inimigos, habilidades, preços, recompensas,
+      regeneração ou recursos iniciais nesta entrega;
+    - na campanha com resgate, fome e infecção levam ao resgate; os dois dias alimentam herói e comitiva sem gastar a
+      bolsa e encerram a emergência; o custo do resgate continua;
+    - a nota "Consome 1 provisão por dia." na opção de aceitar um companheiro;
+    - uma cena curta de fim de capítulo no Vau, uma vez, sem abrir Varn nem dar recompensa;
+    - a partida de Jean entra como evidência humana, não como validação de jogadores novos.
+  - **Motivo:** a partida perdida por fome era perda de progresso; o robô sozinho não decide redução de dificuldade.
+  - **Documentos:** [17](17-E9-VALIDACAO-DO-VALE.md) (seções 13 a 16), [12](12-E1-CAMPANHA.md) (seção 6), este, [07](07-ETAPAS.md), [00](00-COMECE-AQUI.md).
+  - **Como avaliar:** Jean e os jogadores novos jogando; o caso do arqueiro sem flechas (17, seção 16) fica para
+    depois da partida de um arqueiro.
 
 Se uma hipótese falhar jogando, registrar revisão. Nunca marcar proposta como implementada ou teste como aprovado sem evidência.

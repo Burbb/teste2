@@ -85,7 +85,7 @@ Três commits posteriores à atualização do roadmap foram consultados. Os comp
 | Direção (11/10/2026) | **Decidido por Jean:** o Vale do Turvo é o primeiro capítulo completo, para validação; depois da primeira entrega da E7 vem a avaliação integrada do Vale (E9 antecipada); a E8 fica adiada; a campanha maior continua como direção, sem obrigação de expandir antes da primeira versão de teste. **Em aberto:** a duração, que vem de partidas de jogadores novos. Detalhes no [01](01-VISAO.md) ("Direção") e no [07](07-ETAPAS.md) ("Ordem atual"). |
 | E7 — equipamento e build | **Primeira entrega implementada na 1.63.0:** o Broquel do Vigia, medido em lutas inteiras ([16](16-E7-ITEM-E-LOOT.md), seção 5). Antes, o saque do Vale foi medido e o baú da campanha passou a dar um suprimento (1.62.6). Falta Jean jogar (cenários `broquel` e `muralha`). Os exemplos para Arqueiro e Mago não foram começados. |
 | E8 — raças e origens | **Adiada explicitamente** (11/10/2026). |
-| E9 — avaliação do Vale | **Começada, não concluída.** Primeira entrega (diagnóstico, sem mudar o jogo) em [17](17-E9-VALIDACAO-DO-VALE.md): o percurso completo fecha nas três classes e nos dois caminhos, salvar e carregar mantém o estado, e nenhum bloqueio de jogo foi reproduzido. **Antes de liberar o capítulo:** a fome e a infecção podem prender o save (decisão de Jean, seção 10 do 17), o capítulo não tem marco de fim, e o custo do companheiro não aparece na escolha. O começo apertado fica para confirmar jogando. Falta Jean jogar (roteiro na seção 8) e os jogadores novos (ficha na seção 9). |
+| E9 — avaliação do Vale | **Em andamento, não concluída.** Diagnóstico em [17](17-E9-VALIDACAO-DO-VALE.md) (seções 1 a 12). **Na 1.64.0** (seções 13 a 16): fome e infecção levam ao resgate na campanha, que alimenta herói e comitiva sem gastar a bolsa e trata a emergência; a nota "Consome 1 provisão por dia." ao aceitar um companheiro; o fim do capítulo no Vau, no rastreador e no Diário; a partida de Jean (mago) registrada como evidência humana. Dificuldade dos combates sem mudança. Faltam os jogadores novos (ficha na seção 9) e Jean jogar a 1.64.0 (roteiro na seção 16). |
 | E10–E11 | Plano de trabalho futuro; infraestrutura existente não equivale a etapas concluídas. A E10 depende da avaliação do Vale. Notas aprovadas para a E3 na seção 19 do [11](11-E1-REGIAO-INICIAL.md). |
 | Bugs ainda abertos | Nenhum bug aberto específico foi informado para registro nesta passagem. Isso não comprova ausência de bugs. |
 | Polimento antes da E3 | Entregue na 1.48.1 (registro abaixo): leitura, item achado, balcão do templo, palco da luta. Falta Jean conferir jogando. |
@@ -1334,3 +1334,36 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
 - **Decisões de Jean:** seção 10 do 17.
 - **Verificado:** testes, gabarito (sem mudança), pyflakes, fumaça; as opções novas da régua rodadas.
 - **Não mudou:** nada no jogo (1.63.0). A E9 **não** está concluída: falta Jean jogar e os jogadores novos.
+
+### 11/10/2026 — Recuperação, custo da comitiva e fim do capítulo (E9, 1.64.0)
+
+- **Pedido de Jean:**
+  - incorporar a partida dele (mago, 1.63.0) à avaliação, separando o registro da impressão;
+  - na campanha com resgate, fome e infecção levam ao resgate; os dois dias alimentam herói e comitiva sem gastar a
+    bolsa e encerram a emergência; o custo do resgate continua;
+  - a nota do custo do companheiro na opção de aceitar;
+  - uma cena curta de fim de capítulo no Vau, uma vez;
+  - preservar a dificuldade: nada de dano, vida, habilidades, preços, recompensas, regeneração ou recursos iniciais.
+- **A partida de Jean** ([17](17-E9-VALIDACAO-DO-VALE.md), seção 13): confirmados no registro o nível 3 no dia 5, as
+  dez lutas (7 vitórias, 2 fugas, 1 derrota), o ossuário com 36/58 de vida e 19/42 de mana, Ilse no nível 3 com 38/58,
+  e 94 de ouro depois do resgate. A vida que restou a Ilse não está no registro.
+- **Como ficou** (seção 14):
+  - `Finais.cair_sem_luta` e `Derrota.causa`: a fome e a infecção viram queda na campanha com resgate; hardcore e
+    mundo gerado como eram;
+  - `Jogo.resgate_campanha`: Marta ou Pita, os dois dias com refeição, fome zerada, infecção tratada, feridas abertas
+    enfaixadas, um quadro de amanhecer só, nenhuma queda durante o tratamento;
+  - o prólogo e a escolha do modo dizem que fome e infecção também levam ao resgate;
+  - `comitiva.oferecer_vaga`: a nota "Consome 1 provisão por dia.";
+  - `rpg/capitulo.py`: a cena "O Vale do Turvo · fim do primeiro capítulo", e a linha "Primeiro capítulo concluído"
+    no rastreador e no Diário; saves já concluídos recebem a cena na próxima visita ao Vau.
+- **Medido** (seção 15): nenhum fim de jogo nos 540 percursos (antes, 303); completos de 140 para 159; mais percursos
+  chegam à capela e ao fundo. Mas dos 303 salvos só 39 completam: o resto gira em quedas de combate até o dia 45 do
+  robô. Morte evitada não é progresso: a economia do começo não foi resolvida por esta entrega.
+- **Caso concreto que continua** (seção 16): o arqueiro sem ouro e sem flechas, lutando de adaga por semanas. Proposta
+  registrada, nada aplicado; esperar a partida de um arqueiro.
+- **Verificado:** `tests/test_recuperacao.py` e `tests/test_capitulo.py` novos; testes antigos de Caspar e Yara
+  ajustados para o fim do capítulo; fumaça com o cenário `resgate` e o fim do capítulo, a 1500 e 1280 px; gabarito
+  mudou só na nota do recrutamento (conferido e atualizado); pyflakes.
+- **Para Jean:** o roteiro curto da seção 16 do 17.
+- **Falta:** os jogadores novos; a E9 continua aberta.
+

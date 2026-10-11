@@ -1,10 +1,14 @@
 # 17 — Avaliação integrada do Vale (E9): diagnóstico e roteiro de validação
 
-Primeira entrega da E9 antecipada (decisão de Jean, 11/10/2026): diagnóstico do Vale do Turvo como primeiro capítulo
-e preparação da validação humana. **Nada do jogo mudou.** Regras, números e recompensas ficam como estão na 1.63.0
-até Jean decidir. As propostas abaixo são propostas.
+Avaliação integrada do Vale do Turvo como primeiro capítulo (a E9 antecipada, decisão de Jean, 11/10/2026).
 
-**A E9 não está concluída.** A validação técnica não substitui Jean jogando nem as partidas de jogadores novos
+- **Primeira entrega (seções 1 a 12):** o diagnóstico e a preparação da validação humana, sobre a 1.63.0, sem mudar o
+  jogo.
+- **Segunda entrega, 1.64.0 (seções 13 a 16):** a partida de Jean como evidência humana, a recuperação no modo
+  Resgate da campanha, o custo dos companheiros na escolha e o encerramento do capítulo. Dano, vida dos inimigos,
+  habilidades, preços, recompensas, regeneração e recursos iniciais não mudaram.
+
+**A E9 não está concluída.** A validação técnica e a partida de Jean não substituem as partidas de jogadores novos
 (seção 9).
 
 ## 1. Resumo
@@ -326,10 +330,10 @@ dizem (ficha, seção 9).
 
 | # | Prioridade | Achado | Evidência | Proposta | Antes de liberar? |
 |---|---|---|---|---|---|
-| 1 | Bloqueio ou perda de progresso | A fome e a infecção matam na campanha; o save automático fica na véspera | Reproduzido (4.5); 162 de 540 percursos | Fome e infecção levam ao resgate na campanha (4.6, 1) | **Sim** |
-| 2 | Bloqueio ou perda de progresso | O resgate come dois dias de provisões, e isso leva a outro resgate | Reproduzido (4.1, 4.5) | O resgate do Vau não come a bolsa (4.6, 2) | **Sim**, junto com o 1 |
-| 3 | Clareza e coerência | O capítulo não termina para quem joga | Reproduzido (3.3) | Cena curta de fim de capítulo no Vau (3.3) | **Sim** |
-| 4 | Clareza e coerência | O custo do companheiro não aparece na escolha | Reproduzido (4.4) | Nota "Come 1 provisão por dia" (4.6, 3) | **Sim** (uma linha) |
+| 1 | Bloqueio ou perda de progresso | A fome e a infecção matam na campanha; o save automático fica na véspera | Reproduzido (4.5); 162 de 540 percursos | Fome e infecção levam ao resgate na campanha (4.6, 1) | **Feito na 1.64.0** (seção 14) |
+| 2 | Bloqueio ou perda de progresso | O resgate come dois dias de provisões, e isso leva a outro resgate | Reproduzido (4.1, 4.5) | O resgate do Vau não come a bolsa (4.6, 2) | **Feito na 1.64.0** |
+| 3 | Clareza e coerência | O capítulo não termina para quem joga | Reproduzido (3.3) | Cena curta de fim de capítulo no Vau (3.3) | **Feito na 1.64.0** |
+| 4 | Clareza e coerência | O custo do companheiro não aparece na escolha | Reproduzido (4.4) | Nota "Consome 1 provisão por dia." | **Feito na 1.64.0** |
 | 5 | Ritmo e equilíbrio | Nos níveis 1 e 2, lutar dá prejuízo, e o herói inteiro perde de 10% a 22% das lutas no Charco | Medido (4.2); persiste nas estratégias (4.3) | Ver com Jean depois de 1 a 4; número só pelo ciclo do COMO_CRIAR | Não: confirmar jogando |
 | 6 | Ritmo e equilíbrio | O Mago fica bem atrás no começo (6 a 9 completos em 40) | Medido (4.1, 4.3) | O mesmo do 5 | Não: confirmar jogando |
 | 7 | Ritmo e equilíbrio | Eventos repetidos: 29% num Vale direto, cerca de 50% para quem explora muito | Medido (5) | Nenhuma agora. Se Jean sentir a repetição, sortear sem repetir enquanto houver outro | Não |
@@ -372,7 +376,10 @@ dizem (ficha, seção 9).
 | `praca` | Depois da resposta a Caspar (`POSTURA=apoiar`, `denunciado`, `denuncia_falhou` ou `calar`; `YARA=grupo`) |
 | `broquel` | O escudo e o ataque, com e sem o Revide |
 | `muralha` | A Muralha com o Contra-ataque, no nível 6 |
-| `covil` com `EVENTO=odete_na_estrada` | Odette na estrada (mundo gerado) |
+| `covil` com `EVENTO=odete_na_estrada` | Odette na estrada (mundo gerado), com a nota do custo ao aceitar |
+| `resgate` | A recuperação (1.64.0): acampar no Charco derruba o herói; `CAUSA=fome` ou `infeccao`, `COMITIVA=0` para ir sozinho |
+
+Na 1.64.0, o cenário `praca` no Vau abre no fim do capítulo: é o que um save já concluído recebe.
 
 Exemplo: `ETAPA=fundo PREPARO=pronto CLASSE=mago NIVEL=4 python -m tests.navegador.cenarios capela`.
 
@@ -448,3 +455,171 @@ python -m tests.saque_vale --economia                             # a conta da l
 As trajetórias, as pausas e os encontros estão em cada percurso que `medir` devolve (chaves `trajeto`, `pausas`,
 `escolhas_fora`, `rotina`, `encontros`, `eventos`). A conta de "sem comida e sem ouro" e o salvar e carregar foram
 feitos com scripts de uma vez, sobre essas chaves.
+
+## 13. A partida de Jean (1.63.0, mago, PARAIBATRON)
+
+Evidência humana da E9, de um jogador experiente que conhece o jogo. **Não é validação de jogador novo nem conclusão
+da etapa.** Fonte: o registro da partida (`.jsonl`) e o relatório (`.md`) que Jean anexou. Semente 179558948, modo
+Resgate, 9 dias, nível 3, partida em andamento.
+
+**O que o registro mostra:**
+- **Nível 3 no dia 5** (o evento "nivel" do dia 5).
+- **Dez lutas: sete vitórias, duas fugas, uma derrota.** As fugas, nos dias 1 e 2, no nível 1: o Espantalho Possuído
+  (elite, emboscada já na saída do Vau, deixou o herói com 12 de 42) e Jormus, o sapo ancião (um alvo com nome).
+  Jormus foi vencido no dia 3, com Morel.
+- **O ossuário vencido começando com 36/58 de vida e 19/42 de mana** (a concussão do dia 6 baixou o máximo de mana). A
+  luta chegou a deixar o herói com 11 de vida; Odette terminou com 1.
+- **Ilse enfrentada no nível 3, antes da especialização (que vem no 4), começando com 38/58 de vida e 39/42 de mana.**
+  Antes, uma poção fora da luta; dentro, um tônico. Quinze turnos, derrota.
+- **Habilidades e recursos usados:** Lança de Gelo (21 vezes), Bola de Fogo (13), Meditar (6), Barreira (5) e o Dardo
+  Arcano; duas fugas; Morel e Odette na comitiva desde o dia 3 (522 de dano dos dois no total; Odette curou o herói em
+  várias lutas).
+- **Depois do resgate, 94 de ouro:** a derrota custou 40 (30% de 134). Havia dinheiro para comprar comida. Mas os
+  dois dias do resgate passaram sem provisões: a fome subiu para 1 e depois 2, a vida máxima caiu de 58 para 46, e
+  Morel e Odette perderam 6 de aprovação por dia, com fome.
+
+**O que o registro não mostra:** a vida que restou a Ilse. Na luta contra ela, o herói causou 141 de dano e a comitiva
+160, somando 301 contra os 265 de vida de Ilse. Mas esse total inclui os afogados que ela invoca (os dois do fim, de 45
+cada, estavam vivos), e o registro não separa o dano por alvo. **"Quase matei Ilse" é a impressão de Jean jogando; o
+registro não confirma nem desmente.**
+
+**O que isso acrescenta ao robô:**
+- uma pessoa experiente avança bem, entrando nas lutas ferida e com poucos recursos: usa fuga, Meditar, Barreira e a
+  comitiva, coisas que o robô usa pouco ou mal;
+- o problema da recuperação aparece também com gente: os dois dias do resgate puseram fome no herói e na comitiva,
+  mesmo com ouro no bolso (seção 4.5). O robô, sozinho, não basta para decidir reduzir a dificuldade, e Jean decidiu
+  não reduzir.
+
+## 14. O que mudou na 1.64.0
+
+**Recuperação no modo Resgate da campanha:**
+- **a fome e a infecção que zerariam a vida levam ao resgate,** como a queda em combate (`Finais.cair_sem_luta`). A
+  noite termina (o quadro do amanhecer mostra o que a fome ou a febre tirou) e então vem o resgate
+  (`Derrota.causa`: "fome" ou "infeccao");
+- **o hardcore e o mundo gerado ficam como eram:** a fome e a infecção encerram a partida; o hardcore apaga o save;
+- **o custo é o de antes:** 30% do ouro e dois dias;
+- **os dois dias encerram a emergência** (`Jogo.resgate_campanha`):
+  - o herói e a comitiva comem na casa de Marta: os dias passam com refeição (como a taverna), sem gastar a bolsa;
+  - a fome zera; a infecção é tratada; as feridas abertas ficam enfaixadas (não infeccionam);
+  - os outros ferimentos seguem as regras de sempre (uma fratura continua sarando pelos dias);
+  - os atributos são recalculados, e a vida fica entre 40% e o máximo;
+  - **nada derruba de novo durante o próprio tratamento** (`resgatando`): uma queda, uma recuperação, uma cobrança;
+- **quem cuida:** Marta, se a água já limpou e ela está de pé; senão, Pita, na casa de Marta
+  (`consequencias.marta_de_pe`, conferido depois dos dois dias);
+- **a apresentação:** o título "Tudo escurece...", a causa numa linha (só para fome e infecção: a de combate já disse
+  diante de quem o herói tombou), um quadro de amanhecer só para os dois dias, e então o despertar: onde, quem cuidou,
+  que a comitiva comeu junto, a infecção limpa (se houver) e o ouro perdido. O tratamento é aplicado antes do texto,
+  para o painel já mostrar o herói tratado quando a narração diz isso;
+- **o prólogo e a escolha do modo** dizem agora "se você cair em combate, de fome ou de infecção". A frase "a fome e
+  uma infecção sem tratamento ainda encerram a partida" saiu;
+- **nenhuma provisão extra nem benefício econômico novo.**
+
+**O custo dos companheiros:** a opção "Aceitar X na comitiva" traz a nota "Consome 1 provisão por dia.", no padrão
+das notas (na tela, embaixo da opção; no texto, junto do rótulo). Sem janela de confirmação nem explicação depois.
+Com a comitiva cheia, a troca não leva a nota: quem chega come no lugar de quem vai para o acampamento, e o gasto não
+muda. A nota vale também no mundo gerado (o gabarito mudou só nessa linha, nas ofertas da Yara e do Morel).
+
+**O encerramento do capítulo** (`rpg/capitulo.py`):
+- depois de concluir "A Febre do Turvo" e responder a Caspar, uma cena no Vau, uma vez, na próxima tela de lá (nunca
+  no meio de luta, serviço ou evento). Título "O Vale do Turvo", subtítulo "fim do primeiro capítulo";
+- quatro frases do estado de agora: a Fonte e Marta (sem antecipar: com a água escura ou limpando, Marta continua de
+  cama), Ilse, Caspar e Yara. Não repetem a frase da vila que aparece logo depois;
+- o aviso discreto: "Este é o fim do capítulo disponível. Você pode continuar explorando o Vale.";
+- se a herança de Vó Berta ainda espera, a cena lembra, e a ação continua na taverna;
+- **na interface:** o rastreador mostra "Capítulo · O Vale do Turvo · Primeiro capítulo concluído", no lugar da
+  missão; o Diário abre com a mesma linha;
+- não abre a Estrada de Varn, não cria missão nova, não dá recompensa;
+- **um save que já tinha tudo resolvido** recebe a cena na próxima visita ao Vau, sem repetir a volta ao Vau nem a
+  praça.
+
+**Verificado:**
+- `tests/test_recuperacao.py` (20 testes): queda em combate, fome, infecção, as duas juntas, a comitiva comendo,
+  sem comida, sem ouro e sem nada para vender (vinte noites seguidas: cada queda uma recuperação, nenhum fim de jogo),
+  a guarda contra queda durante o tratamento, o hardcore e o mundo gerado, salvar e carregar depois da recuperação, um
+  quadro de amanhecer só, o texto uma vez, Marta ou Pita, o prólogo e a nota;
+- `tests/test_capitulo.py` (12 testes): uma vez, logo depois da praça, nem antes nem fora do Vau nem numa luta, os
+  desfechos, a Fonte no estado de agora, nada repetido da frase da vila, a herança, o rastreador e o Diário, o save já
+  concluído;
+- os testes antigos de Caspar e da Yara que esperavam "nenhuma cena" depois da praça agora esperam o fim do capítulo;
+- a fumaça com o cenário novo `resgate` e o fim do capítulo no cenário de Caspar, a 1500 e 1280 px;
+- gabarito: só a nota do recrutamento mudou (conferido com as transcrições lado a lado), atualizado.
+
+## 15. O começo antes e depois (as mesmas políticas)
+
+Mesmas sementes, mesmo robô e mesmas estratégias da seção 4. "Antes" é a 1.63.0; "depois", a 1.64.0. O robô para no
+dia 45: no jogo, esse limite não existe.
+
+**Ritmo: "direto", "explorador" e "nível 6", 30 sementes, os dois caminhos (540 percursos):**
+
+| Classe | | Completos | Fim de jogo | Parou no dia 45 | Chegou à capela | Chegou ao fundo | Nível no fim | Quedas | Dias com fome | Resgates por fome ou infecção |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Guerreiro | antes | 70 | 88 | 22 | 158 | 88 | 3,4 | 1,6 | 2,1 | — |
+| Guerreiro | depois | 89 | 0 | 91 | 170 | 120 | 4,3 | 3,1 | 3,3 | 0,40 |
+| Arqueiro | antes | 54 | 90 | 36 | 160 | 74 | 3,4 | 1,5 | 2,3 | — |
+| Arqueiro | depois | 47 | 0 | 133 | 168 | 82 | 3,9 | 3,0 | 4,4 | 0,67 |
+| Mago | antes | 16 | 125 | 39 | 144 | 36 | 2,7 | 2,9 | 3,2 | — |
+| Mago | depois | 23 | 0 | 157 | 158 | 52 | 3,8 | 5,4 | 4,0 | 0,41 |
+| Todas | antes | 140 | 303 | 97 | 462 | 198 | 3,2 | 2,0 | 2,5 | — |
+| Todas | depois | 159 | 0 | 381 | 496 | 254 | 4,0 | 3,9 | 3,9 | 0,49 |
+
+**Estratégias do começo ("direto", "descansada", 40 sementes; completos de 40):**
+
+| Estratégia | Guerreiro antes → depois | Arqueiro | Mago |
+|---|---|---|---|
+| atual | 19 → 27 | 17 → 17 | 6 → 14 |
+| comida do grupo | 21 → 30 | 13 → 18 | 7 → 16 |
+| cuidadoso | 15 → 15 | 16 → 13 | 9 → 11 |
+
+**Morte evitada não é progresso.** Dos 303 percursos que antes morriam de fome ou infecção, com a mesma semente:
+- **39 completaram** o capítulo;
+- **264 pararam no dia 45 do robô,** a maioria na capela (155) ou ainda no canal (38), nos níveis 2 e 3, com 5,9
+  quedas em média;
+- 134 passaram da etapa em que morriam, e 240 subiram de nível além do que tinham.
+
+A recuperação tirou a perda da partida inteira e mais gente chega à capela e ao fundo. Mas a maior parte dos percursos
+salvos gira em quedas: a média de quedas dobrou (2,0 → 3,9), e quase todas são de combate (só 0,49 por percurso vêm de
+fome ou infecção). **A economia do começo não foi resolvida por esta entrega,** e não era o objetivo.
+
+## 16. O que continua e o que falta
+
+**Um caso concreto de bloqueio econômico, com o robô: o arqueiro sem ouro e sem flechas.**
+- O percurso (arqueiro, semente 10, "direto", "descansada"): começa com 20 flechas e 10 de ouro depois das compras;
+  cai já na primeira noite, acampado no Charco; no dia 12 está com 2 flechas e 0 de ouro; **a partir do dia 19, sem
+  flechas e sem ouro,** luta de adaga ("Golpe de Adaga — sem flechas!") no Charco por mais de 25 dias, caindo de
+  tempos em tempos, com 0 ou 1 de ouro. O nível 2 vem no dia 21; no dia 45 ainda não entrou na capela.
+- Não é a fome: os resgates o alimentam. É o círculo flecha → luta → ouro: sem flecha, a luta rende pouco e derruba;
+  sem ouro, não há flecha (1,4 de ouro cada).
+- Entre os 540 percursos depois, 66 tiveram dois ou mais resgates por fome ou infecção; nenhum completou. Metade deles
+  é de arqueiros (34), e 34 dos 66 não ganharam nível depois do dia 20; o ouro médio nos últimos dez dias foi 3,3.
+- **Não sei se uma pessoa cai nisso.** Uma pessoa guarda flechas, foge antes e não caça o alvo com nome no nível 1. O
+  robô faz o contrário.
+- **A menor solução, se Jean jogando confirmar** (nada aplicado; não mexe em preço nem em renda das lutas): o resgate
+  devolver ao arqueiro um punhado de flechas recolhidas do lugar da queda, ou o mercado do Vau aceitar trocar flechas
+  por um item da bolsa. Recomendo esperar a partida de um arqueiro antes de decidir.
+
+**Os outros que giram:** guerreiros e magos que param no dia 45 caem sobretudo em combate, na capela, onde o robô
+insiste nas salas no nível 3. É a dificuldade das lutas, que Jean decidiu preservar, somada à política do robô (seção
+4.4). Não há, nesses, uma situação sem saída: sempre há luta possível, ouro de contrato e o Charco no nível 1.
+
+**Riscos que ficam:**
+- a recuperação deixa o herói em 40% da vida, com fome zerada e sem comida na bolsa. Quem não tem ouro precisa ganhar
+  ao menos 4 antes da terceira noite de fome. O jogo agora não acaba, mas pode girar devagar;
+- o capítulo termina sem marco para quem não responde a Caspar ("Ainda não"): a cena espera a resposta. É coerente
+  (o conflito local não acabou), mas vale ver se alguém fica na dúvida;
+- a ordem do resgate mostra o quadro do amanhecer antes do texto do despertar. Na tela gráfica, ficou claro; no modo
+  texto, a linha "Amanhece o dia N" vem antes de "Dois dias se passaram".
+
+**Falta:**
+- Jean jogar a 1.64.0 (roteiro curto abaixo);
+- os jogadores novos, com a ficha da seção 9;
+- decidir, depois disso, os números do começo (seção 6, achados 5, 6 e 9) e o caso do arqueiro.
+
+**Roteiro curto para Jean (1.64.0):**
+1. `python -m tests.navegador.cenarios resgate` e acampar: a fome derruba, o resgate alimenta e trata. Repetir com
+   `CAUSA=infeccao`. Conferir se o texto e o painel contam a mesma coisa, sem repetir.
+2. `python -m tests.navegador.cenarios covil` com `EVENTO=odete_na_estrada`: a nota "Consome 1 provisão por dia." ao
+   aceitar.
+3. `python -m tests.navegador.cenarios praca` (com `POSTURA` e `YARA` à escolha): o fim do capítulo, o rastreador e o
+   Diário.
+4. Uma partida nova até o fim do capítulo, de preferência com o Arqueiro, anotando como na seção 8.1.
+
