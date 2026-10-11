@@ -4,7 +4,7 @@
     python -m tests.navegador.cenarios titulo    # menu principal com um save de dia para carregar
     python -m tests.navegador.cenarios vila      # guerreiro acha um item raro e abre o mural de contratos
     python -m tests.navegador.cenarios campanha  # menu principal com saves dos dois modos; começar a campanha
-    python -m tests.navegador.cenarios baus      # vila com três baús na bolsa: a pilha abre inteira
+    python -m tests.navegador.cenarios baus      # vila com três baús na bolsa (BAUS): a pilha abre inteira
     python -m tests.navegador.cenarios missao    # campanha no Bosque do Moinho, na etapa de seguir o canal
     python -m tests.navegador.cenarios recarga   # título com um save da campanha (Bosque, à noite) e um do mundo gerado
     python -m tests.navegador.cenarios capela    # herói na Capela Afogada (CLASSE, ESPEC, ETAPA, NIVEL, PREPARO, LUGAR, SEMENTE, PRISAO)
@@ -134,8 +134,9 @@ def campanha(ui):
 
 
 def baus(ui):
-    """Guerreiro numa vila com três baús na bolsa, numa semente em que saem ao menos dois equipamentos (conferida antes
-    com o mesmo estado: o menu da vila sorteia a frase de ambiente e então a pilha abre)."""
+    """Guerreiro numa vila com três baús na bolsa (BAUS=n para outra quantidade), numa semente em que saem ao menos dois
+    equipamentos (conferida antes com o mesmo estado: o menu da vila sorteia a frase de ambiente e então a pilha abre;
+    com menos de três baús, a semente 1)."""
     from rpg.regras import AMBIENTE_VILA
     from rpg.ui import BotUI, InterfaceGrafica
 
@@ -145,7 +146,7 @@ def baus(ui):
         g.mundo["atual"] = next(l for l in g.mundo["locais"] if l["tipo"] == "vila")["id"]
         g.periodo, g.clima = 1, "limpo"
         g.j.nivel = 4
-        g.j.consumiveis["bau"] = 3
+        g.j.consumiveis["bau"] = baus
         return g
 
     class Conta(InterfaceGrafica, BotUI):
@@ -157,7 +158,8 @@ def baus(ui):
 
         def escolher(self, pergunta, opcoes):
             return next(i for i, o in enumerate(opcoes) if o.startswith(("Guardar", "Deixar")))
-    for seed in range(1, 300):
+    baus = int(os.environ.get("BAUS", "3"))
+    for seed in range(1, 300 if baus >= 3 else 2):
         Conta.achados = 0
         t = montar(Conta(random.Random(1)), seed)
         t.sortear(AMBIENTE_VILA)

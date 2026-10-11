@@ -375,8 +375,13 @@ const Sensacao = (() => {
     // dele, para comparar e decidir).
     const equips = (d.equipamentos || []).map((it) => `<span class="achado-espolio equip-espolio rar-${esc(it.raridade)}">${S(it.icone, 2)}${esc(it.nome)}</span>`);
     const extras = achados.length || contratos || equips.length;
+    // Vários baús abertos juntos: a pilha (um ícone por baú, até cinco, caindo um depois do outro) e o ×N grande ao
+    // lado, para ver de relance quantos foram. N é o que o motor abriu (saiu da bolsa).
+    const pilha = d.baus > 1 ? `<div class="espolio-baus" style="--n:${Math.min(d.baus, 5)}">
+      <span class="eb-pilha">${Array.from({ length: Math.min(d.baus, 5) }, (_, i) => `<span style="--i:${i}">${S(Telas.iconeConsumivel("bau", "bau"), 3)}</span>`).join("")}</span>
+      <b class="eb-qtd">×${d.baus}</b></div>` : "";
     caixa.innerHTML = `<div class="festa festa-espolio">
-      <div class="rotulo-festa">${esc(d.titulo || "espólio")}</div>
+      <div class="rotulo-festa">${esc(d.titulo || "espólio")}</div>${pilha}
       ${d.frase ? `<p class="espolio-frase">${esc(d.frase)}</p>` : ""}
       ${d.ouro ? `<div class="espolio-linha ouro">${S("moeda", 2)}<span class="nome">Ouro</span><b>+<span class="conta">0</span></b></div>` : ""}
       ${d.xp ? `<div class="espolio-xp${d.ouro ? " esperando" : ""}">

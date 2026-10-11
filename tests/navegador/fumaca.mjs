@@ -1138,6 +1138,7 @@ async function cenarioBaus(browser) {
   console.log("cenário: baús abertos juntos");
   const { proc, url } = await subir("baus");
   const { page, erros, esperar } = await abrir(browser, url);
+  const baus = () => page.evaluate(() => (App.estado.heroi.bolsa.find((b) => b.id === "bau") || { qtd: 0 }).qtd);
   await page.evaluate(() => {  // quantos quadros de espólio aparecem, e a moldura de cada item achado, quadro a quadro
     window.__festas = 0; window.__janelas = {};
     new MutationObserver((ms) => ms.forEach((m) => m.addedNodes.forEach((n) => { if (n.nodeType === 1 && (n.matches(".festa-espolio") || n.querySelector(".festa-espolio"))) window.__festas++; })))
@@ -1153,11 +1154,14 @@ async function cenarioBaus(browser) {
   try {
     const pilha = await esperar('#heroi [data-bolsa="bau"]');
     await page.waitForTimeout(600);
+    const naBolsa = await baus();
     await pilha.click(); await pilha.click().catch(() => {});  // dois cliques rápidos na pilha
     const continuar = await esperar(".festa-espolio .continuar", 20000);
-    const resumo = await page.evaluate(() => ({ rotulo: document.querySelector(".festa-espolio .rotulo-festa").textContent,
+    const resumo = await page.evaluate(() => ({ qtd: document.querySelector(".festa-espolio .eb-qtd")?.textContent,
+      icones: document.querySelectorAll(".festa-espolio .eb-pilha > span").length,
       equips: [...document.querySelectorAll(".festa-espolio .equip-espolio")].map((x) => x.textContent) }));
-    conferir(!!continuar && resumo.rotulo === "Baús ×3", `a pilha abre num quadro só: ${resumo.rotulo}`);
+    conferir(!!continuar && naBolsa === 3 && resumo.qtd === `×${naBolsa}` && resumo.icones === naBolsa,
+      `a pilha abre num quadro só, com a pilha e o ×N dos baús que saíram (${resumo.qtd}, ${resumo.icones} ícones, ${naBolsa} na bolsa)`);
     conferir(resumo.equips.length >= 2, `o resumo lista os equipamentos (${resumo.equips.join(", ")})`);
     await page.waitForTimeout(1000);  // depois da guarda do espólio
     for (let t = 0; t < 20 && (await page.$(".festa-espolio .continuar")); t++) { await page.click(".festa-espolio .continuar").catch(() => {}); await page.waitForTimeout(300); }

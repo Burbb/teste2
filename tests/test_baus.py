@@ -89,7 +89,7 @@ class TestBaus(unittest.TestCase):
         self.assertEqual(resultado(g), resultado(um_por_um(RoboGrafico(), 1)))
 
     def test_um_quadro_so_e_os_equipamentos_depois(self):
-        """Vários baús: um quadro "Baús ×N" com o ouro e os suprimentos somados e a lista dos equipamentos; depois,
+        """Vários baús: um quadro (a pilha e o ×N) com o ouro e os suprimentos somados e a lista dos equipamentos; depois,
         uma janela de item por equipamento, na mesma ordem."""
         for seed in range(11, 31):
             ui = RoboGrafico()
@@ -98,7 +98,7 @@ class TestBaus(unittest.TestCase):
             espolios = [d for t, d in ui.festas if t == "espolio"]
             self.assertEqual(len(espolios), 1)
             d = espolios[0]
-            self.assertEqual((d["titulo"], d["baus"]), ("Baús ×5", 5))
+            self.assertEqual((d["titulo"], d["baus"]), ("baús abertos", 5))
             baus = [e for e in g.registro if e["t"] == "bau"]
             self.assertEqual(d["ouro"], sum(e["ouro_bau"] for e in baus))
             suprimentos = {}

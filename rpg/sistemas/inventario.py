@@ -179,7 +179,7 @@ class Inventario:
     def abrir_baus(self, n):
         """Os baús da pilha, todos de uma vez (n: quantos havia nela quando a pessoa clicou; já saíram da bolsa). Um só
         é o baú de sempre. Vários: cada um com o próprio sorteio, o mesmo de um baú aberto sozinho, na mesma ordem; na
-        tela gráfica, um quadro só ("Baús ×N") com o ouro e os suprimentos somados e os equipamentos listados, e depois
+        tela gráfica, um quadro só (a pilha de baús com o ×N) com o ouro e os suprimentos somados e os equipamentos listados, e depois
         a janela de cada equipamento, um por um, com as regras de sempre (comparar, equipar, guardar, deixar)."""
         if n <= 1:
             self.abrir_bau()
@@ -189,7 +189,7 @@ class Inventario:
                  f"Num canto sossegado, você força as {n} fechaduras, uma por uma. As tampas rangem e cedem.")
         if not self.ui.conquistas_na_tela:
             self.dizer(frase, "amarelo")
-        self.abrir_espolio(titulo=f"Baús ×{n}", frase=frase)
+        self.abrir_espolio(titulo="baús abertos", frase=frase)  # a tela mostra a pilha e o ×N (dados["baus"])
         if self.espolio_aberto is not None:
             self.espolio_aberto["baus"] = n  # o quadro lista os equipamentos (Recompensas.fechar_espolio)
         for _ in range(n):
