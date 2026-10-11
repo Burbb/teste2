@@ -1159,3 +1159,24 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
     herança, e todas concluídas. Cada um também depois de salvar e carregar;
   - o modo texto, nos testes.
 
+### 11/10/2026 — Odette: perguntar o nome volta às ações (1.62.5)
+
+- **Pedido de Jean:** "Perguntar quem ela é" revela o nome e devolve as ações, para ainda dar para ajudar. A
+  resposta dela precisa servir para um homem que ainda pode ser salvo.
+- **Como ficou:**
+  - Odette responde sem tirar as mãos da ferida: "Odette. Irmã Odette." e "O resto, depois. Ele ainda respira.";
+  - as ações voltam sem a pergunta, então a apresentação não se repete;
+  - perguntar não muda tempo, item, sorteio, reputação, aprovação nem o encontro;
+  - bandagem, oração, revistar e seguir têm os mesmos custos, testes e efeitos, e a fala da oferta segue a ação final
+    e o resultado;
+  - só perguntar já não leva à oferta;
+  - o narrador só usa o nome depois que ela o diz ("A mulher se levanta" ao revistar sem perguntar).
+- **Verificado:**
+  - testes de perguntar e depois bandagem, oração (os dois resultados), seguir e revistar;
+  - o estado intacto depois da pergunta, e o mesmo sorteio e o mesmo resultado perguntando antes ou não;
+  - a pergunta não reaparece;
+  - o modo texto;
+  - no navegador, a 1500 e 1280 px. A fumaça confere a volta das ações.
+- **Gabarito:** uma partida mudou (guerreiro, semente 42, modo texto). O robô revista o moribundo sem perguntar, e o
+  narrador diz "A mulher se levanta" em vez de "Odette se levanta". Nada mais mudou.
+

@@ -627,6 +627,12 @@ async function cenarioCustosEExausto(browser) {
     await page.keyboard.press("1");
     await page.waitForTimeout(600);
     conferir(!!(await page.$(`${MENU}:has-text("Estancar o sangue")`)), "nem clique nem a tecla escolhem a indisponível");
+    await page.click(`${MENU}:has-text("Perguntar quem ela é")`);
+    await page.waitForFunction(() => /Ele ainda respira/.test(document.querySelector("#texto").textContent), null, { timeout: 10000 });
+    await page.waitForSelector(`${MENU}:has-text("Segurar a ferida")`, { timeout: 10000 });
+    const rotulos = await page.$$eval(MENU, (bs) => bs.map((x) => x.textContent));
+    conferir(rotulos.length === 4 && !rotulos.some((r) => /Perguntar/.test(r)) && rotulos.some((r) => /Estancar/.test(r)),
+      "perguntar o nome devolve as ações, sem a pergunta, e a ajuda continua possível");
   } finally {
     conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
     await page.close();

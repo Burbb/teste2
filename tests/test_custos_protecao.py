@@ -9,6 +9,7 @@ import random
 import tempfile
 import unittest
 
+from rpg import comitiva as cm
 from rpg.combate import Combate
 from rpg.combate.luta import ORIGEM_PROTECAO
 from rpg.eventos import classe as ev_classe, comitiva as ev_comitiva, comuns as ev_comuns, vila as ev_vila
@@ -74,11 +75,97 @@ class TestCustoDosItens(unittest.TestCase):
 
     def test_os_outros_caminhos_da_odette_continuam(self):
         for bandagens in (0, 2):
-            ui = Anotador(["Perguntar quem ela é", "Recusar", "Não"])
+            ui = Anotador(["Perguntar quem ela é", "Seguir seu caminho"])
             g = jogo(ui, bandagem=bandagens)
             ev_comitiva.odete_na_estrada(g)
             self.assertIn("Irmã Odette", " ".join(ui.ditos))
             self.assertEqual(g.j.consumiveis["bandagem"], bandagens)
+
+
+class TestPerguntarAOdette(unittest.TestCase):
+    """Perguntar o nome não resolve o encontro: ela responde e as ações voltam, sem a pergunta."""
+
+    def rodar(self, roteiro, **bolsa):
+        ui = Anotador(roteiro)
+        g = jogo(ui, **bolsa)
+        g.comitiva.clear()
+        ev_comitiva.odete_na_estrada(g)
+        return ui, g
+
+    def estado(self, g):
+        return (g.rng.getstate(), g.dia, g.periodo, g.j.reputacao, g.j.ouro, dict(g.j.consumiveis))
+
+    def test_perguntar_nao_muda_nada(self):
+        class Para(Exception):
+            pass
+
+        class AteOSegundoMenu(Anotador):  # pergunta e para quando as ações voltam, para conferir o estado ali
+            def escolher(self, pergunta, opcoes):
+                if self.ofertas:
+                    self.ofertas.append(list(opcoes))
+                    raise Para
+                return super().escolher(pergunta, opcoes)
+        ui = AteOSegundoMenu(["Perguntar quem ela é"])
+        g = jogo(ui, bandagem=1)
+        antes = self.estado(g)
+        with self.assertRaises(Para):
+            ev_comitiva.odete_na_estrada(g)
+        self.assertEqual(self.estado(g), antes)  # nem sorteio, nem tempo, nem reputação, nem ouro, nem item
+        self.assertIsNone(g.flag("comitiva:odete"))  # o encontro segue aberto
+        self.assertEqual(len(ui.ofertas[1]), 4)
+
+    def test_perguntar_depois_bandagem(self):
+        ui, g = self.rodar(["Perguntar quem ela é", "Estancar o sangue", "Aceitar"], bandagem=2)
+        self.assertEqual(len(ui.ofertas[0]), 5)
+        self.assertEqual(len(ui.ofertas[1]), 4)  # a pergunta sai; o resto fica
+        self.assertFalse(any("Perguntar" in o for o in ui.ofertas[1]))
+        self.assertTrue(any("Estancar" in o for o in ui.ofertas[1]))
+        texto = " ".join(ui.ditos)
+        self.assertEqual(texto.count("Irmã Odette"), 1)  # a apresentação, uma vez
+        self.assertIn("Ele ainda respira", texto)
+        self.assertNotIn("Não dá mais para salvar", texto)
+        self.assertIn("Você vai para onde está a dor", texto)  # a oferta acompanha a ajuda
+        self.assertEqual(g.j.consumiveis["bandagem"], 1)
+        self.assertEqual(g.j.reputacao, 2)
+        self.assertEqual(cm.membro(g, "odete")["aprovacao"], 12)
+
+    def test_perguntar_nao_muda_a_ajuda(self):
+        # o mesmo sorteio e o mesmo resultado, perguntando antes ou não
+        for roteiro in (["Segurar a ferida", "Aceitar"], ["Estancar o sangue", "Aceitar"]):
+            pela_direta = self.rodar(roteiro, bandagem=1)[1]
+            perguntando = self.rodar(["Perguntar quem ela é"] + roteiro, bandagem=1)[1]
+            self.assertEqual(self.estado(perguntando), self.estado(pela_direta))
+            self.assertEqual(cm.membro(perguntando, "odete")["aprovacao"],
+                             cm.membro(pela_direta, "odete")["aprovacao"])
+
+    def test_perguntar_depois_oracao(self):
+        for seed in range(1, 40):
+            ui = Anotador(["Perguntar quem ela é", "Segurar a ferida", "Aceitar"])
+            g = Jogo(ui, seed=seed, pasta_saves=tempfile.mkdtemp())
+            g.iniciar("Teste", "guerreiro")
+            g.comitiva.clear()
+            ev_comitiva.odete_na_estrada(g)
+            texto = " ".join(ui.ditos)
+            m = cm.membro(g, "odete")
+            if "Fraco, mas respira" in texto:
+                self.assertIn("Você vai para onde está a dor", texto)
+                self.assertEqual((g.j.reputacao, m["aprovacao"]), (2, 10))
+            else:
+                self.assertIn("Você ficou até o fim", texto)
+                self.assertEqual((g.j.reputacao, m["aprovacao"]), (0, 5))
+
+    def test_perguntar_depois_seguir_ou_revistar(self):
+        ui, g = self.rodar(["Perguntar quem ela é", "Seguir seu caminho"])
+        self.assertIn("Você segue. Atrás de você, Odette começa a rezar.", ui.ditos)
+        self.assertEqual(g.flag("comitiva:odete"), "recusou")
+        self.assertEqual(g.j.reputacao, 0)
+        ui, g = self.rodar(["Seguir seu caminho"])
+        self.assertIn("Você segue. Atrás de você, uma voz de mulher começa a rezar.", ui.ditos)  # sem o nome, ninguém o sabe
+        ui, g = self.rodar(["Revistar o moribundo"])
+        self.assertTrue(any("A mulher se levanta" in d for d in ui.ditos))
+        ui, g = self.rodar(["Perguntar quem ela é", "Revistar o moribundo"])
+        self.assertTrue(any("Odette se levanta" in d for d in ui.ditos))
+        self.assertEqual(g.flag("comitiva:odete"), "recusou")
 
     def test_remedios_na_porta(self):
         ui = Anotador(["Deixar remédios"])

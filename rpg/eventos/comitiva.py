@@ -18,15 +18,25 @@ def odete_na_estrada(g):
     g.dizer("À beira da estrada, uma mulher de hábito chamuscado está ajoelhada ao lado de um homem com a barriga "
             "aberta. Ela aperta a ferida com as próprias mãos. Não tem bandagens. Não tem mais nada.")
     g.dizer("\"Segure aqui\", ela diz, sem olhar para você, como se você sempre tivesse estado ali.", "amarelo")
-    op = g.menu("O que faz?", [
-        ("Estancar o sangue com uma bandagem", "bandagem", g.custo_item("bandagem")),
-        ("Segurar a ferida enquanto ela reza (Vontade)", "segurar"),
-        ("Perguntar quem ela é", "perguntar"),
-        ("Revistar o moribundo enquanto ela está distraída", "roubar"),
-        ("Seguir seu caminho", "nao"),
-    ])
+    # Perguntar o nome não resolve nada: ela responde e o homem continua ali. A pergunta sai do menu (sem repetir a
+    # apresentação), e nada mais muda: nem tempo, nem item, nem reputação, nem sorteio.
+    perguntou = False
+    while True:
+        op = g.menu("O que faz?", [
+            ("Estancar o sangue com uma bandagem", "bandagem", g.custo_item("bandagem")),
+            ("Segurar a ferida enquanto ela reza (Vontade)", "segurar"),
+            None if perguntou else ("Perguntar quem ela é", "perguntar"),
+            ("Revistar o moribundo enquanto ela está distraída", "roubar"),
+            ("Seguir seu caminho", "nao"),
+        ])
+        if op != "perguntar":
+            break
+        perguntou = True
+        g.dizer("\"Odette. Irmã Odette.\" Ela não tira as mãos da ferida nem os olhos do homem. \"O resto, depois. "
+                "Ele ainda respira.\"", "amarelo")
+    ela = "Odette" if perguntou else "A mulher"  # o narrador usa o nome só depois que ela o diz
     simpatia = 0
-    # O que ela diz ao recrutar acompanha o que você fez ali (ajudou, ficou até o fim, só perguntou o nome).
+    # O que ela diz ao recrutar acompanha o que você fez ali (ajudou, ou ficou até o fim sem conseguir).
     fala = "\"Você vai para onde está a dor. Dá para ver. Eu também.\""
     if op == "bandagem":
         g.j.consumiveis["bandagem"] -= 1
@@ -45,22 +55,16 @@ def odete_na_estrada(g):
                     "e fica um tempo ali, parada.", "cinza")
             fala = "\"Você ficou até o fim. Pouca gente fica.\""
             simpatia = 5
-    elif op == "perguntar":
-        g.dizer("\"Odette. Irmã Odette.\" Ela não tira as mãos da ferida. \"Não dá mais para salvar este. Dá para não "
-                "deixar que morra sozinho.\" O homem respira mais devagar, depois para. Ela fecha os olhos dele com "
-                "dois dedos.", "cinza")
-        fala = "\"Você parou para perguntar. A maioria nem para.\""
-        simpatia = 0
     elif op == "roubar":
-        g.dizer("Você encontra três moedas e um dente de ouro. Odette se levanta, com sangue até os cotovelos, e te "
-                "encara até você ir embora.", "vermelho")
+        g.dizer(f"Você encontra três moedas e um dente de ouro. {ela} se levanta, com sangue até "
+                "os cotovelos, e te encara até você ir embora.", "vermelho")
         g.ganhar_ouro(4)
         g.mudar_reputacao(-3)
         cm.reagir(g, "crueldade", "ganancia")
         g.marcar("comitiva:odete", "recusou")
         return
     else:
-        g.dizer("Você segue. Atrás de você, uma voz de mulher começa a rezar.", "cinza")
+        g.dizer(f"Você segue. Atrás de você, {'Odette' if perguntou else 'uma voz de mulher'} começa a rezar.", "cinza")
         g.marcar("comitiva:odete", "recusou")
         return
     cm.reagir(g, "misericordia")

@@ -252,7 +252,7 @@ trecho, motivo e sugestão. Uma entrega à parte decide quais aplicar.
 **Continuidade e "brejo" (1.62.4):**
 - *Feito:*
   - Odette fala conforme o que o herói fez: ajudou, ficou até o fim sem conseguir, ou só perguntou o nome. A morte
-    do homem fica dita com clareza.
+    do homem fica dita com clareza. (Na 1.62.5, perguntar passou a voltar ao menu; veja o fluxo abaixo.)
   - Na fogueira de Yara, na campanha, Caspar é chamado pelo nome do começo ao fim, e não mais de "o pregador" nas
     falas seguintes.
   - O narrador e o Diário deixaram de usar "a moça do brejo" como apelido e "na beira do brejo" para um lugar que não
@@ -265,15 +265,19 @@ trecho, motivo e sugestão. Uma entrega à parte decide quais aplicar.
 - *Escolha de estilo, registrada:* depois da luta com os Cães de Ferro (`teodoro_ruivo`), a cena não diz se Theodore
   morreu, e "Não fica claro se fala da luta ou da ponte" comenta a cena em vez de mostrá-la.
 
-**Fluxo (registrado na 1.62.4, sem mudar):**
+**Fluxo (registrado na 1.62.4, corrigido na 1.62.5):**
 - **Odette na estrada.** `rpg/eventos/comitiva.py`, `odete_na_estrada`.
-  - O que acontece: "Perguntar quem ela é" está no mesmo menu das formas de ajudar. Escolhida, a cena termina: o
-    homem morre, e não há como ajudar depois de saber o nome dela.
-  - Por que importa: perguntar parece uma conversa, e não uma escolha que fecha as outras. Quem pergunta por cortesia
-    perde a ajuda sem saber.
-  - Sugestão: perguntar vira uma resposta que volta ao menu (ela diz o nome e repete "Segure aqui"), sem gastar
-    nada.
-  - Fica para uma entrega que possa mexer no encontro.
+  - Era: "Perguntar quem ela é" estava no mesmo menu das formas de ajudar. Escolhida, a cena terminava: o homem
+    morria, e não havia como ajudar depois de saber o nome dela.
+  - Agora:
+    - ela diz o nome sem tirar as mãos da ferida ("O resto, depois. Ele ainda respira.") e as ações voltam, sem a
+      pergunta;
+    - perguntar não gasta tempo, item nem sorteio, e não muda reputação, aprovação nem o encontro. Não dá para
+      repetir;
+    - ajudar, revistar e seguir têm os mesmos custos, testes e efeitos. A fala da oferta acompanha a ação final e o
+      resultado. Só perguntar já não leva à oferta: a oferta vem de ajudar;
+    - o narrador só chama a mulher de Odette depois que ela diz o nome ("A mulher se levanta" ao revistar sem
+      perguntar; "Odette começa a rezar" ao seguir depois de perguntar).
 
 **Escolhas de estilo:**
 14. **Recuo nas salas.** `rpg/missoes.py:406`, "Dá para voltar quando quiser.". É meta-texto, e a ação continua no
