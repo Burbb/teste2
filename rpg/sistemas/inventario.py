@@ -139,6 +139,24 @@ class Inventario:
             return "Aqui não: forçar a fechadura leva tempo e faz barulho. Abra numa vila ou à luz da fogueira."
         return None
 
+    def o_que_trata(self, k):
+        """O que o item trata agora no herói ("Trata: queimadura grave"), para a bolsa chamar a atenção dele; ou, na
+        bandagem sem nada para tratar, que ela só cura um pouco (quem já enfaixou tudo não gasta achando que trata).
+        None: nada a dizer (o motivo_inutil cobre o item que não serve)."""
+        j = self.j
+        if k == "bandagem":
+            abertas = [sobrevivencia.FERIMENTOS[f["id"]]["nome"].lower() for f in j.ferimentos
+                       if sobrevivencia.FERIMENTOS[f["id"]].get("aberto") and not f["tratado"]]
+            partes = (["sangramento"] if j.efeito("sangramento") else []) + abertas
+            if partes:
+                return {"trata": "Trata: " + tx.lista_natural(partes) + "."}
+            return {"so_cura": f"Nada para tratar agora: só cura {bal.BANDAGEM_VIDA} de vida."}
+        if k == "antidoto" and j.efeito("veneno"):
+            return {"trata": "Trata: veneno."}
+        if k == "unguento" and sobrevivencia.tem(j, "infeccao"):
+            return {"trata": "Trata: infecção."}
+        return None
+
     def lugar_seguro(self):
         """Onde se abre um baú: numa vila ou em volta da fogueira, nunca no meio da luta nem na estrada."""
         return self.combate_ativo is None and (self.loc["tipo"] == "vila" or self.na_fogueira)

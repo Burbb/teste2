@@ -182,6 +182,11 @@
 /* O item ganho num evento chega voando à bolsa: o espaço pulsa. */
 .slot-px.ganhou { animation: atributo-ganhou 0.9s ease-out; }
 .slot-px.pronto { --anel: var(--anel-Y); }  /* um baú que dá para abrir aqui */
+/* Um item que trata o que o herói tem agora (a bandagem com ferida aberta, o antídoto com veneno): o anel acende e o
+   espaço respira devagar, para quem está começando ver por onde se cuida. */
+.slot-px.trata { --anel: var(--anel-Y); animation: trata-pulsa 1.6s ease-in-out infinite; }
+@keyframes trata-pulsa { 50% { filter: brightness(1.35) drop-shadow(0 0 6px rgba(255, 210, 120, 0.6)); } }
+@media (prefers-reduced-motion: reduce) { .slot-px.trata { animation: none; } }
 .item-voando { position: fixed; z-index: 200; pointer-events: none; translate: -50% -50%; filter: drop-shadow(2px 2px 0 #000); }
 /* O animal do patrulheiro na ficha: como um membro da comitiva, com moldura verde de mato */
 .membro.fera .icone { border-color: #3a6a2a; grid-row: span 2; }
