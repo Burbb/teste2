@@ -286,6 +286,7 @@ function mostrarOpcoes(m) {
     if (rot) rot.innerHTML = `${habMirando ? `<b>${esc(habMirando)}</b>: ` : ""}escolha o alvo <small>clique num inimigo</small>`;
   }
   if (lista.childElementCount) { promptEl.appendChild(lista); Telas.ligarDicas(lista); }
+  if (corpo.classList.contains("modo-titulo")) focoNoTitulo(lista);
   if (naVila) montarVila(m, grupos);
   if (atalhos.childElementCount) montarDoca(atalhos);
   if (!replay) guardar("cdf-dica", String(Number(ler("cdf-dica") || 0) + 1));
@@ -296,6 +297,14 @@ function mostrarOpcoes(m) {
   }
   marcarCacadas();
   rolarFim();
+}
+
+/** No menu do título, o mouse e o teclado mostram a mesma opção: passar o mouse leva o foco junto (as setas andam
+ *  a partir dali; Enter confirma), e a primeira já chega em foco. O indicador desenha só o foco (07-titulo). */
+function focoNoTitulo(lista) {
+  const botoes = [...lista.querySelectorAll(".escolha")];
+  botoes.forEach((b) => b.addEventListener("mouseenter", () => b.focus({ preventScroll: true })));
+  if (botoes.length && !lista.contains(document.activeElement)) botoes[0].focus({ preventScroll: true });
 }
 
 /** Contrato de caça com o alvo aqui: o cartão do rastreador vira atalho para "Caçar". */

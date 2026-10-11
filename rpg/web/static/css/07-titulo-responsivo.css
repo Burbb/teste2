@@ -7,7 +7,11 @@ body.modo-titulo .cena-sub { font-size: 18px; color: var(--tinta-2); }
 body.modo-titulo #prompt { max-width: 380px; margin: 0 auto; }
 body.modo-titulo #prompt .escolha { justify-content: center; font-family: var(--titulo); font-size: calc(var(--px) * 48); line-height: 1.1; color: #e8dcc0; padding-left: 12px; text-shadow: 3px 3px 0 #000, 0 0 12px rgba(0,0,0,0.8); }
 body.modo-titulo .escolha .tecla { display: none; }
-body.modo-titulo .escolha:hover { color: var(--ouro); }
+/* A opção em foco (o mouse leva o foco junto, escolhas.js: focoNoTitulo): em ouro, com um losango discreto antes. */
+body.modo-titulo #prompt .escolha:focus { color: var(--ouro); outline: none; }
+body.modo-titulo #prompt .escolha::before { content: "◆"; font-family: var(--leitura); font-size: 18px; color: var(--ouro);
+  opacity: 0; transition: opacity .12s; text-shadow: 0 0 8px rgba(255, 170, 60, 0.6); }
+body.modo-titulo #prompt .escolha:focus::before { opacity: 1; }
 body.modo-titulo #texto { text-align: left; }
 body.modo-titulo .dica-pular { display: none; }
 
