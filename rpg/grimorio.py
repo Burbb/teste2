@@ -7,7 +7,8 @@ fora, porque mudam a cada luta; o livro diz isso em vez de esconder.
 
 from . import balanceamento as bal
 from .classes import CLASSES
-from .habilidades import HABILIDADES, crit_extra, da_estado
+from .habilidades import (HABILIDADES, crit_extra, da_estado, efetiva, ficha, origem, resumo_versao, transformacoes,
+                          versao)
 from .modificadores import contribuicoes, mod, mult, nomes
 from .talentos import custo_habilidade
 
@@ -27,11 +28,11 @@ def _num(x):
 def fontes_critico(j):
     """De onde vêm os críticos além da chance da ficha: habilidades com bônus (lido dos próprios golpes delas)
     e críticos garantidos."""
-    linhas = [f"{HABILIDADES[h]['nome']}: {round(chance_critico(j, crit_extra(HABILIDADES[h])) * 100)}% de chance."
-              for h in j.habilidades if crit_extra(HABILIDADES[h])]
+    linhas = [f"{efetiva(j, h)['nome']}: {round(chance_critico(j, crit_extra(efetiva(j, h))) * 100)}% de chance."
+              for h in j.habilidades if crit_extra(efetiva(j, h))]
     if mod(j, "abertura"):
         linhas.append(f"{', '.join(nomes(j, 'abertura'))}: o primeiro ataque de cada luta é sempre crítico.")
-    furtivo = [HABILIDADES[h]["nome"] for h in j.habilidades if da_estado(HABILIDADES[h], "furtivo")]
+    furtivo = [efetiva(j, h)["nome"] for h in j.habilidades if da_estado(efetiva(j, h), "furtivo")]
     furtivo += nomes(j, "furtivo_ao_abater")
     if furtivo:
         linhas.append(f"Furtivo ({', '.join(furtivo)}): o próximo ataque é crítico garantido.")
@@ -110,7 +111,7 @@ def habilidades_que_usam(j, stat):
     nome = NOME_STAT[stat]
     usam = []
     for h_id in j.habilidades:
-        h = HABILIDADES[h_id]
+        h = efetiva(j, h_id)
         textos = [l.get("formula", "") + " " + " ".join(l.get("escala", [])) + " " + l.get("texto", "")
                   for l in h["linhas"](j)]
         if any(nome in t for t in textos):
@@ -121,7 +122,7 @@ def habilidades_que_usam(j, stat):
 def regras_das_habilidades(j):
     """As regras que valem para várias habilidades, ditas uma vez (só as que tocam as habilidades do herói)."""
     from .habilidades import Acender, Aplicar, Buff, Se, _passos_de
-    passos = [p for h in j.habilidades for p in _passos_de(h)]
+    passos = [p for h in j.habilidades for p in _passos_de(h, j)]
     efeitos = {p.efeito for p in passos if isinstance(p, (Aplicar, Buff))}
     linhas = []
     if any(isinstance(p, Se) and p.condicao in Se.PREFIXO and any(isinstance(x, (Aplicar, Acender)) for x in p.passos)
@@ -136,6 +137,20 @@ def regras_das_habilidades(j):
     return linhas
 
 
+def pagina_versao(j, h_id):
+    """A parte da página de uma habilidade transformada (E6): de onde vem a outra versão, as duas lado a lado com os
+    números do herói, e a troca (a tela mostra o botão quando o menu de agora oferece a opção `versao`)."""
+    variante = transformacoes(j)[h_id]
+    usando = versao(j, h_id)
+    outra = h_id if usando == variante else variante
+    talento = origem(j, h_id)
+    return {"origem": (f"Versão liberada pelo talento {talento}, no lugar da {HABILIDADES[h_id]['nome']}." if usando != h_id
+                       else f"O talento {talento} libera outra versão desta habilidade: a {ficha(variante)['nome']}."),
+            "comparar": [resumo_versao(j, usando) + ".", resumo_versao(j, outra) + "."],
+            "para": outra, "outra": ficha(outra)["nome"],
+            "onde": "A troca se faz na vila ou no acampamento. Na luta, vale a versão que você leva."}
+
+
 def dados(j):
     """Tudo o que o livro mostra: o ataque básico, cada habilidade e os números gerais do herói."""
     nome, alcance, tipo, stat, mult = CLASSES[j.classe]["ataque"]
@@ -148,11 +163,11 @@ def dados(j):
                                 f"({_pct(bal.ATAQUE_RECURSO)} do máximo).")]}
     habs = []
     for h_id in j.habilidades:
-        h = HABILIDADES[h_id]
+        h = efetiva(j, h_id)  # a versão que o herói leva (E6): a página dela, com os números dela
         habs.append({"id": h_id, "nome": h["nome"], "icone": h["icone"], "custo": custo_habilidade(j, h_id), "flechas": h.get("flechas", 0),
                      "flechas_por_alvo": h.get("flechas_por_alvo", 0),
                      "alvo": ALVOS.get(h["alvo"], ""), "desc": h["desc"],  # os números de agora vão nas linhas
-                     "linhas": h["linhas"](j)})
+                     "linhas": h["linhas"](j), **({"versao": pagina_versao(j, h_id)} if h_id in transformacoes(j) else {})})
     tal_corpo, _ = mult_talentos(j, "corpo")
     tal_dist, _ = mult_talentos(j, "distancia")
     gerais = [f"Crítico: {round(chance_critico(j) * 100)}% de chance, dano ×{_num(mult_critico(j))}.",
@@ -197,6 +212,8 @@ def texto(j):
         custo = (x.get("rotulo") or "passiva") if x.get("passiva") else f"{x['custo']} {d['recurso'].lower()}" if x["custo"] \
             else "grátis"
         linhas.append(f"  {x['nome']} ({custo}): " + "; ".join(linha(l).rstrip(".") for l in x["linhas"]) + ".")
+        if x.get("versao"):
+            linhas.append(f"    {x['versao']['origem']} {x['versao']['onde']}")
     linhas += [f"  · {g}" for g in d["gerais"]]
     return linhas
 

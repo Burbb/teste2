@@ -30,7 +30,7 @@ def _heroi(spec):
 
 class TestCatalogo(unittest.TestCase):
     def test_toda_habilidade_tem_execucao_e_descricao(self):
-        for h_id, h in H.HABILIDADES.items():
+        for h_id, h in {**H.HABILIDADES, **H.VARIANTES}.items():  # as variantes (E6) também
             for chave in ("nome", "custo", "alvo", "desc", "fn", "linhas"):
                 self.assertIn(chave, h, f"{h_id} sem {chave}")
             self.assertTrue(callable(h["fn"]) and callable(h["linhas"]), h_id)
@@ -43,7 +43,7 @@ class TestCatalogo(unittest.TestCase):
 
     def test_estados_aplicados_existem(self):
         """Um Aplicar/Buff com um estado que o combate não conhece seria um efeito fantasma."""
-        for h_id, h in H.HABILIDADES.items():
+        for h_id, h in {**H.HABILIDADES, **H.VARIANTES}.items():
             for b in _blocos(h.get("passos", [])):
                 if isinstance(b, (H.Aplicar, H.Buff)):
                     self.assertIn(b.efeito, NOMES_EFEITOS, f"{h_id}: estado {b.efeito}")

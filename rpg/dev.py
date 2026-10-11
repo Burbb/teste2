@@ -44,7 +44,7 @@ def gastar_talentos(g, rng):
             return
         t = rng.choice(livres)
         j.pontos_talento -= 1
-        j.talentos[t["id"]] = j.tal(t["id"]) + 1
+        talentos.aprender(j, t)
     j.recalcular()
 
 

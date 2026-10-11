@@ -1,7 +1,9 @@
 # 15 — E6: especificação de uma transformação de habilidade
 
-Revisão 1 — 11/10/2026. Jogo na versão 1.61.0. **Entrega só de design:** nenhum código, habilidade, talento, número ou
-save foi alterado. Nada aqui está aprovado: é a proposta para Jean decidir.
+Revisão 2 — 11/10/2026. **Implementada na 1.62.0** com as decisões de Jean (seção 11). O que foi feito está na seção
+12, o que foi medido na 13 e o que depende de Jean jogar na 14. As seções 1 a 10 são a especificação de antes, sobre a
+1.61.0, mantida como registro. Onde a decisão mudou a proposta (o "desfazer" da 4.4, a confirmação da compra), vale a
+seção 11.
 
 Legenda (a mesma do [14](14-E5-DIAGNOSTICO-CLASSES.md)):
 
@@ -361,3 +363,200 @@ de 200 turnos, a lição da seção 14 do 14).
 3. **Onde fica o talento:** tronco, nível 4 (recomendado), ou base, nível 2.
 4. **Desfazer:** definitivo, com comparação e confirmação (recomendado), ou esperar a E7 e fazer por item.
 5. **O nome e o ícone:** "Prisão de Gelo", ícone `gelo` ou `cadeado`.
+
+## 11. Decisões de Jean (11/10/2026)
+
+- **A transformação:** a Prisão de Gelo, a única da E6.
+- **Números iniciais de validação:** 16 de mana, 70% de dano de gelo, sem esquiva, congelar sem o sorteio inicial. O
+  `firme` e a resistência de chefes e gigantes continuam. Podem mudar pelos resultados.
+- **O talento:** no tronco do Mago, nível 4 (camada 2), 1 ponto.
+- **Definitivo, com troca:** a compra não se desfaz, mas a versão se troca na vila ou no acampamento. Na luta, só a
+  versão escolhida. Sem reespecialização e sem tela nova: a menor solução dentro do Grimório.
+- **Nome e ícone:** "Prisão de Gelo", ícone `gelo`.
+- **Fora:** a E7, a dívida do Morel, a revisão de loot e outras transformações.
+
+## 12. O que foi implementado (1.62.0)
+
+- **Motor** (`rpg/habilidades.py`):
+  - `VARIANTES` com a Prisão de Gelo, com os blocos de sempre:
+    `Dano(0.7, gelo, esquiva=False)` e, se acertar, `Aplicar("atordoado", 1)` sem chance (nenhum sorteio).
+  - `efetiva(u, h_id)` resolve a ficha por herói: a variante quando uma fonte libera (`transforma`) **e** o herói
+    escolheu levá-la (`versoes`, no personagem); senão, a do catálogo. `HABILIDADES` não muda.
+  - `versao` (o id usado), `escolher_versao`, `ficha`, `origem` e `resumo_versao` (os números do herói numa versão,
+    lidos da ficha).
+- **Talento** (`rpg/talentos.py`): "Prisão de Gelo", tronco, camada 2, 1 ponto, `transforma={"lanca_gelo": "prisao_gelo"}`.
+  - A compra (`talentos.aprender`) já leva a Prisão e avisa como voltar.
+  - A descrição do nó é calculada das duas fichas com os números do herói (custo, dano médio, esquiva, chance de
+    congelar). Nada escrito à mão.
+  - `custo_de(j, id)`: o `custo:<id>` vale para o id da versão; a Eficiência vale para as duas.
+- **Consultas trocadas por `efetiva`:**
+  - o menu e as metas da luta, o bloqueio, a execução e o custo;
+  - o Grimório (página, regras gerais, críticos) e o estado da tela;
+  - o glossário de cores.
+  - A telemetria e a animação recebem o id da versão (`prisao_gelo`).
+- **A troca** (`Progressao.opcoes_versao` e `trocar_versao`):
+  - na vila e no acampamento, uma opção com meta `versao`;
+  - na tela gráfica, ela é escondida e vira o botão "Levar a …" na página da habilidade no Grimório;
+  - fora da vila e do acampamento, a página diz onde trocar;
+  - no modo texto, é uma linha do menu;
+  - a luta não oferece troca;
+  - a troca entra no registro da partida (`versao`) e o replay a reproduz.
+- **O Grimório** mostra, na página da habilidade transformada, a origem ("Versão liberada pelo talento Prisão de Gelo, no
+  lugar da Lança de Gelo"), as duas versões lado a lado com os números do herói e a troca.
+- **Saves:** nenhum campo novo para quem não tem o talento. O save antigo carrega a Lança. A escolha volta do save.
+  `VERSAO_SAVE` não mudou.
+- **O robô lutador** (`tests/arena.py`): antes ele escolhia o ataque mais caro como o mais forte, e passou a usar a
+  Prisão como dano principal. Agora usa a Prisão em quem prepara o golpe (a meta `variante`, que só a habilidade
+  transformada leva), como uma pessoa faria. Quem não tem a transformação joga igual.
+- **Testes:**
+  - `tests/test_transformacao.py`, com isolamento entre dois heróis, catálogo intacto, custo com Eficiência,
+    prévia, menu e Grimório, congelamento sem esquiva, dano dentro da faixa do Grimório, `firme`, chefe e gigante
+    (metade), interrupção do preparo, sem troca na luta, compra, troca na vila e no acampamento, a página do Grimório,
+    save e save antigo;
+  - a validação de conteúdo para `transforma` em `tests/test_modificadores.py`;
+  - as variantes na checagem do catálogo em `tests/test_habilidades.py`.
+- **Cenário de comparação:** `capela` com `PRISAO=prisao` ou `PRISAO=lanca` (seção 14).
+
+## 13. Resultados medidos [medido]
+
+**Como:** lutas inteiras no combate real (os inimigos agem de verdade), com roteiros de decisão explícitos. O mesmo
+herói (nível, talentos, equipamento mediano de `dev.vestir`) e as mesmas sementes nas duas versões; só a versão e o
+roteiro mudam. 200 lutas por célula, sem poções, de dia e com tempo limpo. Luta que passa de 200 turnos conta como
+impasse. O script fica fora do repositório, como os das medidas do 14.
+
+- **Heróis:**
+  - Piromante e Necromante no nível 4, com dois builds: típico (Potência Arcana 2 e Prisão) e mana (Canalização 2,
+    regeneração 7, e Prisão);
+  - nível 6 com Canalização 2, Eficiência 2 e Prisão: a Prisão custa 13;
+  - nível 7 típico (Potência Arcana 3, Prisão e 2 da especialização) e mana (Canalização 2, Eficiência 2, Prisão e
+    Potência 1).
+  - Canalização e Eficiência estão sempre no máximo que o nível permite.
+- **Condições:**
+  - vida cheia, ferido (45%) e metade da mana;
+  - com Morel, Odette ou Yara;
+  - Necromante com servo, sozinho e com Morel ou Yara.
+- **Encontros:**
+  - **no Vale:** ossuário e sarilho (preparadores), Ilse (destruir), javali e lobo sozinhos, três lobos, bruxa e
+    sapo, os dois cultistas;
+  - **depois do Vale:** mercenário sozinho e com bandido, golem, cavaleiro sombrio, troll, abominação, dois
+    guardiões (um com golpe preparado), três bandidos, carniçais.
+- **Roteiros:**
+  - **Dano (Lança):** Bola em quem não queima, a Lança, o Dardo sem mana. Inferno contra três ou mais, Maldição
+    contra dois ou mais.
+  - **Lança no preparo.**
+  - **Dano (Prisão guardada):** só a Bola, que vale para as duas versões.
+  - **Prisão no preparo.**
+  - **Prisão sempre:** congela o mais perigoso sempre que ele não está firme.
+  - **Prisão + Dardo alternados:** a repetição que se paga com o ataque básico.
+  - **Prisão no preparo + Meditar.**
+
+**No total:** 315 células (herói × condição × encontro), 7 roteiros cada, cerca de 441 mil lutas.
+
+**Por tipo de encontro** (médias dos heróis; vitória, vida perdida, golpes preparados que acertaram por luta):
+
+| Encontro, condição | Dano (Lança) | Só Bola | Prisão no preparo | Prisão sempre | Prisão + Dardo |
+|---|---|---|---|---|---|
+| Preparador único, vida cheia | 99%, 32%, 0,20 | 99%, 32%, 0,20 | 100%, 25%, 0,02 | 100%, 24%, 0,01 | 100%, 28%, 0,01 |
+| Preparador único, ferido 45% | 71%, 25% | 70%, 26% | **82%**, 22% | **84%**, 19% | 76%, 23% |
+| Preparador único, com aliado ou servo | 100%, 18% | 100%, 18% | 100%, 14% | 100%, **12%** | 100%, 14% |
+| Preparador único, metade da mana | 99%, 31% | 99%, 32% | 100%, 31% | 98%, 44% | 93%, 54% |
+| Gigante, vida cheia | 95%, 49% | 96%, 43% | 96%, 40% | 87%, 50% | 69%, 70% |
+| Chefe, vida cheia | 46%, 82% | 60%, 71% | 59%, 70% | 29%, 87% | 1%, 100% |
+| Chefe, com aliado ou servo | 58%, 72% | 66%, 63% | 67%, 62% | 48%, 76% | 14%, 96% |
+| Inimigo único sem preparo, vida cheia | 100%, 8% | 100%, 8% | 100%, 8% | 100%, 4% | 100%, 6% |
+| Grupo, vida cheia | 94%, 49% | 95%, 49% | 95%, 49% | 68%, 73% | 66%, 74% |
+| Grupo, com aliado ou servo | 98%, 34% | 98%, 34% | 98%, 34% | 87%, 51% | 86%, 52% |
+
+**Melhor roteiro que usa a Prisão contra o melhor que não usa** (a Lança, ou só a Bola), célula a célula. Conta como
+relevante uma diferença de 3 pontos de vitória, ou vitória igual e 5 pontos de vida perdida:
+
+| Encontro | Células | A Prisão é melhor | Equivalente | A outra é melhor |
+|---|---|---|---|---|
+| Preparador único | 125 | 40 | 84 | 1 |
+| Gigante | 46 | 9 | 37 | 0 |
+| Chefe | 53 | 2 | 45 | 6 |
+| Inimigo único sem preparo | 30 | 6 | 24 | 0 |
+| Grupo | 61 | 0 | 61 | 0 |
+| **Total** | **315** | **57 (18%)** | **251 (80%)** | **7 (2%)** |
+
+**O que isso diz:**
+
+- **Tem papel próprio.**
+  - Contra o inimigo forte que prepara o golpe, a Prisão é a resposta: os golpes preparados que acertam caem de cerca
+    de 0,2 para 0,02 por luta, e o herói ferido vence 82% em vez de 71%.
+  - Contra gigantes ela ajuda pouco, e contra chefes empata com a Bola, porque eles resistem metade.
+- **Não domina.**
+  - Em 80% das células, dá no mesmo levar uma ou outra.
+  - Em grupos, nunca é melhor.
+  - A repetição ("Prisão sempre", "Prisão + Dardo") é pior em todo grupo, gigante e chefe: em 120 das 160 células
+    dessas, perde por margem relevante.
+  - Ela só vence contra um inimigo único **sem resistência**.
+- **O ponto forte: golem e cavaleiro sombrio sozinhos.**
+  - Congelar a cada dois turnos tira metade das ações deles.
+  - Ferido (45%) no nível 7, o herói vence 89–97% com "Prisão sempre", contra 34–70% sem a Prisão.
+  - De vida cheia, com Yara ou o servo, a vida perdida cai de 25–36% para 10–13%.
+  - Cabe na função ("eu respondo a inimigos fortes"), mas é o lugar a sentir jogando (seção 14). Se for demais, o
+    menor ajuste é a Prisão deixar o alvo firme por 2 turnos em vez de 1. Só a repetição perde; a resposta ao preparo
+    continua.
+- **Mana:**
+  - Canalização e Eficiência no máximo não tornam a repetição mais forte: ela é a melhor em 24% das células de
+    preparador tanto no build de mana quanto no típico.
+  - Nessas lutas, a mana não é o que limita; limitam o `firme`, a resistência e o pouco dano.
+  - Com metade da mana, a repetição piora: perde 44% de vida contra 31%.
+- **Nenhum impasse** em 200 turnos, em nenhuma das cerca de 441 mil lutas, inclusive "Prisão + Dardo" contra chefes.
+- **Sem a Lança, o Mago não perde nada mensurável em grupos:** a Bola cobre, com um pouco menos de mana ao fim (62%
+  contra 66%).
+- **A leitura esperada (8.3), conferida:**
+  - a resposta ao preparo ganha contra preparadores fortes sozinhos e ganha menos contra gigantes e chefes: **sim**;
+  - a repetição perde em todos os grupos, gigantes e chefes: **sim**. Mas ela ganha contra um inimigo único sem
+    resistência, o que a hipótese não previa;
+  - com aliados ou o servo, a repetição não é a melhor na maioria dos encontros: **sim**, é a melhor em 35% das células
+    com aliado ou servo, quase todas de inimigo único, e nunca em gigante ou chefe;
+  - em grupos, o Mago transformado perde pouco: **sim**, não perde nada.
+- **Os números ficam:** 16 de mana, 70%, sem esquiva, sem sorteio, `firme` e resistência como estavam.
+
+**Equilíbrio e replay** (o ciclo do COMO_CRIAR, antes e depois):
+
+- `tests.equilibrio --spec piromante` e `--spec necromante`, com 30 lutas por nível: as diferenças ficam dentro do
+  ruído.
+  - Os talentos são sorteados, e o nó novo muda o sorteio.
+  - Na média das lutas comuns dos níveis 4 a 12: Piromante 69,7% → 66,8%; Necromante 85,4% → 87,1%.
+  - Com 90 lutas por nível, o Piromante fica igual nas lutas comuns: vitória 69,8% → 69,4%, vida perdida
+    43,6% → 44,6%.
+  - Os guardiões são sempre 6 por nível (54 lutas nos níveis 4 a 12): Piromante 39% → 33%, ou seja, 21 vitórias
+    contra 18. Está dentro do ruído, e os heróis também mudam, porque o sorteio dos talentos tem uma opção a mais.
+  - Antes de o robô aprender a Prisão, ele a usava como ataque principal (a mais cara), e os guardiões levavam até
+    o dobro de turnos para cair. É o erro de uso que a seção 14 pede para observar.
+- `tests.replay` (a partida padrão e a do Piromante): **idênticos**. As partidas gravadas não compram o talento.
+- O gabarito mudou só pelo esperado:
+  - nas partidas sem Mago, a linha do glossário de cores ganhou "Prisão de Gelo";
+  - nas do Mago, a divergência começa no nó novo da árvore, porque o robô sorteia com uma opção a mais. Nenhuma das
+    partidas do gabarito comprou ou usou a Prisão.
+
+## 14. O que depende de Jean jogar
+
+**Nada abaixo foi validado pelo robô:**
+
+- **A sensação de usar a Prisão contra o Esqueleto de Guarda.** Ela é a resposta certa ou só mais um botão?
+- **Golem e cavaleiro sombrio sozinhos.** A Prisão repetida deixa a luta segura demais? É o principal ponto da seção 13.
+- **A compra.** O talento já ativa a Prisão. Isso é o que se espera, ou a Lança sumir do menu surpreende?
+- **A troca no Grimório.** O botão "Levar a …" é fácil de achar na vila e no acampamento? A página diz claramente onde
+  trocar quando não dá?
+- **A árvore.** A comparação no nó (custo, dano médio, chance de congelar) é suficiente para decidir a compra?
+- **Usar a Prisão como ataque principal.** O robô fez isso antes de aprender. Uma pessoa também faria? (Ela custa
+  mais e fere metade.)
+
+**O cenário curto, para comparar as duas versões no mesmo herói** (mesmo equipamento e os outros talentos iguais):
+
+```
+CLASSE=mago NIVEL=4 ETAPA=ossuario PRISAO=prisao python -m tests.navegador.cenarios capela
+CLASSE=mago NIVEL=4 ETAPA=ossuario PRISAO=lanca  python -m tests.navegador.cenarios capela
+```
+
+- Em cada um, desça ao ossuário. O Esqueleto de Guarda prepara o golpe no primeiro turno dele.
+- Para ver a troca:
+  - acrescente `LUGAR=vau_do_turvo` e abra o Grimório (P) na página da Prisão; o botão "Levar a Lança de Gelo"
+    aparece;
+  - ou, na capela, escolha "Acampar e descansar até o amanhecer" e troque na fogueira.
+- No modo texto, a troca é a linha "Grimório: levar a …" do menu da vila e da fogueira.
+

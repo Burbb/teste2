@@ -6,7 +6,7 @@ import unittest
 
 from rpg import itens, modificadores as M
 from rpg.classes import CLASSES, SPECS
-from rpg.habilidades import HABILIDADES
+from rpg.habilidades import HABILIDADES, VARIANTES
 from rpg.jogo import Jogo
 from rpg.talentos import PASSIVAS, POR_ID, TALENTOS, custo_habilidade
 from rpg.ui import BotUI
@@ -20,7 +20,25 @@ def _fontes():
 class TestModificadores(unittest.TestCase):
     def test_todo_talento_faz_algo(self):
         for tid, t in _fontes():
-            self.assertTrue(t.get("stats") or t.get("mods") or t.get("mults") or t.get("gatilhos"), tid)
+            self.assertTrue(t.get("stats") or t.get("mods") or t.get("mults") or t.get("gatilhos")
+                            or t.get("transforma"), tid)
+
+    def test_transformacoes_validas(self):
+        """Uma transformação (E6) aponta para uma variante que existe, de uma habilidade da própria classe, e cada
+        habilidade tem no máximo uma fonte que a transforma."""
+        for classe, lista in TALENTOS.items():
+            da_classe = {h for _, h in CLASSES[classe]["habilidades"]}
+            transformadas = []
+            for t in lista:
+                for h_id, v in t["transforma"].items():
+                    self.assertIn(v, VARIANTES, t["id"])
+                    self.assertIn(h_id, da_classe, t["id"])
+                    self.assertEqual(VARIANTES[v]["origem"], h_id, t["id"])
+                    transformadas.append(h_id)
+            self.assertEqual(len(transformadas), len(set(transformadas)), classe)
+        for v, f in VARIANTES.items():
+            self.assertNotIn(v, HABILIDADES)  # a variante nunca entra no catálogo: ninguém a aprende por nível
+            self.assertTrue(any(v in t["transforma"].values() for t in POR_ID.values()), v)
 
     def test_chaves_e_eventos_conhecidos(self):
         """Uma chave com erro de digitação não faria nada em silêncio: aqui ela falha."""

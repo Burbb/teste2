@@ -7,7 +7,7 @@
     python -m tests.navegador.cenarios baus      # vila com três baús na bolsa: a pilha abre inteira
     python -m tests.navegador.cenarios missao    # campanha no Bosque do Moinho, na etapa de seguir o canal
     python -m tests.navegador.cenarios recarga   # título com um save da campanha (Bosque, à noite) e um do mundo gerado
-    python -m tests.navegador.cenarios capela    # herói na Capela Afogada (CLASSE, ETAPA, NIVEL, PREPARO, LUGAR, SEMENTE)
+    python -m tests.navegador.cenarios capela    # herói na Capela Afogada (CLASSE, ETAPA, NIVEL, PREPARO, LUGAR, SEMENTE, PRISAO)
     python -m tests.navegador.cenarios retorno   # chegando ao Vau com Ilse resolvida (DESFECHO, DIAS, LODO, YARA)
     python -m tests.navegador.cenarios praca     # depois da resposta a Caspar (POSTURA, YARA, LUGAR)
     python -m tests.navegador.cenarios encruzilhada  # a escolha de especialização, comparando (CLASSE, NIVEL)
@@ -209,8 +209,10 @@ def capela(ui):
     """Herói de nível NIVEL (padrão 5; CLASSE, padrão guerreiro; SEMENTE, padrão 11) na Capela Afogada (ou na chave LUGAR), de manhã, com a
     missão na ETAPA (padrão "sacristia": a nave já vencida) e o que se sabe até ali. PREPARO: "correntes" (soltas),
     "berta" (Berta ouvida e a fita, as correntes ainda presas) ou "pronto" (Berta ouvida, a fita e as correntes: o rito
-    disponível). Sair do jogo leva ao título, com o save."""
-    from rpg import dev, missoes
+    disponível). PRISAO (mago, nível 4 ou mais): o talento Prisão de Gelo já comprado, levando a "prisao" ou a "lanca";
+    o resto dos talentos sai igual nas duas, para comparar o mesmo herói. Sair do jogo leva ao título, com o save."""
+    from rpg import dev, missoes, talentos
+    from rpg.habilidades import escolher_versao
     from rpg.__main__ import menu_principal
     from rpg.ui import BotUI
     pasta = tempfile.mkdtemp()
@@ -218,6 +220,11 @@ def capela(ui):
     g.iniciar("Jean", os.environ.get("CLASSE", "guerreiro"), "turvo")
     nivel = int(os.environ.get("NIVEL", "5"))
     dev.subir_ate(g, nivel)  # já especializado (a primeira da classe): o acampamento não para na encruzilhada
+    if os.environ.get("PRISAO"):  # a comparação da E6: o mesmo herói, com a Prisão ou com a Lança na mão
+        talentos.aprender(g.j, talentos.POR_ID["prisao_gelo"])
+        g.j.pontos_talento -= 1
+        if os.environ["PRISAO"] == "lanca":
+            escolher_versao(g.j, "lanca_gelo", None)
     dev.gastar_talentos(g, random.Random(3))
     dev.vestir(g, random.Random(3), nivel)
     g.j.consumiveis["pocao_vida"] = 3

@@ -4,7 +4,7 @@ from .. import balanceamento as bal
 from .. import comitiva, consequencias, grimorio, mapa, missoes, sobrevivencia
 from .. import texto as tx
 from ..classes import CLASSES
-from ..habilidades import HABILIDADES, descricao_habilidade
+from ..habilidades import HABILIDADES, VARIANTES, descricao_habilidade, efetiva
 from .. import estados
 from ..estados import NOMES as NOMES_EFEITOS, para_tela
 from ..dados import BIOMAS, CLIMAS, PERIODOS, retrato
@@ -157,7 +157,7 @@ def heroi(g):
                   for k, v in j.consumiveis.items() if v > 0 and k in CONSUMIVEIS],
         "equip": {slot: _item(it, j.nome_recurso) for slot, it in j.equip.items()},
         "mochila": [_item(it, j.nome_recurso) for it in j.mochila], "limite_mochila": 12,
-        "habilidades": [{"nome": HABILIDADES[h]["nome"], "custo": custo_habilidade(j, h), "desc": descricao_habilidade(h, j)}
+        "habilidades": [{"nome": efetiva(j, h)["nome"], "custo": custo_habilidade(j, h), "desc": descricao_habilidade(h, j)}
                         for h in j.habilidades],
         "grimorio": grimorio.dados(j),
         "ferimentos": ferimentos, "males": sobrevivencia.descrever(j),
@@ -298,7 +298,7 @@ def glossario():
     """A cor de cada nome de habilidade, talento e passiva que a tela realça nos textos de regra ("Bola de Fogo" em
     laranja, "Drenar Vida" em vermelho): o campo `realce` dos catálogos. Quem não declara fica neutro."""
     from ..talentos import PASSIVAS, POR_ID
-    fichas = list(HABILIDADES.values()) + list(POR_ID.values()) + list(PASSIVAS.values())
+    fichas = list(HABILIDADES.values()) + list(VARIANTES.values()) + list(POR_ID.values()) + list(PASSIVAS.values())
     return {f["nome"]: f["realce"] for f in fichas if f.get("realce")}
 
 

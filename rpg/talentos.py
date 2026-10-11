@@ -17,7 +17,7 @@ A passiva de cada especialização (PASSIVAS) segue o mesmo formato.
 
 from . import balanceamento as bal
 from .classes import CLASSES, SPECS
-from .habilidades import HABILIDADES
+from .habilidades import HABILIDADES, VARIANTES, escolher_versao, ficha, resumo_versao, versao
 from .modificadores import Fixo, mod
 
 
@@ -130,12 +130,14 @@ RAMOS_COMUNS = ("base", "tronco")
 
 
 def _t(id, nome, ramo, camada, maximo, desc, stats=None, mods=None, mults=None, gatilhos=None, ordem=50,
-       icone="estrela", realce=None):
+       icone="estrela", realce=None, transforma=None):
     """ramo: "base", "tronco" ou o id de uma especialização (o talento fica exclusivo dela).
-    icone: o desenho do nó na árvore; realce: a cor do nome quando aparece num texto de regra (Realce, na tela)."""
+    icone: o desenho do nó na árvore; realce: a cor do nome quando aparece num texto de regra (Realce, na tela).
+    transforma: {habilidade: variante} que o talento libera (E6; a variante mora em habilidades.VARIANTES)."""
     return {"id": id, "nome": nome, "ramo": ramo, "camada": camada, "max": maximo, "desc": desc,
             "spec": None if ramo in RAMOS_COMUNS else ramo, "stats": stats or {}, "mods": mods or {},
-            "mults": mults or {}, "gatilhos": gatilhos or {}, "ordem": ordem, "icone": icone, "realce": realce}
+            "mults": mults or {}, "gatilhos": gatilhos or {}, "ordem": ordem, "icone": icone, "realce": realce,
+            "transforma": transforma or {}}
 
 
 TALENTOS = {
@@ -204,6 +206,10 @@ TALENTOS = {
         _t("escudo_reflexo", "Escudo Rúnico", "tronco", 2, 1,
            "A Barreira Arcana absorve 30% a mais e dura 1 turno a mais.",
            mods={"barreira_turnos": 1}, mults={"barreira_mult": 1.3}, icone="escudo"),
+        _t("prisao_gelo", "Prisão de Gelo", "tronco", 2, 1,
+           "Chefes e gigantes resistem metade; quem acabou de se soltar fica firme. Qual das duas você leva se escolhe "
+           "no Grimório, na vila ou no acampamento.", transforma={"lanca_gelo": "prisao_gelo"}, icone="gelo",
+           realce="gelo"),
         _t("pacto_sombrio", "Pacto Sombrio", "necromante", 2, 2,
            "Drenar Vida cura +10% e servos têm +15% de vida, por ponto.",
            mods={"dreno_cura": 0.1, "servo_vida": 0.15}, icone="gota"),
@@ -233,10 +239,39 @@ def bonus_stats(jogador):
     return total
 
 
-def custo_habilidade(jogador, hid):
-    custo = HABILIDADES[hid]["custo"] + mod(jogador, f"custo:{hid}")
+def aprender(jogador, t):
+    """Um ponto no talento. Uma transformação (E6) já sai em uso: quem a comprou quer vê-la; voltar à habilidade de
+    antes é na vila ou no acampamento (Jogo.opcoes_versao)."""
+    jogador.talentos[t["id"]] = jogador.tal(t["id"]) + 1
+    for h_id, variante in t["transforma"].items():
+        escolher_versao(jogador, h_id, variante)
+
+
+def descricao(jogador, t):
+    """O texto do nó. Uma transformação compara as duas versões com os números do herói, lidos das fichas."""
+    if not t["transforma"]:
+        return t["desc"]
+    return " ".join(f"Libera outra versão da {HABILIDADES[h]['nome']}. {resumo_versao(jogador, h)}. "
+                    f"{resumo_versao(jogador, v)}." for h, v in t["transforma"].items()) + " " + t["desc"]
+
+
+def frase_transformacao(t):
+    """O que a compra de uma transformação mudou, dito uma vez na hora da compra."""
+    return " ".join(f"A {HABILIDADES[h]['nome']} agora sai como {VARIANTES[v]['nome']}. Para voltar a usar a "
+                    f"{HABILIDADES[h]['nome']}, troque no Grimório, na vila ou no acampamento."
+                    for h, v in t["transforma"].items())
+
+
+def custo_de(jogador, v_id):
+    """O custo de uma ficha (do catálogo ou variante) para este herói: o `custo:<id>` dela e a Eficiência."""
+    custo = ficha(v_id)["custo"] + mod(jogador, f"custo:{v_id}")
     custo *= 1 - mod(jogador, "custo_pct")
     return max(0, int(round(custo)))
+
+
+def custo_habilidade(jogador, hid):
+    """O custo da versão que o herói leva; um `custo:<id>` vale para o id dessa versão (a Prisão tem o seu)."""
+    return custo_de(jogador, versao(jogador, hid))
 
 
 def estado(jogador, t):
@@ -294,7 +329,7 @@ def dados_arvore(jogador):
     nos = []
     for t, pos in posicoes(jogador.classe):
         est = estado(jogador, t)
-        nos.append({"id": t["id"], "nome": t["nome"], "icone": t["icone"], "desc": t["desc"], "ramo": t["ramo"],
+        nos.append({"id": t["id"], "nome": t["nome"], "icone": t["icone"], "desc": descricao(jogador, t), "ramo": t["ramo"],
                     "camada": t["camada"], "pos": pos, "rank": jogador.tal(t["id"]), "max": t["max"], "estado": est,
                     "motivo": motivo(t, est), "spec": SPECS[t["spec"]]["nome"] if t["spec"] else None})
     camadas = sorted({n["camada"] for n in nos})

@@ -2,7 +2,7 @@
 
 from .. import balanceamento as bal
 from ..classes import CLASSES, COMPANHEIROS, SPECS, habilidades_ate
-from ..habilidades import HABILIDADES
+from ..habilidades import HABILIDADES, efetiva, escolher_versao, ficha, transformacoes, versao
 from ..entidades import NOMES_STATS
 from .. import comitiva
 from .. import especializacao
@@ -68,7 +68,7 @@ class Progressao:
             opcoes = []
             for t in talentos.TALENTOS[j.classe]:
                 est = talentos.estado(j, t)
-                texto = f"{t['nome']} {j.tal(t['id'])}/{t['max']} — {t['desc']}"
+                texto = f"{t['nome']} {j.tal(t['id'])}/{t['max']} — {talentos.descricao(j, t)}"
                 if est == "disponivel" and j.pontos_talento:
                     texto = "▶ " + texto
                 elif est != "disponivel":
@@ -84,12 +84,35 @@ class Progressao:
                 self.dizer("Você não tem pontos de talento. Suba de nível ou derrote guardiões.", "vermelho")
             else:
                 j.pontos_talento -= 1
-                j.talentos[t["id"]] = j.tal(t["id"]) + 1
+                talentos.aprender(j, t)
                 registrar(self, "talento", id=t["id"], nome=t["nome"], rank=j.tal(t["id"]))
                 antes = j.max_hp
                 j.recalcular()
                 j.hp += max(0, j.max_hp - antes)
                 self.ui.talento_aprendido(t["nome"], j.tal(t["id"]), t["max"])
+                if t["transforma"]:
+                    self.dizer(talentos.frase_transformacao(t), "ciano")
+
+    # ================================================================ versões (E6)
+    def opcoes_versao(self):
+        """Trocar a versão de uma habilidade transformada: só onde se descansa (a vila e o acampamento), nunca na
+        luta. Na tela gráfica é o botão da página dela no Grimório (meta `versao`); no texto, uma linha do menu."""
+        j = self.j
+        opcoes = []
+        for h_id, variante in transformacoes(j).items():
+            if h_id not in j.habilidades:
+                continue
+            outra = h_id if versao(j, h_id) == variante else variante
+            opcoes.append((f"Grimório: levar a {ficha(outra)['nome']} no lugar da {efetiva(j, h_id)['nome']}",
+                           ("versao", h_id, None if outra == h_id else outra), {"versao": h_id, "para": outra}))
+        return opcoes
+
+    def trocar_versao(self, h_id, variante):
+        antes = efetiva(self.j, h_id)["nome"]
+        escolher_versao(self.j, h_id, variante)
+        depois = efetiva(self.j, h_id)["nome"]
+        registrar(self, "versao", habilidade=h_id, versao=versao(self.j, h_id))
+        self.dizer(f"Você passa a levar a {depois} no lugar da {antes}. Na luta, é ela que sai.", "ciano")
 
     def _aprender_habilidades(self, anunciar=True):
         j = self.j

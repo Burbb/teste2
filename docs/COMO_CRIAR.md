@@ -95,6 +95,23 @@ Os argumentos na ordem: id, nome, **ramo**, **camada**, pontos máximos, descri�
 | `mods` | modificadores por ponto; `Fixo(v)` vale uma vez (`{"dano_corpo": 0.06}`) |
 | `mults` | multiplicadores (`{"barreira_mult": 1.3}`) |
 | `gatilhos` | `{evento: função(cb, u, pontos, dados)}`, com `ordem=` quando dois reagem ao mesmo evento |
+| `transforma` | `{habilidade: variante}`: libera outra versão de uma habilidade (abaixo) |
+
+### Uma transformação de habilidade
+
+A variante é outra ficha para uma habilidade que o herói já tem (a Prisão de Gelo, da Lança de Gelo). Ela mora em
+`VARIANTES`, em `rpg/habilidades.py`, com os mesmos blocos, e **nunca** entra em `HABILIDADES` (ninguém a aprende por
+nível). Um talento a libera com `transforma={"lanca_gelo": "prisao_gelo"}`; a compra já leva a variante
+(`talentos.aprender`), e o herói troca de versão no Grimório, na vila ou no acampamento (`opcoes_versao`, meta
+`versao`). Na luta, vale a escolhida.
+
+- O herói continua guardando o id de sempre (`lanca_gelo`); a escolha fica em `versoes`, no personagem.
+- Quem precisa da ficha pergunta `efetiva(u, h_id)`: nome, custo, alvo, descrição, Grimório e execução saem dela.
+  Nunca `HABILIDADES[h_id]` para o herói. O catálogo não muda.
+- `custo:<id>` vale para o id da versão (`custo_de`); a telemetria e a animação recebem o id da versão.
+- A árvore compara as duas versões com os números do herói (`talentos.descricao`, lido das fichas).
+- `tests/test_modificadores.py` recusa variante inexistente, habilidade de outra classe e duas fontes transformando a
+  mesma habilidade.
 
 Um gatilho que precisa lembrar algo durante a luta guarda em `cb.memoria`, pelo id do talento (as cargas do Frenesi:
 `cb.memoria["frenesi"]`); a luta seguinte começa do zero. "Uma vez por combate" é um decorador:

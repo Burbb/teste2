@@ -444,6 +444,8 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
                 comitiva.falar(self, op[1])
             elif op[0] == "usar":
                 self.usar_consumivel(op[1])
+            elif op[0] == "versao":
+                self.trocar_versao(op[1], op[2])
             else:
                 self.usar_em_companheiro(op[1], op[2])
             return
@@ -506,6 +508,7 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
             ("Curandeira: tratar ferimentos e infecções", "curandeiro", {"predio": "curandeiro"}) if j.ferimentos else None,
             ("Ferreiro: reforçar arma ou armadura", "ferreiro", {"predio": "ferreiro"}),
             *missoes.opcoes(self),  # o passo da missão que se dá aqui (campanha), como "Examinar a Fonte Nova"
+            *self.opcoes_versao(),  # a troca de versão de uma habilidade transformada (o botão do Grimório)
         ]
         # A frase da vila aparece na chegada e quando o tempo passa, não a cada volta ao menu (do mercado, do
         # inventário). O sorteio segue a cada volta: com a mesma semente, a partida continua a mesma.

@@ -34,8 +34,9 @@ Ela deve informar alvo, custo, passos/comportamento, descrição, preview e apre
 
 Demonstrar primeiro uma transformação simples. Só adicionar hooks novos quando um efeito concreto exigir.
 
-A especificação da primeira está em [15](15-E6-TRANSFORMACAO.md): a Prisão de Gelo [proposta], com a ficha efetiva por herói
-(`efetiva(u, h_id)`, variantes fora do catálogo aprendível, `transforma` nas fontes de modificadores).
+A primeira está em [15](15-E6-TRANSFORMACAO.md), implementada na 1.62.0: a Prisão de Gelo, com a ficha efetiva por herói
+(`efetiva(u, h_id)`, variantes fora do catálogo aprendível, `transforma` nas fontes de modificadores) e a versão trocada
+no Grimório, na vila ou no acampamento. A receita está no COMO_CRIAR ("Uma transformação de habilidade").
 
 ## Alvos
 

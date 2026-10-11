@@ -13,6 +13,8 @@ from rpg.ui import BotUI
 
 # Habilidades que uma pessoa usa quando o inimigo avisa um golpe forte ("prepara um golpe...").
 DEFESAS = ("erguer_escudo", "passo_agil", "barreira", "desaparecer")
+# Controle de pouco dano (a variante, E6): a pessoa usa no inimigo que prepara o golpe, não como o ataque principal.
+CONTROLES = ("prisao_gelo",)
 CURAS = ("prece",)  # curas em si mesmo: quando a vida baixa da metade
 
 # O que conta como "aguentou": as colunas da tabela, na ordem.
@@ -38,6 +40,7 @@ class LutadorUI(BotUI):
         super().__init__(rng, max_decisoes=10 ** 9)
         self.g = None
         self._plano = None
+        self._alvo = None  # o alvo do plano, quando não é o mais ferido (a Prisão vai em quem prepara)
         self._usadas = set()  # buffs já usados nesta luta
         self._defendeu = -99  # turno em que se protegeu pela última vez
         self._serie = None
@@ -76,12 +79,14 @@ class LutadorUI(BotUI):
             return 0 if opcoes[0].startswith("Você") else len(opcoes) - 1
         if pergunta == "Alvo:":
             vivos = cb.inimigos_vivos()
+            if self._alvo in vivos:
+                return vivos.index(self._alvo)
             return min(range(len(vivos)), key=lambda i: vivos[i].hp)
         return super().escolher(pergunta, opcoes)
 
     def _acao(self, cb, metas):
         j = cb.j
-        self._plano = None
+        self._plano = self._alvo = None
         itens = next((m["itens"] for m in metas if m.get("acao") == "itens"), [])
         if j.hp < 0.35 * j.max_hp and any(m.get("usar_item") == "pocao_vida" and not m["motivo"] for m in itens):
             self._plano = "pocao_vida"
@@ -90,6 +95,11 @@ class LutadorUI(BotUI):
         cura = next((m["habilidade"] for m in habs if m["habilidade"] in CURAS), None)
         if cura and j.hp < 0.5 * j.max_hp:
             self._plano = cura
+            return 1
+        prepara = next((e for e in cb.inimigos_vivos() if e.carregando and not e.efeito("firme")), None)
+        controle = next((m["habilidade"] for m in habs if m.get("variante") in CONTROLES), None)
+        if prepara and controle:
+            self._plano, self._alvo = controle, prepara
             return 1
         if any(e.carregando for e in cb.inimigos_vivos()):
             defesa = next((m["habilidade"] for m in habs if m["habilidade"] in DEFESAS), None)
@@ -127,7 +137,7 @@ class LutadorUI(BotUI):
         area = [m for m in habs if m["alvo_tipo"] == "todos"]
         if len(vivos) >= 2 and area:
             return max(area, key=lambda m: m["custo"])["habilidade"]
-        alvo = [m for m in habs if m["alvo_tipo"] == "inimigo"]
+        alvo = [m for m in habs if m["alvo_tipo"] == "inimigo" and m.get("variante") not in CONTROLES]
         if alvo:
             return max(alvo, key=lambda m: m["custo"])["habilidade"]
         return None

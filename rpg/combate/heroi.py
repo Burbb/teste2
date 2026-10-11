@@ -2,7 +2,7 @@
 
 from .. import texto as tx
 from ..classes import CLASSES
-from ..habilidades import HABILIDADES, custo_flechas, descricao_habilidade
+from ..habilidades import custo_flechas, descricao_habilidade, efetiva, versao
 from ..modificadores import disparar, mod
 from ..dados import TRACOS
 from ..inimigos import NOMES_HABS_INIMIGO
@@ -94,7 +94,8 @@ class AcoesDoHeroi:
 
     def motivo_bloqueio(self, h_id):
         """Por que não dá para usar a habilidade agora (ou None se dá)."""
-        j, h = self.j, HABILIDADES[h_id]
+        j = self.j
+        h = efetiva(j, h_id)
         if j.rec < custo_habilidade(j, h_id):
             return f"{j.nome_recurso} insuficiente"
         if self.flechas_de(h) > j.flechas:
@@ -112,12 +113,14 @@ class AcoesDoHeroi:
         j = self.j
         metas = []
         for h_id in j.habilidades:
-            h = HABILIDADES[h_id]
+            h = efetiva(j, h_id)  # a versão que o herói escolheu levar (E6); o id do botão continua o mesmo
             motivo = self.motivo_bloqueio(h_id)
+            v = versao(j, h_id)
             metas.append({"habilidade": h_id, "nome": h["nome"], "icone": h["icone"], "familia": h["familia"],
                           "custo": custo_habilidade(j, h_id),
                           "recurso": j.nome_recurso, "flechas": self.flechas_de(h), "alvo_tipo": h["alvo"],
-                          "desc": descricao_habilidade(h_id, j), "pode": motivo is None, "motivo": motivo})
+                          "desc": descricao_habilidade(h_id, j), "pode": motivo is None, "motivo": motivo,
+                          **({"variante": v} if v != h_id else {})})  # só na transformada: quem não tem, igual
         return metas
 
     def menu_habilidades(self):
@@ -125,7 +128,7 @@ class AcoesDoHeroi:
         ids = list(j.habilidades)
         opcoes = []
         for h_id in ids:
-            h = HABILIDADES[h_id]
+            h = efetiva(j, h_id)
             custo = f"{custo_habilidade(j, h_id)} {j.nome_recurso}"
             flechas = self.flechas_de(h)
             if flechas:
@@ -140,7 +143,8 @@ class AcoesDoHeroi:
             self.ui.meta_opcoes = None
         if esc == len(ids):
             return False
-        h = HABILIDADES[ids[esc]]
+        h = efetiva(j, ids[esc])
+        h_ef = versao(j, ids[esc])  # o id da versão usada: a telemetria separa a Lança da Prisão
         custo = custo_habilidade(j, ids[esc])
         if j.rec < custo:
             self.dizer(f"{j.nome_recurso} insuficiente.", "cinza")
@@ -159,12 +163,12 @@ class AcoesDoHeroi:
             if alvo is None:
                 return False
         j.rec -= custo
-        self.tel["habilidades"][ids[esc]] = self.tel["habilidades"].get(ids[esc], 0) + 1
+        self.tel["habilidades"][h_ef] = self.tel["habilidades"].get(h_ef, 0) + 1
         self.tel["rec_gasto"] += custo
         flechas = self.flechas_de(h)
         j.flechas -= flechas
         self.flechas_gastas += flechas
-        with self.agindo(j, h["nome"], alvo, area=h["alvo"] == "todos", hab=ids[esc], anim=h.get("anim")):
+        with self.agindo(j, h["nome"], alvo, area=h["alvo"] == "todos", hab=h_ef, anim=h.get("anim")):
             antes, self._cura_j = j.hp, 0
             efeitos_antes = {k: dict(v) for k, v in j.efeitos.items()}
             h["fn"](self, j, alvo)
@@ -172,7 +176,7 @@ class AcoesDoHeroi:
             # Buffs em si mesmo (grito, escudo, esquiva, sombras) também viram um lance: a tela anima e espera.
             novos = [k for k, v in j.efeitos.items() if efeitos_antes.get(k) != v]
             if novos:
-                self.lance("buff", em="j", efeitos=novos, rotulo=h["nome"], hab=ids[esc],
+                self.lance("buff", em="j", efeitos=novos, rotulo=h["nome"], hab=h_ef,
                            **({"anim": h["anim"]} if h.get("anim") else {}))
         return True
 

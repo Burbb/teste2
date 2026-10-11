@@ -99,11 +99,13 @@ Na 1.60.1, uma revisão de apresentação e texto, depois do teste de Jean. O cr
 ## E6 — Demonstrar transformação de habilidade
 
 **Depende:** E5.
-**Estado:** especificação proposta em [15](15-E6-TRANSFORMACAO.md), só design, sobre a 1.61.0. Três candidatos
-comparados. Recomendada a **Prisão de Gelo**: um talento do tronco do Mago (nível 4) troca a Lança de Gelo por uma
-versão mais cara e de pouco dano, que congela sem sorteio, salvo as regras de sempre (`firme`; chefes e gigantes
-resistem metade). A arquitetura mínima resolve a ficha efetiva por herói, sem tocar no catálogo. Números, lugar do
-talento e "desfazer" aguardam decisão de Jean (seção 10 do 15). Nenhum código mudou.
+**Estado:** **implementada na 1.62.0** e validada tecnicamente (seções 11 a 13 do [15](15-E6-TRANSFORMACAO.md)). A
+**Prisão de Gelo** é um talento do tronco do Mago (nível 4, 1 ponto) que libera outra versão da Lança de Gelo: 16 de
+mana, 70% de dano de gelo sem esquiva, congela sem sorteio, salvo `firme`, chefes e gigantes. A compra é definitiva; a
+versão se troca no Grimório, na vila ou no acampamento. A ficha se resolve por herói (`efetiva`), sem tocar no catálogo.
+Medida em lutas inteiras: tem papel próprio (o inimigo forte que prepara o golpe) e não domina (equivalente em 80% das
+células, nunca melhor em grupo, a repetição pior contra chefes e gigantes, nenhum impasse). Falta Jean jogar (seção 14
+do 15).
 **Entrega:** uma transformação simples, resolvida de forma consistente para execução e apresentação.
 **Tarefas:** especificar efeito; resolver habilidade efetiva; integrar custo/alvo/descrição; validar equipar/retirar ou aprender.
 **Pronto:** resultado e Grimório concordam e outra build/sessão não é afetada.

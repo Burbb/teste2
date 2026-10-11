@@ -55,6 +55,7 @@ def _fogueira(g, intro):
             opcoes.append((f"Deixar {nome(m['id'])} no acampamento", ("reservar", m["id"]), {"reservar": m["id"]}))
         if getattr(g.j, "companheiro", None):
             opcoes.append((f"Fazer carinho em {g.j.companheiro['nome']}", ("carinho", None), {"carinho": "fera"}))
+        opcoes += g.opcoes_versao()  # a troca de versão de uma habilidade transformada (o botão do Grimório)
         opcoes.append(("Dormir até o amanhecer", None, {"dormir": True}))
         # Em volta do fogo é a hora de cuidar das coisas: talentos, inventário, diário, salvar (a doca acende)...
         opcoes += [o for o in g.opcoes_comuns() if o and o[1] in ATALHOS_FOGUEIRA]
@@ -67,7 +68,7 @@ def _fogueira(g, intro):
             g.executar_comum(op)
             continue
         acao, cid = op[0], op[1]
-        if acao in ("usar", "usar_em"):
+        if acao in ("usar", "usar_em", "versao"):
             g.executar_comum(op)
             continue
         if acao == "carinho":

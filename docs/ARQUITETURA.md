@@ -93,6 +93,10 @@ pacote: `from rpg.combate import Combate`.
 ```
 
 Cada bloco sabe **executar** (na luta) e **se descrever** (no Grimório). O número existe num lugar só.
+
+Uma **variante** (E6, a Prisão de Gelo) é outra ficha para uma habilidade que o herói já tem: mora em `VARIANTES`,
+fora do catálogo aprendível, e um talento a libera (`transforma`). Cada herói resolve a sua ficha com
+`efetiva(u, h_id)`; o menu da luta, o custo, o Grimório, a tela e a execução passam por ela, e o catálogo nunca muda.
 Habilidades muito particulares (Redemoinho, Ordem da Fera, Combustão, Execução, Meditar, Barreira, Erguer
 Servo, Fúria Cega) usam `fn` + `linhas` escritas à mão, lado a lado no mesmo arquivo.
 

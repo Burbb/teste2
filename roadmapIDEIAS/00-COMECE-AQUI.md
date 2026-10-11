@@ -81,7 +81,7 @@ Três commits posteriores à atualização do roadmap foram consultados. Os comp
 | E4 — consequência local | Na 1.54.0, a Fonte Nova, a frase do Vau, Pita e Marta. Na 1.55.0, Caspar: a acusação, a praça (Apoiar, Denunciar com prova, Calar), a situação da Yara e as reações da comitiva. Na 1.56.0, a consolidação: a Yara barrada fica de fato fora do Vau, o encontro no Charco depois da denúncia, a conversa da Yara sobre a praça e os textos que contradiziam o Vau. **O critério mínimo da E4 (07-ETAPAS) está atendido**; as outras ideias do 11 (bênção, sementes, mercado, taverna, Charco à noite, Odette e Caspar, Anselmo, a cena da vigília) ficam adiadas, não são requisito. Falta Jean jogar. |
 | E5 — classes | Diagnóstico (só design) em [14](14-E5-DIAGNOSTICO-CLASSES.md), sobre a 1.56.0. **P1 implementada na 1.57.0:** o golpe preparado em duas lutas fixas da capela (seção 10 do 14). **P3 implementada na 1.58.0:** a encruzilhada compara os dois caminhos e o Grimório explica (seção 11 do 14). **P2 começada na 1.59.0, só pelo Tiro Duplo** (seção 12 do 14): o 2º disparo vai no outro inimigo mais ferido. **Drenar Vida, Desaparecer e Passo Ágil avaliados em lutas inteiras** (seção 13 do 14, sem mudar o jogo): os dois primeiros têm função. **O desvio do Passo Ágil foi validado e rejeitado** (seção 14): usado repetidamente, vira a ação padrão contra inimigos sozinhos; o Passo Ágil fica como era. **O critério mínimo da E5 (07-ETAPAS) está atendido**: as três classes atravessam o Vale (a guardiã medida por caminho) e os seis caminhos foram avaliados em cenários direcionados. A E5 está **concluída tecnicamente**; adiado, sem ser requisito: o Passo Ágil, a sinergia Desaparecer–Execução, Sombra e Piromante contra a guardiã no nível 4, a preparação de habilidades. Falta Jean jogar. A validação da E4 jogando, por Jean, fica registrada à parte. |
 | Clareza da campanha | Pausa antes da E6, a partir do teste de Jean. **Primeira entrega na 1.60.0** (registro abaixo): ações da capela organizadas, Diário reorganizado, linguagem do Vale simplificada, cartão de atualização de missão. **Revisão na 1.60.1**: ações curtas com custo e risco numa nota, e o conhecimento conforme as descobertas (o critério está no 07). **Na 1.60.2**: porta ou ação à vista no menu e grupos. **Na 1.60.3**: o cartão de novidade como nota da história e o Diário na Alegreya Sans. **Na 1.60.4**: revisão editorial dos textos que antecipavam a resolução (critério no 07). **Na 1.61.0**: custo dos consumíveis nas opções, a proteção do mendigo e o fluxo da exaustão. Pendentes: a dívida do Morel e a revisão de loot. As próximas entregas estão listadas em [07](07-ETAPAS.md) ("Entre a E5 e a E6"), sem implementar. Falta Jean testar. |
-| E6 — transformação | **Especificação proposta** em [15](15-E6-TRANSFORMACAO.md), sobre a 1.61.0, só design. Recomendada a Prisão de Gelo (Mago): congela sem sorteio, custa mais e fere pouco, no lugar da Lança de Gelo, por um talento do tronco. Aguarda as decisões de Jean (seção 10 do 15) antes de implementar. |
+| E6 — transformação | **Implementada na 1.62.0** (registro abaixo; seções 11 a 14 do [15](15-E6-TRANSFORMACAO.md)): a Prisão de Gelo, talento do tronco do Mago (nível 4) que libera outra versão da Lança de Gelo, trocada no Grimório na vila ou no acampamento. Medida em lutas inteiras: papel próprio contra o inimigo forte que prepara o golpe, sem dominar. **O critério mínimo da E6 (07-ETAPAS) está atendido tecnicamente.** Falta Jean jogar (seção 14 do 15), sobretudo golem e cavaleiro sombrio sozinhos. |
 | E7–E11 | Plano de trabalho futuro; infraestrutura existente não equivale a etapas concluídas. Notas aprovadas para a E3 na seção 19 do [11](11-E1-REGIAO-INICIAL.md). |
 | Bugs ainda abertos | Nenhum bug aberto específico foi informado para registro nesta passagem. Isso não comprova ausência de bugs. |
 | Polimento antes da E3 | Entregue na 1.48.1 (registro abaixo): leitura, item achado, balcão do templo, palco da luta. Falta Jean conferir jogando. |
@@ -981,3 +981,56 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   (definitivo com comparação e confirmação, ou esperar a E7 e fazer por item) e o nome e o ícone.
 - **Verificações:** só Markdown em `roadmapIDEIAS` mudou (15 novo; README, 04, 07 e 00 atualizados). Nenhum código,
   teste ou save.
+
+### 11/10/2026 — E6: a Prisão de Gelo (1.62.0)
+
+- **Pedido de Jean:**
+  - a Prisão de Gelo como a única transformação da E6;
+  - os números iniciais: 16 de mana, 70% de dano de gelo, sem esquiva, sem o sorteio; o `firme` e a resistência de
+    chefes e gigantes continuam;
+  - validar numa cópia de trabalho, pelo combate real, antes de consolidar. Os cenários do 15, mais:
+    - Canalização e Eficiência no máximo de cada nível;
+    - a comitiva e o servo, com combinações de controle;
+    - o uso repetido e a alternância entre a Prisão e ataques;
+    - inimigos comuns, grupos, chefes e gigantes;
+    - impasses, com limite de 200 turnos;
+  - o talento no tronco, nível 4, 1 ponto;
+  - a compra definitiva, com a versão trocada na vila ou no acampamento, sem tela nova;
+  - a resolução por herói, sem mexer no catálogo;
+  - um cenário curto de comparação;
+  - não começar a E7, a dívida do Morel, a revisão de loot nem outras transformações.
+- **Implementado** (seção 12 do 15):
+  - `VARIANTES`, `efetiva`, `transforma` e o talento;
+  - a troca: opção escondida na vila e na fogueira e o botão "Levar a …" no Grimório. No texto, uma linha do menu;
+  - a árvore compara as duas versões com os números do herói;
+  - o robô lutador usa a Prisão em quem prepara;
+  - `PRISAO=prisao|lanca` no cenário `capela`.
+- **Medido** (seção 13 do 15), em cerca de 441 mil lutas em 315 células, sem nenhum impasse:
+  - a Prisão é relevantemente melhor em 18% das células, equivalente em 80% e pior em 2%;
+  - contra o preparador único, o herói ferido vence 82% em vez de 71%, e os golpes preparados que acertam caem de
+    0,2 para 0,02 por luta;
+  - em grupos, nunca é melhor;
+  - repetida, ela perde em grupo, gigante e chefe;
+  - Canalização e Eficiência não mudam o quadro;
+  - o ponto forte é o golem e o cavaleiro sombrio sozinhos. Se for demais jogando, o menor ajuste é o alvo ficar
+    firme por 2 turnos depois da Prisão.
+- **Equilíbrio e replay:**
+  - `tests.equilibrio` do Piromante e do Necromante ficou dentro do ruído. Com 90 lutas, as lutas comuns do
+    Piromante saem iguais (69,8% → 69,4%); os guardiões, 39% → 33% em 54 lutas;
+  - o replay saiu idêntico;
+  - antes de o robô aprender a Prisão, ele a usava como ataque principal, e os guardiões demoravam o dobro.
+- **Gabarito:** atualizado de propósito.
+  - Nas partidas sem Mago, só a linha do glossário de cores mudou ("Prisão de Gelo").
+  - Nas do Mago, a divergência começa no nó novo da árvore. Nenhuma partida comprou ou usou a Prisão.
+- **Verificações:** testes de unidade, gabarito, pyflakes e a fumaça do navegador. O navegador a 1500 e 1280 px mostra:
+  - a página da Prisão com a troca na vila;
+  - a página sem a troca na capela;
+  - a árvore com os dois nós do tronco lado a lado;
+  - a janelinha da luta com a Prisão (16);
+  - o "congelado" na luta.
+- **Como testar (rota curta):**
+  1. `CLASSE=mago NIVEL=4 ETAPA=ossuario PRISAO=prisao python -m tests.navegador.cenarios capela`: desça ao ossuário
+     e use a Prisão no Esqueleto de Guarda quando ele preparar o golpe.
+  2. O mesmo com `PRISAO=lanca`: o mesmo herói, com a Lança.
+  3. Com `LUGAR=vau_do_turvo`, abra o Grimório (P) na Prisão de Gelo e troque pelo botão.
+

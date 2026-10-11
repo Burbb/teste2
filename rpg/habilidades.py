@@ -28,7 +28,7 @@ para o gabarito de regressão continuar idêntico quando nada de jogo mudou.
 
 from . import balanceamento as bal
 from .estados import descrever_aplicar, descrever_buff
-from .modificadores import mod, mult
+from .modificadores import fontes, mod, mult
 
 NOME_STAT = {"atk": "Ataque", "poder": "Poder", "agi": "Agilidade", "max_hp": "Vida máx.", "defesa": "Defesa"}
 
@@ -586,8 +586,8 @@ def _linhas_combustao(u):
                        "o que as chamas ainda queimariam × (1,6 + 0,2 por camada).")]
 
 
-def _passos_de(h_id):
-    """Os blocos de uma habilidade do catálogo, os de dentro também."""
+def blocos(ficha):
+    """Os blocos de uma ficha, os de dentro também."""
     def ver(passos):
         for p in passos:
             yield p
@@ -595,7 +595,12 @@ def _passos_de(h_id):
                 yield from ver(p.depois)
             elif isinstance(p, (Se, Salva)):
                 yield from ver(p.passos)
-    return list(ver(HABILIDADES[h_id].get("passos", [])))
+    return list(ver(ficha.get("passos", [])))
+
+
+def _passos_de(h_id, u=None):
+    """Os blocos de uma habilidade (a versão do herói, com `u`), os de dentro também."""
+    return blocos(efetiva(u, h_id) if u is not None else HABILIDADES[h_id])
 
 
 def _vida_servo(u):
@@ -757,7 +762,78 @@ HABILIDADES = {
 }
 
 
+# ---------------------------------------------------------------------- transformações (E6)
+# Uma variante é outra ficha para uma habilidade que o herói já tem. Ela não entra em HABILIDADES (ninguém a aprende
+# por nível nem a vê na encruzilhada): um talento a libera (`transforma` nas fontes de modificadores.py) e o herói
+# escolhe, na vila ou no acampamento, qual versão leva (`versoes`, no personagem). Na luta vale a versão escolhida.
+# O catálogo nunca muda: cada herói resolve a sua ficha em `efetiva`.
+VARIANTES = {
+    "prisao_gelo": hab("Prisão de Gelo", 16, "inimigo",
+                       "70% de dano de gelo que não se esquiva; congela o alvo (chefes e gigantes resistem metade; "
+                       "quem acabou de se soltar fica firme).", [
+                           Dano(0.7, tipo="gelo", alcance="distancia", stat="poder", rotulo="Prisão de Gelo",
+                                esquiva=False, depois=[Se("acertou", Aplicar("atordoado", 1, rotulo="congelado"))])],
+                       icone="gelo", familia="gelo", realce="gelo", origem="lanca_gelo"),
+}
+
+
+def transformacoes(u):
+    """{habilidade: variante} que as fontes do herói liberam (hoje, só o talento Prisão de Gelo)."""
+    livres = {}
+    for _, f, _ in fontes(u):
+        livres.update(f.get("transforma") or {})
+    return livres
+
+
+def versao(u, h_id):
+    """O id que o herói usa para essa habilidade: a variante escolhida (se liberada) ou a própria."""
+    v = (getattr(u, "versoes", None) or {}).get(h_id)
+    return v if v and transformacoes(u).get(h_id) == v else h_id
+
+
+def efetiva(u, h_id):
+    """A ficha que vale para este herói: nome, custo, alvo, descrição, execução e Grimório saem dela."""
+    v = versao(u, h_id)
+    return VARIANTES[v] if v != h_id else HABILIDADES[h_id]
+
+
+def ficha(v_id):
+    """A ficha de um id, do catálogo ou de uma variante."""
+    return VARIANTES.get(v_id) or HABILIDADES[v_id]
+
+
+def origem(u, h_id):
+    """O nome de quem libera a transformação dessa habilidade (o talento), para o Grimório dizer de onde ela vem."""
+    return next((nome for nome, f, _ in fontes(u) if h_id in (f.get("transforma") or {})), None)
+
+
+def resumo_versao(u, v_id):
+    """Os números do herói numa versão, para comparar as duas antes de escolher: custo, dano médio, esquiva e congelar.
+    Tudo lido da ficha (custo, blocos, linhas do Grimório): nada escrito à mão."""
+    from .talentos import custo_de
+    f = ficha(v_id)
+    partes = [f"{custo_de(u, v_id)} de {u.nome_recurso.lower()}"]
+    dano = next((l for l in f["linhas"](u) if l.get("tipo") == "dano"), None)
+    if dano:
+        foge = all(p.esquiva for p in blocos(f) if isinstance(p, Dano))
+        partes.append(f"dano médio {dano['medio']}" + ("" if foge else " (não se esquiva)"))
+    for p in blocos(f):
+        if isinstance(p, Aplicar) and p.efeito == "atordoado":
+            partes.append("congela sempre" if p.chance >= 1 else f"{round(p.chance * 100)}% de congelar se acertar")
+    return f"{f['nome']}: " + ", ".join(partes)
+
+
+def escolher_versao(u, h_id, variante):
+    """Leva a variante (ou, com None, a habilidade original). Só muda o que o herói guarda; o catálogo, nunca."""
+    versoes = dict(getattr(u, "versoes", None) or {})
+    if variante:
+        versoes[h_id] = variante
+    else:
+        versoes.pop(h_id, None)
+    u.versoes = versoes
+
+
 def descricao_habilidade(h_id, u):
     """A descrição com os números do herói, quando a habilidade sabe calculá-los (ex.: quanto o Meditar devolve)."""
-    h = HABILIDADES[h_id]
+    h = efetiva(u, h_id)
     return h["desc_fn"](u) if h.get("desc_fn") else h["desc"]

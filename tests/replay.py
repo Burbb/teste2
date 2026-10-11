@@ -29,7 +29,9 @@ from rpg import comitiva
 from rpg.comitiva import COMPANHEIROS as MEMBROS
 from rpg.classes import COMPANHEIROS as ANIMAIS
 from rpg.dados import AFIXOS, GUARDIOES
+from rpg.habilidades import escolher_versao
 from rpg import inimigos as fab
+from rpg.talentos import POR_ID
 
 from tests import arena
 
@@ -121,8 +123,12 @@ def refazer(eventos, vezes=20):
             g.subir_nivel()
         elif t == "talento":
             j.talentos[ev["id"]] = ev["rank"]
+            for h, v in POR_ID[ev["id"]]["transforma"].items():  # a compra já leva a versão nova (talentos.aprender)
+                escolher_versao(j, h, v)
             j.pontos_talento = max(0, j.pontos_talento - 1)
             j.recalcular()
+        elif t == "versao":  # a troca no Grimório (E6)
+            escolher_versao(j, ev["habilidade"], None if ev["versao"] == ev["habilidade"] else ev["versao"])
         elif t == "spec":
             g.especializar(ev["spec"])
             if animal and ev["spec"] == "patrulheiro":

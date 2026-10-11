@@ -41,6 +41,7 @@ function aplicarEstado(e) {
   const antes = estado;
   estado = e;
   Realce.glossario(e.glossario);
+  Telas.atualizarGrimorio();
   corpo.classList.remove("sem-heroi");
   const bioma = e.local.tipo === "vila" ? "vila" : e.local.bioma;
   corpo.dataset.bioma = bioma;

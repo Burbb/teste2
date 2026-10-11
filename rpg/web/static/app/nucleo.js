@@ -125,7 +125,7 @@ function acao(filtro, som, extra) {
   return true;
 }
 const ACOES_OCULTAS = ["equipar", "tirar", "usar", "largar", "comprar", "comprar_item", "vender", "recomprar", "aceitar", "abandonar",
-  "conversar", "chamar", "reservar", "acampamento", "save", "carinho", "dormir", "reforcar", "tratar"];
+  "conversar", "chamar", "reservar", "acampamento", "save", "carinho", "dormir", "reforcar", "tratar", "versao"];
 
 /* ------------------------------------------------------------------ fila */
 async function processar() {
@@ -190,7 +190,7 @@ async function tratar(m) {
     case "bloco": bloco(m); break;
     case "mapa": mapaNaPagina(m); break;
     case "escolhido": eco(m); break;
-    case "opcoes": mostrarOpcoes(m); soltarRolagem(); break;
+    case "opcoes": mostrarOpcoes(m); soltarRolagem(); Telas.atualizarGrimorio(); break;
     case "continuar": mostrarContinuar(m); soltarRolagem(); break;
     case "pergunta": mostrarPergunta(m); soltarRolagem(); break;
     case "erro": anexar(el("p", "erro", "Algo deu errado: " + esc(m.texto))); break;
