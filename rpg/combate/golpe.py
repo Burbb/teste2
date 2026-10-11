@@ -218,6 +218,13 @@ class Golpes:
                          "cinza")
             return False
         atual = alvo.efeitos.get(efeito)
+        if est["perde_turno"] and atual and atual["t"] >= turnos:
+            # Travar de novo quem já está travado não soma: ele perde o próximo turno uma vez só (e depois fica firme).
+            # A tela diz isso, em vez de anunciar um congelamento novo que não muda nada.
+            ja = atual.get("r") or NOMES_EFEITOS[efeito]
+            self.lance("efeito", em=self.uid(alvo), efeito=efeito, rotulo=f"já {ja}")
+            self.detalhe(f"{self.nome(alvo)} já está {ja}: não soma, perde só o próximo turno.", "cinza")
+            return True
         if acumula and atual and est["camadas"]:
             # Mais uma camada: o dano por turno soma (até o teto) e a duração se renova.
             s = min(est["camadas"], atual.get("s", 1) + 1)

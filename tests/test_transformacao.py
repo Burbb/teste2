@@ -159,6 +159,37 @@ class TestNaLuta(unittest.TestCase):
         self.assertTrue(any(l["tipo"] == "golpe" and l["dano"] > 0 for l in lances))  # o golpe fraco sai
         g.combate_ativo = None
 
+    def test_duas_lancas_nos_dois_turnos_da_iniciativa(self):
+        """A iniciativa dá dois turnos seguidos: congelar de novo antes de o inimigo agir não soma (e a tela diz isso),
+        ele perde uma ação só, fica firme depois dela, e a terceira Lança não o congela."""
+        for prisao in (False, True):
+            g = mago(talento=prisao)
+            cb, e = luta(g)
+            e.agi = 0  # a Lança acerta; o sorteio de congelar (35%) é forçado abaixo
+            aplicar = cb.aplicar
+            cb.aplicar = lambda alvo, ef, t, *a, **k: aplicar(alvo, ef, t, *a, **dict(k, chance=1.0))
+            nome = "Prisão de Gelo" if prisao else "Lança de Gelo"
+            g.j.aplicar("iniciativa", 2, 0.25)
+
+            def lanca():
+                g.ui.roteiro, g.ui.lances, g.j.rec = ["Habilidades", nome], [], g.j.max_rec
+                cb.fase_jogador()
+                return [(l["tipo"], l.get("rotulo")) for l in g.ui.lances if l["tipo"].startswith("efeito")]
+
+            self.assertEqual(lanca(), [("efeito", "congelado")])  # turno da surpresa: os inimigos não agem
+            g.j.remover("iniciativa")
+            self.assertEqual(lanca(), [("efeito", "já congelado")])
+            self.assertEqual(e.efeitos["atordoado"]["t"], 1)  # não soma
+            g.ui.lances = []
+            cb.fase_inimigos()
+            self.assertEqual([l["tipo"] for l in g.ui.lances], ["atordoado"])  # perde uma ação
+            self.assertEqual(list(e.efeitos), ["firme"])
+            self.assertEqual(lanca(), [("efeito_negado", "firme")])
+            g.ui.lances = []
+            cb.fase_inimigos()
+            self.assertIn("acao", [l["tipo"] for l in g.ui.lances])  # e age na rodada seguinte
+            g.combate_ativo = None
+
     def test_chefes_e_gigantes_resistem_metade(self):
         for familia, guardiao in (("troll", False), (None, True)):
             congelou = 0

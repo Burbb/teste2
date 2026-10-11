@@ -15,6 +15,7 @@
     python -m tests.navegador.cenarios tiro_duplo    # Patrulheiro contra três lobos feridos de jeitos diferentes (NIVEL, VIDAS)
     python -m tests.navegador.cenarios broquel       # Guerreiro nv 4 com o Broquel contra três lobos; repete com/sem o Revide (LUTA, ESPEC, NIVEL)
     python -m tests.navegador.cenarios resgate       # a recuperação: fome ou infecção no Charco, à noite (CLASSE, CAUSA, COMITIVA)
+    python -m tests.navegador.cenarios gelo          # Mago com a iniciativa contra um lobo: duas Lanças antes de ele agir (PRISAO, NIVEL, SEMENTE)
     python -m tests.navegador.cenarios muralha       # Guerreiro nv 6, Muralha + Contra-ataque (CONTRA) e o Broquel, contra bandidos e um cultista
 
 Imprime o endereço do servidor na primeira linha e fica no ar até ser encerrado.
@@ -428,6 +429,37 @@ def tiro_duplo(ui):
         pass
 
 
+def gelo(ui):
+    """Mago de nível NIVEL (padrão 4) com a iniciativa contra um lobo de muita vida e sem esquiva: dois turnos seguidos
+    para congelar duas vezes antes de o lobo agir. PRISAO="prisao" leva a Prisão de Gelo (congela sempre); sem ela, a
+    Lança de Gelo (35% de congelar; SEMENTE padrão 17: as duas primeiras Lanças congelam). A luta segue até o fim."""
+    from rpg import dev, talentos
+    from rpg.ui import BotUI
+    g = Jogo(BotUI(random.Random(1)), seed=int(os.environ.get("SEMENTE", "17")), pasta_saves=tempfile.mkdtemp(),
+             hardcore=False)
+    g.iniciar("Jean", "mago", "turvo")
+    nivel = int(os.environ.get("NIVEL", "4"))
+    dev.subir_ate(g, nivel, spec="piromante")
+    if os.environ.get("PRISAO") == "prisao":
+        talentos.aprender(g.j, talentos.POR_ID["prisao_gelo"])
+        g.j.pontos_talento -= 1
+    loc = next(l for l in g.mundo["locais"] if l["tipo"] == "selvagem" and l["bioma"] == "floresta")
+    g.mundo["atual"] = loc["id"]
+    loc["visitado"] = True
+    g.periodo, g.clima = 1, "limpo"
+    g.j.hp, g.j.rec = g.j.max_hp, g.j.max_rec
+    g.ui, ui.jogo = ui, g
+    ui.cena("Clareira", g.contexto_cena(), "evento")
+    e = g.inimigo("lobo", nivel=max(1, nivel - 1))
+    e.agi = 0
+    e.hp = e.max_hp = e.max_hp * 6
+    g.combate([e], emboscada="jogador")
+    try:
+        g.rodar()
+    except FimDeJogo:
+        pass
+
+
 def covil(ui):
     """Mundo gerado, CLASSE (padrão guerreiro) no nível 1, no covil de um guardião ainda vivo (ou no primeiro lugar do
     tipo LUGAR: vila, selvagem), no PERIODO (0 manhã ... 3 noite; padrão 0). BOLSA: "bandagem=0,pocao_vida=2" acerta a
@@ -537,7 +569,8 @@ def muralha(ui):
 
 CENARIOS = {"combate": combate, "titulo": titulo, "vila": vila, "campanha": campanha, "baus": baus, "missao": missao,
             "recarga": recarga, "capela": capela, "retorno": retorno, "praca": praca, "encruzilhada": encruzilhada,
-            "tiro_duplo": tiro_duplo, "covil": covil, "broquel": broquel, "muralha": muralha, "resgate": resgate}
+            "tiro_duplo": tiro_duplo, "covil": covil, "broquel": broquel, "muralha": muralha, "resgate": resgate,
+            "gelo": gelo}
 
 
 def main():
