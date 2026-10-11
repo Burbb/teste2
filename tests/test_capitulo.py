@@ -104,7 +104,7 @@ class TestDesfechos(unittest.TestCase):
                  ("destruida", "apoiar", "grupo", "queimados na praça", "vigília de Caspar reúne",
                   "não a deixa entrar no Vau"),
                  ("destruida", "calar", "desconhecida", "fundo da capela, sem nome", "a praça continua dele",
-                  "culpa a moça do brejo"),
+                  "culpa a moça do Charco dos Juncos"),
                  ("descansada", "denuncia_falhou", "morta", "fita de Berta", "a vigília dele acabou",
                   "morreu na fogueira"),
                  ("destruida", "denunciado", "desconhecida", "sem nome", "foi embora", "Ninguém mais procura")]

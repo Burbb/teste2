@@ -151,8 +151,8 @@ class TestPagina(unittest.TestCase):
         def passos(ui):
             ui.respostas.put((1, None))
             ui.respostas.put((2, None))
-            ui.cena("A Fonte Nova")
-            ui.dizer("A Fonte Nova brota entre pedras soltas.")
+            ui.cena("A fonte nova")
+            ui.dizer("A fonte nova brota entre pedras soltas.")
             ui.continuar(confirmar=True)
             ui.cena("Vau do Turvo", tipo="local")
             ui.cena("O vale")

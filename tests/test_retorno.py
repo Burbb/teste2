@@ -1,5 +1,5 @@
 """A volta ao Vau depois da guardiã (fim da E3) e a primeira consequência local (E4): a cena de retorno, uma vez, que
-conclui a missão; o Diário com a conclusão; a herança de Berta antes ou depois de concluir; a Fonte Nova e a frase da
+conclui a missão; o Diário com a conclusão; a herança de Berta antes ou depois de concluir; a fonte nova e a frase da
 vila pelos dias desde o desfecho; Pita e Marta na curandeira; saves e o mundo gerado."""
 
 import json

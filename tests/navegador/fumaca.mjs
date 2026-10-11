@@ -406,19 +406,19 @@ async function cenarioCampanha(browser) {
       "depois do aviso, continua na vila");
     // A missão (E3): a abertura já tocou; o rastreador e a opção da vila mostram o primeiro passo.
     const objetivo = () => page.evaluate(() => (document.querySelector("#mundo .rastro-missao .rastro-objetivo") || {}).textContent || "");
-    conferir(/Fonte Nova/.test(await objetivo()) && !!(await page.$('#prompt .escolha:has-text("Examinar a Fonte Nova")')),
-      "a missão aparece no rastreador e o exame da Fonte Nova no menu da vila");
+    conferir(/fonte nova/.test(await objetivo()) && !!(await page.$('#prompt .escolha:has-text("Examinar a fonte nova")')),
+      "a missão aparece no rastreador e o exame da fonte nova no menu da vila");
     const atalho = await esperar("#mundo .rastro-missao.cacavel", 5000);
     await page.evaluate(() => { velocidade = "instantaneo"; });  // o texto aparece todo de uma vez
     if (atalho) await atalho.click();
-    conferir(!!(await esperar('#cena-cab .cena-titulo:has-text("A Fonte Nova")', 10000)), "o cartão da missão leva ao exame da fonte");
+    conferir(!!(await esperar('#cena-cab .cena-titulo:has-text("A fonte nova")', 10000)), "o cartão da missão leva ao exame da fonte");
     await page.waitForSelector("#prompt .continuar.confirmar", { timeout: 10000 });
     for (let i = 0; i < 6; i++) { await page.keyboard.press("Enter"); await page.waitForTimeout(80); }  // Enter martelado
-    conferir(/A Fonte Nova/.test(await page.textContent("#cena-cab .cena-titulo")), "no instantâneo, o Enter martelado não fecha o exame da fonte");
+    conferir(/A fonte nova/.test(await page.textContent("#cena-cab .cena-titulo")), "no instantâneo, o Enter martelado não fecha o exame da fonte");
     await page.waitForTimeout(700);
     await page.keyboard.press("Enter");  // depois de uma pausa, o Enter continua
     conferir(!!(await esperar('#predios .predio[data-predio="estrada"]', 20000)) && /Bosque do Moinho/.test(await objetivo())
-      && !(await page.$('#prompt .escolha:has-text("Examinar a Fonte Nova")')), "depois do exame, o objetivo aponta o canal e o exame some");
+      && !(await page.$('#prompt .escolha:has-text("Examinar a fonte nova")')), "depois do exame, o objetivo aponta o canal e o exame some");
   } finally {
     conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
     await page.close();
@@ -991,7 +991,7 @@ async function cenarioYara(browser) {
   ({ page, erros } = await abrir(browser, url));
   try {
     await page.waitForSelector(`${MENU}:has-text("Aceitar Yara")`, { timeout: 20000 });
-    conferir(/A Moça do Brejo/.test(await page.textContent("#cena-cab .cena-titulo")) && !/lenha|forcado/.test(await page.textContent("#texto")),
+    conferir(/A Moça do Charco/.test(await page.textContent("#cena-cab .cena-titulo")) && !/lenha|forcado/.test(await page.textContent("#texto")),
       "denunciada a perseguição, a Yara que você não conhecia está livre no Charco, sem fogueira");
     await page.click(`${MENU}:has-text("Aceitar Yara")`);
     for (let t = 0; t < 60 && !(await page.$(`${MENU}:has-text("Explorar")`)); t++) {
@@ -1009,7 +1009,7 @@ async function cenarioYara(browser) {
     await (await page.waitForSelector(".save-cartao")).click();
     await page.waitForSelector(`${MENU}:has-text("Explorar")`, { timeout: 20000 });
     await page.waitForTimeout(600);
-    conferir(!/A Moça do Brejo/.test(await page.textContent("#cena-cab .cena-titulo"))
+    conferir(!/A Moça do Charco/.test(await page.textContent("#cena-cab .cena-titulo"))
       && (await page.evaluate(() => estado.heroi.comitiva.filter((c) => c.id === "yara").length)) === 1,
       "carregado: o encontro não se repete e a Yara está lá uma vez só");
   } finally {

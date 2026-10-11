@@ -1,5 +1,5 @@
 """A missão "A Febre do Turvo" (E3): o registro com etapas, a cena de abertura no Vau, o objetivo no Diário e no estado
-da tela, o exame da Fonte Nova, o canal no Bosque do Moinho, a Capela Afogada por fora e por dentro (nave, sacristia,
+da tela, o exame da fonte nova, o canal no Bosque do Moinho, a Capela Afogada por fora e por dentro (nave, sacristia,
 ossuário, soltar as correntes), as visitas antecipadas, o save e os saves da campanha de antes das missões."""
 
 import json
@@ -108,20 +108,20 @@ def opcoes_febre(g):
 class TestMissao(unittest.TestCase):
     def test_tres_classes_iniciam_e_avancam(self):
         for classe in CLASSES:
-            ui = Roteiro(["Examinar a Fonte Nova"])
+            ui = Roteiro(["Examinar a fonte nova"])
             g = campanha(classe, ui)
             self.assertEqual(missoes.registro(g, MID), {"etapa": "fonte", "cenas": [], "pistas": [], "preparos": [], "desfecho": None, "dia_desfecho": None, "concluida": None, "historico": []})
             g.tela()  # a cena de abertura toca no lugar do menu
             self.assertEqual(ui.cenas[-1], "A Febre do Turvo")
             self.assertEqual(missoes.registro(g, MID)["cenas"], ["abertura"])
             g.tela()  # agora o menu da vila, com o passo da missão; o roteiro escolhe examinar
-            self.assertIn("Examinar a Fonte Nova", ui.ofertas[-1])
+            self.assertIn("Examinar a fonte nova", ui.ofertas[-1])
             m = missoes.registro(g, MID)
             self.assertEqual((m["etapa"], m["pistas"]), ("canal", ["agua_do_leste"]))
-            self.assertIn("A Fonte Nova", ui.cenas)
+            self.assertIn("A fonte nova", ui.cenas)
 
     def test_repetir_nao_anda_de_novo(self):
-        ui = Roteiro(["Examinar a Fonte Nova"])
+        ui = Roteiro(["Examinar a fonte nova"])
         g = campanha(ui=ui)
         g.tela(); g.tela()
         antes = json.dumps(missoes.registro(g, MID))
@@ -134,7 +134,7 @@ class TestMissao(unittest.TestCase):
         self.assertEqual(len([e for e in g.registro if e["t"] == "missao"]), registros)
 
     def test_diario_e_tela_concordam_com_a_etapa(self):
-        for passos in ([], ["Examinar a Fonte Nova"]):
+        for passos in ([], ["Examinar a fonte nova"]):
             ui = Roteiro(passos)
             g = campanha(ui=ui)
             g.tela()
@@ -153,7 +153,7 @@ class TestMissao(unittest.TestCase):
 
     def test_save_preserva_o_avanco(self):
         pasta = tempfile.mkdtemp()
-        ui = Roteiro(["Examinar a Fonte Nova"])
+        ui = Roteiro(["Examinar a fonte nova"])
         g = campanha("arqueiro", ui, pasta)
         g.tela(); g.tela()
         g.salvar(silencioso=True)
@@ -197,7 +197,7 @@ class TestMissao(unittest.TestCase):
 
     def test_tres_classes_vao_da_fonte_ao_exterior_da_capela(self):
         for classe in CLASSES:
-            ui = Roteiro(["Examinar a Fonte Nova", CANAL])
+            ui = Roteiro(["Examinar a fonte nova", CANAL])
             g = campanha(classe, ui)
             g.tela(); g.tela()  # abertura; exame da fonte
             ir(g, "bosque_do_moinho")
@@ -225,7 +225,7 @@ class TestMissao(unittest.TestCase):
     def test_visitar_antes_nao_adianta_nem_gasta(self):
         """Passar pelo bosque e pela capela antes da hora não mostra nem consome nada; voltando na etapa certa, a ação
         e a cena estão lá."""
-        ui = Roteiro(["Examinar a Fonte Nova", CANAL])
+        ui = Roteiro(["Examinar a fonte nova", CANAL])
         g = campanha(ui=ui)
         g.tela()  # abertura
         for chave in ("bosque_do_moinho", "capela_afogada"):  # etapa "fonte"
@@ -254,17 +254,17 @@ class TestMissao(unittest.TestCase):
         """Toda cena e ação da missão declara `confirmar` e termina num Continuar que pede confirmação explícita (a
         tela gráfica não vira a página sozinha)."""
         self.assertTrue(all(d["confirmar"] for d in missoes.CENAS + missoes.ACOES))
-        ui = Roteiro(["Examinar a Fonte Nova", CANAL])
+        ui = Roteiro(["Examinar a fonte nova", CANAL])
         g = campanha(ui=ui)
         g.tela(); g.tela()
         ir(g, "bosque_do_moinho"); g.tela()
         ir(g, "capela_afogada"); g.tela()
-        self.assertEqual(ui.continuares[-4:], [("A Febre do Turvo", True), ("A Fonte Nova", True),
+        self.assertEqual(ui.continuares[-4:], [("A Febre do Turvo", True), ("A fonte nova", True),
                                                ("O Canal do Moinho", True), ("A Capela Afogada", True)])
 
     def test_fonte_respeita_a_hora(self):
         for periodo, hora in enumerate(("a manhã", "a tarde", "o anoitecer", "a noite")):
-            ui = Roteiro(["Examinar a Fonte Nova"])
+            ui = Roteiro(["Examinar a fonte nova"])
             g = campanha(ui=ui)
             g.tela()
             g.periodo = periodo
@@ -276,7 +276,7 @@ class TestMissao(unittest.TestCase):
     def test_save_da_etapa_canal_continua(self):
         """Um save da 1.50 (etapa "canal", com a pista da fonte) segue de onde parou, sem perder a pista."""
         pasta = tempfile.mkdtemp()
-        ui = Roteiro(["Examinar a Fonte Nova"])
+        ui = Roteiro(["Examinar a fonte nova"])
         g = campanha("mago", ui, pasta)
         g.tela(); g.tela()
         g.salvar(silencioso=True)
@@ -297,7 +297,7 @@ class TestMissao(unittest.TestCase):
         self.assertFalse(missoes.cena_pendente(z))
 
     def test_diario_diz_o_que_voce_sabe(self):
-        ui = Roteiro(["Examinar a Fonte Nova", "Fechar"])
+        ui = Roteiro(["Examinar a fonte nova", "Fechar"])
         g = campanha(ui=ui)
         g.diario()
         self.assertNotIn("Mais recente", " ".join(ui.ditos))  # nada descoberto ainda

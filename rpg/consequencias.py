@@ -1,6 +1,6 @@
 """Consequências locais da campanha escrita (E4): o que o desfecho de uma missão muda no lugar, e quem atende ali.
 
-Primeira consequência: o Vau do Turvo depois da guardiã. Nada aqui é simulação: o estado da Fonte Nova sai de dois
+Primeira consequência: o Vau do Turvo depois da guardiã. Nada aqui é simulação: o estado da fonte nova sai de dois
 números guardados na missão (o desfecho e o dia em que ele aconteceu, `missoes.registro(...)["dia_desfecho"]`) e da
 passagem de dias que o jogo já tem (`g.dia`). Dele saem a frase da vila, quem atende na curandeira (Pita enquanto
 Marta está de cama; Marta depois que a água limpa) e o que o Diário diz da Fonte.
@@ -90,17 +90,17 @@ def atendente(g):
 
 FRASES = {
     # (desfecho, estado da Fonte[, "mesmo dia"]): a variante "mesmo dia" vale enquanto nenhuma noite passou.
-    ("descansada", "limpando", "mesmo dia"): "Na Fonte Nova, o lodo assentou e a água corre mais clara. \"Ninguém "
+    ("descansada", "limpando", "mesmo dia"): "Na fonte nova, o lodo assentou e a água corre mais clara. \"Ninguém "
                                              "piorou desde que a água mudou\", diz uma mulher enchendo o balde.",
-    ("descansada", "limpando"): "Na Fonte Nova, o lodo assentou e a água corre mais clara. \"Ninguém piorou de "
+    ("descansada", "limpando"): "Na fonte nova, o lodo assentou e a água corre mais clara. \"Ninguém piorou de "
                                 "noite\", diz uma mulher enchendo o balde. \"A primeira desde o verão.\"",
-    ("descansada", "limpa"): "A Fonte Nova corre clara. Alguém amarrou uma fita desbotada na pedra da fonte, e ninguém "
+    ("descansada", "limpa"): "A fonte nova corre clara. Alguém amarrou uma fita desbotada na pedra da fonte, e ninguém "
                              "tira.",
-    ("destruida", "escura"): "A Fonte Nova corre escura, quase preta. Ninguém enche balde: Pita ferve água do rio para "
+    ("destruida", "escura"): "A fonte nova corre escura, quase preta. Ninguém enche balde: Pita ferve água do rio para "
                              "os doentes. \"Pioraram todos de uma hora para outra\", diz alguém na porta da taverna.",
-    ("destruida", "limpando"): "A Fonte Nova clareia devagar. \"O pior passou\", diz o homem da ponte, \"mas aquela "
+    ("destruida", "limpando"): "A fonte nova clareia devagar. \"O pior passou\", diz o homem da ponte, \"mas aquela "
                                "noite foi feia.\"",
-    ("destruida", "limpa"): "A Fonte Nova corre clara de novo. As crianças voltam à praça; ninguém fala da capela.",
+    ("destruida", "limpa"): "A fonte nova corre clara de novo. As crianças voltam à praça; ninguém fala da capela.",
 }
 
 
@@ -131,15 +131,15 @@ def ambiente(g, frase):
 AMBIENTE_VAU = {
     AMBIENTE_VILA[0]: "Portas fechadas com pano molhado na fresta. Atrás de quase todas, alguém tosse.",
     AMBIENTE_VILA[2]: "Uma tábua cobre a boca do poço seco da praça. As crianças sentam nela para descansar.",
-    AMBIENTE_VILA[7]: "Uma mulher passa com dois baldes cheios da Fonte Nova e não olha para ninguém.",
+    AMBIENTE_VILA[7]: "Uma mulher passa com dois baldes cheios da fonte nova e não olha para ninguém.",
 }
 
 
 # ------------------------------------------------------------------ o Diário
 FONTE_DIARIO = {
-    "escura": "A Fonte Nova corre escura desde o confronto, e os doentes pioraram.",
-    "limpando": "A Fonte Nova está limpando.",
-    "limpa": "A Fonte Nova está limpa, e Marta voltou a atender.",
+    "escura": "A fonte nova corre escura desde o confronto, e os doentes pioraram.",
+    "limpando": "A fonte nova está limpando.",
+    "limpa": "A fonte nova está limpa, e Marta voltou a atender.",
 }
 
 

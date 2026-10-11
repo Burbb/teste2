@@ -382,8 +382,8 @@ def yara_na_fogueira(g):
     g.dizer("A moça vê você. Não pede ajuda. Só olha.", "cinza")
     op = g.menu("O que faz?", [
         ("\"Soltem a moça.\" (Força)", "forca"),
-        # Na campanha, a febre do Vau veio com a Fonte Nova (o poço só secou): a frase fala da água que a vila bebe.
-        ("\"A febre vem da água da Fonte Nova, não dela.\" (Carisma)" if g.campanha else
+        # Na campanha, a febre do Vau veio com a fonte nova (o poço só secou): a frase fala da água que a vila bebe.
+        ("\"A febre vem da água da fonte nova, não dela.\" (Carisma)" if g.campanha else
          "\"A febre vem do poço, não dela.\" (Carisma)", "falar"),
         ("Assustá-los com magia (Arcano)", "magia") if g.j.classe == "mago" else None,
         ("\"Eu levo a bruxa daqui. Vinte moedas pelo incômodo.\"", "comprar") if g.j.ouro >= 20 else None,
@@ -413,8 +413,8 @@ def yara_na_fogueira(g):
         cm.reagir(g, "rebeldia")
     elif op == "falar":
         if g.teste("carisma", 13):
-            g.dizer("Você fala da Fonte Nova, que brotou quando o poço secou, e da febre que começou junto com ela: "
-                    "a água, não uma moça do brejo. Um a um, os forcados baixam. Caspar é o último a ir embora." if g.campanha else
+            g.dizer("Você fala da fonte nova, que brotou quando o poço secou, e da febre que começou junto com ela: "
+                    "a água, não uma moça do Charco dos Juncos. Um a um, os forcados baixam. Caspar é o último a ir embora." if g.campanha else
                     "Você fala do moleiro que desviou o riacho, da água parada, das crianças que bebem dela. Um a um, "
                     "os forcados baixam. O pregador é o último a ir embora.", "verde")
             simpatia = 10
@@ -443,7 +443,7 @@ def yara_na_fogueira(g):
     if cm.oferecer_vaga(g, "yara"):
         cm.mudar_aprovacao(g, "yara", simpatia, mostrar=False)
     else:
-        g.dizer("Yara assente e some no brejo, entre a névoa, sem fazer barulho nenhum.", "cinza")
+        g.dizer("Yara assente e some no pântano, entre a névoa, sem fazer barulho nenhum.", "cinza")
         g.marcar("comitiva:yara", "recusou")
 
 

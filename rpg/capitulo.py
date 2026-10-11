@@ -37,12 +37,12 @@ def para_tela(g):
 # menu do Vau mostra logo depois) nem conta o que ainda não aconteceu: com a Fonte escura ou limpando, Marta segue de
 # cama.
 FONTE = {
-    ("descansada", "limpando"): "A água da Fonte Nova está clareando. Marta ainda está de cama.",
-    ("destruida", "escura"): "A água da Fonte Nova ainda está escura, e Marta piorou com ela.",
-    ("destruida", "limpando"): "A água da Fonte Nova já não corre preta, mas ainda não está limpa. Marta ainda está de "
+    ("descansada", "limpando"): "A água da fonte nova está clareando. Marta ainda está de cama.",
+    ("destruida", "escura"): "A água da fonte nova ainda está escura, e Marta piorou com ela.",
+    ("destruida", "limpando"): "A água da fonte nova já não corre preta, mas ainda não está limpa. Marta ainda está de "
                                "cama.",
 }
-FONTE_LIMPA = "A água da Fonte Nova está limpa de novo, e Marta voltou a atender na cabana."
+FONTE_LIMPA = "A água da fonte nova está limpa de novo, e Marta voltou a atender na cabana."
 
 CASPAR = {
     "apoiar": "Toda noite, a vigília de Caspar reúne a vila na praça.",
@@ -75,9 +75,9 @@ def _yara(g, postura):
     if onde == "recusou":
         return "Yara vive no Charco dos Juncos" + (", e ninguém mais a procura." if livre else
                                                   ", e a vigília ainda fala dela.")
-    return ("Ninguém mais procura a moça do brejo que Caspar acusava." if livre else
-            "A vigília ainda procura a moça do brejo que Caspar acusa." if postura == "apoiar" else
-            "Caspar ainda culpa a moça do brejo pela febre.")
+    return ("Ninguém mais procura a moça do Charco dos Juncos que Caspar acusava." if livre else
+            "A vigília ainda procura a moça do Charco dos Juncos que Caspar acusa." if postura == "apoiar" else
+            "Caspar ainda culpa a moça do Charco dos Juncos pela febre.")
 
 
 def linhas(g):

@@ -44,10 +44,10 @@ MISSOES = {
         },
         pistas={},
         titulos={"lodo": "Uma amostra do lodo do fundo da capela",
-                 "analise": "O lodo tem a mesma magia antiga da Fonte Nova"},
+                 "analise": "O lodo tem a mesma magia antiga da fonte nova"},
         preparos={
-            "lodo": "Uma amostra do lodo do fundo da capela, num frasco: a mesma sujeira que a Fonte Nova trazia.",
-            "analise": "O lodo contém a mesma magia antiga encontrada na Fonte Nova.",
+            "lodo": "Uma amostra do lodo do fundo da capela, num frasco: a mesma sujeira que a fonte nova trazia.",
+            "analise": "O lodo contém a mesma magia antiga encontrada na fonte nova.",
         },
     ),
 }
@@ -115,8 +115,8 @@ def _requisitos(g, m):
     f = _febre(g)
     canal = bool({"canal_da_capela", "agua_da_capela"} & set(f["pistas"]))
     return {"titulo": "O que pode mostrar à praça para defender que a febre veio da água, e não de Yara:", "itens": [
-        {"texto": "O caminho da água, do moinho à Fonte Nova", "onde": None, "feito": canal},
-        {"texto": "Uma amostra do lodo que a água leva para a Fonte Nova", "onde": None,
+        {"texto": "O caminho da água, do moinho à fonte nova", "onde": None, "feito": canal},
+        {"texto": "Uma amostra do lodo que a água leva para a fonte nova", "onde": None,
          "feito": "lodo" in m["preparos"]},
     ]}
 
@@ -222,11 +222,11 @@ def _acusacao(g, mid):
     g.ui.cena("Irmão Caspar", g.contexto_cena(), "evento")
     g.narrar(_caspar_e_quem(g))
     if yara == "morta":
-        g.narrar("\"Nós queimamos a bruxa do brejo\", grita ele, \"e a febre não passou! Então havia mais de uma. Olhem "
+        g.narrar("\"Nós queimamos a bruxa do Charco\", grita ele, \"e a febre não passou! Então havia mais de uma. Olhem "
                  "para os vizinhos. Olhem para quem chega de fora.\"")
     else:
-        g.narrar("\"A febre tem nome\", grita ele. \"Tem uma moça no brejo que fala com sapos e conhece toda erva que "
-                 "mata. Yara. Desde que ela apareceu no Charco, o gado morre e as crianças queimam de febre.\"")
+        g.narrar("\"A febre tem nome\", grita ele. \"Tem uma moça no Charco dos Juncos que fala com sapos e conhece toda "
+                 "erva que mata. Yara. Desde que ela apareceu por lá, o gado morre e as crianças queimam de febre.\"")
     g.narrar({
         "grupo": "Então ele vê Yara ao seu lado, e a praça inteira vê junto. \"E agora anda com gente armada\", diz "
                  "Caspar, mais baixo. Yara não abaixa os olhos.",
@@ -252,8 +252,8 @@ def _praca(g, mid):
         "descansada": "\"Rezamos, e a febre está cedendo!\", grita Caspar para a vila reunida. \"As nossas velas "
                       "fizeram a bruxa recuar.\"",
     }[f["desfecho"]])
-    g.narrar("\"A fogueira no brejo fez o resto\", completa, e ninguém responde." if yara == "morta" else
-             "\"Agora falta a do brejo\", completa. \"Yara. Enquanto ela andar solta, a febre volta.\"")
+    g.narrar("\"A fogueira no Charco fez o resto\", completa, e ninguém responde." if yara == "morta" else
+             "\"Agora falta a do Charco\", completa. \"Yara. Enquanto ela andar solta, a febre volta.\"")
     if yara == "grupo":
         g.narrar("Ele aponta para Yara, ao seu lado, e a praça inteira se vira para ela. Yara não se mexe.")
     g.narrar("A praça olha para você, que voltou da capela.")
@@ -262,7 +262,7 @@ def _praca(g, mid):
 
 def _ir_a_praca(g, mid):
     g.ui.cena("A Praça do Vau", g.contexto_cena(), "evento")
-    g.narrar("Caspar continua no caixote, pregando contra a bruxa do brejo. Quando você chega, a praça se vira para "
+    g.narrar("Caspar continua no caixote, pregando contra a bruxa do Charco. Quando você chega, a praça se vira para "
              "ouvir.")
     _decidir(g)
 
@@ -299,11 +299,11 @@ def _resolver(g, postura, forte=False):
     yara = situacao_yara(g)
     if postura == "denunciar":
         g.narrar("Você ergue o frasco do lodo e conta o caminho da água: a represa, o canal, a capela "
-                 "afundada, a Fonte Nova. \"A febre veio do que todos beberam\", você diz, \"não de uma moça no "
-                 "brejo.\"")
+                 "afundada, a fonte nova. \"A febre veio do que todos beberam\", você diz, \"não de uma moça no "
+                 "Charco.\"")
         if forte:
             g.narrar("Yara mostra as ervas que a água da fonte matava em um dia." if yara == "grupo" else
-                     "Você conta o que reconheceu no lodo: a mesma magia antiga da Fonte Nova, vinda do fundo da "
+                     "Você conta o que reconheceu no lodo: a mesma magia antiga da fonte nova, vinda do fundo da "
                      "capela pela água.")
         aceita = g.teste("carisma", CD_DENUNCIA_FORTE if forte else CD_DENUNCIA)
         postura = "denunciado" if aceita else "denuncia_falhou"
@@ -335,7 +335,7 @@ def _resolver(g, postura, forte=False):
     if postura in ("denunciado", "denuncia_falhou") and yara == "desconhecida":
         g.narrar("Ninguém mais procura a moça que Caspar acusava. Dizem que ela vive no Charco dos Juncos, entre os sapos.")
     if yara_barrada(g):
-        g.narrar("Yara entende antes de você explicar. \"Eu espero do lado de fora\", diz, seca. \"Na beira do brejo. "
+        g.narrar("Yara entende antes de você explicar. \"Eu espero do lado de fora\", diz, seca. \"Na beira do Charco. "
                  "Como sempre.\"" if yara == "grupo" else
                  "Quando voltar ao acampamento, você vai ter de contar à Yara que ela não entra mais no Vau.")
     m["concluida"] = g.dia
@@ -350,7 +350,7 @@ def _recolher_lodo(g, mid):
     if "lodo" not in m["preparos"]:
         m["preparos"].append("lodo")
     if g.j.classe == "mago" and "analise" not in m["preparos"]:
-        g.narrar("Você reconhece no lodo a mesma magia antiga da Fonte Nova. Ela parece vir do fundo da capela e "
+        g.narrar("Você reconhece no lodo a mesma magia antiga da fonte nova. Ela parece vir do fundo da capela e "
                  "chegar à vila pela água.")
         m["preparos"].append("analise")
     g.ui.efeito("Frasco do lodo", "item")
@@ -361,19 +361,19 @@ def _yara_no_charco(g, mid):
     conhece a Yara a encontra livre no Charco, uma vez, na primeira chegada lá. Mesma apresentação e mesma oferta de
     vaga da fogueira (eventos/comitiva.py: yara_na_fogueira), sem a execução."""
     postura = registro(g)["desfecho"]
-    g.ui.cena("A Moça do Brejo", g.contexto_cena(), "evento")
+    g.ui.cena("A Moça do Charco", g.contexto_cena(), "evento")
     g.narrar("Entre os juncos, uma moça de cabelo sujo de lama separa ervas em cima de uma pedra, com os pés na água. Os "
              "sapos em volta não fogem dela. Ela vê você chegar muito antes de você chegar perto.")
-    g.narrar("\"Você é quem mostrou o lodo na praça\", diz. \"Caspar pegou a estrada. Aqui no brejo a notícia chega "
+    g.narrar("\"Você é quem mostrou o lodo na praça\", diz. \"Caspar pegou a estrada. Aqui no Charco a notícia chega "
              "antes da poeira baixar.\"" if postura == "denunciado" else
              "\"Você é quem falou por mim na praça\", diz. \"Não convenceu todo mundo. Mas ninguém mais acende vela "
              "contra mim.\"")
-    g.narrar("\"Yara\", diz, e enxuga as mãos na saia. \"Eu não tenho para onde ir que não seja este brejo.\" Um "
+    g.narrar("\"Yara\", diz, e enxuga as mãos na saia. \"Eu não tenho para onde ir que não seja o Charco.\" Um "
              "sorriso torto. \"E você tem cara de quem precisa de alguém que fale com sapos.\"")
     if cm.oferecer_vaga(g, "yara"):
         cm.mudar_aprovacao(g, "yara", SIMPATIA_CHARCO[postura], mostrar=False)
     else:
-        g.narrar("Yara assente e some no brejo, entre a névoa, sem fazer barulho nenhum.", "cinza")
+        g.narrar("Yara assente e some no pântano, entre a névoa, sem fazer barulho nenhum.", "cinza")
         g.marcar("comitiva:yara", "recusou")
 
 

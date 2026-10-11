@@ -577,7 +577,7 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
             ("Ferreiro: o broquel que trouxeram da capela", "broquel",
              {"predio": "ferreiro", "servico": "broquel", "curto": "O broquel que trouxeram da capela",
               "efeito": "Do ossuário da Capela Afogada. Sem custo"}) if broquel else None,
-            *missoes.opcoes(self),  # o passo da missão que se dá aqui (campanha), como "Examinar a Fonte Nova"
+            *missoes.opcoes(self),  # o passo da missão que se dá aqui (campanha), como "Examinar a fonte nova"
             *self.opcoes_versao(),  # a troca de versão de uma habilidade transformada (o botão do Grimório)
         ]
         # A frase da vila aparece na chegada e quando o tempo passa, não a cada volta ao menu (do mercado, do

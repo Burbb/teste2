@@ -172,7 +172,7 @@ def baus(ui):
 
 
 def missao(ui):
-    """Campanha (mago) no Bosque do Moinho, de dia, com a Fonte Nova já examinada: a missão está na etapa "canal"."""
+    """Campanha (mago) no Bosque do Moinho, de dia, com a fonte nova já examinada: a missão está na etapa "canal"."""
     from rpg import missoes
     g = Jogo(ui, seed=8, pasta_saves=tempfile.mkdtemp(), hardcore=False)
     ui.jogo = g

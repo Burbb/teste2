@@ -312,7 +312,7 @@ function opcaoCacar(id) {
   if (!pergunta || pergunta.tipo !== "opcoes") return -1;
   return pergunta.opcoes.findIndex((o) => o.meta && o.meta.cacar === id);
 }
-/** O passo da missão que se dá aqui (examinar a Fonte Nova...): o cartão da missão no rastreador vira atalho para ele. */
+/** O passo da missão que se dá aqui (examinar a fonte nova...): o cartão da missão no rastreador vira atalho para ele. */
 function opcaoMissao(id) {
   if (!pergunta || pergunta.tipo !== "opcoes") return -1;
   return pergunta.opcoes.findIndex((o) => o.meta && o.meta.missao === id);

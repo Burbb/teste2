@@ -1,7 +1,7 @@
 """Missões da campanha escrita: um registro por missão, com id estável e etapas explícitas.
 
 E3 (roadmapIDEIAS/11-E1-REGIAO-INICIAL.md, seção 5): "A Febre do Turvo" começa com uma cena curta no Vau do Turvo; a
-investigação segue a água da Fonte Nova até o canal no Bosque do Moinho e o canal até a Capela Afogada. Dentro dela, três
+investigação segue a água da fonte nova até o canal no Bosque do Moinho e o canal até a Capela Afogada. Dentro dela, três
 salas em sequência (a nave, a sacristia, o ossuário), cada uma uma ação do menu da capela: sair e voltar é só escolher
 outra coisa no menu, e a sala vencida fica vencida (a etapa já passou dela). No fundo, a guardiã: Ilse, que em vida
 tinha a custódia do Sigilo do Turvo e, afogada pela vila, virou a Bruxa Afogada. Destruí-la ou dar-lhe descanso (o rito,
@@ -14,7 +14,7 @@ O estado de cada missão mora no mundo da campanha (`mundo["missoes"]`, vai no s
      "desfecho": None, "dia_desfecho": None, "concluida": None}
 `pistas` é o que se sabe; `preparos` é o que se fez ou se tem para depois (as correntes soltas, a fita de Ilse). Saber o
 nome não prepara nada: o rito pede a verdade (sacristia e Vó Berta), a fita e as correntes. `desfecho`: "destruida" ou
-"descansada", uma vez só; com ele vêm o Sigilo e a recompensa, e `dia_desfecho` (de onde sai o estado da Fonte Nova).
+"descansada", uma vez só; com ele vêm o Sigilo e a recompensa, e `dia_desfecho` (de onde sai o estado da fonte nova).
 `concluida`: o dia em que a missão terminou (a cena de volta ao Vau); concluída, ela sai do rastreador e do mapa e fica no
 Diário. A herança de Berta continua valendo depois da conclusão, até ser entregue.
 O mundo gerado não tem missões. Cenas e ações declaram a campanha (pela missão), o lugar (`chave` do lugar) e as
@@ -30,11 +30,11 @@ MISSOES = {
         campanha="turvo",
         # Em ordem. Cada etapa: o objetivo do Diário e onde ele leva (a chave do lugar, para o rastreador e o mapa).
         etapas={
-            "fonte": dict(objetivo="Descobrir de onde vem a febre: examinar a Fonte Nova, no Vau do Turvo.",
+            "fonte": dict(objetivo="Descobrir de onde vem a febre: examinar a fonte nova, no Vau do Turvo.",
                           lugar="vau_do_turvo"),
-            "canal": dict(objetivo="Seguir a água da Fonte Nova até o canal, no Bosque do Moinho.",
+            "canal": dict(objetivo="Seguir a água da fonte nova até o canal, no Bosque do Moinho.",
                           lugar="bosque_do_moinho"),
-            "capela": dict(objetivo="Entrar na Capela Afogada, no brejo, aonde o canal do moinho leva.",
+            "capela": dict(objetivo="Entrar na Capela Afogada, no pântano, aonde o canal do moinho leva.",
                            lugar="capela_afogada"),
             "sacristia": dict(objetivo="Atravessar o salão alagado da capela até a sacristia, atrás do altar.",
                               lugar="capela_afogada"),
@@ -45,15 +45,15 @@ MISSOES = {
             "retorno": dict(objetivo="Voltar ao Vau do Turvo com o Sigilo.", lugar="vau_do_turvo"),
         },
         pistas={
-            "agua_do_leste": "A Fonte Nova não nasce ali: a água chega por baixo da terra, do leste, do lado do Bosque "
+            "agua_do_leste": "A fonte nova não nasce ali: a água chega por baixo da terra, do leste, do lado do Bosque "
                              "do Moinho, e traz um lodo escuro e fino que água de nascente não tem.",
             "represa": "No ano passado, o dono do moinho fez uma represa no riacho, acima da roda, e abriu um canal "
                        "para leste. O trecho que descia para a vila minguou: é por isso que o poço da praça secou.",
-            "canal_da_capela": "O canal do moinho corre até o brejo e entra por um buraco no muro de uma capela "
+            "canal_da_capela": "O canal do moinho corre até o pântano e entra por um buraco no muro de uma capela "
                                "afundada, a Capela Afogada. Abaixo dela, a terra está encharcada na direção da vila.",
             "agua_da_capela": "Dentro da capela, a água do canal atravessa o salão principal, desce por uma fenda do piso e sai "
                               "por baixo do muro dos fundos, rumo à vila. Entra limpa e sai com o lodo escuro: é a "
-                              "água da Fonte Nova.",
+                              "água da fonte nova.",
             "ilse": "A capela tinha uma guardiã, Ilse. A vila a acusou de bruxaria e a afogou; o padre que escreveu o "
                     "livro da sacristia diz que ela não fez nada do que disseram.",
             "sigilo_do_turvo": "Em vida, Ilse guardava o Sigilo do Turvo, deixado na capela pela Igreja quando a "
@@ -73,7 +73,7 @@ MISSOES = {
         },
         # O nome curto de cada pista e preparo: o cartão de novidade (o que a cena acabou de mostrar) usa estes.
         titulos={
-            "agua_do_leste": "A água da Fonte Nova vem do leste, com lodo",
+            "agua_do_leste": "A água da fonte nova vem do leste, com lodo",
             "represa": "O dono do moinho fez uma represa no riacho e abriu um canal",
             "canal_da_capela": "O canal entra na Capela Afogada",
             "agua_da_capela": "A água suja passa por dentro da capela, rumo à vila",
@@ -282,8 +282,8 @@ def _abertura(g, mid):
     g.ui.cena(MISSOES[mid]["nome"], g.contexto_cena(), "evento")
     g.narrar("No Vau do Turvo há tosse atrás de quase toda porta. A febre começou há poucos meses: primeiro as crianças "
              "e os velhos, depois quem cuidava deles. Unhas escuras, sono pesado, sonhos com água.")
-    g.narrar("O poço da praça secou no ano passado, quando o riacho baixou. Na mesma época brotou uma fonte logo "
-             "abaixo das últimas casas. A vila a chamou de Fonte Nova, recebeu-a como bênção e passou a beber dela.")
+    g.narrar("O poço da praça secou no ano passado, quando o riacho baixou. Na mesma época, uma fonte nova brotou logo "
+             "abaixo das últimas casas, e a vila a recebeu como bênção e passou a beber dela.")
     g.narrar("\"Desde que a fonte apareceu\", diz uma mulher enchendo dois baldes, sem levantar os olhos, \"ninguém aqui "
              "dorme direito.\"")
     g.narrar("Marta, a curandeira, também está de cama. Anos atrás, foi ela quem tirou você de uma febre de estrada, "
@@ -301,8 +301,8 @@ def _pista(m, pid):
 
 def _examinar_fonte(g, mid):
     m = registro(g, mid)
-    g.ui.cena("A Fonte Nova", g.contexto_cena(), "evento")
-    g.narrar("A Fonte Nova brota entre pedras soltas, num buraco que ninguém cavou. A água é clara à primeira vista e "
+    g.ui.cena("A fonte nova", g.contexto_cena(), "evento")
+    g.narrar("A fonte nova brota entre pedras soltas, num buraco que ninguém cavou. A água é clara à primeira vista e "
              f"fria demais para {_HORA[min(g.periodo, 3)]}.")
     g.narrar({
         "guerreiro": "Você afasta as pedras maiores com as mãos. Por baixo, a terra está mole e afundada numa linha "
@@ -325,18 +325,18 @@ def _seguir_canal(g, mid):
              "troncos e pedra segura a água num lago raso. O leito velho, o que descia para o Vau, é um fio entre "
              "pedras secas.")
     g.narrar("Do lado da represa sai um canal recém-cavado, reto como uma régua. Uma comporta de tábuas manda a "
-             "água para ele, e ele segue para leste, atravessando o bosque rumo ao brejo.")
+             "água para ele, e ele segue para leste, atravessando o bosque rumo ao pântano.")
     g.narrar({
         "guerreiro": "Você desce ao leito velho e chuta as pedras secas. A marca da água ainda está nelas, um palmo "
                      "acima: o riacho que enchia o poço da vila agora passa quase todo pelo canal.",
         "arqueiro": "Você anda ao lado do canal até onde as árvores rareiam. Nenhum bicho bebe dele: as pegadas na lama "
                     "chegam até a beira e voltam.",
-        "mago": "Perto da represa a água é só água. Mais adiante, rumo ao brejo, volta aquela sensação da Fonte Nova: "
+        "mago": "Perto da represa a água é só água. Mais adiante, rumo ao pântano, volta aquela sensação da fonte nova: "
                 "uma palavra apagada, cada vez mais perto.",
-    }.get(g.j.classe, "Rumo ao brejo, a água do canal fica mais escura e mais fria."))
-    g.narrar("Você segue o canal até onde o bosque acaba. Adiante, meio engolida pelo brejo, há uma capela de pedra "
+    }.get(g.j.classe, "Rumo ao pântano, a água do canal fica mais escura e mais fria."))
+    g.narrar("Você segue o canal até onde o bosque acaba. Adiante, meio engolida pelo pântano, há uma capela de pedra "
              "com o telhado afundado, e o canal entra por um buraco no muro dela. Do outro lado, a terra encharcada "
-             "desce na direção da vila, como o fio que você viu na Fonte Nova.")
+             "desce na direção da vila, como o fio que você viu na fonte nova.")
     _pista(m, "represa")
     _pista(m, "canal_da_capela")
     avancar(g, mid, "canal", "capela")
@@ -347,7 +347,7 @@ def _capela_exterior(g, mid):
     g.narrar("A capela está afundada até a metade das janelas. Juncos crescem no que foi o pátio da frente, e a porta "
              "sumiu sob a lama. O sino não está mais na torre.")
     g.narrar("O canal que você seguiu desde o moinho termina aqui: a água entra por um buraco no muro e desaparece "
-             "no escuro lá dentro, sem barulho. Do buraco vem um frio que não é do brejo.")
+             "no escuro lá dentro, sem barulho. Do buraco vem um frio que não é do pântano.")
     g.narrar("Na beira da água, os sapos estão quietos. Alguns têm patas a mais.")
 
 
@@ -416,12 +416,12 @@ def _nave(g, mid):
     g.narrar("Alguma coisa se mexe entre os bancos. Corpos inchados se levantam da água, e o fundo se enche de "
              "sanguessugas.")
     if not _lutar(g, g.grupo("afogado", n=1) + g.grupo("sanguessuga", n=2), "O Salão Alagado"):
-        _recuo(g, "O Salão Alagado", "Você recua pela brecha, de volta ao brejo. Lá dentro, a água se fecha de novo.")
+        _recuo(g, "O Salão Alagado", "Você recua pela brecha, de volta ao pântano. Lá dentro, a água se fecha de novo.")
         return
     g.ui.cena("O Salão Alagado", g.contexto_cena(), "evento")
     g.narrar("Com a água quieta, dá para ver o caminho dela. Entra pelo muro rompido, atravessa o salão, desce pela "
              "fenda do piso e, mais adiante, sai por baixo do muro dos fundos, rumo à vila.")
-    g.narrar("Na entrada, ela é clara. Na saída, deixa nas pedras o mesmo lodo escuro da Fonte Nova. A vila bebe "
+    g.narrar("Na entrada, ela é clara. Na saída, deixa nas pedras o mesmo lodo escuro da fonte nova. A vila bebe "
              "o que passa por baixo desta capela.")
     g.narrar("Atrás do altar, uma porta baixa leva à sacristia.")
     _pista(m, "agua_da_capela")
@@ -451,7 +451,7 @@ def _sacristia(g, mid):
              "no ano em que a Fenda foi fechada, e o que a Igreja deixou com ela: \"o Sigilo do Turvo, que não deve "
              "sair desta capela nem ir para mão nenhuma\".")
     g.narrar("Anos depois, a letra treme. A vila acusa Ilse de bruxaria: a febre daquele inverno, os sonhos com água, o "
-             "gado morto no brejo. O padre escreve que ela não fez nada disso, que só guardava. Na linha seguinte: "
+             "gado morto no pântano. O padre escreve que ela não fez nada disso, que só guardava. Na linha seguinte: "
              "\"Entregue à água pela vontade da vila. O Sigilo foi com ela. Que Deus nos perdoe.\"")
     for pid in ("ilse", "sigilo_do_turvo", "marcados"):
         _pista(m, pid)
@@ -762,13 +762,13 @@ def _retorno(g, mid):
     g.ui.cena("De Volta ao Vau", g.contexto_cena(), "evento")
     g.narrar("Você entra no Vau com o Sigilo do Turvo no bolso, ainda frio como pedra de rio.")
     g.narrar({
-        ("descansada", "limpando"): "Na Fonte Nova, o lodo assentou no fundo da bacia, e a água que corre por cima já "
+        ("descansada", "limpando"): "Na fonte nova, o lodo assentou no fundo da bacia, e a água que corre por cima já "
                                     "sai mais clara." + (" Ninguém piorou de noite." if consequencias.noites(g) else " Ninguém piorou desde então."),
-        ("destruida", "escura"): "A Fonte Nova corre escura, quase preta: o que estava no corpo de Ilse saiu de uma vez. "
+        ("destruida", "escura"): "A fonte nova corre escura, quase preta: o que estava no corpo de Ilse saiu de uma vez. "
                                  "A vila inteira tosse mais desde que a água escureceu, e ninguém enche balde.",
-        ("destruida", "limpando"): "A Fonte Nova ainda tem a cor de chá fraco, mas clareia. Contam que houve uma noite "
+        ("destruida", "limpando"): "A fonte nova ainda tem a cor de chá fraco, mas clareia. Contam que houve uma noite "
                                    "em que a água correu preta e todos pioraram. O pior passou.",
-    }.get((m["desfecho"], fonte), "A Fonte Nova corre clara, e há fila de baldes de novo na praça."))
+    }.get((m["desfecho"], fonte), "A fonte nova corre clara, e há fila de baldes de novo na praça."))
     if consequencias.marta_de_pe(g):
         g.narrar("Marta está na porta da casa dela, magra e de pé. \"Você de novo\", diz, e quase sorri. \"Da outra vez "
                  "fui eu que cuidei de você.\" Pita, ao lado, não para de falar.")
@@ -813,7 +813,7 @@ CENAS = [
 # `abre`: ela leva a outra escolha, de onde se pode voltar (a tela marca com uma seta; o texto, com "›"). `avanca`: é o
 # passo que leva a história adiante; fica por último entre as ações da missão, depois do que se pode examinar antes.
 ACOES = [
-    dict(missao="febre_do_turvo", id="examinar_fonte", rotulo="Examinar a Fonte Nova", lugar="vau_do_turvo",
+    dict(missao="febre_do_turvo", id="examinar_fonte", rotulo="Examinar a fonte nova", lugar="vau_do_turvo",
          etapas=("fonte",), fn=_examinar_fonte, confirmar=True),
     dict(missao="febre_do_turvo", id="seguir_canal", rotulo="Seguir a água e examinar o canal",
          lugar="bosque_do_moinho", etapas=("canal",), fn=_seguir_canal, confirmar=True),

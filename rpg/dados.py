@@ -189,7 +189,7 @@ FAMILIAS = {
     "sapo": dict(nome="sapo-touro gigante", plural="sapos-touro gigantes", g="m", hp=30, atk=6, defesa=3, agi=4, poder=0,
                  tracos=["fera"], habs=["veneno", "agarrar"], xp=14, ouro=(0, 1), grupo=(1, 2),
                  lore="A língua é mais rápida que uma flecha, e o couro é venenoso ao toque."),
-    "bruxa_brejo": dict(nome="bruxa do brejo", plural="bruxas do brejo", g="f", hp=24, atk=4, defesa=2, agi=5, poder=9,
+    "bruxa_brejo": dict(nome="bruxa do pântano", plural="bruxas do pântano", g="f", hp=24, atk=4, defesa=2, agi=5, poder=9,
                         tracos=["humano", "conjurador"], habs=["maldicao", "bola_fogo", "cura"], xp=20, ouro=(6, 15),
                         grupo=(1, 1), ataque="sombra",
                         nivel_min=2,

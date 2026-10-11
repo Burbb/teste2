@@ -149,7 +149,7 @@ class TestDiario(unittest.TestCase):
         self.assertIn("O que você já fez:", " ".join(ui.ditos))
 
     def test_historico_com_dia_e_o_mais_recente(self):
-        ui = Anotador(["Examinar a Fonte Nova"])
+        ui = Anotador(["Examinar a fonte nova"])
         g = Jogo(ui, seed=5, pasta_saves=tempfile.mkdtemp())
         g.iniciar("Teste", "guerreiro", "turvo")
         g.tela()  # abertura

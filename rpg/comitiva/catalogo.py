@@ -78,7 +78,7 @@ COMPANHEIROS = {
         },
     ),
     "yara": dict(
-        nome="Yara", curto="Yara", g="f", titulo="bruxa do brejo", papel="maldicao",
+        nome="Yara", curto="Yara", g="f", titulo="bruxa do pântano", papel="maldicao",
         desc="Quase queimada como bruxa. A Fenda fala com ela, e às vezes ela responde.",
         base=dict(hp=26, atk=3, poder=9, defesa=2, agi=5), cresc=dict(hp=5, atk=0.4, poder=1.7, defesa=0.4),
         valores={"magia_proibida": 3, "curiosidade": 3, "rebeldia": 3, "misericordia": 1, "diplomacia": 1,
@@ -104,7 +104,7 @@ COMPANHEIROS = {
                 "de coisa queimada que não é lenha.",
         ocioso={
             "alto": ["Yara trança ervas no seu cabelo enquanto você cochila. \"Contra pesadelos. Funciona. Às vezes.\"",
-                     "\"Antes de você\", diz Yara, \"eu achava que ia morrer sozinha no brejo. Agora acho que vou morrer acompanhada. É uma melhora.\""],
+                     "\"Antes de você\", diz Yara, \"eu achava que ia morrer sozinha no pântano. Agora acho que vou morrer acompanhada. É uma melhora.\""],
             "medio": ["Yara fala com um sapo por um bom tempo. O sapo parece concordar.",
                       "Yara desenha símbolos na terra e apaga antes que você consiga ler."],
             "baixo": ["Yara dorme longe da fogueira. E longe de você.",

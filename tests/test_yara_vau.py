@@ -42,11 +42,11 @@ class TestCharco(unittest.TestCase):
             ir(g, CHARCO)
             ui.roteiro = ["Aceitar"]
             self.assertTrue(missoes.cena_pendente(g))  # na primeira chegada, sem sorteio
-            self.assertEqual(ui.cenas[-1], "A Moça do Brejo")
+            self.assertEqual(ui.cenas[-1], "A Moça do Charco")
             self.assertNotIn("lenha", " ".join(ui.ditos[-4:]))  # sem a execução
             m = cm.membro(g, "yara")
             self.assertEqual(m["aprovacao"], caspar.SIMPATIA_CHARCO[desfecho])
-            self.assertEqual(ui.continuares[-1], ("A Moça do Brejo", True))
+            self.assertEqual(ui.continuares[-1], ("A Moça do Charco", True))
             self.assertFalse(missoes.cena_pendente(g))
             self.assertEqual(len([x for x in g.comitiva if x["id"] == "yara"]), 1)
 
@@ -288,8 +288,8 @@ class TestTextos(unittest.TestCase):
     def test_fogueira_fala_da_fonte_na_campanha_e_do_poco_no_mundo_gerado(self):
         ui = self.fogueira(campanha())
         opcoes = ui.ofertas[0]
-        self.assertTrue(any(o.startswith("\"A febre vem da água da Fonte Nova, não dela.\" (Carisma") for o in opcoes))
-        self.assertIn("Você fala da Fonte Nova", " ".join(ui.ditos))
+        self.assertTrue(any(o.startswith("\"A febre vem da água da fonte nova, não dela.\" (Carisma") for o in opcoes))
+        self.assertIn("Você fala da fonte nova", " ".join(ui.ditos))
         g = Jogo(Roteiro(), seed=5, pasta_saves=tempfile.mkdtemp())
         g.iniciar("Teste", "guerreiro")
         ui = self.fogueira(g)

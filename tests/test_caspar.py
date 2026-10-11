@@ -185,7 +185,7 @@ class TestCombinacoes(unittest.TestCase):
         g, ui, testes, rep = self.decidir("destruida", "Calar", yara="morta")
         self.assertEqual((caspar.registro(g)["desfecho"], rep), ("calar", 0))
         self.assertEqual(missoes.cartoes(g, todas=True)[1]["linhas"][2], "Yara: morreu na fogueira de Caspar.")
-        self.assertIn("fogueira no brejo fez o resto", " ".join(ui.ditos))
+        self.assertIn("fogueira no Charco fez o resto", " ".join(ui.ditos))
 
     def test_prova_forte_facilita(self):
         g, ui, testes, rep = self.decidir("descansada", "Denunciar", classe="mago")
