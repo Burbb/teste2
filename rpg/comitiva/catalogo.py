@@ -207,7 +207,7 @@ ATALHOS_FOGUEIRA = ("talentos", "personagem", "mapa", "diario", "bestiario", "sa
 
 # Falas curtas no meio da luta: aparecem em balões, uma por turno no máximo.
 GRITOS = {
-    "odete": {"cura": ["Fica de pé. Ainda não é hora.", "Respira. Eu tô aqui.", "A Mãe não te quer ainda."],
+    "odete": {"cura": ["Fica de pé. Ainda não é hora.", "Respira. Eu tô aqui.", "Fica comigo. Respira."],
               "ataque": ["Que a luz te encontre!", "Perdoa. Mas vai doer."]},
     "morel": {"ataque": ["Vem, vem!", "Isso é pelo soldo.", "Olha pra mim, desgraçado!"],
               "atordoa": ["Fica aí no chão.", "Escudo na cara. Funciona sempre."]},

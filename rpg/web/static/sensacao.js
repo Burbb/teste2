@@ -18,10 +18,11 @@ const Sensacao = (() => {
     // quem cai em tempo real, e o resto escurece.
     final: { lento: 0.3, entradaMs: 220, seguraMs: 380, saidaMs: 450, zoom: 1.08, zoomMs: 520 },
     // Números que contam subindo (ouro do espólio): duração e o máximo de tiques de som.
-    contarMs: 650, tiquesMax: 10,
+    contarMs: 650, tiquesMax: 10, espolioOuroMs: 500,
     // A barra de XP enchendo (por trecho de nível) e os respiros do espólio, que fica até o Continuar: o clique não
     // conta por `espolioGuardaMs` depois de tudo aparecer, e cada clique da rajada estende a espera em `espolioRajadaMs`.
-    barraMs: 700, espolioEsperaMs: 450, espolioEntreMs: 180, espolioGuardaMs: 900, espolioRajadaMs: 350,
+    // O ouro do espólio conta mais depressa (`espolioOuroMs`), e a experiência vem logo depois (`espolioEntreMs`).
+    barraMs: 700, espolioEsperaMs: 450, espolioEntreMs: 100, espolioGuardaMs: 900, espolioRajadaMs: 350,
     // Vida por um fio: o compasso do pulso (ms entre batidas), mais rápido quanto mais perto do fim, e quantas
     // vezes o coração soa ao entrar na faixa (depois só a tela pulsa: som contínuo cansa e angustia).
     batimentoLentoMs: 1150, batimentoRapidoMs: 700, batidasAoEntrar: 3,
@@ -398,7 +399,7 @@ const Sensacao = (() => {
     await dormir(pausa(AJUSTES.espolioEsperaMs));  // a faixa de "Vitória" sai antes
     if (d.ouro) {
       Som.tocar("moeda");
-      await contar(caixa.querySelector(".espolio-linha.ouro .conta"), d.ouro);
+      await contar(caixa.querySelector(".espolio-linha.ouro .conta"), d.ouro, AJUSTES.espolioOuroMs);
       Telas.moedasPara(caixa.querySelector(".espolio-linha.ouro"), document.querySelector('.recurso[data-rec="ouro"]'));
       await dormir(pausa(AJUSTES.espolioEntreMs));
     }

@@ -313,6 +313,7 @@ const Batalha = (() => {
   function entrar(el, l, invocada) {
     if (invocada) {
       brilho(el, "sombra");
+      som("invocar");  // só na entrada de verdade: reconstruir a tela ou carregar o estado não passa por aqui
       const a = el.animate([{ opacity: 0, translate: "0px 34px", clipPath: "inset(100% 0 0 0)" },
         { opacity: 1, translate: "0px 0px", clipPath: "inset(0 0 0 0)" }], { duration: pausa(700), easing: "cubic-bezier(.2,.7,.3,1)" });
       entrando.push(a.finished.catch(() => {}));
@@ -1011,7 +1012,8 @@ const Batalha = (() => {
     document.body.appendChild(b);
     posicionarBalao(b, naLuta);
     baloes[cid] = b;
-    setTimeout(() => { b.classList.add("sumindo"); setTimeout(() => b.remove(), 300); }, Math.min(8000, 2600 + texto.length * 45));
+    // Fica o tempo de ler (a fala curta some antes; a pausa da luta, abaixo, é outra conta e não muda).
+    setTimeout(() => { b.classList.add("sumindo"); setTimeout(() => b.remove(), 300); }, Math.min(6000, 1600 + texto.length * 35));
     return Math.min(1600, 500 + texto.length * 18);
   }
   const baloes = {};

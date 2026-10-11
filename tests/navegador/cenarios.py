@@ -7,7 +7,7 @@
     python -m tests.navegador.cenarios baus      # vila com três baús na bolsa: a pilha abre inteira
     python -m tests.navegador.cenarios missao    # campanha no Bosque do Moinho, na etapa de seguir o canal
     python -m tests.navegador.cenarios recarga   # título com um save da campanha (Bosque, à noite) e um do mundo gerado
-    python -m tests.navegador.cenarios capela    # herói na Capela Afogada (CLASSE, ETAPA, NIVEL, PREPARO, LUGAR, SEMENTE, PRISAO)
+    python -m tests.navegador.cenarios capela    # herói na Capela Afogada (CLASSE, ESPEC, ETAPA, NIVEL, PREPARO, LUGAR, SEMENTE, PRISAO)
     python -m tests.navegador.cenarios retorno   # chegando ao Vau com Ilse resolvida (DESFECHO, DIAS, LODO, YARA)
     python -m tests.navegador.cenarios praca     # depois da resposta a Caspar (POSTURA, YARA, LUGAR); no Vau, abre no fim do capítulo
     python -m tests.navegador.cenarios encruzilhada  # a escolha de especialização, comparando (CLASSE, NIVEL)
@@ -225,7 +225,8 @@ def capela(ui):
     g = Jogo(BotUI(random.Random(1)), seed=int(os.environ.get("SEMENTE", "11")), pasta_saves=pasta, hardcore=False)
     g.iniciar("Jean", os.environ.get("CLASSE", "guerreiro"), "turvo")
     nivel = int(os.environ.get("NIVEL", "5"))
-    dev.subir_ate(g, nivel)  # já especializado (a primeira da classe): o acampamento não para na encruzilhada
+    dev.subir_ate(g, nivel, spec=os.environ.get("ESPEC"))  # já especializado (ESPEC, ou a primeira da classe): o
+    # acampamento não para na encruzilhada
     if os.environ.get("PRISAO"):  # a comparação da E6: o mesmo herói, com a Prisão ou com a Lança na mão
         talentos.aprender(g.j, talentos.POR_ID["prisao_gelo"])
         g.j.pontos_talento -= 1

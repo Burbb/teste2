@@ -292,6 +292,12 @@ const Som = (() => {
         sopro(t + d, 0.08, 1800, 900, 0.05, 3);
       });
     },
+    invocar() {  // o servo sobe da terra: um ronco grave que sobe, um sopro escuro e dois estalos de osso no fim
+      const t = ctx.currentTime;
+      tom(t, 48, 0.35, 0.65, "sawtooth", 96);
+      sopro(t, 0.6, 180, 700, 0.22, 1.4, "lowpass");
+      estalo(t + 0.55, 900, 0.18, 0.04); estalo(t + 0.62, 700, 0.14, 0.04);
+    },
     fala() { const t = ctx.currentTime; [0, 0.06, 0.12].forEach((d) => tom(t + d, 520 + Math.random() * 260, 0.03, 0.06, "square")); },
     morte() {
       const t = ctx.currentTime;
