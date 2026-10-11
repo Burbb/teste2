@@ -9,6 +9,7 @@
 const predioEl = $("#predios");
 let vilaAberta = null;  // { m, grupos, predio } enquanto a vila está na tela
 let predioPedido = null;  // clicado enquanto a página ainda virava: entra assim que a vila se remonta
+const MURAL_VISTO = "cdf-mural-visto";  // o mural já foi aberto uma vez: o convite dele não pisca mais
 
 /** A pergunta é o menu da vila? (o lugar é uma vila, a cena é a do lugar, e há opções de prédio) */
 function ehMenuDaVila(m) {
@@ -75,7 +76,11 @@ function montarVila(m, grupos) {
   Vista.predios().forEach((p) => {
     const g = grupos[p.id];
     if (!g && !fechados[p.id]) return;
-    const b = el("button", "predio", `<span class="balao-nome">${esc(p.nome)}</span>`);
+    // Quem ainda não abriu o mural (neste navegador): o balão dele pisca como sob o mouse, com uma legenda curta, até
+    // a primeira visita. Mostra que o cenário se clica e por onde há trabalho a pegar.
+    const convite = p.id === "mural" && !ler(MURAL_VISTO);
+    const b = el("button", "predio" + (convite ? " convite" : ""),
+      `<span class="balao-nome">${esc(p.nome)}${convite ? '<small class="convite-legenda">clique: contratos</small>' : ""}</span>`);
     b.type = "button";
     b.dataset.predio = p.id;
     b.setAttribute("aria-label", p.nome);
@@ -115,6 +120,10 @@ function entrarNoPredio(id, pedido = false, continua = false) {
   // que sobrou na paisagem sai em vez de responder por uma pergunta que o motor não espera mais.
   if (!pergunta || pergunta.id !== v.m.id) { fecharVila(); return; }
   const g = v.grupos[id] || [];
+  if (id === "mural" && !ler(MURAL_VISTO)) {
+    guardar(MURAL_VISTO, "1");
+    predioEl.querySelectorAll(".predio.convite").forEach((b) => { b.classList.remove("convite"); b.querySelector(".convite-legenda")?.remove(); });
+  }
   if (!continua) Som.tocar("predio_" + id);  // de volta ao mesmo balcão (o templo depois de cuidar de alguém): sem o som de entrar
   Vista.focar(id);
   predioEl.classList.add("focado");  // com a câmera perto, os balões da vila inteira saem na hora
