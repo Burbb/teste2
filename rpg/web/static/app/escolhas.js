@@ -119,6 +119,18 @@ function mostrarOpcoes(m) {
       if (i >= 0) { pergunta = { id: m.id, tipo: "opcoes", opcoes: m.opcoes }; responder(m.id, i); return; }
     }
   }
+  // O toque guardado do acampamento (acao, em nucleo.js): o menu voltou, e a ação vale se ainda estiver nele.
+  if (acaoGuardada) {
+    const a = acaoGuardada;
+    acaoGuardada = null;
+    const i = m.opcoes.findIndex((o) => o.meta && Object.entries(a.filtro).every(([k, v]) => o.meta[k] === v));
+    if (i >= 0) {
+      pergunta = { id: m.id, tipo: "opcoes", opcoes: m.opcoes };
+      if (a.som) Som.tocar(a.som);
+      responder(m.id, a.extra ? { i, ...a.extra } : i);
+      return;
+    }
+  }
   promptEl.innerHTML = "";
   pergunta = { id: m.id, tipo: "opcoes", n: m.opcoes.length, opcoes: m.opcoes, numeros: [], letras: {} };
   porVoltar(null);  // o da pergunta anterior (sai e volta no mesmo instante, se esta também tiver: a barra não pisca)
@@ -684,6 +696,7 @@ function ehVoltar(o) {
 
 const RAJADA_LEITURA = 350;  // ms que cada toque da rajada acrescenta à guarda de um Continuar que pede confirmação
 function mostrarContinuar(m) {
+  acaoGuardada = null;  // um toque guardado do acampamento não atravessa um Continuar
   posicionarPrompt();
   soltarAlturaPrompt();
   if (pendente && pendente.chave === "_atalho" && docaTela) {  // a caminho de um atalho
@@ -700,15 +713,22 @@ function mostrarContinuar(m) {
     // Cena que pede confirmação (as de missão): adiantar o texto e continuar são gestos distintos. O botão chega com o
     // texto inteiro à vista e só aceita depois da guarda de leitura; cada toque dentro dela (o clique duplo, a tecla
     // martelada para adiantar) a estende, como no quadro do espólio, e a tecla segurada nunca conta. Continua quem
-    // para e toca de novo.
+    // para e toca de novo. Enquanto a guarda segura, o botão fica apagado: aceso, ele sempre aceita (antes, a rajada
+    // segurava o botão já aceso, e o toque parecia não responder).
     b.classList.add("confirmar");  // chega apagado e acende quando a guarda inicial acaba
     b.style.setProperty("--guarda", `${GUARDA_LEITURA}ms`);
-    pergunta.guardar = () => {
-      if (performance.now() >= pergunta.guardaAte) return false;
-      pergunta.guardaAte = Math.max(pergunta.guardaAte, performance.now() + RAJADA_LEITURA);
+    const q = pergunta;
+    let soltar = null;
+    q.guardar = () => {
+      const agora = performance.now();
+      if (agora >= q.guardaAte) return false;
+      q.guardaAte = Math.max(q.guardaAte, agora + RAJADA_LEITURA);
+      b.classList.add("contido");
+      clearTimeout(soltar);
+      soltar = setTimeout(() => b.classList.remove("contido"), q.guardaAte - agora);
       return true;
     };
-    pergunta.guardaAte = performance.now() + GUARDA_LEITURA;
+    q.guardaAte = performance.now() + GUARDA_LEITURA;
   }
   const p = pergunta;
   b.addEventListener("click", (ev) => { ev.stopPropagation(); if (!(p.guardar && p.guardar())) responder(m.id, null); });
@@ -717,6 +737,7 @@ function mostrarContinuar(m) {
 }
 
 function mostrarPergunta(m) {
+  acaoGuardada = null;
   posicionarPrompt();
   soltarAlturaPrompt();
   promptEl.innerHTML = "";

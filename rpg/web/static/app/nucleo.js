@@ -114,8 +114,22 @@ function pedir(rotulo, chave, valor) {
   responder(pergunta.id, i);
 }
 
+// Ações do acampamento tocadas enquanto a página ainda apresenta a anterior (a fala de quem conversou, a troca de quem
+// vai junto): o botão está à vista e vale, então o toque fica guardado e vale quando o menu voltar (mostrarOpcoes), e
+// a apresentação corre. O segundo toque de um clique duplo (logo depois de uma resposta) não se guarda, nem ações que
+// gastam ou se repetem (comprar, vender, usar). Uma pergunta de outro tipo no meio (um Continuar) descarta o toque.
+const ACOES_GUARDAVEIS = ["dormir", "conversar", "chamar", "reservar", "carinho"];
+const DUPLO_CLIQUE = 400;  // ms depois de uma resposta em que um toque ainda é o mesmo gesto
+let acaoGuardada = null;
+
 /** Responde à opção cujos metadados batem com o filtro (ações de arrastar, comprar, usar...). */
 function acao(filtro, som, extra) {
+  if (!pergunta && Object.keys(filtro).some((k) => ACOES_GUARDAVEIS.includes(k))
+      && performance.now() - ultimaResposta > DUPLO_CLIQUE) {
+    acaoGuardada = { filtro, som, extra };
+    pedirPular();
+    return true;
+  }
   if (!pergunta || pergunta.tipo !== "opcoes" || !pergunta.opcoes) return false;
   const i = pergunta.opcoes.findIndex((o) => o.meta && Object.entries(filtro).every(([k, v]) => o.meta[k] === v));
   if (i < 0) return false;
