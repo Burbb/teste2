@@ -81,7 +81,8 @@ Três commits posteriores à atualização do roadmap foram consultados. Os comp
 | E4 — consequência local | Na 1.54.0, a Fonte Nova, a frase do Vau, Pita e Marta. Na 1.55.0, Caspar: a acusação, a praça (Apoiar, Denunciar com prova, Calar), a situação da Yara e as reações da comitiva. Na 1.56.0, a consolidação: a Yara barrada fica de fato fora do Vau, o encontro no Charco depois da denúncia, a conversa da Yara sobre a praça e os textos que contradiziam o Vau. **O critério mínimo da E4 (07-ETAPAS) está atendido**; as outras ideias do 11 (bênção, sementes, mercado, taverna, Charco à noite, Odette e Caspar, Anselmo, a cena da vigília) ficam adiadas, não são requisito. Falta Jean jogar. |
 | E5 — classes | Diagnóstico (só design) em [14](14-E5-DIAGNOSTICO-CLASSES.md), sobre a 1.56.0. **P1 implementada na 1.57.0:** o golpe preparado em duas lutas fixas da capela (seção 10 do 14). **P3 implementada na 1.58.0:** a encruzilhada compara os dois caminhos e o Grimório explica (seção 11 do 14). **P2 começada na 1.59.0, só pelo Tiro Duplo** (seção 12 do 14): o 2º disparo vai no outro inimigo mais ferido. **Drenar Vida, Desaparecer e Passo Ágil avaliados em lutas inteiras** (seção 13 do 14, sem mudar o jogo): os dois primeiros têm função. **O desvio do Passo Ágil foi validado e rejeitado** (seção 14): usado repetidamente, vira a ação padrão contra inimigos sozinhos; o Passo Ágil fica como era. **O critério mínimo da E5 (07-ETAPAS) está atendido**: as três classes atravessam o Vale (a guardiã medida por caminho) e os seis caminhos foram avaliados em cenários direcionados. A E5 está **concluída tecnicamente**; adiado, sem ser requisito: o Passo Ágil, a sinergia Desaparecer–Execução, Sombra e Piromante contra a guardiã no nível 4, a preparação de habilidades. Falta Jean jogar. A validação da E4 jogando, por Jean, fica registrada à parte. |
 | Clareza da campanha | Pausa antes da E6, a partir do teste de Jean. **Primeira entrega na 1.60.0** (registro abaixo): ações da capela organizadas, Diário reorganizado, linguagem do Vale simplificada, cartão de atualização de missão. **Revisão na 1.60.1**: ações curtas com custo e risco numa nota, e o conhecimento conforme as descobertas (o critério está no 07). **Na 1.60.2**: porta ou ação à vista no menu e grupos. **Na 1.60.3**: o cartão de novidade como nota da história e o Diário na Alegreya Sans. **Na 1.60.4**: revisão editorial dos textos que antecipavam a resolução (critério no 07). **Na 1.61.0**: custo dos consumíveis nas opções, a proteção do mendigo e o fluxo da exaustão. Pendentes: a dívida do Morel e a revisão de loot. As próximas entregas estão listadas em [07](07-ETAPAS.md) ("Entre a E5 e a E6"), sem implementar. Falta Jean testar. |
-| E6–E11 | Plano de trabalho futuro; infraestrutura existente não equivale a etapas concluídas. Notas aprovadas para a E3 na seção 19 do [11](11-E1-REGIAO-INICIAL.md). |
+| E6 — transformação | **Especificação proposta** em [15](15-E6-TRANSFORMACAO.md), sobre a 1.61.0, só design. Recomendada a Prisão de Gelo (Mago): congela sem sorteio, custa mais e fere pouco, no lugar da Lança de Gelo, por um talento do tronco. Aguarda as decisões de Jean (seção 10 do 15) antes de implementar. |
+| E7–E11 | Plano de trabalho futuro; infraestrutura existente não equivale a etapas concluídas. Notas aprovadas para a E3 na seção 19 do [11](11-E1-REGIAO-INICIAL.md). |
 | Bugs ainda abertos | Nenhum bug aberto específico foi informado para registro nesta passagem. Isso não comprova ausência de bugs. |
 | Polimento antes da E3 | Entregue na 1.48.1 (registro abaixo): leitura, item achado, balcão do templo, palco da luta. Falta Jean conferir jogando. |
 | Baús abertos juntos | Entregue na 1.49.0 (registro abaixo), separado da E3. Falta Jean conferir jogando. |
@@ -931,3 +932,52 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   2. Repita com `BOLSA=bandagem=2`: a nota diz o custo, e a bolsa fica com 1.
   3. A proteção: `EVENTO=mendigo_misterioso LUGAR=vila`, pague a refeição e veja o aviso. Depois, `PROTECAO=mendigo LUTA=troll`: ataque, caia e veja "De pé outra vez" e o aviso de que ela se foi.
   4. A exaustão: `PERIODO=3 LUGAR=selvagem SEMENTE=9`, explore e recuse o duelo. É um Continuar, a faixa "Exausto" e a fogueira.
+
+### 11/10/2026 — E6: especificação de uma transformação de habilidade (só design, sobre a 1.61.0)
+
+- **Pedido de Jean:**
+  - retomar o roadmap pela E6, com a especificação de uma transformação pequena que crie alternativa de build e mude
+    decisões na luta;
+  - no máximo três candidatos e uma recomendação;
+  - arquitetura mínima;
+  - validação planejada;
+  - só Markdown em `roadmapIDEIAS`.
+- **Lido e conferido:**
+  - o escopo da E6 (07), o 04 e o 14;
+  - no código:
+    - quem consulta `HABILIDADES[id]` (heroi, Grimório, tela, custo, progressão, encruzilhada, `Salva`);
+    - como os talentos mexem em habilidades (só números);
+    - as regras do atordoar (`firme`, chefes e gigantes resistem metade, interrupção do golpe preparado);
+    - a escolha de alvo dos inimigos (aliados levam 25% dos ataques);
+    - que talentos não se desfazem.
+- **Candidatos (seção 3 do 15):**
+  - **A. Lança de Gelo → Prisão de Gelo:** recomendado;
+  - **B. Erguer Escudo → Desafio:** pouco valor hoje, porque os inimigos já miram o herói;
+  - **C. Golpe Pesado → Golpe Varredor:** sem recurso que limite, viraria a ação de quase toda luta do Vale, como o
+    desvio do Passo Ágil.
+- **Recomendação (seção 4 do 15):** a **Prisão de Gelo**, pelo talento do tronco do Mago (nível 4, 1 ponto), no lugar
+  da Lança de Gelo.
+  - **O que faz:** 16 de mana; 70% de dano de gelo, sem esquiva; congela sem sorteio, salvo `firme`, chefes e gigantes.
+    Todos os números são [proposta].
+  - **A troca:** a Lança é o dano barato com 35% de controle; a Prisão, a resposta certa ao golpe preparado de um
+    inimigo forte, mais cara e fraca em grupos.
+  - **O que limita a repetição** vem do jogo de hoje: a mana, o `firme`, a resistência.
+- **Arquitetura mínima (seção 6 do 15):**
+  - a variante fora do catálogo aprendível (`VARIANTES`);
+  - `efetiva(u, h_id)` por herói;
+  - `transforma` nas fontes de modificadores;
+  - as consultas diretas trocadas;
+  - a descrição do talento calculada das duas fichas.
+
+  Nenhum hook novo de combate; o catálogo global não muda.
+- **Validação (seção 8 do 15):**
+  - os cenários: alvo único com e sem preparo, gigante e chefe, grupo, com aliados, com servo, mana curta, ferido;
+  - as políticas, incluindo "Prisão sempre", que é a repetição abusiva, com e sem aliados;
+  - os testes de isolamento entre heróis;
+  - o navegador;
+  - Jean jogando no ossuário;
+  - o equilíbrio antes e depois.
+- **Para decidir antes de implementar (seção 10 do 15):** a candidata, os números, o lugar do talento, desfazer
+  (definitivo com comparação e confirmação, ou esperar a E7 e fazer por item) e o nome e o ícone.
+- **Verificações:** só Markdown em `roadmapIDEIAS` mudou (15 novo; README, 04, 07 e 00 atualizados). Nenhum código,
+  teste ou save.

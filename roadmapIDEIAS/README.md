@@ -38,6 +38,7 @@ Para uma nova conta ou sessão, começar por [00 — Comece aqui: continuidade](
 | [12-E1-CAMPANHA.md](12-E1-CAMPANHA.md) | E1: linha do tempo, Sigilos, protagonista, arco da campanha, finais, derrota, transição e o que decidir antes da E2 |
 | [13-PENDENCIAS-FORA-DA-CAMPANHA.md](13-PENDENCIAS-FORA-DA-CAMPANHA.md) | Divergências entre documentação e código, e texto do prólogo; fora da campanha |
 | [14-E5-DIAGNOSTICO-CLASSES.md](14-E5-DIAGNOSTICO-CLASSES.md) | E5: diagnóstico das três classes e seis especializações (sistemas conferidos, promessas × código, fichas, builds, progressão) e as prioridades da E5 |
+| [15-E6-TRANSFORMACAO.md](15-E6-TRANSFORMACAO.md) | E6: especificação de uma transformação de habilidade (candidatos, a Prisão de Gelo, regras existentes × propostas, arquitetura mínima, validação e decisões) |
 
 ## Estados e evidências
 

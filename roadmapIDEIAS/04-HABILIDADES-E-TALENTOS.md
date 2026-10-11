@@ -34,6 +34,9 @@ Ela deve informar alvo, custo, passos/comportamento, descrição, preview e apre
 
 Demonstrar primeiro uma transformação simples. Só adicionar hooks novos quando um efeito concreto exigir.
 
+A especificação da primeira está em [15](15-E6-TRANSFORMACAO.md): a Prisão de Gelo [proposta], com a ficha efetiva por herói
+(`efetiva(u, h_id)`, variantes fora do catálogo aprendível, `transforma` nas fontes de modificadores).
+
 ## Alvos
 
 Seleção normal de magias está organizada em inimigo, todos os inimigos e próprio personagem. Poções e a comitiva já têm caminhos de cura em aliados.
