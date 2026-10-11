@@ -7,6 +7,8 @@ Avaliação integrada do Vale do Turvo como primeiro capítulo (a E9 antecipada,
 - **Segunda entrega, 1.64.0 (seções 13 a 16):** a partida de Jean como evidência humana, a recuperação no modo
   Resgate da campanha, o custo dos companheiros na escolha e o encerramento do capítulo. Dano, vida dos inimigos,
   habilidades, preços, recompensas, regeneração e recursos iniciais não mudaram.
+- **Terceira entrega, 1.65.0 (seção 17):** interface, retorno visual e texto, a partir do que Jean encontrou jogando;
+  a investigação dos toques que pareciam não responder; os rótulos dos prédios (não reproduzido). Nada de equilíbrio.
 
 **A E9 não está concluída.** A validação técnica e a partida de Jean não substituem as partidas de jogadores novos
 (seção 9).
@@ -483,6 +485,16 @@ Resgate, 9 dias, nível 3, partida em andamento.
 cada, estavam vivos), e o registro não separa o dano por alvo. **"Quase matei Ilse" é a impressão de Jean jogando; o
 registro não confirma nem desmente.**
 
+**O complemento da mesma partida** (o registro até o dia 19, mandado depois; mesmo herói e mesma semente):
+- **19 dias, nível 6, Piromante desde o dia 9** (nível 4). Talentos: Potência Arcana 3, Prisão de Gelo, Escudo Rúnico,
+  Ignição;
+- **30 lutas: 27 vitórias, 2 fugas (as dos dias 1 e 2), 1 derrota (a primeira contra Ilse)**;
+- **Ilse vencida no dia 14, na segunda tentativa,** no nível 5, começando com 83 de vida, em 10 turnos (184 de dano do
+  herói e 122 da comitiva). O desfecho foi destruí-la, mesmo com a fita já recolhida no dia 13;
+- **a febre concluída no dia 15; diante de Caspar, calar-se**;
+- **o ouro sobe depois do começo:** 37 no dia 10, 200 no dia 12, 403 no dia 19. Passou fome em três dias: o 8 e o 9,
+  depois do resgate, e o 16.
+
 **O que isso acrescenta ao robô:**
 - uma pessoa experiente avança bem, entrando nas lutas ferida e com poucos recursos: usa fuga, Meditar, Barreira e a
   comitiva, coisas que o robô usa pouco ou mal;
@@ -622,4 +634,60 @@ insiste nas salas no nível 3. É a dificuldade das lutas, que Jean decidiu pres
 3. `python -m tests.navegador.cenarios praca` (com `POSTURA` e `YARA` à escolha): o fim do capítulo, o rastreador e o
    Diário.
 4. Uma partida nova até o fim do capítulo, de preferência com o Arqueiro, anotando como na seção 8.1.
+
+## 17. Interface, retorno visual e texto (1.65.0)
+
+Entrega pedida por Jean depois de jogar: interface, retorno e texto, com uma investigação de congelamento. Nada de
+equilíbrio, economia, recompensa ou dificuldade mudou. A proposta do Arqueiro sem flechas (seção 16) continua
+esperando a partida dele.
+
+**O que mudou:**
+- **Mercador ambulante:** sem ouro, as compras ficam à vista e indisponíveis; depois do exame (legítimo, com o preço
+  novo, ou malsucedido) há a compra e "Despedir-se". Antes, sem ouro, o evento acabava sem resposta. Sorteios iguais.
+- **Opção indisponível:** riscada em vermelho, com o motivo curto embaixo ("Ouro insuficiente"), em todas as
+  indisponíveis.
+- **Toques que pareciam não responder** (investigado no navegador, com cliques nas coordenadas, normal e instantâneo):
+  - o Continuar das cenas de missão: a proteção contra clique duplo e tecla segurada continua, mas o botão fica
+    apagado enquanto ela segura (antes, a rajada segurava o botão já aceso). Causa: a proteção;
+  - o acampamento: depois de "Conversar", a fala leva ~1,6 s para ser apresentada, e o "Dormir" à vista ignorava o
+    toque. Agora o toque em Dormir, Conversar, levar ou deixar alguém e carinho fica guardado e vale quando o menu
+    volta (nunca o segundo toque de um clique duplo, nem compra, venda ou uso). Causa: processamento e apresentação.
+- **Menu inicial:** ↑/↓ e Enter, o mouse leva o foco junto, e a opção em foco fica em ouro com um losango discreto.
+- **Nome na ficha:** o nome que não cabe ao lado do retrato ganha uma linha própria em cima ("PARAIBATRON" inteiro a
+  1500 e 1280 px); só uma palavra que nem assim cabe desce ao passo de pixel seguinte.
+- **"Com fome":** o selo fica na ponta da barra de vida (antes saía da caixa e era cortado).
+- **Árvore de talentos:** títulos curtos ("Base", o nome da classe, "sua especialização", "caminho não
+  escolhido"); sem "para todos" nem "passe o mouse".
+- **Combate:**
+  - os balões da comitiva ficam 1,6 s + 35 ms por letra (até 6 s; eram 2,6 s + 45 ms, até 8 s);
+  - a Odette diz "Fica comigo. Respira." no lugar de "A Mãe não te quer ainda.";
+  - a entrada do servo do Necromante tem um som curto, só na entrada de verdade;
+  - o espólio: o XP vem ~600 ms depois do ouro (eram ~830).
+- **Texto:** "fonte nova" vira descrição (a abertura não diz mais que a vila a chamou assim); "brejo" vira "pântano"
+  no terreno e "Charco dos Juncos" (ou "o Charco", nas falas) para o lugar da Yara.
+- **Pedidos de Jean no meio da entrega:**
+  - a teia da aranha voa até o alvo e, quando não prende, a carta diz "não pegou";
+  - na bolsa, o item que trata algo agora pulsa e diz o quê ("Trata: queimadura grave."); a bandagem sem nada para
+    tratar avisa que só cura 8 de vida;
+  - o mural pisca, com "clique: contratos", até a primeira visita (guardado no navegador).
+
+**Não reproduzido: os rótulos dos prédios que subiram.** Procurei em duas sessões de 260 passos ao acaso pela vila
+(prédios, menus, mapa, viagens), nas velocidades normal e instantânea, e num percurso dirigido (taverna, Diário,
+inventário, redimensionar 1500 ↔ 1280, zoom de 125%): o desvio entre a posição dos rótulos e a conta certa ficou
+sempre em 0. **Hipótese** (sem mudança feita, como pedido): os rótulos são calculados no primeiro quadro e no fim da
+transição de altura da paisagem; se a vila montar com a paisagem escondida ou numa mudança de altura sem transição
+(a coluna do meio mudando de largura sem a janela mudar), o cálculo usa uma altura menor e os rótulos sobem até a
+próxima montagem. Se acontecer de novo, anotar o que veio antes (luta, carregar, abrir um painel).
+
+**Verificado:** testes (novos: o mercador, o retorno visual da teia e da bolsa), gabarito (cada mudança conferida lado
+a lado antes de atualizar: só a escolha extra do mercador, o motivo, a nota do recrutamento, o subtítulo do tronco, a
+fala da Odette, "bruxa do pântano" e os campos da bolsa), pyflakes, fumaça, e as telas a 1500 e 1280 px.
+
+**Para Jean conferir:**
+1. Um mercador sem ouro (`EVENTO=mercador_ambulante OURO=0 python -m tests.navegador.cenarios covil`).
+2. O acampamento: conversar com a Odette e logo tocar em Dormir (`python -m tests.navegador.cenarios resgate`, acampar).
+3. O menu inicial só com o teclado.
+4. Uma luta contra aranhas (`LUTA=aranha VIDA=60 NIVEL_LUTA=2 QUANTOS=3 python -m tests.navegador.cenarios covil`).
+5. Uma ferida aberta e a bandagem na bolsa, antes e depois de usar (o cenário `resgate` com `CAUSA=infeccao`).
+6. Uma partida nova: o mural piscando no começo (num navegador que nunca o abriu).
 

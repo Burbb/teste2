@@ -167,7 +167,8 @@ logo depois da primeira entrega da E7. A dependência da E8 cai: raças e origen
 **Primeira entrega feita (diagnóstico, sem mudar o jogo):** [17](17-E9-VALIDACAO-DO-VALE.md). **Segunda entrega, na
 1.64.0:** a recuperação no modo Resgate da campanha (fome e infecção levam ao resgate, que alimenta e trata), a nota do
 custo do companheiro e o fim do capítulo no Vau; a partida de Jean registrada como evidência humana (seções 13 a 16 do
-17). A dificuldade dos combates ficou como estava. **Não concluída:** faltam os jogadores novos (seção 9 do 17) e Jean
+17). A dificuldade dos combates ficou como estava. **Na 1.65.0:** interface, retorno visual e texto a partir da
+partida de Jean (seção 17 do 17). **Não concluída:** faltam os jogadores novos (seção 9 do 17) e Jean
 jogar a 1.64.0; o começo apertado e o caso do arqueiro sem flechas ficam para depois disso (seção 16).
 
 **O que já está registrado para ela:**

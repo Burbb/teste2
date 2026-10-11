@@ -85,7 +85,7 @@ Três commits posteriores à atualização do roadmap foram consultados. Os comp
 | Direção (11/10/2026) | **Decidido por Jean:** o Vale do Turvo é o primeiro capítulo completo, para validação; depois da primeira entrega da E7 vem a avaliação integrada do Vale (E9 antecipada); a E8 fica adiada; a campanha maior continua como direção, sem obrigação de expandir antes da primeira versão de teste. **Em aberto:** a duração, que vem de partidas de jogadores novos. Detalhes no [01](01-VISAO.md) ("Direção") e no [07](07-ETAPAS.md) ("Ordem atual"). |
 | E7 — equipamento e build | **Primeira entrega implementada na 1.63.0:** o Broquel do Vigia, medido em lutas inteiras ([16](16-E7-ITEM-E-LOOT.md), seção 5). Antes, o saque do Vale foi medido e o baú da campanha passou a dar um suprimento (1.62.6). Falta Jean jogar (cenários `broquel` e `muralha`). Os exemplos para Arqueiro e Mago não foram começados. |
 | E8 — raças e origens | **Adiada explicitamente** (11/10/2026). |
-| E9 — avaliação do Vale | **Em andamento, não concluída.** Diagnóstico em [17](17-E9-VALIDACAO-DO-VALE.md) (seções 1 a 12). **Na 1.64.0** (seções 13 a 16): fome e infecção levam ao resgate na campanha, que alimenta herói e comitiva sem gastar a bolsa e trata a emergência; a nota "Consome 1 provisão por dia." ao aceitar um companheiro; o fim do capítulo no Vau, no rastreador e no Diário; a partida de Jean (mago) registrada como evidência humana. Dificuldade dos combates sem mudança. Faltam os jogadores novos (ficha na seção 9) e Jean jogar a 1.64.0 (roteiro na seção 16). |
+| E9 — avaliação do Vale | **Em andamento, não concluída.** Diagnóstico em [17](17-E9-VALIDACAO-DO-VALE.md) (seções 1 a 12). **Na 1.64.0** (seções 13 a 16): fome e infecção levam ao resgate na campanha, que alimenta herói e comitiva sem gastar a bolsa e trata a emergência; a nota "Consome 1 provisão por dia." ao aceitar um companheiro; o fim do capítulo no Vau, no rastreador e no Diário; a partida de Jean (mago) registrada como evidência humana. Dificuldade dos combates sem mudança. **Na 1.65.0** (seção 17): interface, retorno e texto (mercador, toques que se perdiam, menu inicial, nome na ficha, talentos, balões, servo, espólio, "fonte nova", pântano e Charco, a teia, a bolsa, o mural); os rótulos dos prédios não reproduziram. Faltam os jogadores novos (ficha na seção 9) e Jean jogar a 1.64.0 (roteiro na seção 16). |
 | E10–E11 | Plano de trabalho futuro; infraestrutura existente não equivale a etapas concluídas. A E10 depende da avaliação do Vale. Notas aprovadas para a E3 na seção 19 do [11](11-E1-REGIAO-INICIAL.md). |
 | Bugs ainda abertos | Nenhum bug aberto específico foi informado para registro nesta passagem. Isso não comprova ausência de bugs. |
 | Polimento antes da E3 | Entregue na 1.48.1 (registro abaixo): leitura, item achado, balcão do templo, palco da luta. Falta Jean conferir jogando. |
@@ -1366,4 +1366,24 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   mudou só na nota do recrutamento (conferido e atualizado); pyflakes.
 - **Para Jean:** o roteiro curto da seção 16 do 17.
 - **Falta:** os jogadores novos; a E9 continua aberta.
+
+### 11/10/2026 — Interface, retorno visual e texto (E9, 1.65.0)
+
+- **Pedido de Jean:** os problemas que ele encontrou jogando, sem mexer em equilíbrio, economia, recompensa ou
+  dificuldade; entregas pequenas, commits separados; a investigação dos toques que não respondiam.
+- **Feito** ([17](17-E9-VALIDACAO-DO-VALE.md), seção 17):
+  - o mercador ambulante sem ouro (compra à vista e indisponível, despedida);
+  - a opção indisponível riscada em vermelho, com o motivo curto (pedido no meio);
+  - os toques: o Continuar das cenas apagado enquanto a proteção segura; os toques do acampamento guardados até o
+    menu voltar;
+  - o menu inicial com teclado e foco visível; o nome longo na ficha; o selo "com fome" na barra; a árvore de
+    talentos com títulos curtos;
+  - os balões mais curtos, a fala da Odette, o som do servo, o espólio mais ágil;
+  - "fonte nova" como descrição; "pântano" e "Charco dos Juncos" no lugar de "brejo";
+  - pedidos no meio: a teia que voa e diz "não pegou"; a bolsa que pulsa e diz o que trata; a bandagem que avisa que
+    só cura; o mural que pisca para quem nunca o abriu.
+- **Não reproduzido:** os rótulos dos prédios que subiram (registrado com a hipótese, sem mudança).
+- **A partida de Jean:** o complemento até o dia 19 registrado na seção 13 do 17.
+- **Verificado:** testes, gabarito (cada diferença conferida), pyflakes, fumaça, telas a 1500 e 1280 px.
+- **Falta:** Jean conferir (roteiro na seção 17 do 17) e os jogadores novos. A E9 continua aberta.
 
