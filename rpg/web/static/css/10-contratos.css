@@ -59,36 +59,46 @@
 .rastro-objetivo { font-size: 13px; line-height: 1.3; color: var(--tinta-2); }
 /* A missão no diário: um cartaz largo acima dos contratos, com as pistas que você já tem. */
 .quadro-missao { margin-bottom: 14px; }
-.missao-diario { padding: 10px 14px 12px; background: #f1e3c0; color: #2a1f14; box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.45); }
+.missao-diario { padding: 10px 16px 14px; background: #f1e3c0; color: #24180e; box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.45); }
 .missao-cab { display: flex; align-items: center; gap: 8px; }
 .missao-cab b { font-family: var(--titulo); font-weight: 400; font-size: calc(var(--px) * 32); line-height: 1; color: #4a2a10; }
-.missao-objetivo { margin-top: 6px; font-size: 18px; line-height: 1.45; }
-.missao-lugar { margin-top: 4px; font-size: 13.5px; color: #5a4632; display: flex; align-items: center; gap: 4px; }
-.missao-pistas { margin-top: 8px; padding-top: 6px; border-top: 2px dashed rgba(74, 42, 16, 0.35); font-size: 18px; line-height: 1.45; }
-.missao-pistas > span { font-size: 13.5px; color: #7a5e3e; }
-.missao-pistas ul { margin: 4px 0 0; padding-left: 18px; }
-.missao-rito ul { list-style: none; padding-left: 4px; }
-.missao-cab small { margin-left: 8px; font-size: 13.5px; color: #3f5a2a; }
-.missao-pendente { color: #8a4a12; font-style: italic; }
-/* O cartão de novidade da missão, dentro do texto da página: o mesmo papel do Diário, menor. */
-.novidade-missao { max-width: 640px; margin: 0.4em 0 1.1em; padding: 8px 12px 10px; background: #f1e3c0; color: #2a1f14;
-  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.45); border-left: 4px solid #8a5a0c; font-size: 18px; line-height: 1.45; }
-.novidade-missao .missao-cab b { font-size: calc(var(--px) * 24); }
-.novidade-missao ul { margin: 6px 0 0; padding-left: 18px; }
-.novidade-missao.concluida { border-left-color: #3f5a2a; }
-.novidade-objetivo { margin-top: 6px; padding-top: 5px; border-top: 2px dashed rgba(74, 42, 16, 0.35); }
-.novidade-objetivo span { font-size: 13.5px; color: #7a5e3e; margin-right: 4px; }
+.missao-cab small { margin-left: 8px; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #3f5a2a; }
+/* No papel do Diário: o texto em 18px, tinta escura; os rótulos em versalete pequeno, como "O que você faz?". */
+.missao-objetivo { margin-top: 6px; font-size: 19px; line-height: 1.4; }
+.missao-lugar { margin-top: 4px; font-size: 15px; color: #4a3826; display: flex; align-items: center; gap: 4px; }
+.missao-recente, .missao-pistas, .missao-aguardando { font-size: 18px; line-height: 1.45; }
+.missao-recente { margin-top: 10px; }
+.missao-recente span, .missao-pistas > span, .missao-historico summary, .missao-historico ol > li > span {
+  display: block; font-size: 12.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #6b4a26; }
+.missao-pistas { margin-top: 10px; padding-top: 8px; border-top: 2px dashed rgba(74, 42, 16, 0.3); }
+.missao-pistas ul { margin: 4px 0 0; padding-left: 20px; }
+.missao-rito ul { list-style: none; padding-left: 2px; }
 .missao-rito li.feito { color: #3f5a2a; }
-.missao-rito li small { font-size: 13.5px; color: #7a5e3e; }
-.missao-aguardando { margin-top: 6px; padding: 4px 8px; border-left: 3px solid #8a4a12; background: rgba(138, 74, 18, 0.1); font-size: 18px; line-height: 1.45; color: #5a3410; }
-.missao-recente { margin-top: 8px; font-size: 18px; line-height: 1.45; }
-.missao-recente span { display: block; font-size: 13.5px; color: #7a5e3e; }
-.missao-historico { margin-top: 8px; padding-top: 6px; border-top: 2px dashed rgba(74, 42, 16, 0.35); font-size: 13.5px; line-height: 1.45; }
-.missao-historico summary { cursor: pointer; color: #7a5e3e; }
-.missao-historico ol { list-style: none; margin: 4px 0 0; padding-left: 4px; }
-.missao-historico ol > li { margin-top: 4px; }
-.missao-historico ol > li > span { font-size: 13.5px; font-weight: 700; color: #4a2a10; }
-.missao-historico ul { margin: 2px 0 0; padding-left: 18px; }
+.missao-rito li small { font-size: 15px; color: #6b4a26; }
+.missao-pendente { color: #8a4a12; }
+.missao-aguardando { margin-top: 8px; padding: 4px 10px; border-left: 3px solid #8a4a12; background: rgba(138, 74, 18, 0.1); color: #5a3410; }
+.missao-historico { margin-top: 10px; padding-top: 8px; border-top: 2px dashed rgba(74, 42, 16, 0.3); font-size: 16px; line-height: 1.45; }
+.missao-historico summary { display: list-item; cursor: pointer; }
+.missao-historico ol { list-style: none; margin: 6px 0 0; padding-left: 2px; }
+.missao-historico ol > li { margin-top: 6px; }
+.missao-historico ol > li > span { color: #4a2a10; }
+.missao-historico ul { margin: 2px 0 0; padding-left: 20px; }
+/* O cartão de novidade é uma nota dentro da história, não um papel por cima dela: a fonte do texto, um fio dourado na
+   margem, o rótulo em versalete e o nome da missão no gótico; cada descoberta com um losango, o objetivo por último. */
+.novidade-missao { max-width: 640px; margin: 0.6em 0 1.2em; padding: 8px 0 8px 16px; border-left: 2px solid var(--ouro);
+  background: linear-gradient(90deg, rgba(226, 189, 99, 0.07), transparent 70%); color: var(--tinta);
+  font-family: var(--prosa); font-size: 19px; line-height: 1.5; }
+.novidade-missao.concluida { border-left-color: #8fae5a; }
+.novidade-missao .missao-cab { gap: 10px; align-items: baseline; flex-wrap: wrap; }
+.novidade-missao .missao-cab img { display: none; }
+.novidade-missao .missao-cab b { font-size: calc(var(--px) * 16); color: var(--ouro); text-shadow: var(--contorno); }
+.novidade-missao .missao-cab small, .novidade-objetivo span { order: -1; margin: 0; font-family: var(--texto); font-size: 12.5px;
+  font-weight: 600; font-style: normal; text-transform: uppercase; letter-spacing: 0.12em; color: var(--tinta-3); }
+.novidade-missao ul { list-style: none; margin: 4px 0 0; padding: 0; }
+.novidade-missao li { position: relative; padding-left: 18px; }
+.novidade-missao li::before { content: ""; position: absolute; left: 2px; top: 0.62em; width: 6px; height: 6px; background: var(--ouro); transform: rotate(45deg); }
+.novidade-objetivo { margin-top: 8px; color: #f2e6cc; }
+.novidade-objetivo span { display: block; color: var(--ouro); }
 .rastro-cacar { display: block; font-family: var(--texto); font-size: 12px; font-weight: 700; color: var(--ouro); }
 .escolha.op-contrato { border-color: #8a5a0c; }
 .escolha.op-missao { border-color: #b8862a; background: rgba(184, 134, 42, 0.12); }
@@ -99,9 +109,9 @@
 .escolhas .op-grupo.grupo-contrato { color: #c9a26a; }
 .escolhas .op-grupo.grupo-geral { height: 0; margin: 12px 0 8px; border-top: 2px dashed rgba(226, 189, 99, 0.22); }
 /* Quem abre outra escolha (de onde se volta): uma seta discreta no fim, como uma porta. */
-.escolha .op-abre { margin-left: auto; padding-left: 10px; font-family: var(--leitura); font-size: 18px; line-height: 1; color: var(--ouro); opacity: 0.8; }
+.escolha .op-abre { margin-left: auto; padding-left: 10px; font-family: var(--pixel); font-size: 18px; line-height: 1; color: var(--ouro); opacity: 0.8; }
 /* A nota de uma opção (custo, risco): embaixo da ação, menor, para comparar as ações pelo começo. */
-.escolha .rotulo small.op-nota { display: block; margin-top: 3px; font-size: 13.5px; line-height: 1.4; opacity: 0.78; }
+.escolha .rotulo small.op-nota { display: block; margin-top: 2px; font-size: 15.5px; line-height: 1.35; opacity: 0.75; }
 .rastro-arte { flex: none; width: 36px; height: 36px; display: grid; place-items: center; background: radial-gradient(circle at 50% 42%, rgba(255, 232, 190, 0.07), rgba(0, 0, 0, 0.45) 70%); }
 .rastro-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
 .rastro-info b { font-size: 14px; color: #f2e6cc; line-height: 1.2; }

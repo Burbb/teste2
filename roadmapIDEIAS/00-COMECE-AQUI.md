@@ -80,7 +80,7 @@ Três commits posteriores à atualização do roadmap foram consultados. Os comp
 | E3 — missão mínima | Entregas na 1.50.0 a 1.54.0 (registros abaixo): da Fonte Nova ao canal, à capela, ao interior, a Vó Berta, à guardiã (Destruir ou Dar descanso) e à volta ao Vau, que conclui a missão. A bênção e a comporta não existem. Falta Jean jogar. |
 | E4 — consequência local | Na 1.54.0, a Fonte Nova, a frase do Vau, Pita e Marta. Na 1.55.0, Caspar: a acusação, a praça (Apoiar, Denunciar com prova, Calar), a situação da Yara e as reações da comitiva. Na 1.56.0, a consolidação: a Yara barrada fica de fato fora do Vau, o encontro no Charco depois da denúncia, a conversa da Yara sobre a praça e os textos que contradiziam o Vau. **O critério mínimo da E4 (07-ETAPAS) está atendido**; as outras ideias do 11 (bênção, sementes, mercado, taverna, Charco à noite, Odette e Caspar, Anselmo, a cena da vigília) ficam adiadas, não são requisito. Falta Jean jogar. |
 | E5 — classes | Diagnóstico (só design) em [14](14-E5-DIAGNOSTICO-CLASSES.md), sobre a 1.56.0. **P1 implementada na 1.57.0:** o golpe preparado em duas lutas fixas da capela (seção 10 do 14). **P3 implementada na 1.58.0:** a encruzilhada compara os dois caminhos e o Grimório explica (seção 11 do 14). **P2 começada na 1.59.0, só pelo Tiro Duplo** (seção 12 do 14): o 2º disparo vai no outro inimigo mais ferido. **Drenar Vida, Desaparecer e Passo Ágil avaliados em lutas inteiras** (seção 13 do 14, sem mudar o jogo): os dois primeiros têm função. **O desvio do Passo Ágil foi validado e rejeitado** (seção 14): usado repetidamente, vira a ação padrão contra inimigos sozinhos; o Passo Ágil fica como era. **O critério mínimo da E5 (07-ETAPAS) está atendido**: as três classes atravessam o Vale (a guardiã medida por caminho) e os seis caminhos foram avaliados em cenários direcionados. A E5 está **concluída tecnicamente**; adiado, sem ser requisito: o Passo Ágil, a sinergia Desaparecer–Execução, Sombra e Piromante contra a guardiã no nível 4, a preparação de habilidades. Falta Jean jogar. A validação da E4 jogando, por Jean, fica registrada à parte. |
-| Clareza da campanha | Pausa antes da E6, a partir do teste de Jean. **Primeira entrega na 1.60.0** (registro abaixo): ações da capela organizadas, Diário reorganizado, linguagem do Vale simplificada, cartão de atualização de missão. **Revisão na 1.60.1**: ações curtas com custo e risco numa nota, e o conhecimento conforme as descobertas (o critério está no 07). **Na 1.60.2**: porta ou ação à vista no menu, grupos e a Pixeloid Sans no Diário. As próximas entregas estão listadas em [07](07-ETAPAS.md) ("Entre a E5 e a E6"), sem implementar. Falta Jean testar. |
+| Clareza da campanha | Pausa antes da E6, a partir do teste de Jean. **Primeira entrega na 1.60.0** (registro abaixo): ações da capela organizadas, Diário reorganizado, linguagem do Vale simplificada, cartão de atualização de missão. **Revisão na 1.60.1**: ações curtas com custo e risco numa nota, e o conhecimento conforme as descobertas (o critério está no 07). **Na 1.60.2**: porta ou ação à vista no menu e grupos. **Na 1.60.3**: o cartão de novidade como nota da história e o Diário na Alegreya Sans. As próximas entregas estão listadas em [07](07-ETAPAS.md) ("Entre a E5 e a E6"), sem implementar. Falta Jean testar. |
 | E6–E11 | Plano de trabalho futuro; infraestrutura existente não equivale a etapas concluídas. Notas aprovadas para a E3 na seção 19 do [11](11-E1-REGIAO-INICIAL.md). |
 | Bugs ainda abertos | Nenhum bug aberto específico foi informado para registro nesta passagem. Isso não comprova ausência de bugs. |
 | Polimento antes da E3 | Entregue na 1.48.1 (registro abaixo): leitura, item achado, balcão do templo, palco da luta. Falta Jean conferir jogando. |
@@ -841,3 +841,22 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   - `pyflakes` limpo;
   - fumaça: grupos, setas e nenhuma etiqueta por linha;
   - capturas em 1500 e 1280 px: o menu nas duas fontes, o sarilho das três classes, o Diário antes e depois de Berta e o histórico aberto.
+
+### 11/10/2026 — Clareza da campanha: o cartão e o Diário (1.60.3)
+
+- **Pedido de Jean:** achou feio o cartão de atualização na Pixeloid Sans e perguntou como os profissionais fariam. Aprovou a proposta, depois de ver antes e depois no jogo, e mandou a Alegreya Sans.
+- **Critério** (a referência é Disco Elysium e Pentiment): a atualização da missão entra no fluxo do texto, na fonte da história, e se distingue por cor, por um rótulo em versalete e por um fio na margem. A fonte pixel ou gótica fica só em títulos e rótulos curtos.
+- **Cartão de novidade.**
+  - Saiu o papel claro com sombra. Ficou uma nota com um fio dourado na margem e um brilho leve atrás.
+  - Em cima, "DIÁRIO ATUALIZADO" (ou "MISSÃO NOVA", "CONCLUÍDA") em versalete, e o nome da missão no gótico dourado.
+  - Cada descoberta tem um losango dourado. Embaixo vem "OBJETIVO" em versalete e o objetivo em letra clara.
+  - Usa a fonte da história: Alegreya, ou a Pixeloid na "Fonte: pixel".
+- **Diário.**
+  - O pergaminho fica. O texto passou para a Alegreya Sans (Regular e Bold, OFL), recortada para o alfabeto latino em woff2: 29 KB cada, com o `OFL-AlegreyaSans.txt`.
+  - 18–19px, tinta escura, sem itálico. Os rótulos ("MAIS RECENTE · DIA 1", "PERGUNTAS EM ABERTO", "HISTÓRICO DA INVESTIGAÇÃO", os dias) em versalete.
+  - As notas embaixo das opções usam a mesma Alegreya Sans.
+- **Pixeloid Sans:** fica na "Fonte: pixel" e na seta de quem abre outra escolha.
+- **Regras:** nada mudou.
+- **Verificações:**
+  - `unittest`, gabarito idêntico, `pyflakes` e fumaça;
+  - capturas em 1500 e 1280 px: o cartão da sacristia, o Diário, o histórico aberto e o sarilho.

@@ -73,7 +73,11 @@ Na 1.60.1, uma revisão de apresentação e texto, depois do teste de Jean. O cr
 - **Ações fáceis de comparar.** O nome de cada ação é curto e começa pelo que se faz ("Soltar as correntes", "Descer ao fundo alagado", "Recolher uma amostra do lodo"), sem explicação entre parênteses.
 - **Custos e riscos claros antes da escolha.** Ficam numa nota discreta embaixo da ação, junto com o teste: flecha gasta, luta que vem, o que acontece se falhar. Não se esconde consumo nem se transforma consequência conhecida em surpresa, e não se diz "sempre funciona" quando ainda é preciso vencer uma luta.
 - **Porta ou ação, à vista** (1.60.2). Uma ação que leva a outra escolha, de onde se pode voltar, tem uma seta discreta no fim; a que age na hora não tem. O menu do lugar vem em grupos: Missão, Contratos e, depois de um fio, o de sempre. O passo que leva a história adiante fica por último entre os da missão. Nada de aviso de "decisão sem volta": quem diz isso é a própria escolha, lá dentro, com o risco na nota.
-- **Leitura.** Os papéis do Diário e as notas das opções usam a Pixeloid Sans (1.60.2), de traço cheio. "Fonte: pixel" põe a mesma fonte na história.
+- **Leitura** (1.60.3).
+  - Fonte pixel ou gótica só em título e rótulo curto. Frase se lê numa fonte de texto, em tamanho bom, com tinta escura e sem itálico em letra pequena.
+  - Os papéis do Diário e as notas das opções usam a Alegreya Sans, irmã da Alegreya da história.
+  - O cartão de novidade é uma nota dentro da história, na fonte dela, e não um papel por cima.
+  - A Pixeloid Sans fica na "Fonte: pixel".
 - **Conhecimento conforme as descobertas.** As telas e o Diário só mostram o que o personagem já descobriu, atribuído a quem ensinou. O rito aparece como o que Vó Berta contou, só depois da conversa com ela. Antes disso, o Diário mostra as perguntas que as pistas abrem, sem a receita. A finalidade da amostra do lodo aparece no Diário de Caspar, como o que se pode mostrar à praça.
 
 **Próximas entregas (registradas, não implementadas; cada uma é uma entrega à parte, nenhuma é requisito da E6):**
