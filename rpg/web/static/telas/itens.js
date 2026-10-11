@@ -39,6 +39,11 @@
       const d = (it.bonus_bruto[k] || 0) - (alvo.bonus_bruto[k] || 0);
       return d ? `<span class="${d > 0 ? "melhor" : "pior"}">${d > 0 ? "▲ +" : "▼ "}${d} ${NOMES_STAT[k] || k}</span>` : "";
     }).filter(Boolean);
+    // A regra de um único também entra na troca: ganha a dele, ou perde a do que você usa.
+    if (it.efeito_nome !== alvo.efeito_nome) {
+      if (it.efeito_nome) linhas.push(`<span class="melhor">▲ ${h(it.efeito_nome)}</span>`);
+      if (alvo.efeito_nome) linhas.push(`<span class="pior">▼ sem ${h(alvo.efeito_nome)}</span>`);
+    }
     return `<div class="comparacao"><small>contra ${h(alvo.nome)}:</small>${linhas.join("") || "<span>igual</span>"}</div>`;
   }
 
@@ -52,7 +57,7 @@
     const heroi = App.estado && App.estado.heroi;
     const naoUsa = it.classe && heroi && it.classe !== heroi.classe ? `<div class="pior">Só ${CLASSE_NOME[it.classe] || it.classe} sabem usar isto.</div>` : "";
     return `<b class="r-${h(it.raridade)}">${h(it.nome)}</b><div class="tipo">${NOME_ESPACO[it.slot] || ""} · ${RARIDADE[it.raridade] || ""}</div>
-      <div class="bonus">${h(it.bonus).split(", ").join("<br>")}</div>${comparando ? comparar(it) : ""}${naoUsa}
+      <div class="bonus">${h(it.bonus).split(", ").join("<br>")}</div>${it.efeito ? `<div class="efeito-item">${h(it.efeito)}</div>` : ""}${comparando ? comparar(it) : ""}${naoUsa}
       ${it.lore ? `<div class="lore">"${h(it.lore)}"</div>` : ""}${rodape ? `<div class="rodape">${rodape}</div>` : ""}
       ${comparando && equipadosPara(it).length ? '<div class="atalho-shift">Segure <kbd>Shift</kbd> para ver o seu.</div>' : ""}`;
   }

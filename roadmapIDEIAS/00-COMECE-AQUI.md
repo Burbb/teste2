@@ -1229,3 +1229,42 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   bolsa e ouro ao parar, etapa alcançada).
 - **Falta Jean jogar.**
 
+### 11/10/2026 — Broquel do Vigia, a primeira entrega da E7 (1.63.0)
+
+- **Pedido de Jean:**
+  - implementar o Broquel do Vigia com a aquisição no ossuário e a oferta única do ferreiro aos saves antigos;
+  - Revide de 30% como valor de partida;
+  - o Contra-ataque com prioridade;
+  - validar decisões e abuso em lutas inteiras.
+- **Como ficou** (no [16](16-E7-ITEM-E-LOOT.md), seções 5.1 e 5.2):
+  - **o Revide:** com o escudo erguido, cada golpe corpo a corpo que acerta o herói volta a quem bateu, com 30% do
+    Ataque;
+  - **o Contra-ataque vem antes:** se sair (mesmo esquivado), ocupa a resposta. Sem o Broquel, o talento é o de
+    antes;
+  - **a aquisição:** o Guerreiro recebe o broquel no ossuário, uma vez, fora do sorteio. Num save antigo que já
+    venceu a sala, a forja do Vau o oferece uma vez. A marca impede que volte, guardado, deixado ou vendido;
+  - **a apresentação:**
+    - a regra no cartão;
+    - "▲ Revide" ou "▼ sem Revide" na comparação;
+    - a linha na página do Erguer Escudo, no Grimório;
+    - o nome "Revide" sobre a carta do herói, a cada resposta.
+- **Medido** (`python -m tests.broquel`, seção 5.3):
+  - **contra grupos corpo a corpo:** erguer o escudo na abertura ou manter a guarda corta de 30% a 60% da vida
+    perdida. Com o mesmo escudo sem o efeito, a guarda é pior;
+  - **onde atacar continua melhor:** inimigo único, conjuradores e Ilse; a Égide muitas vezes empata só atacando;
+  - **com Muralha (nível 6),** a guarda fica boa com ou sem o Revide; o Revide dá velocidade;
+  - **renovar em todo turno** é sempre pior, e sem atacar a luta não termina contra quem ataca de longe. Isso
+    acontece com ou sem o efeito;
+  - nenhum abuso, e nenhum número mudou.
+- **Verificado:**
+  - `tests/test_broquel.py` (17 testes);
+  - os testes de missão;
+  - a fumaça com o cenário novo, a 1500 e 1280 px;
+  - o modo texto;
+  - gabarito, `tests.equilibrio --spec paladino --spec berserker` e `tests.replay` idênticos antes e depois.
+- **Para Jean jogar:** `python -m tests.navegador.cenarios broquel` (escudo e ataque, com e sem o Revide) e `muralha`
+  (Muralha com Contra-ataque).
+- **Falta:**
+  - a validação de Jean jogando;
+  - os exemplos da E7 para Arqueiro e Mago, que não foram começados.
+

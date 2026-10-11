@@ -120,10 +120,15 @@ do 15).
 **Tarefas:** usar fonte_item/gatilhos; descrever efeito; aquisição; feedback; economia.
 **Pronto:** o jogador entende o efeito e pode reconsiderar a build; reforço existente continua funcionando.
 **Não fazer:** criar reforço do zero, avalanche de drop ou catálogo de únicos em massa.
-**Estado:** primeira entrega **especificada, não implementada** ([16](16-E7-ITEM-E-LOOT.md), seção 4). Candidata
-recomendada: o Broquel do Vigia (Guerreiro, apoio). Com o escudo erguido, devolve cada golpe corpo a corpo que acerta
-o herói (Revide, 30% do Ataque). Vem do esqueleto de guarda do ossuário, uma vez. Usa o gatilho `golpe_recebido`, sem
-evento nem chave nova de combate. A candidata e os números esperam a avaliação de Jean.
+**Estado:**
+- **Primeira entrega implementada na 1.63.0:** o Broquel do Vigia (Guerreiro, apoio).
+  - Com o escudo erguido, devolve cada golpe corpo a corpo que acerta o herói (Revide, 30% do Ataque).
+  - O Contra-ataque tem prioridade sobre o Revide.
+  - Vem do ossuário, uma vez. O ferreiro do Vau o oferece uma vez a saves antigos.
+- **Medido** em lutas inteiras ([16](16-E7-ITEM-E-LOOT.md), seção 5.3): cria a decisão de erguer o escudo contra
+  grupos corpo a corpo, sem dominar inimigo único, conjuradores nem Ilse; nenhum abuso relevante.
+- **Falta Jean jogar:** os cenários `broquel` e `muralha`.
+- **Não feitos:** os exemplos para Arqueiro e Mago. Ficam para depois da avaliação integrada do Vale.
 
 ## E8 — Introduzir identidade em escopo pequeno
 

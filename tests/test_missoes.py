@@ -318,6 +318,8 @@ class TestMissao(unittest.TestCase):
             baus, tochas = g.j.consumiveis.get("bau", 0), g.j.consumiveis["tocha"]
             for aid, etapa in (("nave", "sacristia"), ("sacristia", "ossuario"), ("ossuario", "fundo")):
                 self.assertEqual([o[1][2] for o in missoes.opcoes(g)][0], aid)
+                if aid == "ossuario" and classe == "guerreiro":
+                    g.ui.roteiro.insert(0, "Guardar")  # o Broquel do Vigia (E7): o cartão do achado, só para ele
                 self.assertTrue(fazer(g, aid))
                 self.assertEqual(missoes.registro(g, MID)["etapa"], etapa)
                 cartao = estado(g)["missoes"][0]
@@ -329,6 +331,7 @@ class TestMissao(unittest.TestCase):
             self.assertEqual(m["pistas"][3:], ["agua_da_capela", "ilse", "sigilo_do_turvo", "marcados", "correntes"])
             self.assertEqual(m["preparos"], [])  # saber o nome não prepara nada
             self.assertEqual(g.j.consumiveis.get("bau", 0), baus + 1)  # o baú da sacristia, uma vez
+            self.assertEqual([it.get("unico") for it in g.j.mochila], ["broquel_do_vigia"] if classe == "guerreiro" else [])
             self.assertEqual(g.j.consumiveis["tocha"], tochas - 3)  # a capela é escura: uma tocha por sala
             # No fundo: uma ação só para as correntes (o como é escolhido dentro dela) e a descida ao fundo.
             self.assertEqual([o[1][2] for o in opcoes_febre(g)], ["correntes", "fundo"])

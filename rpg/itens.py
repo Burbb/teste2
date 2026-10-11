@@ -139,6 +139,19 @@ def nome_raro(rng):
     return f"{nome} {comp}"
 
 
+def _revide(cb, u, rank, d):
+    """Broquel do Vigia: em guarda (Erguer Escudo), o golpe corpo a corpo que te acerta volta para quem bateu. Uma resposta
+    por golpe: se o Contra-ataque já respondeu (ele vem antes), o Revide fica quieto. É reação: não gera outra."""
+    de = d["de"]
+    if d.get("respondido") or d["alcance"] != "corpo" or not u.efeito("guarda") or de not in cb.inimigos or not de.vivo:
+        return
+    d["respondido"] = True
+    cb.atacar(u, de, bal.REVIDE, rotulo="Revide", reacao=True)
+
+
+# Um único pode trazer, além dos bônus: `mods`, `mults`, `gatilhos` e `ordem` (como um talento; modificadores.py),
+# `efeito` (a regra, como a ficha a mostra), `realca` (a habilidade cuja página do Grimório cita o item enquanto ele
+# está vestido) e `sorteio=False` (não sai no sorteio de lendários: só de onde a campanha o entrega).
 UNICOS = [
     dict(id="lamento_de_gharbad", nome="Lamento de Gharbad", icone="machado",
          slot="arma", classe="guerreiro", base="Machado",
@@ -190,6 +203,12 @@ UNICOS = [
     dict(id="maos_do_estrangulador", nome="Mãos do Estrangulador", icone="luva", slot="maos", classe=None, base="Luvas",
          bonus={"atk": 0.8, "poder": 0.8, "critico": 6},
          lore="Os dedos se fecham sozinhos quando alguém mente perto de você."),
+    dict(id="broquel_do_vigia", nome="Broquel do Vigia", icone="escudo", slot="secundaria", classe="guerreiro",
+         base="Broquel", bonus={"defesa": 0.6, "max_hp": 4}, gatilhos={"golpe_recebido": _revide}, ordem=30,
+         efeito=f"Revide: com o escudo erguido, você devolve cada golpe corpo a corpo que te acerta "
+                f"({round(bal.REVIDE * 100)}% do Ataque).",
+         realca="erguer_escudo", sorteio=False,
+         lore="Ficou preso ao braço do vigia da capela muito depois de a carne ir embora."),
     dict(id="anel_do_ultimo_rei", nome="Anel do Último Rei", icone="anel", slot="anel", classe=None, base="Anel",
          bonus={"atk": 1, "poder": 1, "critico": 5, "roubo_vida": 3},
          lore="O reino caiu. O anel não."),
@@ -266,7 +285,8 @@ def _afixos(rng, nivel, n):
 
 
 def _unico(rng, classe, nivel, slot):
-    opcoes = [u for u in UNICOS if (slot is None or u["slot"] == slot) and u["classe"] in (None, classe)]
+    opcoes = [u for u in UNICOS if u.get("sorteio", True) and (slot is None or u["slot"] == slot)
+              and u["classe"] in (None, classe)]
     if not opcoes:
         return None
     return fazer_unico(rng.choice(opcoes), nivel)
@@ -387,7 +407,10 @@ def ficha(it, recurso=None, **extra):
     """O item como as telas gráficas o desenham (mercado, mochila, saque). `recurso`: Mana, Vigor ou Foco."""
     if not it:
         return None
+    u = unico_de(it)
     return dict({"nome": rotulo(it), "raridade": it.get("raridade", "comum"), "bonus": descrever_bonus(it["bonus"], recurso),
+                 # a regra do único (o nome dela vem antes dos dois-pontos: a comparação diz "▲ Revide")
+                 **({"efeito": u["efeito"], "efeito_nome": u["efeito"].split(":")[0]} if u and u.get("efeito") else {}),
                  "nivel": it.get("nivel"), "icone": icone_de(it), "slot": it.get("slot"), "base": it.get("base"), "bonus_bruto": it["bonus"],
                  "classe": it.get("classe"), "lore": it.get("lore")}, **extra)
 

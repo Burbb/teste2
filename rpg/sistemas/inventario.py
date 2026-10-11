@@ -37,11 +37,16 @@ class Inventario:
             self.dizer(f"Você encontrou: {itens.rotulo(item)} [{NOMES_SLOT[item['slot']]}, {raridade}]",
                        itens.cor(item) or "branco+negrito")
             self.dizer(f"  {descrever_bonus(item['bonus'], rec)}", itens.cor(item))
+            u = itens.unico_de(item)
+            if u and u.get("efeito"):
+                self.dizer(f"  {u['efeito']}", itens.cor(item))
             if item.get("lore"):
                 self.dizer(f"  \"{item['lore']}\"", "cinza")
             atual = self.j.equip[self.espaco_para(item)]
             if atual:
-                self.dizer(f"  Equipado agora: {itens.rotulo(atual)} — {descrever_bonus(atual['bonus'], rec)}", "cinza")
+                ua = itens.unico_de(atual)
+                self.dizer(f"  Equipado agora: {itens.rotulo(atual)} — {descrever_bonus(atual['bonus'], rec)}"
+                           + (f". {ua['efeito']}" if ua and ua.get("efeito") else ""), "cinza")
         op = self.menu("O que fazer com o item?", opcoes)
         registrar(self, "saque", item=item["nome"], raridade=item.get("raridade", "comum"), slot=item["slot"],
                   nivel=item.get("nivel"), escolha=op or "deixar")

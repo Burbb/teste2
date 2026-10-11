@@ -478,8 +478,41 @@ def _ossuario(g, mid):
     g.narrar("Com a tocha no buraco, aparece a borda de duas pedras velhas de moinho, presas às correntes. Quem fez "
              "isto quis que nada saísse dali. Do buraco sobe o mesmo frio da entrada da capela, e a água lá embaixo não devolve a luz.")
     _pista(m, "correntes")
+    if g.j.classe == "guerreiro" and not g.flag(MARCA_BROQUEL):
+        g.narrar("No braço do esqueleto de guarda ficou um broquel de ferro escuro, ainda preso pela correia.")
+        dar_broquel(g)
     g.avancar_periodo()
     avancar(g, mid, "ossuario", "fundo")
+
+
+# O Broquel do Vigia (E7, roadmapIDEIAS/16): o escudo do esqueleto de guarda, para o Guerreiro, uma vez. A marca é
+# gravada quando o cartão aparece (guardado, vestido ou deixado para trás): não volta por nenhum caminho. Num save de
+# antes da 1.63.0 com o ossuário já vencido, o ferreiro do Vau o oferece uma vez (`broquel_no_ferreiro`).
+MARCA_BROQUEL = "e7:broquel_do_vigia"
+
+
+def dar_broquel(g):
+    from .itens import UNICOS_POR_ID, fazer_unico
+    g.marcar(MARCA_BROQUEL, True)
+    nivel = min(g.nivel_guardiao(_lugar(g, "capela_afogada")), g.j.nivel + 2)  # o do vigia, como a Pele do Penitente
+    g.oferecer_equip(fazer_unico(UNICOS_POR_ID["broquel_do_vigia"], nivel))
+
+
+def broquel_no_ferreiro(g):
+    """O save de Guerreiro que já venceu o ossuário e ainda não viu o broquel (pelo estado da missão e pela marca)."""
+    if not g.campanha or g.j.classe != "guerreiro" or g.flag(MARCA_BROQUEL) or g.loc.get("chave") != "vau_do_turvo":
+        return False
+    m = registro(g, "febre_do_turvo")
+    return bool(m) and (m["etapa"] in ("fundo", "retorno") or bool(m.get("desfecho")))
+
+
+def broquel_do_ferreiro(g):
+    if not broquel_no_ferreiro(g):
+        return
+    g.ui.cena("A forja", g.contexto_cena(), "evento")
+    g.narrar("O ferreiro aponta com o queixo para um broquel de ferro escuro em cima da bancada. \"Trouxeram da capela, "
+             "do ossuário. Ainda tinha um braço de esqueleto preso na correia. É coisa de quem luta, não de quem forja.\"")
+    dar_broquel(g)
 
 
 # Soltar o corpo (o passo D2 do Dar descanso, 11-E1-REGIAO-INICIAL.md seção 6): o caminho geral serve a qualquer

@@ -853,6 +853,55 @@ async function cenarioCaspar(browser) {
   }
 }
 
+async function cenarioBroquel(browser) {
+  console.log("cenário: o Broquel do Vigia (a oferta única do ferreiro, o cartão com o Revide e a reação na luta)");
+  let { proc, url } = await subir("capela", { CLASSE: "guerreiro", ETAPA: "fundo", LUGAR: "vau_do_turvo", NIVEL: "5" });
+  let { page, erros, esperar } = await abrir(browser, url);
+  try {
+    const forja = await esperar('#predios .predio[data-predio="ferreiro"]');
+    await page.waitForTimeout(600);
+    await forja.click();
+    await page.waitForSelector(".balcao-predio .servico", { timeout: 10000 });
+    const cartoes = await page.$$eval(".balcao-predio .servico", (x) => x.map((e) => e.textContent));
+    conferir(cartoes.length === 2 && /Reforçar/.test(cartoes[0]) && /broquel que trouxeram da capela/.test(cartoes[1]),
+      "save que já venceu o ossuário: a forja mostra o reforço e o broquel, um cartão cada");
+    await page.click('.balcao-predio .servico:has-text("broquel")');
+    const achado = await esperar(".achado-cartao", 15000);
+    await page.waitForTimeout(1200);
+    const texto = await achado.evaluate((x) => x.textContent);
+    conferir(/Revide: com o escudo erguido/.test(texto) && /▲ Revide/.test(texto),
+      "o cartão diz a regra (Revide) e a comparação mostra o ganho dela");
+    await (await esperar('#sobre-achado .botao-janela:not(.reserva):has-text("Guardar")', 8000)).click();
+    await (await esperar('#predios .predio[data-predio="ferreiro"]')).click();
+    conferir(!!(await page.waitForSelector(".forja", { timeout: 10000 }).catch(() => null)),
+      "recebido o broquel, a forja volta a ser só o reforço (a oferta não se repete)");
+  } finally {
+    conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
+    await page.close();
+    proc.kill();
+  }
+  ({ proc, url } = await subir("broquel", {}));
+  ({ page, erros, esperar } = await abrir(browser, url));
+  try {
+    await page.evaluate(() => { window.__revides = 0;
+      new MutationObserver((ms) => ms.forEach((m) => m.addedNodes.forEach((n) => {
+        if (n.nodeType === 1 && (n.textContent || "").trim() === "Revide") window.__revides++;
+      }))).observe(document.getElementById("batalha"), { childList: true, subtree: true }); });
+    await (await esperar('.roda-botao[data-slot="habilidades"]')).click();
+    await (await esperar('.rj-linha[data-hab="erguer_escudo"]')).click();
+    for (let k = 0; k < 200 && !(await page.evaluate(() => window.__revides > 0)); k++) {
+      const bt = await page.$('#roda .roda-botao[data-slot="atacar"]'); if (bt) await bt.click().catch(() => {});
+      const a = await page.$(".carta.alvejavel"); if (a) await a.click().catch(() => {});
+      await page.waitForTimeout(60);
+    }
+    conferir(await page.evaluate(() => window.__revides > 0), "com o escudo erguido, o golpe corpo a corpo volta como Revide, com o nome na carta");
+  } finally {
+    conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
+    await page.close();
+    proc.kill();
+  }
+}
+
 async function cenarioYara(browser) {
   console.log("cenário: a Yara depois da praça (barrada no Vau e de volta na estrada; livre no Charco)");
   let { proc, url } = await subir("praca", { POSTURA: "apoiar", YARA: "grupo" });
@@ -1090,6 +1139,7 @@ try {
   await cenarioRetorno(browser);
   await cenarioCaspar(browser);
   await cenarioYara(browser);
+  await cenarioBroquel(browser);
   await cenarioGolpePreparado(browser);
   await cenarioEncruzilhada(browser);
   await cenarioTiroDuplo(browser);

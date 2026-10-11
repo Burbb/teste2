@@ -99,8 +99,9 @@ const BALCOES = {
   taverna: ["pernil", "A taverna", "Fumaça, palha no chão e conversa baixa. O taverneiro nem levanta os olhos."],
   templo: ["lanterna", "O templo", "Velas, incenso e um clérigo cansado, de mãos firmes."],
   curandeiro: ["unguento", "A curandeira", ""],
+  ferreiro: ["martelo", "O ferreiro", "Um homem sem dois dedos cospe na forja."],
 };
-const ICONE_SERVICO = { dormir: "lua", rumores: "pergaminho", templo: "coracao" };
+const ICONE_SERVICO = { dormir: "lua", rumores: "pergaminho", templo: "coracao", broquel: "escudo" };
 
 /** Clicou num prédio: o som dele e a câmera chegando perto. Uma opção só, sem nada a escolher ali (o mercado, o mural,
  *  a forja, a curandeira, a estrada): vai direto para a tela dele. A taverna e o templo mostram o balcão com os

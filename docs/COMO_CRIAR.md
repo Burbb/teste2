@@ -174,6 +174,16 @@ dict(id="coracao_do_carrasco", nome="Coração do Carrasco", icone="amuleto",   
      lore="..."),
 ```
 
+Três campos a mais dizem como o único aparece:
+- `efeito`: a regra, como a ficha a mostra ("Revide: com o escudo erguido, …"). O cartão a desenha, e a comparação
+  diz "▲ Revide" ou "▼ sem Revide";
+- `realca`: o id da habilidade cuja página do Grimório cita o item enquanto ele está vestido;
+- `sorteio=False`: o único não sai no sorteio de lendários, só de onde a campanha o entrega (o Broquel do Vigia, no
+  ossuário).
+
+O exemplo vivo é o `broquel_do_vigia` (E7): um gatilho em `golpe_recebido` que responde ao golpe. Uma resposta por
+golpe: o Contra-ataque marca `dados["respondido"]` e vem antes (ordem 20 contra 30).
+
 O item vestido entra em `mod`, `nomes` e `disparar` na ordem dos espaços, depois dos talentos. O Grimório diz de onde
 vem cada pedaço (`contribuicoes`). Atributo novo de item (ex.: "dano_fogo"): acrescente em `ESPECIAIS`, em `CHAVES` de
 `rpg/modificadores.py`, em `NOME_STAT` (`rpg/entidades.py`) e em `PESO_PRECO`; o lugar do jogo que decide pergunta

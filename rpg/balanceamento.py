@@ -145,6 +145,7 @@ ITEM_FORCA_POR_NIVEL = 0.75
 ITEM_AFIXO_POR_NIVEL = 0.3        # afixos (do Urso, da Águia...): base × (1 + 0,3 × nível)
 ITEM_AFIXO_FIXO_POR_NIVEL = 0.25  # crítico e roubo de vida: base + 0,25 × nível
 ITEM_UNICO_FORCA = 1.3            # lendários: força × 1,3
+REVIDE = 0.3                     # Broquel do Vigia: o golpe que devolve, em fração do Ataque (E7, roadmapIDEIAS/16)
 
 # Ferimentos duradouros (como em Battle Brothers: arranhão não fere, golpe pesado sim). Em combate:
 #   só golpe que tira pelo menos LIMIAR da vida máxima (ou crítico) pode deixar marca; a chance é

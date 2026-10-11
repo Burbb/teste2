@@ -136,6 +136,21 @@ def regras_das_habilidades(j):
     return linhas
 
 
+def linhas_de_itens(j, h_id):
+    """O que um item vestido acrescenta à habilidade (o único declara `realca`): a regra dele, com o nome do item.
+    Sem o item, a página não diz nada (o Grimório mostra o herói de agora)."""
+    from .itens import unico_de
+    linhas = []
+    for it in (j.equip or {}).values():
+        u = it and unico_de(it)
+        if u and u.get("realca") == h_id and u.get("efeito"):
+            texto = f"{u['nome']} — {u['efeito']}"
+            if u["id"] == "broquel_do_vigia" and mod(j, "contra_ataque"):  # quem responde primeiro, com o talento
+                texto += " Quando o Contra-ataque sai, ele responde no lugar do Revide."
+            linhas.append(efeito(texto))
+    return linhas
+
+
 def pagina_versao(j, h_id):
     """A parte da página de uma habilidade transformada (E6): de onde vem a outra versão, as duas lado a lado com os
     números do herói, e a troca (a tela mostra o botão quando o menu de agora oferece a opção `versao`)."""
@@ -165,7 +180,8 @@ def dados(j):
         habs.append({"id": h_id, "nome": h["nome"], "icone": h["icone"], "custo": custo_habilidade(j, h_id), "flechas": h.get("flechas", 0),
                      "flechas_por_alvo": h.get("flechas_por_alvo", 0),
                      "alvo": ALVOS.get(h["alvo"], ""), "desc": h["desc"],  # os números de agora vão nas linhas
-                     "linhas": h["linhas"](j), **({"versao": pagina_versao(j, h_id)} if h_id in transformacoes(j) else {})})
+                     "linhas": h["linhas"](j) + linhas_de_itens(j, h_id),
+                     **({"versao": pagina_versao(j, h_id)} if h_id in transformacoes(j) else {})})
     tal_corpo, _ = mult_talentos(j, "corpo")
     tal_dist, _ = mult_talentos(j, "distancia")
     gerais = [f"Crítico: {round(chance_critico(j) * 100)}% de chance, dano ×{_num(mult_critico(j))}.",

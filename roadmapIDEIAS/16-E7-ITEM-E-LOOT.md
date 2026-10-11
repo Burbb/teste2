@@ -24,7 +24,8 @@ Versão do jogo medida: 1.62.5.
 - *aplicada na campanha na 1.62.6:* um suprimento por baú, em vez de um ou dois. A medida antes e depois está em 3.1;
 - *complemento, não aplicado:* antídoto, unguento ou bomba que o herói já carrega vira ouro no baú.
 
-**E7.** Recomendo o **Broquel do Vigia**, um escudo único do Guerreiro (seção 4).
+**E7.** O **Broquel do Vigia**, um escudo único do Guerreiro (seção 4). Foi **implementado na 1.63.0** e medido em
+lutas inteiras (seção 5). Falta Jean jogar.
 - Com o escudo erguido, ele devolve cada golpe corpo a corpo que acerta o herói (**Revide**, 30% do Ataque).
 - Usa o gatilho `golpe_recebido` que já existe. Não precisa de evento nem de chave nova de combate.
 - Dá ao Erguer Escudo um papel além da defesa: contra dois ou mais inimigos corpo a corpo, erguer o escudo primeiro
@@ -482,8 +483,9 @@ O Mago já recebeu a transformação da E6.
 
 **Interações.**
 - **Talentos do Guerreiro:**
-  - **Contra-ataque:** não somam no mesmo golpe. Com o escudo erguido, responde o Revide (certo, 30%); sem escudo,
-    vale o Contra-ataque de sempre (chance de 15% por ponto, 70%). Pede uma linha no gatilho do Contra-ataque.
+  - **Contra-ataque:** não somam no mesmo golpe. *Especificado:* com o escudo erguido, responderia o Revide.
+    *Implementado, por decisão de Jean:* o Contra-ataque vem primeiro, e o Revide só responde quando ele não sai
+    (seção 5.1).
   - **Muralha:** um turno a mais de guarda e 4 de Vigor a menos, então mais Revide por Vigor. É a combinação principal,
     e o risco a medir.
   - **Golpe Brutal:** o dano corpo a corpo vale no Revide. **Pele de Ferro, Fôlego:** nada de especial.
@@ -604,7 +606,196 @@ ordem de grandeza na arena. Setup:
 - **Com Muralha,** a vida perdida cai a 13%–15% em todos os grupos. É o ponto de atenção da medição de verdade.
 - Isto é uma estimativa para escolher o número de partida, não a medição da entrega.
 
-## 5. O que fica para depois
+## 5. A primeira entrega da E7, implementada (1.63.0)
+
+**Estados:**
+- **Implementado:** o Broquel do Vigia, com a aquisição, a ficha, a comparação, o Grimório e a reação na luta.
+- **Medido:** a régua `python -m tests.broquel`, descrita em 5.3.
+- **Falta:** a validação de Jean jogando, com os dois cenários de 5.5.
+- **Não começado:** os exemplos do Arqueiro e do Mago, que vêm depois desta primeira entrega.
+
+### 5.1 O que mudou em relação à especificação
+
+**Decidido por Jean:** a candidata, o nome, o Revide, a aquisição no ossuário e a oferta única do ferreiro.
+
+**A ordem das respostas foi trocada:**
+- O Contra-ataque vem primeiro, com a mesma chance (15% por ponto) e o mesmo golpe (70%).
+- Quando ele sai, ocupa a resposta daquele golpe, mesmo que o inimigo se esquive dela.
+- Quando não sai, o Revide responde, se o herói estiver em guarda e o golpe for corpo a corpo.
+- Cada golpe recebido tem uma resposta só.
+- Sem o Broquel, o talento é o de antes, com a mesma ordem de sorteio. O gabarito, o equilíbrio e o replay saíram
+  idênticos.
+
+**O selo da guarda não ganhou a dica.** O nome "Revide" sobre a carta do herói, a cada resposta, já confirma o
+efeito. É o mesmo rótulo de reação do Contra-ataque, sem frase extra no texto.
+
+### 5.2 Como ficou
+
+- **Catálogo** (`rpg/itens.py`):
+  - o único `broquel_do_vigia`, com bônus `{"defesa": 0.6, "max_hp": 4}`. No nível 4, dá Defesa 2 e Vida 8; vende
+    por cerca de 53;
+  - o gatilho `_revide` em `golpe_recebido`, ordem 30, depois do Contra-ataque (20);
+  - `efeito` e `realca` (o Erguer Escudo);
+  - `sorteio=False`: o filtro em `_unico` deixa a lista do sorteio igual à de antes.
+- **Número:** `bal.REVIDE = 0.3`.
+- **Contra-ataque** (`rpg/talentos.py`): uma linha marca `dados["respondido"]` quando ele sai.
+- **Aquisição** (`rpg/missoes.py`):
+  - no ossuário vencido, o Guerreiro vê "No braço do esqueleto de guarda ficou um broquel de ferro escuro, ainda
+    preso pela correia." e o cartão do achado;
+  - `dar_broquel` grava a marca `e7:broquel_do_vigia` antes do cartão. Guardado, vestido, deixado para trás ou
+    vendido, o broquel não volta;
+  - `broquel_no_ferreiro` lê o estado real: campanha, Guerreiro, no Vau, sem a marca, e a Febre já depois do ossuário
+    (etapa `fundo` ou `retorno`, ou com desfecho). Só um save de antes da 1.63.0 chega aí;
+  - nesse caso, a forja do Vau mostra dois cartões: o reforço e "O broquel que trouxeram da capela", sem custo.
+- **Ficha e comparação:**
+  - `itens.ficha` leva `efeito` e `efeito_nome`;
+  - o cartão desenha a regra na cor do lendário, entre os bônus e a comparação;
+  - a comparação diz "▲ Revide" (ganha) ou "▼ sem Revide" (perde a regra do escudo vestido);
+  - no texto, o achado mostra a regra, e o "Equipado agora" mostra a do escudo vestido.
+- **Grimório:**
+  - a página do Erguer Escudo ganha "Broquel do Vigia — Revide: …" enquanto ele está vestido;
+  - com o Contra-ataque comprado, acrescenta: "Quando o Contra-ataque sai, ele responde no lugar do Revide.";
+  - sem o Broquel, a página não muda.
+- **Telemetria:** o dano do Revide entra em `dano_por_hab` pelo rótulo do golpe.
+
+### 5.3 Medido: decisões e abuso (`python -m tests.broquel`)
+
+**Método:**
+- Lutas inteiras, pareadas: os mesmos 4 heróis e as mesmas sementes em todas as variantes, com 40 lutas por célula.
+- O herói começa cada luta inteiro, com 2 poções, e não foge.
+- Inimigos comuns um nível abaixo do herói. As salas da capela no nível 3; Ilse no 4.
+- **Escudos comparados:**
+  - o Broquel;
+  - o mesmo Broquel sem o efeito (os mesmos números: separa o Revide dos atributos);
+  - um escudo raro do nível;
+  - a Égide do Mártir.
+- **Políticas:**
+  - **atacar:** nunca ergue o escudo;
+  - **abertura:** ergue no primeiro turno;
+  - **manter:** renova quando a guarda acaba;
+  - **todo_turno:** ergue em todo turno;
+  - **preparado:** ergue só diante do golpe preparado.
+- **Heróis:**
+  - Paladino (com Luz Curativa) e Berserker (com Sede Insaciável: cura por dano);
+  - níveis 4 e 5, e 6 e 9 para Muralha;
+  - Contra-ataque 1 e 2;
+  - Fôlego (regeneração de Vigor);
+  - espinhos (a Pele do Penitente);
+  - com um companheiro.
+- **Cenário artificial, identificado:** o nível 9 contra o nível 8, fora do Vale.
+
+**Níveis 4 e 5, vida perdida** (turnos entre parênteses; mesmo herói e mesmo sorteio):
+
+| Situação | Broquel · atacar | Broquel · abertura | Broquel · manter | Sem efeito · manter | Raro · atacar | Égide · atacar |
+|---|---|---|---|---|---|---|
+| Paladino 4, 1 bandido | 2% (2,7) | 1% (3,5) | 2% (4,4) | 2% (5,2) | 2% (2,7) | 2% (2,3) |
+| Paladino 4, 3 lobos | 22% (6,4) | 14% (6,1) | 11% (6,9) | 28% (10,6) | 15% (6,2) | 11% (4,5) |
+| Berserker 4, 3 esqueletos | 29% (4,0) | 13% (3,7) | 19% (4,2) | 39% (7,0) | 15% (3,2) | 16% (2,5) |
+| Berserker 4, 2 bandidos + cultista | 26% (4,2) | 11% (4,5) | 15% (6,2) | 26% (7,0) | 14% (3,8) | 16% (3,7) |
+| Paladino 4, 2 cultistas | 15% (5,3) | 11% (6,1) | 19% (10,3) | 19% (10,3) | 11% (5,2) | 12% (5,3) |
+| Paladino 4, Ilse (destruir) | 43%, 82% vitórias | 56%, 72% | 77%, 42% | 73%, 45% | 34%, 88% | 39%, 100% |
+| Berserker 4, ossuário | 20% (3,6) | 9% (3,8) | 12% (4,3) | 25% (6,6) | 12% (3,3) | 14% (2,7) |
+
+**Contra grupos corpo a corpo, o Broquel cria a decisão:**
+- Erguer o escudo na abertura, ou manter a guarda, corta de 30% a 60% da vida perdida em relação a atacar com o
+  mesmo escudo.
+- Com os mesmos números e sem o efeito, manter a guarda é pior que atacar: mais turnos e mais vida perdida. A
+  vantagem é do Revide, não dos atributos.
+- O Revide rende de 15% a 58% do dano do herói quando ele mantém a guarda.
+
+**Onde outras escolhas continuam melhores:**
+- **Um inimigo só:** atacar e pronto. A guarda só alonga a luta.
+- **Conjuradores:** o Revide não pega, e a guarda alonga a luta.
+- **Ilse:** ataca de longe. Ficar em guarda piora os dois caminhos (no destruir, de 82% para 42% de vitórias no
+  Paladino). Atacar é melhor.
+- **Égide e raro:** muitas vezes empatam com o Broquel em vida perdida só atacando, e em menos turnos. O Broquel não
+  substitui o melhor escudo de números; troca números por um botão que vale em grupo.
+
+**Renovar em todo turno é sempre pior:**
+- mais vida perdida e lutas de 6 a 33 turnos, com ou sem o efeito;
+- contra quem ataca de longe, o herói que só ergue o escudo nunca termina a luta (os impasses da régua). É uma
+  política absurda e não depende do Broquel: sem o efeito, acontece igual. Contra três lobos, o Revide sozinho
+  termina a luta, mas mais devagar e com o triplo de vida perdida.
+
+**Só diante do golpe preparado** (ossuário, sarilho): com o Broquel, a vida perdida cai de 20% para 12% no Berserker. Fora disso, é igual a atacar.
+
+**Nível 6, com Muralha** (4 de Vigor, 3 turnos de guarda):
+
+| Paladino 6 | Broquel · atacar | Broquel · manter | Sem efeito · manter |
+|---|---|---|---|
+| 3 lobos, só Muralha | 21% (6,1) | 9% (5,9) | 11% (8,9) |
+| 3 lobos, Muralha + Contra-ataque 1 + Pele | 23% (5,0) | 9% (4,5) | 10% (5,8) |
+| 2 bandidos + cultista, Muralha | 20% (6,5) | 5% (8,3) | 7% (9,9) |
+| 2 cultistas, Muralha | 14% (6,0) | 3% (9,1) | 3% (9,1) |
+| 1 bandido, Muralha | 4% (2,9) | 2% (3,8) | 1% (4,6) |
+
+- **Com Muralha, a guarda fica barata e boa mesmo sem o Revide.** A vida perdida cai igual com ou sem o efeito, até
+  contra conjuradores. Isso é da Muralha.
+- O Revide acrescenta **velocidade** em grupo corpo a corpo: no Paladino contra três lobos, 5,9 turnos contra 8,9.
+- O Contra-ataque e a Pele somam, sem laço.
+- Contra-ataque 2 com o Broquel em guarda: o Revide cai para 15%–29% do dano, porque o talento responde primeiro.
+- **No Berserker 6:**
+  - contra três lobos: atacar 19% (2,5 turnos), Muralha e manter 9% (3,0), sem efeito 15% (3,6);
+  - contra um bandido: 6%, 3% e 5%.
+
+**Nível 9** (artificial, fora do Vale): o mesmo quadro. Contra três lobos, Muralha, Contra-ataque 1 e Pele mantendo a guarda dão 14% de vida perdida em 3,8 turnos. Atacar dá 28% em 4,0, e o mesmo escudo sem o efeito, 18% em 5,4. Contra conjuradores, Broquel e sem efeito são iguais.
+
+**Com um companheiro** (nível 5): o ganho cai, porque parte dos golpes vai no companheiro.
+- Paladino contra três lobos: manter 14% contra 19% atacando.
+- Berserker: 8% contra 12%.
+
+**Impasses e recursos:**
+- **Impasses:** só a política "todo_turno", com e sem o efeito.
+- **Poções:** a guarda com o Broquel gasta menos que atacar em grupo.
+- **Vigor:** fica alto em quem mantém a guarda. O Erguer Escudo não chega a apertar o recurso.
+
+**Conclusão:** nenhum abuso relevante. 30% do Ataque e os bônus propostos ficam como valor de partida.
+- **O estilo tem vantagens:** em grupos corpo a corpo e diante do golpe preparado.
+- **Tem custos:** lutas mais longas e pouca vantagem com companheiro.
+- **Tem situações em que outra escolha é melhor:** inimigo único, conjuradores, Ilse, e a Égide só atacando.
+- **Muralha** torna a guarda forte por si. O Revide não a torna dominante.
+- Os números ficam assim até Jean jogar.
+
+### 5.4 Verificações
+
+- **`tests/test_broquel.py`** (17 testes):
+  - o Revide em guarda, corpo a corpo, uma vez por golpe, sem reação em cadeia;
+  - sem guarda, à distância, esquivado ou sem o Broquel, nada;
+  - os espinhos que matam deixam o Revide sem alvo;
+  - o abate pelo Revide conta para o Frenesi, e a cura por dano vale;
+  - o Contra-ataque primeiro, nos dois graus, e esquivado ainda ocupa a resposta;
+  - sem o Broquel, o talento de sempre, com o mesmo sorteio;
+  - a ficha, a comparação e o Grimório;
+  - equipar, retirar, reforçar (+1, o id fica), vender e recomprar;
+  - salvar e carregar;
+  - outro herói sem o efeito; o sorteio de lendários nunca o entrega;
+  - o ossuário dá uma vez, só ao Guerreiro; deixado para trás, não volta;
+  - o ferreiro só para o save elegível; vendido, não volta; a marca sobrevive ao save.
+- **Testes de missão e do golpe preparado:** o Guerreiro agora responde ao cartão do broquel no ossuário.
+- **Navegador** (a fumaça, novo cenário), a 1500 e 1280 px:
+  - a forja com os dois cartões;
+  - o cartão do achado com a regra e "▲ Revide";
+  - recebido o broquel, a forja volta a ser só o reforço;
+  - na luta, o nome "Revide" sobre a carta do herói.
+  - Conferidos também o Grimório e o modo texto (a oferta no menu da vila, a regra no achado).
+- **Ciclo de balanceamento:**
+  - `tests.equilibrio --spec paladino --spec berserker` e `tests.replay` idênticos antes e depois;
+  - o gabarito sem mudança.
+
+### 5.5 Para Jean jogar
+
+- **`python -m tests.navegador.cenarios broquel`:**
+  - Guerreiro nível 4 (Paladino; `ESPEC=berserker` para o outro), sem talentos, vestido, com o Broquel, contra três
+    lobos;
+  - depois de cada luta: a mesma luta de novo, com o Broquel ou com um broquel de números iguais sem o Revide, ou
+    seguir jogando;
+  - `LUTA=esqueletos|misto|cultistas|bandido` troca o encontro.
+  - Para comparar: escudo na abertura, manter a guarda e só atacar.
+- **`python -m tests.navegador.cenarios muralha`:**
+  - Guerreiro nível 6 com Muralha e Contra-ataque (`CONTRA=2` para o grau 2), com o Broquel;
+  - contra dois bandidos e um cultista. O cultista ataca de longe: o Revide não o alcança.
+
+## 6. O que fica para depois
 
 - **Na E7:**
   - um exemplo para o Arqueiro (a B, se o Foco ou as flechas passarem a pesar);
@@ -614,15 +805,18 @@ ordem de grandeza na arena. Setup:
 - **A saída para o excesso de suprimentos** (vender ou largar): só se as propostas do saque não bastarem. Vender
   suprimento é mais trabalho de comparar e vender, o que o próprio diagnóstico desaconselha.
 
-## 6. Decisões pendentes (Jean)
+## 7. Decisões (Jean)
 
-1. **Saque:** aplicar a P1 (um suprimento por baú)? Depois de jogar com ela, decidir se a P2 é necessária.
-2. **E7, a candidata:** o Broquel do Vigia (Guerreiro), ou começar pelo Arqueiro?
-3. **E7, os números:**
-   - Revide 30% do Ataque, sem teto por rodada;
-   - bônus perto de um raro do mesmo nível.
-4. **E7, a aquisição:** o ossuário (no meio do Vale, uma vez, antes da escolha sobre Ilse)? A alternativa é o ferreiro
-   do Vau vender o Broquel desde o começo, por um preço: dá mais tempo de uso, mas pesa no ouro curto do começo.
-5. **E7, o nome:** "Broquel do Vigia" e o efeito "Revide".
-6. **Baús de inimigo com nome** (registrado, fora deste pedido): mexer na frequência só se, depois da P1, ainda houver
-   baús demais.
+**Decidido** (11/10/2026):
+1. **Saque:** aplicar a P1 na campanha (feito na 1.62.6). A P2 fica de reserva.
+2. **E7:**
+   - o Broquel do Vigia, com o nome, o Revide e a aquisição no ossuário, mais a oferta única do ferreiro para os saves
+     antigos;
+   - 30% e os bônus propostos como valor de partida, a validar;
+   - o Contra-ataque tem prioridade sobre o Revide (5.1).
+
+**Em aberto** (depois de jogar):
+3. **Os números do Broquel:** 30% e os bônus, conforme a sensação jogando os cenários de 5.5.
+4. **A P2 do saque:** só se os situacionais ainda sobrarem.
+5. **Baús de inimigo com nome:** mexer na frequência só se, depois da P1, ainda houver baús demais.
+6. **Os próximos exemplos da E7** (Arqueiro e Mago): depois da avaliação integrada do Vale.

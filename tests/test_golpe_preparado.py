@@ -144,6 +144,7 @@ class TestMissao(unittest.TestCase):
             vistas.append((titulo, [e.nome for e in grupo], pode_fugir))
             return "vitoria"
         g.combate = combate
+        g.ui.roteiro.insert(0, "Guardar")  # o Broquel do Vigia (E7): o Guerreiro recebe o escudo do esqueleto de guarda
         self.assertTrue(fazer(g, "ossuario"))
         self.assertTrue(fazer(g, "correntes"))  # à mão: a onda de afogados
         self.assertEqual([(t, n[0], len(n), f) for t, n, f in vistas],

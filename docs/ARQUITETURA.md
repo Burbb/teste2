@@ -220,6 +220,7 @@ lados, turnos até cair) e "Encontros por tipo".
 | `tests/navegador/fumaca.mjs` | a interface web de ponta a ponta (Playwright) |
 | `python -m tests.equilibrio` | não é teste, é régua: heróis típicos por especialização e nível lutando (`tests/arena.py`) |
 | `python -m tests.replay` | régua humana: as partidas de `tests/runs/` refeitas com os números de agora |
+| `python -m tests.broquel` | régua do Broquel do Vigia: lutas inteiras do Guerreiro com cinco jeitos de usar o escudo, o Broquel contra o mesmo escudo sem o efeito, um raro e a Égide (`--exp vale\|talentos\|comitiva\|posterior`) |
 | `python -m tests.saque_vale` | régua do saque: o Vale do Turvo inteiro jogado por um robô (roteiro no topo do arquivo), contando baús, suprimentos, equipamento, vendas e ouro |
 
 Mudou o jogo de propósito? `python -m tests.gabarito --atualizar` e diga no commit o que mudou.

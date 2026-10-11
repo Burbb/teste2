@@ -13,6 +13,8 @@
     python -m tests.navegador.cenarios encruzilhada  # a escolha de especialização, comparando (CLASSE, NIVEL)
     python -m tests.navegador.cenarios covil        # mundo gerado, no covil de um guardião (CLASSE, EVENTO, SEMENTE)
     python -m tests.navegador.cenarios tiro_duplo    # Patrulheiro contra três lobos feridos de jeitos diferentes (NIVEL, VIDAS)
+    python -m tests.navegador.cenarios broquel       # Guerreiro nv 4 com o Broquel contra três lobos; repete com/sem o Revide (LUTA, ESPEC, NIVEL)
+    python -m tests.navegador.cenarios muralha       # Guerreiro nv 6, Muralha + Contra-ataque (CONTRA) e o Broquel, contra bandidos e um cultista
 
 Imprime o endereço do servidor na primeira linha e fica no ar até ser encerrado.
 """
@@ -419,9 +421,77 @@ def covil(ui):
         pass
 
 
+LUTAS_BROQUEL = {
+    "lobos": lambda g, n: [g.inimigo("lobo", nivel=n) for _ in range(3)],
+    "esqueletos": lambda g, n: [g.inimigo("esqueleto", nivel=n) for _ in range(3)],
+    "misto": lambda g, n: [g.inimigo("bandido", nivel=n) for _ in range(2)] + [g.inimigo("cultista", nivel=n)],
+    "cultistas": lambda g, n: [g.inimigo("cultista", nivel=n) for _ in range(2)],
+    "bandido": lambda g, n: [g.inimigo("bandido", nivel=n)],
+}
+
+
+def _broquel(ui, nivel, talentos, luta):
+    """O Guerreiro (ESPEC, padrão paladino) no nível dado, vestido, com o Broquel do Vigia, no Bosque do Moinho, com o
+    ossuário já vencido. Começa na LUTA (lobos, esqueletos, misto, cultistas, bandido), com inimigos um nível abaixo.
+    Depois de cada luta: a mesma luta de novo (o mesmo sorteio de partida), com o Broquel ou com um broquel de números
+    iguais e sem o efeito, ou seguir jogando."""
+    from rpg import dev, missoes
+    from rpg.itens import UNICOS_POR_ID, fazer_unico
+    from rpg.ui import BotUI
+    g = Jogo(BotUI(random.Random(1)), seed=int(os.environ.get("SEMENTE", "11")), pasta_saves=tempfile.mkdtemp(),
+             hardcore=False)
+    g.iniciar("Jean", "guerreiro", "turvo")
+    dev.subir_ate(g, nivel, spec=os.environ.get("ESPEC", "paladino"))
+    g.j.talentos.clear()
+    for t in talentos:
+        nome, _, rank = t.partition("=")
+        g.j.talentos[nome] = int(rank or 1)
+    g.j.pontos_talento = 0
+    dev.vestir(g, random.Random(3), nivel)
+    com = fazer_unico(UNICOS_POR_ID["broquel_do_vigia"], nivel)
+    sem = dict(com, nome="Broquel sem efeito", raridade="raro", bonus=dict(com["bonus"]))
+    sem.pop("unico")
+    missoes.registro(g, "febre_do_turvo").update(etapa="fundo", cenas=["abertura", "capela_exterior"])
+    g.marcar(missoes.MARCA_BROQUEL, True)
+    loc = next(l for l in g.mundo["locais"] if l["chave"] == "bosque_do_moinho")
+    g.mundo["atual"], loc["visitado"] = loc["id"], True
+    g.periodo, g.clima = 1, "limpo"
+    g.ui, ui.jogo = ui, g
+    criar = LUTAS_BROQUEL[os.environ.get("LUTA", luta)]
+    escolha = "broquel"
+    while escolha:
+        g.j.equip["secundaria"] = com if escolha == "broquel" else sem
+        g.j.recalcular()
+        g.j.hp, g.j.rec, g.j.efeitos = g.j.max_hp, g.j.max_rec, {}
+        g.j.consumiveis["pocao_vida"] = 2
+        g.rng.seed(77)  # a mesma luta de partida a cada vez
+        ui.cena("Clareira", g.contexto_cena(), "evento")
+        g.dizer("Com o Broquel do Vigia." if escolha == "broquel" else "Com um broquel de números iguais, sem o Revide.",
+                "cinza")
+        g.combate(criar(g, max(1, nivel - 1)))
+        escolha = g.menu("A luta acabou.", [("A mesma luta, com o Broquel do Vigia", "broquel"),
+                                            ("A mesma luta, com um broquel sem o Revide", "sem"),
+                                            ("Seguir jogando", None)])
+    try:
+        g.rodar()
+    except FimDeJogo:
+        pass
+
+
+def broquel(ui):
+    """Escudo e ataque, com e sem o Broquel: Guerreiro nível NIVEL (padrão 4), sem talentos, contra três lobos."""
+    _broquel(ui, int(os.environ.get("NIVEL", "4")), [], "lobos")
+
+
+def muralha(ui):
+    """Muralha com Contra-ataque (CONTRA, padrão 1) e o Broquel: Guerreiro nível NIVEL (padrão 6), contra dois bandidos
+    e um cultista (o cultista ataca de longe: o Revide não o alcança)."""
+    _broquel(ui, int(os.environ.get("NIVEL", "6")), ["muralha", f"contra_ataque={os.environ.get('CONTRA', '1')}"], "misto")
+
+
 CENARIOS = {"combate": combate, "titulo": titulo, "vila": vila, "campanha": campanha, "baus": baus, "missao": missao,
             "recarga": recarga, "capela": capela, "retorno": retorno, "praca": praca, "encruzilhada": encruzilhada,
-            "tiro_duplo": tiro_duplo, "covil": covil}
+            "tiro_duplo": tiro_duplo, "covil": covil, "broquel": broquel, "muralha": muralha}
 
 
 def main():

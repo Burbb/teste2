@@ -491,6 +491,7 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
     def menu_vila(self):
         j = self.j
         preco_dormir = self.preco(8 + 2 * j.nivel)
+        broquel = missoes.broquel_no_ferreiro(self)
         # Cada serviço diz a que prédio da vila pertence (na tela gráfica, a vila é um lugar com prédios clicáveis).
         # Os que se escolhem diante do prédio (a taverna, o templo) levam o rótulo curto, o preço, o que dão e o tempo
         # que gastam: a tela os desenha em cartões. Os outros abrem a tela do serviço direto.
@@ -506,7 +507,13 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
             ("Mural de contratos", "mural", {"predio": "mural"}),
             *self.opcoes_templo(),
             ("Curandeira: tratar ferimentos e infecções", "curandeiro", {"predio": "curandeiro"}) if j.ferimentos else None,
-            ("Ferreiro: reforçar arma ou armadura", "ferreiro", {"predio": "ferreiro"}),
+            # A oferta única do broquel (saves de antes da E7) divide o balcão da forja com o reforço: dois cartões.
+            ("Ferreiro: reforçar arma ou armadura", "ferreiro",
+             {"predio": "ferreiro", **({"curto": "Reforçar arma ou armadura", "efeito": "Arma, peito e apoio, até +5"}
+                                       if broquel else {})}),
+            ("Ferreiro: o broquel que trouxeram da capela", "broquel",
+             {"predio": "ferreiro", "servico": "broquel", "curto": "O broquel que trouxeram da capela",
+              "efeito": "Do ossuário da Capela Afogada. Sem custo"}) if broquel else None,
             *missoes.opcoes(self),  # o passo da missão que se dá aqui (campanha), como "Examinar a Fonte Nova"
             *self.opcoes_versao(),  # a troca de versão de uma habilidade transformada (o botão do Grimório)
         ]
@@ -534,6 +541,9 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
             self.curandeiro()
         elif op == "ferreiro":
             self.ferreiro()
+        elif op == "broquel":
+            missoes.broquel_do_ferreiro(self)
+            self.pausar()
         elif isinstance(op, tuple) and op[0] == "templo":
             self.balcao_templo(op[1:])
         elif isinstance(op, tuple) and op[0] == "missao":
