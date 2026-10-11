@@ -1209,3 +1209,23 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
 - **Decisões de Jean:** seção 6 do 16.
 - **Verificado:** testes, gabarito (sem mudança), pyflakes, fumaça.
 
+### 11/10/2026 — Um suprimento por baú na campanha (1.62.6)
+
+- **Pedido de Jean:**
+  - aplicar a P1 do [16](16-E7-ITEM-E-LOOT.md) só na campanha, mantendo ouro, chance de equipamento, frequência de
+    baús e recompensas fixas;
+  - medir antes e depois, com os percursos interrompidos na avaliação do começo.
+- **Como ficou:**
+  - na campanha, o baú dá um suprimento (`BAU_SUPRIMENTOS_CAMPANHA`);
+  - o mundo gerado continua com um ou dois, com o mesmo sorteio.
+- **Medido** (`tests.saque_vale`, 480 percursos de cada lado; tabelas no 16, seção 3.1):
+  - nos completos, os suprimentos de baú caem de 9,7 para 6,3 por Vale;
+  - poções no fim: de 3,0 para 2,4, depois de gastar 4,9;
+  - situacionais no fim: de 5,4 para 4,3;
+  - o começo não muda: quem para viu menos de meio baú e para sem poção, com fome e quase sem ouro. Isso fica
+    registrado para a E9, sem ajuste.
+- **Gabarito:** sem mudança (as partidas dele são do mundo gerado).
+- **Régua:** a saída do `tests.saque_vale` ganhou a tabela do começo do jogo (todos os percursos, do que param, nível,
+  bolsa e ouro ao parar, etapa alcançada).
+- **Falta Jean jogar.**
+

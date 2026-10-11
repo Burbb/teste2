@@ -90,8 +90,12 @@ Na 1.60.1, uma revisão de apresentação e texto, depois do teste de Jean. O cr
    `python -m tests.saque_vale`).
    - O volume de suprimentos é alto: metade sai de baús, 1,5 por baú. O excesso que fica é de itens situacionais
      (antídoto, unguento, bomba), sem saída: não se vendem e a bolsa não tem limite.
-   - Duas propostas, nenhuma aplicada: um suprimento por baú (recomendada) e, se não bastar, o situacional repetido
-     virar ouro. Decisão de Jean.
+   - **Um suprimento por baú, aplicado na campanha na 1.62.6** (o mundo gerado não muda).
+     - Medido antes e depois, no 16, seção 3.1: suprimentos de baú de 9,7 para 6,3 por Vale; poções no fim de 3,0
+       para 2,4.
+     - O situacional repetido virar ouro fica de reserva.
+     - O começo do jogo (fome, poucos baús) não muda e fica registrado para a E9.
+     - Falta Jean jogar.
 
 ## E6 — Demonstrar transformação de habilidade
 

@@ -511,6 +511,7 @@ class Percurso:
         return {
             "classe": self.classe, "desfecho": self.desfecho, "roteiro": self.roteiro, "semente": self.semente,
             "fim": motivo, "desfecho_real": f["desfecho"], "dia": g.dia, "nivel": j.nivel,
+            "causa": g.estatisticas.get("causa"), "etapa": f["etapa"],
             "lutas": sum(1 for e in ev if e.get("t") == "combate"), "quedas": g.estatisticas.get("quedas", 0),
             "inicial": self.inicial, "final": {k: v for k, v in j.consumiveis.items() if v},
             "ganhos": self.ganhos, "do_bau": self.do_bau, "recursos": self.recursos, "baus": self.baus, "ofertas": self.ofertas,
@@ -561,6 +562,46 @@ def usados_total(r, k):
     que acende sozinha e não entra no registro de uso."""
     entrou = r["inicial"].get(k, 0) + sum(q for i, q, _ in r["ganhos"] if i == k)
     return entrou - r["final"].get(k, 0)
+
+
+CAUSAS = (("fome", "fome"), ("infecção", "infec"), ("queda", "caiu"))
+
+
+def causa_curta(r):
+    c = (r.get("causa") or "").lower()
+    if r["fim"] != "parou":
+        return r["fim"]
+    for nome, chave in CAUSAS:
+        if chave in c:
+            return nome
+    return "outra"
+
+
+def comeco(rs):
+    """O começo do jogo com todos os percursos, os interrompidos incluídos: até onde cada classe chega, do que
+    morre quem para, e o que leva na bolsa e no bolso nessa hora."""
+    linhas = []
+    for c in CLASSES:
+        g = [r for r in rs if r["classe"] == c]
+        if not g:
+            continue
+        parados = [r for r in g if r["fim"] == "parou"]
+        causas = {}
+        for r in parados:
+            causas[causa_curta(r)] = causas.get(causa_curta(r), 0) + 1
+        etapas = {}
+        for r in g:
+            etapas[r["etapa"]] = etapas.get(r["etapa"], 0) + 1
+        linhas.append([c, len(g), sum(r["fim"] == "completo" for r in g), sum(r["fim"] == "limite" for r in g),
+                       len(parados), ", ".join(f"{k} {v}" for k, v in sorted(causas.items(), key=lambda x: -x[1])),
+                       fmt(media([r["nivel"] for r in parados])), fmt(media([r["dia"] for r in parados])),
+                       fmt(media([sum(v for k, v in r["final"].items() if k != "bau") for r in parados])),
+                       fmt(media([r["ouro_fim"] for r in parados])),
+                       ", ".join(f"{k} {v}" for k, v in sorted(etapas.items(), key=lambda x: -x[1]))])
+    return ("Começo do jogo, com os interrompidos (por classe):\n\n"
+            + tabela(["Classe", "N", "Completos", "No dia limite", "Parados", "Do que param", "Nível ao parar",
+                      "Dia ao parar", "Suprimentos na bolsa ao parar", "Ouro ao parar", "Etapa da Febre no fim"],
+                     linhas))
 
 
 def relatorio(rs, titulo="todos"):
@@ -710,6 +751,8 @@ def main():
     p.add_argument("--detalhe", action="store_true")
     a = p.parse_args()
     rs = rodar(a.classes.split(","), a.desfechos.split(","), a.roteiros.split(","), range(1, a.sementes + 1))
+    print(comeco(rs))
+    print()
     print(relatorio(rs))
     print()
     print(relatorio([r for r in rs if r["fim"] == "completo"], "só os completos"))

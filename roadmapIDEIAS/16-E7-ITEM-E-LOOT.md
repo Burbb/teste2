@@ -20,9 +20,9 @@ Versão do jogo medida: 1.62.5.
 - O equipamento é sempre da classe do herói. Metade a três quartos melhora o que ele veste, conforme a origem.
 - A pressão na mochila foi pequena com o roteiro medido, que vende tudo a cada visita à vila.
 
-**Duas propostas pequenas** (seção 3), nenhuma aplicada:
-- *recomendada:* um suprimento por baú, em vez de um ou dois;
-- *complemento:* antídoto, unguento ou bomba que o herói já carrega vira ouro no baú.
+**Duas propostas pequenas** (seção 3):
+- *aplicada na campanha na 1.62.6:* um suprimento por baú, em vez de um ou dois. A medida antes e depois está em 3.1;
+- *complemento, não aplicado:* antídoto, unguento ou bomba que o herói já carrega vira ouro no baú.
 
 **E7.** Recomendo o **Broquel do Vigia**, um escudo único do Guerreiro (seção 4).
 - Com o escudo erguido, ele devolve cada golpe corpo a corpo que acerta o herói (**Revide**, 30% do Ataque).
@@ -218,13 +218,17 @@ Média por percurso completo:
   terminam, contra 41% dos de Guerreiro). É assunto de dificuldade e economia do começo (E9), não de saque. Precisa
   de confirmação jogando.
 
-## 3. Propostas de ajuste do saque (não aplicadas)
+## 3. Propostas de ajuste do saque
 
 Nenhuma muda frequência de baús, economia de ouro ou recompensas fixas. As duas mexem só no que o baú tira da lista
-de suprimentos. As duas mudam a ordem do sorteio: o gabarito muda de propósito, e a medida antes e depois é feita
-com `tests.saque_vale` e com o ciclo do COMO_CRIAR.
+de suprimentos. A medida antes e depois é feita com `tests.saque_vale` e com o ciclo do COMO_CRIAR.
 
-### P1. Um suprimento por baú — recomendada
+**Estado:**
+- A P1 foi **aplicada na 1.62.6**, só na campanha. O resultado está em 3.1.
+- A P2 não foi aplicada (decisão de Jean).
+- Falta Jean jogar.
+
+### P1. Um suprimento por baú — aplicada na campanha (1.62.6)
 
 - **O que muda:** `sortear_bau` tira **um** suprimento da lista (`BAU_SUPRIMENTOS`), em vez de um ou dois. A lista e o
   resto do baú (ouro, chance de equipamento) ficam iguais.
@@ -254,6 +258,81 @@ com `tests.saque_vale` e com o ciclo do COMO_CRIAR.
   - O herói continua recebendo o primeiro de cada um.
 - **Por que só depois:** é uma regra que depende da bolsa e precisa ser explicada (por que o baú deu ouro e não o
   antídoto). Se a P1 resolver a impressão de excesso, não é preciso.
+
+### 3.1 A P1 medida, antes e depois (1.62.5 e 1.62.6)
+
+**Como ficou:**
+- Na campanha, `sortear_bau` tira um suprimento só (`BAU_SUPRIMENTOS_CAMPANHA = 1`). O sorteio de quantos deixou de
+  acontecer.
+- O mundo gerado continua com um ou dois (`BAU_SUPRIMENTOS = (1, 2)`), na mesma ordem do sorteio. O gabarito não
+  mudou: as partidas dele são do mundo gerado.
+- Ouro, chance de equipamento, frequência de baús e recompensas fixas ficam iguais.
+
+**Como medi:** `python -m tests.saque_vale --sementes 40`, com o mesmo roteiro, antes e depois. São 480 percursos de
+cada lado. O resto do sorteio muda com a mudança, então cada percurso não é pareado; os percursos seguem caminhos um
+pouco diferentes.
+
+**Percursos completos, média por Vale:**
+
+| | Antes (136 completos) | Depois (150) |
+|---|---|---|
+| Baús | 6,4 | 6,4 |
+| Suprimentos de baú | 9,7 | 6,3 |
+| Suprimentos achados (sem compra) | 18,4 a 19,7 | 15,2 a 18,8 |
+| Gastos (com tochas) | 19 a 24 | 19 a 23,5 |
+| Na bolsa no fim | 10,9 a 19,0 | 10,4 a 16,7 |
+| Poções no fim | 3,0 | 2,4 |
+| Antídoto / unguento / bomba no fim | 2,5 / 1,4 / 1,5 | 2,1 / 1,1 / 1,1 |
+
+**Entrada, consumo e estoque por item** (completos, média por Vale; antes → depois):
+- **Poção de Vida:**
+  - de baú: 2,3 → 1,4;
+  - gastas: 5,1 → 4,9;
+  - no fim: 3,0 → 2,4.
+- **Bandagem:** de baú 1,9 → 1,3; gastas 2,8 → 2,7; no fim 4,0 → 3,7.
+- **Tônico:** de baú 1,1 → 0,7; gastos 1,8 → 1,5; no fim 0,7 → 0,6.
+- **Situacionais** (antídoto, unguento, bomba):
+  - de baú: 3,4 → 2,0;
+  - gastos: 1,0 → 1,1;
+  - no fim: 5,4 → 4,3.
+
+**Por classe** (completos; antes → depois):
+- **Guerreiro:**
+  - achados 18,4–19,7 → 15,2–16,3;
+  - na bolsa no fim 13,8–19,0 → 11,7–16,7;
+  - completos 65 → 70.
+- **Arqueiro:**
+  - achados 18,4–19,6 → 15,3–15,7;
+  - no fim 12,4–18,0 → 10,4–15,2;
+  - completos 53 → 60.
+- **Mago:**
+  - achados 18,3–18,8 → 17,1–18,8;
+  - no fim 10,9–15,8 → 12,6–15,0;
+  - completos 18 → 20. A amostra é pequena e não sustenta uma conclusão.
+
+**O começo do jogo, com os interrompidos** (todos os percursos; antes → depois):
+
+| Classe | Completos | No dia 45 | Parados (fome / infecção) | Nível ao parar | Na bolsa ao parar | Ouro ao parar |
+|---|---|---|---|---|---|---|
+| Guerreiro | 65 → 70 | 11 → 12 | 84 (74 / 10) → 78 (70 / 8) | 1,6 → 1,6 | 4,5 → 4,2 | 2,5 → 2,6 |
+| Arqueiro | 53 → 60 | 23 → 21 | 84 (82 / 2) → 79 (75 / 4) | 2,0 → 1,9 | 4,2 → 4,5 | 1,8 → 2,1 |
+| Mago | 18 → 20 | 30 → 29 | 112 (96 / 16) → 111 (91 / 20) | 1,7 → 1,8 | 5,0 → 5,1 | 2,2 → 1,5 |
+
+Depois da mudança, os percursos interrompidos:
+- abriram em média só de 0,2 a 0,4 baú;
+- ganharam de 36 a 65 de ouro no total;
+- pararam **sem nenhuma poção**, com 4 a 5 suprimentos que não viram comida;
+- lutaram de 9 a 10 vezes e caíram de 1,7 a 3,1 vezes.
+
+**Conclusão:**
+- A P1 tira o que pretendia: cerca de um terço dos suprimentos de baú. O excesso no fim diminui, sem faltar poção a
+  quem completa (2,4 no fim, depois de gastar 4,9).
+- O excesso de situacionais diminui, mas não some: 4,3 por Vale no fim. A P2 continua de reserva.
+- **O começo do jogo não depende dos baús.** Quem para quase não viu baú, e a mudança não mexeu nele. A pequena alta
+  de completos fica dentro do ruído do sorteio.
+- Os recursos do começo não bastam para o robô: ele para sem poção, quase sem ouro e com fome. Os 150 que completam
+  não provam que bastam. Pode ser um limite do robô (seção 2.2), mas fica registrado como problema aberto do começo
+  (E9), sem ajuste nesta entrega.
 
 **Não proposto, registrado:** os inimigos com nome sempre deixam baú (53% dos baús). Se, depois da P1, Jean ainda
 achar que há baús demais, o ponto de ajuste é este. Por exemplo, o alvo de contrato daria baú com a chance de elite. Isso

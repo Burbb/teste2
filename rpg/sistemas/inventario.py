@@ -142,7 +142,8 @@ class Inventario:
                        "tocha", "bomba_fumaca"]
 
     def abrir_bau(self):
-        """O baú trancado: ouro, um ou dois suprimentos e, às vezes, um equipamento melhor que o das lutas comuns.
+        """O baú trancado: ouro, suprimentos (um na campanha; um ou dois no mundo gerado) e, às vezes, um equipamento
+        melhor que o das lutas comuns.
         Na tela gráfica, tudo sai num quadro só (o do espólio); o equipamento vem logo depois, na janela dele."""
         frase = ("À luz da fogueira, você força a fechadura. A tampa range e cede." if self.na_fogueira else
                  "Num canto sossegado, você força a fechadura. A tampa range e cede.")
@@ -177,7 +178,9 @@ class Inventario:
         equipamento (com o quadro do espólio aberto, ele espera o quadro aparecer)."""
         nv = self.j.nivel
         ouro = self.ganhar_ouro(self.rng.randint(*bal.BAU_OURO) + bal.BAU_OURO_POR_NIVEL * nv, fonte="baus")
-        suprimentos = [self.sortear(self.BAU_SUPRIMENTOS) for _ in range(self.rng.randint(1, 2))]
+        # Na campanha, um suprimento por baú; no mundo gerado, o sorteio de sempre (a mesma ordem no sorteio).
+        n = bal.BAU_SUPRIMENTOS_CAMPANHA if self.campanha else self.rng.randint(*bal.BAU_SUPRIMENTOS)
+        suprimentos = [self.sortear(self.BAU_SUPRIMENTOS) for _ in range(n)]
         for k in suprimentos:
             self.dar(k)
         equip = None
