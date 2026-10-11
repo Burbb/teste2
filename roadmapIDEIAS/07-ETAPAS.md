@@ -78,13 +78,7 @@ Na 1.60.1, uma revisão de apresentação e texto, depois do teste de Jean. O cr
   - Os papéis do Diário e as notas das opções usam a Alegreya Sans, irmã da Alegreya da história.
   - O cartão de novidade é uma nota dentro da história, na fonte dela, e não um papel por cima.
   - A Pixeloid Sans fica na "Fonte: pixel".
-- **Critério editorial** (1.60.4). Cada parte do texto tem um papel:
-  - a **cena** apresenta indícios e acontecimentos;
-  - a **alternativa** descreve a ação do personagem;
-  - a **interface** comunica custos e restrições importantes: tempo, recurso gasto, teste, esforço, luta sem fuga. Isso vai numa nota discreta junto da opção, não no meio da narração;
-  - o **resultado** revela o que aconteceu.
-
-  Nota não antecipa o inimigo exato nem a sequência de resolução: diz o que se percebe antes de agir ("barulhento", "o eixo range alto"). Custos, testes, efeitos de habilidade, escolhas de fato permanentes e o que se aprendeu em conversa (o rito de Berta) continuam explícitos. Nada de porcentagem inventada, de obstáculo físico criado só para justificar uma regra, ou de remoção geral de avisos.
+- **Critério editorial** (1.60.4; consolidado na 1.62.1, na seção [Critério editorial](#critério-editorial), que vale daqui em diante).
 - **Conhecimento conforme as descobertas.** As telas e o Diário só mostram o que o personagem já descobriu, atribuído a quem ensinou. O rito aparece como o que Vó Berta contou, só depois da conversa com ela. Antes disso, o Diário mostra as perguntas que as pistas abrem, sem a receita. A finalidade da amostra do lodo aparece no Diário de Caspar, como o que se pode mostrar à praça.
 
 **Próximas entregas** (cada uma é uma entrega à parte, nenhuma é requisito da E6):
@@ -158,6 +152,110 @@ do 15).
 ## Depois: expansão opcional
 
 Evoluções avançadas, mais classes, catálogo muito maior, armazenamento e novas telas. Só entrar após decisão de Jean e evidência de necessidade. Manter três classes como escopo deste ciclo.
+
+## Critério editorial
+
+Vale para todo texto novo ou revisto (campanha, eventos, opções, avisos, telas) e entra na revisão de cada entrega.
+Consolida o da 1.60.4 e o da E6 (1.62.1).
+
+**Cada camada tem um papel:**
+- a **cena** descreve o que o personagem percebe;
+- a **alternativa** expressa a ação, curta e começando pelo que se faz;
+- a **nota** informa custo, requisito ou restrição relevante, numa linha discreta junto da opção, e não no meio da
+  narração;
+- o **resultado** apresenta o que aconteceu;
+- a **confirmação** informa o que mudou, só quando isso ainda não estiver evidente na interface. Quando a própria tela
+  já mostra a mudança (a página do Grimório marcando a versão "Em uso"), não há confirmação.
+
+**Evitar:**
+- repetir a mesma informação em duas camadas: a nota repetindo a cena, o resultado repetindo a alternativa, um aviso
+  repetindo a frase ou o cartão de logo antes;
+- narrar o clique que o jogador acabou de fazer;
+- explicar "como o jogo funciona" no meio da história, quando a interface já mostra ou a escolha não precisa disso.
+
+**Preservar**, sempre explícito antes da escolha: consumo de itens, recursos, testes, imunidades, indisponibilidade (com
+o motivo), escolhas de fato permanentes, restrições importantes como luta sem fuga, e o que se aprendeu em conversa.
+Clareza não vira ocultação de regra: nada de remoção geral de avisos.
+
+**Não antecipar** inimigos, consequências ou soluções que o personagem ainda não conhece. A nota diz o que se percebe
+antes de agir ("barulhento", "o eixo range alto"), não o que vem depois. Nada de porcentagem inventada nem de obstáculo
+físico criado só para justificar uma regra.
+
+**Linguagem direta**, com a atmosfera da história: o nome do lugar com maiúsculas (a Fonte Nova), a referência genérica
+com minúsculas (a fonte); a palavra comum no lugar da rara quando a rara não acrescenta nada ("o dono do moinho").
+
+### Levantamento da 1.62.1 (pendente, nada implementado)
+
+Leitura direcionada dos textos da campanha, das notas e dos avisos de ação, pelo critério acima. Cada caso diz arquivo,
+trecho, motivo e sugestão. Uma entrega à parte decide quais aplicar.
+
+**Problemas claros:**
+1. **A fita repetida.** `rpg/missoes.py:607`, `g.ui.efeito("Fita de Ilse", "item")`. O cartão da missão, logo depois,
+   já diz "Você tem a fita de Ilse": são duas confirmações seguidas. Sugestão: tirar o aviso.
+2. **O frasco do lodo repetido.** `rpg/caspar.py:356`, `g.ui.efeito("Frasco do lodo", "item")`. A narração ("enche um
+   frasco com o lodo") e o cartão ("Uma amostra do lodo") já dizem o mesmo. Sugestão: tirar o aviso.
+3. **"Isso a praça vai entender."** `rpg/caspar.py:354`, na análise do mago. A frase antecipa para que a amostra serve,
+   e o lodo pode ser recolhido antes de Caspar acusar alguém (etapa "antes"), quando o personagem nem sabe da praça.
+   Sugestão: tirar a frase.
+4. **"Responder depois", três vezes.**
+   - `rpg/caspar.py:277`: "… Dá para responder depois.", logo acima da opção "Ainda não: responder depois";
+   - `rpg/caspar.py:287`: "Você pode responder a Caspar na praça do Vau quando quiser.", depois de escolhê-la. O
+     menu ("Ir à praça responder a Caspar") e o Diário já mostram isso.
+
+   Sugestão: tirar as duas frases e manter "Para denunciar Caspar, falta prova: …", que é indisponibilidade com motivo.
+5. **A frase da vila repete a cena de volta.** `rpg/consequencias.py` (`FRASES`, chamada em `rpg/jogo.py:517`). Ao
+   chegar depois da guardiã, a cena "De Volta ao Vau" e a da praça descrevem a Fonte Nova, a vigília e onde Yara
+   espera; o menu da vila, em seguida, repete quase palavra por palavra. Sugestão: depois de uma cena de missão na
+   vila, marcar a frase do lugar como vista (`ambiente_visto`) até o período mudar.
+6. **A nota de "à mão" conta o que vem depois.** `rpg/missoes.py:553`, `NOTA_MAO = "Demorado e barulhento: o eixo
+   range, e o som corre pela água da capela inteira."`. O resultado repete a frase, e o comentário do próprio código
+   pede o contrário. Sugestão: "Demorado e barulhento: o eixo range alto."
+7. **O recuo do sarilho diz o errado.** `rpg/missoes.py:406`, "A sala continua por vencer. Dá para voltar quando
+   quiser.", também usado no sarilho (`:511`). Ali o ossuário já foi vencido; o que fica são as correntes, e a narração
+   acabou de dizer isso. Sugestão: no sarilho, sem essa linha.
+8. **O cartão de Vó Berta antecipa a conversa.** `rpg/missoes.py:796`, `"efeito": "Ela estava lá quando a vila afogou
+   Ilse"`. É o que só a conversa revela. Sugestão: o que se percebe, por exemplo "A mais velha da taverna; viveu no
+   Vau a vida toda."
+9. **"Mandar para o acampamento" dito duas vezes.** `rpg/comitiva/fogueira.py:127`, "{nome} pega as coisas e volta para
+   o acampamento. Quando você montar a fogueira, vai estar lá.", seguido do aviso "{nome} vai esperar no acampamento".
+   Sugestão: só o aviso, como na fogueira.
+10. **O ganho de atributo repetido entre parênteses**, depois do selo de `bonus_permanente`. Quando o teto corta o
+    ganho, os parênteses ainda contradizem o motor.
+    - `rpg/eventos/classe.py:544`, "(+8 Mana máxima)";
+    - `rpg/eventos/classe.py:548`, "(+2 Poder)";
+    - `rpg/eventos/classe.py:595`, "(+4 Mana máxima, mana restaurada)";
+    - `rpg/eventos/comuns.py:312`, "(+5 vida máxima)";
+    - `rpg/eventos/comuns.py:326`, "(+1 permanente)".
+
+    Sugestão: tirar os parênteses; na `:595`, manter só "mana restaurada".
+11. **O rito comemorado como derrota.** Dando descanso a Ilse, a festa diz "Guardião derrotado!"
+    (`telas/celebracoes.js:220`) e "Ilse, a Bruxa Afogada caiu" (`:265`). Sugestão: o motor manda um rótulo de
+    desfecho, e a festa mostra "Ilse descansou".
+12. **A Vigília quando Yara já morreu.** `rpg/caspar.py`, objetivo "Caspar acusa Yara…". No ramo em que Yara morreu na
+    fogueira, Caspar acusa "mais de uma", não ela. Sugestão: objetivo pelo ramo, ou "Caspar culpa uma bruxa pela febre".
+13. **Custo dentro do rótulo**, contra o critério de 1.60.1:
+    - `rpg/eventos/classe.py:527`, "Absorver a energia (arriscado)";
+    - `rpg/eventos/classe.py:588`, "Meditar sobre ela (passa o tempo)";
+    - `rpg/eventos/comitiva.py:620`, "(−1 provisão)".
+
+    Sugestão: o custo na `nota`.
+
+**Escolhas de estilo:**
+14. **Recuo nas salas.** `rpg/missoes.py:406`, "Dá para voltar quando quiser.". É meta-texto, e a ação continua no
+    menu. Sugestão: ficar com "A sala continua por vencer."
+15. **A denúncia repete a alternativa.** `rpg/caspar.py:304`, "A febre veio do que todos beberam, não de uma moça no
+    brejo.", depois da opção "a febre veio da água, não da Yara". Sugestão: ficar com o caminho da água.
+16. **O momento do rito.** `rpg/missoes.py:662`, "(dar descanso)" e "(destruir)" no rótulo. Sugestão: rótulos sem
+    parênteses e, na segunda, a nota "Sem volta: a luta segue até destruí-la."
+17. **Odette.** `rpg/eventos/comitiva.py:117`, "(Odette procura a mãe de Thomas. Talvez você a encontre em alguma
+    vila.)". A primeira frase repete a fala dela; a segunda é a única pista da missão pessoal. Sugestão: só a dica, ou
+    mostrá-la na tela da Comitiva.
+18. **"Moleiro".** `rpg/eventos/comitiva.py:408` e `:442`, depois de a pista passar a "o dono do moinho". Na fala de
+    Yara (`:442`), a palavra combina com a voz dela. Sugestão: na narração (`:408`), "o dono do moinho".
+19. **"Se acertar" na Prisão de Gelo.** A linha do Grimório vem de `Se.PREFIXO`, em `rpg/habilidades.py:173`, e fica ao
+    lado de "Não pode ser esquivado." Sugestão: sem o prefixo quando o golpe não se esquiva.
+20. **O contrato em andamento no espólio.** "Eliminar 3 javalis em …" e, ao lado, "2/3 javalis selvagens". Sugestão:
+    só "2/3" à direita.
 
 ## Critério geral
 

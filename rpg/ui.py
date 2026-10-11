@@ -64,6 +64,8 @@ class UI:
                                 # ela mostra
     surpresa_na_tela = False  # a surpresa do começo da luta (a sua iniciativa ou a deles) é animada nas cartas
                               # (o lance "surpresa"): o texto não a anuncia
+    troca_no_grimorio = False  # a troca de versão de uma habilidade (E6) é um botão na página dela no Grimório, que
+                               # marca a versão em uso: o texto não confirma a troca
 
     def __init__(self, cor=None, rapido=False):
         self.cor = _suporta_cor() if cor is None else cor
@@ -266,6 +268,7 @@ class InterfaceGrafica:
     conversa_no_painel = True
     conquistas_na_tela = True
     surpresa_na_tela = True
+    troca_no_grimorio = True
 
     def desenhar_mapa(self, grande, linhas):
         self.mostrar_mapa(grande)

@@ -207,9 +207,9 @@ TALENTOS = {
            "A Barreira Arcana absorve 30% a mais e dura 1 turno a mais.",
            mods={"barreira_turnos": 1}, mults={"barreira_mult": 1.3}, icone="escudo"),
         _t("prisao_gelo", "Prisão de Gelo", "tronco", 2, 1,
-           "Chefes e gigantes resistem metade; quem acabou de se soltar fica firme. Qual das duas você leva se escolhe "
-           "no Grimório, na vila ou no acampamento.", transforma={"lanca_gelo": "prisao_gelo"}, icone="gelo",
-           realce="gelo"),
+           "Chefes e gigantes resistem metade; quem acabou de se soltar fica firme. Ao comprar, a Prisão entra em uso; "
+           "a troca fica no Grimório, na vila ou no acampamento.", transforma={"lanca_gelo": "prisao_gelo"},
+           icone="gelo", realce="gelo"),
         _t("pacto_sombrio", "Pacto Sombrio", "necromante", 2, 2,
            "Drenar Vida cura +10% e servos têm +15% de vida, por ponto.",
            mods={"dreno_cura": 0.1, "servo_vida": 0.15}, icone="gota"),
@@ -256,10 +256,9 @@ def descricao(jogador, t):
 
 
 def frase_transformacao(t):
-    """O que a compra de uma transformação mudou, dito uma vez na hora da compra."""
-    return " ".join(f"A {HABILIDADES[h]['nome']} agora sai como {VARIANTES[v]['nome']}. Para voltar a usar a "
-                    f"{HABILIDADES[h]['nome']}, troque no Grimório, na vila ou no acampamento."
-                    for h, v in t["transforma"].items())
+    """A confirmação curta da compra (no texto; na tela, o nó já disse antes da compra que a versão nova entra em uso,
+    e o Grimório a marca "Em uso"). A mesma linha da troca de versão."""
+    return " ".join(f"Em uso: {VARIANTES[v]['nome']}." for v in t["transforma"].values())
 
 
 def custo_de(jogador, v_id):

@@ -15,6 +15,7 @@ from rpg.habilidades import HABILIDADES, VARIANTES, efetiva, escolher_versao, tr
 from rpg.inimigos import criar, instanciar_guardiao
 from rpg.jogo import Jogo
 from rpg.web.estado import glossario, heroi as estado_heroi
+from rpg.web.ponte import WebUI
 from tests.test_missoes import Roteiro
 
 PRISAO = talentos.POR_ID["prisao_gelo"]
@@ -207,25 +208,53 @@ class TestTroca(unittest.TestCase):
         self.assertEqual((no["ramo"], no["camada"], no["max"], no["icone"]), ("tronco", 2, 1, "gelo"))
 
     def test_troca_na_vila(self):
-        g = mago(roteiro=["Grimório: levar a Lança de Gelo"])
+        """No texto, a opção do menu troca, e uma linha curta diz a versão em uso (o menu só mostra a troca de volta)."""
+        g = mago(roteiro=["Grimório: usar a Lança de Gelo"])
         vila = next(l for l in g.mundo["locais"] if l["tipo"] == "vila")
         g.mundo["atual"] = vila["id"]
         g.menu_vila()
         self.assertEqual(versao(g.j, "lanca_gelo"), "lanca_gelo")
-        self.assertIn("Você passa a levar a Lança de Gelo no lugar da Prisão de Gelo. Na luta, é ela que sai.",
-                      g.ui.ditos)
+        self.assertEqual(g.ui.ditos[-1], "Em uso: Lança de Gelo.")
         self.assertEqual(g.registro[-1]["t"], "versao")
         meta = next(m for m in g.ui.metas[-1] if m and "versao" in m)
         self.assertEqual(meta, {"versao": "lanca_gelo", "para": "lanca_gelo"})
-        self.assertEqual(g.opcoes_versao()[0][0], "Grimório: levar a Prisão de Gelo no lugar da Lança de Gelo")
+        self.assertEqual(g.opcoes_versao()[0][0], "Grimório: usar a Prisão de Gelo no lugar da Lança de Gelo")
 
     def test_troca_no_acampamento(self):
         from rpg.comitiva.fogueira import fogueira
-        g = mago(roteiro=["Grimório: levar a Lança de Gelo", "Grimório: levar a Prisão de Gelo",
+        g = mago(roteiro=["Grimório: usar a Lança de Gelo", "Grimório: usar a Prisão de Gelo",
                           "Dormir até o amanhecer"])
         fogueira(g)
         self.assertEqual(versao(g.j, "lanca_gelo"), "prisao_gelo")
-        self.assertEqual(sum(d.startswith("Você passa a levar") for d in g.ui.ditos), 2)
+        self.assertEqual([d for d in g.ui.ditos if d.startswith("Em uso:")],
+                         ["Em uso: Lança de Gelo.", "Em uso: Prisão de Gelo."])
+
+    def test_na_tela_a_pagina_confirma(self):
+        """Na tela gráfica, a página do Grimório mostra o que mudou: o motor não diz nada, e a ponte não faz da troca
+        um passo da história (sem eco no texto, sem página nova, sem Continuar)."""
+        class Tela(Anotador):
+            troca_no_grimorio = True
+        g = mago()
+        g.ui = Tela(["Grimório: usar a Lança de Gelo"])
+        g.ui.jogo = g
+        vila = next(l for l in g.mundo["locais"] if l["tipo"] == "vila")
+        g.mundo["atual"] = vila["id"]
+        g.menu_vila()
+        self.assertEqual(versao(g.j, "lanca_gelo"), "lanca_gelo")
+        self.assertFalse(any("Em uso" in d for d in g.ui.ditos))
+        ui = WebUI()
+        enviados = []
+        ui._enviar = lambda tipo, **dados: enviados.append(tipo)
+        ui.enviar_estado = lambda: None
+        ui.respostas.put((1, 0))
+        ui.meta_opcoes = [{"versao": "lanca_gelo", "para": "lanca_gelo"}, None]
+        ui.tipo_cena, antes = "local", ui.escolhas_na_cena
+        self.assertEqual(ui.escolher("", ["Grimório: usar a Lança de Gelo no lugar da Prisão de Gelo", "Passear"]), 0)
+        self.assertEqual((enviados, ui.escolhas_na_cena), (["opcoes"], antes))  # a vila fica na mesma página
+        ui.tipo_cena = "menu"  # a fogueira se redesenha: página nova, ainda sem eco
+        ui.respostas.put((2, 0))
+        ui.escolher("", ["Grimório: usar a Prisão de Gelo no lugar da Lança de Gelo", "Dormir"])
+        self.assertEqual((enviados, ui.escolhas_na_cena), (["opcoes", "opcoes"], antes + 1))
 
     def test_sem_talento_nenhuma_opcao(self):
         self.assertEqual(mago(talento=False).opcoes_versao(), [])
@@ -237,15 +266,21 @@ class TestTroca(unittest.TestCase):
         g = mago()
         pagina = next(p for p in grimorio.dados(g.j)["habilidades"] if p["id"] == "lanca_gelo")
         v = pagina["versao"]
-        self.assertEqual(v["origem"], "Versão liberada pelo talento Prisão de Gelo, no lugar da Lança de Gelo.")
+        self.assertEqual(v["origem"], "Duas versões, pelo talento Prisão de Gelo.")
         self.assertEqual((v["para"], v["outra"]), ("lanca_gelo", "Lança de Gelo"))
-        self.assertTrue(v["comparar"][0].startswith("Prisão de Gelo: 16 de mana"))
-        self.assertTrue(v["comparar"][1].startswith("Lança de Gelo: 10 de mana"))
+        self.assertEqual([(x["id"], x["em_uso"]) for x in v["versoes"]], [("lanca_gelo", False), ("prisao_gelo", True)])
+        self.assertTrue(v["versoes"][0]["texto"].startswith("Lança de Gelo: 10 de mana"))
+        self.assertTrue(v["versoes"][1]["texto"].startswith("Prisão de Gelo: 16 de mana"))
+        self.assertEqual((pagina["nome"], pagina["custo"]), ("Prisão de Gelo", 16))  # a página é a da versão em uso
         escolher_versao(g.j, "lanca_gelo", None)
         pagina = next(p for p in grimorio.dados(g.j)["habilidades"] if p["id"] == "lanca_gelo")
-        self.assertEqual(pagina["nome"], "Lança de Gelo")
-        self.assertEqual(pagina["versao"]["origem"], "O talento Prisão de Gelo libera outra versão desta habilidade: "
-                                                     "a Prisão de Gelo.")
+        self.assertEqual((pagina["nome"], pagina["custo"]), ("Lança de Gelo", 10))
+        self.assertIn("× 130%", pagina["linhas"][0]["formula"])
+        self.assertEqual([(x["id"], x["em_uso"]) for x in pagina["versao"]["versoes"]],
+                         [("lanca_gelo", True), ("prisao_gelo", False)])  # a mesma ordem: só a marca muda de linha
+        self.assertEqual(pagina["versao"]["outra"], "Prisão de Gelo")
+        self.assertIn("    Duas versões, pelo talento Prisão de Gelo. Em uso: Lança de Gelo; a outra é a Prisão de Gelo. "
+                      "Troque na vila ou no acampamento. Na luta, vale a versão em uso.", grimorio.texto(g.j))
         sem = next(p for p in grimorio.dados(mago(talento=False).j)["habilidades"] if p["id"] == "lanca_gelo")
         self.assertNotIn("versao", sem)
 

@@ -1034,3 +1034,52 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   2. O mesmo com `PRISAO=lanca`: o mesmo herói, com a Lança.
   3. Com `LUGAR=vau_do_turvo`, abra o Grimório (P) na Prisão de Gelo e troque pelo botão.
 
+### 11/10/2026 — E6: acabamento da troca e critério editorial (1.62.1)
+
+- **Pedido de Jean:**
+  - a troca de versão sem o aviso sobreposto, com a página confirmando ("Em uso", o botão com a outra versão);
+  - o critério editorial consolidado no roadmap e citado no CLAUDE.md;
+  - um levantamento dos casos restantes, sem reescrever tudo;
+  - e, no meio da entrega, cinco ajustes pontuais vistos no teste.
+- **A troca:**
+  - **O problema:** o aviso cobria a vila, a escolha virava eco na página e pedia um Continuar, e até esse Continuar
+    o Grimório ficava sem o botão.
+  - **Agora, na tela gráfica**, a troca é silenciosa (`WebUI.escolher`, meta `versao`): sem eco, sem página nova na
+    vila e sem Continuar. A fogueira, que se redesenha, abre página nova como depois de qualquer escolha.
+  - **A página do Grimório confirma:** as duas versões ficam sempre na mesma ordem, a marca "Em uso" muda de linha, a
+    página vira a da versão em uso (nome, custo, dano) e o botão oferece a outra ("Usar Lança de Gelo").
+  - **No modo texto,** a opção "Grimório: usar a …" e a linha "Em uso: …".
+  - **A compra:** a confirmação também caía atrás da árvore e sumia. Agora o nó diz antes da compra que a Prisão entra
+    em uso, e só o texto confirma depois.
+- **Ajustes pontuais:**
+  - **A represa:** a pista diz "o dono do moinho fez uma represa no riacho, acima da roda".
+  - **O objetivo da capela:** era "onde o canal do moinho entra no brejo" e virou "no brejo, aonde o canal do moinho
+    leva". A geografia é a das pistas: o canal entra na capela por um buraco no muro. A versão mais longa repetia a
+    pista mais recente no Diário.
+  - **A Vigília:** o objetivo fica só com a acusação. A promessa já está no Diário, atribuída a Caspar ("Caspar
+    prometeu que, quando ela acabar…").
+  - **Fonte Nova:**
+    - a abertura dá o nome ("A vila a chamou de Fonte Nova");
+    - a prova diz "a Fonte Nova";
+    - as referências genéricas ("a fonte") ficam em minúsculas.
+  - **O contrato no espólio:** o nome do contrato, o estado curto ("Concluído") e, embaixo, menor, "Recompensa ao
+    chegar a qualquer vila". O pagamento é automático na chegada, então não há ação a destacar.
+- **O critério editorial:** consolidado no 07 (seção "Critério editorial") e citado no CLAUDE.md.
+  - As camadas são cena, alternativa, nota, resultado e confirmação.
+  - Evitar: repetir entre camadas, narrar o clique, explicar o jogo à toa, antecipar.
+  - Preservar: custos, testes, imunidades, indisponibilidade, fuga.
+- **Levantamento:** 13 problemas claros e 7 escolhas de estilo, no 07 ("Levantamento da 1.62.1"). Nada implementado.
+- **Cenários:**
+  - `combate` ganhou `FEITO`: `FEITO=2` fecha o contrato na luta;
+  - `capela` ganhou `PONTOS`: pontos de talento sobrando.
+- **Verificações:**
+  - testes, gabarito, pyflakes e fumaça;
+  - no navegador, a 1500 e 1280 px:
+    - a troca nos dois sentidos, na vila e na fogueira;
+    - salvar, sair e carregar mantém a escolha;
+    - a compra na árvore;
+    - os textos na abertura, no rastreador e no Diário;
+    - o espólio com o contrato concluído e em andamento;
+  - o modo texto, com a compra e a troca nos dois sentidos.
+- **Não mudou:** equilíbrio, regras da transformação, missões e recompensas.
+

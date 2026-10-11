@@ -34,7 +34,7 @@ MISSOES = {
                           lugar="vau_do_turvo"),
             "canal": dict(objetivo="Seguir a água da Fonte Nova até o canal, no Bosque do Moinho.",
                           lugar="bosque_do_moinho"),
-            "capela": dict(objetivo="Entrar na Capela Afogada, onde o canal do moinho entra no brejo.",
+            "capela": dict(objetivo="Entrar na Capela Afogada, no brejo, aonde o canal do moinho leva.",
                            lugar="capela_afogada"),
             "sacristia": dict(objetivo="Atravessar o salão alagado da capela até a sacristia, atrás do altar.",
                               lugar="capela_afogada"),
@@ -47,8 +47,8 @@ MISSOES = {
         pistas={
             "agua_do_leste": "A Fonte Nova não nasce ali: a água chega por baixo da terra, do leste, do lado do Bosque "
                              "do Moinho, e traz um lodo escuro e fino que água de nascente não tem.",
-            "represa": "No ano passado, o moleiro represou o riacho acima do moinho e abriu um canal para leste. O "
-                       "trecho que descia para a vila minguou: é por isso que o poço da praça secou.",
+            "represa": "No ano passado, o dono do moinho fez uma represa no riacho, acima da roda, e abriu um canal "
+                       "para leste. O trecho que descia para a vila minguou: é por isso que o poço da praça secou.",
             "canal_da_capela": "O canal do moinho corre até o brejo e entra por um buraco no muro de uma capela "
                                "afundada, a Capela Afogada. Abaixo dela, a terra está encharcada na direção da vila.",
             "agua_da_capela": "Dentro da capela, a água do canal atravessa o salão principal, desce por uma fenda do piso e sai "
@@ -74,7 +74,7 @@ MISSOES = {
         # O nome curto de cada pista e preparo: o cartão de novidade (o que a cena acabou de mostrar) usa estes.
         titulos={
             "agua_do_leste": "A água da Fonte Nova vem do leste, com lodo",
-            "represa": "O moleiro represou o riacho e abriu um canal",
+            "represa": "O dono do moinho fez uma represa no riacho e abriu um canal",
             "canal_da_capela": "O canal entra na Capela Afogada",
             "agua_da_capela": "A água suja passa por dentro da capela, rumo à vila",
             "ilse": "Ilse, a guardiã da capela, foi afogada pela vila",
@@ -280,8 +280,8 @@ def _abertura(g, mid):
     g.ui.cena(MISSOES[mid]["nome"], g.contexto_cena(), "evento")
     g.narrar("No Vau do Turvo há tosse atrás de quase toda porta. A febre começou há poucos meses: primeiro as crianças "
              "e os velhos, depois quem cuidava deles. Unhas escuras, sono pesado, sonhos com água.")
-    g.narrar("O poço da praça secou no ano passado, quando o riacho baixou. Na mesma época brotou uma fonte nova, logo "
-             "abaixo das últimas casas. A vila a recebeu como bênção e passou a beber dela.")
+    g.narrar("O poço da praça secou no ano passado, quando o riacho baixou. Na mesma época brotou uma fonte logo "
+             "abaixo das últimas casas. A vila a chamou de Fonte Nova, recebeu-a como bênção e passou a beber dela.")
     g.narrar("\"Desde que a fonte apareceu\", diz uma mulher enchendo dois baldes, sem levantar os olhos, \"ninguém aqui "
              "dorme direito.\"")
     g.narrar("Marta, a curandeira, também está de cama. Anos atrás, foi ela quem tirou você de uma febre de estrada, "

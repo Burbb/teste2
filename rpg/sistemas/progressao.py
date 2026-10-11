@@ -90,7 +90,7 @@ class Progressao:
                 j.recalcular()
                 j.hp += max(0, j.max_hp - antes)
                 self.ui.talento_aprendido(t["nome"], j.tal(t["id"]), t["max"])
-                if t["transforma"]:
+                if t["transforma"] and not self.ui.troca_no_grimorio:
                     self.dizer(talentos.frase_transformacao(t), "ciano")
 
     # ================================================================ versões (E6)
@@ -103,16 +103,17 @@ class Progressao:
             if h_id not in j.habilidades:
                 continue
             outra = h_id if versao(j, h_id) == variante else variante
-            opcoes.append((f"Grimório: levar a {ficha(outra)['nome']} no lugar da {efetiva(j, h_id)['nome']}",
+            opcoes.append((f"Grimório: usar a {ficha(outra)['nome']} no lugar da {efetiva(j, h_id)['nome']}",
                            ("versao", h_id, None if outra == h_id else outra), {"versao": h_id, "para": outra}))
         return opcoes
 
     def trocar_versao(self, h_id, variante):
-        antes = efetiva(self.j, h_id)["nome"]
         escolher_versao(self.j, h_id, variante)
-        depois = efetiva(self.j, h_id)["nome"]
         registrar(self, "versao", habilidade=h_id, versao=versao(self.j, h_id))
-        self.dizer(f"Você passa a levar a {depois} no lugar da {antes}. Na luta, é ela que sai.", "ciano")
+        # Na tela, a página do Grimório já mostra o que mudou (a versão em uso e o botão para a outra): nada a dizer.
+        # No texto, uma linha curta, porque o menu só mostra a troca de volta.
+        if not self.ui.troca_no_grimorio:
+            self.dizer(f"Em uso: {efetiva(self.j, h_id)['nome']}.", "ciano")
 
     def _aprender_habilidades(self, anunciar=True):
         j = self.j

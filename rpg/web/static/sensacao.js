@@ -365,8 +365,11 @@ const Sensacao = (() => {
     const S = (n, e = 1) => Sprites.img(n, e);
     const trechos = d.trechos || [], ultimo = trechos[trechos.length - 1] || [0, 0, 1], primeiro = trechos[0] || ultimo;
     const achados = (d.itens || []).map((x) => `<span class="achado-espolio">${S(Telas.iconeConsumivel(x.id, "saco"), 2)}${esc(x.nome)}<b>${quantoAchou(x)}</b></span>`);
+    // Cada contrato: o nome (o que ele pede), o estado curto à direita e, cumprido, onde a recompensa sai, embaixo do
+    // nome e em segundo plano (ela é paga sozinha na chegada a uma vila: aqui não há o que clicar).
     const contratos = (d.contratos || []).map((c) => `<div class="espolio-contrato${c.concluido ? " feito" : ""}">${S("pergaminho", 2)}
-      <span>${c.concluido ? "Contrato cumprido" : "Contrato"}</span><b>${esc(c.concluido ? "receba em qualquer vila" : c.progresso)}</b></div>`).join("");
+      <span class="ec-texto"><span class="ec-nome">${esc(c.desc.replace(/\.$/, ""))}</span>${c.concluido ? '<small class="ec-onde">Recompensa ao chegar a qualquer vila</small>' : ""}</span>
+      <b>${c.concluido ? "Concluído" : esc(c.progresso)}</b></div>`).join("");
     // Vários baús abertos juntos: os equipamentos que saíram ficam listados no resumo (cada um vem depois, na janela
     // dele, para comparar e decidir).
     const equips = (d.equipamentos || []).map((it) => `<span class="achado-espolio equip-espolio rar-${esc(it.raridade)}">${S(it.icone, 2)}${esc(it.nome)}</span>`);

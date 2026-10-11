@@ -297,6 +297,14 @@ class WebUI(InterfaceGrafica, UI):
             if isinstance(i, int) and not isinstance(i, bool) and 0 <= i < len(opcoes):
                 break
         meta, texto = itens[i].get("meta") or {}, itens[i]["texto"]
+        if meta.get("versao"):
+            # A troca de versão (E6) é um botão do Grimório: a página do livro mostra o que mudou. Não é passo da
+            # história: sem eco e sem Continuar. No lugar (a vila), a página fica como estava; numa tela que se
+            # redesenha a cada volta (a fogueira monta o painel de novo), página nova, como depois de qualquer escolha.
+            if self.tipo_cena == "menu":
+                self.escolhas_na_cena += 1
+            self.novo_desde_escolha = False
+            return i
         # Voltar (a palavra sozinha: "Voltar por onde veio" é história) e escolher talento na árvore são navegação, não
         # decisões da história; o que se escolhe numa janela (o item achado, uma confirmação) a própria janela mostra.
         # Nenhum deles vira eco na página nem entra no histórico.

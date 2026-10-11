@@ -103,7 +103,8 @@ A variante é outra ficha para uma habilidade que o herói já tem (a Prisão de
 `VARIANTES`, em `rpg/habilidades.py`, com os mesmos blocos, e **nunca** entra em `HABILIDADES` (ninguém a aprende por
 nível). Um talento a libera com `transforma={"lanca_gelo": "prisao_gelo"}`; a compra já leva a variante
 (`talentos.aprender`), e o herói troca de versão no Grimório, na vila ou no acampamento (`opcoes_versao`, meta
-`versao`). Na luta, vale a escolhida.
+`versao`). Na luta, vale a escolhida. Na tela, a troca não é passo da história: a página do Grimório confirma (a marca
+"Em uso"), sem aviso nem Continuar (`troca_no_grimorio`); no texto, uma linha curta.
 
 - O herói continua guardando o id de sempre (`lanca_gelo`); a escolha fica em `versoes`, no personagem.
 - Quem precisa da ficha pergunta `efetiva(u, h_id)`: nome, custo, alvo, descrição, Grimório e execução saem dela.

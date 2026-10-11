@@ -385,7 +385,8 @@ de 200 turnos, a lição da seção 14 do 14).
   - `versao` (o id usado), `escolher_versao`, `ficha`, `origem` e `resumo_versao` (os números do herói numa versão,
     lidos da ficha).
 - **Talento** (`rpg/talentos.py`): "Prisão de Gelo", tronco, camada 2, 1 ponto, `transforma={"lanca_gelo": "prisao_gelo"}`.
-  - A compra (`talentos.aprender`) já leva a Prisão e avisa como voltar.
+  - A compra (`talentos.aprender`) já leva a Prisão. Desde a 1.62.1, o nó diz isso antes da compra ("Ao comprar, a
+    Prisão entra em uso"); depois dela, só o modo texto confirma ("Em uso: Prisão de Gelo.").
   - A descrição do nó é calculada das duas fichas com os números do herói (custo, dano médio, esquiva, chance de
     congelar). Nada escrito à mão.
   - `custo_de(j, id)`: o `custo:<id>` vale para o id da versão; a Eficiência vale para as duas.
@@ -396,13 +397,15 @@ de 200 turnos, a lição da seção 14 do 14).
   - A telemetria e a animação recebem o id da versão (`prisao_gelo`).
 - **A troca** (`Progressao.opcoes_versao` e `trocar_versao`):
   - na vila e no acampamento, uma opção com meta `versao`;
-  - na tela gráfica, ela é escondida e vira o botão "Levar a …" na página da habilidade no Grimório;
+  - na tela gráfica, ela é escondida e vira o botão "Usar …" na página da habilidade no Grimório. A troca é silenciosa
+    (1.62.1): sem eco, sem página nova e sem Continuar. A própria página confirma: ela vira a da outra versão, e a marca
+    "Em uso" muda de linha. No modo texto, uma linha curta: "Em uso: Lança de Gelo.";
   - fora da vila e do acampamento, a página diz onde trocar;
   - no modo texto, é uma linha do menu;
   - a luta não oferece troca;
   - a troca entra no registro da partida (`versao`) e o replay a reproduz.
-- **O Grimório** mostra, na página da habilidade transformada, a origem ("Versão liberada pelo talento Prisão de Gelo, no
-  lugar da Lança de Gelo"), as duas versões lado a lado com os números do herói e a troca.
+- **O Grimório** mostra, na página da habilidade transformada, a origem ("Duas versões, pelo talento Prisão de Gelo."),
+  as duas versões com os números do herói, sempre na mesma ordem e com a marca "Em uso" na que vale, e a troca.
 - **Saves:** nenhum campo novo para quem não tem o talento. O save antigo carrega a Lança. A escolha volta do save.
   `VERSAO_SAVE` não mudou.
 - **O robô lutador** (`tests/arena.py`): antes ele escolhia o ataque mais caro como o mais forte, e passou a usar a
@@ -540,8 +543,8 @@ relevante uma diferença de 3 pontos de vitória, ou vitória igual e 5 pontos d
 - **A sensação de usar a Prisão contra o Esqueleto de Guarda.** Ela é a resposta certa ou só mais um botão?
 - **Golem e cavaleiro sombrio sozinhos.** A Prisão repetida deixa a luta segura demais? É o principal ponto da seção 13.
 - **A compra.** O talento já ativa a Prisão. Isso é o que se espera, ou a Lança sumir do menu surpreende?
-- **A troca no Grimório.** O botão "Levar a …" é fácil de achar na vila e no acampamento? A página diz claramente onde
-  trocar quando não dá?
+- **A troca no Grimório.** O botão "Usar …" é fácil de achar na vila e no acampamento? A página mudando sozinha, com
+  a marca "Em uso", basta como confirmação? A página diz claramente onde trocar quando não dá?
 - **A árvore.** A comparação no nó (custo, dano médio, chance de congelar) é suficiente para decidir a compra?
 - **Usar a Prisão como ataque principal.** O robô fez isso antes de aprender. Uma pessoa também faria? (Ela custa
   mais e fere metade.)
@@ -555,8 +558,8 @@ CLASSE=mago NIVEL=4 ETAPA=ossuario PRISAO=lanca  python -m tests.navegador.cenar
 
 - Em cada um, desça ao ossuário. O Esqueleto de Guarda prepara o golpe no primeiro turno dele.
 - Para ver a troca:
-  - acrescente `LUGAR=vau_do_turvo` e abra o Grimório (P) na página da Prisão; o botão "Levar a Lança de Gelo"
+  - acrescente `LUGAR=vau_do_turvo` e abra o Grimório (P) na página da Prisão; o botão "Usar Lança de Gelo"
     aparece;
   - ou, na capela, escolha "Acampar e descansar até o amanhecer" e troque na fogueira.
-- No modo texto, a troca é a linha "Grimório: levar a …" do menu da vila e da fogueira.
+- No modo texto, a troca é a linha "Grimório: usar a …" do menu da vila e da fogueira.
 

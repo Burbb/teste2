@@ -38,8 +38,8 @@ MISSOES = {
         campanha="turvo",
         etapas={
             "antes": dict(objetivo=None, lugar=None),
-            "acusacao": dict(objetivo="Caspar acusa Yara, a moça do brejo, de trazer a febre. Quando a febre acabar, "
-                                      "a praça vai querer uma resposta.", lugar=None),
+            # Só a acusação: a promessa de Caspar ("quando a febre acabar...") o Diário atribui a ele, em `_aguardando`.
+            "acusacao": dict(objetivo="Caspar acusa Yara, a moça do brejo, de trazer a febre.", lugar=None),
             "praca": dict(objetivo="Responder a Caspar na praça do Vau.", lugar="vau_do_turvo"),
         },
         pistas={},
@@ -118,7 +118,8 @@ def _requisitos(g, m):
     canal = bool({"canal_da_capela", "agua_da_capela"} & set(f["pistas"]))
     return {"titulo": "O que pode mostrar à praça que a febre veio da água, e não de Yara:", "itens": [
         {"texto": "O caminho da água, do moinho à Fonte Nova", "onde": None, "feito": canal},
-        {"texto": "Uma amostra do lodo que a água leva para a Fonte", "onde": None, "feito": "lodo" in m["preparos"]},
+        {"texto": "Uma amostra do lodo que a água leva para a Fonte Nova", "onde": None,
+         "feito": "lodo" in m["preparos"]},
     ]}
 
 

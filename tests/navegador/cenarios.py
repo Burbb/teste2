@@ -1,6 +1,6 @@
 """Sobe o jogo web num cenário preparado, para os testes de navegador (fumaca.mjs).
 
-    python -m tests.navegador.cenarios combate   # mago em luta, com contrato de caça no lugar
+    python -m tests.navegador.cenarios combate   # mago em luta, com contrato de caça no lugar (FEITO)
     python -m tests.navegador.cenarios titulo    # menu principal com um save de dia para carregar
     python -m tests.navegador.cenarios vila      # guerreiro acha um item raro e abre o mural de contratos
     python -m tests.navegador.cenarios campanha  # menu principal com saves dos dois modos; começar a campanha
@@ -54,7 +54,9 @@ def combate(ui):
     g.j.base["poder"], g.j.base["max_rec"] = 44, 110
     g.j.recalcular()
     g.j.rec = g.j.max_rec
-    g.contratos.append({"id": 991, "tipo": "caca", "local": loc["id"], "familia": "javali", "total": 3, "feito": 1,
+    # FEITO=2: o javali desta luta fecha o contrato (o espólio mostra o contrato concluído)
+    g.contratos.append({"id": 991, "tipo": "caca", "local": loc["id"], "familia": "javali", "total": 3,
+                        "feito": int(os.environ.get("FEITO", "1")),
                         "ouro": 60, "xp": 80, "desc": f"Eliminar 3 javalis em {loc['nome']}."})
     ui.cena("Clareira", g.contexto_cena(), "evento")
     g.dizer("Um javali enorme fareja o ar.")
@@ -210,7 +212,8 @@ def capela(ui):
     missão na ETAPA (padrão "sacristia": a nave já vencida) e o que se sabe até ali. PREPARO: "correntes" (soltas),
     "berta" (Berta ouvida e a fita, as correntes ainda presas) ou "pronto" (Berta ouvida, a fita e as correntes: o rito
     disponível). PRISAO (mago, nível 4 ou mais): o talento Prisão de Gelo já comprado, levando a "prisao" ou a "lanca";
-    o resto dos talentos sai igual nas duas, para comparar o mesmo herói. Sair do jogo leva ao título, com o save."""
+    o resto dos talentos sai igual nas duas, para comparar o mesmo herói. PONTOS: pontos de talento sobrando. Sair do
+    jogo leva ao título, com o save."""
     from rpg import dev, missoes, talentos
     from rpg.habilidades import escolher_versao
     from rpg.__main__ import menu_principal
@@ -226,6 +229,7 @@ def capela(ui):
         if os.environ["PRISAO"] == "lanca":
             escolher_versao(g.j, "lanca_gelo", None)
     dev.gastar_talentos(g, random.Random(3))
+    g.j.pontos_talento += int(os.environ.get("PONTOS", "0"))  # pontos sobrando, para comprar na árvore
     dev.vestir(g, random.Random(3), nivel)
     g.j.consumiveis["pocao_vida"] = 3
     etapa = os.environ.get("ETAPA", "sacristia")

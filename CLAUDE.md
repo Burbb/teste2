@@ -17,6 +17,10 @@ Leia antes de mexer:
 - Nomes no jogo como numa localização profissional: o que descreve é traduzido e soa natural ("Bosque do Lobo
   Branco", "Kalra, o Rei Troll"); nome inventado (Kalra, Varn, Theodore) fica como está.
 - O motor decide as regras; a tela só desenha. Número que aparece na tela vem pronto do motor.
+- Texto segue o [critério editorial](roadmapIDEIAS/07-ETAPAS.md#critério-editorial): cena (o que se percebe),
+  alternativa (a ação), nota (custo, requisito, restrição), resultado (o que aconteceu), confirmação só se a tela não
+  mostra a mudança. Sem repetir entre camadas nem antecipar o que o personagem não sabe; custos e restrições ficam
+  explícitos. Confira em toda revisão.
 - Conteúdo é dado: habilidades (`rpg/habilidades.py`), talentos e passivas (`rpg/talentos.py`, com `mod`/`disparar`
   de `rpg/modificadores.py`), estados (`rpg/estados.py`). Nada de perguntar "tem o talento X?" no combate.
 - Mudou algo visual? Suba o jogo num cenário e **veja** (Playwright tira captura); o Jean percebe pulos, sobreposições

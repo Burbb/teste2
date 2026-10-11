@@ -7,8 +7,7 @@ fora, porque mudam a cada luta; o livro diz isso em vez de esconder.
 
 from . import balanceamento as bal
 from .classes import CLASSES
-from .habilidades import (HABILIDADES, crit_extra, da_estado, efetiva, ficha, origem, resumo_versao, transformacoes,
-                          versao)
+from .habilidades import crit_extra, da_estado, efetiva, ficha, origem, resumo_versao, transformacoes, versao
 from .modificadores import contribuicoes, mod, mult, nomes
 from .talentos import custo_habilidade
 
@@ -143,12 +142,11 @@ def pagina_versao(j, h_id):
     variante = transformacoes(j)[h_id]
     usando = versao(j, h_id)
     outra = h_id if usando == variante else variante
-    talento = origem(j, h_id)
-    return {"origem": (f"Versão liberada pelo talento {talento}, no lugar da {HABILIDADES[h_id]['nome']}." if usando != h_id
-                       else f"O talento {talento} libera outra versão desta habilidade: a {ficha(variante)['nome']}."),
-            "comparar": [resumo_versao(j, usando) + ".", resumo_versao(j, outra) + "."],
+    return {"origem": f"Duas versões, pelo talento {origem(j, h_id)}.",
+            # na mesma ordem sempre (a original, a variante): ao trocar, só a marca "Em uso" muda de linha
+            "versoes": [{"id": v, "texto": resumo_versao(j, v) + ".", "em_uso": v == usando} for v in (h_id, variante)],
             "para": outra, "outra": ficha(outra)["nome"],
-            "onde": "A troca se faz na vila ou no acampamento. Na luta, vale a versão que você leva."}
+            "onde": "Troque na vila ou no acampamento. Na luta, vale a versão em uso."}
 
 
 def dados(j):
@@ -213,7 +211,8 @@ def texto(j):
             else "grátis"
         linhas.append(f"  {x['nome']} ({custo}): " + "; ".join(linha(l).rstrip(".") for l in x["linhas"]) + ".")
         if x.get("versao"):
-            linhas.append(f"    {x['versao']['origem']} {x['versao']['onde']}")
+            linhas.append(f"    {x['versao']['origem']} Em uso: {x['nome']}; a outra é a {x['versao']['outra']}. "
+                          f"{x['versao']['onde']}")
     linhas += [f"  · {g}" for g in d["gerais"]]
     return linhas
 

@@ -11,13 +11,15 @@
    *  e como cresce. Os números chegam prontos do motor (grimorio.py), no estado do herói. */
   /** A troca de versão (E6): o motor a oferece como opção escondida (meta `versao`) só na vila e no acampamento. */
   const trocaOferecida = (id) => (App.opcoes() || []).some((o) => o.meta && o.meta.versao === id);
+  /** As duas versões sempre na mesma ordem; a marca "Em uso" diz qual vale, e a página inteira é a dela. A troca é
+   *  o botão (só onde o motor a oferece) e se confirma na própria página: ela vira a da outra versão. */
   function caixaVersao(x) {
     const v = x.versao;
     if (!v) return "";
     const pode = trocaOferecida(x.id);
     return `<div class="g-versao"><p class="g-versao-origem">${Realce.texto(v.origem)}</p>
-      <ul class="g-versao-comparar">${v.comparar.map((c) => `<li>${Realce.texto(c)}</li>`).join("")}</ul>
-      ${pode ? `<button type="button" class="g-versao-trocar" data-versao="${h(x.id)}">Levar a ${h(v.outra)}</button>`
+      <ul class="g-versao-lista">${v.versoes.map((c) => `<li${c.em_uso ? ' class="em-uso"' : ""}>${c.em_uso ? '<span class="g-versao-tag">Em uso</span>' : ""}${Realce.texto(c.texto)}</li>`).join("")}</ul>
+      ${pode ? `<button type="button" class="g-versao-trocar" data-versao="${h(x.id)}">Usar ${h(v.outra)}</button>`
         : `<p class="g-versao-onde">${h(v.onde)}</p>`}</div>`;
   }
   function abrirGrimorio(id, quieto) {
