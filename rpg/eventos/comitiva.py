@@ -19,7 +19,7 @@ def odete_na_estrada(g):
             "aberta. Ela aperta a ferida com as próprias mãos. Não tem bandagens. Não tem mais nada.")
     g.dizer("\"Segure aqui\", ela diz, sem olhar para você, como se você sempre tivesse estado ali.", "amarelo")
     op = g.menu("O que faz?", [
-        ("Estancar o sangue com uma bandagem", "bandagem") if g.j.tem("bandagem") else None,
+        ("Estancar o sangue com uma bandagem", "bandagem", g.custo_item("bandagem")),
         ("Segurar a ferida enquanto ela reza (Vontade)", "segurar"),
         ("Perguntar quem ela é", "perguntar"),
         ("Revistar o moribundo enquanto ela está distraída", "roubar"),

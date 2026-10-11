@@ -194,7 +194,7 @@ def os_enfermos(g):
     g.dizer("Uma casa com um X pintado na porta. Febre negra. Uma mãe implora: \"Ninguém entra. Ninguém "
             "nos ajuda.\"", "amarelo")
     op = g.menu("O que faz?", [("Entrar e curar os doentes", "curar", {"nota": "Horas de esforço: cobra da sua vida."}),
-                               ("Deixar remédios na porta", "remedio") if g.j.tem("pocao_vida") else None,
+                               ("Deixar remédios na porta", "remedio", g.custo_item("pocao_vida")),
                                ("Seguir em frente", "nao")])
     if op == "curar":
         g.dizer("Você passa horas impondo as mãos. Quando termina, mal consegue ficar de pé — mas ninguém "

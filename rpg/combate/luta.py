@@ -14,6 +14,15 @@ from .turnos import TurnosDosOutros
 
 
 
+
+# A frase de quando a proteção levanta você, por origem (Jogo.receber_protecao). Sem origem guardada (save de antes,
+# ou True), uma frase neutra: nada de dizer "santuário" para o que veio de outro lugar.
+ORIGEM_PROTECAO = {
+    "santuario": "Uma luz antiga, a bênção do santuário, te puxa de volta da escuridão!",
+    "mendigo": "O calor que ficou no seu peito acende de uma vez e te puxa de volta da escuridão!",
+    None: "Uma força que você carregava te puxa de volta da escuridão!",
+}
+
 class Aliado(Combatente):
     def __init__(self, nome, hp, atk, agi=4, tipo="servo", alcance="corpo", crit=0.0):
         super().__init__(nome, hp, atk, 3, agi, 0)
@@ -269,12 +278,16 @@ class Combate(Golpes, AcoesDoHeroi, TurnosDosOutros):
                 j.hp = j.max_hp // 2
                 j.limpar_negativos()
                 self.dizer("A Pena de Fênix arde em chamas douradas e você se ergue das cinzas!", "amarelo+negrito")
+                self.curou(j, j.hp, tipo="levantar", rotulo="Pena de Fênix")  # a carta volta a ter vida, à vista
                 return None
-            if self.g.flag("bencao_fenix"):
+            origem = self.g.flag("bencao_fenix")
+            if origem:
                 self.g.marcar("bencao_fenix", False)
                 j.hp = j.max_hp // 2
                 j.limpar_negativos()
-                self.dizer("Uma luz antiga — a bênção do santuário — te puxa de volta da escuridão!", "amarelo+negrito")
+                self.dizer(ORIGEM_PROTECAO.get(origem, ORIGEM_PROTECAO[None]), "amarelo+negrito")
+                self.curou(j, j.hp, tipo="levantar", rotulo="De pé outra vez")
+                self.ui.efeito("A proteção se foi: você se levantou com metade da vida", "protecao")
                 return None
             return "derrota"
         if not self.inimigos_vivos():

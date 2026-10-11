@@ -234,6 +234,10 @@ function mostrarOpcoes(m) {
       if (n) icone = spr(MapaPx.sprite(n), 1);
     }
     if (o.meta && o.meta.item) icone = spr(Telas.iconeConsumivel(o.meta.item), 1);
+    if (o.meta && o.meta.gasta) icone = spr(Telas.iconeConsumivel(o.meta.gasta), 1);  // o item que a escolha usa
+    // Indisponível: fica à vista, apagada, com o motivo escrito (não só a cor) e sem responder a clique ou tecla.
+    const indisponivel = o.meta && o.meta.indisponivel;
+    if (indisponivel) { b.classList.add("indisponivel"); b.disabled = true; b.setAttribute("aria-disabled", "true"); }
     // A missão e os contratos se distinguem pelo grupo, pela borda e pelo ícone; quem abre outra escolha (de onde se
     // volta) leva uma seta no fim.
     if (o.meta && o.meta.cacar !== undefined) { icone = spr("arco", 1); b.classList.add("op-contrato"); }
@@ -246,7 +250,7 @@ function mostrarOpcoes(m) {
       b.addEventListener("focus", () => Batalha.mirar(o.meta.alvo, true));
       b.addEventListener("blur", () => Batalha.mirar(o.meta.alvo, false));
     }
-    b.innerHTML = `<span class="tecla">${tecla}</span>${icone}<span class="rotulo">${esc(o.texto)}${o.meta && o.meta.nota ? `<small class="op-nota">${esc(o.meta.nota)}</small>` : ""}</span>${teste}${abre}`;
+    b.innerHTML = `<span class="tecla">${tecla}</span>${icone}<span class="rotulo">${esc(o.texto)}${o.meta && o.meta.nota ? `<small class="op-nota">${esc(o.meta.nota)}</small>` : ""}${indisponivel ? `<small class="op-nota op-motivo">Indisponível: ${esc(indisponivel)}</small>` : ""}</span>${teste}${abre}`;
     b.addEventListener("click", (ev) => { ev.stopPropagation(); responder(m.id, i); });
     li.appendChild(b);
     lista.appendChild(li);

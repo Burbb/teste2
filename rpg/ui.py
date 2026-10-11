@@ -37,7 +37,7 @@ COR_EFEITO = {
     "ouro": "amarelo", "perda": "vermelho", "xp": "ciano", "dano": "vermelho", "cura": "verde",
     "item": "verde", "rep": "magenta", "teste_ok": "verde+negrito", "teste_falha": "vermelho+negrito",
     "ferimento": "vermelho+negrito", "info": "cinza", "nivel": "amarelo+negrito", "aprova": "verde",
-    "desaprova": "magenta",
+    "desaprova": "magenta", "protecao": "amarelo",
 }
 
 
@@ -307,8 +307,9 @@ class BotUI(UI):
             raise LimiteBot()
         if pergunta:
             self.dizer(pergunta)
-        # O robô evita sair do jogo para explorar mais conteúdo.
-        validas = [i for i, o in enumerate(opcoes) if not o.startswith("Sair")]
+        # O robô evita sair do jogo para explorar mais conteúdo, e não tenta o que está indisponível.
+        metas = self.meta_opcoes or [None] * len(opcoes)
+        validas = [i for i, o in enumerate(opcoes) if not o.startswith("Sair") and not (metas[i] or {}).get("indisponivel")]
         escolha = self.rng.choice(validas or list(range(len(opcoes))))
         if self.verboso:
             print(f"  [robô] -> {opcoes[escolha]}")

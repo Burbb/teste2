@@ -80,7 +80,7 @@ Três commits posteriores à atualização do roadmap foram consultados. Os comp
 | E3 — missão mínima | Entregas na 1.50.0 a 1.54.0 (registros abaixo): da Fonte Nova ao canal, à capela, ao interior, a Vó Berta, à guardiã (Destruir ou Dar descanso) e à volta ao Vau, que conclui a missão. A bênção e a comporta não existem. Falta Jean jogar. |
 | E4 — consequência local | Na 1.54.0, a Fonte Nova, a frase do Vau, Pita e Marta. Na 1.55.0, Caspar: a acusação, a praça (Apoiar, Denunciar com prova, Calar), a situação da Yara e as reações da comitiva. Na 1.56.0, a consolidação: a Yara barrada fica de fato fora do Vau, o encontro no Charco depois da denúncia, a conversa da Yara sobre a praça e os textos que contradiziam o Vau. **O critério mínimo da E4 (07-ETAPAS) está atendido**; as outras ideias do 11 (bênção, sementes, mercado, taverna, Charco à noite, Odette e Caspar, Anselmo, a cena da vigília) ficam adiadas, não são requisito. Falta Jean jogar. |
 | E5 — classes | Diagnóstico (só design) em [14](14-E5-DIAGNOSTICO-CLASSES.md), sobre a 1.56.0. **P1 implementada na 1.57.0:** o golpe preparado em duas lutas fixas da capela (seção 10 do 14). **P3 implementada na 1.58.0:** a encruzilhada compara os dois caminhos e o Grimório explica (seção 11 do 14). **P2 começada na 1.59.0, só pelo Tiro Duplo** (seção 12 do 14): o 2º disparo vai no outro inimigo mais ferido. **Drenar Vida, Desaparecer e Passo Ágil avaliados em lutas inteiras** (seção 13 do 14, sem mudar o jogo): os dois primeiros têm função. **O desvio do Passo Ágil foi validado e rejeitado** (seção 14): usado repetidamente, vira a ação padrão contra inimigos sozinhos; o Passo Ágil fica como era. **O critério mínimo da E5 (07-ETAPAS) está atendido**: as três classes atravessam o Vale (a guardiã medida por caminho) e os seis caminhos foram avaliados em cenários direcionados. A E5 está **concluída tecnicamente**; adiado, sem ser requisito: o Passo Ágil, a sinergia Desaparecer–Execução, Sombra e Piromante contra a guardiã no nível 4, a preparação de habilidades. Falta Jean jogar. A validação da E4 jogando, por Jean, fica registrada à parte. |
-| Clareza da campanha | Pausa antes da E6, a partir do teste de Jean. **Primeira entrega na 1.60.0** (registro abaixo): ações da capela organizadas, Diário reorganizado, linguagem do Vale simplificada, cartão de atualização de missão. **Revisão na 1.60.1**: ações curtas com custo e risco numa nota, e o conhecimento conforme as descobertas (o critério está no 07). **Na 1.60.2**: porta ou ação à vista no menu e grupos. **Na 1.60.3**: o cartão de novidade como nota da história e o Diário na Alegreya Sans. **Na 1.60.4**: revisão editorial dos textos que antecipavam a resolução (critério no 07). As próximas entregas estão listadas em [07](07-ETAPAS.md) ("Entre a E5 e a E6"), sem implementar. Falta Jean testar. |
+| Clareza da campanha | Pausa antes da E6, a partir do teste de Jean. **Primeira entrega na 1.60.0** (registro abaixo): ações da capela organizadas, Diário reorganizado, linguagem do Vale simplificada, cartão de atualização de missão. **Revisão na 1.60.1**: ações curtas com custo e risco numa nota, e o conhecimento conforme as descobertas (o critério está no 07). **Na 1.60.2**: porta ou ação à vista no menu e grupos. **Na 1.60.3**: o cartão de novidade como nota da história e o Diário na Alegreya Sans. **Na 1.60.4**: revisão editorial dos textos que antecipavam a resolução (critério no 07). **Na 1.61.0**: custo dos consumíveis nas opções, a proteção do mendigo e o fluxo da exaustão. Pendentes: a dívida do Morel e a revisão de loot. As próximas entregas estão listadas em [07](07-ETAPAS.md) ("Entre a E5 e a E6"), sem implementar. Falta Jean testar. |
 | E6–E11 | Plano de trabalho futuro; infraestrutura existente não equivale a etapas concluídas. Notas aprovadas para a E3 na seção 19 do [11](11-E1-REGIAO-INICIAL.md). |
 | Bugs ainda abertos | Nenhum bug aberto específico foi informado para registro nesta passagem. Isso não comprova ausência de bugs. |
 | Polimento antes da E3 | Entregue na 1.48.1 (registro abaixo): leitura, item achado, balcão do templo, palco da luta. Falta Jean conferir jogando. |
@@ -887,3 +887,47 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   - `pyflakes` limpo;
   - fumaça;
   - capturas em 1500 e 1280 px: correntes, descida até Ilse, guardião, alerta de viagem, criança perdida, flechas, Paladino com os doentes. Para isso, o cenário novo `covil` em `tests/navegador/cenarios.py`, com `EVENTO` opcional.
+
+### 11/10/2026 — Custos de consumíveis, a proteção e a exaustão (1.61.0)
+
+- **Pedido de Jean:** uma entrega limitada a três achados do teste dele. A apresentação da 1.60.x e o critério editorial ficam como estão. Regras, custos, tempo, recuperação, sorteios e equilíbrio não mudam.
+- **Reproduzido** (fumaça e `scratchpad`, no navegador, 1500 e 1280 px):
+  - **Exaustão no mato.** No fim de um evento à noite vinha o Continuar do evento, a faixa "Exausto" e um segundo Continuar na mesma página, sem nada novo para ler, antes da fogueira. Causa: a faixa contava como texto novo (`novo_desde_escolha`), e a fogueira pedia leitura antes de abrir.
+  - **Exaustão na vila.** A faixa "Exausto" passava por cima do texto do evento anterior, antes do Continuar dele, e só depois vinha a cena "Exausto".
+- **Implementado:**
+  - **Custo do consumível na opção** (`Jogo.custo_item`).
+    - Com o item: a nota "Usa 1 bandagem da bolsa (você tem N)", com o ícone do item.
+    - Sem o item: a opção continua à vista, desabilitada (`disabled`, `aria-disabled`), apagada e com "Indisponível: Você não tem bandagem na bolsa." escrito, e não só a cor. Nem clique, nem tecla, nem atalho a escolhem (`responder` recusa).
+    - No texto, ela aparece com "— indisponível: …"; se alguém digitar o número, o jogo diz o motivo e pergunta de novo. O robô nunca a escolhe (`BotUI`), e por isso as partidas do gabarito seguem as mesmas escolhas.
+    - Vale para a bandagem da Odette e para "Deixar remédios na porta" (1 poção de vida). Os outros caminhos, testes e consequências desses eventos não mudaram, e a bandagem continua gastando exatamente uma.
+  - **A proteção.**
+    - Quando chega (`Jogo.receber_protecao`), aparece o aviso "Proteção: se cair em combate, você se levanta uma vez".
+    - O mendigo não põe "algo no bolso": fica "um calor estranho no peito". O mistério sobre quem ele é continua.
+    - A flag `bencao_fenix` guarda a origem (`mendigo`, `santuario`). Um save antigo guarda só `True`, e aí a frase é neutra.
+    - Quando ela levanta você: a frase da origem (o santuário só quando veio dele); na tela de combate, a carta volta a ter vida com o rótulo "De pé outra vez" (lance de cura, modo `levantar`); e o aviso "A proteção se foi: você se levantou com metade da vida".
+    - A Pena de Fênix ganhou a mesma animação ("Pena de Fênix") e continua vindo antes da bênção.
+    - Chances, vida recuperada (metade), um uso só e prioridade iguais. A telemetria não conta o levantar como cura, então as medidas de equilíbrio não mudam.
+  - **Exaustão.**
+    - A faixa "Exausto" passa sem pedir leitura (`WebUI.FAIXAS_DE_PASSAGEM`): no mato, é um Continuar para o fim do evento, a faixa e a fogueira.
+    - Na vila, a faixa vem já na página da cena "Exausto". O Continuar do evento anterior, quando há texto para ler, continua.
+    - Tempo, descanso, custos e o quadro do amanhecer iguais. As cenas de missão continuam esperando o Continuar delas.
+- **Pendente:** a dívida do Morel e a revisão de loot (07). Também fica de fora uma marca permanente da proteção no painel do herói: hoje o aviso aparece na chegada e na ativação, e não há lembrete no meio do caminho.
+- **Gabarito.** Mudou em 11 partidas, só no esperado:
+  - os rótulos e as metas da bandagem;
+  - as frases e os avisos da proteção;
+  - o lance de levantar;
+  - a ordem da faixa "Exausto" na vila;
+  - a origem na flag do save.
+
+  As escolhas do robô são as mesmas. Foi atualizado depois da comparação.
+- **Verificações:**
+  - `unittest` com `tests/test_custos_protecao.py` (12 testes): custo e consumo exato, indisponível sem escolha (texto e robô), origens e frase neutra, a pena antes da bênção, um uso só, a faixa sem Continuar a mais, a ordem na vila;
+  - gabarito;
+  - `pyflakes` limpo;
+  - fumaça, com o cenário novo de custos, proteção e exaustão;
+  - capturas em 1500 e 1280 px. O cenário `covil` ganhou `PERIODO`, `LUGAR`, `BOLSA`, `PROTECAO` e `LUTA`.
+- **Como testar (rota curta):**
+  1. Sem bandagem: `python -m tests.navegador.cenarios covil` com `EVENTO=odete_na_estrada BOLSA=bandagem=0`. A ajuda aparece apagada, com o motivo; clique e a tecla 1 não fazem nada.
+  2. Repita com `BOLSA=bandagem=2`: a nota diz o custo, e a bolsa fica com 1.
+  3. A proteção: `EVENTO=mendigo_misterioso LUGAR=vila`, pague a refeição e veja o aviso. Depois, `PROTECAO=mendigo LUTA=troll`: ataque, caia e veja "De pé outra vez" e o aviso de que ela se foi.
+  4. A exaustão: `PERIODO=3 LUGAR=selvagem SEMENTE=9`, explore e recuse o duelo. É um Continuar, a faixa "Exausto" e a fogueira.

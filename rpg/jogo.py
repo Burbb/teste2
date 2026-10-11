@@ -152,24 +152,46 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
                                     for r, v in opcoes])
 
     def menu(self, pergunta, opcoes):
-        """opcoes: lista de (rótulo, chave) ou None (opção indisponível)."""
+        """opcoes: lista de (rótulo, chave[, meta]) ou None (opção que não aparece). Meta `indisponivel` (o motivo):
+        a opção aparece, mas não pode ser escolhida (falta o item que ela gasta, por exemplo)."""
         self.fechar_espolio()  # o que se ganhou aparece antes de a pessoa escolher de novo
         validas = [o for o in opcoes if o]
         rotulos = [self._anotar_teste(o[0]) for o in validas]
         metas = [o[2] if len(o) > 2 else None for o in validas]
-        if not self.ui.notas_proprias:  # a nota da opção (custo, risco) e a seta de quem abre outra escolha: a tela
-            # gráfica desenha as duas; o texto as junta ao rótulo
+        if not self.ui.notas_proprias:  # a nota da opção (custo, risco), a seta de quem abre outra escolha e o motivo
+            # de uma indisponível: a tela gráfica desenha os três; o texto os junta ao rótulo
             rotulos = [r + (" ›" if m and m.get("abre") else "") + (f" — {m['nota']}" if m and m.get("nota") else "")
+                       + (f" — indisponível: {m['indisponivel']}" if m and m.get("indisponivel") else "")
                        for r, m in zip(rotulos, metas)]
         self.ui.meta_opcoes = metas if any(metas) else None
         try:
             esc = self.ui.escolher(pergunta, rotulos)
+            while metas[esc] and metas[esc].get("indisponivel"):  # a tela não deixa; o texto explica e pergunta de novo
+                self.dizer(metas[esc]["indisponivel"], "cinza")
+                esc = self.ui.escolher(pergunta, rotulos)
         finally:
             self.ui.meta_opcoes = None
         chave = validas[esc][1]
         if self.evento_atual and self.comitiva:
             comitiva.reagir_escolha(self, self.evento_atual, chave)
         return chave
+
+    # A proteção que levanta você uma vez ao cair em combate (a flag `bencao_fenix`): o valor guarda de onde ela veio
+    # ("santuario", "mendigo"); um save de antes guarda só True, e aí a origem fica sem nome (ORIGEM_PROTECAO[None]).
+    AVISO_PROTECAO = "Proteção: se cair em combate, você se levanta uma vez"
+
+    def receber_protecao(self, origem):
+        self.marcar("bencao_fenix", origem)
+        self.ui.efeito(self.AVISO_PROTECAO, "protecao")
+
+    def custo_item(self, item, qtd=1):
+        """A meta de uma opção que gasta um consumível: a nota com o que ela usa e quanto você tem, ou, faltando, a
+        opção indisponível com o motivo (ela continua à vista)."""
+        from .itens import CONSUMIVEIS
+        nome, tem = CONSUMIVEIS[item]["nome"].lower(), self.j.consumiveis.get(item, 0)
+        if tem >= qtd:
+            return {"nota": f"Usa {qtd} {nome} da bolsa (você tem {tem}).", "gasta": item}
+        return {"indisponivel": f"Você não tem {nome} na bolsa.", "gasta": item}
 
     def _anotar_teste(self, rotulo):
         """'(Destreza)' vira '(Destreza +3)': mostra quanto você soma ao dado."""

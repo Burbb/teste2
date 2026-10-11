@@ -203,10 +203,9 @@ def mendigo_misterioso(g):
         return
     g.perder_ouro(5 if op == "dar" else 10)
     if op == "refeicao" or g.chance(0.4):
-        g.dizer("Ele sorri. \"Gentileza com quem nada tem. Rara.\" Quando você pisca, ele sumiu. Em seu bolso, "
-                "algo que não estava lá.", "magenta")
-        g.marcar("bencao_fenix")
-        g.dizer("(Você sente que, se cair, poderá se erguer mais uma vez.)", "amarelo")
+        g.dizer("Ele sorri. \"Gentileza com quem nada tem. Rara.\" Quando você pisca, ele sumiu. Fica um calor "
+                "estranho no peito, como se alguém tivesse posto a mão ali.", "magenta")
+        g.receber_protecao("mendigo")
     else:
         g.dizer("\"Obrigado, viu.\" Ele vai direto para a taverna.", "cinza")
     g.mudar_reputacao(1)

@@ -98,11 +98,12 @@ class Tempo:
         self.ui.separador()
         if self.loc["tipo"] == "vila":
             lugar, frase = self.sortear(self.POUSOS_EXAUSTO)
-            if self.ui.conquistas_na_tela:  # a faixa sombria; o texto fica com a cena logo abaixo
-                self.ui.celebrar("exausto", {"texto": lugar})
             # Como a taverna: uma cena curta diz por que (a noite passou sem você parar), onde você dormiu e o que
-            # isso custa; o quadro do amanhecer abre com o lugar.
+            # isso custa; o quadro do amanhecer abre com o lugar. A faixa sombria vem já na página da cena (antes, ela
+            # passava por cima do texto do evento anterior, que ainda esperava o Continuar).
             self.ui.cena("Exausto", self.contexto_cena(), "evento")
+            if self.ui.conquistas_na_tela:
+                self.ui.celebrar("exausto", {"texto": lugar})
             self.dizer("A noite passou e você não parou para dormir. As pernas decidem por você: não dá para "
                        "procurar a estalagem.", "cinza")
             self.dizer(frase, "cinza")

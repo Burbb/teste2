@@ -87,14 +87,12 @@ Na 1.60.1, uma revisão de apresentação e texto, depois do teste de Jean. O cr
   Nota não antecipa o inimigo exato nem a sequência de resolução: diz o que se percebe antes de agir ("barulhento", "o eixo range alto"). Custos, testes, efeitos de habilidade, escolhas de fato permanentes e o que se aprendeu em conversa (o rito de Berta) continuam explícitos. Nada de porcentagem inventada, de obstáculo físico criado só para justificar uma regra, ou de remoção geral de avisos.
 - **Conhecimento conforme as descobertas.** As telas e o Diário só mostram o que o personagem já descobriu, atribuído a quem ensinou. O rito aparece como o que Vó Berta contou, só depois da conversa com ela. Antes disso, o Diário mostra as perguntas que as pistas abrem, sem a receita. A finalidade da amostra do lodo aparece no Diário de Caspar, como o que se pode mostrar à praça.
 
-**Próximas entregas (registradas, não implementadas; cada uma é uma entrega à parte, nenhuma é requisito da E6):**
-1. **A bandagem da Odette.** O custo fica explícito na opção. Quando faltar a bandagem, a opção aparece indisponível e diz por quê. A exigência e o consumo já existem no motor: falta só mostrá-los.
-2. **A proteção do mendigo.**
-   - A aquisição e a ativação ficam visíveis: o que você ganhou, quando vale e quando acaba.
-   - A origem tem de ser coerente com o que o mendigo diz e faz.
-3. **"Continuar → Exausto → Continuar".** Reproduzir o fluxo que Jean viu, entender por que o Exausto aparece entre dois Continuar e corrigir só se for defeito.
-4. **A dívida do Morel.** Uma dívida de verdade: pagamento depois e uma proposta de juros. Hoje a conversa sugere mais do que o jogo guarda.
-5. **Revisão de loot.**
+**Próximas entregas** (cada uma é uma entrega à parte, nenhuma é requisito da E6):
+1. **A bandagem da Odette** — *feita na 1.61.0.* A opção diz o que gasta ("Usa 1 bandagem da bolsa (você tem N)"). Sem bandagem, ela fica à vista, desabilitada e com o motivo escrito. O mesmo vale para "Deixar remédios na porta" (poção de vida).
+2. **A proteção do mendigo** — *feita na 1.61.0.* Um aviso quando ela chega e outro na luta quando ela levanta você. A frase muda conforme a origem (mendigo, santuário, ou neutra num save antigo). Não aparece como item na bolsa.
+3. **"Continuar → Exausto → Continuar"** — *reproduzido e corrigido na 1.61.0.* No mato, o segundo Continuar não tinha nada novo para ler. Na vila, a faixa "Exausto" passava por cima do texto do evento anterior.
+4. **A dívida do Morel** — *pendente.* Uma dívida de verdade: pagamento depois e uma proposta de juros. Hoje a conversa sugere mais do que o jogo guarda.
+5. **Revisão de loot** — *pendente.*
    - Levantar a distribuição de consumíveis e de equipamento e a frequência de baús ao longo do Vale.
    - Só então propor mudanças, pelo ciclo de balanceamento (COMO_CRIAR).
 

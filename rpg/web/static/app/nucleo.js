@@ -84,6 +84,9 @@ function conectar() {
 
 async function responder(id, valor) {
   if (!pergunta || pergunta.id !== id) return;
+  // A opção indisponível (falta o item que ela gasta) não se escolhe: nem clique, nem tecla, nem atalho.
+  if (pergunta.tipo === "opcoes" && typeof valor === "number" && pergunta.opcoes && pergunta.opcoes[valor]
+      && pergunta.opcoes[valor].meta && pergunta.opcoes[valor].meta.indisponivel) return;
   pergunta = null;
   ultimaResposta = performance.now();
   presoNoTopo = false;  // o que a escolha trouxer aparece embaixo, à vista

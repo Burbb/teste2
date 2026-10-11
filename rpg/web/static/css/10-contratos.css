@@ -112,6 +112,10 @@
 .escolha .op-abre { margin-left: auto; padding-left: 10px; font-family: var(--pixel); font-size: 18px; line-height: 1; color: var(--ouro); opacity: 0.8; }
 /* A nota de uma opção (custo, risco): embaixo da ação, menor, para comparar as ações pelo começo. */
 .escolha .rotulo small.op-nota { display: block; margin-top: 2px; font-size: 15.5px; line-height: 1.35; opacity: 0.75; }
+/* A opção indisponível: apagada, sem reagir ao mouse, e o motivo escrito embaixo (não depende só da cor). */
+.escolha.indisponivel { opacity: 0.55; cursor: not-allowed; filter: grayscale(0.6); }
+.escolha.indisponivel:hover, .escolha.indisponivel:focus { transform: none; background: none; }
+.escolha .rotulo small.op-motivo { font-style: normal; opacity: 1; }
 .rastro-arte { flex: none; width: 36px; height: 36px; display: grid; place-items: center; background: radial-gradient(circle at 50% 42%, rgba(255, 232, 190, 0.07), rgba(0, 0, 0, 0.45) 70%); }
 .rastro-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
 .rastro-info b { font-size: 14px; color: #f2e6cc; line-height: 1.2; }

@@ -373,18 +373,33 @@ def tiro_duplo(ui):
 
 
 def covil(ui):
-    """Mundo gerado, CLASSE (padrão guerreiro) no nível 1, no covil de um guardião ainda vivo, de manhã. Com EVENTO
-    (o nome da função: crianca_perdida, madeira_para_flechas, os_enfermos...), o evento toca antes do menu."""
-    from rpg.eventos import classe as ev_classe, comuns as ev_comuns
+    """Mundo gerado, CLASSE (padrão guerreiro) no nível 1, no covil de um guardião ainda vivo (ou no primeiro lugar do
+    tipo LUGAR: vila, selvagem), no PERIODO (0 manhã ... 3 noite; padrão 0). BOLSA: "bandagem=0,pocao_vida=2" acerta a
+    bolsa. PROTECAO (mendigo, santuario ou 1) dá a proteção; LUTA (uma família: lobo, troll...) começa uma luta com o
+    herói quase sem vida. Com EVENTO (o nome da função: crianca_perdida, madeira_para_flechas, os_enfermos, odete_na_estrada,
+    mendigo_misterioso...), o evento toca antes do menu."""
+    from rpg.eventos import classe as ev_classe, comitiva as ev_comitiva, comuns as ev_comuns, vila as ev_vila
     g = Jogo(ui, seed=int(os.environ.get("SEMENTE", "8")), pasta_saves=tempfile.mkdtemp(), hardcore=False)
     ui.jogo = g
     g.iniciar("Jean", os.environ.get("CLASSE", "guerreiro"))
     loc = next(l for l in g.mundo["locais"] if l["tipo"] == "covil")
     g.mundo["atual"], loc["visitado"] = loc["id"], True
-    g.periodo, g.clima = 0, "limpo"
+    g.periodo, g.clima = int(os.environ.get("PERIODO", "0")), "limpo"
+    if os.environ.get("LUGAR"):  # outro tipo de lugar: "vila" ou "selvagem" (o primeiro do mapa)
+        loc = next(l for l in g.mundo["locais"] if l["tipo"] == os.environ["LUGAR"])
+        g.mundo["atual"], loc["visitado"] = loc["id"], True
+    for k, v in (x.split("=") for x in os.environ.get("BOLSA", "").split(",") if x):
+        g.j.consumiveis[k] = int(v)
+    if os.environ.get("PROTECAO"):  # já com a proteção (a origem: mendigo, santuario, ou 1 para um save antigo)
+        g.marcar("bencao_fenix", True if os.environ["PROTECAO"] == "1" else os.environ["PROTECAO"])
+    if os.environ.get("LUTA"):  # cai numa luta já quase sem vida, contra um inimigo forte: a proteção se ativa
+        g.j.hp = 1
+        ui.cena(loc["nome"], g.contexto_cena(), "evento")
+        g.dizer("Um vulto enorme sai da névoa.")
+        g.combate([g.inimigo(os.environ["LUTA"], nivel=6)])
     if os.environ.get("EVENTO"):
         nome = os.environ["EVENTO"]
-        fn = getattr(ev_comuns, nome, None) or getattr(ev_classe, nome)
+        fn = next(getattr(m, nome) for m in (ev_comuns, ev_classe, ev_comitiva, ev_vila) if hasattr(m, nome))
         ui.cena(loc["nome"], g.contexto_cena(), "evento")
         fn(g)
     try:

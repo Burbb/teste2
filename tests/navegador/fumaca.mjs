@@ -613,6 +613,62 @@ async function cenarioSarilho(browser) {
   }
 }
 
+async function cenarioCustosEExausto(browser) {
+  console.log("cenário: custo da bandagem, a proteção que levanta e a exaustão no mato");
+  const MENU = "#prompt .escolhas:not(.escolhido) .escolha";
+  let { proc, url } = await subir("covil", { EVENTO: "odete_na_estrada", BOLSA: "bandagem=0" });
+  let { page, erros } = await abrir(browser, url);
+  try {
+    const b = await page.waitForSelector('#prompt .escolha:has-text("Estancar o sangue")', { timeout: 20000 });
+    const info = await b.evaluate((x) => ({ desab: x.disabled, aria: x.getAttribute("aria-disabled"), texto: x.textContent }));
+    conferir(info.desab && info.aria === "true" && /Indisponível: Você não tem bandagem na bolsa/.test(info.texto),
+      "sem bandagem, a ajuda da Odette fica à vista, desabilitada e com o motivo escrito");
+    await b.click({ force: true }).catch(() => {});
+    await page.keyboard.press("1");
+    await page.waitForTimeout(600);
+    conferir(!!(await page.$(`${MENU}:has-text("Estancar o sangue")`)), "nem clique nem a tecla escolhem a indisponível");
+  } finally {
+    conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
+    await page.close();
+    proc.kill();
+  }
+  ({ proc, url } = await subir("covil", { PROTECAO: "mendigo", LUTA: "troll" }));
+  ({ page, erros } = await abrir(browser, url));
+  try {
+    let viu = false;
+    for (let k = 0; k < 300 && !viu; k++) {
+      viu = await page.evaluate(() => /calor que ficou no seu peito/.test(document.body.textContent));
+      const bt = await page.$('#roda .roda-botao[data-slot="atacar"]'); if (bt) await bt.click().catch(() => {});
+      const alvo = await page.$(".carta.alvejavel"); if (alvo) await alvo.click().catch(() => {});
+      await page.waitForTimeout(100);
+    }
+    conferir(viu && !!(await page.waitForSelector(".chip.protecao", { timeout: 5000 }).catch(() => null)),
+      "ao cair, a proteção do mendigo levanta o herói, com a frase dela e o aviso de que se foi");
+  } finally {
+    conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
+    await page.close();
+    proc.kill();
+  }
+  ({ proc, url } = await subir("covil", { PERIODO: "3", LUGAR: "selvagem", SEMENTE: "9" }));
+  ({ page, erros } = await abrir(browser, url));
+  try {
+    await (await page.waitForSelector(`${MENU}:has-text("Explorar")`, { timeout: 20000 })).click();
+    await (await page.waitForSelector(`${MENU}:has-text("Recusar")`, { timeout: 20000 })).click();
+    let continuares = 0;
+    for (let k = 0; k < 120 && !(await page.$(".dormir-barraca")); k++) {
+      const c = await page.$("#prompt .continuar");
+      if (c) { await page.waitForTimeout(700); continuares++; await c.click().catch(() => {}); await page.waitForTimeout(400); }
+      await page.waitForTimeout(150);
+    }
+    conferir(!!(await page.$(".dormir-barraca")) && continuares === 1,
+      `exausto no mato: um Continuar para o fim do evento e a fogueira em seguida (${continuares})`);
+  } finally {
+    conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
+    await page.close();
+    proc.kill();
+  }
+}
+
 async function cenarioGuardia(browser) {
   console.log("cenário: a guardiã (o rito com tudo pronto, e salvar e carregar depois)");
   const { proc, url } = await subir("capela", { ETAPA: "fundo", PREPARO: "pronto", NIVEL: "6" });
@@ -1012,6 +1068,7 @@ try {
   await cenarioRecarga(browser);
   await cenarioCapela(browser);
   await cenarioSarilho(browser);
+  await cenarioCustosEExausto(browser);
   await cenarioGuardia(browser);
   await cenarioRetorno(browser);
   await cenarioCaspar(browser);

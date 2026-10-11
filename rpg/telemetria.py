@@ -90,7 +90,7 @@ def lance(cb, tipo, d):
             tel["erros"] += 1
         if em is j and d.get("motivo") == "esquiva":
             tel["esquivas"] += 1
-    elif tipo == "cura":
+    elif tipo == "cura" and d.get("modo") != "levantar":  # levantar ao cair (Pena, proteção) não é cura da luta
         if em is j:
             tel["cura_recebida"] += d["valor"]
             if d.get("modo") == "roubo":

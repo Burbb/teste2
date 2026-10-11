@@ -302,7 +302,7 @@ function iconeChip(m) {
     return "saco";
   }
   return { ouro: "moeda", perda: "bolsa_vazia", xp: "estrela", dano: "gota", cura: "coracao", rep: "escudo",
-    ferimento: "gota", nivel: "estrela", info: "pergaminho" }[m.tipo] || "pergaminho";
+    ferimento: "gota", nivel: "estrela", info: "pergaminho", protecao: "coracao" }[m.tipo] || "pergaminho";
 }
 
 /* Avisos soltos na tela: nas telas desenhadas (mercado, inventário), o que aconteceu aparece

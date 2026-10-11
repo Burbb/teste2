@@ -311,9 +311,8 @@ def santuario_antigo(g):
         g.curar(5)
         g.dizer("Um calor sobe pelo seu peito. (+5 vida máxima)", "verde")
     elif bencao == "fenix":
-        g.marcar("bencao_fenix")
-        g.dizer("Uma pena dourada pousa no altar e some na sua mão. Você sente que, se cair, poderá se erguer "
-                "uma vez.", "amarelo+negrito")
+        g.dizer("Uma pena dourada pousa no altar e some na sua mão.", "amarelo+negrito")
+        g.receber_protecao("santuario")
     elif bencao == "cura":
         g.curar(g.j.max_hp * 0.5)
         g.j.rec = g.j.max_rec

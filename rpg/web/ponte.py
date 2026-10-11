@@ -172,9 +172,16 @@ class WebUI(InterfaceGrafica, UI):
     def fim_combate(self, resultado):
         self._enviar("fim_combate", resultado=resultado)
 
+    # Faixas que passam sozinhas pela tela (o "Exausto"): não são texto para ler, então não pedem um Continuar antes da
+    # página seguinte (antes, a fogueira só abria depois de um segundo Continuar, sem nada novo na página).
+    FAIXAS_DE_PASSAGEM = ("exausto",)
+
     def celebrar(self, tipo, dados):
         self.enviar_estado()
+        novo = self.novo_desde_escolha
         self._enviar("celebrar", tipo=tipo, dados=dados)
+        if tipo in self.FAIXAS_DE_PASSAGEM:
+            self.novo_desde_escolha = novo
 
     def painel(self, tipo, dados):
         self.enviar_estado()
