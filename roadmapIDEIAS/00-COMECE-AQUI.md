@@ -1106,3 +1106,23 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   - nada de condição interna disfarçada de narração;
   - evidência como evidência: o que se observa, o que se supõe e o que prova algo.
 
+### 11/10/2026 — Diário, baús e a leitura do lodo (1.62.3)
+
+- **Pedido de Jean:** ajustes de clareza vistos jogando a 1.62.2.
+- **O Diário:**
+  - "o lugar fica marcado no mapa" e "os lugares ficam marcados no mapa" deram lugar ao mesmo "!" do mapa, ao lado do
+    nome do destino;
+  - o "!" só aparece quando o mapa marca o lugar: o objetivo da missão com destino e o contrato em andamento. O
+    contrato cumprido e a Vigília, sem lugar, ficam sem;
+  - o selo diz o que é ("marcado no mapa") ao passar o mouse e para leitores de tela.
+- **A acusação:** "Caspar acusa Yara de causar a febre."
+- **Os baús:** o rótulo dos equipamentos perdeu o "a seguir, um por um". Fica a quantidade ("2 equipamentos"); cada um
+  continua vindo na janela dele para comparar.
+- **O lodo:**
+  - o Mago: "Você reconhece no lodo a mesma magia antiga da Fonte Nova. Ela parece vir do fundo da capela e chegar à
+    vila pela água.";
+  - o Diário: "O lodo contém a mesma magia antiga encontrada na Fonte Nova.";
+  - a prova forte na denúncia diz o mesmo, sem concluir que ninguém lançou aquilo.
+- **Ilse:** "Não deixe os três cair nas mãos de quem não entende o que eles mantêm fechado."
+- **Não mudou:** regras, prova, teste de denúncia e o funcionamento do Diário, do mapa e dos baús.
+

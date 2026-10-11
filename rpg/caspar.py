@@ -39,16 +39,15 @@ MISSOES = {
         etapas={
             "antes": dict(objetivo=None, lugar=None),
             # Só a acusação: a promessa de Caspar ("quando a febre acabar...") o Diário atribui a ele, em `_aguardando`.
-            "acusacao": dict(objetivo="Caspar acusa Yara, a moça do brejo, de trazer a febre.", lugar=None),
+            "acusacao": dict(objetivo="Caspar acusa Yara de causar a febre.", lugar=None),
             "praca": dict(objetivo="Responder a Caspar na praça do Vau.", lugar="vau_do_turvo"),
         },
         pistas={},
         titulos={"lodo": "Uma amostra do lodo do fundo da capela",
-                 "analise": "No lodo, magia velha do fundo da capela, que ninguém lançou"},
+                 "analise": "O lodo tem a mesma magia antiga da Fonte Nova"},
         preparos={
             "lodo": "Uma amostra do lodo do fundo da capela, num frasco: a mesma sujeira que a Fonte Nova trazia.",
-            "analise": "Pelo que você leu no lodo, ele traz a mesma magia velha e fria da Fonte Nova, vinda do fundo "
-                       "da capela, e nenhuma mão por trás dela: não é feitiço lançado contra a vila.",
+            "analise": "O lodo contém a mesma magia antiga encontrada na Fonte Nova.",
         },
     ),
 }
@@ -305,7 +304,8 @@ def _resolver(g, postura, forte=False):
                  "brejo.\"")
         if forte:
             g.narrar("Yara mostra as ervas que a água da fonte matava em um dia." if yara == "grupo" else
-                     "Você conta o que leu no lodo: o mal vem do fundo da capela, e ninguém o lançou contra a vila.")
+                     "Você conta o que reconheceu no lodo: a mesma magia antiga da Fonte Nova, vinda do fundo da "
+                     "capela pela água.")
         aceita = g.teste("carisma", CD_DENUNCIA_FORTE if forte else CD_DENUNCIA)
         postura = "denunciado" if aceita else "denuncia_falhou"
         if aceita:
@@ -351,9 +351,8 @@ def _recolher_lodo(g, mid):
     if "lodo" not in m["preparos"]:
         m["preparos"].append("lodo")
     if g.j.classe == "mago" and "analise" not in m["preparos"]:
-        g.narrar("À luz da tocha, você lê o lodo como se lê uma página. Há nele a mesma palavra apagada da Fonte Nova, "
-                 "velha e fria, mas nenhuma mão por trás dela: ninguém lançou aquilo contra a vila. Pelo que você lê, "
-                 "vem do fundo da capela, e a água o leva.")
+        g.narrar("Você reconhece no lodo a mesma magia antiga da Fonte Nova. Ela parece vir do fundo da capela e "
+                 "chegar à vila pela água.")
         m["preparos"].append("analise")
     g.ui.efeito("Frasco do lodo", "item")
 

@@ -8,8 +8,11 @@
   /** A missão da campanha no diário, na ordem de quem volta ao jogo: o objetivo de agora e onde; a novidade mais
    *  recente; os caminhos e preparos que importam agora; e, fechado, o histórico da investigação (com o dia de cada
    *  passo quando ele foi registrado; o que um save antigo já sabia aparece sem data). */
+  /** O "!" do mapa ao lado do destino que o mapa marca (o objetivo da missão, o contrato em andamento): o mesmo
+   *  selo, com o significado para leitores de tela e no passar do mouse. */
+  const MARCA_MAPA = ' <span class="marca-contrato marca-no-texto" role="img" aria-label="marcado no mapa" title="Marcado no mapa">!</span>';
   function missaoDiario(m) {
-    const lugar = m.lugar ? `${S(MapaPx.sprite({ tipo: m.lugar_tipo, bioma: m.bioma }), 1)} ${h(m.lugar)}${m.distancia ? ` · ${Texto.plural(m.distancia, "trecho")}` : m.distancia === 0 ? " · você está aqui" : ""}` : "";
+    const lugar = m.lugar ? `${S(MapaPx.sprite({ tipo: m.lugar_tipo, bioma: m.bioma }), 1)} ${h(m.lugar)}${m.lugar_id != null ? MARCA_MAPA : ""}${m.distancia ? ` · ${Texto.plural(m.distancia, "trecho")}` : m.distancia === 0 ? " · você está aqui" : ""}` : "";
     // O que um caminho pede (o rito, a denúncia): o que já está feito e o que falta, com onde se consegue (o motor
     // diz; a tela só desenha).
     const req = m.requisitos;
@@ -38,8 +41,8 @@
     const losangos = [0, 1, 2].map((i) => `<i class="sigilo${i < d.sigilos ? " tem" : ""}"></i>`).join("");
     return `<div class="tela diario">
       <div class="faixa-jornada"><span>Dia ${d.dia}</span><span class="sigilos-diario" title="Sigilos dos guardiões">${losangos} ${d.sigilos}/3</span></div>
-      ${missoes ? `<div class="quadro quadro-missao"><div class="quadro-cab"><b>Missão</b><span>${(d.missoes || []).some((m) => !m.concluida) ? "o lugar fica marcado no mapa" : "concluída"}</span></div>${missoes}</div>` : ""}
-      <div class="quadro"><div class="quadro-cab"><b>Contratos</b><span>${d.contratos.length}/${d.limite} · os lugares ficam marcados no mapa</span></div>
+      ${missoes ? `<div class="quadro quadro-missao"><div class="quadro-cab"><b>Missão</b><span>${(d.missoes || []).every((m) => m.concluida) ? "concluída" : ""}</span></div>${missoes}</div>` : ""}
+      <div class="quadro"><div class="quadro-cab"><b>Contratos</b><span>${d.contratos.length}/${d.limite}</span></div>
         <div class="cartazes">${contratos || '<span class="vazio">Nenhum contrato. Procure o mural de uma vila.</span>'}</div></div>
       ${rumores ? `<h4>Rumores</h4><div class="bilhetes">${rumores}</div>` : ""}
       ${d.nemesis ? `<h4>Quem te persegue</h4><div class="bilhete inimigo">${S("fera", 1)} ${h(d.nemesis.nome)}, ${h(d.nemesis.familia)}. Ele não esqueceu de você.</div>` : ""}
@@ -51,7 +54,7 @@
     const arte = c.tipo === "entrega" ? "saco" : c.retrato || "caveira";
     const titulo = c.tipo === "alvo" ? c.alvo : c.tipo === "entrega" ? (c.objeto || "Entrega") : c.desc.replace(/^Eliminar /, "").replace(/ em .*$/, "");
     const perigo = c.nivel == null ? "" : c.nivel - nivelHeroi >= 2 ? "alto" : c.nivel >= nivelHeroi ? "medio" : "baixo";
-    const lugar = `${S(MapaPx.sprite({ tipo: c.lugar_tipo, bioma: c.bioma }), 1)} ${h(c.lugar)}${c.distancia != null ? ` · ${Texto.plural(c.distancia, "trecho")}` : ""}${c.nivel != null ? ` <span class="perigo-tag ${perigo}">Nv.${c.nivel}</span>` : ""}`;
+    const lugar = `${S(MapaPx.sprite({ tipo: c.lugar_tipo, bioma: c.bioma }), 1)} ${h(c.lugar)}${ativo && !c.concluido ? MARCA_MAPA : ""}${c.distancia != null ? ` · ${Texto.plural(c.distancia, "trecho")}` : ""}${c.nivel != null ? ` <span class="perigo-tag ${perigo}">Nv.${c.nivel}</span>` : ""}`;
     let progresso = "";
     if (ativo && c.tipo === "caca" && c.progresso && !c.recebendo) {
       const [feito, total] = c.progresso.split("/").map(Number);

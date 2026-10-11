@@ -125,6 +125,8 @@
 .rastro-prog .barra-px { flex: 1; height: 8px; }
 .rastro-prog small { font-family: var(--num); font-size: 15px; color: var(--tinta-2); }
 .marca-contrato { position: absolute; right: -5px; top: -7px; z-index: 2; min-width: 10px; padding: 0 2px; font-family: var(--num); font-size: 11px; line-height: 11px; text-align: center; color: #120e0b; background: var(--ouro); box-shadow: 0 0 0 1px #000; pointer-events: none; }
+/* O mesmo selo ao lado do nome do destino, no Diário: na linha do texto, sem a posição do mapa. */
+.marca-contrato.marca-no-texto { position: static; display: inline-block; margin-left: 4px; vertical-align: 1px; pointer-events: auto; cursor: help; }
 .mapa-px.grande .marca-contrato { right: -6px; top: -8px; min-width: 13px; font-size: 14px; line-height: 14px; animation: alerta 1.2s steps(2) infinite; }
 .no-btn.destacado { outline: 3px solid var(--ouro); outline-offset: 3px; }
 .faixa-jornada { display: flex; flex-wrap: wrap; gap: 18px; align-items: center; margin-bottom: 12px; font-family: var(--num); font-size: 19px; color: var(--tinta-2); }

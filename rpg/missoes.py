@@ -700,8 +700,8 @@ def _resolver(g, mid, desfecho, nivel):
         g.narrar("Por um momento, ela é só uma mulher cansada com a água pela cintura. Ela pega a fita da sua mão e a "
                  "enrola nos dedos.")
         g.narrar("\"Eu era a guardiã dele\", diz, sem raiva. \"É um de três. Os três seguram fechada uma porta que "
-                 "nunca devia ter sido aberta, e agora ela range. Há mãos procurando os três. Não os deixe juntar por "
-                 "quem não sabe o que está fechando.\"")
+                 "nunca devia ter sido aberta, e agora ela range. Há mãos procurando os três. Não deixe os três cair "
+                 "nas mãos de quem não entende o que eles mantêm fechado.\"")
         g.narrar("Ela abre a mão. O Sigilo do Turvo, rachado e frio como pedra de rio, passa para a sua. Depois ela "
                  "afunda devagar, com a fita entre os dedos, e a água do fundo fica parada e clara.")
         _pista(m, "relato_de_ilse")

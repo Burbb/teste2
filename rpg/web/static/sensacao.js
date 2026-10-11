@@ -383,7 +383,7 @@ const Sensacao = (() => {
         <div class="espolio-nivel"><span>Nível <b>${d.nivel}</b></span><div class="espolio-barra"><i></i></div>
           <span class="espolio-faltam"><span class="conta">${primeiro[0]}</span>/<span class="total">${primeiro[2]}</span></span></div>
       </div>` : ""}
-      ${extras ? `<div class="espolio-extras${d.ouro || d.xp ? " esperando" : ""}">${achados.length ? `<div class="espolio-achados">${achados.join("")}</div>` : ""}${equips.length ? `<div class="espolio-equips"><div class="espolio-equips-rotulo">${equips.length === 1 ? "Equipamento" : `${equips.length} equipamentos`}: a seguir, um por um</div><div class="espolio-achados">${equips.join("")}</div></div>` : ""}${contratos}</div>` : ""}
+      ${extras ? `<div class="espolio-extras${d.ouro || d.xp ? " esperando" : ""}">${achados.length ? `<div class="espolio-achados">${achados.join("")}</div>` : ""}${equips.length ? `<div class="espolio-equips"><div class="espolio-equips-rotulo">${equips.length === 1 ? "Equipamento" : `${equips.length} equipamentos`}</div><div class="espolio-achados">${equips.join("")}</div></div>` : ""}${contratos}</div>` : ""}
     </div>`;
     caixa.classList.add("leve");
     caixa.hidden = false;
