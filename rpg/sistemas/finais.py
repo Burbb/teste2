@@ -35,6 +35,18 @@ class Finais:
             self.dizer(f"Registro da partida salvo em: {caminho} (e o .jsonl ao lado). "
                        f"Mande esses arquivos para análise de equilíbrio.", "ciano")
 
+    def cair_sem_luta(self, causa, motivo):
+        """A fome ou a infecção zerou a vida (causa: "fome" ou "infeccao"). Na campanha com resgate, é uma queda como
+        a do combate: o resgate vem quando a noite termina (Tempo.novo_dia). No hardcore e no mundo gerado, a partida
+        acaba, como sempre (motivo: o texto da morte)."""
+        if not self.campanha or self.hardcore:
+            self.fim_de_jogo(motivo)
+        if self.resgatando:  # nos dias do próprio resgate o tratamento segura: não há queda dentro da queda
+            self.j.hp = max(1, self.j.hp)
+            return
+        self.j.hp = 0
+        self.queda_pendente = self.queda_pendente or causa
+
     def fim_de_jogo(self, motivo):
         self.registrar_legado("morte", motivo)
         self.estatisticas["causa"] = motivo

@@ -115,13 +115,19 @@ def sair(g, cid, motivo="saiu"):
     registrar(g, "comitiva", acao=motivo, id=cid, aprovacao=m["aprovacao"], dias=m["dias"])
 
 
+# O custo de levar alguém, na nota da opção de aceitar (comer, abaixo).
+NOTA_CUSTO = "Consome 1 provisão por dia."
+
+
 def oferecer_vaga(g, cid):
-    """Pergunta se o jogador aceita o companheiro (trocando alguém, se a comitiva estiver cheia)."""
+    """Pergunta se o jogador aceita o companheiro (trocando alguém, se a comitiva estiver cheia). Com lugar, a opção
+    de aceitar traz o custo na nota. Na troca, quem chega come no lugar de quem vai para o acampamento (lá ninguém
+    come das provisões): o gasto não muda, e a nota ficaria enganosa."""
     d = COMPANHEIROS[cid]
     ms = membros(g)
     if len(ms) < LIMITE:
-        op = g.menu(f"Levar {d['curto']} com você?", [(f"Aceitar {d['curto']} na comitiva", "sim"),
-                                                       ("Recusar", "nao")])
+        op = g.menu(f"Levar {d['curto']} com você?", [
+            (f"Aceitar {d['curto']} na comitiva", "sim", {"nota": NOTA_CUSTO}), ("Recusar", "nao")])
         if op == "sim":
             recrutar(g, cid)
             return True

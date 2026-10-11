@@ -27,4 +27,9 @@ class FimDeJogo(Exception):
 
 
 class Derrota(Exception):
-    """Interrompe a ação atual quando o herói cai (fora do modo hardcore)."""
+    """Interrompe a ação atual quando o herói cai (fora do modo hardcore). causa: "combate" (o padrão) ou, na campanha
+    com resgate, "fome" ou "infeccao" (sobrevivencia.amanhecer)."""
+
+    def __init__(self, causa="combate"):
+        super().__init__(causa)
+        self.causa = causa

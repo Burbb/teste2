@@ -6,6 +6,7 @@ from .. import comitiva
 from .. import sobrevivencia
 from .. import telemetria
 from ..telemetria import registrar
+from ..regras import Derrota
 from .. import balanceamento as bal
 
 
@@ -39,8 +40,10 @@ class Tempo:
         if self.periodo == 3:
             self.dizer("A noite cai. Algo começa a se mover nas trevas, e não é gente.", "magenta")
 
-    def novo_dia(self, descanso=1, refeicao=False):
-        """refeicao: a noite já incluiu a comida de todos (a taverna); ninguém come das provisões."""
+    def novo_dia(self, descanso=1, refeicao=False, quadro=True):
+        """refeicao: a noite já incluiu a comida de todos (a taverna, o resgate); ninguém come das provisões.
+        quadro=False: esta noite entra no quadro do próximo amanhecer (os dois dias do resgate mostram um só).
+        Se a fome ou a infecção derrubou o herói (só na campanha com resgate), a queda vem depois do quadro."""
         self.dia += 1
         self.periodo = 0
         self.rolar_clima()
@@ -50,7 +53,7 @@ class Tempo:
             if r.get("evento"):
                 self.impulsos[r["evento"]] = self.impulsos.get(r["evento"], 1) * 3
         self.abrir_relato()
-        if self.relato is None:  # no texto, a linha do dia; na tela gráfica, a faixa "Dia N" do quadro
+        if self.relato is None and quadro:  # no texto, a linha do dia; na tela gráfica, a faixa "Dia N" do quadro
             self.ui.separador()
             self.dizer(f"Amanhece o dia {self.dia}. {descricao_clima(self.clima)}", "amarelo")
         provisoes = self.j.provisoes
@@ -60,15 +63,19 @@ class Tempo:
         if gastas > 0:
             self.relatar(None, None, "aviso" if self.j.provisoes <= 2 else "neutro", "pernil",
                          f"−{gastas} provis{'ões' if gastas > 1 else 'ão'} · restam {self.j.provisoes}")
-        relato, self.relato = self.relato, None
+        relato, self.relato = (self.relato, None) if quadro else (None, self.relato)
         if relato is not None:
             self.ui.celebrar("amanhecer", {"dia": self.dia, "clima": CLIMAS[self.clima]["nome"],
                                            "clima_desc": descricao_clima(self.clima), "itens": relato})
-        comitiva.depois_do_amanhecer(self, famintos)  # queixas e soldo: conversa, não relato
+        queda, self.queda_pendente = self.queda_pendente, None
+        if not queda:
+            comitiva.depois_do_amanhecer(self, famintos)  # queixas e soldo: conversa, não relato
         registrar(self, "dia", descanso=descanso, provisoes=self.j.provisoes, fome=self.j.fome,
                   ferimentos=len(self.j.ferimentos), local=self.loc["nome"], poder_equip=telemetria.poder_equip(self.j),
                   ouro_fontes=dict(self.estatisticas.get("ouro_fontes", {})),
                   ouro_gastos=dict(self.estatisticas.get("ouro_gastos", {})))
+        if queda:
+            raise Derrota(queda)
 
     def descansar(self, fracao, mana=1.0, folego=1.0):
         """Descanso devolve pouca vida: ferimentos de verdade levam dias. Com fome, quase nada.

@@ -554,8 +554,8 @@ class Percurso:
             try:
                 try:
                     g.tela()
-                except Derrota:
-                    g.resgate()
+                except Derrota as d:
+                    g.resgate(d.causa)
             except (FimDeJogo, LimiteBot):
                 motivo = "parou"
                 break
@@ -585,6 +585,8 @@ class Percurso:
             "vigilia": (self.vigilia() or {}).get("etapa"), "postura_fim": (self.vigilia() or {}).get("desfecho"),
             "heranca": "heranca" in f["cenas"], "concluida": f["concluida"], "lugar": g.loc.get("chave"),
             "lutas": sum(1 for e in ev if e.get("t") == "combate"), "quedas": g.estatisticas.get("quedas", 0),
+            "resgates": [e["causa"] for e in ev if e.get("t") == "resgate"],  # a causa de cada queda (campanha)
+            "dias_com_fome": sum(1 for e in ev if e.get("t") == "dia" and e.get("fome")),
             "inicial": self.inicial, "final": {k: v for k, v in j.consumiveis.items() if v},
             "ganhos": self.ganhos, "do_bau": self.do_bau, "recursos": self.recursos, "baus": self.baus, "ofertas": self.ofertas,
             "usados": usados, "vendas": self.vendas, "compras": self.compras, "equip_comprado": self.equip_comprado, "contratos": self.contratos, "deixados": self.deixados,

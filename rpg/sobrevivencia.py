@@ -218,7 +218,8 @@ def amanhecer(g, descanso, refeicao=False):
             j.hp -= perda
             if j.hp <= 0:
                 j.hp = 0
-                g.fim_de_jogo("Você morreu de fome, sozinho, longe de qualquer lugar que pudesse chamar de casa.")
+                g.cair_sem_luta("fome", "Você morreu de fome, sozinho, longe de qualquer lugar que pudesse chamar de "
+                                        "casa.")
     if j.provisoes in (1, 2) and not j.fome:
         g.relatar(f"{'Resta' if j.provisoes == 1 else 'Restam'} só {tx.plural(j.provisoes, 'dia')} de provisões.",
                   "amarelo", "aviso", "pernil", quadro=False)  # no quadro, o ícone das provisões já diz quantas restam
@@ -233,8 +234,8 @@ def amanhecer(g, descanso, refeicao=False):
                       "vermelho+negrito", "perigo", "gota", f"Febre da infecção: −{perda} vida")
             if j.hp <= 0:
                 j.hp = 0
-                g.fim_de_jogo("A ferida apodreceu. A febre veio, depois os delírios, depois o silêncio. "
-                              "A infecção te levou.")
+                g.cair_sem_luta("infeccao", "A ferida apodreceu. A febre veio, depois os delírios, depois o "
+                                            "silêncio. A infecção te levou.")
             continue
         if d.get("aberto") and not f["tratado"] and g.rng.random() < CHANCE_INFECCAO:
             g.relatar(f"Seu {d['nome'].lower()} está vermelho, quente e cheira mal.", "vermelho+negrito", "perigo",

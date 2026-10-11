@@ -76,6 +76,8 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         self.forcados = []
         self.proximo_id = 1
         self.combate_ativo = None
+        self.queda_pendente = None  # a fome ou a infecção derrubou o herói nesta noite (só a campanha com resgate)
+        self.resgatando = False     # os dois dias do resgate: nada derruba de novo enquanto ele é tratado
         self.autosalvar = False  # ligado pelo menu principal quando há uma pessoa jogando
         self.comitiva = []
         self.reserva = []  # companheiros que esperam no acampamento
@@ -232,7 +234,7 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
                 self.iniciar(nome, classe)
                 self.introducao()
                 return True
-            modo = self.menu("Se você cair em combate:", [
+            modo = self.menu("Se você cair (em combate, de fome ou de infecção):", [
                 ("Resgate: alguém da vila te encontra e cuida de você (perde parte do ouro e dois dias)", "resgate"),
                 ("Hardcore: a morte é permanente e o save é apagado", "hardcore"),
                 ("Voltar", None, {"voltar": True}),
@@ -270,9 +272,8 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         if self.hardcore:
             self.dizer("Hardcore: a morte é permanente e o save é apagado.", "vermelho+negrito")
         else:
-            self.dizer("Resgate: se você cair em combate, alguém da vila te encontra e cuida de você, ao custo de "
-                       "parte do ouro e de dois dias. A fome e uma infecção sem tratamento ainda encerram a partida "
-                       "(o último save continua lá).", "amarelo")
+            self.dizer("Resgate: se você cair em combate, de fome ou de infecção, alguém da vila te encontra e cuida "
+                       "de você, ao custo de parte do ouro e de dois dias.", "amarelo")
         self.dizer("A Estrada de Varn, ao sul, segue fechada por enquanto.", "cinza")
         self.dizer("Dica: compre provisões e tochas antes de sair e trate feridas abertas com bandagens.", "cinza")
         self.ui.continuar()
@@ -311,15 +312,19 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
             while True:
                 try:
                     self.tela()
-                except Derrota:
-                    self.resgate()
+                except Derrota as d:
+                    self.resgate(d.causa)
         except FimDeJogo:
             return
 
-    def resgate(self):
-        """Fora do modo hardcore, cair em combate custa ouro e tempo."""
+    def resgate(self, causa="combate"):
+        """Fora do modo hardcore, cair custa ouro e tempo. causa (Derrota.causa): "combate" ou, na campanha, também
+        "fome" e "infeccao". Na campanha, o resgate também encerra a emergência (resgate_campanha)."""
         j = self.j
         self.estatisticas["quedas"] += 1
+        if self.campanha:
+            self.resgate_campanha(causa)
+            return
         locais = self.mundo["locais"]
         from .mundo import _distancias
         dist = _distancias(locais, self.loc["id"])
@@ -341,6 +346,64 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         j.hp = max(j.hp, int(j.max_hp * 0.4))
         self.novo_dia(descanso=0)
         self.novo_dia(descanso=1)
+        self.pausar()
+
+    # A queda que a campanha explica: a fome e a infecção (a de combate já disse diante de quem o herói tombou).
+    QUEDA_SEM_LUTA = {
+        "fome": "A fome vence: as pernas falham e você cai no caminho.",
+        "infeccao": "A febre da ferida infeccionada sobe de vez, e você apaga.",
+    }
+
+    def resgate_campanha(self, causa):
+        """A queda na campanha (combate, fome ou infecção): alguém do Vau acha o herói e o leva para a casa de Marta.
+        Custa o mesmo que no mundo gerado: 30% do ouro e dois dias. Mas os dois dias encerram a emergência: o herói e
+        a comitiva comem lá (as provisões da bolsa ficam), a fome passa, a infecção é tratada e as feridas abertas,
+        enfaixadas (não infeccionam). Os outros ferimentos seguem as regras de sempre. Quem cuida é Marta, se a água
+        já limpou e ela está de pé; senão, Pita (consequencias.marta_de_pe). Uma queda, uma recuperação, uma
+        cobrança: durante os dois dias, nada derruba o herói de novo (resgatando)."""
+        j = self.j
+        locais = self.mundo["locais"]
+        from .mundo import _distancias
+        dist = _distancias(locais, self.loc["id"])
+        vila = min((l for l in locais if l["tipo"] == "vila"), key=lambda l: dist.get(l["id"], 99))
+        self.mundo["atual"] = vila["id"]
+        vila["visitado"] = True
+        infeccao = sobrevivencia.tem(j, "infeccao")
+        juntos = " e à comitiva" if comitiva.membros(self) else ""
+        self.ui.cena("Tudo escurece...", None, "evento")
+        if causa in self.QUEDA_SEM_LUTA:
+            self.narrar(self.QUEDA_SEM_LUTA[causa], "vermelho")
+        # O tratamento e os dois dias vêm antes do texto: quando ele diz o que aconteceu, o painel já mostra o herói
+        # tratado, no Vau, dois dias depois (o quadro do amanhecer abre o despertar).
+        j.fome = 0
+        j.ferimentos = [f for f in j.ferimentos if f["id"] != "infeccao"]
+        for f in j.ferimentos:
+            if sobrevivencia.FERIMENTOS[f["id"]].get("aberto"):
+                f["tratado"] = True
+        j.recalcular()
+        j.efeitos = {}
+        j.rec = j.max_rec
+        if j.companheiro:
+            j.companheiro["hp"] = j.companheiro["max_hp"]
+        j.hp = min(j.max_hp, max(j.hp, int(j.max_hp * 0.4)))
+        self.resgatando = True
+        try:
+            self.novo_dia(descanso=0, refeicao=True, quadro=False)  # um quadro só, no fim dos dois dias
+            self.novo_dia(descanso=1, refeicao=True)
+        finally:
+            self.resgatando = False
+        marta = consequencias.marta_de_pe(self)  # depois dos dois dias: a água pode ter limpado neles
+        quem = "Marta" if marta else "Pita"
+        self.narrar("Alguém do Vau te acha desacordado e te leva para a casa de Marta. " +
+                    ("Você acorda na mesma cama em que ela cuidou de você anos atrás. " if marta else
+                     "Você acorda numa esteira, ao lado da cama em que ela ainda está doente. ") +
+                    f"Dois dias se passaram. {quem} trocou as faixas e deu caldo a você{juntos}.")
+        if infeccao:
+            self.narrar(f"{quem} abriu e limpou a ferida infeccionada, e a febre passou.")
+        perda = self.perder_ouro(j.ouro * 0.3, destino="resgate")
+        if perda:
+            self.dizer("Parte do seu ouro sumiu enquanto você estava desacordado.", "cinza")
+        registrar(self, "resgate", causa=causa, perda=perda)
         self.pausar()
 
     def contexto_cena(self):
