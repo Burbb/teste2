@@ -55,11 +55,14 @@ class TestAcusacao(unittest.TestCase):
         self.assertEqual([c["id"] for c in estado(g)["missoes"]], [FEBRE])  # escondida antes
         self.assertTrue(missoes.cena_pendente(g))
         self.assertEqual(ui.cenas[-1], "Irmão Caspar")
-        self.assertIn("Yara", " ".join(ui.ditos))
+        self.assertIn("uma moça no Charco dos Juncos", " ".join(ui.ditos))
+        self.assertNotIn("Yara", " ".join(ui.ditos))  # ainda não a conhece: nem a cena nem o cartão dizem o nome
         m = caspar.registro(g)
         self.assertEqual((m["etapa"], m["cenas"]), ("acusacao", ["acusacao"]))
         cartao = next(c for c in estado(g)["missoes"] if c["id"] == CASPAR)
         self.assertIsNone(cartao["lugar_id"])  # nada a fazer ainda: objetivo sem marcador
+        self.assertEqual(cartao["objetivo"], "Caspar acusa uma mulher de causar a febre.")
+        self.assertNotIn("Yara", str(cartao))
         self.assertFalse(missoes.cena_pendente(g))
         self.assertEqual(ui.continuares[-1], ("Irmão Caspar", True))
 
@@ -82,8 +85,47 @@ class TestAcusacao(unittest.TestCase):
             missoes.cena_pendente(g)
             self.assertIn(trecho, " ".join(ui.ditos), onde)
 
+    def test_o_nome_so_depois_de_conhece_la(self):
+        """Quem já a conhece (encontrou-a, anda com ela, ou ela morreu) ouve o nome; quem não conhece, quando a encontra,
+        passa a ver o nome no Diário."""
+        for onde in ("grupo", "reserva", "recusou", "morta"):
+            ui = Roteiro()
+            g = investigando(ui=ui)
+            if onde == "recusou":
+                g.marcar("comitiva:yara", "recusou")
+            else:
+                com_yara(g, onde)
+            missoes.cena_pendente(g)
+            if onde != "morta":  # morta, Caspar fala da bruxa que queimaram
+                self.assertIn("erva que mata. Yara.", " ".join(ui.ditos), onde)
+            cartao = next(c for c in estado(g)["missoes"] if c["id"] == CASPAR)
+            self.assertEqual(cartao["objetivo"], "Caspar acusa Yara de causar a febre.", onde)
+            self.assertIn("e não de Yara", cartao["requisitos"]["titulo"], onde)
+        g = investigando()
+        missoes.cena_pendente(g)
+        cartao = next(c for c in estado(g)["missoes"] if c["id"] == CASPAR)
+        self.assertIn("e não da mulher acusada", cartao["requisitos"]["titulo"])
+        g.marcar("comitiva:yara", "recusou")  # a fogueira: ela disse o nome e foi embora
+        cartao = next(c for c in estado(g)["missoes"] if c["id"] == CASPAR)
+        self.assertEqual(cartao["objetivo"], "Caspar acusa Yara de causar a febre.")
+        self.assertIn("Objetivo: Caspar acusa Yara de causar a febre.", str(cartao["historico"]))
+
 
 class TestPraca(unittest.TestCase):
+    def test_praca_nao_entrega_o_nome_de_quem_nao_conhece(self):
+        """A praça (com ou sem a acusação antes), a opção de denunciar e o Diário falam da moça do Charco."""
+        for onde, nome in (("desconhecida", False), ("grupo", True), ("recusou", True)):
+            ui = Roteiro(["Ainda não"])
+            g = resolvida("descansada", ui, lodo=True)
+            if onde == "recusou":
+                g.marcar("comitiva:yara", "recusou")
+            else:
+                com_yara(g, onde)
+            missoes.cena_pendente(g)
+            tela = " ".join(ui.ditos) + " ".join(ui.ofertas[-1]) + str(estado(g)["missoes"])
+            self.assertEqual("Yara" in tela, nome, onde)
+            self.assertIn("não da Yara (Carisma" if nome else "não da moça do Charco (Carisma", " ".join(ui.ofertas[-1]))
+
     def test_sem_prova_nao_ha_denuncia_e_da_para_responder_depois(self):
         ui = Roteiro(["Ainda não"])
         g = resolvida("destruida", ui)
@@ -147,8 +189,7 @@ class TestCombinacoes(unittest.TestCase):
         linhas = missoes.cartoes(g, todas=True)[1]["linhas"]
         self.assertEqual(linhas, ["Ilse: os ossos dela ficaram no fundo da capela, sem nome.",
                                   caspar.LINHA_CASPAR["denunciado"],
-                                  "Yara: você não a conhece. Ninguém mais a procura; ela vive "
-                                  "no Charco dos Juncos."])
+                                  "A moça do Charco: você não a conhece. Ninguém mais a procura."])
         self.assertFalse(caspar.fogueira_possivel(g))  # o pregador não queima ninguém depois disso
         self.assertEqual([c["id"] for c in estado(g)["missoes"]], [])  # nada ativo
         self.assertIn("a praça está vazia", consequencias.frase_da_vila(g))

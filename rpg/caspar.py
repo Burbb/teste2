@@ -39,7 +39,9 @@ MISSOES = {
         etapas={
             "antes": dict(objetivo=None, lugar=None),
             # Só a acusação: a promessa de Caspar ("quando a febre acabar...") o Diário atribui a ele, em `_aguardando`.
-            "acusacao": dict(objetivo="Caspar acusa Yara de causar a febre.", lugar=None),
+            # O nome só depois de o herói conhecê-la (conhece_yara).
+            "acusacao": dict(objetivo=lambda g: f"Caspar acusa {'Yara' if conhece_yara(g) else 'uma mulher'} de causar "
+                                                "a febre.", lugar=None),
             "praca": dict(objetivo="Responder a Caspar na praça do Vau.", lugar="vau_do_turvo"),
         },
         pistas={},
@@ -69,6 +71,12 @@ def situacao_yara(g):
     if cm.na_reserva(g, "yara"):
         return "reserva"
     return {"morto": "morta", "recusou": "recusou"}.get(g.flag("comitiva:yara"), "desconhecida")
+
+
+def conhece_yara(g):
+    """O herói sabe quem é a mulher que Caspar acusa (encontrou-a, ela anda com ele, ou morreu na fogueira): só então os
+    textos dizem o nome dela. Antes, é a moça do Charco dos Juncos."""
+    return situacao_yara(g) != "desconhecida"
 
 
 def yara_barrada(g):
@@ -114,7 +122,8 @@ def _requisitos(g, m):
     # O que o personagem pode mostrar à praça, pelo que já descobriu da água (a acusação vem depois do canal).
     f = _febre(g)
     canal = bool({"canal_da_capela", "agua_da_capela"} & set(f["pistas"]))
-    return {"titulo": "O que pode mostrar à praça para defender que a febre veio da água, e não de Yara:", "itens": [
+    quem = "de Yara" if conhece_yara(g) else "da mulher acusada"
+    return {"titulo": f"O que pode mostrar à praça para defender que a febre veio da água, e não {quem}:", "itens": [
         {"texto": "O caminho da água, do moinho à fonte nova", "onde": None, "feito": canal},
         {"texto": "Uma amostra do lodo que a água leva para a fonte nova", "onde": None,
          "feito": "lodo" in m["preparos"]},
@@ -157,10 +166,10 @@ def linha_yara(g):
     if onde == "recusou":
         return "Yara: vive por conta própria no Charco dos Juncos, " + ("sem ninguém atrás dela." if livre else
                                                              "e a vigília ainda fala dela.")
-    return ("Yara: você não a conhece. Ninguém mais a procura; ela vive no Charco dos Juncos."
+    return ("A moça do Charco: você não a conhece. Ninguém mais a procura."
             if livre else
-            "Yara: você não a conhece. Segue acusada" + (" e procurada pela vigília."
-                                                                            if postura == "apoiar" else "."))
+            "A moça do Charco: você não a conhece. Segue acusada" + (" e procurada pela vigília."
+                                                                     if postura == "apoiar" else "."))
 
 
 def _linhas(g, m):
@@ -225,8 +234,10 @@ def _acusacao(g, mid):
         g.narrar("\"Nós queimamos a bruxa do Charco\", grita ele, \"e a febre não passou! Então havia mais de uma. Olhem "
                  "para os vizinhos. Olhem para quem chega de fora.\"")
     else:
+        # Quem ainda não a conhece não ouve o nome aqui: só a moça do Charco (o nome vem quando ela se apresenta).
+        nome = " Yara." if yara != "desconhecida" else ""
         g.narrar("\"A febre tem nome\", grita ele. \"Tem uma moça no Charco dos Juncos que fala com sapos e conhece toda "
-                 "erva que mata. Yara. Desde que ela apareceu por lá, o gado morre e as crianças queimam de febre.\"")
+                 f"erva que mata.{nome} Desde que ela apareceu por lá, o gado morre e as crianças queimam de febre.\"")
     g.narrar({
         "grupo": "Então ele vê Yara ao seu lado, e a praça inteira vê junto. \"E agora anda com gente armada\", diz "
                  "Caspar, mais baixo. Yara não abaixa os olhos.",
@@ -245,7 +256,8 @@ def _praca(g, mid):
     yara = situacao_yara(g)
     g.ui.cena("A Praça do Vau", g.contexto_cena(), "evento")
     if "acusacao" not in m["cenas"]:  # quem não passou pelo Vau na investigação conhece Caspar aqui
-        g.narrar(_caspar_e_quem(g) + " Faz semanas que ele culpa pela febre uma moça do Charco dos Juncos, Yara.")
+        g.narrar(_caspar_e_quem(g) + " Faz semanas que ele culpa pela febre uma moça do Charco dos Juncos"
+                 + (", Yara." if yara != "desconhecida" else "."))
     g.narrar({
         "destruida": "\"A bruxa da capela foi destruída no fundo da água!\", grita Caspar para a vila reunida. \"Deus "
                      "fez justiça pelas mãos deste viajante. E a febre está indo embora com ela.\"",
@@ -253,7 +265,8 @@ def _praca(g, mid):
                       "fizeram a bruxa recuar.\"",
     }[f["desfecho"]])
     g.narrar("\"A fogueira no Charco fez o resto\", completa, e ninguém responde." if yara == "morta" else
-             "\"Agora falta a do Charco\", completa. \"Yara. Enquanto ela andar solta, a febre volta.\"")
+             "\"Agora falta a do Charco\", completa. \"" + ("Yara. " if yara != "desconhecida" else "")
+             + "Enquanto ela andar solta, a febre volta.\"")
     if yara == "grupo":
         g.narrar("Ele aponta para Yara, ao seu lado, e a praça inteira se vira para ela. Yara não se mexe.")
     g.narrar("A praça olha para você, que voltou da capela.")
@@ -275,7 +288,8 @@ def _decidir(g):
         g.dizer("Para denunciar Caspar, falta prova: " + _lista(falta) + ". Dá para responder depois.", "cinza")
     opcoes = [
         ("Apoiar Caspar: foi a fé da vila", "apoiar"),
-        ("Denunciar a perseguição: a febre veio da água, não da Yara (Carisma)", "denunciar") if geral else None,
+        ("Denunciar a perseguição: a febre veio da água, não " + ("da Yara" if conhece_yara(g) else "da moça do Charco")
+         + " (Carisma)", "denunciar") if geral else None,
         ("Calar-se", "calar"),
         ("Ainda não: responder depois", None),
     ]
@@ -428,7 +442,7 @@ FALA_PRACA = {
                                 "pouco: a vigília apagou.\"",
     ("calar", True): "\"Na praça, você não disse nada\", diz Yara, sem tom nenhum. \"Eu também não. Mas era eu que estava "
                      "sendo acusada, então o meu silêncio era outra coisa.\"",
-    ("calar", False): "\"Fiquei sabendo da praça\", diz Yara, sem tom nenhum. \"Caspar disse o meu nome para a vila "
+    ("calar", False): "\"Fiquei sabendo da praça\", diz Yara, sem tom nenhum. \"Caspar me acusou diante da vila "
                       "inteira, e você não disse nada.\"",
 }
 RESPOSTAS_PRACA = {

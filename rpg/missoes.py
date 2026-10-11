@@ -175,9 +175,10 @@ def cartoes(g, todas=False):
         etapa = d["etapas"][m["etapa"]]
         if not etapa["objetivo"]:
             continue
+        obj = objetivo(g, mid, m["etapa"])
         loc = _lugar(g, etapa["lugar"])
         dist = distancias(g.mundo["locais"], g.loc["id"]).get(loc["id"]) if loc else None
-        saida.append({"id": mid, "nome": d["nome"], "etapa": m["etapa"], "objetivo": etapa["objetivo"],
+        saida.append({"id": mid, "nome": d["nome"], "etapa": m["etapa"], "objetivo": obj,
                       "lugar": loc and loc["nome"], "lugar_id": loc and loc["id"], "lugar_tipo": loc and loc["tipo"],
                       "bioma": loc and loc["bioma"], "distancia": dist,
                       "pistas": [d["pistas"][p] for p in m["pistas"]],
@@ -186,7 +187,7 @@ def cartoes(g, todas=False):
                       "requisitos": None if m.get("concluida") else d.get("requisitos", lambda g, m: None)(g, m),
                       "aguardando": None if m.get("concluida") else d.get("aguardando", lambda g, m: None)(g, m),
                       "perguntas": d.get("perguntas", lambda g, m: [])(g, m),
-                      **_historia(mid, m),
+                      **_historia(g, mid, m),
                       "concluida": m.get("concluida"),
                       # Concluída, o resumo já diz o desfecho: "Mais recente" o repetiria (o histórico continua)
                       **({"recente": None} if m.get("concluida") else {}),
@@ -202,7 +203,14 @@ def _texto(mid, chave):
     return d["pistas"].get(chave) or d["preparos"].get(chave, chave)
 
 
-def _historia(mid, m):
+def objetivo(g, mid, etapa):
+    """O objetivo de uma etapa, como a tela mostra agora. Pode ser um texto ou uma função do jogo (o que o personagem
+    sabe muda o texto: a Vigília não diz o nome de quem Caspar acusa antes de o herói conhecê-la)."""
+    o = MISSOES[mid]["etapas"][etapa]["objetivo"]
+    return o(g) if callable(o) else o
+
+
+def _historia(g, mid, m):
     """O mais recente e o histórico da investigação, como o Diário mostra. Com datas só o que o histórico registrou
     (desta versão em diante); o que um save de antes já sabia aparece sem data, na ordem em que foi descoberto."""
     d = MISSOES[mid]
@@ -215,7 +223,7 @@ def _historia(mid, m):
         if e.get("desfecho"):
             itens.append(d["conclusoes"][e["desfecho"]])
         if e.get("etapa") and d["etapas"][e["etapa"]]["objetivo"] and not e.get("concluida"):
-            itens.append("Objetivo: " + d["etapas"][e["etapa"]]["objetivo"])
+            itens.append("Objetivo: " + objetivo(g, mid, e["etapa"]))
         if e.get("inicio"):
             itens.insert(0, "A missão começou.")
         if itens and historico and historico[-1]["dia"] == e["dia"]:  # o mesmo dia fica junto
@@ -883,9 +891,9 @@ def anotar_novidades(g, antes):
         m.setdefault("historico", []).append(entrada)
         if not d["etapas"][m["etapa"]]["objetivo"] and not fim:
             continue  # uma missão ainda não apresentada (Caspar, antes da acusação) não aparece: o histórico guarda
-        objetivo = d["etapas"][m["etapa"]]["objetivo"] if (nova_etapa or comecou) and not m.get("concluida") else None
+        obj = objetivo(g, mid, m["etapa"]) if (nova_etapa or comecou) and not m.get("concluida") else None
         itens = [titulo(mid, p) for p in novas + feitos] + ([d["conclusoes"][desf]] if desf else [])
-        cartoes.append({"missao": mid, "nome": d["nome"], "itens": itens, "objetivo": objetivo, "nova": comecou,
+        cartoes.append({"missao": mid, "nome": d["nome"], "itens": itens, "objetivo": obj, "nova": comecou,
                         "concluida": fim})
     if cartoes:
         g.ui.missao_atualizada(cartoes)
