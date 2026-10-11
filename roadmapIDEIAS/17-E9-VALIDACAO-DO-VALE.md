@@ -9,6 +9,8 @@ Avaliação integrada do Vale do Turvo como primeiro capítulo (a E9 antecipada,
   habilidades, preços, recompensas, regeneração e recursos iniciais não mudaram.
 - **Terceira entrega, 1.65.0 (seção 17):** interface, retorno visual e texto, a partir do que Jean encontrou jogando;
   a investigação dos toques que pareciam não responder; os rótulos dos prédios (não reproduzido). Nada de equilíbrio.
+- **Correção 1.65.1 (seção 18):** os três pontos que faltaram na mensagem cortada: a percepção do Mago na água, o nome
+  da Yara antes de o herói conhecê-la, e duas Lanças de Gelo nos turnos da iniciativa. Nada de equilíbrio.
 
 **A E9 não está concluída.** A validação técnica e a partida de Jean não substituem as partidas de jogadores novos
 (seção 9).
@@ -690,4 +692,67 @@ fala da Odette, "bruxa do pântano" e os campos da bolsa), pyflakes, fumaça, e 
 4. Uma luta contra aranhas (`LUTA=aranha VIDA=60 NIVEL_LUTA=2 QUANTOS=3 python -m tests.navegador.cenarios covil`).
 5. Uma ferida aberta e a bandagem na bolsa, antes e depois de usar (o cenário `resgate` com `CAUSA=infeccao`).
 6. Uma partida nova: o mural piscando no começo (num navegador que nunca o abriu).
+
+
+## 18. Os três pontos que faltaram (1.65.1)
+
+A mensagem de Jean da 1.65.0 chegou cortada; estes três pontos completam o pedido. Nada de equilíbrio, economia,
+recompensa ou dificuldade mudou.
+
+**1. A percepção do Mago na água.** "Uma palavra apagada, cada vez mais perto" não dizia o que o Mago sente. Agora:
+- na fonte nova: "Você põe a mão na água e sente magia nela, fraca e de um tipo que você não reconhece. Ela não nasce
+  aqui: chega com a água, do leste.";
+- no canal: "Perto da represa, a água é só água. Rumo ao pântano, você volta a sentir nela a magia da fonte nova, mais
+  forte a cada passo.";
+- diante da capela (frase nova, só do Mago): "Junto ao muro da capela, essa magia é a mais forte do caminho, e vem lá
+  de dentro."
+
+Nenhuma delas diz a causa (Ilse, o Sigilo): isso continua no fundo da capela e no lodo.
+
+**2. O nome da Yara.** Quem ainda não a conhece (`caspar.conhece_yara`: ela não está no grupo nem na reserva, não
+recusou a vaga e não morreu) não ouve o nome dela:
+- na acusação, Caspar fala de "uma moça no Charco dos Juncos", sem o nome;
+- o objetivo da Vigília, no cartão e no Diário: "Caspar acusa uma mulher de causar a febre." O objetivo de uma etapa
+  agora pode ser uma função do jogo (`missoes.objetivo`): quando ela se apresenta (na fogueira ou no Charco), o Diário
+  passa a dizer "Caspar acusa Yara de causar a febre.";
+- as referências próximas também: a praça (a apresentação de Caspar e "Agora falta a do Charco"), o título do que
+  mostrar à praça ("e não da mulher acusada"), a opção de denunciar ("não da moça do Charco") e a linha do Diário
+  depois da decisão ("A moça do Charco: você não a conhece. ...");
+- a fala da Yara sobre a praça a que ela não foi diz "Caspar me acusou diante da vila inteira" (não mais "disse o meu
+  nome": quem estava lá não ouviu o nome).
+
+Ficam como estavam: quem a conhece, a tem no grupo ou na reserva, e quem a deixou morrer. **Observação:** quem a deixou
+queimar na fogueira nunca ouviu o nome dela, mas o Diário diz "Yara: morreu na fogueira de Caspar."; ficou assim, como
+pedido (preservar o caso da morte).
+
+**3. Iniciativa, congelamento e Firme.** Reproduzido em Python e no navegador (cenário `gelo`, Mago nível 4 com a
+iniciativa, contra um lobo de muita vida e sem esquiva; semente 17: as duas primeiras Lanças congelam):
+
+| Momento | O lobo | A tela antes | A tela agora |
+|---|---|---|---|
+| 1ª Lança (turno da surpresa) | congelado, 1 turno | "Lobo fica congelado!" | igual |
+| 2ª Lança (o turno seguinte, antes de o lobo agir) | continua congelado, 1 turno (não soma) | "Lobo fica congelado!" e o selo "congelado" de novo | "Lobo já está congelado: não soma, perde só o próximo turno." e o selo "já congelado" |
+| Vez do lobo | perde a ação; fica firme até a próxima vez dele | "Lobo está congelado e perde o turno!" | igual |
+| 3ª Lança | não congela (firme) | "acabou de se soltar e não fica congelado de novo" | igual |
+| Vez seguinte do lobo | age | | |
+
+- **A regra está certa e ficou:** congelar de novo antes da primeira ação do inimigo não soma duração (a duração é a
+  maior das duas, 1); o Firme só entra depois de o inimigo perder a ação de fato, e impede que ele perca duas ações
+  seguidas. A Lança (35%) e a Prisão (sempre) seguem a mesma regra.
+- **A divergência era de apresentação:** a segunda Lança anunciava um congelamento novo que não mudava nada; quem via
+  dois "congelado" esperava duas ações perdidas. Corrigido na tela e no registro (vale para qualquer trava: atordoado,
+  preso). Os sorteios continuam na mesma ordem (o gabarito não mudou).
+- A terceira Lança só mostra "firme" quando o sorteio de 35% congelaria; quando ele falha, o golpe sai sem aviso de
+  congelamento, como sempre.
+
+**Verificado:** testes (novos: o nome antes e depois de conhecê-la, a praça sem o nome, as duas Lanças na iniciativa),
+gabarito sem mudança, pyflakes, fumaça, e as telas da luta a 1500 e 1280 px.
+
+**Para Jean conferir:**
+1. O Mago na fonte nova (`CLASSE=mago ETAPA=fonte LUGAR=vau_do_turvo python -m tests.navegador.cenarios capela`,
+   "Examinar a fonte nova") e no canal até a capela (`python -m tests.navegador.cenarios missao`, "Seguir a água e
+   examinar o canal").
+2. A acusação de Caspar sem conhecer a Yara, e o Diário depois dela (`CLASSE=mago ETAPA=capela LUGAR=vau_do_turvo
+   python -m tests.navegador.cenarios capela`: a cena toca ao abrir).
+3. Duas Lanças seguidas com a iniciativa (`python -m tests.navegador.cenarios gelo`; `PRISAO=prisao` para a Prisão).
 
