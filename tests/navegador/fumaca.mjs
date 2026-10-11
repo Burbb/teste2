@@ -874,12 +874,12 @@ async function cenarioCaspar(browser) {
 
 async function cenarioResgate(browser) {
   console.log("cenário: a recuperação da campanha (infecção no Charco, com a comitiva)");
-  const { proc, url } = await subir("resgate", { CAUSA: "infeccao" });
-  const { page, erros } = await abrir(browser, url);
+  const { proc, url } = await subir("resgate", { CAUSA: "infeccao", CONTRATOS: "1" });
+  const { page, erros, esperar } = await abrir(browser, url);
   const MENU = "#prompt .escolhas:not(.escolhido) .escolha";
   try {
-    const provisoes = await (async () => { await page.waitForSelector(`${MENU}:has-text("Acampar")`, { timeout: 20000 });
-      return page.evaluate(() => estado.heroi.provisoes); })();
+    const [provisoes, ouroAntes] = await (async () => { await page.waitForSelector(`${MENU}:has-text("Acampar")`, { timeout: 20000 });
+      return page.evaluate(() => [estado.heroi.provisoes, estado.heroi.ouro]); })();
     await page.click(`${MENU}:has-text("Acampar")`);
     for (let k = 0; k < 160 && !/ouro sumiu/.test(await page.textContent("#texto")); k++) {
       const dormir = await page.$(".dormir-barraca"); if (dormir) await dormir.click().catch(() => {});
@@ -894,6 +894,16 @@ async function cenarioResgate(browser) {
       "a infecção derruba e leva ao resgate, com Pita cuidando de todos");
     conferir(h.local === "Vau do Turvo" && h.prov === provisoes && h.hp > 0 && !/Infec/.test(h.feridas),
       `no Vau, sem gastar a bolsa e sem a infecção (${JSON.stringify(h)})`);
+    // O contrato cumprido antes da queda paga na página do Vau, depois do resgate (antes, só saindo e voltando).
+    const ouro = ouroAntes - Math.floor(ouroAntes * 0.3);  // o que fica depois da cobrança do resgate
+    const festa = await esperar(".festa-contratos", 20000);
+    conferir(!!festa && !(await page.$(".festa-espolio")), "acordado no Vau, o contrato cumprido paga num quadro só, na página da vila");
+    if (festa) {
+      await page.waitForTimeout(1800);
+      await page.click(".festa-contratos .continuar").catch(() => {});
+      for (let k = 0; k < 30 && (await page.evaluate(() => estado.heroi.ouro)) <= ouro; k++) await page.waitForTimeout(100);
+      conferir((await page.evaluate(() => estado.heroi.ouro)) > ouro, "e o ouro do contrato entra, depois da cobrança do resgate");
+    }
   } finally {
     conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
     await page.close();

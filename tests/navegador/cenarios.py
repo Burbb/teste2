@@ -14,7 +14,7 @@
     python -m tests.navegador.cenarios covil        # mundo gerado, no covil de um guardião (CLASSE, EVENTO, SEMENTE)
     python -m tests.navegador.cenarios tiro_duplo    # Patrulheiro contra três lobos feridos de jeitos diferentes (NIVEL, VIDAS)
     python -m tests.navegador.cenarios broquel       # Guerreiro nv 4 com o Broquel contra três lobos; repete com/sem o Revide (LUTA, ESPEC, NIVEL)
-    python -m tests.navegador.cenarios resgate       # a recuperação: fome ou infecção no Charco, à noite (CLASSE, CAUSA, COMITIVA)
+    python -m tests.navegador.cenarios resgate       # a recuperação: fome ou infecção no Charco, à noite (CLASSE, CAUSA, COMITIVA, CONTRATOS)
     python -m tests.navegador.cenarios gelo          # Mago com a iniciativa contra um lobo: duas Lanças antes de ele agir (PRISAO, NIVEL, SEMENTE)
     python -m tests.navegador.cenarios muralha       # Guerreiro nv 6, Muralha + Contra-ataque (CONTRA) e o Broquel, contra bandidos e um cultista
 
@@ -340,8 +340,8 @@ def resgate(ui):
     """A recuperação da campanha (E9): CLASSE (padrão mago) no Charco dos Juncos, à noite, com Morel e Odette
     (COMITIVA=0: sozinho). CAUSA=fome (padrão): três dias sem comer, sem provisões, 3 de ouro e pouca vida; a próxima
     noite derruba. CAUSA=infeccao: uma infecção e um corte aberto, um dia de fome (que corta a cura do acampamento) e
-    40 de ouro. Acampar leva ao resgate no Vau, na casa de Marta (Pita cuida: a febre do Vau ainda não acabou). Sair
-    leva ao título."""
+    40 de ouro. Acampar leva ao resgate no Vau, na casa de Marta (Pita cuida: a febre do Vau ainda não acabou).
+    CONTRATOS=n: n contratos de caça já cumpridos, que pagam na página do Vau depois do resgate. Sair leva ao título."""
     from rpg.__main__ import menu_principal
     from rpg.ui import BotUI
     pasta = tempfile.mkdtemp()
@@ -367,6 +367,10 @@ def resgate(ui):
     for l in g.mundo["locais"]:
         l["visitado"] = l["chave"] in ("vau_do_turvo", "charco_dos_juncos", "bosque_do_moinho")
     g.mundo["atual"] = next(l["id"] for l in g.mundo["locais"] if l["chave"] == "charco_dos_juncos")
+    for _ in range(int(os.environ.get("CONTRATOS", "0"))):
+        c = g.gerar_contrato()
+        c["concluido"] = True
+        g.contratos.append(c)
     g.ui, ui.jogo = ui, g
     g.autosalvar = True
     try:

@@ -449,6 +449,9 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         self.cabecalho()
         tipo = self.loc["tipo"]
         if tipo == "vila":
+            # Quem chega viajando já recebeu (chegar). Quem acorda aqui depois de um resgate, ou carrega um save feito
+            # na vila com contrato cumprido e ainda não pago, recebe agora, na página da vila, depois do resgate.
+            self.receber_contratos()
             self.menu_vila()
         else:
             self.menu_selvagem()
