@@ -177,6 +177,14 @@ Consolida o da 1.60.4 e o da E6 (1.62.1).
 o motivo), escolhas de fato permanentes, restrições importantes como luta sem fuga, e o que se aprendeu em conversa.
 Clareza não vira ocultação de regra: nada de remoção geral de avisos.
 
+**Nada de condição interna disfarçada de narração.** Porcentagem de vida, limiar de fase, etapa da missão e outros
+estados do motor não viram frase da cena ("Ilse vacila à metade"). O número útil fica na interface (a barra de vida, o
+Diário); a cena descreve o que acontece ("O canto de Ilse falha").
+
+**Evidência como evidência.** O texto separa o que se observa, o que se supõe e o que prova algo, conforme o que o
+personagem tem naquele momento. Uma amostra e um caminho de água sustentam um argumento; não demonstram ausência de
+magia nem garantem que a praça aceite.
+
 **Não antecipar** inimigos, consequências ou soluções que o personagem ainda não conhece. A nota diz o que se percebe
 antes de agir ("barulhento", "o eixo range alto"), não o que vem depois. Nada de porcentagem inventada nem de obstáculo
 físico criado só para justificar uma regra.
@@ -194,7 +202,8 @@ trecho, motivo e sugestão. Uma entrega à parte decide quais aplicar.
    já diz "Você tem a fita de Ilse": são duas confirmações seguidas. Sugestão: tirar o aviso.
 2. **O frasco do lodo repetido.** `rpg/caspar.py:356`, `g.ui.efeito("Frasco do lodo", "item")`. A narração ("enche um
    frasco com o lodo") e o cartão ("Uma amostra do lodo") já dizem o mesmo. Sugestão: tirar o aviso.
-3. **"Isso a praça vai entender."** `rpg/caspar.py:354`, na análise do mago. A frase antecipa para que a amostra serve,
+3. **"Isso a praça vai entender."** *Feito na 1.62.2*, com a leitura do lodo reescrita pela causa aprovada.
+   `rpg/caspar.py:354`, na análise do mago. A frase antecipa para que a amostra serve,
    e o lodo pode ser recolhido antes de Caspar acusar alguém (etapa "antes"), quando o personagem nem sabe da praça.
    Sugestão: tirar a frase.
 4. **"Responder depois", três vezes.**

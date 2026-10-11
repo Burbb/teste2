@@ -1083,3 +1083,26 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   - o modo texto, com a compra e a troca nos dois sentidos.
 - **Não mudou:** equilíbrio, regras da transformação, missões e recompensas.
 
+### 11/10/2026 — Três textos da capela e a leitura do lodo (1.62.2)
+
+- **Pedido de Jean:** três ajustes pontuais de texto e coerência, e um acréscimo ao critério editorial.
+- **A descida até Ilse.** A lembrança de Vó Berta fica, porque é conhecimento que o personagem já tem, mais curta:
+  "Vó Berta disse que era preciso soltá-la das pedras. As correntes ainda a prendem." Depois de Berta, só as correntes
+  podem faltar. O caso improvável de faltar outra coisa continua com a lista.
+- **O lodo.** "Nenhum feitiço de ninguém" contradizia a causa aprovada: o Sigilo rachado vaza a Fenda pelo corpo de
+  Ilse, e a água leva isso à vila.
+  - **O mago observa** no lodo a mesma "palavra apagada" da Fonte Nova, velha e fria, e nenhuma mão por trás dela. A
+    hipótese vem marcada como leitura dele: "pelo que você lê, vem do fundo da capela, e a água o leva". Saiu "Isso a
+    praça vai entender".
+  - **As outras classes** só recolhem o frasco, como antes.
+  - **No Diário,** o título "No lodo, magia velha do fundo da capela, que ninguém lançou". A lista da prova virou "O que
+    pode mostrar à praça para defender que…".
+  - **Na denúncia,** a febre na água vira fala do herói, e a prova forte do mago diz o que ele leu.
+  - **Diante da fogueira do brejo,** o herói contrapõe "a água, não uma moça do brejo", e não "água, não feitiço".
+  - A força da prova e o teste de denúncia não mudaram.
+- **O rito.** "Ilse vacila à metade" virou "O canto de Ilse falha". O resto da cena e o funcionamento do rito ficam
+  como estavam.
+- **O critério editorial** (07) ganhou duas regras:
+  - nada de condição interna disfarçada de narração;
+  - evidência como evidência: o que se observa, o que se supõe e o que prova algo.
+

@@ -203,9 +203,7 @@ class TestConfronto(unittest.TestCase):
     def test_com_berta_e_sem_as_correntes_diz_o_que_falta(self):
         g = no_fundo("mago", ["Voltar por enquanto"], preparos=("fita",), berta=True)
         missoes.executar(g, MID, "fundo")
-        dito = next(d for d in g.ui.ditos if "ainda falta" in d)
-        self.assertIn("Vó Berta", dito)
-        self.assertIn("soltá-la das pedras de moinho", dito)
+        self.assertIn("Vó Berta disse que era preciso soltá-la das pedras. As correntes ainda a prendem.", g.ui.ditos)
         descida = next(p for p in g.ui.perguntas if "Voltar por enquanto" in p[1])
         self.assertEqual(descida[1], [f"Lutar para destruí-la — {tx.SEM_FUGA}", "Voltar por enquanto"])
 

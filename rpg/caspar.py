@@ -44,11 +44,11 @@ MISSOES = {
         },
         pistas={},
         titulos={"lodo": "Uma amostra do lodo do fundo da capela",
-                 "analise": "O lodo é água parada, não feitiço de ninguém"},
+                 "analise": "No lodo, magia velha do fundo da capela, que ninguém lançou"},
         preparos={
             "lodo": "Uma amostra do lodo do fundo da capela, num frasco: a mesma sujeira que a Fonte Nova trazia.",
-            "analise": "Você analisou o lodo: é água parada que passou pelo que vazava no fundo da capela, não "
-                       "feitiço de ninguém.",
+            "analise": "Pelo que você leu no lodo, ele traz a mesma magia velha e fria da Fonte Nova, vinda do fundo "
+                       "da capela, e nenhuma mão por trás dela: não é feitiço lançado contra a vila.",
         },
     ),
 }
@@ -116,7 +116,7 @@ def _requisitos(g, m):
     # O que o personagem pode mostrar à praça, pelo que já descobriu da água (a acusação vem depois do canal).
     f = _febre(g)
     canal = bool({"canal_da_capela", "agua_da_capela"} & set(f["pistas"]))
-    return {"titulo": "O que pode mostrar à praça que a febre veio da água, e não de Yara:", "itens": [
+    return {"titulo": "O que pode mostrar à praça para defender que a febre veio da água, e não de Yara:", "itens": [
         {"texto": "O caminho da água, do moinho à Fonte Nova", "onde": None, "feito": canal},
         {"texto": "Uma amostra do lodo que a água leva para a Fonte Nova", "onde": None,
          "feito": "lodo" in m["preparos"]},
@@ -301,10 +301,11 @@ def _resolver(g, postura, forte=False):
     yara = situacao_yara(g)
     if postura == "denunciar":
         g.narrar("Você ergue o frasco do lodo e conta o caminho da água: a represa, o canal, a capela "
-                 "afundada, a Fonte Nova. A febre veio do que todos beberam, não de uma moça no brejo.")
+                 "afundada, a Fonte Nova. \"A febre veio do que todos beberam\", você diz, \"não de uma moça no "
+                 "brejo.\"")
         if forte:
             g.narrar("Yara mostra as ervas que a água da fonte matava em um dia." if yara == "grupo" else
-                     "Você conta o que viu no lodo: água parada, nenhum feitiço de ninguém.")
+                     "Você conta o que leu no lodo: o mal vem do fundo da capela, e ninguém o lançou contra a vila.")
         aceita = g.teste("carisma", CD_DENUNCIA_FORTE if forte else CD_DENUNCIA)
         postura = "denunciado" if aceita else "denuncia_falhou"
         if aceita:
@@ -350,8 +351,9 @@ def _recolher_lodo(g, mid):
     if "lodo" not in m["preparos"]:
         m["preparos"].append("lodo")
     if g.j.classe == "mago" and "analise" not in m["preparos"]:
-        g.narrar("À luz da tocha, você lê o lodo como se lê uma página: água parada, podre, que passou pelo que vazava "
-                 "lá no fundo. Nenhum feitiço de ninguém. Isso a praça vai entender.")
+        g.narrar("À luz da tocha, você lê o lodo como se lê uma página. Há nele a mesma palavra apagada da Fonte Nova, "
+                 "velha e fria, mas nenhuma mão por trás dela: ninguém lançou aquilo contra a vila. Pelo que você lê, "
+                 "vem do fundo da capela, e a água o leva.")
         m["preparos"].append("analise")
     g.ui.efeito("Frasco do lodo", "item")
 

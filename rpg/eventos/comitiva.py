@@ -404,7 +404,7 @@ def yara_na_fogueira(g):
     elif op == "falar":
         if g.teste("carisma", 13):
             g.dizer("Você fala da Fonte Nova, que brotou quando o poço secou, e da febre que começou junto com ela: "
-                    "água, não feitiço. Um a um, os forcados baixam. Caspar é o último a ir embora." if g.campanha else
+                    "a água, não uma moça do brejo. Um a um, os forcados baixam. Caspar é o último a ir embora." if g.campanha else
                     "Você fala do moleiro que desviou o riacho, da água parada, das crianças que bebem dela. Um a um, "
                     "os forcados baixam. O pregador é o último a ir embora.", "verde")
             simpatia = 10

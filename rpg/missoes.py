@@ -620,9 +620,13 @@ def _fundo(g, mid):
              "Ilse, ou o que a vila fez dela: a Bruxa Afogada.")
     pronto = descanso_pronto(m)
     if not pronto and sabe_do_rito(m):
-        falta = [o_que[0].lower() + o_que[1:] for o_que, _, feito in descanso(m) if not feito]
-        g.dizer("Do que Vó Berta contou, ainda falta " + tx.lista_natural(falta) + ". Sem isso, não há como dar "
-                "descanso a ela.", "cinza")
+        # A lembrança do que Berta contou, diante do que se vê. Depois de Berta, só as correntes podem faltar (o nome e
+        # a fita vêm da conversa); o resto fica no jeito de antes, por garantia.
+        if "corpo_solto" not in m["preparos"]:
+            g.narrar("Vó Berta disse que era preciso soltá-la das pedras. As correntes ainda a prendem.")
+        else:
+            falta = [o_que[0].lower() + o_que[1:] for o_que, _, feito in descanso(m) if not feito]
+            g.narrar("Do que Vó Berta contou, ainda falta " + tx.lista_natural(falta) + ".")
     g.narrar("Ela ainda não se levantou da água.")
     sem_fuga = {"nota": tx.SEM_FUGA}
     opcoes = ([("Chamar Ilse pelo nome e tentar dar descanso", "descanso", sem_fuga)] if pronto else []) + [
@@ -657,7 +661,7 @@ def _momento_do_rito(g, cb, e):
     """No limiar: a escolha é do motor; a tela só a mostra. Devolver o nome e a fita encerra a luta em paz (ela e o que
     ela chamou da água afundam). Desistir tira o piso: o dano que ele segurou cai na hora e a luta segue para a
     segunda fase, como em qualquer guardião. Nada do que a build faz se perde para quem escolhe destruir."""
-    cb.dizer("Ilse vacila à metade. As correntes soltas pendem dos pulsos dela, e os olhos dela vão para a fita na sua "
+    cb.dizer("O canto de Ilse falha. As correntes soltas pendem dos pulsos dela, e os olhos dela vão para a fita na sua "
              "mão.", "ciano+negrito")
     op = g.menu("Este é o momento do rito.", [("Dizer o nome dela e devolver a fita (dar descanso)", "rito"),
                                               ("Desistir do rito e seguir lutando (destruir)", "lutar")])
