@@ -73,6 +73,7 @@ class TestContrato(unittest.TestCase):
         ab.contexto(g, "mural", {"lista": [longe, alvo, perto]})
         o = ab.atual(g)
         self.assertEqual((o["id"], o["ancora"]), ("K1", f"aceitar:{perto['id']}"))  # nem o elite nem o difícil
+        self.assertEqual(o["texto"], "Aceite este contrato para começar.")  # o cartão já diz alvo e recompensa
         ab.contexto(g, "mural", {"lista": [longe, alvo]})
         self.assertIsNone(ab.atual(g))  # sem nada adequado, nada se força (e a oferta não muda)
 
@@ -88,10 +89,10 @@ class TestContrato(unittest.TestCase):
         c = contrato(g, "charco_dos_juncos")
         o = ab.atual(g)
         self.assertEqual((o["id"], o["ancora"]), ("K2", f"contrato:{c['id']}"))
-        self.assertIn("Charco dos Juncos", o["texto"])
+        self.assertEqual(o["texto"], "Clique neste contrato para viajar até **Charco dos Juncos**.")
         ir(g, "charco_dos_juncos")
         self.assertEqual(oid(g), "K3")
-        self.assertIn("(0/3)", ab.atual(g)["texto"])
+        self.assertIn("**Caçar**", ab.atual(g)["texto"])
         c["feito"], c["concluido"] = 3, True
         o = ab.atual(g)
         self.assertEqual((o["id"], o["ancora"]), ("K4", f"contrato:{c['id']}"))
@@ -127,7 +128,10 @@ class TestBauSelosAdiantar(unittest.TestCase):
         self.assertNotEqual(oid(g), "B1")
         g.j.consumiveis["bau"] = 1
         o = ab.atual(g)
-        self.assertEqual((o["id"], o["ancora"]), ("B1", "bolsa:bau"))
+        self.assertEqual((o["id"], o["ancora"], o["texto"]), ("B1", "bolsa:bau", "Clique no baú para abrir."))
+        g.j.consumiveis["bau"] = 3
+        self.assertEqual(ab.atual(g)["texto"], "Clique no baú para abrir os 3.")
+        g.j.consumiveis["bau"] = 1
         g.executar_comum(("usar", "bau"))
         self.assertIn("B1", g.mundo["abertura"]["vistas"])
 
@@ -146,23 +150,37 @@ class TestBauSelosAdiantar(unittest.TestCase):
         lobo.efeitos["firme"] = {"t": 1}
         o = ab.atual(g)
         self.assertEqual(o["id"], "SF")
-        self.assertIn("não pode ser atordoado nem congelado", o["texto"])
+        # O nome, o efeito de agora e, só no primeiro, a duração (o número do ícone).
+        self.assertEqual(o["texto"], "**Firme**\nAcabou de se soltar: não pode ser atordoado nem congelado agora.\n"
+                                     "O número no ícone indica quantos turnos o efeito ainda dura.")
         ab.visto(g, "SF")
         o = ab.atual(g)
         self.assertEqual((o["id"], o["ancora"]), ("S-", f"selo:{cb.uid(lobo)}:veneno"))
-        self.assertIn("de dano por turno", o["texto"])
+        self.assertEqual(o["texto"], "**Veneno**\n4 de dano por turno · 3 turnos restantes.")
         ab.visto(g, "S-")
         o = ab.atual(g)
         self.assertEqual((o["id"], o["ancora"]), ("S+", "selo:j:esquiva"))
-        self.assertIn("esquiva +20%", o["texto"])
+        self.assertEqual(o["texto"], "**Esquiva**\n+20% de chance de esquiva · 2 turnos restantes.")
+
+    def test_iniciativa_diz_de_que_e_do_primeiro_golpe(self):
+        g = depois_da_despensa()
+        self.luta(g)
+        g.j.efeitos["iniciativa"] = {"t": 1, "v": 0.25}
+        self.assertEqual(ab.atual(g)["texto"], "**Iniciativa**\n+25% de dano no primeiro golpe deste turno.\n"
+                                               "O número no ícone indica quantos turnos o efeito ainda dura.")
 
     def test_adiantar_depois_da_primeira_luta_e_sem_prometer_pular(self):
         g = nova_sem_a1()
         o = ab.atual(g)
         self.assertEqual((o["id"], o["ancora"]), ("A1", "topo:velocidade"))
-        self.assertIn("turnos, custos e escolhas continuam os mesmos", o["texto"])
+        self.assertEqual(o["texto"], "Ajuste a velocidade do texto aqui. Atalho: **V**.")
+        # Revelar o texto e acelerar a animação: à parte (a ocasião é da tela), sem segurar a fila das outras.
+        self.assertEqual(set(ab.para_tela(g)["apresentacao"]), {"A0", "AL"})
+        ab.entendi(g, "A0")
+        self.assertEqual(set(ab.para_tela(g)["apresentacao"]), {"AL"})
         g.mundo["abertura"]["vistas"].remove("combate")
         self.assertNotEqual(oid(g), "A1")  # antes de qualquer luta, não
+        self.assertEqual(ab.para_tela(g)["apresentacao"], {})
 
 
 def nova_sem_a1():

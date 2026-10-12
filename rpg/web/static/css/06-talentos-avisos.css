@@ -326,6 +326,12 @@
   background: var(--ouro); border: 1px solid #000; box-shadow: 2px 2px 0 #000; cursor: pointer; }
 .orientacao-entendi:hover { filter: brightness(1.08); }
 .orientacao-entendi:focus-visible { outline: 1px solid var(--tinta); outline-offset: 2px; }
+/* A haste da seta, do quadro na faixa da luta até o ícone de efeito na carta (a ponta encosta nele). */
+.orientacao-haste { position: fixed; z-index: 18; width: 2px; pointer-events: none; background: #b8943f; box-shadow: 1px 0 0 #000; }
+/* A linha de baixo do ícone de efeito (a duração, dita uma vez): um pouco mais baixa e apagada. */
+/* O quadro do ícone de efeito é estreito: cabe ao lado da janelinha de Habilidades aberta, sem cobri-la. */
+.orientacao.efeito { max-width: 250px; }
+.orientacao .o-nota { margin-top: 3px; font-size: 14px; color: var(--tinta-2); }
 /* O C4 em linhas curtas: o nome, os custos (ícone e cor do recurso, o nome escrito) e o Atacar. */
 .orientacao.c4 { max-width: 360px; }
 .o-nome { font-weight: 600; color: var(--ouro); }

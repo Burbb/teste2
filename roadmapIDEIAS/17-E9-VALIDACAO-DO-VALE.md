@@ -21,6 +21,8 @@ Avaliação integrada do Vale do Turvo como primeiro capítulo (a E9 antecipada,
   adiantar o texto ([18](18-E9-ABERTURA-GUIADA.md), seção 16).
 - **Os ciclos básicos, 1.68.0 (seção 25):** o primeiro atendimento grátis do templo, um contrato do mural ao
   pagamento, o primeiro baú, os selos e adiantar a apresentação ([18](18-E9-ABERTURA-GUIADA.md), seção 17).
+- **Revisão pontual, 1.68.1 (seção 26):** textos curtos, os ícones de efeito, adiantar separado, a seta no alvo e a
+  derrota no cenário de teste ([18](18-E9-ABERTURA-GUIADA.md), seção 18).
 - **Quarta entrega, 1.65.2 e 1.65.3 (seção 19):** a partida da Quibia lida; os contratos pagos depois do resgate; o
   ×N dos baús em destaque. A especificação da abertura guiada fica em [18](18-E9-ABERTURA-GUIADA.md).
 - **Correção 1.65.1 (seção 18):** os três pontos que faltaram na mensagem cortada: a percepção do Mago na água, o nome
@@ -898,5 +900,12 @@ graça (autorizada por Jean, uma vez por personagem, na campanha), um contrato a
 primeiro baú, o que os selos das cartas fazem e como adiantar a apresentação sem pular nada do jogo. Nada é dado ou
 forçado para o tutorial; combate, sorteio e equilíbrio iguais. Detalhe na seção 17 do 18.
 
-**A E9 continua aberta** até a validação com jogadores novos.
+## 26. Revisão pontual (1.68.1)
 
+Pedido de Jean depois da 1.68.0: quadros com explicação demais na mesma frase, "selo" em vez de ícone, o adiantar
+misturando quatro assuntos, setas que paravam longe do contrato, do baú e do ícone de efeito, o quadro do sangramento
+sobre a lista de Habilidades e a derrota na luta preparada do cenário `tutorial`, que parava o teste. Tudo reproduzido
+antes (a derrota, no console do servidor; as setas, nas capturas e nas medidas); regras, sorteio e equilíbrio iguais.
+Detalhe na seção 18 do 18.
+
+**A E9 continua aberta** até a validação com jogadores novos.

@@ -1291,7 +1291,8 @@ async function cenarioTutorial(browser) {
     const { proc, url } = await subir("tutorial", { LUGAR: "charco", PERIODO: "3" });
     const { page, erros } = await abrir(browser, url);
     try {
-      conferir(await ate(page, /Noite: os inimigos ficam mais fortes/) && !(await cobre(page)), "N1: fora da vila, à noite, o aviso do topo, sobre a paisagem");
+      conferir(await ate(page, /^A noite deixa os inimigos mais fortes\./) && !(await cobre(page)) && (await pontaNoAlvo(page)) <= 2,
+        "N1: fora da vila, à noite, a linha da noite nos riscos do lugar, com a seta encostando nela, sem cobrir a página");
       await page.keyboard.press("1");  // explorar, pelo teclado: a ocasião passa
       for (let k = 0; k < 80 && !(await page.$("#prompt .escolha")); k++) {
         const c = await page.$("#prompt .continuar"); if (c) await c.click().catch(() => {});
@@ -1306,6 +1307,19 @@ async function cenarioTutorial(browser) {
     }
   }
 }
+
+/** A ponta da seta do quadro (ou da haste) até o controle destacado, em px (0: encosta nele); null sem destaque. */
+const pontaNoAlvo = (page) => page.evaluate(() => {
+  const q = document.querySelector(".orientacao:not([hidden])"), a = document.querySelector(".orientacao-anel:not([hidden])");
+  if (!q || !a) return null;
+  const b = q.getBoundingClientRect(), r = a.getBoundingClientRect(), s = parseFloat(getComputedStyle(q).getPropertyValue("--seta")) || 0;
+  const lado = (q.className.match(/seta-(\w+)/) || [])[1], h = document.querySelector(".orientacao-haste:not([hidden])");
+  let x = b.left + s, y = lado === "cima" ? b.bottom + 6 : b.top - 6;
+  if (lado === "direita") { x = b.left - 6; y = b.top + s; }
+  if (lado === "esquerda") { x = b.right + 6; y = b.top + s; }
+  if (h) { const k = h.getBoundingClientRect(); x = k.left + 1; y = lado === "baixo" ? k.top : k.bottom; }
+  return Math.round(Math.max(r.left - x, 0, x - r.right) + Math.max(r.top - y, 0, y - r.bottom));
+});
 
 async function cenarioCiclos(browser) {
   console.log("cenário: os ciclos básicos (o primeiro atendimento grátis do templo e o primeiro contrato)");
@@ -1327,16 +1341,77 @@ async function cenarioCiclos(browser) {
     await (await page.waitForSelector(':is(button, .escolha):has-text("Voltar à vila")', { timeout: 10000 })).click();
     await page.waitForTimeout(1200);
     await page.click('#predios .predio[data-predio="mural"]');
-    conferir(await ate(/Contrato de caça: .+ Aceitar o põe no Diário/), "K1: no mural, um contrato de caça adequado ao começo");
+    conferir(await ate(/^Aceite este contrato para começar\./) && (await pontaNoAlvo(page)) <= 2,
+      "K1: no mural, \"Aceite este contrato para começar.\", com a seta encostando no cartão destacado");
     const id = await page.evaluate(() => estado.orientacao.atual.ancora.split(":")[1]);
     await page.click(`[data-aceitar="${id}"]`);
     await page.waitForTimeout(800);
-    conferir(!/Contrato de caça/.test(await quadro()) && (await page.evaluate(() => (estado.contratos || []).length)) === 1,
+    conferir(!/Aceite este contrato/.test(await quadro()) && (await page.evaluate(() => (estado.contratos || []).length)) === 1,
       "aceito o contrato, o quadro do mural sai");
+    await page.keyboard.press("Escape");
+    conferir(await ate(/^Clique neste contrato para viajar até .+\./) && (await pontaNoAlvo(page)) <= 2,
+      "K2: na vila, o cartão do contrato à direita, com a seta encostando nele");
+    await page.evaluate(() => { document.querySelector("#mundo").scrollTop += 60; });
+    await page.waitForTimeout(400);
+    conferir((await pontaNoAlvo(page)) <= 2, "rolando a coluna, o quadro acompanha o cartão");
   } finally {
     conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
     await page.close();
     proc.kill();
+  }
+}
+
+async function cenarioApresentacao(browser) {
+  console.log("cenário: revelar o texto (A0) e a derrota na luta preparada do cenário tutorial");
+  {
+    const { proc, url } = await subir("tutorial", { VISTAS: "A1" });
+    const { page, erros } = await abrir(browser, url);
+    const quadro = () => page.evaluate(() => { const q = document.querySelector(".orientacao:not([hidden])"); return q ? q.innerText.replace(/\s+/g, " ") : ""; });
+    try {
+      await page.waitForFunction(() => pergunta && pergunta.tipo === "opcoes" && !processando, null, { timeout: 20000 });
+      await page.keyboard.press("2");  // Examinar a fonte nova: texto e Continuar
+      await page.waitForFunction(() => processando && !!document.querySelector(".orientacao:not([hidden])"), null, { timeout: 10000 }).catch(() => {});
+      conferir(/^Clique para mostrar o texto inteiro\. Depois, use Continuar para avançar\./.test(await quadro()),
+        "A0: com o texto correndo numa cena que acaba em Continuar, o quadro de revelar");
+      const pg = await page.evaluate(() => { const r = document.querySelector("#pagina").getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2]; });
+      await page.mouse.click(pg[0], pg[1]);  // na página (na paisagem, o clique escolheria um prédio)
+      await page.waitForFunction(() => pergunta && pergunta.tipo === "continuar" && !processando, null, { timeout: 10000 });
+      await page.waitForTimeout(300);
+      conferir(/Clique para mostrar/.test(await quadro()) && (await pontaNoAlvo(page)) <= 2, "revelado o texto, o mesmo quadro aponta o Continuar");
+      await page.click("#prompt .continuar");
+      await page.waitForTimeout(1200);
+      conferir(!/Clique para mostrar/.test(await quadro()) && !(await page.evaluate(() => "A0" in estado.orientacao.apresentacao)),
+        "depois do Continuar, o A0 não volta");
+    } finally {
+      conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
+      await page.close();
+      proc.kill();
+    }
+  }
+  {
+    const { proc, url } = await subir("tutorial", { LUTA: "lobo", QUANTOS: "3", VIDA: "0.05", CONTRATO: "aceito", VISTAS: "A1" });
+    const { page, erros } = await abrir(browser, url);
+    try {
+      for (let k = 0; k < 300; k++) {
+        const s = await page.evaluate(() => ({ luta: !!(estado && estado.combate), pode: !!pergunta && !processando, menu: !!document.querySelector("#predios .predio") && !!pergunta && pergunta.tipo === "opcoes" && !processando }));
+        if (s.menu && !s.luta && k > 5) break;
+        const c = await page.$("#prompt .continuar");
+        if (c) await c.click().catch(() => {});
+        else if (s.luta && s.pode) {
+          await page.keyboard.press("1");
+          await page.waitForTimeout(150);
+          const alvo = await page.$("#arena .carta.alvejavel"); if (alvo) await alvo.click().catch(() => {});
+        }
+        await page.waitForTimeout(200);
+      }
+      const fim = await page.evaluate(() => ({ local: estado.local.nome, contratos: (estado.contratos || []).length, hp: estado.heroi.hp, menu: !!pergunta && pergunta.tipo === "opcoes" }));
+      conferir(fim.menu && fim.local === "Vau do Turvo" && fim.hp > 0 && fim.contratos === 1,
+        "derrota na luta preparada: o resgate de sempre, de volta ao menu do Vau, com o contrato");
+    } finally {
+      conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
+      await page.close();
+      proc.kill();
+    }
   }
 }
 
@@ -1424,6 +1499,7 @@ try {
   await cenarioFogueira(browser);
   await cenarioTutorial(browser);
   await cenarioCiclos(browser);
+  await cenarioApresentacao(browser);
 } catch (e) {
   falhas.push(String(e));
   console.log("ERRO", e);

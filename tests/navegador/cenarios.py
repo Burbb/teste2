@@ -35,9 +35,18 @@ import time
 from rpg import comitiva as cm
 from rpg.classes import habilidades_ate
 from rpg.itens import gerar_equip
-from rpg.jogo import FimDeJogo, Jogo
+from rpg.jogo import Derrota, FimDeJogo, Jogo
 from rpg.web.ponte import WebUI
 from rpg.web.servidor import Servidor
+
+
+def lutar(g, inimigos, **kw):
+    """Uma luta preparada antes de o jogo rodar: cair nela leva ao resgate de sempre (o mesmo de Jogo.rodar), e o
+    cenário segue dali."""
+    try:
+        g.combate(inimigos, **kw)
+    except Derrota as d:
+        g.resgate(d.causa)
 
 
 def combate(ui):
@@ -72,7 +81,7 @@ def combate(ui):
     lobo = g.inimigo("lobo", nivel=1)  # um segundo inimigo, para a luta pedir o alvo
     lobo.hp = lobo.max_hp = 20
     g.j.hp = g.j.max_hp = 400
-    g.combate([e, lobo])
+    lutar(g, [e, lobo])
     try:
         g.rodar()
     except FimDeJogo:
@@ -433,7 +442,7 @@ def tiro_duplo(ui):
         e.nome, e.agi = nome, 0
         e.hp = max(1, int(e.max_hp * float(frac)))
         inimigos.append(e)
-    g.combate(inimigos)
+    lutar(g, inimigos)
     try:
         g.rodar()
     except FimDeJogo:
@@ -504,7 +513,7 @@ def gelo(ui):
     e = g.inimigo("lobo", nivel=max(1, nivel - 1))
     e.agi = 0
     e.hp = e.max_hp = e.max_hp * 6
-    g.combate([e], emboscada="jogador")
+    lutar(g, [e], emboscada="jogador")
     try:
         g.rodar()
     except FimDeJogo:
@@ -537,8 +546,8 @@ def covil(ui):
         g.j.hp = int(os.environ.get("VIDA", "1"))  # VIDA e NIVEL_LUTA: uma luta comum (a teia da aranha, por exemplo)
         ui.cena(loc["nome"], g.contexto_cena(), "evento")
         g.dizer("Um vulto enorme sai da névoa.")
-        g.combate([g.inimigo(os.environ["LUTA"], nivel=int(os.environ.get("NIVEL_LUTA", "6")))
-                   for _ in range(int(os.environ.get("QUANTOS", "1")))])
+        lutar(g, [g.inimigo(os.environ["LUTA"], nivel=int(os.environ.get("NIVEL_LUTA", "6")))
+                  for _ in range(int(os.environ.get("QUANTOS", "1")))])
     if os.environ.get("EVENTO"):
         nome = os.environ["EVENTO"]
         fn = next(getattr(m, nome) for m in (ev_comuns, ev_classe, ev_comitiva, ev_vila) if hasattr(m, nome))
@@ -597,7 +606,7 @@ def _broquel(ui, nivel, talentos, luta):
         ui.cena("Clareira", g.contexto_cena(), "evento")
         g.dizer("Com o Broquel do Vigia." if escolha == "broquel" else "Com um broquel de números iguais, sem o Revide.",
                 "cinza")
-        g.combate(criar(g, max(1, nivel - 1)))
+        lutar(g, criar(g, max(1, nivel - 1)))
         escolha = g.menu("A luta acabou.", [("A mesma luta, com o Broquel do Vigia", "broquel"),
                                             ("A mesma luta, com um broquel sem o Revide", "sem"),
                                             ("Seguir jogando", None)])
@@ -718,7 +727,7 @@ def tutorial(ui):
         a["vistas"].append("K1")
     if os.environ.get("LUTA"):  # uma luta comum contra LUTA (família), para os selos das cartas
         g.ui.cena(g.loc["nome"], g.contexto_cena(), "evento")
-        g.combate([g.inimigo(os.environ["LUTA"], nivel=1) for _ in range(int(os.environ.get("QUANTOS", "2")))])
+        lutar(g, [g.inimigo(os.environ["LUTA"], nivel=1) for _ in range(int(os.environ.get("QUANTOS", "2")))])
     if os.environ.get("ITEM"):
         g.ui.cena(g.loc["nome"], g.contexto_cena(), "evento")
         g.dizer("No chão, entre a palha, alguma coisa brilha.")

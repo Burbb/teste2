@@ -389,7 +389,7 @@ def _t1(g, a):
 
 
 def _n1(g, a):
-    """A primeira noite fora da vila: a noite aumenta o perigo (os números já estão no aviso do topo) e a tocha
+    """A primeira noite fora da vila: a noite aumenta o perigo (os números já estão nos riscos do lugar) e a tocha
     ilumina o escuro, sem tirar o perigo da noite. Pelas regras do lugar: nas salas (a capela, escura também de dia),
     sem luz o inimigo ataca primeiro, sempre; fora delas, ser pego de surpresa só fica mais provável."""
     from . import missoes
@@ -404,8 +404,8 @@ def _n1(g, a):
     else:
         luz = ("No escuro, a tocha ilumina o caminho; sem ela, ser pego de surpresa fica mais provável. A noite "
                "continua perigosa com ou sem luz.")
-    return {"id": "N1", "texto": f"Noite: os inimigos ficam mais fortes (**Inimigos +{bal.NOITE_NIVEL} nível**, no "
-                                 f"topo). {luz}", "ancora": "mod:noite", "entendi": True}
+    # A âncora: os riscos do lugar, à direita (a linha da noite, com os números, e a da tocha).
+    return {"id": "N1", "texto": f"A noite deixa os inimigos mais fortes. {luz}", "ancora": "risco:noite", "entendi": True}
 
 
 # ------------------------------------------------------------------ os ciclos básicos (K1–K4, B1, S, A1)
@@ -423,7 +423,6 @@ def _adequado(g, c):
 def _k1(g, a, oferta):
     """No Mural, sem contrato aceito ainda: um contrato de caça adequado ao começo (o mais fácil da oferta, se houver;
     a oferta é a de sempre, nada é gerado para o tutorial). Aceitar é da pessoa."""
-    from . import dados
     from .mundo import nivel_regiao
     if not _pendente(a, "K1") or not oferta or g.contratos:
         return None
@@ -431,16 +430,13 @@ def _k1(g, a, oferta):
                   key=lambda c: (nivel_regiao(g.mundo["locais"][c["local"]]), c["total"]))
     if not bons:
         return None
-    c = bons[0]
-    lugar = g.mundo["locais"][c["local"]]["nome"]
-    plural = dados.FAMILIAS[c["familia"]]["plural"]
-    return {"id": "K1", "texto": f"Contrato de caça: {c['total']} {plural} em {lugar}. **Aceitar** o põe no Diário; "
-                                 f"cumprido, ele paga {c['ouro']} de ouro quando você voltar a uma vila.",
-            "ancora": f"aceitar:{c['id']}"}
+    # O cartão já diz o alvo, o lugar e a recompensa: o quadro só diz o que fazer com ele.
+    return {"id": "K1", "texto": "Aceite este contrato para começar.", "ancora": f"aceitar:{bons[0]['id']}"}
 
 
 def _k2(g, a):
-    """Um contrato aceito e o lugar dele longe daqui: onde fica (a linha do contrato, à direita, e o ! no mapa)."""
+    """Um contrato aceito e o lugar dele longe daqui: o cartão do contrato, à direita, leva até lá (o clique nele
+    viaja direto ao lugar, como o destino no mapa)."""
     c = _contrato_seguido(g)
     if not _pendente(a, "K2") or not _pendente(a, "K4") or not c:
         return None
@@ -448,8 +444,7 @@ def _k2(g, a):
     if lid == g.loc["id"]:
         return None
     lugar = g.mundo["locais"][lid]["nome"]
-    return {"id": "K2", "texto": f"O contrato é em **{lugar}**: a linha dele, em Contratos, à direita, e o \"!\" no "
-                                 "mapa mostram onde. Clique na linha (ou em Viajar) para ir.",
+    return {"id": "K2", "texto": f"Clique neste contrato para viajar até **{lugar}**.",
             "ancora": f"contrato:{c['id']}", "entendi": True}
 
 
@@ -466,8 +461,8 @@ def _k3(g, a):
     else:
         f = dados.FAMILIAS[c["familia"]]
         a_ = "a" if f["g"] == "f" else "o"
-        texto = (f"**Caçar** segue os rastros d{a_}s {f['plural']} do contrato: cada um{'a' if a_ == 'a' else ''} "
-                 f"abatid{a_} aqui conta ({c['feito']}/{c['total']}), também {a_}s que aparecerem explorando.")
+        texto = (f"**Caçar** segue os rastros d{a_}s {f['plural']} do contrato. {f['plural'].capitalize()} "
+                 f"vencid{a_}s ao explorar também contam.")
     return {"id": "K3", "texto": texto, "ancora": "opcao:(contrato"}
 
 
@@ -476,33 +471,50 @@ def _k4(g, a):
     c = next((c for c in g.contratos if c.get("concluido")), None)
     if not _pendente(a, "K4") or not c or g.loc["tipo"] == "vila":
         return None
-    return {"id": "K4", "texto": f"Contrato cumprido. A recompensa ({c['ouro']} de ouro e {c['xp']} XP) é paga quando "
-                                 "você chegar a uma vila.", "ancora": f"contrato:{c['id']}", "entendi": True}
+    return {"id": "K4", "texto": f"Contrato cumprido: {c['ouro']} de ouro e {c['xp']} XP, pagos quando você chegar a "
+                                 "uma vila.", "ancora": f"contrato:{c['id']}", "entendi": True}
 
 
 def _b1(g, a):
-    """O primeiro baú de verdade na bolsa, onde dá para abri-lo: o espaço dele."""
+    """O primeiro baú de verdade na bolsa, onde dá para abri-lo: o espaço dele (a tela mostra o quadro quando o menu
+    aceita a abertura, não enquanto a página espera Continuar). Com vários, o clique abre todos."""
     n = g.j.consumiveis.get("bau", 0)
     if not _pendente(a, "B1") or n <= 0 or g.motivo_inutil("bau"):
         return None
-    return {"id": "B1", "texto": ("Um baú trancado na **Bolsa**, à esquerda: clique nele para abrir." if n == 1 else
-                                 f"{n} baús trancados na **Bolsa**, à esquerda: um clique abre os {n} de uma vez."),
+    return {"id": "B1", "texto": "Clique no baú para abrir." if n == 1 else f"Clique no baú para abrir os {n}.",
             "ancora": "bolsa:bau"}
 
 
 def _a1(g, a):
-    """Adiantar a apresentação, uma vez, depois da primeira luta: os controles de verdade, sem pular nada do jogo."""
+    """A velocidade do texto, uma vez, depois da primeira luta: o botão Texto, no topo (revelar o texto e acelerar as
+    animações têm a ocasião delas: APRESENTACAO)."""
     if not _pendente(a, "A1") or "combate" not in a["vistas"]:
         return None
-    return {"id": "A1", "texto": "Enquanto o texto aparece, um clique ou uma tecla mostra o resto de uma vez (na luta, "
-                                 "acelera as animações). **Texto**, no topo (tecla V), deixa tudo mais rápido. Só a "
-                                 "apresentação acelera: turnos, custos e escolhas continuam os mesmos.",
-            "ancora": "topo:velocidade", "entendi": True}
+    return {"id": "A1", "texto": "Ajuste a velocidade do texto aqui. Atalho: **V**.", "ancora": "topo:velocidade",
+            "entendi": True}
+
+
+# Revelar o texto (A0) e acelerar as animações da luta (AL): o motor diz se ainda valem e o texto; a ocasião é da
+# tela, que sabe quando o texto está correndo (e se a cena acaba num Continuar) e quando a animação está na tela. Não
+# entram na fila das outras (não seguram nenhuma) e passam quando aparecem e a pessoa segue.
+APRESENTACAO = {
+    "A0": "Clique para mostrar o texto inteiro. Depois, use **Continuar** para avançar.",
+    "AL": "Clique na tela para acelerar a animação.",
+}
+
+
+def apresentacao(g):
+    """As orientações da apresentação que ainda valem (depois da primeira luta, com a caixa ligada)."""
+    a = estado(g)
+    if not a or not tutorial(g) or "combate" not in a["vistas"]:
+        return {}
+    return {oid: t for oid, t in APRESENTACAO.items() if _pendente(a, oid)}
 
 
 def selo_da_vez(g):
-    """Na luta, a primeira vez de cada tipo de selo numa carta: Firme, um mal e um bem, com o efeito de agora (o
-    mesmo texto da carta). Só o que já aconteceu nesta luta; nada é forçado."""
+    """Na luta, a primeira vez de cada tipo de ícone de efeito numa carta: Firme, um mal e um bem, com o nome e o
+    efeito de agora (os números do estado). A duração se explica uma vez, no primeiro. Só o que já aconteceu nesta
+    luta; nada é forçado."""
     from .estados import ESTADOS, agora, dano_do_tique
     a = estado(g)
     cb = g.combate_ativo
@@ -523,17 +535,21 @@ def selo_da_vez(g):
         if oid not in achados or not _pendente(a, oid):
             continue
         u, n, ef, e = achados[oid]
-        quem = "você" if u is g.j else u.nome
-        # O efeito de agora, como a carta diz: o dano por turno (veneno, sangramento, chamas) e a frase com o número.
-        partes = [f"{dano_do_tique(cb, n, ef)} de dano por turno"] if e.get("tique") else []
-        frase = agora(n, ef.get("v", 0)) or e["dica"]
-        if frase and not e.get("tique"):
-            partes.append(frase)
-        efeito = "; ".join(partes) or e["nome"]
-        turnos = ef["t"]
-        resto = f" O número no selo é quantos turnos faltam ({turnos})." if turnos <= 9 else ""
-        return {"id": oid, "texto": f"**{e['nome'].capitalize()}** ({quem}): {efeito}.{resto}",
-                "ancora": f"selo:{cb.uid(u)}:{n}", "entendi": True}
+        # O efeito de agora: o dano por turno (veneno, sangramento, chamas) ou a frase com o número do estado.
+        if e.get("tique"):
+            info = f"{dano_do_tique(cb, n, ef)} de dano por turno" + (f" e {e['dica']}" if e["golpe"] else "")
+        else:
+            info = agora(n, ef.get("v", 0)) or e["dica"]
+            if info.lower().startswith(e["titulo"].lower() + ": "):  # "fúria: +30% de dano", sob o nome Fúria
+                info = info[len(e["titulo"]) + 2:]
+        info = info[0].upper() + info[1:]
+        t = ef["t"]
+        if t <= 9 and (e.get("tique") or t > 1):  # o que dura só este turno já diz isso ("deste turno", "agora")
+            info += f" · {tx.plural(t, 'turno')} restante{'s' if t != 1 else ''}"
+        primeiro = not any(x in a["vistas"] for x in ("SF", "S-", "S+"))
+        duracao = "\nO número no ícone indica quantos turnos o efeito ainda dura." if primeiro else ""
+        return {"id": oid, "texto": f"**{e['titulo']}**\n{info}.{duracao}", "ancora": f"selo:{cb.uid(u)}:{n}",
+                "entendi": True}
     return None
 
 
@@ -567,7 +583,7 @@ def partiu(g):
 
 def entendi(g, oid):
     """O "Entendi" da tela: só as informativas (as outras se encerram pela ação)."""
-    if oid in ("V3", "V4", "T1", "N1", "A1", "K2", "K4", "SF", "S-", "S+"):
+    if oid in ("V3", "V4", "T1", "N1", "A1", "K2", "K4", "SF", "S-", "S+") or oid in APRESENTACAO:
         visto(g, oid)
 
 
@@ -615,7 +631,10 @@ def ajuda(g):
             ("T1", "Herói", "**Talentos**, na barra de baixo, abre a árvore quando há ponto para gastar."),
             ("N1", "Estrada", f"À noite, os inimigos vêm {bal.NOITE_NIVEL} nível acima e batem mais forte. A tocha "
                               "ilumina os lugares escuros (sem ela, a surpresa fica mais provável; nas salas da "
-                              "capela, certa), mas não tira o perigo da noite.")):
+                              "capela, certa), mas não tira o perigo da noite."),
+            ("A0", "Apresentação", "Enquanto o texto aparece, um clique mostra o texto inteiro; **Continuar** avança."),
+            ("A1", "Apresentação", "**Texto**, no topo (tecla V), ajusta a velocidade do texto."),
+            ("AL", "Apresentação", "Na luta, um clique na tela acelera a animação.")):
         if oid in vistas:
             linhas.append({"grupo": grupo, "texto": texto})
     return {"ligado": tutorial(g), "linhas": linhas}
@@ -625,7 +644,7 @@ def para_tela(g):
     """O que a tela recebe no estado: a orientação de agora e a Ajuda."""
     if not g.mundo:
         return None
-    return {"atual": atual(g), **ajuda(g)}
+    return {"atual": atual(g), "apresentacao": apresentacao(g), **ajuda(g)}
 
 
 def dica_texto(g, onde):
@@ -643,4 +662,5 @@ def dica_texto(g, onde):
         ditos = g.__dict__.setdefault("abertura_ditas", set())  # a sessão de texto: cada dica uma vez
         if o and o["id"] != "V1" and o["id"] not in ditos:
             ditos.add(o["id"])
-            g.dizer("Dica: " + o["texto"].replace("**", "\""), "cinza")
+            nome, _, resto = o["texto"].replace("**", "\"").partition("\n")  # o nome do efeito, na linha de cima
+            g.dizer("Dica: " + (f"{nome}: {resto.replace(chr(10), ' ')}" if resto else nome), "cinza")

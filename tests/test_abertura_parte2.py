@@ -163,7 +163,7 @@ class TestExplorarNoiteTalentos(unittest.TestCase):
         ir(g, "charco_dos_juncos")
         g.periodo = 3
         o = ab.atual(g)
-        self.assertEqual((o["id"], o["ancora"]), ("N1", "mod:noite"))
+        self.assertEqual((o["id"], o["ancora"]), ("N1", "risco:noite"))
         self.assertIn("sem ela, ser pego de surpresa fica mais provável", o["texto"])
         self.assertNotIn("com o mouse", o["texto"])
         ir(g, "capela_afogada")

@@ -623,6 +623,8 @@ D, B, P, M, H e F1 abrindo e fechando; a fuga ("Fugiu!", a carta saindo, o som u
 
 ## 17. Os ciclos básicos (1.68.0)
 
+_Os textos e o posicionamento destes quadros foram revistos na 1.68.1 (seção 18)._
+
 Segunda entrega do mesmo pedido: completar o aprendizado dos sistemas básicos, uma orientação por vez, perto do
 alvo, seguindo o estado real. Combate, sorteio e equilíbrio iguais; a única mudança de economia é a autorizada (o
 templo). O gabarito não muda (as partidas de referência são do mundo gerado, sem a campanha).
@@ -678,3 +680,99 @@ lobo, sangramento no herói), sem cobrir carta nem ação.
   primeiro de cada tipo que acontecer.
 - A faixa dos selos entra na luta quando o primeiro selo aparece (a página abaixo da arena desce uma vez).
 
+
+## 18. Revisão pontual (1.68.1)
+
+Pedido de Jean sobre a 1.68.0: textos do tutorial, posicionamento dos quadros e a derrota no cenário de teste. Sem
+ampliar o tutorial nem mexer em combate, economia, recompensas ou sorteio; adiantar e Continuar funcionam como na
+1.67.1. Os textos da tabela da seção 17 ficam substituídos por estes:
+
+| # | Âncora | Texto |
+|---|---|---|
+| K1 | o cartão do contrato no Mural (o Aceitar está nele) | "Aceite este contrato para começar." (o cartão já mostra alvo, lugar e recompensa) |
+| K2 | o cartão do contrato em Contratos, à direita | "Clique neste contrato para viajar até **{Bosque do Moinho}**." (o clique viaja direto até lá, como o destino no mapa: conferido) |
+| K3 | a ação do contrato no menu | "**Caçar** segue os rastros dos {lobos} do contrato. {Lobos} vencidos ao explorar também contam." |
+| K4 | o cartão do contrato cumprido | "Contrato cumprido: {17} de ouro e {21} XP, pagos quando você chegar a uma vila." |
+| B1 | o baú na Bolsa | "Clique no baú para abrir." (vários: "Clique no baú para abrir os {2}.") |
+| SF, S-, S+ | o ícone de efeito na carta | o nome e o efeito de agora, numa linha cada: "**Sangramento**" / "{3} de dano por turno · {2} turnos restantes."; "**Iniciativa**" / "+{25}% de dano no primeiro golpe deste turno."; no primeiro, uma linha a mais: "O número no ícone indica quantos turnos o efeito ainda dura." |
+| A0 | o texto correndo; depois, o Continuar | "Clique para mostrar o texto inteiro. Depois, use **Continuar** para avançar." |
+| A1 | o botão **Texto** do topo | "Ajuste a velocidade do texto aqui. Atalho: **V**." |
+| AL | (a luta, sem controle) | "Clique na tela para acelerar a animação." |
+| N1 | os riscos do lugar, à direita (a linha da noite e a da tocha) | "A noite deixa os inimigos mais fortes." + a frase da luz de antes (capela, ruínas, o resto) |
+
+**Textos.** Cada quadro diz a ação de agora; o que o cartão ou a tela já mostram não se repete. Nos efeitos, "ícone"
+no lugar de "selo"; a duração se explica uma vez, no primeiro; o "(você)" saiu (o destaque já mostra a carta). O nome
+vem de um campo novo do catálogo (`titulo` em `estados.py`: "Sangramento", "Chamas", "Iniciativa"...), e os números
+do estado de agora; o texto da Iniciativa na carta passou a dizer "de dano" ("+25% de dano no primeiro golpe deste
+turno") e o da Esquiva, "+20% de chance de esquiva". Adiantar foi separado pela ocasião: revelar o texto (A0) com o
+texto correndo numa cena que acaba em Continuar (a dica de rodapé "qualquer tecla ou clique adianta o texto" se
+esconde enquanto ele está à vista); a velocidade (A1) no botão Texto; acelerar a animação (AL) na luta, com a vez dos
+outros correndo, até a próxima ação da pessoa. A0 e AL não entram na fila das outras (não seguram nenhuma).
+
+**Posicionamento.** O quadro encosta no controle, com a ponta da seta nele, quando o controle mora numa coluna (o
+cartão do contrato, o baú, os riscos do lugar: dentro da coluna, acima ou abaixo), no topo (o botão Texto, logo
+abaixo, sem cobrir as barras do herói; a 1280 px ele estreita para caber à direita delas) ou no Mural (acima do
+cartão). Ele acompanha o controle quando a coluna ou a página rola e espera ele voltar se sair de vista; se o
+controle começa fora de vista, a coluna rola só o necessário, uma vez. Na luta, o quadro do ícone continua parado na
+faixa (as cartas andam e tremem) e ganha uma haste da seta até o ícone; é estreito, para caber ao lado da janelinha de
+Habilidades aberta (sem lado livre, espera ela fechar). A faixa da luta cresce uma vez se um quadro maior chega
+depois (o do ícone depois do da animação). O A0 mora na faixa de baixo e, quando o Continuar chega, a haste vai até
+ele. O N1 saiu do aviso do topo (abaixo dele, o quadro cobria as barras do herói) para os riscos do lugar, à direita,
+que já dizem a noite e a tocha.
+
+**Baú.** Com a página esperando Continuar, o clique no baú não abre (o menu ainda não aceita a ação): o B1 só aparece
+quando o menu de agora tem a abertura.
+
+**Derrota no cenário `tutorial`.** A luta preparada (`LUTA=`) era chamada antes de `g.rodar()`, onde a derrota vira
+resgate; cair nela parava o cenário com `rpg.regras.Derrota: combate`. Agora as lutas preparadas dos cenários passam
+por `lutar()` (`tests/navegador/cenarios.py`), que leva a derrota ao `resgate` de sempre e segue o cenário. Nenhuma
+regra da campanha mudou.
+
+**Reproduzido antes de corrigir:**
+- a derrota na luta preparada (`LUTA=lobo QUANTOS=3 VIDA=0.08`): a exceção no console do servidor e a tela parada;
+- nas capturas da 1.68.0: a seta do contrato (K2) e a do baú (B1) apontando dezenas de pixels acima do cartão e do
+  ícone (o quadro na faixa do alto, a seta limitada à altura dele); a do Mural (K1) parando no título do quadro de
+  contratos, longe do Aceitar destacado; a do ícone de efeito a uns 90 px dele;
+- o quadro do sangramento sobre a lista de Habilidades: medido a 1280 px, a janelinha ocupa x 550–800 sobre a faixa,
+  e o quadro de 330 px, alinhado ao ícone, ia de 284 a 614;
+- o clique no baú com a página esperando Continuar não abre (o menu ainda não tem a ação); o B1 da 1.68.0 pedia só uma
+  pergunta qualquer, então aparecia também nesse momento (pela leitura do código).
+
+**Conferido na tela** (1500×950 e 1280×800; o baú e o contrato também a 1280×600):
+- K1 no Mural, K2 na vila (antes e depois de rolar a coluna da direita), B1 (um e dois baús; a 600 px a coluna da
+  esquerda rola até o baú), A1 no topo, V3 nas provisões, N1 no charco e na capela: a ponta da seta encosta no
+  destaque (0 px) e o quadro não cobre ação, carta, barra nem a página;
+- o clique no contrato (K2): a viagem começa e chega ao Bosque do Moinho, com a ação "Caçar … (contrato, 0/3)";
+- o baú com Continuar pendente: nenhum B1 (aparece o A0); de volta ao menu, o B1 volta;
+- os ícones na luta nas três classes (sangramento no herói) e com Morel (Firme no lobo): a haste encosta no ícone;
+  com Habilidades aberta, o quadro fica ao lado da janelinha sem cobri-la (com Morel, sem lado livre, espera ela
+  fechar); Esc fecha a janelinha e o quadro volta; Entendi fecha;
+- o AL durante a animação do lobo, sem seta, na faixa;
+- o A0 com o texto correndo, revelado por clique e por Enter (o Continuar chega em ~110 ms) e esperando o texto
+  acabar sozinho: a seta passa ao Continuar; depois dele, o A0 não volta;
+- a luta preparada: vitória (espólio), fuga (de volta ao menu) e derrota (resgate, de volta ao Vau com o contrato).
+
+**Verificações:** testes (os textos novos, a Iniciativa, o formato dos ícones, a apresentação separada), gabarito
+examinado (só o campo `apresentacao` no estado e o texto da Iniciativa na carta; nenhuma escolha, lance ou número
+mudou), pyflakes, fumaça completa (com um cenário novo: o A0 e a derrota na luta preparada; o K1 e o K2 conferem a
+seta encostando no cartão e a rolagem da coluna).
+
+**Roteiro (PowerShell).** As variáveis ficam valendo na janela até serem removidas: um `LUTA` esquecido põe uma luta
+no teste seguinte. Cada linha abaixo limpa antes só as variáveis dos cenários (ou abra uma janela nova por teste):
+
+```powershell
+function Limpar-Cenario { 'CLASSE','LUGAR','PERIODO','VIDA','REC','OURO','PROVISOES','TOCHAS','PONTOS','COMITIVA','RESERVA','FERIDO','ITEM','BAUS','CONTRATO','CONTRATO_EM','LUTA','QUANTOS','VISTAS','TUTORIAL','ETAPA','SEMENTE' | ForEach-Object { Remove-Item "Env:$_" -ErrorAction SilentlyContinue } }
+Limpar-Cenario; python -m tests.navegador.cenarios tutorial                                    # Texto/V no topo (A1)
+Limpar-Cenario; $env:VISTAS="A1"; python -m tests.navegador.cenarios tutorial                  # Mural (K1); "Examinar a fonte nova" mostra o A0
+Limpar-Cenario; $env:VISTAS="A1"; $env:CONTRATO="aceito"; python -m tests.navegador.cenarios tutorial   # o contrato à direita (K2): o clique viaja
+Limpar-Cenario; $env:VISTAS="A1"; $env:BAUS="2"; python -m tests.navegador.cenarios tutorial   # o baú (B1)
+Limpar-Cenario; $env:VISTAS="A1"; $env:LUTA="lobo"; $env:CLASSE="mago"; python -m tests.navegador.cenarios tutorial   # ícones e animação (abra Habilidades)
+Limpar-Cenario; $env:VISTAS="A1"; $env:LUTA="lobo"; $env:QUANTOS="3"; $env:VIDA="0.08"; $env:CONTRATO="aceito"; python -m tests.navegador.cenarios tutorial   # derrota e resgate
+Limpar-Cenario; $env:VISTAS="A1"; $env:LUGAR="charco"; $env:PERIODO="3"; python -m tests.navegador.cenarios tutorial  # a noite (N1)
+```
+
+**Limitações:**
+- O quadro encostado numa coluna cobre o vizinho dele (o cartão da missão acima do contrato, os Ferimentos acima do
+  baú, o minimapa abaixo dos riscos) enquanto estiver à vista; Entendi ou a ação o fecham.
+- A haste do ícone pode cruzar outra carta da mesma coluna (2 px), quando o ícone é da carta de cima.
+- Com Habilidades aberta e o ícone atrás da janelinha, o quadro espera ela fechar.

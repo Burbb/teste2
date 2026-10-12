@@ -223,6 +223,8 @@ body.modo-titulo .vinheta { background: radial-gradient(ellipse 80% 70% at 50% 4
 .acoes-combate .escolha:hover, .acoes-combate .escolha:focus-visible { box-shadow: var(--sombra), inset 0 0 0 1px rgba(226, 189, 99, 0.5); transform: translateY(-2px); }
 .pergunta-rotulo.mira::after { content: " · ou clique na carta do inimigo"; text-transform: none; letter-spacing: 0; font-weight: 400; color: var(--ouro); }
 .dica-pular { text-align: center; font-size: 13px; color: var(--tinta-3); margin-top: 1em; }
+/* Com o quadro do A0 (revelar o texto) à vista, a dica de rodapé não repete o mesmo (o espaço fica: nada pula). */
+body.orientando-texto .dica-pular { visibility: hidden; }
 /* A doca: uma barra fixa sob a página, em vez de botões no meio do texto. */
 #doca { width: 100%; max-width: 860px; display: none; padding: 6px 6px 7px; transition: opacity .2s ease; }
 body:not(.sem-heroi):not(.modo-titulo):not(.em-combate) #doca:not(:empty) { display: block; }
