@@ -117,7 +117,10 @@
 .perigo-tag.medio, .nivel-cam.medio { color: var(--ouro); }
 .perigo-tag.alto, .nivel-cam.alto { color: var(--sangue-2); }
 /* O que a noite e o escuro mudam aqui (o motor manda o texto): ao lado do nível-base, que não muda. */
-.risco-lugar { display: flex; align-items: center; gap: 6px; margin-top: 3px; font-size: 13px; line-height: 1.25; color: var(--ouro-2, #e0b860); }
+/* A hierarquia dos avisos do lugar: a noite em amarelo, o gasto normal de tocha neutro, a falta de luz em vermelho. */
+.risco-lugar { display: flex; align-items: center; gap: 6px; margin-top: 3px; font-size: 13px; line-height: 1.25; color: var(--tinta-2); }
+.risco-lugar.noite { color: var(--ouro-2, #e0b860); }
+.risco-lugar.perigo { color: #ff8a78; }
 .risco-lugar img { flex: none; }
 .nivel-cam { font-weight: 600; }
 /* Caminhos: um cartão de filete escuro por destino, com o ícone do lugar, o nome, o nível e a distância. */

@@ -493,3 +493,16 @@ fome presente, ausente, depois de dormir e depois de salvar e carregar; a tela C
   o menu numerado da página continua sendo o caminho rápido.
 - A linha de condições mostra só a fome; ferimentos continuam no ícone dos recursos e no painel do herói.
 
+### 14.1 Últimos detalhes (1.66.4)
+
+- **Fome:** a linha embaixo das barras virou uma etiqueta compacta (fundo vermelho escuro, borda discreta, ícone e
+  texto claros, 18 px de altura, a mesma da área reservada). "Morrendo de fome" (do terceiro dia) acende mais: fundo
+  mais vivo e borda clara (o motor manda `grave`). Dica e regras iguais.
+- **Fogueira:** a nota "Descansa, não come das suas provisões e não opina nas suas escolhas." saiu do rodapé; fica no
+  menu de cada companheiro, junto de "Deixar no acampamento" (e de "Mandar para o acampamento", na Comitiva). O
+  rodapé mantém a instrução, o contador e as listas.
+- **Avisos do lugar:** o motor diz o tipo de cada linha (`noite`, `custo`, `perigo`) e a tela pinta: a noite em
+  amarelo, o gasto normal de tocha na cor neutra do texto, a falta de luz em vermelho. O painel não mudou de forma.
+- **Gabarito:** as 9 partidas web mudam só nos campos novos (`grave` na fome, `tipo` nos avisos do lugar); sem eles,
+  as transcrições são idênticas.
+

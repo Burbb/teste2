@@ -106,7 +106,7 @@ def condicoes(j):
         dica.append("Mais um amanhecer sem comer e o corpo começa a se consumir: perde vida a cada dia.")
     dica.append("Passa quando você come: 1 provisão no amanhecer, o ensopado da taverna ou comida comprada.")
     return [{"id": "fome", "icone": "osso_diag", "texto": "Com fome" if j.fome < 3 else "Morrendo de fome",
-             "dica": dica}]
+             "grave": j.fome >= 3, "dica": dica}]
 
 
 def perda_fome(j):
@@ -350,12 +350,13 @@ def riscos_do_lugar(g, salas=False):
         return []
     r = []
     if g.noite:
-        r.append({"icone": "lua", "texto": f"Noite: {_noite()}"})
+        r.append({"icone": "lua", "texto": f"Noite: {_noite()}", "tipo": "noite"})
     if escuro(g):
         n = g.j.consumiveis.get("tocha", 0)
         onde = "explorar, caçar, viajar e cada sala" if salas else "explorar, caçar e viajar"
         r.append({"icone": "tocha" if n else "tocha_apagada",
                   "texto": f"Escuro: {onde} gastam 1 tocha por vez (você tem {n})" if n else
                   f"Escuro e sem tocha: Percepção e Destreza −{bal.ESCURO_TESTES}" +
-                  ("; nas salas, o inimigo ataca primeiro" if salas else "")})
+                  ("; nas salas, o inimigo ataca primeiro" if salas else ""),
+                  "tipo": "custo" if n else "perigo"})  # o gasto normal de tocha é neutro; a falta de luz, perigo
     return r

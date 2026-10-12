@@ -16,7 +16,7 @@
     python -m tests.navegador.cenarios broquel       # Guerreiro nv 4 com o Broquel contra três lobos; repete com/sem o Revide (LUTA, ESPEC, NIVEL)
     python -m tests.navegador.cenarios resgate       # a recuperação: fome ou infecção no Charco, à noite (CLASSE, CAUSA, COMITIVA, CONTRATOS)
     python -m tests.navegador.cenarios abertura      # campanha nova no Vau: a despensa e as orientações (CLASSE, TUTORIAL, MOREL, DESPENSA, VIDA_RATOS)
-    python -m tests.navegador.cenarios fogueira      # a comitiva na fogueira e a fome (LUGAR, COMITIVA, RESERVA, FERIDO, FOME, PROVISOES)
+    python -m tests.navegador.cenarios fogueira      # a comitiva na fogueira e a fome (LUGAR, COMITIVA, RESERVA, FERIDO, FOME, PROVISOES, TOCHAS)
     python -m tests.navegador.cenarios gelo          # Mago com a iniciativa contra um lobo: duas Lanças antes de ele agir (PRISAO, NIVEL, SEMENTE)
     python -m tests.navegador.cenarios muralha       # Guerreiro nv 6, Muralha + Contra-ataque (CONTRA) e o Broquel, contra bandidos e um cultista
 
@@ -620,7 +620,7 @@ def muralha(ui):
 def fogueira(ui):
     """A campanha no LUGAR (charco, padrão, à noite: acampar abre a fogueira; vau: a vila, de manhã), CLASSE (padrão
     arqueiro). COMITIVA: quem anda junto, separado por vírgula (padrão "morel,odete"); RESERVA: quem espera no
-    acampamento (padrão "yara"); FERIDO: quem está ferido. FOME=n: n dias sem comer (PROVISOES, padrão 3). Sair leva ao
+    acampamento (padrão "yara"); FERIDO: quem está ferido. FOME=n: n dias sem comer (PROVISOES, padrão 3); TOCHAS=n. Sair leva ao
     título, com o save (para conferir que a fome volta igual)."""
     from rpg.__main__ import menu_principal
     pasta = tempfile.mkdtemp()
@@ -641,6 +641,8 @@ def fogueira(ui):
             cm.membro(g, c)["ferido"] = True
     j = g.j
     j.provisoes, j.fome = int(os.environ.get("PROVISOES", "3")), int(os.environ.get("FOME", "0"))
+    if os.environ.get("TOCHAS"):
+        j.consumiveis["tocha"] = int(os.environ["TOCHAS"])
     j.recalcular()
     j.hp = j.max_hp
     chave = {"vau": "vau_do_turvo"}.get(os.environ.get("LUGAR", "charco"), "charco_dos_juncos")

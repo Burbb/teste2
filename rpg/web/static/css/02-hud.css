@@ -9,8 +9,13 @@
 /* Só as barras: o nome mora na ficha do herói, ao lado (aqui ele se repetia). Embaixo delas, a linha das condições
    (a fome): sempre com a mesma altura, cheia ou vazia, para a fome chegar ou passar sem as barras pularem. */
 .hud-vitais { position: relative; flex: 1.3; min-width: 180px; display: flex; flex-direction: column; justify-content: center; gap: 4px; }
-.hud-condicoes { display: flex; gap: 8px; height: 17px; margin-left: 22px; overflow: hidden; }
-.condicao { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; line-height: 1; font-weight: 600; color: #ff9b8a; cursor: default; white-space: nowrap; }
+.hud-condicoes { display: flex; gap: 6px; height: 18px; margin-left: 22px; overflow: hidden; }
+/* Cada condição, uma etiqueta compacta: fundo vermelho escuro, borda discreta, ícone e texto claros. A grave (morrendo
+   de fome) acende mais. */
+.condicao { display: inline-flex; align-items: center; gap: 3px; height: 18px; padding: 0 6px 0 3px; box-sizing: border-box;
+  font-size: 13px; line-height: 1; font-weight: 600; color: #ffe6d8; background: #561010; border: 1px solid #7a2a22;
+  cursor: default; white-space: nowrap; }
+.condicao.grave { color: #fff3ea; background: #8c1010; border-color: #ff6a50; }
 .condicao img.sprite { --s: 16; }
 .vital { display: flex; align-items: center; gap: 6px; position: relative; }
 .vital img.sprite { --s: 16; }

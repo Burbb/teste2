@@ -30,15 +30,15 @@
   }
 
   /** Embaixo do palco, cada coisa no seu lugar: a instrução e o contador numa linha; quem vai com você e quem fica no
-   *  acampamento, por escrito (a moldura de ouro do nome não é o único sinal), com o estado de cada um; e o que muda
-   *  para quem fica, como nota da linha do acampamento (no menu de cada um, ela vai junto do "Deixar no acampamento"). */
+   *  acampamento, por escrito (a moldura de ouro do nome não é o único sinal), com o estado de cada um. O que muda para
+   *  quem fica vai no menu de cada um, junto do "Deixar no acampamento". */
   function rodape(d) {
     const quem = (m) => `<span class="fr-nome">${h(m.nome.split(" ").pop())}${m.ferido_txt ? ` <small>(${h(m.ferido_txt)})</small>` : ""}${m.fora ? ` <small>(${h(m.fora.curto)})</small>` : ""}</span>`;
     const lista = (ms) => ms.length ? ms.map(quem).join(", ") : '<span class="fr-ninguem">ninguém</span>';
     return `<div class="fogueira-rodape">
         <div class="fr-cab"><span class="fr-instrucao">Clique num companheiro para conversar ou ajustar a comitiva.</span><span class="fr-contador">${h(d.contador)}</span></div>
         <div class="fr-linha vai"><b>Vai com você:</b> ${lista(d.ativos)}</div>
-        ${d.reserva.length ? `<div class="fr-linha fica"><b>No acampamento:</b> ${lista(d.reserva)}<div class="fr-nota">${h(d.nota_acampamento)}</div></div>` : ""}
+        ${d.reserva.length ? `<div class="fr-linha fica"><b>No acampamento:</b> ${lista(d.reserva)}</div>` : ""}
       </div>`;
   }
 

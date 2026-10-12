@@ -85,6 +85,13 @@ class TestLugar(unittest.TestCase):
         self.assertEqual([r["texto"] for r in estado(g)["local"]["riscos"]],
                          ["Escuro: explorar, caçar, viajar e cada sala gastam 1 tocha por vez (você tem 3)"])
 
+    def test_tipo_de_cada_aviso_para_a_cor(self):
+        # a noite em amarelo, o gasto normal de tocha neutro, a falta de luz em vermelho (a tela só pinta)
+        g = na_capela(periodo=3)
+        self.assertEqual([r["tipo"] for r in estado(g)["local"]["riscos"]], ["noite", "custo"])
+        g.j.consumiveis["tocha"] = 0
+        self.assertEqual([r["tipo"] for r in estado(g)["local"]["riscos"]], ["noite", "perigo"])
+
     def test_vila_e_dia_claro_sem_linhas(self):
         g = na_capela()
         ir(g, "bosque_do_moinho")

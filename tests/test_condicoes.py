@@ -22,7 +22,7 @@ class TestFome(unittest.TestCase):
             g.j.fome = dias
             g.j.recalcular()
             [c] = sobrevivencia.condicoes(g.j)
-            self.assertEqual((c["id"], c["texto"]), ("fome", texto))
+            self.assertEqual((c["id"], c["texto"], c["grave"]), ("fome", texto, dias >= 3))
             self.assertEqual(c["dica"][0], f"Ataque, Poder, Agilidade e vida máxima −{pct}%.")
             self.assertIn("30% da vida", c["dica"][1])
             if aviso:  # do segundo dia em diante, o que vem se ela continuar

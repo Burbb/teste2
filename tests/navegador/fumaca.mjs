@@ -1240,8 +1240,8 @@ async function cenarioFogueira(browser) {
     await esperar(".fogueira-rodape", 20000);
     const rod = await page.textContent(".fogueira-rodape");
     conferir(/Clique num companheiro para conversar ou ajustar a comitiva\./.test(rod) && /Comitiva 1\/2/.test(rod)
-      && /Vai com você:\s*Morel/.test(rod) && /No acampamento:\s*Odette/.test(rod) && /Descansa, não come das suas provisões/.test(rod),
-      "embaixo da fogueira: a instrução, o contador, quem vai, quem fica e a nota do acampamento");
+      && /Vai com você:\s*Morel/.test(rod) && /No acampamento:\s*Odette/.test(rod) && !/Descansa/.test(rod),
+      "embaixo da fogueira: a instrução, o contador, quem vai e quem fica (a nota do acampamento fica no menu)");
     await page.click('.figura[data-cid="morel"]');
     conferir(/Deixar no acampamento\s*Descansa, não come das suas provisões/.test(await page.textContent(".menu-item")),
       "no menu de quem vai, a nota junto do \"Deixar no acampamento\"");
