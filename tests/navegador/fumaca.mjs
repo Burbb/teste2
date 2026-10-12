@@ -1242,7 +1242,8 @@ async function cenarioFogueira(browser) {
     conferir(/Deixar no acampamento\s*Descansa, não come das suas provisões/.test(await page.textContent(".menu-item")),
       "no menu de quem vai, a nota junto do \"Deixar no acampamento\"");
     await page.mouse.click(5, 5);
-    await page.click(".dormir-barraca");
+    // O botão flutua sem parar (boiar, 4 px): sem esperar que ele pare, o clique no centro o acerta do mesmo jeito.
+    await page.click(".dormir-barraca", { force: true });
     for (let k = 0; k < 150 && (await page.evaluate(() => !estado || estado.heroi.fome || !pergunta || !!document.querySelector(".fogueira-palco"))); k++) {
       const c = await page.$("#prompt .continuar"); if (c) { await page.waitForTimeout(300); await c.click().catch(() => {}); }
       await page.waitForTimeout(150);
@@ -1392,8 +1393,12 @@ async function cenarioApresentacao(browser) {
     const { proc, url } = await subir("tutorial", { LUTA: "lobo", QUANTOS: "3", VIDA: "0.05", CONTRATO: "aceito", VISTAS: "A1" });
     const { page, erros } = await abrir(browser, url);
     try {
+      let faixa = "", escuro = false;
       for (let k = 0; k < 300; k++) {
-        const s = await page.evaluate(() => ({ luta: !!(estado && estado.combate), pode: !!pergunta && !processando, menu: !!document.querySelector("#predios .predio") && !!pergunta && pergunta.tipo === "opcoes" && !processando }));
+        const s = await page.evaluate(() => ({ luta: !!(estado && estado.combate), pode: !!pergunta && !processando, menu: !!document.querySelector("#predios .predio") && !!pergunta && pergunta.tipo === "opcoes" && !processando,
+          faixa: [...document.querySelectorAll(".faixa-festa")].map((f) => f.textContent.trim()).join("|"), escuro: document.body.classList.contains("derrotado") && !estado.combate && estado.heroi.hp === 0 }));
+        if (s.faixa) faixa = faixa || s.faixa;
+        escuro = escuro || s.escuro;
         if (s.menu && !s.luta && k > 5) break;
         const c = await page.$("#prompt .continuar");
         if (c) await c.click().catch(() => {});
@@ -1407,11 +1412,39 @@ async function cenarioApresentacao(browser) {
       const fim = await page.evaluate(() => ({ local: estado.local.nome, contratos: (estado.contratos || []).length, hp: estado.heroi.hp, menu: !!pergunta && pergunta.tipo === "opcoes" }));
       conferir(fim.menu && fim.local === "Vau do Turvo" && fim.hp > 0 && fim.contratos === 1,
         "derrota na luta preparada: o resgate de sempre, de volta ao menu do Vau, com o contrato");
+      conferir(faixa === "Você caiu" && escuro && !(await page.evaluate(() => document.body.classList.contains("derrotado"))),
+        "a derrota: a faixa \"Você caiu\", o cenário escuro com o herói em 0 e, de volta ao menu, a luz de sempre");
     } finally {
       conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
       await page.close();
       proc.kill();
     }
+  }
+}
+
+async function cenarioAnimacao(browser) {
+  console.log("cenário: o quadro de acelerar a animação (AL), com Entendi pelo teclado");
+  const { proc, url } = await subir("tutorial", { LUTA: "lobo", QUANTOS: "2", VISTAS: "A1,A0" });
+  const { page, erros } = await abrir(browser, url);
+  try {
+    await page.waitForFunction(() => pergunta && !processando && document.querySelector("#roda .roda-botao"), null, { timeout: 20000 });
+    await page.keyboard.press("1");
+    await page.waitForTimeout(200);
+    await (await page.$("#arena .carta.alvejavel"))?.click();
+    await page.waitForFunction(() => /acelerar a animação/.test((document.querySelector(".orientacao:not([hidden])") || {}).textContent || ""), null, { timeout: 10000 }).catch(() => {});
+    await page.waitForTimeout(150);  // o foco vai para o Entendi no quadro seguinte da tela
+    const antes = await page.evaluate(() => ({ foco: document.activeElement && document.activeElement.className, turno: estado.combate.turno }));
+    conferir(antes.foco === "orientacao-entendi", "AL: com a vez dos lobos correndo, o quadro com Entendi (o foco nele)");
+    await page.keyboard.press("Enter");
+    await page.waitForFunction(() => pergunta && !processando, null, { timeout: 15000 });
+    await page.waitForTimeout(500);
+    const depois = await page.evaluate(() => ({ q: !!document.querySelector(".orientacao:not([hidden])"), turno: estado.combate.turno, ap: "AL" in estado.orientacao.apresentacao, perg: pergunta.tipo }));
+    conferir(!depois.q && !depois.ap && depois.turno === antes.turno + 1 && depois.perg === "opcoes",
+      "Enter no Entendi fecha só o quadro: a vez do herói chega normalmente, sem ação escolhida, e ele não volta");
+  } finally {
+    conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
+    await page.close();
+    proc.kill();
   }
 }
 
@@ -1500,6 +1533,7 @@ try {
   await cenarioTutorial(browser);
   await cenarioCiclos(browser);
   await cenarioApresentacao(browser);
+  await cenarioAnimacao(browser);
 } catch (e) {
   falhas.push(String(e));
   console.log("ERRO", e);

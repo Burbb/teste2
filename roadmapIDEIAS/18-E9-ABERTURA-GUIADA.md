@@ -639,7 +639,7 @@ templo). O gabarito não muda (as partidas de referência são do mundo gerado, 
 | B1 | o baú na **Bolsa**, à esquerda (só a seta: ele já tem o anel dourado) | "Um baú trancado na **Bolsa**, à esquerda: clique nele para abrir." (vários: "um clique abre os {2} de uma vez") | um menu com baú de verdade na bolsa, onde ele abre | abrir |
 | SF, S-, S+ | o selo na carta (luta) | "**Firme** ({Lobo}): acabou de se soltar: não pode ser atordoado nem congelado agora." / "**Sangrando** (você): 2 de dano por turno." / "**Esquivo** (você): esquiva +20%." + "O número no selo é quantos turnos faltam (2)." | a primeira vez de cada tipo numa carta, num momento parado da luta (depois da sequência C1–C4) | **Entendi**, ou a ação seguinte |
 
-**Ordem nos menus:** V2, N1, V1, A1, K2, K3, K4, B1, T1, V4, V5. O Mural (K1), a viagem (V3) e o item achado (E1)
+**Ordem nos menus:** V2, N1, V1, A1, K2, K3, K4, B1, T1, V4, V5 (desde a 1.68.2, o K2 vem antes de todas: seção 19). O Mural (K1), a viagem (V3) e o item achado (E1)
 valem na tela deles; os selos, na luta.
 
 **8. Primeiro atendimento grátis no templo** (`Jogo.templo_gratis`, autorizado por Jean): na campanha, a primeira cura
@@ -776,3 +776,60 @@ Limpar-Cenario; $env:VISTAS="A1"; $env:LUGAR="charco"; $env:PERIODO="3"; python 
   baú, o minimapa abaixo dos riscos) enquanto estiver à vista; Entendi ou a ação o fecham.
 - A haste do ícone pode cruzar outra carta da mesma coluna (2 px), quando o ícone é da carta de cima.
 - Com Habilidades aberta e o ícone atrás da janelinha, o quadro espera ela fechar.
+
+## 19. Três correções (1.68.2)
+
+Pedido de Jean depois de testar a 1.68.1. Sem ampliar o tutorial nem mexer em combate, recuperação, economia ou
+sorteio.
+
+**1. O contrato aceito.** *Reproduzido* no fluxo real, desde a criação: a despensa com a habilidade (C1–C4), a vila
+(V1), o Mural, aceitar, Voltar, sem outra ação. De volta à vila, aparecia o A1 (o botão Texto), que ainda não tinha
+sido visto e vinha antes do K2 na fila; o K2 só vinha depois de uma resposta ao menu (o Passear), que passava o A1.
+Começar o cenário com `CONTRATO=aceito` não mostrava isso. *Corrigido:* o K2 vem antes de todas as orientações do
+menu (é a consequência do que a pessoa acabou de fazer) e passa, como antes, na primeira resposta ao menu ou no
+Entendi; as outras seguem na ordem de antes. Dentro do Mural nada muda: o cartão à direita só viaja fora dele, o
+Mural não fecha sozinho, outros contratos continuam podendo ser aceitos e nenhum quadro cobre a mensagem do aceite.
+
+**2. Entendi no quadro da animação (AL).** O quadro ganhou o Entendi (Encerrar tutorial continua ao lado, menor). Ele
+recebe o foco ao aparecer: Enter ou espaço fecham só o quadro, sem adiantar a animação nem escolher ação; o clique
+nele também (o quadro é dele); o segundo clique de um clique duplo não escolhe nada na roda (a guarda do Gesto). A
+luta não espera: sem Entendi, o quadro fica da vez dos inimigos até a próxima ação do herói, e um ícone de efeito
+novo espera ele sair (antes, o ícone o tirava da tela). Se a luta acaba com ele à vista, ele volta na próxima.
+
+**3. A derrota.** *Reproduzido:* a luta acabava, a arena sumia e ficava a vila clara, com o herói em 0 de vida, "Você
+tombou diante de…" e o Continuar. *Corrigido:* na derrota que encerra a luta (`Combate.fim`), o motor manda
+`celebrar("derrota", {morte})`, ainda com a arena à vista; a tela faz uma sequência curta (~1,3 s, adiantável pelo
+clique ou tecla de sempre): a carta do herói afunda, inclina e se apaga; a tela pulsa vermelho (a mesma camada da
+dor); a faixa diz "Você caiu" (vem o resgate) ou "Você morreu" (modo hardcore); um som curto (baque e três notas
+graves), que respeita o botão de som. Depois, o cenário fica escuro e sem os prédios enquanto o herói está caído; a
+luz volta com o amanhecer do resgate (quando o painel já mostra o herói tratado) ou com o próximo menu (o título,
+depois da morte). A Pena de Fênix e a proteção do mendigo, que levantam o herói, não chegam a `Combate.fim`: nada
+disso aparece. Nenhuma penalidade, recuperação ou estado do herói mudou; nenhum Continuar novo. No replay (recarregar
+a página no meio) e no texto instantâneo, só o escuro, sem som nem faixa. O histórico ganha "▸ Você caiu" / "▸ Você
+morreu".
+
+**Cenário de teste:** `tutorial` aceita `HARDCORE=1`, `PENA=n` e `PROTECAO=mendigo`; a morte no hardcore, já na luta
+preparada, vai ao título como no jogo.
+
+**Conferido na tela (1500 e 1280 px):**
+- o fluxo real desde a despensa: aceito o contrato e Voltar, o K2 na hora, com a seta no cartão;
+- o AL: aparece com a vez dos lobos, o foco no Entendi; Enter, clique e clique duplo fecham só ele (a vez do herói
+  chega no mesmo turno, sem ação escolhida, e ele não volta); sem Entendi, fica até a ação do herói e então sai;
+- a derrota com resgate: a faixa "Você caiu" com a arena à vista, a carta caída, o pulso vermelho, o cenário escuro
+  com o herói em 0 e o Continuar de sempre; o "Tudo escurece…" com o amanhecer, a luz de volta, o menu do Vau;
+- a morte no hardcore: "Você morreu", a cena da morte no escuro, o título;
+- a Pena de Fênix e o mendigo: o herói em 0, de pé com 30, a vitória; nenhuma faixa de derrota, nenhum escuro;
+- vitória e fuga como antes; com o tutorial desligado, a mesma derrota;
+- o som: uma vez por derrota; recarregando a página no meio da queda, nenhum som nem faixa de novo (o escuro fica).
+
+**Verificações:** testes (o K2 antes do A1 e do V2 logo depois do aceite), gabarito examinado (só a linha nova
+`CELEBRAR derrota` antes de cada queda, 37 nas 24 partidas; nada mais mudou), pyflakes, fumaça completa (com o AL pelo
+teclado e a faixa e o escuro da derrota). Duas rodadas completas pararam no cenário da fogueira (o botão "Dormir até o
+amanhecer" flutua sem parar, a animação `boiar`, e o clique do teste esperava ele ficar parado); sozinho, ele
+passava. O teste agora clica sem esperar a parada (o botão anda 4 px e o clique no centro o acerta); a rodada
+completa seguinte passou inteira.
+
+**Limitações:**
+- O som "morte" da carta (quando a vida chega a 0, de antes) toca junto do novo, um pouco antes dele.
+- Fora do combate (a fome e a infecção que derrubam), não há a sequência: o pedido é só para a derrota da luta.
+

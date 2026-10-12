@@ -358,6 +358,11 @@ class Combate(Golpes, AcoesDoHeroi, TurnosDosOutros):
         abertura.depois_da_luta(g, self.habilidades_usadas > 0)
         self.ui.atualizar()
         self.ui.fim_combate(resultado)  # o último golpe aparece antes da vitória
+        if resultado == "derrota":
+            # A derrota que encerra a luta (a Pena de Fênix e a proteção, que levantam o herói, não chegam aqui): a
+            # tela mostra a queda, com a arena ainda à vista. "morte": no modo hardcore ela é definitiva (fim_de_jogo);
+            # fora dele, vem o resgate. Nada muda no herói.
+            g.ui.celebrar("derrota", {"morte": bool(g.hardcore)})
         g.combate_ativo = None
         comitiva.encerrar_combate(self, resultado)
         if resultado == "vitoria" and any(e.chefe for e in self.inimigos):

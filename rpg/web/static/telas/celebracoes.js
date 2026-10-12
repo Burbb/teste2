@@ -191,6 +191,23 @@
     setTimeout(sair, Math.min(9000, 3000 + d.texto.length * 45));
   }
 
+  /** A derrota que encerra a luta (o motor só a manda nessa hora: a Pena de Fênix e a proteção não chegam aqui): a
+   *  carta do herói cai e se apaga, a tela pulsa vermelho, a faixa diz o resultado ("Você caiu": vem o resgate; "Você
+   *  morreu": modo hardcore) e um som curto. Depois, o cenário fica escuro (sem os prédios da vila) até o herói
+   *  acordar (o amanhecer do resgate) ou o próximo menu: a vila não aparece como se ele já estivesse de pé. Rápida
+   *  (~1,3 s) e adiantável pelo clique ou tecla de sempre; no replay e no instantâneo, só o escuro. */
+  function queda(d, instantaneo) {
+    document.body.classList.add("derrotado");
+    if (instantaneo) return Promise.resolve();
+    document.querySelector('#arena .carta[data-uid="j"]')?.classList.add("caida");
+    App.som("derrota");
+    doer();
+    faixa(d.morte ? "Você morreu" : "Você caiu", null, "caveira", "derrota");
+    return (async () => { for (let t = 0; t < 1300 && !pular; t += 50) await new Promise((r) => setTimeout(r, 50)); })();
+  }
+  /** O herói acordou (o amanhecer do resgate) ou um menu chegou: o cenário volta à luz de sempre. */
+  function fimDaQueda() { document.body.classList.remove("derrotado"); }
+
   function celebrar(m, instantaneo) {
     const d = m.dados;
     if (m.tipo === "equipou") return instantaneo ? (fecharAchado(), Promise.resolve()) : voarParaEspaco(d);
@@ -214,6 +231,7 @@
       }
       return new Promise((r) => setTimeout(r, 700));
     }
+    if (m.tipo === "derrota") return queda(d, instantaneo);
     if (m.tipo === "vitoria") {
       if (instantaneo) return Promise.resolve();
       App.som("vitoria");
@@ -241,7 +259,7 @@
     }
     const caixa = document.getElementById("celebracao");
     if (m.tipo === "contratos") return instantaneo ? Promise.resolve() : pagarContratos(caixa, d);
-    if (m.tipo === "amanhecer") return instantaneo ? Promise.resolve() : amanhecer(caixa, d);
+    if (m.tipo === "amanhecer") { fimDaQueda(); return instantaneo ? Promise.resolve() : amanhecer(caixa, d); }
     if (m.tipo === "espolio") return instantaneo ? Promise.resolve() : Sensacao.espolio(caixa, d);
     if (m.tipo === "atributo") return instantaneo ? Promise.resolve() : seloAtributo(d);
     if (m.tipo === "chegada") return instantaneo ? Promise.resolve() : chegada(d);
@@ -375,6 +393,7 @@
     if (m.tipo === "atributo") return `▸ +${d.valor} ${d.nome} permanente`;
     if (m.tipo === "chegada") return `▸ ${d.primeira ? "Descoberto" : "Chegada"}: ${d.nome}`;
     if (m.tipo === "exausto") return `▸ Exausto: ${d.texto}`;
+    if (m.tipo === "derrota") return d.morte ? "▸ Você morreu" : "▸ Você caiu";
     if (m.tipo === "mestre") return `▸ Mestre caçador: ${d.plural} (+10% de dano contra eles)`;
     if (m.tipo === "equipou" && d.achado) return `▸ Vestiu: ${d.item.nome}`;
     if (m.tipo === "guardou") return `▸ Na mochila: ${d.item.nome}`;
@@ -382,5 +401,5 @@
     return "";
   }
 
-  Object.assign(Telas, { celebrar, resumoCelebracao });
+  Object.assign(Telas, { celebrar, resumoCelebracao, fimDaQueda });
 })();

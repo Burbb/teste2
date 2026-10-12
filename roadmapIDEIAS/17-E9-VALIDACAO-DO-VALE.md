@@ -23,6 +23,8 @@ Avaliação integrada do Vale do Turvo como primeiro capítulo (a E9 antecipada,
   pagamento, o primeiro baú, os selos e adiantar a apresentação ([18](18-E9-ABERTURA-GUIADA.md), seção 17).
 - **Revisão pontual, 1.68.1 (seção 26):** textos curtos, os ícones de efeito, adiantar separado, a seta no alvo e a
   derrota no cenário de teste ([18](18-E9-ABERTURA-GUIADA.md), seção 18).
+- **Três correções, 1.68.2 (seção 27):** o contrato aceito logo na volta à vila, o Entendi no quadro da animação e a
+  sequência da derrota ([18](18-E9-ABERTURA-GUIADA.md), seção 19).
 - **Quarta entrega, 1.65.2 e 1.65.3 (seção 19):** a partida da Quibia lida; os contratos pagos depois do resgate; o
   ×N dos baús em destaque. A especificação da abertura guiada fica em [18](18-E9-ABERTURA-GUIADA.md).
 - **Correção 1.65.1 (seção 18):** os três pontos que faltaram na mensagem cortada: a percepção do Mago na água, o nome
@@ -907,5 +909,11 @@ misturando quatro assuntos, setas que paravam longe do contrato, do baú e do í
 sobre a lista de Habilidades e a derrota na luta preparada do cenário `tutorial`, que parava o teste. Tudo reproduzido
 antes (a derrota, no console do servidor; as setas, nas capturas e nas medidas); regras, sorteio e equilíbrio iguais.
 Detalhe na seção 18 do 18.
+
+## 27. Três correções (1.68.2)
+
+Pedido de Jean depois da 1.68.1: o quadro do contrato aceito só aparecia depois de Passear (reproduzido no fluxo real:
+o A1 ainda pendente vinha antes na fila), o quadro da animação sem Entendi e a derrota sem sinal do resultado (a vila
+clara com o herói em 0). Regras, sorteio e equilíbrio iguais. Detalhe na seção 19 do 18.
 
 **A E9 continua aberta** até a validação com jogadores novos.

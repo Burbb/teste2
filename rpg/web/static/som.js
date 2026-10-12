@@ -310,7 +310,13 @@ const Som = (() => {
       estalo(t, 300, 0.5, 0.3);
       estalo(t + 0.08, 180, 0.4, 0.35);
     },
-    vitoria() {
+    derrota() {  // a queda que encerra a luta: um baque surdo e três notas graves descendo, que se apagam
+      const t = ctx.currentTime;
+      estalo(t, 120, 0.45, 0.25);
+      sopro(t, 0.4, 500, 90, 0.22, 0.9, "lowpass");
+      [[220, 0.12], [185, 0.32], [147, 0.54]].forEach(([f, d], i) => tom(t + d, f, 0.09, 0.5 + i * 0.25, "triangle", f * 0.94));
+    },
+        vitoria() {
       const t = ctx.currentTime;
       [[392, 0], [523, 0.12], [659, 0.24], [784, 0.36]].forEach(([f, d]) => tom(t + d, f, 0.1, 0.35, "square"));
       tom(t + 0.48, 1046, 0.1, 0.9, "square");

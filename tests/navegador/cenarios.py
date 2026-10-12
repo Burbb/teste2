@@ -676,11 +676,12 @@ def tutorial(ui):
     talento). COMITIVA: quem anda junto ("morel,odete"); RESERVA: quem espera no acampamento; FERIDO. ITEM=1: um
     item da arma para comparar logo na chegada. BAUS=n na bolsa. CONTRATO=aceito ou feito: um contrato de caça no
     CONTRATO_EM (bosque, padrão, ou charco). LUTA=família (QUANTOS): uma luta logo na chegada. VISTAS: as orientações já vistas, além da luta e do Mural ("V3,N1").
+    HARDCORE=1: morte definitiva. PENA=n (Penas de Fênix) e PROTECAO=mendigo: o que levanta o herói na luta.
     Sair leva ao título, com o save (para carregar com orientações pendentes)."""
     from rpg import abertura as ab, itens, missoes
     from rpg.__main__ import menu_principal
     pasta = tempfile.mkdtemp()
-    g = Jogo(ui, seed=int(os.environ.get("SEMENTE", "5")), pasta_saves=pasta, hardcore=False)
+    g = Jogo(ui, seed=int(os.environ.get("SEMENTE", "5")), pasta_saves=pasta, hardcore=os.environ.get("HARDCORE") == "1")
     ui.jogo = g
     g.iniciar("Jean", os.environ.get("CLASSE", "guerreiro"), "turvo")
     ab.comecar(g, os.environ.get("TUTORIAL", "1") != "0")
@@ -725,14 +726,18 @@ def tutorial(ui):
             c["feito"], c["concluido"] = c["total"], True
         g.contratos.append(c)
         a["vistas"].append("K1")
-    if os.environ.get("LUTA"):  # uma luta comum contra LUTA (família), para os selos das cartas
-        g.ui.cena(g.loc["nome"], g.contexto_cena(), "evento")
-        lutar(g, [g.inimigo(os.environ["LUTA"], nivel=1) for _ in range(int(os.environ.get("QUANTOS", "2")))])
-    if os.environ.get("ITEM"):
-        g.ui.cena(g.loc["nome"], g.contexto_cena(), "evento")
-        g.dizer("No chão, entre a palha, alguma coisa brilha.")
-        g.oferecer_equip(itens.gerar_equip(random.Random(4), j.classe, j.nivel, slot="arma", qualidade=1))
-    try:
+    if os.environ.get("PENA"):  # PENA=1: uma Pena de Fênix na bolsa (cair na luta levanta o herói)
+        j.consumiveis["pena_fenix"] = int(os.environ["PENA"])
+    if os.environ.get("PROTECAO"):  # PROTECAO=mendigo (ou santuario): a proteção que levanta uma vez
+        g.marcar("bencao_fenix", os.environ["PROTECAO"])
+    try:  # a morte no modo hardcore (HARDCORE=1) já na luta preparada leva ao título, como no jogo
+        if os.environ.get("LUTA"):  # uma luta comum contra LUTA (família), para os selos das cartas
+            g.ui.cena(g.loc["nome"], g.contexto_cena(), "evento")
+            lutar(g, [g.inimigo(os.environ["LUTA"], nivel=1) for _ in range(int(os.environ.get("QUANTOS", "2")))])
+        if os.environ.get("ITEM"):
+            g.ui.cena(g.loc["nome"], g.contexto_cena(), "evento")
+            g.dizer("No chão, entre a palha, alguma coisa brilha.")
+            g.oferecer_equip(itens.gerar_equip(random.Random(4), j.classe, j.nivel, slot="arma", qualidade=1))
         g.rodar()
     except FimDeJogo:
         pass

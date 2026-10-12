@@ -77,6 +77,19 @@ class TestContrato(unittest.TestCase):
         ab.contexto(g, "mural", {"lista": [longe, alvo]})
         self.assertIsNone(ab.atual(g))  # sem nada adequado, nada se força (e a oferta não muda)
 
+    def test_aceito_o_contrato_o_k2_vem_antes_das_outras(self):
+        # O fluxo de Jean: o Texto (A1) e a vida baixa (V2) ainda pendentes; aceito o contrato, a volta à vila mostra o
+        # contrato, sem esperar outra resposta ao menu.
+        g = depois_da_despensa()
+        g.mundo["abertura"]["vistas"].remove("A1")
+        g.j.hp = int(g.j.max_hp * 0.4)
+        c = contrato(g, "charco_dos_juncos")
+        g.contratos = []
+        g.aceitar_contrato(c, {"lista": [c]})
+        self.assertEqual(oid(g), "K2")
+        ab.depois_do_menu(g, ab.proxima(g), "passear")  # respondido o menu, a fila segue
+        self.assertEqual(oid(g), "V2")
+
     def test_aceitar_qualquer_um_cumpre_k1(self):
         g = depois_da_despensa()
         c = contrato(g)

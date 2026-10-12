@@ -138,6 +138,10 @@ body.em-combate #hud-linha { justify-content: flex-end; }
 .carta.morta .icone img { opacity: 0.2; }
 .carta.morta .icone::after { content: ""; position: absolute; inset: 0; background: var(--caveira) center / 30px no-repeat; }
 .carta.morrendo { animation: morrer 0.7s ease-in forwards; }
+/* O herói que cai na derrota final: a carta afunda, inclina e se apaga (e fica assim até a arena sair). */
+.carta.caida { animation: cair 0.9s ease-in forwards; }
+@keyframes cair { 0% { filter: brightness(1.6); transform: none; } 30% { transform: translateY(-4px) rotate(1deg); } 100% { filter: grayscale(1) brightness(0.45); opacity: 0.55; transform: translateY(10px) rotate(-5deg); } }
+@media (prefers-reduced-motion: reduce) { .carta.caida { animation: none; filter: grayscale(1) brightness(0.45); opacity: 0.55; } }
 @keyframes morrer { 0% { filter: brightness(2.5); transform: translateY(-3px); } 40% { transform: translateX(3px) rotate(-3deg); } 100% { filter: grayscale(1) brightness(0.5); transform: none; } }
 .carta .flutua { top: -14px; }
 .flutua.crit { color: var(--ouro); font-size: 34px; animation-duration: 1.4s; }

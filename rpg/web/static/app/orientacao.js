@@ -92,6 +92,7 @@ const Orientacao = (() => {
   function entendi() {
     const id = passo.split("|")[0];
     if (id === "C4") { if (luta) luta.feito = true; }
+    else if (id === "AL") passou("AL");  // na luta: sem pausa (os ícones de efeito seguem podendo aparecer)
     else if (id) { fechados.add(id); pausa = cenaAgora(); enviar("visto:" + id); }
     esconder();
   }
@@ -260,9 +261,9 @@ const Orientacao = (() => {
 
   // ---------------------------------------------------------------- desenhar
   function desenhar() {
-    const regular = alvo();
-    if (regular && alMostrado) passou("AL");  // um ícone novo na carta toma o lugar: o AL já foi visto
-    const a = regular || apresentacao();
+    // O AL à vista fica até o Entendi ou a próxima ação da pessoa: um ícone novo na carta espera ele (não o tira da
+    // tela antes de dar para ler).
+    const a = (alMostrado && apresentacao()) || alvo() || apresentacao();
     // Fora da luta, a faixa entra assim que a orientação vale (antes de o texto correr: nada pula quando o menu chega)
     // e sai quando a cena muda sem que ela continue valendo (não a cada piscar da pergunta, nem logo no "Entendi").
     const o = estado && estado.orientacao;
@@ -295,7 +296,8 @@ const Orientacao = (() => {
       if (chave !== passo) {
         quadro.innerHTML = a.html;
         document.body.classList.toggle("orientando-texto", a.id === "A0");
-        if (a.id === "C4") requestAnimationFrame(() => quadro.querySelector(".orientacao-entendi")?.focus({ preventScroll: true }));
+        // O Entendi recebe o foco (Enter e espaço fecham só o quadro, sem escolher ação nem adiantar a animação).
+        if (a.id === "C4" || a.id === "AL") requestAnimationFrame(() => quadro.querySelector(".orientacao-entendi")?.focus({ preventScroll: true }));
       }
       passo = chave;
       layout = lay;
@@ -341,7 +343,7 @@ const Orientacao = (() => {
       if (pergunta) animando = false;
       if (!ap.AL || fechados.has("AL") || (o.atual && o.atual.id === "combate") || !(animando || (alMostrado && pergunta))) return null;
       alMostrado = true;
-      return { id: "AL", el: null, html: botoes(negrito(ap.AL)), luta: true };
+      return { id: "AL", el: null, html: botoes(negrito(ap.AL), true), luta: true };
     }
     // O A0 mora na faixa de baixo, junto do Continuar: não quando a orientação da vez já reservou a do alto.
     if (!ap.A0 || fechados.has("A0") || !["", "baixo"].includes(faixaPedida(o.atual))) return null;
@@ -516,7 +518,11 @@ const Orientacao = (() => {
   function aoEstado(e) {
     const emLuta = !!(e && e.combate);
     if (emLuta && !luta) luta = { c4: null, feito: false };
-    if (!emLuta) { luta = null; animando = false; if (faixaDe === "luta") soltarFaixa(); }
+    if (!emLuta) {
+      luta = null; animando = false;
+      if (alMostrado && !fechados.has("AL")) alMostrado = false;  // a luta acabou com ele à vista: volta na próxima
+      if (faixaDe === "luta") soltarFaixa();
+    }
     if (e && e.orientacao && e.orientacao.ligado) dispensado = false;
     const agora = e && e.orientacao && e.orientacao.atual;
     const ap = (e && e.orientacao && e.orientacao.apresentacao) || {};

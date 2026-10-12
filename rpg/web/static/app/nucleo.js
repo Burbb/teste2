@@ -232,7 +232,7 @@ async function tratar(m) {
     case "bloco": bloco(m); break;
     case "mapa": mapaNaPagina(m); break;
     case "escolhido": eco(m); break;
-    case "opcoes": Gesto.novaTela(); mostrarOpcoes(m); soltarRolagem(); Telas.atualizarGrimorio(); break;
+    case "opcoes": Gesto.novaTela(); Telas.fimDaQueda(); mostrarOpcoes(m); soltarRolagem(); Telas.atualizarGrimorio(); break;
     case "continuar": Gesto.novaTela(); mostrarContinuar(m); soltarRolagem(); break;
     case "pergunta": Gesto.novaTela(); mostrarPergunta(m); soltarRolagem(); break;
     case "erro": anexar(el("p", "erro", "Algo deu errado: " + esc(m.texto))); break;

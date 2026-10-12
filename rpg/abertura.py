@@ -277,7 +277,9 @@ def proxima(g):
     if ctx:
         f = {"achado": _e1, "viagem": _v3, "mural": _k1}.get(ctx[0])
         return f(g, a, ctx[1]) if f else None
-    for f in (_v2, _n1, _v1, _a1, _k2, _k3, _k4, _b1, _t1, _v4, _v5):
+    # O contrato recém-aceito (K2) vem antes de todas: é a consequência do que a pessoa acabou de fazer, e passa na
+    # primeira resposta ao menu (ou no Entendi). Depois, preparar e se recuperar antes de chamar para coisas novas.
+    for f in (_k2, _v2, _n1, _v1, _a1, _k3, _k4, _b1, _t1, _v4, _v5):
         o = f(g, a)
         if o:
             return o
