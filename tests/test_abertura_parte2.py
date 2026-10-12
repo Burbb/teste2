@@ -30,7 +30,7 @@ def depois_da_despensa(classe="guerreiro", tutorial=True, roteiro=(), pasta=None
     g = nova(classe, tutorial, roteiro, pasta=pasta)
     a = g.mundo["abertura"]
     a.update(despensa="feita", caneca=False)
-    a["vistas"] += ["combate", "V1"]
+    a["vistas"] += ["combate", "V1", "A1"]  # A1 (adiantar) vem depois da primeira luta: aqui, já visto
     g.contagem["morel_na_taverna"] = 1  # já encontrado: a abertura não o apresenta de novo
     return g
 
@@ -46,7 +46,11 @@ class TestRecuperar(unittest.TestCase):
         g.j.hp = int(g.j.max_hp * 0.5)
         o = ab.atual(g)
         self.assertEqual((o["id"], o["ancora"]), ("V2", "predio:templo"))
-        self.assertIn("devolve a vida toda", o["texto"])
+        self.assertIn("primeiro atendimento no **Templo** é grátis", o["texto"])
+        self.assertIn("o preço depende da vida que falta", o["texto"])
+        g.marcar("templo_gratis_usado")
+        o = ab.atual(g)
+        self.assertIn("o preço depende da vida que falta (agora,", o["texto"])  # o valor de agora, não uma tarifa
         g.j.ouro = ab.preco_dormir(g)  # o templo custa mais do que isso: a taverna devolve parte da vida
         g.j.hp = 5
         o = ab.atual(g)
@@ -73,6 +77,7 @@ class TestRecuperar(unittest.TestCase):
 
     def test_sem_ouro_nao_aponta_nada_e_nao_bloqueia(self):
         g = depois_da_despensa()
+        g.marcar("templo_gratis_usado")
         g.j.hp, g.j.ouro = 5, 0
         self.assertNotEqual(oid(g), "V2")
 
@@ -201,7 +206,7 @@ class TestExplorarNoiteTalentos(unittest.TestCase):
             o = ab.atual(g)
             ordem.append(o["id"])
             ab.visto(g, o["id"])
-        self.assertEqual(ordem, ["V2", "V1", "T1", "V4"])
+        self.assertEqual(ordem, ["V2", "V1", "T1", "V4"])  # A1 já visto pelo ajudante
 
 
 class TestEquipamento(unittest.TestCase):

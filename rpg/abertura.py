@@ -6,8 +6,9 @@ Duas partes, separadas de propósito:
   curta e previsível), a caneca por conta da casa (uma vez o serviço de bebida e rumores, sem pagar) e a oportunidade
   de sentar com Morel, pelo evento que já existe (`morel_na_taverna`), só enquanto ele nunca apareceu.
 - **As orientações**, que a caixa "Mostrar tutorial" liga: os quadros da primeira luta (C1–C4), o do Mural (V1) e os
-  da segunda parte (V2 recuperar, V3 provisões, V4 comitiva, V5 explorar, E1 equipamento, T1 talentos, N1 noite), uma
-  por vez, quando fazem sentido. O motor diz qual vale agora e o texto dela; a tela desenha. Ligadas ou não, a
+  da segunda parte (V2 recuperar, V3 provisões, V4 comitiva, V5 explorar, E1 equipamento, T1 talentos, N1 noite) e
+  os ciclos básicos (K1–K4 um contrato do mural ao pagamento, B1 o primeiro baú, S os selos da luta, A1 adiantar a
+  apresentação), uma por vez, quando fazem sentido. O motor diz qual vale agora e o texto dela; a tela desenha. Ligadas ou não, a
   abertura, as recompensas e o sorteio são os mesmos: nada aqui sorteia, e o que se marca como visto (a ação que a
   orientação ensina aconteceu, ou a ocasião dela passou) não depende da caixa.
 
@@ -238,7 +239,7 @@ def atual(g):
     if g.combate_ativo is None:
         return proxima(g)
     if not _combate_pendente(g) or not j.habilidades:
-        return None
+        return selo_da_vez(g)
     hid = hab_inicial(j) if hab_inicial(j) in j.habilidades else j.habilidades[0]
     return {"id": "combate", "passos": {
         "C1": "Clique em **Habilidades** (tecla 2).",
@@ -274,9 +275,9 @@ def proxima(g):
         return None
     ctx = getattr(g, "abertura_contexto", None)
     if ctx:
-        f = {"achado": _e1, "viagem": _v3}.get(ctx[0])
+        f = {"achado": _e1, "viagem": _v3, "mural": _k1}.get(ctx[0])
         return f(g, a, ctx[1]) if f else None
-    for f in (_v2, _n1, _v1, _t1, _v4, _v5):
+    for f in (_v2, _n1, _v1, _a1, _k2, _k3, _k4, _b1, _t1, _v4, _v5):
         o = f(g, a)
         if o:
             return o
@@ -314,7 +315,10 @@ def _v2(g, a):
     taverna = (f"Dormir na **Taverna** ({dormir} de ouro) devolve {TODO.get(r, r)} e "
                f"{round(bal.TAVERNA_VIDA * 100)}% da vida{' (menos, com fome)' if j.fome else ''}.")
     if vida and cura:
-        texto = f"Vida baixa. O **Templo** devolve a vida toda por {templo[1][2]} de ouro."
+        texto = ("Vida baixa. O primeiro atendimento no **Templo** é grátis e devolve a vida toda; depois, o preço "
+                 "depende da vida que falta." if not templo[1][2] else
+                 f"Vida baixa. O **Templo** devolve a vida toda; o preço depende da vida que falta (agora, "
+                 f"{templo[1][2]} de ouro).")
         if rec and dorme:
             texto += f" {POUCO.get(r, r)}: {taverna[0].lower()}{taverna[1:]}"
         return {"id": "V2", "texto": texto + feridas, "ancora": "predio:templo"}
@@ -404,9 +408,138 @@ def _n1(g, a):
                                  f"topo). {luz}", "ancora": "mod:noite", "entendi": True}
 
 
+# ------------------------------------------------------------------ os ciclos básicos (K1–K4, B1, S, A1)
+def _contrato_seguido(g):
+    """O contrato que as orientações acompanham: o mais antigo em andamento (abandonado, passa ao seguinte)."""
+    return next((c for c in g.contratos if not c.get("concluido")), None)
+
+
+def _adequado(g, c):
+    """Um contrato bom para aprender: caça de bando (não um alvo de elite) num lugar do nível do herói ou abaixo."""
+    from .mundo import nivel_regiao
+    return c["tipo"] == "caca" and nivel_regiao(g.mundo["locais"][c["local"]]) <= g.j.nivel
+
+
+def _k1(g, a, oferta):
+    """No Mural, sem contrato aceito ainda: um contrato de caça adequado ao começo (o mais fácil da oferta, se houver;
+    a oferta é a de sempre, nada é gerado para o tutorial). Aceitar é da pessoa."""
+    from . import dados
+    from .mundo import nivel_regiao
+    if not _pendente(a, "K1") or not oferta or g.contratos:
+        return None
+    bons = sorted((c for c in oferta["lista"] if _adequado(g, c)),
+                  key=lambda c: (nivel_regiao(g.mundo["locais"][c["local"]]), c["total"]))
+    if not bons:
+        return None
+    c = bons[0]
+    lugar = g.mundo["locais"][c["local"]]["nome"]
+    plural = dados.FAMILIAS[c["familia"]]["plural"]
+    return {"id": "K1", "texto": f"Contrato de caça: {c['total']} {plural} em {lugar}. **Aceitar** o põe no Diário; "
+                                 f"cumprido, ele paga {c['ouro']} de ouro quando você voltar a uma vila.",
+            "ancora": f"aceitar:{c['id']}"}
+
+
+def _k2(g, a):
+    """Um contrato aceito e o lugar dele longe daqui: onde fica (a linha do contrato, à direita, e o ! no mapa)."""
+    c = _contrato_seguido(g)
+    if not _pendente(a, "K2") or not _pendente(a, "K4") or not c:
+        return None
+    lid = c["destino"] if c["tipo"] == "entrega" else c["local"]
+    if lid == g.loc["id"]:
+        return None
+    lugar = g.mundo["locais"][lid]["nome"]
+    return {"id": "K2", "texto": f"O contrato é em **{lugar}**: a linha dele, em Contratos, à direita, e o \"!\" no "
+                                 "mapa mostram onde. Clique na linha (ou em Viajar) para ir.",
+            "ancora": f"contrato:{c['id']}", "entendi": True}
+
+
+def _k3(g, a):
+    """No lugar do contrato: a ação dele no menu (caçar o bando, rastrear o alvo)."""
+    from . import dados
+    if not _pendente(a, "K3") or not _pendente(a, "K4"):
+        return None
+    c = next(iter(g.contratos_aqui()), None)
+    if not c:
+        return None
+    if c["tipo"] == "alvo":
+        texto = "**Rastrear** leva até o alvo do contrato: vencê-lo cumpre o trabalho."
+    else:
+        f = dados.FAMILIAS[c["familia"]]
+        a_ = "a" if f["g"] == "f" else "o"
+        texto = (f"**Caçar** segue os rastros d{a_}s {f['plural']} do contrato: cada um{'a' if a_ == 'a' else ''} "
+                 f"abatid{a_} aqui conta ({c['feito']}/{c['total']}), também {a_}s que aparecerem explorando.")
+    return {"id": "K3", "texto": texto, "ancora": "opcao:(contrato"}
+
+
+def _k4(g, a):
+    """O contrato cumprido e ainda não pago: o pagamento vem na chegada a uma vila (a tela mostra quando paga)."""
+    c = next((c for c in g.contratos if c.get("concluido")), None)
+    if not _pendente(a, "K4") or not c or g.loc["tipo"] == "vila":
+        return None
+    return {"id": "K4", "texto": f"Contrato cumprido. A recompensa ({c['ouro']} de ouro e {c['xp']} XP) é paga quando "
+                                 "você chegar a uma vila.", "ancora": f"contrato:{c['id']}", "entendi": True}
+
+
+def _b1(g, a):
+    """O primeiro baú de verdade na bolsa, onde dá para abri-lo: o espaço dele."""
+    n = g.j.consumiveis.get("bau", 0)
+    if not _pendente(a, "B1") or n <= 0 or g.motivo_inutil("bau"):
+        return None
+    return {"id": "B1", "texto": ("Um baú trancado na **Bolsa**, à esquerda: clique nele para abrir." if n == 1 else
+                                 f"{n} baús trancados na **Bolsa**, à esquerda: um clique abre os {n} de uma vez."),
+            "ancora": "bolsa:bau"}
+
+
+def _a1(g, a):
+    """Adiantar a apresentação, uma vez, depois da primeira luta: os controles de verdade, sem pular nada do jogo."""
+    if not _pendente(a, "A1") or "combate" not in a["vistas"]:
+        return None
+    return {"id": "A1", "texto": "Enquanto o texto aparece, um clique ou uma tecla mostra o resto de uma vez (na luta, "
+                                 "acelera as animações). **Texto**, no topo (tecla V), deixa tudo mais rápido. Só a "
+                                 "apresentação acelera: turnos, custos e escolhas continuam os mesmos.",
+            "ancora": "topo:velocidade", "entendi": True}
+
+
+def selo_da_vez(g):
+    """Na luta, a primeira vez de cada tipo de selo numa carta: Firme, um mal e um bem, com o efeito de agora (o
+    mesmo texto da carta). Só o que já aconteceu nesta luta; nada é forçado."""
+    from .estados import ESTADOS, agora, dano_do_tique
+    a = estado(g)
+    cb = g.combate_ativo
+    if not a or cb is None:
+        return None
+    unidades = [g.j] + list(getattr(cb, "aliados", None) or []) + list(getattr(cb, "inimigos", None) or [])
+    achados = {}
+    for u in unidades:
+        if not getattr(u, "vivo", True) or getattr(u, "hp", 0) <= 0:
+            continue
+        for n, ef in (getattr(u, "efeitos", None) or {}).items():
+            e = ESTADOS.get(n)
+            if not e:
+                continue
+            oid = "SF" if n == "firme" else "S-" if e["negativo"] else "S+"
+            achados.setdefault(oid, (u, n, ef, e))
+    for oid in ("SF", "S-", "S+"):
+        if oid not in achados or not _pendente(a, oid):
+            continue
+        u, n, ef, e = achados[oid]
+        quem = "você" if u is g.j else u.nome
+        # O efeito de agora, como a carta diz: o dano por turno (veneno, sangramento, chamas) e a frase com o número.
+        partes = [f"{dano_do_tique(cb, n, ef)} de dano por turno"] if e.get("tique") else []
+        frase = agora(n, ef.get("v", 0)) or e["dica"]
+        if frase and not e.get("tique"):
+            partes.append(frase)
+        efeito = "; ".join(partes) or e["nome"]
+        turnos = ef["t"]
+        resto = f" O número no selo é quantos turnos faltam ({turnos})." if turnos <= 9 else ""
+        return {"id": oid, "texto": f"**{e['nome'].capitalize()}** ({quem}): {efeito}.{resto}",
+                "ancora": f"selo:{cb.uid(u)}:{n}", "entendi": True}
+    return None
+
+
 # O que cada menu cumpre ao ser respondido: a ocasião passou (o quadro apareceu e a pessoa seguiu). Os talentos
 # também: o quadro aparece uma vez (o ★ do atalho continua avisando) e não segura os outros na fila.
-PASSA_NO_MENU = ("N1", "V4", "V5", "T1")
+PASSA_NO_MENU = ("N1", "V4", "V5", "T1", "A1", "K2", "K3", "K4")
 
 
 def depois_do_menu(g, antes, op):
@@ -434,7 +567,7 @@ def partiu(g):
 
 def entendi(g, oid):
     """O "Entendi" da tela: só as informativas (as outras se encerram pela ação)."""
-    if oid in ("V3", "V4", "T1", "N1"):
+    if oid in ("V3", "V4", "T1", "N1", "A1", "K2", "K4", "SF", "S-", "S+"):
         visto(g, oid)
 
 
@@ -469,7 +602,8 @@ def ajuda(g):
         linhas.append({"grupo": "Vila", "texto": "Clique no **mural** para ver os contratos disponíveis."})
     r = j.nome_recurso
     for oid, grupo, texto in (
-            ("V2", "Vila", f"Vida baixa: o **Templo** devolve a vida por ouro. {POUCO.get(r, r)}: dormir na **Taverna** "
+            ("V2", "Vila", f"Vida baixa: o **Templo** devolve a vida toda (o primeiro atendimento é grátis; depois, o preço "
+                           f"depende da vida que falta). {POUCO.get(r, r)}: dormir na **Taverna** "
                            f"devolve {TODO.get(r, r)} e {round(bal.TAVERNA_VIDA * 100)}% da vida. Ferimentos: a Curandeira."),
             ("V3", "Estrada", "Cada amanhecer come 1 provisão sua e 1 de cada companheiro, na vila ou fora. O Mercado "
                               "vende; o ensopado da Taverna alimenta sem gastar."),
@@ -505,7 +639,7 @@ def dica_texto(g, onde):
     elif onde == "vila" and _v1_pendente(g) and (proxima(g) or {}).get("id") == "V1":
         g.dizer("Dica: o \"Mural de contratos\" tem trabalho pago.", "cinza")
     elif onde != "combate":
-        o = proxima(g)
+        o = selo_da_vez(g) if onde == "selo" else proxima(g)
         ditos = g.__dict__.setdefault("abertura_ditas", set())  # a sessão de texto: cada dica uma vez
         if o and o["id"] != "V1" and o["id"] not in ditos:
             ditos.add(o["id"])

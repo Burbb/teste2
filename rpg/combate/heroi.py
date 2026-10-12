@@ -7,7 +7,7 @@ from ..modificadores import disparar, mod
 from ..dados import TRACOS
 from ..inimigos import NOMES_HABS_INIMIGO
 from ..itens import CONSUMIVEIS, EM_ALIADO, PENA_FENIX_AGE_SOZINHA, USAVEIS_NA_LUTA, ficha
-from .. import comitiva, telemetria
+from .. import abertura, comitiva, telemetria
 from ..talentos import custo_habilidade
 from .. import balanceamento as bal
 
@@ -36,10 +36,14 @@ class AcoesDoHeroi:
                 opcoes.append("Fugir")
                 metas.append({"acao": "fugir"})
             self.ui.meta_opcoes = metas
+            selo = abertura.selo_da_vez(self.g)  # um selo novo numa carta (a orientação dele passa com a ação)
+            abertura.dica_texto(self.g, "selo")
             try:
                 esc = self.ui.escolher("Sua ação:", opcoes)
             finally:
                 self.ui.meta_opcoes = None
+            if selo:
+                abertura.visto(self.g, selo["id"])
             if esc >= 3 and not analisar:
                 esc += 1  # mantém a numeração das ações abaixo
             if esc == 0:

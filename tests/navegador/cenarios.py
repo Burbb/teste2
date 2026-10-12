@@ -17,7 +17,7 @@
     python -m tests.navegador.cenarios resgate       # a recuperação: fome ou infecção no Charco, à noite (CLASSE, CAUSA, COMITIVA, CONTRATOS)
     python -m tests.navegador.cenarios abertura      # campanha nova no Vau: a despensa e as orientações (CLASSE, TUTORIAL, MOREL, DESPENSA, VIDA_RATOS)
     python -m tests.navegador.cenarios fogueira      # a comitiva na fogueira e a fome (LUGAR, COMITIVA, RESERVA, FERIDO, FOME, PROVISOES, TOCHAS)
-    python -m tests.navegador.cenarios tutorial      # a segunda parte da abertura guiada (LUGAR, PERIODO, VIDA, REC, OURO, PROVISOES, COMITIVA, PONTOS, ITEM, VISTAS)
+    python -m tests.navegador.cenarios tutorial      # a segunda parte da abertura guiada (LUGAR, PERIODO, VIDA, REC, OURO, PROVISOES, COMITIVA, PONTOS, ITEM, BAUS, CONTRATO, LUTA, VISTAS)
     python -m tests.navegador.cenarios gelo          # Mago com a iniciativa contra um lobo: duas Lanças antes de ele agir (PRISAO, NIVEL, SEMENTE)
     python -m tests.navegador.cenarios muralha       # Guerreiro nv 6, Muralha + Contra-ataque (CONTRA) e o Broquel, contra bandidos e um cultista
 
@@ -665,7 +665,8 @@ def tutorial(ui):
     vistos), com o tutorial ligado (TUTORIAL=0 desliga). LUGAR: vau (padrão), charco, bosque ou capela; PERIODO (0
     manhã ... 3 noite). VIDA e REC: a fração da vida e do recurso (0.5...). OURO, PROVISOES, TOCHAS, PONTOS (de
     talento). COMITIVA: quem anda junto ("morel,odete"); RESERVA: quem espera no acampamento; FERIDO. ITEM=1: um
-    item da arma para comparar logo na chegada. VISTAS: as orientações já vistas, além da luta e do Mural ("V3,N1").
+    item da arma para comparar logo na chegada. BAUS=n na bolsa. CONTRATO=aceito ou feito: um contrato de caça no
+    CONTRATO_EM (bosque, padrão, ou charco). LUTA=família (QUANTOS): uma luta logo na chegada. VISTAS: as orientações já vistas, além da luta e do Mural ("V3,N1").
     Sair leva ao título, com o save (para carregar com orientações pendentes)."""
     from rpg import abertura as ab, itens, missoes
     from rpg.__main__ import menu_principal
@@ -705,6 +706,19 @@ def tutorial(ui):
     g.mundo["atual"] = next(l["id"] for l in g.mundo["locais"] if l["chave"] == chave)
     g.periodo, g.clima = int(os.environ.get("PERIODO", "0")), "limpo"
     g.autosalvar = True
+    if os.environ.get("BAUS"):
+        j.consumiveis["bau"] = int(os.environ["BAUS"])
+    if os.environ.get("CONTRATO"):  # um contrato de caça aceito (CONTRATO=aceito) ou já cumprido (feito), no CONTRATO_EM
+        alvo = {"charco": "charco_dos_juncos", "bosque": "bosque_do_moinho"}.get(os.environ.get("CONTRATO_EM", "bosque"))
+        lid = next(l["id"] for l in g.mundo["locais"] if l["chave"] == alvo)
+        c = next(c for c in (g.gerar_contrato() for _ in range(400)) if c["tipo"] == "caca" and c["local"] == lid)
+        if os.environ["CONTRATO"] == "feito":
+            c["feito"], c["concluido"] = c["total"], True
+        g.contratos.append(c)
+        a["vistas"].append("K1")
+    if os.environ.get("LUTA"):  # uma luta comum contra LUTA (família), para os selos das cartas
+        g.ui.cena(g.loc["nome"], g.contexto_cena(), "evento")
+        g.combate([g.inimigo(os.environ["LUTA"], nivel=1) for _ in range(int(os.environ.get("QUANTOS", "2")))])
     if os.environ.get("ITEM"):
         g.ui.cena(g.loc["nome"], g.contexto_cena(), "evento")
         g.dizer("No chão, entre a palha, alguma coisa brilha.")

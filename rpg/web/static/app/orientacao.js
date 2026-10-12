@@ -134,6 +134,13 @@ const Orientacao = (() => {
     // Uma janela por cima (Ajuda, mapa, confirmação) esconde o quadro; a do item achado, só se ele não é sobre ela.
     if (document.querySelector(".sobreposicao:not([hidden]):not(#sobre-achado), #janela-confirmar")) return null;
     if (o.id !== "E1" && document.querySelector("#sobre-achado")) return null;
+    if (o.ancora && o.ancora.startsWith("selo:")) {
+      // Um selo novo numa carta (Firme, um mal, um bem): num momento parado da luta, perto da arena, com "Entendi".
+      const [, uid, ef] = o.ancora.split(":");
+      const selo = document.querySelector(`#arena .carta[data-uid="${uid}"] .ef[data-ef="${ef}"]`);
+      if (!estado.combate || !visivel(selo) || !pergunta || processando) return null;
+      return { id: o.id, el: selo, html: botoes(negrito(o.texto), true), luta: true };
+    }
     if (o.id === "combate") {
       if (!estado.combate || !luta || luta.feito) return null;
       const p = o.passos;
@@ -166,6 +173,10 @@ const Orientacao = (() => {
       return ok(document.querySelector(`#predios .predio[data-predio="${tipo === "mural" ? "mural" : valor}"]`), "vila");
     }
     if (tipo === "provisoes") return ok(document.querySelector('#hud .recurso[data-rec="provisoes"]'), "topo");
+    if (tipo === "aceitar") return ok(document.querySelector(`#texto [data-aceitar="${valor}"]`), "topo");  // no Mural
+    if (tipo === "contrato") return ok(document.querySelector(`#mundo .rastro-contrato[data-contrato="${valor}"]`), "topo");
+    if (tipo === "bolsa") return ok(document.querySelector(`#heroi .slot-px[data-bolsa="${valor}"]`), "topo");
+    if (tipo === "topo") return ok(document.querySelector(`[data-acao="${valor}"]`), "topo");
     if (tipo === "membro") return ok(document.querySelector(`#heroi .membro[data-cid="${valor}"]`), "topo");
     if (tipo === "mod") return ok([...document.querySelectorAll("#modificadores .mod")].find((m) => /Inimigos/.test(m.textContent)), "topo");
     if (tipo === "opcao") return ok([...document.querySelectorAll("#prompt .escolhas:not(.escolhido) .escolha")].find((e) => e.textContent.includes(valor)), "baixo");
@@ -184,7 +195,7 @@ const Orientacao = (() => {
     if (!o || !o.ancora || dispensado || fechados.has(o.id) || estado.combate) return "";
     const tipo = o.ancora.split(":")[0];
     if (tipo === "mural" || tipo === "predio") return estado.local.tipo === "vila" && visivel(document.querySelector("#vista")) ? "alto" : "";
-    if (tipo === "provisoes" || tipo === "membro" || tipo === "mod") return "alto";
+    if (["provisoes", "membro", "mod", "aceitar", "contrato", "bolsa", "topo"].includes(tipo)) return "alto";
     if (tipo === "opcao" || tipo === "doca") return "baixo";
     return "";
   }
@@ -217,7 +228,10 @@ const Orientacao = (() => {
     document.body.classList.toggle("orientando-mural", !!a && a.id === "V1");
     if (!a) { esconder(); destacar(null); return; }
     montar();
-    if (a.luta) reservarFaixa("luta", Object.values(estado.orientacao.atual.passos.C4 || {}).map(htmlC4), "orientacao c4");
+    if (a.luta) {
+      const pss = estado.orientacao.atual.passos;  // a sequência da primeira luta mede pelo maior C4; um selo, por ele
+      reservarFaixa("luta", pss ? Object.values(pss.C4 || {}).map(htmlC4) : [a.html], pss ? "orientacao c4" : "orientacao");
+    }
     const chave = a.id + "|" + a.html;
     if (!a.luta && chave !== passo) trazerAVista(a.el);  // uma vez por etapa, antes de medir
     const zona = a.luta ? (faixa ? faixa.getBoundingClientRect() : acimaDasCartas())
@@ -237,8 +251,9 @@ const Orientacao = (() => {
       quadro.hidden = false;
       posicionar(a, zona);
     }
-    // Um destaque por controle: o que o jogo já acende (os Talentos com ponto, ★) fica só com a seta do quadro.
-    destacar(a.el.classList.contains("destaque") ? null : a.el);
+    // Um destaque por controle: o que o jogo já acende (os Talentos com ponto, ★; o baú pronto, com o anel dourado)
+    // fica só com a seta do quadro.
+    destacar(a.el.classList.contains("destaque") || a.el.classList.contains("pronto") ? null : a.el);
     veu(a);
   }
 
@@ -264,7 +279,7 @@ const Orientacao = (() => {
       y = jan.bottom + 12;
       lado = "baixo";
       if (y + h > vh - 8) { y = jan.top - 12 - h; lado = "cima"; }
-    } else if (zona && !a.luta && (r.right <= zona.left || r.left >= zona.left + zona.width)) {
+    } else if (zona && !a.luta && (r.right <= zona.left || r.left >= zona.left + zona.width) && r.bottom > zona.top) {
       // O controle mora numa coluna ao lado (o cartão da comitiva): o quadro na ponta da zona, a seta para o lado.
       const esquerda = r.right <= zona.left;
       x = esquerda ? zona.left + 4 : zona.left + zona.width - w - 4;

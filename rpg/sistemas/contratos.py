@@ -68,17 +68,22 @@ class Contratos:
         if not oferta or self.dia - oferta["dia"] >= 3:
             oferta = {"dia": self.dia, "lista": [self.gerar_contrato() for _ in range(3)]}
             self.ofertas[vid] = oferta
-        while True:
-            self.ui.cena("Mural de contratos", f"{self.loc['nome']} · contratos ativos: {len(self.contratos)}/3", "menu")
-            if self.ui.painel("mural", self.dados_mural(oferta)):
-                if self._mural_web(oferta):
+        abertura.contexto(self, "mural", oferta)  # o primeiro contrato: o quadro aponta um adequado ao começo (K1)
+        try:
+            while True:
+                self.ui.cena("Mural de contratos", f"{self.loc['nome']} · contratos ativos: {len(self.contratos)}/3", "menu")
+                if self.ui.painel("mural", self.dados_mural(oferta)):
+                    if self._mural_web(oferta):
+                        return
+                    continue
+                abertura.dica_texto(self, "mural")
+                opcoes = [(f"{c['desc']} (recompensa: {c['ouro']} ouro, {c['xp']} XP)", c) for c in oferta["lista"]]
+                c = self.menu("Aceitar qual contrato?", opcoes + [("Voltar", None)])
+                if not c:
                     return
-                continue
-            opcoes = [(f"{c['desc']} (recompensa: {c['ouro']} ouro, {c['xp']} XP)", c) for c in oferta["lista"]]
-            c = self.menu("Aceitar qual contrato?", opcoes + [("Voltar", None)])
-            if not c:
-                return
-            self.aceitar_contrato(c, oferta)
+                self.aceitar_contrato(c, oferta)
+        finally:
+            abertura.contexto(self, None)
 
     def aceitar_contrato(self, c, oferta):
         """Tira o contrato do mural e o põe no diário (no máximo 3). True se aceitou."""
@@ -87,6 +92,7 @@ class Contratos:
             return False
         oferta["lista"].remove(c)
         self.contratos.append(c)
+        abertura.visto(self, "K1")  # aceitou um contrato (qualquer um): o quadro do mural não volta
         self.ui.efeito("Contrato aceito", "info")
         if c["tipo"] == "alvo":
             self.marcar(f"conhecido:{c['local']}")
@@ -139,6 +145,7 @@ class Contratos:
                   if c.get("concluido") or (c["tipo"] == "entrega" and c["destino"] == self.loc["id"])]
         if not feitos:
             return
+        abertura.visto(self, "K4")  # o ciclo do contrato se fechou: aceito, cumprido, pago
         festa = self.ui.conquistas_na_tela
         if festa:
             self.ui.celebrar("contratos", {

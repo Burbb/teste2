@@ -621,3 +621,60 @@ no Continuar; um Enter novo continua). No navegador: os casos de adiantar (cliqu
 clique duplo no Continuar e Enter segurado nele: uma resposta só, nenhuma escolha atravessada); as teclas T, I, C,
 D, B, P, M, H e F1 abrindo e fechando; a fuga ("Fugiu!", a carta saindo, o som uma vez e nenhuma vez ao recarregar).
 
+## 17. Os ciclos básicos (1.68.0)
+
+Segunda entrega do mesmo pedido: completar o aprendizado dos sistemas básicos, uma orientação por vez, perto do
+alvo, seguindo o estado real. Combate, sorteio e equilíbrio iguais; a única mudança de economia é a autorizada (o
+templo). O gabarito não muda (as partidas de referência são do mundo gerado, sem a campanha).
+
+| # | Âncora | Texto | Aparece | Encerra |
+|---|---|---|---|---|
+| A1 | o botão **Texto** do topo | "Enquanto o texto aparece, um clique ou uma tecla mostra o resto de uma vez (na luta, acelera as animações). **Texto**, no topo (tecla V), deixa tudo mais rápido. Só a apresentação acelera: turnos, custos e escolhas continuam os mesmos." | o primeiro menu depois da primeira luta | **Entendi**, ou a resposta ao menu |
+| K1 | **Aceitar** de um contrato de caça adequado, no Mural | "Contrato de caça: {2 bandidos} em {Charco dos Juncos}. **Aceitar** o põe no Diário; cumprido, ele paga {12} de ouro quando você voltar a uma vila." | no Mural, sem contrato aceito, com uma caça (não um alvo de elite) num lugar do nível do herói ou abaixo na oferta de sempre | aceitar um contrato (qualquer um) |
+| K2 | a linha do contrato em Contratos, à direita | "O contrato é em **{Bosque do Moinho}**: a linha dele, em Contratos, à direita, e o "!" no mapa mostram onde. Clique na linha (ou em Viajar) para ir." | um menu longe do lugar do contrato seguido (o mais antigo em andamento) | **Entendi**, a resposta ao menu, ou a chegada ao lugar |
+| K3 | a ação do contrato no menu ("Caçar … (contrato, 0/3)", "Rastrear …") | "**Caçar** segue os rastros dos {lobos} do contrato: cada um abatido aqui conta ({0/3}), também os que aparecerem explorando." (alvo: "**Rastrear** leva até o alvo do contrato: vencê-lo cumpre o trabalho.") | o primeiro menu no lugar do contrato | a resposta ao menu |
+| K4 | a linha do contrato cumprido | "Contrato cumprido. A recompensa ({17} de ouro e {21} XP) é paga quando você chegar a uma vila." | um menu fora da vila com um contrato cumprido e não pago | **Entendi**, a resposta ao menu, ou o pagamento |
+| B1 | o baú na **Bolsa**, à esquerda (só a seta: ele já tem o anel dourado) | "Um baú trancado na **Bolsa**, à esquerda: clique nele para abrir." (vários: "um clique abre os {2} de uma vez") | um menu com baú de verdade na bolsa, onde ele abre | abrir |
+| SF, S-, S+ | o selo na carta (luta) | "**Firme** ({Lobo}): acabou de se soltar: não pode ser atordoado nem congelado agora." / "**Sangrando** (você): 2 de dano por turno." / "**Esquivo** (você): esquiva +20%." + "O número no selo é quantos turnos faltam (2)." | a primeira vez de cada tipo numa carta, num momento parado da luta (depois da sequência C1–C4) | **Entendi**, ou a ação seguinte |
+
+**Ordem nos menus:** V2, N1, V1, A1, K2, K3, K4, B1, T1, V4, V5. O Mural (K1), a viagem (V3) e o item achado (E1)
+valem na tela deles; os selos, na luta.
+
+**8. Primeiro atendimento grátis no templo** (`Jogo.templo_gratis`, autorizado por Jean): na campanha, a primeira cura
+de vida do herói no templo não cobra, uma vez por personagem, com as orientações ligadas ou não. O serviço diz
+"Primeiro atendimento — grátis" (o preço, "grátis"); só se gasta quando a cura acontece (entrar no templo ou ler o
+quadro, não); a marca vai no save (carregar e religar o tutorial não renovam). A comitiva paga como sempre; nenhum
+tratamento novo. O V2 diz que, depois, o preço depende da vida que falta (e, quando já pago, mostra o valor de agora
+entre parênteses, não como tarifa).
+
+**9. Um contrato do começo ao pagamento** (K1–K4): os contratos e os estados de sempre (aceito, progresso, cumprido,
+pago na chegada a uma vila); nada é gerado, garantido ou recompensado a mais. Desvios: o quadro acompanha o contrato
+mais antigo em andamento; abandonado, passa ao seguinte; sem contrato, nada; derrota e resgate seguem as regras (o
+cumprido paga na vila do resgate, e isso fecha o ciclo); salvar e carregar continuam do estado real. Pago o primeiro,
+o ciclo não se repete. Não segura a história: cada quadro passa com a resposta ao menu.
+
+**10. Primeiro baú** (B1): o primeiro baú de verdade (nenhum é dado para o tutorial); o saque e a comparação seguem
+como sempre (o E1 aparece se vier equipamento para comparar).
+
+**11. Selos** (SF, S-, S+): só o que aconteceu na luta (nada é forçado nem sorteado); o efeito de agora, o mesmo da
+carta (o dano por turno; a esquiva com o número; Firme pela regra).
+
+**12. Adiantar** (A1): os controles de verdade (o clique ou a tecla durante o texto, que também acelera as animações
+da luta, e o botão Texto/V); diz que só a apresentação acelera.
+
+**Conferido:** testes (`tests/test_abertura_ciclos.py`: o templo uma vez, só na cura, só o herói, sem renovar ao
+carregar ou religar, igual com e sem tutorial, só na campanha; o contrato adequado e nada quando não há; aceitar
+qualquer um; K2→K3→K4 pelo estado; pagamento fecha; abandonar segue o próximo; o menu passa as ocasiões; o baú; a
+ordem dos selos com o efeito real; o adiantar só depois da primeira luta), gabarito sem diferença, pyflakes, fumaça
+(um cenário dos ciclos: o V2 com o grátis, o serviço "Primeiro atendimento — grátis", a cura sem cobrar, o K1 e o
+aceite). No navegador, a 1500 e 1280 px: A1, V2 com o grátis e o cartão do templo, B1 (um e dois baús), K1 no Mural,
+K2 na vila (com Entendi), K3 no lugar (respondido pelo teclado), K4 cumprido; os selos nas três classes (chamas no
+lobo, sangramento no herói), sem cobrir carta nem ação.
+
+**Limitações:**
+- O K1 só aparece se a oferta do Mural tiver uma caça adequada; sem ela, o quadro espera a próxima visita (a oferta
+  renova a cada 3 dias).
+- Os selos aparecem um de cada tipo; outros estados (congelado, atordoado, barreira) não têm quadro próprio, só o
+  primeiro de cada tipo que acontecer.
+- A faixa dos selos entra na luta quando o primeiro selo aparece (a página abaixo da arena desce uma vez).
+

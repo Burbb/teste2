@@ -523,6 +523,8 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
     def executar_comum(self, op):
         if op == "comitiva" or isinstance(op, tuple) and op[0] == "falar":
             abertura.visto(self, "V4")  # a comitiva aberta (a tela ou a conversa): o quadro que a apontava não volta
+        if isinstance(op, tuple) and op[:2] == ("usar", "bau"):
+            abertura.visto(self, "B1")  # o primeiro baú aberto: daqui, o saque e a comparação seguem como sempre
         if isinstance(op, tuple):  # o painel lateral: a bolsa e o ✉ da comitiva
             if op[0] == "falar":
                 comitiva.falar(self, op[1])
@@ -555,6 +557,8 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         opcoes.append(("Explorar a região" + (" (à noite é mais perigoso)" if self.noite else ""), "explorar"))
         opcoes.append(("Acampar e descansar até o amanhecer", "acampar"))
         abertura.motivo_explorar(self, "morel")  # com Morel junto, ele conta onde está o dinheiro (uma vez)
+        if self.contratos_aqui():
+            abertura.visto(self, "K2")  # chegou ao lugar do contrato: o quadro que mostrava onde ele fica não volta
         abertura.dica_texto(self, "fora")  # na interface de texto, a orientação da vez numa linha
         antes = abertura.proxima(self)
         op = self.menu("O que você faz?", opcoes + self.opcoes_comuns())

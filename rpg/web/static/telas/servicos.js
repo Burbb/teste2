@@ -16,7 +16,7 @@
    *  nem motivo e com `limite`, é só mostruário. `attrs`: o que identifica a ação (data-...). */
   function cartaoServico({ icone, raridade, nome, efeito, preco, tempo, motivo, limite, attrs = "", dicaAttr = "" }) {
     const r = raridade ? ` r-${h(raridade)}` : "";
-    const fim = (preco != null ? `<span class="preco">${S("moeda", 1)}${preco}</span>` : "") + (tempo ? `<small class="serv-tempo">⧗ ${h(tempo)}</small>` : "");
+    const fim = (preco === 0 ? '<span class="preco gratis">grátis</span>' : preco != null ? `<span class="preco">${S("moeda", 1)}${preco}</span>` : "") + (tempo ? `<small class="serv-tempo">⧗ ${h(tempo)}</small>` : "");
     return `<button type="button" class="servico${motivo ? " caro" : ""}${limite ? " limite" : ""}" ${attrs} ${dicaAttr}${motivo ? ` aria-disabled="true"` : ""}>
       <span class="slot-px${r}">${S(icone, 2)}</span>
       <span class="serv-texto"><b class="serv-nome${r}">${h(nome)}</b>${efeito ? `<span class="serv-efeito">${Realce.texto(efeito)}</span>` : ""}</span>

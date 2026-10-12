@@ -1274,7 +1274,7 @@ async function cenarioTutorial(browser) {
     try {
       conferir(await ate(page, /A linha "contra…" compara o achado/) && !(await cobre(page)), "E1: no item achado, a comparação e as escolhas, sem cobrir a janela");
       await page.keyboard.press("2");  // Guardar, pelo teclado
-      conferir(await ate(page, /Vida baixa\. O Templo devolve a vida toda/) && !(await cobre(page)),
+      conferir(await ate(page, /Vida baixa\. O primeiro atendimento no Templo é grátis/) && !(await cobre(page)),
         "decidido o item, o E1 sai; na vila, V2 aponta o Templo (a vida baixa), sem cobrir prédio nem página");
       await page.click('#predios .predio[data-predio="estrada"]');
       conferir(await ate(page, /Cada amanhecer come 1 provisão sua/), "V3: ao escolher o destino, as provisões do topo");
@@ -1304,6 +1304,39 @@ async function cenarioTutorial(browser) {
       await page.close();
       proc.kill();
     }
+  }
+}
+
+async function cenarioCiclos(browser) {
+  console.log("cenário: os ciclos básicos (o primeiro atendimento grátis do templo e o primeiro contrato)");
+  const { proc, url } = await subir("tutorial", { VIDA: "0.4", VISTAS: "A1" });
+  const { page, erros } = await abrir(browser, url);
+  const quadro = () => page.evaluate(() => { const q = document.querySelector(".orientacao:not([hidden])"); return q ? q.innerText.replace(/\s+/g, " ") : ""; });
+  const ate = async (re, ms = 20000) => { for (let k = 0; k < ms; k += 150) { if (re.test(await quadro())) return true; await page.waitForTimeout(150); } return false; };
+  try {
+    conferir(await ate(/primeiro atendimento no Templo é grátis/) && /o preço depende da vida que falta/.test(await quadro()),
+      "V2: o primeiro atendimento grátis, e depois o preço pela vida que falta (sem tarifa fixa)");
+    const ouro = await page.evaluate(() => estado.heroi.ouro);
+    await page.click('#predios .predio[data-predio="templo"]');
+    const servico = await page.waitForSelector('.servico:has-text("Primeiro atendimento — grátis")', { timeout: 10000 }).catch(() => null);
+    conferir(!!servico && /grátis/.test(await servico.textContent()), "no templo, o serviço diz \"Primeiro atendimento — grátis\"");
+    await servico.click();
+    await page.waitForFunction(() => estado.heroi.hp === estado.heroi.max_hp, null, { timeout: 10000 }).catch(() => {});
+    conferir((await page.evaluate(() => estado.heroi.hp === estado.heroi.max_hp)) && (await page.evaluate(() => estado.heroi.ouro)) === ouro,
+      "a cura grátis devolve a vida toda e não cobra");
+    await (await page.waitForSelector(':is(button, .escolha):has-text("Voltar à vila")', { timeout: 10000 })).click();
+    await page.waitForTimeout(1200);
+    await page.click('#predios .predio[data-predio="mural"]');
+    conferir(await ate(/Contrato de caça: .+ Aceitar o põe no Diário/), "K1: no mural, um contrato de caça adequado ao começo");
+    const id = await page.evaluate(() => estado.orientacao.atual.ancora.split(":")[1]);
+    await page.click(`[data-aceitar="${id}"]`);
+    await page.waitForTimeout(800);
+    conferir(!/Contrato de caça/.test(await quadro()) && (await page.evaluate(() => (estado.contratos || []).length)) === 1,
+      "aceito o contrato, o quadro do mural sai");
+  } finally {
+    conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
+    await page.close();
+    proc.kill();
   }
 }
 
@@ -1390,6 +1423,7 @@ try {
   await cenarioAbertura(browser);
   await cenarioFogueira(browser);
   await cenarioTutorial(browser);
+  await cenarioCiclos(browser);
 } catch (e) {
   falhas.push(String(e));
   console.log("ERRO", e);

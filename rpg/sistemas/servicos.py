@@ -100,21 +100,30 @@ class Servicos:
             self.dizer(f"Ela costura, cauteriza e enfaixa sem anestesia. Você grita. "
                        f"{sobrevivencia.FERIMENTOS[fid]['nome']}: tratado.", "verde")
 
+    def templo_gratis(self):
+        """O primeiro atendimento do herói no templo, de graça, uma vez por personagem, na campanha (com as orientações
+        ligadas ou não). Só se gasta quando a cura acontece; salvar, carregar ou religar o tutorial não o renova."""
+        return bool(self.campanha) and not self.flag("templo_gratis_usado")
+
     def opcoes_templo(self):
         """O templo cuida de cada um pelo que falta a cada um: você e quem anda com você (desacordado também), cada um
-        com o seu preço. Uma opção por pessoa; sem ninguém precisando, nenhuma."""
+        com o seu preço. Uma opção por pessoa; sem ninguém precisando, nenhuma. O primeiro atendimento do herói na
+        campanha é grátis (templo_gratis); o da comitiva, não."""
         j = self.j
         precisam = [(None, "você", j.max_hp - j.hp, j.max_hp)] if j.hp < j.max_hp else []
         precisam += [(m, comitiva.nome(m["id"]), m["max_hp"] - m["hp"], m["max_hp"])
                      for m in comitiva.junto(self) if m["hp"] < m["max_hp"] or m["ferido"]]
         opcoes = []
         for m, quem, falta, maximo in precisam:
-            preco = self.preco(max(1, falta // 2))
-            meta = {"predio": "templo", "servico": "templo", "curto": f"Cuidar de {quem}", "preco": preco,
+            gratis = m is None and self.templo_gratis()
+            preco = 0 if gratis else self.preco(max(1, falta // 2))
+            meta = {"predio": "templo", "servico": "templo",
+                    "curto": "Primeiro atendimento — grátis" if gratis else f"Cuidar de {quem}", "preco": preco,
                     "efeito": f"+{falta} de vida ({maximo}/{maximo})" + (", de pé de novo" if m and m["ferido"] else "")}
             if m:
                 meta["alvo"] = m["id"]
-            rotulo = f"Templo: cuidar da vida ({preco} ouro)" if m is None else f"Templo: cuidar de {quem} ({preco} ouro)"
+            rotulo = ("Templo: cuidar da vida (primeiro atendimento — grátis)" if gratis else
+                      f"Templo: cuidar da vida ({preco} ouro)" if m is None else f"Templo: cuidar de {quem} ({preco} ouro)")
             opcoes.append((rotulo, ("templo", m and m["id"], preco, falta), meta))
         return opcoes
 
@@ -133,8 +142,12 @@ class Servicos:
         if self.j.ouro < preco:
             self.dizer("Você não tem ouro suficiente.", "vermelho")
             return
-        self.perder_ouro(preco, destino="templo")
+        if preco:
+            self.perder_ouro(preco, destino="templo")
         if cid is None:
+            if not preco and self.templo_gratis():
+                self.marcar("templo_gratis_usado")  # gasto só agora, com a cura feita
+                self.dizer("O clérigo não cobra: é o seu primeiro atendimento aqui.", "cinza")
             self.curar(falta)
             self.dizer("Um clérigo trata suas feridas com unguentos e orações.", "verde")
             return
