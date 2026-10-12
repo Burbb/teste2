@@ -15,7 +15,7 @@
     python -m tests.navegador.cenarios tiro_duplo    # Patrulheiro contra três lobos feridos de jeitos diferentes (NIVEL, VIDAS)
     python -m tests.navegador.cenarios broquel       # Guerreiro nv 4 com o Broquel contra três lobos; repete com/sem o Revide (LUTA, ESPEC, NIVEL)
     python -m tests.navegador.cenarios resgate       # a recuperação: fome ou infecção no Charco, à noite (CLASSE, CAUSA, COMITIVA, CONTRATOS)
-    python -m tests.navegador.cenarios abertura      # campanha nova no Vau: a despensa e as orientações (CLASSE, TUTORIAL, MOREL, DESPENSA)
+    python -m tests.navegador.cenarios abertura      # campanha nova no Vau: a despensa e as orientações (CLASSE, TUTORIAL, MOREL, DESPENSA, VIDA_RATOS)
     python -m tests.navegador.cenarios gelo          # Mago com a iniciativa contra um lobo: duas Lanças antes de ele agir (PRISAO, NIVEL, SEMENTE)
     python -m tests.navegador.cenarios muralha       # Guerreiro nv 6, Muralha + Contra-ataque (CONTRA) e o Broquel, contra bandidos e um cultista
 
@@ -442,8 +442,17 @@ def abertura(ui):
     """Uma campanha nova no Vau (CLASSE, padrão guerreiro; SEMENTE, padrão 7), logo depois da criação: o prólogo, a
     abertura da febre e o pedido do taverneiro (a despensa). TUTORIAL=0 desliga as orientações. MOREL=recrutado,
     recusou ou rumores: Morel já resolvido antes (no grupo; recusado pela bebida; encontrado pela bebida e deixado).
-    DESPENSA=adiada: o pedido já foi recusado ("Agora não"). Sair leva ao título, com o save."""
+    DESPENSA=adiada: o pedido já foi recusado ("Agora não"). VIDA_RATOS=n: só para conferir a tela, os ratos com n de
+    vida (1: um golpe derruba cada um, e a habilidade pode encerrar a luta). Sair leva ao título, com o save."""
     from rpg import abertura as ab
+    if os.environ.get("VIDA_RATOS"):
+        original = ab._rato
+
+        def rato(g):
+            e = original(g)
+            e.hp = e.max_hp = int(os.environ["VIDA_RATOS"])
+            return e
+        ab._rato = rato
     from rpg.__main__ import menu_principal
     pasta = tempfile.mkdtemp()
     g = Jogo(ui, seed=int(os.environ.get("SEMENTE", "7")), pasta_saves=pasta, hardcore=False)

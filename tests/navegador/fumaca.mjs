@@ -1167,7 +1167,13 @@ async function cenarioAbertura(browser) {
     await page.keyboard.press("1");  // a mesma coisa pelo teclado
     conferir(await ateQuadro(/escolher o alvo/) && !(await cobre()), "C3: na mira, o quadro pede o alvo sem cobrir os inimigos");
     await page.click("#arena .carta.alvejavel");
-    conferir(await ateQuadro(/Bola de Fogo gastou 14 de Mana\. Atacar não gasta Mana/), "C4: depois do golpe, o que ele gastou e o que o Atacar faz");
+    conferir(await ateQuadro(/Bola de Fogo\s*−14 Mana\s*Atacar não gasta Mana\. Ao acertar, \+2 Mana\./),
+      "C4: depois do golpe, o nome, o custo real e o que o Atacar faz, em linhas separadas");
+    const antes = await page.evaluate(() => JSON.stringify(pergunta));
+    await page.click(".orientacao-entendi");
+    await page.waitForTimeout(300);
+    conferir(!(await quadro()) && antes === (await page.evaluate(() => JSON.stringify(pergunta))) && (await page.evaluate(() => estado.orientacao.ligado)),
+      "Entendi fecha só o quadro: a pergunta da luta continua a mesma e as orientações seguem ligadas");
     await page.keyboard.press("F1");
     conferir(!(await page.$("#sobre-ajuda[hidden]")) && /Bola de Fogo gasta 14 de Mana/.test(await page.textContent("#ajuda-corpo")) === false,
       "F1 abre a Ajuda (antes de a luta acabar, ela ainda não lista a luta)");
@@ -1182,13 +1188,20 @@ async function cenarioAbertura(browser) {
       const fe = await page.$(".festa-espolio .continuar"); if (fe) { await page.waitForTimeout(600); await fe.click().catch(() => {}); }
       await page.waitForTimeout(200);
     }
-    let mural = null;
+    let mural = null, vistaTaverna = false;
     for (let k = 0; k < 120 && !(mural = await page.$('#predios .predio[data-predio="mural"]:visible')) ; k++) {  // o espólio e o texto até a vila
       const fe = await page.$("#celebracao:not([hidden]) .continuar"); if (fe) { await page.waitForTimeout(700); await fe.click().catch(() => {}); }
-      const c = await page.$("#prompt .continuar"); if (c) { await page.waitForTimeout(900); await c.click().catch(() => {}); }
+      const c = await page.$("#prompt .continuar"); if (c) {
+        if (!vistaTaverna && /primeira caneca é por minha conta/.test(await page.textContent("#pagina"))) {  // a cena espera o clique
+          await page.waitForTimeout(2500);
+          vistaTaverna = !!(await page.$("#prompt .continuar"));
+        }
+        await page.waitForTimeout(900); await c.click().catch(() => {});
+      }
       await page.waitForTimeout(200);
     }
     await page.waitForTimeout(500);
+    conferir(vistaTaverna, "a cena depois da despensa (caneca e mural) espera o Continuar");
     conferir(!!mural && !(await quadro()), "na vila, desligado: nenhum quadro");
     await page.keyboard.press("F1");
     await page.click("#ajuda-corpo .ajuda-chave");
@@ -1196,9 +1209,9 @@ async function cenarioAbertura(browser) {
     conferir(await ateQuadro(/Os prédios da vila são clicáveis\. Mural: os contratos\./), "religado na Ajuda: V1 aponta o Mural");
     const card = await page.$('.predio[data-predio="taverna"]');
     conferir(!!card, "a taverna está na vila (a despensa feita, Morel à espera nela)");
-    await page.click(".orientacao-dispensar");
+    await page.click(".orientacao-encerrar");
     await page.waitForTimeout(400);
-    conferir(!(await quadro()) && !(await page.evaluate(() => estado.orientacao.ligado)), "Dispensar orientações desliga e o quadro some");
+    conferir(!(await quadro()) && !(await page.evaluate(() => estado.orientacao.ligado)), "Encerrar tutorial desliga e o quadro some");
   } finally {
     conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
     await page.close();

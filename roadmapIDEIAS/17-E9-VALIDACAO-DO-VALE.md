@@ -11,6 +11,8 @@ Avaliação integrada do Vale do Turvo como primeiro capítulo (a E9 antecipada,
   a investigação dos toques que pareciam não responder; os rótulos dos prédios (não reproduzido). Nada de equilíbrio.
 - **Quinta entrega, 1.65.4 e 1.66.0 (seção 20):** a noite e a tocha ditas antes da luta; a primeira implementação
   da abertura guiada ([18](18-E9-ABERTURA-GUIADA.md), seção 12).
+- **Acabamento, 1.66.1 e 1.66.2 (seção 21):** os riscos da capela em indicadores; os quadros da abertura parados,
+  mais discretos, com "Entendi" e "Encerrar tutorial" ([18](18-E9-ABERTURA-GUIADA.md), seção 13).
 - **Quarta entrega, 1.65.2 e 1.65.3 (seção 19):** a partida da Quibia lida; os contratos pagos depois do resgate; o
   ×N dos baús em destaque. A especificação da abertura guiada fica em [18](18-E9-ABERTURA-GUIADA.md).
 - **Correção 1.65.1 (seção 18):** os três pontos que faltaram na mensagem cortada: a percepção do Mago na água, o nome
@@ -837,3 +839,16 @@ nas transcrições da tela; escolhas, lances e herói idênticos.
 **Para Jean conferir:** o roteiro está na resposta da entrega e na seção 12 do 18 (as três classes, com e sem tutorial,
 e os caminhos de Morel).
 
+## 21. Acabamento da abertura e os riscos da capela (1.66.1 e 1.66.2)
+
+Pedido de Jean antes da segunda parte do tutorial; regras, custos, recompensas, sorteio e dificuldade iguais (gabarito
+sem diferença).
+
+**1.66.1:** na capela, o nome da ação em destaque e, embaixo, indicadores com ícone: "−1 tocha"; sem tocha, "Sem luz:
+inimigo age primeiro", em vermelho; à noite, a lua com "+1 nível · +10% dano" (na guardiã, "+10% dano"). A dica traz o
+detalhe. O sarilho mostra só o que vale para cada atalho.
+
+**1.66.2:** o destaque é um contorno fino com brilho lento (parado com movimento reduzido); os quadros da luta ficam
+numa faixa parada fora das cartas, das ações e do texto; o C4 aparece depois do golpe, em linhas (nome, custo com a
+cor e o ícone do recurso, o Atacar da classe), com "Entendi" e "Encerrar tutorial"; a cena depois da despensa espera o
+Continuar e o taverneiro aponta o mural de contratos. Detalhe, conferência e limitações na seção 13 do 18.

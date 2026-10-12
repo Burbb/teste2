@@ -136,16 +136,17 @@ classe, o recurso, a tecla).
 | C1 | botão Habilidades | "Clique em **Habilidades** (tecla 2)." | a roda de ações aparece | a janelinha de Habilidades abre |
 | C2 | a linha da habilidade na janelinha | "Clique em **{Bola de Fogo}**." | C1 encerrou | uma habilidade é escolhida |
 | C3 | as cartas dos inimigos | "Clique num inimigo para escolher o alvo." | a mira acende | o alvo é escolhido |
-| C4 | a barra de recurso na carta do herói | por classe, abaixo | a habilidade é usada | a próxima ação é escolhida, ou a luta acaba |
+| C4 | a barra de recurso na carta do herói | por classe, abaixo | depois do golpe, quando a pessoa pode agir de novo | **Entendi**, ou a próxima ação é escolhida; não aparece se a luta acabou |
 
 Os quadros não repetem a descrição da habilidade: a janelinha e a dica já mostram o efeito e o custo. C4 diz só o
-custo e o que o **Atacar** faz, pelas regras da classe (o motor monta o texto com os números da ficha e do
-balanceamento):
+custo e o que o **Atacar** faz, pelas regras da classe (o motor monta as partes com os números da ficha e do
+balanceamento; a tela só pinta). Três linhas curtas: o nome da habilidade; o que ela gastou, com o ícone e a cor do
+recurso; o Atacar (desde a 1.66.2, seção 13):
 
-- **Guerreiro:** "{Golpe Pesado} gastou {10} de Vigor. **Atacar** não gasta Vigor e, se acertar, devolve {2}."
-- **Mago:** "{Bola de Fogo} gastou {14} de Mana. **Atacar** não gasta Mana e, se acertar, devolve {2}."
-- **Arqueiro:** "{Tiro Certeiro} gastou {8} de Foco e 1 flecha. **Atacar** também gasta 1 flecha (sem flechas, vira
-  um golpe de adaga mais fraco), não gasta Foco e, se acertar, devolve {2}."
+- **Guerreiro:** "Golpe Pesado" / "−10 Vigor" / "Atacar não gasta Vigor. Ao acertar, +2 Vigor."
+- **Mago:** "Bola de Fogo" / "−14 Mana" / "Atacar não gasta Mana. Ao acertar, +2 Mana."
+- **Arqueiro:** "Tiro Certeiro" / "−8 Foco −1 flecha" / "Atacar: −1 flecha, sem Foco. Ao acertar, +2 Foco. Sem
+  flechas, vira um golpe de adaga mais fraco."
 
 O que se devolve é `max(ATAQUE_RECURSO_MIN, 4% do máximo)`; o custo é o da habilidade que a pessoa usou de fato (se
 escolheu outra, o texto é o dela).
@@ -154,6 +155,8 @@ escolheu outra, o texto é o dela).
 - **Escolheu outra habilidade:** C2 encerra do mesmo jeito (o quadro ensina o caminho, não obriga a habilidade).
 - **Atacou em vez de abrir Habilidades:** C1 fica até a próxima vez que a roda aparecer nesta luta; se a luta acabar
   antes, a sequência passa para a luta seguinte. Depois de duas lutas sem abrir Habilidades, C1 para (nada de insistir).
+- **Entendi** fecha só o C4 (o clique e o Enter não escolhem ação da luta); **Encerrar tutorial**, no mesmo quadro,
+  desliga todas as orientações (a Ajuda religa).
 - **O golpe acabou com a luta:** C4 não aparece por cima do espólio (o espólio já fecha a luta). A sequência conta
   como cumprida (a habilidade foi usada) e o texto do C4 fica na Ajuda.
 
@@ -193,11 +196,12 @@ O N1 só depois dos textos da noite corrigidos (feito na 1.65.4, seção 8).
   barra de recurso da carta do herói, `#predios .predio[data-predio=…]`, o contador de provisões do topo, o cartão da
   comitiva, as opções do menu do lugar (`meta`), `.achado-cartao`, o atalho de Talentos.
 
-**O quadro:** pequeno (até ~260 px), com uma seta discreta apontando para a âncora; abaixo do texto, em letra menor,
-"Dispensar orientações". O destaque é um anel claro em volta da âncora. **Na luta, o quadro fica logo abaixo da
-arena**, alinhado ao controle (a seta aponta para cima): ao lado do botão ele cobria a carta do primeiro inimigo. Ali
-ele pode cobrir uma linha do texto já lido da página; nunca as cartas, as barras, as ações nem a janelinha. Na janelinha
-de Habilidades (C2), ao lado da linha.
+**O quadro:** pequeno (até ~290 px; o C4, 360), com uma seta discreta apontando para a âncora; abaixo do texto, em
+letra menor, "Encerrar tutorial" (e, no C4, o botão "Entendi"). O destaque é um contorno fino que segue a forma do
+controle, com um brilho que pulsa devagar (2,4 s; nada de piscar). **Na luta, o quadro fica numa faixa reservada
+logo abaixo da arena** (ou acima das cartas, se ali couber), parado: não acompanha o avanço nem o tremor da carta e
+só muda de lugar quando o passo muda ou a janela muda de tamanho. Não cobre cartas, barras, ações, a janelinha nem o
+texto da página (seção 13). Na janelinha de Habilidades (C2), ao lado dela, do lado que tem espaço.
 
 **O escurecimento:** um véu leve (cerca de 25%) só nas áreas que não importam naquela hora (as colunas laterais e a doca
 durante a luta; o texto da cena durante a vila). Nunca sobre a arena, as cartas, as barras do herói e dos inimigos e o
@@ -205,13 +209,15 @@ topo. O véu não recebe clique (`pointer-events: none`): tudo continua clicáve
 
 **Mouse:** o quadro não bloqueia nada; clicar fora dele não o fecha (ele fecha quando a ação acontece).
 **Teclado:** as teclas de sempre funcionam (1–4 na roda, os números na mira, Esc, Enter); o quadro diz a tecla quando
-existe. O foco não vai para o quadro; "Dispensar orientações" é alcançável com Tab. A Ajuda abre com **F1**.
+existe. O foco não vai para o quadro, menos no C4, em que vai para "Entendi" (Enter ou espaço fecham só o quadro); "Encerrar
+tutorial" é alcançável com Tab. A Ajuda abre com **F1**.
 
-**Movimento reduzido:** sem piscar; o anel fica aceso.
+**Movimento reduzido:** sem pulso; o contorno fica aceso, parado.
 
 ## 6. Pular, fugir, perder, salvar e carregar; os outros caminhos
 
-- **Dispensar orientações:** desliga todas neste save (o quadro some na hora). Religar: na Ajuda.
+- **Encerrar tutorial** (antes "Dispensar orientações"): desliga todas neste save (o quadro some na hora). Religar:
+  na Ajuda.
 - **Ajuda** (item no topo, ao lado de Histórico; F1; Esc ou clique fora fecha): a chave "Mostrar orientações:
   ligado/desligado" e a lista do que já foi visto, por grupo (Luta, Vila). Só texto; nada de tour. Num jogo sem a
   abertura (save de antes, mundo gerado), a chave também liga as orientações; a despensa não aparece.
@@ -383,3 +389,55 @@ abertura sem quadros.
 - `tests.equilibrio` e `tests.replay` não passam pela campanha: a despensa não mexe neles. O começo da campanha ganha 12
   de XP e uma caneca (3 de ouro) para todos, como decidido.
 
+## 13. Acabamento (1.66.1 e 1.66.2)
+
+Pedido de Jean depois da 1.66.0, antes da segunda parte. Regras, custos, recompensas, sorteio e dificuldade iguais
+(gabarito idêntico nas duas versões).
+
+**1.66.1, os riscos da capela em indicadores.** A nota de texto de cada sala virou o nome da ação em destaque e, embaixo,
+indicadores curtos com os ícones de pixel do jogo (`sobrevivencia.riscos_sala`, a tela só desenha):
+
+| Situação | Indicador | Dica (ao passar o mouse) |
+|---|---|---|
+| com tocha | tocha: "−1 tocha" | a sala é escura de dia e de noite; entrar acende 1 tocha (você tem N) |
+| sem tocha | tocha apagada, em vermelho: "Sem luz: inimigo age primeiro" | o mais rápido ataca antes de você; Percepção e Destreza −4 |
+| noite (sala) | lua, alerta discreto: "+1 nível · +10% dano" | os inimigos da sala vêm 1 nível acima e causam 10% mais dano |
+| noite (guardiã) | lua: "+10% dano" | a guardiã causa 10% mais dano; o nível dela não muda à noite |
+
+Os atalhos do sarilho mostram só o que vale para cada um (forçar o mecanismo leva à luta e tem os indicadores; o
+caminho da classe, não). A interface de texto lê as mesmas linhas, numa frase. Na barra do topo a 1280 px, a Ajuda e o
+modificador da noite cabiam só quebrando a linha: abaixo de 1360 px os botões ficam mais estreitos, sem a tecla.
+
+**1.66.2, os quadros da abertura.**
+- **Destaque:** o anel grosso e branco que piscava virou um contorno fino que copia o arredondado do controle, com um
+  brilho que pulsa devagar; some quando a ação acontece; um controle por vez; com movimento reduzido, parado.
+- **Lugar estável na luta:** os quadros moram numa faixa reservada entre a arena e o texto, com a altura do maior C4
+  da classe, criada quando a primeira orientação da luta aparece e tirada quando a luta acaba (ou quando a pessoa
+  encerra o tutorial). Se acima das cartas houver espaço (140 px ou mais), vão para lá e a faixa não existe. O lugar
+  é calculado só quando o passo muda ou a tela muda de tamanho; o avanço, o tremor e a volta da carta não o mexem. Na
+  janelinha de Habilidades (C2), o quadro fica ao lado dela, do lado em que cabe (a 1280 px, à esquerda).
+- **C1 a C3** acabam com a própria ação (abrir Habilidades, escolher a habilidade, escolher o alvo). **C4** aparece
+  quando o golpe já aconteceu e a roda volta (um momento parado de leitura); tem "Entendi" (fecha só ele; o foco vai
+  para ele, e o Enter ou o clique não escolhem ação nem fecham a cena seguinte) e "Encerrar tutorial". Escolher uma
+  ação também o fecha. Se a habilidade acaba com a luta, não aparece, e o espólio segue como sempre.
+- **C4 em linhas:** o nome; o custo real da habilidade usada com a cor e o ícone do recurso e o nome escrito
+  ("−14 Mana"; no Arqueiro também "−1 flecha"); o Atacar pela classe (o que devolve ao acertar; as flechas do Arqueiro).
+  Cada habilidade do herói tem o seu (se usou Meditar ou Erguer Escudo, o texto é dela).
+- **A cena depois da despensa** espera o "Continuar" (com ou sem tutorial), e o taverneiro diz: "A primeira caneca é
+  por minha conta. Se quiser mais trabalho, dê uma olhada no mural de contratos, na praça." Quem já encontrou Morel não
+  ouve a apresentação de novo; a caneca e o XP continuam uma vez.
+
+**Conferido:** testes (os quatro C4 pelas classes, a cena com e sem Morel já encontrado), gabarito sem diferença,
+pyflakes, fumaça (C1–C4 sem cobrir carta nem ação, o C4 em linhas, "Entendi" sem mudar a pergunta da luta, a cena que
+espera o Continuar, "Encerrar tutorial" e religar pela Ajuda). No navegador, nas três classes, com mouse e teclado, a
+1500 e 1280 px: a posição do quadro durante os golpes (medida a cada lance: parada), nenhum quadro sobre cartas, barras,
+ações, janelinha ou texto visível; o C4 e o "Entendi" (clique e Enter); a habilidade que acaba com a luta (com os ratos
+de 1 de vida: nenhum C4, o espólio normal, a sequência contada na Ajuda); a capela de dia e de noite, com e sem tocha;
+salvar e carregar sem repetir caneca, XP nem a apresentação de Morel.
+
+**Limitações:**
+- A faixa reservada empurra o texto da página para baixo durante a primeira luta guiada (a altura do maior C4 da
+  classe; a do Arqueiro é a maior); some quando a luta acaba.
+- O C4 só aparece se houver uma próxima vez de agir; quem acaba a luta com a habilidade lê o custo na Ajuda.
+- Os indicadores da capela usam ícones que já existiam; o detalhe (quem ataca primeiro, −4 nos testes) fica na dica,
+  que no toque não aparece.

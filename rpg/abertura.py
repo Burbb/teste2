@@ -45,7 +45,7 @@ def tutorial(g):
 
 
 def ligar(g, valor):
-    """A Ajuda (ou "Dispensar orientações", com False): liga ou desliga as orientações deste save."""
+    """A Ajuda (ou "Encerrar tutorial", com False): liga ou desliga as orientações deste save."""
     _registro(g)["tutorial"] = bool(valor)
 
 
@@ -108,12 +108,12 @@ def descer(g):
         return
     a["despensa"], a["caneca"] = "feita", True
     g.ui.cena("A Taverna do Vau", g.contexto_cena(), "evento")
-    g.narrar("O taverneiro olha os dois ratos e cospe de lado. \"A primeira caneca é por minha conta, quando você "
-             "quiser.\" Ele aponta a praça com o queixo. \"E se quer trabalho, o mural paga quem limpa a estrada.\"")
-    if morel_esperando(g):
+    g.narrar("O taverneiro olha os dois ratos e cospe de lado. \"A primeira caneca é por minha conta. Se quiser mais "
+             "trabalho, dê uma olhada no mural de contratos, na praça.\"")
+    if morel_esperando(g):  # quem já encontrou Morel (por qualquer caminho) não ouve a apresentação de novo
         g.narrar("No canto, um homem grande come sozinho, de costas para a parede. Assistiu a tudo sem levantar. "
                  "\"Rato é fácil\", diz. \"Senta aqui, se quiser ouvir uma proposta.\"")
-    g.pausar()
+    g.ui.continuar(confirmar=True)  # a cena espera o Continuar, com ou sem tutorial: há o que ler
 
 
 # ------------------------------------------------------------------ Morel e a caneca
@@ -140,7 +140,7 @@ def opcoes(g):
     if a.get("despensa") == "adiada":
         r.append(("Taverna: descer à despensa", ("abertura", "despensa"),
                   {"predio": "taverna", "servico": "despensa", "curto": "Descer à despensa",
-                   "efeito": "Os ratos que o taverneiro quer fora", "nota": "Luta: dois ratos gigantes."}))
+                   "efeito": "Os ratos que o taverneiro quer fora", "nota": "Luta: dois ratos da despensa."}))
     if a.get("despensa") == "feita" and morel_esperando(g):
         r.append(("Taverna: sentar com o homem do canto", ("abertura", "morel"),
                   {"predio": "taverna", "servico": "morel", "curto": "Sentar com o homem do canto",
@@ -183,6 +183,26 @@ def _custo(j, hid, verbo="gastou"):
     return f"{h['nome']} {verbo} {gasto}. **Atacar** não gasta {rec} e, se acertar, devolve {devolve(j)}."
 
 
+def _c4(j, hid):
+    """O C4 em partes curtas, para a tela separar o nome, os custos e o Atacar: cada parte é texto puro (`t`) ou um
+    valor com o ícone e a cor do recurso (`rec`: Vigor, Mana, Foco) ou da flecha (`flecha`). O nome do recurso
+    continua escrito; a cor reforça. Custo real da habilidade (a ficha do herói) e o Atacar pelas regras da classe."""
+    h = efetiva(j, hid)
+    rec = j.nome_recurso
+    gasto = [{"rec": rec, "t": f"−{custo_habilidade(j, hid)} {rec}"}]
+    if h.get("flechas_por_alvo"):
+        gasto.append({"flecha": True, "t": "−1 flecha por inimigo"})
+    elif h.get("flechas"):
+        gasto.append({"flecha": True, "t": f"−{h['flechas']} flecha{'s' if h['flechas'] > 1 else ''}"})
+    volta = {"rec": rec, "t": f"+{devolve(j)} {rec}"}
+    if j.classe == "arqueiro":
+        atacar = [{"t": "Atacar: "}, {"flecha": True, "t": "−1 flecha"}, {"t": f", sem {rec}. Ao acertar, "}, volta,
+                  {"t": ". Sem flechas, vira um golpe de adaga mais fraco."}]
+    else:
+        atacar = [{"t": f"Atacar não gasta {rec}. Ao acertar, "}, volta, {"t": "."}]
+    return {"nome": h["nome"], "gasto": gasto, "atacar": atacar}
+
+
 def _combate_pendente(g):
     a = estado(g)
     return bool(a and "combate" not in a["vistas"] and a.get("lutas_sem_habilidade", 0) < LUTAS_SEM_HABILIDADE)
@@ -220,7 +240,7 @@ def atual(g):
             "C1": "Clique em **Habilidades** (tecla 2).",
             "C2": f"Clique em **{efetiva(j, hid)['nome']}** (tecla {j.habilidades.index(hid) + 1}).",
             "C3": "Clique num inimigo para escolher o alvo (ou a tecla do número dele).",
-            "C4": {h: _custo(j, h) for h in j.habilidades}}, "hab": hid}
+            "C4": {h: _c4(j, h) for h in j.habilidades}}, "hab": hid}
     if _v1_pendente(g):
         return {"id": "V1", "texto": "Os prédios da vila são clicáveis. **Mural**: os contratos.", "ancora": "mural"}
     return None

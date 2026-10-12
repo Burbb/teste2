@@ -308,22 +308,42 @@
 .arvore-base-titulo small { display: block; font-family: var(--texto); font-size: 12px; color: var(--tinta-3); text-shadow: none; margin-top: 2px; }
 
 /* ---------------------------------------------------------------- as orientações da abertura (orientacao.js) */
-/* Um quadro pequeno ao lado do controle, com a seta apontando para ele; um anel em volta do controle; um véu leve só
-   nas colunas laterais e na doca. Nada disso recebe clique, menos o "Dispensar orientações". */
-.orientacao { position: fixed; z-index: 18; max-width: 260px; padding: 8px 11px 7px; font-size: 15px; line-height: 1.35;
-  color: var(--tinta); background: #17110c; border: 2px solid var(--ouro); box-shadow: 3px 3px 0 #000; pointer-events: none; }
+/* O quadro: pequeno, com a seta discreta apontando o controle. Na luta, mora numa faixa reservada abaixo da arena (não
+   cobre cartas, barras, ações nem a página) e não acompanha a animação das cartas. */
+.orientacao { position: fixed; z-index: 18; max-width: 290px; padding: 8px 11px 7px; font-size: 15px; line-height: 1.35;
+  color: var(--tinta); background: #17110c; border: 1px solid #b8943f; box-shadow: 3px 3px 0 #000; }
 .orientacao b { color: var(--ouro); font-weight: 600; }
-.orientacao::before { content: ""; position: absolute; width: 0; height: 0; border: 7px solid transparent; }
-.orientacao.seta-direita::before { left: -16px; top: calc(var(--seta) - 7px); border-right-color: var(--ouro); }
-.orientacao.seta-esquerda::before { right: -16px; top: calc(var(--seta) - 7px); border-left-color: var(--ouro); }
-.orientacao.seta-baixo::before { top: -16px; left: calc(var(--seta) - 7px); border-bottom-color: var(--ouro); }
-.orientacao.seta-cima::before { bottom: -16px; left: calc(var(--seta) - 7px); border-top-color: var(--ouro); }
-.orientacao-dispensar { pointer-events: auto; display: block; margin: 5px 0 0 auto; padding: 0; font: inherit; font-size: 12px;
-  color: var(--tinta-2); background: none; border: 0; text-decoration: underline; cursor: pointer; }
-.orientacao-dispensar:hover, .orientacao-dispensar:focus-visible { color: var(--tinta); }
-.orientacao-anel { position: fixed; z-index: 18; pointer-events: none; border: 2px solid var(--ouro);
-  box-shadow: 0 0 0 2px #000, 0 0 10px rgba(255, 210, 90, 0.5); animation: orientacao-pulso 1.4s ease-in-out infinite; }
-@keyframes orientacao-pulso { 50% { box-shadow: 0 0 0 2px #000, 0 0 2px rgba(255, 210, 90, 0.2); } }
+.orientacao::before { content: ""; position: absolute; width: 0; height: 0; border: 6px solid transparent; }
+.orientacao.seta-direita::before { left: -12px; top: calc(var(--seta) - 6px); border-right-color: #b8943f; }
+.orientacao.seta-esquerda::before { right: -12px; top: calc(var(--seta) - 6px); border-left-color: #b8943f; }
+.orientacao.seta-baixo::before { top: -12px; left: calc(var(--seta) - 6px); border-bottom-color: #b8943f; }
+.orientacao.seta-cima::before { bottom: -12px; left: calc(var(--seta) - 6px); border-top-color: #b8943f; }
+.orientacao-botoes { display: flex; align-items: center; justify-content: flex-end; gap: 12px; margin-top: 6px; }
+.orientacao-encerrar { padding: 0; font: inherit; font-size: 12px; color: var(--tinta-2); background: none; border: 0;
+  text-decoration: underline; cursor: pointer; }
+.orientacao-encerrar:hover, .orientacao-encerrar:focus-visible { color: var(--tinta); }
+.orientacao-entendi { order: 2; padding: 2px 12px; font: inherit; font-size: 14px; font-weight: 600; color: #1a1209;
+  background: var(--ouro); border: 1px solid #000; box-shadow: 2px 2px 0 #000; cursor: pointer; }
+.orientacao-entendi:hover { filter: brightness(1.08); }
+.orientacao-entendi:focus-visible { outline: 1px solid var(--tinta); outline-offset: 2px; }
+/* O C4 em linhas curtas: o nome, os custos (ícone e cor do recurso, o nome escrito) e o Atacar. */
+.orientacao.c4 { max-width: 360px; }
+.o-nome { font-weight: 600; color: var(--ouro); }
+.o-custos { margin: 2px 0 3px; }
+.o-valor { display: inline-flex; align-items: center; gap: 3px; margin-right: 6px; font-weight: 600; white-space: nowrap; }
+.o-valor.rec-vigor { color: #ffe08a; }
+.o-valor.rec-mana { color: #a8c4ff; }
+.o-valor.rec-foco { color: #b8f0a0; }
+.o-valor.flecha { color: #e8d9b8; }
+.o-atacar { font-size: 14px; color: var(--tinta-2); }
+.o-atacar .o-valor { margin: 0 1px; }
+/* A faixa reservada da luta guiada, entre a arena e a página: só espaço (o quadro fica por cima dela). */
+.orientacao-faixa { flex: none; }
+/* O destaque: um contorno fino com o formato do controle e um brilho que pulsa devagar; com movimento reduzido, só o
+   contorno. Acompanha o controle (o quadro, não). */
+.orientacao-anel { position: fixed; z-index: 18; pointer-events: none; border: 1px solid rgba(255, 214, 120, 0.95);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6), 0 0 4px rgba(255, 206, 96, 0.25); animation: orientacao-brilho 2.4s ease-in-out infinite; }
+@keyframes orientacao-brilho { 50% { box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6), 0 0 9px rgba(255, 206, 96, 0.55); } }
 .orientacao-veu { position: fixed; z-index: 17; pointer-events: none; background: rgba(0, 0, 0, 0.25); }
 @media (prefers-reduced-motion: reduce) { .orientacao-anel { animation: none; } }
 /* A caixa marcável que vai junto de uma escolha ("Mostrar tutorial", na criação da campanha). */

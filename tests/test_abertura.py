@@ -115,6 +115,18 @@ class TestDespensa(unittest.TestCase):
         self.assertFalse(abertura.cena_pendente(g))
         self.assertFalse([o for o in abertura.opcoes(g) if o[1][1] == "despensa"])
 
+    def test_a_cena_depois_espera_o_continuar_e_diz_o_mural(self):
+        for morel in (False, True):
+            g = nova(roteiro=["Descer à despensa"])
+            if morel:
+                g.contagem["morel_na_taverna"] = 1  # já encontrado pela bebida: a apresentação não repete
+            telas(g, 3)
+            self.assertIn(("A Taverna do Vau", True), g.ui.continuares)
+            texto = " ".join(g.ui.ditos)
+            self.assertIn("\"A primeira caneca é por minha conta. Se quiser mais trabalho, dê uma olhada no mural de "
+                          "contratos, na praça.\"", texto)
+            self.assertEqual("Rato é fácil" in texto, not morel)
+
     def test_os_ratos_dizem_o_que_sao(self):
         g = nova()
         rato = abertura._rato(g)
@@ -220,15 +232,22 @@ class TestOrientacoes(unittest.TestCase):
         self.assertFalse(estado(g)["orientacao"]["ligado"])
 
     def test_textos_da_luta_pelas_regras_da_classe(self):
-        for classe, hab, trecho in (("guerreiro", "Golpe Pesado", "10 de Vigor. **Atacar** não gasta Vigor"),
-                                    ("mago", "Bola de Fogo", "14 de Mana. **Atacar** não gasta Mana"),
-                                    ("arqueiro", "Tiro Certeiro", "8 de Foco e 1 flecha. **Atacar** também gasta 1 flecha")):
+        casos = (("guerreiro", "Golpe Pesado", [{"rec": "Vigor", "t": "−10 Vigor"}],
+                  [{"t": "Atacar não gasta Vigor. Ao acertar, "}, {"rec": "Vigor", "t": "+2 Vigor"}, {"t": "."}]),
+                 ("mago", "Bola de Fogo", [{"rec": "Mana", "t": "−14 Mana"}],
+                  [{"t": "Atacar não gasta Mana. Ao acertar, "}, {"rec": "Mana", "t": "+2 Mana"}, {"t": "."}]),
+                 ("arqueiro", "Tiro Certeiro", [{"rec": "Foco", "t": "−8 Foco"}, {"flecha": True, "t": "−1 flecha"}],
+                  [{"t": "Atacar: "}, {"flecha": True, "t": "−1 flecha"}, {"t": ", sem Foco. Ao acertar, "},
+                   {"rec": "Foco", "t": "+2 Foco"}, {"t": ". Sem flechas, vira um golpe de adaga mais fraco."}]))
+        for classe, hab, gasto, atacar in casos:
             g = nova(classe)
             g.combate_ativo = object()
             o = abertura.atual(g)
             self.assertEqual(o["passos"]["C1"], "Clique em **Habilidades** (tecla 2).")
             self.assertEqual(o["passos"]["C2"], f"Clique em **{hab}** (tecla 1).")
-            self.assertIn(trecho, o["passos"]["C4"][o["hab"]], classe)
+            self.assertEqual(o["passos"]["C4"][o["hab"]], {"nome": hab, "gasto": gasto, "atacar": atacar}, classe)
+            # cada habilidade do herói tem o dela, com o custo real (a outra do nível 1: Erguer Escudo, Meditar...)
+            self.assertEqual(set(o["passos"]["C4"]), set(g.j.habilidades))
 
     def test_a_luta_com_habilidade_cumpre_e_sem_ela_conta(self):
         g = nova()
@@ -287,8 +306,16 @@ class TestSave(unittest.TestCase):
         telas(h, 2)
         self.assertEqual(abertura.estado(h)["despensa"], "feita")
         h.salvar(silencioso=True)
-        k = Jogo.carregar(Jogador(), h.caminho_save(), pasta)
+        k = Jogo.carregar(Jogador(["Taverna: sentar", "Recusar"]), h.caminho_save(), pasta)
         self.assertEqual((abertura.estado(k)["despensa"], abertura.caneca(k)), ("feita", True))
+        xp, ouro = k.j.xp, k.j.ouro
+        telas(k, 4)  # carregado depois da despensa: nada dela se repete; Morel conta uma vez e não reabre
+        ofertas = [o for lista in k.ui.ofertas for o in lista]
+        self.assertFalse(any(o.startswith("Taverna: descer à despensa") for o in ofertas))
+        self.assertEqual((k.j.xp, k.j.ouro, abertura.caneca(k)), (xp, ouro, True))
+        self.assertEqual(k.contagem["morel_na_taverna"], 1)
+        self.assertNotIn("primeira caneca", " ".join(k.ui.ditos))
+        self.assertEqual(sum(o.startswith("Taverna: sentar") for o in k.ui.ofertas[-1]), 0)
 
 
 if __name__ == "__main__":

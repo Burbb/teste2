@@ -154,9 +154,10 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
 - `app/nucleo.js` conexão e fila de mensagens · `app/pagina.js` texto e cenas · `app/escolhas.js` menus,
   doca de atalhos, roda de ações da luta · `app/paineis.js` ficha e mapa laterais · `app/controles.js` teclado
 - `app/orientacao.js` as orientações da abertura guiada (abertura.py): acha o controle (a roda, a janelinha, a mira, a
-  barra de recurso, o prédio do Mural), põe o anel em volta, o quadro com a seta (na luta, logo abaixo da arena, para
-  nunca cobrir cartas nem ações) e um véu leve só nas colunas laterais e na doca; tudo sem receber clique, menos
-  "Dispensar orientações". A Ajuda (topo, F1) lista o que já foi visto e liga ou desliga, pela rota `/orientacao`
+  barra de recurso, o prédio do Mural), põe o contorno em volta, o quadro com a seta (na luta, parado numa faixa
+  reservada abaixo da arena, ou acima das cartas se couber, para nunca cobrir cartas, ações nem texto; recalculado só
+  quando o passo ou o tamanho da tela muda) e um véu leve só nas colunas laterais e na doca; tudo sem receber clique,
+  menos os botões do quadro ("Entendi" no C4, que fecha só ele, e "Encerrar tutorial"). A Ajuda (topo, F1) lista o que já foi visto e liga ou desliga, pela rota `/orientacao`
   (fora da fila das perguntas). Uma caixa marcável pode ir junto de uma escolha (`caixa` na pergunta; a resposta vem
   como `{"i", "caixa"}`; no texto, `UI.ler_caixa` faz uma pergunta de sim ou não).
 - `app/vila.js` a vila como lugar: os serviços moram nos prédios da paisagem. O motor marca cada opção da vila com
