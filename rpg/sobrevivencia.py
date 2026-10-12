@@ -259,8 +259,9 @@ def escuro(g):
     return g.noite or g.bioma in ("ruinas", "cidadela")
 
 
-def acender_tocha(g):
-    """Antes de agir no escuro. Devolve True se há luz."""
+def acender_tocha(g, sala=False):
+    """Antes de agir no escuro. Devolve True se há luz. sala: a luta de uma sala escura (a capela), que sem luz começa
+    sempre com o inimigo atacando primeiro; fora dela, o escuro só torna a emboscada mais provável (Percepção pior)."""
     if not escuro(g):
         g.sem_luz = False
         return True
@@ -269,6 +270,47 @@ def acender_tocha(g):
         g.dizer(f"Você acende uma tocha. (restam {g.j.consumiveis['tocha']})", "amarelo")
         g.sem_luz = False
         return True
-    g.dizer("Sem tocha, você avança às cegas. (percepção e destreza -4, emboscadas mais prováveis)", "vermelho")
+    if sala:
+        g.dizer(f"Sem tocha, você entra às cegas: o inimigo mais rápido ataca antes de você. (Percepção e Destreza "
+                f"−{bal.ESCURO_TESTES})", "vermelho")
+    else:
+        g.dizer(f"Sem tocha, você avança às cegas. (Percepção e Destreza −{bal.ESCURO_TESTES}, emboscadas mais "
+                "prováveis)", "vermelho")
     g.sem_luz = True
     return False
+
+
+def _noite(guardiao=False):
+    """O que a noite muda numa luta, do balanceamento: o nível (não nos guardiões) e o dano de todos os inimigos."""
+    dano = round((bal.NOITE_INIMIGOS - 1) * 100)
+    return f"+{dano}% de dano dos inimigos" if guardiao else f"inimigos +{bal.NOITE_NIVEL} nível e +{dano}% de dano"
+
+
+def nota_sala(g, guardiao=False):
+    """A nota da luta de uma sala escura (as da capela), junto da ação, antes de entrar: a tocha que ela gasta, ou a
+    emboscada certa sem tocha, e o que a noite muda (num guardião, só o dano). None se nada disso vale."""
+    partes = []
+    if escuro(g):
+        n = g.j.consumiveis.get("tocha", 0)
+        partes.append(f"Gasta 1 tocha (você tem {n})." if n else "Sem tocha: o inimigo mais rápido ataca primeiro.")
+    if g.noite:
+        partes.append(f"Noite: {_noite(guardiao)}.")
+    return " ".join(partes) or None
+
+
+def riscos_do_lugar(g, salas=False):
+    """Fora da vila, o que a hora e a luz mudam aqui, em linhas curtas (o cabeçalho e o painel do lugar), ao lado do
+    nível-base da região, que continua o mesmo. salas: o lugar tem lutas de sala (a capela)."""
+    if g.loc["tipo"] == "vila":
+        return []
+    r = []
+    if g.noite:
+        r.append({"icone": "lua", "texto": f"Noite: {_noite()}"})
+    if escuro(g):
+        n = g.j.consumiveis.get("tocha", 0)
+        onde = "explorar, caçar, viajar e cada sala" if salas else "explorar, caçar e viajar"
+        r.append({"icone": "tocha" if n else "tocha_apagada",
+                  "texto": f"Escuro: {onde} gastam 1 tocha por vez (você tem {n})" if n else
+                  f"Escuro e sem tocha: Percepção e Destreza −{bal.ESCURO_TESTES}" +
+                  ("; nas salas, o inimigo ataca primeiro" if salas else "")})
+    return r

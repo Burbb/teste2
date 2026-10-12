@@ -24,6 +24,9 @@ TUDO = ["agua_do_leste", "represa", "canal_da_capela", "agua_da_capela", "ilse",
         "correntes"]
 
 
+# A guardiã é no fundo da capela, escuro de dia também: a escolha diz a tocha que a luta gasta (sem noite nestes).
+TOCHA = "Gasta 1 tocha (você tem 3)."
+
 class Lutador(arena.LutadorUI):
     """O robô lutador da arena, que responde as perguntas da missão pelo começo do texto (na ordem de preferência)."""
 
@@ -192,7 +195,7 @@ class TestConfronto(unittest.TestCase):
             m = missoes.registro(g, MID)
             self.assertEqual((m["desfecho"], m["etapa"]), ("destruida", "retorno"), classe)
             descida = next(p for p in g.ui.perguntas if "Voltar por enquanto" in p[1])
-            self.assertEqual(descida, ("O que você faz?", [f"Lutar para destruí-la — {tx.SEM_FUGA}", "Voltar por enquanto"]))
+            self.assertEqual(descida, ("O que você faz?", [f"Lutar para destruí-la — {tx.SEM_FUGA} {TOCHA}", "Voltar por enquanto"]))
             self.assertIn("Ela ainda não se levantou da água.", g.ui.ditos)  # a cena; a regra fica na nota da luta
             self.assertFalse(any("ainda falta" in d for d in g.ui.ditos))  # sem Berta, ninguém falou do rito
             self.assertFalse(any(p[0] == "Este é o momento do rito." for p in g.ui.perguntas))
@@ -205,7 +208,7 @@ class TestConfronto(unittest.TestCase):
         missoes.executar(g, MID, "fundo")
         self.assertIn("Vó Berta disse que era preciso soltá-la das pedras. As correntes ainda a prendem.", g.ui.ditos)
         descida = next(p for p in g.ui.perguntas if "Voltar por enquanto" in p[1])
-        self.assertEqual(descida[1], [f"Lutar para destruí-la — {tx.SEM_FUGA}", "Voltar por enquanto"])
+        self.assertEqual(descida[1], [f"Lutar para destruí-la — {tx.SEM_FUGA} {TOCHA}", "Voltar por enquanto"])
 
     def test_preparado_e_mesmo_assim_destroi(self):
         g = no_fundo("arqueiro", DESTRUIR, **PRONTO)

@@ -291,7 +291,8 @@ function desenharMundo(e) {
       <span class="dist">${Texto.plural(n.distancia, "trecho")}</span></div>`).join("");
   const raiz = $("#mundo");
   raiz.innerHTML = `<div class="local-nome">${esc(l.nome)}</div><div class="local-desc">${esc(maiuscula(l.descricao))}</div>
-    ${l.nivel ? `<span class="perigo-tag ${nivelPerigo(l.nivel)}">${l.tipo === "vila" ? "Arredores" : "Inimigos"} Nv.${l.nivel}</span>` : ""}<div id="mapa-mini"></div>
+    ${l.nivel ? `<span class="perigo-tag ${nivelPerigo(l.nivel)}">${l.tipo === "vila" ? "Arredores" : "Inimigos"} Nv.${l.nivel}</span>` : ""}
+    ${(l.riscos || []).map((r) => `<div class="risco-lugar">${spr(r.icone, 1)}<span>${esc(r.texto)}</span></div>`).join("")}<div id="mapa-mini"></div>
     ${Telas.rastreador(e.contratos, e.heroi.nivel, e.missoes, e.capitulo)}
     <div class="secao"><h3>Caminhos</h3><div class="caminhos">${caminhos || '<div class="vazio">nenhum</div>'}</div></div>`;
   const mini = MapaPx.criar(e.mapa, { clicaveis: clic, aoClicar: viajarPara, nivelHeroi: e.heroi.nivel, marcas: marcasContrato(e), dicaDe: dicaDoLugar(e, clic) });

@@ -416,7 +416,9 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         ui = self.ui
         tipo = {"vila": "Vila", "selvagem": BIOMAS[loc["bioma"]]["nome"], "covil": BIOMAS[loc["bioma"]]["nome"],
                 "cidadela": "Cidadela"}[loc["tipo"]]
-        perigo = "" if loc["tipo"] == "vila" else f" • inimigos Nv.{self.nivel_local()}"
+        # O nível-base da região; à noite, o que ela soma vem ao lado, sem trocar o número (seção 8 do 18).
+        perigo = ("" if loc["tipo"] == "vila" else f" • inimigos Nv.{self.nivel_local()}"
+                  + (f" (+{bal.NOITE_NIVEL} à noite)" if self.noite else ""))
         ui.cena(loc["nome"], f"{tipo}{perigo} • Dia {self.dia} • {PERIODOS[min(self.periodo, 3)]} • "
                              f"{CLIMAS[self.clima]['nome']}", "local")
         if ui.hud:
@@ -434,6 +436,8 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         males = sobrevivencia.descrever(j)
         ui.dizer(f" Provisões {j.provisoes}  Tochas {j.consumiveis.get('tocha', 0)}"
                  + (f"  |  {', '.join(males)}" if males else ""), "vermelho" if males else "cinza")
+        for r in sobrevivencia.riscos_do_lugar(self, missoes.tem_salas(self)):
+            ui.dizer(f" {r['texto']}", "amarelo")
         ui.separador()
 
     def tela(self):

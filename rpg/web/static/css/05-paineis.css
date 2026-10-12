@@ -116,6 +116,9 @@
 .perigo-tag.baixo, .nivel-cam.baixo { color: var(--bom); }
 .perigo-tag.medio, .nivel-cam.medio { color: var(--ouro); }
 .perigo-tag.alto, .nivel-cam.alto { color: var(--sangue-2); }
+/* O que a noite e o escuro mudam aqui (o motor manda o texto): ao lado do nível-base, que não muda. */
+.risco-lugar { display: flex; align-items: center; gap: 6px; margin-top: 3px; font-size: 13px; line-height: 1.25; color: var(--ouro-2, #e0b860); }
+.risco-lugar img { flex: none; }
 .nivel-cam { font-weight: 600; }
 /* Caminhos: um cartão de filete escuro por destino, com o ícone do lugar, o nome, o nível e a distância. */
 .caminhos { display: flex; flex-direction: column; gap: 6px; }

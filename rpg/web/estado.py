@@ -265,9 +265,11 @@ def modificadores(g):
         m.append({"icone": clima["icone"], "texto": f"Esquiva +{pct}%",
                   "detalhe": f"{clima['nome']}: todo mundo erra mais (+{pct}% de esquiva para todos)."})
     if g.noite:
+        # O que vale em todo lugar (o +1 inimigo só onde o bando varia; o nível não sobe nos guardiões).
         m.append({"icone": "lua", "texto": f"Inimigos +{bal.NOITE_NIVEL} nível",
-                  "detalhe": f"Noite: os inimigos vêm {'um nível' if bal.NOITE_NIVEL == 1 else f'{bal.NOITE_NIVEL} níveis'} acima, mais vezes em bando, e "
-                             f"causam {round((bal.NOITE_INIMIGOS - 1) * 100)}% mais dano. É a hora deles."})
+                  "detalhe": f"Noite: os inimigos dos encontros e das salas vêm {'um nível' if bal.NOITE_NIVEL == 1 else f'{bal.NOITE_NIVEL} níveis'} acima "
+                             "(os guardiões, não). Onde o bando varia, às vezes vem um a mais; nas salas, o número é o "
+                             f"mesmo. Todos causam {round((bal.NOITE_INIMIGOS - 1) * 100)}% mais dano."})
     if g.sem_luz:
         m.append({"icone": "tocha_apagada", "texto": f"Escuro −{bal.ESCURO_TESTES}",
                   "detalhe": f"Sem luz: −{bal.ESCURO_TESTES} nos testes de Percepção e Destreza. Acenda uma tocha."})
@@ -315,6 +317,7 @@ def estado(g):
         "local": {"id": loc["id"], "nome": loc["nome"], "tipo": loc["tipo"], "bioma": loc["bioma"],
                   "bioma_nome": BIOMAS[loc["bioma"]]["nome"], "descricao": mapa.descricao(g, loc),
                   "nivel": g.nivel_local(), "predios_fechados": predios_fechados(g),
+                  "riscos": sobrevivencia.riscos_do_lugar(g, missoes.tem_salas(g)),
                   **({"atendentes": atendentes(g)} if atendentes(g) else {}),  # só no Vau da campanha
                   "estrada": g.na_estrada},  # viajando: a paisagem é a da região, sem a vila
         "mapa": mapa_conhecido(g),

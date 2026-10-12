@@ -7,7 +7,7 @@
     python -m tests.navegador.cenarios baus      # vila com três baús na bolsa (BAUS): a pilha abre inteira
     python -m tests.navegador.cenarios missao    # campanha no Bosque do Moinho, na etapa de seguir o canal
     python -m tests.navegador.cenarios recarga   # título com um save da campanha (Bosque, à noite) e um do mundo gerado
-    python -m tests.navegador.cenarios capela    # herói na Capela Afogada (CLASSE, ESPEC, ETAPA, NIVEL, PREPARO, LUGAR, SEMENTE, PRISAO)
+    python -m tests.navegador.cenarios capela    # herói na Capela Afogada (CLASSE, ESPEC, ETAPA, NIVEL, PREPARO, LUGAR, SEMENTE, PRISAO, PERIODO, TOCHAS)
     python -m tests.navegador.cenarios retorno   # chegando ao Vau com Ilse resolvida (DESFECHO, DIAS, LODO, YARA)
     python -m tests.navegador.cenarios praca     # depois da resposta a Caspar (POSTURA, YARA, LUGAR); no Vau, abre no fim do capítulo
     python -m tests.navegador.cenarios encruzilhada  # a escolha de especialização, comparando (CLASSE, NIVEL)
@@ -218,8 +218,8 @@ def capela(ui):
     missão na ETAPA (padrão "sacristia": a nave já vencida) e o que se sabe até ali. PREPARO: "correntes" (soltas),
     "berta" (Berta ouvida e a fita, as correntes ainda presas) ou "pronto" (Berta ouvida, a fita e as correntes: o rito
     disponível). PRISAO (mago, nível 4 ou mais): o talento Prisão de Gelo já comprado, levando a "prisao" ou a "lanca";
-    o resto dos talentos sai igual nas duas, para comparar o mesmo herói. PONTOS: pontos de talento sobrando. Sair do
-    jogo leva ao título, com o save."""
+    o resto dos talentos sai igual nas duas, para comparar o mesmo herói. PONTOS: pontos de talento sobrando. PERIODO
+    (padrão 0, manhã; 3 é noite) e TOCHAS (padrão: as do começo). Sair do jogo leva ao título, com o save."""
     from rpg import dev, missoes, talentos
     from rpg.habilidades import escolher_versao
     from rpg.__main__ import menu_principal
@@ -256,7 +256,9 @@ def capela(ui):
     for chave in ("bosque_do_moinho", "capela_afogada"):
         next(l for l in g.mundo["locais"] if l["chave"] == chave)["visitado"] = True
     g.mundo["atual"] = next(l for l in g.mundo["locais"] if l["chave"] == os.environ.get("LUGAR", "capela_afogada"))["id"]
-    g.periodo, g.clima = 0, "limpo"
+    g.periodo, g.clima = int(os.environ.get("PERIODO", "0")), "limpo"
+    if os.environ.get("TOCHAS"):
+        g.j.consumiveis["tocha"] = int(os.environ["TOCHAS"])
     g.ui, ui.jogo = ui, g
     try:
         g.rodar()

@@ -369,7 +369,7 @@ def _capela_exterior(g, mid):
 def _lutar(g, grupo, titulo):
     """A luta da sala. Devolve True só com vitória (a derrota sai daqui como sempre, para o resgate ou o fim)."""
     from . import sobrevivencia
-    luz = sobrevivencia.acender_tocha(g)
+    luz = sobrevivencia.acender_tocha(g, sala=True)
     try:
         r = g.combate(grupo, emboscada=None if luz else "inimigo", titulo=titulo)
     finally:
@@ -608,11 +608,13 @@ def _soltar_correntes(g, mid):
              "até as duas pedras de moinho, lá embaixo na água. Uma trava de ferro segura o eixo para ele não girar.")
     if sabe_do_rito(m):
         g.narrar("Vó Berta disse que um afogado descansa quando alguém o chama pelo nome e o solta das pedras.")
-    opcoes = [("Desenrolar as correntes à mão", "mao", {"nota": NOTA_MAO})]
+    from .sobrevivencia import nota_sala
+    sala = nota_sala(g)  # o barulho chama os afogados: a luta é na sala, com a tocha e a noite de sempre
+    opcoes = [("Desenrolar as correntes à mão", "mao", {"nota": " ".join(x for x in (NOTA_MAO, sala) if x)})]
     if g.j.classe == "arqueiro" and g.j.flechas <= 0:
         g.dizer("Sem flechas, não dá para acertar o pino da trava: sobra o jeito à mão.", "cinza")
     else:
-        nota = ("Gasta 1 flecha. " if g.j.classe == "arqueiro" else "") + RISCO_CLASSE
+        nota = ("Gasta 1 flecha. " if g.j.classe == "arqueiro" else "") + RISCO_CLASSE + (f" {sala}" if sala else "")
         opcoes.append((METODO_CLASSE[g.j.classe], "classe", {"nota": nota}))
     opcoes.append(("Deixar como está", None))
     op = g.menu("O que você faz com as correntes?", opcoes)
@@ -673,7 +675,8 @@ def _fundo(g, mid):
             falta = [o_que[0].lower() + o_que[1:] for o_que, _, feito in descanso(m) if not feito]
             g.narrar("Do que Vó Berta contou, ainda falta " + tx.lista_natural(falta) + ".")
     g.narrar("Ela ainda não se levantou da água.")
-    sem_fuga = {"nota": tx.SEM_FUGA}
+    from .sobrevivencia import nota_sala
+    sem_fuga = {"nota": " ".join(x for x in (tx.SEM_FUGA, nota_sala(g, guardiao=True)) if x)}
     opcoes = ([("Chamar Ilse pelo nome e tentar dar descanso", "descanso", sem_fuga)] if pronto else []) + [
         ("Lutar para destruí-la", "destruir", sem_fuga), ("Voltar por enquanto", None)]
     op = g.menu("O que você faz?", opcoes)
@@ -691,7 +694,7 @@ def _fundo(g, mid):
         chefe.ao_limiar = lambda cb, e: _momento_do_rito(g, cb, e)
         g.narrar("Você segura a fita e espera o momento de dizer o nome dela.")
     from . import sobrevivencia
-    luz = sobrevivencia.acender_tocha(g)
+    luz = sobrevivencia.acender_tocha(g, sala=True)
     try:
         r = g.combate([chefe], emboscada=None if luz else "inimigo", pode_fugir=False,
                       titulo="Guardiã: Ilse, a Bruxa Afogada")
@@ -828,11 +831,11 @@ ACOES = [
     dict(missao="febre_do_turvo", id="seguir_canal", rotulo="Seguir a água e examinar o canal",
          lugar="bosque_do_moinho", etapas=("canal",), fn=_seguir_canal, confirmar=True),
     dict(missao="febre_do_turvo", id="nave", rotulo="Entrar na capela pelo buraco do canal", lugar="capela_afogada",
-         etapas=("capela",), fn=_nave, confirmar=True),
+         etapas=("capela",), fn=_nave, confirmar=True, sala=True),
     dict(missao="febre_do_turvo", id="sacristia", rotulo="Atravessar o salão alagado",
-         lugar="capela_afogada", etapas=("sacristia",), fn=_sacristia, confirmar=True),
+         lugar="capela_afogada", etapas=("sacristia",), fn=_sacristia, confirmar=True, sala=True),
     dict(missao="febre_do_turvo", id="ossuario", rotulo="Descer ao ossuário", lugar="capela_afogada",
-         etapas=("ossuario",), fn=_ossuario, confirmar=True),
+         etapas=("ossuario",), fn=_ossuario, confirmar=True, sala=True),
     dict(missao="febre_do_turvo", id="correntes", rotulo="Soltar as correntes", abre=True,
          lugar="capela_afogada", etapas=("fundo",), falta="corpo_solto", fn=_soltar_correntes, confirmar=True),
     dict(missao="febre_do_turvo", id="fundo", rotulo="Descer ao fundo alagado", abre=True, avanca=True,
@@ -937,8 +940,21 @@ def opcoes(g):
         return []
     validas = sorted((d for d in ACOES if _vale(g, d)), key=lambda d: bool(d.get("avanca")))  # estável: o resto na ordem
     return [(d["rotulo"](g) if callable(d["rotulo"]) else d["rotulo"], ("missao", d["missao"], d["id"]),
-             {**d.get("meta", {}), "missao": d["missao"], **({"abre": True} if d.get("abre") else {})})
+             {**d.get("meta", {}), "missao": d["missao"], **({"abre": True} if d.get("abre") else {}),
+              **_nota_sala(g, d)})
             for d in validas]
+
+
+def _nota_sala(g, d):
+    """A ação que entra direto na luta de uma sala (`sala`) leva a nota da tocha e da noite (sobrevivencia.nota_sala)."""
+    from .sobrevivencia import nota_sala
+    nota = nota_sala(g) if d.get("sala") else None
+    return {"nota": nota} if nota else {}
+
+
+def tem_salas(g):
+    """O lugar de agora tem lutas de sala (a capela da campanha): o painel do lugar fala delas no escuro."""
+    return bool(g.campanha) and any(d.get("sala") and d["lugar"] == g.loc.get("chave") for d in ACOES)
 
 
 def executar(g, mid, aid):
