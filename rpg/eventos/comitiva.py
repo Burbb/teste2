@@ -15,7 +15,7 @@ def _vivos_covis(g):
 @evento(contextos=("explorar", "viagem"), peso=lambda g: 16 if g.dia <= 8 else 6, cooldown=0, unico=True,
         cond=lambda g: g.dia >= 2 and cm.disponivel(g, "odete") and g.loc["tipo"] != "cidadela")
 def odete_na_estrada(g):
-    g.dizer("À beira da estrada, uma mulher de hábito chamuscado está ajoelhada ao lado de um homem com a barriga "
+    g.dizer("À beira da estrada, uma mulher de roupas chamuscadas está ajoelhada ao lado de um homem com a barriga "
             "aberta. Ela aperta a ferida com as próprias mãos. Não tem bandagens. Não tem mais nada.")
     g.dizer("\"Segure aqui\", ela diz, sem olhar para você, como se você sempre tivesse estado ali.", "amarelo")
     # Perguntar o nome não resolve nada: ela responde e o homem continua ali. A pergunta sai do menu (sem repetir a
@@ -79,8 +79,8 @@ def odete_na_estrada(g):
 
 @conversa("odete", 0, dias=1)
 def odete_conversa_habito(g, m):
-    g.dizer("Você pergunta pelo hábito chamuscado. Odette demora a responder.")
-    g.dizer("\"Chamuscado, não queimado. Tem diferença. Queimado é quem ficou.\"", "amarelo")
+    g.dizer("Você pergunta pelas roupas chamuscadas. Odette demora a responder.")
+    g.dizer("\"Chamuscadas, não queimadas. Tem diferença. Queimado é quem ficou.\"", "amarelo")
     op = g.menu("O que diz?", [
         ("\"Não precisa me contar nada.\"", "respeito"),
         ("\"Quem ficou?\"", "insistir"),

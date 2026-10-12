@@ -277,6 +277,11 @@ const Som = (() => {
     cura() { const t = ctx.currentTime; [523, 659, 784, 1046, 1318].forEach((f, i) => tom(t + i * 0.06, f, 0.05, 0.5, "sine")); sopro(t, 0.6, 2000, 6000, 0.03, 0.8, "highpass"); },
     roubo() { const t = ctx.currentTime; tom(t, 520, 0.09, 0.45, "sawtooth", 140); tom(t + 0.1, 330, 0.06, 0.4, "triangle", 110); sopro(t, 0.45, 1600, 300, 0.12, 3); },
     esquiva() { const t = ctx.currentTime; sopro(t, 0.22, 600, 3200, 0.18, 1.5); },
+    retirada() {  // a fuga concluída: quatro passos que se afastam (cada vez mais baixos) e um sopro que some
+      const t = ctx.currentTime;
+      [0, 0.1, 0.2, 0.3].forEach((d, i) => estalo(t + d, 700 - i * 90, 0.2 * (1 - i * 0.22), 0.05));
+      sopro(t + 0.05, 0.5, 1600, 260, 0.1, 1.2);
+    },
     disparo() { const t = ctx.currentTime; estalo(t, 1500, 0.2, 0.04); sopro(t + 0.02, 0.18, 2500, 900, 0.12, 2); },
     lancar() { const t = ctx.currentTime; sopro(t, 0.25, 400, 1800, 0.18, 1.2); },
     atordoar() { const t = ctx.currentTime; [1568, 1318, 1568, 1318].forEach((f, i) => tom(t + i * 0.08, f, 0.04, 0.12, "square")); },

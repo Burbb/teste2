@@ -89,7 +89,7 @@ document.addEventListener("keydown", (ev) => {
   if (ev.target.tagName === "INPUT" && (ev.target.type !== "checkbox" || ev.key === " ")) { if (ev.key === "Escape") ev.target.blur(); return; }
   if (ev.ctrlKey || ev.metaKey || ev.altKey) return;
   const k = ev.key;
-  if (k === "F1") { ev.preventDefault(); Orientacao.alternarAjuda(); return; }
+  if (k === "F1") { ev.preventDefault(); if (!ev.repeat) Orientacao.alternarAjuda(); return; }
   if (k === "Escape" || k === "Backspace") {
     if (fecharJanela()) { ev.preventDefault(); return; }  // a janelinha de habilidades/itens da luta fecha primeiro
     const aberto = !$("#gaveta-historico").hidden || !$("#sobre-mapa").hidden || !$("#sobre-talentos").hidden || !$("#sobre-grimorio").hidden || !$("#sobre-ajuda").hidden || document.querySelector(".menu-item");
@@ -99,12 +99,20 @@ document.addEventListener("keydown", (ev) => {
     return;
   }
   if (pergunta && pergunta.letras && pergunta.letras[k.toLowerCase()] !== undefined && !processando) {
-    ev.preventDefault(); responder(pergunta.id, pergunta.letras[k.toLowerCase()]); return;
+    ev.preventDefault();
+    // A letra de um atalho da doca faz o que o botão faz (a doca fica sabendo qual tela abriu e a mesma tecla a fecha).
+    const at = SISTEMA.find((x) => x[2] === k.toLowerCase());
+    if (at && doca.querySelector(`.atalho[data-rotulo="${at[1]}"]`)) { pedirAtalho(at[1]); return; }
+    responder(pergunta.id, pergunta.letras[k.toLowerCase()]); return;
   }
+  // Tecla segurada: só o primeiro aperto conta (abrir e já fechar, ou atravessar para a tela seguinte, não).
+  if (ev.repeat && k.length === 1 && /[a-z]/i.test(k)) { ev.preventDefault(); return; }
   if (k.length === 1 && /[a-z]/i.test(k) && estado && !estado.combate && !corpo.classList.contains("modo-titulo")) {
     // As teclas dos atalhos (I, C, T...) valem dentro das telas da doca e também com texto correndo (o pedido fica
     // guardado). Salvar e Sair só dentro das telas: uma tecla solta no meio da leitura não deve sair do jogo.
     const at = SISTEMA.find((x) => x[2] === k.toLowerCase() && x[1] !== "Mapa");
+    // A tecla da árvore de talentos, com ela aberta, fecha pelo caminho dela (o Voltar que o jogo espera).
+    if (at && at[1] === "Talentos" && !$("#sobre-talentos").hidden) { ev.preventDefault(); fecharTudo(); return; }
     if (at && (docaTela || !["Salvar", "Sair"].includes(at[1]))) { ev.preventDefault(); pedirAtalho(at[1]); return; }
   }
   if (k === "F2" || k === "h" || k === "H") { ev.preventDefault(); alternarHistorico(); return; }
@@ -118,11 +126,12 @@ document.addEventListener("keydown", (ev) => {
   if (!pergunta) return;
   if (pergunta.tipo === "continuar" && (k === " " || k === "Enter")) {
     ev.preventDefault();
-    if (pergunta.confirmar && (ev.repeat || pergunta.guardar())) return;  // a tecla que adiantou o texto
+    if (!Gesto.teclaVale(ev)) return;  // a tecla que adiantou o texto (segurada) não continua
     responder(pergunta.id, null);
     return;
   }
   if (pergunta.tipo !== "opcoes" || !pergunta.numeros) return;
+  if (/^[0-9]$/.test(k) && !Gesto.teclaVale(ev)) { ev.preventDefault(); return; }  // segurada, ou vinda da tela anterior
   const botoes = [...promptEl.querySelectorAll(".escolha, .atalho")];
   if (/^[0-9]$/.test(k) && pergunta.teclasNum) {  // barra de ações da luta: cada tecla faz o que o botão faz
     const f = pergunta.teclasNum[k === "0" ? 9 : Number(k) - 1];

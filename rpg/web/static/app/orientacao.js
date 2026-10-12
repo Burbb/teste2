@@ -4,11 +4,12 @@
      movimento reduzido, só o contorno). Um controle por vez; some quando a ação acontece;
    - o quadro: na luta, numa faixa estável logo abaixo da arena (ou acima das cartas, quando cabe), que fica reservada
      enquanto durar a luta guiada; ele não acompanha a investida, o tremor nem o retorno das cartas: a posição só muda
-     quando muda a etapa, o tamanho da janela ou o layout. Fora da vila e da luta, sobre o cenário (só paisagem),
-     do lado do controle: nada da página se mexe. Na vila (os prédios ocupam o cenário) e nas telas sem cenário,
-     numa faixa da página: no alto para o que mora em cima ou ao lado (os prédios, as provisões do topo, o aviso da
-     noite, o cartão da comitiva) e embaixo, junto da doca, para o que mora embaixo (explorar, os Talentos). A faixa
-     entra com a orientação, antes de o texto correr, e só sai quando a cena muda: nada pula. No item achado (E1),
+     quando muda a etapa, o tamanho da janela ou o layout. Fora da luta, numa faixa da página: no alto para o que
+     mora em cima ou ao lado (os prédios da vila, as provisões do topo, o aviso da noite) e embaixo, junto da doca,
+     para o que mora embaixo (explorar, os atalhos da doca). A faixa entra com a orientação, antes de o texto correr,
+     e só sai quando a cena muda: nada pula, e o quadro não troca de lugar durante a leitura (sobre a paisagem ele
+     trocava quando o cenário encolhia com o texto). O quadro aparece quando o texto da cena terminou; se o controle
+     está fora da parte visível da página, a página rola só o necessário, uma vez por etapa. No item achado (E1),
      logo abaixo da janela dele. Depois de um "Entendi", a próxima espera a cena seguinte (uma por vez, sem fila);
    - um véu leve só nas colunas laterais e na doca.
    C1–C3 se encerram pela própria ação (abrir Habilidades, escolher uma, escolher o alvo). O C4 explica o que a
@@ -97,15 +98,6 @@ const Orientacao = (() => {
     // "baixo": depois da página, junto da doca (o que mora embaixo); as outras, antes dela (logo abaixo do cenário).
     pagina.parentNode.insertBefore(faixa, de === "baixo" ? pagina.nextSibling : pagina);
   }
-  /** O cenário à vista e só de paisagem (fora da vila e da luta): o quadro pode morar nele sem cobrir nada. */
-  const cenarioLivre = () => !!estado && !estado.combate && estado.local.tipo !== "vila" && visivel(document.querySelector("#vista"));
-  /** O quadro cabe sobre a paisagem (o cenário encolhe quando a página tem muito texto: aí, a faixa). */
-  const alturas = new Map();
-  function cabeNoCenario(html) {
-    if (!cenarioLivre()) return false;
-    if (!alturas.has(html)) alturas.set(html, alturaDoMaior([html], "orientacao"));
-    return alturas.get(html) <= document.querySelector("#vista").getBoundingClientRect().height - 16;
-  }
   /** A cena à vista (o título e o tipo): a faixa de fora da luta fica até ela mudar, mesmo depois do "Entendi". */
   const cenaAgora = () => { const c = document.querySelector("#cena"); const h = document.querySelector("#cena-cab");
     return (c ? c.dataset.tipo || "" : "") + "|" + (h ? h.textContent : ""); };
@@ -166,7 +158,7 @@ const Orientacao = (() => {
   /** Onde mora cada orientação de fora da luta: o controle e a faixa (vila: a do alto, abaixo do cenário; topo: a do
    *  alto; baixo: a de baixo; achado: junto da janela do item). Só quando ele está à vista e a pergunta é de agora. */
   function ancora(o) {
-    if (!o.ancora || estado.combate || !pergunta) return null;
+    if (!o.ancora || estado.combate || !pergunta || processando) return null;  // o texto da cena já terminou
     const [tipo, valor] = o.ancora.split(":");
     const ok = (e, onde) => (visivel(e) ? { el: e, onde } : null);
     if (tipo === "mural" || tipo === "predio") {
@@ -191,7 +183,6 @@ const Orientacao = (() => {
   function faixaPedida(o) {
     if (!o || !o.ancora || dispensado || fechados.has(o.id) || estado.combate) return "";
     const tipo = o.ancora.split(":")[0];
-    if (tipo !== "mural" && tipo !== "predio" && cabeNoCenario(botoes(negrito(o.texto), !!o.entendi))) return "";  // sobre a paisagem
     if (tipo === "mural" || tipo === "predio") return estado.local.tipo === "vila" && visivel(document.querySelector("#vista")) ? "alto" : "";
     if (tipo === "provisoes" || tipo === "membro" || tipo === "mod") return "alto";
     if (tipo === "opcao" || tipo === "doca") return "baixo";
@@ -228,12 +219,13 @@ const Orientacao = (() => {
     montar();
     if (a.luta) reservarFaixa("luta", Object.values(estado.orientacao.atual.passos.C4 || {}).map(htmlC4), "orientacao c4");
     const chave = a.id + "|" + a.html;
-    const paisagem = !a.luta && a.onde !== "achado" && a.onde !== "vila" && !faixa && cabeNoCenario(a.html);
+    if (!a.luta && chave !== passo) trazerAVista(a.el);  // uma vez por etapa, antes de medir
     const zona = a.luta ? (faixa ? faixa.getBoundingClientRect() : acimaDasCartas())
-      : paisagem ? sobreOCenario() : faixa && a.onde !== "achado" ? faixa.getBoundingClientRect() : null;
-    // Fora da luta, o prédio pode andar com a câmera (a vila se monta): a posição dele entra na conta. Na luta, não: a
-    // carta avança e treme, e o quadro fica parado.
-    const ancora = a.luta ? "" : [a.el.getBoundingClientRect()].map((r) => [r.left, r.top, r.width].map(Math.round).join(",")).join("");
+      : faixa && a.onde !== "achado" ? faixa.getBoundingClientRect() : null;
+    // Fora da luta, o prédio pode andar com a câmera (a vila se monta): a posição horizontal dele entra na conta (a
+    // vertical, não: rolar a página para ler não mexe no quadro). Na luta, nada: a carta avança e treme, e o quadro
+    // fica parado.
+    const ancora = a.luta ? "" : [a.el.getBoundingClientRect()].map((r) => [r.left, r.width].map(Math.round).join(",")).join("");
     const lay = `${innerWidth}x${innerHeight}|${zona ? [zona.left, zona.top, zona.width, zona.height].map(Math.round).join(",") : ""}|${ancora}`;
     if (chave !== passo || lay !== layout) {
       if (chave !== passo) {
@@ -250,10 +242,15 @@ const Orientacao = (() => {
     veu(a);
   }
 
-  /** A paisagem fora da vila, um pouco para dentro da moldura (sem a faixa de chão de baixo, que é dela). */
-  function sobreOCenario() {
-    const v = document.querySelector("#vista").getBoundingClientRect();
-    return { left: v.left + 8, top: v.top + 8, width: v.width - 16, height: v.height - 16, paisagem: true };
+  /** O controle dentro da página que rola (a opção do menu) e fora da parte visível dela: a página rola só o
+   *  necessário para ele aparecer inteiro, com uma folga. Chamada uma vez por etapa: a leitura não é interrompida
+   *  por rolagens repetidas, e quem rolar depois fica onde rolou. */
+  function trazerAVista(e) {
+    const pg = e.closest("#pagina");
+    if (!pg) return;
+    const r = e.getBoundingClientRect(), v = pg.getBoundingClientRect(), folga = 8;
+    if (r.bottom > v.bottom - folga) pg.scrollTop += Math.ceil(r.bottom - v.bottom + folga);
+    else if (r.top < v.top + folga) pg.scrollTop -= Math.ceil(v.top + folga - r.top);
   }
 
   /** Onde o quadro fica: calculado na mudança de etapa ou de layout, nunca a cada quadro da animação. */
@@ -271,15 +268,14 @@ const Orientacao = (() => {
       // O controle mora numa coluna ao lado (o cartão da comitiva): o quadro na ponta da zona, a seta para o lado.
       const esquerda = r.right <= zona.left;
       x = esquerda ? zona.left + 4 : zona.left + zona.width - w - 4;
-      y = zona.paisagem ? Math.max(zona.top, Math.min(zona.top + zona.height - h, r.top + r.height / 2 - h / 2))
-        : zona.top + Math.max(4, (zona.height - h) / 2);
+      y = zona.top + Math.max(4, (zona.height - h) / 2);
       lado = esquerda ? "direita" : "esquerda";
     } else if (zona && !a.luta) {
-      // Na faixa ou sobre a paisagem: alinhado ao controle, do lado dele (acima ou abaixo), a seta apontando para ele.
+      // Na faixa: alinhado ao controle, do lado dele (acima ou abaixo), a seta apontando para ele.
       x = r.left + r.width / 2 - w / 2;
       x = Math.max(zona.left + 4, Math.min(zona.left + zona.width - w - 4, x));
       const abaixo = r.top + r.height / 2 < zona.top + zona.height / 2;  // o controle está acima da zona
-      y = zona.paisagem ? (abaixo ? zona.top : zona.top + zona.height - h) : zona.top + Math.max(4, (zona.height - h) / 2);
+      y = zona.top + Math.max(4, (zona.height - h) / 2);
       lado = abaixo ? "baixo" : "cima";
     } else if (zona) {
       // Na faixa (ou acima das cartas): alinhado ao controle; ao lado da janelinha de Habilidades quando ela está aberta.

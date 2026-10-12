@@ -343,18 +343,15 @@ def _v3(g, a, _dados=None):
 
 
 def _v4(g, a):
-    """O primeiro companheiro que anda com você (Morel ou outro), presente aqui: o cartão dele no painel."""
+    """O primeiro companheiro que anda com você (Morel ou outro), presente aqui: o botão Comitiva, que abre a gestão
+    (conversar, a confiança, mandar para o acampamento). Um objetivo só: o texto, o destaque e a seta no mesmo botão."""
     if not _pendente(a, "V4"):
         return None
     m = next((m for m in cm.membros(g) if not cm.fora(g, m)), None)
     if not m:
         return None
-    nome = cm.nome(m["id"])
-    texto = f"{nome} anda com você: luta junto e come 1 provisão por dia."
-    if m["ferido"]:
-        texto += f" Está {cm.flexao(m['id'], 'ferid{a}')}: fora de combate até descansar."
-    texto += " **Comitiva**, na barra de baixo: conversar e mandar para o acampamento."
-    return {"id": "V4", "texto": texto, "ancora": f"membro:{m['id']}", "entendi": True}
+    return {"id": "V4", "texto": f"**Comitiva** abre quem anda com você ({cm.nome(m['id'])}): conversar, ver a confiança "
+                                 "e mandar para o acampamento.", "ancora": "doca:Comitiva", "entendi": True}
 
 
 def _v5(g, a):
@@ -388,19 +385,23 @@ def _t1(g, a):
 
 
 def _n1(g, a):
-    """A primeira noite fora da vila: o aviso do topo, e a diferença entre a noite e a falta de luz neste lugar."""
-    from . import sobrevivencia
+    """A primeira noite fora da vila: a noite aumenta o perigo (os números já estão no aviso do topo) e a tocha
+    ilumina o escuro, sem tirar o perigo da noite. Pelas regras do lugar: nas salas (a capela, escura também de dia),
+    sem luz o inimigo ataca primeiro, sempre; fora delas, ser pego de surpresa só fica mais provável."""
+    from . import missoes
     if not _pendente(a, "N1") or g.loc["tipo"] == "vila" or not g.noite:
         return None
-    from . import missoes
-    sempre = g.bioma in ("ruinas", "cidadela") or missoes.tem_salas(g)
-    luz = ("Aqui é escuro até de dia; a tocha resolve a luz, não a noite." if sempre else
-           "A tocha resolve o escuro, não a noite.")
-    if not sobrevivencia.escuro(g):
-        luz = ""
-    return {"id": "N1", "texto": f"Noite: **Inimigos +{bal.NOITE_NIVEL} nível**, no topo, vale para as lutas daqui "
-                                 f"(o detalhe, com o mouse). {luz}".strip(),
-            "ancora": "mod:noite", "entendi": True}
+    if missoes.tem_salas(g):
+        luz = ("Este lugar é escuro também de dia: sem tocha, cada sala começa com o inimigo atacando primeiro. "
+               "A tocha ilumina, mas a noite continua perigosa.")
+    elif g.bioma in ("ruinas", "cidadela"):
+        luz = ("Este lugar é escuro também de dia: sem tocha, ser pego de surpresa fica mais provável. A tocha "
+               "ilumina, mas a noite continua perigosa.")
+    else:
+        luz = ("No escuro, a tocha ilumina o caminho; sem ela, ser pego de surpresa fica mais provável. A noite "
+               "continua perigosa com ou sem luz.")
+    return {"id": "N1", "texto": f"Noite: os inimigos ficam mais fortes (**Inimigos +{bal.NOITE_NIVEL} nível**, no "
+                                 f"topo). {luz}", "ancora": "mod:noite", "entendi": True}
 
 
 # O que cada menu cumpre ao ser respondido: a ocasião passou (o quadro apareceu e a pessoa seguiu). Os talentos
@@ -472,14 +473,15 @@ def ajuda(g):
                            f"devolve {TODO.get(r, r)} e {round(bal.TAVERNA_VIDA * 100)}% da vida. Ferimentos: a Curandeira."),
             ("V3", "Estrada", "Cada amanhecer come 1 provisão sua e 1 de cada companheiro, na vila ou fora. O Mercado "
                               "vende; o ensopado da Taverna alimenta sem gastar."),
-            ("V4", "Comitiva", "Quem anda com você luta junto e come 1 provisão por dia. **Comitiva**, na barra de "
-                               "baixo: conversar e mandar para o acampamento."),
+            ("V4", "Comitiva", "**Comitiva**, na barra de baixo, abre quem anda com você: conversar, ver a confiança "
+                               "e mandar para o acampamento."),
             ("V5", "Estrada", "**Explorar a região** gasta um período: luta, achado, alguém pelo caminho ou nada."),
             ("E1", "Herói", "No item achado, ▲ e ▼ comparam com o que você usa. **Equipar** troca; **Guardar** leva "
                             "na mochila."),
             ("T1", "Herói", "**Talentos**, na barra de baixo, abre a árvore quando há ponto para gastar."),
             ("N1", "Estrada", f"À noite, os inimigos vêm {bal.NOITE_NIVEL} nível acima e batem mais forte. A tocha "
-                              "resolve o escuro, não a noite.")):
+                              "ilumina os lugares escuros (sem ela, a surpresa fica mais provável; nas salas da "
+                              "capela, certa), mas não tira o perigo da noite.")):
         if oid in vistas:
             linhas.append({"grupo": grupo, "texto": texto})
     return {"ligado": tutorial(g), "linhas": linhas}

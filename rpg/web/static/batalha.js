@@ -522,6 +522,25 @@ const Batalha = (() => {
         await ir(de, 160, 0, pausa(420), "ease-in");
         return;
       }
+      case "fuga_heroi": {
+        // A fuga do herói. Concluída: "Fugiu!", a carta sai pela esquerda e some, com o som da retirada (uma vez: os
+        // lances não voltam quando a tela se redesenha ou o jogo é carregado). Fracassada: "Cercado!", a carta recua
+        // um passo e volta ao lugar (o turno se perdeu).
+        if (!de) return;
+        if (m.ok) {
+          Som.tocar("retirada");
+          rotulo(de, "Fugiu!", "boa");
+          de.classList.add("escapando");
+          await ir(de, -180, 0, pausa(520), "ease-in");
+          return;
+        }
+        som("esquiva");
+        rotulo(de, "Cercado!", "inimiga");
+        await ir(de, -36, 0, pausa(150));
+        reiniciar(de, "surpreso", 500);
+        await ir(de, 0, 0, pausa(220));
+        return;
+      }
       case "giro": {
         if (!de) return;
         reiniciar(de, "giro", 320);

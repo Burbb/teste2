@@ -17,6 +17,8 @@ Avaliação integrada do Vale do Turvo como primeiro capítulo (a E9 antecipada,
   ([18](18-E9-ABERTURA-GUIADA.md), seção 14).
 - **A segunda parte da abertura, 1.66.4 e 1.67.0 (seção 23):** os últimos detalhes e V2–V5, E1, T1, N1
   ([18](18-E9-ABERTURA-GUIADA.md), seções 14.1 e 15).
+- **Interação e feedback, 1.67.1 (seção 24):** o alvo à vista, a comitiva, a noite, textos, a fuga, as teclas e
+  adiantar o texto ([18](18-E9-ABERTURA-GUIADA.md), seção 16).
 - **Quarta entrega, 1.65.2 e 1.65.3 (seção 19):** a partida da Quibia lida; os contratos pagos depois do resgate; o
   ×N dos baús em destaque. A especificação da abertura guiada fica em [18](18-E9-ABERTURA-GUIADA.md).
 - **Correção 1.65.1 (seção 18):** os três pontos que faltaram na mensagem cortada: a percepção do Mago na água, o nome
@@ -878,4 +880,12 @@ ponto de talento e a primeira noite fora da vila. Regras, encontros, recompensas
 com e sem tutorial. Detalhe, conferência e limitações na seção 15 do 18.
 
 **A E9 continua aberta:** o teste técnico não mostra que uma pessoa nova entendeu os sistemas (seção 11 do 18).
+
+## 24. Interação, posicionamento e feedback (1.67.1)
+
+Correções pedidas por Jean depois da 1.67.0, cada uma reproduzida antes: o quadro que apontava para "Explorar a
+região" fora da área visível (e trocava de lugar durante a leitura), o V4 que falava do botão Comitiva apontando o
+cartão, o texto da noite, "hábito chamuscado" e o uivo dos lobos, a fuga sem retorno além da linha verde, as teclas
+que abriam e não fechavam (T, I, C, D, B) e a guarda do Continuar que cliques repetidos prolongavam sem fim. Regras,
+sorteio e equilíbrio iguais. Detalhe na seção 16 do 18.
 

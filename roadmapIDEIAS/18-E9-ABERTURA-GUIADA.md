@@ -169,7 +169,7 @@ escolheu outra, o texto é o dela).
 | V1 | o Mural (o prédio; o quadro numa faixa abaixo do cenário) | "Clique no **mural** para ver os contratos disponíveis." | menu do Vau depois do pedido da despensa (3.4.1) | o Mural é aberto |
 | V2 | o Templo (vida, se o ouro dá) ou a Taverna (o recurso; ou a vida, se o Templo não cabe no bolso) | vida: "Vida baixa. O **Templo** devolve a vida toda por {13} de ouro." (+ "Pouco Foco: dormir na **Taverna** ({10} de ouro) devolve todo o Foco e 35% da vida." se o recurso também está baixo); recurso: "Pouca Mana. Dormir na **Taverna** ({10} de ouro) devolve toda a Mana e 35% da vida."; com ferimento: "Ferimentos, a **Curandeira** trata." | menu da vila com vida < 70% ou recurso < 50%, e o serviço ao alcance do ouro | o serviço é usado, ou a viagem começa |
 | V3 | provisões no topo | "Cada amanhecer come 1 provisão sua e 1 de cada companheiro, na vila ou fora: dá {2} dias. Sem provisão, fome." (+ "O **Mercado** vende mais." só com menos de 3 dias, na vila) "Dormindo na Taverna, o ensopado é por conta dela." | a primeira escolha de destino (Viajar ou a Estrada) | **Entendi**, ou a viagem começa |
-| V4 | o cartão do primeiro companheiro no painel | "{Morel} anda com você: luta junto e come 1 provisão por dia." (+ "Está ferido: fora de combate até descansar.") "**Comitiva**, na barra de baixo: conversar e mandar para o acampamento." | o primeiro menu com alguém na comitiva, presente (reserva e ausência não contam) | **Entendi**, a Comitiva aberta, ou a resposta ao menu |
+| V4 | o botão **Comitiva** da barra de baixo (desde a 1.67.1; antes, o cartão) | "**Comitiva** abre quem anda com você ({Morel}): conversar, ver a confiança e mandar para o acampamento." | o primeiro menu com alguém na comitiva, presente (reserva e ausência não contam) | **Entendi**, a Comitiva aberta, ou a resposta ao menu |
 | V5 | "Explorar a região" | "**Explorar a região** gasta um período. Pode dar luta, um achado, alguém pelo caminho ou nada: é por aí que se acha o que não está nos contratos." | o primeiro menu fora da vila | a resposta ao menu |
 
 ### 4.3 Quando chegar
@@ -178,7 +178,7 @@ escolheu outra, o texto é o dela).
 |---|---|---|---|---|
 | E1 | a linha "contra…" do achado | "A linha "contra…" compara o achado com o que você usa (▲ ganha, ▼ perde). **Equipar** veste o novo e guarda o antigo na mochila; **Guardar** leva o novo na mochila." (mochila cheia: "Com a mochila cheia, **Equipar** deixa o antigo para trás.") | o primeiro item achado que você pode usar, com um equipado no lugar | a decisão do item |
 | T1 | Talentos (na doca; só a seta: o atalho já acende com ★) | "Você tem {1} ponto de talento. **Talentos**, na barra de baixo, abre a árvore." | um menu com ponto por gastar (gasto antes, não aparece) | **Entendi**, a árvore aberta, ou a resposta ao menu |
-| N1 | o aviso "Inimigos +1 nível" no topo | "Noite: **Inimigos +1 nível**, no topo, vale para as lutas daqui (o detalhe, com o mouse). A tocha resolve o escuro, não a noite." (ruínas e capela: "Aqui é escuro até de dia; a tocha resolve a luz, não a noite.") | o primeiro menu fora da vila, à noite | **Entendi**, ou a resposta ao menu |
+| N1 | o aviso "Inimigos +1 nível" no topo | "Noite: os inimigos ficam mais fortes (**Inimigos +1 nível**, no topo)." + fora: "No escuro, a tocha ilumina o caminho; sem ela, ser pego de surpresa fica mais provável. A noite continua perigosa com ou sem luz."; na capela: "Este lugar é escuro também de dia: sem tocha, cada sala começa com o inimigo atacando primeiro. A tocha ilumina, mas a noite continua perigosa." (texto da 1.67.1) | o primeiro menu fora da vila, à noite | **Entendi**, ou a resposta ao menu |
 
 **Dormir na Taverna, pelas regras de hoje:** devolve 35% da vida máxima (menos, com fome), todo o recurso, tira os
 efeitos de luta, cura o animal, descansa a comitiva e passa a noite com o ensopado para todos (ninguém gasta provisão;
@@ -526,7 +526,8 @@ quem religa o tutorial pela Ajuda não revê o que já passou.
 **Onde cada quadro mora** (nada de controle, barra, personagem ou narrativa por baixo):
 - na vila, numa faixa logo abaixo do cenário (como o V1): V2, e o V4 quando o cenário é a vila;
 - fora da vila, sobre a paisagem (o cenário fora da vila é só paisagem), do lado do controle: N1, V5, T1 e V4, quando o
-  quadro cabe nela; quando não cabe (o cenário encolhe com muito texto na página), na faixa;
+  quadro cabe nela; quando não cabe (o cenário encolhe com muito texto na página), na faixa (na 1.67.1, sempre na
+  faixa: sobre a paisagem o quadro trocava de lugar durante a leitura, seção 16);
 - sem cenário (a escolha do destino), numa faixa no alto da página: V3;
 - embaixo, junto da doca, quando o controle mora embaixo e não há paisagem: V5 e T1;
 - no item achado, logo abaixo da janela dele, acima do véu: E1.
@@ -571,4 +572,52 @@ continua como antes).
 - O V4 fala do primeiro companheiro presente; quem só tem gente no acampamento não vê o quadro até alguém andar junto.
 - Teste técnico não mostra que uma pessoa nova entendeu os sistemas: a E9 continua aberta até os testes com gente
   nova (seção 11).
+
+## 16. Interação, posicionamento e feedback (1.67.1)
+
+Primeira de duas entregas pedidas por Jean sobre a 1.67.0. Regras de combate, sorteio e equilíbrio iguais (o
+gabarito muda só pelo lance novo da fuga e pelos dois textos corrigidos; sem eles, escolhas, lances e herói
+idênticos).
+
+**Reproduzido antes de corrigir, e o que mudou:**
+1. **Alvo fora da área visível.** Reproduzido: "Explorar a região" abaixo da dobra com a faixa de baixo, e o quadro
+   que aparecia sobre a paisagem e pulava para a faixa quando o cenário encolhia com o texto (posição mudando durante
+   a leitura). Agora o quadro de fora da luta só aparece quando o texto da cena terminou; a página rola só o
+   necessário para o controle aparecer inteiro, uma vez por etapa (quem rolar depois fica onde rolou); fora da luta o
+   quadro mora sempre na faixa (no alto ou embaixo), que entra antes de o texto correr e não troca de lugar. Rolar a
+   página não move o quadro (só a posição horizontal do controle conta). Conferido com a página rolada para o alto
+   antes de o quadro aparecer, a 1280×800, 1280×640 e 1500×950: o alvo à vista, nenhuma escolha coberta.
+2. **Comitiva.** O texto mandava abrir Comitiva e o destaque estava no cartão. Agora o V4 tem um objetivo só: abrir
+   a gestão da comitiva. Texto, destaque e seta no botão **Comitiva** da barra de baixo ("**Comitiva** abre quem anda
+   com você (Morel): conversar, ver a confiança e mandar para o acampamento."). Quando o botão já acende (✉), fica só
+   a seta.
+3. **Noite.** Sem "(o detalhe, com o mouse)" nem "a tocha resolve o escuro, não a noite". Fora: "Noite: os inimigos
+   ficam mais fortes (**Inimigos +1 nível**, no topo). No escuro, a tocha ilumina o caminho; sem ela, ser pego de
+   surpresa fica mais provável. A noite continua perigosa com ou sem luz." Na capela: "Este lugar é escuro também de
+   dia: sem tocha, cada sala começa com o inimigo atacando primeiro. A tocha ilumina, mas a noite continua
+   perigosa." Nas ruínas sem salas, a surpresa provável.
+4. **Textos.** Odette: "uma mulher de roupas chamuscadas", "Você pergunta pelas roupas chamuscadas", "Chamuscadas,
+   não queimadas." Lobos no Bestiário: "Caçam em matilha. Durante a luta, seu uivo fortalece o grupo." (o uivo já
+   fortalecia os presentes; nenhuma habilidade mudou).
+5. **Fuga.** O motor manda um lance `fuga_heroi` (concluída ou não). Concluída: a faixa "Fugiu!" verde, a carta do
+   herói sai pela esquerda e some, e um som curto de passos que se afastam (uma vez: os lances não voltam ao
+   redesenhar nem ao carregar; segue o som ligado ou desligado). Fracassada: a faixa "Cercado!" vermelha, a carta
+   recua um passo e volta. A linha do histórico continua. Sem Continuar, recompensa ou mudança na chance.
+6. **Atalhos.** Reproduzido: T abria os Talentos e não fechava (e a árvore aberta travava as outras teclas); I, C, D
+   e B abriam e não fechavam, porque a letra no menu do lugar respondia direto, sem a doca saber qual tela abriu. Agora
+   a letra faz o que o botão da doca faz, a doca lembra a tela aberta enquanto ela tem Voltar, e a mesma tecla fecha
+   pelo Voltar dela (ou, nos Talentos, pelo fechamento da árvore). Mapa (M), Grimório (P), Histórico (H) e Ajuda (F1)
+   já alternavam. Tecla segurada não repete.
+7. **Adiantar e Continuar.** Reproduzido: depois de adiantar, cliques explícitos no Continuar a cada ~250 ms
+   prolongavam a guarda indefinidamente (a cena não avançava). Agora não há guarda de tempo: o gesto que adianta só
+   revela e para no Continuar; o próximo clique (ou Enter/espaço) explícito avança na hora. Não contam: o clique cujo
+   toque começou antes de a tela aparecer, o segundo clique de um clique duplo, a tecla repetida de quem a segura e a
+   tecla que já estava apertada quando a tela chegou (vale também para as escolhas e os números da tela seguinte).
+   Nada de Continuar novo onde não havia.
+
+**Conferido:** testes (`tests/test_fuga.py`; V4 e N1 em `tests/test_abertura_parte2.py`), gabarito examinado, pyflakes,
+fumaça (com as conferências de adiantar reescritas para a regra nova: clique duplo e Enter segurado revelam e param
+no Continuar; um Enter novo continua). No navegador: os casos de adiantar (clique, clique duplo, Enter segurado,
+clique duplo no Continuar e Enter segurado nele: uma resposta só, nenhuma escolha atravessada); as teclas T, I, C,
+D, B, P, M, H e F1 abrindo e fechando; a fuga ("Fugiu!", a carta saindo, o som uma vez e nenhuma vez ao recarregar).
 

@@ -422,10 +422,9 @@ async function cenarioCampanha(browser) {
     if (atalho) await atalho.click();
     conferir(!!(await esperar('#cena-cab .cena-titulo:has-text("A fonte nova")', 10000)), "o cartão da missão leva ao exame da fonte");
     await page.waitForSelector("#prompt .continuar.confirmar", { timeout: 10000 });
-    for (let i = 0; i < 6; i++) { await page.keyboard.press("Enter"); await page.waitForTimeout(80); }  // Enter martelado
-    conferir(/A fonte nova/.test(await page.textContent("#cena-cab .cena-titulo")), "no instantâneo, o Enter martelado não fecha o exame da fonte");
-    await page.waitForTimeout(700);
-    await page.keyboard.press("Enter");  // depois de uma pausa, o Enter continua
+    await page.waitForTimeout(1200);
+    conferir(/A fonte nova/.test(await page.textContent("#cena-cab .cena-titulo")), "no instantâneo, o exame da fonte espera o Continuar");
+    await page.keyboard.press("Enter");  // um Enter explícito continua na hora
     conferir(!!(await esperar('#predios .predio[data-predio="estrada"]', 20000)) && /Bosque do Moinho/.test(await objetivo())
       && !(await page.$('#prompt .escolha:has-text("Examinar a fonte nova")')), "depois do exame, o objetivo aponta o canal e o exame some");
   } finally {
@@ -449,15 +448,12 @@ async function cenarioMissao(browser) {
     await page.waitForFunction(() => /O Canal do Moinho/.test(document.querySelector("#cena-cab .cena-titulo").textContent), null, { timeout: 10000 });
     await page.waitForTimeout(300);
     const correndo = await page.evaluate(() => processando);
-    await page.mouse.click(700, 450);  // adianta o texto
-    for (let i = 0; i < 15; i++) {  // e segue clicando e apertando Enter em rajada
-      const b = await page.$("#prompt .continuar");
-      if (b) await b.click({ timeout: 300 }).catch(() => {});
-      await page.keyboard.press("Enter");
-      await page.waitForTimeout(80);
-    }
+    await page.keyboard.down("Enter");  // o Enter que adianta o texto, segurado: revela e para no Continuar
+    for (let i = 0; i < 8; i++) { await page.evaluate(() => document.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", repeat: true, bubbles: true }))); await page.waitForTimeout(60); }
+    await page.keyboard.up("Enter");
+    await page.mouse.dblclick(700, 450);  // e um clique duplo na página, fora dos controles, não faz nada
     conferir(correndo && /O Canal do Moinho/.test(await titulo()) && !!(await page.$("#prompt .continuar.confirmar")),
-      "adiantar o texto (clique e Enter em rajada) não fecha a cena do canal");
+      "adiantar o texto (clique duplo, Enter segurado) revela e para no Continuar, sem fechar a cena do canal");
     await page.waitForTimeout(6500);
     conferir(/O Canal do Moinho/.test(await titulo()), "deixada aberta, a cena do canal não fecha por tempo");
     await page.click("#prompt .continuar");
@@ -1295,7 +1291,7 @@ async function cenarioTutorial(browser) {
     const { proc, url } = await subir("tutorial", { LUGAR: "charco", PERIODO: "3" });
     const { page, erros } = await abrir(browser, url);
     try {
-      conferir(await ate(page, /Noite: Inimigos \+1 nível, no topo/) && !(await cobre(page)), "N1: fora da vila, à noite, o aviso do topo, sobre a paisagem");
+      conferir(await ate(page, /Noite: os inimigos ficam mais fortes/) && !(await cobre(page)), "N1: fora da vila, à noite, o aviso do topo, sobre a paisagem");
       await page.keyboard.press("1");  // explorar, pelo teclado: a ocasião passa
       for (let k = 0; k < 80 && !(await page.$("#prompt .escolha")); k++) {
         const c = await page.$("#prompt .continuar"); if (c) await c.click().catch(() => {});

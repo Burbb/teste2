@@ -168,7 +168,7 @@ def retrato(tracos):
 FAMILIAS = {
     "lobo": dict(nome="lobo", plural="lobos", g="m", hp=20, atk=6, defesa=2, agi=6, poder=0,
                  tracos=["fera"], habs=["mordida_sangrenta", "uivo"], xp=12, ouro=(0, 2), grupo=(1, 3),
-                 lore="Caçam em matilha e uivam para chamar as outras. Um lobo sozinho raramente está sozinho."),
+                 lore="Caçam em matilha. Durante a luta, seu uivo fortalece o grupo."),
     "aranha": dict(nome="aranha gigante", plural="aranhas gigantes", g="f", hp=18, atk=6, defesa=2, agi=7, poder=0,
                    tracos=["fera"], habs=["teia", "veneno"], xp=13, ouro=(0, 2), grupo=(1, 2),
                    lore="Tecem armadilhas entre as árvores. Seu veneno paralisa antes de matar."),

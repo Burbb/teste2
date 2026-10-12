@@ -162,6 +162,31 @@ async function processar() {
   pularPedido = false;
 }
 
+/* Revelar e avançar são gestos distintos, e um gesto só vale para a tela em que começou (sem temporizador): o clique
+   cujo toque começou antes de a tela aparecer (o que adiantou o texto), o segundo clique de um clique duplo, a tecla
+   repetida de quem a segura e a tecla que já estava apertada quando a tela chegou não escolhem nada nela. Qualquer
+   gesto novo vale na hora: tentar de novo não prolonga bloqueio nenhum. */
+const Gesto = (() => {
+  const abaixo = new Set();
+  let presas = new Set(), desde = 0, toque = 0;
+  document.addEventListener("pointerdown", () => { toque = performance.now(); }, true);
+  document.addEventListener("keydown", (ev) => { if (!ev.repeat) abaixo.add(ev.key); }, true);
+  document.addEventListener("keyup", (ev) => { abaixo.delete(ev.key); presas.delete(ev.key); }, true);
+  window.addEventListener("blur", () => { abaixo.clear(); presas.clear(); });
+  // Os controles das telas: o prompt (escolhas, Continuar), os prédios da vila, a roda da luta e a doca.
+  const CONTROLES = "#prompt button, #prompt .escolha, #predios .predio, #roda button, #doca .atalho";
+  document.addEventListener("click", (ev) => {
+    if (!ev.target.closest || !ev.target.closest(CONTROLES)) return;
+    // detail 0: o clique que o teclado gera num botão focado (Enter, espaço) é julgado como tecla, não aqui.
+    if (ev.detail >= 2 || (ev.detail === 1 && toque < desde)) { ev.stopPropagation(); ev.preventDefault(); }
+  }, true);
+  return {
+    novaTela() { desde = performance.now(); presas = new Set(abaixo); },
+    /** A tecla pode escolher nesta tela: não é repetição nem vinha apertada da tela anterior. */
+    teclaVale(ev) { return !ev.repeat && !presas.has(ev.key); },
+  };
+})();
+
 function instantaneo() { return pular || replay || velocidade === "instantaneo"; }
 function cps() { return VELOCIDADES[velocidade] * (estado && estado.combate ? 2.5 : 1); }
 function ritmo(ms) { return instantaneo() ? 0 : ms * (velocidade === "lento" ? 1.4 : velocidade === "rapido" ? 0.5 : 1); }
@@ -207,9 +232,9 @@ async function tratar(m) {
     case "bloco": bloco(m); break;
     case "mapa": mapaNaPagina(m); break;
     case "escolhido": eco(m); break;
-    case "opcoes": mostrarOpcoes(m); soltarRolagem(); Telas.atualizarGrimorio(); break;
-    case "continuar": mostrarContinuar(m); soltarRolagem(); break;
-    case "pergunta": mostrarPergunta(m); soltarRolagem(); break;
+    case "opcoes": Gesto.novaTela(); mostrarOpcoes(m); soltarRolagem(); Telas.atualizarGrimorio(); break;
+    case "continuar": Gesto.novaTela(); mostrarContinuar(m); soltarRolagem(); break;
+    case "pergunta": Gesto.novaTela(); mostrarPergunta(m); soltarRolagem(); break;
     case "erro": anexar(el("p", "erro", "Algo deu errado: " + esc(m.texto))); break;
     case "fim": $("#aviso-fim").hidden = false; break;
   }

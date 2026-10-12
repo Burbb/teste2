@@ -153,6 +153,7 @@
 .carta.gargalha .icone { animation: gargalha 0.9s ease-in-out; }
 @keyframes gargalha { 20%, 60% { transform: translateY(-3px) rotate(-6deg); } 40%, 80% { transform: translateY(0) rotate(6deg); } }
 .carta.fugindo { opacity: 0; transition: opacity 0.4s ease; }
+.carta.escapando { opacity: 0; transition: opacity 0.5s ease-in; }  /* o herói que fugiu (batalha.js) */
 
 /* ficha do inimigo (hover na carta) */
 /* A ficha do inimigo (hover da carta): os traços numa linha, fraquezas e resistências em duas colunas compactas e,

@@ -124,17 +124,16 @@ class TestComitiva(unittest.TestCase):
         g = depois_da_despensa()
         cm.recrutar(g, "odete")
         o = ab.atual(g)
-        self.assertEqual((o["id"], o["ancora"]), ("V4", "membro:odete"))
-        self.assertTrue(o["texto"].startswith(f"{cm.nome('odete')} anda com você"))
+        self.assertEqual((o["id"], o["ancora"]), ("V4", "doca:Comitiva"))  # texto, destaque e seta no mesmo botão
+        self.assertIn(f"**Comitiva** abre quem anda com você ({cm.nome('odete')})", o["texto"])
 
-    def test_reserva_nao_conta_e_ferido_diz(self):
+    def test_reserva_nao_conta(self):
         g = depois_da_despensa()
         cm.recrutar(g, "yara")
         cm.para_acampamento(g, "yara", silencioso=True)
         self.assertNotEqual(oid(g), "V4")
         cm.recrutar(g, "morel")
-        cm.membro(g, "morel")["ferido"] = True
-        self.assertIn("Está ferido: fora de combate até descansar.", ab.atual(g)["texto"])
+        self.assertEqual(oid(g), "V4")
 
     def test_abrir_a_comitiva_cumpre_sem_mexer_na_aprovacao(self):
         g = depois_da_despensa(roteiro=["Voltar"])
@@ -160,9 +159,11 @@ class TestExplorarNoiteTalentos(unittest.TestCase):
         g.periodo = 3
         o = ab.atual(g)
         self.assertEqual((o["id"], o["ancora"]), ("N1", "mod:noite"))
-        self.assertIn("A tocha resolve o escuro, não a noite.", o["texto"])
+        self.assertIn("sem ela, ser pego de surpresa fica mais provável", o["texto"])
+        self.assertNotIn("com o mouse", o["texto"])
         ir(g, "capela_afogada")
-        self.assertIn("Aqui é escuro até de dia", ab.atual(g)["texto"])
+        self.assertIn("sem tocha, cada sala começa com o inimigo atacando primeiro", ab.atual(g)["texto"])
+        self.assertIn("a noite continua perigosa", ab.atual(g)["texto"])  # a tocha não tira a noite
         g.periodo = 1
         self.assertNotEqual(oid(g), "N1")  # de dia, a noite não tem o que dizer
 

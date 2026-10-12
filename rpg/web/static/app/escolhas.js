@@ -8,9 +8,9 @@
 const doca = $("#doca");
 let docaSono = 0;
 let docaTela = null;  // o atalho cuja tela está aberta agora (null: no menu do lugar ou fora da doca)
-function montarDoca(atalhos) {
+function montarDoca(atalhos, manter = false) {
   clearTimeout(docaSono);
-  docaTela = null;
+  if (!manter) docaTela = null;  // numa tela aberta pela doca (que tem Voltar), ela continua sabendo qual é
   doca.replaceChildren(atalhos);
   doca.classList.remove("inativa");
   doca.dataset.viva = "1";
@@ -55,7 +55,12 @@ function acionarAtalho(rotulo, mid, i) {
   }
   if (pergunta.tipo === "continuar") { recusarAtalho(rotulo); return; }
   if (pergunta.tipo !== "opcoes") return;
-  if (pergunta.id === mid) { docaTela = rotulo; marcarDocaAtual(); responder(mid, i); return; }
+  if (pergunta.id === mid) {
+    // O atalho (ou a tecla) da tela que está aberta fecha a tela pelo Voltar dela, como o jogo espera.
+    const v = pergunta.opcoes.findIndex(ehVoltar);
+    if (rotulo === docaTela && v >= 0) { pendente = null; responder(mid, v); return; }
+    docaTela = rotulo; marcarDocaAtual(); responder(mid, i); return;
+  }
   const aqui = atalhoNoMenu(pergunta.opcoes, rotulo);
   if (aqui >= 0) { docaTela = rotulo; marcarDocaAtual(); responder(pergunta.id, aqui); return; }
   if (menuDoLugar(pergunta.opcoes)) return;  // o lugar não tem esse atalho (ex.: Comitiva sem ninguém)
@@ -293,7 +298,7 @@ function mostrarOpcoes(m) {
   }
   if (corpo.classList.contains("modo-titulo")) focoNoTitulo(lista);
   if (naVila) montarVila(m, grupos);
-  if (atalhos.childElementCount) montarDoca(atalhos);
+  if (atalhos.childElementCount) montarDoca(atalhos, !!docaTela && m.opcoes.some(ehVoltar));
   if (!replay) guardar("cdf-dica", String(Number(ler("cdf-dica") || 0) + 1));
   if (estado) {
     const chave = [...destinosClicaveis()].join(",") + "|" + estado.local.id;
@@ -715,7 +720,6 @@ function ehVoltar(o) {
   return (o.meta && o.meta.voltar) || /^(Voltar|Sair do mercado|Cancelar|Fechar)\b/.test(o.texto);
 }
 
-const RAJADA_LEITURA = 350;  // ms que cada toque da rajada acrescenta à guarda de um Continuar que pede confirmação
 function mostrarContinuar(m) {
   acaoGuardada = null;  // um toque guardado do acampamento não atravessa um Continuar
   posicionarPrompt();
@@ -731,28 +735,14 @@ function mostrarContinuar(m) {
   b.type = "button";
   pergunta = { id: m.id, tipo: "continuar", confirmar: !!m.confirmar };
   if (m.confirmar) {
-    // Cena que pede confirmação (as de missão): adiantar o texto e continuar são gestos distintos. O botão chega com o
-    // texto inteiro à vista e só aceita depois da guarda de leitura; cada toque dentro dela (o clique duplo, a tecla
-    // martelada para adiantar) a estende, como no quadro do espólio, e a tecla segurada nunca conta. Continua quem
-    // para e toca de novo. Enquanto a guarda segura, o botão fica apagado: aceso, ele sempre aceita (antes, a rajada
-    // segurava o botão já aceso, e o toque parecia não responder).
-    b.classList.add("confirmar");  // chega apagado e acende quando a guarda inicial acaba
-    b.style.setProperty("--guarda", `${GUARDA_LEITURA}ms`);
-    const q = pergunta;
-    let soltar = null;
-    q.guardar = () => {
-      const agora = performance.now();
-      if (agora >= q.guardaAte) return false;
-      q.guardaAte = Math.max(q.guardaAte, agora + RAJADA_LEITURA);
-      b.classList.add("contido");
-      clearTimeout(soltar);
-      soltar = setTimeout(() => b.classList.remove("contido"), q.guardaAte - agora);
-      return true;
-    };
-    q.guardaAte = performance.now() + GUARDA_LEITURA;
+    // Cena que pede confirmação (as de missão): adiantar o texto e continuar são gestos distintos. O gesto que adiantou
+    // termina aqui, com o botão à vista; o próximo clique (ou Enter/espaço) explícito continua na hora. Quem separa os
+    // gestos é o Gesto (nucleo.js): o toque que começou antes do botão, o segundo clique do clique duplo e a tecla
+    // segurada não contam. Sem guarda de tempo: tentar de novo não prolonga nada.
+    b.classList.add("confirmar");
   }
   const p = pergunta;
-  b.addEventListener("click", (ev) => { ev.stopPropagation(); if (!(p.guardar && p.guardar())) responder(m.id, null); });
+  b.addEventListener("click", (ev) => { ev.stopPropagation(); responder(p.id, null); });
   promptEl.appendChild(b);
   rolarFim();
 }

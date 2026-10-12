@@ -326,8 +326,10 @@ class AcoesDoHeroi:
         if any(f["id"] == "perna" for f in self.j.ferimentos):
             chance -= 0.2
         if self.rng.random() < chance:
+            self.lance("fuga_heroi", de="j", ok=True)  # a tela mostra a retirada (a carta sai, um som curto)
             self.dizer("Você recua e consegue escapar!", "verde")
             comitiva.reagir(self.g, "fuga", forca=0.5)
             return True
+        self.lance("fuga_heroi", de="j", ok=False)  # cercado: a carta recua e volta
         self.dizer(tx.concordar("Você tenta fugir, mas {eles} {corta o seu caminho|cercam você}!", vivos), "vermelho")
         return False
