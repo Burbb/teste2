@@ -82,7 +82,7 @@ class Tempo:
         Mana volta pela metade numa noite ao relento; vigor e foco, quase todo (só a cama devolve tudo)."""
         j = self.j
         if j.fome:
-            fracao *= 0.3
+            fracao *= sobrevivencia.FOME_DESCANSO
         cura = j.curar(j.max_hp * fracao)
         if cura:
             self.relatar(f"Você recupera {cura} de vida. ({j.hp}/{j.max_hp})", "verde", "bom", "coracao",

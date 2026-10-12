@@ -4,7 +4,8 @@
      movimento reduzido, só o contorno). Um controle por vez; some quando a ação acontece;
    - o quadro: na luta, numa faixa estável logo abaixo da arena (ou acima das cartas, quando cabe), que fica reservada
      enquanto durar a luta guiada; ele não acompanha a investida, o tremor nem o retorno das cartas: a posição só muda
-     quando muda a etapa, o tamanho da janela ou o layout. Fora da luta (o Mural), junto do prédio;
+     quando muda a etapa, o tamanho da janela ou o layout. Na vila (o Mural), numa faixa logo abaixo do cenário,
+     reservada enquanto o V1 vale: o quadro não cobre o desenho do prédio nem o nome dele, e a seta sobe até ele;
    - um véu leve só nas colunas laterais e na doca.
    C1–C3 se encerram pela própria ação (abrir Habilidades, escolher uma, escolher o alvo). O C4 explica o que a
    habilidade gastou, num momento estável depois do golpe (a próxima vez em que a pessoa pode agir), com "Entendi";
@@ -13,7 +14,7 @@
 "use strict";
 
 const Orientacao = (() => {
-  let quadro = null, anel = null, faixa = null, veus = [], dispensado = false;
+  let quadro = null, anel = null, faixa = null, faixaDe = "", veus = [], dispensado = false;
   let luta = null;           // a luta de agora: { c4: id da habilidade usada, feito, guiada }
   let passo = "";            // a etapa à vista (o quadro só se reposiciona quando ela muda, ou o layout)
   let layout = "";           // o tamanho da janela e da área do quadro, quando a posição foi calculada
@@ -68,30 +69,35 @@ const Orientacao = (() => {
     controle = null;
   }
 
-  // ---------------------------------------------------------------- a faixa da luta guiada
-  /** A faixa abaixo da arena, reservada enquanto durar a luta guiada: o quadro mora nela e nada da página fica por
-   *  baixo dele. Se a arena tem espaço acima das cartas para o quadro, ela não é criada. */
-  function reservarFaixa() {
-    if (faixa || acimaDasCartas()) return;
+  // ---------------------------------------------------------------- a faixa do quadro
+  /** A faixa logo abaixo da arena (ou do cenário da vila), reservada enquanto durar a luta guiada (ou o V1): o quadro
+   *  mora nela e nada da página fica por baixo dele. Na luta, se a arena tem espaço acima das cartas, ela não é criada. */
+  function reservarFaixa(de, htmls, classe) {
+    if (faixa && faixaDe === de) return;
+    soltarFaixa();
+    if (de === "luta" && acimaDasCartas()) return;
     const pagina = document.querySelector("#cena #pagina");
     if (!pagina) return;
     faixa = el("div", "orientacao-faixa", "");
+    faixaDe = de;
     faixa.setAttribute("aria-hidden", "true");
-    // A altura do maior quadro da luta (o C4 da classe), medida antes: a faixa não muda de tamanho entre as etapas.
-    faixa.style.height = alturaDoMaior() + 16 + "px";
+    // A altura do maior quadro que vai morar nela (na luta, o C4 da classe), medida antes: a faixa não muda de tamanho
+    // entre as etapas.
+    faixa.style.height = alturaDoMaior(htmls, classe) + 16 + "px";
     pagina.parentNode.insertBefore(faixa, pagina);
   }
-  function alturaDoMaior() {
-    const o = estado.orientacao.atual, c4 = Object.values(o.passos.C4 || {});
-    const prova = el("div", "orientacao c4", "");
+  function alturaDoMaior(htmls, classe) {
+    const prova = el("div", classe, "");
     Object.assign(prova.style, { visibility: "hidden", left: "-9999px", top: "0" });
     document.body.appendChild(prova);
-    let h = 60;
-    c4.forEach((c) => { prova.innerHTML = htmlC4(c); h = Math.max(h, prova.offsetHeight); });
+    let h = 40;
+    htmls.forEach((x) => { prova.innerHTML = x; h = Math.max(h, prova.offsetHeight); });
     prova.remove();
     return h;
   }
-  function soltarFaixa() { if (faixa) { faixa.remove(); faixa = null; } }
+  function soltarFaixa() { if (faixa) { faixa.remove(); faixa = null; faixaDe = ""; } }
+  /** A vila à vista, com os prédios clicáveis (não diante de um balcão nem com a câmera num prédio). */
+  const vilaAVista = () => { const p = document.querySelector("#predios"); return !!p && !p.hidden && !p.classList.contains("focado"); };
 
   /** A área livre acima das cartas da arena, se couber o maior quadro (o do C4); senão null. */
   function acimaDasCartas() {
@@ -128,8 +134,8 @@ const Orientacao = (() => {
     }
     if (o.id === "V1") {
       const mural = document.querySelector('#predios .predio[data-predio="mural"]');
-      if (!visivel(mural) || !pergunta || estado.combate) return null;
-      return { id: "V1", el: mural.querySelector(".balao-nome") || mural, html: botoes(negrito(o.texto)), luta: false };
+      if (!vilaAVista() || !visivel(mural) || !pergunta || estado.combate) return null;
+      return { id: "V1", el: mural, html: botoes(negrito(o.texto)), luta: false };
     }
     return null;
   }
@@ -153,12 +159,23 @@ const Orientacao = (() => {
   // ---------------------------------------------------------------- desenhar
   function desenhar() {
     const a = alvo();
+    // A faixa do V1 entra assim que a vila aparece com ele valendo (antes de o texto correr: nada pula quando o menu
+    // chega) e sai quando ele deixa de valer ou o cenário sai da tela (não a cada piscar da pergunta).
+    const o = estado && estado.orientacao;
+    const v1 = !dispensado && o && o.ligado && o.atual && o.atual.id === "V1" && !estado.combate && estado.local.tipo === "vila"
+      && visivel(document.querySelector("#vista"));
+    if (v1) reservarFaixa("V1", [botoes(negrito(o.atual.texto))], "orientacao");
+    else if (faixaDe === "V1") soltarFaixa();
+    document.body.classList.toggle("orientando-mural", !!a && a.id === "V1");
     if (!a) { esconder(); destacar(null); return; }
     montar();
-    if (a.luta) reservarFaixa();
+    if (a.luta) reservarFaixa("luta", Object.values(estado.orientacao.atual.passos.C4 || {}).map(htmlC4), "orientacao c4");
     const chave = a.id + "|" + a.html;
-    const zona = a.luta ? (faixa ? faixa.getBoundingClientRect() : acimaDasCartas()) : null;
-    const lay = `${innerWidth}x${innerHeight}|${zona ? [zona.left, zona.top, zona.width, zona.height].map(Math.round).join(",") : ""}`;
+    const zona = a.luta ? (faixa ? faixa.getBoundingClientRect() : acimaDasCartas()) : faixa ? faixa.getBoundingClientRect() : null;
+    // Fora da luta, o prédio pode andar com a câmera (a vila se monta): a posição dele entra na conta. Na luta, não: a
+    // carta avança e treme, e o quadro fica parado.
+    const ancora = a.luta ? "" : [a.el.getBoundingClientRect()].map((r) => [r.left, r.top, r.width].map(Math.round).join(",")).join("");
+    const lay = `${innerWidth}x${innerHeight}|${zona ? [zona.left, zona.top, zona.width, zona.height].map(Math.round).join(",") : ""}|${ancora}`;
     if (chave !== passo || lay !== layout) {
       if (chave !== passo) {
         quadro.innerHTML = a.html;
@@ -177,7 +194,7 @@ const Orientacao = (() => {
   function posicionar(a, zona) {
     const r = a.el.getBoundingClientRect(), w = quadro.offsetWidth, h = quadro.offsetHeight, vw = innerWidth, vh = innerHeight;
     let x, y, lado;
-    if (a.luta && zona) {
+    if (zona) {
       // Na faixa (ou acima das cartas): alinhado ao controle; ao lado da janelinha de Habilidades quando ela está aberta.
       // A janelinha de Habilidades desce sobre a faixa: o quadro vai para o lado dela que tem espaço.
       const jan = a.aoLado && a.aoLado.getBoundingClientRect();
@@ -229,7 +246,7 @@ const Orientacao = (() => {
   function aoEstado(e) {
     const emLuta = !!(e && e.combate);
     if (emLuta && !luta) luta = { c4: null, feito: false };
-    if (!emLuta) { luta = null; soltarFaixa(); }
+    if (!emLuta) { luta = null; if (faixaDe === "luta") soltarFaixa(); }
     if (e && e.orientacao && e.orientacao.ligado) dispensado = false;
     if (!$("#sobre-ajuda").hidden) desenharAjuda();
   }

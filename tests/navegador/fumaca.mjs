@@ -1206,12 +1206,53 @@ async function cenarioAbertura(browser) {
     await page.keyboard.press("F1");
     await page.click("#ajuda-corpo .ajuda-chave");
     await page.keyboard.press("Escape");
-    conferir(await ateQuadro(/Os prédios da vila são clicáveis\. Mural: os contratos\./), "religado na Ajuda: V1 aponta o Mural");
+    conferir(await ateQuadro(/Clique no mural para ver os contratos disponíveis\./), "religado na Ajuda: V1 aponta o Mural");
+    conferir(await page.evaluate(() => {  // abaixo do cenário: nem o desenho do mural nem o nome dele ficam por baixo
+      const q = document.querySelector(".orientacao:not([hidden])").getBoundingClientRect();
+      const m = document.querySelector('#predios .predio[data-predio="mural"]');
+      const longe = (r) => q.right <= r.left || q.left >= r.right || q.bottom <= r.top || q.top >= r.bottom;
+      return longe(m.getBoundingClientRect()) && longe(m.querySelector(".balao-nome").getBoundingClientRect())
+        && q.top >= document.querySelector("#vista").getBoundingClientRect().bottom && !/clique: contratos/.test(document.body.innerText);
+    }), "o quadro do V1 fica abaixo do cenário, sem cobrir o mural nem o nome; sem a legenda \"clique: contratos\"");
     const card = await page.$('.predio[data-predio="taverna"]');
     conferir(!!card, "a taverna está na vila (a despensa feita, Morel à espera nela)");
     await page.click(".orientacao-encerrar");
     await page.waitForTimeout(400);
     conferir(!(await quadro()) && !(await page.evaluate(() => estado.orientacao.ligado)), "Encerrar tutorial desliga e o quadro some");
+  } finally {
+    conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
+    await page.close();
+    proc.kill();
+  }
+}
+
+async function cenarioFogueira(browser) {
+  console.log("cenário: a fogueira (quem vai, quem fica, a nota do acampamento) e a fome fora da barra");
+  const { proc, url } = await subir("fogueira", { COMITIVA: "morel", RESERVA: "odete", FOME: "1" });
+  const { page, erros, esperar } = await abrir(browser, url);
+  try {
+    await esperar('#prompt .escolha:has-text("Acampar")', 30000);
+    const hud = () => page.evaluate(() => ({ cond: document.querySelector(".hud-condicoes").innerText.trim(),
+      alto: Math.round(document.querySelector("#hud").getBoundingClientRect().height), fome: !!document.querySelector(".hud-fome") }));
+    const antes = await hud();
+    conferir(antes.cond === "Com fome" && !antes.fome, "a fome mora embaixo das barras (não em cima da vida)");
+    await page.click('#prompt .escolha:has-text("Acampar")');
+    await esperar(".fogueira-rodape", 20000);
+    const rod = await page.textContent(".fogueira-rodape");
+    conferir(/Clique num companheiro para conversar ou ajustar a comitiva\./.test(rod) && /Comitiva 1\/2/.test(rod)
+      && /Vai com você:\s*Morel/.test(rod) && /No acampamento:\s*Odette/.test(rod) && /Descansa, não come das suas provisões/.test(rod),
+      "embaixo da fogueira: a instrução, o contador, quem vai, quem fica e a nota do acampamento");
+    await page.click('.figura[data-cid="morel"]');
+    conferir(/Deixar no acampamento\s*Descansa, não come das suas provisões/.test(await page.textContent(".menu-item")),
+      "no menu de quem vai, a nota junto do \"Deixar no acampamento\"");
+    await page.mouse.click(5, 5);
+    await page.click(".dormir-barraca");
+    for (let k = 0; k < 150 && (await page.evaluate(() => !estado || estado.heroi.fome || !pergunta || !!document.querySelector(".fogueira-palco"))); k++) {
+      const c = await page.$("#prompt .continuar"); if (c) { await page.waitForTimeout(300); await c.click().catch(() => {}); }
+      await page.waitForTimeout(150);
+    }
+    const depois = await hud();
+    conferir(depois.cond === "" && depois.alto === antes.alto, "o amanhecer come a provisão: a fome some e o painel não muda de altura");
   } finally {
     conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
     await page.close();
@@ -1300,6 +1341,7 @@ try {
   await cenarioTiroDuplo(browser);
   await cenarioBaus(browser);
   await cenarioAbertura(browser);
+  await cenarioFogueira(browser);
 } catch (e) {
   falhas.push(String(e));
   console.log("ERRO", e);

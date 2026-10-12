@@ -5,6 +5,9 @@ from .grupo import chamar, fora, membro, membros, na_reserva, nivel, nome, para_
 from .conversas import carinho, conversar, fala_ociosa, falar, proxima_conversa
 from .tela import estado
 
+# O que muda para quem fica no acampamento (a nota junto da decisão, na fogueira e na comitiva).
+NOTA_ACAMPAMENTO = "Descansa, não come das suas provisões e não opina nas suas escolhas."
+
 
 def fogueira(g, intro=None):
     """O acampamento à noite: quem anda com você e quem espera na reserva, em volta do fogo.
@@ -27,6 +30,7 @@ def _fogueira(g, intro):
         # A frase da noite é parte da tela: quem a desenha mostra de novo a cada volta (carinho, trocar quem vai),
         # senão a página encolhe e pula; no texto, ela sai só uma vez.
         dados = {"ativos": estado(g), "reserva": estado(g, reserva(g)), "limite": LIMITE,
+                 "contador": f"Comitiva {len(ms)}/{LIMITE}", "nota_acampamento": NOTA_ACAMPAMENTO,
                  "clima": g.clima, "bioma": g.loc["bioma"], "intro": intro}
         fera = getattr(g.j, "companheiro", None)
         if fera:  # o animal do patrulheiro dorme junto do fogo
@@ -101,7 +105,8 @@ def menu(g):
                 "monte a fogueira para chamar." if rs else " Por enquanto."), "cinza")
             g.pausar()
             return
-        painel = {"membros": estado(g), "limite": LIMITE, "reserva": estado(g, reserva(g))}
+        painel = {"membros": estado(g), "limite": LIMITE, "reserva": estado(g, reserva(g)),
+                  "nota_acampamento": NOTA_ACAMPAMENTO}
         for m in ([] if g.ui.painel("comitiva", painel) else ms):
             d = COMPANHEIROS[m["id"]]
             rotulo, _ = nivel(m)

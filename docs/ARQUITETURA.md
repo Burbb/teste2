@@ -133,6 +133,7 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
 | Queda e resgate | `Derrota` leva a `causa` ("combate", "fome" ou "infeccao"). No combate, `Confronto.combate` levanta a derrota; a fome e a infecção que zeram a vida passam por `Finais.cair_sem_luta`: no hardcore e no mundo gerado, `fim_de_jogo`; na campanha com resgate, a queda fica pendente e `Tempo.novo_dia` a levanta depois do quadro do amanhecer. `Jogo.rodar` chama `resgate(causa)`; na campanha, `resgate_campanha` (Marta ou Pita, dois dias com refeição, fome, infecção e feridas abertas tratadas, `resgatando` impede queda dentro da queda) |
 | Toques e proteção (interface) | O Continuar das cenas de missão tem uma guarda de leitura (escolhas.js: `mostrarContinuar`): toques dentro dela a estendem, e o botão fica apagado (`contido`) enquanto ela segura. As ações do acampamento tocadas enquanto a página ainda apresenta a anterior ficam guardadas (`acaoGuardada`, nucleo.js) e valem quando o menu volta |
 | A bolsa e o que trata | `Inventario.o_que_trata` diz o que um item trata agora (`trata`) ou que a bandagem só cura (`so_cura`); a bolsa do painel pulsa e mostra na dica (paineis.js) |
+| As condições do herói | `sobrevivencia.condicoes` monta a fome (texto, ícone, a dica do efeito de agora) para a linha embaixo das barras do topo (paineis.js), que tem sempre a mesma altura |
 | `rpg/campanha.py` | a campanha escrita (protótipo): regiões de mapa fixo no mesmo formato do mundo gerado (`chave` estável, `nivel` fixo, saída `fechado`), e os eventos do mundo gerado que ficam de fora (`EVENTOS_FORA`) |
 | `rpg/habilidades.py` | habilidades (execução + descrição) |
 | `rpg/talentos.py` | árvores de talentos e passivas de especialização, cada um declarando o próprio efeito |
@@ -155,8 +156,8 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   doca de atalhos, roda de ações da luta · `app/paineis.js` ficha e mapa laterais · `app/controles.js` teclado
 - `app/orientacao.js` as orientações da abertura guiada (abertura.py): acha o controle (a roda, a janelinha, a mira, a
   barra de recurso, o prédio do Mural), põe o contorno em volta, o quadro com a seta (na luta, parado numa faixa
-  reservada abaixo da arena, ou acima das cartas se couber, para nunca cobrir cartas, ações nem texto; recalculado só
-  quando o passo ou o tamanho da tela muda) e um véu leve só nas colunas laterais e na doca; tudo sem receber clique,
+  reservada abaixo da arena, ou acima das cartas se couber, para nunca cobrir cartas, ações nem texto; na vila, o V1
+  numa faixa abaixo do cenário, sem cobrir o prédio; recalculado só quando o passo ou o tamanho da tela muda) e um véu leve só nas colunas laterais e na doca; tudo sem receber clique,
   menos os botões do quadro ("Entendi" no C4, que fecha só ele, e "Encerrar tutorial"). A Ajuda (topo, F1) lista o que já foi visto e liga ou desliga, pela rota `/orientacao`
   (fora da fila das perguntas). Uma caixa marcável pode ir junto de uma escolha (`caixa` na pergunta; a resposta vem
   como `{"i", "caixa"}`; no texto, `UI.ler_caixa` faz uma pergunta de sim ou não).

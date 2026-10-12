@@ -330,13 +330,16 @@
 .orientacao.c4 { max-width: 360px; }
 .o-nome { font-weight: 600; color: var(--ouro); }
 .o-custos { margin: 2px 0 3px; }
-.o-valor { display: inline-flex; align-items: center; gap: 3px; margin-right: 6px; font-weight: 600; white-space: nowrap; }
+/* O ícone e o número na mesma linha do texto em volta (inline, não flex: assim a linha base é a do texto) e o ícone
+   centrado na altura das letras. */
+.o-valor { margin-right: 6px; font-weight: 600; white-space: nowrap; }
+.o-valor img.sprite { vertical-align: middle; margin: 0 3px 0 0; position: relative; top: -1px; }
 .o-valor.rec-vigor { color: #ffe08a; }
 .o-valor.rec-mana { color: #a8c4ff; }
 .o-valor.rec-foco { color: #b8f0a0; }
 .o-valor.flecha { color: #e8d9b8; }
 .o-atacar { font-size: 14px; color: var(--tinta-2); }
-.o-atacar .o-valor { margin: 0 1px; }
+.o-atacar .o-valor { margin: 0; }
 /* A faixa reservada da luta guiada, entre a arena e a página: só espaço (o quadro fica por cima dela). */
 .orientacao-faixa { flex: none; }
 /* O destaque: um contorno fino com o formato do controle e um brilho que pulsa devagar; com movimento reduzido, só o

@@ -6,10 +6,12 @@
   border: var(--borda) solid var(--p-J); border-image: var(--retrato-a) 3 / calc(var(--P) * 3) stretch;
   background: var(--tx-funda) 0 0 / calc(var(--P) * 32), var(--p-z); background-clip: padding-box; }
 .hud-retrato .nivel { position: absolute; right: -9px; bottom: -9px; font-family: var(--num); font-size: 16px; font-weight: 700; color: var(--p-k); background: var(--ouro); padding: 0 5px; line-height: 1.2; box-shadow: 0 0 0 var(--px) var(--p-k); }
-/* Só as barras: o nome mora na ficha do herói, ao lado (aqui ele se repetia). O "com fome" é um selo na ponta direita
-   da barra de vida (a fome tira vida máxima): não empurra as barras e não sai da caixa (antes, acima delas, era cortado). */
-.hud-vitais { position: relative; flex: 1.3; min-width: 180px; display: flex; flex-direction: column; justify-content: center; gap: 6px; }
-.hud-fome { position: absolute; right: 74px; top: 50%; transform: translateY(-50%); z-index: 1; font-size: 12px; line-height: 1; padding: 1px 5px 2px; color: #fff3d6; background: #6e0d0d; border: 1px solid #000; white-space: nowrap; pointer-events: none; }
+/* Só as barras: o nome mora na ficha do herói, ao lado (aqui ele se repetia). Embaixo delas, a linha das condições
+   (a fome): sempre com a mesma altura, cheia ou vazia, para a fome chegar ou passar sem as barras pularem. */
+.hud-vitais { position: relative; flex: 1.3; min-width: 180px; display: flex; flex-direction: column; justify-content: center; gap: 4px; }
+.hud-condicoes { display: flex; gap: 8px; height: 17px; margin-left: 22px; overflow: hidden; }
+.condicao { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; line-height: 1; font-weight: 600; color: #ff9b8a; cursor: default; white-space: nowrap; }
+.condicao img.sprite { --s: 16; }
 .vital { display: flex; align-items: center; gap: 6px; position: relative; }
 .vital img.sprite { --s: 16; }
 .vital .barra-px { flex: 1; height: 16px; }

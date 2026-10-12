@@ -1,7 +1,7 @@
 """O que a tela mostra da comitiva: o estado de cada um e a explicação da aprovação."""
 
 from .catalogo import COMPANHEIROS
-from .grupo import fora, lealdade, membros, nivel
+from .grupo import flexao, fora, lealdade, membros, nivel
 from .conversas import CONVERSAS, proxima_conversa
 
 
@@ -45,6 +45,7 @@ def estado(g, quem=None):
         lista.append({"id": m["id"], "nome": d["nome"], "titulo": d["titulo"], "desc": d["desc"],
                       "hp": m["hp"], "max_hp": m["max_hp"],
                       "aprovacao": m["aprovacao"], "nivel": rotulo, "classe": classe, "ferido": m["ferido"],
+                      **({"ferido_txt": flexao(m["id"], "ferid{a}, fora de combate")} if m["ferido"] else {}),
                       "papel": d["papel"],
                       "conversa": not ausente and bool(proxima_conversa(g, m)) and m["ultima_conversa"] != g.dia,
                       "aprovacao_info": explicar_aprovacao(g, m), **({"fora": ausente} if ausente else {})})

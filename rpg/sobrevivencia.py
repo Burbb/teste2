@@ -18,6 +18,9 @@ FERIMENTOS = {
     "infeccao": dict(nome="Infecção", dias=None, mult={"atk": 0.85, "poder": 0.85, "agi": 0.85}),
 }
 MAX_PROVISOES = 12
+FOME_FATOR = {1: 0.9, 2: 0.8}   # atributos e vida máxima com fome (1º e 2º dia); do 3º em diante, FOME_GRAVE
+FOME_GRAVE = 0.65
+FOME_DESCANSO = 0.3             # com fome, descansar devolve esta parte da vida
 CHANCE_INFECCAO = 0.3
 
 
@@ -79,7 +82,7 @@ def fontes_penalidade(jogador):
         for stat, v in FERIMENTOS[f["id"]]["mult"].items():
             fontes.setdefault(stat, []).append((FERIMENTOS[f["id"]]["nome"], v))
     if jogador.fome:
-        fator = {1: 0.9, 2: 0.8}.get(jogador.fome, 0.65)
+        fator = FOME_FATOR.get(jogador.fome, FOME_GRAVE)
         for stat in ("atk", "poder", "max_hp", "agi"):
             fontes.setdefault(stat, []).append(("Fome", fator))
     return fontes
@@ -87,6 +90,28 @@ def fontes_penalidade(jogador):
 
 def tem(jogador, fid):
     return any(f["id"] == fid for f in jogador.ferimentos)
+
+
+def condicoes(j):
+    """As condições do herói fora das barras (a área embaixo da vida e do recurso): hoje, a fome, com o efeito de
+    agora na dica. Lista vazia sem nenhuma."""
+    if not j.fome:
+        return []
+    pct = round((1 - FOME_FATOR.get(j.fome, FOME_GRAVE)) * 100)
+    dica = [f"Ataque, Poder, Agilidade e vida máxima −{pct}%.",
+            f"Descansar devolve só {round(FOME_DESCANSO * 100)}% da vida de sempre, e os ferimentos não saram."]
+    if j.fome >= 3:
+        dica.append(f"Cada amanhecer sem comer tira {perda_fome(j)} de vida.")
+    elif j.fome == 2:  # o próximo amanhecer sem comer é o terceiro: aí o corpo começa a se consumir
+        dica.append("Mais um amanhecer sem comer e o corpo começa a se consumir: perde vida a cada dia.")
+    dica.append("Passa quando você come: 1 provisão no amanhecer, o ensopado da taverna ou comida comprada.")
+    return [{"id": "fome", "icone": "osso_diag", "texto": "Com fome" if j.fome < 3 else "Morrendo de fome",
+             "dica": dica}]
+
+
+def perda_fome(j):
+    """A vida que cada amanhecer sem comer tira, do terceiro dia em diante."""
+    return max(3, int(j.max_hp * 0.2))
 
 
 def ferir(g, fid, motivo=""):
@@ -212,7 +237,7 @@ def amanhecer(g, descanso, refeicao=False):
             g.relatar(f"Dia {j.fome} sem comer. Suas mãos tremem e a vista escurece. (-20% atributos)", "vermelho",
                       "perigo", "pernil", f"{j.fome}º dia sem comer: −20% atributos")
         else:
-            perda = max(3, int(j.max_hp * 0.2))
+            perda = perda_fome(j)
             g.relatar(f"Dia {j.fome} sem comer. Seu corpo começa a se consumir. (-{perda} vida)", "vermelho+negrito",
                       "perigo", "caveira", f"{j.fome}º dia sem comer: −{perda} vida")
             j.hp -= perda

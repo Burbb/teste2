@@ -242,7 +242,7 @@ def atual(g):
             "C3": "Clique num inimigo para escolher o alvo (ou a tecla do número dele).",
             "C4": {h: _c4(j, h) for h in j.habilidades}}, "hab": hid}
     if _v1_pendente(g):
-        return {"id": "V1", "texto": "Os prédios da vila são clicáveis. **Mural**: os contratos.", "ancora": "mural"}
+        return {"id": "V1", "texto": "Clique no **mural** para ver os contratos disponíveis.", "ancora": "mural"}
     return None
 
 
@@ -258,7 +258,7 @@ def ajuda(g):
                                                  "habilidade e depois no alvo."})
         linhas.append({"grupo": "Luta", "texto": _custo(j, hid, "gasta")})
     if "V1" in vistas:
-        linhas.append({"grupo": "Vila", "texto": "Os prédios da vila são clicáveis. O **Mural** tem os contratos."})
+        linhas.append({"grupo": "Vila", "texto": "Clique no **mural** para ver os contratos disponíveis."})
     return {"ligado": tutorial(g), "linhas": linhas}
 
 

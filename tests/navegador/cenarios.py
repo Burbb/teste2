@@ -16,6 +16,7 @@
     python -m tests.navegador.cenarios broquel       # Guerreiro nv 4 com o Broquel contra três lobos; repete com/sem o Revide (LUTA, ESPEC, NIVEL)
     python -m tests.navegador.cenarios resgate       # a recuperação: fome ou infecção no Charco, à noite (CLASSE, CAUSA, COMITIVA, CONTRATOS)
     python -m tests.navegador.cenarios abertura      # campanha nova no Vau: a despensa e as orientações (CLASSE, TUTORIAL, MOREL, DESPENSA, VIDA_RATOS)
+    python -m tests.navegador.cenarios fogueira      # a comitiva na fogueira e a fome (LUGAR, COMITIVA, RESERVA, FERIDO, FOME, PROVISOES)
     python -m tests.navegador.cenarios gelo          # Mago com a iniciativa contra um lobo: duas Lanças antes de ele agir (PRISAO, NIVEL, SEMENTE)
     python -m tests.navegador.cenarios muralha       # Guerreiro nv 6, Muralha + Contra-ataque (CONTRA) e o Broquel, contra bandidos e um cultista
 
@@ -616,10 +617,50 @@ def muralha(ui):
     _broquel(ui, int(os.environ.get("NIVEL", "6")), ["muralha", f"contra_ataque={os.environ.get('CONTRA', '1')}"], "misto")
 
 
+def fogueira(ui):
+    """A campanha no LUGAR (charco, padrão, à noite: acampar abre a fogueira; vau: a vila, de manhã), CLASSE (padrão
+    arqueiro). COMITIVA: quem anda junto, separado por vírgula (padrão "morel,odete"); RESERVA: quem espera no
+    acampamento (padrão "yara"); FERIDO: quem está ferido. FOME=n: n dias sem comer (PROVISOES, padrão 3). Sair leva ao
+    título, com o save (para conferir que a fome volta igual)."""
+    from rpg.__main__ import menu_principal
+    pasta = tempfile.mkdtemp()
+    g = Jogo(ui, seed=int(os.environ.get("SEMENTE", "5")), pasta_saves=pasta, hardcore=False)
+    ui.jogo = g
+    g.iniciar("Jean", os.environ.get("CLASSE", "arqueiro"), "turvo")
+    from rpg import missoes
+    missoes.registro(g, "febre_do_turvo").update(etapa="capela", cenas=["abertura"],
+                                                 pistas=["agua_do_leste", "represa", "canal_da_capela"])
+    ativos = [c for c in os.environ.get("COMITIVA", "morel,odete").split(",") if c]
+    reserva = [c for c in os.environ.get("RESERVA", "yara").split(",") if c]
+    for c in reserva + ativos:
+        cm.recrutar(g, c)
+    for c in reserva:
+        cm.para_acampamento(g, c, silencioso=True)
+    for c in os.environ.get("FERIDO", "").split(","):
+        if cm.membro(g, c):
+            cm.membro(g, c)["ferido"] = True
+    j = g.j
+    j.provisoes, j.fome = int(os.environ.get("PROVISOES", "3")), int(os.environ.get("FOME", "0"))
+    j.recalcular()
+    j.hp = j.max_hp
+    chave = {"vau": "vau_do_turvo"}.get(os.environ.get("LUGAR", "charco"), "charco_dos_juncos")
+    for l in g.mundo["locais"]:
+        l["visitado"] = l["chave"] in ("vau_do_turvo", "charco_dos_juncos", "bosque_do_moinho")
+    g.mundo["atual"] = next(l["id"] for l in g.mundo["locais"] if l["chave"] == chave)
+    g.dia, g.periodo, g.clima = 5, (0 if chave == "vau_do_turvo" else 3), "limpo"
+    g.autosalvar = True
+    try:
+        g.rodar()
+    except FimDeJogo:
+        pass
+    ui.jogo = None
+    menu_principal(ui, argparse.Namespace(seed=1, saves=pasta, brando=False))
+
+
 CENARIOS = {"combate": combate, "titulo": titulo, "vila": vila, "campanha": campanha, "baus": baus, "missao": missao,
             "recarga": recarga, "capela": capela, "retorno": retorno, "praca": praca, "encruzilhada": encruzilhada,
             "tiro_duplo": tiro_duplo, "covil": covil, "broquel": broquel, "muralha": muralha, "resgate": resgate,
-            "gelo": gelo, "abertura": abertura}
+            "gelo": gelo, "abertura": abertura, "fogueira": fogueira}
 
 
 def main():

@@ -114,8 +114,9 @@ function desenharHud(h, antes) {
   $("#hud-linha").innerHTML = `
     <div class="hud-retrato" title="${esc(h.titulo)} nível ${h.nivel}">${spr(h.classe, 3)}<span class="nivel">${h.nivel}</span></div>
     <div class="hud-vitais">
-      <div class="vital" data-vital="hp" ${Telas.dica("Vida", true)}>${spr("coracao", 1)}${barra("vida", h.hp, h.max_hp, antes ? antes.hp : undefined, "hud-hp")}${h.fome ? '<span class="hud-fome">com fome</span>' : ""}<span class="num">${h.hp}/${h.max_hp}</span></div>
+      <div class="vital" data-vital="hp" ${Telas.dica("Vida", true)}>${spr("coracao", 1)}${barra("vida", h.hp, h.max_hp, antes ? antes.hp : undefined, "hud-hp")}<span class="num">${h.hp}/${h.max_hp}</span></div>
       <div class="vital" data-vital="rec" ${Telas.dica(esc(h.recurso), true)}>${spr(RECURSO_ICONE[h.recurso] || "estrela", 1)}${barra(RECURSO_BARRA[h.recurso] || "mana", h.rec, h.max_rec, antes ? antes.rec : undefined, "hud-rec")}<span class="num">${h.rec}/${h.max_rec}</span></div>
+      <div class="hud-condicoes">${(h.condicoes || []).map((c) => `<span class="condicao" data-condicao="${esc(c.id)}" ${Telas.dica(`<b>${esc(c.texto)}</b>${c.dica.map((l) => `<div>${esc(l)}</div>`).join("")}`)}>${spr(c.icone, 1)}${esc(c.texto)}</span>`).join("")}</div>
     </div>
     <div class="hud-recursos">
       ${recurso("provisoes", comida, `${h.provisoes}<small>d</small>`, { alerta: h.provisoes <= 1, vazio: !h.provisoes, titulo: h.provisoes ? `Comida para ${Texto.plural(h.provisoes, "dia")}. Cada dia consome 1 (e cada companheiro come também).` : "Sem comida! Você vai passar fome." })}

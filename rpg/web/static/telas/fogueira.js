@@ -26,7 +26,20 @@
     // no canto de cima: em cima da barraca ele encostava no nome de quem senta ali perto.
     const dormir = `<button type="button" class="dormir-barraca">${S("lua", 1)} Dormir até o amanhecer</button>`;
     return `<div class="tela acampamento">${d.intro ? `<p class="sussurro">${h(d.intro)}</p>` : ""}<div class="fogueira-palco"><canvas class="fogueira-cena" width="320" height="120"></canvas>${botoes}${fera}${dormir}</div>
-      <div class="dica-uso">${figuras.length ? `Clique em alguém para conversar ou decidir quem vai com você amanhã (nome com moldura de ouro). Quem fica no acampamento descansa, não come das suas provisões e não opina nas suas escolhas. ${d.ativos.length}/${d.limite} na comitiva.` : "Só você, o fogo e os barulhos da mata. Quem você encontrar pelo caminho pode se sentar aqui um dia."}</div></div>`;
+      ${figuras.length ? rodape(d) : '<div class="dica-uso">Só você, o fogo e os barulhos da mata. Quem você encontrar pelo caminho pode se sentar aqui um dia.</div>'}</div>`;
+  }
+
+  /** Embaixo do palco, cada coisa no seu lugar: a instrução e o contador numa linha; quem vai com você e quem fica no
+   *  acampamento, por escrito (a moldura de ouro do nome não é o único sinal), com o estado de cada um; e o que muda
+   *  para quem fica, como nota da linha do acampamento (no menu de cada um, ela vai junto do "Deixar no acampamento"). */
+  function rodape(d) {
+    const quem = (m) => `<span class="fr-nome">${h(m.nome.split(" ").pop())}${m.ferido_txt ? ` <small>(${h(m.ferido_txt)})</small>` : ""}${m.fora ? ` <small>(${h(m.fora.curto)})</small>` : ""}</span>`;
+    const lista = (ms) => ms.length ? ms.map(quem).join(", ") : '<span class="fr-ninguem">ninguém</span>';
+    return `<div class="fogueira-rodape">
+        <div class="fr-cab"><span class="fr-instrucao">Clique num companheiro para conversar ou ajustar a comitiva.</span><span class="fr-contador">${h(d.contador)}</span></div>
+        <div class="fr-linha vai"><b>Vai com você:</b> ${lista(d.ativos)}</div>
+        ${d.reserva.length ? `<div class="fr-linha fica"><b>No acampamento:</b> ${lista(d.reserva)}<div class="fr-nota">${h(d.nota_acampamento)}</div></div>` : ""}
+      </div>`;
   }
 
   function desenharFogueira(canvas, d) {
@@ -129,7 +142,7 @@
       App.ultimaFogueira = d;
       desenharFogueira(raiz.querySelector(".fogueira-cena"), d);
       requestAnimationFrame(() => acomodarNomes(raiz));
-      ligarFigurasComitiva(raiz);
+      ligarFigurasComitiva(raiz, d);
     },
   });
 })();

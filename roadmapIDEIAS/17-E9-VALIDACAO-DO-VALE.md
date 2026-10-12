@@ -13,6 +13,8 @@ Avaliação integrada do Vale do Turvo como primeiro capítulo (a E9 antecipada,
   da abertura guiada ([18](18-E9-ABERTURA-GUIADA.md), seção 12).
 - **Acabamento, 1.66.1 e 1.66.2 (seção 21):** os riscos da capela em indicadores; os quadros da abertura parados,
   mais discretos, com "Entendi" e "Encerrar tutorial" ([18](18-E9-ABERTURA-GUIADA.md), seção 13).
+- **Ajustes pontuais, 1.66.3 (seção 22):** C4, V1 e o Mural, a fogueira e a fome fora da barra
+  ([18](18-E9-ABERTURA-GUIADA.md), seção 14).
 - **Quarta entrega, 1.65.2 e 1.65.3 (seção 19):** a partida da Quibia lida; os contratos pagos depois do resgate; o
   ×N dos baús em destaque. A especificação da abertura guiada fica em [18](18-E9-ABERTURA-GUIADA.md).
 - **Correção 1.65.1 (seção 18):** os três pontos que faltaram na mensagem cortada: a percepção do Mago na água, o nome
@@ -852,3 +854,12 @@ detalhe. O sarilho mostra só o que vale para cada atalho.
 numa faixa parada fora das cartas, das ações e do texto; o C4 aparece depois do golpe, em linhas (nome, custo com a
 cor e o ícone do recurso, o Atacar da classe), com "Entendi" e "Encerrar tutorial"; a cena depois da despensa espera o
 Continuar e o taverneiro aponta o mural de contratos. Detalhe, conferência e limitações na seção 13 do 18.
+
+## 22. Ajustes pontuais de apresentação (1.66.3)
+
+Os últimos ajustes da primeira parte da abertura, antes da segunda e dos testes humanos, sem mudar regras nem
+equilíbrio: os ícones do C4 alinhados ao texto; o V1 com o texto "Clique no mural para ver os contratos disponíveis.",
+num quadro abaixo do cenário que não cobre o prédio; o balão do Mural sem "clique: contratos"; a fogueira com a
+instrução, o contador, quem vai e quem fica escritos e a nota do acampamento junto da decisão; a fome numa linha de
+condições embaixo das barras, com o efeito de agora na dica. Detalhe e limitações na seção 14 do 18.
+

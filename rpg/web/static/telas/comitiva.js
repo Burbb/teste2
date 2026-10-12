@@ -59,7 +59,7 @@
     fecharAoClicarFora();
   }
 
-  function menuFigura(ancora, cid) {
+  function menuFigura(ancora, cid, nota) {
     fecharMenuItem();
     const ops = App.opcoes() || [];
     const nomeDe = (id) => (App.estado.heroi.comitiva.concat(App.ultimaFogueira ? App.ultimaFogueira.reserva : []).find((m) => m.id === id) || {}).nome || id;
@@ -69,15 +69,17 @@
       if (m.conversar === cid) itens.push([`${S("pergaminho", 1)} Conversar${/✉/.test(o.texto) ? " ✉" : ""}`, { conversar: cid }]);
       if (m.chamar === cid && !m.sai) itens.push([`${S("espada", 1)} Levar amanhã`, { chamar: cid }]);
       if (m.chamar === cid && m.sai) itens.push([`${S("espada", 1)} Levar no lugar de ${h(nomeDe(m.sai).split(" ").pop())}`, { chamar: cid, sai: m.sai }]);
-      if (m.reservar === cid) itens.push([`${S("fogueira", 1)} Deixar no acampamento`, { reservar: cid }]);
-      if (m.acampamento === cid) itens.push([`${S("fogueira", 1)} Mandar para o acampamento`, { acampamento: cid }]);
+      // O que muda para quem fica vai junto da decisão, embaixo do botão.
+      const oQueMuda = nota ? `<small class="menu-nota">${h(nota)}</small>` : "";
+      if (m.reservar === cid) itens.push([`${S("fogueira", 1)} Deixar no acampamento${oQueMuda}`, { reservar: cid }]);
+      if (m.acampamento === cid) itens.push([`${S("fogueira", 1)} Mandar para o acampamento${oQueMuda}`, { acampamento: cid }]);
     });
     if (!itens.length) return;
     const menu = document.createElement("div");
     menu.className = "menu-item m-janela";
-    // Onde a pessoa está agora (o que a dica da fogueira dizia), logo embaixo do nome.
+    // Onde a pessoa está agora, logo embaixo do nome.
     const vai = App.estado.heroi.comitiva.some((m) => m.id === cid);
-    const onde = vai ? "Vai com você amanhã." : "Fica no acampamento: descansa, não come das suas provisões e não opina.";
+    const onde = vai ? "Vai com você amanhã." : `Fica no acampamento.${nota ? " " + h(nota) : ""}`;
     menu.innerHTML = `<b>${h(nomeDe(cid))}</b><small class="menu-sub">${onde}</small>` + itens.map(([t], i) => `<button type="button" data-i="${i}">${t}</button>`).join("") +
       '<button type="button" class="secundaria" data-i="-1">Cancelar</button>';
     document.body.appendChild(menu);
@@ -95,7 +97,8 @@
     fecharAoClicarFora();
   }
 
-  function ligarFigurasComitiva(raiz) {
+  function ligarFigurasComitiva(raiz, d) {
+    const nota = d && d.nota_acampamento;
     raiz.querySelectorAll(".dormir-barraca").forEach((b) => b.addEventListener("click", (ev) => {
       ev.stopPropagation(); fecharMenuItem(); App.acao({ dormir: true }, "escolha");
     }));
@@ -108,7 +111,7 @@
         ev.stopPropagation();
         // Clicou no aviso de conversa (✉ do retrato ou "quer conversar"): abre a conversa direto, sem menu.
         if (ev.target.closest(".aviso-conversa, .carta-aviso") && App.acao({ conversar: el.dataset.cid }, "escolha")) return;
-        menuFigura(el, el.dataset.cid);
+        menuFigura(el, el.dataset.cid, nota);
       });
     });
   }

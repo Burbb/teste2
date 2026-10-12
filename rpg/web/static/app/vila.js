@@ -76,12 +76,11 @@ function montarVila(m, grupos) {
   Vista.predios().forEach((p) => {
     const g = grupos[p.id];
     if (!g && !fechados[p.id]) return;
-    // Quem ainda não abriu o mural (neste navegador): o balão dele pisca como sob o mouse, com uma legenda curta, até
-    // a primeira visita. Mostra que o cenário se clica e por onde há trabalho a pegar.
-    // Com o tutorial ligado, o quadro da orientação (V1, orientacao.js) aponta o Mural no lugar do convite.
+    // Quem ainda não abriu o mural (neste navegador): o balão dele pisca como sob o mouse até a primeira visita. Mostra
+    // que o cenário se clica e por onde há trabalho a pegar. Com o tutorial ligado, o quadro da orientação (V1,
+    // orientacao.js) aponta o Mural no lugar do convite (e, enquanto ele está à vista, o convite não pisca junto).
     const convite = p.id === "mural" && !ler(MURAL_VISTO) && !(estado && estado.orientacao && estado.orientacao.ligado);
-    const b = el("button", "predio" + (convite ? " convite" : ""),
-      `<span class="balao-nome">${esc(p.nome)}${convite ? '<small class="convite-legenda">clique: contratos</small>' : ""}</span>`);
+    const b = el("button", "predio" + (convite ? " convite" : ""), `<span class="balao-nome">${esc(p.nome)}</span>`);
     b.type = "button";
     b.dataset.predio = p.id;
     b.setAttribute("aria-label", p.nome);
@@ -123,7 +122,7 @@ function entrarNoPredio(id, pedido = false, continua = false) {
   const g = v.grupos[id] || [];
   if (id === "mural" && !ler(MURAL_VISTO)) {
     guardar(MURAL_VISTO, "1");
-    predioEl.querySelectorAll(".predio.convite").forEach((b) => { b.classList.remove("convite"); b.querySelector(".convite-legenda")?.remove(); });
+    predioEl.querySelectorAll(".predio.convite").forEach((b) => b.classList.remove("convite"));
   }
   if (!continua) Som.tocar("predio_" + id);  // de volta ao mesmo balcão (o templo depois de cuidar de alguém): sem o som de entrar
   Vista.focar(id);

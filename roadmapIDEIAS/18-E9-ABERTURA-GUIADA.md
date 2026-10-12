@@ -1,7 +1,7 @@
 # 18 — Abertura guiada da campanha (E9): especificação
 
 Especificação da abertura guiada (pedido de Jean, 12/10/2026, sobre a 1.65.3), revista por Jean e ajustada antes da
-primeira implementação (seção 12: o que foi implementado e como foi conferido). A segunda parte (V2–V5, E1, T1, N1)
+primeira implementação (seção 12: o que foi implementado e como foi conferido; seções 13 e 14: o acabamento). A segunda parte (V2–V5, E1, T1, N1)
 continua só especificada.
 
 **O que se quer:** uma orientação **opcional**, para testar se ela ajuda quem nunca jogou. A abertura (a luta curta, o
@@ -110,8 +110,8 @@ opções e as regras ficam como são: pagar 40, queda de braço, Carisma ou Recu
 Nesta ordem, cada quadro só uma vez e só se a condição valer (se não valer, ele espera a vez dele ou não aparece):
 
 1. **Um prédio clicável (o Mural).** O taverneiro, ao fim da despensa: "o mural paga quem limpa a estrada". Quadro no
-   Mural (V1) a partir do menu da vila depois do pedido (despensa feita ou adiada), até o Mural ser aberto. Com o tutorial desligado, o convite que já existe (o Mural piscando,
-   "clique: contratos") continua como hoje; com o tutorial ligado, o quadro toma o lugar dele.
+   Mural (V1) a partir do menu da vila depois do pedido (despensa feita ou adiada), até o Mural ser aberto. Com o tutorial desligado, o convite que já existe (o balão do Mural
+   piscando, sem legenda desde a 1.66.3) continua; com o tutorial ligado, o quadro toma o lugar dele.
 2. **Recuperar.** Só se a vida estiver abaixo de 70% ou o recurso abaixo de metade quando o menu da vila voltar: quadro
    no Templo (vida) e na Taverna (dormir). A Curandeira só se houver ferimento.
 3. **Provisões.** Na primeira vez que a pessoa abrir "Viajar" (ou clicar na Estrada): quadro no contador de provisões
@@ -164,7 +164,7 @@ escolheu outra, o texto é o dela).
 
 | # | Âncora | Texto | Aparece | Encerra |
 |---|---|---|---|---|
-| V1 | o Mural (balão do prédio) | "Os prédios da vila são clicáveis. **Mural**: os contratos." | menu do Vau depois de Morel (3.4.1) | o Mural é aberto |
+| V1 | o Mural (o prédio; o quadro numa faixa abaixo do cenário) | "Clique no **mural** para ver os contratos disponíveis." | menu do Vau depois do pedido da despensa (3.4.1) | o Mural é aberto |
 | V2 | Templo e Taverna | "Vida baixa. O **Templo** cura a vida por ouro. **Dormir na Taverna** devolve 35% da vida e todo o {recurso}, e o ensopado da noite substitui a provisão." | menu do Vau com vida < 70% ou recurso < 50% | um dos dois é usado, ou a pessoa sai da vila |
 | V3 | provisões no topo (e o Mercado) | "Cada amanhecer come 1 provisão sua e 1 de cada companheiro, na vila ou fora (você tem {4}). Sem provisão, fome. O ensopado da Taverna e o resgate alimentam sem gastar. O **Mercado** vende mais." | primeira vez em Viajar | a viagem começa, ou o Mercado é aberto |
 | V4 | o cartão de Morel na Comitiva | "{Morel} luta com você e come 1 provisão por dia. Clique no cartão para conversar." | primeiro menu com Morel no grupo | o cartão é aberto, ou o menu muda |
@@ -441,3 +441,55 @@ salvar e carregar sem repetir caneca, XP nem a apresentação de Morel.
 - O C4 só aparece se houver uma próxima vez de agir; quem acaba a luta com a habilidade lê o custo na Ajuda.
 - Os indicadores da capela usam ícones que já existiam; o detalhe (quem ataca primeiro, −4 nos testes) fica na dica,
   que no toque não aparece.
+
+## 14. Ajustes pontuais de apresentação (1.66.3)
+
+Pedido de Jean sobre a 1.66.2, para fechar os ajustes da primeira parte. Regras, custos, recompensas, sorteio e
+dificuldade iguais; as transcrições do gabarito mudam só nos campos novos que a tela recebe (abaixo).
+
+- **Ícones do C4:** o valor ("−1 flecha", "−14 Mana", "+2 Vigor") deixou de ser um bloco flexível, que subia em
+  relação ao texto em volta; agora fica na linha do texto, com o ícone centrado na altura das letras. Medido nas três
+  classes, a 1500 e a 1280 px: o centro do ícone a menos de 1 px do centro do número, e o número na mesma linha que
+  "Atacar:". Sem espaço sobrando antes da vírgula e do ponto.
+- **V1:** "Clique no **mural** para ver os contratos disponíveis." O contorno fica no desenho do prédio; o quadro mora
+  numa faixa logo abaixo do cenário, com a seta subindo até o mural. Ele não cobre o desenho nem o nome do prédio, nem
+  o texto da página. A faixa entra assim que a vila aparece com o V1 valendo (o texto não pula quando o menu chega) e
+  sai quando o Mural abre, quando a pessoa encerra o tutorial ou quando o cenário sai da tela. A posição é refeita só
+  quando o passo, o tamanho da janela ou a posição do prédio muda (a câmera da vila assentando). Pelo teclado, o prédio
+  recebe foco com Tab e abre com Enter (o menu numerado continua igual).
+- **Sem "clique: contratos":** a legenda sumiu do balão do Mural com o tutorial ligado ou não. O nome, a resposta ao
+  mouse, o foco e o convite piscando (tutorial desligado, Mural nunca aberto) continuam. Com o V1 à vista, o convite
+  descansa: um destaque só sobre o prédio, também quando a pessoa religa o tutorial pela Ajuda na vila e com
+  movimento reduzido.
+- **Fogueira:** embaixo do palco, a instrução ("Clique num companheiro para conversar ou ajustar a comitiva."), o
+  contador ("Comitiva 1/2", do motor), "Vai com você:" e "No acampamento:" por escrito, com o estado de cada um
+  ("ferido, fora de combate", na concordância do motor) e, na linha do acampamento, a nota: "Descansa, não come das
+  suas provisões e não opina nas suas escolhas." No menu de cada companheiro, a mesma nota vai embaixo de "Deixar no
+  acampamento" (e de "Mandar para o acampamento", na Comitiva); quem está no acampamento vê "Fica no acampamento." com
+  ela. Sem janela de confirmação nova.
+- **Fome fora da barra:** o selo "com fome" saiu de cima da barra de vida. Embaixo das duas barras há uma linha de
+  condições, sempre com a mesma altura (a fome chegar ou passar não mexe no painel): ícone e "Com fome" ("Morrendo de
+  fome" do terceiro dia em diante), com a dica do efeito de agora, montada pelo motor (`sobrevivencia.condicoes`):
+  atributos e vida máxima −10/−20/−35%, descanso devolvendo 30% do normal e ferimentos sem sarar, o que vem se
+  continuar e como passa. Os números saem das mesmas constantes que as regras usam (`FOME_FATOR`, `FOME_GRAVE`,
+  `FOME_DESCANSO`, `perda_fome`), sem mudar conta nenhuma.
+
+**Gabarito:** as 9 partidas web mudam só em campos novos: `condicoes` no estado do herói, `contador` e
+`nota_acampamento` no painel da fogueira, `ferido_txt` no companheiro ferido. Sem eles, cada linha das transcrições é
+idêntica (escolhas, lances, herói, painéis); as outras 15 não mudam.
+
+**Conferido:** testes (`test_condicoes`: a dica pelos dias de fome; some ao comer no amanhecer, com o ensopado da
+taverna, com comida comprada e no resgate; o contador e a nota vindos do motor; a concordância do ferido), gabarito,
+pyflakes, fumaça (o V1 abaixo do cenário e sem a legenda; um cenário novo da fogueira com fome: o rodapé, a nota no
+menu, a fome sumindo no amanhecer sem mudar a altura do painel). No navegador, a 1500 e 1280 px, mouse e teclado: o C4
+nas três classes; o V1 visível e clicável (mouse e Tab + Enter), com o tutorial ligado, desligado e religado pela
+Ajuda; a fogueira com dois companheiros juntos e um no acampamento, e com um junto (ferido) e dois no acampamento; a
+fome presente, ausente, depois de dormir e depois de salvar e carregar; a tela Comitiva.
+
+**Limitações:**
+- A faixa do V1 (96 px) fica abaixo do cenário também nas cenas da vila antes do menu, enquanto o V1 vale (a cena da
+  taverna depois da despensa, por exemplo): troca-se um espaço vazio por um texto que não pula.
+- Pelo teclado, chegar ao prédio do Mural com Tab leva muitos toques (o foco passa pelo topo e pelos painéis antes);
+  o menu numerado da página continua sendo o caminho rápido.
+- A linha de condições mostra só a fome; ferimentos continuam no ícone dos recursos e no painel do herói.
+

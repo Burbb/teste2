@@ -145,7 +145,7 @@ def heroi(g):
         "dificuldade_extra": g.dificuldade(0),
         "ouro": j.ouro, "reputacao": j.reputacao, "flechas": j.flechas if j.classe == "arqueiro" else None,
         "max_flechas": g.max_flechas() if j.classe == "arqueiro" else None,
-        "provisoes": j.provisoes, "fome": j.fome,
+        "provisoes": j.provisoes, "fome": j.fome, "condicoes": sobrevivencia.condicoes(j),
         **{c["hud"]: j.consumiveis.get(k, 0) for k, c in CONSUMIVEIS.items() if c["hud"]},  # tochas, poções...
         "spec": j.spec, "reputacao_txt": "herói do povo" if j.reputacao >= 20 else "temido" if j.reputacao <= -20 else "",
         "bolsa": [{"id": k, "nome": CONSUMIVEIS[k]["nome"], "qtd": v, "desc": CONSUMIVEIS[k]["desc"],
