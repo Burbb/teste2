@@ -45,6 +45,7 @@ Para uma nova conta ou sessão, começar por [00 — Comece aqui: continuidade](
 | [15-E6-TRANSFORMACAO.md](15-E6-TRANSFORMACAO.md) | E6: a transformação de habilidade (a especificação; as decisões de Jean, o implementado na 1.62.0, o medido e o que falta jogar) |
 | [16-E7-ITEM-E-LOOT.md](16-E7-ITEM-E-LOOT.md) | O saque do Vale medido (baús, suprimentos, equipamento, ouro), duas propostas de ajuste e a especificação da primeira entrega da E7 (o Broquel do Vigia), com as decisões pendentes |
 | [17-E9-VALIDACAO-DO-VALE.md](17-E9-VALIDACAO-DO-VALE.md) | E9: avaliação integrada do Vale (percurso completo, encerramento, começo, ritmo e progressão), os achados por prioridade, as propostas, o roteiro de Jean e a ficha para jogadores novos; a partida de Jean, a recuperação, a nota da comitiva e o fim do capítulo (1.64.0), medidos antes e depois |
+| [18-E9-ABERTURA-GUIADA.md](18-E9-ABERTURA-GUIADA.md) | E9: especificação da abertura guiada da campanha (caixa "Mostrar tutorial", a luta curta na despensa, Morel previsível, os quadros de orientação, mouse e teclado, salvar e carregar, escopo mínimo, critérios do teste) e a investigação de como a noite é percebida |
 
 ## Estados e evidências
 

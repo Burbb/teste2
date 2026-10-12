@@ -9,6 +9,8 @@ Avaliação integrada do Vale do Turvo como primeiro capítulo (a E9 antecipada,
   habilidades, preços, recompensas, regeneração e recursos iniciais não mudaram.
 - **Terceira entrega, 1.65.0 (seção 17):** interface, retorno visual e texto, a partir do que Jean encontrou jogando;
   a investigação dos toques que pareciam não responder; os rótulos dos prédios (não reproduzido). Nada de equilíbrio.
+- **Quarta entrega, 1.65.2 e 1.65.3 (seção 19):** a partida da Quibia lida; os contratos pagos depois do resgate; o
+  ×N dos baús em destaque. A especificação da abertura guiada fica em [18](18-E9-ABERTURA-GUIADA.md).
 - **Correção 1.65.1 (seção 18):** os três pontos que faltaram na mensagem cortada: a percepção do Mago na água, o nome
   da Yara antes de o herói conhecê-la, e duas Lanças de Gelo nos turnos da iniciativa. Nada de equilíbrio.
 
@@ -755,4 +757,63 @@ gabarito sem mudança, pyflakes, fumaça, e as telas da luta a 1500 e 1280 px.
 2. A acusação de Caspar sem conhecer a Yara, e o Diário depois dela (`CLASSE=mago ETAPA=capela LUGAR=vau_do_turvo
    python -m tests.navegador.cenarios capela`: a cena toca ao abrir).
 3. Duas Lanças seguidas com a iniciativa (`python -m tests.navegador.cenarios gelo`; `PRISAO=prisao` para a Prisão).
+
+
+## 19. A partida da Quibia e duas correções (1.65.2 e 1.65.3)
+
+### 19.1 A partida (registros de 11/10/2026, 1.65.0, Mago piromante, modo resgate, 25 dias, nível 5)
+
+Os arquivos ficaram como vieram. Separo o que Jean contou, o que o registro mostra e o que é leitura minha.
+
+**Observações da sessão (contadas por Jean):** ela não percebeu Habilidades até Jean apontar; não entendeu de início
+que o cenário da vila era clicável; passou a seguir contratos depois de uma dica; concluiu dois contratos, caiu, e só
+recebeu saindo do Vau e voltando.
+
+**Fatos do registro:**
+- As quatro primeiras lutas (dias 2 a 5) só com o ataque básico (Dardo Arcano); a primeira Bola de Fogo é a quinta
+  luta (dia 5, à noite). Depois, a Bola de Fogo vira a habilidade mais usada (16 vezes).
+- 20 lutas, 7 derrotas e 5 resgates. O Salão Alagado derrotou duas vezes: dia 3 de manhã, nível 2 (Afogado nv 2 e
+  duas sanguessugas nv 3) e dia 19 à noite, nível 5 (Afogado nv 4 e duas sanguessugas nv 5, uma Flamejante).
+- À noite, 4 lutas e 2 derrotas; de dia, 16 e 3 (na tabela do registro).
+- Morel entrou no dia 17, pelo evento da taverna (`morel_na_taverna`); Odette não aparece.
+- Os eventos do contexto "explorar" aparecem no dia 16 e no 24; antes, o registro tem viagens, chegadas e lutas.
+- Contratos: 178 de ouro (41% do que entrou). O registro não tem uma linha para contrato pago; o ouro sobe ao chegar
+  ao Vau nos dias 8 (+23), 17 (+87) e 21 (+32, depois do resgate do mesmo dia, saindo para o Bosque e voltando).
+- Nenhum dia com fome; quatro costelas quebradas (no dia 13, na briga de taverna e no festival; no dia 14, na estrada
+  e na capela).
+
+**Hipóteses (não confirmadas por uma pessoa só):** a falta de Habilidades nas primeiras lutas explica parte das
+derrotas cedo; a capela no nível 2 foi cedo demais e nada na tela disse isso com força; a exploração e a taverna
+apareceram tarde porque nada as apresenta. Uma jogadora não dá a frequência no público.
+
+### 19.2 Contratos depois do resgate (1.65.2)
+
+**Reproduzido** nos quatro caminhos: o resgate da campanha (combate, fome, infecção) e o do mundo gerado no modo
+brando. **Causa:** só a chegada viajando (`chegar`) chamava `receber_contratos`; os dois resgates põem o herói na vila
+direto. O gabarito tinha o mesmo caso (guerreiro-42: cai em Ribeira Fria com um contrato cumprido e nunca recebe).
+
+**Correção:** o menu da vila recebe os contratos cumpridos ainda não pagos, na página da vila, depois do texto do
+resgate e da cena de missão pendente. Sem viagem nem evento de chegada. Cada contrato sai da lista ao pagar (uma
+vez); a cobrança do resgate continua sobre o ouro de antes; ouro, XP, reputação e o quadro dos contratos são os de
+sempre. Um save na vila com contrato cumprido e não pago recebe na primeira volta do menu.
+
+**Conferido:** nenhum, um e dois contratos em cada queda; salvar e carregar depois do pagamento (não paga de novo);
+o save antigo; fora da vila não paga; o mundo gerado brando; na tela, resgate → cena de Caspar → página do Vau com o
+quadro dos contratos, sem sobreposição, a 1500 e 1280 px. Gabarito: só guerreiro-42 mudou (o pagamento, e a partida
+segue outro caminho depois dele).
+
+### 19.3 Baús abertos juntos (1.65.3)
+
+Antes, o número só estava no rótulo pequeno ("BAÚS ×3"). Agora o quadro abre com a pilha (um ícone por baú, até
+cinco, caindo um sobre o outro) e o ×N grande ao lado; o rótulo vira "baús abertos". Um baú fica como era. O N é o
+que o motor abriu (os baús que saíram da bolsa); a fumaça confere o número e os ícones contra a bolsa antes do clique.
+Sorteios, recompensas e a janela de cada equipamento iguais; gabarito sem mudança; conferido a 1500 e 1280 px com 1, 2
+e 3 baús.
+
+### 19.4 Para Jean conferir
+
+1. O resgate com contratos cumpridos: `CONTRATOS=2 python -m tests.navegador.cenarios resgate` (acampar; depois da
+   cena de Caspar, o quadro dos contratos no Vau). `CAUSA=infeccao` para a infecção.
+2. Os baús: `python -m tests.navegador.cenarios baus` (três) e `BAUS=2` ou `BAUS=1`.
+3. A proposta da abertura guiada: [18](18-E9-ABERTURA-GUIADA.md).
 

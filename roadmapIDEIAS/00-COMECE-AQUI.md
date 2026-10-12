@@ -85,7 +85,7 @@ Três commits posteriores à atualização do roadmap foram consultados. Os comp
 | Direção (11/10/2026) | **Decidido por Jean:** o Vale do Turvo é o primeiro capítulo completo, para validação; depois da primeira entrega da E7 vem a avaliação integrada do Vale (E9 antecipada); a E8 fica adiada; a campanha maior continua como direção, sem obrigação de expandir antes da primeira versão de teste. **Em aberto:** a duração, que vem de partidas de jogadores novos. Detalhes no [01](01-VISAO.md) ("Direção") e no [07](07-ETAPAS.md) ("Ordem atual"). |
 | E7 — equipamento e build | **Primeira entrega implementada na 1.63.0:** o Broquel do Vigia, medido em lutas inteiras ([16](16-E7-ITEM-E-LOOT.md), seção 5). Antes, o saque do Vale foi medido e o baú da campanha passou a dar um suprimento (1.62.6). Falta Jean jogar (cenários `broquel` e `muralha`). Os exemplos para Arqueiro e Mago não foram começados. |
 | E8 — raças e origens | **Adiada explicitamente** (11/10/2026). |
-| E9 — avaliação do Vale | **Em andamento, não concluída.** Diagnóstico em [17](17-E9-VALIDACAO-DO-VALE.md) (seções 1 a 12). **Na 1.64.0** (seções 13 a 16): fome e infecção levam ao resgate na campanha, que alimenta herói e comitiva sem gastar a bolsa e trata a emergência; a nota "Consome 1 provisão por dia." ao aceitar um companheiro; o fim do capítulo no Vau, no rastreador e no Diário; a partida de Jean (mago) registrada como evidência humana. Dificuldade dos combates sem mudança. **Na 1.65.0** (seção 17): interface, retorno e texto (mercador, toques que se perdiam, menu inicial, nome na ficha, talentos, balões, servo, espólio, "fonte nova", pântano e Charco, a teia, a bolsa, o mural); os rótulos dos prédios não reproduziram. **Na 1.65.1** (seção 18): a percepção do Mago na água, o nome da Yara só depois de o herói conhecê-la, e a segunda Lança de Gelo antes de o inimigo agir dizendo "já congelado" (a regra do Firme confirmada, sem mudança). Faltam os jogadores novos (ficha na seção 9) e Jean jogar a 1.64.0 (roteiro na seção 16). |
+| E9 — avaliação do Vale | **Em andamento, não concluída.** Diagnóstico em [17](17-E9-VALIDACAO-DO-VALE.md) (seções 1 a 12). **Na 1.64.0** (seções 13 a 16): fome e infecção levam ao resgate na campanha, que alimenta herói e comitiva sem gastar a bolsa e trata a emergência; a nota "Consome 1 provisão por dia." ao aceitar um companheiro; o fim do capítulo no Vau, no rastreador e no Diário; a partida de Jean (mago) registrada como evidência humana. Dificuldade dos combates sem mudança. **Na 1.65.0** (seção 17): interface, retorno e texto (mercador, toques que se perdiam, menu inicial, nome na ficha, talentos, balões, servo, espólio, "fonte nova", pântano e Charco, a teia, a bolsa, o mural); os rótulos dos prédios não reproduziram. **Na 1.65.1** (seção 18): a percepção do Mago na água, o nome da Yara só depois de o herói conhecê-la, e a segunda Lança de Gelo antes de o inimigo agir dizendo "já congelado" (a regra do Firme confirmada, sem mudança). **Na 1.65.2 e 1.65.3** (seção 19): a partida da Quibia lida; os contratos cumpridos pagam na vila também depois do resgate; o ×N dos baús em destaque. **A abertura guiada** está especificada em [18](18-E9-ABERTURA-GUIADA.md), esperando a revisão de Jean. Faltam os jogadores novos (ficha na seção 9) e Jean jogar a 1.64.0 (roteiro na seção 16). |
 | E10–E11 | Plano de trabalho futuro; infraestrutura existente não equivale a etapas concluídas. A E10 depende da avaliação do Vale. Notas aprovadas para a E3 na seção 19 do [11](11-E1-REGIAO-INICIAL.md). |
 | Bugs ainda abertos | Nenhum bug aberto específico foi informado para registro nesta passagem. Isso não comprova ausência de bugs. |
 | Polimento antes da E3 | Entregue na 1.48.1 (registro abaixo): leitura, item achado, balcão do templo, palco da luta. Falta Jean conferir jogando. |
@@ -1400,4 +1400,23 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
     nunca duas seguidas) e ficou; a segunda Lança agora diz "já congelado" em vez de anunciar um congelamento novo.
 - **Verificado:** testes, gabarito sem mudança, pyflakes, fumaça, telas da luta a 1500 e 1280 px; cenário novo `gelo`.
 - **Falta:** Jean conferir (roteiro na seção 18 do 17) e os jogadores novos. A E9 continua aberta.
+
+### 12/10/2026 — A partida da Quibia, duas correções e a abertura guiada especificada (E9, 1.65.2 e 1.65.3)
+
+- **Pedido de Jean:** ler a partida da Quibia (sem mexer nos arquivos), corrigir os contratos depois do resgate e o
+  destaque dos baús abertos juntos, e especificar a abertura guiada antes de implementar.
+- **Feito:**
+  - a Quibia em observações, fatos e hipóteses ([17](17-E9-VALIDACAO-DO-VALE.md), seção 19.1);
+  - 1.65.2: os dois resgates punham o herói na vila sem passar por `chegar`, a única que pagava contratos; agora o
+    menu da vila paga os cumpridos e não pagos (campanha e mundo gerado brando, saves antigos), uma vez, depois da
+    cobrança do resgate. Gabarito: só guerreiro-42 mudou (o mesmo caso);
+  - 1.65.3: a pilha de baús e o ×N grande no quadro; um baú fica como era;
+  - [18](18-E9-ABERTURA-GUIADA.md): a abertura guiada (caixa "Mostrar tutorial", a despensa da taverna, Morel
+    previsível, os quadros C1–C4 e V1–V5, E1, T1, N1, mouse e teclado, pular, fugir, perder, salvar e carregar, a
+    primeira implementação mínima e os critérios do teste) e a investigação da noite (seção 8: o que avisa, o que não
+    avisa ou avisa errado; encontros sem mudança).
+- **Verificado:** testes (novos: os contratos depois do resgate), gabarito (a diferença conferida), pyflakes, fumaça,
+  telas a 1500 e 1280 px.
+- **Falta:** Jean revisar o 18 (decisões na seção 10 dele) antes da implementação; Jean conferir (roteiro na seção
+  19.4 do 17); os jogadores novos. A E9 continua aberta.
 
