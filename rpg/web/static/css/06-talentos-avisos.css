@@ -310,7 +310,7 @@
 /* ---------------------------------------------------------------- as orientações da abertura (orientacao.js) */
 /* O quadro: pequeno, com a seta discreta apontando o controle. Na luta, mora numa faixa reservada abaixo da arena (não
    cobre cartas, barras, ações nem a página) e não acompanha a animação das cartas. */
-.orientacao { position: fixed; z-index: 18; max-width: 290px; padding: 8px 11px 7px; font-size: 15px; line-height: 1.35;
+.orientacao { position: fixed; z-index: 18; max-width: 330px; padding: 8px 11px 7px; font-size: 15px; line-height: 1.35;
   color: var(--tinta); background: #17110c; border: 1px solid #b8943f; box-shadow: 3px 3px 0 #000; }
 .orientacao b { color: var(--ouro); font-weight: 600; }
 .orientacao::before { content: ""; position: absolute; width: 0; height: 0; border: 6px solid transparent; }
@@ -349,6 +349,8 @@
 @keyframes orientacao-brilho { 50% { box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6), 0 0 9px rgba(255, 206, 96, 0.55); } }
 .orientacao-veu { position: fixed; z-index: 17; pointer-events: none; background: rgba(0, 0, 0, 0.25); }
 @media (prefers-reduced-motion: reduce) { .orientacao-anel { animation: none; } }
+/* No item achado (E1), o quadro e o contorno ficam acima da janela dele. */
+.orientacao.sobre-janela, .orientacao-anel.sobre-janela { z-index: 31; }
 /* A caixa marcável que vai junto de uma escolha ("Mostrar tutorial", na criação da campanha). */
 .caixa-escolha { display: flex; align-items: center; gap: 8px; margin: 10px 0 0 6px; font-size: 16px; color: var(--tinta); cursor: pointer; }
 .caixa-escolha input { width: 18px; height: 18px; accent-color: var(--ouro); cursor: pointer; }

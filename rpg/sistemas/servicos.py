@@ -155,6 +155,7 @@ class Servicos:
         if gratis:
             abertura.usar_caneca(self)
             self.dizer("O taverneiro enche a caneca e não cobra. \"Por conta da casa.\"", "cinza")
+            abertura.motivo_explorar(self, "taverneiro")  # sem Morel junto, é ele quem conta onde está o dinheiro
         else:
             self.perder_ouro(preco, destino="taverna")
         self.marcar(chave, self.flag(chave, 0) + 1)

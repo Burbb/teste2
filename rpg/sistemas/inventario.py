@@ -1,5 +1,6 @@
 """Equipamento, mochila, consumíveis e a tela de personagem."""
 
+from .. import abertura
 from .. import grimorio, itens
 from ..itens import CONSUMIVEIS, EM_ALIADO, PENA_FENIX_AGE_SOZINHA, descrever_bonus
 from .. import comitiva
@@ -47,7 +48,15 @@ class Inventario:
                 ua = itens.unico_de(atual)
                 self.dizer(f"  Equipado agora: {itens.rotulo(atual)} — {descrever_bonus(atual['bonus'], rec)}"
                            + (f". {ua['efeito']}" if ua and ua.get("efeito") else ""), "cinza")
-        op = self.menu("O que fazer com o item?", opcoes)
+        compara = usa and bool(equipados)  # a primeira comparação de equipamento (E1)
+        abertura.contexto(self, "achado", {"compara": compara, "cabe": cabe})
+        abertura.dica_texto(self, "achado")
+        try:
+            op = self.menu("O que fazer com o item?", opcoes)
+        finally:
+            abertura.contexto(self, None)
+        if compara:
+            abertura.visto(self, "E1")
         registrar(self, "saque", item=item["nome"], raridade=item.get("raridade", "comum"), slot=item["slot"],
                   nivel=item.get("nivel"), escolha=op or "deixar")
         if op == "equipar":

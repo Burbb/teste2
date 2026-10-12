@@ -1,5 +1,6 @@
 """Viagem entre lugares, chegada e o mapa."""
 
+from .. import abertura
 from .. import eventos
 from .. import texto as tx
 from .. import mapa
@@ -11,6 +12,13 @@ from ..mundo import nivel_regiao, vizinhos
 
 class Navegacao:
     def viajar(self):
+        abertura.contexto(self, "viagem")  # a primeira viagem: o quadro das provisões (V3), já com a cena
+        try:
+            return self._viajar()
+        finally:
+            abertura.contexto(self, None)
+
+    def _viajar(self):
         self.ui.cena("Viagem", self.contexto_cena(), "menu")
         self.desenhar_mapa()
         opcoes = []
@@ -29,7 +37,9 @@ class Navegacao:
                 texto += " · inexplorado"
             opcoes.append((texto, (loc, dist), {"local": loc["id"]}))
         opcoes.append(("Voltar", None))
+        abertura.dica_texto(self, "viagem")
         destino = self.menu("Para onde?", opcoes)
+        abertura.contexto(self, None)  # escolhido o destino, a viagem segue sem o quadro
         if not destino:
             return
         loc, dist = destino
@@ -50,6 +60,7 @@ class Navegacao:
             self.dizer(f"Uma muralha de sombras bloqueia o caminho. Você precisa dos três Sigilos "
                        f"({len(self.j.sigilos)}/3).", "magenta")
             return
+        abertura.partiu(self)  # a viagem começou: as provisões foram vistas, e a recuperação da vila ficou para trás
         self.na_estrada = True
         try:
             for trecho in range(dist):

@@ -154,7 +154,8 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
 
 - `app/nucleo.js` conexão e fila de mensagens · `app/pagina.js` texto e cenas · `app/escolhas.js` menus,
   doca de atalhos, roda de ações da luta · `app/paineis.js` ficha e mapa laterais · `app/controles.js` teclado
-- `app/orientacao.js` as orientações da abertura guiada (abertura.py): acha o controle (a roda, a janelinha, a mira, a
+- `app/orientacao.js` as orientações da abertura guiada (abertura.py: C1–C4 na luta; fora dela, uma por vez pela
+  `proxima`, com o contexto da tela que pede a sua: o item achado, a escolha do destino): acha o controle (a roda, a janelinha, a mira, a
   barra de recurso, o prédio do Mural), põe o contorno em volta, o quadro com a seta (na luta, parado numa faixa
   reservada abaixo da arena, ou acima das cartas se couber, para nunca cobrir cartas, ações nem texto; na vila, o V1
   numa faixa abaixo do cenário, sem cobrir o prédio; recalculado só quando o passo ou o tamanho da tela muda) e um véu leve só nas colunas laterais e na doca; tudo sem receber clique,

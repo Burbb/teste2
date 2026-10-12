@@ -277,10 +277,14 @@ class WebUI(InterfaceGrafica, UI):
         return bool((self.extra_resposta or {}).get("caixa", self.caixa["marcada"]))
 
     def orientacao(self, acao):
-        """A tela pediu para dispensar ou religar as orientações (o quadro, a Ajuda), fora da fila das perguntas."""
+        """A tela pediu para dispensar ou religar as orientações (o quadro, a Ajuda), ou deu "Entendi" num quadro
+        informativo, fora da fila das perguntas."""
         from .. import abertura
         if self.jogo and self.jogo.mundo and acao in ("dispensar", "ligar"):
             abertura.ligar(self.jogo, acao == "ligar")
+            self.enviar_estado()
+        elif self.jogo and self.jogo.mundo and isinstance(acao, str) and acao.startswith("visto:"):
+            abertura.entendi(self.jogo, acao[6:])  # o "Entendi" de um quadro informativo
             self.enviar_estado()
 
     def escolher(self, pergunta, opcoes):

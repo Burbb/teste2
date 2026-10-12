@@ -521,6 +521,8 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
                 for c in comitiva.estado(self) if c["conversa"]]
 
     def executar_comum(self, op):
+        if op == "comitiva" or isinstance(op, tuple) and op[0] == "falar":
+            abertura.visto(self, "V4")  # a comitiva aberta (a tela ou a conversa): o quadro que a apontava não volta
         if isinstance(op, tuple):  # o painel lateral: a bolsa e o ✉ da comitiva
             if op[0] == "falar":
                 comitiva.falar(self, op[1])
@@ -552,7 +554,11 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
             opcoes.append((rotulo, f"cacar:{c['id']}", {"cacar": c["id"]}))
         opcoes.append(("Explorar a região" + (" (à noite é mais perigoso)" if self.noite else ""), "explorar"))
         opcoes.append(("Acampar e descansar até o amanhecer", "acampar"))
+        abertura.motivo_explorar(self, "morel")  # com Morel junto, ele conta onde está o dinheiro (uma vez)
+        abertura.dica_texto(self, "fora")  # na interface de texto, a orientação da vez numa linha
+        antes = abertura.proxima(self)
         op = self.menu("O que você faz?", opcoes + self.opcoes_comuns())
+        abertura.depois_do_menu(self, antes, op)
         if isinstance(op, str) and op.startswith("cacar:"):
             c = next((c for c in self.contratos if f"cacar:{c['id']}" == op), None)
             if c:
@@ -572,7 +578,7 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
 
     def menu_vila(self):
         j = self.j
-        preco_dormir = self.preco(8 + 2 * j.nivel)
+        preco_dormir = abertura.preco_dormir(self)
         broquel = missoes.broquel_no_ferreiro(self)
         # Cada serviço diz a que prédio da vila pertence (na tela gráfica, a vila é um lugar com prédios clicáveis).
         # Os que se escolhem diante do prédio (a taverna, o templo) levam o rótulo curto, o preço, o que dão e o tempo
@@ -610,7 +616,9 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
             self.ambiente_visto = (self.loc["id"], self.dia, self.periodo)
             self.dizer(ambiente, "cinza")
             abertura.dica_texto(self, "vila")  # na interface de texto, a orientação do Mural numa linha
+        antes = abertura.proxima(self)  # a orientação da vez quando o menu abriu (cumpre-se pela resposta)
         op = self.menu(f"Você está em {self.loc['nome']}. O que faz?", opcoes + self.opcoes_comuns())
+        abertura.depois_do_menu(self, antes, op)
         if op == "passear":
             if not eventos.disparar(self, "vila"):
                 self.dizer("A vila segue sua rotina. Nada de especial acontece.", "cinza")

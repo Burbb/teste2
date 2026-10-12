@@ -17,6 +17,7 @@
     python -m tests.navegador.cenarios resgate       # a recuperação: fome ou infecção no Charco, à noite (CLASSE, CAUSA, COMITIVA, CONTRATOS)
     python -m tests.navegador.cenarios abertura      # campanha nova no Vau: a despensa e as orientações (CLASSE, TUTORIAL, MOREL, DESPENSA, VIDA_RATOS)
     python -m tests.navegador.cenarios fogueira      # a comitiva na fogueira e a fome (LUGAR, COMITIVA, RESERVA, FERIDO, FOME, PROVISOES, TOCHAS)
+    python -m tests.navegador.cenarios tutorial      # a segunda parte da abertura guiada (LUGAR, PERIODO, VIDA, REC, OURO, PROVISOES, COMITIVA, PONTOS, ITEM, VISTAS)
     python -m tests.navegador.cenarios gelo          # Mago com a iniciativa contra um lobo: duas Lanças antes de ele agir (PRISAO, NIVEL, SEMENTE)
     python -m tests.navegador.cenarios muralha       # Guerreiro nv 6, Muralha + Contra-ataque (CONTRA) e o Broquel, contra bandidos e um cultista
 
@@ -659,10 +660,68 @@ def fogueira(ui):
     menu_principal(ui, argparse.Namespace(seed=1, saves=pasta, brando=False))
 
 
+def tutorial(ui):
+    """A segunda parte da abertura guiada (V2–V5, E1, T1, N1): a campanha depois da despensa (a luta e o Mural já
+    vistos), com o tutorial ligado (TUTORIAL=0 desliga). LUGAR: vau (padrão), charco, bosque ou capela; PERIODO (0
+    manhã ... 3 noite). VIDA e REC: a fração da vida e do recurso (0.5...). OURO, PROVISOES, TOCHAS, PONTOS (de
+    talento). COMITIVA: quem anda junto ("morel,odete"); RESERVA: quem espera no acampamento; FERIDO. ITEM=1: um
+    item da arma para comparar logo na chegada. VISTAS: as orientações já vistas, além da luta e do Mural ("V3,N1").
+    Sair leva ao título, com o save (para carregar com orientações pendentes)."""
+    from rpg import abertura as ab, itens, missoes
+    from rpg.__main__ import menu_principal
+    pasta = tempfile.mkdtemp()
+    g = Jogo(ui, seed=int(os.environ.get("SEMENTE", "5")), pasta_saves=pasta, hardcore=False)
+    ui.jogo = g
+    g.iniciar("Jean", os.environ.get("CLASSE", "guerreiro"), "turvo")
+    ab.comecar(g, os.environ.get("TUTORIAL", "1") != "0")
+    a = g.mundo["abertura"]
+    a.update(despensa="feita", caneca=False)
+    a["vistas"] = ["combate", "V1"] + [v for v in os.environ.get("VISTAS", "").split(",") if v]
+    g.contagem["morel_na_taverna"] = 1
+    for c in [c for c in os.environ.get("RESERVA", "").split(",") if c] + [c for c in os.environ.get("COMITIVA", "").split(",") if c]:
+        cm.recrutar(g, c)
+    for c in [c for c in os.environ.get("RESERVA", "").split(",") if c]:
+        cm.para_acampamento(g, c, silencioso=True)
+    for c in os.environ.get("FERIDO", "").split(","):
+        if cm.membro(g, c):
+            cm.membro(g, c)["ferido"] = True
+    j = g.j
+    if os.environ.get("ETAPA"):
+        missoes.registro(g, "febre_do_turvo").update(etapa=os.environ["ETAPA"], cenas=["abertura", "capela_exterior"],
+                                                     pistas=["agua_do_leste", "represa", "canal_da_capela"])
+    else:
+        missoes.registro(g, "febre_do_turvo").update(cenas=["abertura"])
+    for k, campo in (("OURO", "ouro"), ("PROVISOES", "provisoes"), ("PONTOS", "pontos_talento")):
+        if os.environ.get(k):
+            setattr(j, campo, int(os.environ[k]))
+    if os.environ.get("TOCHAS"):
+        j.consumiveis["tocha"] = int(os.environ["TOCHAS"])
+    j.hp = max(1, int(j.max_hp * float(os.environ.get("VIDA", "1"))))
+    j.rec = int(j.max_rec * float(os.environ.get("REC", "1")))
+    chave = {"charco": "charco_dos_juncos", "bosque": "bosque_do_moinho", "capela": "capela_afogada"}.get(
+        os.environ.get("LUGAR", "vau"), "vau_do_turvo")
+    for l in g.mundo["locais"]:
+        l["visitado"] = l["chave"] in ("vau_do_turvo", "charco_dos_juncos", "bosque_do_moinho", chave)
+    g.mundo["atual"] = next(l["id"] for l in g.mundo["locais"] if l["chave"] == chave)
+    g.periodo, g.clima = int(os.environ.get("PERIODO", "0")), "limpo"
+    g.autosalvar = True
+    if os.environ.get("ITEM"):
+        g.ui.cena(g.loc["nome"], g.contexto_cena(), "evento")
+        g.dizer("No chão, entre a palha, alguma coisa brilha.")
+        g.oferecer_equip(itens.gerar_equip(random.Random(4), j.classe, j.nivel, slot="arma", qualidade=1))
+    try:
+        g.rodar()
+    except FimDeJogo:
+        pass
+    ui.jogo = None
+    menu_principal(ui, argparse.Namespace(seed=1, saves=pasta, brando=False))
+
+
 CENARIOS = {"combate": combate, "titulo": titulo, "vila": vila, "campanha": campanha, "baus": baus, "missao": missao,
             "recarga": recarga, "capela": capela, "retorno": retorno, "praca": praca, "encruzilhada": encruzilhada,
             "tiro_duplo": tiro_duplo, "covil": covil, "broquel": broquel, "muralha": muralha, "resgate": resgate,
-            "gelo": gelo, "abertura": abertura, "fogueira": fogueira}
+            "gelo": gelo, "abertura": abertura, "fogueira": fogueira,
+            "tutorial": tutorial}
 
 
 def main():

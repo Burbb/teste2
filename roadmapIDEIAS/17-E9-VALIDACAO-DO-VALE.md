@@ -15,6 +15,8 @@ Avaliação integrada do Vale do Turvo como primeiro capítulo (a E9 antecipada,
   mais discretos, com "Entendi" e "Encerrar tutorial" ([18](18-E9-ABERTURA-GUIADA.md), seção 13).
 - **Ajustes pontuais, 1.66.3 (seção 22):** C4, V1 e o Mural, a fogueira e a fome fora da barra
   ([18](18-E9-ABERTURA-GUIADA.md), seção 14).
+- **A segunda parte da abertura, 1.66.4 e 1.67.0 (seção 23):** os últimos detalhes e V2–V5, E1, T1, N1
+  ([18](18-E9-ABERTURA-GUIADA.md), seções 14.1 e 15).
 - **Quarta entrega, 1.65.2 e 1.65.3 (seção 19):** a partida da Quibia lida; os contratos pagos depois do resgate; o
   ×N dos baús em destaque. A especificação da abertura guiada fica em [18](18-E9-ABERTURA-GUIADA.md).
 - **Correção 1.65.1 (seção 18):** os três pontos que faltaram na mensagem cortada: a percepção do Mago na água, o nome
@@ -862,4 +864,18 @@ equilíbrio: os ícones do C4 alinhados ao texto; o V1 com o texto "Clique no mu
 num quadro abaixo do cenário que não cobre o prédio; o balão do Mural sem "clique: contratos"; a fogueira com a
 instrução, o contador, quem vai e quem fica escritos e a nota do acampamento junto da decisão; a fome numa linha de
 condições embaixo das barras, com o efeito de agora na dica. Detalhe e limitações na seção 14 do 18.
+
+## 23. A segunda parte da abertura guiada (1.66.4 e 1.67.0)
+
+**1.66.4:** a fome numa etiqueta compacta (a de "Morrendo de fome" acende mais); a nota do acampamento só no menu de
+cada companheiro, junto da decisão; os avisos do lugar com cor pela hierarquia (noite em amarelo, tocha neutra, falta
+de luz em vermelho).
+
+**1.67.0:** os quadros que faltavam, um por vez e só quando fazem sentido: recuperar na vila (o serviço que resolve e
+cabe no bolso), as provisões na primeira escolha de destino, o primeiro companheiro, explorar na primeira ocasião fora
+da vila (com o motivo dito uma vez, pelo taverneiro ou por Morel), a primeira comparação de equipamento, o primeiro
+ponto de talento e a primeira noite fora da vila. Regras, encontros, recompensas e sorteio iguais; o jogo é o mesmo
+com e sem tutorial. Detalhe, conferência e limitações na seção 15 do 18.
+
+**A E9 continua aberta:** o teste técnico não mostra que uma pessoa nova entendeu os sistemas (seção 11 do 18).
 

@@ -1260,6 +1260,57 @@ async function cenarioFogueira(browser) {
   }
 }
 
+async function cenarioTutorial(browser) {
+  console.log("cenário: a segunda parte da abertura guiada (item achado, recuperar, noite e explorar)");
+  const quadro = (page) => page.evaluate(() => { const q = document.querySelector(".orientacao:not([hidden])"); return q ? q.innerText.replace(/\s+/g, " ") : ""; });
+  const cobre = (page) => page.evaluate(() => {  // controles, barras, cartas, nomes e a página que está à vista
+    const q = document.querySelector(".orientacao:not([hidden])").getBoundingClientRect(), pg = document.querySelector("#pagina").getBoundingClientRect();
+    return [...document.querySelectorAll("#prompt .escolha, #texto > *, #hud .vital, #hud .recurso, #doca .atalho, #predios .predio, #predios .balao-nome, .achado-cartao, .achado-acoes button")].some((e) => {
+      let r = e.getBoundingClientRect();
+      if (e.closest("#pagina")) r = { left: r.left, right: r.right, top: Math.max(r.top, pg.top), bottom: Math.min(r.bottom, pg.bottom) };
+      return r.bottom > r.top && r.right > r.left && !(q.right <= r.left || q.left >= r.right || q.bottom <= r.top || q.top >= r.bottom);
+    });
+  });
+  const ate = async (page, re, ms = 20000) => { for (let k = 0; k < ms; k += 150) { if (re.test(await quadro(page))) return true; await page.waitForTimeout(150); } return false; };
+  {
+    const { proc, url } = await subir("tutorial", { ITEM: "1", VIDA: "0.4" });
+    const { page, erros } = await abrir(browser, url);
+    try {
+      conferir(await ate(page, /A linha "contra…" compara o achado/) && !(await cobre(page)), "E1: no item achado, a comparação e as escolhas, sem cobrir a janela");
+      await page.keyboard.press("2");  // Guardar, pelo teclado
+      conferir(await ate(page, /Vida baixa\. O Templo devolve a vida toda/) && !(await cobre(page)),
+        "decidido o item, o E1 sai; na vila, V2 aponta o Templo (a vida baixa), sem cobrir prédio nem página");
+      await page.click('#predios .predio[data-predio="estrada"]');
+      conferir(await ate(page, /Cada amanhecer come 1 provisão sua/), "V3: ao escolher o destino, as provisões do topo");
+      await page.click(".orientacao-entendi");
+      await page.waitForTimeout(600);
+      conferir(!(await quadro(page)) && (await page.evaluate(() => estado.orientacao.atual === null)), "Entendi fecha o V3, e nenhum outro quadro entra na mesma tela");
+    } finally {
+      conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
+      await page.close();
+      proc.kill();
+    }
+  }
+  {
+    const { proc, url } = await subir("tutorial", { LUGAR: "charco", PERIODO: "3" });
+    const { page, erros } = await abrir(browser, url);
+    try {
+      conferir(await ate(page, /Noite: Inimigos \+1 nível, no topo/) && !(await cobre(page)), "N1: fora da vila, à noite, o aviso do topo, sobre a paisagem");
+      await page.keyboard.press("1");  // explorar, pelo teclado: a ocasião passa
+      for (let k = 0; k < 80 && !(await page.$("#prompt .escolha")); k++) {
+        const c = await page.$("#prompt .continuar"); if (c) await c.click().catch(() => {});
+        if (await page.evaluate(() => !!(estado && estado.combate))) break;
+        await page.waitForTimeout(200);
+      }
+      conferir(!/Noite:/.test(await quadro(page)), "respondido o menu, o N1 não volta");
+    } finally {
+      conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
+      await page.close();
+      proc.kill();
+    }
+  }
+}
+
 async function cenarioBaus(browser) {
   console.log("cenário: baús abertos juntos");
   const { proc, url } = await subir("baus");
@@ -1342,6 +1393,7 @@ try {
   await cenarioBaus(browser);
   await cenarioAbertura(browser);
   await cenarioFogueira(browser);
+  await cenarioTutorial(browser);
 } catch (e) {
   falhas.push(String(e));
   console.log("ERRO", e);

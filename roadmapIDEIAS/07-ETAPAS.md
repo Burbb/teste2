@@ -172,7 +172,8 @@ partida de Jean (seção 17 do 17); **na 1.65.1,** os três pontos que faltaram:
 a segunda Lança de Gelo na iniciativa (seção 18 do 17); **na 1.65.2 e 1.65.3,** os contratos pagos depois do resgate
 e o ×N dos baús (seção 19 do 17); **na 1.65.4,** a noite e a tocha ditas antes da luta; **na 1.66.0,** a primeira parte da abertura guiada
 ([18](18-E9-ABERTURA-GUIADA.md)); **na 1.66.1 e 1.66.2,** os riscos da capela em indicadores e o acabamento dos
-quadros (seção 13 do 18); **na 1.66.3,** os ajustes pontuais de apresentação (seção 14 do 18).
+quadros (seção 13 do 18); **na 1.66.3 e 1.66.4,** os ajustes pontuais de apresentação (seção 14 do 18); **na 1.67.0,** a segunda parte da
+abertura guiada (seção 15 do 18).
 **Não concluída:** faltam os jogadores novos (seção 9 do 17) e Jean
 jogar a 1.64.0; o começo apertado e o caso do arqueiro sem flechas ficam para depois disso (seção 16).
 

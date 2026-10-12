@@ -1,8 +1,8 @@
 # 18 — Abertura guiada da campanha (E9): especificação
 
 Especificação da abertura guiada (pedido de Jean, 12/10/2026, sobre a 1.65.3), revista por Jean e ajustada antes da
-primeira implementação (seção 12: o que foi implementado e como foi conferido; seções 13 e 14: o acabamento). A segunda parte (V2–V5, E1, T1, N1)
-continua só especificada.
+primeira implementação (seção 12: o que foi implementado e como foi conferido; seções 13 e 14: o acabamento). A segunda
+parte (V2–V5, E1, T1, N1) foi feita na 1.67.0 (seção 15); as tabelas da seção 4 trazem os textos finais.
 
 **O que se quer:** uma orientação **opcional**, para testar se ela ajuda quem nunca jogou. A abertura (a luta curta, o
 encontro com Morel) é a mesma para todos; a caixa "Mostrar tutorial" controla só os quadros de orientação.
@@ -117,9 +117,11 @@ Nesta ordem, cada quadro só uma vez e só se a condição valer (se não valer,
 3. **Provisões.** Na primeira vez que a pessoa abrir "Viajar" (ou clicar na Estrada): quadro no contador de provisões
    do topo e no Mercado, antes de sair. Se ela já tiver comprado, o quadro não aparece.
 4. **Morel e o cartão da comitiva.** Na primeira vez que o menu volta com Morel no grupo: quadro no cartão dele.
-5. **Explorar.** O motivo vem de Morel na conversa: "O dinheiro de verdade está no que ninguém foi buscar. Desde que
-   a febre fechou a estrada, tem carroça largada no bosque. Às vezes tem alguma coisa; às vezes só lobo." Sem Morel, o
-   taverneiro diz o mesmo ao servir a caneca. Na primeira chegada a um lugar fora da vila, quadro em "Explorar a
+5. **Explorar.** O motivo, uma vez, na voz de quem está lá: "O dinheiro de verdade está no que ninguém foi buscar.
+   Desde que a febre fechou a estrada, tem coisa largada pelo caminho: carroça tombada, trouxa de quem fugiu. Às vezes
+   alguma coisa presta; às vezes só tem lobo." O taverneiro diz ao servir a caneca, se Morel não anda com você; com
+   Morel junto, é ele quem diz, na primeira vez fora da vila (sem lugar fixo nem achado garantido: os eventos de
+   carroça e de achado são os que já existem, sorteados). Na primeira ocasião fora da vila, quadro em "Explorar a
    região".
 
 Equipamento e talentos ficam para quando chegarem (seção 4.3). A noite, para a primeira noite fora da vila (4.3).
@@ -165,18 +167,18 @@ escolheu outra, o texto é o dela).
 | # | Âncora | Texto | Aparece | Encerra |
 |---|---|---|---|---|
 | V1 | o Mural (o prédio; o quadro numa faixa abaixo do cenário) | "Clique no **mural** para ver os contratos disponíveis." | menu do Vau depois do pedido da despensa (3.4.1) | o Mural é aberto |
-| V2 | Templo e Taverna | "Vida baixa. O **Templo** cura a vida por ouro. **Dormir na Taverna** devolve 35% da vida e todo o {recurso}, e o ensopado da noite substitui a provisão." | menu do Vau com vida < 70% ou recurso < 50% | um dos dois é usado, ou a pessoa sai da vila |
-| V3 | provisões no topo (e o Mercado) | "Cada amanhecer come 1 provisão sua e 1 de cada companheiro, na vila ou fora (você tem {4}). Sem provisão, fome. O ensopado da Taverna e o resgate alimentam sem gastar. O **Mercado** vende mais." | primeira vez em Viajar | a viagem começa, ou o Mercado é aberto |
-| V4 | o cartão de Morel na Comitiva | "{Morel} luta com você e come 1 provisão por dia. Clique no cartão para conversar." | primeiro menu com Morel no grupo | o cartão é aberto, ou o menu muda |
-| V5 | "Explorar a região" | "**Explorar** gasta um período. Pode dar luta, um achado ou nada." | primeira chegada fora da vila | a pessoa escolhe qualquer opção do menu |
+| V2 | o Templo (vida, se o ouro dá) ou a Taverna (o recurso; ou a vida, se o Templo não cabe no bolso) | vida: "Vida baixa. O **Templo** devolve a vida toda por {13} de ouro." (+ "Pouco Foco: dormir na **Taverna** ({10} de ouro) devolve todo o Foco e 35% da vida." se o recurso também está baixo); recurso: "Pouca Mana. Dormir na **Taverna** ({10} de ouro) devolve toda a Mana e 35% da vida."; com ferimento: "Ferimentos, a **Curandeira** trata." | menu da vila com vida < 70% ou recurso < 50%, e o serviço ao alcance do ouro | o serviço é usado, ou a viagem começa |
+| V3 | provisões no topo | "Cada amanhecer come 1 provisão sua e 1 de cada companheiro, na vila ou fora: dá {2} dias. Sem provisão, fome." (+ "O **Mercado** vende mais." só com menos de 3 dias, na vila) "Dormindo na Taverna, o ensopado é por conta dela." | a primeira escolha de destino (Viajar ou a Estrada) | **Entendi**, ou a viagem começa |
+| V4 | o cartão do primeiro companheiro no painel | "{Morel} anda com você: luta junto e come 1 provisão por dia." (+ "Está ferido: fora de combate até descansar.") "**Comitiva**, na barra de baixo: conversar e mandar para o acampamento." | o primeiro menu com alguém na comitiva, presente (reserva e ausência não contam) | **Entendi**, a Comitiva aberta, ou a resposta ao menu |
+| V5 | "Explorar a região" | "**Explorar a região** gasta um período. Pode dar luta, um achado, alguém pelo caminho ou nada: é por aí que se acha o que não está nos contratos." | o primeiro menu fora da vila | a resposta ao menu |
 
 ### 4.3 Quando chegar
 
 | # | Âncora | Texto | Aparece | Encerra |
 |---|---|---|---|---|
-| E1 | a comparação na janela do item | "▲ e ▼ comparam com o que você veste. **Equipar** troca; **Guardar** leva na mochila." | a primeira janela de equipamento | a decisão do item |
-| T1 | Talentos (na doca) | "Você tem {1} ponto. **Talentos** (tecla T) abre a árvore." | o primeiro ponto de talento | a árvore abre |
-| N1 | o modificador "Inimigos +1 nível" no topo | "À noite os inimigos vêm um nível acima e batem mais forte. Sem tocha, a luta começa com eles atacando." | a primeira noite fora da vila | a próxima escolha |
+| E1 | a linha "contra…" do achado | "A linha "contra…" compara o achado com o que você usa (▲ ganha, ▼ perde). **Equipar** veste o novo e guarda o antigo na mochila; **Guardar** leva o novo na mochila." (mochila cheia: "Com a mochila cheia, **Equipar** deixa o antigo para trás.") | o primeiro item achado que você pode usar, com um equipado no lugar | a decisão do item |
+| T1 | Talentos (na doca; só a seta: o atalho já acende com ★) | "Você tem {1} ponto de talento. **Talentos**, na barra de baixo, abre a árvore." | um menu com ponto por gastar (gasto antes, não aparece) | **Entendi**, a árvore aberta, ou a resposta ao menu |
+| N1 | o aviso "Inimigos +1 nível" no topo | "Noite: **Inimigos +1 nível**, no topo, vale para as lutas daqui (o detalhe, com o mouse). A tocha resolve o escuro, não a noite." (ruínas e capela: "Aqui é escuro até de dia; a tocha resolve a luz, não a noite.") | o primeiro menu fora da vila, à noite | **Entendi**, ou a resposta ao menu |
 
 **Dormir na Taverna, pelas regras de hoje:** devolve 35% da vida máxima (menos, com fome), todo o recurso, tira os
 efeitos de luta, cura o animal, descansa a comitiva e passa a noite com o ensopado para todos (ninguém gasta provisão;
@@ -505,4 +507,68 @@ fome presente, ausente, depois de dormir e depois de salvar e carregar; a tela C
   amarelo, o gasto normal de tocha na cor neutra do texto, a falta de luz em vermelho. O painel não mudou de forma.
 - **Gabarito:** as 9 partidas web mudam só nos campos novos (`grave` na fome, `tipo` nos avisos do lugar); sem eles,
   as transcrições são idênticas.
+
+## 15. A segunda parte (1.67.0)
+
+Pedido de Jean sobre a 1.66.4: V2–V5, E1, T1 e N1, apresentando o que faz sentido na hora, uma coisa por vez, sem
+passeio obrigatório pela tela. C1–C4, V1, a despensa e Morel ficaram como estavam.
+
+**Uma por vez, nesta ordem** (`abertura.proxima`): primeiro o que a tela de agora pede (o item achado: E1; a escolha
+do destino: V3); nos menus do lugar, preparar e se recuperar antes de chamar para novidades: V2, N1, V1, T1, V4, V5.
+Depois de um "Entendi", a próxima espera a cena seguinte: nada de fila de quadros na mesma tela.
+
+**O que se cumpre não depende da caixa:** o motor marca a orientação como vista quando a ação dela acontece (o
+serviço usado, a viagem começada, a árvore aberta, a Comitiva aberta, o item decidido) ou quando a ocasião passa (a
+resposta ao menu em que ela valia: noite, comitiva, explorar, talentos). O "Entendi" (V3, V4, T1, N1, as
+informativas) também marca. As outras se encerram pela ação. Assim, com a caixa ligada ou não, o jogo é o mesmo, e
+quem religa o tutorial pela Ajuda não revê o que já passou.
+
+**Onde cada quadro mora** (nada de controle, barra, personagem ou narrativa por baixo):
+- na vila, numa faixa logo abaixo do cenário (como o V1): V2, e o V4 quando o cenário é a vila;
+- fora da vila, sobre a paisagem (o cenário fora da vila é só paisagem), do lado do controle: N1, V5, T1 e V4, quando o
+  quadro cabe nela; quando não cabe (o cenário encolhe com muito texto na página), na faixa;
+- sem cenário (a escolha do destino), numa faixa no alto da página: V3;
+- embaixo, junto da doca, quando o controle mora embaixo e não há paisagem: V5 e T1;
+- no item achado, logo abaixo da janela dele, acima do véu: E1.
+As faixas entram com a orientação, antes de o texto correr, e só saem quando a cena muda (também depois do
+"Entendi"): a página não pula. O quadro fica parado; a posição só muda com a etapa, o tamanho da janela ou o lugar do
+controle. Um destaque por controle: o T1 não põe contorno nos Talentos, que já acendem com ★.
+
+**Regras conferidas para os textos:** o Templo devolve a vida toda pelo preço dele (metade do que falta) e não trata
+ferimento; dormir na Taverna custa {8 + 2 × nível} (com o desconto da reputação), devolve todo o recurso e 35% da vida
+(menos com fome) e serve o ensopado (ninguém gasta provisão naquele amanhecer); cada amanhecer come 1 provisão do
+herói e 1 de cada companheiro presente, na vila ou fora; Equipar guarda o antigo na mochila (cheia, deixa para trás);
+à noite os inimigos vêm 1 nível acima e causam 10% mais dano, e a tocha só resolve o escuro (Percepção e Destreza,
+quem ataca primeiro nas salas).
+
+**Interface de texto:** cada orientação vira uma linha "Dica: …" uma vez por sessão, no menu em que vale (o V1
+continua como antes).
+
+**Gabarito:** sem diferença (as 24 partidas não passam pela abertura; nada novo sorteia).
+
+**Conferido:**
+- testes (`tests/test_abertura_parte2.py`): o serviço certo para cada falta (vida no Templo, recurso na Taverna, os
+  dois, sem ouro nada), o que o V2 não promete, cumprir pelo serviço ou pela partida; as provisões com e sem
+  comitiva, com pouca e muita comida, sem nenhuma; o primeiro companheiro (Odette antes de Morel), a reserva que não
+  conta, o ferido; explorar e a noite (e a capela escura de dia); os talentos só com ponto por gastar; a ordem; o E1
+  só com comparação e a escolha preservada; o motivo de explorar uma vez, pelo taverneiro ou por Morel; o mesmo jogo
+  com e sem tutorial nas três classes (dormir, viajar, explorar, voltar); o "Entendi" só nas informativas; salvar e
+  carregar com orientações pendentes e cumpridas; a dica de texto uma vez;
+- fumaça: um cenário novo (E1 pelo teclado, V2 no Templo, V3 com Entendi sem quadro novo na mesma tela, N1 sobre a
+  paisagem e cumprido pela resposta), além dos de antes (C1–C4, V1, fogueira, fome);
+- no navegador, a 1500 e 1280 px, mouse e teclado (cenário `tutorial`): cada quadro sem cobrir controle, barra,
+  cartão, prédio ou página; V2 com vida baixa, recurso baixo, os dois e ferimento; V3 com e sem comitiva; V4 de Morel
+  e de Odette, ferido, na vila e fora; V5 e T1 sobre a paisagem; N1 no Charco e na Capela (sem tocha); E1 sobre a
+  janela do item; Encerrar tutorial; tutorial desligado sem quadro nenhum.
+
+**Limitações:**
+- Na vila e na escolha do destino, a faixa empurra o texto da página para baixo enquanto a orientação vale (90 a 190
+  px, conforme o texto e a largura).
+- O "Entendi" de uma informativa e a resposta ao menu valem como vista: quem ignora o quadro não o vê de novo (a Ajuda
+  guarda o texto).
+- O V2 só aparece com o serviço ao alcance do ouro; sem ouro, nenhum quadro (a dica do Templo e da Taverna continua
+  nos cartões dos prédios).
+- O V4 fala do primeiro companheiro presente; quem só tem gente no acampamento não vê o quadro até alguém andar junto.
+- Teste técnico não mostra que uma pessoa nova entendeu os sistemas: a E9 continua aberta até os testes com gente
+  nova (seção 11).
 

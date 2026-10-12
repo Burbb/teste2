@@ -1,5 +1,6 @@
 """Níveis, talentos, habilidades, especialização e companheiro animal."""
 
+from .. import abertura
 from .. import balanceamento as bal
 from ..classes import CLASSES, COMPANHEIROS, SPECS, habilidades_ate
 from ..habilidades import HABILIDADES, efetiva, escolher_versao, ficha, transformacoes, versao
@@ -61,6 +62,7 @@ class Progressao:
                        "amarelo+negrito")
 
     def menu_talentos(self):
+        abertura.visto(self, "T1")  # a árvore aberta: o quadro que apontava para ela não volta
         while True:
             j = self.j
             self.ui.mostrar_talentos(lambda: talentos.dados_arvore(j), lambda: talentos.desenhar(j),
