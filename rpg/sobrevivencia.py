@@ -286,16 +286,36 @@ def _noite(guardiao=False):
     return f"+{dano}% de dano dos inimigos" if guardiao else f"inimigos +{bal.NOITE_NIVEL} nível e +{dano}% de dano"
 
 
-def nota_sala(g, guardiao=False):
-    """A nota da luta de uma sala escura (as da capela), junto da ação, antes de entrar: a tocha que ela gasta, ou a
-    emboscada certa sem tocha, e o que a noite muda (num guardião, só o dano). None se nada disso vale."""
-    partes = []
+def riscos_sala(g, guardiao=False):
+    """Os riscos da luta de uma sala escura (as da capela), junto da ação, antes de entrar: indicadores curtos (ícone,
+    texto, tipo para a cor, dica com o detalhe e `linha` para a interface de texto). A tocha que ela gasta, ou, sem
+    tocha, o inimigo que age primeiro; e o que a noite muda (num guardião, só o dano). Lista vazia se nada vale."""
+    r = []
+    dano = round((bal.NOITE_INIMIGOS - 1) * 100)
     if escuro(g):
         n = g.j.consumiveis.get("tocha", 0)
-        partes.append(f"Gasta 1 tocha (você tem {n})." if n else "Sem tocha: o inimigo mais rápido ataca primeiro.")
+        if n:
+            r.append({"icone": "tocha", "texto": "−1 tocha", "tipo": "custo", "linha": f"Gasta 1 tocha (você tem {n}).",
+                      "dica": f"A sala é escura de dia e de noite: entrar acende 1 tocha (você tem {n})."})
+        else:
+            r.append({"icone": "tocha_apagada", "texto": "Sem luz: inimigo age primeiro", "tipo": "perigo",
+                      "linha": "Sem tocha: o inimigo mais rápido ataca primeiro.",
+                      "dica": "Sem tocha, o inimigo mais rápido ataca antes de você, e Percepção e Destreza ficam "
+                              f"−{bal.ESCURO_TESTES}."})
     if g.noite:
-        partes.append(f"Noite: {_noite(guardiao)}.")
-    return " ".join(partes) or None
+        if guardiao:
+            r.append({"icone": "lua", "texto": f"+{dano}% dano", "tipo": "noite", "linha": f"Noite: {_noite(True)}.",
+                      "dica": f"Noite: a guardiã causa {dano}% mais dano (o nível dela não muda à noite)."})
+        else:
+            r.append({"icone": "lua", "texto": f"+{bal.NOITE_NIVEL} nível · +{dano}% dano", "tipo": "noite",
+                      "linha": f"Noite: {_noite()}.",
+                      "dica": f"Noite: os inimigos da sala vêm {bal.NOITE_NIVEL} nível acima e causam {dano}% mais dano."})
+    return r
+
+
+def nota_sala(g, guardiao=False):
+    """Os riscos da sala numa frase (a interface de texto, os testes). None se nada vale."""
+    return " ".join(r["linha"] for r in riscos_sala(g, guardiao)) or None
 
 
 def riscos_do_lugar(g, salas=False):

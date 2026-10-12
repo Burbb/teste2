@@ -608,13 +608,15 @@ def _soltar_correntes(g, mid):
              "até as duas pedras de moinho, lá embaixo na água. Uma trava de ferro segura o eixo para ele não girar.")
     if sabe_do_rito(m):
         g.narrar("Vó Berta disse que um afogado descansa quando alguém o chama pelo nome e o solta das pedras.")
-    from .sobrevivencia import nota_sala
-    sala = nota_sala(g)  # o barulho chama os afogados: a luta é na sala, com a tocha e a noite de sempre
-    opcoes = [("Desenrolar as correntes à mão", "mao", {"nota": " ".join(x for x in (NOTA_MAO, sala) if x)})]
+    from .sobrevivencia import riscos_sala
+    # À mão, o barulho sempre chama os afogados: a luta é na sala, com a tocha e a noite de sempre. Pela classe, a luta
+    # só vem se a trava não ceder: a nota não promete custo de luz nem perigo da noite que podem não acontecer.
+    riscos = riscos_sala(g)
+    opcoes = [("Desenrolar as correntes à mão", "mao", {"nota": NOTA_MAO, **({"riscos": riscos} if riscos else {})})]
     if g.j.classe == "arqueiro" and g.j.flechas <= 0:
         g.dizer("Sem flechas, não dá para acertar o pino da trava: sobra o jeito à mão.", "cinza")
     else:
-        nota = ("Gasta 1 flecha. " if g.j.classe == "arqueiro" else "") + RISCO_CLASSE + (f" {sala}" if sala else "")
+        nota = ("Gasta 1 flecha. " if g.j.classe == "arqueiro" else "") + RISCO_CLASSE
         opcoes.append((METODO_CLASSE[g.j.classe], "classe", {"nota": nota}))
     opcoes.append(("Deixar como está", None))
     op = g.menu("O que você faz com as correntes?", opcoes)
@@ -675,8 +677,8 @@ def _fundo(g, mid):
             falta = [o_que[0].lower() + o_que[1:] for o_que, _, feito in descanso(m) if not feito]
             g.narrar("Do que Vó Berta contou, ainda falta " + tx.lista_natural(falta) + ".")
     g.narrar("Ela ainda não se levantou da água.")
-    from .sobrevivencia import nota_sala
-    sem_fuga = {"nota": " ".join(x for x in (tx.SEM_FUGA, nota_sala(g, guardiao=True)) if x)}
+    from .sobrevivencia import riscos_sala
+    sem_fuga = {"nota": tx.SEM_FUGA, **({"riscos": riscos_sala(g, guardiao=True)} if riscos_sala(g, guardiao=True) else {})}
     opcoes = ([("Chamar Ilse pelo nome e tentar dar descanso", "descanso", sem_fuga)] if pronto else []) + [
         ("Lutar para destruí-la", "destruir", sem_fuga), ("Voltar por enquanto", None)]
     op = g.menu("O que você faz?", opcoes)
@@ -946,10 +948,10 @@ def opcoes(g):
 
 
 def _nota_sala(g, d):
-    """A ação que entra direto na luta de uma sala (`sala`) leva a nota da tocha e da noite (sobrevivencia.nota_sala)."""
-    from .sobrevivencia import nota_sala
-    nota = nota_sala(g) if d.get("sala") else None
-    return {"nota": nota} if nota else {}
+    """A ação que entra direto na luta de uma sala (`sala`) leva os riscos da tocha e da noite (sobrevivencia)."""
+    from .sobrevivencia import riscos_sala
+    riscos = riscos_sala(g) if d.get("sala") else []
+    return {"riscos": riscos} if riscos else {}
 
 
 def tem_salas(g):

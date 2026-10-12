@@ -242,3 +242,11 @@ body:not(.sem-heroi):not(.modo-titulo):not(.em-combate) #doca:not(:empty) { disp
 /* A tela aberta: nome em ouro e um traço aceso embaixo, como a aba ativa. */
 #doca .atalho.atual { color: var(--ouro); }
 #doca .atalho.atual::after { content: ""; position: absolute; left: 22%; right: 22%; bottom: 0; height: var(--P); background: var(--ouro); }
+
+/* Os riscos de uma ação (a luz e a noite numa sala da capela, escolhas.js): indicadores compactos embaixo do nome. O
+   custo de luz em tom neutro; a falta de luz em vermelho; a noite num alerta mais discreto. A ação continua clicável. */
+.op-riscos { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.op-risco { display: inline-flex; align-items: center; gap: 4px; padding: 0 7px 0 3px; font-size: 13px; line-height: 20px;
+  color: var(--tinta-2); background: rgba(255, 255, 255, 0.03); border: 1px solid #4a3c2c; }
+.op-risco.perigo { color: #ff9c8e; background: rgba(140, 36, 24, 0.22); border-color: #9a3324; }
+.op-risco.noite { color: #d9c690; border-color: #5e5032; }

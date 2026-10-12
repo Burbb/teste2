@@ -195,7 +195,7 @@ class TestConfronto(unittest.TestCase):
             m = missoes.registro(g, MID)
             self.assertEqual((m["desfecho"], m["etapa"]), ("destruida", "retorno"), classe)
             descida = next(p for p in g.ui.perguntas if "Voltar por enquanto" in p[1])
-            self.assertEqual(descida, ("O que você faz?", [f"Lutar para destruí-la — {tx.SEM_FUGA} {TOCHA}", "Voltar por enquanto"]))
+            self.assertEqual(descida, ("O que você faz?", [f"Lutar para destruí-la — {tx.SEM_FUGA} — {TOCHA}", "Voltar por enquanto"]))
             self.assertIn("Ela ainda não se levantou da água.", g.ui.ditos)  # a cena; a regra fica na nota da luta
             self.assertFalse(any("ainda falta" in d for d in g.ui.ditos))  # sem Berta, ninguém falou do rito
             self.assertFalse(any(p[0] == "Este é o momento do rito." for p in g.ui.perguntas))
@@ -208,7 +208,7 @@ class TestConfronto(unittest.TestCase):
         missoes.executar(g, MID, "fundo")
         self.assertIn("Vó Berta disse que era preciso soltá-la das pedras. As correntes ainda a prendem.", g.ui.ditos)
         descida = next(p for p in g.ui.perguntas if "Voltar por enquanto" in p[1])
-        self.assertEqual(descida[1], [f"Lutar para destruí-la — {tx.SEM_FUGA} {TOCHA}", "Voltar por enquanto"])
+        self.assertEqual(descida[1], [f"Lutar para destruí-la — {tx.SEM_FUGA} — {TOCHA}", "Voltar por enquanto"])
 
     def test_preparado_e_mesmo_assim_destroi(self):
         g = no_fundo("arqueiro", DESTRUIR, **PRONTO)

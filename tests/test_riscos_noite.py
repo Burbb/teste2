@@ -20,23 +20,49 @@ def na_capela(etapa="capela", periodo=1, tochas=3):
     return g
 
 
-def nota(g):
-    return next(o[2].get("nota") for o in missoes.opcoes(g) if o[1][2] in ("nave", "sacristia", "ossuario"))
+def riscos(g):
+    return next(o[2].get("riscos") for o in missoes.opcoes(g) if o[1][2] in ("nave", "sacristia", "ossuario"))
 
 
 class TestSalas(unittest.TestCase):
-    def test_nota_da_sala_de_dia_e_de_noite(self):
-        self.assertEqual(nota(na_capela()), "Gasta 1 tocha (você tem 3).")  # a capela é escura de dia também
-        self.assertEqual(nota(na_capela(periodo=3)), "Gasta 1 tocha (você tem 3). Noite: inimigos +1 nível e +10% de "
-                                                     "dano.")
-        self.assertEqual(nota(na_capela(tochas=0)), "Sem tocha: o inimigo mais rápido ataca primeiro.")
+    def test_indicadores_da_sala_de_dia_e_de_noite(self):
+        dia = riscos(na_capela())  # a capela é escura de dia também
+        self.assertEqual([(r["icone"], r["texto"], r["tipo"]) for r in dia], [("tocha", "−1 tocha", "custo")])
+        self.assertIn("você tem 3", dia[0]["dica"])
+        noite = riscos(na_capela(periodo=3))
+        self.assertEqual([(r["icone"], r["texto"], r["tipo"]) for r in noite],
+                         [("tocha", "−1 tocha", "custo"), ("lua", "+1 nível · +10% dano", "noite")])
+        sem = riscos(na_capela(tochas=0))
+        self.assertEqual([(r["icone"], r["texto"], r["tipo"]) for r in sem],
+                         [("tocha_apagada", "Sem luz: inimigo age primeiro", "perigo")])
+        self.assertIn("o inimigo mais rápido ataca antes de você", sem[0]["dica"])
         for etapa in ("sacristia", "ossuario"):
-            self.assertIn("tocha", nota(na_capela(etapa)))
+            self.assertEqual(riscos(na_capela(etapa))[0]["texto"], "−1 tocha")
+
+    def test_texto_junta_os_riscos_ao_rotulo(self):
+        g = na_capela(periodo=3, tochas=0)
+        g.ui.roteiro = ["Explorar"]
+        g.menu("O que você faz?", missoes.opcoes(g) + [("Explorar a região", "explorar")])
+        self.assertIn("Entrar na capela pelo buraco do canal — Sem tocha: o inimigo mais rápido ataca primeiro. Noite: "
+                      "inimigos +1 nível e +10% de dano.", g.ui.ofertas[-1])
 
     def test_guardia_so_o_dano(self):
         g = na_capela(periodo=3)
+        r = sobrevivencia.riscos_sala(g, guardiao=True)
+        self.assertEqual([x["texto"] for x in r], ["−1 tocha", "+10% dano"])
+        self.assertIn("o nível dela não muda", r[1]["dica"])
         self.assertEqual(sobrevivencia.nota_sala(g, guardiao=True),
                          "Gasta 1 tocha (você tem 3). Noite: +10% de dano dos inimigos.")
+
+    def test_sarilho_so_o_que_vale_para_cada_opcao(self):
+        g = na_capela("fundo", periodo=3)
+        metas = []
+        g.ui.escolher = lambda p, o: (metas.append(list(g.ui.meta_opcoes or [])), len(o) - 1)[1]
+        missoes._soltar_correntes(g, "febre_do_turvo")
+        mao, classe = metas[0][0], metas[0][1]
+        self.assertEqual([r["texto"] for r in mao["riscos"]], ["−1 tocha", "+1 nível · +10% dano"])  # à mão, a luta vem
+        self.assertNotIn("riscos", classe)  # pela classe, só se a trava não ceder: sem custo de luz prometido
+        self.assertNotIn("tocha", classe["nota"])
 
     def test_sem_tocha_na_sala_o_texto_diz_a_emboscada_certa(self):
         g = na_capela(tochas=0)

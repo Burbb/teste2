@@ -163,6 +163,7 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         if not self.ui.notas_proprias:  # a nota da opção (custo, risco), a seta de quem abre outra escolha e o motivo
             # de uma indisponível: a tela gráfica desenha os três; o texto os junta ao rótulo
             rotulos = [r + (" ›" if m and m.get("abre") else "") + (f" — {m['nota']}" if m and m.get("nota") else "")
+                       + (f" — {' '.join(x['linha'] for x in m['riscos'])}" if m and m.get("riscos") else "")
                        + (f" — indisponível: {m['indisponivel']}" if m and m.get("indisponivel") else "")
                        for r, m in zip(rotulos, metas)]
         self.ui.meta_opcoes = metas if any(metas) else None

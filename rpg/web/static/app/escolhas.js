@@ -262,7 +262,7 @@ function mostrarOpcoes(m) {
       b.addEventListener("focus", () => Batalha.mirar(o.meta.alvo, true));
       b.addEventListener("blur", () => Batalha.mirar(o.meta.alvo, false));
     }
-    b.innerHTML = `<span class="tecla">${tecla}</span>${icone}<span class="rotulo"><span class="op-texto">${esc(o.texto)}</span>${o.meta && o.meta.nota ? `<small class="op-nota">${esc(o.meta.nota)}</small>` : ""}${indisponivel ? `<small class="op-nota op-motivo">${esc(indisponivel)}</small>` : ""}</span>${teste}${abre}`;
+    b.innerHTML = `<span class="tecla">${tecla}</span>${icone}<span class="rotulo"><span class="op-texto">${esc(o.texto)}</span>${o.meta && o.meta.nota ? `<small class="op-nota">${esc(o.meta.nota)}</small>` : ""}${riscosDaOpcao(o.meta)}${indisponivel ? `<small class="op-nota op-motivo">${esc(indisponivel)}</small>` : ""}</span>${teste}${abre}`;
     b.addEventListener("click", (ev) => { ev.stopPropagation(); responder(m.id, i); });
     li.appendChild(b);
     lista.appendChild(li);
@@ -675,6 +675,13 @@ function rodaMira(m) {
     chip.appendChild(v);
   }
   rodaEl().appendChild(chip);
+}
+
+/** Os riscos de uma ação (a luz e a noite numa sala da capela): indicadores curtos com o ícone, a cor do tipo (custo,
+ *  perigo, noite) e a dica com o detalhe. Vêm prontos do motor (sobrevivencia.riscos_sala). */
+function riscosDaOpcao(meta) {
+  if (!meta || !meta.riscos || !meta.riscos.length) return "";
+  return `<span class="op-riscos">${meta.riscos.map((r) => `<span class="op-risco ${esc(r.tipo)}" ${Telas.dica(esc(r.dica), true)}>${spr(r.icone, 1)}${esc(r.texto)}</span>`).join("")}</span>`;
 }
 
 const ICONE_ACAO = { habilidades: "grimorio", itens: "pocao", analisar: "olho", fugir: "fuga" };
