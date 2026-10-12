@@ -59,8 +59,15 @@ class Servidor:
 
             def do_POST(self):
                 url = urlparse(self.path)
-                if url.path != "/responder" or not self._token_ok({}):
+                if url.path not in ("/responder", "/orientacao") or not self._token_ok({}):
                     return self._responder(403)
+                if url.path == "/orientacao":  # dispensar ou religar as orientações (abertura.py)
+                    try:
+                        tamanho = min(int(self.headers.get("Content-Length", 0)), 1_000)
+                        servidor.ui.orientacao(json.loads(self.rfile.read(tamanho) or b"{}").get("acao"))
+                    except (ValueError, TypeError, AttributeError):
+                        return self._responder(400)
+                    return self._responder(204)
                 try:
                     tamanho = min(int(self.headers.get("Content-Length", 0)), 10_000)
                     dados = json.loads(self.rfile.read(tamanho) or b"{}")

@@ -1,6 +1,6 @@
 """Serviços da vila: ferreiro, curandeiro e rumores."""
 
-from .. import comitiva, consequencias
+from .. import abertura, comitiva, consequencias
 from .. import eventos
 from ..entidades import nome_stat
 from ..eventos.vila import ouvir_rumor
@@ -147,11 +147,16 @@ class Servicos:
         if self.flag(chave, 0) >= 2:
             self.dizer("Os fregueses já contaram tudo o que sabiam hoje.", "cinza")
             return
-        preco = self.preco(3)
+        gratis = abertura.caneca(self)  # a primeira caneca, por conta da casa (a despensa da abertura): uma vez
+        preco = 0 if gratis else self.preco(3)
         if self.j.ouro < preco:
             self.dizer("Sem ouro nem para uma caneca.", "vermelho")
             return
-        self.perder_ouro(preco, destino="taverna")
+        if gratis:
+            abertura.usar_caneca(self)
+            self.dizer("O taverneiro enche a caneca e não cobra. \"Por conta da casa.\"", "cinza")
+        else:
+            self.perder_ouro(preco, destino="taverna")
         self.marcar(chave, self.flag(chave, 0) + 1)
         # O que se passa dentro da taverna só acontece ali, a quem senta para beber: às vezes a bebida vira briga, uma
         # queda de braço, ou o homem do canto (Morel) puxa conversa, em vez dos rumores. Enquanto ninguém conheceu

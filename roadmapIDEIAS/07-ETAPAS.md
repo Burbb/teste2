@@ -170,7 +170,8 @@ custo do companheiro e o fim do capítulo no Vau; a partida de Jean registrada c
 17). A dificuldade dos combates ficou como estava. **Na 1.65.0:** interface, retorno visual e texto a partir da
 partida de Jean (seção 17 do 17); **na 1.65.1,** os três pontos que faltaram: o Mago na água, o nome da Yara e
 a segunda Lança de Gelo na iniciativa (seção 18 do 17); **na 1.65.2 e 1.65.3,** os contratos pagos depois do resgate
-e o ×N dos baús (seção 19 do 17); **a abertura guiada especificada** em [18](18-E9-ABERTURA-GUIADA.md), para revisão.
+e o ×N dos baús (seção 19 do 17); **na 1.65.4,** a noite e a tocha ditas antes da luta; **na 1.66.0,** a primeira parte da abertura guiada
+([18](18-E9-ABERTURA-GUIADA.md)).
 **Não concluída:** faltam os jogadores novos (seção 9 do 17) e Jean
 jogar a 1.64.0; o começo apertado e o caso do arqueiro sem flechas ficam para depois disso (seção 16).
 

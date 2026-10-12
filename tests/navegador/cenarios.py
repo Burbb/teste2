@@ -15,6 +15,7 @@
     python -m tests.navegador.cenarios tiro_duplo    # Patrulheiro contra três lobos feridos de jeitos diferentes (NIVEL, VIDAS)
     python -m tests.navegador.cenarios broquel       # Guerreiro nv 4 com o Broquel contra três lobos; repete com/sem o Revide (LUTA, ESPEC, NIVEL)
     python -m tests.navegador.cenarios resgate       # a recuperação: fome ou infecção no Charco, à noite (CLASSE, CAUSA, COMITIVA, CONTRATOS)
+    python -m tests.navegador.cenarios abertura      # campanha nova no Vau: a despensa e as orientações (CLASSE, TUTORIAL, MOREL, DESPENSA)
     python -m tests.navegador.cenarios gelo          # Mago com a iniciativa contra um lobo: duas Lanças antes de ele agir (PRISAO, NIVEL, SEMENTE)
     python -m tests.navegador.cenarios muralha       # Guerreiro nv 6, Muralha + Contra-ataque (CONTRA) e o Broquel, contra bandidos e um cultista
 
@@ -437,6 +438,37 @@ def tiro_duplo(ui):
         pass
 
 
+def abertura(ui):
+    """Uma campanha nova no Vau (CLASSE, padrão guerreiro; SEMENTE, padrão 7), logo depois da criação: o prólogo, a
+    abertura da febre e o pedido do taverneiro (a despensa). TUTORIAL=0 desliga as orientações. MOREL=recrutado,
+    recusou ou rumores: Morel já resolvido antes (no grupo; recusado pela bebida; encontrado pela bebida e deixado).
+    DESPENSA=adiada: o pedido já foi recusado ("Agora não"). Sair leva ao título, com o save."""
+    from rpg import abertura as ab
+    from rpg.__main__ import menu_principal
+    pasta = tempfile.mkdtemp()
+    g = Jogo(ui, seed=int(os.environ.get("SEMENTE", "7")), pasta_saves=pasta, hardcore=False)
+    ui.jogo = g
+    g.iniciar("Jean", os.environ.get("CLASSE", "guerreiro"), "turvo")
+    ab.comecar(g, os.environ.get("TUTORIAL", "1") != "0")
+    morel = os.environ.get("MOREL")
+    if morel == "recrutado":
+        cm.recrutar(g, "morel")
+        g.contagem["morel_na_taverna"] = 1
+    elif morel in ("recusou", "rumores"):
+        g.contagem["morel_na_taverna"] = 1
+    if os.environ.get("DESPENSA") == "adiada":
+        g.mundo["abertura"]["despensa"] = "adiada"
+    g.periodo, g.clima = 0, "limpo"
+    g.autosalvar = True
+    g.introducao_campanha()
+    try:
+        g.rodar()
+    except FimDeJogo:
+        pass
+    ui.jogo = None
+    menu_principal(ui, argparse.Namespace(seed=1, saves=pasta, brando=False))
+
+
 def gelo(ui):
     """Mago de nível NIVEL (padrão 4) com a iniciativa contra um lobo de muita vida e sem esquiva: dois turnos seguidos
     para congelar duas vezes antes de o lobo agir. PRISAO="prisao" leva a Prisão de Gelo (congela sempre); sem ela, a
@@ -578,7 +610,7 @@ def muralha(ui):
 CENARIOS = {"combate": combate, "titulo": titulo, "vila": vila, "campanha": campanha, "baus": baus, "missao": missao,
             "recarga": recarga, "capela": capela, "retorno": retorno, "praca": praca, "encruzilhada": encruzilhada,
             "tiro_duplo": tiro_duplo, "covil": covil, "broquel": broquel, "muralha": muralha, "resgate": resgate,
-            "gelo": gelo}
+            "gelo": gelo, "abertura": abertura}
 
 
 def main():

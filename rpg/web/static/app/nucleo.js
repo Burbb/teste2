@@ -87,6 +87,9 @@ async function responder(id, valor) {
   // A opção indisponível (falta o item que ela gasta) não se escolhe: nem clique, nem tecla, nem atalho.
   if (pergunta.tipo === "opcoes" && typeof valor === "number" && pergunta.opcoes && pergunta.opcoes[valor]
       && pergunta.opcoes[valor].meta && pergunta.opcoes[valor].meta.indisponivel) return;
+  // A caixa que acompanha a escolha ("Mostrar tutorial", na criação da campanha) vai junto dela.
+  if (pergunta.caixa && typeof valor === "number") valor = { i: valor, caixa: pergunta.caixa.checked };
+  Orientacao.aoResponder();
   pergunta = null;
   ultimaResposta = performance.now();
   presoNoTopo = false;  // o que a escolha trouxer aparece embaixo, à vista
@@ -177,7 +180,7 @@ async function tratar(m) {
       // Luta nova: nada da anterior (a câmera lenta de um golpe final que não terminou) nem da vila fica na arena.
       Sensacao.repor(); fecharVila();
       cenaInterrompida = true; faixaCombate(m); break;
-    case "lance": if (!replay) await Batalha.lance(m); break;
+    case "lance": if (!replay) { Orientacao.aoLance(m); await Batalha.lance(m); } break;
     case "fala": await fala(m); break;
     case "opiniao": await opiniao(m); break;
     case "turno": turno(m); break;

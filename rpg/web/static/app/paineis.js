@@ -40,6 +40,7 @@ let ultimoHeroi = "", ultimoMundo = "";
 function aplicarEstado(e) {
   const antes = estado;
   estado = e;
+  Orientacao.aoEstado(e);
   Realce.glossario(e.glossario);
   Telas.atualizarGrimorio();
   corpo.classList.remove("sem-heroi");

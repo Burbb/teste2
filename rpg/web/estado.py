@@ -1,7 +1,7 @@
 """Fotografia do estado do jogo em JSON, para a interface web desenhar painéis, mapa e combate."""
 
 from .. import balanceamento as bal
-from .. import capitulo, comitiva, consequencias, grimorio, mapa, missoes, sobrevivencia
+from .. import abertura, capitulo, comitiva, consequencias, grimorio, mapa, missoes, sobrevivencia
 from .. import texto as tx
 from ..classes import CLASSES
 from ..habilidades import HABILIDADES, VARIANTES, descricao_habilidade, efetiva
@@ -322,6 +322,7 @@ def estado(g):
                   "estrada": g.na_estrada},  # viajando: a paisagem é a da região, sem a vila
         "mapa": mapa_conhecido(g),
         "combate": combate(g),
+        "orientacao": abertura.para_tela(g),  # o quadro de agora e a Ajuda (abertura.py)
         "estados": para_tela(),  # ícone, cor e dica de cada estado (catálogo em estados.py)
         "glossario": glossario(),
         "itens": itens.para_tela(),  # ícone e contador de cada consumível e recurso

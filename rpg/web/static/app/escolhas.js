@@ -286,6 +286,11 @@ function mostrarOpcoes(m) {
     if (rot) rot.innerHTML = `${habMirando ? `<b>${esc(habMirando)}</b>: ` : ""}escolha o alvo <small>clique num inimigo</small>`;
   }
   if (lista.childElementCount) { promptEl.appendChild(lista); Telas.ligarDicas(lista); }
+  if (m.caixa) {  // uma caixa marcável que vai junto da escolha ("Mostrar tutorial", abertura.py)
+    const c = el("label", "caixa-escolha", `<input type="checkbox"${m.caixa.marcada ? " checked" : ""}><span>${esc(m.caixa.rotulo)}</span>`);
+    promptEl.appendChild(c);
+    pergunta.caixa = c.querySelector("input");
+  }
   if (corpo.classList.contains("modo-titulo")) focoNoTitulo(lista);
   if (naVila) montarVila(m, grupos);
   if (atalhos.childElementCount) montarDoca(atalhos);

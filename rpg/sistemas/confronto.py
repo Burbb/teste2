@@ -108,9 +108,9 @@ class Confronto:
             grupo.append(self.inimigo(esc["familia"], bonus))
         return grupo
 
-    def combate(self, inimigos, emboscada=None, pode_fugir=True, titulo=None, sozinho=False):
+    def combate(self, inimigos, emboscada=None, pode_fugir=True, titulo=None, sozinho=False, saque=True):
         self.fechar_espolio()  # o espólio de uma luta anterior aparece antes da próxima começar
-        r = Combate(self, inimigos, emboscada, pode_fugir, titulo, sozinho=sozinho).executar()
+        r = Combate(self, inimigos, emboscada, pode_fugir, titulo, sozinho=sozinho, saque=saque).executar()
         if r == "derrota":
             causa = f"Você tombou diante de {tx.lista_natural([e.nome for e in inimigos])}."
             if self.hardcore:

@@ -78,7 +78,8 @@ function montarVila(m, grupos) {
     if (!g && !fechados[p.id]) return;
     // Quem ainda não abriu o mural (neste navegador): o balão dele pisca como sob o mouse, com uma legenda curta, até
     // a primeira visita. Mostra que o cenário se clica e por onde há trabalho a pegar.
-    const convite = p.id === "mural" && !ler(MURAL_VISTO);
+    // Com o tutorial ligado, o quadro da orientação (V1, orientacao.js) aponta o Mural no lugar do convite.
+    const convite = p.id === "mural" && !ler(MURAL_VISTO) && !(estado && estado.orientacao && estado.orientacao.ligado);
     const b = el("button", "predio" + (convite ? " convite" : ""),
       `<span class="balao-nome">${esc(p.nome)}${convite ? '<small class="convite-legenda">clique: contratos</small>' : ""}</span>`);
     b.type = "button";

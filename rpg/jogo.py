@@ -3,7 +3,7 @@
 import random
 
 from . import campanha
-from . import consequencias, missoes
+from . import abertura, consequencias, missoes
 from . import eventos
 from . import texto as tx
 from .classes import CLASSES, SPECS
@@ -234,15 +234,24 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
                 self.iniciar(nome, classe)
                 self.introducao()
                 return True
-            modo = self.menu("Se você cair (em combate, de fome ou de infecção):", [
-                ("Resgate: alguém da vila te encontra e cuida de você (perde parte do ouro e dois dias)", "resgate"),
-                ("Hardcore: a morte é permanente e o save é apagado", "hardcore"),
-                ("Voltar", None, {"voltar": True}),
-            ])
+            # A caixa "Mostrar tutorial", marcada, junto da escolha do modo (na tela gráfica, uma linha marcável; no texto,
+            # uma pergunta depois): liga só as orientações; a abertura é a mesma.
+            self.ui.caixa = {"id": "tutorial", "rotulo": "Mostrar tutorial", "marcada": True,
+                             "pergunta": "Mostrar as orientações do tutorial?"}
+            try:
+                modo = self.menu("Se você cair (em combate, de fome ou de infecção):", [
+                    ("Resgate: alguém da vila te encontra e cuida de você (perde parte do ouro e dois dias)", "resgate"),
+                    ("Hardcore: a morte é permanente e o save é apagado", "hardcore"),
+                    ("Voltar", None, {"voltar": True}),
+                ])
+                tutorial = self.ui.ler_caixa() if modo else None
+            finally:
+                self.ui.caixa = None
             if modo:
                 break
         self.hardcore = modo == "hardcore"
         self.iniciar(nome, classe, regiao)
+        abertura.comecar(self, tutorial)
         self.introducao_campanha()
         return True
 
@@ -450,6 +459,8 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
             self.exausto()
         if missoes.cena_pendente(self):  # a cena de missão deste lugar e desta etapa (só na campanha, uma vez)
             return
+        if abertura.cena_pendente(self):  # o pedido do taverneiro (a despensa), uma vez, na campanha nova
+            return
         self.cabecalho()
         tipo = self.loc["tipo"]
         if tipo == "vila":
@@ -572,7 +583,10 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
               "efeito": f"Descanso, {j.nome_recurso.lower()} de volta e ensopado para todos"}),
             (f"Taverna: pagar uma bebida e ouvir rumores ({self.preco(3)} ouro)", "rumores",
              {"predio": "taverna", "servico": "rumores", "curto": "Uma bebida e os rumores", "preco": self.preco(3),
-              "efeito": "O que se conta nas mesas"}),
+              "efeito": "O que se conta nas mesas"}) if not abertura.caneca(self) else
+            ("Taverna: uma bebida e os rumores (por conta da casa)", "rumores",
+             {"predio": "taverna", "servico": "rumores", "curto": "Uma bebida e os rumores", "preco": 0,
+              "efeito": "A primeira caneca é por conta da casa"}),
             ("Mercado", "loja", {"predio": "mercado"}),
             ("Mural de contratos", "mural", {"predio": "mural"}),
             *self.opcoes_templo(),
@@ -585,6 +599,7 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
              {"predio": "ferreiro", "servico": "broquel", "curto": "O broquel que trouxeram da capela",
               "efeito": "Do ossuário da Capela Afogada. Sem custo"}) if broquel else None,
             *missoes.opcoes(self),  # o passo da missão que se dá aqui (campanha), como "Examinar a fonte nova"
+            *abertura.opcoes(self),  # a despensa adiada e o homem do canto (campanha nova)
             *self.opcoes_versao(),  # a troca de versão de uma habilidade transformada (o botão do Grimório)
         ]
         # A frase da vila aparece na chegada e quando o tempo passa, não a cada volta ao menu (do mercado, do
@@ -593,6 +608,7 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         if self.ambiente_visto != (self.loc["id"], self.dia, self.periodo):
             self.ambiente_visto = (self.loc["id"], self.dia, self.periodo)
             self.dizer(ambiente, "cinza")
+            abertura.dica_texto(self, "vila")  # na interface de texto, a orientação do Mural numa linha
         op = self.menu(f"Você está em {self.loc['nome']}. O que faz?", opcoes + self.opcoes_comuns())
         if op == "passear":
             if not eventos.disparar(self, "vila"):
@@ -618,6 +634,8 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
             self.balcao_templo(op[1:])
         elif isinstance(op, tuple) and op[0] == "missao":
             missoes.executar(self, op[1], op[2])
+        elif isinstance(op, tuple) and op[0] == "abertura":
+            abertura.executar(self, op[1])
         else:
             self.executar_comum(op)
 

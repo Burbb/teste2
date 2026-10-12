@@ -49,6 +49,9 @@ class UI:
     interativo = True
     extra_resposta = None  # dados extras que a interface mandou junto da escolha (ex.: quantidade)
     meta_opcoes = None  # dados extras de cada opção (local de viagem, talento...), para interfaces gráficas
+    # Uma caixa marcável que acompanha a próxima escolha ({"id", "rotulo", "marcada", "pergunta"}): "Mostrar tutorial"
+    # na criação da campanha. Lida com ler_caixa depois da escolha.
+    caixa = None
     notas_proprias = False  # a interface mostra a `nota` de uma opção à parte (senão o jogo a junta ao rótulo)
 
     # O que a interface sabe fazer. O motor pergunta por isto, nunca "que tela é esta?".
@@ -219,6 +222,13 @@ class UI:
             self._imprimir("".join(self.pintar(t, c) for t, c in linha).rstrip())
 
     # ------------------------------------------------------------ entrada
+    def ler_caixa(self):
+        """O valor da caixa da última escolha. No texto, ela vira uma pergunta de sim ou não, logo depois."""
+        c = self.caixa
+        if not c:
+            return None
+        return self.escolher(c["pergunta"], ["Sim", "Não"]) == 0
+
     def escolher(self, pergunta, opcoes):
         """Mostra opções numeradas e devolve o índice escolhido."""
         if pergunta:

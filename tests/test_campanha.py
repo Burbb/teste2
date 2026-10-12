@@ -73,16 +73,17 @@ class TestCampanha(unittest.TestCase):
 
     def test_criacao_escolhe_o_modo(self):
         for modo, hardcore in (("Resgate", False), ("Hardcore", True)):
-            ui = Roteiro(["Arqueiro", modo])
+            ui = Roteiro(["Arqueiro", modo, "Sim"])  # no texto, a caixa "Mostrar tutorial" vira uma pergunta
             g = Jogo(ui, seed=2, pasta_saves=tempfile.mkdtemp(), hardcore=not hardcore)
             self.assertTrue(g.novo_jogo("turvo"))
             self.assertEqual((g.campanha, g.j.classe, g.hardcore), ("turvo", "arqueiro", hardcore))
             self.assertTrue(any(("Hardcore:" if hardcore else "Resgate:") in d for d in ui.ditos))
             self.assertTrue(any("Estrada de Varn" in d for d in ui.ditos))
-            self.assertIn("Resgate", ui.ofertas[-1][0])  # o resgate é o padrão: vem primeiro
+            self.assertIn("Resgate", ui.ofertas[-2][0])  # o resgate é o padrão: vem primeiro
+            self.assertEqual(ui.ofertas[-1], ["Sim", "Não"])
 
     def test_voltar_no_modo_volta_para_a_classe(self):
-        ui = Roteiro(["Mago", "Voltar", "Guerreiro", "Resgate"])
+        ui = Roteiro(["Mago", "Voltar", "Guerreiro", "Resgate", "Sim"])
         g = Jogo(ui, seed=2, pasta_saves=tempfile.mkdtemp())
         self.assertTrue(g.novo_jogo("turvo"))
         self.assertEqual((g.j.classe, g.hardcore), ("guerreiro", False))

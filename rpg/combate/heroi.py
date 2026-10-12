@@ -163,6 +163,7 @@ class AcoesDoHeroi:
             if alvo is None:
                 return False
         j.rec -= custo
+        self.habilidades_usadas += 1
         self.tel["habilidades"][h_ef] = self.tel["habilidades"].get(h_ef, 0) + 1
         self.tel["rec_gasto"] += custo
         flechas = self.flechas_de(h)

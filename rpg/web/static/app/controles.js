@@ -33,6 +33,7 @@ function fecharTudo() {
   $("#gaveta-historico").hidden = true;
   $("#sobre-mapa").hidden = true;
   $("#sobre-grimorio").hidden = true;
+  $("#sobre-ajuda").hidden = true;
   corpo.classList.remove("mostrar-heroi", "mostrar-mundo");
 }
 
@@ -49,6 +50,7 @@ document.addEventListener("click", (ev) => {
   if (acao) {
     const a = acao.dataset.acao;
     if (a === "historico") alternarHistorico();
+    else if (a === "ajuda") Orientacao.alternarAjuda();
     else if (a === "mapa") alternarMapa();
     else if (a === "velocidade") mudarVelocidade();
     else if (a === "som") alternarSom();
@@ -61,6 +63,7 @@ document.addEventListener("click", (ev) => {
   }
   // Clique fora da caixa (no véu escuro em volta) fecha, como Esc: livro, mapa e árvore de talentos.
   if (ev.target.id === "sobre-grimorio") { ev.target.hidden = true; return; }
+  if (ev.target.id === "sobre-ajuda") { ev.target.hidden = true; return; }
   if (ev.target.id === "sobre-mapa") { alternarMapa(false); return; }
   if (ev.target.id === "sobre-talentos") { fecharTudo(); return; }
   if (ev.target.closest(".talento-aviso")) { pedir("Talentos", "_", null); return; }
@@ -82,12 +85,14 @@ document.addEventListener("click", (ev) => {
 
 document.addEventListener("keydown", (ev) => {
   primeiraInteracao();
-  if (ev.target.tagName === "INPUT") { if (ev.key === "Escape") ev.target.blur(); return; }
+  // Num campo de texto, as teclas são do texto; numa caixa marcável, só o espaço (as teclas da escolha continuam).
+  if (ev.target.tagName === "INPUT" && (ev.target.type !== "checkbox" || ev.key === " ")) { if (ev.key === "Escape") ev.target.blur(); return; }
   if (ev.ctrlKey || ev.metaKey || ev.altKey) return;
   const k = ev.key;
+  if (k === "F1") { ev.preventDefault(); Orientacao.alternarAjuda(); return; }
   if (k === "Escape" || k === "Backspace") {
     if (fecharJanela()) { ev.preventDefault(); return; }  // a janelinha de habilidades/itens da luta fecha primeiro
-    const aberto = !$("#gaveta-historico").hidden || !$("#sobre-mapa").hidden || !$("#sobre-talentos").hidden || !$("#sobre-grimorio").hidden || document.querySelector(".menu-item");
+    const aberto = !$("#gaveta-historico").hidden || !$("#sobre-mapa").hidden || !$("#sobre-talentos").hidden || !$("#sobre-grimorio").hidden || !$("#sobre-ajuda").hidden || document.querySelector(".menu-item");
     if (!aberto && pergunta && pergunta.voltar !== undefined && !processando) { ev.preventDefault(); voltarPergunta(); return; }
     if (!aberto && processando && !pergunta) { ev.preventDefault(); pedirPular(); return; }  // o Esc também adianta
     if (k === "Escape") { Telas.fecharMenuItem(); fecharTudo(); }

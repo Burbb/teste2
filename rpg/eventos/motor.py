@@ -69,6 +69,16 @@ def disparar(g, contexto):
         if not lista:
             return None
         ev = g.rng.choices([e for e, _ in lista], weights=[p for _, p in lista])[0]
+    return _executar(g, ev, contexto)
+
+
+def disparar_id(g, ev_id, contexto):
+    """Executa um evento escolhido pelo conteúdo, não pelo sorteio (a apresentação de Morel na abertura, abertura.py),
+    contando como qualquer disparo: histórico, contagem e registro. As condições do evento ficam com quem chama."""
+    return _executar(g, next(e for e in REGISTRO if e.id == ev_id), contexto)
+
+
+def _executar(g, ev, contexto):
     g.historico[ev.id] = g.passos
     g.contagem[ev.id] = g.contagem.get(ev.id, 0) + 1
     g.estatisticas["eventos"] = g.estatisticas.get("eventos", 0) + 1

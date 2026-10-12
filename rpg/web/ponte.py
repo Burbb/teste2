@@ -270,6 +270,19 @@ class WebUI(InterfaceGrafica, UI):
         """Chamado pelo servidor quando o navegador responde."""
         self.respostas.put((pid, valor))
 
+    def ler_caixa(self):
+        """A caixa marcável veio junto da escolha ({"i": 0, "caixa": true}); sem ela, vale como estava."""
+        if not self.caixa:
+            return None
+        return bool((self.extra_resposta or {}).get("caixa", self.caixa["marcada"]))
+
+    def orientacao(self, acao):
+        """A tela pediu para dispensar ou religar as orientações (o quadro, a Ajuda), fora da fila das perguntas."""
+        from .. import abertura
+        if self.jogo and self.jogo.mundo and acao in ("dispensar", "ligar"):
+            abertura.ligar(self.jogo, acao == "ligar")
+            self.enviar_estado()
+
     def escolher(self, pergunta, opcoes):
         pergunta = pergunta or ""
         # Perguntas longas são parte da história e vão para a página. A da confirmação (viagem perigosa, abandonar um
@@ -289,7 +302,7 @@ class WebUI(InterfaceGrafica, UI):
                 item["meta"] = meta
             itens.append(item)
         while True:
-            i = self._perguntar("opcoes", pergunta=pergunta, opcoes=itens)
+            i = self._perguntar("opcoes", pergunta=pergunta, opcoes=itens, **({"caixa": self.caixa} if self.caixa else {}))
             self.extra_resposta = None
             if isinstance(i, dict):  # {"i": 3, "qtd": 5}: a escolha e o que veio junto
                 self.extra_resposta = i

@@ -2,7 +2,7 @@
 
 from .. import texto as tx
 from ..dados import BIOMAS, FAMILIAS, retrato
-from .. import capitulo, missoes
+from .. import abertura, capitulo, missoes
 from .. import sobrevivencia
 from ..mundo import distancias, nivel_regiao
 from .. import balanceamento as bal
@@ -62,6 +62,7 @@ class Contratos:
                 "ouro": ouro, "xp": xp, "desc": f"Eliminar {total} {f['plural']} em {loc['nome']}."}
 
     def mural(self):
+        abertura.visto(self, "V1")  # o Mural aberto: o quadro que apontava para ele (V1) não volta
         vid = str(self.loc["id"])
         oferta = self.ofertas.get(vid)
         if not oferta or self.dia - oferta["dia"] >= 3:

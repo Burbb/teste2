@@ -385,6 +385,10 @@ async function cenarioCampanha(browser) {
     await (await esperar('#prompt .escolha:has-text("Arqueiro")')).click();
     const resgate = await esperar('#prompt .escolha:has-text("Resgate")');
     conferir(!!resgate && !!(await page.$('#prompt .escolha:has-text("Hardcore")')), "a criação pergunta o modo: resgate ou hardcore");
+    const caixa = await page.$("#prompt .caixa-escolha input");
+    conferir(!!caixa && (await caixa.isChecked()) && /Mostrar tutorial/.test(await page.textContent("#prompt .caixa-escolha")),
+      "junto do modo, a caixa \"Mostrar tutorial\", marcada");
+    await caixa.click();  // esta campanha segue sem orientações (a abertura é a mesma)
     await resgate.click();
     conferir(!!(await esperar('#texto :text("Resgate: se você cair")', 8000)), "o prólogo diz o modo escolhido");
     // A abertura da missão pede confirmação: o texto termina num Continuar e a página não vira sozinha.
@@ -393,6 +397,11 @@ async function cenarioCampanha(browser) {
     await page.waitForTimeout(6500);  // mais que a leitura mais longa de uma página que vira sozinha (5,5 s)
     conferir(/A Febre do Turvo/.test(await page.textContent("#cena-cab .cena-titulo")) && !!(await page.$("#prompt .continuar.confirmar")),
       "a abertura fica aberta esperando o Continuar");
+    // Depois, o pedido do taverneiro (a despensa), o mesmo com ou sem tutorial; "Agora não" deixa para depois.
+    const agoraNao = await esperar('#prompt .escolha:has-text("Agora não")', 15000);
+    conferir(!!agoraNao && !!(await page.$('#prompt .escolha:has-text("Descer à despensa")')) && !(await page.evaluate(() => estado.orientacao.ligado)),
+      "a despensa é oferecida (sem tutorial, sem quadros)");
+    await agoraNao.click();
     conferir(!!(await esperar('#cena-cab .cena-titulo:has-text("Vau do Turvo")')) && !!(await esperar('#predios .predio[data-predio="estrada"]')),
       "a campanha começa no Vau do Turvo, com a vila desenhada");
     conferir(await page.evaluate(() => estado.mapa.nos.map((n) => n.nome).sort().join(",")) === "Bosque do Moinho,Charco dos Juncos,Estrada de Varn,Vau do Turvo",
@@ -1134,6 +1143,69 @@ async function cenarioTiroDuplo(browser) {
   }
 }
 
+async function cenarioAbertura(browser) {
+  console.log("cenário: a abertura guiada (a despensa, os quadros da primeira luta, a Ajuda e o Mural)");
+  const { proc, url } = await subir("abertura", { CLASSE: "mago" });
+  const { page, erros, esperar } = await abrir(browser, url);
+  const quadro = () => page.evaluate(() => { const q = document.querySelector(".orientacao:not([hidden])"); return q ? q.querySelector(".orientacao-texto").textContent : ""; });
+  // O quadro nunca cobre uma carta da arena (vida, inimigos) nem as ações da roda.
+  const cobre = () => page.evaluate(() => {
+    const q = document.querySelector(".orientacao:not([hidden])");
+    if (!q) return false;
+    const b = q.getBoundingClientRect();
+    return [...document.querySelectorAll("#arena .carta, #roda .roda-botao")].some((c) => {
+      const r = c.getBoundingClientRect();
+      return r.width && !(b.right <= r.left || b.left >= r.right || b.bottom <= r.top || b.top >= r.bottom);
+    });
+  });
+  const ateQuadro = async (re, ms = 6000) => { for (let t = 0; t < ms; t += 100) { if (re.test(await quadro())) return true; await page.waitForTimeout(100); } return false; };
+  try {
+    await (await esperar('#prompt .escolha:has-text("Descer à despensa")', 30000)).click();
+    conferir(await ateQuadro(/Clique em Habilidades \(tecla 2\)/, 15000) && !(await cobre()), "C1: o quadro aponta Habilidades, sem cobrir carta nem ação");
+    await page.click('#roda .roda-botao[data-slot="habilidades"]');
+    conferir(await ateQuadro(/Clique em Bola de Fogo/), "C2: aberta a janelinha, o quadro aponta a habilidade da classe");
+    await page.keyboard.press("1");  // a mesma coisa pelo teclado
+    conferir(await ateQuadro(/escolher o alvo/) && !(await cobre()), "C3: na mira, o quadro pede o alvo sem cobrir os inimigos");
+    await page.click("#arena .carta.alvejavel");
+    conferir(await ateQuadro(/Bola de Fogo gastou 14 de Mana\. Atacar não gasta Mana/), "C4: depois do golpe, o que ele gastou e o que o Atacar faz");
+    await page.keyboard.press("F1");
+    conferir(!(await page.$("#sobre-ajuda[hidden]")) && /Bola de Fogo gasta 14 de Mana/.test(await page.textContent("#ajuda-corpo")) === false,
+      "F1 abre a Ajuda (antes de a luta acabar, ela ainda não lista a luta)");
+    await page.click("#ajuda-corpo .ajuda-chave");
+    await page.waitForTimeout(300);
+    conferir(!(await quadro()) && /desligado/.test(await page.textContent("#ajuda-corpo .ajuda-chave")), "na Ajuda, desligar tira os quadros na hora");
+    await page.keyboard.press("Escape");
+    conferir(!!(await page.$("#sobre-ajuda[hidden]")), "Esc fecha a Ajuda");
+    for (let k = 0; k < 80 && (await page.evaluate(() => !!(estado && estado.combate))); k++) {
+      const atk = await page.$('#roda .roda-botao[data-slot="atacar"]'); if (atk) { await atk.click().catch(() => {}); await page.waitForTimeout(250); }
+      const alvo = await page.$("#arena .carta.alvejavel"); if (alvo) await alvo.click().catch(() => {});
+      const fe = await page.$(".festa-espolio .continuar"); if (fe) { await page.waitForTimeout(600); await fe.click().catch(() => {}); }
+      await page.waitForTimeout(200);
+    }
+    let mural = null;
+    for (let k = 0; k < 120 && !(mural = await page.$('#predios .predio[data-predio="mural"]:visible')) ; k++) {  // o espólio e o texto até a vila
+      const fe = await page.$("#celebracao:not([hidden]) .continuar"); if (fe) { await page.waitForTimeout(700); await fe.click().catch(() => {}); }
+      const c = await page.$("#prompt .continuar"); if (c) { await page.waitForTimeout(900); await c.click().catch(() => {}); }
+      await page.waitForTimeout(200);
+    }
+    await page.waitForTimeout(500);
+    conferir(!!mural && !(await quadro()), "na vila, desligado: nenhum quadro");
+    await page.keyboard.press("F1");
+    await page.click("#ajuda-corpo .ajuda-chave");
+    await page.keyboard.press("Escape");
+    conferir(await ateQuadro(/Os prédios da vila são clicáveis\. Mural: os contratos\./), "religado na Ajuda: V1 aponta o Mural");
+    const card = await page.$('.predio[data-predio="taverna"]');
+    conferir(!!card, "a taverna está na vila (a despensa feita, Morel à espera nela)");
+    await page.click(".orientacao-dispensar");
+    await page.waitForTimeout(400);
+    conferir(!(await quadro()) && !(await page.evaluate(() => estado.orientacao.ligado)), "Dispensar orientações desliga e o quadro some");
+  } finally {
+    conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
+    await page.close();
+    proc.kill();
+  }
+}
+
 async function cenarioBaus(browser) {
   console.log("cenário: baús abertos juntos");
   const { proc, url } = await subir("baus");
@@ -1214,6 +1286,7 @@ try {
   await cenarioEncruzilhada(browser);
   await cenarioTiroDuplo(browser);
   await cenarioBaus(browser);
+  await cenarioAbertura(browser);
 } catch (e) {
   falhas.push(String(e));
   console.log("ERRO", e);

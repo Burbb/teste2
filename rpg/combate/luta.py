@@ -6,7 +6,7 @@ from .. import texto as tx
 from ..modificadores import disparar, mod, nomes
 from ..estados import ESTADOS, NOMES, NOMES as NOMES_EFEITOS, dano_do_tique
 from ..entidades import Combatente
-from .. import comitiva, telemetria
+from .. import abertura, comitiva, telemetria
 from .. import balanceamento as bal
 from .golpe import Golpes
 from .heroi import AcoesDoHeroi
@@ -35,8 +35,10 @@ _SERIE = [0]
 
 
 class Combate(Golpes, AcoesDoHeroi, TurnosDosOutros):
-    def __init__(self, g, inimigos, emboscada=None, pode_fugir=True, titulo=None, sozinho=False):
+    def __init__(self, g, inimigos, emboscada=None, pode_fugir=True, titulo=None, sozinho=False, saque=True):
         self.g = g
+        self.saque = saque  # False: a vitória não sorteia achados nos corpos (os ratos da despensa, abertura.py)
+        self.habilidades_usadas = 0  # quantas vezes o herói usou uma habilidade nesta luta (abertura.depois_da_luta)
         self.sozinho = sozinho  # duelo: nem comitiva nem animal entram na luta
         self.ui = g.ui
         self.rng = g.rng
@@ -233,6 +235,7 @@ class Combate(Golpes, AcoesDoHeroi, TurnosDosOutros):
             self.j.aplicar("iniciativa", 2, bal.INICIATIVA_BONUS)
             self.lance("surpresa", de="j", alvos=[self.uid(e) for e in self.inimigos_vivos()])
         disparar(self, self.j, "inicio_combate")  # Aura de Proteção, Armadilheiro...
+        abertura.dica_texto(self.g, "combate")  # na interface de texto, a orientação da luta numa linha
 
         while True:
             self.turno += 1
@@ -352,6 +355,7 @@ class Combate(Golpes, AcoesDoHeroi, TurnosDosOutros):
         j = self.j
         g = self.g
         telemetria.fim_combate(self, resultado)
+        abertura.depois_da_luta(g, self.habilidades_usadas > 0)
         self.ui.atualizar()
         self.ui.fim_combate(resultado)  # o último golpe aparece antes da vitória
         g.combate_ativo = None
@@ -392,5 +396,6 @@ class Combate(Golpes, AcoesDoHeroi, TurnosDosOutros):
             g.ganhar_ouro(ouro, fonte="lutas")
             g.registrar_abates(derrotados)
             g.ganhar_xp(xp)
-            g.saque_de_combate(derrotados)
+            if self.saque:
+                g.saque_de_combate(derrotados)
         return resultado

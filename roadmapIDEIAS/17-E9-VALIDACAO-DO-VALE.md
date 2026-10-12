@@ -9,6 +9,8 @@ Avaliação integrada do Vale do Turvo como primeiro capítulo (a E9 antecipada,
   habilidades, preços, recompensas, regeneração e recursos iniciais não mudaram.
 - **Terceira entrega, 1.65.0 (seção 17):** interface, retorno visual e texto, a partir do que Jean encontrou jogando;
   a investigação dos toques que pareciam não responder; os rótulos dos prédios (não reproduzido). Nada de equilíbrio.
+- **Quinta entrega, 1.65.4 e 1.66.0 (seção 20):** a noite e a tocha ditas antes da luta; a primeira implementação
+  da abertura guiada ([18](18-E9-ABERTURA-GUIADA.md), seção 12).
 - **Quarta entrega, 1.65.2 e 1.65.3 (seção 19):** a partida da Quibia lida; os contratos pagos depois do resgate; o
   ×N dos baús em destaque. A especificação da abertura guiada fica em [18](18-E9-ABERTURA-GUIADA.md).
 - **Correção 1.65.1 (seção 18):** os três pontos que faltaram na mensagem cortada: a percepção do Mago na água, o nome
@@ -816,4 +818,22 @@ e 3 baús.
    cena de Caspar, o quadro dos contratos no Vau). `CAUSA=infeccao` para a infecção.
 2. Os baús: `python -m tests.navegador.cenarios baus` (três) e `BAUS=2` ou `BAUS=1`.
 3. A proposta da abertura guiada: [18](18-E9-ABERTURA-GUIADA.md).
+
+
+## 20. Riscos da noite e abertura guiada (1.65.4 e 1.66.0)
+
+**1.65.4, a noite e a tocha ditas antes da luta** (com o tutorial ligado ou não; encontros, atributos, horários,
+consumo e dificuldade iguais): a nota das salas da capela e das escolhas que levam à luta (tocha, ou o inimigo que
+ataca primeiro sem ela; à noite, +1 nível e +10% de dano, e na guardiã só o dano); o nível-base do lugar com o que a
+noite soma ao lado; o consumo real de tocha no painel; a dica da noite sem prometer bando maior onde o tamanho é fixo;
+o texto de quem entra sem luz numa sala (certo) separado do de fora (provável). O detalhe está na seção 8 do 18.
+Gabarito: as 24 partidas mudam só no texto; escolhas, lances e herói conferidos idênticos.
+
+**1.66.0, a abertura guiada (escopo mínimo):** a caixa "Mostrar tutorial", a despensa da taverna, a caneca por conta
+da casa, a oportunidade de sentar com Morel, os quadros da primeira luta (C1–C4) e do Mural (V1), "Dispensar
+orientações" e a Ajuda (F1). Medida, caminhos e limitações na seção 12 do 18. Gabarito: só uma linha de estado nova
+nas transcrições da tela; escolhas, lances e herói idênticos.
+
+**Para Jean conferir:** o roteiro está na resposta da entrega e na seção 12 do 18 (as três classes, com e sem tutorial,
+e os caminhos de Morel).
 
