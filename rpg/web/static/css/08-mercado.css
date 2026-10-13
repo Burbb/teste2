@@ -288,6 +288,11 @@
 .ci-ponto { position: absolute; padding: 0; background: none; border: 0; cursor: pointer; }
 .ci-ponto.parado { cursor: default; }
 .ci-ponto:focus-visible { outline: 2px dashed var(--ouro); outline-offset: 2px; }
+/* Afastar: a volta de um ponto de olhar (os sapos), no canto da arte. */
+.ci-afastar { position: absolute; right: 6px; top: 6px; padding: 2px 10px 3px; font-family: var(--texto); font-size: 14px; color: var(--tinta);
+  background: rgba(10, 8, 6, 0.85); border: 2px solid #6a5a40; cursor: pointer; }
+.ci-afastar:hover, .ci-afastar:focus-visible { color: var(--ouro); border-color: var(--ouro); outline: none; }
+.ci-afastar[hidden] { display: none; }
 .ci-balao { position: absolute; transform: translate(-50%, -100%); white-space: nowrap; padding: 1px 8px 2px; font-family: var(--texto); font-size: 14px;
   color: var(--tinta); background: rgba(10, 8, 6, 0.82); border: 2px solid #4a3c2c; pointer-events: none; }
 .ci-ponto:hover .ci-balao, .ci-ponto:focus-visible .ci-balao, .ci-ponto.aceso .ci-balao { color: var(--ouro); border-color: var(--ouro); }

@@ -665,6 +665,51 @@ async function cenarioSarilho(browser) {
   }
 }
 
+async function cenarioCapelaFora(browser) {
+  console.log("cenário: a capela por fora e o salão alagado (pontos, olhar de perto, a cena de cada momento)");
+  const { proc, url } = await subir("capela", { ETAPA: "capela" });
+  const { page, erros } = await abrir(browser, url);
+  const MENU = "#prompt .escolhas:not(.escolhido) .escolha";
+  const foto = () => page.evaluate(() => JSON.stringify([estado.heroi.bolsa, estado.heroi.hp, estado.mundo.dia, estado.mundo.periodo_n, estado.missoes]));
+  const cenas = () => page.evaluate(() => [...document.querySelectorAll("#texto .cena-interativa")].map((e) => e.dataset.cena + (e.dataset.agua ? ":" + e.dataset.agua : "")).join());
+  try {
+    await page.waitForSelector(`${MENU}:has-text("Entrar na capela")`, { timeout: 20000 });
+    conferir((await cenas()) === "exterior" && !!(await page.$('.ci-ponto[data-ponto="buraco"]:not(.parado) .ci-balao'))
+      && !!(await page.$('.ci-ponto[data-ponto="sapos"]:not(.parado)')), "antes de entrar, a página mostra a capela por fora, com o buraco e os sapos à vista");
+    const antes = await foto();
+    // Os sapos: só olhar. Aproxima, Afastar volta, e nada muda.
+    await page.focus('.ci-ponto[data-ponto="sapos"]'); await page.keyboard.press("Enter");
+    await page.waitForSelector(".ci-afastar:not([hidden])", { timeout: 5000 });
+    conferir(await page.evaluate(() => document.querySelector(".ci-pontos").hidden && document.activeElement.classList.contains("ci-afastar")),
+      "Enter nos sapos aproxima a vista e leva o foco ao Afastar");
+    await page.keyboard.press("Enter");
+    await page.waitForFunction(() => !document.querySelector(".ci-pontos").hidden, null, { timeout: 5000 });
+    conferir((await foto()) === antes && !!(await page.$(`${MENU}:has-text("Entrar na capela")`)), "afastar volta à vista inteira sem gastar nada nem mudar a missão");
+    // O buraco faz a ação do menu: a cena do salão, com a água inquieta.
+    await page.hover('.ci-ponto[data-ponto="buraco"]');
+    conferir(await page.$eval('.ci-ponto[data-ponto="buraco"]', (b) => b.classList.contains("aceso")), "o mouse acende o buraco");
+    await page.click('.ci-ponto[data-ponto="buraco"]');
+    await page.waitForFunction(() => /Salão Alagado/.test(document.querySelector("#cena-cab .cena-titulo")?.textContent || ""), null, { timeout: 10000 });
+    await page.waitForTimeout(300);
+    conferir((await cenas()) === "salao:inquieta", "entrar pelo buraco abre o salão alagado, com a água inquieta (o ambiente que o texto descreve)");
+  } finally {
+    conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
+    await page.close();
+    proc.kill();
+  }
+  // Vencido o salão: a página mostra o salão quieto, com a porta da sacristia fazendo a ação do menu.
+  const s2 = await subir("capela", { ETAPA: "sacristia" });
+  const p2 = await abrir(browser, s2.url);
+  try {
+    await p2.page.waitForSelector(`${MENU}:has-text("Atravessar o salão")`, { timeout: 20000 });
+    conferir(await p2.page.evaluate(() => [...document.querySelectorAll("#texto .cena-interativa")].map((e) => e.dataset.cena + ":" + e.dataset.agua).join()) === "salao:quieta"
+      && !!(await p2.page.$('.ci-ponto[data-ponto="porta"]:not(.parado)')), "vencido o salão, a página mostra o salão quieto com a porta da sacristia");
+  } finally {
+    conferir(p2.erros.length === 0, "sem erros no console" + (p2.erros.length ? ": " + p2.erros.slice(0, 3).join(" | ") : ""));
+    await p2.page.close();
+    s2.proc.kill();
+  }
+}
 async function cenarioCustosEExausto(browser) {
   console.log("cenário: custo da bandagem, a proteção que levanta e a exaustão no mato");
   const MENU = "#prompt .escolhas:not(.escolhido) .escolha";
@@ -1718,6 +1763,7 @@ try {
   await cenarioRecarga(browser);
   await cenarioCapela(browser);
   await cenarioSarilho(browser);
+  await cenarioCapelaFora(browser);
   await cenarioCustosEExausto(browser);
   await cenarioGuardia(browser);
   await cenarioRetorno(browser);

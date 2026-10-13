@@ -1645,3 +1645,19 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
 - **Verificado:** testes, gabarito idêntico, pyflakes, fumaça completa, telas a 1500 e 1280 px com altura reduzida,
   os quatro períodos, o gesto quadro a quadro, mochila vazia/1/8/12, venda, recompra, mouse, teclado e dicas.
 - **Falta:** Jean conferir.
+
+### 13/10/2026 — A capela por partes: exterior, salão e escada (1.76.0)
+
+- **Pedido de Jean:** corrigir a escada do ossuário, representar o exterior e o salão alagado, e mostrar o ambiente
+  certo em cada momento da narrativa, sem mexer em regra nem antecipar a sacristia e o fundo.
+- **Feito:**
+  - a escada do ossuário em degraus de pedra, com a boca da descida separada do buraco das correntes;
+  - o exterior e o salão (a partir do protótipo, sem o sarilho na nave);
+  - os pontos "Buraco no muro" e "Sacristia" fazendo as ações do menu, e os sapos só de olhar;
+  - a cena de cada momento: chegada e recuo por fora, entrada e vitória no salão (inquieto e quieto), a página do
+    lugar pelo passo da missão.
+  - Mapa dos cinco ambientes, gatilhos e planejamento em [20](20-CENA-INTERATIVA-OSSUARIO.md).
+- **Verificado:** testes (`test_cenas_capela.py` novo), gabarito idêntico, pyflakes, fumaça completa
+  (`cenarioCapelaFora` novo), telas a 1500 e 1280 px com altura reduzida, quatro períodos, três classes, fuga, salvar e
+  carregar, movimento reduzido.
+- **Falta:** Jean conferir; a sacristia e o fundo.

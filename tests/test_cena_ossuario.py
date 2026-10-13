@@ -36,7 +36,7 @@ def cenas(g):
 class TestCenaOssuario(unittest.TestCase):
     def test_presas_com_o_ponto_que_faz_a_acao_do_menu(self):
         g = no_ossuario()
-        d = missoes.cena_ossuario(g)
+        d = missoes.cena_ossuario(g, pagina=True)
         self.assertEqual((d["cena"], d["correntes"], d["foco"]), ("ossuario", "presas", None))
         ponto = d["pontos"][0]
         self.assertEqual(ponto["acao"], {"missao": MID, "acao_missao": "correntes"})
@@ -56,10 +56,10 @@ class TestCenaOssuario(unittest.TestCase):
     def test_so_na_capela_e_depois_do_ossuario(self):
         g = no_ossuario()
         missoes.mostrar_cena(g)
-        self.assertEqual(len(cenas(g)), 1)
+        self.assertEqual([d["cena"] for d in cenas(g)], ["ossuario"])
         missoes.registro(g, MID)["pistas"].remove("correntes")
         missoes.mostrar_cena(g)
-        self.assertEqual(len(cenas(g)), 1)  # sem ter visto o ossuário, a página é a de sempre
+        self.assertEqual(cenas(g)[-1]["cena"], "salao")  # sem ter visto o ossuário, o caminho até ele (1.76.0)
 
     def test_clicar_e_voltar_nao_gasta_nem_celebra(self):
         g = no_ossuario()

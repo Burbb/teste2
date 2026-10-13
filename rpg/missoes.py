@@ -354,6 +354,7 @@ def _seguir_canal(g, mid):
 
 def _capela_exterior(g, mid):
     g.ui.cena("A Capela Afogada", g.contexto_cena(), "evento")
+    g.ui.painel("cena", cena_exterior(g, mid))
     g.narrar("A capela está afundada até a metade das janelas. Juncos crescem no que foi o pátio da frente, e a porta "
              "sumiu sob a lama. O sino não está mais na torre.")
     g.narrar("O canal que você seguiu desde o moinho termina aqui: a água entra por um buraco no muro e desaparece "
@@ -412,8 +413,12 @@ def grupo_sarilho(g):
     return grupo
 
 
-def _recuo(g, titulo, texto):
+def _recuo(g, titulo, texto, fora=False):
+    """Fuga da sala: a sala continua por vencer. `fora`: o texto termina do lado de fora, pela brecha (a tela mostra o
+    exterior)."""
     g.ui.cena(titulo, g.contexto_cena(), "evento")
+    if fora:
+        g.ui.painel("cena", cena_exterior(g))
     g.narrar(texto)
     g.dizer("A sala continua por vencer. Dá para voltar quando quiser.", "cinza")
 
@@ -421,14 +426,17 @@ def _recuo(g, titulo, texto):
 def _nave(g, mid):
     m = registro(g, mid)
     g.ui.cena("O Salão Alagado", g.contexto_cena(), "evento")
+    g.ui.painel("cena", cena_salao(g, mid, agua="inquieta"))
     g.narrar("Você entra pelo buraco no muro, com a água do canal pelos joelhos. Lá dentro, o salão principal da capela "
              "é um lago escuro entre colunas. A água corre devagar entre os bancos podres e some numa fenda do piso, perto do altar.")
     g.narrar("Alguma coisa se mexe entre os bancos. Corpos inchados se levantam da água, e o fundo se enche de "
              "sanguessugas.")
     if not _lutar(g, g.grupo("afogado", n=1) + g.grupo("sanguessuga", n=2), "O Salão Alagado"):
-        _recuo(g, "O Salão Alagado", "Você recua pela brecha, de volta ao pântano. Lá dentro, a água se fecha de novo.")
+        _recuo(g, "O Salão Alagado", "Você recua pela brecha, de volta ao pântano. Lá dentro, a água se fecha de novo.",
+               fora=True)
         return
     g.ui.cena("O Salão Alagado", g.contexto_cena(), "evento")
+    g.ui.painel("cena", cena_salao(g, mid, agua="quieta"))
     g.narrar("Com a água quieta, dá para ver o caminho dela. Entra pelo muro rompido, atravessa o salão, desce pela "
              "fenda do piso e, mais adiante, sai por baixo do muro dos fundos, rumo à vila.")
     g.narrar("Na entrada, ela é clara. Na saída, deixa nas pedras o mesmo lodo escuro da fonte nova. A vila bebe "
@@ -446,7 +454,8 @@ def _sacristia(g, mid):
              "escura reviram as prateleiras à luz de uma lanterna. Os dois têm a mesma marca queimada no pulso.")
     g.narrar("Um deles ergue a lanterna para o seu rosto. \"Não é ela\", diz. O outro já está com a faca na mão.")
     if not _lutar(g, g.grupo("cultista", n=2), "A Sacristia"):
-        _recuo(g, "A Sacristia", "Você volta pelo salão alagado até a brecha. Atrás de você, a lanterna se apaga.")
+        _recuo(g, "A Sacristia", "Você volta pelo salão alagado até a brecha. Atrás de você, a lanterna se apaga.",
+               fora=True)
         return
     g.ui.cena("A Sacristia", g.contexto_cena(), "evento")
     g.narrar({
@@ -481,6 +490,7 @@ def _ossuario(g, mid):
         _recuo(g, "O Ossuário", "Você sobe a escada de costas e fecha o alçapão. Embaixo, os ossos voltam a se arrumar.")
         return
     g.ui.cena("O Ossuário", g.contexto_cena(), "evento")
+    g.ui.painel("cena", cena_ossuario(g, mid))  # vencida a sala: o sarilho que o texto vai descrever
     g.narrar("No fundo da sala há um sarilho: um eixo de madeira preta, grosso como um tronco, com correntes "
              "enroladas nele, como num poço. "
              "Elas descem por um buraco no chão até a água parada lá embaixo, e estão esticadas: alguma coisa pesada "
@@ -539,26 +549,69 @@ ATALHOS_CORRENTES = {
 CD_CORRENTES = 13
 
 
-# A cena interativa do ossuário (roadmapIDEIAS/20): a tela gráfica desenha a sala com o sarilho, e o sarilho é um ponto
-# clicável que faz a mesma ação do menu ("Soltar as correntes"). O motor diz o estado (as correntes presas ou soltas,
-# pelo preparo gravado) e o que o ponto faz agora; a tela só desenha. A animação da corrente descendo vem depois de o
-# preparo ser gravado (celebrar "correntes"): ela mostra o resultado, não o decide.
-def cena_ossuario(g, mid="febre_do_turvo", foco=None):
+# As cenas interativas da capela (roadmapIDEIAS/20): a tela gráfica desenha o ambiente onde a coisa acontece (o
+# exterior, o salão alagado, o ossuário), com pontos clicáveis que fazem as mesmas ações do menu. O motor diz o estado
+# (a água do salão inquieta ou quieta, as correntes presas ou soltas) e o que cada ponto faz agora; a tela só desenha.
+# Painel da página do lugar (`pagina`): o ambiente do passo da missão, com os pontos ativos quando a ação está no
+# menu. Painel dentro de uma cena: o ambiente que o texto descreve, sem ação (a escolha da cena vem pelo menu dela).
+# A animação da corrente descendo vem depois de o preparo ser gravado (celebrar "correntes"): mostra, não decide.
+ETAPAS_FEBRE = list(MISSOES["febre_do_turvo"]["etapas"])
+
+
+def _ponto(g, mid, pid, nome, acao_id, estado, pagina):
+    """Um ponto da cena: faz a ação `acao_id` do menu (o mesmo rótulo e o mesmo endereço da opção) se ela vale agora e
+    o painel é o da página do lugar; senão, só diz o `estado` a quem clica."""
+    d = next((d for d in ACOES if d["id"] == acao_id and d["missao"] == mid), None) if acao_id else None
+    vale = bool(pagina and d and _vale(g, d))
+    return {"id": pid, "nome": nome, "estado": estado,
+            "acao": {"missao": mid, "acao_missao": acao_id} if vale else None, "faz": d["rotulo"] if vale else None}
+
+
+def cena_exterior(g, mid="febre_do_turvo", pagina=False):
+    """A capela vista de fora: afundada, a porta sob a lama, a torre sem sino, o canal entrando pelo buraco do muro e
+    os sapos na beira (um ponto só de olhar: aproxima e afasta, sem mexer em nada)."""
+    buraco = _ponto(g, mid, "buraco", "Buraco no muro", "nave", "O buraco no muro, rente à água, por onde o canal entra.",
+                    pagina)
+    sapos = {"id": "sapos", "nome": "Sapos", "estado": "Sapos quietos na beira da água.", "acao": None, "olhar": True}
+    return {"cena": "exterior", "pontos": [buraco, sapos], "titulo": "A Capela Afogada", "pagina": pagina}
+
+
+def cena_salao(g, mid="febre_do_turvo", agua="quieta", pagina=False):
+    """O salão alagado: `agua` "inquieta" (os afogados e as sanguessugas ainda na água, antes da luta) ou "quieta"
+    (vencido: dá para ver o caminho da água, do muro rompido até a fenda do piso). Sem o mecanismo das correntes nem
+    os ossos: são do ossuário."""
+    m = registro(g, mid)
+    vencida = m and ETAPAS_FEBRE.index(m["etapa"]) > ETAPAS_FEBRE.index("capela")
+    porta = _ponto(g, mid, "porta", "Sacristia", "sacristia",
+                   "A porta baixa atrás do altar, que leva à sacristia." if vencida else "Uma porta baixa, atrás do altar.",
+                   pagina)
+    return {"cena": "salao", "agua": agua, "pontos": [porta] if agua == "quieta" else [], "titulo": "O Salão Alagado",
+            "pagina": pagina}
+
+
+def cena_ossuario(g, mid="febre_do_turvo", foco=None, pagina=False):
     m = registro(g, mid)
     soltas = "corpo_solto" in m["preparos"]
-    pode = any(d["id"] == "correntes" and d["missao"] == mid and _vale(g, d) for d in ACOES)
-    ponto = {"id": "sarilho", "nome": "Sarilho",
-             "acao": {"missao": mid, "acao_missao": "correntes"} if pode and not foco else None,
-             "estado": "As correntes estão soltas." if soltas else "As correntes estão presas pela trava."}
+    ponto = _ponto(g, mid, "sarilho", "Sarilho", "correntes",
+                   "As correntes estão soltas." if soltas else "As correntes estão presas pela trava.",
+                   pagina and not foco)
     return {"cena": "ossuario", "correntes": "soltas" if soltas else "presas", "foco": foco, "pontos": [ponto],
-            "titulo": "O Ossuário"}
+            "titulo": "O Ossuário", "pagina": pagina and not foco}
 
 
 def mostrar_cena(g):
-    """Na página da capela, depois de chegar ao ossuário: a sala desenhada, com o sarilho (só na tela gráfica)."""
-    m = g.campanha and registro(g, "febre_do_turvo")
-    if m and g.loc.get("chave") == "capela_afogada" and "correntes" in m["pistas"]:
-        g.ui.painel("cena", cena_ossuario(g))
+    """Na página da Capela Afogada (só na tela gráfica): o ambiente do passo da missão. Até entrar, o exterior (também
+    numa visita antes da hora, sem ação); vencido o salão, o salão quieto, com a porta da sacristia; depois do
+    ossuário, o ossuário com o sarilho. A sacristia e o fundo ainda não têm arte: até lá, o salão vale de caminho."""
+    if not g.campanha or g.loc.get("chave") != "capela_afogada":
+        return
+    m = registro(g, "febre_do_turvo")
+    if m and "correntes" in m["pistas"]:
+        g.ui.painel("cena", cena_ossuario(g, pagina=True))
+    elif m and ETAPAS_FEBRE.index(m["etapa"]) > ETAPAS_FEBRE.index("capela"):
+        g.ui.painel("cena", cena_salao(g, pagina=True))
+    else:
+        g.ui.painel("cena", cena_exterior(g, pagina=True))
 
 
 def _soltar(g, mid):

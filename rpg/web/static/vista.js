@@ -31,15 +31,22 @@ const Vista = (() => {
   }
   function px(c, x, y, w = 1, h = 1, cor) { c.fillStyle = cor; c.fillRect(x | 0, y | 0, w, h); }
 
-  /** O céu em faixas; a passagem de uma para a outra é pontilhada pelo Bayer, sem degrau duro. */
-  function ceu(c, e) {
-    const p = e.mundo.periodo_n;
+  /** As faixas do céu do período, com o clima por cima, e o astro (o sol só com o céu limpo; a lua sempre à noite).
+   *  As cenas interativas (telas/cenas.js) usam o mesmo céu. */
+  function ceuDo(e) {
+    const p = e.mundo.periodo_n, clima = e.mundo.clima_id;
     let bandas = CEUS[p].slice();
-    const clima = e.mundo.clima_id;
     if (["chuva", "tempestade", "nublado"].includes(clima)) bandas = bandas.map((b) => misturar(b, "#3a3f48", clima === "tempestade" ? 0.75 : 0.55));
     if (clima === "nevoa") bandas = bandas.map((b) => misturar(b, "#8a9098", 0.5));
     if (clima === "neve") bandas = bandas.map((b) => misturar(b, "#a8b0bc", 0.45));
-    if (e.local.bioma === "cidadela") bandas = bandas.map((b, i) => misturar(b, i > 2 ? "#a01818" : "#2a0508", 0.7));
+    if (e.local && e.local.bioma === "cidadela") bandas = bandas.map((b, i) => misturar(b, i > 2 ? "#a01818" : "#2a0508", 0.7));
+    return { bandas, astro: ["limpo", "neve"].includes(clima) || p === 3 ? ASTROS[p] : null, periodo: p };
+  }
+  /** O céu em faixas; a passagem de uma para a outra é pontilhada pelo Bayer, sem degrau duro. */
+  function ceu(c, e) {
+    const p = e.mundo.periodo_n;
+    const bandas = ceuDo(e).bandas;
+    const clima = e.mundo.clima_id;
     const altura = 50;
     for (let y = 0; y < H; y++) {
       const f = (Math.min(y, altura) / altura) * (bandas.length - 1), i = Math.floor(f), resto = Math.floor((f - i) * 16);
@@ -549,6 +556,6 @@ const Vista = (() => {
   /** Os prédios clicáveis da paisagem atual (só na vila), em pixels da arte (320x72). */
   function listaPredios() { return predios.map(({ id, nome, x, y, w, h, balao }) => ({ id, nome, x, y, w, h, balao })); }
 
-  return { atualizar, titulo, corDoCeu, amanhecer, predios: listaPredios, destacar, focar, LARGURA: W, ALTURA: H,
+  return { atualizar, titulo, corDoCeu, ceuDo, amanhecer, predios: listaPredios, destacar, focar, LARGURA: W, ALTURA: H,
     arte: () => arte };  // o quadro em 320x72 (as páginas de teste da paisagem leem daqui)
 })();

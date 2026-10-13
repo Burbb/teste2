@@ -241,7 +241,7 @@ def capela(ui):
     """Herói de nível NIVEL (padrão 5; CLASSE, padrão guerreiro; SEMENTE, padrão 11) na Capela Afogada (ou na chave LUGAR), de manhã, com a
     missão na ETAPA (padrão "sacristia": a nave já vencida) e o que se sabe até ali. PREPARO: "correntes" (soltas),
     "berta" (Berta ouvida e a fita, as correntes ainda presas) ou "pronto" (Berta ouvida, a fita e as correntes: o rito
-    disponível). PRISAO (mago, nível 4 ou mais): o talento Prisão de Gelo já comprado, levando a "prisao" ou a "lanca";
+    disponível). CHEGADA=1: a cena de chegada ainda por ver (com ETAPA=capela, ela abre ao carregar). PRISAO (mago, nível 4 ou mais): o talento Prisão de Gelo já comprado, levando a "prisao" ou a "lanca";
     o resto dos talentos sai igual nas duas, para comparar o mesmo herói. PONTOS: pontos de talento sobrando. PERIODO
     (padrão 0, manhã; 3 é noite) e TOCHAS (padrão: as do começo). Sair do jogo leva ao título, com o save."""
     from rpg import dev, missoes, talentos
@@ -275,7 +275,8 @@ def capela(ui):
     if preparo in ("berta", "pronto"):
         pistas += ["verdade_de_ilse", "nome_e_fita"]
         preparos.append("fita")
-    missoes.registro(g, "febre_do_turvo").update(etapa=etapa, cenas=["abertura", "capela_exterior"], pistas=pistas,
+    cenas = ["abertura"] if os.environ.get("CHEGADA") else ["abertura", "capela_exterior"]  # CHEGADA=1: a cena de fora
+    missoes.registro(g, "febre_do_turvo").update(etapa=etapa, cenas=cenas, pistas=pistas,
                                                   preparos=preparos)
     for chave in ("bosque_do_moinho", "capela_afogada"):
         next(l for l in g.mundo["locais"] if l["chave"] == chave)["visitado"] = True

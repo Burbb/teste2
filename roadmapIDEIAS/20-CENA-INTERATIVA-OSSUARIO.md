@@ -103,3 +103,121 @@ não como regra nem como código.
 5. Com as correntes soltas, recarregue a página (F5) e depois salve, saia e carregue: as correntes aparecem soltas,
    sem som e sem a descida de novo.
 6. Para ver direto a sala com as correntes soltas: `$env:PREPARO="correntes"` antes do mesmo comando.
+
+---
+
+# A capela por partes: o exterior, o salão alagado e a escada (1.76.0)
+
+Pedido de Jean (13/10/2026): continuar a representação da Capela Afogada por partes. Nesta entrega: a escada do
+ossuário, o exterior, o salão alagado e a cena certa em cada momento da narrativa. Regras, custos, encontros,
+recompensas, sorteios e progressão não mudaram; a sacristia e o fundo (com Ilse) ficam para a entrega deles.
+
+## O mapa dos cinco ambientes
+
+A sequência é a do jogo: **Exterior → Salão alagado → Sacristia → Ossuário → Fundo alagado**. Nenhuma sala nova, nenhum
+mapa interno, nenhum sistema de navegação: cada ambiente é desenhado quando o motor manda (`g.ui.painel("cena", ...)`).
+
+| Ambiente | O que tem | Arte | Ponto (a mesma ação do menu) | Onde aparece |
+|---|---|---|---|---|
+| Exterior | a capela afundada até a metade das janelas, juncos no antigo pátio, a porta da frente sob a lama, a torre sem sino, o canal entrando pelo buraco do muro, sapos na margem (alguns com patas a mais) | 1.76.0 | **Buraco no muro**: "Entrar na capela pelo buraco do canal" (etapa `capela`). **Sapos**: só olhar (aproxima e afasta) | a cena de chegada; a página do lugar até vencer o salão (também numa visita antes da hora, sem ação); o recuo pela brecha (fuga do salão ou da sacristia) |
+| Salão alagado | a entrada pelo buraco do canal, água pelos joelhos, colunas, bancos podres, o altar, a fenda do piso perto do altar (por onde a água desce), a porta baixa da sacristia atrás do altar, um degrau acima | 1.76.0 | **Sacristia** (a porta): "Atravessar o salão alagado" (etapa `sacristia`) | a cena de entrada, com a água **inquieta** (o afogado subindo entre os bancos, as sanguessugas no raso); a cena da vitória, com a água **quieta** e o caminho dela à vista; a página do lugar depois de vencer o salão (e, até a sacristia ter arte, também na etapa `ossuario`, sem ação na porta) |
+| Sacristia | acima da água, os cultistas, o livro, o baú, o alçapão para o ossuário; a escada de mão na janela alta | **planejada** | — | sem arte (como antes): a paisagem do lugar |
+| Ossuário | a escada de pedra do alçapão, os nichos com ossos, a boca da escada que segue descendo ao fundo, o sarilho e o buraco redondo das correntes | 1.72.0 (escada refeita na 1.76.0) | **Sarilho**: "Soltar as correntes" (etapa `fundo`) | a cena da vitória na sala dos ossos (sem ação); a página do lugar depois de achar as correntes; "O Sarilho" de perto |
+| Fundo alagado | a água pela cintura, as duas pedras de moinho, Ilse | **planejado** | — | sem arte (como antes) |
+
+**Gatilhos** (`rpg/missoes.py`):
+
+- `mostrar_cena(g)` (a página do lugar, só na tela gráfica): achadas as correntes, o ossuário; vencido o salão (etapa
+  depois de `capela`), o salão quieto; senão, o exterior. O painel leva `pagina: true` e os pontos ativos só quando a
+  ação vale agora (`_vale`, o mesmo teste do menu).
+- `_capela_exterior` (chegada): o exterior, sem ação.
+- `_nave`: na entrada, o salão inquieto; na vitória, o salão quieto (o texto da água e da vila logo embaixo).
+- `_recuo(..., fora=True)`: a fuga do salão e a da sacristia terminam do lado de fora ("pela brecha"): o exterior. As
+  outras fugas (ossuário, sarilho) seguem como eram.
+- `_ossuario` (vitória): o ossuário com o sarilho, sem ação.
+- Derrota: o resgate de sempre, fora da capela; a sala continua por vencer e a página volta ao ambiente da etapa.
+- Nada disso grava estado: a arte lê a etapa, as pistas e os preparos que o motor já tem. Recarregar ou carregar
+  redesenha o mesmo ambiente, sem som nem animação de conclusão.
+
+## O que entrou nesta entrega
+
+- **A escada do ossuário:** a boca do alçapão na abóbada, com a luz de cima; dez degraus de pedra, cada um com o piso
+  claro, o espelho de frente e a quina, um abaixo e à direita do outro, apoiados num maciço de pedra em blocos até o
+  chão. Logo depois do último degrau, a boca retangular no chão por onde a escada continua descendo até a água (o
+  caminho de quem desce), separada do buraco redondo por onde passam as correntes. A tocha mudou para o lado da
+  escada. O resto do ossuário e a animação das correntes ficaram como estavam.
+- **O exterior** (`baseExterior`, `desenharExterior` em `telas/cenas.js`): o céu e o astro das paisagens
+  (`Vista.ceuDo`: o período e o clima), a outra margem com árvores mortas, a névoa rasteira, a capela com o reflexo,
+  o canal reto até o buraco, a beira de cá. Animação: nuvens, a água do brejo, a correnteza do canal entrando no
+  buraco, estrelas à noite, os sapos piscando. À noite, o luar clareia as formas o bastante para a capela não sumir.
+- **O salão** (`baseSalao`, `desenharSalao`): os vãos com as janelas altas e os fachos de luz do período, o buraco do
+  muro da esquerda com o pântano lá fora, as colunas, os bancos, o presbitério com o altar e a porta baixa da
+  sacristia, a água com os reflexos e a fenda do piso girando. Inquieta: rodas na água, o afogado que sobe devagar
+  entre os bancos (uns três segundos, o tempo do texto chegar nele) e as duas sanguessugas — só o grupo da sala, sem
+  inimigo a mais. Quieta: o caminho da água à vista, claro na entrada e escurecendo de lodo até a fenda.
+- **Os pontos:** o mesmo componente do sarilho. O nome fica sempre à vista; o ponto acende no mouse e no foco do
+  teclado; Enter e espaço funcionam. Com ação: aproxima e manda a mesma ação do menu (o motor diz se vale; a tela não
+  repete regra). Sem ação: diz o estado. **De olhar** (os sapos): aproxima a vista e mostra "Afastar" (que recebe o
+  foco); afastar, ou clicar na arte, volta. Olhar não dá pista, não gasta tempo e não muda nada.
+- **A rolagem:** o painel da página do lugar (`pagina`) não puxa a página; o painel dentro de um texto segue o texto
+  até as escolhas, como antes fazia só a cena de perto do sarilho. Na tela baixa, a página do lugar começa na cena.
+- `tests/navegador/cenarios.py`: `CHEGADA=1` deixa a cena de chegada por ver (com `ETAPA=capela`, ela abre ao
+  carregar).
+
+## O protótipo consultado
+
+Do artifact da capela (13/10), lido como referência de linguagem, não como regra:
+
+- **Reaproveitado:**
+  - a vista de fora (`fora`): a composição, a torre com o campanário vazado, a nave com o rombo do telhado, as
+    janelas cortadas pela água, o buraco no muro rente à água, a fachada com o alto da porta sob a lama, o reflexo,
+    o canal com as estacas, os juncos, as árvores mortas, os sapos e o desenho das nuvens, da água e da correnteza;
+  - a nave por dentro (`dentro`): os vãos, as janelas com o céu da hora, os fachos de luz, o buraco do muro, as
+    colunas, o presbitério, o altar, a água com os reflexos, os bancos e o redemoinho (aqui, a fenda do piso);
+  - a câmera em dobro com o pontilhado que se fecha, e o destaque no mouse.
+- **Deixado de fora ou mudado:**
+  - o sarilho na nave (ele é do ossuário);
+  - o azul que pulsa na fenda depois de soltar as correntes (a fenda é um rasgo no piso, não um portal);
+  - o "bafo frio" azulado saindo do buraco (seria um sinal sobrenatural antes de o texto falar dele);
+  - os textos e as ações de teste do protótipo;
+  - os pontos de torre, porta e canal (não são ações da campanha);
+  - os sapos foram redesenhados maiores, para as patas a mais aparecerem na aproximação;
+  - a porta baixa da sacristia foi acrescentada atrás do altar, um degrau acima.
+
+## Conferido na tela
+
+- 1500×950 e 1280×700 (e 1280×800 com movimento reduzido).
+- O exterior e o salão nos quatro períodos (manhã, tarde, anoitecer, noite).
+- A visita antes da hora (etapa `canal`): o exterior sem ação; clicar no buraco só diz o que é, sem cena nem avanço.
+- A chegada, com o exterior.
+- O buraco pelo mouse; o salão inquieto, a luta, a vitória com o salão quieto e a página depois dele.
+- A fuga, com o recuo mostrando o exterior e a página de fora, e a nova tentativa.
+- A porta da sacristia levando à cena da sacristia, que segue sem arte.
+- Os sapos pelo teclado: aproximar, afastar e o foco de volta.
+- A escada e a aproximação do sarilho.
+- Guerreiro (paladino), mago e arqueiro do buraco à vitória.
+- Salvar, sair e carregar no salão: o salão quieto, sem som.
+- O movimento reduzido: o afogado já de pé, nada se mexe.
+- Nenhum erro no console.
+
+## Limitações
+
+- A sacristia e o fundo ainda não têm arte; até lá, a página do lugar na etapa `ossuario` mostra o salão (o caminho),
+  sem ação na porta, e a cena da sacristia, a do fundo e a coleta do lodo usam a paisagem de sempre.
+- A luta usa a arena de sempre, não o salão desenhado.
+- A derrota leva ao resgate como antes; não há uma cena da capela para ela.
+- Clima de chuva ou neblina só escurece o céu do exterior (sem gotas).
+- Os sapos de perto ficam pequenos: as patas a mais são um par de pixels claros de cada lado.
+- Jean ainda não viu: teste humano pendente.
+
+## Como Jean testa (1.76.0)
+
+1. `$env:ETAPA="capela"; $env:CHEGADA="1"; python -m tests.navegador.cenarios capela`:
+   - a chegada com a capela por fora; depois do Continuar, a página com o buraco e os sapos;
+   - aproxime os sapos (clique ou Tab e Enter) e afaste.
+2. Clique no buraco (ou use o menu): o salão com a água inquieta e o afogado subindo. Vença a luta: a água fica
+   quieta e o caminho dela aparece. Numa outra rodada, fuja: o recuo mostra a capela por fora.
+3. `$env:ETAPA="sacristia"` (janela nova): a página mostra o salão quieto com a porta da sacristia.
+4. `$env:ETAPA="fundo"`: o ossuário com a escada nova; o sarilho de perto como antes.
+5. `$env:PERIODO` 0 a 3 com qualquer um deles: manhã, tarde, anoitecer e noite. `$env:CLASSE="mago"` ou
+   `"arqueiro"` para as outras classes.
