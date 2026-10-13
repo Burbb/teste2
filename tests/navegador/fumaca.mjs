@@ -623,8 +623,9 @@ async function cenarioSarilho(browser) {
     const correntes = menu.filter(([t]) => /correntes/i.test(t));
     conferir(correntes.length === 1 && /op-missao/.test(correntes[0][1]) && grupos[0] === "Missão" && !(await page.$("#prompt .op-etiqueta")),
       "as correntes são uma ação só, no grupo da missão (um rótulo para o grupo, nenhuma etiqueta por linha)");
-    conferir(menu.slice(0, 3).map(([t]) => t).join("|") === "Soltar as correntes|Recolher uma amostra do lodo|Descer ao fundo alagado"
-      && menu.slice(0, 3).map(([, , a]) => a).join() === "true,false,true" && grupos.length === 2 && !menu.slice(3).some(([, , a]) => a),
+    // (o lodo de Caspar se recolhe no fundo, 1.80.0: não está no menu do ossuário)
+    conferir(menu.slice(0, 2).map(([t]) => t).join("|") === "Soltar as correntes|Descer ao fundo alagado"
+      && menu.slice(0, 2).map(([, , a]) => a).join() === "true,true" && grupos.length === 2 && !menu.slice(2).some(([, , a]) => a),
       "nomes curtos; seta só nas que abrem outra escolha; a descida por último; um fio antes das ações de sempre");
     const antes = await foto();
     await page.click(`${MENU}:has-text("Soltar as correntes")`);
@@ -825,6 +826,23 @@ async function cenarioCapelaSalas(browser) {
     await ir("Descer ao ossuário pelo alçapão", "Soltar as correntes");
     conferir((await sala()) === "ossuario" && (await foto()) === antes,
       "ida e volta pela capela inteira: nada gasto, nenhum dia ou período a mais, a missão igual");
+    // O lodo de Caspar (1.80.0): não no ossuário; na água do fundo, junto de Ilse, sem começar a luta.
+    conferir(!(await page.$(`${MENU}:has-text("Recolher uma amostra")`)), "no ossuário, nada de recolher o lodo");
+    const tempo = () => page.evaluate(() => JSON.stringify([estado.mundo.dia, estado.mundo.periodo_n, estado.heroi.bolsa]));
+    const t0 = await tempo();
+    await page.click('.ci-ponto[data-ponto="descida"]');
+    await page.waitForSelector(`${MENU}:has-text("Recolher uma amostra do lodo")`, { timeout: 20000 });
+    conferir((await sala()) === "neutra" && /Fundo da Capela/.test(await page.textContent("#cena-cab .cena-titulo")),
+      "a descida: o fundo (neutro) com Ilse na água, e a amostra entre as escolhas");
+    await page.click(`${MENU}:has-text("Recolher uma amostra do lodo")`);
+    await page.waitForSelector(`${MENU}:has-text("Voltar por enquanto")`, { timeout: 20000 });
+    conferir(!(await page.evaluate(() => document.body.classList.contains("em-combate"))) && !(await page.$(`${MENU}:has-text("Recolher uma amostra")`))
+      && /frasco/.test(await page.textContent("#texto")), "recolhida a amostra, Ilse continua na água: sem luta, e a escolha some");
+    await page.click(`${MENU}:has-text("Voltar por enquanto")`);
+    await (await page.waitForSelector("#prompt .continuar", { timeout: 20000 })).click();
+    await page.waitForSelector(`${MENU}:has-text("Subir à sacristia")`, { timeout: 20000 });
+    conferir((await sala()) === "ossuario" && (await tempo()) === t0 && !(await page.$(`${MENU}:has-text("Recolher uma amostra")`)),
+      "de volta ao ossuário, sem tempo nem gasto, e a amostra não se recolhe de novo");
   } finally {
     conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
     await page.close();

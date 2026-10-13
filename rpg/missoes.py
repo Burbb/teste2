@@ -855,6 +855,7 @@ def _fundo(g, mid):
     """A descida ao fundo: a guardiã. O que falta para o rito é dito antes; o rito só é oferecido com tudo pronto."""
     from .inimigos import instanciar_guardiao
     m = registro(g, mid)
+    _por_na_sala(g, "fundo")  # desceu: está no fundo, com Ilse ainda na água (a luta só começa se for escolhida)
     g.ui.cena("O Fundo da Capela", g.contexto_cena(), "evento")
     g.ui.painel("cena", cena_neutra(g, "fundo"))
     g.narrar("A escada do ossuário termina na água. O fundo é um poço escuro, com água pela cintura e um frio que não é "
@@ -874,11 +875,20 @@ def _fundo(g, mid):
             g.narrar("Do que Vó Berta contou, ainda falta " + tx.lista_natural(falta) + ".")
     g.narrar("Ela ainda não se levantou da água.")
     from .sobrevivencia import riscos_sala
-    sem_fuga = {"nota": tx.SEM_FUGA, **({"riscos": riscos_sala(g, guardiao=True)} if riscos_sala(g, guardiao=True) else {})}
-    opcoes = ([("Chamar Ilse pelo nome e tentar dar descanso", "descanso", sem_fuga)] if pronto else []) + [
-        ("Lutar para destruí-la", "destruir", sem_fuga), ("Voltar por enquanto", None)]
-    op = g.menu("O que você faz?", opcoes)
+    while True:
+        sem_fuga = {"nota": tx.SEM_FUGA, **({"riscos": riscos_sala(g, guardiao=True)} if riscos_sala(g, guardiao=True) else {})}
+        # O lodo de Caspar se recolhe aqui, na água, com Ilse ainda quieta: recolher não começa a luta.
+        lodo = next((d for d in ACOES if d["id"] == "lodo" and d["missao"] == _caspar.MID and _vale(g, d)), None)
+        opcoes = ([("Chamar Ilse pelo nome e tentar dar descanso", "descanso", sem_fuga)] if pronto else []) + [
+            ("Lutar para destruí-la", "destruir", sem_fuga)] + (
+            [(lodo["rotulo"], "lodo")] if lodo else []) + [("Voltar por enquanto", None)]
+        op = g.menu("O que você faz?", opcoes)
+        if op != "lodo":
+            break
+        lodo["fn"](g, lodo["missao"])
+        g.narrar("Ilse continua na água, entre as pedras, cantando baixo. Ela ainda não se levantou.")
     if op is None:
+        _por_na_sala(g, "ossuario")
         g.narrar("Você sobe a escada de costas. O canto continua lá embaixo.")
         return
     spec = {"bioma": "pantano", "id": "bruxa_afogada", "idx": 1, "nome": "Ilse, a Bruxa Afogada", "g": "f",

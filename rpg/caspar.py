@@ -356,12 +356,13 @@ def _resolver(g, postura, forte=False):
 
 
 def _recolher_lodo(g, mid):
-    """O frasco do lodo, no fundo da capela: a prova geral. A qualquer momento depois de chegar ao fundo."""
+    """O frasco do lodo, no fundo da capela: a prova geral. A qualquer momento depois de chegar ao fundo, estando lá
+    (antes de Ilse, dentro da descida, missoes._fundo; depois dela, na página do fundo). Sem tempo, tocha nem sorteio."""
     m = registro(g)
     g.ui.cena("O Fundo da Capela", g.contexto_cena(), "evento")
     g.ui.painel("cena", _missoes().cena_neutra(g, "fundo"))
-    g.narrar("Você desce até a água do fundo e enche um frasco com o lodo escuro e fino do fundo, o mesmo que a Fonte "
-             "Nova trazia.")
+    g.narrar("Você se abaixa na água do fundo e enche um frasco com o lodo escuro e fino que cobre as pedras, o mesmo "
+             "que a Fonte Nova trazia.")
     if "lodo" not in m["preparos"]:
         m["preparos"].append("lodo")
     if g.j.classe == "mago" and "analise" not in m["preparos"]:
@@ -416,7 +417,7 @@ CENAS = [
 ACOES = [
     dict(missao=MID, id="lodo", rotulo="Recolher uma amostra do lodo", lugar="capela_afogada",
          etapas=("antes", "acusacao", "praca"), falta="lodo", pode=_chegou_ao_fundo, fn=_recolher_lodo,
-         confirmar=True, onde=("ossuario", "fundo")),
+         confirmar=True, onde="fundo"),
     dict(missao=MID, id="praca", rotulo="Ir à praça responder a Caspar", abre=True, lugar="vau_do_turvo", etapas=("praca",),
          pode=lambda g: "praca" in registro(g)["cenas"] and not registro(g).get("desfecho"), fn=_ir_a_praca,
          confirmar=True),

@@ -425,3 +425,23 @@ sentido: a lamparina à esquerda do mercador é a fonte de dentro, e ao anoitece
 longe dela (`LUZ_DE_FORA` em `telas/mercado.js`). De dia, a luz principal é a da janela e da porta, como pede um
 interior com janela. Trocar para a luz do ossuário também de dia escureceria a mercadoria (que precisa ser lida) e
 destoaria da vila clara lá fora. Não foi redesenhada.
+
+## O lodo se recolhe no fundo (1.80.0)
+
+- **O problema (reproduzido):** com a navegação, "Recolher uma amostra do lodo" aparecia no menu do ossuário, mas o
+  texto levava o personagem até a água do fundo.
+- **Feito:**
+  - A ação de Caspar vale só com o personagem no fundo (`onde="fundo"`). Os requisitos são os de antes
+    (`_chegou_ao_fundo`: a febre no fundo ou depois de Ilse, Caspar ainda por responder; sem o frasco).
+  - **Antes de Ilse:** "Descer ao fundo alagado" põe o personagem no fundo e mostra a cena de sempre, com Ilse ainda
+    na água. Entre as escolhas dela (chamar pelo nome, lutar, voltar por enquanto) entra "Recolher uma amostra do
+    lodo". Recolher não começa a luta: a amostra é recolhida (a página do fundo, fundo neutro), Ilse continua na água
+    e as escolhas voltam, sem a amostra. "Voltar por enquanto" sobe ao ossuário (a sala registrada passa a ser o
+    ossuário, como o texto diz). Descer de novo repete a cena, sem a amostra se ela já está no frasco.
+  - **Depois de Ilse:** a amostra fica na página do fundo, aonde se chega pelas passagens; no ossuário ela não aparece.
+  - O texto da coleta diz o que se faz estando lá ("Você se abaixa na água do fundo e enche um frasco...").
+  - Iguais: a análise do mago (uma vez), a força da prova, o teste da denúncia, e nenhum tempo, tocha, encontro,
+    recompensa ou sorteio na coleta. Quem já tinha o frasco (inclusive em save antigo) continua com ele, e nada é
+    entregue de novo.
+- **Conferido:** testes (`TestLodoNoFundo`), fumaça (`cenarioCapelaSalas`: a descida, a coleta sem luta, a volta ao
+  ossuário sem tempo nem gasto, a escolha que some); a tela a 1280×700 com o mago.

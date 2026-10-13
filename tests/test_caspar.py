@@ -154,13 +154,20 @@ class TestPraca(unittest.TestCase):
             ir(g, "capela_afogada")
             self.assertEqual([o[1][2] for o in missoes.opcoes(g)], [])  # do lado de fora: o lodo é lá embaixo (1.79.0)
             ate_o_ossuario(g)
+            self.assertEqual([o[1][2] for o in missoes.opcoes(g)], [])  # nem no ossuário: na água do fundo (1.80.0)
+            self.assertTrue(missoes.ir_na_capela(g, "fundo"))
             self.assertEqual([o[1][2] for o in missoes.opcoes(g)], ["lodo"])
             self.assertTrue(missoes.executar(g, CASPAR, "lodo"))
             self.assertFalse(missoes.executar(g, CASPAR, "lodo"))
             self.assertEqual(caspar.prova(g), (True, forte))
         g = investigando("fundo")
-        ir(g, "capela_afogada")
-        self.assertIn("lodo", [o[1][2] for o in missoes.opcoes(g)])  # no fundo, antes da guardiã também
+        ir(g, "capela_afogada")  # (um save sem a sala: na etapa do fundo, o ossuário)
+        g.ui.roteiro = ["Recolher uma amostra do lodo", "Voltar por enquanto"]
+        lutas_vistas = []
+        g.combate = lambda *a, **k: lutas_vistas.append(a)  # recolher não começa a luta com Ilse
+        self.assertTrue(missoes.executar(g, FEBRE, "fundo"))  # no fundo, antes da guardiã também
+        self.assertEqual((caspar.registro(g)["preparos"], lutas_vistas), (["lodo"], []))
+        self.assertEqual(missoes.sala_atual(g), "ossuario")  # e o recuo sobe ao ossuário
         g = investigando("ossuario")
         ir(g, "capela_afogada")
         self.assertNotIn("lodo", [o[1][2] for o in missoes.opcoes(g)])
@@ -294,6 +301,7 @@ class TestSaves(unittest.TestCase):
         self.assertEqual(missoes.registro(h, FEBRE)["concluida"], g.dia)  # a febre não reabre
         ir(h, "capela_afogada")
         ate_o_ossuario(h)
+        missoes.ir_na_capela(h, "fundo")
         self.assertEqual([o[1][2] for o in missoes.opcoes(h)], ["lodo"])
 
     def test_procedural_sem_caspar(self):

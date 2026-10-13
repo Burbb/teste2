@@ -250,5 +250,68 @@ class TestNavegacao(unittest.TestCase):
         self.assertEqual(opcoes_febre(g), [])
 
 
+class TestLodoNoFundo(unittest.TestCase):
+    """A amostra do lodo (Caspar) se recolhe na água do fundo, onde a cena a descreve (1.80.0)."""
+
+    def descida(self, classe="guerreiro", respostas=("Voltar por enquanto",)):
+        from rpg import caspar
+        g = na_capela(classe, etapa="fundo")
+        g.ui.roteiro = list(respostas)
+        lutas_vistas = []
+        g.combate = lambda *a, **k: lutas_vistas.append(a)
+        return g, caspar, lutas_vistas
+
+    def test_no_ossuario_nao_e_na_descida_sim_sem_luta(self):
+        g, caspar, lutas_vistas = self.descida(respostas=["Recolher uma amostra do lodo", "Voltar por enquanto"])
+        self.assertNotIn("lodo", [o[1][2] for o in missoes.opcoes(g)])
+        antes = (g.dia, g.periodo, g.j.consumiveis.get("tocha"))
+        fazer(g, "fundo")
+        self.assertEqual(caspar.registro(g)["preparos"], ["lodo"])
+        self.assertEqual(lutas_vistas, [])  # estar no fundo e recolher não começam a luta
+        self.assertEqual((g.dia, g.periodo, g.j.consumiveis.get("tocha")), antes)  # nem tempo, nem tocha
+        self.assertEqual(missoes.sala_atual(g), "ossuario")  # voltar por enquanto: sobe ao ossuário
+        self.assertEqual(g.ui.cenas[-2:], ["O Fundo da Capela", "O Fundo da Capela"])  # título e sala concordam
+        self.assertEqual([d["cena"] for t, d in g.ui.paineis if t == "cena"][-2:], ["neutra", "neutra"])
+        # descer de novo: Ilse e o recuo como antes, sem a amostra (já está no frasco)
+        g.ui.roteiro = ["Voltar por enquanto"]
+        fazer(g, "fundo")
+        self.assertNotIn("Recolher uma amostra do lodo", g.ui.ofertas[-1])
+        self.assertEqual(caspar.registro(g)["preparos"], ["lodo"])
+
+    def test_o_mago_analisa_uma_vez(self):
+        g, caspar, _ = self.descida("mago", ["Recolher uma amostra do lodo", "Voltar por enquanto"])
+        fazer(g, "fundo")
+        self.assertEqual(caspar.registro(g)["preparos"], ["lodo", "analise"])
+        self.assertEqual(caspar.prova(g), (True, True))
+
+    def test_depois_de_ilse_na_pagina_do_fundo(self):
+        from rpg import caspar
+        g = na_capela(etapa="fundo")
+        missoes.registro(g, MID).update(desfecho="descansada", etapa="retorno")
+        caspar.sincronizar(g)
+        missoes.ir_na_capela(g, "salao")
+        for sala in ("sacristia", "ossuario"):
+            missoes.ir_na_capela(g, sala)
+        self.assertNotIn("lodo", [o[1][2] for o in missoes.opcoes(g)])
+        missoes.ir_na_capela(g, "fundo")
+        self.assertEqual([o[1][2] for o in missoes.opcoes(g)], ["lodo"])
+        self.assertEqual(pagina(g)["cena"], "neutra")
+        self.assertTrue(missoes.executar(g, caspar.MID, "lodo"))
+        self.assertFalse(missoes.executar(g, caspar.MID, "lodo"))  # uma vez
+        self.assertEqual((missoes.sala_atual(g), caspar.registro(g)["preparos"]), ("fundo", ["lodo"]))
+
+    def test_save_antigo_com_o_frasco(self):
+        from rpg import caspar
+        pasta = tempfile.mkdtemp()
+        g = na_capela(etapa="fundo", pasta=pasta)
+        caspar.registro(g)["preparos"].append("lodo")
+        missoes.registro(g, MID).pop("sala", None)
+        g.salvar(silencioso=True)
+        h = Jogo.carregar(Roteiro(["Voltar por enquanto"]), g.caminho_save(), pasta)
+        self.assertEqual((caspar.registro(h)["preparos"], missoes.sala_atual(h)), (["lodo"], "ossuario"))
+        missoes.executar(h, MID, "fundo")
+        self.assertNotIn("Recolher uma amostra do lodo", h.ui.ofertas[-1])  # quem já tem não recolhe de novo
+
+
 if __name__ == "__main__":
     unittest.main()

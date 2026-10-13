@@ -41,9 +41,10 @@ class TestCorrentes(unittest.TestCase):
             lutas(g)
             rotulos = [o[0] for o in missoes.opcoes(g)]
             # o que se examina antes vem primeiro; o passo adiante (a descida), por último
-            self.assertEqual(rotulos[:3], ["Soltar as correntes", "Recolher uma amostra do lodo", "Descer ao fundo alagado"])
+            # (o lodo de Caspar se recolhe no fundo, 1.80.0: não aparece no ossuário)
+            self.assertEqual(rotulos[:2], ["Soltar as correntes", "Descer ao fundo alagado"])
             abre = {o[1][2]: bool(o[2].get("abre")) for o in missoes.opcoes(g)}
-            self.assertEqual(abre, {"correntes": True, "lodo": False, "fundo": True})  # quem leva a outra escolha
+            self.assertEqual(abre, {"correntes": True, "fundo": True})  # quem leva a outra escolha
             fazer(g, "correntes", "Deixar")
             metodos = g.ui.ofertas[-1]  # no modo texto, a nota vem junto, depois do travessão
             principais = [m.split(" — ")[0] for m in metodos]
@@ -99,7 +100,9 @@ class TestCorrentes(unittest.TestCase):
 class TestLodo(unittest.TestCase):
     def test_a_amostra_tem_rotulo_curto_e_a_finalidade_no_diario(self):
         g = na_capela(etapa="fundo")
-        self.assertIn("Recolher uma amostra do lodo", [o[0] for o in missoes.opcoes(g)])
+        g.ui.roteiro = ["Voltar por enquanto"]
+        fazer(g, "fundo")  # na descida ao fundo, junto de Ilse e do recuo
+        self.assertIn("Recolher uma amostra do lodo", g.ui.ofertas[-1])
         caspar.registro(g)["etapa"] = "acusacao"
         req = next(c for c in missoes.cartoes(g) if c["id"] == CASPAR)["requisitos"]
         self.assertIn("praça", req["titulo"])
@@ -244,7 +247,7 @@ class TestCartao(unittest.TestCase):
             g.tela()
         rotulos = g.ui.ofertas[-1]
         # no modo texto, a seta de quem abre outra escolha vem junto
-        self.assertEqual(rotulos[:3], ["Soltar as correntes ›", "Recolher uma amostra do lodo", "Descer ao fundo alagado ›"])
+        self.assertEqual(rotulos[:2], ["Soltar as correntes ›", "Descer ao fundo alagado ›"])
 
 if __name__ == "__main__":
     unittest.main()
