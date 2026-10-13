@@ -513,6 +513,20 @@
     }
   }
 
+  // ================================================================ a sala sem arte própria
+  // A sacristia e o fundo ainda não foram desenhados: em vez de mostrar outra sala no lugar deles, um fundo neutro,
+  // a parede de pedra e o chão no escuro, com a luz da tocha de quem está ali no meio. Sem objetos nem pontos.
+  function baseNeutra(W) {
+    const k = camada(W), c = k.getContext("2d"), px = pincel(c), ox = Math.round((W - QW) / 2);
+    px(0, 0, W, QH, COR.parede);
+    for (let y = 4; y < PISO; y += 6) for (let x = ((y / 6) % 2) * 7 - 14; x < W; x += 14) { px(x, y, 14, 1, COR.junta); px(x, y, 1, 6, COR.junta); }
+    for (let y = PISO; y < QH; y++) px(0, y, W, 1, y === PISO ? COR.pedraLuz : COR.chao);
+    for (let y = PISO + 3; y < QH; y += 5) for (let x = (y * 3) % 10; x < W; x += 14) px(x, y, 9, 1, COR.chaoJunta);
+    escurecer(px, W, ox + QW / 2, 34, 36, 160, 0.8);
+    return { canvas: k, ox };
+  }
+  function desenharNeutra(c, W, b) { c.drawImage(b.canvas, 0, 0); }
+
   // As sanguessugas da sala inquieta: [x, y, para que lado o corpo cresce]. No encosto submerso do banco da frente (o
   // de 42 de largura), na perna de um banco de trás onde ela entra na água e no pé de uma coluna.
   const SANGUESSUGAS = [[70, 55, 1], [96, 55, -1], [133, 51, 1], [COLUNAS[2] - 6, 51, 1]];
@@ -521,13 +535,27 @@
   // Cada ponto: a área clicável, onde fica o nome e para onde a câmera vai (no quadro de 320×72).
   const CENAS = {
     ossuario: { base: baseOssuario, desenhar: desenharOssuario,
-      pontos: { sarilho: { area: [186, 14, 110, 56], balao: [240, 12], foco: [238, 48] } } },
+      pontos: { sarilho: { area: [186, 14, 110, 56], balao: [240, 12], foco: [238, 48] },
+                escada: { area: [2, 0, 46, 56], balao: [24, 20], foco: [26, 30] },
+                descida: { area: [48, 57, 34, 15], balao: [65, 58], foco: [65, 62] } } },
     exterior: { base: baseExterior, desenhar: desenharExterior,
       pontos: { buraco: { area: [146, 36, 30, 20], balao: [161, 69], foco: [161, 44] },
                 sapos: { area: [42, 52, 78, 14], balao: [80, 54], foco: [82, 58] } } },
     salao: { base: baseSalao, desenhar: desenharSalao,
-      pontos: { porta: { area: [282, 26, 26, 20], balao: [295, 24], foco: [270, 36] } } },
+      pontos: { porta: { area: [282, 26, 26, 20], balao: [295, 24], foco: [270, 36] },
+                brecha: { area: [2, 24, 30, 30], balao: [17, 26], foco: [18, 40] } } },
+    neutra: { base: baseNeutra, desenhar: desenharNeutra, pontos: {} },
   };
+
+  /** O contorno de um ponto aceso, no estilo da arte: quatro cantos dourados com a sombra por fora, em volta da área. */
+  function cantos(c, [x, y, w, hh]) {
+    const px = pincel(c), L = 4, x1 = x + w - 1, y1 = Math.min(QH - 1, y + hh - 1);
+    [["#000000", 1], [COR.ouro, 0]].forEach(([cor, d]) => {
+      [[x, y, 1, 1], [x1, y, -1, 1], [x, y1, 1, -1], [x1, y1, -1, -1]].forEach(([cx, cy, sx, sy]) => {
+        for (let k = 0; k < L; k++) { px(cx + sx * k + d * sx, cy + d * sy, 1, 1, cor); px(cx + d * sx, cy + sy * k + d * sy, 1, 1, cor); }
+      });
+    });
+  }
 
   // ---------------------------------------------------------------- a cena no topo
   // O painel "cena" não põe imagem no texto: ele troca a arte do topo (o mesmo canvas da paisagem, vista.js) pelo
@@ -559,6 +587,7 @@
         ctx.save(); ctx.translate(tranco, 0);
         def.desenhar(ctx, QW, b, est, quadro, destaque);
         ctx.restore();
+        acesos(destaque).forEach((id) => cantos(ctx, def.pontos[id].area));
       },
       andar: () => passo(est),
     });
@@ -575,8 +604,30 @@
   /** A página virou (nova cena): o ambiente fica até a próxima mensagem; se ela não for um painel de cena, sai. */
   function virou() { if (atual) pendente = true; }
   function conferirPendente(m) {
+    if (!["estado", "sincronizado"].includes(m.t)) tirarOlhar();  // o que se viu de perto não fica no meio do que veio
     if (pendente && !["estado", "sincronizado", "nova_cena", "cabecalho"].includes(m.t) && !(m.t === "painel" && m.tipo === "cena")) limpar();
   }
+
+  /** Os pontos com contorno agora: o do mouse ou do foco e, com "Destacar interações", todos os que fazem algo. Só
+   *  com os pontos valendo (fora da luta, sem estar de perto). */
+  function acesos(destaque) {
+    if (!atual || !capa || capa.hidden || capa.classList.contains("perto")) return [];
+    const ids = destacando() ? atual.d.pontos.filter((p) => p.acao || p.olhar).map((p) => p.id) : [];
+    if (destaque && !ids.includes(destaque) && atual.def.pontos[destaque]) ids.push(destaque);
+    return ids.filter((id) => atual.def.pontos[id]);
+  }
+  // "Destacar interações" (Ajuda e F4): os nomes e os contornos de todos os pontos à vista; sem ele, só no mouse e no
+  // foco do teclado. Preferência de quem joga, guardada no navegador.
+  let destacar = false;
+  try { destacar = localStorage.getItem("cdf-destacar") === "1"; } catch (e) { /* sem armazenamento */ }
+  const destacando = () => destacar;
+  function alternarDestaque(forcar) {
+    destacar = forcar === undefined ? !destacar : !!forcar;
+    try { localStorage.setItem("cdf-destacar", destacar ? "1" : "0"); } catch (e) { /* sem armazenamento */ }
+    document.body.classList.toggle("destacar-interacoes", destacar);
+    return destacar;
+  }
+  document.body.classList.toggle("destacar-interacoes", destacar);
 
   /** Onde cada ponto cai na tela: a arte é desenhada com object-fit: cover (centro, 80% para baixo), como na vila. */
   function posicionar() {
@@ -610,6 +661,7 @@
     }
     capa.innerHTML = "";
     capa.classList.remove("perto");
+    tirarOlhar();
     const d = atual && atual.d;
     capa.dataset.cena = d ? d.cena : "";
     capa.dataset.correntes = (d && d.correntes) || "";
@@ -654,7 +706,14 @@
       if (p.olhar) {
         App.som("escolha");
         capa.classList.add("perto"); bt.setAttribute("data-olhado", "");
+        Vista.destacar(null);
         await Vista.focarEm(foco);
+        if (typeof p.olhar === "string") {  // o que se vê de perto, curto, embaixo do texto da página (sai ao afastar)
+          tirarOlhar();
+          const nota = document.createElement("p");
+          nota.className = "olhar-perto"; nota.textContent = p.olhar;
+          document.getElementById("texto").appendChild(nota);
+        }
         const af = capa.querySelector(".ci-afastar"); af.hidden = false; af.focus();
         return;
       }
@@ -667,8 +726,10 @@
       if (!App.acao(p.acao)) { capa.classList.remove("perto"); Vista.focarEm(null); }
     });
   }
+  function tirarOlhar() { document.querySelectorAll("#texto .olhar-perto").forEach((e) => e.remove()); }
   function longe() {
     if (!capa) return;
+    tirarOlhar();
     const af = capa.querySelector(".ci-afastar");
     if (af) af.hidden = true;
     Vista.focarEm(null).then(() => {
@@ -709,5 +770,6 @@
 
   Telas.registrar("cena", () => "", {});
   Object.assign(Telas, { soltarCorrentes });
-  window.Cenas = { mostrar, limpar, virou, conferirPendente, aoCombate, aoMenu, posicionar, atual: () => atual };
+  window.Cenas = { mostrar, limpar, virou, conferirPendente, aoCombate, aoMenu, posicionar, atual: () => atual,
+    alternarDestaque, destacando };
 })();

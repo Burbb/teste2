@@ -90,6 +90,11 @@ document.addEventListener("keydown", (ev) => {
   if (ev.ctrlKey || ev.metaKey || ev.altKey) return;
   const k = ev.key;
   if (k === "F1") { ev.preventDefault(); if (!ev.repeat) Orientacao.alternarAjuda(); return; }
+  if (k === "F4") {  // destacar interações: os nomes e contornos dos pontos da cena (a escolha fica na Ajuda também)
+    ev.preventDefault();
+    if (!ev.repeat) { const sim = Cenas.alternarDestaque(); Telas.toast("", `Destacar interações: ${sim ? "ligado" : "desligado"}`, "estrela", true); if (!$("#sobre-ajuda").hidden) Orientacao.alternarAjuda(true); }
+    return;
+  }
   if (k === "Escape" || k === "Backspace") {
     if (fecharJanela()) { ev.preventDefault(); return; }  // a janelinha de habilidades/itens da luta fecha primeiro
     const aberto = !$("#gaveta-historico").hidden || !$("#sobre-mapa").hidden || !$("#sobre-talentos").hidden || !$("#sobre-grimorio").hidden || !$("#sobre-ajuda").hidden || document.querySelector(".menu-item");

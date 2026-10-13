@@ -280,3 +280,96 @@ criaturas desenhadas não são inimigos (a luta, as cartas e o texto seguem igua
 - **Salão vencido:** a água quieta com o caminho dela, sem criatura nenhuma (já era assim; conferido).
 
 Conferido: a arte ampliada de dia e de noite; o salão inquieto, a luta com o salão de fundo e o salão quieto a 1280×700.
+
+---
+
+# Navegação entre as salas e os pontos (1.79.0)
+
+Terceira entrega do mesmo pedido. A capela passa a ter **onde o personagem está**, separado do **passo da missão**.
+
+## Como funciona
+
+- **A posição** fica no registro da missão (`m["sala"]`): `exterior`, `salao`, `sacristia`, `ossuario` ou `fundo`
+  (`missoes.sala_atual`). Ela vai no save. Um save de antes da 1.79.0 não tem a sala: ela vem do passo da missão
+  (`SALA_DA_ETAPA`: a última sala vencida; antes do salão e depois da guardiã, do lado de fora), sem refazer nada.
+- **A sequência física:** exterior ↔ salão ↔ sacristia ↔ ossuário ↔ fundo (`PASSAGENS`). Sem atalho: cada sala só
+  leva às vizinhas.
+- **Sala vencida:** passar por ela é uma opção do menu do lugar ("Entrar no salão pelo buraco do muro", "Sair pela
+  brecha do muro", "Ir à sacristia", "Voltar ao salão alagado", "Descer ao ossuário pelo alçapão", "Subir à
+  sacristia", "Descer ao fundo alagado", "Subir ao ossuário") e um ponto da cena com o mesmo endereço
+  (`{"capela_ir": sala}`). Só troca a sala: sem luta, texto, Continuar, tempo, tocha, cura, recurso, recompensa nem
+  pista. Os inimigos da capela são os das salas; andar não sorteia nada.
+- **Sala por vencer:** entrar continua sendo a ação da missão, com o encontro, a tocha e o texto de sempre. Cada ação
+  da capela agora vale só na sala dela (`onde` em `ACOES`): entrar no salão, de fora; atravessar para a sacristia, do
+  salão; descer ao ossuário, da sacristia; o sarilho e a descida ao fundo, do ossuário; o lodo de Caspar, do ossuário
+  ou do fundo.
+- **Quem muda a sala:** vencer o salão, a sacristia, o ossuário ou a guardiã deixa o personagem nela. A fuga do salão
+  e a da sacristia terminam do lado de fora (pela brecha, como o texto dizia); a do ossuário e a da onda do sarilho, na
+  sacristia (pelo alçapão). "Voltar por enquanto", diante de Ilse, fica no ossuário. Chegar viajando, o resgate,
+  explorar e acampar deixam do lado de fora. Carregar um save não simula viagem: volta à sala salva.
+- **O que fica:** salas vencidas, correntes soltas, baú, pistas, Sigilo e desfecho não dependem de onde se está.
+  Voltar do ossuário à sacristia e descer de novo mostra as correntes como estão. A luta com Ilse segue sem fuga.
+- **O subtítulo da página** diz a sala ("Ruínas • Sacristia • inimigos Nv.3 • ..."); o título continua o do lugar. No
+  terminal, as passagens são opções do menu como as outras.
+
+## O que cada sala mostra
+
+| Sala | Arte no topo | Pontos (só na página do lugar) |
+|---|---|---|
+| Exterior | a capela por fora (1.76.0) | **Buraco no muro** (entrar: a ação da missão ou a passagem), **Sapos** (só olhar) |
+| Salão | o salão quieto, depois de vencido (1.76.0; inquieto só na cena da luta) | **Brecha do muro** (sair), **Sacristia** (a porta: a ação ou a passagem) |
+| Sacristia | **fundo neutro**: parede e chão no escuro, a luz no meio, sem objetos (sem arte própria) | nenhum: o caminho fica no menu |
+| Ossuário | o ossuário (1.72.0; luz na 1.78.0) | **Escada do alçapão** (subir), **Sarilho** (a ação), **Descida ao fundo** (a ação ou a passagem) |
+| Fundo | **fundo neutro** (sem arte própria) | nenhum |
+
+As cenas de texto usam a mesma regra: a luta da sacristia, a descida ao fundo, a guardiã, o desfecho e o lodo de
+Caspar trazem o fundo neutro (antes, as ruínas genéricas), e nenhuma sala aparece no lugar de outra.
+
+## Os pontos
+
+- **Sem nome fixo** sobre a arte. O nome aparece, com um contorno de quatro cantos dourados em volta do ponto, com o
+  mouse em cima ou com o foco do teclado (Tab).
+- **Destacar interações** (opcional): na Ajuda (F1) ou com **F4**, os nomes e os contornos de todos os pontos ficam à
+  vista. A preferência fica no navegador. Nenhuma instrução escrita sobre a arte.
+- As portas, a escada e a brecha se reconhecem pelo desenho; tudo que a missão exige continua nas opções embaixo.
+- **Os sapos:** o clique (ou Enter) aproxima a arte do topo e põe uma linha curta embaixo do texto, com o que se vê de
+  perto e a chegada não disse (`OLHAR_SAPOS`); "Afastar" volta e tira a linha. Sem Continuar, tempo, recurso nem pista.
+- Nada escondido, sem sorteio de clique e sem pista nova nos pontos.
+
+## Conferido
+
+1500×950 e 1280×700; guerreiro, mago e arqueiro; movimento reduzido. Do ossuário à sacristia (fundo neutro), ao salão,
+à brecha, de volta pelo buraco, à sacristia e ao ossuário, pelo mouse e pelo menu, sem gastar nada nem mudar dia ou
+período; a sala pendente pedindo o encontro; F4 e o botão da Ajuda; os sapos com a linha de perto; salvar e carregar
+na sacristia; a fuga do salão e a da sacristia terminando fora; a derrota levando ao resgate (e a volta, por fora).
+Fumaça completa (`cenarioCapelaSalas` novo). Testes novos em `test_cenas_capela.py` (`TestNavegacao`).
+
+## Limitações
+
+- A sacristia e o fundo não têm arte própria: o fundo neutro é provisório e não tem pontos.
+- O destaque dos pontos vale só nas cenas da capela (a vila já mostra os nomes dos prédios).
+- A sala não aparece no mapa nem no painel lateral; só no subtítulo da página.
+- Jean ainda não viu: teste humano pendente.
+
+## Como Jean testa (1.79.0)
+
+1. `$env:ETAPA="fundo"; python -m tests.navegador.cenarios capela` (janela nova do PowerShell, ou
+   `Remove-Item Env:SALA` antes, se sobrou de outro teste):
+   - no ossuário, passe o mouse e use Tab: os nomes aparecem só no ponto da vez, com os cantos dourados;
+   - F4 (ou a Ajuda, F1): todos os nomes e contornos; F4 de novo desliga;
+   - clique na escada: a sacristia (fundo neutro); pelo menu, salão, brecha, e o buraco de volta. Repare que a tocha,
+     o dia e o período não mudam;
+   - volte ao ossuário e solte as correntes; suba e desça de novo: continuam soltas.
+2. `$env:ETAPA="sacristia"`: fuja da luta da sacristia; a página fica do lado de fora, e entrar no salão é só passar.
+3. `$env:ETAPA="capela"`: os sapos de perto, com a linha embaixo do texto, e Afastar.
+4. `$env:SALA="sacristia"` com `$env:ETAPA="fundo"`: começar já na sacristia; salve, saia e carregue.
+5. `$env:DESFECHO="descansada"`: a guardiã resolvida; desça até o fundo (fundo neutro) e suba.
+
+## Planejado (não feito): a sacristia e o fundo com Ilse
+
+- **Sacristia:** acima da água, a lanterna, as prateleiras reviradas, o buraco na parede onde estava o livro, o baú
+  embaixo do pano (aberto ou não, pelo estado), o alçapão para o ossuário e a escada de mão na janela alta. Pontos:
+  a porta do salão e o alçapão (passagens).
+- **Fundo:** a água pela cintura, as duas pedras de moinho, as correntes (presas ou frouxas, pelo preparo) e Ilse
+  antes da luta; depois do desfecho, a água parada e clara (descanso) ou turva (destruída). Ponto: a escada para o
+  ossuário. Nada disso entra antes de Jean pedir.

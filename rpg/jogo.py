@@ -333,6 +333,7 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         "fome" e "infeccao". Na campanha, o resgate também encerra a emergência (resgate_campanha)."""
         j = self.j
         self.estatisticas["quedas"] += 1
+        missoes.saiu_da_capela(self)  # quem volta à capela depois do resgate chega por fora
         if self.campanha:
             self.resgate_campanha(causa)
             return
@@ -435,6 +436,9 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         # O nível-base da região; à noite, o que ela soma vem ao lado, sem trocar o número (seção 8 do 18).
         perigo = ("" if loc["tipo"] == "vila" else f" • inimigos Nv.{self.nivel_local()}"
                   + (f" (+{bal.NOITE_NIVEL} à noite)" if self.noite else ""))
+        sala = missoes.sala_atual(self)  # dentro da capela, a sala em que se está
+        if sala and sala != "exterior":
+            tipo += f" • {missoes.NOME_SALA[sala]}"
         ui.cena(loc["nome"], f"{tipo}{perigo} • Dia {self.dia} • {PERIODOS[min(self.periodo, 3)]} • "
                              f"{CLIMAS[self.clima]['nome']}", "local")
         if ui.hud:
@@ -562,6 +566,7 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
             else:
                 rotulo = f"Caçar {FAMILIAS[c['familia']]['plural']} (contrato, {c['feito']}/{c['total']})"
             opcoes.append((rotulo, f"cacar:{c['id']}", {"cacar": c["id"]}))
+        opcoes += missoes.passagens(self)  # na capela: as salas vizinhas já vencidas (só a vista muda)
         opcoes.append(("Explorar a região" + (" (à noite é mais perigoso)" if self.noite else ""), "explorar"))
         opcoes.append(("Acampar e descansar até o amanhecer", "acampar"))
         abertura.motivo_explorar(self, "morel")  # com Morel junto, ele conta onde está o dinheiro (uma vez)
@@ -577,13 +582,17 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
                 self.cacar(c)
         elif isinstance(op, tuple) and op[0] == "missao":
             missoes.executar(self, op[1], op[2])
+        elif isinstance(op, tuple) and op[0] == "capela":
+            missoes.ir_na_capela(self, op[1])
         elif op == "chefe":
             self.enfrentar_guardiao()
         elif op == "final":
             self.batalha_final()
         elif op == "explorar":
+            missoes.saiu_da_capela(self)  # explorar e acampar são lá fora
             self.explorar()
         elif op == "acampar":
+            missoes.saiu_da_capela(self)
             self.acampar()
         else:
             self.executar_comum(op)

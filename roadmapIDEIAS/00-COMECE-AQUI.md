@@ -1681,3 +1681,16 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   de dia; sanguessugas grudadas nos bancos e numa coluna, esticando devagar. Detalhe em [20](20-CENA-INTERATIVA-OSSUARIO.md).
 - **Verificado:** testes, gabarito idêntico, pyflakes, fumaça completa, telas a 1280 px, dia e noite.
 - **Falta:** Jean conferir.
+
+### 13/10/2026 — Andar pela capela (1.79.0)
+
+- **Pedido de Jean:** separar onde o personagem está do progresso da missão, andar entre as salas vencidas por
+  pontos, menu e teclado sem repetir nada nem gastar nada, sacristia e fundo sem mostrar outra sala, pontos sem nome
+  fixo (com destaque opcional) e os sapos com uma resposta curta.
+- **Feito:** a sala no registro da missão (save antigo deduz pela etapa), as passagens entre salas vizinhas vencidas,
+  cada ação da capela só na sala dela, recuo/resgate/viagem atualizando a sala, fundo neutro para a sacristia e o
+  fundo, escada/brecha/descida como pontos, nomes só no mouse e no foco, "Destacar interações" (Ajuda e F4), a linha
+  de perto dos sapos. Detalhe em [20](20-CENA-INTERATIVA-OSSUARIO.md).
+- **Verificado:** testes (`TestNavegacao` novo), gabarito idêntico, pyflakes, fumaça completa (`cenarioCapelaSalas`
+  novo), telas a 1500 e 1280 px com altura reduzida, três classes, movimento reduzido, salvar e carregar, derrota.
+- **Falta:** Jean conferir; a arte da sacristia e do fundo (planejada). A E9 segue aberta.

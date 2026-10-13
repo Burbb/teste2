@@ -592,6 +592,8 @@ async function cenarioCapela(browser) {
     conferir(!(await page.$(`${MENU}:has-text("Atravessar o salão")`)) && /ossuário/.test(await objetivo()) && (await baus()) === bausDepois
       && !!(await page.$("#doca .atalho")) && !(await page.evaluate(() => document.body.classList.contains("sem-heroi"))),
       "salvar, sair e carregar lá dentro: a sala vencida continua vencida, o baú não se repete e a tela vem inteira");
+    conferir(await page.evaluate(() => document.querySelector("#pontos-cena").dataset.cena === "neutra" && /Sacristia/.test(document.querySelector("#cena-cab").textContent)),
+      "carregado na sacristia: o fundo neutro no topo (sem arte de outra sala) e a sala no subtítulo");
     await page.keyboard.press("d");
     await page.waitForSelector(".missao-pistas", { timeout: 10000 });
     const diario = await page.textContent(".missao-diario");
@@ -640,20 +642,21 @@ async function cenarioSarilho(browser) {
       "voltar não gasta nada, não mostra cartão e devolve o menu da capela");
     // A cena do ossuário (1.72.0): o sarilho é um ponto da sala que faz a mesma ação do menu. Desde a 1.77.0 a sala é
     // a arte do topo (os pontos numa camada por cima dela); no texto, nada desenhado.
+    const SAR = '.ci-ponto[data-ponto="sarilho"]';
     const sala = () => page.evaluate(() => { const e = document.querySelector("#pontos-cena"); return e.dataset.cena === "ossuario" ? e.dataset.correntes + (e.dataset.foco ? "/perto" : "") : e.dataset.cena; });
     conferir((await sala()) === "presas" && !!(await page.$('#pontos-cena:not([hidden]) .ci-ponto[data-ponto="sarilho"]:not(.parado) .ci-balao'))
       && !(await page.$("#texto canvas")), "a arte do topo é o ossuário com o sarilho (correntes presas), o ponto por cima; o texto sem imagem");
-    await page.hover(".ci-ponto");
-    conferir(await page.$eval(".ci-ponto", (b) => b.classList.contains("aceso")), "o mouse em cima acende o sarilho");
+    await page.hover(SAR);
+    conferir(await page.$eval(SAR, (b) => b.classList.contains("aceso")), "o mouse em cima acende o sarilho");
     await page.mouse.move(2, 2);
-    await page.focus(".ci-ponto");
-    conferir(await page.$eval(".ci-ponto", (b) => b.classList.contains("aceso") && b.matches(":focus-visible, :focus")), "o foco do teclado acende do mesmo jeito");
+    await page.focus(SAR);
+    conferir(await page.$eval(SAR, (b) => b.classList.contains("aceso") && b.matches(":focus-visible, :focus")), "o foco do teclado acende do mesmo jeito");
     await page.keyboard.press("Enter");
     await page.waitForSelector(`${MENU}:has-text("Deixar como está")`, { timeout: 20000 });
     conferir((await sala()) === "presas/perto" && (await foto()) === antes, "Enter no sarilho aproxima e abre as mesmas formas de soltar, sem gastar nada");
     await page.click(`${MENU}:has-text("Deixar como está")`);
     await page.waitForSelector(`${MENU}:has-text("Soltar as correntes")`, { timeout: 20000 });
-    await page.click(".ci-ponto");
+    await page.click(SAR);
     await page.waitForSelector(`${MENU}:has-text("Deixar como está")`, { timeout: 20000 });
     conferir((await foto()) === antes, "o clique também só abre as alternativas");
     await page.click(`${MENU}:has-text("Deixar como está")`);
@@ -683,9 +686,12 @@ async function cenarioCapelaFora(browser) {
     await page.waitForSelector(".ci-afastar:not([hidden])", { timeout: 5000 });
     conferir(await page.evaluate(() => document.querySelector("#pontos-cena").classList.contains("perto") && document.activeElement.classList.contains("ci-afastar")),
       "Enter nos sapos aproxima a vista e leva o foco ao Afastar");
+    conferir(/patas a mais/.test(await page.textContent("#texto .olhar-perto").catch(() => "")) && !(await page.$("#prompt .continuar")),
+      "de perto, uma linha curta embaixo do texto (sem Continuar)");
     await page.keyboard.press("Enter");
     await page.waitForFunction(() => !document.querySelector("#pontos-cena").classList.contains("perto"), null, { timeout: 5000 });
-    conferir((await foto()) === antes && !!(await page.$(`${MENU}:has-text("Entrar na capela")`)), "afastar volta à vista inteira sem gastar nada nem mudar a missão");
+    conferir((await foto()) === antes && !!(await page.$(`${MENU}:has-text("Entrar na capela")`)) && !(await page.$("#texto .olhar-perto")),
+      "afastar volta à vista inteira, tira a linha, sem gastar nada nem mudar a missão");
     // O buraco faz a ação do menu: a cena do salão, com a água inquieta.
     await page.hover('.ci-ponto[data-ponto="buraco"]');
     conferir(await page.$eval('.ci-ponto[data-ponto="buraco"]', (b) => b.classList.contains("aceso")), "o mouse acende o buraco");
@@ -770,6 +776,55 @@ async function cenarioCustosEExausto(browser) {
     }
     conferir(!!(await page.$(".dormir-barraca")) && continuares === 1,
       `exausto no mato: um Continuar para o fim do evento e a fogueira em seguida (${continuares})`);
+  } finally {
+    conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
+    await page.close();
+    proc.kill();
+  }
+}
+
+async function cenarioCapelaSalas(browser) {
+  console.log("cenário: andar pela capela (as salas vencidas, sem custo, pelos pontos e pelo menu; nomes só no mouse ou no destaque)");
+  const { proc, url } = await subir("capela", { ETAPA: "fundo" });
+  const { page, erros } = await abrir(browser, url);
+  const MENU = "#prompt .escolhas:not(.escolhido) .escolha";
+  const foto = () => page.evaluate(() => JSON.stringify([estado.heroi.bolsa, estado.heroi.hp, estado.mundo.dia, estado.mundo.periodo_n, estado.missoes]));
+  const sala = () => page.evaluate(() => { const e = document.querySelector("#pontos-cena"); return e.dataset.cena + (e.dataset.agua ? ":" + e.dataset.agua : ""); });
+  const ir = async (texto, espera) => { await page.click(`${MENU}:has-text("${texto}")`); await page.waitForSelector(`${MENU}:has-text("${espera}")`, { timeout: 20000 }); await page.waitForTimeout(200); };
+  try {
+    await page.waitForSelector(`${MENU}:has-text("Subir à sacristia")`, { timeout: 20000 });
+    const antes = await foto();
+    conferir((await sala()) === "ossuario" && await page.evaluate(() => [...document.querySelectorAll("#pontos-cena .ci-balao")].every((b) => getComputedStyle(b).visibility === "hidden")),
+      "no ossuário, os pontos sem nome fixo sobre a arte");
+    await page.hover('.ci-ponto[data-ponto="escada"]');
+    conferir(await page.$eval('.ci-ponto[data-ponto="escada"] .ci-balao', (b) => getComputedStyle(b).visibility === "visible" && /Escada/.test(b.textContent)),
+      "o mouse na escada mostra o nome dela");
+    await page.mouse.move(2, 2);
+    await page.keyboard.press("F4");
+    await page.waitForTimeout(200);
+    conferir(await page.evaluate(() => document.body.classList.contains("destacar-interacoes")
+      && [...document.querySelectorAll("#pontos-cena .ci-ponto:not(.parado) .ci-balao")].every((b) => getComputedStyle(b).visibility === "visible")),
+      "F4 (destacar interações) mostra os nomes de todos os pontos");
+    await page.keyboard.press("F4");
+    await page.waitForTimeout(200);
+    conferir(!(await page.evaluate(() => document.body.classList.contains("destacar-interacoes"))), "F4 de novo desliga");
+    // a escada leva à sacristia (fundo neutro), o menu ao salão e à brecha; o buraco de volta ao salão, sem luta
+    await page.click('.ci-ponto[data-ponto="escada"]');
+    await page.waitForSelector(`${MENU}:has-text("Voltar ao salão alagado")`, { timeout: 20000 });
+    await page.waitForTimeout(200);
+    conferir((await sala()) === "neutra" && /Sacristia/.test(await page.textContent("#cena-cab")), "a escada sobe à sacristia: fundo neutro e a sala no subtítulo");
+    await ir("Voltar ao salão alagado", "Sair pela brecha");
+    conferir((await sala()) === "salao:quieta", "o salão vencido, quieto");
+    await ir("Sair pela brecha", "Entrar no salão pelo buraco");
+    conferir((await sala()) === "exterior", "pela brecha, do lado de fora");
+    await page.click('.ci-ponto[data-ponto="buraco"]');
+    await page.waitForSelector(`${MENU}:has-text("Sair pela brecha")`, { timeout: 20000 });
+    conferir(!(await page.evaluate(() => document.body.classList.contains("em-combate"))) && !(await page.$("#prompt .continuar")),
+      "o buraco leva de volta ao salão vencido sem luta e sem Continuar");
+    await ir("Ir à sacristia", "Descer ao ossuário pelo alçapão");
+    await ir("Descer ao ossuário pelo alçapão", "Soltar as correntes");
+    conferir((await sala()) === "ossuario" && (await foto()) === antes,
+      "ida e volta pela capela inteira: nada gasto, nenhum dia ou período a mais, a missão igual");
   } finally {
     conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
     await page.close();
@@ -1769,6 +1824,7 @@ try {
   await cenarioCapela(browser);
   await cenarioSarilho(browser);
   await cenarioCapelaFora(browser);
+  await cenarioCapelaSalas(browser);
   await cenarioCustosEExausto(browser);
   await cenarioGuardia(browser);
   await cenarioRetorno(browser);

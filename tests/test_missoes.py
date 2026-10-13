@@ -351,15 +351,17 @@ class TestMissao(unittest.TestCase):
         g = na_capela("mago")
         lutas(g, "fuga", "derrota", "vitoria")
         tochas = g.j.consumiveis["tocha"]
-        antes = json.dumps(missoes.registro(g, MID))
+        # (a sala em que se está muda com a fuga e o resgate: do lado de fora; o resto do registro não)
+        sem_sala = lambda: json.dumps({k: v for k, v in missoes.registro(g, MID).items() if k != "sala"})
+        antes = sem_sala()
         self.assertTrue(fazer(g, "nave"))  # fugiu
-        self.assertEqual(json.dumps(missoes.registro(g, MID)), antes)
+        self.assertEqual(sem_sala(), antes)
         with self.assertRaises(Derrota):  # caiu: o jogo leva ao resgate, a sala segue por vencer
             fazer(g, "nave")
-        self.assertEqual(json.dumps(missoes.registro(g, MID)), antes)
+        self.assertEqual(sem_sala(), antes)
         g.resgate()
         self.assertEqual(g.loc["chave"], "vau_do_turvo")
-        self.assertEqual(json.dumps(missoes.registro(g, MID)), antes)
+        self.assertEqual(sem_sala(), antes)
         ir(g, "capela_afogada")
         self.assertTrue(fazer(g, "nave"))  # de volta: a nave ainda está lá, e agora cai
         self.assertEqual(missoes.registro(g, MID)["etapa"], "sacristia")
@@ -371,6 +373,8 @@ class TestMissao(unittest.TestCase):
         baus = g.j.consumiveis.get("bau", 0)
         fazer(g, "sacristia")
         self.assertEqual((g.j.consumiveis.get("bau", 0), missoes.registro(g, MID)["pistas"][3:]), (baus, []))
+        self.assertFalse(fazer(g, "sacristia"))  # a fuga termina lá fora (1.79.0): primeiro, entrar de novo
+        self.assertTrue(missoes.ir_na_capela(g, "salao"))
         fazer(g, "sacristia")
         self.assertEqual(g.j.consumiveis.get("bau", 0), baus + 1)
         self.assertFalse(fazer(g, "sacristia"))  # vencida: o pedido atrasado não faz nada
@@ -396,6 +400,9 @@ class TestMissao(unittest.TestCase):
         lutas(g, "fuga")
         fazer(g, "correntes")
         self.assertEqual(missoes.registro(g, MID)["preparos"], [])
+        self.assertEqual(missoes.sala_atual(g), "sacristia")  # a fuga sobe pelo alçapão (1.79.0)
+        self.assertEqual(opcoes_febre(g), [])
+        self.assertTrue(missoes.ir_na_capela(g, "ossuario"))
         self.assertEqual([o[1][2] for o in opcoes_febre(g)], ["correntes", "fundo"])
 
     def test_arqueiro_sem_flechas_so_tem_o_caminho_geral(self):

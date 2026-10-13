@@ -294,6 +294,13 @@
   width: calc(var(--P) * 7); height: calc(var(--P) * 4); background: var(--bico) 0 0 / 100% 100%; image-rendering: pixelated; }
 .ci-ponto:is(:hover, :focus-visible, .aceso) .ci-balao { --anel: var(--anel-a); --bico: var(--bico-a); color: var(--ouro); }
 .ci-ponto.parado .ci-balao { color: var(--tinta-3); }
+/* Sem nome fixo sobre a arte: ele aparece com o mouse, com o foco do teclado ou com "Destacar interações" ligado
+   (Ajuda, F4); aí, em ouro, junto do contorno que a arte desenha em volta do ponto. */
+.ci-balao { visibility: hidden; }
+.ci-ponto:is(:hover, :focus-visible, .aceso) .ci-balao, body.destacar-interacoes .ci-ponto:not(.parado) .ci-balao { visibility: visible; }
+body.destacar-interacoes .ci-ponto:not(.parado) .ci-balao { --anel: var(--anel-a); --bico: var(--bico-a); color: var(--ouro); }
+/* O que se vê de perto num ponto de olhar (os sapos): uma linha curta embaixo do texto, até afastar. */
+#texto .olhar-perto { color: var(--tinta-2); font-style: italic; }
 /* Afastar: a volta de um ponto de olhar (os sapos), no canto da arte. */
 .ci-afastar { position: absolute; right: 8px; top: 8px; padding: 1px 10px 2px; pointer-events: auto; cursor: pointer;
   font-family: var(--texto); font-size: 13px; font-weight: 600; color: var(--tinta);

@@ -612,7 +612,7 @@ const Orientacao = (() => {
   function desenharAjuda() {
     const o = estado && estado.orientacao;
     const corpoAjuda = $("#ajuda-corpo");
-    if (!o) { corpoAjuda.innerHTML = '<p class="vazio">Comece ou carregue um jogo para ver as orientações dele.</p>'; return; }
+    if (!o) { corpoAjuda.innerHTML = '<p class="vazio">Comece ou carregue um jogo para ver as orientações dele.</p>'; botaoDestaque(corpoAjuda); return; }
     const grupos = {};
     o.linhas.forEach((l) => { (grupos[l.grupo] = grupos[l.grupo] || []).push(l.texto); });
     const lista = Object.entries(grupos).map(([g, ls]) => `<h3>${esc(g)}</h3><ul>${ls.map((t) => `<li>${negrito(t)}</li>`).join("")}</ul>`).join("");
@@ -625,6 +625,17 @@ const Orientacao = (() => {
       dispensado = !o.ligado;
       desenharAjuda();
     });
+    botaoDestaque(corpoAjuda);
+  }
+  /** "Destacar interações": os nomes e os contornos dos pontos clicáveis das cenas sempre à vista (telas/cenas.js). */
+  function botaoDestaque(corpoAjuda) {
+    const sim = Cenas.destacando();
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "botao-janela ajuda-chave ajuda-destaque"; b.setAttribute("aria-pressed", String(sim));
+    b.innerHTML = `Destacar interações: <b>${sim ? "ligado" : "desligado"}</b> <kbd>F4</kbd>`;
+    b.addEventListener("click", (ev) => { ev.stopPropagation(); Cenas.alternarDestaque(); desenharAjuda(); corpoAjuda.querySelector(".ajuda-destaque")?.focus(); });
+    const primeiro = corpoAjuda.querySelector(".ajuda-chave");
+    if (primeiro) primeiro.after(b); else corpoAjuda.prepend(b);
   }
 
   function alternarAjuda(forcar) {

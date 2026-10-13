@@ -242,6 +242,9 @@ class TestConfronto(unittest.TestCase):
         self.assertEqual((m["desfecho"], m["etapa"], sorted(m["preparos"])), (None, "fundo", ["corpo_solto", "fita"]))
         g.resgate()
         ir(g, "capela_afogada")
+        self.assertFalse(missoes.executar(g, MID, "fundo"))  # do lado de fora (1.79.0): primeiro, descer até lá
+        for sala in ("salao", "sacristia", "ossuario"):
+            self.assertTrue(missoes.ir_na_capela(g, sala))
         with self.assertRaises(Derrota):
             missoes.executar(g, MID, "fundo")
         self.assertEqual(vistas[1][0], vistas[1][1])  # ...mas a nova tentativa começa com ela inteira

@@ -33,12 +33,16 @@ def cenas(g):
     return [d for t, d in g.ui.paineis if t == "cena"]
 
 
+def sarilho(d):
+    return next(p for p in d["pontos"] if p["id"] == "sarilho")
+
+
 class TestCenaOssuario(unittest.TestCase):
     def test_presas_com_o_ponto_que_faz_a_acao_do_menu(self):
         g = no_ossuario()
         d = missoes.cena_ossuario(g, pagina=True)
         self.assertEqual((d["cena"], d["correntes"], d["foco"]), ("ossuario", "presas", None))
-        ponto = d["pontos"][0]
+        ponto = sarilho(d)
         self.assertEqual(ponto["acao"], {"missao": MID, "acao_missao": "correntes"})
         # a mesma ação do menu: a opção traz o mesmo endereço na meta
         metas = [o[1] for o in missoes.opcoes(g)]
@@ -47,19 +51,19 @@ class TestCenaOssuario(unittest.TestCase):
 
     def test_de_perto_o_ponto_nao_age_e_soltas_dizem_o_estado(self):
         g = no_ossuario()
-        self.assertIsNone(missoes.cena_ossuario(g, foco="sarilho")["pontos"][0]["acao"])
+        self.assertTrue(all(p["acao"] is None for p in missoes.cena_ossuario(g, foco="sarilho")["pontos"]))
         missoes.registro(g, MID)["preparos"].append("corpo_solto")
         d = missoes.cena_ossuario(g)
-        self.assertEqual((d["correntes"], d["pontos"][0]["acao"]), ("soltas", None))
-        self.assertIn("soltas", d["pontos"][0]["estado"])
+        self.assertEqual((d["correntes"], sarilho(d)["acao"]), ("soltas", None))
+        self.assertIn("soltas", sarilho(d)["estado"])
 
     def test_so_na_capela_e_depois_do_ossuario(self):
         g = no_ossuario()
         missoes.mostrar_cena(g)
         self.assertEqual([d["cena"] for d in cenas(g)], ["ossuario"])
-        missoes.registro(g, MID)["pistas"].remove("correntes")
+        missoes.ir_na_capela(g, "sacristia")
         missoes.mostrar_cena(g)
-        self.assertEqual(cenas(g)[-1]["cena"], "salao")  # sem ter visto o ossuário, o caminho até ele (1.76.0)
+        self.assertEqual(cenas(g)[-1]["cena"], "neutra")  # subiu à sacristia: a página mostra onde se está (1.79.0)
 
     def test_clicar_e_voltar_nao_gasta_nem_celebra(self):
         g = no_ossuario()

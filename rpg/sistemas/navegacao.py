@@ -1,6 +1,7 @@
 """Viagem entre lugares, chegada e o mapa."""
 
 from .. import abertura
+from .. import missoes
 from .. import eventos
 from .. import texto as tx
 from .. import mapa
@@ -85,6 +86,7 @@ class Navegacao:
 
     def chegar(self, loc):
         self.mundo["atual"] = loc["id"]
+        missoes.saiu_da_capela(self)  # chegar à capela viajando é chegar do lado de fora
         registrar(self, "chegada", local=loc["nome"], tipo_local=loc["tipo"], nivel_regiao=self.nivel_local(),
                   primeira=not loc["visitado"])
         primeira = not loc["visitado"]

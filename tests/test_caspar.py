@@ -48,6 +48,12 @@ def com_yara(g, onde="grupo"):
     return g
 
 
+
+def ate_o_ossuario(g):
+    """Da porta da capela até o ossuário, pelas salas já vencidas (1.79.0: a sala em que se está conta)."""
+    for sala in ("salao", "sacristia", "ossuario"):
+        assert missoes.ir_na_capela(g, sala), sala
+
 class TestAcusacao(unittest.TestCase):
     def test_acusacao_na_investigacao_uma_vez(self):
         ui = Roteiro()
@@ -146,6 +152,8 @@ class TestPraca(unittest.TestCase):
         for classe, forte in (("guerreiro", False), ("mago", True)):
             g = resolvida("descansada", classe=classe)
             ir(g, "capela_afogada")
+            self.assertEqual([o[1][2] for o in missoes.opcoes(g)], [])  # do lado de fora: o lodo é lá embaixo (1.79.0)
+            ate_o_ossuario(g)
             self.assertEqual([o[1][2] for o in missoes.opcoes(g)], ["lodo"])
             self.assertTrue(missoes.executar(g, CASPAR, "lodo"))
             self.assertFalse(missoes.executar(g, CASPAR, "lodo"))
@@ -285,6 +293,7 @@ class TestSaves(unittest.TestCase):
         self.assertIn("É o Irmão Caspar", " ".join(h.ui.ditos))
         self.assertEqual(missoes.registro(h, FEBRE)["concluida"], g.dia)  # a febre não reabre
         ir(h, "capela_afogada")
+        ate_o_ossuario(h)
         self.assertEqual([o[1][2] for o in missoes.opcoes(h)], ["lodo"])
 
     def test_procedural_sem_caspar(self):

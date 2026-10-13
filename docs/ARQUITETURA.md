@@ -201,7 +201,10 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   o `estado` escrito. Mudança de estado se anima por uma celebração mandada depois de o motor gravar o resultado. Hoje
   há três, da Capela Afogada: o exterior, o salão alagado e o ossuário (`missoes.cena_exterior`, `cena_salao`,
   `cena_ossuario`; `mostrar_cena` escolhe o da página do lugar pelo passo da missão). Um ponto pode ser só "de olhar"
-  (aproxima e afasta, sem falar com o motor). O céu do exterior vem de `Vista.ceuDo`. Ver roadmapIDEIAS/20.
+  (aproxima e afasta, sem falar com o motor; o texto curto do que se vê vem do motor). O céu do exterior vem de
+  `Vista.ceuDo`. Na capela, a sala em que se está (`missoes.sala_atual`) é separada da etapa: as passagens entre salas
+  vencidas são opções do menu (`("capela", sala)`, meta `capela_ir`) e pontos da cena; cada ação da capela tem a sua
+  sala (`onde`). Ver roadmapIDEIAS/20.
 - `batalha.js` o palco da luta (o jeito de animar vem do motor: `anim` nos lances). A arena só cresce durante a luta e cresce devagar; quando uma carta entra ou ganha a linha de efeitos, as outras deslizam até o lugar novo (`acomodar`, desvio em `top`/`left` e em pixel inteiro: `transform` e `translate` são do foco e dos golpes) · `realce.js` cores dos termos de
   jogo (os nomes de habilidades e talentos chegam do motor no `glossario` do estado) · `sprites*.js`, `vista.js`, `mapa.js`, `som.js`
 - `sensacao.js` o peso dos momentos (parada no impacto, tremor, câmera lenta no golpe final...): as telas dizem o
