@@ -453,7 +453,21 @@
     // a fenda do piso, perto do altar: um rasgo escuro no fundo raso, onde a água desce
     const fx = ox + FENDA.x, fy = FENDA.y;
     px(fx - 5, fy, 11, 1, "#020304"); px(fx - 3, fy - 1, 7, 1, "#020304"); px(fx - 2, fy + 1, 5, 1, "#03050a");
-    // os bancos: uma fileira lá atrás, entre as colunas, e a da frente, maior, podre e torta
+    // Os bancos. A água que se mexe (as rodas, o caminho dela) é desenhada depois, por cima da sala: para ela passar
+    // atrás da madeira, os bancos vão também numa camada própria, só o que está acima da linha d'água deles, que
+    // volta por cima da água a cada quadro. O que está submerso (o pé das pernas da frente) fica embaixo dela.
+    desenharBancos(px, ox);
+    const bancos = camada(W), cb = bancos.getContext("2d");
+    cb.save(); cb.beginPath(); cb.rect(0, 0, W, LINHA_BANCOS); cb.clip();
+    desenharBancos(pincel(cb), ox);
+    cb.restore();
+    return { canvas: k, ox, bancos, cor: { agua, luz } };
+  }
+
+  // A linha d'água dos bancos da frente: deles para cima, madeira à vista; para baixo, a perna dentro da água.
+  const LINHA_BANCOS = 60;
+  /** Os bancos: uma fileira lá atrás, entre as colunas, e a da frente, maior, podre e torta. */
+  function desenharBancos(px, ox) {
     const madeira = "#2c2118", madeiraLuz = "#45352a", madeiraEsc = "#1a130e";
     [[50, 14], [70, 22], [112, 16], [134, 22], [176, 14]].forEach(([x0, w], i) => {
       const x = ox + x0;
@@ -470,7 +484,6 @@
       [x, x + w - 2].forEach((bx) => { px(bx, 53, 2, 9, madeiraEsc); px(bx, 53, 2, 1, madeiraLuz); });
       px(x, 52, w - (quebrado ? 26 : 0), 1, madeiraEsc);
     });
-    return { canvas: k, ox, cor: { agua, luz } };
   }
 
   function desenharSalao(c, W, b, est, quadro, destaque) {
@@ -485,12 +498,14 @@
         const [x0, y0] = caminho[k], [x1, y1] = caminho[k + 1];
         px(Math.round(lerp(x0, x1, f)) - 1, Math.round(lerp(y0, y1, f)) + ((i % 3) - 1) * 2, 3, 1, misturar("#3a5a5c", "#1a1810", u));
       }
+      c.drawImage(b.bancos, 0, 0);
     } else {
-      // inquieta: a água se mexe em rodas por todo lado; as sanguessugas, grudadas na madeira que sai da água
+      // inquieta: a água se mexe em rodas por todo lado (atrás da madeira); as sanguessugas, grudadas nela
       for (let i = 0; i < 9; i++) {
         const cx = ox + 20 + ((i * 37 + Math.floor(q / 4) * 11) % 180), cy = 54 + (i * 5) % 12, rr = 2 + ((q + i * 3) % 6);
         for (let a = 0; a < 10; a++) px(Math.round(cx + Math.cos(a / 10 * Math.PI * 2) * rr), Math.round(cy + Math.sin(a / 10 * Math.PI * 2) * rr * 0.3), 1, 1, "#1f3438");
       }
+      c.drawImage(b.bancos, 0, 0);
       // Cada uma presa num ponto (o encosto do banco da frente, a perna de um banco de trás na linha d'água, a base de
       // uma coluna): o corpo se estica e encolhe devagar, sem sair do lugar; com movimento reduzido, parada.
       SANGUESSUGAS.forEach(([sx, sy, lado], i) => {

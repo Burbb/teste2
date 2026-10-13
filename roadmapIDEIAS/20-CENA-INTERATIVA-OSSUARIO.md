@@ -373,3 +373,20 @@ Fumaça completa (`cenarioCapelaSalas` novo). Testes novos em `test_cenas_capela
 - **Fundo:** a água pela cintura, as duas pedras de moinho, as correntes (presas ou frouxas, pelo preparo) e Ilse
   antes da luta; depois do desfecho, a água parada e clara (descanso) ou turva (destruída). Ponto: a escada para o
   ossuário. Nada disso entra antes de Jean pedir.
+
+---
+
+# Ajustes sobre a 1.79.0
+
+Pedido de Jean (13/10/2026): quatro ajustes, preservando a composição, a navegação e as animações.
+
+## A água atrás dos bancos (1.79.1)
+
+- **O problema:** as rodas da água inquieta e o caminho da água quieta eram desenhados por cima da sala inteira, e
+  passavam por cima das tábuas dos bancos da frente.
+- **Feito:** os bancos (`desenharBancos`) vão também numa camada própria, recortada na linha d'água dos bancos da
+  frente (`LINHA_BANCOS`, y 60): assentos, encostos e a parte das pernas acima da água. A cada quadro, a água animada
+  é desenhada e essa camada volta por cima; as sanguessugas vêm depois, grudadas na madeira. O pé das pernas
+  (abaixo da linha) continua embaixo da água. A animação, as cores e a composição são as mesmas.
+- **Conferido:** a arte ampliada em quatro momentos da animação, inquieta e quieta (antes: as rodas atravessavam as
+  tábuas; depois: passam atrás delas); a luta do salão com a sala como fundo da arena.
