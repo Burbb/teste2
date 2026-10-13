@@ -390,3 +390,38 @@ Pedido de Jean (13/10/2026): quatro ajustes, preservando a composição, a naveg
   (abaixo da linha) continua embaixo da água. A animação, as cores e a composição são as mesmas.
 - **Conferido:** a arte ampliada em quatro momentos da animação, inquieta e quieta (antes: as rodas atravessavam as
   tábuas; depois: passam atrás delas); a luta do salão com a sala como fundo da arena.
+
+## Referência de iluminação para os próximos cenários
+
+A luz do ossuário (1.78.0) é a referência para os cenários desenhados que vierem, a começar pela **sacristia** e pelo
+**fundo com Ilse**. Não é uma regra de código (cada cenário desenha a sua luz); é o critério para desenhar e revisar.
+
+1. **Uma fonte de luz que se identifica.** Quem olha sabe de onde vem a luz: uma tocha na parede, uma lamparina, uma
+   janela, o céu. A fonte aparece desenhada (a chama, o vidro) e tem a cor dela (quente para fogo, fria para
+   luar e dia nublado).
+2. **Luz concentrada em volta dela.** Anéis de pixel inteiro, do mais forte (perto da chama) ao mais fraco, que tremem
+   de leve com a chama (parados com movimento reduzido). Nada de facho pontilhado atravessando a cena nem de brilho
+   espalhado por igual.
+3. **Penumbra gradual longe dela.** A sala escurece em degraus de preto translúcido com o pontilhado de Bayer entre um
+   degrau e outro (`escurecer` em `telas/cenas.js`): os cantos e o que está longe ficam na penumbra, não no preto.
+4. **A leitura vem antes do clima.** O escuro nunca esconde o que importa: os objetos com ação (o sarilho), as
+   passagens (a escada, a porta, a brecha) e quem está na sala continuam legíveis, com a forma inteira à vista. Se
+   algo importante cai longe da fonte, a fonte muda de lugar (foi o que aconteceu com a tocha do ossuário), não o
+   objeto.
+5. **Luz secundária discreta e coerente com a hora.** O que vem de fora (um alçapão, uma fresta) é fraco, segue o
+   período e some à noite; nunca um sol forte numa cena noturna.
+6. **A luz é só desenho.** Ela não mexe em tocha, emboscada, risco nem em nada do motor.
+
+**Cada ambiente com o que é dele:** nos interiores, tochas, lamparinas e janelas (a janela segue o período e o clima
+lá de fora); nos exteriores, o período e o clima das paisagens (`Vista.ceuDo`), sem uma tocha inventada.
+
+**Para a sacristia:** a lanterna dos cultistas (ou a que sobrou, depois da luta) como fonte, a janela alta com a luz do
+período, a penumbra nos cantos das prateleiras; o alçapão e a porta do salão legíveis. **Para o fundo:** a tocha de
+quem desce como fonte (o reflexo dela na água), a água pela cintura escurecendo para longe, as pedras de moinho e Ilse
+legíveis na luz; depois do descanso, a água clara; depois da destruição, turva.
+
+**O mercado (decidido nesta entrega: fica como está).** A banca do Vale já segue o mesmo princípio onde ele faz
+sentido: a lamparina à esquerda do mercador é a fonte de dentro, e ao anoitecer e à noite a loja escurece em degraus
+longe dela (`LUZ_DE_FORA` em `telas/mercado.js`). De dia, a luz principal é a da janela e da porta, como pede um
+interior com janela. Trocar para a luz do ossuário também de dia escureceria a mercadoria (que precisa ser lida) e
+destoaria da vila clara lá fora. Não foi redesenhada.

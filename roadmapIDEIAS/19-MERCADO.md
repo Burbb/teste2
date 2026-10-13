@@ -233,6 +233,12 @@ estoque, limites, sorteios e navegação não mudaram.
     - nenhum erro no console.
 - **Falta:** Jean conferir.
 
+## A luz da banca e a referência de iluminação (13/10/2026)
+
+Jean perguntou se a luz do ossuário caberia no mercado. Decisão: não mudar. A banca já usa a lamparina como fonte de
+dentro e escurece longe dela ao anoitecer e à noite; de dia, a luz é a da janela e da porta. A referência de luz para
+os próximos cenários está em [20](20-CENA-INTERATIVA-OSSUARIO.md#referência-de-iluminação-para-os-próximos-cenários).
+
 ## Como Jean testa
 
 1. Numa vila, entre no mercado: a banca aparece num pontilhado, e a aba Suprimentos já está aberta.
