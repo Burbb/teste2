@@ -129,6 +129,22 @@ class TestResgate(unittest.TestCase):
         self.assertEqual({m["id"]: m["hp"] for m in cm.membros(g)}, vida)
         self.assertIn("deu caldo a você e à comitiva", " ".join(g.ui.ditos))
 
+    def test_soldo_do_morel_vem_depois_de_acordar(self):
+        # O sétimo dia de Morel cai num dos dois dias do resgate: a cobrança espera o herói ser achado e acordar na
+        # casa de Marta (antes, Morel estendia a mão enquanto o herói ainda estava caído). Paga com o ouro que sobrou.
+        for dias in (5, 6):  # o sétimo dia no primeiro ou no segundo dia do resgate
+            ui = Roteiro(["Pagar"])
+            g = no_charco(ui=ui, ouro=100)
+            cm.recrutar(g, "morel")["dias"] = dias
+            g.resgate()
+            ditos = " ".join(ui.ditos)
+            self.assertIn("Morel estende a mão aberta", ditos)
+            self.assertLess(ditos.index("Alguém do Vau te acha"), ditos.index("Morel estende a mão aberta"), dias)
+            self.assertLess(ditos.index("Parte do seu ouro sumiu"), ditos.index("Morel estende a mão aberta"), dias)
+            valor = 8 + 3 * g.j.nivel
+            self.assertEqual(g.j.ouro, 100 - 30 - valor)  # o resgate leva 30%; o soldo sai do que ficou
+            self.assertEqual(ui.ofertas[-1][0], f"Pagar {valor} ouro")
+
     def test_fome_encerra_a_emergencia(self):
         g = faminto(no_charco(ouro=0))
         g.resgate(cair_de_noite(g))

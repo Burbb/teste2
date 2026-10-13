@@ -70,7 +70,11 @@ class Tempo:
                                            "clima_desc": descricao_clima(self.clima), "itens": relato})
         queda, self.queda_pendente = self.queda_pendente, None
         if not queda:
-            comitiva.depois_do_amanhecer(self, famintos)  # queixas e soldo: conversa, não relato
+            if self.amanhecer_adiado is not None:  # no resgate, a comitiva fala depois que o herói acorda
+                self.amanhecer_adiado["famintos"] += famintos
+                self.amanhecer_adiado["soldo"] = self.amanhecer_adiado["soldo"] or comitiva.soldo_devido(self)
+            else:
+                comitiva.depois_do_amanhecer(self, famintos)  # queixas e soldo: conversa, não relato
         registrar(self, "dia", descanso=descanso, provisoes=self.j.provisoes, fome=self.j.fome,
                   ferimentos=len(self.j.ferimentos), local=self.loc["nome"], poder_equip=telemetria.poder_equip(self.j),
                   ouro_fontes=dict(self.estatisticas.get("ouro_fontes", {})),

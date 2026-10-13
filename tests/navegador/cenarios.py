@@ -357,7 +357,8 @@ def resgate(ui):
     (COMITIVA=0: sozinho). CAUSA=fome (padrão): três dias sem comer, sem provisões, 3 de ouro e pouca vida; a próxima
     noite derruba. CAUSA=infeccao: uma infecção e um corte aberto, um dia de fome (que corta a cura do acampamento) e
     40 de ouro. Acampar leva ao resgate no Vau, na casa de Marta (Pita cuida: a febre do Vau ainda não acabou).
-    CONTRATOS=n: n contratos de caça já cumpridos, que pagam na página do Vau depois do resgate. Sair leva ao título."""
+    CONTRATOS=n: n contratos de caça já cumpridos, que pagam na página do Vau depois do resgate. MOREL_DIAS=4: o sétimo
+    dia de Morel cai nos dias do resgate (o soldo vem depois de acordar); OURO, o ouro. Sair leva ao título."""
     from rpg.__main__ import menu_principal
     from rpg.ui import BotUI
     pasta = tempfile.mkdtemp()
@@ -368,7 +369,7 @@ def resgate(ui):
     missoes.registro(g, "febre_do_turvo").update(etapa="capela", cenas=["abertura"],
                                                  pistas=["agua_do_leste", "represa", "canal_da_capela"])
     if os.environ.get("COMITIVA", "1") != "0":
-        cm.recrutar(g, "morel")
+        cm.recrutar(g, "morel")["dias"] = int(os.environ.get("MOREL_DIAS", "0"))  # 4: o soldo cai no resgate
         cm.recrutar(g, "odete")
     j = g.j
     if os.environ.get("CAUSA", "fome") == "infeccao":
@@ -380,6 +381,8 @@ def resgate(ui):
         j.provisoes, j.fome, j.ouro = 0, 3, 3
         j.recalcular()
         j.hp = 2
+    if os.environ.get("OURO"):
+        j.ouro = int(os.environ["OURO"])
     for l in g.mundo["locais"]:
         l["visitado"] = l["chave"] in ("vau_do_turvo", "charco_dos_juncos", "bosque_do_moinho")
     g.mundo["atual"] = next(l["id"] for l in g.mundo["locais"] if l["chave"] == "charco_dos_juncos")

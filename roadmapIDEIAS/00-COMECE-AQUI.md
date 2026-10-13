@@ -1559,3 +1559,11 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
 - **Verificado:** testes (`test_bandagem.py` novo), gabarito (24 partidas divergem no uso da bandagem; examinado),
   equilíbrio e replay iguais, saque_vale medido, pyflakes, fumaça completa, telas a 1500 e 1280 px.
 - **Falta:** Jean conferir; jogadores novos. A E9 continua aberta.
+
+### 13/10/2026 — O soldo de Morel no resgate (E9, 1.70.1)
+
+- **Achado de Jean:** caído no dia de pagar Morel, ele cobrava antes de o herói ser achado e levado à casa de Marta.
+- **Feito:** reproduzido em teste; nos dias do resgate, a fala da comitiva ao amanhecer (fome, soldo) espera o herói
+  acordar e perder o ouro do resgate (`Jogo.amanhecer_adiado`, `comitiva.soldo_devido`).
+- **Verificado:** testes, gabarito igual sem atualizar, pyflakes, fumaça completa, tela a 1500 e 1280 px.
+- **Falta:** Jean conferir. A E9 continua aberta.

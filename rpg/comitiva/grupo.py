@@ -259,11 +259,18 @@ def amanhecer(g, descanso, refeicao=False):
     return comer(g) if not refeicao else []
 
 
-def depois_do_amanhecer(g, famintos):
-    """O que a comitiva diz quando o dia já raiou: a queixa de quem passou fome, e o soldo do Morel."""
+def soldo_devido(g):
+    """Hoje Morel cobra: a cada sete dias na comitiva."""
+    m = membro(g, "morel") if presente(g, "morel") else None
+    return bool(m) and m["dias"] > 0 and m["dias"] % 7 == 0
+
+
+def depois_do_amanhecer(g, famintos, soldo=None):
+    """O que a comitiva diz quando o dia já raiou: a queixa de quem passou fome, e o soldo do Morel. soldo: se ele
+    cobra (None: o de hoje); o resgate guarda os dois dias e chama isto quando o herói acorda (Jogo.resgate_campanha)."""
     for cid in famintos:
         mudar_aprovacao(g, cid, -6, fala=f"{nome(cid)} passa o dia sem comer. Não reclama em voz alta.")
-    if presente(g, "morel"):
+    if soldo_devido(g) if soldo is None else soldo:
         pagar_soldo(g)
 
 
@@ -282,9 +289,6 @@ def comer(g):
 
 
 def pagar_soldo(g):
-    m = membro(g, "morel")
-    if m["dias"] == 0 or m["dias"] % 7:
-        return
     valor = 8 + 3 * g.j.nivel
     g.dizer(f"Morel estende a mão aberta. \"Sete dias. O soldo: {valor} moedas.\"", "amarelo")
     opcoes = [(f"Pagar {valor} ouro", "pagar") if g.j.ouro >= valor else None,

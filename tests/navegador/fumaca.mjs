@@ -1442,7 +1442,13 @@ async function cenarioFeridas(browser) {
       await page.keyboard.press("Escape");
       conferir(await ate(page, /^A bandagem protege a ferida contra infecção\. O ferimento ainda precisa sarar\./) && (await pontaNoAlvo(page)) <= 2,
         "F2: na cena seguinte, a bandagem da bolsa");
-      await page.click('#heroi .slot-px[data-bolsa="bandagem"]');
+      // O clique só vale com o menu aceitando o uso (sem cena correndo): sob carga, ele espera a vez em vez de cair
+      // no "Agora não".
+      for (let k = 0; k < 8 && (await page.evaluate(() => estado.heroi.bandagens)) === 2; k++) {
+        await page.waitForFunction(() => !processando && pergunta && pergunta.tipo === "opcoes" && pergunta.opcoes.some((o) => o.meta && o.meta.usar === "bandagem"), null, { timeout: 10000 }).catch(() => {});
+        await page.click('#heroi .slot-px[data-bolsa="bandagem"]');
+        await page.waitForTimeout(700);
+      }
       await page.waitForFunction(() => estado.heroi.ferimentos.every((f) => !f.aberto), null, { timeout: 10000 }).catch(() => {});
       conferir(await page.evaluate(() => !/aberto/.test(document.querySelector("#heroi .ferimento").textContent)) && !/bandagem protege/.test(await quadro(page)),
         "usada a bandagem, a ficha mostra a ferida tratada e o quadro sai");

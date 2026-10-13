@@ -31,6 +31,7 @@ Avaliação integrada do Vale do Turvo como primeiro capítulo (a E9 antecipada,
   detalhes: Curandeira, Templo, o cartão Dormir e a fogueira em linhas curtas ([18](18-E9-ABERTURA-GUIADA.md), seção 21).
 - **A bandagem só enfaixa, 1.70.0 (seção 30):** sem vida, só ferida aberta do herói, uma por uso; o primeiro
   ferimento em três linhas; as flechas recolhidas no espólio ([18](18-E9-ABERTURA-GUIADA.md), seção 22).
+- **Correção 1.70.1 (seção 31):** o soldo de Morel que caía nos dias do resgate vem depois de o herói acordar.
 - **Quarta entrega, 1.65.2 e 1.65.3 (seção 19):** a partida da Quibia lida; os contratos pagos depois do resgate; o
   ×N dos baús em destaque. A especificação da abertura guiada fica em [18](18-E9-ABERTURA-GUIADA.md).
 - **Correção 1.65.1 (seção 18):** os três pontos que faltaram na mensagem cortada: a percepção do Mago na água, o nome
@@ -953,6 +954,28 @@ quadro do espólio.
 
 **Medida:** no `saque_vale`, os percursos completos foram de 61 para 57, quase todos do arqueiro (16 → 12), que cai
 um pouco mais. Equilíbrio e replay ficaram iguais. Nada foi compensado. Detalhe na seção 22 do 18.
+
+**A E9 continua aberta** até a validação com jogadores novos.
+
+## 31. O soldo de Morel no resgate (1.70.1)
+
+Achado de Jean: quando o herói caía e o sétimo dia de Morel vinha nos dois dias do resgate, Morel cobrava o soldo
+antes de alguém do Vau achar o herói e levá-lo para a casa de Marta. **Reproduzido** num teste: os dois dias passam
+antes da narração do resgate, e o soldo era cobrado dentro do amanhecer.
+
+**Corrigido:** nos dias do resgate, o que a comitiva diz ao amanhecer (a queixa da fome e o soldo) fica guardado
+(`Jogo.amanhecer_adiado`) e acontece depois do texto do despertar e da perda de 30% do ouro. Então Morel cobra com o
+ouro que sobrou, como numa manhã qualquer. Se o sétimo dia cai no primeiro dos dois dias, o soldo também vem
+(`comitiva.soldo_devido` é anotado no dia certo). Nada mais mudou: valor, regras, sorteios, e o resgate do mundo
+gerado, que já narrava antes de passar os dias.
+
+**Verificado:**
+- teste `test_soldo_do_morel_vem_depois_de_acordar` (o sétimo dia no primeiro e no segundo dia do resgate);
+- gabarito idêntico sem atualizar;
+- pyflakes e fumaça completa (o passo da bandagem no cenário de ferimentos falhou uma vez com duas fumaças rodando
+  juntas: o clique chegava antes de o menu aceitar o uso; agora ele espera a vez e confere que a bandagem foi gasta);
+- na tela, a 1500 e 1280 px (cenário `resgate` com `MOREL_DIAS=4`): "Alguém do Vau te acha…", o −30 ouro, e só
+  então "Morel estende a mão aberta" com Pagar/Dizer que não há dinheiro.
 
 **A E9 continua aberta** até a validação com jogadores novos.
 

@@ -78,6 +78,7 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         self.combate_ativo = None
         self.queda_pendente = None  # a fome ou a infecção derrubou o herói nesta noite (só a campanha com resgate)
         self.resgatando = False     # os dois dias do resgate: nada derruba de novo enquanto ele é tratado
+        self.amanhecer_adiado = None  # nesses dias, o que a comitiva diz ao amanhecer (o soldo) espera o herói acordar
         self.autosalvar = False  # ligado pelo menu principal quando há uma pessoa jogando
         self.comitiva = []
         self.reserva = []  # companheiros que esperam no acampamento
@@ -397,11 +398,13 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
             j.companheiro["hp"] = j.companheiro["max_hp"]
         j.hp = min(j.max_hp, max(j.hp, int(j.max_hp * 0.4)))
         self.resgatando = True
+        self.amanhecer_adiado = {"famintos": [], "soldo": False}
         try:
             self.novo_dia(descanso=0, refeicao=True, quadro=False)  # um quadro só, no fim dos dois dias
             self.novo_dia(descanso=1, refeicao=True)
         finally:
             self.resgatando = False
+            adiado, self.amanhecer_adiado = self.amanhecer_adiado, None
         marta = consequencias.marta_de_pe(self)  # depois dos dois dias: a água pode ter limpado neles
         quem = "Marta" if marta else "Pita"
         self.narrar("Alguém do Vau te acha desacordado e te leva para a casa de Marta. " +
@@ -414,6 +417,9 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         if perda:
             self.dizer("Parte do seu ouro sumiu enquanto você estava desacordado.", "cinza")
         registrar(self, "resgate", causa=causa, perda=perda)
+        # Só agora, acordado na casa de Marta e com o ouro que sobrou, a comitiva fala do amanhecer: o soldo de Morel,
+        # se o sétimo dia caiu nos dois dias do resgate (antes, ele cobrava com o herói ainda caído na estrada).
+        comitiva.depois_do_amanhecer(self, adiado["famintos"], adiado["soldo"])
         self.pausar()
 
     def contexto_cena(self):
