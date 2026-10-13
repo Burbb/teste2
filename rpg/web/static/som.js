@@ -181,6 +181,13 @@ const Som = (() => {
       tom(t + 0.05, 130, 0.05, 1.2, "triangle", 82);
     },
     sucesso() { const t = ctx.currentTime; tom(t, 523, 0.12, 0.35, "triangle"); tom(t + 0.09, 784, 0.1, 0.5, "triangle"); },
+    corrente() {  // a trava que salta, os elos correndo pelo tambor e descendo, e a água lá embaixo
+      const t = ctx.currentTime;
+      estalo(t, 1800, 0.3, 0.05); tom(t, 140, 0.2, 0.2, "square", 90);
+      for (let i = 0; i < 22; i++) estalo(t + 0.15 + i * 0.1 + Math.random() * 0.03, 2600 - i * 60, 0.12, 0.03);
+      tom(t + 0.1, 70, 0.18, 2.4, "sawtooth", 45);
+      sopro(t + 2.5, 0.6, 900, 200, 0.18, 2);
+    },
     falha() { const t = ctx.currentTime; tom(t, 196, 0.14, 0.5, "sawtooth", 130); },
     critico() { const t = ctx.currentTime; [523, 659, 784, 1046].forEach((f, i) => tom(t + i * 0.07, f, 0.1, 0.6, "triangle")); },
     golpe() {

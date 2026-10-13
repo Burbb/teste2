@@ -567,6 +567,7 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         if self.contratos_aqui():
             abertura.visto(self, "K2")  # chegou ao lugar do contrato: o quadro que mostrava onde ele fica não volta
         abertura.dica_texto(self, "fora")  # na interface de texto, a orientação da vez numa linha
+        missoes.mostrar_cena(self)  # na capela, depois do ossuário: a sala desenhada, com o sarilho (tela gráfica)
         antes = abertura.proxima(self)
         op = self.menu("O que você faz?", opcoes + self.opcoes_comuns())
         abertura.depois_do_menu(self, antes, op)

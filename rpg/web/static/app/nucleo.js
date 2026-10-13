@@ -224,7 +224,9 @@ async function tratar(m) {
         await Telas.abrirAchado(m.dados, replay);
         break;
       }
-      if (emMenu()) seguir = false;  // a tela desenhada (inventário, mercado, mural) se lê de cima: a página não desce
+      // A tela desenhada (inventário, mercado, mural, a cena do lugar) se lê de cima: a página não desce. A cena de perto
+      // (o sarilho) é o começo de uma cena com texto e escolhas: ela segue como as outras.
+      if (emMenu() || (m.tipo === "cena" && !(m.dados && m.dados.foco))) seguir = false;
       anexar(Telas.painel(m));
       break;
     }

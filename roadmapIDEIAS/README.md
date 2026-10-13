@@ -47,6 +47,7 @@ Para uma nova conta ou sessão, começar por [00 — Comece aqui: continuidade](
 | [17-E9-VALIDACAO-DO-VALE.md](17-E9-VALIDACAO-DO-VALE.md) | E9: avaliação integrada do Vale (percurso completo, encerramento, começo, ritmo e progressão), os achados por prioridade, as propostas, o roteiro de Jean e a ficha para jogadores novos; a partida de Jean, a recuperação, a nota da comitiva e o fim do capítulo (1.64.0), medidos antes e depois |
 | [18-E9-ABERTURA-GUIADA.md](18-E9-ABERTURA-GUIADA.md) | E9: especificação da abertura guiada da campanha (caixa "Mostrar tutorial", a luta curta na despensa, Morel previsível, os quadros de orientação, mouse e teclado, salvar e carregar, escopo mínimo, critérios do teste) e a investigação de como a noite é percebida |
 | [19-MERCADO.md](19-MERCADO.md) | O mercado com abas (Suprimentos, Equipamentos, Vender), a lista que rola sozinha, os motivos vindos do motor e a banca em pixel art (1.71.0) |
+| [20-CENA-INTERATIVA-OSSUARIO.md](20-CENA-INTERATIVA-OSSUARIO.md) | A primeira cena interativa da campanha: o ossuário da capela desenhado, o sarilho como ponto clicável que faz a ação do menu, a corrente que só desce depois do resultado (1.72.0) |
 
 ## Estados e evidências
 

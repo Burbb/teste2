@@ -278,3 +278,19 @@
   .loja-recompra { min-height: 34px; }
   .loja-recompra .celula { width: 34px; height: 34px; }
 }
+
+/* ------------------------------------------------------------------ cenas interativas (roadmapIDEIAS/20) */
+/* O lugar desenhado em pixel art, com os pontos clicáveis por cima (como os prédios da vila): o nome sempre à vista,
+   o contorno no mouse e no foco do teclado. */
+.cena-interativa { margin: 4px 0 14px; }
+.ci-palco { position: relative; border: var(--borda) solid var(--p-j); border-image: var(--anel-j) 1 / 1 stretch; background: #0b0d10; }
+.ci-arte { display: block; width: 100%; height: auto; image-rendering: pixelated; }
+.ci-pontos { position: absolute; inset: 0; }
+.ci-pontos[hidden] { display: none; }
+.ci-ponto { position: absolute; padding: 0; background: none; border: 0; cursor: pointer; }
+.ci-ponto.parado { cursor: default; }
+.ci-ponto:focus-visible { outline: 2px dashed var(--ouro); outline-offset: 2px; }
+.ci-balao { position: absolute; transform: translate(-50%, -100%); white-space: nowrap; padding: 1px 8px 2px; font-family: var(--texto); font-size: 14px;
+  color: var(--tinta); background: rgba(10, 8, 6, 0.82); border: 2px solid #4a3c2c; pointer-events: none; }
+.ci-ponto:hover .ci-balao, .ci-ponto:focus-visible .ci-balao, .ci-ponto.aceso .ci-balao { color: var(--ouro); border-color: var(--ouro); }
+.ci-ponto.parado .ci-balao { color: var(--tinta-3); }

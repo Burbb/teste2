@@ -234,6 +234,7 @@
       return new Promise((r) => setTimeout(r, 700));
     }
     if (m.tipo === "derrota") return queda(d, instantaneo);
+    if (m.tipo === "correntes") return Telas.soltarCorrentes(instantaneo);  // o preparo gravado: a corrente desce
     if (m.tipo === "vitoria") {
       if (instantaneo) return Promise.resolve();
       App.som("vitoria");

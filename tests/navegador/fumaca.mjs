@@ -628,6 +628,26 @@ async function cenarioSarilho(browser) {
     await page.waitForSelector(`${MENU}:has-text("Soltar as correntes")`, { timeout: 20000 });
     conferir((await foto()) === antes && !(await page.$("#texto .novidade-missao")) && !(await page.$("#prompt .continuar")),
       "voltar não gasta nada, não mostra cartão e devolve o menu da capela");
+    // A cena do ossuário (1.72.0): o sarilho é um ponto da sala que faz a mesma ação do menu.
+    const sala = () => page.evaluate(() => [...document.querySelectorAll("#texto .cena-interativa")].map((e) => e.dataset.correntes + (e.classList.contains("perto") ? "/perto" : "")).join());
+    conferir((await sala()) === "presas" && !!(await page.$('.ci-ponto[data-ponto="sarilho"]:not(.parado) .ci-balao')),
+      "a página da capela desenha o ossuário com o sarilho (correntes presas) e o nome dele à vista");
+    await page.hover(".ci-ponto");
+    conferir(await page.$eval(".ci-ponto", (b) => b.classList.contains("aceso")), "o mouse em cima acende o sarilho");
+    await page.mouse.move(2, 2);
+    await page.focus(".ci-ponto");
+    conferir(await page.$eval(".ci-ponto", (b) => b.classList.contains("aceso") && b.matches(":focus-visible, :focus")), "o foco do teclado acende do mesmo jeito");
+    await page.keyboard.press("Enter");
+    await page.waitForSelector(`${MENU}:has-text("Deixar como está")`, { timeout: 20000 });
+    conferir((await sala()) === "presas/perto" && (await foto()) === antes, "Enter no sarilho aproxima e abre as mesmas formas de soltar, sem gastar nada");
+    await page.click(`${MENU}:has-text("Deixar como está")`);
+    await page.waitForSelector(`${MENU}:has-text("Soltar as correntes")`, { timeout: 20000 });
+    await page.click(".ci-ponto");
+    await page.waitForSelector(`${MENU}:has-text("Deixar como está")`, { timeout: 20000 });
+    conferir((await foto()) === antes, "o clique também só abre as alternativas");
+    await page.click(`${MENU}:has-text("Deixar como está")`);
+    await page.waitForSelector(`${MENU}:has-text("Soltar as correntes")`, { timeout: 20000 });
+    conferir((await sala()) === "presas" && (await foto()) === antes, "de volta: a sala de antes, nada gasto");
   } finally {
     conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
     await page.close();
@@ -704,6 +724,9 @@ async function cenarioGuardia(browser) {
   const MENU = "#prompt .escolhas:not(.escolhido) .escolha";
   const missao = () => page.evaluate(() => (estado.missoes || [])[0]);
   try {
+    await page.waitForSelector(`${MENU}:has-text("Descer ao fundo")`, { timeout: 20000 });
+    conferir(await page.$eval("#texto .cena-interativa", (e) => e.dataset.correntes === "soltas" && !!e.querySelector(".ci-ponto.parado")),
+      "com as correntes soltas, o ossuário já as desenha soltas e o sarilho não oferece ação");
     await (await page.waitForSelector(`${MENU}:has-text("Descer ao fundo")`, { timeout: 20000 })).click();
     await page.waitForSelector(`${MENU}:has-text("Lutar para destruí-la")`, { timeout: 20000 });
     conferir(!!(await page.$(`${MENU}:has-text("Chamar Ilse pelo nome")`)), "com a verdade, a fita e as correntes, a descida oferece o rito e a luta para destruir");

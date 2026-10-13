@@ -1588,3 +1588,15 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
 - **Verificado:** testes (`test_mercado.py` novo), gabarito (só os campos novos do painel; examinado), pyflakes,
   fumaça completa (`cenarioMercado` novo), telas a 1500 e 1280 px, com altura reduzida e movimento reduzido.
 - **Falta:** Jean conferir.
+
+### 13/10/2026 — A primeira cena interativa: o ossuário e o sarilho (1.72.0)
+
+- **Pedido de Jean:** começar a representação visual da campanha pela capela: o ossuário, com o sarilho clicável que
+  enquadra o mecanismo e abre as alternativas de sempre; o motor resolve, a cena mostra o resultado.
+- **Feito:** a sala desenhada na página da capela (depois do ossuário visto); o sarilho como ponto (mouse, teclado,
+  nome sempre à vista) que faz a mesma ação do menu; a aproximação; a corrente que só desce depois de o preparo ser
+  gravado, inclusive depois da luta; recarga e save sem repetir nada. Detalhe em [20](20-CENA-INTERATIVA-OSSUARIO.md).
+- **Verificado:** testes (`test_cena_ossuario.py` novo), gabarito idêntico, pyflakes, fumaça completa
+  (`cenarioSarilho` e `cenarioGuardia` ampliados), telas a 1500 e 1280 px com altura reduzida: classe, à mão, fuga,
+  derrota, recarga, salvar e carregar, movimento reduzido.
+- **Falta:** Jean conferir.

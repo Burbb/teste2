@@ -192,6 +192,10 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   O mercado (`telas/mercado.js`) é a tela com abas: elas são só da tela (não falam com o motor); a tela ocupa a altura
   visível da página e só a lista da aba rola; a banca é desenhada em canvas, no estilo das paisagens. O que não se
   compra vem com o `motivo` do motor (`Loja.dados_loja`). Ver roadmapIDEIAS/19.
+  A cena interativa (`telas/cenas.js`, tipo `cena`) desenha um lugar com pontos clicáveis: o motor manda o estado e,
+  em cada ponto, a `acao` (a mesma meta de uma opção do menu: o clique só aproxima a câmera e escolhe aquela opção) ou
+  o `estado` escrito. Mudança de estado se anima por uma celebração mandada depois de o motor gravar o resultado. Hoje
+  há uma cena só: o ossuário da capela (`missoes.cena_ossuario`). Ver roadmapIDEIAS/20.
 - `batalha.js` o palco da luta (o jeito de animar vem do motor: `anim` nos lances). A arena só cresce durante a luta e cresce devagar; quando uma carta entra ou ganha a linha de efeitos, as outras deslizam até o lugar novo (`acomodar`, desvio em `top`/`left` e em pixel inteiro: `transform` e `translate` são do foco e dos golpes) · `realce.js` cores dos termos de
   jogo (os nomes de habilidades e talentos chegam do motor no `glossario` do estado) · `sprites*.js`, `vista.js`, `mapa.js`, `som.js`
 - `sensacao.js` o peso dos momentos (parada no impacto, tremor, câmera lenta no golpe final...): as telas dizem o

@@ -539,13 +539,38 @@ ATALHOS_CORRENTES = {
 CD_CORRENTES = 13
 
 
+# A cena interativa do ossuário (roadmapIDEIAS/20): a tela gráfica desenha a sala com o sarilho, e o sarilho é um ponto
+# clicável que faz a mesma ação do menu ("Soltar as correntes"). O motor diz o estado (as correntes presas ou soltas,
+# pelo preparo gravado) e o que o ponto faz agora; a tela só desenha. A animação da corrente descendo vem depois de o
+# preparo ser gravado (celebrar "correntes"): ela mostra o resultado, não o decide.
+def cena_ossuario(g, mid="febre_do_turvo", foco=None):
+    m = registro(g, mid)
+    soltas = "corpo_solto" in m["preparos"]
+    pode = any(d["id"] == "correntes" and d["missao"] == mid and _vale(g, d) for d in ACOES)
+    ponto = {"id": "sarilho", "nome": "Sarilho",
+             "acao": {"missao": mid, "acao_missao": "correntes"} if pode and not foco else None,
+             "estado": "As correntes estão soltas." if soltas else "As correntes estão presas pela trava."}
+    return {"cena": "ossuario", "correntes": "soltas" if soltas else "presas", "foco": foco, "pontos": [ponto],
+            "titulo": "O Ossuário"}
+
+
+def mostrar_cena(g):
+    """Na página da capela, depois de chegar ao ossuário: a sala desenhada, com o sarilho (só na tela gráfica)."""
+    m = g.campanha and registro(g, "febre_do_turvo")
+    if m and g.loc.get("chave") == "capela_afogada" and "correntes" in m["pistas"]:
+        g.ui.painel("cena", cena_ossuario(g))
+
+
 def _soltar(g, mid):
-    """O fim comum: a corrente desce frouxa e o preparo fica registrado."""
+    """O fim comum: a corrente desce frouxa e o preparo fica registrado. Só depois disso a tela mostra a corrente
+    descendo (e, recarregada, já desenha as correntes soltas)."""
     m = registro(g, mid)
     if "corpo_solto" not in m["preparos"]:
         m["preparos"].append("corpo_solto")
         from .telemetria import registrar
         registrar(g, "missao", missao=mid, preparo="corpo_solto")
+    if g.ui.conquistas_na_tela:
+        g.ui.celebrar("correntes", {"cena": "ossuario"})
     g.narrar("Lá embaixo, a água se mexe uma vez e para: o que estava preso às pedras de moinho está solto.")
 
 
@@ -556,6 +581,7 @@ def _onda_de_afogados(g, mid):
         _recuo(g, "O Sarilho", "Você sobe pelo alçapão e deixa o sarilho como estava. As correntes continuam presas.")
         return
     g.ui.cena("O Sarilho", g.contexto_cena(), "evento")
+    g.ui.painel("cena", cena_ossuario(g, mid, foco="sarilho"))
     g.narrar("Com a sala quieta de novo, você termina o trabalho. A última volta da corrente escorrega do eixo e desce, "
              "frouxa, para o fundo.")
     g.avancar_periodo()
@@ -604,6 +630,7 @@ def _soltar_correntes(g, mid):
     pede Continuar: a função devolve False."""
     m = registro(g, mid)
     g.ui.cena("O Sarilho", g.contexto_cena(), "evento")
+    g.ui.painel("cena", cena_ossuario(g, mid, foco="sarilho"))  # a tela gráfica enquadra o mecanismo
     g.narrar("As correntes saem do sarilho, um eixo grosso de madeira no fundo do ossuário, e descem pelo buraco do chão "
              "até as duas pedras de moinho, lá embaixo na água. Uma trava de ferro segura o eixo para ele não girar.")
     if sabe_do_rito(m):
@@ -942,7 +969,7 @@ def opcoes(g):
         return []
     validas = sorted((d for d in ACOES if _vale(g, d)), key=lambda d: bool(d.get("avanca")))  # estável: o resto na ordem
     return [(d["rotulo"](g) if callable(d["rotulo"]) else d["rotulo"], ("missao", d["missao"], d["id"]),
-             {**d.get("meta", {}), "missao": d["missao"], **({"abre": True} if d.get("abre") else {}),
+             {**d.get("meta", {}), "missao": d["missao"], "acao_missao": d["id"], **({"abre": True} if d.get("abre") else {}),
               **_nota_sala(g, d)})
             for d in validas]
 
