@@ -139,13 +139,14 @@ function entrarNoPredio(id, pedido = false, continua = false) {
   const caixa = el("div", "tela balcao-predio");
   caixa.innerHTML = Telas.topoBalcao(icone, quem, motivo || fala, ouro) + (g.length ? `<div class="servicos">${g.map(({ o, i }) => Telas.cartaoServico({
     icone: o.meta.alvo || ICONE_SERVICO[o.meta.servico] || icone, nome: o.meta.curto || o.texto, efeito: o.meta.efeito, preco: o.meta.preco,
-    tempo: o.meta.tempo, linhas: o.meta.linhas, motivo: o.meta.preco > ouro ? "Ouro insuficiente." : "", attrs: `data-i="${i}"${o.meta.servico ? ` data-servico="${o.meta.servico}"` : ""}`,
+    tempo: o.meta.tempo, linhas: o.meta.linhas, motivo: o.meta.motivo || "", attrs: `data-i="${i}"${o.meta.servico ? ` data-servico="${o.meta.servico}"` : ""}`,
   })).join("")}</div>` : "");
   caixa.querySelectorAll(".servico").forEach((b) => b.addEventListener("click", (ev) => {
     ev.stopPropagation();
-    if (b.classList.contains("caro")) { Som.tocar("falha"); return; }
+    if (b.classList.contains("caro")) { App.recusar(b, b.dataset.motivo); return; }
     responder(v.m.id, Number(b.dataset.i));
   }));
+  const cartoes = [...caixa.querySelectorAll(".servico")];
   // Voltar à vila: com o balcão mantido pelo motor, é a resposta à pergunta dele; senão, só a tela volta para a vila.
   const sair = v.balcao && v.balcao.id === id ? () => { Som.tocar("escolha"); responder(v.m.id, v.balcao.i); } : sairDoPredio;
   const volta = el("button", "escolha secundaria voltar-vila", `<span class="rotulo">◀ Voltar à vila</span>`);
@@ -154,7 +155,9 @@ function entrarNoPredio(id, pedido = false, continua = false) {
   caixa.appendChild(volta);
   promptEl.appendChild(caixa);
   // As teclas 1, 2... escolhem os cartões, na ordem; Esc volta à vila.
-  pergunta = { id: v.m.id, tipo: "opcoes", n: v.m.opcoes.length, opcoes: v.m.opcoes, numeros: g.map(({ i }) => i), letras: {}, voltar: -1, voltarLocal: sair };
+  // Cada tecla faz o que o clique no cartão faz (o sem ouro recusa ali, sem a escolha chegar ao motor).
+  pergunta = { id: v.m.id, tipo: "opcoes", n: v.m.opcoes.length, opcoes: v.m.opcoes, numeros: g.map(({ i }) => i), letras: {}, voltar: -1, voltarLocal: sair,
+    teclasNum: cartoes.map((b) => () => b.click()) };
   // o balcão inteiro à vista: o topo dele no alto da página, se ele não couber embaixo do texto
   const sobra = caixa.getBoundingClientRect().bottom - pagina.getBoundingClientRect().bottom + 12;
   if (sobra > 0) pagina.scrollTop += Math.min(sobra, caixa.getBoundingClientRect().top - pagina.getBoundingClientRect().top - 8);

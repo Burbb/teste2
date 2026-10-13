@@ -36,7 +36,8 @@ class Servicos:
             dados = {"ouro": j.ouro, "pecas": [
                 {"slot": slot, "item": itens.ficha(item, j.nome_recurso), "reforco": item.get("reforco", 0),
                  "ganho": ganho and f"+{ganho} {nome_stat(stat, j.nome_recurso)}", "custo": custo,
-                 "pode": custo is not None and j.ouro >= custo}
+                 "pode": custo is not None and j.ouro >= custo,
+                 "motivo": "Ouro insuficiente." if custo is not None and j.ouro < custo else None}
                 for slot, item, stat, ganho, custo in pecas]}
             if self.ui.painel("ferreiro", dados):
                 # Tela gráfica: cada peça é um cartão; o clique reforça. Fora isso, só sair.
@@ -83,6 +84,7 @@ class Servicos:
             custos = [0 if gratis else abertura.custo_tratamento(self, f) for f in j.ferimentos]
             dados = {"ouro": j.ouro, **({"quem": quem["quem"], "fala": quem["fala"]} if quem else {}), "ferimentos": [
                 {"id": f["id"], "nome": sobrevivencia.FERIMENTOS[f["id"]]["nome"], "custo": custo, "pode": j.ouro >= custo,
+                 "motivo": None if j.ouro >= custo else "Ouro insuficiente.",
                  **({"gratis": "Primeiro tratamento — grátis"} if gratis else {}),
                  "explica": sobrevivencia.explicar(f, j.nome_recurso, j)} for f, custo in zip(j.ferimentos, custos)]}
             abertura.contexto(self, "curandeira")  # o cartão do ferimento que o tutorial mostrou (F4)
@@ -116,6 +118,17 @@ class Servicos:
             self.dizer(f"Ela costura, cauteriza e enfaixa sem anestesia. Você grita. "
                        f"{sobrevivencia.FERIMENTOS[fid]['nome']}: tratado.", "verde")
 
+    def motivo_pagar(self, preco):
+        """A meta de um serviço pago diante do balcão: sem ouro bastante, o motivo que a tela mostra no cartão e no
+        aviso do clique (a tentativa nem chega aqui: não gasta tempo nem sorteio)."""
+        return {"motivo": "Ouro insuficiente."} if self.j.ouro < preco else {}
+
+    def motivo_rumores(self):
+        """Por que a bebida e os rumores não estão à venda agora: os fregueses já contaram tudo hoje, ou falta ouro."""
+        if self.flag(f"rumores:{self.dia}:{self.loc['id']}", 0) >= 2:
+            return {"motivo": "Os fregueses já contaram tudo o que sabiam hoje."}
+        return {} if abertura.caneca(self) else self.motivo_pagar(self.preco(3))
+
     def templo_gratis(self):
         """O primeiro atendimento do herói no templo, de graça, uma vez por personagem, na campanha (com as orientações
         ligadas ou não). Só se gasta quando a cura acontece; salvar, carregar ou religar o tutorial não o renova."""
@@ -135,7 +148,8 @@ class Servicos:
             preco = 0 if gratis else self.preco(max(1, falta // 2))
             meta = {"predio": "templo", "servico": "templo",
                     "curto": "Primeiro atendimento — grátis" if gratis else f"Cuidar de {quem}", "preco": preco,
-                    "efeito": f"+{falta} de vida ({maximo}/{maximo})" + (", de pé de novo" if m and m["ferido"] else "")}
+                    "efeito": f"+{falta} de vida ({maximo}/{maximo})" + (", de pé de novo" if m and m["ferido"] else ""),
+                    **self.motivo_pagar(preco)}
             if m:
                 meta["alvo"] = m["id"]
             rotulo = ("Templo: cuidar da vida (primeiro atendimento — grátis)" if gratis else

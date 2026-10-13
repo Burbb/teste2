@@ -67,6 +67,7 @@ const App = {
   som: (n) => Som.tocar(n),
   ritmo: (ms) => ritmo(ms),  // um tempo de animação na velocidade escolhida (0 no instantâneo e ao pular)
   avisar: (texto, chave) => aviso(texto, "info", "pergaminho", typeof chave === "string" ? chave : undefined),
+  recusar: (el, texto) => recusar(el, texto),  // a tentativa sem ouro (ou outro motivo do motor): som e aviso no controle
   doer: () => doer(),
   acaoFecharTalentos: null,
 };

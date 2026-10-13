@@ -19,6 +19,7 @@
     python -m tests.navegador.cenarios fogueira      # a comitiva na fogueira e a fome (LUGAR, COMITIVA, RESERVA, FERIDO, FOME, PROVISOES, TOCHAS)
     python -m tests.navegador.cenarios tutorial      # a segunda parte da abertura guiada (LUGAR, PERIODO, VIDA, REC, OURO, PROVISOES, COMITIVA, PONTOS, ITEM, BAUS, CONTRATO, LUTA, VISTAS)
     python -m tests.navegador.cenarios gelo          # Mago com a iniciativa contra um lobo: duas Lanças antes de ele agir (PRISAO, NIVEL, SEMENTE)
+    python -m tests.navegador.cenarios aneis         # acha um anel com os dois espaços ocupados (ANEIS=1: um vazio; CHEIA, OURO)
     python -m tests.navegador.cenarios muralha       # Guerreiro nv 6, Muralha + Contra-ataque (CONTRA) e o Broquel, contra bandidos e um cultista
 
 Imprime o endereço do servidor na primeira linha e fica no ar até ser encerrado.
@@ -809,7 +810,38 @@ def mercado(ui):
         pass
 
 
-CENARIOS = {"mercado": mercado, "combate": combate, "titulo": titulo, "vila": vila, "campanha": campanha, "baus": baus, "missao": missao,
+def aneis(ui):
+    """Guerreiro numa vila do mundo gerado acha um anel: ANEIS (padrão 2) anéis já vestidos (1: só o primeiro espaço;
+    0: nenhum), um deles o Anel do Último Rei. Na mochila, outro anel (para equipar pelo inventário e pelo mercado);
+    CHEIA=1 enche a mochila. OURO (padrão 300)."""
+    from rpg import itens
+    g = Jogo(ui, seed=8, pasta_saves=tempfile.mkdtemp())
+    ui.jogo = g
+    g.iniciar("Jean", "guerreiro")
+    g.mundo["atual"] = next(l for l in g.mundo["locais"] if l["tipo"] == "vila")["id"]
+    g.periodo, g.clima = 1, "limpo"
+    g.j.ouro = int(os.environ.get("OURO", "300"))
+    rng = random.Random(11)
+    n = int(os.environ.get("ANEIS", "2"))
+    if n >= 1:
+        g.j.equip["anel1"] = itens.fazer_unico(next(u for u in itens.UNICOS if u["id"] == "anel_do_ultimo_rei"), 3)
+    if n >= 2:
+        g.j.equip["anel2"] = gerar_equip(rng, "guerreiro", 3, slot="anel", raridade="magico")
+    g.j.mochila.append(gerar_equip(rng, "guerreiro", 3, slot="anel", raridade="comum"))
+    if os.environ.get("CHEIA") == "1":
+        while len(g.j.mochila) < 12:
+            g.j.mochila.append(gerar_equip(rng, "guerreiro", 2))
+    g.j.recalcular()
+    ui.cena("Ruínas do caminho", g.contexto_cena(), "evento")
+    g.dizer("Entre as pedras, algo reluz.")
+    g.oferecer_equip(gerar_equip(rng, "guerreiro", 4, slot="anel", raridade="raro"))
+    try:
+        g.rodar()
+    except FimDeJogo:
+        pass
+
+
+CENARIOS = {"aneis": aneis, "mercado": mercado, "combate": combate, "titulo": titulo, "vila": vila, "campanha": campanha, "baus": baus, "missao": missao,
             "recarga": recarga, "capela": capela, "retorno": retorno, "praca": praca, "encruzilhada": encruzilhada,
             "tiro_duplo": tiro_duplo, "covil": covil, "broquel": broquel, "muralha": muralha, "resgate": resgate,
             "gelo": gelo, "abertura": abertura, "fogueira": fogueira,

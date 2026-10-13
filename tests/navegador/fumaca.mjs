@@ -1399,14 +1399,22 @@ async function cenarioAbertura(browser) {
     conferir(!(await quadro()) && /desligado/.test(await page.textContent("#ajuda-corpo .ajuda-chave")), "na Ajuda, desligar tira os quadros na hora");
     await page.keyboard.press("Escape");
     conferir(!!(await page.$("#sobre-ajuda[hidden]")), "Esc fecha a Ajuda");
+    // O relatório da luta (o espólio, com o XP) vem logo depois dela, antes da cena do taverneiro.
+    let espolioAntes = null;
+    const olharEspolio = async () => {
+      if (espolioAntes === null && await page.$("#celebracao:not([hidden]) .festa-espolio"))
+        espolioAntes = !/O taverneiro olha os dois ratos/.test(await page.textContent("#pagina"));
+    };
     for (let k = 0; k < 80 && (await page.evaluate(() => !!(estado && estado.combate))); k++) {
       const atk = await page.$('#roda .roda-botao[data-slot="atacar"]'); if (atk) { await atk.click().catch(() => {}); await page.waitForTimeout(250); }
       const alvo = await page.$("#arena .carta.alvejavel"); if (alvo) await alvo.click().catch(() => {});
+      await olharEspolio();
       const fe = await page.$(".festa-espolio .continuar"); if (fe) { await page.waitForTimeout(600); await fe.click().catch(() => {}); }
       await page.waitForTimeout(200);
     }
     let mural = null, vistaTaverna = false;
     for (let k = 0; k < 120 && !(mural = await page.$('#predios .predio[data-predio="mural"]:visible')) ; k++) {  // o espólio e o texto até a vila
+      await olharEspolio();
       const fe = await page.$("#celebracao:not([hidden]) .continuar"); if (fe) { await page.waitForTimeout(700); await fe.click().catch(() => {}); }
       const c = await page.$("#prompt .continuar"); if (c) {
         if (!vistaTaverna && /primeira caneca é por minha conta/.test(await page.textContent("#pagina"))) {  // a cena espera o clique
@@ -1418,6 +1426,8 @@ async function cenarioAbertura(browser) {
       await page.waitForTimeout(200);
     }
     await page.waitForTimeout(500);
+    conferir(espolioAntes === true && (await page.evaluate(() => estado.heroi.xp)) === 12,
+      "a despensa: o relatório da luta (12 XP, uma vez) vem antes da cena do taverneiro");
     conferir(vistaTaverna, "a cena depois da despensa (caneca e mural) espera o Continuar");
     conferir(!!mural && !(await quadro()), "na vila, desligado: nenhum quadro");
     await page.keyboard.press("F1");
@@ -1573,13 +1583,151 @@ async function cenarioCiclos(browser) {
     await page.keyboard.press("Escape");
     conferir(await ate(/^Clique neste contrato para viajar até .+\./) && (await pontaNoAlvo(page)) <= 2,
       "K2: na vila, o cartão do contrato à direita, com a seta encostando nele");
+    const c = await page.evaluate(() => ({ ancora: estado.orientacao.atual.ancora, ...estado.contratos[0],
+      vizinho: estado.mapa.nos.some((n) => n.id === estado.contratos[0].lugar_id && n.distancia != null) }));
+    conferir(c.ancora === `contrato:${id}` && c.vizinho, "o contrato indicado no Mural é o do cartão apontado, num lugar a uma viagem da vila");
     await page.evaluate(() => { document.querySelector("#mundo").scrollTop += 60; });
     await page.waitForTimeout(400);
     conferir((await pontaNoAlvo(page)) <= 2, "rolando a coluna, o quadro acompanha o cartão");
+    await page.click(`.rastro-contrato[data-contrato="${id}"]`);
+    let chegou = false;
+    for (let k = 0; k < 120 && !chegou; k++) {  // a viagem: o texto da estrada e a chegada, sem parar em outro lugar
+      chegou = await page.evaluate((l) => estado.local.id === l && !estado.combate && !!document.querySelector("#prompt .escolha"), c.lugar_id);
+      if (chegou) break;
+      const cont = await page.$("#prompt .continuar"); if (cont) await cont.click().catch(() => {});
+      const fe = await page.$("#celebracao:not([hidden]) .continuar"); if (fe) await fe.click().catch(() => {});
+      if (await page.evaluate(() => !!(estado && estado.combate))) {  // uma luta na estrada
+        const atk = await page.$('#roda .roda-botao[data-slot="atacar"]'); if (atk) await atk.click().catch(() => {});
+        const alvo = await page.$("#arena .carta.alvejavel"); if (alvo) await alvo.click().catch(() => {});
+      } else {  // um evento na estrada: segue o caminho
+        const opcoes = await page.$$("#prompt .escolha:not(.indisponivel)");
+        const seguir = opcoes.length && (await page.$('#prompt .escolha:is(:has-text("Seguir"), :has-text("Ignorar"), :has-text("Deixar"))') || opcoes[opcoes.length - 1]);
+        if (seguir && !(await page.evaluate((l) => estado.local.id === l, c.lugar_id))) await seguir.click().catch(() => {});
+      }
+      await page.waitForTimeout(250);
+    }
+    conferir(chegou && await ate(/^Caçar segue os rastros/), "o clique no contrato viaja direto até o lugar dele, onde o K3 aponta o Caçar");
   } finally {
     conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
     await page.close();
     proc.kill();
+  }
+}
+
+async function cenarioAneis(browser) {
+  console.log("cenário: os dois espaços de anel (comparar, equipar no espaço escolhido, a mochila)");
+  for (const [aneis, altura] of [["2", 720], ["1", 620]]) {
+    const { proc, url } = await subir("aneis", { ANEIS: aneis });
+    const page = await browser.newPage({ viewport: { width: 1280, height: altura } });  // a janela nasce no tamanho da tela
+    const erros = [];
+    page.on("pageerror", (e) => erros.push(String(e)));
+    page.on("console", (m) => { if (m.type() === "error") erros.push(m.text()); });
+    await page.goto(url);
+    try {
+      await page.waitForSelector("#sobre-achado .achado-acoes button:not(.reserva)", { timeout: 20000 });
+      await page.waitForTimeout(700);
+      const info = await page.evaluate(() => {
+        const j = document.querySelector(".janela-achado").getBoundingClientRect();
+        return { botoes: [...document.querySelectorAll("#sobre-achado .achado-acoes button")].map((b) => b.textContent.replace(/^\d/, "")),
+          selos: [...document.querySelectorAll(".achado-aneis .achado-selo")].map((s) => s.textContent),
+          trocas: [...document.querySelectorAll(".achado-cartao.novo .comparacao.por-espaco .troca small")].map((s) => s.textContent),
+          cabe: j.top >= 0 && j.bottom <= innerHeight, eq: { ...App.estado.heroi.equip } };
+      });
+      const n1 = info.eq.anel1.nome.replace(/^★ /, "").replace(/ \(Anel\)$/, "");
+      if (aneis === "2") {
+        const n2 = info.eq.anel2.nome.replace(/ \(Anel\)$/, "");
+        conferir(info.botoes[0] === `Substituir ${n1} (Anel 1)` && info.botoes[1] === `Substituir ${n2} (Anel 2)`,
+          "dois anéis: um botão por espaço, com o anel que sai e o espaço");
+        conferir(info.selos.join("|") === "Anel 1 · você usa|Anel 2 · você usa" && info.trocas.length === 2 && info.trocas[1].startsWith("Anel 2 · no lugar de"),
+          "a comparação mostra a troca com cada anel, pelo nome do espaço");
+      } else {
+        conferir(info.botoes[1] === "Equipar no Anel 2 (vazio)" && info.selos[1] === "Anel 2 · vazio" && /Anel 2 · vazio/.test(info.trocas[1]),
+          "um espaço vazio: o botão, o cartão e a comparação dizem que ele está vazio");
+      }
+      conferir(info.cabe, `a janela do anel cabe na tela de 1280×${altura}`);
+      await page.keyboard.press("2");  // o segundo espaço, pelo teclado
+      await page.waitForFunction(() => !document.querySelector("#sobre-achado"), null, { timeout: 8000 }).catch(() => {});
+      const depois = await page.evaluate(() => ({ ...App.estado.heroi.equip }));
+      conferir(depois.anel1.nome === info.eq.anel1.nome && depois.anel2 && depois.anel2.nome !== (info.eq.anel2 || {}).nome,
+        "a tecla 2 equipa no Anel 2; o Anel 1 fica como estava");
+      if (aneis === "1") {  // agora os dois ocupados: pela mochila, um menu pergunta qual substituir
+        await (await page.waitForSelector('#doca .atalho[data-rotulo="Inventário"]', { timeout: 10000 })).click();
+        const cel = await page.waitForSelector(".mochila-grade [data-mochila]", { timeout: 10000 });
+        await cel.dblclick();
+        const menu = await page.$$eval(".menu-espaco button", (bs) => bs.map((b) => b.textContent));
+        conferir(menu.length === 3 && /Anel 1/.test(menu[0]) && /Anel 2/.test(menu[1]), "dois cliques num anel da mochila: o menu pergunta qual substituir");
+        await page.keyboard.press("Tab");
+        await page.keyboard.press("Enter");
+        await page.waitForTimeout(800);
+        const fim = await page.evaluate(() => ({ ...App.estado.heroi.equip }));
+        conferir(fim.anel1.nome === depois.anel1.nome && fim.anel2.nome !== depois.anel2.nome, "pelo teclado, o Anel 2 é o substituído");
+      }
+    } finally {
+      conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
+      await page.close();
+      proc.kill();
+    }
+  }
+}
+
+async function cenarioOuroInsuficiente(browser) {
+  console.log("cenário: tentar pagar sem ouro (forja, taverna, mercado)");
+  const { proc, url } = await subir("tutorial", { OURO: "2", VIDA: "0.5", GRATIS_USADO: "templo,curandeira", VISTAS: "A1,V2,N1,D1" });
+  const { page, erros } = await abrir(browser, url);
+  const avisos = () => page.$$eval(".aviso-controle", (as) => as.map((a) => a.textContent));
+  try {
+    await page.waitForSelector("#predios .predio", { timeout: 20000 });
+    await page.waitForTimeout(600);
+    for (const predio of ["ferreiro", "taverna"]) {
+      await page.click(`#predios .predio[data-predio="${predio}"]`);
+      const caro = await page.waitForSelector(".servico.caro", { timeout: 10000 });
+      const antes = await page.evaluate(() => ({ ouro: estado.heroi.ouro, texto: document.getElementById("texto").innerText, dia: estado.dia }));
+      for (let k = 0; k < 3; k++) await caro.click({ force: true });
+      await page.waitForTimeout(150);
+      const lista = await avisos();
+      const dentro = await page.evaluate(() => {
+        const a = document.querySelector(".aviso-controle").getBoundingClientRect(), c = document.querySelector(".servico.caro").getBoundingClientRect();
+        const p = document.querySelector(".servico.caro :is(.preco, .serv-fim)"), q = p && p.getBoundingClientRect();
+        return a.left >= c.left && a.right <= c.right && a.top >= c.top && a.bottom <= c.bottom && (!q || !q.width || a.right <= q.left);
+      });
+      conferir(lista.length === 1 && lista[0] === "Ouro insuficiente." && dentro,
+        `${predio}: três cliques sem ouro, um aviso só, dentro do cartão e sem cobrir o preço`);
+      await page.waitForTimeout(1900);
+      await caro.focus();
+      await page.keyboard.press("Enter");
+      if (predio === "taverna") { await page.waitForTimeout(1900); await page.keyboard.press("1"); }
+      await page.waitForTimeout(150);
+      const depois = await page.evaluate(() => ({ ouro: estado.heroi.ouro, texto: document.getElementById("texto").innerText, dia: estado.dia }));
+      conferir((await avisos()).length === 1 && JSON.stringify(antes) === JSON.stringify(depois),
+        `${predio}: pelo teclado também, e a tentativa não gasta ouro nem muda a página`);
+      await page.waitForTimeout(1800);
+      await page.keyboard.press("Escape");
+      await page.waitForSelector("#predios .predio", { timeout: 10000 });
+      await page.waitForTimeout(900);
+    }
+  } finally {
+    conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
+    await page.close();
+    proc.kill();
+  }
+  const m = await subir("mercado", { OURO: "3" });
+  const { page: pg, erros: er } = await abrir(browser, m.url);
+  try {
+    await pg.waitForSelector(".tela.loja", { timeout: 20000 });
+    await pg.waitForTimeout(800);
+    const caro = await pg.$('.mercadoria.suprimento.caro:not(:has(.merc-estoque.esgotado))');
+    await caro.click({ force: true });
+    await pg.waitForTimeout(150);
+    const a1 = await pg.$$eval(".aviso-controle", (as) => as.map((a) => a.textContent));
+    const esgotado = await pg.$('.mercadoria.suprimento.caro:has(.merc-estoque.esgotado)');
+    let a2 = ["(sem esgotado)"];
+    if (esgotado) { await esgotado.focus(); await pg.keyboard.press("Enter"); await pg.waitForTimeout(150); a2 = await pg.$$eval(".aviso-controle", (as) => as.map((a) => a.textContent)); }
+    conferir(a1.join() === "Ouro insuficiente." && (a2.join() === "Esgotado" || !esgotado),
+      "mercado: o aviso diz o motivo do motor (ouro, ou esgotado), um de cada vez");
+  } finally {
+    conferir(er.length === 0, "sem erros no console" + (er.length ? ": " + er.slice(0, 3).join(" | ") : ""));
+    await pg.close();
+    m.proc.kill();
   }
 }
 
@@ -1907,6 +2055,8 @@ try {
   await cenarioFogueira(browser);
   await cenarioTutorial(browser);
   await cenarioCiclos(browser);
+  await cenarioAneis(browser);
+  await cenarioOuroInsuficiente(browser);
   await cenarioApresentacao(browser);
   await cenarioAnimacao(browser);
   await cenarioFeridas(browser);

@@ -613,13 +613,13 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
              # O cartão mostra o custo, o que volta e as provisões em linhas curtas (os números da conta de descansar).
              {"predio": "taverna", "servico": "dormir", "curto": "Dormir até o amanhecer", "preco": preco_dormir,
               "linhas": [{"icone": "moeda", "rotulo": "Custo", "texto": f"{preco_dormir} ouro"},
-                         *self.linhas_descanso("taverna")]}),
+                         *self.linhas_descanso("taverna")], **self.motivo_pagar(preco_dormir)}),
             (f"Taverna: pagar uma bebida e ouvir rumores ({self.preco(3)} ouro)", "rumores",
              {"predio": "taverna", "servico": "rumores", "curto": "Uma bebida e os rumores", "preco": self.preco(3),
-              "efeito": "O que se conta nas mesas"}) if not abertura.caneca(self) else
+              "efeito": "O que se conta nas mesas", **self.motivo_rumores()}) if not abertura.caneca(self) else
             ("Taverna: uma bebida e os rumores (por conta da casa)", "rumores",
              {"predio": "taverna", "servico": "rumores", "curto": "Uma bebida e os rumores", "preco": 0,
-              "efeito": "A primeira caneca é por conta da casa"}),
+              "efeito": "A primeira caneca é por conta da casa", **self.motivo_rumores()}),
             ("Mercado", "loja", {"predio": "mercado"}),
             ("Mural de contratos", "mural", {"predio": "mural"}),
             *self.opcoes_templo(),

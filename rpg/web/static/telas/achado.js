@@ -3,7 +3,7 @@
 "use strict";
 
 (() => {
-  const { h, S, faiscas, htmlItem, iconeItem, noPalco } = Telas;
+  const { h, S, faiscas, htmlItem, iconeItem, noPalco, VAZIO } = Telas;
 
   const BRILHO_RARIDADE = { comum: ["#f1e4c4", "#c0b8a8"], magico: ["#7fb0ff", "#c8e0ff", "#ffffff"],
     raro: ["#f2c94c", "#fff3a0", "#ffffff"], lendario: ["#ffb35c", "#e0782f", "#fff3a0", "#ffffff"] };
@@ -11,10 +11,21 @@
   function achado(d) {
     const it = d.item;
     const rar = h(it.raridade);
-    const eq = (d.equipados || []).map((e) => `<div class="achado-cartao atual rar-${h(e.raridade)}">
+    // O anel: os dois espaços empilhados numa coluna ao lado do achado, cada um com o nome do espaço e o anel que está
+    // nele (ou vazio), em cartões baixos: três cartões lado a lado não cabiam e o terceiro quebrava de linha.
+    const aneis = d.espacos && (d.equipados || []).length;
+    const eq = aneis ? `<div class="achado-aneis">${d.espacos.map((e) => e.item
+      ? `<div class="achado-cartao atual compacto rar-${h(e.item.raridade)}"><span class="achado-selo">${h(e.nome)} · você usa</span>
+          <div class="compacto-corpo"><div class="achado-arte pequena">${S(iconeItem(e.item), 3)}</div><div>${htmlItem(e.item, "", false)}</div></div></div>`
+      : `<div class="achado-cartao atual compacto vazio"><span class="achado-selo">${h(e.nome)} · vazio</span>
+          <div class="compacto-corpo"><div class="achado-arte pequena">${S(VAZIO[e.espaco], 3, "fantasma")}</div></div></div>`).join("")}</div>`
+      : (d.equipados || []).map((e) => `<div class="achado-cartao atual rar-${h(e.raridade)}">
         <span class="achado-selo">Você usa</span>
         <div class="achado-arte pequena">${S(iconeItem(e), 3)}</div>${htmlItem(e, "", false)}</div>`).join("");
-    const aviso = !d.pode_usar ? "" : !d.cabe ? '<div class="pior">Mochila cheia: equipar deixa o item antigo para trás.</div>' : "";
+    // Mochila cheia: o que sai do corpo fica para trás (o anel que vai para o espaço vazio não tira nada).
+    const aviso = !d.pode_usar || d.cabe ? "" : aneis && d.espacos.some((e) => !e.item)
+      ? '<div class="pior">Mochila cheia: substituir um anel deixa o antigo para trás.</div>'
+      : '<div class="pior">Mochila cheia: equipar deixa o item antigo para trás.</div>';
     return `<div class="tela achado rar-${rar}">
       <div class="achado-cartao novo rar-${rar}">
         <div class="achado-raios" aria-hidden="true"></div>

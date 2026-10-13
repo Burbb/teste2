@@ -23,17 +23,27 @@ class Inventario:
         rec = self.j.nome_recurso
         usa = self.pode_usar(item)
         cabe = len(self.j.mochila) < LIMITE_MOCHILA
-        equipados = [it for it in (self.j.equip[s] for s in itens.espacos(item["slot"])) if it]
+        espacos = itens.espacos(item["slot"])
+        equipados = [it for it in (self.j.equip[s] for s in espacos) if it]
+        # O anel com algum espaço ocupado: um botão por espaço, dizendo qual anel sai ou que o espaço está vazio. A
+        # escolha é da pessoa (nada de trocar o "pior" por uma soma: o efeito de um pode importar para a build).
+        if usa and len(espacos) > 1 and equipados:
+            equipar = [(self.rotulo_espaco(s), ("equipar", s), {"achado": "equipar", "espaco": s}) for s in espacos]
+        else:
+            equipar = [("Equipar agora", "equipar", {"achado": "equipar"})] if usa else []
         # Na tela gráfica, o cartão e estas opções moram numa janela própria (fora do log): {"achado": ...}.
-        opcoes = [o for o in (
-            ("Equipar agora", "equipar", {"achado": "equipar"}) if usa else None,
+        opcoes = equipar + [o for o in (
             ("Guardar na mochila" + ("" if usa else " (para vender)"), "guardar", {"achado": "guardar"}) if cabe else None,
             ("Deixar para trás (mochila cheia)", "deixar", {"achado": "deixar"}) if not cabe else None,
         ) if o]
         # Os rótulos vão também com o cartão: a janela reserva desde o começo o lugar exato dos botões, que só chegam
         # depois da revelação (antes, a moldura crescia quando eles chegavam).
-        if not self.ui.painel("achado", {"item": itens.ficha(item, rec), "equipados": [itens.ficha(it, rec) for it in equipados],
-                                         "pode_usar": usa, "cabe": cabe, "acoes": [o[0] for o in opcoes]}):
+        dados = {"item": itens.ficha(item, rec), "equipados": [itens.ficha(it, rec) for it in equipados],
+                 "pode_usar": usa, "cabe": cabe, "acoes": [o[0] for o in opcoes]}
+        if len(espacos) > 1:  # o anel: cada espaço com o nome e o que tem (ou vazio), na ordem do corpo
+            dados["espacos"] = [{"espaco": s, "nome": NOMES_SLOT[s], "item": itens.ficha(self.j.equip[s], rec)}
+                                for s in espacos]
+        if not self.ui.painel("achado", dados):
             raridade = itens.NOMES_RARIDADE[item.get("raridade", "comum")]
             self.dizer(f"Você encontrou: {itens.rotulo(item)} [{NOMES_SLOT[item['slot']]}, {raridade}]",
                        itens.cor(item) or "branco+negrito")
@@ -43,11 +53,13 @@ class Inventario:
                 self.dizer(f"  {u['efeito']}", itens.cor(item))
             if item.get("lore"):
                 self.dizer(f"  \"{item['lore']}\"", "cinza")
-            atual = self.j.equip[self.espaco_para(item)]
-            if atual:
-                ua = itens.unico_de(atual)
-                self.dizer(f"  Equipado agora: {itens.rotulo(atual)} — {descrever_bonus(atual['bonus'], rec)}"
-                           + (f". {ua['efeito']}" if ua and ua.get("efeito") else ""), "cinza")
+            if len(espacos) > 1 and equipados:  # o anel: os dois espaços, cada um com o que tem
+                for s in espacos:
+                    self.dizer(f"  {NOMES_SLOT[s]}: {self._equipado_texto(self.j.equip[s])}", "cinza")
+            else:
+                atual = self.j.equip[self.espaco_para(item)]
+                if atual:
+                    self.dizer(f"  Equipado agora: {self._equipado_texto(atual)}", "cinza")
         compara = usa and bool(equipados)  # a primeira comparação de equipamento (E1)
         abertura.contexto(self, "achado", {"compara": compara, "cabe": cabe})
         abertura.dica_texto(self, "achado")
@@ -59,9 +71,10 @@ class Inventario:
             abertura.visto(self, "E1")
         registrar(self, "saque", item=item["nome"], raridade=item.get("raridade", "comum"), slot=item["slot"],
                   nivel=item.get("nivel"), escolha=op or "deixar")
+        op, destino = op if isinstance(op, tuple) else (op, None)
         if op == "equipar":
-            espaco = self.espaco_para(item)
-            self.equipar(item, avisar=not self.ui.conquistas_na_tela)
+            espaco = self.espaco_para(item, destino)
+            self.equipar(item, espaco, avisar=not self.ui.conquistas_na_tela)
             # o mesmo voo do mercado: o ícone sai do cartão e pousa no espaço do corpo, que brilha ao receber
             self.ui.celebrar("equipou", {"espaco": espaco, "item": itens.ficha(item, rec), "achado": True})
         elif op == "guardar":
@@ -70,6 +83,27 @@ class Inventario:
                 self.ui.celebrar("guardou", {"item": itens.ficha(item, rec)})
             else:
                 self.dizer("Guardado na mochila.", "cinza")
+
+    def _equipado_texto(self, it):
+        if not it:
+            return "vazio"
+        u = itens.unico_de(it)
+        return (f"{itens.rotulo(it)} — {descrever_bonus(it['bonus'], self.j.nome_recurso)}"
+                + (f". {u['efeito']}" if u and u.get("efeito") else ""))
+
+    def rotulo_espaco(self, s):
+        """Equipar num espaço de anel: qual anel sai, ou que o espaço está vazio."""
+        atual = self.j.equip.get(s)
+        return f"Substituir {atual['nome']} ({NOMES_SLOT[s]})" if atual else f"Equipar no {NOMES_SLOT[s]} (vazio)"
+
+    def escolher_espaco(self, item):
+        """Onde um item da mochila entra (no texto): o espaço dele; o anel, no espaço vazio, ou a pessoa escolhe qual
+        substituir quando os dois estão ocupados. None: voltou."""
+        espacos = itens.espacos(item["slot"])
+        if len(espacos) == 1 or not all(self.j.equip.get(s) for s in espacos):
+            return self.espaco_para(item)
+        return self.menu("Substituir qual anel?", [(f"{self.rotulo_espaco(s)} — {self._equipado_texto(self.j.equip[s])}", s)
+                                                    for s in espacos] + [("Voltar", None)])
 
     def espaco_para(self, item, destino=None):
         """Em qual espaço do corpo o item entra (anéis: o vazio, ou o primeiro)."""
@@ -329,7 +363,9 @@ class Inventario:
                     if it["classe"] and it["classe"] != j.classe:
                         self.dizer("Você não sabe usar isso.", "vermelho")
                     else:
-                        self.equipar(it)
+                        destino = self.escolher_espaco(it)
+                        if destino:
+                            self.equipar(it, destino)
 
     def _personagem_web(self):
         """Na interface web, cada ação do inventário é uma opção direta (arrastar, clicar). True = sair."""

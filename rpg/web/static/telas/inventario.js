@@ -3,8 +3,8 @@
 "use strict";
 
 (() => {
-  const { h, S, AREA, dica, dicaItem, esconderDica, ESPACOS, iconeConsumivel, iconeItem, menuUso, NOME_ESPACO,
-          VAZIO } = Telas;
+  const { h, S, AREA, dica, dicaItem, equiparDaMochila, esconderDica, ESPACOS, iconeConsumivel, iconeItem, menuUso,
+          NOME_ESPACO, VAZIO } = Telas;
 
   function personagem(d) {
     const e = App.estado;
@@ -97,8 +97,9 @@
       if (a && a.de === "mochila" && window.confirm(`Largar ${heroi.mochila[a.i].nome}? Não há volta.`)) App.acao({ largar: a.i });
     });
     raiz.querySelectorAll("[data-mochila]").forEach((el) => {
-      el.addEventListener("dblclick", () => App.acao({ equipar: Number(el.dataset.mochila) }, "equipar"));
-      el.addEventListener("contextmenu", (ev) => { ev.preventDefault(); App.acao({ equipar: Number(el.dataset.mochila) }, "equipar"); });
+      const i = Number(el.dataset.mochila);
+      el.addEventListener("dblclick", () => equiparDaMochila(el, heroi.mochila[i], i));
+      el.addEventListener("contextmenu", (ev) => { ev.preventDefault(); equiparDaMochila(el, heroi.mochila[i], i); });
     });
     raiz.querySelectorAll("[data-usar]").forEach((el) => el.addEventListener("click", (ev) => {
       ev.stopPropagation();

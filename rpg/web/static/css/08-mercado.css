@@ -81,6 +81,12 @@
 .aviso-flutuante.perda, .aviso-flutuante.dano { color: #ff9c90; border-color: #8a1414; }
 .aviso-flutuante.item, .aviso-flutuante.cura { color: #bfe59b; border-color: #3d6a2a; }
 .aviso-flutuante.nivel { color: #120e0b; background: var(--ouro); border-color: #fff3a0; }
+/* O "não" preso ao controle (pagina.js: recusar): aparece no lugar, segura e some, sem subir por cima das opções. */
+.aviso-flutuante.aviso-controle.estreito { font-size: 16px; padding: 2px 6px 3px 4px; }
+.aviso-flutuante.aviso-controle { font-size: 19px; color: #ff9c90; border-color: #8a1414; animation: aviso-controle 1.7s ease-out forwards; }
+@keyframes aviso-controle { 0% { opacity: 0; transform: scale(.85); } 10% { opacity: 1; transform: scale(1.06); } 18% { transform: none; } 80% { opacity: 1; } 100% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .aviso-flutuante.aviso-controle { animation: aviso-controle-calmo 1.7s linear forwards; } }
+@keyframes aviso-controle-calmo { 0%, 85% { opacity: 1; } 100% { opacity: 0; } }
 @keyframes aviso-sobe { 0% { opacity: 0; transform: translateY(8px) scale(0.8); } 10% { opacity: 1; transform: translateY(0) scale(1.08); } 18% { transform: none; } 75% { opacity: 1; } 100% { opacity: 0; transform: translateY(-30px); } }
 .mercadoria.suprimento { grid-template-rows: auto auto 1fr; }
 .merc-estoque { display: block; font-family: var(--texto); font-size: 11px; color: var(--tinta-2); letter-spacing: .02em; }
@@ -100,6 +106,9 @@
 .menu-item button.vender { color: var(--ouro); }
 .menu-item button.secundaria { color: var(--tinta-3); }
 .menu-item .pior { font-size: 13px; color: var(--sangue-2); }
+.menu-espaco button { flex-direction: column; align-items: flex-start; gap: 0; }
+.menu-espaco button small { font-size: 12px; color: var(--tinta-3); }
+.menu-item button:focus-visible { border-color: var(--ouro); color: #fff3d6; outline: none; }
 
 /* ------------------------------------------------------------------ saque: o item encontrado */
 .tela.achado { display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: 18px; margin: 12px 0 6px; }
@@ -129,6 +138,22 @@
 .achado-cartao .melhor { color: var(--bom); } .achado-cartao .pior { color: var(--sangue-2); }
 .achado-cartao .lore { margin-top: 8px; font-style: italic; color: var(--tinta-2); }
 .achado-cartao .atalho-shift { display: none; }
+/* O anel (achado.js): os dois espaços numa coluna ao lado do achado, em cartões baixos (ícone ao lado do nome), e a
+   comparação com um bloco por espaço. */
+.achado-aneis { display: flex; flex-direction: column; gap: 10px; width: 290px; }
+.achado-cartao.atual.compacto { width: auto; padding: 8px 12px 9px; text-align: left; }
+.achado-cartao.compacto .compacto-corpo { display: flex; align-items: flex-start; gap: 10px; margin-top: 4px; }
+.achado-cartao.compacto .achado-arte.pequena { flex: none; margin: 0; }
+.achado-cartao.compacto b { font-size: calc(var(--px) * 24); }
+.achado-cartao.compacto .tipo { margin: 2px 0 3px; }
+.achado-cartao.compacto .bonus { font-size: 17px; }
+.achado-cartao.compacto .lore { display: none; }
+.achado-cartao.compacto.vazio { --cor: #3a2e24; border-style: dashed; background: transparent; }
+.achado-cartao.compacto.vazio img.fantasma { opacity: 0.16; filter: grayscale(1); }
+.comparacao.por-espaco .troca { display: flex; flex-wrap: wrap; justify-content: center; column-gap: 10px; }
+.comparacao.por-espaco .troca small { flex-basis: 100%; }
+.comparacao.por-espaco .troca + .troca { margin-top: 5px; }
+:is(#dica-item, #dica-equipado) .comparacao.por-espaco .troca { justify-content: flex-start; }
 @keyframes achado-entra { 0% { transform: translateY(14px) scale(.7); opacity: 0; } 100% { transform: none; opacity: 1; } }
 @keyframes achado-lado { 0% { transform: translateX(24px); opacity: 0; } 100% { transform: none; opacity: 1; } }
 @keyframes achado-arte { 0% { transform: translateY(-26px) scale(.4); opacity: 0; } 60% { transform: translateY(4px) scale(1.12); opacity: 1; } 100% { transform: none; } }

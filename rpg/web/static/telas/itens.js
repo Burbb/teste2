@@ -11,7 +11,7 @@
   const SECUNDARIA = { guerreiro: "Escudo", arqueiro: "Aljava", mago: "Grimório" };
   const NOME_ESPACO = { cabeca: "Cabeça", amuleto: "Amuleto", armadura: "Peito", maos: "Mãos", arma: "Arma",
     get secundaria() { return SECUNDARIA[App.estado && App.estado.heroi && App.estado.heroi.classe] || "Apoio"; },
-    pernas: "Pernas", pes: "Pés", anel: "Anel", anel1: "Anel", anel2: "Anel" };
+    pernas: "Pernas", pes: "Pés", anel: "Anel", anel1: "Anel 1", anel2: "Anel 2" };
   const VAZIO = { cabeca: "elmo", amuleto: "amuleto", armadura: "armadura", maos: "manopla", arma: "espada",
     secundaria: "escudo", pernas: "calca", pes: "bota", anel1: "anel", anel2: "anel" };
   const AREA = { cabeca: "cab", amuleto: "amu", armadura: "pei", maos: "mao", arma: "arm", secundaria: "sec",
@@ -26,32 +26,43 @@
     return (it && it.icone) || "saco";
   }
 
-  function comparar(it) {
-    const heroi = App.estado && App.estado.heroi;
-    if (!heroi || !it.bonus_bruto) return "";
-    const espacos = ESPACOS[it.slot] || [it.slot];
-    const eq = espacos.map((s) => heroi.equip[s]).filter(Boolean);
-    if (espacos.length > 1 && eq.length < espacos.length) return '<div class="comparacao"><span class="melhor">▲ há um espaço livre</span></div>';
-    if (!eq.length) return '<div class="comparacao"><span class="melhor">▲ espaço vazio: tudo é ganho</span></div>';
-    const alvo = eq.reduce((a, b) => (Object.values(a.bonus_bruto).reduce((x, y) => x + y, 0) <= Object.values(b.bonus_bruto).reduce((x, y) => x + y, 0) ? a : b));
+  /** A troca de `alvo` (o que você usa) por `it`: a diferença de cada atributo e a regra de um único (ganha a dele, ou
+   *  perde a do que você usa). */
+  function linhasTroca(it, alvo) {
     const chaves = new Set([...Object.keys(it.bonus_bruto), ...Object.keys(alvo.bonus_bruto)]);
     const linhas = [...chaves].map((k) => {
       const d = (it.bonus_bruto[k] || 0) - (alvo.bonus_bruto[k] || 0);
       return d ? `<span class="${d > 0 ? "melhor" : "pior"}">${d > 0 ? "▲ +" : "▼ "}${d} ${NOMES_STAT[k] || k}</span>` : "";
     }).filter(Boolean);
-    // A regra de um único também entra na troca: ganha a dele, ou perde a do que você usa.
     if (it.efeito_nome !== alvo.efeito_nome) {
       if (it.efeito_nome) linhas.push(`<span class="melhor">▲ ${h(it.efeito_nome)}</span>`);
       if (alvo.efeito_nome) linhas.push(`<span class="pior">▼ sem ${h(alvo.efeito_nome)}</span>`);
     }
-    return `<div class="comparacao"><small>contra ${h(alvo.nome)}:</small>${linhas.join("") || "<span>igual</span>"}</div>`;
+    return linhas.join("") || "<span>igual</span>";
+  }
+  function comparar(it) {
+    const heroi = App.estado && App.estado.heroi;
+    if (!heroi || !it.bonus_bruto) return "";
+    const espacos = ESPACOS[it.slot] || [it.slot];
+    // O anel tem dois espaços: a troca com cada um, separada, pelo nome do espaço e do anel que está nele (ou vazio).
+    // Qual sai é escolha de quem joga: um efeito pode valer mais para a build do que a soma dos números.
+    if (espacos.length > 1 && espacos.some((s) => heroi.equip[s])) {
+      return `<div class="comparacao por-espaco">${espacos.map((s) => {
+        const alvo = heroi.equip[s];
+        return alvo ? `<div class="troca"><small>${NOME_ESPACO[s]} · no lugar de ${h(alvo.nome)}:</small>${linhasTroca(it, alvo)}</div>`
+          : `<div class="troca"><small>${NOME_ESPACO[s]} · vazio:</small><span class="melhor">▲ tudo é ganho</span></div>`;
+      }).join("")}</div>`;
+    }
+    const alvo = heroi.equip[espacos[0]];
+    if (!alvo) return '<div class="comparacao"><span class="melhor">▲ espaço vazio: tudo é ganho</span></div>';
+    return `<div class="comparacao"><small>contra ${h(alvo.nome)}:</small>${linhasTroca(it, alvo)}</div>`;
   }
 
-  /** Os itens que o herói está usando onde `it` iria (o anel tem dois espaços). */
+  /** Os itens que o herói está usando onde `it` iria (o anel tem dois espaços), cada um com o `espaco` em que está. */
   function equipadosPara(it) {
     const heroi = App.estado && App.estado.heroi;
     if (!heroi || !it || !it.slot) return [];
-    return (ESPACOS[it.slot] || [it.slot]).map((s) => heroi.equip[s]).filter(Boolean);
+    return (ESPACOS[it.slot] || [it.slot]).filter((s) => heroi.equip[s]).map((s) => ({ ...heroi.equip[s], espaco: s }));
   }
   function htmlItem(it, rodape = "", comparando = true) {
     const heroi = App.estado && App.estado.heroi;
@@ -62,5 +73,5 @@
       ${comparando && equipadosPara(it).length ? '<div class="atalho-shift">Segure <kbd>Shift</kbd> para ver o seu.</div>' : ""}`;
   }
 
-  Object.assign(Telas, { AREA, equipadosPara, ESPACOS, htmlItem, iconeItem, NOME_ESPACO, VAZIO });
+  Object.assign(Telas, { AREA, equipadosPara, ESPACOS, htmlItem, iconeItem, linhasTroca, NOME_ESPACO, VAZIO });
 })();

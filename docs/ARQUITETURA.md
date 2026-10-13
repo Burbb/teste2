@@ -133,6 +133,7 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
 | Queda e resgate | `Derrota` leva a `causa` ("combate", "fome" ou "infeccao"). No combate, `Confronto.combate` levanta a derrota; a fome e a infecção que zeram a vida passam por `Finais.cair_sem_luta`: no hardcore e no mundo gerado, `fim_de_jogo`; na campanha com resgate, a queda fica pendente e `Tempo.novo_dia` a levanta depois do quadro do amanhecer. `Jogo.rodar` chama `resgate(causa)`; na campanha, `resgate_campanha` (Marta ou Pita, dois dias com refeição, fome, infecção e feridas abertas tratadas, `resgatando` impede queda dentro da queda) |
 | Toques e proteção (interface) | O Continuar das cenas de missão tem uma guarda de leitura (escolhas.js: `mostrarContinuar`): toques dentro dela a estendem, e o botão fica apagado (`contido`) enquanto ela segura. As ações do acampamento tocadas enquanto a página ainda apresenta a anterior ficam guardadas (`acaoGuardada`, nucleo.js) e valem quando o menu volta |
 | A bolsa e o que trata | `Inventario.o_que_trata` diz o que um item trata agora (`trata`: a bandagem, a ferida que ela vai enfaixar, `sobrevivencia.ferida_para_bandagem`); a bolsa do painel pulsa e mostra na dica (paineis.js); sem nada a tratar, o `motivo` apaga o espaço |
+| Os dois anéis | Um anel tem dois espaços (`itens.espacos`: `anel1`, `anel2`, "Anel 1" e "Anel 2"). O item achado com algum anel vestido oferece um botão por espaço (`Inventario.rotulo_espaco`: "Substituir {anel} (Anel 1)" ou "Equipar no Anel 2 (vazio)") e manda `espacos` ao painel (cada espaço com o que tem); a escolha é sempre da pessoa. Da mochila: no texto, `escolher_espaco` pergunta qual substituir com os dois ocupados; na tela, o inventário e o mercado têm uma opção por espaço (`destino`) e `Telas.equiparDaMochila` usa o vazio ou abre o menu de qual substituir. A comparação (`itens.js`, `comparar`) mostra a troca com cada espaço |
 | As condições do herói | `sobrevivencia.condicoes` monta a fome (texto, ícone, a dica do efeito de agora) para a linha embaixo das barras do topo (paineis.js), que tem sempre a mesma altura |
 | `rpg/campanha.py` | a campanha escrita (protótipo): regiões de mapa fixo no mesmo formato do mundo gerado (`chave` estável, `nivel` fixo, saída `fechado`), e os eventos do mundo gerado que ficam de fora (`EVENTOS_FORA`) |
 | `rpg/habilidades.py` | habilidades (execução + descrição) |
@@ -192,7 +193,10 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   O mercado (`telas/mercado.js`) é a tela com abas: elas são só da tela (não falam com o motor); a tela ocupa a altura
   visível da página e só a lista da aba rola; a banca é uma faixa em cima (em qualquer largura), desenhada em canvas
   no estilo das paisagens, com vãos de mercadoria que aparecem conforme a largura. O que não se compra vem com o
-  `motivo` do motor (`Loja.dados_loja`). Ver roadmapIDEIAS/19.
+  `motivo` do motor (`Loja.dados_loja`). Ver roadmapIDEIAS/19. Tentar o que não se compra (ou um serviço da forja, da
+  curandeira, da taverna e do templo sem ouro: o motor manda `motivo` nos dados e nas metas, `Servicos.motivo_pagar`) é
+  recusado na tela (`App.recusar`, pagina.js): o som de falha e um aviso só, preso ao controle, com o motivo do motor;
+  clique, Enter e as teclas de número passam por ali, e a escolha não chega ao motor (nem tempo, nem sorteio).
   A cena interativa (`telas/cenas.js`, painel `cena`) troca a arte do topo por um ambiente desenhado
   (`Vista.usarAmbiente`: o mesmo canvas, a mesma câmera, o mesmo chão de arena na luta) e põe os pontos clicáveis numa
   camada por cima dela (`#pontos-cena`, como os prédios da vila); nada vai para o texto. Uma página nova sem painel de

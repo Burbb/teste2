@@ -5,7 +5,7 @@
 "use strict";
 
 (() => {
-  const { h, S, dica, dicaItem, esconderDica, fecharMenuItem, iconeItem, moedasPara } = Telas;
+  const { h, S, dica, dicaItem, equiparDaMochila, esconderDica, fecharMenuItem, iconeItem, moedasPara } = Telas;
 
   const ABAS = [["suprimentos", "Suprimentos"], ["equipamentos", "Equipamentos"], ["vender", "Vender"]];
   const qtdLoja = {};  // quantidade escolhida em cada suprimento
@@ -561,7 +561,7 @@
         ["pointerup", "pointerleave", "pointercancel"].forEach((t) => b.addEventListener(t, pararRepeticao));
       });
       const comprar = (ev) => {
-        if (el.classList.contains("caro")) { App.som("falha"); return; }
+        if (el.classList.contains("caro")) { const c = dados && dados.consumiveis.find((x) => x.id === id); App.recusar(el, c && c.motivo); return; }
         const q = ev.shiftKey ? Math.min(5, max) : Math.min(qtdLoja[id] || 1, max);
         qtdLoja[id] = 1;
         App.acao({ comprar: id }, "moeda", { qtd: q });
@@ -575,7 +575,7 @@
     });
     raiz.querySelectorAll("[data-comprar-item]").forEach((el) => el.addEventListener("click", (ev) => {
       ev.stopPropagation();
-      if (el.classList.contains("caro")) { App.som("falha"); return; }
+      if (el.classList.contains("caro")) { const it = dados && dados.equipamentos[Number(el.dataset.comprarItem)]; App.recusar(el, it && it.motivo); return; }
       App.acao({ comprar_item: Number(el.dataset.comprarItem) }, "moeda");
     }));
     // Vender: clique vende na hora (as moedas voam até o ouro do topo); o botão direito equipa; arrastar até a banca
@@ -596,7 +596,7 @@
         ev.preventDefault(); fecharMenuItem(); esconderDica();
         if (!it) return;
         if (!it.usavel) { App.som("falha"); App.avisar("Não é para a sua classe.", "equipar"); return; }
-        App.acao({ equipar: i }, "equipar");
+        equiparDaMochila(el, it, i);
       });
       el.addEventListener("dragstart", (ev) => { esconderDica(); fecharMenuItem(); vendendo = i; ev.dataTransfer.setData("text/plain", "item"); balcao.classList.add("alvo"); });
       el.addEventListener("dragend", () => { balcao.classList.remove("alvo"); setTimeout(() => { vendendo = null; }, 0); });
@@ -605,7 +605,7 @@
       const recomprar = () => {
         esconderDica();
         const it = dados && dados.recompra[Number(el.dataset.recomprar)];
-        if (el.classList.contains("caro")) { App.som("falha"); App.avisar((it && it.motivo) || "Ouro insuficiente.", "recomprar"); return; }
+        if (el.classList.contains("caro")) { App.recusar(el, it && it.motivo); return; }
         App.acao({ recomprar: Number(el.dataset.recomprar) }, "moeda");
       };
       el.addEventListener("click", (ev) => { ev.stopPropagation(); recomprar(); });

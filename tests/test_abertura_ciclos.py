@@ -77,6 +77,60 @@ class TestContrato(unittest.TestCase):
         ab.contexto(g, "mural", {"lista": [longe, alvo]})
         self.assertIsNone(ab.atual(g))  # sem nada adequado, nada se força (e a oferta não muda)
 
+    def test_k1_so_aponta_um_lugar_ligado_direto_a_vila(self):
+        # Pelo grafo das estradas: a Capela (nível 3) fica depois do Bosque; do Vau, é uma viagem a mais.
+        g = depois_da_despensa()
+        g.j.nivel = 3
+        capela = contrato(g, "capela_afogada", total=2)
+        bosque = contrato(g, "bosque_do_moinho")
+        g.contratos = []
+        ab.contexto(g, "mural", {"lista": [capela, bosque]})
+        self.assertEqual(ab.atual(g)["ancora"], f"aceitar:{bosque['id']}")
+        ab.contexto(g, "mural", {"lista": [capela]})
+        self.assertIsNone(ab.atual(g))  # sem um vizinho adequado, o quadro espera outra oferta
+        self.assertEqual(g.mundo["locais"][capela["local"]]["chave"], "capela_afogada")  # nada muda no contrato
+
+    def test_k1_no_mundo_gerado_tambem_pelo_grafo(self):
+        for seed in range(6):
+            g = Jogo(Jogador(), seed=seed, pasta_saves=tempfile.mkdtemp(), hardcore=False)
+            g.iniciar("Teste", "guerreiro")
+            ab.ligar(g, True)
+            oferta = {"lista": [g.gerar_contrato() for _ in range(12)]}
+            ab.contexto(g, "mural", oferta)
+            o = ab.atual(g)
+            vizinhos = {int(i) for i in g.loc["con"]}
+            bons = [c for c in oferta["lista"] if c["tipo"] == "caca" and c["local"] in vizinhos]
+            if o and o["id"] == "K1":
+                c = next(c for c in oferta["lista"] if o["ancora"] == f"aceitar:{c['id']}")
+                self.assertIn(c["local"], vizinhos)
+                self.assertEqual(c["tipo"], "caca")
+            else:
+                self.assertFalse([c for c in bons if ab._adequado(g, c)])
+
+    def test_o_contrato_indicado_e_o_apontado_depois_do_aceite(self):
+        g = depois_da_despensa()
+        perto = contrato(g, "charco_dos_juncos")
+        outro = contrato(g, "bosque_do_moinho")
+        g.contratos = []
+        oferta = {"lista": [outro, perto]}
+        ab.contexto(g, "mural", oferta)
+        self.assertEqual(ab.atual(g)["ancora"], f"aceitar:{perto['id']}")
+        g.aceitar_contrato(perto, oferta)
+        ab.contexto(g, None)
+        o = ab.atual(g)
+        self.assertEqual((o["id"], o["ancora"]), ("K2", f"contrato:{perto['id']}"))
+        self.assertEqual(o["texto"], "Clique neste contrato para viajar até **Charco dos Juncos**.")
+
+    def test_k2_longe_diz_por_onde_sem_prometer_a_viagem_direta(self):
+        # Quem aceitou outro contrato (a liberdade continua): mais de uma viagem, o quadro não diz "clique para viajar".
+        g = depois_da_despensa()
+        c = contrato(g, "capela_afogada", total=2)
+        o = ab.atual(g)
+        self.assertEqual((o["id"], o["ancora"]), ("K2", f"contrato:{c['id']}"))
+        self.assertEqual(o["texto"], "O contrato é em **Capela Afogada**. O caminho passa por **Bosque do Moinho**.")
+        ir(g, "bosque_do_moinho")  # um passo adiante: daqui é uma viagem só
+        self.assertEqual(ab.atual(g)["texto"], "Clique neste contrato para viajar até **Capela Afogada**.")
+
     def test_aceito_o_contrato_o_k2_vem_antes_das_outras(self):
         # O fluxo de Jean: o Texto (A1) e a vida baixa (V2) ainda pendentes; aceito o contrato, a volta à vila mostra o
         # contrato, sem esperar outra resposta ao menu.

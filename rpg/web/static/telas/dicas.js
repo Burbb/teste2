@@ -3,7 +3,7 @@
 "use strict";
 
 (() => {
-  const { equipadosPara, htmlItem } = Telas;
+  const { equipadosPara, htmlItem, NOME_ESPACO } = Telas;
 
   const dicas = new Map();
   let proximaDica = 0;
@@ -102,7 +102,7 @@
     const eq = ligado && caixa && !caixa.hidden && caixa._item ? equipadosPara(caixa._item) : [];
     if (!eq.length) { if (lado) lado.hidden = true; return; }
     if (!lado) { lado = document.createElement("div"); lado.id = "dica-equipado"; lado.className = "m-janela"; document.body.appendChild(lado); }
-    lado.innerHTML = eq.map((it, i) => `<div class="${i ? "outro" : ""}"><span class="selo-equipado">Equipado</span>${htmlItem(it, "", false)}</div>`).join("");
+    lado.innerHTML = eq.map((it, i) => `<div class="${i ? "outro" : ""}"><span class="selo-equipado">Equipado${eq.length > 1 || it.espaco.startsWith("anel") ? ` · ${NOME_ESPACO[it.espaco]}` : ""}</span>${htmlItem(it, "", false)}</div>`).join("");
     lado.hidden = false;
     const r = caixa.getBoundingClientRect();
     const larg = lado.offsetWidth || 280;

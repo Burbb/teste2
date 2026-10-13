@@ -254,7 +254,11 @@ class Loja:
             opcoes.append((f"Comprar {it['nome']}", ("equip", it), {"comprar_item": i}))
         for i, it in enumerate(j.mochila):
             if self.pode_usar(it):
-                opcoes.append((f"Equipar {it['nome']}", ("equipar", it), {"equipar": i}))
+                espacos = itens.espacos(it["slot"])
+                if len(espacos) > 1:  # o anel: um por espaço, como no inventário (a tela escolhe ou pergunta qual)
+                    opcoes += [(f"Equipar {it['nome']}", ("equipar", it, s), {"equipar": i, "destino": s}) for s in espacos]
+                else:
+                    opcoes.append((f"Equipar {it['nome']}", ("equipar", it), {"equipar": i}))
             opcoes.append((f"Vender {it['nome']}", ("vender", it), {"vender": i}))
         for i, (it, _) in enumerate(self.recompra):
             opcoes.append((f"Recomprar {it['nome']}", ("recomprar", i), {"recomprar": i}))
@@ -266,7 +270,7 @@ class Loja:
         elif op[0] == "recomprar":
             self.recomprar_item(op[1])
         elif op[0] == "equipar":
-            self.equipar(op[1])
+            self.equipar(op[1], op[2] if len(op) > 2 else None)
         elif op[0] == "equip":
             self.comprar_equipamento(op[1], a_venda)
         else:

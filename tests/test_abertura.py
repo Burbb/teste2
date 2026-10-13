@@ -10,6 +10,7 @@ import unittest
 from rpg import abertura, comitiva as cm
 from rpg.jogo import Jogo
 from rpg.regras import Derrota, FimDeJogo
+from rpg.ui import InterfaceGrafica
 from rpg.web.estado import estado
 from tests.test_missoes import Roteiro
 
@@ -27,6 +28,31 @@ class Jogador(Roteiro):
         if pergunta == "Habilidades:":
             return 0
         raise FimDeJogo(f"sem roteiro para {pergunta!r}: {opcoes}")
+
+
+class JogadorNaTela(InterfaceGrafica, Jogador):
+    """O jogador na tela gráfica (o espólio vira um quadro): anota a ordem das cenas e celebrações. Com `habilidade`,
+    usa a primeira habilidade sempre que pode."""
+
+    def __init__(self, roteiro=(), habilidade=False):
+        super().__init__(roteiro)
+        self.habilidade, self.usou_habilidade = habilidade, False
+        self.ordem, self.xp_no_quadro = [], []
+
+    def cena(self, titulo, subtitulo=None, tipo="evento"):
+        super().cena(titulo, subtitulo, tipo)
+        self.ordem.append(("cena", titulo))
+
+    def celebrar(self, tipo, dados):
+        self.ordem.append(("celebrar", tipo))
+        if tipo == "espolio":
+            self.xp_no_quadro.append(dados.get("xp"))
+
+    def escolher(self, pergunta, opcoes):
+        if self.habilidade and pergunta == "Sua ação:" and "Habilidades" in opcoes:
+            self.usou_habilidade = True
+            return opcoes.index("Habilidades")
+        return super().escolher(pergunta, opcoes)
 
 
 def nova(classe="guerreiro", tutorial=True, roteiro=(), seed=7, pasta=None):
@@ -126,6 +152,38 @@ class TestDespensa(unittest.TestCase):
             self.assertIn("\"A primeira caneca é por minha conta. Se quiser mais trabalho, dê uma olhada no mural de "
                           "contratos, na praça.\"", texto)
             self.assertEqual("Rato é fácil" in texto, not morel)
+
+    def test_o_relatorio_da_luta_vem_antes_do_taverneiro(self):
+        """Na tela: fim da luta → relatório (o espólio, com o XP, uma vez) → cena do taverneiro. Antes o quadro só
+        fechava no menu seguinte, depois do Continuar do taverneiro. Com e sem tutorial, nas três classes, atacando
+        ou acabando com a habilidade ensinada."""
+        original = abertura._rato
+
+        def rato_fraco(g):  # só para o teste: um golpe derruba, para a habilidade dar o último
+            e = original(g)
+            e.hp = e.hp_max = 1
+            return e
+        for classe in ("guerreiro", "arqueiro", "mago"):
+            for tutorial in (True, False):
+                for habilidade in (False, True):
+                    with self.subTest(classe=classe, tutorial=tutorial, habilidade=habilidade):
+                        abertura._rato = rato_fraco if habilidade else original
+                        try:
+                            g = nova(classe, tutorial, roteiro=["Descer à despensa"])
+                            g.ui = JogadorNaTela(["Descer à despensa"], habilidade)
+                            telas(g, 2)
+                        finally:
+                            abertura._rato = original
+                        ordem = g.ui.ordem
+                        vitoria = ordem.index(("celebrar", "vitoria"))
+                        espolios = [i for i, o in enumerate(ordem) if o == ("celebrar", "espolio")]
+                        taverna = ordem.index(("cena", "A Taverna do Vau"))
+                        self.assertEqual(len(espolios), 1)
+                        self.assertTrue(vitoria < espolios[0] < taverna, ordem[vitoria:taverna + 1])
+                        self.assertEqual(g.ui.xp_no_quadro, [12])
+                        self.assertEqual(g.j.xp, 12)
+                        self.assertEqual(g.ui.usou_habilidade, habilidade)
+                        self.assertEqual((abertura.estado(g)["despensa"], abertura.caneca(g)), ("feita", True))
 
     def test_os_ratos_dizem_o_que_sao(self):
         g = nova()

@@ -23,7 +23,7 @@
     const corpo = linhas ? linhas.map((l) => l.nota ? `<span class="serv-nota">${h(l.nota)}</span>`
       : `<span class="serv-linha">${S(l.icone, 1)}<span class="serv-rotulo">${h(l.rotulo)}:</span> ${Realce.texto(l.texto)}</span>`).join("")
       : efeito ? `<span class="serv-efeito">${Realce.texto(efeito)}</span>` : "";
-    return `<button type="button" class="servico${motivo ? " caro" : ""}${limite ? " limite" : ""}" ${attrs} ${dicaAttr}${motivo ? ` aria-disabled="true"` : ""}>
+    return `<button type="button" class="servico${motivo ? " caro" : ""}${limite ? " limite" : ""}" ${attrs} ${dicaAttr}${motivo ? ` aria-disabled="true" data-motivo="${h(motivo)}"` : ""}>
       <span class="slot-px${r}">${S(icone, 2)}</span>
       <span class="serv-texto"><b class="serv-nome${r}">${h(nome)}</b>${corpo}</span>
       <span class="serv-fim">${fim}</span></button>`;
@@ -32,9 +32,9 @@
     const cartoes = d.pecas.map((p) => cartaoServico({
       icone: iconeItem(p.item), raridade: p.item.raridade, nome: p.item.nome, preco: p.custo, limite: p.custo == null,
       efeito: p.custo == null ? "No limite (+5): a forja não tira mais nada dela" : p.ganho,
-      motivo: p.custo != null && !p.pode ? "Ouro insuficiente." : "",
+      motivo: p.motivo || "",
       attrs: p.custo == null ? "" : `data-reforcar="${h(p.slot)}"`,
-      dicaAttr: dicaItem(p.item, p.custo == null ? "No limite do reforço." : p.pode ? "Clique para reforçar." : "Ouro insuficiente.", false),
+      dicaAttr: dicaItem(p.item, p.custo == null ? "No limite do reforço." : p.motivo ? h(p.motivo) : "Clique para reforçar.", false),
     }));
     return `<div class="tela balcao-servico forja">${topoBalcao("martelo", "O ferreiro", "Um homem sem dois dedos cospe na forja. \"Ouro primeiro.\"", d.ouro)}
       <h4>Reforçar o que você usa</h4><div class="servicos">${cartoes.join("") || '<span class="vazio">Nada no corpo que valha a forja.</span>'}</div></div>`;
@@ -43,18 +43,18 @@
     const cartoes = d.ferimentos.map((f) => cartaoServico({
       // O primeiro tratamento grátis (o motor diz): no lugar do efeito, até ser usado; a explicação fica na dica.
       icone: f.id === "infeccao" ? "gota_verde" : "gota", nome: f.nome, efeito: f.gratis || (f.explica || [])[0] || "", preco: f.gratis ? null : f.custo,
-      motivo: f.pode ? "" : "Ouro insuficiente.", attrs: `data-tratar="${h(f.id)}"`,
-      dicaAttr: dica(`<b>${h(f.nome)}</b>${(f.explica || []).map((l, i) => `<div class="${i ? "" : "bonus pior"}">${h(l)}</div>`).join("")}<div class="rodape">${f.pode ? "Clique para tratar na hora." : "Ouro insuficiente."}</div>`),
+      motivo: f.motivo || "", attrs: `data-tratar="${h(f.id)}"`,
+      dicaAttr: dica(`<b>${h(f.nome)}</b>${(f.explica || []).map((l, i) => `<div class="${i ? "" : "bonus pior"}">${h(l)}</div>`).join("")}<div class="rodape">${f.motivo ? h(f.motivo) : "Clique para tratar na hora."}</div>`),
     }));
     // Quem atende e o que diz vêm do motor quando não é a curandeira de sempre (no Vau da campanha: Pita ou Marta).
     return `<div class="tela balcao-servico curandeira">${topoBalcao("unguento", d.quem || "A curandeira", d.fala || "Uma velha de mãos manchadas de sangue seco examina você. \"O que vai ser?\"", d.ouro)}
       <h4>Tratar</h4><div class="servicos">${cartoes.join("")}</div></div>`;
   }
-  /** Clique num cartão: a ação, ou o "não" de quem não tem ouro. */
+  /** Clique (ou Enter) num cartão: a ação, ou o "não" com o motivo do motor, no próprio cartão. */
   function ligarServicos(raiz, chave, som) {
     raiz.querySelectorAll(`[data-${chave}]`).forEach((b) => b.addEventListener("click", (ev) => {
       ev.stopPropagation();
-      if (b.classList.contains("caro")) { App.som("falha"); return; }
+      if (b.classList.contains("caro")) { App.recusar(b, b.dataset.motivo); return; }
       App.acao({ [chave]: b.dataset[chave] }, som);
     }));
   }

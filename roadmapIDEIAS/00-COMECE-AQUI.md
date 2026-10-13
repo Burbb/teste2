@@ -1715,3 +1715,39 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
 - **Verificado:** testes, gabarito idêntico, pyflakes, fumaça completa, telas nas quatro salas e no exterior, salvar e
   carregar, tutorial ligado.
 - **Falta:** Jean conferir. A E9 segue aberta.
+
+### 13/10/2026 — Quatro correções: os dois anéis, o contrato do tutorial, os ratos e o ouro (1.82.0)
+
+- **Pedido de Jean:** antes da arte da sacristia, corrigir quatro pontos da 1.81.1 e levantar (só levantar) os ataques
+  em área dos inimigos. Trabalho retomado de uma sessão interrompida: nada dela estava no repositório (nem na pasta
+  nem nos commits), então as quatro correções foram refeitas a partir da 1.81.1.
+- **Feito:**
+  - **Anéis:** a comparação mostra a troca com cada espaço ("Anel 1 · no lugar de…", ou "Anel 2 · vazio"), na janela
+    do item achado, nas dicas da mochila e do mercado e no Shift; a janela empilha os dois anéis vestidos em cartões
+    baixos ao lado do achado (cabe a 1280×620; mais baixo, rola por dentro). Equipar diz o espaço: "Substituir {anel}
+    (Anel 1)" / "Equipar no Anel 2 (vazio)", um botão por espaço, teclas 1, 2. Da mochila (dois cliques ou botão
+    direito, no inventário e no mercado), o anel vai para o espaço vazio; com os dois ocupados, um menu pergunta qual
+    substituir (mouse e teclado); no texto, a mesma pergunta. Nada escolhe o "pior" por soma. Mochila e regras de
+    equipar iguais. O inventário e a ficha de texto dizem "Anel 1" e "Anel 2".
+  - **Contrato introdutório:** o K1 só aponta um contrato num lugar ligado direto à vila (pelo grafo das estradas),
+    da oferta de sempre; o K2 aponta o mesmo contrato e só diz "Clique neste contrato para viajar até…" quando é uma
+    viagem só; mais longe, diz por onde o caminho passa. Detalhe em [18](18-E9-ABERTURA-GUIADA.md), seção 24.
+  - **Ratos da despensa:** o relatório da luta (o espólio, 12 XP) vem logo depois da vitória, antes da cena do
+    taverneiro (antes, só depois dela e do Continuar). Seção 24 do [18](18-E9-ABERTURA-GUIADA.md).
+  - **"Ouro insuficiente":** tentar um serviço ou compra sem ouro (forja, curandeira, taverna, templo, mercado: suprimento,
+    peça e recompra) mostra um aviso curto dentro do próprio cartão, encostado no preço, sem cobrir o preço, o motivo
+    escrito nem as outras opções; um só (clicar de novo troca), pelo mouse, Enter e as teclas de número. O texto é o
+    motivo do motor ("Esgotado", "A aljava está cheia.", "Os fregueses já contaram tudo o que sabiam hoje."...). A
+    tentativa não chega ao motor: não gasta ouro, item, tempo nem sorteio (antes, a tecla de número na taverna chegava
+    ao motor e a volta ao menu da vila consumia um sorteio).
+- **Verificado:** testes (558, com `test_aneis.py`, `test_ouro_insuficiente.py`, o relatório dos ratos e os K1/K2
+  novos), pyflakes, fumaça completa (cenários novos: `cenarioAneis`, `cenarioOuroInsuficiente`; o K2 até a
+  chegada no `cenarioCiclos`; a ordem dos ratos no `cenarioAbertura`). Gabarito examinado antes de atualizar: as 18
+  partidas de mundo gerado mudam só no campo `motivo` novo das metas e dos painéis e em "Anel 1/Anel 2" na ficha de
+  texto; nenhuma escolha nem sorteio mudou (comparado com as transcrições normalizadas). Telas a 1500×950, 1280×720,
+  1280×620 e 1280×560: anéis com dois ocupados, um vazio e nenhum; a abertura dos ratos nas três classes, com e sem
+  tutorial, atacando e acabando com a habilidade; forja, taverna, templo, curandeira e mercado sem ouro.
+- **Visto e não mexido:** com o tutorial ligado e sem ouro para a cama, o quadro D1 ("Clique neste cartão para dormir
+  aqui até o amanhecer.") ainda aparece; o clique agora mostra "Ouro insuficiente". Fica para Jean dizer se o D1 deve
+  esperar ouro.
+- **Falta:** Jean conferir. A arte da sacristia e do fundo não começou. A E9 segue aberta.

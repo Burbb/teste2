@@ -1084,3 +1084,30 @@ some; ao voltar, reaparece):
 - 1280×800, 1280×700, 1500×950 e 1500×700;
 - sozinho e com Morel e Odette, de dia e à noite (página mais longa, com as linhas de risco);
 - guerreiro no Charco e arqueiro no Bosque.
+
+## 24. O contrato do tutorial a uma viagem e o relatório dos ratos (1.82.0)
+
+Pedido de Jean sobre a 1.81.1, junto com os anéis e o aviso de ouro (registro em [00](00-COMECE-AQUI.md)).
+
+**O contrato introdutório (K1, K2).** O K2 diz "Clique neste contrato para viajar até…", mas o clique no cartão só
+viaja até um lugar ligado direto ao de agora (o menu de viagem só lista os vizinhos). Um contrato na Capela, visto do
+Vau, abria o menu de viagem em vez de viajar.
+- **K1:** o contrato apontado no Mural, além de caça (sem alvo de elite) num lugar do nível do herói ou abaixo, tem de
+  ser num lugar ligado direto à vila pelas estradas (o grafo, `con`, não a distância no mapa). Continua vindo da oferta
+  de sempre, sem mudar destino nem recompensa; sem um assim, o quadro espera outra oferta.
+- **K2:** o contrato seguido continua o mais antigo em andamento, então o apontado no Mural é o mesmo apontado depois do
+  aceite. Ligado direto ao lugar de agora, o texto é o de sempre; mais longe (quem aceitou outro contrato), "O contrato
+  é em **{Capela Afogada}**. O caminho passa por **{Bosque do Moinho}**." (o primeiro lugar do caminho mais curto), sem
+  prometer a viagem direta. Chegando ao Bosque, o texto volta a ser o do clique.
+- Aceitar outro contrato, ou nenhum, continua livre.
+
+**O relatório da luta da despensa.** Na tela, o quadro do espólio (o XP dos ratos) só fechava na pergunta seguinte, já
+depois da cena do taverneiro e do Continuar dela. Agora `abertura.descer` fecha o espólio logo depois da vitória, como
+as salas da capela: fim da luta → relatório → cena do taverneiro, com os controles de sempre do relatório. XP (12) e
+caneca entregues uma vez, com os mesmos valores.
+
+**Conferido:** `TestDespensa.test_o_relatorio_da_luta_vem_antes_do_taverneiro` (falha sem a correção nas 12
+combinações: três classes, tutorial ligado e desligado, atacando ou acabando com a habilidade); no navegador, as mesmas
+12 combinações desde a abertura real; os testes novos do K1 e do K2 (grafo da campanha e do mundo gerado, o mesmo
+contrato antes e depois do aceite, o texto de longe); fumaça: o K2 aponta o contrato aceito e o clique nele viaja até o
+lugar, onde o K3 aponta o Caçar.

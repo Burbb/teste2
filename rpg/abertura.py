@@ -111,6 +111,7 @@ def descer(g):
         g.pausar()
         return
     a["despensa"], a["caneca"] = "feita", True
+    g.fechar_espolio()  # o relatório da luta (o XP) logo depois dela, antes da cena do taverneiro
     g.ui.cena("A Taverna do Vau", g.contexto_cena(), "evento")
     g.narrar("O taverneiro olha os dois ratos e cospe de lado. \"A primeira caneca é por minha conta. Se quiser mais "
              "trabalho, dê uma olhada no mural de contratos, na praça.\"")
@@ -417,15 +418,31 @@ def _contrato_seguido(g):
     return next((c for c in g.contratos if not c.get("concluido")), None)
 
 
+def _vizinho(g, lid):
+    """O lugar `lid` é ligado direto a este por uma estrada (uma viagem só, sem atravessar outro lugar)?"""
+    return lid in {int(i) for i in g.loc["con"]}
+
+
+def _por_onde(g, lid):
+    """O primeiro lugar do caminho mais curto daqui até `lid` (pelo grafo das estradas, não pela distância no mapa)."""
+    from .mundo import distancias, vizinhos
+    ate = distancias(g.mundo["locais"], lid)
+    v, _ = min(vizinhos(g.mundo, g.loc), key=lambda vd: (vd[1] + ate.get(vd[0]["id"], 99), vd[0]["id"]))
+    return v
+
+
 def _adequado(g, c):
-    """Um contrato bom para aprender: caça de bando (não um alvo de elite) num lugar do nível do herói ou abaixo."""
+    """Um contrato bom para aprender: caça de bando (não um alvo de elite) num lugar do nível do herói ou abaixo e
+    ligado direto a esta vila, para a primeira viagem ser uma só."""
     from .mundo import nivel_regiao
-    return c["tipo"] == "caca" and nivel_regiao(g.mundo["locais"][c["local"]]) <= g.j.nivel
+    return (c["tipo"] == "caca" and nivel_regiao(g.mundo["locais"][c["local"]]) <= g.j.nivel
+            and _vizinho(g, c["local"]))
 
 
 def _k1(g, a, oferta):
     """No Mural, sem contrato aceito ainda: um contrato de caça adequado ao começo (o mais fácil da oferta, se houver;
-    a oferta é a de sempre, nada é gerado para o tutorial). Aceitar é da pessoa."""
+    a oferta é a de sempre, nada é gerado nem mudado para o tutorial; sem um adequado, o quadro espera outra oferta).
+    Aceitar é da pessoa, e qualquer contrato vale."""
     from .mundo import nivel_regiao
     if not _pendente(a, "K1") or not oferta or g.contratos:
         return None
@@ -438,8 +455,9 @@ def _k1(g, a, oferta):
 
 
 def _k2(g, a):
-    """Um contrato aceito e o lugar dele longe daqui: o cartão do contrato, à direita, leva até lá (o clique nele
-    viaja direto ao lugar, como o destino no mapa)."""
+    """Um contrato aceito e o lugar dele longe daqui: o cartão do contrato, à direita. Ligado direto a este lugar, o
+    clique no cartão viaja até lá (como o destino no mapa); mais longe, o clique não leva direto, e o quadro diz por
+    onde o caminho passa."""
     c = _contrato_seguido(g)
     if not _pendente(a, "K2") or not _pendente(a, "K4") or not c:
         return None
@@ -447,8 +465,11 @@ def _k2(g, a):
     if lid == g.loc["id"]:
         return None
     lugar = g.mundo["locais"][lid]["nome"]
-    return {"id": "K2", "texto": f"Clique neste contrato para viajar até **{lugar}**.",
-            "ancora": f"contrato:{c['id']}", "entendi": True}
+    if _vizinho(g, lid):
+        texto = f"Clique neste contrato para viajar até **{lugar}**."
+    else:
+        texto = f"O contrato é em **{lugar}**. O caminho passa por **{_por_onde(g, lid)['nome']}**."
+    return {"id": "K2", "texto": texto, "ancora": f"contrato:{c['id']}", "entendi": True}
 
 
 def _k3(g, a):

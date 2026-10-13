@@ -349,6 +349,39 @@ function aviso(texto, tipo, icone, chave) {
   a._t = setTimeout(() => { a.remove(); avisosAtivos = Math.max(0, avisosAtivos - 1); }, dura);
 }
 
+/** O "não" de uma ação paga (ou bloqueada por outro motivo) que se tentou mesmo assim: o som de falha e um aviso
+ *  curto preso ao controle, com o motivo que o motor mandou ("Ouro insuficiente.", "Esgotado"...). Fica dentro do
+ *  próprio controle, encostado no preço, sem cobrir o preço, o motivo já escrito no cartão nem as outras opções. Um só
+ *  por vez: tentar de novo troca o aviso aberto por um novo, sem empilhar. Vale para clique e teclado (Enter, números):
+ *  a tentativa não chega ao motor, então não gasta ouro, item, tempo nem sorteio. */
+let avisoControle = null;
+function recusar(controle, texto) {
+  Som.tocar("falha");
+  if (!controle || !texto || replay) return;
+  if (avisoControle) { clearTimeout(avisoControle._t); avisoControle.remove(); }
+  const a = el("div", "aviso-flutuante aviso-controle", `<span>${esc(texto)}</span>`);
+  document.body.appendChild(a);
+  avisoControle = a;
+  // O espaço livre do controle: sem o ícone (à esquerda), o preço (à direita) nem o motivo escrito (embaixo).
+  const r = controle.getBoundingClientRect();
+  let esq0 = r.left + 4, dir = r.right - 6, baixo = r.bottom - 4;
+  controle.querySelectorAll(".slot-px, .preco, .serv-fim, .merc-motivo, .merc-total").forEach((p) => {
+    const q = p.getBoundingClientRect();
+    if (!q.width || !q.height) return;
+    if (q.right < r.left + r.width / 2) esq0 = Math.max(esq0, q.right + 4);
+    else if (q.left > r.left + r.width / 2) dir = Math.min(dir, q.left - 6);
+    else if (q.top > r.top + r.height / 2) baixo = Math.min(baixo, q.top - 2);
+  });
+  if (a.offsetWidth > dir - esq0) a.classList.add("estreito");  // o cartão pequeno do mercado: a letra menor
+  const w = a.offsetWidth, hgt = a.offsetHeight;
+  const esq = Math.max(esq0, dir - w);  // encostado no preço: o vão entre o texto e ele costuma estar livre
+  a.style.left = Math.max(6, Math.min(innerWidth - w - 6, esq)) + "px";
+  a.style.top = Math.max(6, Math.min(innerHeight - hgt - 6, (r.top + baixo) / 2 - hgt / 2)) + "px";
+  a._t = setTimeout(() => { a.remove(); if (avisoControle === a) avisoControle = null; }, 1700);
+}
+// Rolar, trocar de tela ou responder: o aviso preso a um controle que saiu do lugar não fica boiando.
+document.addEventListener("scroll", () => { if (avisoControle) { avisoControle.remove(); avisoControle = null; } }, { capture: true, passive: true });
+
 async function efeito(m) {
   if (emTela()) {
     aviso(m.texto, m.tipo, iconeChip(m));
