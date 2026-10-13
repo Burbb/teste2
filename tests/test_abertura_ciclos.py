@@ -165,7 +165,7 @@ class TestBauSelosAdiantar(unittest.TestCase):
         self.assertEqual(o["id"], "SF")
         # O nome, o efeito de agora e, só no primeiro, a duração (o número do ícone).
         self.assertEqual(o["texto"], "**Firme**\nAcabou de se soltar: não pode ser atordoado nem congelado agora.\n"
-                                     "O número no ícone indica quantos turnos o efeito ainda dura.")
+                                     "_O número no ícone indica quantos turnos o efeito ainda dura.")
         ab.visto(g, "SF")
         o = ab.atual(g)
         self.assertEqual((o["id"], o["ancora"]), ("S-", f"selo:{cb.uid(lobo)}:veneno"))
@@ -180,7 +180,7 @@ class TestBauSelosAdiantar(unittest.TestCase):
         self.luta(g)
         g.j.efeitos["iniciativa"] = {"t": 1, "v": 0.25}
         self.assertEqual(ab.atual(g)["texto"], "**Iniciativa**\n+25% de dano no primeiro golpe deste turno.\n"
-                                               "O número no ícone indica quantos turnos o efeito ainda dura.")
+                                               "_O número no ícone indica quantos turnos o efeito ainda dura.")
 
     def test_adiantar_depois_da_primeira_luta_e_sem_prometer_pular(self):
         g = nova_sem_a1()

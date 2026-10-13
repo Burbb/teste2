@@ -8,14 +8,14 @@ from . import balanceamento as bal
 from . import texto as tx
 
 FERIMENTOS = {
-    "corte": dict(nome="Corte profundo", dias=4, mult={"max_hp": 0.9}, aberto=True),
-    "mordida": dict(nome="Mordida dilacerada", dias=4, mult={"max_hp": 0.9, "agi": 0.9}, aberto=True),
-    "costelas": dict(nome="Costelas quebradas", dias=8, mult={"defesa": 0.75, "max_rec": 0.85}),
-    "braco": dict(nome="Braço fraturado", dias=8, mult={"atk": 0.75, "poder": 0.9}),
-    "perna": dict(nome="Perna torcida", dias=5, mult={"agi": 0.7}),
-    "concussao": dict(nome="Concussão", dias=3, mult={"poder": 0.75, "max_rec": 0.85}),
-    "queimadura": dict(nome="Queimadura grave", dias=5, mult={"max_hp": 0.88}, aberto=True),
-    "infeccao": dict(nome="Infecção", dias=None, mult={"atk": 0.85, "poder": 0.85, "agi": 0.85}),
+    "corte": dict(nome="Corte profundo", curto="o corte", dias=4, mult={"max_hp": 0.9}, aberto=True),
+    "mordida": dict(nome="Mordida dilacerada", curto="a mordida", dias=4, mult={"max_hp": 0.9, "agi": 0.9}, aberto=True),
+    "costelas": dict(nome="Costelas quebradas", curto="as costelas", dias=8, mult={"defesa": 0.75, "max_rec": 0.85}),
+    "braco": dict(nome="Braço fraturado", curto="o braço", dias=8, mult={"atk": 0.75, "poder": 0.9}),
+    "perna": dict(nome="Perna torcida", curto="a perna", dias=5, mult={"agi": 0.7}),
+    "concussao": dict(nome="Concussão", curto="a concussão", dias=3, mult={"poder": 0.75, "max_rec": 0.85}),
+    "queimadura": dict(nome="Queimadura grave", curto="a queimadura", dias=5, mult={"max_hp": 0.88}, aberto=True),
+    "infeccao": dict(nome="Infecção", curto="a infecção", dias=None, mult={"atk": 0.85, "poder": 0.85, "agi": 0.85}),
 }
 MAX_PROVISOES = 12
 FOME_FATOR = {1: 0.9, 2: 0.8}   # atributos e vida máxima com fome (1º e 2º dia); do 3º em diante, FOME_GRAVE

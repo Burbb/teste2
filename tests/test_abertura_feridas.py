@@ -166,44 +166,78 @@ class TestCurandeiraGratis(unittest.TestCase):
         visto(g, "F1", "F2", "F3")
         ab.contexto(g, "curandeira")
         o = ab.atual(g)
-        self.assertEqual((o["id"], o["ancora"]), ("F4", "tratar:corte"))
-        self.assertIn("o primeiro tratamento é grátis", o["texto"])
+        self.assertEqual((o["id"], o["ancora"], o["texto"]), ("F4", "tratar:corte", "Clique neste cartão para tratar o corte."))
         ab.contexto(g, None)
 
 
 class TestDescanso(unittest.TestCase):
-    def test_d1_taverna_com_os_numeros_das_regras(self):
+    def test_cartao_da_taverna_com_os_numeros_das_regras(self):
         g = depois_da_despensa()
         j = g.j
         j.hp, j.rec = 10, 0
-        o = next(c for c in ab.contextuais(g) if c["id"] == "D1")
         vida = int(j.max_hp * bal.TAVERNA_VIDA)
-        self.assertIn(f"custa {ab.preco_dormir(g)} de ouro e vai até amanhã: devolve {vida} de vida e todo o Vigor",
-                      o["texto"])
-        self.assertIn("nenhuma provisão gasta", o["texto"])
-        self.assertEqual(o["ancora"], "servico:dormir")
+        self.assertEqual(g.linhas_descanso("taverna"), [
+            {"icone": "coracao", "rotulo": "Recuperação", "texto": f"+{vida} vida · Vigor completo"},
+            {"icone": "pernil", "rotulo": "Provisões", "texto": "nenhuma consumida"}])
         g.descansar(bal.TAVERNA_VIDA)  # o descanso da taverna devolve exatamente isso
         self.assertEqual((j.hp, j.rec), (10 + vida, j.max_rec))
 
-    def test_d1_com_fome_nao_promete_tudo(self):
+    def test_vida_cheia_sem_mais_zero(self):
+        g = depois_da_despensa("mago")
+        g.j.rec = 0
+        self.assertEqual(g.linhas_descanso("taverna")[0]["texto"], "Mana completa")
+        g.j.rec = g.j.max_rec
+        self.assertEqual(g.linhas_descanso("taverna")[0]["texto"], "Mana completa")
+
+    def test_fome_so_quando_reduz(self):
         g = depois_da_despensa()
         j = g.j
         j.hp, j.fome = 10, 1
-        o = next(c for c in ab.contextuais(g) if c["id"] == "D1")
         vida = int(j.max_hp * bal.TAVERNA_VIDA * sobrevivencia.FOME_DESCANSO)
-        self.assertIn(f"devolve {vida} de vida", o["texto"])
-        self.assertIn("Com fome, a vida volta menos.", o["texto"])
+        linhas = g.linhas_descanso("taverna")
+        self.assertEqual(linhas[0]["texto"], f"+{vida} vida · Vigor completo")
+        self.assertIn({"nota": "Recuperação de vida reduzida pela fome."}, linhas)
         g.descansar(bal.TAVERNA_VIDA)
         self.assertEqual(j.hp, 10 + vida)
+        j.hp = j.max_hp  # com a vida cheia, a fome não reduz nada: sem nota
+        self.assertNotIn({"nota": "Recuperação de vida reduzida pela fome."}, g.linhas_descanso("taverna"))
 
-    def test_d1_ferimento_diferencia_descanso_e_curandeira(self):
+    def test_nunca_zero_com_vida_faltando(self):
+        # A conta da taverna e da fogueira, com fome e com mau tempo, nas três classes e no nível 1: sempre volta vida.
+        for classe in ("guerreiro", "arqueiro", "mago"):
+            g = depois_da_despensa(classe)
+            g.j.fome = 2
+            g.clima = "tempestade"
+            for fracao in (bal.TAVERNA_VIDA, bal.ACAMPAR_VIDA_RUIM):
+                g.j.hp = 1
+                self.assertGreater(g.previsao_descanso(fracao, 0.5)[0], 0, (classe, fracao))
+
+    def test_ferimentos_saram_quando_ha_comida(self):
+        # No amanhecer a comida vem antes dos ferimentos: a taverna serve o ensopado e a fogueira gasta uma provisão;
+        # só quem fica sem comer não sara.
         g = depois_da_despensa()
+        g.j.fome = 1
+        ferir(g, "perna")
+        sara = {"nota": "Ferimentos: o descanso ajuda a sarar com o tempo."}
+        self.assertIn(sara, g.linhas_descanso("taverna"))
+        self.assertIn(sara, g.linhas_descanso("fogueira"))
+        g.j.provisoes = 0
+        self.assertIn({"nota": "Ferimentos: sem comer, não saram esta noite."}, g.linhas_descanso("fogueira"))
+        dias = g.j.ferimentos[0]["dias"]
+        g.novo_dia(descanso=1)
+        self.assertEqual(g.j.ferimentos[0]["dias"], dias)  # de fato, não sarou
+
+    def test_d1_so_a_acao_no_quadro(self):
+        g = depois_da_despensa()
+        g.j.hp = 10
+        o = next(c for c in ab.contextuais(g) if c["id"] == "D1")
+        self.assertEqual((o["texto"], o["ancora"]), ("Clique neste cartão para dormir aqui até o amanhecer.", "servico:dormir"))
         ferir(g, "perna")
         o = next(c for c in ab.contextuais(g) if c["id"] == "D1")
-        self.assertIn("Descansar ajuda os ferimentos a sararem com o tempo; a Curandeira trata na hora.", o["texto"])
+        self.assertIn("_A Curandeira trata ferimentos na hora.", o["texto"])
 
     def test_d2_acampar_fora_da_vila_com_algo_a_recuperar(self):
-        g = depois_da_despensa()
+        g = depois_da_despensa("arqueiro")
         ir(g, "charco_dos_juncos")
         visto(g, "V5")
         g.j.hp = g.j.max_hp
@@ -212,8 +246,10 @@ class TestDescanso(unittest.TestCase):
         g.j.hp -= 10
         o = ab.atual(g)
         self.assertEqual((o["id"], o["ancora"]), ("D2", "opcao:Acampar"))
+        self.assertEqual(o["texto"], "Acampe para montar uma fogueira. Lá, você pode dormir para recuperar vida e Foco.")
 
-    def test_d3_fogueira_numeros_provisoes_e_mau_tempo(self):
+    def test_d3_fogueira_linhas_provisoes_e_mau_tempo(self):
+        from rpg import comitiva as cm
         g = depois_da_despensa()
         ir(g, "charco_dos_juncos")
         j = g.j
@@ -223,11 +259,18 @@ class TestDescanso(unittest.TestCase):
         o = ab.atual(g)
         vida, rec = int(j.max_hp * bal.ACAMPAR_VIDA), int(j.max_rec * bal.ACAMPAR_FOLEGO)
         self.assertEqual((o["id"], o["ancora"]), ("D3", "dormir:fogueira"))
-        self.assertIn(f"devolve {vida} de vida e {rec} de Vigor; o amanhecer come 1 provisão sua (você tem 3).", o["texto"])
+        self.assertEqual(o["texto"], f"**Dormir até o amanhecer**\nRecuperação: +{vida} vida · +{rec} Vigor\n"
+                                     "Provisões: 1 consumida · restam 2")
         g.clima = "chuva"
-        self.assertIn(f"devolve {int(j.max_hp * bal.ACAMPAR_VIDA_RUIM)} de vida", ab.atual(g)["texto"])
+        self.assertIn(f"+{int(j.max_hp * bal.ACAMPAR_VIDA_RUIM)} vida", ab.atual(g)["texto"])
+        self.assertIn("_Recuperação de vida reduzida pelo mau tempo.", ab.atual(g)["texto"])
+        cm.recrutar(g, "morel")
+        cm.recrutar(g, "odete")
+        self.assertIn("Provisões: 3 consumidas (você e 2 companheiros) · restam 0", ab.atual(g)["texto"])
+        j.provisoes = 2
+        self.assertIn("Provisões: 2 consumidas: não dão para todos", ab.atual(g)["texto"])
         j.provisoes = 0
-        self.assertIn("sem provisão, você acorda com fome", ab.atual(g)["texto"])
+        self.assertIn("Provisões: nenhuma: todos acordam com fome", ab.atual(g)["texto"])
         g.descansar(bal.ACAMPAR_VIDA_RUIM, mana=bal.ACAMPAR_MANA, folego=bal.ACAMPAR_FOLEGO)
         self.assertEqual((j.hp, j.rec), (20 + int(j.max_hp * bal.ACAMPAR_VIDA_RUIM), rec))
 

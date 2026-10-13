@@ -43,7 +43,8 @@ const Orientacao = (() => {
   const visivel = (e) => { if (!e) return false; const r = e.getBoundingClientRect(); return r.width > 0 && r.height > 0; };
   const negrito = (s) => esc(s).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>");
   // Uma linha por parágrafo do motor (o efeito da carta: o nome, o efeito de agora e, na primeira vez, a duração).
-  const linhas = (s) => s.split("\n").map((l, k) => `<div${k > 1 ? ' class="o-nota"' : ""}>${negrito(l)}</div>`).join("");
+  // As notas (o que só complementa: a duração do ícone, a fome desta noite) chegam com "_" na frente e saem apagadas.
+  const linhas = (s) => s.split("\n").map((l) => l.startsWith("_") ? `<div class="o-nota">${negrito(l.slice(1))}</div>` : `<div>${negrito(l)}</div>`).join("");
 
   function montar() {
     if (quadro) return;
@@ -195,7 +196,7 @@ const Orientacao = (() => {
     const a = ancora(o);
     // O prédio da vila mora na paisagem, acima da faixa; a opção do menu pode ficar acima da faixa de baixo: uma haste
     // leva a ponta da seta até eles.
-    return a ? { id: o.id, el: a.el, onde: a.onde, prefere: a.prefere, haste: a.onde === "vila" || a.onde === "baixo", html: botoes(negrito(o.texto), !!o.entendi), luta: false } : null;
+    return a ? { id: o.id, el: a.el, onde: a.onde, prefere: a.prefere, haste: a.onde === "vila" || a.onde === "baixo", html: botoes(linhas(o.texto), !!o.entendi), luta: false } : null;
   }
 
   /** Onde mora cada orientação de fora da luta: o controle e a faixa (vila: a do alto, abaixo do cenário; topo: a do
@@ -226,7 +227,11 @@ const Orientacao = (() => {
     if (tipo === "ferimento") return ok(document.querySelector(`#heroi .ferimento[data-ferimento="${valor}"]`), "junto");  // na ficha
     if (tipo === "tratar") return ok(document.querySelector(`#texto .curandeira [data-tratar="${valor}"]`), "junto");  // o cartão
     if (tipo === "servico") return ok(document.querySelector(`#prompt .balcao-predio .servico[data-servico="${valor}"]`), "junto");
-    if (tipo === "dormir") return ok(document.querySelector("#texto .dormir-barraca"), "junto");  // na fogueira
+    if (tipo === "dormir") {
+      // Na fogueira: o botão fica no alto do cenário; o quadro vai à esquerda dele, sobre o céu, sem cobrir a roda.
+      const r = ok(document.querySelector("#texto .dormir-barraca"), "junto");
+      return r && { ...r, prefere: "esquerda" };
+    }
     if (tipo === "risco") {  // os riscos do lugar, à direita: a linha da noite e, junto, a da tocha
       const linha = document.querySelector(`#mundo .risco-lugar.${valor}`);
       return ok(linha && linha.closest(".riscos-lugar"), "junto");
@@ -276,7 +281,7 @@ const Orientacao = (() => {
     // e sai quando a cena muda sem que ela continue valendo (não a cada piscar da pergunta, nem logo no "Entendi").
     const o = estado && estado.orientacao;
     const pedida = o && o.ligado ? faixaPedida(o.atual) : "";
-    if (pedida) reservarFaixa(pedida, [botoes(negrito(o.atual.texto), !!o.atual.entendi)], "orientacao");
+    if (pedida) reservarFaixa(pedida, [botoes(linhas(o.atual.texto), !!o.atual.entendi)], "orientacao");
     else if (faixa && faixaDe !== "luta" && (cenaAgora() !== faixaCena || dispensado || !o || !o.ligado)) soltarFaixa();
     document.body.classList.toggle("orientando-mural", !!a && a.id === "V1");
     if (!a) { esconder(); destacar(null); return; }
@@ -373,7 +378,7 @@ const Orientacao = (() => {
     for (const c of o.contextuais || []) {
       if (fechados.has(c.id)) continue;
       const a = ancora(c);
-      if (a) return { id: c.id, el: a.el, onde: a.onde, html: botoes(negrito(c.texto), !!c.entendi), luta: false };
+      if (a) return { id: c.id, el: a.el, onde: a.onde, html: botoes(linhas(c.texto), !!c.entendi), luta: false };
     }
     return null;
   }
@@ -399,6 +404,7 @@ const Orientacao = (() => {
     // Encostado num controle de coluna lateral (o baú, o contrato): o quadro cabe na largura da coluna.
     const col = a.onde === "junto" ? a.el.closest("#heroi, #mundo") : null;
     quadro.style.width = col ? Math.min(330, col.getBoundingClientRect().width - 12) + "px" : "";
+    quadro.style.maxWidth = "";
     const tipo = `orientacao${a.id === "C4" ? " c4" : ""}${a.haste && a.luta ? " efeito" : ""}${a.onde === "achado" ? " sobre-janela" : ""}`;
     quadro.className = tipo;  // a largura do tipo vale já na medida
     const vw = innerWidth, vh = innerHeight;
@@ -433,6 +439,13 @@ const Orientacao = (() => {
       }
       y = acima ? r.top - PERTO - h : r.bottom + PERTO;
       lado = acima ? "cima" : "baixo";
+      const pg = !col && a.prefere === "esquerda" && a.el.closest("#pagina");
+      if (pg && r.left - PERTO - w >= pg.getBoundingClientRect().left + 8) {
+        // Largo até onde o céu deixa: menos linhas, e o quadro não desce sobre os nomes da comitiva.
+        quadro.style.width = quadro.style.maxWidth = Math.min(420, r.left - PERTO - pg.getBoundingClientRect().left - 8) + "px";
+        w = quadro.offsetWidth; h = quadro.offsetHeight;
+        x = r.left - PERTO - w; y = r.top; lado = "esquerda";  // a seta sai da borda direita
+      }
       // Do topo da janela (o botão Texto), o quadro desce sem cobrir as barras e os números do herói: vai para o lado
       // delas, se a seta ainda alcança o controle.
       const hud = !col && !a.el.closest("#hud") && document.querySelector("#hud");

@@ -317,20 +317,14 @@ def _v2(g, a):
     dorme = j.ouro >= dormir
     templo = next((o for o in g.opcoes_templo() if o[1][1] is None), None)  # o do herói: ("templo", None, preço, falta)
     cura = templo is not None and j.ouro >= templo[1][2]
-    feridas = ""  # ferimentos: a Curandeira tem a orientação dela (F3), com a diferença para o Templo
-    taverna = (f"Dormir na **Taverna** ({dormir} de ouro) devolve {TODO.get(r, r)} e "
-               f"{round(bal.TAVERNA_VIDA * 100)}% da vida{' (menos, com fome)' if j.fome else ''}.")
+    # Um quadro, um alvo: o Templo fala da vida (e do grátis, enquanto vale); a Taverna, do recurso. O preço e os
+    # números ficam nos cartões; os detalhes, na Ajuda.
     if vida and cura:
-        texto = ("Vida baixa. O primeiro atendimento no **Templo** é grátis e devolve a vida toda; depois, o preço "
-                 "depende da vida que falta." if not templo[1][2] else
-                 f"Vida baixa. O **Templo** devolve a vida toda; o preço depende da vida que falta (agora, "
-                 f"{templo[1][2]} de ouro).")
-        if rec and dorme:
-            texto += f" {POUCO.get(r, r)}: {taverna[0].lower()}{taverna[1:]}"
-        return {"id": "V2", "texto": texto + feridas, "ancora": "predio:templo"}
+        texto = "O **Templo** recupera sua vida." + (" Seu primeiro atendimento é grátis." if not templo[1][2] else "")
+        return {"id": "V2", "texto": texto, "ancora": "predio:templo"}
     if dorme:
-        falta = "Vida baixa" + (f" e {POUCO.get(r, r).lower()}" if rec else "") if vida else POUCO.get(r, r)
-        return {"id": "V2", "texto": f"{falta}. {taverna}" + (feridas if vida else ""), "ancora": "predio:taverna"}
+        return {"id": "V2", "texto": f"Dormir na **Taverna** recupera {TODO.get(r, r)} e parte da vida.",
+                "ancora": "predio:taverna"}
     return None  # nada que resolva cabe no bolso agora: o quadro espera
 
 
@@ -348,7 +342,7 @@ def _v3(g, a, _dados=None):
              f", na vila ou fora: {quanto}. Sem provisão, fome.")
     if dias < DIAS_DE_COMIDA and g.loc["tipo"] == "vila":
         texto += " O **Mercado** vende mais."
-    texto += " Dormindo na Taverna, o ensopado é por conta dela."
+    texto += " Dormindo na Taverna, nenhuma provisão é consumida."
     return {"id": "V3", "texto": texto, "ancora": "provisoes", "entendi": True}
 
 
@@ -553,7 +547,7 @@ def selo_da_vez(g):
         if t <= 9 and (e.get("tique") or t > 1):  # o que dura só este turno já diz isso ("deste turno", "agora")
             info += f" · {tx.plural(t, 'turno')} restante{'s' if t != 1 else ''}"
         primeiro = not any(x in a["vistas"] for x in ("SF", "S-", "S+"))
-        duracao = "\nO número no ícone indica quantos turnos o efeito ainda dura." if primeiro else ""
+        duracao = "\n_O número no ícone indica quantos turnos o efeito ainda dura." if primeiro else ""
         return {"id": oid, "texto": f"**{e['titulo']}**\n{info}.{duracao}", "ancora": f"selo:{cb.uid(u)}:{n}",
                 "entendi": True}
     return None
@@ -633,8 +627,8 @@ def _f4(g, a, _dados=None):
     if not _pendente(a, "F4") or not j.ferimentos:
         return None
     f = j.ferimentos[0]
-    preco = "o primeiro tratamento é grátis" if curandeira_gratis(g) else f"custa {custo_tratamento(g, f)} de ouro"
-    return {"id": "F4", "texto": f"Clique no cartão para tratar **{FERIMENTOS[f['id']]['nome']}** agora: {preco}.",
+    # O cartão já diz o preço (ou "Primeiro tratamento — grátis"): o quadro só diz o que fazer.
+    return {"id": "F4", "texto": f"Clique neste cartão para tratar {FERIMENTOS[f['id']]['curto']}.",
             "ancora": f"tratar:{f['id']}"}
 
 
@@ -643,39 +637,21 @@ def custo_tratamento(g, f):
     return g.preco((25 + 4 * g.j.nivel) if f["id"] == "infeccao" else (12 + 3 * g.j.nivel))
 
 
-def recuperacao(g, fracao, parte_rec):
-    """O que um descanso devolve agora, pelas contas de Tempo.descansar: (vida, recurso). Com fome, a vida volta
-    menos; o recurso, não."""
-    from .sobrevivencia import FOME_DESCANSO
-    j = g.j
-    if j.fome:
-        fracao *= FOME_DESCANSO
-    vida = max(0, min(int(j.max_hp * fracao), j.max_hp - j.hp)) if j.hp > 0 else 0
-    rec = max(0, min(j.max_rec - j.rec, int(j.max_rec * parte_rec)))
-    return vida, rec
-
-
-def _descanso_ferimentos(j):
-    if not j.ferimentos:
-        return ""
-    if j.fome:
-        return " Com fome, os ferimentos não saram."
-    return " Descansar ajuda os ferimentos a sararem com o tempo; a Curandeira trata na hora."
+def _linhas(linhas):
+    """As linhas do descanso (Tempo.linhas_descanso) no quadro: "Rótulo: texto"; as notas, apagadas (prefixo _)."""
+    return "\n".join(f"{l['rotulo']}: {l['texto']}" if "rotulo" in l else "_" + l["nota"] for l in linhas)
 
 
 def _d1(g, a):
-    """A taverna aberta, com o cartão Dormir à vista (a tela acha a ocasião): o custo, o que volta, até quando e as
-    provisões, com os números das regras de agora."""
+    """A taverna aberta, com o cartão Dormir à vista (a tela acha a ocasião). O cartão já mostra o custo, a
+    recuperação, as provisões e os ferimentos: o quadro só diz o que fazer (e, com ferimento, a Curandeira)."""
     j = g.j
     if not tutorial(g) or not _pendente(a, "D1") or g.loc["tipo"] != "vila" or g.combate_ativo is not None:
         return None
-    vida, _ = recuperacao(g, bal.TAVERNA_VIDA, 1.0)
-    r = j.nome_recurso
-    texto = (f"Dormir aqui custa {preco_dormir(g)} de ouro e vai até amanhã: devolve {vida} de vida e "
-             f"{TODO.get(r, r)}. O ensopado é por conta da casa: nenhuma provisão gasta.")
-    if j.fome:
-        texto += " Com fome, a vida volta menos."
-    return {"id": "D1", "texto": texto + _descanso_ferimentos(j), "ancora": "servico:dormir", "entendi": True}
+    texto = "Clique neste cartão para dormir aqui até o amanhecer."
+    if j.ferimentos:
+        texto += "\n_A Curandeira trata ferimentos na hora."  # que o descanso ajuda a sarar, o cartão já diz
+    return {"id": "D1", "texto": texto, "ancora": "servico:dormir", "entendi": True}
 
 
 def _d2(g, a):
@@ -683,26 +659,17 @@ def _d2(g, a):
     j = g.j
     if not _pendente(a, "D2") or g.loc["tipo"] == "vila" or (j.hp >= j.max_hp and j.rec >= j.max_rec):
         return None
-    return {"id": "D2", "texto": "**Acampar** monta a fogueira aqui; lá, dormir passa a noite e recupera vida e "
+    return {"id": "D2", "texto": f"Acampe para montar uma fogueira. Lá, você pode dormir para recuperar vida e "
                                  f"{j.nome_recurso}.", "ancora": "opcao:Acampar"}
 
 
 def _d3(g, a):
-    """Na fogueira: o Dormir até o amanhecer, com o que volta, o tempo e as provisões (você e a comitiva)."""
-    j = g.j
+    """Na fogueira: o Dormir até o amanhecer, em linhas curtas: o que volta e as provisões de verdade (você e a
+    comitiva); as condições só quando afetam esta noite."""
     if not _pendente(a, "D3") or not getattr(g, "na_fogueira", False):
         return None
-    ruim = g.clima in ("chuva", "tempestade", "neve")
-    vida, rec = recuperacao(g, bal.ACAMPAR_VIDA_RUIM if ruim else bal.ACAMPAR_VIDA,
-                            bal.ACAMPAR_MANA if j.classe == "mago" else bal.ACAMPAR_FOLEGO)
-    bocas = len(cm.membros(g))
-    come = ("come 1 provisão sua" + (" e 1 de cada companheiro" if bocas else "") + f" (você tem {j.provisoes})"
-            if j.provisoes else "sem provisão, você acorda com fome")
-    texto = (f"**Dormir até o amanhecer** devolve {vida} de vida e {rec} de {j.nome_recurso}"
-             + (" (com este tempo, a vida volta menos)" if ruim else "") + f"; o amanhecer {come}.")
-    if j.fome:
-        texto += " Com fome, a vida volta menos."
-    return {"id": "D3", "texto": texto + _descanso_ferimentos(j), "ancora": "dormir:fogueira", "entendi": True}
+    return {"id": "D3", "texto": "**Dormir até o amanhecer**\n" + _linhas(g.linhas_descanso("fogueira")),
+            "ancora": "dormir:fogueira", "entendi": True}
 
 
 # As que a tela mostra quando o alvo aparece (a taverna aberta), sem segurar a fila das outras.
@@ -778,11 +745,11 @@ def ajuda(g):
         linhas.append({"grupo": "Vila", "texto": "Clique no **mural** para ver os contratos disponíveis."})
     r = j.nome_recurso
     for oid, grupo, texto in (
-            ("V2", "Vila", f"Vida baixa: o **Templo** devolve a vida toda (o primeiro atendimento é grátis; depois, o preço "
-                           f"depende da vida que falta). {POUCO.get(r, r)}: dormir na **Taverna** "
-                           f"devolve {TODO.get(r, r)} e {round(bal.TAVERNA_VIDA * 100)}% da vida. Ferimentos: a Curandeira."),
+            ("V2", "Vila", "O **Templo** devolve a vida toda; o preço depende da vida que falta"
+                           + (" (o primeiro atendimento é grátis)" if g.templo_gratis() else "") + ". Dormir na **Taverna** "
+                           f"devolve {TODO.get(r, r)} e {round(bal.TAVERNA_VIDA * 100)}% da vida (menos, com fome)."),
             ("V3", "Estrada", "Cada amanhecer come 1 provisão sua e 1 de cada companheiro, na vila ou fora. O Mercado "
-                              "vende; o ensopado da Taverna alimenta sem gastar."),
+                              "vende; dormindo na Taverna, nenhuma provisão é consumida."),
             ("V4", "Comitiva", "**Comitiva**, na barra de baixo, abre quem anda com você: conversar, ver a confiança "
                                "e mandar para o acampamento."),
             ("V5", "Estrada", "**Explorar a região** gasta um período: luta, achado, alguém pelo caminho ou nada."),
@@ -796,10 +763,10 @@ def ajuda(g):
                                  "descanso; a **Curandeira** trata na hora; a infecção pede unguento ou a Curandeira."),
             ("F2", "Ferimentos", "A bandagem protege uma ferida aberta contra infecção (uma por bandagem, a primeira da "
                                  "lista); o ferimento ainda precisa sarar."),
-            ("F3", "Vila", "A **Curandeira** trata ferimentos; o **Templo** recupera vida. O primeiro tratamento e o "
-                           "primeiro atendimento são grátis."),
-            ("D1", "Descanso", "Dormir na **Taverna** vai até amanhã, devolve parte da vida e todo o recurso; o ensopado "
-                               "poupa as provisões."),
+            ("F3", "Vila", "A **Curandeira** trata ferimentos; o **Templo** recupera vida."
+                           + (" O primeiro tratamento é grátis." if curandeira_gratis(g) else "")),
+            ("D1", "Descanso", "Dormir na **Taverna** vai até o amanhecer, devolve parte da vida e todo o recurso; nenhuma "
+                               "provisão é consumida."),
             ("D3", "Descanso", "**Acampar** e dormir na fogueira vai até o amanhecer, devolve parte da vida e do recurso e "
                                "come provisões. Com fome, a vida volta menos e os ferimentos não saram."),
             ("A0", "Apresentação", "Enquanto o texto aparece, um clique mostra o texto inteiro; **Continuar** avança."),
@@ -832,5 +799,5 @@ def dica_texto(g, onde):
         ditos = g.__dict__.setdefault("abertura_ditas", set())  # a sessão de texto: cada dica uma vez
         if o and o["id"] != "V1" and o["id"] not in ditos:
             ditos.add(o["id"])
-            nome, _, resto = o["texto"].replace("**", "\"").partition("\n")  # o nome do efeito, na linha de cima
+            nome, _, resto = o["texto"].replace("**", "\"").replace("\n_", "\n").partition("\n")  # o nome, em cima
             g.dizer("Dica: " + (f"{nome}: {resto.replace(chr(10), ' ')}" if resto else nome), "cinza")

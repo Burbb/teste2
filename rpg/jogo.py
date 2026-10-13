@@ -592,8 +592,10 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         opcoes = [
             ("Passear pela vila", "passear", {"tempo": "1 período"}),
             (f"Taverna: dormir até amanhã ({preco_dormir} ouro)", "dormir",
-             {"predio": "taverna", "servico": "dormir", "curto": "Dormir até amanhã", "preco": preco_dormir, "tempo": "até amanhã",
-              "efeito": f"Descanso, {j.nome_recurso.lower()} de volta e ensopado para todos"}),
+             # O cartão mostra o custo, o que volta e as provisões em linhas curtas (os números da conta de descansar).
+             {"predio": "taverna", "servico": "dormir", "curto": "Dormir até o amanhecer", "preco": preco_dormir,
+              "linhas": [{"icone": "moeda", "rotulo": "Custo", "texto": f"{preco_dormir} ouro"},
+                         *self.linhas_descanso("taverna")]}),
             (f"Taverna: pagar uma bebida e ouvir rumores ({self.preco(3)} ouro)", "rumores",
              {"predio": "taverna", "servico": "rumores", "curto": "Uma bebida e os rumores", "preco": self.preco(3),
               "efeito": "O que se conta nas mesas"}) if not abertura.caneca(self) else

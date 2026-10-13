@@ -46,25 +46,21 @@ class TestRecuperar(unittest.TestCase):
         g.j.hp = int(g.j.max_hp * 0.5)
         o = ab.atual(g)
         self.assertEqual((o["id"], o["ancora"]), ("V2", "predio:templo"))
-        self.assertIn("primeiro atendimento no **Templo** é grátis", o["texto"])
-        self.assertIn("o preço depende da vida que falta", o["texto"])
+        self.assertEqual(o["texto"], "O **Templo** recupera sua vida. Seu primeiro atendimento é grátis.")
         g.marcar("templo_gratis_usado")
-        o = ab.atual(g)
-        self.assertIn("o preço depende da vida que falta (agora,", o["texto"])  # o valor de agora, não uma tarifa
+        self.assertEqual(ab.atual(g)["texto"], "O **Templo** recupera sua vida.")  # usado: sem prometer grátis
         g.j.ouro = ab.preco_dormir(g)  # o templo custa mais do que isso: a taverna devolve parte da vida
         g.j.hp = 5
         o = ab.atual(g)
-        self.assertEqual(o["ancora"], "predio:taverna")
-        self.assertIn("35% da vida", o["texto"])
+        self.assertEqual((o["ancora"], o["texto"]), ("predio:taverna", "Dormir na **Taverna** recupera todo o Vigor e "
+                                                                       "parte da vida."))
 
     def test_so_recurso_baixo_vai_para_a_taverna_nunca_para_o_templo(self):
         g = depois_da_despensa("mago")
         g.j.rec = 1
         o = ab.atual(g)
         self.assertEqual(o["ancora"], "predio:taverna")
-        self.assertTrue(o["texto"].startswith("Pouca Mana. Dormir na **Taverna**"))
-        self.assertIn("toda a Mana", o["texto"])
-        self.assertNotIn("Templo", o["texto"])
+        self.assertEqual(o["texto"], "Dormir na **Taverna** recupera toda a Mana e parte da vida.")
 
     def test_os_dois_baixos_e_o_que_nao_promete(self):
         g = depois_da_despensa("arqueiro")
@@ -73,8 +69,8 @@ class TestRecuperar(unittest.TestCase):
         self.assertEqual(oid(g), "F1")  # o ferimento novo vem antes
         g.mundo["abertura"]["vistas"].append("F1")
         o = ab.atual(g)
-        self.assertIn("Templo", o["texto"])
-        self.assertIn("Pouco Foco: dormir na **Taverna**", o["texto"])
+        self.assertEqual(o["ancora"], "predio:templo")  # um quadro, um alvo: a Taverna (o Foco) fica para o cartão dela
+        self.assertNotIn("Taverna", o["texto"])
         self.assertNotIn("Curandeira", o["texto"])  # a diferença Templo × Curandeira é do F3, logo depois
         ab.visto(g, "V2")
         self.assertEqual(oid(g), "F3")

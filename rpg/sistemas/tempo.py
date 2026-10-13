@@ -8,6 +8,7 @@ from .. import telemetria
 from ..telemetria import registrar
 from ..regras import Derrota
 from .. import balanceamento as bal
+from .. import texto as tx
 
 
 class Tempo:
@@ -93,6 +94,63 @@ class Tempo:
         if j.companheiro:
             j.companheiro["hp"] = j.companheiro["max_hp"]
         comitiva.descansar(self, fracao)
+
+    # ---------------------------------------------------------------- o descanso antes de dormir
+    COMPLETO = {"Mana": "Mana completa", "Vigor": "Vigor completo", "Foco": "Foco completo"}
+
+    def previsao_descanso(self, fracao, parte_rec):
+        """O que um descanso devolve agora, pela conta de descansar: (vida, recurso, vida sem a fome). Com fome, a vida
+        volta menos; o recurso, não."""
+        j = self.j
+        falta = j.max_hp - j.hp if j.hp > 0 else 0
+        sem_fome = max(0, min(int(j.max_hp * fracao), falta))
+        vida = max(0, min(int(j.max_hp * fracao * (sobrevivencia.FOME_DESCANSO if j.fome else 1)), falta))
+        rec = max(0, min(j.max_rec - j.rec, int(j.max_rec * parte_rec)))
+        return vida, rec, sem_fome
+
+    def linhas_descanso(self, onde):
+        """O que dormir dá, em linhas curtas, para o cartão da taverna e o quadro da fogueira: [{icone, rotulo, texto}]
+        e notas [{nota}] só do que afeta esta noite (a fome, o mau tempo, os ferimentos). onde: "taverna" ou
+        "fogueira". Os números são os da conta de descansar; nada aqui muda a recuperação."""
+        j = self.j
+        r = j.nome_recurso
+        ruim = onde == "fogueira" and self.clima in ("chuva", "tempestade", "neve")
+        if onde == "taverna":
+            vida, rec, sem_fome = self.previsao_descanso(bal.TAVERNA_VIDA, 1.0)
+        else:
+            vida, rec, sem_fome = self.previsao_descanso(
+                bal.ACAMPAR_VIDA_RUIM if ruim else bal.ACAMPAR_VIDA,
+                bal.ACAMPAR_MANA if j.classe == "mago" else bal.ACAMPAR_FOLEGO)
+        partes = [f"+{vida} vida"] if vida else []
+        if onde == "taverna":
+            partes.append(self.COMPLETO.get(r, f"{r} completo"))  # a cama devolve todo o recurso
+        elif rec:
+            partes.append(f"+{rec} {r}")
+        linhas = [{"icone": "coracao", "rotulo": "Recuperação",
+                   "texto": " · ".join(partes) if partes else f"vida e {r} já completos"}]
+        if onde == "taverna":
+            linhas.append({"icone": "pernil", "rotulo": "Provisões", "texto": "nenhuma consumida"})
+        else:
+            n = len(comitiva.membros(self))
+            bocas, p = 1 + n, j.provisoes
+            come = min(bocas, p)
+            if come == bocas:
+                texto = (f"{come} consumida{'s' if come > 1 else ''}"
+                         + (f" (você e {tx.plural(n, 'companheiro')})" if n else "") + f" · restam {p - come}")
+            elif p == 0:
+                texto = "nenhuma: " + ("todos acordam com fome" if n else "você acorda com fome")
+            else:
+                texto = f"{p} consumida{'s' if p > 1 else ''}: não dão para todos"
+            linhas.append({"icone": "pernil", "rotulo": "Provisões", "texto": texto})
+        notas = []
+        if j.fome and vida < sem_fome:
+            notas.append("Recuperação de vida reduzida pela fome.")
+        elif ruim and vida and j.hp < j.max_hp:
+            notas.append("Recuperação de vida reduzida pelo mau tempo.")
+        if j.ferimentos:  # a comida vem antes, no amanhecer: só quem fica sem comer não sara
+            notas.append("Ferimentos: sem comer, não saram esta noite." if onde == "fogueira" and not j.provisoes else
+                         "Ferimentos: o descanso ajuda a sarar com o tempo.")
+        return linhas + [{"nota": n} for n in notas]
 
     # Onde se dorme quando o corpo desaba numa vila: (o lugar, para o quadro do amanhecer; a frase da cena).
     POUSOS_EXAUSTO = [

@@ -110,8 +110,8 @@ class Servicos:
             if custo:
                 self.perder_ouro(custo, destino="curandeira")
             elif gratis:
-                self.marcar("curandeira_gratis_usado")  # gasto só agora, com o tratamento feito
-                self.dizer("Ela não cobra: é o seu primeiro tratamento aqui.", "cinza")
+                # Gasto só agora, com o tratamento feito. O cartão já dizia "grátis": sem outra fala por cima.
+                self.marcar("curandeira_gratis_usado")
             sobrevivencia.curar_ferimento(self, fid)
             self.dizer(f"Ela costura, cauteriza e enfaixa sem anestesia. Você grita. "
                        f"{sobrevivencia.FERIMENTOS[fid]['nome']}: tratado.", "verde")

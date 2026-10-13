@@ -677,7 +677,8 @@ def tutorial(ui):
     item da arma para comparar logo na chegada. BAUS=n na bolsa. CONTRATO=aceito ou feito: um contrato de caça no
     CONTRATO_EM (bosque, padrão, ou charco). LUTA=família (QUANTOS): uma luta logo na chegada. VISTAS: as orientações já vistas, além da luta e do Mural ("V3,N1").
     HARDCORE=1: morte definitiva. PENA=n (Penas de Fênix) e PROTECAO=mendigo: o que levanta o herói na luta.
-    FERIMENTOS=corte,costelas (do herói, sem tratar), BANDAGENS=n, FOME=n (dias sem comer).
+    FERIMENTOS=corte,costelas (do herói, sem tratar), BANDAGENS=n, FOME=n (dias sem comer). GRATIS_USADO=templo,curandeira:
+    o primeiro atendimento ou tratamento grátis já usado.
     Sair leva ao título, com o save (para carregar com orientações pendentes)."""
     from rpg import abertura as ab, itens, missoes, sobrevivencia
     from rpg.__main__ import menu_principal
@@ -736,6 +737,8 @@ def tutorial(ui):
         j.consumiveis["bandagem"] = int(os.environ["BANDAGENS"])
     if os.environ.get("FOME"):
         j.fome = int(os.environ["FOME"])
+    for qual in [q for q in os.environ.get("GRATIS_USADO", "").split(",") if q]:  # templo, curandeira
+        g.marcar(f"{qual}_gratis_usado")
     if os.environ.get("PENA"):  # PENA=1: uma Pena de Fênix na bolsa (cair na luta levanta o herói)
         j.consumiveis["pena_fenix"] = int(os.environ["PENA"])
     if os.environ.get("PROTECAO"):  # PROTECAO=mendigo (ou santuario): a proteção que levanta uma vez

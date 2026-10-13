@@ -177,6 +177,11 @@
 .serv-texto { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .serv-nome { font-size: 16px; font-weight: 600; line-height: 1.2; }
 .serv-efeito { font-size: 14px; line-height: 1.3; color: var(--tinta-2); }
+/* As linhas de um serviço (o Dormir da taverna): ícone, rótulo e valor; a nota, só quando afeta o resultado. */
+.serv-linha { display: flex; align-items: center; gap: 5px; font-size: 14px; line-height: 1.3; color: var(--tinta); }
+.serv-linha img.sprite { flex: none; }
+.serv-rotulo { color: var(--tinta-2); }
+.serv-nota { font-size: 13px; line-height: 1.3; color: var(--tinta-2); font-style: italic; }
 .serv-fim { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
 .serv-tempo { font-size: 13px; color: var(--tinta-2); white-space: nowrap; }
 .balcao-servico h4 { margin-top: 0.8em; }

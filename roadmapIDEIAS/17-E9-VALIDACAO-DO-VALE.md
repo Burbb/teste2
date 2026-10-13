@@ -27,6 +27,8 @@ Avaliação integrada do Vale do Turvo como primeiro capítulo (a E9 antecipada,
   sequência da derrota ([18](18-E9-ABERTURA-GUIADA.md), seção 19).
 - **Ferimentos e descanso, 1.69.0 (seção 28):** o fim da derrota sem o Continuar dos registros, o primeiro ferimento, a
   bandagem, a Curandeira com o primeiro tratamento grátis e o descanso ([18](18-E9-ABERTURA-GUIADA.md), seção 20).
+- **Acabamento, 1.69.1 (seção 29):** o quadro ensina a ação, o cartão mostra custo e resultado, a Ajuda guarda os
+  detalhes: Curandeira, Templo, o cartão Dormir e a fogueira em linhas curtas ([18](18-E9-ABERTURA-GUIADA.md), seção 21).
 - **Quarta entrega, 1.65.2 e 1.65.3 (seção 19):** a partida da Quibia lida; os contratos pagos depois do resgate; o
   ×N dos baús em destaque. A especificação da abertura guiada fica em [18](18-E9-ABERTURA-GUIADA.md).
 - **Correção 1.65.1 (seção 18):** os três pontos que faltaram na mensagem cortada: a percepção do Mago na água, o nome
@@ -924,6 +926,17 @@ Pedido de Jean: a queda seguia para uma página de registros com Continuar (repr
 não mostrava ferimentos, bandagem, Curandeira nem as opções de descanso. Agora a derrota vira direto para o resgate, e
 cada sistema aparece quando acontece de verdade, com os números das regras; o primeiro tratamento na curandeira é
 grátis (autorizado). Combate, sorteio e recuperação iguais. Detalhe na seção 20 do 18.
+
+**A E9 continua aberta** até a validação com jogadores novos.
+
+## 29. Acabamento dos textos e da apresentação (1.69.1)
+
+Pedido de Jean: acabar os textos da 1.69.0 pelo critério "o quadro ensina a ação; o cartão mostra custo e resultado; a
+Ajuda guarda os detalhes", sem novas etapas nem mudança de regra, preço, grátis ou sorteio. O F4 e o D1 dizem só a ação;
+o Templo fala só do Templo (e do grátis, enquanto vale); o cartão Dormir e o quadro da fogueira mostram recuperação e
+provisões em linhas curtas, com os números das regras; o "ensopado por conta da casa" virou "nenhuma provisão é
+consumida". Achado: a nota de ferimentos com fome estava errada na Taverna e na fogueira com provisão (a comida vem
+antes). Detalhe na seção 21 do 18.
 
 **A E9 continua aberta** até a validação com jogadores novos.
 

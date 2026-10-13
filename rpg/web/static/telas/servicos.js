@@ -14,12 +14,18 @@
   }
   /** Um serviço num cartão: o ícone, o nome, o que dá, o preço e o tempo. Com `motivo` (sem ouro), apagado; sem preço
    *  nem motivo e com `limite`, é só mostruário. `attrs`: o que identifica a ação (data-...). */
-  function cartaoServico({ icone, raridade, nome, efeito, preco, tempo, motivo, limite, attrs = "", dicaAttr = "" }) {
+  /** `linhas`: o que o serviço dá em linhas curtas, com ícone ("Custo: 10 ouro", "Recuperação: +21 vida · Vigor
+   *  completo"); as notas (só o que afeta este resultado) vêm apagadas. Com elas, o custo mora numa linha e o canto
+   *  direito fica livre. */
+  function cartaoServico({ icone, raridade, nome, efeito, preco, tempo, motivo, limite, linhas, attrs = "", dicaAttr = "" }) {
     const r = raridade ? ` r-${h(raridade)}` : "";
-    const fim = (preco === 0 ? '<span class="preco gratis">grátis</span>' : preco != null ? `<span class="preco">${S("moeda", 1)}${preco}</span>` : "") + (tempo ? `<small class="serv-tempo">⧗ ${h(tempo)}</small>` : "");
+    const fim = linhas ? "" : (preco === 0 ? '<span class="preco gratis">grátis</span>' : preco != null ? `<span class="preco">${S("moeda", 1)}${preco}</span>` : "") + (tempo ? `<small class="serv-tempo">⧗ ${h(tempo)}</small>` : "");
+    const corpo = linhas ? linhas.map((l) => l.nota ? `<span class="serv-nota">${h(l.nota)}</span>`
+      : `<span class="serv-linha">${S(l.icone, 1)}<span class="serv-rotulo">${h(l.rotulo)}:</span> ${Realce.texto(l.texto)}</span>`).join("")
+      : efeito ? `<span class="serv-efeito">${Realce.texto(efeito)}</span>` : "";
     return `<button type="button" class="servico${motivo ? " caro" : ""}${limite ? " limite" : ""}" ${attrs} ${dicaAttr}${motivo ? ` aria-disabled="true"` : ""}>
       <span class="slot-px${r}">${S(icone, 2)}</span>
-      <span class="serv-texto"><b class="serv-nome${r}">${h(nome)}</b>${efeito ? `<span class="serv-efeito">${Realce.texto(efeito)}</span>` : ""}</span>
+      <span class="serv-texto"><b class="serv-nome${r}">${h(nome)}</b>${corpo}</span>
       <span class="serv-fim">${fim}</span></button>`;
   }
   function ferreiro(d) {

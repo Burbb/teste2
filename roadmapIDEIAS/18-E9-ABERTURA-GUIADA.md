@@ -909,3 +909,72 @@ teste da curandeira do Vau (`test_retorno`), que confere o preço de sempre, ago
   alguma coisa.
 - A recuperação do resgate vira a página sozinha na volta à vila (como já era); o texto do despertar fica o tempo de ler.
 
+
+## 21. Acabamento dos textos e da apresentação (1.69.1)
+
+Pedido de Jean, sobre a 1.69.0: acabar textos e apresentação sem acrescentar etapas nem mexer em regras, recuperação,
+preços, benefícios gratuitos ou sorteios. Critério: **o quadro ensina a ação; o cartão mostra custo e resultado; a Ajuda
+guarda os detalhes.**
+
+**1. Curandeira.** O F4 diz só a ação, com o ferimento real em linguagem natural: "Clique neste cartão para tratar o
+corte." (o nome curto mora em `FERIMENTOS[...]["curto"]`: o corte, a mordida, as costelas, o braço, a perna, a
+concussão, a queimadura, a infecção). O grátis fica no cartão ("Primeiro tratamento — grátis"). Saiu a fala "Ela não
+cobra: é o seu primeiro tratamento aqui." (a narração seguinte e o cartão já dizem); o retorno do tratamento ficou igual.
+
+**2. Templo.** O V2 do Templo fala só do Templo: "O **Templo** recupera sua vida. Seu primeiro atendimento é grátis."
+enquanto o benefício vale; depois, só "O **Templo** recupera sua vida." Taverna, Vigor, fome e hospedagem saíram dele.
+Quando o alvo é a Taverna (vida cheia, recurso baixo): "Dormir na **Taverna** recupera {todo o Vigor | todo o Foco | toda
+a Mana} e parte da vida." O preço que depende da vida que falta ficou na Ajuda.
+
+**3. Dormir na Taverna.** O cartão Dormir passou a mostrar os dados em linhas curtas, com os ícones e as cores dos
+cartões:
+
+    Dormir até o amanhecer
+    Custo: 10 ouro
+    Recuperação: +21 vida · Vigor completo
+    Provisões: nenhuma consumida
+
+Os números e o nome do recurso vêm de `Tempo.linhas_descanso("taverna")`, com a mesma conta de `Tempo.descansar`
+(`Tempo.previsao_descanso`). Vida cheia: só "Vigor completo" (sem "+0 vida"). Com fome, "Recuperação de vida reduzida
+pela fome." só quando a fome de fato reduz (vida cheia: sem a nota). Com ferimento: "Ferimentos: o descanso ajuda a
+sarar com o tempo." Saiu "O ensopado é por conta da casa" (no cartão, na Ajuda e na nota de provisões do V3): fica o
+fato, "nenhuma provisão é consumida". O D1 diz só a ação: "Clique neste cartão para dormir aqui até o amanhecer." (com
+ferimento: "A Curandeira trata ferimentos na hora.", apagado), sem repetir o cartão.
+
+**Zero com vida faltando:** não acontece no nível 1. A menor conta é a da fogueira com mau tempo e fome (18% × 30% da
+vida máxima); com a menor vida máxima do nível 1 (o mago, 42), dá 2. O teste `test_nunca_zero_com_vida_faltando`
+confere as três classes.
+
+**4. Acampamento.** D2: "Acampe para montar uma fogueira. Lá, você pode dormir para recuperar vida e {Vigor | Foco |
+Mana}." Na fogueira, o D3 destaca o Dormir e mostra as mesmas linhas:
+
+    Dormir até o amanhecer
+    Recuperação: +18 vida · +22 Vigor
+    Provisões: 3 consumidas (você e 2 companheiros) · restam 0
+
+Provisões de verdade: sem comitiva, "1 consumida · restam 2"; sem provisão, "nenhuma: você acorda com fome" (ou "todos
+acordam com fome"); se não dão para todos, "{n} consumidas: não dão para todos". As condições só quando afetam esta
+noite: a fome que reduz a vida, o mau tempo que reduz a vida, e os ferimentos ("o descanso ajuda a sarar com o tempo";
+sem provisão, "Ferimentos: sem comer, não saram esta noite."). Recuperar vida e um ferimento sarar seguem separados.
+
+**Achado na revisão:** a nota antiga dizia "com fome, os ferimentos não saram" sempre que o herói estava com fome. No
+amanhecer a comida vem antes dos ferimentos: na Taverna (o ensopado) e na fogueira com provisão, o herói come e o
+ferimento sara. A nota agora segue isso (teste `test_ferimentos_saram_quando_ha_comida`).
+
+**Posição.** Na fogueira, o quadro do D3 (mais alto, com as notas) cobria a comitiva a 1280 px. Agora ele fica à
+esquerda do botão, sobre o céu, mais largo (até 420 px) para caber em menos linhas: não cobre o herói, os companheiros
+nem os nomes deles.
+
+**Conferido na tela (1500 e 1280 px):**
+- Curandeira com corte, costelas e perna e 100 de ouro: o F4 "Clique neste cartão para tratar o corte."; os três
+  cartões com "Primeiro tratamento — grátis"; depois do primeiro, os outros a 15 (100 → 85 → 70); uma mensagem de
+  tratamento por vez, sem sobreposição;
+- Templo com o benefício (com a frase do grátis) e já usado (sem ela); a Taverna como alvo (o mago com pouca Mana);
+- cartão Dormir nas três classes, com vida cheia e faltando (+21 vida · Vigor completo; +18 · Foco; +14 · Mana), com
+  fome (+6 vida e a nota) e com fome de vida cheia (sem nota), com ferimento;
+- fogueira nas três classes com recurso baixo (+22 Vigor, +18 Foco, +20 Mana), vida cheia e faltando, com fome, sem
+  provisão e com ferimento, sem comitiva, com Morel e com Morel e Odette (3 provisões): o quadro sem cobrir figuras.
+
+**Verificações:** testes (`test_abertura_feridas`, `_ciclos`, `_parte2`: textos novos, as linhas iguais à conta do
+descanso, a fome só quando reduz, nunca zero, os ferimentos com e sem comida), gabarito examinado (só o meta do Dormir:
+`curto` e `linhas` no lugar de `efeito` e `tempo`; nenhuma outra linha), pyflakes, fumaça completa.

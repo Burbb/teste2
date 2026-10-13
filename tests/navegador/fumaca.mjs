@@ -1275,7 +1275,7 @@ async function cenarioTutorial(browser) {
     try {
       conferir(await ate(page, /A linha "contra…" compara o achado/) && !(await cobre(page)), "E1: no item achado, a comparação e as escolhas, sem cobrir a janela");
       await page.keyboard.press("2");  // Guardar, pelo teclado
-      conferir(await ate(page, /Vida baixa\. O primeiro atendimento no Templo é grátis/) && !(await cobre(page)),
+      conferir(await ate(page, /^O Templo recupera sua vida\. Seu primeiro atendimento é grátis\./) && !(await cobre(page)),
         "decidido o item, o E1 sai; na vila, V2 aponta o Templo (a vida baixa), sem cobrir prédio nem página");
       await page.click('#predios .predio[data-predio="estrada"]');
       conferir(await ate(page, /Cada amanhecer come 1 provisão sua/), "V3: ao escolher o destino, as provisões do topo");
@@ -1329,8 +1329,8 @@ async function cenarioCiclos(browser) {
   const quadro = () => page.evaluate(() => { const q = document.querySelector(".orientacao:not([hidden])"); return q ? q.innerText.replace(/\s+/g, " ") : ""; });
   const ate = async (re, ms = 20000) => { for (let k = 0; k < ms; k += 150) { if (re.test(await quadro())) return true; await page.waitForTimeout(150); } return false; };
   try {
-    conferir(await ate(/primeiro atendimento no Templo é grátis/) && /o preço depende da vida que falta/.test(await quadro()),
-      "V2: o primeiro atendimento grátis, e depois o preço pela vida que falta (sem tarifa fixa)");
+    conferir(await ate(/^O Templo recupera sua vida\. Seu primeiro atendimento é grátis\./) && !/Taverna|Vigor|fome/.test(await quadro()),
+      "V2: o Templo e o primeiro atendimento grátis, sem misturar a Taverna");
     const ouro = await page.evaluate(() => estado.heroi.ouro);
     await page.click('#predios .predio[data-predio="templo"]');
     const servico = await page.waitForSelector('.servico:has-text("Primeiro atendimento — grátis")', { timeout: 10000 }).catch(() => null);
@@ -1459,8 +1459,8 @@ async function cenarioFeridas(browser) {
       conferir(await ate(page, /^A Curandeira trata ferimentos na hora; o Templo só recupera vida\./) && (await pontaNoAlvo(page)) <= 2,
         "F3: na vila, a Curandeira (e o Templo só recupera vida)");
       await page.click('#predios .predio[data-predio="curandeiro"]');
-      conferir(await ate(page, /^Clique no cartão para tratar Corte profundo agora: o primeiro tratamento é grátis\./),
-        "F4: o cartão do ferimento, com o primeiro tratamento grátis");
+      conferir(await ate(page, /^Clique neste cartão para tratar o corte\./) && !/grátis/.test(await quadro(page)),
+        "F4: o cartão do ferimento (o grátis fica no cartão, não no quadro)");
       const gratis = await page.evaluate(() => [...document.querySelectorAll("#texto .curandeira [data-tratar]")].map((c) => /Primeiro tratamento — grátis/.test(c.textContent)));
       await page.click('#texto .curandeira [data-tratar="costelas"] >> nth=-1');
       await page.waitForFunction(() => estado.heroi.ferimentos.length === 1 && !!document.querySelector("#texto .curandeira [data-tratar]") && !!pergunta && !processando, null, { timeout: 15000 }).catch(() => {});
@@ -1480,8 +1480,10 @@ async function cenarioFeridas(browser) {
       await page.waitForFunction(() => pergunta && pergunta.tipo === "opcoes" && !processando && document.querySelector('#predios .predio[data-predio="taverna"]'), null, { timeout: 20000 });
       await page.waitForTimeout(600);
       await page.click('#predios .predio[data-predio="taverna"]');
-      conferir(await ate(page, /^Dormir aqui custa 10 de ouro e vai até amanhã: devolve 21 de vida e todo o Vigor\. O ensopado é por conta da casa/) && (await pontaNoAlvo(page)) <= 2,
-        "D1: na taverna, o cartão Dormir com o custo e a recuperação das regras");
+      const d1 = await ate(page, /^Clique neste cartão para dormir aqui até o amanhecer\./) && (await pontaNoAlvo(page)) <= 2;
+      const cartao = await page.evaluate(() => [...document.querySelectorAll('.servico[data-servico="dormir"] .serv-linha')].map((l) => l.textContent.replace(/\s+/g, " ").trim()));
+      conferir(d1 && JSON.stringify(cartao) === JSON.stringify(["Custo: 10 ouro", "Recuperação: +21 vida · Vigor completo", "Provisões: nenhuma consumida"]),
+        "D1: na taverna, o quadro diz a ação; o cartão Dormir, o custo, a recuperação e as provisões das regras");
       await page.click('.servico[data-servico="dormir"]');
       await page.waitForFunction(() => estado.heroi.hp === 51 && estado.heroi.rec === estado.heroi.max_rec, null, { timeout: 30000 }).catch(() => {});
       conferir(await page.evaluate(() => estado.heroi.hp === 51 && estado.heroi.rec === estado.heroi.max_rec), "dormir devolve exatamente o que o quadro disse (30 → 51 de vida, todo o Vigor)");
