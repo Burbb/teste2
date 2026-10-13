@@ -1751,3 +1751,14 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   aqui até o amanhecer.") ainda aparece; o clique agora mostra "Ouro insuficiente". Fica para Jean dizer se o D1 deve
   esperar ouro.
 - **Falta:** Jean conferir. A arte da sacristia e do fundo não começou. A E9 segue aberta.
+
+### 13/10/2026 — Ataques em área dos inimigos: diagnóstico (sobre a 1.82.0, sem mudar o jogo)
+
+- **Pedido de Jean:** levantar quem já tem ataque em área, como os inimigos escolhem alvos, quanto ameaçam a comitiva,
+  candidatos coerentes, e se o ataque deveria ser anunciado. Sem implementar nem aumentar dano.
+- **Feito:** [21](21-DIAGNOSTICO-ATAQUES-EM-AREA.md) e a medição `python -m tests.area_inimigos`. Resumo: só a
+  Varredura (seis guardiões e o antagonista), sem aviso, cerca de 1,5 vez por luta de guardião; nada no Vale. A
+  comitiva já recebe de 31% a 49% do dano dos inimigos em lutas comuns. O herói não tem como proteger os aliados.
+  Recomendação: ataque em área como habilidade anunciada (o modelo do Golpe Esmagador), rara e só em inimigos fortes,
+  e, antes disso, decidir uma ação de proteção do grupo.
+- **Falta:** Jean decidir se e em que ordem (seção 7 do 21). A E9 segue aberta.
