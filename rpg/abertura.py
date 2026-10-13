@@ -304,6 +304,16 @@ def preco_dormir(g):
     return g.preco(8 + 2 * g.j.nivel)
 
 
+def _pode_dormir(g):
+    """A cama da taverna dá para pagar agora (a mesma regra do cartão: Servicos.motivo_pagar)."""
+    return not g.motivo_pagar(preco_dormir(g))
+
+
+# Os quadros que mandam usar um serviço pago (V2, F3, F4, D1) só aparecem quando ele dá para usar agora: sem ouro, o
+# cartão, o preço e o "Ouro insuficiente" continuam, e o quadro fica pendente (não conta como visto) até uma ocasião
+# em que dê, sem segurar os outros.
+
+
 def _v2(g, a):
     """Recuperar: vida abaixo de 70% ou recurso abaixo de metade, no menu da vila. Aponta o serviço que resolve o que
     falta e que dá para pagar: a vida no Templo; o recurso (ou a vida, se o Templo não cabe no bolso) na Taverna."""
@@ -314,10 +324,9 @@ def _v2(g, a):
     if not (vida or rec):
         return None
     r = j.nome_recurso
-    dormir = preco_dormir(g)
-    dorme = j.ouro >= dormir
+    dorme = _pode_dormir(g)
     templo = next((o for o in g.opcoes_templo() if o[1][1] is None), None)  # o do herói: ("templo", None, preço, falta)
-    cura = templo is not None and j.ouro >= templo[1][2]
+    cura = templo is not None and not templo[2].get("motivo")  # a mesma regra do cartão do templo
     # Um quadro, um alvo: o Templo fala da vida (e do grátis, enquanto vale); a Taverna, do recurso. O preço e os
     # números ficam nos cartões; os detalhes, na Ajuda.
     if vida and cura:
@@ -640,18 +649,22 @@ def _f3(g, a):
     j = g.j
     if not _pendente(a, "F3") or g.loc["tipo"] != "vila" or not j.ferimentos:
         return None
+    if not any(not motivo for _, _, motivo in g.tratamentos()):
+        return None  # nenhum tratamento cabe no bolso agora: o quadro espera
     gratis = " O primeiro tratamento é grátis." if curandeira_gratis(g) else ""
     return {"id": "F3", "texto": f"A **Curandeira** trata ferimentos na hora; o Templo só recupera vida.{gratis}",
             "ancora": "predio:curandeiro"}
 
 
 def _f4(g, a, _dados=None):
-    """Na cabana da curandeira: o cartão do ferimento que o F1 mostrou (o primeiro da lista), com o preço de agora."""
+    """Na cabana da curandeira: o cartão do primeiro ferimento que dá para tratar agora (o que o F1 mostrou, se der),
+    com o preço de agora. Sem nenhum ao alcance do bolso, o quadro espera outra visita."""
     from .sobrevivencia import FERIMENTOS
-    j = g.j
-    if not _pendente(a, "F4") or not j.ferimentos:
+    if not _pendente(a, "F4"):
         return None
-    f = j.ferimentos[0]
+    f = next((f for f, _, motivo in g.tratamentos() if not motivo), None)
+    if not f:
+        return None
     # O cartão já diz o preço (ou "Primeiro tratamento — grátis"): o quadro só diz o que fazer.
     return {"id": "F4", "texto": f"Clique neste cartão para tratar {FERIMENTOS[f['id']]['curto']}.",
             "ancora": f"tratar:{f['id']}"}
@@ -673,6 +686,8 @@ def _d1(g, a):
     j = g.j
     if not tutorial(g) or not _pendente(a, "D1") or g.loc["tipo"] != "vila" or g.combate_ativo is not None:
         return None
+    if not _pode_dormir(g):
+        return None  # sem ouro para a cama: o cartão diz isso; o quadro espera uma visita em que dê
     texto = "Clique neste cartão para dormir aqui até o amanhecer."
     if j.ferimentos:
         texto += "\n_A Curandeira trata ferimentos na hora."  # que o descanso ajuda a sarar, o cartão já diz

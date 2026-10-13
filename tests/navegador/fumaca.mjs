@@ -1710,6 +1710,28 @@ async function cenarioOuroInsuficiente(browser) {
     await page.close();
     proc.kill();
   }
+  // O quadro do cartão Dormir (D1) só com ouro para a cama: sem ouro, o cartão e o aviso ficam, e o quadro espera.
+  for (const [ouro, deve] of [["2", false], ["60", true]]) {
+    const t = await subir("tutorial", { OURO: ouro, VIDA: "0.5", GRATIS_USADO: "templo,curandeira", VISTAS: "A1,V2,N1" });
+    const { page: pt, erros: et } = await abrir(browser, t.url);
+    try {
+      await pt.waitForSelector("#predios .predio", { timeout: 20000 });
+      await pt.waitForTimeout(600);
+      await pt.click('#predios .predio[data-predio="taverna"]');
+      await pt.waitForSelector('.servico[data-servico="dormir"]', { timeout: 10000 });
+      await pt.waitForTimeout(900);
+      const r = await pt.evaluate(() => ({
+        quadro: /Clique neste cartão para dormir/.test((document.querySelector(".orientacao:not([hidden])") || {}).textContent || ""),
+        caro: document.querySelector('.servico[data-servico="dormir"]').classList.contains("caro"),
+ }));
+      conferir(r.quadro === deve && r.caro === !deve,
+        deve ? "com ouro para a cama, o quadro do cartão Dormir aparece" : "sem ouro, o cartão Dormir fica (com o motivo) e o quadro não aparece");
+    } finally {
+      conferir(et.length === 0, "sem erros no console" + (et.length ? ": " + et.slice(0, 3).join(" | ") : ""));
+      await pt.close();
+      t.proc.kill();
+    }
+  }
   const m = await subir("mercado", { OURO: "3" });
   const { page: pg, erros: er } = await abrir(browser, m.url);
   try {

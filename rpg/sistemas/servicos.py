@@ -81,13 +81,14 @@ class Servicos:
         while j.ferimentos:
             self.ui.cena("A curandeira", self.loc["nome"], "menu")  # a cada volta: na tela gráfica, a cabana se redesenha
             gratis = abertura.curandeira_gratis(self)
-            custos = [0 if gratis else abertura.custo_tratamento(self, f) for f in j.ferimentos]
+            tratamentos = self.tratamentos()
+            custos = [custo for _, custo, _ in tratamentos]
             dados = {"ouro": j.ouro, **({"quem": quem["quem"], "fala": quem["fala"]} if quem else {}), "ferimentos": [
-                {"id": f["id"], "nome": sobrevivencia.FERIMENTOS[f["id"]]["nome"], "custo": custo, "pode": j.ouro >= custo,
-                 "motivo": None if j.ouro >= custo else "Ouro insuficiente.",
-                 **({"gratis": "Primeiro tratamento — grátis"} if gratis else {}),
-                 "explica": sobrevivencia.explicar(f, j.nome_recurso, j)} for f, custo in zip(j.ferimentos, custos)]}
+                {"id": f["id"], "nome": sobrevivencia.FERIMENTOS[f["id"]]["nome"], "custo": custo, "pode": not motivo,
+                 "motivo": motivo, **({"gratis": "Primeiro tratamento — grátis"} if gratis else {}),
+                 "explica": sobrevivencia.explicar(f, j.nome_recurso, j)} for f, custo, motivo in tratamentos]}
             abertura.contexto(self, "curandeira")  # o cartão do ferimento que o tutorial mostrou (F4)
+            f4 = abertura.proxima(self)  # o quadro, se há um tratamento que dá para pagar agora (senão, fica pendente)
             try:
                 if self.ui.painel("curandeira", dados):
                     # Tela gráfica: cada ferimento é um cartão; o clique trata. Fora isso, só sair.
@@ -102,7 +103,8 @@ class Servicos:
                                     "examina você. \"O que vai ser?\"", opcoes + [("Voltar", None)])
             finally:
                 abertura.contexto(self, None)
-            abertura.visto(self, "F4")  # tratou ou saiu: a ocasião passou
+            if f4:
+                abertura.visto(self, "F4")  # tratou ou saiu com o quadro à vista: a ocasião passou
             if not esc:
                 return
             fid, custo = esc
@@ -122,6 +124,16 @@ class Servicos:
         """A meta de um serviço pago diante do balcão: sem ouro bastante, o motivo que a tela mostra no cartão e no
         aviso do clique (a tentativa nem chega aqui: não gasta tempo nem sorteio)."""
         return {"motivo": "Ouro insuficiente."} if self.j.ouro < preco else {}
+
+    def tratamentos(self):
+        """Os ferimentos do herói na curandeira: (ferimento, preço de agora, motivo de não dar), na ordem da ficha. O
+        primeiro tratamento da campanha é grátis (abertura.curandeira_gratis); sem ouro para os outros, o motivo."""
+        gratis = abertura.curandeira_gratis(self)
+        lista = []
+        for f in self.j.ferimentos:
+            custo = 0 if gratis else abertura.custo_tratamento(self, f)
+            lista.append((f, custo, self.motivo_pagar(custo).get("motivo")))
+        return lista
 
     def motivo_rumores(self):
         """Por que a bebida e os rumores não estão à venda agora: os fregueses já contaram tudo hoje, ou falta ouro."""

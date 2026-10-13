@@ -1748,8 +1748,7 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   1280×620 e 1280×560: anéis com dois ocupados, um vazio e nenhum; a abertura dos ratos nas três classes, com e sem
   tutorial, atacando e acabando com a habilidade; forja, taverna, templo, curandeira e mercado sem ouro.
 - **Visto e não mexido:** com o tutorial ligado e sem ouro para a cama, o quadro D1 ("Clique neste cartão para dormir
-  aqui até o amanhecer.") ainda aparece; o clique agora mostra "Ouro insuficiente". Fica para Jean dizer se o D1 deve
-  esperar ouro.
+  aqui até o amanhecer.") ainda aparecia; resolvido na 1.82.1, logo abaixo.
 - **Falta:** Jean conferir. A arte da sacristia e do fundo não começou. A E9 segue aberta.
 
 ### 13/10/2026 — Ataques em área dos inimigos: diagnóstico (sobre a 1.82.0, sem mudar o jogo)
@@ -1762,3 +1761,22 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   Recomendação: ataque em área como habilidade anunciada (o modelo do Golpe Esmagador), rara e só em inimigos fortes,
   e, antes disso, decidir uma ação de proteção do grupo.
 - **Falta:** Jean decidir se e em que ordem (seção 7 do 21). A E9 segue aberta.
+
+### 13/10/2026 — Os quadros do tutorial só apontam o que dá para pagar (1.82.1)
+
+- **Pedido de Jean:** "Clique neste cartão para dormir" só quando o serviço pode ser usado naquele momento; sem ouro,
+  o cartão, o preço e o "Ouro insuficiente" ficam, e o quadro fica pendente, sem segurar os outros. Conferir os outros
+  quadros que mandam comprar ou tratar, preservar o grátis e não marcar como visto só porque faltou ouro.
+- **Feito:** os quadros que mandam usar um serviço pago seguem a mesma regra dos cartões (o `motivo` do motor,
+  `Servicos.motivo_pagar`):
+  - **D1** (o cartão Dormir): só com ouro para a cama.
+  - **F3** (a Curandeira na vila): só se algum tratamento dá para pagar (o primeiro grátis conta e continua dito).
+  - **F4** (o cartão na cabana): aponta o primeiro ferimento que dá para tratar agora (o do F1, se der); sem nenhum,
+    não aparece, e sair da cabana assim não o marca como visto (antes, marcava sempre).
+  - **V2** já esperava o ouro; agora lê o mesmo motivo do cartão do templo e da taverna.
+  - Os quadros só informativos (V3 "O Mercado vende mais", F2 sem bandagem "O Mercado vende bandagens; a Curandeira
+    trata na hora") não apontam o serviço nem mandam usá-lo: ficaram como estavam.
+- **Verificado:** testes (`TestSoOQueDaParaPagar` novo: os de D1, F3 e F4 falham sem a correção), gabarito idêntico,
+  pyflakes, fumaça completa (no `cenarioOuroInsuficiente`, a taverna sem ouro sem o quadro e com ouro com ele); telas a
+  1280×720 sem ouro (vila, taverna, curandeira: nenhum quadro, cartões com preço) e 1500×950 com ouro (F3, D1, F4).
+- **Falta:** Jean conferir. A E9 segue aberta.

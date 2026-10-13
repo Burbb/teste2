@@ -293,3 +293,68 @@ class TestDescanso(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestSoOQueDaParaPagar(unittest.TestCase):
+    """Os quadros que mandam usar um serviço pago (D1, F3, F4, V2) só aparecem quando ele dá para usar agora. Sem ouro,
+    o cartão e o "Ouro insuficiente" continuam; o quadro fica pendente (não conta como visto) e volta quando der, sem
+    segurar os outros. O grátis continua sendo mostrado."""
+
+    def test_d1_sem_ouro_espera_e_volta_com_ouro(self):
+        g = depois_da_despensa()
+        g.j.hp = 10
+        g.j.ouro = ab.preco_dormir(g) - 1
+        self.assertFalse([c for c in ab.contextuais(g) if c["id"] == "D1"])
+        self.assertNotIn("D1", g.mundo["abertura"]["vistas"])  # pendente
+        g.j.ouro = ab.preco_dormir(g)
+        self.assertTrue([c for c in ab.contextuais(g) if c["id"] == "D1"])
+
+    def test_d1_sem_ouro_nao_segura_as_outras(self):
+        g = depois_da_despensa()
+        g.j.ouro = 0
+        ferir(g, "perna")
+        self.assertEqual(oid(g), "F1")  # a fila segue: o D1 é da taverna aberta e, sem ouro, nem entra
+
+    def test_f3_sem_ouro_espera_e_o_gratis_continua(self):
+        g = depois_da_despensa()
+        ferir(g, "perna")
+        visto(g, "F1")
+        g.marcar("curandeira_gratis_usado")
+        g.j.ouro = 0
+        self.assertNotEqual(oid(g), "F3")
+        self.assertNotIn("F3", g.mundo["abertura"]["vistas"])
+        g.j.ouro = 999
+        self.assertEqual(oid(g), "F3")
+        h = depois_da_despensa()  # com o primeiro tratamento grátis, sem ouro nenhum: aparece, e diz que é grátis
+        ferir(h, "perna")
+        visto(h, "F1")
+        h.j.ouro = 0
+        self.assertTrue(ab.atual(h)["texto"].endswith("O primeiro tratamento é grátis."))
+
+    def test_f4_aponta_o_que_da_para_pagar_e_sem_nenhum_nao_conta_como_visto(self):
+        g = depois_da_despensa(roteiro=["Voltar"])
+        ferir(g, "infeccao", "corte")
+        visto(g, "F1", "F2", "F3")
+        g.marcar("curandeira_gratis_usado")
+        g.j.ouro = ab.custo_tratamento(g, {"id": "corte"})  # dá para o corte, não para a infecção (mais cara)
+        ab.contexto(g, "curandeira")
+        self.assertEqual(ab.atual(g)["ancora"], "tratar:corte")
+        g.j.ouro = 0
+        self.assertIsNone(ab.atual(g))
+        ab.contexto(g, None)
+        g.curandeiro()  # entrou e saiu sem ouro: o quadro nem apareceu, então não passa
+        self.assertNotIn("F4", g.mundo["abertura"]["vistas"])
+        g.j.ouro = 999
+        g.ui.roteiro = ["Voltar"]
+        g.curandeiro()  # com ouro, o quadro aparece; sair passa a ocasião, como antes
+        self.assertIn("F4", g.mundo["abertura"]["vistas"])
+
+    def test_v2_segue_a_regra_dos_cartoes(self):
+        g = depois_da_despensa()
+        g.j.hp = int(g.j.max_hp * 0.4)
+        g.marcar("templo_gratis_usado")
+        g.j.ouro = 0
+        self.assertNotEqual(oid(g), "V2")
+        self.assertNotIn("V2", g.mundo["abertura"]["vistas"])
+        g.j.ouro = ab.preco_dormir(g)
+        self.assertEqual((ab.atual(g)["id"], ab.atual(g)["ancora"]), ("V2", "predio:taverna"))

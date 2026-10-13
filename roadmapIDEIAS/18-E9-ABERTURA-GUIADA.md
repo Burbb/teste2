@@ -1111,3 +1111,10 @@ combinações: três classes, tutorial ligado e desligado, atacando ou acabando 
 12 combinações desde a abertura real; os testes novos do K1 e do K2 (grafo da campanha e do mundo gerado, o mesmo
 contrato antes e depois do aceite, o texto de longe); fumaça: o K2 aponta o contrato aceito e o clique nele viaja até o
 lugar, onde o K3 aponta o Caçar.
+
+## 25. Os quadros só apontam o que dá para pagar (1.82.1)
+
+Os quadros que mandam usar um serviço pago seguem a regra dos cartões (`Servicos.motivo_pagar`): o D1 só com ouro para
+a cama; o F3 só se algum tratamento cabe no bolso (o primeiro grátis conta); o F4 aponta o primeiro ferimento que dá
+para tratar agora. Sem isso, o quadro fica pendente e não segura os outros; sair da cabana sem o F4 à vista não o marca
+como visto. O V2 já esperava o ouro e passou a ler o mesmo motivo. Registro em [00](00-COMECE-AQUI.md).
