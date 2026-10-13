@@ -144,8 +144,11 @@ class Tempo:
         else:
             intro = "Você junta gravetos, acende uma fogueira fraca e se enrola na capa. O frio entra mesmo assim."
         # Sozinho, no texto, a fogueira só vira cena quando há o que fazer nela: um baú para abrir.
+        from .. import abertura
+        abertura.visto(self, "D2")  # acampou: o quadro que apontava o Acampar não volta
         if comitiva.membros(self) or comitiva.reserva(self) or self.ui.fogueira_sozinho or self.j.tem("bau"):
             conversou = comitiva.fogueira(self, intro)
+            abertura.visto(self, "D3")  # dormiu (a fogueira só termina no Dormir)
             self.ui.cena("Acampamento", self.contexto_cena(), "evento")
         else:
             self.ui.cena("Acampamento", self.contexto_cena(), "evento")
@@ -169,6 +172,8 @@ class Tempo:
         if self.j.ouro < preco:
             self.dizer("Sem ouro suficiente. O taverneiro aponta para a porta.", "vermelho")
             return
+        from .. import abertura
+        abertura.visto(self, "D1")  # dormiu na taverna: o quadro do cartão Dormir não volta
         self.ui.cena("A taverna", self.contexto_cena(), "evento")
         self.perder_ouro(preco, destino="taverna")
         self.dizer("Uma cama de palha sem pulgas demais e um ensopado ralo para todos. É o melhor que este mundo "

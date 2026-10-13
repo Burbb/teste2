@@ -1393,12 +1393,14 @@ async function cenarioApresentacao(browser) {
     const { proc, url } = await subir("tutorial", { LUTA: "lobo", QUANTOS: "3", VIDA: "0.05", CONTRATO: "aceito", VISTAS: "A1" });
     const { page, erros } = await abrir(browser, url);
     try {
-      let faixa = "", escuro = false;
+      let faixa = "", escuro = false, logs = false;
       for (let k = 0; k < 300; k++) {
         const s = await page.evaluate(() => ({ luta: !!(estado && estado.combate), pode: !!pergunta && !processando, menu: !!document.querySelector("#predios .predio") && !!pergunta && pergunta.tipo === "opcoes" && !processando,
-          faixa: [...document.querySelectorAll(".faixa-festa")].map((f) => f.textContent.trim()).join("|"), escuro: document.body.classList.contains("derrotado") && !estado.combate && estado.heroi.hp === 0 }));
+          faixa: [...document.querySelectorAll(".faixa-festa")].map((f) => f.textContent.trim()).join("|"), escuro: document.body.classList.contains("derrotado") && estado.heroi.hp === 0,
+          logs: !estado.combate && !!pergunta && pergunta.tipo === "continuar" && estado.heroi.hp === 0 }));
         if (s.faixa) faixa = faixa || s.faixa;
         escuro = escuro || s.escuro;
+        logs = logs || s.logs;  // um Continuar com o herói ainda em 0: a página dos registros da luta segurando a tela
         if (s.menu && !s.luta && k > 5) break;
         const c = await page.$("#prompt .continuar");
         if (c) await c.click().catch(() => {});
@@ -1414,6 +1416,75 @@ async function cenarioApresentacao(browser) {
         "derrota na luta preparada: o resgate de sempre, de volta ao menu do Vau, com o contrato");
       conferir(faixa === "Você caiu" && escuro && !(await page.evaluate(() => document.body.classList.contains("derrotado"))),
         "a derrota: a faixa \"Você caiu\", o cenário escuro com o herói em 0 e, de volta ao menu, a luz de sempre");
+      conferir(!logs && (await page.evaluate(() => /Você tombou diante de/.test(document.querySelector("#historico-lista").textContent))),
+        "da queda direto ao resgate, sem um Continuar segurando os registros da luta (eles ficam no Histórico)");
+    } finally {
+      conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
+      await page.close();
+      proc.kill();
+    }
+  }
+}
+
+async function cenarioFeridas(browser) {
+  console.log("cenário: ferimentos e descanso (F1, F2, a Curandeira com o primeiro tratamento grátis, D1)");
+  const quadro = (page) => page.evaluate(() => { const q = document.querySelector(".orientacao:not([hidden])"); return q ? q.innerText.replace(/\s+/g, " ") : ""; });
+  const ate = async (page, re, ms = 15000) => { for (let k = 0; k < ms; k += 150) { if (re.test(await quadro(page))) return true; await page.waitForTimeout(150); } return false; };
+  {
+    const { proc, url } = await subir("tutorial", { LUGAR: "charco", VISTAS: "A1,A0,AL,N1,V5", FERIMENTOS: "corte", BANDAGENS: "1" });
+    const { page, erros } = await abrir(browser, url);
+    try {
+      conferir(await ate(page, /^Corte profundo fica na ficha depois da luta/) && (await pontaNoAlvo(page)) <= 2,
+        "F1: o ferimento real na ficha, com o efeito e o tratamento, a seta nele");
+      await page.click(".orientacao-entendi");
+      await page.click('#doca .atalho[data-rotulo="Inventário"]');
+      await page.waitForTimeout(600);
+      await page.keyboard.press("Escape");
+      conferir(await ate(page, /^A bandagem protege a ferida contra infecção\. O ferimento ainda precisa sarar\./) && (await pontaNoAlvo(page)) <= 2,
+        "F2: na cena seguinte, a bandagem da bolsa");
+      await page.click('#heroi .slot-px[data-bolsa="bandagem"]');
+      await page.waitForFunction(() => estado.heroi.ferimentos.every((f) => !f.aberto), null, { timeout: 10000 }).catch(() => {});
+      conferir(await page.evaluate(() => !/aberto/.test(document.querySelector("#heroi .ferimento").textContent)) && !/bandagem protege/.test(await quadro(page)),
+        "usada a bandagem, a ficha mostra a ferida tratada e o quadro sai");
+    } finally {
+      conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
+      await page.close();
+      proc.kill();
+    }
+  }
+  {
+    const { proc, url } = await subir("tutorial", { VISTAS: "A1,A0,F1,F2", FERIMENTOS: "corte,costelas", OURO: "0" });
+    const { page, erros } = await abrir(browser, url);
+    try {
+      conferir(await ate(page, /^A Curandeira trata ferimentos na hora; o Templo só recupera vida\./) && (await pontaNoAlvo(page)) <= 2,
+        "F3: na vila, a Curandeira (e o Templo só recupera vida)");
+      await page.click('#predios .predio[data-predio="curandeiro"]');
+      conferir(await ate(page, /^Clique no cartão para tratar Corte profundo agora: o primeiro tratamento é grátis\./),
+        "F4: o cartão do ferimento, com o primeiro tratamento grátis");
+      const gratis = await page.evaluate(() => [...document.querySelectorAll("#texto .curandeira [data-tratar]")].map((c) => /Primeiro tratamento — grátis/.test(c.textContent)));
+      await page.click('#texto .curandeira [data-tratar="costelas"] >> nth=-1');
+      await page.waitForFunction(() => estado.heroi.ferimentos.length === 1 && !!document.querySelector("#texto .curandeira [data-tratar]") && !!pergunta && !processando, null, { timeout: 15000 }).catch(() => {});
+      const depois = await page.evaluate(() => ({ ouro: estado.heroi.ouro, cartao: [...document.querySelectorAll("#texto .curandeira [data-tratar]")].pop().textContent }));
+      conferir(gratis.length === 2 && gratis.every(Boolean) && depois.ouro === 0 && !/grátis/.test(depois.cartao) && /15/.test(depois.cartao),
+        "com zero de ouro: um tratamento grátis, e o outro cartão volta ao preço de sempre na mesma tela");
+    } finally {
+      conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
+      await page.close();
+      proc.kill();
+    }
+  }
+  {
+    const { proc, url } = await subir("tutorial", { VIDA: "0.5", REC: "0.2", VISTAS: "A1,A0,AL", OURO: "40" });
+    const { page, erros } = await abrir(browser, url);
+    try {
+      await page.waitForFunction(() => pergunta && pergunta.tipo === "opcoes" && !processando && document.querySelector('#predios .predio[data-predio="taverna"]'), null, { timeout: 20000 });
+      await page.waitForTimeout(600);
+      await page.click('#predios .predio[data-predio="taverna"]');
+      conferir(await ate(page, /^Dormir aqui custa 10 de ouro e vai até amanhã: devolve 21 de vida e todo o Vigor\. O ensopado é por conta da casa/) && (await pontaNoAlvo(page)) <= 2,
+        "D1: na taverna, o cartão Dormir com o custo e a recuperação das regras");
+      await page.click('.servico[data-servico="dormir"]');
+      await page.waitForFunction(() => estado.heroi.hp === 51 && estado.heroi.rec === estado.heroi.max_rec, null, { timeout: 30000 }).catch(() => {});
+      conferir(await page.evaluate(() => estado.heroi.hp === 51 && estado.heroi.rec === estado.heroi.max_rec), "dormir devolve exatamente o que o quadro disse (30 → 51 de vida, todo o Vigor)");
     } finally {
       conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
       await page.close();
@@ -1534,6 +1605,7 @@ try {
   await cenarioCiclos(browser);
   await cenarioApresentacao(browser);
   await cenarioAnimacao(browser);
+  await cenarioFeridas(browser);
 } catch (e) {
   falhas.push(String(e));
   console.log("ERRO", e);

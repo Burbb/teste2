@@ -833,3 +833,79 @@ completa seguinte passou inteira.
 - O som "morte" da carta (quando a vida chega a 0, de antes) toca junto do novo, um pouco antes dele.
 - Fora do combate (a fome e a infecção que derrubam), não há a sequência: o pedido é só para a derrota da luta.
 
+## 20. Ferimentos, descanso e o fim da derrota (1.69.0)
+
+Pedido de Jean: concluir o fluxo visual da derrota e apresentar ferimentos, tratamentos e descanso. Combate, sorteio e
+regras de recuperação iguais; a única mudança de economia autorizada é o primeiro tratamento grátis de um ferimento do
+herói na curandeira.
+
+**1. Da derrota ao resgate.** *Reproduzido:* a faixa "Você caiu" sumia em ~1,3 s e ficava a página dos registros da
+luta, rolada para baixo, com "Você tombou diante de…" e um Continuar. *Corrigido:* a queda dura ~2,2 s (a faixa, ~2,6
+s), adiantável como antes; depois, a cena do resgate (ou da morte) abre página nova, com a rolagem no início, sem a
+confirmação dos registros (`WebUI.depois_da_queda`: a troca de cena seguinte à derrota não para para ler). Nada do
+resgate deixa de acontecer (ouro, dias, tratamentos, contratos, estado); os registros da luta ficam no Histórico. A
+recuperação segue como já era: o amanhecer, o texto do despertar e, na volta à vila, a página que vira sozinha. No
+Hardcore, a cena da morte, com o Continuar dela, e o título. A Pena de Fênix e a proteção continuam sem derrota.
+
+**2–5. Ferimentos.**
+
+| # | Âncora | Texto (números do ferimento real) | Aparece | Encerra |
+|---|---|---|---|---|
+| F1 | o ferimento na ficha (Ferimentos, à esquerda) | "**{Corte profundo}** fica na ficha depois da luta (não passa como o sangramento): {−10% Vida}. {Sara em 4 dias de descanso, mas, aberta, pode infeccionar à noite. A **Curandeira** trata na hora.}" (infecção: "Não passa sozinha: um unguento cura, e a Curandeira trata na hora.") | o primeiro menu fora da luta com um ferimento (na luta, espera) | **Entendi** ou a resposta ao menu |
+| F2 | a bandagem da bolsa | "A bandagem protege a ferida contra infecção. O ferimento ainda precisa sarar." (duas abertas: "Cada bandagem enfaixa uma ferida, a começar por **{Mordida dilacerada}**.") | a primeira ferida aberta sem bandagem, com bandagem na bolsa e o menu aceitando o uso | usar a bandagem, ou a resposta ao menu |
+| F2 (sem bandagem) | a ferida na ficha | "Sem bandagem, a ferida aberta pode infeccionar a cada noite. O **Mercado** vende bandagens; a Curandeira trata na hora." | o mesmo, sem bandagem | **Entendi** ou a resposta ao menu |
+| F3 | o prédio da Curandeira | "A **Curandeira** trata ferimentos na hora; o Templo só recupera vida. O primeiro tratamento é grátis." | na vila, com um ferimento | entrar nela, ou a resposta ao menu |
+| F4 | o cartão do ferimento do F1, na cabana | "Clique no cartão para tratar **{Corte profundo}** agora: o primeiro tratamento é grátis." (depois: "custa {15} de ouro") | dentro da cabana | tratar ou sair |
+
+Nada provoca ferimento nem muda a chance dele. A bandagem nunca aparece para fratura, concussão ou infecção (o F2 espera
+a primeira ferida aberta). A bandagem enfaixa a primeira ferida aberta da lista, sem escolha: o quadro diz qual, e a
+dica da bolsa passou a dizer só essa (antes, "Trata: corte profundo e mordida dilacerada" prometia as duas). Depois do
+uso, a ficha mostra a ferida sem "aberto" (o estado confirma; nenhum aviso a mais). Se o ferimento sara ou o resgate o
+resolve antes, as orientações que pediam tratamento não aparecem (seguem o estado de agora).
+
+**Primeiro tratamento grátis** (`abertura.curandeira_gratis`): na campanha, uma vez por personagem, com as orientações
+ligadas ou não. Enquanto vale, cada cartão diz "Primeiro tratamento — grátis"; a pessoa escolhe qual; só um sai de
+graça e só quando o tratamento acontece (abrir, sair, salvar, carregar ou religar não gastam nem renovam). Depois, os
+outros cartões voltam ao preço de sempre na mesma tela. Separado do grátis do templo; nenhum preço mudou.
+
+**Descanso.**
+
+| # | Âncora | Texto (números das regras de agora) | Aparece | Encerra |
+|---|---|---|---|---|
+| D1 | o cartão Dormir, na taverna aberta | "Dormir aqui custa {10} de ouro e vai até amanhã: devolve {21} de vida e todo o {Vigor}. O ensopado é por conta da casa: nenhuma provisão gasta." (+ "Com fome, a vida volta menos."; com ferimento: "Descansar ajuda os ferimentos a sararem com o tempo; a Curandeira trata na hora.") | a taverna aberta, sem outra orientação à vista (não segura a fila: a tela acha a ocasião) | **Entendi** ou dormir |
+| D2 | o Acampar do menu | "**Acampar** monta a fogueira aqui; lá, dormir passa a noite e recupera vida e {Vigor}." | fora da vila, com vida ou recurso a recuperar, depois das outras | acampar, ou a resposta ao menu |
+| D3 | o Dormir até o amanhecer, na fogueira | "**Dormir até o amanhecer** devolve {18} de vida e {22} de {Vigor}; o amanhecer come 1 provisão sua (e 1 de cada companheiro) (você tem {3})." (mau tempo: "a vida volta menos"; sem provisão: "você acorda com fome"; fome e ferimentos como no D1) | na fogueira | **Entendi** ou dormir |
+
+Os números saem de `abertura.recuperacao`, a mesma conta de `Tempo.descansar` (a fome multiplica a vida; o recurso,
+não). Ordem nos menus agora: K2, F1, V2, N1, V1, F2, F3, A1, K3, K4, B1, T1, V4, V5, D2; na fogueira, F1, D3, B1, F2. O
+V2 deixou de citar a Curandeira (é o F3, com a diferença para o Templo).
+
+**Posição.** A haste da seta vale também para os prédios da vila e para as opções acima da faixa de baixo (o quadro
+continua parado na faixa, a ponta encosta no alvo). Na bolsa, o quadro fica abaixo do espaço quando cabe (acima ficam os
+ferimentos que a bandagem trata). Na página, quando não cabe acima, ele sobe sobre o cenário em vez de descer sobre o
+Voltar e a doca.
+
+**Cenário de teste:** `tutorial` aceita `FERIMENTOS=corte,costelas`, `BANDAGENS=n` e `FOME=n`.
+
+**Conferido na tela (1500 e 1280 px):**
+- a derrota: a faixa ~2,6 s, a página do resgate limpa e no topo, nenhum Continuar com o herói em 0, os registros no
+  Histórico; no Hardcore, a cena da morte e o título;
+- F1 e F2 com bandagem (a seta na ferida e depois na bandagem; usada, a ficha mostra a ferida tratada), sem bandagem (a
+  alternativa, na ferida, sem destacar item), com concussão (sem bandagem) e com infecção (unguento ou Curandeira);
+- a Curandeira com dois ferimentos e zero de ouro: F3 no prédio (a haste até ele), F4 no cartão, os dois cartões com
+  "Primeiro tratamento — grátis", um tratado de graça, o outro de volta aos 15 de ouro sem sair da tela; com o tutorial
+  desligado, nenhum quadro e o grátis igual;
+- o descanso, vida e recurso antes e depois: taverna 30 → 51 e o Vigor cheio (com fome, 30 → 36); acampamento +18 de
+  vida e +22 de Vigor, 1 provisão (com fome, +5; com Morel e Odette, 3 provisões); os números iguais aos do quadro.
+
+**Verificações:** testes (`tests/test_abertura_feridas.py`: F1–F4, a bandagem na primeira ferida, o grátis uma vez só,
+com zero de ouro, separado do templo, sem renovar ao carregar ou religar, só na campanha; D1–D3 com os números e a
+fome; nada com o tutorial desligado), gabarito examinado (só os campos novos `contextuais` e o `id` dos ferimentos),
+pyflakes, fumaça completa (um cenário novo: F1, F2, a Curandeira e o D1; a derrota sem o Continuar dos registros). O
+teste da curandeira do Vau (`test_retorno`), que confere o preço de sempre, agora marca o grátis como já usado.
+
+**Limitações:**
+- Depois de um Entendi, a próxima orientação espera a cena seguinte (como sempre): o F2 vem depois de o jogador fazer
+  alguma coisa.
+- A recuperação do resgate vira a página sozinha na volta à vila (como já era); o texto do despertar fica o tempo de ler.
+

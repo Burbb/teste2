@@ -70,10 +70,14 @@ class TestRecuperar(unittest.TestCase):
         g = depois_da_despensa("arqueiro")
         g.j.hp, g.j.rec = int(g.j.max_hp * 0.5), 1
         g.j.ferimentos.append({"id": "perna", "dias": 3, "tratado": False})
+        self.assertEqual(oid(g), "F1")  # o ferimento novo vem antes
+        g.mundo["abertura"]["vistas"].append("F1")
         o = ab.atual(g)
         self.assertIn("Templo", o["texto"])
         self.assertIn("Pouco Foco: dormir na **Taverna**", o["texto"])
-        self.assertIn("Ferimentos, a **Curandeira** trata.", o["texto"])  # o templo não trata ferimento
+        self.assertNotIn("Curandeira", o["texto"])  # a diferença Templo × Curandeira é do F3, logo depois
+        ab.visto(g, "V2")
+        self.assertEqual(oid(g), "F3")
 
     def test_sem_ouro_nao_aponta_nada_e_nao_bloqueia(self):
         g = depois_da_despensa()

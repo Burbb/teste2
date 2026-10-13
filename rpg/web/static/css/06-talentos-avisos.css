@@ -69,7 +69,7 @@
 .faixa-festa.sombria span { font-size: 17px; font-style: italic; }
 /* A derrota (celebracoes.js: queda): a faixa em vermelho apagado, e o cenário escuro, sem os prédios, até o herói
    acordar (o amanhecer do resgate) ou o próximo menu. */
-.faixa-festa.derrota { animation-duration: 1.9s; background: linear-gradient(90deg, transparent, rgba(30, 6, 6, 0.95) 20%, rgba(30, 6, 6, 0.95) 80%, transparent); }
+.faixa-festa.derrota { animation-duration: 2.6s; background: linear-gradient(90deg, transparent, rgba(30, 6, 6, 0.95) 20%, rgba(30, 6, 6, 0.95) 80%, transparent); }
 .faixa-festa.derrota b { color: #e8695b; }
 body.derrotado #vista { filter: grayscale(0.75) brightness(0.32); transition: filter 0.9s ease-out; }
 body.derrotado #predios { visibility: hidden; }

@@ -71,31 +71,47 @@ class Servicos:
             self.dizer(f"Faíscas, marteladas, água fervendo. {item['nome']}: +{ganho} {nome_stat(stat, self.j.nome_recurso)}.", "verde")
 
     def curandeiro(self):
+        """A cabana da curandeira: um cartão por ferimento, com o preço de cada um. O primeiro tratamento do herói na
+        campanha é grátis (abertura.curandeira_gratis): todos os cartões dizem isso enquanto ele vale, e só um é de
+        graça; tratado esse, os outros voltam ao preço de sempre na mesma tela."""
         j = self.j
         quem = consequencias.atendente(self)  # no Vau da campanha: Pita, ou Marta depois que a água limpa
+        abertura.visto(self, "F3")  # a cabana aberta: o quadro que apontava o prédio não volta
         while j.ferimentos:
             self.ui.cena("A curandeira", self.loc["nome"], "menu")  # a cada volta: na tela gráfica, a cabana se redesenha
-            custos = [self.preco((25 + 4 * j.nivel) if f["id"] == "infeccao" else (12 + 3 * j.nivel)) for f in j.ferimentos]
+            gratis = abertura.curandeira_gratis(self)
+            custos = [0 if gratis else abertura.custo_tratamento(self, f) for f in j.ferimentos]
             dados = {"ouro": j.ouro, **({"quem": quem["quem"], "fala": quem["fala"]} if quem else {}), "ferimentos": [
                 {"id": f["id"], "nome": sobrevivencia.FERIMENTOS[f["id"]]["nome"], "custo": custo, "pode": j.ouro >= custo,
+                 **({"gratis": "Primeiro tratamento — grátis"} if gratis else {}),
                  "explica": sobrevivencia.explicar(f, j.nome_recurso, j)} for f, custo in zip(j.ferimentos, custos)]}
-            if self.ui.painel("curandeira", dados):
-                # Tela gráfica: cada ferimento é um cartão; o clique trata. Fora isso, só sair.
-                esc = self.menu("", [(f"Tratar {sobrevivencia.FERIMENTOS[f['id']]['nome']}", (f["id"], custo),
-                                      {"tratar": f["id"]}) for f, custo in zip(j.ferimentos, custos)]
-                                + [("Voltar", None, {"voltar": True})])
-            else:
-                opcoes = [(f"{sobrevivencia.FERIMENTOS[f['id']]['nome']} — {custo} ouro", (f["id"], custo))
-                          for f, custo in zip(j.ferimentos, custos)]
-                esc = self.menu(quem["fala"] if quem else "A curandeira, uma velha de mãos manchadas de sangue seco, "
-                                "examina você. \"O que vai ser?\"", opcoes + [("Voltar", None)])
+            abertura.contexto(self, "curandeira")  # o cartão do ferimento que o tutorial mostrou (F4)
+            try:
+                if self.ui.painel("curandeira", dados):
+                    # Tela gráfica: cada ferimento é um cartão; o clique trata. Fora isso, só sair.
+                    esc = self.menu("", [(f"Tratar {sobrevivencia.FERIMENTOS[f['id']]['nome']}", (f["id"], custo),
+                                          {"tratar": f["id"]}) for f, custo in zip(j.ferimentos, custos)]
+                                    + [("Voltar", None, {"voltar": True})])
+                else:
+                    opcoes = [(f"{sobrevivencia.FERIMENTOS[f['id']]['nome']} — "
+                               + ("primeiro tratamento, grátis" if gratis else f"{custo} ouro"), (f["id"], custo))
+                              for f, custo in zip(j.ferimentos, custos)]
+                    esc = self.menu(quem["fala"] if quem else "A curandeira, uma velha de mãos manchadas de sangue seco, "
+                                    "examina você. \"O que vai ser?\"", opcoes + [("Voltar", None)])
+            finally:
+                abertura.contexto(self, None)
+            abertura.visto(self, "F4")  # tratou ou saiu: a ocasião passou
             if not esc:
                 return
             fid, custo = esc
             if j.ouro < custo:
                 self.dizer("\"Sem ouro, sem cura. Ninguém aqui faz caridade mais.\"", "vermelho")
                 continue
-            self.perder_ouro(custo, destino="curandeira")
+            if custo:
+                self.perder_ouro(custo, destino="curandeira")
+            elif gratis:
+                self.marcar("curandeira_gratis_usado")  # gasto só agora, com o tratamento feito
+                self.dizer("Ela não cobra: é o seu primeiro tratamento aqui.", "cinza")
             sobrevivencia.curar_ferimento(self, fid)
             self.dizer(f"Ela costura, cauteriza e enfaixa sem anestesia. Você grita. "
                        f"{sobrevivencia.FERIMENTOS[fid]['nome']}: tratado.", "verde")

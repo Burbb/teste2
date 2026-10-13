@@ -677,8 +677,9 @@ def tutorial(ui):
     item da arma para comparar logo na chegada. BAUS=n na bolsa. CONTRATO=aceito ou feito: um contrato de caça no
     CONTRATO_EM (bosque, padrão, ou charco). LUTA=família (QUANTOS): uma luta logo na chegada. VISTAS: as orientações já vistas, além da luta e do Mural ("V3,N1").
     HARDCORE=1: morte definitiva. PENA=n (Penas de Fênix) e PROTECAO=mendigo: o que levanta o herói na luta.
+    FERIMENTOS=corte,costelas (do herói, sem tratar), BANDAGENS=n, FOME=n (dias sem comer).
     Sair leva ao título, com o save (para carregar com orientações pendentes)."""
-    from rpg import abertura as ab, itens, missoes
+    from rpg import abertura as ab, itens, missoes, sobrevivencia
     from rpg.__main__ import menu_principal
     pasta = tempfile.mkdtemp()
     g = Jogo(ui, seed=int(os.environ.get("SEMENTE", "5")), pasta_saves=pasta, hardcore=os.environ.get("HARDCORE") == "1")
@@ -726,6 +727,15 @@ def tutorial(ui):
             c["feito"], c["concluido"] = c["total"], True
         g.contratos.append(c)
         a["vistas"].append("K1")
+    for fid in [f for f in os.environ.get("FERIMENTOS", "").split(",") if f]:  # FERIMENTOS=corte,costelas (do herói)
+        j.ferimentos.append({"id": fid, "dias": sobrevivencia.FERIMENTOS[fid]["dias"], "tratado": False})
+    if os.environ.get("FERIMENTOS"):
+        j.recalcular()
+        j.hp = min(j.hp, j.max_hp)
+    if os.environ.get("BANDAGENS") is not None:  # BANDAGENS=0 tira as da bolsa
+        j.consumiveis["bandagem"] = int(os.environ["BANDAGENS"])
+    if os.environ.get("FOME"):
+        j.fome = int(os.environ["FOME"])
     if os.environ.get("PENA"):  # PENA=1: uma Pena de Fênix na bolsa (cair na luta levanta o herói)
         j.consumiveis["pena_fenix"] = int(os.environ["PENA"])
     if os.environ.get("PROTECAO"):  # PROTECAO=mendigo (ou santuario): a proteção que levanta uma vez

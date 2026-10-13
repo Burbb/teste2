@@ -25,6 +25,8 @@ Avaliação integrada do Vale do Turvo como primeiro capítulo (a E9 antecipada,
   derrota no cenário de teste ([18](18-E9-ABERTURA-GUIADA.md), seção 18).
 - **Três correções, 1.68.2 (seção 27):** o contrato aceito logo na volta à vila, o Entendi no quadro da animação e a
   sequência da derrota ([18](18-E9-ABERTURA-GUIADA.md), seção 19).
+- **Ferimentos e descanso, 1.69.0 (seção 28):** o fim da derrota sem o Continuar dos registros, o primeiro ferimento, a
+  bandagem, a Curandeira com o primeiro tratamento grátis e o descanso ([18](18-E9-ABERTURA-GUIADA.md), seção 20).
 - **Quarta entrega, 1.65.2 e 1.65.3 (seção 19):** a partida da Quibia lida; os contratos pagos depois do resgate; o
   ×N dos baús em destaque. A especificação da abertura guiada fica em [18](18-E9-ABERTURA-GUIADA.md).
 - **Correção 1.65.1 (seção 18):** os três pontos que faltaram na mensagem cortada: a percepção do Mago na água, o nome
@@ -916,4 +918,12 @@ Pedido de Jean depois da 1.68.1: o quadro do contrato aceito só aparecia depois
 o A1 ainda pendente vinha antes na fila), o quadro da animação sem Entendi e a derrota sem sinal do resultado (a vila
 clara com o herói em 0). Regras, sorteio e equilíbrio iguais. Detalhe na seção 19 do 18.
 
+## 28. Ferimentos, descanso e o fim da derrota (1.69.0)
+
+Pedido de Jean: a queda seguia para uma página de registros com Continuar (reproduzido) antes do resgate; e o tutorial
+não mostrava ferimentos, bandagem, Curandeira nem as opções de descanso. Agora a derrota vira direto para o resgate, e
+cada sistema aparece quando acontece de verdade, com os números das regras; o primeiro tratamento na curandeira é
+grátis (autorizado). Combate, sorteio e recuperação iguais. Detalhe na seção 20 do 18.
+
 **A E9 continua aberta** até a validação com jogadores novos.
+

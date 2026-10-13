@@ -139,7 +139,7 @@ function entrarNoPredio(id, pedido = false, continua = false) {
   const caixa = el("div", "tela balcao-predio");
   caixa.innerHTML = Telas.topoBalcao(icone, quem, motivo || fala, ouro) + (g.length ? `<div class="servicos">${g.map(({ o, i }) => Telas.cartaoServico({
     icone: o.meta.alvo || ICONE_SERVICO[o.meta.servico] || icone, nome: o.meta.curto || o.texto, efeito: o.meta.efeito, preco: o.meta.preco,
-    tempo: o.meta.tempo, motivo: o.meta.preco > ouro ? "Ouro insuficiente." : "", attrs: `data-i="${i}"`,
+    tempo: o.meta.tempo, motivo: o.meta.preco > ouro ? "Ouro insuficiente." : "", attrs: `data-i="${i}"${o.meta.servico ? ` data-servico="${o.meta.servico}"` : ""}`,
   })).join("")}</div>` : "");
   caixa.querySelectorAll(".servico").forEach((b) => b.addEventListener("click", (ev) => {
     ev.stopPropagation();

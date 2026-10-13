@@ -130,7 +130,7 @@ def heroi(g):
     ferimentos = []
     for f in j.ferimentos:
         d = sobrevivencia.FERIMENTOS[f["id"]]
-        ferimentos.append({"nome": d["nome"], "dias": f.get("dias") if d["dias"] else None,
+        ferimentos.append({"id": f["id"], "nome": d["nome"], "dias": f.get("dias") if d["dias"] else None,
                            "aberto": bool(d.get("aberto") and not f.get("tratado")),
                            "explica": sobrevivencia.explicar(f, j.nome_recurso, j)})
     return {

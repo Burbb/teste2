@@ -525,6 +525,8 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
             abertura.visto(self, "V4")  # a comitiva aberta (a tela ou a conversa): o quadro que a apontava não volta
         if isinstance(op, tuple) and op[:2] == ("usar", "bau"):
             abertura.visto(self, "B1")  # o primeiro baú aberto: daqui, o saque e a comparação seguem como sempre
+        if isinstance(op, tuple) and op[:2] == ("usar", "bandagem"):
+            abertura.visto(self, "F2")  # a bandagem usada: o estado "tratado" da ferida mostra o resultado
         if isinstance(op, tuple):  # o painel lateral: a bolsa e o ✉ da comitiva
             if op[0] == "falar":
                 comitiva.falar(self, op[1])

@@ -35,7 +35,8 @@
   }
   function curandeira(d) {
     const cartoes = d.ferimentos.map((f) => cartaoServico({
-      icone: f.id === "infeccao" ? "gota_verde" : "gota", nome: f.nome, efeito: (f.explica || [])[0] || "", preco: f.custo,
+      // O primeiro tratamento grátis (o motor diz): no lugar do efeito, até ser usado; a explicação fica na dica.
+      icone: f.id === "infeccao" ? "gota_verde" : "gota", nome: f.nome, efeito: f.gratis || (f.explica || [])[0] || "", preco: f.gratis ? null : f.custo,
       motivo: f.pode ? "" : "Ouro insuficiente.", attrs: `data-tratar="${h(f.id)}"`,
       dicaAttr: dica(`<b>${h(f.nome)}</b>${(f.explica || []).map((l, i) => `<div class="${i ? "" : "bonus pior"}">${h(l)}</div>`).join("")}<div class="rodape">${f.pode ? "Clique para tratar na hora." : "Ouro insuficiente."}</div>`),
     }));

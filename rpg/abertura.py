@@ -275,11 +275,15 @@ def proxima(g):
         return None
     ctx = getattr(g, "abertura_contexto", None)
     if ctx:
-        f = {"achado": _e1, "viagem": _v3, "mural": _k1}.get(ctx[0])
+        f = {"achado": _e1, "viagem": _v3, "mural": _k1, "curandeira": _f4}.get(ctx[0])
         return f(g, a, ctx[1]) if f else None
-    # O contrato recém-aceito (K2) vem antes de todas: é a consequência do que a pessoa acabou de fazer, e passa na
-    # primeira resposta ao menu (ou no Entendi). Depois, preparar e se recuperar antes de chamar para coisas novas.
-    for f in (_k2, _v2, _n1, _v1, _a1, _k3, _k4, _b1, _t1, _v4, _v5):
+    # Em volta da fogueira: o ferimento novo, dormir (D3), o baú e a bandagem (o resto espera o menu do lugar).
+    # Fora dela: o contrato recém-aceito (K2) vem antes de todas, por ser a consequência do que a pessoa acabou de
+    # fazer, e passa na primeira resposta ao menu (ou no Entendi); o ferimento novo (F1), logo depois. Depois,
+    # preparar e se recuperar antes de chamar para coisas novas; o acampamento (D2) por último.
+    ordem = ((_f1, _d3, _b1, _f2) if getattr(g, "na_fogueira", False) else
+             (_k2, _f1, _v2, _n1, _v1, _f2, _f3, _a1, _k3, _k4, _b1, _t1, _v4, _v5, _d2))
+    for f in ordem:
         o = f(g, a)
         if o:
             return o
@@ -313,7 +317,7 @@ def _v2(g, a):
     dorme = j.ouro >= dormir
     templo = next((o for o in g.opcoes_templo() if o[1][1] is None), None)  # o do herói: ("templo", None, preço, falta)
     cura = templo is not None and j.ouro >= templo[1][2]
-    feridas = " Ferimentos, a **Curandeira** trata." if j.ferimentos else ""
+    feridas = ""  # ferimentos: a Curandeira tem a orientação dela (F3), com a diferença para o Templo
     taverna = (f"Dormir na **Taverna** ({dormir} de ouro) devolve {TODO.get(r, r)} e "
                f"{round(bal.TAVERNA_VIDA * 100)}% da vida{' (menos, com fome)' if j.fome else ''}.")
     if vida and cura:
@@ -555,9 +559,163 @@ def selo_da_vez(g):
     return None
 
 
+# ------------------------------------------------------------------ ferimentos (F1–F4) e descanso (D1–D3)
+def _ferida_aberta(j):
+    """A ferida aberta ainda sem bandagem que uma bandagem trataria agora: a primeira da lista (tratar_com_bandagem
+    trata essa, sem escolha)."""
+    from .sobrevivencia import FERIMENTOS
+    return next((f for f in j.ferimentos if FERIMENTOS[f["id"]].get("aberto") and not f["tratado"]), None)
+
+
+def _tratamento(f):
+    """O tratamento de um ferimento real, numa frase: a infecção não passa sozinha; o resto sara com descanso, e a
+    Curandeira resolve na hora (a ferida aberta, sem bandagem, pode infeccionar)."""
+    from .sobrevivencia import FERIMENTOS
+    if f["id"] == "infeccao":
+        return "Não passa sozinha: um unguento cura, e a **Curandeira** trata na hora."
+    aberta = FERIMENTOS[f["id"]].get("aberto") and not f["tratado"]
+    return (f"Sara em {tx.plural(f['dias'], 'dia')} de descanso" + (", mas, aberta, pode infeccionar à noite" if aberta
+                                                                      else "") + ". A **Curandeira** trata na hora.")
+
+
+def _f1(g, a):
+    """O primeiro ferimento de verdade (fica além da luta, ao contrário do sangramento): onde está na ficha, o que tira
+    e como se trata. Fora da luta (o golpe já passou); some sozinho se ele sarar antes."""
+    from .sobrevivencia import FERIMENTOS, penalidades
+    j = g.j
+    if not _pendente(a, "F1") or not j.ferimentos:
+        return None
+    f = j.ferimentos[0]
+    return {"id": "F1", "texto": f"**{FERIMENTOS[f['id']]['nome']}** fica na ficha depois da luta (não passa como o "
+                                 f"sangramento): {penalidades(f['id'], j.nome_recurso)}. {_tratamento(f)}",
+            "ancora": f"ferimento:{f['id']}", "entendi": True}
+
+
+def _f2(g, a):
+    """A primeira ferida aberta sem bandagem: com bandagem na bolsa, o espaço dela (a tela mostra quando o menu aceita o
+    uso); sem bandagem, a alternativa, na ferida. Nunca para fratura, concussão ou infecção (a bandagem não trata)."""
+    from .sobrevivencia import FERIMENTOS
+    j = g.j
+    f = _ferida_aberta(j)
+    if not _pendente(a, "F2") or not f:
+        return None
+    if j.tem("bandagem") and not g.motivo_inutil("bandagem"):
+        outras = sum(1 for x in j.ferimentos if FERIMENTOS[x["id"]].get("aberto") and not x["tratado"]) > 1
+        texto = "A bandagem protege a ferida contra infecção. O ferimento ainda precisa sarar."
+        if outras:  # uma bandagem, uma ferida: a primeira da lista, sem escolha
+            texto += f" Cada bandagem enfaixa uma ferida, a começar por **{FERIMENTOS[f['id']]['nome']}**."
+        return {"id": "F2", "texto": texto, "ancora": "bolsa:bandagem"}
+    return {"id": "F2", "texto": "Sem bandagem, a ferida aberta pode infeccionar a cada noite. O **Mercado** vende "
+                                 "bandagens; a Curandeira trata na hora.",
+            "ancora": f"ferimento:{f['id']}", "entendi": True}
+
+
+def curandeira_gratis(g):
+    """O primeiro tratamento de um ferimento do herói na curandeira, de graça, uma vez por personagem, na campanha
+    (com as orientações ligadas ou não). Só se gasta com o tratamento feito; separado do grátis do templo."""
+    return bool(g.campanha) and not g.flag("curandeira_gratis_usado")
+
+
+def _f3(g, a):
+    """Na vila, com um ferimento: a Curandeira, e a diferença para o Templo."""
+    j = g.j
+    if not _pendente(a, "F3") or g.loc["tipo"] != "vila" or not j.ferimentos:
+        return None
+    gratis = " O primeiro tratamento é grátis." if curandeira_gratis(g) else ""
+    return {"id": "F3", "texto": f"A **Curandeira** trata ferimentos na hora; o Templo só recupera vida.{gratis}",
+            "ancora": "predio:curandeiro"}
+
+
+def _f4(g, a, _dados=None):
+    """Na cabana da curandeira: o cartão do ferimento que o F1 mostrou (o primeiro da lista), com o preço de agora."""
+    from .sobrevivencia import FERIMENTOS
+    j = g.j
+    if not _pendente(a, "F4") or not j.ferimentos:
+        return None
+    f = j.ferimentos[0]
+    preco = "o primeiro tratamento é grátis" if curandeira_gratis(g) else f"custa {custo_tratamento(g, f)} de ouro"
+    return {"id": "F4", "texto": f"Clique no cartão para tratar **{FERIMENTOS[f['id']]['nome']}** agora: {preco}.",
+            "ancora": f"tratar:{f['id']}"}
+
+
+def custo_tratamento(g, f):
+    """O preço de sempre da curandeira para um ferimento (a infecção custa mais)."""
+    return g.preco((25 + 4 * g.j.nivel) if f["id"] == "infeccao" else (12 + 3 * g.j.nivel))
+
+
+def recuperacao(g, fracao, parte_rec):
+    """O que um descanso devolve agora, pelas contas de Tempo.descansar: (vida, recurso). Com fome, a vida volta
+    menos; o recurso, não."""
+    from .sobrevivencia import FOME_DESCANSO
+    j = g.j
+    if j.fome:
+        fracao *= FOME_DESCANSO
+    vida = max(0, min(int(j.max_hp * fracao), j.max_hp - j.hp)) if j.hp > 0 else 0
+    rec = max(0, min(j.max_rec - j.rec, int(j.max_rec * parte_rec)))
+    return vida, rec
+
+
+def _descanso_ferimentos(j):
+    if not j.ferimentos:
+        return ""
+    if j.fome:
+        return " Com fome, os ferimentos não saram."
+    return " Descansar ajuda os ferimentos a sararem com o tempo; a Curandeira trata na hora."
+
+
+def _d1(g, a):
+    """A taverna aberta, com o cartão Dormir à vista (a tela acha a ocasião): o custo, o que volta, até quando e as
+    provisões, com os números das regras de agora."""
+    j = g.j
+    if not tutorial(g) or not _pendente(a, "D1") or g.loc["tipo"] != "vila" or g.combate_ativo is not None:
+        return None
+    vida, _ = recuperacao(g, bal.TAVERNA_VIDA, 1.0)
+    r = j.nome_recurso
+    texto = (f"Dormir aqui custa {preco_dormir(g)} de ouro e vai até amanhã: devolve {vida} de vida e "
+             f"{TODO.get(r, r)}. O ensopado é por conta da casa: nenhuma provisão gasta.")
+    if j.fome:
+        texto += " Com fome, a vida volta menos."
+    return {"id": "D1", "texto": texto + _descanso_ferimentos(j), "ancora": "servico:dormir", "entendi": True}
+
+
+def _d2(g, a):
+    """Fora da vila, com algo a recuperar: o Acampar do menu (dormir é lá dentro, na fogueira: D3)."""
+    j = g.j
+    if not _pendente(a, "D2") or g.loc["tipo"] == "vila" or (j.hp >= j.max_hp and j.rec >= j.max_rec):
+        return None
+    return {"id": "D2", "texto": "**Acampar** monta a fogueira aqui; lá, dormir passa a noite e recupera vida e "
+                                 f"{j.nome_recurso}.", "ancora": "opcao:Acampar"}
+
+
+def _d3(g, a):
+    """Na fogueira: o Dormir até o amanhecer, com o que volta, o tempo e as provisões (você e a comitiva)."""
+    j = g.j
+    if not _pendente(a, "D3") or not getattr(g, "na_fogueira", False):
+        return None
+    ruim = g.clima in ("chuva", "tempestade", "neve")
+    vida, rec = recuperacao(g, bal.ACAMPAR_VIDA_RUIM if ruim else bal.ACAMPAR_VIDA,
+                            bal.ACAMPAR_MANA if j.classe == "mago" else bal.ACAMPAR_FOLEGO)
+    bocas = len(cm.membros(g))
+    come = ("come 1 provisão sua" + (" e 1 de cada companheiro" if bocas else "") + f" (você tem {j.provisoes})"
+            if j.provisoes else "sem provisão, você acorda com fome")
+    texto = (f"**Dormir até o amanhecer** devolve {vida} de vida e {rec} de {j.nome_recurso}"
+             + (" (com este tempo, a vida volta menos)" if ruim else "") + f"; o amanhecer {come}.")
+    if j.fome:
+        texto += " Com fome, a vida volta menos."
+    return {"id": "D3", "texto": texto + _descanso_ferimentos(j), "ancora": "dormir:fogueira", "entendi": True}
+
+
+# As que a tela mostra quando o alvo aparece (a taverna aberta), sem segurar a fila das outras.
+def contextuais(g):
+    a = estado(g)
+    if not a or not tutorial(g):
+        return []
+    return [o for o in (_d1(g, a),) if o]
+
+
 # O que cada menu cumpre ao ser respondido: a ocasião passou (o quadro apareceu e a pessoa seguiu). Os talentos
 # também: o quadro aparece uma vez (o ★ do atalho continua avisando) e não segura os outros na fila.
-PASSA_NO_MENU = ("N1", "V4", "V5", "T1", "A1", "K2", "K3", "K4")
+PASSA_NO_MENU = ("N1", "V4", "V5", "T1", "A1", "K2", "K3", "K4", "F1", "F2", "F3", "D2")
 
 
 def depois_do_menu(g, antes, op):
@@ -585,7 +743,7 @@ def partiu(g):
 
 def entendi(g, oid):
     """O "Entendi" da tela: só as informativas (as outras se encerram pela ação)."""
-    if oid in ("V3", "V4", "T1", "N1", "A1", "K2", "K4", "SF", "S-", "S+") or oid in APRESENTACAO:
+    if oid in ("V3", "V4", "T1", "N1", "A1", "K2", "K4", "SF", "S-", "S+", "F1", "F2", "D1", "D3") or oid in APRESENTACAO:
         visto(g, oid)
 
 
@@ -634,6 +792,16 @@ def ajuda(g):
             ("N1", "Estrada", f"À noite, os inimigos vêm {bal.NOITE_NIVEL} nível acima e batem mais forte. A tocha "
                               "ilumina os lugares escuros (sem ela, a surpresa fica mais provável; nas salas da "
                               "capela, certa), mas não tira o perigo da noite."),
+            ("F1", "Ferimentos", "Ferimentos ficam na ficha depois da luta (o sangramento passa com ela). Saram com "
+                                 "descanso; a **Curandeira** trata na hora; a infecção pede unguento ou a Curandeira."),
+            ("F2", "Ferimentos", "A bandagem protege uma ferida aberta contra infecção (uma por bandagem, a primeira da "
+                                 "lista); o ferimento ainda precisa sarar."),
+            ("F3", "Vila", "A **Curandeira** trata ferimentos; o **Templo** recupera vida. O primeiro tratamento e o "
+                           "primeiro atendimento são grátis."),
+            ("D1", "Descanso", "Dormir na **Taverna** vai até amanhã, devolve parte da vida e todo o recurso; o ensopado "
+                               "poupa as provisões."),
+            ("D3", "Descanso", "**Acampar** e dormir na fogueira vai até o amanhecer, devolve parte da vida e do recurso e "
+                               "come provisões. Com fome, a vida volta menos e os ferimentos não saram."),
             ("A0", "Apresentação", "Enquanto o texto aparece, um clique mostra o texto inteiro; **Continuar** avança."),
             ("A1", "Apresentação", "**Texto**, no topo (tecla V), ajusta a velocidade do texto."),
             ("AL", "Apresentação", "Na luta, um clique na tela acelera a animação.")):
@@ -646,7 +814,7 @@ def para_tela(g):
     """O que a tela recebe no estado: a orientação de agora e a Ajuda."""
     if not g.mundo:
         return None
-    return {"atual": atual(g), "apresentacao": apresentacao(g), **ajuda(g)}
+    return {"atual": atual(g), "apresentacao": apresentacao(g), "contextuais": contextuais(g), **ajuda(g)}
 
 
 def dica_texto(g, onde):

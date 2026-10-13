@@ -155,6 +155,7 @@ class TestFonteEMarta(unittest.TestCase):
             sobrevivencia.ferir(g, fid)
             ui.roteiro = [sobrevivencia.FERIMENTOS[fid]["nome"], "Voltar"]
             g.j.ouro = 200
+            g.marcar("curandeira_gratis_usado")  # o primeiro tratamento grátis (1.69.0) já usado: o preço de sempre
             g.curandeiro()
             self.assertFalse(g.j.ferimentos)
             self.assertEqual(g.j.ouro, 200 - g.preco(12 + 3 * g.j.nivel))

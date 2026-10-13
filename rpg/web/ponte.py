@@ -74,6 +74,10 @@ class WebUI(InterfaceGrafica, UI):
         self.ultimo_estado = None
         self.ultimo_titulo = None
         self._segurando = None  # durante uma salva de golpes: o que chegar espera a animação
+        # A derrota que encerra a luta já foi mostrada (a faixa "Você caiu"/"Você morreu"): a cena seguinte (o resgate
+        # ou a morte) abre página nova direto, sem um Continuar que só seguraria os registros da luta (eles ficam no
+        # Histórico).
+        self.depois_da_queda = False
 
     # Salva de golpes (área): tudo o que o jogo mandar enquanto ela acontece (estado, falas, avisos) só sai
     # depois do lance "salva"; senão a tela mostraria o resultado antes da animação começar.
@@ -177,6 +181,8 @@ class WebUI(InterfaceGrafica, UI):
     FAIXAS_DE_PASSAGEM = ("exausto",)
 
     def celebrar(self, tipo, dados):
+        if tipo == "derrota":
+            self.depois_da_queda = True
         self.enviar_estado()
         novo = self.novo_desde_escolha
         self._enviar("celebrar", tipo=tipo, dados=dados)
@@ -208,6 +214,10 @@ class WebUI(InterfaceGrafica, UI):
         # Telas de menu que se redesenham (inventário, mercado) não param para "Continuar".
         mesma_tela = tipo == "menu" and titulo == self.ultimo_titulo
         ler_antes = pagina_nova and (self.novo_desde_escolha or self.pausa_pendente) and not mesma_tela
+        if self.depois_da_queda and tipo != "combate":
+            self.depois_da_queda = False
+            ler_antes = False
+            self.pausa_pendente = False
         # O fim de um evento (ou de uma luta) que cai direto no lugar não pede Continuar: a tela deixa o texto o tempo
         # de ler e vira a página sozinha. O estado do lugar (a arte, o painel, o mapa) vai junto com a página nova:
         # mandado antes, a cidade aparecia enquanto ainda se lia o que aconteceu na estrada.

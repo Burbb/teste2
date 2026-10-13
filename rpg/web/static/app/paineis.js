@@ -156,7 +156,7 @@ function desenharHeroi(h, antes) {
     if (!it) return `<div class="slot-px mini vazio" data-mini="${s}" title="${esc(Telas.NOME_ESPACO[s])} (vazio)">${spr(Telas.VAZIO[s], 2, "fantasma")}</div>`;
     return `<div class="slot-px mini r-${esc(it.raridade)}" data-mini="${s}" ${Telas.dicaItem(it, "", false)}>${spr(Telas.iconeItem(it), 2)}</div>`;
   };
-  const feridas = h.ferimentos.length ? h.ferimentos.map((f) => `<div class="ferimento${f.aberto ? " aberto" : ""}" ${Telas.dica(`<b>${esc(f.nome)}</b><div class="tipo">${f.dias ? `${Texto.plural(f.dias, "dia")} para sarar` : "não sara sozinha"}${f.aberto ? " · ferida aberta" : ""}</div>${(f.explica || []).map((l, i) => `<div class="${i ? "" : "bonus pior"}">${esc(l)}</div>`).join("")}`)}>${spr("gota", 1)}${esc(f.nome)} <small>${f.dias ? f.dias + "d" : ""}${f.aberto ? " · aberto" : ""}</small></div>`).join("")
+  const feridas = h.ferimentos.length ? h.ferimentos.map((f) => `<div class="ferimento${f.aberto ? " aberto" : ""}" data-ferimento="${esc(f.id)}" ${Telas.dica(`<b>${esc(f.nome)}</b><div class="tipo">${f.dias ? `${Texto.plural(f.dias, "dia")} para sarar` : "não sara sozinha"}${f.aberto ? " · ferida aberta" : ""}</div>${(f.explica || []).map((l, i) => `<div class="${i ? "" : "bonus pior"}">${esc(l)}</div>`).join("")}`)}>${spr("gota", 1)}${esc(f.nome)} <small>${f.dias ? f.dias + "d" : ""}${f.aberto ? " · aberto" : ""}</small></div>`).join("")
     : '<div class="vazio">Nenhum, por enquanto.</div>';
   const bolsa = h.bolsa.filter((b) => b.id !== "tocha").map((b) => {
     const bau = b.id === "bau";  // o baú se abre (e, onde dá para abrir, ganha o anel dourado)

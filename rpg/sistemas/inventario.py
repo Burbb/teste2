@@ -154,8 +154,9 @@ class Inventario:
         None: nada a dizer (o motivo_inutil cobre o item que não serve)."""
         j = self.j
         if k == "bandagem":
+            # Uma bandagem enfaixa uma ferida: a primeira aberta da lista (tratar_com_bandagem), sem escolha.
             abertas = [sobrevivencia.FERIMENTOS[f["id"]]["nome"].lower() for f in j.ferimentos
-                       if sobrevivencia.FERIMENTOS[f["id"]].get("aberto") and not f["tratado"]]
+                       if sobrevivencia.FERIMENTOS[f["id"]].get("aberto") and not f["tratado"]][:1]
             partes = (["sangramento"] if j.efeito("sangramento") else []) + abertas
             if partes:
                 return {"trata": "Trata: " + tx.lista_natural(partes) + "."}

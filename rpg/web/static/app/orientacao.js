@@ -193,7 +193,9 @@ const Orientacao = (() => {
       return null;
     }
     const a = ancora(o);
-    return a ? { id: o.id, el: a.el, onde: a.onde, html: botoes(negrito(o.texto), !!o.entendi), luta: false } : null;
+    // O prédio da vila mora na paisagem, acima da faixa; a opção do menu pode ficar acima da faixa de baixo: uma haste
+    // leva a ponta da seta até eles.
+    return a ? { id: o.id, el: a.el, onde: a.onde, prefere: a.prefere, haste: a.onde === "vila" || a.onde === "baixo", html: botoes(negrito(o.texto), !!o.entendi), luta: false } : null;
   }
 
   /** Onde mora cada orientação de fora da luta: o controle e a faixa (vila: a do alto, abaixo do cenário; topo: a do
@@ -216,9 +218,15 @@ const Orientacao = (() => {
     if (tipo === "bolsa") {
       // Só quando o menu de agora aceita a abertura (não enquanto a página espera Continuar): o clique funciona.
       if (pergunta.tipo !== "opcoes" || !pergunta.opcoes.some((x) => x.meta && x.meta.usar === valor)) return null;
-      return ok(document.querySelector(`#heroi .slot-px[data-bolsa="${valor}"]`), "junto");
+      // Abaixo da bolsa, quando cabe: acima ficam os ferimentos, que a bandagem trata (o quadro não os cobre).
+      const r = ok(document.querySelector(`#heroi .slot-px[data-bolsa="${valor}"]`), "junto");
+      return r && { ...r, prefere: "baixo" };
     }
     if (tipo === "topo") return ok(document.querySelector(`[data-acao="${valor}"]`), "junto");
+    if (tipo === "ferimento") return ok(document.querySelector(`#heroi .ferimento[data-ferimento="${valor}"]`), "junto");  // na ficha
+    if (tipo === "tratar") return ok(document.querySelector(`#texto .curandeira [data-tratar="${valor}"]`), "junto");  // o cartão
+    if (tipo === "servico") return ok(document.querySelector(`#prompt .balcao-predio .servico[data-servico="${valor}"]`), "junto");
+    if (tipo === "dormir") return ok(document.querySelector("#texto .dormir-barraca"), "junto");  // na fogueira
     if (tipo === "risco") {  // os riscos do lugar, à direita: a linha da noite e, junto, a da tocha
       const linha = document.querySelector(`#mundo .risco-lugar.${valor}`);
       return ok(linha && linha.closest(".riscos-lugar"), "junto");
@@ -263,7 +271,7 @@ const Orientacao = (() => {
   function desenhar() {
     // O AL à vista fica até o Entendi ou a próxima ação da pessoa: um ícone novo na carta espera ele (não o tira da
     // tela antes de dar para ler).
-    const a = (alMostrado && apresentacao()) || alvo() || apresentacao();
+    const a = (alMostrado && apresentacao()) || alvo() || apresentacao() || contextual();
     // Fora da luta, a faixa entra assim que a orientação vale (antes de o texto correr: nada pula quando o menu chega)
     // e sai quando a cena muda sem que ela continue valendo (não a cada piscar da pergunta, nem logo no "Entendi").
     const o = estado && estado.orientacao;
@@ -357,6 +365,18 @@ const Orientacao = (() => {
     }
     return null;
   }
+  /** As que valem quando o alvo aparece, sem segurar a fila (o cartão Dormir com a taverna aberta: D1): só quando
+   *  nenhuma outra está à vista. */
+  function contextual() {
+    const o = estado && estado.orientacao;
+    if (!o || !o.ligado || dispensado || estado.combate || (pausa && pausa === cenaAgora())) return null;
+    for (const c of o.contextuais || []) {
+      if (fechados.has(c.id)) continue;
+      const a = ancora(c);
+      if (a) return { id: c.id, el: a.el, onde: a.onde, html: botoes(negrito(c.texto), !!c.entendi), luta: false };
+    }
+    return null;
+  }
   /** O que vem na fila depois do texto de agora termina num Continuar (não num menu nem numa pergunta). */
   function continuarAdiante() {
     const fim = fila.find((m) => ["opcoes", "continuar", "pergunta", "combate"].includes(m.t));
@@ -402,10 +422,14 @@ const Orientacao = (() => {
         const c = col.getBoundingClientRect();
         x = Math.max(c.left + 6, Math.min(c.right - w - 6, cx - w / 2));
         acima = r.top - PERTO - h >= Math.max(c.top, 8);
+        if (a.prefere === "baixo" && r.bottom + PERTO + h <= Math.min(c.bottom, vh - 8)) acima = false;
       } else {
         x = cx - w / 2;
-        const pg = a.el.closest("#pagina");
-        acima = pg ? r.top - PERTO - h >= pg.getBoundingClientRect().top : r.bottom + PERTO + h > vh - 8;
+        const pg = a.el.closest("#pagina"), p = pg && pg.getBoundingClientRect();
+        // Na página: acima do controle, dentro dela; senão abaixo, se couber nela; senão acima mesmo (sobre o cenário),
+        // nunca descendo sobre o Voltar e a doca.
+        acima = p ? r.top - PERTO - h >= p.top || !(r.bottom + PERTO + h <= p.bottom) && r.top - PERTO - h >= 8
+          : r.bottom + PERTO + h > vh - 8;
       }
       y = acima ? r.top - PERTO - h : r.bottom + PERTO;
       lado = acima ? "cima" : "baixo";
@@ -526,7 +550,8 @@ const Orientacao = (() => {
     if (e && e.orientacao && e.orientacao.ligado) dispensado = false;
     const agora = e && e.orientacao && e.orientacao.atual;
     const ap = (e && e.orientacao && e.orientacao.apresentacao) || {};
-    fechados.forEach((id) => { if ((!agora || agora.id !== id) && !(id in ap)) fechados.delete(id); });  // o motor já confirmou
+    const ctx = ((e && e.orientacao && e.orientacao.contextuais) || []).map((c) => c.id);
+    fechados.forEach((id) => { if ((!agora || agora.id !== id) && !(id in ap) && !ctx.includes(id)) fechados.delete(id); });  // o motor já confirmou
     if (!$("#sobre-ajuda").hidden) desenharAjuda();
   }
 

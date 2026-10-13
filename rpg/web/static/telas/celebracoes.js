@@ -194,8 +194,10 @@
   /** A derrota que encerra a luta (o motor só a manda nessa hora: a Pena de Fênix e a proteção não chegam aqui): a
    *  carta do herói cai e se apaga, a tela pulsa vermelho, a faixa diz o resultado ("Você caiu": vem o resgate; "Você
    *  morreu": modo hardcore) e um som curto. Depois, o cenário fica escuro (sem os prédios da vila) até o herói
-   *  acordar (o amanhecer do resgate) ou o próximo menu: a vila não aparece como se ele já estivesse de pé. Rápida
-   *  (~1,3 s) e adiantável pelo clique ou tecla de sempre; no replay e no instantâneo, só o escuro. */
+   *  acordar (o amanhecer do resgate) ou o próximo menu: a vila não aparece como se ele já estivesse de pé. Cerca de
+   *  2 s, adiantável pelo clique ou tecla de sempre; em seguida, a página nova do resgate (ou da morte), sem Continuar
+   *  no meio (ponte.py: depois_da_queda). No replay e no instantâneo, só o escuro. */
+  const QUEDA_MS = 2200;  // a queda inteira (a faixa dura um pouco mais e some sobre a página nova)
   function queda(d, instantaneo) {
     document.body.classList.add("derrotado");
     if (instantaneo) return Promise.resolve();
@@ -203,7 +205,7 @@
     App.som("derrota");
     doer();
     faixa(d.morte ? "Você morreu" : "Você caiu", null, "caveira", "derrota");
-    return (async () => { for (let t = 0; t < 1300 && !pular; t += 50) await new Promise((r) => setTimeout(r, 50)); })();
+    return (async () => { for (let t = 0; t < QUEDA_MS && !pular; t += 50) await new Promise((r) => setTimeout(r, 50)); })();
   }
   /** O herói acordou (o amanhecer do resgate) ou um menu chegou: o cenário volta à luz de sempre. */
   function fimDaQueda() { document.body.classList.remove("derrotado"); }
