@@ -245,7 +245,8 @@ class TestNavegacao(unittest.TestCase):
         missoes._por_na_sala(g, "fundo")  # o que a vitória sobre a guardiã faz, antes do desfecho
         m.update(desfecho="destruida", etapa="retorno")
         self.assertEqual((missoes.sala_atual(g), passagens(g)), ("fundo", ["ossuario"]))
-        self.assertEqual(pagina(g)["cena"], "neutra")
+        d = pagina(g)
+        self.assertEqual((d["cena"], d["ilse"], d["agua"]), ("fundo", "ausente", "escura"))  # destruída: sem ela
         missoes.ir_na_capela(g, "ossuario")
         self.assertIn("fundo", passagens(g))  # resolvida: o fundo é só passagem, sem a luta de novo
         self.assertEqual(opcoes_febre(g), [])
@@ -272,7 +273,8 @@ class TestLodoNoFundo(unittest.TestCase):
         self.assertEqual((g.dia, g.periodo, g.j.consumiveis.get("tocha")), antes)  # nem tempo, nem tocha
         self.assertEqual(missoes.sala_atual(g), "ossuario")  # voltar por enquanto: sobe ao ossuário
         self.assertEqual(g.ui.cenas[-2:], ["O Fundo da Capela", "O Fundo da Capela"])  # título e sala concordam
-        self.assertEqual([d["cena"] for t, d in g.ui.paineis if t == "cena"][-2:], ["neutra", "neutra"])
+        fundos = [d for t, d in g.ui.paineis if t == "cena"][-2:]  # a descida e a coleta: Ilse na água, sem luta
+        self.assertEqual([(d["cena"], d["momento"], d["ilse"]) for d in fundos], [("fundo", "descida", "presa"), ("fundo", "visita", "presa")])
         # descer de novo: Ilse e o recuo como antes, sem a amostra (já está no frasco)
         g.ui.roteiro = ["Voltar por enquanto"]
         fazer(g, "fundo")
@@ -296,7 +298,10 @@ class TestLodoNoFundo(unittest.TestCase):
         self.assertNotIn("lodo", [o[1][2] for o in missoes.opcoes(g)])
         missoes.ir_na_capela(g, "fundo")
         self.assertEqual([o[1][2] for o in missoes.opcoes(g)], ["lodo"])
-        self.assertEqual(pagina(g)["cena"], "neutra")
+        d = pagina(g)
+        self.assertEqual((d["cena"], d["ilse"], d["agua"]), ("fundo", "ausente", "clara"))
+        self.assertEqual(ponto(d, "lodo")["acao"], {"missao": caspar.MID, "acao_missao": "lodo"})  # o mesmo do menu
+        self.assertEqual(ponto(d, "escada")["acao"], {"capela_ir": "ossuario"})
         self.assertTrue(missoes.executar(g, caspar.MID, "lodo"))
         self.assertFalse(missoes.executar(g, caspar.MID, "lodo"))  # uma vez
         self.assertEqual((missoes.sala_atual(g), caspar.registro(g)["preparos"]), ("fundo", ["lodo"]))
@@ -513,3 +518,95 @@ class TestSacristia(unittest.TestCase):
         lutas(g, "vitoria")
         fazer(g, "sacristia")
         self.assertNotIn("luz_na_sala", json.dumps(g.mundo))
+
+
+class TestFundo(unittest.TestCase):
+    """O fundo alagado desenhado (1.84.0): o motor diz o momento (descida, visita, luta, descanso, destruída), Ilse
+    (presa, solta, ausente), as correntes, a água e a luz; os momentos dela vão para a tela só depois do texto que os
+    conta, e só na tela gráfica. Nada de item, sorteio ou regra a mais."""
+
+    def no_fundo(self, classe, respostas, grafica=True, **kw):
+        from tests.test_guardia import no_fundo
+        g = no_fundo(classe, respostas, **kw)
+        ui = g.ui
+        ui.paineis, ui.momentos = [], []
+        ui.painel = lambda t, d: ui.paineis.append((t, d)) or False
+        ui.conquistas_na_tela = grafica
+        ui.celebrar = lambda tipo, dados: ui.momentos.append(dados["momento"]) if tipo == "ilse" else None
+        ui.dizer = ui.narrar = lambda texto="", cor=None: (ui.ditos.append(str(texto)), ui.momentos.append(str(texto)))
+        return g
+
+    def fundos(self, g):
+        return [(d["momento"], d["ilse"], d["correntes"], d["agua"]) for d in cenas(g) if d["cena"] == "fundo"]
+
+    def depois_do_texto(self, g, momento, trecho):
+        """O momento vem logo depois do texto que o conta (nunca antes)."""
+        i = g.ui.momentos.index(momento)
+        self.assertIn(trecho, g.ui.momentos[i - 1])
+
+    def test_destruir_presa(self):
+        from tests.test_guardia import DESTRUIR
+        g = self.no_fundo("guerreiro", DESTRUIR, preparos=())
+        missoes.executar(g, MID, "fundo")
+        self.assertEqual(missoes.registro(g, MID)["desfecho"], "destruida")
+        self.assertEqual(self.fundos(g), [("descida", "presa", "presas", "escura"), ("luta", "ausente", "presas", "escura"),
+                                          ("destruida", "destruida", "presas", "escura")])
+        self.assertEqual([m for m in g.ui.momentos if m in ("acorda", "canto_falha", "fita", "afunda", "desfaz")],
+                         ["acorda", "desfaz"])
+        self.depois_do_texto(g, "acorda", "Ela abre os olhos")
+        self.depois_do_texto(g, "desfaz", "Ilse se desfaz")
+        self.assertTrue(all(d["pontos"] == [] for d in cenas(g) if d["cena"] == "fundo"))  # dentro das cenas, nada se clica
+        d = pagina(g)
+        self.assertEqual((d["momento"], d["ilse"], d["agua"], [p["id"] for p in d["pontos"]]),
+                         ("visita", "ausente", "escura", ["escada", "lodo"]))
+
+    def test_descanso_solta_com_a_fita(self):
+        from tests.test_guardia import DESCANSO, PRONTO
+        g = self.no_fundo("mago", DESCANSO, **PRONTO)
+        missoes.executar(g, MID, "fundo")
+        self.assertEqual(missoes.registro(g, MID)["desfecho"], "descansada")
+        self.assertEqual(self.fundos(g), [("descida", "solta", "soltas", "escura"), ("luta", "ausente", "soltas", "escura"),
+                                          ("descanso", "descanso", "soltas", "escura")])
+        self.assertEqual([m for m in g.ui.momentos if m in ("acorda", "canto_falha", "fita", "afunda", "desfaz")],
+                         ["acorda", "canto_falha", "fita", "afunda"])
+        self.depois_do_texto(g, "canto_falha", "O canto de Ilse falha")
+        self.depois_do_texto(g, "fita", "pega a fita")
+        self.depois_do_texto(g, "afunda", "afunda devagar")
+        d = pagina(g)
+        self.assertEqual((d["ilse"], d["agua"], d["correntes"]), ("ausente", "clara", "soltas"))
+
+    def test_desistir_do_rito_falha_e_desfaz(self):
+        from tests.test_guardia import PRONTO
+        g = self.no_fundo("arqueiro", ["Chamar Ilse pelo nome", "Desistir do rito", "Guardar"], **PRONTO)
+        missoes.executar(g, MID, "fundo")
+        self.assertEqual([m for m in g.ui.momentos if m in ("acorda", "canto_falha", "fita", "afunda", "desfaz")],
+                         ["acorda", "canto_falha", "desfaz"])
+
+    def test_no_texto_sem_momentos_e_o_mesmo_jogo(self):
+        from tests.test_guardia import DESCANSO, PRONTO
+        a = self.no_fundo("mago", DESCANSO, **PRONTO)
+        b = self.no_fundo("mago", DESCANSO, grafica=False, **PRONTO)
+        for g in (a, b):
+            missoes.executar(g, MID, "fundo")
+        self.assertNotIn("acorda", b.ui.momentos)  # a tela de texto não recebe os momentos
+        ilse = [t for t in a.ui.ditos if "Ilse" in t or "fita" in t]
+        self.assertEqual(ilse, [t for t in b.ui.ditos if "Ilse" in t or "fita" in t])  # a mesma cena contada
+        self.assertEqual(json.dumps([a.j.para_dict(), a.mundo, a.dia, a.periodo], sort_keys=True, default=str),
+                         json.dumps([b.j.para_dict(), b.mundo, b.dia, b.periodo], sort_keys=True, default=str))
+
+    def test_sem_tocha_a_luta_sem_luz(self):
+        from tests.test_guardia import DESTRUIR
+        g = self.no_fundo("guerreiro", DESTRUIR, preparos=())
+        g.j.consumiveis["tocha"] = 0
+        missoes.executar(g, MID, "fundo")
+        luzes = [(d["momento"], d["luz"]) for d in cenas(g) if d["cena"] == "fundo"]
+        self.assertEqual(luzes[:2], [("descida", None), ("luta", None)])
+
+    def test_voltar_por_enquanto_nao_muda_ilse(self):
+        g = na_capela(etapa="fundo")
+        g.ui.roteiro = ["Voltar por enquanto"]
+        lutas(g)
+        fazer(g, "fundo")
+        self.assertEqual([(d["momento"], d["ilse"]) for d in cenas(g) if d["cena"] == "fundo"], [("descida", "presa")])
+        self.assertEqual(missoes.sala_atual(g), "ossuario")
+        self.assertIsNone(missoes.registro(g, MID).get("desfecho"))

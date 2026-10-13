@@ -772,23 +772,51 @@ def cena_sacristia(g, mid="febre_do_turvo", momento="visita", pagina=False, luz=
             "pontos": pontos, "titulo": "A Sacristia", "pagina": pagina}
 
 
-def cena_neutra(g, sala, pagina=False):
-    """Uma sala que ainda não tem arte própria (o fundo): a tela mostra um fundo neutro, escuro, sem
-    objetos nem pontos, em vez de mostrar outra sala no lugar dela. O caminho fica nas opções do menu."""
-    return {"cena": "neutra", "sala": sala, "pontos": [], "titulo": {"sacristia": "A Sacristia",
-                                                                     "fundo": "O Fundo Alagado"}[sala], "pagina": pagina}
+def cena_fundo(g, mid="febre_do_turvo", momento="visita", pagina=False, luz=None):
+    """O fundo alagado: a escada de pedra do ossuário terminando na água, a água pela cintura, as duas pedras de
+    moinho e as correntes que descem do buraco do ossuário (presas, esticadas; ou soltas, frouxas, pelo preparo
+    `corpo_solto`), e Ilse entre as pedras enquanto não há desfecho. `momento`: "descida" (os olhos fechados até o
+    texto chegar neles: a celebração "ilse" acorda), "visita" (na água, acordada, cantando baixo; depois do desfecho,
+    sem ela), "luta" (ela é a carta: a arte sem ela), "descanso" e "destruida" (as cenas do desfecho: ela ainda está ali,
+    e a celebração conta o que o texto conta). `agua`: "clara" depois do descanso; senão, escura. `luz`: a tocha de quem
+    está ali; sem ela, só o que desce do buraco do ossuário. Na página, a escada (subir ao ossuário) e o lodo (a ação de
+    Caspar, quando vale)."""
+    m = registro(g, mid)
+    soltas = "corpo_solto" in m["preparos"]
+    desfecho = m.get("desfecho")
+    if momento in ("descanso", "destruida"):
+        ilse = momento
+    elif momento == "luta" or desfecho:
+        ilse = "ausente"
+    else:
+        ilse = "solta" if soltas else "presa"
+    pontos = []
+    if momento == "visita":
+        escada = _passagem(g, mid, "escada", "Escada", "ossuario", None, "A escada de pedra sobe ao ossuário.", pagina)
+        lodo = _ponto(g, _caspar.MID, "lodo", "Lodo", "lodo", "O lodo escuro e fino que cobre as pedras do fundo.", pagina)
+        pontos = [escada, lodo]
+    return {"cena": "fundo", "momento": momento, "ilse": ilse, "correntes": "soltas" if soltas else "presas",
+            "agua": "clara" if desfecho == "descansada" and momento == "visita" else "escura", "luz": luz,
+            "pontos": pontos, "titulo": "O Fundo Alagado", "pagina": pagina}
+
+
+def _ilse(g, momento):
+    """Um momento de Ilse que o texto acabou de contar, para a tela gráfica acompanhar (abrir os olhos, o canto que
+    falha, a fita, afundar, desfazer-se). Só mostra: o desfecho, os itens e o rito são do motor, antes ou depois."""
+    if g.ui.conquistas_na_tela:
+        g.ui.celebrar("ilse", {"momento": momento})
 
 
 def mostrar_cena(g):
     """Na página da Capela Afogada (só na tela gráfica): a sala onde o personagem está (sala_atual), com os pontos
-    que valem agora. O fundo, ainda sem arte própria, num fundo neutro."""
+    que valem agora."""
     sala = sala_atual(g)
     if sala is None:
         return
     if sala == "sacristia":
         g.ui.painel("cena", cena_sacristia(g, pagina=True))
     elif sala == "fundo":
-        g.ui.painel("cena", cena_neutra(g, sala, pagina=True))
+        g.ui.painel("cena", cena_fundo(g, pagina=True))
     else:
         g.ui.painel("cena", {"exterior": cena_exterior, "salao": cena_salao, "ossuario": cena_ossuario}[sala](
             g, pagina=True))
@@ -925,13 +953,14 @@ def _fundo(g, mid):
     m = registro(g, mid)
     _por_na_sala(g, "fundo")  # desceu: está no fundo, com Ilse ainda na água (a luta só começa se for escolhida)
     g.ui.cena("O Fundo da Capela", g.contexto_cena(), "evento")
-    g.ui.painel("cena", cena_neutra(g, "fundo"))
+    g.ui.painel("cena", cena_fundo(g, mid, "descida"))
     g.narrar("A escada do ossuário termina na água. O fundo é um poço escuro, com água pela cintura e um frio que não é "
              "de água. No meio, entre duas pedras de moinho, há uma forma enrolada em correntes.")
     if "corpo_solto" in m["preparos"]:
         g.narrar("As correntes que você soltou pendem frouxas. A forma já não está presa às pedras.")
     g.narrar("Ela abre os olhos. A pele é azulada, os cabelos são algas, e ela começa a cantar uma canção de ninar. É "
              "Ilse, ou o que a vila fez dela: a Bruxa Afogada.")
+    _ilse(g, "acorda")  # na tela gráfica, quando o texto chega aqui: os olhos se abrem e o canto mexe a água
     pronto = descanso_pronto(m)
     if not pronto and sabe_do_rito(m):
         # A lembrança do que Berta contou, diante do que se vê. Depois de Berta, só as correntes podem faltar (o nome e
@@ -971,6 +1000,8 @@ def _fundo(g, mid):
         g.narrar("Você segura a fita e espera o momento de dizer o nome dela.")
     from . import sobrevivencia
     luz = sobrevivencia.acender_tocha(g, sala=True)
+    g.luz_na_sala = "tocha" if luz else None
+    g.ui.painel("cena", cena_fundo(g, mid, "luta", luz=g.luz_na_sala))  # ela é a carta: a arte fica sem ela
     try:
         r = g.combate([chefe], emboscada=None if luz else "inimigo", pode_fugir=False,
                       titulo="Guardiã: Ilse, a Bruxa Afogada")
@@ -988,6 +1019,7 @@ def _momento_do_rito(g, cb, e):
     segunda fase, como em qualquer guardião. Nada do que a build faz se perde para quem escolhe destruir."""
     cb.dizer("O canto de Ilse falha. As correntes soltas pendem dos pulsos dela, e os olhos dela vão para a fita na sua "
              "mão.", "ciano+negrito")
+    _ilse(g, "canto_falha")  # na arena: a água do fundo para de se mexer um instante (só a reação; a escolha é o menu)
     op = g.menu("Este é o momento do rito.", [("Dizer o nome dela e devolver a fita (dar descanso)", "rito"),
                                               ("Desistir do rito e seguir lutando (destruir)", "lutar")])
     if op == "rito":
@@ -1022,20 +1054,23 @@ def _resolver(g, mid, desfecho, nivel):
     registrar(g, "missao", missao=mid, desfecho=desfecho)
     if desfecho == "descansada":
         g.ui.cena("Ilse", g.contexto_cena(), "evento")
-        g.ui.painel("cena", cena_neutra(g, "fundo"))
+        g.ui.painel("cena", cena_fundo(g, mid, "descanso", luz=g.luz_na_sala))
         g.narrar("Por um momento, ela é só uma mulher cansada com a água pela cintura. Ela pega a fita da sua mão e a "
                  "enrola nos dedos.")
+        _ilse(g, "fita")
         g.narrar("\"Eu era a guardiã dele\", diz, sem raiva. \"É um de três. Os três seguram fechada uma porta que "
                  "nunca devia ter sido aberta, e agora ela range. Há mãos procurando os três. Não deixe os três cair "
                  "nas mãos de quem não entende o que eles mantêm fechado.\"")
         g.narrar("Ela abre a mão. O Sigilo do Turvo, rachado e frio como pedra de rio, passa para a sua. Depois ela "
                  "afunda devagar, com a fita entre os dedos, e a água do fundo fica parada e clara.")
+        _ilse(g, "afunda")
         _pista(m, "relato_de_ilse")
     else:
         g.ui.cena("A Guardiã Destruída", g.contexto_cena(), "evento")
-        g.ui.painel("cena", cena_neutra(g, "fundo"))
+        g.ui.painel("cena", cena_fundo(g, mid, "destruida", luz=g.luz_na_sala))
         g.narrar("Ilse se desfaz na água escura, e o canto vira bolhas. Por um instante, a água que desce para a vila "
                  "corre mais turva.")
+        _ilse(g, "desfaz")
         g.narrar("Onde ela esteve, entre as pedras de moinho, sobra o Sigilo do Turvo, rachado e frio como pedra de rio. Presa às "
                  "pedras, há também uma veste de couro endurecido pela água, que ainda guarda a forma de alguém.")
     g.receber_sigilo("turvo", "Ilse, a Bruxa Afogada")

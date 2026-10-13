@@ -1,6 +1,6 @@
 /* Cenas interativas: um lugar desenhado em pixel art (como as paisagens: escala inteira, pontilhado de Bayer, dez
    quadros por segundo) com pontos clicáveis por cima. Os ambientes da Capela Afogada (roadmapIDEIAS/20): o exterior,
-   o salão alagado, a sacristia e o ossuário com o sarilho. O motor diz qual ambiente, o estado dele (a água do salão
+   o salão alagado, a sacristia, o ossuário com o sarilho e o fundo alagado com Ilse. O motor diz qual ambiente, o estado dele (a água do salão
    inquieta ou quieta, as correntes presas ou soltas) e o que cada ponto faz (a mesma ação do menu, ou nada); clicar
    aproxima a câmera e manda a ação; a tela não decide nada. A corrente desce na tela só quando o motor avisa que o
    preparo foi gravado (celebrar "correntes"). Um ponto "de olhar" (os sapos) só aproxima e afasta. */
@@ -737,19 +737,254 @@
     if (destaque === "livro") { const bk = SAC.buraco, bx = ox + bk.x; px(bx - 2, P + 4, 17, 1, ouro); px(bx - 2, P + 10, 17, 1, ouro); }
   }
 
-  // ================================================================ a sala sem arte própria
-  // A sacristia e o fundo ainda não foram desenhados: em vez de mostrar outra sala no lugar deles, um fundo neutro,
-  // a parede de pedra e o chão no escuro, com a luz da tocha de quem está ali no meio. Sem objetos nem pontos.
-  function baseNeutra(W) {
-    const k = camada(W), c = k.getContext("2d"), px = pincel(c), ox = Math.round((W - QW) / 2);
-    px(0, 0, W, QH, COR.parede);
-    for (let y = 4; y < PISO; y += 6) for (let x = ((y / 6) % 2) * 7 - 14; x < W; x += 14) { px(x, y, 14, 1, COR.junta); px(x, y, 1, 6, COR.junta); }
-    for (let y = PISO; y < QH; y++) px(0, y, W, 1, y === PISO ? COR.pedraLuz : COR.chao);
-    for (let y = PISO + 3; y < QH; y += 5) for (let x = (y * 3) % 10; x < W; x += 14) px(x, y, 9, 1, COR.chaoJunta);
-    escurecer(px, W, ox + QW / 2, 34, 36, 160, 0.8);
-    return { canvas: k, ox };
+  // ================================================================ o fundo alagado
+  // Um poço baixo e escuro com a água pela cintura: a escada de pedra do ossuário descendo pela esquerda até a água, as
+  // duas pedras de moinho no meio, as correntes que descem do buraco do ossuário (o mesmo do sarilho, lá em cima; aqui
+  // não há outro sarilho) e Ilse entre as pedras. O motor diz o estado: as correntes presas (esticadas até as pedras e
+  // nos pulsos dela, os braços puxados para os lados) ou soltas (frouxas, pendendo, os braços caídos); Ilse presente,
+  // ausente (na luta ela é a carta; depois do desfecho, foi embora) ou nas cenas do desfecho; a água escura, ou clara
+  // depois do descanso. A luz: a tocha de quem está ali, ao pé da escada; sem ela, só o pouco que desce do buraco do
+  // ossuário. Os momentos (os olhos que se abrem, o canto que falha, a fita, afundar, desfazer-se) vêm por celebração,
+  // quando o texto chega neles.
+  const FUNDO = { agua: 46, cx: 168, pedra: 40, raio: 13, buraco: 168 };
+  const CORF = {
+    teto: "#0c1012", pedra: "#232a2c", pedraLuz: "#3a4542", pedraSombra: "#141a1b", junta: "#192022", limo: "#25372c",
+    agua: "#061012", aguaMeio: "#0a1a1d", aguaLuz: "#1f383c", mo: "#4a4c48", moLuz: "#6a6c64", moSombra: "#2c2e2a",
+    moSulco: "#383a36", ferro: "#4a4c54", ferroLuz: "#7a7c86", pele: "#7d98a6", peleSombra: "#55707e", peleLuz: "#a0b8c2",
+    peleCalma: "#a4aeb0", peleCalmaSombra: "#7a868a", cabelo: "#2b4531", cabeloLuz: "#3f5f3e", cabeloEsc: "#18281b",
+    veste: "#3a3430", vesteSombra: "#25211e", olhoFechado: "#3a4c56", olho: "#c4d4da", fita: "#a87a76", fitaSombra: "#7a5654",
+  };
+  /** Onde está a luz: a tocha de quem está ali, ao pé da escada; sem ela, o pouco que desce do buraco do ossuário. */
+  function luzFundo(d) {
+    return d.luz === "tocha" ? { x: 62, y: 38, perto: 52, longe: 210, max: 0.55, tocha: true }
+      : { x: FUNDO.buraco, y: 6, perto: 30, longe: 175, max: 0.6, tocha: false };
   }
-  function desenharNeutra(c, W, b) { c.drawImage(b.canvas, 0, 0); }
+
+  function baseFundo(W, d) {
+    const k = camada(W), c = k.getContext("2d"), px = pincel(c), ox = Math.round((W - QW) / 2), C = CORF, A = FUNDO.agua;
+    d = d || { correntes: "presas", agua: "escura" };
+    // a parede úmida em blocos, o teto baixo e a linha do limo perto da água
+    px(0, 0, W, QH, C.pedra);
+    for (let y = 9; y < A; y += 6) for (let x = ((y / 6) % 2) * 8 - 16; x < W; x += 16) { px(x, y, 16, 1, C.junta); px(x, y, 1, 6, C.junta); }
+    px(0, 0, W, 7, C.teto); px(0, 7, W, 1, C.pedraSombra);
+    for (let x = 0; x < W; x++) { const hh = 2 + ((x * 7) % 5 === 0 ? 1 : 0); px(x, A - hh, 1, hh, C.limo); }
+    // o buraco do ossuário no teto, por onde as correntes descem (o mesmo do sarilho); um resto de luz quente de cima
+    const bx = ox + FUNDO.buraco;
+    px(bx - 9, 0, 19, 4, "#020303"); px(bx - 10, 4, 21, 1, C.pedraLuz);
+    px(bx - 7, 3, 15, 1, "rgba(255,170,90,0.18)"); px(bx - 4, 2, 9, 1, "rgba(255,170,90,0.1)");
+    // a escada de pedra, a do ossuário, descendo pela esquerda desde a boca no teto até a água (e sumindo nela)
+    px(ox + 6, 0, 26, 7, "#030405"); px(ox + 5, 7, 28, 1, C.pedraLuz);
+    for (let k2 = 0; k2 < 11; k2++) {
+      const x = ox + 8 + k2 * 5, y = 9 + k2 * 4;
+      px(x, y + 1, 6, QH - y - 1, "#1d2426");
+      for (let yy = y + 3; yy < QH; yy += 4) px(x + ((yy + k2) % 2 ? 0 : 3), yy, 3, 1, C.pedraSombra);
+      px(x, y + 1, 5, 3, "#2c3436"); px(x, y, 9, 1, "#56605e"); px(x + 5, y + 1, 1, 3, "#0f1314");
+    }
+    // as duas pedras de moinho, de pé, metade dentro da água: o olho no meio e os sulcos
+    const pedras = [ox + FUNDO.cx - FUNDO.pedra, ox + FUNDO.cx + FUNDO.pedra], R = FUNDO.raio, py = A - 8;
+    pedras.forEach((mx, lado) => {
+      for (let y = -R; y <= R; y++) for (let x = -R; x <= R; x++) {
+        const dd = x * x + y * y;
+        if (dd > R * R) continue;
+        const borda = dd > (R - 1.5) ** 2, luz = (lado ? -x : x) < -4 && y < 0;
+        px(mx + x, py + y, 1, 1, borda ? C.moSombra : luz ? C.moLuz : C.mo);
+      }
+      for (let a = 0; a < 8; a++) {  // os sulcos, retos, do olho para a borda
+        const ang = a * Math.PI / 4 + 0.3;
+        for (let r = 4; r < R - 2; r += 1) if (r % 3) px(Math.round(mx + Math.cos(ang) * r), Math.round(py + Math.sin(ang) * r), 1, 1, C.moSulco);
+      }
+      px(mx - 2, py - 2, 4, 4, "#0c0e0c"); px(mx - 2, py - 3, 4, 1, C.moSombra);  // o olho
+    });
+    // o chão do poço, de pedras soltas (com a água escura, quase não se vê)
+    for (let i = 0; i < 26; i++) { const x = ox + 70 + ((i * 37) % 200), y = 60 + ((i * 7) % 11); px(x, y, 3 + (i % 3), 2, i % 2 ? C.pedraLuz : C.pedra); }
+    // a água: escura, mais funda embaixo, e o que está dentro dela (as pedras, a escada) fica turvo; clara, depois do
+    // descanso, deixa ver o fundo
+    const clara = d.agua === "clara";
+    for (let y = A; y < QH; y++) {
+      const f = (y - A) / (QH - A);
+      for (let x = 0; x < W; x++) px(x, y, 1, 1, clara ? `rgba(24,52,54,${(0.3 + f * 0.25).toFixed(2)})`
+        : `rgba(${Math.round(lerp(10, 4, f))},${Math.round(lerp(26, 14, f))},${Math.round(lerp(29, 16, f))},${(0.72 + f * 0.2).toFixed(2)})`);
+    }
+    px(0, A, W, 1, clara ? "#2e5254" : C.aguaLuz);
+    // o lodo, ao pé da escada, logo abaixo da superfície: manchas escuras e finas sobre as pedras
+    [[72, 2, 6], [79, 3, 5], [85, 2, 7], [93, 3, 5], [76, 5, 9], [89, 5, 6]].forEach(([x, dy, w]) => px(ox + x, A + dy, w, 1, "rgba(34,28,16,0.75)"));
+    // os reflexos: as pedras, quebrados em faixas
+    pedras.forEach((mx) => { for (let y = A + 2; y < A + 12; y += 2) px(mx - R + ((y * 3) % 4), y, 2 * R - 2, 1, misturar(C.aguaMeio, C.mo, 0.18)); });
+    // a luz e a penumbra: longe da fonte, a sala escurece em degraus; as pedras e a escada continuam legíveis
+    const L = luzFundo(d);
+    escurecer(px, W, ox + L.x, L.y, L.perto, L.longe, L.max);
+    pedras.forEach((mx) => { for (let a = 0; a < 18; a++) { const ang = Math.PI + (a / 17) * Math.PI; px(Math.round(mx + Math.cos(ang) * R), Math.round(py + Math.sin(ang) * R), 1, 1, "rgba(150,160,150,0.35)"); } });
+    for (let k2 = 0; k2 < 11; k2++) px(ox + 8 + k2 * 5, 9 + k2 * 4, 8, 1, "rgba(150,160,150,0.22)");
+    return { canvas: k, ox, d, luz: L, pedras, py };
+  }
+
+  /** Uma corrente de (x0, y0) a (x1, y1): reta (esticada) ou com barriga (`folga` em pixels, frouxa). Elos alternados. */
+  function corrente(px, x0, y0, x1, y1, folga = 0, balanco = 0) {
+    const n = Math.max(2, Math.ceil(Math.hypot(x1 - x0, y1 - y0)));
+    for (let i = 0; i <= n; i++) {
+      const t = i / n, x = Math.round(lerp(x0, x1, t) + Math.sin(t * Math.PI) * balanco), y = Math.round(lerp(y0, y1, t) + Math.sin(t * Math.PI) * folga);
+      if (y >= FUNDO.agua + 1) continue;
+      px(x, y, 1, 1, i % 3 === 0 ? CORF.ferroLuz : CORF.ferro);
+    }
+  }
+
+  /** Ilse, da cintura para cima, entre as pedras. `pose`: "presa" (os braços puxados para as pedras, correntes no corpo),
+   *  "solta" (os braços caídos, as correntes pendendo dos pulsos), "calma" (o descanso: a pele menos azul, o cabelo
+   *  quieto), com `fita` nas mãos. `olhos`: abertos ou fechados. `desce`: quantos pixels afundou. `some`: 0 a 1, o
+   *  quanto já se desfez (pixels faltando no pontilhado). Tudo o que fica abaixo da água não é desenhado. */
+  function ilseDesenho(px, cx, pose, olhos, fita, desce, some, q) {
+    const C = CORF, A = FUNDO.agua, calma = pose === "calma";
+    const pele = calma ? C.peleCalma : C.pele, sombra = calma ? C.peleCalmaSombra : C.peleSombra;
+    const p = (x, y, w, hh, cor) => {
+      for (let yy = y; yy < y + hh; yy++) for (let xx = x; xx < x + w; xx++) {
+        const yd = yy + desce;
+        if (yd >= A) continue;
+        if (some && pontilha(xx, yd, Math.round(some * 16))) continue;
+        px(xx, yd, 1, 1, cor);
+      }
+    };
+    const T = 20, mexe = calma || !q ? 0 : Math.floor(q / 9) % 2;
+    // O cabelo de algas, atrás: mechas soltas e compridas, de comprimentos diferentes, que descem ondulando até a água
+    // (com o descanso, quietas). Não é um bloco: cada mecha tem falhas.
+    [[-4, 3, 18], [-5, 4, 21], [-6, 6, 16], [-7, 9, 12], [4, 3, 19], [5, 4, 22], [6, 6, 15], [7, 10, 11]].forEach(([dx, y0, comp], i) => {
+      for (let k = 0; k < comp; k++) {
+        if ((k + i) % 7 === 6) continue;
+        const onda = calma ? 0 : (Math.floor((k + mexe * 2 + i) / 3) % 2) * (dx < 0 ? -1 : 1);
+        p(cx + dx + onda, T + y0 + k, 1, 1, k % 5 === 0 ? C.cabeloLuz : i % 2 ? C.cabelo : C.cabeloEsc);
+      }
+    });
+    // o vestido escuro, os ombros e o pescoço
+    p(cx - 4, T + 11, 9, 1, C.veste); p(cx - 5, T + 12, 11, A - T - 12, C.veste);
+    p(cx + 3, T + 12, 3, A - T - 12, C.vesteSombra); p(cx - 5, T + 12, 1, A - T - 12, C.vesteSombra);
+    p(cx - 1, T + 10, 3, 1, pele); p(cx, T + 11, 1, 1, pele);
+    // os braços: presos, puxados para as pedras; soltos, caídos, com as argolas e a corrente pendendo; com a fita, as
+    // mãos juntas na frente
+    if (pose === "presa") {
+      p(cx - 11, T + 13, 6, 2, pele); p(cx + 6, T + 13, 6, 2, pele); p(cx + 6, T + 14, 6, 1, sombra);
+      p(cx - 12, T + 13, 1, 2, C.ferroLuz); p(cx + 12, T + 13, 1, 2, C.ferroLuz);
+      for (let k = 0; k < 9; k++) { p(cx - 4 + k, T + 15 + Math.floor(k / 2), 1, 1, k % 2 ? C.ferro : C.ferroLuz); p(cx + 4 - k, T + 19 + Math.floor(k / 2), 1, 1, k % 2 ? C.ferroLuz : C.ferro); }
+    } else if (fita) {  // os braços dobrados, as mãos juntas na frente do peito, com a fita enrolada nos dedos
+      p(cx - 7, T + 12, 2, 5, pele); p(cx + 6, T + 12, 2, 5, sombra);
+      for (let k = 0; k < 4; k++) { p(cx - 6 + k, T + 17 + Math.floor(k / 2), 2, 1, pele); p(cx + 5 - k, T + 17 + Math.floor(k / 2), 2, 1, sombra); }
+      p(cx - 2, T + 18, 5, 2, pele);
+      p(cx - 2, T + 18, 5, 1, C.fita); p(cx - 1, T + 19, 3, 1, C.fitaSombra); p(cx + 1, T + 20, 1, 3, C.fita); p(cx + 2, T + 23, 1, 1, C.fitaSombra);
+    } else {
+      p(cx - 7, T + 12, 2, 10, pele); p(cx + 6, T + 12, 2, 10, sombra);
+      p(cx - 7, T + 22, 2, 1, sombra); p(cx + 6, T + 22, 2, 1, sombra);
+      if (pose === "solta") for (const x of [cx - 7, cx + 7]) { p(x, T + 21, 1, 1, C.ferroLuz); for (let k = 0; k < 4; k++) p(x, T + 23 + k, 1, 1, k % 2 ? C.ferroLuz : C.ferro); }
+    }
+    // a cabeça: o rosto azulado (no descanso, menos azul), a franja, as mechas que caem dos lados até o peito
+    p(cx - 2, T, 5, 1, C.cabelo); p(cx - 3, T + 1, 7, 1, C.cabelo); p(cx - 2, T + 1, 3, 1, C.cabeloLuz);
+    p(cx - 2, T + 2, 5, 7, pele); p(cx + 2, T + 2, 1, 7, sombra); p(cx - 1, T + 9, 3, 1, pele);
+    p(cx - 2, T + 2, 3, 1, C.cabelo); p(cx + 1, T + 2, 1, 1, C.cabeloEsc);
+    p(cx - 3, T + 2, 1, 12, C.cabelo); p(cx + 3, T + 2, 1, 13, C.cabeloEsc);
+    p(cx - 3, T + 14, 1, 3, C.cabeloEsc); p(cx + 3, T + 15, 1, 3, C.cabelo);
+    const olho = olhos === "abertos" ? C.olho : C.olhoFechado;
+    p(cx - 1, T + 4, 1, 1, olho); p(cx + 1, T + 4, 1, 1, olho);
+    p(cx, T + 7, 1, 1, sombra);  // a boca
+    // as mechas que boiam na água, em volta dela
+    if (!desce && !some) [[-10, 0], [-8, 1], [8, 0], [10, 1], [12, 0]].forEach(([dx, dy]) => px(cx + dx, A + dy, 2, 1, C.cabeloEsc));
+  }
+
+  function desenharFundo(c, W, b, est, quadro, destaque) {
+    const px = pincel(c), ox = b.ox, d = b.d, quieto = reduzido(), q = quieto ? 0 : quadro, A = FUNDO.agua, L = b.luz;
+    c.drawImage(b.canvas, 0, 0);
+    const cx = ox + FUNDO.cx, bx = ox + FUNDO.buraco, [pe, pd] = b.pedras, R = FUNDO.raio;
+    // a tocha de quem está ali, ao pé da escada: anéis quentes e o reflexo dela quebrado na água
+    if (L.tocha) {
+      aneis(px, W, ox + L.x, L.y, 90 + (quieto ? 0 : (q % 3) - 1), 0.75);
+      [[3, 7], [6, 5], [10, 4], [15, 3], [21, 2]].forEach(([dy, w], i) => px(ox + L.x - 3 + ((i * 3 + Math.floor(q / 4)) % 5) - 2, A + dy, w, 1, "rgba(255,170,90,0.2)"));
+    } else {  // o pouco de luz do buraco: um brilho fraco na água embaixo dele
+      for (let y = A + 2; y < A + 10; y += 2) px(bx - 2 + ((y + Math.floor(q / 4)) % 3), y, 3, 1, "rgba(200,170,120,0.12)");
+    }
+    const mostra = est.ilse !== "ausente";
+    const balanco = est.falha > 0 ? Math.sin(est.falha / 2) * 1.2 : 0;
+    // as correntes do buraco às pedras: esticadas (presas) ou com barriga, frouxas, caindo na água (soltas)
+    if (d.correntes === "presas") {
+      corrente(px, bx - 3, 4, pe, b.py - 1, 0, balanco); corrente(px, bx + 3, 4, pd, b.py - 1, 0, balanco);
+      if (mostra) {  // nos pulsos dela; desfazendo-se, as pontas caem para a água
+        const s = est.some || 0, xs = Math.round(12 - 9 * s), ys = Math.round(34 + (A - 34) * s);
+        corrente(px, cx - xs, ys, pe + 2, b.py); corrente(px, cx + xs, ys, pd - 2, b.py);
+      } else { corrente(px, pe + 2, b.py, cx - 3, A); corrente(px, pd - 2, b.py, cx + 3, A); }  // até a água entre as pedras
+    } else {
+      corrente(px, bx - 3, 4, pe + 6, A, 9, balanco); corrente(px, bx + 3, 4, pd - 6, A, 9, balanco);
+      corrente(px, pe + 4, b.py - R + 2, pe + 10, A, 3); corrente(px, pd - 4, b.py - R + 2, pd - 10, A, 3);
+    }
+    // Ilse entre as pedras (ou o lugar vazio dela)
+    if (mostra) {
+      const pose = est.ilse === "descanso" ? "calma" : est.ilse === "destruida" ? (d.correntes === "soltas" ? "solta" : "presa") : est.ilse;
+      ilseDesenho(px, cx, pose, est.olhos, est.fita, est.desce || 0, est.some || 0, q);
+    }
+    // a água: rodas devagar; com o canto, anéis que se abrem em volta dela; o canto que falha para tudo um instante
+    const canta = mostra && est.canto && est.olhos === "abertos" && !est.desce && !est.some;
+    if (!quieto && !est.falha && d.agua !== "clara") for (let i = 0; i < 5; i++) {  // clara, depois do descanso: parada
+      const x = (i * 71 + Math.floor(q / 5) * 7) % W, y = A + 3 + ((i * 5) % 14);
+      px(x, y, 3, 1, d.agua === "clara" ? "#2c4a50" : CORF.aguaLuz);
+    }
+    if (canta && !quieto) for (let r0 = 0; r0 < 2; r0++) {
+      const r = ((q / 3 + r0 * 8) % 16) + 6;
+      for (let a = 0; a < 24; a++) { const ang = a / 24 * Math.PI * 2, y = Math.round(A + 1 + Math.sin(ang) * r * 0.22); if (y > A) px(Math.round(cx + Math.cos(ang) * r), y, 1, 1, "rgba(120,160,165,0.35)"); }
+    }
+    if (est.falha > 0) {  // o canto falha: um anel só, saindo do lugar dela, e a água parada
+      const r = 22 - est.falha;
+      for (let a = 0; a < 30; a++) { const ang = a / 30 * Math.PI * 2, y = Math.round(A + 2 + Math.sin(ang) * r * 0.25); if (y > A) px(Math.round(cx + Math.cos(ang) * r), y, 1, 1, "rgba(150,190,195,0.5)"); }
+    }
+    if (est.desce > 0 && est.desce < 24) for (let a = 0; a < 20; a++) {  // afundando: a roda que ela deixa
+      const r = 4 + est.desce * 0.6, ang = a / 20 * Math.PI * 2;
+      px(Math.round(cx + Math.cos(ang) * r), Math.round(A + 1 + Math.sin(ang) * r * 0.2), 1, 1, "rgba(150,190,195,0.4)");
+    }
+    if (est.turvo > 0) {  // desfeita: bolhas subindo e a água turva que se espalha e assenta
+      const t = est.turvo / 30;
+      for (let y = A + 1; y < QH; y++) for (let x = cx - 40; x < cx + 40; x++) {
+        const dd = Math.hypot((x - cx) / 40, (y - A - 6) / 14);
+        if (dd < 1 && pontilha(x, y, Math.round((1 - dd) * 12 * t))) px(x, y, 1, 1, "rgba(70,56,36,0.55)");
+      }
+      for (let i = 0; i < 7; i++) { const y = A - 2 - ((Math.floor(q / 2) + i * 5) % 14); if (t > 0.3) px(cx - 6 + i * 2, y, 1, 1, "rgba(180,200,205,0.6)"); }
+    }
+    // os pontos acesos no mouse e no foco
+    const ouro = COR.ouro;
+    if (destaque === "escada") { px(ox + 5, 6, 30, 1, ouro); for (let k2 = 0; k2 < 11; k2++) px(ox + 8 + k2 * 5, 8 + k2 * 4, 9, 1, ouro); }
+    if (destaque === "lodo") { px(ox + 68, A + 3, 34, 1, ouro); px(ox + 68, A + 9, 34, 1, ouro); }
+  }
+
+  /** O momento de Ilse que o motor acabou de contar (celebrar "ilse"). Recarregando ou com movimento reduzido, o fim
+   *  dele de uma vez. A promessa resolve quando termina (o texto seguinte espera). */
+  function momentoIlse(dados, instantaneo) {
+    const a = atual && atual.d.cena === "fundo" ? atual : null;
+    if (!a) return Promise.resolve();
+    const est = a.est, m = dados && dados.momento, rapido = instantaneo || reduzido();
+    const fim = {
+      acorda: () => { est.olhos = "abertos"; est.canto = true; },
+      canto_falha: () => { est.falha = 0; est.canto = false; },
+      fita: () => { est.fita = true; },
+      afunda: () => { est.desce = 0; est.ilse = "ausente"; aguaClara(a); },
+      desfaz: () => { est.some = 0; est.turvo = 0; est.ilse = "ausente"; },
+    }[m];
+    if (!fim) return Promise.resolve();
+    if (rapido) { fim(); return Promise.resolve(); }
+    if (m === "fita") { fim(); return new Promise((r) => setTimeout(r, 400)); }
+    return new Promise((r) => { est.anim = { m, passo: 0, fim, resolver: r }; });
+  }
+  /** Depois do descanso, a água fica parada e clara: a base é refeita com a água clara (o mesmo objeto, para quem
+   *  desenha já pegar a nova). */
+  function aguaClara(a) {
+    a.d = Object.assign({}, a.d, { agua: "clara" });
+    Object.assign(a.b, baseFundo(QW, a.d));
+  }
+  /** Um passo dos momentos de Ilse (dez por segundo). */
+  function passoIlse(est) {
+    const an = est.anim;
+    if (!an) return;
+    an.passo++;
+    const acabar = () => { est.anim = null; est.desce = 0; est.some = 0; est.turvo = 0; est.falha = 0; an.fim(); an.resolver(); };
+    if (an.m === "acorda") { est.olhos = an.passo % 4 < 2 && an.passo < 6 ? "fechados" : "abertos"; if (an.passo >= 8) acabar(); }
+    else if (an.m === "canto_falha") { est.canto = false; est.falha = Math.max(1, 22 - an.passo); if (an.passo >= 20) acabar(); }
+    else if (an.m === "afunda") { est.desce = Math.min(24, Math.floor(an.passo / 1.5)); if (an.passo >= 40) acabar(); }
+    else if (an.m === "desfaz") {
+      est.some = Math.min(1, an.passo / 22); est.turvo = an.passo < 22 ? an.passo + 8 : Math.max(0, 30 - (an.passo - 22) * 2);
+      if (an.passo >= 37) acabar();
+    }
+  }
 
   // As sanguessugas da sala inquieta: [x, y, para que lado o corpo cresce]. No encosto submerso do banco da frente (o
   // de 42 de largura), na perna de um banco de trás onde ela entra na água e no pé de uma coluna.
@@ -773,7 +1008,9 @@
                 janela: { area: [184, 2, 24, 54], balao: [222, 14], foco: [198, 26] },
                 livro: { area: [114, 22, 26, 46], balao: [128, 20], foco: [128, 47] },
                 alcapao: { area: [210, 56, 42, 14], balao: [230, 55], foco: [230, 62] } } },
-    neutra: { base: baseNeutra, desenhar: desenharNeutra, pontos: {} },
+    fundo: { base: baseFundo, desenhar: desenharFundo,
+      pontos: { escada: { area: [4, 4, 62, 42], balao: [34, 10], foco: [40, 30] },
+                lodo: { area: [66, 46, 38, 14], balao: [85, 47], foco: [96, 52] } } },
   };
 
   /** O contorno de um ponto aceso, no estilo da arte: quatro cantos dourados com a sombra por fora, em volta da área. */
@@ -805,7 +1042,9 @@
     pendente = false;
     const def = CENAS[d.cena];
     if (!def) { limpar(); return; }
-    const b = def.base(QW, d), est = { correntes: d.correntes, agua: d.agua, soltando: false, passo: 0, onda: 0 };
+    const b = def.base(QW, d), est = { correntes: d.correntes, agua: d.agua, soltando: false, passo: 0, onda: 0,
+      ilse: d.ilse, olhos: d.momento === "descida" ? "fechados" : "abertos", canto: d.momento === "descida" ? false : !!d.ilse && d.ilse !== "ausente" && d.momento === "visita",
+      fita: false, desce: 0, some: 0, turvo: 0, falha: 0, anim: null };
     atual = { d, def, b, est };
     document.getElementById("cena").classList.add("com-ambiente");
     if (typeof recolherArte === "function") recolherArte(false);
@@ -818,7 +1057,7 @@
         ctx.restore();
         acesos(destaque).forEach((id) => cantos(ctx, def.pontos[id].area));
       },
-      andar: () => passo(est),
+      andar: () => { passo(est); passoIlse(est); },
     });
     montarPontos();
   }
@@ -998,7 +1237,7 @@
   }
 
   Telas.registrar("cena", () => "", {});
-  Object.assign(Telas, { soltarCorrentes });
+  Object.assign(Telas, { soltarCorrentes, momentoIlse });
   window.Cenas = { mostrar, limpar, virou, conferirPendente, aoCombate, aoMenu, posicionar, atual: () => atual,
     alternarDestaque, destacando };
 })();

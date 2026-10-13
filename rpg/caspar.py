@@ -360,7 +360,7 @@ def _recolher_lodo(g, mid):
     (antes de Ilse, dentro da descida, missoes._fundo; depois dela, na página do fundo). Sem tempo, tocha nem sorteio."""
     m = registro(g)
     g.ui.cena("O Fundo da Capela", g.contexto_cena(), "evento")
-    g.ui.painel("cena", _missoes().cena_neutra(g, "fundo"))
+    g.ui.painel("cena", _missoes().cena_fundo(g))  # Ilse continua na água (antes dela) ou o fundo vazio (depois)
     g.narrar("Você se abaixa na água do fundo e enche um frasco com o lodo escuro e fino que cobre as pedras, o mesmo "
              "que a Fonte Nova trazia.")
     if "lodo" not in m["preparos"]:

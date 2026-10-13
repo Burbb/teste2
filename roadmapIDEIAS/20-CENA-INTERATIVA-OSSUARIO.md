@@ -320,7 +320,7 @@ Terceira entrega do mesmo pedido. A capela passa a ter **onde o personagem está
 | Salão | o salão quieto, depois de vencido (1.76.0; inquieto só na cena da luta) | **Brecha do muro** (sair), **Sacristia** (a porta: a ação ou a passagem) |
 | Sacristia | **fundo neutro** até a 1.82.1; desenhada na 1.83.0 (abaixo) | nenhum até a 1.82.1; porta, janela, livro e alçapão na 1.83.0 |
 | Ossuário | o ossuário (1.72.0; luz na 1.78.0) | **Escada do alçapão** (subir), **Sarilho** (a ação), **Descida ao fundo** (a ação ou a passagem) |
-| Fundo | **fundo neutro** (sem arte própria) | nenhum |
+| Fundo | **fundo neutro** até a 1.83.0; desenhado na 1.84.0 (abaixo) | nenhum até a 1.83.0; escada e lodo na 1.84.0 |
 
 As cenas de texto usam a mesma regra: a luta da sacristia, a descida ao fundo, a guardiã, o desfecho e o lodo de
 Caspar trazem o fundo neutro (antes, as ruínas genéricas), e nenhuma sala aparece no lugar de outra.
@@ -365,7 +365,7 @@ Fumaça completa (`cenarioCapelaSalas` novo). Testes novos em `test_cenas_capela
 4. `$env:SALA="sacristia"` com `$env:ETAPA="fundo"`: começar já na sacristia; salve, saia e carregue.
 5. `$env:DESFECHO="descansada"`: a guardiã resolvida; desça até o fundo (fundo neutro) e suba.
 
-## Planejado (não feito): a sacristia e o fundo com Ilse
+## Planejado: a sacristia e o fundo com Ilse (feitos na 1.83.0 e na 1.84.0, no fim deste documento)
 
 - **Sacristia:** acima da água, a lanterna, as prateleiras reviradas, o buraco na parede onde estava o livro, o baú
   embaixo do pano (aberto ou não, pelo estado), o alçapão para o ossuário e a escada de mão na janela alta. Pontos:
@@ -586,3 +586,85 @@ livro. Nomes no mouse e no foco; F4 mostra todos. Na luta e dentro das cenas, ne
 2. Depois do Continuar, a página: o pano no chão. Passe o mouse na porta, na janela, no livro e no alçapão; F4 mostra
    todos. A janela e o livro só aproximam (Afastar volta).
 3. `$env:ETAPA="ossuario"; $env:SALA="sacristia"; $env:PERIODO="3"`: a sacristia à noite, legível.
+
+---
+
+# O fundo alagado com Ilse (1.84.0)
+
+Segunda entrega do pedido de 13/10/2026 (a sacristia foi a primeira). Regras, custos, tempo, encontros, recompensas,
+equilíbrio e história iguais: só a arte do fundo, os estados que o motor manda e os momentos de Ilse.
+
+## O que a sala mostra
+
+Um poço baixo e escuro, na paleta das outras salas, mais frio (`baseFundo`, `desenharFundo` em `telas/cenas.js`):
+
+- **A escada de pedra** do ossuário, no alto à esquerda, descendo degrau por degrau até sumir na água.
+- **A água pela cintura**, escura, com rodas devagar e reflexos; o lodo escuro em manchas na beira (onde se recolhe).
+- **As duas pedras de moinho** no meio, com o olho e os sulcos, saindo da água.
+- **As correntes** descendo do buraco redondo do ossuário no teto (o mesmo buraco do sarilho, visto de baixo, com uma
+  borda fraca de luz): **presas**, esticadas até as pedras e delas aos pulsos de Ilse, de braços abertos; **soltas**
+  (o preparo `corpo_solto`), frouxas, com barriga, caindo na água, e um pedaço pendendo de cada pulso. Nenhum segundo
+  sarilho.
+- **Ilse** entre as pedras: silhueta de mulher com a água pela cintura, pele azulada, cabelo de algas caindo pelos
+  ombros, o vestido escuro molhado. Sem brilho em volta, sem portal, sem Fenda.
+
+## Os estados (o motor manda: `missoes.cena_fundo`)
+
+| Momento | Quando | O que se vê |
+|---|---|---|
+| `descida` | "Descer ao fundo alagado" | Ilse de olhos fechados, presa ou solta pelas correntes; o momento `acorda` abre os olhos quando o texto chega em "Ela abre os olhos" |
+| `visita` | a coleta do lodo antes dela; a página do fundo | antes do desfecho, Ilse acordada, cantando baixo (anéis na água); depois, o fundo sem ela |
+| `luta` | logo antes da luta | ela é a carta: a arte fica sem ela (as correntes presas descem até a água entre as pedras), com a tocha se a luta a acendeu |
+| `descanso` | a cena "Ilse" depois do rito | ela calma; `fita`: os braços dobrados, a fita entre os dedos; `afunda`: ela desce devagar e a água fica parada e clara |
+| `destruida` | a cena "A Guardiã Destruída" | `desfaz`: ela se desfaz em bolhas e a água turva um instante, assentando; as pontas das correntes caem na água |
+
+- `ilse`: `presa`, `solta`, `ausente` (na luta e depois do desfecho), `descanso`, `destruida`. `correntes`: `presas`
+  ou `soltas`. `agua`: `clara` só na página depois do descanso; senão, escura (a turbidez da destruição é só o instante
+  que o texto conta). `luz`: a tocha de quem está ali (`Jogo.luz_na_sala`, como na sacristia); sem ela, só o pouco que
+  desce do buraco do ossuário, com a escada, as pedras e a beira com borda clara para a leitura vir antes do clima.
+- **Os momentos de Ilse** são a celebração `ilse` (`missoes._ilse`), mandada logo depois do texto que os conta e só na
+  tela gráfica: `acorda` (na descida), `canto_falha` (no momento do rito, na arena: um anel só na água, que para de se
+  mexer; a escolha continua sendo o menu), `fita` e `afunda` (no descanso), `desfaz` (na destruição). Só mostram: o
+  desfecho, o Sigilo, a veste e o rito são do motor, antes ou depois; nada se deduz da vida da carta. Recarregando ou
+  com movimento reduzido, o fim do momento de uma vez (`Telas.momentoIlse`).
+- Recolher o lodo antes dela não começa a luta nem muda a pose: a página da coleta é `visita` com Ilse na água.
+
+## Os pontos (só na página do lugar)
+
+| Ponto | Faz |
+|---|---|
+| **Escada** | "Subir ao ossuário" (passagem, sem custo) |
+| **Lodo** | "Recolher uma amostra do lodo" (a ação de Caspar) quando vale; senão, só diz o que se vê |
+
+Nomes no mouse e no foco; F4 mostra todos. Na luta e dentro das cenas, nenhum ponto ativo. Nada se pega no fundo
+depois do desfecho.
+
+## Conferido
+
+- Testes: `TestFundo` (destruir com ela presa; descanso com ela solta; desistir do rito; cada momento logo depois do
+  seu texto; a tela de texto sem momentos e com o mesmo jogo; a luta sem tocha sem luz; voltar por enquanto) e os do
+  lodo ajustados (a coleta no fundo desenhado). Gabarito idêntico. Fumaça completa, com o fundo desenhado na descida,
+  Ilse presa e acordada depois da coleta, e, carregado o save depois do descanso, o fundo sem ela, a água clara,
+  nada animando de novo e os pontos escada e lodo.
+- Na tela: a descida (olhos fechados e depois abertos, o canto), a coleta sem luta, a luta com a arena no fundo e Ilse
+  só na carta, o rito (o canto que falha), o descanso (a fita, afundar, a água clara), a destruição (o desfazer, a
+  turbidez, as correntes caindo), a desistência do rito, a página depois de cada desfecho (F4, escada, lodo), a
+  derrota do guerreiro (o resgate no Vau); guerreiro, mago e arqueiro; 1500×950, 1500×700, 1280×720 e 1280×600; de
+  dia e à noite, com e sem tocha; movimento reduzido; recarregar a página na descida, no descanso e na página depois.
+
+## Limitações
+
+- Recarregar a página no meio de uma cena mostra o fim dos momentos que o motor já mandou, mesmo que o texto ainda não
+  tenha chegado neles (o texto também volta inteiro, como nas outras celebrações).
+- O canto que falha acontece na arena, onde Ilse é a carta: a reação é só na água.
+- Voltar por enquanto e descer de novo repete o texto da descida; os olhos abrem de novo junto com ele.
+- Jean ainda não viu: teste humano pendente.
+
+## Como Jean testa (1.84.0)
+
+1. `$env:ETAPA="fundo"; python -m tests.navegador.cenarios capela`: desça ao fundo; Ilse presa, de olhos fechados,
+   abre os olhos com o texto. Recolha o lodo (ela fica), volte por enquanto, desça e lute para destruí-la: a arena com
+   o fundo, depois ela se desfaz; a página sem ela, com a escada e o lodo.
+2. `$env:PREPARO="pronto"; $env:NIVEL="8"` (com `ETAPA=fundo`): as correntes soltas; chame Ilse pelo nome; no momento
+   do rito, a água para; diga o nome: a fita, ela afunda, a água clara. Salve, saia e carregue: o fundo sem ela.
+3. `$env:PERIODO="3"; $env:TOCHAS="0"`: o fundo no escuro, legível.

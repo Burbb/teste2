@@ -846,12 +846,14 @@ async function cenarioCapelaSalas(browser) {
     const t0 = await tempo();
     await page.click('.ci-ponto[data-ponto="descida"]');
     await page.waitForSelector(`${MENU}:has-text("Recolher uma amostra do lodo")`, { timeout: 20000 });
-    conferir((await sala()) === "neutra" && /Fundo da Capela/.test(await page.textContent("#cena-cab .cena-titulo")),
-      "a descida: o fundo (neutro) com Ilse na água, e a amostra entre as escolhas");
+    const ilse = () => page.evaluate(() => { const a = Cenas.atual(); return a && a.d.cena === "fundo" ? [a.est.ilse, a.d.correntes, a.est.olhos].join("/") : "-"; });
+    conferir((await sala()) === "fundo:escura" && /Fundo da Capela/.test(await page.textContent("#cena-cab .cena-titulo"))
+      && /^presa\/presas\//.test(await ilse()), "a descida: o fundo desenhado, Ilse presa entre as pedras, e a amostra entre as escolhas");
     await page.click(`${MENU}:has-text("Recolher uma amostra do lodo")`);
     await page.waitForSelector(`${MENU}:has-text("Voltar por enquanto")`, { timeout: 20000 });
     conferir(!(await page.evaluate(() => document.body.classList.contains("em-combate"))) && !(await page.$(`${MENU}:has-text("Recolher uma amostra")`))
-      && /frasco/.test(await page.textContent("#texto")), "recolhida a amostra, Ilse continua na água: sem luta, e a escolha some");
+      && /frasco/.test(await page.textContent("#texto")) && (await ilse()) === "presa/presas/abertos",
+      "recolhida a amostra, Ilse continua na água, acordada e presa: sem luta, e a escolha some");
     await page.click(`${MENU}:has-text("Voltar por enquanto")`);
     await (await page.waitForSelector("#prompt .continuar", { timeout: 20000 })).click();
     await page.waitForSelector(`${MENU}:has-text("Subir à sacristia")`, { timeout: 20000 });
@@ -965,6 +967,8 @@ async function cenarioGuardia(browser) {
     m = await missao();
     conferir(m.desfecho === "descansada" && !(await page.$(`${MENU}:has-text("Descer ao fundo")`)) && (await page.evaluate(() => estado.heroi.sigilos)) === 1,
       "carregado: ela segue descansada, sem descida nem Sigilo repetido");
+    const fundo = await page.evaluate(() => { const a = Cenas.atual(); return a && [a.d.cena, a.est.ilse, a.d.agua, !!a.est.anim, [...document.querySelectorAll("#pontos-cena .ci-ponto")].map((p) => p.dataset.ponto).join(",")].join("/"); });
+    conferir(fundo === "fundo/ausente/clara/false/escada,lodo", `carregado: o fundo sem Ilse, a água clara, nada animando de novo, a escada e o lodo (${fundo})`);
   } finally {
     conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
     await page.close();

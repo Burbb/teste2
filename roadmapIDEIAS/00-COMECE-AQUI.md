@@ -1793,3 +1793,19 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
 - **Verificado:** testes (`TestSacristia` novo), gabarito idêntico, pyflakes, fumaça completa; telas nas três classes,
   1500 e 1280 px com altura reduzida, movimento reduzido, fuga, derrota, dia e noite.
 - **Falta:** Jean conferir. Próxima entrega: o fundo alagado com Ilse. A E9 segue aberta.
+
+### 13/10/2026 — O fundo alagado com Ilse (1.84.0)
+
+- **Pedido de Jean:** a segunda arte da capela, separada da sacristia, sem mudar regra, custo, tempo, encontro,
+  recompensa, equilíbrio ou história.
+- **Feito:** a escada de pedra terminando na água, a água pela cintura, as duas pedras de moinho, as correntes do
+  buraco do ossuário (presas, esticadas até os pulsos dela; soltas, frouxas, pelo preparo) e Ilse entre as pedras. O
+  motor manda o momento (`missoes.cena_fundo`: descida, visita, luta, descanso, destruída) e os momentos dela pela
+  celebração `ilse`, depois do texto que os conta: abrir os olhos e cantar, o canto que falha no rito, a fita, afundar
+  com a água clara, desfazer-se com a água turva um instante. Na luta, ela é só a carta. A página do fundo tem a escada
+  (subir ao ossuário) e o lodo (a ação de Caspar); depois do desfecho, o fundo sem ela. O fundo neutro saiu.
+  Detalhe em [20](20-CENA-INTERATIVA-OSSUARIO.md).
+- **Verificado:** testes (`TestFundo` novo), gabarito idêntico, pyflakes, fumaça completa; telas nas três classes,
+  1500 e 1280 px com altura reduzida, movimento reduzido, dia e noite, com e sem tocha, destruição, descanso,
+  desistência do rito, coleta do lodo sem luta, derrota, recarregar e carregar o save.
+- **Falta:** Jean conferir as duas artes da capela. Nada de outras regiões nem dos ataques em área; a E9 segue aberta.
