@@ -568,7 +568,9 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
             opcoes.append((rotulo, f"cacar:{c['id']}", {"cacar": c["id"]}))
         opcoes += missoes.passagens(self)  # na capela: as salas vizinhas já vencidas (só a vista muda)
         opcoes.append(("Explorar a região" + (" (à noite é mais perigoso)" if self.noite else ""), "explorar"))
-        opcoes.append(("Acampar e descansar até o amanhecer", "acampar"))
+        # Dentro da capela, acampar é sair primeiro (sair_para_acampar): a fogueira nunca fica dentro de uma sala.
+        dentro = missoes.sala_atual(self) not in (None, "exterior")
+        opcoes.append(("Sair e acampar" if dentro else "Acampar e descansar até o amanhecer", "acampar"))
         abertura.motivo_explorar(self, "morel")  # com Morel junto, ele conta onde está o dinheiro (uma vez)
         if self.contratos_aqui():
             abertura.visto(self, "K2")  # chegou ao lugar do contrato: o quadro que mostrava onde ele fica não volta
@@ -592,7 +594,7 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
             missoes.saiu_da_capela(self)  # explorar e acampar são lá fora
             self.explorar()
         elif op == "acampar":
-            missoes.saiu_da_capela(self)
+            missoes.sair_para_acampar(self)
             self.acampar()
         else:
             self.executar_comum(op)

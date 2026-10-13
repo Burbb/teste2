@@ -254,6 +254,12 @@
       faixa("Exausto", d.texto, "lua", "sombria");
       return new Promise((r) => setTimeout(r, 2300));
     }
+    if (m.tipo === "retirada") {  // a saída da capela antes de acampar (a arte do topo já passou ao lado de fora)
+      if (instantaneo) return Promise.resolve();
+      App.som(d.exausto ? "exausto" : "retirada");  // os passos que se afastam
+      faixa(d.exausto ? "Exausto" : "Saindo da capela", d.texto, d.exausto ? "lua" : "fuga", "sombria");
+      return new Promise((r) => setTimeout(r, 2600));
+    }
     if (m.tipo === "comitiva") {
       if (instantaneo) return Promise.resolve();
       App.som("nivel");
@@ -396,6 +402,7 @@
     if (m.tipo === "atributo") return `▸ +${d.valor} ${d.nome} permanente`;
     if (m.tipo === "chegada") return `▸ ${d.primeira ? "Descoberto" : "Chegada"}: ${d.nome}`;
     if (m.tipo === "exausto") return `▸ Exausto: ${d.texto}`;
+    if (m.tipo === "retirada") return `▸ ${d.exausto ? "Exausto: " : ""}${d.texto}`;
     if (m.tipo === "derrota") return d.morte ? "▸ Você morreu" : "▸ Você caiu";
     if (m.tipo === "mestre") return `▸ Mestre caçador: ${d.plural} (+10% de dano contra eles)`;
     if (m.tipo === "equipou" && d.achado) return `▸ Vestiu: ${d.item.nome}`;

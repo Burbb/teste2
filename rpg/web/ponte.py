@@ -178,7 +178,7 @@ class WebUI(InterfaceGrafica, UI):
 
     # Faixas que passam sozinhas pela tela (o "Exausto"): não são texto para ler, então não pedem um Continuar antes da
     # página seguinte (antes, a fogueira só abria depois de um segundo Continuar, sem nada novo na página).
-    FAIXAS_DE_PASSAGEM = ("exausto",)
+    FAIXAS_DE_PASSAGEM = ("exausto", "retirada")
 
     def celebrar(self, tipo, dados):
         if tipo == "derrota":
@@ -191,7 +191,10 @@ class WebUI(InterfaceGrafica, UI):
 
     def painel(self, tipo, dados):
         self.enviar_estado()
+        novo = self.novo_desde_escolha
         self._enviar("painel", tipo=tipo, dados=dados)
+        if tipo == "cena":  # a arte do topo (a sala da capela) não é texto para ler: não pede Continuar depois
+            self.novo_desde_escolha = novo
         return True
 
     def arvore_talentos(self, dados):

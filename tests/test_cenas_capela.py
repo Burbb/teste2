@@ -313,5 +313,67 @@ class TestLodoNoFundo(unittest.TestCase):
         self.assertNotIn("Recolher uma amostra do lodo", h.ui.ofertas[-1])  # quem já tem não recolhe de novo
 
 
+class TestSairParaAcampar(unittest.TestCase):
+    """A fogueira é lá fora: a exaustão e o "Sair e acampar" usam a mesma saída, que só conta o caminho (1.81.0)."""
+
+    def depois_de_acampar(self, sala, exausto):
+        g = na_capela(etapa="fundo")
+        g.rng.seed(7)
+        g.ui.escolher = lambda pergunta, opcoes: 0  # um evento da noite: a primeira opção, igual nos dois
+        g.combate = lambda *a, **k: "vitoria"  # e uma luta da noite, vencida (o que importa aqui é a saída)
+        if sala != "ossuario":
+            for s in {"sacristia": ["sacristia"], "salao": ["sacristia", "salao"],
+                      "exterior": ["sacristia", "salao", "exterior"]}[sala]:
+                missoes.ir_na_capela(g, s)
+        if exausto:
+            g.periodo = 4
+            g.exausto()
+        else:
+            missoes.sair_para_acampar(g)
+            g.acampar()
+        return g
+
+    def conta(self, g):
+        return (g.dia, g.periodo, g.j.hp, g.j.rec, g.j.provisoes, dict(g.j.consumiveis), g.rng.getstate())
+
+    def test_a_frase_segue_a_sala_e_o_amanhecer_e_fora(self):
+        frases = {}
+        for sala in ("salao", "sacristia", "ossuario"):
+            g = self.depois_de_acampar(sala, exausto=True)
+            self.assertEqual(missoes.sala_atual(g), "exterior")
+            frases[sala] = next(d for d in g.ui.ditos if "brecha do muro" in d)
+        self.assertEqual(frases["salao"], "Você está exausto. Volta pelo caminho já aberto e sai pela brecha do muro "
+                                          "para descansar, perto da capela.")
+        self.assertIn("atravessa o salão alagado", frases["sacristia"])
+        self.assertIn("sobe pelo alçapão", frases["ossuario"])
+        g = self.depois_de_acampar("exterior", exausto=True)  # já fora: a frase de sempre, sem "sai"
+        self.assertFalse(any("brecha do muro" in d for d in g.ui.ditos))
+        self.assertIn("Você está exausto demais para continuar. É preciso acampar.", g.ui.ditos)
+
+    def test_sair_nao_custa_nada_alem_do_acampamento(self):
+        """Mesmo sorteio, mesmo descanso, mesmas provisões e tochas que acampar do lado de fora."""
+        for exausto in (True, False):
+            dentro, fora = self.depois_de_acampar("ossuario", exausto), self.depois_de_acampar("exterior", exausto)
+            self.assertEqual(self.conta(dentro), self.conta(fora))
+
+    def test_o_rotulo_e_a_saida_manual(self):
+        g = na_capela(etapa="fundo", ui=Roteiro(["Sair e acampar"] + ["Dormir"] * 5))
+        g.menu_selvagem()
+        self.assertIn("Sair e acampar", g.ui.ofertas[0])
+        self.assertTrue(any(d.startswith("Você volta pelo caminho já aberto: sobe pelo alçapão") for d in g.ui.ditos))
+        self.assertEqual(missoes.sala_atual(g), "exterior")
+        self.assertEqual(missoes.registro(g, MID)["etapa"], "fundo")  # a missão não anda nem volta
+        g = na_capela(etapa="capela", ui=Roteiro(["Acampar e descansar"] + ["Dormir"] * 5))
+        g.menu_selvagem()  # do lado de fora, o nome de sempre
+        self.assertIn("Acampar e descansar até o amanhecer", g.ui.ofertas[0])
+
+    def test_voltar_depois_pelas_salas_abertas(self):
+        g = self.depois_de_acampar("ossuario", exausto=True)
+        lutas(g)  # nenhuma luta pode acontecer na volta
+        for sala in ("salao", "sacristia", "ossuario"):
+            self.assertTrue(missoes.ir_na_capela(g, sala))
+        self.assertEqual([o[1][2] for o in opcoes_febre(g)], ["correntes", "fundo"])
+
+
 if __name__ == "__main__":
     unittest.main()

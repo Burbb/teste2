@@ -184,8 +184,11 @@ class Tempo:
             self.novo_dia(descanso=1)
             self.pausar()
         else:
-            self.avisar_exausto("Não dá para seguir: é preciso acampar.",
-                                "Você está exausto demais para continuar. É preciso acampar.")
+            # Dentro da capela, a mesma saída do "Sair e acampar" diz por onde se sai; fora dela, a faixa de sempre.
+            from .. import missoes
+            if not missoes.sair_para_acampar(self, exausto=True):
+                self.avisar_exausto("Não dá para seguir: é preciso acampar.",
+                                    "Você está exausto demais para continuar. É preciso acampar.")
             self.acampar()
 
     def avisar_exausto(self, curto, frase):

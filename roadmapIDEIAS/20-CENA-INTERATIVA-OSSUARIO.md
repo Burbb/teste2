@@ -445,3 +445,46 @@ destoaria da vila clara lá fora. Não foi redesenhada.
     entregue de novo.
 - **Conferido:** testes (`TestLodoNoFundo`), fumaça (`cenarioCapelaSalas`: a descida, a coleta sem luta, a volta ao
   ossuário sem tempo nem gasto, a escolha que some); a tela a 1280×700 com o mago.
+
+## Sair da capela para acampar (1.81.0)
+
+- **O problema (reproduzido):** exausto dentro da capela, o personagem caía na fogueira (que é lá fora) sem nada
+  dizer que saiu; e a sala registrada continuava a de dentro (amanhecia no ossuário). O "Acampar" do menu tirava o
+  personagem da capela em silêncio.
+- **Feito:** uma saída só, `missoes.sair_para_acampar`, usada pelo menu e pela exaustão (`tempo.exausto`):
+  - dentro da capela, a opção do menu se chama **"Sair e acampar"** (do lado de fora, o "Acampar e descansar até o
+    amanhecer" de sempre);
+  - antes da fogueira, a arte do topo passa à capela por fora e uma faixa conta o caminho de verdade, pela sala em que
+    se está: "Você volta pelo caminho já aberto: sobe pelo alçapão, atravessa o salão alagado e sai pela brecha do
+    muro para acampar, perto da capela." Exausto, a faixa é "Exausto", com "...para descansar". No terminal, a frase
+    inteira ("Você está exausto. Volta pelo caminho já aberto...");
+  - já do lado de fora, a exaustão segue com a faixa de sempre ("Não dá para seguir: é preciso acampar.");
+  - a faixa passa sozinha (como a do "Exausto"): sem Continuar antes da fogueira; a arte da capela também não pede
+    leitura (`ponte.painel`);
+  - a sala passa a ser o exterior: o acampamento é lá fora, o amanhecer também, e a volta é pelas passagens abertas,
+    sem encontro nem custo.
+- **Iguais:** a passagem do tempo de cada ação, o descanso, o clima, as provisões, os eventos do acampamento e a
+  comitiva. A saída não gasta período nem tocha e não tem luta, teste nem sorteio (o teste compara, com o mesmo
+  sorteio, acampar saindo do ossuário e acampar do lado de fora: tudo igual). A exaustão continua no começo da volta
+  seguinte do jogo, depois que a ação, a luta e as recompensas terminaram. Nenhuma fogueira dentro das salas.
+- **Conferido também (os ajustes juntos), a 1280×700:** descer ao fundo, recolher a amostra, voltar ao ossuário, subir
+  à sacristia, salvar, sair e carregar: a sacristia de volta, a tocha e o tempo iguais, e na nova descida a amostra não
+  é oferecida de novo (o frasco ficou no save).
+- **Conferido:** testes (`TestSairParaAcampar`), fumaça (`cenarioCapelaAcampar`), e na tela: a exaustão depois da luta
+  do ossuário à noite (mago, 1500×950: a vitória, o Continuar do resultado, a faixa "Exausto" com a capela por fora
+  no topo, a fogueira, o amanhecer); a saída manual do ossuário a 1280×700 e com movimento reduzido.
+
+## Limitações destes ajustes
+
+- "Explorar a região" de dentro da capela ainda leva para fora sem contar a saída (não fazia parte do pedido).
+- A faixa conta a saída por uns dois segundos e meio; quem quiser reler acha a frase no Histórico (H).
+
+## Como Jean testa (ajustes da 1.79.0)
+
+1. `$env:ETAPA="capela"; python -m tests.navegador.cenarios capela`: entre no salão e repare nas rodas da água
+   passando atrás dos bancos, também durante a luta.
+2. `$env:ETAPA="fundo"`: desça ao fundo, recolha a amostra (Ilse não levanta), volte por enquanto e desça de novo.
+   `$env:CLASSE="mago"` para a análise. `$env:DESFECHO="descansada"`: a amostra na página do fundo.
+3. `$env:ETAPA="fundo"; $env:PERIODO="1"`: "Sair e acampar" no ossuário; a faixa, a fogueira, o amanhecer fora.
+4. `$env:ETAPA="ossuario"; $env:CLASSE="mago"; $env:PERIODO="3"`: desça ao ossuário e vença: a exaustão vem depois
+   do resultado, com a saída contada.

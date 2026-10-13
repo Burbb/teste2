@@ -616,6 +616,35 @@ def saiu_da_capela(g):
     _por_na_sala(g, "exterior")
 
 
+# O caminho de volta de cada sala até a brecha do muro (as passagens ao contrário), para a saída antes de acampar.
+CAMINHO_PARA_FORA = {
+    "salao": "",
+    "sacristia": ", atravessa o salão alagado",
+    "ossuario": ": sobe pelo alçapão, atravessa o salão alagado",
+    "fundo": ": sobe ao ossuário, passa pelo alçapão, atravessa o salão alagado",
+}
+
+
+def sair_para_acampar(g, exausto=False):
+    """A saída da capela antes do acampamento: a mesma para "Sair e acampar" e para a exaustão. Só o deslocamento,
+    pelo caminho já aberto (sem tempo, tocha, luta, teste nem sorteio); a fogueira é lá fora, perto da capela, e o
+    amanhecer também. Na tela gráfica, a arte do topo passa ao exterior junto com a faixa que conta a saída. Do lado
+    de fora (ou longe da capela), não há o que sair: devolve False e o acampamento segue como sempre."""
+    sala = sala_atual(g)
+    if sala in (None, "exterior"):
+        return False
+    corpo = (f"volta pelo caminho já aberto{CAMINHO_PARA_FORA[sala]} e sai pela brecha do muro para "
+             f"{'descansar' if exausto else 'acampar'}, perto da capela.")
+    _por_na_sala(g, "exterior")
+    if g.ui.conquistas_na_tela:
+        g.ui.painel("cena", cena_exterior(g))
+        g.ui.celebrar("retirada", {"texto": (corpo[0].upper() + corpo[1:]) if exausto else "Você " + corpo,
+                                   "exausto": exausto})
+    else:
+        g.dizer(("Você está exausto. " + corpo[0].upper() + corpo[1:]) if exausto else "Você " + corpo, "cinza")
+    return True
+
+
 def passagens(g):
     """As passagens que valem agora, como opções do menu do lugar (a mesma escolha que os pontos da cena fazem)."""
     s = sala_atual(g)

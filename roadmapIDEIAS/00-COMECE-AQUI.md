@@ -1694,3 +1694,15 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
 - **Verificado:** testes (`TestNavegacao` novo), gabarito idêntico, pyflakes, fumaça completa (`cenarioCapelaSalas`
   novo), telas a 1500 e 1280 px com altura reduzida, três classes, movimento reduzido, salvar e carregar, derrota.
 - **Falta:** Jean conferir; a arte da sacristia e do fundo (planejada). A E9 segue aberta.
+
+### 13/10/2026 — Ajustes sobre a capela (1.79.1 a 1.81.0)
+
+- **Pedido de Jean:** água do salão atrás dos bancos; a luz do ossuário como referência; o lodo recolhido no fundo;
+  a saída da capela antes de acampar (manual e por exaustão).
+- **Feito:** a camada dos bancos acima da água (1.79.1); a referência de iluminação no documento 20, com o mercado
+  mantido como está (sem código); o lodo só no fundo, dentro da descida antes de Ilse e na página do fundo depois
+  dela, sem começar a luta (1.80.0); "Sair e acampar" e a exaustão pela mesma saída, com a faixa que conta o caminho
+  e a capela por fora no topo, amanhecendo do lado de fora (1.81.0). Detalhe em [20](20-CENA-INTERATIVA-OSSUARIO.md).
+- **Verificado:** testes (`TestLodoNoFundo`, `TestSairParaAcampar` novos), gabarito idêntico, pyflakes, fumaça
+  completa (`cenarioCapelaAcampar` novo), telas a 1500 e 1280 px, movimento reduzido.
+- **Falta:** Jean conferir. A E9 segue aberta.

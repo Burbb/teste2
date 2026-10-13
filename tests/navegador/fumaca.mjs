@@ -850,6 +850,52 @@ async function cenarioCapelaSalas(browser) {
   }
 }
 
+async function cenarioCapelaAcampar(browser) {
+  console.log("cenário: sair da capela para acampar (a saída contada antes da fogueira, o amanhecer do lado de fora)");
+  const { proc, url } = await subir("capela", { ETAPA: "fundo", PERIODO: "1" });
+  const { page, erros } = await abrir(browser, url);
+  const MENU = "#prompt .escolhas:not(.escolhido) .escolha";
+  try {
+    await page.waitForSelector(`${MENU}:has-text("Sair e acampar")`, { timeout: 20000 });
+    conferir(!(await page.$(`${MENU}:has-text("Acampar e descansar")`)), "dentro da capela, a opção é \"Sair e acampar\"");
+    await page.evaluate(() => {  // a faixa passa sozinha: guarda o texto dela e a arte do topo naquele instante
+      window.__saida = null;
+      new MutationObserver((ms) => ms.forEach((m) => m.addedNodes.forEach((n) => {
+        if (n.classList && n.classList.contains("faixa-festa") && !window.__saida)
+          window.__saida = { texto: n.textContent, arte: document.querySelector("#pontos-cena").dataset.cena, continuar: !!document.querySelector("#prompt .continuar") };
+      }))).observe(document.body, { childList: true });
+    });
+    await page.click(`${MENU}:has-text("Sair e acampar")`);
+    await page.waitForSelector(".dormir-barraca", { timeout: 20000 });
+    const saida = await page.evaluate(() => window.__saida);
+    conferir(!!saida && /Saindo da capela/.test(saida.texto) && /sobe pelo alçapão/.test(saida.texto) && /brecha do muro/.test(saida.texto)
+      && saida.arte === "exterior" && !saida.continuar,
+      "antes da fogueira, a faixa conta a saída pelo caminho da sala (o ossuário), com a capela por fora no topo e sem Continuar");
+    await page.click(".dormir-barraca");
+    for (let k = 0; k < 400 && !(await page.$(`${MENU}:has-text("Explorar")`)); k++) {  // a noite: um evento pode vir
+      const c = await page.$("#prompt .continuar"); if (c) await c.click().catch(() => {});
+      if (await page.evaluate(() => document.body.classList.contains("em-combate"))) {
+        const bt = await page.$('#roda .roda-botao[data-slot="atacar"]'); if (bt) await bt.click().catch(() => {});
+        const alvo = await page.$(".carta.alvejavel"); if (alvo) await alvo.click().catch(() => {});
+      } else if (!c) {  // a escolha de um evento da noite; o menu do lugar (com Explorar) é o fim, nunca se clica nele
+        const ops = await page.$$(MENU), textos = await Promise.all(ops.map((o) => o.innerText().catch(() => "")));
+        if (textos.some((t) => /Explorar/.test(t))) break;
+        if (ops.length) await ops[0].click().catch(() => {});
+      }
+      const f = await page.$(".festa .continuar, .festa-espolio .continuar"); if (f) { await page.waitForTimeout(800); await f.click().catch(() => {}); }
+      await page.waitForTimeout(250);
+    }
+    await page.waitForTimeout(300);
+    conferir(await page.evaluate(() => document.querySelector("#pontos-cena").dataset.cena === "exterior" && estado.mundo.periodo_n === 0)
+      && !!(await page.$(`${MENU}:has-text("Entrar no salão pelo buraco do muro")`)) && !!(await page.$(`${MENU}:has-text("Acampar e descansar")`)),
+      "amanhece do lado de fora: a capela por fora, a volta pelas salas abertas e o acampar de sempre");
+  } finally {
+    conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
+    await page.close();
+    proc.kill();
+  }
+}
+
 async function cenarioGuardia(browser) {
   console.log("cenário: a guardiã (o rito com tudo pronto, e salvar e carregar depois)");
   const { proc, url } = await subir("capela", { ETAPA: "fundo", PREPARO: "pronto", NIVEL: "6" });
@@ -1843,6 +1889,7 @@ try {
   await cenarioSarilho(browser);
   await cenarioCapelaFora(browser);
   await cenarioCapelaSalas(browser);
+  await cenarioCapelaAcampar(browser);
   await cenarioCustosEExausto(browser);
   await cenarioGuardia(browser);
   await cenarioRetorno(browser);
