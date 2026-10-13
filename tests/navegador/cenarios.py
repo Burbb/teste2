@@ -40,6 +40,18 @@ from rpg.web.ponte import WebUI
 from rpg.web.servidor import Servidor
 
 
+def lugar_por_chave(g, padrao):
+    """O lugar de LUGAR (a chave, como "vau_do_turvo"), ou o padrão do cenário. Um LUGAR que sobrou de outro teste no
+    terminal ("vila", "selvagem") não trava o cenário: avisa e usa o padrão."""
+    chave = os.environ.get("LUGAR", padrao)
+    achado = next((l for l in g.mundo["locais"] if l["chave"] == chave), None)
+    if achado is None:
+        print(f'LUGAR="{chave}" não é um lugar deste mapa; usando {padrao}. (Para limpar no PowerShell: '
+              f'Remove-Item Env:LUGAR)', flush=True)
+        achado = next(l for l in g.mundo["locais"] if l["chave"] == padrao)
+    return achado
+
+
 def lutar(g, inimigos, **kw):
     """Uma luta preparada antes de o jogo rodar: cair nela leva ao resgate de sempre (o mesmo de Jogo.rodar), e o
     cenário segue dali."""
@@ -267,7 +279,7 @@ def capela(ui):
                                                   preparos=preparos)
     for chave in ("bosque_do_moinho", "capela_afogada"):
         next(l for l in g.mundo["locais"] if l["chave"] == chave)["visitado"] = True
-    g.mundo["atual"] = next(l for l in g.mundo["locais"] if l["chave"] == os.environ.get("LUGAR", "capela_afogada"))["id"]
+    g.mundo["atual"] = lugar_por_chave(g, "capela_afogada")["id"]
     g.periodo, g.clima = int(os.environ.get("PERIODO", "0")), "limpo"
     if os.environ.get("TOCHAS"):
         g.j.consumiveis["tocha"] = int(os.environ["TOCHAS"])
@@ -342,7 +354,7 @@ def praca(ui):
                               concluida=10, yara_na_praca=yara or "desconhecida")
     for l in g.mundo["locais"]:
         l["visitado"] = l["chave"] != "estrada_de_varn"
-    g.mundo["atual"] = next(l["id"] for l in g.mundo["locais"] if l["chave"] == os.environ.get("LUGAR", "vau_do_turvo"))
+    g.mundo["atual"] = lugar_por_chave(g, "vau_do_turvo")["id"]
     g.ui, ui.jogo = ui, g
     try:
         g.rodar()
