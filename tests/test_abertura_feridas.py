@@ -37,15 +37,25 @@ class TestFerimento(unittest.TestCase):
         ferir(g, "costelas")
         o = ab.atual(g)
         self.assertEqual((o["id"], o["ancora"]), ("F1", "ferimento:costelas"))
-        self.assertIn("**Costelas quebradas** fica na ficha depois da luta (não passa como o sangramento)", o["texto"])
-        self.assertIn("−25% Defesa", o["texto"])
-        self.assertIn("Sara em 8 dias de descanso. A **Curandeira** trata na hora.", o["texto"])
+        self.assertEqual(o["texto"], "**Costelas quebradas**\n−25% de Defesa e −15% de Vigor máximo.\n"
+                                     "Precisa de descanso ou tratamento para sarar.")
         self.assertNotIn("bandagem", o["texto"].lower())  # fratura: a bandagem não trata
+
+    def test_f1_corte_com_os_numeros_reais(self):
+        g = depois_da_despensa("mago")
+        ferir(g, "corte")
+        self.assertEqual(ab.atual(g)["texto"], "**Corte profundo**\n−10% de vida máxima.\n"
+                                               "Precisa de descanso ou tratamento para sarar.")
+        g = depois_da_despensa("mago")
+        ferir(g, "concussao")
+        self.assertIn("−25% de Poder e −15% de Mana máxima.", ab.atual(g)["texto"])
 
     def test_f1_infeccao_nao_passa_sozinha(self):
         g = depois_da_despensa()
         ferir(g, "infeccao")
-        self.assertIn("Não passa sozinha: um unguento cura", ab.atual(g)["texto"])
+        texto = ab.atual(g)["texto"]
+        self.assertIn("Não passa com descanso: precisa de unguento ou tratamento.", texto)
+        self.assertNotIn("Precisa de descanso", texto)  # nada de prometer que o descanso cura
 
     def test_f1_espera_a_luta_acabar(self):
         from rpg.combate import Combate
@@ -74,7 +84,7 @@ class TestFerimento(unittest.TestCase):
         visto(g, "F1")
         g.j.consumiveis["bandagem"] = 2
         self.assertIn("a começar por **Mordida dilacerada**", ab.atual(g)["texto"])
-        self.assertEqual(g.o_que_trata("bandagem"), {"trata": "Trata: mordida dilacerada."})  # sem prometer as duas
+        self.assertEqual(g.o_que_trata("bandagem"), {"trata": "Enfaixa: mordida dilacerada."})  # sem prometer as duas
         g.executar_comum(("usar", "bandagem"))
         self.assertEqual([f["tratado"] for f in g.j.ferimentos], [True, False])
 

@@ -24,7 +24,7 @@ const Realce = (() => {
     ["mana", `(?:(?:recupera(?:m)?|devolve)\\s+)?${NUM}\\s+(?:de\\s+)?mana`],
     ["vigor", `(?:(?:recupera(?:m)?|devolve)\\s+)?${NUM}\\s+(?:de\\s+)?vigor`],
     ["foco", `(?:(?:recupera(?:m)?|devolve)\\s+)?${NUM}\\s+(?:de\\s+)?foco`],
-    ["cura", `(?:recupera(?:m)?|cura(?:m|r)?|devolve)(?:\\s+${NUM})?(?:\\s+(?:de|da)\\s+vida)?`],
+    ["cura", `(?<!não\\s)(?:recupera(?:m)?|cura(?:m|r)?|devolve)(?:\\s+${NUM})?(?:\\s+(?:de|da)\\s+vida)?`],  // "não recupera vida": sem verde
     ["cura", `\\+${NUM}\\s+(?:de\\s+)?vida`],
     ["mana", COM_NUM("mana")],
     ["vigor", COM_NUM("vigor")],

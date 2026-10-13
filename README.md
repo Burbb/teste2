@@ -147,8 +147,11 @@ no topo troca só a fonte da história, pela pixel.
 - **Contratos do seu tamanho:** o mural sorteia lugares de nível próximo ao seu (de um abaixo
   até dois acima), e ouro e XP crescem com o nível do lugar: trabalho fácil paga pouco.
 - **Itens com bom senso:** o jogo avisa em vez de gastar poção com vida cheia ou bandagem sem
-  ferida. Fora de combate, poção e bandagem também servem na comitiva (clique na poção e escolha
-  em quem); a bandagem põe de pé um companheiro caído.
+  ferida aberta. Fora de combate, a poção também serve na comitiva (clique na poção e escolha
+  em quem) e põe de pé um companheiro caído.
+- **A bandagem só enfaixa:** ela trata uma ferida aberta do herói (corte, mordida, queimadura)
+  ainda sem tratar, uma por uso, e a protege contra infecção; não recupera vida, não cura
+  infecção e não apressa o ferimento. Sem ferida aberta, fica apagada na bolsa, com o motivo.
 - **Doca de atalhos:** Talentos, Grimório, Inventário, Comitiva · Mapa, Diário, Bestiário · Salvar, Sair,
   em botões de ícone com a tecla no canto e selos de aviso (pontos de talento, carta). A doca
   é uma barra própria, fixa embaixo da página (fora do texto da história): não pula de lugar a
@@ -163,9 +166,9 @@ no topo troca só a fonte da história, pela pixel.
 - **Botão direito faz atalhos:** no mercado, vende o item da mochila na hora (sem abrir o menu);
   no inventário, equipa o item da mochila ou tira o do corpo; na bolsa, usa o consumível em você.
   Ele não volta mais de tela.
-- **Poção e bandagem na comitiva, em plena luta:** se alguém ao seu lado (comitiva ou animal) está
-  ferido, a poção e a bandagem perguntam em quem usar, e as cartas acendem como na mira de um
-  golpe. Gasta o seu turno. A bandagem estanca o sangramento de quem a recebe.
+- **Poção na comitiva, em plena luta:** se alguém ao seu lado (comitiva ou animal) está
+  ferido, a poção pergunta em quem usar, e as cartas acendem como na mira de um
+  golpe. Gasta o seu turno.
 - **Ordem da Fera (Patrulheiro):** no lugar do antigo "Comando: Atacar!", que repetia o que o
   animal já faz sozinho, uma ordem que ele não dá por conta própria: o **urso protege** (ataca e
   provoca: por 2 turnos os inimigos atacam ele, que recebe 30% menos dano), o **lobo dilacera**
@@ -175,9 +178,9 @@ no topo troca só a fonte da história, pela pixel.
 - **Quem age fica por cima:** quando você manda outro agir (Ordem da Fera, poção na comitiva), a
   carta dele e a faixa da ação ("Provocando") passam à frente da sua, mesmo com a sua em foco.
 - **O animal do Patrulheiro é da família:** aparece na ficha, na Comitiva (retrato, nome, vida);
-  poção e bandagem da bolsa servem nele (a bandagem põe de pé quem caiu); na fogueira ele dorme
+  a poção da bolsa serve nele; na fogueira ele dorme
   perto do fogo e, clicando nele, dá para **fazer carinho** (corações; uma vez por noite, e ele
-  entra na primeira luta do dia seguinte **animado**, com +15% de dano), enfaixar ou dar poção.
+  entra na primeira luta do dia seguinte **animado**, com +15% de dano) ou dar poção.
   Ele não come das provisões: caça a própria comida.
 - **Clique que não se perde:** clicar num atalho (o ponto de talento piscando, Talentos, Inventário,
   ou a tecla dele) enquanto o texto ainda corre ou uma cena espera não é mais ignorado: o texto
@@ -190,7 +193,7 @@ no topo troca só a fonte da história, pela pixel.
   corpo, que brilha; o cartão vira "Vestido" e o antigo, apagado, "Foi para a mochila".
 - **Duelo é duelo:** nos duelos de honra a comitiva e o animal ficam de fora, assistindo.
 - **Fogueira sempre:** acampar mostra a fogueira desenhada mesmo quando você está sozinho. Na
-  fogueira dá para usar poção e bandagem (em você ou na comitiva) antes de dormir.
+  fogueira dá para usar poção (em você ou na comitiva) e bandagem antes de dormir.
 - **Caçada garantida:** no lugar de um contrato de caça aparece "Caçar … (contrato, 1/3)" (e o
   cartão do contrato pisca com "Seguir os rastros ▸"). Seguir os rastros sempre leva ao bicho; a
   Percepção decide quem vê quem primeiro. Cada abate mostra o progresso.
@@ -329,7 +332,7 @@ que abrem o caminho até a Cidadela, onde o vilão (gerado a cada partida) esper
   saqueie.
 - **Ferimentos:** golpes pesados deixam marcas que duram dias (costelas quebradas,
   braço fraturado, perna torcida, cortes, queimaduras...) e reduzem seus atributos.
-  Feridas abertas precisam de bandagem, ou podem **infeccionar**. A infecção causa febre
+  Feridas abertas precisam ser enfaixadas com bandagem, ou podem **infeccionar**. A infecção causa febre
   e mata se não for tratada com unguento ou por um curandeiro.
 - **Escuridão:** à noite, nas ruínas e na Cidadela, você precisa de tochas. Sem luz, você
   fica pior em percepção e destreza e é emboscado com mais facilidade.

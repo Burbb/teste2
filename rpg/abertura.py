@@ -555,33 +555,34 @@ def selo_da_vez(g):
 
 # ------------------------------------------------------------------ ferimentos (F1–F4) e descanso (D1–D3)
 def _ferida_aberta(j):
-    """A ferida aberta ainda sem bandagem que uma bandagem trataria agora: a primeira da lista (tratar_com_bandagem
-    trata essa, sem escolha)."""
-    from .sobrevivencia import FERIMENTOS
-    return next((f for f in j.ferimentos if FERIMENTOS[f["id"]].get("aberto") and not f["tratado"]), None)
+    """A ferida aberta ainda sem bandagem que uma bandagem enfaixaria agora: a primeira da lista (tratar_com_bandagem
+    enfaixa essa, sem escolha)."""
+    from .sobrevivencia import ferida_para_bandagem
+    return ferida_para_bandagem(j)
 
 
-def _tratamento(f):
-    """O tratamento de um ferimento real, numa frase: a infecção não passa sozinha; o resto sara com descanso, e a
-    Curandeira resolve na hora (a ferida aberta, sem bandagem, pode infeccionar)."""
+def _efeito_ferimento(fid, recurso):
+    """O que o ferimento tira, em linguagem direta: "−10% de vida máxima", "−30% de Agilidade"."""
+    from .entidades import nome_stat
     from .sobrevivencia import FERIMENTOS
-    if f["id"] == "infeccao":
-        return "Não passa sozinha: um unguento cura, e a **Curandeira** trata na hora."
-    aberta = FERIMENTOS[f["id"]].get("aberto") and not f["tratado"]
-    return (f"Sara em {tx.plural(f['dias'], 'dia')} de descanso" + (", mas, aberta, pode infeccionar à noite" if aberta
-                                                                      else "") + ". A **Curandeira** trata na hora.")
+    nomes = {"max_hp": "vida máxima", "max_rec": f"{recurso} máximo" if recurso != "Mana" else "Mana máxima"}
+    return tx.lista_natural(f"−{round((1 - v) * 100)}% de {nomes.get(stat) or nome_stat(stat, recurso)}"
+                            for stat, v in FERIMENTOS[fid]["mult"].items())
 
 
 def _f1(g, a):
-    """O primeiro ferimento de verdade (fica além da luta, ao contrário do sangramento): onde está na ficha, o que tira
-    e como se trata. Fora da luta (o golpe já passou); some sozinho se ele sarar antes."""
-    from .sobrevivencia import FERIMENTOS, penalidades
+    """O primeiro ferimento de verdade: o nome, o que ele tira e o que o faz sarar, em três linhas, com a seta na
+    ficha. A bandagem e a Curandeira vêm depois (F2, F3), cada uma no alvo dela. Fora da luta (o golpe já passou);
+    some sozinho se ele sarar antes."""
+    from .sobrevivencia import FERIMENTOS
     j = g.j
     if not _pendente(a, "F1") or not j.ferimentos:
         return None
     f = j.ferimentos[0]
-    return {"id": "F1", "texto": f"**{FERIMENTOS[f['id']]['nome']}** fica na ficha depois da luta (não passa como o "
-                                 f"sangramento): {penalidades(f['id'], j.nome_recurso)}. {_tratamento(f)}",
+    sara = ("Não passa com descanso: precisa de unguento ou tratamento." if f["id"] == "infeccao" else
+            "Precisa de descanso ou tratamento para sarar.")
+    return {"id": "F1", "texto": f"**{FERIMENTOS[f['id']]['nome']}**\n{_efeito_ferimento(f['id'], j.nome_recurso)}."
+                                 f"\n{sara}",
             "ancora": f"ferimento:{f['id']}", "entendi": True}
 
 
@@ -761,8 +762,9 @@ def ajuda(g):
                               "capela, certa), mas não tira o perigo da noite."),
             ("F1", "Ferimentos", "Ferimentos ficam na ficha depois da luta (o sangramento passa com ela). Saram com "
                                  "descanso; a **Curandeira** trata na hora; a infecção pede unguento ou a Curandeira."),
-            ("F2", "Ferimentos", "A bandagem protege uma ferida aberta contra infecção (uma por bandagem, a primeira da "
-                                 "lista); o ferimento ainda precisa sarar."),
+            ("F2", "Ferimentos", "A bandagem só enfaixa uma ferida aberta (corte, mordida, queimadura) e a protege "
+                                 "contra infecção: uma por bandagem, a primeira da lista. Não recupera vida, não cura "
+                                 "infecção, e o ferimento ainda precisa sarar."),
             ("F3", "Vila", "A **Curandeira** trata ferimentos; o **Templo** recupera vida."
                            + (" O primeiro tratamento é grátis." if curandeira_gratis(g) else "")),
             ("D1", "Descanso", "Dormir na **Taverna** vai até o amanhecer, devolve parte da vida e todo o recurso; nenhuma "

@@ -1,6 +1,6 @@
 """Retorno visual pedido no teste de Jean (E9): a teia da aranha que voa e, quando não prende, diz isso na carta do
-alvo; e a bolsa que diz o que cada item trata agora (a bandagem com ferida aberta) ou que a bandagem só cura um pouco
-(as feridas já enfaixadas)."""
+alvo; e a bolsa que diz o que cada item trata agora (a ferida que a bandagem vai enfaixar) ou, sem ferida aberta (as
+já enfaixadas), por que ela fica apagada."""
 
 import random
 import tempfile
@@ -64,22 +64,22 @@ class TestBolsa(unittest.TestCase):
     def bolsa(self, g, k):
         return next(b for b in estado(g)["heroi"]["bolsa"] if b["id"] == k)
 
-    def test_bandagem_com_ferida_aberta_diz_o_que_trata(self):
+    def test_bandagem_com_ferida_aberta_diz_qual_enfaixa(self):
         g = jogo()
         g.j.consumiveis["bandagem"] = 2
         g.j.ferimentos.append({"id": "queimadura", "dias": 5, "tratado": False})
-        self.assertEqual(self.bolsa(g, "bandagem")["trata"], "Trata: queimadura grave.")
-        g.j.aplicar("sangramento", 2, 2)
-        self.assertEqual(self.bolsa(g, "bandagem")["trata"], "Trata: sangramento e queimadura grave.")
+        self.assertEqual(self.bolsa(g, "bandagem")["trata"], "Enfaixa: queimadura grave.")
+        g.j.aplicar("sangramento", 2, 2)  # o sangramento da luta não é ferida para enfaixar
+        self.assertEqual(self.bolsa(g, "bandagem")["trata"], "Enfaixa: queimadura grave.")
 
-    def test_bandagem_sem_nada_para_tratar_avisa_que_so_cura(self):
+    def test_bandagem_sem_ferida_aberta_fica_apagada(self):
         g = jogo()
         g.j.consumiveis["bandagem"] = 1
         g.j.ferimentos.append({"id": "queimadura", "dias": 5, "tratado": True})
-        g.j.hp = 10
+        g.j.hp = 10  # nem com a vida baixa: ela não recupera vida
         b = self.bolsa(g, "bandagem")
-        self.assertNotIn("trata", b)
-        self.assertIn("só cura", b["so_cura"])
+        self.assertNotIn("trata", b)  # não pulsa
+        self.assertEqual(b["motivo"], "Nenhuma ferida aberta para enfaixar.")
 
     def test_antidoto_e_unguento(self):
         g = jogo()

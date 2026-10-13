@@ -59,7 +59,7 @@ def explicar(f, recurso=None, jogador=None):
                    "Não passa sozinha: use um unguento ou pague um curandeiro."]
         return linhas
     if d.get("aberto") and not f.get("tratado"):
-        linhas.append(f"Ferida aberta: uma bandagem trata. Sem tratar, {round(CHANCE_INFECCAO * 100)}% de chance de "
+        linhas.append(f"Ferida aberta: enfaixe com uma bandagem. Sem isso, {round(CHANCE_INFECCAO * 100)}% de chance de "
                       "infeccionar a cada noite.")
     linhas.append(f"Sara em {f['dias']} dia{'s' if f['dias'] != 1 else ''} de descanso (dormir numa cama conta dobrado; "
                   "com fome não sara). Um curandeiro resolve na hora.")
@@ -129,7 +129,7 @@ def ferir(g, fid, motivo=""):
     else:
         j.ferimentos.append({"id": fid, "dias": d["dias"], "tratado": False})
         g.ui.efeito(f"FERIMENTO: {d['nome']}{motivo} ({penalidades(fid, j.nome_recurso)}) — "
-                    + ("trate com bandagem ou pode infeccionar" if d.get("aberto") else
+                    + ("enfaixe com bandagem ou pode infeccionar" if d.get("aberto") else
                        "só o tempo ou um curandeiro resolvem"), "ferimento")
     antes_hp = j.hp
     j.recalcular()
@@ -183,15 +183,21 @@ def ferir_por_evento(g, dano, motivo=""):
     ferir(g, g.rng.choice(opcoes))
 
 
+def ferida_para_bandagem(j):
+    """A ferida que uma bandagem enfaixaria agora: a primeira aberta (corte, mordida, queimadura) ainda sem tratar.
+    Fratura, perna torcida, concussão e infecção não se enfaixam."""
+    return next((f for f in j.ferimentos if FERIMENTOS[f["id"]].get("aberto") and not f["tratado"]), None)
+
+
 def tratar_com_bandagem(g):
-    """Trata o primeiro ferimento aberto não tratado. Devolve True se tratou algo."""
-    j = g.j
-    for f in j.ferimentos:
-        if FERIMENTOS[f["id"]].get("aberto") and not f["tratado"]:
-            f["tratado"] = True
-            g.dizer(f"Você limpa e enfaixa: {FERIMENTOS[f['id']]['nome']}. Não deve infeccionar.", "verde")
-            return True
-    return False
+    """Enfaixa a primeira ferida aberta não tratada: ela fica protegida contra infecção e segue sarando no tempo dela
+    (a penalidade fica até sarar). Devolve True se enfaixou algo."""
+    f = ferida_para_bandagem(g.j)
+    if not f:
+        return False
+    f["tratado"] = True
+    g.dizer(f"Você limpa e enfaixa: {FERIMENTOS[f['id']]['nome']}. Não deve infeccionar.", "verde")
+    return True
 
 
 def curar_ferimento(g, fid):

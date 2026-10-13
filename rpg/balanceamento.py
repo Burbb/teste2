@@ -182,7 +182,6 @@ EXAUSTO_VIDA = 0.15           # dormir no estábulo
 EXAUSTO_RECURSO = 0.4
 POCAO_VIDA = 0.35             # fração da vida máxima
 TONICO = 0.5                  # fração do recurso máximo
-BANDAGEM_VIDA = 8
 
 # ---------------------------------------------------------------- mercado
 # Quanto cada mercado tem de cada suprimento por dia (mínimo, máximo): sorteado por vila e dia, reabastece toda

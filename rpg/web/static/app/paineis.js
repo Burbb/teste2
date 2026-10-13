@@ -123,7 +123,7 @@ function desenharHud(h, antes) {
       ${recurso("tochas", tochas, h.tochas, { alerta: h.tochas === 0, vazio: !h.tochas, titulo: "Tochas: luz para a noite, ruínas e a cidadela." })}
       ${recurso("ouro", ouro, h.ouro, { vazio: !h.ouro, titulo: h.ouro ? `Ouro: ${Texto.plural(h.ouro, "moeda")}` : "Sem ouro" })}
       ${recurso("pocoes", pocoes, h.pocoes, { vazio: !h.pocoes, titulo: "Poções de vida (35% da vida)" })}
-      ${recurso("bandagens", ["bandagem"], h.bandagens, { vazio: !h.bandagens, alerta: !h.bandagens && h.ferimentos.some((f) => f.aberto), titulo: "Bandagens: estancam sangramento e tratam feridas abertas" })}
+      ${recurso("bandagens", ["bandagem"], h.bandagens, { vazio: !h.bandagens, alerta: !h.bandagens && h.ferimentos.some((f) => f.aberto), titulo: "Bandagens: enfaixam feridas abertas contra infecção" })}
       ${h.flechas !== null && h.flechas !== undefined ? recurso("flechas", ["aljava"], h.flechas, { alerta: h.flechas <= 8, titulo: `Flechas (a aljava leva ${h.max_flechas || 30})` }) : ""}
       ${feridas}
     </div>`;
@@ -160,10 +160,10 @@ function desenharHeroi(h, antes) {
     : '<div class="vazio">Nenhum, por enquanto.</div>';
   const bolsa = h.bolsa.filter((b) => b.id !== "tocha").map((b) => {
     const bau = b.id === "bau";  // o baú se abre (e, onde dá para abrir, ganha o anel dourado)
-    // O que ele trata agora (o motor diz): a dica abre com isso, e o espaço pulsa até ser usado. A bandagem sem nada
-    // para tratar avisa que só cura um pouco (antes, ela parecia tratar de novo a ferida já enfaixada).
+    // O que ele trata agora (o motor diz): a dica abre com isso, e o espaço pulsa até ser usado. Sem nada a tratar
+    // (a bandagem sem ferida aberta), o espaço fica apagado e o rodapé diz por quê.
     const trata = !b.motivo && b.trata;
-    const dica = `<b>${esc(b.nome)}</b>${trata ? `<div class="bonus melhor">${esc(b.trata)}</div>` : ""}${!b.motivo && b.so_cura ? `<div class="bonus">${esc(b.so_cura)}</div>` : ""}<div>${Realce.texto(b.desc)}</div><div class="rodape">${b.motivo ? esc(b.motivo) : bau ? (b.qtd > 1 ? `Clique para abrir os ${b.qtd} de uma vez.` : "Clique para abrir.") : estado && estado.combate ? "Clique para usar (gasta o turno)." : "Clique para usar."}</div>`;
+    const dica = `<b>${esc(b.nome)}</b>${trata ? `<div class="bonus melhor">${esc(b.trata)}</div>` : ""}<div>${Realce.texto(b.desc)}</div><div class="rodape">${b.motivo ? esc(b.motivo) : bau ? (b.qtd > 1 ? `Clique para abrir os ${b.qtd} de uma vez.` : "Clique para abrir.") : estado && estado.combate ? "Clique para usar (gasta o turno)." : "Clique para usar."}</div>`;
     return `<div role="button" tabindex="0" class="slot-px usavel${b.motivo && !(b.alvos || []).some((a) => !a.motivo) ? " inutil" : ""}${bau && !b.motivo ? " pronto" : ""}${trata ? " trata" : ""}" data-bolsa="${esc(b.id)}" ${Telas.dica(dica)}>${spr(Telas.iconeConsumivel(b.id), 2)}<span class="qtd">${b.qtd}</span></div>`;
   }).join("");
   // Comitiva e animal no mesmo molde: retrato e nome com a ficha no hover, a vida em números no canto (como os
@@ -176,7 +176,7 @@ function desenharHeroi(h, antes) {
   const dicaFera = f ? Telas.dica(`<b>${esc(f.nome)}</b><div class="tipo">${ESPECIE[f.tipo] || "Animal"} · seu companheiro</div>` +
     (f.hp <= 0 ? "<div>Ferido: não luta até descansar.</div>" : "") +
     (f.animado ? '<div class="melhor">Animado: +15% de dano na próxima luta.</div>' : "") +
-    '<div class="rodape">Poção e bandagem da bolsa também servem nele. Na fogueira, um carinho.</div>') : "";
+    '<div class="rodape">A poção da bolsa também serve nele. Na fogueira, um carinho.</div>') : "";
   const fera = f ? `<div class="membro fera${f.hp <= 0 ? " ferido" : ""}" data-fera="1">
       <div class="icone" ${dicaFera}>${spr(f.tipo === "falcao" ? "voador" : "fera", 2)}</div>
       ${linhaNome(f.nome, f.animado ? ' <b class="fera-animado" title="animado">♥</b>' : "", f.hp, f.max_hp, dicaFera)}

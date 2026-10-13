@@ -354,7 +354,8 @@ const Sensacao = (() => {
 
   /* ------------------------------------------------------------ o espólio da vitória */
   // O que se acha (o motor manda o id; a tela escolhe o ícone e escreve a quantidade do jeito de cada coisa).
-  const quantoAchou = (x) => (x.id === "comida" ? `+${Texto.plural(x.qtd, "dia")}` : x.id === "flechas" ? `+${x.qtd}` : `×${x.qtd}`);
+  // As flechas dizem tudo na quantidade ("+2 flechas"): o nome ao lado seria repetido.
+  const quantoAchou = (x) => (x.id === "comida" ? `+${Texto.plural(x.qtd, "dia")}` : x.id === "flechas" ? `+${Texto.plural(x.qtd, "flecha")}` : `×${x.qtd}`);
   const esc = Texto.html;
 
   /** Como a tela de resultado dos jogos, tudo o que a vitória deu num quadro só: uma linha por recompensa (o ouro,
@@ -365,7 +366,7 @@ const Sensacao = (() => {
   async function espolio(caixa, d) {
     const S = (n, e = 1) => Sprites.img(n, e);
     const trechos = d.trechos || [], ultimo = trechos[trechos.length - 1] || [0, 0, 1], primeiro = trechos[0] || ultimo;
-    const achados = (d.itens || []).map((x) => `<span class="achado-espolio">${S(Telas.iconeConsumivel(x.id, "saco"), 2)}${esc(x.nome)}<b>${quantoAchou(x)}</b></span>`);
+    const achados = (d.itens || []).map((x) => `<span class="achado-espolio">${S(Telas.iconeConsumivel(x.id, "saco"), 2)}${x.id === "flechas" ? "" : esc(x.nome)}<b>${quantoAchou(x)}</b></span>`);
     // Cada contrato: o nome (o que ele pede), o estado curto à direita e, cumprido, onde a recompensa sai, embaixo do
     // nome e em segundo plano (ela é paga sozinha na chegada a uma vila: aqui não há o que clicar).
     const contratos = (d.contratos || []).map((c) => `<div class="espolio-contrato${c.concluido ? " feito" : ""}">${S("pergaminho", 2)}

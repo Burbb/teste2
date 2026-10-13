@@ -29,6 +29,8 @@ Avaliação integrada do Vale do Turvo como primeiro capítulo (a E9 antecipada,
   bandagem, a Curandeira com o primeiro tratamento grátis e o descanso ([18](18-E9-ABERTURA-GUIADA.md), seção 20).
 - **Acabamento, 1.69.1 (seção 29):** o quadro ensina a ação, o cartão mostra custo e resultado, a Ajuda guarda os
   detalhes: Curandeira, Templo, o cartão Dormir e a fogueira em linhas curtas ([18](18-E9-ABERTURA-GUIADA.md), seção 21).
+- **A bandagem só enfaixa, 1.70.0 (seção 30):** sem vida, só ferida aberta do herói, uma por uso; o primeiro
+  ferimento em três linhas; as flechas recolhidas no espólio ([18](18-E9-ABERTURA-GUIADA.md), seção 22).
 - **Quarta entrega, 1.65.2 e 1.65.3 (seção 19):** a partida da Quibia lida; os contratos pagos depois do resgate; o
   ×N dos baús em destaque. A especificação da abertura guiada fica em [18](18-E9-ABERTURA-GUIADA.md).
 - **Correção 1.65.1 (seção 18):** os três pontos que faltaram na mensagem cortada: a percepção do Mago na água, o nome
@@ -937,6 +939,20 @@ o Templo fala só do Templo (e do grátis, enquanto vale); o cartão Dormir e o 
 provisões em linhas curtas, com os números das regras; o "ensopado por conta da casa" virou "nenhuma provisão é
 consumida". Achado: a nota de ferimentos com fome estava errada na Taverna e na fogueira com provisão (a comida vem
 antes). Detalhe na seção 21 do 18.
+
+**A E9 continua aberta** até a validação com jogadores novos.
+
+## 30. A bandagem só enfaixa (1.70.0)
+
+Mudança de mecânica autorizada por Jean: a bandagem não recupera vida. Ela enfaixa uma ferida aberta do herói ainda
+sem tratar (corte, mordida, queimadura), uma por uso, protegendo-a da infecção, sem apressar nem tirar a penalidade.
+Não estanca mais o sangramento da luta e não serve na comitiva nem no animal. Sem ferida para enfaixar, fica à vista e
+apagada, com o motivo, e tentar não gasta nada. Os eventos que pedem bandagem (Odette, o viajante ferido) seguem
+iguais. Junto: o primeiro ferimento em três linhas (nome, efeito real, o que faz sarar) e as flechas recolhidas no
+quadro do espólio.
+
+**Medida:** no `saque_vale`, os percursos completos foram de 61 para 57, quase todos do arqueiro (16 → 12), que cai
+um pouco mais. Equilíbrio e replay ficaram iguais. Nada foi compensado. Detalhe na seção 22 do 18.
 
 **A E9 continua aberta** até a validação com jogadores novos.
 

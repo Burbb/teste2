@@ -139,9 +139,8 @@ class Inventario:
             return f"{j.nome_recurso} já está no máximo."
         if k == "antidoto" and not j.efeito("veneno"):
             return "Não há veneno no seu sangue."
-        if k == "bandagem" and not j.efeito("sangramento") and j.hp >= j.max_hp and not any(
-                sobrevivencia.FERIMENTOS[f["id"]].get("aberto") and not f["tratado"] for f in j.ferimentos):
-            return "Nada para enfaixar: sem sangramento, sem feridas abertas."
+        if k == "bandagem" and not sobrevivencia.ferida_para_bandagem(j):
+            return "Nenhuma ferida aberta para enfaixar."
         if k == "unguento" and not sobrevivencia.tem(j, "infeccao"):
             return "Você não tem nenhuma infecção para tratar."
         if k == "bau" and not self.lugar_seguro():
@@ -149,18 +148,13 @@ class Inventario:
         return None
 
     def o_que_trata(self, k):
-        """O que o item trata agora no herói ("Trata: queimadura grave"), para a bolsa chamar a atenção dele; ou, na
-        bandagem sem nada para tratar, que ela só cura um pouco (quem já enfaixou tudo não gasta achando que trata).
+        """O que o item trata agora no herói ("Enfaixa: queimadura grave"), para a bolsa chamar a atenção dele.
         None: nada a dizer (o motivo_inutil cobre o item que não serve)."""
         j = self.j
         if k == "bandagem":
             # Uma bandagem enfaixa uma ferida: a primeira aberta da lista (tratar_com_bandagem), sem escolha.
-            abertas = [sobrevivencia.FERIMENTOS[f["id"]]["nome"].lower() for f in j.ferimentos
-                       if sobrevivencia.FERIMENTOS[f["id"]].get("aberto") and not f["tratado"]][:1]
-            partes = (["sangramento"] if j.efeito("sangramento") else []) + abertas
-            if partes:
-                return {"trata": "Trata: " + tx.lista_natural(partes) + "."}
-            return {"so_cura": f"Nada para tratar agora: só cura {bal.BANDAGEM_VIDA} de vida."}
+            f = sobrevivencia.ferida_para_bandagem(j)
+            return {"trata": f"Enfaixa: {sobrevivencia.FERIMENTOS[f['id']]['nome'].lower()}."} if f else None
         if k == "antidoto" and j.efeito("veneno"):
             return {"trata": "Trata: veneno."}
         if k == "unguento" and sobrevivencia.tem(j, "infeccao"):
@@ -225,7 +219,7 @@ class Inventario:
             self.oferecer_equip(equip)
 
     def usar_no_animal(self, k):
-        """Poção e bandagem também servem no animal do patrulheiro. A bandagem põe de pé quem não podia lutar."""
+        """A poção também serve no animal do patrulheiro."""
         f = self.j.companheiro
         if not f or not self.j.tem(k):
             return False
@@ -236,17 +230,12 @@ class Inventario:
         self.j.consumiveis[k] -= 1
         registrar(self, "consumivel", item=k, em_combate=False, em="fera")
         antes = f["hp"]
-        if k == "pocao_vida":
-            f["hp"] = min(f["max_hp"], f["hp"] + int(f["max_hp"] * bal.POCAO_VIDA))
-            self.dizer(f"{f['nome']} lambe a Poção de Vida da sua mão. (+{f['hp'] - antes} vida)", "verde")
-        else:
-            f["hp"] = min(f["max_hp"], f["hp"] + bal.BANDAGEM_VIDA)
-            self.dizer(f"Você enfaixa {f['nome']}, que reclama mas deixa."
-                       + (" Já consegue ficar de pé." if antes <= 0 else "") + f" (+{f['hp'] - antes} vida)", "verde")
+        f["hp"] = min(f["max_hp"], f["hp"] + int(f["max_hp"] * bal.POCAO_VIDA))
+        self.dizer(f"{f['nome']} lambe a Poção de Vida da sua mão. (+{f['hp'] - antes} vida)", "verde")
         return True
 
     def usar_em_companheiro(self, k, cid):
-        """Fora de combate, poção e bandagem também servem na comitiva. A bandagem põe de pé quem caiu."""
+        """Fora de combate, a poção também serve na comitiva (e põe de pé quem caiu)."""
         if cid == "fera":
             return self.usar_no_animal(k)
         m = comitiva.membro(self, cid)
@@ -260,18 +249,9 @@ class Inventario:
         nome = comitiva.nome(cid)
         registrar(self, "consumivel", item=k, em_combate=False, em=cid)
         antes = m["hp"]
-        if k == "pocao_vida":
-            m["hp"] = min(m["max_hp"], m["hp"] + int(m["max_hp"] * bal.POCAO_VIDA))
-            m["ferido"] = False
-            self.dizer(f"{nome} bebe a Poção de Vida e respira melhor. (+{m['hp'] - antes} vida)", "verde")
-        else:
-            m["hp"] = min(m["max_hp"], m["hp"] + bal.BANDAGEM_VIDA)
-            if m["ferido"]:
-                m["ferido"] = False
-                self.dizer(f"Você enfaixa {nome} com cuidado. Já consegue ficar de pé e lutar. (+{m['hp'] - antes} vida)",
-                           "verde")
-            else:
-                self.dizer(f"Você troca as faixas de {nome}. (+{m['hp'] - antes} vida)", "verde")
+        m["hp"] = min(m["max_hp"], m["hp"] + int(m["max_hp"] * bal.POCAO_VIDA))
+        m["ferido"] = False
+        self.dizer(f"{nome} bebe a Poção de Vida e respira melhor. (+{m['hp'] - antes} vida)", "verde")
         return True
 
     def usar_consumivel(self, k):
@@ -296,14 +276,7 @@ class Inventario:
             j.remover("veneno")
             self.dizer("O veneno deixa seu corpo.", "verde")
         elif k == "bandagem":
-            sangrando = j.efeito("sangramento")
-            j.remover("sangramento")
-            tratou = sobrevivencia.tratar_com_bandagem(self)
-            c = j.curar(bal.BANDAGEM_VIDA)
-            if not tratou and not sangrando:
-                self.dizer(f"Você troca as faixas velhas. (+{c} vida)", "verde")
-            elif sangrando:
-                self.dizer(f"O sangramento para. (+{c} vida)", "verde")
+            sobrevivencia.tratar_com_bandagem(self)  # só enfaixa: a ferida segue no tempo dela; a vida não muda
         elif k == "bau":
             # A pilha inteira: os baús que estavam na bolsa neste momento abrem juntos, e saem dela todos de uma vez
             # (antes de qualquer sorteio). Cada um conta como um consumível usado no registro da partida.

@@ -978,3 +978,88 @@ nem os nomes deles.
 **Verificações:** testes (`test_abertura_feridas`, `_ciclos`, `_parte2`: textos novos, as linhas iguais à conta do
 descanso, a fome só quando reduz, nunca zero, os ferimentos com e sem comida), gabarito examinado (só o meta do Dormir:
 `curto` e `linhas` no lugar de `efeito` e `tempo`; nenhuma outra linha), pyflakes, fumaça completa.
+
+## 22. A bandagem só enfaixa, o primeiro ferimento e as flechas no espólio (1.70.0)
+
+Pedido de Jean. **Mudança de mecânica autorizada:** a bandagem deixa de recuperar vida e passa a servir só para
+enfaixar uma ferida aberta. O resto das regras, recompensas e sorteios fica igual.
+
+**1. A nova função da bandagem.** Como consumível de tratamento, ela enfaixa **uma ferida aberta do herói ainda sem
+tratar** (os tipos que o jogo já marcava como abertos: corte, mordida, queimadura), uma por uso, a primeira da lista
+(`sobrevivencia.ferida_para_bandagem`). Enfaixada, a ferida fica protegida da infecção e segue sarando no tempo dela,
+com a penalidade até sarar.
+- **Saiu:** os +8 de vida (`BANDAGEM_VIDA`), estancar o sangramento da luta, o uso na comitiva e no animal (que
+  punha de pé quem caiu: a poção, o descanso e o Templo continuam fazendo isso).
+- **Não habilitam o item:** perna torcida, fraturas, concussão e infecção (a bandagem não cura infecção).
+- **Sem ferida para enfaixar:** a bandagem fica à vista e apagada, na bolsa e na janela de itens da luta, com
+  "Nenhuma ferida aberta para enfaixar.". O clique ou a tecla só mostram o motivo: não gastam item, turno, tempo nem
+  sorteio.
+- **Destaque:** a bolsa só pulsa quando há ferida para enfaixar. A dica diz qual: "Enfaixa: corte profundo.".
+- **Na luta:** com ferida aberta, enfaixa e gasta o turno, como qualquer item.
+- **Sem mudança:** a quantidade inicial, o preço, o estoque do mercado, os baús e os usos de eventos (a ajuda à
+  Odette, o viajante ferido), que gastam uma bandagem como escolha da cena.
+
+**Textos atualizados:**
+- a descrição: "Enfaixa uma ferida aberta e a protege contra infecção. Não recupera vida.";
+- a dica da bolsa (sem o "só cura 8 de vida") e o título do contador do topo;
+- a explicação do ferimento ("Ferida aberta: enfaixe com uma bandagem.");
+- o aviso do ferimento novo;
+- a Ajuda (F2) e o README;
+- a dica do animal e o menu dele na fogueira (sem "Enfaixar");
+- o realce não pinta mais de verde "não recupera".
+
+O F2 só fica visto quando a bandagem enfaixa de fato (antes, um clique sem efeito já o encerrava). Na janela de
+itens da luta, a dica de um item apagado agora diz o motivo, como nas habilidades.
+
+**2. O primeiro ferimento (F1).** Saiu "fica na ficha depois da luta (não passa como o sangramento)". O quadro tem três
+linhas, com os números do ferimento real e da classe:
+
+    Corte profundo
+    −10% de vida máxima.
+    Precisa de descanso ou tratamento para sarar.
+
+Outros exemplos: "−25% de Defesa e −15% de Vigor máximo." (costelas), "−25% de Poder e −15% de Mana máxima."
+(concussão do mago). Para a infecção: "Não passa com descanso: precisa de unguento ou tratamento." (sem promessa de
+cura pelo descanso). O quadro não repete a bandagem nem a Curandeira, que vêm depois (F2, F3), cada uma no seu alvo.
+
+**3. Flechas recolhidas no espólio.** Depois da vitória, as flechas que voltam do campo aparecem no quadro do espólio,
+com o ícone da aljava: "+1 flecha", "+2 flechas". Só quando volta alguma, e com o número que de fato voltou (o teto da
+aljava conta). A conta, o momento e o sorteio são os de antes. A linha "Você recolhe N flechas intactas do campo." saiu
+da página na tela gráfica e continua no modo texto, que não tem quadro. As flechas entram na aljava no motor, uma vez;
+o quadro só mostra, então redesenhar ou recarregar não devolve de novo. Flechas achadas nos corpos somam na mesma linha.
+
+**Conferido na tela (1500 e 1280 px):**
+- **Bandagem com ferida aberta (corte):** a bolsa pulsa, a dica diz "Enfaixa: corte profundo."; usada, a ficha
+  mostra a ferida sem "aberto", a vida não muda e o item fica apagado.
+- **Sem ferimento, só perna torcida, vida baixa sem ferida elegível:** apagada desde o início, com o motivo; cliques
+  repetidos não gastam nada.
+- **Mordida e corte:** um por uso, a dica passa para o corte.
+- **Infecção e corte:** enfaixa o corte, a infecção fica.
+- **Com o tutorial desligado:** a mesma regra, sem quadros.
+- **Na luta:** a bandagem apagada na janela de itens, com o motivo na dica e no clique (sem gastar o turno); com
+  ferida, enfaixa.
+- **O evento da Odette:** a opção da bandagem continua disponível (sem ferida no herói) e gasta uma.
+- **Espólio do arqueiro:** nada (nenhuma voltou), "+1 flecha", "+4 flechas", "+9 flechas"; nenhuma linha "recolhe"
+  na página; a aljava igual depois de recarregar.
+
+**Verificações:**
+- **Testes:** `tests/test_bandagem.py` (ferida aberta, sem ferimento, só perna e outras, já enfaixada, várias,
+  infecção, sangramento, comitiva, a luta sem gastar o turno, salvar e carregar, tutorial ligado e desligado, o F2;
+  as flechas: zero, uma, várias, o modo texto, sem devolver de novo) e os testes de antes ajustados.
+- **Gabarito examinado:** as 24 partidas divergem, todas num ponto esperado: o robô usava a bandagem para recuperar
+  vida (sem ferida), no sangramento ou num companheiro, e agora não pode; e a linha "Você recolhe" virou o item do
+  espólio. Antes desse ponto, só mudam textos e a meta da bandagem.
+- pyflakes e fumaça completa.
+
+**Medidas (antes → depois):** `tests.equilibrio` e `tests.replay` saem idênticos (os robôs deles não usam
+bandagem). `tests.saque_vale` (o Vale inteiro, 180 percursos):
+- bandagens gastas na luta: 1,5 → 0,1 por percurso; sobram 2,5 → 3,0 no fim;
+- percursos completos: 61 → 57 (arqueiro 16 → 12);
+- quedas do arqueiro: 3,8/2,1/4,3/2,5 → 4,2/3,0/4,3/3,2 (descansada/destruída × direto/explorador);
+- quedas do guerreiro e do mago: quase iguais.
+
+A bandagem pesava mais para o arqueiro (sangramento e vida baixa). Nada foi compensado: fica para Jean decidir depois
+de jogar.
+
+**Visto e não mexido:** a 1280 px, o quadro do D2 ("Acampe…"), na faixa de baixo, cobre a opção logo abaixo de
+"Acampar" quando a página rola até ela. Ele é da 1.69.x e não mudou aqui.

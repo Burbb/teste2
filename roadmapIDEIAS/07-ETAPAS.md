@@ -177,7 +177,8 @@ abertura guiada (seção 15 do 18); **na 1.67.1,** interação, posicionamento e
 (templo, contrato, baú, selos, adiantar; seção 17 do 18); **na 1.68.1,** a revisão dos textos, do posicionamento e da
 derrota no cenário de teste (seção 18 do 18); **na 1.68.2,** o contrato aceito, o Entendi da animação e a sequência da
 derrota (seção 19 do 18); **na 1.69.0,** ferimentos, descanso e o fim da derrota (seção 20 do 18); **na 1.69.1,** o acabamento dos
-textos e da apresentação (seção 21 do 18).
+textos e da apresentação (seção 21 do 18); **na 1.70.0,** a bandagem só enfaixa, o primeiro
+ferimento direto e as flechas no espólio (seção 22 do 18).
 **Não concluída:** faltam os jogadores novos (seção 9 do 17) e Jean
 jogar a 1.64.0; o começo apertado e o caso do arqueiro sem flechas ficam para depois disso (seção 16).
 

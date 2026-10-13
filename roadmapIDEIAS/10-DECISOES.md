@@ -117,4 +117,13 @@ Data / tema / decisão de Jean / motivo / documentos afetados / etapa dependente
   - **Como avaliar:** Jean e os jogadores novos jogando; o caso do arqueiro sem flechas (17, seção 16) fica para
     depois da partida de um arqueiro.
 
+- **13/10/2026 — a bandagem só enfaixa (1.70.0).**
+  - **Decisão de Jean:** a bandagem deixa de recuperar vida e, como consumível de tratamento, só enfaixa uma ferida
+    aberta ainda não tratada (os tipos que o jogo já considera abertos), uma por uso, protegendo-a da infecção.
+    Quantidade inicial, preço e frequência de obtenção ficam iguais; os usos narrativos em eventos continuam.
+  - **Consequência registrada:** sem a cura da bandagem, o robô do `saque_vale` completa menos percursos com o
+    arqueiro (16 → 12 de 60); nada foi compensado.
+  - **Documentos:** [18](18-E9-ABERTURA-GUIADA.md) (seção 22), [17](17-E9-VALIDACAO-DO-VALE.md) (seção 30), este, [00](00-COMECE-AQUI.md).
+  - **Como avaliar:** jogando, se a falta da cura pequena aperta demais o começo (sobretudo o arqueiro).
+
 Se uma hipótese falhar jogando, registrar revisão. Nunca marcar proposta como implementada ou teste como aprovado sem evidência.

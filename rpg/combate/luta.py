@@ -377,13 +377,16 @@ class Combate(Golpes, AcoesDoHeroi, TurnosDosOutros):
             j.rec = min(j.max_rec, j.rec + int(j.max_rec * bal.FOLEGO_POS_LUTA))
         else:
             j.rec = min(j.max_rec, j.rec + int(j.max_rec * bal.MANA_POS_LUTA))
+        recuperadas = 0
         if j.classe == "arqueiro" and self.flechas_gastas and resultado == "vitoria":
             chance = bal.RECOLHER_FLECHA + mod(j, "recolher_flecha")
             recuperadas = sum(1 for _ in range(self.flechas_gastas) if self.rng.random() < chance)
             recuperadas = min(recuperadas, self.g.max_flechas() - j.flechas)
             if recuperadas > 0:
-                j.flechas += recuperadas
-                self.dizer(f"Você recolhe {tx.plural(recuperadas, 'flecha intacta', 'flechas intactas')} do campo.", "verde")
+                j.flechas += recuperadas  # já na aljava: o quadro do espólio só mostra (redesenhar não devolve de novo)
+                if not g.ui.conquistas_na_tela:  # na tela, a linha vai para o quadro do espólio, com o ícone
+                    self.dizer(f"Você recolhe {tx.plural(recuperadas, 'flecha intacta', 'flechas intactas')} do campo.",
+                               "verde")
 
         if resultado == "vitoria":
             derrotados = [e for e in self.inimigos if not e.fugiu]
@@ -397,6 +400,8 @@ class Combate(Golpes, AcoesDoHeroi, TurnosDosOutros):
             # O espólio: o ouro, o XP, os contratos que andaram e o que se acha nos corpos. Na tela gráfica tudo
             # isso (e o que o evento ainda der logo depois) vai para um quadro só, antes da próxima pergunta.
             g.abrir_espolio()
+            if recuperadas > 0:
+                g.achou("flechas", "Flechas", recuperadas)  # as recolhidas do campo, no quadro (já estão na aljava)
             xp = int(comitiva.parte_do_xp(g) * sum(e.xp * bal.fator_xp(e.nivel - j.nivel) for e in derrotados))
             g.ganhar_ouro(ouro, fonte="lutas")
             g.registrar_abates(derrotados)

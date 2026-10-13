@@ -1431,11 +1431,11 @@ async function cenarioFeridas(browser) {
   const quadro = (page) => page.evaluate(() => { const q = document.querySelector(".orientacao:not([hidden])"); return q ? q.innerText.replace(/\s+/g, " ") : ""; });
   const ate = async (page, re, ms = 15000) => { for (let k = 0; k < ms; k += 150) { if (re.test(await quadro(page))) return true; await page.waitForTimeout(150); } return false; };
   {
-    const { proc, url } = await subir("tutorial", { LUGAR: "charco", VISTAS: "A1,A0,AL,N1,V5", FERIMENTOS: "corte", BANDAGENS: "1" });
+    const { proc, url } = await subir("tutorial", { LUGAR: "charco", VISTAS: "A1,A0,AL,N1,V5", FERIMENTOS: "corte", BANDAGENS: "2", VIDA: "0.5" });
     const { page, erros } = await abrir(browser, url);
     try {
-      conferir(await ate(page, /^Corte profundo fica na ficha depois da luta/) && (await pontaNoAlvo(page)) <= 2,
-        "F1: o ferimento real na ficha, com o efeito e o tratamento, a seta nele");
+      conferir(await ate(page, /^Corte profundo −10% de vida máxima\. Precisa de descanso ou tratamento para sarar\./) && (await pontaNoAlvo(page)) <= 2,
+        "F1: o nome, o efeito real e o que faz sarar, a seta no ferimento");
       await page.click(".orientacao-entendi");
       await page.click('#doca .atalho[data-rotulo="Inventário"]');
       await page.waitForTimeout(600);
@@ -1446,6 +1446,14 @@ async function cenarioFeridas(browser) {
       await page.waitForFunction(() => estado.heroi.ferimentos.every((f) => !f.aberto), null, { timeout: 10000 }).catch(() => {});
       conferir(await page.evaluate(() => !/aberto/.test(document.querySelector("#heroi .ferimento").textContent)) && !/bandagem protege/.test(await quadro(page)),
         "usada a bandagem, a ficha mostra a ferida tratada e o quadro sai");
+      const vidaAntes = await page.evaluate(() => estado.heroi.hp);
+      const slot = await page.evaluate(() => { const e = document.querySelector('#heroi .slot-px[data-bolsa="bandagem"]'); return e && { inutil: e.classList.contains("inutil"), trata: e.classList.contains("trata") }; });
+      conferir(slot && slot.inutil && !slot.trata, "enfaixada a única ferida aberta, a bandagem fica à vista, apagada e sem pulsar");
+      await page.click('#heroi .slot-px[data-bolsa="bandagem"]');
+      await page.waitForTimeout(500);
+      const depois = await page.evaluate(() => ({ qtd: estado.heroi.bandagens, hp: estado.heroi.hp, aviso: [...document.querySelectorAll(".aviso-flutuante")].map((e) => e.textContent).join(" ") }));
+      conferir(depois.qtd === 1 && depois.hp === vidaAntes && /Nenhuma ferida aberta para enfaixar/.test(depois.aviso),
+        "o clique na bandagem sem ferida diz o motivo e não gasta nada (nem cura vida)");
     } finally {
       conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
       await page.close();

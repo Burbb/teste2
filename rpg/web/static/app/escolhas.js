@@ -527,7 +527,7 @@ function rodaDeAcoes(m) {
     App.som("pagina");
     abrirJanela(b, "Itens", itens.map((meta) => linhaItem(meta, () => {
       App.som(meta.trocar !== undefined ? "equipar" : "item");
-      habMirando = meta.nome || "";  // poção e bandagem podem pedir em quem: o lembrete diz o quê
+      habMirando = meta.nome || "";  // a poção pode pedir em quem: o lembrete diz o quê
       pendente = meta.trocar !== undefined ? { chave: "trocar", valor: meta.trocar } : { chave: "usar_item", valor: meta.usar_item };
       responder(m.id, acaoIdx("itens"));
     })));
@@ -571,8 +571,8 @@ function linhaItem(meta, aoClicar) {
       dica: Telas.htmlItem(meta.equip, "Trocar de arma no meio da luta gasta o seu turno."), aoClicar };
   }
   return { icone: spr(Telas.iconeConsumivel(meta.usar_item), 2), fam: "cura", nome: meta.nome, info: `×${meta.qtd}`, slot: "item",
-    dica: `<b>${esc(meta.nome)}</b><div class="tipo">Você tem ${meta.qtd} · gasta o turno</div><div class="bonus">${Realce.texto(meta.desc)}</div>`,
-    bloqueio: meta.motivo, aoClicar };
+    dica: `<b>${esc(meta.nome)}</b><div class="tipo">Você tem ${meta.qtd} · gasta o turno</div><div class="bonus">${Realce.texto(meta.desc)}</div>${meta.motivo ? `<div class="pior">${esc(meta.motivo)}</div>` : ""}`,
+    bloqueio: meta.motivo, aoClicar };  // apagado, a dica já diz por quê (como nas habilidades)
 }
 function dicaHabilidade(h) {
   return `<b>${esc(h.nome)}</b><div class="tipo">${h.custo ? `${h.custo} de ${esc(h.recurso)}` : "Sem custo"}${h.flechas ? ` · ${Texto.plural(h.flechas, "flecha")}` : ""} · Alvo: ${ALVO_TXT[h.alvo_tipo] || "—"}</div>

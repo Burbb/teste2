@@ -63,7 +63,7 @@ def _fogueira(g, intro):
         opcoes.append(("Dormir até o amanhecer", None, {"dormir": True}))
         # Em volta do fogo é a hora de cuidar das coisas: talentos, inventário, diário, salvar (a doca acende)...
         opcoes += [o for o in g.opcoes_comuns() if o and o[1] in ATALHOS_FOGUEIRA]
-        # ...e de fazer curativos: a bolsa do painel funciona aqui (bandagem, poção, unguento).
+        # ...e de fazer curativos: a bolsa do painel funciona aqui (poção, bandagem, unguento).
         opcoes += g.opcoes_bolsa()
         op = g.menu("", opcoes)
         if op is None:

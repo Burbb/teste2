@@ -245,7 +245,7 @@ class AcoesDoHeroi:
             return "fuga"
         motivo = self.g.motivo_inutil(k)
         if k in EM_ALIADO:
-            # Poção e bandagem também servem em quem luta ao seu lado (comitiva e animal); servos não.
+            # A poção também serve em quem luta ao seu lado (comitiva e animal); servos não.
             precisam = self.aliados_precisam(k)
             if precisam:
                 quem = self.escolher_quem_trata(k, ([] if motivo else [j]) + precisam)
@@ -265,14 +265,13 @@ class AcoesDoHeroi:
         return "turno"
 
     def aliados_precisam(self, k):
-        """Quem luta ao seu lado (comitiva e animal; servos não) e precisa da poção ou da bandagem agora."""
+        """Quem luta ao seu lado (comitiva e animal; servos não) e precisa da poção agora."""
         if k not in EM_ALIADO:
             return []
-        return [a for a in self.aliados if a.vivo and a.tipo != "servo"
-                and (a.hp < a.max_hp or (k == "bandagem" and a.efeito("sangramento")))]
+        return [a for a in self.aliados if a.vivo and a.tipo != "servo" and a.hp < a.max_hp]
 
     def escolher_quem_trata(self, k, candidatos):
-        """Em quem usar a poção ou a bandagem. Na tela gráfica, as cartas acendem como na mira de um golpe."""
+        """Em quem usar a poção. Na tela gráfica, as cartas acendem como na mira de um golpe."""
         self.ui.meta_opcoes = [{"alvo": self.uid(c)} for c in candidatos] + [{"voltar": True}]
         try:
             esc = self.ui.escolher(f"Em quem usar {CONSUMIVEIS[k]['nome']}?",
@@ -289,15 +288,8 @@ class AcoesDoHeroi:
         telemetria.registrar(self.g, "consumivel", item=k, em_combate=True, em=getattr(a, "cid", None) or a.tipo)
         with self.agindo(j, nome, a, hab="item"):
             antes = a.hp
-            if k == "pocao_vida":
-                a.curar(a.max_hp * bal.POCAO_VIDA)
-                self.dizer(f"Você joga a {nome} para {a.nome}, que bebe num gole. (+{a.hp - antes} vida)", "verde")
-            else:
-                estancou = a.efeito("sangramento")
-                a.remover("sangramento")
-                a.curar(bal.BANDAGEM_VIDA)
-                self.dizer(f"Você enfaixa {a.nome} às pressas{', e o sangue para' if estancou else ''}. "
-                           f"(+{a.hp - antes} vida)", "verde")
+            a.curar(a.max_hp * bal.POCAO_VIDA)
+            self.dizer(f"Você joga a {nome} para {a.nome}, que bebe num gole. (+{a.hp - antes} vida)", "verde")
             self.curou(a, a.hp - antes, de=j, rotulo=nome)
         return "turno"
 

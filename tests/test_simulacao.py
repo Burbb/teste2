@@ -314,9 +314,11 @@ class TestSimulacao(unittest.TestCase):
             self.assertEqual(g.j.consumiveis["pocao_vida"], 1)
             m = comitiva.recrutar(g, "odete")
             m["hp"], m["ferido"] = 1, True
-            self.assertTrue(g.usar_em_companheiro("bandagem", "odete"))
+            self.assertFalse(g.usar_em_companheiro("bandagem", "odete"))  # a bandagem só enfaixa ferida do herói
+            self.assertEqual((g.j.consumiveis["bandagem"], m["hp"]), (1, 1))
+            self.assertTrue(g.usar_em_companheiro("pocao_vida", "odete"))  # a poção, sim, põe de pé
             self.assertFalse(m["ferido"])
-            self.assertEqual(g.j.consumiveis["bandagem"], 0)
+            self.assertEqual(g.j.consumiveis["pocao_vida"], 0)
 
     def test_mercado_quantidade_e_auto_equipar(self):
         with tempfile.TemporaryDirectory() as pasta:

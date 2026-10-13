@@ -26,7 +26,7 @@
     return `<div class="aprovacao ${h(m.classe)}" ${dica(`<b>Aprovação de ${h(m.nome.split(" ").pop())}</b><div class="aprov-agora">${h(m.nivel)} <span class="aprov-num">${valor}</span></div><ul class="dica-lista">${info}</ul><div class="rodape">Roxo: desconfiança · verde: confiança.</div>`)}><span class="trilho"><span class="marca" style="left:${(m.aprovacao + 100) / 2}%"></span></span><span class="rotulo">${h(m.nivel)}</span></div>`;
   }
 
-  /** O animal do patrulheiro na fogueira: carinho, poção, bandagem (o que estiver disponível agora). */
+  /** O animal do patrulheiro na fogueira: carinho e poção (o que estiver disponível agora). */
   function menuFera(ancora) {
     fecharMenuItem();
     const ops = App.opcoes() || [];
@@ -36,7 +36,7 @@
     ops.forEach((o) => {
       const m = o.meta || {};
       if (m.carinho === "fera") itens.push([`${S("coracao", 1)} Fazer carinho`, { carinho: "fera" }]);
-      if (m.em === "fera" && m.usar) itens.push([`${S(iconeConsumivel(m.usar), 1)} ${m.usar === "bandagem" ? "Enfaixar" : "Dar a Poção de Vida"}`, { usar: m.usar, em: "fera" }]);
+      if (m.em === "fera" && m.usar) itens.push([`${S(iconeConsumivel(m.usar), 1)} Dar a Poção de Vida`, { usar: m.usar, em: "fera" }]);
     });
     if (!itens.length) return;
     const menu = document.createElement("div");

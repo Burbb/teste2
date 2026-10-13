@@ -1,11 +1,11 @@
-/* Menus de item: em quem usar a poção ou a bandagem (com a comitiva por perto), e o vigia único que fecha qualquer
+/* Menus de item: em quem usar a poção (com a comitiva por perto), e o vigia único que fecha qualquer
    menu de item com um clique fora dele (a comitiva e a fogueira usam o mesmo). */
 "use strict";
 
 (() => {
   const { h, esconderDica } = Telas;
 
-  /** Poção ou bandagem com a comitiva por perto: em quem usar? (só fora de combate) */
+  /** A poção com a comitiva por perto: em quem usar? (só fora de combate) */
   function menuUso(ancora, b) {
     fecharMenuItem();
     esconderDica();
