@@ -372,6 +372,7 @@ def _lutar(g, grupo, titulo):
     """A luta da sala. Devolve True só com vitória (a derrota sai daqui como sempre, para o resgate ou o fim)."""
     from . import sobrevivencia
     luz = sobrevivencia.acender_tocha(g, sala=True)
+    g.luz_na_sala = "tocha" if luz else None  # a tela gráfica desenha a tocha acesa na cena que vem logo depois
     try:
         r = g.combate(grupo, emboscada=None if luz else "inimigo", titulo=titulo)
     finally:
@@ -423,7 +424,7 @@ def _recuo(g, titulo, texto, fora=False, sacristia=False):
         g.ui.painel("cena", cena_exterior(g))
     elif sacristia:
         _por_na_sala(g, "sacristia")
-        g.ui.painel("cena", cena_neutra(g, "sacristia"))
+        g.ui.painel("cena", cena_sacristia(g, luz=getattr(g, "luz_na_sala", None)))
     g.narrar(texto)
     g.dizer("A sala continua por vencer. Dá para voltar quando quiser.", "cinza")
 
@@ -456,17 +457,18 @@ def _nave(g, mid):
 def _sacristia(g, mid):
     m = registro(g, mid)
     g.ui.cena("A Sacristia", g.contexto_cena(), "evento")
-    g.ui.painel("cena", cena_neutra(g, "sacristia"))
+    g.ui.painel("cena", cena_sacristia(g, mid, "entrada"))
     g.narrar("A sacristia ficou acima da água: um degrau a mais salvou o chão. Há gente aqui. Dois homens de capa "
              "escura reviram as prateleiras à luz de uma lanterna. Os dois têm a mesma marca queimada no pulso.")
     g.narrar("Um deles ergue a lanterna para o seu rosto. \"Não é ela\", diz. O outro já está com a faca na mão.")
+    g.ui.painel("cena", cena_sacristia(g, mid, "luta"))  # na luta, os dois são as cartas: a arte fica sem eles
     if not _lutar(g, g.grupo("cultista", n=2), "A Sacristia"):
         _recuo(g, "A Sacristia", "Você volta pelo salão alagado até a brecha. Atrás de você, a lanterna se apaga.",
                fora=True)
         return
     _por_na_sala(g, "sacristia")
     g.ui.cena("A Sacristia", g.contexto_cena(), "evento")
-    g.ui.painel("cena", cena_neutra(g, "sacristia"))
+    g.ui.painel("cena", cena_sacristia(g, mid, "vitoria", luz=g.luz_na_sala))
     g.narrar({
         "guerreiro": "As botas deles ainda pingam. Não vieram pela brecha: há uma escada de mão encostada na janela "
                      "alta.",
@@ -741,8 +743,37 @@ def cena_ossuario(g, mid="febre_do_turvo", foco=None, pagina=False):
             "pontos": [escada, ponto, descida], "titulo": "O Ossuário", "pagina": pg}
 
 
+# O que se vê de perto na sacristia (pontos de olhar, só na página do lugar): o que a arte mostra, sem repetir o livro.
+OLHAR_JANELA = "Uma escada de mão, de madeira, encostada na parede até a janela alta."
+OLHAR_LIVRO = "O livro da capela, no couro duro. O que ele conta, você já leu."
+
+
+def cena_sacristia(g, mid="febre_do_turvo", momento="visita", pagina=False, luz=None):
+    """A sacristia, acima da água do salão: a porta para ele (um degrau abaixo), as prateleiras reviradas, a janela alta
+    com a escada de mão, o buraco na parede onde estava o livro, o baú embaixo do pano e o alçapão do ossuário.
+    `momento`: "entrada" (os dois de capa escura nas prateleiras, a lanterna erguida), "luta" (eles são as cartas: a
+    arte fica sem eles, a lanterna no chão, ainda acesa), "vitoria" (a lanterna caída e apagada, o livro fora do
+    buraco, o baú ainda embaixo do pano, como o texto conta) ou "visita" (o baú já está na bolsa: o pano no chão e o
+    canto vazio). `luz`: "tocha" quando a luta acendeu a de quem está ali; sem ela, a janela (o período lá fora)."""
+    visita = momento == "visita"
+    pontos = []
+    if visita:
+        porta = _passagem(g, mid, "porta", "Porta do salão", "salao", None,
+                          "A porta que volta ao salão alagado, um degrau abaixo.", pagina)
+        alcapao = _passagem(g, mid, "alcapao", "Alçapão", "ossuario", "ossuario", "O alçapão no chão desce ao ossuário.",
+                            pagina)
+        janela = {"id": "janela", "nome": "Janela", "estado": "A janela alta, com uma escada de mão encostada.",
+                  "acao": None, "olhar": OLHAR_JANELA if pagina else None}
+        livro = {"id": "livro", "nome": "Livro", "estado": "O livro da capela, embrulhado em couro.", "acao": None,
+                 "olhar": OLHAR_LIVRO if pagina else None}
+        pontos = [porta, janela, livro, alcapao]
+    return {"cena": "sacristia", "momento": momento, "luz": "lanterna" if momento in ("entrada", "luta") else luz,
+            "bau": "levado" if visita else "coberto", "livro": "no_buraco" if momento in ("entrada", "luta") else "fora",
+            "pontos": pontos, "titulo": "A Sacristia", "pagina": pagina}
+
+
 def cena_neutra(g, sala, pagina=False):
-    """Uma sala que ainda não tem arte própria (a sacristia, o fundo): a tela mostra um fundo neutro, escuro, sem
+    """Uma sala que ainda não tem arte própria (o fundo): a tela mostra um fundo neutro, escuro, sem
     objetos nem pontos, em vez de mostrar outra sala no lugar dela. O caminho fica nas opções do menu."""
     return {"cena": "neutra", "sala": sala, "pontos": [], "titulo": {"sacristia": "A Sacristia",
                                                                      "fundo": "O Fundo Alagado"}[sala], "pagina": pagina}
@@ -750,11 +781,13 @@ def cena_neutra(g, sala, pagina=False):
 
 def mostrar_cena(g):
     """Na página da Capela Afogada (só na tela gráfica): a sala onde o personagem está (sala_atual), com os pontos
-    que valem agora. A sacristia e o fundo, sem arte própria, num fundo neutro."""
+    que valem agora. O fundo, ainda sem arte própria, num fundo neutro."""
     sala = sala_atual(g)
     if sala is None:
         return
-    if sala in ("sacristia", "fundo"):
+    if sala == "sacristia":
+        g.ui.painel("cena", cena_sacristia(g, pagina=True))
+    elif sala == "fundo":
         g.ui.painel("cena", cena_neutra(g, sala, pagina=True))
     else:
         g.ui.painel("cena", {"exterior": cena_exterior, "salao": cena_salao, "ossuario": cena_ossuario}[sala](

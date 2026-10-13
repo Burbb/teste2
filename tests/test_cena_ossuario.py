@@ -63,7 +63,7 @@ class TestCenaOssuario(unittest.TestCase):
         self.assertEqual([d["cena"] for d in cenas(g)], ["ossuario"])
         missoes.ir_na_capela(g, "sacristia")
         missoes.mostrar_cena(g)
-        self.assertEqual(cenas(g)[-1]["cena"], "neutra")  # subiu à sacristia: a página mostra onde se está (1.79.0)
+        self.assertEqual(cenas(g)[-1]["cena"], "sacristia")  # subiu à sacristia: a página mostra onde se está (1.79.0)
 
     def test_clicar_e_voltar_nao_gasta_nem_celebra(self):
         g = no_ossuario()

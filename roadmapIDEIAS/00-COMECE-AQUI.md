@@ -1780,3 +1780,16 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   pyflakes, fumaça completa (no `cenarioOuroInsuficiente`, a taverna sem ouro sem o quadro e com ouro com ele); telas a
   1280×720 sem ouro (vila, taverna, curandeira: nenhum quadro, cartões com preço) e 1500×950 com ouro (F3, D1, F4).
 - **Falta:** Jean conferir. A E9 segue aberta.
+
+### 13/10/2026 — A sacristia desenhada (1.83.0)
+
+- **Pedido de Jean:** completar as artes da Capela Afogada, a sacristia e depois o fundo com Ilse, em entregas e
+  commits separados, sem mudar regra, custo, tempo, encontro, recompensa, equilíbrio ou história.
+- **Feito (a sacristia):** a sala seca com a porta do salão (um degrau acima da água), as prateleiras reviradas, a
+  janela alta com a escada de mão, o buraco do livro, o baú embaixo do pano e o alçapão; os momentos vindos do motor
+  (entrada com os dois vultos e a lanterna, luta sem eles, vitória com a lanterna apagada e o livro fora do buraco,
+  visita com o baú já levado); a luz da lanterna, depois a janela e a tocha de quem está ali; os pontos porta e alçapão
+  (as mesmas ações do menu) e janela e livro (só olhar). Detalhe em [20](20-CENA-INTERATIVA-OSSUARIO.md).
+- **Verificado:** testes (`TestSacristia` novo), gabarito idêntico, pyflakes, fumaça completa; telas nas três classes,
+  1500 e 1280 px com altura reduzida, movimento reduzido, fuga, derrota, dia e noite.
+- **Falta:** Jean conferir. Próxima entrega: o fundo alagado com Ilse. A E9 segue aberta.

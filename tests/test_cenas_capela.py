@@ -49,9 +49,9 @@ class TestPaginaDaCapela(unittest.TestCase):
         self.assertEqual((d["cena"], d["agua"]), ("salao", "quieta"))
         self.assertEqual(ponto(d, "porta")["acao"], {"missao": MID, "acao_missao": "sacristia"})
         self.assertEqual(ponto(d, "brecha")["acao"], {"capela_ir": "exterior"})
-        g = na_capela(etapa="ossuario")  # a sacristia não tem arte: um fundo neutro, sem pontos, nunca o salão
+        g = na_capela(etapa="ossuario")  # vencida a sacristia, a página é a dela (nunca o salão no lugar)
         d = pagina(g)
-        self.assertEqual((d["cena"], d["sala"], d["pontos"]), ("neutra", "sacristia", []))
+        self.assertEqual((d["cena"], d["momento"]), ("sacristia", "visita"))
 
     def test_depois_do_ossuario_o_sarilho(self):
         g = na_capela(etapa="fundo")
@@ -102,7 +102,8 @@ class TestCenasDentroDoTexto(unittest.TestCase):
         g = na_capela(etapa="sacristia")
         lutas(g, "fuga")
         fazer(g, "sacristia")
-        self.assertEqual([d["cena"] for d in cenas(g)], ["neutra", "exterior"])  # a sacristia, num fundo neutro
+        self.assertEqual([(d["cena"], d.get("momento")) for d in cenas(g)],
+                         [("sacristia", "entrada"), ("sacristia", "luta"), ("exterior", None)])
         self.assertEqual(missoes.sala_atual(g), "exterior")
 
     def test_a_luta_do_ossuario_no_ossuario(self):
@@ -110,7 +111,7 @@ class TestCenasDentroDoTexto(unittest.TestCase):
         g = na_capela("mago", etapa="ossuario")
         lutas(g, "fuga")
         fazer(g, "ossuario")
-        self.assertEqual([d["cena"] for d in cenas(g)], ["ossuario", "neutra"])  # a fuga sobe à sacristia
+        self.assertEqual([d["cena"] for d in cenas(g)], ["ossuario", "sacristia"])  # a fuga sobe à sacristia
         self.assertEqual((missoes.registro(g, MID)["etapa"], missoes.sala_atual(g)), ("ossuario", "sacristia"))
 
     def test_ossuario_vencido_mostra_o_sarilho_sem_acao(self):
@@ -449,3 +450,66 @@ class TestExplorarSoLaFora(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestSacristia(unittest.TestCase):
+    """A sacristia desenhada (1.83.0): o motor diz o momento (entrada, luta, vitória, visita), a luz, o baú e o livro; a
+    tela só desenha. Nada de baú, livro ou pista a mais."""
+
+    def test_entrada_luta_vitoria_e_a_pagina_depois(self):
+        g = na_capela(etapa="sacristia")
+        g.j.consumiveis["tocha"] = 2
+        lutas(g, "vitoria")
+        fazer(g, "sacristia")
+        ds = [d for d in cenas(g) if d["cena"] == "sacristia"]
+        self.assertEqual([(d["momento"], d["luz"], d["bau"], d["livro"]) for d in ds],
+                         [("entrada", "lanterna", "coberto", "no_buraco"), ("luta", "lanterna", "coberto", "no_buraco"),
+                          ("vitoria", "tocha", "coberto", "fora")])
+        self.assertTrue(all(d["pontos"] == [] and not d["pagina"] for d in ds))  # dentro das cenas, nada se clica
+        self.assertEqual(g.j.consumiveis["bau"], 1)  # o baú, uma vez, pelo motor
+        d = pagina(g)
+        self.assertEqual((d["momento"], d["bau"], d["livro"], d["luz"]), ("visita", "levado", "fora", None))
+        self.assertEqual([p["id"] for p in d["pontos"]], ["porta", "janela", "livro", "alcapao"])
+        self.assertEqual(ponto(d, "porta")["acao"], {"capela_ir": "salao"})
+        self.assertEqual(ponto(d, "alcapao")["acao"], {"missao": MID, "acao_missao": "ossuario"})
+        self.assertEqual(ponto(d, "alcapao")["faz"], "Descer ao ossuário")
+
+    def test_sem_tocha_a_vitoria_fica_com_a_janela(self):
+        g = na_capela(etapa="sacristia")
+        g.j.consumiveis["tocha"] = 0
+        lutas(g, "vitoria")
+        fazer(g, "sacristia")
+        self.assertIsNone(next(d for d in cenas(g) if d.get("momento") == "vitoria")["luz"])
+
+    def test_olhar_nao_da_nada_nem_repete_o_livro(self):
+        g = na_capela(etapa="ossuario")
+        d = pagina(g)
+        antes = json.dumps([g.j.para_dict(), g.mundo, g.dia, g.periodo], sort_keys=True, default=str)
+        for pid in ("janela", "livro"):
+            p = ponto(d, pid)
+            self.assertIsNone(p["acao"])
+            self.assertTrue(p["olhar"])
+            self.assertNotIn("Sigilo", p["olhar"])  # o que o livro conta não se repete
+        self.assertEqual(antes, json.dumps([g.j.para_dict(), g.mundo, g.dia, g.periodo], sort_keys=True, default=str))
+
+    def test_depois_do_ossuario_o_alcapao_so_passa(self):
+        g = na_capela(etapa="fundo")
+        missoes.ir_na_capela(g, "salao")
+        missoes.ir_na_capela(g, "sacristia")
+        d = pagina(g)
+        self.assertEqual(ponto(d, "alcapao")["acao"], {"capela_ir": "ossuario"})
+        self.assertEqual(ponto(d, "porta")["acao"], {"capela_ir": "salao"})
+
+    def test_a_fuga_do_ossuario_sobe_com_a_tocha(self):
+        g = na_capela("mago", etapa="ossuario")
+        g.j.consumiveis["tocha"] = 2
+        lutas(g, "fuga")
+        fazer(g, "ossuario")
+        d = cenas(g)[-1]
+        self.assertEqual((d["cena"], d["momento"], d["luz"]), ("sacristia", "visita", "tocha"))
+
+    def test_a_luz_da_luta_nao_vai_no_save(self):
+        g = na_capela(etapa="sacristia")
+        lutas(g, "vitoria")
+        fazer(g, "sacristia")
+        self.assertNotIn("luz_na_sala", json.dumps(g.mundo))

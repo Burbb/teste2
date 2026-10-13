@@ -203,8 +203,10 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   cena devolve a paisagem (`Cenas.virou`/`conferirPendente` em `tratar`). O motor manda o estado e,
   em cada ponto, a `acao` (a mesma meta de uma opção do menu: o clique só aproxima a câmera e escolhe aquela opção) ou
   o `estado` escrito. Mudança de estado se anima por uma celebração mandada depois de o motor gravar o resultado. Hoje
-  há três, da Capela Afogada: o exterior, o salão alagado e o ossuário (`missoes.cena_exterior`, `cena_salao`,
-  `cena_ossuario`; `mostrar_cena` escolhe o da página do lugar pelo passo da missão). Um ponto pode ser só "de olhar"
+  há quatro, da Capela Afogada: o exterior, o salão alagado, a sacristia e o ossuário (`missoes.cena_exterior`,
+  `cena_salao`, `cena_sacristia`, `cena_ossuario`; `mostrar_cena` escolhe o da página do lugar pela sala). Um ambiente
+  pode ter momentos que o motor manda explícitos (a sacristia: `momento` entrada, luta, vitória, visita; `luz`); a base
+  do desenho recebe o painel (`base(W, d)`). Um ponto pode ser só "de olhar"
   (aproxima e afasta, sem falar com o motor; o texto curto do que se vê vem do motor). O céu do exterior vem de
   `Vista.ceuDo`. Na capela, a sala em que se está (`missoes.sala_atual`) é separada da etapa: as passagens entre salas
   vencidas são opções do menu (`("capela", sala)`, meta `capela_ir`) e pontos da cena; cada ação da capela tem a sua

@@ -1,6 +1,6 @@
 /* Cenas interativas: um lugar desenhado em pixel art (como as paisagens: escala inteira, pontilhado de Bayer, dez
-   quadros por segundo) com pontos clicáveis por cima. Por enquanto, três ambientes da Capela Afogada (roadmapIDEIAS/20):
-   o exterior, o salão alagado e o ossuário com o sarilho. O motor diz qual ambiente, o estado dele (a água do salão
+   quadros por segundo) com pontos clicáveis por cima. Os ambientes da Capela Afogada (roadmapIDEIAS/20): o exterior,
+   o salão alagado, a sacristia e o ossuário com o sarilho. O motor diz qual ambiente, o estado dele (a água do salão
    inquieta ou quieta, as correntes presas ou soltas) e o que cada ponto faz (a mesma ação do menu, ou nada); clicar
    aproxima a câmera e manda a ação; a tela não decide nada. A corrente desce na tela só quando o motor avisa que o
    preparo foi gravado (celebrar "correntes"). Um ponto "de olhar" (os sapos) só aproxima e afasta. */
@@ -528,6 +528,215 @@
     }
   }
 
+  // ================================================================ a sacristia
+  // Uma sala pequena e seca, um degrau acima da água do salão: a porta para ele à esquerda (lá dentro, a água mais
+  // embaixo), as prateleiras reviradas, o buraco na parede onde estava o livro, a janela alta com a escada de mão (de
+  // madeira, não a de pedra do ossuário), o alçapão no chão e, no canto, o baú pequeno de ferro embaixo de um pano. O
+  // motor diz o momento: a entrada (os dois de capa escura, a lanterna erguida), a luta (eles são as cartas: a lanterna
+  // no chão), a vitória (a lanterna caída e apagada, o livro fora do buraco) e a visita (o baú já está na bolsa: o pano
+  // no chão e o canto vazio). A luz: a lanterna enquanto eles estão; depois, a janela (o período lá fora) e a tocha de
+  // quem está ali, se a luta a acendeu.
+  const SAC = {
+    piso: 54,
+    porta: { x: 8, w: 26, topo: 18 },          // o vão da porta do salão, em arco
+    janela: { x: 197, y: 4, w: 10, h: 17 },     // a janela alta
+    buraco: { x: 122, y: 24, w: 13, h: 10 },    // onde estava o livro
+    alcapao: { x: 230, y: 58, meia: 16, alt: 9 }, // o centro de cima, a meia largura em cima, a altura
+    bau: { x: 272, w: 24 },
+  };
+  const CORS = {
+    parede: "#1f1d1c", junta: "#161413", pedra: "#2d2926", pedraLuz: "#47413b", pedraSombra: "#171513",
+    chao: "#29251f", chaoLuz: "#3d362d", chaoJunta: "#1c1915", madeira: "#3a2a1c", madeiraLuz: "#5a4430",
+    madeiraEsc: "#1c140d", escada: "#6a5236", escadaLuz: "#8a6e48", ferro: "#3a3c42", ferroLuz: "#6a6c74",
+    pano: "#4a4440", panoLuz: "#5e5650", panoSombra: "#2e2a27", papel: "#b8ae98", couro: "#4a3020", couroEsc: "#2a1a10",
+    capa: "#141419", capaBorda: "#2a2a34", escuro: "#06080a",
+  };
+  /** Onde a luz principal está, pelo momento: a lanterna erguida (entrada), a lanterna no chão (luta), a tocha de quem
+   *  está ali (vitória, visita) ou, sem ela, a janela. */
+  function luzSacristia(d) {
+    if (d.momento === "entrada") return { x: 160, y: 31, perto: 40, longe: 150, max: 0.6, quente: true };
+    if (d.momento === "luta") return { x: 112, y: 57, perto: 38, longe: 150, max: 0.6, quente: true };
+    if (d.luz === "tocha") return { x: 62, y: 74, perto: 46, longe: 175, max: 0.52, quente: true };
+    return { x: 202, y: 30, perto: 34, longe: 200, max: 0.46, quente: false };  // só a janela: a leitura vem antes
+  }
+
+  function baseSacristia(W, d) {
+    const k = camada(W), c = k.getContext("2d"), px = pincel(c), ox = Math.round((W - QW) / 2), C = CORS, P = SAC.piso;
+    const ceu = ceuAgora(), bandas = ceu.bandas, noite = ceu.periodo === 3;
+    d = d || { momento: "visita", bau: "levado", livro: "fora" };
+    // a parede em blocos, o teto baixo com duas vigas e o chão seco de lajes
+    px(0, 0, W, QH, C.parede);
+    for (let y = 6; y < P; y += 6) for (let x = ((y / 6) % 2) * 7 - 14; x < W; x += 14) { px(x, y, 14, 1, C.junta); px(x, y, 1, 6, C.junta); }
+    px(0, 0, W, 4, C.madeiraEsc); px(0, 4, W, 1, C.pedraSombra);
+    for (let y = P; y < QH; y++) px(0, y, W, 1, y === P ? C.chaoLuz : C.chao);
+    for (let y = P + 4; y < QH; y += 5) for (let x = (y * 3) % 12; x < W; x += 16) px(x, y, 12, 1, C.chaoJunta);
+    for (let x = 0; x < W; x += 17) px(x + ((x * 7) % 5), P + 1, 1, 3, C.chaoJunta);
+    // a porta do salão, à esquerda: o arco de pedra, o escuro, e lá dentro a água do salão, mais embaixo (um degrau)
+    const pt = SAC.porta, px0 = ox + pt.x, pmeio = px0 + pt.w / 2;
+    for (let x = px0; x < px0 + pt.w; x++) {
+      const t = Math.min(1, Math.abs(x + 0.5 - pmeio) / (pt.w / 2)), topo = Math.round(pt.topo + 7 * (1 - Math.sqrt(1 - t * t)));
+      px(x, topo, 1, P - topo, C.escuro); px(x, topo - 1, 1, 1, C.pedraLuz); px(x, topo - 2, 1, 1, C.pedra);
+    }
+    px(px0 + 17, 26, 3, 21, "#0f1215"); px(px0 + 17, 26, 1, 21, "#191d22");          // uma coluna do salão, lá no fundo
+    for (let y = 47; y < P - 2; y++) px(px0 + 1, y, pt.w - 2, 1, y === 47 ? "#1a2629" : "#0b1316");  // a água do salão
+    px(px0 + 4, 49, 4, 1, "#1f3034"); px(px0 + 14, 50, 3, 1, "#1f3034");
+    px(px0 + 1, P - 2, pt.w - 2, 2, C.pedraSombra); px(px0 + 1, P - 2, pt.w - 2, 1, C.pedra);  // o degrau, descendo
+    px(px0 - 2, P, pt.w + 4, 1, C.pedraLuz); px(px0 - 1, P + 1, pt.w + 2, 1, C.pedra);          // a soleira
+    px(ox + 2, 22, 5, P - 22, C.madeira); px(ox + 2, 22, 1, P - 22, C.madeiraLuz); px(ox + 6, 22, 1, P - 22, C.madeiraEsc);  // a folha, aberta
+    px(ox + 3, 30, 3, 1, C.ferro); px(ox + 3, 46, 3, 1, C.ferro);
+    // as prateleiras, reviradas: uma tábua torta, um pote caído, uma caixa aberta, papéis no chão
+    [ox + 44, ox + 106].forEach((x) => { px(x, 16, 3, P - 16, C.madeiraEsc); px(x, 16, 1, P - 16, C.madeira); });
+    [[24, 0], [34, 0], [44, 1]].forEach(([y, torta]) => {
+      for (let x = ox + 44; x < ox + 109; x++) { const dy = torta && x > ox + 80 ? 1 : 0; px(x, y + dy, 1, 1, C.madeiraLuz); px(x, y + 1 + dy, 1, 1, C.madeira); }
+    });
+    px(ox + 52, 19, 4, 5, "#4a4038"); px(ox + 52, 19, 4, 1, "#6a5e50"); px(ox + 53, 18, 2, 1, "#3a3028");    // um pote de pé
+    px(ox + 64, 22, 7, 2, "#4a4038"); px(ox + 70, 22, 1, 2, "#2a221c");                                      // outro, deitado
+    px(ox + 82, 30, 7, 4, C.madeira); px(ox + 82, 29, 7, 1, C.madeiraLuz); px(ox + 88, 27, 1, 3, C.madeiraLuz); // a caixa, aberta
+    px(ox + 84, 29, 2, 1, C.papel);
+    px(ox + 94, 42, 6, 1, "#6a5a3a"); px(ox + 99, 41, 1, 1, "#8a7a4a");                                     // o castiçal caído
+    [[60, 61, 4], [78, 66, 5], [90, 58, 3]].forEach(([x, y, w]) => { px(ox + x, y, w, 1, C.papel); px(ox + x, y + 1, w, 1, "#8a8270"); });
+    px(ox + 100, 60, 2, 1, "#4a4038"); px(ox + 103, 61, 1, 1, "#4a4038");                                    // os cacos
+    // o buraco na parede onde estava o livro: pedras arrancadas em volta; o couro lá dentro, ou o livro no chão embaixo
+    const bk = SAC.buraco, bx = ox + bk.x;
+    // o contorno roído: cada linha começa e termina num ponto diferente (pedras arrancadas, não um nicho feito)
+    const recorte = [3, 1, 0, 0, 1, 0, 0, 2, 1, 3], fim = [2, 0, 1, 0, 0, 0, 1, 0, 2, 4];
+    for (let i = 0; i < bk.h; i++) {
+      const y = bk.y + i, a = bx + recorte[i], b2 = bx + bk.w - fim[i];
+      px(a, y, b2 - a, 1, C.escuro);
+      px(a - 1, y, 1, 1, i < 3 ? C.pedraLuz : C.pedra); px(b2, y, 1, 1, C.pedraSombra);
+    }
+    px(bx + 2, bk.y - 1, bk.w - 3, 1, C.pedraLuz); px(bx + 3, bk.y + bk.h, bk.w - 6, 1, C.pedraLuz);
+    px(bx + bk.w - 3, bk.y + 2, 2, 2, C.pedra);  // uma pedra meio solta na borda
+    px(bx + 2, P + 2, 3, 2, C.pedra); px(bx + 9, P + 3, 2, 1, C.pedra);  // as pedras que caíram
+    if (d.livro === "no_buraco") {
+      px(bx + 2, bk.y + 4, 9, 5, C.couro); px(bx + 2, bk.y + 4, 9, 1, "#6a4a30"); px(bx + 6, bk.y + 4, 1, 5, C.couroEsc);
+    } else {  // aberto no chão, embaixo do buraco: o couro desdobrado e as páginas
+      px(bx - 1, P + 6, 15, 3, C.couro); px(bx - 1, P + 6, 15, 1, "#6a4a30");
+      px(bx + 2, P + 5, 4, 2, C.papel); px(bx + 7, P + 5, 4, 2, C.papel); px(bx + 6, P + 5, 1, 2, "#8a8270");
+    }
+    // a janela alta, estreita, com o céu da hora e uma barra de ferro; o peitoril de pedra
+    const jn = SAC.janela, jx = ox + jn.x;
+    for (let y = jn.y; y < jn.y + jn.h; y++) for (let x = jx; x < jx + jn.w; x++) {
+      const dx = x + 0.5 - (jx + jn.w / 2);
+      if (y - jn.y < jn.w / 2 && dx * dx + (y - jn.y - jn.w / 2) ** 2 > (jn.w / 2) ** 2) continue;
+      px(x, y, 1, 1, x === jx + 5 ? "#2a2c30" : corDoCeu(bandas, x, Math.round(((y - jn.y) / jn.h) * 50)));
+    }
+    px(jx - 2, jn.y + jn.h, jn.w + 4, 2, C.pedraLuz); px(jx - 2, jn.y + jn.h + 2, jn.w + 4, 1, C.pedraSombra);
+    // a escada de mão, de madeira, encostada embaixo da janela: dois montantes e os degraus (não é a de pedra do ossuário)
+    for (let y = 21; y < P + 4; y++) {
+      const t = (y - 21) / (P + 3 - 21), xe = Math.round(lerp(ox + 196, ox + 186, t)), xd = Math.round(lerp(ox + 203, ox + 194, t));
+      px(xe, y, 1, 1, C.escada); px(xd, y, 1, 1, C.escada);
+      if ((y - 23) % 5 === 0) px(xe + 1, y, xd - xe - 1, 1, C.escadaLuz);
+    }
+    // o alçapão no chão, para o ossuário: as tábuas num trapézio (a perspectiva do chão), a moldura de pedra, a argola
+    const al = SAC.alcapao, ax = ox + al.x;
+    for (let i = 0; i < al.alt; i++) {
+      const meia = al.meia + Math.round(i * 0.4), y = al.y + i;
+      px(ax - meia - 1, y, meia * 2 + 2, 1, C.pedraLuz);
+      for (let x = ax - meia; x < ax + meia; x++) px(x, y, 1, 1, (x - ax + 60) % 6 === 0 ? C.madeiraEsc : i === 0 ? C.madeiraLuz : C.madeira);
+    }
+    px(ax - al.meia - 1, al.y - 1, al.meia * 2 + 2, 1, C.pedraSombra);
+    px(ax - 2, al.y + 3, 5, 1, C.ferroLuz); px(ax - 3, al.y + 4, 1, 2, C.ferroLuz); px(ax + 3, al.y + 4, 1, 2, C.ferroLuz); px(ax - 2, al.y + 6, 5, 1, C.ferro);
+    [ax - 11, ax + 8].forEach((x) => px(x, al.y, 4, 1, C.ferro));  // as dobradiças
+    // o baú: embaixo do pano, com um canto de ferro à vista (entrada, luta, vitória); depois, o pano no chão e o canto
+    // vazio, com a marca do baú na poeira (ele está na bolsa: aqui não há nada para pegar)
+    const bu = ox + SAC.bau.x, bw = SAC.bau.w;
+    if (d.bau === "coberto") {
+      px(bu, P - 9, bw, 9, C.ferro); px(bu, P - 9, 1, 9, C.ferroLuz);
+      for (let y = P - 13; y < P + 1; y++) {
+        const recuo = y < P - 10 ? Math.round((P - 10 - y) * 1.5) : 0, comeco = bu + 3 + recuo + (y > P - 4 ? 4 : 0);
+        for (let x = comeco; x < bu + bw + 2 - recuo; x++) px(x, y, 1, 1, (x + y) % 7 === 0 ? C.panoSombra : y === P - 13 ? C.panoLuz : C.pano);
+      }
+      px(bu + 1, P - 3, 1, 1, C.ferroLuz); px(bu + 3, P - 1, 1, 1, C.ferroLuz);  // o canto à vista: a quina e um rebite
+    } else {
+      px(bu + 1, P + 1, bw - 2, 1, C.chaoLuz); px(bu, P + 2, 1, 2, C.chaoLuz); px(bu + bw - 1, P + 2, 1, 2, C.chaoLuz); px(bu + 1, P + 3, bw - 2, 1, C.chaoLuz);
+      // o pano largado ao lado, amassado: um monte baixo, mais alto no meio, com duas dobras claras
+      const monte = [1, 2, 2, 3, 3, 4, 4, 4, 3, 3, 4, 3, 2, 2, 1, 1];
+      monte.forEach((alto, i) => { const x = bu - 14 + i; px(x, P + 7 - alto, 1, alto, C.pano); px(x, P + 7, 1, 1, C.panoSombra); });
+      px(bu - 10, P + 4, 3, 1, C.panoLuz); px(bu - 4, P + 4, 3, 1, C.panoLuz); px(bu - 7, P + 5, 1, 2, C.panoSombra);
+    }
+    // a lanterna dos dois: no chão, acesa (luta: o vidro vem no desenho de cada quadro), ou caída e apagada (depois)
+    if (d.momento === "vitoria" || d.momento === "visita") {
+      px(ox + 146, P + 8, 6, 3, C.ferro); px(ox + 147, P + 8, 4, 2, "#2a2a28"); px(ox + 152, P + 9, 2, 1, C.ferroLuz);
+    }
+    // a parede da direita, no canto
+    px(W - 8, 0, 8, P, C.pedraSombra); px(W - 8, 0, 1, P, C.pedra);
+    // a luz: longe da fonte, a sala escurece em degraus pontilhados; as passagens e a janela continuam legíveis
+    const L = luzSacristia(d);
+    escurecer(px, W, ox + L.x, L.y, L.perto, L.longe, L.max);
+    const leitura = "rgba(150,140,120,0.35)";
+    for (let x = px0; x < px0 + pt.w; x++) { const t = Math.min(1, Math.abs(x + 0.5 - pmeio) / (pt.w / 2)); px(x, Math.round(pt.topo + 7 * (1 - Math.sqrt(1 - t * t))) - 1, 1, 1, leitura); }
+    px(ax - al.meia - 1, al.y, al.meia * 2 + 2, 1, leitura);
+    px(jx - 2, jn.y + jn.h, jn.w + 4, 1, leitura);
+    // a luz que entra pela janela: fria, fraca, no peitoril e numa mancha no chão; à noite, quase nada
+    const daJanela = noite ? "rgba(150,165,200," : "rgba(225,215,190,";
+    px(jx - 2, jn.y + jn.h, jn.w + 4, 1, daJanela + (noite ? "0.25)" : "0.45)"));
+    for (let y = P + 1; y < P + 8; y++) {
+      const x0 = jx - 10 - (y - P) * 2, x1 = jx + jn.w - (y - P), f = 1 - (y - P) / 8;
+      px(x0, y, x1 - x0, 1, daJanela + ((noite ? 0.035 : 0.09) * f).toFixed(3) + ")");
+    }
+    return { canvas: k, ox, d, luz: L };
+  }
+
+  /** Um vulto de capa escura com capuz: sem rosto, sem marca (o que o texto diz dos pulsos fica no texto). `virado`:
+   *  -1 olhando para a esquerda (a porta), 1 para a direita, 0 de frente. A borda do lado da luz clareia um pouco. */
+  function vulto(px, x, pe, virado, ladoLuz) {
+    const C = CORS, topo = pe - 27;
+    px(x - 2, topo, 5, 1, C.capa); px(x - 3, topo + 1, 7, 4, C.capa);                          // o capuz
+    px(x - 1 + Math.max(0, virado) - (virado < 0 ? 1 : 0), topo + 2, 3, 3, "#050506");            // a sombra do rosto
+    for (let y = topo + 5; y < pe; y++) {                                                        // a capa, abrindo para baixo
+      const meia = Math.round(3 + (y - topo - 5) * 0.2), barra = y === pe - 1 && (x + y) % 2;
+      if (!barra) px(x - meia, y, meia * 2 + 1, 1, C.capa);
+      px(ladoLuz > 0 ? x + meia : x - meia, y, 1, 1, C.capaBorda);
+    }
+    px(x - 1, pe, 1, 1, "#0a0a0d"); px(x + 1, pe, 1, 1, "#0a0a0d");                             // os pés
+  }
+  /** A lanterna: a armação de ferro e o vidro aceso (`aceso` 0 apagado, 1 e 2: a chama tremendo). */
+  function lanterna(px, x, y, aceso) {
+    px(x, y - 2, 3, 1, CORS.ferroLuz); px(x + 1, y - 3, 1, 1, CORS.ferroLuz);
+    px(x - 1, y - 1, 5, 5, CORS.ferro);
+    px(x, y, 3, 3, aceso ? (aceso === 2 ? "#ffe08a" : "#ffd070") : "#2a2a28");
+    if (aceso) px(x + 1, y + 1, 1, 1, "#fff4c8");
+  }
+  /** Os anéis da luz quente (a lanterna, a tocha), que tremem de leve; parados com movimento reduzido. */
+  function aneis(px, W, lx, ly, raio, forca = 1) {
+    for (let y = 0; y < QH; y++) for (let x = Math.max(0, lx - raio); x < Math.min(W, lx + raio); x++) {
+      const d2 = ((x - lx) ** 2 + ((y - ly) * 1.6) ** 2) / (raio * raio);
+      if (d2 >= 1) continue;
+      const a = d2 < 0.08 ? 0.18 : d2 < 0.3 ? 0.11 : d2 < 0.65 ? 0.06 : 0.03;
+      px(x, y, 1, 1, `rgba(255,${d2 < 0.08 ? 190 : d2 < 0.3 ? 170 : 160},${d2 < 0.08 ? 110 : 90},${(a * forca).toFixed(3)})`);
+    }
+  }
+
+  function desenharSacristia(c, W, b, est, quadro, destaque) {
+    const px = pincel(c), ox = b.ox, d = b.d, quieto = reduzido(), q = quieto ? 0 : quadro, L = b.luz, P = SAC.piso;
+    c.drawImage(b.canvas, 0, 0);
+    const treme = quieto ? 0 : (q % 3) - 1;
+    if (d.momento === "entrada") {
+      // os dois de capa escura: um revirando as prateleiras, de lado, com a faca na outra mão; o outro de frente,
+      // erguendo a lanterna para quem chega
+      const mexe = quieto ? 0 : Math.floor(q / 6) % 2;
+      aneis(px, W, ox + L.x, L.y, 58 + treme);
+      vulto(px, ox + 92, P + 5, -1, 1);
+      px(ox + 88 - mexe, 30 + mexe, 1, 6, CORS.capa); px(ox + 87 - mexe, 29 + mexe, 2, 1, "#5a4a3c");     // o braço na prateleira
+      px(ox + 96, 46, 1, 3, CORS.capa); px(ox + 97, 48, 2, 1, "#c8ccd4");                                // a faca, baixa
+      vulto(px, ox + 154, P + 6, 0, -1);
+      px(ox + 157, 33, 1, 5, CORS.capa); px(ox + 158, 32, 1, 2, CORS.capa);                               // o braço erguido
+      lanterna(px, ox + L.x - 1, L.y - 1 + (quieto ? 0 : (Math.floor(q / 9) % 2)), quieto ? 1 : 1 + (q % 2));
+    } else if (d.momento === "luta") {
+      aneis(px, W, ox + L.x, L.y, 54 + treme);
+      lanterna(px, ox + L.x - 1, L.y - 3, quieto ? 1 : 1 + (q % 2));
+    } else if (d.luz === "tocha") {
+      aneis(px, W, ox + L.x, L.y, 96 + treme, 0.6);  // a tocha de quem está ali, perto da porta (fora do quadro)
+    }
+    // os pontos acesos no mouse e no foco
+    const ouro = COR.ouro;
+    if (destaque === "porta") { const pt = SAC.porta, x0 = ox + pt.x; px(x0 - 2, pt.topo + 2, 1, P - pt.topo - 2, ouro); px(x0 + pt.w + 1, pt.topo + 2, 1, P - pt.topo - 2, ouro); px(x0 + 4, pt.topo - 2, pt.w - 8, 1, ouro); }
+    if (destaque === "alcapao") { const al = SAC.alcapao, ax = ox + al.x; px(ax - al.meia - 2, al.y - 1, al.meia * 2 + 4, 1, ouro); px(ax - al.meia - 4, al.y + al.alt, al.meia * 2 + 8, 1, ouro); }
+    if (destaque === "janela") { const jn = SAC.janela, jx = ox + jn.x; px(jx - 1, jn.y + 4, 1, jn.h - 4, ouro); px(jx + jn.w, jn.y + 4, 1, jn.h - 4, ouro); px(jx + 2, jn.y - 1, jn.w - 4, 1, ouro); }
+    if (destaque === "livro") { const bk = SAC.buraco, bx = ox + bk.x; px(bx - 2, P + 4, 17, 1, ouro); px(bx - 2, P + 10, 17, 1, ouro); }
+  }
+
   // ================================================================ a sala sem arte própria
   // A sacristia e o fundo ainda não foram desenhados: em vez de mostrar outra sala no lugar deles, um fundo neutro,
   // a parede de pedra e o chão no escuro, com a luz da tocha de quem está ali no meio. Sem objetos nem pontos.
@@ -559,6 +768,11 @@
     salao: { base: baseSalao, desenhar: desenharSalao,
       pontos: { porta: { area: [282, 26, 26, 20], balao: [295, 24], foco: [270, 36] },
                 brecha: { area: [2, 24, 30, 30], balao: [17, 26], foco: [18, 40] } } },
+    sacristia: { base: baseSacristia, desenhar: desenharSacristia,
+      pontos: { porta: { area: [4, 16, 34, 42], balao: [21, 14], foco: [24, 40] },
+                janela: { area: [184, 2, 24, 54], balao: [222, 14], foco: [198, 26] },
+                livro: { area: [114, 22, 26, 46], balao: [128, 20], foco: [128, 47] },
+                alcapao: { area: [210, 56, 42, 14], balao: [230, 55], foco: [230, 62] } } },
     neutra: { base: baseNeutra, desenhar: desenharNeutra, pontos: {} },
   };
 
@@ -591,7 +805,7 @@
     pendente = false;
     const def = CENAS[d.cena];
     if (!def) { limpar(); return; }
-    const b = def.base(QW), est = { correntes: d.correntes, agua: d.agua, soltando: false, passo: 0, onda: 0 };
+    const b = def.base(QW, d), est = { correntes: d.correntes, agua: d.agua, soltando: false, passo: 0, onda: 0 };
     atual = { d, def, b, est };
     document.getElementById("cena").classList.add("com-ambiente");
     if (typeof recolherArte === "function") recolherArte(false);

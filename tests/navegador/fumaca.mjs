@@ -571,6 +571,8 @@ async function cenarioCapela(browser) {
     }
     conferir(/A Sacristia/.test(await page.textContent("#cena-cab .cena-titulo")) && /Ilse/.test(await page.textContent("#texto")),
       "vencida a luta, a sacristia mostra o livro da capela, com Ilse, e espera o Continuar");
+    conferir(await page.evaluate(() => { const d = Cenas.atual() && Cenas.atual().d; return !!d && d.cena === "sacristia" && d.momento === "vitoria" && d.bau === "coberto" && !d.pontos.length; }),
+      "a vitória na sacristia desenhada: os dois já não estão, o baú ainda embaixo do pano, nada para clicar");
     const cartoes = await page.$$eval("#texto .novidade-missao", (cs) => cs.map((c) => c.textContent));
     conferir(cartoes.length === 1 && /Ilse/.test(cartoes[0]) && /Objetivo/.test(cartoes[0]) && /ossuário/.test(cartoes[0]),
       `um cartão só junta o que a sacristia mostrou e o objetivo novo (${cartoes.length})`);
@@ -592,8 +594,8 @@ async function cenarioCapela(browser) {
     conferir(!(await page.$(`${MENU}:has-text("Atravessar o salão")`)) && /ossuário/.test(await objetivo()) && (await baus()) === bausDepois
       && !!(await page.$("#doca .atalho")) && !(await page.evaluate(() => document.body.classList.contains("sem-heroi"))),
       "salvar, sair e carregar lá dentro: a sala vencida continua vencida, o baú não se repete e a tela vem inteira");
-    conferir(await page.evaluate(() => document.querySelector("#pontos-cena").dataset.cena === "neutra" && /Sacristia/.test(document.querySelector("#cena-cab").textContent)),
-      "carregado na sacristia: o fundo neutro no topo (sem arte de outra sala) e a sala no subtítulo");
+    conferir(await page.evaluate(() => { const d = Cenas.atual().d; return d.cena === "sacristia" && d.momento === "visita" && d.bau === "levado" && /Sacristia/.test(document.querySelector("#cena-cab").textContent); }),
+      "carregado na sacristia: a sacristia no topo, o baú já levado (o pano no chão) e a sala no subtítulo");
     await page.keyboard.press("d");
     await page.waitForSelector(".missao-pistas", { timeout: 10000 });
     const diario = await page.textContent(".missao-diario");
@@ -809,13 +811,22 @@ async function cenarioCapelaSalas(browser) {
     await page.keyboard.press("F4");
     await page.waitForTimeout(200);
     conferir(!(await page.evaluate(() => document.body.classList.contains("destacar-interacoes"))), "F4 de novo desliga");
-    // a escada leva à sacristia (fundo neutro), o menu ao salão e à brecha; o buraco de volta ao salão, sem luta
+    // a escada leva à sacristia, a porta dela ao salão e o menu à brecha; o buraco de volta ao salão, sem luta
     await page.click('.ci-ponto[data-ponto="escada"]');
     await page.waitForSelector(`${MENU}:has-text("Voltar ao salão alagado")`, { timeout: 20000 });
     await page.waitForTimeout(200);
-    conferir((await sala()) === "neutra" && /Sacristia/.test(await page.textContent("#cena-cab")), "a escada sobe à sacristia: fundo neutro e a sala no subtítulo");
+    conferir((await sala()) === "sacristia" && /Sacristia/.test(await page.textContent("#cena-cab")), "a escada sobe à sacristia desenhada, com a sala no subtítulo");
     conferir(!(await page.$(`${MENU}:has-text("Explorar")`)), "dentro da capela, sem Explorar a região (1.81.1)");
-    await ir("Voltar ao salão alagado", "Sair pela brecha");
+    await page.focus('.ci-ponto[data-ponto="livro"]');
+    await page.keyboard.press("Enter");
+    await page.waitForSelector("#texto .olhar-perto", { timeout: 5000 }).catch(() => {});
+    conferir(/já leu/.test((await page.textContent("#texto .olhar-perto").catch(() => "")) || "") && (await foto()) === antes,
+      "o livro, pelo teclado: uma linha curta, sem repetir o que ele conta e sem gastar nada");
+    await page.click(".ci-afastar");
+    await page.waitForTimeout(600);
+    await page.click('.ci-ponto[data-ponto="porta"]');
+    await page.waitForSelector(`${MENU}:has-text("Sair pela brecha")`, { timeout: 20000 });
+    await page.waitForTimeout(200);
     conferir((await sala()) === "salao:quieta", "o salão vencido, quieto");
     await ir("Sair pela brecha", "Entrar no salão pelo buraco");
     conferir((await sala()) === "exterior" && !!(await page.$(`${MENU}:has-text("Explorar a região")`)), "pela brecha, do lado de fora, onde se explora");
@@ -824,7 +835,9 @@ async function cenarioCapelaSalas(browser) {
     conferir(!(await page.evaluate(() => document.body.classList.contains("em-combate"))) && !(await page.$("#prompt .continuar")),
       "o buraco leva de volta ao salão vencido sem luta e sem Continuar");
     await ir("Ir à sacristia", "Descer ao ossuário pelo alçapão");
-    await ir("Descer ao ossuário pelo alçapão", "Soltar as correntes");
+    await page.click('.ci-ponto[data-ponto="alcapao"]');
+    await page.waitForSelector(`${MENU}:has-text("Soltar as correntes")`, { timeout: 20000 });
+    await page.waitForTimeout(200);
     conferir((await sala()) === "ossuario" && (await foto()) === antes,
       "ida e volta pela capela inteira: nada gasto, nenhum dia ou período a mais, a missão igual");
     // O lodo de Caspar (1.80.0): não no ossuário; na água do fundo, junto de Ilse, sem começar a luta.

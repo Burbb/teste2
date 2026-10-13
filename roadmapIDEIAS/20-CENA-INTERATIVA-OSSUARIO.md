@@ -318,7 +318,7 @@ Terceira entrega do mesmo pedido. A capela passa a ter **onde o personagem está
 |---|---|---|
 | Exterior | a capela por fora (1.76.0) | **Buraco no muro** (entrar: a ação da missão ou a passagem), **Sapos** (só olhar) |
 | Salão | o salão quieto, depois de vencido (1.76.0; inquieto só na cena da luta) | **Brecha do muro** (sair), **Sacristia** (a porta: a ação ou a passagem) |
-| Sacristia | **fundo neutro**: parede e chão no escuro, a luz no meio, sem objetos (sem arte própria) | nenhum: o caminho fica no menu |
+| Sacristia | **fundo neutro** até a 1.82.1; desenhada na 1.83.0 (abaixo) | nenhum até a 1.82.1; porta, janela, livro e alçapão na 1.83.0 |
 | Ossuário | o ossuário (1.72.0; luz na 1.78.0) | **Escada do alçapão** (subir), **Sarilho** (a ação), **Descida ao fundo** (a ação ou a passagem) |
 | Fundo | **fundo neutro** (sem arte própria) | nenhum |
 
@@ -506,3 +506,83 @@ destoaria da vila clara lá fora. Não foi redesenhada.
   o tutorial, salvar e carregar em cada sala); fumaça (`cenarioCapelaSalas`); na tela, as quatro salas e o exterior,
   salvar e carregar no fundo e voltar até a brecha, e o tutorial ligado: sem quadro dentro, o quadro do Explorar
   apontando a opção do lado de fora.
+
+---
+
+# A sacristia desenhada (1.83.0)
+
+Pedido de Jean (13/10/2026): completar as artes da capela, a sacristia primeiro e o fundo com Ilse depois, em entregas
+separadas. Nesta, a sacristia. Regras, custos, tempo, encontros, recompensas, equilíbrio e história iguais.
+
+## O que a sala mostra
+
+Uma sala pequena e seca (lajes de pedra, teto baixo), na mesma paleta das outras salas, um pouco mais quente por ser
+seca (`baseSacristia`, `desenharSacristia` em `telas/cenas.js`):
+
+- **A porta do salão**, à esquerda: o arco de pedra, a folha de tábuas aberta e, lá dentro, a água do salão mais
+  embaixo, com o degrau descendo e a soleira (o "degrau a mais" do texto).
+- **As prateleiras reviradas** pelos dois homens: uma tábua torta, um pote de pé e outro deitado, uma caixa aberta, o
+  castiçal caído, cacos e três folhas no chão. Nada repetido.
+- **A janela alta**, estreita, com o céu da hora (o mesmo das paisagens) e uma barra; **a escada de mão** de madeira
+  encostada embaixo dela (montantes e degraus claros, diferente da escada de pedra do ossuário).
+- **O buraco na parede** onde estava o livro, de pedras arrancadas (contorno irregular, uma pedra meio solta, duas no
+  chão).
+- **O baú pequeno de ferro** no canto, embaixo de um pano, com a quina e um rebite à vista.
+- **O alçapão** no chão, em perspectiva, com a moldura de pedra, as tábuas, as dobradiças e a argola.
+
+## Os estados (o motor manda: `missoes.cena_sacristia`)
+
+| Momento | Quando | O que muda |
+|---|---|---|
+| `entrada` | a cena "A Sacristia", antes da luta | os dois vultos de capa escura e capuz (sem rosto, sem marca, sem símbolo): um nas prateleiras, de lado, com a faca baixa; o outro de frente, erguendo a lanterna. O livro ainda no buraco, embrulhado em couro |
+| `luta` | logo antes da luta (um segundo painel) | eles são as cartas: a arte fica sem eles, com a lanterna no chão, acesa |
+| `vitoria` | a cena depois da luta | a lanterna caída e apagada; o livro aberto no chão, embaixo do buraco; o baú ainda embaixo do pano (o texto chega nele e o motor o põe na bolsa) |
+| `visita` | a página da sacristia (e o recuo do ossuário) | o baú já está na bolsa: o pano largado no chão e a marca do baú na poeira. Nada para pegar |
+
+**A luz** (`luz` no painel e `luzSacristia` na tela), pela referência do ossuário:
+
+- na entrada, a lanterna erguida (anéis quentes que tremem; com movimento reduzido, parados); na luta, a lanterna no
+  chão;
+- depois, a janela (o período lá fora: um peitoril claro e uma mancha fraca no chão, sem facho pontilhado; à noite,
+  quase nada) e, se a luta acendeu a tocha de quem está ali, a luz dela vindo de perto da porta (`luz: "tocha"`,
+  guardada em `Jogo.luz_na_sala` só para a cena seguinte; não vai no save). Na visita sem tocha, só a janela: a sala
+  escurece menos e a porta, o peitoril e o alçapão ganham uma borda clara, para a leitura vir antes do clima, também
+  à noite.
+
+## Os pontos (só na página do lugar)
+
+| Ponto | Faz |
+|---|---|
+| **Porta do salão** | "Voltar ao salão alagado" (passagem, sem custo) |
+| **Alçapão** | "Descer ao ossuário" (a ação da missão, com a luta) enquanto o ossuário não foi vencido; depois, "Descer ao ossuário pelo alçapão" (passagem) |
+| **Janela** | só olhar: "Uma escada de mão, de madeira, encostada na parede até a janela alta." |
+| **Livro** | só olhar: "O livro da capela, no couro duro. O que ele conta, você já leu." |
+
+Os de olhar aproximam a arte e põem a linha embaixo do texto, como os sapos: sem tempo, custo, pista ou repetição do
+livro. Nomes no mouse e no foco; F4 mostra todos. Na luta e dentro das cenas, nenhum ponto.
+
+## Conferido
+
+- Testes: `TestSacristia` (os quatro momentos, a luz com e sem tocha, o baú uma vez, os pontos, olhar sem mudar nada,
+  o alçapão como passagem depois do ossuário, a fuga do ossuário subindo com a tocha, a luz fora do save) e os de antes
+  ajustados (a sacristia no lugar do fundo neutro).
+- Fumaça: `cenarioCapela` (a vitória desenhada; carregado, o baú levado) e `cenarioCapelaSalas` (a escada sobe à
+  sacristia; o livro pelo teclado; a porta ao salão; o alçapão ao ossuário). Gabarito idêntico.
+- Na tela: a entrada, a luta, a vitória e a página nas três classes (guerreiro, mago e arqueiro), a 1280×720,
+  1500×950, 1500×700 e 1280×600 com movimento reduzido; a fuga (o exterior) e a volta pelo buraco e pela porta; a
+  derrota do mago (o resgate no Vau, a paisagem da vila no topo); a visita de dia e à noite; F4 e o mouse nos pontos.
+
+## Limitações
+
+- O vulto com a lanterna olha para a frente; quem olha "para o seu rosto" é o personagem fora do quadro.
+- A tocha de quem está ali é uma luz vinda de baixo, à esquerda, sem o personagem desenhado.
+- Jean ainda não viu: teste humano pendente.
+
+## Como Jean testa (1.83.0)
+
+1. `$env:ETAPA="sacristia"; $env:SALA="salao"; python -m tests.navegador.cenarios capela`: clique na porta do salão; a
+   sacristia com os dois e a lanterna; na luta, só a lanterna no chão. Fuja: o exterior. Volte e vença: a lanterna
+   caída, o livro no chão, o baú embaixo do pano.
+2. Depois do Continuar, a página: o pano no chão. Passe o mouse na porta, na janela, no livro e no alçapão; F4 mostra
+   todos. A janela e o livro só aproximam (Afastar volta).
+3. `$env:ETAPA="ossuario"; $env:SALA="sacristia"; $env:PERIODO="3"`: a sacristia à noite, legível.
