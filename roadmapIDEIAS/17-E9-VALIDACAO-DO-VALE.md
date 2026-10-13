@@ -32,6 +32,7 @@ Avaliação integrada do Vale do Turvo como primeiro capítulo (a E9 antecipada,
 - **A bandagem só enfaixa, 1.70.0 (seção 30):** sem vida, só ferida aberta do herói, uma por uso; o primeiro
   ferimento em três linhas; as flechas recolhidas no espólio ([18](18-E9-ABERTURA-GUIADA.md), seção 22).
 - **Correção 1.70.1 (seção 31):** o soldo de Morel que caía nos dias do resgate vem depois de o herói acordar.
+- **Relato de Jean e correção 1.70.2 (seção 32):** uma partida completa de Sombra; o D2 não cobre mais a opção seguinte.
 - **Quarta entrega, 1.65.2 e 1.65.3 (seção 19):** a partida da Quibia lida; os contratos pagos depois do resgate; o
   ×N dos baús em destaque. A especificação da abertura guiada fica em [18](18-E9-ABERTURA-GUIADA.md).
 - **Correção 1.65.1 (seção 18):** os três pontos que faltaram na mensagem cortada: a percepção do Mago na água, o nome
@@ -976,6 +977,29 @@ gerado, que já narrava antes de passar os dias.
   juntas: o clique chegava antes de o menu aceitar o uso; agora ele espera a vez e confere que a bandagem foi gasta);
 - na tela, a 1500 e 1280 px (cenário `resgate` com `MOREL_DIAS=4`): "Alguém do Vau te acha…", o −30 ouro, e só
   então "Morel estende a mão aberta" com Pagar/Dizer que não há dinheiro.
+
+**A E9 continua aberta** até a validação com jogadores novos.
+
+## 32. A partida de Sombra de Jean (relato) e o D2 (1.70.2)
+
+**Relato humano de Jean (13/10/2026):** jogou uma partida completa com um arqueiro Sombra e terminou com
+tranquilidade. É o relato do designer, que conhece o jogo. **Não** é a validação com jogadores novos (seção 9), que
+continua pendente: o próximo teste é com a esposa dele.
+
+**O registro que ele mandou** (`tests/runs/ze_do_lanca_sombra.jsonl`, agora régua do `tests.replay`) diz, sem conta
+nova:
+- Zé do Lança, jogo 1.69.1, ou seja, antes da bandagem só enfaixar (1.70.0);
+- 21 dias, nível 6, especialização no dia 5;
+- Ilse, a Bruxa Afogada, vencida no nível 5, em 7 turnos, com 26% da vida perdida;
+- 37 lutas, uma derrota (no nível 4) e uma fuga (no nível 1);
+- Morel desde o dia 3 e Odette desde o dia 12, os dois até o fim;
+- 9 baús abertos, 5 ferimentos, 1 dia com fome;
+- o arquivo marca "partida em andamento": foi gravado antes de ele fechar o jogo.
+
+A leitura detalhada (economia, saque, ritmo) fica para quando for preciso. Não se tira daí conclusão de dificuldade.
+
+**Correção 1.70.2:** o quadro "Acampe para montar uma fogueira…" não cobre mais a opção seguinte a Acampar (seção 23
+do 18).
 
 **A E9 continua aberta** até a validação com jogadores novos.
 

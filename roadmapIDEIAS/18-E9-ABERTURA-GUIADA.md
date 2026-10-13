@@ -1063,3 +1063,24 @@ de jogar.
 
 **Visto e não mexido:** a 1280 px, o quadro do D2 ("Acampe…"), na faixa de baixo, cobre a opção logo abaixo de
 "Acampar" quando a página rola até ela. Ele é da 1.69.x e não mudou aqui.
+
+## 23. O D2 não cobre a opção seguinte (1.70.2)
+
+Registrado na 1.70.0 (seção 22) e pedido por Jean. **Reproduzido** em 1280×800: a página rolava só o bastante para
+mostrar "Acampar" (42 px, menos do que recolhe a arte) e "Viajar", logo abaixo, ficava 70% escondida atrás da faixa
+do quadro. Se a pessoa rolava para cima, o contorno da opção destacada passava por cima da faixa e do quadro,
+apontando para o que tinha sumido.
+
+**Corrigido, com o posicionamento que já existia** (`orientacao.js`):
+- **A rolagem para o alvo**, uma vez por etapa como antes, traz o menu inteiro quando ele cabe, não só a opção
+  destacada. Na página do meio, a arte do lugar se recolhe antes de rolar, como faria rolando à mão; a conta é refeita
+  depois que ela termina de encolher. Nenhum espaço novo: a faixa é a mesma de antes.
+- **Se a pessoa rola até a opção destacada sair de vista** (menos da metade aparecendo), o quadro espera ela voltar,
+  como já fazia com o baú e o contrato. O contorno e a haste ficam cortados pela borda da página.
+- Textos e funcionamento do tutorial iguais.
+
+**Conferido na tela**, com o D2 em todos (as três opções inteiras na posição inicial; ao rolar até o topo, o quadro
+some; ao voltar, reaparece):
+- 1280×800, 1280×700, 1500×950 e 1500×700;
+- sozinho e com Morel e Odette, de dia e à noite (página mais longa, com as linhas de risco);
+- guerreiro no Charco e arqueiro no Bosque.

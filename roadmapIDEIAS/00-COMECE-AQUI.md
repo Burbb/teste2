@@ -1567,3 +1567,13 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   acordar e perder o ouro do resgate (`Jogo.amanhecer_adiado`, `comitiva.soldo_devido`).
 - **Verificado:** testes, gabarito igual sem atualizar, pyflakes, fumaça completa, tela a 1500 e 1280 px.
 - **Falta:** Jean conferir. A E9 continua aberta.
+
+### 13/10/2026 — Relato da partida de Sombra e o D2 (E9, 1.70.2)
+
+- **Relato de Jean:** uma partida completa de arqueiro Sombra, terminada com tranquilidade (registro em
+  `tests/runs/ze_do_lanca_sombra.jsonl`; 17, seção 32). É relato humano, não validação de jogadores novos.
+- **Feito:** a rolagem para a opção destacada traz o menu inteiro (a arte se recolhe antes); o quadro espera a opção
+  voltar à vista se a pessoa rolar para longe; o contorno fica cortado pela página (18, seção 23).
+- **Verificado:** testes, gabarito, pyflakes, fumaça completa, tela em 1280/1500 × 800/950/700, com e sem comitiva,
+  de dia e à noite.
+- **Falta:** Jean conferir; jogadores novos. A E9 continua aberta.

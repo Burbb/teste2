@@ -293,8 +293,9 @@ const Orientacao = (() => {
     }
     const chave = a.id + "|" + a.html;
     if (!a.luta && a.el && chave !== rolado) { trazerAVista(a.el); rolado = chave; }  // uma vez por etapa
-    // O controle encostado que a pessoa rolou para fora da parte visível: o quadro espera ele voltar (não rola de novo).
-    if (a.onde === "junto" && !aVista(a.el)) { esconder(); destacar(null); return; }
+    // O controle encostado (ou a opção do menu, sobre a faixa de baixo) que a pessoa rolou para fora da parte visível:
+    // o quadro espera ele voltar (não rola de novo nem aponta para o que ficou escondido).
+    if ((a.onde === "junto" || a.onde === "baixo") && !aVista(a.el)) { esconder(); destacar(null); return; }
     const zona = a.luta ? (faixa ? faixa.getBoundingClientRect() : acimaDasCartas())
       : faixa && a.onde !== "achado" && a.onde !== "junto" ? faixa.getBoundingClientRect() : null;
     // Fora da luta, o prédio pode andar com a câmera (a vila se monta): a posição horizontal dele entra na conta (a
@@ -324,6 +325,15 @@ const Orientacao = (() => {
     // fica só com a seta do quadro. Sem controle (o texto correndo, a animação), sem destaque nem véu.
     destacar(!a.el || a.semAnel || a.el.classList.contains("destaque") || a.el.classList.contains("pronto") ? null : a.el);
     if (a.el) veu(a); else veus.forEach((v) => { v.hidden = true; });
+  }
+
+  /** O retângulo do controle cortado pela coluna ou página que rola: o anel e a haste não passam da borda dela (a
+   *  opção que a pessoa rolou até a faixa do quadro fica contornada só na parte que aparece). */
+  function parteVisivel(e) {
+    const r = e.getBoundingClientRect(), caixa = rolavel(e);
+    if (!caixa) return r;
+    const c = caixa.getBoundingClientRect(), top = Math.max(r.top, c.top), bottom = Math.min(r.bottom, c.bottom);
+    return { left: r.left, right: r.right, width: r.width, top, bottom: Math.max(top, bottom), height: Math.max(0, bottom - top) };
   }
 
   /** O controle à vista dentro da coluna ou da página que rola (pelo menos metade dele). */
@@ -394,9 +404,26 @@ const Orientacao = (() => {
   function trazerAVista(e) {
     const pg = rolavel(e);  // a página do meio ou a coluna lateral (o baú, o contrato) que rola
     if (!pg) return;
-    const r = e.getBoundingClientRect(), v = pg.getBoundingClientRect(), folga = 8;
+    // Na página, antes de rolar, a arte do lugar se recolhe (como faria rolando à mão): o espaço vai para o texto, e a
+    // rolagem é medida depois que ela termina de encolher.
+    const cena = pg.id === "pagina" && document.querySelector("#cena");
+    if (cena && !cena.classList.contains("recolhido") && !cena.classList.contains("vila-hub")
+        && e.getBoundingClientRect().bottom > pg.getBoundingClientRect().bottom - 8 && typeof recolherArte === "function") {
+      recolherArte(true);
+      setTimeout(() => rolarAte(e, pg), 400);
+      return;
+    }
+    rolarAte(e, pg);
+  }
+  /** Rola só o necessário para o controle aparecer inteiro, com uma folga. Uma opção do menu traz o menu inteiro,
+   *  quando ele cabe: a opção seguinte não fica escondida atrás da faixa do quadro. */
+  function rolarAte(e, pg) {
+    if (!e.isConnected) return;
+    const lista = e.closest(".escolhas"), folga = 8;
+    const alvo = lista && lista.getBoundingClientRect().height <= pg.clientHeight - 2 * folga ? lista : e;
+    const r = alvo.getBoundingClientRect(), v = pg.getBoundingClientRect();
     if (r.bottom > v.bottom - folga) pg.scrollTop += Math.ceil(r.bottom - v.bottom + folga);
-    else if (r.top < v.top + folga) pg.scrollTop -= Math.ceil(v.top + folga - r.top);
+    else if (e.getBoundingClientRect().top < v.top + folga) pg.scrollTop -= Math.ceil(v.top + folga - e.getBoundingClientRect().top);
   }
 
   /** Onde o quadro fica: calculado na mudança de etapa ou de layout, nunca a cada quadro da animação. */
@@ -521,7 +548,7 @@ const Orientacao = (() => {
   /** A haste vai da ponta da seta (6px fora do quadro) até a borda do ícone, e acompanha o ícone quando a carta
    *  cresce ou treme (o quadro fica parado). */
   function esticarHaste(e) {
-    const r = e.getBoundingClientRect(), q = quadro.getBoundingClientRect(), baixo = haste.dataset.lado === "baixo";
+    const r = parteVisivel(e), q = quadro.getBoundingClientRect(), baixo = haste.dataset.lado === "baixo";
     const de = baixo ? r.bottom + 1 : q.bottom + 6, ate = baixo ? q.top - 6 : r.top - 1;
     haste.hidden = ate - de <= 2;
     Object.assign(haste.style, { left: haste.dataset.x - 1 + "px", top: Math.round(de) + "px", height: Math.max(0, Math.round(ate - de)) + "px" });
@@ -532,7 +559,7 @@ const Orientacao = (() => {
     controle = e;
     if (!anel) return;
     if (!e) { anel.hidden = true; return; }
-    const r = e.getBoundingClientRect(), cs = getComputedStyle(e);
+    const r = parteVisivel(e), cs = getComputedStyle(e);
     anel.hidden = false;
     Object.assign(anel.style, { left: r.left - 3 + "px", top: r.top - 3 + "px", width: r.width + 6 + "px", height: r.height + 6 + "px",
       borderRadius: cs.borderRadius && cs.borderRadius !== "0px" ? `calc(${cs.borderRadius} + 3px)` : "0" });
