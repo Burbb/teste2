@@ -407,7 +407,7 @@ const Orientacao = (() => {
     // Na página, antes de rolar, a arte do lugar se recolhe (como faria rolando à mão): o espaço vai para o texto, e a
     // rolagem é medida depois que ela termina de encolher.
     const cena = pg.id === "pagina" && document.querySelector("#cena");
-    if (cena && !cena.classList.contains("recolhido") && !cena.classList.contains("vila-hub")
+    if (cena && !cena.classList.contains("recolhido") && !cena.classList.contains("vila-hub") && !cena.classList.contains("com-ambiente")
         && e.getBoundingClientRect().bottom > pg.getBoundingClientRect().bottom - 8 && typeof recolherArte === "function") {
       recolherArte(true);
       setTimeout(() => rolarAte(e, pg), 400);

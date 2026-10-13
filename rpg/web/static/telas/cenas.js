@@ -517,174 +517,185 @@
       pontos: { porta: { area: [282, 26, 26, 20], balao: [295, 24], foco: [270, 36] } } },
   };
 
-  // ---------------------------------------------------------------- a cena na página
-  function cena(d) {
-    const pontos = d.pontos.map((p) => {
+  // ---------------------------------------------------------------- a cena no topo
+  // O painel "cena" não põe imagem no texto: ele troca a arte do topo (o mesmo canvas da paisagem, vista.js) pelo
+  // ambiente, e os pontos ficam numa capa por cima dela (como os prédios da vila). Embaixo, só o texto e as escolhas.
+  // Uma página nova sem painel de cena (outro lugar, um menu, a sacristia) devolve a paisagem.
+  let atual = null;      // { d, def, b, est }: o ambiente à vista
+  let pendente = false;  // a página virou: o ambiente sai, a menos que o próximo painel traga outro
+  let capa = null;     // os pontos, sobre a arte
+
+  function passo(est) {
+    if (est.soltando) {
+      est.passo++;
+      if (est.passo >= 27) { est.soltando = false; est.correntes = "soltas"; est.onda = 12; if (est.fim) { est.fim(); est.fim = null; } }
+    } else if (est.onda > 0) est.onda--;
+  }
+
+  function mostrar(d) {
+    pendente = false;
+    const def = CENAS[d.cena];
+    if (!def) { limpar(); return; }
+    const b = def.base(QW), est = { correntes: d.correntes, agua: d.agua, soltando: false, passo: 0, onda: 0 };
+    atual = { d, def, b, est };
+    document.getElementById("cena").classList.add("com-ambiente");
+    if (typeof recolherArte === "function") recolherArte(false);
+    Vista.usarAmbiente({
+      base: b.canvas, foco: d.foco ? def.pontos[d.foco].foco : null,
+      desenhar: (ctx, quadro, destaque) => {  // a corrente descendo dá trancos no quadro
+        const tranco = est.soltando && est.passo > 3 && est.passo < 22 && !reduzido() ? (est.passo % 2 ? 1 : -1) : 0;
+        ctx.save(); ctx.translate(tranco, 0);
+        def.desenhar(ctx, QW, b, est, quadro, destaque);
+        ctx.restore();
+      },
+      andar: () => passo(est),
+    });
+    montarPontos();
+  }
+  function limpar() {
+    pendente = false;
+    if (!atual) return;
+    atual = null;
+    document.getElementById("cena").classList.remove("com-ambiente");
+    Vista.usarAmbiente(null);
+    montarPontos();
+  }
+  /** A página virou (nova cena): o ambiente fica até a próxima mensagem; se ela não for um painel de cena, sai. */
+  function virou() { if (atual) pendente = true; }
+  function conferirPendente(m) {
+    if (pendente && !["estado", "sincronizado", "nova_cena", "cabecalho"].includes(m.t) && !(m.t === "painel" && m.tipo === "cena")) limpar();
+  }
+
+  /** Onde cada ponto cai na tela: a arte é desenhada com object-fit: cover (centro, 80% para baixo), como na vila. */
+  function posicionar() {
+    if (!capa || capa.hidden) return;
+    const vista = document.getElementById("vista"), cs = getComputedStyle(vista);
+    const larg = vista.clientWidth, alt = vista.clientHeight - parseFloat(cs.paddingBottom);
+    const esc = Math.max(larg / QW, alt / QH), dx = (larg - QW * esc) * 0.5, dy = (alt - QH * esc) * 0.8;
+    Object.assign(capa.style, { left: vista.offsetLeft + "px", top: vista.offsetTop + "px", width: larg + "px", height: alt + "px" });
+    capa.querySelectorAll(".ci-ponto").forEach((bt) => {
+      const pd = atual && atual.def.pontos[bt.dataset.ponto];
+      if (!pd) return;
+      const [x, y, w, hh] = pd.area, [bx, by] = pd.balao;
+      Object.assign(bt.style, { left: dx + x * esc + "px", top: dy + y * esc + "px", width: w * esc + "px", height: hh * esc + "px" });
+      Object.assign(bt.querySelector(".ci-balao").style, { left: Math.round((bx - x) * esc) + "px", top: Math.round((by - y) * esc) + "px" });
+    });
+  }
+  window.addEventListener("resize", posicionar);
+
+  /** Os pontos só valem na página do lugar (no texto de uma cena, a escolha é a do menu dela), fora da luta e com a
+   *  arte no topo. */
+  function pontosValem() {
+    return !!(atual && atual.d.pagina && !document.body.classList.contains("em-combate")
+      && document.getElementById("vista").parentElement === document.getElementById("cena"));
+  }
+  function montarPontos() {
+    if (!capa) {
+      capa = document.createElement("div");
+      capa.id = "pontos-cena";
+      document.getElementById("cena").appendChild(capa);
+      document.getElementById("vista").addEventListener("transitionend", posicionar);
+    }
+    capa.innerHTML = "";
+    capa.classList.remove("perto");
+    const d = atual && atual.d;
+    capa.dataset.cena = d ? d.cena : "";
+    capa.dataset.correntes = (d && d.correntes) || "";
+    capa.dataset.agua = (d && d.agua) || "";
+    capa.dataset.foco = (d && d.foco) || "";
+    capa.dataset.pagina = d && d.pagina ? "1" : "";
+    capa.hidden = !pontosValem();
+    if (!d) return;
+    const descricao = d.pontos.map((p) => p.estado).join(" ");
+    capa.setAttribute("role", "group");
+    capa.setAttribute("aria-label", `${d.titulo}${descricao ? ": " + descricao : ""}`);
+    d.pontos.forEach((p) => {
       const ativo = !!p.acao || !!p.olhar;
       const rotulo = p.acao ? `${p.nome}: ${p.faz}` : p.olhar ? `${p.nome}: olhar de perto` : `${p.nome}. ${p.estado}`;
-      return `<button type="button" class="ci-ponto${ativo ? "" : " parado"}" data-ponto="${h(p.id)}" aria-label="${h(rotulo)}"${ativo ? "" : ' aria-disabled="true" tabindex="-1"'}>
-        <span class="ci-balao">${h(p.nome)}</span></button>`;
-    }).join("");
-    const descricao = d.pontos.map((p) => p.estado).join(" ");
-    return `<div class="cena-interativa${d.foco ? " perto" : ""}" data-cena="${h(d.cena)}"${d.correntes ? ` data-correntes="${h(d.correntes)}"` : ""}${d.agua ? ` data-agua="${h(d.agua)}"` : ""}>
-      <div class="ci-palco"><canvas class="ci-arte" aria-label="${h(d.titulo)}${descricao ? ": " + h(descricao) : ""}" role="img"></canvas>
-      <div class="ci-pontos"${d.foco ? " hidden" : ""}>${pontos}</div>
-      <button type="button" class="ci-afastar" hidden>Afastar</button></div></div>`;
+      const bt = document.createElement("button");
+      bt.type = "button";
+      bt.className = "ci-ponto" + (ativo ? "" : " parado");
+      bt.dataset.ponto = p.id;
+      bt.setAttribute("aria-label", rotulo);
+      if (!ativo) { bt.setAttribute("aria-disabled", "true"); bt.tabIndex = -1; }
+      bt.innerHTML = `<span class="ci-balao">${h(p.nome)}</span>`;
+      ligarPonto(bt, p);
+      capa.appendChild(bt);
+    });
+    const afastar = document.createElement("button");
+    afastar.type = "button"; afastar.className = "ci-afastar"; afastar.hidden = true; afastar.textContent = "Afastar";
+    afastar.addEventListener("click", longe);
+    capa.appendChild(afastar);
+    requestAnimationFrame(posicionar);
   }
-
-  function ligarCena(raiz, d) {
-    const def = CENAS[d.cena];
-    if (!def) return;
-    const el = raiz.querySelector(".cena-interativa"), canvas = el.querySelector(".ci-arte"), palco = el.querySelector(".ci-palco");
-    const camadaPontos = el.querySelector(".ci-pontos"), afastar = el.querySelector(".ci-afastar");
-    const c = canvas.getContext("2d");
-    const est = { correntes: d.correntes, agua: d.agua, soltando: false, passo: 0, onda: 0 };
-    let W = QW, b = null, quadro = 0, destaque = null, timer = null, troca = null;
-    let cam = d.foco ? focoDe(d.foco) : { x: 0, y: 0, s: 1 };
-    const cenaK = document.createElement("canvas"), quadroAtual = document.createElement("canvas");
-    function focoDe(id) {
-      if (!id) return { x: 0, y: 0, s: 1 };
-      const [fx, fy] = def.pontos[id].foco, ox = Math.round((W - QW) / 2);
-      return { s: 2, x: Math.max(0, Math.min(W / 2, Math.round(ox + fx - W / 4))), y: Math.max(0, Math.min(QH / 2, Math.round(fy - QH / 4))) };
-    }
-    // Pixel inteiro: a largura lógica acompanha a página (duas vezes o pixel), e o lugar continua dos lados.
-    function medir() {
-      const largura = palco.clientWidth;
-      if (!largura) return;
-      W = Math.max(QW - 40, Math.round(largura / 2));
-      b = def.base(W);
-      canvas.width = W; canvas.height = QH; cenaK.width = W; cenaK.height = QH; quadroAtual.width = W; quadroAtual.height = QH;
-      if (d.foco) cam = focoDe(d.foco);
-      const esc = largura / W, ox = Math.round((W - QW) / 2);
-      el.querySelectorAll(".ci-ponto").forEach((bt) => {
-        const [x, y, w, hh] = def.pontos[bt.dataset.ponto].area, [bx, by] = def.pontos[bt.dataset.ponto].balao;
-        Object.assign(bt.style, { left: (ox + x) * esc + "px", top: y * esc + "px", width: w * esc + "px", height: hh * esc + "px" });
-        const bal = bt.querySelector(".ci-balao");
-        bal.style.left = (bx - x) * esc + "px"; bal.style.top = (by - y) * esc + "px";
-      });
-      pintar();
-    }
-    function pintar() {
-      if (!b) return;
-      const cc = cenaK.getContext("2d");
-      cc.imageSmoothingEnabled = false;
-      def.desenhar(cc, W, b, est, quadro, destaque);
-      const q = quadroAtual.getContext("2d");
-      q.imageSmoothingEnabled = false;
-      q.clearRect(0, 0, W, QH);
-      q.drawImage(cenaK, cam.x, cam.y, W / cam.s, QH / cam.s, 0, 0, W, QH);
-      c.imageSmoothingEnabled = false;
-      c.clearRect(0, 0, W, QH);
-      if (troca) {  // o quadro novo cobre o velho num pontilhado que se fecha, como a câmera da vila
-        const n = Math.min(16, Math.ceil(((performance.now() - troca.inicio) / 380) * 16));
-        c.drawImage(troca.velho, 0, 0);
-        const img = q.getImageData(0, 0, W, QH), velho = c.getImageData(0, 0, W, QH);
-        for (let y = 0; y < QH; y++) for (let x = 0; x < W; x++) if (pontilha(x, y, n)) { const i = (y * W + x) * 4; velho.data[i] = img.data[i]; velho.data[i + 1] = img.data[i + 1]; velho.data[i + 2] = img.data[i + 2]; velho.data[i + 3] = 255; }
-        c.putImageData(velho, 0, 0);
-        if (n >= 16) troca = null;
+  /** O ponto: destaque no mouse e no foco. Com ação: o clique (ou Enter/espaço) aproxima a câmera e manda a mesma ação
+   *  do menu. De olhar: só aproxima, e "Afastar" volta. Sem nada: diz o estado. */
+  function ligarPonto(bt, p) {
+    const acender = (sim) => { bt.classList.toggle("aceso", sim); Vista.destacar(sim ? p.id : null); };
+    ["mouseenter", "focus"].forEach((t) => bt.addEventListener(t, () => acender(true)));
+    ["mouseleave", "blur"].forEach((t) => bt.addEventListener(t, () => acender(false)));
+    bt.addEventListener("click", async (ev) => {
+      ev.stopPropagation();
+      if (processando) { pular = true; return; }  // a página ainda corre: o clique adianta, como na arte
+      if (!pontosValem()) return;
+      const foco = atual.def.pontos[p.id].foco;
+      if (p.olhar) {
+        App.som("escolha");
+        capa.classList.add("perto"); bt.setAttribute("data-olhado", "");
+        await Vista.focarEm(foco);
+        const af = capa.querySelector(".ci-afastar"); af.hidden = false; af.focus();
         return;
       }
-      const tranco = est.soltando && est.passo > 3 && est.passo < 22 && !reduzido() ? (est.passo % 2 ? 1 : -1) : 0;
-      c.drawImage(quadroAtual, tranco, 0);
-    }
-    /** A câmera vai até o ponto (ou volta à vista inteira, com `id` nulo), num pontilhado; parada com movimento
-     *  reduzido. Enquanto está perto, os pontos saem de cima da arte. */
-    function aproximar(id) {
-      return new Promise((fim) => {
-        const alvo = focoDe(id);
-        camadaPontos.hidden = !!id;
-        if (reduzido() || (alvo.s === cam.s && alvo.x === cam.x && alvo.y === cam.y)) { cam = alvo; pintar(); fim(); return; }
-        const velho = document.createElement("canvas"); velho.width = W; velho.height = QH; velho.getContext("2d").drawImage(canvas, 0, 0);
-        troca = { inicio: performance.now(), velho };
-        cam = alvo;
-        const passo = () => { pintar(); if (troca) requestAnimationFrame(passo); else fim(); };
-        requestAnimationFrame(passo);
-      });
-    }
-    // O relógio da cena: dez quadros por segundo (a luz, a água, a corrente descendo); parado com movimento reduzido.
-    function relogio() {
-      if (!canvas.isConnected) { clearInterval(timer); return; }
-      if (document.hidden) return;
-      quadro++;
-      if (est.soltando) {
-        est.passo++;
-        if (est.passo >= 27) { est.soltando = false; est.correntes = "soltas"; est.onda = 12; el.dataset.correntes = "soltas"; if (est.fim) { est.fim(); est.fim = null; } }
-      } else if (est.onda > 0) est.onda--;
-      if (!troca) pintar();
-    }
-    if (!reduzido()) timer = setInterval(relogio, 100);
-    el._soltar = (instantaneo) => new Promise((fim) => {
-      if (d.cena !== "ossuario" || est.correntes === "soltas") { fim(); return; }
-      if (instantaneo || reduzido()) {  // refazendo a página: sem som; com movimento reduzido, o som fica (não é movimento)
-        if (!instantaneo) App.som("corrente");
-        est.correntes = "soltas"; el.dataset.correntes = "soltas"; pintar(); fim(); return;
-      }
-      // O resultado já empurrou a página: a cena volta à vista para a corrente descer, e a leitura desce de novo depois.
-      const pg = document.getElementById("pagina"), topo = el.getBoundingClientRect().top - pg.getBoundingClientRect().top;
-      const subiu = topo < 0;
-      if (subiu) pg.scrollTo({ top: pg.scrollTop + topo - 8, behavior: "smooth" });
-      App.som("corrente");
-      est.soltando = true; est.passo = 0;
-      est.fim = () => {
-        if (!subiu) { fim(); return; }
-        pg.scrollTo({ top: pg.scrollHeight, behavior: "smooth" });
-        setTimeout(() => { pg.scrollTop = pg.scrollHeight; fim(); }, 450);
-      };
+      if (!p.acao) { App.som("falha"); App.avisar(p.estado, "ponto"); return; }
+      const pode = (App.opcoes() || []).some((o) => o.meta && Object.entries(p.acao).every(([k, v]) => o.meta[k] === v));
+      if (!pode) { App.som("falha"); App.avisar("Agora não: termine o que está fazendo primeiro.", "ponto"); return; }
+      App.som("escolha");
+      capa.classList.add("perto");
+      await Vista.focarEm(foco);
+      if (!App.acao(p.acao)) { capa.classList.remove("perto"); Vista.focarEm(null); }
     });
-    // Os pontos: destaque no mouse e no foco. Com ação: o clique (ou Enter/espaço) aproxima a câmera e manda a mesma
-    // ação do menu. De olhar: só aproxima, e "Afastar" (ou um clique na arte) volta. Sem nada: diz o estado.
-    const longe = () => { afastar.hidden = true; aproximar(null).then(() => { const bt = el.querySelector(".ci-ponto[data-olhado]"); if (bt) { bt.removeAttribute("data-olhado"); bt.focus(); } }); };
-    afastar.addEventListener("click", longe);
-    canvas.addEventListener("click", () => { if (!afastar.hidden) longe(); });
-    el.querySelectorAll(".ci-ponto").forEach((bt) => {
-      const p = d.pontos.find((x) => x.id === bt.dataset.ponto);
-      const acender = (sim) => { destaque = sim ? p.id : null; bt.classList.toggle("aceso", sim); pintar(); };
-      ["mouseenter", "focus"].forEach((t) => bt.addEventListener(t, () => acender(true)));
-      ["mouseleave", "blur"].forEach((t) => bt.addEventListener(t, () => acender(false)));
-      bt.addEventListener("click", async () => {
-        if (p.olhar) {
-          App.som("escolha"); bt.setAttribute("data-olhado", "");
-          await aproximar(p.id);
-          afastar.hidden = false; afastar.focus();
-          return;
-        }
-        if (!p.acao) { App.som("falha"); App.avisar(p.estado, "ponto"); return; }
-        const pode = (App.opcoes() || []).some((o) => o.meta && Object.entries(p.acao).every(([k, v]) => o.meta[k] === v));
-        if (!pode) { App.som("falha"); App.avisar("Agora não: termine o que está fazendo primeiro.", "ponto"); return; }
-        App.som("escolha");
-        await aproximar(p.id);
-        if (!App.acao(p.acao)) { cam = { x: 0, y: 0, s: 1 }; camadaPontos.hidden = false; pintar(); }
-      });
+  }
+  function longe() {
+    if (!capa) return;
+    const af = capa.querySelector(".ci-afastar");
+    if (af) af.hidden = true;
+    Vista.focarEm(null).then(() => {
+      capa.classList.remove("perto");
+      const bt = capa.querySelector(".ci-ponto[data-olhado]");
+      if (bt) { bt.removeAttribute("data-olhado"); bt.focus(); }
     });
-    queueMicrotask(() => { if (typeof recolherArte === "function") recolherArte(true); medir(); });
-    // Tela baixa: na página do lugar, se embaixo da cena não cabem as escolhas, a página começa na cena (o nome do lugar
-    // segue no painel ao lado). Depois que a paisagem de cima terminou de recolher. Dentro de uma cena, o texto puxa a
-    // página até as escolhas, como sempre.
-    const naCena = () => {
-      const pg = document.getElementById("pagina");
-      if (!d.pagina || !pg || !el.isConnected || pg.scrollTop > 0) return;  // e quem rolou, rolou
-      const r = el.getBoundingClientRect(), rp = pg.getBoundingClientRect();
-      if (rp.bottom - r.bottom < 230 && r.top - rp.top > 12) pg.scrollTop = Math.round(r.top - rp.top - 8);
-    };
-    setTimeout(naCena, 420); setTimeout(naCena, 1200);  // as escolhas podem chegar depois: só então a página tem altura
-    if (typeof ResizeObserver !== "undefined") {
-      let largura = 0;
-      const obs = new ResizeObserver(() => {
-        if (!canvas.isConnected) { obs.disconnect(); return; }
-        if (Math.abs(palco.clientWidth - largura) > 1) { largura = palco.clientWidth; medir(); }
-      });
-      obs.observe(palco);
-    }
+  }
+  /** Luta: os pontos saem (a arte desce para a arena); a câmera volta à sala inteira, para a arena mostrar o lugar. */
+  function aoCombate() {
+    if (!capa) return;
+    capa.hidden = true;
+    if (atual) Vista.focarEm(null);
+  }
+  /** Fim da luta ou pergunta nova: os pontos voltam se valem. */
+  function aoMenu() {
+    if (!capa) return;
+    const valia = !capa.hidden;
+    capa.hidden = !pontosValem();
+    if (!capa.hidden && !valia) requestAnimationFrame(posicionar);
   }
 
-  /** O motor gravou que as correntes soltaram: a cena à vista mostra a corrente descendo (ou, refazendo a página ou
-   *  no instantâneo, já desenha as correntes soltas). */
+  /** O motor gravou que as correntes soltaram: a arte do topo mostra a corrente descendo (refazendo a página, ou com
+   *  movimento reduzido, já desenha as correntes soltas; com movimento reduzido o som fica: não é movimento). A arte
+   *  está sempre inteira com o ambiente (pagina.js, recolherArte): a descida fica à vista sem a página pular. */
   function soltarCorrentes(instantaneo) {
-    const cenas = document.querySelectorAll('#texto .cena-interativa[data-cena="ossuario"]');
-    const el = cenas[cenas.length - 1];
-    return el && el._soltar ? el._soltar(instantaneo) : Promise.resolve();
+    const est = atual && atual.d.cena === "ossuario" ? atual.est : null;
+    if (!est || est.correntes === "soltas") return Promise.resolve();
+    if (capa) capa.dataset.correntes = "soltas";
+    if (instantaneo || reduzido()) {
+      if (!instantaneo) App.som("corrente");
+      est.correntes = "soltas";
+      return Promise.resolve();
+    }
+    App.som("corrente");
+    return new Promise((fim) => { est.soltando = true; est.passo = 0; est.fim = fim; });
   }
 
-  Telas.registrar("cena", cena, { ligar: ligarCena });
+  Telas.registrar("cena", () => "", {});
   Object.assign(Telas, { soltarCorrentes });
+  window.Cenas = { mostrar, limpar, virou, conferirPendente, aoCombate, aoMenu, posicionar, atual: () => atual };
 })();

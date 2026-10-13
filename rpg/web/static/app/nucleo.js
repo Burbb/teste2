@@ -175,7 +175,7 @@ const Gesto = (() => {
   window.addEventListener("blur", () => { abaixo.clear(); presas.clear(); });
   // Os controles das telas: o prompt (escolhas, Continuar), os prédios da vila, a roda da luta, a doca e o que compra
   // ou vende no mercado (a lista se redesenha depois de cada operação: o item que cair no lugar do outro não vai junto).
-  const CONTROLES = "#prompt button, #prompt .escolha, #predios .predio, #roda button, #doca .atalho, .tela.loja .mercadoria, .tela.loja [data-mochila-loja], .tela.loja [data-recomprar]";
+  const CONTROLES = "#prompt button, #prompt .escolha, #predios .predio, #pontos-cena .ci-ponto, #roda button, #doca .atalho, .tela.loja .mercadoria, .tela.loja [data-mochila-loja], .tela.loja [data-recomprar]";
   document.addEventListener("click", (ev) => {
     if (!ev.target.closest || !ev.target.closest(CONTROLES)) return;
     // detail 0: o clique que o teclado gera num botão focado (Enter, espaço) é julgado como tecla, não aqui.
@@ -193,18 +193,22 @@ function cps() { return VELOCIDADES[velocidade] * (estado && estado.combate ? 2.
 function ritmo(ms) { return instantaneo() ? 0 : ms * (velocidade === "lento" ? 1.4 : velocidade === "rapido" ? 0.5 : 1); }
 
 async function tratar(m) {
+  Cenas.conferirPendente(m);  // a página virou e o que veio não é o ambiente da capela: a paisagem volta ao topo
   switch (m.t) {
     case "estado": aplicarEstado(m.estado); break;
     case "sincronizado": replay = false; break;
-    case "nova_cena": await novaCena(m); break;
-    case "cabecalho": tituloAtual = m.titulo; cabecalho(m); break;  // a tela que se redesenha depois reconhece o título
+    case "nova_cena": Cenas.virou(); await novaCena(m); break;
+    case "cabecalho":
+      tituloAtual = m.titulo; cabecalho(m);  // a tela que se redesenha depois reconhece o título
+      if (replay && m.tipo === "local") presoNoTopo = true;  // a página refeita (recarregar) começa no topo, como a nova
+      break;
     case "texto": await texto(m); break;
     case "efeito": await efeito(m); break;
     case "missao": await cartaoMissao(m); break;
     case "rolagem": await rolagem(m); break;
     case "combate":
       // Luta nova: nada da anterior (a câmera lenta de um golpe final que não terminou) nem da vila fica na arena.
-      Sensacao.repor(); fecharVila();
+      Sensacao.repor(); fecharVila(); Cenas.aoCombate();
       cenaInterrompida = true; faixaCombate(m); break;
     case "lance": if (!replay) { Orientacao.aoLance(m); await Batalha.lance(m); } break;
     case "fala": await fala(m); break;
@@ -224,9 +228,10 @@ async function tratar(m) {
         await Telas.abrirAchado(m.dados, replay);
         break;
       }
-      // A tela desenhada (inventário, mercado, mural, a cena da página do lugar) se lê de cima: a página não desce. A
-      // cena dentro de um texto (o salão, o sarilho de perto) é o começo de uma cena com escolhas: segue como as outras.
-      if (emMenu() || (m.tipo === "cena" && m.dados && m.dados.pagina)) seguir = false;
+      // O ambiente da capela não entra no texto: ele troca a arte do topo (telas/cenas.js).
+      if (m.tipo === "cena") { Cenas.mostrar(m.dados); break; }
+      // A tela desenhada (inventário, mercado, mural) se lê de cima: a página não desce.
+      if (emMenu()) seguir = false;
       anexar(Telas.painel(m));
       break;
     }
@@ -235,9 +240,9 @@ async function tratar(m) {
     case "bloco": bloco(m); break;
     case "mapa": mapaNaPagina(m); break;
     case "escolhido": eco(m); break;
-    case "opcoes": Gesto.novaTela(); Telas.fimDaQueda(); mostrarOpcoes(m); soltarRolagem(); Telas.atualizarGrimorio(); break;
-    case "continuar": Gesto.novaTela(); mostrarContinuar(m); soltarRolagem(); break;
-    case "pergunta": Gesto.novaTela(); mostrarPergunta(m); soltarRolagem(); break;
+    case "opcoes": Gesto.novaTela(); Cenas.aoMenu(); Telas.fimDaQueda(); mostrarOpcoes(m); soltarRolagem(); Telas.atualizarGrimorio(); break;
+    case "continuar": Gesto.novaTela(); Cenas.aoMenu(); mostrarContinuar(m); soltarRolagem(); break;
+    case "pergunta": Gesto.novaTela(); Cenas.aoMenu(); mostrarPergunta(m); soltarRolagem(); break;
     case "erro": anexar(el("p", "erro", "Algo deu errado: " + esc(m.texto))); break;
     case "fim": $("#aviso-fim").hidden = false; break;
   }

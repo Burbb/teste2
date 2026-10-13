@@ -638,10 +638,11 @@ async function cenarioSarilho(browser) {
     await page.waitForSelector(`${MENU}:has-text("Soltar as correntes")`, { timeout: 20000 });
     conferir((await foto()) === antes && !(await page.$("#texto .novidade-missao")) && !(await page.$("#prompt .continuar")),
       "voltar não gasta nada, não mostra cartão e devolve o menu da capela");
-    // A cena do ossuário (1.72.0): o sarilho é um ponto da sala que faz a mesma ação do menu.
-    const sala = () => page.evaluate(() => [...document.querySelectorAll("#texto .cena-interativa")].map((e) => e.dataset.correntes + (e.classList.contains("perto") ? "/perto" : "")).join());
-    conferir((await sala()) === "presas" && !!(await page.$('.ci-ponto[data-ponto="sarilho"]:not(.parado) .ci-balao')),
-      "a página da capela desenha o ossuário com o sarilho (correntes presas) e o nome dele à vista");
+    // A cena do ossuário (1.72.0): o sarilho é um ponto da sala que faz a mesma ação do menu. Desde a 1.77.0 a sala é
+    // a arte do topo (os pontos numa camada por cima dela); no texto, nada desenhado.
+    const sala = () => page.evaluate(() => { const e = document.querySelector("#pontos-cena"); return e.dataset.cena === "ossuario" ? e.dataset.correntes + (e.dataset.foco ? "/perto" : "") : e.dataset.cena; });
+    conferir((await sala()) === "presas" && !!(await page.$('#pontos-cena:not([hidden]) .ci-ponto[data-ponto="sarilho"]:not(.parado) .ci-balao'))
+      && !(await page.$("#texto canvas")), "a arte do topo é o ossuário com o sarilho (correntes presas), o ponto por cima; o texto sem imagem");
     await page.hover(".ci-ponto");
     conferir(await page.$eval(".ci-ponto", (b) => b.classList.contains("aceso")), "o mouse em cima acende o sarilho");
     await page.mouse.move(2, 2);
@@ -671,7 +672,7 @@ async function cenarioCapelaFora(browser) {
   const { page, erros } = await abrir(browser, url);
   const MENU = "#prompt .escolhas:not(.escolhido) .escolha";
   const foto = () => page.evaluate(() => JSON.stringify([estado.heroi.bolsa, estado.heroi.hp, estado.mundo.dia, estado.mundo.periodo_n, estado.missoes]));
-  const cenas = () => page.evaluate(() => [...document.querySelectorAll("#texto .cena-interativa")].map((e) => e.dataset.cena + (e.dataset.agua ? ":" + e.dataset.agua : "")).join());
+  const cenas = () => page.evaluate(() => { const e = document.querySelector("#pontos-cena"); return e ? e.dataset.cena + (e.dataset.agua ? ":" + e.dataset.agua : "") : ""; });
   try {
     await page.waitForSelector(`${MENU}:has-text("Entrar na capela")`, { timeout: 20000 });
     conferir((await cenas()) === "exterior" && !!(await page.$('.ci-ponto[data-ponto="buraco"]:not(.parado) .ci-balao'))
@@ -680,10 +681,10 @@ async function cenarioCapelaFora(browser) {
     // Os sapos: só olhar. Aproxima, Afastar volta, e nada muda.
     await page.focus('.ci-ponto[data-ponto="sapos"]'); await page.keyboard.press("Enter");
     await page.waitForSelector(".ci-afastar:not([hidden])", { timeout: 5000 });
-    conferir(await page.evaluate(() => document.querySelector(".ci-pontos").hidden && document.activeElement.classList.contains("ci-afastar")),
+    conferir(await page.evaluate(() => document.querySelector("#pontos-cena").classList.contains("perto") && document.activeElement.classList.contains("ci-afastar")),
       "Enter nos sapos aproxima a vista e leva o foco ao Afastar");
     await page.keyboard.press("Enter");
-    await page.waitForFunction(() => !document.querySelector(".ci-pontos").hidden, null, { timeout: 5000 });
+    await page.waitForFunction(() => !document.querySelector("#pontos-cena").classList.contains("perto"), null, { timeout: 5000 });
     conferir((await foto()) === antes && !!(await page.$(`${MENU}:has-text("Entrar na capela")`)), "afastar volta à vista inteira sem gastar nada nem mudar a missão");
     // O buraco faz a ação do menu: a cena do salão, com a água inquieta.
     await page.hover('.ci-ponto[data-ponto="buraco"]');
@@ -692,6 +693,10 @@ async function cenarioCapelaFora(browser) {
     await page.waitForFunction(() => /Salão Alagado/.test(document.querySelector("#cena-cab .cena-titulo")?.textContent || ""), null, { timeout: 10000 });
     await page.waitForTimeout(300);
     conferir((await cenas()) === "salao:inquieta", "entrar pelo buraco abre o salão alagado, com a água inquieta (o ambiente que o texto descreve)");
+    // A luta do salão: a arte do topo (o salão) vira o chão da arena; os pontos saem enquanto ela dura.
+    await page.waitForFunction(() => document.body.classList.contains("em-combate") && document.querySelector("#arena > #vista"), null, { timeout: 20000 });
+    conferir(await page.evaluate(() => document.querySelector("#pontos-cena").hidden && Vista.temAmbiente()),
+      "na luta, o salão é o fundo da arena e os pontos ficam fora de alcance");
   } finally {
     conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
     await page.close();
@@ -702,7 +707,7 @@ async function cenarioCapelaFora(browser) {
   const p2 = await abrir(browser, s2.url);
   try {
     await p2.page.waitForSelector(`${MENU}:has-text("Atravessar o salão")`, { timeout: 20000 });
-    conferir(await p2.page.evaluate(() => [...document.querySelectorAll("#texto .cena-interativa")].map((e) => e.dataset.cena + ":" + e.dataset.agua).join()) === "salao:quieta"
+    conferir(await p2.page.evaluate(() => { const e = document.querySelector("#pontos-cena"); return e.dataset.cena + ":" + e.dataset.agua; }) === "salao:quieta"
       && !!(await p2.page.$('.ci-ponto[data-ponto="porta"]:not(.parado)')), "vencido o salão, a página mostra o salão quieto com a porta da sacristia");
   } finally {
     conferir(p2.erros.length === 0, "sem erros no console" + (p2.erros.length ? ": " + p2.erros.slice(0, 3).join(" | ") : ""));
@@ -780,7 +785,7 @@ async function cenarioGuardia(browser) {
   const missao = () => page.evaluate(() => (estado.missoes || [])[0]);
   try {
     await page.waitForSelector(`${MENU}:has-text("Descer ao fundo")`, { timeout: 20000 });
-    conferir(await page.$eval("#texto .cena-interativa", (e) => e.dataset.correntes === "soltas" && !!e.querySelector(".ci-ponto.parado")),
+    conferir(await page.$eval("#pontos-cena", (e) => e.dataset.correntes === "soltas" && !!e.querySelector(".ci-ponto.parado")),
       "com as correntes soltas, o ossuário já as desenha soltas e o sarilho não oferece ação");
     await (await page.waitForSelector(`${MENU}:has-text("Descer ao fundo")`, { timeout: 20000 })).click();
     await page.waitForSelector(`${MENU}:has-text("Lutar para destruí-la")`, { timeout: 20000 });

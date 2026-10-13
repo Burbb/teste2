@@ -22,6 +22,9 @@ const Vista = (() => {
   // A câmera não desliza (escala quebrada faz o pixel tremer): ela troca de enquadramento num pontilhado que se fecha,
   // do enquadramento de antes (`de`) para o novo, sempre em pixel inteiro.
   let predios = [], destaque = null, quadroBuf = null, mascara = null;
+  // Um ambiente desenhado por outra parte da tela (as cenas da capela, telas/cenas.js) no lugar da paisagem: o mesmo
+  // canvas do topo, a mesma câmera e o mesmo destaque; na luta, ele vira o chão da arena como a paisagem viraria.
+  let ambiente = null;
   const camera = { x: 0, y: 0, s: 1, de: null, inicio: 0, ms: 380 };
   const tramas = [];
 
@@ -351,7 +354,7 @@ const Vista = (() => {
   function pintarChao() {
     const cena = document.body;
     if (!canvas || !cena) return;
-    const [r, g, b] = frente.getContext("2d").getImageData(W >> 1, H - 1, 1, 1).data;
+    const [r, g, b] = (ambiente ? ambiente.base : frente).getContext("2d").getImageData(W >> 1, H - 1, 1, 1).data;
     const t = document.createElement("canvas"), n = 12;
     t.width = 4; t.height = n;
     const x = t.getContext("2d");
@@ -383,6 +386,7 @@ const Vista = (() => {
    *  redesenhar (o hover, a troca de câmera, o amanhecer) não apresse nada. */
   function andar() {
     quadro++;
+    if (ambiente && ambiente.andar) ambiente.andar(quadro);
     nuvens.forEach((n) => { n.x = (n.x + n.v) % (W + n.w); });
     neblinas.forEach((n) => { n.x = (n.x + n.v) % (W + n.w); });
     aves.forEach((a) => { a.x = (a.x + a.v) % (W + 20); });
@@ -451,6 +455,7 @@ const Vista = (() => {
   }
 
   function desenharEm(ctx) {
+    if (ambiente) { ambiente.desenhar(ctx, quadro, destaque); return; }  // a cena tem a própria luz (sem o "escuro")
     ctx.drawImage(fundo, 0, 0);
     const clima = estado.mundo.clima_id;
     estrelas.forEach((s) => { if ((quadro + s.f) % 14 > 2) px(ctx, s.x, s.y, 1, 1, (quadro + s.f) % 30 < 4 ? "#ffffff" : "#9aa4c0"); });
@@ -553,9 +558,36 @@ const Vista = (() => {
     requestAnimationFrame(passo);
   }
   function destacar(id) { if (destaque !== id) { destaque = id; desenhar(); } }
+  /** Põe um ambiente no lugar da paisagem (ou tira, com null). `a`: { desenhar(ctx 320x72, quadro, destaque),
+   *  andar(quadro)?, base (canvas: a última linha dá a cor do chão que continua embaixo da arte), foco ([x, y] para já
+   *  começar de perto) }. Troca sem animação: quem anima a chegada é a página. */
+  function usarAmbiente(a) {
+    if (ambiente === a) return;
+    ambiente = a;
+    destaque = null;
+    const para = a && a.foco ? enquadramento(a.foco) : { s: 1, x: 0, y: 0 };
+    Object.assign(camera, para); camera.de = null;
+    if (frente || a) pintarChao();
+    desenhar();
+  }
+  function enquadramento([fx, fy]) {
+    return { s: 2, x: Math.max(0, Math.min(W / 2, Math.round(fx - W / 4))), y: Math.max(0, Math.min(H / 2, Math.round(fy - H / 4))) };
+  }
+  /** A câmera do ambiente: perto de um ponto ([x, y] da arte) ou a vista inteira (null), no pontilhado de sempre (sem
+   *  ele, com movimento reduzido). A promessa resolve quando a troca termina. */
+  function focarEm(xy) {
+    const para = xy ? enquadramento(xy) : { s: 1, x: 0, y: 0 };
+    if (camera.s === para.s && camera.x === para.x && camera.y === para.y) return Promise.resolve();
+    const reduzido = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    camera.de = reduzido || !ctx ? null : { x: camera.x, y: camera.y, s: camera.s }; camera.inicio = performance.now();
+    Object.assign(camera, para);
+    if (!camera.de) { desenhar(); return Promise.resolve(); }
+    return new Promise((fim) => { const passo = () => { desenhar(); if (camera.de) requestAnimationFrame(passo); else fim(); }; requestAnimationFrame(passo); });
+  }
   /** Os prédios clicáveis da paisagem atual (só na vila), em pixels da arte (320x72). */
   function listaPredios() { return predios.map(({ id, nome, x, y, w, h, balao }) => ({ id, nome, x, y, w, h, balao })); }
 
-  return { atualizar, titulo, corDoCeu, ceuDo, amanhecer, predios: listaPredios, destacar, focar, LARGURA: W, ALTURA: H,
+  return { atualizar, titulo, corDoCeu, ceuDo, amanhecer, predios: listaPredios, destacar, focar, usarAmbiente, focarEm,
+    temAmbiente: () => !!ambiente, LARGURA: W, ALTURA: H,
     arte: () => arte };  // o quadro em 320x72 (as páginas de teste da paisagem leem daqui)
 })();

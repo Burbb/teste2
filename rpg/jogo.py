@@ -548,6 +548,7 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
 
     def menu_selvagem(self):
         loc = self.loc
+        missoes.mostrar_cena(self)  # na capela, o ambiente desenhado no topo (tela gráfica): antes de qualquer texto
         opcoes = []
         if loc["tipo"] == "covil" and not loc["guardiao"]["derrotado"]:
             opcoes.append((f"Enfrentar {loc['guardiao']['nome']} (guardião)", "chefe"))
@@ -567,7 +568,6 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         if self.contratos_aqui():
             abertura.visto(self, "K2")  # chegou ao lugar do contrato: o quadro que mostrava onde ele fica não volta
         abertura.dica_texto(self, "fora")  # na interface de texto, a orientação da vez numa linha
-        missoes.mostrar_cena(self)  # na capela, depois do ossuário: a sala desenhada, com o sarilho (tela gráfica)
         antes = abertura.proxima(self)
         op = self.menu("O que você faz?", opcoes + self.opcoes_comuns())
         abertura.depois_do_menu(self, antes, op)

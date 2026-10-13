@@ -221,3 +221,42 @@ Do artifact da capela (13/10), lido como referência de linguagem, não como reg
 4. `$env:ETAPA="fundo"`: o ossuário com a escada nova; o sarilho de perto como antes.
 5. `$env:PERIODO` 0 a 3 com qualquer um deles: manhã, tarde, anoitecer e noite. `$env:CLASSE="mago"` ou
    `"arqueiro"` para as outras classes.
+
+---
+
+# A capela no cenário principal (1.77.0)
+
+Pedido de Jean (13/10/2026), primeira de três entregas: a cena da capela vinha como uma imagem dentro do texto, com
+as ruínas genéricas da paisagem em cima. Duas imagens do mesmo lugar, e a de cima errada.
+
+## Como ficou
+
+- **Uma representação só, no topo.** O painel `cena` não põe nada no texto: ele troca a arte do topo (o canvas da
+  paisagem, `#vista`) pelo ambiente da capela. Embaixo, só o título da cena, a descrição, a resposta e as escolhas.
+  `Vista.usarAmbiente(a)` desenha o ambiente no lugar da paisagem, com a mesma câmera (o pontilhado ao aproximar), o
+  mesmo destaque e a mesma cor de chão continuando para o pergaminho.
+- **Os pontos** ficam numa camada sobre a arte (`#pontos-cena`), posicionados como os prédios da vila (a arte é
+  desenhada com `object-fit: cover`). Só valem na página do lugar, fora da luta e com a arte no topo; o clique
+  enquanto a página ainda corre adianta o texto, como na arte. O balão do nome tem o estilo dos prédios.
+- **Quando sai:** a página vira (`nova_cena`) e o que vem depois não é um painel de cena (outro lugar, um menu, a
+  sacristia, o fundo): a paisagem volta. O motor manda o painel logo depois do título da cena, antes de qualquer
+  texto, para a arte não piscar entre os dois. Na página do lugar, `mostrar_cena` foi para o começo do menu.
+- **Na luta:** a arte do topo vira o chão da arena como a paisagem viraria; com o ambiente, a luta do salão é no
+  salão e a do ossuário no ossuário (o painel do ossuário passou a vir antes da luta também). A câmera volta à sala
+  inteira e os pontos saem enquanto a luta dura; as cartas e as animações são as de sempre.
+- **Tela baixa:** com o ambiente, a arte não se recolhe na faixa de 52 px ao rolar (é ali que se vê a sala, o sarilho
+  de perto e a corrente descendo); a altura dela já é limitada a 22% da janela, e só o texto rola. A página do lugar
+  refeita ao recarregar começa no topo, como a nova (antes descia até o fim).
+- **O sarilho:** de perto, no topo; a corrente desce ali mesmo, com os trancos de antes, sem a página rolar até a
+  imagem e voltar.
+
+## Conferido
+
+1500×950 e 1280×700: o exterior, os sapos de perto e Afastar, o buraco levando ao salão inquieto, a luta do salão e a
+do ossuário (mago) com o ambiente de fundo e as cartas legíveis, a vitória com o salão quieto, o sarilho de perto e a
+corrente descendo, recarregar com as correntes soltas (sem som), movimento reduzido. Fumaça completa.
+
+## Limitações (até as próximas entregas)
+
+- A sacristia e o fundo ainda usam a paisagem genérica; a página do lugar na etapa `ossuario` mostra o salão.
+- Os nomes dos pontos ainda ficam sempre à vista; o afogado verde e o facho pontilhado do alçapão continuam.

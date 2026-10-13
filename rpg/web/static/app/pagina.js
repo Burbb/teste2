@@ -39,8 +39,10 @@ pagina.addEventListener("scroll", () => {
 pagina.addEventListener("wheel", (ev) => { if (ev.deltaY < 0 && pagina.scrollTop <= 0) recolherArte(false); }, { passive: true });
 
 /** A arte do lugar fica presa no topo da cena. Quando o texto passa a precisar de rolagem, ela se recolhe numa
- *  faixa baixa e o espaço vai para a leitura; volta inteira na cena seguinte. */
-function recolherArte(sim) { cenaEl.classList.toggle("recolhido", sim); }
+ *  faixa baixa e o espaço vai para a leitura; volta inteira na cena seguinte. Com um ambiente da capela no topo
+ *  (telas/cenas.js), ela fica inteira: é ali que se vê a sala, o mecanismo de perto e a corrente descendo; a altura
+ *  dela já é limitada pela da janela (22vh), e só o texto rola. */
+function recolherArte(sim) { cenaEl.classList.toggle("recolhido", sim && !cenaEl.classList.contains("com-ambiente")); }
 
 /** O Voltar das telas de menu mora na barra do topo da cena, fora da área que rola: nunca cobre o conteúdo.
  *  Sem `acao`, sai. Entre uma resposta e o redesenho da mesma tela ele fica (um clique ali não vale: a pergunta

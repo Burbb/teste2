@@ -278,22 +278,25 @@
 }
 
 /* ------------------------------------------------------------------ cenas interativas (roadmapIDEIAS/20) */
-/* O lugar desenhado em pixel art, com os pontos clicáveis por cima (como os prédios da vila): o nome sempre à vista,
-   o contorno no mouse e no foco do teclado. */
-.cena-interativa { margin: 4px 0 14px; }
-.ci-palco { position: relative; border: var(--borda) solid var(--p-j); border-image: var(--anel-j) 1 / 1 stretch; background: #0b0d10; }
-.ci-arte { display: block; width: 100%; height: auto; image-rendering: pixelated; }
-.ci-pontos { position: absolute; inset: 0; }
-.ci-pontos[hidden] { display: none; }
-.ci-ponto { position: absolute; padding: 0; background: none; border: 0; cursor: pointer; }
+/* Os ambientes da capela são desenhados na arte do topo (vista.js + telas/cenas.js); os pontos clicáveis ficam numa
+   camada por cima dela, como os prédios da vila, com o balão do nome no mesmo estilo. */
+#pontos-cena { position: absolute; z-index: 2; overflow: hidden; pointer-events: none; }
+#pontos-cena[hidden] { display: none; }
+#pontos-cena.perto .ci-ponto { visibility: hidden; }  /* de perto, a arte é o que se olha: "Afastar" volta */
+.ci-ponto { position: absolute; padding: 0; background: none; border: 0; cursor: pointer; pointer-events: auto; }
 .ci-ponto.parado { cursor: default; }
-.ci-ponto:focus-visible { outline: 2px dashed var(--ouro); outline-offset: 2px; }
-/* Afastar: a volta de um ponto de olhar (os sapos), no canto da arte. */
-.ci-afastar { position: absolute; right: 6px; top: 6px; padding: 2px 10px 3px; font-family: var(--texto); font-size: 14px; color: var(--tinta);
-  background: rgba(10, 8, 6, 0.85); border: 2px solid #6a5a40; cursor: pointer; }
-.ci-afastar:hover, .ci-afastar:focus-visible { color: var(--ouro); border-color: var(--ouro); outline: none; }
-.ci-afastar[hidden] { display: none; }
-.ci-balao { position: absolute; transform: translate(-50%, -100%); white-space: nowrap; padding: 1px 8px 2px; font-family: var(--texto); font-size: 14px;
-  color: var(--tinta); background: rgba(10, 8, 6, 0.82); border: 2px solid #4a3c2c; pointer-events: none; }
-.ci-ponto:hover .ci-balao, .ci-ponto:focus-visible .ci-balao, .ci-ponto.aceso .ci-balao { color: var(--ouro); border-color: var(--ouro); }
+.ci-ponto:focus-visible { outline: var(--px) dashed var(--ouro); outline-offset: 0; }
+.ci-balao { --anel: var(--anel-j); --bico: var(--bico-j); position: absolute; translate: -50% calc(-100% - var(--P) * 3);
+  padding: 0 5px; white-space: nowrap; pointer-events: none;
+  font-family: var(--texto); font-size: 12px; font-weight: 600; line-height: 1.3; color: var(--tinta-2);
+  border: var(--borda) solid var(--p-j); border-image: var(--anel) 1 / 1 stretch; background: var(--p-k); background-clip: padding-box; }
+.ci-balao::after { content: ""; position: absolute; left: 50%; top: 100%; translate: -50% 0;
+  width: calc(var(--P) * 7); height: calc(var(--P) * 4); background: var(--bico) 0 0 / 100% 100%; image-rendering: pixelated; }
+.ci-ponto:is(:hover, :focus-visible, .aceso) .ci-balao { --anel: var(--anel-a); --bico: var(--bico-a); color: var(--ouro); }
 .ci-ponto.parado .ci-balao { color: var(--tinta-3); }
+/* Afastar: a volta de um ponto de olhar (os sapos), no canto da arte. */
+.ci-afastar { position: absolute; right: 8px; top: 8px; padding: 1px 10px 2px; pointer-events: auto; cursor: pointer;
+  font-family: var(--texto); font-size: 13px; font-weight: 600; color: var(--tinta);
+  border: var(--borda) solid var(--p-j); border-image: var(--anel-j) 1 / 1 stretch; background: var(--p-k); background-clip: padding-box; }
+.ci-afastar:is(:hover, :focus-visible) { border-image-source: var(--anel-a); color: var(--ouro); outline: none; }
+.ci-afastar[hidden] { display: none; }

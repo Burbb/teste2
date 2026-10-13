@@ -1661,3 +1661,14 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   (`cenarioCapelaFora` novo), telas a 1500 e 1280 px com altura reduzida, quatro períodos, três classes, fuga, salvar e
   carregar, movimento reduzido.
 - **Falta:** Jean conferir; a sacristia e o fundo.
+
+### 13/10/2026 — A capela no cenário principal (1.77.0)
+
+- **Pedido de Jean:** a cena da capela no topo, no lugar das ruínas genéricas, sem imagem no texto; a luta no
+  ambiente certo; os pontos fora de alcance na luta; tela baixa sem pulos.
+- **Feito:** o ambiente desenhado na arte do topo (`Vista.usarAmbiente`), os pontos numa camada por cima dela, a luta
+  do salão e a do ossuário com o próprio fundo, a arte inteira enquanto houver ambiente, o sarilho e a corrente no
+  topo. Detalhe em [20](20-CENA-INTERATIVA-OSSUARIO.md).
+- **Verificado:** testes, gabarito idêntico, pyflakes, fumaça completa, telas a 1500 e 1280 px com altura reduzida,
+  movimento reduzido, recarregar.
+- **Falta:** Jean conferir; as entregas 2 (luz e criaturas) e 3 (navegação).

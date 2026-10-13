@@ -484,6 +484,7 @@ def _sacristia(g, mid):
 def _ossuario(g, mid):
     m = registro(g, mid)
     g.ui.cena("O Ossuário", g.contexto_cena(), "evento")
+    g.ui.painel("cena", cena_ossuario(g, mid))  # a sala da luta (os pontos só valem na página do lugar)
     g.narrar("O alçapão dá numa escada de pedra que desce para o frio. O ossuário é uma sala baixa, com ossos "
              "arrumados em buracos nas paredes. Alguns buracos estão vazios. Os ossos que faltam estão de pé, no meio da sala.")
     if not _lutar(g, grupo_ossuario(g), "O Ossuário"):

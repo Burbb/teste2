@@ -100,6 +100,14 @@ class TestCenasDentroDoTexto(unittest.TestCase):
         fazer(g, "sacristia")
         self.assertEqual([d["cena"] for d in cenas(g)], ["exterior"])  # a sacristia em si segue sem arte
 
+    def test_a_luta_do_ossuario_no_ossuario(self):
+        """A arte do topo vira o chão da arena: a luta do ossuário acontece no ossuário (1.77.0)."""
+        g = na_capela("mago", etapa="ossuario")
+        lutas(g, "fuga")
+        fazer(g, "ossuario")
+        self.assertEqual([d["cena"] for d in cenas(g)], ["ossuario"])
+        self.assertEqual(missoes.registro(g, MID)["etapa"], "ossuario")
+
     def test_ossuario_vencido_mostra_o_sarilho_sem_acao(self):
         g = na_capela("mago", etapa="ossuario")  # (o guerreiro ganharia o broquel aqui: outra escolha no meio)
         lutas(g, "vitoria")
