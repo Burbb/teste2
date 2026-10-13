@@ -201,12 +201,12 @@
 .mochila-loja.recompra .celula { border-style: dashed; }
 
 /* ------------------------------------------------------------------ o mercado: a banca e as abas */
-/* A tela ocupa a altura visível da página (mercado.js mede): a banca à esquerda e, à direita, o ouro, as abas e a
-   lista, que é a única parte que rola. Com pouca largura, a banca vira uma faixa baixa em cima. */
+/* A tela ocupa a altura visível da página (mercado.js mede): a banca numa faixa em cima (em qualquer largura) e,
+   embaixo, o ouro, as abas e a lista, que é a única parte que rola. */
 #folha:has(.tela.loja) { max-width: none; padding-bottom: 0; }
 #texto:has(.tela.loja) { container-type: inline-size; }
-.tela.loja { display: grid; grid-template-columns: calc(192px + 2 * var(--borda)) 1fr; gap: 14px; min-height: 280px; }
-.loja-banca { position: relative; align-self: start; aspect-ratio: 64 / 84; min-height: 0; background: #120e0b; border: var(--borda) solid var(--p-j); border-image: var(--anel-j) 1 / 1 stretch; overflow: hidden; }
+.tela.loja { display: grid; grid-template-columns: 1fr; grid-template-rows: calc(96px + 2 * var(--borda)) 1fr; gap: 8px; min-height: 280px; }
+.loja-banca { position: relative; align-self: stretch; min-height: 0; background: #120e0b; border: var(--borda) solid var(--p-j); border-image: var(--anel-j) 1 / 1 stretch; overflow: hidden; }
 .loja-banca canvas { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 100%; image-rendering: pixelated; }
 .loja-banca.alvo { outline: 3px dashed var(--ouro); outline-offset: 3px; }
 .loja-lado { display: flex; flex-direction: column; min-height: 0; min-width: 0; }
@@ -236,7 +236,7 @@
 .loja-recompra .celula:hover, .loja-recompra .celula:focus-visible { --anel: var(--anel-Y); outline: none; }
 .preco-canto { position: absolute; right: 1px; bottom: -1px; font-family: var(--num); font-size: 14px; color: var(--ouro); text-shadow: 1px 1px 0 #000; }
 .loja-lista { flex: 1; min-height: 0; overflow-y: auto; align-content: start; padding: 10px 6px 12px 2px; scrollbar-width: thin; scrollbar-color: #4a4038 #120e0b; }
-.loja-lista.vitrine { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
+.loja-lista.vitrine { grid-template-columns: repeat(auto-fill, minmax(196px, 1fr)); }
 .loja-lista > .vazio { grid-column: 1 / -1; color: var(--tinta-3); font-style: italic; }
 .mercadoria:focus-visible { outline: 2px solid var(--ouro); outline-offset: 2px; }
 .mercadoria.suprimento, .mercadoria.equip, .mercadoria.venda { grid-template-columns: 52px 1fr; grid-template-rows: auto auto auto; align-items: start; }
@@ -263,20 +263,17 @@
 .mercadoria.venda .preco.ganho { font-size: 17px; gap: 4px; color: var(--bom); }
 .mercadoria.venda.outra-classe > .slot-px { opacity: 0.6; }
 .merc-classe { display: block; font-family: var(--texto); font-size: 12px; color: var(--tinta-3); }
-/* A entrada: a banca se revela (mercado.js) e a coluna dos produtos chega junto, uma vez por visita; a saída apaga
+/* A entrada: a banca se revela (mercado.js) e os produtos chegam junto, de baixo, uma vez por visita; a saída apaga
    a banca no mesmo tempo da página. */
 .tela.loja.chegando .loja-lado { animation: loja-chega 0.32s ease-out both; }
-@keyframes loja-chega { from { opacity: 0; transform: translateX(10px); } }
+@keyframes loja-chega { from { opacity: 0; transform: translateY(8px); } }
 #folha.saindo .loja-banca canvas { animation: banca-sai 0.2s steps(4) forwards; }
 @keyframes banca-sai { to { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .tela.loja.chegando .loja-lado, #folha.saindo .loja-banca canvas { animation: none; } }
-@container (max-width: 700px) {
-  .tela.loja { grid-template-columns: 1fr; grid-template-rows: 80px 1fr; gap: 8px; }
-  .loja-banca { aspect-ratio: auto; align-self: stretch; }
-  .loja-lista.vitrine { grid-template-columns: repeat(auto-fill, minmax(178px, 1fr)); }
-}
+
 /* Altura curta: o que não é produto aperta (a frase do mercador sai; o nome e o ouro ficam). */
 @media (max-height: 760px) {
+  .tela.loja { grid-template-rows: calc(80px + 2 * var(--borda)) 1fr; }
   .tela.loja .lore { display: none; }
   .loja-abas { margin-top: 6px; }
   .loja-sub { padding: 4px 2px 2px; }

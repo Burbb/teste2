@@ -1614,3 +1614,19 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
 - **Verificado:** testes, gabarito (só o painel do mercado; examinado), pyflakes, fumaça completa, telas a 1500 e
   1280 px com altura reduzida e movimento reduzido.
 - **Falta:** Jean conferir.
+
+### 13/10/2026 — O mercado em faixa única e a vendinha do Vale (1.74.0)
+
+- **Pedido de Jean:** a arte horizontal em todas as larguras, e uma loja que pertença ao Vale: grupos de mercadorias
+  do jogo, com respiro, e um comerciante de roupa de trabalho rústica. Só composição e ambientação.
+- **Feito:**
+  - a faixa em cima da tela do mercado, em qualquer largura (96 px, ou 80 com a janela baixa, pixel 2×), e a lista com
+    a largura toda;
+  - a parede em vãos com grupos reconhecíveis (curativos, provisões, gibão e broquel, arco e aljava, tochas, cestos,
+    ferramentas, caixotes e barril), porta, janela, dia e noite;
+  - o comerciante mais velho, de túnica de lã, capuz caído, avental de couro gasto, cinto com bolsa e chaves;
+  - a animação que não recomeça a cada compra.
+  - Detalhe em [19](19-MERCADO.md).
+- **Verificado:** testes, gabarito idêntico, pyflakes, fumaça completa, telas de 1100 a 1920 px, altura reduzida, dia,
+  noite, movimento reduzido.
+- **Falta:** Jean conferir.

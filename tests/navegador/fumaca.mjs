@@ -1486,6 +1486,13 @@ async function cenarioMercado(browser) {
     await page.evaluate(() => { const l = document.querySelector('[data-lista="suprimentos"]'); l.scrollTop = l.scrollHeight; });
     const m = await medidas();
     conferir(m.pagina <= 1 && m.abas && m.ouro && m.sair, `em 1280×700, só a lista rola; abas, ouro e Sair à vista (${JSON.stringify(m)})`);
+    // A banca é uma faixa em cima de tudo (em qualquer largura), em pixel inteiro, sem esticar o desenho.
+    const fx = await page.evaluate(() => {
+      const b = document.querySelector(".loja-banca").getBoundingClientRect(), t = document.querySelector(".loja-topo").getBoundingClientRect();
+      const c = document.querySelector(".banca-cena"), r = c.getBoundingClientRect();
+      return { acima: b.bottom <= t.top, larga: b.width > b.height * 4, escala: r.width / c.width, escalaV: r.height / c.height };
+    });
+    conferir(fx.acima && fx.larga && Math.abs(fx.escala - 2) < 0.02 && Math.abs(fx.escalaV - 2) < 0.02, `a banca é a faixa em cima, em pixel 2× (${JSON.stringify(fx)})`);
     // O esgotado diz por quê, por escrito (não só a cor).
     const esgotado = await page.evaluate(() => [...document.querySelectorAll(".mercadoria.suprimento.caro .merc-motivo")].map((e) => e.textContent).join(" | "));
     conferir(/Esgotado/.test(esgotado) || /Ouro insuficiente/.test(esgotado), `o que não se compra diz o motivo no cartão (${esgotado})`);

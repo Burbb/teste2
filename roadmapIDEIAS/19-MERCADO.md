@@ -134,6 +134,62 @@ quantidades e o cartão esgotado. Preços, estoque, limites, reposição e sorte
     - nenhum erro no console.
 - **Falta:** Jean conferir.
 
+## A faixa única e a vendinha do Vale (1.74.0)
+
+Pedido de Jean (13/10/2026): ele prefere a arte horizontal que aparecia na janela menor; usá-la em todas as larguras,
+inclusive maximizado. E a loja deve parecer um pequeno comércio de vila do Vale do Turvo, não uma bancada genérica
+com muitos frascos iguais. Só composição e ambientação: textos dos cartões, quantidades, preços, estoque, compras,
+vendas, recompra e regras não mudaram.
+
+- **Composição:** a banca é uma faixa em cima do cabeçalho do mercador, das abas e da lista, em qualquer largura; o
+  retrato vertical saiu.
+  - 96 px de altura (80 px com a janela baixa, abaixo de 760 px), pixel 2× inteiro.
+  - Mais largura mostra mais da loja, nunca o desenho esticado.
+  - A lista ganhou a largura toda: os cartões a partir de 196 px, três colunas de 1100 a 1920 px de janela.
+  - O ouro, as abas, o Sair e a rolagem da lista seguem iguais.
+  - Os produtos agora chegam de baixo, junto da faixa que se revela.
+- **A loja (vãos):**
+  - A parede de tábuas velhas, de tons e larguras diferentes, é dividida por postes em vãos, cada um com um grupo
+    reconhecível:
+    - curativos: rolos de bandagem, dois frascos, potes de barro;
+    - provisões: pães, queijo, provisões embrulhadas em pano e amarradas, carne seca e um odre pendurados;
+    - proteção: um gibão de couro no cabide e um broquel;
+    - arco: o arco pendurado, a aljava e um feixe de flechas;
+    - tochas: um caixote de tochas e uma tocha apagada no suporte;
+    - sacos: corda, machadinha, martelo, sacos e caixote;
+    - cestos: réstia de alho, maçãs e nabos;
+    - ferramentas: martelo, torquês, serrote, lanterna e caixa de pregos;
+    - caixas: caixotes empilhados e um barril.
+  - Entre os grupos, parede vazia (descanso), a porta dos fundos com a cortina remendada e uma janela.
+  - Atrás do mercador, a parede fica lisa.
+  - Os dois lados têm ordens diferentes, para os grupos repetidos ficarem longe um do outro.
+  - No balcão: livro de contas, balança, moedas, um embrulho, uma faca, um feixe de flechas e sacos; na frente, a
+    cinta de ferro com rebites.
+  - Nada disso é clicável nem vira mercadoria: é ambientação.
+- **Luz:**
+  - De dia, a janela clara e a fresta de luz embaixo da porta.
+  - À noite, a lamparina mais forte, a janela azul com uma estrela e a loja escurecendo em anéis em volta dela (pixel
+    inteiro, sem degradê nem pontilhado).
+- **O comerciante:**
+  - Um homem mais velho: careca de franja grisalha, sobrancelha desconfiada, nariz comprido, barba grisalha.
+  - Túnica de lã crua com o capuz caído nos ombros e avental de couro gasto, com manchas.
+  - Cinto de fivela com a bolsa e as chaves.
+  - Saíram o chapéu de aba, o lenço vermelho e a túnica azul (pareciam de atendente moderno).
+  - Ele pende a cabeça para o lado da mão apoiada no balcão.
+  - Os movimentos seguem: respira, pisca e, a cada oito segundos, pega o frasco vermelho, ergue contra a luz e devolve.
+- **Animação contínua:** o relógio do mercador é o da visita. Uma compra (que redesenha a tela) não recomeça o gesto
+  nem a entrada; trocar de aba nem redesenha a faixa. Com movimento reduzido, tudo parado.
+- **Validação:**
+  - Testes, pyflakes, gabarito idêntico, fumaça completa (`cenarioMercado` confere a faixa em cima, larga e em pixel
+    2×).
+  - Conferido na tela, nas janelas 1920×1080 (maximizada), 1500×950, 1500×700, 1280×800, 1280×700 e 1100×800:
+    escala 2 sempre, três colunas, a página sem rolar (só a lista).
+  - Também: dia e noite, movimento reduzido, e uma compra no meio do gesto (ele continua e ergue o frasco no tempo
+    certo, sem repetir a entrada).
+  - O cenário `mercado` aceita `PERIODO` (3 é noite).
+- **Limitação:** com a janela baixa (700 px), a lista mostra duas fileiras de cartões por vez.
+- **Falta:** Jean conferir.
+
 ## Como Jean testa
 
 1. Numa vila, entre no mercado: a banca aparece num pontilhado, e a aba Suprimentos já está aberta.
@@ -146,3 +202,6 @@ quantidades e o cartão esgotado. Preços, estoque, limites, reposição e sorte
 7. (1.73.0) Repare no mercador (chapéu, lenço, a mão apoiada no balcão) e espere uns oito segundos: ele pega o frasco
    e ergue contra a luz. Compre até esgotar algo: o cartão diz só "Esgotado"; passe o mouse (ou chegue com Tab) para
    ler quando o mercador reabastece.
+8. (1.74.0) Abra o mercado maximizado e numa janela menor: a loja é sempre a faixa em cima. Repare nos grupos da
+   parede (bandagens, pães, gibão, arco, tochas, cestos, caixotes) e no mercador de avental de couro. Para a noite:
+   `$env:PERIODO="3"; python -m tests.navegador.cenarios mercado`.

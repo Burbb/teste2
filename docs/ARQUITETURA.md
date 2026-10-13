@@ -190,8 +190,9 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   `Telas` um nome que ninguém pôs é erro na hora, com o nome. Tela nova: um arquivo em `telas/`, o `registrar` no fim
   e o `<script>` antes de quem a usa.
   O mercado (`telas/mercado.js`) é a tela com abas: elas são só da tela (não falam com o motor); a tela ocupa a altura
-  visível da página e só a lista da aba rola; a banca é desenhada em canvas, no estilo das paisagens. O que não se
-  compra vem com o `motivo` do motor (`Loja.dados_loja`). Ver roadmapIDEIAS/19.
+  visível da página e só a lista da aba rola; a banca é uma faixa em cima (em qualquer largura), desenhada em canvas
+  no estilo das paisagens, com vãos de mercadoria que aparecem conforme a largura. O que não se compra vem com o
+  `motivo` do motor (`Loja.dados_loja`). Ver roadmapIDEIAS/19.
   A cena interativa (`telas/cenas.js`, tipo `cena`) desenha um lugar com pontos clicáveis: o motor manda o estado e,
   em cada ponto, a `acao` (a mesma meta de uma opção do menu: o clique só aproxima a câmera e escolhe aquela opção) ou
   o `estado` escrito. Mudança de estado se anima por uma celebração mandada depois de o motor gravar o resultado. Hoje

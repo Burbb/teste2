@@ -782,13 +782,13 @@ def tutorial(ui):
 def mercado(ui):
     """Uma vila do mundo gerado com o herói direto no mercado (Voltar leva à vila; o prédio do mercado entra de novo).
     CLASSE (padrão arqueiro: as flechas também), OURO (padrão 300), MOCHILA (quantos equipamentos na mochila, padrão 8;
-    alguns de outra classe), PROVISOES."""
+    alguns de outra classe), PROVISOES, PERIODO (padrão 1, tarde; 3 é noite)."""
     g = Jogo(ui, seed=int(os.environ.get("SEMENTE", "8")), pasta_saves=tempfile.mkdtemp())
     ui.jogo = g
     classe = os.environ.get("CLASSE", "arqueiro")
     g.iniciar("Jean", classe)
     g.mundo["atual"] = next(l for l in g.mundo["locais"] if l["tipo"] == "vila")["id"]
-    g.periodo, g.clima = 1, "limpo"
+    g.periodo, g.clima = int(os.environ.get("PERIODO", "1")), "limpo"
     g.j.ouro = int(os.environ.get("OURO", "300"))
     if os.environ.get("PROVISOES"):
         g.j.provisoes = int(os.environ["PROVISOES"])

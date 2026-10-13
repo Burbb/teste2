@@ -1,5 +1,5 @@
-/* Mercado: a banca do mercador (à esquerda, ou numa faixa em cima quando falta largura) e, ao lado, o ouro, três abas
-   (Suprimentos, Equipamentos, Vender) e a lista da aba, a única parte que rola. Trocar de aba é só da tela: não fala
+/* Mercado: a banca do mercador numa faixa em cima e, embaixo, o ouro, três abas (Suprimentos, Equipamentos, Vender) e
+   a lista da aba, a única parte que rola. Trocar de aba é só da tela: não fala
    com o motor, não passa tempo nem mexe no estoque. A aba, a rolagem de cada lista e a quantidade escolhida em cada
    suprimento sobrevivem ao redesenho depois de cada compra ou venda (não à saída do mercado). */
 "use strict";
@@ -83,138 +83,268 @@
   }
 
   // ---------------------------------------------------------------- a banca
-  /** Dentro do mercado, de frente para o balcão: a parede de tábuas com as prateleiras (potes, sacos, frascos), as
-   *  ervas penduradas, a lamparina que treme (mais forte à noite) e, atrás do balcão, o mercador: chapéu de aba com a
-   *  fita vermelha, lenço no pescoço, barba, avental de couro; uma mão apoiada no balcão, a outra mexendo nas coisas.
-   *  Ele respira, pisca e, a cada oito segundos, pega um frasco, ergue contra a luz e devolve. A luz vem da lamparina,
-   *  à esquerda: o lado de lá do rosto, do corpo e dos potes fica na sombra. É outro lugar que não o mercado da vila
-   *  (aquele é o prédio; isto é o lado de dentro). Pixel art no estilo das paisagens, em escala inteira: o retrato (ao
-   *  lado dos produtos) em 64×84, com a parede do lado, a janela e a ponta do balcão; a faixa (em cima, quando falta
-   *  largura) com a mesma loja, mais larga. Ao entrar, revela-se num pontilhado que se fecha; com movimento reduzido,
-   *  fica parada. */
+  /** Dentro do mercado, de frente para o balcão, numa faixa em cima dos produtos (em qualquer largura): uma vendinha
+   *  de vila do Vale. A parede de tábuas velhas é dividida em vãos por postes, e cada vão mostra um grupo do que o
+   *  mercado vende (curativos e frascos, provisões, uma peça de proteção, o arco e a aljava, tochas, sacos,
+   *  ferramentas, cestos, caixotes e um barril), com paredes vazias entre eles para descansar o olho; a porta dos
+   *  fundos e uma janela (dia ou noite). Os objetos são só ambientação: nada na faixa é clicável.
+   *  Mais largura mostra mais vãos, nunca o desenho esticado. A luz é a da lamparina, à esquerda do mercador; à noite,
+   *  o que fica longe dela escurece. Atrás do balcão, o mercador: um homem mais velho, careca de franja grisalha,
+   *  nariz comprido e sobrancelha desconfiada, túnica de lã crua com o capuz caído, avental de couro gasto e manchado,
+   *  cinto com bolsa e chaves. Ele se apoia numa mão sobre o balcão; respira, pisca e, a cada oito segundos, pega um
+   *  frasco, ergue contra a luz e devolve. Pixel art no estilo das paisagens, em escala inteira (pixel 2×). Ao entrar,
+   *  a faixa se revela num pontilhado que se fecha; comprar ou trocar de aba não recomeça nada. Com movimento
+   *  reduzido, fica parada. */
   const reduzido = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let relogio0 = 0;  // quando a visita começou: o ritmo do mercador segue o mesmo entre um redesenho e outro
   const COR = {
-    parede: "#1e1712", fresta: "#15100c", lado: "#140f0b", ladoFresta: "#0e0a07",
+    parede: "#1e1712", tabuas: ["#211913", "#1b140f", "#241b14", "#1d1611"], fresta: "#130e0a", no: "#15100b",
+    viga: "#2e2216", vigaLuz: "#3e2e1e", poste: "#2a1e14", posteLuz: "#3a2a1c", posteSombra: "#120c08",
     prateleira: "#4a3624", prateleiraLuz: "#6a5034", prateleiraSombra: "#24190f",
-    balcao: "#5a4028", balcaoLuz: "#7a5a38", balcaoFundo: "#3e2c1a", balcaoBorda: "#2a1c10", frente: "#3a2818", frenteLinha: "#2a1c12",
-    frenteLuz: "#46321e", chao: "#1a130e", chaoLinha: "#120d09",
-    pele: "#b07a56", peleLuz: "#d09a70", peleSombra: "#7e5236", cabelo: "#2a1c14", barba: "#5a3a24", barbaSombra: "#3a2416",
-    olho: "#120c08", chapeu: "#6a4c30", chapeuLuz: "#8e6c46", chapeuSombra: "#3e2a1a", fita: "#a83a2a",
-    lenco: "#a8402e", lencoSombra: "#6a2418", tunica: "#3a4a5a", tunicaLuz: "#4e6276", tunicaSombra: "#26323e",
-    avental: "#8a6a44", aventalLuz: "#a4825a", aventalSombra: "#5e4630", saco: "#8a7454", sacoSombra: "#5a4a34",
+    caixa: "#5a4630", caixaLuz: "#6e5638", caixaSombra: "#3a2c1c",
+    pano: "#8a7e66", panoLuz: "#a89a7c", panoSombra: "#5e5444", barbante: "#3a2c1c",
+    couro: "#5a3c24", couroLuz: "#704c2e", couroSombra: "#3a2616", ferro: "#4a4a50", ferroLuz: "#8a8a92",
+    pao: "#a07a44", paoLuz: "#c09a5a", queijo: "#b89a4a", carne: "#5a2a1e", carneLuz: "#7a3a2a",
+    bandagem: "#d8d0bc", bandagemSombra: "#a8a090", barro: "#7a4a2e", barroLuz: "#9a6040", barroSombra: "#4e2e1c",
+    haste: "#8a6a44", pena: "#c8c0b0", penaCor: "#9a3a2a", corda: "#9a845a", piche: "#2a2018",
+    saco: "#8a7454", sacoSombra: "#5a4a34", cortina: "#5a2a22", cortinaSombra: "#3e1c16", cortinaRemendo: "#6a4a2e",
+    balcao: "#5a4028", balcaoLuz: "#7a5a38", balcaoFundo: "#3e2c1a", balcaoBorda: "#2a1c10",
+    frente: ["#3a2818", "#34241a", "#3e2c1c"], frenteLinha: "#22160c",
+    pele: "#b07a56", peleLuz: "#d09a70", peleSombra: "#7e5236", olho: "#120c08", boca: "#3a2418",
+    cabelo: "#8a8478", cabeloSombra: "#5e5a52", sobrancelha: "#4a463e", barba: "#7a7266", barbaSombra: "#5a544a",
+    capuz: "#4e5640", capuzSombra: "#363c2c", tunica: "#6e6046", tunicaLuz: "#8a7a5a", tunicaSombra: "#4a402e",
+    avental: "#5a3e28", aventalSombra: "#3e2a1a", mancha: "#4a3220", cinto: "#2a1c12", fivela: "#a89a62",
+    bolsa: "#7a5634", bolsaSombra: "#5a3e24",
   };
-  // O mercador, do chapéu ao peito (21 colunas; o meio é a coluna 10). O resto do tronco repete a última linha até o
-  // balcão. Letras: H/h/x chapéu (luz, meio, sombra), f fita, k cabelo, L/s/d pele (luz, meio, sombra), e olho,
-  // n nariz, B/b barba, r/R lenço, u/t/T túnica, a/A/l avental (meio, sombra, luz), p bolso.
+  // O mercador, da careca ao peito (21 colunas; o meio é a coluna 10). O resto do tronco repete a última linha até o
+  // balcão; o cinto, a bolsa e as chaves entram na altura da cintura. Letras: L/s/d pele (luz, meio, sombra), k/K
+  // franja grisalha, w sobrancelha, e olho, n nariz, B/b barba, M boca, c/C capuz caído, u/t/T túnica de lã,
+  // a/A avental de couro, x mancha no couro.
   const FIGURA = [
-    "........hhhhx........",
-    ".......Hhhhhhx.......",
-    ".......fffffff.......",
-    ".....Hhhhhhhhhhx.....",
-    "......kdddddddk......",
-    "......kLesssedk......",
-    "......kLssndddk......",
-    ".......LBBBBbd.......",
+    "........LLssd........",
+    ".......LLsssdd.......",
+    "......kLssssddk......",
+    "......kwwsswwdk......",
+    "......kLeLsedKk......",
+    "......KLssnsddK......",
+    "......KBLnnsbBK......",
+    ".......BBMMBbb.......",
+    ".......BBBBBbb.......",
     "........BBBbb........",
-    ".......rrBbbRR.......",
-    "......utrrrRRtT......",
-    "....uuttarrRaatTT....",
-    "...uuttlaarRaaAtTT...",
-    "...uuttlaaaaaaAtTT...",
-    "...uuttlaapppaAtTT...",
-    "...uuttlaaaaaaAtTT...",
+    ".....ccccBbbCCC......",
+    "....ccttttttttCCC....",
+    "...uuttaaaaaaAttTT...",
+    "...uuttaaaaaaAttTT...",
+    "...uuttaaxaaaAttTT...",
+    "...uuttaaaaaaAttTT...",
+    "...uuttaaaaxaAttTT...",
   ];
   const TINTA = {
-    H: "chapeuLuz", h: "chapeu", x: "chapeuSombra", f: "fita", k: "cabelo", L: "peleLuz", s: "pele", d: "peleSombra",
-    e: "olho", n: "peleSombra", B: "barba", b: "barbaSombra", r: "lenco", R: "lencoSombra", u: "tunicaLuz", t: "tunica",
-    T: "tunicaSombra", a: "avental", A: "aventalSombra", l: "aventalLuz", p: "aventalSombra",
+    L: "peleLuz", s: "pele", d: "peleSombra", k: "cabelo", K: "cabeloSombra", w: "sobrancelha", e: "olho",
+    n: "peleSombra", B: "barba", b: "barbaSombra", M: "boca", c: "capuz", C: "capuzSombra", u: "tunicaLuz",
+    t: "tunica", T: "tunicaSombra", a: "avental", A: "aventalSombra", x: "mancha",
+  };
+  // Os vãos da parede, do mercador para fora (o primeiro de cada lado encosta nele). Larguras em pixels da arte.
+  const VAOS = {
+    esquerda: [["curativos", 28], ["descanso", 10], ["protecao", 22], ["janela", 18], ["sacos", 30], ["descanso", 12],
+      ["tochas", 20], ["ferramentas", 26], ["descanso", 10], ["caixas", 26], ["curativos", 28], ["porta", 18], ["descanso", 14]],
+    direita: [["provisoes", 30], ["descanso", 10], ["arco", 24], ["cestos", 26], ["porta", 18], ["caixas", 26],
+      ["descanso", 12], ["tochas", 20], ["janela", 18], ["protecao", 22], ["descanso", 10], ["provisoes", 30], ["descanso", 14]],
   };
 
   function banca(caixa, revelar) {
     const canvas = caixa.querySelector(".banca-cena"), c = canvas.getContext("2d");
     const cw = Math.max(1, caixa.clientWidth), ch = Math.max(1, caixa.clientHeight);
-    const faixa = cw > ch * 1.6;
-    const W = faixa ? Math.max(120, Math.round(cw / 2)) : 64, H = faixa ? 40 : 84;
+    const W = Math.max(160, Math.round(cw / 2)), H = Math.max(40, Math.min(56, Math.round(ch / 2)));
     canvas.width = W; canvas.height = H;
     const px = (x, y, w, hh, cor) => { c.fillStyle = cor; c.fillRect(Math.round(x), Math.round(y), w, hh); };
     const noite = ((App.estado && App.estado.mundo && App.estado.mundo.periodo_n) || 0) === 3;
-    const topo = faixa ? 29 : 60;               // a borda de trás do tampo do balcão
-    const tampo = faixa ? 4 : 5;                // a profundidade do tampo (a face de cima, à vista)
-    const frente = topo + tampo;                // a quina da frente do balcão
-    const mx = faixa ? Math.round(W / 2) : 37;  // o meio do mercador
-    const ponta = faixa ? -1 : 10;              // onde o balcão começa (no retrato, a ponta dele aparece à esquerda)
-    const lampada = faixa ? [mx - 46, 1] : [20, 3];
-    const inicio = performance.now();
-    let quadro = 0, timer = null;
+    const topo = H - 11;        // a borda de trás do tampo do balcão (o balcão fica sempre embaixo)
+    const frente = topo + 4;    // a quina da frente
+    const S1 = topo - 18, S2 = topo - 8;  // as duas prateleiras
+    const mx = Math.round(W / 2);
+    const lampada = [mx - 30, Math.max(1, S1 - 12)];
+    if (revelar || !relogio0) relogio0 = performance.now();
+    let timer = null;
 
-    function pote(x, y, cor, alto = 5) {
-      px(x, y + 1, 4, alto - 1, cor); px(x, y + 1, 1, alto - 1, "rgba(255,255,255,0.18)"); px(x + 3, y + 1, 1, alto - 1, "rgba(0,0,0,0.35)");
-      px(x + 1, y, 2, 1, "#6a5034"); px(x, y + alto, 4, 1, "rgba(0,0,0,0.4)");
-    }
-    function frasco(x, y, cor) { px(x + 1, y, 1, 2, "#9a9aa0"); px(x, y + 2, 3, 3, cor); px(x, y + 2, 1, 1, "rgba(255,255,255,0.35)"); }
-    function saco(x, y) { px(x + 1, y, 3, 1, COR.sacoSombra); px(x, y + 1, 5, 4, COR.saco); px(x + 4, y + 1, 1, 4, COR.sacoSombra); px(x + 1, y + 1, 1, 1, "#a8946c"); }
+    // ------------------------------------------------ pequenas coisas
     function prateleira(y, x0, x1) {
       px(x0, y, x1 - x0, 1, COR.prateleiraLuz); px(x0, y + 1, x1 - x0, 1, COR.prateleira); px(x0, y + 2, x1 - x0, 1, COR.prateleiraSombra);
-      px(x0, y + 3, x1 - x0, 1, "rgba(0,0,0,0.25)");  // a sombra da tábua na parede
+      px(x0, y + 3, x1 - x0, 1, "rgba(0,0,0,0.25)");
+      px(x0 + 1, y + 3, 1, 2, COR.prateleiraSombra); px(x1 - 2, y + 3, 1, 2, COR.prateleiraSombra);  // as mãos-francesas
     }
-    // A luz da lamparina cai mais forte perto dela: longe, uma película escura por cima (pontilhada, não em degradê).
-    function sombraLonge() {
-      if (faixa) return;  // na faixa, larga e baixa, a película pesaria: a luz fica só no halo da lamparina
-      const [lx, ly] = lampada, alcance = 52;
-      for (let y = 0; y < topo; y++) for (let x = 0; x < W; x++) {
-        const d = Math.hypot(x - lx, (y - ly) * 1.3) / alcance;
-        if (d > 0.55 && Sprites.pontilha(x, y, Math.min(10, Math.round((d - 0.55) * 14)))) px(x, y, 1, 1, "rgba(8,5,3,0.45)");
-      }
+    function frasco(x, y, cor) { px(x + 1, y, 1, 1, "#6a5034"); px(x + 1, y + 1, 1, 1, "#9a9aa0"); px(x, y + 2, 3, 3, cor); px(x, y + 2, 1, 1, "rgba(255,255,255,0.35)"); px(x + 2, y + 4, 1, 1, "rgba(0,0,0,0.35)"); }
+    function pote(x, y, w, alto) {
+      px(x + 1, y, w - 2, 1, COR.barroSombra); px(x, y + 1, w, alto - 1, COR.barro); px(x, y + 1, 1, alto - 1, COR.barroLuz);
+      px(x + w - 1, y + 1, 1, alto - 1, COR.barroSombra); px(x, y + 2, w, 1, COR.barroSombra);
     }
+    function saco(x, y) { px(x + 1, y, 3, 1, COR.sacoSombra); px(x + 2, y - 1, 1, 1, COR.barbante); px(x, y + 1, 5, 4, COR.saco); px(x + 4, y + 1, 1, 4, COR.sacoSombra); px(x + 1, y + 1, 1, 1, "#a8946c"); }
+    function caixote(x, y, w, alto) {
+      px(x, y, w, alto, COR.caixa); px(x, y, w, 1, COR.caixaLuz); px(x, y + alto - 1, w, 1, COR.caixaSombra);
+      for (let k = x + 3; k < x + w - 1; k += 4) px(k, y + 1, 1, alto - 2, COR.caixaSombra);
+      px(x, y, 1, alto, COR.caixaSombra); px(x + w - 1, y, 1, alto, COR.caixaSombra);
+    }
+    function embrulho(x, y) {  // provisão embrulhada em pano, amarrada em cruz
+      px(x, y, 6, 4, COR.pano); px(x, y, 6, 1, COR.panoLuz); px(x + 5, y + 1, 1, 3, COR.panoSombra);
+      px(x + 3, y, 1, 4, COR.barbante); px(x, y + 2, 6, 1, COR.barbante);
+    }
+    function ervas(x, y0, k) {
+      const vento = reduzido() ? 0 : Math.round(Math.sin(quadro() / 9 + k) * 0.6);
+      px(x, y0, 1, 1, COR.barbante);
+      for (let y = y0 + 1; y < y0 + 5 + (k % 2); y++) px(x + (y > y0 + 3 ? vento : 0), y, 1, 1, k % 2 ? "#4a6a32" : "#5a7a3a");
+      px(x - 1 + (vento > 0 ? 1 : 0), y0 + 4 + (k % 2), 3, 1, "#3a5226");
+    }
+    function poste(x) { px(x, 2, 3, topo - 2, COR.poste); px(x, 2, 1, topo - 2, COR.posteLuz); px(x + 2, 2, 1, topo - 2, COR.posteSombra); }
+    const quadro = () => Math.floor((performance.now() - relogio0) / 100);
+
+    // ------------------------------------------------ os vãos
+    const VAO = {
+      descanso(x, w) { poste(x + Math.floor(w / 2) - 1); },
+      curativos(x, w, v) {
+        prateleira(S1, x + 1, x + w - 1); prateleira(S2, x + 1, x + w - 1);
+        // em cima: os rolos de bandagem empilhados e dois frascos
+        [[3, 0], [8, 0], [5, -3]].forEach(([dx, dy]) => { px(x + dx, S1 - 3 + dy, 4, 3, COR.bandagem); px(x + dx + 3, S1 - 3 + dy, 1, 3, COR.bandagemSombra); px(x + dx + 1, S1 - 2 + dy, 1, 1, COR.bandagemSombra); });
+        frasco(x + 16, S1 - 5, "#8a2a26"); frasco(x + 21, S1 - 5, v % 2 ? "#2a5a7a" : "#3a6a3a");
+        // embaixo: os potes de barro e um frasco de antídoto
+        pote(x + 3, S2 - 6, 5, 6); pote(x + 10, S2 - 4, 4, 4); frasco(x + 18, S2 - 5, "#3a6a3a");
+        ervas(x + 6, 2, v); ervas(x + 12, 2, v + 1);
+      },
+      provisoes(x, w, v) {
+        prateleira(S1, x + 1, x + w - 1); prateleira(S2, x + 1, x + w - 1);
+        // em cima: os pães e o queijo; embaixo: as provisões embrulhadas e um saquinho
+        [[3, 0], [10, 0]].forEach(([dx]) => { px(x + dx, S1 - 3, 6, 3, COR.pao); px(x + dx + 1, S1 - 3, 4, 1, COR.paoLuz); px(x + dx, S1 - 1, 6, 1, "#7a5a30"); });
+        px(x + 18, S1 - 3, 6, 3, COR.queijo); px(x + 18, S1 - 3, 6, 1, "#d8ba6a"); px(x + 22, S1 - 2, 2, 2, "#8a6a2a");
+        embrulho(x + 3, S2 - 4); embrulho(x + 11, S2 - 4); if (v % 2 === 0) saco(x + 20, S2 - 5);
+        // penduradas na viga: tiras de carne seca e o odre de água
+        for (let k = 0; k < 3; k++) { px(x + 5 + k * 2, 2, 1, 1, COR.barbante); px(x + 5 + k * 2, 3, 1, 4 + (k % 2), COR.carne); px(x + 5 + k * 2, 3, 1, 1, COR.carneLuz); }
+        const ox = x + w - 8;
+        px(ox + 2, 2, 1, 2, COR.barbante); px(ox + 1, 4, 3, 1, COR.couroSombra); px(ox, 5, 5, 5, COR.couro); px(ox, 5, 1, 4, COR.couroLuz); px(ox + 4, 6, 1, 4, COR.couroSombra); px(ox + 1, 10, 3, 1, COR.couroSombra);
+      },
+      protecao(x, w, v) {
+        // a peça de proteção pendurada: um gibão de couro num cabide; ao lado, um broquel de madeira com aro de ferro
+        px(x + 1, S1 - 10, w - 2, 1, COR.prateleiraSombra);  // a régua dos cabides
+        const gx = x + 3, gy = S1 - 9;
+        px(gx + 4, gy, 1, 2, COR.ferro);
+        px(gx, gy + 2, 9, 3, COR.couro); px(gx + 1, gy + 5, 7, 8, COR.couro); px(gx, gy + 2, 2, 2, COR.couroLuz);
+        px(gx + 1, gy + 5, 1, 8, COR.couroLuz); px(gx + 7, gy + 5, 1, 8, COR.couroSombra); px(gx + 3, gy + 2, 3, 1, COR.couroSombra);
+        for (let y = gy + 5; y < gy + 13; y += 2) px(gx + 4, y, 1, 1, COR.corda);  // os cordões da frente
+        const bx = x + w - 7, by = S2 - 7, r = v % 2 ? 4 : 3;
+        for (let y = -r; y <= r; y++) for (let k = -r; k <= r; k++) {
+          const d = k * k + y * y;
+          if (d <= r * r) px(bx + k, by + y, 1, 1, d > (r - 1) * (r - 1) ? COR.ferro : (k + y < 0 ? COR.caixaLuz : COR.caixa));
+        }
+        px(bx, by, 1, 1, COR.ferroLuz);
+      },
+      arco(x, w) {
+        // o arco pendurado (a madeira curva e a corda reta) e a aljava com as penas para fora
+        const ax = x + 4, ay0 = S1 - 9, alto = 18;
+        for (let y = 0; y <= alto; y++) { const dx = Math.round(Math.sin((y / alto) * Math.PI) * 3); px(ax - dx, ay0 + y, 1, 1, y % 6 === 0 ? COR.couroLuz : "#6a4a2a"); }
+        px(ax, ay0 + 1, 1, alto - 1, "#c8c0a8"); px(ax, ay0 - 1, 1, 1, COR.ferro);
+        const qx = x + 10, qy = S1 - 5;
+        px(qx, qy, 4, 10, COR.couro); px(qx, qy, 1, 10, COR.couroLuz); px(qx + 3, qy, 1, 10, COR.couroSombra); px(qx, qy + 3, 4, 1, COR.couroSombra);
+        [[0, COR.pena], [1, COR.penaCor], [2, COR.pena]].forEach(([k, cor]) => { px(qx + k + 0.5, qy - 3 + (k % 2), 1, 3, COR.haste); px(qx + k + 0.5, qy - 4 + (k % 2), 1, 2, cor); });
+        px(qx + 1, qy - 7, 1, 2, COR.couroSombra); px(qx + 1, qy - 8, 1, 1, COR.ferro);
+        // na prateleira de baixo, um feixe de flechas amarrado, deitado
+        prateleira(S2, x + w - 12, x + w - 1);
+        for (let k = 0; k < 3; k++) px(x + w - 11, S2 - 1 - k, 9, 1, COR.haste);
+        px(x + w - 11, S2 - 3, 1, 3, COR.ferroLuz); px(x + w - 3, S2 - 3, 2, 3, COR.pena); px(x + w - 2, S2 - 2, 1, 1, COR.penaCor);
+        px(x + w - 7, S2 - 3, 1, 3, COR.barbante);
+      },
+      tochas(x, w) {
+        prateleira(S2, x + 1, x + w - 1);
+        // um caixote de tochas na prateleira de baixo, os cabos para cima e as cabeças de piche
+        caixote(x + 3, S2 - 4, 11, 4);
+        [[4, 7], [6, 6], [8, 8], [10, 6], [12, 7]].forEach(([dx, h]) => { px(x + dx, S2 - 4 - h, 1, h, COR.haste); px(x + dx, S2 - 4 - h, 2, 2, COR.piche); });
+        // uma tocha apagada no suporte de ferro da parede
+        const sx = x + w - 5, sy = S1 - 4;
+        px(sx - 1, sy + 3, 3, 1, COR.ferro); px(sx, sy - 2, 1, 6, COR.haste); px(sx - 1, sy - 3, 3, 2, COR.piche);
+      },
+      sacos(x, w, v) {
+        prateleira(S1, x + 1, x + w - 1);
+        // em cima: um rolo de corda e as ferramentas (machadinha, martelo); embaixo: sacos e um caixote
+        const rx = x + 5, ry = S1 - 3;
+        for (let a = 0; a < 16; a++) px(Math.round(rx + Math.cos(a / 16 * Math.PI * 2) * 3), Math.round(ry + Math.sin(a / 16 * Math.PI * 2) * 2), 1, 1, a % 3 ? COR.corda : "#7a6a46");
+        px(x + 13, S1 - 6, 1, 6, COR.haste); px(x + 12, S1 - 6, 3, 2, COR.ferroLuz);
+        px(x + 19, S1 - 5, 1, 5, COR.haste); px(x + 17, S1 - 6, 5, 2, COR.ferro);
+        saco(x + 3, S2 + 2); saco(x + 9, S2 + 2); saco(x + 6, S2 - 2);
+        caixote(x + 16, S2 - 1, 10, topo - S2 + 1);
+        if (v % 2) saco(x + 18, S2 - 6);
+      },
+      cestos(x, w) {
+        prateleira(S2, x + 1, x + w - 1);
+        // uma réstia de alho pendurada na viga; na prateleira, dois cestos de vime (maçãs e nabos)
+        px(x + 5, 2, 1, 2, COR.barbante);
+        for (let y = 4; y < 4 + 9; y += 2) { px(x + 4 + (y % 4 ? 1 : 0), y, 2, 2, "#d8d0bc"); px(x + 5 + (y % 4 ? 1 : 0), y + 1, 1, 1, "#a8a090"); }
+        [[x + 3, "#8a2a22", "#b04a3a"], [x + 14, "#d8d0bc", "#7a4a7a"]].forEach(([cx, a1, a2]) => {
+          for (let k = 0; k < 4; k++) { px(cx + k * 2 + 1, S2 - 5, 2, 2, k % 2 ? a1 : a2); }
+          for (let y = S2 - 4; y < S2; y++) for (let k = 0; k < 10; k++) px(cx + k, y, 1, 1, (k + y) % 2 ? "#8a6a3a" : "#6a4e2a");
+          px(cx, S2 - 4, 10, 1, "#a07a44");
+        });
+      },
+      ferramentas(x, w) {
+        prateleira(S2, x + 1, x + w - 1);
+        // a régua das ferramentas: martelo, torquês e um serrote; embaixo, uma lanterna apagada e a caixa de pregos
+        px(x + 1, S1 - 9, w - 2, 1, COR.prateleiraSombra);
+        px(x + 4, S1 - 8, 1, 7, COR.haste); px(x + 3, S1 - 8, 3, 2, COR.ferroLuz);
+        px(x + 9, S1 - 8, 1, 6, COR.ferro); px(x + 11, S1 - 8, 1, 6, COR.ferro); px(x + 10, S1 - 5, 1, 1, COR.ferroLuz);
+        px(x + 15, S1 - 8, 2, 3, COR.haste); px(x + 17, S1 - 7, 6, 3, COR.ferroLuz);
+        for (let k = 0; k < 6; k += 2) px(x + 17 + k, S1 - 4, 1, 1, COR.ferro);
+        px(x + 4, S2 - 6, 4, 1, COR.ferro); px(x + 4, S2 - 5, 4, 4, "#3a3428"); px(x + 5, S2 - 4, 2, 2, "#6a6050"); px(x + 4, S2 - 1, 4, 1, COR.ferro);
+        caixote(x + 13, S2 - 3, 9, 3);
+      },
+      caixas(x, w) {
+        // caixotes empilhados no chão atrás do balcão e um barril de tampa
+        caixote(x + 2, topo - 7, 12, 7); caixote(x + 4, topo - 13, 9, 6);
+        const bx = x + 16;
+        px(bx, topo - 11, 8, 11, COR.couro); px(bx, topo - 11, 1, 11, COR.couroLuz); px(bx + 7, topo - 11, 1, 11, COR.couroSombra);
+        px(bx, topo - 9, 8, 1, COR.ferro); px(bx, topo - 3, 8, 1, COR.ferro); px(bx - 1, topo - 12, 10, 1, COR.caixaLuz);
+      },
+      porta(x, w) {
+        // a porta dos fundos, com a cortina gasta e remendada; de dia, a luz escapa embaixo
+        px(x + 1, 3, w - 2, topo - 3, "#0e0a07"); px(x + 1, 3, w - 2, 1, COR.poste);
+        px(x + 3, 4, w - 6, topo - 4, COR.cortina);
+        for (let y = 4; y < topo; y++) { px(x + 5 + (y % 4 === 0 ? 1 : 0), y, 1, 1, COR.cortinaSombra); px(x + w - 7, y, 1, 1, COR.cortinaSombra); }
+        px(x + 7, Math.round(topo * 0.5), 3, 3, COR.cortinaRemendo);
+        if (!noite) px(x + 3, topo - 1, w - 6, 1, "rgba(232,210,150,0.35)");
+      },
+      janela(x, w) {
+        // a janela com as folhas abertas: a luz do dia (com o calor dela na parede) ou o azul da noite com uma estrela
+        const jx = x + 4, jy = S1 - 9, jw = w - 8, jh = 11;
+        px(jx - 1, jy - 1, jw + 2, jh + 2, COR.poste);
+        px(jx, jy, jw, jh, noite ? "#1a2640" : "#c8b888");
+        if (!noite) px(jx, jy, jw, 2, "#e8dcb0");
+        else px(jx + 2, jy + 3, 1, 1, "#c8d8f0");
+        px(jx + Math.floor(jw / 2), jy, 1, jh, COR.poste); px(jx, jy + 5, jw, 1, COR.poste);
+        px(jx - 3, jy, 2, jh, COR.caixaSombra); px(jx + jw + 1, jy, 2, jh, COR.caixaSombra);  // as folhas abertas
+        px(jx - 2, jy + jh + 1, jw + 4, 1, COR.prateleiraLuz);  // o parapeito
+      },
+    };
+
+    // ------------------------------------------------ a cena
     function parede() {
       px(0, 0, W, topo, COR.parede);
-      for (let x = 3; x < W; x += 7) px(x, 0, 1, topo, COR.fresta);
-      for (let y = 0; y < topo; y++) for (let x = 0; x < W; x++) if (Sprites.pontilha(x, y, 1)) px(x, y, 1, 1, "#241c16");
-      if (!faixa) {
-        // a parede do lado, em perspectiva (mais escura), com a janela: a luz do dia ou o azul da noite
-        for (let x = 0; x < 9; x++) { const alto = 4 + Math.round(x * 0.5); px(x, alto, 1, H - alto, COR.lado); if (x % 4 === 1) px(x, alto, 1, H - alto, COR.ladoFresta); }
-        px(9, 0, 1, H, "#0c0806");
-        const vidro = noite ? "#1c2a44" : "#c8b888", vidroLuz = noite ? "#2c3c5c" : "#e8dcb0";
-        for (let y = 18; y < 34; y++) { const x0 = 2 + Math.floor((y - 18) / 8); px(x0, y, 5, 1, y % 8 === 2 ? "#2a1c12" : vidro); }
-        px(4, 18, 1, 16, "#2a1c12");
-        if (!noite) for (let y = 19; y < 26; y++) px(2 + (y % 2), y, 1, 1, vidroLuz);
-        px(1, 17, 7, 1, "#3a2a1a"); px(1, 34, 7, 1, "#3a2a1a");
-        // a luz da janela no chão e no balcão (de dia)
-        if (!noite) for (let y = topo; y < topo + 4; y++) for (let x = 10; x < 18; x++) if (Sprites.pontilha(x, y, 3)) px(x, y, 1, 1, "rgba(232,220,176,0.18)");
+      for (let x = 0, k = 0; x < W; x += 6, k++) {  // tábuas de larguras e tons diferentes, com frestas e nós
+        px(x, 0, 6, topo, COR.tabuas[(k * 7 + (k >> 2)) % 4]); px(x, 0, 1, topo, COR.fresta);
+        if (k % 5 === 2) px(x + 3, 6 + (k * 11) % Math.max(1, topo - 10), 2, 1, COR.no);
       }
-      // a viga do teto e as ervas penduradas nela (balançam de leve)
-      px(0, 0, W, 2, COR.prateleiraSombra); px(0, 2, W, 1, "rgba(0,0,0,0.3)");
-      const vento = reduzido() ? 0 : Math.round(Math.sin(quadro / 9) * 0.6);
-      (faixa ? [mx + 26, mx + 34, mx + 70, mx - 80] : [44, 50, 56]).forEach((x, k) => {
-        for (let y = 2; y < 2 + 6 + (k % 2) * 2; y++) px(x + (y > 5 ? vento : 0), y, 1, 1, k % 2 ? "#4a6a32" : "#5a7a3a");
-        px(x - 1 + (vento > 0 ? 1 : 0), 7 + (k % 2) * 2, 3, 1, "#3a5226");
-      });
-      // as prateleiras, com a mercadoria
-      const fileiras = faixa ? [11, 21] : [16, 30];
-      const x0 = faixa ? 0 : 11, x1 = W - (faixa ? 0 : 1);
-      fileiras.forEach((y) => prateleira(y, x0, x1));
-      const cores = ["#7a2a26", "#2a5a7a", "#3a6a3a", "#8a6a2a", "#5a3a6a"];
-      const passo = faixa ? 11 : 7;
-      fileiras.forEach((y, f) => {
-        for (let x = x0 + 3 + f * 3, k = 0; x < x1 - 4; x += passo, k++) {
-          if (Math.abs(x + 2 - mx) < (faixa ? 12 : 8) && f === fileiras.length - 1) continue;  // atrás da cabeça dele, vazio
-          if (faixa && (k * 7 + f * 3) % 5 === 4) continue;  // na faixa, larga, a prateleira tem vãos
-          const tipo = (k + f * 2) % 4;
-          if (tipo === 0) pote(x, y - 6, cores[(k + f) % cores.length]);
-          else if (tipo === 1) saco(x, y - 5);
-          else if (tipo === 2) frasco(x + 1, y - 5, cores[(k * 2 + f) % cores.length]);
-          else { pote(x, y - 4, "#6a5a4a", 3); }
+      // os vãos, para os dois lados a partir do mercador; atrás dele, parede lisa com a prateleira de baixo vazia
+      prateleira(S2, mx - 13, mx + 13);
+      poste(mx - 15); poste(mx + 13);
+      for (const [lado, sinal] of [["esquerda", -1], ["direita", 1]]) {
+        let x = sinal < 0 ? mx - 15 : mx + 16, v = 0;
+        for (let i = 0; ; i++) {
+          const [tipo, w] = VAOS[lado][i % VAOS[lado].length];
+          const x0 = sinal < 0 ? x - w : x;
+          if (x0 > W || x0 + w < 0) break;
+          VAO[tipo](x0, w, v++ + (sinal > 0 ? 1 : 0));
+          x += sinal * w;
         }
-      });
-      if (faixa) {  // na faixa, a porta dos fundos à direita, com uma cortina (as prateleiras param nela)
-        const dx = Math.min(W - 14, mx + 92);
-        px(dx - 1, 3, 14, topo - 3, "#0e0a07"); px(dx + 1, 3, 10, topo - 3, "#6a2a22");
-        for (let y = 3; y < topo; y++) { px(dx + 3 + (y % 3 === 0 ? 1 : 0), y, 1, 1, "#4a1c16"); px(dx + 7, y, 1, 1, "#4a1c16"); }
-        px(dx - 1, 2, 14, 1, COR.prateleiraSombra);
       }
+      // a viga do teto
+      px(0, 0, W, 2, COR.viga); px(0, 1, W, 1, COR.vigaLuz); px(0, 2, W, 1, "rgba(0,0,0,0.3)");
     }
     function lamparina() {
-      const [lx, ly] = lampada, forca = noite ? 1 : 0.6, raio = (faixa ? 11 : 13) + (noite ? 4 : 0) + (reduzido() ? 0 : (quadro % 3) - 1);
+      const [lx, ly] = lampada, forca = noite ? 1 : 0.6, raio = (noite ? 16 : 12) + (reduzido() ? 0 : (quadro() % 3) - 1);
       for (let y = -raio; y <= raio; y++) for (let x = -raio; x <= raio; x++) {
         const d2 = (x * x + y * y) / (raio * raio);
         if (d2 < 1 && Sprites.pontilha(lx + x, ly + 6 + y, Math.round((1 - d2) * 8 * forca))) px(lx + x, ly + 6 + y, 1, 1, "rgba(255,190,110,0.22)");
@@ -222,111 +352,107 @@
       px(lx, 0, 1, ly + 3, "#2a2016"); px(lx - 2, ly + 3, 5, 6, "#3a2a18"); px(lx - 1, ly + 4, 3, 4, noite ? "#ffd27a" : "#e8a050");
       px(lx, ly + 5, 1, 2, "#fff0b0");
     }
-    // O corpo: a figura, o tronco até o balcão e o braço do lado da luz descendo para a mão apoiada.
+    // À noite, longe da lamparina, a loja escurece em degraus (anéis de pixel inteiro, como a luz das paisagens).
+    function escuro() {
+      if (!noite) return;
+      const [lx, ly] = lampada, degraus = [[0.55, 0.18], [0.85, 0.3], [1.25, 0.42]];
+      for (let y = 0; y < H; y++) {
+        let x0 = 0, nivel = -1;
+        for (let x = 0; x <= W; x++) {
+          const d = x < W ? Math.hypot(x - lx, (y - ly) * 1.6) / 80 : Infinity;
+          const n = x < W ? degraus.filter(([lim]) => d > lim).length - 1 : -2;
+          if (n !== nivel) { if (nivel >= 0) px(x0, y, x - x0, 1, `rgba(6,8,18,${degraus[nivel][1]})`); x0 = x; nivel = n; }
+        }
+      }
+    }
     function mercador(t) {
       const quieto = reduzido(), respira = quieto ? 0 : Math.floor(t / 1.4) % 2;
-      const y0 = topo - (faixa ? 25 : 28) + respira, ox = mx - 10;
+      const y0 = topo - 26 + respira, ox = mx - 10;
       const pisca = !quieto && t % 4.3 < 0.15;
-      const linhas = FIGURA.length;
-      for (let r = 0; r < topo - y0 + 1; r++) {
-        const linha = FIGURA[Math.min(r, linhas - 1)];
+      const cinto = topo - 3 - y0;
+      for (let r = 0; r <= topo - y0; r++) {
+        const linha = FIGURA[Math.min(r, FIGURA.length - 1)], inclina = r <= 9 ? -1 : 0;  // a cabeça pende para a mão apoiada
         for (let k = 0; k < linha.length; k++) {
           let ch = linha[k];
           if (ch === ".") continue;
-          if (r >= linhas && ch === "p") ch = "a";
-          if (r === linhas + 1 && "alA".includes(ch)) ch = "A";  // o cordão do avental na cintura
+          if (r >= FIGURA.length && ch === "x") ch = "a";
           if (ch === "e" && pisca) ch = "d";
-          px(ox + k, y0 + r, 1, 1, COR[TINTA[ch]]);
+          const cor = r === cinto ? (k === 9 ? COR.fivela : COR.cinto) : COR[TINTA[ch]];
+          px(ox + k + inclina, y0 + r, 1, 1, cor);
         }
       }
-      // a sombra que o chapéu faz atrás dele, na parede
-      for (let y = y0 + 1; y < y0 + 10; y++) if (Sprites.pontilha(ox + 17, y, 6)) px(ox + 17, y, 2, 1, "rgba(0,0,0,0.35)");
-      // o braço do lado da luz: desce do ombro e dobra para a frente, até a mão espalmada no tampo (desenhada depois)
+      // a bolsa no cinto e as chaves
+      px(ox + 4, y0 + cinto + 1, 3, 3, COR.bolsa); px(ox + 4, y0 + cinto + 1, 3, 1, COR.bolsaSombra); px(ox + 6, y0 + cinto + 2, 1, 2, COR.bolsaSombra);
+      px(ox + 15, y0 + cinto + 1, 1, 2, COR.ferroLuz); px(ox + 14, y0 + cinto + 3, 2, 1, COR.ferro);
+      // o braço do lado da luz: desce do ombro, a manga arregaçada, até a mão espalmada no tampo (desenhada depois)
       const ombro = y0 + 12;
       for (let y = ombro; y < topo - 4; y++) { px(ox + 1, y, 2, 1, y < topo - 8 ? COR.tunicaLuz : COR.tunica); px(ox + 3, y, 1, 1, COR.tunicaSombra); }
-      px(ox, topo - 4, 4, 1, COR.tunicaSombra);  // a manga arregaçada
+      px(ox, topo - 4, 4, 1, COR.tunicaSombra);
     }
-    // O que fica em cima do tampo, por cima dele: a mão apoiada, o braço que mexe nas coisas e o frasco.
     function maos(t) {
       const ox = mx - 10;
-      // o antebraço do lado da luz, do cotovelo até a mão espalmada no tampo
       [[1, -3], [0, -2], [0, -1], [-1, 0]].forEach(([dx, dy]) => { px(ox + dx, topo + dy, 2, 1, COR.pele); px(ox + dx, topo + dy, 1, 1, COR.peleLuz); });
       px(ox - 4, topo + 1, 5, 1, COR.peleLuz); px(ox - 4, topo + 2, 5, 1, COR.pele); px(ox - 4, topo + 2, 1, 1, COR.peleSombra);
-      px(ox - 3, topo + 3, 4, 1, "rgba(0,0,0,0.35)");  // a sombra da mão no tampo
+      px(ox - 3, topo + 3, 4, 1, "rgba(0,0,0,0.35)");
       const quieto = reduzido(), respira = quieto ? 0 : Math.floor(t / 1.4) % 2;
-      const ombro = [mx + 7, topo - (faixa ? 25 : 28) + respira + 12];
+      const ombro = [mx + 6, topo - 26 + respira + 12];
       const ciclo = quieto ? 0 : t % 8;
       const alvo = [mx + 13, topo + 1];
       let mao = [mx + 6, topo + 1], ergue = 0;
       if (ciclo > 4.6 && ciclo < 7.6) {
         const ida = Math.min(1, (ciclo - 4.6) / 0.6), volta = Math.min(1, Math.max(0, (7.6 - ciclo) / 0.6));
-        const f = Math.min(ida, volta);
-        mao = [Math.round(mao[0] + (alvo[0] - mao[0]) * f), mao[1]];
-        if (ciclo > 5.3 && ciclo < 6.9) ergue = Math.round(Math.min(1, (ciclo - 5.3) / 0.3, (6.9 - ciclo) / 0.3) * (faixa ? 8 : 11));
+        mao = [Math.round(mao[0] + (alvo[0] - mao[0]) * Math.min(ida, volta)), mao[1]];
+        if (ciclo > 5.3 && ciclo < 6.9) ergue = Math.round(Math.min(1, (ciclo - 5.3) / 0.3, (6.9 - ciclo) / 0.3) * 9);
       }
       const [hx, hy] = [mao[0], mao[1] - ergue];
-      for (let k = 0; k <= 8; k++) {  // do ombro até a mão: a manga na sombra, o antebraço à mostra
+      for (let k = 0; k <= 8; k++) {
         const x = Math.round(ombro[0] + (hx - ombro[0]) * (k / 8)), y = Math.round(ombro[1] + (hy - ombro[1]) * (k / 8));
         px(x, y, 2, 2, k < 5 ? COR.tunicaSombra : COR.peleSombra);
       }
       px(hx, hy, 3, 2, COR.pele); px(hx, hy, 1, 1, COR.peleLuz);
-      // o frasco que ele mexe: no tampo, ou na mão, erguido contra a luz
       const fx = ergue ? hx : alvo[0], fy = ergue ? hy - 5 : topo - 3;
-      frasco(fx, fy, "#2a7a5a");
-      if (ergue > 3) px(fx + 1, fy + 3, 1, 1, "#9ae8c0");  // a luz da lamparina atravessa o vidro
+      frasco(fx, fy, "#8a2a26");
+      if (ergue > 3) px(fx + 1, fy + 3, 1, 1, "#ff9a8a");  // a luz da lamparina atravessa o vidro
     }
     function bancada() {
-      // o chão, à vista onde o balcão termina (só no retrato), com um barril
-      if (ponta > 0) {
-        px(0, topo, ponta, H - topo, COR.chao);
-        for (let y = topo + 3; y < H; y += 4) px(0, y, ponta, 1, COR.chaoLinha);
-        const by = H - 14;
-        px(1, by, 7, 13, "#4a3422"); px(1, by, 1, 13, "#5e4430"); px(7, by, 1, 13, "#2e2014");
-        px(1, by + 2, 7, 1, "#6a6a70"); px(1, by + 9, 7, 1, "#6a6a70"); px(2, by - 1, 5, 1, "#2e2014");
-      }
-      const x0 = Math.max(0, ponta);
-      // o tampo: a borda de trás no escuro, a face de cima com os veios, a quina da frente pegando a luz
-      px(x0, topo, W - x0, 1, COR.balcaoFundo);
-      px(x0, topo + 1, W - x0, tampo - 2, COR.balcao);
-      for (let x = x0 + 2; x < W; x += 9) px(x, topo + 1 + (x % 2), 4, 1, COR.balcaoLuz);
-      px(x0, frente - 1, W - x0, 1, COR.balcaoLuz);
-      px(x0, frente, W - x0, 1, COR.balcaoBorda);
-      // a frente, em tábuas, com a sombra embaixo da quina
-      px(x0, frente + 1, W - x0, H - frente - 1, COR.frente);
-      px(x0, frente + 1, W - x0, 1, "#22160c");
-      for (let x = x0 + 4; x < W; x += faixa ? 11 : 9) { px(x, frente + 2, 1, H - frente - 2, COR.frenteLinha); px(x + 1, frente + 2, 1, H - frente - 2, COR.frenteLuz); }
-      if (!faixa) {  // a lousa dos preços, pendurada na frente, com riscos de giz
-        const lx = mx + 6, ly = frente + 4;
-        px(lx + 3, frente + 1, 1, 3, "#2a1c10"); px(lx + 6, frente + 1, 1, 3, "#2a1c10");
-        px(lx, ly, 10, 8, "#5a4028"); px(lx + 1, ly + 1, 8, 6, "#1c1e1e");
-        [[2, 2, 4], [2, 4, 5], [2, 6, 3]].forEach(([dx, dy, w]) => px(lx + dx, ly + dy - 1, w, 1, "#9a9a92"));
-      }
-      if (ponta > 0) {  // a ponta do balcão, de lado: mais escura
-        px(ponta - 2, topo + 1, 2, H - topo - 1, "#2a1c10"); px(ponta - 2, topo, 2, 1, COR.balcaoFundo);
-      }
-      // em cima do tampo: a balança, a pilha de moedas, um saco aberto
-      const bx = faixa ? mx - 30 : 13;
+      // o tampo: a borda de trás no escuro, as tábuas com os veios, a quina da frente pegando a luz
+      px(0, topo, W, 1, COR.balcaoFundo); px(0, topo + 1, W, 2, COR.balcao);
+      for (let x = 2; x < W; x += 9) px(x, topo + 1 + (x % 2), 4, 1, COR.balcaoLuz);
+      for (let x = 17; x < W; x += 31) px(x, topo + 1, 1, 2, COR.balcaoFundo);
+      px(0, frente - 1, W, 1, COR.balcaoLuz); px(0, frente, W, 1, COR.balcaoBorda);
+      // a frente: tábuas de tons diferentes, a sombra embaixo da quina e as ferragens (cantoneiras com rebites)
+      for (let x = 0, k = 0; x < W; x += 9, k++) { px(x, frente + 1, 9, H - frente - 1, COR.frente[(k * 5) % 3]); px(x, frente + 2, 1, H - frente - 2, COR.frenteLinha); }
+      px(0, frente + 1, W, 1, "#22160c");
+      px(0, frente + 3, W, 1, "#2a2a2c");  // a cinta de ferro, com os rebites
+      for (let x = (mx % 18); x < W; x += 18) px(x, frente + 3, 1, 1, "#5a5a60");
+      // em cima do tampo: o livro de contas, a balança, as moedas, um embrulho, a faca e o feixe de flechas
+      const lx = mx - 46;
+      px(lx, topo + 1, 9, 2, "#d8ccaa"); px(lx + 4, topo + 1, 1, 2, COR.couroSombra); px(lx + 1, topo + 1, 2, 1, "#8a7e66"); px(lx + 6, topo + 2, 2, 1, "#8a7e66");
+      const bx = mx - 30;
       px(bx + 3, topo - 6, 1, 8, "#5a4a3a"); px(bx, topo - 6, 7, 1, "#8a7a5a");
-      const pesa = reduzido() ? 0 : Math.round(Math.sin(quadro / 11));
+      const pesa = reduzido() ? 0 : Math.round(Math.sin(quadro() / 11));
       px(bx - 1, topo - 5 + pesa, 3, 1, "#8a7a5a"); px(bx + 5, topo - 5 - pesa, 3, 1, "#8a7a5a");
       px(bx + 1, topo + 2, 5, 1, "#3a2a1a");
-      const mo = faixa ? mx + 24 : W - 8;
+      const mo = mx + 22;
       [[0, 0], [1, -1], [0, -2], [1, -3]].forEach(([dx, dy]) => { px(mo + dx, topo + 2 + dy, 4, 1, "#e2bd63"); px(mo + dx + 3, topo + 2 + dy, 1, 1, "#a07a2a"); });
-      if (faixa) { saco(mx + 40, topo - 3); saco(mx - 52, topo - 3); }
+      embrulho(mx + 32, topo - 2);
+      px(mx - 60, topo + 2, 5, 1, COR.ferroLuz); px(mx - 55, topo + 2, 3, 1, COR.couroSombra);
+      for (let k = 0; k < 2; k++) px(mx + 44, topo + 1 + k, 10, 1, COR.haste);
+      px(mx + 44, topo + 1, 1, 2, COR.ferroLuz); px(mx + 52, topo + 1, 2, 2, COR.pena);
+      saco(mx + 64, topo - 3); saco(mx - 74, topo - 3);
     }
     function cena() {
       if (!canvas.isConnected) { clearInterval(timer); return; }
-      quadro++;
-      const t = (performance.now() - inicio) / 1000;
+      const t = (performance.now() - relogio0) / 1000;
       parede();
-      sombraLonge();
       lamparina();
       mercador(t);
       bancada();
       maos(t);
+      escuro();
       if (revelar && !reduzido()) {
         // a entrada: o pontilhado que se fecha (os pixels ainda não revelados ficam na cor do papel)
-        const p = Math.min(1, (performance.now() - inicio) / 420);
+        const p = Math.min(1, (performance.now() - relogio0) / 420);
         if (p < 1) { const nivel = Math.floor(p * 16); for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (!Sprites.pontilha(x, y, nivel)) px(x, y, 1, 1, "#120e0b"); }
       }
     }
@@ -374,12 +500,12 @@
       banca(raiz.querySelector(".loja-banca"), visitaNova);
       visitaNova = false;
       if (typeof ResizeObserver !== "undefined") {
-        let largura = raiz.querySelector(".loja-banca").clientWidth;
+        let largura = raiz.querySelector(".loja-banca").clientWidth, altura = raiz.querySelector(".loja-banca").clientHeight;
         const obs = new ResizeObserver(() => {
           if (!tela.isConnected) { obs.disconnect(); return; }
           ajustar(raiz);
           const b = raiz.querySelector(".loja-banca");
-          if (Math.abs(b.clientWidth - largura) > 2) { largura = b.clientWidth; banca(b, false); }
+          if (Math.abs(b.clientWidth - largura) > 2 || Math.abs(b.clientHeight - altura) > 2) { largura = b.clientWidth; altura = b.clientHeight; banca(b, false); }
         });
         obs.observe(document.querySelector("#pagina"));
       }
