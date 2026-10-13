@@ -189,6 +189,9 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   (`Object.assign(Telas, {...})`, no fim); a ordem dos `<script>` no `index.html` é a das dependências. Pedir a
   `Telas` um nome que ninguém pôs é erro na hora, com o nome. Tela nova: um arquivo em `telas/`, o `registrar` no fim
   e o `<script>` antes de quem a usa.
+  O mercado (`telas/mercado.js`) é a tela com abas: elas são só da tela (não falam com o motor); a tela ocupa a altura
+  visível da página e só a lista da aba rola; a banca é desenhada em canvas, no estilo das paisagens. O que não se
+  compra vem com o `motivo` do motor (`Loja.dados_loja`). Ver roadmapIDEIAS/19.
 - `batalha.js` o palco da luta (o jeito de animar vem do motor: `anim` nos lances). A arena só cresce durante a luta e cresce devagar; quando uma carta entra ou ganha a linha de efeitos, as outras deslizam até o lugar novo (`acomodar`, desvio em `top`/`left` e em pixel inteiro: `transform` e `translate` são do foco e dos golpes) · `realce.js` cores dos termos de
   jogo (os nomes de habilidades e talentos chegam do motor no `glossario` do estado) · `sprites*.js`, `vista.js`, `mapa.js`, `som.js`
 - `sensacao.js` o peso dos momentos (parada no impacto, tremor, câmera lenta no golpe final...): as telas dizem o

@@ -199,3 +199,82 @@
 .venda-item .preco img.sprite { --s: 12; }
 .mochila-loja .celula.caro { opacity: 0.45; cursor: not-allowed; }
 .mochila-loja.recompra .celula { border-style: dashed; }
+
+/* ------------------------------------------------------------------ o mercado: a banca e as abas */
+/* A tela ocupa a altura visível da página (mercado.js mede): a banca à esquerda e, à direita, o ouro, as abas e a
+   lista, que é a única parte que rola. Com pouca largura, a banca vira uma faixa baixa em cima. */
+#folha:has(.tela.loja) { max-width: none; padding-bottom: 0; }
+#texto:has(.tela.loja) { container-type: inline-size; }
+.tela.loja { display: grid; grid-template-columns: minmax(160px, 24%) 1fr; gap: 14px; min-height: 280px; }
+.loja-banca { position: relative; align-self: start; aspect-ratio: 58 / 78; min-height: 0; background: #120e0b; border: var(--borda) solid var(--p-j); border-image: var(--anel-j) 1 / 1 stretch; overflow: hidden; }
+.loja-banca canvas { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 100%; image-rendering: pixelated; }
+.loja-banca.alvo { outline: 3px dashed var(--ouro); outline-offset: 3px; }
+.loja-lado { display: flex; flex-direction: column; min-height: 0; min-width: 0; }
+.tela.loja .loja-topo { flex: none; padding: 4px 12px; }
+.tela.loja .loja-topo > div { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 12px; min-width: 0; }
+.tela.loja .loja-topo b { display: inline; font-size: calc(var(--px) * 24); }
+.tela.loja .lore { font-size: 15px; }
+.tela.loja .ouro-loja { font-size: 26px; }
+.loja-abas { flex: none; display: flex; gap: 4px; margin: 10px 0 0; border-bottom: 2px solid #4a3c2c; }
+.loja-aba { position: relative; top: 2px; padding: 6px 14px 5px; cursor: pointer; font-family: var(--titulo); font-size: calc(var(--px) * 20); line-height: 1; color: var(--tinta-2);
+  background: #120e0b; border: 2px solid #3a2e24; border-bottom-color: #4a3c2c; }
+.loja-aba small { font-family: var(--num); font-size: 16px; color: var(--tinta-3); margin-left: 2px; }
+.loja-aba:hover, .loja-aba:focus-visible { color: #fff3d6; outline: none; border-color: #6a5a40; border-bottom-color: #4a3c2c; }
+.loja-aba[aria-selected="true"] { color: var(--ouro); background: var(--p-k); border-color: #8a6a24; border-bottom-color: var(--p-k); }
+.loja-aba[aria-selected="true"]::after { content: ""; position: absolute; left: 0; right: 0; bottom: -2px; height: 2px; background: var(--p-k); }
+.loja-painel { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+.loja-painel[hidden] { display: none; }
+.loja-sub { flex: none; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; padding: 8px 2px 4px; font-size: 14px; color: var(--tinta-2); }
+.loja-mochila { display: inline-flex; align-items: center; gap: 5px; }
+.loja-mochila b { font-family: var(--num); font-size: 18px; font-weight: 400; color: #fff3d6; }
+.loja-recompra { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; min-height: 40px; }
+.lr-rotulo { font-size: 13px; color: var(--tinta-3); text-transform: uppercase; letter-spacing: .06em; }
+.lr-vazio { font-size: 13px; color: var(--tinta-3); font-style: italic; }
+.loja-recompra .celula { position: relative; width: 40px; height: 40px; cursor: pointer; border-style: dashed; }
+.loja-recompra .celula img.sprite { --s: 24; }
+.loja-recompra .celula.caro { opacity: 0.45; cursor: not-allowed; }
+.loja-recompra .celula:hover, .loja-recompra .celula:focus-visible { --anel: var(--anel-Y); outline: none; }
+.preco-canto { position: absolute; right: 1px; bottom: -1px; font-family: var(--num); font-size: 14px; color: var(--ouro); text-shadow: 1px 1px 0 #000; }
+.loja-lista { flex: 1; min-height: 0; overflow-y: auto; align-content: start; padding: 10px 6px 12px 2px; scrollbar-width: thin; scrollbar-color: #4a4038 #120e0b; }
+.loja-lista.vitrine { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
+.loja-lista > .vazio { grid-column: 1 / -1; color: var(--tinta-3); font-style: italic; }
+.mercadoria:focus-visible { outline: 2px solid var(--ouro); outline-offset: 2px; }
+.mercadoria.suprimento, .mercadoria.equip, .mercadoria.venda { grid-template-columns: 52px 1fr; grid-template-rows: auto auto auto; align-items: start; }
+.mercadoria .slot-px { width: 52px; height: 52px; }
+.merc-contas { display: flex; flex-wrap: wrap; gap: 0 10px; font-size: 13px; color: var(--tinta-2); line-height: 1.35; }
+.merc-contas b { font-family: var(--num); font-size: 17px; font-weight: 400; color: #fff3d6; }
+.merc-contas .merc-estoque { font-size: 13px; letter-spacing: 0; color: var(--tinta-3); }
+.merc-contas .merc-estoque b { color: var(--tinta-2); }
+.merc-contas .merc-estoque.esgotado b { color: var(--sangue-2); }
+.merc-acao { grid-column: 2; display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-top: 2px; }
+.merc-acao .qtd-ctrl { margin: 0; }
+.merc-total { display: inline-flex; align-items: center; gap: 3px; font-family: var(--num); font-size: 20px; color: var(--ouro); }
+.merc-total img.sprite { --s: 16; }
+.merc-motivo { grid-column: 2; display: inline-flex; align-items: flex-start; gap: 4px; margin-top: 2px; font-size: 13px; line-height: 1.3; color: #e8b0a0; }
+.merc-motivo img.sprite { --s: 16; flex: none; margin-top: 1px; }
+.mercadoria.caro { opacity: 1; }
+.mercadoria.caro > .slot-px, .mercadoria.caro > .merc-nome, .mercadoria.caro > .merc-contas, .mercadoria.caro > .merc-bonus { opacity: 0.5; }
+.mercadoria.equip .preco, .mercadoria.venda .preco { grid-column: 2; }
+.mercadoria.venda .preco.ganho { font-size: 17px; gap: 4px; color: var(--bom); }
+.mercadoria.venda.outra-classe > .slot-px { opacity: 0.6; }
+.merc-classe { display: block; font-family: var(--texto); font-size: 12px; color: var(--tinta-3); }
+/* A entrada: a banca se revela (mercado.js) e a coluna dos produtos chega junto, uma vez por visita; a saída apaga
+   a banca no mesmo tempo da página. */
+.tela.loja.chegando .loja-lado { animation: loja-chega 0.32s ease-out both; }
+@keyframes loja-chega { from { opacity: 0; transform: translateX(10px); } }
+#folha.saindo .loja-banca canvas { animation: banca-sai 0.2s steps(4) forwards; }
+@keyframes banca-sai { to { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .tela.loja.chegando .loja-lado, #folha.saindo .loja-banca canvas { animation: none; } }
+@container (max-width: 700px) {
+  .tela.loja { grid-template-columns: 1fr; grid-template-rows: 80px 1fr; gap: 8px; }
+  .loja-banca { aspect-ratio: auto; align-self: stretch; }
+  .loja-lista.vitrine { grid-template-columns: repeat(auto-fill, minmax(178px, 1fr)); }
+}
+/* Altura curta: o que não é produto aperta (a frase do mercador sai; o nome e o ouro ficam). */
+@media (max-height: 760px) {
+  .tela.loja .lore { display: none; }
+  .loja-abas { margin-top: 6px; }
+  .loja-sub { padding: 4px 2px 2px; }
+  .loja-recompra { min-height: 34px; }
+  .loja-recompra .celula { width: 34px; height: 34px; }
+}

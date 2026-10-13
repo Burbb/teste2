@@ -37,27 +37,56 @@ class Loja:
         return {k: max(0, sorteio.randint(*bal.ESTOQUE_MERCADO[k]) - vendidos.get(k, 0)) for k in self.COM_ESTOQUE}
 
     def dados_loja(self):
+        """O que a tela do mercado mostra. Cada coisa que não dá para comprar agora vem com o motivo (`motivo`), já
+        escrito: a tela não deduz regra nenhuma. Nos suprimentos, `tem` é o que você carrega (e `teto`, o máximo, na
+        comida e nas flechas) e `estoque`, o que o mercador ainda tem hoje: dois números, cada um com o seu nome."""
         j = self.j
         estoque = self.estoque_suprimentos()
         def item(it, preco):
             return itens.ficha(it, j.nome_recurso, preco=preco)
+        def suprimento(k, nome, icone, desc, tem, limite, teto=None, cheio=None):
+            preco = self.preco_suprimento(k)
+            motivo = ("Esgotado: o mercador reabastece amanhã cedo." if estoque[k] == 0 else
+                      cheio if limite <= 0 else "Ouro insuficiente." if j.ouro < preco else None)
+            return {"id": k, "nome": nome, "icone": icone, "desc": desc, "preco": preco, "tem": tem, "teto": teto,
+                    "estoque": estoque[k], "limite": limite, "motivo": motivo}
         return {
             "ouro": j.ouro, "limite": LIMITE_MOCHILA, "ocupado": len(j.mochila),
-            "consumiveis": [{"id": k, "nome": CONSUMIVEIS[k]["nome"], "icone": CONSUMIVEIS[k]["icone"],
-                             "desc": CONSUMIVEIS[k]["desc"],
-                             "preco": self.preco(CONSUMIVEIS[k]["preco"]), "tem": j.consumiveis.get(k, 0),
-                             "estoque": estoque[k], "limite": estoque[k]} for k in self.SUPRIMENTOS]
-            + [{"id": "provisoes", "nome": "Provisões (1 dia)", "icone": RECURSOS["comida"]["icone"], "desc": "Pão duro, carne seca e um odre de água.",
-                "preco": self.preco(4), "tem": j.provisoes, "estoque": estoque["provisoes"],
-                "limite": min(estoque["provisoes"], sobrevivencia.MAX_PROVISOES - j.provisoes)}]
-            + ([{"id": "flechas", "nome": "Flecha", "icone": RECURSOS["flechas"]["icone"], "desc": f"Flecha de freixo, ponta de ferro. A aljava leva {self.max_flechas()}.",
-                 "preco": self.preco(PRECO_FLECHAS), "tem": j.flechas,
-                 "estoque": estoque["flechas"], "limite": min(estoque["flechas"], self.max_flechas() - j.flechas)}]
+            "consumiveis": [suprimento(k, CONSUMIVEIS[k]["nome"], CONSUMIVEIS[k]["icone"], CONSUMIVEIS[k]["desc"],
+                                       j.consumiveis.get(k, 0), estoque[k]) for k in self.SUPRIMENTOS]
+            + [suprimento("provisoes", "Provisões (1 dia)", RECURSOS["comida"]["icone"],
+                          "Pão duro, carne seca e um odre de água.", j.provisoes,
+                          min(estoque["provisoes"], sobrevivencia.MAX_PROVISOES - j.provisoes),
+                          teto=sobrevivencia.MAX_PROVISOES, cheio="Você já carrega o máximo de comida.")]
+            + ([suprimento("flechas", "Flecha", RECURSOS["flechas"]["icone"],
+                           f"Flecha de freixo, ponta de ferro. A aljava leva {self.max_flechas()}.", j.flechas,
+                           min(estoque["flechas"], self.max_flechas() - j.flechas),
+                           teto=self.max_flechas(), cheio="A aljava está cheia.")]
                if j.classe == "arqueiro" else []),
-            "equipamentos": [item(it, self.preco(it["preco"])) for it in self.estoque()],
+            "equipamentos": [dict(item(it, self.preco(it["preco"])), motivo=self.motivo_compra_equip(it))
+                             for it in self.estoque()],
             "mochila": [dict(item(it, it["preco"] // 2), usavel=self.pode_usar(it)) for it in j.mochila],
-            "recompra": [item(it, valor) for it, valor in self.recompra],
+            "recompra": [dict(item(it, valor), motivo=self.motivo_recompra(valor)) for it, valor in self.recompra],
         }
+
+    def motivo_compra_equip(self, it):
+        """Por que esta peça do estoque não se compra agora (ou None). A mochila só conta se ela não for direto para um
+        espaço vazio do corpo (aí sai vestida)."""
+        j = self.j
+        if j.ouro < self.preco(it["preco"]):
+            return "Ouro insuficiente."
+        vago = self.pode_usar(it) and not j.equip.get(self.espaco_para(it))
+        if not vago and len(j.mochila) >= LIMITE_MOCHILA:
+            return "Mochila cheia: venda ou largue algo antes."
+        return None
+
+    def motivo_recompra(self, valor):
+        """Por que um item vendido nesta visita não se recompra agora (ou None)."""
+        if self.j.ouro < valor:
+            return "Ouro insuficiente."
+        if len(self.j.mochila) >= LIMITE_MOCHILA:
+            return "Mochila cheia: venda ou largue algo antes."
+        return None
 
     SUPRIMENTOS = DO_MERCADO  # o catálogo diz (itens.py: mercado)
     COM_ESTOQUE = SUPRIMENTOS + ("provisoes", "flechas")  # tudo o que o mercado vende a granel acaba e reabastece

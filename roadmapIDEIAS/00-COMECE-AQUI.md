@@ -1577,3 +1577,14 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
 - **Verificado:** testes, gabarito, pyflakes, fumaça completa, tela em 1280/1500 × 800/950/700, com e sem comitiva,
   de dia e à noite.
 - **Falta:** Jean conferir; jogadores novos. A E9 continua aberta.
+
+### 13/10/2026 — O mercado com abas e a banca (1.71.0)
+
+- **Pedido de Jean:** comprar, procurar equipamento e vender sem percorrer a página; a banca e o comerciante no estilo
+  das paisagens, como um interior de perto.
+- **Feito:** três abas (Suprimentos, Equipamentos, Vender) só da tela; só a lista rola; o motor manda o motivo de cada
+  coisa que não se compra e separa "você tem" de "à venda"; a banca em pixel art com o mercador na bancada; o
+  `Gesto` protege os cartões do mercado. Detalhe em [19](19-MERCADO.md).
+- **Verificado:** testes (`test_mercado.py` novo), gabarito (só os campos novos do painel; examinado), pyflakes,
+  fumaça completa (`cenarioMercado` novo), telas a 1500 e 1280 px, com altura reduzida e movimento reduzido.
+- **Falta:** Jean conferir.

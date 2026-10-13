@@ -767,7 +767,30 @@ def tutorial(ui):
     menu_principal(ui, argparse.Namespace(seed=1, saves=pasta, brando=False))
 
 
-CENARIOS = {"combate": combate, "titulo": titulo, "vila": vila, "campanha": campanha, "baus": baus, "missao": missao,
+def mercado(ui):
+    """Uma vila do mundo gerado com o herói direto no mercado (Voltar leva à vila; o prédio do mercado entra de novo).
+    CLASSE (padrão arqueiro: as flechas também), OURO (padrão 300), MOCHILA (quantos equipamentos na mochila, padrão 8;
+    alguns de outra classe), PROVISOES."""
+    g = Jogo(ui, seed=int(os.environ.get("SEMENTE", "8")), pasta_saves=tempfile.mkdtemp())
+    ui.jogo = g
+    classe = os.environ.get("CLASSE", "arqueiro")
+    g.iniciar("Jean", classe)
+    g.mundo["atual"] = next(l for l in g.mundo["locais"] if l["tipo"] == "vila")["id"]
+    g.periodo, g.clima = 1, "limpo"
+    g.j.ouro = int(os.environ.get("OURO", "300"))
+    if os.environ.get("PROVISOES"):
+        g.j.provisoes = int(os.environ["PROVISOES"])
+    rng = random.Random(7)
+    for k in range(int(os.environ.get("MOCHILA", "8"))):
+        g.j.mochila.append(gerar_equip(rng, classe if k % 3 else "mago" if classe != "mago" else "guerreiro", 2))
+    g.loja()
+    try:
+        g.rodar()
+    except FimDeJogo:
+        pass
+
+
+CENARIOS = {"mercado": mercado, "combate": combate, "titulo": titulo, "vila": vila, "campanha": campanha, "baus": baus, "missao": missao,
             "recarga": recarga, "capela": capela, "retorno": retorno, "praca": praca, "encruzilhada": encruzilhada,
             "tiro_duplo": tiro_duplo, "covil": covil, "broquel": broquel, "muralha": muralha, "resgate": resgate,
             "gelo": gelo, "abertura": abertura, "fogueira": fogueira,

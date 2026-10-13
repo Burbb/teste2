@@ -318,6 +318,17 @@ async function cenarioVila(browser) {
     await (await page.$('[data-comprar="tocha"] [data-q="-1"]')).click();
     await page.waitForTimeout(300);
     conferir((await qtd()) === parado - 1, "o − desce a quantidade");
+    // As abas: Suprimentos é a inicial; as setas trocam (sem falar com o motor: nada de tempo, estoque ou sorteio).
+    conferir(await page.evaluate(() => document.querySelector('.loja-aba[aria-selected="true"]').dataset.aba) === "suprimentos",
+      "o mercado abre na aba Suprimentos");
+    const diaAntes = await page.evaluate(() => App.estado.mundo.dia + "|" + App.estado.mundo.periodo);
+    await page.focus('.loja-aba[data-aba="suprimentos"]');
+    await page.keyboard.press("ArrowRight");
+    conferir(await page.evaluate(() => !document.querySelector('[data-painel="equipamentos"]').hidden && document.activeElement.dataset.aba === "equipamentos"),
+      "a seta leva o foco e a lista para a aba Equipamentos");
+    await page.click('.loja-aba[data-aba="vender"]');
+    conferir(await page.evaluate((d) => App.estado.mundo.dia + "|" + App.estado.mundo.periodo === d, diaAntes) && !(await page.evaluate(() => processando)),
+      "trocar de aba não passa tempo nem espera o motor");
     // Clique num item da mochila vende na hora (sem menu), não sai do mercado, e o vendido fica para recomprar.
     const ouro = () => page.evaluate(() => App.estado.heroi.ouro);
     const antesVenda = await ouro();
@@ -325,8 +336,14 @@ async function cenarioVila(browser) {
     for (let k = 0; k < 30 && (await ouro()) === antesVenda; k++) await page.waitForTimeout(100);
     conferir((await ouro()) > antesVenda && !(await page.$(".menu-item")), "clique vende o item da mochila na hora");
     conferir(!!(await esperar("[data-comprar]")), "vender não tira você do mercado");
-    const recomprar = await esperar("[data-recomprar]", 3000);
+    let recomprar = await esperar("[data-recomprar]", 3000);
     conferir(!!recomprar, "o item vendido aparece em \"Vendidos agora\"");
+    conferir(await page.evaluate(() => document.querySelector('.loja-aba[aria-selected="true"]').dataset.aba) === "vender",
+      "depois de vender, a aba Vender continua aberta");
+    // Trocar de aba não encerra a recompra (ela vale até sair do mercado).
+    await page.click('.loja-aba[data-aba="suprimentos"]');
+    await page.click('.loja-aba[data-aba="vender"]');
+    recomprar = await page.$("[data-recomprar]");
     if (recomprar) {
       await recomprar.click();
       for (let k = 0; k < 30 && (await ouro()) !== antesVenda; k++) await page.waitForTimeout(100);
@@ -1426,6 +1443,61 @@ async function cenarioApresentacao(browser) {
   }
 }
 
+async function cenarioMercado(browser) {
+  console.log("cenário: o mercado com abas e a banca (tela baixa, teclado, clique duplo, sair e voltar)");
+  const { proc, url } = await subir("mercado", { MOCHILA: "11" });
+  const page = await browser.newPage({ viewport: { width: 1280, height: 700 } });
+  const erros = [];
+  page.on("pageerror", (e) => erros.push(String(e)));
+  page.on("console", (m) => { if (m.type() === "error") erros.push(m.text()); });
+  await page.goto(url);
+  const ate = async (f, ms = 10000) => { for (let t = 0; t < ms; t += 100) { if (await f()) return true; await page.waitForTimeout(100); } return false; };
+  const parado = () => ate(() => page.evaluate(() => !processando && !!pergunta && pergunta.tipo === "opcoes"));
+  try {
+    await ate(() => page.$(".tela.loja")); await parado(); await page.waitForTimeout(600);
+    // Só a lista rola: a página fica parada, com o ouro, as abas e o Sair à vista.
+    const medidas = () => page.evaluate(() => {
+      const pg = document.querySelector("#pagina"), vis = (s) => { const r = document.querySelector(s).getBoundingClientRect(); return r.top >= 0 && r.bottom <= innerHeight; };
+      return { pagina: pg.scrollHeight - pg.clientHeight, abas: vis(".loja-abas"), ouro: vis(".ouro-loja"), sair: vis("#barra-tela .voltar-seta") };
+    });
+    await page.evaluate(() => { const l = document.querySelector('[data-lista="suprimentos"]'); l.scrollTop = l.scrollHeight; });
+    const m = await medidas();
+    conferir(m.pagina <= 1 && m.abas && m.ouro && m.sair, `em 1280×700, só a lista rola; abas, ouro e Sair à vista (${JSON.stringify(m)})`);
+    // O esgotado diz por quê, por escrito (não só a cor).
+    const esgotado = await page.evaluate(() => [...document.querySelectorAll(".mercadoria.suprimento.caro .merc-motivo")].map((e) => e.textContent).join(" | "));
+    conferir(/Esgotado/.test(esgotado) || /Ouro insuficiente/.test(esgotado), `o que não se compra diz o motivo no cartão (${esgotado})`);
+    // "Você tem" e "À venda", cada um com o seu nome.
+    const contas = await page.evaluate(() => document.querySelector('[data-comprar="tocha"] .merc-contas').textContent.replace(/\s+/g, " ").trim());
+    conferir(/^Você tem \d+ ?À venda \d+$/.test(contas), `o que você tem e o que o mercador tem, separados (${contas})`);
+    // Enter num cartão compra a quantidade escolhida; o ouro e o "você tem" acompanham.
+    const ouro = () => page.evaluate(() => App.estado.heroi.ouro);
+    const o0 = await ouro();
+    await page.focus('[data-comprar="tocha"]'); await page.keyboard.press("Enter"); await parado(); await page.waitForTimeout(300);
+    conferir((await ouro()) < o0 && /Você tem 4/.test(await page.evaluate(() => document.querySelector('[data-comprar="tocha"] .merc-contas').textContent)),
+      "Enter no cartão compra; o ouro e o que você tem atualizam");
+    // Clique duplo num item à venda vende um só (o que cai no lugar dele não vai junto).
+    await page.click('.loja-aba[data-aba="vender"]');
+    const mochila = () => page.evaluate(() => App.estado.heroi.mochila.length);
+    const n0 = await mochila();
+    const alvo = await page.$('[data-mochila-loja="0"]'); await alvo.scrollIntoViewIfNeeded();
+    const bb = await alvo.boundingBox();
+    await page.mouse.dblclick(bb.x + 20, bb.y + 20); await parado(); await page.waitForTimeout(700);
+    conferir((await mochila()) === n0 - 1, `clique duplo vende um item só (${n0} → ${await mochila()})`);
+    // Sair e voltar: a aba volta a Suprimentos e a recompra começa vazia.
+    await page.keyboard.press("Escape");
+    conferir(await ate(() => page.$('#predios .predio[data-predio="mercado"]'), 8000), "Esc sai do mercado para a vila");
+    await page.waitForTimeout(600);
+    await page.click('#predios .predio[data-predio="mercado"]');
+    await ate(() => page.$(".tela.loja")); await parado();
+    conferir(await page.evaluate(() => document.querySelector('.loja-aba[aria-selected="true"]').dataset.aba === "suprimentos" && !document.querySelector("[data-recomprar]")),
+      "de volta ao mercado: aba Suprimentos, sem a recompra da visita anterior");
+  } finally {
+    conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
+    await page.close();
+    proc.kill();
+  }
+}
+
 async function cenarioFeridas(browser) {
   console.log("cenário: ferimentos e descanso (F1, F2, a Curandeira com o primeiro tratamento grátis, D1)");
   const quadro = (page) => page.evaluate(() => { const q = document.querySelector(".orientacao:not([hidden])"); return q ? q.innerText.replace(/\s+/g, " ") : ""; });
@@ -1599,6 +1671,7 @@ try {
   await cenarioCombate(browser);
   await cenarioTitulo(browser);
   await cenarioVila(browser);
+  await cenarioMercado(browser);
   await cenarioCampanha(browser);
   await cenarioMissao(browser);
   await cenarioRecarga(browser);
