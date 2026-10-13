@@ -329,6 +329,16 @@ async function cenarioVila(browser) {
     await page.click('.loja-aba[data-aba="vender"]');
     conferir(await page.evaluate((d) => App.estado.mundo.dia + "|" + App.estado.mundo.periodo === d, diaAntes) && !(await page.evaluate(() => processando)),
       "trocar de aba não passa tempo nem espera o motor");
+    // A aba Vender é a grade da mochila: todos os espaços (os vazios fora do Tab), "Mochila N/12" e nada de recompra
+    // antes da primeira venda.
+    const grade = await page.evaluate(() => {
+      const p = document.querySelector('[data-painel="vender"]');
+      return { celulas: p.querySelectorAll(".mochila-grade:not(.recompra) .celula").length, itens: p.querySelectorAll("[data-mochila-loja]").length,
+        vaziosNoTab: [...p.querySelectorAll(".celula.vazia")].filter((e) => e.tabIndex >= 0).length, mochila: App.estado.heroi.mochila.length,
+        rotulo: p.querySelector(".loja-mochila").textContent.replace(/\s+/g, " ").trim(), recompra: !!p.querySelector(".loja-recompra"), velho: /Vendidos agora/.test(p.textContent) };
+    });
+    conferir(grade.celulas === 12 && grade.itens === grade.mochila && grade.vaziosNoTab === 0 && grade.rotulo === `Mochila ${grade.mochila}/12` && !grade.recompra && !grade.velho,
+      `Vender: a grade com os 12 espaços, "Mochila N/12" e sem recompra antes de vender (${JSON.stringify(grade)})`);
     // Clique num item da mochila vende na hora (sem menu), não sai do mercado, e o vendido fica para recomprar.
     const ouro = () => page.evaluate(() => App.estado.heroi.ouro);
     const antesVenda = await ouro();
@@ -337,7 +347,7 @@ async function cenarioVila(browser) {
     conferir((await ouro()) > antesVenda && !(await page.$(".menu-item")), "clique vende o item da mochila na hora");
     conferir(!!(await esperar("[data-comprar]")), "vender não tira você do mercado");
     let recomprar = await esperar("[data-recomprar]", 3000);
-    conferir(!!recomprar, "o item vendido aparece em \"Vendidos agora\"");
+    conferir(!!recomprar && /Recomprar/i.test(await page.textContent(".loja-recompra h5")), "o item vendido aparece em \"Recomprar\"");
     conferir(await page.evaluate(() => document.querySelector('.loja-aba[aria-selected="true"]').dataset.aba) === "vender",
       "depois de vender, a aba Vender continua aberta");
     // Trocar de aba não encerra a recompra (ela vale até sair do mercado).

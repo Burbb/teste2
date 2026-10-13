@@ -190,6 +190,49 @@ vendas, recompra e regras não mudaram.
 - **Limitação:** com a janela baixa (700 px), a lista mostra duas fileiras de cartões por vez.
 - **Falta:** Jean conferir.
 
+## Quatro ajustes sobre a faixa (1.75.0)
+
+Pedido de Jean (13/10/2026), com a composição horizontal e a loja aprovadas. Compras, vendas, recompra, preços,
+estoque, limites, sorteios e navegação não mudaram.
+
+- **As ervas sobre os frascos saíram.** Os dois tufos verdes pendurados em cima dos curativos não tinham forma nessa
+  escala. O espaço ficou vazio, sem decoração no lugar.
+- **A luz de fora segue o período do jogo** (`periodo_n` do estado, não o relógio do computador). Muda só a janela,
+  a fresta da porta, a força da lamparina e o escuro longe dela; o resto da loja guarda as cores.
+  - Manhã: vidro claro e suave, fresta fraca.
+  - Tarde: vidro mais claro, fresta mais forte.
+  - Anoitecer: vidro laranja e fraco, fresta quente, a lamparina mais forte e a loja escurecendo de leve longe dela.
+  - Noite: vidro azul com uma estrela, sem fresta, a lamparina no máximo e os anéis de escuro inteiros.
+  - O período vem do estado a cada desenho. Comprar redesenha com o mesmo período, e trocar de aba não redesenha
+    a faixa: nada pisca.
+- **A mão apoiada:**
+  - Antes, o antebraço saía em diagonal e a palma ficava solta à esquerda do corpo.
+  - Agora o braço desce até o cotovelo (a manga arregaçada), o antebraço curto desce na frente dele, o punho encosta
+    no tampo e a palma fica espalmada logo embaixo, com a sombra no balcão.
+  - O gesto do frasco foi conferido quadro a quadro: parado, indo, erguendo, erguido, devolvendo e de volta. A mão
+    segue ligada ao braço, sem atravessar o balcão.
+- **Vender é a grade da mochila:**
+  - Como no inventário: os 12 espaços, os vazios apagados e fora do Tab, e "Mochila N/12" com a ocupação e a
+    capacidade reais.
+  - Cada item mostra o ícone, a raridade (a cor da borda) e, no canto, o que o mercador paga.
+  - A ficha e a comparação (com Shift) seguem na dica, pelo mouse e pelo foco do teclado.
+  - Clique vende; botão direito equipa; arrastar até a banca vende; Enter vende pelo teclado.
+  - O `Gesto` cobre as células: o segundo clique de um clique duplo não vende o item que cai no lugar.
+  - "Vendidos agora" e a explicação saíram. Depois da primeira venda aparece, embaixo e separada, a seção
+    "Recomprar", com os itens e o preço de cada um (o mesmo da venda, até sair do mercado, inclusive trocando de
+    aba). Saíram também os cartões grandes da venda.
+- **Validação:**
+  - Testes, pyflakes, gabarito idêntico, fumaça completa (a vila confere a grade, "Mochila N/12", os vazios fora do
+    Tab, a recompra só depois da venda e o título "Recomprar").
+  - Conferido na tela (1500×950 e 1280×700):
+    - mochila vazia, com 1, 8 e 12 itens;
+    - venda (a grade, a ocupação e o ouro atualizam), clique duplo vendendo um só;
+    - troca de aba e recompra pelo mesmo preço;
+    - dica pelo mouse e pelo teclado;
+    - os quatro períodos, o gesto quadro a quadro e o movimento reduzido;
+    - nenhum erro no console.
+- **Falta:** Jean conferir.
+
 ## Como Jean testa
 
 1. Numa vila, entre no mercado: a banca aparece num pontilhado, e a aba Suprimentos já está aberta.
@@ -205,3 +248,6 @@ vendas, recompra e regras não mudaram.
 8. (1.74.0) Abra o mercado maximizado e numa janela menor: a loja é sempre a faixa em cima. Repare nos grupos da
    parede (bandagens, pães, gibão, arco, tochas, cestos, caixotes) e no mercador de avental de couro. Para a noite:
    `$env:PERIODO="3"; python -m tests.navegador.cenarios mercado`.
+9. (1.75.0) Troque `PERIODO` por 0, 1, 2 e 3 (manhã, tarde, anoitecer, noite) e repare na janela e na porta. Olhe a
+   mão apoiada e espere o frasco. Na aba Vender, venda um item e veja a grade, "Mochila N/12", o ouro e a seção
+   "Recomprar" aparecendo; troque de aba e recompre. Para mochila vazia ou cheia: `$env:MOCHILA="0"` ou `"12"`.

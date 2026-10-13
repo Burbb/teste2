@@ -38,40 +38,47 @@
       ${it.motivo ? motivoHtml(it.motivo) : `<span class="preco">${S("moeda", 1)}${it.preco}</span>`}</button>`;
   }
 
-  // Vender: cada item da mochila com o que o mercador paga, à vista (sem depender da dica). Clique vende na hora (o que
-  // você vendeu fica no balcão para recomprar pelo mesmo preço até sair do mercado); o botão direito equipa.
+  // Vender: a mochila como no inventário, uma grade com todos os espaços (os vazios também, apagados e fora do Tab).
+  // Cada item mostra o ícone, a raridade e o que o mercador paga; a ficha (e a comparação, com Shift) vem na dica.
+  // Clique vende na hora (o vendido vai para "Recomprar", pelo mesmo preço, até sair do mercado); o botão direito
+  // equipa; arrastar até a banca também vende.
   function paraVender(it, i) {
     const venda = `<div class="preco-venda">${S("moeda", 1)} O mercador paga <b>${it.preco}</b></div>` +
       `Clique: vender${it.usavel ? " · botão direito: equipar" : " · não é para a sua classe"}`;
-    return `<div role="button" tabindex="0" class="mercadoria venda${it.usavel ? "" : " outra-classe"}" draggable="true" data-mochila-loja="${i}" ${dicaItem(it, venda)}>
-      <span class="slot-px r-${h(it.raridade)}">${S(iconeItem(it), 2)}</span>
-      <span class="merc-nome r-${h(it.raridade)}">${h(it.nome)}</span><span class="merc-bonus">${h(it.bonus)}${it.usavel ? "" : '<small class="merc-classe">Não é para a sua classe</small>'}</span>
-      <span class="preco ganho">Vende por ${S("moeda", 1)}${it.preco}</span></div>`;
+    return `<div role="button" tabindex="0" class="slot-px celula r-${h(it.raridade)}${it.usavel ? "" : " inutil"}" draggable="true" data-mochila-loja="${i}"
+        aria-label="Vender ${h(it.nome)} por ${it.preco} de ouro" ${dicaItem(it, venda)}>${S(iconeItem(it), 2)}<span class="preco-canto">${it.preco}</span></div>`;
+  }
+  function gradeVenda(d) {
+    const celulas = d.mochila.map(paraVender);
+    for (let k = d.mochila.length; k < d.limite; k++) celulas.push('<div class="slot-px celula vazia" aria-hidden="true"></div>');
+    return `<div class="mochila-grade mochila-loja" role="group" aria-label="Mochila">${celulas.join("")}</div>`;
   }
 
+  // Recomprar: só depois da primeira venda da visita; cada vendido com o preço que você recebeu (é o que ele cobra).
   function recompra(d) {
-    const itens = (d.recompra || []).map((it, i) => `<div role="button" tabindex="0" class="slot-px celula r-${h(it.raridade)}${it.motivo ? " caro" : ""}" data-recomprar="${i}"
-        ${dicaItem(it, `<div class="preco-venda">${S("moeda", 1)} Recomprar por <b>${it.preco}</b></div>${it.motivo ? h(it.motivo) : "Clique para desfazer a venda."}`)}>${S(iconeItem(it), 2)}<span class="preco-canto">${it.preco}</span></div>`).join("");
-    return `<div class="loja-recompra"><span class="lr-rotulo">Vendidos agora</span>${itens || '<span class="lr-vazio">Recompre aqui pelo mesmo preço o que vender, até sair do mercado.</span>'}</div>`;
+    if (!(d.recompra || []).length) return "";
+    const itens = d.recompra.map((it, i) => `<div role="button" tabindex="0" class="slot-px celula r-${h(it.raridade)}${it.motivo ? " caro" : ""}" data-recomprar="${i}"
+        aria-label="Recomprar ${h(it.nome)} por ${it.preco} de ouro" ${dicaItem(it, `<div class="preco-venda">${S("moeda", 1)} Recomprar por <b>${it.preco}</b></div>${it.motivo ? h(it.motivo) : "Clique para desfazer a venda."}`)}>${S(iconeItem(it), 2)}<span class="preco-canto">${it.preco}</span></div>`).join("");
+    return `<section class="loja-recompra" aria-label="Recomprar"><h5>Recomprar</h5><div class="mochila-grade mochila-loja recompra">${itens}</div></section>`;
   }
 
   function loja(d) {
     const listas = {
       suprimentos: d.consumiveis.map((c) => suprimento(c, d.ouro)).join(""),
       equipamentos: d.equipamentos.map(equipamento).join("") || '<span class="vazio">Nada que preste hoje. Volte em alguns dias.</span>',
-      vender: d.mochila.map(paraVender).join("") || '<span class="vazio">A mochila está vazia: nada para vender.</span>',
+      vender: gradeVenda(d) + recompra(d),
     };
     const conta = { equipamentos: d.equipamentos.length, vender: d.mochila.length };
     const mochila = `<span class="loja-mochila">${S("saco", 1)} Mochila <b>${d.ocupado}/${d.limite}</b></span>`;
     const sub = {
       suprimentos: "",
       equipamentos: mochila,
-      vender: `${mochila}${recompra(d)}`,
+      vender: `${mochila}<span class="loja-dica">${d.mochila.length ? "Clique num item para vender." : "Nada para vender."}</span>`,
     };
     const abas = ABAS.map(([id, nome]) => `<button type="button" role="tab" id="aba-${id}" class="loja-aba" data-aba="${id}" aria-controls="lista-${id}"
         aria-selected="${id === aba}" tabindex="${id === aba ? 0 : -1}">${nome}${conta[id] !== undefined ? ` <small>${conta[id]}</small>` : ""}</button>`).join("");
     const paineis = ABAS.map(([id]) => `<div class="loja-painel" role="tabpanel" id="lista-${id}" aria-labelledby="aba-${id}" data-painel="${id}"${id === aba ? "" : " hidden"}>
-        ${sub[id] ? `<div class="loja-sub">${sub[id]}</div>` : ""}<div class="loja-lista vitrine" data-lista="${id}">${listas[id]}</div></div>`).join("");
+        ${sub[id] ? `<div class="loja-sub">${sub[id]}</div>` : ""}<div class="loja-lista${id === "vender" ? " venda" : " vitrine"}" data-lista="${id}">${listas[id]}</div></div>`).join("");
     return `<div class="tela loja${visitaNova ? " chegando" : ""}">
       <div class="loja-banca"><canvas class="banca-cena"></canvas></div>
       <div class="loja-lado">
@@ -88,8 +95,8 @@
    *  mercado vende (curativos e frascos, provisões, uma peça de proteção, o arco e a aljava, tochas, sacos,
    *  ferramentas, cestos, caixotes e um barril), com paredes vazias entre eles para descansar o olho; a porta dos
    *  fundos e uma janela (dia ou noite). Os objetos são só ambientação: nada na faixa é clicável.
-   *  Mais largura mostra mais vãos, nunca o desenho esticado. A luz é a da lamparina, à esquerda do mercador; à noite,
-   *  o que fica longe dela escurece. Atrás do balcão, o mercador: um homem mais velho, careca de franja grisalha,
+   *  Mais largura mostra mais vãos, nunca o desenho esticado. A luz de dentro é a da lamparina, à esquerda do mercador;
+   *  a de fora (janela e porta) segue o período do jogo, e à noite o que fica longe da lamparina escurece. Atrás do balcão, o mercador: um homem mais velho, careca de franja grisalha,
    *  nariz comprido e sobrancelha desconfiada, túnica de lã crua com o capuz caído, avental de couro gasto e manchado,
    *  cinto com bolsa e chaves. Ele se apoia numa mão sobre o balcão; respira, pisca e, a cada oito segundos, pega um
    *  frasco, ergue contra a luz e devolve. Pixel art no estilo das paisagens, em escala inteira (pixel 2×). Ao entrar,
@@ -116,6 +123,15 @@
     avental: "#5a3e28", aventalSombra: "#3e2a1a", mancha: "#4a3220", cinto: "#2a1c12", fivela: "#a89a62",
     bolsa: "#7a5634", bolsaSombra: "#5a3e24",
   };
+  // A luz de fora, pelo período do jogo (0 manhã, 1 tarde, 2 anoitecer, 3 noite): o vidro da janela, o brilho em cima
+  // dele, a fresta embaixo da porta, a força da lamparina e o quanto a loja escurece longe dela. Só a janela, a porta
+  // e o escuro mudam; o resto da loja guarda as cores.
+  const LUZ_DE_FORA = [
+    { vidro: "#b4ae8c", brilho: "#d4ceb0", fresta: "rgba(220,214,180,0.25)", lamparina: 0.55, escuro: 0 },
+    { vidro: "#dccb92", brilho: "#f4e8c4", fresta: "rgba(240,224,170,0.4)", lamparina: 0.5, escuro: 0 },
+    { vidro: "#b0683e", brilho: "#d08850", fresta: "rgba(220,130,70,0.28)", lamparina: 0.8, escuro: 0.5 },
+    { vidro: "#1a2640", brilho: "#22304e", fresta: null, lamparina: 1, escuro: 1 },
+  ];
   // O mercador, da careca ao peito (21 colunas; o meio é a coluna 10). O resto do tronco repete a última linha até o
   // balcão; o cinto, a bolsa e as chaves entram na altura da cintura. Letras: L/s/d pele (luz, meio, sombra), k/K
   // franja grisalha, w sobrancelha, e olho, n nariz, B/b barba, M boca, c/C capuz caído, u/t/T túnica de lã,
@@ -158,7 +174,8 @@
     const W = Math.max(160, Math.round(cw / 2)), H = Math.max(40, Math.min(56, Math.round(ch / 2)));
     canvas.width = W; canvas.height = H;
     const px = (x, y, w, hh, cor) => { c.fillStyle = cor; c.fillRect(Math.round(x), Math.round(y), w, hh); };
-    const noite = ((App.estado && App.estado.mundo && App.estado.mundo.periodo_n) || 0) === 3;
+    const periodo = (App.estado && App.estado.mundo && App.estado.mundo.periodo_n) || 0, noite = periodo === 3;
+    const fora = LUZ_DE_FORA[periodo] || LUZ_DE_FORA[0];
     const topo = H - 11;        // a borda de trás do tampo do balcão (o balcão fica sempre embaixo)
     const frente = topo + 4;    // a quina da frente
     const S1 = topo - 18, S2 = topo - 8;  // as duas prateleiras
@@ -188,12 +205,6 @@
       px(x, y, 6, 4, COR.pano); px(x, y, 6, 1, COR.panoLuz); px(x + 5, y + 1, 1, 3, COR.panoSombra);
       px(x + 3, y, 1, 4, COR.barbante); px(x, y + 2, 6, 1, COR.barbante);
     }
-    function ervas(x, y0, k) {
-      const vento = reduzido() ? 0 : Math.round(Math.sin(quadro() / 9 + k) * 0.6);
-      px(x, y0, 1, 1, COR.barbante);
-      for (let y = y0 + 1; y < y0 + 5 + (k % 2); y++) px(x + (y > y0 + 3 ? vento : 0), y, 1, 1, k % 2 ? "#4a6a32" : "#5a7a3a");
-      px(x - 1 + (vento > 0 ? 1 : 0), y0 + 4 + (k % 2), 3, 1, "#3a5226");
-    }
     function poste(x) { px(x, 2, 3, topo - 2, COR.poste); px(x, 2, 1, topo - 2, COR.posteLuz); px(x + 2, 2, 1, topo - 2, COR.posteSombra); }
     const quadro = () => Math.floor((performance.now() - relogio0) / 100);
 
@@ -207,7 +218,6 @@
         frasco(x + 16, S1 - 5, "#8a2a26"); frasco(x + 21, S1 - 5, v % 2 ? "#2a5a7a" : "#3a6a3a");
         // embaixo: os potes de barro e um frasco de antídoto
         pote(x + 3, S2 - 6, 5, 6); pote(x + 10, S2 - 4, 4, 4); frasco(x + 18, S2 - 5, "#3a6a3a");
-        ervas(x + 6, 2, v); ervas(x + 12, 2, v + 1);
       },
       provisoes(x, w, v) {
         prateleira(S1, x + 1, x + w - 1); prateleira(S2, x + 1, x + w - 1);
@@ -305,15 +315,14 @@
         px(x + 3, 4, w - 6, topo - 4, COR.cortina);
         for (let y = 4; y < topo; y++) { px(x + 5 + (y % 4 === 0 ? 1 : 0), y, 1, 1, COR.cortinaSombra); px(x + w - 7, y, 1, 1, COR.cortinaSombra); }
         px(x + 7, Math.round(topo * 0.5), 3, 3, COR.cortinaRemendo);
-        if (!noite) px(x + 3, topo - 1, w - 6, 1, "rgba(232,210,150,0.35)");
+        if (fora.fresta) px(x + 3, topo - 1, w - 6, 1, fora.fresta);
       },
       janela(x, w) {
-        // a janela com as folhas abertas: a luz do dia (com o calor dela na parede) ou o azul da noite com uma estrela
+        // a janela com as folhas abertas: a luz de fora pelo período (à noite, o azul com uma estrela)
         const jx = x + 4, jy = S1 - 9, jw = w - 8, jh = 11;
         px(jx - 1, jy - 1, jw + 2, jh + 2, COR.poste);
-        px(jx, jy, jw, jh, noite ? "#1a2640" : "#c8b888");
-        if (!noite) px(jx, jy, jw, 2, "#e8dcb0");
-        else px(jx + 2, jy + 3, 1, 1, "#c8d8f0");
+        px(jx, jy, jw, jh, fora.vidro); px(jx, jy, jw, 2, fora.brilho);
+        if (noite) px(jx + 2, jy + 3, 1, 1, "#c8d8f0");
         px(jx + Math.floor(jw / 2), jy, 1, jh, COR.poste); px(jx, jy + 5, jw, 1, COR.poste);
         px(jx - 3, jy, 2, jh, COR.caixaSombra); px(jx + jw + 1, jy, 2, jh, COR.caixaSombra);  // as folhas abertas
         px(jx - 2, jy + jh + 1, jw + 4, 1, COR.prateleiraLuz);  // o parapeito
@@ -344,24 +353,25 @@
       px(0, 0, W, 2, COR.viga); px(0, 1, W, 1, COR.vigaLuz); px(0, 2, W, 1, "rgba(0,0,0,0.3)");
     }
     function lamparina() {
-      const [lx, ly] = lampada, forca = noite ? 1 : 0.6, raio = (noite ? 16 : 12) + (reduzido() ? 0 : (quadro() % 3) - 1);
+      const [lx, ly] = lampada, forca = fora.lamparina, raio = Math.round(10 + forca * 6) + (reduzido() ? 0 : (quadro() % 3) - 1);
       for (let y = -raio; y <= raio; y++) for (let x = -raio; x <= raio; x++) {
         const d2 = (x * x + y * y) / (raio * raio);
         if (d2 < 1 && Sprites.pontilha(lx + x, ly + 6 + y, Math.round((1 - d2) * 8 * forca))) px(lx + x, ly + 6 + y, 1, 1, "rgba(255,190,110,0.22)");
       }
-      px(lx, 0, 1, ly + 3, "#2a2016"); px(lx - 2, ly + 3, 5, 6, "#3a2a18"); px(lx - 1, ly + 4, 3, 4, noite ? "#ffd27a" : "#e8a050");
+      px(lx, 0, 1, ly + 3, "#2a2016"); px(lx - 2, ly + 3, 5, 6, "#3a2a18"); px(lx - 1, ly + 4, 3, 4, forca > 0.7 ? "#ffd27a" : "#e8a050");
       px(lx, ly + 5, 1, 2, "#fff0b0");
     }
-    // À noite, longe da lamparina, a loja escurece em degraus (anéis de pixel inteiro, como a luz das paisagens).
+    // À noite (e, mais de leve, ao anoitecer), longe da lamparina, a loja escurece em degraus (anéis de pixel inteiro,
+    // como a luz das paisagens).
     function escuro() {
-      if (!noite) return;
+      if (!fora.escuro) return;
       const [lx, ly] = lampada, degraus = [[0.55, 0.18], [0.85, 0.3], [1.25, 0.42]];
       for (let y = 0; y < H; y++) {
         let x0 = 0, nivel = -1;
         for (let x = 0; x <= W; x++) {
           const d = x < W ? Math.hypot(x - lx, (y - ly) * 1.6) / 80 : Infinity;
           const n = x < W ? degraus.filter(([lim]) => d > lim).length - 1 : -2;
-          if (n !== nivel) { if (nivel >= 0) px(x0, y, x - x0, 1, `rgba(6,8,18,${degraus[nivel][1]})`); x0 = x; nivel = n; }
+          if (n !== nivel) { if (nivel >= 0) px(x0, y, x - x0, 1, `rgba(6,8,18,${degraus[nivel][1] * fora.escuro})`); x0 = x; nivel = n; }
         }
       }
     }
@@ -386,14 +396,17 @@
       px(ox + 15, y0 + cinto + 1, 1, 2, COR.ferroLuz); px(ox + 14, y0 + cinto + 3, 2, 1, COR.ferro);
       // o braço do lado da luz: desce do ombro, a manga arregaçada, até a mão espalmada no tampo (desenhada depois)
       const ombro = y0 + 12;
-      for (let y = ombro; y < topo - 4; y++) { px(ox + 1, y, 2, 1, y < topo - 8 ? COR.tunicaLuz : COR.tunica); px(ox + 3, y, 1, 1, COR.tunicaSombra); }
-      px(ox, topo - 4, 4, 1, COR.tunicaSombra);
+      for (let y = ombro; y < topo - 3; y++) { px(ox + 1, y, 2, 1, y < topo - 7 ? COR.tunicaLuz : COR.tunica); px(ox + 3, y, 1, 1, COR.tunicaSombra); }
+      px(ox + 1, topo - 3, 3, 1, COR.tunicaSombra);  // a manga arregaçada, no cotovelo
     }
     function maos(t) {
       const ox = mx - 10;
-      [[1, -3], [0, -2], [0, -1], [-1, 0]].forEach(([dx, dy]) => { px(ox + dx, topo + dy, 2, 1, COR.pele); px(ox + dx, topo + dy, 1, 1, COR.peleLuz); });
-      px(ox - 4, topo + 1, 5, 1, COR.peleLuz); px(ox - 4, topo + 2, 5, 1, COR.pele); px(ox - 4, topo + 2, 1, 1, COR.peleSombra);
-      px(ox - 3, topo + 3, 4, 1, "rgba(0,0,0,0.35)");
+      // a mão apoiada: o antebraço desce do cotovelo, o punho encosta no tampo e a palma fica espalmada nele, com os
+      // dedos para a frente e a sombra embaixo
+      px(ox + 1, topo - 2, 2, 2, COR.pele); px(ox + 1, topo - 2, 1, 2, COR.peleLuz);
+      px(ox + 1, topo, 2, 1, COR.peleSombra);
+      px(ox, topo + 1, 4, 1, COR.peleLuz); px(ox, topo + 2, 4, 1, COR.pele); px(ox + 3, topo + 1, 1, 2, COR.peleSombra);
+      px(ox, topo + 3, 4, 1, "rgba(0,0,0,0.35)");
       const quieto = reduzido(), respira = quieto ? 0 : Math.floor(t / 1.4) % 2;
       const ombro = [mx + 6, topo - 26 + respira + 12];
       const ciclo = quieto ? 0 : t % 8;

@@ -193,10 +193,7 @@
 /* Na dica de um item da mochila, no mercado: quanto o mercador paga. */
 .preco-venda { display: flex; align-items: center; gap: 4px; margin-bottom: 4px; font-family: var(--num); font-size: 17px; color: var(--ouro); }
 .preco-venda b { font-weight: 400; }
-/* A mochila no mercado: cada item com o preço que o mercador paga embaixo; os vendidos agora, para recomprar. */
-.venda-item { display: flex; flex-direction: column; align-items: center; gap: 2px; }
-.venda-item .preco { font-size: 14px; line-height: 1; }
-.venda-item .preco img.sprite { --s: 12; }
+/* A mochila no mercado: o preço de venda no canto de cada item; a recompra, com borda tracejada. */
 .mochila-loja .celula.caro { opacity: 0.45; cursor: not-allowed; }
 .mochila-loja.recompra .celula { border-style: dashed; }
 
@@ -227,19 +224,23 @@
 .loja-sub { flex: none; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; padding: 8px 2px 4px; font-size: 14px; color: var(--tinta-2); }
 .loja-mochila { display: inline-flex; align-items: center; gap: 5px; }
 .loja-mochila b { font-family: var(--num); font-size: 18px; font-weight: 400; color: #fff3d6; }
-.loja-recompra { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; min-height: 40px; }
-.lr-rotulo { font-size: 13px; color: var(--tinta-3); text-transform: uppercase; letter-spacing: .06em; }
-.lr-vazio { font-size: 13px; color: var(--tinta-3); font-style: italic; }
-.loja-recompra .celula { position: relative; width: 40px; height: 40px; cursor: pointer; border-style: dashed; }
-.loja-recompra .celula img.sprite { --s: 24; }
+/* Vender: a grade da mochila (como no inventário), com o preço de venda no canto de cada item; os espaços vazios ficam
+   apagados. "Recomprar" só aparece depois de uma venda, separada embaixo. */
+.loja-dica { font-size: 13px; color: var(--tinta-3); }
+.loja-lista.venda { display: flex; flex-direction: column; gap: 14px; }
+.mochila-loja .celula { position: relative; }
+.mochila-loja .celula.vazia { opacity: 0.45; cursor: default; }
+.mochila-loja .celula.vazia:hover { transform: none; --anel: var(--anel-j); }
+.mochila-loja .celula:focus-visible { --anel: var(--anel-Y); outline: 2px dashed var(--ouro); outline-offset: 2px; }
+.loja-recompra h5 { margin: 0 0 6px; font-family: var(--texto); font-weight: 400; font-size: 13px; color: var(--tinta-2); text-transform: uppercase; letter-spacing: .06em; }
+.loja-recompra .celula { border-style: dashed; }
 .loja-recompra .celula.caro { opacity: 0.45; cursor: not-allowed; }
-.loja-recompra .celula:hover, .loja-recompra .celula:focus-visible { --anel: var(--anel-Y); outline: none; }
-.preco-canto { position: absolute; right: 1px; bottom: -1px; font-family: var(--num); font-size: 14px; color: var(--ouro); text-shadow: 1px 1px 0 #000; }
+.preco-canto { position: absolute; right: 2px; bottom: 0; font-family: var(--num); font-size: 15px; line-height: 1; color: var(--ouro); text-shadow: 1px 1px 0 #000, -1px 0 0 #000; pointer-events: none; }
 .loja-lista { flex: 1; min-height: 0; overflow-y: auto; align-content: start; padding: 10px 6px 12px 2px; scrollbar-width: thin; scrollbar-color: #4a4038 #120e0b; }
 .loja-lista.vitrine { grid-template-columns: repeat(auto-fill, minmax(196px, 1fr)); }
 .loja-lista > .vazio { grid-column: 1 / -1; color: var(--tinta-3); font-style: italic; }
 .mercadoria:focus-visible { outline: 2px solid var(--ouro); outline-offset: 2px; }
-.mercadoria.suprimento, .mercadoria.equip, .mercadoria.venda { grid-template-columns: 52px 1fr; grid-template-rows: auto auto auto; align-items: start; }
+.mercadoria.suprimento, .mercadoria.equip { grid-template-columns: 52px 1fr; grid-template-rows: auto auto auto; align-items: start; }
 .mercadoria .slot-px { width: 52px; height: 52px; }
 /* "Na bolsa: 17/30 · Estoque: 29": rótulo discreto, número claro. Quando não cabe, a segunda informação desce inteira
    e o ponto que separava fica escondido no começo da linha (na margem negativa, que o clip-path corta). */
@@ -259,10 +260,7 @@
 .merc-motivo img.sprite { --s: 16; flex: none; margin-top: 1px; }
 .mercadoria.caro { opacity: 1; }
 .mercadoria.caro > .slot-px, .mercadoria.caro > .merc-nome, .mercadoria.caro > .merc-contas, .mercadoria.caro > .merc-bonus { opacity: 0.5; }
-.mercadoria.equip .preco, .mercadoria.venda .preco { grid-column: 2; }
-.mercadoria.venda .preco.ganho { font-size: 17px; gap: 4px; color: var(--bom); }
-.mercadoria.venda.outra-classe > .slot-px { opacity: 0.6; }
-.merc-classe { display: block; font-family: var(--texto); font-size: 12px; color: var(--tinta-3); }
+.mercadoria.equip .preco { grid-column: 2; }
 /* A entrada: a banca se revela (mercado.js) e os produtos chegam junto, de baixo, uma vez por visita; a saída apaga
    a banca no mesmo tempo da página. */
 .tela.loja.chegando .loja-lado { animation: loja-chega 0.32s ease-out both; }
@@ -277,8 +275,6 @@
   .tela.loja .lore { display: none; }
   .loja-abas { margin-top: 6px; }
   .loja-sub { padding: 4px 2px 2px; }
-  .loja-recompra { min-height: 34px; }
-  .loja-recompra .celula { width: 34px; height: 34px; }
 }
 
 /* ------------------------------------------------------------------ cenas interativas (roadmapIDEIAS/20) */

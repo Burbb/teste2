@@ -1630,3 +1630,18 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
 - **Verificado:** testes, gabarito idêntico, pyflakes, fumaça completa, telas de 1100 a 1920 px, altura reduzida, dia,
   noite, movimento reduzido.
 - **Falta:** Jean conferir.
+
+### 13/10/2026 — Quatro ajustes no mercado (1.75.0)
+
+- **Pedido de Jean:** tirar os dois tufos verdes sobre os frascos; a luz da janela pelos quatro períodos; a mão
+  apoiada do comerciante; a aba Vender como a grade da mochila, com "Recomprar" só depois de vender.
+- **Feito:**
+  - os tufos saíram;
+  - a janela, a porta e a lamparina seguem o período do jogo (manhã, tarde, anoitecer, noite);
+  - a mão desce do cotovelo e se espalma no tampo;
+  - Vender é a grade da mochila com "Mochila N/12" e o preço no canto de cada item, e a seção "Recomprar" separada
+    só aparece depois da primeira venda.
+  - Detalhe em [19](19-MERCADO.md).
+- **Verificado:** testes, gabarito idêntico, pyflakes, fumaça completa, telas a 1500 e 1280 px com altura reduzida,
+  os quatro períodos, o gesto quadro a quadro, mochila vazia/1/8/12, venda, recompra, mouse, teclado e dicas.
+- **Falta:** Jean conferir.

@@ -175,7 +175,7 @@ const Gesto = (() => {
   window.addEventListener("blur", () => { abaixo.clear(); presas.clear(); });
   // Os controles das telas: o prompt (escolhas, Continuar), os prédios da vila, a roda da luta, a doca e o que compra
   // ou vende no mercado (a lista se redesenha depois de cada operação: o item que cair no lugar do outro não vai junto).
-  const CONTROLES = "#prompt button, #prompt .escolha, #predios .predio, #roda button, #doca .atalho, .tela.loja .mercadoria, .tela.loja [data-recomprar]";
+  const CONTROLES = "#prompt button, #prompt .escolha, #predios .predio, #roda button, #doca .atalho, .tela.loja .mercadoria, .tela.loja [data-mochila-loja], .tela.loja [data-recomprar]";
   document.addEventListener("click", (ev) => {
     if (!ev.target.closest || !ev.target.closest(CONTROLES)) return;
     // detail 0: o clique que o teclado gera num botão focado (Enter, espaço) é julgado como tecla, não aqui.
