@@ -476,7 +476,7 @@ destoaria da vila clara lá fora. Não foi redesenhada.
 
 ## Limitações destes ajustes
 
-- "Explorar a região" de dentro da capela ainda leva para fora sem contar a saída (não fazia parte do pedido).
+- (Resolvido na 1.81.1: "Explorar a região" de dentro da capela levava para fora sem contar a saída.)
 - A faixa conta a saída por uns dois segundos e meio; quem quiser reler acha a frase no Histórico (H).
 
 ## Como Jean testa (ajustes da 1.79.0)
@@ -488,3 +488,21 @@ destoaria da vila clara lá fora. Não foi redesenhada.
 3. `$env:ETAPA="fundo"; $env:PERIODO="1"`: "Sair e acampar" no ossuário; a faixa, a fogueira, o amanhecer fora.
 4. `$env:ETAPA="ossuario"; $env:CLASSE="mago"; $env:PERIODO="3"`: desça ao ossuário e vença: a exaustão vem depois
    do resultado, com a saída contada.
+
+## Explorar só do lado de fora (1.81.1)
+
+- **Pedido de Jean:** "Explorar a região" só aparece do lado de fora da capela.
+- **Feito (`missoes.pode_explorar`):**
+  - o menu do salão, da sacristia, do ossuário e do fundo não tem mais "Explorar a região". Para explorar, sai-se
+    antes pelas passagens; não há "Sair e explorar" nem saída automática;
+  - o motor tem a mesma regra: `Jogo.explorar` não faz nada dentro da capela (um pedido de uma tela desatualizada ou
+    de atalho não explora, não gasta período, tocha nem sorteio, e não leva para fora);
+  - o tutorial (V5, que aponta "Explorar a região") só aparece do lado de fora; dentro, ele espera. A fala de Morel
+    sobre explorar também só vem lá fora;
+  - antes, escolher Explorar dentro levava para fora em silêncio; isso saiu junto com a opção.
+- **Iguais:** "Sair e acampar", a exaustão, a navegação entre as salas; os outros lugares e o mundo gerado (fora da
+  capela, `pode_explorar` é sempre verdadeiro).
+- **Conferido:** testes (`TestExplorarSoLaFora`: as quatro salas e o exterior, o pedido atrasado sem gasto nem sorteio,
+  o tutorial, salvar e carregar em cada sala); fumaça (`cenarioCapelaSalas`); na tela, as quatro salas e o exterior,
+  salvar e carregar no fundo e voltar até a brecha, e o tutorial ligado: sem quadro dentro, o quadro do Explorar
+  apontando a opção do lado de fora.

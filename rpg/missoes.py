@@ -611,6 +611,12 @@ def _por_na_sala(g, sala):
         m["sala"] = sala
 
 
+def pode_explorar(g):
+    """Explorar a região é lá fora: dentro da capela (salão, sacristia, ossuário, fundo), a ação não existe. Para
+    explorar, sai-se antes pelas passagens; não há "sair e explorar"."""
+    return sala_atual(g) in (None, "exterior")
+
+
 def saiu_da_capela(g):
     """Viagem, resgate, explorar ou acampar: na próxima vez, o personagem está do lado de fora."""
     _por_na_sala(g, "exterior")

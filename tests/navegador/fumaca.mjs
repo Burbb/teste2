@@ -814,10 +814,11 @@ async function cenarioCapelaSalas(browser) {
     await page.waitForSelector(`${MENU}:has-text("Voltar ao salão alagado")`, { timeout: 20000 });
     await page.waitForTimeout(200);
     conferir((await sala()) === "neutra" && /Sacristia/.test(await page.textContent("#cena-cab")), "a escada sobe à sacristia: fundo neutro e a sala no subtítulo");
+    conferir(!(await page.$(`${MENU}:has-text("Explorar")`)), "dentro da capela, sem Explorar a região (1.81.1)");
     await ir("Voltar ao salão alagado", "Sair pela brecha");
     conferir((await sala()) === "salao:quieta", "o salão vencido, quieto");
     await ir("Sair pela brecha", "Entrar no salão pelo buraco");
-    conferir((await sala()) === "exterior", "pela brecha, do lado de fora");
+    conferir((await sala()) === "exterior" && !!(await page.$(`${MENU}:has-text("Explorar a região")`)), "pela brecha, do lado de fora, onde se explora");
     await page.click('.ci-ponto[data-ponto="buraco"]');
     await page.waitForSelector(`${MENU}:has-text("Sair pela brecha")`, { timeout: 20000 });
     conferir(!(await page.evaluate(() => document.body.classList.contains("em-combate"))) && !(await page.$("#prompt .continuar")),
@@ -931,7 +932,8 @@ async function cenarioGuardia(browser) {
       "ela descansa: o relato de Ilse, esperando o Continuar");
     await page.waitForTimeout(800);
     await page.click("#prompt .continuar");
-    for (let k = 0; k < 60 && !(await page.$(`${MENU}:has-text("Explorar")`)); k++) {
+    // vencida a guardiã, o personagem fica no fundo (1.79.0): a página do fundo, onde não se explora (1.81.1)
+    for (let k = 0; k < 60 && !(await page.$(`${MENU}:has-text("Subir ao ossuário")`)); k++) {
       const f = await page.$(".festa .continuar, .festa-espolio .continuar"); if (f) { await page.waitForTimeout(1000); await f.click().catch(() => {}); }
       await page.waitForTimeout(250);
     }
@@ -946,7 +948,7 @@ async function cenarioGuardia(browser) {
     }
     await (await page.waitForSelector(`${MENU}:has-text("Carregar")`)).click();
     await (await page.waitForSelector(".save-cartao")).click();
-    await page.waitForSelector(`${MENU}:has-text("Explorar")`, { timeout: 20000 });
+    await page.waitForSelector(`${MENU}:has-text("Subir ao ossuário")`, { timeout: 20000 });  // carregado, no fundo
     m = await missao();
     conferir(m.desfecho === "descansada" && !(await page.$(`${MENU}:has-text("Descer ao fundo")`)) && (await page.evaluate(() => estado.heroi.sigilos)) === 1,
       "carregado: ela segue descansada, sem descida nem Sigilo repetido");

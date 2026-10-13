@@ -567,11 +567,13 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
                 rotulo = f"Caçar {FAMILIAS[c['familia']]['plural']} (contrato, {c['feito']}/{c['total']})"
             opcoes.append((rotulo, f"cacar:{c['id']}", {"cacar": c["id"]}))
         opcoes += missoes.passagens(self)  # na capela: as salas vizinhas já vencidas (só a vista muda)
-        opcoes.append(("Explorar a região" + (" (à noite é mais perigoso)" if self.noite else ""), "explorar"))
+        if missoes.pode_explorar(self):  # dentro da capela, não: explorar a região é do lado de fora
+            opcoes.append(("Explorar a região" + (" (à noite é mais perigoso)" if self.noite else ""), "explorar"))
         # Dentro da capela, acampar é sair primeiro (sair_para_acampar): a fogueira nunca fica dentro de uma sala.
         dentro = missoes.sala_atual(self) not in (None, "exterior")
         opcoes.append(("Sair e acampar" if dentro else "Acampar e descansar até o amanhecer", "acampar"))
-        abertura.motivo_explorar(self, "morel")  # com Morel junto, ele conta onde está o dinheiro (uma vez)
+        if missoes.pode_explorar(self):
+            abertura.motivo_explorar(self, "morel")  # com Morel junto, ele conta onde está o dinheiro (uma vez)
         if self.contratos_aqui():
             abertura.visto(self, "K2")  # chegou ao lugar do contrato: o quadro que mostrava onde ele fica não volta
         abertura.dica_texto(self, "fora")  # na interface de texto, a orientação da vez numa linha
@@ -591,7 +593,6 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         elif op == "final":
             self.batalha_final()
         elif op == "explorar":
-            missoes.saiu_da_capela(self)  # explorar e acampar são lá fora
             self.explorar()
         elif op == "acampar":
             missoes.sair_para_acampar(self)
@@ -675,6 +676,10 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
 
     # ================================================================ ações no mundo
     def explorar(self):
+        # Dentro da capela, explorar não existe (a opção nem aparece): um pedido atrasado ou de atalho não faz nada,
+        # sem gastar tempo, tocha nem sorteio.
+        if not missoes.pode_explorar(self):
+            return False
         self.ui.cena("Explorando", self.contexto_cena(), "evento")
         self.narrar(self.ambiente(), "cinza")
         sobrevivencia.acender_tocha(self)

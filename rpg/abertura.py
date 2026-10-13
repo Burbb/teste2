@@ -362,6 +362,9 @@ def _v5(g, a):
     """Explorar, na primeira ocasião fora da vila: a ação do menu do lugar."""
     if not _pendente(a, "V5") or g.loc["tipo"] == "vila":
         return None
+    from . import missoes
+    if not missoes.pode_explorar(g):  # dentro da capela, a opção não existe: o quadro espera o lado de fora
+        return None
     return {"id": "V5", "texto": "**Explorar a região** gasta um período. Pode dar luta, um achado, alguém pelo "
                                  "caminho ou nada: é por aí que se acha o que não está nos contratos.",
             "ancora": "opcao:Explorar a região"}

@@ -375,5 +375,77 @@ class TestSairParaAcampar(unittest.TestCase):
         self.assertEqual([o[1][2] for o in opcoes_febre(g)], ["correntes", "fundo"])
 
 
+class TestExplorarSoLaFora(unittest.TestCase):
+    """Explorar a região só do lado de fora da capela (1.81.1): sem a opção dentro, sem "sair e explorar", e um pedido
+    atrasado (tela desatualizada, atalho) não explora nem gasta nada."""
+
+    INTERNAS = ("salao", "sacristia", "ossuario", "fundo")
+
+    def em(self, sala, pasta=None):
+        g = na_capela(etapa="retorno", pasta=pasta)  # a guardiã resolvida: todas as salas abertas
+        missoes.registro(g, MID)["desfecho"] = "descansada"
+        caminho = {"exterior": [], "salao": ["salao"], "sacristia": ["salao", "sacristia"],
+                   "ossuario": ["salao", "sacristia", "ossuario"], "fundo": ["salao", "sacristia", "ossuario", "fundo"]}
+        missoes.saiu_da_capela(g)
+        for s in caminho[sala]:
+            self.assertTrue(missoes.ir_na_capela(g, s))
+        return g
+
+    def menu(self, g):
+        def escolher(pergunta, opcoes):
+            g.ui.ofertas.append(list(opcoes))
+            raise StopIteration
+        g.ui.escolher = escolher
+        with self.assertRaises(StopIteration):
+            g.menu_selvagem()
+        return g.ui.ofertas[-1]
+
+    def test_dentro_nao_ha_explorar(self):
+        for sala in self.INTERNAS:
+            ops = self.menu(self.em(sala))
+            self.assertFalse(any(o.startswith("Explorar") for o in ops), sala)
+            self.assertFalse(any("explorar" in o.lower() for o in ops), sala)  # nem "Sair e explorar"
+            self.assertIn("Sair e acampar", ops)  # a saída para acampar continua
+        self.assertTrue(any(o.startswith("Explorar a região") for o in self.menu(self.em("exterior"))))
+
+    def test_pedido_atrasado_dentro_nao_faz_nada(self):
+        for sala in self.INTERNAS:
+            g = self.em(sala)
+            g.combate = lambda *a, **k: self.fail("explorar começou uma luta")
+            antes = (foto(g), g.rng.getstate(), len(g.ui.cenas))
+            self.assertFalse(g.explorar())
+            self.assertEqual((foto(g), g.rng.getstate(), len(g.ui.cenas)), antes, sala)
+            self.assertEqual(missoes.sala_atual(g), sala)  # e não leva para fora
+
+    def test_do_lado_de_fora_explora_como_sempre(self):
+        g = self.em("exterior")
+        g.ui.escolher = lambda pergunta, opcoes: 0
+        g.combate = lambda *a, **k: "vitoria"
+        periodo = g.periodo
+        g.explorar()
+        self.assertIn("Explorando", g.ui.cenas)
+        self.assertEqual(g.periodo, periodo + 1)
+
+    def test_o_tutorial_espera_o_lado_de_fora(self):
+        from rpg import abertura
+        for sala in self.INTERNAS:
+            g = self.em(sala)
+            abertura.comecar(g, True)
+            self.assertIsNone(abertura._v5(g, abertura.estado(g)), sala)
+        g = self.em("exterior")
+        abertura.comecar(g, True)
+        self.assertEqual(abertura._v5(g, abertura.estado(g))["ancora"], "opcao:Explorar a região")
+
+    def test_salvar_e_carregar_dentro_e_fora(self):
+        for sala in self.INTERNAS + ("exterior",):
+            pasta = tempfile.mkdtemp()
+            g = self.em(sala, pasta)
+            g.salvar(silencioso=True)
+            h = Jogo.carregar(Roteiro(), g.caminho_save(), pasta)
+            self.assertEqual(missoes.sala_atual(h), sala)
+            tem = any(o.startswith("Explorar") for o in self.menu(h))
+            self.assertEqual(tem, sala == "exterior", sala)
+
+
 if __name__ == "__main__":
     unittest.main()

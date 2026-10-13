@@ -1706,3 +1706,12 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
 - **Verificado:** testes (`TestLodoNoFundo`, `TestSairParaAcampar` novos), gabarito idêntico, pyflakes, fumaça
   completa (`cenarioCapelaAcampar` novo), telas a 1500 e 1280 px, movimento reduzido.
 - **Falta:** Jean conferir. A E9 segue aberta.
+
+### 13/10/2026 — Explorar só do lado de fora da capela (1.81.1)
+
+- **Pedido de Jean:** tirar "Explorar a região" das salas internas, com a mesma regra no motor e no tutorial.
+- **Feito:** a opção só no exterior; `Jogo.explorar` não faz nada dentro (sem tempo, tocha nem sorteio); o quadro V5 e
+  a fala de Morel esperam o lado de fora. Detalhe em [20](20-CENA-INTERATIVA-OSSUARIO.md).
+- **Verificado:** testes, gabarito idêntico, pyflakes, fumaça completa, telas nas quatro salas e no exterior, salvar e
+  carregar, tutorial ligado.
+- **Falta:** Jean conferir. A E9 segue aberta.
