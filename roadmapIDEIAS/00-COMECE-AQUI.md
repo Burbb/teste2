@@ -1672,3 +1672,12 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
 - **Verificado:** testes, gabarito idêntico, pyflakes, fumaça completa, telas a 1500 e 1280 px com altura reduzida,
   movimento reduzido, recarregar.
 - **Falta:** Jean conferir; as entregas 2 (luz e criaturas) e 3 (navegação).
+
+### 13/10/2026 — Luz do ossuário e criaturas do salão (1.78.0)
+
+- **Pedido de Jean:** tirar o facho pontilhado do alçapão e deixar a tocha como luz principal; tirar o afogado verde
+  do salão; sanguessugas presas à madeira ou à linha d'água, sem flutuar.
+- **Feito:** a tocha entre os nichos e o sarilho, com a sala escurecendo longe dela; o alçapão só com um cinza frio
+  de dia; sanguessugas grudadas nos bancos e numa coluna, esticando devagar. Detalhe em [20](20-CENA-INTERATIVA-OSSUARIO.md).
+- **Verificado:** testes, gabarito idêntico, pyflakes, fumaça completa, telas a 1280 px, dia e noite.
+- **Falta:** Jean conferir.

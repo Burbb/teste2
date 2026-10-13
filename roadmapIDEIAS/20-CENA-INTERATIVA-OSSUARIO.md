@@ -120,7 +120,7 @@ mapa interno, nenhum sistema de navegação: cada ambiente é desenhado quando o
 | Ambiente | O que tem | Arte | Ponto (a mesma ação do menu) | Onde aparece |
 |---|---|---|---|---|
 | Exterior | a capela afundada até a metade das janelas, juncos no antigo pátio, a porta da frente sob a lama, a torre sem sino, o canal entrando pelo buraco do muro, sapos na margem (alguns com patas a mais) | 1.76.0 | **Buraco no muro**: "Entrar na capela pelo buraco do canal" (etapa `capela`). **Sapos**: só olhar (aproxima e afasta) | a cena de chegada; a página do lugar até vencer o salão (também numa visita antes da hora, sem ação); o recuo pela brecha (fuga do salão ou da sacristia) |
-| Salão alagado | a entrada pelo buraco do canal, água pelos joelhos, colunas, bancos podres, o altar, a fenda do piso perto do altar (por onde a água desce), a porta baixa da sacristia atrás do altar, um degrau acima | 1.76.0 | **Sacristia** (a porta): "Atravessar o salão alagado" (etapa `sacristia`) | a cena de entrada, com a água **inquieta** (o afogado subindo entre os bancos, as sanguessugas no raso); a cena da vitória, com a água **quieta** e o caminho dela à vista; a página do lugar depois de vencer o salão (e, até a sacristia ter arte, também na etapa `ossuario`, sem ação na porta) |
+| Salão alagado | a entrada pelo buraco do canal, água pelos joelhos, colunas, bancos podres, o altar, a fenda do piso perto do altar (por onde a água desce), a porta baixa da sacristia atrás do altar, um degrau acima | 1.76.0 | **Sacristia** (a porta): "Atravessar o salão alagado" (etapa `sacristia`) | a cena de entrada, com a água **inquieta** (as sanguessugas presas na madeira que sai da água; até a 1.77.0, também um afogado subindo); a cena da vitória, com a água **quieta** e o caminho dela à vista; a página do lugar depois de vencer o salão (e, até a sacristia ter arte, também na etapa `ossuario`, sem ação na porta) |
 | Sacristia | acima da água, os cultistas, o livro, o baú, o alçapão para o ossuário; a escada de mão na janela alta | **planejada** | — | sem arte (como antes): a paisagem do lugar |
 | Ossuário | a escada de pedra do alçapão, os nichos com ossos, a boca da escada que segue descendo ao fundo, o sarilho e o buraco redondo das correntes | 1.72.0 (escada refeita na 1.76.0) | **Sarilho**: "Soltar as correntes" (etapa `fundo`) | a cena da vitória na sala dos ossos (sem ação); a página do lugar depois de achar as correntes; "O Sarilho" de perto |
 | Fundo alagado | a água pela cintura, as duas pedras de moinho, Ilse | **planejado** | — | sem arte (como antes) |
@@ -259,4 +259,24 @@ corrente descendo, recarregar com as correntes soltas (sem som), movimento reduz
 ## Limitações (até as próximas entregas)
 
 - A sacristia e o fundo ainda usam a paisagem genérica; a página do lugar na etapa `ossuario` mostra o salão.
-- Os nomes dos pontos ainda ficam sempre à vista; o afogado verde e o facho pontilhado do alçapão continuam.
+- Os nomes dos pontos ainda ficam sempre à vista; o afogado verde e o facho pontilhado do
+  alçapão saíram na 1.78.0.
+
+---
+
+# Luz do ossuário e criaturas do salão (1.78.0)
+
+Segunda entrega do mesmo pedido. Só desenho: a luz não muda o gasto de tocha, a emboscada nem os riscos; as
+criaturas desenhadas não são inimigos (a luta, as cartas e o texto seguem iguais).
+
+- **Ossuário:** saiu o facho pontilhado que descia do alçapão e se misturava com a luz da tocha. A tocha da parede
+  foi para entre os nichos e o sarilho (`TOCHA`) e é a luz da sala: anéis quentes que tremem, e longe dela a sala
+  escurece em degraus pontilhados (`escurecer`), de modo que a escada e os cantos ficam na penumbra e o sarilho
+  continua legível. Do alçapão, só o que vem da sacristia: de dia, um cinza frio nos três primeiros degraus; à
+  noite, nada. A escada e o mecanismo não mudaram.
+- **Salão inquieto:** saiu o afogado verde subindo da água. As sanguessugas (`SANGUESSUGAS`) ficam presas na
+  madeira que sai da água (o banco da frente, a perna de um banco de trás na linha d'água, o pé de uma coluna) e se
+  esticam e encolhem devagar sem sair do lugar; com movimento reduzido, paradas. A água continua em rodas.
+- **Salão vencido:** a água quieta com o caminho dela, sem criatura nenhuma (já era assim; conferido).
+
+Conferido: a arte ampliada de dia e de noite; o salão inquieto, a luta com o salão de fundo e o salão quieto a 1280×700.

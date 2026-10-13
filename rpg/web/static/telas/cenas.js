@@ -37,6 +37,7 @@
   const SAR = { x: 196, y: 22 };                   // o canto de cima do sarilho (postes, trave, tambor)
   const BURACO = { x: 240, y: 64, rx: 19, ry: 4 }; // o buraco no chão por onde descem as correntes, com a água lá embaixo
   const DESCIDA = { x0: 50, x1: 80 };              // a boca da escada que segue descendo até a água do fundo
+  const TOCHA = { x: 186, y: 12 };                 // a tocha na parede, entre os nichos e o sarilho: a luz da sala
 
   function baseOssuario(W) {
     const k = camada(W), c = k.getContext("2d"), px = pincel(c), ox = Math.round((W - QW) / 2);
@@ -76,8 +77,8 @@
       px(x + 4, y + 1, 1, alto, "#101215");              // a quina que dá a profundidade
     }
     px(ax + 1 + DEGRAUS * 4, PISO - 1, 6, 1, "#59616c");  // o último degrau encosta no chão
-    // a luz que desce pelo alçapão, nos primeiros degraus
-    for (let y = 3; y < 34; y++) for (let x = ax + 1; x < ax + 16 + Math.floor(y / 3); x++) if (pontilha(x, y, Math.max(0, 4 - Math.floor(y / 9)))) px(x, y, 1, 1, "rgba(150,150,130,0.35)");
+    // Pelo alçapão, só o que vem da sacristia: de dia, um cinza frio nos três primeiros degraus; à noite, nada.
+    if (ceuAgora().periodo !== 3) for (let k2 = 0; k2 < 3; k2++) px(ax + 1 + k2 * 4, Math.round(5 + k2 * passo), 7 - k2, 1, misturar("#59616c", "#9aa4ae", 0.35 - k2 * 0.1));
     // a sombra da escada na parede, acompanhando os degraus
     for (let k2 = 0; k2 < DEGRAUS; k2++) { const x = ax + 9 + k2 * 4, y = Math.round(5 + k2 * passo); px(x, y - 3, 1, 3, "#15181c"); }
     // o chão, com os ossos dos que caíram
@@ -111,7 +112,19 @@
     const sx = ox + SAR.x, sy = SAR.y;
     [sx + 4, sx + 84].forEach((x) => { px(x, sy, 4, PISO - sy, COR.madeiraEsc); px(x + 1, sy, 1, PISO - sy, COR.madeiraLuz); });
     px(sx, sy - 3, 92, 4, COR.madeira); px(sx, sy - 3, 92, 1, COR.madeiraLuz); px(sx, sy, 92, 1, COR.madeiraEsc);
+    // A luz é a da tocha: longe dela, a sala escurece em degraus pontilhados (a escada e os cantos ficam na penumbra).
+    escurecer(px, W, ox + TOCHA.x, TOCHA.y, 58, 150, 0.62);
     return { canvas: k, ox };
+  }
+  /** Sombra pela distância de uma luz (x, y): nada até `perto`, a mais escura (`max`) a partir de `longe`. Em degraus
+   *  de preto translúcido, com o pontilhado de Bayer entre um degrau e outro. */
+  function escurecer(px, W, lx, ly, perto, longe, max) {
+    for (let y = 0; y < QH; y++) for (let x = 0; x < W; x++) {
+      const d = Math.hypot(x - lx, (y - ly) * 1.6), t = Math.min(1, Math.max(0, (d - perto) / (longe - perto)));
+      if (!t) continue;
+      const f = t * 5, n = Math.floor(f) + (pontilha(x, y, Math.floor((f % 1) * 16)) ? 1 : 0);
+      if (n) px(x, y, 1, 1, `rgba(3,4,6,${(max * n / 5).toFixed(3)})`);
+    }
   }
 
   /** O que se mexe: a tocha da parede, o tambor com a corrente, a trava, a manivela e as correntes até o buraco. */
@@ -119,13 +132,13 @@
     const px = pincel(c);
     c.drawImage(b.canvas, 0, 0);
     const ox = b.ox, quieto = reduzido();
-    // a tocha na parede, ao lado da escada, com a luz que treme
-    const tx = ox + 47, ty = 11, raio = 30 + (quieto ? 0 : (quadro % 3) - 1);
-    for (let y = Math.max(0, ty - raio); y < Math.min(QH, ty + raio); y++) for (let x = tx - raio; x < tx + raio; x++) {
-      const d2 = ((x - tx) ** 2 + (y - ty) ** 2) / (raio * raio);
-      if (d2 < 1 && pontilha(x, y, Math.round((1 - d2) * 6))) px(x, y, 1, 1, "rgba(255,170,90,0.16)");
+    // a tocha na parede, entre os nichos e o sarilho: a luz quente em anéis, que treme e alcança os ossos e o mecanismo
+    const tx = ox + TOCHA.x, ty = TOCHA.y, raio = 62 + (quieto ? 0 : (quadro % 3) - 1);
+    for (let y = 0; y < QH; y++) for (let x = Math.max(0, tx - raio); x < Math.min(W, tx + raio); x++) {
+      const d2 = ((x - tx) ** 2 + ((y - ty) * 1.6) ** 2) / (raio * raio);
+      if (d2 < 1) px(x, y, 1, 1, d2 < 0.08 ? "rgba(255,190,110,0.2)" : d2 < 0.3 ? "rgba(255,170,90,0.12)" : d2 < 0.65 ? "rgba(255,160,80,0.07)" : "rgba(255,150,70,0.035)");
     }
-    px(tx - 1, ty + 2, 3, 5, "#3a2a18");
+    px(tx - 2, ty + 2, 5, 1, "#2a2018"); px(tx - 1, ty + 2, 3, 5, "#3a2a18");
     const chama = quieto ? 0 : quadro % 2;
     px(tx - 1, ty - 2 - chama, 3, 4 + chama, "#e0782f"); px(tx, ty - 1 - chama, 1, 3, "#ffd27a");
     // o tambor: um eixo grosso de madeira preta; com a corrente enrolada (presas) ou nu (soltas)
@@ -473,23 +486,18 @@
         px(Math.round(lerp(x0, x1, f)) - 1, Math.round(lerp(y0, y1, f)) + ((i % 3) - 1) * 2, 3, 1, misturar("#3a5a5c", "#1a1810", u));
       }
     } else {
-      // inquieta: a água se mexe em rodas por todo lado; um afogado se ergue entre os bancos; as sanguessugas no raso
+      // inquieta: a água se mexe em rodas por todo lado; as sanguessugas, grudadas na madeira que sai da água
       for (let i = 0; i < 9; i++) {
         const cx = ox + 20 + ((i * 37 + Math.floor(q / 4) * 11) % 180), cy = 54 + (i * 5) % 12, rr = 2 + ((q + i * 3) % 6);
         for (let a = 0; a < 10; a++) px(Math.round(cx + Math.cos(a / 10 * Math.PI * 2) * rr), Math.round(cy + Math.sin(a / 10 * Math.PI * 2) * rr * 0.3), 1, 1, "#1f3438");
       }
-      // o afogado sobe devagar entre os bancos (uns três segundos, o tempo do texto chegar nele); parado, já de pé
-      const sobe = quieto ? 1 : Math.min(1, Math.max(0, (quadro - 12) / 30));
-      const ax = ox + 118, ay = Math.round(AGUA_D + 1 - sobe * 9) + (quieto || sobe < 1 ? 0 : Math.round(Math.sin(quadro / 6))), pele = "#2e4038", peleLuz = "#4a5e50";
-      c.save(); c.beginPath(); c.rect(0, 0, W, AGUA_D); c.clip();  // o que está embaixo da água não aparece
-      px(ax - 5, ay + 3, 12, 8, pele); px(ax - 2, ay - 4, 7, 7, pele); px(ax - 2, ay - 4, 2, 4, peleLuz); px(ax - 5, ay + 3, 2, 3, peleLuz);
-      px(ax - 7, ay + 1, 2, 5, pele); px(ax + 7, ay + 1, 2, 5, pele); px(ax - 8, ay, 2, 2, peleLuz); px(ax + 8, ay, 2, 2, pele);
-      px(ax - 1, ay - 2, 1, 1, "#c8d8a0"); px(ax + 2, ay - 2, 1, 1, "#c8d8a0");
-      c.restore();
-      if (sobe > 0) px(ax - 8, AGUA_D, 18, 1, "#2a4448");  // a água aberta em volta do corpo
-      // as sanguessugas, no raso, ondulando
-      [[ox + 74, 57], [ox + 150, 59]].forEach(([sx, sy], i) => {
-        for (let k = 0; k < 8; k++) px(sx + k, sy + Math.round(Math.sin((quieto ? 0 : quadro * 0.6) + k * 0.9 + i)), 1, 2, k === 0 ? "#6a3a40" : k % 2 ? "#3a1c22" : "#4a2a30");
+      // Cada uma presa num ponto (o encosto do banco da frente, a perna de um banco de trás na linha d'água, a base de
+      // uma coluna): o corpo se estica e encolhe devagar, sem sair do lugar; com movimento reduzido, parada.
+      SANGUESSUGAS.forEach(([sx, sy, lado], i) => {
+        const fase = quieto ? 0 : Math.floor(quadro / 7 + i * 3) % 4, estica = fase === 1 || fase === 2 ? 1 : 0;
+        const n = 5 + estica;
+        for (let k = 0; k < n; k++) px(ox + sx + lado * k, sy, 1, k === 0 || k === n - 1 ? 1 : 2, k === n - 1 ? "#7a4248" : k % 2 ? "#3a1c22" : "#4e2830");
+        px(ox + sx + lado * (n - 1), sy - 1, 1, 1, "#5a3036");  // a ventosa erguida, procurando
       });
     }
     // a fenda: a água gira em volta do rasgo e desce (mais devagar com a sala quieta)
@@ -504,6 +512,10 @@
       px(dx - 2, dy - 2, dw + 4, 1, COR.ouro); px(dx - 2, dy - 2, 1, PRESB - dy + 2, COR.ouro); px(dx + dw + 1, dy - 2, 1, PRESB - dy + 2, COR.ouro);
     }
   }
+
+  // As sanguessugas da sala inquieta: [x, y, para que lado o corpo cresce]. No encosto submerso do banco da frente (o
+  // de 42 de largura), na perna de um banco de trás onde ela entra na água e no pé de uma coluna.
+  const SANGUESSUGAS = [[70, 55, 1], [96, 55, -1], [133, 51, 1], [COLUNAS[2] - 6, 51, 1]];
 
   // ================================================================ as cenas e os pontos
   // Cada ponto: a área clicável, onde fica o nome e para onde a câmera vai (no quadro de 320×72).
