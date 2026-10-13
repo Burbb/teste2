@@ -38,7 +38,8 @@ class Loja:
 
     def dados_loja(self):
         """O que a tela do mercado mostra. Cada coisa que não dá para comprar agora vem com o motivo (`motivo`), já
-        escrito: a tela não deduz regra nenhuma. Nos suprimentos, `tem` é o que você carrega (e `teto`, o máximo, na
+        escrito: a tela não deduz regra nenhuma (no suprimento esgotado, o motivo é curto, "Esgotado", e o `detalhe` diz
+        quando volta). Nos suprimentos, `tem` é o que você carrega (e `teto`, o máximo, na
         comida e nas flechas) e `estoque`, o que o mercador ainda tem hoje: dois números, cada um com o seu nome."""
         j = self.j
         estoque = self.estoque_suprimentos()
@@ -46,10 +47,12 @@ class Loja:
             return itens.ficha(it, j.nome_recurso, preco=preco)
         def suprimento(k, nome, icone, desc, tem, limite, teto=None, cheio=None):
             preco = self.preco_suprimento(k)
-            motivo = ("Esgotado: o mercador reabastece amanhã cedo." if estoque[k] == 0 else
+            motivo = ("Esgotado" if estoque[k] == 0 else
                       cheio if limite <= 0 else "Ouro insuficiente." if j.ouro < preco else None)
+            # o cartão mostra só o motivo; o detalhe (quando volta) fica na dica
+            detalhe = "O mercador reabastece amanhã cedo." if estoque[k] == 0 else None
             return {"id": k, "nome": nome, "icone": icone, "desc": desc, "preco": preco, "tem": tem, "teto": teto,
-                    "estoque": estoque[k], "limite": limite, "motivo": motivo}
+                    "estoque": estoque[k], "limite": limite, "motivo": motivo, "detalhe": detalhe}
         return {
             "ouro": j.ouro, "limite": LIMITE_MOCHILA, "ocupado": len(j.mochila),
             "consumiveis": [suprimento(k, CONSUMIVEIS[k]["nome"], CONSUMIVEIS[k]["icone"], CONSUMIVEIS[k]["desc"],

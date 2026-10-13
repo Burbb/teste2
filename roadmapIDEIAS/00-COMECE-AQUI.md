@@ -1600,3 +1600,17 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   (`cenarioSarilho` e `cenarioGuardia` ampliados), telas a 1500 e 1280 px com altura reduzida: classe, à mão, fuga,
   derrota, recarga, salvar e carregar, movimento reduzido.
 - **Falta:** Jean conferir.
+
+### 13/10/2026 — Acabamento do mercado (1.73.0)
+
+- **Pedido de Jean:** com as abas aprovadas, refinar a banca e o mercador, a linha das quantidades e o cartão
+  esgotado, sem mexer em preço, estoque, limite, reposição ou sorteio.
+- **Feito:**
+  - a banca mais aberta (parede do lado com janela, ponta do balcão, tampo com profundidade, lousa) e um mercador
+    reconhecível (chapéu com fita, lenço, barba, avental, a mão apoiada no balcão, a luz da lamparina de um lado);
+  - "Na bolsa: N · Estoque: N" (com "17/30" onde há capacidade);
+  - "Esgotado" no cartão, com a reposição na dica, que no mercado também abre pelo foco do teclado.
+  - Detalhe em [19](19-MERCADO.md), seção "Acabamento".
+- **Verificado:** testes, gabarito (só o painel do mercado; examinado), pyflakes, fumaça completa, telas a 1500 e
+  1280 px com altura reduzida e movimento reduzido.
+- **Falta:** Jean conferir.

@@ -48,7 +48,8 @@
     caixa.hidden = false;
     clearInterval(vigia);
     vigia = setInterval(() => {
-      const dentro = caixa._area ? mouseNaArea() : caixa._dono && caixa._dono.matches(":hover");
+      const dentro = caixa._area ? mouseNaArea()
+        : caixa._dono && (caixa._dono.matches(":hover") || (caixa._foco && document.activeElement === caixa._dono));
       if (caixa.hidden || !caixa._dono || !caixa._dono.isConnected || !dentro) esconderDica();
     }, 250);
     return caixa;
@@ -64,8 +65,9 @@
   function ligarDicas(raiz) {
     const caixa = caixaDica();
     raiz.querySelectorAll("[data-dica]").forEach((el) => {
-      el.addEventListener("mouseenter", (ev) => {
+      const mostrar = (ev, foco) => {
         const id = Number(el.dataset.dica);
+        caixa._foco = foco;
         caixa.innerHTML = dicas.get(id) || "";
         caixa.classList.remove("ficha-inimigo");
         caixa.classList.toggle("curta", dicasCurtas.has(id));
@@ -83,8 +85,14 @@
         caixa.style.left = Math.max(6, esq) + "px";
         caixa.style.top = Math.max(6, Math.min(window.innerHeight - caixa.offsetHeight - 6, r.top - 6)) + "px";
         mostrarEquipado(ev.shiftKey);
-      });
+      };
+      el.addEventListener("mouseenter", (ev) => mostrar(ev, false));
       el.addEventListener("mouseleave", esconderDica);
+      // No mercado, o foco do teclado também abre a dica (o motivo inteiro de um cartão que não se compra mora nela).
+      if (el.closest(".tela.loja")) {
+        el.addEventListener("focus", (ev) => { if (el.matches(":focus-visible")) mostrar(ev, true); });
+        el.addEventListener("blur", () => { if (caixa._dono === el) esconderDica(); });
+      }
     });
   }
   /** Com Shift seguro, o item que você usa naquele espaço abre ao lado da dica, inteiro (não só a diferença). */

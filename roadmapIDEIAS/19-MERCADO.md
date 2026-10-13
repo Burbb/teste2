@@ -85,6 +85,55 @@ de dentro, mais perto e mais detalhado, com o comerciante na bancada mexendo nas
 - O som do mercado é o de antes (moedas, falha). Não há som novo para a banca.
 - Jean ainda não viu: teste humano pendente.
 
+## Acabamento (1.73.0)
+
+Pedido de Jean (13/10/2026): a estrutura com abas está aprovada; refinar a banca e o mercador, a linha das
+quantidades e o cartão esgotado. Preços, estoque, limites, reposição e sorteios não mudaram.
+
+- **A banca:**
+  - O retrato passou de 58×78 para 64×84, ainda em pixel 3× inteiro (a coluna mede 192 px mais a borda).
+  - A composição abre um pouco: a parede do lado em perspectiva, com a janela (luz do dia ou azul da noite), e a
+    ponta do balcão com o chão e um barril.
+  - O balcão ganhou profundidade: o tampo à vista, com a borda de trás no escuro, veios e a quina da frente na luz;
+    embaixo da quina, a sombra; na frente, a lousa de preços pendurada.
+  - A luz vem da lamparina, à esquerda. Longe dela, a parede escurece num pontilhado (só no retrato: na faixa larga,
+    pesaria).
+  - Na faixa, a porta dos fundos com a cortina; as prateleiras param nela.
+- **O mercador:**
+  - Desenhado por linhas (`FIGURA`), não por retângulos: chapéu de aba com a fita vermelha (a aba faz sombra na
+    testa), barba, lenço vermelho, túnica com ombros caídos e avental de couro com bolso.
+  - O lado da luz é mais claro no rosto e na túnica; o outro, na sombra.
+  - Uma mão apoiada no balcão, com o antebraço até o cotovelo; a outra mexe nas coisas.
+  - Os movimentos de antes, ajustados ao desenho: respira, pisca e, a cada oito segundos, pega o frasco, ergue contra
+    a luz e devolve. Com movimento reduzido, fica parado.
+- **Quantidades:**
+  - "Na bolsa: 0 · Estoque: 5"; com capacidade, "Na bolsa: 17/30 · Estoque: 29" (os mesmos `tem`, `teto` e
+    `estoque` do motor).
+  - O rótulo é discreto e o número claro. Bolsa cheia pinta o número de ouro; estoque zero, de vermelho.
+  - Sem espaço, a segunda informação desce inteira e o ponto que separava some do começo da linha.
+  - A quantidade a comprar continua no seletor embaixo.
+- **Esgotado:**
+  - O motor manda `motivo: "Esgotado"` e `detalhe: "O mercador reabastece amanhã cedo."` (só nos suprimentos: as
+    peças de equipamento não têm reposição).
+  - O cartão mostra só "Esgotado"; a dica junta os dois.
+  - Os outros motivos (ouro insuficiente, aljava cheia, comida no máximo, mochila cheia) ficam inteiros no cartão.
+- **A dica com o teclado:** no mercado, o foco do teclado num cartão também abre a dica (antes, só o mouse). No resto
+  do jogo, as dicas seguem só no mouse.
+- **Validação:**
+  - Testes: `test_mercado.py`, com o motivo curto e o detalhe só no esgotado.
+  - Gabarito examinado: só os painéis do mercado das partidas web mudaram. Com o motivo antigo trocado por
+    "Esgotado" e sem o campo `detalhe`, as transcrições ficam idênticas.
+  - Fumaça: `cenarioMercado` confere "Na bolsa"/"Estoque" e que o cartão não traz a reposição.
+  - Conferido na tela (1500×950, 1500×700, 1280×700):
+    - a banca e a faixa, com a animação quadro a quadro e com movimento reduzido;
+    - compras repetidas até esgotar tocha, bandagem e antídoto, com a bolsa subindo, o estoque descendo e o ouro
+      acompanhando;
+    - cinco esgotados de uma vez; comida cheia (12/12) e flechas 20/30;
+    - nomes longos ("Tônico Restaurador", "Provisões (1 dia)"), sem corte nem sobreposição nas três colunas da faixa;
+    - a dica pelo mouse e pelo foco;
+    - nenhum erro no console.
+- **Falta:** Jean conferir.
+
 ## Como Jean testa
 
 1. Numa vila, entre no mercado: a banca aparece num pontilhado, e a aba Suprimentos já está aberta.
@@ -94,3 +143,6 @@ de dentro, mais perto e mais detalhado, com o comerciante na bancada mexendo nas
 4. Em Vender, venda alguma coisa e vá para Suprimentos e volte: a recompra continua lá, pelo mesmo preço.
 5. Saia (Esc) e entre de novo: volta a Suprimentos, sem a recompra da visita anterior.
 6. Num monitor menor (ou com a janela estreita), a banca vira uma faixa em cima.
+7. (1.73.0) Repare no mercador (chapéu, lenço, a mão apoiada no balcão) e espere uns oito segundos: ele pega o frasco
+   e ergue contra a luz. Compre até esgotar algo: o cartão diz só "Esgotado"; passe o mouse (ou chegue com Tab) para
+   ler quando o mercador reabastece.

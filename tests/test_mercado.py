@@ -48,7 +48,9 @@ class TestSuprimentos(unittest.TestCase):
         g.j.ouro = 300
         estoque = g.estoque_suprimentos()["tocha"]
         self.assertTrue(g.comprar_suprimento("tocha", estoque))  # leva tudo o que havia hoje
-        self.assertEqual(suprimento(g, "tocha")["motivo"], "Esgotado: o mercador reabastece amanhã cedo.")
+        esgotada = suprimento(g, "tocha")
+        self.assertEqual((esgotada["motivo"], esgotada["detalhe"]), ("Esgotado", "O mercador reabastece amanhã cedo."))
+        self.assertIsNone(suprimento(g, "bandagem")["detalhe"])  # o detalhe é só do esgotado
         self.assertFalse(g.comprar_suprimento("tocha"))  # a regra de sempre recusa do mesmo jeito
 
     def test_compra_atualiza_tem_e_estoque(self):

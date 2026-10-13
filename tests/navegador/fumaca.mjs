@@ -1436,8 +1436,8 @@ async function cenarioApresentacao(browser) {
       let faixa = "", escuro = false, logs = false;
       for (let k = 0; k < 300; k++) {
         const s = await page.evaluate(() => ({ luta: !!(estado && estado.combate), pode: !!pergunta && !processando, menu: !!document.querySelector("#predios .predio") && !!pergunta && pergunta.tipo === "opcoes" && !processando,
-          faixa: [...document.querySelectorAll(".faixa-festa")].map((f) => f.textContent.trim()).join("|"), escuro: document.body.classList.contains("derrotado") && estado.heroi.hp === 0,
-          logs: !estado.combate && !!pergunta && pergunta.tipo === "continuar" && estado.heroi.hp === 0 }));
+          faixa: [...document.querySelectorAll(".faixa-festa")].map((f) => f.textContent.trim()).join("|"), escuro: document.body.classList.contains("derrotado") && !!estado && estado.heroi.hp === 0,
+          logs: !!estado && !estado.combate && !!pergunta && pergunta.tipo === "continuar" && estado.heroi.hp === 0 }));
         if (s.faixa) faixa = faixa || s.faixa;
         escuro = escuro || s.escuro;
         logs = logs || s.logs;  // um Continuar com o herói ainda em 0: a página dos registros da luta segurando a tela
@@ -1489,14 +1489,15 @@ async function cenarioMercado(browser) {
     // O esgotado diz por quê, por escrito (não só a cor).
     const esgotado = await page.evaluate(() => [...document.querySelectorAll(".mercadoria.suprimento.caro .merc-motivo")].map((e) => e.textContent).join(" | "));
     conferir(/Esgotado/.test(esgotado) || /Ouro insuficiente/.test(esgotado), `o que não se compra diz o motivo no cartão (${esgotado})`);
-    // "Você tem" e "À venda", cada um com o seu nome.
+    conferir(!/reabastece/.test(esgotado), "no cartão, o esgotado diz só \"Esgotado\" (quando volta fica na dica)");
+    // "Na bolsa" e "Estoque", cada um com o seu nome.
     const contas = await page.evaluate(() => document.querySelector('[data-comprar="tocha"] .merc-contas').textContent.replace(/\s+/g, " ").trim());
-    conferir(/^Você tem \d+ ?À venda \d+$/.test(contas), `o que você tem e o que o mercador tem, separados (${contas})`);
+    conferir(/^Na bolsa: \d+ ?Estoque: \d+$/.test(contas), `o que você tem e o que o mercador tem, separados (${contas})`);
     // Enter num cartão compra a quantidade escolhida; o ouro e o "você tem" acompanham.
     const ouro = () => page.evaluate(() => App.estado.heroi.ouro);
     const o0 = await ouro();
     await page.focus('[data-comprar="tocha"]'); await page.keyboard.press("Enter"); await parado(); await page.waitForTimeout(300);
-    conferir((await ouro()) < o0 && /Você tem 4/.test(await page.evaluate(() => document.querySelector('[data-comprar="tocha"] .merc-contas').textContent)),
+    conferir((await ouro()) < o0 && /Na bolsa: 4/.test(await page.evaluate(() => document.querySelector('[data-comprar="tocha"] .merc-contas').textContent)),
       "Enter no cartão compra; o ouro e o que você tem atualizam");
     // Clique duplo num item à venda vende um só (o que cai no lugar dele não vai junto).
     await page.click('.loja-aba[data-aba="vender"]');
