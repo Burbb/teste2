@@ -60,13 +60,14 @@ const Vista = (() => {
     // e a lua em quarto fica limpa no escuro.
     if (["limpo", "neve"].includes(clima) || p === 3) {
       const [sx, sy, raio, cor, baixo] = ASTROS[p], halo = misturar(bandas[bandas.length - 2], cor, 0.45);
+      // A lua em quarto é o disco sem a parte coberta pela sombra (um círculo deslocado): ali não se pinta nada, e o
+      // céu de verdade, já desenhado com as faixas e o pontilhado da hora, fica à vista (antes, a sombra era pintada
+      // com a cor do alto do céu e aparecia como um bloco de outro tom em volta da lua).
+      const sombra = (x, y) => p === 3 && (x - sx - 3) ** 2 + (y - sy + 1) ** 2 <= raio * raio * 0.8;
       for (let y = sy - raio - 6; y <= sy + raio + 6; y++) for (let x = sx - raio - 6; x <= sx + raio + 6; x++) {
         const d = Math.hypot(x - sx, y - sy);
-        if (d <= raio) px(c, x, y, 1, 1, y > sy + raio / 3 && pontilha(x, y, 8) ? baixo : cor);
+        if (d <= raio) { if (!sombra(x, y)) px(c, x, y, 1, 1, y > sy + raio / 3 && pontilha(x, y, 8) ? baixo : cor); }
         else if (p !== 3 && d < raio + 5 && pontilha(x, y, Math.round(9 - (d - raio) * 1.6))) px(c, x, y, 1, 1, halo);
-      }
-      if (p === 3) for (let y = -raio; y <= raio; y++) for (let x = -raio; x <= raio; x++) {  // a lua em quarto
-        if ((x - 3) * (x - 3) + (y + 1) * (y + 1) <= raio * raio * 0.8) px(c, sx + x, sy + y, 1, 1, bandas[0]);
       }
     }
     return bandas;

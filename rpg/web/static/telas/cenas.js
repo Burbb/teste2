@@ -1094,7 +1094,8 @@
     const mesmo = !!antes && ["momento", "ilse", "correntes"].every((k) => antes.d[k] === d[k]);  // o mesmo acontecimento
     if (mesmo && antes.d.agua === "clara") d = Object.assign({}, d, { agua: "clara" });  // o que a tela já mostrou fica
     const b = def.base(QW, d), est = mesmo ? antes.est : { correntes: d.correntes, agua: d.agua, soltando: false, passo: 0, onda: 0,
-      ilse: d.ilse, olhos: d.momento === "descida" ? "fechados" : "abertos", canto: d.momento === "descida" ? false : !!d.ilse && d.ilse !== "ausente" && d.momento === "visita",
+      // `canto`: a música de Ilse; começa quando o fundo aparece na descida (os olhos e o canto na água esperam o texto)
+      ilse: d.ilse, olhos: d.momento === "descida" ? "fechados" : "abertos", canto: ["descida", "visita"].includes(d.momento) && !!d.ilse && d.ilse !== "ausente",
       fita: false, desce: 0, some: 0, turvo: 0, falha: 0, anim: null };
     if (!mesmo && antes && d.cena === "fundo" && ["luta", "destruida"].includes(d.momento)) est.canto = antes.est.canto;
     const troca = antes && !reduzido() ? { de: antes.b.canvas, inicio: performance.now() } : null;

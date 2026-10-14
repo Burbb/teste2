@@ -229,12 +229,19 @@ class TestBauSelosAdiantar(unittest.TestCase):
         self.assertEqual((o["id"], o["ancora"]), ("S+", "selo:j:esquiva"))
         self.assertEqual(o["texto"], "**Esquiva**\n+20% de chance de esquiva · 2 turnos restantes.")
 
-    def test_iniciativa_diz_de_que_e_do_primeiro_golpe(self):
+    def test_iniciativa_diz_o_turno_extra_e_o_bonus_do_jogo(self):
+        """O principal (1.88.1): um turno a mais antes dos inimigos, e o bônus (o do estado, não um número no texto)
+        no primeiro golpe dessa abertura. Sem dizer que é preciso atacar."""
+        from rpg import balanceamento as bal
         g = depois_da_despensa()
         self.luta(g)
-        g.j.efeitos["iniciativa"] = {"t": 1, "v": 0.25}
-        self.assertEqual(ab.atual(g)["texto"], "**Iniciativa**\n+25% de dano no primeiro golpe deste turno.\n"
+        g.j.efeitos["iniciativa"] = {"t": 1, "v": bal.INICIATIVA_BONUS}
+        pct = round(bal.INICIATIVA_BONUS * 100)
+        self.assertEqual(ab.atual(g)["texto"], "**Iniciativa**\nVocê ganha um turno extra antes dos inimigos. Seu "
+                                               f"primeiro golpe nessa abertura causa +{pct}% de dano.\n"
                                                "_O número no ícone indica quantos turnos o efeito ainda dura.")
+        g.combate_ativo.aliados = [object()]  # com comitiva ou animal: a abertura é só do herói
+        self.assertIn("(só você: comitiva e animal agem a partir do turno seguinte)", ab.atual(g)["texto"])
 
     def test_adiantar_depois_da_primeira_luta_e_sem_prometer_pular(self):
         g = nova_sem_a1()
