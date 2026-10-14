@@ -21,26 +21,79 @@ const Som = (() => {
   }
 
   // ---------------------------------------------------------------- o canto de Ilse
-  // Uma canção de ninar sem palavras, quase um murmúrio: poucas notas graves, devagar, num timbre abafado (triângulo
-  // com uma oitava abaixo, filtro baixo e um vibrato lento). Melodia própria, em duas frases que descem e voltam. Um
-  // canal só (o volume mestre vale para ele): pedir de novo só muda o nível; parar desliga e solta o canal.
-  const CANTO = [[220, 1.3], [261.6, 0.9], [246.9, 0.9], [220, 1.8], [0, 0.7], [174.6, 1.1], [196, 0.9], [164.8, 2.2],
-    [0, 0.8], [196, 0.9], [220, 0.9], [207.7, 1.0], [164.8, 2.4], [0, 2.0]];
+  // A música do fundo: abandono e cansaço, não susto. Composição própria; a direção é a das Gnossiennes de Satie
+  // (frases lentas, poucas notas, pausas, acompanhamento espaçado, tensões que demoram a resolver). Lá menor, uns 52
+  // tempos por minuto, quatro frases de oito tempos: a primeira e a segunda param no acorde de mi (o sol sustenido fica
+  // sem resolver), a terceira sobe com um si pendurado sobre lá menor e um murmúrio sem palavras bem baixo junto, e a
+  // quarta enfim desce ao lá; dois tempos de respiro e a volta recomeça no mesmo acorde. Voltas alternadas mudam um
+  // detalhe da melodia e o registro do acompanhamento, para não cansar. Timbre de piano velho e abafado: ataque macio,
+  // poucos harmônicos que se apagam rápido, filtro baixo. O mesmo desenho toca no jogo (um canal só, pelo volume
+  // mestre) e num contexto offline (Som.gravarCanto: para ouvir e medir fora da cena).
+  const BATIDA = 1.15;  // segundos por tempo
+  const NOTA = (n) => { const m = /^([A-G])(#?)(\d)$/.exec(n); const i = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 }[m[1]] + (m[2] ? 1 : 0);
+    return 440 * Math.pow(2, (i + 12 * (Number(m[3]) + 1) - 69) / 12); };
+  const ACORDES = { Am: ["A2", ["C4", "E4"]], Dm: ["D3", ["F3", "A3"]], E: ["E2", ["G#3", "D4"]], F: ["F2", ["A3", "C4"]],
+    Am9: ["A2", ["B3", "E4"]] };
+  // [acordes da frase, melodia: [nota ou null (pausa), tempos]]; a segunda forma vale nas voltas ímpares
+  const FRASES = [
+    [["Am", "Am", "Dm", "E"], [["E5", 1.5], ["F5", 0.5], ["E5", 1], [null, 1], ["D5", 1], ["F5", 1], ["E5", 2]],
+      [["E5", 1.5], ["F5", 0.5], ["E5", 1], ["C5", 0.5], [null, 0.5], ["D5", 1], ["F5", 1], ["E5", 2]]],
+    [["Am", "F", "Dm", "E"], [["C5", 1.5], ["B4", 0.5], ["A4", 1.5], [null, 0.5], ["F5", 1], ["E5", 0.5], ["D5", 0.5], ["G#4", 2]],
+      [["C5", 1.5], ["B4", 0.5], ["A4", 1.5], [null, 0.5], ["F5", 1], ["E5", 0.5], ["D5", 0.5], ["G#4", 1], ["B4", 1]]],
+    [["Dm", "Am9", "Dm", "Am9"], [[null, 1], ["A4", 1], ["C5", 1.5], ["D5", 0.5], ["F5", 1.5], ["E5", 0.5], ["D5", 1], ["B4", 1]], null, "murmurio"],
+    [["Am", "Dm", "E", "Am"], [["E5", 1.5], ["F5", 0.5], ["E5", 0.5], ["D5", 0.5], ["C5", 1], ["B4", 1.5], ["C5", 0.5], ["A4", 2]]],
+  ];
+  const RESPIRO = 2;  // tempos de silêncio (só o último acorde soando) antes de recomeçar
   const NIVEIS_CANTO = { alto: 0.06, baixo: 0.02 };
-  function notaCanto(bus, t, f, dur) {
-    const o = ctx.createOscillator(), sub = ctx.createOscillator(), vib = ctx.createOscillator();
-    o.type = "triangle"; o.frequency.value = f; sub.type = "sine"; sub.frequency.value = f / 2;
-    vib.frequency.value = 4.6; const vg = ctx.createGain(); vg.gain.value = f * 0.012;
-    vib.connect(vg); vg.connect(o.frequency); vg.connect(sub.frequency);
-    const filtro = ctx.createBiquadFilter(); filtro.type = "lowpass"; filtro.frequency.value = 620; filtro.Q.value = 0.8;
-    const gs = ctx.createGain(); gs.gain.value = 0.5;
-    const g = ctx.createGain();
-    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(1, t + 0.3);
-    g.gain.setTargetAtTime(0.0001, t + dur - 0.1, 0.25);
-    o.connect(filtro); sub.connect(gs).connect(filtro); filtro.connect(g).connect(bus);
-    [o, sub, vib].forEach((x) => { x.start(t); x.stop(t + dur + 1.2); });
+  /** Uma nota de piano velho: a fundamental, um pouco de oitava e de quinta acima que se apagam antes, ataque macio. */
+  function teclaCanto(ac, dest, t, f, dur, vol, apaga) {
+    const filtro = ac.createBiquadFilter(); filtro.type = "lowpass"; filtro.frequency.value = Math.min(1700, f * 4); filtro.Q.value = 0.5;
+    const g = ac.createGain();
+    g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(vol, t + 0.035);
+    g.gain.setTargetAtTime(vol * 0.0001 + 0.00001, t + 0.035, apaga);  // o som se apaga sozinho, como corda
+    g.gain.setTargetAtTime(0.00001, t + dur, 0.18);                    // e o abafador no fim da nota
+    filtro.connect(g).connect(dest);
+    [[1, 1, "sine"], [2.001, 0.22, "triangle"], [3, 0.06, "sine"], [1.003, 0.35, "sine"]].forEach(([mult, ganho, tipo]) => {
+      const o = ac.createOscillator(); o.type = tipo; o.frequency.value = f * mult;
+      const go = ac.createGain(); go.gain.value = ganho;
+      if (mult > 1.5) { go.gain.setValueAtTime(ganho, t); go.gain.setTargetAtTime(0.0001, t + 0.05, 0.35); }
+      o.connect(go).connect(filtro); o.start(t); o.stop(t + dur + 1.2);
+    });
   }
-  function fraseCanto(bus, t) { CANTO.forEach(([f, d]) => { if (f) notaCanto(bus, t, f, d); t += d; }); return t; }
+  /** O murmúrio sem palavras, muito baixo, dobrando a melodia uma oitava abaixo (só na terceira frase). */
+  function murmurioCanto(ac, dest, t, f, dur, vol) {
+    const o = ac.createOscillator(), vib = ac.createOscillator(), vg = ac.createGain();
+    o.type = "triangle"; o.frequency.value = f / 2; vib.frequency.value = 4.4; vg.gain.value = f * 0.004;
+    vib.connect(vg).connect(o.frequency);
+    const filtro = ac.createBiquadFilter(); filtro.type = "lowpass"; filtro.frequency.value = 520;
+    const g = ac.createGain();
+    g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(vol, t + 0.35); g.gain.setTargetAtTime(0.00001, t + dur - 0.15, 0.3);
+    o.connect(filtro).connect(g).connect(dest);
+    [o, vib].forEach((x) => { x.start(t); x.stop(t + dur + 1.5); });
+  }
+  /** Uma volta inteira da música a partir de `t` (a `volta`-ésima: as ímpares variam). Devolve quando ela acaba. */
+  function voltaCanto(ac, dest, t, volta) {
+    const impar = volta % 2 === 1;
+    FRASES.forEach(([acordes, melodia, variante, murmurio]) => {
+      acordes.forEach((nome, k) => {  // o baixo no primeiro tempo, o bicorde no segundo, mais baixo
+        const [baixo, par] = ACORDES[nome], t0 = t + k * 2 * BATIDA;
+        teclaCanto(ac, dest, t0, NOTA(baixo) * (impar && nome !== "E" ? 2 : 1), 2 * BATIDA, 0.32, 1.6);
+        par.forEach((n) => teclaCanto(ac, dest, t0 + BATIDA, NOTA(n), BATIDA * 0.95, 0.13, 0.9));
+      });
+      let tm = t;
+      ((impar && variante) || melodia).forEach(([n, tempos]) => {
+        const dur = tempos * BATIDA;
+        if (n) { teclaCanto(ac, dest, tm, NOTA(n), dur * 0.97, 0.5, 1.3); if (murmurio) murmurioCanto(ac, dest, tm, NOTA(n), dur, 0.1); }
+        tm += dur;
+      });
+      t += acordes.length * 2 * BATIDA;
+    });
+    const [baixo, par] = ACORDES.Am;  // o respiro: o lá de baixo e o acorde, de leve, deixando soar
+    teclaCanto(ac, dest, t, NOTA(baixo), RESPIRO * BATIDA, 0.18, 1.8);
+    par.forEach((n) => teclaCanto(ac, dest, t, NOTA(n), RESPIRO * BATIDA, 0.07, 1.4));
+    return t + RESPIRO * BATIDA;
+  }
+  const DURACAO_VOLTA = (FRASES.reduce((s, f) => s + f[0].length * 2, 0) + RESPIRO) * BATIDA;
   function cantar(nivel) {
     if (!ctx) { cantoPendente = nivel; return; }
     const t = ctx.currentTime;
@@ -55,9 +108,30 @@ const Som = (() => {
     if (canto) { if (canto.nivel !== nivel) { canto.nivel = nivel; canto.bus.gain.setTargetAtTime(NIVEIS_CANTO[nivel], t, 0.5); } return; }
     const bus = ctx.createGain(); bus.gain.value = 0.0001; bus.gain.setTargetAtTime(NIVEIS_CANTO[nivel], t, 0.8);
     bus.connect(mestre);
-    canto = { bus, nivel, fim: fraseCanto(bus, t + 0.2) };
-    const c = canto;  // a próxima volta da canção, marcada um pouco antes de a de agora acabar
-    c.relogio = setInterval(() => { if (canto === c && ctx.currentTime > c.fim - 2) c.fim = fraseCanto(c.bus, c.fim); }, 500);
+    canto = { bus, nivel, volta: 0, fim: voltaCanto(ctx, bus, t + 0.2, 0) };
+    const c = canto;  // a próxima volta, marcada um pouco antes de a de agora acabar
+    c.relogio = setInterval(() => { if (canto === c && ctx.currentTime > c.fim - 3) c.fim = voltaCanto(ctx, c.bus, c.fim, ++c.volta); }, 500);
+  }
+  /** A música gravada fora do jogo, no nível de cena (o "alto" e o volume mestre ligado): `voltas` voltas seguidas, para
+   *  ouvir o trecho inteiro e o retorno, e medir. Devolve a promessa de um AudioBuffer. */
+  function gravarCanto(voltas = 2, nivel = "alto", taxa = 44100) {
+    const OAC = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+    const dur = voltas * DURACAO_VOLTA + 2;
+    const ac = new OAC(1, Math.ceil(dur * taxa), taxa);
+    const bus = ac.createGain(); bus.gain.value = NIVEIS_CANTO[nivel] * 0.9; bus.connect(ac.destination);
+    let t = 0.2;
+    for (let v = 0; v < voltas; v++) t = voltaCanto(ac, bus, t, v);
+    return ac.startRendering();
+  }
+  /** Um AudioBuffer em WAV (16 bits, mono), para baixar. */
+  function wavDe(buf) {
+    const d = buf.getChannelData(0), n = d.length, b = new DataView(new ArrayBuffer(44 + n * 2));
+    const tx = (o, s) => [...s].forEach((c, i) => b.setUint8(o + i, c.charCodeAt(0)));
+    tx(0, "RIFF"); b.setUint32(4, 36 + n * 2, true); tx(8, "WAVEfmt "); b.setUint32(16, 16, true); b.setUint16(20, 1, true);
+    b.setUint16(22, 1, true); b.setUint32(24, buf.sampleRate, true); b.setUint32(28, buf.sampleRate * 2, true);
+    b.setUint16(32, 2, true); b.setUint16(34, 16, true); tx(36, "data"); b.setUint32(40, n * 2, true);
+    for (let i = 0; i < n; i++) b.setInt16(44 + i * 2, Math.max(-1, Math.min(1, d[i])) * 32767, true);
+    return new Blob([b], { type: "audio/wav" });
   }
 
   function ruido(segundos, cor = "branco") {
@@ -432,6 +506,7 @@ const Som = (() => {
     /** O canto de Ilse: "alto", "baixo" (na luta) ou null (para). Um só, por mais que se peça. */
     canto: (nivel) => { try { cantar(nivel || null); } catch (e) { /* sem som */ } },
     cantoAgora: () => (canto ? canto.nivel : null),
+    gravarCanto, wavDe, DURACAO_CANTO: DURACAO_VOLTA,
     _pendente: null,
   };
 })();

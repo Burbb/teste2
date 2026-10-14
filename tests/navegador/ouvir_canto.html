@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ouvir o canto de Ilse</title>
+<!-- Para ouvir a música do fundo fora da cena: abra este arquivo no navegador (duplo clique). Usa o mesmo som.js do
+     jogo, com o mesmo nível e o mesmo volume mestre. -->
+<style>
+  body { margin: 0; padding: 24px 16px; background: #120e0b; color: #e8dcc0; font: 17px/1.5 Georgia, serif; }
+  main { max-width: 640px; margin: 0 auto; }
+  h1 { font-weight: 400; color: #f2c94c; margin: 0 0 8px; }
+  p { margin: 6px 0 14px; color: #c0b090; }
+  .botoes { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+  button { font: inherit; color: #e8dcc0; background: #2a1f16; border: 3px solid #5a4632; padding: 6px 14px; cursor: pointer; }
+  button:hover, button:focus-visible { border-color: #f2c94c; outline: none; }
+  #estado { min-height: 1.5em; color: #f2c94c; }
+  a { color: #f2c94c; }
+</style>
+</head>
+<body>
+<main>
+  <h1>O canto de Ilse</h1>
+  <p>A música do fundo alagado, no mesmo nível do jogo. Uma volta dura uns 39 segundos; depois ela recomeça.</p>
+  <div class="botoes">
+    <button id="tocar">Tocar como no jogo (em volta)</button>
+    <button id="luta">Nível da luta</button>
+    <button id="parar">Parar</button>
+  </div>
+  <div class="botoes">
+    <button id="retorno">Ouvir o retorno (o fim de uma volta e o começo da outra)</button>
+    <button id="baixar">Gravar duas voltas (WAV)</button>
+  </div>
+  <p id="estado"></p>
+</main>
+<script src="../../rpg/web/static/som.js"></script>
+<script>
+  const estado = (t) => { document.getElementById("estado").textContent = t; };
+  let trecho = null;
+  const pararTrecho = () => { if (trecho) { try { trecho.stop(); } catch (e) { /* já parou */ } trecho = null; } };
+  document.getElementById("tocar").onclick = () => { pararTrecho(); Som.iniciar(); Som.canto("alto"); estado("Tocando no nível da cena."); };
+  document.getElementById("luta").onclick = () => { pararTrecho(); Som.iniciar(); Som.canto("baixo"); estado("Tocando no nível da luta."); };
+  document.getElementById("parar").onclick = () => { pararTrecho(); Som.canto(null); estado("Parado."); };
+  document.getElementById("retorno").onclick = async () => {
+    Som.canto(null); pararTrecho();
+    estado("Preparando...");
+    const buf = await Som.gravarCanto(2);
+    const ac = new AudioContext(), src = ac.createBufferSource();
+    src.buffer = buf; src.connect(ac.destination);
+    const inicio = Som.DURACAO_CANTO - 12;  // os últimos 12 s da primeira volta e os primeiros da segunda
+    src.start(0, inicio, 26);
+    trecho = src;
+    estado("Tocando o retorno: o fim da volta, o respiro e o recomeço.");
+  };
+  document.getElementById("baixar").onclick = async () => {
+    estado("Gravando...");
+    const buf = await Som.gravarCanto(2);
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(Som.wavDe(buf)); a.download = "canto_ilse_2voltas.wav"; a.click();
+    estado("Pronto: canto_ilse_2voltas.wav (duas voltas, no nível do jogo).");
+  };
+</script>
+</body>
+</html>
