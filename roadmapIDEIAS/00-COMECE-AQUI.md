@@ -1910,3 +1910,23 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
 - **Verificado:** 1500×950, 1280×800 e 1280×720, nas duas versões (nome longo, ferimentos, foco pelo teclado com a dica
   acompanhando a rolagem, sem texto cortado, sem erro no console). **É experimento:** nada migrado, versão do jogo
   igual. **Falta:** a avaliação de Jean.
+
+### 14/10/2026 — HUD 3: molduras, superfícies e controles na composição inteira (experimento, sem versão)
+
+- **Pedido de Jean:** uma terceira versão do protótipo com três folhas de referência (molduras, texturas e controles),
+  aplicada à HUD inteira (topo, ficha, barras e recursos, cena, leitura e ações, mapa, missão e caminhos, doca, dicas e
+  uma janela), para avaliar a linguagem visual na composição, não só na ficha.
+- **Feito:** em `ferramentas/prototipos/hud/`, a versão "HUD 3" ao lado da Anterior e da Assets (mesmos dados, mesma
+  janela). `preparar_hud3.py` recorta as folhas (intactas em `assets3/original/`), limpa o alfa, reduz tudo 4× (a mesma
+  escala para as três folhas), monta as nove partes com o trecho de borda sem rebite, separa moldura e preenchimento das
+  barras e emenda as texturas. O entorno é o jogo fotografado na campanha com missão e contratos, a cena de missão e a
+  janela do anel (`fotografar_composicao3.mjs`, `cenario_hud3.py`); o topo agora é desenhado com o mesmo estado da
+  ficha (os números batem nas três versões). Estados dos controles (normal, mouse, pressionado, selecionado,
+  indisponível, foco) por forma e não só por cor.
+- **Avaliação** (no `LEIA-ME.md` da pasta): melhoraram o peso e a hierarquia das molduras, a coerência entre as
+  colunas, a leitura dos controles e o espaço útil (menos rolagem em todas as medidas). Ficaram desencontrados: o grão
+  das peças (1 px por pixel) contra o da paisagem e dos sprites (2 a 3), o latão dos rebites em toda placa, o retrato e
+  os ícones antigos nos nichos novos, o desenho interno do mapa e os títulos dourados no estilo antigo.
+- **Verificado:** 1500×950, 1280×800 e 1280×720, mouse e teclado, nas duas composições; sem erro no console e sem texto
+  cortado. **É experimento:** nada migrado; motor, saves, telas de produção e versão iguais. **Falta:** a avaliação de
+  Jean.

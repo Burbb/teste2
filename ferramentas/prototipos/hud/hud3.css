@@ -1,0 +1,200 @@
+/* HUD 3 (experimento): a mesma composição do jogo, com as molduras, as superfícies e os controles das três folhas de
+   referência (assets3/exibicao, preparados por preparar_hud3.py). Só vale com body.v3: a composição atual e as duas
+   tentativas anteriores da ficha ficam como eram.
+
+   Escala: tudo foi reduzido 4×, um pixel da arte por pixel da tela. Os cortes das nove partes dizem o tamanho dos
+   cantos (eles nunca esticam); a largura da borda é a da barra de ferro, e o canto avança por cima do conteúdo.
+   Estrutura (ficha, cena, mundo, janela): as molduras grandes, com a barra de 8 px. Secundário (barras, mapa, doca,
+   dicas): as pequenas, de 4 a 6 px. Superfícies: a textura de cada lugar sob um véu escuro, para o material aparecer
+   sem disputar com as letras. Dourado: na seleção, no foco e no que pede atenção. */
+
+body.v3 {
+  --m-grande: url(assets3/exibicao/moldura-alta.png);
+  --m-larga: url(assets3/exibicao/moldura-larga.png);
+  --m-media: url(assets3/exibicao/moldura-media.png);
+  --m-faixa: url(assets3/exibicao/moldura-faixa.png);
+  --m-quadrada: url(assets3/exibicao/moldura-quadrada.png);
+  --m-pequena: url(assets3/exibicao/moldura-pequena.png);
+  --t-painel: url(assets3/exibicao/textura-painel.png);
+  --t-leitura: url(assets3/exibicao/textura-leitura.png);
+  --t-espaco: url(assets3/exibicao/textura-espaco.png);
+  --t-botao: url(assets3/exibicao/textura-botao.png);
+  --veu-painel: linear-gradient(rgba(8, 9, 11, 0.6), rgba(8, 9, 11, 0.74));
+  --veu-leitura: linear-gradient(rgba(12, 9, 6, 0.5), rgba(12, 9, 6, 0.62));
+  --veu-botao: linear-gradient(rgba(12, 13, 15, 0.45), rgba(12, 13, 15, 0.62));
+  --veu-espaco: linear-gradient(rgba(6, 7, 8, 0.35), rgba(6, 7, 8, 0.5));
+  --latao: #c9a14a;
+  --latao-claro: #f2d27a;
+  --ferro-fio: #2b2d31;
+  --sec: #9d978b;
+  /* sem o pontilhado nem a fuligem do fundo antigo: só o escuro, com a vinheta de sempre por cima */
+  background: #0a0a0b;
+}
+
+/* ------------------------------------------------------------ a mesa: corredores mais estreitos, blocos alinhados */
+body.v3 #mesa { gap: 8px; padding: 8px 10px; }
+@media (max-width: 1280px) { body.v3 #mesa { gap: 6px; padding: 6px 8px; } }
+body.v3 #palco { gap: 6px; }
+body.v3 #hud, body.v3 #cena, body.v3 #doca { max-width: none; }
+
+/* ------------------------------------------------------------ painéis de estrutura */
+body.v3 #ficha, body.v3 #mundo {
+  border: 8px solid transparent; border-image: var(--m-grande) 14 / 14px round;
+  background: var(--veu-painel), var(--t-painel) 0 0 / 128px; background-clip: padding-box; }
+body.v3 #mundo { padding: 10px 12px 12px; }
+body.v3 #cena {
+  border: 8px solid transparent; border-image: var(--m-larga) 14 / 14px round;
+  background: #0b0a09; background-clip: padding-box; }
+body.v3 #pagina { background: var(--veu-leitura), var(--t-leitura) 0 0 / 128px; scrollbar-color: #5a5146 transparent; }
+body.v3 #hud {
+  padding: 6px 10px; border: 5px solid transparent; border-image: var(--m-quadrada) 9 / 9px round;
+  background: var(--veu-painel), var(--t-painel) 64px 0 / 128px; background-clip: padding-box; }
+body.v3 #doca {
+  padding: 4px 8px 0; border: 6px solid transparent; border-image: var(--m-faixa) 10 / 10px round;
+  background: var(--veu-painel), var(--t-painel) 32px 64px / 128px; background-clip: padding-box; }
+body.v3 #topo {
+  border: 0 solid transparent; border-bottom-width: 6px; border-image: var(--m-faixa) 10 / 0 0 10px 0 round;  /* só a borda de baixo, sem os cantos */
+  background: var(--veu-painel), var(--t-painel) 0 0 / 128px; }
+
+/* ------------------------------------------------------------ títulos de seção: pequenos e secundários */
+body.v3 #mundo .secao h3, body.v3 #ficha .f-sec {
+  font-family: var(--leitura); font-weight: 700; font-size: 13px; line-height: 1.2; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--sec); text-shadow: none; margin: 0 0 8px; gap: 8px; }
+body.v3 #mundo .secao h3::before { display: none; }
+body.v3 #mundo .secao h3::after, body.v3 #ficha .f-sec::after {
+  content: ""; flex: 1; height: 1px; padding: 0; background: var(--ferro-fio); box-shadow: 0 1px 0 #000; border: 0; }
+body.v3 #mundo .secao { margin-top: 14px; }
+body.v3 .local-nome { font-size: calc(var(--px) * 32); }
+
+/* ------------------------------------------------------------ barras: a moldura da folha, o preenchimento à parte */
+body.v3 .barra-px {
+  height: 13px; background: #0b0a09; box-shadow: none; overflow: hidden;
+  border: 3px solid transparent; border-image: url(assets3/exibicao/barra-moldura.png) 3 6 / 3px 6px round;
+  background-clip: padding-box; }
+body.v3 .barra-px .enchimento { background: var(--enche) 0 0 / auto 100% repeat-x; }
+body.v3 .barra-px.vida { --enche: url(assets3/exibicao/enche-vermelha.png); }
+body.v3 .barra-px.vigor { --enche: url(assets3/exibicao/enche-laranja.png); }
+body.v3 .barra-px.mana { --enche: url(assets3/exibicao/enche-azul.png); }
+body.v3 .barra-px.xp { --enche: url(assets3/exibicao/enche-roxa.png); height: 13px; }
+body.v3 .barra-px .rastro { background: #e8dcc0; }
+body.v3 .vital .barra-px { height: 13px; }
+
+/* topo: o retrato num nicho de couro, o nível numa plaquinha de latão (o destaque de verdade) */
+body.v3 .hud-retrato { border: 3px solid transparent; border-image: url(assets3/exibicao/espaco-ferro.png) 8 / 8px round;
+  background: var(--veu-espaco), var(--t-espaco) 0 0 / 128px; background-clip: padding-box; }
+body.v3 .hud-retrato .nivel { background: var(--latao); }
+body.v3 .recurso { padding: 2px 8px; }
+body.v3 .recurso + .recurso { box-shadow: -1px 0 0 var(--ferro-fio); }
+
+/* ------------------------------------------------------------ a cena e a leitura */
+body.v3 #cena > #vista { box-shadow: 0 2px 0 #000; }
+body.v3 .ornamento { width: 190px; height: 8px; margin: 10px auto 0; background: url(assets3/exibicao/trilho-latao.png) 50% 50% / 190px 8px no-repeat; }
+body.v3 .ornamento > * { display: none; }
+body.v3 #texto p { color: #ece2cc; }
+/* a página com menos ar morto em volta: as ações cabem sem rolar a 1500×950 */
+body.v3 #folha { padding: 16px 28px 18px; }
+body.v3 #cena-cab { margin-bottom: 12px; }
+body.v3 .pergunta-rotulo { color: var(--sec); letter-spacing: 0.14em; }
+body.v3 .escolhas { gap: 6px; }
+body.v3 .op-grupo { font-family: var(--leitura); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #7d776c; margin: 6px 0 0 2px; }
+body.v3 .op-grupo:empty { display: none; }
+
+/* ------------------------------------------------------------ controles: placas de ferro sobre a textura dos botões */
+body.v3 .escolha, body.v3 .caminho, body.v3 .botao-janela {
+  border: 3px solid transparent; border-image: url(assets3/exibicao/placa-ferro.png) 8 / 8px round;
+  background: var(--veu-botao), var(--t-botao) 0 0 / 128px; background-clip: padding-box; box-shadow: none; }
+body.v3 .escolha { padding: 5px 12px 5px 7px; gap: 12px; }
+body.v3 .caminho { padding: 5px 10px 5px 6px; }
+/* mouse por cima: a placa clareia (o estado comum, sem ouro) */
+body.v3 :is(.escolha, .caminho.clicavel, .botao-janela):hover, body.v3 :is(.escolha, .caminho, .botao-janela).demo-hover {
+  background: linear-gradient(rgba(40, 42, 46, 0.35), rgba(30, 32, 36, 0.5)), var(--t-botao) 0 0 / 128px; background-clip: padding-box; color: #fff7e6; }
+/* pressionado: a placa funda e o conteúdo desce 1 px (forma, não só cor) */
+body.v3 :is(.escolha, .caminho, .botao-janela):active, body.v3 :is(.escolha, .caminho, .botao-janela).demo-pressionado {
+  border-image-source: url(assets3/exibicao/placa-funda.png); transform: translateY(1px);
+  background: linear-gradient(rgba(4, 4, 5, 0.6), rgba(4, 4, 5, 0.7)), var(--t-botao) 0 0 / 128px; background-clip: padding-box; }
+/* selecionado: a placa de latão e a marca ◆ antes do texto */
+body.v3 :is(.escolha, .botao-janela)[aria-pressed="true"] { border-image-source: url(assets3/exibicao/placa-latao.png); color: #fff1cc; }
+body.v3 .escolha[aria-pressed="true"] .rotulo::before { content: "◆ "; color: var(--latao-claro); }
+/* indisponível: a placa gasta, o texto apagado e o cadeado (não depende só da cor) */
+body.v3 :is(.escolha, .botao-janela)[aria-disabled="true"] { border-image-source: url(assets3/exibicao/placa-gasta.png);
+  color: #8c877e; filter: saturate(0.4); cursor: not-allowed; }
+body.v3 #prompt .escolha[aria-disabled="true"] .rotulo::after { content: " · indisponível"; font-size: 15px; color: #8c877e; }
+body.v3 .escolha[aria-disabled="true"] .tecla { position: relative; }
+body.v3 .escolha[aria-disabled="true"] .tecla::after { content: ""; position: absolute; right: -10px; top: -10px; width: 16px; height: 16px;
+  background: var(--cadeado) 0 0 / 100%; image-rendering: pixelated; }  /* o cadeado do jogo (o mesmo do mercado) */
+/* foco do teclado: um anel claro por fora, que não some no escuro nem se confunde com o hover */
+body.v3 :is(.escolha, .caminho, .botao-janela, .atalho, .f-foco):focus-visible, body.v3 :is(.escolha, .caminho, .atalho).demo-foco {
+  outline: 2px solid var(--latao-claro); outline-offset: 2px; }
+body.v3 .escolha .tecla {
+  width: 28px; height: 28px; border: 3px solid transparent; border-image: url(assets3/exibicao/espaco-ferro.png) 8 / 8px round;
+  background: var(--veu-espaco), var(--t-espaco) 0 0 / 128px; background-clip: padding-box; color: #e8dcc0; }
+body.v3 .escolha:is(:hover, :focus-visible, .demo-hover, .demo-foco) .tecla { border-image-source: url(assets3/exibicao/espaco-cantos.png); border-image-slice: 10; border-image-width: 10px; color: var(--latao-claro); }
+
+/* a doca: abas de ferro; a aberta (a tela atual, ou o selecionado) é a de latão, com o fio embaixo */
+body.v3 #doca .atalhos { gap: 4px; margin: 0 auto; }
+/* a aba tem 18 px de ombro de cada lado (o canto da folha): a doca alarga cada uma para o nome caber inteiro */
+body.v3 #doca .atalho { width: 88px; min-width: 0; }
+@media (max-width: 1280px) { body.v3 #doca .atalho { width: 80px; } body.v3 #doca .atalho-nome { font-size: 14px; } }
+body.v3 #doca .atalho, body.v3 .aba-demo {
+  border: 0 solid transparent; border-width: 6px 6px 3px; border-image: url(assets3/exibicao/aba-ferro-2.png) 15 18 6 / 15px 18px 6px round;
+  background: var(--veu-botao), var(--t-botao) 0 0 / 128px; background-clip: padding-box; padding: 4px 4px 5px; }
+body.v3 #doca .atalho + .atalho { background: var(--veu-botao), var(--t-botao) 0 0 / 128px; background-clip: padding-box; }
+body.v3 #doca .atalho:hover, body.v3 :is(#doca .atalho, .aba-demo).demo-hover { border-image-source: url(assets3/exibicao/aba-ferro.png); transform: none; color: #fff7e6; }
+body.v3 #doca .atalho.atual, body.v3 .aba-demo[aria-selected="true"] { border-image-source: url(assets3/exibicao/aba-latao.png); color: var(--latao-claro); }
+body.v3 #doca .atalho.atual::after, body.v3 .aba-demo[aria-selected="true"]::after { left: 30%; right: 30%; bottom: 1px; height: 2px; background: var(--latao-claro); }
+
+/* ------------------------------------------------------------ o painel do mundo */
+body.v3 #mapa-mini .mapa-px { border: 5px solid transparent; border-image: var(--m-quadrada) 9 / 9px round; }
+body.v3 .rastro-contrato { background: rgba(255, 255, 255, 0.02); box-shadow: inset 2px 0 0 #4a4c52; padding: 6px 8px; animation: none; }
+body.v3 .rastro-missao { box-shadow: inset 2px 0 0 var(--latao); }
+body.v3 .rastro-contrato.cacavel:hover { background: rgba(255, 255, 255, 0.05); }
+body.v3 .rastro-cacar { color: var(--latao-claro); }
+body.v3 .rastro-arte { background: none; border: 3px solid transparent; border-image: url(assets3/exibicao/espaco-ferro.png) 8 / 8px round;
+  background: var(--veu-espaco), var(--t-espaco) 0 0 / 128px; background-clip: padding-box; }
+
+/* ------------------------------------------------------------ a ficha (a mesma ficha, na linguagem da HUD 3) */
+body.v3 #ficha .f-identidade { border-bottom: 1px solid var(--ferro-fio); box-shadow: 0 1px 0 #000; }
+body.v3 #ficha .f-retrato { border: 3px solid transparent; border-image: url(assets3/exibicao/espaco-ferro.png) 8 / 8px round;
+  background: var(--veu-espaco), var(--t-espaco) 0 0 / 128px; background-clip: padding-box; }
+body.v3 #ficha .f-barra { height: 13px; background: #0b0a09; box-shadow: none; border: 3px solid transparent;
+  border-image: url(assets3/exibicao/barra-moldura.png) 3 6 / 3px 6px round; background-clip: padding-box; }
+body.v3 #ficha .f-barra i { background: url(assets3/exibicao/enche-roxa.png) 0 0 / auto 100% repeat-x; }
+body.v3 #ficha .f-talento { border: 3px solid transparent; border-image: url(assets3/exibicao/placa-latao.png) 8 / 8px round;
+  background: var(--veu-botao), var(--t-botao) 0 0 / 128px; background-clip: padding-box; color: var(--latao-claro); }
+body.v3 #ficha .f-corpo { background: none; }
+body.v3 #ficha .f-attr { background: rgba(255, 255, 255, 0.025); box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.5); }
+body.v3 #ficha .f-attr:hover, body.v3 #ficha .f-linha:hover, body.v3 #ficha .f-rep:hover { background: rgba(255, 255, 255, 0.05); }
+/* os espaços: o nicho de ferro sobre o couro; mouse ou foco mostram as cantoneiras (forma); o inútil, o canto vermelho */
+body.v3 #ficha .f-slot { width: 40px; height: 40px; border: 3px solid transparent; border-image: url(assets3/exibicao/espaco-ferro.png) 8 / 8px round;
+  background: var(--veu-espaco), var(--t-espaco) 0 0 / 128px; background-clip: padding-box; }
+body.v3 #ficha .f-espacos, body.v3 #ficha .f-bolsa { grid-template-columns: repeat(5, 40px); }
+body.v3 #ficha .f-slot img { width: 32px; height: 32px; }
+body.v3 #ficha .f-slot:is(:hover, :focus-visible) { border-image: url(assets3/exibicao/espaco-cantos.png) 10 / 10px round; }
+body.v3 #ficha .f-slot:is(:hover, :focus-visible)::before { display: none; }
+body.v3 #ficha .f-slot.inutil { border-image: url(assets3/exibicao/espaco-indisponivel.png) 11 / 11px round; }
+body.v3 #ficha .f-slot[data-r]::after { inset: 1px; box-shadow: inset 0 0 0 1px var(--cor-r); }
+body.v3 #ficha .f-slot[data-r="raro"] { --cor-r: var(--latao); }
+body.v3 #ficha .f-linha .tag { background: #0b0a09; }
+
+/* ------------------------------------------------------------ dicas e a janela */
+.f-dica.v3 { border: 4px solid transparent; border-image: url(assets3/exibicao/moldura-pequena.png) 7 / 7px round;
+  background: linear-gradient(rgba(8, 9, 11, 0.8), rgba(8, 9, 11, 0.86)), url(assets3/exibicao/textura-painel.png) 0 0 / 128px;
+  background-clip: padding-box; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6); }
+.f-dica.v3 .rodape { border-top: 1px solid var(--ferro-fio, #2b2d31); }
+body.v3 #sobre-achado .janela-achado {
+  border: 8px solid transparent; border-image: var(--m-media) 14 / 14px round;
+  background: var(--veu-painel), var(--t-painel) 0 0 / 128px; background-clip: padding-box; box-shadow: 0 16px 48px rgba(0, 0, 0, 0.8); }
+body.v3 #sobre-achado .achado-cartao { border: 4px solid transparent; border-image: var(--m-pequena) 7 / 7px round;
+  background: rgba(0, 0, 0, 0.35); background-clip: padding-box; box-shadow: none; }
+body.v3 #sobre-achado .achado-cartao.novo { border-image-source: url(assets3/exibicao/moldura-quadrada.png); border-image-slice: 9; border-image-width: 9px; border-width: 5px; }
+body.v3 #sobre-achado .botao-janela { padding: 6px 12px; }
+body.v3 #sobre-achado .botao-janela kbd { border: 2px solid transparent; border-image: url(assets3/exibicao/espaco-ferro.png) 8 / 6px round; background: #0b0a09; background-clip: padding-box; }
+
+/* ------------------------------------------------------------ a faixa de estados (demonstração) */
+#estados-demo { margin: 0 0 14px; padding: 8px 10px 10px; background: rgba(0, 0, 0, 0.35); }
+#estados-demo h4 { margin: 0 0 6px; font-family: var(--leitura); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #8a847a; font-weight: 700; }
+#estados-demo .linha { display: flex; flex-wrap: wrap; gap: 6px; align-items: flex-end; margin-top: 6px; }
+#estados-demo .escolha { width: auto; opacity: 1; animation: none; font-size: 16px; padding-right: 12px; }
+#estados-demo .aba-demo { position: relative; display: inline-flex; align-items: center; min-width: 74px; justify-content: center; font-family: var(--texto); font-size: 15px; color: var(--tinta); cursor: pointer; }
+#estados-demo .aba-demo::after { content: none; position: absolute; }
+body.v3 #estados-demo .aba-demo[aria-selected="true"]::after { content: ""; }

@@ -22,6 +22,7 @@
 <link rel="stylesheet" href="../../../rpg/web/static/css/13-realce.css">
 <link rel="stylesheet" href="ficha.css">
 <link rel="stylesheet" href="ficha-assets.css">
+<link rel="stylesheet" href="hud3.css">
 <script src="../../../rpg/web/static/sprites-dados.js"></script>
 <script src="../../../rpg/web/static/sprites.js"></script>
 <script>Sprites.publicar();</script>
@@ -41,7 +42,17 @@
 <section id="demo" aria-label="Controles de demonstração">
   <h2>Demonstração <span>D esconde</span></h2>
   <fieldset data-chave="versao"><legend>Versão</legend><div class="op">
-    <button type="button" data-v="anterior">Anterior</button><button type="button" data-v="assets">Assets</button></div></fieldset>
+    <button type="button" data-v="anterior">Anterior</button><button type="button" data-v="assets">Assets</button><button type="button" data-v="hud3">HUD 3</button></div></fieldset>
+  <fieldset data-chave="entorno"><legend>Entorno</legend><div class="op">
+    <button type="button" data-v="bosque">Bosque (missão)</button><button type="button" data-v="brejo">Brejo</button></div></fieldset>
+  <fieldset data-chave="pagina"><legend>Página</legend><div class="op">
+    <button type="button" data-v="lugar">o lugar</button><button type="button" data-v="missao">cena de missão</button></div></fieldset>
+  <fieldset data-chave="rastreios"><legend>Missões</legend><div class="op">
+    <button type="button" data-v="uma">só a missão</button><button type="button" data-v="varias">missão e contratos</button></div></fieldset>
+  <fieldset data-chave="modal"><legend>Janela</legend><div class="op">
+    <button type="button" data-v="nao">fechada</button><button type="button" data-v="sim">comparar anel</button></div></fieldset>
+  <fieldset data-chave="estados"><legend>Estados</legend><div class="op">
+    <button type="button" data-v="nao">escondidos</button><button type="button" data-v="sim">à vista</button></div></fieldset>
   <fieldset data-chave="nome"><legend>Nome</legend><div class="op">
     <button type="button" data-v="Jean">Jean</button><button type="button" data-v="PARAIBATRON">PARAIBATRON</button>
     <button type="button" data-v="Aldebarã de Montemor">Aldebarã de Montemor</button></div></fieldset>
@@ -57,39 +68,88 @@
     <button type="button" data-v="0">sem</button><button type="button" data-v="1">com</button></div></fieldset>
   <fieldset data-chave="icones"><legend>Ícones</legend><div class="op">
     <button type="button" data-v="novos">novos</button><button type="button" data-v="atuais">atuais</button></div></fieldset>
-  <p>Os números, nomes, dicas e espaços vêm do motor (dados.js). O nome é livre, como no jogo. <b>V</b> alterna Anterior e Assets.</p>
+  <p>Os números, nomes, dicas e espaços vêm do motor (dados.js). O nome é livre, como no jogo. <b>V</b> passa de uma versão à outra; <b>Esc</b> fecha a janela.</p>
 </section>
 <button type="button" id="mostrar-demo" hidden>Demonstração (D)</button>
 
 <script src="../../../rpg/web/static/vista.js"></script>
 <script src="dados.js"></script>
 <script src="composicao.js"></script>
+<script src="composicao3.js"></script>
+<script src="topo.js"></script>
 <script src="arte.js"></script>
 <script src="ficha.js"></script>
 <script>
 "use strict";
-// O entorno: o topo, a cena e o mundo fotografados do jogo (composicao.js), e a paisagem desenhada de verdade.
-const C = window.COMPOSICAO;
-document.body.className = C.corpo.classe;
-document.body.dataset.bioma = C.corpo.bioma;
-document.body.dataset.periodo = C.corpo.periodo;
-document.getElementById("topo").innerHTML = C.topo;
-document.getElementById("palco").innerHTML = C.palco;
-document.getElementById("mundo").innerHTML = C.mundo;
-document.querySelectorAll("#palco button, #palco [tabindex], #mundo button, #mundo [tabindex], #topo button").forEach((b) => b.setAttribute("tabindex", "-1"));
-Vista.atualizar({ local: C.vista.local, mundo: C.vista.mundo });
+// O entorno: o topo, a cena e o mundo fotografados do jogo, e a paisagem desenhada de verdade. "Bosque" é a campanha
+// com a missão e os contratos (composicao3.js); "Brejo", a fotografia das duas primeiras tentativas (composicao.js).
+const ENTORNOS = { bosque: { ...COMPOSICAO3.local, evento: COMPOSICAO3.evento }, brejo: COMPOSICAO };
+let entornoAtual = null;
+function montarEntorno(nome) {
+  const C = ENTORNOS[nome] || ENTORNOS.bosque;
+  document.body.dataset.bioma = C.corpo.bioma;
+  document.body.dataset.periodo = C.corpo.periodo;
+  document.getElementById("topo").innerHTML = C.topo;
+  document.getElementById("palco").innerHTML = C.palco;
+  document.getElementById("mundo").innerHTML = C.mundo;
+  // Os controles do entorno recebem foco pelo teclado (para conferir o anel de foco); os outros, não. Nada responde
+  // ao clique: o protótipo não fala com o motor.
+  document.querySelectorAll("#palco button, #palco [tabindex], #mundo button, #mundo [tabindex], #topo button").forEach((b) => b.setAttribute("tabindex", "-1"));
+  document.querySelectorAll("#prompt .escolha, #doca .atalho, #mundo .caminho, #mundo .rastro-contrato").forEach((b) => b.setAttribute("tabindex", "0"));
+  document.querySelectorAll("#palco .escolha").forEach((b) => { b.style.opacity = "1"; b.style.animation = "none"; });
+  Vista.atualizar({ local: C.vista.local, mundo: C.vista.mundo });
+  entornoAtual = nome;
+}
+const folhaDoLugar = {};
+function ajustarEntorno() {
+  const C = ENTORNOS[escolha.entorno] || ENTORNOS.bosque;
+  if (entornoAtual !== escolha.entorno) { montarEntorno(escolha.entorno); folhaDoLugar.html = document.getElementById("folha").innerHTML; }
+  // A página: o lugar (o menu) ou a cena de missão logo depois dele (texto longo, para a rolagem).
+  const folha = document.getElementById("folha");
+  folha.innerHTML = escolha.pagina === "missao" && C.evento ? C.evento.folha : folhaDoLugar.html;
+  folha.querySelectorAll(".escolha, button.continuar").forEach((b) => { b.style.opacity = "1"; b.style.animation = "none"; b.setAttribute("tabindex", "0"); });
+  // Missões: só a missão, ou a missão e os dois contratos (o painel do mundo como o jogo desenha cada caso).
+  document.querySelectorAll("#mundo .secao.rastreador").forEach((sec, i) => { sec.hidden = escolha.rastreios === "uma" && i > 0; });
+  // A faixa de estados dos controles (demonstração, fora do jogo): no alto da página.
+  document.getElementById("estados-demo")?.remove();
+  if (escolha.estados === "sim") folha.insertAdjacentHTML("afterbegin", ESTADOS_DEMO);
+  // A janela: a comparação do anel achado, por cima de tudo (a fotografia do cenário "aneis").
+  document.getElementById("sobre-achado")?.remove();
+  if (escolha.modal === "sim") {
+    document.body.insertAdjacentHTML("beforeend", COMPOSICAO3.modal);
+    document.querySelectorAll("#sobre-achado button").forEach((b) => b.setAttribute("tabindex", "0"));
+  }
+}
+const ESTADOS_DEMO = `<section id="estados-demo" aria-label="Estados dos controles (demonstração)">
+  <h4>Estados dos controles · demonstração</h4>
+  <div class="linha">
+    <button type="button" class="escolha"><span class="tecla">1</span><span class="rotulo">Normal</span></button>
+    <button type="button" class="escolha demo-hover"><span class="tecla">2</span><span class="rotulo">Mouse por cima</span></button>
+    <button type="button" class="escolha demo-pressionado"><span class="tecla">3</span><span class="rotulo">Pressionado</span></button>
+    <button type="button" class="escolha" aria-pressed="true"><span class="tecla">4</span><span class="rotulo">Selecionado</span></button>
+    <button type="button" class="escolha" aria-disabled="true"><span class="tecla">5</span><span class="rotulo">Indisponível</span></button>
+    <button type="button" class="escolha demo-foco"><span class="tecla">6</span><span class="rotulo">Foco do teclado</span></button>
+  </div>
+  <div class="linha">
+    <span class="aba-demo">Normal</span><span class="aba-demo demo-hover">Mouse</span><span class="aba-demo" aria-selected="true">Aberta</span>
+  </div>
+</section>`;
 
 // Os assets da ficha vão para o CSS como variáveis (como o jogo faz com os materiais dele).
 document.documentElement.style.setProperty("--f-moldura", `url(${Arte.moldura()})`);
 document.documentElement.style.setProperty("--f-espaco", `url(${Arte.espaco()})`);
 
-const escolha = { versao: "assets", nome: "Jean", nivel: "6", equip: "completo", bolsa: "comum", feridas: "0", fome: "0", icones: "novos" };
+const escolha = { versao: "hud3", entorno: "bosque", pagina: "lugar", rastreios: "varias", modal: "nao", estados: "nao", nome: "Jean", nivel: "6", equip: "completo", bolsa: "comum", feridas: "0", fome: "0", icones: "novos" };
 try { Object.assign(escolha, JSON.parse(localStorage.getItem("prototipo-ficha") || "{}")); } catch (e) { /* sem armazenamento */ }
 const ficha = document.getElementById("ficha");
 function redesenhar() {
   const h = FICHAS[[escolha.nivel, escolha.equip, escolha.feridas, escolha.fome, escolha.bolsa].join("|")];
   Ficha.iconesNovos = escolha.icones === "novos";
   Ficha.versao = escolha.versao;
+  document.body.className = (ENTORNOS[escolha.entorno] || ENTORNOS.bosque).corpo.classe;
+  document.body.classList.toggle("v3", escolha.versao === "hud3");
+  ajustarEntorno();
+  Topo.desenhar(document.getElementById("hud-linha"), h);  // o topo e a ficha: o mesmo estado
   Ficha.fecharDica();
   Ficha.desenhar(ficha, h, escolha.nome);
   document.querySelectorAll("#demo fieldset").forEach((f) => f.querySelectorAll("button").forEach((b) =>
@@ -106,10 +166,12 @@ mostrar.addEventListener("click", alternarDemo);
 document.addEventListener("keydown", (ev) => {
   if (ev.ctrlKey || ev.metaKey || ev.altKey) return;
   if (ev.key === "d" || ev.key === "D") alternarDemo();
-  if (ev.key === "v" || ev.key === "V") { escolha.versao = escolha.versao === "assets" ? "anterior" : "assets"; redesenhar(); }  // a mesma janela, a outra versão
+  if (ev.key === "v" || ev.key === "V") { const vs = ["anterior", "assets", "hud3"]; escolha.versao = vs[(vs.indexOf(escolha.versao) + 1) % vs.length]; redesenhar(); }  // a mesma janela, a próxima versão
+  if (ev.key === "Escape" && escolha.modal === "sim") { escolha.modal = "nao"; redesenhar(); }
 });
 Ficha.ligarDicas(ficha);
-addEventListener("resize", redesenhar);
+Ficha.ligarDicas(document.getElementById("palco"));
+addEventListener("resize", () => Ficha.desenhar(ficha, FICHAS[[escolha.nivel, escolha.equip, escolha.feridas, escolha.fome, escolha.bolsa].join("|")], escolha.nome));
 document.fonts.ready.then(redesenhar);
 redesenhar();
 </script>

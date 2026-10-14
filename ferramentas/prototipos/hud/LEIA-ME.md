@@ -1,7 +1,9 @@
 # Protótipo: a ficha do herói (experimento)
 
-Duas tentativas na mesma página, com os mesmos dados e a mesma janela: **Anterior** (assets desenhados em código) e
-**Assets** (peças recortadas de uma imagem de referência). O controle "Versão" (ou a tecla **V**) alterna as duas.
+Três versões na mesma página, com os mesmos dados e a mesma janela: **Anterior** (a HUD atual do jogo, com a ficha
+desenhada em código), **Assets** (a ficha com peças recortadas de uma imagem de referência) e **HUD 3** (a HUD inteira
+com as molduras, as superfícies e os controles de três folhas de referência). O controle "Versão" (ou a tecla **V**)
+passa de uma à outra.
 
 **Experimento, não aprovado nem migrado.** Nada desta pasta é carregado pelo jogo; o motor, os saves, as regras e as
 telas de produção não mudaram, nem a versão do jogo. O teste é só a ficha do herói (o painel da esquerda); o topo, a
@@ -17,7 +19,10 @@ cena e o painel do mundo em volta são o jogo de hoje, para julgar a ficha na co
 Na página:
 
 - O quadro claro no canto de baixo à direita são os **controles de demonstração** (fora da interface do jogador):
-  a versão (Anterior ou Assets; **V** alterna), nome curto e longo (com PARAIBATRON), nível 1, 6 e 14, equipamento completo, parcial ou vazio, bolsa comum, cheia
+  a versão (Anterior, Assets ou HUD 3; **V** passa de uma à outra), o entorno (o Bosque da campanha, com a missão e os
+  contratos, ou o Brejo das duas primeiras tentativas), a página (o lugar ou a cena de missão, com texto longo), as
+  missões (só a missão, ou a missão e os contratos), a janela de comparação do anel (**Esc** fecha), a faixa de
+  estados dos controles, nome curto e longo (com PARAIBATRON), nível 1, 6 e 14, equipamento completo, parcial ou vazio, bolsa comum, cheia
   ou vazia, com ou sem ferimentos, com ou sem fome, e os ícones novos ou os atuais (para comparar). **D** esconde e
   mostra o quadro. A escolha fica guardada no navegador.
 - Mouse sobre um atributo, espaço, ferimento, item da bolsa ou a reputação mostra a dica, sempre à direita do painel
@@ -125,3 +130,87 @@ Capturas comparáveis em `capturas/` (o mesmo estado nas duas versões: `-anteri
   mistura com o resto do catálogo tira parte do ganho. Na moldura, nenhuma: é outra moldura, não uma melhor. Para essa
   direção funcionar no jogo, o catálogo de itens e as molduras dos outros painéis teriam de vir no mesmo estilo e na
   mesma escala; só trocar estas peças deixa a ficha desencontrada do resto.
+
+## Terceira versão: a HUD inteira com as folhas de molduras, texturas e controles ("HUD 3")
+
+Aqui o teste deixa de ser só a ficha: o topo, a ficha, as barras e recursos, a moldura da cena, a área de leitura e das
+ações, o painel do mapa, da missão e dos caminhos, a doca, as dicas e uma janela de comparação de equipamento usam a
+mesma família visual. O retrato e os ícones são os da primeira tentativa (desenhados pelo sistema) e os do jogo; o
+rosto gerado da segunda não entra. As paisagens são as do jogo.
+
+**De onde vem o entorno.** `fotografar_composicao3.mjs` sobe o jogo em `cenario_hud3.py` (a campanha no Bosque do
+Moinho, com a missão da febre e dois contratos de caça) e guarda o DOM do lugar, a página da cena de missão logo depois
+(o texto longo) e a janela do anel achado do cenário de teste "aneis" (`composicao3.js`). O topo é redesenhado com o
+mesmo estado da ficha (`topo.js`): **a barra de cima e a ficha agora mostram os mesmos números** (antes o topo era a
+fotografia fixa do herói de nível 1). Isso vale para as três versões.
+
+**Preparação** (`preparar_hud3.py`, com Pillow e numpy; as folhas ficam intactas em `assets3/original/`):
+
+- cada componente recortado em `assets3/pecas/` (6 molduras, 27 controles, 4 texturas), com o fundo transparente: as
+  folhas tinham uns 17 mil pixels de pontinhos soltos e franja, que saíram (alfa só 0 e 255);
+- **escala comum**: as texturas têm o "pixel" de uns 4 pixels da folha, e as molduras e os controles são da mesma mão;
+  tudo foi reduzido 4×, com os cortes das nove partes em múltiplos de 4. As molduras grandes ficam com a barra de 8 px
+  na tela (a estrutura), as pequenas com 4 a 6 px (o secundário);
+- **nove partes** para molduras, placas, abas e espaços: os cantos de verdade nunca esticam, e o trecho repetido de
+  cada borda é escolhido automaticamente onde não há rebite (com um rebite no trecho, a repetição virava uma fileira
+  de pontinhos);
+- **barras**: a moldura é a da barra vermelha com o preenchimento apagado (`barra-moldura.png`), e os quatro
+  preenchimentos são tiras separadas (`enche-*.png`); o código põe o valor pela largura do preenchimento, sem esticar
+  canto nem desenhar número na imagem;
+- **texturas**: o miolo de cada quadrado, emendado nas bordas (misturado com ele mesmo deslocado meia volta) e reduzido
+  a um ladrilho de 128 px. A folha `assets3/teste/` mostra cada textura repetida antes e depois: a emenda sumiu; fica
+  um padrão leve a cada 128 px, coberto pelo véu escuro.
+
+**Onde cada peça foi.** Estrutura (ficha, mundo, cena, janela): as molduras grandes. Topo, barras, mapa, doca e dicas:
+as pequenas. Superfícies: a textura superior esquerda nos painéis, a de couro marrom na leitura, a de couro preto
+dentro dos espaços de item e das teclas, a de ardósia nos botões, abas e doca, sempre sob um véu escuro. As opções e os
+caminhos são placas de ferro; a doca é de abas; os números das opções ficam em nichos.
+
+**Estados** (a faixa "Estados à vista" mostra todos juntos; ao vivo, mouse e teclado fazem o mesmo nas opções, nos
+caminhos, na doca e na ficha): normal (placa de ferro); mouse por cima (a placa clareia e o nicho do número ganha as
+cantoneiras); pressionado (placa funda e o conteúdo desce 1 px); selecionado (placa de latão e a marca ◆; na aba, o
+fio embaixo); indisponível (placa gasta, texto apagado e o cadeado do jogo); foco do teclado (um anel claro por fora).
+Nenhum estado importante depende só da cor.
+
+**Composição.** Corredores entre as colunas de 14 para 8 px (6 em 1280), blocos alinhados pelo mesmo quadro, títulos
+de seção pequenos em versal, menos ar morto em volta da página. Resultado medido (mesmo estado, mesma janela):
+
+| | Anterior | HUD 3 |
+|---|---|---|
+| Altura da página de leitura, 1500×950 | 446 px | 473 px |
+| Altura da página de leitura, 1280×720 | 244 px | 276 px |
+| Rolagem da página no lugar, 1500×950 | 55 px | 10 px |
+| Rolagem do painel do mundo, 1280×720 | 385 px | 253 px |
+| Rolagem da ficha, 1280×720 (PARAIBATRON, nível 14) | 157 px | 138 px |
+
+Capturas comparáveis em `capturas3/` (cada estado em `-anterior` e `-hud3`, e lado a lado em `comparacao-*.png`): o
+lugar, a dica da ficha e a do topo, a janela, os estados, a cena de missão e o foco pelo teclado a 1280×720, o nome
+longo a 1280×800. Sem erro no console e sem texto cortado em nenhuma.
+
+### Avaliação da HUD 3
+
+- **Espessura e peso das molduras: melhorou.** A estrutura ganhou um quadro de ferro com cantos de latão que separa as
+  três colunas sem pesar (8 px de barra); as molduras pequenas no topo, na doca e nas dicas ficam abaixo dela, e a
+  hierarquia se lê. Os cantos ficaram pequenos (14 px): reconhecíveis, mas sem o detalhe da folha.
+- **Nitidez no tamanho real: boa, numa escala própria.** Reduzidas 4×, as peças ficam com um pixel da arte por pixel da
+  tela: nítidas, mas mais finas que a paisagem, os sprites e o retrato, que andam de 2 a 3 px por pixel. A interface
+  parece de um grão e o conteúdo de outro.
+- **Textura atrás do texto: no limite certo.** Sob o véu, a pedra dos painéis e o couro da leitura aparecem como
+  material, sem manchas atrás das letras; o couro dentro dos espaços quase não se percebe nesse tamanho.
+- **Coerência entre as três colunas: melhorou.** O mesmo quadro, a mesma superfície e os mesmos títulos nas três;
+  antes, cada coluna tinha títulos grandes e dourados próprios.
+- **Espaço útil e rolagem: melhorou** (tabela acima): a página e o painel do mundo rolam menos.
+- **Leitura dos controles: melhorou.** As opções viraram botões de verdade (placa, número em nicho), e os estados se
+  distinguem pela forma, não só pela cor.
+- **Combinação com os cenários: boa no tom, desencontrada no grão.** O ferro escuro e o latão velho combinam com as
+  paisagens ao entardecer; o desencontro é a escala do pixel, acima.
+- **O que ficou desencontrado:**
+  - *Dourado demais nos rebites*: cada placa, aba e espaço traz quatro rebites de latão; somados, o latão aparece em
+    toda parte, não só na seleção e no foco. Um conjunto de placas sem rebites (ou com rebite de ferro) resolveria.
+  - *O retrato e os ícones antigos* estão em 2 px por pixel dentro de nichos de 1 px por pixel: o nicho parece mais
+    fino que o que ele guarda.
+  - *O mapa pequeno* ganhou a moldura nova, mas o desenho dele (marcas, rótulos) é o de antes.
+  - *A doca* precisa de abas largas (88 px; 80 em 1280) por causa do ombro de 18 px de cada lado da aba: cabe, mas
+    com pouca folga se a doca ganhar atalhos.
+  - *Os textos dourados de título* (o nome do lugar, o da cena) continuam no estilo antigo, ao lado de títulos de
+    seção já discretos.

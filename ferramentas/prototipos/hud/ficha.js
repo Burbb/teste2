@@ -21,7 +21,7 @@ const Ficha = (() => {
    *  `lado`: o tamanho em que aparece (a versão Assets tem um arquivo por tamanho; a Anterior escala o pixel). */
   const icone = (nome, lado = 32) => {
     if (iconesNovos && versao === "assets" && ASSETS.includes(nome)) return `assets/exibicao/${nome}-${lado}.png`;
-    if (iconesNovos && versao === "anterior" && Arte.temIcone(nome)) return Arte.icone(nome);
+    if (iconesNovos && versao !== "assets" && Arte.temIcone(nome)) return Arte.icone(nome);  // Anterior e HUD 3
     return Sprites.url(nome);
   };
   const ehAsset = (nome) => iconesNovos && versao === "assets" && ASSETS.includes(nome);
@@ -35,6 +35,7 @@ const Ficha = (() => {
 
   function desenhar(raiz, h, nome) {
     raiz.classList.toggle("v2", versao === "assets");
+    raiz.classList.toggle("v3", versao === "hud3");  // a HUD 3 usa o retrato e os ícones da primeira tentativa
     const espacos = ESPACOS.map((linha) => linha.map((s) => {
       const it = h.equip[s];
       if (!it) return `<button type="button" class="f-slot vazio f-foco" data-espaco="${s}" data-dica="${esc(`<b class="t">${NOME_ESPACO[s]}</b><div class="sub">vazio</div>`)}" aria-label="${NOME_ESPACO[s]}: vazio">${img(VAZIO[s])}</button>`;
@@ -100,13 +101,16 @@ const Ficha = (() => {
   let dica = null, dono = null;
   function abrirDica(el) {
     if (!dica) { dica = document.createElement("div"); dica.setAttribute("role", "tooltip"); document.body.appendChild(dica); }
-    dica.className = versao === "assets" ? "f-dica v2" : "f-dica";
+    dica.className = { assets: "f-dica v2", hud3: "f-dica v3" }[versao] || "f-dica";
+    if (/^\d+$/.test(el.dataset.dica)) return;  // as dicas numeradas da fotografia do jogo (sem o conteúdo delas)
     dono = el;
     dica.innerHTML = el.dataset.dica;
     dica.hidden = false;
-    // À direita do painel, na altura do elemento; nunca por cima dele. Se passar do pé da janela, sobe.
-    const painel = el.closest("#ficha").getBoundingClientRect(), r = el.getBoundingClientRect(), d = dica.getBoundingClientRect();
-    const x = painel.right + 8, y = Math.max(8, Math.min(r.top - 6, innerHeight - d.height - 8));
+    // Na ficha: à direita do painel, na altura do elemento; nunca por cima dele. Se passar do pé da janela, sobe.
+    // Fora dela (o topo): logo embaixo do elemento, sem sair da janela.
+    const ficha = el.closest("#ficha"), r = el.getBoundingClientRect(), d = dica.getBoundingClientRect();
+    const x = ficha ? ficha.getBoundingClientRect().right + 8 : Math.max(8, Math.min(r.left, innerWidth - d.width - 8));
+    const y = ficha ? Math.max(8, Math.min(r.top - 6, innerHeight - d.height - 8)) : Math.min(r.bottom + 6, innerHeight - d.height - 8);
     dica.style.left = `${Math.round(x)}px`; dica.style.top = `${Math.round(y)}px`;
   }
   function fecharDica() { if (dica) dica.hidden = true; dono = null; }
