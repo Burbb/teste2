@@ -4,7 +4,8 @@ Nos arquivos já migrados para os materiais em pixel ficam proibidos: canto arre
 degradê tem de ter paradas duras, cada faixa encostando na anterior), sombra borrada (também guardada em variável),
 desfoque, cor translúcida (rgba, hex com alfa, opacidade parada), filtro de cor e borda grossa (moldura dentro de
 moldura, inclusive outline e borda em texels). Os arquivos que ainda não migraram ficam em PENDENTES; cada passo da
-migração tira os seus da lista, e o teste avisa quando um pendente já está limpo (a lista só encolhe).
+migração tira os seus da lista, e o teste avisa quando um pendente já está limpo (a lista só encolhe). A HUD de
+ferro (FORA_DA_TRAVA) é outro material, pintado, e fica fora da trava de propósito.
 """
 
 import pathlib
@@ -21,6 +22,10 @@ PENDENTES = {
     "07-titulo-responsivo.css", "08-mercado.css", "09-comitiva.css", "10-contratos.css", "12-acoes-combate.css",
 }
 PENDENTES_JS = {"talentos.js"}  # filtros de cor em animações feitas pelo JS (o brilho do nó aprendido)
+# A HUD de ferro (aprovada em 10/2026): materiais pintados por cima da estrutura de 01 a 13 (moldura e texturas em
+# imagem, véus translúcidos sobre elas, relevo e sombra suaves, cantos de 2 px). Não é pixel art de interface nem
+# migração pendente: é outro material, decidido de propósito, e fica só nestes arquivos.
+FORA_DA_TRAVA = {"14-hud.css", "15-hud-luta.css", "16-hud-telas.css"}
 
 FILTRO = r"\b(grayscale|sepia|hue-rotate|brightness|saturate|contrast|invert|opacity|drop-shadow)\(|filter\s*:\s*url\("
 PROIBIDO = {
@@ -160,7 +165,7 @@ def filtros_js(arquivo):
 
 class TestEstiloPixel(unittest.TestCase):
     def test_arquivos_migrados_seguem_o_pixel(self):
-        sujos = {a.name: violacoes(a)[:6] for a in CSS if a.name not in PENDENTES and violacoes(a)}
+        sujos = {a.name: violacoes(a)[:6] for a in CSS if a.name not in PENDENTES | FORA_DA_TRAVA and violacoes(a)}
         sujos.update({a.name: filtros_js(a)[:6] for a in JS if a.name not in PENDENTES_JS and filtros_js(a)})
         self.assertEqual(sujos, {}, "estilo liso num arquivo já migrado (ou volte-o a PENDENTES, com o motivo)")
 
@@ -169,7 +174,7 @@ class TestEstiloPixel(unittest.TestCase):
         limpos += sorted(a.name for a in JS if a.name in PENDENTES_JS and not filtros_js(a))
         self.assertEqual(limpos, [], "estes já estão limpos: tire-os da lista de pendentes")
         existem = {a.name for a in CSS} | {a.name for a in JS}
-        self.assertEqual(sorted((PENDENTES | PENDENTES_JS) - existem), [], "pendente que não existe")
+        self.assertEqual(sorted((PENDENTES | PENDENTES_JS | FORA_DA_TRAVA) - existem), [], "pendente que não existe")
 
     def test_letras_da_paleta(self):
         """Toda var(--p-<letra>) no CSS e no mostruário existe na PALETA dos sprites (que a publica no :root)."""

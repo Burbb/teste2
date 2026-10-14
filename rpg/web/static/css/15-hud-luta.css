@@ -1,0 +1,110 @@
+/* A HUD de ferro na luta: as cartas e a roda de ações com o tratamento interno dos outros controles (face de metal
+   escuro, aresta fina, relevo discreto), sem a moldura pesada dos painéis. Disposição, ações e reações são as de
+   03-batalha.css e 12-acoes-combate.css: dano, cura, fuga, derrota, proteção, contra-ataque, Revide, efeitos e golpe
+   preparado. Cada estado tem forma, não só cor:
+     vez de alguém     barra de latão em cima e a marca ▸ antes do nome
+     sua carta, agindo a mesma barra, a carta à frente (o jogo a amplia) e o contorno claro
+     pode ser alvo     contorno tracejado
+     alvo escolhido    contorno cheio claro e a seta ▼ do jogo
+     fora da luta      aresta tracejada, apagada, com a caveira do jogo
+     foco do teclado   anel claro por fora (como nos outros botões)
+   Prefixo ":root body" como em 14-hud.css. */
+
+:root body .carta {
+  --lado-carta: inset 3px 0 0 #4a4e56;
+  --relevo-carta: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 1px 0 #000, 0 3px 6px rgba(0, 0, 0, 0.45);
+  border: 1px solid var(--aresta-face, #4a4e56); border-radius: 2px; padding: 5px 8px 6px 7px;
+  background: linear-gradient(rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.015) 45%, rgba(0, 0, 0, 0.2)), rgba(20, 21, 25, 0.94);
+  box-shadow: var(--lado-carta), var(--relevo-carta); }
+/* o lado de cada um, pela marca à esquerda (latão: você; ferro-verde: a comitiva; ferrugem: o inimigo) e pela cor */
+:root body .carta.heroi { --lado-carta: inset 3px 0 0 var(--latao); }
+:root body .carta.aliado:not(.heroi) { --lado-carta: inset 3px 0 0 #2f6b6e; }
+:root body .carta.inimigo { --lado-carta: inset 3px 0 0 #7a2a22; }
+/* o que o jogo marca com um anel por fora continua: o chefe e a proteção (o escudo azul) */
+:root body .carta.chefe { border-color: #8a3a2a; box-shadow: var(--lado-carta), 0 0 0 2px #000, 0 0 0 4px #6e1d1d; }
+:root body .carta.com-protecao { box-shadow: var(--lado-carta), 0 0 0 2px #0d0b0a, 0 0 0 4px #3d63c9, 3px 3px 0 6px rgba(0, 0, 0, 0.4); }
+:root body .carta .icone { border: 1px solid var(--aresta, #3a3d43); background: #0a0b0d; box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.9); }
+:root body .carta.heroi .icone { border-color: #6b5426; }
+
+/* nome, nível, vida e recurso: legíveis de longe */
+:root body .carta-nome { font-size: 14px; color: #f0e6d2; }
+:root body .carta-nome small { font-size: 14px; color: var(--sec, #9d978b); }
+:root body .carta-hp { font-size: 16px; color: #ece2cc; }
+:root body .carta-rec { font-size: 13px; color: #c9bfa8; }
+:root body .carta-efeitos { border-top: 1px solid rgba(255, 255, 255, 0.07); }
+:root body .ef { border-width: 1px; border-radius: 2px; background: #0a0b0d; font-size: 14px; padding: 1px 4px 1px 2px; }
+
+/* vez: a barra de latão em cima e a marca ▸; o pulso do jogo vira um anel de latão que acende e apaga, sem tirar as
+   marcas (a animação do jogo troca a sombra inteira) */
+:root body .carta.vez { border-color: var(--latao); box-shadow: var(--lado-carta), inset 0 3px 0 var(--latao), var(--relevo-carta);
+  animation: vez-hud 1.2s steps(2) infinite; }
+@keyframes vez-hud { 50% { box-shadow: var(--lado-carta), inset 0 3px 0 var(--latao), 0 0 0 2px #000, 0 0 0 3px var(--latao); } }
+:root body .carta.vez .carta-nome span::before { content: "▸ "; color: var(--latao-claro); }
+/* sua carta, na sua vez: à frente (o jogo a amplia), com contorno claro em vez do brilho dourado */
+:root body .carta.foco { animation: none; box-shadow: var(--lado-carta), inset 0 3px 0 var(--latao), 0 0 0 2px #000, 0 0 0 3px var(--latao-claro), 0 10px 22px rgba(0, 0, 0, 0.6); }
+:root body .carta.agindo { border-color: var(--latao-claro); }
+/* pode ser alvo: contorno tracejado (o piscar do jogo fica na aresta) */
+:root body .carta.alvejavel { outline: 1px dashed rgba(242, 210, 122, 0.7); outline-offset: 3px; }
+/* alvo escolhido (mouse ou teclado): contorno cheio e a seta ▼ do jogo */
+:root body .carta.alvejavel:hover, :root body .carta.mirando { outline: 2px solid var(--latao-claro); outline-offset: 3px; border-color: var(--latao-claro); }
+/* fora da luta: aresta tracejada e apagada (a caveira e o cinza do jogo continuam) */
+:root body .carta.morta { border-style: dashed; box-shadow: none; outline: 0; animation: none; }
+:root body .carta:focus-visible { outline: 2px solid var(--latao-claro); outline-offset: 3px; }
+
+/* ------------------------------------------------------------ a roda de ações */
+/* O medalhão vira um nicho de item (aresta fina, fundo fundo); o nome, uma placa de metal; a tecla, o nicho escuro das
+   opções. O dourado fica para a ação aberta e o foco. */
+:root body .roda-botao .rb-icone { width: 44px; height: 44px; border: 1px solid var(--aresta-face, #4a4e56); border-radius: 2px;
+  background: linear-gradient(rgba(255, 255, 255, 0.06), rgba(0, 0, 0, 0.25)), #0d0e11;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 1px 0 #000, 0 3px 5px rgba(0, 0, 0, 0.5); }
+:root body .roda-botao .rb-nome { margin-left: -1px; padding: 5px 12px 6px 10px; border: 1px solid var(--aresta-face, #4a4e56); border-left: 0; border-radius: 0 2px 2px 0;
+  font-size: 14px; color: #f0e6d2; text-shadow: 0 1px 0 #000;
+  background: linear-gradient(rgba(255, 255, 255, 0.085), rgba(255, 255, 255, 0.02) 48%, rgba(0, 0, 0, 0.14)), rgba(28, 30, 34, 0.96); }
+:root body .roda-botao .tecla { top: -6px; left: -6px; min-width: 17px; height: 17px; color: #e8dcc0; background: #08090b; border: 1px solid #4a4d53; border-radius: 2px; line-height: 15px; }
+:root body .roda-botao:hover .rb-icone, :root body .roda-botao:focus-visible .rb-icone { transform: translateY(-2px); border-color: var(--aresta-viva, #6f737b);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 1px 0 #000, 0 5px 8px rgba(0, 0, 0, 0.55); }
+:root body .roda-botao:hover .rb-nome, :root body .roda-botao:focus-visible .rb-nome { color: #fff7e6; border-color: var(--aresta-viva, #6f737b);
+  background: linear-gradient(rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.05) 48%, rgba(0, 0, 0, 0.1)), rgba(36, 38, 43, 0.97); }
+:root body .roda-botao:active .rb-icone { transform: translateY(1px); box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8); }
+/* a ação aberta (a janelinha de habilidades ou itens): latão e a barra à esquerda do nome, como o selecionado */
+:root body .roda-botao.ativo .rb-icone { border-color: var(--latao); background: linear-gradient(rgba(201, 161, 74, 0.12), rgba(0, 0, 0, 0.25)), #0d0e11; }
+:root body .roda-botao.ativo .rb-nome { color: var(--latao-claro); border-color: var(--latao); box-shadow: inset 3px 0 0 var(--latao); }
+:root body .roda-botao:focus-visible .rb-icone { outline: 2px solid var(--latao-claro); outline-offset: 2px; }
+:root body .roda-botao:is([disabled], .bloqueada) .rb-icone, :root body .roda-botao:is([disabled], .bloqueada) .rb-nome { border-style: dashed; opacity: 0.6; }
+:root body .roda-botao .rb-icone img.desenho { width: 32px; height: 32px; image-rendering: auto; filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.7)); }
+/* o rosto do herói na carta e os desenhos da roda, no tamanho deles (32 px); a carta em foco é ampliada 1,12× pelo
+   jogo (.carta.foco): o rosto amplia em pixel duro, como os sprites dele */
+:root body .carta.heroi .icone img.desenho { width: 32px; height: 32px; }
+:root body .carta.foco .icone img.desenho { image-rendering: pixelated; }
+
+
+/* a janelinha de habilidades e itens: a janela leve da HUD 4 (aresta, face escura), sem a borda de pixel */
+:root body .roda-janela { border: 1px solid #4a4d53; border-image: none; border-radius: 2px;
+  background: linear-gradient(rgba(255, 255, 255, 0.04), rgba(0, 0, 0, 0.2)), #121317;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 10px 26px rgba(0, 0, 0, 0.7); }
+:root body .rj-titulo { color: var(--latao-claro); }
+:root body .rj-fechar { border: 1px solid #4a4d53; border-radius: 2px; background: #0b0c0e; }
+:root body .rj-fechar:hover, :root body .rj-fechar:focus-visible { border-color: var(--aresta-viva, #6f737b); color: #fff; }
+
+/* as linhas da janelinha: o botão leve da HUD (face escura, aresta fina); o ícone num nicho com o fio da cor do
+   elemento (fogo, gelo...), que o jogo já usa; a bloqueada, tracejada */
+:root body .rj-linha { border: 1px solid var(--aresta-face, #4a4e56); border-radius: 2px;
+  background: linear-gradient(rgba(255, 255, 255, 0.06), rgba(0, 0, 0, 0.12)), rgba(26, 28, 32, 0.96); }
+:root body .rj-linha:hover, :root body .rj-linha:focus-visible { border-color: var(--aresta-viva, #6f737b); transform: none;
+  background: linear-gradient(rgba(255, 255, 255, 0.12), rgba(0, 0, 0, 0.08)), rgba(36, 38, 43, 0.97); }
+:root body .rj-linha:focus-visible { outline: 2px solid var(--latao-claro); outline-offset: 1px; }
+:root body .rj-linha .rj-icone { border-width: 1px; border-radius: 2px; }
+:root body .rj-linha.bloqueada { border-style: dashed; }
+
+/* ------------------------------------------------------------ mirando: o lembrete no vão entre os dois lados */
+/* No alto da arena, numa janela de 1280 px, o lembrete "escolha o alvo" cobria o nome, o rosto e a vida da carta de
+   cima dos inimigos. Agora ele fica no meio, no vão entre a sua fileira e a deles, compacto: o nome da ação, "escolha
+   o alvo" embaixo e o Voltar. Nenhuma carta, vida ou efeito fica por baixo dele. */
+:root body .roda-mira { top: 50%; translate: -50% -50%; flex-direction: column; gap: 6px; width: max-content; max-width: 150px; padding: 7px 10px 8px;
+  white-space: normal; text-align: center; line-height: 1.25; font-size: 15px; color: #e8dcc0;
+  border: 1px solid var(--latao); border-radius: 2px; background: rgba(12, 13, 15, 0.94); box-shadow: 0 1px 0 #000, 0 6px 14px rgba(0, 0, 0, 0.6); }
+:root body .roda-mira b { display: block; color: var(--latao-claro); }
+:root body .mira-voltar { border: 1px solid var(--aresta-face, #4a4e56); border-radius: 2px; color: var(--tinta);
+  background: linear-gradient(rgba(255, 255, 255, 0.07), rgba(0, 0, 0, 0.15)), #16171b; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 1px 0 #000; }
+:root body .mira-voltar:is(:hover, :focus-visible) { border-color: var(--aresta-viva, #6f737b); color: #fff7e6; }
+:root body .mira-voltar:focus-visible { outline: 2px solid var(--latao-claro); outline-offset: 2px; }

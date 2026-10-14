@@ -32,14 +32,14 @@
   function seloAtributo(d) {
     const selo = document.createElement("div");
     selo.className = "selo-atributo";
-    selo.innerHTML = `${S(ICONE_SELO[d.stat] || "estrela", 4)}<b>+${d.valor}</b><span>${h(d.nome)}<small>permanente</small></span>`;
+    selo.innerHTML = `${Icones.atributo(d.nome, 64) || S(ICONE_SELO[d.stat] || "estrela", 4)}<b>+${d.valor}</b><span>${h(d.nome)}<small>permanente</small></span>`;
     document.body.appendChild(selo);
     selo.style.left = (innerWidth - selo.offsetWidth) / 2 + "px";  // centrado sem transform: o voo usa translate e scale
     App.som("aprender");
     const antes = d.total - d.valor, noPainel = !["max_hp", "max_rec"].includes(d.stat);
     if (noPainel) {  // o painel espera o selo chegar para mostrar o valor novo
       chegando.set(d.nome, antes);
-      const v = destinoAtributo(d)?.querySelector(".valor");
+      const v = destinoAtributo(d)?.querySelector(".valor .num");
       if (v) v.textContent = antes;
     }
     const voar = async () => {
@@ -57,7 +57,7 @@
       if (!aqui) return;
       aqui.classList.remove("ganhou"); void aqui.offsetWidth; aqui.classList.add("ganhou");
       setTimeout(() => aqui.classList.remove("ganhou"), 1100);
-      const valor = aqui.querySelector(".valor");
+      const valor = aqui.querySelector(".valor .num");
       if (valor && noPainel) Sensacao.contar(valor, d.total, 520, { de: antes });
     };
     // O próximo só aparece quando este chega ao painel (dois seguidos, +1 Poder e +4 Vida, um tampava o outro
@@ -127,7 +127,7 @@
     const r = alvo.getBoundingClientRect();
     const voo = document.createElement("div");
     voo.className = "voo-item";
-    voo.innerHTML = S(iconeItem(item), 3);
+    voo.innerHTML = Icones.item(iconeItem(item), 48) || S(iconeItem(item), 3);
     document.body.appendChild(voo);
     const dx = r.left + r.width / 2 - origem.x, dy = r.top + r.height / 2 - origem.y;
     voo.style.left = origem.x - 24 + "px"; voo.style.top = origem.y - 24 + "px";

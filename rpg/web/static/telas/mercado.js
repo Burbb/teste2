@@ -24,7 +24,7 @@
     const motivo = c.motivo ? h(c.motivo) + (c.detalhe ? `. ${h(c.detalhe)}` : "") : "";
     return `<div role="button" tabindex="0" class="mercadoria suprimento${c.motivo ? " caro" : ""}" data-comprar="${h(c.id)}" data-preco="${c.preco}" data-max="${max}"
         ${dica(`<b>${h(c.nome)}</b><div>${Realce.texto(c.desc)}</div><div class="rodape">${motivo || "Clique para comprar a quantidade escolhida. Shift+clique compra 5."}</div>`)}>
-      <span class="slot-px">${S(c.icone || "pocao", 2)}</span>
+      <span class="slot-px">${Icones.consumivel(c.id) || Icones.porDesenho(c.icone) || S(c.icone || "pocao", 2)}</span>
       <span class="merc-nome">${h(c.nome)}</span>
       <span class="merc-contas"><span class="merc-bolsa${cheio ? " cheio" : ""}">Na bolsa: <b>${tem}</b></span><span class="merc-estoque${c.estoque ? "" : " esgotado"}">Estoque: <b>${c.estoque}</b></span></span>
       ${c.motivo ? motivoHtml(c.motivo) : `<span class="merc-acao"><span class="qtd-ctrl"><button type="button" data-q="-1" aria-label="menos ${h(c.nome)}">−</button><b aria-label="quantidade">${q}</b><button type="button" data-q="1" aria-label="mais ${h(c.nome)}">+</button></span>
@@ -33,7 +33,7 @@
 
   function equipamento(it, i) {
     return `<button type="button" class="mercadoria equip${it.motivo ? " caro" : ""}" data-comprar-item="${i}" ${dicaItem(it, it.motivo ? h(it.motivo) : "Clique para comprar. Se o espaço do corpo estiver vazio, você já sai vestindo.")}>
-      <span class="slot-px r-${h(it.raridade)}">${S(iconeItem(it), 2)}</span>
+      <span class="slot-px r-${h(it.raridade)}">${Icones.item(iconeItem(it)) || S(iconeItem(it), 2)}</span>
       <span class="merc-nome r-${h(it.raridade)}">${h(it.nome)}</span><span class="merc-bonus">${h(it.bonus)}</span>
       ${it.motivo ? motivoHtml(it.motivo) : `<span class="preco">${S("moeda", 1)}${it.preco}</span>`}</button>`;
   }
@@ -46,7 +46,7 @@
     const venda = `<div class="preco-venda">${S("moeda", 1)} O mercador paga <b>${it.preco}</b></div>` +
       `Clique: vender${it.usavel ? " · botão direito: equipar" : " · não é para a sua classe"}`;
     return `<div role="button" tabindex="0" class="slot-px celula r-${h(it.raridade)}${it.usavel ? "" : " inutil"}" draggable="true" data-mochila-loja="${i}"
-        aria-label="Vender ${h(it.nome)} por ${it.preco} de ouro" ${dicaItem(it, venda)}>${S(iconeItem(it), 2)}<span class="preco-canto">${it.preco}</span></div>`;
+        aria-label="Vender ${h(it.nome)} por ${it.preco} de ouro" ${dicaItem(it, venda)}>${Icones.item(iconeItem(it)) || S(iconeItem(it), 2)}<span class="preco-canto">${it.preco}</span></div>`;
   }
   function gradeVenda(d) {
     const celulas = d.mochila.map(paraVender);
@@ -58,7 +58,7 @@
   function recompra(d) {
     if (!(d.recompra || []).length) return "";
     const itens = d.recompra.map((it, i) => `<div role="button" tabindex="0" class="slot-px celula r-${h(it.raridade)}${it.motivo ? " caro" : ""}" data-recomprar="${i}"
-        aria-label="Recomprar ${h(it.nome)} por ${it.preco} de ouro" ${dicaItem(it, `<div class="preco-venda">${S("moeda", 1)} Recomprar por <b>${it.preco}</b></div>${it.motivo ? h(it.motivo) : "Clique para desfazer a venda."}`)}>${S(iconeItem(it), 2)}<span class="preco-canto">${it.preco}</span></div>`).join("");
+        aria-label="Recomprar ${h(it.nome)} por ${it.preco} de ouro" ${dicaItem(it, `<div class="preco-venda">${S("moeda", 1)} Recomprar por <b>${it.preco}</b></div>${it.motivo ? h(it.motivo) : "Clique para desfazer a venda."}`)}>${Icones.item(iconeItem(it)) || S(iconeItem(it), 2)}<span class="preco-canto">${it.preco}</span></div>`).join("");
     return `<section class="loja-recompra" aria-label="Recomprar"><h5>Recomprar</h5><div class="mochila-grade mochila-loja recompra">${itens}</div></section>`;
   }
 
@@ -82,7 +82,7 @@
     return `<div class="tela loja${visitaNova ? " chegando" : ""}">
       <div class="loja-banca"><canvas class="banca-cena"></canvas></div>
       <div class="loja-lado">
-        <div class="loja-topo"><div><b>O mercador</b><span class="lore">"Tudo tem preço. Até você."</span></div>
+        <div class="loja-topo"><span class="npc-retrato"><img src="${retratoMercador(2)}" srcset="${retratoMercador(4)} 2x" width="48" height="48" alt="O mercador" draggable="false"></span><div><b>O mercador</b><span class="lore">"Tudo tem preço. Até você."</span></div>
           <span class="ouro-loja" aria-label="seu ouro">${S("moedas", 2)}${d.ouro}</span></div>
         <div class="loja-abas" role="tablist" aria-label="Mercado">${abas}</div>
         ${paineis}
@@ -118,7 +118,7 @@
     balcao: "#5a4028", balcaoLuz: "#7a5a38", balcaoFundo: "#3e2c1a", balcaoBorda: "#2a1c10",
     frente: ["#3a2818", "#34241a", "#3e2c1c"], frenteLinha: "#22160c",
     pele: "#b07a56", peleLuz: "#d09a70", peleSombra: "#7e5236", olho: "#120c08", boca: "#3a2418",
-    cabelo: "#8a8478", cabeloSombra: "#5e5a52", sobrancelha: "#4a463e", barba: "#7a7266", barbaSombra: "#5a544a",
+    cabelo: "#8a8478", cabeloSombra: "#5e5a52", cabeloLuz: "#a8a296", barbaLuz: "#9a9488", capuzLuz: "#5e6850", sobrancelha: "#4a463e", barba: "#7a7266", barbaSombra: "#5a544a",
     capuz: "#4e5640", capuzSombra: "#363c2c", tunica: "#6e6046", tunicaLuz: "#8a7a5a", tunicaSombra: "#4a402e",
     avental: "#5a3e28", aventalSombra: "#3e2a1a", mancha: "#4a3220", cinto: "#2a1c12", fivela: "#a89a62",
     bolsa: "#7a5634", bolsaSombra: "#5a3e24",
@@ -160,6 +160,51 @@
     n: "peleSombra", B: "barba", b: "barbaSombra", M: "boca", c: "capuz", C: "capuzSombra", u: "tunicaLuz",
     t: "tunica", T: "tunicaSombra", a: "avental", A: "aventalSombra", x: "mancha",
   };
+  // O mesmo homem de perto, no balcão da loja (busto de 24×24, mostrado a 48 px): a figura da banca com as mesmas
+  // cores e um pouco mais de desenho, onde o tamanho deixa (a luz na franja, na barba e no capuz, as rugas da testa, os
+  // olhos sob a sobrancelha pesada, a alça do avental). A luz vem da esquerda, como a lamparina. Letras da FIGURA e
+  // mais: h/H/g a luz da franja, da barba e do capuz; y a alça de couro.
+  const RETRATO = [
+    "........................",
+    "..........LLLsd.........",
+    "........LLLLLssdd.......",
+    ".......LLLLsssssdd......",
+    ".......LLssssssssd......",
+    "......hLsssddssddsdK....",
+    "......kLsssssssssdK.....",
+    "......kwwwLssssLwwwK....",
+    ".....dkLweesssseewdKd...",
+    ".....dkLsssLsnsssddKd...",
+    "......kLssssLnnssddK....",
+    "......kKsssLsnnsddKK....",
+    "......KBBsdLnnndBbbK....",
+    ".......BHBBdMMMdBbb.....",
+    ".......BHBBBBBBBbbb.....",
+    "........BHBBBBBbbb......",
+    ".........BBBBBbbb.......",
+    ".......ccgBBBbbCCC......",
+    ".....ccgcccdddCCCCCC....",
+    "...uuuuccgcccCCCCCttTT..",
+    "..uuuuttayaaaaaaAAttTTT.",
+    "..uuuttaayaaaaaaAAtttTT.",
+    ".uuuuttaaaaaxaaaAAtttTTT",
+    ".uuuuttaaaaaaaaaAAtttTTT",
+  ];
+  const TINTA_RETRATO = { ...TINTA, h: "cabeloLuz", H: "barbaLuz", g: "capuzLuz", y: "couroLuz" };
+  const retratos = {};
+  /** O busto pintado com `escala` pixels de tela por pixel da arte (×2 no balcão, ×4 para telas densas). */
+  function retratoMercador(escala) {
+    if (retratos[escala]) return retratos[escala];
+    const c = document.createElement("canvas");
+    c.width = c.height = 24 * escala;
+    const x = c.getContext("2d");
+    RETRATO.forEach((linha, y) => [...linha].forEach((ch, k) => {
+      if (ch === ".") return;
+      x.fillStyle = COR[TINTA_RETRATO[ch]]; x.fillRect(k * escala, y * escala, escala, escala);
+    }));
+    return (retratos[escala] = c.toDataURL());
+  }
+
   // Os vãos da parede, do mercador para fora (o primeiro de cada lado encosta nele). Larguras em pixels da arte.
   const VAOS = {
     esquerda: [["curativos", 28], ["descanso", 10], ["protecao", 22], ["janela", 18], ["sacos", 30], ["descanso", 12],

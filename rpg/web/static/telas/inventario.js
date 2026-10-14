@@ -14,7 +14,7 @@
     const attrs = atributosHtml(p);
     const espacos = Object.keys(AREA).map((s) => {
       const it = p.equip[s];
-      const conteudo = it ? S(iconeItem(it), 2) : S(VAZIO[s], 2, "fantasma");
+      const conteudo = it ? Icones.item(iconeItem(it)) || S(iconeItem(it), 2) : Icones.vazio(s) || S(VAZIO[s], 2, "fantasma");
       const extra = it ? `draggable="true" ${dicaItem(it, "Arraste para a mochila, dê dois cliques ou use o botão direito para tirar.", false)}` : `title="${NOME_ESPACO[s]} (vazio)"`;
       return `<div class="espaco slot-px ${it ? "r-" + h(it.raridade) : "vazio"}" data-espaco="${s}" style="grid-area:${AREA[s]}" ${extra}>${conteudo}<span class="espaco-nome">${NOME_ESPACO[s]}</span></div>`;
     }).join("");
@@ -22,10 +22,10 @@
     for (let i = 0; i < limite; i++) {
       const it = p.mochila[i];
       celulas.push(it
-        ? `<div class="slot-px celula r-${h(it.raridade)}${it.classe && it.classe !== p.classe ? " inutil" : ""}" draggable="true" data-mochila="${i}" ${dicaItem(it, "Arraste para o corpo, dê dois cliques ou use o botão direito para equipar.")}>${S(iconeItem(it), 2)}</div>`
+        ? `<div class="slot-px celula r-${h(it.raridade)}${it.classe && it.classe !== p.classe ? " inutil" : ""}" draggable="true" data-mochila="${i}" ${dicaItem(it, "Arraste para o corpo, dê dois cliques ou use o botão direito para equipar.")}>${Icones.item(iconeItem(it)) || S(iconeItem(it), 2)}</div>`
         : '<div class="slot-px celula vazia"></div>');
     }
-    const bolsa = p.bolsa.map((b) => `<div class="slot-px clicavel" data-usar="${h(b.id)}" ${dica(`<b>${h(b.nome)}</b><div>${Realce.texto(b.desc)}</div>${b.id === "tocha" ? "" : '<div class="rodape">Clique para usar · botão direito: usar em você.</div>'}`)}>${S(iconeConsumivel(b.id), 2)}<span class="qtd">${b.qtd}</span></div>`).join("");
+    const bolsa = p.bolsa.map((b) => `<div class="slot-px clicavel" data-usar="${h(b.id)}" ${dica(`<b>${h(b.nome)}</b><div>${Realce.texto(b.desc)}</div>${b.id === "tocha" ? "" : '<div class="rodape">Clique para usar · botão direito: usar em você.</div>'}`)}>${Icones.consumivel(b.id) || S(iconeConsumivel(b.id), 2)}<span class="qtd">${b.qtd}</span></div>`).join("");
     return `<div class="tela inventario">
       <div class="boneco">${espacos}<div class="boneco-retrato">${S(p.classe, 6)}</div></div>
       <div class="inv-lado">
@@ -46,9 +46,11 @@
     const info = p.atributos_info || {}, penal = p.atributos_penal || {};
     return Object.entries(p.atributos).map(([k, v]) => {
       const linhas = (info[k] || []).map((l, i) => `<li${penal[k] && !i ? ' class="pior"' : ""}>${h(l)}</li>`).join("");
-      // Abaixo do normal (ferimento, fome): o número já vem com a penalidade, em vermelho, e a dica diz quanto.
+      // Abaixo do normal (ferimento, fome): o número já vem com a penalidade, em vermelho, e quanto ela tira vem do
+      // motor (atributos_penal): ao lado do valor e na dica.
       const pen = penal[k] ? ` <span class="penal">(−${penal[k].pct}%)</span>` : "";
-      return `<div class="atributo${penal[k] ? " abaixo" : ""}" data-atributo="${h(k)}" ${dica(`<b>${h(k)} ${v}${pen}</b><ul class="dica-lista">${linhas}</ul>`)}>${S(ICONE_ATTR[k] || "estrela", 1)}<span class="nome">${h(k)}</span><span class="valor">${chegando.has(k) ? chegando.get(k) : v}</span></div>`;
+      const aoLado = penal[k] ? ` <small class="valor-penal">−${penal[k].pct}%</small>` : "";
+      return `<div class="atributo${penal[k] ? " abaixo" : ""}" data-atributo="${h(k)}" ${dica(`<b>${h(k)} ${v}${pen}</b><ul class="dica-lista">${linhas}</ul>`)}>${Icones.atributo(k) || S(ICONE_ATTR[k] || "estrela", 1)}<span class="nome">${h(k)}</span><span class="valor"><span class="num">${chegando.has(k) ? chegando.get(k) : v}</span>${aoLado}</span></div>`;
     }).join("");
   }
   function reputacaoHtml(p) {

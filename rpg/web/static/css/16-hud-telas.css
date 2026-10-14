@@ -1,0 +1,138 @@
+/* A HUD de ferro nas telas e janelas (menus, mercado, serviços, Diário, Talentos, avisos), na mesma família de
+   14-hud.css. A hierarquia:
+     janela principal (Mapa, Talentos, Ajuda, Histórico, celebrações, confirmação): a moldura das colunas
+     janela pequena (dica, menu de item): aresta fina e carvão, sem moldura
+     componente interno (cartão, mercadoria, serviço, comitiva, quadro): aresta fina, a face de metal leve, sem rebite
+     título de seção dentro de uma tela: a versal pequena com o fio, como na ficha
+   Papel continua papel onde é documento: o Grimório, os cartazes de contrato, a missão no Diário, os bilhetes.
+   Prefixo ":root body" como em 14-hud.css. */
+
+/* ------------------------------------------------------------ títulos de seção dentro das telas */
+:root body :is(.tela h4, #ajuda-corpo h3) { display: flex; align-items: center; gap: 8px; margin: 24px 0 10px;
+  font-family: var(--leitura); font-weight: 700; font-size: 13px; line-height: 1.2; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--sec); text-shadow: none; }
+:root body :is(.tela h4, #ajuda-corpo h3)::after { content: ""; flex: 1; height: 1px; background: var(--ferro-fio); box-shadow: 0 1px 0 #000; }
+:root body .tela h4 small { letter-spacing: 0; text-transform: none; font-weight: 400; }
+:root body #ajuda-corpo b { color: var(--latao-claro); }
+
+/* ------------------------------------------------------------ janelas principais: a moldura das colunas */
+:root body :is(.sobre-caixa.m-janela, .gaveta.m-janela, .festa.m-janela, .caixa-confirmar, .festa-amanhecer, .festa-espolio) {
+  border: 12px solid transparent; border-image: var(--m-principal) 24 / 24px round;
+  background: linear-gradient(rgba(8, 9, 11, 0.62), rgba(8, 9, 11, 0.76)), var(--t-painel) 0 0 / 128px; background-clip: padding-box;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.8); }
+/* o cabeçalho delas: o título gótico em latão e o Fechar como um botão leve; embaixo, o fio */
+:root body .gaveta-cab { padding: 4px 6px 9px; border-bottom: 0; box-shadow: var(--hud-fio); margin-bottom: 2px; }
+:root body .gaveta-cab h2 { color: var(--latao-claro); }
+:root body :is(.gaveta-cab button, .grimorio-fechar) { border: 1px solid var(--aresta-face); border-radius: 2px; color: var(--tinta);
+  background: var(--hud-face); box-shadow: var(--hud-relevo); padding: 3px 10px; cursor: pointer; }
+:root body :is(.gaveta-cab button, .grimorio-fechar):is(:hover, :focus-visible) { border-color: var(--aresta-viva); background: var(--hud-face-viva); color: #fff7e6; }
+:root body :is(.gaveta-cab button, .grimorio-fechar):focus-visible { outline: 2px solid var(--latao-claro); outline-offset: 2px; }
+:root body :is(.gaveta-cab button, .grimorio-fechar) kbd { border: 1px solid #4a4d53; background: #0b0c0e; }
+/* o Histórico: as cenas separadas pelo fio de ferro */
+:root body #historico-lista .h-cena { color: var(--latao-claro); border-top: 1px solid var(--ferro-fio); box-shadow: inset 0 1px 0 #000; }
+
+/* ------------------------------------------------------------ janelas pequenas: dicas e menus de item */
+:root body :is(#dica-item, #dica-equipado, #talento-info, .menu-item.m-janela) {
+  border: 1px solid #4a4d53; border-image: none; border-radius: 2px;
+  background: linear-gradient(rgba(10, 11, 13, 0.9), rgba(10, 11, 13, 0.95)), var(--t-painel) 0 0 / 128px; background-clip: padding-box;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 8px 20px rgba(0, 0, 0, 0.65); }
+:root body #dica-item.curta { border-color: var(--aresta); background: rgba(10, 11, 13, 0.94); }
+:root body :is(#dica-item, #dica-equipado) :is(.comparacao, .outro) { border-top: 1px solid var(--ferro-fio); }
+:root body #dica-equipado + #dica-equipado { border-top: 1px solid #4a4d53; }
+:root body .menu-item button { border: 1px solid var(--aresta-face); border-image: none; border-radius: 2px; background: var(--hud-face); box-shadow: var(--hud-relevo); }
+:root body .menu-item button:is(:hover, :focus-visible) { border-color: var(--aresta-viva); background: var(--hud-face-viva); }
+:root body .menu-item button:focus-visible { outline: 2px solid var(--latao-claro); outline-offset: 1px; }
+
+/* ------------------------------------------------------------ componentes internos: aresta fina e face leve */
+:root body :is(.cartao, .mercadoria, .servico, .loja-topo) {
+  border: 1px solid var(--aresta-face); border-image: none; border-radius: 2px; background: var(--hud-face); background-clip: padding-box; box-shadow: var(--hud-relevo); }
+/* os cartões do Bestiário e da Comitiva: o lado pela marca à esquerda (como as cartas da luta) */
+:root body .cartao.inimigo { box-shadow: inset 3px 0 0 #7a2a22, var(--hud-relevo); }
+:root body .cartao.feito { box-shadow: inset 3px 0 0 #3d6a2a, var(--hud-relevo); }
+:root body :is(.cartao.mestre, .esp-caminho.foco) { border-color: var(--latao); box-shadow: inset 3px 0 0 var(--latao), var(--hud-relevo); }
+:root body .cartao.clicavel:hover { border-color: var(--aresta-viva); background: var(--hud-face-viva); transform: none; }
+:root body .cartao.na-reserva { border-style: dashed; }
+:root body .tag { border: 1px solid var(--aresta); border-radius: 2px; }
+:root body .tag.fraco { border-color: #3d6a2a; } :root body .tag.forte { border-color: #8a1414; }
+:root body .tag.mestre { border-color: var(--latao-claro); }
+/* comitiva na ficha: a face leve, o retrato no nicho (jogo.css); o animal, o fio verde de mato */
+:root body .membro { border: 1px solid var(--aresta); border-image: none; border-radius: 2px; background: rgba(255, 255, 255, 0.025); background-clip: padding-box;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04); }
+:root body #heroi .membro.fera .icone { border-color: #3a6a2a; }
+
+/* ------------------------------------------------------------ mercado e serviços */
+:root body .loja-topo b { color: var(--latao-claro); }
+:root body .loja-banca { border: 1px solid var(--aresta); border-image: none; border-radius: 2px; background: #0b0c0e; box-shadow: 0 1px 0 #000; }
+/* as abas: como a doca (uma barra só, divisões discretas); a aberta em latão com o traço embaixo */
+:root body .loja-abas { gap: 0; border-bottom: 0; box-shadow: var(--hud-fio); }
+:root body .loja-aba { top: 0; padding: 7px 16px 8px; font-family: var(--texto); font-size: 16px; color: var(--tinta-2); border: 0; border-radius: 0;
+  background: none; box-shadow: inset 1px 0 0 rgba(255, 255, 255, 0.05), inset -1px 0 0 rgba(0, 0, 0, 0.75); }
+:root body .loja-aba small { font-size: 14px; color: var(--sec); }
+:root body .loja-aba:is(:hover, :focus-visible) { color: #fff7e6; background: rgba(255, 255, 255, 0.06); }
+:root body .loja-aba:focus-visible { outline: 2px solid var(--latao-claro); outline-offset: -3px; }
+:root body .loja-aba[aria-selected="true"] { color: var(--latao-claro); background: rgba(201, 161, 74, 0.08); border: 0; }
+:root body .loja-aba[aria-selected="true"]::after { left: 18%; right: 18%; bottom: 0; height: 2px; background: var(--latao-claro); }
+/* as mercadorias e os serviços: o mouse acende a aresta e a face (sem pular); o foco, o anel de latão; o que não dá
+   para pagar, a aresta tracejada (forma) além do apagado e do motivo que o jogo já escreve */
+:root body :is(.mercadoria, .servico):is(:hover, :focus-visible) { border-image: none; border-color: var(--aresta-viva); background: var(--hud-face-viva); transform: none; }
+:root body :is(.mercadoria, .servico):focus-visible { outline: 2px solid var(--latao-claro); outline-offset: 2px; }
+:root body :is(.mercadoria, .servico).caro, :root body :is(.mercadoria, .servico).caro:hover { border-style: dashed; border-color: #4a4c50;
+  background: rgba(20, 20, 22, 0.6); box-shadow: none; }
+:root body .servico.limite:hover { border-color: var(--aresta-face); background: var(--hud-face); }
+:root body .qtd-ctrl button { border: 1px solid #4a4d53; border-radius: 2px; background: #0b0c0e; box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.9); }
+:root body .qtd-ctrl button:hover { border-color: var(--latao); color: var(--latao-claro); }
+:root body .voltar-seta:is(:hover, :focus-visible) { background: rgba(255, 255, 255, 0.06); }
+:root body .voltar-seta:focus-visible { outline: 2px solid var(--latao-claro); outline-offset: 1px; }
+
+/* o mercador da banca no balcão (telas/mercado.js: o busto), num nicho encostado na borda esquerda, com a luz quente
+   da lamparina vindo da esquerda (como na banca); o balcão fica com a mesma altura (a lista não perde espaço) */
+:root body .tela.loja .loja-topo { gap: 10px; padding: 0 12px 0 0; }
+:root body .npc-retrato { flex: none; align-self: stretch; display: grid; place-items: center; width: 49px; min-height: 48px;
+  border-right: 1px solid var(--aresta); background: radial-gradient(circle at 22% 38%, rgba(255, 186, 110, 0.16), transparent 72%), #0b0c0e;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.9); overflow: hidden; }
+:root body .npc-retrato img { display: block; width: 48px; height: 48px; image-rendering: pixelated; }
+
+/* ------------------------------------------------------------ Diário e mural: o quadro vira um painel de carvão */
+/* O quadro de madeira saiu; os cartazes de contrato e a missão continuam de papel (são documentos). */
+:root body .quadro { padding: 10px 12px 14px; border: 1px solid var(--aresta); border-radius: 2px; background: rgba(0, 0, 0, 0.24);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 1px 0 #000; }
+:root body .quadro-cab { align-items: center; gap: 8px; }
+:root body .quadro-cab b { font-family: var(--leitura); font-weight: 700; font-size: 13px; line-height: 1.2; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--sec); text-shadow: none; }
+:root body .quadro-cab span { font-size: 13px; color: var(--sec); }
+:root body :is(.missao-diario, .missao-pendencia) { box-shadow: 0 1px 0 #000, 0 3px 8px rgba(0, 0, 0, 0.5); }
+:root body .contrato { box-shadow: 0 1px 0 #000, 0 4px 10px rgba(0, 0, 0, 0.55); }
+:root body .sigilos-diario .sigilo { border-color: #4a4d53; background: #0b0c0e; }
+:root body .sigilos-diario .sigilo.tem { background: var(--latao); border-color: var(--latao-claro); }
+
+/* ------------------------------------------------------------ Talentos */
+:root body .arvore-base { background: none; border-bottom: 1px solid var(--ferro-fio); box-shadow: 0 1px 0 #000; }
+/* os nós: o nicho de ferro; os estados continuam pela cor e pela forma (comprado em latão com o número cheio, possível
+   pulsando em verde, trancado com o cadeado, bloqueado apagado) */
+:root body .no-talento { border: 2px solid var(--aresta); border-radius: 2px; background: #0a0b0d; box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.85), 0 1px 0 rgba(255, 255, 255, 0.04); }
+:root body .no-talento .rank { border: 1px solid #4a4d53; border-radius: 2px; background: #0b0c0e; }
+:root body .no-talento.comprado { border-color: var(--latao); box-shadow: 0 0 0 1px #000, 0 0 12px rgba(242, 201, 76, 0.35); }
+:root body .no-talento.comprado .rank { color: #120e0b; background: var(--latao-claro); border-color: var(--latao-claro); }
+:root body .no-talento.disponivel { border-color: var(--aresta-viva); }
+:root body .no-talento.pode { border-color: var(--bom); }
+:root body .no-talento.bloqueado { border-color: #3a1414; }
+:root body .arvore-celula.conecta::before { width: 4px; margin-left: -2px; background: #24262b; border: 1px solid #000; }
+:root body .arvore-celula.conecta.aceso::before { background: var(--latao); }
+:root body .arvore-col-titulo { color: var(--latao-claro); }
+:root body .arvore-col-titulo.trancada { color: #55585e; }
+
+/* ------------------------------------------------------------ os avisos */
+:root body .aviso-flutuante { border: 1px solid #4a4d53; border-image: none; border-radius: 2px; background: #0b0c0e; }
+:root body .aviso-flutuante.ouro { border-color: var(--latao); }
+:root body :is(.aviso-flutuante.perda, .aviso-flutuante.dano, .aviso-flutuante.aviso-controle) { border-color: #8a1414; }
+:root body :is(.aviso-flutuante.item, .aviso-flutuante.cura) { border-color: #3d6a2a; }
+:root body .aviso-flutuante.nivel { background: var(--latao-claro); border-color: #fff3a0; }
+:root body .cartao-comitiva { border: 1px solid #4a4d53; border-radius: 2px; background: rgba(12, 13, 15, 0.96); box-shadow: 0 1px 0 #000, 0 8px 20px rgba(0, 0, 0, 0.6); }
+:root body .cartao-comitiva.aprova { border-color: #5f8f3e; box-shadow: inset 3px 0 0 #5f8f3e, 0 8px 20px rgba(0, 0, 0, 0.6); }
+:root body .cartao-comitiva.desaprova { border-color: #8a3a7a; box-shadow: inset 3px 0 0 #8a3a7a, 0 8px 20px rgba(0, 0, 0, 0.6); }
+:root body .cc-retrato { border: 1px solid var(--aresta); background: #0b0c0e; }
+:root body .toast { border-width: 1px; border-radius: 2px; background: rgba(12, 13, 15, 0.96); box-shadow: 0 1px 0 #000, 0 8px 20px rgba(0, 0, 0, 0.6); }
+/* as linhas das janelas de fim de luta e do amanhecer: aresta fina de ferro (as de cor continuam a cor delas) */
+:root body :is(.noite-item, .achado-espolio, .festa .ganho, .festa .habilidade-nova, .espolio-linha, .espolio-contrato) {
+  border-width: 1px; border-radius: 2px; background: rgba(0, 0, 0, 0.3); }
+:root body :is(.noite-item, .achado-espolio, .espolio-linha, .espolio-contrato):not(.bom):not(.aviso):not(.perigo):not(.feito):not([class*="rar-"]) { border-color: var(--aresta); }

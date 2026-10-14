@@ -269,7 +269,7 @@ function itemVoa(chip, id) {
     if (!para || !para.offsetParent) { if (performance.now() - inicio < 900) return setTimeout(tentar, 60); return soltar(); }
     const a = chip.getBoundingClientRect(), b = para.getBoundingClientRect();
     if (b.bottom < 0 || b.top > innerHeight || !a.width) return soltar();
-    const v = el("span", "item-voando", spr(Telas.iconeConsumivel(id, "saco"), 2));
+    const v = el("span", "item-voando", Icones.consumivel(id) || spr(Telas.iconeConsumivel(id, "saco"), 2));
     v.style.left = a.left + 10 + "px";
     v.style.top = a.top + a.height / 2 + "px";
     document.body.appendChild(v);

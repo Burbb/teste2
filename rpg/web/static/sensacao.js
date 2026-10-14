@@ -366,7 +366,7 @@ const Sensacao = (() => {
   async function espolio(caixa, d) {
     const S = (n, e = 1) => Sprites.img(n, e);
     const trechos = d.trechos || [], ultimo = trechos[trechos.length - 1] || [0, 0, 1], primeiro = trechos[0] || ultimo;
-    const achados = (d.itens || []).map((x) => `<span class="achado-espolio">${S(Telas.iconeConsumivel(x.id, "saco"), 2)}${x.id === "flechas" ? "" : esc(x.nome)}<b>${quantoAchou(x)}</b></span>`);
+    const achados = (d.itens || []).map((x) => `<span class="achado-espolio">${Icones.consumivel(x.id) || S(Telas.iconeConsumivel(x.id, "saco"), 2)}${x.id === "flechas" ? "" : esc(x.nome)}<b>${quantoAchou(x)}</b></span>`);
     // Cada contrato: o nome (o que ele pede), o estado curto à direita e, cumprido, onde a recompensa sai, embaixo do
     // nome e em segundo plano (ela é paga sozinha na chegada a uma vila: aqui não há o que clicar).
     const contratos = (d.contratos || []).map((c) => `<div class="espolio-contrato${c.concluido ? " feito" : ""}">${S("pergaminho", 2)}
@@ -374,12 +374,12 @@ const Sensacao = (() => {
       <b>${c.concluido ? "Concluído" : esc(c.progresso)}</b></div>`).join("");
     // Vários baús abertos juntos: os equipamentos que saíram ficam listados no resumo (cada um vem depois, na janela
     // dele, para comparar e decidir).
-    const equips = (d.equipamentos || []).map((it) => `<span class="achado-espolio equip-espolio rar-${esc(it.raridade)}">${S(it.icone, 2)}${esc(it.nome)}</span>`);
+    const equips = (d.equipamentos || []).map((it) => `<span class="achado-espolio equip-espolio rar-${esc(it.raridade)}">${Icones.item(it.icone) || S(it.icone, 2)}${esc(it.nome)}</span>`);
     const extras = achados.length || contratos || equips.length;
     // Vários baús abertos juntos: a pilha (um ícone por baú, até cinco, caindo um depois do outro) e o ×N grande ao
     // lado, para ver de relance quantos foram. N é o que o motor abriu (saiu da bolsa).
     const pilha = d.baus > 1 ? `<div class="espolio-baus" style="--n:${Math.min(d.baus, 5)}">
-      <span class="eb-pilha">${Array.from({ length: Math.min(d.baus, 5) }, (_, i) => `<span style="--i:${i}">${S(Telas.iconeConsumivel("bau", "bau"), 3)}</span>`).join("")}</span>
+      <span class="eb-pilha">${Array.from({ length: Math.min(d.baus, 5) }, (_, i) => `<span style="--i:${i}">${Icones.consumivel("bau", 48) || S(Telas.iconeConsumivel("bau", "bau"), 3)}</span>`).join("")}</span>
       <b class="eb-qtd">×${d.baus}</b></div>` : "";
     caixa.innerHTML = `<div class="festa festa-espolio">
       <div class="rotulo-festa">${esc(d.titulo || "espólio")}</div>${pilha}

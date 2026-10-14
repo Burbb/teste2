@@ -1,0 +1,271 @@
+/* A HUD de ferro (aprovada em 10/2026; o caminho dela está em ferramentas/prototipos/hud, que fica como histórico).
+   Por cima da estrutura de 01 a 13 (a disposição, os estados, as animações), esta camada dá os materiais:
+     estrutura      três molduras principais (a ficha, a coluna do centro inteira e o mundo): aço escuro com filete de
+                    latão e um rebite em cada canto (hud/moldura-nove.png), barra de ~10 px e canto de 24 px
+     superfície     o carvão (hud/textura-painel.png) sob um véu escuro; a leitura um passo mais clara que os painéis,
+                    com o grão pouco marcado; a doca no metal dos botões, escurecido para combinar
+     controles      face de metal um degrau mais clara que a página, aresta fina e relevo discreto; o mouse acende a
+                    aresta e a face, o pressionado afunda e desce 1 px, o selecionado é latão com a barra à esquerda, o
+                    indisponível é tracejado com o cadeado, o foco do teclado é o anel claro por fora
+     latão          só na seleção, no foco e no que pede atenção
+   Os desenhos dos ícones vêm de icones.js (a família de ferro, pelo papel). Esta camada fica fora da trava de pixel
+   art (tests/test_estilo_pixel.py: FORA_DA_TRAVA): os materiais são pintados, com véus translúcidos e relevo suave.
+   Toda regra começa por ":root body": a mesma força de body.<estado> (body.em-combate...), que é a que estas regras
+   tinham no experimento; assim elas vencem o material antigo de 01 a 13 sem depender de uma classe no corpo. */
+
+:root body {
+  --m-principal: url(../hud/moldura-nove.png);
+  --m-faixa: url(../hud/moldura-faixa.png);
+  --t-painel: url(../hud/textura-painel.png);
+  --t-botao: url(../hud/textura-botao.png);
+  /* a superfície (a "mais escura" da comparação): as três colunas e a leitura com o véu denso, o grão quase apagado;
+     o topo da janela e as janelas por cima, o véu de painel */
+  --veu-superficie: linear-gradient(rgba(7, 8, 10, 0.72), rgba(7, 8, 10, 0.82));
+  --veu-painel: linear-gradient(rgba(8, 9, 11, 0.6), rgba(8, 9, 11, 0.74));
+  --veu-leitura: linear-gradient(rgba(12, 13, 15, 0.7), rgba(11, 12, 14, 0.78));
+  /* o metal da doca: o dos botões, escurecido para assentar na superfície escura */
+  --veu-metal: linear-gradient(rgba(255, 255, 255, 0.035), rgba(0, 0, 0, 0.22)), linear-gradient(rgba(10, 11, 13, 0.56), rgba(10, 11, 13, 0.66));
+  --latao: #c9a14a;
+  --latao-claro: #f2d27a;
+  --ferro-fio: #2b2d31;
+  --sec: #9d978b;
+  --fio-escuro: rgba(0, 0, 0, 0.75);
+  --fio-claro: rgba(255, 255, 255, 0.05);
+  --aresta: #3a3d43;
+  --aresta-viva: #6f737b;
+  --aresta-face: #4a4e56;
+  /* a face dos botões centrais: um degrau mais clara que a página, luz em cima e sombra embaixo */
+  --face: linear-gradient(rgba(255, 255, 255, 0.085), rgba(255, 255, 255, 0.025) 48%, rgba(0, 0, 0, 0.14)),
+    linear-gradient(rgba(34, 36, 41, 0.62), rgba(26, 27, 31, 0.7));
+  --relevo: inset 0 1px 0 rgba(255, 255, 255, 0.09), inset 0 -1px 0 rgba(0, 0, 0, 0.5), 0 1px 0 #000, 0 2px 3px rgba(0, 0, 0, 0.35);
+  /* a face leve dos componentes internos (cartões, mercadorias, serviços) */
+  --hud-face: linear-gradient(rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.01) 45%, rgba(0, 0, 0, 0.16)), rgba(17, 18, 21, 0.92);
+  --hud-face-viva: linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.035) 45%, rgba(0, 0, 0, 0.1)), rgba(30, 32, 36, 0.95);
+  --hud-relevo: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 1px 0 #000;
+  --hud-fio: 0 1px 0 rgba(0, 0, 0, 0.75), 0 2px 0 rgba(255, 255, 255, 0.05);
+  background: #0a0a0b;
+}
+/* os desenhos da família (icones.js) já vêm no tamanho de uso: sem o "pixelated" dos sprites */
+:root body img.desenho, :root body picture.desenho img { image-rendering: auto; }
+
+/* ------------------------------------------------------------ a mesa e as três molduras principais */
+:root body #mesa { gap: 6px; padding: 8px 10px; }
+@media (max-width: 1280px) { :root body #mesa { gap: 6px; padding: 6px 8px; } }
+:root body #heroi, :root body #mundo, :root body #palco {
+  border: 12px solid transparent; border-image: var(--m-principal) 24 / 24px round; box-shadow: none;
+  background: var(--veu-superficie), var(--t-painel) 0 0 / 128px; background-clip: padding-box; }
+:root body #heroi { padding: 10px 12px 12px; }
+:root body #mundo { padding: 8px 10px 10px; }
+:root body #palco { gap: 0; padding: 0; align-items: stretch; min-width: 0; overflow: hidden; }
+/* dentro do centro: o topo das barras, a cena e a doca sem moldura própria, separados por fios (sombra e luz) */
+:root body #hud, :root body #cena, :root body #doca { border: 0; border-image: none; box-shadow: none; max-width: none; width: 100%; }
+:root body #hud { background: none; padding: 6px 12px 7px; box-shadow: 0 1px 0 var(--fio-escuro), 0 2px 0 var(--fio-claro); position: relative; z-index: 1; }
+:root body #cena { background: none; }
+:root body #cena > #vista { box-shadow: 0 1px 0 var(--fio-escuro); }
+:root body #pagina { background: var(--veu-leitura), var(--t-painel) 64px 32px / 128px; scrollbar-color: #5a5146 transparent; }
+:root body #doca { background: var(--veu-metal), var(--t-botao) 0 0 / 128px; padding: 0; box-shadow: 0 -1px 0 var(--fio-escuro), inset 0 1px 0 var(--fio-claro); }
+/* o topo da janela: a faixa de ferro embaixo, sem os cantos */
+:root body #topo { border: 0 solid transparent; border-bottom-width: 6px; border-image: var(--m-faixa) 10 / 0 0 10px 0 round;
+  background: var(--veu-painel), var(--t-painel) 0 0 / 128px; }
+
+/* ------------------------------------------------------------ o topo das barras, dentro do centro */
+/* O retrato num nicho escuro de aresta fina, com o nível numa plaquinha de latão. */
+:root body .hud-retrato { border: 1px solid var(--aresta); border-image: none; background: #0b0c0e; box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.9); }
+:root body .hud-retrato .nivel { background: var(--latao); }
+:root body .hud-retrato img.desenho { display: block; width: 48px; height: 48px; }
+/* as barras: até 400 px (com o número logo depois) e são elas que cedem primeiro quando a coluna estreita. Na janela
+   larga (a coluna para de crescer em ~1064 px) o retrato, as barras e os recursos ficam juntos, no meio, alinhados com
+   a página e a doca, em vez de as barras se esticarem ou de um vão abrir entre os grupos. */
+:root body #hud-linha { justify-content: center; }
+:root body .hud-vitais { flex: 1 10 400px; max-width: 400px; }
+:root body .hud-recursos { flex: none; }
+:root body .vital img.desenho { width: 20px; height: 20px; flex: none; margin: -2px 0; }
+:root body .recurso { padding: 2px 8px; background: none; }
+:root body .recurso + .recurso { box-shadow: -1px 0 0 var(--ferro-fio); }
+:root body .recurso .icones img.desenho { width: 24px; height: 24px; margin-bottom: 2px; }
+/* as barras: a moldura de ferro, o preenchimento à parte */
+:root body .barra-px { height: 13px; background: #0b0a09; box-shadow: none; overflow: hidden;
+  border: 3px solid transparent; border-image: url(../hud/barra-moldura.png) 3 6 / 3px 6px round; background-clip: padding-box; }
+:root body .barra-px .enchimento { background: var(--enche) 0 0 / auto 100% repeat-x; }
+:root body .barra-px.vida { --enche: url(../hud/enche-vermelha.png); }
+:root body .barra-px.vigor { --enche: url(../hud/enche-laranja.png); }
+:root body .barra-px.mana { --enche: url(../hud/enche-azul.png); }
+:root body .barra-px.xp { --enche: url(../hud/enche-roxa.png); height: 13px; }
+:root body .barra-px .rastro { background: #e8dcc0; }
+:root body .vital .barra-px { height: 13px; }
+
+/* ------------------------------------------------------------ a cena e a leitura */
+/* O lugar é apresentado no painel do mundo; no centro, a página do lugar abre só com a linha do momento, em versal
+   pequena. A cena de missão mantém o título dela, menor, sem o ornamento. */
+:root body #folha { padding: 14px 26px 16px; }
+:root body #cena-cab { margin-bottom: 10px; }
+:root body #cena-cab[data-tipo="local"] .cena-titulo { display: none; }
+:root body #cena-cab .cena-titulo { font-size: calc(var(--px) * 32); }
+:root body #cena-cab .ornamento { display: none; }
+:root body #cena-cab .cena-sub { margin-top: 6px; font-family: var(--leitura); font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--sec); }
+:root body #cena-cab[data-tipo="local"] .cena-sub { margin-top: 0; }
+:root body #texto p { color: #ece2cc; }
+:root body #texto .passado { opacity: 0.7; }  /* os turnos anteriores da luta se leem no carvão */
+:root body #texto hr { background: var(--ferro-fio); box-shadow: 0 1px 0 #000; }
+/* a barra das telas (Voltar, título, o que importa): o fio de sombra e luz */
+:root body #barra-tela { background: none; box-shadow: var(--hud-fio); }
+:root body .pergunta-rotulo { color: var(--sec); letter-spacing: 0.14em; }
+:root body .escolhas { gap: 5px; }
+:root body .op-grupo { font-family: var(--leitura); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #7d776c; margin: 6px 0 0 2px; }
+:root body .op-grupo:empty { display: none; }
+
+/* ------------------------------------------------------------ os botões: escolhas, caminhos e botões de janela */
+:root body :is(.escolha, .caminho, .botao-janela) {
+  border: 1px solid var(--aresta-face); border-image: none; border-radius: 2px;
+  background: var(--face), var(--t-botao) 0 0 / 128px; background-clip: padding-box; box-shadow: var(--relevo); }
+:root body .escolha { padding: 6px 12px 6px 7px; gap: 12px; }
+:root body .caminho { padding: 6px 10px 6px 6px; }
+/* mouse por cima: a aresta acende e a face clareia */
+:root body :is(.escolha, .caminho.clicavel, .botao-janela):hover {
+  border-color: var(--aresta-viva); color: #fff7e6;
+  background: linear-gradient(rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.06) 48%, rgba(0, 0, 0, 0.08)),
+    linear-gradient(rgba(50, 53, 60, 0.62), rgba(38, 40, 46, 0.7)), var(--t-botao) 0 0 / 128px; background-clip: padding-box; }
+/* pressionado: a face afunda e o conteúdo desce 1 px (pela propriedade translate: a animação de entrada das opções
+   fica com transform: none) */
+:root body :is(.escolha, .caminho, .botao-janela):active {
+  translate: 0 1px; box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.85);
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.35)), var(--t-botao) 0 0 / 128px; background-clip: padding-box; }
+/* selecionado: aresta de latão, a barra de latão à esquerda e a marca ◆ (forma, não só cor) */
+:root body :is(.escolha, .botao-janela)[aria-pressed="true"] { border-color: var(--latao); box-shadow: inset 3px 0 0 var(--latao), var(--relevo); color: #fff1cc; }
+:root body .escolha[aria-pressed="true"] .rotulo::before { content: "◆ "; color: var(--latao-claro); }
+/* indisponível: a aresta tracejada, a face apagada, o cadeado e a nota escrita */
+:root body :is(.escolha, .botao-janela)[aria-disabled="true"] { border-style: dashed; border-color: #4a4c50;
+  background: rgba(20, 20, 22, 0.6); color: #8c877e; filter: none; box-shadow: none; cursor: not-allowed; }
+:root body #prompt .escolha[aria-disabled="true"] .rotulo::after { content: " · indisponível"; font-size: 15px; color: #8c877e; }
+:root body .escolha[aria-disabled="true"] .tecla { position: relative; }
+:root body .escolha[aria-disabled="true"] .tecla::after { content: ""; position: absolute; right: -10px; top: -10px; width: 16px; height: 16px;
+  background: var(--cadeado) 0 0 / 100%; image-rendering: pixelated; }  /* o cadeado do jogo (o mesmo do mercado) */
+/* foco do teclado: um anel claro por fora, que não some no escuro nem se confunde com o hover */
+:root body :is(.escolha, .caminho, .botao-janela, .atalho, .rastro-contrato):focus-visible { outline: 2px solid var(--latao-claro); outline-offset: 2px; }
+/* o número: um nicho escuro de aresta fina; com o mouse ou o foco, a aresta vira latão */
+:root body .escolha .tecla { width: 26px; height: 26px; border: 1px solid #3c3f45; border-image: none; border-radius: 2px;
+  background: #08090b; box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.9); color: #e8dcc0; font-size: 15px; }
+:root body .escolha:is(:hover, :focus-visible) .tecla { border-color: var(--latao); color: var(--latao-claro); }
+/* o que o motor já diz: a missão e o contrato pelo grupo e pela marca à esquerda; quem abre outra escolha, pela seta › */
+:root body .escolha.op-missao { box-shadow: inset 3px 0 0 #8a6a2a, var(--relevo); }
+:root body .escolha.op-contrato { box-shadow: inset 3px 0 0 #5a5e66, var(--relevo); }
+:root body .escolha .op-abre { margin-left: 8px; font-size: 22px; line-height: 1; color: var(--sec); }
+/* o botão principal (Continuar): a placa de latão */
+:root body .continuar { border: 1px solid var(--latao); border-image: none; border-radius: 2px; color: var(--latao-claro);
+  background: linear-gradient(rgba(201, 161, 74, 0.1), rgba(0, 0, 0, 0.18)), rgba(20, 21, 25, 0.95); background-clip: padding-box;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 1px 0 #000, 0 3px 6px rgba(0, 0, 0, 0.45); }
+:root body .continuar:is(:hover, :focus-visible) { border-color: var(--latao-claro); color: #fff1cc;
+  background: linear-gradient(rgba(242, 210, 122, 0.16), rgba(0, 0, 0, 0.1)), rgba(32, 33, 38, 0.96); }
+:root body .continuar:focus-visible { outline: 2px solid var(--latao-claro); outline-offset: 2px; }
+:root body .continuar:active { translate: 0 1px; box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.85); }
+
+/* ------------------------------------------------------------ a doca: uma barra só, com divisões discretas */
+/* Cada estado tem forma além da cor: o mouse clareia a casa, a tela aberta é latão com o traço embaixo, o pressionado
+   escurece e desce, o foco do teclado é o anel claro por dentro. */
+:root body #doca .atalhos { gap: 0; margin: 0 auto; width: auto; }
+:root body #doca .atalho, :root body #doca .atalho + .atalho {
+  width: 84px; border: 0; border-image: none; border-radius: 0; background: none; padding: 7px 4px 8px;
+  box-shadow: inset 1px 0 0 var(--fio-claro), inset -1px 0 0 var(--fio-escuro); }
+:root body #doca .atalho:hover { background: rgba(255, 255, 255, 0.07); color: #fff7e6; transform: none; }
+:root body #doca .atalho:active { background: rgba(0, 0, 0, 0.35); transform: translateY(1px); }
+:root body #doca .atalho.atual { color: var(--latao-claro); background: rgba(201, 161, 74, 0.09); }
+:root body #doca .atalho.atual::after { left: 18%; right: 18%; bottom: 0; height: 2px; background: var(--latao-claro); }
+:root body #doca .atalho:focus-visible { outline-offset: -3px; }
+:root body #doca .doca-sep { display: block; width: 2px; margin: 8px 3px; background: var(--fio-escuro); box-shadow: 1px 0 0 var(--fio-claro); }
+@media (max-width: 1280px) {
+  :root body #doca .atalho, :root body #doca .atalho + .atalho { width: 76px; }
+  :root body #doca .atalho-nome { font-size: 14px; }
+}
+
+/* ------------------------------------------------------------ o painel do mundo */
+:root body #mundo .secao { margin-top: 14px; }
+:root body #mundo .local-nome { font-size: calc(var(--px) * 32); }
+:root body #mapa-mini .mapa-px { border: 1px solid var(--aresta); border-image: none; box-shadow: 0 1px 0 #000, inset 0 0 0 1px #000; }
+:root body .rastro-contrato { background: rgba(255, 255, 255, 0.02); box-shadow: inset 2px 0 0 #4a4c52; padding: 6px 8px; margin-bottom: 4px; animation: none; }
+:root body .rastro-missao { box-shadow: inset 2px 0 0 var(--latao); }
+:root body .rastro-contrato.cacavel:hover { background: rgba(255, 255, 255, 0.05); }
+:root body .rastro-cacar { color: var(--latao-claro); }
+:root body .rastro-arte { border: 1px solid var(--aresta); border-image: none; background: #0b0c0e; }
+:root body #mundo .caminho > img.desenho { width: 40px; height: 40px; margin: -4px 0; }
+
+/* ------------------------------------------------------------ títulos de seção: versal pequena com o fio */
+:root body :is(#heroi, #mundo) .secao h3 {
+  font-family: var(--leitura); font-weight: 700; font-size: 13px; line-height: 1.2; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--sec); text-shadow: none; margin: 0 0 8px; gap: 8px; }
+:root body :is(#heroi, #mundo) .secao h3::before { display: none; }
+:root body :is(#heroi, #mundo) .secao h3::after { content: ""; flex: 1; height: 1px; padding: 0; background: var(--ferro-fio); box-shadow: 0 1px 0 #000; border: 0; }
+
+/* ------------------------------------------------------------ a ficha do herói */
+:root body #heroi .secao { margin-top: 14px; }
+/* a identidade: o retrato num nicho escuro de aresta fina */
+:root body #heroi .identidade { padding-bottom: 10px; border-bottom: 1px solid var(--ferro-fio); box-shadow: 0 1px 0 #000; }
+:root body #heroi .retrato-grande { width: auto; height: auto; padding: 4px; border: 1px solid var(--aresta); border-image: none;
+  background: #0b0c0e; box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.9); }
+:root body #heroi .retrato-grande picture { display: block; }
+:root body #heroi .retrato-grande picture img { display: block; width: 80px; height: 80px; }
+:root body #heroi .retrato-grande img.sprite { --s: 64; }  /* as classes sem retrato: o desenho delas, maior */
+@media (max-height: 800px) { :root body #heroi .retrato-grande picture img { width: 64px; height: 64px; } }
+:root body #heroi .heroi-titulo { color: var(--sec); }
+/* a experiência: sem divisória própria (o fio do título "Atributos", logo abaixo, já separa) */
+:root body #heroi .xp-linha { margin-top: 10px; background: none; padding-bottom: 2px; }
+:root body #heroi .legenda-linha { font-size: 14px; color: var(--sec); }
+/* o aviso de talento: a placa de latão (é destaque) */
+:root body #heroi .talento-aviso { border: 1px solid #6b5426; border-image: none; background: rgba(201, 161, 74, 0.07);
+  color: var(--latao-claro); text-shadow: none; }
+:root body #heroi .talento-aviso:is(:hover, :focus-visible) { border-color: var(--latao-claro); }
+
+/* atributos: sem caixas, duas colunas, na superfície do painel, com um fio claro entre as colunas e entre as linhas.
+   Em cada um: o ícone de 24 px, o nome discreto, o valor em destaque e a penalidade ao lado dele (do motor) */
+:root body .atributos { gap: 0; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+:root body .atributo { display: grid; grid-template-columns: 24px minmax(0, 1fr); grid-template-rows: auto auto; column-gap: 8px; row-gap: 1px;
+  align-items: center; padding: 7px 10px 7px 2px; border: 0; border-image: none; background: none; }
+:root body .atributo:nth-child(even) { padding: 7px 2px 7px 11px; border-left: 1px solid rgba(255, 255, 255, 0.07); }
+:root body .atributo:nth-child(-n+2) { border-bottom: 1px solid rgba(255, 255, 255, 0.07); }
+:root body .atributo > img { grid-row: 1 / 3; width: 24px; height: 24px; }
+:root body .atributo .nome { font-size: 13px; line-height: 1.1; color: var(--sec); }
+:root body .atributo .valor { margin: 0; font-family: var(--texto); font-weight: 700; font-size: 21px; line-height: 1.05; color: #f3e6c8; white-space: nowrap; }
+:root body .atributo .valor-penal { margin-left: 4px; font-family: var(--leitura); font-size: 12px; font-weight: 700; }
+:root body .atributo.abaixo .valor { color: var(--vermelho, #e2574c); }
+:root body .atributo:hover { background: rgba(255, 255, 255, 0.045); border-color: rgba(255, 255, 255, 0.07); }
+@media (max-width: 1400px) {
+  :root body .atributo { column-gap: 6px; padding-right: 6px; }
+  :root body .atributo:nth-child(even) { padding-left: 8px; }
+  :root body .atributo .nome { font-size: 12.5px; }
+  :root body .atributo .valor { font-size: 19px; }
+}
+
+/* espaços de item (na ficha, no inventário, no mercado): o nicho escuro, aresta fina, sombra por dentro; a raridade
+   num fio interno da cor dela; o item que não serve agora, o canto cortado em vermelho */
+:root body .slot-px { border: 1px solid var(--aresta); border-image: none; border-radius: 2px;
+  background: #0a0b0d; box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.85), 0 1px 0 rgba(255, 255, 255, 0.04); }
+:root body .slot-px.r-magico { box-shadow: inset 0 0 0 1px #4d74e0, inset 0 2px 4px rgba(0, 0, 0, 0.85); }
+:root body .slot-px.r-raro { box-shadow: inset 0 0 0 1px var(--latao), inset 0 2px 4px rgba(0, 0, 0, 0.85); }
+:root body .slot-px.r-lendario { box-shadow: inset 0 0 0 1px #e0782f, inset 0 2px 4px rgba(0, 0, 0, 0.85); }
+:root body .slot-px:is(.usavel, .clicavel, [draggable="true"]):hover { border-color: var(--aresta-viva); background: #121418; }
+:root body .slot-px:focus-visible { outline: 2px solid var(--latao-claro); outline-offset: 2px; }
+:root body .slot-px img.desenho { width: 32px; height: 32px; }
+:root body .slot-px.vazio img.desenho, :root body .slot-px img.fantasma.desenho { opacity: 0.26; filter: grayscale(1) brightness(1.5); }
+:root body .slot-px.alvo { box-shadow: inset 0 0 0 2px var(--latao-claro); }  /* onde o item arrastado cabe */
+:root body .slot-px.inutil::after { content: ""; position: absolute; top: 0; right: 0; width: 0; height: 0;
+  border: 6px solid transparent; border-top-color: #b3262b; border-right-color: #b3262b; }
+:root body .slot-px .qtd { right: 2px; bottom: 1px; font-size: 14px; }
+:root body #heroi .equip-mini, :root body #heroi .slots { gap: 6px; }
+
+/* ferimentos e reputação: linhas na superfície, sem caixa; na comitiva, o retrato num nicho (a face: 16-hud-telas.css) */
+:root body #heroi .ferimento { padding: 3px 4px; border-left: 2px solid #8a1414; margin-bottom: 3px; }
+:root body .reputacao { border: 0; border-image: none; background: none; padding: 2px 4px; }
+:root body .rep-icone { width: 32px; height: 32px; border-right: 0; }
+:root body #heroi .membro .icone { border: 1px solid var(--aresta); border-image: none; background: #0b0c0e; }
+
+/* ------------------------------------------------------------ a janela do item achado */
+/* Ela abre sobre a coluna do centro: a moldura principal tira espaço, que a margem de dentro e o vão entre os cartões
+   devolvem (a 1280×720, o achado e os dois anéis cabem lado a lado). */
+:root body #sobre-achado .janela-achado { border: 12px solid transparent; border-image: var(--m-principal) 24 / 24px round;
+  background: var(--veu-painel), var(--t-painel) 0 0 / 128px; background-clip: padding-box; box-shadow: 0 16px 48px rgba(0, 0, 0, 0.8);
+  padding: 12px 8px 14px; }
+:root body .janela-achado .tela.achado { gap: 12px; }
+:root body #sobre-achado .achado-cartao, :root body #sobre-achado .achado-cartao.novo { border: 1px solid var(--aresta); border-image: none;
+  background: rgba(0, 0, 0, 0.32); box-shadow: inset 0 1px 0 var(--fio-claro); }
+:root body #sobre-achado .achado-cartao.novo { border-color: #6b5426; }
+:root body #sobre-achado .botao-janela { padding: 6px 12px; }
+:root body #sobre-achado .botao-janela kbd { border: 1px solid #4a4d53; border-image: none; background: #0b0c0e; }

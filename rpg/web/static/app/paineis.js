@@ -96,7 +96,7 @@ function desenharModificadores(mods) {
 }
 
 function recurso(id, icones, qtd, opts = {}) {
-  const imgs = icones.map((n) => spr(n, 2)).join("");
+  const imgs = icones.map((n) => Icones.recurso(n) || spr(n, 2)).join("");
   const dica = opts.titulo ? Telas.dica(esc(opts.titulo), true) : "";
   return `<div class="recurso${opts.alerta ? " alerta" : ""}${opts.vazio ? " vazio" : ""}" data-rec="${id}" ${dica}>
     <div class="icones">${imgs}</div><div class="qtd">${qtd}</div></div>`;
@@ -112,10 +112,10 @@ function desenharHud(h, antes) {
   guardarLarguras($("#hud-linha"));
   const feridas = h.ferimentos.length ? `<div class="recurso alerta" data-rec="feridas" ${Telas.dica(h.ferimentos.map((f) => `<b>${esc(f.nome)}</b><div class="bonus pior">${esc((f.explica || [""])[0])}</div>`).join("") + '<div class="rodape">Detalhes no painel do herói, à esquerda.</div>')}><div class="icones">${spr("gota", 2)}</div><div class="qtd">${h.ferimentos.length}</div></div>` : "";
   $("#hud-linha").innerHTML = `
-    <div class="hud-retrato" title="${esc(h.titulo)} nível ${h.nivel}">${spr(h.classe, 3)}<span class="nivel">${h.nivel}</span></div>
+    <div class="hud-retrato" title="${esc(h.titulo)} nível ${h.nivel}">${Icones.cabeca(h.classe) || spr(h.classe, 3)}<span class="nivel">${h.nivel}</span></div>
     <div class="hud-vitais">
-      <div class="vital" data-vital="hp" ${Telas.dica("Vida", true)}>${spr("coracao", 1)}${barra("vida", h.hp, h.max_hp, antes ? antes.hp : undefined, "hud-hp")}<span class="num">${h.hp}/${h.max_hp}</span></div>
-      <div class="vital" data-vital="rec" ${Telas.dica(esc(h.recurso), true)}>${spr(RECURSO_ICONE[h.recurso] || "estrela", 1)}${barra(RECURSO_BARRA[h.recurso] || "mana", h.rec, h.max_rec, antes ? antes.rec : undefined, "hud-rec")}<span class="num">${h.rec}/${h.max_rec}</span></div>
+      <div class="vital" data-vital="hp" ${Telas.dica("Vida", true)}>${Icones.vital("Vida") || spr("coracao", 1)}${barra("vida", h.hp, h.max_hp, antes ? antes.hp : undefined, "hud-hp")}<span class="num">${h.hp}/${h.max_hp}</span></div>
+      <div class="vital" data-vital="rec" ${Telas.dica(esc(h.recurso), true)}>${Icones.vital(h.recurso) || spr(RECURSO_ICONE[h.recurso] || "estrela", 1)}${barra(RECURSO_BARRA[h.recurso] || "mana", h.rec, h.max_rec, antes ? antes.rec : undefined, "hud-rec")}<span class="num">${h.rec}/${h.max_rec}</span></div>
       <div class="hud-condicoes">${(h.condicoes || []).map((c) => `<span class="condicao${c.grave ? " grave" : ""}" data-condicao="${esc(c.id)}" ${Telas.dica(`<b>${esc(c.texto)}</b>${c.dica.map((l) => `<div>${esc(l)}</div>`).join("")}`)}>${spr(c.icone, 1)}${esc(c.texto)}</span>`).join("")}</div>
     </div>
     <div class="hud-recursos">
@@ -153,8 +153,8 @@ function desenharHeroi(h, antes) {
   const attrs = Telas.atributosHtml(h);
   const slot = (s) => {
     const it = h.equip[s];
-    if (!it) return `<div class="slot-px mini vazio" data-mini="${s}" title="${esc(Telas.NOME_ESPACO[s])} (vazio)">${spr(Telas.VAZIO[s], 2, "fantasma")}</div>`;
-    return `<div class="slot-px mini r-${esc(it.raridade)}" data-mini="${s}" ${Telas.dicaItem(it, "", false)}>${spr(Telas.iconeItem(it), 2)}</div>`;
+    if (!it) return `<div class="slot-px mini vazio" data-mini="${s}" title="${esc(Telas.NOME_ESPACO[s])} (vazio)">${Icones.vazio(s, 32) || spr(Telas.VAZIO[s], 2, "fantasma")}</div>`;
+    return `<div class="slot-px mini r-${esc(it.raridade)}" data-mini="${s}" ${Telas.dicaItem(it, "", false)}>${Icones.item(Telas.iconeItem(it)) || spr(Telas.iconeItem(it), 2)}</div>`;
   };
   const feridas = h.ferimentos.length ? h.ferimentos.map((f) => `<div class="ferimento${f.aberto ? " aberto" : ""}" data-ferimento="${esc(f.id)}" ${Telas.dica(`<b>${esc(f.nome)}</b><div class="tipo">${f.dias ? `${Texto.plural(f.dias, "dia")} para sarar` : "não sara sozinha"}${f.aberto ? " · ferida aberta" : ""}</div>${(f.explica || []).map((l, i) => `<div class="${i ? "" : "bonus pior"}">${esc(l)}</div>`).join("")}`)}>${spr("gota", 1)}${esc(f.nome)} <small>${f.dias ? f.dias + "d" : ""}${f.aberto ? " · aberto" : ""}</small></div>`).join("")
     : '<div class="vazio">Nenhum, por enquanto.</div>';
@@ -164,7 +164,7 @@ function desenharHeroi(h, antes) {
     // (a bandagem sem ferida aberta), o espaço fica apagado e o rodapé diz por quê.
     const trata = !b.motivo && b.trata;
     const dica = `<b>${esc(b.nome)}</b>${trata ? `<div class="bonus melhor">${esc(b.trata)}</div>` : ""}<div>${Realce.texto(b.desc)}</div><div class="rodape">${b.motivo ? esc(b.motivo) : bau ? (b.qtd > 1 ? `Clique para abrir os ${b.qtd} de uma vez.` : "Clique para abrir.") : estado && estado.combate ? "Clique para usar (gasta o turno)." : "Clique para usar."}</div>`;
-    return `<div role="button" tabindex="0" class="slot-px usavel${b.motivo && !(b.alvos || []).some((a) => !a.motivo) ? " inutil" : ""}${bau && !b.motivo ? " pronto" : ""}${trata ? " trata" : ""}" data-bolsa="${esc(b.id)}" ${Telas.dica(dica)}>${spr(Telas.iconeConsumivel(b.id), 2)}<span class="qtd">${b.qtd}</span></div>`;
+    return `<div role="button" tabindex="0" class="slot-px usavel${b.motivo && !(b.alvos || []).some((a) => !a.motivo) ? " inutil" : ""}${bau && !b.motivo ? " pronto" : ""}${trata ? " trata" : ""}" data-bolsa="${esc(b.id)}" ${Telas.dica(dica)}>${Icones.consumivel(b.id) || spr(Telas.iconeConsumivel(b.id), 2)}<span class="qtd">${b.qtd}</span></div>`;
   }).join("");
   // Comitiva e animal no mesmo molde: retrato e nome com a ficha no hover, a vida em números no canto (como os
   // atributos), a barra, e embaixo a aprovação (só companheiros). O ♥ do carinho fica ao lado da vida do animal.
@@ -195,7 +195,7 @@ function desenharHeroi(h, antes) {
   }).join("");
   const comitiva = membros || fera ? `<div class="secao"><h3>Comitiva</h3>${membros}${fera}</div>` : "";
   $("#heroi").innerHTML = `
-    <div class="identidade"><div class="retrato-grande">${spr(h.classe, 3)}</div>
+    <div class="identidade"><div class="retrato-grande">${Icones.retrato(h.classe, "Retrato do herói") || spr(h.classe, 3)}</div>
       <div><div class="heroi-nome">${esc(h.nome)}</div><div class="heroi-titulo">${esc(h.titulo)} • nível ${h.nivel}</div></div></div>
     <div class="xp-linha"><div class="legenda-linha"><span>Experiência</span><span>${h.xp}/${h.xp_proximo}</span></div>${barra("xp", h.xp, h.xp_proximo, antes && antes.nivel === h.nivel ? antes.xp : undefined, antes && antes.nivel === h.nivel ? "xp" : undefined)}</div>
     ${h.pontos_talento ? `<div class="talento-linha"><div class="talento-aviso" role="button" tabindex="0" data-atalho="Talentos"><span class="estrela">${spr("estrela", 2)}</span><span>${Texto.plural(h.pontos_talento, "ponto de talento", "pontos de talento")}</span></div><span class="seta-pendencia" aria-hidden="true">${spr("seta_esq", 2)}</span></div>` : ""}
@@ -252,7 +252,7 @@ function usarDaBolsa(b, el) {
       Som.tocar("falha"); aviso("Espere a sua vez.", "info", "pergaminho"); return;
     }
     Som.tocar("item");
-    habMirando = b.nome;  // se pedir em quem, o lembrete diz o quê ("Poção de Vida · escolha o alvo")
+    habMirando = b.nome;  // se pedir em quem, o lembrete diz o quê ("Poção de Vida", "escolha o alvo")
     pedir("Itens", "usar_item", b.id);
     return;
   }
@@ -288,7 +288,7 @@ function desenharMundo(e) {
   const l = e.local;
   const clic = destinosClicaveis();
   const caminhos = e.mapa.nos.filter((n) => n.distancia).sort((a, b) => a.distancia - b.distancia || a.nome.localeCompare(b.nome))
-    .map((n) => `<div class="caminho${clic.has(n.id) ? " clicavel" : ""}" data-local="${n.id}">${spr(MapaPx.sprite(n), 2)}
+    .map((n) => `<div class="caminho${clic.has(n.id) ? " clicavel" : ""}" data-local="${n.id}">${Icones.lugar(MapaPx.sprite(n)) || spr(MapaPx.sprite(n), 2)}
       <span class="nome">${esc(n.nome)}<small>${n.nivel ? `<span class="nivel-cam ${nivelPerigo(n.nivel)}">Nível ${n.nivel}</span> · ` : ""}${esc(n.descricao)}</small></span>
       <span class="dist">${Texto.plural(n.distancia, "trecho")}</span></div>`).join("");
   const raiz = $("#mundo");

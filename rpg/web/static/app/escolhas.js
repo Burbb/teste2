@@ -200,7 +200,7 @@ function mostrarOpcoes(m) {
       const b = el("button", "atalho" + (pontos || carta ? " destaque" : ""));
       b.type = "button";
       const selo = pontos ? `<b class="selo">★${pontos}</b>` : carta ? '<b class="selo">✉</b>' : "";
-      b.innerHTML = `<span class="atalho-icone">${spr(at[3], 2)}${selo}</span><span class="atalho-nome">${esc(at[1])}</span>` +
+      b.innerHTML = `<span class="atalho-icone">${Icones.atalho(at[1]) || spr(at[3], 2)}${selo}</span><span class="atalho-nome">${esc(at[1])}</span>` +
         (at[2] ? `<kbd>${at[2].toUpperCase()}</kbd>` : "");
       b.title = o.texto + (at[2] ? ` (${at[2].toUpperCase()})` : "");
       if (atalhos.lastElementChild && Number(atalhos.lastElementChild.dataset.grupo) !== at[4]) atalhos.appendChild(el("span", "doca-sep"));
@@ -375,7 +375,7 @@ function cartaAcao(o, i, m, pos) {
       <div class="bonus">${Realce.texto(meta.desc)}</div>${danoGrimorio(meta.habilidade)}${bloqueio ? `<div class="pior">${esc(bloqueio)}</div>` : ""}`;
   } else if (meta.usar_item) {
     b.classList.add("el-cura");
-    icone = spr(Telas.iconeConsumivel(meta.usar_item), 2);
+    icone = Icones.consumivel(meta.usar_item) || spr(Telas.iconeConsumivel(meta.usar_item), 2);
     nome = meta.nome;
     rodape = `<span class="acao-custo"><b>×${meta.qtd}</b></span><span class="acao-alvo">gasta o turno</span>`;
     if (meta.motivo) bloqueio = meta.motivo;
@@ -383,7 +383,7 @@ function cartaAcao(o, i, m, pos) {
   } else {
     const it = meta.equip;
     b.classList.add("el-fisico", "troca");
-    icone = spr(Telas.iconeItem(it), 2);
+    icone = Icones.item(Telas.iconeItem(it)) || spr(Telas.iconeItem(it), 2);
     nome = "Trocar: " + it.nome;
     rodape = `<span class="acao-alvo">gasta o turno</span>`;
   }
@@ -512,11 +512,11 @@ function rodaDeAcoes(m) {
     return b;
   };
   const arma = iconeAtaque();
-  botao("atacar", spr(arma, 2), "Atacar", `<b>${esc(atk.meta.nome)}</b><div class="tipo">grátis · devolve um pouco de ${esc(heroi.recurso.toLowerCase())}</div>` +
+  botao("atacar", Icones.acao(arma) || spr(arma, 2), "Atacar", `<b>${esc(atk.meta.nome)}</b><div class="tipo">grátis · devolve um pouco de ${esc(heroi.recurso.toLowerCase())}</div>` +
     (basico ? `<div class="melhor">Dano: ${basico.min}–${basico.max} (crítico ${basico.critico})</div>` : ""),
     () => { App.som("escolha"); habMirando = atk.meta.nome; responder(m.id, acaoIdx("atacar")); });
   if (habs.length) {
-    botao("habilidades", spr("grimorio", 2), "Habilidades", "", (b) => {
+    botao("habilidades", Icones.acao("grimorio") || spr("grimorio", 2), "Habilidades", "", (b) => {
       if (janelaAberta && b.classList.contains("ativo")) { fecharJanela(); return; }
       App.som("pagina");
       abrirJanela(b, "Habilidades", habs.map((h) => linhaHabilidade(h, () => {
@@ -529,7 +529,7 @@ function rodaDeAcoes(m) {
     });
   }
   const itens = m.opcoes[acaoIdx("itens")].meta.itens || [];
-  botao("itens", spr("pocao", 2), "Itens", "<b>Itens</b><div>Poções, tônicos, bandagens e troca de arma. Usar gasta o turno.</div>", (b) => {
+  botao("itens", Icones.acao("pocao") || spr("pocao", 2), "Itens", "<b>Itens</b><div>Poções, tônicos, bandagens e troca de arma. Usar gasta o turno.</div>", (b) => {
     if (janelaAberta && b.classList.contains("ativo")) { fecharJanela(); return; }
     if (!itens.length) { tremerNao(b, "Nada na bolsa serve agora."); return; }
     App.som("pagina");
@@ -542,7 +542,7 @@ function rodaDeAcoes(m) {
   });
   if (acaoIdx("analisar") >= 0) botao("analisar", spr("olho", 2), "Analisar", "", () => responder(m.id, acaoIdx("analisar")));
   if (acaoIdx("fugir") >= 0) {
-    botao("fugir", spr("fuga", 2), "Fugir", "<b>Fugir</b><div>A chance depende da sua Agilidade contra a dos inimigos. Falhar custa o turno.</div>",
+    botao("fugir", Icones.acao("fuga") || spr("fuga", 2), "Fugir", "<b>Fugir</b><div>A chance depende da sua Agilidade contra a dos inimigos. Falhar custa o turno.</div>",
       () => { App.som("escolha"); responder(m.id, acaoIdx("fugir")); });
   }
   arcoDeBotoes(botoes);
@@ -575,10 +575,10 @@ function linhaHabilidade(h, aoClicar) {
 }
 function linhaItem(meta, aoClicar) {
   if (meta.trocar !== undefined) {
-    return { icone: spr(Telas.iconeItem(meta.equip), 2), fam: "fisico", nome: "Trocar: " + meta.equip.nome, info: "turno", slot: "troca",
+    return { icone: Icones.item(Telas.iconeItem(meta.equip)) || spr(Telas.iconeItem(meta.equip), 2), fam: "fisico", nome: "Trocar: " + meta.equip.nome, info: "turno", slot: "troca",
       dica: Telas.htmlItem(meta.equip, "Trocar de arma no meio da luta gasta o seu turno."), aoClicar };
   }
-  return { icone: spr(Telas.iconeConsumivel(meta.usar_item), 2), fam: "cura", nome: meta.nome, info: `×${meta.qtd}`, slot: "item",
+  return { icone: Icones.consumivel(meta.usar_item) || spr(Telas.iconeConsumivel(meta.usar_item), 2), fam: "cura", nome: meta.nome, info: `×${meta.qtd}`, slot: "item",
     dica: `<b>${esc(meta.nome)}</b><div class="tipo">Você tem ${meta.qtd} · gasta o turno</div><div class="bonus">${Realce.texto(meta.desc)}</div>${meta.motivo ? `<div class="pior">${esc(meta.motivo)}</div>` : ""}`,
     bloqueio: meta.motivo, aoClicar };  // apagado, a dica já diz por quê (como nas habilidades)
 }
@@ -678,7 +678,7 @@ function rodaMira(m) {
   Batalha.alvos(m.opcoes, (i) => responder(m.id, i));
   m.opcoes.forEach((o, i) => { if (o.meta && o.meta.alvo) pergunta.teclasNum.push(() => responder(m.id, i)); });
   const voltar = m.opcoes.findIndex(ehVoltar);
-  const chip = el("div", "roda-mira", `<span>${habMirando ? `<b>${esc(habMirando)}</b> · ` : ""}escolha o alvo</span>`);
+  const chip = el("div", "roda-mira", `<span>${habMirando ? `<b>${esc(habMirando)}</b> ` : ""}escolha o alvo</span>`);
   if (voltar >= 0) {
     pergunta.voltar = voltar;
     if (viaBarra) pergunta.aoVoltar = () => { pendente = { chave: "_voltar", valor: true }; };
@@ -719,7 +719,7 @@ function botaoGrimorio(grupo) {
   b.dataset.grupo = grupo;
   b.title = "Grimório: suas habilidades e o dano de cada uma (P)";
   b.dataset.sempre = "1";  // funciona com a doca apagada
-  b.innerHTML = `<span class="atalho-icone">${spr("grimorio", 2)}</span><span class="atalho-nome">Grimório</span><kbd>P</kbd>`;
+  b.innerHTML = `<span class="atalho-icone">${Icones.atalho("Grimório") || spr("grimorio", 2)}</span><span class="atalho-nome">Grimório</span><kbd>P</kbd>`;
   b.addEventListener("click", (ev) => { ev.stopPropagation(); Telas.abrirGrimorio(); });
   return b;
 }

@@ -7,6 +7,8 @@
 
   const BRILHO_RARIDADE = { comum: ["#f1e4c4", "#c0b8a8"], magico: ["#7fb0ff", "#c8e0ff", "#ffffff"],
     raro: ["#f2c94c", "#fff3a0", "#ffffff"], lendario: ["#ffb35c", "#e0782f", "#fff3a0", "#ffffff"] };
+  /** O desenho de um item no cartão: o da interface (Icones), ou o sprite do jogo, no mesmo tamanho. */
+  const arte = (sprite, escala) => Icones.porDesenho(sprite, 16 * escala) || S(sprite, escala);
   /** Item encontrado: o cartão dele (sprite, raridade, bônus, diferença para o seu) e, ao lado, o que você usa. */
   function achado(d) {
     const it = d.item;
@@ -16,12 +18,12 @@
     const aneis = d.espacos && (d.equipados || []).length;
     const eq = aneis ? `<div class="achado-aneis">${d.espacos.map((e) => e.item
       ? `<div class="achado-cartao atual compacto rar-${h(e.item.raridade)}" data-espaco="${h(e.espaco)}"><span class="achado-selo">${h(e.nome)} · você usa</span>
-          <div class="compacto-corpo"><div class="achado-arte pequena">${S(iconeItem(e.item), 3)}</div><div>${htmlItem(e.item, "", false)}</div></div></div>`
+          <div class="compacto-corpo"><div class="achado-arte pequena">${arte(iconeItem(e.item), 3)}</div><div>${htmlItem(e.item, "", false)}</div></div></div>`
       : `<div class="achado-cartao atual compacto vazio" data-espaco="${h(e.espaco)}"><span class="achado-selo">${h(e.nome)} · vazio</span>
-          <div class="compacto-corpo"><div class="achado-arte pequena">${S(VAZIO[e.espaco], 3, "fantasma")}</div></div></div>`).join("")}</div>`
+          <div class="compacto-corpo"><div class="achado-arte pequena">${Icones.vazio(e.espaco, 48) || S(VAZIO[e.espaco], 3, "fantasma")}</div></div></div>`).join("")}</div>`
       : (d.equipados || []).map((e) => `<div class="achado-cartao atual rar-${h(e.raridade)}">
         <span class="achado-selo">Você usa</span>
-        <div class="achado-arte pequena">${S(iconeItem(e), 3)}</div>${htmlItem(e, "", false)}</div>`).join("");
+        <div class="achado-arte pequena">${arte(iconeItem(e), 3)}</div>${htmlItem(e, "", false)}</div>`).join("");
     // Mochila cheia: o que sai do corpo fica para trás (o anel que vai para o espaço vazio não tira nada).
     const aviso = !d.pode_usar || d.cabe ? "" : aneis && d.espacos.some((e) => !e.item)
       ? '<div class="pior">Mochila cheia: substituir um anel deixa o antigo para trás.</div>'
@@ -30,7 +32,7 @@
       <div class="achado-cartao novo rar-${rar}">
         <div class="achado-raios" aria-hidden="true"></div>
         <span class="achado-selo">Você encontrou</span>
-        <div class="achado-arte">${S(iconeItem(it), 4)}</div>
+        <div class="achado-arte">${arte(iconeItem(it), 4)}</div>
         ${htmlItem(it, "", true)}${aviso}
       </div>${eq}</div>`;
   }

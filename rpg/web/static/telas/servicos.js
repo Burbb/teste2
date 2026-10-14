@@ -24,7 +24,7 @@
       : `<span class="serv-linha">${S(l.icone, 1)}<span class="serv-rotulo">${h(l.rotulo)}:</span> ${Realce.texto(l.texto)}</span>`).join("")
       : efeito ? `<span class="serv-efeito">${Realce.texto(efeito)}</span>` : "";
     return `<button type="button" class="servico${motivo ? " caro" : ""}${limite ? " limite" : ""}" ${attrs} ${dicaAttr}${motivo ? ` aria-disabled="true" data-motivo="${h(motivo)}"` : ""}>
-      <span class="slot-px${r}">${S(icone, 2)}</span>
+      <span class="slot-px${r}">${Icones.porDesenho(icone) || S(icone, 2)}</span>
       <span class="serv-texto"><b class="serv-nome${r}">${h(nome)}</b>${corpo}</span>
       <span class="serv-fim">${fim}</span></button>`;
   }

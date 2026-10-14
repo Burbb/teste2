@@ -148,10 +148,29 @@ const Sprites = (() => {
     const dpr = window.devicePixelRatio || 1;
     document.documentElement.style.setProperty("--px", Math.max(1, Math.round(dpr)) / dpr + "px");
   }
+  // Os materiais da HUD de ferro (css/14-hud.css): os anéis, os bicos dos balões e os fios da interface são as mesmas
+  // grades, pintadas nas cores do ferro no lugar do bronze (j, J, a); as pontas de ouro das divisórias, a estrelinha e
+  // os losangos dos títulos saem. O bronze continua nos sprites (a paleta não muda) e no protótipo (bronze: true).
+  const FERRO = { anel_j: { j: "#3a3d43" }, anel_a: { a: "#6f737b" }, bico_j: { j: "#3a3d43" }, bico_a: { a: "#6f737b" },
+    retrato_a: { J: "#3a3d43", a: "#4a4e56" }, fio: { J: "#2b2d31" }, fio_v: { J: "#2b2d31" }, fio_cabeca: { J: "#2b2d31", j: "#000000" } };
+  const FORA_DO_FERRO = new Set(["ponta", "estrelinha", "fim_cabeca", "ornamento"]);
+  /** A grade `nome` com algumas letras trocadas por outras cores (o resto pela paleta), como data URL. */
+  function repintado(nome, cores) {
+    const grade = S[nome], c = document.createElement("canvas");
+    c.width = grade[0].length; c.height = grade.length;
+    const x = c.getContext("2d");
+    grade.forEach((linha, y) => [...linha].forEach((letra, k) => {
+      const cor = cores[letra] || PALETA[letra];
+      if (cor) { x.fillStyle = cor; x.fillRect(k, y, 1, 1); }
+    }));
+    return c.toDataURL();
+  }
+
   let publicado = false;
   /** Põe no :root a unidade de pixel, a paleta (--p-<letra>), as texturas, os pontilhados, as molduras e os sprites
-   *  que o CSS usa. Uma vez só: cada troca no :root recalcula o estilo da página inteira. */
-  function publicar() {
+   *  que o CSS usa. Uma vez só: cada troca no :root recalcula o estilo da página inteira. Os materiais da interface
+   *  saem em ferro (a HUD); com `bronze`, no bronze de antes (o protótipo da HUD, que guarda as versões anteriores). */
+  function publicar({ bronze = false } = {}) {
     unidade();
     if (publicado) return;
     publicado = true;
@@ -167,7 +186,8 @@ const Sprites = (() => {
     // Fuligem por cima da pedra: os painéis afundam na sombra e a luz fica na cena; a página, mais escura ainda.
     raiz.setProperty("--fumo-painel", u(fumo("k", 128, 5, 32, 0.5)));
     raiz.setProperty("--fumo-fundo", u(fumo("k", 128, 9, 32, 0.75)));
-    for (const n of MOLDURAS) raiz.setProperty(`--${n.replace("_", "-")}`, u(url(n)));
+    const material = (n) => (bronze || !FERRO[n] ? u(url(n)) : u(repintado(n, FERRO[n])));
+    for (const n of MOLDURAS) raiz.setProperty(`--${n.replace("_", "-")}`, material(n));
     for (const n of [4, 8, 12]) raiz.setProperty(`--veu-${n}`, u(pontilhado("k", n)));
     // O relevo dos painéis: a luz vem de cima e da esquerda; a direita e o pé ficam na sombra.
     raiz.setProperty("--luz-topo", u(rampa("s", 6)));
@@ -175,7 +195,9 @@ const Sprites = (() => {
     raiz.setProperty("--sombra-dir", u(rampa("k", 4, "esquerda")));
     raiz.setProperty("--sombra-baixo", u(rampa("k", 4, "sobe")));
     raiz.setProperty("--sombra-desce", u(rampa("k", 4)));
-    for (const n of ["caveira", "cadeado", "lanterna", "estrelinha", "fio_cabeca", "fim_cabeca", "fio", "fio_v", "ponta", "ornamento", "faixa", "bico_j", "bico_a"]) raiz.setProperty(`--${n.replace("_", "-")}`, u(url(n)));
+    for (const n of ["caveira", "cadeado", "lanterna", "estrelinha", "fio_cabeca", "fim_cabeca", "fio", "fio_v", "ponta", "ornamento", "faixa", "bico_j", "bico_a"]) {
+      raiz.setProperty(`--${n.replace("_", "-")}`, !bronze && FORA_DO_FERRO.has(n) ? "none" : material(n));
+    }
   }
 
   return { img, url, canvas, existe: (n) => !!S[n], PALETA, BAYER4, pontilha, rgb, misturar, MOLDURAS, tex: { tile, pontilhado, rampa, pedra, fumo }, publicar };

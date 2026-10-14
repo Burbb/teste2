@@ -66,7 +66,7 @@ const Batalha = (() => {
     e.dataset.uid = c.uid;
     if (c.cid) e.dataset.cid = c.cid;
     if (c.tipo) e.dataset.tipo = c.tipo;
-    e.innerHTML = `<div class="carta-fx"></div><div class="icone">${S(icone(c), 2)}</div>
+    e.innerHTML = `<div class="carta-fx"></div><div class="icone">${(c.uid === "j" && Icones.cabeca(c.classe, 32)) || S(icone(c), 2)}</div>
       <div class="carta-nome"><span></span><small></small></div>
       <div class="carta-hp"><span class="barra-px vida"><span class="rastro"></span><span class="enchimento"></span></span><span class="num"></span></div>
       ${c.uid === "j" ? '<div class="carta-rec"><span class="barra-px mana"><span class="enchimento"></span></span><span class="num"></span></div><div class="carta-flechas" hidden></div>' : ""}
