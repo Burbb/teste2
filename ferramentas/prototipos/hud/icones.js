@@ -7,8 +7,13 @@
      Icones4p: HUD 4 pixel (assets4p/, preparar_hud4p.py), a família de ferro com contorno duro. */
 "use strict";
 
+/** De onde os desenhos vêm: no protótipo, a própria pasta; no jogo com a HUD experimental (jogo/ligar.js),
+ *  "/experimento/". */
+const RAIZ_ICONES = window.HUD_RAIZ || "";
+
 function familiaDeIcones(cfg) {
-  const { DIR, ITEM, VAZIO, BOLSA, ATRIBUTO, RECURSO, VITAL, ATALHO, LUGAR, RETRATO } = cfg;
+  const DIR = RAIZ_ICONES + cfg.DIR;
+  const { ITEM, VAZIO, BOLSA, ATRIBUTO, RECURSO, VITAL, ATALHO, LUGAR, RETRATO } = cfg;
   const CABECA = cfg.CABECA || {}, RODA = cfg.RODA || {};
   const src = (peca, lado) => `${DIR}${peca}-${lado}.png`;
   const srcset = (peca, lado) => `${DIR}${peca}-${lado}@2x.png 2x`;
@@ -77,7 +82,8 @@ function familiaDeIcones(cfg) {
     });
   }
 
-  return { img, retrato, cabeca, aplicar, ITEM, VAZIO, BOLSA, ATRIBUTO, RECURSO, VITAL };
+  return { img, retrato, cabeca, aplicar, src, srcset, nomeDoSprite, ladoAtalho: cfg.ladoAtalho,
+    ITEM, VAZIO, BOLSA, ATRIBUTO, RECURSO, VITAL, ATALHO, LUGAR, RETRATO, CABECA, RODA };
 }
 
 const Icones = {
@@ -131,13 +137,15 @@ const Icones4p = familiaDeIcones({
     secundaria: "escudo", amuleto: "amuleto", anel1: "anel", anel2: "anel" },
   BOLSA: { pocao_vida: "pocao", tonico: "tonico", antidoto: "antidoto", bandagem: "bandagem", bau: "bau", tocha: "tocha" },
   ATRIBUTO: { Ataque: "attr-ataque", Defesa: "attr-defesa", Agilidade: "attr-agilidade", Poder: "attr-poder" },
-  RECURSO: { pernil: "provisoes", osso_diag: "osso", tocha: "tocha", moedas: "moedas", pocao: "pocao", bandagem: "bandagem" },
+  RECURSO: { pernil: "provisoes", osso_diag: "osso", tocha: "tocha", moedas: "moedas", pocao: "pocao", bandagem: "bandagem",
+    aljava: "aljava" },  // a aljava: as flechas do Patrulheiro
   VITAL: { Vida: "vital-vida", Vigor: "vital-vigor", Mana: "vital-mana", Foco: "vital-foco" },
   ATALHO: ATALHOS("atalho-"),
   LUGAR: { vila: "lugar-vila", floresta: "lugar-floresta", pantano: "lugar-pantano", ruinas: "lugar-ruinas",
     montanha: "lugar-montanha", planicie: "lugar-planicie", cidadela: "lugar-cidadela", covil: "lugar-caverna" },
   RETRATO: { guerreiro: "retrato-guerreiro" },
   CABECA: { guerreiro: "cabeca-guerreiro" },
-  // a roda da luta: o ataque da classe (a espada do Guerreiro), Habilidades (o grimório) e Itens (a poção); Fugir fica
-  RODA: { espada: "espada", grimorio: "atalho-grimorio", pocao: "pocao" },
+  // a roda da luta: o ataque da classe (a espada do Guerreiro), Habilidades (o grimório), Itens (a poção) e Fugir (a
+  // bota com os riscos de movimento, a mesma da Agilidade: correr, não a porta do Sair do jogo)
+  RODA: { espada: "espada", grimorio: "atalho-grimorio", pocao: "pocao", fuga: "attr-agilidade" },
 });

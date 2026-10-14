@@ -571,3 +571,40 @@ Os testes acima garantem só o técnico. A leitura e o acabamento ficam para ava
 - **Faltam:** martelo e machado; as peças e armas das outras classes; unguento, bomba de fumaça, pena de fênix; os
   recursos vazios (tocha apagada, bolsa vazia, frasco vazio); Fugir; o covil vencido.
 
+
+## Sétima rodada: acabamento da HUD 4 pixel e teste funcional
+
+A HUD 4 pixel foi aprovada como direção visual. Esta rodada não gera outra proposta: acaba a luta e os botões, fecha
+as pequenas lacunas de tamanho e liga a HUD ao jogo de verdade, como teste, sem tirar a interface padrão do lugar.
+
+### Acabamento visual
+
+- **A luta** (`hud4p-luta.css`, a mesma folha no protótipo e no jogo): as cartas e a roda ganham o tratamento interno
+  dos outros controles da HUD 4 (face de metal escuro, aresta fina, relevo discreto), sem a moldura pesada dos painéis.
+  Nome, nível, vida e recurso maiores e mais claros; efeitos em etiquetas finas. Cada estado tem forma, não só cor:
+
+  | Estado | Forma |
+  |---|---|
+  | lado de cada um | marca de 3 px à esquerda: latão (você), ferro-verde (comitiva), ferrugem (inimigo) |
+  | vez de alguém | barra de latão em cima e a marca ▸ antes do nome; o pulso vira um anel que acende e apaga |
+  | sua carta, agindo | a mesma barra, a carta à frente (o jogo amplia) e o contorno claro |
+  | pode ser alvo | contorno tracejado |
+  | alvo escolhido (mouse ou teclado) | contorno cheio claro e a seta ▼ do jogo |
+  | fora da luta | aresta tracejada, apagada, com a caveira do jogo |
+  | foco do teclado | anel claro por fora |
+  | proteção, chefe | o anel por fora do jogo continua (azul, ferrugem) |
+
+  A roda: o medalhão vira um nicho de item, o nome uma placa de metal, a tecla o nicho escuro das opções; latão só
+  na ação aberta e no foco. A janelinha de habilidades e itens e as linhas dela seguem a janela leve da HUD 4 (o ícone
+  mantém o fio da cor do elemento). Disposição, ações e reações são as do jogo: dano, cura, fuga, derrota, proteção,
+  contra-ataque, Revide, efeitos e golpe preparado não mudaram.
+- **Fugir** usa a bota com os riscos de movimento (o desenho da Agilidade), com o nome escrito; a porta continua só no
+  Sair do jogo.
+- **Botões centrais conferidos durante a interação, no jogo** (`capturas-jogo/estados-botoes-jogo.png`): o mouse por
+  cima mal se via e o pressionado não descia (a animação de entrada das opções prende `transform: none`). Agora o mouse
+  clareia a face um degrau a mais e o pressionado escurece e desce 1 px pela propriedade `translate`. Indisponível
+  (aresta tracejada, texto riscado e o motivo) e foco (anel de latão) seguem como estavam.
+- **Tamanhos que faltavam** (achados no jogo): a tocha entrou no grupo dos itens (aparece na bolsa do inventário em
+  32 px; a mediana do grupo mexeu um pixel em 31 arquivos de itens); a aljava das flechas entrou nos recursos do topo;
+  atributos e lugares ganharam 32 px (Fugir, cartões menores). `preparar_hud4p.py` grava `assets4p/exibicao/indice.js`
+  com os tamanhos que existem, para a troca nunca pedir um arquivo que não há.

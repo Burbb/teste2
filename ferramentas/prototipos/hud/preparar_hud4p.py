@@ -17,6 +17,7 @@ Redução: os desenhos imitam pixel art, mas não têm uma grade nativa exata (o
 conforme a peça, e não cai em 32). Por isso não há um fator inteiro que sirva; a folha de conferência compara, em
 tamanho real, a redução macia da rodada anterior com três que mantêm a borda dura (ver `reduzir`)."""
 
+import json
 import os
 import shutil
 
@@ -53,15 +54,15 @@ ANEXO = {"11.webp": "equipamentos-itens.webp", "12.webp": "atalhos.webp", "13.we
 # Grupos: o que aparece junto tem a mesma escala visual (normalizado pela área visível). Os itens da bolsa e os do
 # equipamento dividem os mesmos nichos de 32 px: um grupo só.
 ITENS = ["elmo", "cota", "manopla", "perneiras", "botas-ferro", "maca", "espada", "escudo", "amuleto", "anel", "aljava",
-         "bandagem", "pocao", "tonico", "antidoto", "bau"]
+         "bandagem", "pocao", "tonico", "antidoto", "bau", "tocha"]  # a tocha também é item da bolsa (no inventário)
 GRUPOS = {  # grupo: (peças, tamanhos na folha de conferência, folga, tamanhos de uso)
     "atalhos": (FOLHAS["atalhos.webp"][2], (32, 36, 40), 1, (32, 36)),  # 36 na doca, 32 na roda da luta
     "itens": (ITENS, (24, 32, 40), 1, (32, 48, 64)),
-    "recursos": (["provisoes", "osso", "tocha", "moedas", "pocao", "bandagem"], (20, 24, 28), 0, (24,)),
+    "recursos": (["provisoes", "osso", "tocha", "moedas", "pocao", "bandagem", "aljava"], (20, 24, 28), 0, (24,)),  # aljava: flechas
     "vitais": (["vital-vida", "vital-vigor", "vital-mana", "vital-foco"], (16, 20, 24), 0, (20,)),
-    "atributos": (["attr-ataque", "attr-defesa", "attr-agilidade", "attr-poder"], (20, 24, 28), 0, (24,)),
+    "atributos": (["attr-ataque", "attr-defesa", "attr-agilidade", "attr-poder"], (20, 24, 28), 0, (24, 32)),  # 32: Fugir
     "lugares": (["lugar-vila", "lugar-floresta", "lugar-pantano", "lugar-ruinas", "lugar-planicie", "lugar-cidadela",
-                 "lugar-caverna", "lugar-montanha"], (32, 40, 48), 0, (40,)),
+                 "lugar-caverna", "lugar-montanha"], (32, 40, 48), 0, (32, 40)),
 }
 METODOS = ("macia", "dura", "paleta", "moda", "vizinho")
 METODO_USO = "paleta"
@@ -195,6 +196,13 @@ def main():
                     no_quadrado(pecas[n], fat[n], lado, METODO_USO, dens).save(
                         os.path.join(SAIDA, "exibicao", f"{n}-{lado}{suf}.png"))
 
+    # O índice do que existe (peça: tamanhos), para a HUD no jogo nunca pedir um arquivo que não há.
+    indice = {}
+    for arq in sorted(os.listdir(os.path.join(SAIDA, "exibicao"))):
+        if arq.endswith(".png") and "@2x" not in arq:
+            peca, lado = arq[:-4].rsplit("-", 1)
+            indice.setdefault(peca, []).append(int(lado))
+
     # O retrato: o busto inteiro na ficha; só a cabeça no topo e na carta de luta.
     r = pecas["retrato-guerreiro"]
     busto, cabeca = quadrado(r), quadrado(r, CORTE_CABECA)
@@ -203,6 +211,10 @@ def main():
             for dens, suf in ((1, ""), (2, "@2x")):
                 reduzir(fonte, px * dens, px * dens, METODO_USO).save(
                     os.path.join(SAIDA, "exibicao", f"{nome}-{px}{suf}.png"))
+            indice.setdefault(nome, []).append(px)
+    with open(os.path.join(SAIDA, "exibicao", "indice.js"), "w", encoding="utf-8") as f:
+        f.write("// Gerado por preparar_hud4p.py: os tamanhos de cada desenho em exibicao/ (sem os @2x).\n"
+                "window.ASSETS4P = " + json.dumps({k: sorted(v) for k, v in sorted(indice.items())}) + ";\n")
     tira = superficie(len(METODOS) * 96 + 20, 4 * 90 + 20)
     for j, (fonte, px) in enumerate(((busto, 80), (busto, 64), (cabeca, 48), (cabeca, 32))):
         for i, m in enumerate(METODOS):

@@ -37,3 +37,15 @@ body.v4p .carta.heroi .icone img.novo4c { width: 32px; height: 32px; }
 body.v4p .roda-botao .rb-icone img.novo4c { width: 32px; height: 32px; }
 /* a carta em foco é ampliada 1,12× pelo jogo (.carta.foco): o rosto amplia em pixel duro, como os sprites dele */
 body.v4p .carta.foco .icone img.novo4c { image-rendering: pixelated; }
+
+/* ------------------------------------------------------------ botões centrais durante a interação */
+/* Conferido no jogo de verdade: o mouse por cima mal se via (só a tecla acendia) e o pressionado não descia (a
+   animação de entrada das opções fica com transform: none). Agora o mouse clareia a face um degrau a mais; o pressionado
+   escurece e desce 1 px pela propriedade translate, que a animação não toca. Sem ornamento novo; o latão continua só
+   no destaque (tecla acesa, selecionado, foco). */
+body.v4p :is(.escolha, .caminho.clicavel, .botao-janela):hover, body.v4p :is(.escolha, .caminho, .botao-janela).demo-hover {
+  background: linear-gradient(rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.06) 48%, rgba(0, 0, 0, 0.08)),
+    linear-gradient(rgba(50, 53, 60, 0.62), rgba(38, 40, 46, 0.7)), var(--t-botao) 0 0 / 128px; background-clip: padding-box; }
+body.v4p :is(.escolha, .caminho, .botao-janela):active, body.v4p :is(.escolha, .caminho, .botao-janela).demo-pressionado {
+  translate: 0 1px; box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.85);
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.35)), var(--t-botao) 0 0 / 128px; background-clip: padding-box; }
