@@ -15,9 +15,9 @@
     // nele (ou vazio), em cartões baixos: três cartões lado a lado não cabiam e o terceiro quebrava de linha.
     const aneis = d.espacos && (d.equipados || []).length;
     const eq = aneis ? `<div class="achado-aneis">${d.espacos.map((e) => e.item
-      ? `<div class="achado-cartao atual compacto rar-${h(e.item.raridade)}"><span class="achado-selo">${h(e.nome)} · você usa</span>
+      ? `<div class="achado-cartao atual compacto rar-${h(e.item.raridade)}" data-espaco="${h(e.espaco)}"><span class="achado-selo">${h(e.nome)} · você usa</span>
           <div class="compacto-corpo"><div class="achado-arte pequena">${S(iconeItem(e.item), 3)}</div><div>${htmlItem(e.item, "", false)}</div></div></div>`
-      : `<div class="achado-cartao atual compacto vazio"><span class="achado-selo">${h(e.nome)} · vazio</span>
+      : `<div class="achado-cartao atual compacto vazio" data-espaco="${h(e.espaco)}"><span class="achado-selo">${h(e.nome)} · vazio</span>
           <div class="compacto-corpo"><div class="achado-arte pequena">${S(VAZIO[e.espaco], 3, "fantasma")}</div></div></div>`).join("")}</div>`
       : (d.equipados || []).map((e) => `<div class="achado-cartao atual rar-${h(e.raridade)}">
         <span class="achado-selo">Você usa</span>

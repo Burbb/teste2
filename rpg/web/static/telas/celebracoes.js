@@ -137,21 +137,25 @@
       { duration: 560, easing: "cubic-bezier(.4,0,.2,1)" }).finished.catch(() => {}).then(() => voo.remove());
   }
   /** O cartão do item achado (na janela) recebe o selo do destino; devolve de onde o ícone sai. */
-  function seloDoAchado(texto, classe, velhoTexto) {
+  function seloDoAchado(texto, classe, velhoTexto, espaco) {
     const tela = document.querySelector("#sobre-achado .tela.achado");
     if (!tela) return null;
-    const novo = tela.querySelector(".achado-cartao.novo"), velho = tela.querySelector(".achado-cartao.atual");
+    // o cartão do que estava no espaço que recebeu o achado (os anéis têm um cartão por espaço; os outros, um só)
+    const novo = tela.querySelector(".achado-cartao.novo");
+    const velho = tela.querySelector(`.achado-cartao.atual[data-espaco="${espaco}"]`) || tela.querySelector(".achado-cartao.atual:not([data-espaco])");
     if (novo) { novo.classList.add(classe); const selo = novo.querySelector(".achado-selo"); if (selo) selo.textContent = texto; }
     if (velho && velhoTexto) { velho.classList.add("guardado"); const selo = velho.querySelector(".achado-selo"); if (selo) selo.textContent = velhoTexto; }
     const a = novo && novo.querySelector(".achado-arte").getBoundingClientRect();
     return a && a.width ? { x: a.left + a.width / 2, y: a.top + a.height / 2 } : null;
   }
   /** Vestiu (comprou no mercado ou achou): o ícone voa até o espaço do corpo no painel, que brilha ao receber. Achado:
-   *  o cartão vira "Vestido", o antigo "Foi para a mochila", o ícone sai do próprio cartão e a janela fecha. */
+   *  o cartão vira "Vestido" e o do que estava naquele espaço diz para onde ele foi, como o motor contou ("Foi para a
+   *  mochila", ou "Ficou para trás" com a mochila cheia; espaço vazio, nada); o ícone sai do cartão e a janela fecha. */
   async function voarParaEspaco(d) {
     const alvo = document.querySelector(`#heroi [data-mini="${d.espaco}"]`);
     let origem = App.ultimoClique && performance.now() - App.ultimoClique.t < 4000 ? App.ultimoClique : { x: innerWidth / 2, y: innerHeight / 2 };
-    if (d.achado) origem = seloDoAchado("Vestido", "vestido", "Foi para a mochila") || origem;
+    const velho = { mochila: "Foi para a mochila", ficou: "Ficou para trás" }[d.antigo] || null;
+    if (d.achado) origem = seloDoAchado("Vestido", "vestido", velho, d.espaco) || origem;
     if (alvo) {
       App.som("equipar");
       await voarIcone(d.item, origem, alvo);

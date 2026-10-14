@@ -136,3 +136,46 @@ class TestMochila(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestDestinoDoAntigo(unittest.TestCase):
+    """O que a tela conta ao equipar segue a transferência real (1.88.1): no espaço vazio, só o novo entra (nada "foi
+    para a mochila"); substituindo, o antigo vai para a mochila; com ela cheia, fica para trás. Nos dois anéis."""
+
+    def equipado(self, g):
+        festas = []
+        g.ui.celebrar = lambda tipo, dados: festas.append((tipo, dados))
+        return festas
+
+    def test_achado_nos_dois_espacos(self):
+        for espaco in ("anel1", "anel2"):
+            g, novo = heroi(Tela(), aneis=1)
+            if espaco == "anel1":  # o vazio é o Anel 1
+                g.j.equip["anel2"], g.j.equip["anel1"] = g.j.equip["anel1"], None
+            festas = self.equipado(g)
+            g.ui.roteiro = [f"Equipar no {'Anel 1' if espaco == 'anel1' else 'Anel 2'} (vazio)"]
+            g.oferecer_equip(novo)
+            self.assertEqual([(t, d["espaco"], d["antigo"]) for t, d in festas], [("equipou", espaco, None)])
+            self.assertEqual(g.j.mochila, [])
+
+    def test_achado_substituindo_e_com_a_mochila_cheia(self):
+        for cheia, destino in ((False, "mochila"), (True, "ficou")):
+            g, novo = heroi(Tela())
+            if cheia:
+                g.j.mochila = [gerar_equip(random.Random(k), "guerreiro", 2) for k in range(12)]
+            antigo = g.j.equip["anel2"]
+            festas = self.equipado(g)
+            g.ui.roteiro = [f"Substituir {antigo['nome']}"]
+            g.oferecer_equip(novo)
+            self.assertEqual([(d["espaco"], d["antigo"]) for _, d in festas], [("anel2", destino)])
+            self.assertEqual(antigo in g.j.mochila, not cheia)
+
+    def test_inventario_e_mercado_devolvem_o_que_aconteceu(self):
+        g, novo = heroi(Roteiro(), aneis=1)
+        g.j.mochila.append(novo)
+        self.assertIsNone(g.equipar(novo, "anel2"))  # o espaço vazio: nada sai
+        outro = gerar_equip(random.Random(9), "guerreiro", 4, slot="anel")
+        g.j.mochila.append(outro)
+        velho = g.j.equip["anel1"]
+        self.assertEqual(g.equipar(outro, "anel1"), "mochila")
+        self.assertIn(velho, g.j.mochila)

@@ -74,9 +74,11 @@ class Inventario:
         op, destino = op if isinstance(op, tuple) else (op, None)
         if op == "equipar":
             espaco = self.espaco_para(item, destino)
-            self.equipar(item, espaco, avisar=not self.ui.conquistas_na_tela)
-            # o mesmo voo do mercado: o ícone sai do cartão e pousa no espaço do corpo, que brilha ao receber
-            self.ui.celebrar("equipou", {"espaco": espaco, "item": itens.ficha(item, rec), "achado": True})
+            antigo = self.equipar(item, espaco, avisar=not self.ui.conquistas_na_tela)
+            # o mesmo voo do mercado: o ícone sai do cartão e pousa no espaço do corpo, que brilha ao receber; o
+            # cartão do que estava no espaço (se havia) diz para onde ele foi
+            self.ui.celebrar("equipou", {"espaco": espaco, "item": itens.ficha(item, rec), "achado": True,
+                                         "antigo": antigo})
         elif op == "guardar":
             self.j.mochila.append(item)
             if self.ui.conquistas_na_tela:  # o ícone voa do cartão até a mochila
@@ -134,23 +136,29 @@ class Inventario:
             self.dizer(f"Você larga {item['nome']} no chão. Alguém vai achar.", "cinza")
 
     def equipar(self, item, destino=None, avisar=True):
-        """avisar=False: a tela já mostra (o cartão do item achado vira "Vestido" e o ícone voa até o corpo)."""
+        """avisar=False: a tela já mostra (o cartão do item achado vira "Vestido" e o ícone voa até o corpo).
+        Devolve o que aconteceu com o que estava no espaço: None (estava vazio), "mochila" ou "ficou" (mochila
+        cheia: fica para trás). A tela conta isso como aconteceu."""
         j = self.j
         espaco = self.espaco_para(item, destino)
         antigo = j.equip[espaco]
         j.equip[espaco] = item
         if item in j.mochila:
             j.mochila.remove(item)
+        destino_antigo = None
         if antigo:
             if len(j.mochila) < LIMITE_MOCHILA:
                 j.mochila.append(antigo)
+                destino_antigo = "mochila"
             else:
+                destino_antigo = "ficou"
                 self.dizer(f"Mochila cheia: {antigo['nome']} fica para trás.", "cinza")
         j.recalcular()
         if avisar:
             self.dizer(f"Você equipa {item['nome']}.", "verde")
         registrar(self, "equipar", item=item["nome"], slot=espaco, raridade=item.get("raridade", "comum"),
                   bonus=item["bonus"])
+        return destino_antigo
 
     def motivo_inutil(self, k, m=None):
         """Por que usar o item agora não faria nada (ou None). m: um companheiro, em vez de você."""
