@@ -1,0 +1,160 @@
+/* HUD experimental no jogo: os componentes que ainda tinham a aparência anterior (o bronze, o marrom, as divisórias de
+   ouro com pontas) na família de carvão, ferro e latão. A marcação, a navegação e as informações são as do jogo; só a
+   aparência muda. A hierarquia:
+     janela principal (Mapa, Talentos, Ajuda, Histórico, celebrações, confirmação): a moldura da HUD 4, como os painéis
+     janela pequena (dica, menu de item): aresta fina e carvão, sem moldura
+     componente interno (cartão, mercadoria, serviço, comitiva, quadro): aresta fina, a face de metal leve, sem rebite
+     título de seção dentro de uma tela: a versal pequena com o fio, como na ficha
+   Papel continua papel onde é documento: o Grimório, os cartazes de contrato, a missão no Diário, os bilhetes.
+   O dourado fica na seleção, no foco e no que pede atenção. Os endereços das imagens são absolutos (/experimento/). */
+
+body.hud-experimental {
+  --hud-moldura: url(/experimento/assets/exibicao/moldura-nove.png);
+  --hud-textura: url(/experimento/assets3/exibicao/textura-painel.png);
+  --hud-face: linear-gradient(rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.01) 45%, rgba(0, 0, 0, 0.16)), rgba(17, 18, 21, 0.92);
+  --hud-face-viva: linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.035) 45%, rgba(0, 0, 0, 0.1)), rgba(30, 32, 36, 0.95);
+  --hud-relevo: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 1px 0 #000;
+  --hud-fio: 0 1px 0 rgba(0, 0, 0, 0.75), 0 2px 0 rgba(255, 255, 255, 0.05);
+  /* a divisória em pé do jogo (recursos do topo, doca) se resolve aqui, com o fio e a ponta de ferro (materiais.js) */
+  --divisoria: var(--ponta) 0 50% / calc(var(--P) * 3) calc(var(--P) * 3) no-repeat, var(--fio-v) 0 50% / calc(var(--P) * 3) 64% no-repeat;
+}
+
+/* ------------------------------------------------------------ divisórias */
+/* a barra das telas (Voltar, título, o que importa): o fio de sombra e luz, como entre o topo e a cena */
+body.hud-experimental #barra-tela { background: none; box-shadow: var(--hud-fio); }
+/* a experiência na ficha: sem a divisória própria (o fio do título "Atributos", logo abaixo, já separa) */
+body.hud-experimental #heroi .xp-linha { background: none; padding-bottom: 2px; }
+body.hud-experimental #heroi .legenda-linha { font-size: 14px; color: var(--sec); }
+/* os recursos do topo: só o fio de ferro entre eles (hud3), sem a ponta de ouro no meio */
+body.hud-experimental .recurso { background: none; }
+/* a base da árvore de talentos e os separadores do texto */
+body.hud-experimental .arvore-base { background: none; border-bottom: 1px solid var(--ferro-fio); box-shadow: 0 1px 0 #000; }
+body.hud-experimental #texto hr { background: var(--ferro-fio); box-shadow: 0 1px 0 #000; }
+
+/* ------------------------------------------------------------ títulos de seção dentro das telas */
+body.hud-experimental :is(.tela h4, #ajuda-corpo h3) { display: flex; align-items: center; gap: 8px; margin: 24px 0 10px;
+  font-family: var(--leitura); font-weight: 700; font-size: 13px; line-height: 1.2; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--sec); text-shadow: none; }
+body.hud-experimental :is(.tela h4, #ajuda-corpo h3)::after { content: ""; flex: 1; height: 1px; background: var(--ferro-fio); box-shadow: 0 1px 0 #000; }
+body.hud-experimental .tela h4 small { letter-spacing: 0; text-transform: none; font-weight: 400; }
+body.hud-experimental #ajuda-corpo b { color: var(--latao-claro); }
+
+/* ------------------------------------------------------------ janelas principais: a moldura da HUD 4 */
+body.hud-experimental :is(.sobre-caixa.m-janela, .gaveta.m-janela, .festa.m-janela, .caixa-confirmar, .festa-amanhecer, .festa-espolio) {
+  border: 12px solid transparent; border-image: var(--hud-moldura) 24 / 24px round;
+  background: linear-gradient(rgba(8, 9, 11, 0.62), rgba(8, 9, 11, 0.76)), var(--hud-textura) 0 0 / 128px; background-clip: padding-box;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.8); }
+/* o cabeçalho delas: o título gótico em latão e o Fechar como um botão leve; embaixo, o fio */
+body.hud-experimental .gaveta-cab { padding: 4px 6px 9px; border-bottom: 0; box-shadow: var(--hud-fio); margin-bottom: 2px; }
+body.hud-experimental .gaveta-cab h2 { color: var(--latao-claro); }
+body.hud-experimental :is(.gaveta-cab button, .grimorio-fechar) { border: 1px solid var(--aresta-face); border-radius: 2px; color: var(--tinta);
+  background: var(--hud-face); box-shadow: var(--hud-relevo); padding: 3px 10px; cursor: pointer; }
+body.hud-experimental :is(.gaveta-cab button, .grimorio-fechar):is(:hover, :focus-visible) { border-color: var(--aresta-viva); background: var(--hud-face-viva); color: #fff7e6; }
+body.hud-experimental :is(.gaveta-cab button, .grimorio-fechar):focus-visible { outline: 2px solid var(--latao-claro); outline-offset: 2px; }
+body.hud-experimental :is(.gaveta-cab button, .grimorio-fechar) kbd { border: 1px solid #4a4d53; background: #0b0c0e; }
+/* o Histórico: as cenas separadas pelo fio de ferro */
+body.hud-experimental #historico-lista .h-cena { color: var(--latao-claro); border-top: 1px solid var(--ferro-fio); box-shadow: inset 0 1px 0 #000; }
+
+/* ------------------------------------------------------------ janelas pequenas: dicas e menus de item */
+body.hud-experimental :is(#dica-item, #dica-equipado, #talento-info, .menu-item.m-janela) {
+  border: 1px solid #4a4d53; border-image: none; border-radius: 2px;
+  background: linear-gradient(rgba(10, 11, 13, 0.9), rgba(10, 11, 13, 0.95)), var(--hud-textura) 0 0 / 128px; background-clip: padding-box;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 8px 20px rgba(0, 0, 0, 0.65); }
+body.hud-experimental #dica-item.curta { border-color: var(--aresta); background: rgba(10, 11, 13, 0.94); }
+body.hud-experimental :is(#dica-item, #dica-equipado) :is(.comparacao, .outro) { border-top: 1px solid var(--ferro-fio); }
+body.hud-experimental #dica-equipado + #dica-equipado { border-top: 1px solid #4a4d53; }
+body.hud-experimental .menu-item button { border: 1px solid var(--aresta-face); border-image: none; border-radius: 2px; background: var(--hud-face); box-shadow: var(--hud-relevo); }
+body.hud-experimental .menu-item button:is(:hover, :focus-visible) { border-color: var(--aresta-viva); background: var(--hud-face-viva); }
+body.hud-experimental .menu-item button:focus-visible { outline: 2px solid var(--latao-claro); outline-offset: 1px; }
+
+/* ------------------------------------------------------------ componentes internos: aresta fina e face leve */
+body.hud-experimental :is(.cartao, .mercadoria, .servico, .loja-topo) {
+  border: 1px solid var(--aresta-face); border-image: none; border-radius: 2px; background: var(--hud-face); background-clip: padding-box; box-shadow: var(--hud-relevo); }
+/* os cartões do Bestiário e da Comitiva: o lado pela marca à esquerda (como as cartas da luta) */
+body.hud-experimental .cartao.inimigo { box-shadow: inset 3px 0 0 #7a2a22, var(--hud-relevo); }
+body.hud-experimental .cartao.feito { box-shadow: inset 3px 0 0 #3d6a2a, var(--hud-relevo); }
+body.hud-experimental :is(.cartao.mestre, .esp-caminho.foco) { border-color: var(--latao); box-shadow: inset 3px 0 0 var(--latao), var(--hud-relevo); }
+body.hud-experimental .cartao.clicavel:hover { border-color: var(--aresta-viva); background: var(--hud-face-viva); transform: none; }
+body.hud-experimental .cartao.na-reserva { border-style: dashed; }
+body.hud-experimental .tag { border: 1px solid var(--aresta); border-radius: 2px; }
+body.hud-experimental .tag.fraco { border-color: #3d6a2a; } body.hud-experimental .tag.forte { border-color: #8a1414; }
+body.hud-experimental .tag.mestre { border-color: var(--latao-claro); }
+/* comitiva na ficha: a face leve, o retrato no nicho (jogo.css); o animal, o fio verde de mato */
+body.hud-experimental .membro { border: 1px solid var(--aresta); border-image: none; border-radius: 2px; background: rgba(255, 255, 255, 0.025); background-clip: padding-box;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04); }
+body.hud-experimental #heroi .membro.fera .icone { border-color: #3a6a2a; }
+
+/* ------------------------------------------------------------ mercado e serviços */
+body.hud-experimental .loja-topo b { color: var(--latao-claro); }
+body.hud-experimental .loja-banca { border: 1px solid var(--aresta); border-image: none; border-radius: 2px; background: #0b0c0e; box-shadow: 0 1px 0 #000; }
+/* as abas: como a doca (uma barra só, divisões discretas); a aberta em latão com o traço embaixo */
+body.hud-experimental .loja-abas { gap: 0; border-bottom: 0; box-shadow: var(--hud-fio); }
+body.hud-experimental .loja-aba { top: 0; padding: 7px 16px 8px; font-family: var(--texto); font-size: 16px; color: var(--tinta-2); border: 0; border-radius: 0;
+  background: none; box-shadow: inset 1px 0 0 rgba(255, 255, 255, 0.05), inset -1px 0 0 rgba(0, 0, 0, 0.75); }
+body.hud-experimental .loja-aba small { font-size: 14px; color: var(--sec); }
+body.hud-experimental .loja-aba:is(:hover, :focus-visible) { color: #fff7e6; background: rgba(255, 255, 255, 0.06); }
+body.hud-experimental .loja-aba:focus-visible { outline: 2px solid var(--latao-claro); outline-offset: -3px; }
+body.hud-experimental .loja-aba[aria-selected="true"] { color: var(--latao-claro); background: rgba(201, 161, 74, 0.08); border: 0; }
+body.hud-experimental .loja-aba[aria-selected="true"]::after { left: 18%; right: 18%; bottom: 0; height: 2px; background: var(--latao-claro); }
+/* as mercadorias e os serviços: o mouse acende a aresta e a face (sem pular); o foco, o anel de latão; o que não dá
+   para pagar, a aresta tracejada (forma) além do apagado e do motivo que o jogo já escreve */
+body.hud-experimental :is(.mercadoria, .servico):is(:hover, :focus-visible) { border-image: none; border-color: var(--aresta-viva); background: var(--hud-face-viva); transform: none; }
+body.hud-experimental :is(.mercadoria, .servico):focus-visible { outline: 2px solid var(--latao-claro); outline-offset: 2px; }
+body.hud-experimental :is(.mercadoria, .servico).caro, body.hud-experimental :is(.mercadoria, .servico).caro:hover { border-style: dashed; border-color: #4a4c50;
+  background: rgba(20, 20, 22, 0.6); box-shadow: none; }
+body.hud-experimental .servico.limite:hover { border-color: var(--aresta-face); background: var(--hud-face); }
+body.hud-experimental .qtd-ctrl button { border: 1px solid #4a4d53; border-radius: 2px; background: #0b0c0e; box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.9); }
+body.hud-experimental .qtd-ctrl button:hover { border-color: var(--latao); color: var(--latao-claro); }
+body.hud-experimental .voltar-seta:is(:hover, :focus-visible) { background: rgba(255, 255, 255, 0.06); }
+body.hud-experimental .voltar-seta:focus-visible { outline: 2px solid var(--latao-claro); outline-offset: 1px; }
+
+/* ------------------------------------------------------------ Diário e mural: o quadro vira um painel de carvão */
+/* O quadro de madeira saiu; os cartazes de contrato e a missão continuam de papel (são documentos). */
+body.hud-experimental .quadro { padding: 10px 12px 14px; border: 1px solid var(--aresta); border-radius: 2px; background: rgba(0, 0, 0, 0.24);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 1px 0 #000; }
+body.hud-experimental .quadro-cab { align-items: center; gap: 8px; }
+body.hud-experimental .quadro-cab b { font-family: var(--leitura); font-weight: 700; font-size: 13px; line-height: 1.2; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--sec); text-shadow: none; }
+body.hud-experimental .quadro-cab span { font-size: 13px; color: var(--sec); }
+body.hud-experimental :is(.missao-diario, .missao-pendencia) { box-shadow: 0 1px 0 #000, 0 3px 8px rgba(0, 0, 0, 0.5); }
+body.hud-experimental .contrato { box-shadow: 0 1px 0 #000, 0 4px 10px rgba(0, 0, 0, 0.55); }
+body.hud-experimental .sigilos-diario .sigilo { border-color: #4a4d53; background: #0b0c0e; }
+body.hud-experimental .sigilos-diario .sigilo.tem { background: var(--latao); border-color: var(--latao-claro); }
+
+/* ------------------------------------------------------------ Talentos */
+/* os nós: o nicho de ferro; os estados continuam pela cor e pela forma (comprado em latão com o número cheio, possível
+   pulsando em verde, trancado com o cadeado, bloqueado apagado) */
+body.hud-experimental .no-talento { border: 2px solid var(--aresta); border-radius: 2px; background: #0a0b0d; box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.85), 0 1px 0 rgba(255, 255, 255, 0.04); }
+body.hud-experimental .no-talento .rank { border: 1px solid #4a4d53; border-radius: 2px; background: #0b0c0e; }
+body.hud-experimental .no-talento.comprado { border-color: var(--latao); box-shadow: 0 0 0 1px #000, 0 0 12px rgba(242, 201, 76, 0.35); }
+body.hud-experimental .no-talento.comprado .rank { color: #120e0b; background: var(--latao-claro); border-color: var(--latao-claro); }
+body.hud-experimental .no-talento.disponivel { border-color: var(--aresta-viva); }
+body.hud-experimental .no-talento.pode { border-color: var(--bom); }
+body.hud-experimental .no-talento.bloqueado { border-color: #3a1414; }
+body.hud-experimental .arvore-celula.conecta::before { width: 4px; margin-left: -2px; background: #24262b; border: 1px solid #000; }
+body.hud-experimental .arvore-celula.conecta.aceso::before { background: var(--latao); }
+body.hud-experimental .arvore-col-titulo { color: var(--latao-claro); }
+body.hud-experimental .arvore-col-titulo.trancada { color: #55585e; }
+
+/* ------------------------------------------------------------ o botão principal e os avisos */
+body.hud-experimental .continuar { border: 1px solid var(--latao); border-image: none; border-radius: 2px; color: var(--latao-claro);
+  background: linear-gradient(rgba(201, 161, 74, 0.1), rgba(0, 0, 0, 0.18)), rgba(20, 21, 25, 0.95); background-clip: padding-box;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 1px 0 #000, 0 3px 6px rgba(0, 0, 0, 0.45); }
+body.hud-experimental .continuar:is(:hover, :focus-visible) { border-color: var(--latao-claro); color: #fff1cc;
+  background: linear-gradient(rgba(242, 210, 122, 0.16), rgba(0, 0, 0, 0.1)), rgba(32, 33, 38, 0.96); }
+body.hud-experimental .continuar:focus-visible { outline: 2px solid var(--latao-claro); outline-offset: 2px; }
+body.hud-experimental .continuar:active { translate: 0 1px; box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.85); }
+body.hud-experimental .aviso-flutuante { border: 1px solid #4a4d53; border-image: none; border-radius: 2px; background: #0b0c0e; }
+body.hud-experimental .aviso-flutuante.ouro { border-color: var(--latao); }
+body.hud-experimental :is(.aviso-flutuante.perda, .aviso-flutuante.dano, .aviso-flutuante.aviso-controle) { border-color: #8a1414; }
+body.hud-experimental :is(.aviso-flutuante.item, .aviso-flutuante.cura) { border-color: #3d6a2a; }
+body.hud-experimental .aviso-flutuante.nivel { background: var(--latao-claro); border-color: #fff3a0; }
+body.hud-experimental .cartao-comitiva { border: 1px solid #4a4d53; border-radius: 2px; background: rgba(12, 13, 15, 0.96); box-shadow: 0 1px 0 #000, 0 8px 20px rgba(0, 0, 0, 0.6); }
+body.hud-experimental .cartao-comitiva.aprova { border-color: #5f8f3e; box-shadow: inset 3px 0 0 #5f8f3e, 0 8px 20px rgba(0, 0, 0, 0.6); }
+body.hud-experimental .cartao-comitiva.desaprova { border-color: #8a3a7a; box-shadow: inset 3px 0 0 #8a3a7a, 0 8px 20px rgba(0, 0, 0, 0.6); }
+body.hud-experimental .cc-retrato { border: 1px solid var(--aresta); background: #0b0c0e; }
+body.hud-experimental .toast { border-width: 1px; border-radius: 2px; background: rgba(12, 13, 15, 0.96); box-shadow: 0 1px 0 #000, 0 8px 20px rgba(0, 0, 0, 0.6); }
+/* as linhas das janelas de fim de luta e do amanhecer: aresta fina de ferro (as de cor continuam a cor delas) */
+body.hud-experimental :is(.noite-item, .achado-espolio, .festa .ganho, .festa .habilidade-nova, .espolio-linha, .espolio-contrato) {
+  border-width: 1px; border-radius: 2px; background: rgba(0, 0, 0, 0.3); }
+body.hud-experimental :is(.noite-item, .achado-espolio, .espolio-linha, .espolio-contrato):not(.bom):not(.aviso):not(.perigo):not(.feito):not([class*="rar-"]) { border-color: var(--aresta); }

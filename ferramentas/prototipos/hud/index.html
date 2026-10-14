@@ -27,6 +27,7 @@
 <link rel="stylesheet" href="hud4c.css">
 <link rel="stylesheet" href="hud4p.css">
 <link rel="stylesheet" href="hud4p-luta.css">
+<link rel="stylesheet" href="jogo/superficies.css">
 <script src="../../../rpg/web/static/sprites-dados.js"></script>
 <script src="../../../rpg/web/static/sprites.js"></script>
 <script>Sprites.publicar();</script>
@@ -71,6 +72,8 @@
     <button type="button" data-v="0">sem</button><button type="button" data-v="1">com</button></div></fieldset>
   <fieldset data-chave="fome"><legend>Fome</legend><div class="op">
     <button type="button" data-v="0">sem</button><button type="button" data-v="1">com</button></div></fieldset>
+  <fieldset data-chave="superficie"><legend>Superfície (teste)</legend><div class="op">
+    <button type="button" data-v="atual">atual</button><button type="button" data-v="escura">mais escura</button><button type="button" data-v="escura-transicao">escura + transição</button></div></fieldset>
   <fieldset data-chave="icones"><legend>Ícones</legend><div class="op">
     <button type="button" data-v="novos">novos</button><button type="button" data-v="atuais">atuais</button></div></fieldset>
   <p>Os números, nomes, dicas e espaços vêm do motor (dados.js). O nome é livre, como no jogo. <b>V</b> passa de uma versão à outra; <b>Esc</b> fecha a janela.</p>
@@ -166,7 +169,7 @@ const ESTADOS_DEMO = `<section id="estados-demo" aria-label="Estados dos control
 document.documentElement.style.setProperty("--f-moldura", `url(${Arte.moldura()})`);
 document.documentElement.style.setProperty("--f-espaco", `url(${Arte.espaco()})`);
 
-const escolha = { versao: "hud4", entorno: "bosque", pagina: "lugar", rastreios: "varias", modal: "nao", estados: "nao", nome: "Jean", nivel: "6", equip: "completo", bolsa: "comum", feridas: "0", fome: "0", icones: "novos" };
+const escolha = { versao: "hud4", entorno: "bosque", pagina: "lugar", rastreios: "varias", modal: "nao", estados: "nao", nome: "Jean", nivel: "6", equip: "completo", bolsa: "comum", feridas: "0", fome: "0", icones: "novos", superficie: "atual" };
 try { Object.assign(escolha, JSON.parse(localStorage.getItem("prototipo-ficha") || "{}")); } catch (e) { /* sem armazenamento */ }
 const ficha = document.getElementById("ficha");
 function redesenhar() {
@@ -178,6 +181,9 @@ function redesenhar() {
   document.body.classList.toggle("v4", ["hud4", "hud4c", "hud4p"].includes(escolha.versao));  // a completa, da 4
   document.body.classList.toggle("v4c", ["hud4c", "hud4p"].includes(escolha.versao));  // e a pixel, da completa
   document.body.classList.toggle("v4p", escolha.versao === "hud4p");
+  // a comparação de superfícies (jogo/superficies.css): só na HUD 4 pixel, só os fundos
+  if (escolha.versao === "hud4p" && escolha.superficie !== "atual") document.body.dataset.superficie = escolha.superficie;
+  else delete document.body.dataset.superficie;
   ajustarEntorno();
   const familia = escolha.icones === "novos" ? { hud4c: Icones4c, hud4p: Icones4p }[escolha.versao] || null : null;
   Topo.familia = familia;

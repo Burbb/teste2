@@ -5,7 +5,8 @@
 "use strict";
 window.HUD_RAIZ = "/experimento/";
 (() => {
-  const ESTILOS = ["hud3.css", "hud4.css", "hud4c.css", "hud4p.css", "hud4p-luta.css", "jogo/jogo.css"];
+  const ESTILOS = ["hud3.css", "hud4.css", "hud4c.css", "hud4p.css", "hud4p-luta.css",
+    "jogo/jogo.css", "jogo/telas.css", "jogo/superficies.css"];
   for (const arquivo of ESTILOS) {
     const l = document.createElement("link");
     l.rel = "stylesheet"; l.href = window.HUD_RAIZ + arquivo;
@@ -13,7 +14,8 @@ window.HUD_RAIZ = "/experimento/";
   }
   // v3 v4 v4c v4p: a HUD 4 pixel parte da completa, que parte da 4, que parte da 3 (como no protótipo)
   document.body.classList.add("v3", "v4", "v4c", "v4p", "hud-experimental");
-  // icones.js (as famílias), o índice dos tamanhos que existem e, por fim, a troca pelos papéis (jogo/papeis.js)
+  // os materiais de ferro (jogo/materiais.js), os controles de teste (jogo/desenvolvimento.js), icones.js (as
+  // famílias), o índice dos tamanhos que existem e, por fim, a troca pelos papéis (jogo/papeis.js)
   const carregar = (arquivos) => {
     if (!arquivos.length) return;
     const s = document.createElement("script");
@@ -21,5 +23,6 @@ window.HUD_RAIZ = "/experimento/";
     s.onload = () => carregar(arquivos.slice(1));
     document.head.appendChild(s);
   };
-  carregar(["icones.js", "assets4p/exibicao/indice.js", "jogo/papeis.js"]);
+  carregar(["jogo/materiais.js", "jogo/desenvolvimento.js", "icones.js", "assets4p/exibicao/indice.js",
+    "jogo/papeis.js"]);
 })();

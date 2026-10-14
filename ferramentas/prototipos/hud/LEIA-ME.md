@@ -701,3 +701,100 @@ existem, mas as capturas são em densidade 1); outras resoluções.
 - da interface padrão, não da HUD (acontece igual sem ela): a faixa "Golpe de espada · escolha o alvo" cobre a carta de
   cima enquanto se mira; na luta o registro fica atrás da janelinha de habilidades;
 - a barra de experiência ainda usa o desenho de produção (com o fio de baixo), diferente das barras do topo.
+
+## Oitava rodada: componentes uniformes, superfícies e teste de arte
+
+Pedido de Jean: a base da HUD 4 pixel (molduras, composição, atributos) aprovada; uniformizar os componentes que ainda
+tinham a aparência anterior, comparar uma superfície mais escura e testar a coerência entre a arte do mundo e a da
+HUD com duas peças (o mercador e o baú da sacristia, no commit seguinte). A interface padrão continua a padrão; nada de
+regra, número, save ou versão. Capturas em `capturas-oitava/`.
+
+### Componentes uniformes (`jogo/materiais.js`, `jogo/telas.css`)
+
+- **Os materiais do jogo em ferro.** O jogo desenha os anéis, os bicos dos balões e as divisórias com pequenas grades
+  de pixel publicadas como variáveis de CSS (`--anel-j`, `--bico-a`, `--fio`, `--ponta`...). `materiais.js` pinta as
+  mesmas grades com as cores do ferro e publica no `<body>`: o que ainda usava o bronze (um balão de prédio, um aviso,
+  uma dica) passa ao ferro, e os estados que o jogo troca pela variável (o mouse, o convite do mural, o destaque F4)
+  continuam funcionando sem código novo. As pontas de ouro das divisórias e o losango dos títulos saíram.
+- **A hierarquia** (`telas.css`): janela principal (Mapa, Talentos, Ajuda, Histórico, celebrações, confirmação,
+  amanhecer, espólio) com a moldura da HUD 4; janela pequena (dicas, menu de item) com aresta fina e carvão; cartões,
+  mercadorias, serviços, comitiva e o quadro do Diário e do mural com aresta fina e a face leve, sem rebite; títulos de
+  seção dentro das telas ("Mochila", "Bolsa", "Missão", "Contratos", "Reforçar o que você usa") na versal pequena com o
+  fio, como na ficha. Papel continua papel onde é documento: o Grimório, os cartazes de contrato, a missão no Diário.
+- **Revisados:** a barra das telas (o fio de ouro com pontas virou o fio de sombra e luz); a experiência na ficha (sem a
+  divisória própria: o fio de "Atributos" logo abaixo separa); os recursos do topo (sem a ponta de ouro entre eles); os
+  cartões da comitiva; Diário, Inventário, Talentos (os nós num nicho de ferro, os estados por cor e forma), Mapa,
+  Bestiário, Histórico e Ajuda (os títulos internos); o mercado (o balcão, a banca, as abas como a doca, as mercadorias:
+  o mouse acende a aresta sem pular, o foco é o anel de latão, o que não dá para pagar fica tracejado além de apagado),
+  a taverna, o templo e a forja; o mural; o Continuar (a placa de latão); os avisos flutuantes, os cartões de reação da
+  comitiva e as linhas do espólio e do amanhecer. Grimório: só o Fechar mudou (o livro é papel).
+- **A faixa "escolha o alvo"** (`hud4p-luta.css`, e `papeis.js` tira o ponto que separava as duas partes numa linha):
+  no alto da arena ela cobria o nome, o rosto e a vida da carta de cima dos inimigos a 1280 px (também na padrão). Agora
+  fica no vão entre as duas fileiras, compacta: o nome da ação, "escolha o alvo" embaixo e o Voltar. Conferido com três
+  lobos e com a comitiva (Odette ao lado): nenhuma carta por baixo dela nos três tamanhos.
+
+### Comparação de superfícies (`jogo/superficies.css`, `jogo/desenvolvimento.js`)
+
+Controle de desenvolvimento, não configuração do jogador (não vai para o save): no jogo, `&superficie=escura` (ou
+`escura-transicao`) no endereço, ou Ctrl+Alt+S com o jogo aberto; no protótipo, "Superfície (teste)" no painel de
+demonstração (HUD 4 pixel). Só os fundos mudam (o véu sobre a textura mais denso); texto, ícones, barras, avisos,
+botões e cenários não passam por filtro.
+
+| Medido nas capturas (1500×950, mesmo cenário) | atual | mais escura |
+|---|---|---|
+| Página abaixo das ações: luminância média / desvio do grão | 20,9 / 1,85 | 16,1 / 1,08 |
+| Diferença entre a face de um botão e a página | 21,5 | 26,3 |
+| Página × chão da paisagem (floresta / Vau / capela) | 20,9 × 18,1 / 19,6 / 12,1 | 16,1 × 16,7 / 18,2 / 10,7 |
+
+- **Em cima:** a separação da barra de recursos fica igual (o fio do topo não muda; o céu é a arte).
+- **Embaixo:** na mais escura a página fica no tom do chão da paisagem (floresta e Vau quase iguais; a capela, um passo
+  mais clara), e o salto entre o chão e a área de leitura quase some. A transição curta (18 px na cor do chão, presa
+  ao topo da página) quase não acrescenta depois disso: na capela ela escurece a borda, na floresta mal aparece.
+- **Botões:** continuam distinguíveis sem o mouse, e um pouco mais (a página escureceu, a face deles não). Seleção,
+  foco e indisponível são os mesmos.
+- **Minha leitura:** a mais escura, sem a transição. É uma recomendação para a sua avaliação, não uma decisão.
+
+### Conferência (jogo de verdade, HUD experimental)
+
+- **Tamanhos:** 1500×950, 1280×800 e 1280×720, com movimento reduzido também em 1280×720. Sem erro de página em nenhum
+  percurso.
+- **Percursos:** a ficha com nome longo, comitiva, fome e ferimentos (dica da bolsa e da comitiva, foco pelo teclado);
+  Inventário (dica do item), Diário, Bestiário, Talentos, Mapa, Histórico e Ajuda (rolada até o fim); a vila (o balão
+  do prédio com o mouse), o mural, o mercado (mouse com dica, foco pelo teclado, lista rolada, as três abas), a taverna,
+  o templo e a forja; a sacristia (o balão do baú, aproximar pela janela, Afastar, recolher o baú, que voa até a bolsa);
+  a luta contra três lobos (a mira, o mouse num lobo com a ficha dele, Esc voltando) e com a comitiva.
+- **Fumaça** (`tests/navegador/fumaca.mjs`): 356 conferências, tudo certo, na padrão e com `HUD=experimental`. Na
+  experimental, o servidor de teste registrou uma exceção ao atender um pedido no fim do último cenário, quando o
+  navegador fecha (o rastro se perdeu com o encerramento do processo); não se repetiu nas conferências e não derrubou
+  nenhuma delas. Testes, gabarito e pyflakes iguais.
+- **Resolvidos da rodada anterior:** a faixa da mira cobrindo a carta de cima e a barra de experiência com o fio de
+  produção (os dois estavam nas lacunas de layout).
+- **Não conferido:** o som; densidade 2 (as capturas são em densidade 1); o jogo inteiro de ponta a ponta à mão.
+
+**Como ver (PowerShell, na pasta do jogo):**
+
+```powershell
+git pull
+python jogar.py --hud-experimental
+```
+
+Com o jogo aberto: **Ctrl+Alt+S** troca a superfície (atual → mais escura → mais escura com transição); um aviso curto
+no pé da tela diz qual ficou. Para cair direto numa situação:
+
+```powershell
+$env:HUD = "experimental"
+python -m tests.navegador.cenarios vila         # mercado, taverna, templo, forja, mural
+$env:ETAPA = "ossuario"; $env:SALA = "sacristia"; $env:BAU = "1"; $env:NIVEL = "6"
+python -m tests.navegador.cenarios capela       # a sacristia com o baú no canto
+Remove-Item Env:ETAPA, Env:SALA, Env:BAU, Env:NIVEL
+python -m tests.navegador.cenarios broquel      # luta contra três lobos: a mira no vão
+Remove-Item Env:HUD                             # volta à interface padrão
+```
+
+O endereço que o cenário mostra aceita `&superficie=escura` (ou `escura-transicao`) no fim, para abrir já na
+comparação.
+
+### Proposta guardada: retratos do herói por classe
+
+Registrada em `docs/ROADMAP.md` (ideias guardadas): uma seleção pequena, de início dois retratos por classe, escolhida
+na criação, só cosmética. Nada implementado: nem a tela de escolha, nem recoloração, nem retratos por especialização.

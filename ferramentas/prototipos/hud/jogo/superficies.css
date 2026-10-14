@@ -1,0 +1,24 @@
+/* Comparação de superfícies (avaliação, controles de desenvolvimento; não é configuração do jogador). O mesmo jogo,
+   com a superfície trocada pelo atributo data-superficie do <body> (jogo/desenvolvimento.js, ou o painel de
+   demonstração do protótipo, na HUD 4 pixel). Os endereços são relativos a esta folha: valem no jogo (/experimento/jogo/)
+   e no protótipo.
+     atual             (sem atributo) a HUD 4: a leitura um passo mais clara que os painéis
+     escura            a leitura e os painéis mais escuros, com a textura de carvão menos marcada
+     escura-transicao  a escura e, embaixo da arte, uma faixa curta na cor do chão (--chao, que o jogo já publica)
+   Só os fundos mudam: o véu sobre a textura fica mais denso (mais escuro e com menos contraste no grão). Texto, ícones,
+   barras, avisos, botões (que têm a face própria) e a arte do cenário não passam por filtro nenhum. */
+
+body:is(.hud-experimental, .v4p)[data-superficie^="escura"] #pagina {
+  background: linear-gradient(rgba(12, 13, 15, 0.7), rgba(11, 12, 14, 0.78)), url(../assets3/exibicao/textura-painel.png) 64px 32px / 128px; }
+body:is(.hud-experimental, .v4p)[data-superficie^="escura"] :is(#heroi, #ficha, #mundo, #palco) {
+  background: linear-gradient(rgba(7, 8, 10, 0.72), rgba(7, 8, 10, 0.82)), url(../assets3/exibicao/textura-painel.png) 0 0 / 128px; background-clip: padding-box; }
+
+/* a borda de baixo da arte: o chão continua numa faixa curta (18 px) que se apaga na página; fica presa ao topo da
+   página (não rola com o texto), só quando há arte em cima (não nas telas de menu) */
+body:is(.hud-experimental, .v4p)[data-superficie="escura-transicao"] #cena:not([data-tipo="menu"]) #pagina {
+  background: linear-gradient(color-mix(in srgb, var(--chao, #000) 75%, transparent), transparent 18px) 0 0 / 100% 18px no-repeat,
+    linear-gradient(rgba(12, 13, 15, 0.7), rgba(11, 12, 14, 0.78)), url(../assets3/exibicao/textura-painel.png) 64px 32px / 128px; }
+
+/* o aviso curto do atalho de desenvolvimento (Ctrl+Alt+S) */
+.hud-dev-aviso { position: fixed; left: 50%; bottom: 18px; translate: -50% 0; z-index: 90; padding: 5px 12px; pointer-events: none;
+  font: 14px var(--leitura, sans-serif); color: #e8dcc0; background: rgba(10, 11, 13, 0.94); border: 1px solid #4a4d53; border-radius: 2px; }

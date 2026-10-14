@@ -95,6 +95,9 @@
     // a luta: as ações da roda e o rosto do herói na carta dele
     q("#roda .rb-icone img", (el) => trocar(el, F.RODA[nome(el)], 32));
     q(".carta.heroi .icone img", (el) => { if (RETRATOS.includes(nome(el))) trocar(el, F.CABECA[nome(el)], 32); });
+    // o lembrete da mira, em duas linhas no vão da arena (hud4p-luta.css): o nome da ação em cima, "escolha o alvo"
+    // embaixo, sem o ponto que os separava numa linha só
+    q(".roda-mira > span > b", (b) => { const t = b.nextSibling; if (t && t.nodeType === 3 && t.data.startsWith(" · ")) t.data = t.data.slice(3); });
   }
 
   let pedido = false;

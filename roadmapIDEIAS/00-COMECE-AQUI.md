@@ -2008,3 +2008,21 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   unguento, bomba, pena de fênix, recursos vazios, inimigos, ícones de habilidade e efeito; de layout, só o que a
   interface padrão já faz (a faixa da mira cobrindo a carta de cima) e a barra de experiência de produção.
 - **É experimento:** a interface padrão continua a padrão; nada migrado; versão igual. **Falta:** Jean jogar e avaliar.
+
+### 14/10/2026 — HUD experimental: componentes uniformes, superfícies e teste de arte (experimento, sem versão)
+
+- **Pedido de Jean:** base da HUD 4 pixel aprovada; uniformizar os componentes antigos (divisórias, experiência,
+  comitiva, menus, mercado e serviços) e tirar a faixa "escolha o alvo" de cima da carta; comparar uma superfície mais
+  escura; testar a coerência entre a arte do mundo e a HUD com o mercador e o baú da sacristia; só registrar os
+  retratos por classe.
+- **Feito (interface):** `jogo/materiais.js` (os anéis, bicos e fios do jogo pintados em ferro, pelas mesmas grades),
+  `jogo/telas.css` (janelas principais com a moldura, componentes internos leves, títulos de seção na versal pequena,
+  mercado e serviços, Diário e mural em carvão com os documentos de papel, Talentos), a mira no vão da arena
+  (`hud4p-luta.css`); `jogo/superficies.css` e `jogo/desenvolvimento.js` (Ctrl+Alt+S, `&superficie=`; no protótipo,
+  o painel de demonstração).
+- **Verificado:** três janelas e movimento reduzido nos percursos pedidos; fumaça padrão e experimental (356, tudo
+  certo); testes, gabarito e pyflakes. Medido: a superfície mais escura deixa a página no tom do chão da paisagem e os
+  botões mais destacados; a transição quase não acrescenta.
+- **Registrado:** retratos do herói por classe (dois por classe, cosméticos) em `docs/ROADMAP.md`, ideias guardadas.
+- **É experimento:** a interface padrão continua a padrão; versão igual. **Falta:** o teste de arte (commit seguinte)
+  e Jean avaliar.

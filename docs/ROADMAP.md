@@ -60,6 +60,10 @@ mais brando para quem quiser; um robô de mapa que jogue partidas inteiras com j
 - Domar o grifo como quarto animal do Patrulheiro (com Ordem própria).
 - Comida para o animal (descartado por ora: provisões ficariam apertadas demais).
 - Ícones próprios para cada habilidade.
+- Retratos do herói por classe (proposta da HUD experimental, 10/2026): uma seleção pequena, de início dois retratos
+  por classe, escolhidos na criação do personagem. Só cosmético (nada de regra, número ou recoloração), no mesmo
+  desenho da ficha, do topo e da carta da luta (busto e cabeça). Fora por ora: a tela de escolha na criação, os
+  retratos por especialização e os seis retratos; hoje só o Guerreiro tem retrato na HUD experimental.
 - "Ordens" leves para a comitiva.
 - Aliados na batalha final, repaginado (o sistema antigo saiu na 1.45: cada evento somava um aliado que tirava vida
   do chefe num texto antes da luta, invisível no resto do jogo). Se voltar: poucos aliados, ganhos por arcos
