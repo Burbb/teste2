@@ -1,0 +1,54 @@
+/* HUD 4 completa (experimento, fora do jogo): a HUD 4 aprovada (molduras, carvão, doca, cenários) com os desenhos das
+   quatro folhas novas (icones4c.js) e a face dos botões centrais mais destacada do fundo. Só acrescenta: tudo o que
+   não está aqui é o hud4.css. Os desenhos já vêm no tamanho de uso (preparar_hud4c.py): nada é ampliado nem reduzido
+   pelo navegador, e eles não usam o "pixelated" dos sprites do jogo. */
+
+body.v4c img.novo4c, #ficha.v4c img.novo4c, .f-dica.v4c img.novo4c { image-rendering: auto; }
+
+/* ------------------------------------------------------------ botões centrais: a face se separa do fundo sem o mouse */
+/* Antes, a face e a página tinham quase o mesmo tom: o botão só aparecia pela aresta. Agora a face é um degrau mais
+   clara que a página, com luz em cima e sombra embaixo (relevo discreto), e a aresta um pouco mais viva. O dourado
+   continua só para destaque (missão, selecionado, foco). */
+body.v4c { --face: linear-gradient(rgba(255, 255, 255, 0.085), rgba(255, 255, 255, 0.025) 48%, rgba(0, 0, 0, 0.14)),
+  linear-gradient(rgba(34, 36, 41, 0.62), rgba(26, 27, 31, 0.7));
+  --relevo: inset 0 1px 0 rgba(255, 255, 255, 0.09), inset 0 -1px 0 rgba(0, 0, 0, 0.5), 0 1px 0 #000, 0 2px 3px rgba(0, 0, 0, 0.35);
+  --aresta-face: #4a4e56; }
+body.v4c :is(.escolha, .caminho, .botao-janela) { border-color: var(--aresta-face);
+  background: var(--face), var(--t-botao) 0 0 / 128px; background-clip: padding-box; box-shadow: var(--relevo); }
+body.v4c :is(.escolha, .caminho.clicavel, .botao-janela):hover, body.v4c :is(.escolha, .caminho, .botao-janela).demo-hover {
+  border-color: var(--aresta-viva);
+  background: linear-gradient(rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.05) 48%, rgba(0, 0, 0, 0.1)),
+    linear-gradient(rgba(40, 42, 48, 0.6), rgba(30, 32, 36, 0.66)), var(--t-botao) 0 0 / 128px; background-clip: padding-box; }
+body.v4c :is(.escolha, .caminho, .botao-janela):active, body.v4c :is(.escolha, .caminho, .botao-janela).demo-pressionado {
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8);
+  background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.3)), var(--t-botao) 0 0 / 128px; background-clip: padding-box; }
+body.v4c :is(.escolha, .botao-janela)[aria-pressed="true"] { box-shadow: inset 3px 0 0 var(--latao), var(--relevo); }
+body.v4c :is(.escolha, .botao-janela)[aria-disabled="true"] { box-shadow: none; background: rgba(20, 20, 22, 0.6); }
+body.v4c .escolha.op-missao { box-shadow: inset 3px 0 0 #8a6a2a, var(--relevo); }
+body.v4c .escolha.op-contrato { box-shadow: inset 3px 0 0 #5a5e66, var(--relevo); }
+/* a tecla continua o nicho escuro: agora contrasta com a face, não só com o fundo */
+body.v4c .escolha .tecla { background: #08090b; border-color: #3c3f45; }
+
+/* ------------------------------------------------------------ a ficha */
+/* o retrato de demonstração do Guerreiro: o mesmo quadro (80 px; 64 em telas baixas), sem o "pixelated" */
+#ficha.v4c .f-retrato picture { display: block; }
+#ficha.v4c .f-retrato picture img.original { image-rendering: auto; }
+/* atributos em 24 px, na altura das duas linhas (nome e valor): em 16 e em 20 o escudo e a bota viravam mancha */
+#ficha.v4c .f-attr picture.novo4c { grid-row: 1 / 3; display: block; }
+#ficha.v4c .f-attr img.novo4c { display: block; width: 24px; height: 24px; }
+/* na coluna estreita (até 1400 px), 20 px e um vão menor: "Agilidade" e "33 −20%" cabem sem corte */
+@media (max-width: 1400px) {
+  #ficha.v4c .f-attr { column-gap: 6px; }
+  #ficha.v4c .f-attr img.novo4c { width: 20px; height: 20px; }
+}
+/* espaços: o desenho em 32 px no nicho de 40 (44 em telas largas), como a HUD 4 */
+#ficha.v4c .f-slot img.novo4c { width: 32px; height: 32px; }
+/* espaço vazio: a silhueta apagada um pouco mais visível (os desenhos novos são mais escuros que os sprites) */
+#ficha.v4c .f-slot.vazio img.novo4c { opacity: 0.26; filter: grayscale(1) brightness(1.5); }
+
+/* ------------------------------------------------------------ o topo: vida e Vigor em 20, recursos em 24 */
+body.v4c .vital img.novo4c { width: 20px; height: 20px; flex: none; margin: -2px 0; }
+body.v4c .recurso .icones img.novo4c { width: 24px; height: 24px; margin-bottom: 2px; }
+
+/* ------------------------------------------------------------ caminhos: o lugar em 40 px */
+body.v4c #mundo .caminho > img.novo4c { width: 40px; height: 40px; margin: -4px 0; }

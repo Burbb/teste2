@@ -1947,3 +1947,25 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
 - **Verificado:** 1500×950, 1280×800 e 1280×720, nas três composições, controles de demonstração escondidos; sem erro no
   console nem texto cortado. **É experimento:** nada migrado; motor, saves e versão iguais. **Falta:** a avaliação de
   Jean.
+
+### 14/10/2026 — HUD 4 completa: ícones e retrato de quatro folhas (experimento, sem versão)
+
+- **Pedido de Jean:** completar a HUD 4 (molduras, carvão, doca e cenários aprovados) com quatro PNGs: atalhos,
+  equipamentos e recursos, lugares e atributos, retrato de um Guerreiro de demonstração. Originais intactos, alfa
+  conferido, normalização pela área visível, redução comparada em tamanho real; desenhos só nos tipos que existem
+  (lacuna registrada, nada inventado); contraste dos botões centrais; combate e capela no protótipo.
+- **Feito:** em `ferramentas/prototipos/hud/`, a versão "HUD 4 completa" no alternador (mesmos dados; a HUD 4 continua).
+  `preparar_hud4c.py` (37 peças em `assets4c/`, folhas de redução em `assets4c/teste/`; média por área com nitidez
+  leve, um arquivo por tamanho e o @2x), `icones4c.js` (troca pelo papel e pelo tipo do motor), `hud4c.css`,
+  entornos Combate e Capela (`composicao4c.js`, fotografados dos cenários "muralha" e "capela" com o Guerreiro nível 6).
+  Corrigido de passagem: a paisagem ficava vazia ao trocar de entorno.
+- **Avaliação** (no `LEIA-ME.md` da pasta): os anéis se leem, Grimório e Diário se distinguem, bolsa e equipamento têm o
+  mesmo peso, o retrato cabe no quadro sem rolagem a mais, e os botões se destacam do fundo. Perderam leitura: Talentos,
+  Salvar, provisões, amuleto, a bota e o escudo dos atributos em 20 px, ruínas e pântano. Desencontrados: o Guerreiro de
+  ferro fica metade com peças novas e metade com sprites (as peças novas são de couro: não há elmo, cota, manopla,
+  perneira, bota ferrada nem maça/martelo), dois retratos do herói (ficha e topo), o grão pintado contra o pixel duro,
+  o combate de produção, a pedra azul com o azul do "mágico".
+- **Verificado:** 1500×950, 1280×800 e 1280×720, nas composições de lugar, missão, luta e capela, mouse e teclado,
+  controles de demonstração escondidos; sem erro no console, sem texto cortado, sem ícone reescalado, rolagem igual à da
+  HUD 4; versões anteriores iguais pixel a pixel nas regiões paradas. **É experimento:** nada migrado; motor, saves,
+  telas de produção e versão iguais. **Falta:** a avaliação de Jean.

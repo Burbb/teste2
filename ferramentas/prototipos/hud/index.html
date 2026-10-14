@@ -24,6 +24,7 @@
 <link rel="stylesheet" href="ficha-assets.css">
 <link rel="stylesheet" href="hud3.css">
 <link rel="stylesheet" href="hud4.css">
+<link rel="stylesheet" href="hud4c.css">
 <script src="../../../rpg/web/static/sprites-dados.js"></script>
 <script src="../../../rpg/web/static/sprites.js"></script>
 <script>Sprites.publicar();</script>
@@ -43,9 +44,10 @@
 <section id="demo" aria-label="Controles de demonstração">
   <h2>Demonstração <span>D esconde</span></h2>
   <fieldset data-chave="versao"><legend>Versão</legend><div class="op">
-    <button type="button" data-v="anterior">Anterior</button><button type="button" data-v="assets">Assets</button><button type="button" data-v="hud3">HUD 3</button><button type="button" data-v="hud4">HUD 4</button></div></fieldset>
+    <button type="button" data-v="anterior">Anterior</button><button type="button" data-v="assets">Assets</button><button type="button" data-v="hud3">HUD 3</button><button type="button" data-v="hud4">HUD 4</button><button type="button" data-v="hud4c">HUD 4 completa</button></div></fieldset>
   <fieldset data-chave="entorno"><legend>Entorno</legend><div class="op">
-    <button type="button" data-v="bosque">Bosque (missão)</button><button type="button" data-v="brejo">Brejo</button></div></fieldset>
+    <button type="button" data-v="bosque">Bosque (missão)</button><button type="button" data-v="brejo">Brejo</button>
+    <button type="button" data-v="combate">Combate</button><button type="button" data-v="capela">Capela</button></div></fieldset>
   <fieldset data-chave="pagina"><legend>Página</legend><div class="op">
     <button type="button" data-v="lugar">o lugar</button><button type="button" data-v="missao">cena de missão</button></div></fieldset>
   <fieldset data-chave="rastreios"><legend>Missões</legend><div class="op">
@@ -77,28 +79,50 @@
 <script src="dados.js"></script>
 <script src="composicao.js"></script>
 <script src="composicao3.js"></script>
+<script src="composicao4c.js"></script>
+<script src="icones4c.js"></script>
 <script src="topo.js"></script>
 <script src="arte.js"></script>
 <script src="ficha.js"></script>
 <script>
 "use strict";
 // O entorno: o topo, a cena e o mundo fotografados do jogo, e a paisagem desenhada de verdade. "Bosque" é a campanha
-// com a missão e os contratos (composicao3.js); "Brejo", a fotografia das duas primeiras tentativas (composicao.js).
-const ENTORNOS = { bosque: { ...COMPOSICAO3.local, evento: COMPOSICAO3.evento }, brejo: COMPOSICAO };
+// com a missão e os contratos (composicao3.js); "Brejo", a fotografia das duas primeiras tentativas (composicao.js);
+// "Combate" e "Capela", o Guerreiro de nível 6 numa luta e na capela (composicao4c.js).
+const ENTORNOS = { bosque: { ...COMPOSICAO3.local, evento: COMPOSICAO3.evento }, brejo: COMPOSICAO,
+  combate: COMPOSICAO4C.combate, capela: COMPOSICAO4C.capela };
 let entornoAtual = null;
+// A paisagem: vista.js guarda o primeiro canvas #vista que vê e desenha sempre nele. A fotografia de cada entorno traz
+// um canvas novo (vazio): ele dá lugar ao de sempre, com as classes e o estilo da fotografia. Na capela, a sala é a
+// imagem fotografada do canvas (cenas.js pinta a sala nele; a sala não é redesenhada aqui).
+let vistaCanvas = null;
 function montarEntorno(nome) {
   const C = ENTORNOS[nome] || ENTORNOS.bosque;
   document.body.dataset.bioma = C.corpo.bioma;
   document.body.dataset.periodo = C.corpo.periodo;
   document.getElementById("topo").innerHTML = C.topo;
   document.getElementById("palco").innerHTML = C.palco;
+  const novo = document.getElementById("vista");
+  if (!vistaCanvas) vistaCanvas = novo;
+  if (novo && novo !== vistaCanvas) {
+    vistaCanvas.className = novo.className;
+    vistaCanvas.setAttribute("style", novo.getAttribute("style") || "");
+    novo.replaceWith(vistaCanvas);
+  }
   document.getElementById("mundo").innerHTML = C.mundo;
   // Os controles do entorno recebem foco pelo teclado (para conferir o anel de foco); os outros, não. Nada responde
   // ao clique: o protótipo não fala com o motor.
   document.querySelectorAll("#palco button, #palco [tabindex], #mundo button, #mundo [tabindex], #topo button").forEach((b) => b.setAttribute("tabindex", "-1"));
   document.querySelectorAll("#prompt .escolha, #doca .atalho, #mundo .caminho, #mundo .rastro-contrato").forEach((b) => b.setAttribute("tabindex", "0"));
   document.querySelectorAll("#palco .escolha").forEach((b) => { b.style.opacity = "1"; b.style.animation = "none"; });
-  Vista.atualizar({ local: C.vista.local, mundo: C.vista.mundo });
+  Vista.atualizar({ local: C.vista.local, mundo: C.vista.mundo });  // (antes da troca abaixo: a vista guarda o canvas)
+  if (C.vistaImagem && vistaCanvas) {
+    const foto = document.createElement("img");
+    foto.id = "vista"; foto.className = vistaCanvas.className; foto.alt = "";
+    foto.src = C.vistaImagem.src; foto.width = C.vistaImagem.largura; foto.height = C.vistaImagem.altura;
+    foto.style.imageRendering = "pixelated";
+    vistaCanvas.replaceWith(foto);
+  }
   entornoAtual = nome;
 }
 const folhaDoLugar = {};
@@ -148,10 +172,14 @@ function redesenhar() {
   Ficha.iconesNovos = escolha.icones === "novos";
   Ficha.versao = escolha.versao;
   document.body.className = (ENTORNOS[escolha.entorno] || ENTORNOS.bosque).corpo.classe;
-  document.body.classList.toggle("v3", escolha.versao === "hud3" || escolha.versao === "hud4");  // a HUD 4 parte da 3
-  document.body.classList.toggle("v4", escolha.versao === "hud4");
+  document.body.classList.toggle("v3", ["hud3", "hud4", "hud4c"].includes(escolha.versao));  // a HUD 4 parte da 3
+  document.body.classList.toggle("v4", ["hud4", "hud4c"].includes(escolha.versao));  // e a completa, da 4
+  document.body.classList.toggle("v4c", escolha.versao === "hud4c");
   ajustarEntorno();
+  const novos = escolha.versao === "hud4c" && escolha.icones === "novos";
+  Topo.novos = novos;
   Topo.desenhar(document.getElementById("hud-linha"), h);  // o topo e a ficha: o mesmo estado
+  Icones4c.aplicar(novos);  // a doca, os caminhos e a janela, fotografados do jogo
   Ficha.fecharDica();
   Ficha.desenhar(ficha, h, escolha.nome);
   document.querySelectorAll("#demo fieldset").forEach((f) => f.querySelectorAll("button").forEach((b) =>
@@ -168,7 +196,7 @@ mostrar.addEventListener("click", alternarDemo);
 document.addEventListener("keydown", (ev) => {
   if (ev.ctrlKey || ev.metaKey || ev.altKey) return;
   if (ev.key === "d" || ev.key === "D") alternarDemo();
-  if (ev.key === "v" || ev.key === "V") { const vs = ["anterior", "assets", "hud3", "hud4"]; escolha.versao = vs[(vs.indexOf(escolha.versao) + 1) % vs.length]; redesenhar(); }  // a mesma janela, a próxima versão
+  if (ev.key === "v" || ev.key === "V") { const vs = ["anterior", "assets", "hud3", "hud4", "hud4c"]; escolha.versao = vs[(vs.indexOf(escolha.versao) + 1) % vs.length]; redesenhar(); }  // a mesma janela, a próxima versão
   if (ev.key === "Escape" && escolha.modal === "sim") { escolha.modal = "nao"; redesenhar(); }
 });
 Ficha.ligarDicas(ficha);

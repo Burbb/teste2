@@ -1,9 +1,10 @@
 # Protótipo: a ficha do herói (experimento)
 
-Quatro versões na mesma página, com os mesmos dados e a mesma janela: **Anterior** (a HUD atual do jogo, com a ficha
+Cinco versões na mesma página, com os mesmos dados e a mesma janela: **Anterior** (a HUD atual do jogo, com a ficha
 desenhada em código), **Assets** (a ficha com peças recortadas de uma imagem de referência), **HUD 3** (a HUD inteira
-com as molduras, as superfícies e os controles de três folhas de referência) e **HUD 4** (a rodada seguinte, sobre a
-HUD 3). O controle "Versão" (ou a tecla **V**) passa de uma à outra; a página abre na HUD 4.
+com as molduras, as superfícies e os controles de três folhas de referência), **HUD 4** (a rodada seguinte, sobre a
+HUD 3) e **HUD 4 completa** (a HUD 4 com os ícones e o retrato de quatro folhas novas). O controle "Versão" (ou a tecla
+**V**) passa de uma à outra; a página abre na última que você viu (na primeira vez, na HUD 4).
 
 **Experimento, não aprovado nem migrado.** Nada desta pasta é carregado pelo jogo; o motor, os saves, as regras e as
 telas de produção não mudaram, nem a versão do jogo. O teste é só a ficha do herói (o painel da esquerda); o topo, a
@@ -19,8 +20,8 @@ cena e o painel do mundo em volta são o jogo de hoje, para julgar a ficha na co
 Na página:
 
 - O quadro claro no canto de baixo à direita são os **controles de demonstração** (fora da interface do jogador):
-  a versão (Anterior, Assets, HUD 3 ou HUD 4; **V** passa de uma à outra), o entorno (o Bosque da campanha, com a missão e os
-  contratos, ou o Brejo das duas primeiras tentativas), a página (o lugar ou a cena de missão, com texto longo), as
+  a versão (Anterior, Assets, HUD 3, HUD 4 ou HUD 4 completa; **V** passa de uma à outra), o entorno (o Bosque da
+  campanha, com a missão e os contratos; o Brejo das duas primeiras tentativas; uma luta do Guerreiro; a capela), a página (o lugar ou a cena de missão, com texto longo), as
   missões (só a missão, ou a missão e os contratos), a janela de comparação do anel (**Esc** fecha), a faixa de
   estados dos controles, nome curto e longo (com PARAIBATRON), nível 1, 6 e 14, equipamento completo, parcial ou vazio, bolsa comum, cheia
   ou vazia, com ou sem ferimentos, com ou sem fome, e os ícones novos ou os atuais (para comparar). **D** esconde e
@@ -281,3 +282,145 @@ dois anéis, a dica, o foco do teclado e a rolagem. Sem erro no console e sem te
   - *A doca* ocupa a largura toda, mas os atalhos ficam no meio, com sobra dos lados.
   - *O topo* ainda usa a faixa fina da HUD 3 embaixo; não ganhou a linguagem da moldura principal.
   - *O nome do lugar só no painel do mundo* depende de esse painel estar à vista (ver acima).
+
+## Quinta rodada: HUD 4 completa (ícones e retrato de quatro folhas)
+
+A HUD 4 aprovada (molduras, profundidade, cantos, carvão, doca, cenários) fica como está; esta rodada põe nela uma
+família de desenhos: atalhos, equipamentos, recursos, atributos, lugares e o retrato. Arquivos: `preparar_hud4c.py`
+(os assets), `icones4c.js` (o que vai onde), `hud4c.css` (o corpo leva `v3 v4 v4c`: só acrescenta à HUD 4),
+`composicao4c.js` e `fotografar_composicao4c.mjs` (a luta e a capela). O controle "Ícones" (novos ou atuais) troca os
+desenhos sem sair da versão.
+
+### Os assets (`assets4c/`)
+
+- **Originais intactos** em `assets4c/original/` (os quatro anexos, só renomeados: `lugares-atributos.webp`,
+  `equipamentos-recursos.webp`, `atalhos.webp`, `retrato.webp`).
+- **Alfa conferido antes de mexer**: o fundo já é transparente (alfa 0). O opaco veio em 250 a 253 (compressão) e foi
+  levado a 255. Em volta de cada desenho e espalhada pelo fundo há uma franja escura de alfa 1 a 12 (no máximo 5% de
+  opacidade), resto do recorte: zerada. Pontos soltos longe do desenho saíram. A borda de antisserrilhado (alfa 13 a
+  249) ficou inteira, e com ela o que é do desenho: os riscos da bota, o golpe da espada, as faíscas da chama, o chão e a
+  água dos lugares. O relatório de cada peça está em `assets4c/teste/limpeza.txt`.
+- **Recorte**: as regiões conexas são achadas na folha inteira e cada uma vai para a célula do seu centro (as peças
+  passam um pouco da grade; um recorte pela grade cortava o pé da linha de cima). 37 peças em `assets4c/pecas/`.
+- **Normalização pela área visível** (alfa acima de 50%), por grupo: todas com a mesma área, sem nenhuma sair do
+  quadrado; as compridas (tocha, espada, raio) batem na borda antes e ficam um pouco abaixo.
+- **Redução comparada** em `assets4c/teste/reducoes-*.png`, em tamanho real sobre o carvão e o nicho de item: média
+  por área, média com nitidez leve, Lanczos e vizinho mais próximo, em 24/32/40 (atalhos, equipamentos, bolsa), 16/20/24
+  (recursos, atributos), 32/40/48 (lugares) e 80/64 (retrato). A média sozinha deixa tudo macio; o Lanczos acende um anel
+  nas bordas fortes (aço, ouro); o vizinho serrilha e perde linha fina (a corrente do amuleto, os galhos do pântano).
+  Escolhida a **média com nitidez leve**, com o alfa pré-multiplicado (sem halo escuro). Cada tamanho tem o seu arquivo
+  e o dobro (`@2x`) para telas densas: o navegador não reescala nada (conferido nas capturas).
+
+| Onde | Tamanho escolhido | Por quê |
+|---|---|---|
+| Doca | 36 px (caixa de 38, a barra não cresce) | em 32, a mochila, o grimório e a carteira somem no carvão |
+| Espaços de equipamento e bolsa | 32 px no nicho de 40/44 | o mesmo tamanho dos ícones da HUD 4 |
+| Janela dos anéis | 64 e 48 px | os tamanhos que o jogo já usa nos cartões |
+| Atributos | 24 px; 20 em janelas de até 1400 px | em 16 e 20 o escudo e a bota viram mancha; 24 corta "Agilidade" em 1280 |
+| Topo: vida e Vigor | 20 px | a altura de uma barra |
+| Topo: recursos | 24 px | 32 era o desenho de 16 em ×2 com folga; o novo enche mais a caixa |
+| Caminhos | 40 px | em 32 a vila e as ruínas perdem as casas e o arco; 40 não aumenta o cartão |
+| Retrato | 80 px; 64 em janelas baixas | o mesmo quadro da HUD 4 |
+
+### O que vai onde (pelo tipo que o motor já manda)
+
+| Desenho | Tipo do jogo | Onde aparece |
+|---|---|---|
+| Talentos, Grimório, Inventário, Mapa, Diário, Bestiário, Salvar, Sair | os oito atalhos da doca | doca (nomes mantidos; Salvar continua escrito) |
+| espada, escudo redondo, amuleto, anel (pedra azul) | `espada`, `escudo`, `amuleto`, `anel` | espaços, dicas, janela dos anéis |
+| capuz, armadura de couro, calça de couro, botas, aljava | `capuz`, `gibao`, `calca_couro`, `bota`, `aljava` | só em itens desses tipos; e como silhueta apagada do espaço vazio (Cabeça, Peito, Pernas, Pés) |
+| poção, bandagem, tocha | `pocao_vida`, `bandagem`, `tocha` | bolsa e topo |
+| pão e trouxa, moedas | provisões, ouro | topo (com estoque) |
+| coração, raio | Vida, Vigor (o raio é dourado como a barra do Vigor) | topo |
+| espada com golpe, escudo, bota, chama azul | Ataque, Defesa, Agilidade, Poder | atributos (a chama já era o ícone do Poder) |
+| vila, floresta, pântano, ruínas, montanha | o desenho do destino (`MapaPx.sprite`: vila ou bioma) | cartões de caminhos |
+| retrato | só a classe `guerreiro` | ficha (as outras classes ficam com o desenho delas) |
+
+O jogo separa couro de ferro pela cor do mesmo desenho (calça e calça de couro, bota e bota ferrada, armadura e gibão).
+As peças novas são de couro, então não entram nos tipos de ferro: o Guerreiro de demonstração, todo de ferro, mantém
+elmo, cota, manopla, perneira e bota ferrada do jogo. Os sprites do jogo têm mais de um papel (a "chama" é o Vigor, o
+Poder e a Pena de Fênix): a troca é pelo papel, nunca só pelo nome.
+
+**Sem uso, de propósito:** a adaga (o jogo não tem adaga); o anel vermelho (um tipo, um desenho: a pedra é decoração, e
+o vermelho bateria com os avisos); a cripta (nenhum destino é cripta, e o covil do jogo é a caveira de perigo, que a
+cripta não diz).
+
+**Faltam (ficou o desenho atual):** elmo, cota/peitoral de metal, manopla e luva, perneira de ferro, bota ferrada; maça,
+machado, martelo e as armas das outras classes (arco, besta, cajado, varinha, orbe, livro); tônico, antídoto, unguento,
+bomba de fumaça, pena de fênix, baú; os recursos vazios (osso, tocha apagada, bolsa vazia, frasco vazio); Mana e Foco;
+planície, cidadela, covil e covil vencido; os retratos das outras classes e o retrato do topo; ferimentos, fome,
+reputação, pergaminho da missão, cabeças dos contratos e as notas das opções (a tocha de "−1 tocha").
+
+### Botões centrais
+
+A face das opções, caminhos e botões da janela agora é um degrau mais clara que a página, com luz em cima e sombra
+embaixo (relevo discreto) e a aresta um pouco mais viva: o botão se separa do fundo sem o mouse. A tecla continua o
+nicho escuro, agora contrastando com a face. O latão ficou só no destaque (missão, selecionado, foco); mouse,
+pressionado, indisponível e foco seguem os estados da HUD 4.
+
+### Combate e capela
+
+Dois entornos novos, fotografados do jogo com o mesmo Guerreiro de nível 6 (Paladino): **Combate** (o cenário
+"muralha": dois bandidos e um cultista no Bosque do Moinho, depois de uma troca de golpes) e **Capela** (o salão alagado,
+de manhã, com a sala desenhada pelo jogo; o protótipo mostra a imagem dela, não a redesenha). A ficha e o topo continuam
+o estado dos controles de demonstração (os números da carta de luta são os do herói fotografado). Na luta, como no jogo,
+o topo e a doca saem; a roda de ações e as cartas são as de produção.
+
+De passagem: ao trocar de entorno, a paisagem continuava sendo desenhada no canvas da composição anterior (fora da
+página) e a nova ficava vazia. Agora o canvas da paisagem é sempre o mesmo.
+
+### Conferência
+
+Capturas em `capturas4c/`, com os controles de demonstração escondidos: cada estado em `-hud4` e `-hud4c`, lado a lado
+em `comparacao-*.png` (metade do tamanho) e os detalhes dos ícones em tamanho real em `detalhe-icones-tamanho-real.png`.
+Conferido em 1500×950, 1280×800 e 1280×720: página do lugar e cena de missão longa; nome longo, fome, ferimentos e a
+missão com dois contratos; equipamento completo, parcial e vazio; bolsa comum, cheia e vazia; a janela dos dois anéis;
+mouse (dica do anel, do atributo e da tocha), teclado (foco na opção e nos botões da janela) e rolagem; combate e
+capela. Sem erro no console, sem imagem quebrada, sem ícone reescalado pelo navegador e sem texto cortado (o corte de
+"Agilidade" em 1280 apareceu e foi resolvido com o tamanho de 20 px). Anterior, Assets, HUD 3 e HUD 4 conferidas pixel a
+pixel contra as capturas da rodada passada nas regiões paradas (ficha, página, mundo): iguais.
+
+| Rolagem (mesmo estado) | HUD 4 | HUD 4 completa |
+|---|---|---|
+| Página do lugar, 1500×950 | 0 | 0 |
+| Página do lugar, 1280×720 | 72 px | 72 px |
+| Cena de missão, 1280×720 | 510 px | 510 px |
+| Ficha, 1280×720 (PARAIBATRON, nível 14) | 155 px | 155 px |
+| Ficha, 1280×800 (PARAIBATRON, nível 14) | 75 px | 75 px |
+| Painel do mundo, 1280×720 | 277 px | 277 px |
+| Luta, página, 1280×720 | 27 px | 27 px |
+
+### Avaliação da HUD 4 completa
+
+O que os testes acima garantem é técnico (sem erro, sem corte, sem rolagem a mais). O acabamento não está aprovado: é
+o que esta rodada põe para avaliar.
+
+- **O que melhorou:**
+  - *Anéis*: deixaram de ser pontinhos; em 32 no espaço e em 64/48 na janela se leem o aro e a pedra.
+  - *Grimório e Diário* se distinguem pela forma (fechado com gema × aberto com pena), não só pela cor.
+  - *Bolsa e equipamentos* têm o mesmo peso (32 px, a mesma normalização).
+  - *Retrato*: o Guerreiro pintado lê bem em 80 e em 64 e cabe no mesmo quadro; a rolagem da ficha não mudou.
+  - *Poção, moedas, tocha, raio e coração* continuam reconhecíveis de relance no topo.
+  - *Botões*: a lista de opções se lê como botões mesmo sem o mouse.
+- **Perderam leitura ao reduzir:**
+  - *Talentos* (36): a árvore de esferas vira um enfeite; sem o nome, não diz "talentos".
+  - *Salvar* (36): a carteira com selo e carimbo vira um livro marrom com uma mancha vermelha; só funciona com a palavra
+    (mantida).
+  - *Provisões* (24): pão e trouxa viram duas manchas claras; o pernil atual lia mais rápido.
+  - *Amuleto* (32): a corrente fina some em parte; fica a pedra roxa.
+  - *Agilidade e Defesa* (20, em 1280): a bota e o escudo, escuros, quase somem no carvão; em 24 (1500) leem.
+  - *Ruínas e pântano* (40): escuros sobre a face do cartão; a vila e a floresta leem melhor.
+- **Desencontrados:**
+  - *O equipamento do Guerreiro*: metade nova (espada, escudo, amuleto, anéis), metade sprite (elmo, cota, manopla,
+    perneira, bota ferrada, maça/martelo). As duas famílias lado a lado são o que mais aparece na ficha.
+  - *Dois retratos do mesmo herói*: o pintado na ficha e o sprite ×3 no topo.
+  - *Traço*: as peças novas têm sombreado e contorno pintados; os sprites têm pixel duro de 2 px. Em 32 px, lado a lado
+    (bolsa cheia, espaços, recursos vazios), a diferença de grão se vê.
+  - *Combate*: as cartas, a roda de ações e os ícones das habilidades são os de produção, e agora destoam mais da ficha.
+  - *Cores*: a pedra azul do anel tem o azul do "mágico" (a raridade continua na aresta do espaço e no nome, mas a pedra
+    pode sugerir raridade); o dourado das peças (anéis, moedas, raio) é mais saturado que o latão da interface e, nos
+    anéis grandes da janela, disputa um pouco com o cartão do achado. A chama azul do Poder e a Mana azul colidiriam num
+    Mago (o Guerreiro não tem Mana).
+- **Faltam**: ver a lista acima. Para a família fechar no Guerreiro, as primeiras são elmo, cota, manopla, perneira,
+  bota ferrada e maça/martelo; para o topo, os recursos vazios; depois as outras classes.
+

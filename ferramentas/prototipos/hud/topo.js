@@ -9,9 +9,12 @@ const Topo = (() => {
   const pct = (a, m) => Math.max(0, Math.min(100, Math.round((100 * a) / Math.max(1, m))));
   const barra = (classe, a, m) => `<span class="barra-px ${classe}" data-alvo="${pct(a, m)}"><span class="rastro" style="width:${pct(a, m)}%"></span><span class="enchimento" style="width:${pct(a, m)}%"></span></span>`;
   const dica = (html) => ` data-dica="${esc(html)}" tabindex="0"`;
+  let novos = false;  // HUD 4 completa: os desenhos novos onde há par (Icones4c)
+  /** O ícone de um papel do topo: o desenho novo da tabela, se houver; senão, o sprite do jogo. */
+  const ico = (sprite, escala, peca, lado) => (novos && peca ? Icones4c.img(peca, lado) : Sprites.img(sprite, escala));
   function recurso(id, icone, qtd, titulo, { alerta = false, vazio = false } = {}) {
     return `<div class="recurso f-foco${alerta ? " alerta" : ""}${vazio ? " vazio" : ""}" data-rec="${id}"${dica(`<b class="t">${esc(titulo)}</b>`)}>
-      <div class="icones">${Sprites.img(icone, 2)}</div><div class="qtd">${qtd}</div></div>`;
+      <div class="icones">${ico(icone, 2, Icones4c.RECURSO[icone], 24)}</div><div class="qtd">${qtd}</div></div>`;
   }
   function desenhar(alvo, h) {
     const q = (id) => (h.bolsa.find((b) => b.id === id) || { qtd: 0 }).qtd;
@@ -21,8 +24,8 @@ const Topo = (() => {
     alvo.innerHTML = `
       <div class="hud-retrato" title="${esc(h.titulo)} nível ${h.nivel}">${Sprites.img(h.classe, 3)}<span class="nivel">${h.nivel}</span></div>
       <div class="hud-vitais">
-        <div class="vital f-foco" data-vital="hp"${dica("<b class=\"t\">Vida</b>")}>${Sprites.img("coracao", 1)}${barra("vida", h.hp, h.max_hp)}<span class="num">${h.hp}/${h.max_hp}</span></div>
-        <div class="vital f-foco" data-vital="rec"${dica(`<b class="t">${esc(h.recurso)}</b>`)}>${Sprites.img(RECURSO_ICONE[h.recurso] || "estrela", 1)}${barra(RECURSO_BARRA[h.recurso] || "mana", h.rec, h.max_rec)}<span class="num">${h.rec}/${h.max_rec}</span></div>
+        <div class="vital f-foco" data-vital="hp"${dica("<b class=\"t\">Vida</b>")}>${ico("coracao", 1, Icones4c.VITAL.Vida, 20)}${barra("vida", h.hp, h.max_hp)}<span class="num">${h.hp}/${h.max_hp}</span></div>
+        <div class="vital f-foco" data-vital="rec"${dica(`<b class="t">${esc(h.recurso)}</b>`)}>${ico(RECURSO_ICONE[h.recurso] || "estrela", 1, Icones4c.VITAL[h.recurso], 20)}${barra(RECURSO_BARRA[h.recurso] || "mana", h.rec, h.max_rec)}<span class="num">${h.rec}/${h.max_rec}</span></div>
         <div class="hud-condicoes">${cond}</div>
       </div>
       <div class="hud-recursos">
@@ -34,5 +37,5 @@ const Topo = (() => {
         ${feridas}
       </div>`;
   }
-  return { desenhar };
+  return { desenhar, set novos(v) { novos = v; } };
 })();
