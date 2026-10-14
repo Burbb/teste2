@@ -97,6 +97,7 @@ document.addEventListener("keydown", (ev) => {
   }
   if (k === "Escape" || k === "Backspace") {
     if (fecharJanela()) { ev.preventDefault(); return; }  // a janelinha de habilidades/itens da luta fecha primeiro
+    if (k === "Escape" && Cenas.afastar()) { ev.preventDefault(); return; }  // um ponto da cena visto de perto
     const aberto = !$("#gaveta-historico").hidden || !$("#sobre-mapa").hidden || !$("#sobre-talentos").hidden || !$("#sobre-grimorio").hidden || !$("#sobre-ajuda").hidden || document.querySelector(".menu-item");
     if (!aberto && pergunta && pergunta.voltar !== undefined && !processando) { ev.preventDefault(); voltarPergunta(); return; }
     if (!aberto && processando && !pergunta) { ev.preventDefault(); pedirPular(); return; }  // o Esc também adianta

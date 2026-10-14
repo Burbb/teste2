@@ -307,7 +307,9 @@
    camada por cima dela, como os prédios da vila, com o balão do nome no mesmo estilo. */
 #pontos-cena { position: absolute; z-index: 2; overflow: hidden; pointer-events: none; }
 #pontos-cena[hidden] { display: none; }
-#pontos-cena.perto .ci-ponto { visibility: hidden; }  /* de perto, a arte é o que se olha: "Afastar" volta */
+/* de perto, a arte é o que se olha: nenhum nome, contorno ou ponto da vista geral, nem com "Destacar interações"
+   (o id vence as regras de destaque lá embaixo); "Afastar" volta */
+#pontos-cena.perto .ci-ponto, #pontos-cena.perto .ci-ponto .ci-balao { visibility: hidden; }
 .ci-ponto { position: absolute; padding: 0; background: none; border: 0; cursor: pointer; pointer-events: auto; }
 .ci-ponto.parado { cursor: default; }
 .ci-ponto:focus-visible { outline: var(--px) dashed var(--ouro); outline-offset: 0; }

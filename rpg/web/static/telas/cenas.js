@@ -1156,16 +1156,20 @@
     });
     const afastar = document.createElement("button");
     afastar.type = "button"; afastar.className = "ci-afastar"; afastar.hidden = true; afastar.textContent = "Afastar";
-    afastar.addEventListener("click", longe);
+    afastar.addEventListener("click", (ev) => longe(ev.detail === 0));  // detail 0: Enter ou espaço, pelo teclado
     capa.appendChild(afastar);
     requestAnimationFrame(posicionar);
   }
   /** O ponto: destaque no mouse e no foco. Com ação: o clique (ou Enter/espaço) aproxima a câmera e manda a mesma ação
    *  do menu. De olhar: só aproxima, e "Afastar" volta. Sem nada: diz o estado. */
   function ligarPonto(bt, p) {
+    // Três destaques diferentes: o global (F4, em acesos), o do mouse (enquanto ele está em cima) e o do foco do
+    // teclado (:focus-visible: o foco que o mouse deixa num botão não acende nada).
     const acender = (sim) => { bt.classList.toggle("aceso", sim); Vista.destacar(sim ? p.id : null); };
-    ["mouseenter", "focus"].forEach((t) => bt.addEventListener(t, () => acender(true)));
-    ["mouseleave", "blur"].forEach((t) => bt.addEventListener(t, () => acender(false)));
+    bt.addEventListener("mouseenter", () => acender(true));
+    bt.addEventListener("focus", () => acender(bt.matches(":focus-visible")));
+    bt.addEventListener("mouseleave", () => acender(bt.matches(":focus-visible")));
+    bt.addEventListener("blur", () => acender(bt.matches(":hover")));
     bt.addEventListener("click", async (ev) => {
       ev.stopPropagation();
       if (processando) { pular = true; return; }  // a página ainda corre: o clique adianta, como na arte
@@ -1195,17 +1199,26 @@
     });
   }
   function tirarOlhar() { document.querySelectorAll("#texto .olhar-perto").forEach((e) => e.remove()); }
-  function longe() {
-    if (!capa) return;
+  /** Afastar: a vista geral volta, com os nomes e contornos como estavam (F4 incluído). Pelo teclado, o foco volta ao
+   *  ponto olhado (com o indicador de foco); pelo mouse, nada fica aceso: o ponteiro já está longe dele. */
+  function longe(teclado) {
+    if (!capa || !capa.classList.contains("perto")) return false;
     tirarOlhar();
     const af = capa.querySelector(".ci-afastar");
-    if (af) af.hidden = true;
+    if (af) { if (!teclado && document.activeElement === af) af.blur(); af.hidden = true; }
     Vista.focarEm(null).then(() => {
       capa.classList.remove("perto");
       const bt = capa.querySelector(".ci-ponto[data-olhado]");
-      if (bt) { bt.removeAttribute("data-olhado"); bt.focus(); }
+      if (bt) {
+        bt.removeAttribute("data-olhado");
+        bt.classList.remove("aceso"); Vista.destacar(null);  // o destaque do clique de antes não fica
+        if (teclado) bt.focus();
+      }
     });
+    return true;
   }
+  /** Esc com um ponto de olhar aproximado: afasta (como o botão, pelo teclado). */
+  function afastar() { const af = capa && capa.querySelector(".ci-afastar"); return !!(af && !af.hidden && longe(true)); }
   /** Luta: os pontos saem (a arte desce para a arena); a câmera volta à sala inteira, para a arena mostrar o lugar. */
   function aoCombate() {
     if (!capa) return;
@@ -1239,5 +1252,5 @@
   Telas.registrar("cena", () => "", {});
   Object.assign(Telas, { soltarCorrentes, momentoIlse });
   window.Cenas = { mostrar, limpar, virou, conferirPendente, aoCombate, aoMenu, posicionar, atual: () => atual,
-    alternarDestaque, destacando };
+    alternarDestaque, destacando, afastar };
 })();

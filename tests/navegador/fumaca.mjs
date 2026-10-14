@@ -652,8 +652,9 @@ async function cenarioSarilho(browser) {
     await page.hover(SAR);
     conferir(await page.$eval(SAR, (b) => b.classList.contains("aceso")), "o mouse em cima acende o sarilho");
     await page.mouse.move(2, 2);
+    await page.keyboard.press("Shift");  // o foco vindo do teclado (o do mouse não acende: 1.84.1)
     await page.focus(SAR);
-    conferir(await page.$eval(SAR, (b) => b.classList.contains("aceso") && b.matches(":focus-visible, :focus")), "o foco do teclado acende do mesmo jeito");
+    conferir(await page.$eval(SAR, (b) => b.classList.contains("aceso") && b.matches(":focus-visible")), "o foco do teclado acende do mesmo jeito");
     await page.keyboard.press("Enter");
     await page.waitForSelector(`${MENU}:has-text("Deixar como está")`, { timeout: 20000 });
     conferir((await sala()) === "presas/perto" && (await foto()) === antes, "Enter no sarilho aproxima e abre as mesmas formas de soltar, sem gastar nada");
@@ -824,6 +825,29 @@ async function cenarioCapelaSalas(browser) {
       "o livro, pelo teclado: uma linha curta, sem repetir o que ele conta e sem gastar nada");
     await page.click(".ci-afastar");
     await page.waitForTimeout(600);
+    // De perto, nada da vista geral, nem com F4; afastando pelo mouse, nada fica aceso; pelo teclado, o foco volta
+    const visiveis = () => page.evaluate(() => [...document.querySelectorAll("#pontos-cena .ci-balao")].filter((b) => getComputedStyle(b).visibility === "visible").length);
+    await page.keyboard.press("F4");
+    await page.click('.ci-ponto[data-ponto="janela"]');
+    await page.waitForSelector(".ci-afastar:not([hidden])", { timeout: 5000 });
+    await page.waitForTimeout(400);
+    conferir((await visiveis()) === 0, "de perto, com F4 ligado, nenhum nome da vista geral sobre a arte");
+    await page.click(".ci-afastar");
+    await page.waitForTimeout(800);
+    conferir((await visiveis()) === 4, "afastando, a vista geral volta com o F4 como estava");
+    await page.keyboard.press("F4");
+    await page.mouse.move(2, 2);
+    await page.waitForTimeout(300);
+    conferir((await visiveis()) === 0 && !(await page.$(".ci-ponto.aceso")) && !(await page.$(".ci-ponto:focus")),
+      "afastado pelo mouse e F4 desligado: a janela não fica acesa nem com o contorno do foco");
+    await page.focus('.ci-ponto[data-ponto="janela"]');
+    await page.keyboard.press("Enter");
+    await page.waitForSelector(".ci-afastar:not([hidden])", { timeout: 5000 });
+    await page.waitForTimeout(400);
+    await page.keyboard.press("Escape");
+    await page.waitForTimeout(800);
+    conferir(await page.evaluate(() => document.activeElement.dataset.ponto === "janela" && document.activeElement.matches(":focus-visible")),
+      "pelo teclado, Esc afasta e o foco volta à janela, visível");
     await page.click('.ci-ponto[data-ponto="porta"]');
     await page.waitForSelector(`${MENU}:has-text("Sair pela brecha")`, { timeout: 20000 });
     await page.waitForTimeout(200);
