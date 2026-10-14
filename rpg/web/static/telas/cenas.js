@@ -555,7 +555,7 @@
    *  está ali (vitória, visita) ou, sem ela, a janela. */
   function luzSacristia(d) {
     if (d.momento === "entrada") return { x: 160, y: 31, perto: 40, longe: 150, max: 0.6, quente: true };
-    if (d.momento === "luta") return { x: 112, y: 57, perto: 38, longe: 150, max: 0.6, quente: true };
+    if (d.momento === "luta") return { x: 150, y: 57, perto: 38, longe: 150, max: 0.6, quente: true };  // largada aos pés
     if (d.luz === "tocha") return { x: 62, y: 74, perto: 46, longe: 175, max: 0.52, quente: true };
     return { x: 202, y: 30, perto: 34, longe: 200, max: 0.46, quente: false };  // só a janela: a leitura vem antes
   }
@@ -658,8 +658,8 @@
     if (d.bau === "no_canto") desenharBau(px, bu, bw, bt, P);
     else { px(bu + 1, P + 1, bw - 2, 1, C.chaoLuz); px(bu, P + 2, 1, 2, C.chaoLuz); px(bu + bw - 1, P + 2, 1, 2, C.chaoLuz); px(bu + 1, P + 4, bw - 2, 1, C.chaoLuz); }
     // a lanterna dos dois: no chão, acesa (luta: o vidro vem no desenho de cada quadro), ou caída e apagada (depois)
-    if (d.momento === "vitoria" || d.momento === "visita") {
-      px(ox + 146, P + 8, 6, 3, C.ferro); px(ox + 147, P + 8, 4, 2, "#2a2a28"); px(ox + 152, P + 9, 2, 1, C.ferroLuz);
+    if (d.momento === "vitoria" || d.momento === "visita") {  // onde ficou na luta, tombada
+      px(ox + 146, P + 1, 6, 3, C.ferro); px(ox + 147, P + 1, 4, 2, "#2a2a28"); px(ox + 152, P + 2, 2, 1, C.ferroLuz);
     }
     // a parede da direita, no canto
     px(W - 8, 0, 8, P, C.pedraSombra); px(W - 8, 0, 1, P, C.pedra);
@@ -1064,13 +1064,20 @@
     } else if (est.onda > 0) est.onda--;
   }
 
+  // Na mesma sala, um acontecimento novo (a entrada, a luta, a vitória, a visita) não recomeça a cena: o mesmo quadro,
+  // a mesma câmera e, no mesmo momento, a mesma animação; o que mudou (a luz, a lanterna, o baú) passa numa mistura
+  // curta da base de antes para a nova (instantânea com movimento reduzido).
+  const TROCA_MS = 280;
   function mostrar(d) {
     pendente = false;
     const def = CENAS[d.cena];
     if (!def) { limpar(); return; }
-    const b = def.base(QW, d), est = { correntes: d.correntes, agua: d.agua, soltando: false, passo: 0, onda: 0,
+    const antes = atual && atual.d.cena === d.cena ? atual : null, mesmo = !!antes && antes.d.momento === d.momento;
+    if (mesmo && antes.d.agua === "clara") d = Object.assign({}, d, { agua: "clara" });  // o que a tela já mostrou fica
+    const b = def.base(QW, d), est = mesmo ? antes.est : { correntes: d.correntes, agua: d.agua, soltando: false, passo: 0, onda: 0,
       ilse: d.ilse, olhos: d.momento === "descida" ? "fechados" : "abertos", canto: d.momento === "descida" ? false : !!d.ilse && d.ilse !== "ausente" && d.momento === "visita",
       fita: false, desce: 0, some: 0, turvo: 0, falha: 0, anim: null };
+    const troca = antes && !reduzido() ? { de: antes.b.canvas, inicio: performance.now() } : null;
     atual = { d, def, b, est };
     document.getElementById("cena").classList.add("com-ambiente");
     if (typeof recolherArte === "function") recolherArte(false);
@@ -1081,6 +1088,11 @@
         ctx.save(); ctx.translate(tranco, 0);
         def.desenhar(ctx, QW, b, est, quadro, destaque);
         ctx.restore();
+        if (troca && troca.de) {  // a base de antes, sumindo por cima da nova
+          const t = (performance.now() - troca.inicio) / TROCA_MS;
+          if (t >= 1) troca.de = null;
+          else { ctx.save(); ctx.globalAlpha = 1 - t; ctx.drawImage(troca.de, 0, 0); ctx.restore(); }
+        }
         acesos(destaque).forEach((id) => cantos(ctx, def.pontos[id].area));
       },
       andar: () => { passo(est); passoIlse(est); },

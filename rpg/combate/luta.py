@@ -396,6 +396,11 @@ class Combate(Golpes, AcoesDoHeroi, TurnosDosOutros):
             ouro = sum(e.ouro + e.roubado for e in derrotados)
             if any(e.roubado for e in derrotados):
                 self.dizer("Você recupera o ouro que lhe foi roubado.", "verde")
+            ao_vencer = [e.ao_vencer for e in derrotados if getattr(e, "ao_vencer", None)]
+            if ao_vencer:  # o que a vitória sobre ele mostra antes da faixa (a resolução de Ilse: missoes._fundo)
+                self.ui.atualizar()  # a arena sai antes: a cena não divide a tela com a carta dele
+                for f in ao_vencer:
+                    f()
             g.ui.celebrar("vitoria", {"inimigos": len(derrotados), "chefe": any(e.chefe for e in derrotados)})
             # O espólio: o ouro, o XP, os contratos que andaram e o que se acha nos corpos. Na tela gráfica tudo
             # isso (e o que o evento ainda der logo depois) vai para um quadro só, antes da próxima pergunta.

@@ -372,7 +372,7 @@ def _lutar(g, grupo, titulo):
     """A luta da sala. Devolve True só com vitória (a derrota sai daqui como sempre, para o resgate ou o fim)."""
     from . import sobrevivencia
     luz = sobrevivencia.acender_tocha(g, sala=True)
-    g.luz_na_sala = "tocha" if luz else None  # a tela gráfica desenha a tocha acesa na cena que vem logo depois
+    _acender(g, None, luz)  # a tela gráfica desenha a tocha acesa na cena que vem logo depois (e na sala vencida)
     try:
         r = g.combate(grupo, emboscada=None if luz else "inimigo", titulo=titulo)
     finally:
@@ -424,7 +424,8 @@ def _recuo(g, titulo, texto, fora=False, sacristia=False):
         g.ui.painel("cena", cena_exterior(g))
     elif sacristia:
         _por_na_sala(g, "sacristia")
-        g.ui.painel("cena", cena_sacristia(g, luz=getattr(g, "luz_na_sala", None)))
+        g.luz_onde = "sacristia"  # a tocha da luta lá embaixo sobe junto
+        g.ui.painel("cena", cena_sacristia(g, luz=g.luz_na_sala))
     g.narrar(texto)
     g.dizer("A sala continua por vencer. Dá para voltar quando quiser.", "cinza")
 
@@ -467,6 +468,7 @@ def _sacristia(g, mid):
                fora=True)
         return
     _por_na_sala(g, "sacristia")
+    g.luz_onde = "sacristia"  # a tocha da luta continua acesa na sala vencida (a página também)
     g.ui.cena("A Sacristia", g.contexto_cena(), "evento")
     g.ui.painel("cena", cena_sacristia(g, mid, "vitoria", luz=g.luz_na_sala))
     g.narrar({
@@ -499,7 +501,7 @@ def _recolher_bau(g, mid):
         return
     m["bau"] = "recolhido"
     g.ui.cena("A Sacristia", g.contexto_cena(), "evento")
-    g.ui.painel("cena", cena_sacristia(g, mid, "visita"))  # o canto já vazio
+    g.ui.painel("cena", cena_sacristia(g, mid, "visita", luz=luz_da_sala(g, "sacristia")))  # o canto já vazio
     g.narrar("Você recolhe o baú de ferro do canto.")
     g.dar("bau")
 
@@ -623,6 +625,20 @@ def _por_na_sala(g, sala):
     m = registro(g, "febre_do_turvo")
     if m is not None:
         m["sala"] = sala
+    if getattr(g, "luz_onde", None) not in (None, sala):  # saiu da sala da luta: a tocha dela não vem junto
+        g.luz_onde = None
+
+
+def _acender(g, sala, luz):
+    """A tocha que a luta de sala acendeu (`luz`): a arte a desenha na cena seguinte e, enquanto o personagem fica na
+    sala dela (`sala`, ou a que vier, `_por_na_sala`), também na página. Só a vista: não vai no save."""
+    g.luz_na_sala = "tocha" if luz else None
+    g.luz_onde = sala
+
+
+def luz_da_sala(g, sala):
+    """A luz que a arte desenha na página de `sala`: a tocha da luta que acabou de acontecer ali, se acendeu."""
+    return g.luz_na_sala if getattr(g, "luz_onde", None) == sala else None
 
 
 def pode_explorar(g):
@@ -842,9 +858,9 @@ def mostrar_cena(g):
     if sala is None:
         return
     if sala == "sacristia":
-        g.ui.painel("cena", cena_sacristia(g, pagina=True))
+        g.ui.painel("cena", cena_sacristia(g, pagina=True, luz=luz_da_sala(g, sala)))
     elif sala == "fundo":
-        g.ui.painel("cena", cena_fundo(g, pagina=True))
+        g.ui.painel("cena", cena_fundo(g, pagina=True, luz=luz_da_sala(g, sala)))
     else:
         g.ui.painel("cena", {"exterior": cena_exterior, "salao": cena_salao, "ossuario": cena_ossuario}[sala](
             g, pagina=True))
@@ -1028,8 +1044,12 @@ def _fundo(g, mid):
         g.narrar("Você segura a fita e espera o momento de dizer o nome dela.")
     from . import sobrevivencia
     luz = sobrevivencia.acender_tocha(g, sala=True)
-    g.luz_na_sala = "tocha" if luz else None
+    _acender(g, "fundo", luz)
     g.ui.painel("cena", cena_fundo(g, mid, "luta", luz=g.luz_na_sala))  # ela é a carta: a arte fica sem ela
+    # Vencida, a tela vai do fim da luta direto à resolução, com Ilse ainda ali (a fita ou o desfazer vêm depois, com o
+    # texto), antes da faixa da vitória e do espólio. Só a vista: o desfecho é gravado em _resolver, como sempre.
+    chefe.ao_vencer = lambda: g.ui.painel("cena", cena_fundo(
+        g, mid, "descanso" if getattr(chefe, "descansou", False) else "destruida", luz=g.luz_na_sala))
     try:
         r = g.combate([chefe], emboscada=None if luz else "inimigo", pode_fugir=False,
                       titulo="Guardiã: Ilse, a Bruxa Afogada")

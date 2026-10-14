@@ -84,7 +84,8 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
         self.reserva = []  # companheiros que esperam no acampamento
         self.evento_atual = None
         self.sem_luz = False
-        self.luz_na_sala = None  # a tocha acesa na última luta de sala (só para a arte da cena seguinte; não vai no save)
+        self.luz_na_sala = None  # a tocha acesa na última luta de sala (só para a arte; não vai no save)
+        self.luz_onde = None     # a sala em que ela continua acesa na página (missoes._acender)
         self.espolio_aberto = None  # o quadro de espólio sendo juntado (tela gráfica; ver Recompensas.abrir_espolio)
         self.ambiente_visto = None  # (lugar, dia, período) da última frase de ambiente da vila (ver menu_vila)
         self.registro = []

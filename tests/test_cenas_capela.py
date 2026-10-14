@@ -473,7 +473,7 @@ class TestSacristia(unittest.TestCase):
         self.assertTrue(all(d["pontos"] == [] and not d["pagina"] for d in ds))  # dentro das cenas, nada se clica
         self.assertEqual(g.j.consumiveis.get("bau", 0), 0)  # o baú fica no canto: recolhe-se pela ação (1.85.0)
         d = pagina(g)
-        self.assertEqual((d["momento"], d["bau"], d["livro"], d["luz"]), ("visita", "no_canto", "no_buraco", None))
+        self.assertEqual((d["momento"], d["bau"], d["livro"], d["luz"]), ("visita", "no_canto", "no_buraco", "tocha"))
         self.assertEqual([p["id"] for p in d["pontos"]], ["porta", "janela", "livro", "bau", "alcapao"])
         self.assertEqual(ponto(d, "porta")["acao"], {"capela_ir": "salao"})
         self.assertEqual(ponto(d, "bau")["acao"], {"missao": MID, "acao_missao": "bau"})
@@ -543,10 +543,22 @@ class TestFundo(unittest.TestCase):
         from tests.test_guardia import no_fundo
         g = no_fundo(classe, respostas, **kw)
         ui = g.ui
-        ui.paineis, ui.momentos = [], []
-        ui.painel = lambda t, d: ui.paineis.append((t, d)) or False
+        ui.paineis, ui.momentos, ui.ordem = [], [], []
+        m = missoes.registro(g, MID)
+
+        def painel(t, d):
+            ui.paineis.append((t, d))
+            if t == "cena":
+                ui.ordem.append(("painel", d.get("momento"), m.get("desfecho")))
+            return False
+        ui.painel = painel
         ui.conquistas_na_tela = grafica
-        ui.celebrar = lambda tipo, dados: ui.momentos.append(dados["momento"]) if tipo == "ilse" else None
+
+        def celebrar(tipo, dados):
+            ui.ordem.append(("celebrar", tipo, m.get("desfecho")))
+            if tipo == "ilse":
+                ui.momentos.append(dados["momento"])
+        ui.celebrar = celebrar
         ui.dizer = ui.narrar = lambda texto="", cor=None: (ui.ditos.append(str(texto)), ui.momentos.append(str(texto)))
         return g
 
@@ -564,6 +576,7 @@ class TestFundo(unittest.TestCase):
         missoes.executar(g, MID, "fundo")
         self.assertEqual(missoes.registro(g, MID)["desfecho"], "destruida")
         self.assertEqual(self.fundos(g), [("descida", "presa", "presas", "escura"), ("luta", "ausente", "presas", "escura"),
+                                          ("destruida", "destruida", "presas", "escura"),
                                           ("destruida", "destruida", "presas", "escura")])
         self.assertEqual([m for m in g.ui.momentos if m in ("acorda", "canto_falha", "fita", "afunda", "desfaz")],
                          ["acorda", "desfaz"])
@@ -580,6 +593,7 @@ class TestFundo(unittest.TestCase):
         missoes.executar(g, MID, "fundo")
         self.assertEqual(missoes.registro(g, MID)["desfecho"], "descansada")
         self.assertEqual(self.fundos(g), [("descida", "solta", "soltas", "escura"), ("luta", "ausente", "soltas", "escura"),
+                                          ("descanso", "descanso", "soltas", "escura"),
                                           ("descanso", "descanso", "soltas", "escura")])
         self.assertEqual([m for m in g.ui.momentos if m in ("acorda", "canto_falha", "fita", "afunda", "desfaz")],
                          ["acorda", "canto_falha", "fita", "afunda"])
@@ -696,3 +710,36 @@ class TestBauDaSacristia(unittest.TestCase):
         # antes da sacristia, a migração não mexe: a vitória põe o baú no canto
         antigo = {"jogador": {}, "seed": 1, "versao": 3, "mundo": {"missoes": {MID: {"etapa": "sacristia"}}}}
         self.assertNotIn("bau", migrar(antigo)["mundo"]["missoes"][MID])
+
+class TestContinuidade(unittest.TestCase):
+    """Entre acontecimentos da mesma sala, a arte não passa por um estado errado no meio (1.85.0): a resolução de Ilse
+    vem logo depois da luta, com ela presente, e a tocha da luta continua acesa na sala enquanto se está nela."""
+    no_fundo = TestFundo.no_fundo
+
+    def test_do_fim_da_luta_direto_a_resolucao(self):
+        """A arte vai do fim da luta à resolução com Ilse ainda ali, antes do espólio e da cena do desfecho; o desfecho
+        só é gravado depois, em _resolver (nada de sala vazia no meio, nada adiado no motor)."""
+        from tests.test_guardia import DESCANSO, DESTRUIR, PRONTO
+        for respostas, kw, momento in ((DESCANSO, PRONTO, "descanso"), (DESTRUIR, {"preparos": ()}, "destruida")):
+            g = self.no_fundo("mago", respostas, **kw)
+            missoes.executar(g, MID, "fundo")
+            ordem = g.ui.ordem
+            i = ordem.index(("painel", "luta", None))
+            j = next(k for k in range(i + 1, len(ordem)) if ordem[k][0] == "painel")
+            self.assertEqual(ordem[j], ("painel", momento, None))  # o próximo quadro já é a resolução
+            self.assertTrue(all(o[1] == "ilse" for o in ordem[i + 1:j]))  # no meio, só o canto que falha (no rito)
+            self.assertEqual(ordem[j + 1][:2], ("celebrar", "vitoria"))  # a faixa da vitória já sobre Ilse
+            self.assertNotIn(("painel", "visita", None), ordem[i:])
+            self.assertTrue(any(o[0] == "celebrar" and o[1] != "ilse" for o in ordem[j + 1:]))  # o espólio vem depois
+            self.assertTrue(missoes.registro(g, MID)["desfecho"])
+
+    def test_a_tocha_da_luta_fica_na_sala_e_sai_com_quem_sai(self):
+        g = na_capela(etapa="sacristia")
+        g.j.consumiveis["tocha"] = 2
+        lutas(g, "vitoria")
+        fazer(g, "sacristia")
+        self.assertEqual(pagina(g)["luz"], "tocha")  # a página logo depois da vitória: a mesma luz da cena
+        missoes.ir_na_capela(g, "salao")
+        missoes.ir_na_capela(g, "sacristia")
+        self.assertIsNone(pagina(g)["luz"])  # voltou depois: a tocha da luta já não está acesa
+        self.assertNotIn("luz", json.dumps(g.mundo))
