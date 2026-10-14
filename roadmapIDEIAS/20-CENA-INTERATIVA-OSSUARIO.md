@@ -668,3 +668,130 @@ depois do desfecho.
 2. `$env:PREPARO="pronto"; $env:NIVEL="8"` (com `ETAPA=fundo`): as correntes soltas; chame Ilse pelo nome; no momento
    do rito, a água para; diga o nome: a fita, ela afunda, a água clara. Salve, saia e carregue: o fundo sem ela.
 3. `$env:PERIODO="3"; $env:TOCHAS="0"`: o fundo no escuro, legível.
+
+---
+
+# Acabamento sobre a 1.84.0 (1.84.1 a 1.86.1)
+
+Pedido de Jean (14/10/2026): continuidade visual, aproximações, detalhes de Ilse, o livro, o baú e a barra branca do
+modal de equipamento. Regras, custos, progressão, encontros e recompensas iguais (a quantidade de baús também: só
+mudou a forma de recolher o da sacristia). Cada problema foi reproduzido antes de corrigir; cada parte, um commit.
+
+## De perto, sem a vista geral (1.84.1)
+
+- **Reproduzido:** com F4 ligado, olhar a janela mostrava os quatro nomes da vista geral flutuando sobre a arte
+  aproximada (o balão do F4, `visibility: visible`, vencia o `hidden` do ponto). Afastando pelo mouse, a janela
+  ficava com o contorno pontilhado e o nome aceso mesmo com F4 desligado: o código devolvia o foco ao ponto, e o
+  navegador o tratava como foco de teclado (a última tecla tinha sido o F4).
+- **Feito:** de perto ficam só o objeto, o texto (ou o livro aberto) e "Afastar"; nenhum nome, contorno ou ponto da
+  vista geral, com ou sem F4. Afastar devolve a vista geral com o F4 como estava. Três destaques separados: o global
+  (F4), o do mouse (enquanto ele está em cima) e o do foco de teclado (`:focus-visible`); o foco que o mouse deixa
+  não acende nada. Afastar pelo teclado devolve o foco ao ponto, visível; pelo mouse, nada fica aceso. Esc afasta.
+- **Conferido:** janela, livro, sapos (1280×600) e o sarilho (a aproximação dele é a da ação: os pontos saem), com F4
+  ligado e desligado antes, durante e depois; afastar pelo mouse e pelo teclado.
+
+## O livro, o baú e a tábua (1.85.0)
+
+- **O livro fica no buraco da parede:** embrulhado no couro antes da vitória; depois, desembrulhado ali, com o couro
+  pendendo da borda. A vitória conta só o essencial ("Um padre anotou nele que Ilse guardava esta casa e o Sigilo do
+  Turvo, deixado com ela pela Igreja. A vila a acusou de bruxaria e a entregou à água; o padre escreveu que ela não
+  fez nada do que disseram. O Sigilo foi com ela."); as pistas continuam desta primeira vez. O ponto **Livro** abre o
+  relato inteiro (`missoes.LIVRO_DA_CAPELA`, o texto de antes, sem nada novo) num livro aberto como o Grimório: Fechar,
+  Esc, Enter, espaço ou o véu em volta fecham e devolvem a sala; as teclas do menu não escolhem nada embaixo. Reler
+  não fala com o motor: nada de Diário, baú, tempo, recompensa ou sorteio. Não é item.
+- **O baú** (de ferro, sem o pano: tampa abaulada, cintas com rebites, fechadura, ferrugem) fica no canto até ser
+  recolhido. O ponto **Baú** e a opção **Recolher o baú** são a mesma ação (`bau`): entrega o mesmo baú, uma vez, pela
+  bolsa como sempre, sem tempo, tocha nem sorteio; depois, o canto fica só com a marca na poeira e a ação some. Na
+  entrada e na luta não se recolhe (a ação vale na página da sacristia vencida). A missão segue sem ele; dá para
+  voltar depois. O estado fica na missão (`bau`: "no_canto", "recolhido"). **Saves de antes:** quem venceu a
+  sacristia já recebeu o baú na vitória (aberto ou gasto); a migração 3→4 marca "recolhido" pela etapa da missão, sem
+  olhar a bolsa. O gabarito mudou só no número do formato dentro dos saves (3 para 4).
+- **A tábua de baixo da estante** partiu no meio: a metade da esquerda ficou no suporte, com a ponta lascada; a outra
+  escorregou e ficou inclinada do montante ao chão, com sombra e o suporte vazio. O castiçal que estava nela caiu.
+- **Defeito antigo achado no caminho:** depois de Sair → Carregar, a doca guardava "Sair" como tela aberta, e o menu
+  da sacristia tem "Voltar ao salão alagado", que era tomado pelo Voltar dessa tela: clicar Sair levava ao salão.
+  Uma passagem da capela não é mais um Voltar de tela, e o título fecha a tela da doca.
+
+## A mesma sala sem saltos (1.85.1)
+
+Reproduzido gravando, a cada quadro, o que estava no topo (ambiente, momento, Ilse, luz) desde a entrada real:
+
+- **Sacristia:** nenhuma paisagem no meio, mas a lanterna da luta (no chão) reaparecia caída em outro lugar na
+  vitória, e a luz da tocha sumia de uma vez na página logo depois. Agora a lanterna fica aos pés de onde o vulto
+  estava e tomba ali, apagada; a tocha acesa na luta continua acesa na sala enquanto se está nela (`Jogo.luz_onde`,
+  `missoes.luz_da_sala`; sai com quem sai, não vai no save; carregado, a sala volta sem ela).
+- **Fundo:** a luta acabava e, durante a faixa da vitória e o espólio (uns 8 s), a arte ficava sem Ilse; depois ela
+  reaparecia na resolução. Agora a vitória sobre ela chama um gancho do combate (`ao_vencer`, só dela): a arena sai e
+  a resolução (descanso ou destruição) entra com ela presente, antes da faixa. O desfecho e a proteção contra
+  recompensa repetida continuam em `_resolver`, gravados como antes: só o momento visual veio antes. Na luta ela
+  continua só na carta. A sala vazia vem depois da fita e de afundar, ou de se desfazer (as correntes caem na água).
+- **Na tela:** um painel novo da mesma sala não recomeça a cena. No mesmo acontecimento (o mesmo momento, Ilse e
+  correntes) a animação continua; nos outros, a base de antes some numa mistura curta (280 ms, em degraus do quadro;
+  instantânea com movimento reduzido), o que suaviza sobretudo a troca de luz.
+
+## Ilse: o texto, o cabelo e o canto (1.86.0)
+
+- **A descida conta as correntes como estão:** presas, "uma forma presa às pedras pelas correntes, que puxam os
+  pulsos dela"; soltas, "uma forma na água. As correntes que você soltou pendem frouxas dos pulsos dela, sem prendê-la
+  às pedras". "Ela ainda não se levantou da água" virou "Ela permanece entre as pedras, cantando baixo" (a arte a
+  mostra pela cintura); depois da coleta do lodo, "Ilse não se mexe entre as pedras. O canto continua, baixo."
+- **O cabelo:** mechas mais escuras e assimétricas (mais cheias à esquerda; à direita, um bolo de alga mais curto),
+  uma mecha grossa descendo do alto da cabeça na frente do rosto e cobrindo o olho direito, outra fina cortando a
+  face esquerda. Um olho à vista; a silhueta humana continua. A carta da luta segue o sistema de cartas (o ícone da
+  espécie), como as outras guardiãs.
+- **O canto** (`Som.canto`, sintetizado como o resto do som do jogo): uma canção de ninar sem palavras, melodia
+  própria em poucas notas graves, lenta, num timbre abafado (triângulo com uma oitava abaixo, filtro baixo, vibrato
+  lento). Um canal só: pedir de novo só muda o nível, nunca soma outro; passa pelo volume mestre (som desligado,
+  silêncio). Entra quando o texto diz que ela começa a cantar (o momento `acorda`) e segue na coleta do lodo; na
+  luta e na cena da destruição fica baixo; para quando o canto falha no rito; desistindo, o momento novo `grito`
+  (logo depois de "o canto vira um grito") toca um grito curto e o canto não volta; no descanso já parou; na
+  destruição para ao se desfazer; voltar por enquanto manda logo a arte do ossuário (antes ela ficava no fundo até o
+  Continuar) e o canto para; sair da cena para. Recarregar refaz um canal só. Nenhuma fala nova nem pausa.
+
+## A barra branca do modal (1.86.1)
+
+- **Reproduzido** na entrega real do Broquel do Vigia (o guerreiro vencendo o ossuário), medindo a janela a cada
+  quadro: quando a comparação entra, a largura do conteúdo passava 6 px da largura visível por uns 0,4 s. Causa: o
+  cartão do que se usa entrava vindo de 24 px à direita (`achado-lado`), além do recuo de 18 px da janela; como a
+  janela rola na vertical (`overflow-y: auto`, que leva o x junto), ela ganhava rolagem de lado nesse instante: a
+  barra branca, nos sistemas com barra de rolagem clássica. Ícones e fontes não mudavam a largura.
+- **Feito:** o cartão entra de dentro para fora (saindo de trás do achado), nunca além da borda. A rolagem vertical
+  das janelas baixas continua; nada foi escondido. O Broquel, os atributos e as regras de equipar não mudaram.
+- **Conferido:** o Broquel a 1500×950, 1280×600, 1280×480 (rolando na vertical) e com movimento reduzido; os anéis
+  (dois espaços) a 1500×950 e 1280×600, e um anel com movimento reduzido: nenhum quadro com largura excedente.
+  Uma guarda nos testes impede a animação de voltar a começar à direita.
+
+## Conferido (o conjunto)
+
+- Testes novos: `TestBauDaSacristia` (menu e ponto, uma vez, sem tempo nem sorteio, só na sacristia, a missão sem
+  ele, salvar e carregar antes e depois, save antigo migrado), `TestContinuidade` (a resolução logo depois da luta,
+  antes do espólio, com o desfecho gravado depois; a tocha que fica na sala e sai com quem sai), `TestDescidaConta`,
+  o livro (ler não muda nada; a vitória resume e as pistas vêm dela), o `grito`, e a guarda do modal. Fumaça: F4 de
+  perto, afastar pelo mouse e pelo teclado (Esc), o livro pelo teclado (as teclas do menu não passam), reler pelo
+  mouse, o baú com clique duplo e salvar/carregar antes e depois, o canto entrando e parando ao voltar.
+- Na tela: a sacristia da entrada à visita (entrada, luta, vitória com a lanterna no mesmo lugar, página com a tocha),
+  o baú de dia e à noite, o livro aberto a 1500×950 e 1280×600; o fundo preso e solto, a coleta sem luta, o descanso,
+  a destruição e a desistência gravados quadro a quadro (sem sala vazia antes da resolução); o canto em cada passo,
+  com som desligado e recarregando.
+
+## Limitações
+
+- A mistura de luz anda no passo da animação do ambiente (dez quadros por segundo): são três degraus, no estilo da
+  arte, não um degradê contínuo.
+- O áudio só começa depois do primeiro toque que chega à página (uma tecla, um clique fora dos botões), como o
+  resto do som do jogo; o canto pedido antes disso entra nesse toque.
+- Carregar um save dentro da sacristia logo depois da luta mostra a sala sem a tocha (a luz não vai no save).
+- Jean ainda não viu nem ouviu: teste humano pendente.
+
+## Como Jean testa (1.86.1)
+
+1. `$env:ETAPA="sacristia"; $env:SALA="salao"; python -m tests.navegador.cenarios capela`: entre na sacristia e
+   vença; repare na lanterna e na luz entre a luta, a vitória e a página. Clique no livro (Esc fecha), no baú (vai
+   para a bolsa, o canto fica vazio). Ligue o F4, olhe a janela e afaste: nada fica aceso depois de desligar o F4.
+2. `$env:ETAPA="fundo"; $env:PREPARO="pronto"; $env:NIVEL="8"`: com som ligado, desça (o canto começa com o texto),
+   chame Ilse, no momento do rito ouça o canto falhar; desista uma vez (o grito) ou diga o nome (a fita, afundar).
+   Repare que, ao fim da luta, Ilse já está na arte.
+3. `$env:ETAPA="ossuario"; $env:SALA="sacristia"; $env:CLASSE="guerreiro"`: desça e vença o ossuário; o Broquel abre
+   sem a barra branca embaixo.
+4. `$env:BAU="1"` com `ETAPA=ossuario` e `SALA=sacristia`: o baú ainda no canto, para recolher.
+

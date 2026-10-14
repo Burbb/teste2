@@ -53,7 +53,8 @@ pacote: `from rpg.combate import Combate`.
   (golpe, vários golpes, efeito periódico, comitiva, servo, espinhos, execução) a leva abaixo dele; o excesso fica em
   `retido`. `Combate.checar_limiares` chama `ao_limiar` uma vez, no primeiro ponto seguro (depois da sua vez, da vez
   dos aliados, e antes de cada inimigo agir). Hoje só o rito da guardiã do Turvo usa (`missoes._momento_do_rito`):
-  dar descanso encerra a luta; desistir tira o piso e o retido cai na hora. Sem piso, nada muda.
+  dar descanso encerra a luta; desistir tira o piso e o retido cai na hora. Sem piso, nada muda. `ao_vencer`, se o
+  inimigo vencido tiver, roda na vitória antes da faixa (só mostra: a resolução de Ilse entra na arte com ela ali).
 - `Chefes.receber_sigilo` é a recompensa de progressão de um guardião (Sigilo, reputação, ponto de talento, festa),
   usada pelo covil e pela guardiã da campanha; `itens.fazer_unico` monta um único do catálogo pelo id.
 - Cada coisa visível vira um **lance** estruturado (`acao`, `golpe`, `erro`, `cura`, `buff`, `salva`, `fim_acao`...)
@@ -208,8 +209,11 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   sala). Um ambiente pode ter momentos que o motor manda explícitos (a sacristia: `momento` entrada, luta, vitória,
   visita; `luz`; o fundo: descida, visita, luta, descanso, destruída, com `ilse`, `correntes` e `agua`, e os momentos de
   Ilse pela celebração `ilse`, logo depois do texto que os conta); a base
-  do desenho recebe o painel (`base(W, d)`). Um ponto pode ser só "de olhar"
-  (aproxima e afasta, sem falar com o motor; o texto curto do que se vê vem do motor). O céu do exterior vem de
+  do desenho recebe o painel (`base(W, d)`). Um painel novo da mesma sala não recomeça a cena (no mesmo acontecimento
+  a animação continua; nos outros, a base de antes some numa mistura curta). Um ponto pode ser só "de olhar"
+  (aproxima e afasta, sem falar com o motor; o texto curto do que se vê vem do motor) ou "de ler" (`ler`: abre um
+  livro aberto com o texto pronto do motor). De perto, nada da vista geral fica à vista; o destaque do F4, o do mouse
+  e o do foco de teclado são separados. O canto de Ilse (`Som.canto`) é um canal só, decidido pela cena do fundo. O céu do exterior vem de
   `Vista.ceuDo`. Na capela, a sala em que se está (`missoes.sala_atual`) é separada da etapa: as passagens entre salas
   vencidas são opções do menu (`("capela", sala)`, meta `capela_ir`) e pontos da cena; cada ação da capela tem a sua
   sala (`onde`). Ver roadmapIDEIAS/20.

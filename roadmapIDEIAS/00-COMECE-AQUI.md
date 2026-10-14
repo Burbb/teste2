@@ -1809,3 +1809,21 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   1500 e 1280 px com altura reduzida, movimento reduzido, dia e noite, com e sem tocha, destruição, descanso,
   desistência do rito, coleta do lodo sem luta, derrota, recarregar e carregar o save.
 - **Falta:** Jean conferir as duas artes da capela. Nada de outras regiões nem dos ataques em área; a E9 segue aberta.
+
+### 14/10/2026 — Acabamento das salas da capela (1.84.1 a 1.86.1)
+
+- **Pedido de Jean:** acabamento sobre a 1.84.0: aproximação sem rótulos e destaques separados, a tábua da estante,
+  continuidade entre os acontecimentos da mesma sala (e Ilse presente até a resolução), o livro na parede com a
+  leitura, o texto e o cabelo de Ilse, o canto dela, o baú recolhido pela interação e a barra branca do modal.
+- **Feito, em commits separados:** 1.84.1 (de perto sem a vista geral; F4, mouse e foco de teclado separados; Esc
+  afasta), 1.85.0 (o livro no buraco com o relato num livro aberto; o baú no canto, recolhido pelo ponto ou pelo
+  menu, com migração de saves antigos para formato 4; a tábua partida; a doca que levava Sair ao salão), 1.85.1 (a
+  mesma sala sem saltos: a lanterna e a tocha coerentes, a resolução de Ilse logo depois da luta pelo gancho
+  `ao_vencer`, a mistura curta de luz), 1.86.0 (a descida conta as correntes como estão; o cabelo escuro sobre o
+  rosto; o canto, um canal só, e o grito da desistência), 1.86.1 (o cartão da comparação entra sem passar da borda
+  da janela). Detalhe e o que foi reproduzido em [20](20-CENA-INTERATIVA-OSSUARIO.md).
+- **Verificado:** testes, gabarito (só o número do formato nos saves mudou, na 1.85.0), pyflakes e fumaça completa
+  em cada commit; telas e quadro a quadro como no documento 20.
+- **Falta:** Jean conferir (e ouvir o canto). Nada de outras regiões, ataques em área ou exploração nova; a E9 segue
+  aberta.
+

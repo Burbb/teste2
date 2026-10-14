@@ -223,3 +223,17 @@ class TestApresentacao(Catalogo):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestJanelaDoAchado(unittest.TestCase):
+    """A janela do achado rola na vertical (overflow-y: auto, que leva o x junto): nenhuma animação de entrada de cartão
+    pode começar à direita do lugar dele, ou a janela ganha rolagem de lado por um instante (a barra branca que aparecia
+    com o Broquel do Vigia, 1.86.0)."""
+
+    def test_os_cartoes_entram_sem_passar_da_borda(self):
+        with open(os.path.join(ESTATICO, "css", "08-mercado.css"), encoding="utf-8") as f:
+            css = f.read()
+        for nome in ("achado-lado", "achado-entra"):
+            quadro = re.search(r"@keyframes " + nome + r" \{ 0% \{([^}]*)\}", css).group(1)
+            desvio = re.search(r"translateX\((-?\d+)px\)", quadro)
+            self.assertFalse(desvio and int(desvio.group(1)) > 0, f"{nome} começa à direita: {quadro}")

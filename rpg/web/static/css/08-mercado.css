@@ -155,7 +155,9 @@
 .comparacao.por-espaco .troca + .troca { margin-top: 5px; }
 :is(#dica-item, #dica-equipado) .comparacao.por-espaco .troca { justify-content: flex-start; }
 @keyframes achado-entra { 0% { transform: translateY(14px) scale(.7); opacity: 0; } 100% { transform: none; opacity: 1; } }
-@keyframes achado-lado { 0% { transform: translateX(24px); opacity: 0; } 100% { transform: none; opacity: 1; } }
+/* O que você usa entra de dentro para fora (saindo de trás do achado), nunca além da borda da janela: começar à direita
+   dela fazia a janela (overflow-y: auto, logo também na horizontal) rolar de lado por um instante, a barra branca. */
+@keyframes achado-lado { 0% { transform: translateX(-16px); opacity: 0; } 100% { transform: none; opacity: 1; } }
 @keyframes achado-arte { 0% { transform: translateY(-26px) scale(.4); opacity: 0; } 60% { transform: translateY(4px) scale(1.12); opacity: 1; } 100% { transform: none; } }
 @keyframes achado-gira { to { transform: rotate(360deg); } }
 @keyframes achado-raios-entra { 0% { opacity: 0; scale: .3; } 100% { scale: 1; } }
