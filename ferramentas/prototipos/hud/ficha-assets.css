@@ -1,0 +1,78 @@
+/* Segunda tentativa da ficha ("Assets"): as peças da imagem de referência (assets/exibicao, preparadas por
+   preparar_assets.py) e a composição refinada. Só vale com #ficha.v2: a primeira versão (ficha.css) fica intacta.
+
+   Escala: a arte da referência tem o "pixel" de uns 4 texels da imagem; reduzida 4×, um pixel dela vira um pixel da
+   tela. A moldura e o retrato ficam nessa escala, a mesma para os dois. Os ícones vêm desenhados grandes demais para
+   um espaço de item e vão no tamanho de uso (32 px nos espaços, 24 nos atributos); a borda deles é suave. */
+
+#ficha.v2 {
+  --corte: 24px;                      /* o canto da moldura reduzida (96 texels da referência ÷ 4) */
+  --sup: #15120f;                     /* a superfície: lisa, quase preta, morna; o texto lê sem textura atrás */
+  --sup-2: #1c1814;                   /* placas e espaços, um passo acima */
+  --fio: #2e271f;                     /* separadores */
+  --dourado: #c9a14a;                 /* só nos detalhes: raridade, foco, o aviso de talento */
+  position: relative; isolation: isolate;
+  border: 0; border-image: none; background: none;
+  padding: 14px 12px 12px;
+}
+/* A superfície, por baixo da metade de dentro da barra (as bordas da moldura são de fora para dentro). */
+#ficha.v2::before { content: ""; position: absolute; inset: 6px; z-index: 0;
+  background: linear-gradient(#17140f, var(--sup) 40%, #120f0c); }
+/* A moldura em nove partes, por cima de tudo: os cantos inteiros (nunca esticam) e as bordas repetindo um trecho
+   liso, sem rebite. Os rebites do meio da referência ficaram de fora: esticados ou repetidos, viravam outra coisa. */
+#ficha.v2::after { content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none;
+  border: var(--corte) solid transparent; border-image: url(assets/exibicao/moldura-nove.png) 24 / var(--corte) round; }
+#ficha.v2 > * { position: relative; z-index: 1; }
+#ficha.v2 img.ia { image-rendering: auto; }
+
+/* ------------------------------------------------------------ identidade */
+#ficha.v2 .f-identidade { padding: 12px 12px 12px; column-gap: 14px; row-gap: 8px; border-bottom: 1px solid var(--fio); box-shadow: none; }
+/* O retrato no tamanho em que um pixel da referência vale um da tela (100×115); o elmo passa por cima da borda do
+   quadro dele, como na referência. Sem moldura própria: só a sombra que o descola da superfície. */
+#ficha.v2 .f-retrato { width: 100px; height: 115px; border: 0; border-image: none; background: none; padding: 0; }
+#ficha.v2 .f-retrato img { width: 100px; height: 115px; filter: drop-shadow(0 2px 0 #000) drop-shadow(0 0 6px rgba(0, 0, 0, 0.6)); }
+#ficha.v2 .f-nome { text-shadow: 2px 2px 0 #000; }
+#ficha.v2 .f-titulo { color: #b9ad97; }
+#ficha.v2 .f-barra { height: 6px; background: #0b0908; box-shadow: inset 0 0 0 1px #000, 0 0 0 1px var(--fio); }
+#ficha.v2 .f-barra i { background: linear-gradient(#a98ae8, #7a5cc8 60%, #5a3f9e); }
+#ficha.v2 .f-talento { background: var(--sup-2); border: 1px solid #6b5426; color: #f0d68a; }
+@media (max-height: 800px) {
+  #ficha.v2 .f-retrato, #ficha.v2 .f-retrato img { width: 80px; height: 92px; }  /* 1/5 da referência: o rosto ainda lê */
+}
+
+/* ------------------------------------------------------------ corpo */
+#ficha.v2 .f-corpo { background: none; padding: 0 10px 12px; scrollbar-color: #4a4038 transparent; }
+#ficha.v2 .f-sec { color: #9c917e; }
+#ficha.v2 .f-sec::after { height: 1px; background: var(--fio); box-shadow: none; }
+
+/* atributos: placas lisas, sem chanfro; o número é o que pesa */
+#ficha.v2 .f-attr { background: var(--sup-2); box-shadow: inset 0 1px 0 #241f19; padding: 6px 6px 5px 6px; column-gap: 6px; }
+/* o ícone novo em 24 (a 16 a espada vira um risco); os do jogo seguem em 16, no centro da mesma caixa */
+#ficha.v2 .f-attr img { width: 16px; height: 16px; margin: 4px; }
+#ficha.v2 .f-attr img.ia { width: 24px; height: 24px; margin: 0; }
+#ficha.v2 .f-attr:hover, #ficha.v2 .f-linha:hover, #ficha.v2 .f-rep:hover { background: #221d17; }
+
+/* espaços: nichos feitos pela interface (sem imagem), do mesmo tamanho da primeira versão, com o ícone em 32 */
+#ficha.v2 .f-espacos, #ficha.v2 .f-bolsa { grid-template-columns: repeat(5, 40px); row-gap: 6px; }
+#ficha.v2 .f-slot { width: 40px; height: 40px; background: #0e0c0a; border-radius: 2px;
+  box-shadow: inset 0 0 0 1px #2a231c, inset 0 2px 3px rgba(0, 0, 0, 0.7); }
+#ficha.v2 .f-slot img { width: 32px; height: 32px; }
+#ficha.v2 .f-slot.vazio img { opacity: 0.18; }
+#ficha.v2 .f-slot[data-r]::after { inset: 0; border-radius: 2px; box-shadow: inset 0 0 0 1px var(--cor-r); }
+#ficha.v2 .f-slot[data-r="magico"] { --cor-r: #4f74d6; }
+#ficha.v2 .f-slot[data-r="raro"] { --cor-r: var(--dourado); }
+#ficha.v2 .f-slot[data-r="lendario"] { --cor-r: #e0782f; }
+#ficha.v2 .f-slot:hover::before, #ficha.v2 .f-slot:focus-visible::before { box-shadow: inset 0 0 0 1px #8a7444, inset 0 0 10px rgba(201, 161, 74, 0.18); border-radius: 2px; }
+#ficha.v2 .f-foco:focus-visible { outline: 2px solid #f2d27a; outline-offset: 1px; }
+#ficha.v2 .f-qtd { right: 2px; bottom: 2px; background: rgba(8, 7, 6, 0.92); box-shadow: 0 0 0 1px #3a3128; }
+
+/* ferimentos e condições: a marca de cor à esquerda, fina */
+#ficha.v2 .f-linha { padding: 5px 8px; }
+#ficha.v2 .f-linha.ferida { box-shadow: inset 2px 0 0 #b3262b; }
+#ficha.v2 .f-linha.fome { box-shadow: inset 2px 0 0 #e0782f; }
+#ficha.v2 .f-linha.fome.grave { box-shadow: inset 2px 0 0 #b3262b; }
+#ficha.v2 .f-linha .tag { background: #0c0a08; box-shadow: 0 0 0 1px #2e271f; }
+
+/* ------------------------------------------------------------ a dica da segunda versão: sem a moldura pesada */
+.f-dica.v2 { border: 1px solid #4a3d2a; border-image: none; background: #14110e; box-shadow: 0 0 0 1px #000, 0 6px 18px rgba(0, 0, 0, 0.6); padding: 10px 12px; }
+.f-dica.v2 .rodape { border-top: 1px solid #2e271f; }

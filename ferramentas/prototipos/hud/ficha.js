@@ -13,10 +13,19 @@ const Ficha = (() => {
   const ICONE_ATTR = { Ataque: "espada", Defesa: "escudo", Agilidade: "folha", Poder: "chama" };
   const RARIDADE = { comum: "comum", magico: "mágico", raro: "raro", lendario: "lendário" };
 
-  let iconesNovos = true;
-  /** O desenho: os quatro novos (espada, escudo, anel, poção) quando ligados; o resto, o catálogo atual do jogo. */
-  const icone = (nome) => (iconesNovos && Arte.temIcone(nome) ? Arte.icone(nome) : Sprites.url(nome));
-  const img = (nome) => `<img src="${icone(nome)}" alt="" draggable="false">`;
+  let iconesNovos = true, versao = "anterior";
+  // Segunda tentativa ("Assets"): as peças recortadas da imagem de referência (preparar_assets.py), já reduzidas
+  // para o tamanho de uso de cada lugar. Só estes quatro ícones têm substituto; o resto continua o catálogo do jogo.
+  const ASSETS = ["espada", "escudo", "anel", "pocao"];
+  /** O desenho: os quatro novos (espada, escudo, anel, poção) quando ligados; o resto, o catálogo atual do jogo.
+   *  `lado`: o tamanho em que aparece (a versão Assets tem um arquivo por tamanho; a Anterior escala o pixel). */
+  const icone = (nome, lado = 32) => {
+    if (iconesNovos && versao === "assets" && ASSETS.includes(nome)) return `assets/exibicao/${nome}-${lado}.png`;
+    if (iconesNovos && versao === "anterior" && Arte.temIcone(nome)) return Arte.icone(nome);
+    return Sprites.url(nome);
+  };
+  const ehAsset = (nome) => iconesNovos && versao === "assets" && ASSETS.includes(nome);
+  const img = (nome, lado = 32) => `<img src="${icone(nome, lado)}"${ehAsset(nome) ? ' class="ia"' : ""} alt="" draggable="false">`;
 
   function dicaItem(it, espaco) {
     const r = it.raridade || "comum";
@@ -25,6 +34,7 @@ const Ficha = (() => {
   }
 
   function desenhar(raiz, h, nome) {
+    raiz.classList.toggle("v2", versao === "assets");
     const espacos = ESPACOS.map((linha) => linha.map((s) => {
       const it = h.equip[s];
       if (!it) return `<button type="button" class="f-slot vazio f-foco" data-espaco="${s}" data-dica="${esc(`<b class="t">${NOME_ESPACO[s]}</b><div class="sub">vazio</div>`)}" aria-label="${NOME_ESPACO[s]}: vazio">${img(VAZIO[s])}</button>`;
@@ -36,7 +46,7 @@ const Ficha = (() => {
       const pen = (h.atributos_penal || {})[k];
       const linhas = (h.atributos_info[k] || []).map((l, i) => `<li${pen && !i ? ' class="pior"' : ""}>${esc(l)}</li>`).join("");
       const dica = `<b class="t">${esc(k)} ${v}${pen ? ` <span class="pior">(−${pen.pct}%)</span>` : ""}</b><ul>${linhas}</ul>`;
-      return `<div class="f-attr f-foco${pen ? " abaixo" : ""}" tabindex="0" data-dica="${esc(dica)}"><img src="${icone(ICONE_ATTR[k])}" alt=""><span class="n">${esc(k)}</span><span class="v">${v}${pen ? `<small>−${pen.pct}%</small>` : ""}</span></div>`;
+      return `<div class="f-attr f-foco${pen ? " abaixo" : ""}" tabindex="0" data-dica="${esc(dica)}">${img(ICONE_ATTR[k], versao === "assets" ? 24 : 16)}<span class="n">${esc(k)}</span><span class="v">${v}${pen ? `<small>−${pen.pct}%</small>` : ""}</span></div>`;
     }).join("");
     const feridas = h.ferimentos.map((f) => {
       const tag = f.aberto ? '<span class="tag aberto">aberto</span>' : f.dias ? `<span class="tag">${f.dias} dias</span>` : "";
@@ -60,7 +70,7 @@ const Ficha = (() => {
     const pct = Math.max(0, Math.min(100, (100 * h.xp) / h.xp_proximo));
     raiz.innerHTML = `
       <header class="f-identidade">
-        <div class="f-retrato"><img src="${Arte.retrato()}" alt="Retrato do Guerreiro"></div>
+        <div class="f-retrato">${versao === "assets" ? '<img class="ia" src="assets/exibicao/retrato.png" alt="Retrato do Guerreiro">' : `<img src="${Arte.retrato()}" alt="Retrato do Guerreiro">`}</div>
         <div class="f-nome">${esc(nome)}</div><div class="f-titulo">${esc(h.titulo)}<br><b>nível ${h.nivel}</b></div>
         <div class="f-xp"><div class="f-legenda"><span>Experiência</span><b>${h.xp}/${h.xp_proximo}</b></div><div class="f-barra"><i style="width:${pct}%"></i></div></div>
         ${h.pontos_talento ? `<div class="f-talento f-foco" tabindex="0" role="button" data-dica="${esc('<b class="t">Talentos</b><div>Abre a árvore de talentos.</div>')}"><img src="${Sprites.url("estrela")}" alt="">${h.pontos_talento} ${h.pontos_talento === 1 ? "ponto de talento" : "pontos de talento"}</div>` : ""}
@@ -89,7 +99,8 @@ const Ficha = (() => {
   // ------------------------------------------------------------ a dica: ao lado do painel, à direita
   let dica = null, dono = null;
   function abrirDica(el) {
-    if (!dica) { dica = document.createElement("div"); dica.className = "f-dica"; dica.setAttribute("role", "tooltip"); document.body.appendChild(dica); }
+    if (!dica) { dica = document.createElement("div"); dica.setAttribute("role", "tooltip"); document.body.appendChild(dica); }
+    dica.className = versao === "assets" ? "f-dica v2" : "f-dica";
     dono = el;
     dica.innerHTML = el.dataset.dica;
     dica.hidden = false;
@@ -104,9 +115,11 @@ const Ficha = (() => {
     raiz.addEventListener("mouseout", (ev) => { const el = ev.target.closest("[data-dica]"); if (el && !el.contains(ev.relatedTarget)) fecharDica(); });
     raiz.addEventListener("focusin", (ev) => { const el = ev.target.closest("[data-dica]"); if (el) abrirDica(el); });
     raiz.addEventListener("focusout", fecharDica);
-    raiz.addEventListener("scroll", fecharDica, true);
+    // A rolagem leva a dica junto quando o foco do teclado continua no elemento (o Tab que desce a lista rola o
+    // painel); com o mouse, ela fecha.
+    raiz.addEventListener("scroll", () => { if (dono && dono === document.activeElement) abrirDica(dono); else fecharDica(); }, true);
     document.addEventListener("keydown", (ev) => { if (ev.key === "Escape") fecharDica(); });
   }
 
-  return { desenhar, ligarDicas, fecharDica, set iconesNovos(v) { iconesNovos = v; } };
+  return { desenhar, ligarDicas, fecharDica, set iconesNovos(v) { iconesNovos = v; }, set versao(v) { versao = v; } };
 })();

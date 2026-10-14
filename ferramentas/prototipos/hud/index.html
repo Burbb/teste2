@@ -21,6 +21,7 @@
 <link rel="stylesheet" href="../../../rpg/web/static/css/12-acoes-combate.css">
 <link rel="stylesheet" href="../../../rpg/web/static/css/13-realce.css">
 <link rel="stylesheet" href="ficha.css">
+<link rel="stylesheet" href="ficha-assets.css">
 <script src="../../../rpg/web/static/sprites-dados.js"></script>
 <script src="../../../rpg/web/static/sprites.js"></script>
 <script>Sprites.publicar();</script>
@@ -39,6 +40,8 @@
 <!-- Controles de demonstração: fora da interface do jogador (D mostra e esconde). -->
 <section id="demo" aria-label="Controles de demonstração">
   <h2>Demonstração <span>D esconde</span></h2>
+  <fieldset data-chave="versao"><legend>Versão</legend><div class="op">
+    <button type="button" data-v="anterior">Anterior</button><button type="button" data-v="assets">Assets</button></div></fieldset>
   <fieldset data-chave="nome"><legend>Nome</legend><div class="op">
     <button type="button" data-v="Jean">Jean</button><button type="button" data-v="PARAIBATRON">PARAIBATRON</button>
     <button type="button" data-v="Aldebarã de Montemor">Aldebarã de Montemor</button></div></fieldset>
@@ -54,7 +57,7 @@
     <button type="button" data-v="0">sem</button><button type="button" data-v="1">com</button></div></fieldset>
   <fieldset data-chave="icones"><legend>Ícones</legend><div class="op">
     <button type="button" data-v="novos">novos</button><button type="button" data-v="atuais">atuais</button></div></fieldset>
-  <p>Os números, nomes, dicas e espaços vêm do motor (dados.js). O nome é livre, como no jogo.</p>
+  <p>Os números, nomes, dicas e espaços vêm do motor (dados.js). O nome é livre, como no jogo. <b>V</b> alterna Anterior e Assets.</p>
 </section>
 <button type="button" id="mostrar-demo" hidden>Demonstração (D)</button>
 
@@ -80,12 +83,13 @@ Vista.atualizar({ local: C.vista.local, mundo: C.vista.mundo });
 document.documentElement.style.setProperty("--f-moldura", `url(${Arte.moldura()})`);
 document.documentElement.style.setProperty("--f-espaco", `url(${Arte.espaco()})`);
 
-const escolha = { nome: "Jean", nivel: "6", equip: "completo", bolsa: "comum", feridas: "0", fome: "0", icones: "novos" };
+const escolha = { versao: "assets", nome: "Jean", nivel: "6", equip: "completo", bolsa: "comum", feridas: "0", fome: "0", icones: "novos" };
 try { Object.assign(escolha, JSON.parse(localStorage.getItem("prototipo-ficha") || "{}")); } catch (e) { /* sem armazenamento */ }
 const ficha = document.getElementById("ficha");
 function redesenhar() {
   const h = FICHAS[[escolha.nivel, escolha.equip, escolha.feridas, escolha.fome, escolha.bolsa].join("|")];
   Ficha.iconesNovos = escolha.icones === "novos";
+  Ficha.versao = escolha.versao;
   Ficha.fecharDica();
   Ficha.desenhar(ficha, h, escolha.nome);
   document.querySelectorAll("#demo fieldset").forEach((f) => f.querySelectorAll("button").forEach((b) =>
@@ -99,7 +103,11 @@ document.querySelectorAll("#demo fieldset").forEach((f) => f.addEventListener("c
 const demo = document.getElementById("demo"), mostrar = document.getElementById("mostrar-demo");
 function alternarDemo() { demo.hidden = !demo.hidden; mostrar.hidden = !demo.hidden; }
 mostrar.addEventListener("click", alternarDemo);
-document.addEventListener("keydown", (ev) => { if ((ev.key === "d" || ev.key === "D") && !ev.ctrlKey && !ev.metaKey && !ev.altKey) alternarDemo(); });
+document.addEventListener("keydown", (ev) => {
+  if (ev.ctrlKey || ev.metaKey || ev.altKey) return;
+  if (ev.key === "d" || ev.key === "D") alternarDemo();
+  if (ev.key === "v" || ev.key === "V") { escolha.versao = escolha.versao === "assets" ? "anterior" : "assets"; redesenhar(); }  // a mesma janela, a outra versão
+});
 Ficha.ligarDicas(ficha);
 addEventListener("resize", redesenhar);
 document.fonts.ready.then(redesenhar);

@@ -1892,3 +1892,21 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   dicas à direita do painel sem cobrir o elemento, sem erro no console, servido do disco e por http).
 - **É experimento:** não aprovado nem migrado; o jogo, os saves e a versão não mudaram por causa dele. Nada de mercado,
   combate, mapa, Diário ou outras janelas. **Falta:** a avaliação de Jean.
+
+### 14/10/2026 — Ficha do herói, segunda tentativa: assets de imagem (experimento, sem versão)
+
+- **Pedido de Jean:** a mesma ficha com as peças de uma imagem de referência (moldura, retrato, espada, escudo, anel,
+  poção), para ver se assets de imagem dão um salto de acabamento sobre os desenhados em código.
+- **Feito:** em `ferramentas/prototipos/hud/`, a versão "Assets" ao lado da "Anterior" (mesmos dados, mesma janela;
+  o controle Versão ou a tecla V alternam). `preparar_assets.py` recorta as peças da referência (guardada intacta em
+  `assets/original/`), limpa o alfa (2.600 pontinhos e uma franja escura saíram; alfa só 0 e 255) e reduz: moldura em
+  nove partes e retrato a 1/4 (um pixel da arte por pixel da tela), ícones a 32 px nos espaços e 24 px nos atributos.
+  Superfície lisa sem textura atrás do texto, títulos e fios mais discretos, dourado só na raridade, no foco e no
+  talento. A Anterior ficou idêntica pixel a pixel.
+- **Avaliação** (no `LEIA-ME.md` da pasta): o retrato é um salto real; os ícones leem bem a 32 px, mas a borda suave
+  destoa dos sprites do jogo na mesma fileira (e a espada não serve a 16 px); a moldura tem bom peso, mas é de aço
+  azulado ao lado dos painéis de bronze; a pintura detalhada fica mais rica que o cenário minimalista. Só funcionaria
+  no jogo com o catálogo e as molduras dos outros painéis no mesmo estilo.
+- **Verificado:** 1500×950, 1280×800 e 1280×720, nas duas versões (nome longo, ferimentos, foco pelo teclado com a dica
+  acompanhando a rolagem, sem texto cortado, sem erro no console). **É experimento:** nada migrado, versão do jogo
+  igual. **Falta:** a avaliação de Jean.
