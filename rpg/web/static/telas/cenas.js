@@ -1140,7 +1140,7 @@
    *  com os pontos valendo (fora da luta, sem estar de perto). */
   function acesos(destaque) {
     if (!atual || !capa || capa.hidden || capa.classList.contains("perto")) return [];
-    const ids = destacando() ? atual.d.pontos.filter((p) => p.acao || p.olhar || p.ler).map((p) => p.id) : [];
+    const ids = destacando() ? atual.d.pontos.filter((p) => p.acao || p.olhar).map((p) => p.id) : [];
     if (destaque && !ids.includes(destaque) && atual.def.pontos[destaque]) ids.push(destaque);
     return ids.filter((id) => atual.def.pontos[id]);
   }
@@ -1187,7 +1187,7 @@
       document.getElementById("cena").appendChild(capa);
       document.getElementById("vista").addEventListener("transitionend", posicionar);
     }
-    fecharLeitura(false, true);  // uma página nova fecha o livro aberto
+    fecharLeitura();  // uma página nova fecha o livro aberto
     capa.innerHTML = "";
     capa.classList.remove("perto");
     tirarOlhar();
@@ -1203,8 +1203,8 @@
     capa.setAttribute("role", "group");
     capa.setAttribute("aria-label", `${d.titulo}${descricao ? ": " + descricao : ""}`);
     d.pontos.forEach((p) => {
-      const ativo = !!p.acao || !!p.olhar || !!p.ler;
-      const rotulo = p.acao ? `${p.nome}: ${p.faz}` : p.ler ? `${p.nome}: ler` : p.olhar ? `${p.nome}: olhar de perto` : `${p.nome}. ${p.estado}`;
+      const ativo = !!p.acao || !!p.olhar;
+      const rotulo = p.acao ? `${p.nome}: ${p.faz}` : p.olhar ? `${p.nome}: olhar de perto` : `${p.nome}. ${p.estado}`;
       const bt = document.createElement("button");
       bt.type = "button";
       bt.className = "ci-ponto" + (ativo ? "" : " parado");
@@ -1236,12 +1236,11 @@
       if (processando) { pular = true; return; }  // a página ainda corre: o clique adianta, como na arte
       if (!pontosValem()) return;
       const foco = atual.def.pontos[p.id].foco;
-      if (p.olhar || p.ler) {
+      if (p.olhar) {
         App.som("escolha");
         capa.classList.add("perto"); bt.setAttribute("data-olhado", "");
         Vista.destacar(null);
         await Vista.focarEm(foco);
-        if (p.ler) { abrirLeitura(p.ler, ev.detail === 0); return; }  // examinar e ler: o livro aberto, por cima
         if (typeof p.olhar === "string") {  // o que se vê de perto, curto, embaixo do texto da página (sai ao afastar)
           tirarOlhar();
           const nota = document.createElement("p");
@@ -1280,9 +1279,14 @@
     return true;
   }
   // ---------------------------------------------------------------- ler (o livro da sacristia)
-  // Um livro aberto, como o Grimório: o texto vem pronto do motor no ponto (`ler`: título e páginas) e ler não fala
-  // com ele (reler não muda nada). Fechar (o botão, Esc ou o véu em volta) devolve a sala, afastando a câmera.
-  let leitura = null;
+  // Um livro aberto, como o Grimório, por cima da sala: o motor manda abrir (a celebração "livro", depois de registrar
+  // a descoberta) com o título e as páginas prontos. Fechar (o botão, Esc, Enter, espaço ou o véu em volta) devolve a
+  // sala e deixa o texto seguir; nada pede ler até o fim. Recarregando, não abre de novo.
+  let leitura = null, aoFecharLeitura = null;
+  function lerLivro(d, instantaneo) {
+    if (instantaneo || !d || !d.paginas) return Promise.resolve();
+    return new Promise((r) => { aoFecharLeitura = r; abrirLeitura(d, false); });
+  }
   function abrirLeitura(ler, teclado) {
     if (!leitura) {
       leitura = document.createElement("div");
@@ -1291,11 +1295,11 @@
       leitura.addEventListener("click", (ev) => { if (ev.target === leitura) fecharLeitura(false); });
       document.body.appendChild(leitura);
     }
-    const [p1, ...resto] = ler.paginas;
+    const [p1, ...resto] = ler.paginas, pars = (t) => t.split("\n\n").map((x) => `<p class="leitura-texto">${h(x)}</p>`).join("");
     leitura.setAttribute("aria-label", ler.titulo);
     leitura.innerHTML = `<div class="grimorio-livro leitura-livro">
-      <div class="grimorio-pagina esquerda"><div class="grimorio-cab"><b>${h(ler.titulo)}</b></div><p class="leitura-texto">${h(p1)}</p></div>
-      <div class="grimorio-pagina direita">${resto.map((t) => `<p class="leitura-texto">${h(t)}</p>`).join("")}</div>
+      <div class="grimorio-pagina esquerda"><div class="grimorio-cab"><b>${h(ler.titulo)}</b></div>${pars(p1)}</div>
+      <div class="grimorio-pagina direita">${resto.map((t) => `<div class="leitura-entrada">${pars(t)}</div>`).join("")}</div>
       <button class="grimorio-fechar" type="button">Fechar <kbd>Esc</kbd></button></div>`;
     leitura.querySelector(".grimorio-fechar").addEventListener("click", (ev) => fecharLeitura(ev.detail === 0));
     leitura.hidden = false;
@@ -1310,11 +1314,12 @@
     if (ev.key === "Tab") { ev.preventDefault(); return; }  // um só controle: o foco fica nele
     if (!["F4", "F1"].includes(ev.key)) ev.stopPropagation();
   }
-  function fecharLeitura(teclado, semAfastar) {
+  function fecharLeitura() {
     if (!leitura || leitura.hidden) return false;
     leitura.hidden = true;
     document.removeEventListener("keydown", teclaLeitura, true);
-    if (!semAfastar) longe(teclado);
+    const fim = aoFecharLeitura; aoFecharLeitura = null;
+    if (fim) fim();  // o texto segue (o Continuar da leitura)
     return true;
   }
 
@@ -1351,7 +1356,7 @@
   }
 
   Telas.registrar("cena", () => "", {});
-  Object.assign(Telas, { soltarCorrentes, momentoIlse });
+  Object.assign(Telas, { soltarCorrentes, momentoIlse, lerLivro });
   window.Cenas = { mostrar, limpar, virou, conferirPendente, aoCombate, aoMenu, posicionar, atual: () => atual,
     alternarDestaque, destacando, afastar };
 })();

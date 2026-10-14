@@ -200,8 +200,9 @@ class TestCartao(unittest.TestCase):
         g = na_capela(ui=ui, etapa="sacristia")
         lutas(g, "vitoria")
         fazer(g, "sacristia")
-        self.assertEqual(len(ui.cartoes), 1)
-        self.assertGreater(len(ui.cartoes[0][0]["itens"]), 1)
+        fazer(g, "livro")  # o livro da sacristia: Ilse e o Sigilo, juntos (1.88.0)
+        self.assertEqual(len(ui.cartoes), 2)
+        self.assertGreater(len(ui.cartoes[1][0]["itens"]), 1)
 
     def test_fuga_nao_gera_cartao(self):
         ui = Anotador()

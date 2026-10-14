@@ -317,10 +317,13 @@ class TestMissao(unittest.TestCase):
             vistas = lutas(g, "vitoria", "vitoria", "vitoria", "vitoria")
             baus, tochas = g.j.consumiveis.get("bau", 0), g.j.consumiveis["tocha"]
             for aid, etapa in (("nave", "sacristia"), ("sacristia", "ossuario"), ("ossuario", "fundo")):
-                if aid == "ossuario":  # o baú da sacristia ficou no canto: recolhido pela ação (1.85.0)
-                    self.assertEqual([o[1][2] for o in missoes.opcoes(g)][0], "bau")
+                if aid == "ossuario":  # o baú no canto (1.85.0) e o livro na parede (1.88.0): as ações da sacristia
+                    self.assertEqual([o[1][2] for o in missoes.opcoes(g)][:2], ["bau", "livro"])
                     self.assertTrue(fazer(g, "bau"))
-                self.assertEqual([o[1][2] for o in missoes.opcoes(g)][0], aid)
+                    self.assertTrue(fazer(g, "livro"))
+                    self.assertEqual([o[1][2] for o in missoes.opcoes(g)][:2], ["livro", "ossuario"])  # reler vale
+                if aid != "ossuario":
+                    self.assertEqual([o[1][2] for o in missoes.opcoes(g)][0], aid)
                 if aid == "ossuario" and classe == "guerreiro":
                     g.ui.roteiro.insert(0, "Guardar")  # o Broquel do Vigia (E7): o cartão do achado, só para ele
                 self.assertTrue(fazer(g, aid))
@@ -331,7 +334,7 @@ class TestMissao(unittest.TestCase):
             self.assertEqual([v[0] for v in vistas], ["O Salão Alagado", "A Sacristia", "O Ossuário"])
             self.assertEqual(vistas[1][1], ["cultista", "cultista"])
             m = missoes.registro(g, MID)
-            self.assertEqual(m["pistas"][3:], ["agua_da_capela", "ilse", "sigilo_do_turvo", "marcados", "correntes"])
+            self.assertEqual(m["pistas"][3:], ["agua_da_capela", "marcados", "ilse", "sigilo_do_turvo", "correntes"])
             self.assertEqual(m["preparos"], [])  # saber o nome não prepara nada
             self.assertEqual(g.j.consumiveis.get("bau", 0), baus + 1)  # o baú da sacristia, uma vez
             self.assertEqual([it.get("unico") for it in g.j.mochila], ["broquel_do_vigia"] if classe == "guerreiro" else [])
@@ -406,7 +409,7 @@ class TestMissao(unittest.TestCase):
         fazer(g, "correntes")
         self.assertEqual(missoes.registro(g, MID)["preparos"], [])
         self.assertEqual(missoes.sala_atual(g), "sacristia")  # a fuga sobe pelo alçapão (1.79.0)
-        self.assertEqual(opcoes_febre(g), [])
+        self.assertEqual([o[1][2] for o in opcoes_febre(g)], ["livro"])  # na sacristia, só o livro
         self.assertTrue(missoes.ir_na_capela(g, "ossuario"))
         self.assertEqual([o[1][2] for o in opcoes_febre(g)], ["correntes", "fundo"])
 
@@ -428,7 +431,7 @@ class TestMissao(unittest.TestCase):
         h = Jogo.carregar(Roteiro(), g.caminho_save(), pasta)
         self.assertEqual(missoes.registro(h, MID), missoes.registro(g, MID))
         self.assertEqual(h.j.consumiveis.get("bau", 0), baus)
-        self.assertEqual([o[1][2] for o in missoes.opcoes(h)], ["bau", "ossuario"])  # as salas vencidas ficam vencidas
+        self.assertEqual([o[1][2] for o in missoes.opcoes(h)], ["bau", "livro", "ossuario"])  # as salas vencidas ficam vencidas
         lutas(h, "vitoria", "vitoria")
         fazer(h, "ossuario"); fazer(h, "correntes")
         h.salvar(silencioso=True)

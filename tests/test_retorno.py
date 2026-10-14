@@ -40,7 +40,7 @@ class TestRetorno(unittest.TestCase):
             self.assertEqual(missoes.cartoes(g), [])
             cartao = missoes.cartoes(g, todas=True)[0]  # o Diário guarda tudo
             self.assertEqual((cartao["concluida"], cartao["desfecho"]), (g.dia, desfecho))
-            self.assertIn(missoes.CONCLUSAO[desfecho], cartao["conclusao"])
+            self.assertIn(missoes.conclusao(g, MID, desfecho), cartao["conclusao"])
             self.assertEqual(len(cartao["pistas"]), 2)
             self.assertEqual(len(cartao["preparos"]), 2)
             self.assertFalse(missoes.cena_pendente(g))  # repetir a visita não toca de novo

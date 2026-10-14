@@ -55,9 +55,10 @@ CASPAR = {
 def _ilse(f, postura):
     if f["desfecho"] == "descansada":
         return "Ilse descansa no fundo da capela, com a fita de Berta entre os dedos."
+    dela = "de Ilse" if "ilse" in f["pistas"] else "da Bruxa Afogada"  # o nome, só depois do livro da sacristia
     if postura == "apoiar":
-        return "Os ossos de Ilse foram queimados na praça, na vigília de Caspar."
-    return "Os ossos de Ilse ficaram no fundo da capela, sem nome."
+        return f"Os ossos {dela} foram queimados na praça, na vigília de Caspar."
+    return f"Os ossos {dela} ficaram no fundo da capela, sem nome."
 
 
 def _yara(g, postura):

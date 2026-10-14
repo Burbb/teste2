@@ -134,8 +134,9 @@ def _requisitos(g, m):
 def linha_ilse(g):
     f, m = _febre(g), registro(g)
     if f.get("desfecho") == "destruida":
-        return ("Ilse: os ossos dela foram tirados do fundo e queimados na praça, com Caspar rezando."
-                if m.get("desfecho") == "apoiar" else "Ilse: os ossos dela ficaram no fundo da capela, sem nome.")
+        quem = "Ilse" if "ilse" in f["pistas"] else "A Bruxa Afogada"  # o nome, só depois do livro da sacristia
+        return (f"{quem}: os ossos dela foram tirados do fundo e queimados na praça, com Caspar rezando."
+                if m.get("desfecho") == "apoiar" else f"{quem}: os ossos dela ficaram no fundo da capela, sem nome.")
     if f.get("desfecho") == "descansada":
         return "Ilse: Vó Berta pôs uma pedra com o nome dela junto à fonte" + (
             "; Caspar finge não ver." if m.get("desfecho") == "apoiar" else ".")

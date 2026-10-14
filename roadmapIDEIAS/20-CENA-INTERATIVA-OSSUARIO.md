@@ -795,3 +795,107 @@ Reproduzido gravando, a cada quadro, o que estava no topo (ambiente, momento, Il
    sem a barra branca embaixo.
 4. `$env:BAU="1"` com `ETAPA=ossuario` e `SALA=sacristia`: o baú ainda no canto, para recolher.
 
+---
+
+# A lanterna, a música de Ilse e a descoberta pelo livro (1.86.2 a 1.88.0)
+
+Pedido de Jean (14/10/2026): três ajustes sobre a 1.86.1, em commits separados, preservando o acabamento aprovado.
+
+## A lanterna fica no chão (1.86.2)
+
+- Antes, depois de vencer os cultistas, a arte trocava a lanterna da luta por uma luz vinda de fora do quadro (a tocha
+  de quem está ali), que parecia carregada pelo personagem, e a lanterna aparecia tombada e apagada noutro desenho.
+- Agora a lanterna fica onde o vulto a largou na luta, no chão, no mesmo desenho, acesa, e ilumina a sala dali na
+  vitória e na página. A janela continua somando a luz do período (de noite, quase nada). A luz da sacristia não
+  depende mais da tocha da luta (`luz` é sempre "lanterna"): salvar e carregar mostra a mesma sala. Na entrada, a
+  lanterna continua erguida pelo vulto.
+- Só apresentação: a lanterna não é item, não sai da sala, e o consumo de tochas e a emboscada não mudaram. A fuga
+  da sacristia e a nova tentativa seguem como antes. No fundo, a tocha da luta continua como estava (1.85.1).
+- Conferido: luta, vitória e visita lado a lado (o mesmo desenho e a mesma luz), a visita de dia e à noite, a
+  sequência no jogo da entrada à visita, e salvar e carregar (teste).
+
+## A música de Ilse (1.87.0)
+
+**A composição** (`som.js`, "o canto de Ilse"): própria, com a direção das Gnossiennes nº 1 e nº 3 de Satie, como
+atmosfera. Lá menor, uns 52 tempos por minuto, quatro frases de oito tempos (uma volta de uns 39 s):
+
+1. sobe e para no acorde de mi, com o sol sustenido sem resolver;
+2. desce e para de novo no mi, no sol sustenido (nas voltas ímpares, sobe ao si);
+3. sobe sobre ré menor e lá menor com o si pendurado, com um murmúrio sem palavras bem baixo junto;
+4. enfim desce ao lá sobre lá menor; dois tempos de respiro, só o acorde soando, e a volta recomeça no mesmo acorde.
+
+O acompanhamento é espaçado (o baixo num tempo, um bicorde suave no outro); as voltas ímpares mudam um detalhe da
+melodia e o registro do baixo. Timbre de piano velho e abafado: ataque macio, poucos harmônicos que se apagam rápido,
+filtro baixo. Os momentos de entrada e interrupção, o canal único, o nível baixo na luta e o volume mestre são os de
+antes (1.86.0).
+
+**Para ouvir fora da cena:** abra `tests/navegador/ouvir_canto.html` no navegador (duplo clique; usa o mesmo
+`som.js`): tocar como no jogo, no nível da luta, parar, ouvir o retorno (os 12 s finais de uma volta e o começo da
+seguinte) e gravar duas voltas em WAV. Dentro da cena: `$env:ETAPA="fundo"; python -m tests.navegador.cenarios capela`.
+
+**Conferência técnica** (gravado offline, no nível da cena, e medido):
+
+| | média (RMS) | pico | maior salto entre amostras |
+|---|---|---|---|
+| a música nova, duas voltas | −35,9 dB | −21,4 dB | 0,0076 (sem estalos) |
+| a nova, no nível da luta | −45,6 dB | −31,3 dB | 0,0024 |
+| a anterior, 80 s | −30,2 dB | −20,5 dB | 0,0026 |
+
+A média ficou 5,7 dB abaixo da anterior, com o pico no mesmo lugar: não subiu o volume. Na luta, a música fica uns
+20 dB abaixo dos golpes. Sem recorte. O envelope mostra as pausas das frases e o respiro descendo antes do recomeço
+(sem salto na emenda). No jogo: entra quando o texto diz que ela canta, fica baixa na luta, para quando o canto falha,
+ao se desfazer e ao voltar por enquanto; um canal só ao descer de novo, recolher o lodo, recarregar e na página de
+escuta (três cliques em Tocar, um canal); som desligado, silêncio.
+
+**Avaliação musical:** pendente, com Jean ouvindo (o clima, as tensões, o retorno, se cansa).
+
+## A descoberta pelo livro (1.88.0)
+
+A consulta ao livro agora determina o momento da descoberta.
+
+- **A vitória** mostra só o achado ("O que eles procuravam ficou num buraco da parede: um livro embrulhado num couro
+  duro."), as observações de cada classe, o baú e o alçapão. Registra só os homens marcados, que o personagem viu.
+- **O livro**, nas palavras do padre (`missoes.LIVRO_DA_CAPELA`), duas entradas, cada uma na sua página (a segunda,
+  de anos depois, em outra tinta): a chegada de Ilse como guardiã no ano em que a Fenda foi fechada e o Sigilo que a
+  Igreja deixou com ela; depois, a acusação, o registro de que ela não fez nada disso, e "Entregue à água pela vontade
+  da vila. O Sigilo foi com ela. Que Deus nos perdoe." Nada inventado: os fatos são os de antes.
+- **Ler** é uma ação da sacristia: o ponto "Livro" e "Ler o livro da capela" no menu fazem a mesma (no modo texto, o
+  texto das páginas). A primeira consulta registra as pistas de Ilse e do Sigilo, uma vez, com o cartão do Diário; na
+  tela, o livro aberto, que fecha quando o jogador quiser (Fechar, Esc, Enter, espaço ou o véu), e o Continuar.
+  Reler mostra o mesmo, sem pista, cartão, tempo, recompensa ou sorteio. O livro fica no buraco da parede: embrulhado
+  até a primeira leitura, sem o couro depois.
+- **Antes de ler**, o personagem não sabe de Ilse: o Diário não mostra as pistas (e pergunta "O que diz o livro que os
+  homens marcados procuravam na sacristia?"), Vó Berta não aparece na taverna, e a guardiã é chamada pelo que parece:
+  "Você não sabe quem ela foi. A água fez dela a Bruxa Afogada.", "Guardiã: a Bruxa Afogada", "A Bruxa Afogada se
+  desfaz...", a conclusão no Diário, o capítulo e a linha de Caspar sem o nome dela. O caminho de destruição continua
+  aberto sem ler; o descanso pede Berta, que pede o livro. Quem lê depois (a sacristia continua lá) passa a saber.
+- **Saves antigos** já têm as pistas da regra anterior: nada é retirado (Berta, a fita e o rito continuam); ler é
+  reler. Sem migração.
+- O robô do Saque do Vale lê o livro uma vez.
+
+## Conferido
+
+- Testes: a lanterna com e sem tocha e depois de salvar e carregar; `TestLivroDaCapela` (o livro em primeira pessoa,
+  a primeira consulta uma vez com o cartão, o Diário e Berta antes e depois, reler sem nada, o modo texto e a tela, a
+  guardiã sem nome no caminho de destruição sem ler, o save antigo); os de antes ajustados (a vitória só com o achado,
+  o livro como ação). Gabarito idêntico (a capela não entra nas partidas). Fumaça completa: a vitória sem Ilse no
+  texto e no cartão, a primeira leitura pelo menu com o cartão, o livro pelo teclado (as teclas do menu não passam) e
+  reler pelo menu.
+- Na tela: a lanterna da luta à página, de dia e à noite; a sacristia sem ler (livro embrulhado) e a primeira consulta
+  pelo ponto a 1500×950 e a 1280×600 com movimento reduzido (o livro aberto, o cartão, o livro sem o couro depois).
+
+## Limitações
+
+- O áudio só começa depois do primeiro toque que chega à página (como o resto do som do jogo).
+- O cenário de teste `capela` com etapa depois da sacristia vem com o livro lido; `LIVRO=0` começa sem ter lido.
+- Jean ainda não viu nem ouviu: teste humano pendente.
+
+## Como Jean testa (1.88.0)
+
+1. `$env:ETAPA="sacristia"; $env:SALA="salao"; python -m tests.navegador.cenarios capela`: vença os cultistas; a
+   lanterna fica no chão, acesa, na vitória e na página. O texto só mostra o livro embrulhado. Abra o Diário (sem
+   Ilse); clique no livro (ou "Ler o livro da capela"): o livro aberto e o cartão; o Diário agora com Ilse. Leia de
+   novo: nada novo. Salve, saia e carregue: a mesma sala.
+2. `$env:ETAPA="fundo"; $env:LIVRO="0"`: sem ter lido, desça e lute: a Bruxa Afogada, sem o nome.
+3. A música: abra `tests/navegador/ouvir_canto.html` no navegador; e `$env:ETAPA="fundo"` para ouvir na cena.
+

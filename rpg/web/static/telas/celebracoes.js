@@ -236,6 +236,7 @@
     if (m.tipo === "derrota") return queda(d, instantaneo);
     if (m.tipo === "correntes") return Telas.soltarCorrentes(instantaneo);  // o preparo gravado: a corrente desce
     if (m.tipo === "ilse") return Telas.momentoIlse(d, instantaneo);  // o que o texto acabou de contar de Ilse, no fundo
+    if (m.tipo === "livro") return Telas.lerLivro(d, instantaneo);  // o livro da capela aberto, até o jogador fechar
     if (m.tipo === "vitoria") {
       if (instantaneo) return Promise.resolve();
       App.som("vitoria");
@@ -405,6 +406,7 @@
     if (m.tipo === "exausto") return `▸ Exausto: ${d.texto}`;
     if (m.tipo === "retirada") return `▸ ${d.exausto ? "Exausto: " : ""}${d.texto}`;
     if (m.tipo === "derrota") return d.morte ? "▸ Você morreu" : "▸ Você caiu";
+    if (m.tipo === "livro") return "▸ Leu o livro da capela";
     if (m.tipo === "mestre") return `▸ Mestre caçador: ${d.plural} (+10% de dano contra eles)`;
     if (m.tipo === "equipou" && d.achado) return `▸ Vestiu: ${d.item.nome}`;
     if (m.tipo === "guardou") return `▸ Na mochila: ${d.item.nome}`;

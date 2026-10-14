@@ -181,7 +181,8 @@ body.derrotado #predios { visibility: hidden; }
 /* O livro da sacristia (cenas.js, abrirLeitura): o mesmo livro aberto, menor, só texto corrido */
 .leitura-livro { grid-template-columns: 1fr 1fr; width: min(860px, 94vw); height: auto; min-height: min(360px, 80vh); max-height: 88vh; }
 .leitura-texto { margin: 14px 0 0; font-size: 18px; line-height: 1.5; color: #2a1f16; }
-.grimorio-pagina.direita .leitura-texto:first-child { margin-top: 44px; }
+.grimorio-pagina.direita .leitura-entrada:first-child .leitura-texto:first-child { margin-top: 44px; }
+.leitura-entrada .leitura-texto { color: #3a2a1e; font-style: italic; }  /* a entrada de anos depois, outra tinta */
 @keyframes livro-abre { from { transform: scale(.92) translateY(10px); opacity: 0; } }
 @keyframes pagina-vira { from { opacity: 0; transform: translateX(14px); } }
 @media (max-width: 760px) {

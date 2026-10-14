@@ -168,13 +168,13 @@ class TestNavegacao(unittest.TestCase):
     def test_cada_acao_so_na_sua_sala(self):
         g = na_capela(etapa="fundo")
         missoes.ir_na_capela(g, "sacristia")
-        self.assertEqual(missoes.opcoes(g), [])  # o sarilho e o fundo ficam no ossuário
+        self.assertEqual([o[1][2] for o in missoes.opcoes(g)], ["livro"])  # o sarilho e o fundo ficam no ossuário
         self.assertFalse(fazer(g, "correntes", "Deixar"))
         g = na_capela(etapa="ossuario")
         missoes.ir_na_capela(g, "salao")
         self.assertEqual(missoes.opcoes(g), [])  # descer ao ossuário é da sacristia
         missoes.ir_na_capela(g, "sacristia")
-        self.assertEqual([o[1][2] for o in missoes.opcoes(g)], ["ossuario"])  # a sala pendente pede o encontro
+        self.assertEqual([o[1][2] for o in missoes.opcoes(g)], ["livro", "ossuario"])  # a sala pendente pede o encontro
 
     def test_pontos_de_passagem_na_pagina(self):
         g = na_capela(etapa="fundo")
@@ -471,12 +471,13 @@ class TestSacristia(unittest.TestCase):
         ds = [d for d in cenas(g) if d["cena"] == "sacristia"]
         self.assertEqual([(d["momento"], d["luz"], d["bau"], d["livro"]) for d in ds],
                          [("entrada", "lanterna", "no_canto", "embrulhado"), ("luta", "lanterna", "no_canto", "embrulhado"),
-                          ("vitoria", "lanterna", "no_canto", "no_buraco")])
+                          ("vitoria", "lanterna", "no_canto", "embrulhado")])
         self.assertTrue(all(d["pontos"] == [] and not d["pagina"] for d in ds))  # dentro das cenas, nada se clica
         self.assertEqual(g.j.consumiveis.get("bau", 0), 0)  # o baú fica no canto: recolhe-se pela ação (1.85.0)
         d = pagina(g)
-        self.assertEqual((d["momento"], d["bau"], d["livro"], d["luz"]), ("visita", "no_canto", "no_buraco", "lanterna"))
+        self.assertEqual((d["momento"], d["bau"], d["livro"], d["luz"]), ("visita", "no_canto", "embrulhado", "lanterna"))
         self.assertEqual([p["id"] for p in d["pontos"]], ["porta", "janela", "livro", "bau", "alcapao"])
+        self.assertEqual(ponto(d, "livro")["acao"], {"missao": MID, "acao_missao": "livro"})  # o mesmo do menu
         self.assertEqual(ponto(d, "porta")["acao"], {"capela_ir": "salao"})
         self.assertEqual(ponto(d, "bau")["acao"], {"missao": MID, "acao_missao": "bau"})
         self.assertEqual(ponto(d, "bau")["faz"], "Recolher o baú")
@@ -501,28 +502,24 @@ class TestSacristia(unittest.TestCase):
             missoes.ir_na_capela(h, "salao")
             self.assertEqual(pagina(h)["cena"], "salao")  # na outra sala, nada dela
 
-    def test_olhar_e_ler_nao_dao_nada(self):
+    def test_olhar_a_janela_nao_da_nada(self):
         g = na_capela(etapa="ossuario")
         d = pagina(g)
         antes = json.dumps([g.j.para_dict(), g.mundo, g.dia, g.periodo], sort_keys=True, default=str)
-        janela, livro = ponto(d, "janela"), ponto(d, "livro")
-        self.assertEqual((janela["acao"], livro["acao"]), (None, None))
+        janela = ponto(d, "janela")
+        self.assertIsNone(janela["acao"])
         self.assertTrue(janela["olhar"])
-        self.assertEqual(livro["ler"], missoes.LIVRO_DA_CAPELA)  # o relato inteiro, pronto do motor, para reler
-        self.assertNotIn("já leu", json.dumps(d, ensure_ascii=False))
         self.assertEqual(antes, json.dumps([g.j.para_dict(), g.mundo, g.dia, g.periodo], sort_keys=True, default=str))
 
-    def test_a_vitoria_resume_o_livro_e_as_pistas_vem_dela(self):
+    def test_a_vitoria_so_mostra_o_livro(self):
         g = na_capela(etapa="sacristia")
         lutas(g, "vitoria")
         fazer(g, "sacristia")
         texto = " ".join(g.ui.ditos)
-        for trecho in ("Ilse guardava", "Sigilo do Turvo", "acusou de bruxaria", "não fez nada do que disseram",
-                       "O Sigilo foi com ela"):
-            self.assertIn(trecho, texto)
-        self.assertNotIn("Que Deus nos perdoe", texto)  # o relato inteiro fica no livro
-        self.assertTrue(any("Que Deus nos perdoe" in p for p in missoes.LIVRO_DA_CAPELA["paginas"]))
-        self.assertTrue({"ilse", "sigilo_do_turvo", "marcados"} <= set(missoes.registro(g, MID)["pistas"]))
+        self.assertIn("um livro embrulhado num couro duro", texto)
+        for trecho in ("Ilse", "Sigilo", "bruxaria", "padre"):
+            self.assertNotIn(trecho, texto)  # o que ele conta fica para quem o consultar
+        self.assertEqual(missoes.registro(g, MID)["pistas"][3:], ["marcados"])  # só o que se viu
 
     def test_depois_do_ossuario_o_alcapao_so_passa(self):
         g = na_capela(etapa="fundo")
@@ -774,3 +771,105 @@ class TestContinuidade(unittest.TestCase):
         missoes.ir_na_capela(g, "fundo")
         self.assertIsNone(pagina(g)["luz"])  # voltou depois: a tocha da luta já não está acesa
         self.assertNotIn("luz", json.dumps(g.mundo))
+
+
+class TestLivroDaCapela(unittest.TestCase):
+    """A consulta ao livro da sacristia é o momento da descoberta (1.88.0): a vitória mostra só o achado (e os homens
+    marcados, que se viram); ler, pelo ponto, pelo menu ou no modo texto, registra uma vez as pistas de Ilse e do
+    Sigilo. Reler não repete nada. Sem ler, a capela continua aberta até a guardiã, chamada pelo que parece."""
+
+    def vencida(self, classe="mago", ui=None, pasta=None):
+        g = na_capela(classe, ui=ui, etapa="sacristia", pasta=pasta)
+        lutas(g, "vitoria")
+        fazer(g, "sacristia")
+        return g
+
+    def instantaneo(self, g):
+        return json.dumps([g.dia, g.periodo, g.j.consumiveis, g.j.mochila, g.j.ouro, g.rng.getstate()], default=str,
+                          sort_keys=True)
+
+    def diario(self, g):
+        return [x for x in missoes.cartoes(g, todas=True) if x["id"] == MID][0]
+
+    def test_o_livro_em_primeira_pessoa(self):
+        texto = " ".join(missoes.LIVRO_DA_CAPELA["paginas"])
+        for de_fora in ("padre", "Ele anota", "Ele escreve", "anotou", "letra"):
+            self.assertNotIn(de_fora, texto)
+        for fato in ("chegou hoje Ilse", "guardiã desta casa", "a Fenda foi fechada", "Sigilo do Turvo",
+                     "nem ir para mão nenhuma", "acusa Ilse de bruxaria", "ela não fez nada disso",
+                     "Entregue à água pela vontade da vila", "O Sigilo foi com ela", "Que Deus nos perdoe"):
+            self.assertIn(fato, texto)
+        self.assertEqual(len(missoes.LIVRO_DA_CAPELA["paginas"]), 2)  # duas entradas, cada uma na sua página
+
+    def test_a_primeira_consulta_descobre_uma_vez(self):
+        from tests.test_clareza import Anotador
+        g = self.vencida(ui=Anotador())
+        m = missoes.registro(g, MID)
+        self.assertNotIn("ilse", m["pistas"])
+        self.assertNotIn("berta", [o[1][2] for o in missoes.opcoes(g)])
+        d = self.diario(g)
+        self.assertFalse(any("Ilse" in p for p in d["pistas"]))  # o Diário só depois da consulta
+        self.assertIn("O que diz o livro que os homens marcados procuravam na sacristia?", d["perguntas"])
+        antes, cartoes = self.instantaneo(g), len(g.ui.cartoes)
+        self.assertTrue(missoes.executar(g, MID, "livro"))
+        self.assertEqual(m["pistas"][-2:], ["ilse", "sigilo_do_turvo"])
+        self.assertEqual(len(g.ui.cartoes), cartoes + 1)  # um cartão com a descoberta
+        self.assertEqual(self.instantaneo(g), antes)  # sem tempo, item, ouro ou sorteio
+        self.assertEqual(pagina(g)["livro"], "no_buraco")  # sem o couro, no mesmo lugar
+        self.assertTrue(any("Ilse" in p for p in self.diario(g)["pistas"]))
+        self.assertNotIn("O que diz o livro que os homens marcados procuravam na sacristia?", self.diario(g)["perguntas"])
+        # reler: o mesmo texto, nada novo
+        self.assertTrue(missoes.executar(g, MID, "livro"))
+        self.assertEqual((m["pistas"].count("ilse"), len(g.ui.cartoes)), (1, cartoes + 1))
+        self.assertEqual(self.instantaneo(g), antes)
+        ir(g, "vau_do_turvo")
+        self.assertIn("berta", [o[1][2] for o in missoes.opcoes(g)])  # agora há o que perguntar a Vó Berta
+
+    def test_no_modo_texto_as_paginas_e_na_tela_o_livro(self):
+        g = self.vencida()
+        g.ui.ditos.clear()
+        missoes.executar(g, MID, "livro")
+        texto = " ".join(g.ui.ditos)
+        self.assertIn("Que Deus nos perdoe", texto)
+        self.assertIn("Algumas páginas adiante", texto)
+        h = self.vencida()
+        h.ui.conquistas_na_tela, festas = True, []
+        h.ui.celebrar = lambda tipo, dados: festas.append((tipo, dados))
+        h.ui.ditos.clear()
+        missoes.executar(h, MID, "livro")
+        self.assertEqual(festas, [("livro", missoes.LIVRO_DA_CAPELA)])
+        self.assertNotIn("Que Deus nos perdoe", " ".join(h.ui.ditos))  # na tela, o livro aberto, sem repetir o texto
+
+    def test_sem_ler_a_capela_segue_e_a_guardia_nao_tem_nome(self):
+        from tests.test_guardia import DESTRUIR, no_fundo
+        g = no_fundo("guerreiro", DESTRUIR, preparos=())
+        m = missoes.registro(g, MID)
+        m["pistas"] = [p for p in m["pistas"] if p not in ("ilse", "sigilo_do_turvo")]  # venceu a sacristia sem ler
+        titulos = []
+        combate = g.combate
+        g.combate = lambda grupo, **k: (titulos.append((k.get("titulo"), grupo[0].nome)), combate(grupo, **k))[1]
+        missoes.executar(g, MID, "fundo")
+        self.assertEqual(m["desfecho"], "destruida")
+        self.assertEqual(titulos, [("Guardiã: a Bruxa Afogada", "A Bruxa Afogada")])
+        texto = " ".join(g.ui.ditos)
+        self.assertNotIn("Ilse", texto)
+        self.assertIn("Você não sabe quem ela foi", texto)
+        self.assertTrue(missoes.conclusao(g, MID, "destruida").startswith("A Bruxa Afogada foi destruída"))
+        from rpg import capitulo
+        self.assertNotIn("Ilse", capitulo._ilse(m, "calar"))
+        # e quem leu depois (a sacristia continua lá) passa a saber
+        m["pistas"] += ["ilse", "sigilo_do_turvo"]
+        self.assertTrue(missoes.conclusao(g, MID, "destruida").startswith("Ilse foi destruída"))
+
+    def test_save_antigo_com_as_pistas_continua_sabendo(self):
+        g = na_capela(etapa="fundo")
+        m = missoes.registro(g, MID)
+        m["pistas"] += ["ilse", "sigilo_do_turvo", "marcados"]  # a regra de antes: vieram na vitória
+        ir(g, "vau_do_turvo")
+        self.assertIn("berta", [o[1][2] for o in missoes.opcoes(g)])
+        ir(g, "capela_afogada")
+        missoes.ir_na_capela(g, "sacristia")
+        self.assertEqual(pagina(g)["livro"], "no_buraco")
+        antes = list(m["pistas"])
+        self.assertTrue(missoes.executar(g, MID, "livro"))  # ler é só reler
+        self.assertEqual(m["pistas"], antes)

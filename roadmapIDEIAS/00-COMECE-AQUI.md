@@ -1827,3 +1827,17 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
 - **Falta:** Jean conferir (e ouvir o canto). Nada de outras regiões, ataques em área ou exploração nova; a E9 segue
   aberta.
 
+### 14/10/2026 — A lanterna, a música de Ilse e a descoberta pelo livro (1.86.2 a 1.88.0)
+
+- **Pedido de Jean:** três ajustes sobre a 1.86.1, em commits separados.
+- **Feito:** 1.86.2 (a lanterna da sacristia fica no chão, acesa, da luta à página; a luz não depende mais da tocha
+  da luta), 1.87.0 (a música do fundo, composição própria na direção das Gnossiennes de Satie, e a página
+  `tests/navegador/ouvir_canto.html` para ouvir e gravar), 1.88.0 (**a consulta ao livro agora determina o momento
+  da descoberta**: a vitória só mostra o livro embrulhado; ler, pelo ponto, pelo menu ou no modo texto, registra uma
+  vez as pistas de Ilse e do Sigilo; o livro em primeira pessoa do padre; antes de ler, a guardiã é a Bruxa Afogada e
+  Berta não aparece; saves antigos mantêm o que já sabiam). Detalhe em [20](20-CENA-INTERATIVA-OSSUARIO.md).
+- **Verificado:** testes, gabarito idêntico, pyflakes e fumaça completa em cada commit; a conferência técnica do áudio
+  (gravado offline e medido) no documento 20.
+- **Falta:** Jean conferir e ouvir (a avaliação musical é dele). Nada de outras regiões, ataques em área ou
+  empacotamento; a E9 segue aberta.
+

@@ -352,6 +352,8 @@ class Percurso:
             aid = k[2]
             if aid == "correntes" and self.desfecho == "destruida":
                 continue
+            if aid == "livro" and "ilse" in f["pistas"]:  # lê o livro da sacristia uma vez (1.88.0), sem reler
+                continue
             if aid in ("nave", "sacristia", "ossuario", "correntes") and self.g.j.nivel < NIVEL_CAPELA:
                 continue
             if aid == "fundo":

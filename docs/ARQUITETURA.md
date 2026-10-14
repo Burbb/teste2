@@ -213,7 +213,9 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   a animação continua; nos outros, a base de antes some numa mistura curta). Um ponto pode ser só "de olhar"
   (aproxima e afasta, sem falar com o motor; o texto curto do que se vê vem do motor) ou "de ler" (`ler`: abre um
   livro aberto com o texto pronto do motor). De perto, nada da vista geral fica à vista; o destaque do F4, o do mouse
-  e o do foco de teclado são separados. O canto de Ilse (`Som.canto`) é um canal só, decidido pela cena do fundo. O céu do exterior vem de
+  e o do foco de teclado são separados. O canto de Ilse (`Som.canto`) é um canal só, decidido pela cena do fundo
+  (`Som.gravarCanto` grava a mesma música offline; `tests/navegador/ouvir_canto.html` toca fora do jogo). O livro da
+  sacristia abre por uma celebração (`livro`) que a ação de ler manda: a leitura é do motor, que registra a descoberta. O céu do exterior vem de
   `Vista.ceuDo`. Na capela, a sala em que se está (`missoes.sala_atual`) é separada da etapa: as passagens entre salas
   vencidas são opções do menu (`("capela", sala)`, meta `capela_ir`) e pontos da cena; cada ação da capela tem a sua
   sala (`onde`). Ver roadmapIDEIAS/20.

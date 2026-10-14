@@ -246,7 +246,7 @@ def capela(ui):
     o resto dos talentos sai igual nas duas, para comparar o mesmo herói. PONTOS: pontos de talento sobrando. PERIODO
     (padrão 0, manhã; 3 é noite) e TOCHAS (padrão: as do começo). SALA: a sala da capela em que se começa (exterior,
     salao, sacristia, ossuario, fundo; padrão: a da etapa). DESFECHO: a guardiã já resolvida. BAU=1: o baú da sacristia
-    ainda no canto. Sair do jogo leva ao
+    ainda no canto. LIVRO=0: a sacristia vencida sem ter lido o livro (sem as pistas de Ilse e do Sigilo). Sair do jogo leva ao
     título, com o save."""
     from rpg import dev, missoes, talentos
     from rpg.habilidades import escolher_versao
@@ -272,7 +272,8 @@ def capela(ui):
     def depois(e):
         return ordem.index(etapa) > ordem.index(e)
     pistas = (["agua_do_leste", "represa", "canal_da_capela"] + (["agua_da_capela"] if depois("capela") else [])
-              + (["ilse", "sigilo_do_turvo", "marcados"] if depois("sacristia") else [])
+              + ((["marcados"] if os.environ.get("LIVRO") == "0" else ["ilse", "sigilo_do_turvo", "marcados"])
+                 if depois("sacristia") else [])  # LIVRO=0: venceu a sacristia sem ler o livro (1.88.0)
               + (["correntes"] if depois("ossuario") else []))
     preparo = os.environ.get("PREPARO", "")
     preparos = ["corpo_solto"] if preparo in ("correntes", "pronto") else []

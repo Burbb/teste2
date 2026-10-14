@@ -191,7 +191,7 @@ def cartoes(g, todas=False):
                       "concluida": m.get("concluida"),
                       # Concluída, o resumo já diz o desfecho: "Mais recente" o repetiria (o histórico continua)
                       **({"recente": None} if m.get("concluida") else {}),
-                      **({"conclusao": f"Concluída no dia {m['concluida']}. " + d["conclusoes"][m["desfecho"]],
+                      **({"conclusao": f"Concluída no dia {m['concluida']}. " + conclusao(g, mid, m["desfecho"]),
                           "linhas": [x for x in d.get("linhas", lambda g, m: [])(g, m) if x],
                           "pendente": d.get("pendente", lambda g, m: None)(g, m)}
                          if m.get("concluida") else {})})
@@ -221,7 +221,7 @@ def _historia(g, mid, m):
     for e in entradas:
         itens = [_texto(mid, c) for c in e["pistas"] + e["preparos"]]
         if e.get("desfecho"):
-            itens.append(d["conclusoes"][e["desfecho"]])
+            itens.append(conclusao(g, mid, e["desfecho"]))
         if e.get("etapa") and d["etapas"][e["etapa"]]["objetivo"] and not e.get("concluida"):
             itens.append("Objetivo: " + objetivo(g, mid, e["etapa"]))
         if e.get("inicio"):
@@ -258,6 +258,7 @@ def _perguntas_febre(g, m):
         return []
     p, feito = set(m["pistas"]), set(m.get("preparos", []))
     return [q for q, vale in (
+        ("O que diz o livro que os homens marcados procuravam na sacristia?", "marcados" in p and "ilse" not in p),
         ("O livro diz que a vila afogou Ilse. Alguém no Vau ainda se lembra daquela noite?",
          "ilse" in p and "verdade_de_ilse" not in p),
         ("O que as correntes prendem às pedras de moinho, lá no fundo?",
@@ -278,7 +279,7 @@ def _pendente_febre(g, m):
 
 CONCLUSAO = {
     "descansada": "Ilse descansou: com o nome e a fita, largou o Sigilo do Turvo e afundou em paz.",
-    "destruida": "Ilse foi destruída, e o Sigilo do Turvo ficou no fundo da capela até você o pegar.",
+    "destruida": "{guardia} foi destruída, e o Sigilo do Turvo ficou no fundo da capela até você o pegar.",
 }
 MISSOES["febre_do_turvo"].update(conclusoes=CONCLUSAO, requisitos=_requisitos_descanso, linhas=_linhas_febre,
                                  pendente=_pendente_febre, perguntas=_perguntas_febre)
@@ -476,14 +477,10 @@ def _sacristia(g, mid):
                     "de você chegar.",
         "mago": "A marca no pulso deles não é tinta. Foi queimada, e ainda tem um cheiro que não é de fogo.",
     }.get(g.j.classe, "Não vieram pela brecha: há uma escada de mão encostada na janela alta."))
-    # O livro fica no buraco da parede: aqui, o essencial (as pistas são desta primeira vez); o relato inteiro se lê
-    # no livro, na página da sacristia (LIVRO_DA_CAPELA, o ponto "livro").
-    g.narrar("O que eles procuravam ficou num buraco da parede, embrulhado num couro duro: o livro da capela. Um padre "
-             "anotou nele que Ilse guardava esta casa e o Sigilo do Turvo, deixado com ela pela Igreja. A vila a acusou "
-             "de bruxaria e a entregou à água; o padre escreveu que ela não fez nada do que disseram. O Sigilo foi com "
-             "ela.")
-    for pid in ("ilse", "sigilo_do_turvo", "marcados"):
-        _pista(m, pid)
+    # Só o achado: o que o livro conta se descobre ao consultá-lo (_ler_livro: o ponto "Livro" ou o menu). Daqui sai
+    # só o que o personagem viu, os homens marcados.
+    g.narrar("O que eles procuravam ficou num buraco da parede: um livro embrulhado num couro duro.")
+    _pista(m, "marcados")
     g.narrar("Num canto, há um baú pequeno de ferro, trancado. No chão, um alçapão desce para o ossuário, a sala dos "
              "ossos.")
     m["bau"] = "no_canto"  # o baú da sacristia: fica no canto até ser recolhido (a ação "bau"), uma vez
@@ -771,18 +768,57 @@ def cena_ossuario(g, mid="febre_do_turvo", foco=None, pagina=False):
 
 # O que se vê de perto na sacristia (pontos de olhar, só na página do lugar): o que a arte mostra, sem repetir o livro.
 OLHAR_JANELA = "Uma escada de mão, de madeira, encostada na parede até a janela alta."
-# O relato inteiro do livro da sacristia (o ponto "livro" abre a leitura; a vitória conta só o essencial).
+# O livro da sacristia, nas palavras do padre que fez os registros: duas entradas, anos entre elas (cada uma numa
+# página; dentro delas, só o que ele escreveu). Ler é a descoberta (_ler_livro).
 LIVRO_DA_CAPELA = {
     "titulo": "O livro da capela",
     "paginas": [
-        "As primeiras páginas são de um padre de letra miúda. Ele anota a chegada de Ilse, \"guardiã desta casa\", no "
-        "ano em que a Fenda foi fechada, e o que a Igreja deixou com ela: \"o Sigilo do Turvo, que não deve sair desta "
-        "capela nem ir para mão nenhuma\".",
-        "Anos depois, a letra treme. A vila acusa Ilse de bruxaria: a febre daquele inverno, os sonhos com água, o gado "
-        "morto no pântano. O padre escreve que ela não fez nada disso, que só guardava. Na linha seguinte: \"Entregue "
-        "à água pela vontade da vila. O Sigilo foi com ela. Que Deus nos perdoe.\"",
+        "Registro que chegou hoje Ilse, para ficar como guardiã desta casa. É o ano em que a Fenda foi fechada.\n\n"
+        "A Igreja deixou com ela o Sigilo do Turvo. Ele não deve sair desta capela nem ir para mão nenhuma.",
+        "A vila acusa Ilse de bruxaria. Põem nela a culpa da febre deste inverno, dos sonhos com água e do gado morto "
+        "no pântano. Digo aqui que ela não fez nada disso. Ela só guardava o que a Igreja deixou com ela.\n\n"
+        "Entregue à água pela vontade da vila. O Sigilo foi com ela. Que Deus nos perdoe.",
     ],
 }
+
+
+def conhece_ilse(g, mid="febre_do_turvo"):
+    """O personagem sabe quem é a guardiã: leu o livro da sacristia (a pista "ilse"; saves de antes já a têm)."""
+    m = registro(g, mid)
+    return bool(m) and "ilse" in m["pistas"]
+
+
+def nome_da_guardia(g, mid="febre_do_turvo"):
+    """Como os textos chamam a guardiã: Ilse, depois do livro; antes, só a Bruxa Afogada, o que ela parece."""
+    return "Ilse" if conhece_ilse(g, mid) else "a Bruxa Afogada"
+
+
+def conclusao(g, mid, desfecho):
+    """A frase do desfecho no Diário e no cartão, com a guardiã pelo nome que o personagem conhece."""
+    nome = nome_da_guardia(g, mid)
+    return MISSOES[mid]["conclusoes"][desfecho].format(guardia=nome[0].upper() + nome[1:])
+
+
+def _ler_livro(g, mid):
+    """O livro da capela, aberto ali mesmo, no buraco da parede (o ponto "Livro" ou o menu; no modo texto, o texto das
+    páginas). A primeira consulta é a descoberta: as pistas de Ilse e do Sigilo, uma vez. Reler mostra o mesmo e não
+    muda nada. Sem tempo, tocha nem sorteio; fechar a qualquer momento (nada pede ler até o fim)."""
+    m = registro(g, mid)
+    primeira = not conhece_ilse(g, mid)
+    g.ui.cena("A Sacristia", g.contexto_cena(), "evento")
+    g.narrar("Você tira o couro do livro ali mesmo, no buraco da parede, e o abre." if primeira else
+             "Você abre de novo o livro, no buraco da parede.")
+    for pid in ("ilse", "sigilo_do_turvo"):
+        _pista(m, pid)
+    g.ui.painel("cena", cena_sacristia(g, mid, "visita"))  # o livro sem o couro, no lugar dele
+    if g.ui.conquistas_na_tela:  # o livro aberto por cima da sala; fecha quando o jogador quiser
+        g.ui.celebrar("livro", LIVRO_DA_CAPELA)
+    else:
+        for i, pagina in enumerate(LIVRO_DA_CAPELA["paginas"]):
+            if i:
+                g.narrar("Algumas páginas adiante:")
+            for paragrafo in pagina.split("\n\n"):
+                g.narrar(f"\"{paragrafo}\"")
 
 
 def cena_sacristia(g, mid="febre_do_turvo", momento="visita", pagina=False):
@@ -790,7 +826,8 @@ def cena_sacristia(g, mid="febre_do_turvo", momento="visita", pagina=False):
     com a escada de mão, o livro no buraco da parede, o baú de ferro no canto e o alçapão do ossuário.
     `momento`: "entrada" (os dois de capa escura nas prateleiras, a lanterna erguida), "luta" (eles são as cartas: a
     arte fica sem eles, a lanterna no chão, ainda acesa), "vitoria" (o livro desembrulhado no buraco) ou "visita" (a
-    página). `livro`: "embrulhado" (no couro, antes da vitória) ou "no_buraco". `bau`: "no_canto" até ser recolhido;
+    página). `livro`: "embrulhado" (no couro, até a primeira leitura) ou "no_buraco" (sem o couro, no mesmo lugar).
+    `bau`: "no_canto" até ser recolhido;
     "levado" depois (e nos saves de antes, que o receberam na vitória). `luz`: sempre a lanterna dos dois (erguida na
     entrada; da luta em diante, no chão onde ficou, acesa), com a janela somando a luz do período; a tocha de quem está
     ali não entra na arte desta sala (ela é a mesma depois de salvar e carregar)."""
@@ -805,13 +842,12 @@ def cena_sacristia(g, mid="febre_do_turvo", momento="visita", pagina=False):
                             pagina)
         janela = {"id": "janela", "nome": "Janela", "estado": "A janela alta, com uma escada de mão encostada.",
                   "acao": None, "olhar": OLHAR_JANELA if pagina else None}
-        livro = {"id": "livro", "nome": "Livro", "estado": "O livro da capela, no buraco da parede.", "acao": None,
-                 "ler": LIVRO_DA_CAPELA if pagina else None}  # ler não fala com o motor: reler não muda nada
+        livro = _ponto(g, mid, "livro", "Livro", "livro", "Um livro no buraco da parede.", pagina)  # o mesmo do menu
         pontos = [porta, janela, livro] + ([_ponto(g, mid, "bau", "Baú", "bau", "Um baú pequeno de ferro, trancado, no "
                                                    "canto.", pagina)] if no_canto else []) + [alcapao]
     return {"cena": "sacristia", "momento": momento, "luz": "lanterna",
             "bau": "no_canto" if no_canto else "levado",
-            "livro": "embrulhado" if momento in ("entrada", "luta") else "no_buraco",
+            "livro": "no_buraco" if momento == "visita" and conhece_ilse(g, mid) else "embrulhado",
             "pontos": pontos, "titulo": "A Sacristia", "pagina": pagina}
 
 
@@ -1002,8 +1038,9 @@ def _fundo(g, mid):
              "de água. No meio, entre duas pedras de moinho, há uma forma " + (
                  "na água. As correntes que você soltou pendem frouxas dos pulsos dela, sem prendê-la às pedras."
                  if "corpo_solto" in m["preparos"] else "presa às pedras pelas correntes, que puxam os pulsos dela."))
-    g.narrar("Ela abre os olhos. A pele é azulada, os cabelos são algas, e ela começa a cantar uma canção de ninar. É "
-             "Ilse, ou o que a vila fez dela: a Bruxa Afogada.")
+    g.narrar("Ela abre os olhos. A pele é azulada, os cabelos são algas, e ela começa a cantar uma canção de ninar. " + (
+        "É Ilse, ou o que a vila fez dela: a Bruxa Afogada." if conhece_ilse(g, mid) else
+        "Você não sabe quem ela foi. A água fez dela a Bruxa Afogada."))
     _ilse(g, "acorda")  # na tela gráfica, quando o texto chega aqui: os olhos se abrem e o canto mexe a água
     pronto = descanso_pronto(m)
     if not pronto and sabe_do_rito(m):
@@ -1027,13 +1064,14 @@ def _fundo(g, mid):
         if op != "lodo":
             break
         lodo["fn"](g, lodo["missao"])
-        g.narrar("Ilse não se mexe entre as pedras. O canto continua, baixo.")
+        g.narrar("Ela não se mexe entre as pedras. O canto continua, baixo.")
     if op is None:
         _por_na_sala(g, "ossuario")
         g.ui.painel("cena", cena_ossuario(g, mid))  # de volta lá em cima: a arte (e o som) saem do fundo
         g.narrar("Você sobe a escada de costas. O canto continua lá embaixo.")
         return
-    spec = {"bioma": "pantano", "id": "bruxa_afogada", "idx": 1, "nome": "Ilse, a Bruxa Afogada", "g": "f",
+    nome = "Ilse, a Bruxa Afogada" if conhece_ilse(g, mid) else "A Bruxa Afogada"  # o nome que o personagem sabe
+    spec = {"bioma": "pantano", "id": "bruxa_afogada", "idx": 1, "nome": nome, "g": "f",
             "base": "Bruxa Afogada"}
     chefe = instanciar_guardiao(spec, g.nivel_guardiao(g.loc))
     chefe.chave = "ilse"
@@ -1053,7 +1091,7 @@ def _fundo(g, mid):
         g, mid, "descanso" if getattr(chefe, "descansou", False) else "destruida", luz=g.luz_na_sala))
     try:
         r = g.combate([chefe], emboscada=None if luz else "inimigo", pode_fugir=False,
-                      titulo="Guardiã: Ilse, a Bruxa Afogada")
+                      titulo="Guardiã: " + (nome if conhece_ilse(g, mid) else "a Bruxa Afogada"))
     finally:
         g.sem_luz = False
     g.fechar_espolio()
@@ -1118,12 +1156,13 @@ def _resolver(g, mid, desfecho, nivel):
     else:
         g.ui.cena("A Guardiã Destruída", g.contexto_cena(), "evento")
         g.ui.painel("cena", cena_fundo(g, mid, "destruida", luz=g.luz_na_sala))
-        g.narrar("Ilse se desfaz na água escura, e o canto vira bolhas. Por um instante, a água que desce para a vila "
+        g.narrar(("Ilse" if conhece_ilse(g, mid) else "A Bruxa Afogada") + " se desfaz na água escura, e o canto vira "
+                 "bolhas. Por um instante, a água que desce para a vila "
                  "corre mais turva.")
         _ilse(g, "desfaz")
         g.narrar("Onde ela esteve, entre as pedras de moinho, sobra o Sigilo do Turvo, rachado e frio como pedra de rio. Presa às "
                  "pedras, há também uma veste de couro endurecido pela água, que ainda guarda a forma de alguém.")
-    g.receber_sigilo("turvo", "Ilse, a Bruxa Afogada")
+    g.receber_sigilo("turvo", "Ilse, a Bruxa Afogada" if conhece_ilse(g, mid) else "a Bruxa Afogada")
     if desfecho == "destruida":
         g.oferecer_equip(itens.fazer_unico(itens.UNICOS_POR_ID["pele_do_penitente"], min(nivel, g.j.nivel + 2)))
     g.avancar_periodo()
@@ -1141,7 +1180,7 @@ def _retorno(g, mid):
     g.narrar({
         ("descansada", "limpando"): "Na fonte nova, o lodo assentou no fundo da bacia, e a água que corre por cima já "
                                     "sai mais clara." + (" Ninguém piorou de noite." if consequencias.noites(g) else " Ninguém piorou desde então."),
-        ("destruida", "escura"): "A fonte nova corre escura, quase preta: o que estava no corpo de Ilse saiu de uma vez. "
+        ("destruida", "escura"): "A fonte nova corre escura, quase preta: o que estava no corpo dela saiu de uma vez. "
                                  "A vila inteira tosse mais desde que a água escureceu, e ninguém enche balde.",
         ("destruida", "limpando"): "A fonte nova ainda tem a cor de chá fraco, mas clareia. Contam que houve uma noite "
                                    "em que a água correu preta e todos pioraram. O pior passou.",
@@ -1203,6 +1242,9 @@ ACOES = [
     dict(missao="febre_do_turvo", id="bau", rotulo="Recolher o baú", lugar="capela_afogada",
          etapas=("ossuario", "fundo", "retorno"), pode=lambda g: registro(g, "febre_do_turvo").get("bau") == "no_canto",
          fn=_recolher_bau, confirmar=True, onde="sacristia"),
+    # O livro da capela: ler (o ponto "Livro" faz o mesmo) é como se descobre quem era a guardiã. Sempre dá para reler.
+    dict(missao="febre_do_turvo", id="livro", rotulo="Ler o livro da capela", lugar="capela_afogada",
+         etapas=("ossuario", "fundo", "retorno"), fn=_ler_livro, confirmar=True, onde="sacristia"),
     dict(missao="febre_do_turvo", id="ossuario", rotulo="Descer ao ossuário", lugar="capela_afogada",
          etapas=("ossuario",), fn=_ossuario, confirmar=True, sala=True, onde="sacristia"),
     dict(missao="febre_do_turvo", id="correntes", rotulo="Soltar as correntes", abre=True,
@@ -1265,7 +1307,7 @@ def anotar_novidades(g, antes):
         if not d["etapas"][m["etapa"]]["objetivo"] and not fim:
             continue  # uma missão ainda não apresentada (Caspar, antes da acusação) não aparece: o histórico guarda
         obj = objetivo(g, mid, m["etapa"]) if (nova_etapa or comecou) and not m.get("concluida") else None
-        itens = [titulo(mid, p) for p in novas + feitos] + ([d["conclusoes"][desf]] if desf else [])
+        itens = [titulo(mid, p) for p in novas + feitos] + ([conclusao(g, mid, desf)] if desf else [])
         cartoes.append({"missao": mid, "nome": d["nome"], "itens": itens, "objetivo": obj, "nova": comecou,
                         "concluida": fim})
     if cartoes:
