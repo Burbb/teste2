@@ -184,6 +184,81 @@ class TestPagina(unittest.TestCase):
         titulo = next(i for i, m in enumerate(ui.canal.mensagens) if m.get("titulo") == "Crônicas da Fenda")
         self.assertIn("estado", tipos[titulo:])
 
+    def mensagens(self, passos, respostas=3):
+        ui = WebUI()
+        ui.jogo = None
+        for k in range(1, respostas + 1):
+            ui.respostas.put((k, None))
+        passos(ui)
+        return [(m["t"], m.get("titulo") or m.get("tipo"), m.get("virar", False)) for m in ui.canal.mensagens
+                if m["t"] in ("nova_cena", "cabecalho", "continuar", "celebrar")]
+
+    def luta_vencida(self, ui, depois=()):
+        ui.cena("Explorando")
+        ui.dizer("Dois lobos saem do mato.")
+        ui.cena("COMBATE", tipo="combate")
+        ui.detalhe("Você acerta o lobo: 12 de dano.")
+        ui.dizer("O lobo cai.")
+        ui.fim_combate("vitoria")
+        ui.celebrar("vitoria", {"inimigos": 2})
+        for f in depois:
+            f(ui)
+        ui.celebrar("espolio", {"ouro": 5, "xp": 20})
+
+    def test_depois_do_relatorio_so_com_a_luta_a_pagina_vira_sem_continuar(self):
+        # A luta comum do explorar: o relatório (com o Continuar dele) e a pausa do fim do evento. Na página só ficou o
+        # registro da luta: o lugar abre direto (sem o segundo Continuar nem a espera de leitura).
+        def passos(ui):
+            self.luta_vencida(ui)
+            ui.celebrar("nivel", {"nivel": 2})  # a subida de nível é faixa: já foi vista
+            ui.pausar()
+            ui.cena("Vale do Corvo", tipo="local")
+        ms = self.mensagens(passos)
+        self.assertNotIn("continuar", [t for t, _, _ in ms])
+        self.assertEqual(ms[-1], ("nova_cena", "Vale do Corvo", False))
+
+    def test_depois_do_relatorio_o_exausto_nao_pede_continuar(self):
+        # O caso achado na varredura: a luta, a pausa e o "Exausto" (que manda um separador): o Continuar caía na
+        # página com só o registro da luta.
+        def passos(ui):
+            self.luta_vencida(ui)
+            ui.pausar()
+            ui.separador()
+            ui.celebrar("exausto", {})
+            ui.cena("Fogueira", tipo="menu")
+        self.assertNotIn("continuar", [t for t, _, _ in self.mensagens(passos)])
+
+    def test_narracao_depois_da_luta_guarda_a_leitura(self):
+        # O evento continua depois da vitória (o mercador agradece): esse texto é novo e pede leitura antes do lugar.
+        def passos(ui):
+            self.luta_vencida(ui, [lambda u: u.dizer("O mercador te cobre de agradecimentos.")])
+            ui.pausar()
+            ui.cena("Vale do Corvo", tipo="local")
+        self.assertEqual(self.mensagens(passos)[-1], ("nova_cena", "Vale do Corvo", True))
+
+    def test_cena_de_missao_depois_da_luta_mantem_o_continuar(self):
+        # A luta seguida de cena de missão: a cena abre página e o Continuar dela (confirmar) continua lá.
+        def passos(ui):
+            self.luta_vencida(ui)
+            ui.cena("A capela")
+            ui.dizer("Atrás do altar, uma porta baixa leva à sacristia.")
+            ui.continuar(confirmar=True)
+            ui.cena("Vau do Turvo", tipo="local")
+        ms = self.mensagens(passos)
+        self.assertEqual([t for t, _, _ in ms].count("continuar"), 1)
+        self.assertLess([t for t, _, _ in ms].index("celebrar"), [t for t, _, _ in ms].index("continuar"))
+
+    def test_luta_sem_vitoria_segue_como_era(self):
+        # Fugir não mostra relatório: a página da fuga continua pedindo leitura antes da próxima cena.
+        def passos(ui):
+            ui.cena("Explorando")
+            ui.cena("COMBATE", tipo="combate")
+            ui.dizer("Você foge.")
+            ui.fim_combate("fuga")
+            ui.pausar()
+            ui.cena("Rumo a Abrigo Branco")
+        self.assertIn("continuar", [t for t, _, _ in self.mensagens(passos)])
+
     def test_introducao_sem_texto_so_troca_o_titulo(self):
         def passos(ui):
             ui.cena("Estrada")

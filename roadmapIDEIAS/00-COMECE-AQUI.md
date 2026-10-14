@@ -1841,3 +1841,38 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
 - **Falta:** Jean conferir e ouvir (a avaliação musical é dele). Nada de outras regiões, ataques em área ou
   empacotamento; a E9 segue aberta.
 
+
+### 14/10/2026 — Oito correções sobre a 1.88.0 (1.88.1 a 1.88.5)
+
+- **Pedido de Jean:** oito correções da versão atual, cada uma reproduzida no fluxo real antes de mexer; depois, o
+  protótipo da ficha do herói (registrado à parte, abaixo).
+- **Reproduzido e corrigido:**
+  - 1.88.1. *Lua:* a sombra da meia-lua era pintada com a cor do topo do céu, o que desenhava um quadrado à noite;
+    agora a parte em sombra não se pinta e aparece o céu real (paisagens e períodos conferidos). *Iniciativa:* o
+    quadro diz o turno extra antes dos inimigos, que a abertura é só do herói (comitiva e animal no turno seguinte) e
+    o bônus do primeiro golpe com o número do motor. *Canto de Ilse:* começa quando o fundo aparece na descida (e na
+    visita com ela), sem mudar a música; sem Ilse, sem canto; um canal só.
+  - 1.88.2. *Anel no espaço vazio:* o motor diz para onde foi o antigo (nenhum, mochila, ficou para trás com a
+    mochila cheia) e a tela só põe o selo quando houve antigo, no cartão do espaço certo (achado, inventário e
+    mercado; os dois espaços).
+  - 1.88.3. *Grito do cultista:* aplicado, o selo e o ícone no cartão; não aplicado, o motivo real do motor no alvo
+    ("a fé não vacila", "resistiu", "imune"), via o lance `efeito_negado`. *Reações ao golpe:* gravei lances e tela
+    quadro a quadro (normal e acelerado); a ordem já seguia o motor e não há defeito de regra. Faltava a origem: o
+    roubo de vida diz o item, os espinhos acendem quem os tinha, e a regeneração e a vida por abate ganharam lance.
+  - 1.88.4. *Compras rápidas:* de seis cliques rápidos só três chegavam ao motor (a pergunta ainda não tinha voltado,
+    e a proteção de clique duplo e o redesenho comiam o resto). Agora cada clique num suprimento é um pedido, pelo id,
+    numa fila que vai ao motor um de cada vez; o cartão bloqueado no meio (estoque, ouro, espaço) dá o aviso do motor
+    e derruba o resto daquele suprimento; Esc, voltar ou outra pergunta descartam a fila. Equipamentos, venda e
+    recompra continuam com a proteção por posição.
+  - 1.88.5. *Segundo Continuar:* a varredura de partidas pela ponte achou o caso (o relatório e, depois, um Continuar
+    numa página só com o registro da luta, por exemplo antes do "Exausto"), e o explorar comum ainda segurava a página
+    da luta com o fio de leitura. Depois da vitória, se só vieram ganhos e faixas, a pausa não pede leitura: a página
+    vira para o lugar. Narração nova (o evento que continua, a cena de missão, a noite que cai) mantém a leitura e o
+    Continuar dela; subida de nível, comparação de equipamento e escolhas seguem como eram. O clique (ou o Enter) que
+    fecha o relatório não escolhe nada no menu seguinte.
+- **Verificado:** testes (com os novos `test_reacoes_tela`, `test_aneis` e os da página em `test_web`), gabarito
+  (diferenças conferidas antes de atualizar: só `"antigo"` na celebração do anel e `"anim": "grito"` no grito),
+  pyflakes e fumaça completa em cada commit; cenários novos de navegador `reacoes` e `relatorio`, e na fumaça as
+  compras rápidas (estoque, espaço e ouro acabando no meio, Shift+clique, Esc com fila) e o relatório (clique duplo,
+  Enter segurado, subida de nível).
+- **Falta:** Jean conferir jogando. Nada de outras regiões, ataques em área ou empacotamento; a E9 segue aberta.

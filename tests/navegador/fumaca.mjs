@@ -2057,6 +2057,67 @@ async function cenarioComprasRapidas(browser) {
   });
 }
 
+async function cenarioRelatorio(browser) {
+  console.log("cenário: o relatório da luta e o que vem depois (sem segundo Continuar; o clique que fecha não escolhe)");
+  const { proc, url } = await subir("relatorio", { VEZES: "2" });
+  const { page, erros } = await abrir(browser, url);
+  try {
+    const menuLocal = () => page.waitForFunction(() => !processando && pergunta && pergunta.tipo === "opcoes"
+      && pergunta.opcoes.some((o) => /^Explorar/.test(o.texto)), null, { timeout: 30000 });
+    await menuLocal(); await page.waitForTimeout(600);
+    await page.evaluate(() => {
+      window.__continuares = 0; window.__escolhidos = [];
+      new MutationObserver(() => { if (document.querySelector("#prompt button.continuar") && !window.__viuCont) { window.__viuCont = true; window.__continuares++; }
+        if (!document.querySelector("#prompt button.continuar")) window.__viuCont = false; }).observe(document.body, { childList: true, subtree: true });
+      const r = window.fetch; window.fetch = (u, o) => { if (String(u).includes("/responder")) window.__escolhidos.push(JSON.parse(o.body).valor); return r(u, o); };
+    });
+    const explorar = await page.$("#prompt .escolha");
+    const alvo = await explorar.boundingBox();
+    // Uma luta e o relatório: o resto (as escolhas do evento e os golpes) vai pela pergunta da vez.
+    const lutar = async () => {
+      for (let k = 0; k < 120 && !(await page.$("button.continuar:not(#prompt button)")); k++) {
+        await page.evaluate(() => {
+          if (processando || !pergunta || pergunta.tipo !== "opcoes") return;
+          const i = pergunta.opcoes.findIndex((o) => !(o.meta && o.meta.indisponivel) && !/^Explorar/.test(o.texto));
+          if (i >= 0 && !pergunta.opcoes.some((o) => /^Explorar/.test(o.texto))) responder(pergunta.id, i);
+        });
+        await page.waitForTimeout(250);
+      }
+      await page.waitForTimeout(1500);  // o quadro termina de contar
+      return page.evaluate(() => { window.__continuares = 0; window.__escolhidos = []; return !!document.querySelector("button.continuar:not(#prompt button)"); });
+    };
+    const depois = async (como) => {
+      await menuLocal(); await page.waitForTimeout(1200);
+      const r = await page.evaluate(() => ({ continuares: window.__continuares, escolhidos: window.__escolhidos.length,
+        titulo: document.querySelector("#texto h1, #texto .titulo-cena, .cena-titulo") && document.querySelector("#texto h1, #texto .titulo-cena, .cena-titulo").textContent }));
+      conferir(r.continuares === 0, `${como}: do relatório direto ao menu do lugar, sem segundo Continuar (${r.continuares})`);
+      conferir(r.escolhidos === 0, `${como}: o gesto que fecha o relatório não escolhe nada no menu seguinte (${r.escolhidos} respostas)`);
+    };
+    await page.click("#prompt .escolha");
+    conferir(await lutar(), "a luta comum termina no relatório, com o Continuar dele");
+    await page.mouse.dblclick(alvo.x + alvo.width / 2, alvo.y + alvo.height / 2);  // onde o Explorar vai aparecer
+    await depois("clique duplo");
+    await page.click("#prompt .escolha");
+    conferir(await lutar(), "a segunda luta também termina no relatório");
+    await page.keyboard.down("Enter"); await page.waitForTimeout(700); await page.keyboard.up("Enter");  // segurado
+    // Esta luta sobe o nível: a faixa da subida vem depois do relatório, com o Continuar dela (preservado).
+    const nivel = await page.waitForSelector("#celebracao button.continuar, .celebracao-nivel button.continuar, button.continuar:not(#prompt button)", { timeout: 8000 }).then(() => true, () => false);
+    const textoNivel = await page.evaluate(() => document.body.innerText.includes("VOCÊ SUBIU DE NÍVEL") || /subiu de nível/i.test(document.body.innerText));
+    conferir(nivel && textoNivel, "a subida de nível aparece depois do relatório, com o Continuar dela");
+    await page.waitForTimeout(1500);
+    await page.evaluate(() => { window.__continuares = 0; window.__escolhidos = []; });
+    await page.keyboard.press("Enter");
+    await depois("Enter segurado, depois a subida de nível");
+    await page.keyboard.press("1");
+    conferir(await page.waitForFunction(() => window.__escolhidos.length === 1, null, { timeout: 5000 }).then(() => true, () => false),
+      "um gesto novo depois disso vale na hora");
+  } finally {
+    conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
+    await page.close();
+    proc.kill();
+  }
+}
+
 async function cenarioFeridas(browser) {
   console.log("cenário: ferimentos e descanso (F1, F2, a Curandeira com o primeiro tratamento grátis, D1)");
   const quadro = (page) => page.evaluate(() => { const q = document.querySelector(".orientacao:not([hidden])"); return q ? q.innerText.replace(/\s+/g, " ") : ""; });
@@ -2232,6 +2293,7 @@ try {
   await cenarioVila(browser);
   await cenarioMercado(browser);
   await cenarioComprasRapidas(browser);
+  await cenarioRelatorio(browser);
   await cenarioCampanha(browser);
   await cenarioMissao(browser);
   await cenarioRecarga(browser);

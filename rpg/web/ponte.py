@@ -78,6 +78,11 @@ class WebUI(InterfaceGrafica, UI):
         # ou a morte) abre página nova direto, sem um Continuar que só seguraria os registros da luta (eles ficam no
         # Histórico).
         self.depois_da_queda = False
+        # A vitória já foi mostrada (a faixa e o quadro do espólio, que tem o seu Continuar) e, desde ela, só vieram
+        # ganhos e faixas, sem narração nova: a página é o registro da luta (que fica no Histórico), e a pausa que
+        # viria depois dela seria um segundo Continuar sem nada para ler. Texto novo (o evento que continua, a cena de
+        # missão, a noite que cai) desfaz isso, e a leitura volta a valer.
+        self.so_a_luta = False
 
     # Salva de golpes (área): tudo o que o jogo mandar enquanto ela acontece (estado, falas, avisos) só sai
     # depois do lance "salva"; senão a tela mostraria o resultado antes da animação começar.
@@ -94,10 +99,14 @@ class WebUI(InterfaceGrafica, UI):
         self.enviar_estado()
 
     # ------------------------------------------------------------ saída
+    NARRACAO = ("texto", "fala", "rolagem", "bloco", "mapa", "subtitulo")  # o que se lê (não as faixas nem os avisos)
+
     def _enviar(self, t, **dados):
         if self._segurando is not None and not (t == "lance" and dados.get("tipo") == "salva"):
             self._segurando.append({"t": t, **dados})
             return
+        if t in self.NARRACAO and not dados.get("detalhe"):
+            self.so_a_luta = False
         if self.pausa_pendente and t in ("texto", "efeito", "rolagem", "bloco", "mapa", "subtitulo", "separador"):
             self.pausa_pendente = False
             self._continuar()
@@ -183,6 +192,8 @@ class WebUI(InterfaceGrafica, UI):
     def celebrar(self, tipo, dados):
         if tipo == "derrota":
             self.depois_da_queda = True
+        if tipo == "vitoria":
+            self.so_a_luta = True
         self.enviar_estado()
         novo = self.novo_desde_escolha
         self._enviar("celebrar", tipo=tipo, dados=dados)
@@ -216,7 +227,7 @@ class WebUI(InterfaceGrafica, UI):
         pagina_nova = tipo != "combate" and (self.escolhas_na_cena > 0 or (self.pausa_pendente and not mesmo_lugar))
         # Telas de menu que se redesenham (inventário, mercado) não param para "Continuar".
         mesma_tela = tipo == "menu" and titulo == self.ultimo_titulo
-        ler_antes = pagina_nova and (self.novo_desde_escolha or self.pausa_pendente) and not mesma_tela
+        ler_antes = pagina_nova and (self.novo_desde_escolha or self.pausa_pendente) and not mesma_tela and not self.so_a_luta
         if self.depois_da_queda and tipo != "combate":
             self.depois_da_queda = False
             ler_antes = False
@@ -229,6 +240,7 @@ class WebUI(InterfaceGrafica, UI):
             self.enviar_estado()
         if tipo != "combate":
             self.tipo_cena = tipo
+        self.so_a_luta = False  # cena nova (ou outra luta): o que vier é desta página
         if tipo == "combate":
             if self.pausa_pendente:
                 self.pausa_pendente = False
@@ -369,6 +381,10 @@ class WebUI(InterfaceGrafica, UI):
         self._continuar(confirmar)
 
     def pausar(self):
+        if self.so_a_luta:
+            # O Continuar do relatório já foi a leitura: a próxima cena abre página nova, sem um segundo Continuar.
+            self.escolhas_na_cena += 1
+            return
         if self.novo_desde_escolha:
             if self.tipo_cena == "menu":
                 self._continuar()  # numa tela de menu (bestiário, diário) a pausa é a tela aberta, esperando o Voltar

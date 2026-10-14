@@ -21,6 +21,7 @@
     python -m tests.navegador.cenarios gelo          # Mago com a iniciativa contra um lobo: duas Lanças antes de ele agir (PRISAO, NIVEL, SEMENTE)
     python -m tests.navegador.cenarios aneis         # acha um anel com os dois espaços ocupados (ANEIS=1: um vazio; CHEIA, OURO)
     python -m tests.navegador.cenarios reacoes       # Contra-ataque, espinhos, roubo de vida e o Revide juntos (CONTRA, ESPINHOS, ROUBO, LUTA)
+    python -m tests.navegador.cenarios relatorio     # Explorar cai numa luta comum: o relatório e o que vem depois (EVENTO, VEZES, SEMENTE, PERIODO)
     python -m tests.navegador.cenarios muralha       # Guerreiro nv 6, Muralha + Contra-ataque (CONTRA) e o Broquel, contra bandidos e um cultista
 
 Imprime o endereço do servidor na primeira linha e fica no ar até ser encerrado.
@@ -673,6 +674,34 @@ def reacoes(ui):
                                                      "maos": {"roubo_vida": int(os.environ.get("ROUBO", "20"))}})
 
 
+def relatorio(ui):
+    """Mundo gerado, guerreiro forte num lugar selvagem: cada Explorar (VEZES, padrão 2) cai no EVENTO (padrão
+    encontro_hostil, uma luta comum), para o relatório da luta e o que vem depois dele."""
+    import rpg.eventos as eventos
+    from rpg.eventos.motor import disparar_id
+    g = Jogo(ui, seed=int(os.environ.get("SEMENTE", "4")), pasta_saves=tempfile.mkdtemp(), hardcore=False)
+    ui.jogo = g
+    g.iniciar("Jean", "guerreiro")
+    loc = next(l for l in g.mundo["locais"] if l["tipo"] == "selvagem")
+    g.mundo["atual"], loc["visitado"] = loc["id"], True
+    g.periodo, g.clima = int(os.environ.get("PERIODO", "0")), "limpo"
+    g.j.base["atk"] = 400
+    g.j.recalcular()
+    g.j.hp = g.j.max_hp
+    original, vezes = eventos.disparar, [int(os.environ.get("VEZES", "2"))]
+
+    def forcado(g2, contexto):
+        if contexto != "explorar" or not vezes[0]:
+            return original(g2, contexto)
+        vezes[0] -= 1
+        return disparar_id(g2, os.environ.get("EVENTO", "encontro_hostil"), contexto) or True
+    eventos.disparar = forcado
+    try:
+        g.rodar()
+    except FimDeJogo:
+        pass
+
+
 def fogueira(ui):
     """A campanha no LUGAR (charco, padrão, à noite: acampar abre a fogueira; vau: a vila, de manhã), CLASSE (padrão
     arqueiro). COMITIVA: quem anda junto, separado por vírgula (padrão "morel,odete"); RESERVA: quem espera no
@@ -858,7 +887,7 @@ def aneis(ui):
         pass
 
 
-CENARIOS = {"aneis": aneis, "mercado": mercado, "combate": combate, "titulo": titulo, "vila": vila, "campanha": campanha, "baus": baus, "missao": missao,
+CENARIOS = {"aneis": aneis, "mercado": mercado, "relatorio": relatorio, "combate": combate, "titulo": titulo, "vila": vila, "campanha": campanha, "baus": baus, "missao": missao,
             "recarga": recarga, "capela": capela, "retorno": retorno, "praca": praca, "encruzilhada": encruzilhada,
             "tiro_duplo": tiro_duplo, "covil": covil, "broquel": broquel, "muralha": muralha, "reacoes": reacoes, "resgate": resgate,
             "gelo": gelo, "abertura": abertura, "fogueira": fogueira,
