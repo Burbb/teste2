@@ -289,6 +289,7 @@ def _grito_terror(cb, e, alvo):
     cb.dizer(f"{e.nome} solta um grito que congela a alma!", "magenta")
     resiste = mod(alvo, "resiste_terror") if alvo is cb.j else 0
     if resiste and cb.rng.random() < resiste:
+        cb.lance("efeito_negado", em=cb.uid(alvo), efeito="enfraquecido", por="fe", rotulo="a fé não vacila")
         cb.dizer("Sua fé não vacila.", "amarelo")
         return
     cb.aplicar(alvo, "enfraquecido", 2)
@@ -403,7 +404,8 @@ HABS = {
     "bola_fogo": hab_inimigo(_bola_fogo, "Bola de Fogo", "bola de fogo", golpe=True),
     "bola_sombra": hab_inimigo(_bola_sombra, "Esfera Sombria", "esfera sombria", golpe=True),
     "cura": hab_inimigo(_cura, "Cura", "cura aliados", quando=_cura_serve),
-    "grito_terror": hab_inimigo(_grito_terror, "Grito de Terror", "grito de terror", quando=_sem("enfraquecido")),
+    "grito_terror": hab_inimigo(_grito_terror, "Grito de Terror", "grito de terror", quando=_sem("enfraquecido"),
+                                anim="grito"),
     "mordida_gelida": hab_inimigo(_mordida_gelida, "Mordida Gélida", "mordida congelante", golpe=True),
     "invocar": hab_inimigo(_invocar, "Invocar", "invoca reforços",
                            quando=lambda cb, e, alvo: bool(e.invoca) and len(cb.inimigos_vivos()) < 4),

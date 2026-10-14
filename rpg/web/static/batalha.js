@@ -384,13 +384,13 @@ const Batalha = (() => {
   }
   /** Ganhou um estado bom: o ícone de cada um com uma seta para cima, em cima da carta (o nome do golpe ali
    *  confundia: parecia que o golpe tinha saído de novo). */
-  function selos(el, ids) {
+  function selos(el, ids, desce = false) {  // desce: um estado ruim chegando (▼); bom, ▲
     if (!ids || !ids.length || rapido()) return;
     const velho = el.querySelector(".faixa-acao");
     if (velho) velho.remove();
     const f = document.createElement("div");
-    f.className = "faixa-acao selos";
-    f.innerHTML = ids.map((id) => `<span>${S(efeito(id)[0], 1)}<b>▲</b></span>`).join("");
+    f.className = "faixa-acao selos" + (desce ? " ruim" : "");
+    f.innerHTML = ids.map((id) => `<span>${S(efeito(id)[0], 1)}<b>${desce ? "▼" : "▲"}</b></span>`).join("");
     el.appendChild(f);
     Sensacao.depois(1500, () => f.remove());
   }
@@ -564,6 +564,10 @@ const Batalha = (() => {
       case "cura": {
         marcar(m.em);
         if (m.modo === "roubo") return roubo(m, em, carta(m.fonte));
+        if (m.modo === "discreto") {  // a regeneração de cada turno: o número e a barra, sem pausa nem som
+          if (em) { barra(em, m.hp, m.max_hp); numero(em, `+${m.valor}`, "cura pequeno"); }
+          return;
+        }
         if (de && de !== em) { brilho(de, "cura"); await dormir(pausa(160)); }
         if (em) {
           barra(em, m.hp, m.max_hp);
@@ -616,6 +620,7 @@ const Batalha = (() => {
         brilho(em, fam);
         if (m.efeito === "queimadura") labaredas(em);
         numero(em, m.rotulo, "info");
+        if (ESTADOS[m.efeito] && ESTADOS[m.efeito].negativo) selos(em, [m.efeito], true);  // o ícone do estado, já na carta
         som(m.efeito === "atordoado" ? "atordoar" : ESTADOS[m.efeito] && ESTADOS[m.efeito].negativo === false ? "buff" : "debuff");
         await dormir(pausa(300));
         return;
@@ -639,7 +644,7 @@ const Batalha = (() => {
         await dormir(pausa(260));
         return;
       }
-      case "efeito_negado": {  // firme: acabou de se soltar e não perde o turno de novo
+      case "efeito_negado": {  // o estado não pegou, com o motivo do motor: firme, imune, resistiu, a fé não vacila
         if (!em) return;
         marcar(m.em);
         brilho(em, "protecao");
@@ -712,7 +717,8 @@ const Batalha = (() => {
     barra(em, m.hp, m.max_hp);
     brilho(em, "roubo");
     numero(em, `+${m.valor} ♥`, "roubo");
-    if (m.rotulo) numero(em, m.rotulo, "motivo roubo-fonte");
+    // de onde veio: o roubo de vida, com a fonte (o item ou o talento) quando ela tem nome próprio
+    if (m.rotulo) numero(em, /roubo de vida/i.test(m.rotulo) ? m.rotulo : `Roubo de vida (${m.rotulo})`, "motivo roubo-fonte");
     await dormir(pausa(360));
   }
 
@@ -914,6 +920,8 @@ const Batalha = (() => {
 
   /** Dano devolvido pelos espinhos da armadura: o agressor só sente (sem farpas voando), e "Espinhos" sobe nele. */
   async function espinhos(m, em) {
+    const origem = carta(m.refletido);  // de quem são os espinhos: a carta brilha antes de o agressor sentir
+    if (origem) brilho(origem, "protecao");
     await dormir(pausa(90));
     barra(em, m.hp, m.max_hp);
     tremer(em, false);

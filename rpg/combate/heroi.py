@@ -3,7 +3,7 @@
 from .. import texto as tx
 from ..classes import CLASSES
 from ..habilidades import custo_flechas, descricao_habilidade, efetiva, versao
-from ..modificadores import disparar, mod
+from ..modificadores import disparar, mod, nomes
 from ..dados import TRACOS
 from ..inimigos import NOMES_HABS_INIMIGO
 from ..itens import CONSUMIVEIS, EM_ALIADO, PENA_FENIX_AGE_SOZINHA, USAVEIS_NA_LUTA, ficha
@@ -19,8 +19,9 @@ class AcoesDoHeroi:
     def fase_jogador(self):
         j = self.j
         self.mostrar_estado()
-        if mod(j, "regen_vida") and j.hp < j.max_hp:
-            j.curar(mod(j, "regen_vida"))
+        if mod(j, "regen_vida") and j.hp < j.max_hp:  # discreta na tela: o número e a barra, sem pausa
+            self.curou(j, j.curar(mod(j, "regen_vida")), tipo="discreto", conta=False,
+                       rotulo=(nomes(j, "regen_vida") or ["Regeneração"])[0])
         if self.processar_efeitos(j) or not j.vivo:
             return None
         while True:

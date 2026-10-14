@@ -84,6 +84,7 @@ body.em-combate #hud-linha { justify-content: flex-end; }
 .faixa-acao.selos { display: flex; align-items: center; gap: 8px; padding: 2px 6px; background: #120e0b; }
 .faixa-acao.selos span { display: inline-flex; align-items: center; gap: 1px; }
 .faixa-acao.selos b { font-size: 15px; color: var(--bom); }
+.faixa-acao.selos.ruim b { color: var(--sangue-2); }  /* um estado ruim chegando (o enfraquecimento do grito...) */
 .faixa-acao.espinhos { background: #5a3a1c; color: #e8d6a8; font-size: 12px; }
 .faixa-acao.ruim { background: #4a4038; color: var(--tinta); }
 @keyframes faixa { 0% { opacity: 0; transform: translateY(6px); } 15% { opacity: 1; transform: none; } 80% { opacity: 1; } 100% { opacity: 0; transform: translateY(-4px); } }

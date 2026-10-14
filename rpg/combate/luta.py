@@ -154,10 +154,11 @@ class Combate(Golpes, AcoesDoHeroi, TurnosDosOutros):
         finally:
             self.lance("fim_acao", de=self.uid(u))
 
-    def curou(self, c, valor, tipo="cura", de=None, rotulo=None, fonte=None):
-        """fonte: de quem a vida foi tirada (roubo de vida), para a tela desenhar o sangue voltando."""
+    def curou(self, c, valor, tipo="cura", de=None, rotulo=None, fonte=None, conta=True):
+        """fonte: de quem a vida foi tirada (roubo de vida), para a tela desenhar o sangue voltando. conta=False: a
+        tela mostra, mas o relatório da luta não soma (a regeneração e a vida por abate, que ele nunca contou)."""
         if valor and valor > 0:
-            if c is self.j:
+            if c is self.j and conta:
                 self._cura_j += valor
             self.lance("cura", em=self.uid(c), de=self.uid(de), valor=int(valor), modo=tipo, rotulo=rotulo,
                        fonte=self.uid(fonte), hp=max(0, c.hp), max_hp=c.max_hp)

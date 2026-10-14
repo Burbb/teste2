@@ -20,6 +20,7 @@
     python -m tests.navegador.cenarios tutorial      # a segunda parte da abertura guiada (LUGAR, PERIODO, VIDA, REC, OURO, PROVISOES, COMITIVA, PONTOS, ITEM, BAUS, CONTRATO, LUTA, VISTAS)
     python -m tests.navegador.cenarios gelo          # Mago com a iniciativa contra um lobo: duas Lanças antes de ele agir (PRISAO, NIVEL, SEMENTE)
     python -m tests.navegador.cenarios aneis         # acha um anel com os dois espaços ocupados (ANEIS=1: um vazio; CHEIA, OURO)
+    python -m tests.navegador.cenarios reacoes       # Contra-ataque, espinhos, roubo de vida e o Revide juntos (CONTRA, ESPINHOS, ROUBO, LUTA)
     python -m tests.navegador.cenarios muralha       # Guerreiro nv 6, Muralha + Contra-ataque (CONTRA) e o Broquel, contra bandidos e um cultista
 
 Imprime o endereço do servidor na primeira linha e fica no ar até ser encerrado.
@@ -601,7 +602,7 @@ LUTAS_BROQUEL = {
 }
 
 
-def _broquel(ui, nivel, talentos, luta):
+def _broquel(ui, nivel, talentos, luta, extra=None):
     """O Guerreiro (ESPEC, padrão paladino) no nível dado, vestido, com o Broquel do Vigia, no Bosque do Moinho, com o
     ossuário já vencido. Começa na LUTA (lobos, esqueletos, misto, cultistas, bandido), com inimigos um nível abaixo.
     Depois de cada luta: a mesma luta de novo (o mesmo sorteio de partida), com o Broquel ou com um broquel de números
@@ -619,6 +620,9 @@ def _broquel(ui, nivel, talentos, luta):
         g.j.talentos[nome] = int(rank or 1)
     g.j.pontos_talento = 0
     dev.vestir(g, random.Random(3), nivel)
+    for espaco, bonus in (extra or {}).items():  # bônus a mais num item vestido (o cenário das reações)
+        if g.j.equip.get(espaco):
+            g.j.equip[espaco] = dict(g.j.equip[espaco], bonus={**g.j.equip[espaco]["bonus"], **bonus})
     com = fazer_unico(UNICOS_POR_ID["broquel_do_vigia"], nivel)
     sem = dict(com, nome="Broquel sem efeito", raridade="raro", bonus=dict(com["bonus"]))
     sem.pop("unico")
@@ -658,6 +662,15 @@ def muralha(ui):
     """Muralha com Contra-ataque (CONTRA, padrão 1) e o Broquel: Guerreiro nível NIVEL (padrão 6), contra dois bandidos
     e um cultista (o cultista ataca de longe: o Revide não o alcança)."""
     _broquel(ui, int(os.environ.get("NIVEL", "6")), ["muralha", f"contra_ataque={os.environ.get('CONTRA', '1')}"], "misto")
+
+
+def reacoes(ui):
+    """As reações ao golpe juntas (para ver a ordem na tela): o Guerreiro com Contra-ataque (CONTRA, padrão 7: sempre
+    revida), espinhos e roubo de vida nas botas e nas luvas (ESPINHOS, ROUBO) e o Broquel (o Revide), contra lobos
+    (LUTA). Sem mexer em regra: só monta a situação."""
+    _broquel(ui, int(os.environ.get("NIVEL", "6")), [f"contra_ataque={os.environ.get('CONTRA', '7')}"],
+             os.environ.get("LUTA", "lobos"), extra={"pes": {"espinhos": int(os.environ.get("ESPINHOS", "4"))},
+                                                     "maos": {"roubo_vida": int(os.environ.get("ROUBO", "20"))}})
 
 
 def fogueira(ui):
@@ -847,7 +860,7 @@ def aneis(ui):
 
 CENARIOS = {"aneis": aneis, "mercado": mercado, "combate": combate, "titulo": titulo, "vila": vila, "campanha": campanha, "baus": baus, "missao": missao,
             "recarga": recarga, "capela": capela, "retorno": retorno, "praca": praca, "encruzilhada": encruzilhada,
-            "tiro_duplo": tiro_duplo, "covil": covil, "broquel": broquel, "muralha": muralha, "resgate": resgate,
+            "tiro_duplo": tiro_duplo, "covil": covil, "broquel": broquel, "muralha": muralha, "reacoes": reacoes, "resgate": resgate,
             "gelo": gelo, "abertura": abertura, "fogueira": fogueira,
             "tutorial": tutorial}
 

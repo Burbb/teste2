@@ -204,11 +204,13 @@ class Golpes:
         if chance < 1 and self.rng.random() >= chance:
             return False
         est = ESTADOS[efeito]
-        if est["imune"] and est["imune"](alvo):
+        if est["imune"] and est["imune"](alvo):  # o motivo real vai junto, para a tela mostrar no alvo
+            self.lance("efeito_negado", em=self.uid(alvo), efeito=efeito, por="imune", rotulo="imune")
             self.detalhe(f"{self.nome(alvo)} não é afetad{'o' if alvo.g == 'm' else 'a'} ({NOMES_EFEITOS[efeito]}).",
                          "cinza")
             return False
         if est["resiste"] and est["resiste"](self, alvo):
+            self.lance("efeito_negado", em=self.uid(alvo), efeito=efeito, por="resiste", rotulo="resistiu")
             self.detalhe(f"{self.nome(alvo)} resiste ao {'atordoamento' if efeito == 'atordoado' else est['nome']}!", "cinza")
             return False
         guarda = next((k for k in alvo.efeitos if efeito in ESTADOS.get(k, {}).get("protege", ())), None)
@@ -261,6 +263,7 @@ class Golpes:
         disparar(self, j, "morte", alvo=c, por=por, tipo=tipo)  # Colheita, Rei dos Mortos...
         if por is not j:
             return
-        if mod(j, "vida_abate"):
-            j.curar(mod(j, "vida_abate"))
+        if mod(j, "vida_abate"):  # a tela mostra de onde veio a vida (antes, a barra só subia no redesenho)
+            self.curou(j, j.curar(mod(j, "vida_abate")), rotulo=(nomes(j, "vida_abate") or ["Vida por abate"])[0],
+                       conta=False)
         disparar(self, j, "abate", alvo=c, tipo=tipo)  # Frenesi, Assassino, Coração Ardente...
