@@ -273,7 +273,9 @@ class TestLodoNoFundo(unittest.TestCase):
         self.assertEqual((g.dia, g.periodo, g.j.consumiveis.get("tocha")), antes)  # nem tempo, nem tocha
         self.assertEqual(missoes.sala_atual(g), "ossuario")  # voltar por enquanto: sobe ao ossuário
         self.assertEqual(g.ui.cenas[-2:], ["O Fundo da Capela", "O Fundo da Capela"])  # título e sala concordam
-        fundos = [d for t, d in g.ui.paineis if t == "cena"][-2:]  # a descida e a coleta: Ilse na água, sem luta
+        fundos = [d for t, d in g.ui.paineis if t == "cena" and d["cena"] == "fundo"][-2:]  # a descida e a coleta: Ilse
+        # na água, sem luta (voltar por enquanto: o ossuário)
+        self.assertEqual(cenas(g)[-1]["cena"], "ossuario")
         self.assertEqual([(d["cena"], d["momento"], d["ilse"]) for d in fundos], [("fundo", "descida", "presa"), ("fundo", "visita", "presa")])
         # descer de novo: Ilse e o recuo como antes, sem a amostra (já está no frasco)
         g.ui.roteiro = ["Voltar por enquanto"]
@@ -607,8 +609,9 @@ class TestFundo(unittest.TestCase):
         from tests.test_guardia import PRONTO
         g = self.no_fundo("arqueiro", ["Chamar Ilse pelo nome", "Desistir do rito", "Guardar"], **PRONTO)
         missoes.executar(g, MID, "fundo")
-        self.assertEqual([m for m in g.ui.momentos if m in ("acorda", "canto_falha", "fita", "afunda", "desfaz")],
-                         ["acorda", "canto_falha", "desfaz"])
+        self.assertEqual([m for m in g.ui.momentos if m in ("acorda", "canto_falha", "grito", "fita", "afunda", "desfaz")],
+                         ["acorda", "canto_falha", "grito", "desfaz"])
+        self.depois_do_texto(g, "grito", "o canto vira um grito")
 
     def test_no_texto_sem_momentos_e_o_mesmo_jogo(self):
         from tests.test_guardia import DESCANSO, PRONTO
@@ -710,6 +713,24 @@ class TestBauDaSacristia(unittest.TestCase):
         # antes da sacristia, a migração não mexe: a vitória põe o baú no canto
         antigo = {"jogador": {}, "seed": 1, "versao": 3, "mundo": {"missoes": {MID: {"etapa": "sacristia"}}}}
         self.assertNotIn("bau", migrar(antigo)["mundo"]["missoes"][MID])
+
+
+class TestDescidaConta(unittest.TestCase):
+    """O texto da descida acompanha as correntes de fato (1.85.1)."""
+    no_fundo = TestFundo.no_fundo
+
+    def test_a_descida_conta_as_correntes_como_estao(self):
+        from tests.test_guardia import PRONTO
+        for kw, certo, errado in (({"preparos": ()}, "presa às pedras pelas correntes", "pendem frouxas"),
+                                  (PRONTO, "pendem frouxas dos pulsos dela, sem prendê-la", "presa às pedras")):
+            g = self.no_fundo("mago", ["Voltar por enquanto"], **kw)
+            missoes.executar(g, MID, "fundo")
+            texto = " ".join(g.ui.ditos)
+            self.assertIn(certo, texto)
+            self.assertNotIn(errado, texto)
+            self.assertNotIn("levantou", texto)  # a arte a mostra pela cintura, entre as pedras
+            self.assertIn("Ela permanece entre as pedras, cantando baixo.", texto)
+
 
 class TestContinuidade(unittest.TestCase):
     """Entre acontecimentos da mesma sala, a arte não passa por um estado errado no meio (1.85.0): a resolução de Ilse

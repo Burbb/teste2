@@ -198,7 +198,7 @@ class TestConfronto(unittest.TestCase):
             # (com Caspar por responder, o lodo se recolhe aqui, na água: 1.80.0)
             self.assertEqual(descida, ("O que você faz?", [f"Lutar para destruí-la — {tx.SEM_FUGA} — {TOCHA}",
                                                            "Recolher uma amostra do lodo", "Voltar por enquanto"]))
-            self.assertIn("Ela ainda não se levantou da água.", g.ui.ditos)  # a cena; a regra fica na nota da luta
+            self.assertIn("Ela permanece entre as pedras, cantando baixo.", g.ui.ditos)  # a cena; a regra fica na nota da luta
             self.assertFalse(any("ainda falta" in d for d in g.ui.ditos))  # sem Berta, ninguém falou do rito
             self.assertFalse(any(p[0] == "Este é o momento do rito." for p in g.ui.perguntas))
             todos = [it for it in g.j.mochila + list(g.j.equip.values()) if it]

@@ -776,7 +776,7 @@
     teto: "#0c1012", pedra: "#232a2c", pedraLuz: "#3a4542", pedraSombra: "#141a1b", junta: "#192022", limo: "#25372c",
     agua: "#061012", aguaMeio: "#0a1a1d", aguaLuz: "#1f383c", mo: "#4a4c48", moLuz: "#6a6c64", moSombra: "#2c2e2a",
     moSulco: "#383a36", ferro: "#4a4c54", ferroLuz: "#7a7c86", pele: "#7d98a6", peleSombra: "#55707e", peleLuz: "#a0b8c2",
-    peleCalma: "#a4aeb0", peleCalmaSombra: "#7a868a", cabelo: "#2b4531", cabeloLuz: "#3f5f3e", cabeloEsc: "#18281b",
+    peleCalma: "#a4aeb0", peleCalmaSombra: "#7a868a", cabelo: "#1c2b1f", cabeloLuz: "#2c4130", cabeloEsc: "#0d160f",
     veste: "#3a3430", vesteSombra: "#25211e", olhoFechado: "#3a4c56", olho: "#c4d4da", fita: "#a87a76", fitaSombra: "#7a5654",
   };
   /** Onde está a luz: a tocha de quem está ali, ao pé da escada; sem ela, o pouco que desce do buraco do ossuário. */
@@ -869,9 +869,9 @@
       }
     };
     const T = 20, mexe = calma || !q ? 0 : Math.floor(q / 9) % 2;
-    // O cabelo de algas, atrás: mechas soltas e compridas, de comprimentos diferentes, que descem ondulando até a água
-    // (com o descanso, quietas). Não é um bloco: cada mecha tem falhas.
-    [[-4, 3, 18], [-5, 4, 21], [-6, 6, 16], [-7, 9, 12], [4, 3, 19], [5, 4, 22], [6, 6, 15], [7, 10, 11]].forEach(([dx, y0, comp], i) => {
+    // O cabelo de algas, atrás: mechas escuras, soltas, de comprimentos diferentes e mais cheias à esquerda, que descem
+    // ondulando até a água (com o descanso, quietas). Não é um bloco: cada mecha tem falhas.
+    [[-4, 3, 20], [-5, 4, 23], [-6, 5, 18], [-7, 8, 15], [-8, 12, 9], [4, 4, 13], [5, 6, 16], [6, 9, 10]].forEach(([dx, y0, comp], i) => {
       for (let k = 0; k < comp; k++) {
         if ((k + i) % 7 === 6) continue;
         const onda = calma ? 0 : (Math.floor((k + mexe * 2 + i) / 3) % 2) * (dx < 0 ? -1 : 1);
@@ -898,15 +898,20 @@
       p(cx - 7, T + 22, 2, 1, sombra); p(cx + 6, T + 22, 2, 1, sombra);
       if (pose === "solta") for (const x of [cx - 7, cx + 7]) { p(x, T + 21, 1, 1, C.ferroLuz); for (let k = 0; k < 4; k++) p(x, T + 23 + k, 1, 1, k % 2 ? C.ferroLuz : C.ferro); }
     }
-    // a cabeça: o rosto azulado (no descanso, menos azul), a franja, as mechas que caem dos lados até o peito
-    p(cx - 2, T, 5, 1, C.cabelo); p(cx - 3, T + 1, 7, 1, C.cabelo); p(cx - 2, T + 1, 3, 1, C.cabeloLuz);
+    // a cabeça: o rosto azulado (no descanso, menos azul) e o cabelo molhado colado nele: uma mecha grossa desce do
+    // alto da cabeça na frente do rosto e cobre o olho direito; outra, fina, corta a face esquerda; dos lados, a da
+    // esquerda vai até o peito e a da direita para antes, num bolo de alga
+    p(cx - 2, T, 5, 1, C.cabeloEsc); p(cx - 3, T + 1, 7, 1, C.cabelo); p(cx - 1, T + 1, 2, 1, C.cabeloLuz);
     p(cx - 2, T + 2, 5, 7, pele); p(cx + 2, T + 2, 1, 7, sombra); p(cx - 1, T + 9, 3, 1, pele);
-    p(cx - 2, T + 2, 3, 1, C.cabelo); p(cx + 1, T + 2, 1, 1, C.cabeloEsc);
-    p(cx - 3, T + 2, 1, 12, C.cabelo); p(cx + 3, T + 2, 1, 13, C.cabeloEsc);
-    p(cx - 3, T + 14, 1, 3, C.cabeloEsc); p(cx + 3, T + 15, 1, 3, C.cabelo);
     const olho = olhos === "abertos" ? C.olho : C.olhoFechado;
-    p(cx - 1, T + 4, 1, 1, olho); p(cx + 1, T + 4, 1, 1, olho);
+    p(cx - 1, T + 4, 1, 1, olho);
     p(cx, T + 7, 1, 1, sombra);  // a boca
+    p(cx - 2, T + 2, 4, 1, C.cabeloEsc);                                                       // a franja, molhada
+    [[2, 2], [1, 3], [1, 4], [1, 5], [1, 6], [2, 7], [2, 8], [2, 9]].forEach(([dx, dy]) => p(cx + dx, T + dy, 1, 1, dy % 3 ? C.cabeloEsc : C.cabelo));
+    p(cx, T + 3, 1, 2, C.cabeloEsc);                                                           // a mecha que cobre o olho
+    [[-2, 3], [-2, 4], [-2, 5], [-1, 6], [-1, 7]].forEach(([dx, dy]) => p(cx + dx, T + dy, 1, 1, C.cabelo));  // a fina
+    p(cx - 3, T + 2, 1, 15, C.cabelo); p(cx - 3, T + 5, 1, 2, C.cabeloLuz); p(cx - 4, T + 14, 1, 4, C.cabeloEsc);
+    p(cx + 3, T + 2, 1, 10, C.cabeloEsc); p(cx + 3, T + 11, 2, 2, C.cabelo); p(cx + 4, T + 13, 1, 1, C.cabeloEsc);
     // as mechas que boiam na água, em volta dela
     if (!desce && !some) [[-10, 0], [-8, 1], [8, 0], [10, 1], [12, 0]].forEach(([dx, dy]) => px(cx + dx, A + dy, 2, 1, C.cabeloEsc));
   }
@@ -985,10 +990,31 @@
       afunda: () => { est.desce = 0; est.ilse = "ausente"; aguaClara(a); },
       desfaz: () => { est.some = 0; est.turvo = 0; est.ilse = "ausente"; },
     }[m];
+    if (m === "grito") {  // o rito deixado: o canto vira grito (o texto acabou de dizer) e não volta
+      est.canto = false; cantoDeIlse();
+      if (!instantaneo) App.som("grito_ilse");
+      return Promise.resolve();
+    }
     if (!fim) return Promise.resolve();
+    // o som acompanha o começo do momento: o canto entra quando ela começa a cantar e para quando falha ou some
+    if (m === "acorda") est.canto = true;
+    if (m === "canto_falha" || m === "desfaz") est.canto = false;
+    cantoDeIlse();
     if (rapido) { fim(); return Promise.resolve(); }
     if (m === "fita") { fim(); return new Promise((r) => setTimeout(r, 400)); }
     return new Promise((r) => { est.anim = { m, passo: 0, fim, resolver: r }; });
+  }
+  /** O canto de Ilse, pelo que a cena mostra agora: no fundo, com ela cantando na água (desde que acordou), alto; na
+   *  luta e na cena da destruição, baixo (não cobre os golpes); fora do fundo, no descanso e depois, nada. Um canal só
+   *  (Som.canto): pedir de novo não soma outro. */
+  function cantoDeIlse() {
+    const a = atual, est = a && a.est;
+    let nivel = null;
+    if (a && a.d.cena === "fundo" && est.canto && !est.desce && !est.some) {
+      if (["luta", "destruida"].includes(a.d.momento)) nivel = "baixo";
+      else if (["presa", "solta"].includes(est.ilse)) nivel = "alto";
+    }
+    Som.canto(nivel);
   }
   /** Depois do descanso, a água fica parada e clara: a base é refeita com a água clara (o mesmo objeto, para quem
    *  desenha já pegar a nova). */
@@ -1072,13 +1098,16 @@
     pendente = false;
     const def = CENAS[d.cena];
     if (!def) { limpar(); return; }
-    const antes = atual && atual.d.cena === d.cena ? atual : null, mesmo = !!antes && antes.d.momento === d.momento;
+    const antes = atual && atual.d.cena === d.cena ? atual : null;
+    const mesmo = !!antes && ["momento", "ilse", "correntes"].every((k) => antes.d[k] === d[k]);  // o mesmo acontecimento
     if (mesmo && antes.d.agua === "clara") d = Object.assign({}, d, { agua: "clara" });  // o que a tela já mostrou fica
     const b = def.base(QW, d), est = mesmo ? antes.est : { correntes: d.correntes, agua: d.agua, soltando: false, passo: 0, onda: 0,
       ilse: d.ilse, olhos: d.momento === "descida" ? "fechados" : "abertos", canto: d.momento === "descida" ? false : !!d.ilse && d.ilse !== "ausente" && d.momento === "visita",
       fita: false, desce: 0, some: 0, turvo: 0, falha: 0, anim: null };
+    if (!mesmo && antes && d.cena === "fundo" && ["luta", "destruida"].includes(d.momento)) est.canto = antes.est.canto;
     const troca = antes && !reduzido() ? { de: antes.b.canvas, inicio: performance.now() } : null;
     atual = { d, def, b, est };
+    cantoDeIlse();
     document.getElementById("cena").classList.add("com-ambiente");
     if (typeof recolherArte === "function") recolherArte(false);
     Vista.usarAmbiente({
@@ -1103,6 +1132,7 @@
     pendente = false;
     if (!atual) return;
     atual = null;
+    cantoDeIlse();  // saiu do fundo: o canto para
     document.getElementById("cena").classList.remove("com-ambiente");
     Vista.usarAmbiente(null);
     montarPontos();

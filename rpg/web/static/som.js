@@ -4,6 +4,7 @@
 
 const Som = (() => {
   let ctx = null, mestre = null, ambiente = null, ambienteBioma = null;
+  let canto = null, cantoPendente = null;  // o canto de Ilse (um só, sempre: Som.canto)
   let ligado = true;
   try { ligado = localStorage.getItem("cdf-som") !== "0"; } catch (e) { /* armazenamento indisponível */ }
 
@@ -15,7 +16,48 @@ const Som = (() => {
     mestre = ctx.createGain();
     mestre.gain.value = ligado ? 0.9 : 0;
     mestre.connect(ctx.destination);
+    if (cantoPendente) { const n = cantoPendente; cantoPendente = null; cantar(n); }  // pedido antes do primeiro toque
     return true;
+  }
+
+  // ---------------------------------------------------------------- o canto de Ilse
+  // Uma canção de ninar sem palavras, quase um murmúrio: poucas notas graves, devagar, num timbre abafado (triângulo
+  // com uma oitava abaixo, filtro baixo e um vibrato lento). Melodia própria, em duas frases que descem e voltam. Um
+  // canal só (o volume mestre vale para ele): pedir de novo só muda o nível; parar desliga e solta o canal.
+  const CANTO = [[220, 1.3], [261.6, 0.9], [246.9, 0.9], [220, 1.8], [0, 0.7], [174.6, 1.1], [196, 0.9], [164.8, 2.2],
+    [0, 0.8], [196, 0.9], [220, 0.9], [207.7, 1.0], [164.8, 2.4], [0, 2.0]];
+  const NIVEIS_CANTO = { alto: 0.06, baixo: 0.02 };
+  function notaCanto(bus, t, f, dur) {
+    const o = ctx.createOscillator(), sub = ctx.createOscillator(), vib = ctx.createOscillator();
+    o.type = "triangle"; o.frequency.value = f; sub.type = "sine"; sub.frequency.value = f / 2;
+    vib.frequency.value = 4.6; const vg = ctx.createGain(); vg.gain.value = f * 0.012;
+    vib.connect(vg); vg.connect(o.frequency); vg.connect(sub.frequency);
+    const filtro = ctx.createBiquadFilter(); filtro.type = "lowpass"; filtro.frequency.value = 620; filtro.Q.value = 0.8;
+    const gs = ctx.createGain(); gs.gain.value = 0.5;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(1, t + 0.3);
+    g.gain.setTargetAtTime(0.0001, t + dur - 0.1, 0.25);
+    o.connect(filtro); sub.connect(gs).connect(filtro); filtro.connect(g).connect(bus);
+    [o, sub, vib].forEach((x) => { x.start(t); x.stop(t + dur + 1.2); });
+  }
+  function fraseCanto(bus, t) { CANTO.forEach(([f, d]) => { if (f) notaCanto(bus, t, f, d); t += d; }); return t; }
+  function cantar(nivel) {
+    if (!ctx) { cantoPendente = nivel; return; }
+    const t = ctx.currentTime;
+    if (!nivel) {
+      cantoPendente = null;
+      if (!canto) return;
+      const c = canto; canto = null; clearInterval(c.relogio);
+      c.bus.gain.setTargetAtTime(0.0001, t, 0.15);
+      setTimeout(() => { try { c.bus.disconnect(); } catch (e) { /* já solto */ } }, 2500);
+      return;
+    }
+    if (canto) { if (canto.nivel !== nivel) { canto.nivel = nivel; canto.bus.gain.setTargetAtTime(NIVEIS_CANTO[nivel], t, 0.5); } return; }
+    const bus = ctx.createGain(); bus.gain.value = 0.0001; bus.gain.setTargetAtTime(NIVEIS_CANTO[nivel], t, 0.8);
+    bus.connect(mestre);
+    canto = { bus, nivel, fim: fraseCanto(bus, t + 0.2) };
+    const c = canto;  // a próxima volta da canção, marcada um pouco antes de a de agora acabar
+    c.relogio = setInterval(() => { if (canto === c && ctx.currentTime > c.fim - 2) c.fim = fraseCanto(c.bus, c.fim); }, 500);
   }
 
   function ruido(segundos, cor = "branco") {
@@ -304,6 +346,12 @@ const Som = (() => {
         sopro(t + d, 0.08, 1800, 900, 0.05, 3);
       });
     },
+    grito_ilse() {  // o canto que vira grito, quando o rito é deixado: uma voz que sobe rasgada e cai, curta
+      const t = ctx.currentTime;
+      tom(t, 330, 0.06, 0.55, "sawtooth", 520);
+      tom(t + 0.35, 520, 0.05, 0.6, "triangle", 196);
+      sopro(t, 0.8, 1400, 500, 0.07, 2.5);
+    },
     invocar() {  // o servo sobe da terra: um ronco grave que sobe, um sopro escuro e dois estalos de osso no fim
       const t = ctx.currentTime;
       tom(t, 48, 0.35, 0.65, "sawtooth", 96);
@@ -381,6 +429,9 @@ const Som = (() => {
       return ligado;
     },
     get ligado() { return ligado; },
+    /** O canto de Ilse: "alto", "baixo" (na luta) ou null (para). Um só, por mais que se peça. */
+    canto: (nivel) => { try { cantar(nivel || null); } catch (e) { /* sem som */ } },
+    cantoAgora: () => (canto ? canto.nivel : null),
     _pendente: null,
   };
 })();

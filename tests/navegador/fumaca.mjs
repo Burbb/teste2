@@ -914,7 +914,13 @@ async function cenarioCapelaSalas(browser) {
     conferir(!(await page.evaluate(() => document.body.classList.contains("em-combate"))) && !(await page.$(`${MENU}:has-text("Recolher uma amostra")`))
       && /frasco/.test(await page.textContent("#texto")) && (await ilse()) === "presa/presas/abertos",
       "recolhida a amostra, Ilse continua na água, acordada e presa: sem luta, e a escolha some");
+    // o canto de Ilse (1.86.0): entrou quando o texto disse que ela canta, um só, e continua com a coleta
+    await page.waitForFunction(() => Cenas.atual() && Cenas.atual().est.canto, null, { timeout: 15000 });
+    conferir((await page.evaluate(() => Som.cantoAgora())) === "alto", "no fundo, o canto de Ilse tocando, um só");
     await page.click(`${MENU}:has-text("Voltar por enquanto")`);
+    await page.waitForTimeout(400);
+    conferir((await page.evaluate(() => Som.cantoAgora())) === null && (await sala()) === "ossuario",
+      "voltar por enquanto: a arte sobe ao ossuário e o canto para");
     await (await page.waitForSelector("#prompt .continuar", { timeout: 20000 })).click();
     await page.waitForSelector(`${MENU}:has-text("Subir à sacristia")`, { timeout: 20000 });
     conferir((await sala()) === "ossuario" && (await tempo()) === t0 && !(await page.$(`${MENU}:has-text("Recolher uma amostra")`)),

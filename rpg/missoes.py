@@ -998,10 +998,11 @@ def _fundo(g, mid):
     _por_na_sala(g, "fundo")  # desceu: está no fundo, com Ilse ainda na água (a luta só começa se for escolhida)
     g.ui.cena("O Fundo da Capela", g.contexto_cena(), "evento")
     g.ui.painel("cena", cena_fundo(g, mid, "descida"))
+    # A forma, como as correntes estão de fato (o preparo `corpo_solto`): presa às pedras ou com elas frouxas.
     g.narrar("A escada do ossuário termina na água. O fundo é um poço escuro, com água pela cintura e um frio que não é "
-             "de água. No meio, entre duas pedras de moinho, há uma forma enrolada em correntes.")
-    if "corpo_solto" in m["preparos"]:
-        g.narrar("As correntes que você soltou pendem frouxas. A forma já não está presa às pedras.")
+             "de água. No meio, entre duas pedras de moinho, há uma forma " + (
+                 "na água. As correntes que você soltou pendem frouxas dos pulsos dela, sem prendê-la às pedras."
+                 if "corpo_solto" in m["preparos"] else "presa às pedras pelas correntes, que puxam os pulsos dela."))
     g.narrar("Ela abre os olhos. A pele é azulada, os cabelos são algas, e ela começa a cantar uma canção de ninar. É "
              "Ilse, ou o que a vila fez dela: a Bruxa Afogada.")
     _ilse(g, "acorda")  # na tela gráfica, quando o texto chega aqui: os olhos se abrem e o canto mexe a água
@@ -1014,7 +1015,7 @@ def _fundo(g, mid):
         else:
             falta = [o_que[0].lower() + o_que[1:] for o_que, _, feito in descanso(m) if not feito]
             g.narrar("Do que Vó Berta contou, ainda falta " + tx.lista_natural(falta) + ".")
-    g.narrar("Ela ainda não se levantou da água.")
+    g.narrar("Ela permanece entre as pedras, cantando baixo.")
     from .sobrevivencia import riscos_sala
     while True:
         sem_fuga = {"nota": tx.SEM_FUGA, **({"riscos": riscos_sala(g, guardiao=True)} if riscos_sala(g, guardiao=True) else {})}
@@ -1027,9 +1028,10 @@ def _fundo(g, mid):
         if op != "lodo":
             break
         lodo["fn"](g, lodo["missao"])
-        g.narrar("Ilse continua na água, entre as pedras, cantando baixo. Ela ainda não se levantou.")
+        g.narrar("Ilse não se mexe entre as pedras. O canto continua, baixo.")
     if op is None:
         _por_na_sala(g, "ossuario")
+        g.ui.painel("cena", cena_ossuario(g, mid))  # de volta lá em cima: a arte (e o som) saem do fundo
         g.narrar("Você sobe a escada de costas. O canto continua lá embaixo.")
         return
     spec = {"bioma": "pantano", "id": "bruxa_afogada", "idx": 1, "nome": "Ilse, a Bruxa Afogada", "g": "f",
@@ -1081,6 +1083,7 @@ def _momento_do_rito(g, cb, e):
     e.piso = None
     dano, e.retido = e.retido, 0
     cb.dizer("Você guarda a fita. Ilse entende antes de você terminar o gesto, e o canto vira um grito.", "vermelho+negrito")
+    _ilse(g, "grito")  # na tela gráfica: o canto para, com o grito (e não volta)
     if dano:
         e.hp = max(0, e.hp - dano)
         cb.lance("golpe", de=None, em=cb.uid(e), dano=dano, crit=False, elemento="fisico", alcance="corpo",
