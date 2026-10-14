@@ -424,8 +424,7 @@ def _recuo(g, titulo, texto, fora=False, sacristia=False):
         g.ui.painel("cena", cena_exterior(g))
     elif sacristia:
         _por_na_sala(g, "sacristia")
-        g.luz_onde = "sacristia"  # a tocha da luta lá embaixo sobe junto
-        g.ui.painel("cena", cena_sacristia(g, luz=g.luz_na_sala))
+        g.ui.painel("cena", cena_sacristia(g))
     g.narrar(texto)
     g.dizer("A sala continua por vencer. Dá para voltar quando quiser.", "cinza")
 
@@ -468,9 +467,8 @@ def _sacristia(g, mid):
                fora=True)
         return
     _por_na_sala(g, "sacristia")
-    g.luz_onde = "sacristia"  # a tocha da luta continua acesa na sala vencida (a página também)
     g.ui.cena("A Sacristia", g.contexto_cena(), "evento")
-    g.ui.painel("cena", cena_sacristia(g, mid, "vitoria", luz=g.luz_na_sala))
+    g.ui.painel("cena", cena_sacristia(g, mid, "vitoria"))
     g.narrar({
         "guerreiro": "As botas deles ainda pingam. Não vieram pela brecha: há uma escada de mão encostada na janela "
                      "alta.",
@@ -501,7 +499,7 @@ def _recolher_bau(g, mid):
         return
     m["bau"] = "recolhido"
     g.ui.cena("A Sacristia", g.contexto_cena(), "evento")
-    g.ui.painel("cena", cena_sacristia(g, mid, "visita", luz=luz_da_sala(g, "sacristia")))  # o canto já vazio
+    g.ui.painel("cena", cena_sacristia(g, mid, "visita"))  # o canto já vazio
     g.narrar("Você recolhe o baú de ferro do canto.")
     g.dar("bau")
 
@@ -787,14 +785,15 @@ LIVRO_DA_CAPELA = {
 }
 
 
-def cena_sacristia(g, mid="febre_do_turvo", momento="visita", pagina=False, luz=None):
+def cena_sacristia(g, mid="febre_do_turvo", momento="visita", pagina=False):
     """A sacristia, acima da água do salão: a porta para ele (um degrau abaixo), as prateleiras reviradas, a janela alta
     com a escada de mão, o livro no buraco da parede, o baú de ferro no canto e o alçapão do ossuário.
     `momento`: "entrada" (os dois de capa escura nas prateleiras, a lanterna erguida), "luta" (eles são as cartas: a
-    arte fica sem eles, a lanterna no chão, ainda acesa), "vitoria" (a lanterna caída e apagada, o livro desembrulhado
-    no buraco) ou "visita" (a página). `livro`: "embrulhado" (no couro, antes da vitória) ou "no_buraco". `bau`:
-    "no_canto" até ser recolhido; "levado" depois (e nos saves de antes, que o receberam na vitória). `luz`: "tocha"
-    quando a luta acendeu a de quem está ali; sem ela, a janela (o período lá fora)."""
+    arte fica sem eles, a lanterna no chão, ainda acesa), "vitoria" (o livro desembrulhado no buraco) ou "visita" (a
+    página). `livro`: "embrulhado" (no couro, antes da vitória) ou "no_buraco". `bau`: "no_canto" até ser recolhido;
+    "levado" depois (e nos saves de antes, que o receberam na vitória). `luz`: sempre a lanterna dos dois (erguida na
+    entrada; da luta em diante, no chão onde ficou, acesa), com a janela somando a luz do período; a tocha de quem está
+    ali não entra na arte desta sala (ela é a mesma depois de salvar e carregar)."""
     visita = momento == "visita"
     m = registro(g, mid)
     no_canto = momento in ("entrada", "luta", "vitoria") or m.get("bau") == "no_canto"
@@ -810,7 +809,7 @@ def cena_sacristia(g, mid="febre_do_turvo", momento="visita", pagina=False, luz=
                  "ler": LIVRO_DA_CAPELA if pagina else None}  # ler não fala com o motor: reler não muda nada
         pontos = [porta, janela, livro] + ([_ponto(g, mid, "bau", "Baú", "bau", "Um baú pequeno de ferro, trancado, no "
                                                    "canto.", pagina)] if no_canto else []) + [alcapao]
-    return {"cena": "sacristia", "momento": momento, "luz": "lanterna" if momento in ("entrada", "luta") else luz,
+    return {"cena": "sacristia", "momento": momento, "luz": "lanterna",
             "bau": "no_canto" if no_canto else "levado",
             "livro": "embrulhado" if momento in ("entrada", "luta") else "no_buraco",
             "pontos": pontos, "titulo": "A Sacristia", "pagina": pagina}
@@ -858,7 +857,7 @@ def mostrar_cena(g):
     if sala is None:
         return
     if sala == "sacristia":
-        g.ui.painel("cena", cena_sacristia(g, pagina=True, luz=luz_da_sala(g, sala)))
+        g.ui.painel("cena", cena_sacristia(g, pagina=True))
     elif sala == "fundo":
         g.ui.painel("cena", cena_fundo(g, pagina=True, luz=luz_da_sala(g, sala)))
     else:

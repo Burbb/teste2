@@ -471,11 +471,11 @@ class TestSacristia(unittest.TestCase):
         ds = [d for d in cenas(g) if d["cena"] == "sacristia"]
         self.assertEqual([(d["momento"], d["luz"], d["bau"], d["livro"]) for d in ds],
                          [("entrada", "lanterna", "no_canto", "embrulhado"), ("luta", "lanterna", "no_canto", "embrulhado"),
-                          ("vitoria", "tocha", "no_canto", "no_buraco")])
+                          ("vitoria", "lanterna", "no_canto", "no_buraco")])
         self.assertTrue(all(d["pontos"] == [] and not d["pagina"] for d in ds))  # dentro das cenas, nada se clica
         self.assertEqual(g.j.consumiveis.get("bau", 0), 0)  # o baú fica no canto: recolhe-se pela ação (1.85.0)
         d = pagina(g)
-        self.assertEqual((d["momento"], d["bau"], d["livro"], d["luz"]), ("visita", "no_canto", "no_buraco", "tocha"))
+        self.assertEqual((d["momento"], d["bau"], d["livro"], d["luz"]), ("visita", "no_canto", "no_buraco", "lanterna"))
         self.assertEqual([p["id"] for p in d["pontos"]], ["porta", "janela", "livro", "bau", "alcapao"])
         self.assertEqual(ponto(d, "porta")["acao"], {"capela_ir": "salao"})
         self.assertEqual(ponto(d, "bau")["acao"], {"missao": MID, "acao_missao": "bau"})
@@ -483,12 +483,23 @@ class TestSacristia(unittest.TestCase):
         self.assertEqual(ponto(d, "alcapao")["acao"], {"missao": MID, "acao_missao": "ossuario"})
         self.assertEqual(ponto(d, "alcapao")["faz"], "Descer ao ossuário")
 
-    def test_sem_tocha_a_vitoria_fica_com_a_janela(self):
-        g = na_capela(etapa="sacristia")
-        g.j.consumiveis["tocha"] = 0
-        lutas(g, "vitoria")
-        fazer(g, "sacristia")
-        self.assertIsNone(next(d for d in cenas(g) if d.get("momento") == "vitoria")["luz"])
+    def test_a_lanterna_fica_no_chao_com_ou_sem_tocha_e_no_save(self):
+        """A lanterna dos dois fica no chão, acesa, da luta à página (1.86.2): a mesma luz com ou sem a tocha de quem
+        está ali, e depois de salvar e carregar. Não é item, não sai da sala e não mexe nas tochas."""
+        for tochas in (0, 2):
+            pasta = tempfile.mkdtemp()
+            g = na_capela(etapa="sacristia", pasta=pasta)
+            g.j.consumiveis["tocha"] = tochas
+            lutas(g, "vitoria")
+            fazer(g, "sacristia")
+            self.assertEqual({d["luz"] for d in cenas(g) if d["cena"] == "sacristia"}, {"lanterna"})
+            self.assertEqual(pagina(g)["luz"], "lanterna")
+            self.assertNotIn("lanterna", json.dumps([g.j.para_dict()]))
+            g.salvar(silencioso=True)
+            h = Jogo.carregar(Roteiro(), g.caminho_save(), pasta)
+            self.assertEqual((pagina(h)["momento"], pagina(h)["luz"]), ("visita", "lanterna"))
+            missoes.ir_na_capela(h, "salao")
+            self.assertEqual(pagina(h)["cena"], "salao")  # na outra sala, nada dela
 
     def test_olhar_e_ler_nao_dao_nada(self):
         g = na_capela(etapa="ossuario")
@@ -521,13 +532,13 @@ class TestSacristia(unittest.TestCase):
         self.assertEqual(ponto(d, "alcapao")["acao"], {"capela_ir": "ossuario"})
         self.assertEqual(ponto(d, "porta")["acao"], {"capela_ir": "salao"})
 
-    def test_a_fuga_do_ossuario_sobe_com_a_tocha(self):
+    def test_a_fuga_do_ossuario_sobe_para_a_lanterna(self):
         g = na_capela("mago", etapa="ossuario")
         g.j.consumiveis["tocha"] = 2
         lutas(g, "fuga")
         fazer(g, "ossuario")
         d = cenas(g)[-1]
-        self.assertEqual((d["cena"], d["momento"], d["luz"]), ("sacristia", "visita", "tocha"))
+        self.assertEqual((d["cena"], d["momento"], d["luz"]), ("sacristia", "visita", "lanterna"))
 
     def test_a_luz_da_luta_nao_vai_no_save(self):
         g = na_capela(etapa="sacristia")
@@ -754,13 +765,12 @@ class TestContinuidade(unittest.TestCase):
             self.assertTrue(any(o[0] == "celebrar" and o[1] != "ilse" for o in ordem[j + 1:]))  # o espólio vem depois
             self.assertTrue(missoes.registro(g, MID)["desfecho"])
 
-    def test_a_tocha_da_luta_fica_na_sala_e_sai_com_quem_sai(self):
-        g = na_capela(etapa="sacristia")
-        g.j.consumiveis["tocha"] = 2
-        lutas(g, "vitoria")
-        fazer(g, "sacristia")
-        self.assertEqual(pagina(g)["luz"], "tocha")  # a página logo depois da vitória: a mesma luz da cena
-        missoes.ir_na_capela(g, "salao")
-        missoes.ir_na_capela(g, "sacristia")
+    def test_a_tocha_da_luta_fica_no_fundo_e_sai_com_quem_sai(self):
+        from tests.test_guardia import DESTRUIR
+        g = self.no_fundo("mago", DESTRUIR, preparos=())
+        missoes.executar(g, MID, "fundo")
+        self.assertEqual(pagina(g)["luz"], "tocha")  # a página logo depois do desfecho: a mesma luz da cena
+        missoes.ir_na_capela(g, "ossuario")
+        missoes.ir_na_capela(g, "fundo")
         self.assertIsNone(pagina(g)["luz"])  # voltou depois: a tocha da luta já não está acesa
         self.assertNotIn("luz", json.dumps(g.mundo))

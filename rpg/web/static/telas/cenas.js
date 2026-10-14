@@ -533,9 +533,8 @@
   // embaixo), as prateleiras reviradas (a de baixo partida), o livro escondido num buraco da parede, a janela alta com a
   // escada de mão (de madeira, não a de pedra do ossuário), o alçapão no chão e, no canto, o baú pequeno de ferro. O
   // motor diz o momento: a entrada (os dois de capa escura, a lanterna erguida), a luta (eles são as cartas: a lanterna
-  // no chão), a vitória (a lanterna caída e apagada, o livro desembrulhado no buraco) e a visita; e o baú (no canto até
-  // ser recolhido). A luz: a lanterna enquanto eles estão; depois, a janela (o período lá fora) e a tocha de quem está
-  // ali, se a luta a acendeu.
+  // no chão), a vitória e a visita (a lanterna continua no chão, acesa, no mesmo lugar); e o baú (no canto até ser
+  // recolhido). A luz: a lanterna e a janela (o período lá fora).
   const SAC = {
     piso: 54,
     porta: { x: 8, w: 26, topo: 18 },          // o vão da porta do salão, em arco
@@ -551,14 +550,13 @@
     papel: "#b8ae98", couro: "#4a3020", couroEsc: "#2a1a10",
     capa: "#141419", capaBorda: "#2a2a34", escuro: "#06080a",
   };
-  /** Onde a luz principal está, pelo momento: a lanterna erguida (entrada), a lanterna no chão (luta), a tocha de quem
-   *  está ali (vitória, visita) ou, sem ela, a janela. */
+  /** Onde a luz principal está: a lanterna erguida (entrada) e, da luta em diante, a lanterna no chão, onde o vulto a
+   *  largou (a vitória e a visita também: ela ficou ali, acesa). A janela soma a luz do período lá fora (na base). */
   function luzSacristia(d) {
     if (d.momento === "entrada") return { x: 160, y: 31, perto: 40, longe: 150, max: 0.6, quente: true };
-    if (d.momento === "luta") return { x: 150, y: 57, perto: 38, longe: 150, max: 0.6, quente: true };  // largada aos pés
-    if (d.luz === "tocha") return { x: 62, y: 74, perto: 46, longe: 175, max: 0.52, quente: true };
-    return { x: 202, y: 30, perto: 34, longe: 200, max: 0.46, quente: false };  // só a janela: a leitura vem antes
+    return { x: 150, y: 57, perto: 38, longe: 150, max: 0.6, quente: true };  // largada no chão na luta, e ali ficou
   }
+
 
   function baseSacristia(W, d) {
     const k = camada(W), c = k.getContext("2d"), px = pincel(c), ox = Math.round((W - QW) / 2), C = CORS, P = SAC.piso;
@@ -657,10 +655,6 @@
     const bu = ox + SAC.bau.x, bw = SAC.bau.w, bt = SAC.bau.y;
     if (d.bau === "no_canto") desenharBau(px, bu, bw, bt, P);
     else { px(bu + 1, P + 1, bw - 2, 1, C.chaoLuz); px(bu, P + 2, 1, 2, C.chaoLuz); px(bu + bw - 1, P + 2, 1, 2, C.chaoLuz); px(bu + 1, P + 4, bw - 2, 1, C.chaoLuz); }
-    // a lanterna dos dois: no chão, acesa (luta: o vidro vem no desenho de cada quadro), ou caída e apagada (depois)
-    if (d.momento === "vitoria" || d.momento === "visita") {  // onde ficou na luta, tombada
-      px(ox + 146, P + 1, 6, 3, C.ferro); px(ox + 147, P + 1, 4, 2, "#2a2a28"); px(ox + 152, P + 2, 2, 1, C.ferroLuz);
-    }
     // a parede da direita, no canto
     px(W - 8, 0, 8, P, C.pedraSombra); px(W - 8, 0, 1, P, C.pedra);
     // a luz: longe da fonte, a sala escurece em degraus pontilhados; as passagens e a janela continuam legíveis
@@ -747,11 +741,9 @@
       vulto(px, ox + 154, P + 6, 0, -1);
       px(ox + 157, 33, 1, 5, CORS.capa); px(ox + 158, 32, 1, 2, CORS.capa);                               // o braço erguido
       lanterna(px, ox + L.x - 1, L.y - 1 + (quieto ? 0 : (Math.floor(q / 9) % 2)), quieto ? 1 : 1 + (q % 2));
-    } else if (d.momento === "luta") {
+    } else {  // da luta em diante, a lanterna fica no chão onde o vulto a largou, acesa, no mesmo lugar e do mesmo jeito
       aneis(px, W, ox + L.x, L.y, 54 + treme);
       lanterna(px, ox + L.x - 1, L.y - 3, quieto ? 1 : 1 + (q % 2));
-    } else if (d.luz === "tocha") {
-      aneis(px, W, ox + L.x, L.y, 96 + treme, 0.6);  // a tocha de quem está ali, perto da porta (fora do quadro)
     }
     // os pontos acesos no mouse e no foco
     const ouro = COR.ouro;
