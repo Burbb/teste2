@@ -706,8 +706,8 @@ existem, mas as capturas são em densidade 1); outras resoluções.
 
 Pedido de Jean: a base da HUD 4 pixel (molduras, composição, atributos) aprovada; uniformizar os componentes que ainda
 tinham a aparência anterior, comparar uma superfície mais escura e testar a coerência entre a arte do mundo e a da
-HUD com duas peças (o mercador e o baú da sacristia, no commit seguinte). A interface padrão continua a padrão; nada de
-regra, número, save ou versão. Capturas em `capturas-oitava/`.
+HUD com duas peças (o mercador e o baú da sacristia). A interface padrão continua a padrão; nada de regra, número,
+save ou versão. Capturas em `capturas-oitava/` (interface e superfícies) e `capturas-arte/` (os pares).
 
 ### Componentes uniformes (`jogo/materiais.js`, `jogo/telas.css`)
 
@@ -754,6 +754,34 @@ botões e cenários não passam por filtro.
   foco e indisponível são os mesmos.
 - **Minha leitura:** a mais escura, sem a transição. É uma recomendação para a sua avaliação, não uma decisão.
 
+### Teste de arte: mercador e baú (`arte-teste.js`, `arte-teste.html`, `jogo/arte.css`)
+
+Duas peças desenhadas em código pelo método das cenas (uma grade de letras, cada letra uma cor), a partir do que já
+existe no mundo, com as mesmas cores. Os cenários não mudaram.
+
+- **Mercador:** o homem da banca (`telas/mercado.js`, a grade `FIGURA` de 21 colunas) num busto de 24×24: mais velho,
+  careca com a franja grisalha, sobrancelha pesada e desconfiada, nariz comprido, barba grisalha, o capuz
+  verde-acinzentado caído, a túnica de lã crua e o avental de couro; a luz da esquerda, como a lamparina. No jogo, num
+  nicho encostado à esquerda do balcão do mercado (48 px, ×2), sem mudar a altura do balcão nem a lista.
+- **Baú:** o baú de ferro da sacristia (`telas/cenas.js`, `desenharBau`) de frente, em 16×16, para a bolsa (32 px,
+  ×2): a tampa abaulada mais clara, a junta, as duas cintas com rebites, o espelho de latão com a fechadura e a
+  ferrugem, com o contorno escuro da família. No jogo, na bolsa da ficha e do Inventário, e no baú que voa até ela
+  quando é recolhido. Aquisição, conteúdo, interação e estado do baú são os do jogo.
+- **Ver:** `arte-teste.html` (abre direto no navegador) mostra cada par lado a lado, o mundo (recorte do jogo) e a
+  interface, no tamanho real e ampliados, e cada candidato no lugar dele; a fotografia está em
+  `capturas-arte/pares.png`. No jogo com a HUD experimental o teste vem ligado; `&arte=jogo` ou Ctrl+Alt+A mostram o
+  desenho de antes.
+- **Minha leitura (não é aprovação):** o mercador se reconhece como o mesmo homem (a careca, a franja e a barba cinza,
+  o avental) e lê bem a 48 px; de perto, a barba é uma massa cinza com pouco desenho e os olhos são dois pontos. O baú
+  guarda forma, material e ferragens e se lê como baú a 32 px pela fechadura e pelas cintas, mas é o ícone mais escuro
+  da bolsa: o ferro do mundo é escuro, e ao lado da poção e da bandagem ele pesa menos que o baú de madeira e latão da
+  HUD 4 pixel (`capturas-arte/jogo-bolsa-1500x950.png`, antes e depois). E há uma questão de conteúdo, não de desenho:
+  na bolsa o ícone representa todo Baú Trancado, também os que vêm do saque, não só o da sacristia; um baú de ferro
+  para todos eles é uma escolha a fazer. Se a direção servir, o próximo passo seria só um degrau de luz no corpo dele,
+  sem trocar as cores.
+- **No jogo, antes e depois:** `capturas-arte/jogo-balcao-1500x950.png` (o balcão com e sem o mercador) e
+  `jogo-bolsa-1500x950.png` (a bolsa da ficha e do Inventário).
+
 ### Conferência (jogo de verdade, HUD experimental)
 
 - **Tamanhos:** 1500×950, 1280×800 e 1280×720, com movimento reduzido também em 1280×720. Sem erro de página em nenhum
@@ -763,13 +791,16 @@ botões e cenários não passam por filtro.
   do prédio com o mouse), o mural, o mercado (mouse com dica, foco pelo teclado, lista rolada, as três abas), a taverna,
   o templo e a forja; a sacristia (o balão do baú, aproximar pela janela, Afastar, recolher o baú, que voa até a bolsa);
   a luta contra três lobos (a mira, o mouse num lobo com a ficha dele, Esc voltando) e com a comitiva.
+- **O retrato do mercador** cabe sem mudar a altura do balcão (a primeira versão tirava 10 px da lista de produtos em
+  1280×720; agora são os mesmos 214 px de antes).
 - **Fumaça** (`tests/navegador/fumaca.mjs`): 356 conferências, tudo certo, na padrão e com `HUD=experimental`. Na
   experimental, o servidor de teste registrou uma exceção ao atender um pedido no fim do último cenário, quando o
   navegador fecha (o rastro se perdeu com o encerramento do processo); não se repetiu nas conferências e não derrubou
   nenhuma delas. Testes, gabarito e pyflakes iguais.
 - **Resolvidos da rodada anterior:** a faixa da mira cobrindo a carta de cima e a barra de experiência com o fio de
   produção (os dois estavam nas lacunas de layout).
-- **Não conferido:** o som; densidade 2 (as capturas são em densidade 1); o jogo inteiro de ponta a ponta à mão.
+- **Não conferido:** o som; densidade 2 (as peças do teste de arte têm a versão ×2 para ela, mas as capturas são em
+  densidade 1); o jogo inteiro de ponta a ponta à mão.
 
 **Como ver (PowerShell, na pasta do jogo):**
 
@@ -778,12 +809,13 @@ git pull
 python jogar.py --hud-experimental
 ```
 
-Com o jogo aberto: **Ctrl+Alt+S** troca a superfície (atual → mais escura → mais escura com transição); um aviso curto
-no pé da tela diz qual ficou. Para cair direto numa situação:
+Com o jogo aberto: **Ctrl+Alt+S** troca a superfície (atual → mais escura → mais escura com transição) e **Ctrl+Alt+A**
+liga e desliga o teste de arte; um aviso curto no pé da tela diz o que ficou. Para cair direto numa situação:
 
 ```powershell
 $env:HUD = "experimental"
-python -m tests.navegador.cenarios vila         # mercado, taverna, templo, forja, mural
+python -m tests.navegador.cenarios vila         # mercado (o mercador no balcão), taverna, templo, forja, mural
+python -m tests.navegador.cenarios baus         # três baús na bolsa (o baú novo)
 $env:ETAPA = "ossuario"; $env:SALA = "sacristia"; $env:BAU = "1"; $env:NIVEL = "6"
 python -m tests.navegador.cenarios capela       # a sacristia com o baú no canto
 Remove-Item Env:ETAPA, Env:SALA, Env:BAU, Env:NIVEL
@@ -791,8 +823,8 @@ python -m tests.navegador.cenarios broquel      # luta contra três lobos: a mir
 Remove-Item Env:HUD                             # volta à interface padrão
 ```
 
-O endereço que o cenário mostra aceita `&superficie=escura` (ou `escura-transicao`) no fim, para abrir já na
-comparação.
+O endereço que o cenário mostra aceita `&superficie=escura` (ou `escura-transicao`) e `&arte=jogo` no fim, para abrir
+já numa das comparações. Os pares do teste de arte: abra `ferramentas\prototipos\hud\arte-teste.html` no navegador.
 
 ### Proposta guardada: retratos do herói por classe
 

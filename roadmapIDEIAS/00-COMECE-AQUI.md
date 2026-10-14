@@ -2020,9 +2020,11 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   mercado e serviços, Diário e mural em carvão com os documentos de papel, Talentos), a mira no vão da arena
   (`hud4p-luta.css`); `jogo/superficies.css` e `jogo/desenvolvimento.js` (Ctrl+Alt+S, `&superficie=`; no protótipo,
   o painel de demonstração).
+- **Feito (arte):** `arte-teste.js` (o mercador em busto 24×24 e o baú em 16×16, desenhados em código com as cores do
+  mundo), `arte-teste.html` (os pares) e a ligação no jogo (o balcão do mercado, a bolsa, o baú que voa; Ctrl+Alt+A).
 - **Verificado:** três janelas e movimento reduzido nos percursos pedidos; fumaça padrão e experimental (356, tudo
   certo); testes, gabarito e pyflakes. Medido: a superfície mais escura deixa a página no tom do chão da paisagem e os
   botões mais destacados; a transição quase não acrescenta.
 - **Registrado:** retratos do herói por classe (dois por classe, cosméticos) em `docs/ROADMAP.md`, ideias guardadas.
-- **É experimento:** a interface padrão continua a padrão; versão igual. **Falta:** o teste de arte (commit seguinte)
-  e Jean avaliar.
+- **É experimento:** a interface padrão continua a padrão; versão igual. **Falta:** Jean avaliar a superfície e os dois
+  desenhos.

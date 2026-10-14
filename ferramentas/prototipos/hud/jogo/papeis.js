@@ -50,6 +50,21 @@
     el.classList.add("novo4c");
     el.dataset.hud = `${peca}-${lado}`;
   }
+  // o teste de arte (arte-teste.js): o baú da sacristia na bolsa e o mercador no balcão; Ctrl+Alt+A ou &arte=jogo
+  // voltam ao que era (jogo/desenvolvimento.js)
+  const arteLigada = () => typeof ArteTeste !== "undefined" && document.body.dataset.arte !== "jogo";
+  function trocarArte(el, peca, escala) {
+    const marca = `arte-${peca}`;
+    if (el.dataset.hud === marca) return;
+    if (!el.dataset.hudOrig) el.dataset.hudOrig = el.getAttribute("src");
+    const lado = ArteTeste.PECAS[peca].grade[0].length * escala;
+    el.src = ArteTeste.url(peca, escala);
+    el.srcset = `${ArteTeste.url(peca, escala * 2)} 2x`;
+    el.width = el.height = lado;
+    el.style.setProperty("--s", String(lado));
+    el.classList.add("novo4c");
+    el.dataset.hud = marca;
+  }
   /** O tamanho em que o jogo mostra a imagem, arredondado para um dos arquivos que existem. */
   const lado = (el, tamanhos) => { const w = Number(el.getAttribute("width")) || 32; return tamanhos.find((t) => w >= t) || tamanhos[tamanhos.length - 1]; };
   const q = (sel, f) => document.querySelectorAll(sel).forEach(f);
@@ -82,7 +97,11 @@
       trocar(el, el.parentElement.classList.contains("vazio") ? (porClasse ? null : F.VAZIO[s]) : F.ITEM[nome(el)], 32);
     });
     q("[data-mochila] > img", (el) => trocar(el, F.ITEM[nome(el)], 32));
-    q("[data-bolsa] > img, [data-usar] > img", (el) => trocar(el, F.BOLSA[el.parentElement.dataset.bolsa || el.parentElement.dataset.usar], 32));
+    q("[data-bolsa] > img, [data-usar] > img", (el) => {
+      const id = el.parentElement.dataset.bolsa || el.parentElement.dataset.usar;
+      if (id === "bau" && arteLigada()) trocarArte(el, "bau", 2);
+      else trocar(el, F.BOLSA[id], 32);
+    });
     // a doca, os caminhos e a janela do item achado (e as comparações dela)
     q("#doca .atalho", (b) => {
       const n = ((b.querySelector(".atalho-nome") || {}).textContent || "").trim(), el = b.querySelector(".atalho-icone img");
@@ -92,6 +111,14 @@
     q("#sobre-achado img.sprite, .achado-arte img.sprite", (el) => trocar(el, F.ITEM[nome(el)] || consumivel(nome(el)), lado(el, [64, 48, 32])));
     // o mercado (suprimentos, equipamentos, venda) e qualquer outro espaço de item que sobrou: pelo desenho do jogo
     q(".slot-px > img.sprite:not(.novo4c)", (el) => { const n = nome(el); trocar(el, F.ITEM[n] || consumivel(n) || F.RECURSO[n], lado(el, [64, 48, 32])); });
+    // o baú que voa até a bolsa quando é recolhido (sensação do jogo): o mesmo desenho que vai estar nela
+    q(".item-voando img", (el) => { if (nome(el) === "bau" && arteLigada()) trocarArte(el, "bau", 2); });
+    // o mercador da banca, no balcão do mercado (só o retrato: o nome, a frase e o ouro são os do jogo)
+    q(".tela.loja .loja-topo", (t) => {
+      const tem = t.querySelector(".npc-retrato");
+      if (arteLigada() && !tem) t.insertAdjacentHTML("afterbegin", `<span class="npc-retrato">${ArteTeste.img("mercador", 2, "", "O mercador")}</span>`);
+      else if (!arteLigada() && tem) tem.remove();
+    });
     // a luta: as ações da roda e o rosto do herói na carta dele
     q("#roda .rb-icone img", (el) => trocar(el, F.RODA[nome(el)], 32));
     q(".carta.heroi .icone img", (el) => { if (RETRATOS.includes(nome(el))) trocar(el, F.CABECA[nome(el)], 32); });
@@ -104,4 +131,5 @@
   const agendar = () => { if (!pedido) { pedido = true; requestAnimationFrame(() => { pedido = false; passar(); }); } };
   new MutationObserver(agendar).observe(document.body, { childList: true, subtree: true });
   agendar();
+  window.HUD_PASSAR = agendar;  // os controles de desenvolvimento pedem outra passada depois de trocar o teste de arte
 })();
