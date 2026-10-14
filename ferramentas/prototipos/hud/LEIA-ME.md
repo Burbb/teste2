@@ -1,9 +1,9 @@
 # Protótipo: a ficha do herói (experimento)
 
-Três versões na mesma página, com os mesmos dados e a mesma janela: **Anterior** (a HUD atual do jogo, com a ficha
-desenhada em código), **Assets** (a ficha com peças recortadas de uma imagem de referência) e **HUD 3** (a HUD inteira
-com as molduras, as superfícies e os controles de três folhas de referência). O controle "Versão" (ou a tecla **V**)
-passa de uma à outra.
+Quatro versões na mesma página, com os mesmos dados e a mesma janela: **Anterior** (a HUD atual do jogo, com a ficha
+desenhada em código), **Assets** (a ficha com peças recortadas de uma imagem de referência), **HUD 3** (a HUD inteira
+com as molduras, as superfícies e os controles de três folhas de referência) e **HUD 4** (a rodada seguinte, sobre a
+HUD 3). O controle "Versão" (ou a tecla **V**) passa de uma à outra; a página abre na HUD 4.
 
 **Experimento, não aprovado nem migrado.** Nada desta pasta é carregado pelo jogo; o motor, os saves, as regras e as
 telas de produção não mudaram, nem a versão do jogo. O teste é só a ficha do herói (o painel da esquerda); o topo, a
@@ -19,7 +19,7 @@ cena e o painel do mundo em volta são o jogo de hoje, para julgar a ficha na co
 Na página:
 
 - O quadro claro no canto de baixo à direita são os **controles de demonstração** (fora da interface do jogador):
-  a versão (Anterior, Assets ou HUD 3; **V** passa de uma à outra), o entorno (o Bosque da campanha, com a missão e os
+  a versão (Anterior, Assets, HUD 3 ou HUD 4; **V** passa de uma à outra), o entorno (o Bosque da campanha, com a missão e os
   contratos, ou o Brejo das duas primeiras tentativas), a página (o lugar ou a cena de missão, com texto longo), as
   missões (só a missão, ou a missão e os contratos), a janela de comparação do anel (**Esc** fecha), a faixa de
   estados dos controles, nome curto e longo (com PARAIBATRON), nível 1, 6 e 14, equipamento completo, parcial ou vazio, bolsa comum, cheia
@@ -214,3 +214,70 @@ longo a 1280×800. Sem erro no console e sem texto cortado em nenhuma.
     com pouca folga se a doca ganhar atalhos.
   - *Os textos dourados de título* (o nome do lugar, o da cena) continuam no estilo antigo, ao lado de títulos de
     seção já discretos.
+
+## Quarta rodada: HUD 4 (sobre a HUD 3)
+
+A direção da HUD 3 (ferro escuro, textura discreta, latão envelhecido) segue; esta rodada muda o que não funcionou nela.
+Nenhum asset novo: só as peças já preparadas. Arquivo: `hud4.css` (o corpo leva `v3` e `v4`, então a HUD 4 parte da 3).
+
+- **Molduras com presença, só onde há estrutura.** A moldura da ficha da versão Assets (`assets/exibicao/moldura-nove.png`:
+  aço escuro com filete de latão, a face acesa, a sombra por dentro e um rebite em cada canto), na escala em que ela foi
+  preparada (barra de uns 10 px, canto de 24 px), vai nos três painéis principais: a ficha, a coluna do centro e o
+  mundo. Nada foi engrossado além disso.
+- **Uma moldura por coluna.** Na HUD 3, o topo das barras, a cena e a doca eram três caixas empilhadas com bordas
+  duplas entre elas. Agora moram dentro da mesma moldura do centro, separados por um fio de sombra e luz.
+- **Superfície de carvão em tudo.** A textura dos painéis nas três colunas; a leitura é o mesmo carvão um passo mais
+  claro; os botões e a doca, o metal um pouco mais claro. O couro marrom da leitura saiu (papel fica para livro, Diário e
+  documento).
+- **Controles internos leves.** Opções, caminhos, botões da janela, espaços de item, o retrato, as teclas e os cartões
+  da janela são feitos pela interface: aresta fina, face de metal, sem rebite dourado. O latão ficou na seleção, no foco,
+  no aviso de talento, na barra da missão e no cartão do item achado.
+- **O nome do lugar, uma vez.** A apresentação principal é a do painel do mundo (nome, tipo, perigo). No centro, a
+  página do lugar abre só com a linha do momento (tipo, perigo, dia, período, clima) em versal pequena; a cena de
+  missão mantém o título dela, menor (32 px), sem o ornamento. Isso conta com o painel do mundo à vista: abaixo de
+  1100 px de largura o jogo o esconde, e aí o nome precisaria voltar ao centro.
+- **Doca: uma barra só**, com divisões discretas entre os atalhos e um fio mais forte entre os grupos que o jogo já
+  separa; nomes, teclas e foco preservados. A aberta tem o fio de latão embaixo.
+- **Espaços de equipamento**: nichos escuros de aresta fina, o ícone atual em 32 px (o mesmo ×2 do jogo, sem
+  deformar) com folga em volta; 44 px de lado onde a coluna deixa (a partir de 1400 px de largura), 40 px em 1280. O
+  item que não serve agora tem o canto cortado em vermelho, além do ícone apagado.
+- **O que o motor já distingue** ganhou forma: a missão e o contrato pela marca à esquerda (latão e ferro) e pelo grupo;
+  quem abre outra escolha, pela seta › que o jogo já põe. Nada foi inventado.
+- **Retrato e ícones**: os atuais do jogo (o retrato do Guerreiro em ×5 na ficha, ×4 com a janela baixa). O rosto e os
+  itens pintados da versão Assets não entram.
+- **Estados**: normal; mouse (a aresta acende, a face clareia, a tecla vira latão); pressionado (a face afunda e desce
+  1 px); selecionado (aresta e barra de latão, e a marca ◆); indisponível (aresta tracejada, face apagada, cadeado e a
+  nota escrita); foco do teclado (anel claro por fora).
+
+Capturas em `capturas4/`, com os controles de demonstração escondidos: cada estado nas três composições
+(`-anterior`, `-hud3`, `-hud4`) e lado a lado em `comparacao-*.png`; o detalhe das molduras e superfícies da HUD 3 e
+da HUD 4 em `detalhe-molduras-superficies.png`. Conferido em 1500×950, 1280×800 e 1280×720: a página do lugar e a
+cena de missão (texto longo), nome longo, fome, ferimentos, a missão com dois contratos, os equipamentos, a janela dos
+dois anéis, a dica, o foco do teclado e a rolagem. Sem erro no console e sem texto cortado.
+
+| Rolagem (mesmo estado) | Anterior | HUD 3 | HUD 4 |
+|---|---|---|---|
+| Página do lugar, 1500×950 | 55 px | 10 px | 0 |
+| Página do lugar, 1280×720 | 257 px | 207 px | 72 px |
+| Cena de missão, 1280×720 | 685 px | 589 px | 510 px |
+| Ficha, 1280×720 (PARAIBATRON, nível 14) | 157 px | 138 px | 155 px |
+| Painel do mundo, 1280×720 | 385 px | 253 px | 277 px |
+
+### Avaliação da HUD 4
+
+- **Coerência: melhorou.** As três colunas são três peças do mesmo material, com a mesma moldura e a mesma
+  superfície; o centro deixou de ser outra cor e outra caixa. As bordas duplicadas sumiram.
+- **Presença das molduras: melhorou.** A barra de metal com face acesa e o rebite no canto se leem como estrutura, não
+  como linha em volta de caixa; por dentro, só arestas finas.
+- **Cenário, leitura e ações: mais espaço.** Sem o título grande no centro e sem as caixas empilhadas, a página ganhou
+  altura: no lugar, a 1500×950 as ações cabem sem rolar, e a 1280×720 a rolagem caiu de 207 para 72 px.
+- **O que custou:** a moldura mais larga tira uns 20 px das laterais: a ficha e o mundo rolam um pouco mais que na
+  HUD 3 em janela baixa (tabela acima).
+- **O que ainda ficou desencontrado:**
+  - *O grão da moldura*: ela vem da imagem de referência reduzida 4× e é um pouco macia ao lado dos sprites e da
+    paisagem, de pixel duro e maior.
+  - *O retrato do jogo em ×5* dentro do nicho fino fica grosso; e os anéis do catálogo atual, pequenos no desenho de
+    16, continuam miúdos no espaço de 44 px (ampliar só em passo inteiro, ×3, não cabe no espaço).
+  - *A doca* ocupa a largura toda, mas os atalhos ficam no meio, com sobra dos lados.
+  - *O topo* ainda usa a faixa fina da HUD 3 embaixo; não ganhou a linguagem da moldura principal.
+  - *O nome do lugar só no painel do mundo* depende de esse painel estar à vista (ver acima).

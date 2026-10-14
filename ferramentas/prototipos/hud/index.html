@@ -23,6 +23,7 @@
 <link rel="stylesheet" href="ficha.css">
 <link rel="stylesheet" href="ficha-assets.css">
 <link rel="stylesheet" href="hud3.css">
+<link rel="stylesheet" href="hud4.css">
 <script src="../../../rpg/web/static/sprites-dados.js"></script>
 <script src="../../../rpg/web/static/sprites.js"></script>
 <script>Sprites.publicar();</script>
@@ -42,7 +43,7 @@
 <section id="demo" aria-label="Controles de demonstração">
   <h2>Demonstração <span>D esconde</span></h2>
   <fieldset data-chave="versao"><legend>Versão</legend><div class="op">
-    <button type="button" data-v="anterior">Anterior</button><button type="button" data-v="assets">Assets</button><button type="button" data-v="hud3">HUD 3</button></div></fieldset>
+    <button type="button" data-v="anterior">Anterior</button><button type="button" data-v="assets">Assets</button><button type="button" data-v="hud3">HUD 3</button><button type="button" data-v="hud4">HUD 4</button></div></fieldset>
   <fieldset data-chave="entorno"><legend>Entorno</legend><div class="op">
     <button type="button" data-v="bosque">Bosque (missão)</button><button type="button" data-v="brejo">Brejo</button></div></fieldset>
   <fieldset data-chave="pagina"><legend>Página</legend><div class="op">
@@ -139,7 +140,7 @@ const ESTADOS_DEMO = `<section id="estados-demo" aria-label="Estados dos control
 document.documentElement.style.setProperty("--f-moldura", `url(${Arte.moldura()})`);
 document.documentElement.style.setProperty("--f-espaco", `url(${Arte.espaco()})`);
 
-const escolha = { versao: "hud3", entorno: "bosque", pagina: "lugar", rastreios: "varias", modal: "nao", estados: "nao", nome: "Jean", nivel: "6", equip: "completo", bolsa: "comum", feridas: "0", fome: "0", icones: "novos" };
+const escolha = { versao: "hud4", entorno: "bosque", pagina: "lugar", rastreios: "varias", modal: "nao", estados: "nao", nome: "Jean", nivel: "6", equip: "completo", bolsa: "comum", feridas: "0", fome: "0", icones: "novos" };
 try { Object.assign(escolha, JSON.parse(localStorage.getItem("prototipo-ficha") || "{}")); } catch (e) { /* sem armazenamento */ }
 const ficha = document.getElementById("ficha");
 function redesenhar() {
@@ -147,7 +148,8 @@ function redesenhar() {
   Ficha.iconesNovos = escolha.icones === "novos";
   Ficha.versao = escolha.versao;
   document.body.className = (ENTORNOS[escolha.entorno] || ENTORNOS.bosque).corpo.classe;
-  document.body.classList.toggle("v3", escolha.versao === "hud3");
+  document.body.classList.toggle("v3", escolha.versao === "hud3" || escolha.versao === "hud4");  // a HUD 4 parte da 3
+  document.body.classList.toggle("v4", escolha.versao === "hud4");
   ajustarEntorno();
   Topo.desenhar(document.getElementById("hud-linha"), h);  // o topo e a ficha: o mesmo estado
   Ficha.fecharDica();
@@ -166,7 +168,7 @@ mostrar.addEventListener("click", alternarDemo);
 document.addEventListener("keydown", (ev) => {
   if (ev.ctrlKey || ev.metaKey || ev.altKey) return;
   if (ev.key === "d" || ev.key === "D") alternarDemo();
-  if (ev.key === "v" || ev.key === "V") { const vs = ["anterior", "assets", "hud3"]; escolha.versao = vs[(vs.indexOf(escolha.versao) + 1) % vs.length]; redesenhar(); }  // a mesma janela, a próxima versão
+  if (ev.key === "v" || ev.key === "V") { const vs = ["anterior", "assets", "hud3", "hud4"]; escolha.versao = vs[(vs.indexOf(escolha.versao) + 1) % vs.length]; redesenhar(); }  // a mesma janela, a próxima versão
   if (ev.key === "Escape" && escolha.modal === "sim") { escolha.modal = "nao"; redesenhar(); }
 });
 Ficha.ligarDicas(ficha);

@@ -1930,3 +1930,20 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
 - **Verificado:** 1500×950, 1280×800 e 1280×720, mouse e teclado, nas duas composições; sem erro no console e sem texto
   cortado. **É experimento:** nada migrado; motor, saves, telas de produção e versão iguais. **Falta:** a avaliação de
   Jean.
+
+### 14/10/2026 — HUD 4: moldura principal, carvão e controles leves (experimento, sem versão)
+
+- **Pedido de Jean:** nova rodada sobre a HUD 3 (direção aprovada para seguir no experimento): a moldura da ficha da
+  versão Assets nos painéis principais, sem engrossar o resto; a superfície de carvão em tudo, sem o marrom do centro;
+  o nome do lugar uma vez só; a doca como barra única; espaços de equipamento mais legíveis; menos moldura interna e
+  menos dourado decorativo; retrato e ícones atuais do jogo.
+- **Feito:** `hud4.css` em `ferramentas/prototipos/hud/`, a versão "HUD 4" no alternador (mesmos dados). Uma moldura por
+  coluna (o centro junta barras, cena e doca), controles internos feitos pela interface, estados por forma, o que o
+  motor já distingue (missão, contrato, seta de submenu) com forma própria. Nenhum asset novo.
+- **Avaliação** (no `LEIA-ME.md` da pasta): composição mais coerente, molduras com presença de estrutura, página com
+  mais espaço (sem rolagem no lugar a 1500×950; 72 px contra 207 a 1280×720); as laterais perderam uns 20 px para a
+  moldura. Desencontrados: o grão macio da moldura reduzida, o retrato ×5 e os anéis miúdos, a doca centrada com
+  sobras, o topo ainda fino e o nome do lugar dependente do painel do mundo.
+- **Verificado:** 1500×950, 1280×800 e 1280×720, nas três composições, controles de demonstração escondidos; sem erro no
+  console nem texto cortado. **É experimento:** nada migrado; motor, saves e versão iguais. **Falta:** a avaliação de
+  Jean.

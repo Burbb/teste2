@@ -1,0 +1,146 @@
+/* HUD 4 (experimento): parte da HUD 3 (o body leva v3 e v4) e muda o que Jean pediu na avaliação dela.
+   - Moldura: a da ficha da versão "Assets" (assets/exibicao/moldura-nove.png: aço escuro com filete de latão, face
+     iluminada, sombra por dentro e um rebite em cada canto), só nos três painéis principais: a ficha, a coluna do
+     centro inteira e o mundo. Barra de ~10 px e canto de 24 px, na escala em que ela foi preparada; nada engrossado.
+   - Uma moldura por coluna: o topo das barras, a cena e a doca moram juntos na do centro, separados por fios, em vez
+     de três caixas empilhadas com bordas duplicadas.
+   - Superfície: o carvão (a textura dos painéis) nas três colunas; a leitura, o mesmo carvão um passo mais claro; o
+     metal um pouco mais claro só nos botões. O marrom da leitura saiu (papel fica para livro, Diário e documento).
+   - Dentro dos painéis, nada de moldura de imagem: cartões, espaços, botões e a doca são feitos pela interface, leves,
+     sem rebite dourado. O latão fica na seleção, no foco e no que pede atenção. */
+
+body.v4 {
+  --m-principal: url(assets/exibicao/moldura-nove.png);
+  --veu-leitura4: linear-gradient(rgba(16, 17, 20, 0.5), rgba(14, 15, 18, 0.6));
+  --veu-metal: linear-gradient(rgba(255, 255, 255, 0.045), rgba(0, 0, 0, 0.18)), linear-gradient(rgba(14, 15, 17, 0.38), rgba(14, 15, 17, 0.5));
+  --fio-escuro: rgba(0, 0, 0, 0.75);
+  --fio-claro: rgba(255, 255, 255, 0.05);
+  --aresta: #3a3d43;
+  --aresta-viva: #6f737b;
+}
+
+/* ------------------------------------------------------------ as três molduras principais */
+body.v4 #mesa { gap: 6px; }
+body.v4 #ficha, body.v4 #mundo, body.v4 #palco {
+  border: 12px solid transparent; border-image: var(--m-principal) 24 / 24px round;
+  background: var(--veu-painel), var(--t-painel) 0 0 / 128px; background-clip: padding-box; }
+body.v4 #ficha { padding: 2px 0 0; }
+body.v4 #mundo { padding: 8px 10px 10px; }
+body.v4 #palco { gap: 0; padding: 0; align-items: stretch; min-width: 0; overflow: hidden; }
+
+/* dentro do centro: as barras, a cena e a doca sem moldura própria, separadas por um fio (sombra e luz) */
+body.v4 #hud, body.v4 #cena, body.v4 #doca { border: 0; border-image: none; box-shadow: none; max-width: none; width: 100%; }
+body.v4 #hud { background: none; padding: 6px 12px 7px; box-shadow: 0 1px 0 var(--fio-escuro), 0 2px 0 var(--fio-claro); position: relative; z-index: 1; }
+body.v4 #cena { background: none; }
+body.v4 #cena > #vista { box-shadow: 0 1px 0 var(--fio-escuro); }
+body.v4 #pagina { background: var(--veu-leitura4), var(--t-painel) 64px 32px / 128px; }
+body.v4 #doca { background: var(--veu-metal), var(--t-botao) 0 0 / 128px; padding: 0; box-shadow: 0 -1px 0 var(--fio-escuro), inset 0 1px 0 var(--fio-claro); }
+
+/* ------------------------------------------------------------ o nome do lugar: uma apresentação principal */
+/* O lugar é apresentado no painel do mundo (nome, tipo, perigo). No centro, a página do lugar abre só com a linha do
+   momento (o tipo, o perigo, o dia, o período e o clima), em versal pequena; a cena de missão mantém o título dela,
+   menor, sem o ornamento. */
+body.v4 #cena-cab { margin-bottom: 10px; }
+body.v4 #cena-cab[data-tipo="local"] .cena-titulo { display: none; }
+body.v4 #cena-cab .cena-titulo { font-size: calc(var(--px) * 32); }
+body.v4 #cena-cab .ornamento { display: none; }
+body.v4 #cena-cab .cena-sub { margin-top: 6px; font-family: var(--leitura); font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--sec); }
+body.v4 #cena-cab[data-tipo="local"] .cena-sub { margin-top: 0; }
+body.v4 #folha { padding: 14px 26px 16px; }
+body.v4 #mundo .local-nome { font-size: calc(var(--px) * 32); }
+
+/* ------------------------------------------------------------ botões: metal um pouco mais claro, aresta fina */
+body.v4 :is(.escolha, .caminho, .botao-janela) {
+  border: 1px solid var(--aresta); border-image: none; border-radius: 2px;
+  background: var(--veu-metal), var(--t-botao) 0 0 / 128px; background-clip: padding-box;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 1px 0 #000; }
+body.v4 .escolha { padding: 6px 12px 6px 7px; }
+body.v4 .caminho { padding: 6px 10px 6px 6px; }
+body.v4 .escolhas { gap: 5px; }
+/* mouse por cima: a aresta acende e a face clareia */
+body.v4 :is(.escolha, .caminho.clicavel, .botao-janela):hover, body.v4 :is(.escolha, .caminho, .botao-janela).demo-hover {
+  border-color: var(--aresta-viva); color: #fff7e6;
+  background: linear-gradient(rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.02)), var(--t-botao) 0 0 / 128px; background-clip: padding-box; }
+/* pressionado: a face afunda (sombra por dentro) e o conteúdo desce 1 px */
+body.v4 :is(.escolha, .caminho, .botao-janela):active, body.v4 :is(.escolha, .caminho, .botao-janela).demo-pressionado {
+  border-image: none; transform: translateY(1px); box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8);
+  background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.3)), var(--t-botao) 0 0 / 128px; background-clip: padding-box; }
+/* selecionado: aresta de latão, a barra de latão à esquerda e a marca ◆ (forma, não só cor) */
+body.v4 :is(.escolha, .botao-janela)[aria-pressed="true"] { border-image: none; border-color: var(--latao); box-shadow: inset 3px 0 0 var(--latao), 0 1px 0 #000; color: #fff1cc; }
+/* indisponível: a aresta tracejada, a face apagada, o cadeado e a nota escrita */
+body.v4 :is(.escolha, .botao-janela)[aria-disabled="true"] { border-image: none; border-style: dashed; border-color: #4a4c50;
+  background: rgba(20, 20, 22, 0.6); color: #8c877e; filter: none; box-shadow: none; }
+/* foco do teclado: o anel claro por fora */
+body.v4 :is(.escolha, .caminho, .botao-janela, .atalho, .f-foco, .rastro-contrato):focus-visible, body.v4 :is(.escolha, .caminho, .atalho, .aba-demo).demo-foco {
+  outline: 2px solid var(--latao-claro); outline-offset: 2px; }
+/* o número: um nicho escuro de aresta fina; com o mouse ou o foco, a aresta vira latão */
+body.v4 .escolha .tecla { width: 26px; height: 26px; border: 1px solid #4a4d53; border-image: none; border-radius: 2px;
+  background: #0b0c0e; box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.9); color: #e8dcc0; font-size: 15px; }
+body.v4 .escolha:is(:hover, :focus-visible, .demo-hover, .demo-foco) .tecla { border-image: none; border-color: var(--latao); color: var(--latao-claro); }
+/* o que o motor já diz: a missão e o contrato pelo grupo e pela marca à esquerda; quem abre outra escolha, pela seta › */
+body.v4 .escolha.op-missao { box-shadow: inset 3px 0 0 #8a6a2a, inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 1px 0 #000; }
+body.v4 .escolha.op-contrato { box-shadow: inset 3px 0 0 #5a5e66, inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 1px 0 #000; }
+body.v4 .escolha .op-abre { margin-left: 8px; font-size: 22px; line-height: 1; color: var(--sec); }
+
+/* ------------------------------------------------------------ a doca: uma barra só, com divisões discretas */
+body.v4 #doca .atalhos { gap: 0; margin: 0 auto; width: auto; }
+body.v4 #doca .atalho, body.v4 #doca .atalho + .atalho {
+  width: 84px; border: 0; border-image: none; border-radius: 0; background: none; padding: 7px 4px 8px;
+  box-shadow: inset 1px 0 0 var(--fio-claro), inset -1px 0 0 var(--fio-escuro); }
+body.v4 #doca .atalho:hover, body.v4 #doca .atalho.demo-hover { background: rgba(255, 255, 255, 0.06); color: #fff7e6; transform: none; }
+body.v4 #doca .atalho:active { background: rgba(0, 0, 0, 0.3); transform: translateY(1px); }
+body.v4 #doca .atalho.atual { color: var(--latao-claro); background: rgba(201, 161, 74, 0.08); }
+body.v4 #doca .atalho.atual::after { left: 18%; right: 18%; bottom: 0; height: 2px; background: var(--latao-claro); }
+body.v4 #doca .atalho:focus-visible { outline-offset: -3px; }
+body.v4 #doca .doca-sep { display: block; width: 2px; margin: 8px 3px; background: var(--fio-escuro); box-shadow: 1px 0 0 var(--fio-claro); }
+@media (max-width: 1280px) { body.v4 #doca .atalho, body.v4 #doca .atalho + .atalho { width: 76px; } }
+
+/* ------------------------------------------------------------ o topo das barras, dentro do centro */
+body.v4 .hud-retrato { border: 1px solid var(--aresta); border-image: none; background: #0b0c0e; box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.9); }
+body.v4 .hud-retrato .nivel { background: var(--latao); }
+
+/* ------------------------------------------------------------ o painel do mundo */
+body.v4 #mapa-mini .mapa-px { border: 1px solid var(--aresta); border-image: none; box-shadow: 0 1px 0 #000, inset 0 0 0 1px #000; }
+body.v4 .rastro-arte { border: 1px solid var(--aresta); border-image: none; background: #0b0c0e; }
+body.v4 .rastro-contrato { margin-bottom: 4px; }
+
+/* ------------------------------------------------------------ a ficha */
+body.v4 #ficha .f-retrato { width: auto; height: auto; padding: 4px; border: 1px solid var(--aresta); border-image: none;
+  background: #0b0c0e; box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.9); }
+body.v4 #ficha .f-retrato img.original { display: block; width: 80px; height: 80px; image-rendering: pixelated; }  /* o retrato do jogo, ×5 */
+@media (max-height: 800px) { body.v4 #ficha .f-retrato img.original { width: 64px; height: 64px; } }
+body.v4 #ficha .f-talento { border: 1px solid #6b5426; border-image: none; background: rgba(201, 161, 74, 0.07); color: var(--latao-claro); }
+/* os espaços: um nicho escuro de aresta fina (o couro e a moldura de rebites saíram), com o ícone atual em 32 px e
+   folga em volta; mais largos onde a coluna deixa */
+body.v4 #ficha .f-slot, body.v4 #ficha .f-slot:is(:hover, :focus-visible), body.v4 #ficha .f-slot.inutil {
+  width: 40px; height: 40px; border: 1px solid var(--aresta); border-image: none; border-radius: 2px;
+  background: #0a0b0d; box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.85), 0 1px 0 rgba(255, 255, 255, 0.04); }
+body.v4 #ficha .f-espacos, body.v4 #ficha .f-bolsa { grid-template-columns: repeat(5, 40px); row-gap: 7px; }
+body.v4 #ficha .f-slot img { width: 32px; height: 32px; image-rendering: pixelated; }
+@media (min-width: 1400px) {
+  body.v4 #ficha .f-slot, body.v4 #ficha .f-slot:is(:hover, :focus-visible), body.v4 #ficha .f-slot.inutil { width: 44px; height: 44px; }
+  body.v4 #ficha .f-espacos, body.v4 #ficha .f-bolsa { grid-template-columns: repeat(5, 44px); }
+}
+body.v4 #ficha .f-slot:hover { border-color: var(--aresta-viva); background: #121418; }
+body.v4 #ficha .f-slot.vazio img { opacity: 0.2; }
+body.v4 #ficha .f-slot[data-r]::after { inset: 0; border-radius: 2px; box-shadow: inset 0 0 0 1px var(--cor-r); }
+/* o item que não serve agora: o canto cortado em vermelho (forma), além do ícone apagado */
+body.v4 #ficha .f-slot.inutil::after { content: ""; position: absolute; top: 0; right: 0; inset: 0 0 auto auto; width: 0; height: 0;
+  border: 6px solid transparent; border-top-color: #b3262b; border-right-color: #b3262b; box-shadow: none; }
+body.v4 #ficha .f-qtd { right: 1px; bottom: 1px; }
+
+/* ------------------------------------------------------------ dicas e a janela */
+.f-dica.v4 { border: 1px solid #4a4d53; border-image: none; background: linear-gradient(rgba(10, 11, 13, 0.86), rgba(10, 11, 13, 0.92)), url(assets3/exibicao/textura-painel.png) 0 0 / 128px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 8px 20px rgba(0, 0, 0, 0.65); }
+body.v4 #sobre-achado .janela-achado { border: 12px solid transparent; border-image: var(--m-principal) 24 / 24px round; }
+body.v4 #sobre-achado .achado-cartao, body.v4 #sobre-achado .achado-cartao.novo { border: 1px solid var(--aresta); border-image: none;
+  background: rgba(0, 0, 0, 0.32); box-shadow: inset 0 1px 0 var(--fio-claro); }
+body.v4 #sobre-achado .achado-cartao.novo { border-color: #6b5426; }
+body.v4 #sobre-achado .botao-janela kbd { border: 1px solid #4a4d53; border-image: none; background: #0b0c0e; }
+
+/* ------------------------------------------------------------ a faixa de estados (demonstração) */
+body.v4 #estados-demo .aba-demo { border: 0; border-image: none; background: var(--veu-metal), var(--t-botao) 0 0 / 128px;
+  padding: 7px 10px; box-shadow: inset 1px 0 0 var(--fio-claro), inset -1px 0 0 var(--fio-escuro); }
+body.v4 #estados-demo .aba-demo.demo-hover { background: rgba(255, 255, 255, 0.08); color: #fff7e6; }
+body.v4 #estados-demo .aba-demo[aria-selected="true"] { color: var(--latao-claro); }
+body.v4 #estados-demo .aba-demo[aria-selected="true"]::after { left: 18%; right: 18%; bottom: 0; height: 2px; background: var(--latao-claro); }

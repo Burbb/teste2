@@ -20,6 +20,7 @@ const Ficha = (() => {
   /** O desenho: os quatro novos (espada, escudo, anel, poção) quando ligados; o resto, o catálogo atual do jogo.
    *  `lado`: o tamanho em que aparece (a versão Assets tem um arquivo por tamanho; a Anterior escala o pixel). */
   const icone = (nome, lado = 32) => {
+    if (versao === "hud4") return Sprites.url(nome);  // a HUD 4 fica com os ícones atuais do jogo
     if (iconesNovos && versao === "assets" && ASSETS.includes(nome)) return `assets/exibicao/${nome}-${lado}.png`;
     if (iconesNovos && versao !== "assets" && Arte.temIcone(nome)) return Arte.icone(nome);  // Anterior e HUD 3
     return Sprites.url(nome);
@@ -35,7 +36,8 @@ const Ficha = (() => {
 
   function desenhar(raiz, h, nome) {
     raiz.classList.toggle("v2", versao === "assets");
-    raiz.classList.toggle("v3", versao === "hud3");  // a HUD 3 usa o retrato e os ícones da primeira tentativa
+    raiz.classList.toggle("v3", versao === "hud3" || versao === "hud4");  // a HUD 3 usa o retrato e os ícones da primeira tentativa
+    raiz.classList.toggle("v4", versao === "hud4");  // a HUD 4, o retrato e os ícones atuais do jogo
     const espacos = ESPACOS.map((linha) => linha.map((s) => {
       const it = h.equip[s];
       if (!it) return `<button type="button" class="f-slot vazio f-foco" data-espaco="${s}" data-dica="${esc(`<b class="t">${NOME_ESPACO[s]}</b><div class="sub">vazio</div>`)}" aria-label="${NOME_ESPACO[s]}: vazio">${img(VAZIO[s])}</button>`;
@@ -71,7 +73,8 @@ const Ficha = (() => {
     const pct = Math.max(0, Math.min(100, (100 * h.xp) / h.xp_proximo));
     raiz.innerHTML = `
       <header class="f-identidade">
-        <div class="f-retrato">${versao === "assets" ? '<img class="ia" src="assets/exibicao/retrato.png" alt="Retrato do Guerreiro">' : `<img src="${Arte.retrato()}" alt="Retrato do Guerreiro">`}</div>
+        <div class="f-retrato">${versao === "assets" ? '<img class="ia" src="assets/exibicao/retrato.png" alt="Retrato do Guerreiro">'
+          : versao === "hud4" ? `<img class="original" src="${Sprites.url(h.classe)}" alt="Retrato do ${esc(h.classe_nome)}">` : `<img src="${Arte.retrato()}" alt="Retrato do Guerreiro">`}</div>
         <div class="f-nome">${esc(nome)}</div><div class="f-titulo">${esc(h.titulo)}<br><b>nível ${h.nivel}</b></div>
         <div class="f-xp"><div class="f-legenda"><span>Experiência</span><b>${h.xp}/${h.xp_proximo}</b></div><div class="f-barra"><i style="width:${pct}%"></i></div></div>
         ${h.pontos_talento ? `<div class="f-talento f-foco" tabindex="0" role="button" data-dica="${esc('<b class="t">Talentos</b><div>Abre a árvore de talentos.</div>')}"><img src="${Sprites.url("estrela")}" alt="">${h.pontos_talento} ${h.pontos_talento === 1 ? "ponto de talento" : "pontos de talento"}</div>` : ""}
@@ -101,7 +104,7 @@ const Ficha = (() => {
   let dica = null, dono = null;
   function abrirDica(el) {
     if (!dica) { dica = document.createElement("div"); dica.setAttribute("role", "tooltip"); document.body.appendChild(dica); }
-    dica.className = { assets: "f-dica v2", hud3: "f-dica v3" }[versao] || "f-dica";
+    dica.className = { assets: "f-dica v2", hud3: "f-dica v3", hud4: "f-dica v3 v4" }[versao] || "f-dica";
     if (/^\d+$/.test(el.dataset.dica)) return;  // as dicas numeradas da fotografia do jogo (sem o conteúdo delas)
     dono = el;
     dica.innerHTML = el.dataset.dica;
