@@ -1987,3 +1987,24 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   ferimentos, contratos, anéis); exercitados no navegador dica por mouse e teclado, Esc, tecla V, troca de entorno e
   rolagem; animações não conferidas. HUD 4 completa igual pixel a pixel. **É experimento:** nada migrado; motor, saves,
   telas de produção e versão iguais. **Falta:** a avaliação de Jean.
+
+### 14/10/2026 — HUD 4 pixel: acabamento e teste funcional no jogo (experimento, sem versão)
+
+- **Pedido de Jean:** HUD 4 pixel aprovada como direção; acabar a luta (cartas e roda na linguagem da HUD, estados por
+  forma, foco visível, Fugir com a bota), conferir os botões durante a interação, listar as lacunas separando arte de
+  layout e ligar a HUD ao jogo de verdade como teste explícito, sem trocar a interface padrão nem entrar no save.
+- **Feito (acabamento):** `hud4p-luta.css` (cartas, roda, janelinha), estados dos botões com `translate` (a animação
+  de entrada prendia o transform), tamanhos que faltavam e `assets4p/exibicao/indice.js`.
+- **Feito (ligação):** `python jogar.py --hud-experimental` (ou `HUD=experimental` nos cenários) faz o servidor servir
+  `ferramentas/prototipos/hud/` em `/experimento/` e pôr `jogo/ligar.js` no fim da página padrão; único ponto fora da
+  pasta (`rpg/__main__.py`, `rpg/web/__init__.py`, `rpg/web/servidor.py`, documentado em `docs/ARQUITETURA.md`).
+  `jogo/papeis.js` troca os desenhos pelo papel; `jogo/jogo.css` veste o painel real do herói. O cenário `tutorial`
+  ganhou `NOME` (para nome longo).
+- **Verificado de verdade:** a fumaça inteira com a HUD experimental (356 conferências, tudo certo, depois de corrigir
+  os 404 de tamanho e a janela do anel em 1280×720); fuga, painéis por tecla e mouse, estados dos botões, animações da
+  luta quadro a quadro (normal e movimento reduzido), três janelas com nome longo, fome, ferimentos e missões (menos
+  rolagem que a padrão). A fumaça padrão, os testes e o gabarito continuam iguais.
+- **Lacunas** (no `LEIA-ME.md` da pasta): de arte, martelo e machado, os únicos com desenho próprio, as outras classes,
+  unguento, bomba, pena de fênix, recursos vazios, inimigos, ícones de habilidade e efeito; de layout, só o que a
+  interface padrão já faz (a faixa da mira cobrindo a carta de cima) e a barra de experiência de produção.
+- **É experimento:** a interface padrão continua a padrão; nada migrado; versão igual. **Falta:** Jean jogar e avaliar.

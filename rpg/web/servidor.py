@@ -13,14 +13,22 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import parse_qs, urlparse
 
 PASTA = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static")
+# A HUD experimental (teste, fora da interface padrão): o protótipo em ferramentas/prototipos/hud. Só é servida e ligada
+# quando se pede (`python jogar.py --hud-experimental`, ou HUD=experimental nos cenários de teste); não entra no save.
+PASTA_HUD_EXPERIMENTAL = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
+                                      "ferramentas", "prototipos", "hud")
+LIGAR_HUD_EXPERIMENTAL = b'<script src="/experimento/jogo/ligar.js"></script>\n</body>'
+
 mimetypes.add_type("font/woff2", ".woff2")
 mimetypes.add_type("font/ttf", ".ttf")
 mimetypes.add_type("text/javascript", ".js")
 
 
 class Servidor:
-    def __init__(self, ui, porta=0, config=None):
+    def __init__(self, ui, porta=0, config=None, hud_experimental=False):
         self.ui = ui
+        # a pasta do protótipo, só com o pedido explícito e se ela existir
+        self.experimento = PASTA_HUD_EXPERIMENTAL if hud_experimental and os.path.isdir(PASTA_HUD_EXPERIMENTAL) else None
         self.token = secrets.token_urlsafe(16)
         self.config = config or {}
         servidor = self
@@ -44,9 +52,11 @@ class Servidor:
                 url = urlparse(self.path)
                 qs = parse_qs(url.query)
                 if url.path in ("/", "/index.html"):
-                    return self._arquivo("index.html")
+                    return self._arquivo("index.html", ligar=bool(servidor.experimento))
                 if url.path.startswith("/static/"):
                     return self._arquivo(url.path[len("/static/"):])
+                if url.path.startswith("/experimento/") and servidor.experimento:
+                    return self._arquivo(url.path[len("/experimento/"):], servidor.experimento)
                 if url.path == "/config":
                     if not self._token_ok(qs):
                         return self._responder(403)
@@ -76,15 +86,18 @@ class Servidor:
                     return self._responder(400)
                 self._responder(204)
 
-            def _arquivo(self, relativo):
-                caminho = os.path.normpath(os.path.join(PASTA, relativo))
-                if not caminho.startswith(PASTA + os.sep) or not os.path.isfile(caminho):
+            def _arquivo(self, relativo, pasta=PASTA, ligar=False):
+                caminho = os.path.normpath(os.path.join(pasta, relativo))
+                if not caminho.startswith(pasta + os.sep) or not os.path.isfile(caminho):
                     return self._responder(404)
                 tipo = mimetypes.guess_type(caminho)[0] or "application/octet-stream"
                 if tipo.startswith("text/") or tipo.endswith("javascript"):
                     tipo += "; charset=utf-8"
                 with open(caminho, "rb") as f:
-                    self._responder(200, f.read(), tipo)
+                    corpo = f.read()
+                if ligar:  # a HUD experimental: um script do protótipo no fim da página padrão, que continua igual
+                    corpo = corpo.replace(b"</body>", LIGAR_HUD_EXPERIMENTAL, 1)
+                self._responder(200, corpo, tipo)
 
             def _eventos(self):
                 canal = servidor.ui.canal

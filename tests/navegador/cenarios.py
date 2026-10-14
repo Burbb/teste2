@@ -24,7 +24,8 @@
     python -m tests.navegador.cenarios relatorio     # Explorar cai numa luta comum: o relatório e o que vem depois (EVENTO, VEZES, SEMENTE, PERIODO)
     python -m tests.navegador.cenarios muralha       # Guerreiro nv 6, Muralha + Contra-ataque (CONTRA) e o Broquel, contra bandidos e um cultista
 
-Imprime o endereço do servidor na primeira linha e fica no ar até ser encerrado.
+Imprime o endereço do servidor na primeira linha e fica no ar até ser encerrado. Com HUD=experimental, a página vem
+com a HUD experimental do protótipo (ferramentas/prototipos/hud/jogo/), por cima dos componentes de sempre.
 """
 
 import argparse
@@ -753,14 +754,14 @@ def tutorial(ui):
     CONTRATO_EM (bosque, padrão, ou charco). LUTA=família (QUANTOS): uma luta logo na chegada. VISTAS: as orientações já vistas, além da luta e do Mural ("V3,N1").
     HARDCORE=1: morte definitiva. PENA=n (Penas de Fênix) e PROTECAO=mendigo: o que levanta o herói na luta.
     FERIMENTOS=corte,costelas (do herói, sem tratar), BANDAGENS=n, FOME=n (dias sem comer). GRATIS_USADO=templo,curandeira:
-    o primeiro atendimento ou tratamento grátis já usado.
+    o primeiro atendimento ou tratamento grátis já usado. NOME: o nome do herói (padrão Jean; para conferir nome longo).
     Sair leva ao título, com o save (para carregar com orientações pendentes)."""
     from rpg import abertura as ab, itens, missoes, sobrevivencia
     from rpg.__main__ import menu_principal
     pasta = tempfile.mkdtemp()
     g = Jogo(ui, seed=int(os.environ.get("SEMENTE", "5")), pasta_saves=pasta, hardcore=os.environ.get("HARDCORE") == "1")
     ui.jogo = g
-    g.iniciar("Jean", os.environ.get("CLASSE", "guerreiro"), "turvo")
+    g.iniciar(os.environ.get("NOME", "Jean"), os.environ.get("CLASSE", "guerreiro"), "turvo")
     ab.comecar(g, os.environ.get("TUTORIAL", "1") != "0")
     a = g.mundo["abertura"]
     a.update(despensa="feita", caneca=False)
@@ -898,7 +899,8 @@ def main():
     nome = sys.argv[1] if len(sys.argv) > 1 else "combate"
     ui = WebUI()
     ui.jogo = None
-    srv = Servidor(ui, config={"velocidade": os.environ.get("VELOCIDADE", "normal")}).iniciar()
+    srv = Servidor(ui, config={"velocidade": os.environ.get("VELOCIDADE", "normal")},
+                   hud_experimental=os.environ.get("HUD") == "experimental").iniciar()  # HUD=experimental: o protótipo
     print(srv.url, flush=True)
     threading.Thread(target=CENARIOS[nome], args=(ui,), daemon=True).start()
     while True:

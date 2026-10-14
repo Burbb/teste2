@@ -608,3 +608,96 @@ as pequenas lacunas de tamanho e liga a HUD ao jogo de verdade, como teste, sem 
   32 px; a mediana do grupo mexeu um pixel em 31 arquivos de itens); a aljava das flechas entrou nos recursos do topo;
   atributos e lugares ganharam 32 px (Fugir, cartões menores). `preparar_hud4p.py` grava `assets4p/exibicao/indice.js`
   com os tamanhos que existem, para a troca nunca pedir um arquivo que não há.
+
+### Teste funcional: a HUD experimental no jogo de verdade
+
+**Como jogar (PowerShell, na pasta do jogo):**
+
+```powershell
+git pull
+python jogar.py --hud-experimental
+```
+
+O jogo abre como sempre (novo jogo, carregar, campanha), com a HUD 4 pixel por cima dos componentes de sempre. Sem a
+opção, é a interface padrão. A escolha vale só para aquela sessão: não vai para o save, e um save feito com ela abre
+normal sem ela. Para cair direto num cenário de teste (o mesmo motor, uma situação montada):
+
+```powershell
+$env:HUD = "experimental"
+python -m tests.navegador.cenarios muralha      # luta do Guerreiro (NIVEL=6 pela variável abaixo)
+python -m tests.navegador.cenarios capela       # a Capela Afogada
+python -m tests.navegador.cenarios mercado      # o mercado do Vale do Corvo
+python -m tests.navegador.cenarios aneis        # o anel achado com os dois espaços ocupados
+python -m tests.navegador.cenarios tutorial     # a abertura guiada (orientações apontando os controles)
+Remove-Item Env:HUD                             # volta à interface padrão
+```
+
+Cada cenário mostra um endereço `http://127.0.0.1:...`: abra no navegador; Ctrl+C encerra. Variáveis extras seguem
+o mesmo jeito (`$env:NIVEL = "6"` antes da muralha; `$env:NOME = "Aldebarã de Montemor"`, `$env:FOME = "2"`,
+`$env:FERIMENTOS = "corte,costelas"` no tutorial) e se apagam com `Remove-Item Env:NOME` etc.
+
+**O ponto de ligação** (o único fora desta pasta, e separado): a opção `--hud-experimental` (`rpg/__main__.py`) chega
+ao servidor (`rpg/web/__init__.py` → `Servidor(..., hud_experimental=True)`); nos cenários, `HUD=experimental`. Com
+ela, `rpg/web/servidor.py` serve esta pasta em `/experimento/` e põe `<script src="/experimento/jogo/ligar.js">` no
+fim da página padrão. Sem ela, a página é a mesma de sempre e a pasta nem é servida (`tests/test_web.py`:
+`TestHudExperimental`). Nada no motor, nas regras, nos números, no save ou na versão.
+
+**O que o script faz** (`jogo/`): `ligar.js` carrega as folhas da HUD 4 pixel (`hud3.css` a `hud4p-luta.css`) e
+`jogo/jogo.css`, marca o corpo (`v3 v4 v4c v4p hud-experimental`) e carrega `icones.js`, o índice dos tamanhos e
+`jogo/papeis.js`. `papeis.js` olha o que o jogo acabou de desenhar e troca só a imagem, pelo papel dela (o recurso do
+topo, o atributo pela chave, o espaço pelo nome, a bolsa pelo id, o atalho pelo nome, o caminho pelo desenho do
+destino, a ação da roda, o rosto na carta do herói); clique, arrasto, dica e teclado continuam os do jogo. Também
+põe a penalidade ao lado do valor do atributo (o número que o motor já manda em `atributos_penal`) e pede ao jogo
+para medir de novo o nome depois que o retrato maior entra. `jogo.css` veste o painel real do herói (`#heroi`, com a
+comitiva, a bolsa clicável e o aviso de talento) com a moldura, os atributos sem caixa e os nichos de item; e ajusta a
+janela do achado à moldura maior. O retrato novo continua só no Guerreiro; as outras classes ficam com o desenho delas.
+
+**Percursos conferidos de verdade** (navegador automático, motor real, HUD experimental):
+- a fumaça inteira do jogo (`tests/navegador/fumaca.mjs`, com `HUD=experimental`): 356 conferências, tudo certo. Ela
+  cobre os painéis pelos atalhos e pelo mouse, a vila e a capela (aproximação e retorno, salas, baú, sacristia), as
+  compras repetidas (clique duplo, Shift, fila), vender e recomprar, o item achado e equipar, a comparação dos dois
+  anéis (em 1280×720 e 1280×620), a luta com habilidades, efeitos, comitiva, golpe preparado, Revide e
+  contra-ataque, vitória, espólio, relatório e derrota, e o tutorial apontando os controles. A primeira passada achou
+  dois problemas nossos, já corrigidos: arquivos de tamanho que faltavam (404) e a janela do anel que empilhava os
+  cartões e passava da tela em 1280×720;
+- fugir pela roda (a bota nova), até a luta acabar em fuga; Talentos, Grimório, Mapa, Histórico e Ajuda abrindo pela
+  tecla e fechando no Esc; Talentos e Mapa pelo clique na doca e pelo Fechar; o Inventário abrindo e voltando pelo mesmo
+  atalho;
+- os estados dos botões com mouse e teclado de verdade (o pressionado soltando fora não responde);
+- as animações da luta, quadro a quadro (`capturas-jogo/animacao-luta-*`), com movimento normal e reduzido: as
+  faixas de ação, os números de dano, o clarão do crítico e a roda surgindo não são cortados nem cobrem outra peça
+  além do que a interface padrão já faz;
+- 1500×950, 1280×800 e 1280×720 com nome longo, fome, ferimentos, contrato, a missão com dois contratos e a cena longa:
+  sem texto cortado (o nome longo cortava em 1500 até o jogo medir de novo depois do retrato), e menos rolagem que a
+  padrão:
+
+| Rolagem (mesmo cenário) | padrão | experimental |
+|---|---|---|
+| Nome longo, fome, ferimentos, 1280×800: herói / página / mundo | 84 / 27 / 198 px | 37 / 0 / 130 px |
+| Nome longo, fome, ferimentos, 1280×720: herói / página / mundo | 164 / 107 / 278 px | 117 / 0 / 210 px |
+| Campanha com missão e dois contratos, 1500×950: página / cena longa | 55 / 322 px | 0 / 179 px |
+| A mesma, 1280×800: página / mundo / cena longa | 177 / 265 / 500 px | 0 / 160 / 324 px |
+| A mesma, 1280×720: herói / página / mundo / cena longa | 72 / 257 / 345 / 580 px | 10 / 72 / 240 / 404 px |
+
+**Não conferido:** o som; o jogo inteiro de ponta a ponta à mão; a nitidez em telas de densidade 2 (os arquivos `@2x`
+existem, mas as capturas são em densidade 1); outras resoluções.
+
+### Lacunas que ficam
+
+**De arte** (não impedem o teste; o desenho do jogo continua no lugar):
+- *Guerreiro*: o martelo e o machado (a arma em alguns níveis); os itens únicos com desenho próprio (a cota lendária
+  azul, por exemplo) seguem o desenho deles.
+- *Outras classes*: o retrato; as armas e peças (arco, besta, cajado, varinha, orbe, livro, capuz, gibão, calça de
+  couro, bota de caça, luva, manto); o Atacar da roda (cajado, arco).
+- *Bolsa e mercado*: unguento, bomba de fumaça, pena de fênix; as provisões no mercado usam o desenho de 24 px no nicho
+  de 32; as moedinhas dos preços.
+- *Topo*: tocha apagada, bolsa vazia e frasco vazio.
+- *Luta*: os inimigos e as cartas deles (provisórios, como combinado), os ícones das habilidades e dos efeitos.
+- *Mundo*: o covil vencido (a bandeira).
+
+**De layout** (achados no teste):
+- corrigidos nesta rodada: a janela do anel em 1280×720/620, o nome longo ao lado do retrato maior, a silhueta de
+  escudo no espaço do grimório do Mago, os tamanhos que faltavam;
+- da interface padrão, não da HUD (acontece igual sem ela): a faixa "Golpe de espada · escolha o alvo" cobre a carta de
+  cima enquanto se mira; na luta o registro fica atrás da janelinha de habilidades;
+- a barra de experiência ainda usa o desenho de produção (com o fio de baixo), diferente das barras do topo.

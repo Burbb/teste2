@@ -87,6 +87,9 @@ def main():
     parser.add_argument("--hardcore", action="store_true", help=argparse.SUPPRESS)  # já é o padrão
     parser.add_argument("--dev", type=int, metavar="N", choices=range(2, NIVEL_MAXIMO + 1),
                         help="teste: o jogo novo começa no nível N, com equipamento de acordo e pontos de talento")
+    parser.add_argument("--hud-experimental", action="store_true",
+                        help="teste: abre com a HUD experimental do protótipo (ferramentas/prototipos/hud), só nesta "
+                             "sessão; a escolha não vai para o save")
     parser.add_argument("--sem-cor", action="store_true", help="desativa as cores (interface clássica)")
     parser.add_argument("--rapido", action="store_true", help="sem pausas dramáticas (interface clássica)")
     parser.add_argument("--velocidade", choices=["lento", "normal", "rapido", "instantaneo"], default="normal",

@@ -1,0 +1,90 @@
+/* HUD experimental no jogo de verdade: o que a página real tem de diferente da composição do protótipo. A ficha do
+   protótipo era desenhada à parte (#ficha); no jogo, o painel do herói é o de sempre (#heroi, app/paineis.js), com
+   a comitiva, a bolsa clicável e o aviso de talento: aqui ele ganha a moldura, a superfície e os espaços da HUD 4
+   pixel, sem mudar a marcação nem o que ele faz. Os endereços das imagens são absolutos (/experimento/): uma
+   variável de CSS com url() se resolve a partir da folha que a usa. */
+
+/* ------------------------------------------------------------ o painel do herói: a moldura dos três painéis */
+body.hud-experimental #heroi {
+  border: 12px solid transparent; border-image: url(/experimento/assets/exibicao/moldura-nove.png) 24 / 24px round;
+  background: var(--veu-painel), url(/experimento/assets3/exibicao/textura-painel.png) 0 0 / 128px; background-clip: padding-box;
+  box-shadow: none; padding: 10px 12px 12px; }
+
+/* os títulos das seções: versal pequena com o fio, como no painel do mundo */
+body.hud-experimental #heroi .secao { margin-top: 14px; }
+body.hud-experimental #heroi .secao h3 {
+  font-family: var(--leitura); font-weight: 700; font-size: 13px; line-height: 1.2; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--sec); text-shadow: none; margin: 0 0 8px; gap: 8px; }
+body.hud-experimental #heroi .secao h3::before { display: none; }
+body.hud-experimental #heroi .secao h3::after { content: ""; flex: 1; height: 1px; padding: 0; background: var(--ferro-fio); box-shadow: 0 1px 0 #000; border: 0; }
+
+/* a identidade: o retrato num nicho escuro de aresta fina; o nome e o título como na ficha do protótipo */
+body.hud-experimental #heroi .identidade { padding-bottom: 10px; border-bottom: 1px solid var(--ferro-fio); box-shadow: 0 1px 0 #000; }
+body.hud-experimental #heroi .retrato-grande { width: auto; height: auto; padding: 4px; border: 1px solid var(--aresta); border-image: none;
+  background: #0b0c0e; box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.9); }
+body.hud-experimental #heroi .retrato-grande picture { display: block; }
+body.hud-experimental #heroi .retrato-grande picture img { display: block; width: 80px; height: 80px; image-rendering: auto; }
+body.hud-experimental #heroi .retrato-grande img.sprite { --s: 64; }  /* as outras classes: o desenho delas, maior */
+@media (max-height: 800px) { body.hud-experimental #heroi .retrato-grande picture img { width: 64px; height: 64px; } }
+body.hud-experimental #heroi .heroi-titulo { color: var(--sec); }
+body.hud-experimental #heroi .xp-linha { margin-top: 10px; }
+
+/* o aviso de talento: a placa de latão da HUD 4 (é destaque: fica o dourado) */
+body.hud-experimental #heroi .talento-aviso { border: 1px solid #6b5426; border-image: none; background: rgba(201, 161, 74, 0.07);
+  color: var(--latao-claro); text-shadow: none; }
+body.hud-experimental #heroi .talento-aviso:is(:hover, :focus-visible) { border-color: var(--latao-claro); }
+
+/* ------------------------------------------------------------ atributos: sem caixas, duas colunas */
+/* Na superfície do painel, com um fio claro entre as colunas e entre as linhas. Em cada um: o ícone de 24 px à
+   esquerda, o nome discreto, o valor em destaque e a penalidade ao lado dele (só quando há; o número vem do motor). */
+body.hud-experimental .atributos { gap: 0; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+body.hud-experimental .atributo { display: grid; grid-template-columns: 24px minmax(0, 1fr); grid-template-rows: auto auto; column-gap: 8px; row-gap: 1px;
+  align-items: center; padding: 7px 10px 7px 2px; border: 0; border-image: none; background: none; }
+body.hud-experimental .atributo:nth-child(even) { padding: 7px 2px 7px 11px; border-left: 1px solid rgba(255, 255, 255, 0.07); }
+body.hud-experimental .atributo:nth-child(-n+2) { border-bottom: 1px solid rgba(255, 255, 255, 0.07); }
+body.hud-experimental .atributo > img { grid-row: 1 / 3; width: 24px; height: 24px; }
+body.hud-experimental .atributo .nome { font-size: 13px; line-height: 1.1; color: var(--sec); }
+body.hud-experimental .atributo .valor { margin: 0; font-family: var(--texto); font-weight: 700; font-size: 21px; line-height: 1.05; color: #f3e6c8; white-space: nowrap; }
+body.hud-experimental .atributo .valor .hud-penal { margin-left: 4px; font-family: var(--leitura); font-size: 12px; font-weight: 700; }
+body.hud-experimental .atributo.abaixo .valor { color: var(--vermelho, #e2574c); }
+body.hud-experimental .atributo:hover { background: rgba(255, 255, 255, 0.045); border-color: rgba(255, 255, 255, 0.07); }
+@media (max-width: 1400px) {
+  body.hud-experimental .atributo { column-gap: 6px; padding-right: 6px; }
+  body.hud-experimental .atributo:nth-child(even) { padding-left: 8px; }
+  body.hud-experimental .atributo .nome { font-size: 12.5px; }
+  body.hud-experimental .atributo .valor { font-size: 19px; }
+}
+
+/* ------------------------------------------------------------ espaços de item: o nicho escuro da HUD 4 */
+/* Na ficha, no inventário e no mercado: aresta fina, fundo fundo, sombra por dentro. A raridade continua nos dados: um
+   fio interno da cor dela. */
+body.hud-experimental .slot-px { border: 1px solid var(--aresta); border-image: none; border-radius: 2px;
+  background: #0a0b0d; box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.85), 0 1px 0 rgba(255, 255, 255, 0.04); }
+body.hud-experimental .slot-px.r-magico { box-shadow: inset 0 0 0 1px #4d74e0, inset 0 2px 4px rgba(0, 0, 0, 0.85); }
+body.hud-experimental .slot-px.r-raro { box-shadow: inset 0 0 0 1px var(--latao), inset 0 2px 4px rgba(0, 0, 0, 0.85); }
+body.hud-experimental .slot-px.r-lendario { box-shadow: inset 0 0 0 1px #e0782f, inset 0 2px 4px rgba(0, 0, 0, 0.85); }
+body.hud-experimental .slot-px:is(.usavel, .clicavel, [draggable="true"]):hover { border-color: var(--aresta-viva); background: #121418; }
+body.hud-experimental .slot-px:focus-visible { outline: 2px solid var(--latao-claro); outline-offset: 2px; }
+body.hud-experimental .slot-px img.novo4c { width: 32px; height: 32px; image-rendering: auto; }
+body.hud-experimental .slot-px.vazio img.novo4c, body.hud-experimental .slot-px img.fantasma.novo4c { opacity: 0.26; filter: grayscale(1) brightness(1.5); }
+body.hud-experimental .slot-px.alvo { box-shadow: inset 0 0 0 2px var(--latao-claro); }  /* onde o item arrastado cabe */
+/* o item que não serve agora: o canto cortado em vermelho (forma), além do apagado do jogo */
+body.hud-experimental .slot-px.inutil::after { content: ""; position: absolute; top: 0; right: 0; width: 0; height: 0;
+  border: 6px solid transparent; border-top-color: #b3262b; border-right-color: #b3262b; }
+body.hud-experimental .slot-px .qtd { right: 2px; bottom: 1px; font-size: 14px; }
+body.hud-experimental #heroi .equip-mini, body.hud-experimental #heroi .slots { gap: 6px; }
+
+/* ferimentos e reputação: linhas na superfície, sem caixa */
+body.hud-experimental #heroi .ferimento { padding: 3px 4px; border-left: 2px solid #8a1414; margin-bottom: 3px; }
+body.hud-experimental .reputacao { border: 0; border-image: none; background: none; padding: 2px 4px; }
+body.hud-experimental .rep-icone { width: 32px; height: 32px; border-right: 0; }
+
+/* a comitiva no painel: o retrato de cada um num nicho como o do herói */
+body.hud-experimental #heroi .membro .icone { border: 1px solid var(--aresta); border-image: none; background: #0b0c0e; }
+
+/* ------------------------------------------------------------ a janela do item achado */
+/* Ela abre sobre a coluna do centro: a 1280 px, uns 760 de largura. A moldura principal (12 px de cada lado, contra os 3
+   do jogo) tirava os pixels que deixavam o cartão do achado e os dos anéis lado a lado: eles empilhavam e a janela
+   passava da altura da tela. A margem de dentro e o vão entre os cartões cedem esse espaço. */
+body.hud-experimental .janela-achado { padding: 12px 8px 14px; }
+body.hud-experimental .janela-achado .tela.achado { gap: 12px; }

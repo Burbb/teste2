@@ -154,6 +154,14 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
 
 `rpg/web/servidor.py` (HTTP + SSE em 127.0.0.1, com token) → `rpg/web/static/`:
 
+> **HUD experimental (teste, não é a interface padrão).** Com `python jogar.py --hud-experimental` (ou `HUD=experimental`
+> nos cenários de `tests/navegador/cenarios.py`), o servidor serve também a pasta do protótipo
+> (`ferramentas/prototipos/hud/`, em `/experimento/`) e põe um script dela no fim da página padrão
+> (`jogo/ligar.js`). É o único ponto de ligação (`Servidor(..., hud_experimental=True)`): sem a opção, a página e a
+> pasta ficam como sempre (a pasta nem é servida). A escolha vale só para a sessão e não entra no save. O script veste
+> os componentes reais (estilos e desenhos pelo papel de cada imagem); não muda regra, estado nem o que se clica.
+> Detalhes e lacunas: `ferramentas/prototipos/hud/LEIA-ME.md`.
+
 - `app/nucleo.js` conexão e fila de mensagens (e o `Gesto`: um clique ou tecla só vale na tela em que começou; o segundo clique de um clique duplo e a tecla segurada não escolhem nada) · `app/pagina.js` texto e cenas · `app/escolhas.js` menus,
   doca de atalhos, roda de ações da luta · `app/paineis.js` ficha e mapa laterais · `app/controles.js` teclado
 - `app/orientacao.js` as orientações da abertura guiada (abertura.py: C1–C4 na luta; fora dela, uma por vez pela
