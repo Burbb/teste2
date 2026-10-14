@@ -245,7 +245,8 @@ def capela(ui):
     disponível). CHEGADA=1: a cena de chegada ainda por ver (com ETAPA=capela, ela abre ao carregar). PRISAO (mago, nível 4 ou mais): o talento Prisão de Gelo já comprado, levando a "prisao" ou a "lanca";
     o resto dos talentos sai igual nas duas, para comparar o mesmo herói. PONTOS: pontos de talento sobrando. PERIODO
     (padrão 0, manhã; 3 é noite) e TOCHAS (padrão: as do começo). SALA: a sala da capela em que se começa (exterior,
-    salao, sacristia, ossuario, fundo; padrão: a da etapa). DESFECHO: a guardiã já resolvida. Sair do jogo leva ao
+    salao, sacristia, ossuario, fundo; padrão: a da etapa). DESFECHO: a guardiã já resolvida. BAU=1: o baú da sacristia
+    ainda no canto. Sair do jogo leva ao
     título, com o save."""
     from rpg import dev, missoes, talentos
     from rpg.habilidades import escolher_versao
@@ -283,6 +284,8 @@ def capela(ui):
                                                   preparos=preparos)
     if os.environ.get("SALA"):  # a sala em que se está (1.79.0); sem ela, a da etapa (como num save antigo)
         missoes.registro(g, "febre_do_turvo")["sala"] = os.environ["SALA"]
+    if os.environ.get("BAU"):  # o baú da sacristia ainda no canto, por recolher (1.85.0; sem ele, já recolhido)
+        missoes.registro(g, "febre_do_turvo")["bau"] = "no_canto"
     if os.environ.get("DESFECHO"):  # a guardiã já resolvida ("descansada" ou "destruida"): a capela toda aberta
         missoes.registro(g, "febre_do_turvo").update(desfecho=os.environ["DESFECHO"], etapa="retorno")
     for chave in ("bosque_do_moinho", "capela_afogada"):

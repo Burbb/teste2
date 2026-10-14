@@ -571,16 +571,17 @@ async function cenarioCapela(browser) {
     }
     conferir(/A Sacristia/.test(await page.textContent("#cena-cab .cena-titulo")) && /Ilse/.test(await page.textContent("#texto")),
       "vencida a luta, a sacristia mostra o livro da capela, com Ilse, e espera o Continuar");
-    conferir(await page.evaluate(() => { const d = Cenas.atual() && Cenas.atual().d; return !!d && d.cena === "sacristia" && d.momento === "vitoria" && d.bau === "coberto" && !d.pontos.length; }),
-      "a vitória na sacristia desenhada: os dois já não estão, o baú ainda embaixo do pano, nada para clicar");
+    conferir(await page.evaluate(() => { const d = Cenas.atual() && Cenas.atual().d; return !!d && d.cena === "sacristia" && d.momento === "vitoria" && d.bau === "no_canto" && d.livro === "no_buraco" && !d.pontos.length; }),
+      "a vitória na sacristia desenhada: os dois já não estão, o livro no buraco, o baú no canto, nada para clicar");
     const cartoes = await page.$$eval("#texto .novidade-missao", (cs) => cs.map((c) => c.textContent));
     conferir(cartoes.length === 1 && /Ilse/.test(cartoes[0]) && /Objetivo/.test(cartoes[0]) && /ossuário/.test(cartoes[0]),
       `um cartão só junta o que a sacristia mostrou e o objetivo novo (${cartoes.length})`);
     await page.waitForTimeout(800);
     await page.click("#prompt .continuar");
     await page.waitForSelector(`${MENU}:has-text("Descer ao ossuário")`, { timeout: 20000 });
-    conferir(/ossuário/.test(await objetivo()) && !(await page.$(`${MENU}:has-text("Atravessar o salão")`)) && (await baus()) >= antes + 1,
-      "o objetivo passa ao ossuário, a sacristia some do menu e o baú dela está na bolsa");
+    conferir(/ossuário/.test(await objetivo()) && !(await page.$(`${MENU}:has-text("Atravessar o salão")`)) && (await baus()) === antes
+      && !!(await page.$(`${MENU}:has-text("Recolher o baú")`)) && !!(await page.$('.ci-ponto[data-ponto="bau"]')),
+      "o objetivo passa ao ossuário, a sacristia some do menu e o baú fica no canto: o ponto e a opção para recolher");
     const bausDepois = await baus();
     await (await page.waitForSelector('#doca .atalho[data-rotulo="Sair"]')).click();
     await (await page.waitForSelector(`${MENU}:has-text("Salvar e sair")`)).click();
@@ -593,9 +594,30 @@ async function cenarioCapela(browser) {
     await page.waitForSelector(`${MENU}:has-text("Descer ao ossuário")`, { timeout: 20000 });
     conferir(!(await page.$(`${MENU}:has-text("Atravessar o salão")`)) && /ossuário/.test(await objetivo()) && (await baus()) === bausDepois
       && !!(await page.$("#doca .atalho")) && !(await page.evaluate(() => document.body.classList.contains("sem-heroi"))),
-      "salvar, sair e carregar lá dentro: a sala vencida continua vencida, o baú não se repete e a tela vem inteira");
-    conferir(await page.evaluate(() => { const d = Cenas.atual().d; return d.cena === "sacristia" && d.momento === "visita" && d.bau === "levado" && /Sacristia/.test(document.querySelector("#cena-cab").textContent); }),
-      "carregado na sacristia: a sacristia no topo, o baú já levado (o pano no chão) e a sala no subtítulo");
+      "salvar, sair e carregar lá dentro: a sala vencida continua vencida e a tela vem inteira");
+    conferir(await page.evaluate(() => { const d = Cenas.atual().d; return d.cena === "sacristia" && d.momento === "visita" && d.bau === "no_canto" && /Sacristia/.test(document.querySelector("#cena-cab").textContent); })
+      && !!(await page.$(`${MENU}:has-text("Recolher o baú")`)), "carregado na sacristia: a sacristia no topo, o baú ainda no canto");
+    // recolher pelo ponto, com clique duplo: um baú só, sem tempo; o canto vazio e a opção some; carregar não devolve
+    const tempo = () => page.evaluate(() => JSON.stringify([estado.mundo.dia, estado.mundo.periodo_n]));
+    const t0 = await tempo();
+    await page.dblclick('.ci-ponto[data-ponto="bau"]');
+    await (await page.waitForSelector("#prompt .continuar", { timeout: 20000 })).click();
+    await page.waitForSelector(`${MENU}:has-text("Descer ao ossuário")`, { timeout: 20000 });
+    await page.waitForTimeout(300);
+    conferir((await baus()) === bausDepois + 1 && (await tempo()) === t0 && !(await page.$(`${MENU}:has-text("Recolher o baú")`))
+      && !(await page.$('.ci-ponto[data-ponto="bau"]')) && (await page.evaluate(() => Cenas.atual().d.bau)) === "levado",
+      "o baú pelo ponto (dois cliques): um só na bolsa, sem tempo; o canto vazio e a opção some");
+    await (await page.waitForSelector('#doca .atalho[data-rotulo="Sair"]')).click();
+    await (await page.waitForSelector(`${MENU}:has-text("Salvar e sair")`)).click();
+    for (let t = 0; t < 60 && !(await page.$(`${MENU}:has-text("Carregar")`)); t++) {
+      const c = await page.$("#prompt .continuar"); if (c) await c.click().catch(() => {});
+      await page.waitForTimeout(200);
+    }
+    await (await page.waitForSelector(`${MENU}:has-text("Carregar")`, { timeout: 20000 })).click();
+    await (await page.waitForSelector(".save-cartao")).click();
+    await page.waitForSelector(`${MENU}:has-text("Descer ao ossuário")`, { timeout: 20000 });
+    conferir((await baus()) === bausDepois + 1 && !(await page.$(`${MENU}:has-text("Recolher o baú")`)),
+      "carregado depois de recolher: o baú não volta ao canto nem à bolsa");
     await page.keyboard.press("d");
     await page.waitForSelector(".missao-pistas", { timeout: 10000 });
     const diario = await page.textContent(".missao-diario");
@@ -818,13 +840,27 @@ async function cenarioCapelaSalas(browser) {
     await page.waitForTimeout(200);
     conferir((await sala()) === "sacristia" && /Sacristia/.test(await page.textContent("#cena-cab")), "a escada sobe à sacristia desenhada, com a sala no subtítulo");
     conferir(!(await page.$(`${MENU}:has-text("Explorar")`)), "dentro da capela, sem Explorar a região (1.81.1)");
+    // o livro: examinar e ler. Pelo teclado abre o livro aberto com o relato inteiro; Esc fecha e devolve a sala
     await page.focus('.ci-ponto[data-ponto="livro"]');
     await page.keyboard.press("Enter");
-    await page.waitForSelector("#texto .olhar-perto", { timeout: 5000 }).catch(() => {});
-    conferir(/já leu/.test((await page.textContent("#texto .olhar-perto").catch(() => "")) || "") && (await foto()) === antes,
-      "o livro, pelo teclado: uma linha curta, sem repetir o que ele conta e sem gastar nada");
-    await page.click(".ci-afastar");
-    await page.waitForTimeout(600);
+    await page.waitForSelector("#sobre-leitura:not([hidden])", { timeout: 5000 });
+    const livro = await page.textContent("#sobre-leitura");
+    conferir(/O livro da capela/.test(livro) && /Que Deus nos perdoe/.test(livro) && /guardiã desta casa/.test(livro) && !/já leu/.test(livro)
+      && (await page.evaluate(() => document.activeElement.classList.contains("grimorio-fechar"))),
+      "o livro, pelo teclado: o relato inteiro num livro aberto, com o Fechar no foco");
+    await page.keyboard.press("1");  // as teclas do menu não escolhem nada embaixo do livro
+    await page.keyboard.press("Escape");
+    await page.waitForTimeout(800);
+    conferir((await page.$("#sobre-leitura[hidden]")) && (await foto()) === antes && !(await page.$("#pontos-cena.perto"))
+      && (await page.evaluate(() => document.activeElement.dataset.ponto === "livro")) && (await sala()) === "sacristia",
+      "Esc fecha o livro: a sala inteira de volta, o foco no livro, nada gasto nem escolhido");
+    await page.click('.ci-ponto[data-ponto="livro"]');  // reler, pelo mouse, e fechar no botão
+    await page.waitForSelector("#sobre-leitura:not([hidden])", { timeout: 5000 });
+    await page.click("#sobre-leitura .grimorio-fechar");
+    await page.waitForTimeout(800);
+    await page.mouse.move(2, 2);
+    conferir((await page.$("#sobre-leitura[hidden]")) && (await foto()) === antes && !(await page.$(".ci-ponto.aceso")),
+      "reler pelo mouse e fechar: nada muda, nada fica aceso");
     // De perto, nada da vista geral, nem com F4; afastando pelo mouse, nada fica aceso; pelo teclado, o foco volta
     const visiveis = () => page.evaluate(() => [...document.querySelectorAll("#pontos-cena .ci-balao")].filter((b) => getComputedStyle(b).visibility === "visible").length);
     await page.keyboard.press("F4");

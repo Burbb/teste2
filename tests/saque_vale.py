@@ -186,7 +186,7 @@ class Percurso:
                     tipo = ("guardiã" if any(e.chefe for e in g.derrotados) else
                             "inimigo com nome" if any(e.unico for e in g.derrotados) else "sorteado")
                 else:
-                    tipo = "sacristia" if g.ctx[0] == "missao:sacristia" else "outro"
+                    tipo = "sacristia" if g.ctx[0] in ("missao:sacristia", "missao:bau") else "outro"  # recolhido (1.85.0)
                 g.baus.append((g.origem(), tipo))
             g.ganhos.append((item, qtd, g.origem()))
             if "bau" in g.ctx and item != "bau":

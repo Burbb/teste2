@@ -317,6 +317,9 @@ class TestMissao(unittest.TestCase):
             vistas = lutas(g, "vitoria", "vitoria", "vitoria", "vitoria")
             baus, tochas = g.j.consumiveis.get("bau", 0), g.j.consumiveis["tocha"]
             for aid, etapa in (("nave", "sacristia"), ("sacristia", "ossuario"), ("ossuario", "fundo")):
+                if aid == "ossuario":  # o baú da sacristia ficou no canto: recolhido pela ação (1.85.0)
+                    self.assertEqual([o[1][2] for o in missoes.opcoes(g)][0], "bau")
+                    self.assertTrue(fazer(g, "bau"))
                 self.assertEqual([o[1][2] for o in missoes.opcoes(g)][0], aid)
                 if aid == "ossuario" and classe == "guerreiro":
                     g.ui.roteiro.insert(0, "Guardar")  # o Broquel do Vigia (E7): o cartão do achado, só para ele
@@ -376,6 +379,8 @@ class TestMissao(unittest.TestCase):
         self.assertFalse(fazer(g, "sacristia"))  # a fuga termina lá fora (1.79.0): primeiro, entrar de novo
         self.assertTrue(missoes.ir_na_capela(g, "salao"))
         fazer(g, "sacristia")
+        self.assertEqual(g.j.consumiveis.get("bau", 0), baus)  # o baú fica no canto (1.85.0)
+        self.assertTrue(fazer(g, "bau"))
         self.assertEqual(g.j.consumiveis.get("bau", 0), baus + 1)
         self.assertFalse(fazer(g, "sacristia"))  # vencida: o pedido atrasado não faz nada
         self.assertEqual(g.j.consumiveis.get("bau", 0), baus + 1)
@@ -423,7 +428,7 @@ class TestMissao(unittest.TestCase):
         h = Jogo.carregar(Roteiro(), g.caminho_save(), pasta)
         self.assertEqual(missoes.registro(h, MID), missoes.registro(g, MID))
         self.assertEqual(h.j.consumiveis.get("bau", 0), baus)
-        self.assertEqual([o[1][2] for o in missoes.opcoes(h)], ["ossuario"])  # as salas vencidas ficam vencidas
+        self.assertEqual([o[1][2] for o in missoes.opcoes(h)], ["bau", "ossuario"])  # as salas vencidas ficam vencidas
         lutas(h, "vitoria", "vitoria")
         fazer(h, "ossuario"); fazer(h, "correntes")
         h.salvar(silencioso=True)

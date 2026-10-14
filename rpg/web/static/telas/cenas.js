@@ -530,25 +530,25 @@
 
   // ================================================================ a sacristia
   // Uma sala pequena e seca, um degrau acima da água do salão: a porta para ele à esquerda (lá dentro, a água mais
-  // embaixo), as prateleiras reviradas, o buraco na parede onde estava o livro, a janela alta com a escada de mão (de
-  // madeira, não a de pedra do ossuário), o alçapão no chão e, no canto, o baú pequeno de ferro embaixo de um pano. O
+  // embaixo), as prateleiras reviradas (a de baixo partida), o livro escondido num buraco da parede, a janela alta com a
+  // escada de mão (de madeira, não a de pedra do ossuário), o alçapão no chão e, no canto, o baú pequeno de ferro. O
   // motor diz o momento: a entrada (os dois de capa escura, a lanterna erguida), a luta (eles são as cartas: a lanterna
-  // no chão), a vitória (a lanterna caída e apagada, o livro fora do buraco) e a visita (o baú já está na bolsa: o pano
-  // no chão e o canto vazio). A luz: a lanterna enquanto eles estão; depois, a janela (o período lá fora) e a tocha de
-  // quem está ali, se a luta a acendeu.
+  // no chão), a vitória (a lanterna caída e apagada, o livro desembrulhado no buraco) e a visita; e o baú (no canto até
+  // ser recolhido). A luz: a lanterna enquanto eles estão; depois, a janela (o período lá fora) e a tocha de quem está
+  // ali, se a luta a acendeu.
   const SAC = {
     piso: 54,
     porta: { x: 8, w: 26, topo: 18 },          // o vão da porta do salão, em arco
     janela: { x: 197, y: 4, w: 10, h: 17 },     // a janela alta
     buraco: { x: 122, y: 24, w: 13, h: 10 },    // onde estava o livro
     alcapao: { x: 230, y: 58, meia: 16, alt: 9 }, // o centro de cima, a meia largura em cima, a altura
-    bau: { x: 272, w: 24 },
+    bau: { x: 274, w: 18, y: 40 },               // o baú no canto: x, largura, o alto da tampa
   };
   const CORS = {
     parede: "#1f1d1c", junta: "#161413", pedra: "#2d2926", pedraLuz: "#47413b", pedraSombra: "#171513",
     chao: "#29251f", chaoLuz: "#3d362d", chaoJunta: "#1c1915", madeira: "#3a2a1c", madeiraLuz: "#5a4430",
     madeiraEsc: "#1c140d", escada: "#6a5236", escadaLuz: "#8a6e48", ferro: "#3a3c42", ferroLuz: "#6a6c74",
-    pano: "#4a4440", panoLuz: "#5e5650", panoSombra: "#2e2a27", papel: "#b8ae98", couro: "#4a3020", couroEsc: "#2a1a10",
+    papel: "#b8ae98", couro: "#4a3020", couroEsc: "#2a1a10",
     capa: "#141419", capaBorda: "#2a2a34", escuro: "#06080a",
   };
   /** Onde a luz principal está, pelo momento: a lanterna erguida (entrada), a lanterna no chão (luta), a tocha de quem
@@ -563,7 +563,7 @@
   function baseSacristia(W, d) {
     const k = camada(W), c = k.getContext("2d"), px = pincel(c), ox = Math.round((W - QW) / 2), C = CORS, P = SAC.piso;
     const ceu = ceuAgora(), bandas = ceu.bandas, noite = ceu.periodo === 3;
-    d = d || { momento: "visita", bau: "levado", livro: "fora" };
+    d = d || { momento: "visita", bau: "levado", livro: "no_buraco" };
     // a parede em blocos, o teto baixo com duas vigas e o chão seco de lajes
     px(0, 0, W, QH, C.parede);
     for (let y = 6; y < P; y += 6) for (let x = ((y / 6) % 2) * 7 - 14; x < W; x += 14) { px(x, y, 14, 1, C.junta); px(x, y, 1, 6, C.junta); }
@@ -584,19 +584,32 @@
     px(px0 - 2, P, pt.w + 4, 1, C.pedraLuz); px(px0 - 1, P + 1, pt.w + 2, 1, C.pedra);          // a soleira
     px(ox + 2, 22, 5, P - 22, C.madeira); px(ox + 2, 22, 1, P - 22, C.madeiraLuz); px(ox + 6, 22, 1, P - 22, C.madeiraEsc);  // a folha, aberta
     px(ox + 3, 30, 3, 1, C.ferro); px(ox + 3, 46, 3, 1, C.ferro);
-    // as prateleiras, reviradas: uma tábua torta, um pote caído, uma caixa aberta, papéis no chão
+    // as prateleiras, reviradas: a de baixo partida, um pote caído, uma caixa aberta, papéis no chão
     [ox + 44, ox + 106].forEach((x) => { px(x, 16, 3, P - 16, C.madeiraEsc); px(x, 16, 1, P - 16, C.madeira); });
-    [[24, 0], [34, 0], [44, 1]].forEach(([y, torta]) => {
-      for (let x = ox + 44; x < ox + 109; x++) { const dy = torta && x > ox + 80 ? 1 : 0; px(x, y + dy, 1, 1, C.madeiraLuz); px(x, y + 1 + dy, 1, 1, C.madeira); }
+    [24, 34].forEach((y) => {
+      px(ox + 44, y, 65, 1, C.madeiraLuz); px(ox + 44, y + 1, 65, 1, C.madeira); px(ox + 47, y + 2, 59, 1, C.pedraSombra);  // a sombra embaixo
+      [ox + 47, ox + 103].forEach((x) => px(x, y + 2, 2, 1, C.ferro));  // os suportes de ferro, junto dos montantes
     });
+    // a de baixo partiu no meio: a metade da esquerda ficou no suporte, com a ponta lascada; a da direita escorregou
+    // do suporte de lá e ficou inclinada, com uma ponta no chão e a outra apoiada no montante
+    px(ox + 44, 44, 34, 1, C.madeiraLuz); px(ox + 44, 45, 33, 1, C.madeira); px(ox + 47, 46, 28, 1, C.pedraSombra);
+    px(ox + 78, 44, 1, 1, C.madeiraLuz); px(ox + 77, 45, 1, 1, C.madeiraLuz); px(ox + 79, 43, 1, 1, C.madeira);  // as lascas
+    px(ox + 47, 46, 2, 1, C.ferro);
+    for (let x = ox + 80; x <= ox + 105; x++) {
+      const y = Math.round(lerp(P - 2, 44, (x - ox - 80) / 25));
+      px(x, y, 1, 1, C.madeiraLuz); px(x, y + 1, 1, 1, C.madeira); px(x + 1, y + 2, 1, 1, C.pedraSombra);  // e a sombra dela
+    }
+    px(ox + 80, P - 2, 1, 2, C.madeiraEsc); px(ox + 81, P - 1, 1, 1, C.madeiraLuz);  // a ponta quebrada, no chão
+    px(ox + 103, 46, 2, 1, C.ferro);                                                     // o suporte vazio
     px(ox + 52, 19, 4, 5, "#4a4038"); px(ox + 52, 19, 4, 1, "#6a5e50"); px(ox + 53, 18, 2, 1, "#3a3028");    // um pote de pé
     px(ox + 64, 22, 7, 2, "#4a4038"); px(ox + 70, 22, 1, 2, "#2a221c");                                      // outro, deitado
     px(ox + 82, 30, 7, 4, C.madeira); px(ox + 82, 29, 7, 1, C.madeiraLuz); px(ox + 88, 27, 1, 3, C.madeiraLuz); // a caixa, aberta
     px(ox + 84, 29, 2, 1, C.papel);
-    px(ox + 94, 42, 6, 1, "#6a5a3a"); px(ox + 99, 41, 1, 1, "#8a7a4a");                                     // o castiçal caído
+    px(ox + 92, P + 3, 6, 1, "#6a5a3a"); px(ox + 97, P + 2, 1, 1, "#8a7a4a");                               // o castiçal caído
     [[60, 61, 4], [78, 66, 5], [90, 58, 3]].forEach(([x, y, w]) => { px(ox + x, y, w, 1, C.papel); px(ox + x, y + 1, w, 1, "#8a8270"); });
     px(ox + 100, 60, 2, 1, "#4a4038"); px(ox + 103, 61, 1, 1, "#4a4038");                                    // os cacos
-    // o buraco na parede onde estava o livro: pedras arrancadas em volta; o couro lá dentro, ou o livro no chão embaixo
+    // o buraco na parede onde o livro estava escondido: pedras arrancadas em volta; o livro lá dentro, no couro (antes
+    // da vitória) ou desembrulhado, com o couro aberto caindo pela borda
     const bk = SAC.buraco, bx = ox + bk.x;
     // o contorno roído: cada linha começa e termina num ponto diferente (pedras arrancadas, não um nicho feito)
     const recorte = [3, 1, 0, 0, 1, 0, 0, 2, 1, 3], fim = [2, 0, 1, 0, 0, 0, 1, 0, 2, 4];
@@ -608,11 +621,13 @@
     px(bx + 2, bk.y - 1, bk.w - 3, 1, C.pedraLuz); px(bx + 3, bk.y + bk.h, bk.w - 6, 1, C.pedraLuz);
     px(bx + bk.w - 3, bk.y + 2, 2, 2, C.pedra);  // uma pedra meio solta na borda
     px(bx + 2, P + 2, 3, 2, C.pedra); px(bx + 9, P + 3, 2, 1, C.pedra);  // as pedras que caíram
-    if (d.livro === "no_buraco") {
+    if (d.livro === "embrulhado") {
       px(bx + 2, bk.y + 4, 9, 5, C.couro); px(bx + 2, bk.y + 4, 9, 1, "#6a4a30"); px(bx + 6, bk.y + 4, 1, 5, C.couroEsc);
-    } else {  // aberto no chão, embaixo do buraco: o couro desdobrado e as páginas
-      px(bx - 1, P + 6, 15, 3, C.couro); px(bx - 1, P + 6, 15, 1, "#6a4a30");
-      px(bx + 2, P + 5, 4, 2, C.papel); px(bx + 7, P + 5, 4, 2, C.papel); px(bx + 6, P + 5, 1, 2, "#8a8270");
+    } else {  // desembrulhado: o livro deitado, a lombada e o corte das folhas à vista; o couro pendendo da borda
+      px(bx + 3, bk.y + 5, 8, 3, "#5a3422"); px(bx + 3, bk.y + 5, 8, 1, "#7a4c30");  // a capa
+      px(bx + 3, bk.y + 8, 8, 1, C.papel); px(bx + 10, bk.y + 6, 1, 2, "#8a8270");   // as folhas
+      px(bx + 1, bk.y + bk.h, 7, 1, C.couro); px(bx + 2, bk.y + bk.h + 1, 5, 2, C.couro);
+      px(bx + 3, bk.y + bk.h + 3, 3, 1, C.couroEsc); px(bx + 1, bk.y + bk.h, 7, 1, "#6a4a30");
     }
     // a janela alta, estreita, com o céu da hora e uma barra de ferro; o peitoril de pedra
     const jn = SAC.janela, jx = ox + jn.x;
@@ -638,23 +653,10 @@
     px(ax - al.meia - 1, al.y - 1, al.meia * 2 + 2, 1, C.pedraSombra);
     px(ax - 2, al.y + 3, 5, 1, C.ferroLuz); px(ax - 3, al.y + 4, 1, 2, C.ferroLuz); px(ax + 3, al.y + 4, 1, 2, C.ferroLuz); px(ax - 2, al.y + 6, 5, 1, C.ferro);
     [ax - 11, ax + 8].forEach((x) => px(x, al.y, 4, 1, C.ferro));  // as dobradiças
-    // o baú: embaixo do pano, com um canto de ferro à vista (entrada, luta, vitória); depois, o pano no chão e o canto
-    // vazio, com a marca do baú na poeira (ele está na bolsa: aqui não há nada para pegar)
-    const bu = ox + SAC.bau.x, bw = SAC.bau.w;
-    if (d.bau === "coberto") {
-      px(bu, P - 9, bw, 9, C.ferro); px(bu, P - 9, 1, 9, C.ferroLuz);
-      for (let y = P - 13; y < P + 1; y++) {
-        const recuo = y < P - 10 ? Math.round((P - 10 - y) * 1.5) : 0, comeco = bu + 3 + recuo + (y > P - 4 ? 4 : 0);
-        for (let x = comeco; x < bu + bw + 2 - recuo; x++) px(x, y, 1, 1, (x + y) % 7 === 0 ? C.panoSombra : y === P - 13 ? C.panoLuz : C.pano);
-      }
-      px(bu + 1, P - 3, 1, 1, C.ferroLuz); px(bu + 3, P - 1, 1, 1, C.ferroLuz);  // o canto à vista: a quina e um rebite
-    } else {
-      px(bu + 1, P + 1, bw - 2, 1, C.chaoLuz); px(bu, P + 2, 1, 2, C.chaoLuz); px(bu + bw - 1, P + 2, 1, 2, C.chaoLuz); px(bu + 1, P + 3, bw - 2, 1, C.chaoLuz);
-      // o pano largado ao lado, amassado: um monte baixo, mais alto no meio, com duas dobras claras
-      const monte = [1, 2, 2, 3, 3, 4, 4, 4, 3, 3, 4, 3, 2, 2, 1, 1];
-      monte.forEach((alto, i) => { const x = bu - 14 + i; px(x, P + 7 - alto, 1, alto, C.pano); px(x, P + 7, 1, 1, C.panoSombra); });
-      px(bu - 10, P + 4, 3, 1, C.panoLuz); px(bu - 4, P + 4, 3, 1, C.panoLuz); px(bu - 7, P + 5, 1, 2, C.panoSombra);
-    }
+    // o baú: pequeno, de ferro velho, no canto, até ser recolhido; depois, só a marca dele na poeira
+    const bu = ox + SAC.bau.x, bw = SAC.bau.w, bt = SAC.bau.y;
+    if (d.bau === "no_canto") desenharBau(px, bu, bw, bt, P);
+    else { px(bu + 1, P + 1, bw - 2, 1, C.chaoLuz); px(bu, P + 2, 1, 2, C.chaoLuz); px(bu + bw - 1, P + 2, 1, 2, C.chaoLuz); px(bu + 1, P + 4, bw - 2, 1, C.chaoLuz); }
     // a lanterna dos dois: no chão, acesa (luta: o vidro vem no desenho de cada quadro), ou caída e apagada (depois)
     if (d.momento === "vitoria" || d.momento === "visita") {
       px(ox + 146, P + 8, 6, 3, C.ferro); px(ox + 147, P + 8, 4, 2, "#2a2a28"); px(ox + 152, P + 9, 2, 1, C.ferroLuz);
@@ -668,6 +670,7 @@
     for (let x = px0; x < px0 + pt.w; x++) { const t = Math.min(1, Math.abs(x + 0.5 - pmeio) / (pt.w / 2)); px(x, Math.round(pt.topo + 7 * (1 - Math.sqrt(1 - t * t))) - 1, 1, 1, leitura); }
     px(ax - al.meia - 1, al.y, al.meia * 2 + 2, 1, leitura);
     px(jx - 2, jn.y + jn.h, jn.w + 4, 1, leitura);
+    if (d.bau === "no_canto") { px(bu + 3, bt, bw - 6, 1, leitura); px(bu, bt + 5, 1, P + 3 - bt - 5, leitura); }  // o baú, legível no canto
     // a luz que entra pela janela: fria, fraca, no peitoril e numa mancha no chão; à noite, quase nada
     const daJanela = noite ? "rgba(150,165,200," : "rgba(225,215,190,";
     px(jx - 2, jn.y + jn.h, jn.w + 4, 1, daJanela + (noite ? "0.25)" : "0.45)"));
@@ -676,6 +679,27 @@
       px(x0, y, x1 - x0, 1, daJanela + ((noite ? 0.035 : 0.09) * f).toFixed(3) + ")");
     }
     return { canvas: k, ox, d, luz: L };
+  }
+
+  /** O baú de ferro: a tampa abaulada, as cintas com rebites nas pontas, o espelho da fechadura no meio, a ferrugem
+   *  nas bordas e a sombra no chão. Fica pousado com a base um pouco à frente da parede (y do chão + 3). */
+  function desenharBau(px, x, w, topo, P) {
+    const C = CORS, base = P + 3, tampa = topo + 6, ferro = "#45474e", ferroLuz = "#6e7078", ferroEsc = "#2a2b30";
+    px(x + 1, base, w, 1, "#120f0c"); px(x + w, base - 3, 1, 3, "#120f0c");                  // a sombra
+    for (let y = topo; y < tampa; y++) {                                                      // a tampa, abaulada
+      const recuo = [4, 2, 1, 0, 0, 0][y - topo];
+      px(x + recuo, y, w - recuo * 2, 1, y - topo < 2 ? ferroLuz : ferro);
+    }
+    px(x, tampa, w, 1, "#1c1d21");                                                            // a junta da tampa
+    px(x, tampa + 1, w, base - tampa - 1, "#38393f"); px(x, tampa + 1, 1, base - tampa - 1, ferroLuz);
+    px(x + w - 1, tampa + 1, 1, base - tampa - 1, ferroEsc); px(x, base - 1, w, 1, ferroEsc);
+    [x + 2, x + w - 4].forEach((cx) => {                                                      // as cintas e os rebites
+      px(cx, topo + (cx === x + 2 ? 2 : 2), 2, base - topo - 3, "#53555c"); px(cx, topo + 2, 1, base - topo - 3, "#62646c");
+      px(cx + 1, tampa + 2, 1, 1, "#9a9ca4"); px(cx + 1, base - 3, 1, 1, "#9a9ca4");
+    });
+    const meio = x + Math.floor(w / 2) - 2;
+    px(meio, tampa - 1, 4, 5, "#7a6438"); px(meio, tampa - 1, 4, 1, "#a8904c"); px(meio + 1, tampa + 1, 2, 2, "#120f0c");  // a fechadura
+    px(x + 5, base - 2, 3, 1, "#6a3e24"); px(x + w - 9, tampa + 3, 2, 1, "#6a3e24"); px(x + 7, topo + 2, 2, 1, "#6a3e24");  // a ferrugem
   }
 
   /** Um vulto de capa escura com capuz: sem rosto, sem marca (o que o texto diz dos pulsos fica no texto). `virado`:
@@ -734,7 +758,8 @@
     if (destaque === "porta") { const pt = SAC.porta, x0 = ox + pt.x; px(x0 - 2, pt.topo + 2, 1, P - pt.topo - 2, ouro); px(x0 + pt.w + 1, pt.topo + 2, 1, P - pt.topo - 2, ouro); px(x0 + 4, pt.topo - 2, pt.w - 8, 1, ouro); }
     if (destaque === "alcapao") { const al = SAC.alcapao, ax = ox + al.x; px(ax - al.meia - 2, al.y - 1, al.meia * 2 + 4, 1, ouro); px(ax - al.meia - 4, al.y + al.alt, al.meia * 2 + 8, 1, ouro); }
     if (destaque === "janela") { const jn = SAC.janela, jx = ox + jn.x; px(jx - 1, jn.y + 4, 1, jn.h - 4, ouro); px(jx + jn.w, jn.y + 4, 1, jn.h - 4, ouro); px(jx + 2, jn.y - 1, jn.w - 4, 1, ouro); }
-    if (destaque === "livro") { const bk = SAC.buraco, bx = ox + bk.x; px(bx - 2, P + 4, 17, 1, ouro); px(bx - 2, P + 10, 17, 1, ouro); }
+    if (destaque === "livro") { const bk = SAC.buraco, bx = ox + bk.x; px(bx - 2, bk.y - 3, bk.w + 4, 1, ouro); px(bx - 2, bk.y + bk.h + 5, bk.w + 4, 1, ouro); }
+    if (destaque === "bau") { const bu = ox + SAC.bau.x, bw = SAC.bau.w; px(bu - 2, SAC.bau.y - 2, bw + 4, 1, ouro); px(bu - 2, P + 5, bw + 4, 1, ouro); }
   }
 
   // ================================================================ o fundo alagado
@@ -1006,7 +1031,8 @@
     sacristia: { base: baseSacristia, desenhar: desenharSacristia,
       pontos: { porta: { area: [4, 16, 34, 42], balao: [21, 14], foco: [24, 40] },
                 janela: { area: [184, 2, 24, 54], balao: [222, 14], foco: [198, 26] },
-                livro: { area: [114, 22, 26, 46], balao: [128, 20], foco: [128, 47] },
+                livro: { area: [116, 19, 24, 22], balao: [128, 18], foco: [128, 30] },
+                bau: { area: [270, 36, 26, 24], balao: [283, 35], foco: [283, 48] },
                 alcapao: { area: [210, 56, 42, 14], balao: [230, 55], foco: [230, 62] } } },
     fundo: { base: baseFundo, desenhar: desenharFundo,
       pontos: { escada: { area: [4, 4, 62, 42], balao: [34, 10], foco: [40, 30] },
@@ -1080,7 +1106,7 @@
    *  com os pontos valendo (fora da luta, sem estar de perto). */
   function acesos(destaque) {
     if (!atual || !capa || capa.hidden || capa.classList.contains("perto")) return [];
-    const ids = destacando() ? atual.d.pontos.filter((p) => p.acao || p.olhar).map((p) => p.id) : [];
+    const ids = destacando() ? atual.d.pontos.filter((p) => p.acao || p.olhar || p.ler).map((p) => p.id) : [];
     if (destaque && !ids.includes(destaque) && atual.def.pontos[destaque]) ids.push(destaque);
     return ids.filter((id) => atual.def.pontos[id]);
   }
@@ -1127,6 +1153,7 @@
       document.getElementById("cena").appendChild(capa);
       document.getElementById("vista").addEventListener("transitionend", posicionar);
     }
+    fecharLeitura(false, true);  // uma página nova fecha o livro aberto
     capa.innerHTML = "";
     capa.classList.remove("perto");
     tirarOlhar();
@@ -1142,8 +1169,8 @@
     capa.setAttribute("role", "group");
     capa.setAttribute("aria-label", `${d.titulo}${descricao ? ": " + descricao : ""}`);
     d.pontos.forEach((p) => {
-      const ativo = !!p.acao || !!p.olhar;
-      const rotulo = p.acao ? `${p.nome}: ${p.faz}` : p.olhar ? `${p.nome}: olhar de perto` : `${p.nome}. ${p.estado}`;
+      const ativo = !!p.acao || !!p.olhar || !!p.ler;
+      const rotulo = p.acao ? `${p.nome}: ${p.faz}` : p.ler ? `${p.nome}: ler` : p.olhar ? `${p.nome}: olhar de perto` : `${p.nome}. ${p.estado}`;
       const bt = document.createElement("button");
       bt.type = "button";
       bt.className = "ci-ponto" + (ativo ? "" : " parado");
@@ -1175,11 +1202,12 @@
       if (processando) { pular = true; return; }  // a página ainda corre: o clique adianta, como na arte
       if (!pontosValem()) return;
       const foco = atual.def.pontos[p.id].foco;
-      if (p.olhar) {
+      if (p.olhar || p.ler) {
         App.som("escolha");
         capa.classList.add("perto"); bt.setAttribute("data-olhado", "");
         Vista.destacar(null);
         await Vista.focarEm(foco);
+        if (p.ler) { abrirLeitura(p.ler, ev.detail === 0); return; }  // examinar e ler: o livro aberto, por cima
         if (typeof p.olhar === "string") {  // o que se vê de perto, curto, embaixo do texto da página (sai ao afastar)
           tirarOlhar();
           const nota = document.createElement("p");
@@ -1217,6 +1245,45 @@
     });
     return true;
   }
+  // ---------------------------------------------------------------- ler (o livro da sacristia)
+  // Um livro aberto, como o Grimório: o texto vem pronto do motor no ponto (`ler`: título e páginas) e ler não fala
+  // com ele (reler não muda nada). Fechar (o botão, Esc ou o véu em volta) devolve a sala, afastando a câmera.
+  let leitura = null;
+  function abrirLeitura(ler, teclado) {
+    if (!leitura) {
+      leitura = document.createElement("div");
+      leitura.id = "sobre-leitura"; leitura.className = "sobreposicao"; leitura.hidden = true;
+      leitura.setAttribute("role", "dialog"); leitura.setAttribute("aria-modal", "true");
+      leitura.addEventListener("click", (ev) => { if (ev.target === leitura) fecharLeitura(false); });
+      document.body.appendChild(leitura);
+    }
+    const [p1, ...resto] = ler.paginas;
+    leitura.setAttribute("aria-label", ler.titulo);
+    leitura.innerHTML = `<div class="grimorio-livro leitura-livro">
+      <div class="grimorio-pagina esquerda"><div class="grimorio-cab"><b>${h(ler.titulo)}</b></div><p class="leitura-texto">${h(p1)}</p></div>
+      <div class="grimorio-pagina direita">${resto.map((t) => `<p class="leitura-texto">${h(t)}</p>`).join("")}</div>
+      <button class="grimorio-fechar" type="button">Fechar <kbd>Esc</kbd></button></div>`;
+    leitura.querySelector(".grimorio-fechar").addEventListener("click", (ev) => fecharLeitura(ev.detail === 0));
+    leitura.hidden = false;
+    leitura.dataset.teclado = teclado ? "1" : "";
+    document.addEventListener("keydown", teclaLeitura, true);
+    leitura.querySelector(".grimorio-fechar").focus({ focusVisible: !!teclado });
+  }
+  /** Com o livro aberto, as teclas são dele: Esc, Enter e espaço fecham; as outras não escolhem nada embaixo. */
+  function teclaLeitura(ev) {
+    if (!leitura || leitura.hidden) return;
+    if (["Escape", "Enter", " "].includes(ev.key)) { ev.preventDefault(); ev.stopPropagation(); fecharLeitura(true); return; }
+    if (ev.key === "Tab") { ev.preventDefault(); return; }  // um só controle: o foco fica nele
+    if (!["F4", "F1"].includes(ev.key)) ev.stopPropagation();
+  }
+  function fecharLeitura(teclado, semAfastar) {
+    if (!leitura || leitura.hidden) return false;
+    leitura.hidden = true;
+    document.removeEventListener("keydown", teclaLeitura, true);
+    if (!semAfastar) longe(teclado);
+    return true;
+  }
+
   /** Esc com um ponto de olhar aproximado: afasta (como o botão, pelo teclado). */
   function afastar() { const af = capa && capa.querySelector(".ci-afastar"); return !!(af && !af.hidden && longe(true)); }
   /** Luta: os pontos saem (a arte desce para a arena); a câmera volta à sala inteira, para a arena mostrar o lugar. */

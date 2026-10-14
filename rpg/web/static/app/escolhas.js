@@ -296,7 +296,7 @@ function mostrarOpcoes(m) {
     promptEl.appendChild(c);
     pergunta.caixa = c.querySelector("input");
   }
-  if (corpo.classList.contains("modo-titulo")) focoNoTitulo(lista);
+  if (corpo.classList.contains("modo-titulo")) { focoNoTitulo(lista); docaTela = null; }  // o título fecha a tela da doca
   if (naVila) montarVila(m, grupos);
   if (atalhos.childElementCount) montarDoca(atalhos, !!docaTela && m.opcoes.some(ehVoltar));
   if (!replay) guardar("cdf-dica", String(Number(ler("cdf-dica") || 0) + 1));
@@ -717,6 +717,8 @@ function botaoGrimorio(grupo) {
 }
 
 function ehVoltar(o) {
+  // Uma passagem da capela ("Voltar ao salão alagado") anda pelo lugar: não é o Voltar de uma tela.
+  if (o.meta && o.meta.capela_ir) return false;
   return (o.meta && o.meta.voltar) || /^(Voltar|Sair do mercado|Cancelar|Fechar)\b/.test(o.texto);
 }
 

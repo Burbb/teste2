@@ -178,6 +178,10 @@ body.derrotado #predios { visibility: hidden; }
 .g-versao-trocar { margin-top: 8px; font: inherit; font-size: 15px; color: var(--tinta); background: #2a1f16; border: 3px solid #5a4632; padding: 4px 12px; box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.35); cursor: pointer; }
 .g-versao-trocar:hover, .g-versao-trocar:focus-visible { border-color: var(--ouro); }
 .grimorio-fechar { position: absolute; top: -16px; right: -10px; z-index: 2; font: inherit; font-size: 15px; color: var(--tinta); background: #120e0b; border: 3px solid #5a4632; padding: 3px 10px; box-shadow: 3px 3px 0 #000; cursor: pointer; }
+/* O livro da sacristia (cenas.js, abrirLeitura): o mesmo livro aberto, menor, só texto corrido */
+.leitura-livro { grid-template-columns: 1fr 1fr; width: min(860px, 94vw); height: auto; min-height: min(360px, 80vh); max-height: 88vh; }
+.leitura-texto { margin: 14px 0 0; font-size: 18px; line-height: 1.5; color: #2a1f16; }
+.grimorio-pagina.direita .leitura-texto:first-child { margin-top: 44px; }
 @keyframes livro-abre { from { transform: scale(.92) translateY(10px); opacity: 0; } }
 @keyframes pagina-vira { from { opacity: 0; transform: translateX(14px); } }
 @media (max-width: 760px) {
@@ -375,3 +379,4 @@ body.derrotado #predios { visibility: hidden; }
 #ajuda-corpo ul { margin: 0; padding-left: 20px; line-height: 1.45; }
 #ajuda-corpo b { color: var(--ouro); font-weight: 600; }
 .ajuda-chave { margin-top: 6px; }
+@media (prefers-reduced-motion: reduce) { .leitura-livro { animation: none; } }

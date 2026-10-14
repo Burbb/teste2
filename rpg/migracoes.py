@@ -5,7 +5,7 @@ acrescenta-se uma função `_vN_para_vN1` em MIGRACOES. Um save antigo passa por
 chegar à versão atual; assim nenhum código do jogo precisa se defender de saves velhos.
 """
 
-VERSAO_SAVE = 3
+VERSAO_SAVE = 4
 
 # Tudo o que o estado da partida guarda além do jogador, da semente e do gerador aleatório.
 CAMPOS_SAVE = ("mundo", "dia", "periodo", "clima", "passos", "flags", "historico", "contagem",
@@ -44,7 +44,16 @@ def _v2_para_v3(d):
     return d
 
 
-MIGRACOES = {1: _v1_para_v2, 2: _v2_para_v3}
+def _v3_para_v4(d):
+    """O baú da sacristia passou a ser recolhido pela ação (1.85.0). Quem venceu a sacristia antes já o recebeu na
+    vitória, aberto ou gasto depois: fica "recolhido", para não vir outro (não se deduz pela bolsa)."""
+    m = ((d.get("mundo") or {}).get("missoes") or {}).get("febre_do_turvo")
+    if m and (m.get("etapa") in ("ossuario", "fundo", "retorno") or m.get("desfecho") or m.get("concluida")):
+        m.setdefault("bau", "recolhido")
+    return d
+
+
+MIGRACOES = {1: _v1_para_v2, 2: _v2_para_v3, 3: _v3_para_v4}
 
 
 def migrar(dados):

@@ -476,20 +476,32 @@ def _sacristia(g, mid):
                     "de você chegar.",
         "mago": "A marca no pulso deles não é tinta. Foi queimada, e ainda tem um cheiro que não é de fogo.",
     }.get(g.j.classe, "Não vieram pela brecha: há uma escada de mão encostada na janela alta."))
-    g.narrar("O que eles procuravam ficou num buraco da parede, embrulhado num couro duro: o livro da capela. As "
-             "primeiras páginas são de um padre de letra miúda. Ele anota a chegada de Ilse, \"guardiã desta casa\", "
-             "no ano em que a Fenda foi fechada, e o que a Igreja deixou com ela: \"o Sigilo do Turvo, que não deve "
-             "sair desta capela nem ir para mão nenhuma\".")
-    g.narrar("Anos depois, a letra treme. A vila acusa Ilse de bruxaria: a febre daquele inverno, os sonhos com água, o "
-             "gado morto no pântano. O padre escreve que ela não fez nada disso, que só guardava. Na linha seguinte: "
-             "\"Entregue à água pela vontade da vila. O Sigilo foi com ela. Que Deus nos perdoe.\"")
+    # O livro fica no buraco da parede: aqui, o essencial (as pistas são desta primeira vez); o relato inteiro se lê
+    # no livro, na página da sacristia (LIVRO_DA_CAPELA, o ponto "livro").
+    g.narrar("O que eles procuravam ficou num buraco da parede, embrulhado num couro duro: o livro da capela. Um padre "
+             "anotou nele que Ilse guardava esta casa e o Sigilo do Turvo, deixado com ela pela Igreja. A vila a acusou "
+             "de bruxaria e a entregou à água; o padre escreveu que ela não fez nada do que disseram. O Sigilo foi com "
+             "ela.")
     for pid in ("ilse", "sigilo_do_turvo", "marcados"):
         _pista(m, pid)
-    g.narrar("Embaixo de um pano, num canto, há um baú pequeno de ferro, trancado. No chão, um alçapão desce para o "
-             "ossuário, a sala dos ossos.")
-    g.dar("bau")
+    g.narrar("Num canto, há um baú pequeno de ferro, trancado. No chão, um alçapão desce para o ossuário, a sala dos "
+             "ossos.")
+    m["bau"] = "no_canto"  # o baú da sacristia: fica no canto até ser recolhido (a ação "bau"), uma vez
     g.avancar_periodo()
     avancar(g, mid, "sacristia", "ossuario")
+
+
+def _recolher_bau(g, mid):
+    """O baú da sacristia, recolhido pela ação (o ponto ou o menu): o mesmo que a vitória dava antes da 1.85.0, uma
+    vez. Sem tempo, tocha nem sorteio. Saves de antes já o receberam na vitória (migracoes: `bau` "recolhido")."""
+    m = registro(g, mid)
+    if m.get("bau") != "no_canto":
+        return
+    m["bau"] = "recolhido"
+    g.ui.cena("A Sacristia", g.contexto_cena(), "evento")
+    g.ui.painel("cena", cena_sacristia(g, mid, "visita"))  # o canto já vazio
+    g.narrar("Você recolhe o baú de ferro do canto.")
+    g.dar("bau")
 
 
 def _ossuario(g, mid):
@@ -745,17 +757,31 @@ def cena_ossuario(g, mid="febre_do_turvo", foco=None, pagina=False):
 
 # O que se vê de perto na sacristia (pontos de olhar, só na página do lugar): o que a arte mostra, sem repetir o livro.
 OLHAR_JANELA = "Uma escada de mão, de madeira, encostada na parede até a janela alta."
-OLHAR_LIVRO = "O livro da capela, no couro duro. O que ele conta, você já leu."
+# O relato inteiro do livro da sacristia (o ponto "livro" abre a leitura; a vitória conta só o essencial).
+LIVRO_DA_CAPELA = {
+    "titulo": "O livro da capela",
+    "paginas": [
+        "As primeiras páginas são de um padre de letra miúda. Ele anota a chegada de Ilse, \"guardiã desta casa\", no "
+        "ano em que a Fenda foi fechada, e o que a Igreja deixou com ela: \"o Sigilo do Turvo, que não deve sair desta "
+        "capela nem ir para mão nenhuma\".",
+        "Anos depois, a letra treme. A vila acusa Ilse de bruxaria: a febre daquele inverno, os sonhos com água, o gado "
+        "morto no pântano. O padre escreve que ela não fez nada disso, que só guardava. Na linha seguinte: \"Entregue "
+        "à água pela vontade da vila. O Sigilo foi com ela. Que Deus nos perdoe.\"",
+    ],
+}
 
 
 def cena_sacristia(g, mid="febre_do_turvo", momento="visita", pagina=False, luz=None):
     """A sacristia, acima da água do salão: a porta para ele (um degrau abaixo), as prateleiras reviradas, a janela alta
-    com a escada de mão, o buraco na parede onde estava o livro, o baú embaixo do pano e o alçapão do ossuário.
+    com a escada de mão, o livro no buraco da parede, o baú de ferro no canto e o alçapão do ossuário.
     `momento`: "entrada" (os dois de capa escura nas prateleiras, a lanterna erguida), "luta" (eles são as cartas: a
-    arte fica sem eles, a lanterna no chão, ainda acesa), "vitoria" (a lanterna caída e apagada, o livro fora do
-    buraco, o baú ainda embaixo do pano, como o texto conta) ou "visita" (o baú já está na bolsa: o pano no chão e o
-    canto vazio). `luz`: "tocha" quando a luta acendeu a de quem está ali; sem ela, a janela (o período lá fora)."""
+    arte fica sem eles, a lanterna no chão, ainda acesa), "vitoria" (a lanterna caída e apagada, o livro desembrulhado
+    no buraco) ou "visita" (a página). `livro`: "embrulhado" (no couro, antes da vitória) ou "no_buraco". `bau`:
+    "no_canto" até ser recolhido; "levado" depois (e nos saves de antes, que o receberam na vitória). `luz`: "tocha"
+    quando a luta acendeu a de quem está ali; sem ela, a janela (o período lá fora)."""
     visita = momento == "visita"
+    m = registro(g, mid)
+    no_canto = momento in ("entrada", "luta", "vitoria") or m.get("bau") == "no_canto"
     pontos = []
     if visita:
         porta = _passagem(g, mid, "porta", "Porta do salão", "salao", None,
@@ -764,11 +790,13 @@ def cena_sacristia(g, mid="febre_do_turvo", momento="visita", pagina=False, luz=
                             pagina)
         janela = {"id": "janela", "nome": "Janela", "estado": "A janela alta, com uma escada de mão encostada.",
                   "acao": None, "olhar": OLHAR_JANELA if pagina else None}
-        livro = {"id": "livro", "nome": "Livro", "estado": "O livro da capela, embrulhado em couro.", "acao": None,
-                 "olhar": OLHAR_LIVRO if pagina else None}
-        pontos = [porta, janela, livro, alcapao]
+        livro = {"id": "livro", "nome": "Livro", "estado": "O livro da capela, no buraco da parede.", "acao": None,
+                 "ler": LIVRO_DA_CAPELA if pagina else None}  # ler não fala com o motor: reler não muda nada
+        pontos = [porta, janela, livro] + ([_ponto(g, mid, "bau", "Baú", "bau", "Um baú pequeno de ferro, trancado, no "
+                                                   "canto.", pagina)] if no_canto else []) + [alcapao]
     return {"cena": "sacristia", "momento": momento, "luz": "lanterna" if momento in ("entrada", "luta") else luz,
-            "bau": "levado" if visita else "coberto", "livro": "no_buraco" if momento in ("entrada", "luta") else "fora",
+            "bau": "no_canto" if no_canto else "levado",
+            "livro": "embrulhado" if momento in ("entrada", "luta") else "no_buraco",
             "pontos": pontos, "titulo": "A Sacristia", "pagina": pagina}
 
 
@@ -1149,6 +1177,10 @@ ACOES = [
          etapas=("capela",), fn=_nave, confirmar=True, sala=True, onde="exterior"),
     dict(missao="febre_do_turvo", id="sacristia", rotulo="Atravessar o salão alagado",
          lugar="capela_afogada", etapas=("sacristia",), fn=_sacristia, confirmar=True, sala=True, onde="salao"),
+    # O baú da sacristia, no canto até ser recolhido (o ponto "Baú" faz a mesma ação); a missão segue sem ele.
+    dict(missao="febre_do_turvo", id="bau", rotulo="Recolher o baú", lugar="capela_afogada",
+         etapas=("ossuario", "fundo", "retorno"), pode=lambda g: registro(g, "febre_do_turvo").get("bau") == "no_canto",
+         fn=_recolher_bau, confirmar=True, onde="sacristia"),
     dict(missao="febre_do_turvo", id="ossuario", rotulo="Descer ao ossuário", lugar="capela_afogada",
          etapas=("ossuario",), fn=_ossuario, confirmar=True, sala=True, onde="sacristia"),
     dict(missao="febre_do_turvo", id="correntes", rotulo="Soltar as correntes", abre=True,

@@ -468,14 +468,16 @@ class TestSacristia(unittest.TestCase):
         fazer(g, "sacristia")
         ds = [d for d in cenas(g) if d["cena"] == "sacristia"]
         self.assertEqual([(d["momento"], d["luz"], d["bau"], d["livro"]) for d in ds],
-                         [("entrada", "lanterna", "coberto", "no_buraco"), ("luta", "lanterna", "coberto", "no_buraco"),
-                          ("vitoria", "tocha", "coberto", "fora")])
+                         [("entrada", "lanterna", "no_canto", "embrulhado"), ("luta", "lanterna", "no_canto", "embrulhado"),
+                          ("vitoria", "tocha", "no_canto", "no_buraco")])
         self.assertTrue(all(d["pontos"] == [] and not d["pagina"] for d in ds))  # dentro das cenas, nada se clica
-        self.assertEqual(g.j.consumiveis["bau"], 1)  # o baú, uma vez, pelo motor
+        self.assertEqual(g.j.consumiveis.get("bau", 0), 0)  # o baú fica no canto: recolhe-se pela ação (1.85.0)
         d = pagina(g)
-        self.assertEqual((d["momento"], d["bau"], d["livro"], d["luz"]), ("visita", "levado", "fora", None))
-        self.assertEqual([p["id"] for p in d["pontos"]], ["porta", "janela", "livro", "alcapao"])
+        self.assertEqual((d["momento"], d["bau"], d["livro"], d["luz"]), ("visita", "no_canto", "no_buraco", None))
+        self.assertEqual([p["id"] for p in d["pontos"]], ["porta", "janela", "livro", "bau", "alcapao"])
         self.assertEqual(ponto(d, "porta")["acao"], {"capela_ir": "salao"})
+        self.assertEqual(ponto(d, "bau")["acao"], {"missao": MID, "acao_missao": "bau"})
+        self.assertEqual(ponto(d, "bau")["faz"], "Recolher o baú")
         self.assertEqual(ponto(d, "alcapao")["acao"], {"missao": MID, "acao_missao": "ossuario"})
         self.assertEqual(ponto(d, "alcapao")["faz"], "Descer ao ossuário")
 
@@ -486,16 +488,28 @@ class TestSacristia(unittest.TestCase):
         fazer(g, "sacristia")
         self.assertIsNone(next(d for d in cenas(g) if d.get("momento") == "vitoria")["luz"])
 
-    def test_olhar_nao_da_nada_nem_repete_o_livro(self):
+    def test_olhar_e_ler_nao_dao_nada(self):
         g = na_capela(etapa="ossuario")
         d = pagina(g)
         antes = json.dumps([g.j.para_dict(), g.mundo, g.dia, g.periodo], sort_keys=True, default=str)
-        for pid in ("janela", "livro"):
-            p = ponto(d, pid)
-            self.assertIsNone(p["acao"])
-            self.assertTrue(p["olhar"])
-            self.assertNotIn("Sigilo", p["olhar"])  # o que o livro conta não se repete
+        janela, livro = ponto(d, "janela"), ponto(d, "livro")
+        self.assertEqual((janela["acao"], livro["acao"]), (None, None))
+        self.assertTrue(janela["olhar"])
+        self.assertEqual(livro["ler"], missoes.LIVRO_DA_CAPELA)  # o relato inteiro, pronto do motor, para reler
+        self.assertNotIn("já leu", json.dumps(d, ensure_ascii=False))
         self.assertEqual(antes, json.dumps([g.j.para_dict(), g.mundo, g.dia, g.periodo], sort_keys=True, default=str))
+
+    def test_a_vitoria_resume_o_livro_e_as_pistas_vem_dela(self):
+        g = na_capela(etapa="sacristia")
+        lutas(g, "vitoria")
+        fazer(g, "sacristia")
+        texto = " ".join(g.ui.ditos)
+        for trecho in ("Ilse guardava", "Sigilo do Turvo", "acusou de bruxaria", "não fez nada do que disseram",
+                       "O Sigilo foi com ela"):
+            self.assertIn(trecho, texto)
+        self.assertNotIn("Que Deus nos perdoe", texto)  # o relato inteiro fica no livro
+        self.assertTrue(any("Que Deus nos perdoe" in p for p in missoes.LIVRO_DA_CAPELA["paginas"]))
+        self.assertTrue({"ilse", "sigilo_do_turvo", "marcados"} <= set(missoes.registro(g, MID)["pistas"]))
 
     def test_depois_do_ossuario_o_alcapao_so_passa(self):
         g = na_capela(etapa="fundo")
@@ -610,3 +624,75 @@ class TestFundo(unittest.TestCase):
         self.assertEqual([(d["momento"], d["ilse"]) for d in cenas(g) if d["cena"] == "fundo"], [("descida", "presa")])
         self.assertEqual(missoes.sala_atual(g), "ossuario")
         self.assertIsNone(missoes.registro(g, MID).get("desfecho"))
+
+
+class TestBauDaSacristia(unittest.TestCase):
+    """O baú da sacristia fica no canto depois da vitória e se recolhe pela ação (o ponto "Baú" ou "Recolher o baú"),
+    uma vez, sem tempo, tocha ou sorteio (1.85.0). Saves de antes, que o receberam na vitória, não recebem outro."""
+
+    def vencida(self, pasta=None, classe="guerreiro"):
+        g = na_capela(classe, etapa="sacristia", pasta=pasta)
+        lutas(g, "vitoria")
+        fazer(g, "sacristia")
+        return g
+
+    def instantaneo(self, g):
+        return json.dumps([g.dia, g.periodo, g.j.consumiveis.get("tocha"), g.rng.getstate()], default=str)
+
+    def test_o_menu_e_o_ponto_fazem_a_mesma_acao_uma_vez(self):
+        g = self.vencida()
+        self.assertIn(("Recolher o baú", MID, "bau"), [(o[0], o[1][1], o[1][2]) for o in missoes.opcoes(g)])
+        antes = self.instantaneo(g)
+        self.assertTrue(missoes.executar(g, MID, "bau"))
+        self.assertEqual(g.j.consumiveis["bau"], 1)
+        self.assertEqual(self.instantaneo(g), antes)  # sem tempo, tocha ou sorteio
+        self.assertFalse(missoes.executar(g, MID, "bau"))  # o segundo clique não dá outro
+        self.assertEqual(g.j.consumiveis["bau"], 1)
+        d = pagina(g)
+        self.assertEqual((d["bau"], [p["id"] for p in d["pontos"]]), ("levado", ["porta", "janela", "livro", "alcapao"]))
+        self.assertNotIn("bau", [o[1][2] for o in opcoes_febre(g)])
+
+    def test_so_na_sacristia_e_a_missao_segue_sem_ele(self):
+        g = self.vencida(classe="mago")  # (o guerreiro acha o broquel no ossuário: outra pergunta)
+        missoes.ir_na_capela(g, "salao")
+        self.assertNotIn("bau", [o[1][2] for o in opcoes_febre(g)])
+        missoes.ir_na_capela(g, "sacristia")
+        lutas(g, "vitoria")
+        fazer(g, "ossuario")  # desce sem recolher
+        self.assertEqual(missoes.registro(g, MID)["etapa"], "fundo")
+        missoes.ir_na_capela(g, "sacristia")  # e volta depois para buscar
+        self.assertTrue(missoes.executar(g, MID, "bau"))
+        self.assertEqual(g.j.consumiveis["bau"], 1)
+
+    def test_salvar_e_carregar_antes_e_depois(self):
+        pasta = tempfile.mkdtemp()
+        g = self.vencida(pasta)
+        g.salvar(silencioso=True)
+        h = Jogo.carregar(Roteiro(), g.caminho_save(), pasta)
+        self.assertEqual(missoes.registro(h, MID)["bau"], "no_canto")
+        self.assertTrue(missoes.executar(h, MID, "bau"))
+        h.salvar(silencioso=True)
+        k = Jogo.carregar(Roteiro(), h.caminho_save(), pasta)
+        self.assertEqual((missoes.registro(k, MID)["bau"], k.j.consumiveis["bau"]), ("recolhido", 1))
+        self.assertFalse(missoes.executar(k, MID, "bau"))
+
+    def test_save_antigo_que_ja_recebeu_nao_recebe_outro(self):
+        from rpg.migracoes import migrar
+        pasta = tempfile.mkdtemp()
+        g = na_capela(etapa="fundo", pasta=pasta)  # venceu a sacristia pela regra antiga: o baú veio na vitória...
+        g.j.consumiveis.pop("bau", None)              # ...e já foi aberto (a bolsa não diz nada)
+        g.salvar(silencioso=True)
+        with open(g.caminho_save(), encoding="utf-8") as f:
+            d = json.load(f)
+        d["versao"] = 3
+        d["mundo"]["missoes"][MID].pop("bau", None)
+        with open(g.caminho_save(), "w", encoding="utf-8") as f:
+            json.dump(d, f)
+        h = Jogo.carregar(Roteiro(), g.caminho_save(), pasta)
+        self.assertEqual(missoes.registro(h, MID)["bau"], "recolhido")
+        missoes.ir_na_capela(h, "sacristia")
+        self.assertNotIn("bau", [o[1][2] for o in opcoes_febre(h)])
+        self.assertEqual(pagina(h)["bau"], "levado")
+        # antes da sacristia, a migração não mexe: a vitória põe o baú no canto
+        antigo = {"jogador": {}, "seed": 1, "versao": 3, "mundo": {"missoes": {MID: {"etapa": "sacristia"}}}}
+        self.assertNotIn("bau", migrar(antigo)["mundo"]["missoes"][MID])
