@@ -830,3 +830,31 @@ já numa das comparações. Os pares do teste de arte: abra `ferramentas\prototi
 
 Registrada em `docs/ROADMAP.md` (ideias guardadas): uma seleção pequena, de início dois retratos por classe, escolhida
 na criação, só cosmética. Nada implementado: nem a tela de escolha, nem recoloração, nem retratos por especialização.
+
+## Depois da aprovação: a HUD de ferro é a interface padrão (1.89.0)
+
+Jean aprovou a HUD para substituir a interface principal, com a superfície "mais escura" (sem a transição). Ela foi
+migrada para a estrutura normal do jogo e esta pasta fica como **histórico**: o jogo não carrega mais nada daqui, a
+opção `--hud-experimental` e o `HUD=experimental` dos cenários saíram, e `jogo/` (ligar.js, papeis.js, materiais.js,
+as folhas de teste) não é mais servido. Onde cada coisa foi parar:
+
+| No protótipo | No jogo |
+|---|---|
+| hud3 a hud4p, jogo/jogo.css, jogo/telas.css, superfície escura | `rpg/web/static/css/14-hud.css`, `16-hud-telas.css` (camadas consolidadas, sem as regras só do protótipo nem as que eram sobrepostas) |
+| hud4p-luta.css | `rpg/web/static/css/15-hud-luta.css` |
+| jogo/materiais.js | `Sprites.publicar()` pinta os materiais em ferro (o protótipo chama `Sprites.publicar({ bronze: true })` e segue com o bronze das versões anteriores) |
+| jogo/papeis.js e icones.js (Icones4p) | `rpg/web/static/icones.js`: as telas pedem o desenho pelo papel (sem observar a página) |
+| assets/, assets3/, assets4p/exibicao/ | `rpg/web/static/hud/` (moldura, texturas, barras) e `hud/icones/` (a família de ferro) |
+| arte-teste.js (mercador) | o busto do mercador em `telas/mercado.js`, com as cores da figura da banca |
+| arte-teste.js (baú de ferro) | não migrado: o Baú Trancado segue o baú de madeira e latão da família |
+
+Ajustes da migração: a doca um pouco mais escura; as barras do topo até 400 px e, na janela larga, o retrato, as
+barras e os recursos juntos no meio da coluna; a animação de equipar e o selo de atributo com o mesmo desenho da
+origem e do destino. Detalhes em `docs/ARQUITETURA.md` ("A interface web").
+
+Capturas da migração, tiradas do jogo de verdade (`capturas-migracao/`): `topo-larga.png` (a barra do topo em
+1280×720, 1500×950, 1920×1080 e 2560×1440: o grupo das barras para em 400 px e fica no meio com o retrato e os
+recursos), `janela-*.png` (a página inteira nesses tamanhos), `doca-estados.png` (normal, mouse, pressionado, tela
+aberta, foco de teclado), `mercado-*.png` (com o mercador, mouse e foco), `equipar-achado-*.png` (o voo de "Equipar
+agora" quadro a quadro, também com movimento reduzido), `equipar-guardar-e-mochila-1500x950.png` (guardar, e o clique
+duplo na mochila, que veste sem voo, como antes) e `baus-*.png` (o baú marrom na bolsa e no relatório).

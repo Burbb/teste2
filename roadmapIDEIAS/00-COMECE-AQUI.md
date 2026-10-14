@@ -33,6 +33,11 @@ Baldur's Gate 3 é uma referência de liberdade e consequências; Diablo/PoE, de
 - Manter Guerreiro, Arqueiro e Mago como as três classes iniciais deste ciclo.
 - Preservar os seis caminhos existentes: Guerreiro → Paladino/Berserker; Arqueiro → Patrulheiro/Sombra; Mago → Piromante/Necromante.
 - Preservar a identidade visual dos cenários, cards e telas interativas; usar as capturas do README principal como referência do que existe.
+- A HUD de ferro é a interface padrão desde a 1.89.0 (molduras, superfície mais escura, ícones pela família de ferro;
+  `docs/ARQUITETURA.md`, "A interface web"). Os cenários continuam a referência da arte do mundo: personagens e objetos
+  novos preservam formas simples, cores contidas e características reconhecíveis; retratos podem ser desenhados pelo
+  método dos cenários (grade de pixels em código), com mais detalhe só quando o tamanho deixa. O catálogo de ícones não
+  é refeito de uma vez; o que ainda não tem desenho fica com o do jogo (lacunas em `docs/ARQUITETURA.md`).
 - Reaproveitar a comitiva existente: Odette, Morel e Yara.
 - Continuar com o motor Python e a interface local HTML/CSS/JavaScript. Não há necessidade demonstrada de migração.
 - Validar uma primeira região pequena antes de expandir a campanha por trechos.
@@ -2028,3 +2033,26 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
 - **Registrado:** retratos do herói por classe (dois por classe, cosméticos) em `docs/ROADMAP.md`, ideias guardadas.
 - **É experimento:** a interface padrão continua a padrão; versão igual. **Falta:** Jean avaliar a superfície e os dois
   desenhos.
+
+### 14/10/2026 — A HUD de ferro vira a interface padrão (1.89.0)
+
+- **Pedido de Jean:** HUD aprovada; migrar para a interface padrão (sem `--hud-experimental`, sem depender de
+  `ferramentas/prototipos/hud/`), superfície mais escura sem transição, doca um pouco mais escura, barras do topo com
+  limite em telas largas, a animação de equipar com o ícone atual, baú marrom como o Baú Trancado geral, mercador no
+  mercado; não mexer em combate, economia, conteúdo, sorteios nem saves.
+- **Feito:** `css/14-hud.css`, `15-hud-luta.css` e `16-hud-telas.css` (as regras aprovadas, fora da trava de pixel de
+  `test_estilo_pixel.py`), `static/hud/` (molduras, texturas e os ícones em tamanhos de uso), `static/icones.js`
+  (`Icones`: o desenho de cada papel num lugar só; as telas pedem a ele e, sem desenho, usam o sprite do jogo),
+  `sprites.js` publica anéis, bicos e fios em ferro (o protótipo pede bronze). A ligação experimental saiu do servidor,
+  de `jogar.py` e dos cenários; os protótipos ficam como histórico.
+- **Ajustes:** grupo das barras do topo até 400 px e centralizado (em 1920 e 2560 a coluna do meio para em ~1064 px);
+  doca com véu mais escuro, estados conferidos; o voo de equipar, guardar e comprar-e-vestir usa o mesmo desenho da
+  origem e do destino; o Baú Trancado é sempre o baú marrom (bolsa, relatório, voo), o baú físico da sacristia não
+  mudou; o busto do mercador na banca, nas cores do homem do cenário.
+- **Verificado:** 601 testes, gabarito sem diferença (nenhuma escolha, sorteio ou estado mudou), pyflakes, a fumaça
+  inteira (356 conferências, nenhuma exceção no servidor; logs guardados). Percursos com captura em 1500×950, 1280×720,
+  1280×620, 1920×1080 e 2560×1440, mouse, teclado e movimento reduzido. A exceção do servidor e a falha de teste da
+  rodada anterior não reapareceram; a única falha desta rodada foi causada pela migração (`Icones.vazio(s)` caía na
+  regra de plural sem parênteses) e foi corrigida.
+- **Pendente:** lacunas de arte (em `docs/ARQUITETURA.md`), ícones de 16 px dentro das opções ainda do jogo, o duplo
+  clique da ficha equipa sem voo (como antes), capturas do README da interface antiga. **Falta:** Jean conferir.

@@ -154,14 +154,6 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
 
 `rpg/web/servidor.py` (HTTP + SSE em 127.0.0.1, com token) → `rpg/web/static/`:
 
-> **HUD experimental (teste, não é a interface padrão).** Com `python jogar.py --hud-experimental` (ou `HUD=experimental`
-> nos cenários de `tests/navegador/cenarios.py`), o servidor serve também a pasta do protótipo
-> (`ferramentas/prototipos/hud/`, em `/experimento/`) e põe um script dela no fim da página padrão
-> (`jogo/ligar.js`). É o único ponto de ligação (`Servidor(..., hud_experimental=True)`): sem a opção, a página e a
-> pasta ficam como sempre (a pasta nem é servida). A escolha vale só para a sessão e não entra no save. O script veste
-> os componentes reais (estilos e desenhos pelo papel de cada imagem); não muda regra, estado nem o que se clica.
-> Detalhes e lacunas: `ferramentas/prototipos/hud/LEIA-ME.md`.
-
 - `app/nucleo.js` conexão e fila de mensagens (e o `Gesto`: um clique ou tecla só vale na tela em que começou; o segundo clique de um clique duplo e a tecla segurada não escolhem nada) · `app/pagina.js` texto e cenas · `app/escolhas.js` menus,
   doca de atalhos, roda de ações da luta · `app/paineis.js` ficha e mapa laterais · `app/controles.js` teclado
 - `app/orientacao.js` as orientações da abertura guiada (abertura.py: C1–C4 na luta; fora dela, uma por vez pela
@@ -245,7 +237,8 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
 - Perguntas que moram numa janela por cima, e não no pé da página, vêm marcadas nos metadados das opções: a
   confirmação de algo pedido pela tela (`Jogo.confirmar`: abandonar contrato, viagem perigosa) e o item achado
   (`achado`: o cartão e os botões numa janela própria, fora do log)
-- `css/01..13-*.css` por componente. A identidade é pixel art em paleta indexada (a dos sprites, publicada por
+- `css/01..13-*.css` por componente: a estrutura, os estados e as animações (os materiais vêm da HUD de ferro, no
+  item seguinte, por cima). A base é pixel art em paleta indexada (a dos sprites, publicada por
   `Sprites.publicar()` como `--p-<letra>`): toda caixa é um dos materiais de `01-base.css` (`m-painel`, `m-janela`,
   `m-placa`, `m-nicho`, `m-sulco`, `m-etiqueta`): os painéis num quadro de bronze com rebites (`quadro_j`), o resto
   com um anel só, de 1 texel (`--P`) e canto chanfrado. Pedra, pergaminho, fuligem e luz são ladrilhos pontilhados
@@ -253,6 +246,26 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   (`tests/test_estilo_pixel.py` trava isso, arquivo por arquivo). Títulos em Alagard (`fontes/alagard-pt.ttf`, com os
   acentos desenhados por `ferramentas/acentuar_alagard.py`), em múltiplos de 16 px de arte; interface, números e prosa
   em Alegreya ("Fonte: pixel" troca só a prosa, para Pixelify Sans).
+- A HUD de ferro (1.89.0; o caminho até ela está em `ferramentas/prototipos/hud/`, que fica como histórico). Os
+  materiais da interface por cima da estrutura de 01 a 13, em três folhas: `css/14-hud.css` (as três molduras
+  principais da ficha, da coluna do centro e do mundo, as superfícies de carvão, o topo, a doca, os botões, a ficha, os
+  espaços de item, a janela do achado), `15-hud-luta.css` (cartas, roda, mira) e `16-hud-telas.css` (janelas, menus,
+  mercado e serviços, Diário, Talentos, avisos). As imagens moram em `static/hud/` (moldura, texturas, barras) e
+  `static/hud/icones/` (a família de ícones, cada um no tamanho de uso e com o dobro). Toda regra começa por
+  `:root body`, a mesma força de `body.<estado>`: é a que elas tinham no experimento, e vencem o material antigo sem
+  depender de uma classe no corpo. Essas três folhas ficam fora da trava de pixel (`FORA_DA_TRAVA`): o material é
+  pintado, com véus translúcidos, relevo e sombra suaves. `Sprites.publicar()` pinta os anéis, bicos e fios da
+  interface em ferro (as mesmas grades; o bronze continua nos sprites e, com `{ bronze: true }`, no protótipo).
+- `icones.js` (`Icones`) é o único lugar que decide o desenho de cada papel: o item pelo desenho que o motor dá,
+  o consumível pelo id, o atributo, o recurso do topo, o vital, o atalho da doca, o lugar de um caminho, a ação da
+  roda, o retrato e a cabeça da classe. Devolve a `<img>` pronta ou `""` quando a família não tem aquele desenho; a
+  tela usa então o sprite do jogo (`Icones.item(s) || S(s, 2)`). A origem e o destino de uma animação pedem o mesmo
+  papel (o item que voa ao equipar, o selo de atributo, o consumível que cai na bolsa). Lacunas (desenho do jogo no
+  lugar, sem trocar por desenho de outro tipo de item): as outras classes além do Guerreiro (retrato, cabeça, armas e
+  peças de couro, arco, cajado, orbe, livro), martelo e machado, os itens únicos com desenho próprio, unguento, bomba de
+  fumaça e Pena de Fênix, a tocha apagada, a bolsa vazia e o frasco vazio no topo, os inimigos e as cartas deles, os
+  ícones de habilidade e de efeito, o covil vencido. O mercador da banca tem o busto no balcão (`telas/mercado.js`,
+  com as cores da figura da banca).
 
 ## Telemetria
 
