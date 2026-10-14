@@ -1876,3 +1876,19 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   compras rápidas (estoque, espaço e ouro acabando no meio, Shift+clique, Esc com fila) e o relatório (clique duplo,
   Enter segurado, subida de nível).
 - **Falta:** Jean conferir jogando. Nada de outras regiões, ataques em área ou empacotamento; a E9 segue aberta.
+
+### 14/10/2026 — Protótipo da ficha do herói (experimento, sem versão)
+
+- **Pedido de Jean:** depois das correções, um teste visual da ficha do herói como painel completo, separado do jogo:
+  dados reais da ficha, hierarquia (identidade primeiro, títulos de seção menores), molduras e espaços bem definidos,
+  ouro com moderação, assets desenhados em código, controles de demonstração, avaliação na composição real em 1500 e
+  1280 px (com janela baixa).
+- **Feito:** `ferramentas/prototipos/hud/` (abrir `index.html`, ou `abrir.bat` no Windows). Os dados saem do motor
+  (`gerar_dados.py` grava o dicionário de `rpg.web.estado.heroi` para cada combinação dos controles); o entorno é o DOM
+  do jogo fotografado num lugar real, com a paisagem do `vista.js`. Assets novos em `arte.js`: retrato do Guerreiro,
+  moldura em nove partes, espaço de item e os ícones de espada, escudo, anel e poção (mapas de material com contorno,
+  luz e sombra do mesmo pintor). Decisões e o que não convenceu no `LEIA-ME.md` da pasta; capturas em `capturas/`.
+- **Verificado:** aberto e fotografado em 1500×950, 1280×800 e 1280×720 (sem texto cortado, foco visível ao rolar,
+  dicas à direita do painel sem cobrir o elemento, sem erro no console, servido do disco e por http).
+- **É experimento:** não aprovado nem migrado; o jogo, os saves e a versão não mudaram por causa dele. Nada de mercado,
+  combate, mapa, Diário ou outras janelas. **Falta:** a avaliação de Jean.

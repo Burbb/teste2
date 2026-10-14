@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Protótipo: ficha do herói (experimento)</title>
+<link rel="icon" href="data:,">
+<!-- Experimento fora do jogo. O CSS e os scripts de produção só dão o entorno (o topo, a cena, o mundo) e a paleta;
+     a ficha é toda daqui (ficha.css, ficha.js, arte.js). Nada nesta pasta é carregado pelo jogo. -->
+<link rel="stylesheet" href="../../../rpg/web/static/css/01-base.css">
+<link rel="stylesheet" href="../../../rpg/web/static/css/02-hud.css">
+<link rel="stylesheet" href="../../../rpg/web/static/css/03-batalha.css">
+<link rel="stylesheet" href="../../../rpg/web/static/css/04-pagina.css">
+<link rel="stylesheet" href="../../../rpg/web/static/css/05-paineis.css">
+<link rel="stylesheet" href="../../../rpg/web/static/css/06-talentos-avisos.css">
+<link rel="stylesheet" href="../../../rpg/web/static/css/07-titulo-responsivo.css">
+<link rel="stylesheet" href="../../../rpg/web/static/css/08-mercado.css">
+<link rel="stylesheet" href="../../../rpg/web/static/css/09-comitiva.css">
+<link rel="stylesheet" href="../../../rpg/web/static/css/10-contratos.css">
+<link rel="stylesheet" href="../../../rpg/web/static/css/11-tipografia.css">
+<link rel="stylesheet" href="../../../rpg/web/static/css/12-acoes-combate.css">
+<link rel="stylesheet" href="../../../rpg/web/static/css/13-realce.css">
+<link rel="stylesheet" href="ficha.css">
+<script src="../../../rpg/web/static/sprites-dados.js"></script>
+<script src="../../../rpg/web/static/sprites.js"></script>
+<script>Sprites.publicar();</script>
+</head>
+<body>
+
+<div id="atmosfera" aria-hidden="true"><div class="camada vinheta"></div></div>
+<header id="topo"></header>
+
+<main id="mesa">
+  <aside id="ficha" aria-label="Herói"></aside>
+  <section id="palco"></section>
+  <aside id="mundo" class="painel m-painel" aria-label="Mundo"></aside>
+</main>
+
+<!-- Controles de demonstração: fora da interface do jogador (D mostra e esconde). -->
+<section id="demo" aria-label="Controles de demonstração">
+  <h2>Demonstração <span>D esconde</span></h2>
+  <fieldset data-chave="nome"><legend>Nome</legend><div class="op">
+    <button type="button" data-v="Jean">Jean</button><button type="button" data-v="PARAIBATRON">PARAIBATRON</button>
+    <button type="button" data-v="Aldebarã de Montemor">Aldebarã de Montemor</button></div></fieldset>
+  <fieldset data-chave="nivel"><legend>Nível</legend><div class="op">
+    <button type="button" data-v="1">1</button><button type="button" data-v="6">6</button><button type="button" data-v="14">14</button></div></fieldset>
+  <fieldset data-chave="equip"><legend>Equipamento</legend><div class="op">
+    <button type="button" data-v="completo">completo</button><button type="button" data-v="parcial">parcial</button><button type="button" data-v="vazio">vazio</button></div></fieldset>
+  <fieldset data-chave="bolsa"><legend>Bolsa</legend><div class="op">
+    <button type="button" data-v="comum">comum</button><button type="button" data-v="cheia">cheia</button><button type="button" data-v="vazia">vazia</button></div></fieldset>
+  <fieldset data-chave="feridas"><legend>Ferimentos</legend><div class="op">
+    <button type="button" data-v="0">sem</button><button type="button" data-v="1">com</button></div></fieldset>
+  <fieldset data-chave="fome"><legend>Fome</legend><div class="op">
+    <button type="button" data-v="0">sem</button><button type="button" data-v="1">com</button></div></fieldset>
+  <fieldset data-chave="icones"><legend>Ícones</legend><div class="op">
+    <button type="button" data-v="novos">novos</button><button type="button" data-v="atuais">atuais</button></div></fieldset>
+  <p>Os números, nomes, dicas e espaços vêm do motor (dados.js). O nome é livre, como no jogo.</p>
+</section>
+<button type="button" id="mostrar-demo" hidden>Demonstração (D)</button>
+
+<script src="../../../rpg/web/static/vista.js"></script>
+<script src="dados.js"></script>
+<script src="composicao.js"></script>
+<script src="arte.js"></script>
+<script src="ficha.js"></script>
+<script>
+"use strict";
+// O entorno: o topo, a cena e o mundo fotografados do jogo (composicao.js), e a paisagem desenhada de verdade.
+const C = window.COMPOSICAO;
+document.body.className = C.corpo.classe;
+document.body.dataset.bioma = C.corpo.bioma;
+document.body.dataset.periodo = C.corpo.periodo;
+document.getElementById("topo").innerHTML = C.topo;
+document.getElementById("palco").innerHTML = C.palco;
+document.getElementById("mundo").innerHTML = C.mundo;
+document.querySelectorAll("#palco button, #palco [tabindex], #mundo button, #mundo [tabindex], #topo button").forEach((b) => b.setAttribute("tabindex", "-1"));
+Vista.atualizar({ local: C.vista.local, mundo: C.vista.mundo });
+
+// Os assets da ficha vão para o CSS como variáveis (como o jogo faz com os materiais dele).
+document.documentElement.style.setProperty("--f-moldura", `url(${Arte.moldura()})`);
+document.documentElement.style.setProperty("--f-espaco", `url(${Arte.espaco()})`);
+
+const escolha = { nome: "Jean", nivel: "6", equip: "completo", bolsa: "comum", feridas: "0", fome: "0", icones: "novos" };
+try { Object.assign(escolha, JSON.parse(localStorage.getItem("prototipo-ficha") || "{}")); } catch (e) { /* sem armazenamento */ }
+const ficha = document.getElementById("ficha");
+function redesenhar() {
+  const h = FICHAS[[escolha.nivel, escolha.equip, escolha.feridas, escolha.fome, escolha.bolsa].join("|")];
+  Ficha.iconesNovos = escolha.icones === "novos";
+  Ficha.fecharDica();
+  Ficha.desenhar(ficha, h, escolha.nome);
+  document.querySelectorAll("#demo fieldset").forEach((f) => f.querySelectorAll("button").forEach((b) =>
+    b.setAttribute("aria-pressed", String(escolha[f.dataset.chave] === b.dataset.v))));
+  try { localStorage.setItem("prototipo-ficha", JSON.stringify(escolha)); } catch (e) { /* sem armazenamento */ }
+}
+document.querySelectorAll("#demo fieldset").forEach((f) => f.addEventListener("click", (ev) => {
+  const b = ev.target.closest("button[data-v]");
+  if (b) { escolha[f.dataset.chave] = b.dataset.v; redesenhar(); }
+}));
+const demo = document.getElementById("demo"), mostrar = document.getElementById("mostrar-demo");
+function alternarDemo() { demo.hidden = !demo.hidden; mostrar.hidden = !demo.hidden; }
+mostrar.addEventListener("click", alternarDemo);
+document.addEventListener("keydown", (ev) => { if ((ev.key === "d" || ev.key === "D") && !ev.ctrlKey && !ev.metaKey && !ev.altKey) alternarDemo(); });
+Ficha.ligarDicas(ficha);
+addEventListener("resize", redesenhar);
+document.fonts.ready.then(redesenhar);
+redesenhar();
+</script>
+</body>
+</html>

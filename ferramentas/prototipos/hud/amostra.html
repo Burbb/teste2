@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Protótipo: os assets da ficha (experimento)</title>
+<link rel="icon" href="data:,">
+<style>
+  body { margin: 0; padding: 20px; background: #121110; color: #c0b8a8; font: 15px/1.4 "Segoe UI", system-ui, sans-serif; }
+  h1 { font-size: 18px; margin: 0 0 4px; color: #f1e4c4; } h2 { font-size: 15px; margin: 22px 0 6px; color: #f1e4c4; }
+  p { margin: 0 0 8px; max-width: 760px; }
+  .linha { display: flex; align-items: flex-end; gap: 14px; flex-wrap: wrap; }
+  figure { margin: 0; text-align: center; font-size: 12px; color: #8a8070; }
+  img { image-rendering: pixelated; display: block; margin: 0 auto 4px; }
+  .fundo { background: #211a14; padding: 6px; }
+</style>
+</head>
+<body>
+<h1>Os assets próprios da ficha, em cada escala</h1>
+<p>Desenhados em código (arte.js), na paleta do jogo. Os ícones são mapas de material: a luz, a sombra e o contorno
+saem do pintor, iguais em todos. A escala ×2 é a dos espaços da ficha; ×1, a dos atributos.</p>
+<div id="a"></div>
+<script src="../../../rpg/web/static/sprites-dados.js"></script>
+<script src="../../../rpg/web/static/sprites.js"></script>
+<script src="arte.js"></script>
+<script>
+const fig = (src, lado, esc, rot) => `<figure><div class="fundo"><img src="${src}" width="${lado * esc}" height="${lado * esc}" alt=""></div>${rot}</figure>`;
+let h = "<h2>Ícones novos (×1, ×2, ×3, ×6) e o atual do jogo (×2, ×6)</h2>";
+for (const n of ["espada", "escudo", "anel", "pocao"])
+  h += `<div class="linha">${[1, 2, 3, 6].map((e) => fig(Arte.icone(n), 16, e, `${n} ×${e}`)).join("")}${fig(Sprites.url(n), 16, 2, "atual ×2")}${fig(Sprites.url(n), 16, 6, "atual ×6")}</div>`;
+h += `<h2>Retrato do Guerreiro (×2, ×3, ×6) e o atual</h2><div class="linha">${[2, 3, 6].map((e) => fig(Arte.retrato(), 32, e, `×${e}`)).join("")}${fig(Sprites.url("guerreiro"), 16, 6, "atual ×6")}</div>`;
+h += `<h2>Moldura (nove partes, 6 texels por canto) e espaço de item (20 texels), ×6</h2><div class="linha">${fig(Arte.moldura(), 18, 6, "moldura")}${fig(Arte.espaco(), 20, 6, "espaço")}${fig(Arte.espaco(), 20, 2, "espaço ×2")}</div>`;
+document.getElementById("a").innerHTML = h;
+</script>
+</body>
+</html>
