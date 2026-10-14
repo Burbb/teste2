@@ -1,0 +1,39 @@
+/* HUD 4 pixel (experimento, fora do jogo): a HUD 4 completa (molduras, carvão, cenários, botões) com a família de
+   ferro de contorno duro (icones.js: Icones4p), os atributos sem caixas e o texto da luta legível. Só acrescenta: o
+   resto é o hud4c.css e o hud4.css (o corpo leva v3 v4 v4c v4p). Nenhuma moldura nova. */
+
+/* ------------------------------------------------------------ atributos: na superfície do painel, duas colunas */
+/* Sem as quatro caixas: os atributos ficam no carvão da ficha, organizados por alinhamento e por um fio claro entre as
+   colunas e entre as linhas. Em cada um: o ícone à esquerda, o nome discreto em cima, o valor em destaque embaixo e a
+   penalidade logo depois dele (só quando há). */
+body.v4p #ficha .f-atributos { gap: 0; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+body.v4p #ficha .f-attr, body.v4p #ficha .f-attr:hover { background: none; box-shadow: none; border-radius: 0;
+  grid-template-columns: 24px minmax(0, 1fr); column-gap: 8px; row-gap: 1px; padding: 7px 10px 7px 2px; }
+body.v4p #ficha .f-attr:nth-child(even) { padding: 7px 2px 7px 11px; border-left: 1px solid rgba(255, 255, 255, 0.07); }
+body.v4p #ficha .f-attr:nth-child(-n+2) { border-bottom: 1px solid rgba(255, 255, 255, 0.07); }
+body.v4p #ficha .f-attr img.novo4c { grid-row: 1 / 3; width: 24px; height: 24px; }
+body.v4p #ficha .f-attr .n { font-size: 13px; line-height: 1.1; color: var(--sec, #9d978b); letter-spacing: 0.01em; }
+body.v4p #ficha .f-attr .v { font-size: 21px; line-height: 1.05; color: #f3e6c8; white-space: nowrap; }
+body.v4p #ficha .f-attr .v small { margin-left: 4px; font-size: 12px; }
+body.v4p #ficha .f-attr.abaixo .v { color: var(--vermelho); }
+/* o mouse e o foco ainda marcam o atributo (a dica sai dele): um véu claro, sem caixa fixa */
+body.v4p #ficha .f-attr:hover { background: rgba(255, 255, 255, 0.045); }
+@media (max-width: 1400px) {
+  body.v4p #ficha .f-attr { column-gap: 6px; padding-right: 6px; }
+  body.v4p #ficha .f-attr:nth-child(even) { padding-left: 8px; }
+  body.v4p #ficha .f-attr .n { font-size: 12.5px; }
+  body.v4p #ficha .f-attr .v { font-size: 19px; }
+}
+
+/* ------------------------------------------------------------ o topo: a cabeça do mesmo retrato da ficha */
+body.v4p .hud-retrato img.novo4c { display: block; width: 48px; height: 48px; }
+
+/* ------------------------------------------------------------ a luta */
+/* O registro: as linhas dos turnos anteriores ficavam a 35% (pensado para um fundo claro) e sumiam no carvão. Agora
+   ficam a 70%: o turno atual continua à frente, os anteriores se leem. */
+body.v4p #texto .passado { opacity: 0.7; }
+/* o rosto do herói na carta e os desenhos novos da roda, no tamanho deles (32 px) */
+body.v4p .carta.heroi .icone img.novo4c { width: 32px; height: 32px; }
+body.v4p .roda-botao .rb-icone img.novo4c { width: 32px; height: 32px; }
+/* a carta em foco é ampliada 1,12× pelo jogo (.carta.foco): o rosto amplia em pixel duro, como os sprites dele */
+body.v4p .carta.foco .icone img.novo4c { image-rendering: pixelated; }

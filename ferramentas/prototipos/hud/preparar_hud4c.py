@@ -109,10 +109,12 @@ def dilatar(m, raio):
     return np.array(img) > 0
 
 
-def separar(folha, cols, lins):
+def separar(folha, cols, lins, par=0.0):
     """Os desenhos de uma folha, um por célula da grade, com o alfa limpo, e o que saiu de cada um. As regiões conexas
     são achadas na folha inteira (um desenho pode passar um pouco da sua célula) e cada uma vai para a célula do seu
-    centro; ficam a principal e as menores perto dela (faíscas, riscos de velocidade). O resto são pontos soltos."""
+    centro; ficam a principal e as menores perto dela (faíscas, riscos de velocidade). O resto são pontos soltos.
+    `par`: uma região da célula com pelo menos essa fração da principal fica onde estiver (o segundo pé de um par de
+    perneiras, separado do primeiro por um vão)."""
     a = np.array(folha)
     alfa = a[:, :, 3].astype(int)
     rot, tam = regioes(alfa > 40)
@@ -132,11 +134,15 @@ def separar(folha, cols, lins):
             folga = round(0.06 * max(cw, ch))
             fica = rot == principal
             for _, n, (bx0, by0, bx1, by1) in regs[1:]:
-                if bx1 >= x0 - folga and bx0 <= x1 + folga and by1 >= y0 - folga and by0 <= y1 + folga:
+                perto = bx1 >= x0 - folga and bx0 <= x1 + folga and by1 >= y0 - folga and by0 <= y1 + folga
+                if perto or (par and tam[n] >= par * tam[principal]):
                     fica |= rot == n
             # a borda de antisserrilhado (alfa entre a franja e 40) encosta no desenho: entra com uma dilatação curta
-            X0, Y0 = max(0, x0 - 2 * folga), max(0, y0 - 2 * folga)
-            X1, Y1 = min(folha.width, x1 + 2 * folga), min(folha.height, y1 + 2 * folga)
+            # A janela em volta da principal. Com `par`, ela cobre tudo o que fica (o par inteiro); sem ele, é a da HUD 4
+            # completa, que mantém as peças dela como foram avaliadas (e corta a ponta dos riscos da bota de Agilidade).
+            ys, xs = np.nonzero(fica) if par else (np.array([y0, y1 - 1]), np.array([x0, x1 - 1]))
+            X0, Y0 = max(0, min(x0, xs.min()) - 2 * folga), max(0, min(y0, ys.min()) - 2 * folga)
+            X1, Y1 = min(folha.width, max(x1, xs.max() + 1) + 2 * folga), min(folha.height, max(y1, ys.max() + 1) + 2 * folga)
             sub_fica = dilatar(fica[Y0:Y1, X0:X1], 3) & (alfa[Y0:Y1, X0:X1] > FRANJA)
             sub_a = a[Y0:Y1, X0:X1].copy()
             sub_alfa = alfa[Y0:Y1, X0:X1]

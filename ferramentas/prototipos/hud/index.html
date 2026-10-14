@@ -25,6 +25,7 @@
 <link rel="stylesheet" href="hud3.css">
 <link rel="stylesheet" href="hud4.css">
 <link rel="stylesheet" href="hud4c.css">
+<link rel="stylesheet" href="hud4p.css">
 <script src="../../../rpg/web/static/sprites-dados.js"></script>
 <script src="../../../rpg/web/static/sprites.js"></script>
 <script>Sprites.publicar();</script>
@@ -44,7 +45,7 @@
 <section id="demo" aria-label="Controles de demonstração">
   <h2>Demonstração <span>D esconde</span></h2>
   <fieldset data-chave="versao"><legend>Versão</legend><div class="op">
-    <button type="button" data-v="anterior">Anterior</button><button type="button" data-v="assets">Assets</button><button type="button" data-v="hud3">HUD 3</button><button type="button" data-v="hud4">HUD 4</button><button type="button" data-v="hud4c">HUD 4 completa</button></div></fieldset>
+    <button type="button" data-v="anterior">Anterior</button><button type="button" data-v="assets">Assets</button><button type="button" data-v="hud3">HUD 3</button><button type="button" data-v="hud4">HUD 4</button><button type="button" data-v="hud4c">HUD 4 completa</button><button type="button" data-v="hud4p">HUD 4 pixel</button></div></fieldset>
   <fieldset data-chave="entorno"><legend>Entorno</legend><div class="op">
     <button type="button" data-v="bosque">Bosque (missão)</button><button type="button" data-v="brejo">Brejo</button>
     <button type="button" data-v="combate">Combate</button><button type="button" data-v="capela">Capela</button></div></fieldset>
@@ -80,7 +81,7 @@
 <script src="composicao.js"></script>
 <script src="composicao3.js"></script>
 <script src="composicao4c.js"></script>
-<script src="icones4c.js"></script>
+<script src="icones.js"></script>
 <script src="topo.js"></script>
 <script src="arte.js"></script>
 <script src="ficha.js"></script>
@@ -172,14 +173,16 @@ function redesenhar() {
   Ficha.iconesNovos = escolha.icones === "novos";
   Ficha.versao = escolha.versao;
   document.body.className = (ENTORNOS[escolha.entorno] || ENTORNOS.bosque).corpo.classe;
-  document.body.classList.toggle("v3", ["hud3", "hud4", "hud4c"].includes(escolha.versao));  // a HUD 4 parte da 3
-  document.body.classList.toggle("v4", ["hud4", "hud4c"].includes(escolha.versao));  // e a completa, da 4
-  document.body.classList.toggle("v4c", escolha.versao === "hud4c");
+  document.body.classList.toggle("v3", ["hud3", "hud4", "hud4c", "hud4p"].includes(escolha.versao));  // a HUD 4 parte da 3
+  document.body.classList.toggle("v4", ["hud4", "hud4c", "hud4p"].includes(escolha.versao));  // a completa, da 4
+  document.body.classList.toggle("v4c", ["hud4c", "hud4p"].includes(escolha.versao));  // e a pixel, da completa
+  document.body.classList.toggle("v4p", escolha.versao === "hud4p");
   ajustarEntorno();
-  const novos = escolha.versao === "hud4c" && escolha.icones === "novos";
-  Topo.novos = novos;
+  const familia = escolha.icones === "novos" ? { hud4c: Icones4c, hud4p: Icones4p }[escolha.versao] || null : null;
+  Topo.familia = familia;
   Topo.desenhar(document.getElementById("hud-linha"), h);  // o topo e a ficha: o mesmo estado
-  Icones4c.aplicar(novos);  // a doca, os caminhos e a janela, fotografados do jogo
+  Icones.desligar();  // a doca, os caminhos, a janela e a luta, fotografados do jogo
+  if (familia) familia.aplicar();
   Ficha.fecharDica();
   Ficha.desenhar(ficha, h, escolha.nome);
   document.querySelectorAll("#demo fieldset").forEach((f) => f.querySelectorAll("button").forEach((b) =>
@@ -196,7 +199,7 @@ mostrar.addEventListener("click", alternarDemo);
 document.addEventListener("keydown", (ev) => {
   if (ev.ctrlKey || ev.metaKey || ev.altKey) return;
   if (ev.key === "d" || ev.key === "D") alternarDemo();
-  if (ev.key === "v" || ev.key === "V") { const vs = ["anterior", "assets", "hud3", "hud4", "hud4c"]; escolha.versao = vs[(vs.indexOf(escolha.versao) + 1) % vs.length]; redesenhar(); }  // a mesma janela, a próxima versão
+  if (ev.key === "v" || ev.key === "V") { const vs = ["anterior", "assets", "hud3", "hud4", "hud4c", "hud4p"]; escolha.versao = vs[(vs.indexOf(escolha.versao) + 1) % vs.length]; redesenhar(); }  // a mesma janela, a próxima versão
   if (ev.key === "Escape" && escolha.modal === "sim") { escolha.modal = "nao"; redesenhar(); }
 });
 Ficha.ligarDicas(ficha);

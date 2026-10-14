@@ -20,15 +20,21 @@ const Ficha = (() => {
   /** O desenho: os quatro novos (espada, escudo, anel, poção) quando ligados; o resto, o catálogo atual do jogo.
    *  `lado`: o tamanho em que aparece (a versão Assets tem um arquivo por tamanho; a Anterior escala o pixel). */
   const icone = (nome, lado = 32) => {
-    if (versao === "hud4" || versao === "hud4c") return Sprites.url(nome);  // a HUD 4 fica com os ícones atuais do jogo
+    if (["hud4", "hud4c", "hud4p"].includes(versao)) return Sprites.url(nome);  // a HUD 4 fica com os ícones atuais do jogo
     if (iconesNovos && versao === "assets" && ASSETS.includes(nome)) return `assets/exibicao/${nome}-${lado}.png`;
     if (iconesNovos && versao !== "assets" && Arte.temIcone(nome)) return Arte.icone(nome);  // Anterior e HUD 3
     return Sprites.url(nome);
   };
   const ehAsset = (nome) => iconesNovos && versao === "assets" && ASSETS.includes(nome);
   const img = (nome, lado = 32) => `<img src="${icone(nome, lado)}"${ehAsset(nome) ? ' class="ia"' : ""} alt="" draggable="false">`;
-  /** HUD 4 completa: o desenho novo da peça, se a tabela do papel tem um (Icones4c); senão, vazio (fica o do jogo). */
-  const novo = (peca, lado, estreito = 0) => (versao === "hud4c" && iconesNovos && peca ? Icones4c.img(peca, lado, "", estreito) : "");
+  /** A família de desenhos da versão (icones.js): HUD 4 completa e HUD 4 pixel; nas outras, nenhuma. */
+  const familia = () => (iconesNovos ? { hud4c: Icones4c, hud4p: Icones4p }[versao] || null : null);
+  /** O desenho novo de um papel (`tabela`: ITEM, VAZIO, BOLSA, ATRIBUTO) para a `chave` do motor, se a família tem um;
+   *  senão, vazio (fica o do jogo). */
+  const novo = (tabela, chave, lado, estreito = 0) => {
+    const F = familia(), peca = F && F[tabela][chave];
+    return peca ? F.img(peca, lado, "", estreito) : "";
+  };
 
   function dicaItem(it, espaco) {
     const r = it.raridade || "comum";
@@ -38,21 +44,22 @@ const Ficha = (() => {
 
   function desenhar(raiz, h, nome) {
     raiz.classList.toggle("v2", versao === "assets");
-    raiz.classList.toggle("v3", versao === "hud3" || versao === "hud4" || versao === "hud4c");  // a HUD 3 usa o retrato e os ícones da primeira tentativa
-    raiz.classList.toggle("v4", versao === "hud4" || versao === "hud4c");  // a HUD 4, o retrato e os ícones atuais do jogo
-    raiz.classList.toggle("v4c", versao === "hud4c");  // a HUD 4 completa, os desenhos novos onde há par
+    raiz.classList.toggle("v3", ["hud3", "hud4", "hud4c", "hud4p"].includes(versao));  // a HUD 3 usa o retrato e os ícones da primeira tentativa
+    raiz.classList.toggle("v4", ["hud4", "hud4c", "hud4p"].includes(versao));  // a HUD 4, o retrato e os ícones atuais do jogo
+    raiz.classList.toggle("v4c", ["hud4c", "hud4p"].includes(versao));  // a HUD 4 completa, os desenhos novos onde há par
+    raiz.classList.toggle("v4p", versao === "hud4p");  // a HUD 4 pixel: a família de ferro e os atributos sem caixa
     const espacos = ESPACOS.map((linha) => linha.map((s) => {
       const it = h.equip[s];
-      if (!it) return `<button type="button" class="f-slot vazio f-foco" data-espaco="${s}" data-dica="${esc(`<b class="t">${NOME_ESPACO[s]}</b><div class="sub">vazio</div>`)}" aria-label="${NOME_ESPACO[s]}: vazio">${novo(Icones4c.VAZIO[s], 32) || img(VAZIO[s])}</button>`;
+      if (!it) return `<button type="button" class="f-slot vazio f-foco" data-espaco="${s}" data-dica="${esc(`<b class="t">${NOME_ESPACO[s]}</b><div class="sub">vazio</div>`)}" aria-label="${NOME_ESPACO[s]}: vazio">${novo("VAZIO", s, 32) || img(VAZIO[s])}</button>`;
       const r = it.raridade && it.raridade !== "comum" ? ` data-r="${esc(it.raridade)}"` : "";
-      return `<button type="button" class="f-slot f-foco"${r} data-espaco="${s}" data-dica="${esc(dicaItem(it, s))}" aria-label="${NOME_ESPACO[s]}: ${esc(it.nome)}">${novo(Icones4c.ITEM[it.icone], 32) || img(it.icone || "saco")}</button>`;
+      return `<button type="button" class="f-slot f-foco"${r} data-espaco="${s}" data-dica="${esc(dicaItem(it, s))}" aria-label="${NOME_ESPACO[s]}: ${esc(it.nome)}">${novo("ITEM", it.icone, 32) || img(it.icone || "saco")}</button>`;
     }).join("")).join("");
     const ocupados = Object.values(h.equip).filter(Boolean).length;
     const attrs = Object.entries(h.atributos).map(([k, v]) => {
       const pen = (h.atributos_penal || {})[k];
       const linhas = (h.atributos_info[k] || []).map((l, i) => `<li${pen && !i ? ' class="pior"' : ""}>${esc(l)}</li>`).join("");
       const dica = `<b class="t">${esc(k)} ${v}${pen ? ` <span class="pior">(−${pen.pct}%)</span>` : ""}</b><ul>${linhas}</ul>`;
-      return `<div class="f-attr f-foco${pen ? " abaixo" : ""}" tabindex="0" data-dica="${esc(dica)}">${novo(Icones4c.ATRIBUTO[k], 24, 20) || img(ICONE_ATTR[k], versao === "assets" ? 24 : 16)}<span class="n">${esc(k)}</span><span class="v">${v}${pen ? `<small>−${pen.pct}%</small>` : ""}</span></div>`;
+      return `<div class="f-attr f-foco${pen ? " abaixo" : ""}" tabindex="0" data-dica="${esc(dica)}">${novo("ATRIBUTO", k, 24, versao === "hud4c" ? 20 : 0) || img(ICONE_ATTR[k], versao === "assets" ? 24 : 16)}<span class="n">${esc(k)}</span><span class="v">${v}${pen ? `<small>−${pen.pct}%</small>` : ""}</span></div>`;
     }).join("");
     const feridas = h.ferimentos.map((f) => {
       const tag = f.aberto ? '<span class="tag aberto">aberto</span>' : f.dias ? `<span class="tag">${f.dias} dias</span>` : "";
@@ -68,7 +75,7 @@ const Ficha = (() => {
     const bolsa = h.bolsa.filter((b) => b.id !== "tocha").map((b) => {
       const dica = `<b class="t">${esc(b.nome)}</b>${b.trata ? `<div class="melhor">${esc(b.trata)}</div>` : ""}<div>${esc(b.desc)}</div>` +
         `<div class="rodape">${b.motivo ? esc(b.motivo) : "Clique para usar."}</div>`;
-      return `<button type="button" class="f-slot f-foco${b.motivo ? " inutil" : ""}" data-dica="${esc(dica)}" aria-label="${esc(b.nome)}: ${b.qtd}">${novo(Icones4c.BOLSA[b.id], 32) || img(ICONES_BOLSA[b.id] || "pocao")}<span class="f-qtd">${b.qtd}</span></button>`;
+      return `<button type="button" class="f-slot f-foco${b.motivo ? " inutil" : ""}" data-dica="${esc(dica)}" aria-label="${esc(b.nome)}: ${b.qtd}">${novo("BOLSA", b.id, 32) || img(ICONES_BOLSA[b.id] || "pocao")}<span class="f-qtd">${b.qtd}</span></button>`;
     }).join("");
     const r = h.reputacao_info, sinal = h.reputacao > 0 ? "mais" : h.reputacao < 0 ? "menos" : "zero";
     const rep = `<div class="f-rep f-foco" tabindex="0" data-dica="${esc(`<b class="t">Reputação</b><div class="sub">${esc(r.titulo)} · ${h.reputacao > 0 ? "+" : ""}${h.reputacao}</div><ul>${r.linhas.map((l) => `<li>${esc(l)}</li>`).join("")}</ul>`)}">` +
@@ -77,8 +84,8 @@ const Ficha = (() => {
     raiz.innerHTML = `
       <header class="f-identidade">
         <div class="f-retrato">${versao === "assets" ? '<img class="ia" src="assets/exibicao/retrato.png" alt="Retrato do Guerreiro">'
-          : versao === "hud4c" && iconesNovos && Icones4c.retrato(h.classe, `Retrato do ${esc(h.classe_nome)}`) ? Icones4c.retrato(h.classe, `Retrato do ${esc(h.classe_nome)}`)
-          : versao === "hud4" || versao === "hud4c" ? `<img class="original" src="${Sprites.url(h.classe)}" alt="Retrato do ${esc(h.classe_nome)}">` : `<img src="${Arte.retrato()}" alt="Retrato do Guerreiro">`}</div>
+          : familia() && familia().retrato(h.classe, `Retrato do ${esc(h.classe_nome)}`) ? familia().retrato(h.classe, `Retrato do ${esc(h.classe_nome)}`)
+          : ["hud4", "hud4c", "hud4p"].includes(versao) ? `<img class="original" src="${Sprites.url(h.classe)}" alt="Retrato do ${esc(h.classe_nome)}">` : `<img src="${Arte.retrato()}" alt="Retrato do Guerreiro">`}</div>
         <div class="f-nome">${esc(nome)}</div><div class="f-titulo">${esc(h.titulo)}<br><b>nível ${h.nivel}</b></div>
         <div class="f-xp"><div class="f-legenda"><span>Experiência</span><b>${h.xp}/${h.xp_proximo}</b></div><div class="f-barra"><i style="width:${pct}%"></i></div></div>
         ${h.pontos_talento ? `<div class="f-talento f-foco" tabindex="0" role="button" data-dica="${esc('<b class="t">Talentos</b><div>Abre a árvore de talentos.</div>')}"><img src="${Sprites.url("estrela")}" alt="">${h.pontos_talento} ${h.pontos_talento === 1 ? "ponto de talento" : "pontos de talento"}</div>` : ""}
@@ -108,7 +115,7 @@ const Ficha = (() => {
   let dica = null, dono = null;
   function abrirDica(el) {
     if (!dica) { dica = document.createElement("div"); dica.setAttribute("role", "tooltip"); document.body.appendChild(dica); }
-    dica.className = { assets: "f-dica v2", hud3: "f-dica v3", hud4: "f-dica v3 v4", hud4c: "f-dica v3 v4 v4c" }[versao] || "f-dica";
+    dica.className = { assets: "f-dica v2", hud3: "f-dica v3", hud4: "f-dica v3 v4", hud4c: "f-dica v3 v4 v4c", hud4p: "f-dica v3 v4 v4c v4p" }[versao] || "f-dica";
     if (/^\d+$/.test(el.dataset.dica)) return;  // as dicas numeradas da fotografia do jogo (sem o conteúdo delas)
     dono = el;
     dica.innerHTML = el.dataset.dica;

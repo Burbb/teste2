@@ -1969,3 +1969,21 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   controles de demonstração escondidos; sem erro no console, sem texto cortado, sem ícone reescalado, rolagem igual à da
   HUD 4; versões anteriores iguais pixel a pixel nas regiões paradas. **É experimento:** nada migrado; motor, saves,
   telas de produção e versão iguais. **Falta:** a avaliação de Jean.
+
+### 14/10/2026 — HUD 4 pixel: família de ferro, mesmo rosto e atributos sem caixas (experimento, sem versão)
+
+- **Pedido de Jean:** quatro folhas novas, mais perto da pixel art dos cenários; preservar molduras e cenários; fechar
+  a ficha do Guerreiro com as peças de ferro; o mesmo rosto no topo e na carta da luta; atributos sem as quatro caixas,
+  em duas colunas; ícones novos na luta; contraste do texto da luta; redução que preserve contorno (sem o filtro macio).
+- **Feito:** em `ferramentas/prototipos/hud/`, a versão "HUD 4 pixel" no alternador (mesmos dados; as anteriores
+  ficam). `preparar_hud4p.py` (45 peças em `assets4p/`; cinco reduções comparadas; escolhida a "paleta": alfa duro e
+  só cores do desenho), `icones.js` (as famílias da HUD 4 completa e da pixel, pelo papel e pelo tipo do motor),
+  `hud4p.css` (atributos, cabeça no topo, luta). O registro da luta passou de 35% para 70% nos turnos anteriores.
+- **Avaliação** (no `LEIA-ME.md` da pasta): a ficha do Guerreiro fecha numa família só, o contorno duro fica mais
+  perto dos cenários, um rosto só na ficha, no topo e na carta, atributos mais limpos e sem corte em 1280. Ainda
+  escuros ou pequenos: grimório, silhuetas vazias, talentos, anel grande, bota e manopla. Desencontrados: o martelo
+  (sem desenho), Fugir, inimigos e cartas de produção, recursos vazios do topo, o retrato pintado ao lado dos sprites.
+- **Verificado:** capturas estáticas em 1500×950, 1280×800 e 1280×720 (lugar, missão, capela, luta, nome longo, fome,
+  ferimentos, contratos, anéis); exercitados no navegador dica por mouse e teclado, Esc, tecla V, troca de entorno e
+  rolagem; animações não conferidas. HUD 4 completa igual pixel a pixel. **É experimento:** nada migrado; motor, saves,
+  telas de produção e versão iguais. **Falta:** a avaliação de Jean.
