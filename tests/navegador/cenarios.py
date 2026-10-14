@@ -24,8 +24,7 @@
     python -m tests.navegador.cenarios relatorio     # Explorar cai numa luta comum: o relatório e o que vem depois (EVENTO, VEZES, SEMENTE, PERIODO)
     python -m tests.navegador.cenarios muralha       # Guerreiro nv 6, Muralha + Contra-ataque (CONTRA) e o Broquel, contra bandidos e um cultista
 
-Imprime o endereço do servidor na primeira linha e fica no ar até ser encerrado. Com HUD=experimental, a página vem
-com a HUD experimental do protótipo (ferramentas/prototipos/hud/jogo/), por cima dos componentes de sempre.
+Imprime o endereço do servidor na primeira linha e fica no ar até ser encerrado.
 """
 
 import argparse
@@ -899,8 +898,7 @@ def main():
     nome = sys.argv[1] if len(sys.argv) > 1 else "combate"
     ui = WebUI()
     ui.jogo = None
-    srv = Servidor(ui, config={"velocidade": os.environ.get("VELOCIDADE", "normal")},
-                   hud_experimental=os.environ.get("HUD") == "experimental").iniciar()  # HUD=experimental: o protótipo
+    srv = Servidor(ui, config={"velocidade": os.environ.get("VELOCIDADE", "normal")}).iniciar()
     print(srv.url, flush=True)
     threading.Thread(target=CENARIOS[nome], args=(ui,), daemon=True).start()
     while True:

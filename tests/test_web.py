@@ -266,38 +266,5 @@ class TestPagina(unittest.TestCase):
         self.assertEqual(self.cenas(passos)[-1], ("cabecalho", "Vale do Corvo", False))
 
 
-class TestHudExperimental(unittest.TestCase):
-    """A HUD experimental (ferramentas/prototipos/hud) só entra com o pedido explícito: sem ele, a página é a padrão e
-    a pasta do protótipo não é servida; com ele, a mesma página ganha um script no fim e nada sai da pasta."""
-
-    def abrir(self, hud):
-        srv = Servidor(WebUI(), hud_experimental=hud).iniciar()
-        self.addCleanup(srv.parar)
-        return srv.url.split("/?")[0]
-
-    def ler(self, url):
-        with urllib.request.urlopen(url, timeout=10) as r:
-            return r.read().decode("utf-8")
-
-    def test_padrao_sem_experimento(self):
-        base = self.abrir(False)
-        self.assertNotIn("/experimento/", self.ler(base + "/"))
-        with self.assertRaises(urllib.error.HTTPError) as e:
-            urllib.request.urlopen(base + "/experimento/jogo/ligar.js", timeout=10)
-        self.assertEqual(e.exception.code, 404)
-
-    def test_experimental_liga_e_fica_na_pasta(self):
-        base = self.abrir(True)
-        pagina = self.ler(base + "/")
-        self.assertIn('<script src="/experimento/jogo/ligar.js"></script>', pagina)
-        self.assertEqual(pagina.count("/experimento/"), 1)
-        self.assertIn("Icones4p", self.ler(base + "/experimento/icones.js"))
-        self.assertIn("HUD experimental", self.ler(base + "/experimento/jogo/ligar.js"))
-        for fora in ("/experimento/../../../rpg/jogo.py", "/experimento/%2e%2e/%2e%2e/%2e%2e/rpg/jogo.py"):
-            with self.assertRaises(urllib.error.HTTPError) as e:
-                urllib.request.urlopen(base + fora, timeout=10)
-            self.assertEqual(e.exception.code, 404)
-
-
 if __name__ == "__main__":
     unittest.main()

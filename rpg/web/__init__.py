@@ -16,11 +16,7 @@ from .servidor import Servidor
 def jogar(args, menu_principal):
     ui = WebUI()
     ui.jogo = None
-    srv = Servidor(ui, porta=args.porta, config={"velocidade": args.velocidade},
-                   hud_experimental=getattr(args, "hud_experimental", False)).iniciar()
-    if getattr(args, "hud_experimental", False):
-        print("HUD experimental ligada só nesta sessão (ferramentas/prototipos/hud)." if srv.experimento else
-              "HUD experimental: a pasta ferramentas/prototipos/hud não está aqui; segue a interface padrão.")
+    srv = Servidor(ui, porta=args.porta, config={"velocidade": args.velocidade}).iniciar()
 
     def rodar_jogo():
         try:
