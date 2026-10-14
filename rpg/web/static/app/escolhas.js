@@ -136,6 +136,14 @@ function mostrarOpcoes(m) {
       return;
     }
   }
+  // A próxima compra de suprimento da fila (mercado.js): o mercado voltou a perguntar e ela vai na hora.
+  const compra = Telas.proximaCompra(m.opcoes);
+  if (compra) {
+    pergunta = { id: m.id, tipo: "opcoes", opcoes: m.opcoes };
+    Som.tocar("moeda");
+    responder(m.id, compra);
+    return;
+  }
   promptEl.innerHTML = "";
   pergunta = { id: m.id, tipo: "opcoes", n: m.opcoes.length, opcoes: m.opcoes, numeros: [], letras: {} };
   porVoltar(null);  // o da pergunta anterior (sai e volta no mesmo instante, se esta também tiver: a barra não pisca)
@@ -724,6 +732,7 @@ function ehVoltar(o) {
 
 function mostrarContinuar(m) {
   acaoGuardada = null;  // um toque guardado do acampamento não atravessa um Continuar
+  Telas.descartarCompras();  // nem as compras do mercado que ainda esperavam a vez
   posicionarPrompt();
   soltarAlturaPrompt();
   if (pendente && pendente.chave === "_atalho" && docaTela) {  // a caminho de um atalho
@@ -751,6 +760,7 @@ function mostrarContinuar(m) {
 
 function mostrarPergunta(m) {
   acaoGuardada = null;
+  Telas.descartarCompras();
   posicionarPrompt();
   soltarAlturaPrompt();
   promptEl.innerHTML = "";

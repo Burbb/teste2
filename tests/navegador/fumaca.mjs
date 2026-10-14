@@ -1978,6 +1978,85 @@ async function cenarioMercado(browser) {
   }
 }
 
+async function cenarioComprasRapidas(browser) {
+  console.log("cenário: compras rápidas de suprimentos (cada clique é uma compra; estoque, espaço e ouro acabam no meio)");
+  const rodar = async (amb, corpo) => {
+    const { proc, url } = await subir("mercado", amb);
+    const page = await browser.newPage({ viewport: { width: 1280, height: 720 } });
+    const erros = [];
+    page.on("pageerror", (e) => erros.push(String(e)));
+    page.on("console", (m) => { if (m.type() === "error") erros.push(m.text()); });
+    await page.goto(url);
+    try {
+      await page.waitForSelector(".tela.loja", { timeout: 20000 });
+      await page.waitForFunction(() => !processando && pergunta && pergunta.tipo === "opcoes", null, { timeout: 15000 });
+      await page.waitForTimeout(600);
+      await page.evaluate(() => { window.__sons = []; const t = Som.tocar; Som.tocar = (n, ...r) => { window.__sons.push(n); return t(n, ...r); }; });
+      await corpo(page);
+    } finally {
+      conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
+      await page.close();
+      proc.kill();
+    }
+  };
+  const cartao = (page, id) => page.evaluate((k) => {
+    const c = document.querySelector(`[data-comprar="${k}"]`), n = (re) => Number((c.querySelector(".merc-contas").textContent.match(re) || [])[1]);
+    return { bolsa: n(/Na bolsa: (\d+)/), estoque: n(/Estoque: (\d+)/), preco: Number(c.dataset.preco), caro: c.classList.contains("caro"), ouro: App.estado.heroi.ouro };
+  }, id);
+  // Cliques seguidos no mesmo ponto, sem esperar a tela: a lista se redesenha no meio deles.
+  const metralhar = async (page, id, n, gap = 50) => {
+    const el = await page.$(`[data-comprar="${id}"]`); await el.scrollIntoViewIfNeeded();
+    const b = await el.boundingBox();
+    for (let k = 0; k < n; k++) { await page.mouse.click(b.x + 30, b.y + b.height / 2); await page.waitForTimeout(gap); }
+  };
+  const assentar = (page) => page.waitForFunction(() => !processando && pergunta && pergunta.tipo === "opcoes", null, { timeout: 15000 }).then(() => page.waitForTimeout(800));
+  const sons = (page, nome) => page.evaluate((n) => window.__sons.filter((s) => s === n).length, nome);
+  await rodar({ OURO: "300", PROVISOES: "10" }, async (page) => {
+    // A quantidade escolhida vai inteira; depois, cliques rápidos até o estoque acabar no meio.
+    const t0 = await cartao(page, "tocha");
+    const mais = await page.$('[data-comprar="tocha"] [data-q="1"]');
+    await mais.click(); await mais.click();
+    await metralhar(page, "tocha", 1); await assentar(page);
+    const t1 = await cartao(page, "tocha");
+    conferir(t1.bolsa === t0.bolsa + 3 && t1.ouro === t0.ouro - 3 * t0.preco, `a quantidade escolhida (3) vai numa compra (${t0.bolsa} → ${t1.bolsa})`);
+    await metralhar(page, "tocha", t1.estoque + 2); await assentar(page);
+    const t2 = await cartao(page, "tocha");
+    conferir(t2.bolsa === t1.bolsa + t1.estoque && t2.estoque === 0 && t2.ouro === t1.ouro - t1.estoque * t1.preco,
+      `${t1.estoque + 2} cliques rápidos: compra o estoque inteiro (${t1.estoque}), nem um a menos (${t1.bolsa} → ${t2.bolsa})`);
+    conferir((await sons(page, "falha")) >= 1, "os cliques depois do estoque acabar dão o aviso de recusa");
+    // O espaço na bolsa acaba no meio (provisões 10/12).
+    const p0 = await cartao(page, "provisoes");
+    await metralhar(page, "provisoes", 5); await assentar(page);
+    const p1 = await cartao(page, "provisoes");
+    conferir(p1.bolsa === 12 && p1.ouro === p0.ouro - 2 * p0.preco, `provisões: cinco cliques rápidos param no teto (${p0.bolsa} → ${p1.bolsa}/12), cobrando só as duas`);
+    // Shift+clique compra 5, também em sequência.
+    const f0 = await cartao(page, "flechas");
+    await page.keyboard.down("Shift"); await metralhar(page, "flechas", 2); await page.keyboard.up("Shift"); await assentar(page);
+    const f1 = await cartao(page, "flechas");
+    conferir(f1.bolsa === f0.bolsa + 10 && f1.ouro === f0.ouro - 10 * f0.preco, `dois Shift+cliques rápidos compram 5 + 5 flechas (${f0.bolsa} → ${f1.bolsa})`);
+    // Sair do mercado com compras na fila: o que ainda não foi ao motor fica sem efeito.
+    await metralhar(page, "pocao_vida", 4, 20);
+    await page.keyboard.press("Escape");  // com a compra anterior chegando, o primeiro Esc só adianta; a fila já cai
+    const oFila = await page.evaluate(() => App.estado.heroi.ouro);
+    await assentar(page);
+    const oAssentado = await page.evaluate(() => App.estado.heroi.ouro), preco = (await cartao(page, "pocao_vida")).preco;
+    conferir(oFila - oAssentado <= preco, `o Esc derruba a fila: no máximo a compra que já estava no motor (${oFila} → ${oAssentado})`);
+    await page.keyboard.press("Escape");
+    await page.waitForSelector('#predios .predio[data-predio="mercado"]', { timeout: 8000 });
+    const o1 = await page.evaluate(() => App.estado.heroi.ouro);
+    await page.waitForTimeout(1500);
+    const o2 = await page.evaluate(() => App.estado.heroi.ouro);
+    conferir(o2 === o1, `fora do mercado, nenhuma compra da fila acontece depois (${o1} → ${o2})`);
+  });
+  await rodar({ OURO: "10" }, async (page) => {
+    const t0 = await cartao(page, "tocha");
+    await metralhar(page, "tocha", 6); await assentar(page);
+    const t1 = await cartao(page, "tocha");
+    const cabe = Math.min(Math.floor(10 / t0.preco), t0.estoque);
+    conferir(t1.bolsa === t0.bolsa + cabe && t1.ouro === 10 - cabe * t0.preco, `o ouro acaba no meio: compra ${cabe}, o que o ouro paga (${t0.bolsa} → ${t1.bolsa}, ouro ${t1.ouro})`);
+  });
+}
+
 async function cenarioFeridas(browser) {
   console.log("cenário: ferimentos e descanso (F1, F2, a Curandeira com o primeiro tratamento grátis, D1)");
   const quadro = (page) => page.evaluate(() => { const q = document.querySelector(".orientacao:not([hidden])"); return q ? q.innerText.replace(/\s+/g, " ") : ""; });
@@ -2152,6 +2231,7 @@ try {
   await cenarioTitulo(browser);
   await cenarioVila(browser);
   await cenarioMercado(browser);
+  await cenarioComprasRapidas(browser);
   await cenarioCampanha(browser);
   await cenarioMissao(browser);
   await cenarioRecarga(browser);

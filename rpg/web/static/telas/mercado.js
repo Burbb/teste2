@@ -560,16 +560,12 @@
         });
         ["pointerup", "pointerleave", "pointercancel"].forEach((t) => b.addEventListener(t, pararRepeticao));
       });
-      const comprar = (ev) => {
-        if (el.classList.contains("caro")) { const c = dados && dados.consumiveis.find((x) => x.id === id); App.recusar(el, c && c.motivo); return; }
-        const q = ev.shiftKey ? Math.min(5, max) : Math.min(qtdLoja[id] || 1, max);
-        qtdLoja[id] = 1;
-        App.acao({ comprar: id }, "moeda", { qtd: q });
-      };
-      el.addEventListener("click", (ev) => { if (!ev.target.closest(".qtd-ctrl")) comprar(ev); });
+      // O mouse compra no soltar (ver "apertado"); o clique que sobra é o de quem não usa mouse (leitor de tela).
+      el.addEventListener("pointerdown", (ev) => { if (ev.button === 0 && !ev.target.closest(".qtd-ctrl")) apertado = id; });
+      el.addEventListener("click", (ev) => { if (ev.detail === 0 && !ev.target.closest(".qtd-ctrl")) pedirCompra(el, ev.shiftKey); });
       el.addEventListener("keydown", (ev) => {
         if (ev.target !== el || !Gesto.teclaVale(ev)) return;
-        if (ev.key === "Enter") comprar(ev);
+        if (ev.key === "Enter") pedirCompra(el, ev.shiftKey);
         else if (ev.key === "+" || ev.key === "=" || ev.key === "-") { ev.preventDefault(); if (num) mudar((qtdLoja[id] || 1) + (ev.key === "-" ? -1 : 1)); }
       });
     });
@@ -619,9 +615,64 @@
     });
   }
 
+  /* Compras de suprimento em sequência. Cada clique é um pedido, guardado pelo id do suprimento (nunca pela posição na
+     lista), e os pedidos vão ao motor um de cada vez: o seguinte sai quando o mercado volta a perguntar, já redesenhado
+     com o ouro, o estoque e a bolsa de depois da compra anterior. O motor confere preço, estoque, ouro e espaço em cada
+     um; se o cartão voltou bloqueado (o ouro ou o estoque acabou no meio), o aviso diz o motivo dele, e os pedidos que
+     restavam desse suprimento caem juntos. Sair do mercado (ou qualquer pergunta que não seja ele) descarta a fila. */
+  const fila = [];
+  let apertado = null;  // o suprimento em que o botão do mouse desceu (o id: a lista se redesenha entre o descer e o soltar)
+  function descartarCompras() { fila.length = 0; apertado = null; }
+  function pedirCompra(el, shift) {
+    const id = el.dataset.comprar, max = Number(el.dataset.max);
+    if (!fila.length && el.classList.contains("caro")) {
+      const c = App.ultimaLoja && App.ultimaLoja.consumiveis.find((x) => x.id === id);
+      App.recusar(el, c && c.motivo);
+      return;
+    }
+    const qtd = shift ? Math.min(5, max) : Math.min(qtdLoja[id] || 1, max);
+    qtdLoja[id] = 1;
+    if (fila.length || !App.acao({ comprar: id }, "moeda", { qtd })) fila.push({ id, qtd });
+  }
+  /** Chamada a cada menu novo (escolhas.js): a resposta da próxima compra da fila ({ i, qtd }), ou null. */
+  function proximaCompra(opcoes) {
+    while (fila.length) {
+      const p = fila[0];
+      const i = opcoes.findIndex((o) => o.meta && o.meta.comprar === p.id);
+      if (i < 0) { descartarCompras(); return null; }
+      const c = App.ultimaLoja && App.ultimaLoja.consumiveis.find((x) => x.id === p.id);
+      if (c && c.motivo) {
+        for (let k = fila.length - 1; k >= 0; k--) if (fila[k].id === p.id) fila.splice(k, 1);
+        App.recusar(document.querySelector(`.tela.loja [data-comprar="${CSS.escape(p.id)}"]`), c.motivo);
+        continue;
+      }
+      fila.shift();
+      return { i, qtd: p.qtd };
+    }
+    return null;
+  }
+  // O soltar do botão compra se cair no mesmo suprimento em que ele desceu, ainda que o cartão tenha sido redesenhado
+  // no meio (a compra anterior voltou): o clique do navegador se perderia, e a proteção de clique entre telas (Gesto,
+  // nucleo.js) não vale aqui, porque o pedido vai pelo id e nunca acerta outro item.
+  document.addEventListener("pointerup", (ev) => {
+    const id = apertado;
+    apertado = null;
+    if (!id || ev.button !== 0 || !ev.target.closest) return;
+    const el = ev.target.closest(".tela.loja [data-comprar]");
+    if (el && el.dataset.comprar === id && !ev.target.closest(".qtd-ctrl")) pedirCompra(el, ev.shiftKey);
+  }, true);
+
+  // Quem pede para sair (Esc, a seta de voltar) já não quer o que esperava a vez: a fila cai ali, mesmo que a tela ainda
+  // esteja recebendo a compra anterior (aí o Esc só adianta a animação, e o próximo sai do mercado).
+  document.addEventListener("keydown", (ev) => { if (ev.key === "Escape") descartarCompras(); }, true);
+  document.addEventListener("click", (ev) => { if (ev.target.closest && ev.target.closest("#barra-tela .voltar-seta")) descartarCompras(); }, true);
+
+  Object.assign(Telas, { proximaCompra, descartarCompras });
+
   Telas.registrar("loja", loja, {
     ligar: (raiz, d) => { App.ultimaLoja = d; ligarLoja(raiz, d); },
     esquecer: () => {
+      descartarCompras();
       for (const k in qtdLoja) delete qtdLoja[k];
       for (const k in rolagem) delete rolagem[k];
       aba = "suprimentos"; visitaNova = true;
