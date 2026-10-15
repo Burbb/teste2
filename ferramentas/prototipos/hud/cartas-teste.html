@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Teste das cartas de combate (experimento)</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="../../../rpg/web/static/css/11-tipografia.css">
+<!-- O padrão das cartas de combate (experimento, fora do jogo): os seis retratos em 32 px no enquadramento do Morel
+     "40 reduzido a 32" (cartas-teste.js), ao lado da carta anterior de cada um; embaixo, a luta de verdade com as
+     duas versões (fotografar_cartas.mjs, em capturas-cartas/). A avaliação é no tamanho real; as ampliações são só
+     para ver os pixels. -->
+<style>
+  @font-face { font-family: "Titulo"; src: url(../../../rpg/web/static/fontes/alagard-pt.ttf) format("truetype"); }
+  :root { --latao: #c9a14a; --latao-claro: #f2d27a; --sec: #9d978b; --aresta: #3a3d43; --ferro-fio: #2b2d31; }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 20px 24px 28px; color: #e8dcc0; font: 15px/1.4 "Alegreya Sans", "Alegreya", Georgia, sans-serif;
+    background: linear-gradient(rgba(8, 9, 11, 0.62), rgba(8, 9, 11, 0.76)), url(../../../rpg/web/static/hud/textura-painel.png) 0 0 / 128px, #0a0a0b; }
+  h1 { margin: 0 0 4px; font: 400 32px/1 "Titulo", serif; color: var(--latao-claro); }
+  .nota { margin: 0 0 14px; color: var(--sec); max-width: 1100px; }
+  section { margin-bottom: 22px; padding: 10px 16px 14px; border: 12px solid transparent;
+    border-image: url(../../../rpg/web/static/hud/moldura-nove.png) 24 / 24px round; background: rgba(0, 0, 0, 0.28); background-clip: padding-box; }
+  h2 { display: flex; align-items: center; gap: 8px; margin: 0 0 10px; font-weight: 700; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--sec); }
+  h2::after { content: ""; flex: 1; height: 1px; background: var(--ferro-fio); box-shadow: 0 1px 0 #000; }
+  .linha { display: flex; align-items: flex-end; gap: 18px; flex-wrap: wrap; }
+  .linha + h2, .linha + .linha { margin-top: 16px; }
+  figure { margin: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 5px; }
+  figcaption { font-size: 13px; color: var(--sec); max-width: 360px; }
+  figcaption b { color: #e8dcc0; }
+  img { image-rendering: pixelated; display: block; }
+  /* o nicho da carta do jogo: 36 px, a aresta fina e o fundo escuro (15-hud-luta.css) */
+  .nicho { width: 36px; height: 36px; display: grid; place-items: center; border: 1px solid var(--aresta); background: #0a0b0d;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.9); }
+  .nicho.heroi { border-color: #6b5426; }
+  .rotulo { width: 120px; align-self: center; font-weight: 700; font-size: 13px; color: var(--latao-claro); }
+  .grade { display: grid; grid-template-columns: 120px repeat(6, 64px); gap: 10px 14px; align-items: center; }
+  .grade > span { font-size: 13px; color: var(--sec); }
+  .foto { border: 1px solid #000; max-width: 100%; height: auto; image-rendering: auto; }
+  table { border-collapse: collapse; font-size: 13px; color: #d8cdb6; }
+  td, th { padding: 3px 10px; border-bottom: 1px solid var(--ferro-fio); text-align: left; }
+  th { color: var(--sec); font-weight: 700; }
+</style>
+</head>
+<body>
+<h1>Teste das cartas de combate</h1>
+<p class="nota">O padrão das seis cartas segue o Morel escolhido ("40 reduzido a 32"): cabeça e parte dos ombros, nas
+proporções do busto aprovado. Cada candidata é o busto de 40×40 reduzido a 32 pelo vizinho mais perto; só onde a redução
+apagava um traço que identifica houve ajuste pontual (a fenda do visor do Guerreiro, o braço de cima da cruz e os olhos da
+Odette, os olhos da Yara; o véu da Odette um degrau mais claro, para a borda não sumir no fundo da carta). O Morel é a
+referência, sem mudança. Avalie no tamanho real (as fileiras de cima e as fotografias); as ampliações são para os pixels.</p>
+
+<section>
+  <h2>Os seis em 32 px, no nicho da carta (tamanho real)</h2>
+  <div class="grade" id="folha"></div>
+</section>
+
+<section>
+  <h2>Anterior e candidata de cada um (32 px, e ampliadas 8× para inspeção)</h2>
+  <div id="pares"></div>
+</section>
+
+<section>
+  <h2>No jogo: as cartas completas (nome, vida e recurso), na vez do herói</h2>
+  <p class="nota">A mesma luta e os mesmos dados nas duas versões. Janela normal (1500×950), movimento normal.</p>
+  <div id="aliados"></div>
+  <h2>Composições de combate (a arena inteira)</h2>
+  <div id="arenas"></div>
+  <h2>Janela baixa (1280×720) e movimento reduzido</h2>
+  <div id="variantes"></div>
+</section>
+
+<section>
+  <h2>O herói em foco: o rosto em 32 px exatos, a moldura e o rosto no pixel inteiro</h2>
+  <p class="nota">Na vez do herói, o jogo amplia a carta 1,12×. Neste teste, o nicho (a moldura e o rosto) desfaz a
+  ampliação e fica em 36 px, com o rosto em 32 px, alinhado ao pixel inteiro da tela; o nome, as barras e a borda da
+  carta continuam ampliados. Os companheiros não recebem foco e ficam sempre em 32 px. Medido em cada fotografia:</p>
+  <table id="medidas"><tr><th>fotografia</th><th>foco</th><th>nicho (x, y, lado)</th><th>rosto (x, y, lado)</th><th>companheiros (y)</th><th>tecla 1 / Esc</th></tr></table>
+</section>
+
+<section>
+  <h2>Histórico (não escolhido)</h2>
+  <div class="linha">
+    <figure><span class="nicho"><img id="rejeitada" alt=""></span><figcaption>a carta nativa de 32×32 do Morel com o rosto aproximado: rejeitada; fica só aqui e em resolucao-teste.html</figcaption></figure>
+  </div>
+</section>
+
+<script src="arte-teste.js"></script>
+<script src="resolucao-teste.js"></script>
+<script src="cartas-teste.js"></script>
+<script src="capturas-cartas/medidas.js"></script>
+<script>
+"use strict";
+const SEIS = [["guerreiro", "Guerreiro"], ["mago", "Mago"], ["arqueiro", "Arqueiro"], ["morel", "Morel"], ["odette", "Odette"], ["yara", "Yara"]];
+const img = (p, e, cl = "") => { const n = ArteTeste.PECAS[p].grade.length; return `<img src="${ArteTeste.url(p, e)}" width="${n * e}" height="${n * e}" alt="" class="${cl}">`; };
+const nicho = (p, e, heroi) => `<span class="nicho${heroi ? " heroi" : ""}">${img(p, e)}</span>`;
+// a folha: os seis em 32 px, a anterior em cima e a candidata embaixo
+const her = (n) => ["guerreiro", "mago", "arqueiro"].includes(n);
+document.getElementById("folha").innerHTML =
+  `<span></span>${SEIS.map(([, t]) => `<span>${t}</span>`).join("")}` +
+  `<span class="rotulo">anterior (16×16 a 2×)</span>${SEIS.map(([n]) => nicho(`${n}-carta`, 2, her(n))).join("")}` +
+  `<span class="rotulo">candidata (padrão)</span>${SEIS.map(([n]) => nicho(`${n}-c32`, 1, her(n))).join("")}`;
+document.getElementById("pares").innerHTML = SEIS.map(([n, t]) => `<div class="linha"><span class="rotulo">${t}</span>` +
+  `<figure>${nicho(`${n}-carta`, 2, her(n))}<figcaption>anterior, 32 px</figcaption></figure>` +
+  `<figure>${nicho(`${n}-c32`, 1, her(n))}<figcaption>candidata, 32 px</figcaption></figure>` +
+  `<figure>${img(`${n}-carta`, 16)}<figcaption>anterior, 16×16 ampliada 16×</figcaption></figure>` +
+  `<figure>${img(`${n}-c32`, 8)}<figcaption>candidata, 32×32 ampliada 8×</figcaption></figure></div>`).join("");
+document.getElementById("rejeitada").outerHTML = img("morel-80-carta", 1);
+// as fotografias do jogo
+const COMP = [["guerreiro", "Guerreiro com Morel e Odette"], ["mago", "Mago com Yara e Morel"], ["arqueiro", "Arqueiro com Odette e Yara"]];
+const par = (base, sufixo, larg) => ["anterior", "candidata"].map((v) =>
+  `<figure><img class="foto" src="capturas-cartas/${base}-${v}-${sufixo}.png" ${larg ? `width="${larg}"` : ""} alt=""><figcaption>${v}</figcaption></figure>`).join("");
+document.getElementById("aliados").innerHTML = COMP.map(([c, t]) => `<h2>${t}</h2><div class="linha">${par(`${c}-normal-normal`, "aliados")}</div>`).join("");
+document.getElementById("arenas").innerHTML = COMP.map(([c, t]) => `<div class="linha">${par(`${c}-normal-normal`, "arena")}</div><p class="nota">${t}</p>`).join("");
+document.getElementById("variantes").innerHTML = [["baixa-normal", "janela baixa"], ["normal-reduzido", "movimento reduzido"], ["baixa-reduzido", "janela baixa, movimento reduzido"]].map(([j, t]) =>
+  `<h2>${t}</h2>` + COMP.map(([c]) => `<div class="linha">${par(`${c}-${j}`, "aliados")}</div>`).join("")).join("");
+document.getElementById("medidas").insertAdjacentHTML("beforeend", (window.MEDIDAS || []).map((m) =>
+  `<tr><td>${m.nome}</td><td>${m.foco ? "sim" : "não"}</td><td>${m.nicho[0]}, ${m.nicho[1]}, ${m.nicho[2]}</td><td>${m.rosto[0]}, ${m.rosto[1]}, ${m.rosto[2]}</td>` +
+  `<td>${m.companheiros.map((c) => c[1]).join(" · ")}</td><td>${m.mira ? "mira" : "—"} / ${m.voltou ? "volta" : "—"}</td></tr>`).join(""));
+</script>
+</body>
+</html>

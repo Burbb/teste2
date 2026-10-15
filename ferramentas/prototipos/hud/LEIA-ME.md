@@ -1185,3 +1185,63 @@ As fotografias (`capturas-carta/`) são do jogo de verdade, a mesma luta e os me
 refeitas com `PLAYWRIGHT_MODULO=<caminho do playwright>/index.mjs node ferramentas/prototipos/hud/fotografar_carta.mjs`.
 O jogo não mudou: a comitiva e os itens continuam fora da produção, e o ajuste do texto da cicatriz, já autorizado,
 fica para a integração.
+
+## O padrão das cartas de combate: os três heróis e os três companheiros (experimento, sem versão)
+
+**A referência** é o Morel "40 reduzido a 32": o busto aprovado de 40×40 inteiro, reduzido a 32 px. A carta nativa de
+32×32 com o rosto aproximado foi rejeitada e fica só no histórico (`resolucao-teste.html` e o fim de
+`cartas-teste.html`).
+
+**O padrão (para os seis e para personagens futuros):** a carta de combate mostra 32 px de retrato com a cabeça e parte
+dos ombros, nas proporções do busto (a cabeça ocupa mais ou menos a metade de cima, os ombros enchem a largura de
+baixo), sem rosto aumentado para caber olho, cicatriz ou detalhe: quem identifica é o conjunto (silhueta, cor, o
+traço principal). Peso parecido entre os personagens e a borda visível sobre o fundo escuro do nicho (`#0a0b0d`). O
+padrão é de apresentação, não de método: aqui saiu da redução do busto, mas um personagem futuro pode ter a carta
+desenhada à mão, desde que caia nesse enquadramento.
+
+**Como os seis chegaram nele** (`cartas-teste.js`, as peças `<nome>-c32`): o busto aprovado de cada um reduzido a 32
+pelo vizinho mais perto, como foi feito com o Morel, e ajuste pontual só onde a redução apagou um traço que identifica.
+A redução de 40 para 32 tira uma linha e uma coluna a cada cinco, e alguns traços caíram exatamente nelas:
+
+- *Guerreiro:* a fenda do visor (a linha 12 do busto) sumia; volta no lugar da linha lisa de cima dela.
+- *Odette:* o braço de cima da cruz e os dois olhos (as colunas 17 e 22) sumiam; voltam no lugar correspondente, do
+  mesmo tamanho. A borda dela tinha metade do contraste dos outros sobre o fundo da carta (o véu quase preto); na
+  carta, os quatro tons do véu sobem um degrau, na mesma ordem (o contraste médio da borda vai de 1,52 para 1,79; os
+  outros ficam entre 2,1 e 3,3).
+- *Yara:* os dois olhos caíam nas mesmas colunas da Odette; voltam do mesmo jeito.
+- *Mago, Arqueiro:* a redução direta já servia. *Morel:* a referência, sem mudança.
+
+O que identifica cada um continua: o capacete fechado com o visor, o capuz azul alto e fundo, o capuz verde curto com a
+aljava, a barba, a cicatriz e a espada nas costas, a touca branca com a cruz amarela, o cabelo roxo assimétrico.
+
+**No jogo** (`capturas-cartas/`, refeitas com
+`PLAYWRIGHT_MODULO=<caminho do playwright>/index.mjs node ferramentas/prototipos/hud/fotografar_cartas.mjs`): três
+composições (o Guerreiro com Morel e Odette, o Mago com Yara e Morel, o Arqueiro com Odette e Yara), a anterior e a
+candidata, em 1500×950 e 1280×720, com movimento normal e reduzido, na vez do herói, com nome, vida e recurso nas
+cartas. As cartas entram só na página fotografada (`cartas-no-jogo.js`).
+
+**O herói em foco.** O jogo amplia a carta do herói 1,12× na vez dele. Neste teste o nicho (a moldura de 36 px e o rosto
+de 32) desfaz a ampliação e é alinhado ao pixel inteiro da tela, enquanto o nome, as barras e a borda da carta continuam
+ampliados; usa as propriedades `scale` e `translate`, que não brigam com as animações da carta (que usam `transform`).
+Medido nas 24 fotografias: o nicho e o rosto em posições inteiras, com 36 e 32 px; a tecla 1 abre a mira e o Esc volta
+à roda em todas. Os companheiros não recebem foco e ficam sempre em 32 px. Achado à parte: a carta deles cai em meio
+pixel na vertical em parte das janelas (y = 166,5), já no jogo de hoje; como o desenho é pixel a pixel, não mistura
+cores (conferido na captura), só desloca. Não mexi.
+
+**Avaliação no tamanho real:**
+
+- *Legíveis e proporcionais:* sim. Os seis leem como busto (cabeça e ombros), sem cabeça grande; o Guerreiro e o Mago
+  pela silhueta, o Arqueiro pelo capuz e a aljava, o Morel pela barba e a ombreira, a Odette pela touca e a cruz, a
+  Yara pelo cabelo roxo. As cartas anteriores (16×16 a 2×) tinham a cabeça enchendo o nicho e pixels de 2 px; as
+  candidatas têm o pixel de 1 px, o mesmo dos ícones da HUD ao lado.
+- *Consistentes entre si:* o enquadramento é o mesmo (todos vêm de bustos do mesmo tamanho). O Mago e a Yara são os
+  mais escuros; o Guerreiro (o aço) e a Odette (a touca branca) os mais claros, sem destoar no conjunto.
+- *Na luta:* o rosto do herói em foco fica nítido e do mesmo tamanho dos companheiros; nas três composições as cartas
+  de cima e de baixo têm o mesmo peso.
+
+**Decisões já tomadas, registradas aqui para a integração:** o Morel grande em 80×80; a carta dele, "40 reduzido a
+32"; Odette e Yara revisadas aprovadas; o ajuste do texto da cicatriz autorizado; o martelo e a Pena de Fênix de 32×32
+escolhidos. Nada disso entrou no jogo ainda. Não mudaram nesta rodada os retratos grandes, o topo, o Inventário nem as
+figuras da fogueira.
+
+**Para ver:** `cartas-teste.html`.

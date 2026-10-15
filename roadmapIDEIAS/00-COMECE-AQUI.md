@@ -2217,3 +2217,19 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   com movimento normal e reduzido, e a mira pela tecla 1 continua; nenhum erro no console. O jogo não mudou.
 - **Pendente:** Jean avaliar a carta pequena. A integração da comitiva e dos itens e o ajuste do texto da cicatriz
   (autorizado) continuam para depois. A E9 e a validação com jogadores novos continuam abertas.
+
+### 15/10/2026 — O padrão das cartas de combate (experimento, sem versão)
+
+- **Pedido de Jean:** fechar um padrão para os retratos nas cartas de combate, com os três heróis e os três
+  companheiros juntos. Referência: o Morel "40 reduzido a 32" (a carta nativa de rosto aproximado foi rejeitada).
+  Comparar as cartas atuais com reduções dos bustos aprovados e ajustar só quem destoar; testar o rosto do herói em
+  32 px exatos e alinhado ao pixel na vez dele.
+- **Feito:** em `ferramentas/prototipos/hud/`, `cartas-teste.js` (os seis em 32×32: a redução do busto; ajustes
+  pontuais no visor do Guerreiro, na cruz, nos olhos e no véu da Odette, nos olhos da Yara), `cartas-no-jogo.js` (a
+  troca na luta e o nicho do herói em foco em 36 px, rosto em 32, alinhado), `fotografar_cartas.mjs` e
+  `cartas-teste.html`. O padrão de enquadramento registrado no `LEIA-ME.md` da pasta e no `docs/ROADMAP.md`.
+- **Verificado:** três composições, anterior e candidata, em 1500×950 e 1280×720, com movimento normal e reduzido; o
+  nicho e o rosto do herói em pixels inteiros; a tecla 1 e o Esc funcionando; nenhum erro no console. O jogo não mudou.
+- **Decisões guardadas para a integração:** Morel grande em 80×80; a carta dele "40 reduzido a 32"; Odette e Yara
+  revisadas aprovadas; o ajuste do texto da cicatriz (autorizado); martelo e Pena de Fênix de 32×32.
+- **Falta:** Jean avaliar os seis antes da integração. A E9 e a validação com jogadores novos continuam abertas.
