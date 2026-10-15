@@ -2304,3 +2304,15 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   cenário, Enter e F4 depois delas. Fotos antes/depois da superfície (orientação, vila, evento, em 1920 e 1280) e da
   luta e do mercado. Verificações do CLAUDE.md.
 - **Falta:** Jean conferir.
+
+### 15/10/2026 — Experimento: itens, ícones e acabamento da roda (sem versão)
+
+- **Pedido de Jean:** só no protótipo, machado, unguento e bomba de fumaça pelas descrições reais; espada, escudo e
+  anel atuais ao lado de candidatos no estilo do mundo; Grimório e Talentos (doca), Ataque e Defesa (ficha) e Fugir
+  (roda) nos tamanhos reais; uma alternativa de acabamento para a roda (nichos, placas, teclas, janelinhas e os seis
+  estados) sem mudar disposição, fluxo, mira ou áreas clicáveis; comparar no jogo e avaliar.
+- **Feito:** `ferramentas/prototipos/hud/` (desenhar_itens.py, itens-icones-teste.html, roda-alternativa.css, os dois
+  roteiros de fotografia e a avaliação; o LEIA-ME explica). O cenário `tutorial` ganhou `VITRINE=1`. O jogo não mudou.
+- **Recomendação:** integrar machado, unguento, escudo de madeira, Grimório, Talentos, Ataque, Fugir e o acabamento da
+  roda; a bomba depois de clarear a bola; espada só com a família inteira; anel atual fica; Defesa opcional.
+- **Falta:** Jean avaliar. Nada integrado.

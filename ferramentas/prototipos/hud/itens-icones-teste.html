@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Itens, ícones e roda (experimento)</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="../../../rpg/web/static/css/11-tipografia.css">
+<!-- O experimento de itens, ícones e acabamento da roda (fora do jogo): os candidatos desenhados em código
+     (desenhar_itens.py → itens-icones-teste.js) ao lado dos desenhos atuais, no tamanho real de uso, sobre o carvão;
+     embaixo, o jogo de verdade vestido com eles (fotografar_itens_icones.mjs e fotografar_roda.mjs). Nada daqui entra
+     no jogo antes da avaliação. -->
+<style>
+  @font-face { font-family: "Titulo"; src: url(../../../rpg/web/static/fontes/alagard-pt.ttf) format("truetype"); }
+  :root { --latao: #c9a14a; --latao-claro: #f2d27a; --sec: #9d978b; --aresta: #3a3d43; --ferro-fio: #2b2d31; }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 20px 24px 28px; color: #e8dcc0; font: 15px/1.4 "Alegreya Sans", "Alegreya", Georgia, sans-serif;
+    background: linear-gradient(rgba(8, 9, 11, 0.62), rgba(8, 9, 11, 0.76)), url(../../../rpg/web/static/hud/textura-painel.png) 0 0 / 128px, #0a0a0b; }
+  h1 { margin: 0 0 4px; font: 400 32px/1 "Titulo", serif; color: var(--latao-claro); }
+  .nota { margin: 0 0 14px; color: var(--sec); max-width: 1100px; }
+  section { margin-bottom: 22px; padding: 10px 16px 14px; border: 12px solid transparent;
+    border-image: url(../../../rpg/web/static/hud/moldura-nove.png) 24 / 24px round; background: rgba(0, 0, 0, 0.28); background-clip: padding-box; }
+  h2 { display: flex; align-items: center; gap: 8px; margin: 0 0 10px; font-weight: 700; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--sec); }
+  h2::after { content: ""; flex: 1; height: 1px; background: var(--ferro-fio); box-shadow: 0 1px 0 #000; }
+  h3 { margin: 14px 0 6px; font-size: 14px; color: var(--latao-claro); }
+  .linha { display: flex; align-items: flex-end; gap: 18px; flex-wrap: wrap; }
+  .linha + .linha { margin-top: 12px; }
+  figure { margin: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 5px; }
+  figcaption { font-size: 13px; color: var(--sec); max-width: 420px; }
+  figcaption b { color: #e8dcc0; }
+  img { display: block; }
+  img.px { image-rendering: pixelated; }
+  /* o espaço de item da bolsa (48 px, aresta fina, fundo escuro) e o nicho da roda (44 px) */
+  .slot { width: 48px; height: 48px; display: grid; place-items: center; border: 1px solid var(--aresta); background: #0b0c0e;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.9); }
+  .slot.g { width: 72px; height: 72px; }
+  .nicho { width: 44px; height: 44px; display: grid; place-items: center; border: 1px solid #4a4e56; background: #0d0e11; }
+  .grade { display: grid; grid-template-columns: 150px repeat(3, auto) 1fr; gap: 10px 18px; align-items: center; }
+  .grade > span { font-size: 13px; color: var(--sec); }
+  .rot { font-weight: 700; font-size: 13px; color: var(--latao-claro); }
+  .par { display: flex; gap: 8px; align-items: center; }
+  .foto { border: 1px solid #000; max-width: 100%; height: auto; image-rendering: auto; }
+  table { border-collapse: collapse; font-size: 13px; color: #d8cdb6; }
+  td, th { padding: 4px 10px; border-bottom: 1px solid var(--ferro-fio); text-align: left; vertical-align: top; }
+  th { color: var(--sec); font-weight: 700; }
+</style>
+</head>
+<body>
+<h1>Itens, ícones e roda</h1>
+<p class="nota">Candidatos desenhados em código, pelo método do martelo e da Pena de Fênix (grade de letras, contorno
+escuro de 1 pixel, luz de cima e da esquerda, poucos planos), ao lado dos desenhos de hoje. Avalie no tamanho real (as
+fileiras de nichos e as fotografias); as ampliações são só para ver os pixels. Nada disto está no jogo.</p>
+
+<section>
+  <h2>Itens no tamanho real: atual × candidato</h2>
+  <div class="grade" id="itens"></div>
+</section>
+
+<section>
+  <h2>Ícones de interface no tamanho real: atual × candidato</h2>
+  <div class="grade" id="interface"></div>
+</section>
+
+<section>
+  <h2>Ampliados 8× (só para inspeção)</h2>
+  <div class="linha" id="ampliados"></div>
+</section>
+
+<section>
+  <h2>No jogo</h2>
+  <p class="nota">O mesmo jogo, os mesmos dados, com os desenhos atuais e com os candidatos. Janela normal (1500×950) e baixa
+  (1280×720).</p>
+  <div id="jogo"></div>
+</section>
+
+<section>
+  <h2>A roda de ações: atual, com os ícones candidatos e com o acabamento alternativo</h2>
+  <p class="nota">Cada estado na luta de verdade (Guerreiro contra lobos). A alternativa (roda-alternativa.css) só muda cor,
+  aresta e sombra: tamanhos, disposição, mira e áreas clicáveis são os de hoje. "Indisponível" é simulado (a classe que o
+  jogo usa, posta no Fugir).</p>
+  <div id="roda"></div>
+</section>
+
+<section>
+  <h2>Avaliação</h2>
+  <div id="avaliacao"></div>
+</section>
+
+<script src="../../../rpg/web/static/sprites-dados.js"></script>
+<script src="../../../rpg/web/static/sprites.js"></script>
+<script src="arte-teste.js"></script>
+<script src="itens-icones-teste.js"></script>
+<script src="itens-icones-avaliacao.js"></script>
+<script>
+"use strict";
+const HUD = "../../../rpg/web/static/hud/icones/";
+const png = (n, l) => `<img src="${HUD}${n}-${l}.png" srcset="${HUD}${n}-${l}@2x.png 2x" width="${l}" height="${l}" alt="">`;
+const spr = (n, l) => `<img class="px" src="${Sprites.url(n)}" width="${l}" height="${l}" alt="">`;
+const cand = (n, l) => { const g = ArteTeste.PECAS[n].grade.length, inteira = l % g === 0, e = inteira ? l / g : Math.ceil(l / g);
+  return `<img class="${inteira ? "px" : ""}" src="${ArteTeste.url(n, e)}" srcset="${ArteTeste.url(n, 2 * e)} 2x" width="${l}" height="${l}" alt="">`; };
+const slot = (h, g) => `<span class="slot${g ? " g" : ""}">${h}</span>`;
+// [nome, atual(lado), candidato, observação do que é hoje]
+const ITENS = [
+  ["Machado", (l) => spr("machado", l), "cand-machado-32", "hoje: o sprite 16×16 do jogo a 2×"],
+  ["Unguento de Prata", (l) => spr("unguento", l), "cand-unguento-32", "hoje: o sprite do jogo (o mesmo da curandeira)"],
+  ["Bomba de Fumaça", (l) => spr("caveira", l), "cand-bomba-32", "hoje: a caveira do jogo (a mesma da morte e do bestiário)"],
+  ["Espada", (l) => png("espada", l === 64 ? 64 : l === 48 ? 48 : 32), "cand-espada-32", "hoje: a família pintada da HUD"],
+  ["Escudo", (l) => png("escudo", l === 64 ? 64 : l === 48 ? 48 : 32), "cand-escudo-32", "hoje: a família pintada da HUD"],
+  ["Anel", (l) => png("anel", l === 64 ? 64 : l === 48 ? 48 : 32), "cand-anel-32", "hoje: a família pintada da HUD"],
+];
+document.getElementById("itens").innerHTML = `<span></span><span>32 px (bolsa, prateleira)</span><span>48 px (voo ao equipar)</span><span>64 px (cartão do saque)</span><span></span>` +
+  ITENS.map(([t, atual, c, obs]) => `<span class="rot">${t}</span>` +
+    [32, 48, 64].map((l) => `<span class="par">${slot(atual(l), l > 32)}${slot(cand(c, l), l > 32)}</span>`).join("") +
+    `<span>${obs}; à direita, o candidato</span>`).join("");
+const INTERFACE = [
+  ["Grimório (doca, roda)", [36, 32], (l) => png("atalho-grimorio", l), "cand-grimorio"],
+  ["Talentos (doca)", [36, 32], (l) => png("atalho-talentos", l), "cand-talentos"],
+  ["Ataque (ficha)", [32, 24], (l) => png("attr-ataque", l), "cand-ataque"],
+  ["Defesa (ficha)", [32, 24], (l) => png("attr-defesa", l), "cand-defesa"],
+  ["Fugir (roda)", [32], (l) => png("attr-agilidade", l), "cand-fugir"],
+];
+document.getElementById("interface").innerHTML = `<span></span><span>tamanho de uso</span><span>o outro tamanho</span><span></span><span></span>` +
+  INTERFACE.map(([t, lados, atual, c]) => `<span class="rot">${t}</span>` +
+    lados.map((l) => `<span class="par"><span class="nicho">${atual(l)}</span><span class="nicho">${cand(`${c}-${ArteTeste.PECAS[`${c}-${l}`] ? l : 32}`, l)}</span></span>`).join("") +
+    (lados.length < 2 ? "<span></span>" : "") + `<span></span><span>${t === "Fugir (roda)" ? "hoje: a bota da Agilidade (com o raio)" : ""}</span>`).join("");
+document.getElementById("ampliados").innerHTML = Object.keys(ArteTeste.PECAS).filter((n) => n.startsWith("cand-")).map((n) =>
+  `<figure>${cand(n, ArteTeste.PECAS[n].grade.length * 4)}<figcaption>${n.slice(5)}</figcaption></figure>`).join("");
+// as fotografias
+const F = (pasta, nome, t) => `<figure><img class="foto" src="${pasta}/${nome}.png" alt=""><figcaption>${t}</figcaption></figure>`;
+const CONTEXTOS = [["ficha", "Ficha (atributos, equipado, bolsa)"], ["doca", "Doca (Talentos, Grimório)"], ["mochila", "Inventário (equipado, bolsa e mochila)"], ["mercado", "Mercado no Vau (prateleira e mochila)"], ["luta-itens", "Luta: a roda e a janelinha de Itens"], ["capela", "Perto da Capela Afogada: a tela inteira"]];
+document.getElementById("jogo").innerHTML = ["normal", "baixa"].map((j) => `<h3>Janela ${j}</h3>` + CONTEXTOS.map(([c, t]) =>
+  `<h3>${t}</h3><div class="linha">${F("capturas-itens-icones", `${j}-atual-${c}`, "atual")}${F("capturas-itens-icones", `${j}-candidatos-${c}`, "candidatos")}</div>`).join("")).join("");
+const ESTADOS = [["parada", "parada"], ["mouse", "mouse em Habilidades"], ["pressionada", "Atacar pressionado"], ["habilidades", "Habilidades aberta"], ["itens", "Itens aberta"], ["indisponivel", "Fugir indisponível"], ["teclado", "foco do teclado (Fugir)"]];
+document.getElementById("roda").innerHTML = ["normal", "baixa"].map((j) => `<h3>Janela ${j}</h3>` + ESTADOS.map(([e, t]) =>
+  `<div class="linha">${["atual", "icones", "acabamento"].map((v) => F("capturas-roda", `${j}-${v}-${e}`, `${t}: ${v}`)).join("")}</div>`).join("")).join("");
+document.getElementById("avaliacao").innerHTML = window.AVALIACAO || "";
+</script>
+</body>
+</html>

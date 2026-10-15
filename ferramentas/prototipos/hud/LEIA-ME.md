@@ -1275,3 +1275,54 @@ hora: a regra de movimento reduzido encurta a animação para 0,001 ms e a faixa
 assim antes desta entrega.
 
 O martelo e a Pena de Fênix de 32×32 continuam guardados para o próximo lote de itens.
+
+## Itens, ícones e acabamento da roda (experimento, sem versão)
+
+Primeira etapa do plano de apresentação (`docs/ROADMAP.md`, "Apresentação e serviços"). Nada daqui está no jogo: os
+candidatos esperam a avaliação do Jean.
+
+**Os desenhos** (`desenhar_itens.py` → `itens-icones-teste.js`, gerado; não editar à mão): cada peça é uma função do
+lado, montada com formas simples (traço grosso, disco, polígono) pintadas com as letras da paleta do martelo e da Pena
+(ferro, madeira, latão, couro) e mais o que cada uma pede (barro, prata, fumaça, couro vermelho, folhas); o contorno
+escuro de 1 pixel sai sozinho e a luz vem de cima e da esquerda. `python ferramentas/prototipos/hud/desenhar_itens.py
+--png <pasta>` também faz a folha ampliada.
+- **Machado** (a base "Machado" do Guerreiro): cabo de madeira na diagonal, como o martelo, punho de couro e a lâmina
+  em meia-lua caindo para a direita, com o fio claro no arco e o talão atrás do cabo.
+- **Unguento de Prata** ("Cura uma infecção"): o pote baixo de barro, de barriga larga, com o cordão no gargalo, a boca
+  aberta e o unguento de prata em monte, com a espátula de madeira. Hoje é o sprite da curandeira.
+- **Bomba de Fumaça** ("Garante a fuga de um combate"): a bola de barro escuro com a corda, o tampão de madeira, o
+  pavio aceso e a fumaça clara saindo pela base (sem contorno escuro: com ele, os rolos viravam pedras). Hoje é a
+  caveira, a mesma da morte e do bestiário.
+- **Espada, escudo e anel** (candidatos no estilo do mundo, ao lado dos pintados da HUD): a espada reta com o sulco,
+  guarda e pomo de latão e punho de couro; o escudo redondo de tábuas com o aro de ferro, cravos de latão e a bossa de
+  ferro (o escudo de bico fica para a Defesa, e os dois deixam de se confundir); o sinete de latão com o selo gravado
+  (sem pedra: nenhuma cor de raridade).
+- **Grimório** (doca e Habilidades da roda, 32 e 36): o livro de couro vermelho-escuro com as folhas à mostra, cantos
+  e fecho de latão (hoje, roxo com a pedra). **Talentos** (32 e 36): a árvore de madeira com três nós de latão (os
+  ramos da árvore de talentos; hoje, só os três nós).
+- **Ataque e Defesa** (ficha, 24 e 32): duas espadas cruzadas (hoje, a mesma espada do item) e o escudo de bico em dois
+  planos com a borda de latão. **Fugir** (roda, 32): a bota em passo largo com a poeira e os rastros, sem o raio, que é
+  da Agilidade (hoje, Fugir e Agilidade usam a mesma bota).
+
+**A roda** (`roda-alternativa.css`): só cor, aresta e sombra; tamanhos, recuos, disposição, mira, fluxo e áreas
+clicáveis são os de hoje. O que muda e por quê está no cabeçalho da folha (o mouse quase invisível, a tecla solta por
+cima do canto do nicho, as placas mais claras que o carvão, o indisponível só apagado).
+
+**Como fotografar** (o jogo não carrega nada daqui; os roteiros põem os arquivos na página):
+`PLAYWRIGHT_MODULO=<caminho do playwright>/index.mjs node ferramentas/prototipos/hud/fotografar_itens_icones.mjs`
+(ficha, doca, Inventário, Mercado, Itens na luta e perto da capela, atual × candidatos; o cenário `tutorial` com
+`VITRINE=1`) e `.../fotografar_roda.mjs` (cada estado da roda: atual, com os ícones, com o acabamento). A comparação
+está em `itens-icones-teste.html`.
+
+**Fotografias** (`capturas-itens-icones/` e `capturas-roda/`, em 1500×950 e 1280×720): ficha, doca, Inventário,
+Mercado do Vau, a roda com a janelinha de Itens e a tela inteira perto da Capela Afogada; a roda em sete estados
+(parada, mouse, pressionada, Habilidades e Itens abertas, indisponível simulado, foco do teclado), atual, com os ícones
+e com o acabamento. Ajustes feitos depois da primeira volta: o mouse da roda alternativa era fraco demais (agora a
+placa clareia e corre um fio de latão de 2 px); a troca do unguento e da bomba precisava achar o item pelo id na
+bolsa, na janelinha e no Mercado (o jogo usa os mesmos desenhos para a curandeira, a morte e o Largar).
+
+**Avaliação** (a tabela inteira em `itens-icones-avaliacao.js`, nos seis critérios pedidos): integrar o machado, o
+unguento, o escudo de madeira, o Grimório, os Talentos, o Ataque, o Fugir e o acabamento da roda; a bomba depois de
+clarear a bola (some no nicho escuro); a espada candidata só se a família de equipamento inteira migrar para o estilo
+dos cenários (sozinha, briga com o elmo, a cota e as botas pintados); o anel atual fica (o selo do candidato vira
+mancha em 32 px e a silhueta do espaço vazio vira bolha); a Defesa nova é opcional, junto do escudo.

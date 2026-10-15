@@ -1,0 +1,64 @@
+/* A alternativa de acabamento da roda de ações (experimento; fotografar_roda.mjs a põe na página, o jogo não a carrega).
+   Só cor, aresta e sombra: os tamanhos, os recuos, a disposição, a mira e as áreas clicáveis são os de 12-acoes-combate.css
+   e 15-hud-luta.css. O que ela muda, pelo que as fotografias da roda atual mostraram:
+   - nicho: ferro escuro com o chanfro (luz em cima, sombra embaixo) e o fundo de carvão, em vez do degradê cinza;
+   - placa do nome: carvão, mais escura que hoje e encaixada atrás do nicho (sombra à esquerda), sem virar moldura;
+   - tecla: um encaixe no canto do nicho (sem caixa solta por cima), o número em latão;
+   - mouse em cima: hoje quase não se vê; agora a aresta clareia, a placa acende e um fio de latão corre embaixo do nome;
+   - pressionado: afunda 1 px e escurece;
+   - aberto: latão no nicho e na placa, com o fio de latão aceso (o estado mais forte depois do foco);
+   - indisponível: o desenho em cinza e a placa apagada, com a aresta tracejada só no nicho (a forma além da cor);
+   - foco do teclado: o anel claro fino por fora, separado do latão do aberto. */
+
+:root body .roda-botao .rb-icone {
+  border-color: #3a3d43;
+  background: radial-gradient(ellipse 70% 60% at 50% 40%, rgba(255, 255, 255, 0.05), transparent 70%), #0b0c0f;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), inset 0 -1px 0 rgba(0, 0, 0, 0.7), 0 1px 0 #000, 0 3px 6px rgba(0, 0, 0, 0.55); }
+:root body .roda-botao .rb-nome {
+  border-color: #33363c; color: #e8dcc0;
+  background: linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0) 55%, rgba(0, 0, 0, 0.18)), #15161a;
+  box-shadow: inset 4px 0 4px -2px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 2px 4px rgba(0, 0, 0, 0.45); }
+:root body .roda-botao .tecla {
+  top: -1px; left: -1px; min-width: 15px; height: 15px; line-height: 14px; font-size: 11px;
+  color: var(--latao-claro); background: #08090b; border: 1px solid #3a3d43; border-width: 0 1px 1px 0; border-radius: 0 0 2px 0;
+  box-shadow: none; }
+
+/* mouse em cima: a aresta clareia, a placa acende um degrau e o fio de latão (2 px) corre embaixo do nome */
+:root body .roda-botao:hover .rb-icone {
+  border-color: #8a8f98;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), inset 0 0 12px rgba(201, 161, 74, 0.2), 0 1px 0 #000, 0 5px 9px rgba(0, 0, 0, 0.6); }
+:root body .roda-botao:hover .rb-nome {
+  border-color: #7b8089; color: #fff4dc;
+  background: linear-gradient(rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04) 55%, rgba(0, 0, 0, 0.1)), #24262c;
+  box-shadow: inset 4px 0 4px -2px rgba(0, 0, 0, 0.8), inset 0 -2px 0 var(--latao), 0 2px 4px rgba(0, 0, 0, 0.45); }
+
+/* pressionado */
+:root body .roda-botao:active .rb-icone { transform: translateY(1px); background: #08090b; border-color: #5a5e66;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.9); }
+:root body .roda-botao:active .rb-nome { transform: translateY(1px); background: #111215; box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8); }
+
+/* aberto (a janelinha de Habilidades ou Itens) */
+:root body .roda-botao.ativo .rb-icone { border-color: var(--latao);
+  background: radial-gradient(ellipse 70% 60% at 50% 40%, rgba(201, 161, 74, 0.16), transparent 70%), #0d0d0f; }
+:root body .roda-botao.ativo .rb-nome { border-color: var(--latao); color: var(--latao-claro);
+  background: linear-gradient(rgba(201, 161, 74, 0.1), rgba(0, 0, 0, 0.15)), #17150f;
+  box-shadow: inset 3px 0 0 var(--latao), inset 0 -1px 0 var(--latao), 0 2px 4px rgba(0, 0, 0, 0.45); }
+:root body .roda-botao.ativo .tecla { color: #fff4dc; border-color: var(--latao); }
+
+/* indisponível */
+:root body .roda-botao:is([disabled], .bloqueada) .rb-icone { opacity: 1; border-style: dashed; border-color: #4a4d53; background: #0a0a0c; box-shadow: none; }
+:root body .roda-botao:is([disabled], .bloqueada) .rb-icone img { filter: grayscale(1) brightness(0.55); }
+:root body .roda-botao:is([disabled], .bloqueada) .rb-nome { opacity: 1; border-style: solid; border-color: #26282d; color: #6f6a60; background: #0f1013; box-shadow: none; }
+:root body .roda-botao:is([disabled], .bloqueada) .tecla { color: #6f6a60; }
+
+/* foco do teclado */
+:root body .roda-botao:focus-visible .rb-icone { outline: 1px solid var(--latao-claro); outline-offset: 2px; }
+:root body .roda-botao:focus-visible .rb-nome { color: #fff4dc; }
+
+/* a janelinha: as linhas no mesmo carvão das placas, o mouse com o mesmo fio de latão */
+:root body .rj-linha { border-color: #33363c;
+  background: linear-gradient(rgba(255, 255, 255, 0.045), rgba(0, 0, 0, 0.14)), #15161a; }
+:root body .rj-linha:hover { border-color: #6a6e76; box-shadow: inset 0 -1px 0 var(--latao);
+  background: linear-gradient(rgba(255, 255, 255, 0.08), rgba(0, 0, 0, 0.1)), #1d1f24; }
+:root body .rj-linha:focus-visible { outline-width: 1px; }
+:root body .rj-titulo { border-bottom-color: #33363c; }
