@@ -2127,3 +2127,15 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   `Icones.retrato` (o mesmo da ficha: o Guerreiro de capacete fechado, 80 px; 64 na janela baixa), sem halo; Mago e
   Arqueiro seguem com o desenho da classe. Folga até arma, escudo, mãos e anel: 22 px (30 na janela baixa).
 - **Verificado:** 602 testes, gabarito sem diferença, pyflakes, fumaça (356, nenhuma exceção no servidor).
+
+### 15/10/2026 — Teste dos retratos: Mago e Arqueiro (experimento, sem versão)
+
+- **Pedido de Jean:** um candidato de Mago e um de Arqueiro, no protótipo, com o Guerreiro de capacete fechado como
+  referência; sem substituir os retratos de produção.
+- **Feito:** em `ferramentas/prototipos/hud/`, as peças `mago` e `arqueiro` em `arte-teste.js` (40×40, os recortes de
+  64 e 48 px no mesmo enquadramento do Guerreiro e a carta de 16×16 de cada um); `retratos-classes.html` (a comparação
+  dos três); `fotografar_retratos_classes.mjs` (o jogo de verdade, capela, vila e luta, em 1500×950 e 1280×720), com
+  `retrato-no-jogo.js` agora pela classe do herói. Avaliação no `LEIA-ME.md` da pasta; `docs/ROADMAP.md` registra os
+  dois em avaliação.
+- **Verificado:** as fotografias do jogo (ficha 80/64, topo 48, carta 32 e 36 na vez; a mira pela tecla 1), as três
+  páginas do teste de arte abrem sem erro, nenhum erro no console. O jogo não mudou. **Falta:** Jean avaliar.

@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Teste dos retratos: as três classes (experimento)</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="../../../rpg/web/static/css/11-tipografia.css">
+<!-- Teste dos retratos das três classes (experimento, fora do jogo): o Guerreiro aprovado (o mesmo de retratos.js) e os
+     candidatos de Mago e Arqueiro (arte-teste.js), ampliados e nos tamanhos reais; embaixo, as fotografias do jogo de
+     verdade com cada um (fotografar_retratos_classes.mjs, em capturas-retratos-classes/). -->
+<style>
+  @font-face { font-family: "Titulo"; src: url(../../../rpg/web/static/fontes/alagard-pt.ttf) format("truetype"); }
+  :root { --latao: #c9a14a; --latao-claro: #f2d27a; --sec: #9d978b; --aresta: #3a3d43; --ferro-fio: #2b2d31; }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 20px 24px 28px; color: #e8dcc0; font: 15px/1.4 "Alegreya Sans", "Alegreya", Georgia, sans-serif;
+    background: linear-gradient(rgba(8, 9, 11, 0.62), rgba(8, 9, 11, 0.76)), url(assets3/exibicao/textura-painel.png) 0 0 / 128px, #0a0a0b; }
+  h1 { margin: 0 0 4px; font: 400 32px/1 "Titulo", serif; color: var(--latao-claro); }
+  .nota { margin: 0 0 18px; color: var(--sec); max-width: 1100px; }
+  section { margin-bottom: 22px; padding: 10px 16px 14px; border: 12px solid transparent;
+    border-image: url(assets/exibicao/moldura-nove.png) 24 / 24px round; background: rgba(0, 0, 0, 0.28); background-clip: padding-box; }
+  h2 { display: flex; align-items: center; gap: 8px; margin: 0 0 10px; font-weight: 700; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--sec); }
+  h2::after { content: ""; flex: 1; height: 1px; background: var(--ferro-fio); box-shadow: 0 1px 0 #000; }
+  .linha { display: flex; align-items: flex-end; gap: 22px; flex-wrap: wrap; }
+  .linha + h2, .linha + .linha { margin-top: 16px; }
+  figure { margin: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+  figcaption { font-size: 13px; color: var(--sec); }
+  img { image-rendering: pixelated; display: block; }
+  .nicho { display: grid; place-items: center; border: 1px solid var(--aresta); border-radius: 2px; background: #0a0b0d;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.85), 0 1px 0 rgba(255, 255, 255, 0.04); }
+  .rotulo { width: 96px; align-self: center; font-weight: 700; font-size: 13px; color: var(--latao-claro); }
+  .vez img { width: 36px; height: 36px; }  /* a carta do herói na vez dele: o jogo a amplia 1,125× */
+  .foto { border: 1px solid #000; max-width: 100%; height: auto; image-rendering: auto; }
+</style>
+</head>
+<body>
+<h1>Teste dos retratos: as três classes</h1>
+<p class="nota">O Guerreiro de capacete fechado (aprovado, no jogo desde a 1.90.0) e os candidatos de Mago e Arqueiro,
+desenhados em código pelo mesmo método e no mesmo enquadramento (arte-teste.js): um desenho de 40×40 pixels de arte, com
+o busto da ficha inteiro e os recortes para a janela baixa e o topo; a carta da luta, uma versão de 16×16. O jogo não
+mudou: as fotografias de baixo foram tiradas com os candidatos postos só na página fotografada.</p>
+
+<section>
+  <h2>Ampliados (os pixels à vista)</h2>
+  <div class="linha">
+    <figure><span class="nicho" style="width:242px;height:242px" data-peca="guerreiro" data-escala="6"></span><figcaption>Guerreiro (aprovado), ×6</figcaption></figure>
+    <figure><span class="nicho" style="width:242px;height:242px" data-peca="mago" data-escala="6"></span><figcaption>Mago (candidato), ×6</figcaption></figure>
+    <figure><span class="nicho" style="width:242px;height:242px" data-peca="arqueiro" data-escala="6"></span><figcaption>Arqueiro (candidato), ×6</figcaption></figure>
+  </div>
+  <div class="linha">
+    <figure><span class="nicho" style="width:130px;height:130px" data-peca="guerreiro-carta" data-escala="8"></span><figcaption>carta do Guerreiro, ×8</figcaption></figure>
+    <figure><span class="nicho" style="width:130px;height:130px" data-peca="mago-carta" data-escala="8"></span><figcaption>carta do Mago, ×8</figcaption></figure>
+    <figure><span class="nicho" style="width:130px;height:130px" data-peca="arqueiro-carta" data-escala="8"></span><figcaption>carta do Arqueiro, ×8</figcaption></figure>
+  </div>
+</section>
+
+<section>
+  <h2>Nos tamanhos reais do jogo</h2>
+  <div id="reais"></div>
+</section>
+
+<section>
+  <h2>No jogo: ficha e topo ao lado da capela (janela normal, 1500×950)</h2>
+  <div class="linha">
+    <figure><img class="foto" src="capturas-retratos-classes/guerreiro-capela-normal.png" width="440" height="279" alt=""><figcaption>Guerreiro</figcaption></figure>
+    <figure><img class="foto" src="capturas-retratos-classes/mago-capela-normal.png" width="440" height="279" alt=""><figcaption>Mago</figcaption></figure>
+    <figure><img class="foto" src="capturas-retratos-classes/arqueiro-capela-normal.png" width="440" height="279" alt=""><figcaption>Arqueiro</figcaption></figure>
+  </div>
+  <h2>No jogo: ficha e topo na vila (janela baixa, 1280×720)</h2>
+  <div class="linha">
+    <figure><img class="foto" src="capturas-retratos-classes/guerreiro-vila-baixa.png" width="440" height="248" alt=""><figcaption>Guerreiro</figcaption></figure>
+    <figure><img class="foto" src="capturas-retratos-classes/mago-vila-baixa.png" width="440" height="248" alt=""><figcaption>Mago</figcaption></figure>
+    <figure><img class="foto" src="capturas-retratos-classes/arqueiro-vila-baixa.png" width="440" height="248" alt=""><figcaption>Arqueiro</figcaption></figure>
+  </div>
+  <h2>No jogo: a carta na vez do herói (tamanho real)</h2>
+  <div class="linha">
+    <figure><img class="foto" src="capturas-retratos-classes/guerreiro-luta-normal-carta-vez.png" alt=""><figcaption>Guerreiro</figcaption></figure>
+    <figure><img class="foto" src="capturas-retratos-classes/mago-luta-normal-carta-vez.png" alt=""><figcaption>Mago</figcaption></figure>
+    <figure><img class="foto" src="capturas-retratos-classes/arqueiro-luta-normal-carta-vez.png" alt=""><figcaption>Arqueiro</figcaption></figure>
+  </div>
+</section>
+
+<script src="arte-teste.js"></script>
+<script>
+"use strict";
+document.querySelectorAll("[data-peca]").forEach((n) => n.insertAdjacentHTML("afterbegin", ArteTeste.img(n.dataset.peca, Number(n.dataset.escala))));
+// os tamanhos reais: a ficha (80 e 64), o topo (48), a carta (32 e 36 na vez), lado a lado para as três classes
+const TAM = [["", 2, 90, "ficha 80 px"], ["-busto-baixo", 2, 74, "ficha baixa 64 px"], ["-cabeca", 2, 56, "topo 48 px"], ["-carta", 2, 36, "carta 32 px"]];
+document.getElementById("reais").innerHTML = ["guerreiro", "mago", "arqueiro"].map((c) => `<div class="linha"><span class="rotulo">${c[0].toUpperCase() + c.slice(1)}</span>` +
+  TAM.map(([suf, e, caixa, rot]) => `<figure><span class="nicho" style="width:${caixa}px;height:${caixa}px">${ArteTeste.img(c + suf, e)}</span><figcaption>${rot}</figcaption></figure>`).join("") +
+  `<figure><span class="nicho vez" style="width:40px;height:40px">${ArteTeste.img(c + "-carta", 2)}</span><figcaption>na vez, 36 px</figcaption></figure></div>`).join("");
+</script>
+</body>
+</html>

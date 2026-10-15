@@ -1,27 +1,33 @@
-/* Teste do retrato (experimento): veste o Guerreiro do jogo de verdade com o candidato de arte-teste.js, só para a
-   comparação (fotografar_retrato.mjs põe este arquivo na página depois de abrir um cenário). O jogo não carrega este
-   arquivo: o retrato de produção continua o de hud/icones/. Troca as três imagens que Icones dá ao Guerreiro, nos
-   mesmos lugares e com as mesmas classes (as regras de tamanho da HUD valem igual): o busto da ficha (80 px; 64 em
-   janela baixa, pelo mesmo <picture>), a cabeça do topo (48 px) e a da carta da luta (32 px). Como os painéis se
-   redesenham a cada mudança do jogo, um observador refaz a troca. */
+/* Teste do retrato (experimento): veste o herói do jogo de verdade com o candidato da classe dele (arte-teste.js), só
+   para a comparação (fotografar_retrato.mjs e fotografar_retratos_classes.mjs põem este arquivo na página depois de
+   abrir um cenário). O jogo não carrega este arquivo: o retrato de produção continua o de retratos.js (o Guerreiro) e
+   o sprite da classe (Mago e Arqueiro). Troca as três imagens do herói, nos mesmos lugares e com as classes que as
+   regras de tamanho da HUD usam: o busto da ficha (80 px; 64 em janela baixa, pelo mesmo <picture>), a cabeça do
+   topo (48 px) e a da carta da luta (32 px). Como os painéis se redesenham a cada mudança do jogo, um observador
+   refaz a troca. */
 "use strict";
 
 (() => {
-  const uma = (peca, escala, classe, alt = "") => ArteTeste.img(peca, escala, classe, alt);
-  function busto(alt) {
-    const baixo = ArteTeste.url("guerreiro-busto-baixo", 2), baixo2 = ArteTeste.url("guerreiro-busto-baixo", 4);
+  const classe = () => (App.estado && App.estado.heroi && App.estado.heroi.classe) || "guerreiro";
+  const uma = (peca, escala, cl, alt = "") => ArteTeste.img(peca, escala, cl, alt);
+  function busto(c, alt) {
+    const baixo = ArteTeste.url(`${c}-busto-baixo`, 2), baixo2 = ArteTeste.url(`${c}-busto-baixo`, 4);
     return `<picture class="desenho candidato"><source media="(max-height: 800px)" srcset="${baixo}, ${baixo2} 2x">` +
-      uma("guerreiro", 2, "original", alt) + "</picture>";
+      uma(c, 2, "original", alt) + "</picture>";
   }
   function vestir() {
-    document.querySelectorAll("#heroi .retrato-grande picture.desenho:not(.candidato)").forEach((p) => {
-      p.outerHTML = busto(p.querySelector("img") ? p.querySelector("img").alt : "");
+    const c = classe();
+    if (!ArteTeste.PECAS[c]) return;
+    document.querySelectorAll("#heroi .retrato-grande").forEach((r) => {
+      if (r.querySelector(".candidato")) return;
+      const velho = r.querySelector("img");
+      r.innerHTML = busto(c, velho ? velho.alt : "");
     });
-    document.querySelectorAll(".hud-retrato img.desenho:not(.arte-teste)").forEach((i) => {
-      i.outerHTML = uma("guerreiro-cabeca", 2, "sprite desenho", i.alt);
+    document.querySelectorAll(".hud-retrato img:not(.arte-teste)").forEach((i) => {
+      i.outerHTML = uma(`${c}-cabeca`, 2, "sprite desenho", i.alt);
     });
-    document.querySelectorAll(".carta.heroi .icone img.desenho:not(.arte-teste)").forEach((i) => {
-      i.outerHTML = uma("guerreiro-carta", 2, "sprite desenho", i.alt);
+    document.querySelectorAll(".carta.heroi .icone img:not(.arte-teste)").forEach((i) => {
+      i.outerHTML = uma(`${c}-carta`, 2, "sprite desenho", i.alt);
     });
   }
   // pixel a pixel, sem suavizar, em qualquer tamanho

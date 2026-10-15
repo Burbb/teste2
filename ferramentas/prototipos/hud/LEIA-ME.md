@@ -913,3 +913,44 @@ classes, nem troca pelo elmo equipado. A proposta guardada (`docs/ROADMAP.md`, i
 **Aprovado (1.90.0):** o candidato foi para o jogo como está, em `rpg/web/static/retratos.js` (as mesmas grades, sem
 detalhe a mais), pintado por `Sprites.grade`; os PNG do retrato gerado saíram de `hud/icones/` (as cópias continuam em
 `assets4p/exibicao/`, e `retrato-teste.html` passou a apontar para elas).
+
+## Teste dos retratos: Mago e Arqueiro, junto do Guerreiro aprovado (experimento, sem versão)
+
+Com o Guerreiro de capacete fechado aprovado (no jogo desde a 1.90.0), um candidato para cada uma das outras classes
+básicas, só aqui: `arte-teste.js` ganhou as peças `mago` e `arqueiro` (40×40) com os recortes de 64 e 48 px e a carta
+(16×16) de cada um. O mesmo método (uma grade de letras, cada letra uma cor, pintada pixel a pixel) e o mesmo
+enquadramento do Guerreiro: a cabeça na mesma região, para os mesmos recortes servirem às três classes.
+
+- **Mago:** capuz alto de pano azul apagado, com a ponta mole caída para trás; o manto do capuz nos ombros, em
+  triângulo; o rosto na sombra do capuz, só a metade de baixo à luz da esquerda (sem olhos à mostra, sem chapéu, sem
+  joia, sem brilho).
+- **Arqueiro:** capuz curto e redondo de pano verde apagado, rente à cabeça, que acaba numa capinha nos ombros; o rosto
+  à mostra; o gibão de couro marrom, uma correia só e a boca da aljava com duas penas curtas atrás do ombro direito (a
+  silhueta fica torta de um lado, onde a do Mago é um triângulo e a do Guerreiro uma caixa).
+- **A carta** de cada um é redesenhada em 16×16 (nada reduzido por suavização): o capuz, o rosto e, no Arqueiro, a
+  aljava; conferida também a 36 px, a ampliação da vez do herói.
+
+**Para ver:** `retratos-classes.html` (os três ampliados, nos tamanhos reais, e as fotografias do jogo). As fotografias
+(`capturas-retratos-classes/`) são do jogo de verdade, refeitas com
+`PLAYWRIGHT_MODULO=<caminho do playwright>/index.mjs node ferramentas/prototipos/hud/fotografar_retratos_classes.mjs`:
+para cada classe, em 1500×950 e 1280×720, a ficha e o topo ao lado da capela e da vila (fotografias paradas) e a luta
+(interações: a vez do herói, com a carta a 36 px, e a mira aberta pela tecla 1). Os candidatos entram só na página
+fotografada (`retrato-no-jogo.js`, agora pela classe do herói).
+
+**Avaliação:**
+
+- *Classes distintas sem depender da cor:* sim, pela silhueta: a caixa do capacete, o triângulo do capuz alto e o
+  capuz redondo com a aljava saindo de um lado. Em tons de cinza, as três continuam diferentes.
+- *Peso semelhante:* próximo. O Guerreiro tem o cinza mais claro do capacete; o Mago é o mais escuro e mais de uma cor
+  só (o azul do capuz e do manto); o Arqueiro tem o rosto e o couro mais quentes. O couro foi apagado uma vez para não
+  pesar mais que os outros. Se o Mago parecer apagado demais ao lado dos outros dois, o próximo passo é clarear a borda
+  do capuz, não acrescentar detalhe.
+- *Sobre o carvão:* os três legíveis nos quatro tamanhos; o Mago depende da borda clara do capuz e do rosto.
+- *Mesmo mundo:* sim; o mesmo método, poucos tons, a luz da esquerda, as cores contidas, junto do mercador e das
+  figuras dos cenários.
+- *Interações verificadas* (não só fotografias): a vez do herói chegou e a carta foi medida a 36 px nas seis lutas; a
+  tecla 1 abriu a mira com o retrato no lugar; nenhum erro no console. As fichas, os topos e as páginas inteiras são
+  fotografias paradas.
+
+Nada mudou no jogo: os retratos de produção seguem o de `retratos.js` (o Guerreiro) e o desenho da classe (Mago e
+Arqueiro). Nem seleção, nem recoloração, nem gênero, nem retratos por especialização, nem troca pelo equipamento.
