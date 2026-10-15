@@ -30,7 +30,8 @@ import math
 import pathlib
 
 import numpy as np
-from PIL import Image
+
+from pixel_comum import ANG_LUZ, LUZ, ajustar, contornar, imagem, limpar, salvar
 
 AQUI = pathlib.Path(__file__).resolve().parent
 SAIDA = AQUI / "escudo-pixel"
@@ -38,17 +39,15 @@ SAIDA = AQUI / "escudo-pixel"
 # As rampas: do mais escuro ao brilho (o ferro azulado e o latão do escudo atual, organizados em degraus).
 FERRO = ["#0e1117", "#191e28", "#252c3a", "#343e51", "#465269", "#5d6b86", "#8492ab", "#bcc5d4", "#eef1f6"]
 LATAO = ["#26170a", "#40270c", "#623c12", "#8a571b", "#ae7526", "#cf9737", "#e9bb5c", "#f8dc94", "#fff5d6"]
-CONTORNO = "#08080a"
-# o tom de cada gomo pela distância à luz: o da luz, os vizinhos, os de lado, os de trás, o oposto
-ESCADA = [7, 5, 4, 3, 2]
-LUZ = np.array([-0.58, -0.62, 0.53]); LUZ = LUZ / np.linalg.norm(LUZ)
-ANG_LUZ = math.atan2(LUZ[1], LUZ[0])  # cima e esquerda
+# o tom de cada gomo pela distância à luz (o da luz, os vizinhos, os de lado, os de trás, o oposto) fica em MEDIDAS
+# (`escada`): na passagem final, os de trás desceram um degrau em 48 e 64
+# a luz (de cima e da esquerda) e o contorno são os de pixel_comum.py, comuns aos objetos
 
 # As medidas de cada tamanho, em pixels (os raios em relação ao centro do disco da frente).
 MEDIDAS = {
-    32: dict(raio=12.45, lado=1, aro=2.0, degrau=1, cupula=3.5, base=0.0, sulco=1.0, cravos=7.9, cravo="1", sombra_peca=1, emendas=False, reflexo=(1.35, 2.0)),
-    48: dict(raio=18.45, lado=1, aro=2.8, degrau=1, cupula=4.4, base=1.2, sulco=1.0, cravos=12.3, cravo="2", sombra_peca=1, emendas=True, reflexo=(0.8, 1.4)),
-    64: dict(raio=24.45, lado=1, aro=3.0, degrau=1, cupula=6.0, base=1.6, sulco=1.1, cravos=17.2, cravo="3", sombra_peca=2, emendas=True, reflexo=(0.8, 1.4)),
+    32: dict(raio=12.45, lado=1, aro=2.0, degrau=1, cupula=3.5, base=0.0, sulco=1.0, cravos=7.9, cravo="1", sombra_peca=1, emendas=False, reflexo=(1.35, 2.0), alcance=0.62, escada=(7, 5, 4, 3, 2)),
+    48: dict(raio=18.45, lado=1, aro=2.8, degrau=1, cupula=4.4, base=1.2, sulco=1.0, cravos=12.3, cravo="2", sombra_peca=1, emendas=True, reflexo=(1.0, 1.65), alcance=0.7, escada=(7, 5, 4, 3, 1)),
+    64: dict(raio=24.45, lado=1, aro=3.0, degrau=1, cupula=6.0, base=1.6, sulco=1.1, cravos=17.2, cravo="3", sombra_peca=2, emendas=True, reflexo=(1.05, 1.7), alcance=0.72, escada=(7, 5, 4, 2, 1)),
 }
 # Correções feitas olhando cada tamanho: {(x, y): ("f"|"l"|"c", índice)} (ferro, latão, contorno; None apaga).
 AJUSTES = {32: {}, 48: {}, 64: {}}
@@ -111,14 +110,15 @@ def desenhar(lado_img):
     r_sulco = M["cupula"] + M["base"] + M["sulco"]
     face = frente & (d <= r_deg) & (d > r_sulco)
     ordem = np.round(delta(centro_gomo) / passo).astype(int)  # 0 o gomo da luz ... 4 o oposto
-    tom_gomo = np.array(ESCADA)[ordem]
+    escada = np.array(M["escada"])
+    tom_gomo = escada[ordem]
     mat[face], tom[face] = "f", tom_gomo[face]
     rf = (d - r_sulco) / (r_deg - r_sulco)  # 0 junto do sulco, 1 junto do degrau
     # a emenda: uma linha de pixel um tom abaixo do mais escuro dos dois gomos
     if M["emendas"]:
         dist_emenda = np.abs(((ang - passo / 2) % passo) - passo / 2) * d
         em = face & (dist_emenda < 0.5) & (rf > 0.05) & (rf < 0.97)
-        tom[em] = np.maximum(1, np.minimum(tom_gomo[em], np.array(ESCADA)[np.minimum(ordem[em] + 1, 4)]) - 1)
+        tom[em] = np.maximum(1, np.minimum(tom_gomo[em], escada[np.minimum(ordem[em] + 1, 4)]) - 1)
     # a sombra junto do sulco (o pé da peça central) e a sombra da peça sobre a face, embaixo à direita
     pe = face & (d <= r_sulco + 1.0)
     tom[pe] = np.maximum(1, tom[pe] - 1)
@@ -130,8 +130,8 @@ def desenhar(lado_img):
     lado_g = np.abs((ang - centro_gomo + np.pi) % (2 * np.pi) - np.pi) * d  # distância à linha do meio do gomo, em px
     gomo_luz = face & (ordem == 0)
     largura = (0.3 + 0.9 * rf) * (r_deg - r_sulco) * 0.4
-    nucleo = gomo_luz & (rf > 0.0) & (rf < 0.62) & (lado_g < largura * M["reflexo"][0])
-    meio = gomo_luz & (rf > -0.1) & (rf < 0.8) & (lado_g < largura * M["reflexo"][1]) & ~nucleo
+    nucleo = gomo_luz & (rf > 0.0) & (rf < M["alcance"]) & (lado_g < largura * M["reflexo"][0])
+    meio = gomo_luz & (rf > -0.1) & (rf < M["alcance"] + 0.18) & (lado_g < largura * M["reflexo"][1]) & ~nucleo
     tom[meio], tom[nucleo] = 7, 8
     tom[gomo_luz & ~meio & ~nucleo] = np.minimum(tom[gomo_luz & ~meio & ~nucleo], 6)
     fixo[nucleo | meio] = True
@@ -186,50 +186,14 @@ def desenhar(lado_img):
                     t_ = max(0, min(tom[yy, xx] - 2, t_ + 2))
                 mat[yy, xx], tom[yy, xx], fixo[yy, xx] = m_, t_, True
 
-    # ---- a limpeza: um pixel sozinho num tom, cercado (nos quatro lados) pelo mesmo material com outro tom
-    for _ in range(2):
-        novo = tom.copy()
-        for yy in range(1, lado_img - 1):
-            for xx in range(1, lado_img - 1):
-                if not mat[yy, xx] or fixo[yy, xx]:
-                    continue
-                viz = [(yy - 1, xx), (yy + 1, xx), (yy, xx - 1), (yy, xx + 1)]
-                if all(mat[a, b] == mat[yy, xx] and tom[a, b] != tom[yy, xx] for a, b in viz):
-                    tons = [tom[a, b] for a, b in viz]
-                    novo[yy, xx] = max(set(tons), key=tons.count)
-        tom = novo
-
-    # ---- o contorno: 1 pixel em volta da silhueta, só pelos lados
-    forma = mat != ""
-    viz = np.zeros_like(forma)
-    for ox, oy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-        viz |= np.roll(np.roll(forma, oy, 0), ox, 1)
-    contorno = viz & ~forma
-    mat[contorno] = "c"
-
-    for (xx, yy), (m_, t_) in AJUSTES[lado_img].items():
-        mat[yy, xx] = "" if m_ is None else m_
-        tom[yy, xx] = t_ or 0
-
-    img = np.zeros((lado_img, lado_img, 4), dtype=np.uint8)
-    cor = lambda h: [int(h[i:i + 2], 16) for i in (1, 3, 5)] + [255]
-    for yy in range(lado_img):
-        for xx in range(lado_img):
-            m_ = mat[yy, xx]
-            if m_ == "f":
-                img[yy, xx] = cor(FERRO[tom[yy, xx]])
-            elif m_ == "l":
-                img[yy, xx] = cor(LATAO[tom[yy, xx]])
-            elif m_ == "c":
-                img[yy, xx] = cor(CONTORNO)
-    return Image.fromarray(img, "RGBA")
+    # ---- a limpeza, o contorno e as correções (pixel_comum.py)
+    tom = limpar(mat, tom, fixo)
+    contornar(mat)
+    ajustar(mat, tom, AJUSTES[lado_img])
+    return imagem(mat, tom, {"f": FERRO, "l": LATAO})
 
 
 if __name__ == "__main__":
     SAIDA.mkdir(exist_ok=True)
     for lado in (32, 48, 64):
-        img = desenhar(lado)
-        img.save(SAIDA / f"escudo-{lado}.png")
-        img.resize((2 * lado, 2 * lado), Image.NEAREST).save(SAIDA / f"escudo-{lado}@2x.png")
-        usados = len({tuple(p) for p in np.asarray(img).reshape(-1, 4) if p[3]})
-        print(f"escudo-{lado}: {usados} cores")
+        print(f"escudo-{lado}: {salvar(desenhar(lado), SAIDA, 'escudo')} cores")

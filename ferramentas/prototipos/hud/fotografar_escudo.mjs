@@ -16,7 +16,8 @@ import path from "path";
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULO || "playwright");
 const aqui = path.dirname(fileURLToPath(import.meta.url)), raiz = path.resolve(aqui, "../../..");
 const SAIDA = path.join(aqui, "capturas-escudo");
-const PASTA = { candidato: path.join(aqui, "escudo-teste"), refinado: path.join(aqui, "escudo-pixel") };
+// v1: o refinado aprovado como base (escudo-pixel-v1/); refinado: o mesmo com o acabamento final (escudo-pixel/)
+const PASTA = { candidato: path.join(aqui, "escudo-teste"), v1: path.join(aqui, "escudo-pixel-v1"), refinado: path.join(aqui, "escudo-pixel") };
 mkdirSync(SAIDA, { recursive: true });
 const espera = (ms) => new Promise((r) => setTimeout(r, ms));
 async function subir(cenario, amb = {}) {

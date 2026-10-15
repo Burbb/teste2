@@ -1371,7 +1371,7 @@ regras na grade final, descritas no cabeçalho do arquivo, com as medidas de cad
 manuais em `AJUSTES`. A silhueta são dois discos em centro de pixel (a frente e a lateral, 1 pixel embaixo e à
 direita), no enquadramento do atual; o aro é um rolo por regras (o tom pelo ângulo até a luz, a fileira de fora e a de
 dentro um degrau abaixo do lado em que viram, o brilho num arco curto); o degrau é a sombra do aro, com um toque da
-parede acesa embaixo à direita; cada gomo da face tem um tom só (a escada `ESCADA`), com o reflexo do gomo da luz em
+parede acesa embaixo à direita; cada gomo da face tem um tom só (a `escada` de cada tamanho, em `MEDIDAS`), com o reflexo do gomo da luz em
 três tons e as emendas só em 48 e 64; a peça central tem o sulco, a base (em 48 e 64), a cúpula em faixas e o brilho
 desenhado por tamanho; os cravos são pinos por tamanho; uma limpeza tira pixels sozinhos; o contorno tem 1 pixel, só
 pelos lados. Paleta: 9 tons de ferro, 9 de latão e o contorno (17 a 18 cores por arquivo).
@@ -1390,3 +1390,54 @@ Inventário e o Mercado em 32, o voo em 48, o cartão do saque em 64 e as telas 
 **Avaliação** (`escudo-avaliacao.js`): o refinado ganha na organização dos pixels, na silhueta e na espessura, nos
 reflexos localizados do aro e na leitura limpa em 32; perde para o atual no tamanho do reflexo do gomo (mais em 64)
 e na face de 64, mais clara e chapada.
+
+### O método em dois objetos: o escudo final e o Unguento de Prata (experimento, sem versão)
+
+**O pedido:** encerrar o escudo com uma passagem curta de acabamento e testar o método num segundo objeto, o Unguento
+de Prata, sem levar nada à produção.
+
+**O escudo final** (`escudo-pixel/`; o aprovado antes da passagem fica em `escudo-pixel-v1/`): os gomos de trás um
+degrau mais escuros em 48 e 64 (a `escada` passou a ser de cada tamanho: 32 `7,5,4,3,2`, 48 `7,5,4,3,1`, 64
+`7,5,4,2,1`) e o reflexo do gomo da luz maior em 48 e 64 (`reflexo` e `alcance` em `MEDIDAS`). O 32 saiu igual ao
+aprovado, pixel a pixel. Estrutura, enquadramento, paleta, aro, peça central e cravos não mudaram.
+
+**O unguento** (`desenhar_unguento_pixel.py` → `unguento-pixel/`, 32 como prioridade, 48 e 64 como apresentação; o
+dobro é a duplicação exata). Antes de desenhar, o que o jogo diz: "Unguento de Prata", "Cura uma infecção", 30 de ouro,
+usado fora da luta ("O unguento arde como fogo. Horas depois, a febre cede"); nenhum brilho, símbolo ou efeito. A
+identidade vem do sprite atual (um pote baixo de louça clara, de paredes retas, com tampa e um rótulo azul-esverdeado
+com uma tira clara; é também o desenho da curandeira). A proposta guarda a louça, a forma e o rótulo e abre o pote:
+a borda (o lábio em elipse, aceso atrás à esquerda, com a espessura na frente), a parede de dentro em sombra e a pasta
+abaixo da borda. A primeira tentativa desta rodada seguiu o primeiro candidato (um pote de barro barrigudo) e perdia a
+identidade do atual; foi descartada. Rodadas até a proposta: o corpo em muitas faixas verticais com um reflexo branco
+lia como lata de metal (virou poucos tons largos e um reflexo de vidrado um degrau acima, sem branco); a pasta escura
+e ruidosa lia como pedra (virou cinza frio com a luz em volta de um ponto); no tamanho real a pasta e a borda tinham o
+mesmo valor e a boca sumia (a pasta desceu um degrau e mais da parede escura de dentro aparece). Rampas: louça (9
+tons, o último é o reflexo), pasta de prata (8), rótulo (8) e papel (8); 24 cores por arquivo.
+
+**O comum aos dois** (`pixel_comum.py`, que os dois usam): a luz (de cima e da esquerda, um pouco de frente), a grade
+em duas camadas (material e tom) com o que é desenhado de propósito protegido, a limpeza de pixels sozinhos, o
+contorno de 1 pixel só pelos lados, as correções manuais por tamanho (`AJUSTES`), a imagem pelas rampas e o @2x por
+duplicação. O escudo foi refeito sobre ele sem mudar um pixel.
+
+**O que foi de cada material:** o metal (ferro, latão) leva reflexo especular forte e localizado (o arco do aro, a
+mancha do gomo, o ponto da cúpula) e vai do quase preto ao quase branco; a louça vidrada, a luz da forma em poucas
+faixas largas e um reflexo baixo e estreito; o papel do rótulo, só a luz da forma (o reflexo para nele); a pasta, cinza
+frio contra a louça quente, luz macia em volta de um ponto, nenhum especular. A quantidade de cores não é regra: o
+escudo usa 17 a 18, o unguento 24.
+
+**O que foi de cada tamanho:** no escudo, as emendas e a base da peça só em 48 e 64, os cravos por tamanho, a escada
+e o reflexo por tamanho; no unguento, a espessura do lábio (1 px em 32, 2 em 48 e 64), o sulco do pescoço só em 48 e
+64, a barriga só em 48 e 64 (em 32 virava um degrau solto na silhueta), o grupo de brilho da pasta desenhado por
+tamanho, e a pasta mais funda em 32 (para a parede de dentro aparecer).
+
+**Etapas reutilizáveis:** ler o que o jogo diz do objeto e o desenho atual antes de desenhar; montar a forma na grade
+final por regras (as medidas de cada tamanho numa tabela); dar a cada material a sua rampa e a sua regra de luz;
+conferir em 32 no tamanho real, no jogo, e não só ampliado; corrigir o que for de um tamanho na tabela ou em
+`AJUSTES`; fotografar com o jogo intacto, trocando só os arquivos (`fotografar_escudo.mjs`,
+`fotografar_unguento.mjs` com `unguento-no-jogo.js`). Ainda não é uma skill: o método foi provado em dois objetos.
+
+**Fotos:** `fotografar_escudo.mjs` com `VERSOES=v1,refinado` (o anterior × o final: saque em 64, voo em 48,
+Inventário, Mercado e ficha em 32, telas inteiras); `fotografar_unguento.mjs` → `capturas-unguento/` (atual, primeiro
+candidato e proposta, esta com o escudo final: o Inventário, o Mercado em Suprimentos, a ficha e as telas inteiras),
+em 1500×950 e 1280×720. Na página `itens-icones-teste.html`, a primeira seção, com a avaliação dos dois juntos
+(`unguento-avaliacao.js`).

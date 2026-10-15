@@ -50,7 +50,30 @@
 <p class="nota"><b>Decisão do Jean (10/2026):</b> o lote de candidatos abaixo não foi aprovado. Os desenhos atuais têm
 mais volume, personalidade e acabamento; a aproximação com os cenários simplificou demais os itens. Ficam os itens e
 ícones atuais e a Pena de Fênix aprovada; o acabamento alternativo da roda continua aqui para uma avaliação separada.
-O teste seguinte é um escudo só, com o atual como referência direta (a primeira seção).</p>
+O teste seguinte é um escudo só, com o atual como referência direta; depois, o mesmo método no Unguento de Prata (a primeira seção).</p>
+
+<section>
+  <h2>O método em dois objetos: o escudo final e o Unguento de Prata</h2>
+  <p class="nota"><b>Escudo:</b> a passagem final sobre o refinado aprovado (escudo-pixel-v1/ guarda o anterior): os gomos
+  de trás um degrau mais escuros em 48 e 64, o reflexo do gomo da luz maior em 48 e 64; o 32 ficou igual. A estrutura, o
+  enquadramento, a paleta, o aro, a peça central e os cravos não mudaram. <b>Unguento:</b> o atual é o sprite do jogo
+  (um pote baixo de louça clara com tampa e rótulo azul-esverdeado; é também o desenho da curandeira); o primeiro
+  candidato (desenhar_itens.py) fica como histórico; a proposta (desenhar_unguento_pixel.py, unguento-pixel/) guarda a
+  identidade do atual (a louça, as paredes retas, o rótulo com a tira clara) e abre o pote para mostrar a pasta. Cada
+  tamanho é desenhado na própria grade; o @2x é a duplicação dos pixels. Nas fotos, o roteiro troca só o unguento da
+  bolsa e da prateleira (a curandeira fica) e, na proposta, o escudo pelo final, para ver os dois juntos.</p>
+  <h3>Escudo: refinado anterior × acabamento final (tamanho real)</h3>
+  <div class="grade" id="final-escudo"></div>
+  <h3>Unguento: atual × primeiro candidato × proposta (tamanho real)</h3>
+  <div class="grade" id="final-unguento"></div>
+  <h3>Os dois juntos, no tamanho real, sobre o carvão da HUD</h3>
+  <div class="linha" id="final-juntos"></div>
+  <h3>Os arquivos finais ampliados sem suavizar (só para inspeção)</h3>
+  <div id="final-amp"></div>
+  <div id="final-fotos"></div>
+  <h3>Avaliação dos dois objetos juntos</h3>
+  <div id="final-avaliacao"></div>
+</section>
 
 <section>
   <h2>Teste do escudo: o atual, o candidato anterior e o refinado em pixel art</h2>
@@ -58,7 +81,8 @@ O teste seguinte é um escudo só, com o atual como referência direta (a primei
   no enquadramento do atual. <b>Anterior</b> (desenhar_escudo.py, escudo-teste/): o relevo iluminado, renderizado grande e
   reduzido. <b>Refinado</b> (desenhar_escudo_pixel.py, escudo-pixel/): o anterior como referência de construção e luz e o
   atual como referência de reflexo e contraste; cada tamanho desenhado na própria grade, com a paleta em rampas e a luz
-  em grupos de pixels (o processo está no cabeçalho do arquivo). Nas fotos, o roteiro responde com os arquivos de cada
+  em grupos de pixels (o processo está no cabeçalho do arquivo). Desde a passagem final, o refinado aqui é o final; o
+  aprovado antes dela está em escudo-pixel-v1/ (seção acima). Nas fotos, o roteiro responde com os arquivos de cada
   versão aos pedidos do escudo; os dados e os espaços são os mesmos.</p>
   <div class="grade" id="escudo"></div>
   <h3>Os arquivos finais, ampliados sem suavizar (só para inspeção): 32 px a 10×, 48 px a 7×, 64 px a 5×</h3>
@@ -113,6 +137,7 @@ fileiras de nichos e as fotografias); as ampliações são só para ver os pixel
 <script src="itens-icones-teste.js"></script>
 <script src="itens-icones-avaliacao.js"></script>
 <script src="escudo-avaliacao.js"></script>
+<script src="unguento-avaliacao.js"></script>
 <script>
 "use strict";
 const HUD = "../../../rpg/web/static/hud/icones/";
@@ -170,6 +195,35 @@ document.getElementById("escudo-fotos").innerHTML = ["normal", "baixa"].map((j) 
   FOTOS_ESCUDO.map(([c, t]) => `<h3>${t}</h3><div class="linha">` +
     [["atual", "atual"], ["candidato", "anterior"], ["refinado", "refinado"]].map(([v, r]) => F("capturas-escudo", `${j}-${v}-${c}`, r)).join("") + "</div>").join("")).join("");
 document.getElementById("escudo-avaliacao").innerHTML = window.AVALIACAO_ESCUDO || "";
+// o método em dois objetos: o escudo final (v1 × final) e o unguento (atual × primeiro × proposta)
+const ung = (l) => `<img src="unguento-pixel/unguento-${l}.png" srcset="unguento-pixel/unguento-${l}@2x.png 2x" width="${l}" height="${l}" alt="">`;
+const CAB = `<span></span><span>32 px (bolsa, inventário, mercado)</span><span>48 px</span><span>64 px (apresentação)</span><span></span>`;
+document.getElementById("final-escudo").innerHTML = CAB +
+  [["refinado anterior", "escudo-pixel-v1/"], ["acabamento final", "escudo-pixel/"]].map(([t, pasta]) =>
+    `<span class="rot">${t}</span>` + [32, 48, 64].map((l) => slot(esc(pasta, l), l > 32)).join("") + "<span></span>").join("");
+document.getElementById("final-unguento").innerHTML = CAB +
+  [["atual", (l) => spr("unguento", l), "o sprite 16×16 do jogo, ampliado pelo navegador"],
+   ["primeiro candidato", (l) => cand("cand-unguento-32", l), "histórico, não é referência"],
+   ["proposta", ung, "cada tamanho na própria grade"]].map(([t, f, o]) =>
+    `<span class="rot">${t}</span>` + [32, 48, 64].map((l) => slot(f(l), l > 32)).join("") + `<span>${o}</span>`).join("");
+document.getElementById("final-juntos").innerHTML =
+  `<span class="par">${slot(esc("escudo-pixel/", 32))}${slot(ung(32))}</span>` +
+  `<span class="par">${slot(esc("escudo-pixel/", 64), true)}${slot(ung(64), true)}</span>` +
+  `<span class="par">${slot(png("escudo", 32))}${slot(spr("unguento", 32))}</span><span class="nota" style="margin:0">à direita, os atuais</span>`;
+document.getElementById("final-amp").innerHTML = [[32, 10], [48, 7], [64, 5]].map(([l, e]) => `<div class="linha">` +
+  [["escudo anterior", `escudo-pixel-v1/escudo-${l}.png`], ["escudo final", `escudo-pixel/escudo-${l}.png`], ["unguento proposta", `unguento-pixel/unguento-${l}.png`]]
+    .map(([t, arq]) => `<figure><img class="px" src="${arq}" width="${l * e}" height="${l * e}" alt=""><figcaption>${t}, ${l} px a ${e}×</figcaption></figure>`).join("") +
+  "</div>").join("") + `<div class="linha" style="margin-top:12px"><figure><img class="px" src="${Sprites.url("unguento")}" width="160" height="160" alt=""><figcaption>unguento atual, 16 px a 10×</figcaption></figure>` +
+  `<figure>${cand("cand-unguento-32", 160)}<figcaption>primeiro candidato, 32 px a 5×</figcaption></figure></div>`;
+const FOTOS_UNG = [["inventario", "Inventário: a bolsa (32 px)"], ["mercado", "Mercado, aba Suprimentos (32 px)"], ["ficha", "Ficha: a bolsa (32 px; fora de uso na vila, o jogo esmaece)"],
+  ["tela-vila", "A tela inteira: o Guerreiro e a vila"], ["tela-inventario", "A tela inteira: o Inventário"]];
+const FOTOS_ESC = [["saque", "Cartão do saque (64 px)"], ["voo", "Voo ao equipar (48 px)"], ["inventario", "Inventário (32 px)"]];
+document.getElementById("final-fotos").innerHTML = ["normal", "baixa"].map((j) => `<h3>Janela ${j === "normal" ? "normal (1500×950)" : "baixa (1280×720)"}</h3>` +
+  FOTOS_ESC.map(([c, t]) => `<h3>Escudo: ${t}</h3><div class="linha">` +
+    [["v1", "refinado anterior"], ["refinado", "acabamento final"]].map(([v, r]) => F("capturas-escudo", `${j}-${v}-${c}`, r)).join("") + "</div>").join("") +
+  FOTOS_UNG.map(([c, t]) => `<h3>Unguento: ${t}</h3><div class="linha">` +
+    [["atual", "atual"], ["primeiro", "primeiro candidato"], ["proposta", "proposta (com o escudo final)"]].map(([v, r]) => F("capturas-unguento", `${j}-${v}-${c}`, r)).join("") + "</div>").join("")).join("");
+document.getElementById("final-avaliacao").innerHTML = window.AVALIACAO_UNGUENTO || "";
 </script>
 </body>
 </html>

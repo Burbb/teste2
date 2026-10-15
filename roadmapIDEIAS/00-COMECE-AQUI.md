@@ -2351,3 +2351,15 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
 - **Leitura:** melhorou a organização, a silhueta e a espessura, os reflexos do aro e a leitura em 32; ainda perde
   para o atual no reflexo do gomo (mais em 64) e na face de 64, mais clara e chapada.
 - **Falta:** Jean avaliar. Depois, confirmar o método num segundo objeto antes de pensar numa skill.
+
+### 15/10/2026 — Escudo final e Unguento de Prata: o método em dois objetos (sem versão)
+
+- **Pedido de Jean:** o escudo refinado foi aprovado como base visual; uma passagem curta de acabamento (gomos de
+  sombra mais escuros, reflexo do gomo mais presente em 48 e 64, o 32 preservado) e o método no Unguento de Prata,
+  só no protótipo; comparar, registrar o processo e parar.
+- **Feito:** `escudo-pixel/` final (o anterior em `escudo-pixel-v1/`; 32 igual); `pixel_comum.py` (as etapas comuns,
+  o escudo refeito sobre ele sem mudar um pixel); `desenhar_unguento_pixel.py` → `unguento-pixel/` (32, 48, 64, com
+  a identidade do atual: o pote de louça clara com rótulo, agora aberto mostrando a pasta); `fotografar_unguento.mjs`
+  e `unguento-no-jogo.js` → `capturas-unguento/`; a seção no topo de `itens-icones-teste.html` com a avaliação; o
+  processo (comum, por material, por tamanho, reutilizável) no LEIA-ME do protótipo. A produção não mudou.
+- **Falta:** Jean avaliar. Nada de outros itens nem de skill antes disso.
