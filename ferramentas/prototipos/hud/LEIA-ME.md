@@ -1381,7 +1381,8 @@ num arco curto; a peça central diminuiu e, em 32, perdeu a base separada (fazia
 depois das sombras (elas o apagavam) e cresceu; os cravos em cruz viraram cabeças redondas; a pedido do Jean, o canto
 de baixo à direita, que somava parede, aro e lateral de 2 px, ficou com a lateral de 1 px e a parede só num toque;
 e, numa segunda revisão (32 e 48 ainda pesavam), a lateral passou a se deslocar pela diagonal (1 px em x e 1 em y
-davam 1,4 px na diagonal) e o toque da parede ficou só em 64: o canto fica 1 px mais grosso que o resto do aro.
+davam 1,4 px na diagonal) e o toque da parede ficou só em 64: o canto fica 1 px mais grosso que o resto do aro. Por fim, o toque da parede saiu também de 64, onde
+virava um risco solto por dentro do aro: o degrau é escuro a volta toda.
 
 **Fotos** (`fotografar_escudo.mjs`, agora com as três versões; `VERSOES=refinado` refaz só uma): a ficha, o
 Inventário e o Mercado em 32, o voo em 48, o cartão do saque em 64 e as telas inteiras, em 1500×950 e 1280×720.

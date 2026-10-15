@@ -7,12 +7,10 @@ A construção, em cada tamanho:
   - a silhueta: dois discos em centro de pixel (a frente, e atrás dela, deslocada para baixo e para a direita, a
     lateral do escudo, que aparece como um crescente); os raios são escolhidos para os degraus do círculo saírem
     regulares, e o contorno escuro tem 1 pixel, só pelos lados (sem engrossar nas diagonais);
-  - o aro de latão: um rolo; a luz vem da normal do rolo (a parte de fora acende do lado da luz, a parte de dentro do
-    lado oposto), quantizada nas faixas da rampa de latão; o brilho mais claro só onde a luz bate de frente (um arco
-    curto em cima à esquerda), e a parede de dentro do aro acende embaixo à direita: reflexos localizados, sem um anel
-    claro em volta do círculo inteiro;
-  - o degrau entre a face e o aro: a sombra do aro sobre a face em cima à esquerda, a parede do aro iluminada embaixo
-    à direita;
+  - o aro de latão: um rolo, por regras: o tom pelo ângulo até a luz, a fileira de fora e a de dentro um degrau abaixo
+    do lado em que viram, e o brilho mais claro só onde a luz bate de frente (um arco curto em cima à esquerda): um
+    reflexo localizado, sem um anel claro em volta do círculo inteiro;
+  - o degrau entre a face e o aro: a sombra do aro sobre a face, a volta toda;
   - a face de ferro: oito gomos, cada um num tom só da rampa de ferro, pela direção dele em relação à luz (o gomo de
     cima à esquerda o mais claro, o de baixo à direita o mais escuro); no gomo iluminado, o reflexo é uma mancha
     desenhada em três tons; a emenda entre os gomos aparece como uma linha de pixel em 48 e 64 e só pela troca de tom
@@ -101,13 +99,11 @@ def desenhar(lado_img):
     t_aro = np.clip(t_aro, 1, 8)
     mat[aro], tom[aro] = "l", t_aro[aro]
 
-    # ---- o degrau: a sombra do aro sobre a face, a volta toda; só bem no lado oposto à luz a parede de dentro do aro
-    #   acende, num toque curto (em faixa, ela somava com o aro e a lateral e engordava o canto de baixo à direita)
+    # ---- o degrau: a sombra do aro sobre a face, a volta toda (a parede de dentro do aro acesa embaixo à direita
+    #   foi tirada: em 32 e 48 engordava o canto, e em 64 virava um risco solto por dentro do aro)
     r_deg = r_aro - M["degrau"]
     deg = frente & (d > r_deg) & ~aro
-    parede = deg & (dl > 2.95) & (lado_img >= 64)  # em 32 e 48, o toque somava com o aro e a lateral e engordava o canto
     mat[deg], tom[deg] = "f", 0
-    mat[parede], tom[parede] = "l", 3
 
     # ---- a face: oito gomos, cada um num tom pela direção dele
     passo = np.pi / 4

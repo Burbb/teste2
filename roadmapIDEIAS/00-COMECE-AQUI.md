@@ -2346,7 +2346,8 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   atual, anterior e refinado no jogo; avaliar e parar. Pedido no meio: o canto de baixo à direita estava gordo.
 - **Feito:** `ferramentas/prototipos/hud/desenhar_escudo_pixel.py` (regras na grade, reproduzível) e `escudo-pixel/`;
   `fotografar_escudo.mjs` com as três versões; a seção do escudo e a avaliação em `itens-icones-teste.html`. O canto
-  de baixo à direita (duas revisões): a lateral de 1 px pela diagonal e o toque da parede do aro só em 64. A produção não mudou.
+  de baixo à direita (duas revisões): a lateral de 1 px pela diagonal e, sem o toque da parede do aro (em 64 virava
+  um risco solto), o degrau escuro a volta toda. A produção não mudou.
 - **Leitura:** melhorou a organização, a silhueta e a espessura, os reflexos do aro e a leitura em 32; ainda perde
   para o atual no reflexo do gomo (mais em 64) e na face de 64, mais clara e chapada.
 - **Falta:** Jean avaliar. Depois, confirmar o método num segundo objeto antes de pensar numa skill.
