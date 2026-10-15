@@ -2488,3 +2488,27 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
 - **Verificado:** no jogo, em 1500×950 e 1280×720, a ficha, o topo, o Inventário, a luta e a fogueira com o Arqueiro, e a
   lua da capela antes × depois; 602 testes, gabarito sem diferença, pyflakes, fumaça.
 - **Falta:** Jean conferir.
+
+### 15/10/2026 — Protótipo do acampamento do lado de fora da Capela Afogada (sem versão)
+
+- **Pedido de Jean:** um protótipo visual do acampamento, com a composição mais próxima da qualidade das salas da capela,
+  começando pelo lado de fora da Capela Afogada. Só protótipo: a fogueira de produção não muda até a avaliação. O fogo
+  e a luz ficam; os personagens são os fechados na 1.97.0; nada de mecânica nova. (A mensagem chegou cortada em "Se
+  alterar"; o protótipo não toca no motor nem nas regras.)
+- **O que foi feito** (`ferramentas/prototipos/acampamento/`, com o `LEIA-ME.md`): a cena no topo, no lugar da paisagem,
+  como as salas da capela (o quadro de 320×72 pela `Vista.usarAmbiente`, as figuras clicáveis por cima pela
+  `Vista.caixaDaArte`); embaixo, só a frase, a instrução, o contador e quem vai e quem fica, e o palco com moldura sai.
+  Três planos: longe, o céu da hora, a outra margem e a capela pequena afundada no brejo, apagada à esquerda; no meio,
+  um teso de terra seca com o fogo da produção (o mesmo desenho, movimento e luz, levado para 166,60) e a roda, cada um
+  num tronco, numa pedra ou na manta, com sombra no chão e um calor leve do lado do fogo; quem fica senta na beira da
+  luz, perto da barraca, com penumbra; perto, o barranco escuro nos cantos de baixo. Objetos: a barraca, a mochila e o
+  cobertor enrolado ao lado dela, o cantil encostado num tronco; nenhum clicável.
+- **Como abrir:** `python ferramentas/prototipos/acampamento/cenario_acampamento.py capela_fora` (a cópia da pasta
+  `static` com o protótipo; `PROTOTIPO=0` mostra o jogo como está).
+- **Verificado** em 1500×950 e 1280×720 (`fotografar_acampamento.mjs`, em `capturas/`): atual × protótipo; o menu de um
+  companheiro, deixar no acampamento e levar de volta (as figuras e o rodapé batem com quem está presente a cada vez),
+  a ferida, a conversa e a volta, o Dormir até o amanhecer (a capela de fora volta), o Arqueiro com o lobo, o herói
+  sozinho, manhã, crepúsculo e chuva; sem erro no console. Na janela baixa, a cena, o texto, quem vai e quem fica e a
+  doca ficam à vista sem rolar.
+- **Falta:** Jean avaliar. Fica para depois: outros lugares (cada um com o fundo desenhado à mão, na mesma organização)
+  e a orientação D3, que aponta o "Dormir" dentro do texto (no protótipo ele mora na cena).
