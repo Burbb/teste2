@@ -2200,3 +2200,20 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
 - **Verificado:** a página nas duas versões, em 1500×950 e 1280×720, sem imagem quebrada nem erro; as fotografias do
   jogo sem erro no console. O jogo não mudou. **Falta:** Jean avaliar. A E9 e a validação com jogadores novos continuam
   abertas.
+
+### 15/10/2026 — A carta pequena do Morel e a espada (experimento, sem versão)
+
+- **Pedido de Jean:** fechar o experimento de resolução. Decidido: itens em 32×32 para bolsa, mochila e mercado; o
+  Morel de 80×80 como candidato da apresentação grande; cabeça e carta com adaptação própria; "nunca reduzir" não vira
+  regra geral. Corrigir a carta pequena do Morel (conferindo antes se o componente deforma), testar 32 contra 36 px,
+  adaptar a cabeça e a ficha baixa; refazer a espada do Morel, encaixada nas costas e sem o cabo em zigue-zague.
+- **Feito:** a carta nova de 32×32 perto da cabeça e a redução do 40 a 32 para comparar; a espada refeita no 40×40, no
+  80×80 e nas cartas; a cabeça de 48 sem os pedaços da espada e a ficha baixa recortada para a espada caber inteira; as
+  versões anteriores em `morel-anterior.js`; `resolucao-no-jogo.js` com a opção de manter o rosto inteiro na carta em
+  foco e de trocar a carta do Morel companheiro; `fotografar_carta.mjs`; a seção nova no alto de
+  `resolucao-teste.html`. Detalhes no `LEIA-ME.md` da pasta.
+- **Verificado:** o componente não deforma (32×32 quadrado no nicho de 36); a ampliação de 1,12× é só da carta do
+  herói, e o companheiro fica sempre em 32 px; com o rosto inteiro, todos os pixels iguais, em janela normal e baixa,
+  com movimento normal e reduzido, e a mira pela tecla 1 continua; nenhum erro no console. O jogo não mudou.
+- **Pendente:** Jean avaliar a carta pequena. A integração da comitiva e dos itens e o ajuste do texto da cicatriz
+  (autorizado) continuam para depois. A E9 e a validação com jogadores novos continuam abertas.

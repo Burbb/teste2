@@ -1,0 +1,250 @@
+[
+ {
+  "nome": "heroi-normal-normal-16-aprovada-36px",
+  "w": 35.84,
+  "h": 35.84,
+  "x": 352.6,
+  "y": 148.12,
+  "nativo": 32,
+  "foco": true,
+  "transform": "matrix(1.12, 0, 0, 1.12, 0, 0)"
+ },
+ {
+  "nome": "heroi-normal-normal-16-aprovada-32px",
+  "w": 32,
+  "h": 32,
+  "x": 354.52,
+  "y": 150.04,
+  "nativo": 32,
+  "foco": true,
+  "transform": "matrix(1.12, 0, 0, 1.12, 0, 0)"
+ },
+ {
+  "nome": "heroi-normal-normal-32-anterior-36px",
+  "w": 35.84,
+  "h": 35.84,
+  "x": 352.6,
+  "y": 148.12,
+  "nativo": 32,
+  "foco": true,
+  "transform": "matrix(1.12, 0, 0, 1.12, 0, 0)"
+ },
+ {
+  "nome": "heroi-normal-normal-32-anterior-32px",
+  "w": 32,
+  "h": 32,
+  "x": 354.52,
+  "y": 150.04,
+  "nativo": 32,
+  "foco": true,
+  "transform": "matrix(1.12, 0, 0, 1.12, 0, 0)"
+ },
+ {
+  "nome": "heroi-normal-normal-32-nova-36px",
+  "w": 35.84,
+  "h": 35.84,
+  "x": 352.6,
+  "y": 148.12,
+  "nativo": 32,
+  "foco": true,
+  "transform": "matrix(1.12, 0, 0, 1.12, 0, 0)"
+ },
+ {
+  "nome": "heroi-normal-normal-32-nova-32px",
+  "w": 32,
+  "h": 32,
+  "x": 354.52,
+  "y": 150.04,
+  "nativo": 32,
+  "foco": true,
+  "transform": "matrix(1.12, 0, 0, 1.12, 0, 0)"
+ },
+ {
+  "nome": "heroi-normal-normal-40-reduzida-36px",
+  "w": 35.84,
+  "h": 35.84,
+  "x": 352.6,
+  "y": 148.12,
+  "nativo": 32,
+  "foco": true,
+  "transform": "matrix(1.12, 0, 0, 1.12, 0, 0)"
+ },
+ {
+  "nome": "heroi-normal-normal-40-reduzida-32px",
+  "w": 32,
+  "h": 32,
+  "x": 354.52,
+  "y": 150.04,
+  "nativo": 32,
+  "foco": true,
+  "transform": "matrix(1.12, 0, 0, 1.12, 0, 0)"
+ },
+ {
+  "nome": "heroi-normal-reduzido-32-anterior-36px",
+  "w": 35.84,
+  "h": 35.84,
+  "x": 352.6,
+  "y": 148.12,
+  "nativo": 32,
+  "foco": true,
+  "transform": "matrix(1.12, 0, 0, 1.12, 0, 0)"
+ },
+ {
+  "nome": "heroi-normal-reduzido-32-anterior-32px",
+  "w": 32,
+  "h": 32,
+  "x": 354.52,
+  "y": 150.04,
+  "nativo": 32,
+  "foco": true,
+  "transform": "matrix(1.12, 0, 0, 1.12, 0, 0)"
+ },
+ {
+  "nome": "heroi-normal-reduzido-32-nova-36px",
+  "w": 35.84,
+  "h": 35.84,
+  "x": 352.6,
+  "y": 148.12,
+  "nativo": 32,
+  "foco": true,
+  "transform": "matrix(1.12, 0, 0, 1.12, 0, 0)"
+ },
+ {
+  "nome": "heroi-normal-reduzido-32-nova-32px",
+  "w": 32,
+  "h": 32,
+  "x": 354.52,
+  "y": 150.04,
+  "nativo": 32,
+  "foco": true,
+  "transform": "matrix(1.12, 0, 0, 1.12, 0, 0)"
+ },
+ {
+  "nome": "heroi-baixa-normal-32-anterior-36px",
+  "w": 35.84,
+  "h": 35.84,
+  "x": 310.6,
+  "y": 146.12,
+  "nativo": 32,
+  "foco": true,
+  "transform": "matrix(1.12, 0, 0, 1.12, 0, 0)"
+ },
+ {
+  "nome": "heroi-baixa-normal-32-anterior-32px",
+  "w": 32,
+  "h": 32,
+  "x": 312.52,
+  "y": 148.04,
+  "nativo": 32,
+  "foco": true,
+  "transform": "matrix(1.12, 0, 0, 1.12, 0, 0)"
+ },
+ {
+  "nome": "heroi-baixa-normal-32-nova-36px",
+  "w": 35.84,
+  "h": 35.84,
+  "x": 310.6,
+  "y": 146.12,
+  "nativo": 32,
+  "foco": true,
+  "transform": "matrix(1.12, 0, 0, 1.12, 0, 0)"
+ },
+ {
+  "nome": "heroi-baixa-normal-32-nova-32px",
+  "w": 32,
+  "h": 32,
+  "x": 312.52,
+  "y": 148.04,
+  "nativo": 32,
+  "foco": true,
+  "transform": "matrix(1.12, 0, 0, 1.12, 0, 0)"
+ },
+ {
+  "nome": "heroi-baixa-reduzido-32-anterior-36px",
+  "w": 35.84,
+  "h": 35.84,
+  "x": 310.6,
+  "y": 146.12,
+  "nativo": 32,
+  "foco": true,
+  "transform": "matrix(1.12, 0, 0, 1.12, 0, 0)"
+ },
+ {
+  "nome": "heroi-baixa-reduzido-32-anterior-32px",
+  "w": 32,
+  "h": 32,
+  "x": 312.52,
+  "y": 148.04,
+  "nativo": 32,
+  "foco": true,
+  "transform": "matrix(1.12, 0, 0, 1.12, 0, 0)"
+ },
+ {
+  "nome": "heroi-baixa-reduzido-32-nova-36px",
+  "w": 35.84,
+  "h": 35.84,
+  "x": 310.6,
+  "y": 146.12,
+  "nativo": 32,
+  "foco": true,
+  "transform": "matrix(1.12, 0, 0, 1.12, 0, 0)"
+ },
+ {
+  "nome": "heroi-baixa-reduzido-32-nova-32px",
+  "w": 32,
+  "h": 32,
+  "x": 312.52,
+  "y": 148.04,
+  "nativo": 32,
+  "foco": true,
+  "transform": "matrix(1.12, 0, 0, 1.12, 0, 0)"
+ },
+ {
+  "nome": "companheiro-normal-16-aprovada",
+  "w": 32,
+  "h": 32,
+  "foco": false
+ },
+ {
+  "nome": "companheiro-normal-32-anterior",
+  "w": 32,
+  "h": 32,
+  "foco": false
+ },
+ {
+  "nome": "companheiro-normal-32-nova",
+  "w": 32,
+  "h": 32,
+  "foco": false
+ },
+ {
+  "nome": "companheiro-normal-40-reduzida",
+  "w": 32,
+  "h": 32,
+  "foco": false
+ },
+ {
+  "nome": "companheiro-baixa-16-aprovada",
+  "w": 32,
+  "h": 32,
+  "foco": false
+ },
+ {
+  "nome": "companheiro-baixa-32-anterior",
+  "w": 32,
+  "h": 32,
+  "foco": false
+ },
+ {
+  "nome": "companheiro-baixa-32-nova",
+  "w": 32,
+  "h": 32,
+  "foco": false
+ },
+ {
+  "nome": "companheiro-baixa-40-reduzida",
+  "w": 32,
+  "h": 32,
+  "foco": false
+ }
+]

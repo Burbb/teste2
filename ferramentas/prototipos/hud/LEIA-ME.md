@@ -1127,3 +1127,61 @@ tiverem apresentação grande, desenhada à parte, nunca reduzida para 32. Retra
 que tem o pixel dos cenários; do 80×80 vale trazer para o 40×40 o que dá expressão sem mudar a resolução (as
 sobrancelhas descendo para o nariz, a boca marcada), e para a carta de 32 px um desenho próprio de 32×32, que mostra a
 cicatriz e a cara fechada. Nada mudou no jogo.
+
+### Segunda rodada: a carta pequena do Morel e a espada (experimento, sem versão)
+
+Decisões de Jean: os itens de 32×32 são a base da bolsa, da mochila e do mercado; o Morel de 80×80 é o candidato da
+apresentação grande; a cabeça e a carta pedem adaptação própria. "Nunca reduzir uma imagem maior" não vira regra
+geral: neste experimento, os desenhos próprios de 32 leram melhor. As versões anteriores ficam em `morel-anterior.js`
+(`morel-ant…`, `morel-80-ant…`) para a comparação.
+
+**A carta parecia comprimida: componente ou desenho?** Medido no jogo (`capturas-carta/medidas.json`): a imagem da
+carta é quadrada, 32×32, no nicho de 36 px, sem recorte nem proporção torta. O que muda o tamanho é a vez do herói: o
+jogo amplia a carta inteira 1,12× (`.carta.foco`), e o rosto de 32 px vira 35,84 px, com pixels de 1 ou 2 de espessura
+(`capturas-carta/nitidez-36.png`); as cores não se misturam (23 cores na captura, as do desenho). O aperto do rosto é
+do desenho: o enquadramento da carta pegava peito, ombreiras e espada, e o rosto ficava com 8 a 12 pixels de altura
+para sobrancelha, olho, cicatriz, nariz, bigode e boca.
+
+**A carta nova** (`morel-80-carta`, nativa de 32×32): perto da cabeça (o rosto ocupa as linhas 2 a 23), menos peito,
+ombreira e espada (só o punho atrás do ombro). Cada traço com folga: sobrancelha (linhas 9 e 10), pálpebra (11), olho
+(12), nariz (12 a 16), bigode (17 e 18), boca (19), barba até o queixo (23). A cara fechada pelas sobrancelhas descendo
+para o nariz; a cicatriz só sugerida, quatro pixels na testa e na sobrancelha e dois na bochecha do outro lado. As
+cores e os traços do 80×80; nenhum contorno claro.
+
+**A redução do 40×40 a 32** (`morel-40-32`, o vizinho mais perto, como o navegador): o mesmo enquadramento largo, o
+rosto ainda menor que na carta anterior e a cicatriz em degraus irregulares. Fica como comparação; não é candidata.
+
+**32 ou 36 px.** Só a carta do herói passa pela ampliação: o foco é dele (`Batalha.foco("j")`). A carta do Morel
+companheiro mede 32 px sempre, nas duas janelas, e não recebe foco; ali não há o que corrigir. Os 36 px do Morel nas
+fotografias existem só porque o teste o põe no lugar do herói. Para o herói, o teste mantém o rosto em 32 px inteiros
+dentro da carta ampliada (só neste protótipo, `resolucao-no-jogo.js` com `inteiro`: o rosto desfaz a ampliação, a
+moldura, o nome e as barras continuam com o destaque): todos os pixels iguais, nas duas janelas, com movimento normal e
+reduzido; a tecla 1 continua abrindo a mira, e o foco, a seleção e as áreas clicáveis não mudam. A posição na tela fica
+fracionada (x = 354,52), o que não borra (as mesmas cores) mas desloca o desenho meio pixel; se for para a produção,
+vale alinhar o nicho ao pixel inteiro. Nada mudou nas animações do jogo.
+
+**A cabeça e a ficha baixa.** A cabeça de 48 px é o mesmo recorte do 80×80, sem os pedaços da guarda que entravam pela
+borda (liam como um traço solto). A ficha baixa de 64 px desceu o recorte 4 pixels para a esquerda: a espada aparece
+inteira (o pomo perde 2 pixels) em vez de cortada no meio, e o rosto fica 4 pixels à direita do centro.
+
+**A espada do Morel, refeita em todas as artes** (40×40 e as cartas em `arte-teste.js`, 80×80 em `resolucao-teste.js`):
+encaixada nas costas, uma reta numa leve diagonal, o pomo para fora e para cima, 1 pixel de degrau a cada 3 linhas (no
+80×80, a cada 3 linhas também, com o dobro da largura), a empunhadura com largura constante e as voltas do couro em
+faixas regulares (antes o degrau ia e voltava, em zigue-zague), a guarda de través apoiada na ombreira e a lâmina
+sumindo atrás dela. Na carta de 16×16 (a figura da fogueira), o mesmo em miniatura.
+
+**Ao lado dos outros.** Nos mesmos espaços (80, 48, 32), o Morel de 80×80 tem o pixel com metade do tamanho do de
+Odette, Yara e dos heróis (40×40 a 2×): a diferença aparece no retrato grande, nas mechas da barba, na cicatriz fina e
+nas arestas das ombreiras, e quase some na cabeça e na carta. Não incomoda na ficha, que mostra um retrato por vez; vai
+aparecer onde houver dois retratos grandes lado a lado (uma ficha da comitiva, por exemplo). Os outros não foram
+redesenhados.
+
+**Os itens escolhidos.** O martelo e a Pena de Fênix de 32×32, em tamanho real, ao lado da espada, do anel e do baú
+atuais (`resolucao-teste.html`). Nenhum outro item nem versão grande.
+
+**Para ver:** a primeira seção de `resolucao-teste.html` (as quatro cartas em 32 px e ampliadas; a carta no jogo em
+36 e em 32 px; a do companheiro; o conjunto novo e o anterior; os vizinhos; a ficha e o topo na capela; os itens).
+As fotografias (`capturas-carta/`) são do jogo de verdade, a mesma luta e os mesmos dados para todas as versões,
+refeitas com `PLAYWRIGHT_MODULO=<caminho do playwright>/index.mjs node ferramentas/prototipos/hud/fotografar_carta.mjs`.
+O jogo não mudou: a comitiva e os itens continuam fora da produção, e o ajuste do texto da cicatriz, já autorizado,
+fica para a integração.

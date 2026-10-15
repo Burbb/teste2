@@ -52,6 +52,8 @@
 <p class="nota">Três amostras desenhadas em código para comparar resoluções nativas, não tamanhos da mesma imagem: o
 martelo (metal e geometria) e a Pena de Fênix (curvas) em 32×32 e em 64×64, e o Morel aprovado (40×40, mostrado a 2×) ao
 lado de uma versão de 80×80 (mostrada a 1×), com os recortes da ficha baixa e da cabeça e uma carta própria de 32×32.
+Na rodada seguinte (no alto): a carta pequena do Morel refeita, perto da cabeça, e a espada dele refeita em todas as
+artes; as versões anteriores continuam aqui, com "anterior" ou "antes" no rótulo.
 Toda redução e ampliação é pixel a pixel, sem suavização. Os botões trocam a versão no mesmo lugar, em toda a página.</p>
 
 <div class="chaves" role="group" aria-label="Versões">
@@ -62,6 +64,31 @@ Toda redução e ampliação é pixel a pixel, sem suavização. Os botões troc
   <button type="button" data-chave="morel" data-valor="40" aria-pressed="true">40×40 a 2× (aprovado)</button>
   <button type="button" data-chave="morel" data-valor="80" aria-pressed="false">80×80 a 1×</button>
 </div>
+
+<section>
+  <h2>A carta pequena do Morel: as quatro versões, em 32 px (tamanho real) e ampliadas</h2>
+  <div class="linha" id="cartas"></div>
+  <h2>No jogo, na vez do herói (o Morel no lugar dele só neste teste): a ampliação do jogo (36 px) e o rosto inteiro (32 px)</h2>
+  <div class="linha" id="cartas-jogo"></div>
+  <div class="linha">
+    <figure><img class="foto" src="capturas-carta/nitidez-36.png" width="208" height="208" style="image-rendering: pixelated" alt=""><figcaption><b>36 px</b> (a carta inteira a 1,12×): ampliado 8× na captura, os pixels saem com 1 ou 2 de espessura</figcaption></figure>
+    <figure><img class="foto" src="capturas-carta/nitidez-32.png" width="208" height="208" style="image-rendering: pixelated" alt=""><figcaption><b>32 px</b> (o rosto desfaz a ampliação, o resto da carta continua com o destaque): todos os pixels iguais</figcaption></figure>
+  </div>
+  <h2>A carta do Morel companheiro (o tamanho que ele usa de verdade: 32 px, sem a ampliação do foco)</h2>
+  <div class="linha" id="cartas-comp"></div>
+  <h2>O conjunto novo: retrato grande, ficha baixa, cabeça e carta (80×80 e a carta de 32×32)</h2>
+  <div class="linha" id="conjunto"></div>
+  <h2>Ao lado de Odette, Yara e dos heróis, nos mesmos espaços</h2>
+  <div id="vizinhos"></div>
+  <div class="linha">
+    <figure><img class="foto" src="capturas-carta/ficha-normal.png" alt=""><figcaption>a ficha na capela, janela normal (80 px)</figcaption></figure>
+    <figure><img class="foto" src="capturas-carta/ficha-baixa.png" alt=""><figcaption>a ficha na capela, janela baixa (64 px: o recorte novo, com a espada inteira)</figcaption></figure>
+    <figure><img class="foto" src="capturas-carta/topo-normal.png" alt=""><figcaption>a cabeça no topo (48 px)</figcaption></figure>
+  </div>
+  <div class="linha"><figure><img class="foto" src="capturas-carta/capela-normal.png" width="900" alt=""><figcaption>a capela inteira, com o 80×80 no lugar do retrato</figcaption></figure></div>
+  <h2>Os itens escolhidos (32×32) ao lado da espada, do anel e do baú atuais, em tamanho real</h2>
+  <div class="linha" id="itens-escolhidos"></div>
+</section>
 
 <section>
   <h2>Itens em espaços de 32 px, como na bolsa, ao lado dos ícones aprovados</h2>
@@ -93,7 +120,7 @@ Toda redução e ampliação é pixel a pixel, sem suavização. Os botões troc
     <figure><img class="foto so32" src="capturas-resolucao/mercado-normal-atual.png" width="900" alt=""><img class="foto so64" src="capturas-resolucao/mercado-normal-maior.png" width="900" alt="">
       <figcaption>a tela inteira (1500×950), com a banca do mercador</figcaption></figure>
   </div>
-  <h2>No jogo: a capela e o mercado com o Morel no lugar do retrato (normal e baixa)</h2>
+  <h2>No jogo: a capela e o mercado com o Morel no lugar do retrato (rodada anterior, com a espada antiga)</h2>
   <div class="linha">
     <figure><img class="foto so40" src="capturas-resolucao/capela-normal-atual-ficha.png" alt=""><img class="foto so80" src="capturas-resolucao/capela-normal-maior-ficha.png" alt=""><figcaption>ficha, janela normal (80 px)</figcaption></figure>
     <figure><img class="foto so40" src="capturas-resolucao/capela-baixa-atual-ficha.png" alt=""><img class="foto so80" src="capturas-resolucao/capela-baixa-maior-ficha.png" alt=""><figcaption>ficha, janela baixa (64 px)</figcaption></figure>
@@ -110,6 +137,7 @@ Toda redução e ampliação é pixel a pixel, sem suavização. Os botões troc
 
 <script src="arte-teste.js"></script>
 <script src="resolucao-teste.js"></script>
+<script src="morel-anterior.js"></script>
 <script>
 "use strict";
 const ICONES = "../../../rpg/web/static/hud/icones/";
@@ -157,6 +185,27 @@ document.getElementById("morel-lado").innerHTML = ESPACOS.map(([lado, nome]) =>
 document.getElementById("morel-ampliado").innerHTML =
   fig(img("morel", 8), "", "<b>40×40</b> (aprovado), 8×") + fig(img("morel-80", 4), "", "<b>80×80</b>, 4×") +
   fig(img("morel-carta", 16), "", "<b>carta 16×16</b>, 16×") + fig(img("morel-80-carta", 8), "", "<b>carta 32×32</b>, 8×");
+// a carta pequena do Morel: as quatro versões
+const CARTAS = [["morel-ant-carta", "16×16 aprovada antes desta rodada, a 2×"], ["morel-80-ant-carta", "32×32 do experimento anterior"],
+  ["morel-80-carta", "<b>32×32 nova</b>: perto da cabeça, os traços com folga"], ["morel-40-32", "o 40×40 reduzido a 32 (o vizinho mais perto)"]];
+document.getElementById("cartas").innerHTML = CARTAS.map(([p, rot]) => { const n = ArteTeste.PECAS[p].grade.length;
+  return `<figure><div class="lado"><span class="espaco e32">${img(p, 32 / n, 32)}</span>${img(p, 256 / n, 256)}</div><figcaption>${rot}</figcaption></figure>`; }).join("");
+const NOMES = { "16-aprovada": "16×16 aprovada", "32-anterior": "32×32 anterior", "32-nova": "32×32 nova", "40-reduzida": "40 reduzido a 32" };
+document.getElementById("cartas-jogo").innerHTML = Object.entries(NOMES).map(([k, n]) =>
+  `<figure><div class="lado"><b>36 px</b><b>32 px</b><img class="foto" src="capturas-carta/heroi-normal-normal-${k}-36px.png" alt=""><img class="foto" src="capturas-carta/heroi-normal-normal-${k}-32px.png" alt=""></div><figcaption>${n}, janela normal</figcaption></figure>`).join("") +
+  ["baixa-normal", "normal-reduzido", "baixa-reduzido"].map((j) => `<figure><div class="lado"><b>36 px</b><b>32 px</b><img class="foto" src="capturas-carta/heroi-${j}-32-nova-36px.png" alt=""><img class="foto" src="capturas-carta/heroi-${j}-32-nova-32px.png" alt=""></div><figcaption>32×32 nova, ${j.replace("-", ", movimento ").replace("baixa", "janela baixa").replace("normal,", "janela normal,")}</figcaption></figure>`).join("") +
+  `<figure><img class="foto" src="capturas-carta/heroi-normal-normal-32-nova-32px-mira.png" width="500" alt=""><figcaption>a tecla 1 abre a mira com o rosto inteiro: o foco sai da carta e as ações seguem iguais</figcaption></figure>`;
+document.getElementById("cartas-comp").innerHTML = Object.entries(NOMES).map(([k, n]) =>
+  `<figure><img class="foto" src="capturas-carta/companheiro-normal-${k}.png" alt=""><figcaption>${n}</figcaption></figure>`).join("");
+const CONJ = [["morel-80", 1, "retrato 80×80, 80 px"], ["morel-80-baixo", 1, "ficha baixa, 64 px"], ["morel-80-cabeca", 1, "cabeça, 48 px"], ["morel-80-carta", 1, "carta 32×32, 32 px"]];
+document.getElementById("conjunto").innerHTML = CONJ.map(([p, e, r]) => fig(img(p, e), "", r)).join("") +
+  CONJ.map(([p, e, r]) => fig(img(p.replace("morel-80", "morel-80-ant"), e), "", `antes: ${r}`)).join("");
+const VIZ = [["Morel 80×80", ["morel-80", 1], ["morel-80-cabeca", 1], ["morel-80-carta", 1]],
+  ...["odette", "yara", "guerreiro", "mago", "arqueiro"].map((c) => [c[0].toUpperCase() + c.slice(1) + " 40×40", [c, 2], [`${c}-cabeca`, 2], [`${c}-carta`, 2]])];
+document.getElementById("vizinhos").innerHTML = VIZ.map(([n, ...pp]) => `<div class="linha"><span class="rotulo">${n}</span>` +
+  pp.map(([p, e], i) => fig(img(p, e), "", ["80 px", "48 px", "32 px"][i])).join("") + "</div>").join("");
+document.getElementById("itens-escolhidos").innerHTML = [["martelo-32", "martelo (32×32)"], ["pena-32", "Pena de Fênix (32×32)"]].map(([p, r]) => fig(img(p, 1), "e32", r)).join("") +
+  [["espada", "espada"], ["anel", "anel"], ["bau", "baú"]].map(([n, r]) => fig(aprovado(n, 32), "e32", `${r} (atual)`)).join("");
 // os botões
 document.querySelectorAll(".chaves button").forEach((b) => b.addEventListener("click", () => {
   document.body.dataset[b.dataset.chave] = b.dataset.valor;
