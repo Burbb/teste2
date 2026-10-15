@@ -858,3 +858,8 @@ recursos), `janela-*.png` (a página inteira nesses tamanhos), `doca-estados.png
 aberta, foco de teclado), `mercado-*.png` (com o mercador, mouse e foco), `equipar-achado-*.png` (o voo de "Equipar
 agora" quadro a quadro, também com movimento reduzido), `equipar-guardar-e-mochila-1500x950.png` (guardar, e o clique
 duplo na mochila, que veste sem voo, como antes) e `baus-*.png` (o baú marrom na bolsa e no relatório).
+
+Correção da 1.89.1: na janela larga, o retrato, as barras e os recursos encostam no começo da coluna (12 px, o recuo
+do topo), e a sobra fica à direita, em vez de ficarem no meio. As barras continuam em até 400 px. Capturas:
+`capturas-migracao/topo-alinhado-1920x1080.png` (a janela maximizada) e `topo-alinhado-classes.png` (Guerreiro, Mago
+e Arqueiro em 1280×720, 1920×1080 e 2560×1440).

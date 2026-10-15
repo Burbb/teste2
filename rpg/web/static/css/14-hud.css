@@ -74,9 +74,10 @@
 :root body .hud-retrato .nivel { background: var(--latao); }
 :root body .hud-retrato img.desenho { display: block; width: 48px; height: 48px; }
 /* as barras: até 400 px (com o número logo depois) e são elas que cedem primeiro quando a coluna estreita. Na janela
-   larga (a coluna para de crescer em ~1064 px) o retrato, as barras e os recursos ficam juntos, no meio, alinhados com
-   a página e a doca, em vez de as barras se esticarem ou de um vão abrir entre os grupos. */
-:root body #hud-linha { justify-content: center; }
+   larga (a coluna para de crescer em ~1064 px) o retrato, as barras e os recursos ficam juntos, encostados no começo
+   da coluna (o recuo do #hud, como o da página), e a sobra fica à direita: as barras não se esticam e não abre vão
+   entre os grupos. */
+:root body #hud-linha { justify-content: flex-start; }
 :root body .hud-vitais { flex: 1 10 400px; max-width: 400px; }
 :root body .hud-recursos { flex: none; }
 :root body .vital img.desenho { width: 20px; height: 20px; flex: none; margin: -2px 0; }

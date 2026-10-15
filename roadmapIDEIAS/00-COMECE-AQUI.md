@@ -2056,3 +2056,19 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   regra de plural sem parênteses) e foi corrigida.
 - **Pendente:** lacunas de arte (em `docs/ARQUITETURA.md`), ícones de 16 px dentro das opções ainda do jogo, o duplo
   clique da ficha equipa sem voo (como antes), capturas do README da interface antiga. **Falta:** Jean conferir.
+
+### 15/10/2026 — Topo alinhado ao começo da coluna (1.89.1)
+
+- **Pedido de Jean:** migração aprovada; na janela maximizada, o grupo do topo centralizado deixava um vão grande à
+  esquerda. Alinhar ao começo da coluna, mantendo as barras em até 400 px, os números junto das barras e os recursos
+  juntos; nenhuma outra mudança de layout.
+- **Feito:** `#hud-linha` passa de `center` para `flex-start` (`css/14-hud.css`). O retrato fica a 12 px da borda
+  interna (o recuo do topo) em todas as larguras; a sobra vai para a direita.
+- **Verificado:** Guerreiro, Mago e Arqueiro em 1280×720, 1920×1080 e 2560×1440 (barras de 384 a 400 px, 340 no
+  Arqueiro em 1280, que tem um recurso a mais; número a 6 px da barra; recursos numa linha só; nada sobreposto);
+  601 testes, gabarito sem diferença, pyflakes e fumaça (356, tudo certo).
+- **A exceção do servidor, agora com rastro:** `BrokenPipeError` em `servidor.py` (`_arquivo` → `_responder` →
+  `wfile.write`) ao servir um arquivo de `/static/`, no fim do cenário de compras rápidas da fumaça, entre a última
+  conferência e o cenário seguinte. É o navegador do teste fechando a página com um arquivo ainda a caminho; o teste
+  passa e o jogo não é afetado. Não mexi no servidor (fora desta entrega); se for para silenciar, o lugar é o
+  `_responder` ignorar `BrokenPipeError`/`ConnectionResetError`. **Falta:** Jean conferir.
