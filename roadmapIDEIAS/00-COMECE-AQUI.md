@@ -2139,3 +2139,20 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   dois em avaliação.
 - **Verificado:** as fotografias do jogo (ficha 80/64, topo 48, carta 32 e 36 na vez; a mira pela tecla 1), as três
   páginas do teste de arte abrem sem erro, nenhum erro no console. O jogo não mudou. **Falta:** Jean avaliar.
+
+### 15/10/2026 — Os retratos dos três heróis no jogo (1.91.0)
+
+- **Pedido de Jean:** o Mago e o Arqueiro candidatos (a1c7b1d) aprovados; integrar sem mudar os desenhos, em todo lugar
+  onde o herói aparece, com um mecanismo só de escolha; a fogueira com a mesma identidade; o "nível 5" do Patrulheiro
+  sozinho na linha de baixo da ficha baixa.
+- **Feito:** o Mago e o Arqueiro em `retratos.js`, com as mesmas grades (conferidas uma a uma contra o protótipo).
+  `Icones` escolhe tudo: `retrato` (ficha, Inventário), `cabeca` (topo, carta, cartão do save) e o novo `figura` (o
+  canvas de 16×16 da fogueira: a carta do herói, ou o sprite do jogo para quem ainda não tem retrato). A fogueira
+  desenhava o retrato antigo de 16×16 (cabeça e ombros, não corpo inteiro): agora é a carta de cada classe, na mesma
+  escala e no mesmo lugar. O cartão do save também pedia o sprite da classe direto e passou para `Icones`. O título da
+  ficha e do Inventário mantém "nível 5" junto (espaço sem quebra): pode quebrar antes dele, não no meio.
+- **Verificado:** as três classes em 1500×950 (movimento normal) e 1280×720 (movimento reduzido): ficha 80/64, topo 48,
+  carta 36 na vez, Inventário, fogueira com Morel, Odette e Yara e o cartão do save; nenhum lugar com o desenho antigo,
+  nenhum erro no console. 602 testes, gabarito sem diferença, pyflakes, fumaça (356, nenhuma exceção no servidor).
+- **Não feito:** a E9 e a validação com jogadores novos continuam abertas. Os companheiros seguem com os sprites de
+  sempre; os candidatos deles são a entrega seguinte, só no protótipo.

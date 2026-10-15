@@ -954,3 +954,6 @@ fotografada (`retrato-no-jogo.js`, agora pela classe do herói).
 
 Nada mudou no jogo: os retratos de produção seguem o de `retratos.js` (o Guerreiro) e o desenho da classe (Mago e
 Arqueiro). Nem seleção, nem recoloração, nem gênero, nem retratos por especialização, nem troca pelo equipamento.
+
+**Aprovados (1.91.0):** o Mago e o Arqueiro foram para o jogo como estão, em `rpg/web/static/retratos.js` (as mesmas
+grades). A carta de 16×16 de cada classe virou também a figura do herói na fogueira (`Icones.figura`).

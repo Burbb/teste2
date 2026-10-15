@@ -99,6 +99,10 @@ const Icones = (() => {
       return `<img class="sprite desenho pixel" src="${Retratos.url(classe, papel, e)}" srcset="${Retratos.url(classe, papel, 2 * e)} 2x" ` +
         `width="${lado}" height="${lado}" style="--s:${lado}" alt="" draggable="false">`;
     },
+    /** A figura pequena de alguém (16×16, num canvas, para quem pinta em canvas: a fogueira): o herói pela classe, com
+     *  o retrato desenhado (a versão da carta, retratos.js) quando há; senão, o sprite do jogo. O mesmo lugar que escolhe o
+     *  busto e a cabeça, para nenhuma tela ficar com o desenho antigo. */
+    figura: (nome) => (Retratos.tem(nome) ? Retratos.canvas(nome, "carta") : Sprites.canvas(nome)),
     /** O busto da ficha (retratos.js): 80 px, e 64 em telas baixas (até 800 px de altura), o recorte na mesma escala. */
     retrato(classe, alt = "") {
       if (!Retratos.tem(classe)) return "";

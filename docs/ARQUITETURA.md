@@ -272,10 +272,13 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   ícones de habilidade e de efeito, o covil vencido. O mercador da banca tem o busto no balcão (`telas/mercado.js`,
   com as cores da figura da banca).
 - `retratos.js` (`Retratos`): os retratos do herói desenhados em código, pelo método das cenas (uma grade de letras
-  com a paleta do desenho, pintada por `Sprites.grade`, o mesmo pintor do busto do mercador). Por ora só o Guerreiro
-  (1.90.0: o capacete fechado, sem rosto): um desenho de 40×40 a ×2 dá o busto da ficha (80 px) e, por recorte na
-  mesma escala, o da janela baixa (64 px) e a cabeça do topo (48 px); a carta da luta (32 px) tem a versão de 16×16.
-  Mago e Arqueiro seguem com o sprite da classe. O retrato não depende do equipamento nem dos atributos.
+  com a paleta do desenho, pintada por `Sprites.grade`, o mesmo pintor do busto do mercador). As três classes: o
+  Guerreiro (1.90.0: o capacete fechado, sem rosto), o Mago e o Arqueiro (1.91.0: o capuz alto azul; o capuz curto
+  verde com a aljava). Cada um é um desenho de 40×40 a ×2 que dá o busto da ficha (80 px) e, por recorte na mesma
+  escala, o da janela baixa (64 px) e a cabeça do topo (48 px); a carta da luta (32 px) tem a versão de 16×16, que é
+  também a figura do herói na fogueira. Quem escolhe é sempre `Icones`: `retrato` (ficha, Inventário), `cabeca` (topo,
+  carta, saves) e `figura` (o canvas de 16×16 da fogueira: o retrato desenhado ou, para quem não tem, o sprite do
+  jogo). Nenhuma tela pede o sprite da classe direto. O retrato não depende do equipamento nem dos atributos.
 
 ## Telemetria
 

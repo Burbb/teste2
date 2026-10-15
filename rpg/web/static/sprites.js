@@ -73,11 +73,10 @@ const Sprites = (() => {
     return `<img class="sprite ${classe}" src="${url(nome, sombra)}" width="${lado}" height="${lado}" style="--s:${lado}" alt="" draggable="false">`;
   }
 
-  const grades = {};
+  const grades = {}, gradesUrl = {};
   /** Um desenho com a paleta própria dele (os retratos: o mercador, o herói), numa grade de letras como a dos sprites:
-   *  cada pixel da arte vira `escala` × `escala` pixels, e "." é transparente. Devolve o endereço da imagem, guardado
-   *  por `chave` e escala. */
-  function grade(chave, linhas, cores, escala = 1) {
+   *  cada pixel da arte vira `escala` × `escala` pixels, e "." é transparente. O canvas, guardado por `chave` e escala. */
+  function gradeCanvas(chave, linhas, cores, escala = 1) {
     const k = `${chave}@${escala}`;
     if (grades[k]) return grades[k];
     const c = document.createElement("canvas");
@@ -87,7 +86,12 @@ const Sprites = (() => {
       if (ch === ".") return;
       x.fillStyle = cores[ch]; x.fillRect(i * escala, y * escala, escala, escala);
     }));
-    return (grades[k] = c.toDataURL());
+    return (grades[k] = c);
+  }
+  /** O mesmo desenho como endereço de imagem (data URL), para uma <img>. */
+  function grade(chave, linhas, cores, escala = 1) {
+    const k = `${chave}@${escala}`;
+    return gradesUrl[k] || (gradesUrl[k] = gradeCanvas(chave, linhas, cores, escala).toDataURL());
   }
 
   // ------------------------------------------------------------ materiais da interface
@@ -217,5 +221,5 @@ const Sprites = (() => {
     }
   }
 
-  return { img, url, canvas, grade, existe: (n) => !!S[n], PALETA, BAYER4, pontilha, rgb, misturar, MOLDURAS, tex: { tile, pontilhado, rampa, pedra, fumo }, publicar };
+  return { img, url, canvas, grade, gradeCanvas, existe: (n) => !!S[n], PALETA, BAYER4, pontilha, rgb, misturar, MOLDURAS, tex: { tile, pontilhado, rampa, pedra, fumo }, publicar };
 })();

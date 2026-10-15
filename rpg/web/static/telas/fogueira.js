@@ -85,7 +85,7 @@
       }
       // figuras, iluminadas pelo fogo
       quem.forEach(([nomeSpr, fx, fy]) => {
-        const spr = Sprites.canvas(nomeSpr);
+        const spr = Icones.figura(nomeSpr);  // o retrato desenhado (a versão da carta) ou o sprite de quem ainda não tem
         px(fx - 7, fy + 6, 14, 2, "rgba(0,0,0,0.5)");
         if (spr) x.drawImage(spr, fx - 8, fy - 9, 16, 16);
       });

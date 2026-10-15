@@ -29,7 +29,7 @@
     return `<div class="tela inventario">
       <div class="boneco">${espacos}<div class="boneco-retrato">${Icones.retrato(p.classe, "Retrato do herói") || S(p.classe, 6)}</div></div>
       <div class="inv-lado">
-        <div class="ficha-mini"><div class="heroi-nome">${h(p.nome)}</div><div class="heroi-titulo">${h(p.titulo)} · nível ${p.nivel} · ${p.xp}/${p.xp_proximo} XP</div></div>
+        <div class="ficha-mini"><div class="heroi-nome">${h(p.nome)}</div><div class="heroi-titulo">${h(p.titulo)} · nível&nbsp;${p.nivel} · ${p.xp}/${p.xp_proximo}&nbsp;XP</div></div>
         <div class="atributos">${attrs}</div>
         <h4>Mochila <small>${p.mochila.length}/${limite}</small></h4>
         <div class="mochila-grade">${celulas.join("")}<div class="slot-px lixeira" title="Arraste um item aqui para largar">${S("caveira", 2, "fantasma")}<span class="espaco-nome">Largar</span></div></div>

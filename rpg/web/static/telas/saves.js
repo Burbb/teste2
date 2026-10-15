@@ -16,9 +16,9 @@
   /** Os saves como cartões: retrato da classe, nome, nível, dia, lugar e quando foi jogado (o mais recente primeiro). */
   function saves(d) {
     const cartoes = d.saves.map((s, i) => `<button type="button" class="save-cartao${s.ilegivel ? " ilegivel" : ""}" data-save="${i}">
-        <span class="save-retrato">${S(s.classe || "pergaminho", 3)}</span>
+        <span class="save-retrato">${Icones.cabeca(s.classe, 48) || S(s.classe || "pergaminho", 3)}</span>
         <span class="save-info"><b>${h(s.nome)}</b>
-          <span class="save-classe">${s.ilegivel ? "save danificado" : `${h(s.classe_nome)} · nível ${s.nivel}`}${s.campanha ? ` <i class="save-tag">${h(s.campanha)} · ${s.hardcore === false ? "resgate" : "hardcore"}</i>` : s.hardcore === false ? ' <i class="save-tag">brando</i>' : ""}</span>
+          <span class="save-classe">${s.ilegivel ? "save danificado" : `${h(s.classe_nome)} · nível&nbsp;${s.nivel}`}${s.campanha ? ` <i class="save-tag">${h(s.campanha)} · ${s.hardcore === false ? "resgate" : "hardcore"}</i>` : s.hardcore === false ? ' <i class="save-tag">brando</i>' : ""}</span>
           <small>${s.ilegivel ? "" : `Dia ${s.dia} · ${h(s.lugar)} · `}${haQuanto(s.modificado)}</small></span></button>`).join("");
     return `<div class="tela saves"><div class="saves-lista">${cartoes}</div></div>`;
   }

@@ -66,9 +66,9 @@ mais brando para quem quiser; um robô de mapa que jogue partidas inteiras com j
   retratos por especialização e os seis retratos.
   Direção aprovada (10/2026): o Guerreiro de capacete fechado, sem rosto, desenhado em código no estilo dos cenários
   (um desenho só para o busto, a cabeça do topo e a carta; o teste em `ferramentas/prototipos/hud/retrato-teste.html`).
-  No jogo desde a 1.90.0 (`rpg/web/static/retratos.js`); Mago e Arqueiro seguem com o sprite da classe, e os
-  candidatos deles (capuz azul alto; capuz verde curto com a aljava) estão em avaliação em
-  `ferramentas/prototipos/hud/retratos-classes.html`. Quantos
+  No jogo desde a 1.90.0 (`rpg/web/static/retratos.js`); o Mago (capuz azul alto) e o Arqueiro (capuz verde curto com
+  a aljava) desde a 1.91.0, em todos os lugares do herói (ficha, topo, carta, Inventário, fogueira, saves). Os
+  companheiros (Morel, Odette, Yara) estão em teste no protótipo. Quantos
   retratos haverá e como o jogador vai
   personalizar o herói continuam em aberto (nem seleção, nem recoloração, nem diferença por gênero, nem as outras
   classes por enquanto); o retrato não segue o elmo equipado nem os atributos.
