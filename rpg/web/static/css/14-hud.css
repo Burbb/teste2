@@ -63,6 +63,12 @@
 :root body #cena { background: none; }
 :root body #cena > #vista { box-shadow: 0 1px 0 var(--fio-escuro); }
 :root body #pagina { background: var(--veu-leitura), var(--t-painel) 64px 32px / 128px; scrollbar-color: #5a5146 transparent; }
+/* A superfície da leitura é da cena inteira, não só da página: o pontilhado do chão (embaixo do cenário; na luta, em
+   cima do log), a faixa que a orientação reserva entre o cenário e o texto e qualquer vão entre os dois mostram a
+   mesma superfície, sem emenda. Antes, o que não era página mostrava o carvão do palco, mais escuro. Ficam de fora o
+   título (a paisagem aberta) e as telas de menu (a barra de cima continua no carvão do palco). */
+:root body:not(.modo-titulo) #cena:not([data-tipo="menu"]) { background: var(--veu-leitura), var(--t-painel) 64px 32px / 128px; }
+:root body:not(.modo-titulo) #cena:not([data-tipo="menu"]) > #pagina { background: none; }
 :root body #doca { background: var(--veu-metal), var(--t-botao) 0 0 / 128px; padding: 0; box-shadow: 0 -1px 0 var(--fio-escuro), inset 0 1px 0 var(--fio-claro); }
 /* o topo da janela: a faixa de ferro embaixo, sem os cantos */
 :root body #topo { border: 0 solid transparent; border-bottom-width: 6px; border-image: var(--m-faixa) 10 / 0 0 10px 0 round;

@@ -177,7 +177,14 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   (passear) fica em texto.
 - A paisagem (`vista.js`) compõe a arte em 320×72 e a desenha no canvas já no tamanho em que aparece, pixel a pixel
   da tela (o enquadramento vem do CSS: `object-fit`, `object-position`). Deixar o navegador esticar numa escala
-  quebrada fazia colunas da arte parada tremerem de um quadro para o outro.
+  quebrada fazia colunas da arte parada tremerem de um quadro para o outro. O que fica por cima da arte (os prédios
+  da vila com a área de clique, o balão e a ponta; os pontos de uma cena, como os da capela; o clique no próprio
+  cenário) usa a mesma conta do desenho, `Vista.caixaDaArte()`, e se refaz por `Vista.aoRedimensionar`, que dispara a
+  cada mudança de tamanho do canvas, inclusive durante a animação da altura (1.93.2: antes, a vila calculava no evento
+  `resize` da janela, ainda com a altura de antes, e os balões ficavam no lugar do tamanho anterior;
+  `tests/navegador/redimensionar.mjs` confere). A superfície da leitura é a da cena inteira (`14-hud.css`), não só a
+  da página: o pontilhado do chão, a faixa reservada pela orientação e qualquer vão entre a arte e o texto terminam
+  nela.
 - O fim de um evento ou de uma luta não pede Continuar: a ponte manda a cena do lugar com `virar`, a tela deixa o
   que aconteceu o tempo de ler (um fio se enche; clique ou tecla adianta) e vira para a página limpa do lugar, no
   topo. Vale também para o evento que termina sem escolha nenhuma (o "Exausto", a noite no acampamento): o
@@ -312,6 +319,7 @@ lados, turnos até cair) e "Encontros por tipo".
 | `python -m unittest discover -s tests` | sistemas, saves antigos, catálogo de habilidades, Grimório, gabarito |
 | `python -m unittest tests.test_conteudo` | o validador de conteúdo: toda referência entre catálogos existe (habilidades de famílias, afixos e fases de guardião; famílias dos biomas; traços; lore; títulos e reações da comitiva apontando para eventos; ícones de habilidade, talento, item e traço com desenho; cor, animação e realce de cada habilidade entre os que a tela sabe fazer) |
 | `tests/navegador/fumaca.mjs` | a interface web de ponta a ponta (Playwright) |
+| `tests/navegador/redimensionar.mjs` | a mesma página alternando o tamanho da janela, sem recarregar: os prédios da vila e os pontos da capela (área, balão, ponta) ficam onde estariam numa página aberta naquele tamanho; mouse, teclado, clique e F4 depois das alternâncias |
 | `python -m tests.equilibrio` | não é teste, é régua: heróis típicos por especialização e nível lutando (`tests/arena.py`) |
 | `python -m tests.replay` | régua humana: as partidas de `tests/runs/` refeitas com os números de agora |
 | `python -m tests.broquel` | régua do Broquel do Vigia: lutas inteiras do Guerreiro com cinco jeitos de usar o escudo, o Broquel contra o mesmo escudo sem o efeito, um raro e a Égide (`--exp vale\|talentos\|comitiva\|posterior`) |

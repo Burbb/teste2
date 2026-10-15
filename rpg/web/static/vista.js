@@ -441,18 +441,43 @@ const Vista = (() => {
    *  Esticada por ele numa escala quebrada (×2,09 e tal), a placa de vídeo podia escolher, a cada quadro, um texel ou
    *  o vizinho nas colunas que caem bem na divisa, e a paisagem parada tremia. O enquadramento continua sendo o do
    *  CSS (object-fit: cover, object-position). */
-  function apresentar() {
-    const cs = getComputedStyle(canvas), dpr = window.devicePixelRatio || 1;
-    const larg = canvas.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
-    const alt = canvas.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
-    if (larg <= 0 || alt <= 0) return;  // escondida (telas de menu): desenha quando voltar
+  /** Onde a arte cai na caixa da vista: a conta do desenho (cobre a caixa, no ponto de object-position), em pixels do
+   *  aparelho, e a mesma em pixels da tela para o que fica por cima dela (os prédios da vila, os pontos de uma cena e
+   *  o clique no cenário). Uma conta só, lida da caixa como ela está agora: a altura da vista anima (transition) e uma
+   *  conta guardada de antes deixava os balões no lugar do tamanho anterior. Null com a vista escondida. */
+  function medir() {
+    const c = canvas || document.getElementById("vista");
+    if (!c) return null;
+    const cs = getComputedStyle(c), dpr = window.devicePixelRatio || 1;
+    const esq = parseFloat(cs.paddingLeft), topo = parseFloat(cs.paddingTop);
+    const larg = c.clientWidth - esq - parseFloat(cs.paddingRight);
+    const alt = c.clientHeight - topo - parseFloat(cs.paddingBottom);
+    if (larg <= 0 || alt <= 0) return null;
     const cw = Math.round(larg * dpr), ch = Math.round(alt * dpr);
-    if (canvas.width !== cw || canvas.height !== ch) { canvas.width = cw; canvas.height = ch; }
     const esc = Math.max(cw / W, ch / H), dw = Math.round(W * esc), dh = Math.round(H * esc);
     const [fx, fy] = cs.objectPosition.split(" ").map((v) => (v.endsWith("%") ? parseFloat(v) / 100 : 0.5));
+    const ox = Math.round((cw - dw) * fx), oy = Math.round((ch - dh) * fy);
+    // na tela: a caixa do bitmap (cw x ch) é esticada para larg x alt; a escala de cada eixo vem dessa razão
+    const kx = larg / cw, ky = alt / ch;
+    return { cw, ch, dw, dh, ox, oy, larg, alt, esq: c.offsetLeft + c.clientLeft + esq, topo: c.offsetTop + c.clientTop + topo,
+      ex: (dw / W) * kx, ey: (dh / H) * ky, dx: ox * kx, dy: oy * ky };
+  }
+  /** A caixa da arte em pixels da tela (para as camadas por cima dela): a caixa (esq, topo, larg, alt, relativas à
+   *  cena), a escala de cada eixo (ex, ey) e o deslocamento da arte dentro da caixa (dx, dy). Um ponto (x, y) da arte
+   *  cai em (dx + x * ex, dy + y * ey) dentro da caixa. */
+  function caixaDaArte() {
+    const m = medir();
+    return m && { esq: m.esq, topo: m.topo, larg: m.larg, alt: m.alt, ex: m.ex, ey: m.ey, dx: m.dx, dy: m.dy };
+  }
+  // quem fica por cima da arte e precisa acompanhar o tamanho dela (vila.js, telas/cenas.js)
+  const aoRedimensionar = [];
+  function apresentar() {
+    const m = medir();
+    if (!m) return;  // escondida (telas de menu): desenha quando voltar
+    if (canvas.width !== m.cw || canvas.height !== m.ch) { canvas.width = m.cw; canvas.height = m.ch; }
     tela.imageSmoothingEnabled = false;
-    tela.clearRect(0, 0, cw, ch);
-    tela.drawImage(arte, Math.round((cw - dw) * fx), Math.round((ch - dh) * fy), dw, dh);
+    tela.clearRect(0, 0, m.cw, m.ch);
+    tela.drawImage(arte, m.ox, m.oy, m.dw, m.dh);
   }
 
   function desenharEm(ctx) {
@@ -519,7 +544,9 @@ const Vista = (() => {
       arte = document.createElement("canvas"); arte.width = W; arte.height = H;
       ctx = arte.getContext("2d");
       tela = canvas.getContext("2d");
-      new ResizeObserver(() => { if (estado) apresentar(); }).observe(canvas);  // a arte cresce ou recolhe: já no tamanho novo
+      // a arte cresce ou recolhe (a janela muda, ou a altura anima): a cada quadro, já no tamanho novo, e o que está por
+      // cima dela vai junto, com a mesma conta
+      new ResizeObserver(() => { if (estado) apresentar(); aoRedimensionar.forEach((f) => f()); }).observe(canvas);
     }
     estado = e;
     const k = [e.local.id, e.local.tipo, e.mundo.periodo_n, e.mundo.clima_id, e.local.bioma, !!e.local.estrada].join("|");
@@ -589,6 +616,6 @@ const Vista = (() => {
   function listaPredios() { return predios.map(({ id, nome, x, y, w, h, balao }) => ({ id, nome, x, y, w, h, balao })); }
 
   return { atualizar, titulo, corDoCeu, ceuDo, amanhecer, predios: listaPredios, destacar, focar, usarAmbiente, focarEm,
-    temAmbiente: () => !!ambiente, LARGURA: W, ALTURA: H,
+    temAmbiente: () => !!ambiente, LARGURA: W, ALTURA: H, caixaDaArte, aoRedimensionar: (f) => aoRedimensionar.push(f),
     arte: () => arte };  // o quadro em 320x72 (as páginas de teste da paisagem leem daqui)
 })();

@@ -2284,3 +2284,23 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   de salvar e sair de uma partida (sem moldura, título em 112 px na janela grande), movimento reduzido; a criação de
   personagem (fora do menu) não mudou. Verificações do CLAUDE.md.
 - **Falta:** Jean conferir.
+
+### 15/10/2026 — A emenda entre cenário e leitura e as etiquetas ao redimensionar (1.93.2)
+
+- **Pedido de Jean:** (1) a faixa escura entre o pontilhado do cenário e a superfície do texto; (2) os nomes dos
+  prédios saindo de cima dos desenhos ao alternar entre maximizado e janela menor, sem recarregar.
+- **Causas encontradas:** (1) a superfície da leitura estava só na `#pagina`; o que ficava na cena fora dela mostrava
+  o carvão mais escuro do palco: a parte transparente da rampa pontilhada do chão e, durante a orientação da vila, a
+  faixa que `orientacao.js` reserva entre o cenário e o texto (96 px, sem fundo; a faixa da captura de Jean). Na luta,
+  o mesmo embaixo da arena. (2) A vila posicionava os prédios no evento `resize` da janela, quando a largura já é a
+  nova, mas a altura do `#vista` ainda está no começo da transição (0,35 s); a escala saía da altura velha e não se
+  refazia no fim. A capela recalculava no `transitionend` e estava certa; as duas copiavam a conta do desenho.
+- **Feito:** a superfície da leitura passou para a `#cena` (fora do título e das telas de menu, que ficam como
+  estavam), a página transparente por cima; nenhum efeito novo. `Vista.caixaDaArte()` é a conta única (a mesma do
+  desenho, com os arredondamentos dele) e `Vista.aoRedimensionar` avisa a cada mudança de tamanho do canvas; a vila
+  (camada, botões, balões, clique no cenário) e os pontos da cena usam as duas.
+- **Verificado:** `tests/navegador/redimensionar.mjs` (novo): 7 alternâncias entre 1920×1009, 1280×720 e 1405×850 na
+  mesma página; antes, até 173 px de erro na vila; agora 0 px na vila e na capela; mouse, clique no balão, clique no
+  cenário, Enter e F4 depois delas. Fotos antes/depois da superfície (orientação, vila, evento, em 1920 e 1280) e da
+  luta e do mercado. Verificações do CLAUDE.md.
+- **Falta:** Jean conferir.

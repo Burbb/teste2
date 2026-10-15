@@ -1202,22 +1202,22 @@
   }
   document.body.classList.toggle("destacar-interacoes", destacar);
 
-  /** Onde cada ponto cai na tela: a arte é desenhada com object-fit: cover (centro, 80% para baixo), como na vila. */
+  /** Onde cada ponto cai na tela: a caixa da arte (Vista.caixaDaArte), a mesma do desenho e dos prédios da
+   *  vila, refeito a cada mudança de tamanho da vista, inclusive durante a animação da altura. */
   function posicionar() {
     if (!capa || capa.hidden) return;
-    const vista = document.getElementById("vista"), cs = getComputedStyle(vista);
-    const larg = vista.clientWidth, alt = vista.clientHeight - parseFloat(cs.paddingBottom);
-    const esc = Math.max(larg / QW, alt / QH), dx = (larg - QW * esc) * 0.5, dy = (alt - QH * esc) * 0.8;
-    Object.assign(capa.style, { left: vista.offsetLeft + "px", top: vista.offsetTop + "px", width: larg + "px", height: alt + "px" });
+    const q = Vista.caixaDaArte();
+    if (!q) return;
+    Object.assign(capa.style, { left: q.esq + "px", top: q.topo + "px", width: q.larg + "px", height: q.alt + "px" });
     capa.querySelectorAll(".ci-ponto").forEach((bt) => {
       const pd = atual && atual.def.pontos[bt.dataset.ponto];
       if (!pd) return;
       const [x, y, w, hh] = pd.area, [bx, by] = pd.balao;
-      Object.assign(bt.style, { left: dx + x * esc + "px", top: dy + y * esc + "px", width: w * esc + "px", height: hh * esc + "px" });
-      Object.assign(bt.querySelector(".ci-balao").style, { left: Math.round((bx - x) * esc) + "px", top: Math.round((by - y) * esc) + "px" });
+      Object.assign(bt.style, { left: q.dx + x * q.ex + "px", top: q.dy + y * q.ey + "px", width: w * q.ex + "px", height: hh * q.ey + "px" });
+      Object.assign(bt.querySelector(".ci-balao").style, { left: Math.round((bx - x) * q.ex) + "px", top: Math.round((by - y) * q.ey) + "px" });
     });
   }
-  window.addEventListener("resize", posicionar);
+  Vista.aoRedimensionar(posicionar);
 
   /** Os pontos só valem na página do lugar (no texto de uma cena, a escolha é a do menu dela), fora da luta e com a
    *  arte no topo. */
@@ -1230,7 +1230,6 @@
       capa = document.createElement("div");
       capa.id = "pontos-cena";
       document.getElementById("cena").appendChild(capa);
-      document.getElementById("vista").addEventListener("transitionend", posicionar);
     }
     fecharLeitura();  // uma página nova fecha o livro aberto
     capa.innerHTML = "";

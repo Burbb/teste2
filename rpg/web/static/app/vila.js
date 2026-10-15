@@ -26,36 +26,34 @@ function fecharVila() {
   Vista.destacar(null);
 }
 
-/** Onde cada prédio cai na tela: a arte é desenhada com object-fit: cover (centro, 80% para baixo). */
+/** Onde cada prédio cai na tela: a caixa da arte (Vista.caixaDaArte, a mesma conta do desenho), aplicada à
+ *  camada inteira, a cada botão (a área clicável e o contorno), ao balão e à ponta dele. Refeito a cada mudança de
+ *  tamanho da vista, inclusive durante a animação da altura (Vista.aoRedimensionar): com uma conta só no evento
+ *  "resize" da janela, a altura ainda era a de antes e os balões ficavam no lugar do tamanho anterior. */
 function posicionarPredios() {
   if (!vilaAberta) return;
-  const vista = $("#vista"), cs = getComputedStyle(vista);
-  const larg = vista.clientWidth, alt = vista.clientHeight - parseFloat(cs.paddingBottom);
-  const esc = Math.max(larg / Vista.LARGURA, alt / Vista.ALTURA);
-  const dx = (larg - Vista.LARGURA * esc) * 0.5, dy = (alt - Vista.ALTURA * esc) * 0.8;
-  predioEl.style.left = vista.offsetLeft + "px"; predioEl.style.top = vista.offsetTop + "px";
-  predioEl.style.width = larg + "px"; predioEl.style.height = alt + "px";
+  const q = Vista.caixaDaArte();
+  if (!q) return;
+  Object.assign(predioEl.style, { left: q.esq + "px", top: q.topo + "px", width: q.larg + "px", height: q.alt + "px" });
   predioEl.querySelectorAll(".predio").forEach((b) => {
     const p = Vista.predios().find((x) => x.id === b.dataset.predio);
     if (!p) return;
-    Object.assign(b.style, { left: dx + p.x * esc + "px", top: dy + p.y * esc + "px", width: p.w * esc + "px", height: p.h * esc + "px" });
+    Object.assign(b.style, { left: q.dx + p.x * q.ex + "px", top: q.dy + p.y * q.ey + "px", width: p.w * q.ex + "px", height: p.h * q.ey + "px" });
     // o bico do balão aponta para o telhado (pixel inteiro da tela, para o balão não ficar borrado)
     const [bx, by] = p.balao || [p.x + p.w / 2, p.y];
-    Object.assign(b.querySelector(".balao-nome").style, { left: Math.round((bx - p.x) * esc) + "px", top: Math.round((by - p.y) * esc) + "px" });
+    Object.assign(b.querySelector(".balao-nome").style, { left: Math.round((bx - p.x) * q.ex) + "px", top: Math.round((by - p.y) * q.ey) + "px" });
   });
 }
-window.addEventListener("resize", posicionarPredios);
+Vista.aoRedimensionar(posicionarPredios);
 
 /** O prédio da vila sob um ponto da tela (ou null): a mesma conta de posicionarPredios, ao contrário. */
 function predioNoPonto(x, y) {
   if (!estado || estado.combate || estado.local.tipo !== "vila") return null;
-  const vista = $("#vista"), cs = getComputedStyle(vista), r = vista.getBoundingClientRect();
-  const larg = vista.clientWidth, alt = vista.clientHeight - parseFloat(cs.paddingBottom);
-  if (larg <= 0 || alt <= 0) return null;
-  const esc = Math.max(larg / Vista.LARGURA, alt / Vista.ALTURA);
-  const dx = (larg - Vista.LARGURA * esc) * 0.5, dy = (alt - Vista.ALTURA * esc) * 0.8;
-  const ax = (x - r.left - dx) / esc, ay = (y - r.top - dy) / esc;
-  const p = Vista.predios().find((q) => ax >= q.x && ax < q.x + q.w && ay >= q.y && ay < q.y + q.h);
+  const q = Vista.caixaDaArte();
+  if (!q) return null;
+  const r = $("#cena").getBoundingClientRect(), c = $("#cena");
+  const ax = (x - r.left - c.clientLeft - q.esq - q.dx) / q.ex, ay = (y - r.top - c.clientTop - q.topo - q.dy) / q.ey;
+  const p = Vista.predios().find((k) => ax >= k.x && ax < k.x + k.w && ay >= k.y && ay < k.y + k.h);
   return p ? p.id : null;
 }
 
@@ -91,8 +89,7 @@ function montarVila(m, grupos) {
     b.addEventListener("click", (ev) => { ev.stopPropagation(); entrarNoPredio(p.id); });
     predioEl.appendChild(b);
   });
-  requestAnimationFrame(posicionarPredios);
-  $("#vista").addEventListener("transitionend", posicionarPredios, { once: true });
+  posicionarPredios();
   const pedido = predioPedido;
   predioPedido = null;
   if (balcao && predioEl.querySelector(`[data-predio="${balcao.id}"]`)) entrarNoPredio(balcao.id, true, true);
