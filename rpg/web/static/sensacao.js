@@ -443,6 +443,12 @@ const Sensacao = (() => {
     // adiantar não fecha o espólio sem ver: logo depois de tudo aparecer o clique não conta, e enquanto os cliques
     // seguem em rajada a espera se estende. Fecha o clique dado depois de uma pausa.
     festa.insertAdjacentHTML("beforeend", '<button class="continuar" type="button">Continuar <span>▸</span></button>');
+    // O quadro é uma janela: o foco vai para o Continuar dele (o Tab não precisa atravessar a página escondida atrás) e,
+    // fechado o quadro, volta para onde estava. O anel só aparece se o último gesto foi do teclado (:focus-visible).
+    const focoAntes = document.activeElement, botao = festa.querySelector(".continuar");
+    const prender = (ev) => { if (ev.key === "Tab") { ev.preventDefault(); botao.focus({ preventScroll: true }); } };  // um botão só: o Tab fica nele
+    document.addEventListener("keydown", prender, true);
+    botao.focus({ preventScroll: true });
     pular = false;
     let guarda = performance.now() + AJUSTES.espolioGuardaMs;
     await new Promise((r) => {
@@ -457,9 +463,11 @@ const Sensacao = (() => {
     });
     document.removeEventListener("pointerdown", adiantar, true);
     document.removeEventListener("keydown", adiantar, true);
+    document.removeEventListener("keydown", prender, true);
     festa.classList.add("saindo");
     await dormir(220);
     caixa.hidden = true; caixa.innerHTML = ""; caixa.classList.remove("leve");
+    if (focoAntes && focoAntes !== document.body && focoAntes.isConnected) focoAntes.focus({ preventScroll: true });
   }
 
   return { AJUSTES, configurar, peso, maisPesado, tremor, parada, antesDoGolpe, golpe, repor, depois, contar, encher,
