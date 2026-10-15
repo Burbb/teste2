@@ -2441,3 +2441,30 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   da capela reconstruído a partir das fontes sai idêntico e abre direto do arquivo, sem erro; o unguento refeito pelo
   script continua igual ao do jogo; `claude plugin validate .claude/skills`. O jogo não mudou (sem versão).
 - **Falta:** Jean avaliar as duas propostas. A E9 e a validação com jogadores novos continuam abertas.
+
+### 15/10/2026 — O Morel pelas referências escolhidas e o Mago na fogueira (1.96.0 e 1.97.0)
+
+- **Pedido de Jean:** recusar a carta e a cabeça novas do Morel (commit `98c9af9`), voltar aos desenhos que ele
+  escolheu pelas capturas, corrigir só a espada da versão pequena, e integrar o Mago sentado na fogueira (aprovado),
+  em commits separados.
+- **Versões escolhidas e recusadas do Morel** (para nenhuma outra sessão trocar de novo):
+  - **Escolhida, lugares pequenos:** a figura de 16×16 da fogueira (`MOREL_FIGURA` em `rpg/web/static/retratos.js`),
+    agora também a carta de 32 px (luta, painel da comitiva, aviso) e o chip, a 2×; a única mudança de desenho é a
+    espada (o punho reto num eixo só, a guarda centrada longe do rosto, a lâmina sumindo atrás da ombreira; 13 pixels,
+    só nas colunas da espada).
+  - **Escolhida, cabeça:** a de 48×48 a 1× (`MOREL_CABECA`), nos cartões da Comitiva, na reação "Morel aprova" e na
+    faixa de quem chega. Sem mudança.
+  - **Mantidos:** o busto de 80×80 e a ficha baixa de 64. Hoje nenhuma tela mostra o busto de um companheiro (o
+    retrato grande da ficha e do Inventário é só do herói); a maior apresentação do Morel no jogo é a cabeça de 48.
+  - **Recusadas:** a carta "40 reduzido a 32" (o busto antigo de 40×40, de cabeça pequena e traço fino; saiu de uso e
+    de `retratos.js`, fica no histórico da 1.92.0) e os candidatos de 16×16 e 24×24 de `98c9af9` (no protótipo,
+    marcados como recusados). Não fazer outra proposta de rosto do Morel sem pedido.
+- **O Mago na fogueira** (1.97.0): o papel `fogueira` de `retratos.js`, pedido só por `Icones.figura` (o canvas da
+  fogueira); a grade é a aprovada, pixel a pixel. A carta da luta, o topo, a ficha, o Inventário e o chip continuam com
+  os desenhos de antes (conferido na página: a carta do herói, o topo e o chip de 16 com os de sempre, e o desenho da
+  fogueira em nenhum outro lugar).
+- **Verificado** nas duas versões: no jogo, em 1500×950 e 1280×720, a fogueira com o Mago sozinho e com a comitiva,
+  o Morel na fogueira, na carta da luta (Guerreiro, Morel e Odette; Arqueiro e Morel) e no painel, a reação "Morel
+  aprova", o aviso, a faixa de quem chega e a tela da Comitiva, nos mesmos lugares e tamanhos, sem erro no console;
+  602 testes, gabarito sem diferença, pyflakes, fumaça (356).
+- **Falta:** Jean conferir. A E9 e a validação com jogadores novos continuam abertas.

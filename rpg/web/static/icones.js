@@ -127,10 +127,11 @@ const Icones = (() => {
       return `<img class="sprite desenho pixel" src="${Retratos.url(nome, papel, e)}" srcset="${Retratos.url(nome, papel, 2 * e)} 2x" ` +
         `width="${lado}" height="${lado}" style="--s:${lado}" alt="" draggable="false">`;
     },
-    /** A figura pequena de alguém (16×16, num canvas, para quem pinta em canvas: a fogueira): o herói pela classe e o
-     *  companheiro pelo id, com a figura desenhada (retratos.js) quando há; senão, o sprite do jogo. O mesmo lugar que
-     *  escolhe o busto e a cabeça, para nenhuma tela ficar com o desenho antigo. */
-    figura: (nome) => (Retratos.tem(nome) ? Retratos.canvas(nome, "figura") : Sprites.canvas(nome)),
+    /** A figura pequena de alguém na fogueira (16×16, num canvas): o herói pela classe e o companheiro pelo id, com o
+     *  desenho da fogueira quando há (o Mago sentado, 1.97.0) ou a figura desenhada (retratos.js); senão, o sprite do
+     *  jogo. O mesmo lugar que escolhe o busto e a cabeça, para nenhuma tela ficar com o desenho antigo. */
+    figura: (nome) => (Retratos.tem(nome) ? Retratos.canvas(nome, Retratos.temPapel(nome, "fogueira") ? "fogueira" : "figura")
+      : Sprites.canvas(nome)),
     /** O busto da ficha (retratos.js): 80 px, e 64 em telas baixas (até 800 px de altura), o recorte na mesma escala. */
     retrato(nome, alt = "") {
       if (!Retratos.tem(nome)) return "";

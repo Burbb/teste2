@@ -142,6 +142,28 @@ const Retratos = (() => {
     "AAaaaaaaaabbbBBB",
     "AAaaaaaBaabbbBBB",
   ];
+  // O Mago na fogueira (1.97.0): um desenho só da fogueira, porque a carta da luta, ali sentada no chão, ficava com a
+  // base inclinada e o capuz torto sobre o corpo. Sentado, a cabeça no meio dos ombros, o capuz com a ponta mole caída
+  // para trás, a capa assentando numa base reta, os antebraços cruzados no colo com as mãos à luz; as mesmas cores e
+  // a luz da esquerda. A carta, o busto, a cabeça e o chip do Mago não mudam.
+  const MAGO_FOGUEIRA = [
+    "......aab.......",
+    ".....Aaabb......",
+    "....AAaaabb.....",
+    "....AaaaaabB....",
+    "...AAaZZZZbbB...",
+    "...AaZZZZZZbB...",
+    "...AaZZZZZZbB...",
+    "...AaZpPPoZbB...",
+    "...AaZppooZbB...",
+    "..AAaaZooZbbBB..",
+    "..AaaaaZZbbbbBB.",
+    ".AAaaaaaabbbbBB.",
+    ".AaaAAPPpbbbbBBB",
+    ".AAaaaaaabbbbBBB",
+    "AAAaaaaaaabbbBBB",
+    "AAAaaaaaaabbbBBB",
+  ];
   // O Arqueiro (1.91.0): capuz curto e redondo de pano verde apagado, rente à cabeça, que acaba numa capinha nos ombros;
   // o rosto à mostra, o gibão de couro, uma correia só e a boca da aljava com duas penas curtas atrás do ombro. G/g/h/H o
   // pano; Z a sombra do capuz; L/l/m/M o couro; P/p/o o rosto e e os olhos; f/F as penas.
@@ -497,12 +519,13 @@ const Retratos = (() => {
   const recorte = (grade, x, y, lado) => grade.slice(y, y + lado).map((l) => l.slice(x, x + lado));
   // cada um com retrato (as classes e os companheiros, pelo id do motor): o desenho de cada papel, que a tela mostra
   // sempre no mesmo tamanho (o busto em 80 px, o da janela baixa em 64, a cabeça do topo e dos cartões em 48, a carta
-  // da luta em 32, a figura da fogueira em 16); a escala sai do tamanho de cada desenho
+  // da luta em 32, a figura da fogueira e do chip em 16); a escala sai do tamanho de cada desenho. Quem tem um papel
+  // `fogueira` (o Mago) aparece na fogueira com ele; os outros, com a figura.
   const DESENHOS = {
     guerreiro: { cores: FERRO_LA, busto: GUERREIRO, bustoBaixo: recorte(GUERREIRO, 4, 1, 32), cabeca: recorte(GUERREIRO, 8, 1, 24),
       carta: GUERREIRO_CARTA, figura: GUERREIRO_CARTA },
     mago: { cores: PANO_AZUL, busto: MAGO, bustoBaixo: recorte(MAGO, 4, 1, 32), cabeca: recorte(MAGO, 8, 1, 24), carta: MAGO_CARTA,
-      figura: MAGO_CARTA },
+      figura: MAGO_CARTA, fogueira: MAGO_FOGUEIRA },
     arqueiro: { cores: PANO_VERDE, busto: ARQUEIRO, bustoBaixo: recorte(ARQUEIRO, 4, 1, 32), cabeca: recorte(ARQUEIRO, 8, 1, 24),
       carta: ARQUEIRO_CARTA, figura: ARQUEIRO_CARTA },
     morel: { cores: CORES_MOREL, busto: MOREL, bustoBaixo: recorte(MOREL, 4, 2, 64), cabeca: MOREL_CABECA, carta: MOREL_FIGURA,
@@ -515,6 +538,8 @@ const Retratos = (() => {
 
   return {
     tem: (classe) => !!DESENHOS[classe],
+    /** Se o desenho tem aquele papel (a fogueira só para quem tem um desenho dela). */
+    temPapel: (classe, papel) => !!(DESENHOS[classe] && DESENHOS[classe][papel]),
     /** O endereço da imagem do papel (busto, bustoBaixo, cabeca, carta, figura), com `escala` pixels de tela por pixel da arte. */
     url(classe, papel, escala) {
       const d = DESENHOS[classe];

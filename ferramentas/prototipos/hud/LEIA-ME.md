@@ -1531,6 +1531,12 @@ um pouco: a cicatriz fina e as sobrancelhas desenhadas do 48 de hoje viram bloco
 remendo da ombreira. As posições, as áreas clicáveis, o avanço das cartas e o destaque da vez do herói são os mesmos
 (medidos nas fotos: os retratos nos mesmos pontos, em 32 e 48 px inteiros).
 
-**Para integrar (se aprovado):** em `retratos.js`, a carta do Morel passa a ser a de 16×16 e a cabeça a de 24×24
+**Decisão de Jean (15/10/2026):** o Mago sentado foi aprovado e entrou no jogo na 1.97.0 (o papel `fogueira` de
+`retratos.js`). A carta e a cabeça novas do Morel foram **recusadas** (na reação, a barba virava um bloco escuro; no
+painel, o rosto novo não convenceu) e não entram; o Morel voltou aos desenhos que já tinha e que Jean escolheu pelas
+capturas (1.96.0): a figura de 16×16 da fogueira também na carta, com a espada refeita, e a cabeça de 48 de sempre.
+As grades recusadas ficam aqui só como histórico.
+
+**Para integrar (se aprovado; não vale mais para o Morel):** em `retratos.js`, a carta do Morel passa a ser a de 16×16 e a cabeça a de 24×24
 (a escala sai do tamanho do desenho, como nos outros); o Mago ganha um papel só da fogueira (por exemplo
 `fogueira`, pedido por `Icones.figura`), para o chip e a carta da luta continuarem com o desenho de hoje.

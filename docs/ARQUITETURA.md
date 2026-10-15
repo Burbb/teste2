@@ -308,7 +308,7 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   da fogueira a ×2, com a espada num eixo só (1.96.0; antes, o busto de 40×40 reduzido a 32). O critério entre eles é a leitura, a identidade e o peso parecidos no tamanho em que aparecem,
   não a mesma resolução de origem nem a mesma proporção entre cabeça e ombros. Quem escolhe é sempre `Icones`:
   `retrato` (ficha, Inventário), `cabeca` (48, 32 ou 16 px, conforme o lugar) e `figura` (o canvas de 16×16 da
-  fogueira; para quem não tem, o sprite do jogo). Nenhuma tela pede o sprite da classe nem do companheiro direto. O
+  fogueira, com o papel `fogueira` de quem tem um desenho próprio ali: o Mago sentado, desde a 1.97.0; para quem não tem, o sprite do jogo). Nenhuma tela pede o sprite da classe nem do companheiro direto. O
   retrato não depende do equipamento nem dos atributos.
 - Na vez do herói a carta dele é ampliada 1,12× (`.carta.foco`), mas o nicho do retrato desfaz a ampliação (o rosto em
   32 px exatos) e `Batalha.foco` o põe no pixel inteiro da tela, depois que os movimentos da arena acabam (as
