@@ -73,6 +73,23 @@ const Sprites = (() => {
     return `<img class="sprite ${classe}" src="${url(nome, sombra)}" width="${lado}" height="${lado}" style="--s:${lado}" alt="" draggable="false">`;
   }
 
+  const grades = {};
+  /** Um desenho com a paleta própria dele (os retratos: o mercador, o herói), numa grade de letras como a dos sprites:
+   *  cada pixel da arte vira `escala` × `escala` pixels, e "." é transparente. Devolve o endereço da imagem, guardado
+   *  por `chave` e escala. */
+  function grade(chave, linhas, cores, escala = 1) {
+    const k = `${chave}@${escala}`;
+    if (grades[k]) return grades[k];
+    const c = document.createElement("canvas");
+    c.width = linhas[0].length * escala; c.height = linhas.length * escala;
+    const x = c.getContext("2d");
+    linhas.forEach((linha, y) => [...linha].forEach((ch, i) => {
+      if (ch === ".") return;
+      x.fillStyle = cores[ch]; x.fillRect(i * escala, y * escala, escala, escala);
+    }));
+    return (grades[k] = c.toDataURL());
+  }
+
   // ------------------------------------------------------------ materiais da interface
   const tiles = {};
   /** Um ladrilho pequeno pintado texel a texel, só com cores da PALETA: letra fora dela é erro, na hora. */
@@ -200,5 +217,5 @@ const Sprites = (() => {
     }
   }
 
-  return { img, url, canvas, existe: (n) => !!S[n], PALETA, BAYER4, pontilha, rgb, misturar, MOLDURAS, tex: { tile, pontilhado, rampa, pedra, fumo }, publicar };
+  return { img, url, canvas, grade, existe: (n) => !!S[n], PALETA, BAYER4, pontilha, rgb, misturar, MOLDURAS, tex: { tile, pontilhado, rampa, pedra, fumo }, publicar };
 })();

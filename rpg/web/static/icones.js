@@ -1,7 +1,8 @@
 /* Os desenhos da interface (hud/icones/): a família de ferro da HUD, pelo papel de cada imagem. As telas pedem aqui o
    desenho de um papel (o item pelo desenho que o motor dá, o consumível pelo id, o atributo, o recurso do topo, o
    vital, o atalho da doca, o lugar de um caminho, a ação da roda, o retrato da classe) e recebem a <img> pronta, ou ""
-   quando a família não tem aquele desenho: aí a tela usa o sprite do jogo, como sempre. É o único lugar que sabe qual
+   quando a família não tem aquele desenho: aí a tela usa o sprite do jogo, como sempre. O retrato e a cabeça do herói
+   vêm de retratos.js (desenhados em código, como as cenas), não de arquivo. É o único lugar que sabe qual
    desenho vai em cada papel; a origem e o destino de uma animação (o item que voa da mochila para o corpo, o baú que
    cai na bolsa) pedem o mesmo e saem iguais.
    Um sprite pode ter mais de um papel (a "chama" é o Vigor no topo, o Poder nos atributos e a Pena de Fênix na bolsa):
@@ -17,12 +18,12 @@ const Icones = (() => {
     "atalho-bestiario": [32, 36], "atalho-diario": [32, 36], "atalho-grimorio": [32, 36], "atalho-inventario": [32, 36],
     "atalho-mapa": [32, 36], "atalho-sair": [32, 36], "atalho-salvar": [32, 36], "atalho-talentos": [32, 36],
     "attr-agilidade": [24, 32], "attr-ataque": [24, 32], "attr-defesa": [24, 32], "attr-poder": [24, 32],
-    "bandagem": [24, 32, 48, 64], "bau": [32, 48, 64], "botas-ferro": [32, 48, 64], "cabeca-guerreiro": [32, 48],
+    "bandagem": [24, 32, 48, 64], "bau": [32, 48, 64], "botas-ferro": [32, 48, 64],
     "cota": [32, 48, 64], "elmo": [32, 48, 64], "escudo": [32, 48, 64], "espada": [32, 48, 64], "lugar-caverna": [32, 40],
     "lugar-cidadela": [32, 40], "lugar-floresta": [32, 40], "lugar-montanha": [32, 40], "lugar-pantano": [32, 40],
     "lugar-planicie": [32, 40], "lugar-ruinas": [32, 40], "lugar-vila": [32, 40], "maca": [32, 48, 64],
     "manopla": [32, 48, 64], "moedas": [24], "osso": [24], "perneiras": [32, 48, 64], "pocao": [24, 32, 48, 64],
-    "provisoes": [24], "retrato-guerreiro": [64, 80], "tocha": [24, 32, 48, 64], "tonico": [32, 48, 64],
+    "provisoes": [24], "tocha": [24, 32, 48, 64], "tonico": [32, 48, 64],
     "vital-foco": [20], "vital-mana": [20], "vital-vida": [20], "vital-vigor": [20]};
 
   // Cada desenho vai para o tipo de ferro que o jogo já tem (elmo, armadura, manopla, calca = perneira, bota_ferro, maca);
@@ -49,9 +50,6 @@ const Icones = (() => {
   // a roda da luta: o ataque da classe (a espada do Guerreiro), Habilidades (o grimório), Itens (a poção) e Fugir (a
   // bota com os riscos de movimento, a mesma da Agilidade: correr, não a porta do Sair)
   const ACAO = { espada: "espada", grimorio: "atalho-grimorio", pocao: "pocao", fuga: "attr-agilidade" };
-  // o retrato (busto na ficha) e a cabeça (topo, carta da luta): por ora só o Guerreiro
-  const RETRATO = { guerreiro: "retrato-guerreiro" };
-  const CABECA = { guerreiro: "cabeca-guerreiro" };
 
   /** O arquivo de `peca` para mostrar em `lado` px: o tamanho igual ou o mais perto; maior que o maior, o dobro dele. */
   function arquivos(peca, lado) {
@@ -93,12 +91,20 @@ const Icones = (() => {
     atalho: (nome, lado = 36) => img(ATALHO[nome], lado),
     lugar: (sprite, lado = 32) => img(LUGAR[sprite], lado),
     acao: (sprite, lado = 32) => img(ACAO[sprite], lado),
-    cabeca: (classe, lado = 48) => img(CABECA[classe], lado),
-    /** O busto da ficha: 80 px, 64 em telas baixas (até 800 px de altura). */
+    /** A cabeça do herói (retratos.js): no topo, 48 px, o recorte do busto; na carta da luta, 32 px ou menos, a versão
+     *  pequena. Pixel a pixel, sem suavizar (classe "pixel"). */
+    cabeca(classe, lado = 48) {
+      if (!Retratos.tem(classe)) return "";
+      const papel = lado <= 32 ? "carta" : "cabeca", e = lado / Retratos.lado(classe, papel);
+      return `<img class="sprite desenho pixel" src="${Retratos.url(classe, papel, e)}" srcset="${Retratos.url(classe, papel, 2 * e)} 2x" ` +
+        `width="${lado}" height="${lado}" style="--s:${lado}" alt="" draggable="false">`;
+    },
+    /** O busto da ficha (retratos.js): 80 px, e 64 em telas baixas (até 800 px de altura), o recorte na mesma escala. */
     retrato(classe, alt = "") {
-      const p = RETRATO[classe];
-      return p ? `<picture class="desenho"><source media="(max-height: 800px)" srcset="${DIR}${p}-64.png, ${DIR}${p}-64@2x.png 2x">` +
-        `<img class="original" src="${DIR}${p}-80.png" srcset="${DIR}${p}-80@2x.png 2x" alt="${alt}" draggable="false"></picture>` : "";
+      if (!Retratos.tem(classe)) return "";
+      const u = (papel, e) => Retratos.url(classe, papel, e);
+      return `<picture class="desenho pixel"><source media="(max-height: 800px)" srcset="${u("bustoBaixo", 2)}, ${u("bustoBaixo", 4)} 2x">` +
+        `<img class="original" src="${u("busto", 2)}" srcset="${u("busto", 4)} 2x" alt="${alt}" draggable="false"></picture>`;
     },
     urlItem: (sprite, lado = 32) => url(ITEM[sprite], lado),
     urlConsumivel: (id, lado = 32) => url(CONSUMIVEL[id], lado),

@@ -909,3 +909,7 @@ fotografada (`retrato-no-jogo.js`, que troca as três imagens nos mesmos lugares
 
 Nada implementado além disso: nem seleção de retratos, nem recoloração, nem diferenças por gênero, nem as outras
 classes, nem troca pelo elmo equipado. A proposta guardada (`docs/ROADMAP.md`, ideias) registra a direção.
+
+**Aprovado (1.90.0):** o candidato foi para o jogo como está, em `rpg/web/static/retratos.js` (as mesmas grades, sem
+detalhe a mais), pintado por `Sprites.grade`; os PNG do retrato gerado saíram de `hud/icones/` (as cópias continuam em
+`assets4p/exibicao/`, e `retrato-teste.html` passou a apontar para elas).

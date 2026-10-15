@@ -258,7 +258,7 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   interface em ferro (as mesmas grades; o bronze continua nos sprites e, com `{ bronze: true }`, no protótipo).
 - `icones.js` (`Icones`) é o único lugar que decide o desenho de cada papel: o item pelo desenho que o motor dá,
   o consumível pelo id, o atributo, o recurso do topo, o vital, o atalho da doca, o lugar de um caminho, a ação da
-  roda, o retrato e a cabeça da classe. Devolve a `<img>` pronta ou `""` quando a família não tem aquele desenho; a
+  roda, o retrato e a cabeça da classe (estes dois de `retratos.js`, abaixo). Devolve a `<img>` pronta ou `""` quando a família não tem aquele desenho; a
   tela usa então o sprite do jogo (`Icones.item(s) || S(s, 2)`). A origem e o destino de uma animação pedem o mesmo
   papel (o item que voa ao equipar, o selo de atributo, o consumível que cai na bolsa). Lacunas (desenho do jogo no
   lugar, sem trocar por desenho de outro tipo de item): as outras classes além do Guerreiro (retrato, cabeça, armas e
@@ -266,6 +266,11 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   fumaça e Pena de Fênix, a tocha apagada, a bolsa vazia e o frasco vazio no topo, os inimigos e as cartas deles, os
   ícones de habilidade e de efeito, o covil vencido. O mercador da banca tem o busto no balcão (`telas/mercado.js`,
   com as cores da figura da banca).
+- `retratos.js` (`Retratos`): os retratos do herói desenhados em código, pelo método das cenas (uma grade de letras
+  com a paleta do desenho, pintada por `Sprites.grade`, o mesmo pintor do busto do mercador). Por ora só o Guerreiro
+  (1.90.0: o capacete fechado, sem rosto): um desenho de 40×40 a ×2 dá o busto da ficha (80 px) e, por recorte na
+  mesma escala, o da janela baixa (64 px) e a cabeça do topo (48 px); a carta da luta (32 px) tem a versão de 16×16.
+  Mago e Arqueiro seguem com o sprite da classe. O retrato não depende do equipamento nem dos atributos.
 
 ## Telemetria
 

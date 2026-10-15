@@ -191,19 +191,9 @@
     ".uuuuttaaaaaaaaaAAtttTTT",
   ];
   const TINTA_RETRATO = { ...TINTA, h: "cabeloLuz", H: "barbaLuz", g: "capuzLuz", y: "couroLuz" };
-  const retratos = {};
+  const CORES_RETRATO = Object.fromEntries(Object.entries(TINTA_RETRATO).map(([letra, tinta]) => [letra, COR[tinta]]));
   /** O busto pintado com `escala` pixels de tela por pixel da arte (×2 no balcão, ×4 para telas densas). */
-  function retratoMercador(escala) {
-    if (retratos[escala]) return retratos[escala];
-    const c = document.createElement("canvas");
-    c.width = c.height = 24 * escala;
-    const x = c.getContext("2d");
-    RETRATO.forEach((linha, y) => [...linha].forEach((ch, k) => {
-      if (ch === ".") return;
-      x.fillStyle = COR[TINTA_RETRATO[ch]]; x.fillRect(k * escala, y * escala, escala, escala);
-    }));
-    return (retratos[escala] = c.toDataURL());
-  }
+  const retratoMercador = (escala) => Sprites.grade("mercador", RETRATO, CORES_RETRATO, escala);
 
   // Os vãos da parede, do mercador para fora (o primeiro de cada lado encosta nele). Larguras em pixels da arte.
   const VAOS = {

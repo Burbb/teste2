@@ -73,6 +73,8 @@
 :root body .hud-retrato { border: 1px solid var(--aresta); border-image: none; background: #0b0c0e; box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.9); }
 :root body .hud-retrato .nivel { background: var(--latao); }
 :root body .hud-retrato img.desenho { display: block; width: 48px; height: 48px; }
+/* os retratos desenhados em código (retratos.js): pixel a pixel, também com a tela ampliada (125%, 150%) */
+:root body img.pixel, :root body picture.pixel img { image-rendering: pixelated; }
 /* as barras: até 400 px (com o número logo depois) e são elas que cedem primeiro quando a coluna estreita. Na janela
    larga (a coluna para de crescer em ~1064 px) o retrato, as barras e os recursos ficam juntos, encostados no começo
    da coluna (o recuo do #hud, como o da página), e a sobra fica à direita: as barras não se esticam e não abre vão
