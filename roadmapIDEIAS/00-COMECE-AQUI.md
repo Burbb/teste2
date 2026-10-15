@@ -2316,3 +2316,13 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
 - **Recomendação:** integrar machado, unguento, escudo de madeira, Grimório, Talentos, Ataque, Fugir e o acabamento da
   roda; a bomba depois de clarear a bola; espada só com a família inteira; anel atual fica; Defesa opcional.
 - **Falta:** Jean avaliar. Nada integrado.
+
+### 15/10/2026 — O plano de apresentação e serviços no ROADMAP
+
+- **Pedido de Jean:** registrar a sequência de 8 etapas (itens e ícones; Grimório, livro e criação; forja; protótipo
+  de reforço e encantamento; Templo, Curandeira e Taverna; cenários do mapa e da campanha; eventos da estrada;
+  preparação e animação de habilidades), separando o trabalho atual das propostas, com a Capela Afogada como
+  referência e as hipóteses de reforço, encantamento e habilidades preparadas sem números nem implementação.
+- **Feito:** `docs/ROADMAP.md`, seção "Apresentação e serviços (plano de 10/2026)"; "Ícones próprios para cada
+  habilidade" das ideias guardadas aponta para a etapa 8.
+- **Falta:** nada a implementar agora. Interiores, forja nova e sistema de habilidades não começaram.

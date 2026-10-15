@@ -55,11 +55,42 @@ mais brando para quem quiser; um robô de mapa que jogue partidas inteiras com j
 - Conteúdo: história fixa, personagens, mapa, cidades, masmorras com mapa interno.
 - Classes: árvores grandes, novas especializações, elites.
 
+## Apresentação e serviços (plano de 10/2026)
+
+A sequência combinada com Jean para a parte visual e para os serviços. Só a etapa 1 está em andamento; as outras são
+propostas, na ordem em que devem vir, e cada uma começa por protótipo e avaliação antes de entrar no jogo.
+
+| Etapa | O quê | Situação |
+|---|---|---|
+| **1** | Itens, ícones e acabamento das ações: os itens no desenho do mundo (martelo e Pena de Fênix no jogo desde a 1.93.0), os ícones da interface (doca, ficha, Fugir) e o acabamento ao redor da roda de combate | em andamento: os candidatos esperam avaliação (`ferramentas/prototipos/hud/itens-icones-teste.html`) |
+| **2** | Grimório, o livro da capela e a apresentação da criação de personagem | proposta |
+| **3** | O interior da forja e a conversa com o ferreiro, de início com as regras de hoje | proposta |
+| **4** | Protótipo separado do novo reforço e do encantamento (hipóteses abaixo) | proposta |
+| **5** | Os interiores do Templo, da Curandeira e da Taverna | proposta |
+| **6** | Cenários dos lugares do mapa e das cenas principais da campanha | proposta |
+| **7** | Representações dos eventos recorrentes da estrada | proposta |
+| **8** | Preparação de habilidades, novas habilidades, ícones e animações (hipóteses abaixo) | proposta |
+
+A referência dos serviços e cenários é a Capela Afogada: o ambiente desenhado conforme o texto, com a luz de onde se
+reconhece que ela vem (vela, lanterna, janela, fogo), animações discretas e a interação no próprio cenário (o que se
+usa está no desenho, não numa lista à parte).
+
+Hipóteses para os protótipos das etapas 4 e 8. São pontos de partida, não decisões: nada de chances, custos,
+materiais, poderes, limites finais nem layout definitivo até o protótipo ser avaliado, e nada disso entra no jogo
+antes.
+- Reforçar melhora os atributos físicos da peça; encantar acrescenta uma propriedade especial.
+- Investigar reforços iniciais garantidos e risco só nos últimos níveis; de início sem destruir a peça nem tirar
+  reforços já conquistados.
+- Materiais de encantamento encontrados no mundo, começando com poucos tipos.
+- Preparar até seis habilidades na vila ou no acampamento, com no máximo uma elite entre elas.
+- Atacar, Itens e Fugir separados desses espaços.
+- Testar a apresentação das habilidades na HUD antes de decidir a posição e o formato.
+
 ## Ideias guardadas (não agora)
 
 - Domar o grifo como quarto animal do Patrulheiro (com Ordem própria).
 - Comida para o animal (descartado por ora: provisões ficariam apertadas demais).
-- Ícones próprios para cada habilidade.
+- Ícones próprios para cada habilidade (entra na etapa 8 do plano de apresentação).
 - Retratos do herói por classe (proposta da HUD experimental, 10/2026): uma seleção pequena, de início dois retratos
   por classe, escolhidos na criação do personagem. Só cosmético (nada de regra, número ou recoloração), no mesmo
   desenho da ficha, do topo e da carta da luta (busto e cabeça). Fora por ora: a tela de escolha na criação, os
