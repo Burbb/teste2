@@ -214,13 +214,14 @@
     for (let y = 0; y < QH; y++) for (let x = 0; x < W; x++) px(x, y, 1, 1, corDoCeu(bandas, x, y));
     if (sol) {
       const [sx0, sy, raio, cor, baixo] = sol, sx = ox + sx0, halo = misturar(bandas[bandas.length - 2], cor, 0.45);
+      // A lua em quarto: o disco sem a parte da sombra (um círculo deslocado), onde fica o céu que já está pintado,
+      // como nas paisagens (vista.js). Pintar a sombra com a cor do alto do céu deixava, em volta da lua, uns pixels de
+      // outro tom, onde o céu já é a faixa de baixo.
+      const sombra = (x, y) => noite && (x - sx - 3) ** 2 + (y - sy + 1) ** 2 <= raio * raio * 0.8;
       for (let y = sy - raio - 6; y <= sy + raio + 6; y++) for (let x = sx - raio - 6; x <= sx + raio + 6; x++) {
         const d = Math.hypot(x - sx, y - sy);
-        if (d <= raio) px(x, y, 1, 1, y > sy + raio / 3 && pontilha(x, y, 8) ? baixo : cor);
+        if (d <= raio) { if (!sombra(x, y)) px(x, y, 1, 1, y > sy + raio / 3 && pontilha(x, y, 8) ? baixo : cor); }
         else if (!noite && d < raio + 5 && pontilha(x, y, Math.round(9 - (d - raio) * 1.6))) px(x, y, 1, 1, halo);
-      }
-      if (noite) for (let y = -raio; y <= raio; y++) for (let x = -raio; x <= raio; x++) {
-        if ((x - 3) * (x - 3) + (y + 1) * (y + 1) <= raio * raio * 0.8) px(sx + x, sy + y, 1, 1, bandas[0]);
       }
     }
     // a outra margem, árvores mortas longe, a névoa rasteira e a água do brejo

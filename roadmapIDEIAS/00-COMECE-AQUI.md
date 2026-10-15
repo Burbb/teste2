@@ -2468,3 +2468,23 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   aprova", o aviso, a faixa de quem chega e a tela da Comitiva, nos mesmos lugares e tamanhos, sem erro no console;
   602 testes, gabarito sem diferença, pyflakes, fumaça (356).
 - **Falta:** Jean conferir. A E9 e a validação com jogadores novos continuam abertas.
+
+### 15/10/2026 — A aljava do Arqueiro e a lua da capela (1.97.1)
+
+- **Pedido de Jean:** a aljava do Arqueiro não parecia estar nas costas (ficava em pé ao lado da cabeça, como um
+  poste); revisar em todos os retratos do Arqueiro. Na primeira revisão (não enviada) ela ficou escondida demais; Jean
+  pediu mais corpo, flechas mais detalhadas e o ângulo da alça que ele carrega. E, na capela de fora à noite, uns
+  pixels de outra cor em volta da meia-lua.
+- **A aljava** (`ARQUEIRO` e `ARQUEIRO_CARTA` em `rpg/web/static/retratos.js`; o roteiro em
+  `ferramentas/prototipos/hud/arqueiro/aljava.py`): nas costas, na mesma diagonal da correia que cruza o peito (uns 45
+  graus), a boca saindo por trás do ombro, com cinta, aro e duas flechas com as penas (clara em cima, escura embaixo) e
+  o entalhe; o corpo some atrás do capuz e do ombro. Desenhada à mão, pixel a pixel (a 45 graus, a conta automática
+  deixava as penas em xadrez). Mudam todos os papéis do Arqueiro (busto, busto baixo, cabeça, carta, figura); o resto
+  do desenho e os outros personagens, não.
+- **A lua** (`baseExterior` em `rpg/web/static/telas/cenas.js`): a sombra da lua em quarto era pintada com a cor do
+  alto do céu, e onde o céu já é a faixa de baixo sobrava um bloco de outro tom. Agora a sombra não se pinta (o céu de
+  verdade fica à vista), como a paisagem já fazia (`vista.js`). O ensaio guardado da capela tem o defeito antigo e fica
+  como está (histórico).
+- **Verificado:** no jogo, em 1500×950 e 1280×720, a ficha, o topo, o Inventário, a luta e a fogueira com o Arqueiro, e a
+  lua da capela antes × depois; 602 testes, gabarito sem diferença, pyflakes, fumaça.
+- **Falta:** Jean conferir.

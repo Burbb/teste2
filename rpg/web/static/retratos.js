@@ -165,8 +165,10 @@ const Retratos = (() => {
     "AAAaaaaaaabbbBBB",
   ];
   // O Arqueiro (1.91.0): capuz curto e redondo de pano verde apagado, rente à cabeça, que acaba numa capinha nos ombros;
-  // o rosto à mostra, o gibão de couro, uma correia só e a boca da aljava com duas penas curtas atrás do ombro. G/g/h/H o
-  // pano; Z a sombra do capuz; L/l/m/M o couro; P/p/o o rosto e e os olhos; f/F as penas.
+  // o rosto à mostra, o gibão de couro e uma correia só, que cruza o peito; a aljava nas costas na mesma diagonal da
+  // correia, a boca saindo por trás do ombro com a cinta e o aro, e as flechas com as penas e o entalhe (1.97.1; antes
+  // ela ficava em pé ao lado da cabeça, como um poste). G/g/h/H o pano; Z a sombra do capuz; L/l/m/M o couro; P/p/o o
+  // rosto (o também a haste das flechas) e e os olhos; f/F as penas.
   const PANO_VERDE = { G: "#788a5c", g: "#5b6a45", h: "#434e33", H: "#2d3423", Z: "#151710", L: "#7e6044", l: "#5f4630", m: "#46331f", M: "#2f2217", P: "#c09474", p: "#9a7058", o: "#6a4c3a", e: "#22180f", f: "#a89c80", F: "#7c7260" };
   const ARQUEIRO = [
     "........................................",
@@ -177,20 +179,20 @@ const Retratos = (() => {
     ".............GGgggggggghhhH.............",
     "............GGGggGGGGGGhhhHH............",
     "............GGGgGZZZZZZhhhHH............",
-    "............GGGGZZZZZZZZhhHH............",
-    "............GGGZZZZZZZZZZhHH...f........",
-    "............GGGZooooooZZZhHH.f.f........",
-    "............GGGZpPPpppoZZhHH.f.F........",
-    "............GGGZpePppeoZZhHH.FMF........",
-    "............GGGZpPPPpooZZhHHLLLLl.......",
-    "............GGGZpPPPooooZhHHlmmmM.......",
-    "............GGGZpPppoooZZhHHlmmmM.......",
-    "............GGGZZpoooooZZhHHlmmmM.......",
-    "............GGGZZppppoZZZhHHlmmmM.......",
-    "............GGGGZZppooZZhhHHlmmmM.......",
-    "............GGGgGZZZZZZhhhHHlmmmM.......",
-    "...........gggggggggggghhhhhhmmmM.......",
-    ".........GGgggggggggggghhhhhhhHmM.......",
+    "............GGGGZZZZZZZZhhHH...........o",
+    "............GGGZZZZZZZZZZhHH.........fF.",
+    "............GGGZooooooZZZhHH........fF..",
+    "............GGGZpPPpppoZZhHH.......fF.fF",
+    "............GGGZpePppeoZZhHH.......o.fF.",
+    "............GGGZpPPPpooZZhHH......o..o..",
+    "............GGGZpPPPooooZhHH.....LLLLLl.",
+    "............GGGZpPppoooZZhHH....LLlmmM..",
+    "............GGGZZpoooooZZhHH...mMlmmM...",
+    "............GGGZZppppoZZZhHH..LLMMmM....",
+    "............GGGGZZppooZZhhHH.LLlmMM.....",
+    "............GGGgGZZZZZZhhhHHLLlmmM......",
+    "...........gggggggggggghhhhhhlmmM.......",
+    ".........GGgggggggggggghhhhhhhHM........",
     "......LGGGGgggggggggggghhhhhhhHHHl......",
     "....LLGGGGGgggggggggggghhhhhhhHHHHll....",
     "..LLLLGGGGGgggggggggggghhhhhhhHHHHMMll..",
@@ -211,17 +213,17 @@ const Retratos = (() => {
     "LLLLLLLllmMMlllllllmllmmmmmmmmmmmMMMMMMM",
   ];
   const ARQUEIRO_CARTA = [
-    "............f.f.",
-    ".....Gggggh.f.F.",
-    "....GGgggghhFMF.",
-    "....GZZZZZZhLLL.",
-    "....GZoooooZlmM.",
-    "....GZpeppeZlmM.",
-    "....GZPPpooZlmM.",
-    "....GZpPoooZlmM.",
-    "....GZZppoZhlmM.",
-    "...GGgZZZZghlmM.",
-    "..GGGgggggghhmM.",
+    "................",
+    ".....Gggggh.....",
+    "....GGgggghh....",
+    "....GZZZZZZh...o",
+    "....GZoooooZ..f.",
+    "....GZpeppeZ.fFf",
+    "....GZPPpooZ..fF",
+    "....GZpPoooZ.LLl",
+    "....GZZppoZh.LmM",
+    "...GGgZZZZghLlM.",
+    "..GGGgggggghhM..",
     ".LGGGgggggghhHMl",
     "LLLGGGGGGhhhhMMl",
     "LLLllllllmmmMMMM",

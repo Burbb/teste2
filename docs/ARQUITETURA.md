@@ -299,7 +299,7 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
 - `retratos.js` (`Retratos`): os retratos do herói e dos companheiros desenhados em código, pelo método das cenas
   (uma grade de letras com a paleta do desenho, pintada por `Sprites.grade`, o mesmo pintor do busto do mercador). As
   três classes: o Guerreiro (1.90.0: o capacete fechado, sem rosto), o Mago e o Arqueiro (1.91.0: o capuz alto azul; o
-  capuz curto verde com a aljava). Os companheiros, pelo id do motor (1.92.0): Morel, Odette (`odete`) e Yara. Cada um
+  capuz curto verde com a aljava, que desde a 1.97.1 fica nas costas na diagonal da correia). Os companheiros, pelo id do motor (1.92.0): Morel, Odette (`odete`) e Yara. Cada um
   tem um desenho por papel, sempre mostrado no mesmo tamanho: o busto da ficha (80 px), o da janela baixa (64), a
   cabeça (48: o topo, os cartões da Comitiva e da reação, a faixa de quem chega), a carta (32: a luta, o painel, o
   aviso) e a figura de 16×16 (a fogueira e o chip de aprovação no texto). A escala sai do tamanho do desenho: o busto
