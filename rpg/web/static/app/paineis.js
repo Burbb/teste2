@@ -3,19 +3,23 @@
 /* ------------------------------------------------------------------ estado e painéis */
 const { pct } = Telas;
 /** Uma barra. Com `chave`, ela sai da largura que estava na tela (larguraViva): um estado novo no meio da animação
- *  (a poção e, logo depois, outra mudança) continua de onde a barra está, em vez de saltar para o fim. */
+ *  (a poção e, logo depois, outra mudança) continua de onde a barra está, em vez de saltar para o fim. Parada no lugar
+ *  certo (a menos de meio ponto: o arredondamento do pixel), sai exatamente dele e não se mexe. */
 function barra(classe, atual, maximo, anterior, chave) {
-  const viva = chave ? larguraViva[chave] : undefined;
-  const de = viva !== undefined ? viva : anterior === undefined ? pct(atual, maximo) : pct(anterior, maximo);
-  return `<span class="barra-px ${classe}"${chave ? ` data-chave="${chave}"` : ""} data-alvo="${pct(atual, maximo)}"><span class="rastro" style="width:${de}%"></span><span class="enchimento" style="width:${de}%"></span></span>`;
+  const alvo = pct(atual, maximo), viva = chave ? larguraViva[chave] : undefined;
+  const de = viva !== undefined ? (Math.abs(viva - alvo) < 0.5 ? alvo : viva) : anterior === undefined ? alvo : pct(anterior, maximo);
+  return `<span class="barra-px ${classe}"${chave ? ` data-chave="${chave}"` : ""} data-alvo="${alvo}"><span class="rastro" style="width:${de}%"></span><span class="enchimento" style="width:${de}%"></span></span>`;
 }
 const larguraViva = {};
-/** Antes de redesenhar um painel: a largura que cada barra com chave mostra agora, em %. */
+/** Antes de redesenhar um painel: a largura que cada barra com chave mostra agora, em %. Medida contra o lado de dentro
+ *  da barra (sem a borda), o mesmo de onde sai a largura em % do enchimento: contra a barra inteira, uma barra cheia
+ *  media 98% e, a cada estado novo (comprar uma tocha manda dois), saía um pouco mais curta e enchia de novo. */
 function guardarLarguras(raiz) {
   for (const k in larguraViva) delete larguraViva[k];
   raiz.querySelectorAll(".barra-px[data-chave]").forEach((b) => {
-    const total = b.getBoundingClientRect().width;
-    if (total) larguraViva[b.dataset.chave] = (100 * b.querySelector(".enchimento").getBoundingClientRect().width) / total;
+    const cs = getComputedStyle(b);
+    const dentro = b.getBoundingClientRect().width - parseFloat(cs.borderLeftWidth) - parseFloat(cs.borderRightWidth);
+    if (dentro > 0) larguraViva[b.dataset.chave] = (100 * b.querySelector(".enchimento").getBoundingClientRect().width) / dentro;
   });
 }
 /** As barras vão do valor de antes ao de agora. Subindo (cura, poção), o rastro claro marca logo onde ela vai chegar
