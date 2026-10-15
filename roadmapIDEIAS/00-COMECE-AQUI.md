@@ -2156,3 +2156,16 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   nenhum erro no console. 602 testes, gabarito sem diferença, pyflakes, fumaça (356, nenhuma exceção no servidor).
 - **Não feito:** a E9 e a validação com jogadores novos continuam abertas. Os companheiros seguem com os sprites de
   sempre; os candidatos deles são a entrega seguinte, só no protótipo.
+
+### 15/10/2026 — Teste da comitiva: Morel, Odette e Yara (experimento, sem versão)
+
+- **Pedido de Jean:** um candidato de cada companheiro, só no protótipo, pelo método dos heróis e a partir do que o
+  jogo diz deles; as peças para ficha, menus e carta; uma proposta para a fogueira; comparação ampliada, nos tamanhos
+  reais, ao lado dos heróis e no jogo.
+- **Feito:** em `ferramentas/prototipos/hud/`, as peças `morel`, `odette` e `yara` em `arte-teste.js` (40×40, o recorte
+  da cabeça e a carta de 16×16); `comitiva-teste.html` (a comparação); `fotografar_comitiva.mjs` com
+  `comitiva-no-jogo.js` (o jogo de verdade, hoje e com os candidatos, em `capturas-comitiva/`). Referências, proposta
+  da fogueira (a carta de 16×16 como figura, como o herói) e avaliação no `LEIA-ME.md` da pasta.
+- **Verificado:** fogueira com cada herói, painel, tela da Comitiva (tecla C e Tab) e duas lutas, em 1500×950 e
+  1280×720; a página abre sem erro; nenhum erro no console. O jogo não mudou. **Falta:** Jean avaliar. A E9 e a
+  validação com jogadores novos continuam abertas.

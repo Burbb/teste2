@@ -957,3 +957,63 @@ Arqueiro). Nem seleção, nem recoloração, nem gênero, nem retratos por espec
 
 **Aprovados (1.91.0):** o Mago e o Arqueiro foram para o jogo como estão, em `rpg/web/static/retratos.js` (as mesmas
 grades). A carta de 16×16 de cada classe virou também a figura do herói na fogueira (`Icones.figura`).
+
+## Teste da comitiva: Morel, Odette e Yara (experimento, sem versão)
+
+Um candidato de cada companheiro, no método e no enquadramento dos heróis (`arte-teste.js`): o busto de 40×40, o recorte
+da cabeça (24×24, a 48 px) e a versão de 16×16 (a carta). Em produção eles seguem com os sprites de sempre.
+
+**O que serviu de referência** (o texto do jogo manda; o sprite antigo só onde o texto não diz nada):
+
+- *Morel* (`rpg/eventos/comitiva.py`, `rpg/abertura.py`): "um homem grande", "cicatriz de orelha a orelha", "armadura
+  remendada com pedaços de outras armaduras"; o cabelo castanho e a barba do sprite. Daí o tronco largo, as ombreiras
+  de peças diferentes e a espada atravessada nas costas. A cicatriz é uma linha vermelho-escura que corta o rosto na
+  diagonal: de orelha a orelha, na horizontal, a 40×40 lia como boca ou faixa.
+- *Odette* (`rpg/eventos/comitiva.py`, `rpg/comitiva/catalogo.py`): clériga desertora, "roupas chamuscadas"
+  ("chamuscadas, não queimadas"); a touca branca e o véu escuro do sprite. As queimaduras ficam nas pontas do véu e num
+  ombro, em manchas, não numa linha (que lia como cinto). Sem a cruz, que só o sprite tinha. O rosário que ela usa no
+  pescoço ficou de fora porque, num dos caminhos, ela o entrega ao herói, e o retrato é um só; se preferir, ele entra
+  como um fio claro no peito.
+- *Yara* (`rpg/caspar.py`, `rpg/eventos/comitiva.py`, `rpg/comitiva/catalogo.py`): "uma moça de cabelo sujo de lama",
+  olhos castanhos ("castanhos de novo", depois da maldição); o vestido verde do sprite, em pano apagado. Sem o violeta
+  nos olhos e no cabelo que o sprite tinha, que contradiz o texto. Cabelo solto e sem capuz, para não repetir o Mago e o
+  Arqueiro.
+- Nenhuma idade, roupa, símbolo ou acessório além disso. Uma diferença de nome que não é desta entrega: o catálogo
+  chama Yara de "bruxa do pântano"; as cenas, de "bruxa do Charco".
+
+**As peças** (`morel`, `morel-cabeca`, `morel-carta`, e o mesmo para `odette` e `yara`): o busto para uma ficha de
+companheiro que venha a existir; a cabeça para a tela da Comitiva, o cartão da reação e a faixa de quem chega (48 px);
+a carta para o painel e a luta (32 px) e para a fogueira (16 px).
+
+**Proposta para a fogueira:** a fogueira desenha bustos de 16×16, não corpos inteiros, e o herói já usa a carta dele
+(`Icones.figura`). A correspondência proposta é a mesma: a carta de 16×16 de cada companheiro vira a figura dele na
+fogueira, no mesmo lugar e na mesma escala. Bastaria pôr os três em `retratos.js`; nada disso foi feito no jogo.
+
+**Para ver:** `comitiva-teste.html` (ampliados com as referências, nos tamanhos reais ao lado dos três heróis, e as
+fotografias do jogo). As fotografias (`capturas-comitiva/`, com `folha-fogueiras.png` e `folha-lutas.png` juntando os
+pares) são do jogo de verdade, refeitas com
+`PLAYWRIGHT_MODULO=<caminho do playwright>/index.mjs node ferramentas/prototipos/hud/fotografar_comitiva.mjs`: em 1500×950
+e 1280×720, hoje e com os candidatos, a fogueira com cada herói (Morel e Odette, Yara no acampamento, Morel ferido), o
+painel da comitiva, a tela da Comitiva (tecla C) e duas lutas (Morel e Odette; Yara e Morel). Os candidatos entram só
+na página fotografada (`comitiva-no-jogo.js`).
+
+**Avaliação:**
+
+- *Identidade própria:* sim, pela silhueta antes da cor: Morel é o mais largo, de cabeça descoberta, barba e ombreiras
+  desiguais; Odette é a forma fechada do véu com o oval claro da touca; Yara é o cabelo solto e escuro caindo nos
+  ombros. Nenhum capuz, nenhuma paleta trocada de outro.
+- *Os mesmos personagens em todos os tamanhos:* a 80 e a 48 px, sim. A 32 px a cicatriz do Morel some (fica a barba e
+  a espada); a touca da Odette continua lendo. A 16 px, na fogueira, os três ficam mais escuros e com menos contraste
+  que os sprites antigos (que tinham contorno claro): a Odette se reconhece pela touca, o Morel pela forma larga, a
+  Yara é a mais apagada. Se for para a fogueira, o próximo passo é clarear o rosto e a borda do cabelo dela na carta,
+  não acrescentar detalhe.
+- *Ao lado dos heróis:* mesmo método, mesma luz da esquerda, cores contidas; os heróis têm o capacete e os capuzes,
+  os companheiros o rosto à mostra, o que ajuda a separar quem é o jogador.
+- *Nomes longos, vida, aprovação, ferimento:* "Bastian Morel" e "Irmã Odette" cabem nos cartões; a vida, a aprovação e
+  o Morel ferido aparecem como hoje (o retrato não toca nisso).
+- *Foco do teclado:* os cartões da tela da Comitiva não recebem foco (já é assim em produção; o Tab vai para a doca).
+  Não mexi; fica anotado.
+- *Interações verificadas:* a tela da Comitiva aberta pela tecla C, o Tab, o Acampar até a fogueira, as lutas até a
+  vez do herói; nenhum erro no console. As fichas, os painéis e as fogueiras são fotografias paradas.
+
+Nada mudou no jogo nem nas regras da comitiva.
