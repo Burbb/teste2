@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Teste de resolução (experimento)</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="../../../rpg/web/static/css/11-tipografia.css">
+<!-- Experimento de resolução (fora do jogo): o martelo e a Pena de Fênix desenhados em 32×32 e em 64×64, e o Morel
+     aprovado (40×40) ao lado de uma versão de 80×80 (resolucao-teste.js). Os botões trocam a versão no mesmo lugar;
+     cada quadro diz a resolução nativa e o tamanho exibido. Embaixo, as fotografias do jogo de verdade
+     (fotografar_resolucao.mjs, em capturas-resolucao/). -->
+<style>
+  @font-face { font-family: "Titulo"; src: url(../../../rpg/web/static/fontes/alagard-pt.ttf) format("truetype"); }
+  :root { --latao: #c9a14a; --latao-claro: #f2d27a; --sec: #9d978b; --aresta: #3a3d43; --ferro-fio: #2b2d31; }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 20px 24px 28px; color: #e8dcc0; font: 15px/1.4 "Alegreya Sans", "Alegreya", Georgia, sans-serif;
+    background: linear-gradient(rgba(8, 9, 11, 0.62), rgba(8, 9, 11, 0.76)), url(../../../rpg/web/static/hud/textura-painel.png) 0 0 / 128px, #0a0a0b; }
+  h1 { margin: 0 0 4px; font: 400 32px/1 "Titulo", serif; color: var(--latao-claro); }
+  .nota { margin: 0 0 14px; color: var(--sec); max-width: 1100px; }
+  section { margin-bottom: 22px; padding: 10px 16px 14px; border: 12px solid transparent;
+    border-image: url(../../../rpg/web/static/hud/moldura-nove.png) 24 / 24px round; background: rgba(0, 0, 0, 0.28); background-clip: padding-box; }
+  h2 { display: flex; align-items: center; gap: 8px; margin: 0 0 10px; font-weight: 700; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--sec); }
+  h2::after { content: ""; flex: 1; height: 1px; background: var(--ferro-fio); box-shadow: 0 1px 0 #000; }
+  .linha { display: flex; align-items: flex-end; gap: 18px; flex-wrap: wrap; }
+  .linha + h2, .linha + .linha { margin-top: 16px; }
+  figure { margin: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 5px; }
+  figcaption { font-size: 13px; color: var(--sec); max-width: 320px; }
+  figcaption b { color: #e8dcc0; font-weight: 700; }
+  img, canvas { image-rendering: pixelated; display: block; }
+  /* o espaço de um item, como na bolsa e na mochila (a moldura de ferro do jogo: o fundo fundo e a aresta) */
+  .espaco { display: grid; place-items: center; border: 1px solid var(--aresta); border-radius: 2px; background: #0a0b0d;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.85), 0 1px 0 rgba(255, 255, 255, 0.04); }
+  .e32 { width: 46px; height: 46px; } .e64 { width: 78px; height: 78px; }
+  .rotulo { width: 110px; align-self: center; font-weight: 700; font-size: 13px; color: var(--latao-claro); }
+  .chaves { position: sticky; top: 0; z-index: 2; display: flex; gap: 22px; flex-wrap: wrap; align-items: center; margin: 0 0 16px;
+    padding: 8px 12px; background: #121316; border: 1px solid var(--aresta); }
+  .chaves span { font-size: 13px; color: var(--sec); }
+  .chaves button { font: 700 13px/1 "Alegreya Sans", sans-serif; color: #e8dcc0; background: #1d1f23; border: 1px solid var(--aresta);
+    padding: 7px 10px; cursor: pointer; }
+  .chaves button[aria-pressed="true"] { color: #141414; background: var(--latao-claro); border-color: var(--latao); }
+  .chaves button:focus-visible { outline: 2px solid var(--latao-claro); outline-offset: 2px; }
+  /* a alternância: as duas versões no mesmo lugar, uma à vista */
+  [data-itens="32"] .so64, [data-itens="64"] .so32, [data-morel="40"] .so80, [data-morel="80"] .so40 { display: none !important; }
+  .foto { border: 1px solid #000; max-width: 100%; height: auto; image-rendering: auto; }
+  .lado { display: grid; grid-template-columns: repeat(2, auto); gap: 6px 18px; justify-content: start; }
+  .lado > b { font-size: 13px; color: var(--latao-claro); }
+</style>
+</head>
+<body data-itens="32" data-morel="40">
+<h1>Teste de resolução</h1>
+<p class="nota">Três amostras desenhadas em código para comparar resoluções nativas, não tamanhos da mesma imagem: o
+martelo (metal e geometria) e a Pena de Fênix (curvas) em 32×32 e em 64×64, e o Morel aprovado (40×40, mostrado a 2×) ao
+lado de uma versão de 80×80 (mostrada a 1×), com os recortes da ficha baixa e da cabeça e uma carta própria de 32×32.
+Toda redução e ampliação é pixel a pixel, sem suavização. Os botões trocam a versão no mesmo lugar, em toda a página.</p>
+
+<div class="chaves" role="group" aria-label="Versões">
+  <span>Itens:</span>
+  <button type="button" data-chave="itens" data-valor="32" aria-pressed="true">desenho de 32×32</button>
+  <button type="button" data-chave="itens" data-valor="64" aria-pressed="false">desenho de 64×64</button>
+  <span>Morel:</span>
+  <button type="button" data-chave="morel" data-valor="40" aria-pressed="true">40×40 a 2× (aprovado)</button>
+  <button type="button" data-chave="morel" data-valor="80" aria-pressed="false">80×80 a 1×</button>
+</div>
+
+<section>
+  <h2>Itens em espaços de 32 px, como na bolsa, ao lado dos ícones aprovados</h2>
+  <div class="linha" id="bolsa32"></div>
+  <h2>Itens em espaços de 64 px, como numa apresentação maior</h2>
+  <div class="linha" id="bolsa64"></div>
+  <h2>Ampliados, com os pixels à vista (os dois desenhos e o de 64 reduzido a 32 pelo navegador)</h2>
+  <div class="linha" id="ampliados"></div>
+</section>
+
+<section>
+  <h2>Morel nos espaços da ficha (80 px), da ficha baixa (64), da cabeça (48) e da carta (32; 36 na vez)</h2>
+  <div class="linha" id="morel-espacos"></div>
+  <h2>Os dois lado a lado (sem alternar)</h2>
+  <div class="linha" id="morel-lado"></div>
+  <h2>Ampliados: o de 40×40 a 8× e o de 80×80 a 4× (o mesmo tamanho na tela)</h2>
+  <div class="linha" id="morel-ampliado"></div>
+</section>
+
+<section>
+  <h2>No jogo: o mercado (a Pena de Fênix na bolsa e na prateleira; o martelo na mochila)</h2>
+  <div class="linha">
+    <figure><img class="foto so32" src="capturas-resolucao/mercado-normal-atual-painel.png" width="310" alt=""><img class="foto so64" src="capturas-resolucao/mercado-normal-maior-painel.png" width="310" alt="">
+      <figcaption>a ficha à esquerda, janela normal: a pena na bolsa (32 px), ao lado da poção e da bandagem aprovadas</figcaption></figure>
+    <figure><img class="foto so32" src="capturas-resolucao/mercado-normal-atual-vender-lista.png" alt=""><img class="foto so64" src="capturas-resolucao/mercado-normal-maior-vender-lista.png" alt="">
+      <figcaption>a mochila na aba Vender (32 px): os martelos ao lado da espada e da cota aprovadas</figcaption></figure>
+  </div>
+  <div class="linha">
+    <figure><img class="foto so32" src="capturas-resolucao/mercado-normal-atual.png" width="900" alt=""><img class="foto so64" src="capturas-resolucao/mercado-normal-maior.png" width="900" alt="">
+      <figcaption>a tela inteira (1500×950), com a banca do mercador</figcaption></figure>
+  </div>
+  <h2>No jogo: a capela e o mercado com o Morel no lugar do retrato (normal e baixa)</h2>
+  <div class="linha">
+    <figure><img class="foto so40" src="capturas-resolucao/capela-normal-atual-ficha.png" alt=""><img class="foto so80" src="capturas-resolucao/capela-normal-maior-ficha.png" alt=""><figcaption>ficha, janela normal (80 px)</figcaption></figure>
+    <figure><img class="foto so40" src="capturas-resolucao/capela-baixa-atual-ficha.png" alt=""><img class="foto so80" src="capturas-resolucao/capela-baixa-maior-ficha.png" alt=""><figcaption>ficha, janela baixa (64 px)</figcaption></figure>
+    <figure><img class="foto so40" src="capturas-resolucao/luta-normal-atual-carta.png" alt=""><img class="foto so80" src="capturas-resolucao/luta-normal-maior-carta.png" alt=""><figcaption>a carta na vez (36 px)</figcaption></figure>
+  </div>
+  <div class="linha">
+    <figure><img class="foto so40" src="capturas-resolucao/capela-normal-atual-topo.png" width="900" alt=""><img class="foto so80" src="capturas-resolucao/capela-normal-maior-topo.png" width="900" alt=""><figcaption>o topo (a cabeça, 48 px)</figcaption></figure>
+  </div>
+  <div class="linha">
+    <figure><img class="foto so40" src="capturas-resolucao/capela-normal-atual.png" width="900" alt=""><img class="foto so80" src="capturas-resolucao/capela-normal-maior.png" width="900" alt=""><figcaption>a capela inteira (1500×950)</figcaption></figure>
+    <figure><img class="foto so40" src="capturas-resolucao/mercado-baixa-atual.png" width="900" alt=""><img class="foto so80" src="capturas-resolucao/mercado-baixa-maior.png" width="900" alt=""><figcaption>o mercado em janela baixa (1280×720); aqui a troca de itens e do Morel vem junta</figcaption></figure>
+  </div>
+</section>
+
+<script src="arte-teste.js"></script>
+<script src="resolucao-teste.js"></script>
+<script>
+"use strict";
+const ICONES = "../../../rpg/web/static/hud/icones/";
+const img = (peca, escala, lado) => {   // uma peça de ArteTeste num lado exato (reduzida ou ampliada pixel a pixel)
+  const n = ArteTeste.PECAS[peca].grade.length, e = Math.max(1, Math.round(escala));
+  return `<img src="${ArteTeste.url(peca, e)}" width="${lado || n * escala}" height="${lado || n * escala}" alt="">`;
+};
+const aprovado = (nome, lado) => `<img src="${ICONES}${nome}-${lado}.png" srcset="${ICONES}${nome}-${lado}@2x.png 2x" width="${lado}" height="${lado}" alt="">`;
+const fig = (conteudo, cl, legenda) => `<figure><span class="espaco ${cl}">${conteudo}</span><figcaption>${legenda}</figcaption></figure>`;
+const amostra = (nome, lado) =>
+  `<span class="so32">${img(`${nome}-32`, lado / 32, lado)}</span><span class="so64">${img(`${nome}-64`, 1, lado)}</span>`;
+const rotItem = (lado) => `<span class="so32">nativo <b>32×32</b>, exibido ${lado} px${lado > 32 ? " (2×)" : ""}</span>` +
+  `<span class="so64">nativo <b>64×64</b>, exibido ${lado} px${lado < 64 ? " (reduzido ½)" : ""}</span>`;
+for (const lado of [32, 64]) {
+  document.getElementById(`bolsa${lado}`).innerHTML =
+    fig(amostra("martelo", lado), `e${lado}`, `<b>martelo</b><br>${rotItem(lado)}`) +
+    fig(amostra("pena", lado), `e${lado}`, `<b>Pena de Fênix</b><br>${rotItem(lado)}`) +
+    ["espada", "maca", "pocao", "tocha", "bau"].map((n) => fig(aprovado(n, lado), `e${lado}`, `${n} (aprovado)`)).join("");
+}
+// ampliados: o 32 a 8×, o 64 a 4×, e o 64 reduzido a 32 pelo navegador (o que a bolsa mostraria) a 8×
+function reduzido(peca) {
+  const c = document.createElement("canvas"); c.width = c.height = 32;
+  const x = c.getContext("2d"); x.imageSmoothingEnabled = false; x.drawImage(ArteTeste.canvas(peca, 1), 0, 0, 32, 32);
+  const g = document.createElement("canvas"); g.width = g.height = 256;
+  const y = g.getContext("2d"); y.imageSmoothingEnabled = false; y.drawImage(c, 0, 0, 256, 256);
+  return `<img src="${g.toDataURL()}" width="256" height="256" alt="">`;
+}
+document.getElementById("ampliados").innerHTML = ["martelo", "pena"].map((n) =>
+  fig(img(`${n}-32`, 8), "", `<b>${n === "pena" ? "Pena de Fênix" : "martelo"}</b>, desenho de 32×32, ampliado 8×`) +
+  fig(img(`${n}-64`, 4), "", `desenho de 64×64, ampliado 4×`) +
+  fig(reduzido(`${n}-64`), "", `o de 64×64 reduzido a 32 pelo navegador (pixel a pixel), ampliado 8×: o que a bolsa mostraria`)).join("");
+// o Morel nos espaços do jogo, alternando
+const MOREL = { 40: { 80: ["morel", 2], 64: ["morel-busto-baixo", 2], 48: ["morel-cabeca", 2], 32: ["morel-carta", 2] },
+  80: { 80: ["morel-80", 1], 64: ["morel-80-baixo", 1], 48: ["morel-80-cabeca", 1], 32: ["morel-80-carta", 1] } };
+const NATIVO = { 40: { 80: "40×40", 64: "recorte 32×32", 48: "recorte 24×24", 32: "carta 16×16" },
+  80: { 80: "80×80", 64: "recorte 64×64", 48: "recorte 48×48", 32: "carta 32×32" } };
+const morelEm = (v, lado, exibido = lado) => { const [p] = MOREL[v][lado]; return img(p, exibido / ArteTeste.PECAS[p].grade.length, exibido); };
+const ESPACOS = [[80, "a ficha"], [64, "a ficha baixa"], [48, "a cabeça"], [32, "a carta"]];
+document.getElementById("morel-espacos").innerHTML = ESPACOS.map(([lado, nome]) =>
+  fig(`<span class="so40">${morelEm(40, lado)}</span><span class="so80">${morelEm(80, lado)}</span>`, "", `<b>${nome}, ${lado} px</b><br>` +
+    `<span class="so40">${NATIVO[40][lado]} a ${lado / ArteTeste.PECAS[MOREL[40][lado][0]].grade.length}×</span><span class="so80">${NATIVO[80][lado]} a 1×</span>`)).join("") +
+  fig(`<span class="so40">${morelEm(40, 32, 36)}</span><span class="so80">${morelEm(80, 32, 36)}</span>`, "", "<b>a carta na vez, 36 px</b><br>a ampliação do jogo (não inteira)");
+document.getElementById("morel-lado").innerHTML = ESPACOS.map(([lado, nome]) =>
+  `<figure><div class="lado"><b>40×40</b><b>80×80</b>${morelEm(40, lado)}${morelEm(80, lado)}</div><figcaption>${nome}, ${lado} px</figcaption></figure>`).join("");
+document.getElementById("morel-ampliado").innerHTML =
+  fig(img("morel", 8), "", "<b>40×40</b> (aprovado), 8×") + fig(img("morel-80", 4), "", "<b>80×80</b>, 4×") +
+  fig(img("morel-carta", 16), "", "<b>carta 16×16</b>, 16×") + fig(img("morel-80-carta", 8), "", "<b>carta 32×32</b>, 8×");
+// os botões
+document.querySelectorAll(".chaves button").forEach((b) => b.addEventListener("click", () => {
+  document.body.dataset[b.dataset.chave] = b.dataset.valor;
+  document.querySelectorAll(`.chaves button[data-chave="${b.dataset.chave}"]`).forEach((o) => o.setAttribute("aria-pressed", String(o === b)));
+}));
+</script>
+</body>
+</html>

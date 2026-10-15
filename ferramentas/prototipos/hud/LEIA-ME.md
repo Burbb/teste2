@@ -1059,3 +1059,71 @@ fotografia é do passo à frente dele, quando a carta avança com a borda acesa 
   Continua reconhecível pela barba, o porte e as ombreiras diferentes.
 - *Interações verificadas:* tela da Comitiva (tecla C e Tab), Acampar até a fogueira, a vez do herói, o ataque pela
   tecla 1 com o alvo e o passo à frente de um companheiro; nenhum erro no console. O jogo não mudou.
+
+## Experimento de resolução: martelo, Pena de Fênix e Morel 80×80 (experimento, sem versão)
+
+Antes de integrar a comitiva e fazer o lote de itens: outra resolução melhora a apresentação sem sair da linguagem dos
+cenários? Três amostras desenhadas em código (`resolucao-teste.js`), cada uma nas duas resoluções nativas; nada foi
+ampliado ou reduzido para virar a outra.
+
+- **Martelo** (`martelo-32`, `martelo-64`; itens.py: "Martelo", arma do Guerreiro, de Ferro/Aço...): na diagonal como a
+  maça e a espada aprovadas, cabo de madeira, cabeça de ferro atravessada, colar e pomo de latão, empunhadura de couro;
+  luz de cima-esquerda. O de 64 acrescenta a cinta que prende a cabeça ao cabo, os dois anéis do colar, um veio na
+  madeira e o brilho do pomo; a aresta acesa e o contorno continuam de 1 pixel.
+- **Pena de Fênix** (`pena-32`, `pena-64`; "Revive você com metade da vida", "arde em chamas douradas"): pena de voo
+  curva, cálamo marfim, do vermelho fundo da base ao dourado da ponta, a cor correndo pelas barbas (as faixas em ponta
+  de flecha, não cortes retos). O de 64 tem uma falha a mais na borda e a borda do lado da luz um tom abaixo.
+- **Morel 80×80** (`morel-80`, com `morel-80-baixo` de 64, `morel-80-cabeca` de 48 e a carta própria `morel-80-carta`
+  de 32×32): o aprovado ampliado por Scale2x (as diagonais em degrau de 1 pixel, sem suavizar) e redesenhado onde a
+  resolução ajuda: a cicatriz de 1 pixel com a borda afundada, as sobrancelhas carregadas descendo para o nariz (a cara
+  fechada), os olhos fundos, o nariz, a boca no meio da barba, duas mechas da barba, a aresta das ombreiras e a junta das
+  placas, a guarda acesa. Mesmo enquadramento, roupa, espada e cicatriz. Odette e Yara não mudaram.
+
+**Para ver:** `resolucao-teste.html`. Os botões trocam no mesmo lugar o desenho dos itens (32×32 ou 64×64) e o Morel
+(40×40 a 2× ou 80×80 a 1×); cada quadro diz a resolução nativa e o tamanho exibido. Itens em espaços de 32 e de 64 px
+ao lado dos ícones aprovados, ampliados com os pixels à vista (e o de 64 reduzido a 32 pelo navegador), o Morel nos
+espaços de 80, 64, 48, 32 e 36 px, e as fotografias do jogo. As fotografias (`capturas-resolucao/`) são do jogo de
+verdade, refeitas com
+`PLAYWRIGHT_MODULO=<caminho do playwright>/index.mjs node ferramentas/prototipos/hud/fotografar_resolucao.mjs`: capela
+(ficha e topo), mercado (a pena na bolsa e na prateleira, os martelos na mochila da aba Vender; o cenário `mercado` ganhou
+`AMOSTRAS=1`, que põe um Martelo e uma Pena de Fênix) e luta (a carta na vez), em 1500×950 e 1280×720, nas versões
+`atual` (32 e 40) e `maior` (64 e 80). O Morel ocupa o lugar do retrato do herói (não há ficha de companheiro); as
+amostras entram só na página fotografada (`resolucao-no-jogo.js`).
+
+**O custo de reduzir o de 64 a 32** (o navegador, pixel a pixel, sem suavizar; contado na grade):
+
+- *Martelo:* o contorno sobra em 16 de 63 pixels da borda (no desenho de 32, em 61 de 61): o cabo fica sem contorno
+  quase todo e se separa do fundo pela cor só. A aresta acesa da cabeça cai de 29 para 8 pixels, em pontos soltos; a
+  cinta e os anéis do colar ficam em pixels avulsos.
+- *Pena:* a raque e o cálamo caem de 89 para 23 pixels claros e afinam para 1 pixel na diagonal, que lê como
+  pontilhado (no desenho de 32 são 43, com 2 pixels de largura); as falhas da borda viram dentes isolados; o contorno
+  sobra em 44 de 55.
+- Conclusão: um desenho de 64 não serve de ícone de 32. Se houver apresentação em 64, são dois desenhos.
+
+**Avaliação:**
+
+- *Reconhecimento rápido* (no tamanho de uso): nos espaços de 32, o desenho de 32 ganha (o contorno inteiro, a forma
+  limpa); o de 64 reduzido lê como o mesmo objeto, mas mais fraco e sujo. Nos de 64, o desenho de 64 é mais limpo que o
+  de 32 a 2× (as diagonais em degrau de 1 pixel), mas a diferença de reconhecimento é pequena. O Morel é reconhecido
+  igual nas duas versões em todos os espaços: quem carrega a identidade é a silhueta, a barba, a cicatriz e as cores.
+- *Leitura de detalhe e expressão:* é onde o 80×80 ganha. Na ficha (80) e na ficha baixa (64), a cara fechada, a boca e
+  a cicatriz fina leem melhor; na cabeça (48) o ganho diminui; na carta, a de 32×32 própria mostra a cicatriz e as
+  sobrancelhas que a de 16×16 não tem espaço para mostrar. Nos itens, o detalhe a mais do 64 (cinta, anéis, veio, falha)
+  só aparece em 64 e não muda o que o objeto é.
+- *O mesmo mundo:* os cenários (capela, mercado) são desenhados com pixels de 2 a 3 px na tela, e o Morel de 40×40 a 2×
+  tem o pixel do mesmo tamanho. O de 80×80 a 1× tem pixels com metade do tamanho de tudo em volta: ainda parece o mesmo
+  personagem e o mesmo mundo (poucos tons, poucos planos de luz, nada de textura nas áreas grandes), mas fica mais fino
+  que a cena ao lado. Nos itens a questão não existe: os ícones aprovados já são de 1 pixel por pixel de tela, em 32 e
+  em 64, e as amostras de 32 e de 64 ficam na mesma densidade deles. As amostras são mais simples que os ícones
+  aprovados (menos brilho e volume); isso é o desenho, não a resolução.
+- *Custo:* o 80×80 dá quatro vezes mais pixels para decidir e pede as versões menores próprias (a carta de 32×32 teve
+  de ser redesenhada; os recortes de 64 e 48 funcionam como recortes). Nos itens, dois desenhos por item se houver
+  apresentação em 64.
+- *Estático × interação:* as fotografias são paradas (a página do mercado, a aba Vender, a capela, a vez do herói na
+  luta); nenhum erro no console.
+
+**Recomendação:** itens nascem em 32×32, que é onde vivem (bolsa, mochila, mercado); uma versão de 64×64 só para os que
+tiverem apresentação grande, desenhada à parte, nunca reduzida para 32. Retratos continuam no mestre de 40×40 a 2×,
+que tem o pixel dos cenários; do 80×80 vale trazer para o 40×40 o que dá expressão sem mudar a resolução (as
+sobrancelhas descendo para o nariz, a boca marcada), e para a carta de 32 px um desenho próprio de 32×32, que mostra a
+cicatriz e a cara fechada. Nada mudou no jogo.

@@ -2183,3 +2183,20 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
 - **Verificado:** fogueira com cada herói, painel, tela da Comitiva, lutas (vez do herói e companheiro agindo), em
   1500×950 e 1280×720; a página abre sem erro; nenhum erro no console. O jogo não mudou. **Falta:** Jean avaliar. A E9 e
   a validação com jogadores novos continuam abertas.
+
+### 15/10/2026 — Experimento de resolução: martelo, Pena de Fênix e Morel 80×80 (experimento, sem versão)
+
+- **Pedido de Jean:** antes de integrar a comitiva e de fazer o lote de itens, testar se outra resolução melhora a
+  apresentação sem sair da linguagem dos cenários: um martelo e uma Pena de Fênix em 32×32 e em 64×64 (dois desenhos), e
+  o Morel aprovado ao lado de uma versão de 80×80, com as versões próprias para os tamanhos menores. A mensagem chegou
+  cortada nos critérios de avaliação ("reconhecimento rápido; leitura…"); completei com leitura de detalhe, o mesmo
+  mundo e o custo.
+- **Feito:** em `ferramentas/prototipos/hud/`, `resolucao-teste.js` (as amostras), `resolucao-teste.html` (a comparação
+  com alternância no mesmo lugar), `resolucao-no-jogo.js` e `fotografar_resolucao.mjs` (o jogo de verdade, capela,
+  mercado e luta, em `capturas-resolucao/`); o cenário `mercado` ganhou `AMOSTRAS=1` (um Martelo e uma Pena de Fênix).
+  Avaliação e o custo da redução no `LEIA-ME.md` da pasta.
+- **Recomendação:** itens em 32×32, e 64×64 só desenhado à parte para apresentação grande; retratos no 40×40 a 2× (o
+  pixel dos cenários), trazendo do 80×80 a expressão e uma carta própria de 32×32.
+- **Verificado:** a página nas duas versões, em 1500×950 e 1280×720, sem imagem quebrada nem erro; as fotografias do
+  jogo sem erro no console. O jogo não mudou. **Falta:** Jean avaliar. A E9 e a validação com jogadores novos continuam
+  abertas.
