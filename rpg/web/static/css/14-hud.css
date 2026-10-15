@@ -153,14 +153,28 @@
 :root body .escolha.op-missao { box-shadow: inset 3px 0 0 #8a6a2a, var(--relevo); }
 :root body .escolha.op-contrato { box-shadow: inset 3px 0 0 #5a5e66, var(--relevo); }
 :root body .escolha .op-abre { margin-left: 8px; font-size: 22px; line-height: 1; color: var(--sec); }
-/* o botão principal (Continuar): a placa de latão */
-:root body .continuar { border: 1px solid var(--latao); border-image: none; border-radius: 2px; color: var(--latao-claro);
-  background: linear-gradient(rgba(201, 161, 74, 0.1), rgba(0, 0, 0, 0.18)), rgba(20, 21, 25, 0.95); background-clip: padding-box;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 1px 0 #000, 0 3px 6px rgba(0, 0, 0, 0.45); }
-:root body .continuar:is(:hover, :focus-visible) { border-color: var(--latao-claro); color: #fff1cc;
-  background: linear-gradient(rgba(242, 210, 122, 0.16), rgba(0, 0, 0, 0.1)), rgba(32, 33, 38, 0.96); }
-:root body .continuar:focus-visible { outline: 2px solid var(--latao-claro); outline-offset: 2px; }
-:root body .continuar:active { translate: 0 1px; box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.85); }
+/* O botão principal (Continuar, Confirmar, Receber recompensa: o mesmo componente na página, nas cenas, no relatório
+   da luta e nas janelas de festa). O metal escuro dos botões, um degrau mais firme que uma opção: a aresta de latão
+   discreto com um fio claro em cima, a letra da interface (não a do título), meia-gota menor que o título, e a seta
+   pequena, parada, que só avança um pouco com o mouse ou o foco. */
+:root body .continuar { display: block; min-width: 168px; padding: 7px 20px 8px 22px; border: 1px solid #8a7038; border-image: none;
+  border-radius: 2px; font-family: var(--texto); font-size: 20px; font-weight: 700; line-height: 1.2; letter-spacing: 0.02em;
+  color: #eadbb4; text-shadow: 0 1px 0 #000;
+  background: linear-gradient(rgba(242, 210, 122, 0.07), rgba(255, 255, 255, 0.02) 46%, rgba(0, 0, 0, 0.2)),
+    linear-gradient(rgba(36, 37, 42, 0.92), rgba(24, 25, 29, 0.96)), var(--t-botao) 0 0 / 128px; background-clip: padding-box;
+  box-shadow: inset 0 1px 0 rgba(242, 210, 122, 0.16), inset 0 -1px 0 rgba(0, 0, 0, 0.55), 0 1px 0 #000, 0 2px 4px rgba(0, 0, 0, 0.45); }
+:root body .continuar span { animation: none; margin-left: 6px; font-size: 14px; color: var(--latao); transition: translate 0.12s ease-out; }
+/* mouse por cima: a aresta e a letra acendem, a face clareia, a seta avança */
+:root body .continuar:hover { border-color: var(--latao-claro); color: #fff3d6;
+  background: linear-gradient(rgba(242, 210, 122, 0.14), rgba(255, 255, 255, 0.05) 46%, rgba(0, 0, 0, 0.12)),
+    linear-gradient(rgba(48, 50, 56, 0.92), rgba(34, 35, 40, 0.96)), var(--t-botao) 0 0 / 128px; background-clip: padding-box; }
+:root body .continuar:is(:hover, :focus-visible) span { translate: 3px 0; color: var(--latao-claro); }
+/* foco do teclado: o mesmo anel claro por fora dos outros botões (não some no escuro nem se confunde com o mouse) */
+:root body .continuar:focus-visible { border-color: var(--latao-claro); color: #fff3d6; outline: 2px solid var(--latao-claro); outline-offset: 2px; }
+/* pressionado: a face afunda e o conteúdo desce 1 px */
+:root body .continuar:active { translate: 0 1px; box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.85);
+  background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.3)), var(--t-botao) 0 0 / 128px; background-clip: padding-box; }
+@media (prefers-reduced-motion: reduce) { :root body .continuar span { transition: none; } }
 
 /* ------------------------------------------------------------ a doca: uma barra só, com divisões discretas */
 /* Cada estado tem forma além da cor: o mouse clareia a casa, a tela aberta é latão com o traço embaixo, o pressionado
