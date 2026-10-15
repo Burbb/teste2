@@ -62,7 +62,7 @@ propostas, na ordem em que devem vir, e cada uma começa por protótipo e avalia
 
 | Etapa | O quê | Situação |
 |---|---|---|
-| **1** | Itens, ícones e acabamento das ações: os itens no desenho do mundo (martelo e Pena de Fênix no jogo desde a 1.93.0), os ícones da interface (doca, ficha, Fugir) e o acabamento ao redor da roda de combate | em andamento: o primeiro lote de candidatos foi recusado (os atuais têm mais volume e acabamento); a direção se ajusta num teste de um escudo só, com o atual como referência (`ferramentas/prototipos/hud/itens-icones-teste.html`) |
+| **1** | Itens, ícones e acabamento das ações: os itens no desenho do mundo (martelo e Pena de Fênix no jogo desde a 1.93.0), os ícones da interface (doca, ficha, Fugir) e o acabamento ao redor da roda de combate | em andamento: o primeiro lote de candidatos foi recusado (não integrar); o escudo e o Unguento de Prata, feitos pelo método da skill `.claude/skills/arte-itens-fenda/`, estão no jogo desde a 1.94.0, e o equipamento aparece em 40 px no Inventário desde a 1.95.0. Os outros itens continuam com o desenho de antes; novos lotes seguem a skill |
 | **2** | Grimório, o livro da capela e a apresentação da criação de personagem | proposta |
 | **3** | O interior da forja e a conversa com o ferreiro, de início com as regras de hoje | proposta |
 | **4** | Protótipo separado do novo reforço e do encantamento (hipóteses abaixo) | proposta |
@@ -85,6 +85,13 @@ antes.
 - Preparar até seis habilidades na vila ou no acampamento, com no máximo uma elite entre elas.
 - Atacar, Itens e Fugir separados desses espaços.
 - Testar a apresentação das habilidades na HUD antes de decidir a posição e o formato.
+
+Pendências registradas depois da 1.95.0 (para depois, sem executar):
+- O Mago na fogueira: adaptar postura e silhueta da figura dele ali.
+- O Morel nas versões pequenas e intermediárias (o painel e a luta), preservando o busto grande.
+- Novos lotes de itens, pela skill `arte-itens-fenda`, e as etapas acima.
+- Os itens que ainda são sprites 16×16 (as armas e peças de couro das outras classes) ficam em 32 px no Inventário
+  até ganharem desenho; o martelo e a Pena de Fênix (desenhados em 32) também.
 
 ## Ideias guardadas (não agora)
 

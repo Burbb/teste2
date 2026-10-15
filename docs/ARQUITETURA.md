@@ -282,7 +282,9 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   `ferramentas/arte/` (`desenhar_escudo_pixel.py`, `desenhar_unguento_pixel.py`, com as etapas comuns em
   `pixel_comum.py`), que grava os arquivos prontos em `static/hud/icones/`; o jogo só lê os arquivos. O unguento se
   acha só pelo id do consumível: o desenho "unguento" do jogo é também o da Curandeira, que fica com o dela. A
-  conferência no jogo, nos lugares de cada item: `ferramentas/arte/fotografar_itens.mjs`.
+  conferência no jogo, nos lugares de cada item: `ferramentas/arte/fotografar_itens.mjs`; em tamanho real sobre o
+  carvão: `ferramentas/arte/prancha.py`. O processo de desenhar e avaliar um item está na skill do projeto
+  `.claude/skills/arte-itens-fenda/` (`/arte-itens-fenda`).
 - O equipamento no corpo e na mochila do Inventário aparece em 40 px (1.95.0), com arquivos nativos de 40
   (`Icones.equipamento`): a família de ferro pintada sai de `ferramentas/arte/familia_ferro.py` (as peças aprovadas em
   `familia-ferro/`, o mesmo processo dos tamanhos de sempre: a escala do grupo e a redução "paleta"; `--conferir`

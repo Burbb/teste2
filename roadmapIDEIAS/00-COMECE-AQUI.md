@@ -2380,3 +2380,38 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   - os arquivos de 40 de todo o equipamento;
   - o acabamento do escudo em 40;
   - uma decisão para os sprites 16×16.
+
+### 15/10/2026 — Escudo e unguento no jogo, equipamento em 40 px e a skill de arte (1.94.0, 1.95.0)
+
+- **Pedido de Jean:** levar ao jogo o escudo final (com o cravo de 40 px corrigido) e o pote de cerâmica do unguento
+  pelo `Icones`; o equipamento em 40 px no corpo e na mochila do Inventário; registrar o processo numa skill do
+  projeto. Sem mudar regras, preços, estoque, recompensas ou sorteios; o lote recusado de candidatos não entra.
+- **Entrou na produção:**
+  - 1.94.0 (`bbeda6a`): o escudo final em 32, 48 e 64 (iguais ao aprovado) e o 40 com a sombra do cravo de cima à
+    esquerda clareada (4 pixels, em `AJUSTES`); o Unguento de Prata em 32 e 64, achado só pelo id (a Curandeira
+    continua com o desenho dela). Os scripts saíram do protótipo para `ferramentas/arte/` (`pixel_comum.py`,
+    `desenhar_escudo_pixel.py`, `desenhar_unguento_pixel.py`), que gravam em `rpg/web/static/hud/icones/`.
+  - 1.95.0 (`d498062`): `Icones.equipamento` mostra o equipamento em 40 px no Inventário quando há arquivo de 40; os
+    40 da família pintada saem de `ferramentas/arte/familia_ferro.py` (as peças aprovadas em `familia-ferro/`, o
+    processo de sempre; `--conferir` refaz os 32/48/64 do jogo iguais). Espaços, bordas, foco e áreas clicáveis não
+    mudaram (nas fotos, só os ícones diferem).
+  - A skill (`.claude/skills/arte-itens-fenda/SKILL.md`, com as soluções do escudo e do unguento em `exemplos.md`) e
+    `ferramentas/arte/prancha.py` (tamanho real sobre o carvão). Nenhum item novo foi desenhado para testá-la.
+- **Como usar a skill:** ela é descoberta pelo Claude Code ao abrir o repositório (conferido numa sessão nova: aparece
+  na lista e é escolhida para pedidos de item ou ícone); à mão, `/arte-itens-fenda`. Ela ajuda a desenhar e a
+  avaliar e termina na proposta com fotos; não aprova nada sozinha. As referências aprovadas são os arquivos do jogo
+  (`rpg/web/static/hud/icones/escudo-*.png`, `unguento-*.png`); o histórico das rodadas fica no protótipo.
+- **Continuam com o desenho de antes:** todos os outros itens e ícones da família de ferro (só ganharam o tamanho de
+  40); o martelo e a Pena de Fênix (desenhos de 32, ficam em 32 no Inventário); as armas e peças de couro das outras
+  classes, o machado, os únicos com desenho próprio, a bomba de fumaça e o resto das lacunas de
+  `docs/ARQUITETURA.md` (sprites 16×16, em 32 no Inventário); as silhuetas dos espaços vazios (32; a do escudo agora
+  é a do escudo novo, apagada).
+- **Verificado:** `ferramentas/arte/fotografar_itens.mjs` em 1500×950 e 1280×720 (mercado com o unguento na
+  prateleira e a compra, a dica do escudo na aba Vender, o cartão do saque com o escudo em 64 e o que se usa em 48, o
+  voo ao equipar, o baú aberto com o unguento, o voo do unguento até a bolsa, a ficha, o Inventário em 40, a dica
+  comparando os dois anéis, arrastar um anel para o Anel 2, dois cliques e Enter no "Substituir", i e Esc, o arqueiro
+  com o martelo e os sprites antigos em 32, a Curandeira com o desenho dela), sem erro no console; 602 testes,
+  gabarito sem diferença, pyflakes, fumaça (356), nas duas versões. `claude plugin validate .claude/skills`.
+- **Falta:** Jean conferir jogando. Para depois, registrado no `docs/ROADMAP.md` sem executar: o Mago na fogueira
+  (postura e silhueta), as versões pequenas e intermediárias do Morel (painel e luta, preservando o busto grande),
+  novos lotes de itens. A E9 e a validação com jogadores novos continuam abertas.
