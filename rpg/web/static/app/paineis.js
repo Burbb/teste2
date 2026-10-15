@@ -193,7 +193,7 @@ function desenharHeroi(h, antes) {
     const carta = m.conversa ? ` <button type="button" class="membro-carta" data-conversar="${esc(m.id)}" title="${esc(m.nome.split(" ").pop())} quer conversar">✉</button>` : "";
     const velho = antes && (antes.comitiva || []).find((x) => x.id === m.id);  // a barra sai de onde estava
     return `<div class="membro${m.ferido || m.fora ? " ferido" : ""}" data-cid="${esc(m.id)}">
-      <div class="icone" ${d}>${spr(m.id, 2)}</div>
+      <div class="icone" ${d}>${Icones.cabeca(m.id, 32) || spr(m.id, 2)}</div>
       ${linhaNome(m.nome, carta, m.hp, m.max_hp, d)}
       ${barra("vida fina", m.hp, m.max_hp, velho ? velho.hp : undefined, "m-" + m.id)}${Telas.aprovacao(m)}</div>`;
   }).join("");

@@ -263,22 +263,31 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   interface em ferro (as mesmas grades; o bronze continua nos sprites e, com `{ bronze: true }`, no protótipo).
 - `icones.js` (`Icones`) é o único lugar que decide o desenho de cada papel: o item pelo desenho que o motor dá,
   o consumível pelo id, o atributo, o recurso do topo, o vital, o atalho da doca, o lugar de um caminho, a ação da
-  roda, o retrato e a cabeça da classe (estes dois de `retratos.js`, abaixo). Devolve a `<img>` pronta ou `""` quando a família não tem aquele desenho; a
+  roda, o retrato, a cabeça e a figura do herói e dos companheiros (de `retratos.js`, abaixo). Devolve a `<img>` pronta ou `""` quando a família não tem aquele desenho; a
   tela usa então o sprite do jogo (`Icones.item(s) || S(s, 2)`). A origem e o destino de uma animação pedem o mesmo
   papel (o item que voa ao equipar, o selo de atributo, o consumível que cai na bolsa). Lacunas (desenho do jogo no
-  lugar, sem trocar por desenho de outro tipo de item): as outras classes além do Guerreiro (retrato, cabeça, armas e
-  peças de couro, arco, cajado, orbe, livro), martelo e machado, os itens únicos com desenho próprio, unguento, bomba de
+  lugar, sem trocar por desenho de outro tipo de item): as armas e peças de couro das outras classes (arco, cajado,
+  orbe, livro), martelo e machado, os itens únicos com desenho próprio, unguento, bomba de
   fumaça e Pena de Fênix, a tocha apagada, a bolsa vazia e o frasco vazio no topo, os inimigos e as cartas deles, os
   ícones de habilidade e de efeito, o covil vencido. O mercador da banca tem o busto no balcão (`telas/mercado.js`,
   com as cores da figura da banca).
-- `retratos.js` (`Retratos`): os retratos do herói desenhados em código, pelo método das cenas (uma grade de letras
-  com a paleta do desenho, pintada por `Sprites.grade`, o mesmo pintor do busto do mercador). As três classes: o
-  Guerreiro (1.90.0: o capacete fechado, sem rosto), o Mago e o Arqueiro (1.91.0: o capuz alto azul; o capuz curto
-  verde com a aljava). Cada um é um desenho de 40×40 a ×2 que dá o busto da ficha (80 px) e, por recorte na mesma
-  escala, o da janela baixa (64 px) e a cabeça do topo (48 px); a carta da luta (32 px) tem a versão de 16×16, que é
-  também a figura do herói na fogueira. Quem escolhe é sempre `Icones`: `retrato` (ficha, Inventário), `cabeca` (topo,
-  carta, saves) e `figura` (o canvas de 16×16 da fogueira: o retrato desenhado ou, para quem não tem, o sprite do
-  jogo). Nenhuma tela pede o sprite da classe direto. O retrato não depende do equipamento nem dos atributos.
+- `retratos.js` (`Retratos`): os retratos do herói e dos companheiros desenhados em código, pelo método das cenas
+  (uma grade de letras com a paleta do desenho, pintada por `Sprites.grade`, o mesmo pintor do busto do mercador). As
+  três classes: o Guerreiro (1.90.0: o capacete fechado, sem rosto), o Mago e o Arqueiro (1.91.0: o capuz alto azul; o
+  capuz curto verde com a aljava). Os companheiros, pelo id do motor (1.92.0): Morel, Odette (`odete`) e Yara. Cada um
+  tem um desenho por papel, sempre mostrado no mesmo tamanho: o busto da ficha (80 px), o da janela baixa (64), a
+  cabeça (48: o topo, os cartões da Comitiva e da reação, a faixa de quem chega), a carta (32: a luta, o painel, o
+  aviso) e a figura de 16×16 (a fogueira e o chip de aprovação no texto). A escala sai do tamanho do desenho: o busto
+  dos heróis, de Odette e de Yara é de 40×40 a ×2 (a janela baixa e a cabeça são recortes na mesma escala), a carta de
+  16×16 a ×2; o do Morel é de 80×80 a ×1, com a ficha baixa e a cabeça em 64 e 48 a ×1 e a carta de 32×32 (o busto de
+  40×40 reduzido a 32). O critério entre eles é a leitura, a identidade e o peso parecidos no tamanho em que aparecem,
+  não a mesma resolução de origem nem a mesma proporção entre cabeça e ombros. Quem escolhe é sempre `Icones`:
+  `retrato` (ficha, Inventário), `cabeca` (48, 32 ou 16 px, conforme o lugar) e `figura` (o canvas de 16×16 da
+  fogueira; para quem não tem, o sprite do jogo). Nenhuma tela pede o sprite da classe nem do companheiro direto. O
+  retrato não depende do equipamento nem dos atributos.
+- Na vez do herói a carta dele é ampliada 1,12× (`.carta.foco`), mas o nicho do retrato desfaz a ampliação (o rosto em
+  32 px exatos) e `Batalha.foco` o põe no pixel inteiro da tela, depois que os movimentos da arena acabam (as
+  propriedades `scale` e `translate`, que não brigam com as animações da carta). Os companheiros não recebem foco.
 
 ## Telemetria
 

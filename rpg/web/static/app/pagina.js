@@ -393,7 +393,7 @@ async function efeito(m) {
   }
   let linha = textoEl.lastElementChild;
   if (!linha || !linha.classList.contains("chips") || linha.classList.contains("passado")) linha = anexar(el("div", "chips"));
-  const chip = linha.appendChild(el("span", `chip ${m.tipo || "info"}`, spr(iconeChip(m), 1) + esc(m.texto)));
+  const chip = linha.appendChild(el("span", `chip ${m.tipo || "info"}`, (Icones.cabeca(iconeChip(m), 16) || spr(iconeChip(m), 1)) + esc(m.texto)));
   rolarFim();
   // Ouro ganho num evento (o baú aberto, a recompensa): o chip fica no texto e as moedas voam até o ouro do topo,
   // sem parar a cena (a festa de tela cheia fica para o que é raro: atributo para sempre, nível, Sigilo).

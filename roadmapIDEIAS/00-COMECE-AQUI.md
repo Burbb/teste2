@@ -2233,3 +2233,23 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
 - **Decisões guardadas para a integração:** Morel grande em 80×80; a carta dele "40 reduzido a 32"; Odette e Yara
   revisadas aprovadas; o ajuste do texto da cicatriz (autorizado); martelo e Pena de Fênix de 32×32.
 - **Falta:** Jean avaliar os seis antes da integração. A E9 e a validação com jogadores novos continuam abertas.
+
+### 15/10/2026 — A comitiva no jogo (1.92.0)
+
+- **Pedido de Jean:** fechar a escolha das cartas (heróis, Odette e Yara com a carta de 16×16 a 2×; o Morel com o busto
+  reduzido a 32) e integrar Morel, Odette e Yara pelo `Icones` em todas as aparições; o rosto do herói em 32 px na vez
+  dele, no pixel inteiro; o texto da cicatriz do Morel. Sem itens, sem telas novas, sem mudar regras.
+- **Feito:** os três em `retratos.js` com um desenho por papel (busto, ficha baixa, cabeça, carta, figura), a escala
+  saindo do tamanho do desenho; `Icones.cabeca` em 48, 32 ou 16 px e `Icones.figura` pela figura de 16×16; o painel, a
+  tela da Comitiva, a carta e o cartão de reação, a faixa, o aviso, o chip de aprovação e a fogueira pedindo ao
+  `Icones`. Na vez do herói, o nicho do retrato desfaz a ampliação da carta e vai ao pixel inteiro depois dos
+  movimentos da arena (`Batalha.foco`, `css/15-hud-luta.css`). "Cicatriz de orelha a orelha" virou "uma cicatriz
+  atravessa o rosto dele" (o gabarito mudou só nessa frase, em 13 partidas, e foi atualizado). O critério das cartas
+  (leitura, identidade e peso, não a mesma resolução) registrado em `docs/ARQUITETURA.md`, `docs/ROADMAP.md` e no
+  `LEIA-ME.md` do protótipo.
+- **Verificado:** os três heróis com pares diferentes, em 1500×950 e 1280×720, com movimento normal e reduzido; o rosto
+  do herói em 32 px no pixel inteiro, a mira e o Esc, o companheiro agindo, a reação, o painel, a Comitiva, o aviso, a
+  faixa e a fogueira; nenhum sprite antigo dos três; 602 testes, gabarito, pyflakes, fumaça (356).
+- **Achado, sem mexer:** com movimento reduzido a faixa de celebração some na hora (já era assim).
+- **Falta:** Jean conferir. O martelo e a Pena de Fênix (32×32) ficam para o lote de itens. A E9 e a validação com
+  jogadores novos continuam abertas.

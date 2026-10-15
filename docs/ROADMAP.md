@@ -68,9 +68,11 @@ mais brando para quem quiser; um robô de mapa que jogue partidas inteiras com j
   (um desenho só para o busto, a cabeça do topo e a carta; o teste em `ferramentas/prototipos/hud/retrato-teste.html`).
   No jogo desde a 1.90.0 (`rpg/web/static/retratos.js`); o Mago (capuz azul alto) e o Arqueiro (capuz verde curto com
   a aljava) desde a 1.91.0, em todos os lugares do herói (ficha, topo, carta, Inventário, fogueira, saves). Os
-  companheiros (Morel, Odette, Yara) estão em teste no protótipo. Padrão em teste para as cartas de combate (os seis,
-  `ferramentas/prototipos/hud/cartas-teste.html`): 32 px, cabeça e parte dos ombros nas proporções do busto, como o
-  Morel "40 reduzido a 32"; vale para personagens futuros. Quantos
+  companheiros (Morel, Odette, Yara) desde a 1.92.0, em todos os lugares deles (painel, Comitiva, carta e reação na
+  luta, faixa de quem chega, aviso, chip de aprovação, fogueira); o Morel com o busto grande em 80×80. Cartas de
+  combate (comparadas em `ferramentas/prototipos/hud/cartas-teste.html`): o critério é leitura, identidade e peso
+  parecidos em 32 px, não a mesma resolução de origem nem a mesma proporção entre cabeça e ombros (os heróis, Odette e
+  Yara com a carta de 16×16 a ×2; o Morel com o busto reduzido a 32); vale para personagens futuros. Quantos
   retratos haverá e como o jogador vai
   personalizar o herói continuam em aberto (nem seleção, nem recoloração, nem diferença por gênero, nem as outras
   classes por enquanto); o retrato não segue o elmo equipado nem os atributos.

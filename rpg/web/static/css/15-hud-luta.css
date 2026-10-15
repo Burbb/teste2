@@ -72,9 +72,12 @@
 :root body .roda-botao:focus-visible .rb-icone { outline: 2px solid var(--latao-claro); outline-offset: 2px; }
 :root body .roda-botao:is([disabled], .bloqueada) .rb-icone, :root body .roda-botao:is([disabled], .bloqueada) .rb-nome { border-style: dashed; opacity: 0.6; }
 :root body .roda-botao .rb-icone img.desenho { width: 32px; height: 32px; image-rendering: auto; filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.7)); }
-/* o rosto do herói na carta e os desenhos da roda, no tamanho deles (32 px); a carta em foco é ampliada 1,12× pelo
-   jogo (.carta.foco): o rosto amplia em pixel duro, como os sprites dele */
+/* o rosto do herói na carta e os desenhos da roda, no tamanho deles (32 px). Na vez do herói a carta é ampliada 1,12×
+   (.carta.foco): o nome, as barras e a borda crescem, mas o nicho do retrato desfaz a ampliação (36 px, o rosto em 32
+   px exatos, pixel a pixel) e Batalha.foco o põe no pixel inteiro da tela (a propriedade translate). Usa scale e
+   translate, que não brigam com as animações da carta, que usam transform. */
 :root body .carta.heroi .icone img.desenho { width: 32px; height: 32px; }
+:root body .carta.foco .icone { scale: calc(1 / 1.12); }
 :root body .carta.foco .icone img.desenho { image-rendering: pixelated; }
 
 

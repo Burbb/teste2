@@ -88,7 +88,7 @@ const Telas = new Proxy({}, {
   function toast(titulo, texto, icone, bom) {
     const t = document.createElement("div");
     t.className = "toast" + (bom ? " bom" : "");
-    t.innerHTML = `${S(icone, 2)}<div>${titulo ? `<b>${h(titulo)}</b>` : ""}${h(texto || "")}</div>`;
+    t.innerHTML = `${Icones.cabeca(icone, 32) || S(icone, 2)}<div>${titulo ? `<b>${h(titulo)}</b>` : ""}${h(texto || "")}</div>`;
     document.getElementById("toasts").appendChild(t);
     setTimeout(() => t.remove(), 3300);
   }

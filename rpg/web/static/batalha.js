@@ -66,7 +66,7 @@ const Batalha = (() => {
     e.dataset.uid = c.uid;
     if (c.cid) e.dataset.cid = c.cid;
     if (c.tipo) e.dataset.tipo = c.tipo;
-    e.innerHTML = `<div class="carta-fx"></div><div class="icone">${(c.uid === "j" && Icones.cabeca(c.classe, 32)) || S(icone(c), 2)}</div>
+    e.innerHTML = `<div class="carta-fx"></div><div class="icone">${Icones.cabeca(c.uid === "j" ? c.classe : c.cid, 32) || S(icone(c), 2)}</div>
       <div class="carta-nome"><span></span><small></small></div>
       <div class="carta-hp"><span class="barra-px vida"><span class="rastro"></span><span class="enchimento"></span></span><span class="num"></span></div>
       ${c.uid === "j" ? '<div class="carta-rec"><span class="barra-px mana"><span class="enchimento"></span></span><span class="num"></span></div><div class="carta-flechas" hidden></div>' : ""}
@@ -943,10 +943,36 @@ const Batalha = (() => {
     cartas.forEach((el, u) => el.classList.toggle("vez", u === uid));
     podeEscolher(uid === "j");
   }
-  /** A carta de quem escolhe a ação vem para a frente e cresce. */
+  /** A carta de quem escolhe a ação vem para a frente e cresce. O nicho do retrato não cresce (15-hud-luta.css) e vai
+   *  para o pixel inteiro da tela depois da transição da carta, para o rosto não ficar em meio pixel. */
+  const AMPLIA_FOCO = 1.12;  // a ampliação de .carta.foco (12-acoes-combate.css)
+  let alinhando = null;
+  function alinharNicho() {
+    cartas.forEach((el) => {
+      const ic = el.querySelector(".icone");
+      if (!ic) return;
+      ic.style.translate = "";
+      if (!el.classList.contains("foco")) return;
+      const r = ic.getBoundingClientRect();
+      ic.style.translate = `${(Math.round(r.x) - r.x) / AMPLIA_FOCO}px ${(Math.round(r.y) - r.y) / AMPLIA_FOCO}px`;
+    });
+  }
   function foco(uid) {
     cartas.forEach((el, u) => el.classList.toggle("foco", u === uid));
+    alinharNicho();
+    clearTimeout(alinhando);
+    alinhando = setTimeout(depoisDosMovimentos, 300);  // depois da transição (.25s) da carta
   }
+  /** A carta ainda pode estar chegando (a entrada, o passo de volta): alinha de novo quando os movimentos da arena que
+   *  têm fim acabam (as animações em laço, como o brilho da vez, não contam). */
+  function depoisDosMovimentos() {
+    if (!document.querySelector("#arena .carta.foco")) return;
+    const andando = document.getAnimations().filter((a) => a.playState === "running" && a.effect && a.effect.target &&
+      a.effect.getTiming().iterations !== Infinity && a.effect.target.closest && a.effect.target.closest("#arena"));
+    if (!andando.length) return alinharNicho();
+    Promise.allSettled(andando.map((a) => a.finished)).then(depoisDosMovimentos);
+  }
+  addEventListener("resize", () => { clearTimeout(alinhando); alinhando = setTimeout(depoisDosMovimentos, 150); });
   function elCarta(uid) { return cartas.get(uid) || null; }
   function alvos(opcoes, escolher) {
     limparAlvos();
@@ -999,7 +1025,7 @@ const Batalha = (() => {
     if (!c || !c.isConnected || c.classList.contains("sumindo")) {  // o que já está saindo não volta: a fala nova abre outro
       c = document.createElement("div");
       c.className = "cartao-comitiva";
-      c.innerHTML = `<div class="cc-retrato">${S(cid, 3)}</div><div class="cc-corpo"><div class="cc-topo"><b>${esc(nome)}</b></div></div>`;
+      c.innerHTML = `<div class="cc-retrato">${Icones.cabeca(cid, 48) || S(cid, 3)}</div><div class="cc-corpo"><div class="cc-topo"><b>${esc(nome)}</b></div></div>`;
       c.addEventListener("click", () => fechar(c));
       pilha().appendChild(c);
       cartoesAbertos[cid] = c;

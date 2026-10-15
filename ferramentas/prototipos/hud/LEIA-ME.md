@@ -1245,3 +1245,33 @@ escolhidos. Nada disso entrou no jogo ainda. Não mudaram nesta rodada os retrat
 figuras da fogueira.
 
 **Para ver:** `cartas-teste.html`.
+
+## Integrados (1.92.0): a comitiva no jogo e a escolha final das cartas
+
+**A escolha final das cartas de combate:** Guerreiro, Mago, Arqueiro, Odette e Yara com a carta de 16×16 a 2× (a
+fileira "anterior" de `cartas-teste.html`); o Morel com o busto de 40×40 reduzido a 32 ("40 reduzido a 32"). Reduzir
+todos os bustos deixou cabeças pequenas demais; a carta aproximada do Morel continua rejeitada. **Critério para os
+próximos personagens:** coerência é leitura, identidade e peso visual compatíveis no tamanho em que a carta aparece;
+não exige a mesma resolução de origem nem a mesma proporção entre cabeça e ombros.
+
+**No jogo** (`rpg/web/static/retratos.js`, pelo `Icones`): Morel (busto 80×80, ficha baixa 64 e cabeça 48 já
+adaptadas, a espada encaixada, a carta "40 reduzido a 32", a figura de 16×16 na fogueira), Odette (a revisada, com a
+cruz e o véu roído) e Yara (o cabelo roxo assimétrico com lama, os olhos castanhos), em todos os lugares deles: o
+painel da ficha, a tela da Comitiva, a carta e o cartão de reação na luta, a faixa de quem chega, o aviso, o chip de
+aprovação no texto e a fogueira (as figuras de 16×16, na escala e no lugar de sempre). Os retratos grandes dos heróis
+não mudaram. O texto do Morel diz agora "uma cicatriz atravessa o rosto dele".
+
+**Conferência** (`capturas-integracao/`, refeitas com
+`PLAYWRIGHT_MODULO=<caminho do playwright>/index.mjs node ferramentas/prototipos/hud/fotografar_integracao.mjs`, o jogo
+sem nenhum arquivo do protótipo): os três heróis com pares diferentes (Guerreiro com Morel e Odette, Mago com Yara e
+Morel, Arqueiro com Odette e Yara) em 1500×950 e 1280×720, com movimento normal e reduzido; o rosto do herói na vez
+dele em 32 px no pixel inteiro em todas; a tecla 1 e o Esc; um companheiro avançando; o cartão de reação; o painel,
+a tela da Comitiva, o aviso, a faixa e a fogueira com cada herói. Nenhuma imagem com o sprite antigo dos três em
+nenhuma tela. O cartão de reação, a faixa e o aviso foram chamados direto (os componentes do jogo, com os dados de
+verdade), porque nenhum cenário chega neles sem um caminho longo de escolhas.
+
+**Achado, sem mexer:** com movimento reduzido, a faixa de celebração (quem se junta, vitória, mestre caçador) some na
+hora: a regra de movimento reduzido encurta a animação para 0,001 ms e a faixa sai quando a animação acaba. Já era
+assim antes desta entrega.
+
+O martelo e a Pena de Fênix de 32×32 continuam guardados para o próximo lote de itens.

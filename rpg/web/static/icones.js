@@ -1,6 +1,7 @@
 /* Os desenhos da interface (hud/icones/): a família de ferro da HUD, pelo papel de cada imagem. As telas pedem aqui o
    desenho de um papel (o item pelo desenho que o motor dá, o consumível pelo id, o atributo, o recurso do topo, o
-   vital, o atalho da doca, o lugar de um caminho, a ação da roda, o retrato da classe) e recebem a <img> pronta, ou ""
+   vital, o atalho da doca, o lugar de um caminho, a ação da roda, o retrato do herói ou de um companheiro) e recebem a
+   <img> pronta, ou ""
    quando a família não tem aquele desenho: aí a tela usa o sprite do jogo, como sempre. O retrato e a cabeça do herói
    vêm de retratos.js (desenhados em código, como as cenas), não de arquivo. É o único lugar que sabe qual
    desenho vai em cada papel; a origem e o destino de uma animação (o item que voa da mochila para o corpo, o baú que
@@ -91,24 +92,25 @@ const Icones = (() => {
     atalho: (nome, lado = 36) => img(ATALHO[nome], lado),
     lugar: (sprite, lado = 32) => img(LUGAR[sprite], lado),
     acao: (sprite, lado = 32) => img(ACAO[sprite], lado),
-    /** A cabeça do herói (retratos.js): no topo, 48 px, o recorte do busto; na carta da luta, 32 px ou menos, a versão
-     *  pequena. Pixel a pixel, sem suavizar (classe "pixel"). */
-    cabeca(classe, lado = 48) {
-      if (!Retratos.tem(classe)) return "";
-      const papel = lado <= 32 ? "carta" : "cabeca", e = lado / Retratos.lado(classe, papel);
-      return `<img class="sprite desenho pixel" src="${Retratos.url(classe, papel, e)}" srcset="${Retratos.url(classe, papel, 2 * e)} 2x" ` +
+    /** A cabeça de alguém com retrato (retratos.js: o herói pela classe, o companheiro pelo id): em 48 px (o topo, os
+     *  cartões da Comitiva e da reação, a faixa de quem chega) a cabeça; em 32 px (a carta da luta, o painel, o aviso) a
+     *  versão da carta; em 16 px (o chip de aprovação no texto) a figura de 16×16. Pixel a pixel, sem suavizar. */
+    cabeca(nome, lado = 48) {
+      if (!Retratos.tem(nome)) return "";
+      const papel = lado <= 16 ? "figura" : lado <= 32 ? "carta" : "cabeca", e = lado / Retratos.lado(nome, papel);
+      return `<img class="sprite desenho pixel" src="${Retratos.url(nome, papel, e)}" srcset="${Retratos.url(nome, papel, 2 * e)} 2x" ` +
         `width="${lado}" height="${lado}" style="--s:${lado}" alt="" draggable="false">`;
     },
-    /** A figura pequena de alguém (16×16, num canvas, para quem pinta em canvas: a fogueira): o herói pela classe, com
-     *  o retrato desenhado (a versão da carta, retratos.js) quando há; senão, o sprite do jogo. O mesmo lugar que escolhe o
-     *  busto e a cabeça, para nenhuma tela ficar com o desenho antigo. */
-    figura: (nome) => (Retratos.tem(nome) ? Retratos.canvas(nome, "carta") : Sprites.canvas(nome)),
+    /** A figura pequena de alguém (16×16, num canvas, para quem pinta em canvas: a fogueira): o herói pela classe e o
+     *  companheiro pelo id, com a figura desenhada (retratos.js) quando há; senão, o sprite do jogo. O mesmo lugar que
+     *  escolhe o busto e a cabeça, para nenhuma tela ficar com o desenho antigo. */
+    figura: (nome) => (Retratos.tem(nome) ? Retratos.canvas(nome, "figura") : Sprites.canvas(nome)),
     /** O busto da ficha (retratos.js): 80 px, e 64 em telas baixas (até 800 px de altura), o recorte na mesma escala. */
-    retrato(classe, alt = "") {
-      if (!Retratos.tem(classe)) return "";
-      const u = (papel, e) => Retratos.url(classe, papel, e);
-      return `<picture class="desenho pixel"><source media="(max-height: 800px)" srcset="${u("bustoBaixo", 2)}, ${u("bustoBaixo", 4)} 2x">` +
-        `<img class="original" src="${u("busto", 2)}" srcset="${u("busto", 4)} 2x" alt="${alt}" draggable="false"></picture>`;
+    retrato(nome, alt = "") {
+      if (!Retratos.tem(nome)) return "";
+      const u = (papel, lado, x) => Retratos.url(nome, papel, (x * lado) / Retratos.lado(nome, papel));
+      return `<picture class="desenho pixel"><source media="(max-height: 800px)" srcset="${u("bustoBaixo", 64, 1)}, ${u("bustoBaixo", 64, 2)} 2x">` +
+        `<img class="original" src="${u("busto", 80, 1)}" srcset="${u("busto", 80, 2)} 2x" alt="${alt}" draggable="false"></picture>`;
     },
     urlItem: (sprite, lado = 32) => url(ITEM[sprite], lado),
     urlConsumivel: (id, lado = 32) => url(CONSUMIVEL[id], lado),
