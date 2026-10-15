@@ -1017,3 +1017,45 @@ na página fotografada (`comitiva-no-jogo.js`).
   vez do herói; nenhum erro no console. As fichas, os painéis e as fogueiras são fotografias paradas.
 
 Nada mudou no jogo nem nas regras da comitiva.
+
+### Revisão dos três (segunda versão, experimento, sem versão)
+
+Jean gostou da base e pediu só alguns traços; enquadramento, roupas e estilo ficaram. A primeira versão está guardada em
+`comitiva-v1.js` (as peças `<nome>-v1`), para a comparação; as fotografias dela ficaram em `capturas-comitiva/` com
+`v1` no nome.
+
+- *Yara:* o cabelo ganhou silhueta própria. De um lado (o esquerdo de quem olha), solto, irregular, mais comprido, com
+  três mechas grudadas pela lama (faixas barrentas que descem juntas, não pontos); do outro, puxado para trás da orelha
+  (a orelha aparece) e preso num nó atrás da cabeça, com uma ponta curta descendo atrás do pescoço. A pedido de Jean,
+  o cabelo é roxo apagado, como no sprite antigo: a cor vira o traço dela, e a lama continua barrenta por cima (o texto
+  não diz a cor do cabelo; os olhos seguem castanhos, como o texto diz). Olhos castanhos, sem brilho, joia nem chapéu. A erva na gola foi
+  testada e descartada: a 40×40 lia como broche (pareceria joia) e sumia a 48 e 32 px
+  (`capturas-comitiva/proposta-erva-yara.png`).
+- *Odette:* a pequena cruz amarela do sprite voltou ao peito, em amarelo envelhecido (dois tons), abaixo da touca; na
+  carta, uma cruz de 3×3 no mesmo lugar. As manchas soltas do chamuscado saíram; a queimadura passou a ser a borda do
+  véu roída e escurecida num ombro, uma forma só, na borda. O rosário continua fora.
+- *Morel:* a cicatriz primeiro virou uma linha fina de orelha a orelha por baixo do nariz, mas ainda parecia um traço
+  estranho para quem não sabe que é cicatriz. A pedido de Jean, é um corte na diagonal, da linha do cabelo até a
+  barba, cortando a sobrancelha e o nariz, num tom de pele repuxada (mais claro e rosado); na carta, três pixels em
+  diagonal. O texto ("de orelha a orelha") não mudou: o desenho deixou de segui-lo ao pé da letra; se quiser, a frase
+  se ajusta depois. A espada foi
+  redesenhada num eixo só, longe do rosto: pomo, empunhadura enfaixada, guarda atravessada e a lâmina sumindo atrás da
+  ombreira; na carta, o mesmo em miniatura (pomo, cabo, guarda, lâmina). Os remendos soltos no pano e os rebites das
+  ombreiras saíram (liam como sujeira); a armadura remendada continua nas duas ombreiras diferentes.
+
+**Conferência:** `comitiva-teste.html` mostra v1 × revisão ampliados, nos tamanhos reais (busto 80, cabeça 48, carta
+32, fogueira 16) com os heróis na mesma régua, a fogueira (hoje × v1 × revisão, de perto e inteira, com cada herói), a
+tela da Comitiva e as lutas. Na luta, o companheiro não tem vez própria (a ampliação de 36 px é só do herói): a
+fotografia é do passo à frente dele, quando a carta avança com a borda acesa (as animações param para a fotografia).
+
+**Avaliação:**
+
+- *Yara:* deixou de ser genérica; a assimetria do cabelo e o nó leem a 80 e 48 px, e a 32 px ainda se vê o lado solto
+  contra o lado preso. Na fogueira ela continua a figura mais escura (está longe do fogo, e a cena escurece com a
+  distância), mas o cabelo roxo agora se separa do fundo e a distingue dos outros dois. Não mexi na luz da cena.
+- *Odette:* a cruz se lê em todos os tamanhos sem dominar (na fogueira é um ponto amarelo no peito). A borda queimada é
+  discreta: some abaixo de 48 px, o que é aceitável; se ainda parecer sujeira, sai.
+- *Morel:* a cicatriz agora se lê como cicatriz (o corte atravessa a sobrancelha); a espada tem forma de espada a 80 px e a 32 px.
+  Continua reconhecível pela barba, o porte e as ombreiras diferentes.
+- *Interações verificadas:* tela da Comitiva (tecla C e Tab), Acampar até a fogueira, a vez do herói, o ataque pela
+  tecla 1 com o alvo e o passo à frente de um companheiro; nenhum erro no console. O jogo não mudou.

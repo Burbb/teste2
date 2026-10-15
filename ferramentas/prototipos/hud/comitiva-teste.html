@@ -6,9 +6,9 @@
 <title>Teste da comitiva: Morel, Odette e Yara (experimento)</title>
 <link rel="icon" href="data:,">
 <link rel="stylesheet" href="../../../rpg/web/static/css/11-tipografia.css">
-<!-- Teste da comitiva (experimento, fora do jogo): os candidatos de Morel, Odette e Yara (arte-teste.js), ampliados, nos
-     tamanhos reais e ao lado dos heróis aprovados; embaixo, as fotografias do jogo de verdade com os sprites de hoje e
-     com os candidatos (fotografar_comitiva.mjs, em capturas-comitiva/). -->
+<!-- Teste da comitiva (experimento, fora do jogo): os candidatos de Morel, Odette e Yara (arte-teste.js) ao lado da
+     primeira versão (comitiva-v1.js), ampliados, nos tamanhos reais e junto dos heróis aprovados; embaixo, as fotografias
+     do jogo de verdade com os sprites de hoje, a v1 e a revisão (fotografar_comitiva.mjs, em capturas-comitiva/). -->
 <style>
   @font-face { font-family: "Titulo"; src: url(../../../rpg/web/static/fontes/alagard-pt.ttf) format("truetype"); }
   :root { --latao: #c9a14a; --latao-claro: #f2d27a; --sec: #9d978b; --aresta: #3a3d43; --ferro-fio: #2b2d31; }
@@ -23,6 +23,7 @@
   h2::after { content: ""; flex: 1; height: 1px; background: var(--ferro-fio); box-shadow: 0 1px 0 #000; }
   .linha { display: flex; align-items: flex-end; gap: 22px; flex-wrap: wrap; }
   .linha + h2, .linha + .linha { margin-top: 16px; }
+  .linha.topo { align-items: flex-start; }
   figure { margin: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
   figcaption { font-size: 13px; color: var(--sec); max-width: 330px; }
   img { image-rendering: pixelated; display: block; }
@@ -36,66 +37,78 @@
 </head>
 <body>
 <h1>Teste da comitiva: Morel, Odette e Yara</h1>
-<p class="nota">Candidatos para avaliação, desenhados em código pelo método e no enquadramento dos heróis (arte-teste.js): o
-busto de 40×40, o recorte da cabeça (24×24, a 48 px: a tela da Comitiva, o cartão da reação, a faixa de quem chega) e a
-versão de 16×16 (32 px: o painel e a carta da luta; 16 px: a figura da fogueira). Em produção eles seguem com os
-sprites de sempre; as fotografias de baixo põem os candidatos só na página fotografada.</p>
+<p class="nota">Segunda versão dos candidatos (arte-teste.js), ao lado da primeira (comitiva-v1.js), desenhados em código
+pelo método e no enquadramento dos heróis: o busto de 40×40, o recorte da cabeça (24×24, a 48 px: a tela da Comitiva, o
+cartão da reação, a faixa de quem chega) e a versão de 16×16 (32 px: o painel e a carta da luta; 16 px: a figura da
+fogueira). Mudou só o pedido: o cabelo da Yara (forma e cor), a cruz da Odette, a cicatriz e a espada do Morel, e saíram os pixels
+soltos (os remendos e rebites do Morel, as manchas da Odette). Em produção eles seguem com os sprites de sempre.</p>
 
 <section>
-  <h2>Ampliados, com o que serviu de referência</h2>
-  <div class="linha">
-    <figure><span class="nicho" style="width:242px;height:242px" data-peca="morel" data-escala="6"></span><figcaption>Morel</figcaption>
-      <ul class="ref"><li>"um homem grande", "cicatriz de orelha a orelha"</li><li>"armadura remendada com pedaços de outras armaduras"</li><li>pendura a espada nas costas; o cabelo castanho e a barba do sprite</li></ul></figure>
-    <figure><span class="nicho" style="width:242px;height:242px" data-peca="odette" data-escala="6"></span><figcaption>Odette</figcaption>
-      <ul class="ref"><li>clériga desertora; a touca branca e o véu escuro do sprite</li><li>"roupas chamuscadas" ("chamuscadas, não queimadas")</li><li>sem a cruz (só o sprite tinha); o rosário do pescoço ficou de fora porque, num dos caminhos, ela o entrega ao herói e o retrato é um só</li></ul></figure>
-    <figure><span class="nicho" style="width:242px;height:242px" data-peca="yara" data-escala="6"></span><figcaption>Yara</figcaption>
-      <ul class="ref"><li>"uma moça de cabelo sujo de lama"</li><li>os olhos castanhos ("castanhos de novo"); sem o violeta e o brilho do sprite</li><li>o vestido verde do sprite, em pano apagado</li></ul></figure>
+  <h2>Ampliados: primeira versão × revisão</h2>
+  <div class="linha topo">
+    <figure><span class="nicho" style="width:242px;height:242px" data-peca="morel-v1" data-escala="6"></span><figcaption>Morel, v1</figcaption></figure>
+    <figure><span class="nicho" style="width:242px;height:242px" data-peca="morel" data-escala="6"></span><figcaption>Morel, revisão</figcaption>
+      <ul class="ref"><li>a cicatriz: um corte na diagonal, da linha do cabelo até a barba, cortando a sobrancelha e o nariz, no tom da pele repuxada (antes, uma faixa vermelha de orelha a orelha)</li><li>a espada: pomo, empunhadura enfaixada, guarda e a lâmina sumindo atrás da ombreira, num eixo só</li><li>sem os remendos e rebites soltos</li></ul></figure>
+    <figure><span class="nicho" style="width:130px;height:130px" data-peca="morel-v1-carta" data-escala="8"></span><figcaption>carta v1, ×8</figcaption></figure>
+    <figure><span class="nicho" style="width:130px;height:130px" data-peca="morel-carta" data-escala="8"></span><figcaption>carta revisão, ×8 (a cicatriz em três pixels)</figcaption></figure>
+  </div>
+  <div class="linha topo">
+    <figure><span class="nicho" style="width:242px;height:242px" data-peca="odette-v1" data-escala="6"></span><figcaption>Odette, v1</figcaption></figure>
+    <figure><span class="nicho" style="width:242px;height:242px" data-peca="odette" data-escala="6"></span><figcaption>Odette, revisão</figcaption>
+      <ul class="ref"><li>a pequena cruz amarela do sprite, em amarelo envelhecido</li><li>o chamuscado: a borda do véu roída num ombro, uma forma só (antes, manchas soltas)</li><li>sem o rosário (num dos caminhos ela o entrega ao herói)</li></ul></figure>
+    <figure><span class="nicho" style="width:130px;height:130px" data-peca="odette-v1-carta" data-escala="8"></span><figcaption>carta v1, ×8</figcaption></figure>
+    <figure><span class="nicho" style="width:130px;height:130px" data-peca="odette-carta" data-escala="8"></span><figcaption>carta revisão, ×8</figcaption></figure>
+  </div>
+  <div class="linha topo">
+    <figure><span class="nicho" style="width:242px;height:242px" data-peca="yara-v1" data-escala="6"></span><figcaption>Yara, v1</figcaption></figure>
+    <figure><span class="nicho" style="width:242px;height:242px" data-peca="yara" data-escala="6"></span><figcaption>Yara, revisão</figcaption>
+      <ul class="ref"><li>o cabelo assimétrico: solto e irregular de um lado, com mechas grudadas pela lama ("cabelo sujo de lama"); do outro, atrás da orelha e preso num nó</li><li>o cabelo roxo apagado, como no sprite antigo: a cor vira o traço dela; a lama continua barrenta por cima</li><li>os olhos castanhos; nada de brilho, joia ou chapéu</li></ul></figure>
+    <figure><span class="nicho" style="width:130px;height:130px" data-peca="yara-v1-carta" data-escala="8"></span><figcaption>carta v1, ×8</figcaption></figure>
+    <figure><span class="nicho" style="width:130px;height:130px" data-peca="yara-carta" data-escala="8"></span><figcaption>carta revisão, ×8</figcaption></figure>
   </div>
   <div class="linha">
-    <figure><span class="nicho" style="width:130px;height:130px" data-peca="morel-carta" data-escala="8"></span><figcaption>carta do Morel, ×8</figcaption></figure>
-    <figure><span class="nicho" style="width:130px;height:130px" data-peca="odette-carta" data-escala="8"></span><figcaption>carta da Odette, ×8</figcaption></figure>
-    <figure><span class="nicho" style="width:130px;height:130px" data-peca="yara-carta" data-escala="8"></span><figcaption>carta da Yara, ×8</figcaption></figure>
+    <figure><img src="capturas-comitiva/proposta-erva-yara.png" width="330" height="165" alt=""><figcaption>a erva na gola, testada e descartada: a 40×40 lê como broche (pareceria joia) e some a 48 e 32 px</figcaption></figure>
   </div>
 </section>
 
 <section>
-  <h2>Nos tamanhos reais, com os heróis aprovados</h2>
+  <h2>Nos tamanhos reais (v1 e revisão), com os heróis aprovados</h2>
   <div id="reais"></div>
 </section>
 
 <section>
-  <h2>No jogo: a fogueira (hoje × candidatos), com cada herói</h2>
+  <h2>No jogo: a fogueira (hoje × v1 × revisão), com cada herói</h2>
   <div class="linha">
-    <figure><img class="foto" src="capturas-comitiva/normal-hoje-guerreiro-fogueira-cena.png" width="520" alt=""><figcaption>hoje (os sprites de sempre)</figcaption></figure>
-    <figure><img class="foto" src="capturas-comitiva/normal-candidato-guerreiro-fogueira-cena.png" width="520" alt=""><figcaption>candidatos, com o Guerreiro</figcaption></figure>
+    <figure><img class="foto" src="capturas-comitiva/folha-fogueira-perto.png" alt=""><figcaption>as figuras de perto (×3), com o Guerreiro: a Yara, longe do fogo, é a que pedia mais contraste</figcaption></figure>
   </div>
   <div class="linha">
-    <figure><img class="foto" src="capturas-comitiva/normal-candidato-mago-fogueira-cena.png" width="520" alt=""><figcaption>com o Mago</figcaption></figure>
-    <figure><img class="foto" src="capturas-comitiva/normal-candidato-arqueiro-fogueira-cena.png" width="520" alt=""><figcaption>com o Arqueiro</figcaption></figure>
+    <figure><img class="foto" src="capturas-comitiva/folha-fogueiras.png" alt=""><figcaption>a cena inteira, no tamanho do jogo, com o Guerreiro, o Mago e o Arqueiro</figcaption></figure>
   </div>
   <h2>No jogo: o painel e a tela da Comitiva (Morel ferido)</h2>
   <div class="linha">
     <figure><img class="foto" src="capturas-comitiva/normal-hoje-guerreiro-tela-comitiva.png" width="640" alt=""><figcaption>hoje</figcaption></figure>
-    <figure><img class="foto" src="capturas-comitiva/normal-candidato-guerreiro-tela-comitiva.png" width="640" alt=""><figcaption>candidatos</figcaption></figure>
+    <figure><img class="foto" src="capturas-comitiva/normal-candidato-guerreiro-tela-comitiva.png" width="640" alt=""><figcaption>revisão</figcaption></figure>
   </div>
-  <h2>No jogo: a carta da luta</h2>
+  <h2>No jogo: a carta da luta (v1 × revisão)</h2>
   <div class="linha">
-    <figure><img class="foto" src="capturas-comitiva/folha-lutas.png" alt=""><figcaption>hoje e candidatos (Morel e Odette; Yara e Morel)</figcaption></figure>
+    <figure><img class="foto" src="capturas-comitiva/folha-lutas.png" alt=""><figcaption>na vez do herói e no momento em que o companheiro avança para agir (o companheiro não tem vez própria: a carta dele avança com a borda acesa, sem ampliar)</figcaption></figure>
   </div>
 </section>
 
 <script src="arte-teste.js"></script>
+<script src="comitiva-v1.js"></script>
 <script>
 "use strict";
 document.querySelectorAll("[data-peca]").forEach((n) => n.insertAdjacentHTML("afterbegin", ArteTeste.img(n.dataset.peca, Number(n.dataset.escala))));
-// os tamanhos reais: busto 80, cabeça 48, carta 32 (36 na vez), fogueira 16; os heróis aprovados na mesma linha de base
+// os tamanhos reais: busto 80, cabeça 48, carta 32 (36 na vez do herói), fogueira 16; os heróis aprovados na mesma régua
 const TAM = [["", 2, 90, "busto 80 px"], ["-cabeca", 2, 56, "cabeça 48 px"], ["-carta", 2, 36, "carta 32 px"]];
-const linha = (c, nome) => `<div class="linha"><span class="rotulo">${nome}</span>` +
+const linha = (c, nome, vez) => `<div class="linha"><span class="rotulo">${nome}</span>` +
   TAM.map(([suf, e, caixa, rot]) => `<figure><span class="nicho" style="width:${caixa}px;height:${caixa}px">${ArteTeste.img(c + suf, e)}</span><figcaption>${rot}</figcaption></figure>`).join("") +
-  `<figure><span class="nicho vez" style="width:40px;height:40px">${ArteTeste.img(c + "-carta", 2)}</span><figcaption>na vez, 36 px</figcaption></figure>` +
+  (vez ? `<figure><span class="nicho vez" style="width:40px;height:40px">${ArteTeste.img(c + "-carta", 2)}</span><figcaption>na vez, 36 px</figcaption></figure>` : "") +
   `<figure><span class="nicho" style="width:20px;height:20px">${ArteTeste.img(c + "-carta", 1)}</span><figcaption>fogueira 16 px</figcaption></figure></div>`;
-document.getElementById("reais").innerHTML = [["morel", "Morel"], ["odette", "Odette"], ["yara", "Yara"], ["guerreiro", "Guerreiro"], ["mago", "Mago"], ["arqueiro", "Arqueiro"]]
-  .map(([c, n]) => linha(c, n)).join("");
+document.getElementById("reais").innerHTML = [["morel-v1", "Morel v1"], ["morel", "Morel"], ["odette-v1", "Odette v1"], ["odette", "Odette"],
+  ["yara-v1", "Yara v1"], ["yara", "Yara"]].map(([c, n]) => linha(c, n, false)).join("") +
+  [["guerreiro", "Guerreiro"], ["mago", "Mago"], ["arqueiro", "Arqueiro"]].map(([c, n]) => linha(c, n, true)).join("");
 </script>
 </body>
 </html>

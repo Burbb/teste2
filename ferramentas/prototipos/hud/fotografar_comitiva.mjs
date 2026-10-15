@@ -2,7 +2,9 @@
 // candidatos (arte-teste.js, postos na página por comitiva-no-jogo.js só aqui; o jogo não muda). Em janela normal
 // (1500×950) e baixa (1280×720): a fogueira com cada herói (Morel e Odette juntos, Yara no acampamento, Morel ferido),
 // o painel da comitiva ao lado (vida, aprovação, ferimento), a tela da Comitiva (tecla C, com o foco do teclado) e a
-// luta (as cartas). Guarda em capturas-comitiva/.
+// luta (as cartas, na vez do herói e no passo à frente de um companheiro). Guarda em capturas-comitiva/.
+// Versões: hoje (os sprites de sempre), v1 (a primeira versão dos candidatos, comitiva-v1.js) e candidato (a atual);
+// VERSOES=candidato,v1 escolhe quais refazer (o padrão: hoje e candidato).
 //   PLAYWRIGHT_MODULO=<caminho do playwright>/index.mjs node ferramentas/prototipos/hud/fotografar_comitiva.mjs
 // (SO=luta: só as lutas)
 // (CHROMIUM=<executável do navegador>, se o Playwright não achar o dele)
@@ -36,8 +38,12 @@ async function pagina(url, W, H) {
 }
 const fechar = async (p) => { for (let k = 0; k < 6; k++) { const e = await p.$(".orientacao:not([hidden]) .orientacao-entendi"); if (!e) break; await e.click().catch(() => {}); await espera(250); } };
 const vestir = async (p, versao) => {
-  if (versao !== "candidato") return;
+  if (versao === "hoje") return;
   await p.addScriptTag({ path: path.join(aqui, "arte-teste.js") });
+  if (versao === "v1") {
+    await p.addScriptTag({ path: path.join(aqui, "comitiva-v1.js") });
+    await p.evaluate(() => { window.COMITIVA_VERSAO = "v1"; });
+  }
   await p.addScriptTag({ path: path.join(aqui, "comitiva-no-jogo.js") });
   await espera(500);
 };
@@ -49,7 +55,7 @@ const recorte = async (p, sel, nome, folga = 6) => {
 const contar = (p) => p.evaluate(() => `${document.querySelectorAll("img.arte-teste").length} imagens do candidato`);
 const JANELAS = [[1500, 950, "normal"], [1280, 720, "baixa"]];
 for (const [W, H, jan] of JANELAS) {
-  for (const versao of ["hoje", "candidato"]) {
+  for (const versao of (process.env.VERSOES || "hoje,candidato").split(",")) {
     // a fogueira e o painel da comitiva, com cada herói
     for (const classe of process.env.SO === "luta" ? [] : jan === "normal" ? ["guerreiro", "mago", "arqueiro"] : ["guerreiro"]) {
       const { proc, url } = await subir("fogueira", { CLASSE: classe, FERIDO: "morel" });
@@ -84,6 +90,21 @@ for (const [W, H, jan] of JANELAS) {
       const base = `${jan}-${versao}-luta-${nome}`;
       await p.screenshot({ path: path.join(SAIDA, `${base}.png`) });
       await recorte(p, "#arena", `${base}-arena`, 0);
+      // o passo à frente de um companheiro: o herói ataca (tecla 1 e o alvo) e, quando a carta de um companheiro
+      // avança, as animações param para a fotografia
+      await p.evaluate(() => {
+        new MutationObserver((ms, o) => {
+          if (!document.querySelector("#arena .aliados .carta.agindo:not(:has(.carta-rec))")) return;
+          document.getAnimations().forEach((a) => a.pause()); window.__parado = true; o.disconnect();
+        }).observe(document.getElementById("arena"), { subtree: true, attributes: true, attributeFilter: ["class"] });
+      });
+      await p.keyboard.press("1"); await espera(600);
+      const alvo = await p.$("#arena .inimigos .carta.alvejavel"); if (alvo) await alvo.click().catch(() => {});
+      try {
+        await p.waitForFunction(() => window.__parado, null, { timeout: 20000 });
+        await recorte(p, "#arena", `${base}-agindo-arena`, 0);
+        await p.evaluate(() => document.getAnimations().forEach((a) => a.play()));
+      } catch { console.log(`${base}: nenhum companheiro agiu a tempo`); }
       console.log(`${base}: ${await contar(p)}`);
       await p.close(); proc.kill();
     }

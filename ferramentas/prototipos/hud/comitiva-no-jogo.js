@@ -7,7 +7,9 @@
 "use strict";
 
 (() => {
-  const PECA = { morel: "morel", odete: "odette", yara: "yara" };  // o id do companheiro no jogo → a peça do teste
+  // o id do companheiro no jogo → a peça do teste (window.COMITIVA_VERSAO = "v1": a primeira versão, de comitiva-v1.js)
+  const v = window.COMITIVA_VERSAO ? `-${window.COMITIVA_VERSAO}` : "";
+  const PECA = { morel: `morel${v}`, odete: `odette${v}`, yara: `yara${v}` };
   const srcs = {};
   Object.keys(PECA).forEach((id) => { srcs[Sprites.url(id)] = id; srcs[Sprites.url(id, true)] = id; });
   function vestir() {

@@ -2169,3 +2169,17 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
 - **Verificado:** fogueira com cada herói, painel, tela da Comitiva (tecla C e Tab) e duas lutas, em 1500×950 e
   1280×720; a página abre sem erro; nenhum erro no console. O jogo não mudou. **Falta:** Jean avaliar. A E9 e a
   validação com jogadores novos continuam abertas.
+
+### 15/10/2026 — Teste da comitiva: revisão de Morel, Odette e Yara (experimento, sem versão)
+
+- **Pedido de Jean:** manter a base e revisar só alguns traços, ainda no protótipo: o cabelo da Yara (assimétrico, mechas
+  com lama, parte presa; depois, roxo), a cruz da Odette de volta, a cicatriz do Morel como marca e não faixa (depois,
+  na diagonal); no meio, a espada do Morel com forma de espada e sem os pixels soltos (remendos, rebites, manchas do
+  chamuscado). O texto do Morel ("de orelha a orelha") não mudou; o desenho não o segue ao pé da letra.
+- **Feito:** as grades novas em `arte-teste.js`; a primeira versão guardada em `comitiva-v1.js` para comparar;
+  `fotografar_comitiva.mjs` aceita `VERSOES` (hoje, v1, candidato) e fotografa também o passo à frente de um
+  companheiro na luta; `comitiva-teste.html` mostra v1 × revisão. Detalhes e avaliação no `LEIA-ME.md` da pasta. A erva
+  na gola da Yara foi testada e descartada (lia como broche).
+- **Verificado:** fogueira com cada herói, painel, tela da Comitiva, lutas (vez do herói e companheiro agindo), em
+  1500×950 e 1280×720; a página abre sem erro; nenhum erro no console. O jogo não mudou. **Falta:** Jean avaliar. A E9 e
+  a validação com jogadores novos continuam abertas.
