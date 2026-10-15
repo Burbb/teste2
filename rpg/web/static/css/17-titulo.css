@@ -1,0 +1,44 @@
+/* O menu inicial com a HUD de ferro (1.93.1): a composição aberta do menu antigo, com o acabamento de agora.
+   A HUD (14-hud.css) dá ao palco a moldura e o carvão das telas da partida, à página o véu de leitura e a cada opção a
+   placa de metal; no título isso escondia a paisagem e apequenava o título. Aqui, só no título (body.modo-titulo):
+   - a paisagem animada ocupa o fundo e aparece atrás de tudo: sem o painel central nem a moldura;
+   - uma sombra suave e localizada, sem borda, atrás do título e das opções, para a leitura sobre qualquer céu;
+   - o título grande, na letra do jogo, em tamanhos que são múltiplos do pixel da fonte (nítido em qualquer janela),
+     com um filete de latão embaixo;
+   - as opções como texto sobre a paisagem, com sombra discreta; a escolhida (o mouse leva o foco junto, escolhas.js)
+     em latão claro, com o losango antes e um filete curto embaixo. Pressionar ainda desce 1 px.
+   As telas da partida não mudam. */
+
+:root body.modo-titulo #palco { border-color: transparent; border-image: none; background: none; box-shadow: none; }
+:root body.modo-titulo #pagina {
+  background: radial-gradient(ellipse 42% 46% at 50% 48%, rgba(4, 5, 8, 0.62), rgba(4, 5, 8, 0.3) 55%, transparent 78%); }
+
+/* o título */
+/* o título é mais largo que a coluna de leitura (#folha): o cabeçalho centraliza transbordando igual dos dois lados,
+   dentro do palco */
+:root body.modo-titulo #cena-cab { display: flex; flex-direction: column; align-items: center; margin-bottom: 34px; }
+:root body.modo-titulo #cena-cab .cena-titulo { font-size: calc(var(--px) * 80); line-height: 1; white-space: nowrap; color: var(--ouro);
+  text-shadow: 0 4px 0 #000, 0 8px 28px rgba(0, 0, 0, 0.9), 0 0 48px rgba(255, 140, 40, 0.22); }
+:root body.modo-titulo #cena-cab::after { content: ""; display: block; width: min(280px, 40%); height: 1px; margin: 22px auto 0;
+  background: linear-gradient(90deg, transparent, var(--latao) 30%, var(--latao-claro) 50%, var(--latao) 70%, transparent);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.8); }
+@media (min-width: 1400px) and (min-height: 860px) { :root body.modo-titulo #cena-cab .cena-titulo { font-size: calc(var(--px) * 96); } }
+@media (min-width: 1800px) and (min-height: 1000px) { :root body.modo-titulo #cena-cab .cena-titulo { font-size: calc(var(--px) * 112); } }
+
+/* as opções: texto sobre a paisagem, sem a placa */
+:root body.modo-titulo #prompt .escolha,
+:root body.modo-titulo #prompt .escolha:hover,
+:root body.modo-titulo #prompt .escolha:active,
+:root body.modo-titulo #prompt .escolha:focus-visible {
+  border-color: transparent; background: none; box-shadow: none; }
+:root body.modo-titulo #prompt .escolha { position: relative; justify-content: center; padding: 6px 12px; color: #e8dcc0;
+  text-shadow: 0 2px 0 #000, 0 0 14px rgba(0, 0, 0, 0.85); transition: color .12s; }
+:root body.modo-titulo #prompt .escolha .rotulo { flex: 0 1 auto; }
+:root body.modo-titulo #prompt .escolha:focus { color: var(--latao-claro); }
+:root body.modo-titulo #prompt .escolha::before { color: var(--latao-claro); text-shadow: 0 1px 0 #000; }
+/* o filete de latão curto sob a escolhida (forma, além da cor): o foco do teclado e o do mouse são o mesmo (escolhas.js
+   leva o foco para a opção debaixo do mouse), e o losango, a cor e o filete o mostram sem desenhar uma caixa */
+:root body.modo-titulo #prompt .escolha::after { content: ""; position: absolute; left: 50%; bottom: 2px; width: 44px; height: 1px;
+  margin-left: -22px; background: linear-gradient(90deg, transparent, var(--latao), transparent); opacity: 0; transition: opacity .12s; }
+:root body.modo-titulo #prompt .escolha:focus::after { opacity: 1; }
+:root body.modo-titulo #prompt .escolha:active { color: #fff1cc; }

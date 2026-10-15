@@ -2268,3 +2268,19 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   (64 px), o voo ao equipar (48 px) e o martelo no corpo; a pena só em espaços de item, o Vigor e o Poder com os
   deles. 602 testes, gabarito sem diferença, pyflakes, fumaça (356). O relatório da luta pede a imagem pela mesma
   chamada por id da bolsa (não fotografado: nenhum cenário garante a pena no espólio).
+
+### 15/10/2026 — O menu inicial aberto sobre a paisagem (1.93.1)
+
+- **Pedido de Jean:** no menu inicial, a paisagem animada visível atrás da composição; o título grande; as opções logo
+  abaixo, leves (texto sobre a paisagem, sombra discreta, um indicador pequeno da escolhida); sem o painel opaco, a
+  moldura externa e as placas de metal; sem slogan; as mesmas opções, fluxos, navegação e proteções; só no menu.
+- **Feito:** `css/17-titulo.css`, só em `body.modo-titulo`: tira a moldura e o carvão do palco, troca o véu da página
+  por uma sombra radial suave sem borda (atrás do título e das opções), o título em 80/96/112 px (múltiplos do pixel da
+  fonte, conforme a janela) com um filete de latão embaixo, centralizado no palco mesmo quando passa da coluna de
+  leitura; as opções sem face, textura nem relevo, centralizadas, em creme com sombra; a escolhida em latão claro, com o
+  losango antes e um filete curto embaixo (forma, além da cor). O JS não mudou (o mouse continua levando o foco junto).
+  A folha entrou em `FORA_DA_TRAVA` com as outras da HUD.
+- **Verificado:** 1280×720, 1500×950 e 1920×1080 (parado, teclado, mouse), a lista de saves, a volta ao título depois
+  de salvar e sair de uma partida (sem moldura, título em 112 px na janela grande), movimento reduzido; a criação de
+  personagem (fora do menu) não mudou. Verificações do CLAUDE.md.
+- **Falta:** Jean conferir.

@@ -255,10 +255,11 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   materiais da interface por cima da estrutura de 01 a 13, em três folhas: `css/14-hud.css` (as três molduras
   principais da ficha, da coluna do centro e do mundo, as superfícies de carvão, o topo, a doca, os botões, a ficha, os
   espaços de item, a janela do achado), `15-hud-luta.css` (cartas, roda, mira) e `16-hud-telas.css` (janelas, menus,
-  mercado e serviços, Diário, Talentos, avisos). As imagens moram em `static/hud/` (moldura, texturas, barras) e
+  mercado e serviços, Diário, Talentos, avisos), mais `17-titulo.css` (1.93.1: o menu inicial aberto sobre a
+  paisagem, sem a moldura do palco, o véu da página nem as placas das opções; só em `body.modo-titulo`). As imagens moram em `static/hud/` (moldura, texturas, barras) e
   `static/hud/icones/` (a família de ícones, cada um no tamanho de uso e com o dobro). Toda regra começa por
   `:root body`, a mesma força de `body.<estado>`: é a que elas tinham no experimento, e vencem o material antigo sem
-  depender de uma classe no corpo. Essas três folhas ficam fora da trava de pixel (`FORA_DA_TRAVA`): o material é
+  depender de uma classe no corpo. Essas folhas ficam fora da trava de pixel (`FORA_DA_TRAVA`): o material é
   pintado, com véus translúcidos, relevo e sombra suaves. `Sprites.publicar()` pinta os anéis, bicos e fios da
   interface em ferro (as mesmas grades; o bronze continua nos sprites e, com `{ bronze: true }`, no protótipo).
 - `icones.js` (`Icones`) é o único lugar que decide o desenho de cada papel: o item pelo desenho que o motor dá,
