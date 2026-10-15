@@ -2,7 +2,7 @@
    letras, cada letra uma cor da paleta do desenho, pintada por Sprites.grade (cada pixel da arte, um quadrado inteiro
    da tela). Icones pede aqui o busto da ficha, a cabeça do topo e dos cartões, a carta da luta e a figura da fogueira;
    quem não tem retrato desenhado fica com o sprite que tinha. Cada papel tem o seu desenho (o busto do Morel é de
-   80×80, o dos outros de 40×40; a carta do Morel é de 32×32, a dos outros de 16×16): o critério é a leitura, a
+   80×80, o dos outros de 40×40; a carta de todos é de 16×16, a 2×): o critério é a leitura, a
    identidade e o peso parecidos no tamanho em que aparecem, não a mesma resolução de origem.
    As três classes básicas (o Mago e o Arqueiro desde a 1.91.0, abaixo). O Guerreiro: o capacete fechado de ferro, sem rosto (a calota, a cruz de reforço, a fresta da viseira em
    duas aberturas, um amassado na calota), a gola alta de gibão, a capa de lã nos ombros e a correia da espada. O ferro
@@ -211,8 +211,11 @@ const Retratos = (() => {
   // Morel: o retrato grande em 80×80 (a 1×), redesenhado do de 40×40 onde a resolução ajuda (a cicatriz fina com a
   // borda afundada, as sobrancelhas carregadas, a boca na barba, a junta das ombreiras), com a espada encaixada nas
   // costas numa reta; a ficha baixa é o recorte de 64 um pouco à esquerda (a espada cabe inteira), a cabeça o de 48
-  // sem os pedaços da guarda; a carta da luta é o busto de 40×40 reduzido a 32 (a escolhida); a figura da fogueira, a
-  // versão de 16×16.
+  // sem os pedaços da guarda (a dos cartões da Comitiva, da reação e de quem chega). A figura de 16×16 é a da fogueira
+  // e, desde a 1.96.0, também a carta (a luta, o painel, o aviso: a 2×, como as dos outros) e o chip: o desenho que o
+  // Jean escolheu para os lugares pequenos, com a espada refeita num eixo só (o punho reto, a guarda centrada e longe
+  // do rosto, a lâmina sumindo atrás da ombreira). A carta anterior (o busto de 40×40 reduzido a 32, de cabeça pequena e
+  // traço fino ao lado dos outros) saiu; fica no histórico (1.92.0).
   const CORES_MOREL = { B: "#3e2a1c", C: "#6a4a2c", D: "#2e3034", F: "#6a6058", G: "#b0b2b8", L: "#6a4a30", P: "#c09070", R: "#8a3428", S: "#9a9ca4", X: "#9a6656", b: "#5a3e2a", c: "#4e3420", d: "#4a4c52", e: "#20160f", f: "#4e4640", g: "#7a7c84", h: "#c4c6cc", k: "#33231a", l: "#4a3220", n: "#34302c", o: "#6c4a38", p: "#9a6c52", r: "#5e241c", s: "#6e7078", t: "#2a1c14", x: "#d8aa90" };
   const MOREL = [
     "................................................................................",
@@ -346,52 +349,18 @@ const Retratos = (() => {
     "ssssssssDDDllRRRRRRRRRRRrrrrrrrrrrrllnnfffffffff",
     "sssssssDDlllRRRRRRRRRRRRrrrrrrrrrrrrlllnnfffffff",
   ];
-  const MOREL_CARTA = [
-    "................................",
-    "................................",
-    ".GgD............................",
-    "..D..........Cccccc.............",
-    "..l........CCCccccckk...........",
-    "..l.......CCCCccccckkk..........",
-    "..Ll......CPxppppppook..........",
-    "..Ll......PPPxpppppooo..........",
-    "..lB......PPccppppkkoo..........",
-    "...Ll.....PPPexpppeooo..........",
-    "...lB.....PPPppPxppooo..........",
-    "....Ll....PPPppppxpooo..........",
-    "....Ll....PPPppppppooo..........",
-    "..hhhhg...PbbbbbBBBBBo..........",
-    "....Ss.....bbbbbBBBBB...........",
-    ".....SSSssDlbbbbBBBBlnFFFF......",
-    "....SSSSssdDllllllllnFFFFFFF....",
-    "..SSSSSSssdDllllllllnffffffnnn..",
-    ".dssssssssDllllllllllnfffffnnnn.",
-    "LdsssssssslRRRRRrrrrrlfffffnnnnl",
-    "LdsssssssDlRRRRRrrrrrlnffffnnnnl",
-    "LdssssssDllRRRRRrrrrrllnfffnnnnl",
-    "LLLLLLLLlllRRRRRrrrrrlllllllllll",
-    "LLLLLLLLlllRRRRRrrrrrlllllllllll",
-    "LLLLLLLLlllRRRRrrrrrrlllllllllll",
-    "LLLLLLLLlllRRRRrrrrrrlllllllllll",
-    "LLLLLLLLlllRRRRrrrrrrlllllllllll",
-    "LLLLLLLLlllRRRRrrrrrrlllllllllll",
-    "LLLLLLLLlllRRRRrrrrrrlllllllllll",
-    "LLLLLLLLlllRRRRrrrrrrlllllllllll",
-    "LLLLLLLLlllRRRRrrrrrrlllllllllll",
-    "LLLLLLLLlllRRRRrrrrrrlllllllllll",
-  ];
   const MOREL_FIGURA = [
     "................",
-    "Gg...CCccck.....",
+    ".G...CCccck.....",
     ".L..CCcccccc....",
     ".l..cPxPppok....",
     ".L..cPexpeok....",
-    "..l.PPPPxpoo....",
-    "..L..PPPppoo....",
-    "gGGgbbPPpbBo....",
-    "..S.bbboooBB....",
-    "..s..bbbbBB.....",
-    "..SSs.bbBB.FFn..",
+    ".l..PPPPxpoo....",
+    ".L...PPPppoo....",
+    "gGg.bbPPpbBo....",
+    ".S..bbboooBB....",
+    ".s...bbbbBB.....",
+    ".sSSs.bbBB.FFn..",
     ".SSsdLRRrrlfFn..",
     "SSsdLLRRrrllfFnn",
     "SsdLLLRRrrlllfnn",
@@ -536,7 +505,7 @@ const Retratos = (() => {
       figura: MAGO_CARTA },
     arqueiro: { cores: PANO_VERDE, busto: ARQUEIRO, bustoBaixo: recorte(ARQUEIRO, 4, 1, 32), cabeca: recorte(ARQUEIRO, 8, 1, 24),
       carta: ARQUEIRO_CARTA, figura: ARQUEIRO_CARTA },
-    morel: { cores: CORES_MOREL, busto: MOREL, bustoBaixo: recorte(MOREL, 4, 2, 64), cabeca: MOREL_CABECA, carta: MOREL_CARTA,
+    morel: { cores: CORES_MOREL, busto: MOREL, bustoBaixo: recorte(MOREL, 4, 2, 64), cabeca: MOREL_CABECA, carta: MOREL_FIGURA,
       figura: MOREL_FIGURA },
     odete: { cores: CORES_ODETE, busto: ODETE, bustoBaixo: recorte(ODETE, 4, 1, 32), cabeca: recorte(ODETE, 8, 1, 24), carta: ODETE_CARTA,
       figura: ODETE_CARTA },

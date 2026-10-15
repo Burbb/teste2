@@ -304,8 +304,8 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   cabeça (48: o topo, os cartões da Comitiva e da reação, a faixa de quem chega), a carta (32: a luta, o painel, o
   aviso) e a figura de 16×16 (a fogueira e o chip de aprovação no texto). A escala sai do tamanho do desenho: o busto
   dos heróis, de Odette e de Yara é de 40×40 a ×2 (a janela baixa e a cabeça são recortes na mesma escala), a carta de
-  16×16 a ×2; o do Morel é de 80×80 a ×1, com a ficha baixa e a cabeça em 64 e 48 a ×1 e a carta de 32×32 (o busto de
-  40×40 reduzido a 32). O critério entre eles é a leitura, a identidade e o peso parecidos no tamanho em que aparecem,
+  16×16 a ×2; o do Morel é de 80×80 a ×1, com a ficha baixa e a cabeça em 64 e 48 a ×1, e a carta é a figura de 16×16
+  da fogueira a ×2, com a espada num eixo só (1.96.0; antes, o busto de 40×40 reduzido a 32). O critério entre eles é a leitura, a identidade e o peso parecidos no tamanho em que aparecem,
   não a mesma resolução de origem nem a mesma proporção entre cabeça e ombros. Quem escolhe é sempre `Icones`:
   `retrato` (ficha, Inventário), `cabeca` (48, 32 ou 16 px, conforme o lugar) e `figura` (o canvas de 16×16 da
   fogueira; para quem não tem, o sprite do jogo). Nenhuma tela pede o sprite da classe nem do companheiro direto. O

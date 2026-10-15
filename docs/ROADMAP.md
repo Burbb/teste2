@@ -110,7 +110,8 @@ Pendências registradas depois da 1.95.0 (para depois, sem executar):
   luta, faixa de quem chega, aviso, chip de aprovação, fogueira); o Morel com o busto grande em 80×80. Cartas de
   combate (comparadas em `ferramentas/prototipos/hud/cartas-teste.html`): o critério é leitura, identidade e peso
   parecidos em 32 px, não a mesma resolução de origem nem a mesma proporção entre cabeça e ombros (os heróis, Odette e
-  Yara com a carta de 16×16 a ×2; o Morel com o busto reduzido a 32); vale para personagens futuros. Quantos
+  Yara com a carta de 16×16 a ×2; o Morel, desde a 1.96.0, com a figura de 16×16 da fogueira a ×2); vale para
+  personagens futuros. Quantos
   retratos haverá e como o jogador vai
   personalizar o herói continuam em aberto (nem seleção, nem recoloração, nem diferença por gênero, nem as outras
   classes por enquanto); o retrato não segue o elmo equipado nem os atributos.
