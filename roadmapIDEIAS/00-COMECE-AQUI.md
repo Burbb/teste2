@@ -2112,3 +2112,18 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   fuga em quatro tentativas, nova tentativa, vitória; página recarregada); Ilse nos dois desfechos, amostrada de 100
   em 100 ms, sem quadro sem ela; as barras quadro a quadro em compras, abas, venda e inventário, e o feedback de
   poção, máximo pela fome, experiência e recurso; o Continuar na abertura e no espólio. **Falta:** Jean conferir.
+
+### 15/10/2026 — Teclado no Continuar, carga na capela e o retrato no Inventário (1.90.1 e 1.90.2)
+
+- **Continuar pelo teclado** (sem foco posto por código): na cena de texto, o foco começa na página, Tab chega ao botão
+  em 9 toques e Shift+Tab volta, o anel aparece, Enter e espaço avançam uma vez; nada a corrigir. No espólio, o quadro
+  não levava o foco (21 Tabs pela página escondida atrás). 1.90.1: o foco vai para o Continuar dele, Tab e Shift+Tab
+  ficam nele, e fechado o quadro o foco volta; Enter e espaço fecham uma vez, sem escolha ao motor; com o mouse, o anel
+  não aparece.
+- **Carga real de save na capela:** antes do desfecho (no ossuário) e depois dele, nos dois caminhos (salvar no fundo,
+  sair ao título, carregar): a mesma sala, Ilse ausente, a água escura ou clara, ouro, experiência, itens e o Sigilo
+  iguais, e o desfecho não é contado de novo.
+- **Inventário (1.90.2):** o meio dos espaços mostrava o desenho da classe com um halo atrás. Agora pede o retrato a
+  `Icones.retrato` (o mesmo da ficha: o Guerreiro de capacete fechado, 80 px; 64 na janela baixa), sem halo; Mago e
+  Arqueiro seguem com o desenho da classe. Folga até arma, escudo, mãos e anel: 22 px (30 na janela baixa).
+- **Verificado:** 602 testes, gabarito sem diferença, pyflakes, fumaça (356, nenhuma exceção no servidor).

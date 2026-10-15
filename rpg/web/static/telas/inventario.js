@@ -27,7 +27,7 @@
     }
     const bolsa = p.bolsa.map((b) => `<div class="slot-px clicavel" data-usar="${h(b.id)}" ${dica(`<b>${h(b.nome)}</b><div>${Realce.texto(b.desc)}</div>${b.id === "tocha" ? "" : '<div class="rodape">Clique para usar · botão direito: usar em você.</div>'}`)}>${Icones.consumivel(b.id) || S(iconeConsumivel(b.id), 2)}<span class="qtd">${b.qtd}</span></div>`).join("");
     return `<div class="tela inventario">
-      <div class="boneco">${espacos}<div class="boneco-retrato">${S(p.classe, 6)}</div></div>
+      <div class="boneco">${espacos}<div class="boneco-retrato">${Icones.retrato(p.classe, "Retrato do herói") || S(p.classe, 6)}</div></div>
       <div class="inv-lado">
         <div class="ficha-mini"><div class="heroi-nome">${h(p.nome)}</div><div class="heroi-titulo">${h(p.titulo)} · nível ${p.nivel} · ${p.xp}/${p.xp_proximo} XP</div></div>
         <div class="atributos">${attrs}</div>

@@ -10,7 +10,8 @@
   grid-template-areas: "amu cab an1" "arm ret sec" "mao ret an2" "per pei pes";
   justify-items: center;
 }
-.boneco-retrato { grid-area: ret; width: 100px; height: 100px; display: grid; place-items: center; background: radial-gradient(circle at 50% 42%, rgba(226, 189, 99, 0.14), rgba(0, 0, 0, 0.5) 68%, transparent 72%); align-self: center; }
+/* O retrato (o mesmo da ficha, por Icones.retrato; sem ele, o desenho da classe) direto sobre o painel, sem pedestal. */
+.boneco-retrato { grid-area: ret; width: 100px; height: 100px; display: grid; place-items: center; align-self: center; }
 .espaco { position: relative; width: 60px; height: 60px; }
 .espaco[draggable=true] { cursor: grab; }
 .espaco-nome { position: absolute; left: 50%; bottom: -17px; transform: translateX(-50%); white-space: nowrap; font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--tinta-3); pointer-events: none; }
