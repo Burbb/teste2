@@ -41,7 +41,7 @@ import numpy as np
 
 from pixel_comum import ANG_LUZ, LUZ, ajustar, contornar, destino, grade, imagem, limpar, salvar
 
-LADOS = (32, 64)  # 48 (o voo) é o 32 a 2× reduzido pelo navegador, como nos outros desenhos sem 48
+LADOS = (32, 64)  # os tamanhos em que ele fica parado; o voo até a bolsa só anima o de 32 (não é um tamanho do desenho)
 
 # As rampas, do mais escuro ao mais claro: o barro (bege acinzentado, quente) e a pasta de prata (cinza frio).
 BARRO = ["#1d1712", "#32281f", "#4a3c2f", "#655240", "#816a53", "#9c8467", "#b59d7e", "#cbb596", "#ddcbb0"]

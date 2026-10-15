@@ -1,0 +1,124 @@
+<title>Capela Afogada</title>
+<style>
+/* Ensaio fora do jogo: a cena no quadro de bronze do jogo, a página da história embaixo. Escuro de propósito, como o jogo. */
+@font-face { font-family: "Titulo"; src: url(data:font/ttf;base64,{{ALAGARD}}) format("truetype"); font-display: block; }
+@font-face { font-family: "Alegreya"; font-weight: 400; src: url(data:font/woff2;base64,{{ALEGREYA400}}) format("woff2"); }
+@font-face { font-family: "Alegreya"; font-weight: 400; font-style: italic; src: url(data:font/woff2;base64,{{ALEGREYA400I}}) format("woff2"); }
+@font-face { font-family: "Alegreya"; font-weight: 600; src: url(data:font/woff2;base64,{{ALEGREYA600}}) format("woff2"); }
+:root {
+  --fundo: #08090a;
+  --painel: #121110;
+  --pedra: #17120f;
+  --bronze: #6b4b31;
+  --bronze-escuro: #48311f;
+  --ouro: #f2c94c;
+  --ouro-velho: #d9a05c;
+  --tinta: #f1e4c4;
+  --tinta-2: #c0b8a8;
+  --tinta-3: #8a8070;
+  --frio: #9ab4c8;
+  --titulo: "Titulo", "Jacquard 24", Georgia, serif;
+  --texto: "Alegreya", Georgia, serif;
+  color-scheme: dark;
+}
+html { background: var(--fundo); }
+body { background: var(--fundo); color: var(--tinta); font-family: var(--texto); font-size: 17px; line-height: 1.5;
+  padding-inline: 16px; padding-block: 24px 40px; }
+.folha { max-width: 1000px; margin-inline: auto; display: flex; flex-direction: column; gap: 18px; }
+.cabeca { display: flex; flex-direction: column; gap: 4px; }
+.olho { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--tinta-3); }
+h1 { margin: 0; font-family: var(--titulo); font-weight: 400; font-size: 32px; line-height: 1; color: var(--ouro); text-shadow: 2px 2px 0 #000; }
+.cabeca p { margin: 4px 0 0; color: var(--tinta-2); max-width: 66ch; }
+
+.barra { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
+.abas, .horas { display: flex; flex-wrap: wrap; gap: 6px; }
+.abas button, .horas button { font: inherit; font-size: 15px; cursor: pointer; color: var(--tinta-2); background: var(--painel);
+  border: 2px solid var(--bronze-escuro); padding: 4px 12px; }
+.abas button[aria-pressed="true"], .horas button[aria-pressed="true"] { color: var(--ouro); border-color: var(--bronze); background: #1c1611; }
+.abas button:hover, .horas button:hover { color: var(--tinta); }
+.horas .rotulo { align-self: center; font-size: 13px; color: var(--tinta-3); margin-right: 2px; }
+button:focus-visible { outline: 2px dashed var(--ouro); outline-offset: 2px; }
+
+/* O quadro de bronze do jogo: filete escuro, filete claro, cantos de rebite. */
+.quadro { position: relative; background: var(--painel); border: 4px solid var(--bronze-escuro); box-shadow: inset 0 0 0 2px var(--bronze), 4px 4px 0 #000; padding: 4px; }
+.palco { position: relative; overflow: hidden; background: #000; display: flex; justify-content: center; }
+#arte { display: block; image-rendering: pixelated; }
+#pontos { position: absolute; inset: 0; pointer-events: none; }
+.ponto { position: absolute; pointer-events: auto; padding: 0; margin: 0; background: transparent; border: 0; cursor: pointer; }
+.balao { position: absolute; transform: translate(-50%, calc(-100% - 7px)); white-space: nowrap; pointer-events: none;
+  font-size: 12px; font-weight: 600; line-height: 1.3; padding: 0 5px; color: var(--tinta-2); background: #000; border: 1px solid var(--bronze-escuro); }
+.balao::after { content: ""; position: absolute; left: 50%; top: 100%; transform: translateX(-50%); border: 4px solid transparent; border-top-color: var(--bronze-escuro); }
+.ponto:hover .balao, .ponto:focus-visible .balao { color: var(--ouro); border-color: var(--ouro-velho); }
+.ponto:hover .balao::after, .ponto:focus-visible .balao::after { border-top-color: var(--ouro-velho); }
+.ponto:focus-visible { outline: 1px dashed var(--ouro); }
+
+.pagina { background: var(--pedra); padding: 22px clamp(16px, 4vw, 40px) 26px; display: flex; flex-direction: column; gap: 14px; }
+.pagina h2 { margin: 0; text-align: center; font-family: var(--titulo); font-weight: 400; font-size: 32px; line-height: 1; color: var(--ouro); text-shadow: 2px 2px 0 #000; text-wrap: balance; }
+.sub { text-align: center; font-size: 14px; color: var(--tinta-3); margin-top: -6px; }
+.prosa { display: flex; flex-direction: column; gap: 10px; max-width: 64ch; margin-inline: auto; }
+.prosa p { margin: 0; font-style: italic; color: var(--tinta-2); }
+.prosa p.resultado { font-style: normal; color: var(--tinta); }
+.prosa p.frio { color: var(--frio); }
+.prov { font-style: normal; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--tinta-3); border: 1px solid #3a2e24; padding: 0 4px; margin-left: 6px; vertical-align: 2px; }
+.opcoes { list-style: none; margin: 4px auto 0; padding: 0; display: flex; flex-direction: column; gap: 6px; width: min(100%, 64ch); }
+.opcoes button { width: 100%; display: flex; gap: 12px; align-items: center; text-align: left; cursor: pointer; font: inherit; color: var(--tinta);
+  background: transparent; border: 0; padding: 4px 6px; }
+.opcoes button:hover, .opcoes button:focus-visible { background: #221a13; color: #fff3d6; }
+.opcoes kbd { flex: none; display: inline-grid; place-items: center; width: 24px; height: 24px; font-family: var(--texto); font-size: 14px; color: var(--ouro);
+  border: 2px solid var(--bronze); background: #000; }
+.opcoes button:disabled { cursor: default; color: var(--tinta-3); }
+.opcoes button:disabled kbd { color: var(--tinta-3); border-color: var(--bronze-escuro); }
+
+.notas { color: var(--tinta-3); font-size: 15px; max-width: 70ch; }
+.notas h3 { margin: 0 0 6px; font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--tinta-2); font-weight: 600; }
+.notas ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 4px; }
+@media (max-width: 520px) { h1, .pagina h2 { font-size: 24px; } .balao { font-size: 11px; } }
+</style>
+
+<div class="folha">
+  <header class="cabeca">
+    <span class="olho">Ensaio de cenário · fora do jogo</span>
+    <h1>A Capela Afogada</h1>
+    <p>Duas vistas no estilo das paisagens do jogo, para ver se dá para mostrar o lugar e deixar o jogador clicar nele. Passe o mouse e clique nos nomes; as opções embaixo fazem o mesmo.</p>
+  </header>
+
+  <div class="barra">
+    <div class="abas" role="group" aria-label="Vista">
+      <button type="button" id="aba-fora" data-cena="fora" aria-pressed="true">Lado de fora</button>
+      <button type="button" id="aba-dentro" data-cena="dentro" aria-pressed="false">Nave alagada</button>
+    </div>
+    <div class="horas" role="group" aria-label="Hora do dia" id="horas">
+      <span class="rotulo">Hora</span>
+      <button type="button" id="hora-0" data-hora="0" aria-pressed="false">Manhã</button>
+      <button type="button" id="hora-1" data-hora="1" aria-pressed="false">Tarde</button>
+      <button type="button" id="hora-2" data-hora="2" aria-pressed="true">Crepúsculo</button>
+      <button type="button" id="hora-3" data-hora="3" aria-pressed="false">Noite</button>
+    </div>
+  </div>
+
+  <div class="quadro">
+    <div class="palco" id="palco">
+      <canvas id="arte" width="320" height="72" aria-label="A cena em pixel art"></canvas>
+      <div id="pontos"></div>
+    </div>
+  </div>
+
+  <section class="pagina" aria-live="polite">
+    <h2 id="titulo"></h2>
+    <div class="sub" id="sub"></div>
+    <div class="prosa" id="prosa"></div>
+    <ol class="opcoes" id="opcoes"></ol>
+  </section>
+
+  <section class="notas">
+    <h3>O que está sendo testado</h3>
+    <ul>
+      <li>A arte tem 320×72 pixels, o tamanho das paisagens do jogo, com o mesmo céu, os mesmos tons de silhueta e a mesma água do pântano. Ela é ampliada sem suavizar e anima a 10 quadros por segundo.</li>
+      <li>Os nomes sobre a cena são pontos clicáveis, como os prédios da vila. Alguns aproximam a câmera, como a vila faz com um prédio: a torre, os sapos e o sarilho.</li>
+      <li>O sarilho tem dois estados, travado e solto. Soltar levanta a trava, a manivela gira sozinha e a corrente desce pelo redemoinho. Depois, "Travar de novo" volta ao começo.</li>
+      <li>A hora do dia muda as duas vistas. Dentro, ela muda a luz que entra pelas janelas.</li>
+      <li>As frases marcadas como "texto de teste" são minhas, só para dar resposta aos cliques. As outras são as suas.</li>
+    </ul>
+  </section>
+</div>
+

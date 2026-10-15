@@ -22,10 +22,10 @@ Caminhos relativos à raiz do repositório. O que é de um objeto só (as medida
    (`sprites-dados.js`). Um sprite pode ter vários papéis: a "chama" é Vigor, Poder e Pena de Fênix; o "unguento" é o
    item e a Curandeira. Trocar um desenho não pode trocar outro papel; se o desenho é compartilhado, o item novo se
    acha só pelo id (`SO_PELO_ID` em `icones.js`).
-3. **Onde ele aparece e em que tamanho.** O tamanho de exibição vem do lugar: 32 px na bolsa, mochila do mercado,
-   ficha e dicas; 40 px no corpo e na mochila do Inventário (equipamento); 48 no voo ao equipar e no cartão compacto
-   do saque; 64 no cartão do saque. Desenhe para os tamanhos em que ele de fato aparece; o mais visto (em geral o 32)
-   tem prioridade.
+3. **Onde ele aparece e em que tamanho.** O tamanho de exibição vem do lugar parado: 32 px na bolsa, mochila do
+   mercado, ficha, dicas e quadro do baú; 40 px no corpo e na mochila do Inventário (equipamento); 48 no cartão
+   compacto do saque e na pilha de baús; 64 no cartão do saque. Desenhe para os tamanhos em que ele de fato fica
+   parado na tela; o mais visto (em geral o 32) tem prioridade. Veja abaixo o que é leitura parada e o que é animação.
 4. **Silhueta, materiais e identidade.** Escreva em poucas linhas: a forma que se reconhece no tamanho pequeno, os
    materiais (cada um terá rampa e regra de luz), as características que o fazem ser este objeto e não outro, e o
    que o atual tem de bom e precisa ficar (volume, presença, personalidade). Se o pedido muda o conceito (o pote de
@@ -46,6 +46,18 @@ O desenho é um script Python em `ferramentas/arte/`, um por objeto, com as etap
 - **Cada tamanho na própria grade.** Monte a forma por regras na grade final (32, 40, 48, 64...), com as medidas de
   cada tamanho numa tabela (`MEDIDAS`). Nunca reduza um tamanho de outro, nem use filtro, quantização ou "pixelização"
   como acabamento. O @2x é a duplicação exata (`salvar`).
+- **Leitura parada × animação.** São duas coisas diferentes:
+  - *leitura parada* é onde o desenho fica para ser lido (a bolsa, o corpo, a mochila, a prateleira, o cartão do
+    saque, o quadro do baú). Cada tamanho desses tem arquivo nativo, desenhado na própria grade: é ali que vale tudo o
+    que esta skill pede;
+  - *transformação de animação* é o que uma animação faz com uma imagem enquanto ela anda e some em menos de um
+    segundo: o consumível que voa até a bolsa é o arquivo de 32 com `scale` de 1,3 a 0,8 no caminho (`itemVoa`, em
+    `app/pagina.js`); o item que voa até o corpo encolhe até 0,45 (`voarIcone`, em `telas/celebracoes.js`). Isso não é
+    acabamento do desenho, não pede arquivo próprio e não muda com um item novo: as animações ficam como estão.
+  - O que já existe e se apoia na redução do navegador para um tamanho parado (o martelo e a Pena de Fênix em 48, a 2×
+    reduzida, em `desenhos.js`; um pedido de tamanho sem arquivo, que `Icones` serve com o mais perto) é herança, não
+    regra. Um desenho novo não usa a redução como acabamento: se ele fica parado num tamanho, esse tamanho é
+    desenhado.
 - **Duas camadas.** `mat` (o material de cada pixel; `"c"` é o contorno) e `tom` (o índice na rampa do material);
   `fixo` protege o que foi desenhado de propósito (um brilho, um cravo) da limpeza.
 - **Luz deliberada.** A luz é a de `pixel_comum.LUZ` (de cima e da esquerda, um pouco de frente), igual para todos os

@@ -2415,3 +2415,29 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
 - **Falta:** Jean conferir jogando. Para depois, registrado no `docs/ROADMAP.md` sem executar: o Mago na fogueira
   (postura e silhueta), as versões pequenas e intermediárias do Morel (painel e luta, preservando o busto grande),
   novos lotes de itens. A E9 e a validação com jogadores novos continuam abertas.
+
+### 15/10/2026 — Mago na fogueira e Morel pequeno (propostas); a skill e o ensaio da capela (sem versão)
+
+- **Pedido de Jean:** com o escudo, o unguento e o Inventário em 40 aprovados (a etapa visual encerrada), duas
+  propostas pequenas de personagem, só no protótipo, e dois registros: a skill distinguir os tamanhos parados das
+  transformações das animações; guardar o ensaio particular da Capela Afogada.
+- **Propostas** (commit `98c9af9`, em `ferramentas/prototipos/hud/personagens/`, explicadas no `LEIA-ME.md` do
+  protótipo):
+  - antes de desenhar, o levantamento do que cada componente usa: a figura de 16×16 (a fogueira; para os heróis, é a
+    própria carta da luta), a carta de 32 px (luta, painel, aviso) e a cabeça de 48 (Comitiva, reação, quem chega);
+  - o Mago na fogueira: uma figura só da fogueira, sentado, a cabeça no meio dos ombros, a base reta, as mãos no colo;
+  - o Morel: a carta de 16×16 a 2× e a cabeça de 24×24 a 2×, desenhadas à mão como as dos outros (sem reduzir o busto
+    e sem a carta de rosto aproximado recusada).
+  - Atual × candidata no jogo, em 1500×950 e 1280×720 (`fotografar_personagens.mjs`), e a página
+    `personagens-teste.html`. O busto de 80, a ficha baixa e a figura da fogueira do Morel, os retratos do Mago fora
+    da fogueira e os outros personagens não mudaram.
+- **Registros** (commit seguinte): a skill `arte-itens-fenda` separa a leitura parada (cada tamanho com arquivo nativo)
+  das transformações das animações (o voo até a bolsa anima o arquivo de 32; o voo ao corpo encolhe o de 48), e diz
+  que a redução do navegador que já existe é herança, não regra para itens novos; nenhuma animação mudou. O ensaio da
+  Capela Afogada de 12/10/2026 estava no ambiente e foi guardado em `ferramentas/prototipos/capela-afogada-ensaio/`
+  (página pronta, fontes, fotos, a régua das paisagens e o LEIA-ME com como abrir), como histórico; a capela de
+  produção não foi tocada.
+- **Verificado:** as fotos sem erro no console; os retratos nas mesmas posições e tamanhos nas duas versões; o ensaio
+  da capela reconstruído a partir das fontes sai idêntico e abre direto do arquivo, sem erro; o unguento refeito pelo
+  script continua igual ao do jogo; `claude plugin validate .claude/skills`. O jogo não mudou (sem versão).
+- **Falta:** Jean avaliar as duas propostas. A E9 e a validação com jogadores novos continuam abertas.

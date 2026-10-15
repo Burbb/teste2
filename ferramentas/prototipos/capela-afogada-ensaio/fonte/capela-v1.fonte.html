@@ -1,0 +1,751 @@
+<title>Capela Afogada</title>
+<style>
+/* Ensaio fora do jogo: a cena no quadro de bronze do jogo, a página da história embaixo. Escuro de propósito, como o jogo. */
+@font-face { font-family: "Titulo"; src: url(data:font/ttf;base64,{{ALAGARD}}) format("truetype"); font-display: block; }
+@font-face { font-family: "Alegreya"; font-weight: 400; src: url(data:font/woff2;base64,{{ALEGREYA400}}) format("woff2"); }
+@font-face { font-family: "Alegreya"; font-weight: 400; font-style: italic; src: url(data:font/woff2;base64,{{ALEGREYA400I}}) format("woff2"); }
+@font-face { font-family: "Alegreya"; font-weight: 600; src: url(data:font/woff2;base64,{{ALEGREYA600}}) format("woff2"); }
+:root {
+  --fundo: #08090a;
+  --painel: #121110;
+  --pedra: #17120f;
+  --bronze: #6b4b31;
+  --bronze-escuro: #48311f;
+  --ouro: #f2c94c;
+  --ouro-velho: #d9a05c;
+  --tinta: #f1e4c4;
+  --tinta-2: #c0b8a8;
+  --tinta-3: #8a8070;
+  --frio: #9ab4c8;
+  --titulo: "Titulo", "Jacquard 24", Georgia, serif;
+  --texto: "Alegreya", Georgia, serif;
+  color-scheme: dark;
+}
+html { background: var(--fundo); }
+body { background: var(--fundo); color: var(--tinta); font-family: var(--texto); font-size: 17px; line-height: 1.5;
+  padding-inline: 16px; padding-block: 24px 40px; }
+.folha { max-width: 1000px; margin-inline: auto; display: flex; flex-direction: column; gap: 18px; }
+.cabeca { display: flex; flex-direction: column; gap: 4px; }
+.olho { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--tinta-3); }
+h1 { margin: 0; font-family: var(--titulo); font-weight: 400; font-size: 32px; line-height: 1; color: var(--ouro); text-shadow: 2px 2px 0 #000; }
+.cabeca p { margin: 4px 0 0; color: var(--tinta-2); max-width: 66ch; }
+
+.barra { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
+.abas, .horas { display: flex; flex-wrap: wrap; gap: 6px; }
+.abas button, .horas button { font: inherit; font-size: 15px; cursor: pointer; color: var(--tinta-2); background: var(--painel);
+  border: 2px solid var(--bronze-escuro); padding: 4px 12px; }
+.abas button[aria-pressed="true"], .horas button[aria-pressed="true"] { color: var(--ouro); border-color: var(--bronze); background: #1c1611; }
+.abas button:hover, .horas button:hover { color: var(--tinta); }
+.horas .rotulo { align-self: center; font-size: 13px; color: var(--tinta-3); margin-right: 2px; }
+button:focus-visible { outline: 2px dashed var(--ouro); outline-offset: 2px; }
+
+/* O quadro de bronze do jogo: filete escuro, filete claro, cantos de rebite. */
+.quadro { position: relative; background: var(--painel); border: 4px solid var(--bronze-escuro); box-shadow: inset 0 0 0 2px var(--bronze), 4px 4px 0 #000; padding: 4px; }
+.palco { position: relative; overflow: hidden; background: #000; display: flex; justify-content: center; }
+#arte { display: block; image-rendering: pixelated; }
+#pontos { position: absolute; inset: 0; pointer-events: none; }
+.ponto { position: absolute; pointer-events: auto; padding: 0; margin: 0; background: transparent; border: 0; cursor: pointer; }
+.balao { position: absolute; transform: translate(-50%, calc(-100% - 7px)); white-space: nowrap; pointer-events: none;
+  font-size: 12px; font-weight: 600; line-height: 1.3; padding: 0 5px; color: var(--tinta-2); background: #000; border: 1px solid var(--bronze-escuro); }
+.balao::after { content: ""; position: absolute; left: 50%; top: 100%; transform: translateX(-50%); border: 4px solid transparent; border-top-color: var(--bronze-escuro); }
+.ponto:hover .balao, .ponto:focus-visible .balao { color: var(--ouro); border-color: var(--ouro-velho); }
+.ponto:hover .balao::after, .ponto:focus-visible .balao::after { border-top-color: var(--ouro-velho); }
+.ponto:focus-visible { outline: 1px dashed var(--ouro); }
+
+.pagina { background: var(--pedra); padding: 22px clamp(16px, 4vw, 40px) 26px; display: flex; flex-direction: column; gap: 14px; }
+.pagina h2 { margin: 0; text-align: center; font-family: var(--titulo); font-weight: 400; font-size: 32px; line-height: 1; color: var(--ouro); text-shadow: 2px 2px 0 #000; text-wrap: balance; }
+.sub { text-align: center; font-size: 14px; color: var(--tinta-3); margin-top: -6px; }
+.prosa { display: flex; flex-direction: column; gap: 10px; max-width: 64ch; margin-inline: auto; }
+.prosa p { margin: 0; font-style: italic; color: var(--tinta-2); }
+.prosa p.resultado { font-style: normal; color: var(--tinta); }
+.prosa p.frio { color: var(--frio); }
+.prov { font-style: normal; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--tinta-3); border: 1px solid #3a2e24; padding: 0 4px; margin-left: 6px; vertical-align: 2px; }
+.opcoes { list-style: none; margin: 4px auto 0; padding: 0; display: flex; flex-direction: column; gap: 6px; width: min(100%, 64ch); }
+.opcoes button { width: 100%; display: flex; gap: 12px; align-items: center; text-align: left; cursor: pointer; font: inherit; color: var(--tinta);
+  background: transparent; border: 0; padding: 4px 6px; }
+.opcoes button:hover, .opcoes button:focus-visible { background: #221a13; color: #fff3d6; }
+.opcoes kbd { flex: none; display: inline-grid; place-items: center; width: 24px; height: 24px; font-family: var(--texto); font-size: 14px; color: var(--ouro);
+  border: 2px solid var(--bronze); background: #000; }
+.opcoes button:disabled { cursor: default; color: var(--tinta-3); }
+.opcoes button:disabled kbd { color: var(--tinta-3); border-color: var(--bronze-escuro); }
+
+.notas { color: var(--tinta-3); font-size: 15px; max-width: 70ch; }
+.notas h3 { margin: 0 0 6px; font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--tinta-2); font-weight: 600; }
+.notas ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 4px; }
+@media (max-width: 520px) { h1, .pagina h2 { font-size: 24px; } .balao { font-size: 11px; } }
+</style>
+
+<div class="folha">
+  <header class="cabeca">
+    <span class="olho">Ensaio de cenário · fora do jogo</span>
+    <h1>A Capela Afogada</h1>
+    <p>Duas vistas no estilo das paisagens do jogo, para ver se dá para mostrar o lugar e deixar o jogador clicar nele. Passe o mouse e clique nos nomes; as opções embaixo fazem o mesmo.</p>
+  </header>
+
+  <div class="barra">
+    <div class="abas" role="group" aria-label="Vista">
+      <button type="button" id="aba-fora" data-cena="fora" aria-pressed="true">Lado de fora</button>
+      <button type="button" id="aba-dentro" data-cena="dentro" aria-pressed="false">Nave alagada</button>
+    </div>
+    <div class="horas" role="group" aria-label="Hora do dia" id="horas">
+      <span class="rotulo">Hora</span>
+      <button type="button" id="hora-1" data-hora="1" aria-pressed="false">Tarde</button>
+      <button type="button" id="hora-2" data-hora="2" aria-pressed="true">Crepúsculo</button>
+      <button type="button" id="hora-3" data-hora="3" aria-pressed="false">Noite</button>
+    </div>
+  </div>
+
+  <div class="quadro">
+    <div class="palco" id="palco">
+      <canvas id="arte" width="320" height="72" aria-label="A cena em pixel art"></canvas>
+      <div id="pontos"></div>
+    </div>
+  </div>
+
+  <section class="pagina" aria-live="polite">
+    <h2 id="titulo"></h2>
+    <div class="sub" id="sub"></div>
+    <div class="prosa" id="prosa"></div>
+    <ol class="opcoes" id="opcoes"></ol>
+  </section>
+
+  <section class="notas">
+    <h3>O que está sendo testado</h3>
+    <ul>
+      <li>A arte tem 320×72 pixels, o tamanho das paisagens do jogo, ampliada sem suavizar e animada a 10 quadros por segundo.</li>
+      <li>Os nomes sobre a cena são pontos clicáveis, como os prédios da vila. Clicar num nome escolhe a opção correspondente.</li>
+      <li>Na nave, o sarilho tem dois estados: travado e solto. Soltar anima a manivela e a corrente descendo pela fenda; "Travar de novo" volta ao começo.</li>
+      <li>As frases marcadas como "texto de teste" são minhas, só para dar resposta aos cliques. As outras são as suas.</li>
+    </ul>
+  </section>
+</div>
+
+<script>
+"use strict";
+(() => {
+  const W = 320, H = 72;
+  const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
+  const pont = (x, y, n) => BAYER[(y & 3) * 4 + (x & 3)] < n;  // o texel acende em n de cada 16
+  const rgbDe = (c) => [1, 3, 5].map((i) => parseInt(c.slice(i, i + 2), 16));
+  function mis(a, b, t) {
+    const x = rgbDe(a), y = rgbDe(b);
+    return "#" + x.map((v, i) => Math.round(v + (y[i] - v) * t).toString(16).padStart(2, "0")).join("");
+  }
+  function rng(s) { s = (s * 9301 + 49297) % 233280 || 1; return () => (s = (s * 16807) % 2147483647) / 2147483647; }
+  function px(c, x, y, w, h, cor) { c.fillStyle = cor; c.fillRect(x | 0, y | 0, w, h); }
+  function p1(c, x, y, cor) { c.fillStyle = cor; c.fillRect(x | 0, y | 0, 1, 1); }
+  function perfil(r, base, amp, rug) {
+    const ys = []; let y = base, v = 0;
+    for (let x = 0; x < W; x++) { v += (r() - 0.5) * rug; v = Math.max(-1.5, Math.min(1.5, v * 0.92)); y += v; y = Math.max(base - amp, Math.min(base + amp * 0.4, y)); ys.push(Math.round(y)); }
+    return ys;
+  }
+  function silhueta(c, ys, cor, ate = H) { ys.forEach((y, x) => px(c, x, y, 1, ate - y, cor)); }
+  function nevoa(c, y0, y1, cor, forca, x0 = 0, x1 = W, fase = 0) {
+    const meio = (y0 + y1) / 2, meia = (y1 - y0) / 2;
+    for (let y = y0; y < y1; y++) for (let x = x0; x < x1; x++) {
+      const n = Math.round(forca * (1 - Math.abs(y - meio) / meia) + Math.sin((x + fase) / 11) * 1.5);
+      if (n > 0 && pont(x, y, n)) p1(c, x, y, cor);
+    }
+  }
+  function arvoreSeca(c, x, y, h, cor, lado = 1) {
+    px(c, x, y - h, 1, h, cor);
+    for (let i = 0; i < Math.floor(h / 4); i++) {
+      const yy = y - h + 2 + i * 4, dir = (i + (lado > 0 ? 0 : 1)) % 2 ? 1 : -1, comp = Math.max(2, 5 - i + ((x + i) % 2));
+      for (let k = 0; k < comp; k++) p1(c, x + (dir > 0 ? 1 + k : -1 - k), yy - Math.floor(k / 2), cor);
+    }
+  }
+  /** Juncos: talos de um pixel, alguns com a espiga escura no alto. */
+  function juncos(c, r, x0, x1, base, alt, cor, espiga, dens = 0.55) {
+    for (let x = x0; x < x1; x++) {
+      if (r() > dens) continue;
+      const h = Math.round(alt * (0.5 + r() * 0.6));
+      px(c, x, base - h, 1, h, cor);
+      if (r() < 0.3) px(c, x, base - h - 1, 1, 2, espiga);
+      else if (r() < 0.4) p1(c, x + (r() < 0.5 ? 1 : -1), base - h + 1, cor);
+    }
+  }
+  function lerp(a, b, t) { return a + (b - a) * t; }
+
+  // ------------------------------------------------------------------ o céu (as faixas do jogo)
+  const CEUS = [
+    ["#2c4470", "#45648f", "#7a90b0", "#c09a80", "#e8b88a"],
+    ["#24508c", "#33649e", "#4f80b6", "#79a4c8", "#a8c4d6"],
+    ["#22163a", "#43264a", "#82363e", "#bc5630", "#ec8c3c"],
+    ["#04050c", "#080b1a", "#0d1328", "#121a33", "#18223f"],
+  ];
+  function ceu(c, p) {
+    // tempo fechado de brejo: as faixas puxadas para o cinza, sem sol à vista
+    const bandas = CEUS[p].map((b) => mis(b, "#3a3f48", p === 3 ? 0.2 : 0.42));
+    for (let y = 0; y < H; y++) {
+      const f = (Math.min(y, 50) / 50) * (bandas.length - 1), i = Math.floor(f), resto = Math.floor((f - i) * 16);
+      const a = bandas[i], b = bandas[Math.min(i + 1, bandas.length - 1)];
+      for (let x = 0; x < W; x++) p1(c, x, y, pont(x, y, resto) ? b : a);
+    }
+    if (p === 3) {  // a lua em quarto, limpa no escuro, atrás de um fiapo
+      const [sx, sy, raio] = [272, 13, 5];
+      for (let y = -raio; y <= raio; y++) for (let x = -raio; x <= raio; x++) {
+        if (x * x + y * y > raio * raio) continue;
+        if ((x - 3) * (x - 3) + (y + 1) * (y + 1) <= raio * raio * 0.8) continue;
+        p1(c, sx + x, sy + y, y > 1 && pont(sx + x, sy + y, 8) ? "#c8ccd8" : "#e8ecf4");
+      }
+    }
+    return bandas;
+  }
+
+  // ------------------------------------------------------------------ cena 1: a capela vista de fora
+  // Onde as coisas ficam (em pixels da arte): a torre à esquerda da nave, a nave afundada até a metade das janelas,
+  // a fachada com a porta soterrada à direita, e o canal que vem do moinho pela esquerda até o buraco no muro.
+  const AGUA_Y = 47;
+  const BURACO = { x: 147, y: 39, w: 10 };
+  const CANAL = { de: [0, 57], ate: [152, 46] };  // a linha do meio do canal
+  const SAPOS = [[74, 61, false], [88, 62, true], [103, 61, false], [117, 62, true]];  // x, y, patas a mais
+
+  function fora(p) {
+    const c = novaCamada(), r = rng(7);
+    const bandas = ceu(c, p);
+    const hz = bandas[bandas.length - 1];
+    const esc = (t) => mis(hz, "#050404", t);
+    const longe = esc(0.45), meio = esc(0.62), perto = esc(0.8), chao = esc(0.9);
+    const noite = p === 3;
+    const pedra = mis(meio, "#857d70", noite ? 0.12 : 0.25), pedraSombra = mis(perto, "#3a3630", 0.15), pedraLuz = mis(pedra, bandas[3], 0.3);
+    const telha = mis(perto, "#4a3028", 0.25), madeira = mis(perto, "#5a4028", 0.3);
+    const agua = mis(hz, "#0a1a18", 0.62), brilho = mis(hz, "#6a8a88", 0.35);
+    const lama = mis(chao, "#4a3a24", 0.35), capim = mis(perto, "#2a3a20", 0.3), espiga = mis(chao, "#4a2a14", 0.4);
+    const escuroDentro = "#030405";
+    const cor = { hz, longe, meio, perto, chao, pedra, pedraSombra, pedraLuz, agua, brilho, lama, escuroDentro };
+
+    // a outra margem do brejo, com árvores mortas
+    silhueta(c, perfil(r, 44, 3, 0.5), longe);
+    [[14, 9], [40, 7], [70, 10], [248, 8], [304, 11]].forEach(([x, h], i) => arvoreSeca(c, x, 45, h, mis(longe, meio, 0.5), i % 2 ? 1 : -1));
+    nevoa(c, 40, 47, mis(longe, hz, 0.5), 4);
+    // a água parada
+    px(c, 0, AGUA_Y, W, H - AGUA_Y, agua);
+    for (let y = AGUA_Y + 1; y < H; y += 2) for (let x = (y * 7) % 13; x < W; x += 13 + (y % 5)) px(c, x, y, 2 + (x % 3), 1, brilho);
+
+    // ---- a torre, sem o sino
+    const tx = 129, tw = 15, ttopo = 12;
+    px(c, tx, ttopo, 4, AGUA_Y - ttopo, pedra);              // ombro esquerdo
+    px(c, tx + 10, ttopo, 5, AGUA_Y - ttopo, pedra);         // ombro direito
+    px(c, tx + 4, ttopo, 6, 3, pedra);                        // em cima do vão
+    px(c, tx + 4, 23, 6, AGUA_Y - 23, pedra);                 // embaixo do vão
+    p1(c, tx + 4, 15, pedra); p1(c, tx + 9, 15, pedra);       // o arco do vão
+    px(c, tx + 12, ttopo, 3, AGUA_Y - ttopo, pedraSombra);   // o lado na sombra
+    px(c, tx + 4, 16, 6, 1, madeira);                          // a trave onde o sino ficava
+    p1(c, tx + 7, 17, mis(madeira, pedraLuz, 0.4)); p1(c, tx + 7, 18, madeira);  // um toco de corda
+    for (let y = ttopo + 2; y < AGUA_Y; y += 5) for (let x = tx; x < tx + tw; x++) if (pont(x, y, 6) && (y < 15 || y > 22 || x < tx + 4 || x > tx + 9)) p1(c, x, y, pedraSombra);
+    px(c, tx + 3, 30, 2, 4, escuroDentro); p1(c, tx + 3, 29, pedraSombra);  // uma seteira
+    // o telhado da torre em ponta, com a ponta quebrada
+    for (let k = 0; k < 9; k++) {
+      const meia = 8 - k * 0.85, y = ttopo - 1 - k;
+      if (k >= 7) break;  // a ponta caiu
+      px(c, Math.round(tx + 7 - meia), y, Math.round(meia * 2) + 1, 1, k % 2 ? telha : mis(telha, pedraSombra, 0.4));
+    }
+    p1(c, tx + 9, ttopo - 8, telha);  // uma lasca da ponta, torta
+
+    // ---- a nave: parede até a água, quatro janelas cortadas pela água, contrafortes entre elas
+    const nx0 = 144, nx1 = 212, ntopo = 29;
+    px(c, nx0, ntopo, nx1 - nx0, AGUA_Y - ntopo, pedra);
+    for (let y = ntopo + 3; y < AGUA_Y; y += 4) for (let x = nx0; x < nx1; x++) if (pont(x, y, 5)) p1(c, x, y, pedraSombra);
+    const janelas = [150, 165, 180, 195];
+    janelas.forEach((jx, i) => {
+      px(c, jx, 34, 6, AGUA_Y - 34, mis(perto, "#000000", 0.55));
+      p1(c, jx, 34, pedra); p1(c, jx + 5, 34, pedra);       // o arco
+      px(c, jx + 3, 35, 1, AGUA_Y - 35, pedraSombra);        // o montante do meio
+      // o frio de dentro: um azul apagado subindo da água
+      if (i === 1 || i === 3) for (let y = 39; y < AGUA_Y; y++) for (let x = jx + 1; x < jx + 5; x++) if (x !== jx + 3 && pont(x, y, Math.round((y - 38) * 0.9))) p1(c, x, y, mis("#6f8fa8", perto, 0.45));
+    });
+    [159, 174, 189, 204].forEach((bx) => { px(c, bx, 31, 2, AGUA_Y - 31, pedraLuz); px(c, bx + 2, 31, 1, AGUA_Y - 31, pedraSombra); });
+    // o telhado: uma faixa de telhas, com um rombo mostrando os caibros
+    for (let y = 21; y <= 28; y++) {
+      const x0 = nx0 - 1 + (28 - y > 6 ? 1 : 0), x1 = nx1 + 1;
+      for (let x = x0; x < x1; x++) p1(c, x, y, (y % 2 === 0 && pont(x, y, 7)) ? mis(telha, "#000000", 0.35) : telha);
+    }
+    px(c, nx0 - 2, 28, nx1 - nx0 + 4, 1, mis(telha, "#000000", 0.5));
+    for (let y = 21; y <= 26; y++) for (let x = 177; x < 192; x++) {
+      const borda = Math.abs(x - 184) + (y - 21) * 1.3;
+      if (borda < 9) p1(c, x, y, x % 3 === 0 ? madeira : "#0a0908");
+    }
+    // ---- a fachada: a empena virada para a luz, o óculo e a porta engolida pela lama
+    const fx0 = 212, fx1 = 233, fmeio = 222;
+    px(c, fx0, ntopo, fx1 - fx0, AGUA_Y - ntopo, pedraLuz);
+    for (let y = 15; y <= 28; y++) { const meia = Math.round((y - 15) * 0.85); px(c, fmeio - meia, y, meia * 2 + 1, 1, pedraLuz); }
+    for (let y = 15; y <= 28; y++) { const meia = Math.round((y - 15) * 0.85); p1(c, fmeio - meia - 1, y, telha); p1(c, fmeio + meia + 1, y, telha); }
+    p1(c, fmeio, 14, telha);
+    for (let y = -2; y <= 2; y++) for (let x = -2; x <= 2; x++) if (x * x + y * y <= 5) p1(c, fmeio + x, 23 + y, Math.abs(x) + Math.abs(y) === 0 || x === 0 || y === 0 ? pedraSombra : escuroDentro);
+    for (let y = ntopo + 3; y < AGUA_Y; y += 4) for (let x = fx0; x < fx1; x++) if (pont(x + 2, y, 4)) p1(c, x, y, pedra);
+    px(c, fx0, ntopo, 1, AGUA_Y - ntopo, pedraSombra);
+    // a porta: só o alto do arco aparece sobre a lama
+    for (let y = 35; y < 41; y++) { const meia = y < 37 ? 2 + (y - 35) : 4; px(c, fmeio - meia, y, meia * 2 + 1, 1, escuroDentro); }
+    for (let y = 35; y < 41; y++) { const meia = y < 37 ? 3 + (y - 35) : 5; p1(c, fmeio - meia, y, pedraSombra); p1(c, fmeio + meia, y, pedraSombra); }
+    px(c, fmeio - 2, 34, 5, 1, pedraSombra);
+    // o monte de lama na frente da fachada
+    for (let x = 204; x < 244; x++) {
+      const topo = Math.round(39 + Math.pow((x - 222) / 20, 2) * 9 + Math.sin(x / 2.3) * 0.6);
+      if (topo < AGUA_Y) px(c, x, topo, 1, AGUA_Y - topo + 1, lama);
+      if (topo < AGUA_Y) p1(c, x, topo, mis(lama, pedraLuz, 0.25));
+    }
+
+    // ---- o buraco no muro, na linha da água, e as pedras caídas
+    for (let x = BURACO.x; x < BURACO.x + BURACO.w; x++) {
+      const topo = BURACO.y + Math.round(Math.abs(x - (BURACO.x + 4)) * 0.6 + ((x * 7) % 3) * 0.6);
+      px(c, x, topo, 1, AGUA_Y - topo, escuroDentro);
+      p1(c, x, topo - 1, pedraSombra);
+    }
+    [[143, 46], [145, 47], [157, 47], [159, 46]].forEach(([x, y]) => px(c, x, y, 2, 1, pedraLuz));
+
+    // a linha da água no pé das paredes e o reflexo delas
+    for (let x = tx; x < fx1; x++) {
+      if (x >= BURACO.x && x < BURACO.x + BURACO.w) continue;
+      p1(c, x, AGUA_Y, mis(agua, brilho, 0.6));
+      for (let k = 1; k < 9; k++) if (pont(x, AGUA_Y + k, 7 - k)) p1(c, x, AGUA_Y + k, mis(agua, pedraSombra, 0.45));
+    }
+
+    // ---- o canal que vem do moinho, reto, entre duas margens de terra com estacas
+    const canal = mis(agua, brilho, 0.18), barranco = mis(chao, "#3a2e20", 0.35);
+    for (let x = 0; x < BURACO.x + 6; x++) {
+      const t = x / (CANAL.ate[0] - CANAL.de[0]);
+      const yMeio = lerp(CANAL.de[1], CANAL.ate[1], Math.min(1, t)), meia = lerp(4, 1.5, Math.min(1, t));
+      const y0 = Math.round(yMeio - meia), y1 = Math.round(yMeio + meia);
+      px(c, x, y0, 1, y1 - y0 + 1, canal);
+      px(c, x, y0 - 2, 1, 2, barranco); px(c, x, y1 + 1, 1, 2, barranco);
+      if (x % 7 === 0 && x < 140) { px(c, x, y0 - 4, 1, 3, madeira); px(c, x, y1 + 1, 1, 3, madeira); }  // estacas
+    }
+    juncos(c, r, 0, 140, 52, 6, capim, espiga, 0.25);
+
+    // ---- os juncos do pátio da frente (onde era o adro)
+    juncos(c, r, 196, 258, AGUA_Y + 3, 9, capim, espiga, 0.6);
+    juncos(c, r, 236, 300, AGUA_Y + 6, 6, capim, espiga, 0.4);
+
+    // ---- a margem de cá: lama, capim e a árvore morta; os sapos ficam na beirada
+    const margem = perfil(r, 64, 2, 0.5);
+    margem.forEach((y, x) => { px(c, x, y, 1, H - y, chao); if (pont(x, y, 8)) p1(c, x, y, mis(chao, lama, 0.6)); });
+    juncos(c, r, 0, W, 66, 5, mis(chao, capim, 0.5), espiga, 0.35);
+    arvoreSeca(c, 26, 66, 22, perto, 1);
+    arvoreSeca(c, 296, 64, 18, perto, -1);
+    nevoa(c, 46, 54, mis(meio, hz, 0.45), 3, 0, W, 4);
+
+    return { camada: c, cor, p };
+  }
+
+  // ------------------------------------------------------------------ cena 2: a nave alagada, por dentro
+  const COLUNAS = [36, 104, 172];
+  const FENDA = { x: 208, y: 53, w: 15 };
+  const SARILHO = { x: 278, y: 32 };  // o canto de cima do tambor
+  function dentro() {
+    const c = novaCamada(), r = rng(11);
+    const parede = "#171b20", junta = "#0f1215", pedra = "#262b31", pedraLuz = "#3c434c", pedraSombra = "#14171b";
+    const luzFria = "#8fa6b4", chumbo = "#3e4c56";
+    px(c, 0, 0, W, H, "#06070a");
+    // a parede do fundo, em blocos
+    px(c, 0, 0, W, 48, parede);
+    for (let y = 0; y < 48; y++) for (let x = 0; x < W; x++) {
+      const linha = y % 6 === 0, desloc = (Math.floor(y / 6) % 2) * 5;
+      if (linha || (x + desloc) % 11 === 0) p1(c, x, y, junta);
+    }
+    // as janelas altas, uma em cada vão, com vidros quebrados
+    const janelas = [[64, 12], [132, 12], [236, 10]];
+    janelas.forEach(([jx, jw], i) => {
+      for (let y = 4; y < 30; y++) for (let x = jx; x < jx + jw; x++) {
+        const dx = x - (jx + jw / 2 - 0.5), arco = y < 9 && dx * dx + (y - 9) * (y - 9) * 1.4 > (jw / 2) * (jw / 2);
+        if (arco) continue;
+        const quebrado = ((x * 13 + y * 7 + i * 5) % 17) === 0 || (y > 22 && x === jx + 2);
+        p1(c, x, y, quebrado ? "#0b0d10" : (x - jx) % 4 === 0 || y % 6 === 0 ? chumbo : mis(luzFria, "#5a6e7a", (y / 30) * 0.5));
+      }
+      for (let y = 4; y < 31; y++) { p1(c, jx - 1, y, pedraLuz); p1(c, jx + jw, y, pedraSombra); }
+      px(c, jx - 1, 30, jw + 2, 1, pedraLuz);
+    });
+    // os fachos de luz descendo das janelas até a água
+    janelas.forEach(([jx, jw]) => {
+      for (let y = 30; y < 62; y++) {
+        const desv = Math.round((y - 30) * 0.55), largo = jw + Math.round((y - 30) * 0.2);
+        for (let x = jx + desv - 1; x < jx + desv + largo; x++) if (pont(x, y, y < 47 ? 3 : 4)) p1(c, x, y, mis(luzFria, "#1a2228", 0.35));
+      }
+    });
+    // a água
+    for (let y = 47; y < H; y++) px(c, 0, y, W, 1, mis("#0b1416", "#050809", (y - 47) / 25));
+    px(c, 0, 47, W, 1, "#1e2a2c");
+    janelas.forEach(([jx, jw]) => {  // o reflexo das janelas, em riscos
+      for (let y = 49; y < 66; y += 2) {
+        const x = jx + Math.round((y - 30) * 0.55) - 2 + ((y * 5) % 4);
+        px(c, x, y, Math.max(2, jw - (y - 49) / 2), 1, mis(luzFria, "#0b1416", 0.45 + (y - 49) / 40));
+      }
+    });
+    // as colunas da frente, com capitel, arcos entre elas e o reflexo escuro
+    COLUNAS.forEach((cx) => {
+      px(c, cx, 0, 10, 48, pedra);
+      px(c, cx, 0, 3, 48, pedraLuz);
+      px(c, cx + 7, 0, 3, 48, pedraSombra);
+      for (let y = 2; y < 48; y += 3) if (pont(cx + 5, y, 6)) p1(c, cx + 5, y, pedraSombra);
+      px(c, cx - 2, 5, 14, 2, pedraLuz); px(c, cx - 2, 7, 14, 1, pedraSombra);
+      px(c, cx - 1, 44, 12, 3, pedra); px(c, cx - 1, 44, 12, 1, pedraLuz);
+      for (let k = 1; k < 14; k++) for (let x = cx; x < cx + 10; x++) if (pont(x, 47 + k, 10 - Math.floor(k / 2))) p1(c, x, 47 + k, "#07090b");
+    });
+    for (let i = 0; i < COLUNAS.length - 1; i++) {  // os arcos entre as colunas
+      const a = COLUNAS[i] + 10, b = COLUNAS[i + 1], meio = (a + b) / 2, meia = (b - a) / 2;
+      for (let x = a; x < b; x++) { const y = Math.round(5 - Math.sqrt(Math.max(0, 1 - ((x - meio) / meia) ** 2)) * 8); if (y >= 0) { p1(c, x, y, pedraLuz); p1(c, x, y + 1, pedraSombra); } }
+    }
+    // o buraco no muro da esquerda: lá fora é o crepúsculo do brejo, e a água do canal entra por ele
+    for (let y = 30; y < 48; y++) for (let x = 0; x < 20; x++) {
+      const borda = (x - 9) * (x - 9) / 90 + (y - 47) * (y - 47) / 300;
+      if (borda > 1) continue;
+      p1(c, x, y, y < 38 ? mis("#82363e", "#3a3f48", 0.55) : y < 44 ? mis("#43264a", "#2a2f38", 0.5) : "#1a1416");
+    }
+    juncos(c, r, 1, 18, 47, 7, "#120f0c", "#0c0806", 0.6);
+    for (let y = 30; y < 48; y++) for (let x = 0; x < 22; x++) {
+      const borda = (x - 9) * (x - 9) / 90 + (y - 47) * (y - 47) / 300;
+      if (borda > 1 && borda < 1.35 && pont(x, y, 10)) p1(c, x, y, pedraLuz);
+    }
+    // os bancos podres: uma fileira lá atrás, entre as colunas, e outra perto, maior e quebrada
+    const madeira = "#3a2c1e", madeiraLuz = "#55412b", madeiraEsc = "#211810";
+    [[46, 16], [70, 26], [116, 18], [140, 24]].forEach(([bx, bw], i) => {
+      const torto = i === 1 ? 1 : 0;
+      for (let x = bx; x < bx + bw; x++) { const y = 44 + (torto && x > bx + bw / 2 ? 1 : 0); if ((x * 3 + i) % 9 !== 0) { p1(c, x, y, madeiraLuz); p1(c, x, y + 1, madeira); } }
+      px(c, bx, 44, 1, 4, madeiraEsc); px(c, bx + bw - 1, 44 + torto, 1, 4 - torto, madeiraEsc);
+      px(c, bx + 1, 47, bw - 2, 1, madeira);
+    });
+    [[8, 30], [52, 44], [128, 34]].forEach(([bx, bw], i) => {
+      for (let x = bx; x < bx + bw; x++) {
+        if ((x * 7 + i * 3) % 13 === 0 || (i === 1 && x > bx + 18 && x < bx + 24)) continue;  // tábuas faltando
+        px(c, x, 51, 1, 1, madeiraLuz); px(c, x, 52, 1, 2, madeira);
+        if (pont(x, 55, 6)) p1(c, x, 55, madeiraEsc);
+      }
+      [bx, bx + bw - 2].forEach((x) => { px(c, x, 49, 2, 8, madeiraEsc); p1(c, x, 49, madeiraLuz); });
+      for (let x = bx; x < bx + bw; x++) if (pont(x, 58, 7)) p1(c, x, 58, "#1a140e");  // o reflexo
+    });
+    // o presbitério: três degraus saindo da água até o altar
+    const degraus = [[198, 49], [210, 46], [222, 43]];
+    degraus.forEach(([dx, dy]) => { px(c, dx, dy, W - dx, H - dy, pedra); px(c, dx, dy, W - dx, 1, pedraLuz); px(c, dx, dy, 1, 3, pedraLuz); });
+    for (let y = 50; y < H; y++) for (let x = 198; x < W; x++) if (pont(x, y, 9)) p1(c, x, y, "#0b1416");  // a água cobre o degrau de baixo
+    px(c, 198, 50, W - 198, 1, "#1e2a2c");
+    // o altar: o tampo, a frente com o painel raspado, um pano podre e o castiçal caído
+    px(c, 238, 34, 26, 9, pedra); px(c, 236, 32, 30, 2, pedraLuz); px(c, 236, 34, 30, 1, pedraSombra);
+    px(c, 242, 36, 18, 6, pedraSombra);
+    for (let y = 37; y < 41; y++) for (let x = 248; x < 254; x++) if (pont(x, y, 6)) p1(c, x, y, pedra);  // a cruz raspada
+    px(c, 241, 34, 6, 1, "#4a1a1a"); px(c, 242, 35, 2, 4, "#4a1a1a"); p1(c, 245, 35, "#4a1a1a"); p1(c, 243, 39, "#3a1414");
+    px(c, 256, 31, 5, 1, "#6a5a3a"); p1(c, 260, 30, "#8a7a4a");
+    return { camada: c, cor: { pedra, pedraLuz, pedraSombra, luzFria, madeira, madeiraLuz, madeiraEsc } };
+  }
+
+  function novaCamada() { const k = document.createElement("canvas"); k.width = W; k.height = H; return k.getContext("2d"); }
+
+  // ------------------------------------------------------------------ o que anda (10 quadros por segundo)
+  let quadro = 0;
+  const estado = { cena: "fora", hora: 2, sarilho: "travado", solto: 0, destaque: null };
+  let base = null;
+  const nuvens = [], neblina = [], gotas = [], ondas = [];
+  function prepararCeu() {
+    nuvens.length = 0;
+    const r = rng(3);
+    for (let i = 0; i < 7; i++) nuvens.push({ x: r() * (W + 80), y: 4 + r() * 30, w: 40 + r() * 80, v: 0.03 + r() * 0.06 });
+  }
+  function montar() {
+    base = estado.cena === "fora" ? fora(estado.hora) : dentro();
+  }
+
+  function desenharFora(c) {
+    const { cor, p } = base;
+    c.drawImage(base.camada.canvas, 0, 0);
+    const corNuvem = p === 3 ? "#1a2034" : p === 2 ? "#4a2e3a" : "#5a6270";
+    nuvens.forEach((n) => {  // os fiapos passam por cima do céu (a capela está muito abaixo deles)
+      const x = Math.floor(n.x - n.w);
+      for (let i = 0; i < n.w; i++) if (pont(x + i, n.y | 0, 12)) p1(c, x + i, n.y, corNuvem);
+      for (let i = 6; i < n.w - 12; i++) if (pont(x + i, (n.y | 0) - 1, 9)) p1(c, x + i, n.y - 1, corNuvem);
+    });
+    if (p === 3) for (let i = 0; i < 26; i++) { const x = (i * 97 + 13) % W, y = (i * 53) % 30; if ((quadro + i * 3) % 23 > 2 && !(x > 125 && x < 240 && y > 8)) p1(c, x, y, "#9aa4c0"); }
+    // a correnteza do canal, em riscos que andam até o buraco e somem nele
+    for (let i = 0; i < 9; i++) {
+      const t = ((quadro * 0.012 + i / 9) % 1);
+      const x = Math.round(lerp(CANAL.de[0], CANAL.ate[0] - 4, t)), y = Math.round(lerp(CANAL.de[1], CANAL.ate[1], t) + ((i % 3) - 1) * lerp(2.5, 0.6, t));
+      px(c, x, y, 3, 1, mis(cor.agua, cor.brilho, 0.75));
+    }
+    // o frio que sai do buraco: um sopro azulado, rente à água, que se desfaz
+    for (let i = 0; i < 14; i++) {
+      const t = (quadro * 0.03 + i / 14) % 1, n = Math.round(10 * (1 - t));
+      const x = Math.round(BURACO.x + 4 + t * 46 + Math.sin(i * 1.7 + quadro / 12) * 3), y = Math.round(AGUA_Y - 3 - t * 5 + Math.sin(i + quadro / 15));
+      for (let dx = -2; dx <= 2; dx++) for (let dy = 0; dy < 2; dy++) if (pont(x + dx, y + dy, n)) p1(c, x + dx, y + dy, "#9ab0c4");
+    }
+    // a água que treme em volta do buraco
+    for (let k = 0; k < 3; k++) { const x = BURACO.x - 3 + ((quadro + k * 5) % 16); if (pont(x, AGUA_Y + 1, 10)) p1(c, x, AGUA_Y + 1, cor.brilho); }
+    // os sapos, quietos; de vez em quando um pisca
+    SAPOS.forEach(([sx, sy, mais], i) => {
+      const corpo = mis(cor.chao, "#4a6a3a", 0.45), sombra = mis(cor.chao, "#000000", 0.3), olho = mis("#c8c070", cor.chao, 0.35);
+      const pisca = (quadro + i * 17) % 47 < 2;
+      px(c, sx, sy, 5, 2, corpo); px(c, sx + 1, sy - 1, 3, 1, corpo);
+      p1(c, sx, sy + 2, sombra); p1(c, sx + 4, sy + 2, sombra);
+      p1(c, sx + 1, sy - 1, pisca ? corpo : olho); p1(c, sx + 3, sy - 1, pisca ? corpo : olho);
+      if (mais) { p1(c, sx - 1, sy + 1, sombra); p1(c, sx + 5, sy + 1, sombra); p1(c, sx + 2, sy + 2, sombra); }
+    });
+    acenderFora(c);
+  }
+
+  /** Com o mouse em cima, o lugar acende: só alguns pixels, como as janelas da vila. */
+  function acenderFora(c) {
+    const d = estado.destaque, frio = "#c8dcec", ouro = "#ffd070";
+    if (d === "buraco") for (let x = BURACO.x - 1; x < BURACO.x + BURACO.w + 1; x++) {
+      const topo = BURACO.y + Math.round(Math.abs(x - (BURACO.x + 4)) * 0.6 + ((x * 7) % 3) * 0.6);
+      p1(c, x, topo - 1, frio);
+    }
+    if (d === "torre") { px(c, 133, 16, 6, 1, ouro); p1(c, 136, 17, ouro); p1(c, 136, 18, ouro); }
+    if (d === "sapos") SAPOS.forEach(([sx, sy]) => { p1(c, sx + 1, sy - 1, "#fff3a0"); p1(c, sx + 3, sy - 1, "#fff3a0"); });
+    if (d === "canal") for (let x = 0; x < 140; x += 2) { const y = Math.round(lerp(CANAL.de[1], CANAL.ate[1], x / 152)); p1(c, x, y, frio); }
+    if (d === "porta") { for (let y = 35; y < 41; y++) { const meia = y < 37 ? 3 + (y - 35) : 5; p1(c, 222 - meia, y, ouro); p1(c, 222 + meia, y, ouro); } px(c, 220, 34, 5, 1, ouro); }
+  }
+
+  // o caminho da corrente: do tambor do sarilho até a fenda, uma curva que cede um pouco no meio
+  function pontoDaCorrente(t, folga) {
+    const a = [SARILHO.x + 7, SARILHO.y + 7], b = [FENDA.x + 7, FENDA.y + 1];
+    const x = lerp(a[0], b[0], t), y = lerp(a[1], b[1], t) + Math.sin(t * Math.PI) * (3 + folga);
+    return [Math.round(x), Math.round(y)];
+  }
+  function desenharDentro(c) {
+    const cor = base.cor;
+    c.drawImage(base.camada.canvas, 0, 0);
+    const soltando = estado.sarilho === "soltando", solto = estado.sarilho === "solto";
+    const t = soltando ? Math.min(1, estado.solto / 26) : solto ? 1 : 0;  // quanto da corrente já desceu
+    // a água do canal entra pelo buraco e corre entre os bancos até a fenda
+    const caminho = [[14, 49], [44, 50], [90, 56], [130, 53], [170, 57], [FENDA.x + 4, FENDA.y + 1]];
+    for (let i = 0; i < 12; i++) {
+      const u = (quadro * 0.008 + i / 12) % 1, seg = u * (caminho.length - 1), k = Math.floor(seg), f = seg - k;
+      const [x0, y0] = caminho[k], [x1, y1] = caminho[k + 1];
+      px(c, Math.round(lerp(x0, x1, f)), Math.round(lerp(y0, y1, f)) + ((i % 3) - 1), 3, 1, "#2a4a4c");
+    }
+    // a fenda no piso: um rasgo escuro, e a água girando para dentro dela
+    for (let x = FENDA.x; x < FENDA.x + FENDA.w; x++) { const y = FENDA.y + ((x * 5) % 3) - 1; px(c, x, y, 1, 2, "#010203"); }
+    for (let i = 0; i < 8; i++) {
+      const ang = quadro * (solto ? 0.08 : 0.22) + i * (Math.PI / 4), raio = 3 + (i % 3) * 2;
+      p1(c, Math.round(FENDA.x + 7 + Math.cos(ang) * raio * 1.6), Math.round(FENDA.y + 1 + Math.sin(ang) * raio * 0.45), "#3a5a5c");
+    }
+    if (solto) {  // depois de solta: bolhas e um brilho frio pulsando lá embaixo
+      const pulso = 4 + Math.round(3 * Math.sin(quadro / 6));
+      for (let y = FENDA.y - 2; y < FENDA.y + 4; y++) for (let x = FENDA.x - 3; x < FENDA.x + FENDA.w + 3; x++) if (pont(x, y, pulso - Math.abs(y - FENDA.y) * 2)) p1(c, x, y, "#6f9ab8");
+      for (let i = 0; i < 4; i++) { const k = (quadro + i * 7) % 14; if (k < 8) p1(c, FENDA.x + 3 + i * 3, FENDA.y - k / 2, "#8fb4c8"); }
+    }
+    // o sarilho: dois postes, o tambor com a corrente enrolada, a roda dentada com a trava e a manivela
+    const sx = SARILHO.x, sy = SARILHO.y, madeira = "#4a3624", madeiraEsc = "#2a1e14", ferro = "#3a3a40", ferroLuz = "#7a7a84";
+    px(c, sx - 2, sy - 4, 2, 15, madeiraEsc); px(c, sx + 15, sy - 4, 2, 15, madeiraEsc);
+    px(c, sx - 3, sy - 5, 23, 2, madeira);
+    px(c, sx, sy + 1, 15, 6, "#3a2a1a"); px(c, sx, sy + 1, 15, 1, "#5a4630"); px(c, sx, sy + 6, 15, 1, madeiraEsc);
+    const giro = soltando ? estado.solto : solto ? 26 : 0;
+    const voltasNoTambor = Math.round(14 * (1 - t));
+    for (let i = 0; i < voltasNoTambor; i++) { const x = sx + i, y = sy + 2 + ((i + giro) % 4); p1(c, x, y, (i + giro) % 2 ? ferroLuz : ferro); }
+    // a roda dentada e a trava (a lingueta cai entre os dentes: travado; levantada: solto)
+    for (let k = 0; k < 8; k++) { const a = k * Math.PI / 4 + giro * 0.5; p1(c, Math.round(sx - 4 + Math.cos(a) * 2.5), Math.round(sy + 4 + Math.sin(a) * 2.5), ferro); }
+    p1(c, sx - 4, sy + 4, ferroLuz);
+    const levantada = estado.sarilho !== "travado";
+    px(c, sx - 8, sy + (levantada ? -1 : 1), 4, 1, estado.destaque === "sarilho" ? "#ffd070" : ferroLuz);
+    p1(c, sx - 8, sy + (levantada ? -2 : 2), ferro);
+    // a manivela do outro lado, girando enquanto a corrente desce
+    const ang = soltando ? giro * 0.9 : solto ? 2.4 : -0.6;
+    const mx = sx + 18, my = sy + 4, hx = Math.round(mx + Math.cos(ang) * 4), hy = Math.round(my + Math.sin(ang) * 3);
+    for (let k = 0; k <= 4; k++) p1(c, Math.round(lerp(mx, hx, k / 4)), Math.round(lerp(my, hy, k / 4)), ferro);
+    px(c, hx, hy - 1, 2, 2, madeira); p1(c, mx, my, ferroLuz);
+    // a corrente: esticada até a fenda; soltando, ela escorre elo a elo para dentro; solta, sumiu
+    if (t < 1) {
+      const passo = 0.025, corre = soltando ? (estado.solto * 0.04) % passo : 0;
+      for (let u = t; u <= 1; u += passo) {
+        const [x, y] = pontoDaCorrente(Math.min(1, u + corre), t * 2);
+        const elo = Math.round(u / passo) % 2;
+        if (elo) px(c, x, y, 2, 1, ferroLuz); else px(c, x, y - 1, 1, 2, ferro);
+      }
+    }
+    if (estado.destaque === "sarilho" && estado.sarilho === "travado") { px(c, sx, sy + 1, 15, 1, "#ffd070"); p1(c, hx, hy - 1, "#ffd070"); }
+    // as gotas do teto e as rodas que elas abrem na água
+    if (quadro % 9 === 0) { const r = (quadro * 37) % 3; gotas.push({ x: [70, 140, 160][r] + (quadro % 7), y: 0, v: 2.5 }); }
+    for (const g of gotas) { g.y += g.v; if (g.y < 50) p1(c, g.x, g.y, "#5a7a88"); else if (!g.fim) { g.fim = true; ondas.push({ x: g.x, y: 50 + (g.x % 7), r: 0 }); } }
+    while (gotas.length && gotas[0].fim) gotas.shift();
+    for (const o of ondas) { o.r += 0.6; const n = Math.max(0, 10 - Math.round(o.r * 2)); for (let a = 0; a < 16; a++) { const x = Math.round(o.x + Math.cos(a / 16 * Math.PI * 2) * o.r * 2), y = Math.round(o.y + Math.sin(a / 16 * Math.PI * 2) * o.r * 0.5); if (pont(x, y, n)) p1(c, x, y, "#3a5a64"); } }
+    while (ondas.length && ondas[0].r > 5) ondas.shift();
+    // a luz da sua tocha, morna, na entrada (você está perto do buraco)
+    for (let y = 36; y < H; y++) for (let x = 0; x < 70; x++) {
+      const d = Math.hypot((x - 22) * 0.7, (y - 54) * 1.4), n = Math.round(5 - d / 7);
+      if (n > 0 && pont(x, y, n)) p1(c, x, y, "#c87a3a");
+    }
+    acenderDentro(c);
+  }
+  function acenderDentro(c) {
+    const d = estado.destaque, frio = "#c8dcec", ouro = "#ffd070";
+    if (d === "buraco") for (let y = 30; y < 48; y++) for (let x = 0; x < 22; x++) { const b = (x - 9) * (x - 9) / 90 + (y - 47) * (y - 47) / 300; if (b > 0.92 && b < 1.08) p1(c, x, y, frio); }
+    if (d === "fenda") for (let x = FENDA.x - 1; x < FENDA.x + FENDA.w + 1; x++) p1(c, x, FENDA.y - 2 + ((x * 5) % 3), frio);
+    if (d === "altar") { px(c, 236, 32, 30, 1, ouro); px(c, 248, 37, 6, 1, ouro); px(c, 250, 36, 2, 4, ouro); }
+    if (d === "bancos") [[8, 30], [52, 44], [128, 34]].forEach(([bx, bw]) => { for (let x = bx; x < bx + bw; x += 2) p1(c, x, 51, ouro); });
+  }
+
+  // ------------------------------------------------------------------ a tela: o quadro em pixel inteiro, os pontos clicáveis
+  const canvas = document.getElementById("arte"), palco = document.getElementById("palco"), pontosEl = document.getElementById("pontos");
+  const tela = canvas.getContext("2d"), buf = novaCamada();
+  let escala = 1, troca = null;
+  function medir() {
+    const dpr = window.devicePixelRatio || 1;
+    const larg = palco.clientWidth;
+    const k = Math.max(1, Math.floor((larg * dpr) / W));
+    escala = k / dpr;
+    canvas.width = W * k; canvas.height = H * k;
+    canvas.style.width = W * escala + "px"; canvas.style.height = H * escala + "px";
+    pontosEl.style.left = (palco.clientWidth - W * escala) / 2 + "px";
+    pontosEl.style.width = W * escala + "px"; pontosEl.style.right = "auto";
+    posicionarPontos();
+    pintar();
+  }
+  function pintar() {
+    buf.clearRect(0, 0, W, H);
+    (estado.cena === "fora" ? desenharFora : desenharDentro)(buf);
+    let fonte = buf.canvas;
+    if (troca) {  // a troca de cena: a nova cobre a velha num pontilhado que fecha, como a câmera do jogo
+      const n = Math.min(16, Math.ceil(((performance.now() - troca.inicio) / 420) * 16));
+      const m = troca.mascara;
+      m.clearRect(0, 0, W, H); m.drawImage(troca.velha, 0, 0);
+      for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (pont(x, y, n)) m.clearRect(x, y, 1, 1);
+      const junto = troca.junto; junto.clearRect(0, 0, W, H); junto.drawImage(buf.canvas, 0, 0); junto.drawImage(m.canvas, 0, 0);
+      fonte = junto.canvas;
+      if (n >= 16) troca = null;
+    }
+    tela.imageSmoothingEnabled = false;
+    let dx = 0;
+    if (estado.sarilho === "soltando" && estado.cena === "dentro" && estado.solto > 6 && estado.solto < 22 && !reduzir) dx = (estado.solto % 2 ? 1 : -1);  // o tranco
+    tela.clearRect(0, 0, canvas.width, canvas.height);
+    tela.drawImage(fonte, dx, 0, W, H, 0, 0, canvas.width, canvas.height);
+  }
+  const reduzir = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // ------------------------------------------------------------------ o texto e as opções de cada cena
+  const TEXTO_FORA = [
+    "A capela está afundada até a metade das janelas. Juncos crescem no que foi o pátio da frente, e a porta sumiu sob a lama. O sino não está mais na torre.",
+    "O canal que você seguiu desde o moinho termina aqui: a água entra por um buraco no muro e desaparece no escuro lá dentro, sem barulho. Do buraco vem um frio que não é do pântano.",
+    "Na beira da água, os sapos estão quietos. Alguns têm patas a mais.",
+  ];
+  const TEXTO_DENTRO = [
+    "Você entra pelo buraco no muro, com a água do canal pelos joelhos. Lá dentro, o salão principal da capela é um lago escuro entre colunas. A água corre devagar entre os bancos podres e some numa fenda do piso, perto do altar.",
+  ];
+  const PONTOS = {
+    fora: [
+      { id: "buraco", nome: "Buraco no muro", area: [143, 37, 18, 11], balao: [152, 37], opcao: "Entrar pelo buraco no muro", ir: "dentro" },
+      { id: "torre", nome: "Torre", area: [127, 2, 19, 27], balao: [136, 3], opcao: "Olhar a torre",
+        texto: "No alto da torre, o vão do sino está vazio. Da trave onde ele pendia sobra um toco de corda podre." },
+      { id: "porta", nome: "Porta", area: [206, 32, 32, 14], balao: [222, 33], opcao: "Procurar a porta",
+        texto: "A lama subiu até o arco da porta. Só a pedra de cima aparece, com uma cruz raspada a faca." },
+      { id: "canal", nome: "Canal", area: [8, 48, 120, 10], balao: [40, 52], opcao: "Olhar o canal",
+        texto: "As estacas do moleiro seguram as margens até aqui. A água vai reta para o buraco, sem fazer onda." },
+      { id: "sapos", nome: "Sapos", area: [70, 58, 54, 7], balao: [96, 59], opcao: "Olhar os sapos de perto",
+        texto: "Nenhum coaxa. O mais perto tem uma terceira pata nascendo do lado, e não parece se importar." },
+    ],
+    dentro: [
+      { id: "sarilho", nome: "Sarilho", area: [268, 24, 32, 18], balao: [285, 26], opcao: "Soltar a corrente do sarilho", acao: "soltar" },
+      { id: "fenda", nome: "Fenda", area: [204, 49, 24, 9], balao: [215, 50], opcao: "Olhar a fenda no piso",
+        texto: "A água desce pela fenda sem espirrar, como se lá embaixo houvesse muito espaço. A corrente do sarilho entra por ela." },
+      { id: "altar", nome: "Altar", area: [234, 29, 32, 14], balao: [250, 30], opcao: "Examinar o altar",
+        texto: "O altar ficou acima da água. Alguém raspou o nome da santa da pedra. Um pano vermelho apodrece no canto." },
+      { id: "bancos", nome: "Bancos", area: [6, 48, 160, 10], balao: [72, 50], opcao: "Atravessar entre os bancos",
+        texto: "As tábuas cedem com o peso da mão. A água passa por baixo delas, sempre na mesma direção: o altar." },
+      { id: "buraco", nome: "Saída", area: [0, 30, 20, 18], balao: [10, 31], opcao: "Voltar pelo buraco no muro", ir: "fora" },
+    ],
+  };
+  const tituloEl = document.getElementById("titulo"), subEl = document.getElementById("sub"), prosaEl = document.getElementById("prosa"), opcoesEl = document.getElementById("opcoes");
+  const CENAS = {
+    fora: { titulo: "A Capela Afogada", sub: () => `Covil · Pântano · ${["Manhã", "Tarde", "Crepúsculo", "Noite"][estado.hora]}`, prosa: TEXTO_FORA },
+    dentro: { titulo: "Nave Alagada", sub: () => "A Capela Afogada · primeira sala", prosa: TEXTO_DENTRO },
+  };
+  function paragrafo(texto, classe, provisorio) {
+    const p = document.createElement("p");
+    if (classe) p.className = classe;
+    p.textContent = texto;
+    if (provisorio) { const s = document.createElement("span"); s.className = "prov"; s.textContent = "texto de teste"; p.appendChild(s); }
+    prosaEl.appendChild(p);
+  }
+  function escrever() {
+    const cena = CENAS[estado.cena];
+    tituloEl.textContent = cena.titulo;
+    subEl.textContent = cena.sub();
+    prosaEl.replaceChildren();
+    cena.prosa.forEach((t) => paragrafo(t));
+    opcoesEl.replaceChildren();
+    PONTOS[estado.cena].forEach((p, i) => {
+      const li = document.createElement("li"), b = document.createElement("button");
+      b.type = "button"; b.id = `opcao-${estado.cena}-${p.id}`;
+      b.innerHTML = `<kbd>${i + 1}</kbd><span></span>`;
+      b.querySelector("span").textContent = p.acao === "soltar" ? rotuloSarilho() : p.opcao;
+      b.disabled = p.acao === "soltar" && estado.sarilho === "soltando";
+      b.addEventListener("click", () => escolher(p));
+      b.addEventListener("mouseenter", () => { estado.destaque = p.id; pintar(); });
+      b.addEventListener("mouseleave", () => { estado.destaque = null; pintar(); });
+      li.appendChild(b); opcoesEl.appendChild(li);
+    });
+  }
+  function rotuloSarilho() { return estado.sarilho === "travado" ? "Soltar a corrente do sarilho" : estado.sarilho === "soltando" ? "A corrente está descendo…" : "Travar de novo (recomeçar o teste)"; }
+  function posicionarPontos() {
+    pontosEl.replaceChildren();
+    PONTOS[estado.cena].forEach((p) => {
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "ponto"; b.id = `ponto-${estado.cena}-${p.id}`;
+      b.setAttribute("aria-label", p.nome);
+      const [x, y, w, h] = p.area;
+      Object.assign(b.style, { left: x * escala + "px", top: y * escala + "px", width: w * escala + "px", height: h * escala + "px" });
+      const bal = document.createElement("span");
+      bal.className = "balao"; bal.textContent = p.nome;
+      Object.assign(bal.style, { left: (p.balao[0] - x) * escala + "px", top: (p.balao[1] - y) * escala + "px" });
+      b.appendChild(bal);
+      b.addEventListener("mouseenter", () => { estado.destaque = p.id; pintar(); });
+      b.addEventListener("mouseleave", () => { estado.destaque = null; pintar(); });
+      b.addEventListener("focus", () => { estado.destaque = p.id; pintar(); });
+      b.addEventListener("blur", () => { estado.destaque = null; pintar(); });
+      b.addEventListener("click", () => escolher(p));
+      pontosEl.appendChild(b);
+    });
+  }
+  function escolher(p) {
+    if (p.ir) { irPara(p.ir); return; }
+    if (p.acao === "soltar") {
+      if (estado.sarilho === "soltando") return;
+      if (estado.sarilho === "solto") { estado.sarilho = "travado"; estado.solto = 0; escrever(); return; }
+      estado.sarilho = "soltando"; estado.solto = 0;
+      escrever();
+      paragrafo("Você ergue a lingueta da roda dentada. A manivela dá um tranco e começa a girar sozinha; a corrente corre pelo tambor e desce, elo a elo, pela fenda.", "resultado", true);
+      return;
+    }
+    escrever();
+    paragrafo(p.texto, "resultado", true);
+  }
+  function irPara(cena) {
+    const velha = novaCamada(); velha.drawImage(buf.canvas, 0, 0);
+    troca = { inicio: performance.now(), velha: velha.canvas, mascara: novaCamada(), junto: novaCamada() };
+    estado.cena = cena; estado.destaque = null;
+    document.getElementById("horas").hidden = cena !== "fora";
+    document.querySelectorAll(".abas button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.cena === cena)));
+    montar(); posicionarPontos(); escrever();
+    const passo = () => { pintar(); if (troca) requestAnimationFrame(passo); };
+    requestAnimationFrame(passo);
+  }
+
+  document.querySelectorAll(".abas button").forEach((b) => b.addEventListener("click", () => { if (b.dataset.cena !== estado.cena) irPara(b.dataset.cena); }));
+  document.querySelectorAll(".horas button[data-hora]").forEach((b) => b.addEventListener("click", () => {
+    estado.hora = Number(b.dataset.hora);
+    document.querySelectorAll(".horas button[data-hora]").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+    montar(); subEl.textContent = CENAS[estado.cena].sub(); pintar();
+  }));
+  document.addEventListener("keydown", (ev) => {
+    const n = Number(ev.key);
+    if (!n || ev.ctrlKey || ev.metaKey || ev.altKey) return;
+    const p = PONTOS[estado.cena][n - 1];
+    if (p) { ev.preventDefault(); escolher(p); }
+  });
+
+  // o relógio da cena: dez passos por segundo
+  setInterval(() => {
+    quadro++;
+    nuvens.forEach((n) => { n.x = (n.x + n.v) % (W + n.w); });
+    if (estado.sarilho === "soltando") {
+      estado.solto++;
+      if (estado.solto === 27) {
+        estado.sarilho = "solto";
+        escrever();
+        paragrafo("Você ergue a lingueta da roda dentada. A manivela dá um tranco e começa a girar sozinha; a corrente corre pelo tambor e desce, elo a elo, pela fenda.", "resultado", true);
+        paragrafo("A ponta some na água. Lá embaixo, alguma coisa pesada se arrasta na pedra, e a fenda acende um azul frio que não estava ali.", "resultado frio", true);
+      }
+    }
+    if (!troca) pintar();
+  }, 100);
+
+  prepararCeu(); montar(); escrever();
+  new ResizeObserver(medir).observe(palco);
+  medir();
+})();
+</script>

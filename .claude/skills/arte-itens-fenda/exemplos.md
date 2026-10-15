@@ -28,7 +28,10 @@ de exemplo de raciocínio, não de receita. Outro objeto pede a própria forma, 
 
 ## O Unguento de Prata (pote de cerâmica de boticário)
 
-`ferramentas/arte/desenhar_unguento_pixel.py`; 32 e 64 px (o 48 do voo é o 32 a 2× reduzido pelo navegador).
+`ferramentas/arte/desenhar_unguento_pixel.py`; 32 e 64 px, desenhados cada um na própria grade. O unguento fica parado
+em 32 (a bolsa, a prateleira, o quadro do baú); o 64 é o tamanho grande de apresentação. Ele não tem lugar parado em
+48: no voo até a bolsa, a animação mexe no arquivo de 32 (escala de 1,3 a 0,8, o tempo do voo), o que não é um
+tamanho do desenho.
 
 - **Conceito:** o pote de louça de paredes retas com rótulo azul-esverdeado lembrava embalagem moderna (decisão do
   Jean); virou um pote baixo e arredondado de cerâmica, com a boca espessa e a pasta cinza-prateada à vista, sem
