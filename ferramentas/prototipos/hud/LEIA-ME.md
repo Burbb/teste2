@@ -1478,3 +1478,12 @@ tamanho de exibição com o seu arquivo nativo, o desenho usando o quadro (1 a 2
 rampas. Por objeto: a área ocupada dentro do quadro (as silhuetas diferentes ficam). Por contexto: o tamanho de
 exibição, pelo tipo de espaço. Para adotar faltam os arquivos de 40 de todo o equipamento pintado, a passagem de
 acabamento do escudo em 40 e uma decisão para os itens que ainda são sprites 16×16 (40 não é múltiplo de 16).
+
+## Integrados (1.94.0): o escudo final e o Unguento de Prata
+
+O escudo final (com o 40 px corrigido: a sombra do cravo de cima à esquerda não parte mais o reflexo) e o pote de
+cerâmica do unguento foram para o jogo. `pixel_comum.py`, `desenhar_escudo_pixel.py` e `desenhar_unguento_pixel.py`
+saíram daqui para `ferramentas/arte/`, que grava direto em `rpg/web/static/hud/icones/` (ou numa pasta dada na linha
+de comando); `ocupacao_icones.py` os importa de lá e continua gerando o estudo como era (o 40 de antes da correção).
+As pastas `escudo-pixel/`, `escudo-pixel-v1/`, `unguento-pixel/` e `unguento-pixel-v1/` ficam como histórico da
+avaliação. A conferência no jogo: `ferramentas/arte/fotografar_itens.mjs`.

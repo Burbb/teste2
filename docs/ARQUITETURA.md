@@ -275,9 +275,14 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   tela usa então o sprite do jogo (`Icones.item(s) || S(s, 2)`). A origem e o destino de uma animação pedem o mesmo
   papel (o item que voa ao equipar, o selo de atributo, o consumível que cai na bolsa). Lacunas (desenho do jogo no
   lugar, sem trocar por desenho de outro tipo de item): as armas e peças de couro das outras classes (arco, cajado,
-  orbe, livro), o machado, os itens únicos com desenho próprio, unguento e bomba de fumaça, a tocha apagada, a bolsa vazia e o frasco vazio no topo, os inimigos e as cartas deles, os
+  orbe, livro), o machado, os itens únicos com desenho próprio, a bomba de fumaça, a tocha apagada, a bolsa vazia e o frasco vazio no topo, os inimigos e as cartas deles, os
   ícones de habilidade e de efeito, o covil vencido. O mercador da banca tem o busto no balcão (`telas/mercado.js`,
   com as cores da figura da banca).
+- O escudo e o Unguento de Prata (1.94.0) são desenhados em pixel art, cada tamanho na própria grade, por
+  `ferramentas/arte/` (`desenhar_escudo_pixel.py`, `desenhar_unguento_pixel.py`, com as etapas comuns em
+  `pixel_comum.py`), que grava os arquivos prontos em `static/hud/icones/`; o jogo só lê os arquivos. O unguento se
+  acha só pelo id do consumível: o desenho "unguento" do jogo é também o da Curandeira, que fica com o dela. A
+  conferência no jogo, nos lugares de cada item: `ferramentas/arte/fotografar_itens.mjs`.
 - `desenhos.js` (`Desenhos`): os itens desenhados em código, pelo mesmo método (desde a 1.93.0): o martelo e a Pena de
   Fênix, em 32×32, o tamanho em que vivem (bolsa, mochila, mercado, espólio). `Icones` os entrega como os outros
   desenhos: em 32 e 64 px pixel a pixel; em 48 (o item que voa para o corpo, o cartão compacto do saque) a versão a 2×

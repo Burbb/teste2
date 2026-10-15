@@ -17,10 +17,12 @@ Gera ocupacao/<peça>-40.png e o @2x (a duplicação, como nos outros).
 
 import os
 import pathlib
+import sys
 
 from PIL import Image
 
-import desenhar_escudo_pixel as escudo
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[2] / "arte"))  # o escudo saiu do protótipo (1.94.0)
+import desenhar_escudo_pixel as escudo  # noqa: E402
 from preparar_hud4p import GRUPOS, METODO_USO, escalas, no_quadrado
 
 AQUI = pathlib.Path(__file__).resolve().parent
@@ -30,7 +32,7 @@ PINTADOS = ("anel", "cota", "espada")
 # o escudo em 40: as medidas entre as de 32 e 48 (o raio no centro de pixel, e a margem de 2 px do de 32)
 escudo.MEDIDAS[40] = dict(raio=16.45, lado=1, aro=2.4, degrau=1, cupula=3.9, base=0.8, sulco=1.0, cravos=10.1, cravo="2",
                           sombra_peca=1, emendas=True, reflexo=(1.05, 1.7), alcance=0.68, escada=(7, 5, 4, 3, 1))
-escudo.AJUSTES[40] = {}
+escudo.AJUSTES[40] = {}  # o estudo é de antes da correção do cravo (ferramentas/arte/desenhar_escudo_pixel.py)
 escudo.BRILHO_CUPULA[40] = escudo.BRILHO_CUPULA[48]
 
 

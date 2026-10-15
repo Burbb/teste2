@@ -166,7 +166,8 @@ def campanha(ui):
 def baus(ui):
     """Guerreiro numa vila com três baús na bolsa (BAUS=n para outra quantidade), numa semente em que saem ao menos dois
     equipamentos (conferida antes com o mesmo estado: o menu da vila sorteia a frase de ambiente e então a pilha abre;
-    com menos de três baús, a semente 1)."""
+    com menos de três baús, a semente 1). SUPRIMENTO=unguento (um id da bolsa): a primeira semente em que esse
+    suprimento sai dos baús, em vez dos dois equipamentos (para ver o desenho dele no quadro e no voo para a bolsa)."""
     from rpg.regras import AMBIENTE_VILA
     from rpg.ui import BotUI, InterfaceGrafica
 
@@ -189,12 +190,13 @@ def baus(ui):
         def escolher(self, pergunta, opcoes):
             return next(i for i, o in enumerate(opcoes) if o.startswith(("Guardar", "Deixar")))
     baus = int(os.environ.get("BAUS", "3"))
-    for seed in range(1, 300 if baus >= 3 else 2):
+    suprimento = os.environ.get("SUPRIMENTO")
+    for seed in range(1, 300 if baus >= 3 or suprimento else 2):
         Conta.achados = 0
         t = montar(Conta(random.Random(1)), seed)
         t.sortear(AMBIENTE_VILA)
         t.usar_consumivel("bau")
-        if Conta.achados >= 2:
+        if (t.j.consumiveis.get(suprimento, 0) > 0) if suprimento else Conta.achados >= 2:
             break
     g = montar(ui, seed)
     ui.jogo = g
@@ -854,7 +856,8 @@ def mercado(ui):
     """Uma vila do mundo gerado com o herói direto no mercado (Voltar leva à vila; o prédio do mercado entra de novo).
     CLASSE (padrão arqueiro: as flechas também), OURO (padrão 300), MOCHILA (quantos equipamentos na mochila, padrão 8;
     alguns de outra classe), PROVISOES, PERIODO (padrão 1, tarde; 3 é noite). AMOSTRAS=1 (o experimento de resolução,
-    ferramentas/prototipos/hud): um Martelo na frente da mochila e uma Pena de Fênix na bolsa."""
+    ferramentas/prototipos/hud): um Martelo na frente da mochila e uma Pena de Fênix na bolsa. AMOSTRAS=2 (o escudo e o
+    unguento da 1.94.0): um escudo na frente da mochila e um Unguento de Prata na bolsa."""
     g = Jogo(ui, seed=int(os.environ.get("SEMENTE", "8")), pasta_saves=tempfile.mkdtemp())
     ui.jogo = g
     classe = os.environ.get("CLASSE", "arqueiro")
@@ -869,8 +872,9 @@ def mercado(ui):
         g.j.mochila.append(gerar_equip(rng, classe if k % 3 else "mago" if classe != "mago" else "guerreiro", 2))
     if os.environ.get("AMOSTRAS"):
         r = random.Random(1)
-        g.j.mochila.insert(0, next(e for e in iter(lambda: gerar_equip(r, "guerreiro", 2), None) if e["icone"] == "martelo"))
-        g.j.consumiveis["pena_fenix"] = 1
+        icone, consumivel = ("escudo", "unguento") if os.environ["AMOSTRAS"] == "2" else ("martelo", "pena_fenix")
+        g.j.mochila.insert(0, next(e for e in iter(lambda: gerar_equip(r, "guerreiro", 2), None) if e["icone"] == icone))
+        g.j.consumiveis[consumivel] = 1
     g.loja()
     try:
         g.rodar()

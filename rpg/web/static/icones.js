@@ -9,8 +9,9 @@
    Um sprite pode ter mais de um papel (a "chama" é o Vigor no topo, o Poder nos atributos e a Pena de Fênix na bolsa):
    por isso a escolha é pelo papel, nunca só pelo nome. Os desenhos vêm prontos nos tamanhos de uso (reduzidos das
    folhas aprovadas por ferramentas/prototipos/hud/preparar_hud4p.py), cada um com o dobro para telas densas; pedido um
-   lado sem arquivo igual, vai o mais perto. O martelo e a Pena de Fênix são desenhados em código (desenhos.js), em
-   32×32. As lacunas (o que ainda não tem desenho) estão em docs/ARQUITETURA.md. */
+   lado sem arquivo igual, vai o mais perto. O escudo e o Unguento de Prata são desenhados em pixel art na própria
+   grade de cada tamanho (ferramentas/arte/, 1.94.0). O martelo e a Pena de Fênix são desenhados em código
+   (desenhos.js), em 32×32. As lacunas (o que ainda não tem desenho) estão em docs/ARQUITETURA.md. */
 "use strict";
 
 const Icones = (() => {
@@ -25,7 +26,7 @@ const Icones = (() => {
     "lugar-cidadela": [32, 40], "lugar-floresta": [32, 40], "lugar-montanha": [32, 40], "lugar-pantano": [32, 40],
     "lugar-planicie": [32, 40], "lugar-ruinas": [32, 40], "lugar-vila": [32, 40], "maca": [32, 48, 64],
     "manopla": [32, 48, 64], "moedas": [24], "osso": [24], "perneiras": [32, 48, 64], "pocao": [24, 32, 48, 64],
-    "provisoes": [24], "tocha": [24, 32, 48, 64], "tonico": [32, 48, 64],
+    "provisoes": [24], "tocha": [24, 32, 48, 64], "tonico": [32, 48, 64], "unguento": [32, 64],
     "vital-foco": [20], "vital-mana": [20], "vital-vida": [20], "vital-vigor": [20]};
 
   // Cada desenho vai para o tipo de ferro que o jogo já tem (elmo, armadura, manopla, calca = perneira, bota_ferro, maca);
@@ -37,12 +38,13 @@ const Icones = (() => {
   const VAZIO = { cabeca: "elmo", armadura: "cota", maos: "manopla", pernas: "perneiras", pes: "botas-ferro", arma: "espada",
     secundaria: "escudo", amuleto: "amuleto", anel1: "anel", anel2: "anel" };
   // os consumíveis, pelo id do motor (o Baú Trancado é sempre o baú de madeira e latão; a Pena de Fênix é desenhada em
-  // código, desenhos.js)
+  // código, desenhos.js; o Unguento de Prata é o pote de cerâmica de ferramentas/arte/)
   const CONSUMIVEL = { pocao_vida: "pocao", tonico: "tonico", antidoto: "antidoto", bandagem: "bandagem", bau: "bau", tocha: "tocha",
-    pena_fenix: "pena" };
+    pena_fenix: "pena", unguento: "unguento" };
   // os que só se acham pelo id, nunca pelo desenho: a Pena de Fênix usa no jogo a "chama", que também é o Vigor, o Poder
-  // e as habilidades de fogo; uma tela que só tem o desenho "chama" não está falando da pena
-  const SO_PELO_ID = new Set(["pena_fenix"]);
+  // e as habilidades de fogo; uma tela que só tem o desenho "chama" não está falando da pena. O desenho "unguento" do
+  // jogo é também o da Curandeira (o balcão e os cartões dela): ela continua com o dela, só o item muda
+  const SO_PELO_ID = new Set(["pena_fenix", "unguento"]);
   const ATRIBUTO = { Ataque: "attr-ataque", Defesa: "attr-defesa", Agilidade: "attr-agilidade", Poder: "attr-poder" };
   // os recursos do topo, pelo desenho que o jogo escolhe (sem comida, o osso; a tocha apagada, a bolsa vazia e o
   // frasco vazio ficam com o do jogo); a aljava são as flechas do Patrulheiro

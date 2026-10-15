@@ -1,5 +1,5 @@
-"""O Unguento de Prata em pixel art (experimento, fora do jogo): o segundo objeto do método do escudo refinado
-(desenhar_escudo_pixel.py). Esta é a segunda proposta, com o conceito novo do recipiente.
+"""O Unguento de Prata em pixel art (no jogo desde a 1.94.0): o segundo objeto do método do escudo
+(desenhar_escudo_pixel.py), no conceito novo do recipiente aprovado por Jean.
 
 O que o jogo diz do item (rpg/itens.py e os usos): "Unguento de Prata", "Cura uma infecção", 30 de ouro no mercado
 (estoque de 0 a 2), usado fora da luta ("O unguento arde como fogo. Horas depois, a febre cede"); a curandeira trata
@@ -29,17 +29,19 @@ A construção, em cada tamanho (32 e 64 px), na própria grade:
   - a limpeza, o contorno de 1 pixel e as correções são as etapas comuns (pixel_comum.py).
 O dobro de cada arquivo é a duplicação exata dos pixels.
 
-    python ferramentas/prototipos/hud/desenhar_unguento_pixel.py
+    python ferramentas/arte/desenhar_unguento_pixel.py            (grava em rpg/web/static/hud/icones/)
+    python ferramentas/arte/desenhar_unguento_pixel.py <pasta>    (grava noutra pasta, para comparar)
+
+O consumível é achado só pelo id (icones.js): o desenho do jogo "unguento" é também o da Curandeira, que não muda.
 """
 
-import pathlib
+import sys
 
 import numpy as np
 
-from pixel_comum import ANG_LUZ, LUZ, ajustar, contornar, grade, imagem, limpar, salvar
+from pixel_comum import ANG_LUZ, LUZ, ajustar, contornar, destino, grade, imagem, limpar, salvar
 
-AQUI = pathlib.Path(__file__).resolve().parent
-SAIDA = AQUI / "unguento-pixel"
+LADOS = (32, 64)  # 48 (o voo) é o 32 a 2× reduzido pelo navegador, como nos outros desenhos sem 48
 
 # As rampas, do mais escuro ao mais claro: o barro (bege acinzentado, quente) e a pasta de prata (cinza frio).
 BARRO = ["#1d1712", "#32281f", "#4a3c2f", "#655240", "#816a53", "#9c8467", "#b59d7e", "#cbb596", "#ddcbb0"]
@@ -159,8 +161,6 @@ def desenhar(lado):
 
 
 if __name__ == "__main__":
-    SAIDA.mkdir(exist_ok=True)
-    for velho in SAIDA.glob("unguento-48*.png"):   # o conceito novo tem 32 e 64 (o 48 era da primeira proposta)
-        velho.unlink()
-    for lado in (32, 64):
-        print(f"unguento-{lado}: {salvar(desenhar(lado), SAIDA, 'unguento')} cores")
+    saida = destino(sys.argv)
+    for lado in LADOS:
+        print(f"unguento-{lado}: {salvar(desenhar(lado), saida, 'unguento')} cores")

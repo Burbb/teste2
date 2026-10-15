@@ -1,7 +1,9 @@
-"""O escudo refinado em pixel art (experimento, fora do jogo): o candidato de desenhar_escudo.py (o render do relevo)
-continua como referência de forma, construção e luz, e o escudo atual da HUD como referência de presença dos reflexos
-e de contraste nos tamanhos pequenos. Aqui o desenho não é a redução do render: cada tamanho final (32, 48 e 64 px) é
-construído na própria grade, por regras, com a paleta organizada em rampas e a luz em grupos de pixels deliberados.
+"""O escudo da HUD em pixel art (o escudo de ferro azulado com aro e peça central de latão; no jogo desde a 1.94.0).
+Nasceu no protótipo (ferramentas/prototipos/hud/: o render do relevo de desenhar_escudo.py como referência de forma e
+construção, o escudo pintado da família como referência de presença dos reflexos), e foi aprovado por Jean como o
+desenho final: a revisão artística dele está encerrada. Cada tamanho final (32, 40, 48 e 64 px) é construído na
+própria grade, por regras, com a paleta organizada em rampas e a luz em grupos de pixels deliberados; nada é
+reduzido de outro tamanho. O 40 (o Inventário) tem as medidas entre as de 32 e 48 e uma correção pontual em AJUSTES.
 
 A construção, em cada tamanho:
   - a silhueta: dois discos em centro de pixel (a frente, e atrás dela, deslocada para baixo e para a direita, a
@@ -23,18 +25,18 @@ A construção, em cada tamanho:
     desenhado de propósito: o brilho, os cravos); e as correções feitas olhando cada tamanho (AJUSTES).
 O dobro de cada arquivo (para telas densas) é a duplicação exata dos pixels.
 
-    python ferramentas/prototipos/hud/desenhar_escudo_pixel.py
+    python ferramentas/arte/desenhar_escudo_pixel.py            (grava em rpg/web/static/hud/icones/)
+    python ferramentas/arte/desenhar_escudo_pixel.py <pasta>    (grava noutra pasta, para comparar)
 """
 
 import math
-import pathlib
+import sys
 
 import numpy as np
 
-from pixel_comum import ANG_LUZ, LUZ, ajustar, contornar, imagem, limpar, salvar
+from pixel_comum import ANG_LUZ, LUZ, ajustar, contornar, destino, imagem, limpar, salvar
 
-AQUI = pathlib.Path(__file__).resolve().parent
-SAIDA = AQUI / "escudo-pixel"
+LADOS = (32, 40, 48, 64)
 
 # As rampas: do mais escuro ao brilho (o ferro azulado e o latão do escudo atual, organizados em degraus).
 FERRO = ["#0e1117", "#191e28", "#252c3a", "#343e51", "#465269", "#5d6b86", "#8492ab", "#bcc5d4", "#eef1f6"]
@@ -46,6 +48,9 @@ LATAO = ["#26170a", "#40270c", "#623c12", "#8a571b", "#ae7526", "#cf9737", "#e9b
 # As medidas de cada tamanho, em pixels (os raios em relação ao centro do disco da frente).
 MEDIDAS = {
     32: dict(raio=12.45, lado=1, aro=2.0, degrau=1, cupula=3.5, base=0.0, sulco=1.0, cravos=7.9, cravo="1", sombra_peca=1, emendas=False, reflexo=(1.35, 2.0), alcance=0.62, escada=(7, 5, 4, 3, 2)),
+    # o 40: entre o 32 e o 48 (o raio no centro de pixel e a margem de 2 px do de 32; a escada e o reflexo do 48, os
+    # cravos de 2x2)
+    40: dict(raio=16.45, lado=1, aro=2.4, degrau=1, cupula=3.9, base=0.8, sulco=1.0, cravos=10.1, cravo="2", sombra_peca=1, emendas=True, reflexo=(1.05, 1.7), alcance=0.68, escada=(7, 5, 4, 3, 1)),
     48: dict(raio=18.45, lado=1, aro=2.8, degrau=1, cupula=4.4, base=1.2, sulco=1.0, cravos=12.3, cravo="2", sombra_peca=1, emendas=True, reflexo=(1.0, 1.65), alcance=0.7, escada=(7, 5, 4, 3, 1)),
     64: dict(raio=24.45, lado=1, aro=3.0, degrau=1, cupula=6.0, base=1.6, sulco=1.1, cravos=17.2, cravo="3", sombra_peca=2, emendas=True, reflexo=(1.05, 1.7), alcance=0.72, escada=(7, 5, 4, 2, 1)),
 }
@@ -54,8 +59,11 @@ BRILHO_CUPULA = {32: {(0, 0): 8, (1, 0): 6, (0, 1): 6},
                  48: {(0, 0): 8, (1, 0): 7, (0, 1): 7, (1, 1): 6, (-1, 0): 6, (0, -1): 6},
                  64: {(0, 0): 8, (1, 0): 8, (0, 1): 7, (1, 1): 7, (-1, 0): 6, (0, -1): 6, (2, 0): 6, (0, 2): 6, (-1, 1): 6,
                       (1, -1): 6}}
+BRILHO_CUPULA[40] = BRILHO_CUPULA[48]
 # Correções feitas olhando cada tamanho: {(x, y): ("f"|"l"|"c", índice)} (ferro, latão, contorno; None apaga).
-AJUSTES = {32: {}, 48: {}, 64: {}}
+# Em 40, o cravo de cima à esquerda cai no meio do reflexo do gomo da luz, e a sombra escura dele partia o reflexo em
+# dois: a sombra passa a um tom de ferro claro (o cravo continua com volume) e o canto de baixo do cravo sobe um tom.
+AJUSTES = {32: {}, 40: {(14, 13): ("f", 6), (13, 14): ("f", 7), (14, 14): ("f", 6), (13, 13): ("l", 5)}, 48: {}, 64: {}}
 
 
 def desenhar(lado_img):
@@ -196,6 +204,6 @@ def desenhar(lado_img):
 
 
 if __name__ == "__main__":
-    SAIDA.mkdir(exist_ok=True)
-    for lado in (32, 48, 64):
-        print(f"escudo-{lado}: {salvar(desenhar(lado), SAIDA, 'escudo')} cores")
+    saida = destino(sys.argv)
+    for lado in LADOS:
+        print(f"escudo-{lado}: {salvar(desenhar(lado), saida, 'escudo')} cores")

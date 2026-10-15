@@ -1,6 +1,6 @@
-"""As etapas comuns do método de pixel art dos objetos da HUD (experimento, fora do jogo), usadas pelo escudo
-(desenhar_escudo_pixel.py) e pelo unguento (desenhar_unguento_pixel.py). Só o que já se repetiu nos dois objetos:
-o resto (a forma, os materiais, a luz de cada parte) é de cada desenho.
+"""As etapas comuns do método de pixel art dos objetos da HUD, usadas pelo escudo (desenhar_escudo_pixel.py) e pelo
+unguento (desenhar_unguento_pixel.py). Só o que já se repetiu nos dois objetos: o resto (a forma, os materiais, a luz
+de cada parte) é de cada desenho.
 
 O desenho de um objeto é uma grade de lado x lado com duas camadas: `mat` (o material de cada pixel, uma letra; ""
 é vazio, "c" é o contorno) e `tom` (o índice do tom na rampa daquele material); `fixo` marca o que foi desenhado de
@@ -8,6 +8,7 @@ propósito (um brilho, um cravo) e que a limpeza não pode mexer.
 """
 
 import math
+import pathlib
 
 import numpy as np
 from PIL import Image
@@ -75,8 +76,19 @@ def imagem(mat, tom, rampas):
     return Image.fromarray(img, "RGBA")
 
 
+# Onde os ícones do jogo moram (a família de ferro da HUD, hud/icones/): os desenhos são gravados aqui, prontos.
+ICONES = pathlib.Path(__file__).resolve().parents[2] / "rpg" / "web" / "static" / "hud" / "icones"
+
+
+def destino(argv):
+    """A pasta de saída: a dos ícones do jogo, ou a pasta dada na linha de comando (para experimentar sem tocar no
+    jogo)."""
+    return pathlib.Path(argv[1]).resolve() if len(argv) > 1 else ICONES
+
+
 def salvar(img, pasta, nome):
     """O arquivo e o dobro (a duplicação exata dos pixels, sem detalhe novo); devolve quantas cores o desenho usa."""
+    pasta.mkdir(parents=True, exist_ok=True)
     lado = img.size[0]
     img.save(pasta / f"{nome}-{lado}.png")
     img.resize((2 * lado, 2 * lado), Image.NEAREST).save(pasta / f"{nome}-{lado}@2x.png")
