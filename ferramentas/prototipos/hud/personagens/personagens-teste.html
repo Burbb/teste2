@@ -1,0 +1,42 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Mago na fogueira e Morel pequeno: atual × candidato</title>
+<style>
+  body { background: #101114; color: #d8d0c0; font: 15px/1.5 Georgia, serif; margin: 24px; }
+  h1 { font-size: 20px; } h2 { font-size: 16px; margin-top: 28px; }
+  .linha { display: flex; gap: 28px; align-items: flex-end; flex-wrap: wrap; }
+  figure { margin: 0; text-align: center; } figcaption { font-size: 12px; color: #9a9080; margin-top: 4px; }
+  img { image-rendering: pixelated; display: block; margin: 0 auto; }
+  .nicho { background: #0a0b0d; border: 1px solid #3a3d43; padding: 6px; }
+  p { max-width: 70ch; color: #b0a898; }
+</style>
+<h1>Mago na fogueira e Morel nas versões pequenas: atual × candidato</h1>
+<p>Protótipo, fora do jogo. Em cada linha, o tamanho real em que o jogo mostra o desenho; a ampliação embaixo é só
+para inspecionar o pixel. A avaliação de verdade está nas fotografias do jogo (capturas-personagens/,
+fotografar_personagens.mjs). Para abrir: este arquivo direto no navegador (ele lê os desenhos do jogo em
+rpg/web/static/ e os candidatos em personagens-teste.js).</p>
+<div id="saida"></div>
+<script src="../../../../rpg/web/static/sprites-dados.js"></script>
+<script src="../../../../rpg/web/static/sprites.js"></script>
+<script src="../../../../rpg/web/static/retratos.js"></script>
+<script src="personagens-teste.js"></script>
+<script>
+  const T = window.PersonagensTeste, saida = document.getElementById("saida");
+  const atual = (n, p, e) => Retratos.url(n, p, e);
+  const cand = (n, p, e) => Sprites.grade(`cand-${n}-${p}`, T[n][p], T[n].cores, e);
+  const fig = (src, lado, legenda, zoom = 0) => `<figure><div class="nicho"><img src="${src}" width="${lado}" height="${lado}"></div>` +
+    (zoom ? `<img src="${src}" width="${lado * zoom}" height="${lado * zoom}" style="margin-top:8px">` : "") + `<figcaption>${legenda}</figcaption></figure>`;
+  const secao = (titulo, texto, itens) => { saida.insertAdjacentHTML("beforeend", `<h2>${titulo}</h2><p>${texto}</p><div class="linha">${itens.join("")}</div>`); };
+  secao("A figura do Mago na fogueira (16×16, no canvas da cena)",
+    "Hoje a fogueira usa a carta da luta. O candidato é um desenho só da fogueira: sentado, a cabeça no meio dos ombros, a capa assentada numa base reta, as mãos no colo. A carta da luta, o busto, a cabeça e o chip não mudam.",
+    [fig(atual("mago", "figura", 2), 32, "Mago atual (a carta)", 4), fig(cand("mago", "figura", 2), 32, "Mago candidato", 4),
+     fig(atual("guerreiro", "carta", 2), 32, "Guerreiro"), fig(atual("odete", "carta", 2), 32, "Odette"), fig(atual("morel", "figura", 2), 32, "Morel (fica)")]);
+  secao("A carta do Morel (32 px: luta, painel, aviso)",
+    "Hoje: o busto de 40×40 reduzido a 32, mostrado a 1×. Candidato: uma carta de 16×16 desenhada à mão, a 2×, como a dos outros: a cabeça grande no quadro, a cicatriz em diagonal, a barba, o punho da espada atrás do ombro, as ombreiras de aço remendada e de couro gasto, o tabardo vermelho.",
+    [fig(atual("morel", "carta", 1), 32, "Morel atual", 4), fig(cand("morel", "carta", 2), 32, "Morel candidato", 4),
+     fig(atual("guerreiro", "carta", 2), 32, "Guerreiro"), fig(atual("arqueiro", "carta", 2), 32, "Arqueiro"), fig(atual("odete", "carta", 2), 32, "Odette")]);
+  secao("A cabeça do Morel (48 px: Comitiva, reação, quem chega)",
+    "Hoje: 48×48 a 1×, com traços de um pixel. Candidato: 24×24 a 2×, como a dos outros: as sobrancelhas carregadas, a cicatriz, a barba cheia escura, as duas ombreiras e o tabardo.",
+    [fig(atual("morel", "cabeca", 1), 48, "Morel atual", 4), fig(cand("morel", "cabeca", 2), 48, "Morel candidato", 4),
+     fig(atual("guerreiro", "cabeca", 2), 48, "Guerreiro"), fig(atual("arqueiro", "cabeca", 2), 48, "Arqueiro"), fig(atual("odete", "cabeca", 2), 48, "Odette")]);
+</script>

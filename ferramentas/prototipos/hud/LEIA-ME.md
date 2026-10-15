@@ -1487,3 +1487,50 @@ saíram daqui para `ferramentas/arte/`, que grava direto em `rpg/web/static/hud/
 de comando); `ocupacao_icones.py` os importa de lá e continua gerando o estudo como era (o 40 de antes da correção).
 As pastas `escudo-pixel/`, `escudo-pixel-v1/`, `unguento-pixel/` e `unguento-pixel-v1/` ficam como histórico da
 avaliação. A conferência no jogo: `ferramentas/arte/fotografar_itens.mjs`.
+
+## O Mago na fogueira e o Morel nas versões pequenas (proposta, sem versão)
+
+**O pedido:** uma figura do Mago só para a fogueira (a de hoje, a carta da luta, tem a base inclinada e o capuz
+torto em relação ao corpo) e as versões pequenas e intermediárias do Morel (a "40 reduzido a 32" ficou com a cabeça
+pequena e traços finos ao lado dos outros). Sem mexer no busto de 80×80 nem na ficha baixa do Morel, na figura dele
+na fogueira, nos retratos do Mago fora da fogueira, nem nos outros personagens. Só no protótipo.
+
+**O que cada componente usa** (pelo `Icones`, em `rpg/web/static/retratos.js`):
+- a figura de 16×16 (`figura`): a fogueira (o canvas da cena, `Icones.figura`) e o chip de 16 px do texto. Para o
+  Mago e os heróis, a figura é a própria carta da luta;
+- a carta (`carta`, 32 px): a carta da luta, o painel da comitiva e o aviso (`Telas.toast`). Os outros: 16×16 a 2×;
+  o Morel: 32×32 a 1× (o busto de 40 reduzido);
+- a cabeça (`cabeca`, 48 px): os cartões da tela da Comitiva, o cartão de reação (`Batalha.opiniao`) e a faixa de
+  quem chega. Os outros: o recorte de 24×24 do busto, a 2×; o Morel: 48×48 a 1×.
+
+**A proposta** (`personagens/`: `candidatos.py` com as três grades, nas paletas do jogo, sem cor nova):
+- **Mago na fogueira** (16×16, só o papel `figura` na fogueira): sentado, o capuz com a ponta mole caída para trás e
+  a cabeça no meio dos ombros, a capa assentando numa base reta, os antebraços cruzados no colo com as mãos à luz. A
+  mesma escala e luz das outras figuras da roda; a cena não muda. A carta da luta, o busto, a cabeça e o chip ficam.
+- **Carta do Morel** (16×16 a 2×, como a dos outros): a cabeça ocupando o quadro como a do Guerreiro e a da Odette,
+  o cabelo castanho, as sobrancelhas, a cicatriz em diagonal (da testa à bochecha, entre os olhos), a barba, o punho e
+  a guarda da espada atrás do ombro esquerdo, a ombreira de aço remendada e a de couro gasto, o tabardo vermelho. Não
+  é a carta de rosto aproximado recusada: é busto, com ombros e espada.
+- **Cabeça do Morel** (24×24 a 2×, como a dos outros; `desenhar_cabeca.py` monta as camadas): as sobrancelhas
+  carregadas e puxadas para o meio (a expressão fechada), a cicatriz, a barba cheia escura com a boca fechada, as
+  duas ombreiras e o tabardo. Sem a guarda da espada, como a cabeça aprovada de hoje.
+- Nada foi reduzido nem ampliado do busto: as três grades foram desenhadas pixel a pixel, olhando o tamanho real.
+
+**Comparação** (`personagens/fotografar_personagens.mjs` → `personagens/capturas-personagens/`, atual × candidata,
+1500×950 e 1280×720, sem erro no console): a fogueira com o Mago sozinho e com a comitiva (Morel e Odette na roda,
+Yara no acampamento); o painel da comitiva; a tela da Comitiva; o cartão de reação, a faixa de quem chega e o aviso
+(pelas chamadas do próprio jogo); a luta com o Guerreiro, o Morel e a Odette (a vez do herói em destaque; o Morel
+avançando) e com o Arqueiro e o Morel. Na candidata, o roteiro acrescenta `personagens-teste.js` e
+`personagens-no-jogo.js` ao fim de `/static/retratos.js` só naquela página (troca os três papéis; o jogo não muda).
+`personagens-teste.html` mostra as três grades ao lado das atuais e dos vizinhos, abrindo o arquivo no navegador.
+
+**Leitura:** o Mago sentado fica estável e centrado, com a presença do de hoje, e lê como alguém descansando ao lado
+do fogo; a carta e a cabeça do Morel passam a ter o peso e o tamanho de pixel dos outros (a cabeça grande no quadro,
+massas de rosto, barba e armadura em blocos), mantendo a cicatriz, a barba, o cabelo, as ombreiras e a espada. Perde
+um pouco: a cicatriz fina e as sobrancelhas desenhadas do 48 de hoje viram blocos de 2 px; a carta de 16 não mostra o
+remendo da ombreira. As posições, as áreas clicáveis, o avanço das cartas e o destaque da vez do herói são os mesmos
+(medidos nas fotos: os retratos nos mesmos pontos, em 32 e 48 px inteiros).
+
+**Para integrar (se aprovado):** em `retratos.js`, a carta do Morel passa a ser a de 16×16 e a cabeça a de 24×24
+(a escala sai do tamanho do desenho, como nos outros); o Mago ganha um papel só da fogueira (por exemplo
+`fogueira`, pedido por `Icones.figura`), para o chip e a carta da luta continuarem com o desenho de hoje.
