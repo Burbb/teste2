@@ -462,8 +462,11 @@ def _sacristia(g, mid):
     g.narrar("A sacristia ficou acima da água: um degrau a mais salvou o chão. Há gente aqui. Dois homens de capa "
              "escura reviram as prateleiras à luz de uma lanterna. Os dois têm a mesma marca queimada no pulso.")
     g.narrar("Um deles ergue a lanterna para o seu rosto. \"Não é ela\", diz. O outro já está com a faca na mão.")
-    g.ui.painel("cena", cena_sacristia(g, mid, "luta"))  # na luta, os dois são as cartas: a arte fica sem eles
-    if not _lutar(g, g.grupo("cultista", n=2), "A Sacristia"):
+    g.ui.painel("cena", cena_sacristia(g, mid, "luta"))  # na luta, os dois continuam na sala enquanto estão de pé
+    cultistas = g.grupo("cultista", n=2)
+    for e, figura in zip(cultistas, FIGURAS_SACRISTIA):
+        e.figura = figura  # qual vulto da arte é este inimigo: a tela liga o desenho à carta por aqui
+    if not _lutar(g, cultistas, "A Sacristia"):
         _recuo(g, "A Sacristia", "Você volta pelo salão alagado até a brecha. Atrás de você, a lanterna se apaga.",
                fora=True)
         return
@@ -821,11 +824,16 @@ def _ler_livro(g, mid):
                 g.narrar(f"\"{paragrafo}\"")
 
 
+# Os dois de capa escura da sacristia, como a arte os desenha: o que revira as prateleiras e o que ergue a lanterna. Na
+# luta, cada um é um inimigo (Inimigo.figura) e a tela mostra o vulto enquanto a carta dele está de pé.
+FIGURAS_SACRISTIA = ("prateleira", "lanterna")
+
+
 def cena_sacristia(g, mid="febre_do_turvo", momento="visita", pagina=False):
     """A sacristia, acima da água do salão: a porta para ele (um degrau abaixo), as prateleiras reviradas, a janela alta
     com a escada de mão, o livro no buraco da parede, o baú de ferro no canto e o alçapão do ossuário.
-    `momento`: "entrada" (os dois de capa escura nas prateleiras, a lanterna erguida), "luta" (eles são as cartas: a
-    arte fica sem eles, a lanterna no chão, ainda acesa), "vitoria" (o livro desembrulhado no buraco) ou "visita" (a
+    `momento`: "entrada" (os dois de capa escura nas prateleiras, a lanterna erguida), "luta" (a lanterna no chão, ainda
+    acesa, e os dois de pé enquanto vivos: a tela segue a carta de cada um pela `figura`), "vitoria" (o livro desembrulhado no buraco) ou "visita" (a
     página). `livro`: "embrulhado" (no couro, até a primeira leitura) ou "no_buraco" (sem o couro, no mesmo lugar).
     `bau`: "no_canto" até ser recolhido;
     "levado" depois (e nos saves de antes, que o receberam na vitória). `luz`: sempre a lanterna dos dois (erguida na
@@ -856,7 +864,7 @@ def cena_fundo(g, mid="febre_do_turvo", momento="visita", pagina=False, luz=None
     moinho e as correntes que descem do buraco do ossuário (presas, esticadas; ou soltas, frouxas, pelo preparo
     `corpo_solto`), e Ilse entre as pedras enquanto não há desfecho. `momento`: "descida" (os olhos fechados até o
     texto chegar neles: a celebração "ilse" acorda), "visita" (na água, acordada, cantando baixo; depois do desfecho,
-    sem ela), "luta" (ela é a carta: a arte sem ela), "descanso" e "destruida" (as cenas do desfecho: ela ainda está ali,
+    sem ela), "luta" (ela continua na água, presa ou solta, a luta inteira: só o desfecho a tira), "descanso" e "destruida" (as cenas do desfecho: ela ainda está ali,
     e a celebração conta o que o texto conta). `agua`: "clara" depois do descanso; senão, escura. `luz`: a tocha de quem
     está ali; sem ela, só o que desce do buraco do ossuário. Na página, a escada (subir ao ossuário) e o lodo (a ação de
     Caspar, quando vale)."""
@@ -865,7 +873,7 @@ def cena_fundo(g, mid="febre_do_turvo", momento="visita", pagina=False, luz=None
     desfecho = m.get("desfecho")
     if momento in ("descanso", "destruida"):
         ilse = momento
-    elif momento == "luta" or desfecho:
+    elif desfecho:
         ilse = "ausente"
     else:
         ilse = "solta" if soltas else "presa"
@@ -1084,7 +1092,7 @@ def _fundo(g, mid):
     from . import sobrevivencia
     luz = sobrevivencia.acender_tocha(g, sala=True)
     _acender(g, "fundo", luz)
-    g.ui.painel("cena", cena_fundo(g, mid, "luta", luz=g.luz_na_sala))  # ela é a carta: a arte fica sem ela
+    g.ui.painel("cena", cena_fundo(g, mid, "luta", luz=g.luz_na_sala))  # ela continua na água, a luta inteira
     # Vencida, a tela vai do fim da luta direto à resolução, com Ilse ainda ali (a fita ou o desfazer vêm depois, com o
     # texto), antes da faixa da vitória e do espólio. Só a vista: o desfecho é gravado em _resolver, como sempre.
     chefe.ao_vencer = lambda: g.ui.painel("cena", cena_fundo(

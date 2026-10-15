@@ -709,6 +709,39 @@
     }
     px(x - 1, pe, 1, 1, "#0a0a0d"); px(x + 1, pe, 1, 1, "#0a0a0d");                             // os pés
   }
+  /** Na luta, os dois de capa escura continuam na sala, de frente para quem entrou pela porta (à esquerda), com a faca
+   *  na mão e um balanço lento, cada um no seu tempo. Cada vulto é um inimigo: a carta dele traz a `figura` (o motor a
+   *  dá a cada um, missoes.FIGURAS_SACRISTIA), e o vulto fica enquanto ela está de pé. Caído, ele se desfaz em
+   *  pontilhado no tempo da carta (de uma vez com movimento reduzido); fugido, sai. Sem luta no estado (antes da
+   *  primeira carta, ou depois de uma fuga ou de uma derrota, até a página virar), vale o que se viu por último: só
+   *  quem caiu sai da sala. */
+  // os dois avançaram para o meio da sala, à direita da lanterna (o vão entre a roda das ações e as cartas deles, onde
+  // a sala aparece em todas as larguras)
+  const VULTOS_LUTA = { prateleira: { x: 181, pe: 5, luz: -1, faca: 0 }, lanterna: { x: 199, pe: 6, luz: -1, faca: 3 } };
+  const SAIDA_VULTO = 9;  // quadros (dez por segundo): o tempo da carta caindo
+  function vultosNaLuta(px, ox, P, est, quadro, quieto) {
+    const cb = App.estado && App.estado.combate;
+    est.vultos = est.vultos || {};
+    const cartas = cb ? cb.inimigos.filter((c) => c.figura) : [];
+    Object.keys(VULTOS_LUTA).forEach((id) => {
+      const carta = cartas.find((c) => c.figura === id), vivo = cartas.length ? !!(carta && carta.vivo) : true;
+      // a primeira vez (a luta começando, ou a página recarregada no meio dela): como está, sem animar a saída
+      const v = est.vultos[id] || (est.vultos[id] = { vivo, saiu: null });
+      if (cartas.length) {
+        if (v.vivo && !vivo) v.saiu = quadro;
+        if (vivo) v.saiu = null;
+        v.vivo = vivo;
+      }
+      const f = VULTOS_LUTA[id], resta = v.vivo ? 1 : quieto || v.saiu === null ? 0 : 1 - (quadro - v.saiu) / SAIDA_VULTO;
+      if (resta <= 0) return;
+      const p = resta >= 1 ? px : (x, y, w = 1, hh = 1, cor) => {  // desfazendo-se: só os pontos do pontilhado que restam
+        for (let yy = y; yy < y + hh; yy++) for (let xx = x; xx < x + w; xx++) if (pontilha(xx, yy, Math.round(resta * 16))) px(xx, yy, 1, 1, cor);
+      };
+      const mexe = quieto ? 0 : Math.floor((quadro + f.faca * 4) / 8) % 2, x = ox + f.x, pe = P + f.pe;
+      vulto(p, x, pe, -1, f.luz);
+      p(x - 4, pe - 15, 2, 1, CORS.capa); p(x - 6, pe - 16 + mexe, 2, 1, "#c8ccd4");  // o braço para a frente e a faca
+    });
+  }
   /** A lanterna: a armação de ferro e o vidro aceso (`aceso` 0 apagado, 1 e 2: a chama tremendo). */
   function lanterna(px, x, y, aceso) {
     px(x, y - 2, 3, 1, CORS.ferroLuz); px(x + 1, y - 3, 1, 1, CORS.ferroLuz);
@@ -744,6 +777,7 @@
     } else {  // da luta em diante, a lanterna fica no chão onde o vulto a largou, acesa, no mesmo lugar e do mesmo jeito
       aneis(px, W, ox + L.x, L.y, 54 + treme);
       lanterna(px, ox + L.x - 1, L.y - 3, quieto ? 1 : 1 + (q % 2));
+      if (d.momento === "luta") vultosNaLuta(px, ox, P, est, quadro, quieto);
     }
     // os pontos acesos no mouse e no foco
     const ouro = COR.ouro;
@@ -933,10 +967,7 @@
       corrente(px, pe + 4, b.py - R + 2, pe + 10, A, 3); corrente(px, pd - 4, b.py - R + 2, pd - 10, A, 3);
     }
     // Ilse entre as pedras (ou o lugar vazio dela)
-    if (mostra) {
-      const pose = est.ilse === "descanso" ? "calma" : est.ilse === "destruida" ? (d.correntes === "soltas" ? "solta" : "presa") : est.ilse;
-      ilseDesenho(px, cx, pose, est.olhos, est.fita, est.desce || 0, est.some || 0, q);
-    }
+    frenteFundo(c, W, b, est, quadro);
     // a água: rodas devagar; com o canto, anéis que se abrem em volta dela; o canto que falha para tudo um instante
     const canta = mostra && est.canto && est.olhos === "abertos" && !est.desce && !est.some;
     if (!quieto && !est.falha && d.agua !== "clara") for (let i = 0; i < 5; i++) {  // clara, depois do descanso: parada
@@ -967,6 +998,15 @@
     const ouro = COR.ouro;
     if (destaque === "escada") { px(ox + 5, 6, 30, 1, ouro); for (let k2 = 0; k2 < 11; k2++) px(ox + 8 + k2 * 5, 8 + k2 * 4, 9, 1, ouro); }
     if (destaque === "lodo") { px(ox + 68, A + 3, 34, 1, ouro); px(ox + 68, A + 9, 34, 1, ouro); }
+  }
+
+  /** Ilse entre as pedras (ou o lugar vazio dela). Na mistura curta de uma troca de momento (da descida para a luta, da
+   *  luta para o desfecho), é desenhada de novo por cima dela: ela continua ali, sem a base de antes a cobrir. */
+  function frenteFundo(c, W, b, est, quadro) {
+    if (est.ilse === "ausente") return;
+    const d = b.d, q = reduzido() ? 0 : quadro;
+    const pose = est.ilse === "descanso" ? "calma" : est.ilse === "destruida" ? (d.correntes === "soltas" ? "solta" : "presa") : est.ilse;
+    ilseDesenho(pincel(c), b.ox + FUNDO.cx, pose, est.olhos, est.fita, est.desce || 0, est.some || 0, q);
   }
 
   /** O momento de Ilse que o motor acabou de contar (celebrar "ilse"). Recarregando ou com movimento reduzido, o fim
@@ -1052,7 +1092,7 @@
                 livro: { area: [116, 19, 24, 22], balao: [128, 18], foco: [128, 30] },
                 bau: { area: [270, 36, 26, 24], balao: [283, 35], foco: [283, 48] },
                 alcapao: { area: [210, 56, 42, 14], balao: [230, 55], foco: [230, 62] } } },
-    fundo: { base: baseFundo, desenhar: desenharFundo,
+    fundo: { base: baseFundo, desenhar: desenharFundo, frente: frenteFundo,
       pontos: { escada: { area: [4, 4, 62, 42], balao: [34, 10], foco: [40, 30] },
                 lodo: { area: [66, 46, 38, 14], balao: [85, 47], foco: [96, 52] } } },
   };
@@ -1113,7 +1153,11 @@
         if (troca && troca.de) {  // a base de antes, sumindo por cima da nova
           const t = (performance.now() - troca.inicio) / TROCA_MS;
           if (t >= 1) troca.de = null;
-          else { ctx.save(); ctx.globalAlpha = 1 - t; ctx.drawImage(troca.de, 0, 0); ctx.restore(); }
+          else {
+            ctx.save(); ctx.globalAlpha = 1 - t; ctx.drawImage(troca.de, 0, 0); ctx.restore();
+            // quem continua na sala (Ilse) não some por baixo da mistura
+            if (def.frente) { ctx.save(); ctx.translate(tranco, 0); def.frente(ctx, QW, b, est, quadro); ctx.restore(); }
+          }
         }
         acesos(destaque).forEach((id) => cantos(ctx, def.pontos[id].area));
       },

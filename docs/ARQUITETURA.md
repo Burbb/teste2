@@ -209,7 +209,12 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   sala). Um ambiente pode ter momentos que o motor manda explícitos (a sacristia: `momento` entrada, luta, vitória,
   visita; `luz`; o fundo: descida, visita, luta, descanso, destruída, com `ilse`, `correntes` e `agua`, e os momentos de
   Ilse pela celebração `ilse`, logo depois do texto que os conta); a base
-  do desenho recebe o painel (`base(W, d)`). Um painel novo da mesma sala não recomeça a cena (no mesmo acontecimento
+  do desenho recebe o painel (`base(W, d)`). Na luta, as figuras da sala continuam nela (1.90.0): cada inimigo que é
+  uma figura da arte leva a `figura` (os dois da sacristia: `missoes.FIGURAS_SACRISTIA`), a carta dele a manda
+  (`estado.combate`), e a cena desenha o vulto enquanto aquela carta está de pé, pela identidade, não pela posição nem
+  pelo nome; caído, ele se desfaz no tempo da carta; fuga e derrota não o tiram (vale o último estado visto até a página
+  virar). Ilse fica na água a luta inteira e só sai pelas cenas do desfecho; na mistura curta de uma troca de momento
+  ela é desenhada por cima (`frente` do ambiente), para não sumir por baixo da base de antes. Um painel novo da mesma sala não recomeça a cena (no mesmo acontecimento
   a animação continua; nos outros, a base de antes some numa mistura curta). Um ponto pode ser só "de olhar"
   (aproxima e afasta, sem falar com o motor; o texto curto do que se vê vem do motor) ou "de ler" (`ler`: abre um
   livro aberto com o texto pronto do motor). De perto, nada da vista geral fica à vista; o destaque do F4, o do mouse

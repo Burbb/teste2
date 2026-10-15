@@ -106,6 +106,27 @@ class TestCenasDentroDoTexto(unittest.TestCase):
                          [("sacristia", "entrada"), ("sacristia", "luta"), ("exterior", None)])
         self.assertEqual(missoes.sala_atual(g), "exterior")
 
+    def test_os_dois_da_sacristia_sao_figuras_da_arte(self):
+        """Na luta, cada cultista é um dos vultos da sala (1.90.0): a figura vem no inimigo e vai na carta dele, para a
+        tela seguir quem caiu pela identidade, não pela posição nem pelo nome."""
+        from rpg.web import estado
+        g = na_capela(etapa="sacristia")
+        grupos = []
+
+        def combate(grupo, emboscada=None, pode_fugir=True, titulo=None, sozinho=False):
+            grupos.append(grupo)
+            return "fuga"
+        g.combate = combate
+        fazer(g, "sacristia")
+        (grupo,) = grupos
+        self.assertEqual([e.figura for e in grupo], list(missoes.FIGURAS_SACRISTIA))
+        from rpg.combate import Combate
+        g.combate_ativo = Combate(g, grupo)
+        fichas = estado.combate(g)["inimigos"]
+        self.assertEqual([f["figura"] for f in fichas], ["prateleira", "lanterna"])
+        self.assertEqual(len({f["uid"] for f in fichas}), 2)
+        self.assertNotIn("figura", estado.combate(g)["heroi"])
+
     def test_a_luta_do_ossuario_no_ossuario(self):
         """A arte do topo vira o chão da arena: a luta do ossuário acontece no ossuário (1.77.0)."""
         g = na_capela("mago", etapa="ossuario")
@@ -585,7 +606,7 @@ class TestFundo(unittest.TestCase):
         g = self.no_fundo("guerreiro", DESTRUIR, preparos=())
         missoes.executar(g, MID, "fundo")
         self.assertEqual(missoes.registro(g, MID)["desfecho"], "destruida")
-        self.assertEqual(self.fundos(g), [("descida", "presa", "presas", "escura"), ("luta", "ausente", "presas", "escura"),
+        self.assertEqual(self.fundos(g), [("descida", "presa", "presas", "escura"), ("luta", "presa", "presas", "escura"),
                                           ("destruida", "destruida", "presas", "escura"),
                                           ("destruida", "destruida", "presas", "escura")])
         self.assertEqual([m for m in g.ui.momentos if m in ("acorda", "canto_falha", "fita", "afunda", "desfaz")],
@@ -602,7 +623,7 @@ class TestFundo(unittest.TestCase):
         g = self.no_fundo("mago", DESCANSO, **PRONTO)
         missoes.executar(g, MID, "fundo")
         self.assertEqual(missoes.registro(g, MID)["desfecho"], "descansada")
-        self.assertEqual(self.fundos(g), [("descida", "solta", "soltas", "escura"), ("luta", "ausente", "soltas", "escura"),
+        self.assertEqual(self.fundos(g), [("descida", "solta", "soltas", "escura"), ("luta", "solta", "soltas", "escura"),
                                           ("descanso", "descanso", "soltas", "escura"),
                                           ("descanso", "descanso", "soltas", "escura")])
         self.assertEqual([m for m in g.ui.momentos if m in ("acorda", "canto_falha", "fita", "afunda", "desfaz")],
