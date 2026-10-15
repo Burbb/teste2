@@ -63,7 +63,12 @@ mais brando para quem quiser; um robô de mapa que jogue partidas inteiras com j
 - Retratos do herói por classe (proposta da HUD experimental, 10/2026): uma seleção pequena, de início dois retratos
   por classe, escolhidos na criação do personagem. Só cosmético (nada de regra, número ou recoloração), no mesmo
   desenho da ficha, do topo e da carta da luta (busto e cabeça). Fora por ora: a tela de escolha na criação, os
-  retratos por especialização e os seis retratos; hoje só o Guerreiro tem retrato na HUD experimental.
+  retratos por especialização e os seis retratos; hoje só o Guerreiro tem retrato na HUD (o gerado, de rosto à mostra).
+  Direção em teste (10/2026): o Guerreiro de capacete fechado, sem rosto, desenhado em código no estilo dos cenários
+  (um desenho só para o busto, a cabeça do topo e a carta; candidato em `ferramentas/prototipos/hud/retrato-teste.html`).
+  Só um candidato, à espera da avaliação; não substitui o de produção. Quantos retratos haverá e como o jogador vai
+  personalizar o herói continuam em aberto (nem seleção, nem recoloração, nem diferença por gênero, nem as outras
+  classes por enquanto); o retrato não segue o elmo equipado nem os atributos.
 - "Ordens" leves para a comitiva.
 - Aliados na batalha final, repaginado (o sistema antigo saiu na 1.45: cada evento somava um aliado que tirava vida
   do chefe num texto antes da luta, invisível no resto do jogo). Se voltar: poucos aliados, ganhos por arcos

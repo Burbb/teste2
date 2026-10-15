@@ -863,3 +863,49 @@ Correção da 1.89.1: na janela larga, o retrato, as barras e os recursos encost
 do topo), e a sobra fica à direita, em vez de ficarem no meio. As barras continuam em até 400 px. Capturas:
 `capturas-migracao/topo-alinhado-1920x1080.png` (a janela maximizada) e `topo-alinhado-classes.png` (Guerreiro, Mago
 e Arqueiro em 1280×720, 1920×1080 e 2560×1440).
+
+## Teste do retrato: o Guerreiro de capacete fechado (experimento, sem versão)
+
+Jean escolheu a direção do primeiro retrato no estilo do mundo: o Guerreiro de capacete fechado, sem rosto. Um
+candidato só, para avaliação, no protótipo; o retrato de produção (`rpg/web/static/hud/icones/`) não mudou.
+
+**O desenho** (`arte-teste.js`, peças `guerreiro` e `guerreiro-carta`, pelo método do mercador e das cenas: uma grade
+de letras, cada letra uma cor, cada pixel da arte um quadrado inteiro da tela):
+
+- Capacete fechado de ferro: a calota arredondada, a cruz de reforço (a tira do meio e a de cima da fresta), a fresta
+  da viseira em duas aberturas, a borda de baixo na sombra e um amassado na calota (o desgaste). Nenhum olho, pele ou
+  rosto. Uma primeira versão tinha três furos de respirar na face; juntos com a fresta, pareciam um rostinho, e saíram.
+- A gola alta de gibão, a capa de lã nos ombros (as bordas marcadas no V) e a correia da espada atravessando o peito.
+- As cores do mundo: o ferro com os cinzas do baú e da capela, o gibão com os da túnica do mercador, a capa num
+  azul-acinzentado perto da do retrato de hoje. Luz da esquerda (como a lamparina da banca), em poucos planos: o
+  plano da luz com um filete de brilho, a frente, o plano da sombra e a borda. Sem contorno claro: o tom mais escuro só
+  na fresta e embaixo do capacete, e o capacete fica em cinzas médios, legível no carvão.
+
+**Os tamanhos**, todos de um desenho só de 40×40, sempre a ×2 (nada reamostrado): o busto da ficha é ele inteiro
+(80 px); o da janela baixa (64 px) e a cabeça do topo (48 px) são recortes dele (32×32 e 24×24). A carta da luta
+(32 px) tem a versão de 16×16, redesenhada com a mesma silhueta (calota, cruz, fresta, gola, correia) e sem o amassado,
+que lá vira um ponto parecido com um olho.
+
+**Para ver:** `retrato-teste.html` (ampliado, os tamanhos reais ao lado do retrato de hoje e as fotografias do jogo).
+As fotografias (`capturas-retrato/`) são do jogo de verdade, refeitas com
+`PLAYWRIGHT_MODULO=<caminho do playwright>/index.mjs node ferramentas/prototipos/hud/fotografar_retrato.mjs`: a capela
+(ficha e topo ao lado da sala), a banca do mercado (com o busto do mercador logo abaixo) e uma luta (a carta), em
+janela normal (1500×950) e baixa (1280×720), com o retrato de hoje e com o candidato. O candidato entra só na página
+fotografada (`retrato-no-jogo.js`, que troca as três imagens nos mesmos lugares e com as mesmas classes).
+
+**Avaliação:**
+
+- *Mesmo mundo:* sim, mais do que o retrato gerado. Ao lado da sala da capela, da banca e do busto do mercador, tem a
+  mesma linguagem: formas chapadas, poucos tons, a luz de um lado só. Fica mais simples que os ícones de ferro da
+  ficha (o elmo do equipamento, logo abaixo, tem mais tons); a diferença é de família (cenário × ícone), não de mundo.
+- *Pequeno:* reconhecível em todos. Na carta (32 px; 36 na vez do herói, quando ela cresce) a calota, a cruz e a fresta
+  continuam lá; no topo (48 px) o capacete ocupa a moldura inteira.
+- *Acabamento:* sem corte, sem sobreposição, sem erro no console nas seis fotografias; as medidas são as do jogo
+  (ficha 80 e 64, topo 48, carta 32). A carta do herói na vez dele é ampliada 1,125× pelo jogo e os pixels ficam
+  levemente desiguais, como já acontece com o retrato de hoje.
+- *Para decidir:* no busto, o capacete ocupa metade da largura e a capa ocupa o resto; se o capacete tiver de ser o
+  centro maior, o desenho cresce (e a cabeça do topo passa a ser um recorte menos folgado). A capa é lisa de propósito
+  (sem textura miúda); se parecer vazia, uma dobra ou uma borda a mais resolve sem mudar a direção.
+
+Nada implementado além disso: nem seleção de retratos, nem recoloração, nem diferenças por gênero, nem as outras
+classes, nem troca pelo elmo equipado. A proposta guardada (`docs/ROADMAP.md`, ideias) registra a direção.

@@ -7,6 +7,13 @@
      Baú: o baú de ferro da sacristia (telas/cenas.js, desenharBau), de frente, como ícone de 16×16 para a bolsa: a
        tampa abaulada mais clara em cima, a junta escura, as duas cintas com rebites, o espelho de latão com a fechadura
        e as manchas de ferrugem; o contorno escuro da família de ícones. Usado a 32 px (×2) e ampliado a 64 (×4).
+     Guerreiro: o primeiro retrato do herói no estilo do mundo (candidato, só aqui no protótipo). Capacete fechado de
+       ferro, sem rosto: a calota, a cruz de reforço, a fresta da viseira em duas aberturas e um amassado na calota; a
+       gola alta de gibão, a capa de lã nos ombros e a correia da espada. O ferro com as cores do baú e da capela, o
+       gibão com as da túnica do mercador; a luz da esquerda, em poucos planos. Um desenho só, de 40×40: o busto da
+       ficha é ele inteiro (80 px, ×2); o de janela baixa (64 px) e a cabeça do topo (48 px) são recortes dele, na
+       mesma escala. A carta da luta (32 px) tem a versão de 16×16, mais simples (sem o amassado, que lá vira um
+       ponto), com a mesma silhueta.
    Cada pixel da arte vira um quadrado inteiro de pixels da tela (nada de suavizar). */
 "use strict";
 
@@ -68,7 +75,80 @@ const ArteTeste = (() => {
       "................",
     ],
   };
-  const PECAS = { mercador: MERCADOR, bau: BAU };
+  // R/l/m/s/d/D o ferro, da luz à sombra (o brilho, o plano da luz, a frente, o plano da sombra, a borda, o fundo); v a
+  // fresta; W/w/q/Q a capa de lã (ombro na luz, frente, sombra, o fundo junto do capacete); u/t/T o gibão; a/A a correia
+  const FERRO_LA = { R: "#b4b6bc", l: "#8c8e96", m: "#6e7078", s: "#53555c", d: "#3c3e44", D: "#26272c", v: "#0d0b0a",
+    W: "#5a707a", w: "#405660", q: "#2e3d44", Q: "#20292e", u: "#9a8a66", t: "#7a6c4e", T: "#544a36", a: "#6e4c30", A: "#4a3220" };
+  const GUERREIRO = {
+    cores: FERRO_LA,
+    grade: [
+      "........................................",
+      "........................................",
+      "................lllRdmmm................",
+      ".............lRRlllRdmmmmms.............",
+      "............lRRRlllRdmmmmmss............",
+      "...........lRRRRlllRdmmmmmsss...........",
+      "..........mlRddlmmmRdsssssdddD..........",
+      "..........mlRRRsmmmRdsssssdddD..........",
+      "..........mlRlllmmmRdsssssdddD..........",
+      "..........lRRRRRlllRdmmmmmmmmm..........",
+      "..........mmmmmmmmmRdddddddddd..........",
+      "..........mlllllmmmldsssssdddD..........",
+      "..........mvvvvvvvvldvvvvvvvvD..........",
+      "..........mRRRRRlllldmmmmmmmmD..........",
+      "..........mlRlllmmmldsssssdddD..........",
+      "..........mlRlllmmmldsssssdddD..........",
+      "..........mlRlllmmmldsssssdddD..........",
+      "..........mlRlllmmmldsssssdddD..........",
+      "..........mlRlllmmmldsssssdddD..........",
+      "...........mRlllmmmldsssssddd...........",
+      ".........wQmRlllmmmldsssssdddQQ.........",
+      "......WWWwQRRRRRlllldmmmmmmmmQQwww......",
+      "....WWaaAwQTddddddddDDDDDDDDTQQQqqww....",
+      "...WWWWaaAwwTTTTTTTTTTTTTTTTqqQQqqQQw...",
+      "..WWWWWWWaaAuuuuttttttttTTTTqqQQqqQQQw..",
+      ".WWWWWWWWwaaAuuuttttttttTTTTqqQQqqQQQQw.",
+      ".WWWWWWWWwwwaaAuutttttTTTTQqqqqqqqQQQQQ.",
+      "WWWWWWWWWwwwwaaAutttttTTTQqqqqqqqqQQQQQw",
+      "WWWWWWWWWwwwwwwaaAttttTTQqqqqqqqqqQQQQQQ",
+      "WWWWWWWWWwwwwwwwaaAtttTQqqqqqqqqqqQQQQQQ",
+      "WWWWWWWWWwwwwwwwwaaAttQqqqqqqqqqQqQQQQQQ",
+      "WWWWWWWWWwqwwwwwwwwaaAqqqqqqqqqqQqQQQQQQ",
+      "WWWWWWWWWwqwwwwwwwwWaaAqqqqqqqqqQqQQQQQQ",
+      "WWWWWWWWWwqwwwwwwwwWQqaaAqqqqqqqQqQQQQQQ",
+      "WWWWWWWWWwqwwwwwwwwWQqqaaAqqqqqqQqQQQQQQ",
+      "WWWWWWWWWwqwwwwwwwwWQqqqaaAqqqqqQqQQQQQQ",
+      "WWWWWWWWWwqwwwwwwwwWQqqqqqaaAqqqQqQQQQQQ",
+      "WWWWWWWWWwqwwwwwwwwWQqqqqqqaaAqqQqQQQQQQ",
+      "WWWWWWWWWwqwwwwwwwwWQqqqqqqqqaaAQqQQQQQQ",
+      "WWWWWWWWWwqwwwwwwwwWQqqqqqqqqqaaAqQQQQQQ",
+    ],
+  };
+  const GUERREIRO_CARTA = {
+    cores: FERRO_LA,
+    grade: [
+      "....lRlRdmms....",
+      "...lRRlRdmmss...",
+      "..mlRlmRdsssdD..",
+      "..mlRlmRdsssdD..",
+      "..lRRRlRdmmmmm..",
+      "..mvvvvldvvvvD..",
+      "..mRRRlldmmmmD..",
+      "..mlRlmldsssdD..",
+      "..mlRlmldsssdD..",
+      "..mlRlmldsssdD..",
+      "...lRlmldsssd...",
+      ".WQRRRllldmmmQw.",
+      "WaAQdddddDDDDQqw",
+      "WWaAuuttTTTqqQQQ",
+      "WWWaAuttTqqqqQQQ",
+      "WWWWaAtTqqqqqQQQ",
+    ],
+  };
+  /** Um recorte quadrado de `lado` pixels de arte, a partir de (x, y): o mesmo desenho, na mesma escala. */
+  const recorte = (peca, x, y, lado) => ({ cores: peca.cores, grade: peca.grade.slice(y, y + lado).map((l) => l.slice(x, x + lado)) });
+  const PECAS = { mercador: MERCADOR, bau: BAU, guerreiro: GUERREIRO, "guerreiro-busto-baixo": recorte(GUERREIRO, 4, 1, 32),
+    "guerreiro-cabeca": recorte(GUERREIRO, 8, 1, 24), "guerreiro-carta": GUERREIRO_CARTA };
 
   const cache = {};
   /** A peça desenhada num canvas, cada pixel da arte em `escala` × `escala` pixels. */

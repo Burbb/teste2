@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Teste do retrato: Guerreiro de capacete fechado (experimento)</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="../../../rpg/web/static/css/11-tipografia.css">
+<!-- Teste do retrato (experimento, fora do jogo): o candidato do Guerreiro de capacete fechado (arte-teste.js) ao lado
+     do retrato gerado que está hoje na HUD (rpg/web/static/hud/icones/), ampliado e nos tamanhos reais; embaixo, as
+     fotografias do jogo de verdade com um e com o outro (fotografar_retrato.mjs, em capturas-retrato/). -->
+<style>
+  @font-face { font-family: "Titulo"; src: url(../../../rpg/web/static/fontes/alagard-pt.ttf) format("truetype"); }
+  :root { --latao: #c9a14a; --latao-claro: #f2d27a; --sec: #9d978b; --aresta: #3a3d43; --ferro-fio: #2b2d31; }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 20px 24px 28px; color: #e8dcc0; font: 15px/1.4 "Alegreya Sans", "Alegreya", Georgia, sans-serif;
+    background: linear-gradient(rgba(8, 9, 11, 0.62), rgba(8, 9, 11, 0.76)), url(assets3/exibicao/textura-painel.png) 0 0 / 128px, #0a0a0b; }
+  h1 { margin: 0 0 4px; font: 400 32px/1 "Titulo", serif; color: var(--latao-claro); }
+  .nota { margin: 0 0 18px; color: var(--sec); max-width: 1100px; }
+  section { margin-bottom: 22px; padding: 10px 16px 14px; border: 12px solid transparent;
+    border-image: url(assets/exibicao/moldura-nove.png) 24 / 24px round; background: rgba(0, 0, 0, 0.28); background-clip: padding-box; }
+  h2 { display: flex; align-items: center; gap: 8px; margin: 0 0 10px; font-weight: 700; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--sec); }
+  h2::after { content: ""; flex: 1; height: 1px; background: var(--ferro-fio); box-shadow: 0 1px 0 #000; }
+  .linha { display: flex; align-items: flex-end; gap: 22px; flex-wrap: wrap; }
+  .linha + h2, .linha + .linha { margin-top: 16px; }
+  figure { margin: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+  figcaption { font-size: 13px; color: var(--sec); }
+  img, canvas { image-rendering: pixelated; display: block; }
+  .suave { image-rendering: auto; }
+  .nicho { display: grid; place-items: center; border: 1px solid var(--aresta); border-radius: 2px; background: #0a0b0d;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.85), 0 1px 0 rgba(255, 255, 255, 0.04); }
+  .rotulo { width: 120px; align-self: center; font-weight: 700; font-size: 13px; color: var(--latao-claro); }
+  .foto { border: 1px solid #000; max-width: 100%; height: auto; image-rendering: auto; }
+</style>
+</head>
+<body>
+<h1>Teste do retrato: o Guerreiro de capacete fechado</h1>
+<p class="nota">Candidato para avaliação, desenhado em código pelo método do mercador e das cenas (arte-teste.js): um
+desenho só de 40×40 pixels de arte, com o busto da ficha inteiro e os recortes para a janela baixa e o topo; a carta da
+luta tem uma versão de 16×16 com a mesma silhueta. Em cima de cada par, o retrato gerado que está hoje na HUD. O jogo
+não mudou: as fotografias de baixo foram tiradas com o candidato posto só na página fotografada.</p>
+
+<section>
+  <h2>Ampliado (os pixels à vista)</h2>
+  <div class="linha">
+    <figure><span class="nicho" style="width:322px;height:322px" data-peca="guerreiro" data-escala="8"></span><figcaption>busto, 40×40 pixels de arte, ×8</figcaption></figure>
+    <figure><span class="nicho" style="width:258px;height:258px" data-peca="guerreiro-carta" data-escala="16"></span><figcaption>carta, 16×16 pixels de arte, ×16</figcaption></figure>
+  </div>
+</section>
+
+<section>
+  <h2>Nos tamanhos reais do jogo</h2>
+  <div class="linha">
+    <span class="rotulo">Hoje (gerado)</span>
+    <figure><span class="nicho" style="width:90px;height:90px"><img class="suave" src="../../../rpg/web/static/hud/icones/retrato-guerreiro-80.png" srcset="../../../rpg/web/static/hud/icones/retrato-guerreiro-80@2x.png 2x" width="80" height="80" alt=""></span><figcaption>ficha 80 px</figcaption></figure>
+    <figure><span class="nicho" style="width:74px;height:74px"><img class="suave" src="../../../rpg/web/static/hud/icones/retrato-guerreiro-64.png" srcset="../../../rpg/web/static/hud/icones/retrato-guerreiro-64@2x.png 2x" width="64" height="64" alt=""></span><figcaption>ficha baixa 64 px</figcaption></figure>
+    <figure><span class="nicho" style="width:56px;height:56px"><img class="suave" src="../../../rpg/web/static/hud/icones/cabeca-guerreiro-48.png" srcset="../../../rpg/web/static/hud/icones/cabeca-guerreiro-48@2x.png 2x" width="48" height="48" alt=""></span><figcaption>topo 48 px</figcaption></figure>
+    <figure><span class="nicho" style="width:36px;height:36px"><img class="suave" src="../../../rpg/web/static/hud/icones/cabeca-guerreiro-32.png" srcset="../../../rpg/web/static/hud/icones/cabeca-guerreiro-32@2x.png 2x" width="32" height="32" alt=""></span><figcaption>carta 32 px</figcaption></figure>
+  </div>
+  <div class="linha">
+    <span class="rotulo">Candidato</span>
+    <figure><span class="nicho" style="width:90px;height:90px" data-peca="guerreiro" data-escala="2"></span><figcaption>ficha 80 px</figcaption></figure>
+    <figure><span class="nicho" style="width:74px;height:74px" data-peca="guerreiro-busto-baixo" data-escala="2"></span><figcaption>ficha baixa 64 px</figcaption></figure>
+    <figure><span class="nicho" style="width:56px;height:56px" data-peca="guerreiro-cabeca" data-escala="2"></span><figcaption>topo 48 px</figcaption></figure>
+    <figure><span class="nicho" style="width:36px;height:36px" data-peca="guerreiro-carta" data-escala="2"></span><figcaption>carta 32 px</figcaption></figure>
+  </div>
+</section>
+
+<section>
+  <h2>No jogo: a ficha ao lado da capela (janela normal, 1500×950)</h2>
+  <div class="linha">
+    <figure><img class="foto" src="capturas-retrato/capela-normal-atual.png" width="680" height="431" alt=""><figcaption>hoje</figcaption></figure>
+    <figure><img class="foto" src="capturas-retrato/capela-normal-candidato.png" width="680" height="431" alt=""><figcaption>candidato</figcaption></figure>
+  </div>
+  <h2>No jogo: a ficha ao lado da banca do mercado (janela baixa, 1280×720)</h2>
+  <div class="linha">
+    <figure><img class="foto" src="capturas-retrato/mercado-baixa-atual.png" width="640" height="360" alt=""><figcaption>hoje</figcaption></figure>
+    <figure><img class="foto" src="capturas-retrato/mercado-baixa-candidato.png" width="640" height="360" alt=""><figcaption>candidato</figcaption></figure>
+  </div>
+  <h2>No jogo: a carta da luta (tamanho real)</h2>
+  <div class="linha">
+    <figure><img class="foto" src="capturas-retrato/luta-normal-atual-carta.png" alt=""><figcaption>hoje</figcaption></figure>
+    <figure><img class="foto" src="capturas-retrato/luta-normal-candidato-carta.png" alt=""><figcaption>candidato</figcaption></figure>
+  </div>
+</section>
+
+<script src="arte-teste.js"></script>
+<script>
+"use strict";
+document.querySelectorAll("[data-peca]").forEach((n) => n.insertAdjacentHTML("afterbegin", ArteTeste.img(n.dataset.peca, Number(n.dataset.escala))));
+</script>
+</body>
+</html>

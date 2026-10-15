@@ -2072,3 +2072,16 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   conferência e o cenário seguinte. É o navegador do teste fechando a página com um arquivo ainda a caminho; o teste
   passa e o jogo não é afetado. Não mexi no servidor (fora desta entrega); se for para silenciar, o lugar é o
   `_responder` ignorar `BrokenPipeError`/`ConnectionResetError`. **Falta:** Jean conferir.
+
+### 15/10/2026 — Teste do retrato: o Guerreiro de capacete fechado (experimento, sem versão)
+
+- **Pedido de Jean:** o primeiro retrato do Guerreiro no estilo do mundo, com capacete fechado e sem rosto; um
+  candidato para avaliação, desenhado em código, com busto, cabeça do topo e versão da carta a partir do mesmo
+  desenho; no protótipo, sem substituir o de produção nem mexer em molduras, layout, ícones ou cenários.
+- **Feito:** em `ferramentas/prototipos/hud/`, as peças `guerreiro` (40×40; o busto inteiro e os recortes de 64 e 48
+  px) e `guerreiro-carta` (16×16) em `arte-teste.js`; `retrato-teste.html` (ampliado, tamanhos reais, fotografias);
+  `fotografar_retrato.mjs` e `retrato-no-jogo.js` (o jogo de verdade fotografado com o candidato, em
+  `capturas-retrato/`). `docs/ROADMAP.md` registra a direção; quantidade e personalização continuam em aberto.
+- **Verificado:** capela, banca do mercado e luta, em 1500×950 e 1280×720, com o retrato de hoje e com o candidato
+  (ficha 80/64, topo 48, carta 32; nenhum erro no console); as duas páginas do teste de arte abrem sem erro; testes,
+  gabarito, pyflakes e fumaça. Avaliação no `LEIA-ME.md` da pasta. **Falta:** Jean avaliar.
