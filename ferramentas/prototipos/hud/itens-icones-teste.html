@@ -47,6 +47,26 @@
 </head>
 <body>
 <h1>Itens, ícones e roda</h1>
+<p class="nota"><b>Decisão do Jean (10/2026):</b> o lote de candidatos abaixo não foi aprovado. Os desenhos atuais têm
+mais volume, personalidade e acabamento; a aproximação com os cenários simplificou demais os itens. Ficam os itens e
+ícones atuais e a Pena de Fênix aprovada; o acabamento alternativo da roda continua aqui para uma avaliação separada.
+O teste seguinte é um escudo só, com o atual como referência direta (a primeira seção).</p>
+
+<section>
+  <h2>Teste do escudo: o atual e uma alternativa com o mesmo escudo</h2>
+  <p class="nota">O mesmo tipo de escudo (redondo, face de ferro azulado em gomos, aro de latão, bossa de latão em cúpula,
+  oito cravos), no mesmo enquadramento, sem trocar material nem acrescentar nada. A alternativa (desenhar_escudo.py) é
+  modelada como relevo e iluminada (luz de cima e da esquerda, especular, sombra projetada, oclusão nos sulcos),
+  renderizada em 8× e reduzida, cada tamanho à parte, com os detalhes finos ajustados para o pixel de cada um. Os
+  arquivos têm os nomes do jogo (escudo-teste/); nas fotos, o roteiro responde com eles aos pedidos do escudo.</p>
+  <div class="grade" id="escudo"></div>
+  <h3>Ampliados (só para inspeção): 128 px a 3× e 32 px a 10×</h3>
+  <div class="linha" id="escudo-amp"></div>
+  <div id="escudo-fotos"></div>
+  <h3>Avaliação</h3>
+  <div id="escudo-avaliacao"></div>
+</section>
+
 <p class="nota">Candidatos desenhados em código, pelo método do martelo e da Pena de Fênix (grade de letras, contorno
 escuro de 1 pixel, luz de cima e da esquerda, poucos planos), ao lado dos desenhos de hoje. Avalie no tamanho real (as
 fileiras de nichos e as fotografias); as ampliações são só para ver os pixels. Nada disto está no jogo.</p>
@@ -91,6 +111,7 @@ fileiras de nichos e as fotografias); as ampliações são só para ver os pixel
 <script src="arte-teste.js"></script>
 <script src="itens-icones-teste.js"></script>
 <script src="itens-icones-avaliacao.js"></script>
+<script src="escudo-avaliacao.js"></script>
 <script>
 "use strict";
 const HUD = "../../../rpg/web/static/hud/icones/";
@@ -134,6 +155,20 @@ const ESTADOS = [["parada", "parada"], ["mouse", "mouse em Habilidades"], ["pres
 document.getElementById("roda").innerHTML = ["normal", "baixa"].map((j) => `<h3>Janela ${j}</h3>` + ESTADOS.map(([e, t]) =>
   `<div class="linha">${["atual", "icones", "acabamento"].map((v) => F("capturas-roda", `${j}-${v}-${e}`, `${t}: ${v}`)).join("")}</div>`).join("")).join("");
 document.getElementById("avaliacao").innerHTML = window.AVALIACAO || "";
+// o teste do escudo
+const ESC = "escudo-teste/";
+const esc = (pasta, l) => `<img src="${pasta}escudo-${l}.png" srcset="${pasta}escudo-${l}@2x.png 2x" width="${l}" height="${l}" alt="">`;
+document.getElementById("escudo").innerHTML = `<span></span><span>32 px (inventário, mercado, ficha)</span><span>48 px (voo ao equipar)</span><span>64 px (cartão do saque)</span><span></span>` +
+  [["atual", HUD], ["candidato", ESC]].map(([t, pasta]) => `<span class="rot">${t}</span>` +
+    [32, 48, 64].map((l) => slot(esc(pasta, l), l > 32)).join("") + "<span></span>").join("");
+document.getElementById("escudo-amp").innerHTML = [["atual", HUD], ["candidato", ESC]].map(([t, pasta]) =>
+  `<figure><img class="px" src="${pasta}escudo-64@2x.png" width="384" height="384" alt=""><figcaption>${t}, 128 px a 3×</figcaption></figure>` +
+  `<figure><img class="px" src="${pasta}escudo-32.png" width="320" height="320" alt=""><figcaption>${t}, 32 px a 10×</figcaption></figure>`).join("");
+const FOTOS_ESCUDO = [["inventario", "Inventário: o corpo e a mochila (32 px)"], ["mercado", "Mercado, aba Vender (32 px)"], ["ficha", "Ficha (32 px)"],
+  ["saque", "Cartão do saque (64 px)"], ["voo", "Voo ao equipar (48 px, parado no meio)"], ["tela-vila", "A tela inteira: o Guerreiro e a vila"], ["tela-inventario", "A tela inteira: o Inventário"]];
+document.getElementById("escudo-fotos").innerHTML = ["normal", "baixa"].map((j) => `<h3>Janela ${j === "normal" ? "normal (1500×950)" : "baixa (1280×720)"}</h3>` +
+  FOTOS_ESCUDO.map(([c, t]) => `<h3>${t}</h3><div class="linha">${F("capturas-escudo", `${j}-atual-${c}`, "atual")}${F("capturas-escudo", `${j}-candidato-${c}`, "candidato")}</div>`).join("")).join("");
+document.getElementById("escudo-avaliacao").innerHTML = window.AVALIACAO_ESCUDO || "";
 </script>
 </body>
 </html>

@@ -62,7 +62,7 @@ propostas, na ordem em que devem vir, e cada uma começa por protótipo e avalia
 
 | Etapa | O quê | Situação |
 |---|---|---|
-| **1** | Itens, ícones e acabamento das ações: os itens no desenho do mundo (martelo e Pena de Fênix no jogo desde a 1.93.0), os ícones da interface (doca, ficha, Fugir) e o acabamento ao redor da roda de combate | em andamento: os candidatos esperam avaliação (`ferramentas/prototipos/hud/itens-icones-teste.html`) |
+| **1** | Itens, ícones e acabamento das ações: os itens no desenho do mundo (martelo e Pena de Fênix no jogo desde a 1.93.0), os ícones da interface (doca, ficha, Fugir) e o acabamento ao redor da roda de combate | em andamento: o primeiro lote de candidatos foi recusado (os atuais têm mais volume e acabamento); a direção se ajusta num teste de um escudo só, com o atual como referência (`ferramentas/prototipos/hud/itens-icones-teste.html`) |
 | **2** | Grimório, o livro da capela e a apresentação da criação de personagem | proposta |
 | **3** | O interior da forja e a conversa com o ferreiro, de início com as regras de hoje | proposta |
 | **4** | Protótipo separado do novo reforço e do encantamento (hipóteses abaixo) | proposta |

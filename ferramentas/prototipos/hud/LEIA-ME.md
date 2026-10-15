@@ -1326,3 +1326,35 @@ unguento, o escudo de madeira, o Grimório, os Talentos, o Ataque, o Fugir e o a
 clarear a bola (some no nicho escuro); a espada candidata só se a família de equipamento inteira migrar para o estilo
 dos cenários (sozinha, briga com o elmo, a cota e as botas pintados); o anel atual fica (o selo do candidato vira
 mancha em 32 px e a silhueta do espaço vazio vira bolha); a Defesa nova é opcional, junto do escudo.
+
+**Decisão do Jean (10/2026):** o lote não foi aprovado. Os desenhos atuais têm mais volume, personalidade e
+acabamento; a aproximação com os cenários simplificou demais os itens. Ficam os itens e ícones atuais e a Pena de
+Fênix; nenhum candidato é integrado. O acabamento alternativo da roda fica para uma avaliação separada. A direção dos
+itens se ajusta antes de produzir outros: o próximo teste é um escudo só, com o atual como referência.
+
+## Teste do escudo: o atual como referência (experimento, sem versão)
+
+**O pedido:** uma alternativa ao escudo atual da HUD com o mesmo escudo (redondo, face de ferro azulado em gomos, aro
+de latão, bossa de latão em cúpula, oito cravos), no mesmo enquadramento e no mesmo tamanho aparente, sem trocar
+material nem acrescentar nada, buscando o volume e o acabamento: o aro com espessura, frente, borda e partes
+salientes separadas, sombras que mostram a construção, reflexos de metal controlados e a silhueta no carvão. Sem
+limitar tons nem resolução de origem; sem efeito no espaço para compensar o desenho.
+
+**O processo** (`desenhar_escudo.py` → `escudo-teste/`, com os nomes e tamanhos do jogo): o escudo é um relevo (a
+face em oito gomos planos misturados a uma cúpula rasa, o degrau antes do aro, o aro em rolo, o sulco e a base da
+bossa, a cúpula, os cravos), iluminado como superfície (luz de cima-esquerda, difusa, especular, reflexo de ambiente
+fraco, sombra projetada e oclusão nos sulcos), com a lateral do escudo embaixo e à direita, renderizado em 8× e
+reduzido por média de área, cada tamanho à parte (sulcos, cravos e aro nunca menores que o pixel de cada um) e com um
+contorno escuro de 1 pixel. Rodadas até a proposta: os gomos chapados viraram planos de luz; o reflexo de uma cunha
+branca virou um gradiente dentro do gomo; o aro ganhou altura e a lateral; os cravos foram para junto do aro; a
+bossa cresceu.
+
+**Fotografias** (`fotografar_escudo.mjs` → `capturas-escudo/`, o jogo intacto: o roteiro responde aos pedidos de
+`/static/hud/icones/escudo-*.png` com o candidato): ficha, Inventário, Mercado (Vender) em 32 px; voo ao equipar em
+48; cartão do saque em 64; a tela inteira da vila e do Inventário; em 1500×950 e 1280×720. Na página
+`itens-icones-teste.html`, a primeira seção.
+
+**Avaliação** (`escudo-avaliacao.js`): o atual continua melhor em 32 px, o tamanho que mais aparece (lê mais limpo,
+tem mais presença e conversa com a família pintada); o candidato ganha em 48 e 64 na construção (espessura e lateral
+do aro, base e sombra da bossa, gomos como planos), mas a cúpula tem menos brilho e o conjunto parece de outra família.
+Se a direção servir, o caminho é levar ao atual só o que lhe falta de perto, não trocar o escudo.

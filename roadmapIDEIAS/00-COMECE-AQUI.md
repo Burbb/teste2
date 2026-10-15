@@ -2326,3 +2326,15 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
 - **Feito:** `docs/ROADMAP.md`, seção "Apresentação e serviços (plano de 10/2026)"; "Ícones próprios para cada
   habilidade" das ideias guardadas aponta para a etapa 8.
 - **Falta:** nada a implementar agora. Interiores, forja nova e sistema de habilidades não começaram.
+
+### 15/10/2026 — Lote de itens recusado; teste do escudo (sem versão)
+
+- **Decisão de Jean:** o lote de candidatos não foi aprovado (os atuais têm mais volume, personalidade e acabamento).
+  Ficam os itens e ícones atuais e a Pena de Fênix; o acabamento alternativo da roda fica para avaliação separada.
+- **Pedido:** um escudo só, com o atual como referência direta (mesmo escudo, materiais e enquadramento), buscando
+  volume e acabamento; uma proposta, comparação no jogo, parar.
+- **Feito:** `ferramentas/prototipos/hud/desenhar_escudo.py` (relevo iluminado, render em 8× e redução por tamanho),
+  `escudo-teste/`, `fotografar_escudo.mjs`, `capturas-escudo/`, a seção no topo de `itens-icones-teste.html` e a
+  avaliação. A produção não mudou.
+- **Leitura:** o atual continua melhor em 32 px; o candidato ganha em 48 e 64 na construção do aro e da bossa.
+- **Falta:** Jean avaliar.
