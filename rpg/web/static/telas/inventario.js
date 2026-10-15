@@ -14,7 +14,8 @@
     const attrs = atributosHtml(p);
     const espacos = Object.keys(AREA).map((s) => {
       const it = p.equip[s];
-      const conteudo = it ? Icones.item(iconeItem(it)) || S(iconeItem(it), 2) : Icones.vazio(s) || S(VAZIO[s], 2, "fantasma");
+      // o equipamento em 40 px (o desenho que tem arquivo de 40; os outros em 32, centrados); a silhueta vazia em 32
+      const conteudo = it ? Icones.equipamento(iconeItem(it)) || S(iconeItem(it), 2) : Icones.vazio(s) || S(VAZIO[s], 2, "fantasma");
       const extra = it ? `draggable="true" ${dicaItem(it, "Arraste para a mochila, dê dois cliques ou use o botão direito para tirar.", false)}` : `title="${NOME_ESPACO[s]} (vazio)"`;
       return `<div class="espaco slot-px ${it ? "r-" + h(it.raridade) : "vazio"}" data-espaco="${s}" style="grid-area:${AREA[s]}" ${extra}>${conteudo}<span class="espaco-nome">${NOME_ESPACO[s]}</span></div>`;
     }).join("");
@@ -22,7 +23,7 @@
     for (let i = 0; i < limite; i++) {
       const it = p.mochila[i];
       celulas.push(it
-        ? `<div class="slot-px celula r-${h(it.raridade)}${it.classe && it.classe !== p.classe ? " inutil" : ""}" draggable="true" data-mochila="${i}" ${dicaItem(it, "Arraste para o corpo, dê dois cliques ou use o botão direito para equipar.")}>${Icones.item(iconeItem(it)) || S(iconeItem(it), 2)}</div>`
+        ? `<div class="slot-px celula r-${h(it.raridade)}${it.classe && it.classe !== p.classe ? " inutil" : ""}" draggable="true" data-mochila="${i}" ${dicaItem(it, "Arraste para o corpo, dê dois cliques ou use o botão direito para equipar.")}>${Icones.equipamento(iconeItem(it)) || S(iconeItem(it), 2)}</div>`
         : '<div class="slot-px celula vazia"></div>');
     }
     const bolsa = p.bolsa.map((b) => `<div class="slot-px clicavel" data-usar="${h(b.id)}" ${dica(`<b>${h(b.nome)}</b><div>${Realce.texto(b.desc)}</div>${b.id === "tocha" ? "" : '<div class="rodape">Clique para usar · botão direito: usar em você.</div>'}`)}>${Icones.consumivel(b.id) || S(iconeConsumivel(b.id), 2)}<span class="qtd">${b.qtd}</span></div>`).join("");

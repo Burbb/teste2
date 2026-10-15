@@ -17,15 +17,15 @@
 const Icones = (() => {
   const DIR = "/static/hud/icones/";
   // os lados que existem de cada peça (sem os @2x, que existem para todos)
-  const TAMANHOS = {"aljava": [24, 32, 48, 64], "amuleto": [32, 48, 64], "anel": [32, 48, 64], "antidoto": [32, 48, 64],
+  const TAMANHOS = {"aljava": [24, 32, 40, 48, 64], "amuleto": [32, 40, 48, 64], "anel": [32, 40, 48, 64], "antidoto": [32, 48, 64],
     "atalho-bestiario": [32, 36], "atalho-diario": [32, 36], "atalho-grimorio": [32, 36], "atalho-inventario": [32, 36],
     "atalho-mapa": [32, 36], "atalho-sair": [32, 36], "atalho-salvar": [32, 36], "atalho-talentos": [32, 36],
     "attr-agilidade": [24, 32], "attr-ataque": [24, 32], "attr-defesa": [24, 32], "attr-poder": [24, 32],
-    "bandagem": [24, 32, 48, 64], "bau": [32, 48, 64], "botas-ferro": [32, 48, 64],
-    "cota": [32, 48, 64], "elmo": [32, 48, 64], "escudo": [32, 48, 64], "espada": [32, 48, 64], "lugar-caverna": [32, 40],
+    "bandagem": [24, 32, 48, 64], "bau": [32, 48, 64], "botas-ferro": [32, 40, 48, 64],
+    "cota": [32, 40, 48, 64], "elmo": [32, 40, 48, 64], "escudo": [32, 40, 48, 64], "espada": [32, 40, 48, 64], "lugar-caverna": [32, 40],
     "lugar-cidadela": [32, 40], "lugar-floresta": [32, 40], "lugar-montanha": [32, 40], "lugar-pantano": [32, 40],
-    "lugar-planicie": [32, 40], "lugar-ruinas": [32, 40], "lugar-vila": [32, 40], "maca": [32, 48, 64],
-    "manopla": [32, 48, 64], "moedas": [24], "osso": [24], "perneiras": [32, 48, 64], "pocao": [24, 32, 48, 64],
+    "lugar-planicie": [32, 40], "lugar-ruinas": [32, 40], "lugar-vila": [32, 40], "maca": [32, 40, 48, 64],
+    "manopla": [32, 40, 48, 64], "moedas": [24], "osso": [24], "perneiras": [32, 40, 48, 64], "pocao": [24, 32, 48, 64],
     "provisoes": [24], "tocha": [24, 32, 48, 64], "tonico": [32, 48, 64], "unguento": [32, 64],
     "vital-foco": [20], "vital-mana": [20], "vital-vida": [20], "vital-vigor": [20]};
 
@@ -88,6 +88,13 @@ const Icones = (() => {
     const id = Object.keys(CONSUMIVEL).find((k) => !SO_PELO_ID.has(k) && itens[k] && itens[k].icone === sprite);
     return id ? CONSUMIVEL[id] : "";
   }
+  /** O equipamento num tamanho que só alguns desenhos têm (o 40 do Inventário): no lado pedido quando há arquivo nativo
+   *  dele; senão, no tamanho em que o desenho foi feito (32 px, pixel a pixel, centrado no mesmo espaço), em vez de um
+   *  32 esticado pelo navegador. O martelo (desenhos.js) e os sprites 16×16 do jogo (Icones dá "") ficam em 32. */
+  function nativo(peca, lado, classe) {
+    if (peca && !Desenhos.tem(peca) && TAMANHOS[peca] && TAMANHOS[peca].includes(lado)) return img(peca, lado, `${classe} lado-${lado}`);
+    return img(peca, 32, classe);
+  }
   /** Um endereço só (para um canvas ou uma imagem de arrasto): o do lado pedido, ou "" sem desenho. */
   function url(peca, lado) {
     if (peca && Desenhos.tem(peca)) return Desenhos.url(peca, Math.max(1, Math.round(lado / Desenhos.lado(peca))));
@@ -97,6 +104,8 @@ const Icones = (() => {
   return {
     /** O equipamento, pelo desenho que o motor dá a ele (itens.py: icone). */
     item: (sprite, lado = 32, classe = "") => img(ITEM[sprite], lado, classe),
+    /** O equipamento no corpo e na mochila do Inventário: 40 px quando o desenho tem arquivo de 40; senão 32 (1.95.0). */
+    equipamento: (sprite, lado = 40, classe = "") => nativo(ITEM[sprite], lado, classe),
     /** A silhueta de um espaço vazio do corpo. */
     vazio: (espaco, lado = 32, classe = "fantasma") => img(VAZIO[espaco], lado, classe),
     /** Um consumível da bolsa, pelo id do motor (pocao_vida, bau...). */

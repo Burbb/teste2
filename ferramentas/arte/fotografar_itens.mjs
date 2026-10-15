@@ -6,7 +6,11 @@
 //   - o baú aberto com um unguento dentro (cenário baus, SUPRIMENTO=unguento): o quadro do que saiu;
 //   - o Inventário com o corpo e a mochila cheios (cenário tutorial, VITRINE=2): o equipamento, os anéis, a bolsa, a
 //     dica e a comparação dos dois anéis; o voo de um unguento ganho até a bolsa (itemVoa, a mesma chamada do chip de
-//     um evento). A Curandeira continua com o desenho dela (conferido em cada página: "curandeira").
+//     um evento). A Curandeira continua com o desenho dela (conferido em cada página: "curandeira");
+//   - os anéis (cenário aneis: dois vestidos, um achado guardado e outro na mochila): a dica que compara com os dois,
+//     arrastar um anel para o segundo espaço, dois cliques para vestir, o teclado (i abre, Esc fecha);
+//   - os desenhos que ainda não têm 40 px (cenário mercado, CLASSE=arqueiro, AMOSTRAS=1: o martelo desenhado em 32 e
+//     os sprites 16×16 do arco, do cajado...), que ficam em 32 px, centrados, no Inventário.
 // Em cada página, conta onde cada desenho aparece e em que tamanho. Guarda em SAIDA (padrão: capturas-itens/ ao lado).
 //   PLAYWRIGHT_MODULO=<caminho do playwright>/index.mjs node ferramentas/arte/fotografar_itens.mjs
 // (CHROMIUM=<executável do navegador>, se o Playwright não achar o dele; SO=mercado,saque,bau,inventario para escolher)
@@ -17,7 +21,7 @@ import path from "path";
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULO || "playwright");
 const aqui = path.dirname(fileURLToPath(import.meta.url)), raiz = path.resolve(aqui, "../..");
 const SAIDA = path.resolve(process.env.SAIDA || path.join(aqui, "capturas-itens"));
-const SO = new Set((process.env.SO || "mercado,saque,bau,inventario").split(","));
+const SO = new Set((process.env.SO || "mercado,saque,bau,inventario,aneis,antigos").split(","));
 mkdirSync(SAIDA, { recursive: true });
 const espera = (ms) => new Promise((r) => setTimeout(r, ms));
 async function subir(cenario, amb = {}) {
@@ -173,6 +177,71 @@ if (SO.has("inventario")) {
       await espera(1200);
       if (entrou) { await recortar(p, "#prompt", `${nome}-curandeira`, 4); relatorio.push({ nome: `${nome} curandeira`, ...(await onde(p)) }); }
     }
+    await p.close();
+  }
+  proc.kill();
+}
+// o tamanho de cada desenho no corpo e na mochila do Inventário: a família de ferro (40), o resto (32)
+const medidas = (p) => p.evaluate(() => [...document.querySelectorAll(".tela.inventario .espaco img, .tela.inventario .celula img")].map((i) => {
+  const s = i.getAttribute("src") || "", m = s.match(/hud\/icones\/([a-z-]+)-(\d+)/);
+  const tipo = m ? `${m[1]}-${m[2]}` : s.startsWith("data:") || s.startsWith("blob:") ? (i.classList.contains("desenho") ? "desenhado" : "sprite") : s.slice(-20);
+  const r = i.getBoundingClientRect(), c = i.parentElement.getBoundingClientRect();
+  return `${i.closest(".espaco") ? "corpo" : "mochila"}:${tipo}:${Math.round(r.width)}px:centro${Math.round(r.left + r.width / 2 - c.left - c.width / 2)},${Math.round(r.top + r.height / 2 - c.top - c.height / 2)}${i.classList.contains("fantasma") ? ":vazio" : ""}`;
+}));
+// 5. os anéis: a comparação com os dois, arrastar, dois cliques, o teclado
+if (SO.has("aneis")) {
+  for (const jan of Object.keys(JANELAS)) {
+    const { proc, url } = await subir("aneis", { ANEIS: "2" });
+    const nome = `aneis-${jan}`;
+    const p = await pagina(url, jan, nome);
+    await p.waitForSelector(".janela-achado", { timeout: 30000 }); await espera(2500);
+    await recortar(p, ".janela-achado", `${nome}-achado`, 6);
+    const guardar = await p.$('.achado-acoes button:has-text("Guardar"), #prompt .escolha:has-text("Guardar")');
+    if (guardar) await guardar.click(); else console.log(`  ${nome}: sem o Guardar`);
+    await espera(1500); await parado(p);
+    await p.keyboard.press("i"); await espera(1200);
+    const aberto = await p.$(".tela.inventario");
+    await recortar(p, ".tela.inventario", `${nome}-inventario`, 4);
+    relatorio.push({ nome: `${nome} inventário`, medidas: await medidas(p) });
+    const anel = await p.$('[data-mochila] img[src*="anel-"]');
+    if (anel) await dica(p, anel, `${nome}-dica-dois-aneis`);
+    await p.mouse.move(5, 5); await espera(300);
+    // arrastar o primeiro anel da mochila para o segundo espaço de anel
+    const antes = await p.evaluate(() => App.estado.heroi.equip.anel2 && App.estado.heroi.equip.anel2.nome);
+    await p.locator("[data-mochila]").first().dragTo(p.locator('[data-espaco="anel2"]'));
+    await espera(1500);
+    const depois = await p.evaluate(() => App.estado.heroi.equip.anel2 && App.estado.heroi.equip.anel2.nome);
+    relatorio.push({ nome: `${nome} arrastar`, anel2: `${antes} → ${depois}`, trocou: antes !== depois });
+    await recortar(p, ".tela.inventario", `${nome}-depois-de-arrastar`, 4);
+    // dois cliques num anel da mochila com os dois espaços ocupados: o menu pergunta qual substituir (o foco já está
+    // no primeiro); o Enter escolhe
+    const mochilaAntes = await p.evaluate(() => App.estado.heroi.mochila.map((x) => x.nome).join(", "));
+    await p.locator("[data-mochila]").first().dblclick(); await espera(700);
+    await recortar(p, ".menu-espaco", `${nome}-menu-substituir`, 4);
+    await p.keyboard.press("Enter"); await espera(1500);
+    const mochilaDepois = await p.evaluate(() => App.estado.heroi.mochila.map((x) => x.nome).join(", "));
+    relatorio.push({ nome: `${nome} dois cliques e Enter`, mochila: `${mochilaAntes} → ${mochilaDepois}` });
+    await recortar(p, ".tela.inventario", `${nome}-depois-de-vestir`, 4);
+    await p.mouse.click(5, 5); await espera(300);
+    await p.keyboard.press("Escape"); await espera(900);
+    const fechou = !(await p.$(".tela.inventario"));
+    await p.keyboard.press("i"); await espera(1200);
+    relatorio.push({ nome: `${nome} teclado`, abriu: !!aberto, esc_fecha: fechou, i_abre: !!(await p.$(".tela.inventario")) });
+    await p.close();
+    proc.kill();
+  }
+}
+// 6. os desenhos sem 40 px: o martelo (32, desenhado em código) e os sprites 16×16 de outras classes
+if (SO.has("antigos")) {
+  const { proc, url } = await subir("mercado", { CLASSE: "arqueiro", AMOSTRAS: "1" });
+  for (const jan of Object.keys(JANELAS)) {
+    const nome = `antigos-${jan}`;
+    const p = await pagina(url, jan, nome);
+    await parado(p); await espera(800);
+    await p.keyboard.press("Escape"); await espera(1500); await parado(p);  // sai do mercado para a vila
+    await p.keyboard.press("i"); await espera(1200);
+    await recortar(p, ".tela.inventario", `${nome}-inventario`, 4);
+    relatorio.push({ nome: `${nome} inventário`, medidas: await medidas(p) });
     await p.close();
   }
   proc.kill();

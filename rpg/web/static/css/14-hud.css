@@ -267,6 +267,7 @@
 :root body .slot-px:is(.usavel, .clicavel, [draggable="true"]):hover { border-color: var(--aresta-viva); background: #121418; }
 :root body .slot-px:focus-visible { outline: 2px solid var(--latao-claro); outline-offset: 2px; }
 :root body .slot-px img.desenho { width: 32px; height: 32px; }
+:root body .slot-px img.desenho.lado-40 { width: 40px; height: 40px; }  /* o equipamento no Inventário (1.95.0) */
 :root body .slot-px.vazio img.desenho, :root body .slot-px img.fantasma.desenho { opacity: 0.26; filter: grayscale(1) brightness(1.5); }
 :root body .slot-px.alvo { box-shadow: inset 0 0 0 2px var(--latao-claro); }  /* onde o item arrastado cabe */
 :root body .slot-px.inutil::after { content: ""; position: absolute; top: 0; right: 0; width: 0; height: 0;
