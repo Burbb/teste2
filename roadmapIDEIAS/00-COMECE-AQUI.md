@@ -2363,3 +2363,20 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   e `unguento-no-jogo.js` → `capturas-unguento/`; a seção no topo de `itens-icones-teste.html` com a avaliação; o
   processo (comum, por material, por tamanho, reutilizável) no LEIA-ME do protótipo. A produção não mudou.
 - **Falta:** Jean avaliar. Nada de outros itens nem de skill antes disso.
+
+### 15/10/2026 — Unguento: conceito novo; estudo da ocupação dos ícones (sem versão)
+
+- **Decisão de Jean:** o escudo final está aprovado como referência (a revisão artística dele acabou). O pote de louça
+  com rótulo lembrava embalagem moderna: o unguento vira um pote de cerâmica de boticário.
+- **Feito, só no protótipo:**
+  - `unguento-pixel/` com o conceito novo, em 32 e 64; o pote anterior ficou em `unguento-pixel-v1/`.
+  - O estudo da ocupação:
+    - `ocupacao_icones.py`, `ocupacao/` e `ocupacao-no-jogo.js`;
+    - `fotografar_ocupacao.mjs`, com o cenário `VITRINE=2` (armadura vestida, sem o machado);
+    - a medida de onde a folga nasce: a imagem é exibida em 32 px num espaço de 56 a 60, e os arquivos já são justos;
+    - uma alternativa de 40 px, com arquivos nativos.
+  - As duas coisas e a recomendação estão na primeira seção de `itens-icones-teste.html`. A produção não mudou.
+- **Falta:** Jean avaliar. Se a ocupação de 40 for aprovada, faltam ainda:
+  - os arquivos de 40 de todo o equipamento;
+  - o acabamento do escudo em 40;
+  - uma decisão para os sprites 16×16.

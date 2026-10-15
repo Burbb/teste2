@@ -1,7 +1,8 @@
 // O teste do Unguento de Prata (experimento): fotografa o jogo de verdade com o unguento atual (o sprite do jogo),
-// com o primeiro candidato (desenhar_itens.py) e com a proposta em pixel art (desenhar_unguento_pixel.py,
-// unguento-pixel/), com os mesmos dados (unguento-no-jogo.js troca a imagem só onde o unguento é o assunto). Na
-// proposta, o escudo é o refinado final (escudo-pixel/), para ver os dois objetos novos juntos; nas outras, o atual.
+// com o primeiro candidato (desenhar_itens.py), com a primeira proposta em pixel art (o pote de louça com rótulo,
+// unguento-pixel-v1/) e com o conceito novo (o pote de boticário, desenhar_unguento_pixel.py → unguento-pixel/), com os
+// mesmos dados (unguento-no-jogo.js troca a imagem só onde o unguento é o assunto). Nas propostas, o escudo é o final
+// (escudo-pixel/), para ver os objetos novos juntos; nas outras, o atual.
 //   - a ficha (a bolsa), o Inventário (a bolsa) e o Mercado (Suprimentos), no cenário tutorial com VITRINE=1 (um
 //     unguento na bolsa, o broquel vestido);
 //   - a tela inteira: a vila com o Guerreiro e o cenário, e o Inventário.
@@ -29,15 +30,15 @@ async function subir(cenario, amb = {}) {
 }
 async function pagina(b, url, W, H, versao) {
   const p = await b.newPage({ viewport: { width: W, height: H } });
-  // os arquivos do protótipo (a proposta) e, na proposta, o escudo refinado final no lugar do atual
+  // os arquivos do protótipo (as propostas) e, nelas, o escudo final no lugar do atual
   await p.route(/\/__prototipo\//, (rota) => rota.fulfill({
     path: path.join(aqui, new URL(rota.request().url()).pathname.replace("/__prototipo/", "")), contentType: "image/png" }));
-  if (versao === "proposta") await p.route(/\/static\/hud\/icones\/escudo-[^/]+\.png/, (rota) => {
+  if (PROPOSTA[versao]) await p.route(/\/static\/hud\/icones\/escudo-[^/]+\.png/, (rota) => {
     const arq = path.join(aqui, "escudo-pixel", path.basename(new URL(rota.request().url()).pathname));
     return existsSync(arq) ? rota.fulfill({ path: arq, contentType: "image/png" }) : rota.continue();
   });
   if (versao !== "atual") {
-    await p.addInitScript((v) => { window.UNGUENTO_TESTE = { versao: v }; }, versao);
+    await p.addInitScript((c) => { window.UNGUENTO_TESTE = c; }, { versao, ...(PROPOSTA[versao] || {}) });
     p.on("load", async () => {
       for (const f of ["arte-teste.js", "itens-icones-teste.js", "unguento-no-jogo.js"]) await p.addScriptTag({ path: path.join(aqui, f) }).catch(() => {});
     });
@@ -61,7 +62,9 @@ async function foto(p, sel, nome) {
 const JANELAS = { normal: [1500, 950], baixa: [1280, 720] };
 const erros = [], tamanhos = new Set();
 const b = await chromium.launch(process.env.CHROMIUM ? { executablePath: process.env.CHROMIUM } : {});
-const VERSOES = (process.env.VERSOES || "atual,primeiro,proposta").split(",");
+// as propostas em pixel art: a pasta e os lados de cada uma
+const PROPOSTA = { anterior: { pasta: "unguento-pixel-v1", lados: [32, 48, 64] }, conceito: { pasta: "unguento-pixel", lados: [32, 64] } };
+const VERSOES = (process.env.VERSOES || "atual,primeiro,anterior,conceito").split(",");
 for (const jan of Object.keys(JANELAS)) for (const versao of VERSOES) {
   const [W, H] = JANELAS[jan], n = (c) => `${jan}-${versao}-${c}`;
   const { proc, url } = await subir("tutorial", { TUTORIAL: "0", VITRINE: "1", VISTAS: "A1,V2,N1,D1,K1,M1", OURO: "200" });

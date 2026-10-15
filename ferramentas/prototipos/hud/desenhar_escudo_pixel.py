@@ -49,6 +49,11 @@ MEDIDAS = {
     48: dict(raio=18.45, lado=1, aro=2.8, degrau=1, cupula=4.4, base=1.2, sulco=1.0, cravos=12.3, cravo="2", sombra_peca=1, emendas=True, reflexo=(1.0, 1.65), alcance=0.7, escada=(7, 5, 4, 3, 1)),
     64: dict(raio=24.45, lado=1, aro=3.0, degrau=1, cupula=6.0, base=1.6, sulco=1.1, cravos=17.2, cravo="3", sombra_peca=2, emendas=True, reflexo=(1.05, 1.7), alcance=0.72, escada=(7, 5, 4, 2, 1)),
 }
+# O brilho da cúpula, desenhado por tamanho: {(dx, dy): tom} em volta do ponto de luz.
+BRILHO_CUPULA = {32: {(0, 0): 8, (1, 0): 6, (0, 1): 6},
+                 48: {(0, 0): 8, (1, 0): 7, (0, 1): 7, (1, 1): 6, (-1, 0): 6, (0, -1): 6},
+                 64: {(0, 0): 8, (1, 0): 8, (0, 1): 7, (1, 1): 7, (-1, 0): 6, (0, -1): 6, (2, 0): 6, (0, 2): 6, (-1, 1): 6,
+                      (1, -1): 6}}
 # Correções feitas olhando cada tamanho: {(x, y): ("f"|"l"|"c", índice)} (ferro, latão, contorno; None apaga).
 AJUSTES = {32: {}, 48: {}, 64: {}}
 
@@ -150,10 +155,7 @@ def desenhar(lado_img):
     # o brilho da cúpula: um grupo desenhado por tamanho, em cima à esquerda do centro (a conta de um disco saía em cruz)
     bx = int(math.floor(cx + 0.42 * M["cupula"] * math.cos(ANG_LUZ)))
     by = int(math.floor(cy + 0.42 * M["cupula"] * math.sin(ANG_LUZ)))
-    grupo = {32: {(0, 0): 8, (1, 0): 6, (0, 1): 6},
-             48: {(0, 0): 8, (1, 0): 7, (0, 1): 7, (1, 1): 6, (-1, 0): 6, (0, -1): 6},
-             64: {(0, 0): 8, (1, 0): 8, (0, 1): 7, (1, 1): 7, (-1, 0): 6, (0, -1): 6, (2, 0): 6, (0, 2): 6, (-1, 1): 6, (1, -1): 6}}[lado_img]
-    for (ox, oy), t_ in grupo.items():
+    for (ox, oy), t_ in BRILHO_CUPULA[lado_img].items():
         xx, yy = bx + ox, by + oy
         if cup[yy, xx]:
             tom[yy, xx], fixo[yy, xx] = max(tom[yy, xx], t_), True

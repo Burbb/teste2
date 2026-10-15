@@ -1,0 +1,206 @@
+{
+ "normal-atual": [
+  {
+   "onde": "armadura",
+   "espaco": 60,
+   "imagem": 32,
+   "arquivo": "cota-32.png",
+   "natural": 32
+  },
+  {
+   "onde": "arma",
+   "espaco": 60,
+   "imagem": 32,
+   "arquivo": "espada-32.png",
+   "natural": 32
+  },
+  {
+   "onde": "secundaria",
+   "espaco": 60,
+   "imagem": 32,
+   "arquivo": "escudo-32.png",
+   "natural": 32
+  },
+  {
+   "onde": "anel1",
+   "espaco": 60,
+   "imagem": 32,
+   "arquivo": "anel-32.png",
+   "natural": 32
+  },
+  {
+   "onde": "mochila 0",
+   "espaco": 56,
+   "imagem": 32,
+   "arquivo": "espada-32.png",
+   "natural": 32
+  },
+  {
+   "onde": "mochila 1",
+   "espaco": 56,
+   "imagem": 32,
+   "arquivo": "escudo-32.png",
+   "natural": 32
+  },
+  {
+   "onde": "mochila 2",
+   "espaco": 56,
+   "imagem": 32,
+   "arquivo": "anel-32.png",
+   "natural": 32
+  }
+ ],
+ "normal-alternativa": [
+  {
+   "onde": "armadura",
+   "espaco": 60,
+   "imagem": 40,
+   "arquivo": "cota-40.png",
+   "natural": 40
+  },
+  {
+   "onde": "arma",
+   "espaco": 60,
+   "imagem": 40,
+   "arquivo": "espada-40.png",
+   "natural": 40
+  },
+  {
+   "onde": "secundaria",
+   "espaco": 60,
+   "imagem": 40,
+   "arquivo": "escudo-40.png",
+   "natural": 40
+  },
+  {
+   "onde": "anel1",
+   "espaco": 60,
+   "imagem": 40,
+   "arquivo": "anel-40.png",
+   "natural": 40
+  },
+  {
+   "onde": "mochila 0",
+   "espaco": 56,
+   "imagem": 40,
+   "arquivo": "espada-40.png",
+   "natural": 40
+  },
+  {
+   "onde": "mochila 1",
+   "espaco": 56,
+   "imagem": 40,
+   "arquivo": "escudo-40.png",
+   "natural": 40
+  },
+  {
+   "onde": "mochila 2",
+   "espaco": 56,
+   "imagem": 40,
+   "arquivo": "anel-40.png",
+   "natural": 40
+  }
+ ],
+ "baixa-atual": [
+  {
+   "onde": "armadura",
+   "espaco": 60,
+   "imagem": 32,
+   "arquivo": "cota-32.png",
+   "natural": 32
+  },
+  {
+   "onde": "arma",
+   "espaco": 60,
+   "imagem": 32,
+   "arquivo": "espada-32.png",
+   "natural": 32
+  },
+  {
+   "onde": "secundaria",
+   "espaco": 60,
+   "imagem": 32,
+   "arquivo": "escudo-32.png",
+   "natural": 32
+  },
+  {
+   "onde": "anel1",
+   "espaco": 60,
+   "imagem": 32,
+   "arquivo": "anel-32.png",
+   "natural": 32
+  },
+  {
+   "onde": "mochila 0",
+   "espaco": 56,
+   "imagem": 32,
+   "arquivo": "espada-32.png",
+   "natural": 32
+  },
+  {
+   "onde": "mochila 1",
+   "espaco": 56,
+   "imagem": 32,
+   "arquivo": "escudo-32.png",
+   "natural": 32
+  },
+  {
+   "onde": "mochila 2",
+   "espaco": 56,
+   "imagem": 32,
+   "arquivo": "anel-32.png",
+   "natural": 32
+  }
+ ],
+ "baixa-alternativa": [
+  {
+   "onde": "armadura",
+   "espaco": 60,
+   "imagem": 40,
+   "arquivo": "cota-40.png",
+   "natural": 40
+  },
+  {
+   "onde": "arma",
+   "espaco": 60,
+   "imagem": 40,
+   "arquivo": "espada-40.png",
+   "natural": 40
+  },
+  {
+   "onde": "secundaria",
+   "espaco": 60,
+   "imagem": 40,
+   "arquivo": "escudo-40.png",
+   "natural": 40
+  },
+  {
+   "onde": "anel1",
+   "espaco": 60,
+   "imagem": 40,
+   "arquivo": "anel-40.png",
+   "natural": 40
+  },
+  {
+   "onde": "mochila 0",
+   "espaco": 56,
+   "imagem": 40,
+   "arquivo": "espada-40.png",
+   "natural": 40
+  },
+  {
+   "onde": "mochila 1",
+   "espaco": 56,
+   "imagem": 40,
+   "arquivo": "escudo-40.png",
+   "natural": 40
+  },
+  {
+   "onde": "mochila 2",
+   "espaco": 56,
+   "imagem": 40,
+   "arquivo": "anel-40.png",
+   "natural": 40
+  }
+ ]
+}

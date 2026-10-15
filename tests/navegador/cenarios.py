@@ -758,7 +758,9 @@ def tutorial(ui):
     FERIMENTOS=corte,costelas (do herói, sem tratar), BANDAGENS=n, FOME=n (dias sem comer). GRATIS_USADO=templo,curandeira:
     o primeiro atendimento ou tratamento grátis já usado. NOME: o nome do herói (padrão Jean; para conferir nome longo).
     VITRINE=1 (o experimento de itens e ícones): machado, espada, escudo e anel na mochila, escudo e anel vestidos,
-    unguento e bomba de fumaça na bolsa. Sair leva ao título, com o save (para carregar com orientações pendentes)."""
+    unguento e bomba de fumaça na bolsa; VITRINE=2, sem o machado e com
+    a armadura (cota) vestida. Sair leva ao título, com o save
+    (para carregar com orientações pendentes)."""
     from rpg import abertura as ab, itens, missoes, sobrevivencia
     from rpg.__main__ import menu_principal
     pasta = tempfile.mkdtemp()
@@ -824,8 +826,11 @@ def tutorial(ui):
         r = random.Random(3)
         acha = lambda icone, slot=None: next(e for e in iter(lambda: itens.gerar_equip(r, "guerreiro", 2, slot=slot, raridade="comum"), None)
                                              if e["icone"] == icone)
-        j.mochila[:0] = [acha("machado", "arma"), acha("espada", "arma"), acha("escudo", "secundaria"), acha("anel", "anel")]
+        j.mochila[:0] = ([] if os.environ.get("VITRINE") == "2" else [acha("machado", "arma")]) + [
+            acha("espada", "arma"), acha("escudo", "secundaria"), acha("anel", "anel")]
         j.equip["secundaria"], j.equip["anel1"] = acha("escudo", "secundaria"), acha("anel", "anel")
+        if os.environ.get("VITRINE") == "2":  # o estudo da ocupação dos ícones: também a armadura vestida
+            j.equip["armadura"] = acha("armadura", "armadura")
         j.consumiveis.update(unguento=1, bomba_fumaca=2)
         j.recalcular()
     if os.environ.get("PROTECAO"):  # PROTECAO=mendigo (ou santuario): a proteção que levanta uma vez

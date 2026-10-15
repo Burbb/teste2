@@ -1,9 +1,9 @@
 /* O teste do Unguento de Prata (experimento): veste o jogo de verdade com o primeiro candidato (desenhar_itens.py, pela
-   ArteTeste) ou com a proposta em pixel art (desenhar_unguento_pixel.py, unguento-pixel/), só para as fotografias
-   (fotografar_unguento.mjs põe este arquivo na página; o jogo não o carrega). window.UNGUENTO_TESTE diz qual.
+   ArteTeste) ou com uma proposta em pixel art (a pasta e os lados dela), só para as fotografias (fotografar_unguento.mjs
+   põe este arquivo na página; o jogo não o carrega). window.UNGUENTO_TESTE diz qual: { versao, pasta, lados }.
    Troca a <img> só onde o unguento é o assunto (o espaço da bolsa, a prateleira do mercado, a linha da janelinha de
    Itens): o mesmo sprite é o da curandeira, que fica. Sem mexer em tamanho, lugar, nome nem área clicável.
-   A proposta vai no arquivo do tamanho quando ele existe (32, 48, 64) e o dobro no srcset; nos outros tamanhos, o
+   A proposta vai no arquivo do tamanho quando ele existe e o dobro no srcset; nos outros tamanhos, o
    arquivo maior mais perto, reduzido pelo navegador (como o Icones faz com o martelo e a Pena). */
 "use strict";
 
@@ -27,9 +27,9 @@
       i.srcset = `${ArteTeste.url("cand-unguento-32", 2 * e)} 2x`;
       i.style.imageRendering = inteira ? "pixelated" : "auto";
     } else {
-      const f = [32, 48, 64].find((t) => t >= l) || 64;
-      i.src = `/__prototipo/unguento-pixel/unguento-${f}.png`;
-      i.srcset = `/__prototipo/unguento-pixel/unguento-${f}@2x.png 2x`;
+      const { pasta, lados } = window.UNGUENTO_TESTE, f = lados.find((t) => t >= l) || lados[lados.length - 1];
+      i.src = `/__prototipo/${pasta}/unguento-${f}.png`;
+      i.srcset = `/__prototipo/${pasta}/unguento-${f}@2x.png 2x`;
       i.style.imageRendering = f === l ? "pixelated" : "auto";
     }
     i.width = i.height = l;

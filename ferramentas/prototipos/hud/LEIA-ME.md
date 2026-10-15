@@ -1441,3 +1441,40 @@ Inventário, Mercado e ficha em 32, telas inteiras); `fotografar_unguento.mjs` �
 candidato e proposta, esta com o escudo final: o Inventário, o Mercado em Suprimentos, a ficha e as telas inteiras),
 em 1500×950 e 1280×720. Na página `itens-icones-teste.html`, a primeira seção, com a avaliação dos dois juntos
 (`unguento-avaliacao.js`).
+
+### O conceito novo do unguento e a ocupação dos ícones (experimento, sem versão)
+
+**O escudo final** foi aprovado como referência; a revisão artística dele está encerrada (o desenho de 32, 48 e 64
+não muda). Para o estudo abaixo, a tabela do brilho da cúpula saiu de dentro de `desenhar` para `BRILHO_CUPULA` (o
+mesmo conteúdo; os seis arquivos saem idênticos), para um tamanho novo poder ser pedido de fora.
+
+**O unguento, conceito novo** (`desenhar_unguento_pixel.py` → `unguento-pixel/`, 32 e 64 px; o pote de louça com
+rótulo da rodada anterior ficou em `unguento-pixel-v1/`, e o código dele no commit 75cefb9). Decisão de Jean: as
+paredes retas e o rótulo azul-esverdeado lembravam uma embalagem moderna; o recipiente passa a ser um pote de cerâmica
+de boticário. A construção: uma forma de revolução (a barriga em superelipse, o pescoço curto, o fundo na elipse de
+baixo), vista um pouco mais de cima que o pote anterior (K 0,44 em vez de 0,3: com 0,36, no tamanho real a pasta era
+só uma faixa); o barro bege acinzentado e fosco em quatro faixas largas de luz, sem reflexo; o lábio grosso com o topo
+aceso, a espessura na frente e a sombra no pescoço; a parede de dentro escura; a pasta de prata (a mesma rampa e a
+mesma luz macia da rodada anterior) com a ponta de onde a espátula saiu. Rodadas: as faixas finas da luz liam como
+veios (ficaram quatro, largas); a última linha do fundo acendia (a normal do fundo passou a ser a da linha do fundo);
+um grupo de brilho no ombro lia como um cisco num material fosco (saiu). A tampa ao lado ficou de fora: o pote já
+ocupa 27 dos 32 px e ela obrigaria a encolhê-lo. 14 cores por arquivo. Fotos: `fotografar_unguento.mjs`, agora com
+quatro versões (atual, primeiro, anterior, conceito).
+
+**A ocupação dos ícones no Inventário** (`ocupacao_icones.py` → `ocupacao/`, `ocupacao-no-jogo.js`,
+`fotografar_ocupacao.mjs` → `capturas-ocupacao/`, cenário tutorial com `VITRINE=2`: o escudo, o anel e a armadura
+vestidos, sem o machado). As quatro medidas, separadas: o espaço tem 60 px no corpo, 56 na mochila e 52 na bolsa; a
+imagem exibida tem 32 px em todos (Icones.item pede 32 e a regra `.slot-px img.desenho` de `14-hud.css` fixa 32); o
+desenho ocupa 27 a 30 px do arquivo; a margem transparente no arquivo é de 1 a 4 px. A folga nasce na exibição: um
+desenho de 32 num espaço de 60 ocupa cerca de metade da largura. A alternativa (uma só) mostra o equipamento do corpo
+e da mochila em 40 px, com arquivos nativos de 40: o anel, a cota e a espada pelo caminho dos tamanhos de hoje
+(`preparar_hud4p.py`: as folhas aprovadas, a escala do grupo, a redução "paleta"; os de 32 e 48 desse caminho são iguais
+aos do jogo), o escudo pelas regras dele com medidas entre as de 32 e 48 (uma prova de tamanho, sem acabamento). O
+escudo passa de 48% a 62% da largura útil do espaço do corpo, o anel de 52% a 66%, a armadura de 47% a 59%. 44 px
+foi olhado e descartado (o anel dominava e a mochila ficava justa). A bolsa, a doca, os atributos e a luta não mudam.
+
+**Recomendação** (`ocupacao-recomendacao.js`, na página): adotar 40 px no corpo e na mochila. Comum à família: cada
+tamanho de exibição com o seu arquivo nativo, o desenho usando o quadro (1 a 2 px de margem), a mesma luz, contorno e
+rampas. Por objeto: a área ocupada dentro do quadro (as silhuetas diferentes ficam). Por contexto: o tamanho de
+exibição, pelo tipo de espaço. Para adotar faltam os arquivos de 40 de todo o equipamento pintado, a passagem de
+acabamento do escudo em 40 e uma decisão para os itens que ainda são sprites 16×16 (40 não é múltiplo de 16).
