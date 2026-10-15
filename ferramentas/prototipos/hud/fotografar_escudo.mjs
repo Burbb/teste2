@@ -1,6 +1,7 @@
-// O teste do escudo (experimento): fotografa o jogo de verdade com o escudo atual da HUD e com o candidato de
-// desenhar_escudo.py (escudo-teste/), com os mesmos dados. O jogo não muda: o roteiro responde aos pedidos de
-// /static/hud/icones/escudo-*.png com os arquivos do candidato, que têm os mesmos nomes e tamanhos.
+// O teste do escudo (experimento): fotografa o jogo de verdade com o escudo atual da HUD, com o candidato anterior
+// (desenhar_escudo.py, escudo-teste/) e com o candidato refinado em pixel art (desenhar_escudo_pixel.py,
+// escudo-pixel/), com os mesmos dados. O jogo não muda: o roteiro responde aos pedidos de
+// /static/hud/icones/escudo-*.png com os arquivos da versão, que têm os mesmos nomes e tamanhos.
 //   - 32 px: a ficha, o Inventário (o corpo e a mochila) e o Mercado (a aba Vender, com a mochila), no cenário
 //     tutorial com VITRINE=1 (um broquel vestido e outro na mochila);
 //   - 64 e 48 px: o cartão do saque e o voo ao equipar (cenário vila com ACHADO=escudo);
@@ -14,7 +15,8 @@ import { fileURLToPath } from "url";
 import path from "path";
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULO || "playwright");
 const aqui = path.dirname(fileURLToPath(import.meta.url)), raiz = path.resolve(aqui, "../../..");
-const SAIDA = path.join(aqui, "capturas-escudo"), CANDIDATO = path.join(aqui, "escudo-teste");
+const SAIDA = path.join(aqui, "capturas-escudo");
+const PASTA = { candidato: path.join(aqui, "escudo-teste"), refinado: path.join(aqui, "escudo-pixel") };
 mkdirSync(SAIDA, { recursive: true });
 const espera = (ms) => new Promise((r) => setTimeout(r, ms));
 async function subir(cenario, amb = {}) {
@@ -30,10 +32,10 @@ async function subir(cenario, amb = {}) {
 const trocados = [];
 async function pagina(b, url, W, H, versao) {
   const p = await b.newPage({ viewport: { width: W, height: H } });
-  if (versao === "candidato") await p.route(/\/static\/hud\/icones\/escudo-[^/]+\.png/, (rota) => {
-    const arq = path.join(CANDIDATO, path.basename(new URL(rota.request().url()).pathname));
+  if (PASTA[versao]) await p.route(/\/static\/hud\/icones\/escudo-[^/]+\.png/, (rota) => {
+    const arq = path.join(PASTA[versao], path.basename(new URL(rota.request().url()).pathname));
     if (!existsSync(arq)) return rota.continue();
-    trocados.push(path.basename(arq));
+    trocados.push(`${versao}/${path.basename(arq)}`);
     return rota.fulfill({ path: arq, contentType: "image/png" });
   });
   await p.goto(url);
@@ -56,7 +58,8 @@ async function foto(p, sel, nome, folga = 0) {
 const JANELAS = { normal: [1500, 950], baixa: [1280, 720] };
 const erros = [];
 const b = await chromium.launch(process.env.CHROMIUM ? { executablePath: process.env.CHROMIUM } : {});
-for (const jan of Object.keys(JANELAS)) for (const versao of ["atual", "candidato"]) {
+const VERSOES = (process.env.VERSOES || "atual,candidato,refinado").split(",");
+for (const jan of Object.keys(JANELAS)) for (const versao of VERSOES) {
   const [W, H] = JANELAS[jan], n = (c) => `${jan}-${versao}-${c}`;
   // a vila do Vau, com o broquel vestido e outro na mochila
   {
@@ -101,5 +104,5 @@ for (const jan of Object.keys(JANELAS)) for (const versao of ["atual", "candidat
   console.log(jan, versao, "ok");
 }
 await b.close();
-console.log(`arquivos do candidato servidos: ${[...new Set(trocados)].sort().join(", ") || "nenhum"}`);
+console.log(`arquivos servidos: ${[...new Set(trocados)].sort().join(", ") || "nenhum"}`);
 console.log(erros.length ? erros.join("\n") : "sem erros");

@@ -1358,3 +1358,34 @@ bossa cresceu.
 tem mais presença e conversa com a família pintada); o candidato ganha em 48 e 64 na construção (espessura e lateral
 do aro, base e sombra da bossa, gomos como planos), mas a cúpula tem menos brilho e o conjunto parece de outra família.
 Se a direção servir, o caminho é levar ao atual só o que lhe falta de perto, não trocar o escudo.
+
+### O escudo refinado em pixel art (experimento, sem versão)
+
+**O pedido:** continuar com o candidato do escudo e refinar a linguagem de pixel art: o candidato como referência de
+construção, espessura e sombra, o atual como referência de presença dos reflexos e de contraste no pequeno; a luz,
+a sombra e o contorno como grupos de pixels deliberados; cada tamanho (32, 48, 64) tratado na própria grade, sem
+redução automática, quantização ou filtro de pixel como acabamento; paleta organizada, sem limite arbitrário.
+
+**O processo** (`desenhar_escudo_pixel.py` → `escudo-pixel/`, com os nomes do jogo; o dobro é a duplicação exata):
+regras na grade final, descritas no cabeçalho do arquivo, com as medidas de cada tamanho em `MEDIDAS` e as correções
+manuais em `AJUSTES`. A silhueta são dois discos em centro de pixel (a frente e a lateral, 1 pixel embaixo e à
+direita), no enquadramento do atual; o aro é um rolo por regras (o tom pelo ângulo até a luz, a fileira de fora e a de
+dentro um degrau abaixo do lado em que viram, o brilho num arco curto); o degrau é a sombra do aro, com um toque da
+parede acesa embaixo à direita; cada gomo da face tem um tom só (a escada `ESCADA`), com o reflexo do gomo da luz em
+três tons e as emendas só em 48 e 64; a peça central tem o sulco, a base (em 48 e 64), a cúpula em faixas e o brilho
+desenhado por tamanho; os cravos são pinos por tamanho; uma limpeza tira pixels sozinhos; o contorno tem 1 pixel, só
+pelos lados. Paleta: 9 tons de ferro, 9 de latão e o contorno (17 a 18 cores por arquivo).
+
+**As rodadas** (cada uma olhando os três tamanhos e o jogo): o aro claro na volta toda virou tom médio com o brilho
+num arco curto; a peça central diminuiu e, em 32, perdeu a base separada (fazia dentes); o reflexo do gomo foi para
+depois das sombras (elas o apagavam) e cresceu; os cravos em cruz viraram cabeças redondas; a pedido do Jean, o canto
+de baixo à direita, que somava parede, aro e lateral de 2 px, ficou com a lateral de 1 px e a parede só num toque;
+e, numa segunda revisão (32 e 48 ainda pesavam), a lateral passou a se deslocar pela diagonal (1 px em x e 1 em y
+davam 1,4 px na diagonal) e o toque da parede ficou só em 64: o canto fica 1 px mais grosso que o resto do aro.
+
+**Fotos** (`fotografar_escudo.mjs`, agora com as três versões; `VERSOES=refinado` refaz só uma): a ficha, o
+Inventário e o Mercado em 32, o voo em 48, o cartão do saque em 64 e as telas inteiras, em 1500×950 e 1280×720.
+
+**Avaliação** (`escudo-avaliacao.js`): o refinado ganha na organização dos pixels, na silhueta e na espessura, nos
+reflexos localizados do aro e na leitura limpa em 32; perde para o atual no tamanho do reflexo do gomo (mais em 64)
+e na face de 64, mais clara e chapada.
