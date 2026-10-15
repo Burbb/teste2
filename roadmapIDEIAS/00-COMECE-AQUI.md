@@ -2253,3 +2253,18 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
 - **Achado, sem mexer:** com movimento reduzido a faixa de celebração some na hora (já era assim).
 - **Falta:** Jean conferir. O martelo e a Pena de Fênix (32×32) ficam para o lote de itens. A E9 e a validação com
   jogadores novos continuam abertas.
+
+### 15/10/2026 — O martelo e a Pena de Fênix no jogo (1.93.0)
+
+- **Pedido de Jean:** integrar os dois itens de 32×32 escolhidos no experimento de resolução, pela estrutura normal e
+  pelo `Icones`, sem mudar funcionamento, atributos, preços, estoque, sorteios nem recompensas; a Pena não pode tomar o
+  lugar do ícone de Vigor por usar o mesmo sprite.
+- **Feito:** `rpg/web/static/desenhos.js` (os itens desenhados em código, como os retratos), com as grades aprovadas;
+  `Icones` entrega o martelo pelo desenho do equipamento e a Pena pelo id do consumível (nunca pelo desenho "chama",
+  que é também o Vigor, o Poder e o fogo); em 32 e 64 px pixel a pixel, em 48 a versão a 2× reduzida pelo navegador.
+  O cenário `vila` ganhou `ACHADO=martelo`.
+- **Verificado** (`ferramentas/prototipos/hud/fotografar_itens.mjs`, `capturas-itens/`), em 1500×950 e 1280×720: a
+  prateleira, a bolsa da ficha e do Inventário, a mochila da aba Vender, a dica com a comparação, o cartão do saque
+  (64 px), o voo ao equipar (48 px) e o martelo no corpo; a pena só em espaços de item, o Vigor e o Poder com os
+  deles. 602 testes, gabarito sem diferença, pyflakes, fumaça (356). O relatório da luta pede a imagem pela mesma
+  chamada por id da bolsa (não fotografado: nenhum cenário garante a pena no espólio).

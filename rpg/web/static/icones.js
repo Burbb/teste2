@@ -9,7 +9,8 @@
    Um sprite pode ter mais de um papel (a "chama" é o Vigor no topo, o Poder nos atributos e a Pena de Fênix na bolsa):
    por isso a escolha é pelo papel, nunca só pelo nome. Os desenhos vêm prontos nos tamanhos de uso (reduzidos das
    folhas aprovadas por ferramentas/prototipos/hud/preparar_hud4p.py), cada um com o dobro para telas densas; pedido um
-   lado sem arquivo igual, vai o mais perto. As lacunas (o que ainda não tem desenho) estão em docs/ARQUITETURA.md. */
+   lado sem arquivo igual, vai o mais perto. O martelo e a Pena de Fênix são desenhados em código (desenhos.js), em
+   32×32. As lacunas (o que ainda não tem desenho) estão em docs/ARQUITETURA.md. */
 "use strict";
 
 const Icones = (() => {
@@ -28,15 +29,20 @@ const Icones = (() => {
     "vital-foco": [20], "vital-mana": [20], "vital-vida": [20], "vital-vigor": [20]};
 
   // Cada desenho vai para o tipo de ferro que o jogo já tem (elmo, armadura, manopla, calca = perneira, bota_ferro, maca);
-  // couro (capuz, gibão, calça de couro, bota de caça, luva) e as armas sem desenho (machado, martelo, arco...) ficam
-  // com o do jogo. O anel tem uma pérola branca: não lembra nenhuma cor de raridade.
+  // couro (capuz, gibão, calça de couro, bota de caça, luva) e as armas sem desenho (machado, arco...) ficam com o do
+  // jogo. O anel tem uma pérola branca: não lembra nenhuma cor de raridade. O martelo é desenhado em código (desenhos.js).
   const ITEM = { elmo: "elmo", armadura: "cota", manopla: "manopla", calca: "perneiras", bota_ferro: "botas-ferro",
-    maca: "maca", espada: "espada", escudo: "escudo", amuleto: "amuleto", anel: "anel", aljava: "aljava" };
+    maca: "maca", espada: "espada", escudo: "escudo", amuleto: "amuleto", anel: "anel", aljava: "aljava", martelo: "martelo" };
   // o espaço vazio: a silhueta apagada do que vai nele (o material não aparece)
   const VAZIO = { cabeca: "elmo", armadura: "cota", maos: "manopla", pernas: "perneiras", pes: "botas-ferro", arma: "espada",
     secundaria: "escudo", amuleto: "amuleto", anel1: "anel", anel2: "anel" };
-  // os consumíveis, pelo id do motor (o Baú Trancado é sempre o baú de madeira e latão)
-  const CONSUMIVEL = { pocao_vida: "pocao", tonico: "tonico", antidoto: "antidoto", bandagem: "bandagem", bau: "bau", tocha: "tocha" };
+  // os consumíveis, pelo id do motor (o Baú Trancado é sempre o baú de madeira e latão; a Pena de Fênix é desenhada em
+  // código, desenhos.js)
+  const CONSUMIVEL = { pocao_vida: "pocao", tonico: "tonico", antidoto: "antidoto", bandagem: "bandagem", bau: "bau", tocha: "tocha",
+    pena_fenix: "pena" };
+  // os que só se acham pelo id, nunca pelo desenho: a Pena de Fênix usa no jogo a "chama", que também é o Vigor, o Poder
+  // e as habilidades de fogo; uma tela que só tem o desenho "chama" não está falando da pena
+  const SO_PELO_ID = new Set(["pena_fenix"]);
   const ATRIBUTO = { Ataque: "attr-ataque", Defesa: "attr-defesa", Agilidade: "attr-agilidade", Poder: "attr-poder" };
   // os recursos do topo, pelo desenho que o jogo escolhe (sem comida, o osso; a tocha apagada, a bolsa vazia e o
   // frasco vazio ficam com o do jogo); a aljava são as flechas do Patrulheiro
@@ -61,19 +67,28 @@ const Icones = (() => {
   }
   /** A <img> de uma peça em `lado` px (com a classe "sprite" do jogo, para as regras de tamanho e de lugar dele). */
   function img(peca, lado, classe = "", alt = "") {
+    if (peca && Desenhos.tem(peca)) return desenhado(peca, lado, classe, alt);
     if (!peca || !TAMANHOS[peca]) return "";
     const { src, srcset } = arquivos(peca, lado);
     return `<img class="sprite desenho ${classe}" src="${src}"${srcset ? ` srcset="${srcset}"` : ""} width="${lado}" height="${lado}" style="--s:${lado}" alt="${alt}" draggable="false">`;
+  }
+  /** Uma peça desenhada em código (desenhos.js): numa escala inteira do desenho, pixel a pixel; senão (48 px de um
+   *  desenho de 32), a versão a 2× reduzida pelo navegador, como os outros ícones da HUD. */
+  function desenhado(peca, lado, classe, alt) {
+    const n = Desenhos.lado(peca), inteira = lado % n === 0, e = inteira ? lado / n : Math.ceil(lado / n);
+    return `<img class="sprite desenho${inteira ? " pixel" : ""} ${classe}" src="${Desenhos.url(peca, e)}" srcset="${Desenhos.url(peca, 2 * e)} 2x" ` +
+      `width="${lado}" height="${lado}" style="--s:${lado}" alt="${alt}" draggable="false">`;
   }
   /** O consumível pelo desenho que o catálogo do motor dá a ele (itens.py: icone), quando a tela só tem o desenho. */
   function consumivelDoDesenho(sprite) {
     const itens = typeof App !== "undefined" && App.estado && App.estado.itens;
     if (!itens) return "";
-    const id = Object.keys(CONSUMIVEL).find((k) => itens[k] && itens[k].icone === sprite);
+    const id = Object.keys(CONSUMIVEL).find((k) => !SO_PELO_ID.has(k) && itens[k] && itens[k].icone === sprite);
     return id ? CONSUMIVEL[id] : "";
   }
   /** Um endereço só (para um canvas ou uma imagem de arrasto): o do lado pedido, ou "" sem desenho. */
   function url(peca, lado) {
+    if (peca && Desenhos.tem(peca)) return Desenhos.url(peca, Math.max(1, Math.round(lado / Desenhos.lado(peca))));
     return peca && TAMANHOS[peca] ? arquivos(peca, lado).src : "";
   }
 

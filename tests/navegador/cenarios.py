@@ -116,7 +116,8 @@ def titulo(ui):
 
 
 def vila(ui):
-    """Guerreiro numa vila: acha um item raro (cartão do saque) e depois abre o mural de contratos."""
+    """Guerreiro numa vila: acha um item raro (cartão do saque) e depois abre o mural de contratos. ACHADO=martelo: o
+    item achado é um martelo (para conferir o desenho no cartão e no voo ao equipar)."""
     g = Jogo(ui, seed=8, pasta_saves=tempfile.mkdtemp())
     ui.jogo = g
     g.iniciar("Jean", "guerreiro")
@@ -136,6 +137,8 @@ def vila(ui):
         it = gerar_equip(rng, "guerreiro", 4, qualidade=1)
         if it["slot"] in ("arma", "armadura") and g.j.equip.get(it["slot"]):
             break
+    if os.environ.get("ACHADO"):
+        it = next(e for e in iter(lambda: gerar_equip(rng, "guerreiro", 4, qualidade=1), None) if e["icone"] == os.environ["ACHADO"])
     ui.cena("Ruínas do caminho", g.contexto_cena(), "evento")
     g.dizer("Entre as pedras, algo reluz.")
     g.oferecer_equip(it)

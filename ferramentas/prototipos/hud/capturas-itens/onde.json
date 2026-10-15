@@ -1,0 +1,168 @@
+[
+ {
+  "nome": "mercado-normal suprimentos",
+  "pena": [
+   "slot-px:32",
+   "slot-px:32"
+  ],
+  "martelo": [
+   "slot-px:0",
+   "slot-px:0",
+   "slot-px:0",
+   "slot-px:0"
+  ],
+  "vigor": true,
+  "poder": true
+ },
+ {
+  "nome": "mercado-normal vender",
+  "pena": [
+   "slot-px:32",
+   "slot-px:0"
+  ],
+  "martelo": [
+   "slot-px:32",
+   "slot-px:32",
+   "slot-px:32",
+   "slot-px:32"
+  ],
+  "vigor": true,
+  "poder": true
+ },
+ {
+  "nome": "mercado-normal inventário",
+  "pena": [
+   "slot-px:32",
+   "slot-px:32"
+  ],
+  "martelo": [
+   "slot-px:0",
+   "slot-px:0",
+   "slot-px:0",
+   "slot-px:0"
+  ],
+  "vigor": true,
+  "poder": true
+ },
+ {
+  "nome": "mercado-baixa suprimentos",
+  "pena": [
+   "slot-px:32",
+   "slot-px:32"
+  ],
+  "martelo": [
+   "slot-px:0",
+   "slot-px:0",
+   "slot-px:0",
+   "slot-px:0"
+  ],
+  "vigor": true,
+  "poder": true
+ },
+ {
+  "nome": "mercado-baixa vender",
+  "pena": [
+   "slot-px:32",
+   "slot-px:0"
+  ],
+  "martelo": [
+   "slot-px:32",
+   "slot-px:32",
+   "slot-px:32",
+   "slot-px:32"
+  ],
+  "vigor": true,
+  "poder": true
+ },
+ {
+  "nome": "mercado-baixa inventário",
+  "pena": [
+   "slot-px:32",
+   "slot-px:32"
+  ],
+  "martelo": [
+   "slot-px:0",
+   "slot-px:0",
+   "slot-px:0",
+   "slot-px:0"
+  ],
+  "vigor": true,
+  "poder": true
+ },
+ {
+  "nome": "saque-normal cartão",
+  "pena": [],
+  "martelo": [
+   "achado-arte:64"
+  ],
+  "vigor": true,
+  "poder": true
+ },
+ {
+  "nome": "saque-normal voo",
+  "pena": [],
+  "martelo": [
+   "slot-px:32",
+   "achado-arte:64",
+   "voo-item:56"
+  ],
+  "vigor": true,
+  "poder": true
+ },
+ {
+  "nome": "saque-normal depois",
+  "pena": [],
+  "martelo": [
+   "slot-px:32"
+  ],
+  "vigor": true,
+  "poder": true
+ },
+ {
+  "nome": "saque-normal inventário",
+  "pena": [],
+  "martelo": [
+   "slot-px:32"
+  ],
+  "vigor": true,
+  "poder": true
+ },
+ {
+  "nome": "saque-baixa cartão",
+  "pena": [],
+  "martelo": [
+   "achado-arte:64"
+  ],
+  "vigor": true,
+  "poder": true
+ },
+ {
+  "nome": "saque-baixa voo",
+  "pena": [],
+  "martelo": [
+   "slot-px:32",
+   "achado-arte:64",
+   "voo-item:56"
+  ],
+  "vigor": true,
+  "poder": true
+ },
+ {
+  "nome": "saque-baixa depois",
+  "pena": [],
+  "martelo": [
+   "slot-px:32"
+  ],
+  "vigor": true,
+  "poder": true
+ },
+ {
+  "nome": "saque-baixa inventário",
+  "pena": [],
+  "martelo": [
+   "slot-px:32"
+  ],
+  "vigor": true,
+  "poder": true
+ }
+]

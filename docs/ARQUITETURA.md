@@ -267,10 +267,14 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   tela usa então o sprite do jogo (`Icones.item(s) || S(s, 2)`). A origem e o destino de uma animação pedem o mesmo
   papel (o item que voa ao equipar, o selo de atributo, o consumível que cai na bolsa). Lacunas (desenho do jogo no
   lugar, sem trocar por desenho de outro tipo de item): as armas e peças de couro das outras classes (arco, cajado,
-  orbe, livro), martelo e machado, os itens únicos com desenho próprio, unguento, bomba de
-  fumaça e Pena de Fênix, a tocha apagada, a bolsa vazia e o frasco vazio no topo, os inimigos e as cartas deles, os
+  orbe, livro), o machado, os itens únicos com desenho próprio, unguento e bomba de fumaça, a tocha apagada, a bolsa vazia e o frasco vazio no topo, os inimigos e as cartas deles, os
   ícones de habilidade e de efeito, o covil vencido. O mercador da banca tem o busto no balcão (`telas/mercado.js`,
   com as cores da figura da banca).
+- `desenhos.js` (`Desenhos`): os itens desenhados em código, pelo mesmo método (desde a 1.93.0): o martelo e a Pena de
+  Fênix, em 32×32, o tamanho em que vivem (bolsa, mochila, mercado, espólio). `Icones` os entrega como os outros
+  desenhos: em 32 e 64 px pixel a pixel; em 48 (o item que voa para o corpo, o cartão compacto do saque) a versão a 2×
+  reduzida pelo navegador, como os outros ícones da HUD. A Pena de Fênix só se acha pelo id do consumível, nunca pelo
+  desenho: no jogo ela usa a "chama", que também é o Vigor, o Poder e as habilidades de fogo.
 - `retratos.js` (`Retratos`): os retratos do herói e dos companheiros desenhados em código, pelo método das cenas
   (uma grade de letras com a paleta do desenho, pintada por `Sprites.grade`, o mesmo pintor do busto do mercador). As
   três classes: o Guerreiro (1.90.0: o capacete fechado, sem rosto), o Mago e o Arqueiro (1.91.0: o capuz alto azul; o
