@@ -2085,3 +2085,30 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
 - **Verificado:** capela, banca do mercado e luta, em 1500×950 e 1280×720, com o retrato de hoje e com o candidato
   (ficha 80/64, topo 48, carta 32; nenhum erro no console); as duas páginas do teste de arte abrem sem erro; testes,
   gabarito, pyflakes e fumaça. Avaliação no `LEIA-ME.md` da pasta. **Falta:** Jean avaliar.
+
+### 15/10/2026 — Continuidade visual e acabamento (1.90.0)
+
+- **Pedido de Jean:** quatro pontos, sem mexer em regras, custos, sorteios nem recompensas: o retrato aprovado do
+  Guerreiro no jogo; as figuras do cenário que ficam na sala durante a luta; as barras que mexiam sem mudança de valor;
+  o Continuar no metal da HUD.
+- **Retrato:** o capacete fechado (39fff85) em `rpg/web/static/retratos.js`, com as mesmas grades, pintado por
+  `Sprites.grade` (o mesmo pintor do busto do mercador, que perdeu o dele); `Icones.retrato`/`cabeca` pedem a ele: ficha
+  80 px, janela baixa 64, topo 48, carta 32 (a versão de 16×16). Os PNG do retrato gerado saíram de `hud/icones/`.
+  Mago e Arqueiro seguem com o sprite. Pixel a pixel também com a tela a 125%.
+- **Figuras na luta:** os dois de capa escura da sacristia ficam na sala enquanto a carta de cada um está de pé: cada
+  cultista leva a `figura` (`missoes.FIGURAS_SACRISTIA`), a carta a manda para a tela (`estado.combate`), e o vulto
+  sai pela identidade, não pela posição nem pelo nome; caído, ele se desfaz no tempo da carta. Fuga e derrota não o
+  tiram; a nova tentativa recomeça com os dois; recarregar no meio da luta mostra só quem está de pé. Ilse fica na
+  água a luta inteira e só sai pelas cenas do desfecho; na mistura curta de uma troca de momento ela era coberta pela
+  base de antes por uns 200 ms, e agora é desenhada por cima. Só esses encontros tinham figuras desenhadas.
+- **Barras:** a causa era a medida da largura antes de redesenhar (o enchimento contra a barra inteira, com a borda):
+  uma barra cheia media 98% e saía mais curta a cada estado novo (comprar uma tocha manda dois: 300 → 294 → 288 px, e
+  enchia de novo). Agora a medida é contra o lado de dentro, com um encaixe de meio ponto.
+- **Continuar:** o mesmo componente em todos os lugares (página, cenas, relatório, festas), no metal escuro: letra da
+  interface em 20 px (era o título em 32), latão discreto, seta pequena parada, mouse, pressionado e foco distintos.
+- **Verificado:** 602 testes, gabarito sem diferença (nenhuma escolha, sorteio ou estado do herói mudou), pyflakes,
+  fumaça (356, nenhuma exceção no servidor). No navegador, em 1280×720 e maximizada (1920×969), com movimento normal e
+  reduzido: o retrato nas quatro apresentações; a sacristia (um cai e o outro fica, pela identidade nos dois sentidos;
+  fuga em quatro tentativas, nova tentativa, vitória; página recarregada); Ilse nos dois desfechos, amostrada de 100
+  em 100 ms, sem quadro sem ela; as barras quadro a quadro em compras, abas, venda e inventário, e o feedback de
+  poção, máximo pela fome, experiência e recurso; o Continuar na abertura e no espólio. **Falta:** Jean conferir.
