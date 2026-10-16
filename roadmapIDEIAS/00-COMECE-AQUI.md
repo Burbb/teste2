@@ -2553,3 +2553,20 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
 - **Verificado:** a fumaça ganhou o cenário do Foco e da fuga (ele falha sem as correções e passa com elas); 602
   testes, gabarito sem diferença, pyflakes, fumaça.
 - **Falta:** Jean conferir.
+
+### 16/10/2026 — O machado e a Bomba de Fumaça em pixel art (proposta, sem versão)
+
+- **Pedido de Jean:** lote pequeno pela skill `arte-itens-fenda`, só no protótipo: o machado e a Bomba de Fumaça,
+  com a comparação no jogo (atual × proposta, 1500×950 e 1280×720). No meio, sobre a bomba: mais cara de bomba,
+  mais personalidade, preta.
+- **Feito:** os geradores `ferramentas/arte/desenhar_machado_pixel.py` (machado de barba de uma mão, 32/40/48/64) e
+  `desenhar_bomba_pixel.py` (pote preto vidrado com pano, rede de cordão e pavio, só 32, o único tamanho parado
+  dela); a proposta em `ferramentas/prototipos/hud/machado-bomba-pixel/`; as fotos e as pranchas em
+  `capturas-machado-bomba/` (`fotografar_machado_bomba.mjs`, `comparar_machado_bomba.py`); os cenários ganharam
+  `ARMA=<desenho>` (vila, mercado, tutorial) e `AMOSTRAS=3` no mercado. O registro completo, a leitura e o que falta
+  estão em `ferramentas/prototipos/hud/LEIA-ME.md` ("O machado e a Bomba de Fumaça").
+- **Nada mudou no jogo:** sem integração, regras, preços, estoque, efeitos, sorteios ou animações; a caveira continua
+  nos papéis dela (conferido na lixeira em cada foto) e o machado do Redemoinho e da Fúria não muda.
+- **Verificado:** testes, gabarito sem diferença, pyflakes e fumaça (os cenários novos só agem com as variáveis novas).
+- **Falta:** Jean avaliar; a escolha de evento que gasta um item ainda usa o sprite 1× (outro papel); a roda de
+  ações fica para a entrega separada.

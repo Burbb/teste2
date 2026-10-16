@@ -2,7 +2,7 @@
 
     python -m tests.navegador.cenarios combate   # mago em luta, com contrato de caça no lugar (FEITO)
     python -m tests.navegador.cenarios titulo    # menu principal com um save de dia para carregar
-    python -m tests.navegador.cenarios vila      # guerreiro acha um item raro e abre o mural de contratos
+    python -m tests.navegador.cenarios vila      # guerreiro acha um item raro e abre o mural de contratos (ACHADO, ARMA)
     python -m tests.navegador.cenarios campanha  # menu principal com saves dos dois modos; começar a campanha
     python -m tests.navegador.cenarios baus      # vila com três baús na bolsa (BAUS): a pilha abre inteira
     python -m tests.navegador.cenarios missao    # campanha no Bosque do Moinho, na etapa de seguir o canal
@@ -41,6 +41,16 @@ from rpg.itens import gerar_equip
 from rpg.jogo import Derrota, FimDeJogo, Jogo
 from rpg.web.ponte import WebUI
 from rpg.web.servidor import Servidor
+
+
+def vestir_arma(g):
+    """ARMA=<desenho> (machado, maca...): a arma vestida passa a ser uma comum com esse desenho (para ver o desenho no
+    corpo, na ficha e na comparação). Sorteio próprio: sem ARMA, o cenário sai igual."""
+    if os.environ.get("ARMA"):
+        r = random.Random(2)
+        g.j.equip["arma"] = next(e for e in iter(lambda: gerar_equip(r, g.j.classe, max(1, g.j.nivel), slot="arma", raridade="comum"), None)
+                                 if e["icone"] == os.environ["ARMA"])
+        g.j.recalcular()
 
 
 def lugar_por_chave(g, padrao):
@@ -117,7 +127,8 @@ def titulo(ui):
 
 def vila(ui):
     """Guerreiro numa vila: acha um item raro (cartão do saque) e depois abre o mural de contratos. ACHADO=martelo: o
-    item achado é um martelo (para conferir o desenho no cartão e no voo ao equipar)."""
+    item achado é um martelo (para conferir o desenho no cartão e no voo ao equipar); ARMA=machado: a arma vestida
+    (o cartão "você usa" ao lado)."""
     g = Jogo(ui, seed=8, pasta_saves=tempfile.mkdtemp())
     ui.jogo = g
     g.iniciar("Jean", "guerreiro")
@@ -139,6 +150,7 @@ def vila(ui):
             break
     if os.environ.get("ACHADO"):
         it = next(e for e in iter(lambda: gerar_equip(rng, "guerreiro", 4, qualidade=1), None) if e["icone"] == os.environ["ACHADO"])
+    vestir_arma(g)
     ui.cena("Ruínas do caminho", g.contexto_cena(), "evento")
     g.dizer("Entre as pedras, algo reluz.")
     g.oferecer_equip(it)
@@ -777,7 +789,7 @@ def tutorial(ui):
     o primeiro atendimento ou tratamento grátis já usado. NOME: o nome do herói (padrão Jean; para conferir nome longo).
     VITRINE=1 (o experimento de itens e ícones): machado, espada, escudo e anel na mochila, escudo e anel vestidos,
     unguento e bomba de fumaça na bolsa; VITRINE=2, sem o machado e com
-    a armadura (cota) vestida. Sair leva ao título, com o save
+    a armadura (cota) vestida. ARMA=machado: a arma vestida. Sair leva ao título, com o save
     (para carregar com orientações pendentes)."""
     from rpg import abertura as ab, itens, missoes, sobrevivencia
     from rpg.__main__ import menu_principal
@@ -851,6 +863,7 @@ def tutorial(ui):
             j.equip["armadura"] = acha("armadura", "armadura")
         j.consumiveis.update(unguento=1, bomba_fumaca=2)
         j.recalcular()
+    vestir_arma(g)
     if os.environ.get("PROTECAO"):  # PROTECAO=mendigo (ou santuario): a proteção que levanta uma vez
         g.marcar("bencao_fenix", os.environ["PROTECAO"])
     try:  # a morte no modo hardcore (HARDCORE=1) já na luta preparada leva ao título, como no jogo
@@ -873,7 +886,8 @@ def mercado(ui):
     CLASSE (padrão arqueiro: as flechas também), OURO (padrão 300), MOCHILA (quantos equipamentos na mochila, padrão 8;
     alguns de outra classe), PROVISOES, PERIODO (padrão 1, tarde; 3 é noite). AMOSTRAS=1 (o experimento de resolução,
     ferramentas/prototipos/hud): um Martelo na frente da mochila e uma Pena de Fênix na bolsa. AMOSTRAS=2 (o escudo e o
-    unguento da 1.94.0): um escudo na frente da mochila e um Unguento de Prata na bolsa."""
+    unguento da 1.94.0): um escudo na frente da mochila e um Unguento de Prata na bolsa. AMOSTRAS=3 (a proposta do
+    machado e da bomba): um machado na frente da mochila e uma Bomba de Fumaça na bolsa. ARMA=machado: a arma vestida."""
     g = Jogo(ui, seed=int(os.environ.get("SEMENTE", "8")), pasta_saves=tempfile.mkdtemp())
     ui.jogo = g
     classe = os.environ.get("CLASSE", "arqueiro")
@@ -888,9 +902,11 @@ def mercado(ui):
         g.j.mochila.append(gerar_equip(rng, classe if k % 3 else "mago" if classe != "mago" else "guerreiro", 2))
     if os.environ.get("AMOSTRAS"):
         r = random.Random(1)
-        icone, consumivel = ("escudo", "unguento") if os.environ["AMOSTRAS"] == "2" else ("martelo", "pena_fenix")
+        icone, consumivel = {"2": ("escudo", "unguento"), "3": ("machado", "bomba_fumaca")}.get(os.environ["AMOSTRAS"],
+                                                                                              ("martelo", "pena_fenix"))
         g.j.mochila.insert(0, next(e for e in iter(lambda: gerar_equip(r, "guerreiro", 2), None) if e["icone"] == icone))
         g.j.consumiveis[consumivel] = 1
+    vestir_arma(g)
     g.loja()
     try:
         g.rodar()

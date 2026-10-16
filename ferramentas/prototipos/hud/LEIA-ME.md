@@ -1540,3 +1540,78 @@ As grades recusadas ficam aqui só como histórico.
 **Para integrar (se aprovado; não vale mais para o Morel):** em `retratos.js`, a carta do Morel passa a ser a de 16×16 e a cabeça a de 24×24
 (a escala sai do tamanho do desenho, como nos outros); o Mago ganha um papel só da fogueira (por exemplo
 `fogueira`, pedido por `Icones.figura`), para o chip e a carta da luta continuarem com o desenho de hoje.
+
+## O machado e a Bomba de Fumaça (proposta, sem versão)
+
+**O pedido de Jean (16/10/2026):** um lote pequeno pelo método do escudo e do unguento (skill `arte-itens-fenda`), só
+no protótipo: o machado e a Bomba de Fumaça. No meio da rodada, sobre a bomba: "falta personalidade... pode ter mais
+cara de bomba"; "talvez ela preta já dá uma grande diferença".
+
+**Identidade (o que o jogo diz):**
+- *Machado:* uma das bases de arma do Guerreiro (com a Espada, a Maça, o Montante e o Martelo), em todos os
+  materiais; o jogo não diz o tipo. O sprite "machado" é também o dos únicos Lamento de Gharbad e O Açougueiro (base
+  Cutelo), que mudam junto (é o mesmo papel de equipamento), e o da habilidade Redemoinho e do estado Fúria, que não
+  mudam (o item se acha só em `Icones.ITEM`). **O tipo escolhido:** machado de guerra de uma mão, de barba (a lâmina
+  desce em gancho junto do cabo): é a arma de quem luta com escudo, e a barba dá uma silhueta que nenhuma outra arma
+  da família tem.
+- *Bomba de Fumaça:* consumível de 35 de ouro, "Garante a fuga de um combate (exceto chefes)", só na luta; vem de
+  bandidos e de um ladrão poupado. O sprite atual é a "caveira", que também é retrato de inimigo, Bestiário, derrota,
+  Provocando, fome, contratos e a lixeira do Inventário: a bomba se acha só pelo id (`SO_PELO_ID`). **O conceito:**
+  a bomba redonda e preta dos jogos, feita na vila: pote quase esférico de barro preto vidrado, o tufo de pano
+  encerado amarrado no pescoço, uma rede de cordão para levar e atirar, o pavio grosso que enrola, apagado. A primeira
+  versão (terracota, mais realista) lia como pote e ficava parecida com o unguento na bolsa; virou preta pelo retorno
+  de Jean.
+
+**Os tamanhos de uso (medidos nas fotos):**
+- *Machado:* 32 na ficha, no mercado (mochila e Vender) e na linha "Trocar arma" da janelinha de Itens da luta; 40 no
+  corpo e na mochila do Inventário; 64 no cartão do saque e 48 no cartão "você usa" ao lado; o voo ao equipar anima o
+  48 (não pede arquivo).
+- *Bomba:* só 32 parada (a bolsa da ficha e do Inventário, a prateleira do mercado, a janelinha de Itens da luta, o
+  quadro do baú); o voo até a bolsa anima o 32. Nenhum lugar a mostra em 48 ou 64, então não há esses arquivos.
+
+**Os desenhos** (`ferramentas/arte/desenhar_machado_pixel.py` e `desenhar_bomba_pixel.py`, gravados em
+`machado-bomba-pixel/`; o jogo não lê esta pasta):
+- *Machado* (32, 40, 48, 64; 14 a 15 cores): o cabo na diagonal como a espada e a maça, a lâmina para cima e à
+  esquerda, com o gume virado para a luz. Ferro cinza neutro (sem o azul do escudo): a face fosca clareando do olho
+  para o gume, o gume polido numa faixa clara com o brilho perto da ponta, a espessura do ferro numa faixa escura por
+  baixo da barba, o olho como uma luva mais grossa em volta do cabo, com a borda acesa. O encaixe: o cabo sai por cima
+  do olho (em 64, com a cunha) e a cabeça faz sombra no cabo logo abaixo. Freixo claro e quente em faixas na diagonal;
+  o veio e a madeira mais escura na mão em 48 e 64; o pé alarga 1 px. Desgaste discreto: um dente no meio do gume em
+  48 e 64 (pontos de corrosão na face liam como rebites e saíram).
+- *Bomba* (32; 20 cores): o barro preto em faixas largas, a luz de volta do chão embaixo à direita (a silhueta não
+  some no fundo da HUD) e o reflexo do esmalte desenhado em cima à esquerda; o pano em linho cru com as pregas; o
+  cordão escuro (claro, a rede virava grade de cesto); o pavio grosso no pé, enrolando para a direita, a ponta
+  desfiada.
+
+**A comparação** (`fotografar_machado_bomba.mjs` → `capturas-machado-bomba/`; `comparar_machado_bomba.py` monta
+`comparacao-<janela>-<lugar>.png`, atual à esquerda e proposta à direita em tamanho real, `prancha-zoom.png`, os
+espaços no jogo ampliados 4×, e `prancha-arquivos.png`, os arquivos em 1× sobre o carvão com os vizinhos). Na
+proposta, a página recebe um `icones.js` com os dois registrados como a integração faria (`TAMANHOS`, `ITEM.machado`,
+`CONSUMIVEL.bomba_fumaca`, `SO_PELO_ID`) e os arquivos desta pasta; a pasta `static` não muda. Os cenários
+(`tests/navegador/cenarios.py`): `tutorial` com `VITRINE=1 ARMA=machado` (ficha, voo da bomba, Inventário, dicas; com
+`LUTA=lobo`, a janelinha de Itens), `mercado` com `AMOSTRAS=3 ARMA=machado SEMENTE=1` (a bomba na prateleira),
+`vila` com `ACHADO=machado ARMA=machado` (o cartão do saque e o voo ao equipar), `baus` com
+`SUPRIMENTO=bomba_fumaca` (o quadro do baú). 1500×950 e 1280×720, sem erro no console.
+
+**Leitura de quem desenhou** (a decisão é do Jean):
+- *Reconhecer:* o machado de hoje é uma bola clara num cabo; o novo lê como machado de barba em todos os tamanhos,
+  inclusive em 32 na ficha. A bomba deixa de ser a caveira (que dizia "perigo", não "bomba") e lê como bomba em 1×.
+- *Volume e materiais:* a lâmina tem face, gume e espessura; o olho e a sombra no cabo mostram o encaixe; ferro e
+  madeira se separam pela cor e pela regra de luz. A bomba tem a esfera vidrada, o pano macio e o cordão.
+- *Coerência:* o machado fica na diagonal da espada e da maça, com o mesmo contorno e a mesma luz; o cabo claro de
+  freixo é de propósito (a maça tem o cabo escuro). A bomba fica ao lado da poção e do unguento sem parecer da mesma
+  família de potes.
+- *Onde pode perder:* em 32, o olho do machado é um bloco escuro um pouco pesado; o dente do gume quase não aparece
+  (é discreto de propósito). A bomba preta nos espaços quase pretos da bolsa depende da luz de volta, do brilho e do
+  pano para não afundar: vale olhar no jogo. O Açougueiro tem a base Cutelo e hoje já usa o desenho do machado (o
+  catálogo não mudou).
+
+**Fica para depois:**
+- A escolha de um evento que gasta um item (`escolhas.js`, `meta.gasta`) mostra o sprite 16×16 de 1×, não o
+  `Icones`: mesmo integrada, a bomba continuaria caveira ali. É outro papel; decidir junto da avaliação da roda.
+- A avaliação da roda de ações fica para a entrega separada que Jean pediu.
+
+**Para integrar (se aprovado):** gravar pelos dois scripts em `rpg/web/static/hud/icones/`; em `icones.js`,
+`"machado": [32, 40, 48, 64]` e `"bomba": [32]` em `TAMANHOS`, `machado: "machado"` em `ITEM`,
+`bomba_fumaca: "bomba"` em `CONSUMIVEL` e `"bomba_fumaca"` em `SO_PELO_ID`, e o comentário que hoje cita o machado
+entre as armas sem desenho; conferir pixel a pixel com os desta pasta; atualizar as lacunas em `docs/ARQUITETURA.md`.
