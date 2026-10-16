@@ -2691,3 +2691,16 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   nas cartas nem na rolagem; cliques rápidos, clique duplo, tecla segurada, clique durante a entrada e movimento
   reduzido. Fotos em `capturas-seletor-d/`.
 - **Continua no jogo:** o seletor de hoje. Nenhuma regra, custo, habilidade, talento ou mira mudou. Espera a avaliação.
+
+### 17/10/2026 — Proposta: a D refinada (bordas das faixas e fundo do seletor)
+
+- **Decisão de Jean:** a D aprovada como base; antes de integrar, uma versão com pontas mais orgânicas (tinta e papel
+  gasto) e um fundo integrado à página, com a D atual intacta para comparar.
+- **Feito, só no protótipo** (`ferramentas/prototipos/hud/LEIA-ME.md`, "A D refinada"): `seletor/d2-faixas.css` por cima
+  da D; as faixas recortadas por máscara de três peças (pontas desenhadas em SVG, escaladas só pela altura, e o meio
+  esticado), três pontas de cada lado combinadas pela posição; o fundo com a mesma superfície da leitura da página,
+  opaco e sem sombra, com um fio fino embaixo. O cenário tutorial ganhou `NIVEL_LUTA`.
+- **Conferido:** D atual e refinada com os mesmos dados e o registro real por baixo (uma rodada jogada, a mesma
+  semente), Guerreiro, Mago e Arqueiro, 1500×950 e 1280×720, parado, destaque, indisponível e movimento reduzido; o
+  caminho, o foco e as áreas de clique iguais. Fotos em `capturas-seletor-d2/`.
+- **Continua no jogo:** o seletor de hoje. Espera a escolha entre a D atual e a refinada.

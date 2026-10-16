@@ -17,7 +17,8 @@
 // Do jogo de hoje guarda só a tela e o seletor aberto (os estados dele estão em capturas-seletor/), mas confere o
 // mesmo caminho. Guarda em capturas-seletor-d/ (relatorio.json com as medidas); comparar_seletor_d.py monta as comparações.
 //   PLAYWRIGHT_MODULO=<caminho do playwright>/index.mjs node ferramentas/prototipos/hud/fotografar_seletor_d.mjs
-// (VERSOES=atual,d, LUTAS=guerreiro,arqueiro,mago,capacidade, JANELAS=normal,grande,baixa e SAIDA=<pasta> para escolher)
+// (VERSOES=atual,d,d2 (d2: a D refinada, seletor/d2-faixas.css por cima da D), RODADA=1 (uma rodada de Atacar antes,
+// para o registro real ficar por baixo), LUTAS=guerreiro,arqueiro,mago,capacidade, JANELAS=normal,grande,baixa e SAIDA=<pasta> para escolher)
 import { spawn } from "child_process";
 import { mkdirSync, readFileSync, rmSync, writeFileSync } from "fs";
 import { fileURLToPath } from "url";
@@ -31,15 +32,17 @@ mkdirSync(SAIDA, { recursive: true });
 const espera = (ms) => new Promise((r) => setTimeout(r, ms));
 const filtro = (nome, todos) => (process.env[nome] ? process.env[nome].split(",") : todos);
 const ESCOLHAS_D = escolhasD(readFileSync(path.join(raiz, "rpg/web/static/app/escolhas.js"), "utf8"));
-const FOLHA_D = path.join(aqui, "seletor", "d-faixas.css");
+const FOLHA_D = path.join(aqui, "seletor", "d-faixas.css"), FOLHA_D2 = path.join(aqui, "seletor", "d2-faixas.css");
 const VERSOES = filtro("VERSOES", ["atual", "d"]);
 const BASE = { TUTORIAL: "0", LUTA: "lobo", COMITIVA: "morel,odete", NIVEL: "12", VISTAS: "A1,V2,N1,D1,K1,M1,L1", REC: "0.3", QUANTOS: "2" };
+if (process.env.RODADA) BASE.NIVEL_LUTA = "9";  // lobos que aguentam a rodada (a luta continua, com o registro escrito)
 const TODAS = {
   guerreiro: { ...BASE, CLASSE: "guerreiro", ESPEC: "berserker" },
   arqueiro: { ...BASE, CLASSE: "arqueiro", ESPEC: "sombra", QUANTOS: "3" },
   mago: { ...BASE, CLASSE: "mago", ESPEC: "necromante", REC: "0.12" },  // a Mana é grande: menos, para umas ficarem sem
   capacidade: { ...BASE, CLASSE: "guerreiro", ESPEC: "paladino", HABILIDADES: "todas" },
 };
+if (process.env.RODADA) for (const l of ["guerreiro", "arqueiro", "capacidade"]) TODAS[l].REC = "0";  // a rodada devolve Vigor e Foco: começar sem
 const LUTAS = Object.entries(TODAS).filter(([l]) => filtro("LUTAS", Object.keys(TODAS)).includes(l));
 const JANELAS = Object.entries({ normal: [1500, 950], grande: [1920, 1080], baixa: [1280, 720] }).filter(([j]) => filtro("JANELAS", ["normal", "grande", "baixa"]).includes(j));
 // as habilidades de um alvo só (a escolha leva à mira e o Voltar desfaz; nada é jogado)
@@ -57,14 +60,23 @@ async function subir(amb) {
 }
 const relatorio = [], comportamentos = [], erros = [];
 const b = await chromium.launch(process.env.CHROMIUM ? { executablePath: process.env.CHROMIUM } : {});
-async function pagina(url, [W, H], versao, nome, opcoes = {}) {
+async function pagina(url, [W, H], versao, nome, opcoes = {}, rodada = false) {
   const p = await b.newPage({ viewport: { width: W, height: H }, ...opcoes });
-  if (versao === "d") await p.route(/\/static\/app\/escolhas\.js(\?|$)/, (r) => r.fulfill({ body: ESCOLHAS_D, contentType: "application/javascript" }));
+  if (versao !== "atual") await p.route(/\/static\/app\/escolhas\.js(\?|$)/, (r) => r.fulfill({ body: ESCOLHAS_D, contentType: "application/javascript" }));
   p.on("pageerror", (e) => erros.push(`${nome}: ${e}`));
   p.on("console", (m) => { if (m.type() === "error" && !/favicon/.test(m.location().url || "")) erros.push(`${nome}: ${m.text()}`); });
   await p.goto(url);
-  if (versao === "d") await p.addStyleTag({ path: FOLHA_D });
+  if (versao !== "atual") await p.addStyleTag({ path: FOLHA_D });
+  if (versao === "d2") await p.addStyleTag({ path: FOLHA_D2 });  // a D refinada: as bordas e o fundo, por cima da D
   await vez(p);
+  if (rodada) {  // uma rodada de Atacar antes: o registro real (golpes, falas) por baixo do seletor
+    await (await p.$('#roda .roda-botao[data-slot="atacar"]')).click();
+    for (let k = 0; k < 40 && !(await p.$("#batalha .carta.alvejavel")); k++) await espera(100);
+    const alvo = await p.$("#batalha .carta.alvejavel");
+    if (alvo) await alvo.click();
+    await espera(500);
+    await vez(p);
+  }
   await p.mouse.move(5, H - 5);
   await espera(700);
   return p;
@@ -127,7 +139,9 @@ for (const [luta, amb] of LUTAS) {
   try {
     for (const [jan, tam] of JANELAS) for (const versao of VERSOES) {
       const H = tam[1], n = (c) => `${jan}-${luta}-${versao}-${c}`, r = { nome: `${jan}-${luta}-${versao}` };
-      const p = await pagina(url, tam, versao, r.nome);
+      // com RODADA, cada foto num jogo novo (a mesma semente): a rodada jogada dá o mesmo registro nas duas versões
+      const novo = process.env.RODADA ? await subir(amb) : null;
+      const p = await pagina(novo ? novo.url : url, tam, versao, r.nome, {}, !!novo);
       const antes = await disposicao(p);
       // 1. aberto pelo clique: a tela inteira, o seletor e as medidas
       await abrir(p);
@@ -159,7 +173,7 @@ for (const [luta, amb] of LUTAS) {
       if (versao === "atual") for (let k = 0; k < 15 && !(await p.evaluate(() => !!document.activeElement.closest(".roda-janela .rj-linha"))); k++) await p.keyboard.press("Tab");
       r.foco_ao_abrir = await focado(p);
       await recortar(p, ["#roda", ".roda-janela"], n("5-teclado"));
-      if (versao === "d") {
+      if (versao !== "atual") {
         await p.keyboard.press("ArrowDown"); await p.keyboard.press("ArrowRight"); await espera(200);
         r.setas = await focado(p);
         await recortar(p, ["#roda", ".roda-janela"], n("6-setas"));
@@ -182,6 +196,7 @@ for (const [luta, amb] of LUTAS) {
       relatorio.push(r);
       console.log(JSON.stringify(r));
       await p.close();
+      if (novo) novo.proc.kill();
     }
 
     // Os comportamentos (guerreiro, 1500×950): depressa, clique duplo, tecla segurada, clique na entrada, movimento reduzido

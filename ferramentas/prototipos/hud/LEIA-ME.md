@@ -1988,3 +1988,52 @@ alvo.
 **Para integrar (se aprovado):** as trocas de `d-escolhas.mjs` no `escolhas.js`, a folha `d-faixas.css` como uma
 parte da `15-hud-luta.css` (só a janelinha de Habilidades), conferindo de novo as 24 combinações; a de Itens e as
 outras telas não mudam.
+
+### A D refinada: bordas e fundo (experimento, sem versão)
+
+**O pedido de Jean (17/10/2026):** a D aprovada como base; antes de integrar, uma segunda versão com dois refinamentos,
+com a D atual intacta para comparação. (1) As pontas das faixas ficaram geométricas, como placas recortadas; na
+referência têm personalidade de tinta e papel gasto. (2) O fundo quase preto do seletor aparece como um retângulo
+destacado da página, sobretudo embaixo. Todo o resto (composição, medidas, tipografia, ícones, título, estados,
+custos, atalhos, dicas, animação e comportamento) fica igual.
+
+**Como é feita:** `seletor/d2-faixas.css` vai por cima de `d-faixas.css` e troca só as duas coisas (a página da foto
+carrega as duas folhas; a D atual carrega só a primeira).
+- *As bordas:* na D, cada faixa era recortada por um polígono de 14 a 22 pontos em porcentagem da faixa, esticado na
+  largura: as pontas mudavam de forma com a largura e saíam regulares. Na refinada, a faixa é recortada por uma máscara
+  de três peças: a ponta esquerda (46×50) e a direita (64×50), desenhadas em SVG e escaladas só pela altura (o
+  desenho é o mesmo numa faixa de 300 ou de 480 px), e o meio, de bordas levemente onduladas, esticado entre elas. Três
+  pontas de cada lado, com caráter próprio: pincel seco que abre em cerdas finas passando da ponta, papel rasgado em
+  curvas com um rasgo e um respingo solto, pincel cheio que afina; frestas de pincel seco (riscos vazados de 1 px)
+  rentes à borda de cima ou de baixo. As faixas combinam as pontas pela posição (sempre as mesmas para a mesma
+  posição). O desgaste fica nos ~12 px de cada ponta e nas beiradas: o custo termina 16 px antes da ponta direita, a
+  ponta esquerda fica sob a tecla, e as frestas passam acima e abaixo do texto e do ícone.
+- *O fundo:* na D, o seletor era carvão quase preto (#0e0e11) com uma sombra de 22 px embaixo. Na refinada, o fundo é
+  a mesma superfície da leitura da página (os véus `--veu-leitura` e `--veu-superficie` e a textura de carvão de
+  `14-hud.css`), com a textura alinhada à da página (o `escolhas.js` da proposta passa onde ela cai, em
+  `--fundo-cena` e `--fundo-palco`); continua opaco (o registro não atravessa as opções), sem sombra; a borda de baixo
+  é um fio de 1 px de sombra e 1 px de luz, como as divisórias da página.
+
+**Fotos** (`fotografar_seletor_d.mjs` com `VERSOES=d,d2 RODADA=1` → `capturas-seletor-d2/`; `comparar_seletor_d2.py`
+monta as comparações): antes de abrir o seletor, uma rodada de Atacar, para o registro real (os golpes da rodada)
+ficar por baixo; cada foto num jogo novo com a mesma semente, então as duas versões têm exatamente os mesmos dados, o
+mesmo registro e os mesmos recursos. Guerreiro, Mago e Arqueiro no nível 12, com Morel e Odette, contra lobos de nível
+9 (que aguentam a rodada), em 1500×950 e 1280×720: a tela inteira, `<janela>-<luta>-fundo.png` (o seletor e o registro
+por baixo, D atual em cima e refinada embaixo), `<janela>-<luta>-estados.png` (parado, destaque claro com a dica,
+indisponível) e `reduzido.png` (movimento reduzido). O cenário tutorial ganhou `NIVEL_LUTA` (o nível dos inimigos da
+luta; o padrão continua 1).
+
+**Conferido:** o caminho inteiro (abrir, mouse, indisponível, pressionar e soltar fora, Esc, teclado e setas, escolha
+e mira, Voltar) igual nas duas, nas 12 combinações; nenhum nome ou custo cortado; a área de clique é o botão inteiro,
+que a máscara não toca (ela recorta só o desenho da faixa, o `::before`); o fio de foco e o anel da tecla ficam fora
+da máscara e aparecem iguais; abrir e fechar não mexe nas cartas nem na rolagem; sem erro no console. Para haver
+habilidades indisponíveis depois da rodada (que devolve Vigor e Foco), o Guerreiro e o Arqueiro começam sem recurso e o
+Mago com pouca Mana; por isso, nos comportamentos, o Enter na primeira faixa (Golpe Pesado, sem Vigor) treme e avisa,
+igual nas duas versões; cliques rápidos, tecla segurada, clique duplo, clique na entrada e movimento reduzido iguais.
+
+**Diferenças, de quem fez:** em tamanho real, as pontas da refinada leem como pincel e papel (as cerdas finas e os
+rasgos aparecem sem ampliar, principalmente na faixa clara do destaque); a D atual lê como placa cortada. O fundo da
+refinada some na página: o seletor fica como uma área da coluna, e as faixas passam a ser o que se destaca; a D atual
+mostra um retângulo mais escuro com a sombra embaixo. O que custa: sem o fundo mais escuro, a separação entre o seletor
+e o registro fica só no fio de baixo; a linha do registro que fica cortada pela borda (a de cima do trecho visível)
+aparece um pouco mais, porque o fundo já não escurece em volta dela.

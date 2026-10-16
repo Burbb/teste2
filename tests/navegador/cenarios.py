@@ -783,7 +783,7 @@ def tutorial(ui):
     manhã ... 3 noite). VIDA e REC: a fração da vida e do recurso (0.5...). OURO, PROVISOES, TOCHAS, PONTOS (de
     talento). COMITIVA: quem anda junto ("morel,odete"); RESERVA: quem espera no acampamento; FERIDO. ITEM=1: um
     item da arma para comparar logo na chegada. BAUS=n na bolsa. CONTRATO=aceito ou feito: um contrato de caça no
-    CONTRATO_EM (bosque, padrão, ou charco). LUTA=família (QUANTOS): uma luta logo na chegada. VISTAS: as orientações já vistas, além da luta e do Mural ("V3,N1").
+    CONTRATO_EM (bosque, padrão, ou charco). LUTA=família (QUANTOS, NIVEL_LUTA): uma luta logo na chegada. VISTAS: as orientações já vistas, além da luta e do Mural ("V3,N1").
     HARDCORE=1: morte definitiva. PENA=n (Penas de Fênix) e PROTECAO=mendigo: o que levanta o herói na luta.
     FERIMENTOS=corte,costelas (do herói, sem tratar), BANDAGENS=n, FOME=n (dias sem comer). GRATIS_USADO=templo,curandeira:
     o primeiro atendimento ou tratamento grátis já usado. NOME: o nome do herói (padrão Jean; para conferir nome longo).
@@ -880,7 +880,8 @@ def tutorial(ui):
     try:  # a morte no modo hardcore (HARDCORE=1) já na luta preparada leva ao título, como no jogo
         if os.environ.get("LUTA"):  # uma luta comum contra LUTA (família), para os selos das cartas
             g.ui.cena(g.loc["nome"], g.contexto_cena(), "evento")
-            lutar(g, [g.inimigo(os.environ["LUTA"], nivel=1) for _ in range(int(os.environ.get("QUANTOS", "2")))])
+            lutar(g, [g.inimigo(os.environ["LUTA"], nivel=int(os.environ.get("NIVEL_LUTA", "1")))  # NIVEL_LUTA: inimigos que aguentam
+                      for _ in range(int(os.environ.get("QUANTOS", "2")))])                 # umas rodadas
         if os.environ.get("ITEM"):
             g.ui.cena(g.loc["nome"], g.contexto_cena(), "evento")
             g.dizer("No chão, entre a palha, alguma coisa brilha.")

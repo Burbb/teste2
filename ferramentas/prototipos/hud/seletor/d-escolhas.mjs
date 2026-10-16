@@ -7,7 +7,8 @@
 //     formas que se repetem), nunca do acaso, e a ordem de entrada (--i) e a fila na coluna (--fila) vão para o CSS;
 //   - sem título de janela nem ×: "Habilidades" pequeno em cima e "Esc · Voltar" embaixo (o mesmo fechar de antes);
 //   - a posição: da largura da arena, logo embaixo dela, por cima do registro (a arena e as cartas não se mexem); se
-//     não couber, a lista rola dentro;
+//     não couber, a lista rola dentro; o lugar das texturas da página vai em --fundo-cena e --fundo-palco (a D
+//     refinada continua a superfície da página por baixo das faixas);
 //   - o teclado: aberta pela tecla, a primeira faixa já chega com o foco; as setas andam pelas faixas (cima e baixo na
 //     ordem, lados entre as colunas); o foco também mostra a prévia dos alvos; fechar pelo Esc devolve o foco ao botão;
 //   - a dica de uma faixa abre ao lado do painel, não por cima da outra coluna.
@@ -49,6 +50,14 @@ const TROCAS = [
     j.style.width = g.W + "px";
     j.style.top = g.H + "px";
     j.style.maxHeight = Math.max(170, innerHeight - topoTela - g.H - 14) + "px";
+    // onde caem as texturas da página (a leitura da cena e o carvão do palco), para um fundo que continue a página
+    // sem emenda (a D refinada usa; a D atual ignora)
+    const pj = j.getBoundingClientRect(), cena = document.getElementById("cena"), palco = document.getElementById("palco");
+    if (cena && palco) {
+      const c = cena.getBoundingClientRect(), pa = palco.getBoundingClientRect();
+      j.style.setProperty("--fundo-cena", \`\${c.left + 64 - pj.left}px \${c.top + 32 - pj.top}px\`);
+      j.style.setProperty("--fundo-palco", \`\${pa.left + 12 - pj.left}px \${pa.top + 12 - pj.top}px\`);
+    }
   } else {
     const x = ancora.offsetLeft - 8;
     j.style.left = Math.max(6, Math.min(x, g.W - j.offsetWidth - 6)) + "px";
