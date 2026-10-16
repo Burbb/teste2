@@ -92,6 +92,10 @@ function limparPrompt() {
   Telas.fecharMenuItem();
 }
 /** O atalho da doca de uma opção, pela meta `sistema` (null quando a opção não é de sistema). */
+/** O menu deixa conversar com o companheiro: direto ou pela tela da Comitiva. */
+function podeConversar(opcoes, cid) {
+  return opcoes.some((o) => o.meta && (o.meta.conversar === cid || (atalhoDe(o) && o.meta.sistema === "comitiva")));
+}
 function atalhoDe(o) { return (o && o.meta && o.meta.sistema && SISTEMA.find(([id]) => id === o.meta.sistema)) || null; }
 /** As ações da sua vez na luta (atacar, habilidades, itens...): o motor marca cada uma com a meta `acao`. */
 const ehAcaoDaLuta = (m) => m.opcoes.some((o) => o.meta && o.meta.acao);
@@ -135,6 +139,18 @@ function mostrarOpcoes(m) {
       responder(m.id, a.extra ? { i, ...a.extra } : i);
       return;
     }
+  }
+  // As cartas ✉ tocadas no meio de outra coisa (controles.js): cada uma vale num menu do lugar (o que tem os atalhos
+  // da doca), na ordem dos cliques, uma conversa depois da outra. Os menus de uma conversa (as respostas) não contam.
+  if (conversasGuardadas.length && m.opcoes.some(atalhoDe)) {
+    const cid = conversasGuardadas.shift();
+    if (podeConversar(m.opcoes, cid)) {
+      pergunta = { id: m.id, tipo: "opcoes", opcoes: m.opcoes };
+      pedir("Comitiva", "conversar", cid);
+      return;
+    }
+    conversasGuardadas.length = 0;
+    Telas.toast("", "Dá para conversar quando estiver num lugar seguro (vila ou acampamento).", cid, true);
   }
   // A próxima compra de suprimento da fila (mercado.js): o mercado voltou a perguntar e ela vai na hora.
   const compra = Telas.proximaCompra(m.opcoes);
@@ -516,7 +532,7 @@ function rodaDeAcoes(m) {
     (basico ? `<div class="melhor">Dano: ${basico.min}–${basico.max} (crítico ${basico.critico})</div>` : ""),
     () => { App.som("escolha"); habMirando = atk.meta.nome; responder(m.id, acaoIdx("atacar")); });
   if (habs.length) {
-    botao("habilidades", Icones.acao("grimorio") || spr("grimorio", 2), "Habilidades", "", (b) => {
+    const hb = botao("habilidades", Icones.acao("grimorio") || spr("grimorio", 2), "Habilidades", "", (b) => {
       if (janelaAberta && b.classList.contains("ativo")) { fecharJanela(); return; }
       App.som("pagina");
       abrirJanela(b, "Habilidades", habs.map((h) => linhaHabilidade(h, () => {
@@ -527,9 +543,10 @@ function rodaDeAcoes(m) {
         responder(m.id, acaoIdx("habilidades"));
       })));
     });
+    hb.dataset.alterna = "";  // abre e fecha a cada clique, mesmo seguidos (Gesto, em nucleo.js)
   }
   const itens = m.opcoes[acaoIdx("itens")].meta.itens || [];
-  botao("itens", Icones.acao("pocao") || spr("pocao", 2), "Itens", "<b>Itens</b><div>Poções, tônicos, bandagens e troca de arma. Usar gasta o turno.</div>", (b) => {
+  const ib = botao("itens", Icones.acao("pocao") || spr("pocao", 2), "Itens", "<b>Itens</b><div>Poções, tônicos, bandagens e troca de arma. Usar gasta o turno.</div>", (b) => {
     if (janelaAberta && b.classList.contains("ativo")) { fecharJanela(); return; }
     if (!itens.length) { tremerNao(b, "Nada na bolsa serve agora."); return; }
     App.som("pagina");
@@ -540,6 +557,7 @@ function rodaDeAcoes(m) {
       responder(m.id, acaoIdx("itens"));
     })));
   });
+  ib.dataset.alterna = "";
   if (acaoIdx("analisar") >= 0) botao("analisar", spr("olho", 2), "Analisar", "", () => responder(m.id, acaoIdx("analisar")));
   if (acaoIdx("fugir") >= 0) {
     botao("fugir", Icones.acao("fuga") || spr("fuga", 2), "Fugir", "<b>Fugir</b><div>A chance depende da sua Agilidade contra a dos inimigos. Falhar custa o turno.</div>",

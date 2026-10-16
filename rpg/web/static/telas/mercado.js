@@ -619,7 +619,8 @@
       const vender = () => {
         if (!it) return;
         fecharMenuItem(); esconderDica();
-        if (App.acao({ vender: i })) moedasPara(el, document.querySelector('.recurso[data-rec="ouro"]'));
+        pedirVenda(it, i);
+        moedasPara(el, document.querySelector('.recurso[data-rec="ouro"]'));
       };
       el.addEventListener("click", (ev) => { ev.stopPropagation(); vender(); });
       el.addEventListener("keydown", (ev) => { if (ev.key === "Enter" && Gesto.teclaVale(ev)) vender(); });
@@ -657,7 +658,27 @@
      restavam desse suprimento caem juntos. Sair do mercado (ou qualquer pergunta que não seja ele) descarta a fila. */
   const fila = [];
   let apertado = null;  // o suprimento em que o botão do mouse desceu (o id: a lista se redesenha entre o descer e o soltar)
-  function descartarCompras() { fila.length = 0; apertado = null; }
+  function descartarCompras() { fila.length = 0; apertado = null; vendas.length = 0; vendaApertada = null; }
+  /* Vendas em sequência, do mesmo jeito: cada clique numa peça da mochila é uma venda daquela peça, guardada pelo que
+     ela é (nome, nível, raridade, base e bônus; duas peças iguais são a mesma venda) e não pela posição, porque a
+     mochila se redesenha depois de cada venda e a peça seguinte escorrega para o lugar. A primeira vai na hora; as
+     outras saem uma a uma, quando o mercado volta a perguntar. Clicar sem parar vende o que estiver embaixo do mouse a
+     cada clique. */
+  const vendas = [];
+  let vendaApertada = null;  // a peça em que o botão desceu: se a mochila se redesenhar antes de ele subir, a venda vale
+  const assinatura = (it) => JSON.stringify([it.nome, it.nivel, it.raridade, it.base, it.slot, it.bonus_bruto]);
+  function pedirVenda(it, i) {
+    if (vendas.length || !App.acao({ vender: i })) vendas.push(assinatura(it));
+  }
+  function proximaVenda(opcoes) {
+    while (vendas.length) {
+      const a = vendas.shift(), mochila = (App.ultimaLoja && App.ultimaLoja.mochila) || [];
+      const k = mochila.findIndex((it) => it && assinatura(it) === a);
+      const i = k < 0 ? -1 : opcoes.findIndex((o) => o.meta && o.meta.vender === k);
+      if (i >= 0) return i;  // a peça já não está (vendida antes): a venda cai e vai a próxima
+    }
+    return null;
+  }
   function pedirCompra(el, shift) {
     const id = el.dataset.comprar, max = Number(el.dataset.max);
     if (!fila.length && el.classList.contains("caro")) {
@@ -669,8 +690,10 @@
     qtdLoja[id] = 1;
     if (fila.length || !App.acao({ comprar: id }, "moeda", { qtd })) fila.push({ id, qtd });
   }
-  /** Chamada a cada menu novo (escolhas.js): a resposta da próxima compra da fila ({ i, qtd }), ou null. */
+  /** Chamada a cada menu novo (escolhas.js): a resposta da próxima compra da fila ({ i, qtd }) ou da próxima venda
+   *  (o índice da opção), ou null. */
   function proximaCompra(opcoes) {
+    if (!fila.length && vendas.length) return proximaVenda(opcoes);
     while (fila.length) {
       const p = fila[0];
       const i = opcoes.findIndex((o) => o.meta && o.meta.comprar === p.id);
@@ -689,6 +712,20 @@
   // O soltar do botão compra se cair no mesmo suprimento em que ele desceu, ainda que o cartão tenha sido redesenhado
   // no meio (a compra anterior voltou): o clique do navegador se perderia, e a proteção de clique entre telas (Gesto,
   // nucleo.js) não vale aqui, porque o pedido vai pelo id e nunca acerta outro item.
+  document.addEventListener("pointerdown", (ev) => {
+    const el = ev.button === 0 && ev.target.closest && ev.target.closest(".tela.loja [data-mochila-loja]");
+    const it = el && App.ultimaLoja && App.ultimaLoja.mochila[Number(el.dataset.mochilaLoja)];
+    vendaApertada = it ? { el, it } : null;
+  }, true);
+  // A peça redesenhada entre o descer e o subir do botão: o clique do navegador não sai (são dois elementos), e a
+  // venda da peça em que ele desceu vale aqui.
+  document.addEventListener("pointerup", (ev) => {
+    const v = vendaApertada;
+    vendaApertada = null;
+    if (!v || v.el.isConnected || ev.button !== 0 || !ev.target.closest) return;
+    const el = ev.target.closest(".tela.loja [data-mochila-loja]");
+    if (el) { pedirVenda(v.it, Number(el.dataset.mochilaLoja)); moedasPara(el, document.querySelector('.recurso[data-rec="ouro"]')); }
+  }, true);
   document.addEventListener("pointerup", (ev) => {
     const id = apertado;
     apertado = null;

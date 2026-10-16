@@ -154,7 +154,7 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
 
 `rpg/web/servidor.py` (HTTP + SSE em 127.0.0.1, com token) → `rpg/web/static/`:
 
-- `app/nucleo.js` conexão e fila de mensagens (e o `Gesto`: um clique ou tecla só vale na tela em que começou; o segundo clique de um clique duplo e a tecla segurada não escolhem nada) · `app/pagina.js` texto e cenas · `app/escolhas.js` menus,
+- `app/nucleo.js` conexão e fila de mensagens (e o `Gesto`: um clique ou tecla só vale na tela em que começou; o segundo clique de um clique duplo e a tecla segurada não escolhem nada; os botões que só abrem e fecham uma janelinha na mesma tela, `data-alterna`, aceitam cliques seguidos, e a venda da mochila no mercado vai por uma fila pela peça, como a compra de suprimentos, então clicar sem parar vende uma peça por clique; as cartas ✉ da comitiva tocadas no meio de outra coisa esperam o próximo menu do lugar, na ordem dos cliques) · `app/pagina.js` texto e cenas · `app/escolhas.js` menus,
   doca de atalhos, roda de ações da luta · `app/paineis.js` ficha e mapa laterais · `app/controles.js` teclado
 - `app/orientacao.js` as orientações da abertura guiada (abertura.py: C1–C4 na luta; fora dela, uma por vez pela
   `proxima`, com o contexto da tela que pede a sua: o item achado, a escolha do destino): acha o controle (a roda, a janelinha, a mira, a

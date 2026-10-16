@@ -70,9 +70,15 @@ document.addEventListener("click", (ev) => {
   const carta = ev.target.closest("[data-conversar]");
   if (carta) {
     const cid = carta.dataset.conversar;
-    const direta = pergunta && pergunta.tipo === "opcoes" && pergunta.opcoes.some((o) => o.meta && o.meta.conversar === cid);
-    if (direta || (pergunta && pergunta.tipo === "opcoes" && pergunta.opcoes.some((o) => atalhoDe(o) && o.meta.sistema === "comitiva"))) pedir("Comitiva", "conversar", cid);
-    else Telas.toast("", "Dá para conversar quando estiver num lugar seguro (vila ou acampamento).", cid, true);
+    if (pergunta && pergunta.tipo === "opcoes" && podeConversar(pergunta.opcoes, cid)) { pedir("Comitiva", "conversar", cid); return; }
+    // No meio de outra coisa (a conversa anterior ainda na página, um Continuar, as respostas de uma conversa): o
+    // pedido fica guardado e vale no próximo menu do lugar (escolhas.js). Antes, ele caía no aviso de "lugar seguro" e
+    // se perdia, e conversar com dois companheiros pedia esperar a primeira conversa acabar de vez.
+    if (!pergunta || pergunta.tipo !== "opcoes" || !pergunta.opcoes.some(atalhoDe)) {
+      if (!conversasGuardadas.includes(cid)) conversasGuardadas.push(cid);  // na ordem dos cliques, sem adiantar o texto
+      return;
+    }
+    Telas.toast("", "Dá para conversar quando estiver num lugar seguro (vila ou acampamento).", cid, true);
     return;
   }
   if (processando && ev.target.closest("#cena")) {

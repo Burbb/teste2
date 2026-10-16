@@ -125,11 +125,17 @@ function pedir(rotulo, chave, valor) {
 const ACOES_GUARDAVEIS = ["dormir", "conversar", "chamar", "reservar", "carinho"];
 const DUPLO_CLIQUE = 400;  // ms depois de uma resposta em que um toque ainda é o mesmo gesto
 let acaoGuardada = null;
+const conversasGuardadas = [];  // as cartas ✉ tocadas no meio de outra coisa (os ids, controles.js)
+// A contagem do último clique (o detail do navegador): só o 2º toque de um clique duplo é "o mesmo gesto". Antes,
+// qualquer toque nos 400 ms depois de uma resposta se perdia, e conversar com companheiros diferentes, um depois do
+// outro, pedia uma pausa entre os cliques.
+let contagemClique = 1;
+document.addEventListener("click", (ev) => { contagemClique = ev.detail; }, true);
 
 /** Responde à opção cujos metadados batem com o filtro (ações de arrastar, comprar, usar...). */
 function acao(filtro, som, extra) {
   if (!pergunta && Object.keys(filtro).some((k) => ACOES_GUARDAVEIS.includes(k))
-      && performance.now() - ultimaResposta > DUPLO_CLIQUE) {
+      && (contagemClique < 2 || performance.now() - ultimaResposta > DUPLO_CLIQUE)) {
     acaoGuardada = { filtro, som, extra };
     pedirPular();
     return true;
@@ -177,11 +183,15 @@ const Gesto = (() => {
   // Os controles das telas: o prompt (escolhas, Continuar), os prédios da vila, a roda da luta, a doca e o que compra
   // ou vende no mercado pela posição na lista (ela se redesenha depois de cada operação: o item que cair no lugar do
   // outro não vai junto). Os suprimentos vão pelo id, numa fila (mercado.js): cada clique rápido é uma compra.
-  const CONTROLES = "#prompt button, #prompt .escolha, #predios .predio, #pontos-cena .ci-ponto, #roda button, #doca .atalho, .tela.loja .mercadoria.equip, .tela.loja [data-mochila-loja], .tela.loja [data-recomprar]";
+  const CONTROLES = "#prompt button, #prompt .escolha, #predios .predio, #pontos-cena .ci-ponto, #roda button, #doca .atalho, .tela.loja .mercadoria.equip, .tela.loja [data-recomprar]";
   document.addEventListener("click", (ev) => {
     if (!ev.target.closest || !ev.target.closest(CONTROLES)) return;
     // detail 0: o clique que o teclado gera num botão focado (Enter, espaço) é julgado como tecla, não aqui.
-    if (ev.detail >= 2 || (ev.detail === 1 && toque < desde)) { ev.stopPropagation(); ev.preventDefault(); }
+    // Os botões que só abrem e fecham uma janelinha na mesma tela (Habilidades e Itens, data-alterna) aceitam cliques
+    // seguidos: cada clique alterna. Antes, o 2º e o 3º clique rápidos (detail 2, 3) eram descartados como clique
+    // duplo, e o botão só voltava a responder quando a contagem do navegador zerava (~0,5 s).
+    const alterna = ev.target.closest("[data-alterna]");
+    if ((ev.detail >= 2 && !alterna) || (ev.detail >= 1 && (ev.detail === 1 || alterna) && toque < desde)) { ev.stopPropagation(); ev.preventDefault(); }
   }, true);
   return {
     novaTela() { desde = performance.now(); presas = new Set(abaixo); },
