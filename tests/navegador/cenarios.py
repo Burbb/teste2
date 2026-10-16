@@ -17,7 +17,7 @@
     python -m tests.navegador.cenarios resgate       # a recuperação: fome ou infecção no Charco, à noite (CLASSE, CAUSA, COMITIVA, CONTRATOS)
     python -m tests.navegador.cenarios abertura      # campanha nova no Vau: a despensa e as orientações (CLASSE, TUTORIAL, MOREL, DESPENSA, VIDA_RATOS)
     python -m tests.navegador.cenarios fogueira      # a comitiva na fogueira e a fome (LUGAR, SALA, CLASSE, COMITIVA, RESERVA, FERIDO, FERA, FOME, PROVISOES, TOCHAS, PERIODO, CLIMA, EXAUSTO)
-    python -m tests.navegador.cenarios tutorial      # a segunda parte da abertura guiada (LUGAR, PERIODO, VIDA, REC, OURO, PROVISOES, COMITIVA, PONTOS, ITEM, BAUS, CONTRATO, LUTA, VISTAS)
+    python -m tests.navegador.cenarios tutorial      # a segunda parte da abertura guiada (LUGAR, PERIODO, VIDA, REC, OURO, PROVISOES, COMITIVA, PONTOS, ITEM, BAUS, CONTRATO, LUTA, VISTAS, BOLSA, TROCA)
     python -m tests.navegador.cenarios gelo          # Mago com a iniciativa contra um lobo: duas Lanças antes de ele agir (PRISAO, NIVEL, SEMENTE)
     python -m tests.navegador.cenarios aneis         # acha um anel com os dois espaços ocupados (ANEIS=1: um vazio; CHEIA, OURO)
     python -m tests.navegador.cenarios reacoes       # Contra-ataque, espinhos, roubo de vida e o Revide juntos (CONTRA, ESPINHOS, ROUBO, LUTA)
@@ -880,6 +880,10 @@ def tutorial(ui):
             j.habilidades += [h for nv, h in SPECS[outra]["habilidades"] if nv <= j.nivel and h not in j.habilidades]
         j.hp = max(1, int(j.max_hp * float(os.environ.get("VIDA", "1"))))
         j.rec = int(j.max_rec * float(os.environ.get("REC", "1")))
+    for k, v in (x.split("=") for x in os.environ.get("BOLSA", "").split(",") if x):  # BOLSA="pocao_vida=2,bandagem=0"
+        j.consumiveis[k] = int(v)
+    if os.environ.get("TROCA"):  # uma arma da classe na mochila: a troca de arma na luta (o menu de Itens)
+        j.mochila.append(gerar_equip(random.Random(9), j.classe, j.nivel, slot="arma"))
     try:  # a morte no modo hardcore (HARDCORE=1) já na luta preparada leva ao título, como no jogo
         if os.environ.get("LUTA"):  # uma luta comum contra LUTA (família), para os selos das cartas
             g.ui.cena(g.loc["nome"], g.contexto_cena(), "evento")

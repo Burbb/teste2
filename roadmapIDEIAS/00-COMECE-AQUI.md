@@ -2719,3 +2719,27 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   diferentes; interações, mira, Voltar e reabrir; sem salto e sem texto cortado na borda. Capturas em
   `ferramentas/prototipos/hud/capturas-seletor-integrado/`.
 - **Próximo:** o menu de Itens e os lotes de arte ficam para entregas posteriores.
+
+### 17/10/2026 — Correções da luta e do mercado (1.103.1, 1.103.2, 1.104.0) e o protótipo de Itens
+
+- **Avisos de combate acima da moldura (1.103.1):** os números, as faixas ("AAARGH!", o nome do golpe, "fraqueza!")
+  e os selos de estado nasciam dentro da carta, e o palco (`overflow: hidden`) os cortava na moldura. Agora nascem
+  numa camada da página (`.avisos-luta`, em `batalha.js`) que acompanha a carta, por cima da moldura e dentro da
+  janela, sem pegar o mouse; somem como antes e todos saem com a luta. O cenário, as cartas e os estados
+  permanentes continuam recortados. Duração, ordem, sons e quantidade iguais.
+- **Cliques seguidos (1.103.2):** a causa do "abrir e fechar Habilidades rápido não responde": o navegador conta os
+  cliques seguidos (2, 3...), e a proteção contra clique duplo (`Gesto`, `app/nucleo.js`) descartava todo clique
+  com contagem 2 ou mais nos controles da roda; o botão só voltava a responder quando a contagem zerava (~0,5 s).
+  Os botões que só abrem e fecham uma janelinha na mesma tela (Habilidades e Itens, `data-alterna`) aceitam cliques
+  seguidos; o resto da proteção fica (o clique duplo numa habilidade continua sendo uma escolha só). Pelo retorno do
+  Jean no meio da entrega, a mesma família de problema na venda e na comitiva: a venda da mochila ganhou a fila da
+  compra de suprimentos (pela peça, não pela posição: clicar sem parar vende uma peça por clique), e as cartas ✉
+  tocadas no meio de outra conversa esperam o próximo menu do lugar, na ordem (antes caíam no aviso de "lugar
+  seguro"). `tests/navegador/cliques_seguidos.mjs` confere os três.
+- **Descrição da habilidade dentro do seletor (1.104.0):** a dica lateral saiu das faixas; a descrição da examinada
+  (mouse ou teclado) fica embaixo da coluna dela, num lugar reservado ao abrir (nada pula ao trocar), com as
+  informações da dica de antes e o motivo; em janela baixa, uma área só embaixo das duas colunas (em duas partes, com
+  o "Esc · Voltar" na linha do título), sem fazer a lista rolar com 7 nem com 10 habilidades. As outras telas
+  continuam com as dicas de sempre.
+- **Protótipo:** o menu de Itens em faixas (`ferramentas/prototipos/hud/LEIA-ME.md`, "O menu de Itens em faixas").
+  Espera a avaliação; o menu de Itens do jogo não mudou.

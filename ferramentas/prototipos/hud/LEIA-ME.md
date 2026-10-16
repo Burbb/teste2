@@ -2062,3 +2062,36 @@ Esc, a tecla 2 e as setas, escolher (a mira, ou a execução direta quando sobra
 Voltar e reabrir; a borda de baixo sem linha cortada com o registro em sete posições de rolagem; abrir, fechar e rolar
 sem mexer nas cartas; nenhum nome ou custo cortado; na luta do Guerreiro, cinco cliques rápidos, a tecla segurada, o
 clique duplo, o clique durante a entrada e o movimento reduzido.
+
+## O menu de Itens em faixas (protótipo, sem versão)
+
+**O pedido de Jean (17/10/2026):** preparar o menu de Itens com a linguagem da D refinada (faixas, destaque claro,
+tipografia, foco, movimento e a descrição integrada), reaproveitando o componente onde fizer sentido e deixando
+explícitas as diferenças: a quantidade no lugar certo, o efeito e o motivo real de não poder usar, quem recebe como
+hoje, e a apresentação para poucos itens ou bolsa vazia. Só no protótipo; os desenhos dos consumíveis são os atuais.
+
+**Os arquivos:** `seletor/itens-faixas.mjs` (três trocas no `escolhas.js` do jogo, só na página da foto) e
+`seletor/itens-faixas.css` (por cima de `css/18-seletor-habilidades.css`); `fotografar_itens_faixas.mjs` →
+`capturas-itens-faixas/`.
+
+**O que é o componente, igual:** a posição embaixo da arena, as faixas e as pontas, o título pequeno ("Itens") e
+"Esc · Voltar", os estados, as teclas (3 abre, as setas andam, 1 a 9 escolhem), a entrada e a descrição embaixo da
+coluna, com o efeito do consumível e o "Você tem N · gasta o turno" que a dica já dizia.
+
+**O que é do menu de Itens:**
+- a quantidade fica à direita, no lugar do custo ("×2"), na cor normal mesmo quando o item não serve (o problema é o
+  motivo, não a quantidade);
+- o motivo do motor aparece escrito na faixa ("Vigor já está no máximo", "Não há veneno no seu sangue", "Nenhuma
+  ferida aberta para enfaixar") e de novo na descrição;
+- a troca de arma é uma faixa como as outras ("Trocar: Maça Rúnica", com "TURNO" à direita) e a ficha da arma na
+  descrição;
+- quem recebe: o mesmo caminho de hoje (a poção com aliado ferido abre a mira dos aliados, "Poção de Vida: escolha o
+  alvo", com o Voltar);
+- bolsa sem nada que sirva: hoje o botão só treme e avisa; na proposta o seletor abre com a frase "Nada na bolsa serve
+  agora." no lugar das faixas, e Esc ou o botão fecham.
+
+**Conferido** (o jogo de hoje e a proposta com os mesmos dados, um jogo novo por foto; Guerreiro com bolsa variada e
+uma arma na mochila, Arqueiro com poções e tônicos, Mago com uma bomba só, e a bolsa vazia; com Morel e Odette, uma
+rodada jogada antes; 1500×950 e 1280×720; movimento reduzido no Guerreiro): abre, mouse, item que não serve, Esc,
+tecla 3 e setas, a poção indo para a mira dos aliados e o Voltar; nada cortado, nada cobre a arena, sem erro no
+console. As regras de uso, o turno, os destinatários e os itens que não servem são os do jogo (nada muda no motor).

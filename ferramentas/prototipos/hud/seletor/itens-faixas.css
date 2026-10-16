@@ -1,0 +1,17 @@
+/* O menu de Itens em faixas (protótipo, por cima de css/18-seletor-habilidades.css; itens-faixas.mjs). Tudo o que não
+   está aqui é o componente do seletor de habilidades, igual. */
+/* a quantidade no lugar do custo: o mesmo alinhamento, sem o ícone do recurso */
+:root body .roda-janela[data-menu="itens"] .rj-linha .rj-info { font-size: 17px; letter-spacing: 0.02em; }
+:root body .roda-janela[data-menu="itens"] .rj-linha[data-slot="troca"] .rj-info { font-family: var(--texto); font-size: 12.5px; letter-spacing: 0.08em;
+  text-transform: uppercase; color: #b49a64; }
+:root body .roda-janela[data-menu="itens"] .rj-linha[data-slot="troca"]:is(:hover, :focus-visible) .rj-info { color: #5e4620; }
+/* a ficha da arma da troca, na descrição: a comparação e a lore do jeito da descrição (sem a caixa da dica) */
+:root body .roda-janela[data-menu="itens"] .rj-desc-caixa .comparacao { margin-top: 4px; padding-top: 3px; border-top: 1px dashed rgba(176, 138, 69, 0.35);
+  display: flex; flex-direction: column; font-size: 14px; line-height: 1.25; }
+:root body .roda-janela[data-menu="itens"] .rj-desc-caixa .comparacao small { font-size: 11.5px; color: #9d978b; }
+:root body .roda-janela[data-menu="itens"] .rj-desc-caixa .lore { margin-top: 3px; font-style: italic; font-size: 14px; color: #a59c8b; }
+/* bolsa sem nada que sirva: a frase no lugar das faixas */
+:root body .roda-janela[data-menu="itens"] .rj-vazio { margin: 10px 4px 6px; font-family: var(--texto); font-style: italic; font-size: 16px; color: #a59c8b; }
+/* no item que não serve, a quantidade não é o problema (o motivo é): ela fica na cor normal, não na do custo que falta */
+:root body .roda-janela[data-menu="itens"] .rj-linha.bloqueada .rj-info { color: #b9af99; }
+:root body .roda-janela[data-menu="itens"] .rj-linha.bloqueada:is(:hover, :focus-visible) .rj-info { color: var(--sh-tinta); }
