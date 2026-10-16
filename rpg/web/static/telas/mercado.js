@@ -42,15 +42,48 @@
   // Cada item mostra o ícone, a raridade e o que o mercador paga; a ficha (e a comparação, com Shift) vem na dica.
   // Clique vende na hora (o vendido vai para "Recomprar", pelo mesmo preço, até sair do mercado); o botão direito
   // equipa; arrastar até a banca também vende.
-  function paraVender(it, i) {
+  //
+  // Durante a visita, cada peça fica no espaço em que estava (arranjo): vender deixa o espaço vazio e as outras não
+  // escorregam para ele; o que chega (a recompra, a peça que sai do corpo ao equipar) ocupa o primeiro espaço vazio.
+  // Cada peça da grade tem uma ficha (data-peca) que não muda enquanto ela estiver no espaço: é ela que o pedido de
+  // venda guarda, nunca a posição. data-mochila-loja é a posição de verdade na mochila do motor, refeita a cada
+  // desenho. Ao sair do mercado, o arranjo some e a mochila volta à ordem de sempre.
+  let arranjo = null;  // [{ n, a, i } | null] por espaço: n a ficha, a a assinatura (o que a peça é), i a posição na mochila
+  let fichas = 0;
+  const assinatura = (it) => JSON.stringify([it.nome, it.nivel, it.raridade, it.base, it.slot, it.bonus_bruto]);
+  /** Encaixa a mochila de agora no arranjo da visita: cada espaço ocupado fica com a mesma peça, o que saiu deixa o
+   *  espaço vazio e o que chegou vai para o primeiro vazio. A peça que a tela sabe que saiu (a vendida, a equipada)
+   *  sai primeiro, pela ficha: entre peças iguais (três Martelos Enferrujados), o espaço que esvazia é o clicado. As
+   *  outras se acham pelo que são, na ordem da mochila, que o motor não embaralha (tira do meio e põe no fim). */
+  function arrumar(mochila, limite, sairam) {
+    const novas = mochila.map((it, i) => ({ i, a: assinatura(it) }));
+    const novo = Array.from({ length: Math.max(limite, mochila.length) }, () => null);
+    const quantas = (lista, a) => lista.filter((x) => x && x.a === a).length;
+    let antes = (arranjo || []).map((e, s) => e && { ...e, s }).filter(Boolean);
+    for (const n of sairam) {  // só se de fato saiu uma daquelas (um pedido cancelado não tira nada)
+      const e = antes.find((x) => x.n === n);
+      if (e && quantas(novas, e.a) < quantas(antes, e.a)) antes = antes.filter((x) => x !== e);
+    }
+    let k = 0;
+    for (const e of antes.sort((x, y) => x.i - y.i)) {  // a ordem de antes, casada em sequência com a de agora
+      let j = k;
+      while (j < novas.length && novas[j].a !== e.a) j++;
+      if (j < novas.length && e.s < novo.length) { novo[e.s] = { n: e.n, a: e.a, i: novas[j].i }; novas[j] = { a: null }; k = j + 1; }
+    }
+    novas.forEach((l) => { if (l.a !== null) novo[novo.indexOf(null)] = { n: ++fichas, a: l.a, i: l.i }; });
+    arranjo = novo;
+  }
+  const espacoDa = (n) => (arranjo || []).find((e) => e && e.n === n);
+  function paraVender(it, e) {
     const venda = `<div class="preco-venda">${S("moeda", 1)} O mercador paga <b>${it.preco}</b></div>` +
       `Clique: vender${it.usavel ? " · botão direito: equipar" : " · não é para a sua classe"}`;
-    return `<div role="button" tabindex="0" class="slot-px celula r-${h(it.raridade)}${it.usavel ? "" : " inutil"}" draggable="true" data-mochila-loja="${i}"
+    return `<div role="button" tabindex="0" class="slot-px celula r-${h(it.raridade)}${it.usavel ? "" : " inutil"}" draggable="true" data-mochila-loja="${e.i}" data-peca="${e.n}"
         aria-label="Vender ${h(it.nome)} por ${it.preco} de ouro" ${dicaItem(it, venda)}>${Icones.item(iconeItem(it)) || S(iconeItem(it), 2)}<span class="preco-canto">${it.preco}</span></div>`;
   }
+  const VAZIA = '<div class="slot-px celula vazia" aria-hidden="true"></div>';
   function gradeVenda(d) {
-    const celulas = d.mochila.map(paraVender);
-    for (let k = d.mochila.length; k < d.limite; k++) celulas.push('<div class="slot-px celula vazia" aria-hidden="true"></div>');
+    // a peça já pedida (vendida e esperando a resposta) aparece como o espaço vazio que vai ser
+    const celulas = arranjo.map((e) => (e && !vendida(e.n) ? paraVender(d.mochila[e.i], e) : VAZIA));
     return `<div class="mochila-grade mochila-loja" role="group" aria-label="Mochila">${celulas.join("")}</div>`;
   }
 
@@ -63,6 +96,8 @@
   }
 
   function loja(d) {
+    arrumar(d.mochila, d.limite, [emVoo, equipando]);
+    emVoo = equipando = null;  // um mercado novo é a resposta do pedido que tinha ido
     const listas = {
       suprimentos: d.consumiveis.map((c) => suprimento(c, d.ouro)).join(""),
       equipamentos: d.equipamentos.map(equipamento).join("") || '<span class="vazio">Nada que preste hoje. Volte em alguns dias.</span>',
@@ -613,24 +648,20 @@
     // também vende.
     let vendendo = null;
     const balcao = raiz.querySelector(".loja-banca");
-    raiz.querySelectorAll("[data-mochila-loja]").forEach((el) => {
-      const i = Number(el.dataset.mochilaLoja);
+    raiz.querySelectorAll("[data-peca]").forEach((el) => {
+      const i = Number(el.dataset.mochilaLoja), n = Number(el.dataset.peca);
       const it = dados && dados.mochila[i];
-      const vender = () => {
-        if (!it) return;
-        fecharMenuItem(); esconderDica();
-        pedirVenda(it, i);
-        moedasPara(el, document.querySelector('.recurso[data-rec="ouro"]'));
-      };
+      const vender = () => { if (it) venderPeca(el, n); };
       el.addEventListener("click", (ev) => { ev.stopPropagation(); vender(); });
       el.addEventListener("keydown", (ev) => { if (ev.key === "Enter" && Gesto.teclaVale(ev)) vender(); });
       el.addEventListener("contextmenu", (ev) => {
         ev.preventDefault(); fecharMenuItem(); esconderDica();
-        if (!it) return;
+        if (!it || vendida(n)) return;
         if (!it.usavel) { App.som("falha"); App.avisar("Não é para a sua classe.", "equipar"); return; }
+        equipando = n;  // ao voltar, o espaço desta peça é o que esvazia (a que sai do corpo vai para um vazio)
         equiparDaMochila(el, it, i);
       });
-      el.addEventListener("dragstart", (ev) => { esconderDica(); fecharMenuItem(); vendendo = i; ev.dataTransfer.setData("text/plain", "item"); balcao.classList.add("alvo"); });
+      el.addEventListener("dragstart", (ev) => { esconderDica(); fecharMenuItem(); vendendo = el; ev.dataTransfer.setData("text/plain", "item"); balcao.classList.add("alvo"); });
       el.addEventListener("dragend", () => { balcao.classList.remove("alvo"); setTimeout(() => { vendendo = null; }, 0); });
     });
     raiz.querySelectorAll("[data-recomprar]").forEach((el) => {
@@ -646,7 +677,7 @@
     balcao.addEventListener("dragover", (ev) => { if (vendendo !== null) ev.preventDefault(); });
     balcao.addEventListener("drop", (ev) => {
       ev.preventDefault(); balcao.classList.remove("alvo");
-      if (vendendo !== null) App.acao({ vender: vendendo });
+      if (vendendo !== null) venderPeca(vendendo, Number(vendendo.dataset.peca), false);
       vendendo = null;
     });
   }
@@ -658,24 +689,32 @@
      restavam desse suprimento caem juntos. Sair do mercado (ou qualquer pergunta que não seja ele) descarta a fila. */
   const fila = [];
   let apertado = null;  // o suprimento em que o botão do mouse desceu (o id: a lista se redesenha entre o descer e o soltar)
-  function descartarCompras() { fila.length = 0; apertado = null; vendas.length = 0; vendaApertada = null; }
-  /* Vendas em sequência, do mesmo jeito: cada clique numa peça da mochila é uma venda daquela peça, guardada pelo que
-     ela é (nome, nível, raridade, base e bônus; duas peças iguais são a mesma venda) e não pela posição, porque a
-     mochila se redesenha depois de cada venda e a peça seguinte escorrega para o lugar. A primeira vai na hora; as
-     outras saem uma a uma, quando o mercado volta a perguntar. Clicar sem parar vende o que estiver embaixo do mouse a
-     cada clique. */
+  function descartarCompras() { fila.length = 0; apertado = null; vendas.length = 0; apertoVenda = null; }
+  /* Vendas em sequência, do mesmo jeito: cada clique numa peça é a venda daquela peça, guardada pela ficha dela (o
+     espaço da grade parada, ver arranjo), e não pela posição na mochila, que muda a cada venda. A primeira vai na hora;
+     as outras saem uma a uma, quando o mercado volta a perguntar, cada uma com a posição de verdade daquele momento.
+     A peça pedida some da grade na hora (o espaço fica vazio e não aceita outro clique): o clique duplo vende uma, e
+     clicar sem parar em peças diferentes vende cada uma. Uma ficha que já não está na grade (a peça saiu por outro
+     caminho) cai sem atingir outra peça. */
   const vendas = [];
-  let vendaApertada = null;  // a peça em que o botão desceu: se a mochila se redesenhar antes de ele subir, a venda vale
-  const assinatura = (it) => JSON.stringify([it.nome, it.nivel, it.raridade, it.base, it.slot, it.bonus_bruto]);
-  function pedirVenda(it, i) {
-    if (vendas.length || !App.acao({ vender: i })) vendas.push(assinatura(it));
+  let emVoo = null;  // a ficha da venda que foi ao motor e ainda não voltou
+  let equipando = null;  // a ficha da peça que o botão direito mandou vestir
+  let apertoVenda = null;  // { el, n }: a peça em que o botão desceu (ver o pointerup)
+  const vendida = (n) => n === emVoo || vendas.includes(n);
+  function venderPeca(el, n, moedas = true) {
+    const e = espacoDa(n);
+    if (!e || vendida(n)) return;
+    fecharMenuItem(); esconderDica();
+    if (moedas) moedasPara(el, document.querySelector('.recurso[data-rec="ouro"]'));
+    if (!vendas.length && App.acao({ vender: e.i })) emVoo = n;
+    else vendas.push(n);
+    if (el.isConnected) el.outerHTML = VAZIA;  // o espaço fica vazio já: o item vendido não fica clicável
   }
   function proximaVenda(opcoes) {
     while (vendas.length) {
-      const a = vendas.shift(), mochila = (App.ultimaLoja && App.ultimaLoja.mochila) || [];
-      const k = mochila.findIndex((it) => it && assinatura(it) === a);
-      const i = k < 0 ? -1 : opcoes.findIndex((o) => o.meta && o.meta.vender === k);
-      if (i >= 0) return i;  // a peça já não está (vendida antes): a venda cai e vai a próxima
+      const n = vendas.shift(), e = espacoDa(n);
+      const i = e ? opcoes.findIndex((o) => o.meta && o.meta.vender === e.i) : -1;
+      if (i >= 0) { emVoo = n; return i; }
     }
     return null;
   }
@@ -712,19 +751,19 @@
   // O soltar do botão compra se cair no mesmo suprimento em que ele desceu, ainda que o cartão tenha sido redesenhado
   // no meio (a compra anterior voltou): o clique do navegador se perderia, e a proteção de clique entre telas (Gesto,
   // nucleo.js) não vale aqui, porque o pedido vai pelo id e nunca acerta outro item.
+  // A peça é a mesma, mas a grade foi redesenhada entre o descer e o subir do botão (a venda anterior voltou): o clique
+  // do navegador não sai (são dois elementos). Com a grade parada, o espaço é o mesmo e a ficha também: se o botão
+  // subir na mesma peça em que desceu, a venda vale aqui.
   document.addEventListener("pointerdown", (ev) => {
-    const el = ev.button === 0 && ev.target.closest && ev.target.closest(".tela.loja [data-mochila-loja]");
-    const it = el && App.ultimaLoja && App.ultimaLoja.mochila[Number(el.dataset.mochilaLoja)];
-    vendaApertada = it ? { el, it } : null;
+    const el = ev.button === 0 && ev.target.closest && ev.target.closest(".tela.loja [data-peca]");
+    apertoVenda = el ? { el, n: Number(el.dataset.peca) } : null;
   }, true);
-  // A peça redesenhada entre o descer e o subir do botão: o clique do navegador não sai (são dois elementos), e a
-  // venda da peça em que ele desceu vale aqui.
   document.addEventListener("pointerup", (ev) => {
-    const v = vendaApertada;
-    vendaApertada = null;
+    const v = apertoVenda;
+    apertoVenda = null;
     if (!v || v.el.isConnected || ev.button !== 0 || !ev.target.closest) return;
-    const el = ev.target.closest(".tela.loja [data-mochila-loja]");
-    if (el) { pedirVenda(v.it, Number(el.dataset.mochilaLoja)); moedasPara(el, document.querySelector('.recurso[data-rec="ouro"]')); }
+    const el = ev.target.closest(".tela.loja [data-peca]");
+    if (el && Number(el.dataset.peca) === v.n) venderPeca(el, v.n);
   }, true);
   document.addEventListener("pointerup", (ev) => {
     const id = apertado;
@@ -745,6 +784,7 @@
     ligar: (raiz, d) => { App.ultimaLoja = d; ligarLoja(raiz, d); },
     esquecer: () => {
       descartarCompras();
+      arranjo = null; emVoo = equipando = null;
       for (const k in qtdLoja) delete qtdLoja[k];
       for (const k in rolagem) delete rolagem[k];
       aba = "suprimentos"; visitaNova = true;

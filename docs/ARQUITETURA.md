@@ -154,7 +154,7 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
 
 `rpg/web/servidor.py` (HTTP + SSE em 127.0.0.1, com token) → `rpg/web/static/`:
 
-- `app/nucleo.js` conexão e fila de mensagens (e o `Gesto`: um clique ou tecla só vale na tela em que começou; o segundo clique de um clique duplo e a tecla segurada não escolhem nada; os botões que só abrem e fecham uma janelinha na mesma tela, `data-alterna`, aceitam cliques seguidos, e a venda da mochila no mercado vai por uma fila pela peça, como a compra de suprimentos, então clicar sem parar vende uma peça por clique; as cartas ✉ da comitiva tocadas no meio de outra coisa esperam o próximo menu do lugar, na ordem dos cliques) · `app/pagina.js` texto e cenas · `app/escolhas.js` menus,
+- `app/nucleo.js` conexão e fila de mensagens (e o `Gesto`: um clique ou tecla só vale na tela em que começou; o segundo clique de um clique duplo e a tecla segurada não escolhem nada; os botões que só abrem e fecham uma janelinha na mesma tela, `data-alterna`, aceitam cliques seguidos, e a venda da mochila no mercado vai por uma fila pela peça, como a compra de suprimentos (ver `telas/mercado.js`, abaixo); as cartas ✉ da comitiva tocadas no meio de outra coisa esperam o próximo menu do lugar, na ordem dos cliques) · `app/pagina.js` texto e cenas · `app/escolhas.js` menus,
   doca de atalhos, roda de ações da luta · `app/paineis.js` ficha e mapa laterais · `app/controles.js` teclado
 - `app/orientacao.js` as orientações da abertura guiada (abertura.py: C1–C4 na luta; fora dela, uma por vez pela
   `proxima`, com o contexto da tela que pede a sua: o item achado, a escolha do destino): acha o controle (a roda, a janelinha, a mira, a
@@ -326,6 +326,13 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   A conferência: `ferramentas/prototipos/hud/fotografar_seletor_d.mjs` com `VERSOES=atual RODADA=1` (as três classes
   com comitiva, o teste de 10 habilidades, as interações, a borda de baixo com o registro em várias rolagens) e
   `fotografar_itens_faixas.mjs` (o menu de Itens nas três classes, a bolsa vazia, a troca, a poção e a mira).
+- A aba Vender do mercado (`telas/mercado.js`, 1.105.1): durante a visita, cada peça fica no espaço da grade em que
+  estava (`arranjo`); vender deixa o espaço vazio, as outras não escorregam, e o que chega (a recompra, a peça que
+  sai do corpo ao equipar) vai para o primeiro vazio. Cada peça tem uma ficha (`data-peca`) que o pedido de venda
+  guarda; a posição de verdade na mochila do motor (`data-mochila-loja`) é refeita a cada desenho e só vai ao motor
+  na hora de responder, com o menu daquele momento. A peça pedida some da grade na hora (não aceita outro clique);
+  ao redesenhar, a que a tela sabe que saiu (vendida ou equipada) sai pela ficha, e as outras se acham pelo que são,
+  na ordem da mochila. Sair do mercado esquece o arranjo: a mochila volta à ordem de sempre.
 - `icones.js` (`Icones`) é o único lugar que decide o desenho de cada papel: o item pelo desenho que o motor dá,
   o consumível pelo id, o atributo, o recurso do topo, o vital, o atalho da doca, o lugar de um caminho, a ação da
   roda, o retrato, a cabeça e a figura do herói e dos companheiros (de `retratos.js`, abaixo). Devolve a `<img>` pronta ou `""` quando a família não tem aquele desenho; a

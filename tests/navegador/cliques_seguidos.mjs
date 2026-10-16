@@ -2,7 +2,9 @@
 // deliberado tem de valer. Confere, no jogo de verdade:
 //   - a roda da luta: Habilidades e Itens abrem e fecham a cada clique (a cada 120, 250 e 700 ms), a troca entre os
 //     dois, a tecla 2 segurada (abre uma vez), o Esc, e o clique duplo numa habilidade (uma escolha só: a mira);
-//   - o mercado: quatro cliques seguidos na primeira peça da mochila vendem quatro peças;
+//   - o mercado: peças diferentes clicadas sem parar vendem cada uma; a grade fica parada durante a visita (o espaço
+//     vendido fica vazio, o clique nele não faz nada, o clique duplo vende uma, a troca de aba e a recompra não
+//     embaralham; equipar e arrastar até a banca também não) e volta à ordem de sempre na visita seguinte;
 //   - a comitiva: as cartas ✉ de dois companheiros clicadas uma logo depois da outra abrem as duas conversas, em ordem.
 //   PLAYWRIGHT_MODULO=<caminho do playwright>/index.mjs node tests/navegador/cliques_seguidos.mjs
 import { spawn } from "child_process";
@@ -86,18 +88,76 @@ async function cliques(p, el, vezes, intervalo, depois) {
   await p.close(); proc.kill();
 }
 
-// 2. o mercado: vender em sequência
+// 2. o mercado: vender em sequência, com a grade parada durante a visita
 {
   const { proc, url } = await subir("mercado", { CLASSE: "guerreiro", SEMENTE: "1" });
   const p = await pagina(url);
   await ate(p, () => !!document.querySelector('[data-aba="vender"]'));
   await espera(600);
   await (await p.$('[data-aba="vender"]')).click(); await espera(700);
-  const n0 = await p.$$eval(".tela.loja [data-mochila-loja]", (x) => x.length);
-  await cliques(p, await p.$(".tela.loja [data-mochila-loja]"), 4, 150);
-  await espera(3000);
-  const n1 = await p.$$eval(".tela.loja [data-mochila-loja]", (x) => x.length);
-  conferir(n1 === n0 - 4, `quatro cliques seguidos na mochila vendem quatro peças (${n0} → ${n1})`);
+  // a grade: a ficha de cada espaço ("" no vazio), o ouro, a mochila do motor e o contador da aba
+  const grade = () => p.evaluate(() => ({
+    pecas: [...document.querySelectorAll('[data-painel="vender"] .mochila-grade:not(.recompra) .celula')].map((c) => c.dataset.peca || ""),
+    ouro: App.estado.heroi.ouro, mochila: App.estado.heroi.mochila.length, ocupado: document.querySelector('[data-painel="vender"] .loja-mochila b').textContent,
+    precos: Object.fromEntries([...document.querySelectorAll("[data-peca]")].map((c) => [c.dataset.peca, Number(c.querySelector(".preco-canto").textContent)])),
+    recompra: document.querySelectorAll("[data-recomprar]").length }));
+  const centro = (k) => p.evaluate((k) => { const c = document.querySelectorAll('[data-painel="vender"] .mochila-grade:not(.recompra) .celula')[k].getBoundingClientRect(); return [c.left + c.width / 2, c.top + c.height / 2]; }, k);
+  const assentar = async () => { for (let k = 0; k < 60; k++) { if (await p.evaluate(() => !processando && !!pergunta)) break; await espera(100); } await espera(400); };
+  const g0 = await grade();
+  // quatro peças diferentes, um clique em cada, a 150 ms um do outro (as respostas chegam no meio)
+  const pontos = []; for (let k = 0; k < 4; k++) pontos.push(await centro(k));
+  for (const pt of pontos) { await p.mouse.click(...pt); await espera(150); }
+  await assentar(); await espera(1500);
+  const g1 = await grade();
+  const pagos = g0.pecas.slice(0, 4).reduce((s, n) => s + g0.precos[n], 0);
+  conferir(g1.mochila === g0.mochila - 4 && g1.ouro === g0.ouro + pagos, `quatro peças diferentes, clicadas sem parar, vendem as quatro (${g0.mochila} → ${g1.mochila}, ouro +${g1.ouro - g0.ouro} de ${pagos})`);
+  conferir(g1.pecas.slice(0, 4).every((x) => x === "") && g1.pecas.slice(4).join() === g0.pecas.slice(4).join(),
+    `os espaços vendidos ficam vazios e as outras peças não se mexem (${g0.pecas.join(",")} → ${g1.pecas.join(",")})`);
+  conferir(g1.ocupado === `${g1.mochila}/12` && g1.recompra === 4, `contador e recompra acompanham (${g1.ocupado}, ${g1.recompra} para recomprar)`);
+  await p.mouse.click(...(await centro(0))); await assentar();
+  conferir((await grade()).mochila === g1.mochila, "clique num espaço vazio não faz nada");
+  const pt4 = await centro(4);
+  await p.mouse.dblclick(...pt4); await assentar(); await espera(500);
+  const g2 = await grade();
+  conferir(g2.mochila === g1.mochila - 1 && g2.pecas[4] === "" && g2.pecas.slice(5).join() === g1.pecas.slice(5).join(), `clique duplo vende uma peça só (${g1.mochila} → ${g2.mochila})`);
+  // um clique e a troca de aba logo em seguida, com a venda ainda a caminho: volta igual
+  await p.mouse.click(...(await centro(5)));
+  await (await p.$('[data-aba="suprimentos"]')).click(); await espera(60); await (await p.$('[data-aba="vender"]')).click();
+  await assentar(); await (await p.$('[data-aba="suprimentos"]')).click(); await espera(300); await (await p.$('[data-aba="vender"]')).click(); await espera(300);
+  const g3 = await grade();
+  conferir(g3.mochila === g2.mochila - 1 && g3.pecas[5] === "" && g3.pecas.slice(6).join() === g2.pecas.slice(6).join(), `trocar de aba com a venda a caminho: vendida, e a grade igual (${g3.pecas.join(",")})`);
+  // recomprar: a peça volta ao primeiro espaço vazio, sem cobrir nenhuma
+  await (await p.$("[data-recomprar]")).click(); await assentar(); await espera(500);
+  const g4 = await grade();
+  const ocupados = g4.pecas.filter(Boolean).length;
+  conferir(g4.mochila === g3.mochila + 1 && ocupados === g4.mochila && g4.pecas[0] !== "" && g4.pecas.slice(1).join() === g3.pecas.slice(1).join() && g4.pecas.length === 12,
+    `recomprar ocupa o primeiro espaço vazio (${g4.pecas.join(",")})`);
+  // equipar pelo botão direito: a peça vestida sai do espaço dela, e o que sai do corpo vai para o primeiro vazio (o
+  // mesmo espaço, se ele for o primeiro: uma troca no lugar); o resto fica parado
+  const usavel = await p.evaluate(() => { const c = [...document.querySelectorAll('[data-painel="vender"] .mochila-grade:not(.recompra) .celula')];
+    return c.findIndex((x) => x.dataset.peca && !x.classList.contains("inutil") && !/Anel/.test(x.getAttribute("aria-label"))); });
+  if (usavel >= 0) {
+    await p.mouse.click(...(await centro(usavel)), { button: "right" }); await assentar(); await espera(500);
+    const g5 = await grade(), primeiro = Math.min(usavel, g4.pecas.findIndex((x) => x === ""));
+    const fora = (g) => g.pecas.map((x, s) => (s === usavel || s === primeiro ? "" : x)).join();
+    conferir(fora(g5) === fora(g4) && g5.pecas[usavel] !== g4.pecas[usavel] && g5.pecas.filter(Boolean).length === g5.mochila,
+      `equipar pelo botão direito não embaralha a grade (${g4.pecas.join(",")} → ${g5.pecas.join(",")})`);
+  }
+  // arrastar até a banca também vende, a peça arrastada, e o espaço dela fica vazio
+  const ga = await grade(), sa = ga.pecas.findIndex((x, s) => x && s > 0);
+  await p.dragAndDrop(`[data-peca="${ga.pecas[sa]}"]`, ".loja-banca"); await assentar(); await espera(500);
+  const gb = await grade();
+  conferir(gb.mochila === ga.mochila - 1 && gb.pecas[sa] === "" && gb.pecas.filter((x, s) => s !== sa).join() === ga.pecas.filter((x, s) => s !== sa).join(),
+    `arrastar até a banca vende a peça arrastada (${ga.pecas.join(",")} → ${gb.pecas.join(",")})`);
+  // sair e voltar: a mochila na ordem de sempre (as peças juntas no começo)
+  await p.keyboard.press("Escape");
+  await ate(p, () => !!document.querySelector('#predios .predio[data-predio="mercado"]'));
+  await espera(600);
+  await (await p.$('#predios .predio[data-predio="mercado"]')).click();
+  await ate(p, () => !!document.querySelector('[data-aba="vender"]'));
+  await espera(600); await (await p.$('[data-aba="vender"]')).click(); await espera(500);
+  const g6 = await grade();
+  conferir(g6.pecas.slice(0, g6.mochila).every(Boolean) && g6.pecas.slice(g6.mochila).every((x) => x === ""), `ao voltar ao mercado, a ordem de sempre (${g6.pecas.map((x) => (x ? "■" : "·")).join("")})`);
   await p.close(); proc.kill();
 }
 
