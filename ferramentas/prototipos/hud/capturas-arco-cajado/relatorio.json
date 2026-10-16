@@ -1,0 +1,430 @@
+[
+ {
+  "nome": "normal-atual-arqueiro-mercado",
+  "sprite-arco": [
+   "slot-px.mini→32",
+   "slot-px.r-comum→0",
+   "slot-px.celula→32",
+   "slot-px.celula→32",
+   "slot-px.celula→32"
+  ],
+  "sprite-cajado": [
+   "slot-px.celula→32",
+   "slot-px.celula→32"
+  ]
+ },
+ {
+  "nome": "normal-atual-arqueiro-inventario",
+  "sprite-arco": [
+   "slot-px.mini→32",
+   "espaco.slot-px→32",
+   "slot-px.celula→32",
+   "slot-px.celula→32",
+   "slot-px.celula→32"
+  ],
+  "sprite-cajado": [
+   "slot-px.celula→32",
+   "slot-px.celula→32"
+  ]
+ },
+ {
+  "nome": "normal-atual-arqueiro-saque-cartao",
+  "sprite-arco": [
+   "slot-px.mini→32",
+   "achado-arte→64",
+   "achado-arte.pequena→48"
+  ]
+ },
+ {
+  "nome": "normal-atual-arqueiro-saque-voo",
+  "sprite-arco": [
+   "slot-px.mini→32",
+   "achado-arte→64",
+   "achado-arte.pequena→48",
+   "voo-item→52"
+  ]
+ },
+ {
+  "nome": "normal-atual-arqueiro-luta",
+  "sprite-arco": [
+   "slot-px.mini→32",
+   "roda-botao→32"
+  ]
+ },
+ {
+  "nome": "normal-proposta-arqueiro-mercado",
+  "arco-32": [
+   "slot-px.mini→32",
+   "slot-px.r-comum→0",
+   "slot-px.celula→32",
+   "slot-px.celula→32",
+   "slot-px.celula→32"
+  ],
+  "cajado-32": [
+   "slot-px.celula→32",
+   "slot-px.celula→32"
+  ]
+ },
+ {
+  "nome": "normal-proposta-arqueiro-inventario",
+  "arco-32": [
+   "slot-px.mini→32"
+  ],
+  "arco-40": [
+   "espaco.slot-px→40",
+   "slot-px.celula→40",
+   "slot-px.celula→40",
+   "slot-px.celula→40"
+  ],
+  "cajado-40": [
+   "slot-px.celula→40",
+   "slot-px.celula→40"
+  ]
+ },
+ {
+  "nome": "normal-proposta-arqueiro-saque-cartao",
+  "arco-32": [
+   "slot-px.mini→32"
+  ],
+  "arco-64": [
+   "achado-arte→64"
+  ],
+  "arco-48": [
+   "achado-arte.pequena→48"
+  ]
+ },
+ {
+  "nome": "normal-proposta-arqueiro-saque-voo",
+  "arco-32": [
+   "slot-px.mini→32"
+  ],
+  "arco-64": [
+   "achado-arte→64"
+  ],
+  "arco-48": [
+   "achado-arte.pequena→48",
+   "voo-item→52"
+  ]
+ },
+ {
+  "nome": "normal-proposta-arqueiro-luta",
+  "arco-32": [
+   "slot-px.mini→32"
+  ],
+  "sprite-arco": [
+   "roda-botao→32"
+  ]
+ },
+ {
+  "nome": "baixa-atual-arqueiro-mercado",
+  "sprite-arco": [
+   "slot-px.mini→32",
+   "slot-px.r-comum→0",
+   "slot-px.celula→32",
+   "slot-px.celula→32",
+   "slot-px.celula→32"
+  ],
+  "sprite-cajado": [
+   "slot-px.celula→32",
+   "slot-px.celula→32"
+  ]
+ },
+ {
+  "nome": "baixa-atual-arqueiro-inventario",
+  "sprite-arco": [
+   "slot-px.mini→32",
+   "espaco.slot-px→32",
+   "slot-px.celula→32",
+   "slot-px.celula→32",
+   "slot-px.celula→32"
+  ],
+  "sprite-cajado": [
+   "slot-px.celula→32",
+   "slot-px.celula→32"
+  ]
+ },
+ {
+  "nome": "baixa-atual-arqueiro-saque-cartao",
+  "sprite-arco": [
+   "slot-px.mini→32",
+   "achado-arte→64",
+   "achado-arte.pequena→48"
+  ]
+ },
+ {
+  "nome": "baixa-atual-arqueiro-saque-voo",
+  "sprite-arco": [
+   "slot-px.mini→32",
+   "achado-arte→64",
+   "achado-arte.pequena→48",
+   "voo-item→51"
+  ]
+ },
+ {
+  "nome": "baixa-atual-arqueiro-luta",
+  "sprite-arco": [
+   "slot-px.mini→32",
+   "roda-botao→32"
+  ]
+ },
+ {
+  "nome": "baixa-proposta-arqueiro-mercado",
+  "arco-32": [
+   "slot-px.mini→32",
+   "slot-px.r-comum→0",
+   "slot-px.celula→32",
+   "slot-px.celula→32",
+   "slot-px.celula→32"
+  ],
+  "cajado-32": [
+   "slot-px.celula→32",
+   "slot-px.celula→32"
+  ]
+ },
+ {
+  "nome": "baixa-proposta-arqueiro-inventario",
+  "arco-32": [
+   "slot-px.mini→32"
+  ],
+  "arco-40": [
+   "espaco.slot-px→40",
+   "slot-px.celula→40",
+   "slot-px.celula→40",
+   "slot-px.celula→40"
+  ],
+  "cajado-40": [
+   "slot-px.celula→40",
+   "slot-px.celula→40"
+  ]
+ },
+ {
+  "nome": "baixa-proposta-arqueiro-saque-cartao",
+  "arco-32": [
+   "slot-px.mini→32"
+  ],
+  "arco-64": [
+   "achado-arte→64"
+  ],
+  "arco-48": [
+   "achado-arte.pequena→48"
+  ]
+ },
+ {
+  "nome": "baixa-proposta-arqueiro-saque-voo",
+  "arco-32": [
+   "slot-px.mini→32"
+  ],
+  "arco-64": [
+   "achado-arte→64"
+  ],
+  "arco-48": [
+   "achado-arte.pequena→48",
+   "voo-item→51"
+  ]
+ },
+ {
+  "nome": "baixa-proposta-arqueiro-luta",
+  "arco-32": [
+   "slot-px.mini→32"
+  ],
+  "sprite-arco": [
+   "roda-botao→32"
+  ]
+ },
+ {
+  "nome": "normal-atual-mago-mercado",
+  "sprite-cajado": [
+   "slot-px.mini→32",
+   "slot-px.celula→32",
+   "slot-px.celula→32",
+   "slot-px.celula→32"
+  ]
+ },
+ {
+  "nome": "normal-atual-mago-inventario",
+  "sprite-cajado": [
+   "slot-px.mini→32",
+   "espaco.slot-px→32",
+   "slot-px.celula→32",
+   "slot-px.celula→32",
+   "slot-px.celula→32"
+  ]
+ },
+ {
+  "nome": "normal-atual-mago-saque-cartao",
+  "sprite-cajado": [
+   "slot-px.mini→32",
+   "achado-arte→64",
+   "achado-arte.pequena→48"
+  ]
+ },
+ {
+  "nome": "normal-atual-mago-saque-voo",
+  "sprite-cajado": [
+   "slot-px.mini→32",
+   "achado-arte→64",
+   "achado-arte.pequena→48",
+   "voo-item→52"
+  ]
+ },
+ {
+  "nome": "normal-atual-mago-luta",
+  "sprite-cajado": [
+   "slot-px.mini→32",
+   "roda-botao→32"
+  ]
+ },
+ {
+  "nome": "normal-proposta-mago-mercado",
+  "cajado-32": [
+   "slot-px.mini→32",
+   "slot-px.celula→32",
+   "slot-px.celula→32",
+   "slot-px.celula→32"
+  ]
+ },
+ {
+  "nome": "normal-proposta-mago-inventario",
+  "cajado-32": [
+   "slot-px.mini→32"
+  ],
+  "cajado-40": [
+   "espaco.slot-px→40",
+   "slot-px.celula→40",
+   "slot-px.celula→40",
+   "slot-px.celula→40"
+  ]
+ },
+ {
+  "nome": "normal-proposta-mago-saque-cartao",
+  "cajado-32": [
+   "slot-px.mini→32"
+  ],
+  "cajado-64": [
+   "achado-arte→64"
+  ],
+  "cajado-48": [
+   "achado-arte.pequena→48"
+  ]
+ },
+ {
+  "nome": "normal-proposta-mago-saque-voo",
+  "cajado-32": [
+   "slot-px.mini→32"
+  ],
+  "cajado-64": [
+   "achado-arte→64"
+  ],
+  "cajado-48": [
+   "achado-arte.pequena→48",
+   "voo-item→52"
+  ]
+ },
+ {
+  "nome": "normal-proposta-mago-luta",
+  "cajado-32": [
+   "slot-px.mini→32"
+  ],
+  "sprite-cajado": [
+   "roda-botao→32"
+  ]
+ },
+ {
+  "nome": "baixa-atual-mago-mercado",
+  "sprite-cajado": [
+   "slot-px.mini→32",
+   "slot-px.celula→32",
+   "slot-px.celula→32",
+   "slot-px.celula→32"
+  ]
+ },
+ {
+  "nome": "baixa-atual-mago-inventario",
+  "sprite-cajado": [
+   "slot-px.mini→32",
+   "espaco.slot-px→32",
+   "slot-px.celula→32",
+   "slot-px.celula→32",
+   "slot-px.celula→32"
+  ]
+ },
+ {
+  "nome": "baixa-atual-mago-saque-cartao",
+  "sprite-cajado": [
+   "slot-px.mini→32",
+   "achado-arte→64",
+   "achado-arte.pequena→48"
+  ]
+ },
+ {
+  "nome": "baixa-atual-mago-saque-voo",
+  "sprite-cajado": [
+   "slot-px.mini→32",
+   "achado-arte→64",
+   "achado-arte.pequena→48",
+   "voo-item→52"
+  ]
+ },
+ {
+  "nome": "baixa-atual-mago-luta",
+  "sprite-cajado": [
+   "slot-px.mini→32",
+   "roda-botao→32"
+  ]
+ },
+ {
+  "nome": "baixa-proposta-mago-mercado",
+  "cajado-32": [
+   "slot-px.mini→32",
+   "slot-px.celula→32",
+   "slot-px.celula→32",
+   "slot-px.celula→32"
+  ]
+ },
+ {
+  "nome": "baixa-proposta-mago-inventario",
+  "cajado-32": [
+   "slot-px.mini→32"
+  ],
+  "cajado-40": [
+   "espaco.slot-px→40",
+   "slot-px.celula→40",
+   "slot-px.celula→40",
+   "slot-px.celula→40"
+  ]
+ },
+ {
+  "nome": "baixa-proposta-mago-saque-cartao",
+  "cajado-32": [
+   "slot-px.mini→32"
+  ],
+  "cajado-64": [
+   "achado-arte→64"
+  ],
+  "cajado-48": [
+   "achado-arte.pequena→48"
+  ]
+ },
+ {
+  "nome": "baixa-proposta-mago-saque-voo",
+  "cajado-32": [
+   "slot-px.mini→32"
+  ],
+  "cajado-64": [
+   "achado-arte→64"
+  ],
+  "cajado-48": [
+   "achado-arte.pequena→48",
+   "voo-item→52"
+  ]
+ },
+ {
+  "nome": "baixa-proposta-mago-luta",
+  "cajado-32": [
+   "slot-px.mini→32"
+  ],
+  "sprite-cajado": [
+   "roda-botao→32"
+  ]
+ }
+]

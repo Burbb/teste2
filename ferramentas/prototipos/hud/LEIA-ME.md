@@ -1699,3 +1699,63 @@ mais à direita. **Recomendação:** 24 px, com a bomba de 24 desenhada; a banda
 `escolhas.js`, a bomba de 24 (ou 16) em `desenhar_bomba_pixel.py` (as medidas saem de `escolhas_icones.py`) e o
 tamanho em `TAMANHOS`. O gerador da bomba ganhou só a possibilidade de um tamanho sem a rede de cordão (`alca` e `anel`
 opcionais): o 32 sai idêntico ao do jogo, conferido byte a byte.
+
+(As fotos da rodada anterior da roda, `capturas-roda/` com as versões "icones" e "acabamento" de 15/10, saíram da
+pasta quando o roteiro foi refeito; continuam no histórico do git, no commit `8ee9985`.)
+
+## O arco e o cajado (proposta, sem versão)
+
+**O pedido de Jean (16/10/2026):** o lote seguinte da skill `arte-itens-fenda`, só no protótipo: o arco e o cajado,
+na direção aprovada do escudo e do machado, preservando a identidade das armas, com os tamanhos de uso (40 no
+Inventário) e a comparação no jogo. No meio, sobre o cajado: "a pedra não está tão cravejada no cetro de madeira...
+não parece tanto que está presa na madeira".
+
+**Identidade (o que o jogo diz):**
+- *Arco:* o desenho das bases Arco Curto, Arco Longo e Arco Recurvo do Arqueiro e dos únicos Ventre da Tempestade e
+  Sussurro do Vazio (o papel de equipamento, que muda junto). O mesmo sprite é o Atacar do Arqueiro na roda, o Tiro
+  Duplo e o ícone do contrato de caça: não mudam (conferido na roda). O atual: um arco de madeira em D, de pé, com a
+  corda clara. **O tipo:** arco de uma peça, de pontas levemente viradas (serve aos três, sem puxar para um só),
+  empunhadura de couro, corda clara; sem flecha (é da aljava).
+- *Cajado:* o desenho da base Cajado do Mago e do único Cajado da Peste. O mesmo sprite é o Atacar do Mago na roda e o
+  traço Conjurador dos inimigos: não mudam. O atual: um cajado de madeira com a pedra azul na ponta; a pedra azul
+  fica, como o que o faz ser o cajado do mago. **O tipo:** cajado de caminhada de carvalho escuro, a ponta aberta numa
+  taça com garras que seguram um cristal azul lapidado, empunhadura de couro e ponteira de ferro.
+
+**Os tamanhos de uso (medidos nas fotos):** 32 na ficha, no mercado e nas dicas; 40 no corpo e na mochila do
+Inventário; 64 no cartão do saque e 48 no "você usa"; o voo ao equipar anima o 48.
+
+**Os desenhos** (`ferramentas/arte/desenhar_arco_pixel.py` e `desenhar_cajado_pixel.py`, gravados em
+`arco-cajado-pixel/`; o jogo não lê esta pasta), 32, 40, 48 e 64, cada um na própria grade:
+- *Arco* (13 a 17 cores): na diagonal, como as armas da família; a corda vai de ponta a ponta e o arco abaula para
+  cima e para a esquerda, com as costas para a luz. Teixo de duas madeiras (as costas em alburno claro, a barriga em
+  cerne escuro), a luz pela posição na curva, a empunhadura de couro mais grossa; em 48 e 64, as voltas do couro e as
+  pontas de chifre onde a corda prende.
+- *Cajado* (20 a 23 cores): na diagonal; carvalho em faixas, veio e um nó em 48 e 64, couro no terço de baixo,
+  ponteira de ferro. O cristal em quatro facetas (a da luz mais clara), a aresta acesa, um reflexo pequeno e duro (a
+  regra do vidro) e a luz que atravessa embaixo; sem aura. **O encaixe** (pelo retorno do Jean): a haste abre numa
+  taça que engole a ponta de baixo da pedra, a borda da taça acesa do lado da luz e com sombra na pedra, e duas garras
+  que sobem da borda por cima das faces da pedra. Três passes até a pedra ficar presa sem sumir: as garras cobrindo a
+  pedra inteira (virava um aro marrom), a taça larga demais (a pedra encolhia e a borda fazia chifres), o equilíbrio
+  atual (a pedra maior, a borda justa, as garras finas só sobre a pedra).
+
+**A comparação** (`fotografar_arco_cajado.mjs` → `capturas-arco-cajado/`; `comparar_arco_cajado.py` monta
+`comparacao-<janela>-<classe>-<lugar>.png`, atual à esquerda, a prancha ampliada e a prancha dos arquivos). Na
+proposta, a página recebe um `icones.js` com `TAMANHOS` e `ITEM` dos dois, como a integração faria. Os cenários
+(`tests/navegador/cenarios.py`, que ganhou `AMOSTRA=<desenho>` no mercado e `CLASSE` no `vila`): para o Arqueiro e o
+Mago, o mercado com a arma vestida e outra na mochila (a ficha, a aba Vender, a dica com a comparação, depois o
+Inventário), o cartão do saque e o voo ao equipar, e a roda na luta. 1500×950 e 1280×720, sem erro no console.
+
+**Leitura de quem desenhou** (a decisão é do Jean):
+- *Reconhecer:* o arco atual é um D fino de pé; o novo, na diagonal, ocupa o espaço como a espada e o machado e se lê
+  como arco de teixo em 32. O cajado atual é uma vara com um quadrado azul; o novo tem a pedra lapidada presa na
+  madeira.
+- *Materiais:* madeira clara e escura no arco, couro, corda de linho; carvalho, couro, ferro e cristal no cajado.
+- *Onde pode perder:* o arco abaulado deixa o canto de baixo à direita vazio (é a forma do arco); em 32 a corda é
+  um fio de 1 pixel. No cajado, em 32 o encaixe vira poucos pixels de madeira em volta da pedra; a pedra pesa mais
+  que a haste fina no cartão de 64. A besta, a varinha, o orbe e o grimório (as outras armas dessas classes)
+  continuam com os sprites de hoje.
+
+**Para integrar (se aprovado):** gravar pelos dois scripts em `rpg/web/static/hud/icones/`; em `icones.js`,
+`"arco"` e `"cajado"` com `[32, 40, 48, 64]` em `TAMANHOS` e `arco: "arco", cajado: "cajado"` em `ITEM` (o
+comentário que cita o arco e o cajado entre as armas sem desenho também); conferir pixel a pixel com os desta pasta;
+as lacunas em `docs/ARQUITETURA.md`.

@@ -2618,3 +2618,16 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
 - **Conferido:** o menu inicial e o cabeçalho em 1500×950 e 1280×720, antes e depois: o título cabe numa linha (552 e
   460 px, a mesma altura), a composição é a mesma (a paisagem aberta, o título, o fio e as opções leves), o foco do
   teclado passa pelas opções, a aba mostra o nome novo, sem erro no console.
+
+### 16/10/2026 — O arco e o cajado em pixel art (proposta, sem versão)
+
+- **Pedido de Jean:** o lote seguinte de itens (`arte-itens-fenda`), só no protótipo: o arco e o cajado, com os
+  tamanhos de uso e a comparação no jogo. Retorno no meio: a pedra do cajado precisava parecer presa na madeira.
+- **Feito:** os geradores `ferramentas/arte/desenhar_arco_pixel.py` (arco de teixo de uma peça, empunhadura de
+  couro, corda clara) e `desenhar_cajado_pixel.py` (carvalho, couro, ponteira de ferro e o cristal azul lapidado,
+  cravado numa taça com garras), 32/40/48/64; a proposta em `ferramentas/prototipos/hud/arco-cajado-pixel/`; as fotos
+  atual × proposta em `capturas-arco-cajado/`; os cenários ganharam `AMOSTRA` (mercado) e `CLASSE` (vila).
+- **Nada mudou no jogo**: o Atacar da roda, o Tiro Duplo, o contrato e o Conjurador continuam com os sprites
+  (conferido na roda das duas classes).
+- O registro completo está em `ferramentas/prototipos/hud/LEIA-ME.md` ("O arco e o cajado").
+- **Falta:** Jean avaliar. Guardados: o estudo do Grimório e do livro da capela (depois da etapa de itens).

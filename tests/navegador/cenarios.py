@@ -128,10 +128,10 @@ def titulo(ui):
 def vila(ui):
     """Guerreiro numa vila: acha um item raro (cartão do saque) e depois abre o mural de contratos. ACHADO=martelo: o
     item achado é um martelo (para conferir o desenho no cartão e no voo ao equipar); ARMA=machado: a arma vestida
-    (o cartão "você usa" ao lado)."""
+    (o cartão "você usa" ao lado). CLASSE (padrão guerreiro): o herói e o achado dessa classe (ACHADO=arco, cajado...)."""
     g = Jogo(ui, seed=8, pasta_saves=tempfile.mkdtemp())
     ui.jogo = g
-    g.iniciar("Jean", "guerreiro")
+    g.iniciar("Jean", os.environ.get("CLASSE", "guerreiro"))
     g.mundo["atual"] = next(l for l in g.mundo["locais"] if l["tipo"] == "vila")["id"]
     g.periodo, g.clima = 1, "limpo"
     g.j.ouro = 300
@@ -149,7 +149,7 @@ def vila(ui):
         if it["slot"] in ("arma", "armadura") and g.j.equip.get(it["slot"]):
             break
     if os.environ.get("ACHADO"):
-        it = next(e for e in iter(lambda: gerar_equip(rng, "guerreiro", 4, qualidade=1), None) if e["icone"] == os.environ["ACHADO"])
+        it = next(e for e in iter(lambda: gerar_equip(rng, g.j.classe, 4, qualidade=1), None) if e["icone"] == os.environ["ACHADO"])
     vestir_arma(g)
     ui.cena("Ruínas do caminho", g.contexto_cena(), "evento")
     g.dizer("Entre as pedras, algo reluz.")
@@ -887,7 +887,8 @@ def mercado(ui):
     alguns de outra classe), PROVISOES, PERIODO (padrão 1, tarde; 3 é noite). AMOSTRAS=1 (o experimento de resolução,
     ferramentas/prototipos/hud): um Martelo na frente da mochila e uma Pena de Fênix na bolsa. AMOSTRAS=2 (o escudo e o
     unguento da 1.94.0): um escudo na frente da mochila e um Unguento de Prata na bolsa. AMOSTRAS=3 (a proposta do
-    machado e da bomba): um machado na frente da mochila e uma Bomba de Fumaça na bolsa. ARMA=machado: a arma vestida."""
+    machado e da bomba): um machado na frente da mochila e uma Bomba de Fumaça na bolsa. ARMA=machado: a arma vestida.
+    AMOSTRA=<desenho> (arco, cajado...): uma arma da CLASSE com esse desenho na frente da mochila."""
     g = Jogo(ui, seed=int(os.environ.get("SEMENTE", "8")), pasta_saves=tempfile.mkdtemp())
     ui.jogo = g
     classe = os.environ.get("CLASSE", "arqueiro")
@@ -906,6 +907,9 @@ def mercado(ui):
                                                                                               ("martelo", "pena_fenix"))
         g.j.mochila.insert(0, next(e for e in iter(lambda: gerar_equip(r, "guerreiro", 2), None) if e["icone"] == icone))
         g.j.consumiveis[consumivel] = 1
+    if os.environ.get("AMOSTRA"):
+        r = random.Random(3)
+        g.j.mochila.insert(0, next(e for e in iter(lambda: gerar_equip(r, classe, 2, slot="arma"), None) if e["icone"] == os.environ["AMOSTRA"]))
     vestir_arma(g)
     g.loja()
     try:
