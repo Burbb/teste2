@@ -2743,3 +2743,24 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   continuam com as dicas de sempre.
 - **Protótipo:** o menu de Itens em faixas (`ferramentas/prototipos/hud/LEIA-ME.md`, "O menu de Itens em faixas").
   Espera a avaliação; o menu de Itens do jogo não mudou.
+
+### 17/10/2026 — O menu de Itens no jogo (1.105.0) e a venda com a grade parada (1.105.1)
+
+- **Menu de Itens (1.105.0):** o protótipo aprovado entrou como apresentado: o mesmo seletor de faixas de
+  Habilidades (`abrirJanela`, `.roda-janela.seletor`, `data-tipo`), com a quantidade à direita (na cor normal no item
+  que não serve), o motivo do motor na faixa, a descrição embaixo da coluna, a troca de arma com a ficha e "turno", a
+  poção indo para a mira dos aliados como antes, e "Nada na bolsa serve agora." quando nada serve. A janelinha antiga
+  ao lado dos botões saiu. As fotos do jogo saem iguais às da proposta (comparadas pixel a pixel).
+- **O Tônico** diz só o recurso da classe ("Recupera metade do Vigor / do Foco / da Mana."): `itens.descricao`, com
+  o nome do recurso e o artigo vindos de `classes.py` (`artigo_recurso`). O gabarito mudou só nesse texto.
+- **A venda (1.105.1):** a causa da instabilidade era a grade desenhada na ordem da mochila do motor (as peças
+  escorregavam a cada venda e a fila adivinhava a peça pela assinatura, que não distingue peças iguais). Agora a
+  aba Vender guarda um arranjo da visita: cada peça tem uma ficha e um espaço fixo; vender esvazia o espaço, a
+  recompra e a peça que sai do corpo vão para o primeiro vazio, e sair do mercado volta à ordem de sempre.
+- **Conferido:** Itens nas três classes (com comitiva, uma rodada antes), bolsa variada, poucos itens e vazia, em
+  1500×950 e 1280×720, mouse, teclado, movimento reduzido, registro por baixo sem linha cortada
+  (`fotografar_itens_faixas.mjs` → `capturas-itens-jogo/`); abrir e fechar rápido e a troca com Habilidades, e a
+  venda (rápida, clique duplo, clique no vazio, troca de aba com venda a caminho, recompra, equipar, arrastar, sair)
+  em `tests/navegador/cliques_seguidos.mjs`.
+- **Esperando o Jean:** o encaixe do cajado (a revisão de 17/10 em `cajado-encaixe/` e `capturas-cajado-encaixe/`)
+  e os ícones das escolhas em 24 px. Os próximos lotes de arte ficam para a etapa seguinte.

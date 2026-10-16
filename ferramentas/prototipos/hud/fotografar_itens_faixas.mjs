@@ -12,14 +12,15 @@
 // Voltar. Mais o movimento reduzido no guerreiro. Mede se o menu cobre a arena, se rola e se corta texto, a descrição
 // (a do Tônico com o recurso da classe, a ficha da troca de arma) e se o registro por baixo fica com linha cortada.
 //   PLAYWRIGHT_MODULO=<caminho do playwright>/index.mjs node ferramentas/prototipos/hud/fotografar_itens_faixas.mjs
-// (VERSOES=atual,proposta, LUTAS=..., JANELAS=normal,baixa, SAIDA=<pasta>)
+// (VERSOES=atual,proposta, LUTAS=..., JANELAS=normal,baixa, SAIDA=<pasta>; padrão capturas-itens-jogo/, as fotos do
+// protótipo ficam em capturas-itens-faixas/)
 import { spawn } from "child_process";
 import { mkdirSync, readFileSync, rmSync, writeFileSync } from "fs";
 import { fileURLToPath } from "url";
 import path from "path";
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULO || "playwright");
 const aqui = path.dirname(fileURLToPath(import.meta.url)), raiz = path.resolve(aqui, "../../..");
-const SAIDA = path.resolve(process.env.SAIDA || path.join(aqui, "capturas-itens-faixas"));
+const SAIDA = path.resolve(process.env.SAIDA || path.join(aqui, "capturas-itens-jogo"));
 rmSync(SAIDA, { recursive: true, force: true });
 mkdirSync(SAIDA, { recursive: true });
 const espera = (ms) => new Promise((r) => setTimeout(r, ms));
