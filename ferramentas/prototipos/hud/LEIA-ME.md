@@ -2315,3 +2315,43 @@ mais clara que a primeira tentativa para conviver com o escudo e o orbe (no tom 
 deles no carvão), e a escala foi reduzida para ocupar o quadro como os vizinhos. O que fica abaixo da referência: o
 fecho é uma chapa pequena na beira (a tira de couro quase não aparece neste tamanho), e o bloco de páginas tem três ou
 quatro fileiras, o suficiente para separar das capas, sem os fios finos da imagem. Espera a avaliação do Jean.
+
+### O grimório fechado: a revisão de acabamento do 64 (proposta)
+
+**O pedido de Jean:** a direção do fechado está aprovada (conceito, pose diagonal, cores e elementos). Antes dos outros
+tamanhos, dois pontos no 64: (1) o volume e a luz da capa (a superfície muito uniforme, o brilho numa faixa larga junto
+da lombada): separar a face de cima, a espessura e a lombada, poucos planos para o couro levemente arredondado e as
+quinas, o brilho nas arestas voltadas para a luz, sem faixa clara contínua, mantendo a sombra de contato entre a capa,
+as folhas e a contracapa; (2) o emblema no plano da capa, com o crescente legível e com cara de peça aplicada no couro.
+Preservar a silhueta, o enquadramento, a ocupação, a paleta, o fecho, as ferragens e as páginas; guardar o 64 de antes.
+
+**O que mudou** (`ferramentas/arte/desenhar_grimorio_fechado_pixel.py`, gravado em `livro-fechado-acabamento/`; o 64
+de antes fica intacto em `livro-fechado-ref/`):
+- *a capa:* a face de cima é uma almofada de couro (a altura sobe das beiras para o meio, com o alto um pouco para o
+  lado da lombada e da cabeça); a luz de `pixel_comum` sobre a normal dessa forma, em degraus da rampa, dá três planos
+  largos: o alto aceso junto da cabeça e da lombada, o meio no tom da capa, a descida para o pé e a beira da frente um
+  degrau abaixo (as medidas em `CAPA`). O brilho ficou só na aresta da cabeça, num fio que é mais claro junto da quina
+  da lombada e apaga para a frente; a beira da frente perdeu o fio claro (ela está do lado da sombra);
+- *a lombada:* entre ela e a capa, o sulco da dobradiça (1 pixel escuro, contínuo, marcado pelos vizinhos da lombada e
+  protegido da limpeza), que separa as duas peças; o brilho do couro deixou de correr a lombada inteira: cada gomo
+  entre os reforços (e as pontas) tem o fio de luz só no meio (`LOMBADA`), e o tom mais claro saiu;
+- *o emblema:* o losango com as pontas nas direções da capa (a cabeça, a frente, o pé e a lombada), como a perspectiva
+  as põe, com os vértices arredondados para pixels inteiros e os lados ligados por retas de Bresenham (degraus
+  regulares, sem pixel solto); o crescente redesenhado à mão na mesma inclinação, com a abertura para a beira da
+  frente, e o ponto na abertura; as linhas do lado da luz um tom acima das do lado da sombra, e o sulco escuro
+  embaixo da peça, que a assenta no couro. Antes de escolher, comparei quatro proporções do losango; a mais baixa e
+  larga deixou o crescente solto dentro, sem encostar nas linhas;
+- *preservados:* a silhueta, a escala, o enquadramento, a paleta, o fecho, as cantoneiras, as páginas (a fresta escura
+  sob a capa, as fileiras, a sombra na contracapa) e a espessura no pé. 21 cores.
+
+**A conferência** (`fotografar_livro_fechado.mjs`, agora com as três versões: o jogo, o de antes e o revisado;
+`comparar_livro_fechado.py` monta o antes × depois em `capturas-livro-fechado/`): `antes-depois-zoom.png` (os dois em
+1× sobre o carvão e 8× sem suavizar), `antes-depois-vizinhos.png` (os dois ao lado do escudo, do cajado e do orbe, em
+1× e 4×) e `antes-depois-<janela>-saque-cartao.png` (o cartão do saque nas duas janelas). Nas pranchas, o de antes
+vem em cima. O cartão usa `livro-64.png` em 64 px; sem erro no console.
+
+**A avaliação:** de longe, a capa tem volume: o alto aceso para o lado da luz e a descida escura para a frente leem
+como couro abaulado, e a lombada fica separada da capa pelo sulco, não mais emendada numa faixa clara. O emblema deita
+na capa. O que observar: os lados do losango em perspectiva têm degraus de 3 por 1 e de 9 por 1, menos regulares que
+os de 45° de antes (é o preço de acompanhar o plano); e a fronteira entre os planos da capa é uma escada larga, que
+de perto aparece mais do que em 1×. Espera a avaliação do Jean antes de 32, 40 e 48.

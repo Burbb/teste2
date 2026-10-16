@@ -2837,3 +2837,16 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   orbe e o cartão do saque nas duas janelas em `capturas-livro-fechado/` (`fotografar_livro_fechado.mjs`).
 - **Continua como está no jogo:** o livro com o sprite antigo. Espera a avaliação do 64 antes de 32, 40, 48 ou da
   integração.
+
+### 17/10/2026 — Proposta: o acabamento do 64 do grimório fechado (protótipo)
+
+- **Pedido de Jean:** a direção do fechado aprovada; antes dos outros tamanhos, refinar no 64 o volume e a luz da capa
+  (planos para o couro abaulado, brilho nas arestas voltadas para a luz, sem faixa clara contínua, a sombra de contato
+  mantida) e pôr o emblema no plano da capa, guardando o 64 de antes.
+- **Feito:** `ferramentas/arte/desenhar_grimorio_fechado_pixel.py` (a capa em almofada com três planos, o fio da
+  cabeça, o sulco da dobradiça, o brilho da lombada em trechos, o emblema em perspectiva com o crescente à mão),
+  gravado em `ferramentas/prototipos/hud/livro-fechado-acabamento/`; o de antes intacto em `livro-fechado-ref/`; o
+  antes × depois (em 1× e ampliado, ao lado do escudo, do cajado e do orbe, e no cartão do saque nas duas janelas) em
+  `capturas-livro-fechado/` (`fotografar_livro_fechado.mjs` e `comparar_livro_fechado.py`).
+- **Continua como está no jogo:** o livro com o sprite antigo. Espera a avaliação do 64 antes de 32, 40, 48 ou da
+  integração.

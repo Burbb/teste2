@@ -1,10 +1,12 @@
 // O grimório fechado da nova referência do Jean (protótipo, só o 64): fotografa o cartão do saque do jogo de verdade
-// com o desenho de hoje (o sprite 16×16 "livro") e com a proposta (livro-fechado-ref/livro-64.png, de
-// ferramentas/arte/desenhar_grimorio_fechado_pixel.py), com os mesmos dados. Na proposta, a página recebe um
+// com o desenho de hoje (o sprite 16×16 "livro"), com o 64 aprovado como direção (livro-fechado-ref/) e com a revisão
+// de acabamento dele (livro-fechado-acabamento/, de ferramentas/arte/desenhar_grimorio_fechado_pixel.py), com os
+// mesmos dados. Na proposta, a página recebe um
 // icones.js com o livro registrado só em 64 (TAMANHOS e ITEM) e o arquivo vem da pasta; o jogo não muda. O 64 só fica
 // parado no cartão do saque, então é o único lugar fotografado: o Mago acha um Grimório (ACHADO=livro) vestindo o
 // cajado aprovado (ARMA=cajado), que aparece ao lado no "você usa" em 48. Em 1500×950 e 1280×720.
-// Guarda em capturas-livro-fechado/<janela>-<versao>-<lugar>.png e o recorte ampliável do 64 como zoom-...
+// Guarda em capturas-livro-fechado/<janela>-<versao>-<lugar>.png (versão: atual, fechado, acabamento) e o recorte
+// ampliável do 64 como zoom-...
 //   PLAYWRIGHT_MODULO=<caminho do playwright>/index.mjs node ferramentas/prototipos/hud/fotografar_livro_fechado.mjs
 import { spawn } from "child_process";
 import { mkdirSync, readFileSync, rmSync } from "fs";
@@ -12,7 +14,8 @@ import { fileURLToPath } from "url";
 import path from "path";
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULO || "playwright");
 const aqui = path.dirname(fileURLToPath(import.meta.url)), raiz = path.resolve(aqui, "../../..");
-const SAIDA = path.join(aqui, "capturas-livro-fechado"), PASTA = path.join(aqui, "livro-fechado-ref");
+const SAIDA = path.join(aqui, "capturas-livro-fechado");
+const PASTAS = { fechado: path.join(aqui, "livro-fechado-ref"), acabamento: path.join(aqui, "livro-fechado-acabamento") };
 rmSync(SAIDA, { recursive: true, force: true });
 mkdirSync(SAIDA, { recursive: true });
 const espera = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -43,15 +46,15 @@ async function recortar(p, sel, nome, folga) {
   }, [sel, folga]);
   if (c) await p.screenshot({ path: path.join(SAIDA, `${nome}.png`), clip: c }); else console.log(`  (sem ${sel} em ${nome})`);
 }
-for (const jan of Object.keys(JANELAS)) for (const versao of ["atual", "fechado"]) {
+for (const jan of Object.keys(JANELAS)) for (const versao of ["atual", ...Object.keys(PASTAS)]) {
   const n = (c) => `${jan}-${versao}-${c}`;
   const { proc, url } = await subir("vila", { CLASSE: "mago", ACHADO: "livro", ARMA: "cajado" });
   const [W, H] = JANELAS[jan];
   const p = await b.newPage({ viewport: { width: W, height: H } });
-  if (versao === "fechado") {
+  if (PASTAS[versao]) {
     await p.route(/\/static\/icones\.js(\?|$)/, (r) => r.fulfill({ body: iconesProposta, contentType: "application/javascript" }));
     await p.route(/\/static\/hud\/icones\/livro-[^/]+\.png/, (r) => r.fulfill({
-      path: path.join(PASTA, path.basename(new URL(r.request().url()).pathname)), contentType: "image/png" }));
+      path: path.join(PASTAS[versao], path.basename(new URL(r.request().url()).pathname)), contentType: "image/png" }));
   }
   p.on("pageerror", (e) => erros.push(`${n("saque")}: ${e}`));
   p.on("response", (r) => { if (r.status() >= 400 && !/favicon/.test(r.url())) erros.push(`${n("saque")}: ${r.status()} ${r.url()}`); });

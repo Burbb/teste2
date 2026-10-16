@@ -13,16 +13,19 @@ diagonal, visto de cima em três quartos. O que se preserva, reconstruído por r
   - a pose: a lombada à esquerda, descendo da cabeça (em cima à esquerda) até o pé (embaixo); a capa de cima larga,
     em perspectiva; o pé do livro de frente para quem olha, mostrando o bloco de páginas;
   - a capa: couro violeta (puxado para o vinho), com espessura (as tábuas aparecem no pé), quinas e planos de luz
-    definidos: a face de cima num tom, as beiras do lado da luz (a cabeça e a da frente) num fio mais claro, a beira
-    do pé (a espessura) na sombra;
-  - a lombada: um cilindro de couro, mais alto que a capa, com um fio de brilho ao longo e dois reforços de latão em
-    volta (os nervos da encadernação), cada um com o lado da luz aceso;
+    definidos: a face de cima levemente abaulada em três planos (o alto junto da cabeça e da lombada aceso, o meio, a
+    descida para o pé e a beira da frente na sombra), o brilho só na aresta da cabeça (mais forte junto da lombada), o
+    sulco escuro da dobradiça entre a capa e a lombada, a espessura no pé na sombra;
+  - a lombada: um cilindro de couro, um fio mais alto que a capa, com dois reforços de latão em volta (os nervos da
+    encadernação), cada um com o lado da luz aceso; o brilho do couro em trechos, no meio de cada gomo entre os
+    reforços, sem correr a lombada inteira;
   - o bloco de páginas: papel envelhecido, recuado das capas, com a beira de cima clara e fios de folhas; separado
     das tábuas por uma linha escura;
   - o fecho: uma tira de couro que vem da capa de trás pela beira da frente e uma chapa de latão sobre a capa, com o
     rasgo escuro do pino;
   - as ferragens: cantoneiras de latão envelhecido nos dois cantos soltos, com o rebite;
-  - o emblema: um losango gravado em latão no meio da capa, com o crescente e um ponto dentro, só como decoração.
+  - o emblema: um losango de latão aplicado no meio da capa, no plano dela, com o crescente e um ponto dentro, só como
+    decoração.
 
 A construção: um modelo em três dimensões de polígonos planos (as tábuas, o bloco, as facetas da lombada e dos
 reforços), numa projeção paralela; cada pixel acha o plano mais perto da câmera e o ponto 3D dele: o tom vem da
@@ -55,15 +58,28 @@ LIVRO = dict(W=0.74, T=0.22, tab=0.045, esq=0.015, lombada=0.55, cabo=0.0, refor
              giro=-32.0, alt=58.0)
 # Por tamanho: a escala (o comprimento do livro na tela, em px) e o centro dele na tela; o emblema em pixels da tela:
 # o raio do losango, o ponto e o crescente (em relação ao centro do losango; a linha do meio do desenho é a do centro).
-MEDIDAS = {64: dict(esc=38.0, cx=31.5, cy=31.5, losango=7, ponto=(2, 0),
-                   # o crescente à mão (a conta com dois círculos virava um "L" nesta grade): "#" o latão, "+" o fio aceso
-                   crescente=(" .+#",
-                              ".+#.",
-                              "+#..",
-                              "+#..",
-                              "+#..",
-                              ".+#.",
-                              " .+#"))}
+MEDIDAS = {64: dict(esc=38.0, cx=31.5, cy=31.5,
+                   # o emblema no plano da capa, em pixels da tela a partir do meio da capa: os vértices do losango (as
+                   # pontas na direção da cabeça, da frente, do pé e da lombada, como a perspectiva da capa as põe,
+                   # arredondadas para os lados saírem em degraus regulares), o crescente à mão (na mesma
+                   # inclinação, a abertura para a beira da frente; "#" o latão, "+" o fio aceso; a linha e a coluna do
+                   # meio do desenho caem em crescente_em) e o ponto
+                   losango=((-4, -6), (5, -3), (4, 6), (-5, 3)),
+                   crescente_em=(0, -1),
+                   crescente=("...+...",
+                              "..+#...",
+                              ".+#....",
+                              ".+#....",
+                              ".+#....",
+                              "..+##..",
+                              "....##."),
+                   ponto=(2, -2))}
+# A capa de cima: a largura da beira que arredonda (em fração da largura e do comprimento), a altura da almofada, a
+# curvatura do couro inteiro (o alto um pouco para o lado da lombada e da cabeça), o quanto de luz vale um degrau da rampa e até
+# onde vai o brilho mais claro da aresta da cabeça, a partir da lombada.
+CAPA = dict(borda_u=0.16, borda_v=0.13, altura=0.05, abaulado=1.2, degrau=0.045, quina_luz=0.3)
+# A lombada: que parte do comprimento de cada gomo (entre os reforços) leva o fio de luz.
+LOMBADA = dict(fio=0.5)
 # Correções feitas olhando cada tamanho: {(x, y): (material ou None, tom)}.
 AJUSTES = {64: {}}
 
@@ -121,6 +137,23 @@ def faces():
     # o fecho: a chapa de latão, com espessura, sobre a capa e passando da beira da frente
     lista += caixa("chapa", "l", W - 0.08, W + e + 0.035, Tt, Tt + 0.014, 0.43, 0.57)
     return lista
+
+
+def reta(a, b):
+    """Os pixels de uma reta entre dois pontos inteiros (Bresenham): um por passo, sem degraus soltos."""
+    (x0, y0), (x1, y1) = a, b
+    dx, dy = abs(x1 - x0), -abs(y1 - y0)
+    passo_x, passo_y = (1 if x1 > x0 else -1), (1 if y1 > y0 else -1)
+    erro, pontos = dx + dy, []
+    while True:
+        pontos.append((x0, y0))
+        if (x0, y0) == (x1, y1):
+            return pontos
+        e2 = 2 * erro
+        if e2 >= dy:
+            erro, x0 = erro + dy, x0 + passo_x
+        if e2 <= dx:
+            erro, y0 = erro + dx, y0 + passo_y
 
 
 def dentro_poligono(px, py, poly):
@@ -189,35 +222,76 @@ def desenhar(lado_img):
         u = X / (W + e)                                                # 0 na lombada, 1 na beira da frente
         v = (Z + e) / (1 + 2 * e)                                      # 0 no pé, 1 na cabeça
         px = 1.0 / esc
-        tom[cima_capa] = t0
-        # o chanfro da tábua: uma faixa acesa junto da lombada e da cabeça (as beiras do lado da luz)
-        tom[cima_capa & ((u < 0.045) | (v > 1 - 3.2 * px))] = t0 + 1
-        beira_luz = cima_capa & ((v > 1 - 1.4 * px) | (u < 0.03))
-        tom[beira_luz] = min(8, t0 + 3)
-        # o chanfro do lado da sombra: uma faixa mais escura junto do pé e da beira da frente
-        tom[cima_capa & ((u > 1 - 2.6 * px / W) | (v < 2.6 * px))] = t0 - 1
-        tom[cima_capa & (u > 1 - 1.0 * px / W) & (v > 2.6 * px)] = min(8, t0 + 2)   # a quina da frente pega um fio
-        # o emblema gravado: o losango, com o crescente e o ponto dentro. Desenhado em pixels da tela, centrado no
-        # meio da capa (onde o meio cai na tela): a linha a 45 graus fica limpa, sem os degraus da perspectiva
+        # o couro levemente abaulado (uma almofada): a altura sobe das beiras para o meio e, de leve, do canto da
+        # frente no pé para o da lombada na cabeça; a luz (a de pixel_comum) sobre a normal dessa forma vira poucos
+        # planos: o meio no tom da capa, a subida para a cabeça e a lombada um degrau acima, a descida para o pé e a
+        # beira da frente um degrau abaixo
+        bu = np.clip(u / CAPA["borda_u"], 0, 1)
+        bf = np.clip((1 - u) / CAPA["borda_u"], 0, 1)
+        bv = np.clip(v / CAPA["borda_v"], 0, 1)
+        bc = np.clip((1 - v) / CAPA["borda_v"], 0, 1)
+        sobe = lambda b: 1 - (1 - b) ** 2                               # a beira que arredonda
+        dsobe = lambda b: 2 * (1 - b)
+        hu, hv = sobe(bu) * sobe(bf), sobe(bv) * sobe(bc)
+        dh_du = (dsobe(bu) / CAPA["borda_u"] * (bu < 1) * sobe(bf) - dsobe(bf) / CAPA["borda_u"] * (bf < 1) * sobe(bu)) * hv
+        dh_dv = (dsobe(bv) / CAPA["borda_v"] * (bv < 1) * sobe(bc) - dsobe(bc) / CAPA["borda_v"] * (bc < 1) * sobe(bv)) * hu
+        # e o abaulado do couro inteiro, com o alto um pouco para o lado da lombada e da cabeça
+        dh_du = dh_du - 2 * CAPA["abaulado"] * (u - 0.4)
+        dh_dv = dh_dv - 2 * CAPA["abaulado"] * (v - 0.6)
+        k = CAPA["altura"]
+        nx, ny, nz = -k * dh_du / (W + e), np.ones_like(u), -k * dh_dv / (1 + 2 * e)
+        nn = np.sqrt(nx ** 2 + ny ** 2 + nz ** 2)
+        n_tela = np.stack([(nx * direita[0] + ny * direita[1] + nz * direita[2]) / nn,
+                           -(nx * cima[0] + ny * cima[1] + nz * cima[2]) / nn,
+                           (nx * para_camera[0] + ny * para_camera[1] + nz * para_camera[2]) / nn], axis=-1)
+        L = n_tela @ LUZ
+        plano = np.array([direita[1], -cima[1], para_camera[1]]) @ LUZ
+        degrau = np.clip(np.round((L - plano) / CAPA["degrau"]), -1, 1).astype(int)
+        tom[cima_capa] = (t0 + degrau)[cima_capa]
+        # as arestas: só as voltadas para a luz pegam brilho, e concentrado. A da cabeça num fio, mais claro junto da
+        # quina da lombada (a que mais olha para a luz) e apagando para a frente; junto da lombada, o sulco da
+        # dobradiça (a sombra de construção entre a lombada e a capa)
+        cabeca = cima_capa & (v > 1 - 1.2 * px)
+        tom[cabeca] = t0 + 2
+        tom[cabeca & (u < CAPA["quina_luz"])] = t0 + 3
+        tom[cabeca & (u > 0.72)] = t0 + 1
+        da_lombada = np.char.startswith(nomes, "lombada") | np.char.startswith(nomes, "reforco")
+        encosta = np.zeros(x.shape, dtype=bool)
+        for dy_, dx_ in ((0, 1), (0, -1), (1, 0), (-1, 0)):
+            encosta |= np.roll(da_lombada, (dy_, dx_), axis=(0, 1))
+        sulco = cima_capa & encosta & (u < 0.2)                           # o sulco: o pixel da capa encostado na lombada
+        tom[sulco] = t0 - 2
+        tom[sulco & (v > 1 - 1.2 * px)] = t0 + 2
+        fixo[sulco | cabeca] = True                                     # traços de 1 pixel: a limpeza não os apaga
+        # o emblema aplicado no couro, no plano da capa: o losango (linhas retas entre os vértices), o crescente e o
+        # ponto, a partir do meio da capa na tela; as linhas do lado da luz (a da cabeça e a da lombada) acesas, as do
+        # outro lado mais baixas, e o sulco escuro embaixo, que assenta a peça no couro
         cx_e, cy_e = tela(np.array([0.52 * (W + e), Tt, 0.5]))
         sx, sy = np.floor(x) - math.floor(cx_e), np.floor(y) - math.floor(cy_e)
-        R = M["losango"]
-        linha = cima_capa & (np.abs(sx) + np.abs(sy) == R)
+        vert = M["losango"]
+        linha, linha_luz = np.zeros(x.shape, dtype=bool), np.zeros(x.shape, dtype=bool)
+        for k in range(4):
+            for qx, qy in reta(vert[k], vert[(k + 1) % 4]):
+                aqui = (sx == qx) & (sy == qy)
+                linha |= aqui
+                if k in (0, 3):                                        # a da cabeça e a da lombada
+                    linha_luz |= aqui
+        linha &= cima_capa
         cres, cres_luz = np.zeros(x.shape, dtype=bool), np.zeros(x.shape, dtype=bool)
         desenho = M["crescente"]
         for j, fila in enumerate(desenho):
             for i, c in enumerate(fila):
                 if c in "#+":
-                    aqui = cima_capa & (sx == i - 2) & (sy == j - len(desenho) // 2)
+                    aqui = cima_capa & (sx == i - len(fila) // 2 + M["crescente_em"][0]) & \
+                        (sy == j - len(desenho) // 2 + M["crescente_em"][1])
                     cres |= aqui
                     cres_luz |= aqui & (c == "+")
         ponto = cima_capa & (sx == M["ponto"][0]) & (sy == M["ponto"][1])
         grav = linha | cres | ponto
-        mat[grav], tom[grav] = "l", 6
-        tom[ponto] = 7
-        tom[cres_luz] = 7                                                # a borda do crescente do lado da luz
-        tom[linha & ((sx < 0) & (sy < 0))] = 7                            # o fio do losango do lado da luz
-        tom[linha & ((sx > 0) & (sy > 0))] = 5
+        mat[grav], tom[grav] = "l", 5
+        tom[linha & linha_luz] = 6
+        tom[cres] = 6
+        tom[cres_luz | ponto] = 7
         sombra = cima_capa & ~grav & np.roll(grav, 1, axis=0) & np.roll(grav, 1, axis=1)
         tom[sombra] = np.maximum(1, tom[sombra] - 2)                    # o sulco da gravação, embaixo à direita
         fixo[grav] = True
@@ -259,8 +333,16 @@ def desenhar(lado_img):
     rl = Tt / 2 + 0.006
     rx = LIVRO["lombada"] * 2 * rl * 0.55
     ang = np.arctan2((Y - Tt / 2) / rl, X / rx)                         # o ângulo em volta do eixo (na elipse)
-    tom[lomb & (np.abs(ang - math.radians(140)) < 0.22)] = 7
-    tom[lomb & (np.abs(ang - math.radians(140)) < 0.1)] = 8
+    # o brilho não corre a lombada inteira: cada trecho entre os reforços (e as pontas) é um gomo de couro estufado,
+    # com o fio de luz só no meio dele; perto dos reforços e das pontas o fio apaga para o tom do lado da luz
+    fio = lomb & (np.abs(ang - math.radians(140)) < 0.24)
+    cortes = [-e] + [zr for zr in LIVRO["reforcos"]] + [1 + e]
+    meio_gomo = np.zeros(x.shape, dtype=bool)
+    for z0, z1 in zip(cortes[:-1], cortes[1:]):
+        zm, meia = (z0 + z1) / 2, (z1 - z0) / 2
+        meio_gomo |= (np.abs(Z - zm) < meia * LOMBADA["fio"])
+    tom[fio] = 6
+    tom[fio & meio_gomo] = 7
     # o pé da lombada não é maciço: a casca de couro faz a curva por fora e, dentro dela, o maço de folhas dobra
     tampa = nomes == "lombada_tampa_pe"
     dentro = tampa & ((X / rx) ** 2 + ((Y - Tt / 2) / rl) ** 2 < 0.45)
