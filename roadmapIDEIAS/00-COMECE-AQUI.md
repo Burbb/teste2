@@ -2773,3 +2773,14 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   Peste). O Atacar do Mago na roda e o traço Conjurador dos inimigos continuam com o sprite do jogo.
 - **Conferido** (`fotografar_itens.mjs`, SO=cajado, 1500×950 e 1280×720): ficha 32, mercado e dica de comparação 32,
   Inventário 40 (corpo e mochila), cartão do saque 64 e 48, voo ao equipar; a roda com o sprite.
+
+### 17/10/2026 — Proposta: o orbe e o livro do Mago (protótipo, sem versão)
+
+- **Pedido de Jean:** o orbe e o livro de equipamento pela skill `arte-itens-fenda`, só no protótipo.
+- **Feito:** `ferramentas/arte/desenhar_orbe_pixel.py` (a esfera de vidro violeta na taça de latão com três garras,
+  pescoço e pé; a reflexão separada da luz de dentro, sem aura) e `desenhar_livro_pixel.py` (o livro fechado de couro
+  violeta, lombada com nervos, corte com a espessura das páginas, cantos e fecho de latão, sem símbolos), 32/40/48/64,
+  gravados em `ferramentas/prototipos/hud/orbe-livro-pixel/`; atual × proposta em `capturas-orbe-livro/`, nas duas
+  janelas (mercado, ficha, dica, Inventário, saque, voo, telas inteiras).
+- **Continua como está no jogo:** o orbe e o livro com o sprite antigo; o Grimório da interface e o livro da capela
+  (outra etapa). Espera a avaliação do Jean.

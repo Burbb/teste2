@@ -1,0 +1,370 @@
+[
+ {
+  "nome": "normal-atual-orbe-mercado",
+  "sprite-orbe": [
+   "slot-px.mini→32",
+   "slot-px.r-comum→0",
+   "slot-px.celula→32",
+   "slot-px.celula→32"
+  ],
+  "sprite-livro": [
+   "slot-px.celula→32"
+  ]
+ },
+ {
+  "nome": "normal-atual-orbe-inventario",
+  "sprite-orbe": [
+   "slot-px.mini→32",
+   "espaco.slot-px→32",
+   "slot-px.celula→32",
+   "slot-px.celula→32"
+  ],
+  "sprite-livro": [
+   "slot-px.celula→32"
+  ]
+ },
+ {
+  "nome": "normal-atual-orbe-saque-cartao",
+  "sprite-orbe": [
+   "slot-px.mini→32",
+   "achado-arte→64",
+   "achado-arte.pequena→48"
+  ]
+ },
+ {
+  "nome": "normal-atual-orbe-saque-voo",
+  "sprite-orbe": [
+   "slot-px.mini→32",
+   "achado-arte→64",
+   "achado-arte.pequena→48",
+   "voo-item→52"
+  ]
+ },
+ {
+  "nome": "normal-proposta-orbe-mercado",
+  "orbe-32": [
+   "slot-px.mini→32",
+   "slot-px.r-comum→0",
+   "slot-px.celula→32",
+   "slot-px.celula→32"
+  ],
+  "livro-32": [
+   "slot-px.celula→32"
+  ]
+ },
+ {
+  "nome": "normal-proposta-orbe-inventario",
+  "orbe-32": [
+   "slot-px.mini→32"
+  ],
+  "orbe-40": [
+   "espaco.slot-px→40",
+   "slot-px.celula→40",
+   "slot-px.celula→40"
+  ],
+  "livro-40": [
+   "slot-px.celula→40"
+  ]
+ },
+ {
+  "nome": "normal-proposta-orbe-saque-cartao",
+  "orbe-32": [
+   "slot-px.mini→32"
+  ],
+  "orbe-64": [
+   "achado-arte→64"
+  ],
+  "orbe-48": [
+   "achado-arte.pequena→48"
+  ]
+ },
+ {
+  "nome": "normal-proposta-orbe-saque-voo",
+  "orbe-32": [
+   "slot-px.mini→32"
+  ],
+  "orbe-64": [
+   "achado-arte→64"
+  ],
+  "orbe-48": [
+   "achado-arte.pequena→48",
+   "voo-item→52"
+  ]
+ },
+ {
+  "nome": "baixa-atual-orbe-mercado",
+  "sprite-orbe": [
+   "slot-px.mini→32",
+   "slot-px.r-comum→0",
+   "slot-px.celula→32",
+   "slot-px.celula→32"
+  ],
+  "sprite-livro": [
+   "slot-px.celula→32"
+  ]
+ },
+ {
+  "nome": "baixa-atual-orbe-inventario",
+  "sprite-orbe": [
+   "slot-px.mini→32",
+   "espaco.slot-px→32",
+   "slot-px.celula→32",
+   "slot-px.celula→32"
+  ],
+  "sprite-livro": [
+   "slot-px.celula→32"
+  ]
+ },
+ {
+  "nome": "baixa-atual-orbe-saque-cartao",
+  "sprite-orbe": [
+   "slot-px.mini→32",
+   "achado-arte→64",
+   "achado-arte.pequena→48"
+  ]
+ },
+ {
+  "nome": "baixa-atual-orbe-saque-voo",
+  "sprite-orbe": [
+   "slot-px.mini→32",
+   "achado-arte→64",
+   "achado-arte.pequena→48",
+   "voo-item→52"
+  ]
+ },
+ {
+  "nome": "baixa-proposta-orbe-mercado",
+  "orbe-32": [
+   "slot-px.mini→32",
+   "slot-px.r-comum→0",
+   "slot-px.celula→32",
+   "slot-px.celula→32"
+  ],
+  "livro-32": [
+   "slot-px.celula→32"
+  ]
+ },
+ {
+  "nome": "baixa-proposta-orbe-inventario",
+  "orbe-32": [
+   "slot-px.mini→32"
+  ],
+  "orbe-40": [
+   "espaco.slot-px→40",
+   "slot-px.celula→40",
+   "slot-px.celula→40"
+  ],
+  "livro-40": [
+   "slot-px.celula→40"
+  ]
+ },
+ {
+  "nome": "baixa-proposta-orbe-saque-cartao",
+  "orbe-32": [
+   "slot-px.mini→32"
+  ],
+  "orbe-64": [
+   "achado-arte→64"
+  ],
+  "orbe-48": [
+   "achado-arte.pequena→48"
+  ]
+ },
+ {
+  "nome": "baixa-proposta-orbe-saque-voo",
+  "orbe-32": [
+   "slot-px.mini→32"
+  ],
+  "orbe-64": [
+   "achado-arte→64"
+  ],
+  "orbe-48": [
+   "achado-arte.pequena→48",
+   "voo-item→52"
+  ]
+ },
+ {
+  "nome": "normal-atual-livro-mercado",
+  "sprite-livro": [
+   "slot-px.mini→32",
+   "slot-px.celula→32",
+   "slot-px.celula→32"
+  ],
+  "sprite-orbe": [
+   "slot-px.r-comum→0",
+   "slot-px.celula→32"
+  ]
+ },
+ {
+  "nome": "normal-atual-livro-inventario",
+  "sprite-livro": [
+   "slot-px.mini→32",
+   "espaco.slot-px→32",
+   "slot-px.celula→32",
+   "slot-px.celula→32"
+  ],
+  "sprite-orbe": [
+   "slot-px.celula→32"
+  ]
+ },
+ {
+  "nome": "normal-atual-livro-saque-cartao",
+  "sprite-livro": [
+   "slot-px.mini→32",
+   "achado-arte→64",
+   "achado-arte.pequena→48"
+  ]
+ },
+ {
+  "nome": "normal-atual-livro-saque-voo",
+  "sprite-livro": [
+   "slot-px.mini→32",
+   "achado-arte→64",
+   "achado-arte.pequena→48",
+   "voo-item→52"
+  ]
+ },
+ {
+  "nome": "normal-proposta-livro-mercado",
+  "livro-32": [
+   "slot-px.mini→32",
+   "slot-px.celula→32",
+   "slot-px.celula→32"
+  ],
+  "orbe-32": [
+   "slot-px.r-comum→0",
+   "slot-px.celula→32"
+  ]
+ },
+ {
+  "nome": "normal-proposta-livro-inventario",
+  "livro-32": [
+   "slot-px.mini→32"
+  ],
+  "livro-40": [
+   "espaco.slot-px→40",
+   "slot-px.celula→40",
+   "slot-px.celula→40"
+  ],
+  "orbe-40": [
+   "slot-px.celula→40"
+  ]
+ },
+ {
+  "nome": "normal-proposta-livro-saque-cartao",
+  "livro-32": [
+   "slot-px.mini→32"
+  ],
+  "livro-64": [
+   "achado-arte→64"
+  ],
+  "livro-48": [
+   "achado-arte.pequena→48"
+  ]
+ },
+ {
+  "nome": "normal-proposta-livro-saque-voo",
+  "livro-32": [
+   "slot-px.mini→32"
+  ],
+  "livro-64": [
+   "achado-arte→64"
+  ],
+  "livro-48": [
+   "achado-arte.pequena→48",
+   "voo-item→52"
+  ]
+ },
+ {
+  "nome": "baixa-atual-livro-mercado",
+  "sprite-livro": [
+   "slot-px.mini→32",
+   "slot-px.celula→32",
+   "slot-px.celula→32"
+  ],
+  "sprite-orbe": [
+   "slot-px.r-comum→0",
+   "slot-px.celula→32"
+  ]
+ },
+ {
+  "nome": "baixa-atual-livro-inventario",
+  "sprite-livro": [
+   "slot-px.mini→32",
+   "espaco.slot-px→32",
+   "slot-px.celula→32",
+   "slot-px.celula→32"
+  ],
+  "sprite-orbe": [
+   "slot-px.celula→32"
+  ]
+ },
+ {
+  "nome": "baixa-atual-livro-saque-cartao",
+  "sprite-livro": [
+   "slot-px.mini→32",
+   "achado-arte→64",
+   "achado-arte.pequena→48"
+  ]
+ },
+ {
+  "nome": "baixa-atual-livro-saque-voo",
+  "sprite-livro": [
+   "slot-px.mini→32",
+   "achado-arte→64",
+   "achado-arte.pequena→48",
+   "voo-item→52"
+  ]
+ },
+ {
+  "nome": "baixa-proposta-livro-mercado",
+  "livro-32": [
+   "slot-px.mini→32",
+   "slot-px.celula→32",
+   "slot-px.celula→32"
+  ],
+  "orbe-32": [
+   "slot-px.r-comum→0",
+   "slot-px.celula→32"
+  ]
+ },
+ {
+  "nome": "baixa-proposta-livro-inventario",
+  "livro-32": [
+   "slot-px.mini→32"
+  ],
+  "livro-40": [
+   "espaco.slot-px→40",
+   "slot-px.celula→40",
+   "slot-px.celula→40"
+  ],
+  "orbe-40": [
+   "slot-px.celula→40"
+  ]
+ },
+ {
+  "nome": "baixa-proposta-livro-saque-cartao",
+  "livro-32": [
+   "slot-px.mini→32"
+  ],
+  "livro-64": [
+   "achado-arte→64"
+  ],
+  "livro-48": [
+   "achado-arte.pequena→48"
+  ]
+ },
+ {
+  "nome": "baixa-proposta-livro-saque-voo",
+  "livro-32": [
+   "slot-px.mini→32"
+  ],
+  "livro-64": [
+   "achado-arte→64"
+  ],
+  "livro-48": [
+   "achado-arte.pequena→48",
+   "voo-item→52"
+  ]
+ }
+]

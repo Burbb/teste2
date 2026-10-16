@@ -2102,3 +2102,48 @@ uma arma na mochila, Arqueiro com poções e tônicos, Mago com uma bomba só, e
 rodada jogada antes; 1500×950 e 1280×720; movimento reduzido no Guerreiro): abre, mouse, item que não serve, Esc,
 tecla 3 e setas, a poção indo para a mira dos aliados e o Voltar; nada cortado, nada cobre a arena, sem erro no
 console. As regras de uso, o turno, os destinatários e os itens que não servem são os do jogo (nada muda no motor).
+
+## O orbe e o livro do Mago (proposta, sem versão)
+
+**O pedido de Jean (17/10/2026):** o lote seguinte da skill `arte-itens-fenda`, só no protótipo: o orbe e o livro de
+equipamento, no nível do escudo e do machado (silhueta, volume, encaixes, materiais, luz), com a comparação no jogo.
+"Livro" é o equipamento; o Grimório da interface e o livro da capela ficam para outra etapa.
+
+**O que o jogo diz (`rpg/itens.py`):**
+- *Orbe:* o desenho da arma Orbe e do apoio Foco Arcano do Mago, em todos os materiais (Enferrujado a Rúnico, logo
+  há metal no objeto), e do único Olho do Abismo ("Ele olha de volta. Sempre olhou."). O atual: uma esfera violeta num
+  pé de latão; a esfera violeta no pé de latão fica. Nenhum outro papel usa o desenho "orbe".
+- *Livro:* o desenho da arma Grimório e do apoio Tomo, em todos os materiais, e do único Tomo do Nome Esquecido ("As
+  páginas estão em branco até você sangrar nelas."). O atual: um livro aberto de capa violeta; a capa violeta fica. O
+  mesmo sprite é também o atalho do Diário (com desenho próprio no `Icones`), um talento e o livro da capela: esses
+  papéis não passam pelo `ITEM` e não mudam.
+
+**Os desenhos** (`ferramentas/arte/desenhar_orbe_pixel.py` e `desenhar_livro_pixel.py`, gravados em
+`orbe-livro-pixel/`; o jogo não lê esta pasta), 32, 40, 48 e 64, cada um na própria grade, 17 cores:
+- *Orbe:* uma esfera de vidro violeta num suporte de latão (o latão do escudo): a taça abraça o terço de baixo e a
+  borda da frente passa por cima da esfera; três garras nascem da borda (as dos lados formam o contorno, a da frente
+  sobe pelo meio) com a ponta mais clara fechando para dentro e sombra no vidro; pescoço curto e pé em disco (a face de
+  cima acesa, a lateral em sombra); anéis no pé das garras em 48 e 64. A luz separa as duas coisas: a reflexão da
+  superfície é uma janela pequena e dura em cima à esquerda, quase branca; a luz de dentro é um miolo lavanda macio,
+  embaixo à direita, em três degraus, sempre dentro do contorno (nenhuma aura).
+- *Livro:* fechado, grosso, de couro violeta, visto de cima e da direita: a capa de frente (plana, como o couro fosco
+  pede, com a beira da tábua acesa em cima e à esquerda e um painel rebaixado: o sulco escuro e, em 48 e 64, o lábio
+  aceso), a lombada à esquerda (o lado da luz, em faixas de cilindro, com os nervos em relevo) e o corte de baixo (a
+  espessura das páginas em fios creme, recuadas entre as duas tábuas). Os detalhes fortes são da construção: os cantos
+  de latão nas pontas do lado do corte e o fecho (a tira que dá a volta e a chapa de latão; o pino em 48 e 64). Nenhum
+  símbolo nem inscrição.
+
+**A comparação** (`fotografar_orbe_livro.mjs` → `capturas-orbe-livro/`; `comparar_orbe_livro.py` monta
+`comparacao-<janela>-<desenho>-<lugar>.png`, `prancha-zoom.png` e `prancha-arquivos.png`): o jogo de hoje e a proposta
+com os mesmos dados (o Mago com a arma vestida e outra na mochila), em 1500×950 e 1280×720: a tela do mercado (a banca
+e a ficha), a ficha, a venda e a dica com a comparação, o Inventário (a tela e o recorte: o corpo e a mochila em 40), a
+tela do saque sobre a vila, o cartão (64 e 48) e o voo ao equipar. Na proposta, a página recebe um `icones.js` com os
+dois registrados como a integração faria; o jogo não muda. O relatório conta cada desenho em cada lugar: ficha 32,
+mercado 32, Inventário 40 (o mini da ficha continua em 32), saque 64 e 48; sem erro no console.
+
+**A avaliação:** os dois passam de um sprite 2× para objetos com construção. O orbe se reconhece em 32 pela esfera no
+pé (a mesma identidade do atual, agora com o vidro e o suporte que o segura de fato); o livro passa de aberto a
+fechado, com a lombada e a espessura das páginas que o fazem ler como volume. O violeta continua de longe, um pouco
+mais escuro que o do sprite (o do sprite é quase lilás). Em 32, o painel da capa é só o sulco e a garra da frente do
+orbe é um fio de 1 pixel; os nervos da lombada viram traços curtos. Ao lado do escudo, do machado e do cajado, os dois
+têm a mesma luz e o mesmo contorno. Espera a avaliação do Jean.
