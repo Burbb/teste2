@@ -2150,3 +2150,46 @@ fechado, com a lombada e a espessura das páginas que o fazem ler como volume. O
 mais escuro que o do sprite (o do sprite é quase lilás). Em 32, o painel da capa é só o sulco e a garra da frente do
 orbe é um fio de 1 pixel; os nervos da lombada viram traços curtos. Ao lado do escudo, do machado e do cajado, os dois
 têm a mesma luz e o mesmo contorno. Espera a avaliação do Jean.
+
+### O grimório entreaberto (o segundo conceito do livro; proposta, sem versão)
+
+**O retorno de Jean ao livro fechado:** bem construído, mas lembra uma agenda de couro com fecho; a capa com
+retângulos concêntricos, a lombada larga e a espessura deixam o objeto pesado e genérico. Pedido: um grimório
+entreaberto, em três quartos, com personalidade de equipamento de mago vinda da composição, dos materiais e dos sinais
+de uso (sem luz, partícula nem joia), priorizando a leitura em 32 e 40. O fechado fica intacto em
+`orbe-livro-pixel/livro-*` para a comparação.
+
+**O desenho** (`ferramentas/arte/desenhar_grimorio_pixel.py`, gravado em `livro-entreaberto/` com o nome "livro"; o
+script só grava numa pasta dada): um modelo do livro em 3D rasterizado na grade de cada tamanho, cada face com as
+próprias coordenadas (as marcas, os dentes e as cantoneiras vêm delas). O livro deitado, a capa da frente levantada um
+pouco além da vertical e apoiada para o lado da lombada, visto de cima, da frente e da esquerda (abre 100°, giro −42°,
+altura 56°): a capa por fora (couro violeta apagado), a lombada embaixo dela e a primeira página inteira. O miolo tem
+3/4 da espessura do fechado. A beira solta da capa tem uns poucos dentes (um em 40, dois em 48 e 64); o papel
+envelhecido escurece só na beira e na sombra da capa; as marcas de tinta seca são poucas: um grupo de linhas de
+anotação em 32, dois em 40, 48 e 64, e em 48 e 64 um diagrama (um círculo fino com dois pontos e a reta que os une).
+Em 32 e 40 o diagrama fica de fora: com 4 pixels o círculo virava letra. A fita de tecido vermelho escuro sai do pé do
+miolo e cai na mesa; cantoneiras de ferro escuro nos cantos soltos da capa. 14 a 17 cores.
+
+**O caminho** (para não repetir): em pé, com a capa girando para quem olha, a capa tapa a página; deitado com a capa
+abaixo da vertical, vira uma "tenda" sobre a página; muito além da vertical, a capa some de lado. O ângulo final é o
+meio-termo em que a capa se vê por fora sem tapar a página. Na exploração, as variantes com o mesmo tamanho de
+arquivo saíam iguais (o Python reaproveitava o bytecode do mesmo segundo): rode com `python -B` ao variar.
+
+**A comparação** (`fotografar_livro.mjs` → `capturas-livro/`; `comparar_livro.py` monta as três versões lado a lado:
+o jogo de hoje, o fechado e o entreaberto), com os mesmos dados, em 1500×950 e 1280×720: a tela do mercado (o Mago e
+a banca), a ficha, a venda e a dica com a comparação, o Inventário (a tela e o recorte, 40 no corpo e na mochila), a
+tela do saque sobre a vila, o cartão (64 e 48) e o voo; a `prancha-arquivos.png` (os dois candidatos em 1× sobre o
+carvão, com o orbe, o cajado, o escudo e o machado) e a `prancha-zoom.png` (só para achar o pixel). Sem erro no console.
+
+**A avaliação:**
+- *reconhecimento como grimório:* o entreaberto lê como livro de estudo aberto (a página com anotações, a capa
+  levantada, a fita); o fechado lê como livro, mas também como caixa ou agenda;
+- *personalidade:* o entreaberto tem uso (anotações, fita, beira gasta) e uma pose; o fechado é neutro;
+- *silhueta:* o entreaberto é diagonal e recortado (a capa em pé, a fita para fora), diferente dos vizinhos; o
+  fechado é um bloco quase quadrado;
+- *leitura pequena:* em 32 o entreaberto ainda se reconhece, mas a página creme domina e o violeta fica numa faixa;
+  as marcas em 32 são só traços e as cantoneiras quase não aparecem; o fechado é mais legível de longe como mancha
+  violeta;
+- *coerência com o mundo:* o couro apagado e o papel envelhecido do entreaberto conversam melhor com os cenários; o
+  violeta saturado do fechado é mais "interface".
+Espera a avaliação do Jean.

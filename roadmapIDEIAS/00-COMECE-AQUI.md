@@ -2794,3 +2794,13 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   Olho do Abismo; nenhum outro papel usa o desenho "orbe").
 - **Conferido** (`fotografar_itens.mjs`, SO=orbe, 1500×950 e 1280×720): ficha 32, mercado e dica de comparação 32,
   Inventário 40 (corpo e mochila), cartão do saque 64 e 48, voo ao equipar; o livro e a varinha continuam com o sprite.
+
+### 17/10/2026 — Proposta: o grimório entreaberto (o segundo conceito do livro; protótipo)
+
+- **Pedido de Jean:** o livro fechado lembra uma agenda de couro com fecho; outra proposta: um grimório entreaberto
+  em três quartos, fino, couro violeta apagado com a beira irregular, páginas envelhecidas com poucas marcas
+  abstratas, uma fita como marcador e ferragens discretas, priorizando 32 e 40.
+- **Feito:** `ferramentas/arte/desenhar_grimorio_pixel.py` (um modelo 3D do livro rasterizado em cada grade),
+  gravado em `ferramentas/prototipos/hud/livro-entreaberto/`; o fechado intacto em `orbe-livro-pixel/`; as três
+  versões (o jogo, o fechado, o entreaberto) em `capturas-livro/`, nas duas janelas.
+- **Continua como está no jogo:** o livro com o sprite antigo. Espera a escolha do Jean.
