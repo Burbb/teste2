@@ -24,8 +24,8 @@ diagonal, visto de cima em três quartos. O que se preserva, reconstruído por r
   - o fecho: uma tira de couro que vem da capa de trás pela beira da frente e uma chapa de latão sobre a capa, com o
     rasgo escuro do pino;
   - as ferragens: cantoneiras de latão envelhecido nos dois cantos soltos, com o rebite;
-  - o emblema: um losango de latão aplicado no meio da capa, no plano dela, com o crescente e um ponto dentro, só como
-    decoração.
+  - o emblema: um losango de latão aplicado no meio da capa, inclinado para conversar com ela (estilizado: a leitura
+    vem antes da projeção exata), com o crescente e um ponto dentro, só como decoração.
 
 A construção: um modelo em três dimensões de polígonos planos (as tábuas, o bloco, as facetas da lombada e dos
 reforços), numa projeção paralela; cada pixel acha o plano mais perto da câmera e o ponto 3D dele: o tom vem da
@@ -59,21 +59,21 @@ LIVRO = dict(W=0.74, T=0.22, tab=0.045, esq=0.015, lombada=0.55, cabo=0.0, refor
 # Por tamanho: a escala (o comprimento do livro na tela, em px) e o centro dele na tela; o emblema em pixels da tela:
 # o raio do losango, o ponto e o crescente (em relação ao centro do losango; a linha do meio do desenho é a do centro).
 MEDIDAS = {64: dict(esc=38.0, cx=31.5, cy=31.5,
-                   # o emblema no plano da capa, em pixels da tela a partir do meio da capa: os vértices do losango (as
-                   # pontas na direção da cabeça, da frente, do pé e da lombada, como a perspectiva da capa as põe,
-                   # arredondadas para os lados saírem em degraus regulares), o crescente à mão (na mesma
-                   # inclinação, a abertura para a beira da frente; "#" o latão, "+" o fio aceso; a linha e a coluna do
-                   # meio do desenho caem em crescente_em) e o ponto
-                   losango=((-4, -6), (5, -3), (4, 6), (-5, 3)),
-                   crescente_em=(0, -1),
-                   crescente=("...+...",
+                   # o emblema, em pixels da tela a partir do meio da capa, estilizado para a leitura: os vértices do
+                   # losango (o eixo comprido inclinado como a lombada, o curto subindo como a cabeça da capa; os lados
+                   # em degraus de 2 por 1 e de 1 por 2, as pontas com 2 pixels), o crescente à mão (o da primeira
+                   # proposta, inclinado com o eixo do losango; "#" o latão, "+" o fio aceso; a linha e a coluna do
+                   # meio do desenho caem em crescente_em) e o ponto na abertura; tudo com 1 pixel de folga ou mais
+                   losango=((-3, -7), (7, -2), (3, 6), (-7, 1)),
+                   crescente_em=(0, 0),
+                   crescente=("..+#...",
+                              ".+#....",
+                              ".+#....",
+                              ".+#....",
                               "..+#...",
-                              ".+#....",
-                              ".+#....",
-                              ".+#....",
-                              "..+##..",
-                              "....##."),
-                   ponto=(2, -2))}
+                              "...+#..",
+                              "....+#."),
+                   ponto=(2, -1))}
 # A capa de cima: a largura da beira que arredonda (em fração da largura e do comprimento), a altura da almofada, a
 # curvatura do couro inteiro (o alto um pouco para o lado da lombada e da cabeça), o quanto de luz vale um degrau da rampa e até
 # onde vai o brilho mais claro da aresta da cabeça, a partir da lombada.
@@ -139,21 +139,17 @@ def faces():
     return lista
 
 
-def reta(a, b):
-    """Os pixels de uma reta entre dois pontos inteiros (Bresenham): um por passo, sem degraus soltos."""
+def lado_losango(a, b):
+    """Os pixels de um lado do losango, de um vértice inteiro ao outro, em degraus iguais (2 por 1, 1 por 2...) que
+    começam no vértice: as pontas saem iguais, sem o degrau curto que a reta de Bresenham deixa numa delas."""
     (x0, y0), (x1, y1) = a, b
-    dx, dy = abs(x1 - x0), -abs(y1 - y0)
-    passo_x, passo_y = (1 if x1 > x0 else -1), (1 if y1 > y0 else -1)
-    erro, pontos = dx + dy, []
-    while True:
-        pontos.append((x0, y0))
-        if (x0, y0) == (x1, y1):
-            return pontos
-        e2 = 2 * erro
-        if e2 >= dy:
-            erro, x0 = erro + dy, x0 + passo_x
-        if e2 <= dx:
-            erro, y0 = erro + dx, y0 + passo_y
+    dx, dy = x1 - x0, y1 - y0
+    sx, sy = (1 if dx > 0 else -1), (1 if dy > 0 else -1)
+    if abs(dx) >= abs(dy):
+        r = abs(dx) // max(1, abs(dy))
+        return [(x0 + k * sx, y0 + min(k // r, abs(dy)) * sy) for k in range(abs(dx) + 1)]
+    r = abs(dy) // max(1, abs(dx))
+    return [(x0 + min(k // r, abs(dx)) * sx, y0 + k * sy) for k in range(abs(dy) + 1)]
 
 
 def dentro_poligono(px, py, poly):
@@ -263,15 +259,15 @@ def desenhar(lado_img):
         tom[sulco] = t0 - 2
         tom[sulco & (v > 1 - 1.2 * px)] = t0 + 2
         fixo[sulco | cabeca] = True                                     # traços de 1 pixel: a limpeza não os apaga
-        # o emblema aplicado no couro, no plano da capa: o losango (linhas retas entre os vértices), o crescente e o
-        # ponto, a partir do meio da capa na tela; as linhas do lado da luz (a da cabeça e a da lombada) acesas, as do
+        # o emblema aplicado no couro: o losango (os lados entre os vértices), o crescente e o ponto, a partir do meio
+        # da capa na tela; as linhas do lado da luz (a da cabeça e a da lombada) acesas, as do
         # outro lado mais baixas, e o sulco escuro embaixo, que assenta a peça no couro
         cx_e, cy_e = tela(np.array([0.52 * (W + e), Tt, 0.5]))
         sx, sy = np.floor(x) - math.floor(cx_e), np.floor(y) - math.floor(cy_e)
         vert = M["losango"]
         linha, linha_luz = np.zeros(x.shape, dtype=bool), np.zeros(x.shape, dtype=bool)
         for k in range(4):
-            for qx, qy in reta(vert[k], vert[(k + 1) % 4]):
+            for qx, qy in lado_losango(vert[k], vert[(k + 1) % 4]):
                 aqui = (sx == qx) & (sy == qy)
                 linha |= aqui
                 if k in (0, 3):                                        # a da cabeça e a da lombada

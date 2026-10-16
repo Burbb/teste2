@@ -2850,3 +2850,14 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   `capturas-livro-fechado/` (`fotografar_livro_fechado.mjs` e `comparar_livro_fechado.py`).
 - **Continua como está no jogo:** o livro com o sprite antigo. Espera a avaliação do 64 antes de 32, 40, 48 ou da
   integração.
+
+### 17/10/2026 — Proposta: o emblema corrigido do grimório fechado (só o 64; protótipo)
+
+- **Pedido de Jean:** a capa e a luz da revisão aprovadas (o corpo fica exatamente igual); refazer só o emblema a
+  partir do da primeira proposta (crescente legível, folga entre crescente, ponto e contorno, orientação estilizada
+  conversando com a capa, latão aplicado com luz discreta).
+- **Feito:** o losango inclinado com lados em degraus regulares e o crescente da primeira proposta, inclinado, em
+  `ferramentas/prototipos/hud/livro-fechado-emblema/`; o corpo conferido pixel a pixel contra a revisão (só o emblema
+  e o sulco dele mudam); a revisão e o primeiro 64 intactos; as comparações `emblema-*` em `capturas-livro-fechado/`.
+- **Continua como está no jogo:** o livro com o sprite antigo. Espera a avaliação do 64 antes de 32, 40, 48 ou da
+  integração.

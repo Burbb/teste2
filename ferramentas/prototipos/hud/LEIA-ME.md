@@ -2355,3 +2355,37 @@ como couro abaulado, e a lombada fica separada da capa pelo sulco, não mais eme
 na capa. O que observar: os lados do losango em perspectiva têm degraus de 3 por 1 e de 9 por 1, menos regulares que
 os de 45° de antes (é o preço de acompanhar o plano); e a fronteira entre os planos da capa é uma escada larga, que
 de perto aparece mais do que em 1×. Espera a avaliação do Jean antes de 32, 40 e 48.
+
+### O grimório fechado: o emblema corrigido sobre o corpo aprovado (proposta)
+
+**O pedido de Jean:** a capa e a iluminação da revisão de acabamento estão aprovadas, e o corpo fica exatamente como
+está. Só o emblema muda: na revisão, a deformação para acompanhar a perspectiva deixou o conjunto estreito e
+irregular, e o crescente perdeu a leitura, também no cartão do saque. Partir do emblema da primeira proposta (o
+crescente reconhecível), com espaço entre o crescente, o ponto e o contorno, a orientação conversando com a capa (com
+liberdade de estilização: a leitura vem antes da projeção exata) e a aparência de latão aplicado, com luz e sombra
+discretas.
+
+**O desenho** (`ferramentas/arte/desenhar_grimorio_fechado_pixel.py`, gravado em `livro-fechado-emblema/`; a revisão
+de acabamento fica intacta em `livro-fechado-acabamento/`, e o primeiro 64 em `livro-fechado-ref/`):
+- *o losango:* largo como o da primeira proposta (15 por 14 pixels), inclinado: o eixo comprido pende como a lombada e
+  o curto sobe como a cabeça da capa. Os lados são degraus regulares de 2 por 1 e de 1 por 2, traçados a partir de
+  cada vértice (`lado_losango`, no lugar da reta de Bresenham, que deixava um degrau curto numa das pontas), e as
+  quatro pontas têm 2 pixels;
+- *o crescente:* o da primeira proposta, pixel a pixel, com o fio aceso por fora, inclinado com o eixo do losango (a
+  ponta de cima um pixel para a lombada, a de baixo um para a frente); o ponto na abertura. Com o crescente reto, a
+  ponta de baixo encostava no lado do losango; inclinado, tudo fica com 1 pixel de folga ou mais;
+- *o latão:* como na revisão: os lados do lado da luz um tom acima, os do outro lado um abaixo, o crescente com o fio
+  aceso, e o sulco escuro embaixo da peça.
+
+**O corpo não mudou:** comparando pixel a pixel com a revisão de acabamento, as diferenças ficam só nos pixels do
+emblema (o antigo, que voltou a ser couro, e o novo) e no sulco escuro embaixo dele.
+
+**A comparação** (`fotografar_livro_fechado.mjs` com a versão "emblema"; `comparar_livro_fechado.py` monta os pares):
+`emblema-zoom.png` (a revisão em cima, o emblema corrigido embaixo, em 1× sobre o carvão e 8× sem suavizar),
+`emblema-vizinhos.png` (os dois ao lado do escudo, do cajado e do orbe) e `emblema-<janela>-saque-cartao.png` (o
+cartão do saque nas duas janelas, a revisão à esquerda). O cartão usa `livro-64.png` em 64 px; sem erro no console.
+
+**A avaliação:** o crescente volta a ser lido de longe, no cartão, como na primeira proposta, e o losango deita na
+capa sem ficar estreito; as linhas saem em degraus iguais. O que observar: a inclinação é estilizada (não é a
+projeção exata da capa), e o losango ocupa quase a mesma área do da primeira proposta, um pouco maior que o da
+revisão. Espera a avaliação do Jean antes de 32, 40 e 48.

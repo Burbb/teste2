@@ -1,11 +1,11 @@
 // O grimório fechado da nova referência do Jean (protótipo, só o 64): fotografa o cartão do saque do jogo de verdade
-// com o desenho de hoje (o sprite 16×16 "livro"), com o 64 aprovado como direção (livro-fechado-ref/) e com a revisão
-// de acabamento dele (livro-fechado-acabamento/, de ferramentas/arte/desenhar_grimorio_fechado_pixel.py), com os
-// mesmos dados. Na proposta, a página recebe um
+// com o desenho de hoje (o sprite 16×16 "livro"), com o 64 aprovado como direção (livro-fechado-ref/), com a revisão
+// de acabamento dele (livro-fechado-acabamento/) e com o mesmo corpo e o emblema corrigido (livro-fechado-emblema/, de
+// ferramentas/arte/desenhar_grimorio_fechado_pixel.py), com os mesmos dados. Na proposta, a página recebe um
 // icones.js com o livro registrado só em 64 (TAMANHOS e ITEM) e o arquivo vem da pasta; o jogo não muda. O 64 só fica
 // parado no cartão do saque, então é o único lugar fotografado: o Mago acha um Grimório (ACHADO=livro) vestindo o
 // cajado aprovado (ARMA=cajado), que aparece ao lado no "você usa" em 48. Em 1500×950 e 1280×720.
-// Guarda em capturas-livro-fechado/<janela>-<versao>-<lugar>.png (versão: atual, fechado, acabamento) e o recorte
+// Guarda em capturas-livro-fechado/<janela>-<versao>-<lugar>.png (versão: atual, fechado, acabamento, emblema) e o recorte
 // ampliável do 64 como zoom-...
 //   PLAYWRIGHT_MODULO=<caminho do playwright>/index.mjs node ferramentas/prototipos/hud/fotografar_livro_fechado.mjs
 import { spawn } from "child_process";
@@ -15,9 +15,10 @@ import path from "path";
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULO || "playwright");
 const aqui = path.dirname(fileURLToPath(import.meta.url)), raiz = path.resolve(aqui, "../../..");
 const SAIDA = path.join(aqui, "capturas-livro-fechado");
-const PASTAS = { fechado: path.join(aqui, "livro-fechado-ref"), acabamento: path.join(aqui, "livro-fechado-acabamento") };
+const PASTAS = { fechado: path.join(aqui, "livro-fechado-ref"), acabamento: path.join(aqui, "livro-fechado-acabamento"),
+  emblema: path.join(aqui, "livro-fechado-emblema") };
 mkdirSync(SAIDA, { recursive: true });
-// refaz só as fotos deste roteiro: as pranchas da rodada anterior (prancha-*.png) e o antes × depois ficam
+// refaz só as fotos deste roteiro: as pranchas das rodadas anteriores e as comparações ficam
 for (const f of readdirSync(SAIDA)) if (/^(normal|baixa|zoom)-/.test(f)) rmSync(path.join(SAIDA, f));
 const espera = (ms) => new Promise((r) => setTimeout(r, ms));
 const TROCAS = [['const TAMANHOS = {', 'const TAMANHOS = {"livro": [64], '], ['orbe: "orbe" };', 'orbe: "orbe", livro: "livro" };']];
