@@ -2917,3 +2917,39 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   controle de camadas (`rezaahmadn/aseprite-mcp-bridge`); a instalação e a retomada estão em
   `C:\Users\Jean Wress\Tools\aseprite-mcp-bridge-INSTALACAO.md`.
 - **Continua como está no jogo:** a varinha com o sprite 16×16; `icones.js`, a skill e as regras não mudaram.
+
+### 16/10/2026 (data do computador local) — O conector com camadas e a varinha em 32, 40, 48 e 64 (protótipo, sem versão)
+
+- **Onde:** clone `teste2`, branch `claude/tender-einstein-tx3tjl`, sobre `d0b8af4` (1.108.0 na produção). Conector
+  `aseprite-bridge` (rezaahmadn/aseprite-mcp-bridge, extensão 1.0.0), Aseprite 1.3.18.6 da Steam.
+- **Pedido de Jean:** a etapa 3 do registro do conector (o teste de camadas), com a verificação dos limites do
+  `put_pixels`; se passasse, a varinha: o 32 aprovado intacto, no 64 só a pedra âmbar e o encaixe (pedra sólida com
+  facetas, assentada na taça, sem leitura de chama), o 40 e o 48 nativos, editáveis em camadas, fotos nos usos reais.
+- **O conector:** camadas funcionam pelas ferramentas (criar, desenhar e ler pelo nome, renomear, reordenar, esconder,
+  duplicar, apagar, desfazer/refazer, salvar/reabrir; a imagem composta chega visível). O `put_pixels` tem dois
+  defeitos medidos: descarta em silêncio o pixel fora da cel (cel do lápis, deslocada ou fora da tela; coordenadas são
+  do documento) e não gera desfazer. Solução verificada: `varinha-aseprite/auxiliares/pintar.lua` (imagem nova que
+  cobre a cel e a tela, numa transação; recusa e lista o que fica fora da tela; um passo de desfazer). `io.open` e
+  `saveCopyAs` para PNG num `execute_script` travaram o conector por 60 s: dados por `dofile`, PNG por `export_png`.
+  Detalhes no `LEIA-ME.md` da proposta ("Rodada 2") e no registro do conector (fora do repositório).
+- **Feito:** `ferramentas/prototipos/hud/varinha-aseprite/rodada2/`: os quatro `.aseprite` com 8 camadas (pomo,
+  empunhadura, anel, haste, taca, pedra, garras, contorno), os PNGs, os @2x exatos, as pranchas e as fotos. O 32 é o
+  aprovado pixel a pixel; no 64 só mudaram 66 pixels, da taça para cima (a pedra virou uma pedra lapidada quadrada de
+  quatro faces, com o canto afundado na taça e uma garra); 40 e 48 na própria grade (pedra de 4×4 e 5×5). Listas de
+  `auxiliares/varinha_r2.py`, escritas no Aseprite pelo `pintar.lua`/`montar.lua`. `fotografar_varinha.mjs` ganhou o
+  Inventário, o voo e a escolha de versões; `comparar_varinha.py rodada2` monta as pranchas. A primeira rodada ficou
+  intacta.
+- **Conferido:** cada `.aseprite` reaberto: 8 camadas, composto igual ao PNG salvo e à prévia; fotos atual × rodada 1
+  × rodada 2 em 1500×950 e 1280×720: ficha e mercado (Vender e dica) em 32, corpo e mochila do Inventário em 40, cartão
+  do saque em 64 com o "você usa" em 48, o voo ao equipar; o relatório confirma arquivo e tamanho em cada lugar; sem
+  erro no console.
+- **Verificações:** `unittest`: 603 testes, 1 falha (o gabarito), 1 pulado. `tests.gabarito`: as 18 partidas
+  DIFERENTE, e igual num checkout limpo de `c98d02f` (1.108.0): é do ambiente deste Windows, não desta entrega
+  (suspeita não confirmada: o fim de linha CRLF do checkout, `core.autocrlf=true`). `pyflakes` não está instalado
+  (`py_compile` e `node --check` nos arquivos novos). `fumaca.mjs` não roda neste Windows: calcula a raiz com
+  `new URL(import.meta.url).pathname` (vira `/C:/Users/Jean%20Wress/...`, `cwd` inválido) e chama `python3`. Nada em
+  `rpg/` mudou.
+- **A avaliar com Jean:** a pedra quadrada do 64 (e a do 40 e do 48) tem outro corte que a ponta alongada do 32
+  aprovado; em tamanho real as duas leem como "ponta âmbar". A de 4×4 do 40 é quase só um bloco com reflexo.
+- **Continua como está no jogo:** a varinha com o sprite 16×16; `icones.js`, regras e versão não mudaram. Próximo:
+  a avaliação dos quatro tamanhos pelo Jean; integração só depois dela.

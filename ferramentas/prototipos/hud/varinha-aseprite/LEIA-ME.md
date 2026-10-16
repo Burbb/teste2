@@ -124,3 +124,105 @@ coordenadas (e o @2x e as pranchas, fora dos `.aseprite`).
 - **O fluxo:** comparado aos geradores de `ferramentas/arte/`, o Aseprite deu o `.aseprite` editável, o histórico de
   desfazer e a leitura do resultado a cada passo. Mas faltaram camadas, contorno e paleta, e cada ida e volta custa
   uma chamada; as regras por tamanho continuaram fora do editor.
+
+---
+
+# Rodada 2 (16/10/2026): conector com camadas, a pedra do 64, o 40 e o 48
+
+Com o conector `aseprite-bridge` (rezaahmadn/aseprite-mcp-bridge, extensão 1.0.0; registro fora do repositório, em
+`C:\Users\Jean Wress\Tools\aseprite-mcp-bridge-INSTALACAO.md`). Os arquivos da primeira rodada, acima, ficaram intactos;
+tudo desta rodada está em `rodada2/`. Só protótipo: o jogo, `icones.js`, regras e versão não mudaram.
+
+## O teste do conector
+
+Num arquivo de teste fora do repositório (`C:\Users\Jean Wress\Tools\aseprite-mcp-bridge-teste\`), conferido pela
+leitura das camadas, pelo PNG exportado (pixel a pixel, em Python) e pela imagem composta que chega ao Claude.
+
+**Camadas: tudo funcionou pelas ferramentas do conector.** Criar (`add_layer`), desenhar e ler numa camada anterior
+pelo nome sem trocar a ativa (`put_pixels`/`get_pixel` com `layer`), renomear, reordenar (`reorder_layer`, índice de
+baixo para cima), esconder e mostrar, duplicar (a cópia é independente e vira a ativa), apagar; salvar `.aseprite`,
+fechar e reabrir: camadas, nomes, ordem e visibilidade preservados; o composto exportado respeita a ordem e omite a
+camada oculta; `get_sprite_screenshot` chega como imagem visível, em 1× (de 16 a 64 px: para julgar é preciso ampliar
+fora), igual pixel a pixel ao PNG exportado.
+
+**Dois defeitos do `put_pixels` (e do `put_pixel`), medidos:**
+1. *Descarte fora da cel.* As coordenadas são do documento (a posição da cel é descontada; conferido numa cel
+   deslocada), mas o pixel que cai fora do retângulo da cel é descartado em silêncio e a resposta conta todos
+   (`pixels_set` com o total pedido). Não acontece numa cel de tela inteira (a que o conector cria; salvar e reabrir
+   não recortou a cel), mas acontece numa cel menor: a que o lápis do próprio Aseprite cria (um traço gerou uma cel de
+   9×7, outro de 3×1), uma cel deslocada (4×3 em 12,20) ou parcialmente fora da tela (em −2,−2). Em todas, os pixels
+   das bordas sumiram e os de dentro da cel caíram no lugar certo.
+2. *Desfazer não desfaz.* O comando escreve direto na imagem da cel, e o Aseprite não registra isso: `undo` consome um
+   passo "Put Pixels" vazio e o pixel continua lá (conferido isolado).
+
+**A solução usada (`auxiliares/pintar.lua`, pelo `execute_script`):** uma imagem nova que cobre a cel antiga e a tela
+inteira, com o conteúdo antigo copiado no mesmo lugar do documento e os pixels pedidos por cima; a troca de
+`cel.image` e `cel.position` acontece numa transação só. Preserva o desenho, escreve em qualquer ponto da tela, recusa e
+lista o que cai fora da tela (nunca em silêncio), relê cada pixel pedido depois de gravar e é um passo de desfazer
+(desfazer volta à cel pequena com o desenho antigo; refazer, à grande). Conferido nas três cels problemáticas, depois
+de salvar, fechar e reabrir, e no PNG exportado. O `put_pixels` não foi usado no desenho da varinha.
+
+**Outras observações:**
+- `io.open` dentro do `execute_script`, e `sprite:saveCopyAs` para PNG num documento com camadas, pararam o conector
+  por 60 s sem resposta, e nada foi gravado. O mais provável é uma janela de permissão ou de opções do Aseprite. Por
+  isso o `pintar.lua` lê as listas por `dofile` (arquivos `.lua` que só fazem `return "<lista>"`) e o PNG sai sempre
+  pelo `export_png` do conector (que desenha o sprite numa imagem e grava, sem janela).
+- `save_sprite` com `path` grava uma cópia (`saveCopyAs`): o documento aberto continua "Sprite".
+- `get_image_data` devolve só a imagem da cel, com `offset_x`/`offset_y`; em `hex_array` é longo demais para usar (um
+  32×32 são 1024 cadeias). Para ler, o `pintar.lua` tem `P.ler` (só os opacos, em coordenadas do documento) e
+  `P.camadas` (ordem, nome, visibilidade e quantos pixels).
+
+## O desenho
+
+`auxiliares/varinha_r2.py` calcula as listas de cada camada. O Python só calcula: cada pixel foi escrito no Aseprite
+pelo `pintar.lua`, com o documento e as camadas criados pelo `auxiliares/montar.lua` (no primeiro 64 de teste, as
+camadas foram criadas pelas ferramentas `add_layer`/`rename_layer` do conector). Camadas, de baixo para cima: `pomo`,
+`empunhadura`, `anel`, `haste`, `taca`, `pedra`, `garras`, `contorno`.
+
+- **32**: o aprovado, intacto, só repartido nas camadas. O composto é idêntico pixel a pixel a `varinha-32.png` (o PNG
+  difere nos bytes só pela codificação). A camada `garras` fica vazia.
+- **64**: da haste para baixo, intacto (conferido: só 66 pixels mudaram, todos da taça para cima, u ≥ 25). A pedra da
+  primeira rodada (uma ponta afilada, que lia como chama) virou uma pedra lapidada quadrada na grade, de 6×6 com cantos
+  cortados. Na diagonal da varinha ela fica como um losango baixo, com o canto de baixo afundado na taça e quatro faces
+  planas divididas pelas diagonais (em cima e à esquerda acesas, à direita média, embaixo escura; as divisórias a 45°
+  são as linhas mais nítidas do pixel), um reflexo de 2 px e a luz que atravessa saindo na face da direita. A taça
+  ficou mais curta e escura, abrindo em degrau, e uma garra de bronze sobe pela aresta acesa da pedra.
+  Tentativas descartadas nas prévias: um corpo octogonal de faces retas (lia como bola laranja) e o perfil de
+  lapidação com pavilhão e coroa (lia como cogumelo).
+- **48** e **40**: desenhados na própria grade com a mesma construção (`MEDIDAS`): pedra de 5×5 no 48 e de 4×4 no 40;
+  empunhadura de 4 e haste de 4→3 no 48; empunhadura de 3 e haste de 3→2 no 40, como no 32.
+- Cores: 23 (32), 22 (40), 25 (48) e 26 (64), com o contorno. Alfa só 0 ou 255.
+
+| Arquivo (`rodada2/`) | O que é |
+|---|---|
+| `varinha-32/40/48/64.aseprite` | os editáveis: 8 camadas, 1 quadro, RGBA, fundo transparente |
+| `varinha-32/40/48/64.png` | exportados pelo conector (`export_png`) |
+| `varinha-*@2x.png` | a duplicação exata (vizinho mais próximo, em Python, conferida pixel a pixel) |
+| `capturas/` | as pranchas; `capturas/jogo/`, as fotos e o `relatorio.json` |
+
+Conferência: cada `.aseprite` reaberto pelo conector (`open_sprite`), as 8 camadas listadas, o composto reexportado
+igual ao PNG salvo e à prévia do gerador; a captura (`get_sprite_screenshot`) do 32 igual ao PNG.
+
+## As fotos
+
+`SAIDA=ferramentas/prototipos/hud/varinha-aseprite/rodada2/capturas/jogo VERSOES=atual,proposta,rodada2` no
+`fotografar_varinha.mjs` (com as variáveis do Playwright de cima), que agora também fotografa o Inventário e o voo ao
+equipar; `python ferramentas/prototipos/hud/comparar_varinha.py rodada2` monta as pranchas (as da primeira rodada
+continuam saindo sem o argumento). O relatório confirma, nas duas janelas: ficha e mercado com `varinha-32` (32 px),
+corpo e mochila do Inventário com `varinha-40` (40 px), cartão do saque com `varinha-64` (64 px) e o "você usa" com
+`varinha-48` (48 px); o voo parte do 48 (51 px no meio do caminho, a animação de sempre). Sem erro no console.
+
+Pranchas: `ponta-64.png` (a ponta antes e depois em 1×, 2× e 8×), `carvao-tamanhos.png`, `familia.png` (com o
+cajado, o orbe, o grimório e o escudo em 32, 40, 48 e 64), `comparacao-<janela>-<lugar>.png` (atual, rodada 1 e
+rodada 2: ficha, Vender, dica, Inventário, cartão do saque, voo e as telas inteiras) e `prancha-zoom.png`.
+
+## Avaliação curta
+
+- **Melhorou:** a pedra do 64 lê como pedra maciça de faces planas, presa na taça; a gota afilada, que lia como chama,
+  saiu. O 48 do "você usa" e o 40 do Inventário deixaram de ser o 32 reduzido ou centrado.
+- **Ainda fraco ou a decidir:** a pedra do 64 (quadrada) e a do 32 aprovado (uma ponta mais alongada) não têm a mesma
+  forma. Em tamanho real as duas leem como "ponta âmbar", mas de perto são cortes diferentes. A pedra de 4×4 do 40 é
+  pouco mais que um bloco laranja com reflexo. No nicho, a varinha continua mais fina e leve que o cajado e o orbe,
+  como no 32 aprovado.
+- **O fluxo:** o conector novo resolve as camadas, que eram o maior limite da primeira rodada. O desenho continua
+  vindo de listas calculadas fora, e o `put_pixels` só serve com a ressalva acima (o `pintar.lua` o substitui).
