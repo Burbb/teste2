@@ -1,7 +1,7 @@
 // Cliques seguidos, como o navegador conta (o 2º e o 3º clique rápidos chegam com detail 2 e 3): cada clique
 // deliberado tem de valer. Confere, no jogo de verdade:
-//   - a roda da luta: Habilidades abre e fecha a cada clique (a cada 120, 250 e 700 ms), a troca entre Habilidades e
-//     Itens, a tecla 2 segurada (abre uma vez), o Esc, e o clique duplo numa habilidade (uma escolha só: a mira);
+//   - a roda da luta: Habilidades e Itens abrem e fecham a cada clique (a cada 120, 250 e 700 ms), a troca entre os
+//     dois, a tecla 2 segurada (abre uma vez), o Esc, e o clique duplo numa habilidade (uma escolha só: a mira);
 //   - o mercado: quatro cliques seguidos na primeira peça da mochila vendem quatro peças;
 //   - a comitiva: as cartas ✉ de dois companheiros clicadas uma logo depois da outra abrem as duas conversas, em ordem.
 //   PLAYWRIGHT_MODULO=<caminho do playwright>/index.mjs node tests/navegador/cliques_seguidos.mjs
@@ -62,6 +62,10 @@ async function cliques(p, el, vezes, intervalo, depois) {
   for (const intervalo of [120, 250, 700]) {
     const seq = await cliques(p, await p.$('#roda .roda-botao[data-slot="habilidades"]'), 4, intervalo, aberto);
     conferir(seq.join(" ") === "habilidades fechado habilidades fechado", `Habilidades a cada ${intervalo} ms: ${seq.join(" → ")}`);
+  }
+  for (const intervalo of [120, 700]) {
+    const seq = await cliques(p, await p.$('#roda .roda-botao[data-slot="itens"]'), 4, intervalo, aberto);
+    conferir(seq.join(" ") === "itens fechado itens fechado", `Itens a cada ${intervalo} ms: ${seq.join(" → ")}`);
   }
   const hb = await p.$('#roda .roda-botao[data-slot="habilidades"]'), ib = await p.$('#roda .roda-botao[data-slot="itens"]');
   await hb.click(); await espera(150); await ib.click(); await espera(150);

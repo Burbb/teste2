@@ -18,6 +18,7 @@ CLASSES = {
     "guerreiro": {
         "nome": "Guerreiro",
         "recurso": "Vigor",
+        "artigo_recurso": "o",  # "metade do Vigor"
         "cor": "vermelho",
         "desc": "Muita vida e defesa. Luta corpo a corpo e aguenta o tranco. Vigor regenera rápido.",
         "base": dict(max_hp=60, atk=9, defesa=6, agi=3, poder=1, max_rec=30, regen=6),
@@ -30,6 +31,7 @@ CLASSES = {
     "arqueiro": {
         "nome": "Arqueiro",
         "recurso": "Foco",
+        "artigo_recurso": "o",  # "metade do Foco"
         "cor": "verde",
         "desc": "Ágil e preciso, ataca à distância. Gasta flechas (que podem acabar!) e é ótimo contra voadores.",
         "base": dict(max_hp=52, atk=8, defesa=4, agi=8, poder=2, max_rec=25, regen=5),
@@ -43,6 +45,7 @@ CLASSES = {
     "mago": {
         "nome": "Mago",
         "recurso": "Mana",
+        "artigo_recurso": "a",  # "metade da Mana"
         "cor": "azul",
         "desc": "Frágil, mas devastador. Magias elementais exploram fraquezas. Mana regenera devagar.",
         "base": dict(max_hp=42, atk=3, defesa=3, agi=4, poder=11, max_rec=40, regen=3),

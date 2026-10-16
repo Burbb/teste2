@@ -279,18 +279,23 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   espaços de item, a janela do achado), `15-hud-luta.css` (cartas, roda, mira) e `16-hud-telas.css` (janelas, menus,
   mercado e serviços, Diário, Talentos, avisos), mais `17-titulo.css` (1.93.1: o menu inicial aberto sobre a
   paisagem, sem a moldura do palco, o véu da página nem as placas das opções; só em `body.modo-titulo`) e
-  `18-seletor-habilidades.css` (1.103.0, abaixo). As imagens moram em `static/hud/` (moldura, texturas, barras) e
+  `18-seletor-habilidades.css` (1.103.0 e 1.105.0, abaixo). As imagens moram em `static/hud/` (moldura, texturas, barras) e
   `static/hud/icones/` (a família de ícones, cada um no tamanho de uso e com o dobro). Toda regra começa por
   `:root body`, a mesma força de `body.<estado>`: é a que elas tinham no experimento, e vencem o material antigo sem
   depender de uma classe no corpo. Essas folhas ficam fora da trava de pixel (`FORA_DA_TRAVA`): o material é
   pintado, com véus translúcidos, relevo e sombra suaves. `Sprites.publicar()` pinta os anéis, bicos e fios da
   interface em ferro (as mesmas grades; o bronze continua nos sprites e, com `{ bronze: true }`, no protótipo).
-- O seletor de habilidades (1.103.0; o caminho, das propostas A, B e C à D refinada aprovada, está em
-  `ferramentas/prototipos/hud/LEIA-ME.md`). Um componente só, com material próprio (faixas de tinta, marfim, latão
+- O seletor das ações da luta, Habilidades (1.103.0) e Itens (1.105.0) (o caminho, das propostas A, B e C à D
+  refinada aprovada e ao menu de Itens em faixas, está em `ferramentas/prototipos/hud/LEIA-ME.md`). Um componente só, com material próprio (faixas de tinta, marfim, latão
   envelhecido) que não vale para outras telas. As peças, para reaproveitar se um dia outro seletor pedir o mesmo:
-  - *onde mora:* `abrirJanela` em `app/escolhas.js` monta a janelinha das ações; com o título "Habilidades" ela vira o
-    seletor (`data-tipo="habilidades"`); a de Itens continua a janelinha ao lado dos botões. O visual inteiro está em
-    `css/18-seletor-habilidades.css`; nada vem de `ferramentas/`;
+  - *onde mora:* `abrirJanela` em `app/escolhas.js` monta o seletor (`.roda-janela.seletor`) para os dois menus;
+    `data-tipo` diz qual é ("habilidades" ou "itens"). O visual inteiro está em `css/18-seletor-habilidades.css`, com
+    o que é só de Itens no fim; nada vem de `ferramentas/`;
+  - *o menu de Itens:* a quantidade no lugar do custo ("×2"), na cor normal mesmo quando o item não serve (o motivo do
+    motor fica escrito na faixa); a troca de arma é uma faixa com "turno" à direita e a ficha da arma na descrição;
+    a poção que pode ir num aliado abre a mira dos aliados, como antes; sem nada que sirva, o seletor abre com "Nada
+    na bolsa serve agora." no lugar das faixas. A descrição do consumível vem do motor (`itens.descricao`: o Tônico
+    diz só o recurso da classe, pelo `artigo_recurso` de `classes.py`);
   - *composição:* da largura da arena, colado embaixo dela, por cima do registro (posição absoluta na camada da roda:
     abrir e fechar não mexe nas cartas nem na rolagem); duas colunas na ordem das teclas (`--filas`, `--fila`); a
     altura é a que sobra na tela, e a lista rola dentro se não couber; título pequeno e "Esc · Voltar" (o mesmo
@@ -314,12 +319,13 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   - *descrição (1.104.0):* a habilidade examinada (mouse ou teclado) mostra, dentro do seletor e embaixo da coluna
     dela, o que a dica de antes mostrava (custo, alvo, o que faz, o dano, o motivo de não poder); uma por vez, e ela
     fica na última examinada. O lugar é reservado ao abrir, na altura da maior descrição (`descricoes`): trocar de
-    habilidade não mexe em nada. Se por coluna não couber na janela, vira uma área só embaixo das duas colunas; se nem
-    assim, a lista rola dentro. A dica flutuante não abre nas faixas (continua nas outras telas);
+    habilidade não mexe em nada. Se por coluna não couber na janela, vira uma área só embaixo das duas colunas (e o
+    "Esc · Voltar" sobe para a linha do título); se nem assim, a descrição rola dentro e as faixas ficam inteiras. A dica flutuante não abre nas faixas (continua nas outras telas);
   - *movimento:* as faixas entram de 12 px em 150 ms, 18 ms uma depois da outra, sem segurar os controles; com
     movimento reduzido, sem deslocamento.
   A conferência: `ferramentas/prototipos/hud/fotografar_seletor_d.mjs` com `VERSOES=atual RODADA=1` (as três classes
-  com comitiva, o teste de 10 habilidades, as interações, a borda de baixo com o registro em várias rolagens).
+  com comitiva, o teste de 10 habilidades, as interações, a borda de baixo com o registro em várias rolagens) e
+  `fotografar_itens_faixas.mjs` (o menu de Itens nas três classes, a bolsa vazia, a troca, a poção e a mira).
 - `icones.js` (`Icones`) é o único lugar que decide o desenho de cada papel: o item pelo desenho que o motor dá,
   o consumível pelo id, o atributo, o recurso do topo, o vital, o atalho da doca, o lugar de um caminho, a ação da
   roda, o retrato, a cabeça e a figura do herói e dos companheiros (de `retratos.js`, abaixo). Devolve a `<img>` pronta ou `""` quando a família não tem aquele desenho; a

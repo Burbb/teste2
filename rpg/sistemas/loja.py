@@ -55,7 +55,7 @@ class Loja:
                     "estoque": estoque[k], "limite": limite, "motivo": motivo, "detalhe": detalhe}
         return {
             "ouro": j.ouro, "limite": LIMITE_MOCHILA, "ocupado": len(j.mochila),
-            "consumiveis": [suprimento(k, CONSUMIVEIS[k]["nome"], CONSUMIVEIS[k]["icone"], CONSUMIVEIS[k]["desc"],
+            "consumiveis": [suprimento(k, CONSUMIVEIS[k]["nome"], CONSUMIVEIS[k]["icone"], itens.descricao(k, j),
                                        j.consumiveis.get(k, 0), estoque[k]) for k in self.SUPRIMENTOS]
             + [suprimento("provisoes", "Provisões (1 dia)", RECURSOS["comida"]["icone"],
                           "Pão duro, carne seca e um odre de água.", j.provisoes,

@@ -548,8 +548,7 @@ function rodaDeAcoes(m) {
   const itens = m.opcoes[acaoIdx("itens")].meta.itens || [];
   const ib = botao("itens", Icones.acao("pocao") || spr("pocao", 2), "Itens", "<b>Itens</b><div>Poções, tônicos, bandagens e troca de arma. Usar gasta o turno.</div>", (b) => {
     if (janelaAberta && b.classList.contains("ativo")) { fecharJanela(); return; }
-    if (!itens.length) { tremerNao(b, "Nada na bolsa serve agora."); return; }
-    App.som("pagina");
+    App.som("pagina");  // sem nada que sirva, o seletor abre com a frase que diz isso
     abrirJanela(b, "Itens", itens.map((meta) => linhaItem(meta, () => {
       App.som(meta.trocar !== undefined ? "equipar" : "item");
       habMirando = meta.nome || "";  // a poção pode pedir em quem: o lembrete diz o quê
@@ -614,19 +613,18 @@ function previaAlvos(tipo) {
   cartas.forEach((c) => c.classList.add("previa", ...(tipo === "todos" ? ["previa-area"] : [])));
 }
 
-/** A janelinha das ações: uma linha por habilidade ou item (ícone, nome, custo). Teclas 1–9 escolhem. A de Itens abre
- *  ao lado dos botões; a de Habilidades é o seletor de faixas (css/18-seletor-habilidades.css): da largura da arena,
- *  logo embaixo dela, por cima do registro, em duas colunas na ordem das teclas, sem título de janela nem ×. */
+/** O seletor das ações (Habilidades e Itens): uma faixa por habilidade ou item (tecla, ícone, nome, custo ou
+ *  quantidade). Teclas 1–9 escolhem. O componente está em css/18-seletor-habilidades.css: da largura da arena, logo
+ *  embaixo dela, por cima do registro, em duas colunas na ordem das teclas, sem título de janela nem ×. data-tipo diz
+ *  qual dos dois menus é (o de Itens tem a quantidade no lugar do custo e a frase quando nada serve). */
 function abrirJanela(ancora, titulo, linhas, aoFechar) {
   fecharJanela();
   const roda = rodaEl();
   const teclasAntes = pergunta.teclasNum;
   pergunta.teclasNum = [];
-  const j = el("div", "roda-janela");
-  const faixas = titulo === "Habilidades";  // o seletor de faixas
-  j.dataset.tipo = faixas ? "habilidades" : "itens";
-  j.innerHTML = faixas ? `<div class="rj-titulo"><span>${esc(titulo)}</span></div>`
-    : `<div class="rj-titulo"><span>${esc(titulo)}</span><button type="button" class="rj-fechar" title="Fechar (Esc)">×</button></div>`;
+  const j = el("div", "roda-janela seletor");
+  j.dataset.tipo = titulo === "Itens" ? "itens" : "habilidades";
+  j.innerHTML = `<div class="rj-titulo"><span>${esc(titulo)}</span></div>`;
   const lista = el("ul", "rj-lista");
   linhas.forEach((l, i) => {
     const li = el("li");
@@ -634,12 +632,11 @@ function abrirJanela(ancora, titulo, linhas, aoFechar) {
     b.type = "button";
     if (l.hab) b.dataset.hab = l.hab;
     if (l.slot) b.dataset.slot = l.slot;
-    b.innerHTML = faixas
-      ? `<span class="tecla">${i < 9 ? i + 1 : ""}</span><span class="rj-icone">${l.icone}</span><span class="rj-texto"><span class="rj-nome">${esc(l.nome)}</span>${l.bloqueio ? `<span class="rj-motivo">${esc(l.bloqueio)}</span>` : ""}</span><span class="rj-info">${l.info || ""}</span>`
-      : `<span class="rj-icone">${l.icone}</span><span class="rj-nome">${esc(l.nome)}</span><span class="rj-info">${l.info || ""}</span>${i < 9 ? `<span class="tecla">${i + 1}</span>` : ""}`;
+    b.innerHTML = `<span class="tecla">${i < 9 ? i + 1 : ""}</span><span class="rj-icone">${l.icone}</span><span class="rj-texto"><span class="rj-nome">${esc(l.nome)}</span>${l.bloqueio ? `<span class="rj-motivo">${esc(l.bloqueio)}</span>` : ""}</span><span class="rj-info">${l.info || ""}</span>`;
     // as pontas da faixa vêm da posição (três pares que se repetem, nunca ao acaso); --i é a ordem de entrada
-    if (faixas) { li.dataset.forma = i % 3; li.style.setProperty("--i", i); }
-    if (l.dica && !faixas) b.dataset.dica = Telas.guardarDica(l.dica);  // no seletor, a descrição mora dentro dele
+    li.dataset.forma = i % 3;
+    li.style.setProperty("--i", i);
+    // a descrição (l.dica) mora dentro do seletor, embaixo da coluna (descricoes): as faixas não têm dica ao lado
     const usar = () => (l.bloqueio ? tremerNao(b, l.bloqueio) : l.aoClicar());
     b.addEventListener("click", (ev) => { ev.stopPropagation(); previaAlvos(null); usar(); });
     if (l.alvo) {  // passar o mouse mostra quem a habilidade atingiria
@@ -651,43 +648,36 @@ function abrirJanela(ancora, titulo, linhas, aoFechar) {
     lista.appendChild(li);
   });
   j.appendChild(lista);
-  if (faixas) {  // duas colunas na ordem das teclas (1, 2, 3 descendo; depois a segunda coluna)
-    const filas = Math.ceil(linhas.length / 2);
-    lista.style.setProperty("--filas", filas);
-    [...lista.children].forEach((li, k) => li.style.setProperty("--fila", k % filas));
-    const v = el("button", "rj-fechar rj-voltar", "<kbd>Esc</kbd><span>Voltar</span>");
-    v.type = "button";
-    v.title = "Fechar (Esc)";
-    j.appendChild(v);
-  }
+  if (!linhas.length) lista.insertAdjacentHTML("afterend", '<p class="rj-vazio">Nada na bolsa serve agora.</p>');  // só Itens chega vazio
+  // duas colunas na ordem das teclas (1, 2, 3 descendo; depois a segunda coluna)
+  const filas = Math.ceil(linhas.length / 2);
+  lista.style.setProperty("--filas", filas);
+  [...lista.children].forEach((li, k) => li.style.setProperty("--fila", k % filas));
+  const v = el("button", "rj-fechar rj-voltar", "<kbd>Esc</kbd><span>Voltar</span>");
+  v.type = "button";
+  v.title = "Fechar (Esc)";
+  j.appendChild(v);
   roda.appendChild(j);
   ancora.classList.add("ativo");
   // Desce do botão para baixo da arena, por cima do texto: os alvos ficam à vista enquanto você escolhe.
   const g = geometriaHeroi();
   const topoTela = j.offsetParent.getBoundingClientRect().top;
-  if (faixas) {  // da largura da arena, colado embaixo dela (nada se mexe); a lista rola dentro se não couber
-    j.style.left = "0px";
-    j.style.width = g.W + "px";
-    j.style.top = g.H + "px";
-    j.style.maxHeight = Math.max(170, innerHeight - topoTela - g.H - 14) + "px";
-    // onde caem as texturas da página (a leitura da cena e o carvão do palco): o fundo do seletor continua a página
-    const pj = j.getBoundingClientRect(), cena = document.getElementById("cena"), palco = document.getElementById("palco");
-    if (cena && palco) {
-      const c = cena.getBoundingClientRect(), pa = palco.getBoundingClientRect();
-      j.style.setProperty("--fundo-cena", `${c.left + 64 - pj.left}px ${c.top + 32 - pj.top}px`);
-      j.style.setProperty("--fundo-palco", `${pa.left + 12 - pj.left}px ${pa.top + 12 - pj.top}px`);
-    }
-  } else {
-    const x = ancora.offsetLeft - 8;
-    j.style.left = Math.max(6, Math.min(x, g.W - j.offsetWidth - 6)) + "px";
-    const teto = (document.getElementById("topo")?.getBoundingClientRect().bottom || 0) + 6 - topoTela;  // nunca sob o cabeçalho
-    const y = Math.max(teto, Math.min(g.H + 4, innerHeight - topoTela - j.offsetHeight - 8));
-    j.style.top = y + "px";
+  // da largura da arena, colado embaixo dela (nada se mexe); a lista rola dentro se não couber
+  j.style.left = "0px";
+  j.style.width = g.W + "px";
+  j.style.top = g.H + "px";
+  j.style.maxHeight = Math.max(170, innerHeight - topoTela - g.H - 14) + "px";
+  // onde caem as texturas da página (a leitura da cena e o carvão do palco): o fundo do seletor continua a página
+  const pj = j.getBoundingClientRect(), cena = document.getElementById("cena"), palco = document.getElementById("palco");
+  if (cena && palco) {
+    const c = cena.getBoundingClientRect(), pa = palco.getBoundingClientRect();
+    j.style.setProperty("--fundo-cena", `${c.left + 64 - pj.left}px ${c.top + 32 - pj.top}px`);
+    j.style.setProperty("--fundo-palco", `${pa.left + 12 - pj.left}px ${pa.top + 12 - pj.top}px`);
   }
   const fechar = () => {
     Telas.esconderDica();
     previaAlvos(null);
-    const devolver = faixas && j.contains(document.activeElement);  // fechou pelo teclado: o foco volta ao botão
+    const devolver = j.contains(document.activeElement);  // fechou pelo teclado: o foco volta ao botão
     j.remove();
     ancora.classList.remove("ativo");
     if (devolver && ancora.isConnected && ancora.focus) ancora.focus({ preventScroll: true });
@@ -701,9 +691,9 @@ function abrirJanela(ancora, titulo, linhas, aoFechar) {
   const fecharTudoJanela = () => { document.removeEventListener("pointerdown", fora, true); fechar(); };
   janelaAberta = { fechar: fecharTudoJanela, soltar: () => document.removeEventListener("pointerdown", fora, true) };
   Telas.ligarDicas(j);
-  if (faixas) descricoes(j, linhas, lista);
-  if (faixas) faixasTeclado(j, linhas);
-  if (faixas) bordaLimpa(j);
+  descricoes(j, linhas, lista);
+  faixasTeclado(j, linhas);
+  bordaLimpa(j);
 }
 /** A descrição da habilidade examinada (mouse ou teclado), dentro do seletor, embaixo da coluna dela: o que a dica
  *  de antes mostrava (custo, alvo, o que faz, o dano, o motivo de não poder). Uma por vez; ela fica na última

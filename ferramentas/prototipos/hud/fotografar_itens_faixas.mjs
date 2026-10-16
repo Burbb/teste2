@@ -1,22 +1,22 @@
-// O menu de Itens em faixas (protótipo): o jogo como está ("atual", a janelinha de Itens ao lado dos botões) e a
-// proposta ("proposta": seletor/itens-faixas.mjs e itens-faixas.css, só nesta página), na mesma luta, com os mesmos
-// dados. Lutas (cenário tutorial, contra lobos de nível 9, com Morel e Odette; uma rodada de Atacar antes, para o
+// O menu de Itens em faixas. Integrado no jogo em 1.105.0: "atual" é o jogo (o padrão). A "proposta" (as trocas de
+// seletor/itens-faixas.mjs e itens-faixas.css, só nesta página) só se aplica a um escolhas.js de antes de 1.105.0
+// (VERSOES=atual,proposta, num checkout antigo); fica como registro de como o protótipo foi fotografado. Lutas (cenário tutorial, contra lobos de nível 9, com Morel e Odette; uma rodada de Atacar antes, para o
 // registro real ficar por baixo e os aliados estarem feridos):
 //   guerreiro  bolsa variada: poções, bandagem, tônico, antídoto (não serve sem veneno), bomba de fumaça, e uma arma
 //              na mochila (a troca de arma);
 //   arqueiro   poções e tônicos (quem recebe a poção: a mira dos aliados);
-//   mago       só uma bomba de fumaça (poucos itens);
+//   mago       uma bomba de fumaça e um tônico (poucos itens);
 //   vazio      nada na bolsa que sirva.
 // Em 1500×950 e 1280×720: a tela inteira com o menu aberto, o menu, o mouse num item (a descrição) e num que não serve
 // (o motivo), a tecla 3 com as setas, a escolha da poção (a mira dos aliados ou o uso direto, a regra de hoje) e o
-// Voltar. Mais o movimento reduzido no guerreiro. Mede se o menu cobre a arena, se rola e se corta texto.
+// Voltar. Mais o movimento reduzido no guerreiro. Mede se o menu cobre a arena, se rola e se corta texto, a descrição
+// (a do Tônico com o recurso da classe, a ficha da troca de arma) e se o registro por baixo fica com linha cortada.
 //   PLAYWRIGHT_MODULO=<caminho do playwright>/index.mjs node ferramentas/prototipos/hud/fotografar_itens_faixas.mjs
 // (VERSOES=atual,proposta, LUTAS=..., JANELAS=normal,baixa, SAIDA=<pasta>)
 import { spawn } from "child_process";
 import { mkdirSync, readFileSync, rmSync, writeFileSync } from "fs";
 import { fileURLToPath } from "url";
 import path from "path";
-import { escolhasItens } from "./seletor/itens-faixas.mjs";
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULO || "playwright");
 const aqui = path.dirname(fileURLToPath(import.meta.url)), raiz = path.resolve(aqui, "../../..");
 const SAIDA = path.resolve(process.env.SAIDA || path.join(aqui, "capturas-itens-faixas"));
@@ -24,14 +24,15 @@ rmSync(SAIDA, { recursive: true, force: true });
 mkdirSync(SAIDA, { recursive: true });
 const espera = (ms) => new Promise((r) => setTimeout(r, ms));
 const filtro = (nome, todos) => (process.env[nome] ? process.env[nome].split(",") : todos);
-const ESCOLHAS = escolhasItens(readFileSync(path.join(raiz, "rpg/web/static/app/escolhas.js"), "utf8"));
-const VERSOES = filtro("VERSOES", ["atual", "proposta"]);
+const VERSOES = filtro("VERSOES", ["atual"]);
+const ESCOLHAS = VERSOES.includes("proposta")
+  ? (await import("./seletor/itens-faixas.mjs")).escolhasItens(readFileSync(path.join(raiz, "rpg/web/static/app/escolhas.js"), "utf8")) : null;
 const BASE = { TUTORIAL: "0", LUTA: "lobo", COMITIVA: "morel,odete", NIVEL: "12", NIVEL_LUTA: "9", QUANTOS: "2", VISTAS: "A1,V2,N1,D1,K1,M1,L1", VIDA: "0.6" };
 const ZERO = "pocao_vida=0,tonico=0,antidoto=0,bandagem=0,bomba_fumaca=0";
 const TODAS = {
   guerreiro: { ...BASE, CLASSE: "guerreiro", ESPEC: "berserker", BOLSA: `${ZERO},pocao_vida=2,bandagem=1,tonico=1,antidoto=1,bomba_fumaca=1`, TROCA: "1" },
   arqueiro: { ...BASE, CLASSE: "arqueiro", ESPEC: "sombra", BOLSA: `${ZERO},pocao_vida=3,tonico=2` },
-  mago: { ...BASE, CLASSE: "mago", ESPEC: "necromante", BOLSA: `${ZERO},bomba_fumaca=1` },
+  mago: { ...BASE, CLASSE: "mago", ESPEC: "necromante", BOLSA: `${ZERO},bomba_fumaca=1,tonico=1` },
   vazio: { ...BASE, CLASSE: "guerreiro", ESPEC: "paladino", BOLSA: ZERO },
 };
 const LUTAS = Object.entries(TODAS).filter(([l]) => filtro("LUTAS", Object.keys(TODAS)).includes(l));
@@ -91,11 +92,19 @@ const medir = (p) => p.evaluate(() => {
   if (!j) return { aberto: false };
   const R = j.getBoundingClientRect(), roda = document.getElementById("roda").getBoundingClientRect(), lista = j.querySelector(".rj-lista");
   const linhas = [...j.querySelectorAll(".rj-linha")];
-  return { aberto: true, tamanho: `${Math.round(R.width)}×${Math.round(R.height)}`, cobre_arena: R.top < roda.bottom - 1 && j.dataset.menu === "itens",
+  return { aberto: true, tamanho: `${Math.round(R.width)}×${Math.round(R.height)}`, cobre_arena: R.top < roda.bottom - 1 && j.dataset.tipo === "itens",
     itens: linhas.map((l) => `${l.querySelector(".rj-nome").textContent}${l.classList.contains("bloqueada") ? " (não serve)" : ""}`).join(", "),
     rola: lista.scrollHeight > lista.clientHeight + 1, vazio: !!j.querySelector(".rj-vazio"),
-    cortados: [...j.querySelectorAll(".rj-nome, .rj-info, .rj-motivo")].filter((e) => e.scrollWidth > e.clientWidth + 1).map((e) => e.textContent) };
+    cortados: [...j.querySelectorAll(".rj-nome, .rj-info, .rj-motivo")].filter((e) => e.scrollWidth > e.clientWidth + 1).map((e) => e.textContent),
+    // o registro por baixo: nenhuma linha de texto atravessa a borda de baixo do seletor
+    linha_cortada: (() => {
+      const borda = R.bottom, pg = document.getElementById("pagina"), tr = document.createRange(), w = document.createTreeWalker(pg, NodeFilter.SHOW_TEXT);
+      for (let t = w.nextNode(); t; t = w.nextNode()) { if (!t.textContent.trim()) continue; tr.selectNodeContents(t);
+        for (const q of tr.getClientRects()) if (q.height && q.top < borda - 3 && q.bottom > borda + 3) return t.textContent.trim().slice(0, 40); }
+      return null;
+    })() };
 });
+const descricao = (p) => p.evaluate(() => (document.querySelector(".roda-janela .rj-desc-caixa") || {}).innerText || "");
 const focado = (p) => p.evaluate(() => { const a = document.activeElement; return a === document.body ? "nada" : `${a.className.split(" ")[0]}: ${a.textContent.trim().slice(0, 26)}`; });
 for (const [luta, amb] of LUTAS) for (const [jan, tam] of JANELAS) for (const versao of VERSOES) {
   const { proc, url } = await subir(amb);  // um jogo novo a cada foto (a mesma semente): os mesmos dados nas duas versões
@@ -110,6 +119,14 @@ for (const [luta, amb] of LUTAS) for (const [jan, tam] of JANELAS) for (const ve
     if (!r.aberto) r.botao = "não abriu (o botão treme: nada na bolsa serve)";
     const livre = await p.$(".roda-janela .rj-linha:not(.bloqueada)");
     if (livre) { await livre.hover(); await espera(600); await recortar(p, ["#roda", ".roda-janela", "#dica-item"], n("2-mouse")); }
+    r.dica_ao_lado = await p.evaluate(() => { const d = document.getElementById("dica-item"); return !!d && getComputedStyle(d).display !== "none" && d.getClientRects().length > 0 && !d.hidden && getComputedStyle(d).opacity > 0; });
+    for (const l of await p.$$('.roda-janela .rj-linha[data-slot="item"]')) {
+      if (!/Tônico/.test(await l.evaluate((e) => e.textContent))) continue;
+      await l.hover(); await espera(300); r.tonico = (await descricao(p)).replace(/\s+/g, " ").trim();
+      await recortar(p, ["#roda", ".roda-janela"], n("2b-tonico"));
+    }
+    const troca = await p.$('.roda-janela .rj-linha[data-slot="troca"]');
+    if (troca) { await troca.hover(); await espera(300); r.troca = (await descricao(p)).replace(/\s+/g, " ").trim().slice(0, 160); await recortar(p, ["#roda", ".roda-janela"], n("2c-troca")); }
     const presa = await p.$(".roda-janela .rj-linha.bloqueada");
     if (presa) { await presa.hover(); await espera(600); await recortar(p, ["#roda", ".roda-janela", "#dica-item"], n("3-nao-serve")); }
     await p.mouse.move(5, H - 5); await p.keyboard.press("Escape"); await espera(300);

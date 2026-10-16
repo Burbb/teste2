@@ -1,7 +1,8 @@
-/* O seletor de habilidades (1.103.0; aprovado pelo Jean como "D refinada", o caminho está em
-   ferramentas/prototipos/hud/LEIA-ME.md, "O seletor de habilidades D" e "A D refinada"). Só a janelinha de Habilidades
-   (data-tipo="habilidades", app/escolhas.js); a de Itens fica com 12-acoes-combate.css e 15-hud-luta.css. O material
-   (faixas de tinta, marfim, latão envelhecido) é deste componente: não se espalha para outras telas.
+/* O seletor de faixas das ações da luta (1.103.0 em Habilidades; 1.105.0 também em Itens; aprovado pelo Jean como
+   "D refinada", o caminho está em ferramentas/prototipos/hud/LEIA-ME.md, "O seletor de habilidades D", "A D refinada"
+   e "O menu de Itens em faixas"). A janelinha .seletor de app/escolhas.js, com data-tipo="habilidades" ou "itens"; o
+   que é só do menu de Itens está no fim. O material (faixas de tinta, marfim, latão envelhecido) é deste componente:
+   não se espalha para outras telas.
 
    As peças (tudo em código, nada de imagem com texto; o nome, o custo, a tecla e o motivo são elementos à parte):
    - a composição: o seletor tem a largura da arena e fica logo embaixo dela, por cima do registro (escolhas.js põe a
@@ -26,7 +27,7 @@
   --sh-grao: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='64'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012 .55' numOctaves='3' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .55 -.12'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
   --sh-grao-claro: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='64'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012 .55' numOctaves='3' seed='11' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .32 -.08'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
 }
-:root body .roda-janela[data-tipo="habilidades"] {
+:root body .roda-janela.seletor {
   display: flex; flex-direction: column; padding: 8px 20px 8px 16px; border: 0; border-radius: 0; animation: none; box-shadow: none;
   /* a superfície da leitura da página (14-hud.css: --veu-leitura sobre o carvão, por cima do --veu-superficie do palco),
      com a textura alinhada à da página (--fundo-cena e --fundo-palco vêm do escolhas.js); opaca: o registro não passa */
@@ -34,28 +35,28 @@
     url(../hud/textura-painel.png) var(--fundo-palco, 0 0) / 128px, #0a0a0b;
 }
 /* a borda de baixo: um fio como as divisórias da página (sombra e luz de 1 px), não uma sombra */
-:root body .roda-janela[data-tipo="habilidades"]::after { content: ""; position: absolute; left: 12px; right: 12px; bottom: 0; height: 2px;
+:root body .roda-janela.seletor::after { content: ""; position: absolute; left: 12px; right: 12px; bottom: 0; height: 2px;
   background: linear-gradient(var(--fio-escuro, rgba(0, 0, 0, 0.75)) 0 1px, var(--fio-claro, rgba(255, 255, 255, 0.05)) 1px 2px); pointer-events: none; }
 /* o título: pequeno, abaixo das escolhas na hierarquia, com um fio de latão que se apaga */
-:root body .roda-janela[data-tipo="habilidades"] .rj-titulo { display: flex; align-items: center; gap: 10px; margin: 0 0 2px 4px;
+:root body .roda-janela.seletor .rj-titulo { display: flex; align-items: center; gap: 10px; margin: 0 0 2px 4px;
   font-family: var(--texto); font-weight: 600; font-size: 12.5px; letter-spacing: 0.16em; text-transform: uppercase; color: #b49a64; }
-:root body .roda-janela[data-tipo="habilidades"] .rj-titulo::after { content: ""; flex: 1; height: 1px;
+:root body .roda-janela.seletor .rj-titulo::after { content: ""; flex: 1; height: 1px;
   background: linear-gradient(90deg, rgba(176, 138, 69, 0.55), rgba(176, 138, 69, 0)); }
 /* duas colunas na ordem das teclas; a lista rola dentro se não couber (o painel tem a altura que sobra na tela) */
-:root body .roda-janela[data-tipo="habilidades"] .rj-lista { display: grid; grid-auto-flow: column; grid-template-columns: repeat(2, minmax(0, 1fr));
+:root body .roda-janela.seletor .rj-lista { display: grid; grid-auto-flow: column; grid-template-columns: repeat(2, minmax(0, 1fr));
   grid-template-rows: repeat(var(--filas, 4), auto); column-gap: 18px; row-gap: 2px; min-height: 0; overflow-y: auto; overflow-x: hidden;
   padding: 4px 8px 4px calc(var(--filas, 4) * 4px + 2px); scrollbar-width: thin; scrollbar-color: #4a4640 transparent; }
-:root body .roda-janela[data-tipo="habilidades"] .rj-lista > li { translate: calc(var(--fila, 0) * -4px) 0; filter: drop-shadow(0 2px 1px rgba(0, 0, 0, 0.55)); }
+:root body .roda-janela.seletor .rj-lista > li { translate: calc(var(--fila, 0) * -4px) 0; filter: drop-shadow(0 2px 1px rgba(0, 0, 0, 0.55)); }
 /* a examinada fica por cima das vizinhas (a faixa inclinada e o fio do foco não somem sob a faixa de baixo) */
-:root body .roda-janela[data-tipo="habilidades"] .rj-lista > li:has(.rj-linha:is(:hover, :focus-visible)) { z-index: 1; }
+:root body .roda-janela.seletor .rj-lista > li:has(.rj-linha:is(:hover, :focus-visible)) { z-index: 1; }
 
 /* a linha: a tecla, o ícone, o nome (e o motivo), o custo; a faixa é o ::before, atrás de tudo */
-:root body .roda-janela[data-tipo="habilidades"] .rj-linha { position: relative; isolation: isolate; display: grid;
+:root body .roda-janela.seletor .rj-linha { position: relative; isolation: isolate; display: grid;
   grid-template-columns: 30px 36px minmax(0, 1fr) auto; align-items: center; column-gap: 9px; min-height: 56px; padding: 4px 16px 4px 0;
   border: 0; border-radius: 0; background: none; box-shadow: none; outline: none; transform: none; color: var(--sh-texto); transition: none;
   animation: faixa-entra 150ms cubic-bezier(0.2, 0.8, 0.3, 1) backwards; animation-delay: calc(var(--i, 0) * 18ms); }
 @keyframes faixa-entra { from { opacity: 0; translate: -12px 0; } }
-:root body .roda-janela[data-tipo="habilidades"] .rj-linha::before { content: ""; position: absolute; z-index: -1; inset: 4px 0 4px 12px; rotate: -2deg;
+:root body .roda-janela.seletor .rj-linha::before { content: ""; position: absolute; z-index: -1; inset: 4px 0 4px 12px; rotate: -2deg;
   background-color: var(--sh-carvao);
   -webkit-mask: var(--ponta-e) 0 0 / auto 100% no-repeat, var(--sh-meio) 40px 0 / calc(100% - 96px) 100% no-repeat, var(--ponta-d) 100% 0 / auto 100% no-repeat;
   mask: var(--ponta-e) 0 0 / auto 100% no-repeat, var(--sh-meio) 40px 0 / calc(100% - 96px) 100% no-repeat, var(--ponta-d) 100% 0 / auto 100% no-repeat;
@@ -63,7 +64,7 @@
   background-size: 640px 64px, 100% 100%; }
 /* as pontas: três de cada lado, desenhadas em SVG e escaladas só pela altura (o desenho é o mesmo em qualquer
    largura), e o meio de bordas levemente onduladas esticado entre elas; cada posição tem sempre o mesmo par */
-:root body .roda-janela[data-tipo="habilidades"] {
+:root body .roda-janela.seletor {
   --sh-ponta-e0: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 46 50'><path fill-rule='evenodd' d='M46 2 L31 3 L24 1.5 L17 3.5 L12 2.5 L9 5 L5 6 L8 8.5 L3 11 L1 15.5 L6 17 L2 20 L0 24 L10 25.6 L1 27 L3 31 L0.5 35 L5 37 L3 41 L8 43.5 L13 46.5 L20 47 L26 49 L36 47.5 L46 48.5 Z M2 39.5 L6 40.2 L4.5 41.6 Z M18 4.4 L38 4.9 L18 5.6 Z'/></svg>");
   --sh-ponta-e1: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 46 50'><path fill-rule='evenodd' d='M46 1 L28 2 C21 2.5 18 0.5 12 2.5 C8 4 9.5 8 4.5 10 C1 12 4 16 2 20 C0 23.5 4 26 2.5 30 L11 31 L3 32.5 C1 36 5.5 39 3.5 43 C6 47 12 46 17 48.5 C22 50 27 48 33 49 L46 49 Z'/></svg>");
   --sh-ponta-e2: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 46 50'><path fill-rule='evenodd' d='M46 3 L35 2 L25 4 L17 2.5 L10 5.5 L4 10 L7 12 L2 17 L3.5 22 L0.5 27 L4 31 L1.5 36 L6 39 L4 43 L10 45.5 L15 48.5 L25 46.5 L33 48.5 L46 47 Z M8 6.5 L13 6.8 L11.5 8.3 L7.5 8 Z M14 44.2 L32 44.8 L14 45.4 Z'/></svg>");
@@ -72,97 +73,114 @@
   --sh-ponta-d2: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 50'><path fill-rule='evenodd' d='M0 3 L30 2 L42 3.6 L50 2.8 L53 5 L51.5 7 L55 9.5 L53 12.5 L56 16 L54 19.5 L55.5 23 L53.5 27 L56 30.5 L54 34.5 L55.5 38 L52 41 L53 44.5 L44 46.5 L30 48.5 L0 47 Z M53 5.5 L62 5.2 L53.5 6.6 Z M55 14 L64 14.8 L55 15.8 Z M55 24.5 L60.5 25 L55 26 Z M55 35 L63 36 L54.8 37 Z M52 45 L57 46 L51 46.5 Z M34 44.2 L50 44.8 L34 45.4 Z'/></svg>");
   --sh-meio: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 50' preserveAspectRatio='none'><path d='M0 1.4 Q60 0.4 120 1.2 T240 1 T400 1.5 L400 48.6 Q330 49.6 260 48.7 T120 48.9 T0 48.5 Z'/></svg>");
 }
-:root body .roda-janela[data-tipo="habilidades"] li[data-forma="0"] .rj-linha { --ponta-e: var(--sh-ponta-e0); --ponta-d: var(--sh-ponta-d1); }
-:root body .roda-janela[data-tipo="habilidades"] li[data-forma="1"] .rj-linha { --ponta-e: var(--sh-ponta-e1); --ponta-d: var(--sh-ponta-d2); }
-:root body .roda-janela[data-tipo="habilidades"] li[data-forma="2"] .rj-linha { --ponta-e: var(--sh-ponta-e2); --ponta-d: var(--sh-ponta-d0); }
+:root body .roda-janela.seletor li[data-forma="0"] .rj-linha { --ponta-e: var(--sh-ponta-e0); --ponta-d: var(--sh-ponta-d1); }
+:root body .roda-janela.seletor li[data-forma="1"] .rj-linha { --ponta-e: var(--sh-ponta-e1); --ponta-d: var(--sh-ponta-d2); }
+:root body .roda-janela.seletor li[data-forma="2"] .rj-linha { --ponta-e: var(--sh-ponta-e2); --ponta-d: var(--sh-ponta-d0); }
 
 /* a tecla: um paralelogramo de carvão na ponta da faixa (o número reto) */
-:root body .roda-janela[data-tipo="habilidades"] .rj-linha .tecla { position: relative; inset: auto; grid-column: 1; z-index: 1; display: grid; place-items: center;
+:root body .roda-janela.seletor .rj-linha .tecla { position: relative; inset: auto; grid-column: 1; z-index: 1; display: grid; place-items: center;
   width: 30px; height: 34px; padding: 0; font-family: var(--num); font-weight: 700; font-size: 18px; line-height: 1; color: var(--sh-texto);
   background: none; border: 0; box-shadow: none; }
-:root body .roda-janela[data-tipo="habilidades"] .rj-linha .tecla::before { content: ""; position: absolute; inset: 0; z-index: -1;
+:root body .roda-janela.seletor .rj-linha .tecla::before { content: ""; position: absolute; inset: 0; z-index: -1;
   background: #0b0b0d; border: 1px solid #5c554a; transform: skewX(-10deg) rotate(-2deg); }
-:root body .roda-janela[data-tipo="habilidades"] .rj-linha .tecla:empty::before { display: none; }
+:root body .roda-janela.seletor .rj-linha .tecla:empty::before { display: none; }
 /* o ícone solto sobre a faixa: sem nicho, sem caixa */
-:root body .roda-janela[data-tipo="habilidades"] .rj-linha .rj-icone { grid-column: 2; display: grid; place-items: center; width: 36px; height: 36px;
+:root body .roda-janela.seletor .rj-linha .rj-icone { grid-column: 2; display: grid; place-items: center; width: 36px; height: 36px;
   border: 0; background: none; box-shadow: none; filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.75)); }
-:root body .roda-janela[data-tipo="habilidades"] .rj-linha .rj-texto { grid-column: 3; display: flex; flex-direction: column; justify-content: center; min-width: 0; }
-:root body .roda-janela[data-tipo="habilidades"] .rj-linha .rj-nome { font-family: var(--texto); font-weight: 700; font-size: 18px; line-height: 1.12;
+:root body .roda-janela.seletor .rj-linha .rj-texto { grid-column: 3; display: flex; flex-direction: column; justify-content: center; min-width: 0; }
+:root body .roda-janela.seletor .rj-linha .rj-nome { font-family: var(--texto); font-weight: 700; font-size: 18px; line-height: 1.12;
   color: var(--sh-texto); text-wrap: balance; }
-:root body .roda-janela[data-tipo="habilidades"] .rj-linha .rj-motivo { font-family: var(--texto); font-size: 12.5px; line-height: 1.15; color: var(--sh-perigo); }
-:root body .roda-janela[data-tipo="habilidades"] .rj-linha .rj-info { grid-column: 4; font-family: var(--num); font-weight: 600; font-size: 18px;
+:root body .roda-janela.seletor .rj-linha .rj-motivo { font-family: var(--texto); font-size: 12.5px; line-height: 1.15; color: var(--sh-perigo); }
+:root body .roda-janela.seletor .rj-linha .rj-info { grid-column: 4; font-family: var(--num); font-weight: 600; font-size: 18px;
   font-variant-numeric: tabular-nums; color: var(--sh-texto); }
-:root body .roda-janela[data-tipo="habilidades"] .rj-linha .rj-info .gratis { font-size: 13px; color: #9fc58a; }
+:root body .roda-janela.seletor .rj-linha .rj-info .gratis { font-size: 13px; color: #9fc58a; }
 
 /* examinada (mouse ou teclado): a faixa clara, o texto escuro, a tecla em latão */
-:root body .roda-janela[data-tipo="habilidades"] .rj-linha:is(:hover, :focus-visible)::before { background-color: var(--sh-marfim);
+:root body .roda-janela.seletor .rj-linha:is(:hover, :focus-visible)::before { background-color: var(--sh-marfim);
   background-image: var(--sh-grao-claro), linear-gradient(180deg, rgba(255, 255, 255, 0.35), transparent 40%, rgba(80, 60, 30, 0.18)); }
-:root body .roda-janela[data-tipo="habilidades"] .rj-linha:is(:hover, :focus-visible) :is(.rj-nome, .rj-info) { color: var(--sh-tinta); }
-:root body .roda-janela[data-tipo="habilidades"] .rj-linha:is(:hover, :focus-visible) .rj-info .gratis { color: #2f5a22; }
-:root body .roda-janela[data-tipo="habilidades"] .rj-linha:is(:hover, :focus-visible) .rj-icone { filter: drop-shadow(0 1px 0 rgba(60, 40, 10, 0.45)); }
-:root body .roda-janela[data-tipo="habilidades"] .rj-linha:is(:hover, :focus-visible) .tecla { color: #1a140c; }
-:root body .roda-janela[data-tipo="habilidades"] .rj-linha:is(:hover, :focus-visible) .tecla::before { background: var(--sh-latao); border-color: #5e4620; }
+:root body .roda-janela.seletor .rj-linha:is(:hover, :focus-visible) :is(.rj-nome, .rj-info) { color: var(--sh-tinta); }
+:root body .roda-janela.seletor .rj-linha:is(:hover, :focus-visible) .rj-info .gratis { color: #2f5a22; }
+:root body .roda-janela.seletor .rj-linha:is(:hover, :focus-visible) .rj-icone { filter: drop-shadow(0 1px 0 rgba(60, 40, 10, 0.45)); }
+:root body .roda-janela.seletor .rj-linha:is(:hover, :focus-visible) .tecla { color: #1a140c; }
+:root body .roda-janela.seletor .rj-linha:is(:hover, :focus-visible) .tecla::before { background: var(--sh-latao); border-color: #5e4620; }
 /* o foco do teclado tem marca própria: o fio de latão embaixo da faixa e o anel na tecla */
-:root body .roda-janela[data-tipo="habilidades"] .rj-linha:focus-visible::after { content: ""; position: absolute; left: 20px; right: 2px; bottom: 1px; height: 2px;
+:root body .roda-janela.seletor .rj-linha:focus-visible::after { content: ""; position: absolute; left: 20px; right: 2px; bottom: 1px; height: 2px;
   rotate: -2deg; background: linear-gradient(90deg, var(--sh-latao-claro), var(--sh-latao) 70%, rgba(176, 138, 69, 0)); }
-:root body .roda-janela[data-tipo="habilidades"] .rj-linha:focus-visible .tecla::before { outline: 2px solid var(--sh-latao-claro); outline-offset: 2px; }
+:root body .roda-janela.seletor .rj-linha:focus-visible .tecla::before { outline: 2px solid var(--sh-latao-claro); outline-offset: 2px; }
 /* pressionado: afunda 2 px e escurece */
-:root body .roda-janela[data-tipo="habilidades"] .rj-linha:active { translate: 2px 2px; }
-:root body .roda-janela[data-tipo="habilidades"] .rj-linha:active::before { background-color: var(--sh-marfim-fundo);
+:root body .roda-janela.seletor .rj-linha:active { translate: 2px 2px; }
+:root body .roda-janela.seletor .rj-linha:active::before { background-color: var(--sh-marfim-fundo);
   background-image: var(--sh-grao-claro), linear-gradient(180deg, rgba(0, 0, 0, 0.16), transparent 45%); }
 
 /* indisponível: a faixa cinza riscada; nome, custo e motivo legíveis */
-:root body .roda-janela[data-tipo="habilidades"] .rj-linha.bloqueada { cursor: not-allowed; }
-:root body .roda-janela[data-tipo="habilidades"] .rj-linha.bloqueada > * { filter: none; }
-:root body .roda-janela[data-tipo="habilidades"] .rj-linha.bloqueada .rj-icone img { filter: grayscale(0.75) brightness(0.72); }
-:root body .roda-janela[data-tipo="habilidades"] .rj-linha.bloqueada::before { background-color: var(--sh-cinza);
+:root body .roda-janela.seletor .rj-linha.bloqueada { cursor: not-allowed; }
+:root body .roda-janela.seletor .rj-linha.bloqueada > * { filter: none; }
+:root body .roda-janela.seletor .rj-linha.bloqueada .rj-icone img { filter: grayscale(0.75) brightness(0.72); }
+:root body .roda-janela.seletor .rj-linha.bloqueada::before { background-color: var(--sh-cinza);
   background-image: var(--sh-grao), repeating-linear-gradient(-58deg, rgba(255, 255, 255, 0.045) 0 2px, transparent 2px 8px); }
-:root body .roda-janela[data-tipo="habilidades"] .rj-linha.bloqueada .rj-nome { color: #b9af99; }
-:root body .roda-janela[data-tipo="habilidades"] .rj-linha.bloqueada .rj-info { color: var(--sh-perigo); }
-:root body .roda-janela[data-tipo="habilidades"] .rj-linha.bloqueada:is(:hover, :focus-visible)::before { background-color: var(--sh-cinza-claro);
+:root body .roda-janela.seletor .rj-linha.bloqueada .rj-nome { color: #b9af99; }
+:root body .roda-janela.seletor .rj-linha.bloqueada .rj-info { color: var(--sh-perigo); }
+:root body .roda-janela.seletor .rj-linha.bloqueada:is(:hover, :focus-visible)::before { background-color: var(--sh-cinza-claro);
   background-image: var(--sh-grao-claro), repeating-linear-gradient(-58deg, rgba(0, 0, 0, 0.07) 0 2px, transparent 2px 8px); }
-:root body .roda-janela[data-tipo="habilidades"] .rj-linha.bloqueada:is(:hover, :focus-visible) :is(.rj-nome) { color: var(--sh-tinta); }
-:root body .roda-janela[data-tipo="habilidades"] .rj-linha.bloqueada:is(:hover, :focus-visible) :is(.rj-motivo, .rj-info) { color: var(--sh-perigo-escuro); }
-:root body .roda-janela[data-tipo="habilidades"] .rj-linha.bloqueada:is(:hover, :focus-visible) .tecla { color: var(--sh-texto); }
-:root body .roda-janela[data-tipo="habilidades"] .rj-linha.bloqueada:is(:hover, :focus-visible) .tecla::before { background: #4d463d; border-color: #2a2621; }
-:root body .roda-janela[data-tipo="habilidades"] .rj-linha.bloqueada:active { translate: none; }
+:root body .roda-janela.seletor .rj-linha.bloqueada:is(:hover, :focus-visible) :is(.rj-nome) { color: var(--sh-tinta); }
+:root body .roda-janela.seletor .rj-linha.bloqueada:is(:hover, :focus-visible) :is(.rj-motivo, .rj-info) { color: var(--sh-perigo-escuro); }
+:root body .roda-janela.seletor .rj-linha.bloqueada:is(:hover, :focus-visible) .tecla { color: var(--sh-texto); }
+:root body .roda-janela.seletor .rj-linha.bloqueada:is(:hover, :focus-visible) .tecla::before { background: #4d463d; border-color: #2a2621; }
+:root body .roda-janela.seletor .rj-linha.bloqueada:active { translate: none; }
 
 /* A descrição da examinada, embaixo da coluna dela (escolhas.js, descricoes): a zona tem a altura da maior
    descrição, reservada ao abrir; a caixa vai para baixo da coluna esquerda, da direita ou, se a coluna não couber na
    janela, ocupa as duas ("junto"). Na superfície do seletor, sem janela própria: um fio de latão em cima, o nome em
    versalete pequeno (como o título), o custo e o alvo, o que a habilidade faz em letra de leitura, o dano e o motivo. */
-:root body .roda-janela[data-tipo="habilidades"] .rj-descricao { position: relative; flex: none; margin-top: 4px; }
-:root body .roda-janela[data-tipo="habilidades"] .rj-desc-caixa.rola { overflow-y: auto; scrollbar-width: thin; scrollbar-color: #4a4640 transparent; }
+:root body .roda-janela.seletor .rj-descricao { position: relative; flex: none; margin-top: 4px; }
+:root body .roda-janela.seletor .rj-desc-caixa.rola { overflow-y: auto; scrollbar-width: thin; scrollbar-color: #4a4640 transparent; }
 /* janela baixa: o Esc · Voltar na linha do título, à direita, depois do fio */
-:root body .roda-janela[data-tipo="habilidades"] .rj-titulo::after { order: 1; }
-:root body .roda-janela[data-tipo="habilidades"] .rj-titulo .rj-voltar { order: 2; margin: 0; padding: 0 2px; font-size: 13px; letter-spacing: 0; text-transform: none; }
-:root body .roda-janela[data-tipo="habilidades"] .rj-desc-caixa { position: absolute; top: 0; left: 0; padding: 7px 4px 0 2px;
+:root body .roda-janela.seletor .rj-titulo::after { order: 1; }
+:root body .roda-janela.seletor .rj-titulo .rj-voltar { order: 2; margin: 0; padding: 0 2px; font-size: 13px; letter-spacing: 0; text-transform: none; }
+:root body .roda-janela.seletor .rj-desc-caixa { position: absolute; top: 0; left: 0; padding: 7px 4px 0 2px;
   border-top: 1px solid rgba(176, 138, 69, 0.45); font-family: var(--texto); font-size: 15px; line-height: 1.35; color: #ddd2bb; }
-:root body .roda-janela[data-tipo="habilidades"] .rj-desc-caixa:empty { display: none; }
-:root body .roda-janela[data-tipo="habilidades"] .rj-desc-caixa > b:first-child { display: block; font-weight: 600; font-size: 12.5px; line-height: 1.2;
+:root body .roda-janela.seletor .rj-desc-caixa:empty { display: none; }
+:root body .roda-janela.seletor .rj-desc-caixa > b:first-child { display: block; font-weight: 600; font-size: 12.5px; line-height: 1.2;
   letter-spacing: 0.14em; text-transform: uppercase; color: #b49a64; }
-:root body .roda-janela[data-tipo="habilidades"] .rj-desc-caixa .tipo { margin: 1px 0 3px; font-size: 12.5px; letter-spacing: 0.04em; text-transform: uppercase; color: #9d978b; }
-:root body .roda-janela[data-tipo="habilidades"] .rj-desc-caixa .bonus { color: #ece2cc; }
-:root body .roda-janela[data-tipo="habilidades"] .rj-desc-caixa .melhor { margin-top: 2px; font-size: 14px; color: #9fc58a; }
-:root body .roda-janela[data-tipo="habilidades"] .rj-desc-caixa .pior { margin-top: 2px; font-size: 14px; font-weight: 600; color: var(--sh-perigo); }
-:root body .roda-janela[data-tipo="habilidades"] .rj-desc-caixa .rodape { margin-top: 1px; font-size: 12.5px; color: #8f8775; }
+:root body .roda-janela.seletor .rj-desc-caixa .tipo { margin: 1px 0 3px; font-size: 12.5px; letter-spacing: 0.04em; text-transform: uppercase; color: #9d978b; }
+:root body .roda-janela.seletor .rj-desc-caixa .bonus { color: #ece2cc; }
+:root body .roda-janela.seletor .rj-desc-caixa .melhor { margin-top: 2px; font-size: 14px; color: #9fc58a; }
+:root body .roda-janela.seletor .rj-desc-caixa .pior { margin-top: 2px; font-size: 14px; font-weight: 600; color: var(--sh-perigo); }
+:root body .roda-janela.seletor .rj-desc-caixa .rodape { margin-top: 1px; font-size: 12.5px; color: #8f8775; }
 /* a área de baixo das duas colunas (janela baixa): larga, então em duas partes, para ficar baixa e deixar as faixas
    sem rolar: o nome, o custo e o alvo e o rodapé à esquerda; o que faz, o dano e o motivo à direita */
-:root body .roda-janela[data-tipo="habilidades"] .rj-desc-caixa[data-lado="junto"] { display: grid; grid-template-columns: minmax(150px, 34%) 1fr;
+:root body .roda-janela.seletor .rj-desc-caixa[data-lado="junto"] { display: grid; grid-template-columns: minmax(150px, 34%) 1fr;
   column-gap: 18px; align-items: start; }
-:root body .roda-janela[data-tipo="habilidades"] .rj-desc-caixa .rj-desc-a > b:first-child { display: block; font-weight: 600; font-size: 12.5px; line-height: 1.2;
+:root body .roda-janela.seletor .rj-desc-caixa .rj-desc-a > b:first-child { display: block; font-weight: 600; font-size: 12.5px; line-height: 1.2;
   letter-spacing: 0.14em; text-transform: uppercase; color: #b49a64; }
 
 /* Esc · Voltar: discreto, embaixo à direita (o mesmo fechar da janelinha) */
-:root body .roda-janela[data-tipo="habilidades"] .rj-voltar { align-self: flex-end; display: inline-flex; align-items: center; gap: 7px; width: auto; height: auto;
+:root body .roda-janela.seletor .rj-voltar { align-self: flex-end; display: inline-flex; align-items: center; gap: 7px; width: auto; height: auto;
   margin: 2px 2px 0 0; padding: 3px 4px; font-family: var(--texto); font-size: 14px; line-height: 1.2; color: #a59c8b; background: none; border: 0; border-radius: 0; }
-:root body .roda-janela[data-tipo="habilidades"] .rj-voltar kbd { font-family: var(--num); font-size: 12px; padding: 1px 6px; color: #cfc4ad; background: #0b0b0d;
+:root body .roda-janela.seletor .rj-voltar kbd { font-family: var(--num); font-size: 12px; padding: 1px 6px; color: #cfc4ad; background: #0b0b0d;
   border: 1px solid #4f4a42; border-radius: 2px; }
-:root body .roda-janela[data-tipo="habilidades"] .rj-voltar:is(:hover, :focus-visible) { color: var(--sh-texto); background: none; }
-:root body .roda-janela[data-tipo="habilidades"] .rj-voltar:is(:hover, :focus-visible) kbd { border-color: var(--sh-latao); }
-:root body .roda-janela[data-tipo="habilidades"] .rj-voltar:focus-visible { outline: 2px solid var(--sh-latao-claro); outline-offset: 2px; }
+:root body .roda-janela.seletor .rj-voltar:is(:hover, :focus-visible) { color: var(--sh-texto); background: none; }
+:root body .roda-janela.seletor .rj-voltar:is(:hover, :focus-visible) kbd { border-color: var(--sh-latao); }
+:root body .roda-janela.seletor .rj-voltar:focus-visible { outline: 2px solid var(--sh-latao-claro); outline-offset: 2px; }
+
+/* O menu de Itens: o mesmo componente; o que muda está aqui */
+/* a quantidade no lugar do custo: o mesmo alinhamento, sem o ícone do recurso */
+:root body .roda-janela[data-tipo="itens"] .rj-linha .rj-info { font-size: 17px; letter-spacing: 0.02em; }
+:root body .roda-janela[data-tipo="itens"] .rj-linha[data-slot="troca"] .rj-info { font-family: var(--texto); font-size: 12.5px; letter-spacing: 0.08em;
+  text-transform: uppercase; color: #b49a64; }
+:root body .roda-janela[data-tipo="itens"] .rj-linha[data-slot="troca"]:is(:hover, :focus-visible) .rj-info { color: #5e4620; }
+/* a ficha da arma da troca, na descrição: a comparação e a lore do jeito da descrição (sem a caixa da dica) */
+:root body .roda-janela[data-tipo="itens"] .rj-desc-caixa .comparacao { margin-top: 4px; padding-top: 3px; border-top: 1px dashed rgba(176, 138, 69, 0.35);
+  display: flex; flex-direction: column; font-size: 14px; line-height: 1.25; }
+:root body .roda-janela[data-tipo="itens"] .rj-desc-caixa .comparacao small { font-size: 11.5px; color: #9d978b; }
+:root body .roda-janela[data-tipo="itens"] .rj-desc-caixa .lore { margin-top: 3px; font-style: italic; font-size: 14px; color: #a59c8b; }
+/* bolsa sem nada que sirva: a frase no lugar das faixas */
+:root body .roda-janela[data-tipo="itens"] .rj-vazio { margin: 10px 4px 6px; font-family: var(--texto); font-style: italic; font-size: 16px; color: #a59c8b; }
+/* no item que não serve, a quantidade não é o problema (o motivo é): ela fica na cor normal, não na do custo que falta */
+:root body .roda-janela[data-tipo="itens"] .rj-linha.bloqueada .rj-info { color: #b9af99; }
+:root body .roda-janela[data-tipo="itens"] .rj-linha.bloqueada:is(:hover, :focus-visible) .rj-info { color: var(--sh-tinta); }
 
 @media (prefers-reduced-motion: reduce) {
-  :root body .roda-janela[data-tipo="habilidades"] .rj-linha { animation: none; }
-  :root body .roda-janela[data-tipo="habilidades"] .rj-linha:active { translate: none; }
+  :root body .roda-janela.seletor .rj-linha { animation: none; }
+  :root body .roda-janela.seletor .rj-linha:active { translate: none; }
 }

@@ -6,7 +6,7 @@ from ..habilidades import custo_flechas, descricao_habilidade, efetiva, versao
 from ..modificadores import disparar, mod, nomes
 from ..dados import TRACOS
 from ..inimigos import NOMES_HABS_INIMIGO
-from ..itens import CONSUMIVEIS, EM_ALIADO, PENA_FENIX_AGE_SOZINHA, USAVEIS_NA_LUTA, ficha
+from ..itens import CONSUMIVEIS, EM_ALIADO, PENA_FENIX_AGE_SOZINHA, USAVEIS_NA_LUTA, descricao, ficha
 from .. import abertura, comitiva, telemetria
 from ..talentos import custo_habilidade
 from .. import balanceamento as bal
@@ -199,7 +199,7 @@ class AcoesDoHeroi:
         j = self.j
         usaveis, armas = self.itens_da_luta()
         metas = [{"usar_item": k, "item": k, "qtd": j.consumiveis[k], "nome": CONSUMIVEIS[k]["nome"],
-                  "desc": CONSUMIVEIS[k]["desc"],
+                  "desc": descricao(k, j),
                   "motivo": self.motivo_item(k)}
                  for k in usaveis]
         metas += [{"trocar": j.mochila.index(it), "equip": ficha(it, j.nome_recurso)} for it in armas]
@@ -221,7 +221,7 @@ class AcoesDoHeroi:
         if not usaveis and not armas:
             self.dizer("Sua bolsa não tem nada útil agora.", "cinza")
             return None
-        opcoes = [f"{CONSUMIVEIS[k]['nome']} x{j.consumiveis[k]} — {CONSUMIVEIS[k]['desc']}" for k in usaveis]
+        opcoes = [f"{CONSUMIVEIS[k]['nome']} x{j.consumiveis[k]} — {descricao(k, j)}" for k in usaveis]
         opcoes += [f"Trocar para {it['nome']} (gasta o turno)" for it in armas]
         metas = self.metas_itens()
         self.ui.meta_opcoes = metas + [None]

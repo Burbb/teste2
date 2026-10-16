@@ -2063,7 +2063,14 @@ Voltar e reabrir; a borda de baixo sem linha cortada com o registro em sete posi
 sem mexer nas cartas; nenhum nome ou custo cortado; na luta do Guerreiro, cinco cliques rápidos, a tecla segurada, o
 clique duplo, o clique durante a entrada e o movimento reduzido.
 
-## O menu de Itens em faixas (protótipo, sem versão)
+## O menu de Itens em faixas (protótipo; aprovado e integrado em 1.105.0)
+
+**Integrado (1.105.0):** o Jean aprovou do jeito apresentado. O jogo monta o mesmo seletor para Habilidades e Itens
+(`abrirJanela`, `.roda-janela.seletor`, `data-tipo`), e o que era `itens-faixas.css` foi para o fim de
+`css/18-seletor-habilidades.css` (com `[data-tipo="itens"]` no lugar de `[data-menu="itens"]`, a mesma força). As
+fotos do jogo saem iguais às da proposta, a não ser pela descrição do Tônico, que agora diz só o recurso da classe
+("Recupera metade do Vigor."). `seletor/itens-faixas.mjs` e `.css` ficam como registro: as trocas só se aplicam a um
+`escolhas.js` de antes de 1.105.0; `fotografar_itens_faixas.mjs` fotografa o jogo (VERSOES=atual, o padrão).
 
 **O pedido de Jean (17/10/2026):** preparar o menu de Itens com a linguagem da D refinada (faixas, destaque claro,
 tipografia, foco, movimento e a descrição integrada), reaproveitando o componente onde fizer sentido e deixando

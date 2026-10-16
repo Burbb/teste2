@@ -155,6 +155,11 @@ class Jogador(Combatente):
     def nome_recurso(self):
         return CLASSES[self.classe]["recurso"]
 
+    @property
+    def do_recurso(self):
+        """"do Vigor", "do Foco", "da Mana": o recurso no meio de uma frase."""
+        return f"d{CLASSES[self.classe]['artigo_recurso']} {self.nome_recurso}"
+
     def xp_proximo(self):
         return bal.xp_para_subir(self.nivel)
 

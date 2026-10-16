@@ -10,9 +10,10 @@ from . import balanceamento as bal
 #   em_aliado  serve também num companheiro ou no animal
 #   mercado    o mercado vende (o estoque de cada um mora em balanceamento.ESTOQUE_MERCADO)
 #   hud        o contador do topo da tela onde ele aparece, quando tem um
-def _c(nome, preco, desc, icone, luta=None, fora=False, em_aliado=False, mercado=True, hud=None):
-    return {"nome": nome, "preco": preco, "desc": desc, "icone": icone, "luta": luta, "fora": fora,
-            "em_aliado": em_aliado, "mercado": mercado, "hud": hud}
+#   desc_recurso  a descrição para quem carrega, com o recurso da classe ({do_recurso}: "do Vigor"); desc é a geral
+def _c(nome, preco, desc, icone, luta=None, fora=False, em_aliado=False, mercado=True, hud=None, desc_recurso=None):
+    return {"nome": nome, "preco": preco, "desc": desc, "desc_recurso": desc_recurso, "icone": icone, "luta": luta,
+            "fora": fora, "em_aliado": em_aliado, "mercado": mercado, "hud": hud}
 
 
 CONSUMIVEIS = {
@@ -23,7 +24,7 @@ CONSUMIVEIS = {
     "pocao_vida": _c("Poção de Vida", 40, f"Recupera {round(bal.POCAO_VIDA * 100)}% da vida. Gosto de ferrugem.",
                      "pocao", luta=1, fora=True, em_aliado=True, hud="pocoes"),
     "tonico": _c("Tônico Restaurador", 35, "Recupera metade da sua mana, vigor ou foco.", "pocao_azul",
-                 luta=2, fora=True),
+                 luta=2, fora=True, desc_recurso="Recupera metade {do_recurso}."),
     "antidoto": _c("Antídoto", 15, "Cura veneno.", "folha", luta=3, fora=True),
     "bomba_fumaca": _c("Bomba de Fumaça", 35, "Garante a fuga de um combate (exceto chefes).", "caveira", luta=5),
     "pena_fenix": _c("Pena de Fênix", 220, "Revive você com metade da vida se cair em combate.", "chama"),
@@ -36,6 +37,12 @@ EM_ALIADO = tuple(k for k, c in CONSUMIVEIS.items() if c["em_aliado"])
 DO_MERCADO = tuple(k for k, c in CONSUMIVEIS.items() if c["mercado"])
 # O que se ganha sem ser consumível (comida, flechas) também voa até o seu contador quando chega.
 RECURSOS = {"comida": {"icone": "pernil", "hud": "provisoes"}, "flechas": {"icone": "aljava", "hud": "flechas"}}
+
+
+def descricao(k, j):
+    """A descrição do consumível para quem o carrega (o Tônico diz só o recurso da classe dele)."""
+    c = CONSUMIVEIS[k]
+    return c["desc_recurso"].format(do_recurso=j.do_recurso) if c["desc_recurso"] else c["desc"]
 
 
 def para_tela():

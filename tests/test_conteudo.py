@@ -220,6 +220,17 @@ class TestApresentacao(Catalogo):
             if c["em_aliado"]:
                 self.assertTrue(c["luta"] or c["fora"], f"'{k}' serve num aliado, mas não se usa em lugar nenhum")
 
+    def test_descricao_pelo_recurso_da_classe(self):
+        """O Tônico diz só o recurso de quem carrega, com o nome que vem da classe; os outros, a descrição de sempre."""
+        from rpg.entidades import Jogador
+        esperado = {"guerreiro": "Recupera metade do Vigor.", "arqueiro": "Recupera metade do Foco.", "mago": "Recupera metade da Mana."}
+        for classe in CLASSES:
+            self.assertIn(CLASSES[classe]["artigo_recurso"], ("o", "a"), f"'{classe}': artigo_recurso")
+            j = Jogador("Teste", classe)
+            if classe in esperado:
+                self.assertEqual(itens.descricao("tonico", j), esperado[classe])
+            self.assertEqual(itens.descricao("antidoto", j), CONSUMIVEIS["antidoto"]["desc"])
+
 
 if __name__ == "__main__":
     unittest.main()
