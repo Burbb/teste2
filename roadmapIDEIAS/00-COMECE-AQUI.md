@@ -2873,3 +2873,22 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   (`fotografar_livro.mjs` com a versão "tamanhos" e `comparar_livro_tamanhos.py`); as pastas anteriores intactas.
 - **Continua como está no jogo:** o livro com o sprite antigo. Espera a avaliação dos tamanhos pequenos antes da
   integração.
+
+### 17/10/2026 — 1.108.0: o grimório fechado no jogo (aprovado e integrado)
+
+- **Pedido de Jean:** o grimório fechado aprovado nos quatro tamanhos (com a correção do crescente); integrar
+  exatamente esses desenhos, sem ajuste de arte, e conferir nos usos reais.
+- **Entrou:** `rpg/web/static/hud/icones/livro-32/40/48/64.png` e os @2x, gravados por
+  `ferramentas/arte/desenhar_grimorio_fechado_pixel.py` (sem pasta, grava no jogo), idênticos byte a byte aos
+  aprovados em `ferramentas/prototipos/hud/livro-fechado-tamanhos/`; `Icones`: `TAMANHOS.livro` e `ITEM.livro`.
+- **Alcance:** o desenho "livro" do equipamento: a arma Grimório (todos os materiais), o apoio Tomo e o único Tomo
+  do Nome Esquecido. Ficam como estão (outros papéis, cada um na sua etapa): o talento Mente Vasta (o sprite "livro" na
+  árvore), os atalhos do Diário e do Grimório (desenhos próprios), a roda da luta e o livro da capela (desenhado na
+  cena). Regras, atributos, preços, estoque, recompensas e animações não mudaram.
+- **Conferido** (`fotografar_itens.mjs`, SO=livro, que agora também vende, recompra e guarda o achado): ficha e mercado
+  em 32 (venda, dica de comparação, vendido em Recomprar e recomprado), corpo e mochila do Inventário em 40, cartão do
+  saque em 64 e 48, voo ao equipar a partir do 48 e o achado guardado na mochila em 40; em 1500×950 e 1280×720, sem
+  erro no console.
+- **Candidatos antigos do livro:** histórico, não aprovados (o fechado de antes, o entreaberto, o aberto e o de
+  estudo); o aprovado é o grimório fechado.
+- **Próximo:** um teste com Aseprite via MCP numa sessão local; nenhum outro lote começou.

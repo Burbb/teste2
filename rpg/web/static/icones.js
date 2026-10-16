@@ -18,7 +18,7 @@ const Icones = (() => {
   const DIR = "/static/hud/icones/";
   // os lados que existem de cada peça (sem os @2x, que existem para todos)
   const TAMANHOS = {"aljava": [24, 32, 40, 48, 64], "amuleto": [32, 40, 48, 64], "anel": [32, 40, 48, 64], "antidoto": [32, 48, 64],
-    "arco": [32, 40, 48, 64], "cajado": [32, 40, 48, 64], "orbe": [32, 40, 48, 64],
+    "arco": [32, 40, 48, 64], "cajado": [32, 40, 48, 64], "orbe": [32, 40, 48, 64], "livro": [32, 40, 48, 64],
     "atalho-bestiario": [32, 36], "atalho-diario": [32, 36], "atalho-grimorio": [32, 36], "atalho-inventario": [32, 36],
     "atalho-mapa": [32, 36], "atalho-sair": [32, 36], "atalho-salvar": [32, 36], "atalho-talentos": [32, 36],
     "attr-agilidade": [24, 32], "attr-ataque": [24, 32], "attr-defesa": [24, 32], "attr-poder": [24, 32],
@@ -32,7 +32,7 @@ const Icones = (() => {
     "vital-foco": [20], "vital-mana": [20], "vital-vida": [20], "vital-vigor": [20]};
 
   // Cada desenho vai para o tipo de ferro que o jogo já tem (elmo, armadura, manopla, calca = perneira, bota_ferro, maca);
-  // couro (capuz, gibão, calça de couro, bota de caça, luva) e as armas sem desenho (varinha, livro...) ficam com o do
+  // couro (capuz, gibão, calça de couro, bota de caça, luva) e as armas sem desenho (a varinha) ficam com o do
   // jogo. O anel tem uma pérola branca: não lembra nenhuma cor de raridade. O martelo é desenhado em código (desenhos.js).
   // O machado de barba (ferramentas/arte/, 1.99.0) vale para todo equipamento com o desenho "machado" (o Machado e os
   // únicos Lamento de Gharbad e O Açougueiro); o Redemoinho e a Fúria usam o mesmo sprite noutro papel e ficam com o
@@ -41,9 +41,12 @@ const Icones = (() => {
   // cristal cravado (1.106.0) vale para os Cajados e o único Cajado da Peste; o Atacar do Mago na roda e o traço
   // Conjurador dos inimigos usam o mesmo sprite noutro papel e continuam com ele. O orbe de vidro violeta na taça de
   // latão (1.107.0) vale para a arma Orbe, o apoio Foco Arcano e o único Olho do Abismo (nenhum outro papel usa
-  // o desenho "orbe": os orbes dos projéteis são outros sprites).
+  // o desenho "orbe": os orbes dos projéteis são outros sprites). O grimório fechado de couro violeta com latão
+  // (1.108.0) vale para a arma Grimório, o apoio Tomo e o único Tomo do Nome Esquecido; o talento Mente Vasta (o
+  // sprite "livro" na árvore), o atalho do Diário e o do Grimório (desenhos próprios) e o livro da capela (desenhado na
+  // cena) não passam por aqui e continuam como estão.
   const ITEM = { elmo: "elmo", armadura: "cota", manopla: "manopla", calca: "perneiras", bota_ferro: "botas-ferro",
-    maca: "maca", espada: "espada", escudo: "escudo", amuleto: "amuleto", anel: "anel", aljava: "aljava", martelo: "martelo", machado: "machado", arco: "arco", cajado: "cajado", orbe: "orbe" };
+    maca: "maca", espada: "espada", escudo: "escudo", amuleto: "amuleto", anel: "anel", aljava: "aljava", martelo: "martelo", machado: "machado", arco: "arco", cajado: "cajado", orbe: "orbe", livro: "livro" };
   // o espaço vazio: a silhueta apagada do que vai nele (o material não aparece)
   const VAZIO = { cabeca: "elmo", armadura: "cota", maos: "manopla", pernas: "perneiras", pes: "botas-ferro", arma: "espada",
     secundaria: "escudo", amuleto: "amuleto", anel1: "anel", anel2: "anel" };

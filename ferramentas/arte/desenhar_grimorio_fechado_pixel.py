@@ -1,9 +1,9 @@
-"""O livro do Mago, quinto candidato: o grimório fechado da referência do Jean (proposta; o jogo usa o sprite 16×16
-"livro"). Feito do zero; os candidatos anteriores ficam como histórico (desenhar_livro_pixel.py,
+"""O livro do Mago: o grimório fechado da referência do Jean (aprovado; no jogo desde a 1.108.0; antes, o sprite 16×16
+"livro"). Feito do zero; os candidatos anteriores, não aprovados, ficam como histórico (desenhar_livro_pixel.py,
 desenhar_grimorio_pixel.py, desenhar_grimorio_aberto_pixel.py, desenhar_grimorio_estudo_pixel.py). Pelo método do
 escudo e do machado (pixel_comum.py), cada tamanho (32, 40, 48 e 64) na própria grade: o corpo pelas mesmas regras,
 na mesma proporção do quadro, e o emblema simplificado para a leitura de cada um (MEDIDAS); o 64 tem o crescente com
-a correção do Jean. Grava com o nome "livro" (é o mesmo papel) e só numa pasta dada.
+a correção do Jean. Grava com o nome "livro" (é o mesmo papel) nos ícones do jogo, ou numa pasta dada.
 
 O que o jogo diz (rpg/itens.py): o desenho "livro" é o da arma Grimório e o do apoio Tomo do Mago, em todos os
 materiais, e o do único Tomo do Nome Esquecido. O mesmo sprite é também o atalho do Diário (com desenho próprio no
@@ -34,7 +34,7 @@ direção da face em relação à luz de pixel_comum, e o que fica sobre a capa 
 fecho) vem das coordenadas da capa, de modo que acompanha a perspectiva. A limpeza, o contorno de 1 pixel e as
 correções são as etapas comuns (pixel_comum.py). O dobro do arquivo é a duplicação exata.
 
-    python ferramentas/arte/desenhar_grimorio_fechado_pixel.py <pasta>
+    python ferramentas/arte/desenhar_grimorio_fechado_pixel.py [pasta]
 """
 
 import math
@@ -406,8 +406,6 @@ def desenhar(lado_img):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        sys.exit("proposta: diga a pasta (python ferramentas/arte/desenhar_grimorio_fechado_pixel.py <pasta>)")
     saida = destino(sys.argv)
     for lado in LADOS:
         print(f"livro-{lado}: {salvar(desenhar(lado), saida, 'livro')} cores")

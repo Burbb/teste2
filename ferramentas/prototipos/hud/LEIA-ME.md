@@ -2103,7 +2103,7 @@ rodada jogada antes; 1500×950 e 1280×720; movimento reduzido no Guerreiro): ab
 tecla 3 e setas, a poção indo para a mira dos aliados e o Voltar; nada cortado, nada cobre a arena, sem erro no
 console. As regras de uso, o turno, os destinatários e os itens que não servem são os do jogo (nada muda no motor).
 
-## O orbe e o livro do Mago (o orbe aprovado e no jogo na 1.107.0; o livro, nova proposta abaixo)
+## O orbe e o livro do Mago (o orbe no jogo na 1.107.0; o livro: o grimório fechado aprovado e no jogo na 1.108.0, os outros candidatos não aprovados)
 
 **O orbe entrou no jogo na 1.107.0**, idêntico ao de `orbe-livro-pixel/`. O livro fechado ficou como candidato
 (intacto em `orbe-livro-pixel/livro-*`); o Jean pediu outro conceito ("O grimório entreaberto", abaixo).
@@ -2429,3 +2429,14 @@ planos, as páginas no pé, as cantoneiras e o fecho de latão e o losango com o
 limite: os reforços e as cantoneiras viram um ou dois pixels, as páginas duas fileiras, e o crescente um "C"; o
 losango ocupa boa parte da capa, o que ajuda a leitura mas pesa um pouco. Espera a avaliação do Jean antes da
 integração.
+
+### Integrado (1.108.0): o grimório fechado
+
+Jean aprovou o grimório fechado nos quatro tamanhos, com a correção manual do crescente reproduzida pelo gerador, e
+pediu a integração sem novos ajustes. `ferramentas/arte/desenhar_grimorio_fechado_pixel.py` (sem pasta) grava os
+arquivos em `rpg/web/static/hud/icones/livro-32/40/48/64.png` (e os @2x), idênticos byte a byte aos de
+`livro-fechado-tamanhos/`; o jogo não lê nada daqui. `Icones` registra `TAMANHOS.livro` e `ITEM.livro`. É o desenho
+aprovado; os outros candidatos do livro ficam só como histórico, não aprovados: o fechado de antes
+(`orbe-livro-pixel/`, de `desenhar_livro_pixel.py`), o entreaberto (`livro-entreaberto/`), o aberto de duas páginas
+(`livro-aberto/`) e o de estudo (`livro-estudo/`); as pastas `livro-fechado-ref/`, `livro-fechado-acabamento/` e
+`livro-fechado-emblema/` são as etapas do aprovado.
