@@ -2236,3 +2236,38 @@ aprovados) e a `prancha-zoom.png` (só para achar o pixel). Sem erro no console.
 - *leitura pequena:* em 32 e 40 se reconhece o livro aberto, a dobra, o anel do diagrama e o bloco de linhas; a
   curvatura e os pontos do anel ficam para 48 e 64.
 Espera a avaliação do Jean.
+
+### O grimório de estudo (o quarto candidato do livro: a pose do entreaberto pela referência do Jean; proposta)
+
+**O retorno de Jean ao aberto de duas páginas:** gostou mais do entreaberto. Pediu para usar a skill, se espelhar
+numa referência que ele mandou (um grimório pintado em pixel art: a capa de couro violeta gasto levantada, a lombada
+redonda na dobra, o bloco de folhas com os fios irregulares, a página de pergaminho com anotações e um diagrama de
+anéis com cruzinhas, a fita vermelha larga pendurada no pé) e manter a angulação do entreaberto.
+
+**O desenho** (`ferramentas/arte/desenhar_grimorio_estudo_pixel.py`, gravado em `livro-estudo/` com o nome "livro"; só
+grava numa pasta dada): o renderizador de polígonos do aberto de duas páginas, com a pose do entreaberto (abre 100°,
+giro −42°, altura 56°). O que veio da referência: o bloco de folhas com espessura (o corte do pé em fios ondulados de
+papel) apoiado na capa de trás, que aparece embaixo; a lombada redonda à vista na dobra, ligando a capa ao bloco; a
+capa gasta nas beiras e nos cantos (em 48 e 64, duas manchas de uso, longe do meio); o pergaminho escurecendo para a
+beira, com a beira de fora e a da cabeça um pouco irregulares em 48 e 64; a fita larga, de ponta cortada, pendurada no
+pé. As marcas: linhas de anotação e o diagrama da referência, em 64 dois anéis com o ponto no centro, o eixo que os
+atravessa, a cruzinha na ponta de cima e duas dos lados; em 48 os dois anéis e o eixo; em 40 e 32 um anel (desenhado
+pixel a pixel: pela conta do raio saía dentado, como uma mira), o ponto e a ponta do eixo. 17 cores.
+
+**Duas decisões de pixel art:** a perspectiva da página achatava o anel numa elipse (lia como um olho) e virava as
+linhas de anotação em risquinhos de contagem; as duas marcas são desenhadas de frente para quem olha (o anel redondo,
+as linhas horizontais, como na referência), na posição da página e recortadas por ela. A forma do livro continua em
+perspectiva.
+
+**A comparação** (`fotografar_livro.mjs` → `capturas-livro/`, agora com cinco versões: o jogo, o fechado, o
+entreaberto, o aberto e o de estudo; `comparar_livro.py` monta as comparações, os pares `par-<janela>-<lugar>.png` só
+com o entreaberto e o de estudo, e as pranchas; os rótulos com acento em DejaVu), em 1500×950 e 1280×720: a tela do
+mercado (o Mago e a banca), a ficha, a dica, o Inventário, a tela do saque, o cartão (64 e 48) e o voo. Sem erro no
+console.
+
+**A avaliação:** a mesma silhueta do entreaberto (a capa em pé à esquerda, a página à direita, a fita embaixo), agora
+com o que faltava de construção: a lombada liga a capa ao bloco, e o bloco tem espessura sem virar tijolo. A página
+diz grimório de longe: o anel do diagrama e o bloco de anotações se leem em 32 e 40; em 48 e 64 entram o segundo anel,
+o eixo e as cruzinhas. O que fica abaixo da referência: a referência é pintada num tamanho maior, com o couro
+manchado e a beira do papel queimada em muitos tons; nos tamanhos do jogo o couro gasto fica nas beiras e cantos, e as
+manchas só em 48 e 64. Espera a avaliação do Jean.

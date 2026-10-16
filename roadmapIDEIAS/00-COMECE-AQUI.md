@@ -2815,3 +2815,13 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   cada grade), gravado em `ferramentas/prototipos/hud/livro-aberto/`; o fechado e o entreaberto intactos; as quatro
   versões (o jogo e os três candidatos) em `capturas-livro/`, nas duas janelas.
 - **Continua como está no jogo:** o livro com o sprite antigo. Espera a escolha do Jean.
+
+### 17/10/2026 — Proposta: o grimório de estudo (a pose do entreaberto pela referência do Jean; protótipo)
+
+- **Pedido de Jean:** gostou mais do entreaberto que do aberto de duas páginas; refazer pela skill, se espelhando numa
+  referência que ele mandou (capa gasta levantada, lombada redonda, bloco de folhas, página com anotações e diagrama
+  de anéis, fita pendurada), com a angulação do entreaberto.
+- **Feito:** `ferramentas/arte/desenhar_grimorio_estudo_pixel.py`, gravado em `ferramentas/prototipos/hud/livro-estudo/`;
+  os candidatos anteriores intactos; as cinco versões em `capturas-livro/` (e os pares entreaberto × estudo), nas
+  duas janelas.
+- **Continua como está no jogo:** o livro com o sprite antigo. Espera a escolha do Jean.

@@ -37,7 +37,7 @@
    "slot-px.mini→32",
    "achado-arte→64",
    "achado-arte.pequena→48",
-   "voo-item→52"
+   "voo-item→51"
   ]
  },
  {
@@ -88,7 +88,7 @@
   ],
   "livro-48": [
    "achado-arte.pequena→48",
-   "voo-item→51"
+   "voo-item→52"
   ]
  },
  {
@@ -139,7 +139,7 @@
   ],
   "livro-48": [
    "achado-arte.pequena→48",
-   "voo-item→52"
+   "voo-item→51"
   ]
  },
  {
@@ -182,6 +182,57 @@
  },
  {
   "nome": "normal-aberto-livro-saque-voo",
+  "livro-32": [
+   "slot-px.mini→32"
+  ],
+  "livro-64": [
+   "achado-arte→64"
+  ],
+  "livro-48": [
+   "achado-arte.pequena→48",
+   "voo-item→52"
+  ]
+ },
+ {
+  "nome": "normal-estudo-livro-mercado",
+  "livro-32": [
+   "slot-px.mini→32",
+   "slot-px.celula→32",
+   "slot-px.celula→32"
+  ],
+  "orbe-32": [
+   "slot-px.r-comum→0",
+   "slot-px.celula→32"
+  ]
+ },
+ {
+  "nome": "normal-estudo-livro-inventario",
+  "livro-32": [
+   "slot-px.mini→32"
+  ],
+  "livro-40": [
+   "espaco.slot-px→40",
+   "slot-px.celula→40",
+   "slot-px.celula→40"
+  ],
+  "orbe-40": [
+   "slot-px.celula→40"
+  ]
+ },
+ {
+  "nome": "normal-estudo-livro-saque-cartao",
+  "livro-32": [
+   "slot-px.mini→32"
+  ],
+  "livro-64": [
+   "achado-arte→64"
+  ],
+  "livro-48": [
+   "achado-arte.pequena→48"
+  ]
+ },
+ {
+  "nome": "normal-estudo-livro-saque-voo",
   "livro-32": [
    "slot-px.mini→32"
   ],
@@ -333,7 +384,7 @@
   ],
   "livro-48": [
    "achado-arte.pequena→48",
-   "voo-item→52"
+   "voo-item→51"
   ]
  },
  {
@@ -376,6 +427,57 @@
  },
  {
   "nome": "baixa-aberto-livro-saque-voo",
+  "livro-32": [
+   "slot-px.mini→32"
+  ],
+  "livro-64": [
+   "achado-arte→64"
+  ],
+  "livro-48": [
+   "achado-arte.pequena→48",
+   "voo-item→52"
+  ]
+ },
+ {
+  "nome": "baixa-estudo-livro-mercado",
+  "livro-32": [
+   "slot-px.mini→32",
+   "slot-px.celula→32",
+   "slot-px.celula→32"
+  ],
+  "orbe-32": [
+   "slot-px.r-comum→0",
+   "slot-px.celula→32"
+  ]
+ },
+ {
+  "nome": "baixa-estudo-livro-inventario",
+  "livro-32": [
+   "slot-px.mini→32"
+  ],
+  "livro-40": [
+   "espaco.slot-px→40",
+   "slot-px.celula→40",
+   "slot-px.celula→40"
+  ],
+  "orbe-40": [
+   "slot-px.celula→40"
+  ]
+ },
+ {
+  "nome": "baixa-estudo-livro-saque-cartao",
+  "livro-32": [
+   "slot-px.mini→32"
+  ],
+  "livro-64": [
+   "achado-arte→64"
+  ],
+  "livro-48": [
+   "achado-arte.pequena→48"
+  ]
+ },
+ {
+  "nome": "baixa-estudo-livro-saque-voo",
   "livro-32": [
    "slot-px.mini→32"
   ],
