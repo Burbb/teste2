@@ -2193,3 +2193,46 @@ carvão, com o orbe, o cajado, o escudo e o machado) e a `prancha-zoom.png` (só
 - *coerência com o mundo:* o couro apagado e o papel envelhecido do entreaberto conversam melhor com os cenários; o
   violeta saturado do fechado é mais "interface".
 Espera a avaliação do Jean.
+
+### O grimório aberto, com duas páginas (o terceiro conceito do livro; proposta, sem versão)
+
+**O retorno de Jean ao entreaberto:** ganhou personalidade (anotações, papel, marcador), mas a pose lembra uma folha
+apoiada numa capa levantada: a página parece plana e a ligação entre capa, lombada e miolo não convence. Pedido: um
+livro físico aberto, em diagonal, com duas páginas num "V" suave ligadas pela dobra e apoiadas sobre a capa, com os
+materiais e a linguagem do entreaberto; um diagrama que funcione como marca também em 32 e 40. O fechado e o
+entreaberto ficam intactos.
+
+**O desenho** (`ferramentas/arte/desenhar_grimorio_aberto_pixel.py`, gravado em `livro-aberto/` com o nome "livro"; só
+grava numa pasta dada): um modelo 3D de polígonos planos, rasterizado em cada grade (cada pixel acha o plano mais perto
+da câmera e o ponto 3D dele; as marcas e os fios do bloco vêm das coordenadas desse ponto). O livro aberto deitado,
+girado em diagonal (giro −50°, altura 56°): cada página é uma curva de cinco planos que mergulha na dobra e se assenta
+para a borda, as duas subindo num "V" de 15° a partir da lombada, e não iguais (a da esquerda um pouco mais curva, a
+fita só na da direita); a faixa que desce para a dobra fica na sombra, e a seguinte um degrau abaixo da de fora. A
+dobra é a linha escura no fundo do "V", e desce pelo corte do pé até a lombada (um meio cilindro de couro, visto no
+pé). Embaixo das páginas, o bloco de folhas fino, em fios de papel, no pé e nas bordas; as capas de couro violeta
+apagado passam das folhas e aparecem na beira. As marcas, em tinta seca: na página da esquerda, um bloco de linhas de
+anotação (três em 32 e 40, mais em 48 e 64, com falhas só nos grandes); na da direita, o diagrama: um anel com o ponto
+no centro (um pixel só: com dois virava um sinal de menos), e em 48 e 64 dois pontos marcados no anel. A fita
+vermelho-escura fica deitada na dobra, sai pelo pé entre as folhas e cai na mesa. 16 e 17 cores.
+
+**O caminho** (para não repetir): uma reta saindo do anel virava "♀"; um anel com o ponto encostado virava "Q" ou
+"@"; as linhas de anotação curtas e espaçadas viravam letras ("BI", "ff") em 32, e juntas, a 1 pixel uma da outra,
+viram bloco de texto. O livro com pouco "V" e pouca curva parecia uma folha; com o "V" de 15° e o perfil mais alto, as
+duas páginas leem como volume.
+
+**A comparação** (`fotografar_livro.mjs` → `capturas-livro/`, agora com quatro versões: o jogo de hoje, o fechado, o
+entreaberto e o aberto; `comparar_livro.py`), com os mesmos dados, em 1500×950 e 1280×720: a tela do mercado (o Mago
+e a banca), a ficha, a venda e a dica, o Inventário (a tela e o recorte, 40 no corpo e na mochila), a tela do saque
+sobre a vila, o cartão (64 e 48) e o voo; a `prancha-arquivos.png` (os três candidatos em 1× sobre o carvão com os
+aprovados) e a `prancha-zoom.png` (só para achar o pixel). Sem erro no console.
+
+**A avaliação:**
+- *construção:* o aberto lê como livro físico: duas páginas ligadas pela dobra, o bloco fino embaixo e a capa na
+  beira; a curva das páginas aparece nos planos de luz em 48 e 64, e em 32 como a faixa escura da dobra;
+- *silhueta:* um losango em diagonal com a fita saindo embaixo; diferente das armas longas e do orbe, sem o bloco do
+  fechado nem a "tenda" do entreaberto;
+- *identidade de grimório:* as anotações e o diagrama na página aberta dizem estudo; o violeta ficou só na beira, então
+  de longe o objeto é creme, não violeta (quem identifica o livro do Mago pela cor perde isso);
+- *leitura pequena:* em 32 e 40 se reconhece o livro aberto, a dobra, o anel do diagrama e o bloco de linhas; a
+  curvatura e os pontos do anel ficam para 48 e 64.
+Espera a avaliação do Jean.

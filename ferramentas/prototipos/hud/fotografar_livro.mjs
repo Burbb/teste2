@@ -1,6 +1,7 @@
-// O livro do Mago: os dois conceitos lado a lado (protótipo). Fotografa o jogo de verdade com o desenho de hoje (o
-// sprite 16×16 "livro"), com o candidato fechado (orbe-livro-pixel/livro-*, de ferramentas/arte/desenhar_livro_pixel.py,
-// intacto) e com o grimório entreaberto (livro-entreaberto/, de desenhar_grimorio_pixel.py), com os mesmos dados. Nos
+// O livro do Mago: os conceitos lado a lado (protótipo). Fotografa o jogo de verdade com o desenho de hoje (o sprite
+// 16×16 "livro"), com o candidato fechado (orbe-livro-pixel/livro-*, de ferramentas/arte/desenhar_livro_pixel.py), com
+// o grimório entreaberto (livro-entreaberto/, de desenhar_grimorio_pixel.py) e com o grimório aberto de duas páginas
+// (livro-aberto/, de desenhar_grimorio_aberto_pixel.py), todos intactos, com os mesmos dados. Nos
 // dois candidatos, a página recebe um icones.js com o livro registrado como a integração faria (TAMANHOS e ITEM) e os
 // arquivos vêm da pasta do candidato; o jogo não muda. Os outros papéis do sprite "livro" (o atalho do Diário, com
 // desenho próprio, um talento, o livro da capela) não passam pelo ITEM: o relatório conta cada desenho em cada lugar.
@@ -10,9 +11,9 @@
 //   - saque (vila, CLASSE=mago, ACHADO=livro, ARMA=livro): a tela inteira com o cartão sobre a vila, o cartão (64 e 48)
 //     e o voo ao equipar.
 // Guarda em capturas-livro/<janela>-<versao>-livro-<lugar>.png e os recortes pequenos como zoom-...; comparar_livro.py
-// monta as comparações das três versões.
+// monta as comparações das versões.
 //   PLAYWRIGHT_MODULO=<caminho do playwright>/index.mjs node ferramentas/prototipos/hud/fotografar_livro.mjs
-// (SAIDA=<pasta> troca a pasta das fotos; VERSOES=atual,fechado,entreaberto escolhe as versões)
+// (SAIDA=<pasta> troca a pasta das fotos; VERSOES=atual,fechado,entreaberto,aberto escolhe as versões)
 import { spawn } from "child_process";
 import { mkdirSync, readFileSync, rmSync, writeFileSync } from "fs";
 import { fileURLToPath } from "url";
@@ -20,7 +21,8 @@ import path from "path";
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULO || "playwright");
 const aqui = path.dirname(fileURLToPath(import.meta.url)), raiz = path.resolve(aqui, "../../..");
 const SAIDA = path.resolve(process.env.SAIDA || path.join(aqui, "capturas-livro"));
-const PASTAS = { fechado: path.join(aqui, "orbe-livro-pixel"), entreaberto: path.join(aqui, "livro-entreaberto") };
+const PASTAS = { fechado: path.join(aqui, "orbe-livro-pixel"), entreaberto: path.join(aqui, "livro-entreaberto"),
+  aberto: path.join(aqui, "livro-aberto") };
 rmSync(SAIDA, { recursive: true, force: true });
 mkdirSync(SAIDA, { recursive: true });
 const espera = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -48,7 +50,7 @@ async function subir(cenario, amb = {}) {
   return { proc, url };
 }
 const JANELAS = { normal: [1500, 950], baixa: [1280, 720] };
-const VERSOES = process.env.VERSOES ? process.env.VERSOES.split(",") : ["atual", "fechado", "entreaberto"];
+const VERSOES = process.env.VERSOES ? process.env.VERSOES.split(",") : ["atual", "fechado", "entreaberto", "aberto"];
 const DESENHOS = ["livro"];
 const classe = "mago";
 const relatorio = [], erros = [];

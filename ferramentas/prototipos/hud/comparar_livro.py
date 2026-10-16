@@ -1,9 +1,9 @@
-"""Monta as comparações do livro (fotografar_livro.mjs, capturas-livro/): o jogo de hoje, o candidato fechado e o
-grimório entreaberto, em tamanho real:
-  - comparacao-<janela>-livro-<lugar>.png: as três versões lado a lado;
+"""Monta as comparações do livro (fotografar_livro.mjs, capturas-livro/): o jogo de hoje, o candidato fechado, o
+grimório entreaberto e o grimório aberto de duas páginas, em tamanho real:
+  - comparacao-<janela>-livro-<lugar>.png: as versões lado a lado;
   - prancha-zoom.png: os espaços no jogo (a ficha, a venda, o corpo, a mochila, o saque em 48 e 64) ampliados 3× sem
     suavizar, para achar o pixel (julgue pelo tamanho real);
-  - prancha-arquivos.png: os arquivos dos dois candidatos em 1× sobre o carvão, com os vizinhos aprovados (o orbe, o
+  - prancha-arquivos.png: os arquivos dos candidatos em 1× sobre o carvão, com os vizinhos aprovados (o orbe, o
     cajado, o escudo, o machado).
 
     python ferramentas/prototipos/hud/comparar_livro.py
@@ -19,7 +19,8 @@ AQUI = pathlib.Path(__file__).resolve().parent
 RAIZ = AQUI.parents[2]
 FOTOS = AQUI / "capturas-livro"
 FUNDO, TEXTO = (17, 18, 21), (214, 205, 186)
-VERSOES = (("atual", "o jogo hoje"), ("fechado", "candidato fechado"), ("entreaberto", "grimório entreaberto"))
+VERSOES = (("atual", "o jogo hoje"), ("fechado", "candidato fechado"), ("entreaberto", "grimório entreaberto"),
+           ("aberto", "grimório aberto"))
 ZOOM = ["ficha-arma", "vender", "corpo", "mochila", "saque-48", "saque-64"]
 
 
@@ -71,6 +72,7 @@ def main():
     subprocess.run([sys.executable, str(RAIZ / "ferramentas/arte/prancha.py"),
                     *[str(AQUI / "orbe-livro-pixel" / f"livro-{l}.png") for l in (32, 40, 48, 64)],
                     *[str(AQUI / "livro-entreaberto" / f"livro-{l}.png") for l in (32, 40, 48, 64)],
+                    *[str(AQUI / "livro-aberto" / f"livro-{l}.png") for l in (32, 40, 48, 64)],
                     str(icones / "orbe-32.png"), str(icones / "cajado-32.png"), str(icones / "escudo-32.png"),
                     str(icones / "machado-32.png"), str(icones / "orbe-64.png"),
                     "-o", str(FOTOS / "prancha-arquivos.png"), "--zoom", "6"], check=True)

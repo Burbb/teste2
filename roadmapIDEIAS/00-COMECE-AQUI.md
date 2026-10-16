@@ -2804,3 +2804,14 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   gravado em `ferramentas/prototipos/hud/livro-entreaberto/`; o fechado intacto em `orbe-livro-pixel/`; as três
   versões (o jogo, o fechado, o entreaberto) em `capturas-livro/`, nas duas janelas.
 - **Continua como está no jogo:** o livro com o sprite antigo. Espera a escolha do Jean.
+
+### 17/10/2026 — Proposta: o grimório aberto, com duas páginas (o terceiro conceito do livro; protótipo)
+
+- **Pedido de Jean:** o entreaberto parecia uma folha apoiada numa capa levantada; outra geometria: o livro aberto em
+  diagonal, duas páginas num "V" suave ligadas pela dobra escura até a lombada, a curva das páginas em poucos planos,
+  um bloco de folhas fino, a capa violeta na beira, a fita saindo entre as folhas, anotações numa página e um diagrama
+  na outra (que funcione em 32 e 40).
+- **Feito:** `ferramentas/arte/desenhar_grimorio_aberto_pixel.py` (um modelo 3D de polígonos planos rasterizado em
+  cada grade), gravado em `ferramentas/prototipos/hud/livro-aberto/`; o fechado e o entreaberto intactos; as quatro
+  versões (o jogo e os três candidatos) em `capturas-livro/`, nas duas janelas.
+- **Continua como está no jogo:** o livro com o sprite antigo. Espera a escolha do Jean.
