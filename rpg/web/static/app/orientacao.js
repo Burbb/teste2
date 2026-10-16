@@ -194,13 +194,13 @@ const Orientacao = (() => {
       return null;
     }
     const a = ancora(o);
-    // O prédio da vila mora na paisagem, acima da faixa; a opção do menu pode ficar acima da faixa de baixo: uma haste
-    // leva a ponta da seta até eles.
-    return a ? { id: o.id, el: a.el, onde: a.onde, prefere: a.prefere, haste: a.onde === "vila" || a.onde === "baixo", html: botoes(linhas(o.texto), !!o.entendi), luta: false } : null;
+    // O prédio da vila e o Dormir da fogueira moram na arte, acima da faixa; a opção do menu pode ficar acima da faixa
+    // de baixo: uma haste leva a ponta da seta até eles.
+    return a ? { id: o.id, el: a.el, onde: a.onde, prefere: a.prefere, haste: ["vila", "cena", "baixo"].includes(a.onde), html: botoes(linhas(o.texto), !!o.entendi), luta: false } : null;
   }
 
-  /** Onde mora cada orientação de fora da luta: o controle e a faixa (vila: a do alto, abaixo do cenário; topo: a do
-   *  alto; baixo: a de baixo; achado: junto da janela do item). Só quando ele está à vista e a pergunta é de agora. */
+  /** Onde mora cada orientação de fora da luta: o controle e a faixa (vila e cena: a do alto, abaixo do cenário; topo:
+   *  a do alto; baixo: a de baixo; achado: junto da janela do item). Só quando ele está à vista e a pergunta é de agora. */
   function ancora(o) {
     if (!o.ancora || estado.combate || !pergunta || processando) return null;  // o texto da cena já terminou
     const [tipo, valor] = o.ancora.split(":");
@@ -227,11 +227,9 @@ const Orientacao = (() => {
     if (tipo === "ferimento") return ok(document.querySelector(`#heroi .ferimento[data-ferimento="${valor}"]`), "junto");  // na ficha
     if (tipo === "tratar") return ok(document.querySelector(`#texto .curandeira [data-tratar="${valor}"]`), "junto");  // o cartão
     if (tipo === "servico") return ok(document.querySelector(`#prompt .balcao-predio .servico[data-servico="${valor}"]`), "junto");
-    if (tipo === "dormir") {
-      // Na fogueira: o botão fica no alto do cenário; o quadro vai à esquerda dele, sobre o céu, sem cobrir a roda.
-      const r = ok(document.querySelector("#acampamento-pontos .dormir-barraca"), "junto");
-      return r && { ...r, prefere: "esquerda" };
-    }
+    // Na fogueira: o botão mora no canto de cima da cena (telas/fogueira.js). O quadro fica na faixa logo abaixo dela,
+    // como o dos prédios da vila, e a haste sobe até o botão: sobre a cena, ele cobriria a roda.
+    if (tipo === "dormir") return ok(document.querySelector("#acampamento-pontos .dormir-barraca"), "cena");
     if (tipo === "risco") {  // os riscos do lugar, à direita: a linha da noite e, junto, a da tocha
       const linha = document.querySelector(`#mundo .risco-lugar.${valor}`);
       return ok(linha && linha.closest(".riscos-lugar"), "junto");
@@ -252,6 +250,7 @@ const Orientacao = (() => {
     if (!o || !o.ancora || dispensado || fechados.has(o.id) || estado.combate) return "";
     const tipo = o.ancora.split(":")[0];
     if (tipo === "mural" || tipo === "predio") return estado.local.tipo === "vila" && visivel(document.querySelector("#vista")) ? "alto" : "";
+    if (tipo === "dormir") return document.querySelector("#acampamento-pontos") ? "alto" : "";
     if (tipo === "opcao" || tipo === "doca") return "baixo";
     return "";
   }
@@ -434,6 +433,9 @@ const Orientacao = (() => {
     quadro.style.maxWidth = "";
     const tipo = `orientacao${a.id === "C4" ? " c4" : ""}${a.haste && a.luta ? " efeito" : ""}${a.onde === "achado" ? " sobre-janela" : ""}`;
     quadro.className = tipo;  // a largura do tipo vale já na medida
+    // medido longe da borda: ainda no lugar de antes (perto da direita da janela), ele encolhia na medida e, já no
+    // lugar novo, crescia e passava da faixa
+    quadro.style.left = "0px";
     const vw = innerWidth, vh = innerHeight;
     let w = quadro.offsetWidth, h = quadro.offsetHeight;
     const r = a.el ? a.el.getBoundingClientRect() : null;

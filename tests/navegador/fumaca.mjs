@@ -1619,6 +1619,47 @@ async function cenarioFogueira(browser) {
   }
 }
 
+async function cenarioDormirOrientado(browser) {
+  console.log("cenário: a orientação do Dormir (D3) aponta o botão da cena do acampamento");
+  const { proc, url } = await subir("tutorial", { LUGAR: "charco", PERIODO: "3", VIDA: "0.5", COMITIVA: "morel,odete", RESERVA: "yara", CLASSE: "mago" });
+  const { page, erros } = await abrir(browser, url);
+  try {
+    await page.waitForSelector('#prompt .escolha:has-text("Acampar")', { timeout: 30000 });
+    await page.click('#prompt .escolha:has-text("Acampar")');
+    await page.waitForSelector("#acampamento-pontos .dormir-barraca", { timeout: 20000 });
+    let quadro = "";
+    for (let k = 0; k < 60 && !/^Dormir até o amanhecer/.test(quadro); k++) {
+      quadro = await page.evaluate(() => { const q = document.querySelector(".orientacao:not([hidden])"); return q ? q.innerText.replace(/\s+/g, " ").trim() : ""; });
+      await page.waitForTimeout(150);
+    }
+    const geo = await page.evaluate(() => {
+      const q = document.querySelector(".orientacao:not([hidden])").getBoundingClientRect(), a = document.querySelector(".orientacao-anel:not([hidden])");
+      const b = document.querySelector("#acampamento-pontos .dormir-barraca").getBoundingClientRect(), v = document.getElementById("vista").getBoundingClientRect();
+      const an = a && a.getBoundingClientRect();
+      const toca = (r) => !(q.right <= r.left || q.left >= r.right || q.bottom <= r.top || q.top >= r.bottom);
+      return { anel: !!an && Math.abs(an.left + 3 - b.left) < 2 && Math.abs(an.top + 3 - b.top) < 2,
+        abaixoDaCena: q.top >= v.bottom - 1, figuras: [...document.querySelectorAll("#acampamento-pontos [data-ponto], #prompt .escolha")].some((e) => toca(e.getBoundingClientRect())),
+        naColuna: q.left >= document.getElementById("cena").getBoundingClientRect().left - 1 && q.right <= document.getElementById("cena").getBoundingClientRect().right + 1 };
+    });
+    const ponta = await pontaNoAlvo(page);
+    conferir(/^Dormir até o amanhecer/.test(quadro) && geo.anel && geo.abaixoDaCena && !geo.figuras && geo.naColuna && ponta !== null && ponta <= 2,
+      `D3: o quadro logo abaixo da cena, dentro da coluna, sem cobrir a roda; o contorno e a seta no Dormir de verdade (ponta a ${ponta}px)`);
+    conferir(await page.evaluate(() => document.querySelectorAll(".dormir-barraca").length === 1), "um Dormir só (nenhuma cópia para a orientação)");
+    // pelo teclado: o foco no Dormir e Enter
+    await page.focus("#acampamento-pontos .dormir-barraca"); await page.keyboard.press("Enter");
+    for (let k = 0; k < 150 && (await page.$("#acampamento-pontos")); k++) {
+      const c = await page.$("#prompt .continuar"); if (c) await c.click().catch(() => {});
+      await page.waitForTimeout(150);
+    }
+    conferir(!(await page.$("#acampamento-pontos")) && !/^Dormir até o amanhecer/.test(await page.evaluate(() => { const q = document.querySelector(".orientacao:not([hidden])"); return q ? q.innerText : ""; })),
+      "Enter no Dormir dorme; depois, o D3 não volta e a cena sai do topo");
+  } finally {
+    conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
+    await page.close();
+    proc.kill();
+  }
+}
+
 async function cenarioTutorial(browser) {
   console.log("cenário: a segunda parte da abertura guiada (item achado, recuperar, noite e explorar)");
   const quadro = (page) => page.evaluate(() => { const q = document.querySelector(".orientacao:not([hidden])"); return q ? q.innerText.replace(/\s+/g, " ") : ""; });
@@ -2348,6 +2389,7 @@ try {
   await cenarioBaus(browser);
   await cenarioAbertura(browser);
   await cenarioFogueira(browser);
+  await cenarioDormirOrientado(browser);
   await cenarioTutorial(browser);
   await cenarioCiclos(browser);
   await cenarioAneis(browser);
