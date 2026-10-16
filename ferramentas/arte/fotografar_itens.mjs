@@ -26,7 +26,7 @@ import path from "path";
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULO || "playwright");
 const aqui = path.dirname(fileURLToPath(import.meta.url)), raiz = path.resolve(aqui, "../..");
 const SAIDA = path.resolve(process.env.SAIDA || path.join(aqui, "capturas-itens"));
-const SO = new Set((process.env.SO || "mercado,saque,bau,inventario,aneis,antigos,machado").split(","));
+const SO = new Set((process.env.SO || "mercado,saque,bau,inventario,aneis,antigos,machado,arco").split(","));
 mkdirSync(SAIDA, { recursive: true });
 const espera = (ms) => new Promise((r) => setTimeout(r, ms));
 async function subir(cenario, amb = {}) {
@@ -53,14 +53,15 @@ const onde = (p) => p.evaluate(() => {
   for (const i of document.querySelectorAll("img")) {
     const s = i.getAttribute("src") || "";
     const m = s.match(/hud\/icones\/([a-z-]+)-(\d+)(@2x)?\.png/);
-    if (!m || !/^(escudo|unguento|anel|cota|espada|elmo|manopla|perneiras|botas-ferro|maca|amuleto|aljava|machado|bomba)$/.test(m[1])) continue;
+    if (!m || !/^(escudo|unguento|anel|cota|espada|elmo|manopla|perneiras|botas-ferro|maca|amuleto|aljava|machado|bomba|arco)$/.test(m[1])) continue;
     (linhas[m[1]] = linhas[m[1]] || []).push(`${lugar(i)}:${m[2]}${m[3] || ""}→${r(i)}`);
   }
   // os papéis que não mudam: a Curandeira, a caveira (a lixeira e os outros usos) e o machado das habilidades
   const sprite = (n) => [...document.querySelectorAll("img")].filter((i) => i.getAttribute("src") === Sprites.url(n)).map(lugar);
-  const caveira = sprite("caveira"), machado = sprite("machado");
+  const caveira = sprite("caveira"), machado = sprite("machado"), arco = sprite("arco");
   return { ...linhas, curandeira: typeof Icones !== "undefined" && Icones.porDesenho("unguento") === "" ? "sprite do jogo" : "TROCADA",
-    ...(caveira.length ? { "sprite-caveira": caveira } : {}), ...(machado.length ? { "sprite-machado": machado } : {}) };
+    ...(caveira.length ? { "sprite-caveira": caveira } : {}), ...(machado.length ? { "sprite-machado": machado } : {}),
+    ...(arco.length ? { "sprite-arco": arco } : {}) };
 });
 const JANELAS = { normal: [1500, 950], baixa: [1280, 720] };
 const relatorio = [], erros = [];
@@ -385,6 +386,54 @@ if (SO.has("machado")) {
     bomba_pelo_desenho: await p.evaluate(() => Icones.porDesenho("caveira") === "" && Icones.consumivel("bomba_fumaca") !== "" ? "só pelo id" : "ERRO"),
     machado_item: await p.evaluate(() => Icones.item("machado") !== "" ? "arquivo" : "ERRO") });
   await p.close(); proc.kill();
+}
+// 8. o arco (1.101.0): o Arqueiro com o arco vestido e outro na mochila (cenário mercado, AMOSTRA=arco, ARMA=arco): a
+//    ficha, a venda, a dica com a comparação, o Inventário em 40; o cartão do saque e o voo ao equipar (vila,
+//    CLASSE=arqueiro, ACHADO=arco); a roda da luta, com o Atacar e o Tiro Duplo no sprite do jogo (tutorial, nível 5
+//    patrulheiro: o Tiro Duplo na janelinha de Habilidades)
+if (SO.has("arco")) {
+  for (const jan of Object.keys(JANELAS)) {
+    const n = (c) => `arco-${jan}-${c}`;
+    let { proc, url } = await subir("mercado", { CLASSE: "arqueiro", AMOSTRA: "arco", ARMA: "arco", SEMENTE: "1" });
+    let p = await pagina(url, jan, n("mercado"));
+    await parado(p); await espera(900); await p.mouse.move(2, 2); await espera(300);
+    await recortar(p, "#heroi", n("ficha"), 0);
+    await (await p.$('[data-aba="vender"]')).click(); await espera(800); await p.mouse.move(2, 2); await espera(300);
+    await recortar(p, "#lista-vender", n("vender"), 4);
+    await p.keyboard.down("Shift");
+    await dica(p, await p.$('[data-mochila-loja="0"]'), n("dica-comparacao"));
+    await p.keyboard.up("Shift");
+    relatorio.push({ nome: n("mercado"), ...(await onde(p)) });
+    await p.mouse.move(2, 2); await p.keyboard.press("Escape"); await espera(1500); await parado(p);
+    await p.keyboard.press("i"); await espera(1300); await p.mouse.move(2, 2); await espera(300);
+    await p.screenshot({ path: path.join(SAIDA, `${n("tela-inventario")}.png`) });
+    await recortar(p, ".tela.inventario", n("inventario"), 4);
+    relatorio.push({ nome: n("inventario"), medidas: await medidas(p) });
+    await p.close(); proc.kill();
+    ({ proc, url } = await subir("vila", { CLASSE: "arqueiro", ACHADO: "arco", ARMA: "arco" }));
+    p = await pagina(url, jan, n("saque"));
+    await p.waitForSelector(".janela-achado", { timeout: 30000 }); await espera(2600);
+    await recortar(p, ".janela-achado", n("saque-cartao"), 6);
+    relatorio.push({ nome: n("saque-cartao"), ...(await onde(p)) });
+    await pegarVoo(p, ".voo-item");
+    const eq = await p.$('#prompt .escolha:has-text("Equipar"), .achado-acoes button:has-text("Equipar")');
+    if (eq) await eq.click(); else await p.keyboard.press("1");
+    await voo(p, ".voo-item", n("saque-voo"));
+    await p.close(); proc.kill();
+    ({ proc, url } = await subir("tutorial", { TUTORIAL: "0", CLASSE: "arqueiro", ARMA: "arco", LUTA: "lobo", QUANTOS: "2", VISTAS: "A1,V2,N1,D1,K1,M1,L1" }));
+    p = await pagina(url, jan, n("luta"));
+    for (let k = 0; k < 60 && !(await p.$("#roda .roda-botao")); k++) {
+      for (const s of [".orientacao:not([hidden]) .orientacao-entendi", "#prompt .continuar"]) { const e = await p.$(s); if (e) await e.click().catch(() => {}); }
+      await espera(300);
+    }
+    await espera(900);
+    const hab = await p.$('#roda .roda-botao[data-slot="habilidades"]');
+    if (hab) { await hab.click(); await espera(600); }
+    await p.mouse.move(2, 2); await espera(300);
+    await recortar(p, ["#roda > *", ".roda-janela", "#heroi"], n("luta"), 6);
+    relatorio.push({ nome: n("luta"), ...(await onde(p)) });
+    await p.close(); proc.kill();
+  }
 }
 await b.close();
 for (const r of relatorio) console.log(r.nome, "·", Object.entries(r).filter(([k]) => k !== "nome").map(([k, v]) => `${k} ${JSON.stringify(v)}`).join(" · "));

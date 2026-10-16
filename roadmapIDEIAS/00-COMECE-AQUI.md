@@ -2631,3 +2631,14 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   (conferido na roda das duas classes).
 - O registro completo está em `ferramentas/prototipos/hud/LEIA-ME.md` ("O arco e o cajado").
 - **Falta:** Jean avaliar. Guardados: o estudo do Grimório e do livro da capela (depois da etapa de itens).
+
+### 17/10/2026 — O arco no jogo (1.101.0)
+
+- **Decisão de Jean:** o arco aprovado como apresentado; o cajado volta para um ajuste do encaixe.
+- **Feito:** `rpg/web/static/hud/icones/arco-32/40/48/64` (com os @2x) por `ferramentas/arte/desenhar_arco_pixel.py`,
+  idênticos pixel a pixel aos da proposta; em `icones.js`, `TAMANHOS.arco` e `ITEM.arco` (os três arcos e os únicos
+  Ventre da Tempestade e Sussurro do Vazio). O Atacar do Arqueiro na roda, o Tiro Duplo e o contrato de caça
+  continuam com o sprite do jogo.
+- **Conferido** (`ferramentas/arte/fotografar_itens.mjs`, `SO=arco`, 1500×950 e 1280×720, sem erro no console): 32 na
+  ficha e no mercado, a dica com a comparação, 40 no corpo e na mochila, 64 e 48 no saque, o voo ao equipar; a roda
+  com o Atacar no sprite.
