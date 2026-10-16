@@ -1403,5 +1403,5 @@
   Telas.registrar("cena", () => "", {});
   Object.assign(Telas, { soltarCorrentes, momentoIlse, lerLivro });
   window.Cenas = { mostrar, limpar, virou, conferirPendente, aoCombate, aoMenu, posicionar, atual: () => atual,
-    alternarDestaque, destacando, afastar };
+    alternarDestaque, destacando, afastar, cantos };  // cantos: o mesmo contorno nas figuras da fogueira
 })();

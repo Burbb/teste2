@@ -231,6 +231,21 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   `Vista.ceuDo`. Na capela, a sala em que se está (`missoes.sala_atual`) é separada da etapa: as passagens entre salas
   vencidas são opções do menu (`("capela", sala)`, meta `capela_ir`) e pontos da cena; cada ação da capela tem a sua
   sala (`onde`). Ver roadmapIDEIAS/20.
+  A fogueira (1.98.0) também é uma cena do topo: o painel `acampamento` (o mesmo do motor, `comitiva.fogueira`) monta
+  a cena em `telas/acampamento.js` (`Acampamento.montar`: o lugar ao fundo, o teso com o fogo, a luz e a roda, o
+  barranco na frente) e a passa à `Vista.usarAmbiente`; `telas/fogueira.js` desenha embaixo só a frase, a instrução e
+  quem vai e quem fica, e põe os pontos por cima da arte (`#acampamento-pontos`, um por companheiro e pelo animal,
+  com o menu de sempre, `Telas.ligarFigurasComitiva`, e o "Dormir até o amanhecer" no canto). A tela é de menu para
+  o motor e para a ponte (redesenha no lugar, sem Continuar); com `#cena.acampando`, a arte fica à vista e a barra do
+  título sai, para o chão da cena descer em pontilhado direto até a leitura. O fundo vem do lugar: um entorno
+  desenhado à mão pela chave que o motor manda nos dados (`lugar`; hoje só `capela_afogada`, a capela pequena no
+  brejo, em `ENTORNOS`) ou, nos outros lugares, a própria paisagem (`Vista.paisagem`, o céu e as silhuetas do bioma,
+  com nuvens e corvos; a chuva por cima, `Vista.chuva`). As vagas da roda são fixas (`HEROI`, `ATIVOS`, `RESERVA`,
+  `FERA`); quem fica no acampamento senta na beira da luz. O nome aparece só com o mouse, o foco do teclado ou o F4
+  (o balão da HUD, junto do contorno dourado das salas da capela, `Cenas.cantos`), acomodado como se todos
+  aparecessem juntos (`acomodarNomes`: sem cobrir rosto, fogo nem o Dormir). Com movimento reduzido, as chamas
+  ficam paradas. A orientação do Dormir (D3) fica na faixa logo abaixo da cena, com a haste até o botão, como a dos
+  prédios da vila.
 - `batalha.js` o palco da luta (o jeito de animar vem do motor: `anim` nos lances). A arena só cresce durante a luta e cresce devagar; quando uma carta entra ou ganha a linha de efeitos, as outras deslizam até o lugar novo (`acomodar`, desvio em `top`/`left` e em pixel inteiro: `transform` e `translate` são do foco e dos golpes) · `realce.js` cores dos termos de
   jogo (os nomes de habilidades e talentos chegam do motor no `glossario` do estado) · `sprites*.js`, `vista.js`, `mapa.js`, `som.js`
 - `sensacao.js` o peso dos momentos (parada no impacto, tremor, câmera lenta no golpe final...): as telas dizem o

@@ -90,6 +90,9 @@ Pendências registradas depois da 1.95.0 (para depois, sem executar):
 - O Mago na fogueira (sentado) está no jogo desde a 1.97.0. O Morel pequeno voltou ao desenho escolhido (a figura
   da fogueira na carta, com a espada refeita) na 1.96.0; os candidatos novos de carta e cabeça foram recusados.
 - Novos lotes de itens, pela skill `arte-itens-fenda`, e as etapas acima.
+- A fogueira é a cena do topo desde a 1.98.0 (o protótipo de 15/10 aprovado). Só a Capela Afogada tem o entorno
+  desenhado à mão; os outros lugares usam a paisagem deles. Os fundos próprios de cada lugar (o Charco, o Bosque, os
+  biomas do mundo gerado) ficam para a etapa de cenários, na mesma organização (`ENTORNOS` em `telas/acampamento.js`).
 - Os itens que ainda são sprites 16×16 (as armas e peças de couro das outras classes) ficam em 32 px no Inventário
   até ganharem desenho; o martelo e a Pena de Fênix (desenhados em 32) também.
 

@@ -1,5 +1,8 @@
 # Protótipo do acampamento (fora do jogo)
 
+**Integrado na 1.98.0** (`rpg/web/static/telas/acampamento.js` e `telas/fogueira.js`): o que está aqui fica como
+registro da proposta aprovada; o jogo não lê nada desta pasta.
+
 Um protótipo visual, para avaliar. O acampamento de produção (`rpg/web/static/telas/fogueira.js`) continua como está;
 nada aqui é lido pelo jogo.
 

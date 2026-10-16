@@ -1567,18 +1567,51 @@ async function cenarioFogueira(browser) {
     conferir(/Clique num companheiro para conversar ou ajustar a comitiva\./.test(rod) && /Comitiva 1\/2/.test(rod)
       && /Vai com você:\s*Morel/.test(rod) && /No acampamento:\s*Odette/.test(rod) && !/Descansa/.test(rod),
       "embaixo da fogueira: a instrução, o contador, quem vai e quem fica (a nota do acampamento fica no menu)");
+    // A cena no topo (telas/acampamento.js): a arte à vista, sem a barra de título, os pontos de quem está presente
+    // sobre ela e nenhuma imagem dentro do texto.
+    const cena = () => page.evaluate(() => {
+      const q = Vista.caixaDaArte(), c = document.getElementById("cena").getBoundingClientRect();
+      const pontos = [...document.querySelectorAll("#acampamento-pontos [data-ponto]")].map((el) => {
+        const r = el.getBoundingClientRect();
+        return { id: el.dataset.ponto, x: Math.round(((r.left - c.left - q.esq - q.dx) / q.ex) * 10) / 10, y: Math.round(((r.top - c.top - q.topo - q.dy) / q.ey) * 10) / 10,
+          nome: getComputedStyle(el.querySelector(".ac-nome")).visibility === "visible", l: r.left, t: r.top, r: r.right, b: r.bottom };
+      });
+      return { topo: getComputedStyle(document.getElementById("vista")).display !== "none" && document.getElementById("cena").classList.contains("acampando"),
+        barra: getComputedStyle(document.getElementById("barra-tela")).display, imagemNoTexto: !!document.querySelector("#texto canvas, #texto img.sprite-cena"),
+        pontos, dormir: !!document.querySelector("#acampamento-pontos .dormir-barraca") };
+    });
+    const c0 = await cena();
+    conferir(c0.topo && c0.barra === "none" && !c0.imagemNoTexto && c0.dormir
+      && c0.pontos.map((p) => p.id).sort().join() === "morel,odete" && c0.pontos.every((p) => !p.nome),
+      "a fogueira é a cena do topo: a arte à vista sem a barra do título, um ponto para cada um (Morel e Odette), o Dormir nela, nenhum nome fixo e nada de imagem no texto");
+    const sobrepoe = (ps) => ps.some((a, i) => ps.some((b, j) => j > i && a.l < b.r - 0.5 && b.l < a.r - 0.5 && a.t < b.b - 0.5 && b.t < a.b - 0.5));
+    conferir(!sobrepoe(c0.pontos), "as áreas clicáveis não se encostam");
+    await page.hover('#acampamento-pontos [data-ponto="morel"]'); await page.waitForTimeout(200);
+    const c1 = await cena();
+    conferir(c1.pontos.filter((p) => p.nome).map((p) => p.id).join() === "morel", "com o mouse em cima, só o nome dele aparece");
+    await page.mouse.move(5, 5); await page.keyboard.press("F4"); await page.waitForTimeout(200);
+    const c2 = await cena();
+    conferir(c2.pontos.every((p) => p.nome), "com \"Destacar interações\" (F4), todos os nomes à vista");
+    await page.keyboard.press("F4"); await page.waitForTimeout(200);
+    for (const [w, h] of [[1280, 720], [1500, 950]]) {
+      await page.setViewportSize({ width: w, height: h }); await page.waitForTimeout(600);
+      const c3 = await cena();
+      conferir(c3.pontos.every((p) => { const a = c0.pontos.find((x) => x.id === p.id); return Math.abs(p.x - a.x) < 0.2 && Math.abs(p.y - a.y) < 0.2; }),
+        `em ${w}×${h}, cada ponto continua sobre a figura dele (a mesma posição na arte)`);
+    }
     await page.click('.figura[data-cid="morel"]');
     conferir(/Deixar no acampamento\s*Descansa, não come das suas provisões/.test(await page.textContent(".menu-item")),
       "no menu de quem vai, a nota junto do \"Deixar no acampamento\"");
-    await page.mouse.click(5, 5);
-    // O botão flutua sem parar (boiar, 4 px): sem esperar que ele pare, o clique no centro o acerta do mesmo jeito.
-    await page.click(".dormir-barraca", { force: true });
-    for (let k = 0; k < 150 && (await page.evaluate(() => !estado || estado.heroi.fome || !pergunta || !!document.querySelector(".fogueira-palco"))); k++) {
+    // Com o menu aberto, o Dormir funciona no primeiro clique (o clique fora fecha o menu e passa adiante).
+    await page.click(".dormir-barraca");
+    for (let k = 0; k < 150 && (await page.evaluate(() => !estado || estado.heroi.fome || !pergunta || !!document.querySelector("#acampamento-pontos"))); k++) {
       const c = await page.$("#prompt .continuar"); if (c) { await page.waitForTimeout(300); await c.click().catch(() => {}); }
       await page.waitForTimeout(150);
     }
     const depois = await hud();
     conferir(depois.cond === "" && depois.alto === antes.alto, "o amanhecer come a provisão: a fome some e o painel não muda de altura");
+    conferir(await page.evaluate(() => !document.getElementById("cena").classList.contains("acampando") && !document.querySelector("#acampamento-pontos")),
+      "depois de dormir, a cena do acampamento sai do topo");
   } finally {
     conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
     await page.close();

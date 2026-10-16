@@ -220,9 +220,9 @@
     if (m.tipo === "equipou") return instantaneo ? (fecharAchado(), Promise.resolve()) : voarParaEspaco(d);
     if (m.tipo === "guardou") return instantaneo ? (fecharAchado(), Promise.resolve()) : voarParaMochila(d);
     if (m.tipo === "carinho") {
-      // corações subindo do animal na fogueira, e a reação num balão sobre ele (não tampa nada; um clique dispensa)
+      // corações subindo do animal na cena da fogueira, e a reação num balão sobre ele (não tampa nada; um clique dispensa)
       if (instantaneo) return Promise.resolve();
-      const alvos = document.querySelectorAll("#texto .figura.fera");
+      const alvos = document.querySelectorAll("#acampamento-pontos .figura.fera");
       const alvo = alvos[alvos.length - 1];
       if (alvo && d.texto) balaoFera(alvo, d);
       if (d.repetido) return Promise.resolve();

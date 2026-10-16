@@ -482,8 +482,16 @@ const Vista = (() => {
 
   function desenharEm(ctx) {
     if (ambiente) { ambiente.desenhar(ctx, quadro, destaque); return; }  // a cena tem a própria luz (sem o "escuro")
+    ceuEFundo(ctx);
+    pintarFagulhas(ctx);
+    if (destaque) pintarDestaque(ctx);
+    vivos(ctx);
+    chuva(ctx);
+    if (estado.mundo.escuro) { ctx.fillStyle = "rgba(0,0,0,0.55)"; ctx.fillRect(0, 0, W, H); }
+  }
+  /** O céu do lugar com o que passa nele (estrelas, nuvens, bancos de névoa) e as silhuetas do bioma na frente. */
+  function ceuEFundo(ctx) {
     ctx.drawImage(fundo, 0, 0);
-    const clima = estado.mundo.clima_id;
     estrelas.forEach((s) => { if ((quadro + s.f) % 14 > 2) px(ctx, s.x, s.y, 1, 1, (quadro + s.f) % 30 < 4 ? "#ffffff" : "#9aa4c0"); });
     nuvens.forEach((n) => {
       const x = Math.floor(n.x - n.w);
@@ -498,8 +506,9 @@ const Vista = (() => {
       px(ctx, x + 6, n.y + (n.alta ? 1 : 2), w - 30, 1, n.cor);
     });
     ctx.drawImage(frente, 0, 0);
-    pintarFagulhas(ctx);
-    if (destaque) pintarDestaque(ctx);
+  }
+  /** O que vive no lugar: os corvos e a fumaça das chaminés. */
+  function vivos(ctx) {
     aves.forEach((a, k) => {  // corvos, devagar, batendo as asas
       const x = Math.floor(a.x) - 10, y = Math.round(a.y + Math.sin((quadro + k * 9) / 12)), asa = (Math.floor(quadro / 4) + a.f) % 2, cor = "#0c0606";
       px(ctx, x, y, 1, 1, cor); px(ctx, x - 2, y - asa, 2, 1, cor); px(ctx, x + 1, y - asa, 2, 1, cor);
@@ -510,12 +519,15 @@ const Vista = (() => {
         if (pontilha(x, y, Math.round(12 - t * 0.6))) px(ctx, x, y, 2, 2, "#8a8288");
       }
     });
+  }
+  /** A chuva ou a neve e o relâmpago, por cima de tudo. */
+  function chuva(ctx) {
+    const clima = estado.mundo.clima_id;
     particulas.forEach((p) => {
       if (clima === "neve") px(ctx, p.x, p.y, 1, 1, "#f0f4ff");
       else px(ctx, p.x, p.y, 1, 3, "rgba(170,190,220,0.7)");
     });
     if (relampago > 0) { ctx.fillStyle = `rgba(230,235,255,${relampago / 6})`; ctx.fillRect(0, 0, W, H); }
-    if (estado.mundo.escuro) { ctx.fillStyle = "rgba(0,0,0,0.55)"; ctx.fillRect(0, 0, W, H); }
   }
 
   /** O amanhecer: a paisagem já é a da manhã; por cima, a noite se desfaz e um clarão quente sobe do horizonte. */
@@ -617,5 +629,12 @@ const Vista = (() => {
 
   return { atualizar, titulo, corDoCeu, ceuDo, amanhecer, predios: listaPredios, destacar, focar, usarAmbiente, focarEm,
     temAmbiente: () => !!ambiente, LARGURA: W, ALTURA: H, caixaDaArte, aoRedimensionar: (f) => aoRedimensionar.push(f),
-    arte: () => arte };  // o quadro em 320x72 (as páginas de teste da paisagem leem daqui)
+    arte: () => arte,  // o quadro em 320x72 (as páginas de teste da paisagem leem daqui)
+    // O lugar sem ambiente e a chuva por cima, para a fogueira (telas/acampamento.js) pôr o acampamento entre eles: o
+    // céu, as silhuetas do bioma, os corvos e a fumaça de agora; a chuva, a neve e o relâmpago. Sem o "escuro" da
+    // falta de luz: em volta do fogo, a luz é a dele.
+    paisagem: (c) => { if (fundo) { ceuEFundo(c); vivos(c); } },
+    chuva: (c) => { if (estado) chuva(c); },
+    // o céu e as silhuetas do lugar, parados (a base do acampamento, de onde sai a cor do chão que continua embaixo)
+    camadas: () => (fundo ? { fundo, frente } : null) };
 })();

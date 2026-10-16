@@ -229,7 +229,7 @@ const Orientacao = (() => {
     if (tipo === "servico") return ok(document.querySelector(`#prompt .balcao-predio .servico[data-servico="${valor}"]`), "junto");
     if (tipo === "dormir") {
       // Na fogueira: o botão fica no alto do cenário; o quadro vai à esquerda dele, sobre o céu, sem cobrir a roda.
-      const r = ok(document.querySelector("#texto .dormir-barraca"), "junto");
+      const r = ok(document.querySelector("#acampamento-pontos .dormir-barraca"), "junto");
       return r && { ...r, prefere: "esquerda" };
     }
     if (tipo === "risco") {  // os riscos do lugar, à direita: a linha da noite e, junto, a da tocha

@@ -48,35 +48,43 @@ button.membro-carta:hover { color: #fff3a0; transform: scale(1.2); }
 .tag.aviso-conversa { margin-top: 6px; color: var(--ouro); border-color: #8a6a14; background: #1c140d; cursor: pointer; font: inherit; animation: alerta 1.2s steps(2) infinite; }
 
 /* ------------------------------------------------------------------ fogueira */
-.fogueira-palco { position: relative; border: 3px solid #0d0b0a; box-shadow: 3px 3px 0 #000; }
-.fogueira-cena { display: block; width: 100%; height: auto; image-rendering: pixelated; }
-/* A área clicável é o boneco (16x16 na arte: 5% da largura, 14,2% da altura); o nome, pequeno, fica onde couber em
-   volta dele (acomodarNomes, em telas.js). */
-.figura { position: absolute; transform: translate(-50%, -100%); width: 5%; height: 14.2%; background: none; border: 0; padding: 0; cursor: pointer; font: inherit; }
-.figura .figura-nome { position: absolute; left: 50%; bottom: calc(100% + 2px); translate: -50% 0; font-family: var(--num); font-size: 14px; line-height: 1; color: #fff3d6;
-  background: rgba(13, 11, 10, 0.82); border: 1px solid #4a4038; padding: 1px 4px 2px; white-space: nowrap; }
-.figura .figura-nome.posto { bottom: auto; translate: none; }
-.figura.ativo .figura-nome { border-color: #8a6a14; }
-.figura:hover .figura-nome, .figura:focus-visible .figura-nome { border-color: var(--ouro); color: var(--ouro); }
-/* Quem quer conversar: o ✉ dentro da etiqueta, depois do nome (preso por fora, tampava a última letra). */
-.figura .carta-aviso { display: inline-block; margin-left: 4px; font-style: normal; font-size: 11px; line-height: 1; color: #120e0b; background: var(--ouro); border: 1px solid #000; padding: 1px 2px; vertical-align: 1px; animation: alerta 1.2s steps(2) infinite; }
-/* O animal ocupa a área do desenho dele, como os companheiros: clicar no bicho (não só no nome) abre o menu. */
-.figura.fera { height: 14.2%; }
-.dormir-barraca { position: absolute; top: 8px; right: 8px; white-space: nowrap; cursor: pointer; font-family: var(--num); font-size: 16px; line-height: 1;
-  color: #fff3d6; background: rgba(13, 11, 10, 0.85); border: 2px solid #4a4038; padding: 3px 8px 4px; display: inline-flex; align-items: center; gap: 5px;
-  box-shadow: 2px 2px 0 #000; animation: boiar 2.4s ease-in-out infinite; }
-.dormir-barraca img.sprite { --s: 16; }
-.dormir-barraca:hover, .dormir-barraca:focus-visible { border-color: var(--ouro); color: var(--ouro); }
-@keyframes boiar { 0%, 100% { margin-top: 0; } 50% { margin-top: -4px; } }
+/* O acampamento é a arte do topo (telas/acampamento.js): na tela da fogueira, que é de menu, a arte fica, a barra do
+   título sai e a leitura tem o mesmo fundo das cenas da história, para o chão da cena descer em pontilhado direto até o
+   texto, sem faixa no meio (como na capela). */
+#cena.acampando[data-tipo="menu"] #vista { display: block; }
+#cena.acampando #barra-tela { display: none; }
+:root body:not(.modo-titulo) #cena.acampando { background: var(--veu-leitura), var(--t-painel) 64px 32px / 128px; }
+:root body:not(.modo-titulo) #cena.acampando > #pagina { background: none; }
+/* Os pontos sobre a arte (fogueira.js), como os da capela: a área do desenho de cada companheiro (e do animal), sem
+   nada à vista até o mouse, o foco do teclado ou "Destacar interações" (F4); aí o nome no balão da HUD e, na arte, o
+   contorno dourado. */
+#acampamento-pontos { position: absolute; z-index: 2; overflow: hidden; pointer-events: none; }
+body.em-combate #acampamento-pontos { display: none; }
+#acampamento-pontos .figura { position: absolute; padding: 0; border: 0; background: none; cursor: pointer; pointer-events: auto; font: inherit; }
+#acampamento-pontos .figura:focus-visible { outline: var(--px) dashed var(--ouro); outline-offset: 0; }
+.ac-nome { --anel: var(--anel-a); --bico: var(--bico-a); position: absolute; visibility: hidden; padding: 0 5px; white-space: nowrap;
+  pointer-events: none; font-family: var(--texto); font-size: 12px; font-weight: 600; line-height: 1.3; color: var(--ouro);
+  border: var(--borda) solid var(--p-j); border-image: var(--anel) 1 / 1 stretch; background: var(--p-k); background-clip: padding-box; }
+.ac-nome.com-bico::after { content: ""; position: absolute; left: 50%; top: 100%; translate: -50% 0;
+  width: calc(var(--P) * 7); height: calc(var(--P) * 4); background: var(--bico) 0 0 / 100% 100%; image-rendering: pixelated; }
+#acampamento-pontos .figura:is(:hover, :focus-visible) .ac-nome, body.destacar-interacoes #acampamento-pontos .ac-nome { visibility: visible; }
+/* Quem quer conversar: o ✉ dentro do nome (clicar nele abre a conversa direto) e, embaixo da cena, junto do nome. */
+.ac-nome .carta-aviso { display: inline-block; margin-left: 4px; font-style: normal; font-size: 11px; line-height: 1; color: #120e0b;
+  background: var(--ouro); border: 1px solid #000; padding: 1px 2px; vertical-align: 1px; pointer-events: auto; cursor: pointer; }
+.fr-carta { font-style: normal; color: var(--ouro); }
+/* Dormir: no canto de cima da cena, no botão da HUD (o mesmo do "Afastar" da capela). */
+#acampamento-pontos .dormir-barraca { position: absolute; right: 8px; top: 8px; display: inline-flex; align-items: center; gap: 6px;
+  padding: 2px 10px 3px; pointer-events: auto; cursor: pointer; white-space: nowrap;
+  font-family: var(--texto); font-size: 14px; font-weight: 600; color: var(--tinta);
+  border: var(--borda) solid var(--p-j); border-image: var(--anel-j) 1 / 1 stretch; background: var(--p-k); background-clip: padding-box; }
+#acampamento-pontos .dormir-barraca img.sprite { --s: 16; }
+#acampamento-pontos .dormir-barraca:is(:hover, :focus-visible) { border-image-source: var(--anel-a); color: var(--ouro); outline: none; }
 .balao.da-fera { max-width: 250px; }
 .balao-efeito { display: block; margin-top: 4px; font-size: 12px; color: #3d6a2a; font-style: normal; }
-.figura.fera .figura-nome { font-size: 13px; padding: 0 4px 1px; border-width: 1px; border-color: #3a5a2a; }
-.figura.fera { cursor: pointer; }
-.figura.fera:hover .figura-nome, .figura.fera:focus-visible .figura-nome { border-color: var(--ouro); color: var(--ouro); }
 .coracao-carinho { position: absolute; bottom: -18px; color: #ff6b8a; font-size: 16px; text-shadow: 1px 1px 0 #000; pointer-events: none;
   animation: coracao-sobe 1.4s ease-out forwards; opacity: 0; }
 @keyframes coracao-sobe { 0% { opacity: 0; transform: translateY(0) scale(.6); } 20% { opacity: 1; } 100% { opacity: 0; transform: translateY(-46px) scale(1.15); } }
-/* Embaixo da fogueira (fogueira.js): a instrução e o contador numa linha; quem vai e quem fica, escrito. */
+/* Embaixo da cena da fogueira (fogueira.js): a instrução e o contador numa linha; quem vai e quem fica, escrito. */
 .fogueira-rodape { margin-top: 10px; font-size: 14px; line-height: 1.4; color: var(--tinta-2); }
 .fr-cab { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 4px; color: var(--tinta-3); }
 .fr-contador { flex: none; font-family: var(--num); font-size: 16px; color: var(--ouro); }

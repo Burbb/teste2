@@ -2512,3 +2512,30 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   doca ficam à vista sem rolar.
 - **Falta:** Jean avaliar. Fica para depois: outros lugares (cada um com o fundo desenhado à mão, na mesma organização)
   e a orientação D3, que aponta o "Dormir" dentro do texto (no protótipo ele mora na cena).
+
+### 16/10/2026 — A fogueira na cena do topo (1.98.0)
+
+- **Pedido de Jean:** integrar o protótipo aprovado do acampamento, preservando a arte e o funcionamento: a cena no
+  topo, texto e comitiva embaixo, sem imagem duplicada nem a moldura antiga, a emenda em pontilhado direto até a
+  leitura; o entorno do lugar (a capela só onde ela existe; nos outros, os fundos que já existem); nomes só com mouse,
+  foco ou F4; o Dormir na cena, com a orientação D3 apontando para ele; nenhuma regra nova.
+- **O que entrou:** `telas/acampamento.js` (o desenho: `Acampamento.montar`) e `telas/fogueira.js` (a tela, os
+  pontos e o Dormir sobre a arte); o motor manda a chave do lugar nos dados da fogueira (`lugar`, só nos lugares da
+  campanha; o gabarito não muda, porque as partidas dele são no mundo gerado). A `Vista` empresta o lugar sem ambiente
+  (`paisagem`, `chuva`, `camadas`) e a capela empresta o contorno dourado (`Cenas.cantos`). Detalhes em
+  `docs/ARQUITETURA.md` ("A fogueira").
+- **Entornos:** a Capela Afogada com o entorno do protótipo (a capela pequena no brejo, à esquerda, a outra margem, a
+  névoa); o Charco dos Juncos, o Bosque do Moinho e o mundo gerado com a própria paisagem do lugar (o céu da hora e
+  as silhuetas do bioma: as árvores mortas do charco, os pinheiros do bosque) atrás do teso. **Futuro:** fundos
+  desenhados para cada lugar (na mesma organização, `ENTORNOS`), na etapa de cenários.
+- **Interações e tutorial:** os mesmos menus (conversar, deixar no acampamento, levar de volta, o carinho), a figura
+  mudando de vaga com o estado; o ✉ de quem quer conversar no nome (no mouse) e no rodapé. O D3 mora na faixa logo
+  abaixo da cena, com a haste até o Dormir (como os prédios da vila); um Dormir só. A orientação passou a medir o
+  quadro longe da borda (encostado na direita, ele encolhia na medida e passava da faixa).
+- **Verificado:** em 1500×950 e 1280×720, normal e reduzido: as três classes sozinhas e com a comitiva cheia
+  (reserva, ferida, o lobo), a capela, o Charco e o Bosque, manhã, crepúsculo e chuva, mouse, F4, teclado,
+  redimensionar, deixar e levar de volta, conversar, Dormir (a capela de fora volta), exaustão, sair da capela para
+  acampar, recarregar a página na fogueira, o D3 (`ferramentas/arte/fotografar_acampamento.mjs`); a fumaça ganhou
+  as conferências da cena e do D3.
+- **Falta:** Jean conferir. Anotados para a próxima: a barra de Foco do Arqueiro (vazia na carta da luta, branca na
+  HUD) e a carta que fica no canto da tela depois de fugir da luta.

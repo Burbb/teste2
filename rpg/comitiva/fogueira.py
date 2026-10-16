@@ -32,6 +32,8 @@ def _fogueira(g, intro):
         dados = {"ativos": estado(g), "reserva": estado(g, reserva(g)), "limite": LIMITE,
                  "contador": f"Comitiva {len(ms)}/{LIMITE}", "nota_acampamento": NOTA_ACAMPAMENTO,
                  "clima": g.clima, "bioma": g.loc["bioma"], "intro": intro}
+        if g.loc.get("chave"):  # o lugar da campanha (a tela desenha o entorno dele: a capela, perto da Capela Afogada)
+            dados["lugar"] = g.loc["chave"]
         fera = getattr(g.j, "companheiro", None)
         if fera:  # o animal do patrulheiro dorme junto do fogo
             dados["fera"] = {"nome": fera["nome"], "tipo": fera["tipo"], "hp": fera["hp"], "max_hp": fera["max_hp"]}

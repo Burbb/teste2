@@ -16,7 +16,7 @@
     python -m tests.navegador.cenarios broquel       # Guerreiro nv 4 com o Broquel contra três lobos; repete com/sem o Revide (LUTA, ESPEC, NIVEL)
     python -m tests.navegador.cenarios resgate       # a recuperação: fome ou infecção no Charco, à noite (CLASSE, CAUSA, COMITIVA, CONTRATOS)
     python -m tests.navegador.cenarios abertura      # campanha nova no Vau: a despensa e as orientações (CLASSE, TUTORIAL, MOREL, DESPENSA, VIDA_RATOS)
-    python -m tests.navegador.cenarios fogueira      # a comitiva na fogueira e a fome (LUGAR, COMITIVA, RESERVA, FERIDO, FOME, PROVISOES, TOCHAS)
+    python -m tests.navegador.cenarios fogueira      # a comitiva na fogueira e a fome (LUGAR, SALA, CLASSE, COMITIVA, RESERVA, FERIDO, FERA, FOME, PROVISOES, TOCHAS, PERIODO, CLIMA, EXAUSTO)
     python -m tests.navegador.cenarios tutorial      # a segunda parte da abertura guiada (LUGAR, PERIODO, VIDA, REC, OURO, PROVISOES, COMITIVA, PONTOS, ITEM, BAUS, CONTRATO, LUTA, VISTAS)
     python -m tests.navegador.cenarios gelo          # Mago com a iniciativa contra um lobo: duas Lanças antes de ele agir (PRISAO, NIVEL, SEMENTE)
     python -m tests.navegador.cenarios aneis         # acha um anel com os dois espaços ocupados (ANEIS=1: um vazio; CHEIA, OURO)
@@ -708,18 +708,28 @@ def relatorio(ui):
 
 
 def fogueira(ui):
-    """A campanha no LUGAR (charco, padrão, à noite: acampar abre a fogueira; vau: a vila, de manhã), CLASSE (padrão
+    """A campanha no LUGAR (charco, padrão, à noite: acampar abre a fogueira; vau: a vila, de manhã; bosque: o Bosque
+    do Moinho; capela: do lado de fora da Capela Afogada, ou na SALA dela, com a nave vencida), CLASSE (padrão
     arqueiro). COMITIVA: quem anda junto, separado por vírgula (padrão "morel,odete"); RESERVA: quem espera no
-    acampamento (padrão "yara"); FERIDO: quem está ferido. FOME=n: n dias sem comer (PROVISOES, padrão 3); TOCHAS=n. Sair leva ao
-    título, com o save (para conferir que a fome volta igual)."""
+    acampamento (padrão "yara"); FERIDO: quem está ferido. FOME=n: n dias sem comer (PROVISOES, padrão 3); TOCHAS=n.
+    FERA=1: o lobo do patrulheiro. PERIODO e CLIMA: a hora e o tempo (padrão: noite e limpo fora da vila). EXAUSTO=1: a
+    noite passou sem dormir (abre já na entrada por exaustão). Sair leva ao título, com o save (para conferir que a
+    fome volta igual)."""
     from rpg.__main__ import menu_principal
     pasta = tempfile.mkdtemp()
     g = Jogo(ui, seed=int(os.environ.get("SEMENTE", "5")), pasta_saves=pasta, hardcore=False)
     ui.jogo = g
     g.iniciar("Jean", os.environ.get("CLASSE", "arqueiro"), "turvo")
     from rpg import missoes
-    missoes.registro(g, "febre_do_turvo").update(etapa="capela", cenas=["abertura"],
-                                                 pistas=["agua_do_leste", "represa", "canal_da_capela"])
+    lugar = os.environ.get("LUGAR", "charco")
+    if lugar == "capela":  # já se viu a chegada; na SALA, a nave vencida (a sacristia é a etapa)
+        sala = os.environ.get("SALA", "exterior")
+        missoes.registro(g, "febre_do_turvo").update(
+            etapa="capela" if sala == "exterior" else "sacristia", cenas=["abertura", "capela_exterior"], sala=sala,
+            pistas=["agua_do_leste", "represa", "canal_da_capela"] + ([] if sala == "exterior" else ["agua_da_capela"]))
+    else:
+        missoes.registro(g, "febre_do_turvo").update(etapa="capela", cenas=["abertura"],
+                                                     pistas=["agua_do_leste", "represa", "canal_da_capela"])
     ativos = [c for c in os.environ.get("COMITIVA", "morel,odete").split(",") if c]
     reserva = [c for c in os.environ.get("RESERVA", "yara").split(",") if c]
     for c in reserva + ativos:
@@ -729,17 +739,23 @@ def fogueira(ui):
     for c in os.environ.get("FERIDO", "").split(","):
         if cm.membro(g, c):
             cm.membro(g, c)["ferido"] = True
+    if os.environ.get("FERA"):  # o animal do patrulheiro, como a especialização dá
+        from rpg import especializacao
+        g.j.companheiro = {"nome": "Cinza", **especializacao.animal("lobo", g.j.nivel)}
     j = g.j
     j.provisoes, j.fome = int(os.environ.get("PROVISOES", "3")), int(os.environ.get("FOME", "0"))
     if os.environ.get("TOCHAS"):
         j.consumiveis["tocha"] = int(os.environ["TOCHAS"])
     j.recalcular()
     j.hp = j.max_hp
-    chave = {"vau": "vau_do_turvo"}.get(os.environ.get("LUGAR", "charco"), "charco_dos_juncos")
+    chave = {"vau": "vau_do_turvo", "bosque": "bosque_do_moinho", "capela": "capela_afogada"}.get(lugar, "charco_dos_juncos")
     for l in g.mundo["locais"]:
-        l["visitado"] = l["chave"] in ("vau_do_turvo", "charco_dos_juncos", "bosque_do_moinho")
+        l["visitado"] = l["chave"] in ("vau_do_turvo", "charco_dos_juncos", "bosque_do_moinho", chave)
     g.mundo["atual"] = next(l["id"] for l in g.mundo["locais"] if l["chave"] == chave)
-    g.dia, g.periodo, g.clima = 5, (0 if chave == "vau_do_turvo" else 3), "limpo"
+    g.dia, g.periodo = 5, int(os.environ.get("PERIODO", 0 if chave == "vau_do_turvo" else 3))
+    g.clima = os.environ.get("CLIMA", "limpo")
+    if os.environ.get("EXAUSTO"):
+        g.periodo = 4  # a noite passou: a próxima tela já é a do exausto
     g.autosalvar = True
     try:
         g.rodar()
