@@ -14,7 +14,9 @@
 // Guarda em capturas-livro/<janela>-<versao>-livro-<lugar>.png e os recortes pequenos como zoom-...; comparar_livro.py
 // monta as comparações das versões.
 //   PLAYWRIGHT_MODULO=<caminho do playwright>/index.mjs node ferramentas/prototipos/hud/fotografar_livro.mjs
-// (SAIDA=<pasta> troca a pasta das fotos; VERSOES=atual,fechado,entreaberto,aberto,estudo escolhe as versões)
+// (SAIDA=<pasta> troca a pasta das fotos; VERSOES=atual,fechado,entreaberto,aberto,estudo escolhe as versões; a
+// versão "tamanhos" é o grimório fechado aprovado nos quatro tamanhos, livro-fechado-tamanhos/, de
+// desenhar_grimorio_fechado_pixel.py: SAIDA=ferramentas/prototipos/hud/capturas-livro-tamanhos VERSOES=atual,tamanhos)
 import { spawn } from "child_process";
 import { mkdirSync, readFileSync, rmSync, writeFileSync } from "fs";
 import { fileURLToPath } from "url";
@@ -23,7 +25,8 @@ const { chromium } = await import(process.env.PLAYWRIGHT_MODULO || "playwright")
 const aqui = path.dirname(fileURLToPath(import.meta.url)), raiz = path.resolve(aqui, "../../..");
 const SAIDA = path.resolve(process.env.SAIDA || path.join(aqui, "capturas-livro"));
 const PASTAS = { fechado: path.join(aqui, "orbe-livro-pixel"), entreaberto: path.join(aqui, "livro-entreaberto"),
-  aberto: path.join(aqui, "livro-aberto"), estudo: path.join(aqui, "livro-estudo") };
+  aberto: path.join(aqui, "livro-aberto"), estudo: path.join(aqui, "livro-estudo"),
+  tamanhos: path.join(aqui, "livro-fechado-tamanhos") };
 rmSync(SAIDA, { recursive: true, force: true });
 mkdirSync(SAIDA, { recursive: true });
 const espera = (ms) => new Promise((r) => setTimeout(r, ms));

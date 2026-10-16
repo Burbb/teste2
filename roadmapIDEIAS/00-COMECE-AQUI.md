@@ -2861,3 +2861,15 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   e o sulco dele mudam); a revisão e o primeiro 64 intactos; as comparações `emblema-*` em `capturas-livro-fechado/`.
 - **Continua como está no jogo:** o livro com o sprite antigo. Espera a avaliação do 64 antes de 32, 40, 48 ou da
   integração.
+
+### 17/10/2026 — Proposta: o grimório fechado em 32, 40, 48 e 64 (protótipo)
+
+- **Pedido de Jean:** o crescente do 64 pela correção dele no Aseprite (a ponta de baixo para dentro da abertura),
+  também no gerador; depois as versões próprias de 32, 40 e 48 com o emblema simplificado por tamanho; os quatro sobre
+  o carvão e nos usos reais (ficha, Inventário, mercado, saque, voo), nas duas janelas; tudo no protótipo.
+- **Feito:** a correção lida da captura 8× (3 pixels) e posta no desenho do crescente; o 64 gerado confere com ela; o
+  32, o 40 e o 48 desenhados na própria grade (o mesmo corpo, emblemas por tamanho) em
+  `ferramentas/prototipos/hud/livro-fechado-tamanhos/`; as fotos e as pranchas em `capturas-livro-tamanhos/`
+  (`fotografar_livro.mjs` com a versão "tamanhos" e `comparar_livro_tamanhos.py`); as pastas anteriores intactas.
+- **Continua como está no jogo:** o livro com o sprite antigo. Espera a avaliação dos tamanhos pequenos antes da
+  integração.

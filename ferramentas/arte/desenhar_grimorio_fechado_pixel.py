@@ -1,8 +1,9 @@
 """O livro do Mago, quinto candidato: o grimório fechado da referência do Jean (proposta; o jogo usa o sprite 16×16
 "livro"). Feito do zero; os candidatos anteriores ficam como histórico (desenhar_livro_pixel.py,
 desenhar_grimorio_pixel.py, desenhar_grimorio_aberto_pixel.py, desenhar_grimorio_estudo_pixel.py). Pelo método do
-escudo e do machado (pixel_comum.py), na própria grade. Nesta rodada, só o 64 (o desenho se acerta no tamanho grande
-antes de ir para 32, 40 e 48). Grava com o nome "livro" (é o mesmo papel) e só numa pasta dada.
+escudo e do machado (pixel_comum.py), cada tamanho (32, 40, 48 e 64) na própria grade: o corpo pelas mesmas regras,
+na mesma proporção do quadro, e o emblema simplificado para a leitura de cada um (MEDIDAS); o 64 tem o crescente com
+a correção do Jean. Grava com o nome "livro" (é o mesmo papel) e só numa pasta dada.
 
 O que o jogo diz (rpg/itens.py): o desenho "livro" é o da arma Grimório e o do apoio Tomo do Mago, em todos os
 materiais, e o do único Tomo do Nome Esquecido. O mesmo sprite é também o atalho do Diário (com desenho próprio no
@@ -43,7 +44,7 @@ import numpy as np
 
 from pixel_comum import LUZ, ajustar, contornar, destino, grade, imagem, limpar, salvar
 
-LADOS = (64,)
+LADOS = (32, 40, 48, 64)
 
 # As rampas, do mais escuro ao mais claro: o couro violeta-vinho, o papel envelhecido e o latão (o do escudo).
 COURO = ["#14060f", "#230b1c", "#33112a", "#451838", "#582046", "#6c2954", "#833563", "#9c4673", "#b65d86"]
@@ -56,24 +57,54 @@ LATAO = ["#26170a", "#40270c", "#623c12", "#8a571b", "#ae7526", "#cf9737", "#e9b
 # altura, em graus.
 LIVRO = dict(W=0.74, T=0.22, tab=0.045, esq=0.015, lombada=0.55, cabo=0.0, reforcos=(0.3, 0.68), reforco=0.06,
              giro=-32.0, alt=58.0)
-# Por tamanho: a escala (o comprimento do livro na tela, em px) e o centro dele na tela; o emblema em pixels da tela:
-# o raio do losango, o ponto e o crescente (em relação ao centro do losango; a linha do meio do desenho é a do centro).
-MEDIDAS = {64: dict(esc=38.0, cx=31.5, cy=31.5,
-                   # o emblema, em pixels da tela a partir do meio da capa, estilizado para a leitura: os vértices do
-                   # losango (o eixo comprido inclinado como a lombada, o curto subindo como a cabeça da capa; os lados
-                   # em degraus de 2 por 1 e de 1 por 2, as pontas com 2 pixels), o crescente à mão (o da primeira
-                   # proposta, inclinado com o eixo do losango; "#" o latão, "+" o fio aceso; a linha e a coluna do
-                   # meio do desenho caem em crescente_em) e o ponto na abertura; tudo com 1 pixel de folga ou mais
-                   losango=((-3, -7), (7, -2), (3, 6), (-7, 1)),
-                   crescente_em=(0, 0),
-                   crescente=("..+#...",
-                              ".+#....",
-                              ".+#....",
-                              ".+#....",
-                              "..+#...",
-                              "...+#..",
-                              "....+#."),
-                   ponto=(2, -1))}
+# Por tamanho: a escala (o comprimento do livro na tela, em px; a mesma proporção do quadro em todos) e o centro dele
+# na tela; o emblema de cada tamanho, simplificado para a leitura dele.
+MEDIDAS = {
+    64: dict(esc=38.0, cx=31.5, cy=31.5,
+             # o emblema, em pixels da tela a partir do meio da capa (mais emblema_em), estilizado para a leitura: os
+             # vértices do losango (o eixo comprido inclinado como a lombada, o curto subindo como a cabeça da capa; os
+             # lados em degraus de 2 por 1 e de 1 por 2, as pontas com 2 pixels), o crescente à mão (o da primeira
+             # proposta, inclinado com o eixo do losango; "#" o latão, "+" o fio aceso; a linha e a coluna do meio do
+             # desenho caem em crescente_em) e o ponto na abertura (None: sem ponto); tudo com 1 pixel de folga ou mais
+             emblema_em=(0, 0),
+             losango=((-3, -7), (7, -2), (3, 6), (-7, 1)),
+             crescente_em=(0, 0),
+             crescente=("..+#...",
+                        ".+#....",
+                        ".+#....",
+                        ".+#....",
+                        "..+#...",
+                        "...+#+."),     # a ponta de baixo volta para a abertura (a correção do Jean)
+             ponto=(2, -1)),
+    # 48: o losango um passo menor, o crescente de 5 fileiras com a mesma ponta e o ponto
+    48: dict(esc=28.5, cx=23.5, cy=23.5, emblema_em=(0, 0),
+             losango=((-2, -6), (6, -2), (2, 6), (-6, 2)),
+             crescente_em=(0, 0),
+             crescente=(".+#..",
+                        "+#...",
+                        "+#...",
+                        ".+#..",
+                        "..+#+"),
+             ponto=(2, -1)),
+    # 40: o losango menor e o crescente de 4 fileiras; o ponto sai (não cabe com folga); um pixel para a lombada,
+    # longe do fecho
+    40: dict(esc=23.75, cx=19.5, cy=19.5, emblema_em=(-1, 0),
+             losango=((-2, -5), (4, -2), (1, 4), (-5, 1)),
+             crescente_em=(-1, 0),
+             crescente=(".+#",
+                        "+#.",
+                        "+#.",
+                        ".+#"),
+             ponto=None),
+    # 32: o mesmo losango do 40 e o crescente reduzido a um "C" de 3 fileiras, sem o ponto
+    32: dict(esc=19.0, cx=15.5, cy=15.5, emblema_em=(-1, 0),
+             losango=((-2, -5), (4, -2), (1, 4), (-5, 1)),
+             crescente_em=(-1, 0),
+             crescente=(".+#",
+                        "+#.",
+                        ".+#"),
+             ponto=None),
+}
 # A capa de cima: a largura da beira que arredonda (em fração da largura e do comprimento), a altura da almofada, a
 # curvatura do couro inteiro (o alto um pouco para o lado da lombada e da cabeça), o quanto de luz vale um degrau da rampa e até
 # onde vai o brilho mais claro da aresta da cabeça, a partir da lombada.
@@ -81,7 +112,7 @@ CAPA = dict(borda_u=0.16, borda_v=0.13, altura=0.05, abaulado=1.2, degrau=0.045,
 # A lombada: que parte do comprimento de cada gomo (entre os reforços) leva o fio de luz.
 LOMBADA = dict(fio=0.5)
 # Correções feitas olhando cada tamanho: {(x, y): (material ou None, tom)}.
-AJUSTES = {64: {}}
+AJUSTES = {32: {}, 40: {}, 48: {}, 64: {}}
 
 
 def camera():
@@ -263,7 +294,8 @@ def desenhar(lado_img):
         # da capa na tela; as linhas do lado da luz (a da cabeça e a da lombada) acesas, as do
         # outro lado mais baixas, e o sulco escuro embaixo, que assenta a peça no couro
         cx_e, cy_e = tela(np.array([0.52 * (W + e), Tt, 0.5]))
-        sx, sy = np.floor(x) - math.floor(cx_e), np.floor(y) - math.floor(cy_e)
+        sx = np.floor(x) - math.floor(cx_e) - M["emblema_em"][0]
+        sy = np.floor(y) - math.floor(cy_e) - M["emblema_em"][1]
         vert = M["losango"]
         linha, linha_luz = np.zeros(x.shape, dtype=bool), np.zeros(x.shape, dtype=bool)
         for k in range(4):
@@ -282,7 +314,9 @@ def desenhar(lado_img):
                         (sy == j - len(desenho) // 2 + M["crescente_em"][1])
                     cres |= aqui
                     cres_luz |= aqui & (c == "+")
-        ponto = cima_capa & (sx == M["ponto"][0]) & (sy == M["ponto"][1])
+        ponto = np.zeros(x.shape, dtype=bool)                            # (os tamanhos pequenos ficam sem o ponto)
+        if M["ponto"]:
+            ponto = cima_capa & (sx == M["ponto"][0]) & (sy == M["ponto"][1])
         grav = linha | cres | ponto
         mat[grav], tom[grav] = "l", 5
         tom[linha & linha_luz] = 6

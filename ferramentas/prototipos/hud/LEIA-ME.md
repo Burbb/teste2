@@ -2389,3 +2389,43 @@ cartão do saque nas duas janelas, a revisão à esquerda). O cartão usa `livro
 capa sem ficar estreito; as linhas saem em degraus iguais. O que observar: a inclinação é estilizada (não é a
 projeção exata da capa), e o losango ocupa quase a mesma área do da primeira proposta, um pouco maior que o da
 revisão. Espera a avaliação do Jean antes de 32, 40 e 48.
+
+### O grimório fechado: o crescente do Jean no 64 e os tamanhos 32, 40 e 48 (proposta)
+
+**O pedido de Jean:** o livro aprovado; falta só o crescente, que ele corrigiu à mão no Aseprite (a ponta de baixo
+volta para dentro da abertura, sem a ponta prolongada que lembrava uma banana; o ponto separado e o espaço até o
+losango ficam). Mudar só os pixels necessários e pôr a correção no gerador. Depois, as versões próprias de 32, 40 e
+48, com a identidade do 64 e o emblema simplificado para a leitura de cada tamanho, sem redução automática; os quatro
+sobre o carvão e nos usos reais (ficha, Inventário, mercado, saque, voo ao equipar), nas duas janelas, no protótipo.
+
+**O crescente do 64:** a captura do Jean é a imagem ampliada 8× (os pixels em blocos de 8, alinhados ao arquivo);
+lida bloco a bloco e comparada com o 64 anterior, ela muda 3 pixels: os dois da ponta de baixo (a fileira que descia)
+saem e um pixel aceso entra ao lado da fileira de cima deles, virando a ponta para a abertura. No gerador, a última
+fileira do desenho do crescente passa a ser `...+#+.`. O 64 gerado confere com a correção em todos os pixels do livro
+e difere do anterior só nesses 3 pixels.
+
+**Os tamanhos** (`ferramentas/arte/desenhar_grimorio_fechado_pixel.py`, gravado em `livro-fechado-tamanhos/`; as
+pastas anteriores ficam intactas): o corpo é o mesmo modelo 3D com as mesmas regras de luz, rasterizado na grade de
+cada tamanho, na mesma proporção do quadro (a escala 38/64 do lado); o emblema é desenhado por tamanho, sempre com os
+lados em degraus de 2 por 1 e de 1 por 2 e com 1 pixel de folga entre as peças:
+- *48:* o losango um passo menor (13 por 13), o crescente em 5 fileiras com a mesma ponta para a abertura e o ponto;
+- *40:* o losango menor (10 por 10), o crescente em 4 fileiras e sem o ponto (não cabe com folga); o emblema 1 pixel
+  para o lado da lombada, longe do fecho;
+- *32:* o losango do 40 e o crescente reduzido a um "C" de 3 fileiras, sem o ponto.
+Comparei variantes antes de escolher (no 48, o crescente de 4 fileiras embaralhava; no 40, o de 3 fileiras com ponto
+virava pontos soltos; no 32, um losango menor com um ponto lia como um olho). 18 a 21 cores.
+
+**A conferência** (`fotografar_livro.mjs` com a versão "tamanhos": `SAIDA=ferramentas/prototipos/hud/capturas-livro-tamanhos
+VERSOES=atual,tamanhos`; `comparar_livro_tamanhos.py` monta as comparações em `capturas-livro-tamanhos/`), em
+1500×950 e 1280×720: `prancha-tamanhos.png` (os quatro em 1× sobre o carvão e 6×), `prancha-vizinhos.png` (uma linha
+por tamanho, ao lado do escudo, do cajado e do orbe), `prancha-zoom.png` (a ficha, a venda, o corpo, a mochila e o
+saque em 48 e 64, do jogo, ampliados 3×) e `comparacao-<janela>-<lugar>.png` (o jogo de hoje e o grimório, lado a
+lado: a ficha, o Inventário, a venda, a dica do mercado, o cartão do saque, o voo e as telas inteiras). O relatório
+confere que cada lugar usa o arquivo nativo do tamanho dele: 32 na ficha e no mercado, 40 no corpo e na mochila do
+Inventário, 64 e 48 no cartão do saque (o voo ao equipar parte do 48, como os outros itens). Sem erro no console.
+
+**A avaliação:** nos quatro tamanhos o livro lê como o mesmo objeto: a lombada com os reforços, a capa violeta em
+planos, as páginas no pé, as cantoneiras e o fecho de latão e o losango com o crescente. No 32, o detalhe fica no
+limite: os reforços e as cantoneiras viram um ou dois pixels, as páginas duas fileiras, e o crescente um "C"; o
+losango ocupa boa parte da capa, o que ajuda a leitura mas pesa um pouco. Espera a avaliação do Jean antes da
+integração.

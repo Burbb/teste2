@@ -1,0 +1,186 @@
+[
+ {
+  "nome": "normal-atual-livro-mercado",
+  "sprite-livro": [
+   "slot-px.mini→32",
+   "slot-px.celula→32",
+   "slot-px.celula→32"
+  ],
+  "orbe-32": [
+   "slot-px.r-comum→0",
+   "slot-px.celula→32"
+  ]
+ },
+ {
+  "nome": "normal-atual-livro-inventario",
+  "sprite-livro": [
+   "slot-px.mini→32",
+   "espaco.slot-px→32",
+   "slot-px.celula→32",
+   "slot-px.celula→32"
+  ],
+  "orbe-40": [
+   "slot-px.celula→40"
+  ]
+ },
+ {
+  "nome": "normal-atual-livro-saque-cartao",
+  "sprite-livro": [
+   "slot-px.mini→32",
+   "achado-arte→64",
+   "achado-arte.pequena→48"
+  ]
+ },
+ {
+  "nome": "normal-atual-livro-saque-voo",
+  "sprite-livro": [
+   "slot-px.mini→32",
+   "achado-arte→64",
+   "achado-arte.pequena→48",
+   "voo-item→52"
+  ]
+ },
+ {
+  "nome": "normal-tamanhos-livro-mercado",
+  "livro-32": [
+   "slot-px.mini→32",
+   "slot-px.celula→32",
+   "slot-px.celula→32"
+  ],
+  "orbe-32": [
+   "slot-px.r-comum→0",
+   "slot-px.celula→32"
+  ]
+ },
+ {
+  "nome": "normal-tamanhos-livro-inventario",
+  "livro-32": [
+   "slot-px.mini→32"
+  ],
+  "livro-40": [
+   "espaco.slot-px→40",
+   "slot-px.celula→40",
+   "slot-px.celula→40"
+  ],
+  "orbe-40": [
+   "slot-px.celula→40"
+  ]
+ },
+ {
+  "nome": "normal-tamanhos-livro-saque-cartao",
+  "livro-32": [
+   "slot-px.mini→32"
+  ],
+  "livro-64": [
+   "achado-arte→64"
+  ],
+  "livro-48": [
+   "achado-arte.pequena→48"
+  ]
+ },
+ {
+  "nome": "normal-tamanhos-livro-saque-voo",
+  "livro-32": [
+   "slot-px.mini→32"
+  ],
+  "livro-64": [
+   "achado-arte→64"
+  ],
+  "livro-48": [
+   "achado-arte.pequena→48",
+   "voo-item→54"
+  ]
+ },
+ {
+  "nome": "baixa-atual-livro-mercado",
+  "sprite-livro": [
+   "slot-px.mini→32",
+   "slot-px.celula→32",
+   "slot-px.celula→32"
+  ],
+  "orbe-32": [
+   "slot-px.r-comum→0",
+   "slot-px.celula→32"
+  ]
+ },
+ {
+  "nome": "baixa-atual-livro-inventario",
+  "sprite-livro": [
+   "slot-px.mini→32",
+   "espaco.slot-px→32",
+   "slot-px.celula→32",
+   "slot-px.celula→32"
+  ],
+  "orbe-40": [
+   "slot-px.celula→40"
+  ]
+ },
+ {
+  "nome": "baixa-atual-livro-saque-cartao",
+  "sprite-livro": [
+   "slot-px.mini→32",
+   "achado-arte→64",
+   "achado-arte.pequena→48"
+  ]
+ },
+ {
+  "nome": "baixa-atual-livro-saque-voo",
+  "sprite-livro": [
+   "slot-px.mini→32",
+   "achado-arte→64",
+   "achado-arte.pequena→48",
+   "voo-item→51"
+  ]
+ },
+ {
+  "nome": "baixa-tamanhos-livro-mercado",
+  "livro-32": [
+   "slot-px.mini→32",
+   "slot-px.celula→32",
+   "slot-px.celula→32"
+  ],
+  "orbe-32": [
+   "slot-px.r-comum→0",
+   "slot-px.celula→32"
+  ]
+ },
+ {
+  "nome": "baixa-tamanhos-livro-inventario",
+  "livro-32": [
+   "slot-px.mini→32"
+  ],
+  "livro-40": [
+   "espaco.slot-px→40",
+   "slot-px.celula→40",
+   "slot-px.celula→40"
+  ],
+  "orbe-40": [
+   "slot-px.celula→40"
+  ]
+ },
+ {
+  "nome": "baixa-tamanhos-livro-saque-cartao",
+  "livro-32": [
+   "slot-px.mini→32"
+  ],
+  "livro-64": [
+   "achado-arte→64"
+  ],
+  "livro-48": [
+   "achado-arte.pequena→48"
+  ]
+ },
+ {
+  "nome": "baixa-tamanhos-livro-saque-voo",
+  "livro-32": [
+   "slot-px.mini→32"
+  ],
+  "livro-64": [
+   "achado-arte→64"
+  ],
+  "livro-48": [
+   "achado-arte.pequena→48",
+   "voo-item→51"
+  ]
+ }
+]
