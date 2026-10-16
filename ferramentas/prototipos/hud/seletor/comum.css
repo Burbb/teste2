@@ -1,0 +1,11 @@
+/* O seletor de habilidades: o que as três propostas (A, B, C) têm em comum (experimento; fotografar_seletor.mjs põe
+   na página, o jogo não carrega). Só a janelinha de Habilidades muda ([data-tipo="habilidades"]); a de Itens fica como
+   no jogo. O motivo de uma habilidade indisponível vem pronto do motor (Vigor insuficiente, Flechas insuficientes...) e
+   aparece escrito na linha (.rj-motivo); no jogo de hoje, só na dica. */
+.roda-janela[data-tipo="itens"] .rj-motivo { display: none; }
+.roda-janela[data-tipo="habilidades"] .rj-linha { transform: none; }
+.roda-janela[data-tipo="habilidades"] .rj-linha.bloqueada > :not(.tecla) { filter: none; }   /* legível, não só apagada */
+.roda-janela[data-tipo="habilidades"] .rj-linha.bloqueada .rj-icone img { filter: grayscale(0.7) brightness(0.75); }
+.roda-janela[data-tipo="habilidades"] .rj-linha.bloqueada .rj-nome { color: #a59c8b; }
+.roda-janela[data-tipo="habilidades"] .rj-motivo { font-family: var(--texto); font-size: 12.5px; line-height: 1.15; color: #e08a78; }
+.roda-janela[data-tipo="habilidades"] .rj-info { font-variant-numeric: tabular-nums; }

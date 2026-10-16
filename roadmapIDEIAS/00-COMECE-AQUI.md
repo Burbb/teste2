@@ -2655,3 +2655,22 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   contra o jogo com a folha da alternativa por cima, na mesma luta: parada, mouse, pressionada e a comitiva saem
   pixel a pixel iguais; nos outros estados, a diferença é a do céu e do pulso da carta entre as fotos (e, no
   movimento reduzido, 1 px de posição da roda em uma das duas), e a janelinha, que não mudou.
+
+### 17/10/2026 — Propostas: o encaixe do cajado, os ícones das escolhas em 24 px e o seletor de habilidades
+
+Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesmo nome); nada disso entrou no jogo.
+- **O encaixe do cajado:** pelo retorno do Jean ("a base azul do cristal parece ultrapassar o alojamento de madeira"),
+  a pedra entra na taça, a borda da frente cobre a base dela, as garras nascem da borda e uma sombra de contato separa
+  o cristal da madeira; o resto do desenho é o mesmo. `desenhar_cajado_pixel.py` gravado em `cajado-encaixe/`; antes e
+  depois em `capturas-cajado-encaixe/` (os arquivos, conferidos primeiro em 32 e 40, e o jogo). Espera aprovação.
+- **Os ícones das escolhas em 24 px:** a poção e a bandagem de 24 (as do topo) e a bomba de 24, agora com a rede de
+  cordão, nas opções reais (a bandagem de Odette, os remédios dos enfermos com e sem poção) e numa opção simulada para a
+  bomba; a altura das opções não muda. Fotos em `capturas-escolhas-24/`. Espera a conferência da bandagem e da bomba.
+- **O seletor de habilidades:** três estruturas para o painel de Habilidades (A lista integrada, B grade compacta,
+  C losangos), com os mesmos dados e ícones, o mesmo caminho até o alvo, o motivo da indisponível escrito na linha.
+  Fotografadas contra o jogo de hoje na mesma luta, em 1500×950 e 1280×720, com a comitiva, os nomes longos do
+  Arqueiro e um teste de 10 habilidades (o jogo tem 7 no máximo); o caminho (abrir, Esc, teclado, alvo, Voltar)
+  conferido nas 24 combinações. Recomendação: a B. Espera a escolha do Jean.
+- **Continua como está no jogo:** o cajado (sprite antigo), os ícones das escolhas (sprite 16×16), o painel de
+  Habilidades. `tests/navegador/cenarios.py` ganhou `NIVEL`, `ESPEC`, `HABILIDADES=todas`, `VIDA` e `REC` no tutorial
+  (para as fotos).

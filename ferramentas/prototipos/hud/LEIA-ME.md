@@ -1766,3 +1766,151 @@ Inventário), o cartão do saque e o voo ao equipar, e a roda na luta. 1500×950
 `"arco"` e `"cajado"` com `[32, 40, 48, 64]` em `TAMANHOS` e `arco: "arco", cajado: "cajado"` em `ITEM` (o
 comentário que cita o arco e o cajado entre as armas sem desenho também); conferir pixel a pixel com os desta pasta;
 as lacunas em `docs/ARQUITETURA.md`.
+
+### O encaixe do cajado (proposta, sem versão)
+
+**O retorno do Jean (16/10/2026):** "a base azul do cristal parece ultrapassar o alojamento de madeira". Corrigir só o
+encaixe: a parte de baixo da pedra entra no suporte, a borda da frente cobre a base dela e as garras se apoiam
+claramente no alojamento, com sombra de contato separando os materiais; a identidade, a diagonal e as proporções
+ficam. Conferir primeiro em 32 e 40, depois em 48 e 64.
+
+**O que mudou** (`ferramentas/arte/desenhar_cajado_pixel.py`, gravado em `cajado-encaixe/`; o antes continua em
+`arco-cajado-pixel/`):
+- a pedra entra na taça: o cristal que fica abaixo da boca da taça vira madeira (a taça engole a ponta de baixo da
+  pedra, em vez de a pedra passar por fora dela);
+- a borda da frente: uma faixa de madeira que atravessa a base da pedra na boca da taça, da largura da taça ou da
+  pedra (a maior), em três tons pela direção (acesa do lado da luz);
+- a sombra de contato: um degrau mais escuro no cristal logo acima da borda, que separa a pedra da madeira;
+- as garras: nascem da borda (não do meio da pedra) e sobem só sobre a pedra, com as pontas mais claras e uma sombra
+  de 1 pixel no cristal junto delas;
+- a limpeza: o buraco de 1 pixel que sobrava entre a garra e a taça é preenchido com madeira antes do contorno (virava
+  uma mancha de contorno).
+As medidas do 32 (as outras saem da escala, como antes): a pedra um pouco mais comprida (`h` 6,2), a boca da taça
+(`taca` 0,62), a borda (`beira` 1,7) e a folga da borda sobre a pedra (`folga` 0,4). A haste, a empunhadura, a
+ponteira, as cores e a diagonal são as de antes.
+
+**A comparação** (`comparar_cajado_encaixe.py` → `capturas-cajado-encaixe/`):
+- `prancha-arquivos.png`: os arquivos em 1× sobre o carvão e ampliados, antes e depois em cada tamanho, 32 e 40 primeiro;
+- `prancha-jogo.png`: os espaços do jogo (a ficha, a venda, o corpo e a mochila do Inventário, o saque em 48 e 64),
+  antes em cima e depois embaixo, ampliados 3×;
+- as fotos inteiras do Mago (`fotografar_arco_cajado.mjs` com `CLASSES=mago`, `PROPOSTA=cajado-encaixe` e
+  `SAIDA=capturas-cajado-encaixe`): o mercado (a ficha, a aba Vender, a dica), o Inventário, o saque (o cartão e o
+  voo) e a roda na luta, em 1500×950 e 1280×720, o jogo de hoje ("atual", o sprite antigo) e a proposta nova. A roda
+  continua com o sprite (o Atacar do Mago não muda). Sem erro no console.
+
+**Leitura de quem desenhou:** em 32 e 40, a pedra agora termina dentro da madeira: a borda da frente corta a base
+azul e a ponta de baixo do cristal some na taça; as garras são 1 ou 2 pixels de madeira sobre a pedra. Em 48 e 64, a
+borda e a sombra de contato aparecem como uma faixa clara de madeira e um degrau escuro no azul, e as garras se lêem
+como apoiadas na borda. O que custa: a pedra perde um pouco de azul embaixo (parece um pouco menor no 32); a borda da
+frente, no 32, é uma linha de 1 a 2 pixels.
+
+**Para integrar (se aprovado):** gravar pelo script em `rpg/web/static/hud/icones/`; em `icones.js`, `"cajado"`
+com `[32, 40, 48, 64]` em `TAMANHOS` e `cajado: "cajado"` em `ITEM`; conferir pixel a pixel com `cajado-encaixe/`;
+as lacunas em `docs/ARQUITETURA.md`.
+
+## Os ícones das escolhas em 24 px (proposta, sem versão)
+
+**O pedido de Jean (16/10/2026):** a direção de 24 px aprovada; preparar poção, bandagem e bomba em 24 nas opções
+reais (a bomba pode continuar numa opção simulada, identificada como tal), conferir principalmente a bandagem e a
+bomba antes da integração, preservar a altura das opções e centralizar a escolha das imagens no `Icones`.
+
+**Os três desenhos de 24** (`escolhas-pixel/`):
+- a poção e a bandagem: os arquivos de 24 que já estão no jogo (os recursos do topo), sem mudança;
+- a bomba: desenhada na grade de 24 (`escolhas_icones.py`, pelas medidas do `desenhar_bomba_pixel.py`); nesta
+  rodada ganhou a rede de cordão do 32 (`alca`), que em 24 ainda se lê e dá à bomba o mesmo desenho da bolsa.
+
+**O caminho no jogo (a proposta):** `Icones.escolha(id, lado)` decide a imagem pelo id do consumível e só devolve um
+desenho quando existe o arquivo nativo daquele lado; senão, a opção fica com o sprite de hoje. O `escolhas.js` chama
+esse papel nas duas linhas (`meta.item` e `meta.gasta`).
+
+**Fotos** (`fotografar_escolhas.mjs` com `VERSOES=atual,p24` e `SAIDA=capturas-escolhas-24`; `comparar_escolhas.py
+capturas-escolhas-24` monta `comparacao-<janela>-<caso>.png` e `prancha-zoom.png`): "Estancar o sangue com uma
+bandagem" (Odette na estrada), "Deixar remédios na porta" com e sem poção (os enfermos) e a bomba numa opção
+simulada (o mesmo caminho com o id da bomba, marcada "simulada" no texto e no nome do arquivo), em 1500×950 e
+1280×720. **A altura das opções não muda:** 64 px com a nota, 91 com o motivo, 41 sem nota, nas duas versões
+(`medidas.json`). Sem erro no console.
+
+**Leitura:** a bandagem de 24 é o rolo de pano do topo, reconhecível ao lado do texto; a bomba de 24 é o pote preto
+com a rede e o pavio, a mesma da bolsa. Os dois ocupam a altura do texto da opção sem empurrar nada; o texto começa
+8 px mais à direita que com o sprite.
+
+**Para integrar (se aprovado):** o papel `Icones.escolha` em `icones.js` (com o lado 24), as duas linhas em
+`escolhas.js`, a bomba de 24 pelo `desenhar_bomba_pixel.py` (as medidas de `escolhas_icones.py`) e `24` nos
+`TAMANHOS` da bomba.
+
+## O seletor de habilidades: três propostas (experimento, sem versão)
+
+**O pedido de Jean (16/10/2026):** ampliar o estudo do painel que abre em Habilidades com três estruturas diferentes
+(não três cores), só no protótipo, com as mesmas habilidades, dados e ícones: A, lista integrada (à Octopath
+Traveler); B, grade compacta (o princípio de acesso por ícone do Baldur's Gate 3); C, losangos. Em comum: a HUD de hoje,
+o mesmo caminho (a habilidade, depois o alvo, sem confirmação), nome e custo visíveis antes do mouse, as dicas, os
+motivos, os atalhos e o Esc; a habilidade sem recurso legível, não só apagada; nenhum número inventado; nada de
+habilidades preparadas, limites ou categorias.
+
+**Quantas habilidades:** no jogo de hoje, 7 no nível 12 (o máximo) em todas as classes e especializações. O teste de
+capacidade dá ao Guerreiro as das duas especializações (10), para nenhuma proposta contar com 7.
+
+**Os arquivos** (`seletor/`; o jogo não carrega nada daqui):
+- `comum.css`: só a janelinha de Habilidades muda (a de Itens fica como no jogo); a linha indisponível fica legível
+  (o ícone meio cinza, o nome um pouco mais escuro, sem apagar o resto) e traz o motivo escrito embaixo ou ao lado
+  (`.rj-motivo`: o texto que o motor já manda, "Vigor insuficiente", "Foco insuficiente"; hoje ele só aparece na dica);
+- `a-lista.css`, `b-grade.css`, `c-losangos.css`: a estrutura de cada proposta;
+- na página da foto, uma cópia do `escolhas.js` com duas linhas a mais: a janelinha diz se é de Habilidades ou de Itens
+  (`data-tipo`) e a linha indisponível ganha o `.rj-motivo`. Nada mais muda no código: a ordem, as teclas 1 a 9, o
+  clique, a dica, o tremor e o aviso da linha bloqueada, o Esc, o × e o clique fora são os de hoje.
+
+**As três estruturas:**
+- **A, lista integrada:** um painel só, de superfície comum, com as habilidades em linhas separadas por divisórias
+  leves, sem caixa em cada uma. Em cada linha: a tecla numa coluna à esquerda, o ícone sem moldura, o nome (e embaixo o
+  motivo, se for o caso) e o custo alinhado à direita. O mouse e o foco acendem a linha inteira (uma faixa de latão à
+  esquerda e um véu quente); pressionada, ela afunda. Linhas de 39 px; acima de 10 habilidades em 1280×720, a lista
+  rola dentro do painel com o título parado.
+- **B, grade compacta:** duas colunas de opções pequenas: o ícone num nicho de ferro de 40 px (o do jogo) com a tecla
+  no canto, o nome e, embaixo, o custo e o motivo. Tudo visível sem mouse. O mouse acende o nicho em latão; a
+  indisponível tem a borda tracejada.
+- **C, losangos:** duas colunas regulares, lidas linha a linha como as teclas (1 2 / 3 4...); o ícone dentro de uma
+  moldura em losango de ferro escuro (a moldura gira, o desenho não, e nenhum canto do ícone é cortado); a tecla numa
+  etiqueta antes do nome, e embaixo o custo e o motivo, fora do losango. A área de clique é a opção inteira (o losango
+  e o texto). O mouse e o foco acendem o losango em latão; pressionado, ele afunda; a indisponível tem o losango
+  tracejado. Na primeira versão a coluna da direita descia meia linha (os losangos encaixados); saiu, porque deixava a
+  ordem das teclas em zigue-zague, sobrava um buraco com número ímpar e o painel ficava alto demais.
+
+**Fotos** (`fotografar_seletor.mjs` → `capturas-seletor/`; `comparar_seletor.py` monta, em tamanho real,
+`<janela>-<luta>-paineis.png`, o jogo de hoje e as três lado a lado, e `<janela>-<luta>-interacoes.png`, o mouse numa
+habilidade, o mouse numa indisponível e o foco do teclado; as telas inteiras e a escolha do alvo ficam nos arquivos de
+cada versão): a mesma luta (o tutorial contra lobos, com Morel e Odette na comitiva, pouco recurso para duas
+habilidades ficarem sem), em 1500×950 e 1280×720, para o Guerreiro paladino de nível 12, o Arqueiro sombra de nível 12
+(os nomes longos, Flecha Envenenada e Chuva de Flechas, e o custo em flechas) e o teste de capacidade (10). Sem erro no
+console. O roteiro confere o caminho em cada versão (`relatorio.json`): o clique abre; o Esc fecha; a tecla 2 abre e o
+Tab entra no painel; o clique numa habilidade de um alvo leva à escolha do alvo; o Voltar devolve a roda sem painel.
+Passou nas 24 combinações.
+
+**As medidas** (o painel aberto; nenhum nome ou custo cortado em nenhuma; nenhuma cobre cartas, barras ou a roda):
+
+| | 7 habilidades | 10 habilidades | menor área de clique | em 1280×720 |
+|---|---|---|---|---|
+| hoje | 250×395 | 250×545 | 46 px | com 10, o painel sobe sobre os dois lobos e três botões da roda |
+| A lista | 292×320 | 292×437 | 39 px (a linha inteira, 292 de largura) | cabe; com 10, sobe 10 px |
+| B grade | 404×250 | 404×302 | 48 px | cabe |
+| C losangos | 440×305 | 440×376 | 56 px | cabe; anda 32 px para a esquerda (mais largo) |
+
+**Pontos fortes e custos:**
+- **A, lista:** a leitura mais rápida para comparar custos (todos numa coluna, à direita) e escolher pelo nome; a
+  mais estreita; o motivo cabe inteiro embaixo do nome. Custos: o ícone, sem moldura e menor, perde presença (a
+  identidade fica no texto); a altura cresce uma linha por habilidade, e com mais de 10 rola em 1280×720; as linhas
+  são mais baixas que as de hoje (39 contra 46 px), ainda confortáveis porque ocupam a largura toda.
+- **B, grade:** a mais baixa e a que melhor cresce (uma linha a cada duas habilidades: umas 14 cabem embaixo da arena em 1280×720 sem subir); o
+  ícone fica no nicho de ferro do jogo, reconhecível de relance; a tecla no canto como na roda. Custos: mais larga;
+  os custos não ficam numa coluna só (comparar exige o olho em zigue-zague); o motivo é o menor texto (11,5 px).
+- **C, losangos:** a identidade mais própria (a moldura em losango não existe em outro lugar da HUD) e a maior área
+  de clique. Custos: a mais larga e menos densa (o losango gasta espaço em volta do ícone); o ícone parece menor
+  dentro da moldura; precisa andar para a esquerda em 1280×720.
+- **Comum a B e C:** a dica do jogo abre ao lado da habilidade com o mouse; numa habilidade da coluna da esquerda,
+  ela cobre a coluna da direita enquanto o mouse estiver ali. Numa integração, a dica passaria a abrir encostada na
+  borda do painel.
+- **O jogo de hoje:** só a linha indisponível apagada, sem o motivo escrito; com 10 habilidades em 1280×720, o painel
+  sobe e cobre os inimigos e a roda (no jogo de hoje, com 7, isso não acontece).
+
+**Recomendação de quem fez:** a B. Ela mantém o ícone como no resto da HUD, mostra tudo sem mouse e é a única que
+cresce sem pesar na altura, que é o que falta em 1280×720. A A fica como a melhor para ler custos, se o Jean preferir
+texto a ícone. Nada foi integrado; os ícones das habilidades não foram redesenhados.

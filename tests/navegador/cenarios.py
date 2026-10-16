@@ -789,7 +789,9 @@ def tutorial(ui):
     o primeiro atendimento ou tratamento grátis já usado. NOME: o nome do herói (padrão Jean; para conferir nome longo).
     VITRINE=1 (o experimento de itens e ícones): machado, espada, escudo e anel na mochila, escudo e anel vestidos,
     unguento e bomba de fumaça na bolsa; VITRINE=2, sem o machado e com
-    a armadura (cota) vestida. ARMA=machado: a arma vestida. Sair leva ao título, com o save
+    a armadura (cota) vestida. ARMA=machado: a arma vestida. NIVEL e ESPEC: o herói já nesse nível, especializado (o
+    seletor de habilidades); HABILIDADES=todas: também as habilidades da outra especialização (um teste de capacidade
+    do seletor, com mais habilidades do que um herói tem hoje). Sair leva ao título, com o save
     (para carregar com orientações pendentes)."""
     from rpg import abertura as ab, itens, missoes, sobrevivencia
     from rpg.__main__ import menu_principal
@@ -866,6 +868,15 @@ def tutorial(ui):
     vestir_arma(g)
     if os.environ.get("PROTECAO"):  # PROTECAO=mendigo (ou santuario): a proteção que levanta uma vez
         g.marcar("bencao_fenix", os.environ["PROTECAO"])
+    if os.environ.get("NIVEL"):  # o herói num nível alto, especializado (ESPEC, ou a primeira da classe)
+        from rpg import dev
+        from rpg.classes import CLASSES, SPECS
+        dev.subir_ate(g, int(os.environ["NIVEL"]), spec=os.environ.get("ESPEC"))
+        if os.environ.get("HABILIDADES") == "todas":  # o teste de capacidade: as da outra especialização também
+            outra = next(e for e in CLASSES[j.classe]["specs"] if e != j.spec)
+            j.habilidades += [h for nv, h in SPECS[outra]["habilidades"] if nv <= j.nivel and h not in j.habilidades]
+        j.hp = max(1, int(j.max_hp * float(os.environ.get("VIDA", "1"))))
+        j.rec = int(j.max_rec * float(os.environ.get("REC", "1")))
     try:  # a morte no modo hardcore (HARDCORE=1) já na luta preparada leva ao título, como no jogo
         if os.environ.get("LUTA"):  # uma luta comum contra LUTA (família), para os selos das cartas
             g.ui.cena(g.loc["nome"], g.contexto_cena(), "evento")

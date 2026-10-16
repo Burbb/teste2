@@ -1,0 +1,28 @@
+/* A — Lista integrada. Um painel só, de superfície comum; as habilidades em linhas separadas por divisórias leves, sem
+   caixa em volta de cada uma (como os menus de comando dos RPGs por turnos, à Octopath Traveler, na nossa HUD de ferro).
+   Cada linha: a tecla numa coluna própria à esquerda, o ícone sem moldura, o nome (e embaixo, se for o caso, o motivo da
+   indisponibilidade) e o custo alinhado à direita. O mouse e o foco acendem a linha inteira: uma faixa de latão à
+   esquerda e um véu quente que some para a direita. Linhas de 39 px: as 10 do teste de capacidade cabem sem rolar
+   em 1280×720; acima disso, a lista rola dentro do painel (o título fica). */
+.roda-janela[data-tipo="habilidades"] { width: 292px; padding: 6px 0 6px; display: flex; flex-direction: column;
+  max-height: min(calc(100vh - 16px), 470px); border: 1px solid #3a3d43; background: linear-gradient(rgba(255, 255, 255, 0.035), rgba(0, 0, 0, 0.2)), #111215; }
+.roda-janela[data-tipo="habilidades"] .rj-titulo { margin: 0 10px 4px 14px; padding-bottom: 5px; border-bottom: 1px solid #2c2f35; }
+.roda-janela[data-tipo="habilidades"] .rj-lista { gap: 0; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #4a4e56 transparent; }
+.roda-janela[data-tipo="habilidades"] .rj-lista > li + li .rj-linha { border-top: 1px solid rgba(255, 255, 255, 0.06); }
+.roda-janela[data-tipo="habilidades"] .rj-linha { grid-template-columns: 14px 32px 1fr auto; grid-template-rows: auto auto; column-gap: 9px; row-gap: 1px;
+  padding: 3px 14px 3px 10px; border: 0; border-radius: 0; background: none; box-shadow: none; }
+.roda-janela[data-tipo="habilidades"] .rj-linha .tecla { position: static; grid-column: 1; grid-row: 1 / span 2; align-self: center;
+  font-family: var(--num); font-size: 13px; color: #8d8574; text-align: center; }
+.roda-janela[data-tipo="habilidades"] .rj-linha .rj-icone { grid-column: 2; grid-row: 1 / span 2; width: 32px; height: 32px; border: 0; background: none; }
+.roda-janela[data-tipo="habilidades"] .rj-linha .rj-nome { grid-column: 3; grid-row: 1; align-self: end; font-size: 15px; color: #ece2cc; }
+.roda-janela[data-tipo="habilidades"] .rj-linha .rj-motivo { grid-column: 3; grid-row: 2; align-self: start; }
+.roda-janela[data-tipo="habilidades"] .rj-linha:not(.bloqueada) .rj-nome { grid-row: 1 / span 2; align-self: center; }
+.roda-janela[data-tipo="habilidades"] .rj-linha .rj-info { grid-column: 4; grid-row: 1 / span 2; align-self: center; justify-self: end; font-size: 16px; }
+.roda-janela[data-tipo="habilidades"] .rj-linha:is(:hover, :focus-visible) { background: linear-gradient(90deg, rgba(201, 161, 74, 0.17), rgba(201, 161, 74, 0.03) 75%, transparent);
+  box-shadow: inset 3px 0 0 var(--latao); border-color: rgba(255, 255, 255, 0.06); outline: none; }
+.roda-janela[data-tipo="habilidades"] .rj-linha:is(:hover, :focus-visible) .rj-nome { color: #fff4dc; }
+.roda-janela[data-tipo="habilidades"] .rj-linha:is(:hover, :focus-visible) .tecla { color: var(--latao-claro); }
+.roda-janela[data-tipo="habilidades"] .rj-linha:focus-visible { outline: 2px solid var(--latao-claro); outline-offset: -2px; }
+.roda-janela[data-tipo="habilidades"] .rj-linha:active { background: rgba(0, 0, 0, 0.25); box-shadow: inset 3px 0 0 var(--latao), inset 0 2px 4px rgba(0, 0, 0, 0.6); }
+.roda-janela[data-tipo="habilidades"] .rj-linha.bloqueada:is(:hover, :focus-visible) { box-shadow: inset 3px 0 0 #8a3a2a;
+  background: linear-gradient(90deg, rgba(160, 60, 40, 0.14), transparent 75%); }
