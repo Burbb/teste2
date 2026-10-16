@@ -339,12 +339,13 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   tela usa então o sprite do jogo (`Icones.item(s) || S(s, 2)`). A origem e o destino de uma animação pedem o mesmo
   papel (o item que voa ao equipar, o selo de atributo, o consumível que cai na bolsa). Lacunas (desenho do jogo no
   lugar, sem trocar por desenho de outro tipo de item): as armas e peças de couro das outras classes (varinha,
-  orbe, livro), os itens únicos com desenho próprio, a tocha apagada, a bolsa vazia e o frasco vazio no topo, os inimigos e as cartas deles, os
+  livro), os itens únicos com desenho próprio, a tocha apagada, a bolsa vazia e o frasco vazio no topo, os inimigos e as cartas deles, os
   ícones de habilidade e de efeito, o covil vencido. O mercador da banca tem o busto no balcão (`telas/mercado.js`,
   com as cores da figura da banca).
 - O escudo e o Unguento de Prata (1.94.0), o machado e a Bomba de Fumaça (1.99.0) o arco (1.101.0,
   `desenhar_arco_pixel.py`; o Atacar da roda, o Tiro Duplo e o contrato continuam com o sprite) e o cajado (1.106.0,
-  `desenhar_cajado_pixel.py`; o Atacar do Mago na roda e o traço Conjurador continuam com o sprite) são desenhados em pixel art, cada
+  `desenhar_cajado_pixel.py`; o Atacar do Mago na roda e o traço Conjurador continuam com o sprite) e o orbe (1.107.0,
+  `desenhar_orbe_pixel.py`; a arma Orbe, o Foco Arcano e o Olho do Abismo) são desenhados em pixel art, cada
   tamanho na própria grade, por `ferramentas/arte/` (`desenhar_escudo_pixel.py`, `desenhar_unguento_pixel.py`,
   `desenhar_machado_pixel.py`, `desenhar_bomba_pixel.py`, com as etapas comuns em `pixel_comum.py`), que grava os
   arquivos prontos em `static/hud/icones/`; o jogo só lê os arquivos. O unguento e a bomba se acham só pelo id do

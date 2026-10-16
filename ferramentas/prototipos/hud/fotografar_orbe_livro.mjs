@@ -26,7 +26,12 @@ const PROPOSTA = path.resolve(process.env.PROPOSTA || path.join(aqui, "orbe-livr
 rmSync(SAIDA, { recursive: true, force: true });
 mkdirSync(SAIDA, { recursive: true });
 const espera = (ms) => new Promise((r) => setTimeout(r, ms));
-const TROCAS = [
+// (o orbe entrou no jogo na 1.107.0: quando o icones.js já o tem, a troca põe só o livro)
+const jaTemOrbe = readFileSync(path.join(raiz, "rpg/web/static/icones.js"), "utf8").includes('orbe: "orbe" };');
+const TROCAS = jaTemOrbe ? [
+  ['const TAMANHOS = {', 'const TAMANHOS = {"livro": [32, 40, 48, 64], '],
+  ['orbe: "orbe" };', 'orbe: "orbe", livro: "livro" };'],
+] : [
   ['const TAMANHOS = {', 'const TAMANHOS = {"orbe": [32, 40, 48, 64], "livro": [32, 40, 48, 64], '],
   ['cajado: "cajado" };', 'cajado: "cajado", orbe: "orbe", livro: "livro" };'],
 ];

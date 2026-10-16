@@ -2103,7 +2103,10 @@ rodada jogada antes; 1500×950 e 1280×720; movimento reduzido no Guerreiro): ab
 tecla 3 e setas, a poção indo para a mira dos aliados e o Voltar; nada cortado, nada cobre a arena, sem erro no
 console. As regras de uso, o turno, os destinatários e os itens que não servem são os do jogo (nada muda no motor).
 
-## O orbe e o livro do Mago (proposta, sem versão)
+## O orbe e o livro do Mago (o orbe aprovado e no jogo na 1.107.0; o livro, nova proposta abaixo)
+
+**O orbe entrou no jogo na 1.107.0**, idêntico ao de `orbe-livro-pixel/`. O livro fechado ficou como candidato
+(intacto em `orbe-livro-pixel/livro-*`); o Jean pediu outro conceito ("O grimório entreaberto", abaixo).
 
 **O pedido de Jean (17/10/2026):** o lote seguinte da skill `arte-itens-fenda`, só no protótipo: o orbe e o livro de
 equipamento, no nível do escudo e do machado (silhueta, volume, encaixes, materiais, luz), com a comparação no jogo.

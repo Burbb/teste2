@@ -2784,3 +2784,13 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   janelas (mercado, ficha, dica, Inventário, saque, voo, telas inteiras).
 - **Continua como está no jogo:** o orbe e o livro com o sprite antigo; o Grimório da interface e o livro da capela
   (outra etapa). Espera a avaliação do Jean.
+
+### 17/10/2026 — O orbe no jogo (1.107.0)
+
+- **Decisão de Jean:** o orbe aprovado como apresentado; o livro precisa de outro conceito (o fechado lembra uma
+  agenda de couro com fecho: pesado e genérico).
+- **Entrou:** `orbe-32/40/48/64` (com os @2x) em `hud/icones/`, gravados por `desenhar_orbe_pixel.py`, idênticos byte
+  a byte aos da proposta; `TAMANHOS.orbe` e `ITEM.orbe` em `icones.js` (a arma Orbe, o apoio Foco Arcano e o único
+  Olho do Abismo; nenhum outro papel usa o desenho "orbe").
+- **Conferido** (`fotografar_itens.mjs`, SO=orbe, 1500×950 e 1280×720): ficha 32, mercado e dica de comparação 32,
+  Inventário 40 (corpo e mochila), cartão do saque 64 e 48, voo ao equipar; o livro e a varinha continuam com o sprite.
