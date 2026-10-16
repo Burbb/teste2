@@ -2674,3 +2674,20 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Continua como está no jogo:** o cajado (sprite antigo), os ícones das escolhas (sprite 16×16), o painel de
   Habilidades. `tests/navegador/cenarios.py` ganhou `NIVEL`, `ESPEC`, `HABILIDADES=todas`, `VIDA` e `REC` no tutorial
   (para as fotos).
+
+### 17/10/2026 — Proposta: o seletor de habilidades D, faixas de tinta
+
+- **Decisão de Jean:** a direção do seletor é a referência D (faixas de tinta e gravura); ela passa à frente das
+  propostas A, B e C, que ficam guardadas para comparação. As integrações já aprovadas continuam autorizadas, em
+  entregas separadas.
+- **Feito, só no protótipo** (`ferramentas/prototipos/hud/LEIA-ME.md`, "O seletor de habilidades D"): o seletor da
+  largura da arena, embaixo dela, por cima do registro; as habilidades em faixas carvão de pontas irregulares (três
+  formas fixas pela posição), inclinadas 2°, em duas colunas na ordem das teclas; a examinada em marfim com a tecla
+  em latão; foco do teclado com marca própria; pressionado, indisponível com o motivo escrito; "Habilidades" pequeno e
+  "Esc · Voltar"; a entrada curta das faixas, sem atrasar a escolha; as setas andam pelas faixas. Sem a gravura do
+  capacete.
+- **Conferido:** o jogo de hoje e o D com os mesmos dados (três classes no nível 12 e um teste de 10 habilidades), em
+  1500×950, 1920×1080 e 1280×720, com a comitiva, a dica, a indisponível, a mira e o Voltar; abrir e fechar não mexe
+  nas cartas nem na rolagem; cliques rápidos, clique duplo, tecla segurada, clique durante a entrada e movimento
+  reduzido. Fotos em `capturas-seletor-d/`.
+- **Continua no jogo:** o seletor de hoje. Nenhuma regra, custo, habilidade, talento ou mira mudou. Espera a avaliação.

@@ -1,0 +1,126 @@
+/* D — Faixas de tinta (a referência escolhida pelo Jean em 17/10/2026). O seletor de Habilidades embaixo da arena, da
+   largura dela, por cima do registro: as habilidades em faixas escuras de pontas irregulares, como tinta ou papel gasto,
+   em duas colunas na ordem das teclas; a examinada (mouse ou teclado) vira uma faixa clara de texto escuro.
+   Só nesta página (fotografar_seletor_d.mjs, com a cópia do escolhas.js de d-escolhas.mjs); o jogo não carrega.
+
+   Como é construída (tudo em código, nada de imagem com texto):
+   - a faixa é o ::before da linha: uma cor de fundo (carvão, marfim ou o cinza da indisponível), um grão de pincel
+     horizontal (um ruído SVG fixo, sempre o mesmo, mais leve no marfim) e um degradê de volume; o recorte (clip-path) é uma de três formas
+     de pontas irregulares, escolhida pela posição (data-forma = 0, 1, 2, 0...): estável, sem desgaste ao acaso;
+   - a faixa inclina 2° (o ritmo diagonal da referência) e as filas descem um pouco para a esquerda; o texto, os
+     números e os ícones ficam retos, porque só o ::before gira;
+   - a tecla é um losango de carvão (um paralelogramo) na ponta esquerda da faixa; o ícone fica solto sobre a faixa,
+     sem nicho nem caixa; o nome e o motivo, depois o custo, cada um no seu elemento (a tradução troca só o texto);
+   - estados: normal carvão e marfim no texto; mouse ou teclado a faixa marfim, o texto escuro e a tecla em latão; foco
+     do teclado, além disso, um fio de latão embaixo da faixa e o anel na tecla; pressionado, a faixa afunda 2 px e
+     escurece; indisponível, a faixa cinza riscada, o nome e o custo legíveis e o motivo escrito embaixo do nome;
+   - entrada: cada faixa chega de 12 px à esquerda em 150 ms, uma depois da outra (18 ms); os botões aceitam clique e
+     tecla desde o início. Com movimento reduzido, sem deslocamento (a entrada e o recuo do pressionado saem). */
+:root {
+  --d-carvao: #232125; --d-marfim: #e6dbc0; --d-marfim-fundo: #cdbf9f; --d-cinza: #232125; --d-cinza-claro: #a59c8a;
+  --d-texto: #ece2cc; --d-tinta: #1d1913; --d-latao: #b08a45; --d-latao-claro: #dcb96c; --d-perigo: #e39a86; --d-perigo-escuro: #7a2617;
+  /* o grão do pincel: um ruído que corre na horizontal (frequência baixa em x, alta em y), em preto translúcido */
+  --d-grao: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='64'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012 .55' numOctaves='3' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .55 -.12'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  --d-grao-claro: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='64'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012 .55' numOctaves='3' seed='11' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .32 -.08'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+}
+:root body .roda-janela[data-tipo="habilidades"] {
+  display: flex; flex-direction: column; padding: 8px 20px 8px 16px; border: 0; border-radius: 0; animation: none;
+  background: radial-gradient(110% 80% at 50% 0%, rgba(58, 50, 38, 0.28), transparent 70%),
+    linear-gradient(180deg, #0d0d10, #0e0e11 85%, #101013);
+  box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.8), 0 14px 22px -8px rgba(0, 0, 0, 0.7);
+}
+/* o título: pequeno, abaixo das escolhas na hierarquia, com um fio de latão que se apaga */
+:root body .roda-janela[data-tipo="habilidades"] .rj-titulo { display: flex; align-items: center; gap: 10px; margin: 0 0 2px 4px;
+  font-family: var(--texto); font-weight: 600; font-size: 12.5px; letter-spacing: 0.16em; text-transform: uppercase; color: #b49a64; }
+:root body .roda-janela[data-tipo="habilidades"] .rj-titulo::after { content: ""; flex: 1; height: 1px;
+  background: linear-gradient(90deg, rgba(176, 138, 69, 0.55), rgba(176, 138, 69, 0)); }
+/* duas colunas na ordem das teclas; a lista rola dentro se não couber (o painel tem a altura que sobra na tela) */
+:root body .roda-janela[data-tipo="habilidades"] .rj-lista { display: grid; grid-auto-flow: column; grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(var(--filas, 4), auto); column-gap: 18px; row-gap: 2px; min-height: 0; overflow-y: auto; overflow-x: hidden;
+  padding: 4px 8px 4px calc(var(--filas, 4) * 4px + 2px); scrollbar-width: thin; scrollbar-color: #4a4640 transparent; }
+:root body .roda-janela[data-tipo="habilidades"] .rj-lista > li { translate: calc(var(--fila, 0) * -4px) 0; filter: drop-shadow(0 2px 1px rgba(0, 0, 0, 0.55)); }
+/* a examinada fica por cima das vizinhas (a faixa inclinada e o fio do foco não somem sob a faixa de baixo) */
+:root body .roda-janela[data-tipo="habilidades"] .rj-lista > li:has(.rj-linha:is(:hover, :focus-visible)) { z-index: 1; }
+
+/* a linha: a tecla, o ícone, o nome (e o motivo), o custo; a faixa é o ::before, atrás de tudo */
+:root body .roda-janela[data-tipo="habilidades"] .rj-linha { position: relative; isolation: isolate; display: grid;
+  grid-template-columns: 30px 36px minmax(0, 1fr) auto; align-items: center; column-gap: 9px; min-height: 56px; padding: 4px 16px 4px 0;
+  border: 0; border-radius: 0; background: none; box-shadow: none; outline: none; transform: none; color: var(--d-texto); transition: none;
+  animation: faixa-entra 150ms cubic-bezier(0.2, 0.8, 0.3, 1) backwards; animation-delay: calc(var(--i, 0) * 18ms); }
+@keyframes faixa-entra { from { opacity: 0; translate: -12px 0; } }
+:root body .roda-janela[data-tipo="habilidades"] .rj-linha::before { content: ""; position: absolute; z-index: -1; inset: 4px 0 4px 12px; rotate: -2deg;
+  background-color: var(--d-carvao); clip-path: var(--forma);
+  background-image: var(--d-grao), linear-gradient(180deg, rgba(255, 255, 255, 0.06), transparent 38%, rgba(0, 0, 0, 0.28));
+  background-size: 640px 64px, 100% 100%; }
+/* as três pontas irregulares (x em % da largura, y em % da altura), repetidas pela posição */
+:root body .roda-janela[data-tipo="habilidades"] li[data-forma="0"] .rj-linha { --forma: polygon(0% 34%, 1.8% 16%, 4.5% 6%, 3.4% 0%, 14% 3%, 52% 0%, 88% 4%, 95.5% 0%, 98% 9%, 96.8% 24%, 100% 38%, 97.6% 52%,
+  99.2% 70%, 96.2% 82%, 98.4% 100%, 72% 96%, 30% 100%, 7% 97%, 2.8% 100%, 3.6% 86%, 0.6% 72%, 2.2% 54%); }
+:root body .roda-janela[data-tipo="habilidades"] li[data-forma="1"] .rj-linha { --forma: polygon(2.6% 8%, 7% 0%, 40% 3%, 82% 0%, 97% 3%, 99.4% 14%, 97.2% 30%, 99.8% 48%, 96.4% 62%, 100% 80%, 97.6% 96%,
+  86% 100%, 48% 97%, 12% 100%, 4% 96%, 0.8% 84%, 2.4% 66%, 0% 48%, 1.8% 28%); }
+:root body .roda-janela[data-tipo="habilidades"] li[data-forma="2"] .rj-linha { --forma: polygon(0.4% 22%, 3% 4%, 10% 0%, 64% 4%, 98.6% 0%, 97% 16%, 99.6% 34%, 98% 50%, 100% 66%, 97.2% 88%, 99% 100%,
+  58% 98%, 18% 100%, 5.5% 95%, 1% 100%, 2% 80%, 0% 62%, 1.4% 42%); }
+
+/* a tecla: um paralelogramo de carvão na ponta da faixa (o número reto) */
+:root body .roda-janela[data-tipo="habilidades"] .rj-linha .tecla { position: relative; inset: auto; grid-column: 1; z-index: 1; display: grid; place-items: center;
+  width: 30px; height: 34px; padding: 0; font-family: var(--num); font-weight: 700; font-size: 18px; line-height: 1; color: var(--d-texto);
+  background: none; border: 0; box-shadow: none; }
+:root body .roda-janela[data-tipo="habilidades"] .rj-linha .tecla::before { content: ""; position: absolute; inset: 0; z-index: -1;
+  background: #0b0b0d; border: 1px solid #5c554a; transform: skewX(-10deg) rotate(-2deg); }
+:root body .roda-janela[data-tipo="habilidades"] .rj-linha .tecla:empty::before { display: none; }
+/* o ícone solto sobre a faixa: sem nicho, sem caixa */
+:root body .roda-janela[data-tipo="habilidades"] .rj-linha .rj-icone { grid-column: 2; display: grid; place-items: center; width: 36px; height: 36px;
+  border: 0; background: none; box-shadow: none; filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.75)); }
+:root body .roda-janela[data-tipo="habilidades"] .rj-linha .rj-texto { grid-column: 3; display: flex; flex-direction: column; justify-content: center; min-width: 0; }
+:root body .roda-janela[data-tipo="habilidades"] .rj-linha .rj-nome { font-family: var(--texto); font-weight: 700; font-size: 18px; line-height: 1.12;
+  color: var(--d-texto); text-wrap: balance; }
+:root body .roda-janela[data-tipo="habilidades"] .rj-linha .rj-motivo { font-family: var(--texto); font-size: 12.5px; line-height: 1.15; color: var(--d-perigo); }
+:root body .roda-janela[data-tipo="habilidades"] .rj-linha .rj-info { grid-column: 4; font-family: var(--num); font-weight: 600; font-size: 18px;
+  font-variant-numeric: tabular-nums; color: var(--d-texto); }
+:root body .roda-janela[data-tipo="habilidades"] .rj-linha .rj-info .gratis { font-size: 13px; color: #9fc58a; }
+
+/* examinada (mouse ou teclado): a faixa clara, o texto escuro, a tecla em latão */
+:root body .roda-janela[data-tipo="habilidades"] .rj-linha:is(:hover, :focus-visible)::before { background-color: var(--d-marfim);
+  background-image: var(--d-grao-claro), linear-gradient(180deg, rgba(255, 255, 255, 0.35), transparent 40%, rgba(80, 60, 30, 0.18)); }
+:root body .roda-janela[data-tipo="habilidades"] .rj-linha:is(:hover, :focus-visible) :is(.rj-nome, .rj-info) { color: var(--d-tinta); }
+:root body .roda-janela[data-tipo="habilidades"] .rj-linha:is(:hover, :focus-visible) .rj-info .gratis { color: #2f5a22; }
+:root body .roda-janela[data-tipo="habilidades"] .rj-linha:is(:hover, :focus-visible) .rj-icone { filter: drop-shadow(0 1px 0 rgba(60, 40, 10, 0.45)); }
+:root body .roda-janela[data-tipo="habilidades"] .rj-linha:is(:hover, :focus-visible) .tecla { color: #1a140c; }
+:root body .roda-janela[data-tipo="habilidades"] .rj-linha:is(:hover, :focus-visible) .tecla::before { background: var(--d-latao); border-color: #5e4620; }
+/* o foco do teclado tem marca própria: o fio de latão embaixo da faixa e o anel na tecla */
+:root body .roda-janela[data-tipo="habilidades"] .rj-linha:focus-visible::after { content: ""; position: absolute; left: 20px; right: 2px; bottom: 1px; height: 2px;
+  rotate: -2deg; background: linear-gradient(90deg, var(--d-latao-claro), var(--d-latao) 70%, rgba(176, 138, 69, 0)); }
+:root body .roda-janela[data-tipo="habilidades"] .rj-linha:focus-visible .tecla::before { outline: 2px solid var(--d-latao-claro); outline-offset: 2px; }
+/* pressionado: afunda 2 px e escurece */
+:root body .roda-janela[data-tipo="habilidades"] .rj-linha:active { translate: 2px 2px; }
+:root body .roda-janela[data-tipo="habilidades"] .rj-linha:active::before { background-color: var(--d-marfim-fundo);
+  background-image: var(--d-grao-claro), linear-gradient(180deg, rgba(0, 0, 0, 0.16), transparent 45%); }
+
+/* indisponível: a faixa cinza riscada; nome, custo e motivo legíveis */
+:root body .roda-janela[data-tipo="habilidades"] .rj-linha.bloqueada { cursor: not-allowed; }
+:root body .roda-janela[data-tipo="habilidades"] .rj-linha.bloqueada > * { filter: none; }
+:root body .roda-janela[data-tipo="habilidades"] .rj-linha.bloqueada .rj-icone img { filter: grayscale(0.75) brightness(0.72); }
+:root body .roda-janela[data-tipo="habilidades"] .rj-linha.bloqueada::before { background-color: var(--d-cinza);
+  background-image: var(--d-grao), repeating-linear-gradient(-58deg, rgba(255, 255, 255, 0.045) 0 2px, transparent 2px 8px); }
+:root body .roda-janela[data-tipo="habilidades"] .rj-linha.bloqueada .rj-nome { color: #b9af99; }
+:root body .roda-janela[data-tipo="habilidades"] .rj-linha.bloqueada .rj-info { color: var(--d-perigo); }
+:root body .roda-janela[data-tipo="habilidades"] .rj-linha.bloqueada:is(:hover, :focus-visible)::before { background-color: var(--d-cinza-claro);
+  background-image: var(--d-grao-claro), repeating-linear-gradient(-58deg, rgba(0, 0, 0, 0.07) 0 2px, transparent 2px 8px); }
+:root body .roda-janela[data-tipo="habilidades"] .rj-linha.bloqueada:is(:hover, :focus-visible) :is(.rj-nome) { color: var(--d-tinta); }
+:root body .roda-janela[data-tipo="habilidades"] .rj-linha.bloqueada:is(:hover, :focus-visible) :is(.rj-motivo, .rj-info) { color: var(--d-perigo-escuro); }
+:root body .roda-janela[data-tipo="habilidades"] .rj-linha.bloqueada:is(:hover, :focus-visible) .tecla { color: var(--d-texto); }
+:root body .roda-janela[data-tipo="habilidades"] .rj-linha.bloqueada:is(:hover, :focus-visible) .tecla::before { background: #4d463d; border-color: #2a2621; }
+:root body .roda-janela[data-tipo="habilidades"] .rj-linha.bloqueada:active { translate: none; }
+
+/* Esc · Voltar: discreto, embaixo à direita (o mesmo fechar da janelinha) */
+:root body .roda-janela[data-tipo="habilidades"] .rj-voltar { align-self: flex-end; display: inline-flex; align-items: center; gap: 7px; width: auto; height: auto;
+  margin: 2px 2px 0 0; padding: 3px 4px; font-family: var(--texto); font-size: 14px; line-height: 1.2; color: #a59c8b; background: none; border: 0; border-radius: 0; }
+:root body .roda-janela[data-tipo="habilidades"] .rj-voltar kbd { font-family: var(--num); font-size: 12px; padding: 1px 6px; color: #cfc4ad; background: #0b0b0d;
+  border: 1px solid #4f4a42; border-radius: 2px; }
+:root body .roda-janela[data-tipo="habilidades"] .rj-voltar:is(:hover, :focus-visible) { color: var(--d-texto); background: none; }
+:root body .roda-janela[data-tipo="habilidades"] .rj-voltar:is(:hover, :focus-visible) kbd { border-color: var(--d-latao); }
+:root body .roda-janela[data-tipo="habilidades"] .rj-voltar:focus-visible { outline: 2px solid var(--d-latao-claro); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  :root body .roda-janela[data-tipo="habilidades"] .rj-linha { animation: none; }
+  :root body .roda-janela[data-tipo="habilidades"] .rj-linha:active { translate: none; }
+}

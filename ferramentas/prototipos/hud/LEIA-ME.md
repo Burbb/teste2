@@ -1914,3 +1914,77 @@ Passou nas 24 combinações.
 **Recomendação de quem fez:** a B. Ela mantém o ícone como no resto da HUD, mostra tudo sem mouse e é a única que
 cresce sem pesar na altura, que é o que falta em 1280×720. A A fica como a melhor para ler custos, se o Jean preferir
 texto a ícone. Nada foi integrado; os ícones das habilidades não foram redesenhados.
+
+## O seletor de habilidades D: faixas de tinta (experimento, sem versão)
+
+**O pedido de Jean (17/10/2026):** a direção escolhida para o seletor é a referência D (faixas de tinta e gravura), que
+passa à frente das propostas A, B e C (guardadas acima para comparação). Um protótipo jogável com a linguagem da
+referência: faixas escuras irregulares, seleção clara, tipografia forte, composição integrada embaixo da arena. Os
+dados e o comportamento são os do jogo; a imagem é só referência artística. Sem a gravura grande do capacete, sem
+outra ilustração; "Habilidades" menor que na referência; "Esc · Voltar" discreto. O material novo não se espalha para
+outras telas, e o processo ainda não vira skill.
+
+**Os arquivos** (o jogo não carrega nada daqui):
+- `seletor/d-faixas.css`: as faixas, os estados, a composição e a entrada (o cabeçalho explica a construção);
+- `seletor/d-escolhas.mjs`: as trocas no `escolhas.js` que a página da foto recebe (só a janelinha de Habilidades;
+  a de Itens fica como no jogo). Cada troca procura o texto exato do jogo e para se ele mudou;
+- `fotografar_seletor_d.mjs` e `comparar_seletor_d.py`: as fotos, as medidas e as comparações em `capturas-seletor-d/`.
+
+**Composição:** o seletor ocupa a largura da arena, colado embaixo dela, por cima do registro (que fica em segundo
+plano enquanto se escolhe); a arena, as cartas, as barras e a roda continuam à vista. Ele é filho da camada da roda,
+em posição absoluta: abrir e fechar não empurra nada, não reinicia o cenário e não mexe na rolagem (medido nas 24
+combinações: as cartas e todas as rolagens iguais antes de abrir, aberto e depois de fechar). Duas colunas na ordem
+real das teclas (1, 2, 3, 4 descendo; depois a segunda coluna); a altura do painel é a que sobra na tela, e a lista
+rola dentro se não couber (com as 10 do teste de capacidade, ainda cabe em 1280×720 sem rolar).
+
+**As faixas e os materiais:**
+- cada faixa é o `::before` da linha: carvão (`#232125`) com um grão de pincel horizontal (um ruído SVG fixo, desenhado
+  em código) e um degradê de volume, recortada por `clip-path` numa de três formas de pontas irregulares. A forma vem
+  da posição (0, 1, 2, 0...), então a mesma habilidade no mesmo lugar tem sempre a mesma borda, sem desgaste ao acaso;
+- o ritmo diagonal: a faixa inclina 2° e cada fila desce 4 px para a esquerda; o texto, os números e os ícones ficam
+  retos, porque só o `::before` gira;
+- carvão, marfim (`#e6dbc0`) e latão envelhecido (`#b08a45`); sem moldura retangular em volta de cada opção e sem a
+  caixa preta atrás do ícone (o ícone fica solto sobre a faixa, com uma sombra de 1 pixel);
+- a tecla é um paralelogramo de carvão na ponta da faixa; o nome, o motivo e o custo são elementos separados (a
+  tradução troca só o texto; um nome longo quebra em duas linhas em vez de ser cortado);
+- o título "Habilidades" em versalete de 12,5 px com um fio de latão que se apaga: abaixo das escolhas na hierarquia.
+
+**Os estados:**
+- normal: faixa carvão, texto marfim, a separação pela própria forma e sombra das faixas;
+- mouse ou teclado (a examinada): a faixa marfim, o texto escuro, a tecla em latão; a dica do jogo abre ao lado do
+  painel (não sobre a outra coluna) e a prévia dos alvos acende, como hoje, também pelo foco do teclado;
+- foco do teclado: além disso, um fio de latão embaixo da faixa e um anel claro na tecla;
+- pressionado: a faixa afunda 2 px e escurece;
+- indisponível: a faixa cinza riscada, o ícone meio cinza, o nome e o custo legíveis, o motivo do motor escrito
+  embaixo do nome ("Vigor insuficiente"); o clique treme e avisa, como hoje.
+Nada é executado pelo destaque: o clique (ou Enter, ou a tecla do número) escolhe e segue o caminho de hoje (a mira,
+ou a execução direta), sem confirmação.
+
+**O teclado:** a tecla 2 abre e a primeira faixa já chega com o foco (pelo clique, o foco fica no botão, como hoje);
+as setas andam pelas faixas (cima e baixo na ordem, os lados trocam de coluna); Tab também; 1 a 9 escolhem; Esc fecha e
+devolve o foco ao botão Habilidades.
+
+**O movimento:** cada faixa chega de 12 px à esquerda em 150 ms, 18 ms depois da anterior; os botões aceitam clique e
+tecla desde o primeiro quadro (o clique aos 30 ms foi aceito). A troca de destaque é instantânea. A saída não anima: o
+seletor some na hora da escolha, sem controle invisível ativo (zero botões dele depois da escolha). Com movimento
+reduzido, a entrada e o recuo do pressionado saem; os estados ficam.
+
+**Conferido** (`relatorio.json`; jogo de hoje e D com os mesmos dados; tutorial contra lobos com Morel e Odette;
+Guerreiro berserker, Arqueiro sombra e Mago necromante no nível 12, e o teste de 10 habilidades; 1500×950, 1920×1080 e
+1280×720; sem erro no console):
+- abrir, mouse, indisponível, pressionar e soltar fora (nada escolhido), Esc, a tecla 2, as setas, a escolha de uma
+  habilidade de um alvo (a mira) e o Voltar (a roda de volta, sem seletor): certos nas 24 combinações;
+- nenhum nome ou custo cortado; o D nunca cobre a arena (o seletor de hoje, com 10 habilidades em 1280×720, sobe 114
+  px sobre ela); só "Flecha Envenenada" quebra em duas linhas, e só em 1280×720;
+- menor área de clique: 56 px de altura (hoje 46), a faixa inteira da coluna;
+- no guerreiro em 1500×950: cinco cliques rápidos em Habilidades deixam um seletor só; a tecla segurada abre uma vez;
+  o clique duplo numa habilidade faz uma escolha só (a mira, a vez continua do herói); o clique durante a entrada vale.
+  Igual ao jogo de hoje.
+
+**O que fica a decidir:** o foco depois da escolha fica no corpo da página, como hoje (a mira escolhe pelos números e
+pelo clique; as cartas não recebem foco). Se a mira ganhar navegação pelo teclado, o foco passaria à primeira carta
+alvo.
+
+**Para integrar (se aprovado):** as trocas de `d-escolhas.mjs` no `escolhas.js`, a folha `d-faixas.css` como uma
+parte da `15-hud-luta.css` (só a janelinha de Habilidades), conferindo de novo as 24 combinações; a de Itens e as
+outras telas não mudam.

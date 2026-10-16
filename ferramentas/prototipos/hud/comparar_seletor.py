@@ -11,10 +11,14 @@ tamanho real (nada ampliado nem reduzido; as telas inteiras e a escolha do alvo 
 import pathlib
 import sys
 
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
 
 FOTOS = pathlib.Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else pathlib.Path(__file__).resolve().parent / "capturas-seletor"
 FUNDO, TEXTO = (17, 18, 21), (214, 205, 186)
+try:  # uma fonte com acentos (a de bitmap do Pillow não tem o "í")
+    FONTE = ImageFont.truetype("DejaVuSans.ttf", 12)
+except OSError:
+    FONTE = ImageFont.load_default(size=12)
 VERSOES = (("atual", "o jogo hoje"), ("a", "A · lista integrada"), ("b", "B · grade compacta"), ("c", "C · losangos"))
 LUTAS = ("guerreiro", "arqueiro", "capacidade")
 
@@ -29,7 +33,7 @@ def grade(celulas, colunas):
     for ln, h in zip(linhas, alt):
         x = 16
         for (img, rot), w in zip(ln, larg):
-            d.text((x, y), rot, fill=TEXTO)
+            d.text((x, y), rot, fill=TEXTO, font=FONTE)
             out.paste(img, (x, y + 16))
             x += w + 16
         y += h + 26
