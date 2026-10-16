@@ -9,15 +9,16 @@
 // ampliável do 64 como zoom-...
 //   PLAYWRIGHT_MODULO=<caminho do playwright>/index.mjs node ferramentas/prototipos/hud/fotografar_livro_fechado.mjs
 import { spawn } from "child_process";
-import { mkdirSync, readFileSync, rmSync } from "fs";
+import { mkdirSync, readdirSync, readFileSync, rmSync } from "fs";
 import { fileURLToPath } from "url";
 import path from "path";
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULO || "playwright");
 const aqui = path.dirname(fileURLToPath(import.meta.url)), raiz = path.resolve(aqui, "../../..");
 const SAIDA = path.join(aqui, "capturas-livro-fechado");
 const PASTAS = { fechado: path.join(aqui, "livro-fechado-ref"), acabamento: path.join(aqui, "livro-fechado-acabamento") };
-rmSync(SAIDA, { recursive: true, force: true });
 mkdirSync(SAIDA, { recursive: true });
+// refaz só as fotos deste roteiro: as pranchas da rodada anterior (prancha-*.png) e o antes × depois ficam
+for (const f of readdirSync(SAIDA)) if (/^(normal|baixa|zoom)-/.test(f)) rmSync(path.join(SAIDA, f));
 const espera = (ms) => new Promise((r) => setTimeout(r, ms));
 const TROCAS = [['const TAMANHOS = {', 'const TAMANHOS = {"livro": [64], '], ['orbe: "orbe" };', 'orbe: "orbe", livro: "livro" };']];
 const iconesProposta = TROCAS.reduce((t, [a, b]) => {
