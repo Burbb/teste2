@@ -2271,3 +2271,47 @@ diz grimório de longe: o anel do diagrama e o bloco de anotações se leem em 3
 o eixo e as cruzinhas. O que fica abaixo da referência: a referência é pintada num tamanho maior, com o couro
 manchado e a beira do papel queimada em muitos tons; nos tamanhos do jogo o couro gasto fica nas beiras e cantos, e as
 manchas só em 48 e 64. Espera a avaliação do Jean.
+
+### O grimório fechado da nova referência (o quinto candidato do livro; só o 64, proposta)
+
+**O pedido de Jean:** seguir com o grimório fechado de uma nova referência (pixel art, o livro deitado na diagonal,
+visto de cima em três quartos), desenhado do zero; as propostas anteriores ficam como histórico. Preservar a pose, a
+capa violeta com espessura, quinas e planos de luz, a lombada redonda com os reforços, o bloco de páginas envelhecido
+separado das capas, o fecho lateral e as ferragens de latão envelhecido, e o crescente no meio só como decoração. Só
+o 64 nesta rodada; 32, 40 e 48 e a integração esperam a avaliação.
+
+**O desenho** (`ferramentas/arte/desenhar_grimorio_fechado_pixel.py`, gravado em `livro-fechado-ref/` com o nome
+"livro"; só grava numa pasta dada): um modelo 3D de polígonos planos (as duas tábuas, o bloco, as facetas da lombada e
+dos dois reforços, a chapa do fecho) numa projeção paralela (giro −32°, altura 58°), rasterizado na grade de 64. Os
+tons são decididos por plano: a capa de cima num tom, o chanfro do lado da luz (junto da lombada e da cabeça) um
+degrau acima com o fio aceso na quina, o do lado da sombra (o pé e a beira da frente) um degrau abaixo; as espessuras
+na sombra; a lombada pela curva, com o fio de brilho ao longo e uma sombra no couro sob cada reforço; o latão pela
+luz, com o lado de cima aceso. O bloco de páginas é marcado por coluna de pixels: a fresta escura sob a capa, o fio
+claro das folhas de cima, o maço em dois tons alternados e a última fileira na sombra da capa de trás. As cantoneiras
+nos dois cantos soltos, com o rebite; a do pé desce pela espessura. 22 cores.
+
+**Duas decisões de pixel art:** o emblema em perspectiva saía com degraus irregulares (um losango torto), então é
+desenhado de frente para quem olha, no meio da capa: o losango com as quatro linhas a 45° (o lado da luz aceso, o da
+sombra mais baixo, um sulco escuro embaixo da gravação); e o crescente pela conta de dois círculos virava um "L" nesta
+grade, então é desenhado pixel a pixel (`MEDIDAS`), com o fio aceso por fora e o ponto ao lado. Nada da imagem de
+referência é reduzido nem copiado.
+
+**A conferência** (`fotografar_livro_fechado.mjs` → `capturas-livro-fechado/`): a prancha do 64 em 1× sobre o carvão
+ao lado do escudo, do cajado e do orbe aprovados, ampliados 4× sem suavizar (`prancha-64.png`), e o livro sozinho em
+8× (`prancha-livro-zoom.png`); o cartão do saque em 1500×950 e 1280×720, com o jogo de hoje e com a proposta (o Mago
+acha um Grimório vestindo o cajado aprovado, que aparece ao lado em 48). A proposta registra o livro só em 64 na página
+(TAMANHOS e ITEM); o relatório confere que o cartão usa `livro-64.png` em 64 px. Sem erro no console.
+
+**Dois retornos de Jean durante a rodada:** (1) no pé, junto da lombada, havia uma parte de couro cobrindo as folhas,
+que livro não tem: era a tampa da lombada, um cilindro maciço, maior que as capas e passando delas no pé; agora a
+lombada acaba junto das capas e a tampa é só a casca de couro por fora, com o maço de folhas dobrando dentro (em
+papel); (2) a borda da lombada ainda estava larga: a lombada ficou menos saliente (0,9 → 0,55 do raio) e o chanfro
+aceso da capa junto dela, mais estreito; o fio de brilho da lombada passou a seguir a elipse (pela conta do círculo,
+com a lombada achatada, ele se espalhava em pixels soltos).
+
+**A avaliação:** a silhueta lê como livro fechado grosso de longe: a lombada redonda com os dois reforços à esquerda,
+a capa larga em perspectiva, o bloco de páginas claro no pé, o latão nos cantos e no fecho. A capa ficou um degrau
+mais clara que a primeira tentativa para conviver com o escudo e o orbe (no tom mais escuro, o livro sumia ao lado
+deles no carvão), e a escala foi reduzida para ocupar o quadro como os vizinhos. O que fica abaixo da referência: o
+fecho é uma chapa pequena na beira (a tira de couro quase não aparece neste tamanho), e o bloco de páginas tem três ou
+quatro fileiras, o suficiente para separar das capas, sem os fios finos da imagem. Espera a avaliação do Jean.

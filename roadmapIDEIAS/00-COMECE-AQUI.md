@@ -2825,3 +2825,15 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   os candidatos anteriores intactos; as cinco versões em `capturas-livro/` (e os pares entreaberto × estudo), nas
   duas janelas.
 - **Continua como está no jogo:** o livro com o sprite antigo. Espera a escolha do Jean.
+
+### 17/10/2026 — Proposta: o grimório fechado da nova referência (só o 64; protótipo)
+
+- **Pedido de Jean:** seguir com o grimório fechado de uma nova referência, do zero e pela skill, só em 64 (a pose
+  diagonal de cima em três quartos, a capa violeta com espessura e planos de luz, a lombada redonda com reforços, o
+  bloco de páginas envelhecido, o fecho lateral, o latão envelhecido e o crescente só como decoração); as propostas
+  anteriores ficam como histórico.
+- **Feito:** `ferramentas/arte/desenhar_grimorio_fechado_pixel.py`, gravado em
+  `ferramentas/prototipos/hud/livro-fechado-ref/livro-64.png` (e o @2x); a prancha ao lado do escudo, do cajado e do
+  orbe e o cartão do saque nas duas janelas em `capturas-livro-fechado/` (`fotografar_livro_fechado.mjs`).
+- **Continua como está no jogo:** o livro com o sprite antigo. Espera a avaliação do 64 antes de 32, 40, 48 ou da
+  integração.
