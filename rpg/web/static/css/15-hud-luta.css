@@ -52,24 +52,40 @@
 :root body .carta:focus-visible { outline: 2px solid var(--latao-claro); outline-offset: 3px; }
 
 /* ------------------------------------------------------------ a roda de ações */
-/* O medalhão vira um nicho de item (aresta fina, fundo fundo); o nome, uma placa de metal; a tecla, o nicho escuro das
-   opções. O dourado fica para a ação aberta e o foco. */
-:root body .roda-botao .rb-icone { width: 44px; height: 44px; border: 1px solid var(--aresta-face, #4a4e56); border-radius: 2px;
-  background: linear-gradient(rgba(255, 255, 255, 0.06), rgba(0, 0, 0, 0.25)), #0d0e11;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 1px 0 #000, 0 3px 5px rgba(0, 0, 0, 0.5); }
-:root body .roda-botao .rb-nome { margin-left: -1px; padding: 5px 12px 6px 10px; border: 1px solid var(--aresta-face, #4a4e56); border-left: 0; border-radius: 0 2px 2px 0;
-  font-size: 14px; color: #f0e6d2; text-shadow: 0 1px 0 #000;
-  background: linear-gradient(rgba(255, 255, 255, 0.085), rgba(255, 255, 255, 0.02) 48%, rgba(0, 0, 0, 0.14)), rgba(28, 30, 34, 0.96); }
-:root body .roda-botao .tecla { top: -6px; left: -6px; min-width: 17px; height: 17px; color: #e8dcc0; background: #08090b; border: 1px solid #4a4d53; border-radius: 2px; line-height: 15px; }
+/* O medalhão vira um nicho de item: ferro escuro com o chanfro (luz em cima, sombra embaixo) e o fundo de carvão; o nome,
+   uma placa de carvão encaixada atrás do nicho (a sombra à esquerda); a tecla, um encaixe no canto do nicho, com o
+   número em latão (1.101.0, o acabamento aprovado da roda). O mouse clareia a aresta e acende a placa, com um fio de
+   latão de 2 px embaixo do nome; pressionado, o nicho e o nome afundam juntos; aberto, latão no nicho e na placa; o
+   foco do teclado, o anel claro de 2 px por fora; a tecla acende em latão no mouse e no foco, como a das opções. */
+:root body .roda-botao .rb-icone { width: 44px; height: 44px; border: 1px solid #3a3d43; border-radius: 2px;
+  background: radial-gradient(ellipse 70% 60% at 50% 40%, rgba(255, 255, 255, 0.05), transparent 70%), #0b0c0f;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), inset 0 -1px 0 rgba(0, 0, 0, 0.7), 0 1px 0 #000, 0 3px 6px rgba(0, 0, 0, 0.55); }
+:root body .roda-botao .rb-nome { margin-left: -1px; padding: 5px 12px 6px 10px; border: 1px solid #33363c; border-left: 0; border-radius: 0 2px 2px 0;
+  font-size: 14px; color: #e8dcc0; text-shadow: 0 1px 0 #000;
+  background: linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0) 55%, rgba(0, 0, 0, 0.18)), #15161a;
+  box-shadow: inset 4px 0 4px -2px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 2px 4px rgba(0, 0, 0, 0.45); }
+:root body .roda-botao .tecla { top: -1px; left: -1px; min-width: 15px; height: 15px; line-height: 14px; font-size: 11px;
+  color: var(--latao-claro); background: #08090b; border: 1px solid #3a3d43; border-width: 0 1px 1px 0; border-radius: 0 0 2px 0; box-shadow: none; }
 :root body .roda-botao:hover .rb-icone, :root body .roda-botao:focus-visible .rb-icone { transform: translateY(-2px); border-color: var(--aresta-viva, #6f737b);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 1px 0 #000, 0 5px 8px rgba(0, 0, 0, 0.55); }
-:root body .roda-botao:hover .rb-nome, :root body .roda-botao:focus-visible .rb-nome { color: #fff7e6; border-color: var(--aresta-viva, #6f737b);
-  background: linear-gradient(rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.05) 48%, rgba(0, 0, 0, 0.1)), rgba(36, 38, 43, 0.97); }
-:root body .roda-botao:active .rb-icone { transform: translateY(1px); box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8); }
-/* a ação aberta (a janelinha de habilidades ou itens): latão e a barra à esquerda do nome, como o selecionado */
-:root body .roda-botao.ativo .rb-icone { border-color: var(--latao); background: linear-gradient(rgba(201, 161, 74, 0.12), rgba(0, 0, 0, 0.25)), #0d0e11; }
-:root body .roda-botao.ativo .rb-nome { color: var(--latao-claro); border-color: var(--latao); box-shadow: inset 3px 0 0 var(--latao); }
+:root body .roda-botao:hover .rb-icone { border-color: #8a8f98;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), inset 0 0 12px rgba(201, 161, 74, 0.2), 0 1px 0 #000, 0 5px 9px rgba(0, 0, 0, 0.6); }
+:root body .roda-botao:hover .rb-nome { border-color: #7b8089; color: #fff4dc;
+  background: linear-gradient(rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04) 55%, rgba(0, 0, 0, 0.1)), #24262c;
+  box-shadow: inset 4px 0 4px -2px rgba(0, 0, 0, 0.8), inset 0 -2px 0 var(--latao), 0 2px 4px rgba(0, 0, 0, 0.45); }
+:root body .roda-botao:active .rb-icone { transform: translateY(1px); background: #08090b; border-color: #5a5e66; box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.9); }
+:root body .roda-botao:active .rb-nome { transform: translateY(1px); background: #111215; box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8); }
+/* a ação aberta (a janelinha de habilidades ou itens): latão no nicho e na placa, a barra à esquerda e o fio embaixo */
+:root body .roda-botao.ativo .rb-icone { border-color: var(--latao);
+  background: radial-gradient(ellipse 70% 60% at 50% 40%, rgba(201, 161, 74, 0.16), transparent 70%), #0d0d0f; }
+:root body .roda-botao.ativo .rb-nome { border-color: var(--latao); color: var(--latao-claro);
+  background: linear-gradient(rgba(201, 161, 74, 0.1), rgba(0, 0, 0, 0.15)), #17150f;
+  box-shadow: inset 3px 0 0 var(--latao), inset 0 -1px 0 var(--latao), 0 2px 4px rgba(0, 0, 0, 0.45); }
+:root body .roda-botao.ativo .tecla { color: #fff4dc; border-color: var(--latao); }
 :root body .roda-botao:focus-visible .rb-icone { outline: 2px solid var(--latao-claro); outline-offset: 2px; }
+:root body .roda-botao:focus-visible .rb-nome { color: #fff4dc; border-color: #7b8089;
+  background: linear-gradient(rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04) 55%, rgba(0, 0, 0, 0.1)), #24262c; }
+:root body .roda-botao:is(:hover, :focus-visible) .tecla { color: var(--latao-claro); border-color: var(--latao); }
 :root body .roda-botao:is([disabled], .bloqueada) .rb-icone, :root body .roda-botao:is([disabled], .bloqueada) .rb-nome { border-style: dashed; opacity: 0.6; }
 :root body .roda-botao .rb-icone img.desenho { width: 32px; height: 32px; image-rendering: auto; filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.7)); }
 /* o rosto do herói na carta e os desenhos da roda, no tamanho deles (32 px). Na vez do herói a carta é ampliada 1,12×

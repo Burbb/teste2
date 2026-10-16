@@ -18,7 +18,7 @@ import { fileURLToPath } from "url";
 import path from "path";
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULO || "playwright");
 const aqui = path.dirname(fileURLToPath(import.meta.url)), raiz = path.resolve(aqui, "../../..");
-const SAIDA = path.join(aqui, "capturas-roda");
+const SAIDA = path.resolve(process.env.SAIDA || path.join(aqui, "capturas-roda"));
 rmSync(SAIDA, { recursive: true, force: true });
 mkdirSync(SAIDA, { recursive: true });
 const espera = (ms) => new Promise((r) => setTimeout(r, ms));

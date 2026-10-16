@@ -1622,6 +1622,10 @@ entre as armas sem desenho; conferir pixel a pixel com os desta pasta; atualizar
 
 ## A roda de ações e os ícones pequenos das escolhas (proposta, sem versão)
 
+**O acabamento dos comandos da roda entrou no jogo na 1.102.0** (`css/15-hud-luta.css`, os valores efetivos desta
+alternativa, sem as regras da janelinha, que esperam as propostas do seletor). Os ícones das escolhas seguem em
+proposta, agora em 24 px (abaixo, "Os ícones das escolhas em 24 px").
+
 **O pedido de Jean (16/10/2026):** recuperar e avaliar a alternativa de acabamento da roda guardada no protótipo, sem
 refazer o que já está resolvido e sem trazer o lote de ícones recusado; e investigar o ícone pequeno antigo nas
 escolhas de evento que gastam um item.

@@ -2642,3 +2642,16 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
 - **Conferido** (`ferramentas/arte/fotografar_itens.mjs`, `SO=arco`, 1500×950 e 1280×720, sem erro no console): 32 na
   ficha e no mercado, a dica com a comparação, 40 no corpo e na mochila, 64 e 48 no saque, o voo ao equipar; a roda
   com o Atacar no sprite.
+
+### 17/10/2026 — O acabamento da roda de comandos (1.102.0)
+
+- **Decisão de Jean:** o acabamento alternativo dos comandos da roda aprovado (Atacar, Habilidades, Itens, Fugir): a
+  tecla encaixada, o fio de latão no mouse, o nome que afunda ao pressionar, a superfície mais escura. O painel que
+  abre em Habilidades fica para as três propostas do seletor.
+- **Feito:** em `css/15-hud-luta.css`, os botões da roda com os valores efetivos da alternativa apresentada (a folha de
+  produção mais `roda-alternativa.css`), sem as regras da janelinha. Dimensões, posição, atalhos e funcionamento os
+  mesmos.
+- **Conferido:** `ferramentas/prototipos/hud/fotografar_roda.mjs` com `SAIDA` numa pasta à parte, o jogo integrado
+  contra o jogo com a folha da alternativa por cima, na mesma luta: parada, mouse, pressionada e a comitiva saem
+  pixel a pixel iguais; nos outros estados, a diferença é a do céu e do pulso da carta entre as fotos (e, no
+  movimento reduzido, 1 px de posição da roda em uma das duas), e a janelinha, que não mudou.
