@@ -316,7 +316,7 @@ class TextualUI(UI):
 
 
 class AppRPG(App):
-    TITLE = "Crônicas da Fenda"
+    TITLE = "The Unquiet"
     SUB_TITLE = "um RPG de texto onde nenhuma jornada é igual"
     CSS = """
     Screen { align: center top; }

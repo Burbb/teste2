@@ -2603,3 +2603,18 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
 - O registro completo está em `ferramentas/prototipos/hud/LEIA-ME.md` ("A roda de ações e os ícones pequenos das
   escolhas").
 - **Guardado para depois da etapa de itens (pedido de Jean):** o estudo visual do Grimório e do livro da capela.
+
+### 16/10/2026 — O nome provisório: The Unquiet (1.100.0)
+
+- **Pedido de Jean:** o novo nome provisório do jogo é **The Unquiet** ("Unquiet", sem o artigo, fica guardado como
+  alternativa). **Crônicas da Fenda** era o nome provisório anterior; os registros antigos continuam com ele. O jogo
+  segue em português; nada de tradução nesta entrega.
+- **Feito:** o nome visível do produto: o título do menu inicial (`rpg/__main__.py`), a aba e o cabeçalho
+  (`index.html`), a janela do aplicativo e a mensagem do terminal (`rpg/web/__init__.py`), a interface de terminal
+  (`rpg/tui.py`), o aviso de save incompatível (`rpg/migracoes.py`), a descrição da linha de comando; o README e o
+  CLAUDE.md registram o nome novo e o anterior. A Fenda do mundo do jogo continua com o nome dela. Não mudaram:
+  repositório, pastas, módulos, identificadores, caminhos de saves, a skill `arte-itens-fenda` e os documentos
+  históricos.
+- **Conferido:** o menu inicial e o cabeçalho em 1500×950 e 1280×720, antes e depois: o título cabe numa linha (552 e
+  460 px, a mesma altura), a composição é a mesma (a paisagem aberta, o título, o fio e as opções leves), o foco do
+  teclado passa pelas opções, a aba mostra o nome novo, sem erro no console.

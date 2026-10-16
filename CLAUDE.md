@@ -1,4 +1,7 @@
-# Crônicas da Fenda: guia para o Claude
+# The Unquiet: guia para o Claude
+
+*Nome provisório (1.100.0); antes, Crônicas da Fenda, o nome provisório anterior, que continua nos registros antigos.
+"Unquiet", sem o artigo, fica guardado como alternativa.*
 
 RPG de texto offline em português, feito com o Jean (designer e jogador; ele testa jogando e manda o que achou).
 Motor em Python puro (só biblioteca padrão) + interface web local (`python jogar.py`).

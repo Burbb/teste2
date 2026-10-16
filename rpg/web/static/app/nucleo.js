@@ -1,4 +1,4 @@
-/* Crônicas da Fenda — cliente web (tema pixel art).
+/* The Unquiet — cliente web (tema pixel art).
    Recebe as mensagens do motor (SSE) e as processa em fila: texto com ritmo, dado animado,
    HUD que reage a cada mudança, combate golpe a golpe, mapa clicável e telas visuais. */
 "use strict";

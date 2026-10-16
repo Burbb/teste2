@@ -59,7 +59,7 @@ MIGRACOES = {1: _v1_para_v2, 2: _v2_para_v3, 3: _v3_para_v4}
 def migrar(dados):
     """Leva um save de qualquer versão antiga até VERSAO_SAVE."""
     if not isinstance(dados, dict) or "jogador" not in dados or "seed" not in dados:
-        raise SaveIncompativel("Este arquivo não é um save de Crônicas da Fenda.")
+        raise SaveIncompativel("Este arquivo não é um save de The Unquiet.")
     versao = dados.get("versao", 1)
     if versao > VERSAO_SAVE:
         raise SaveIncompativel(f"Este save é de uma versão mais nova do jogo (formato {versao}; "

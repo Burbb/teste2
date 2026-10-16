@@ -177,11 +177,11 @@ class TestPagina(unittest.TestCase):
         ui.jogo = g
         ui.cena("Vau do Turvo", tipo="local")
         ui.jogo = None
-        ui.cena("Crônicas da Fenda", None, "titulo")
+        ui.cena("The Unquiet", None, "titulo")
         ui.jogo = g
         ui.cena("Vau do Turvo", tipo="local")
         tipos = [m["t"] for m in ui.canal.mensagens]
-        titulo = next(i for i, m in enumerate(ui.canal.mensagens) if m.get("titulo") == "Crônicas da Fenda")
+        titulo = next(i for i, m in enumerate(ui.canal.mensagens) if m.get("titulo") == "The Unquiet")
         self.assertIn("estado", tipos[titulo:])
 
     def mensagens(self, passos, respostas=3):

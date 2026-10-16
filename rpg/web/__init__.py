@@ -31,7 +31,7 @@ def jogar(args, menu_principal):
 
     jogo = threading.Thread(target=rodar_jogo, daemon=True, name="jogo")
     jogo.start()
-    print(f"Crônicas da Fenda está rodando em:\n  {srv.url}\nPara encerrar, feche esta janela ou tecle Ctrl+C.")
+    print(f"The Unquiet está rodando em:\n  {srv.url}\nPara encerrar, feche esta janela ou tecle Ctrl+C.")
 
     webview = None
     if not args.navegador:
@@ -41,7 +41,7 @@ def jogar(args, menu_principal):
             webview = None
     try:
         if webview:
-            janela = webview.create_window("Crônicas da Fenda", srv.url, width=1440, height=900, min_size=(960, 640),
+            janela = webview.create_window("The Unquiet", srv.url, width=1440, height=900, min_size=(960, 640),
                                            background_color="#0c0a09")
 
             def fechar_quando_acabar():

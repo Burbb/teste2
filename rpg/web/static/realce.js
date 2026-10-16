@@ -1,4 +1,4 @@
-/* Crônicas da Fenda — realce de termos de jogo nos textos de regra (dicas, Grimório, talentos, registro da luta).
+/* The Unquiet — realce de termos de jogo nos textos de regra (dicas, Grimório, talentos, registro da luta).
    Como nos RPGs atuais: fogo em laranja, sangramento e roubo de vida em vermelho, cura em verde, crítico em amarelo...
    Recebe texto puro e devolve HTML já escapado; só a prosa da história fica de fora (lá "fogo" é paisagem). */
 "use strict";

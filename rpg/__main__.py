@@ -29,7 +29,7 @@ def escolher_save(ui, saves):
 
 def menu_principal(ui, args):
     while True:
-        ui.cena("Crônicas da Fenda", None, "titulo")
+        ui.cena("The Unquiet", None, "titulo")
         saves = sorted((s for s in glob.glob(os.path.join(args.saves, "*.json"))
                         if os.path.basename(s) != "legado.json"), key=os.path.getmtime, reverse=True)
         # A campanha escrita (protótipo do Vale do Turvo) é outra forma de começar; o "Novo jogo" segue no mundo gerado.
@@ -71,7 +71,7 @@ def menu_principal(ui, args):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Crônicas da Fenda — RPG de texto offline")
+    parser = argparse.ArgumentParser(description="The Unquiet — RPG de texto offline")
     parser.add_argument("--seed", type=int, help="semente do mundo (o mesmo número gera o mesmo reino)")
     parser.add_argument("--terminal", action="store_true",
                         help="joga dentro do terminal, com painéis (precisa do textual)")

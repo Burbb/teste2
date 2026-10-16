@@ -1,4 +1,7 @@
-# Crônicas da Fenda
+# The Unquiet
+
+*Nome provisório. Até a 1.99.0 o jogo se chamava **Crônicas da Fenda**, o nome provisório anterior; ele
+aparece assim nos registros antigos. A Fenda continua sendo a do mundo do jogo.*
 
 RPG de texto **offline**, em português. O motor é escrito em **Python puro**, e a tela é uma
 interface em HTML que roda localmente, sem internet.
