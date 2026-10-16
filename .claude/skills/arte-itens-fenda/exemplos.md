@@ -48,6 +48,31 @@ tamanho do desenho.
 - **Papel:** o desenho "unguento" do jogo é também a Curandeira; o item se acha só pelo id (`SO_PELO_ID`).
 - **Paleta:** barro (9 tons) e prata (8); 14 cores por arquivo.
 
+## O machado (machado de guerra de uma mão, de barba)
+
+`ferramentas/arte/desenhar_machado_pixel.py`; 32, 40, 48 e 64 px (1.99.0).
+
+- **O tipo antes das proporções:** o jogo só diz "Machado"; o de barba (a lâmina desce em gancho junto do cabo) é o
+  de quem luta com escudo e dá uma silhueta que a espada e a maça não têm.
+- **Medidas no sistema do cabo:** u ao longo do cabo, v para o lado da lâmina; o 32 é desenhado e os outros saem
+  das mesmas medidas na escala da grade, com a origem num ponto que dá o cabo de 4 linhas na diagonal (com 3, o 40
+  ficava fino).
+- **Ferro:** face fosca clareando para o gume, gume polido numa faixa, a espessura como a forma deslocada para o pé
+  (aparece por baixo da barba), o olho como luva em volta do cabo, com a borda acesa.
+- **Madeira em faixas de 1 px na diagonal:** ficam em `fixo` (a limpeza as apagava).
+- **Desgaste:** só em 48 e 64, um dente no gume; pontos de corrosão liam como rebites.
+
+## A Bomba de Fumaça (pote preto amarrado)
+
+`ferramentas/arte/desenhar_bomba_pixel.py`; só 32 px, o único tamanho em que ela fica parada (1.99.0).
+
+- **Conceito pelo retorno do Jean:** a terracota realista lia como pote e se confundia com o unguento na bolsa;
+  "mais cara de bomba", "preta" levou ao pote quase esférico de barro preto vidrado, com pano, rede de cordão e
+  pavio enrolado. Personalidade de jogo, construção do mundo, sem caveira, pino ou fogo.
+- **Preto sobre carvão:** faixas escuras, a luz de volta do chão embaixo à direita e o reflexo do esmalte desenhado;
+  o cordão escuro (claro, a rede virava grade de cesto).
+- **Papel:** a "caveira" do jogo tem muitos papéis; a bomba se acha só pelo id (`SO_PELO_ID`).
+
 ## O que se repetiu nos dois (e por isso está no SKILL.md)
 
 Ler o jogo antes de desenhar; a grade de cada tamanho com as medidas numa tabela; uma rampa e uma regra de luz por

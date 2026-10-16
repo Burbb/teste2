@@ -2570,3 +2570,21 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
 - **Verificado:** testes, gabarito sem diferença, pyflakes e fumaça (os cenários novos só agem com as variáveis novas).
 - **Falta:** Jean avaliar; a escolha de evento que gasta um item ainda usa o sprite 1× (outro papel); a roda de
   ações fica para a entrega separada.
+
+### 16/10/2026 — O machado e a Bomba de Fumaça no jogo (1.99.0)
+
+- **Pedido de Jean:** integrar os dois exatamente como aprovados no protótipo (`ee17544`), pela etapa de integração
+  da skill `arte-itens-fenda`, sem mexer em regras, números nem animações.
+- **Feito:** os arquivos em `rpg/web/static/hud/icones/` pelos dois scripts (`machado-32/40/48/64`, `bomba-32`, com
+  os @2x), idênticos pixel a pixel aos aprovados; em `icones.js`, os tamanhos em `TAMANHOS`, `ITEM.machado`,
+  `CONSUMIVEL.bomba_fumaca` e `SO_PELO_ID`. O machado vale para todo equipamento com o desenho "machado" (Lamento
+  de Gharbad e O Açougueiro também); Redemoinho e Fúria continuam com o sprite; a caveira continua em todos os
+  outros papéis (lixeira, retratos, Bestiário, derrota, fome). O jogo não lê nada da pasta de protótipos.
+- **Conferido** (`ferramentas/arte/fotografar_itens.mjs`, `SO=machado`, 1500×950 e 1280×720, movimento normal e
+  reduzido, sem erro no console): o machado em 32 na ficha, no mercado e na troca de arma da luta, em 40 no corpo e
+  na mochila do Inventário, 48 e 64 no saque, o voo ao equipar; a dica com a comparação; comprar (1 → 2 na
+  mochila), vender (10 → 9) e recomprar; a bomba na bolsa, na prateleira (comprar: 1 → 2), na janelinha de Itens, no
+  quadro do baú (0 → 1 na bolsa) e no voo até a bolsa; `Icones.porDesenho("caveira")` continua vazio e a lixeira
+  com a caveira. Testes, gabarito sem diferença, pyflakes, fumaça.
+- **Continua registrado:** a escolha de evento que gasta um item mostra o sprite de 1× (`escolhas.js`,
+  `meta.gasta`), para a revisão desses componentes; a avaliação da roda de ações, em entrega separada.

@@ -1543,6 +1543,10 @@ As grades recusadas ficam aqui só como histórico.
 
 ## O machado e a Bomba de Fumaça (proposta, sem versão)
 
+**Integrados na 1.99.0**, exatamente como o commit `ee17544` (os arquivos do jogo saíram dos dois scripts e são
+idênticos, pixel a pixel, aos de `machado-bomba-pixel/`); o que está aqui fica como registro da proposta aprovada.
+A conferência em produção é `ferramentas/arte/fotografar_itens.mjs` (`SO=machado`).
+
 **O pedido de Jean (16/10/2026):** um lote pequeno pelo método do escudo e do unguento (skill `arte-itens-fenda`), só
 no protótipo: o machado e a Bomba de Fumaça. No meio da rodada, sobre a bomba: "falta personalidade... pode ter mais
 cara de bomba"; "talvez ela preta já dá uma grande diferença".

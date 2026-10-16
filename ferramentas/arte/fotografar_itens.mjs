@@ -1,5 +1,5 @@
 // Conferência dos desenhos de item no jogo de verdade (o escudo e o Unguento de Prata da 1.94.0; o equipamento em 40 px
-// no Inventário da 1.95.0), sem nenhum arquivo do protótipo, em janela normal (1500×950) e baixa (1280×720):
+// no Inventário da 1.95.0; o machado e a Bomba de Fumaça da 1.99.0), sem nenhum arquivo do protótipo, em janela normal (1500×950) e baixa (1280×720):
 //   - o mercado (cenário mercado, AMOSTRAS=2, SEMENTE=1: um escudo na mochila, um unguento na bolsa e outro na
 //     prateleira): a prateleira de suprimentos, a compra, a bolsa da ficha e a aba Vender com a dica de comparação;
 //   - o cartão do saque com um escudo e a comparação com o que se usa (cenário vila, ACHADO=escudo) e o voo ao equipar;
@@ -11,6 +11,11 @@
 //     arrastar um anel para o segundo espaço, dois cliques para vestir, o teclado (i abre, Esc fecha);
 //   - os desenhos que ainda não têm 40 px (cenário mercado, CLASSE=arqueiro, AMOSTRAS=1: o martelo desenhado em 32 e
 //     os sprites 16×16 do arco, do cajado...), que ficam em 32 px, centrados, no Inventário.
+//   - o machado e a Bomba de Fumaça (1.99.0, SO=machado): o Inventário com o machado vestido e na mochila, a bomba
+//     na bolsa, as dicas e a comparação; a compra da bomba, a compra, a venda e a recompra do machado no mercado; o
+//     cartão do saque e o voo ao equipar; o quadro do baú com a bomba e o voo dela até a bolsa; a janelinha de Itens
+//     da luta; o movimento normal e o reduzido (os voos); e os outros papéis da caveira (a lixeira, o Bestiário) e
+//     do machado (Redemoinho, Fúria), que continuam com o sprite do jogo.
 // Em cada página, conta onde cada desenho aparece e em que tamanho. Guarda em SAIDA (padrão: capturas-itens/ ao lado).
 //   PLAYWRIGHT_MODULO=<caminho do playwright>/index.mjs node ferramentas/arte/fotografar_itens.mjs
 // (CHROMIUM=<executável do navegador>, se o Playwright não achar o dele; SO=mercado,saque,bau,inventario para escolher)
@@ -21,7 +26,7 @@ import path from "path";
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULO || "playwright");
 const aqui = path.dirname(fileURLToPath(import.meta.url)), raiz = path.resolve(aqui, "../..");
 const SAIDA = path.resolve(process.env.SAIDA || path.join(aqui, "capturas-itens"));
-const SO = new Set((process.env.SO || "mercado,saque,bau,inventario,aneis,antigos").split(","));
+const SO = new Set((process.env.SO || "mercado,saque,bau,inventario,aneis,antigos,machado").split(","));
 mkdirSync(SAIDA, { recursive: true });
 const espera = (ms) => new Promise((r) => setTimeout(r, ms));
 async function subir(cenario, amb = {}) {
@@ -48,17 +53,21 @@ const onde = (p) => p.evaluate(() => {
   for (const i of document.querySelectorAll("img")) {
     const s = i.getAttribute("src") || "";
     const m = s.match(/hud\/icones\/([a-z-]+)-(\d+)(@2x)?\.png/);
-    if (!m || !/^(escudo|unguento|anel|cota|espada|elmo|manopla|perneiras|botas-ferro|maca|amuleto|aljava)$/.test(m[1])) continue;
+    if (!m || !/^(escudo|unguento|anel|cota|espada|elmo|manopla|perneiras|botas-ferro|maca|amuleto|aljava|machado|bomba)$/.test(m[1])) continue;
     (linhas[m[1]] = linhas[m[1]] || []).push(`${lugar(i)}:${m[2]}${m[3] || ""}→${r(i)}`);
   }
-  return { ...linhas, curandeira: typeof Icones !== "undefined" && Icones.porDesenho("unguento") === "" ? "sprite do jogo" : "TROCADA" };
+  // os papéis que não mudam: a Curandeira, a caveira (a lixeira e os outros usos) e o machado das habilidades
+  const sprite = (n) => [...document.querySelectorAll("img")].filter((i) => i.getAttribute("src") === Sprites.url(n)).map(lugar);
+  const caveira = sprite("caveira"), machado = sprite("machado");
+  return { ...linhas, curandeira: typeof Icones !== "undefined" && Icones.porDesenho("unguento") === "" ? "sprite do jogo" : "TROCADA",
+    ...(caveira.length ? { "sprite-caveira": caveira } : {}), ...(machado.length ? { "sprite-machado": machado } : {}) };
 });
 const JANELAS = { normal: [1500, 950], baixa: [1280, 720] };
 const relatorio = [], erros = [];
 const b = await chromium.launch(process.env.CHROMIUM ? { executablePath: process.env.CHROMIUM } : {});
-async function pagina(url, jan, nome) {
+async function pagina(url, jan, nome, opcoes = {}) {
   const [W, H] = JANELAS[jan];
-  const p = await b.newPage({ viewport: { width: W, height: H } });
+  const p = await b.newPage({ viewport: { width: W, height: H }, ...opcoes });
   p.on("pageerror", (e) => erros.push(`${nome}: ${e}`));
   p.on("console", (m) => { if (m.type() === "error" && !/favicon/.test(m.location().url || "")) erros.push(`${nome}: ${m.text()}`); });
   p.on("requestfailed", (r) => { if (!/ERR_ABORTED/.test(r.failure().errorText)) erros.push(`${nome}: falhou ${r.url()}`); });
@@ -245,6 +254,137 @@ if (SO.has("antigos")) {
     await p.close();
   }
   proc.kill();
+}
+// 7. o machado e a Bomba de Fumaça (1.99.0), com o movimento normal e o reduzido
+const zoom = async (p, el, nome) => {  // um espaço só, para ver o desenho no lugar
+  if (!el) return console.log(`  (sem ${nome})`);
+  await el.scrollIntoViewIfNeeded(); await espera(250);
+  const c = await el.boundingBox();
+  await p.screenshot({ path: path.join(SAIDA, `${nome}.png`), clip: { x: Math.floor(c.x - 2), y: Math.floor(c.y - 2), width: Math.ceil(c.width + 4), height: Math.ceil(c.height + 4) } });
+};
+const ate = async (p, sel) => {  // passa as orientações e os "continuar" até `sel` aparecer
+  for (let k = 0; k < 60 && !(await p.$(sel)); k++) {
+    for (const s of [".orientacao:not([hidden]) .orientacao-entendi", "#prompt .continuar"]) { const e = await p.$(s); if (e) await e.click().catch(() => {}); }
+    await espera(300);
+  }
+  await espera(900);
+};
+const bolsa = (p, id) => p.evaluate((k) => (App.estado.heroi.bolsa.find((x) => x.id === k) || {}).qtd || 0, id);
+if (SO.has("machado")) {
+  const VITRINE = { TUTORIAL: "0", VITRINE: "1", ARMA: "machado", VISTAS: "A1,V2,N1,D1,K1,M1,L1" };
+  for (const jan of Object.keys(JANELAS)) for (const mov of ["normal", "reduzido"]) {
+    const opc = mov === "reduzido" ? { reducedMotion: "reduce" } : {}, n = (c) => `machado-${jan}-${mov}-${c}`;
+    // o Inventário, as dicas, a lixeira, o voo de uma bomba ganha até a bolsa
+    let { proc, url } = await subir("tutorial", VITRINE);
+    let p = await pagina(url, jan, n("vitrine"), opc);
+    await ate(p, "#predios .predio");
+    if (mov === "normal") { await p.screenshot({ path: path.join(SAIDA, `${n("tela-vila")}.png`) }); await recortar(p, "#heroi", n("ficha"), 0); }
+    relatorio.push({ nome: n("ficha"), ...(await onde(p)) });
+    await pegarVoo(p, ".item-voando", mov === "reduzido" ? 60 : 380);
+    await p.evaluate(() => itemVoa(document.querySelector("#texto") || document.querySelector("#pagina"), "bomba_fumaca"));
+    await voo(p, ".item-voando", n("voo-bomba"));
+    await espera(1200);
+    await p.keyboard.press("i"); await espera(1300); await p.mouse.move(2, 2); await espera(300);
+    if (mov === "normal") {
+      await p.screenshot({ path: path.join(SAIDA, `${n("tela-inventario")}.png`) });
+      await recortar(p, ".tela.inventario", n("inventario"), 4);
+      relatorio.push({ nome: n("inventario"), medidas: await medidas(p), ...(await onde(p)) });
+      const im = await p.evaluate(() => App.estado.heroi.mochila.findIndex((x) => x.icone === "machado"));
+      await zoom(p, await p.$('.tela.inventario [data-espaco="arma"]'), n("corpo"));
+      await zoom(p, await p.$(`.tela.inventario [data-mochila="${im}"]`), n("mochila"));
+      await zoom(p, await p.$('.tela.inventario [data-usar="bomba_fumaca"]'), n("bolsa"));
+      await zoom(p, await p.$(".tela.inventario .lixeira"), n("lixeira"));
+      await p.keyboard.down("Shift");
+      await dica(p, await p.$(`.tela.inventario [data-mochila="${im}"]`), n("dica-machado-comparacao"));
+      await p.keyboard.up("Shift");
+      await dica(p, await p.$('.tela.inventario [data-usar="bomba_fumaca"]'), n("dica-bomba"));
+    }
+    await p.close(); proc.kill();
+    // a luta: a janelinha de Itens, com a bomba (e a troca de arma, com o machado da mochila)
+    if (mov === "normal") {
+      ({ proc, url } = await subir("tutorial", { ...VITRINE, LUTA: "lobo", QUANTOS: "1" }));
+      p = await pagina(url, jan, n("luta"), opc);
+      await ate(p, '#roda .roda-botao[data-slot="itens"]');
+      await (await p.$('#roda .roda-botao[data-slot="itens"]')).click(); await espera(900); await p.mouse.move(2, 2); await espera(300);
+      await p.screenshot({ path: path.join(SAIDA, `${n("tela-luta-itens")}.png`) });
+      await recortar(p, ".roda-janela", n("luta-itens"), 6);
+      relatorio.push({ nome: n("luta-itens"), ...(await onde(p)) });
+      await p.close(); proc.kill();
+    }
+    // o mercado: comprar uma bomba; comprar, vender e recomprar o machado
+    if (mov === "normal") {
+      ({ proc, url } = await subir("mercado", { CLASSE: "guerreiro", AMOSTRAS: "3", SEMENTE: "1", ARMA: "machado" }));
+      p = await pagina(url, jan, n("mercado"), opc);
+      await parado(p); await espera(900); await p.mouse.move(2, 2); await espera(300);
+      await p.screenshot({ path: path.join(SAIDA, `${n("tela-mercado")}.png`) });
+      await recortar(p, "#lista-suprimentos", n("mercado-suprimentos"), 4);
+      const antes = await bolsa(p, "bomba_fumaca");
+      await (await p.$('#lista-suprimentos [data-comprar="bomba_fumaca"] .total, #lista-suprimentos [data-comprar="bomba_fumaca"]')).click();
+      await espera(1500); await parado(p);
+      relatorio.push({ nome: n("compra-bomba"), bolsa: `${antes} → ${await bolsa(p, "bomba_fumaca")}` });
+      await recortar(p, "#heroi", n("mercado-ficha-depois"), 0);
+      // comprar o machado da banca (o equipamento à venda)
+      await (await p.$('[data-aba="equipamentos"]')).click(); await espera(700); await p.mouse.move(2, 2); await espera(300);
+      await recortar(p, "#lista-equipamentos", n("mercado-equipamentos"), 4);
+      const loja = await p.$$("[data-comprar-item]").then(async (es) => { for (const e of es) if (/machado-/.test(await e.innerHTML())) return e; return null; });
+      await zoom(p, loja, n("banca-machado"));
+      const naMochila = () => p.evaluate(() => App.estado.heroi.mochila.filter((x) => x.icone === "machado").length);
+      const m0 = await naMochila();
+      if (loja) { await loja.click(); await espera(1500); await parado(p); }
+      relatorio.push({ nome: n("compra-machado"), mochila: `${m0} → ${await naMochila()} machado(s)` });
+      await (await p.$('[data-aba="vender"]')).click(); await espera(800);
+      const mochilaAntes = await p.evaluate(() => App.estado.heroi.mochila.length);
+      const iv = await p.evaluate(() => App.estado.heroi.mochila.findIndex((x) => x.icone === "machado"));
+      await dica(p, await p.$(`[data-mochila-loja="${iv}"]`), n("mercado-dica-machado"));
+      await zoom(p, await p.$(`[data-mochila-loja="${iv}"]`), n("vender-machado"));
+      await p.mouse.move(2, 2); await espera(200);
+      await (await p.$(`[data-mochila-loja="${iv}"]`)).click(); await espera(1500); await parado(p);
+      await p.mouse.move(2, 2); await espera(400);
+      await recortar(p, ".tela.loja", n("mercado-vendido"), 4);
+      await zoom(p, await p.$("[data-recomprar]"), n("recomprar-machado"));
+      relatorio.push({ nome: n("venda"), mochila: `${mochilaAntes} → ${await p.evaluate(() => App.estado.heroi.mochila.length)}`, ...(await onde(p)) });
+      await (await p.$("[data-recomprar]")).click(); await espera(1500); await parado(p);
+      relatorio.push({ nome: n("recompra"), mochila: await p.evaluate(() => App.estado.heroi.mochila.filter((x) => x.icone === "machado").length) + " machado(s) na mochila" });
+      await p.close(); proc.kill();
+    }
+    // o saque: o cartão (64 e 48) e o voo ao equipar
+    ({ proc, url } = await subir("vila", { ACHADO: "machado", ARMA: "machado" }));
+    p = await pagina(url, jan, n("saque"), opc);
+    await p.waitForSelector(".janela-achado", { timeout: 30000 }); await espera(2600);
+    if (mov === "normal") await p.screenshot({ path: path.join(SAIDA, `${n("tela-saque")}.png`) });
+    await recortar(p, ".janela-achado", n("saque-cartao"), 6);
+    relatorio.push({ nome: n("saque-cartao"), ...(await onde(p)) });
+    await pegarVoo(p, ".voo-item", mov === "reduzido" ? 40 : 160);
+    const eq = await p.$('#prompt .escolha:has-text("Equipar"), .achado-acoes button:has-text("Equipar")');
+    if (eq) await eq.click(); else await p.keyboard.press("1");
+    await voo(p, ".voo-item", n("saque-voo"));
+    await espera(1500);
+    await recortar(p, "#heroi", n("saque-ficha-depois"), 0);
+    relatorio.push({ nome: n("saque-equipou"), arma: await p.evaluate(() => App.estado.heroi.equip.arma.nome) });
+    await p.close(); proc.kill();
+    // o baú: o quadro com a bomba
+    ({ proc, url } = await subir("baus", { BAUS: "1", SUPRIMENTO: "bomba_fumaca" }));
+    p = await pagina(url, jan, n("bau"), opc);
+    await parado(p); await espera(800);
+    const b0 = await bolsa(p, "bomba_fumaca");
+    await (await p.$('#heroi [data-bolsa="bau"]')).click();
+    await p.waitForSelector(".achado-espolio", { timeout: 15000 }).catch(() => console.log(`  ${n("bau")}: sem o quadro do baú`));
+    await espera(700);
+    if (mov === "normal") await p.screenshot({ path: path.join(SAIDA, `${n("tela-bau")}.png`) });
+    await recortar(p, ".achado-espolio", n("bau-espolio"), 40);
+    relatorio.push({ nome: n("bau"), ...(await onde(p)) });
+    await espera(2500);
+    relatorio.push({ nome: n("bau-bolsa"), bolsa: `${b0} → ${await bolsa(p, "bomba_fumaca")}` });
+    await p.close(); proc.kill();
+  }
+  // o Bestiário e a derrota (a caveira), o Redemoinho e a Fúria (o machado): continuam com o sprite do jogo
+  const { proc, url } = await subir("tutorial", VITRINE);
+  const p = await pagina(url, "normal", "machado-papeis");
+  await ate(p, "#predios .predio");
+  relatorio.push({ nome: "machado-papeis", caveira: await p.evaluate(() => Icones.porDesenho("caveira") === "" ? "sprite do jogo" : "TROCADA"),
+    bomba_pelo_desenho: await p.evaluate(() => Icones.porDesenho("caveira") === "" && Icones.consumivel("bomba_fumaca") !== "" ? "só pelo id" : "ERRO"),
+    machado_item: await p.evaluate(() => Icones.item("machado") !== "" ? "arquivo" : "ERRO") });
+  await p.close(); proc.kill();
 }
 await b.close();
 for (const r of relatorio) console.log(r.nome, "·", Object.entries(r).filter(([k]) => k !== "nome").map(([k, v]) => `${k} ${JSON.stringify(v)}`).join(" · "));

@@ -10,7 +10,7 @@
    por isso a escolha é pelo papel, nunca só pelo nome. Os desenhos vêm prontos nos tamanhos de uso (reduzidos das
    folhas aprovadas por ferramentas/prototipos/hud/preparar_hud4p.py), cada um com o dobro para telas densas; pedido um
    lado sem arquivo igual, vai o mais perto. O escudo e o Unguento de Prata são desenhados em pixel art na própria
-   grade de cada tamanho (ferramentas/arte/, 1.94.0). O martelo e a Pena de Fênix são desenhados em código
+   grade de cada tamanho (ferramentas/arte/, 1.94.0), como o machado e a Bomba de Fumaça (1.99.0). O martelo e a Pena de Fênix são desenhados em código
    (desenhos.js), em 32×32. As lacunas (o que ainda não tem desenho) estão em docs/ARQUITETURA.md. */
 "use strict";
 
@@ -21,30 +21,36 @@ const Icones = (() => {
     "atalho-bestiario": [32, 36], "atalho-diario": [32, 36], "atalho-grimorio": [32, 36], "atalho-inventario": [32, 36],
     "atalho-mapa": [32, 36], "atalho-sair": [32, 36], "atalho-salvar": [32, 36], "atalho-talentos": [32, 36],
     "attr-agilidade": [24, 32], "attr-ataque": [24, 32], "attr-defesa": [24, 32], "attr-poder": [24, 32],
-    "bandagem": [24, 32, 48, 64], "bau": [32, 48, 64], "botas-ferro": [32, 40, 48, 64],
+    "bandagem": [24, 32, 48, 64], "bau": [32, 48, 64], "bomba": [32], "botas-ferro": [32, 40, 48, 64],
     "cota": [32, 40, 48, 64], "elmo": [32, 40, 48, 64], "escudo": [32, 40, 48, 64], "espada": [32, 40, 48, 64], "lugar-caverna": [32, 40],
     "lugar-cidadela": [32, 40], "lugar-floresta": [32, 40], "lugar-montanha": [32, 40], "lugar-pantano": [32, 40],
     "lugar-planicie": [32, 40], "lugar-ruinas": [32, 40], "lugar-vila": [32, 40], "maca": [32, 40, 48, 64],
+    "machado": [32, 40, 48, 64],
     "manopla": [32, 40, 48, 64], "moedas": [24], "osso": [24], "perneiras": [32, 40, 48, 64], "pocao": [24, 32, 48, 64],
     "provisoes": [24], "tocha": [24, 32, 48, 64], "tonico": [32, 48, 64], "unguento": [32, 64],
     "vital-foco": [20], "vital-mana": [20], "vital-vida": [20], "vital-vigor": [20]};
 
   // Cada desenho vai para o tipo de ferro que o jogo já tem (elmo, armadura, manopla, calca = perneira, bota_ferro, maca);
-  // couro (capuz, gibão, calça de couro, bota de caça, luva) e as armas sem desenho (machado, arco...) ficam com o do
+  // couro (capuz, gibão, calça de couro, bota de caça, luva) e as armas sem desenho (arco, cajado...) ficam com o do
   // jogo. O anel tem uma pérola branca: não lembra nenhuma cor de raridade. O martelo é desenhado em código (desenhos.js).
+  // O machado de barba (ferramentas/arte/, 1.99.0) vale para todo equipamento com o desenho "machado" (o Machado e os
+  // únicos Lamento de Gharbad e O Açougueiro); o Redemoinho e a Fúria usam o mesmo sprite noutro papel e ficam com o
+  // do jogo.
   const ITEM = { elmo: "elmo", armadura: "cota", manopla: "manopla", calca: "perneiras", bota_ferro: "botas-ferro",
-    maca: "maca", espada: "espada", escudo: "escudo", amuleto: "amuleto", anel: "anel", aljava: "aljava", martelo: "martelo" };
+    maca: "maca", espada: "espada", escudo: "escudo", amuleto: "amuleto", anel: "anel", aljava: "aljava", martelo: "martelo", machado: "machado" };
   // o espaço vazio: a silhueta apagada do que vai nele (o material não aparece)
   const VAZIO = { cabeca: "elmo", armadura: "cota", maos: "manopla", pernas: "perneiras", pes: "botas-ferro", arma: "espada",
     secundaria: "escudo", amuleto: "amuleto", anel1: "anel", anel2: "anel" };
   // os consumíveis, pelo id do motor (o Baú Trancado é sempre o baú de madeira e latão; a Pena de Fênix é desenhada em
-  // código, desenhos.js; o Unguento de Prata é o pote de cerâmica de ferramentas/arte/)
+  // código, desenhos.js; o Unguento de Prata é o pote de cerâmica e a Bomba de Fumaça o pote preto amarrado, de
+  // ferramentas/arte/)
   const CONSUMIVEL = { pocao_vida: "pocao", tonico: "tonico", antidoto: "antidoto", bandagem: "bandagem", bau: "bau", tocha: "tocha",
-    pena_fenix: "pena", unguento: "unguento" };
+    pena_fenix: "pena", unguento: "unguento", bomba_fumaca: "bomba" };
   // os que só se acham pelo id, nunca pelo desenho: a Pena de Fênix usa no jogo a "chama", que também é o Vigor, o Poder
   // e as habilidades de fogo; uma tela que só tem o desenho "chama" não está falando da pena. O desenho "unguento" do
-  // jogo é também o da Curandeira (o balcão e os cartões dela): ela continua com o dela, só o item muda
-  const SO_PELO_ID = new Set(["pena_fenix", "unguento"]);
+  // jogo é também o da Curandeira (o balcão e os cartões dela): ela continua com o dela, só o item muda. A Bomba de
+  // Fumaça usa no jogo a "caveira", que também é retrato, Bestiário, derrota, fome e a lixeira: só o item muda
+  const SO_PELO_ID = new Set(["pena_fenix", "unguento", "bomba_fumaca"]);
   const ATRIBUTO = { Ataque: "attr-ataque", Defesa: "attr-defesa", Agilidade: "attr-agilidade", Poder: "attr-poder" };
   // os recursos do topo, pelo desenho que o jogo escolhe (sem comida, o osso; a tocha apagada, a bolsa vazia e o
   // frasco vazio ficam com o do jogo); a aljava são as flechas do Patrulheiro
