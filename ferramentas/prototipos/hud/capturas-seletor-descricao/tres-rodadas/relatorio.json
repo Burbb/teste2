@@ -1,0 +1,119 @@
+{
+ "relatorio": [
+  {
+   "nome": "baixa-guerreiro-atual",
+   "abrir_mexe": false,
+   "aberto": true,
+   "tamanho": "684×356",
+   "posicao": "288,283",
+   "cobre_arena": 0,
+   "cobre_cartas": 0,
+   "fora_da_tela": false,
+   "habilidades": 7,
+   "indisponiveis": 0,
+   "rola": false,
+   "cortados": [],
+   "nomes_em_duas_linhas": [],
+   "menor_alvo": 56,
+   "um_alvo": "golpe_pesado",
+   "fragmentos": {
+    "rolagem_max": 0,
+    "cortadas_por_posicao": "0:0 0:0 0:0 0:0 0:0 0:0 0:0",
+    "voltou": true
+   },
+   "disposicao_depois_da_rolagem": "igual",
+   "dica": "sem dica",
+   "soltar_fora": "nada escolhido",
+   "esc_fecha": true,
+   "fechar_mexe": false,
+   "tecla_abre": true,
+   "foco_ao_abrir": "rj-linha: 1Golpe Pesado10",
+   "setas": "rj-linha: 6Redemoinho22",
+   "foco_depois_do_esc": "roda-botao: 2Habilidades",
+   "escolha": "golpe_pesado → sem mira (um inimigo só: executa direto, a regra do jogo); seletor fora; foco: nada (body)",
+   "cancelar": "a roda de volta, sem seletor",
+   "reabrir": "7 linhas"
+  },
+  {
+   "nome": "baixa-arqueiro-atual",
+   "abrir_mexe": false,
+   "aberto": true,
+   "tamanho": "684×340",
+   "posicao": "288,366",
+   "cobre_arena": 0,
+   "cobre_cartas": 0,
+   "fora_da_tela": false,
+   "habilidades": 7,
+   "indisponiveis": 0,
+   "rola": false,
+   "cortados": [],
+   "nomes_em_duas_linhas": [
+    "Flecha Envenenada"
+   ],
+   "menor_alvo": 56,
+   "um_alvo": "tiro_certeiro",
+   "fragmentos": {
+    "rolagem_max": 88,
+    "cortadas_por_posicao": "88:0 81:0 75:0 66:0 51:0 30:0 0:0",
+    "voltou": true
+   },
+   "disposicao_depois_da_rolagem": "igual",
+   "dica": "sem dica",
+   "soltar_fora": "nada escolhido",
+   "esc_fecha": true,
+   "fechar_mexe": false,
+   "tecla_abre": true,
+   "foco_ao_abrir": "rj-linha: 1Tiro Certeiro8 1",
+   "setas": "rj-linha: 6Flecha Envenenada10 1",
+   "foco_depois_do_esc": "roda-botao: 2Habilidades",
+   "escolha": "tiro_certeiro → mira; seletor fora; foco: nada (body)",
+   "cancelar": "a roda de volta, sem seletor",
+   "reabrir": "7 linhas"
+  },
+  {
+   "nome": "baixa-mago-atual",
+   "abrir_mexe": false,
+   "aberto": true,
+   "tamanho": "684×356",
+   "posicao": "288,315",
+   "cobre_arena": 0,
+   "cobre_cartas": 0,
+   "fora_da_tela": false,
+   "habilidades": 7,
+   "indisponiveis": 0,
+   "rola": false,
+   "cortados": [],
+   "nomes_em_duas_linhas": [],
+   "menor_alvo": 56,
+   "um_alvo": "bola_fogo",
+   "fragmentos": {
+    "rolagem_max": 0,
+    "cortadas_por_posicao": "0:0 0:0 0:0 0:0 0:0 0:0 0:0",
+    "voltou": true
+   },
+   "disposicao_depois_da_rolagem": "igual",
+   "dica": "sem dica",
+   "soltar_fora": "nada escolhido",
+   "esc_fecha": true,
+   "fechar_mexe": false,
+   "tecla_abre": true,
+   "foco_ao_abrir": "rj-linha: 1Bola de Fogo14",
+   "setas": "rj-linha: 6Erguer Servo22",
+   "foco_depois_do_esc": "roda-botao: 2Habilidades",
+   "escolha": "bola_fogo → mira; seletor fora; foco: nada (body)",
+   "cancelar": "a roda de volta, sem seletor",
+   "reabrir": "7 linhas"
+  }
+ ],
+ "comportamentos": [
+  {
+   "versao": "atual",
+   "depressa": "1 seletor(es) na tela depois de 5 cliques (esperado 1)",
+   "tecla_segurada": "1 seletor(es) (esperado 1)",
+   "clique_duplo": "na mira; 4 cartas inimigas; vez do herói: true",
+   "clique_na_entrada": "aceito (foi para a mira)",
+   "saida_pelo_teclado": "sem mira; foco: rj-linha: 1Golpe PesadoVigor insuficient; controles do seletor que sobraram: 8",
+   "reduzido_pressionado": "none"
+  }
+ ]
+}

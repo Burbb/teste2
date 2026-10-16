@@ -127,6 +127,32 @@
 :root body .roda-janela[data-tipo="habilidades"] .rj-linha.bloqueada:is(:hover, :focus-visible) .tecla::before { background: #4d463d; border-color: #2a2621; }
 :root body .roda-janela[data-tipo="habilidades"] .rj-linha.bloqueada:active { translate: none; }
 
+/* A descrição da examinada, embaixo da coluna dela (escolhas.js, descricoes): a zona tem a altura da maior
+   descrição, reservada ao abrir; a caixa vai para baixo da coluna esquerda, da direita ou, se a coluna não couber na
+   janela, ocupa as duas ("junto"). Na superfície do seletor, sem janela própria: um fio de latão em cima, o nome em
+   versalete pequeno (como o título), o custo e o alvo, o que a habilidade faz em letra de leitura, o dano e o motivo. */
+:root body .roda-janela[data-tipo="habilidades"] .rj-descricao { position: relative; flex: none; margin-top: 4px; }
+:root body .roda-janela[data-tipo="habilidades"] .rj-desc-caixa.rola { overflow-y: auto; scrollbar-width: thin; scrollbar-color: #4a4640 transparent; }
+/* janela baixa: o Esc · Voltar na linha do título, à direita, depois do fio */
+:root body .roda-janela[data-tipo="habilidades"] .rj-titulo::after { order: 1; }
+:root body .roda-janela[data-tipo="habilidades"] .rj-titulo .rj-voltar { order: 2; margin: 0; padding: 0 2px; font-size: 13px; letter-spacing: 0; text-transform: none; }
+:root body .roda-janela[data-tipo="habilidades"] .rj-desc-caixa { position: absolute; top: 0; left: 0; padding: 7px 4px 0 2px;
+  border-top: 1px solid rgba(176, 138, 69, 0.45); font-family: var(--texto); font-size: 15px; line-height: 1.35; color: #ddd2bb; }
+:root body .roda-janela[data-tipo="habilidades"] .rj-desc-caixa:empty { display: none; }
+:root body .roda-janela[data-tipo="habilidades"] .rj-desc-caixa > b:first-child { display: block; font-weight: 600; font-size: 12.5px; line-height: 1.2;
+  letter-spacing: 0.14em; text-transform: uppercase; color: #b49a64; }
+:root body .roda-janela[data-tipo="habilidades"] .rj-desc-caixa .tipo { margin: 1px 0 3px; font-size: 12.5px; letter-spacing: 0.04em; text-transform: uppercase; color: #9d978b; }
+:root body .roda-janela[data-tipo="habilidades"] .rj-desc-caixa .bonus { color: #ece2cc; }
+:root body .roda-janela[data-tipo="habilidades"] .rj-desc-caixa .melhor { margin-top: 2px; font-size: 14px; color: #9fc58a; }
+:root body .roda-janela[data-tipo="habilidades"] .rj-desc-caixa .pior { margin-top: 2px; font-size: 14px; font-weight: 600; color: var(--sh-perigo); }
+:root body .roda-janela[data-tipo="habilidades"] .rj-desc-caixa .rodape { margin-top: 1px; font-size: 12.5px; color: #8f8775; }
+/* a área de baixo das duas colunas (janela baixa): larga, então em duas partes, para ficar baixa e deixar as faixas
+   sem rolar: o nome, o custo e o alvo e o rodapé à esquerda; o que faz, o dano e o motivo à direita */
+:root body .roda-janela[data-tipo="habilidades"] .rj-desc-caixa[data-lado="junto"] { display: grid; grid-template-columns: minmax(150px, 34%) 1fr;
+  column-gap: 18px; align-items: start; }
+:root body .roda-janela[data-tipo="habilidades"] .rj-desc-caixa .rj-desc-a > b:first-child { display: block; font-weight: 600; font-size: 12.5px; line-height: 1.2;
+  letter-spacing: 0.14em; text-transform: uppercase; color: #b49a64; }
+
 /* Esc · Voltar: discreto, embaixo à direita (o mesmo fechar da janelinha) */
 :root body .roda-janela[data-tipo="habilidades"] .rj-voltar { align-self: flex-end; display: inline-flex; align-items: center; gap: 7px; width: auto; height: auto;
   margin: 2px 2px 0 0; padding: 3px 4px; font-family: var(--texto); font-size: 14px; line-height: 1.2; color: #a59c8b; background: none; border: 0; border-radius: 0; }

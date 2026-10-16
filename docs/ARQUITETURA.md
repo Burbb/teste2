@@ -308,9 +308,14 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   - *estados:* normal carvão; examinada (mouse ou foco) marfim com texto escuro e a tecla em latão; foco do teclado
     com o fio de latão e o anel na tecla; pressionado afunda 2 px; indisponível cinza riscada, com nome, custo e
     motivo legíveis (o clique treme e avisa, como antes);
-  - *teclado e dicas:* aberto pela tecla, já chega com o foco na primeira faixa; as setas andam (cima e baixo na
-    ordem, os lados trocam de coluna); 1 a 9 escolhem; Esc fecha e devolve o foco ao botão; o foco mostra a prévia
-    dos alvos; a dica abre ao lado do seletor, não por cima da outra coluna;
+  - *teclado:* aberto pela tecla, já chega com o foco na primeira faixa; as setas andam (cima e baixo na ordem, os
+    lados trocam de coluna); 1 a 9 escolhem; Esc fecha e devolve o foco ao botão; o foco mostra a prévia dos alvos;
+    o botão Habilidades (e o Itens) alterna a cada clique, mesmo seguidos (`data-alterna`, ver o `Gesto`);
+  - *descrição (1.104.0):* a habilidade examinada (mouse ou teclado) mostra, dentro do seletor e embaixo da coluna
+    dela, o que a dica de antes mostrava (custo, alvo, o que faz, o dano, o motivo de não poder); uma por vez, e ela
+    fica na última examinada. O lugar é reservado ao abrir, na altura da maior descrição (`descricoes`): trocar de
+    habilidade não mexe em nada. Se por coluna não couber na janela, vira uma área só embaixo das duas colunas; se nem
+    assim, a lista rola dentro. A dica flutuante não abre nas faixas (continua nas outras telas);
   - *movimento:* as faixas entram de 12 px em 150 ms, 18 ms uma depois da outra, sem segurar os controles; com
     movimento reduzido, sem deslocamento.
   A conferência: `ferramentas/prototipos/hud/fotografar_seletor_d.mjs` com `VERSOES=atual RODADA=1` (as três classes

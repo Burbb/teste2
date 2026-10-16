@@ -639,7 +639,7 @@ function abrirJanela(ancora, titulo, linhas, aoFechar) {
       : `<span class="rj-icone">${l.icone}</span><span class="rj-nome">${esc(l.nome)}</span><span class="rj-info">${l.info || ""}</span>${i < 9 ? `<span class="tecla">${i + 1}</span>` : ""}`;
     // as pontas da faixa vêm da posição (três pares que se repetem, nunca ao acaso); --i é a ordem de entrada
     if (faixas) { li.dataset.forma = i % 3; li.style.setProperty("--i", i); }
-    if (l.dica) b.dataset.dica = Telas.guardarDica(l.dica);
+    if (l.dica && !faixas) b.dataset.dica = Telas.guardarDica(l.dica);  // no seletor, a descrição mora dentro dele
     const usar = () => (l.bloqueio ? tremerNao(b, l.bloqueio) : l.aoClicar());
     b.addEventListener("click", (ev) => { ev.stopPropagation(); previaAlvos(null); usar(); });
     if (l.alvo) {  // passar o mouse mostra quem a habilidade atingiria
@@ -701,8 +701,73 @@ function abrirJanela(ancora, titulo, linhas, aoFechar) {
   const fecharTudoJanela = () => { document.removeEventListener("pointerdown", fora, true); fechar(); };
   janelaAberta = { fechar: fecharTudoJanela, soltar: () => document.removeEventListener("pointerdown", fora, true) };
   Telas.ligarDicas(j);
+  if (faixas) descricoes(j, linhas, lista);
   if (faixas) faixasTeclado(j, linhas);
   if (faixas) bordaLimpa(j);
+}
+/** A descrição da habilidade examinada (mouse ou teclado), dentro do seletor, embaixo da coluna dela: o que a dica
+ *  de antes mostrava (custo, alvo, o que faz, o dano, o motivo de não poder). Uma por vez; ela fica na última
+ *  examinada até outra ser examinada. O lugar é reservado ao abrir, na altura da maior descrição daquela luta: trocar de
+ *  habilidade não mexe em nada. Se a descrição por coluna não couber na janela, vira uma área só, embaixo das duas
+ *  colunas (mais larga, logo mais baixa); se nem assim couber, a lista rola dentro e a descrição fica inteira. */
+function descricoes(j, linhas, lista) {
+  const lis = [...lista.children], n = lis.length, filas = Math.ceil(n / 2);
+  if (!n) return;
+  const zona = el("div", "rj-descricao"), caixa = el("div", "rj-desc-caixa");
+  zona.appendChild(caixa);
+  j.insertBefore(zona, j.querySelector(".rj-voltar"));
+  const Z = zona.getBoundingClientRect();
+  const coluna = (li) => { const r = li.getBoundingClientRect(); return { esq: r.left - Z.left + 12, larg: r.width - 12 }; };  // a faixa começa 12 px depois da tecla
+  const esq = coluna(lis[0]), dir = n > 1 ? coluna(lis[filas] || lis[n - 1]) : esq;
+  const junto = { esq: esq.esq, larg: dir.esq + dir.larg - esq.esq };
+  // a área de baixo das duas colunas tem outro arranjo: o nome, o custo e o rodapé à esquerda, o texto à direita
+  const arranjar = (dica, lado) => {
+    if (lado !== "junto") return dica || "";
+    const t = document.createElement("div");
+    t.innerHTML = dica || "";
+    const a = el("div", "rj-desc-a"), d = el("div", "rj-desc-b");
+    [...t.children].forEach((c) => (c.matches("b, .tipo, .rodape") ? a : d).appendChild(c));
+    return a.outerHTML + d.outerHTML;
+  };
+  const medir = (larg, lado) => {
+    caixa.style.width = larg + "px";
+    caixa.dataset.lado = lado;
+    let h = 0;
+    linhas.forEach((l) => { caixa.innerHTML = arranjar(l.dica, lado); h = Math.max(h, caixa.offsetHeight); });
+    caixa.innerHTML = "";
+    return h;
+  };
+  let livre = parseFloat(j.style.maxHeight) - j.offsetHeight;
+  let modo = "coluna", alt = medir(esq.larg, "esquerda");
+  if (alt > livre) {
+    modo = "junto";
+    alt = medir(junto.larg, "junto");
+    // janela baixa: o "Esc · Voltar" sobe para a linha do título, e a descrição ganha a altura dele
+    const v = j.querySelector(".rj-voltar");
+    if (v) { j.querySelector(".rj-titulo").appendChild(v); livre = parseFloat(j.style.maxHeight) - j.offsetHeight; }
+  }
+  // se nem assim couber, as faixas ficam inteiras (as opções antes de tudo) e a descrição rola dentro da área dela
+  if (alt > livre) { alt = Math.max(60, livre); caixa.classList.add("rola"); }
+  zona.style.height = alt + "px";
+  caixa.style.maxHeight = alt + "px";
+  j.dataset.descricao = modo;
+  // com um número ímpar, a coluna da direita acaba uma faixa antes: a descrição dela começa logo embaixo dessa faixa
+  const subir = modo === "coluna" && n % 2 && n > 1 ? lis[n - 1].getBoundingClientRect().bottom - zona.getBoundingClientRect().top : 0;
+  const mostrar = (k) => {
+    const l = linhas[k];
+    if (!l || !l.dica) return;
+    const lado = modo === "junto" ? junto : k < filas ? esq : dir;
+    caixa.style.left = lado.esq + "px";
+    caixa.style.width = lado.larg + "px";
+    caixa.style.top = (modo === "coluna" && k >= filas ? Math.min(0, subir) : 0) + "px";
+    caixa.dataset.lado = modo === "junto" ? "junto" : k < filas ? "esquerda" : "direita";
+    caixa.innerHTML = arranjar(l.dica, caixa.dataset.lado);
+  };
+  lis.forEach((li, k) => {
+    const b = li.querySelector(".rj-linha");
+    b.addEventListener("mouseenter", () => mostrar(k));
+    b.addEventListener("focus", () => mostrar(k));
+  });
 }
 /** O registro continua por baixo do seletor. A linha que a borda de baixo cortaria ao meio fica inteira coberta (o
  *  seletor desce até o fim dela, com o mesmo fundo), para não sobrar meio texto encostado na divisória. Só o seletor
@@ -741,16 +806,10 @@ function bordaLimpa(j) {
   acertar();
   pagina.addEventListener("scroll", acertar, { passive: true });
 }
-/** As faixas pelo teclado, a prévia dos alvos no foco e a dica ao lado do seletor. */
+/** As faixas pelo teclado e a prévia dos alvos no foco. */
 function faixasTeclado(j, linhas) {
   const bs = [...j.querySelectorAll(".rj-linha")], n = bs.length, filas = Math.ceil(n / 2);
   bs.forEach((b, k) => {
-    b.addEventListener("mouseenter", () => {  // a dica sai do painel: ao lado dele, não por cima da outra coluna
-      const c = document.getElementById("dica-item");
-      if (!c || c.hidden || c._dono !== b) return;
-      const p = j.getBoundingClientRect(), w = c.offsetWidth;
-      c.style.left = (p.right + 8 + w <= innerWidth - 6 ? p.right + 8 : Math.max(6, p.left - w - 8)) + "px";
-    });
     const alvo = linhas[k].alvo;
     if (alvo) {
       b.addEventListener("focus", () => previaAlvos(alvo));
@@ -763,7 +822,11 @@ function faixasTeclado(j, linhas) {
     ev.preventDefault();
     ev.stopPropagation();
     const k = bs.indexOf(document.activeElement), novo = k < 0 ? 0 : k + passo;
-    if (novo >= 0 && novo < n) bs[novo].focus({ preventScroll: true });
+    if (novo < 0 || novo >= n) return;
+    bs[novo].focus({ preventScroll: true });
+    const L = bs[novo].closest(".rj-lista"), r = bs[novo].getBoundingClientRect(), lr = L.getBoundingClientRect();
+    if (r.top < lr.top) L.scrollTop -= lr.top - r.top;  // a lista que rola dentro acompanha o foco (só ela: a página fica)
+    else if (r.bottom > lr.bottom) L.scrollTop += r.bottom - lr.bottom;
   });
   if (performance.now() - gestoTecla < 400 && bs[0]) bs[0].focus({ preventScroll: true });  // aberta pela tecla
 }
