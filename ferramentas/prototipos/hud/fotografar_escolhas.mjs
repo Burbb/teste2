@@ -16,13 +16,14 @@
 // Em janela normal (1500×950) e baixa (1280×720); mede a altura de cada opção (a proposta não pode mudar a altura).
 // Guarda em capturas-escolhas/; comparar_escolhas.py monta as comparações.
 //   PLAYWRIGHT_MODULO=<caminho do playwright>/index.mjs node ferramentas/prototipos/hud/fotografar_escolhas.mjs
+// (VERSOES=atual,p24 escolhe as versões; SAIDA=<pasta> troca a pasta das fotos)
 import { spawn } from "child_process";
 import { mkdirSync, readFileSync, rmSync, writeFileSync } from "fs";
 import { fileURLToPath } from "url";
 import path from "path";
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULO || "playwright");
 const aqui = path.dirname(fileURLToPath(import.meta.url)), raiz = path.resolve(aqui, "../../..");
-const SAIDA = path.join(aqui, "capturas-escolhas"), AMOSTRAS = path.join(aqui, "escolhas-pixel");
+const SAIDA = path.resolve(process.env.SAIDA || path.join(aqui, "capturas-escolhas")), AMOSTRAS = path.join(aqui, "escolhas-pixel");
 rmSync(SAIDA, { recursive: true, force: true });
 mkdirSync(SAIDA, { recursive: true });
 const espera = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -45,7 +46,8 @@ const escolhas = trocar(readFileSync(path.join(raiz, "rpg/web/static/app/escolha
   ["    if (o.meta && o.meta.item) icone = spr(Telas.iconeConsumivel(o.meta.item), 1);\n    if (o.meta && o.meta.gasta) icone = spr(Telas.iconeConsumivel(o.meta.gasta), 1);  // o item que a escolha usa",
     "    const doItem = (id) => Icones.escolha(id) || spr(Telas.iconeConsumivel(id), 1);  // o desenho do item, ou o sprite\n    if (o.meta && o.meta.item) icone = doItem(o.meta.item);\n    if (o.meta && o.meta.gasta) icone = doItem(o.meta.gasta);  // o item que a escolha usa"],
 ], "escolhas.js");
-const VERSOES = { atual: null, p16: [16], p24: [24] };
+const VERSOES = Object.fromEntries(Object.entries({ atual: null, p16: [16], p24: [24] })
+  .filter(([v]) => !process.env.VERSOES || process.env.VERSOES.split(",").includes(v)));
 async function subir(cenario, amb = {}) {
   const proc = spawn("python3", ["-m", "tests.navegador.cenarios", cenario],
     { cwd: raiz, env: { ...process.env, VELOCIDADE: "rapido", PYTHONPATH: raiz, ...amb } });

@@ -3,14 +3,16 @@
   - prancha-zoom.png: só a opção de cada caso, nas três versões, ampliada 3× sem suavizar, para achar o pixel (julgue
     pelo tamanho real).
 
-    python ferramentas/prototipos/hud/comparar_escolhas.py
+    python ferramentas/prototipos/hud/comparar_escolhas.py [pasta]   (padrão: capturas-escolhas/; só as versões que
+                                                                      estiverem na pasta, como em capturas-escolhas-24/)
 """
 
 import pathlib
+import sys
 
 from PIL import Image, ImageDraw
 
-FOTOS = pathlib.Path(__file__).resolve().parent / "capturas-escolhas"
+FOTOS = pathlib.Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else pathlib.Path(__file__).resolve().parent / "capturas-escolhas"
 FUNDO, TEXTO = (17, 18, 21), (214, 205, 186)
 VERSOES = (("atual", "atual (sprite 16)"), ("p16", "proposta 16"), ("p24", "proposta 24"))
 CASOS = ("bandagem", "pocao", "pocao-sem", "bomba-simulada")
@@ -28,6 +30,8 @@ def coluna(imgs, rotulos, z=1):
 
 
 def main():
+    global VERSOES
+    VERSOES = tuple((v, r) for v, r in VERSOES if any(FOTOS.glob(f"*-{v}-*.png")))
     for jan in ("normal", "baixa"):
         for caso in CASOS:
             ps = [FOTOS / f"{jan}-{v}-{caso}-opcoes.png" for v, _ in VERSOES]

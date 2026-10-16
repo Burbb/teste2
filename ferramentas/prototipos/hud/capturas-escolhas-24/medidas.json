@@ -1,0 +1,98 @@
+[
+ {
+  "nome": "normal-atual-bandagem",
+  "opcao": 64,
+  "outras": "64,41,41,41,41",
+  "icone": "sprite 16px"
+ },
+ {
+  "nome": "normal-p24-bandagem",
+  "opcao": 64,
+  "outras": "64,41,41,41,41",
+  "icone": "bandagem-24.png 24px"
+ },
+ {
+  "nome": "baixa-atual-bandagem",
+  "opcao": 64,
+  "outras": "64,41,41,41,41",
+  "icone": "sprite 16px"
+ },
+ {
+  "nome": "baixa-p24-bandagem",
+  "opcao": 64,
+  "outras": "64,41,41,41,41",
+  "icone": "bandagem-24.png 24px"
+ },
+ {
+  "nome": "normal-atual-pocao",
+  "opcao": 64,
+  "outras": "64,64,41",
+  "icone": "sprite 16px"
+ },
+ {
+  "nome": "normal-atual-bomba-simulada",
+  "opcao": 64,
+  "outras": "64,64,41",
+  "icone": "sprite 16px"
+ },
+ {
+  "nome": "normal-p24-pocao",
+  "opcao": 64,
+  "outras": "64,64,41",
+  "icone": "pocao-24.png 24px"
+ },
+ {
+  "nome": "normal-p24-bomba-simulada",
+  "opcao": 64,
+  "outras": "64,64,41",
+  "icone": "bomba-24.png 24px"
+ },
+ {
+  "nome": "baixa-atual-pocao",
+  "opcao": 64,
+  "outras": "64,64,41",
+  "icone": "sprite 16px"
+ },
+ {
+  "nome": "baixa-atual-bomba-simulada",
+  "opcao": 64,
+  "outras": "64,64,41",
+  "icone": "sprite 16px"
+ },
+ {
+  "nome": "baixa-p24-pocao",
+  "opcao": 64,
+  "outras": "64,64,41",
+  "icone": "pocao-24.png 24px"
+ },
+ {
+  "nome": "baixa-p24-bomba-simulada",
+  "opcao": 64,
+  "outras": "64,64,41",
+  "icone": "bomba-24.png 24px"
+ },
+ {
+  "nome": "normal-atual-pocao-sem",
+  "opcao": 91,
+  "outras": "64,91,41",
+  "icone": "sprite 16px"
+ },
+ {
+  "nome": "normal-p24-pocao-sem",
+  "opcao": 91,
+  "outras": "64,91,41",
+  "icone": "pocao-24.png 24px"
+ },
+ {
+  "nome": "baixa-atual-pocao-sem",
+  "opcao": 91,
+  "outras": "64,91,41",
+  "icone": "sprite 16px"
+ },
+ {
+  "nome": "baixa-p24-pocao-sem",
+  "opcao": 91,
+  "outras": "64,91,41",
+  "icone": "pocao-24.png 24px"
+ }
+]
