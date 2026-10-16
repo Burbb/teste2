@@ -2892,3 +2892,28 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Candidatos antigos do livro:** histórico, não aprovados (o fechado de antes, o entreaberto, o aberto e o de
   estudo); o aprovado é o grimório fechado.
 - **Próximo:** um teste com Aseprite via MCP numa sessão local; nenhum outro lote começou.
+
+### 16/10/2026 (data do computador local) — Aseprite pelo MCP e a proposta da varinha (protótipo, sem versão)
+
+- **Onde:** feito primeiro na cópia local `C:\Users\Jean Wress\Desktop\packs\MEGABRAIN` (1.108.0, sem `.git`) e
+  depois transferido para o clone `C:\Users\Jean Wress\Desktop\packs\teste2` (branch `claude/tender-einstein-tx3tjl`,
+  a partir de `c98d02f`). A comparação das duas pastas (fora `.git`, `__pycache__` e `node_modules`): 73 arquivos só
+  em MEGABRAIN, todos desta proposta, copiados e conferidos por sha256; um arquivo com conteúdo diferente (esta
+  continuidade: só esta entrada); nenhum arquivo só no clone; 408 arquivos iguais a menos do fim de linha (o clone usa
+  `core.autocrlf=true`, do Git do sistema). Nenhuma diferença ficou sem explicação; MEGABRAIN foi preservada inteira.
+- **O teste da conexão:** o servidor `aseprite` (aseprite-mcp 0.6.0, registro em
+  `C:\Users\Jean Wress\Tools\aseprite-mcp-INSTALACAO.md`) responde com o Aseprite 1.3.18.6 da Steam; um 1.3-rc2 antigo
+  aberto ao mesmo tempo conectava sem responder. O arquivo do teste está em `C:\Users\Jean Wress\Tools\aseprite-mcp-teste\`.
+- **Pedido de Jean:** o primeiro item real por esse fluxo: uma proposta de Varinha (curta e esguia, madeira com
+  afilamento, empunhadura discreta, cristal âmbar pequeno num encaixe de metal envelhecido, sem aura), 32 e 64, só no
+  protótipo; não mexer na skill compartilhada antes de avaliar o fluxo.
+- **Feito:** `ferramentas/prototipos/hud/varinha-aseprite/` (os `.aseprite` editáveis, os PNGs e @2x, as pranchas e as
+  fotos do jogo atual × proposta em 1500×950 e 1280×720: ficha e mercado em 32, cartão do saque em 64), com
+  `fotografar_varinha.mjs` e `comparar_varinha.py`. O `LEIA-ME.md` da pasta lista cada operação feita pelo MCP, as
+  limitações do conector (camadas, contorno, paleta, leitura sem alfa) e a avaliação. O Playwright foi instalado fora do
+  jogo, em `C:\Users\Jean Wress\Tools\playwright`.
+- **Decisão de Jean:** o 32 aprovado como está; o 64 só com um refinamento localizado no cristal e no encaixe; 40 e
+  48 a fazer na própria grade; integração só depois da avaliação dos quatro tamanhos. Antes, testar um conector com
+  controle de camadas (`rezaahmadn/aseprite-mcp-bridge`); a instalação e a retomada estão em
+  `C:\Users\Jean Wress\Tools\aseprite-mcp-bridge-INSTALACAO.md`.
+- **Continua como está no jogo:** a varinha com o sprite 16×16; `icones.js`, a skill e as regras não mudaram.
