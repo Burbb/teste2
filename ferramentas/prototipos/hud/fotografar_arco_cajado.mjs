@@ -12,17 +12,24 @@
 // Guarda em capturas-arco-cajado/<janela>-<versao>-<classe>-<lugar>.png e os recortes pequenos como zoom-...;
 // comparar_arco_cajado.py monta as comparações.
 //   PLAYWRIGHT_MODULO=<caminho do playwright>/index.mjs node ferramentas/prototipos/hud/fotografar_arco_cajado.mjs
+// (PROPOSTA=<pasta> e SAIDA=<pasta> trocam a pasta dos desenhos e a das fotos; CLASSES=mago fotografa só o Mago)
 import { spawn } from "child_process";
 import { mkdirSync, readFileSync, rmSync, writeFileSync } from "fs";
 import { fileURLToPath } from "url";
 import path from "path";
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULO || "playwright");
 const aqui = path.dirname(fileURLToPath(import.meta.url)), raiz = path.resolve(aqui, "../../..");
-const SAIDA = path.join(aqui, "capturas-arco-cajado"), PROPOSTA = path.join(aqui, "arco-cajado-pixel");
+const SAIDA = path.resolve(process.env.SAIDA || path.join(aqui, "capturas-arco-cajado"));
+const PROPOSTA = path.resolve(process.env.PROPOSTA || path.join(aqui, "arco-cajado-pixel"));
 rmSync(SAIDA, { recursive: true, force: true });
 mkdirSync(SAIDA, { recursive: true });
 const espera = (ms) => new Promise((r) => setTimeout(r, ms));
-const TROCAS = [
+// (o arco entrou no jogo na 1.101.0: quando o icones.js já o tem, a troca põe só o cajado)
+const jaTemArco = readFileSync(path.join(raiz, "rpg/web/static/icones.js"), "utf8").includes('arco: "arco" };');
+const TROCAS = jaTemArco ? [
+  ['const TAMANHOS = {', 'const TAMANHOS = {"cajado": [32, 40, 48, 64], '],
+  ['arco: "arco" };', 'arco: "arco", cajado: "cajado" };'],
+] : [
   ['const TAMANHOS = {', 'const TAMANHOS = {"arco": [32, 40, 48, 64], "cajado": [32, 40, 48, 64], '],
   ['machado: "machado" };', 'machado: "machado", arco: "arco", cajado: "cajado" };'],
 ];
@@ -42,7 +49,7 @@ async function subir(cenario, amb = {}) {
 }
 const JANELAS = { normal: [1500, 950], baixa: [1280, 720] };
 const VERSOES = ["atual", "proposta"];
-const CLASSES = { arqueiro: "arco", mago: "cajado" };
+const CLASSES = Object.fromEntries(Object.entries({ arqueiro: "arco", mago: "cajado" }).filter(([c]) => !process.env.CLASSES || process.env.CLASSES.split(",").includes(c)));
 const relatorio = [], erros = [];
 const b = await chromium.launch(process.env.CHROMIUM ? { executablePath: process.env.CHROMIUM } : {});
 async function pagina(url, jan, versao, nome) {

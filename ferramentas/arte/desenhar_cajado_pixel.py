@@ -15,9 +15,10 @@ A construção, em cada tamanho (32, 40, 48 e 64 px):
     medidas num sistema que gira com a haste (u ao longo dela, v para o lado da luz);
   - a madeira (carvalho escuro): um cilindro em faixas de 1 pixel na diagonal, o lado da luz mais claro; o veio e um
     nó em 48 e 64;
-  - o encaixe (retorno do Jean: a pedra parecia solta, encostada na madeira): a haste abre numa taça que engole a
-    ponta de baixo da pedra, a borda da taça acesa do lado da luz e com sombra na pedra, e duas garras que sobem da
-    borda por cima das faces da pedra, na frente dela, com as pontas mais claras;
+  - o encaixe (retornos do Jean: a pedra parecia solta, encostada na madeira; depois, a base azul passava do
+    alojamento): a haste abre num alojamento que engole a parte de baixo da pedra; a borda da frente é uma faixa de
+    madeira por cima da pedra, de lado a lado, acesa do lado da luz; as duas garras nascem na borda e sobem pelas faces;
+    sombra de contato na pedra acima da borda e junto das garras;
   - o cristal: quatro facetas (a de cima à esquerda a mais clara, a de baixo à direita a mais escura), a aresta do
     meio acesa, um reflexo pequeno e duro na faceta da luz (a regra do vidro) e, embaixo, um degrau mais claro dentro
     da pedra (a luz que atravessa);
@@ -48,14 +49,15 @@ R2 = math.sqrt(2)
 # As medidas de cada tamanho, em pixels, no sistema da haste: a origem (o pé, x0 e y0), a meia largura (hw), o fim da
 # haste (L, onde ela se abre nas garras); o cristal: o centro (uc), a meia altura (h) e a meia largura (w); as garras:
 # a espessura (g) e até onde sobem (g_ate, em fração da meia altura acima do centro do cristal); a taça (taca, onde fica
-# a borda, em fração da meia altura abaixo do centro) e a sombra dela na pedra (sombra); a empunhadura (de e ate, em fração de L);
+# a borda, em fração da meia altura abaixo do centro), a sombra dela na pedra (sombra), a altura da borda da frente
+# (beira) e quanto ela passa da pedra de cada lado (folga); a empunhadura (de e ate, em fração de L);
 # a ponteira (pont); `det` liga o veio, o nó e as voltas do couro (48 e 64).
 MEDIDAS = {
-    32: dict(x0=5.0, y0=29.5, hw=1.1, L=23.0, uc=27.6, h=6.2, w=3.9, g=1.0, g_ate=0.3, taca=0.62, sombra=1.1, de=0.18, ate=0.42, pont=1.6, det=0),
+    32: dict(x0=5.0, y0=29.5, hw=1.1, L=23.0, uc=27.6, h=6.2, w=3.9, g=1.0, g_ate=0.3, taca=0.62, sombra=1.1, beira=1.7, folga=0.4, de=0.18, ate=0.42, pont=1.6, det=0),
 }
 for _l, _extra in ((40, dict(x0=6.0, y0=37.5)), (48, dict(x0=7.0, y0=44.5, det=1)), (64, dict(x0=9.0, y0=59.5, det=2))):
     _e = _l / 32
-    MEDIDAS[_l] = {k: (v * _e if k not in ("de", "ate", "det", "g_ate", "taca") else v) for k, v in MEDIDAS[32].items()} | _extra
+    MEDIDAS[_l] = {k: (v * _e if k not in ("de", "ate", "det", "g_ate", "taca", "folga") else v) for k, v in MEDIDAS[32].items()} | _extra
 # Correções feitas olhando cada tamanho: {(x, y): (material ou None, tom)}.
 AJUSTES = {32: {}, 40: {}, 48: {}, 64: {}}
 
@@ -104,28 +106,41 @@ def desenhar(lado):
         if mat[by_ + oy, bx + ox] == "q":
             tom[by_ + oy, bx + ox] = t_
 
-    # ---- o encaixe (o retorno do Jean: a pedra parecia solta, encostada na madeira): a haste abre numa taça que engole
-    # a ponta de baixo da pedra; a borda da taça faz sombra na pedra; duas garras sobem da borda por cima das faces da
-    # pedra (na frente dela), com as pontas viradas para dentro
+    # ---- o encaixe (retornos do Jean: a pedra parecia solta na madeira; depois, a base azul passava do alojamento):
+    # a haste abre num alojamento que engole a parte de baixo da pedra; a borda da frente é uma faixa de madeira por
+    # cima da pedra, de lado a lado (a pedra entra atrás dela); as duas garras nascem na borda e sobem pelas faces;
+    # sombra de contato na pedra logo acima da borda e junto de cada garra
     borda = w * np.clip(1 - np.abs(u - uc) / h, 0, 1)              # a meia largura da pedra naquela altura
-    ut0, ut1 = L - 0.8, uc - M["taca"] * h                         # do pé da taça até a borda
+    ut0, ut1 = L - 0.8, uc - M["taca"] * h                         # do pé do alojamento até a borda
     tt = np.clip((u - ut0) / (ut1 - ut0), 0, 1)
-    larg_taca = hw + (w * M["taca"] + 0.35 - hw) * np.sin(tt * np.pi / 2)
+    boca = max(w * M["taca"] + 0.35, w * (1 - M["taca"]) + M["folga"])   # a borda é sempre mais larga que a pedra ali
+    larg_taca = hw + (boca - hw) * np.sin(tt * np.pi / 2)
     taca = (u >= ut0) & (u <= ut1) & (np.abs(v) <= larg_taca)
-    beira = taca & (u > ut1 - 1.0)
-    taca |= (mat == "q") & (u < ut1)                               # a ponta da pedra fica toda dentro da taça
+    taca |= (mat == "q") & (u < ut1)                               # a parte de baixo da pedra fica toda dentro
     mat[taca], tom[taca] = "m", np.select([v > 0.35 * larg_taca, v > -0.35 * larg_taca], [5, 4], 2)[taca]
-    tom[beira] = np.where(v[beira] > 0, 6, 3)                      # a borda da taça, acesa do lado da luz
-    fixo[taca] = True
-    sombra = (mat == "q") & (u > ut1) & (u < ut1 + M["sombra"])
+    # a borda da frente, por cima da pedra: acompanha a largura do alojamento (ou a da pedra, um pouco mais)
+    beira = (u > ut1 - M["beira"]) & (u <= ut1 + 0.25) & (np.abs(v) <= np.maximum(larg_taca, borda + M["folga"]))
+    mat[beira], tom[beira] = "m", np.where(v[beira] > 0.3 * boca, 6, np.where(v[beira] > -0.3 * boca, 5, 3))
+    fixo[taca | beira] = True
+    sombra = (mat == "q") & (u > ut1) & (u < ut1 + M["sombra"])   # a sombra de contato acima da borda
     tom[sombra] = np.maximum(1, tom[sombra] - 2)
     ug1 = uc + M["g_ate"] * h
-    centro_g = borda - M["g"] * 0.6                                # as garras correm por cima da pedra, junto da borda
-    garra = (u > ut1 - 0.3) & (u <= ug1) & (np.abs(np.abs(v) - centro_g) <= M["g"] / 2) & (np.abs(v) <= borda + 0.2)
+    centro_g = np.maximum(borda - M["g"] * 0.5, 0)                 # as garras correm sobre a face, junto da aresta
+    garra = (u > ut1) & (u <= ug1) & (np.abs(np.abs(v) - centro_g) <= M["g"] / 2) & (np.abs(v) <= borda + 0.1)
     ponta = garra & (u > ug1 - 1.0)
     mat[garra], tom[garra] = "m", np.where(v[garra] > 0, 6, 3)
     tom[ponta] = np.where(v[ponta] > 0, 7, 4)
     fixo[garra] = True
+    junto = (mat == "q") & (np.abs(np.abs(v) - (centro_g - M["g"])) <= 0.5) & (u > ut1) & (u <= ug1)   # a sombra das garras
+    tom[junto] = np.maximum(1, tom[junto] - 1)
+
+    # os furos: um pixel vazio preso entre a garra e o alojamento (três vizinhos cheios) vira madeira, senão o contorno
+    # fazia um ponto escuro e um degrau na silhueta
+    for _ in range(2):
+        cheio = mat != ""
+        viz = sum(np.roll(np.roll(cheio, oy, 0), ox, 1).astype(int) for ox, oy in ((1, 0), (-1, 0), (0, 1), (0, -1)))
+        furo = ~cheio & (viz >= 3) & (u > L - 2)
+        mat[furo], tom[furo] = "m", 4
 
     # ---- a limpeza, o contorno e as correções (pixel_comum.py)
     tom = limpar(mat, tom, fixo)
