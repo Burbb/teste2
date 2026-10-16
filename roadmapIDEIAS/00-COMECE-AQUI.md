@@ -2537,5 +2537,19 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   redimensionar, deixar e levar de volta, conversar, Dormir (a capela de fora volta), exaustão, sair da capela para
   acampar, recarregar a página na fogueira, o D3 (`ferramentas/arte/fotografar_acampamento.mjs`); a fumaça ganhou
   as conferências da cena e do D3.
-- **Falta:** Jean conferir. Anotados para a próxima: a barra de Foco do Arqueiro (vazia na carta da luta, branca na
-  HUD) e a carta que fica no canto da tela depois de fugir da luta.
+- **Falta:** Jean conferir.
+
+### 16/10/2026 — A barra de Foco e a carta de quem foge (1.98.1)
+
+- **Pedido de Jean:** a barra de Foco do Arqueiro não aparecia na carta da luta e ficava branca na HUD; fugindo com
+  sucesso, a carta do herói ficava parada um tempo no canto da tela em vez de sair inteira.
+- **O Foco:** a HUD de ferro dá a cada barra uma imagem de enchimento (vida, Vigor, Mana, experiência); o Foco não
+  tinha, e o enchimento ficava transparente (na HUD, aparecia só o rastro claro por baixo). Entrou
+  `hud/enche-verde.png`, o azul da Mana com o tom levado ao verde do Foco (`ferramentas/arte/enche_verde.py`).
+- **A fuga:** o estado que chega depois do lance da fuga redesenha a carta e remontava as classes dela, guardando só
+  as de animação; a de quem já saiu (`escapando`, e `fugindo` do inimigo que foge) caía, e a carta acendia de novo
+  onde a fuga a deixou, até a luta acabar (a fala do Morel desaprovando segurava esse fim). As duas passaram a ser
+  guardadas.
+- **Verificado:** a fumaça ganhou o cenário do Foco e da fuga (ele falha sem as correções e passa com elas); 602
+  testes, gabarito sem diferença, pyflakes, fumaça.
+- **Falta:** Jean conferir.

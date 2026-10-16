@@ -1551,6 +1551,37 @@ async function cenarioAbertura(browser) {
   }
 }
 
+async function cenarioFocoEFuga(browser) {
+  console.log("cenário: o Foco do Arqueiro (a barra verde) e a carta de quem foge (some e não volta)");
+  const { proc, url } = await subir("tutorial", { TUTORIAL: "0", CLASSE: "arqueiro", COMITIVA: "morel", LUTA: "lobo", NIVEL_LUTA: "1", SEMENTE: "5" });
+  const { page, erros } = await abrir(browser, url);
+  try {
+    for (let k = 0; k < 120 && !(await page.$("#roda .roda-botao")); k++) { const c = await page.$("#prompt .continuar"); if (c) await c.click().catch(() => {}); await page.waitForTimeout(250); }
+    const enche = await page.evaluate(() => ['[data-chave="hud-rec"]', '#arena .carta[data-uid="j"] .carta-rec .barra-px'].map((s) => {
+      const e = document.querySelector(`${s} .enchimento`) || document.querySelector(s); return e ? getComputedStyle(e).backgroundImage : ""; }));
+    conferir(enche.every((b) => /enche-verde/.test(b)), "a barra de Foco enche de verde na HUD e na carta da luta");
+    let fugiu = false, voltou = false;
+    for (let tent = 0; tent < 10 && !fugiu; tent++) {
+      const bt = await page.$('#roda .roda-botao[data-slot="fugir"]');
+      if (!bt) break;
+      await bt.click();
+      for (let i = 0; i < 40; i++) {
+        await page.waitForTimeout(150);
+        const c = await page.evaluate(() => { const e = document.querySelector('#arena .carta[data-uid="j"]');
+          return { escapou: !!e && e.classList.contains("escapando"), op: e ? +getComputedStyle(e).opacity : 0, luta: document.body.classList.contains("em-combate"), pode: !!document.querySelector("#roda .roda-botao") }; });
+        if (c.escapou) fugiu = true;
+        if (fugiu && c.luta && c.op > 0.05 && i > 6) voltou = true;  // depois da saída (meio segundo), a carta não acende de novo
+        if (!c.luta || (!fugiu && c.pode && i > 3)) break;
+      }
+    }
+    conferir(fugiu && !voltou, "fugindo com sucesso, a carta do herói sai e não volta a aparecer no canto enquanto a luta termina");
+  } finally {
+    conferir(erros.length === 0, "sem erros no console" + (erros.length ? ": " + erros.slice(0, 3).join(" | ") : ""));
+    await page.close();
+    proc.kill();
+  }
+}
+
 async function cenarioFogueira(browser) {
   console.log("cenário: a fogueira (quem vai, quem fica, a nota do acampamento) e a fome fora da barra");
   const { proc, url } = await subir("fogueira", { COMITIVA: "morel", RESERVA: "odete", FOME: "1" });
@@ -2388,6 +2419,7 @@ try {
   await cenarioTiroDuplo(browser);
   await cenarioBaus(browser);
   await cenarioAbertura(browser);
+  await cenarioFocoEFuga(browser);
   await cenarioFogueira(browser);
   await cenarioDormirOrientado(browser);
   await cenarioTutorial(browser);

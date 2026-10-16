@@ -147,8 +147,9 @@ const Batalha = (() => {
     if (!c.vivo) classes.push("morta");
     const fams = new Set(c.efeitos.map((f) => efeito(f.id)[1]));
     fams.forEach((f) => classes.push("com-" + f));
-    // preserva as classes de animação em curso
-    ["morrendo", "agindo", "vez", "alvejavel", "atingida"].forEach((k) => { if (el.classList.contains(k)) classes.push(k); });
+    // preserva as classes de animação em curso e a de quem já saiu da luta (fugiu: a carta fica apagada onde a fuga a
+    // deixou; sem isso, o estado que chega depois da fuga a acendia de novo, parada no canto, até a luta acabar)
+    ["morrendo", "agindo", "vez", "alvejavel", "atingida", "escapando", "fugindo"].forEach((k) => { if (el.classList.contains(k)) classes.push(k); });
     el.className = classes.join(" ");
     el.querySelector(".carta-nome span").textContent = c.nome;
     el.querySelector(".carta-nome small").textContent = c.nivel ? `Nv.${c.nivel}` : "";

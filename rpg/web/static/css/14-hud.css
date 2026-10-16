@@ -99,6 +99,7 @@
 :root body .barra-px.vida { --enche: url(../hud/enche-vermelha.png); }
 :root body .barra-px.vigor { --enche: url(../hud/enche-laranja.png); }
 :root body .barra-px.mana { --enche: url(../hud/enche-azul.png); }
+:root body .barra-px.foco { --enche: url(../hud/enche-verde.png); }  /* o Foco do Arqueiro (sem ela, a barra ficava vazia) */
 :root body .barra-px.xp { --enche: url(../hud/enche-roxa.png); height: 13px; }
 :root body .barra-px .rastro { background: #e8dcc0; }
 :root body .vital .barra-px { height: 13px; }
