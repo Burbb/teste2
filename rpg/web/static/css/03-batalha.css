@@ -145,6 +145,10 @@ body.em-combate #hud-linha { justify-content: flex-end; }
 @media (prefers-reduced-motion: reduce) { .carta.caida { animation: none; filter: grayscale(1) brightness(0.45); opacity: 0.55; } }
 @keyframes morrer { 0% { filter: brightness(2.5); transform: translateY(-3px); } 40% { transform: translateX(3px) rotate(-3deg); } 100% { filter: grayscale(1) brightness(0.5); transform: none; } }
 .carta .flutua { top: -14px; }
+.carta-sombra .flutua { top: -14px; }
+/* a camada dos avisos de passagem (batalha.js, sobre): por cima da moldura do palco, sem pegar o mouse */
+.avisos-luta { position: fixed; inset: 0; z-index: 55; pointer-events: none; }
+.carta-sombra { position: fixed; pointer-events: none; }
 .flutua.crit { color: var(--ouro); font-size: 34px; animation-duration: 1.4s; }
 /* roubo de vida: número de cura (verde, é vida que entra) com contorno de sangue, e o nome da fonte embaixo */
 .flutua.roubo { color: #9be37a; font-size: 30px; text-shadow: 2px 2px 0 #000, 0 0 8px #c0182a, 0 0 2px #ff4a5a; }

@@ -1268,7 +1268,7 @@ async function cenarioBroquel(browser) {
     await page.evaluate(() => { window.__revides = 0;
       new MutationObserver((ms) => ms.forEach((m) => m.addedNodes.forEach((n) => {
         if (n.nodeType === 1 && (n.textContent || "").trim() === "Revide") window.__revides++;
-      }))).observe(document.getElementById("batalha"), { childList: true, subtree: true }); });
+      }))).observe(document.body, { childList: true, subtree: true }); });  // os avisos moram na camada .avisos-luta (1.103.1), fora da arena
     await (await esperar('.roda-botao[data-slot="habilidades"]')).click();
     await (await esperar('.rj-linha[data-hab="erguer_escudo"]')).click();
     for (let k = 0; k < 200 && !(await page.evaluate(() => window.__revides > 0)); k++) {

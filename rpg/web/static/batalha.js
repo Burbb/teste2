@@ -238,6 +238,7 @@ const Batalha = (() => {
       if (arena) paisagem(false);
       cartas.clear(); anteriores = {}; emArea = false;
       if (arena) { colAliados.innerHTML = ""; colInimigos.innerHTML = ""; camadaFx.innerHTML = ""; }
+      limparAvisos();  // os avisos de passagem saem com a luta
       // As falas da luta (o Morel reclamando da fuga) saem com ela, em vez de ficarem sobre a página seguinte.
       Object.keys(baloes).forEach((cid) => { baloes[cid].remove(); delete baloes[cid]; });
       return;
@@ -373,13 +374,49 @@ const Batalha = (() => {
     fx.onanimationend = () => { fx.className = "carta-fx"; };
   }
   function brilho(el, fam) { reiniciar(el, "aura-" + fam, 900); particulas(el, fam, fam === "cura" || fam === "roubo" ? 12 : 7); }
+  /* Os avisos de passagem (números, faixas, selos) não moram na carta: o palco recorta o que passa da moldura, e o
+     "AAARGH!" de uma carta no alto sumia atrás dela. Eles nascem numa camada da página, por cima da moldura, numa
+     sombra do tamanho e no lugar da carta que os disparou (a sombra acompanha a carta quadro a quadro enquanto algum
+     aviso vive e some com o último). O cenário, as cartas e os estados permanentes continuam recortados. */
+  let avisos = null, vigiaAvisos = 0;
+  const sombras = new Map();  // carta → a sombra dela na camada dos avisos
+  function sobre(el) {
+    if (!avisos) { avisos = document.createElement("div"); avisos.className = "avisos-luta"; document.body.appendChild(avisos); }
+    let s = sombras.get(el);
+    if (!s) { s = document.createElement("div"); s.className = "carta-sombra"; avisos.appendChild(s); sombras.set(el, s); }
+    posicionar(el, s);
+    if (!vigiaAvisos) vigiaAvisos = requestAnimationFrame(acompanhar);
+    return s;
+  }
+  function posicionar(el, s) {
+    const r = el.getBoundingClientRect();
+    s.style.cssText = `left:${r.left}px;top:${r.top}px;width:${r.width}px;height:${r.height}px`;
+  }
+  function acompanhar() {
+    sombras.forEach((s, el) => {
+      if (!el.isConnected || !s.childElementCount) { s.remove(); sombras.delete(el); } else posicionar(el, s);
+    });
+    vigiaAvisos = sombras.size ? requestAnimationFrame(acompanhar) : 0;
+  }
+  /** Põe o aviso na sombra da carta e, se ele passaria da borda da janela, empurra para dentro (o mesmo lugar em
+   *  relação à carta sempre que cabe). */
+  function avisar(el, n) {
+    sobre(el).appendChild(n);
+    const r = n.getBoundingClientRect();
+    const dx = r.left < 4 ? 4 - r.left : r.right > innerWidth - 4 ? innerWidth - 4 - r.right : 0, dy = r.top < 4 ? 4 - r.top : 0;
+    if (dx || dy) n.style.translate = n.classList.contains("faixa-acao") ? `calc(-50% + ${dx}px) ${dy}px` : `${dx}px ${dy}px`;
+  }
+  function limparAvisos() {
+    sombras.forEach((s) => s.remove());
+    sombras.clear();
+  }
   function numero(el, texto, classe) {
     if (rapido()) return;
     const n = document.createElement("span");
     n.className = "flutua " + classe;
     n.textContent = texto;
     n.style.left = 30 + Math.random() * 40 + "%";
-    el.appendChild(n);
+    avisar(el, n);
     n.addEventListener("animationend", () => n.remove());  // o do golpe final dura mais
     Sensacao.depois(4000, () => n.remove());
   }
@@ -387,22 +424,22 @@ const Batalha = (() => {
    *  confundia: parecia que o golpe tinha saído de novo). */
   function selos(el, ids, desce = false) {  // desce: um estado ruim chegando (▼); bom, ▲
     if (!ids || !ids.length || rapido()) return;
-    const velho = el.querySelector(".faixa-acao");
+    const velho = sobre(el).querySelector(".faixa-acao");
     if (velho) velho.remove();
     const f = document.createElement("div");
     f.className = "faixa-acao selos" + (desce ? " ruim" : "");
     f.innerHTML = ids.map((id) => `<span>${S(efeito(id)[0], 1)}<b>${desce ? "▼" : "▲"}</b></span>`).join("");
-    el.appendChild(f);
+    avisar(el, f);
     Sensacao.depois(1500, () => f.remove());
   }
   function rotulo(el, texto, classe = "") {
     if (!texto || rapido()) return;
-    const velho = el.querySelector(".faixa-acao");
+    const velho = sobre(el).querySelector(".faixa-acao");
     if (velho) velho.remove();
     const f = document.createElement("div");
     f.className = "faixa-acao " + classe;
     f.textContent = texto;
-    el.appendChild(f);
+    avisar(el, f);
     Sensacao.depois(1500, () => f.remove());
   }
   function particulas(el, fam, n = 7) {
