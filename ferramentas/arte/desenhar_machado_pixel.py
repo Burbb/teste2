@@ -1,4 +1,4 @@
-"""O machado do Guerreiro em pixel art (proposta; o jogo ainda usa o sprite 16×16 "machado"). O terceiro objeto do
+"""O machado do Guerreiro em pixel art (no jogo desde a 1.99.0; antes, o sprite 16×16 "machado"). O terceiro objeto do
 método do escudo e do unguento (pixel_comum.py), cada tamanho desenhado na própria grade.
 
 O que o jogo diz do item (rpg/itens.py): "Machado", uma das bases de arma do Guerreiro, ao lado da Espada, da Maça, do

@@ -1710,7 +1710,7 @@ pasta quando o roteiro foi refeito; continuam no histórico do git, no commit `8
 ## O arco e o cajado (proposta, sem versão)
 
 **O arco entrou no jogo na 1.101.0**, idêntico ao desta proposta; o cajado voltou para um ajuste do encaixe (abaixo,
-"O encaixe do cajado").
+"O encaixe do cajado") e entrou na 1.106.0, idêntico ao de `cajado-encaixe/`.
 
 **O pedido de Jean (16/10/2026):** o lote seguinte da skill `arte-itens-fenda`, só no protótipo: o arco e o cajado,
 na direção aprovada do escudo e do machado, preservando a identidade das armas, com os tamanhos de uso (40 no
@@ -1767,7 +1767,7 @@ Inventário), o cartão do saque e o voo ao equipar, e a roda na luta. 1500×950
 comentário que cita o arco e o cajado entre as armas sem desenho também); conferir pixel a pixel com os desta pasta;
 as lacunas em `docs/ARQUITETURA.md`.
 
-### O encaixe do cajado (proposta, sem versão)
+### O encaixe do cajado (aprovado; no jogo na 1.106.0)
 
 **O retorno do Jean (16/10/2026):** "a base azul do cristal parece ultrapassar o alojamento de madeira". Corrigir só o
 encaixe: a parte de baixo da pedra entra no suporte, a borda da frente cobre a base dela e as garras se apoiam

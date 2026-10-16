@@ -1,4 +1,4 @@
-"""O cajado do Mago em pixel art (proposta; o jogo ainda usa o sprite 16×16 "cajado"). Pelo método do escudo e do
+"""O cajado do Mago em pixel art (no jogo desde a 1.106.0; antes, o sprite 16×16 "cajado"). Pelo método do escudo e do
 machado (pixel_comum.py), cada tamanho desenhado na própria grade.
 
 O que o jogo diz (rpg/itens.py): o desenho "cajado" é o da base Cajado do Mago (a arma de Poder), em todos os

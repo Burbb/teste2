@@ -2764,3 +2764,12 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   em `tests/navegador/cliques_seguidos.mjs`.
 - **Esperando o Jean:** o encaixe do cajado (a revisão de 17/10 em `cajado-encaixe/` e `capturas-cajado-encaixe/`)
   e os ícones das escolhas em 24 px. Os próximos lotes de arte ficam para a etapa seguinte.
+
+### 17/10/2026 — O cajado no jogo (1.106.0)
+
+- **Decisão de Jean:** a revisão do encaixe (`cajado-encaixe/`) aprovada, sem outra rodada.
+- **Entrou:** `cajado-32/40/48/64` (com os @2x) em `hud/icones/`, gravados por `desenhar_cajado_pixel.py`, idênticos
+  byte a byte aos da proposta; `TAMANHOS.cajado` e `ITEM.cajado` em `icones.js` (os Cajados e o único Cajado da
+  Peste). O Atacar do Mago na roda e o traço Conjurador dos inimigos continuam com o sprite do jogo.
+- **Conferido** (`fotografar_itens.mjs`, SO=cajado, 1500×950 e 1280×720): ficha 32, mercado e dica de comparação 32,
+  Inventário 40 (corpo e mochila), cartão do saque 64 e 48, voo ao equipar; a roda com o sprite.

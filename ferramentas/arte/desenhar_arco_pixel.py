@@ -1,4 +1,4 @@
-"""O arco do Arqueiro em pixel art (proposta; o jogo ainda usa o sprite 16×16 "arco"). Pelo método do escudo e do
+"""O arco do Arqueiro em pixel art (no jogo desde a 1.101.0; antes, o sprite 16×16 "arco"). Pelo método do escudo e do
 machado (pixel_comum.py), cada tamanho desenhado na própria grade.
 
 O que o jogo diz (rpg/itens.py): o desenho "arco" é o das três bases de arma do Arqueiro, Arco Curto, Arco Longo e
