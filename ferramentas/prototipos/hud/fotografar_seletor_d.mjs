@@ -31,9 +31,12 @@ rmSync(SAIDA, { recursive: true, force: true });
 mkdirSync(SAIDA, { recursive: true });
 const espera = (ms) => new Promise((r) => setTimeout(r, ms));
 const filtro = (nome, todos) => (process.env[nome] ? process.env[nome].split(",") : todos);
-const ESCOLHAS_D = escolhasD(readFileSync(path.join(raiz, "rpg/web/static/app/escolhas.js"), "utf8"));
+
 const FOLHA_D = path.join(aqui, "seletor", "d-faixas.css"), FOLHA_D2 = path.join(aqui, "seletor", "d2-faixas.css");
 const VERSOES = filtro("VERSOES", ["atual", "d"]);
+// d e d2 aplicam as trocas no escolhas.js de antes da 1.103.0 (as propostas); desde a integração, "atual" já é a D
+// refinada no jogo, e só ela roda no escolhas.js de hoje
+const ESCOLHAS_D = VERSOES.some((v) => v !== "atual") ? escolhasD(readFileSync(path.join(raiz, "rpg/web/static/app/escolhas.js"), "utf8")) : null;
 const BASE = { TUTORIAL: "0", LUTA: "lobo", COMITIVA: "morel,odete", NIVEL: "12", VISTAS: "A1,V2,N1,D1,K1,M1,L1", REC: "0.3", QUANTOS: "2" };
 if (process.env.RODADA) BASE.NIVEL_LUTA = "9";  // lobos que aguentam a rodada (a luta continua, com o registro escrito)
 const TODAS = {
@@ -69,7 +72,7 @@ async function pagina(url, [W, H], versao, nome, opcoes = {}, rodada = false) {
   if (versao !== "atual") await p.addStyleTag({ path: FOLHA_D });
   if (versao === "d2") await p.addStyleTag({ path: FOLHA_D2 });  // a D refinada: as bordas e o fundo, por cima da D
   await vez(p);
-  if (rodada) {  // uma rodada de Atacar antes: o registro real (golpes, falas) por baixo do seletor
+  for (let k = 0; k < (rodada ? Number(process.env.RODADA) || 1 : 0); k++) {  // RODADA=n rodadas de Atacar antes: o registro real por baixo
     await (await p.$('#roda .roda-botao[data-slot="atacar"]')).click();
     for (let k = 0; k < 40 && !(await p.$("#batalha .carta.alvejavel")); k++) await espera(100);
     const alvo = await p.$("#batalha .carta.alvejavel");
@@ -91,8 +94,8 @@ async function vez(p) {
   throw new Error("a vez do herói não chegou");
 }
 async function recortar(p, sels, nome, folga = 8) {
-  // o jogo de hoje: só a tela e o seletor aberto (os estados dele já estão em capturas-seletor/); o caminho é conferido igual
-  if (/-atual-[2-9]-/.test(nome)) return;
+  // o jogo de antes da 1.103.0: só a tela e o seletor aberto (os estados dele estão em capturas-seletor/); ANTIGO=1
+  if (process.env.ANTIGO && /-atual-[2-9]-/.test(nome)) return;
   const c = await p.evaluate(([ss, f]) => {
     const rs = ss.flatMap((s) => [...document.querySelectorAll(s)]).filter((e) => e.getClientRects().length && getComputedStyle(e).visibility !== "hidden")
       .map((e) => e.getBoundingClientRect()).filter((r) => r.width);
@@ -150,6 +153,19 @@ for (const [luta, amb] of LUTAS) {
       await p.screenshot({ path: path.join(SAIDA, `${n("tela")}.png`) });
       await recortar(p, ["#roda", ".roda-janela"], n("1-aberto"));
       Object.assign(r, await medir(p));
+      // a borda de baixo: nenhuma linha do registro cortada ao meio, com o registro em várias posições de rolagem
+      // (alturas e quebras de linha diferentes encostando na borda); a rolagem volta para onde estava
+      r.fragmentos = await p.evaluate(async () => {
+        const pg = document.getElementById("pagina"), j = document.querySelector(".roda-janela"), antes = pg.scrollTop, achados = [];
+        const conta = () => { const B = j.getBoundingClientRect().bottom, rr = document.createRange(), w = document.createTreeWalker(pg, NodeFilter.SHOW_TEXT); let n = 0;
+          for (let t = w.nextNode(); t; t = w.nextNode()) { if (!t.textContent.trim()) continue; rr.selectNodeContents(t);
+            for (const q of rr.getClientRects()) if (q.height && q.top < B - 3 && q.bottom > B + 3) n++; } return n; };  // cortada de verdade: o encosto de 3 px das caixas não conta
+        const posicoes = [antes, ...[7, 13, 22, 37, 58, 91].map((d) => Math.max(0, antes - d))];
+        for (const y of posicoes) { pg.scrollTop = y; await new Promise((r) => setTimeout(r, 60)); achados.push(`${Math.round(pg.scrollTop)}:${conta()}`); }
+        pg.scrollTop = antes; await new Promise((r) => setTimeout(r, 60));
+        return { rolagem_max: pg.scrollHeight - pg.clientHeight, cortadas_por_posicao: achados.join(" "), voltou: pg.scrollTop === antes };
+      });
+      r.disposicao_depois_da_rolagem = (await disposicao(p)) === antes ? "igual" : "MUDOU";
       // 2. o mouse numa habilidade (a dica) e numa indisponível (o motivo)
       const livre = await p.$(".roda-janela .rj-linha:not(.bloqueada)");
       if (livre) { await livre.hover(); await espera(650); r.dica = await dicaCobre(p); await recortar(p, ["#roda", ".roda-janela", "#dica-item"], n("2-mouse")); }
@@ -173,7 +189,7 @@ for (const [luta, amb] of LUTAS) {
       if (versao === "atual") for (let k = 0; k < 15 && !(await p.evaluate(() => !!document.activeElement.closest(".roda-janela .rj-linha"))); k++) await p.keyboard.press("Tab");
       r.foco_ao_abrir = await focado(p);
       await recortar(p, ["#roda", ".roda-janela"], n("5-teclado"));
-      if (versao !== "atual") {
+      if (await p.$('.roda-janela[data-tipo="habilidades"]')) {  // o seletor de faixas (a D, a refinada e o jogo desde a 1.103.0)
         await p.keyboard.press("ArrowDown"); await p.keyboard.press("ArrowRight"); await espera(200);
         r.setas = await focado(p);
         await recortar(p, ["#roda", ".roda-janela"], n("6-setas"));
@@ -186,12 +202,16 @@ for (const [luta, amb] of LUTAS) {
       if (alvo) {
         await (await p.$(`.roda-janela .rj-linha[data-hab="${alvo}"]`)).click(); await espera(900);
         await p.mouse.move(5, H - 5); await espera(250);
-        r.escolha = `${alvo} → ${(await p.$(".roda-mira")) ? "mira" : "SEM A MIRA"}; seletor ${(await p.$(".roda-janela")) ? "AINDA NA TELA" : "fora"}; foco: ${await focado(p)}`;
+        r.escolha = `${alvo} → ${(await p.$(".roda-mira")) ? "mira" : "sem mira (um inimigo só: executa direto, a regra do jogo)"}; seletor ${(await p.$(".roda-janela")) ? "AINDA NA TELA" : "fora"}; foco: ${await focado(p)}`;
         await recortar(p, ["#arena"], n("7-alvo"), 2);
         const v = await p.$(".mira-voltar");
         if (v) await v.click(); else await p.keyboard.press("Escape");
         await vez(p);
         r.cancelar = (await p.$('#roda .roda-botao[data-slot="habilidades"]')) && !(await p.$(".roda-janela")) ? "a roda de volta, sem seletor" : "ERRO";
+        // reabrir depois de cancelar: o mesmo seletor, as mesmas linhas
+        await abrir(p);
+        r.reabrir = `${await p.$$eval(".roda-janela .rj-linha", (x) => x.length)} linhas`;
+        await p.keyboard.press("Escape"); await espera(300);
       } else r.escolha = "nenhuma habilidade de um alvo disponível";
       relatorio.push(r);
       console.log(JSON.stringify(r));

@@ -26,7 +26,7 @@ PENDENTES_JS = {"talentos.js"}  # filtros de cor em animações feitas pelo JS (
 # imagem, véus translúcidos sobre elas, relevo e sombra suaves, cantos de 2 px). Não é pixel art de interface nem
 # migração pendente: é outro material, decidido de propósito, e fica só nestes arquivos. O menu inicial (17, 1.93.1)
 # segue o mesmo acabamento: a sombra suave atrás do título e das opções, sem caixa.
-FORA_DA_TRAVA = {"14-hud.css", "15-hud-luta.css", "16-hud-telas.css", "17-titulo.css"}
+FORA_DA_TRAVA = {"14-hud.css", "15-hud-luta.css", "16-hud-telas.css", "17-titulo.css", "18-seletor-habilidades.css"}
 
 FILTRO = r"\b(grayscale|sepia|hue-rotate|brightness|saturate|contrast|invert|opacity|drop-shadow)\(|filter\s*:\s*url\("
 PROIBIDO = {

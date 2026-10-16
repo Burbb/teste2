@@ -2704,3 +2704,18 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   semente), Guerreiro, Mago e Arqueiro, 1500×950 e 1280×720, parado, destaque, indisponível e movimento reduzido; o
   caminho, o foco e as áreas de clique iguais. Fotos em `capturas-seletor-d2/`.
 - **Continua no jogo:** o seletor de hoje. Espera a escolha entre a D atual e a refinada.
+
+### 17/10/2026 — O seletor de habilidades no jogo (1.103.0)
+
+- **Decisão de Jean:** a D refinada aprovada como seletor padrão, com o visual e o funcionamento apresentados, e a
+  meia linha do registro na borda de baixo resolvida.
+- **Feito:** `app/escolhas.js` (a janelinha de Habilidades vira o seletor de faixas: posição embaixo da arena, duas
+  colunas, título e "Esc · Voltar", marcação separada, setas, foco ao abrir pela tecla, dica ao lado, `bordaLimpa`)
+  e `css/18-seletor-habilidades.css` (faixas, pontas, fundo, estados, entrada). A janelinha de Itens não mudou.
+  Nenhuma regra, custo, habilidade, flecha ou sorteio mudou (gabarito idêntico). O componente está descrito em
+  `docs/ARQUITETURA.md` ("O seletor de habilidades"), para reaproveitar se outro seletor pedir; o estilo não vai para
+  outras telas por enquanto.
+- **Conferido:** as três classes com comitiva e o teste de 10 habilidades, 1500×950 e 1280×720, registros de alturas
+  diferentes; interações, mira, Voltar e reabrir; sem salto e sem texto cortado na borda. Capturas em
+  `ferramentas/prototipos/hud/capturas-seletor-integrado/`.
+- **Próximo:** o menu de Itens e os lotes de arte ficam para entregas posteriores.

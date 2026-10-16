@@ -2037,3 +2037,28 @@ refinada some na página: o seletor fica como uma área da coluna, e as faixas p
 mostra um retângulo mais escuro com a sombra embaixo. O que custa: sem o fundo mais escuro, a separação entre o seletor
 e o registro fica só no fio de baixo; a linha do registro que fica cortada pela borda (a de cima do trecho visível)
 aparece um pouco mais, porque o fundo já não escurece em volta dela.
+
+## Integrado (1.103.0): o seletor de habilidades, a D refinada
+
+A D refinada é o seletor padrão de habilidades do jogo, com o visual e o comportamento apresentados: as trocas de
+`seletor/d-escolhas.mjs` entraram no `app/escolhas.js` e as duas folhas (`d-faixas.css` com `d2-faixas.css` por
+cima) viraram `css/18-seletor-habilidades.css`, com o resultado já combinado (a máscara no lugar do polígono, o fundo
+da página no lugar do carvão). O jogo não lê nada desta pasta; `seletor/`, as capturas e os roteiros ficam como
+histórico. Desde a integração, `fotografar_seletor_d.mjs` com `VERSOES=atual` fotografa o jogo (as versões `d` e `d2`
+aplicavam as trocas no `escolhas.js` de antes e não rodam mais sobre o de hoje).
+
+**O fragmento do registro:** na captura do Mago sobrava meia linha do registro encostada na divisória de baixo. Agora
+`bordaLimpa` (em `escolhas.js`) mede as linhas do registro (caixa a caixa, por isso um parágrafo quebrado conta cada
+linha) e faz o seletor descer até o pé da linha que a borda cortaria, com o mesmo fundo; se ali começar a cortar a
+seguinte, desce de novo (a folga de 3 px separa o corte do encosto das caixas vizinhas). Só o seletor cresce (alguns
+pixels): o registro, o Histórico, a rolagem e as cartas não se mexem; se o registro rolar com o seletor aberto, a conta
+é refeita; ao fechar, o registro está onde estava.
+
+**Conferido** (`capturas-seletor-integrado/`, relatorio.json): Guerreiro berserker, Arqueiro sombra e Mago necromante
+no nível 12 e o teste de 10 habilidades, com Morel e Odette, em 1500×950 e 1280×720, depois de uma rodada de Atacar
+(o registro real por baixo); e, em `tres-rodadas/`, as três classes em 1280×720 depois de três rodadas (registros mais
+longos, outras quebras). Em cada uma: abrir, mouse com a dica, indisponível com o motivo, pressionar e soltar fora,
+Esc, a tecla 2 e as setas, escolher (a mira, ou a execução direta quando sobra um inimigo só, a regra do jogo),
+Voltar e reabrir; a borda de baixo sem linha cortada com o registro em sete posições de rolagem; abrir, fechar e rolar
+sem mexer nas cartas; nenhum nome ou custo cortado; na luta do Guerreiro, cinco cliques rápidos, a tecla segurada, o
+clique duplo, o clique durante a entrada e o movimento reduzido.

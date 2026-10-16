@@ -278,12 +278,43 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   principais da ficha, da coluna do centro e do mundo, as superfícies de carvão, o topo, a doca, os botões, a ficha, os
   espaços de item, a janela do achado), `15-hud-luta.css` (cartas, roda, mira) e `16-hud-telas.css` (janelas, menus,
   mercado e serviços, Diário, Talentos, avisos), mais `17-titulo.css` (1.93.1: o menu inicial aberto sobre a
-  paisagem, sem a moldura do palco, o véu da página nem as placas das opções; só em `body.modo-titulo`). As imagens moram em `static/hud/` (moldura, texturas, barras) e
+  paisagem, sem a moldura do palco, o véu da página nem as placas das opções; só em `body.modo-titulo`) e
+  `18-seletor-habilidades.css` (1.103.0, abaixo). As imagens moram em `static/hud/` (moldura, texturas, barras) e
   `static/hud/icones/` (a família de ícones, cada um no tamanho de uso e com o dobro). Toda regra começa por
   `:root body`, a mesma força de `body.<estado>`: é a que elas tinham no experimento, e vencem o material antigo sem
   depender de uma classe no corpo. Essas folhas ficam fora da trava de pixel (`FORA_DA_TRAVA`): o material é
   pintado, com véus translúcidos, relevo e sombra suaves. `Sprites.publicar()` pinta os anéis, bicos e fios da
   interface em ferro (as mesmas grades; o bronze continua nos sprites e, com `{ bronze: true }`, no protótipo).
+- O seletor de habilidades (1.103.0; o caminho, das propostas A, B e C à D refinada aprovada, está em
+  `ferramentas/prototipos/hud/LEIA-ME.md`). Um componente só, com material próprio (faixas de tinta, marfim, latão
+  envelhecido) que não vale para outras telas. As peças, para reaproveitar se um dia outro seletor pedir o mesmo:
+  - *onde mora:* `abrirJanela` em `app/escolhas.js` monta a janelinha das ações; com o título "Habilidades" ela vira o
+    seletor (`data-tipo="habilidades"`); a de Itens continua a janelinha ao lado dos botões. O visual inteiro está em
+    `css/18-seletor-habilidades.css`; nada vem de `ferramentas/`;
+  - *composição:* da largura da arena, colado embaixo dela, por cima do registro (posição absoluta na camada da roda:
+    abrir e fechar não mexe nas cartas nem na rolagem); duas colunas na ordem das teclas (`--filas`, `--fila`); a
+    altura é a que sobra na tela, e a lista rola dentro se não couber; título pequeno e "Esc · Voltar" (o mesmo
+    fechar);
+  - *marcação:* a tecla, o ícone, o nome com o motivo da indisponível (o texto do motor) e o custo, cada um no seu
+    elemento: a tradução troca só o texto; um nome longo quebra em duas linhas em vez de ser cortado;
+  - *a faixa:* o `::before` de cada linha (a cor do estado, um grão de pincel em SVG fixo e um degradê de volume),
+    recortado por uma máscara de três peças: as pontas, desenhadas em SVG e escaladas só pela altura (o desenho não
+    estica com a largura), e o meio esticado entre elas. Três pontas de cada lado, combinadas pela posição
+    (`li[data-forma]`, 0 a 2): a mesma borda a cada abertura. O desgaste fica nos ~12 px das pontas e nas beiradas,
+    longe do texto, do ícone e do custo. Só o `::before` inclina (2°): texto, números e ícones ficam retos;
+  - *fundo:* a superfície da leitura da página (os véus de `14-hud.css` e a textura de carvão, alinhada à da página
+    por `--fundo-cena` e `--fundo-palco`), opaca, com um fio fino embaixo; `bordaLimpa` faz o seletor descer até o pé
+    da linha do registro que a borda cortaria ao meio (e refaz a conta se o registro rolar), sem mexer no registro;
+  - *estados:* normal carvão; examinada (mouse ou foco) marfim com texto escuro e a tecla em latão; foco do teclado
+    com o fio de latão e o anel na tecla; pressionado afunda 2 px; indisponível cinza riscada, com nome, custo e
+    motivo legíveis (o clique treme e avisa, como antes);
+  - *teclado e dicas:* aberto pela tecla, já chega com o foco na primeira faixa; as setas andam (cima e baixo na
+    ordem, os lados trocam de coluna); 1 a 9 escolhem; Esc fecha e devolve o foco ao botão; o foco mostra a prévia
+    dos alvos; a dica abre ao lado do seletor, não por cima da outra coluna;
+  - *movimento:* as faixas entram de 12 px em 150 ms, 18 ms uma depois da outra, sem segurar os controles; com
+    movimento reduzido, sem deslocamento.
+  A conferência: `ferramentas/prototipos/hud/fotografar_seletor_d.mjs` com `VERSOES=atual RODADA=1` (as três classes
+  com comitiva, o teste de 10 habilidades, as interações, a borda de baixo com o registro em várias rolagens).
 - `icones.js` (`Icones`) é o único lugar que decide o desenho de cada papel: o item pelo desenho que o motor dá,
   o consumível pelo id, o atributo, o recurso do topo, o vital, o atalho da doca, o lugar de um caminho, a ação da
   roda, o retrato, a cabeça e a figura do herói e dos companheiros (de `retratos.js`, abaixo). Devolve a `<img>` pronta ou `""` quando a família não tem aquele desenho; a
