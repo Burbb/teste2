@@ -133,7 +133,8 @@ def desenhar(lado):
 
     # ---- as alças do cordão: dois fios do nó até o fundo, abraçando a barriga (o pote amarrado para levar e atirar),
     # curvados pela forma; o tom pela luz da barriga, um degrau acima do barro em volta
-    for lado_ in (-1, 1):
+    # (um tamanho sem `alca` ou sem `anel` fica sem aquele fio: no pequeno, viram ruído)
+    for lado_ in ((-1, 1) if M.get("alca") else ()):
         for yy in range(int(M["ys"]) + 1, int(M["yf"]) + 1):
             r_ = float(raio_barriga(np.array(yy + 0.5)))
             xx = int(np.floor(cx + lado_ * r_ * M["alca"]))
@@ -142,9 +143,9 @@ def desenhar(lado):
 
     # a volta da barriga: um anel do cordão em volta do pote, que cruza as alças (a frente do anel, vista um pouco de
     # cima, desce no meio)
-    ya = M["by"] + M["anel"]
+    ya = M["by"] + M.get("anel", 0)
     ra = float(raio_barriga(np.array(ya)))
-    for xx in range(int(np.floor(cx - ra)), int(np.ceil(cx + ra))):
+    for xx in (range(int(np.floor(cx - ra)), int(np.ceil(cx + ra))) if "anel" in M else ()):
         yy = int(np.floor(ya + ra * K * np.sqrt(max(0.0, 1 - ((xx + 0.5 - cx) / ra) ** 2))))
         if mat[yy, xx] in ("b", "r"):
             mat[yy, xx], tom[yy, xx], fixo[yy, xx] = "r", int(np.clip(tom[yy, xx] - 2, 1, 2)), True
@@ -162,7 +163,7 @@ def desenhar(lado):
     # ---- a limpeza, o contorno e as correções (pixel_comum.py)
     tom = limpar(mat, tom, fixo)
     contornar(mat)
-    ajustar(mat, tom, AJUSTES[lado])
+    ajustar(mat, tom, AJUSTES.get(lado, {}))
     return imagem(mat, tom, {"b": BARRO, "p": PANO, "r": CORDAO})
 
 

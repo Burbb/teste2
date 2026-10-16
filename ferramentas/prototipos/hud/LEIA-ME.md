@@ -1619,3 +1619,83 @@ proposta, a página recebe um `icones.js` com os dois registrados como a integra
 `"machado": [32, 40, 48, 64]` e `"bomba": [32]` em `TAMANHOS`, `machado: "machado"` em `ITEM`,
 `bomba_fumaca: "bomba"` em `CONSUMIVEL` e `"bomba_fumaca"` em `SO_PELO_ID`, e o comentário que hoje cita o machado
 entre as armas sem desenho; conferir pixel a pixel com os desta pasta; atualizar as lacunas em `docs/ARQUITETURA.md`.
+
+## A roda de ações e os ícones pequenos das escolhas (proposta, sem versão)
+
+**O pedido de Jean (16/10/2026):** recuperar e avaliar a alternativa de acabamento da roda guardada no protótipo, sem
+refazer o que já está resolvido e sem trazer o lote de ícones recusado; e investigar o ícone pequeno antigo nas
+escolhas de evento que gastam um item.
+
+### A roda
+
+**O que já estava no jogo:** a roda de produção já tem o tratamento da HUD 4 pixel (`css/15-hud-luta.css`, desde a
+1.92.0): o nicho de item com aresta fina e fundo fundo, o nome numa placa de metal, a tecla num nicho escuro, o mouse
+que sobe o nicho 2 px e clareia a placa, o pressionado que afunda o nicho, o aberto em latão com a barra à esquerda do
+nome, o foco do teclado com o anel claro de 2 px, a linha bloqueada tracejada na janelinha. Os ícones são os aprovados
+(a espada, o Grimório, a poção, a bota de Fugir). Os botões da roda nunca ficam indisponíveis no jogo de hoje (só as
+linhas da janelinha, sem recurso, ficam `.bloqueada`): o estado simulado da rodada anterior saiu das fotos.
+
+**A alternativa** (`roda-alternativa.css`, a mesma folha guardada, com um passe de acabamento): só cor, aresta e
+sombra; tamanhos, recuos, disposição, mira, atalhos e áreas clicáveis são os de produção. Muda:
+- o nicho: chanfro (luz em cima, sombra embaixo) e fundo de carvão, um pouco mais fundo que hoje;
+- a placa do nome: carvão mais escuro, encaixada atrás do nicho (a sombra à esquerda);
+- a tecla: um encaixe no canto do nicho em vez da caixa solta por cima do canto; acende em latão no mouse e no foco,
+  como a tecla das opções da HUD (`.escolha .tecla`) — acrescentado neste passe;
+- o mouse: a aresta clareia, a placa acende e um fio de latão de 2 px corre embaixo do nome (hoje a diferença entre
+  parado e mouse é pequena, principalmente na placa);
+- o pressionado: o nome afunda junto com o nicho;
+- o aberto: latão no nicho e na placa, com o fio de latão;
+- as linhas da janelinha: o mesmo carvão das placas, o mouse com o fio de latão;
+- o foco do teclado: na folha guardada era um anel de 1 px, mais fraco que o de hoje (some no céu claro); neste passe
+  voltou aos 2 px de hoje, separado do latão do aberto, e o nome acende como no mouse.
+
+**Fotos** (`fotografar_roda.mjs` → `capturas-roda/`; `comparar_roda.py` monta `comparacao-<janela>-<estado>.png` e
+`prancha-<janela>.png`, atual à esquerda, alternativa à direita, em tamanho real): a mesma luta (tutorial, Guerreiro
+contra dois lobos, com Vigor para uma habilidade e não para a outra), 1500×950 e 1280×720, sem erro no console:
+parada, mouse, pressionada, Habilidades aberta (com a linha bloqueada e o mouse na outra), Itens aberta, mirando (a
+escolha do alvo, com o Voltar), foco do teclado, movimento reduzido (parada e mouse) e a comitiva (Morel e Odette na
+luta, parada e Habilidades aberta). Os dados são os mesmos nas duas versões (a mira volta com o Voltar, nada é
+jogado).
+
+**Leitura:** a alternativa melhora o que se lê de longe: o mouse fica inconfundível pelo fio de latão, a tecla deixa
+de parecer uma etiqueta solta e o aberto se distingue melhor do mouse. Ela não muda a disposição nem a mira, e com o
+movimento reduzido o resultado é o mesmo (só sem o deslize). O que pode não agradar: o carvão mais escuro das placas
+deixa a roda um pouco mais pesada sobre o céu claro da manhã; a diferença na roda parada é pequena.
+
+### Os ícones pequenos das escolhas
+
+**O caminho:** `app/escolhas.js` desenha o ícone de uma opção de evento que usa ou gasta um consumível
+(`meta.item` e `meta.gasta`) com `spr(Telas.iconeConsumivel(id), 1)`: o sprite 16×16 do jogo em 1×, fora do `Icones`.
+Por isso a bomba continuaria caveira ali, e a poção e a bandagem mostram os sprites antigos.
+
+**Os casos:** `meta.gasta` vem de `Jogo.custo_item` e aparece hoje em dois eventos: "Estancar o sangue com uma
+bandagem" (`odete_na_estrada`) e "Deixar remédios na porta" (`os_enfermos`, poção de vida), disponível ou
+indisponível (o motivo escrito). Nenhum evento de hoje gasta a Bomba de Fumaça. `meta.item` vem do menu de texto
+"Usar:" do inventário, que a interface web não mostra (ela abre a tela do Inventário). As outras opções com ícone
+(o lugar no mapa, o arco do contrato, o pergaminho da missão) não são itens e ficam fora.
+
+**A proposta (centralizada):** um papel novo no `Icones`, `Icones.escolha(id, lado)`, que devolve o desenho do
+consumível pelo id só quando existe o arquivo NATIVO daquele lado (nunca um 32 reduzido pelo navegador), e "" no resto:
+aí a opção fica com o sprite de hoje. O `escolhas.js` troca as duas linhas por essa chamada. Os desenhos compartilhados
+(a caveira, o sprite da bandagem, a poção do topo) não mudam em nenhum outro papel.
+
+**As amostras** (`escolhas_icones.py` → `escolhas-pixel/`):
+- 16 px: a bomba desenhada na grade de 16 (o pote preto, o brilho, o tufo de pano, o pavio enrolado; sem a rede de
+  cordão, que vira ruído); a poção e a bandagem pela redução da família (`familia_ferro.py`, a escala do grupo e a
+  redução "paleta", o processo dos outros tamanhos delas);
+- 24 px: a poção e a bandagem de 24 que já existem no jogo (os recursos do topo) e a bomba desenhada na grade de 24.
+
+**Fotos** (`fotografar_escolhas.mjs` → `capturas-escolhas/`; `comparar_escolhas.py` monta as comparações e a prancha
+ampliada): os dois eventos de verdade (cenário covil, o evento tocado na hora), a poção disponível e sem poção, e a
+bomba simulada (a mesma chamada com o id da bomba, numa opção da poção, marcada "simulada"), em 1500×950 e 1280×720.
+A altura das opções é a mesma nas três versões (64 px com a nota, 91 com o motivo, 41 sem nota).
+
+**Leitura:** em 16, a bomba lê como bomba e a poção como poção, mas a bandagem reduzida vira uma mancha clara (o
+sprite de hoje, o quadrado com a cruz, lê melhor que ela). Em 24, os três leem bem, com os desenhos aprovados de
+verdade (a poção e a bandagem de 24 são as do topo), sem mudar a altura da opção; o texto dessas opções começa 8 px
+mais à direita. **Recomendação:** 24 px, com a bomba de 24 desenhada; a bandagem de 16 não deve entrar.
+
+**Para integrar (se aprovado):** `Icones.escolha` em `icones.js` (o lado escolhido), as duas linhas em
+`escolhas.js`, a bomba de 24 (ou 16) em `desenhar_bomba_pixel.py` (as medidas saem de `escolhas_icones.py`) e o
+tamanho em `TAMANHOS`. O gerador da bomba ganhou só a possibilidade de um tamanho sem a rede de cordão (`alca` e `anel`
+opcionais): o 32 sai idêntico ao do jogo, conferido byte a byte.

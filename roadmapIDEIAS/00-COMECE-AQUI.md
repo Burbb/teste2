@@ -2588,3 +2588,18 @@ Esta passagem registra o ponto de partida. Não marcar a campanha ou uma etapa c
   com a caveira. Testes, gabarito sem diferença, pyflakes, fumaça.
 - **Continua registrado:** a escolha de evento que gasta um item mostra o sprite de 1× (`escolhas.js`,
   `meta.gasta`), para a revisão desses componentes; a avaliação da roda de ações, em entrega separada.
+
+### 16/10/2026 — A roda de ações e os ícones pequenos das escolhas (proposta, sem versão)
+
+- **Pedido de Jean:** avaliar o acabamento da roda com a alternativa guardada (sem o lote de ícones recusado) e achar
+  por que as escolhas que gastam um item mostram o sprite antigo. Nada integrado: as duas propostas esperam a
+  avaliação.
+- **A roda:** o jogo já tem o tratamento da HUD 4 pixel desde a 1.92.0; a alternativa (`roda-alternativa.css`, com um
+  passe: o foco voltou aos 2 px e a tecla acende em latão) refina mouse, tecla, pressionado e aberto. Fotos atual ×
+  alternativa com os mesmos dados em `ferramentas/prototipos/hud/capturas-roda/`.
+- **As escolhas:** `escolhas.js` usa o sprite 16×16 em `meta.gasta` (bandagem em `odete_na_estrada`, poção em
+  `os_enfermos`; nenhum evento gasta a bomba hoje). Proposta: o papel `Icones.escolha(id, lado)`, só com arquivo
+  nativo; amostras em 16 e 24 (`capturas-escolhas/`). Recomendação: 24 px (a bandagem de 16 não lê).
+- O registro completo está em `ferramentas/prototipos/hud/LEIA-ME.md` ("A roda de ações e os ícones pequenos das
+  escolhas").
+- **Guardado para depois da etapa de itens (pedido de Jean):** o estudo visual do Grimório e do livro da capela.

@@ -8,7 +8,8 @@
    - pressionado: afunda 1 px e escurece;
    - aberto: latão no nicho e na placa, com o fio de latão aceso (o estado mais forte depois do foco);
    - indisponível: o desenho em cinza e a placa apagada, com a aresta tracejada só no nicho (a forma além da cor);
-   - foco do teclado: o anel claro fino por fora, separado do latão do aberto. */
+   - foco do teclado: o anel claro de 2 px por fora (o de hoje), separado do latão do aberto;
+   - a tecla acende em latão no mouse e no foco, como a das opções da HUD. */
 
 :root body .roda-botao .rb-icone {
   border-color: #3a3d43;
@@ -51,9 +52,13 @@
 :root body .roda-botao:is([disabled], .bloqueada) .rb-nome { opacity: 1; border-style: solid; border-color: #26282d; color: #6f6a60; background: #0f1013; box-shadow: none; }
 :root body .roda-botao:is([disabled], .bloqueada) .tecla { color: #6f6a60; }
 
-/* foco do teclado */
-:root body .roda-botao:focus-visible .rb-icone { outline: 1px solid var(--latao-claro); outline-offset: 2px; }
-:root body .roda-botao:focus-visible .rb-nome { color: #fff4dc; }
+/* foco do teclado: o anel claro de 2 px por fora, como no jogo hoje e nas outras peças da HUD (com 1 px, na primeira
+   volta, sumia sobre o céu claro), separado do latão do aberto; o nome acende como no mouse */
+:root body .roda-botao:focus-visible .rb-icone { outline: 2px solid var(--latao-claro); outline-offset: 2px; }
+:root body .roda-botao:focus-visible .rb-nome { color: #fff4dc; border-color: #7b8089;
+  background: linear-gradient(rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04) 55%, rgba(0, 0, 0, 0.1)), #24262c; }
+/* a tecla acende no mouse e no foco, como a das opções da HUD (.escolha .tecla em 14-hud.css) */
+:root body .roda-botao:is(:hover, :focus-visible) .tecla { color: var(--latao-claro); border-color: var(--latao); }
 
 /* a janelinha: as linhas no mesmo carvão das placas, o mouse com o mesmo fio de latão */
 :root body .rj-linha { border-color: #33363c;
