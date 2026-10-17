@@ -3114,3 +3114,23 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   `ferramentas/prototipos/hud/couro-aseprite/logs/integracao-*.log`.
 - **Próximo:** nenhuma peça começou; os 64 dos itens anteriores ficam como estão.
 
+### 17/10/2026 (data do computador local) — Diagnóstico: a demora dos testes de unidade (só documentação, sem versão)
+
+- **Pedido de Jean:** os testes de unidade passaram a levar ~9 min (antes ~1); medir sem atribuir a causa a outro
+  processo, sem mudar critérios.
+- **Medido** (Windows 10, Python 3.12.4, sozinho, sem fotos nem fumaça desta sessão em paralelo; o `python jogar.py`
+  do Jean aberto desde 16/10 22:17 ficou aberto em todas as medições), com `ferramentas/diagnostico-testes/
+  tempos_testes.py` (a mesma descoberta do `unittest discover -s tests`, um tempo por teste):
+  - sem `PLAYWRIGHT_MODULO`: **52 s**, 603 testes, 1 pulado (o `test_navegador`); o grosso é o `test_simulacao`
+    (44 s; `test_todo_evento_roda` 25 s, o gabarito 7 s);
+  - só o `test_navegador`, com `PLAYWRIGHT_MODULO`: **488 s** (ele roda o `fumaca.mjs` inteiro: 48 cenários e 186
+    esperas fixas que somam ~106 s).
+  - 52 + 488 = 540 s: as rodadas de 542 a 547 s (16/10) tinham o `PLAYWRIGHT_MODULO` exportado antes do `unittest`,
+    na mesma linha de comando; as de ~55 s, não.
+- **Causa:** procedimento, não o jogo nem os testes: com o Playwright no ambiente, o `unittest` inclui a fumaça (por
+  desenho), e a fumaça ainda era rodada de novo em seguida. Não há medida antiga da fumaça sozinha para dizer se ela
+  mesma ficou mais lenta.
+- **Feito:** a nota no `CLAUDE.md` (o `unittest` roda a fumaça quando acha o Playwright; não repetir), o medidor e as
+  medições em `ferramentas/diagnostico-testes/` (`medicoes.log`, `tempos-sem-playwright.tsv`). Nenhum teste, espera
+  ou critério mudou.
+

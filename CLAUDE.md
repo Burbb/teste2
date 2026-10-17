@@ -50,5 +50,10 @@ de ponto flutuante e a ordem das chamadas ao sorteio (`rng`): trocar a ordem mud
 Mexer em dificuldade: o ciclo está em [docs/COMO_CRIAR.md](docs/COMO_CRIAR.md) ("Um número de balanceamento"):
 `python -m tests.equilibrio` e `python -m tests.replay` antes e depois, e as tabelas no commit.
 
+O `unittest` também roda a fumaça (`tests/test_navegador.py`) quando acha o Playwright: com `PLAYWRIGHT_MODULO` no
+ambiente ou um Playwright global. Aí a suíte leva o tempo da fumaça a mais (no Windows local, ~52 s viram ~9 min) e
+rodar a fumaça de novo depois é repetição: ou passe o `PLAYWRIGHT_MODULO` só no comando da fumaça, como acima, ou
+deixe o `unittest` rodá-la. `ferramentas/diagnostico-testes/tempos_testes.py` mede a suíte teste a teste.
+
 Na nuvem, o Playwright costuma estar em `/opt/node22/lib/node_modules/playwright/index.mjs` (não rode
 `playwright install`).

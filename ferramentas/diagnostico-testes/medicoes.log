@@ -1,0 +1,141 @@
+# 17/10/2026: a suíte de testes de unidade (Windows 10, Python 3.12.4)
+
+## Ambiente antes de medir (processos Python, Node, Chrome e Aseprite; nenhum encerrado)
+== Sat Oct 17 00:23:50     2026
+
+ProcessId Name                          CreationDate        CommandLine                                                                                                                                                                                   
+--------- ----                          ------------        -----------                                                                                                                                                                                   
+     5372 python.exe                    16/10/2026 18:59:27 "C:\Users\Jean Wress\AppData\Local\Programs\Python\Python312\python.exe"  "C:\Users\Jean Wress\AppData\Local\Programs\Python\Python312\Scripts\mcpkmn-showdown.exe"                           
+     6276 python.exe                    16/10/2026 19:00:48 "C:\Users\Jean Wress\AppData\Local\Programs\Python\Python312\python.exe"  "C:\Users\Jean Wress\AppData\Local\Programs\Python\Python312\Scripts\mcpkmn-showdown.exe"                           
+    14048 aseprite-mcp.exe              16/10/2026 19:12:36 "C:\Users\Jean Wress\Tools\aseprite-mcp\.venv\Scripts\aseprite-mcp.exe"                                                                                                                       
+    23792 python.exe                    16/10/2026 19:12:36 "C:\Users\Jean Wress\Tools\aseprite-mcp\.venv\Scripts\python.exe"  "C:\Users\Jean Wress\Tools\aseprite-mcp\.venv\Scripts\aseprite-mcp.exe"                                                    
+    24996 python.exe                    16/10/2026 19:12:36 "C:\Users\Jean Wress\AppData\Local\Programs\Python\Python312\python.exe" "C:\Users\Jean Wress\Tools\aseprite-mcp\.venv\Scripts\aseprite-mcp.exe"                                              
+     8596 Aseprite.exe                  16/10/2026 19:57:57 "C:\Program Files (x86)\Steam\steamapps\common\Aseprite\aseprite.exe"                                                                                                                         
+     1876 aseprite_crashpad_handler.exe 16/10/2026 19:57:57 "C:\Program Files (x86)\Steam\steamapps\common\Aseprite\aseprite_crashpad_handler.exe" --no-rate-limit "--database=C:\Users\Jean Wress\AppData\Roaming\Aseprite\crashdb"                      
+                                                            "--metrics-dir=C:\Users\Jean Wress\AppData\Roaming\Aseprite\crashdb"                                                                                                                          
+                                                            --url=https://o952035.ingest.sentry.io:443/api/5901269/minidump/?sentry_client=sentry.native/0.10.0&sentry_key=c5ddc970388d4c0a94db6e5d50d384ed "--attachment=C:\Users\Jean                   
+                                                            Wress\AppData\Roaming\Aseprite\crashdb\b13a7469-fdaf-44c2-372a-d83ecf2f4b46.run\__sentry-event" "--attachment=C:\Users\Jean                                                                   
+                                                            Wress\AppData\Roaming\Aseprite\crashdb\b13a7469-fdaf-44c2-372a-d83ecf2f4b46.run\__sentry-breadcrumb1" "--attachment=C:\Users\Jean                                                             
+                                                            Wress\AppData\Roaming\Aseprite\crashdb\b13a7469-fdaf-44c2-372a-d83ecf2f4b46.run\__sentry-breadcrumb2"                                                                                         
+                                                            --initial-client-data=0x358,0x35c,0x360,0xc8,0x364,0x7ff6bd094090,0x7ff6bd0940b0,0x7ff6bd0940c8                                                                                               
+    23984 node.exe                      16/10/2026 20:01:47 node "C:/Users/Jean Wress/Tools/aseprite-mcp-bridge/dist/index.js"                                                                                                                            
+    29220 python.exe                    16/10/2026 22:17:28 python  jogar.py                                                                                                                                                                              
+
+
+
+
+## (0) primeira tentativa do medidor, inválida (o diretório do repositório fora do sys.path: 43 módulos não importaram)
+Sat Oct 17 00:23:58     2026
+python 3.12.4 | 49 testes | falhas 0 erros 43 pulados 1 | descoberta 0.5s | total 1.4s
+por m�dulo (testes + intervalos):
+       0.9s  test_navegador
+       0.1s  test_estilo_pixel
+       0.0s  unittest
+os testes mais lentos:
+       0.9s  test_navegador.TestNavegador.test_fumaca_da_interface_web
+       0.0s  test_estilo_pixel.TestEstiloPixel.test_pendentes_so_encolhem
+       0.0s  test_estilo_pixel.TestEstiloPixel.test_arquivos_migrados_seguem_o_pixel
+       0.0s  test_estilo_pixel.TestEstiloPixel.test_letras_da_paleta
+       0.0s  test_estilo_pixel.TestEstiloPixel.test_a_trava_aceita_o_pixel
+       0.0s  test_estilo_pixel.TestEstiloPixel.test_a_trava_pega_o_estilo_liso
+       0.0s  unittest.loader._FailedTest.test_abertura
+       0.0s  unittest.loader._FailedTest.test_ouro_insuficiente
+       0.0s  unittest.loader._FailedTest.test_feedback
+       0.0s  unittest.loader._FailedTest.test_abertura_ciclos
+       0.0s  unittest.loader._FailedTest.test_habilidades
+       0.0s  unittest.loader._FailedTest.test_reacoes_tela
+       0.0s  unittest.loader._FailedTest.test_guardia
+       0.0s  unittest.loader._FailedTest.test_fuga
+       0.0s  unittest.loader._FailedTest.test_abertura_feridas
+       0.0s  unittest.loader._FailedTest.test_grimorio
+       0.0s  unittest.loader._FailedTest.test_golpe_preparado
+       0.0s  unittest.loader._FailedTest.test_inimigos
+       0.0s  unittest.loader._FailedTest.test_recompensas
+       0.0s  unittest.loader._FailedTest.test_clareza
+       0.0s  unittest.loader._FailedTest.test_recuperacao
+       0.0s  unittest.loader._FailedTest.test_aneis
+       0.0s  unittest.loader._FailedTest.test_abertura_parte2
+       0.0s  unittest.loader._FailedTest.test_cena_ossuario
+       0.0s  unittest.loader._FailedTest.test_mercado
+os maiores intervalos (prepara��o de classe/m�dulo):
+       0.0s  antes de unittest.loader._FailedTest.test_abertura
+       0.0s  antes de unittest.loader._FailedTest.test_feedback
+       0.0s  antes de unittest.loader._FailedTest.test_ouro_insuficiente
+       0.0s  antes de test_estilo_pixel.TestEstiloPixel.test_a_trava_aceita_o_pixel
+       0.0s  antes de test_estilo_pixel.TestEstiloPixel.test_letras_da_paleta
+       0.0s  antes de test_navegador.TestNavegador.test_fumaca_da_interface_web
+       0.0s  antes de unittest.loader._FailedTest.test_habilidades
+       0.0s  antes de unittest.loader._FailedTest.test_custos_protecao
+       0.0s  antes de test_estilo_pixel.TestEstiloPixel.test_pendentes_so_encolhem
+       0.0s  antes de unittest.loader._FailedTest.test_abertura_ciclos
+Sat Oct 17 00:23:59     2026
+
+## (a) python tempos_testes.py, sem PLAYWRIGHT_MODULO no ambiente (a mesma descoberta de python -m unittest discover -s tests)
+Sat Oct 17 00:24:39     2026
+python 3.12.4 | 603 testes | falhas 0 erros 0 pulados 1 | descoberta 0.6s | total 52.0s
+por módulo (testes + intervalos):
+      44.4s  test_simulacao
+       2.3s  test_web
+       0.9s  test_navegador
+       0.7s  test_especializacao
+       0.4s  test_campanha
+       0.4s  test_transformacao
+       0.3s  test_recuperacao
+       0.3s  test_cenas_capela
+       0.2s  test_inimigos
+       0.2s  test_custos_protecao
+       0.1s  test_missoes
+       0.1s  test_guardia
+       0.1s  test_broquel
+       0.1s  test_abertura
+       0.1s  test_caspar
+os testes mais lentos:
+      24.9s  test_simulacao.TestSimulacao.test_todo_evento_roda
+       7.0s  test_simulacao.TestGabarito.test_partidas_identicas_ao_gabarito
+       6.8s  test_simulacao.TestSistemas.test_interface_textual
+       4.2s  test_simulacao.TestSimulacao.test_partidas_aleatorias
+       1.2s  test_web.TestWeb.test_partida_pelo_navegador
+       0.9s  test_navegador.TestNavegador.test_fumaca_da_interface_web
+       0.7s  test_especializacao.TestGrimorio.test_combustao_como_a_execucao
+       0.6s  test_web.TestWeb.test_arquivos_e_token
+       0.5s  test_web.TestWeb.test_recarregar_repete_a_cena
+       0.4s  test_simulacao.TestSimulacao.test_mundo_conectado
+       0.4s  test_campanha.TestCampanha.test_robo_atravessa_o_vale
+       0.3s  test_recuperacao.TestResgate.test_robo_atravessa_com_quedas_sem_fim_de_jogo
+       0.3s  test_transformacao.TestNaLuta.test_chefes_e_gigantes_resistem_metade
+       0.2s  test_simulacao.TestSistemas.test_plural_sem_parenteses
+       0.2s  test_simulacao.TestSistemas.test_mapa_renderiza
+       0.2s  test_inimigos.TestJuizo.test_com_o_heroi_a_um_golpe_so_ataca
+       0.1s  test_simulacao.TestSimulacao.test_salvar_e_carregar
+       0.1s  test_simulacao.TestSimulacao.test_comitiva
+       0.1s  test_custos_protecao.TestPerguntarAOdette.test_perguntar_depois_oracao
+       0.1s  test_simulacao.TestSaves.test_save_antigo_e_migrado
+       0.1s  test_simulacao.TestSistemas.test_talentos_compraveis
+       0.1s  test_cenas_capela.TestExplorarSoLaFora.test_salvar_e_carregar_dentro_e_fora
+       0.1s  test_simulacao.TestSaves.test_save_mais_novo_avisa
+       0.0s  test_baus.TestBaus.test_a_pilha_da_o_mesmo_que_um_por_um
+       0.0s  test_estilo_pixel.TestEstiloPixel.test_pendentes_so_encolhem
+os maiores intervalos (preparação de classe/módulo):
+       0.0s  antes de test_conteudo.TestApresentacao.test_animacoes_que_a_tela_sabe_fazer
+       0.0s  antes de test_abertura.TestCriacao.test_caixa_na_tela_grafica
+       0.0s  antes de test_yara_vau.TestCharco.test_comitiva_cheia_oferece_a_troca_de_sempre
+       0.0s  antes de test_estilo_pixel.TestEstiloPixel.test_a_trava_aceita_o_pixel
+       0.0s  antes de test_baus.TestBaus.test_a_pilha_da_o_mesmo_que_um_por_um
+       0.0s  antes de test_tiro_duplo.TestDescricao.test_grimorio_desc_e_previa
+       0.0s  antes de test_recompensas.TestBau.test_guardiao_sempre_deixa_um_bau
+       0.0s  antes de test_abertura_feridas.TestCurandeiraGratis.test_abrir_e_sair_nao_gasta
+       0.0s  antes de test_inimigos.TestJuizo.test_bando_ja_furioso_nao_uiva_de_novo
+       0.0s  antes de test_ouro_insuficiente.TestMotivos.test_caneca_por_conta_da_casa_sem_motivo
+Sat Oct 17 00:25:32     2026
+
+## (b) python -m unittest tests.test_navegador -v, com PLAYWRIGHT_MODULO e PLAYWRIGHT_BROWSERS_PATH
+Sat Oct 17 00:25:40     2026
+
+----------------------------------------------------------------------
+Ran 1 test in 488.004s
+
+OK
+segundos: 488
+Sat Oct 17 00:33:48     2026
+
+## As rodadas lentas (logs de 16/10): unittest 542,6 s, 547,2 s e 543,7 s, todas com PLAYWRIGHT_MODULO exportado antes, na mesma linha de comando (couro-aseprite/logs/verificacoes*.log e integracao-verificacoes.log)
