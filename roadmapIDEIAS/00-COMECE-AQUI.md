@@ -3011,3 +3011,31 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Em aberto, para uma entrega própria:** os roteiros de foto em `ferramentas/` (`arte/` e `prototipos/`), 29
   arquivos, ainda chamam `python3` direto (o `fotografar_varinha.mjs` já usa `PYTHON` ou `python`). Ficaram fora desta
   correção de propósito.
+
+### 16/10/2026 (data do computador local) — 1.109.0: a varinha no jogo (aprovada e integrada)
+
+- **Decisão de Jean:** a varinha aprovada nos quatro tamanhos, na versão de `451ff11` (a haste uniformizada e a pedra
+  compacta do 32); integrar sem ajuste de desenho; guardar a fonte editável; registrar o fluxo na skill.
+- **Entrou:** `rpg/web/static/hud/icones/varinha-32/40/48/64.png` e os @2x, exportados por
+  `ferramentas/arte/exportar_aseprite.py varinha` das fontes finais em `ferramentas/arte/aseprite/varinha/` (os quatro
+  `.aseprite` com as 8 camadas), idênticos byte a byte aos aprovados de `varinha-aseprite/rodada2/` (e o `--conferir`
+  reproduz os oito); `Icones`: `TAMANHOS.varinha` e `ITEM.varinha` (o papel de equipamento, como o cajado, o orbe e o
+  grimório; pedido sem arquivo igual, o mais perto).
+- **Alcance:** só a arma-base Varinha do Mago (`rpg/itens.py`, desenho "varinha"), em todos os materiais e afixos.
+  Nenhum único, apoio, habilidade, talento, ação da roda ou outro objeto usa o desenho "varinha" (procurado em `rpg/`);
+  o sprite 16×16 continua em `sprites-dados.js`. Na luta, o Atacar do Mago continua com o sprite do cajado.
+- **Fonte e fluxo:** `ferramentas/arte/aseprite/LEIA-ME.md` (as fontes, como exportar, o `pintar.lua`, que veio do
+  protótipo, e os defeitos do `put_pixels`); `ferramentas/arte/exportar_aseprite.py` (Aseprite por `ASEPRITE`, PATH ou
+  instalação comum; o 1× pela linha de comando, o @2x pela duplicação exata). O protótipo da varinha ficou como
+  histórico (nenhum script dele grava no jogo; o LEIA-ME diz o papel de cada um). A skill `arte-itens-fenda` ganhou:
+  um objeto só em todos os tamanhos (simplificação × mudança de construção), a silhueta numa cor só antes da cor,
+  "Desenhar no Aseprite (pelo MCP)" e o exemplo da varinha em `exemplos.md`.
+- **Conferido** (`ferramentas/arte/fotografar_itens.mjs`, `SO=varinha`, que agora também roda no Windows e conhece
+  a varinha): ficha e mercado em 32 (Vender, dica de comparação, vendido em Recomprar e recomprado), corpo e mochila do
+  Inventário em 40 (e o achado guardado na mochila em 40), cartão do saque em 64 com o equipado em 48, voo ao equipar a
+  partir do 48, a roda da luta; em 1500×950 e 1280×720, sem erro no console. Preços (7 na venda), atributos, estoque,
+  regras e animações não mudaram (em `rpg/`, só `icones.js`, a versão e os PNGs).
+- **Verificações:** `unittest` 603 OK (1 pulado); `tests.gabarito` OK com o `gabarito.json` intacto; `pyflakes` só com
+  os avisos de `rpg/eventos/__init__.py`; `fumaca.mjs`, `cliques_seguidos.mjs` e `redimensionar.mjs`: "tudo certo".
+  Tudo neste Windows. `tests.equilibrio`/`replay` não rodaram (nenhum número mudou).
+- **Próximo:** nenhum item começou; parar aqui.

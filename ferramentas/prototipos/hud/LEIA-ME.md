@@ -2440,3 +2440,11 @@ aprovado; os outros candidatos do livro ficam só como histórico, não aprovado
 (`orbe-livro-pixel/`, de `desenhar_livro_pixel.py`), o entreaberto (`livro-entreaberto/`), o aberto de duas páginas
 (`livro-aberto/`) e o de estudo (`livro-estudo/`); as pastas `livro-fechado-ref/`, `livro-fechado-acabamento/` e
 `livro-fechado-emblema/` são as etapas do aprovado.
+
+## A varinha do Mago (desenhada no Aseprite; aprovada e no jogo na 1.109.0)
+
+As rodadas (o teste dos conectores, a pedra que lia como chama, os tamanhos 40 e 48, a haste uniformizada e a pedra
+compacta do 32) estão em `varinha-aseprite/LEIA-ME.md`, com as fotos e as pranchas em `varinha-aseprite/capturas/` e
+`varinha-aseprite/rodada2/capturas/`. A versão aprovada é a de `varinha-aseprite/rodada2/` no commit `451ff11`; as
+fontes finais estão em `ferramentas/arte/aseprite/varinha/` e os PNGs do jogo saem de
+`ferramentas/arte/exportar_aseprite.py varinha`, idênticos byte a byte aos aprovados.

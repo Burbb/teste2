@@ -73,6 +73,28 @@ tamanho do desenho.
   o cordão escuro (claro, a rede virava grade de cesto).
 - **Papel:** a "caveira" do jogo tem muitos papéis; a bomba se acha só pelo id (`SO_PELO_ID`).
 
+## A varinha (jacarandá, couro, bronze e uma pedra âmbar; desenhada no Aseprite)
+
+Fonte em `ferramentas/arte/aseprite/varinha/varinha-32/40/48/64.aseprite` (8 camadas: pomo, empunhadura, anel,
+haste, taca, pedra, garras, contorno), exportada por `ferramentas/arte/exportar_aseprite.py varinha` (1.109.0). As
+rodadas estão em `ferramentas/prototipos/hud/varinha-aseprite/LEIA-ME.md`.
+
+- **A pedra:** a ponta afilada (uma gota mais larga embaixo, terminando em ponta) lia como chama. O que leu como pedra
+  foi um quadrado na grade de cantos cortados, com o canto de baixo afundado na taça. Na diagonal da varinha ele fica
+  como um losango baixo, com quatro faces planas divididas pelas diagonais (as linhas a 45° são as mais nítidas do
+  pixel). Descartados nas prévias: um corpo octogonal (bola laranja) e o perfil de lapidação (cogumelo).
+- **Um corte só em todos os tamanhos:** 6×6 no 64, 5×5 no 48, 4×4 no 40 e no 32. No 32, o 4×4 é o menor em que as
+  quatro faces ainda aparecem. Simplificar (menos faces, reflexo de 1 px) é diferente de trocar a construção: o 32
+  aprovado tinha outra pedra (uma ponta alongada), e o Jean pediu o mesmo corte com a mesma proporção.
+- **A haste, conferida pela silhueta:** numa cor só, cada tamanho afinava de um jeito (um começava largo logo depois
+  do anel e afinava pelos dois lados; o eixo ia e voltava). A regra única: a borda da sombra reta do anel à taça, a
+  haste começando na largura do anel e afinando num degrau só, do lado aceso, a ~53% do comprimento (32 e 40: 3→2;
+  48: 4→3; 64: 5→4). Ela entra no gargalo da taça sem degrau de lado.
+- **Separação do suporte:** a taça de bronze mais escura que a pedra e uma garra de bronze por cima da aresta acesa da
+  pedra (no 32, o pixel de bronze da taça fica por cima).
+- **Medidas no sistema da diagonal:** u = x − y ao longo da varinha, s = x + y de través (um pixel existe quando u e s
+  têm a mesma paridade); o perfil de cada parte é uma tabela {u: (s_baixo, s_alto)} por tamanho.
+
 ## O que se repetiu nos dois (e por isso está no SKILL.md)
 
 Ler o jogo antes de desenhar; a grade de cada tamanho com as medidas numa tabela; uma rampa e uma regra de luz por

@@ -1,5 +1,15 @@
 # A varinha do Mago desenhada no Aseprite pelo MCP (proposta, sem versão)
 
+> **Integrada na 1.109.0 (histórico daqui para baixo).** A versão aprovada é a de `rodada2/` no commit `451ff11`. As
+> fontes finais foram para `ferramentas/arte/aseprite/varinha/` e os PNGs do jogo saem de
+> `ferramentas/arte/exportar_aseprite.py varinha` (ver `ferramentas/arte/aseprite/LEIA-ME.md`). O `pintar.lua` mudou
+> para `ferramentas/arte/aseprite/pintar.lua` (o `auxiliares/montar.lua` já o carrega de lá). Papel de cada script
+> desta pasta, todos histórico, nenhum grava no jogo: `auxiliares/varinha_r2.py` calcula as listas das camadas da
+> rodada 2 (as prévias saem iguais aos finais) numa pasta dada; `auxiliares/partes64.py`, `contorno.py` e
+> `conferir.py` são da primeira rodada; `../fotografar_varinha.mjs` e `../comparar_varinha.py` fotografam e montam as
+> pranchas das propostas com o `icones.js` trocado na página. A conferência do jogo integrado é a de
+> `ferramentas/arte/fotografar_itens.mjs` (`SO=varinha`).
+
 Primeiro item real pelo fluxo Aseprite + MCP `aseprite` (aseprite-mcp 0.6.0, Aseprite 1.3.18.6 da Steam). Só no
 protótipo: o jogo, a skill `arte-itens-fenda` e os dados da Varinha não mudaram. Espera a avaliação do Jean.
 

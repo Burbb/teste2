@@ -73,6 +73,10 @@ O desenho é um script Python em `ferramentas/arte/`, um por objeto, com as etap
 - **Adaptar por tamanho.** O detalhe que não cabe sai do tamanho pequeno em vez de virar ruído: uma emenda, uma base,
   um sulco, a barriga de um pote podem existir só em 48 e 64. A espessura de uma borda pode ser 1 px em 32 e 2 em 64.
   Uma silhueta que ganha um degrau solto num tamanho perde aquele detalhe naquele tamanho.
+- **Um objeto só em todos os tamanhos.** Simplificar por tamanho (menos faces, um reflexo de 1 px, um detalhe que
+  sai) é diferente de mudar a construção do objeto (outro corte de pedra, outra forma de cabo, outra proporção entre
+  comprimento e largura). A simplificação é esperada; a mudança de construção num tamanho só é um defeito, mesmo num
+  tamanho já aprovado: a silhueta, o afunilamento e o formato das partes principais são os mesmos nos quatro.
 - **Grave fora do jogo enquanto for proposta:** `python ferramentas/arte/desenhar_<objeto>_pixel.py <pasta>` grava
   numa pasta qualquer (use o scratchpad ou uma pasta do protótipo); sem a pasta, grava em `rpg/web/static/hud/icones/`,
   o que só se faz na integração.
@@ -81,31 +85,60 @@ Para os itens pintados da família de ferro (as peças em `ferramentas/arte/fami
 `python ferramentas/arte/familia_ferro.py` (a mesma escala do grupo e a redução "paleta" de sempre; `--conferir` refaz
 todos e compara com os do jogo). Isso não é redesenho: é o processo de preparação da família, que preserva o desenho.
 
+### Desenhar no Aseprite (pelo MCP)
+
+Quando o desenho é feito no Aseprite (a varinha, 1.109.0), a fonte final é o `.aseprite`, não um script. O conector
+(um servidor MCP com uma extensão do Aseprite; o testado foi o `aseprite-mcp-bridge`) é da máquina de quem desenha,
+não do repositório: confira as ferramentas da sessão antes e, sem elas, use o caminho dos scripts acima. Detalhes e
+uso em `ferramentas/arte/aseprite/LEIA-ME.md`.
+
+- **Três tipos de operação, registrados separados:** as *ferramentas do conector* (criar documento, camadas, salvar,
+  abrir, exportar, a captura do editor), as *operações em Lua* pelo `execute_script` (a pintura e a leitura) e os
+  *cálculos auxiliares fora do editor* (as listas de pixels por regra, as pranchas, o @2x). No registro da proposta,
+  diga qual foi qual.
+- **Pintar pelo `ferramentas/arte/aseprite/pintar.lua`, nunca pelo `put_pixels`.** O `put_pixels` da extensão (1.0.0)
+  descarta em silêncio o pixel fora do retângulo da cel (a cel que o lápis do Aseprite cria, uma cel deslocada ou fora
+  da tela) e responde com o total pedido; e escreve sem gerar desfazer. O `pintar.lua` troca a imagem da cel por uma
+  que cobre a cel e a tela, numa transação (um passo de desfazer), recusa e lista o que cai fora da tela e relê cada
+  pixel depois de gravar. As listas entram por `dofile` (um `.lua` que faz `return "<lista>"`): `io.open` e
+  `saveCopyAs` para PNG num script abrem uma janela do Aseprite e travam o conector.
+- **Camadas úteis:** uma por parte do objeto que alguém vá querer mexer depois (na varinha, oito; o número é do
+  objeto, não regra), o contorno por cima. Guarde em `ferramentas/arte/aseprite/<peça>/<peça>-<lado>.aseprite`.
+- **Exportar e comparar:** `python ferramentas/arte/exportar_aseprite.py <peça> [<pasta>]` (o 1× pela linha de comando
+  do Aseprite, o @2x pela duplicação exata; sem pasta, grava no jogo, o que só se faz na integração);
+  `--conferir` exporta numa pasta temporária e compara com os do jogo. Na proposta, reabra cada `.aseprite` e confira
+  que o composto exportado é igual, pixel a pixel, à imagem do editor e ao que as listas pediam.
+
 ## Conferir
 
-1. **Tamanho real sobre o carvão.** `python ferramentas/arte/prancha.py <png> [<png>...] -o <saida.png>` monta cada
+1. **A silhueta numa cor só, antes da cor.** Pinte cada tamanho numa cor (preenchimento claro, contorno escuro) e
+   confira lado a lado: as mesmas partes com a mesma forma, afunilamentos num sentido só (sem barrigas nem o eixo indo
+   e voltando), as larguras de cada parte proporcionais ao tamanho. Ajuda medir o perfil de través parte por parte.
+   Depois, o desenho completo.
+2. **Tamanho real sobre o carvão.** `python ferramentas/arte/prancha.py <png> [<png>...] -o <saida.png>` monta cada
    arquivo em 1× num nicho de item sobre o carvão da HUD, com a ampliação ao lado para achar o pixel. Julgue pelo 1×:
    a ampliação engana (o que parece limpo de perto pode virar mancha, e um degrau solto só aparece de longe). Olhe o
    novo ao lado do atual e dos vizinhos da família.
-2. **Dentro das telas.** Suba o jogo nos lugares onde o item aparece, em janela normal (1500×950) e baixa (1280×720):
+3. **Dentro das telas.** Suba o jogo nos lugares onde o item aparece, em janela normal (1500×950) e baixa (1280×720):
    `ferramentas/arte/fotografar_itens.mjs` fotografa o mercado, o cartão do saque com a comparação, o voo ao equipar,
    o baú aberto, o voo de um consumível até a bolsa, o Inventário (anéis, arrastar, dois cliques, teclado) e conta o
    arquivo e o tamanho de cada desenho em cada lugar. Para um item novo, acrescente o lugar dele (um cenário em
    `tests/navegador/cenarios.py`) em vez de criar outro roteiro. Para uma proposta, troque só os arquivos pedidos pela
    página (`page.route` em `/static/hud/icones/<peça>-*.png`, como em `ferramentas/prototipos/hud/fotografar_escudo.mjs`),
    com o jogo intacto.
-3. **O mesmo objeto no cenário e na interface.** Quando o objeto existe também no mundo (as cenas da capela em
+4. **O mesmo objeto no cenário e na interface.** Quando o objeto existe também no mundo (as cenas da capela em
    `rpg/web/static/telas/cenas.js`, as paisagens de `vista.js`, a banca do mercador em `telas/mercado.js`), fotografe
    as duas representações lado a lado (o cenário pelo cenário de teste dele, como `capela` em
    `tests/navegador/cenarios.py`): o item pode ter mais detalhe, mas material, cor e identidade precisam ser os mesmos.
-4. **Papéis separados.** Confira que só o papel pedido mudou: equipamento, atributo, consumível e personagem são
+5. **Papéis separados.** Confira que só o papel pedido mudou: equipamento, atributo, consumível e personagem são
    papéis diferentes, ainda que o jogo use o mesmo sprite.
 
 ## Entregar
 
 - Proposta: as fotos em tamanho real (normal e baixa), o atual ao lado, uma avaliação curta do que melhorou e do que
   piorou, e pare. Não integre nem descarte candidatos sem o Jean.
-- Integração (só do que o Jean aprovou): grave em `rpg/web/static/hud/icones/` pelo script; registre os tamanhos em
+- Integração (só do que o Jean aprovou): grave em `rpg/web/static/hud/icones/` pelo script (ou, com fonte no
+  Aseprite, pelo `exportar_aseprite.py`, guardando os `.aseprite` finais em `ferramentas/arte/aseprite/`); registre os tamanhos em
   `TAMANHOS` de `icones.js` e o papel (`ITEM`, `CONSUMIVEL`, `SO_PELO_ID`); confirme que os arquivos aprovados saem
   idênticos (compare pixel a pixel com os da proposta); rode as verificações do `CLAUDE.md` e
   `fotografar_itens.mjs`; atualize as lacunas em `docs/ARQUITETURA.md` ("A interface web"). O jogo nunca lê nada de

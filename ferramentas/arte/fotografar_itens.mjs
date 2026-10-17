@@ -1,5 +1,5 @@
 // Conferência dos desenhos de item no jogo de verdade (o escudo e o Unguento de Prata da 1.94.0; o equipamento em 40 px
-// no Inventário da 1.95.0; o machado e a Bomba de Fumaça da 1.99.0; o arco da 1.101.0; o cajado da 1.106.0; o orbe da 1.107.0; o grimório da 1.108.0), sem nenhum arquivo do protótipo, em janela normal (1500×950) e baixa (1280×720):
+// no Inventário da 1.95.0; o machado e a Bomba de Fumaça da 1.99.0; o arco da 1.101.0; o cajado da 1.106.0; o orbe da 1.107.0; o grimório da 1.108.0; a varinha da 1.109.0), sem nenhum arquivo do protótipo, em janela normal (1500×950) e baixa (1280×720):
 //   - o mercado (cenário mercado, AMOSTRAS=2, SEMENTE=1: um escudo na mochila, um unguento na bolsa e outro na
 //     prateleira): a prateleira de suprimentos, a compra, a bolsa da ficha e a aba Vender com a dica de comparação;
 //   - o cartão do saque com um escudo e a comparação com o que se usa (cenário vila, ACHADO=escudo) e o voo ao equipar;
@@ -19,6 +19,7 @@
 // Em cada página, conta onde cada desenho aparece e em que tamanho. Guarda em SAIDA (padrão: capturas-itens/ ao lado).
 //   PLAYWRIGHT_MODULO=<caminho do playwright>/index.mjs node ferramentas/arte/fotografar_itens.mjs
 // (CHROMIUM=<executável do navegador>, se o Playwright não achar o dele; SO=mercado,saque,bau,inventario para escolher)
+// (PYTHON=<executável> troca o Python que sobe os cenários; o padrão é python no Windows e python3 nos outros)
 import { spawn } from "child_process";
 import { mkdirSync, writeFileSync } from "fs";
 import { fileURLToPath } from "url";
@@ -26,11 +27,11 @@ import path from "path";
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULO || "playwright");
 const aqui = path.dirname(fileURLToPath(import.meta.url)), raiz = path.resolve(aqui, "../..");
 const SAIDA = path.resolve(process.env.SAIDA || path.join(aqui, "capturas-itens"));
-const SO = new Set((process.env.SO || "mercado,saque,bau,inventario,aneis,antigos,machado,arco,cajado,orbe,livro").split(","));
+const SO = new Set((process.env.SO || "mercado,saque,bau,inventario,aneis,antigos,machado,arco,cajado,orbe,livro,varinha").split(","));
 mkdirSync(SAIDA, { recursive: true });
 const espera = (ms) => new Promise((r) => setTimeout(r, ms));
 async function subir(cenario, amb = {}) {
-  const proc = spawn("python3", ["-m", "tests.navegador.cenarios", cenario],
+  const proc = spawn(process.env.PYTHON || (process.platform === "win32" ? "python" : "python3"), ["-m", "tests.navegador.cenarios", cenario],
     { cwd: raiz, env: { ...process.env, VELOCIDADE: "rapido", PYTHONPATH: raiz, ...amb } });
   let url = null;
   proc.stdout.on("data", (d) => { const m = String(d).match(/http:\S+/); if (m) url = m[0]; });
@@ -53,7 +54,7 @@ const onde = (p) => p.evaluate(() => {
   for (const i of document.querySelectorAll("img")) {
     const s = i.getAttribute("src") || "";
     const m = s.match(/hud\/icones\/([a-z-]+)-(\d+)(@2x)?\.png/);
-    if (!m || !/^(escudo|unguento|anel|cota|espada|elmo|manopla|perneiras|botas-ferro|maca|amuleto|aljava|machado|bomba|arco|cajado|orbe|livro)$/.test(m[1])) continue;
+    if (!m || !/^(escudo|unguento|anel|cota|espada|elmo|manopla|perneiras|botas-ferro|maca|amuleto|aljava|machado|bomba|arco|cajado|orbe|livro|varinha)$/.test(m[1])) continue;
     (linhas[m[1]] = linhas[m[1]] || []).push(`${lugar(i)}:${m[2]}${m[3] || ""}→${r(i)}`);
   }
   // os papéis que não mudam: a Curandeira, a caveira (a lixeira e os outros usos) e o machado das habilidades
@@ -387,11 +388,12 @@ if (SO.has("machado")) {
     machado_item: await p.evaluate(() => Icones.item("machado") !== "" ? "arquivo" : "ERRO") });
   await p.close(); proc.kill();
 }
-// 8. o arco (1.101.0), o cajado (1.106.0), o orbe (1.107.0) e o grimório (1.108.0), SO=arco, SO=cajado, SO=orbe ou SO=livro: a classe com a arma vestida e outra na mochila
+// 8. o arco (1.101.0), o cajado (1.106.0), o orbe (1.107.0), o grimório (1.108.0) e a varinha (1.109.0), SO=arco, SO=cajado,
+//    SO=orbe, SO=livro ou SO=varinha: a classe com a arma vestida e outra na mochila
 //    (cenário mercado, AMOSTRA e ARMA): a ficha, a venda, a dica com a comparação, vender e recomprar, o Inventário em
 //    40; o cartão do saque, o voo ao equipar e o guardar na mochila (vila, ACHADO); a roda da luta, com o Atacar no sprite do jogo (e o Tiro Duplo do
 //    Arqueiro na janelinha de Habilidades)
-for (const [peca, classe] of [["arco", "arqueiro"], ["cajado", "mago"], ["orbe", "mago"], ["livro", "mago"]]) {
+for (const [peca, classe] of [["arco", "arqueiro"], ["cajado", "mago"], ["orbe", "mago"], ["livro", "mago"], ["varinha", "mago"]]) {
   if (!SO.has(peca)) continue;
   for (const jan of Object.keys(JANELAS)) {
     const n = (c) => `${peca}-${jan}-${c}`;

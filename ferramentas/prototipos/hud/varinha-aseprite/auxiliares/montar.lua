@@ -2,7 +2,8 @@
 -- camadas na ordem de baixo para cima e pinta cada uma pelo pintar.lua com as listas de varinha_r2.py.
 --   local M = dofile("<auxiliares>/montar.lua"); return M.montar(64, "<pasta das listas>/64/")
 local AUX = debug.getinfo(1, "S").source:match("^@(.*[/\\])")
-local P = dofile(AUX .. "pintar.lua")
+-- o pintar.lua mora em ferramentas/arte/aseprite/ (desta pasta: quatro níveis acima, depois arte/aseprite)
+local P = dofile(AUX .. "../../../../arte/aseprite/pintar.lua")
 local M = {}
 M.CAMADAS = { "pomo", "empunhadura", "anel", "haste", "taca", "pedra", "garras", "contorno" }
 
