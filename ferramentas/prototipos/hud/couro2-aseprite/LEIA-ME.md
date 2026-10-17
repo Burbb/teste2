@@ -1,5 +1,12 @@
 # O capuz e a luva com braçadeira de couro (rodada 1, proposta: o 32 como fonte e o 64 ampliado 2×)
 
+> **Escolha do Jean (17/10/2026): aprovados visualmente** o capuz de couro revisado (`rodada2/capuz-32`), a luva de
+> couro com braçadeira (`rodada1/luva-32`, igual em `rodada2/`), a luva de seda (`rodada2/luva_seda-32`) e o capuz de
+> tecido da rodada 3 (`rodada3/capuz_tecido-32`, commit `1c061e1`); o 64 de cada um é o 32 ampliado 2×. O capuz de
+> tecido da rodada 2 fica só como histórico. **Pendentes, numa entrega separada:** os 40 e 48 derivados dessas fontes
+> e a integração, incluindo a compatibilidade dos itens nos saves antigos (ver o fim deste arquivo). Nada disso está
+> no jogo ainda.
+
 Os desenhos "capuz" (cabeça) e "luva" (mãos) do Arqueiro, desenhados no Aseprite pelo MCP. Só protótipo: o jogo,
 `icones.js`, a versão e os dados dos itens não mudaram. Espera a avaliação do Jean; 40 e 48 ficam para depois da
 aprovação e partirão da fonte aprovada.

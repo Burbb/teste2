@@ -3221,3 +3221,11 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   jogo, rodada 2 × rodada 3 com o Mago (ficha e mercado 32, saque com o 64, telas inteiras) em 1500×950 e 1280×720,
   sem erro no console; verificações em `couro2-aseprite/logs/verificacoes-r3.log`.
 - **Continua como está no jogo:** os sprites antigos. Próximo: a avaliação do Jean; depois, 40 e 48 e a integração.
+
+### 17/10/2026 (data do computador local) — Escolha: capuzes e luvas de couro e tecido aprovados visualmente
+
+- **Escolha de Jean:** aprovados visualmente o capuz de couro revisado (rodada 2), a luva de couro com braçadeira
+  (rodada 1), a luva de seda (rodada 2) e o capuz de tecido da rodada 3 (`1c061e1`), todos em
+  `ferramentas/prototipos/hud/couro2-aseprite/`, com o 64 como o 32 ampliado 2×.
+- **Pendente, numa entrega separada:** os 40 e 48 derivados das fontes aprovadas e a integração no jogo, incluindo a
+  compatibilidade dos itens dos saves antigos (a migração proposta no `LEIA-ME.md` da proposta). Nada entrou no jogo.
