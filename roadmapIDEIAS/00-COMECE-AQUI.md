@@ -2968,3 +2968,13 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   `.aseprite` reabertos (8 camadas, composto igual ao PNG e à prévia); @2x refeitos; fotos da rodada 2 refeitas em
   1500×950 e 1280×720 (ficha e mercado 32, Inventário 40, saque 64 e 48, voo), sem erro no console.
 - **Continua como está no jogo:** a varinha com o sprite 16×16. Próximo: a avaliação do Jean; integração só depois.
+
+### 16/10/2026 (data do computador local) — Varinha: a pedra do 32 no corte compacto (protótipo, sem versão)
+
+- **Decisão de Jean:** a haste aprovada nos quatro tamanhos. Pedido: só o cristal do 32 no corte compacto do 40, 48
+  e 64 (sem a ponta alongada; reflexo, âmbar e separação do suporte mantidos); nada mais muda.
+- **Feito:** a pedra quadrada de 4×4 do 40 no 32 (`PEDRA32`), com o canto na taça, o reflexo e a garra de bronze da
+  taça por cima. Só 28 pixels mudaram (pedra e contorno dela); haste, empunhadura, taça e os outros tamanhos intactos.
+- **Conferido:** `.aseprite` reaberto (8 camadas, composto igual ao PNG), @2x, antes e depois em 1× sobre o carvão e no
+  jogo (ficha, Vender e dica, 1500×950 e 1280×720), sem erro no console (`rodada2/capturas/pedra-32-*.png`).
+- **Continua como está no jogo:** a varinha com o sprite 16×16. Próximo: a avaliação do Jean; integração só depois.

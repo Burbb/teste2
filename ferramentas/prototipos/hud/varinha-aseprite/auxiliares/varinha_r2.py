@@ -6,8 +6,8 @@ Grava <pasta>/<tamanho>/<camada>.txt ("x,y,RRGGBB;...", coordenadas do documento
 dofile do pintar.lua) e <pasta>/<tamanho>/previa.png (o
 composto, só para conferir a leitura do Aseprite). As camadas, de baixo para cima, estão em CAMADAS.
 
-- 32: o desenho aprovado (../varinha-32.png), repartido em camadas pela família da cor e pela posição; só a haste muda
-  (HASTE32: o perfil uniforme dos quatro tamanhos).
+- 32: o desenho aprovado (../varinha-32.png), repartido em camadas pela família da cor e pela posição; mudam a haste
+  (HASTE32: o perfil uniforme dos quatro tamanhos) e a pedra (PEDRA32: o corte compacto dos outros tamanhos).
 - 64: o aprovado (../varinha-64.png) com o pomo, a empunhadura e o anel intactos (u <= -8); a haste, a taça e a pedra
   por regra, e o contorno recalculado do anel para cima. A pedra deixou de ser a ponta afilada (lia como
   chama) e virou uma pedra lapidada quadrada (pedra_quadrada), assentada na taça.
@@ -225,6 +225,10 @@ MEDIDAS = {
 # na cor clara da madeira, e o meio (s 31) desce um tom para a luz ficar na borda
 HASTE32 = {(0, 30): W[5], (2, 30): W[5], (4, 30): W[5], (1, 31): W[4], (3, 31): W[4]}
 
+# a pedra do 32: a de 4×4 do 40 (o menor tamanho em que as quatro faces ainda aparecem), assentada na taça do aprovado
+PEDRA32 = dict(quadrado=(24, 5, 4), pedra_de=17, sem={(0, 0), (3, 3)}, tons_faces=(5, 6, 3, 1),
+               aresta_luz=5, aresta_sombra=2, aresta_eixo=(4, 3), centro=4, toques={(25, 6): 8})
+
 
 def desenhar(n):
     if n == 32:
@@ -237,6 +241,11 @@ def desenhar(n):
         cheio = set().union(*(v.keys() for c, v in camadas.items() if c != "contorno"))
         for p in novos: camadas["contorno"].pop(p, None)
         camadas["contorno"].update({p: CONTORNO for p in contornar(novos, n) if p not in cheio})
+        # a pedra: o corte compacto do 40, 48 e 64 no lugar da ponta alongada; a taça (e a garra dela) fica por cima
+        camadas["pedra"] = {p: k for p, k in pedra_quadrada(PEDRA32).items() if p not in camadas["taca"]}
+        cheio = set().union(*(v.keys() for c, v in camadas.items() if c != "contorno"))
+        camadas["contorno"] = {**{p: k for p, k in camadas["contorno"].items() if p[0] - p[1] < 15},
+                               **{p: CONTORNO for p in contornar(cheio, n) if p[0] - p[1] >= 15}}
         return camadas
     m = MEDIDAS[n]
     if n == 64:

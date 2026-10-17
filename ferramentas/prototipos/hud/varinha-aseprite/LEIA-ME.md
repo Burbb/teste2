@@ -250,3 +250,20 @@ avermelhado; o 32 aprovado pode mudar para isso; materiais, paleta, enquadrament
   e as emendas haste–taça do 48 e do 64). Pintado no Aseprite pelo `pintar.lua`; os `.aseprite` reabertos com as 8
   camadas e o composto igual ao PNG salvo e à prévia; @2x refeitos; fotos da rodada 2 refeitas nas duas janelas
   (as do jogo atual e da rodada 1 são as de antes), sem erro no console; pranchas remontadas.
+
+## Ajuste: a pedra do 32 no corte compacto
+
+Pedido do Jean (com a haste aprovada nos quatro tamanhos): só o cristal do 32, no mesmo corte compacto do 40, 48 e
+64, sem a ponta alongada, mantendo o reflexo, o âmbar e a separação do suporte.
+
+- **Feito** (`PEDRA32` em `varinha_r2.py`): a pedra quadrada de 4×4 de cantos cortados do 40 (o menor tamanho em que
+  as quatro faces ainda aparecem; proporção 1:1, como nos outros), com o canto de baixo afundado na taça e o reflexo de
+  1 px em cima à esquerda. O pixel de bronze da taça na aresta acesa fica por cima da pedra, como garra. A ponta
+  alongada (16 px, até 28,3) virou uma pedra de 12 px visíveis que termina em 27,5; o contorno da ponta foi
+  recalculado.
+- **Não mudou:** haste, empunhadura, anel, pomo e taça do 32 (conferido: só 28 pixels mudaram, todos da pedra e do
+  contorno dela, u ≥ 16); o 40, o 48 e o 64 intactos.
+- **Conferido:** pintado no Aseprite pelo `pintar.lua`; o `.aseprite` reaberto com as 8 camadas e o composto igual ao
+  PNG e à prévia; @2x refeito; `capturas/pedra-32-carvao.png` (antes e depois em 1× sobre o carvão) e
+  `capturas/pedra-32-jogo.png` (ficha, Vender e dica, antes e depois, nas duas janelas); fotos da rodada 2 refeitas,
+  sem erro no console.
