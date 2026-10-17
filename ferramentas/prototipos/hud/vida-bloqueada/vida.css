@@ -1,0 +1,29 @@
+/* Protótipo: a vida máxima bloqueada por ferimento ou fome (etapa 1B). A barra da vida do herói passa a medir a vida
+   saudável (o motor: base, talentos e equipamento, sem as penalidades). Três partes:
+   - preenchida: a vida de agora (a mesma cor de sempre);
+   - vazia: o que uma cura ainda pode encher, até o limite (o fundo escuro de sempre);
+   - bloqueada, no fim: o que a penalidade tira da vida máxima. Hachura diagonal em cinza frio (forma, não só cor),
+     e uma marca de limite de latão que passa um pouco acima e abaixo da barra, onde a cura para.
+   O enchimento é comprimido para a parte útil com `scale` (as transições de largura do jogo continuam iguais); o
+   bloqueio é um elemento por cima, no fim. Sem penalidade, nada disto aparece. */
+:root body .barra-px.com-bloqueio { overflow: visible; }
+:root body .barra-px.com-bloqueio > :is(.enchimento, .rastro) { scale: var(--lim) 1; transform-origin: left center; }
+:root body .barra-px.com-bloqueio > .bloqueio {
+  position: absolute; top: 0; bottom: 0; right: 0; width: calc((1 - var(--lim)) * 100%); display: grid; place-items: center;
+  background: repeating-linear-gradient(-45deg, #4a4740 0 2px, #1b1a1d 2px 5px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), inset 0 -1px 0 rgba(0, 0, 0, 0.6); }
+/* a marca do limite: um traço de latão mais alto que a barra, com o contorno escuro do pixel */
+:root body .barra-px.com-bloqueio > .bloqueio::before { content: ""; position: absolute; left: -1px; top: -3px; bottom: -3px; width: 2px;
+  background: var(--latao-claro, #f2d27a); box-shadow: 0 0 0 1px #000; }
+/* o número: a vida de agora sobre a saudável, e o bloqueado numa etiqueta com a mesma hachura e o cadeado (o que
+   uma cura comum não enche) */
+:root body .num .bloq-num { display: inline-flex; align-items: center; gap: 3px; margin-left: 6px; padding: 1px 4px 0 3px;
+  font-size: 0.8em; line-height: 1.1; color: #e6dfd0; background: #121114; box-shadow: 0 0 0 1px #000, inset 0 0 0 1px #3a3833;
+  vertical-align: 1px; white-space: nowrap; }
+/* a amostra da hachura: a legenda do trecho bloqueado da barra */
+:root body .num .bloq-num::before { content: ""; width: 7px; height: 11px; background: repeating-linear-gradient(-45deg, #6a665c 0 2px, #1b1a1d 2px 4px); }
+:root body .num .bloq-num img.sprite { --s: 12; filter: drop-shadow(0 1px 0 #000); }
+/* no topo, as duas linhas (vida e recurso) com a mesma coluna de números: as barras continuam do mesmo tamanho */
+:root body #hud-linha:has(.bloq-num) .vital .num { min-width: 124px; white-space: nowrap; }
+/* na carta da luta, estreita: o número e a barra (hachura e marca) bastam; a etiqueta apertaria a barra */
+:root body .carta-hp .num .bloq-num { display: none; }

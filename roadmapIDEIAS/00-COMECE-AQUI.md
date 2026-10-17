@@ -3408,3 +3408,18 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Conferido:** a linha do tempo na página, antes e depois (`ferramentas/prototipos/hud/custo-recurso/`);
   `tests/test_custo_na_tela.py`; suíte, gabarito (sem mudança), pyflakes e fumaça.
 - **Próximo:** o protótipo da vida bloqueada (entrega à parte); nada da 1C.
+
+### 17/10/2026 (data do computador local) — Etapa 1B: protótipo da vida máxima bloqueada (em avaliação)
+
+- **Pedido de Jean:** distinguir a vida de agora, a recuperável e a bloqueada pela redução da vida máxima.
+- **Feito, só protótipo** (`ferramentas/prototipos/hud/vida-bloqueada/`):
+  - os números saem das contas do motor (`totais()`, `max_hp`, `fontes_penalidade`; ferimentos e fome se multiplicam);
+  - a barra mede a vida saudável, com o trecho bloqueado em hachura e a marca de limite;
+  - o número `vida/saudável`, a etiqueta `−N` no topo e a dica com as fontes.
+- **Conferido:**
+  - os três estados (1280×720 e 1500×950);
+  - uma rodada de luta;
+  - a Curandeira, que devolve a parte do ferimento como vida;
+  - vestir uma peça com +vida máxima;
+  - a tela fecha com o estado, sem erro no console.
+- **Próximo:** Jean avaliar. Nada da 1C nem lote de arte.

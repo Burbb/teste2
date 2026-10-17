@@ -230,7 +230,19 @@ posição ainda dependem de avaliação. Uma barra apenas vazia com “45/65” 
 - Preservar o estado após cada evento e evitar pulos ou animações de “ganho de vida” sem ganho real.
 
 Entra na prioridade **1B**, junto da clareza do consumo de recurso, antes dos protótipos de avisos de 1C.
-Ainda é uma direção documentada: não houve implementação nem teste do protótipo nesta atualização.
+
+**Protótipo (17/10/2026, em avaliação; nada no jogo):** `ferramentas/prototipos/hud/vida-bloqueada/`.
+- **Os números vêm do motor:** o saudável de `Jogador.totais()` (base, talentos, equipamento); o limite, de `max_hp`;
+  as fontes, de `sobrevivencia.fontes_penalidade` (corte, mordida, queimadura e fome, que se multiplicam; a perda de
+  cada uma na ordem da conta, somando exatamente o bloqueado).
+- **A barra mede a vida saudável:** preenchido, o vazio de sempre e, no fim, o trecho bloqueado em hachura diagonal,
+  com a marca de limite em latão saindo da barra. O número é `vida/saudável`; no topo, uma etiqueta com a hachura, o
+  cadeado e `−N`; a dica explica cada fonte e o que a devolve. Sem penalidade, a barra de sempre.
+- **Conferido:** os três estados em 1280×720 (e o limite em 1500×950); uma rodada de luta (a carta só desce); a
+  Curandeira (o motor devolve a parte do ferimento como vida, e o bloqueio some); vestir uma peça com +vida máxima (o
+  saudável e o limite sobem juntos). A tela fecha com o estado ponto a ponto.
+- **Pendências:** a linha "Em você" do uso de itens; integrar em `estado.py`, `paineis.js` e `batalha.js` se aprovado.
+  O recurso (costelas, concussão) fica fora, como pedido.
 
 ### 1.8. Os comandos da luta na linguagem do seletor (integrados na 1.111.0)
 
