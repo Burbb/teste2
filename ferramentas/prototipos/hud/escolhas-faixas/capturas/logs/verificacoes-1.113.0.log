@@ -1,0 +1,16 @@
+== unittest
+Ran 610 tests in 54.703s
+
+OK (skipped=1)
+== gabarito
+OK
+== pyflakes rpg tests
+rpg\eventos\__init__.py:3:1: '.comuns' imported but unused
+rpg\eventos\__init__.py:3:1: '.biomas' imported but unused
+rpg\eventos\__init__.py:3:1: '.classe' imported but unused
+rpg\eventos\__init__.py:3:1: '.noite' imported but unused
+rpg\eventos\__init__.py:3:1: '.vila' imported but unused
+rpg\eventos\__init__.py:3:1: '.comitiva' imported but unused
+rpg\eventos\__init__.py:4:1: '.motor.REGISTRO' imported but unused
+rpg\eventos\__init__.py:4:1: '.motor.disparar' imported but unused
+rpg\eventos\__init__.py:4:1: '.motor.disparar_id' imported but unused

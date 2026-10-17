@@ -185,8 +185,10 @@ function mostrarOpcoes(m) {
   if (!naVila) fecharVila();
   if (m.pergunta && !naVila) promptEl.appendChild(el("div", "pergunta-rotulo", esc(m.pergunta)));
   const lista = el("ol", "escolhas");
-  // as escolhas de um lugar selvagem (o motor marca a de explorar): as faixas de pincel (18-seletor-habilidades.css)
-  if (!emLuta && m.opcoes.some((o) => o.meta && o.meta.explorar)) lista.classList.add("faixas");
+  // As escolhas da página (o lugar, a vila, os eventos, os diálogos, a missão, a viagem): as faixas de pincel
+  // (18-seletor-habilidades.css). Fora delas: a luta (a roda, o seletor, a mira) e o menu do título. Os controles de
+  // um serviço (comprar, vender, equipar, dormir...) não chegam aqui: as telas os desenham (ACOES_OCULTAS).
+  if (!emLuta && !corpo.classList.contains("modo-titulo")) lista.classList.add("faixas");
   if (emLuta && ehAcaoDaLuta(m)) { lista.classList.add("acoes-combate"); Batalha.vez("j"); }
   if (emLuta && m.opcoes.some((o) => o.meta && o.meta.alvo)) {
     Batalha.alvos(m.opcoes, (i) => responder(m.id, i));

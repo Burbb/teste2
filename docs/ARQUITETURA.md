@@ -326,9 +326,10 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   A conferência: `ferramentas/prototipos/hud/fotografar_seletor_d.mjs` com `VERSOES=atual RODADA=1` (as três classes
   com comitiva, o teste de 10 habilidades, as interações, a borda de baixo com o registro em várias rolagens) e
   `fotografar_itens_faixas.mjs` (o menu de Itens nas três classes, a bolsa vazia, a troca, a poção e a mira).
-- Os comandos da luta e as escolhas de um lugar selvagem na linguagem do seletor (1.111.0; o caminho, da proposta à
-  rodada 2, em `ferramentas/prototipos/hud/LEIA-ME.md`). As pontas e o meio das faixas são as mesmas peças do
-  seletor, declaradas em `18-seletor-habilidades.css` para `.roda-janela.seletor`, `#roda` e `#prompt`:
+- Os comandos da luta (1.111.0) e as escolhas da página (1.111.0 no lugar selvagem, 1.113.0 em todas) na linguagem do
+  seletor (o caminho em `ferramentas/prototipos/hud/LEIA-ME.md` e em `ferramentas/prototipos/hud/escolhas-faixas/`).
+  As pontas e o meio das faixas são as mesmas peças do seletor, declaradas em `18-seletor-habilidades.css` para
+  `.roda-janela.seletor`, `#roda` e `#prompt`:
   - *os comandos* (`15-hud-luta.css`, "a roda de ações"): Atacar, Habilidades, Itens e Fugir como faixas curtas de
     pincel coladas à direita da carta do herói (`arcoDeBotoes`); tecla, ícone e nome numa peça só, sem nicho; o normal
     num carvão quase opaco com um fio de luz no alto (a forma não some no cenário da noite); os estados do seletor
@@ -337,10 +338,17 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
     pulsa a própria barra, sem anel por fora;
   - *o aviso da cena na luta* ("Inimigos +1 nível", os do clima): a arena cresce 14 px embaixo só quando há aviso, e
     ele fica no canto direito dessa faixa, sob os inimigos, fora do caminho dos comandos;
-  - *as escolhas de um lugar selvagem* (`18-seletor-habilidades.css`, no fim): o motor marca a opção de explorar
-    (`{"explorar": True}`, `Jogo.menu_selvagem`) e `escolhas.js` dá a classe `.faixas` à lista; nenhuma outra tela
-    recebe o estilo (mercado, confirmações, doca, caminhos, vila). As pontas escalam pela altura: a opção de duas
-    linhas (a ação da capela com os riscos embaixo) é uma pincelada só, com mais folga quando há riscos ou nota.
+  - *as escolhas da página* (`18-seletor-habilidades.css`, no fim; 1.113.0): `escolhas.js` dá a classe `.faixas` à
+    lista de escolhas da página sempre que ela não é da luta nem do título: o lugar, a vila (Passear, a ação da
+    missão), os eventos e os diálogos (com os testes de atributo), as cenas da missão, a viagem ("Para onde?"), a
+    criação do personagem. Não depende do lugar, do texto nem de marca do motor (a marca `explorar` da 1.111.0 saiu).
+    Ficam com o tratamento próprio: a roda, o seletor e a mira da luta, o menu do título, a confirmação e a janela do
+    achado (por cima), a doca, os caminhos, os prédios da vila e as telas desenhadas (o mercado, o Inventário, a
+    fogueira, os serviços): os controles operacionais delas nunca chegam a esta lista (`ACOES_OCULTAS`). As pontas
+    escalam pela altura (a opção de várias linhas é uma pincelada só, com mais folga quando há riscos ou nota); as
+    etiquetas (riscos, o teste de atributo) ficam escuras com a cor delas também no marfim; a indisponível fica cinza
+    riscada, com o nome claro e o motivo no vermelho de perigo, também sob o mouse; a seta › e a opção secundária
+    leem nos dois fundos. O conteúdo, a ordem, as teclas e as regras de cada opção não mudam.
 - As lutas cheias (1.111.0): `batalha.js` (`distribuir`) divide a arena em três áreas, cada uma só sua: a sua fileira
   (você em cima e a comitiva, o animal e os servos embaixo, sempre numa coluna), a faixa dos comandos (a roda e, na
   mira, o lembrete com o Voltar, que `rodaMira` põe ao lado da sua carta, onde a roda estava; nenhuma carta entra ali:

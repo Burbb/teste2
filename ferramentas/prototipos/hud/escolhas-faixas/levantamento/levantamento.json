@@ -1,0 +1,2273 @@
+[
+ {
+  "nome": "selvagem",
+  "cenario": "tutorial",
+  "amb": {
+   "TUTORIAL": "0",
+   "VISTAS": "A1,V2,N1,D1,K1,M1,L1",
+   "LUGAR": "bosque",
+   "PERIODO": "0"
+  },
+  "ctx": {
+   "luta": false,
+   "titulo": false,
+   "tela": "",
+   "cena": "local",
+   "vila": false,
+   "doca": 8
+  },
+  "pergunta": "O que você faz?",
+  "classes": "escolhas faixas",
+  "grupos": [],
+  "ops": [
+   {
+    "i": 0,
+    "texto": "Explorar a região",
+    "meta": [
+     "explorar"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 1,
+    "texto": "Acampar e descansar até o amanhecer",
+    "meta": [],
+    "teste": ""
+   },
+   {
+    "i": 2,
+    "texto": "Viajar",
+    "meta": [
+     "predio"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 3,
+    "texto": "Talentos",
+    "meta": [
+     "sistema",
+     "pontos"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 4,
+    "texto": "Personagem e inventário",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 5,
+    "texto": "Mapa",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 6,
+    "texto": "Diário (contratos, rumores)",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 7,
+    "texto": "Bestiário",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 8,
+    "texto": "Salvar jogo",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 9,
+    "texto": "Sair do jogo",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 10,
+    "texto": "Usar Bandagem",
+    "meta": [
+     "usar"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 11,
+    "texto": "Usar Poção de Vida",
+    "meta": [
+     "usar"
+    ],
+    "teste": ""
+   }
+  ],
+  "botoes": [
+   {
+    "texto": "Explorar a região",
+    "classes": "escolha",
+    "altura": 46,
+    "teste": "",
+    "nota": "",
+    "riscos": "",
+    "icone": false,
+    "abre": false,
+    "tecla": "1"
+   },
+   {
+    "texto": "Acampar e descansar até o amanhecer",
+    "classes": "escolha",
+    "altura": 46,
+    "teste": "",
+    "nota": "",
+    "riscos": "",
+    "icone": false,
+    "abre": false,
+    "tecla": "2"
+   },
+   {
+    "texto": "Viajar",
+    "classes": "escolha",
+    "altura": 46,
+    "teste": "",
+    "nota": "",
+    "riscos": "",
+    "icone": false,
+    "abre": false,
+    "tecla": "3"
+   }
+  ]
+ },
+ {
+  "nome": "viajar",
+  "cenario": "tutorial",
+  "amb": {
+   "TUTORIAL": "0",
+   "VISTAS": "A1,V2,N1,D1,K1,M1,L1",
+   "LUGAR": "bosque",
+   "PERIODO": "0"
+  },
+  "ctx": {
+   "luta": false,
+   "titulo": false,
+   "tela": "",
+   "cena": "menu",
+   "vila": false,
+   "doca": 8
+  },
+  "pergunta": "Para onde?",
+  "classes": "escolhas",
+  "grupos": [],
+  "ops": [
+   {
+    "i": 0,
+    "texto": "Vau do Turvo — vila · arredores Nv.1 · 1 trecho",
+    "meta": [
+     "local"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 1,
+    "texto": "Capela Afogada — Ruínas · Nv.3 (PERIGOSO!) · 1 trecho · inexplorado",
+    "meta": [
+     "local"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 2,
+    "texto": "Voltar",
+    "meta": [],
+    "teste": ""
+   }
+  ],
+  "botoes": [
+   {
+    "texto": "Vau do Turvo — vila · arredores Nv.1 · 1 trecho",
+    "classes": "escolha",
+    "altura": 41,
+    "teste": "",
+    "nota": "",
+    "riscos": "",
+    "icone": true,
+    "abre": false,
+    "tecla": "1"
+   },
+   {
+    "texto": "Capela Afogada — Ruínas · Nv.3 (PERIGOSO!) · 1 trecho · inexplorado",
+    "classes": "escolha",
+    "altura": 41,
+    "teste": "",
+    "nota": "",
+    "riscos": "",
+    "icone": true,
+    "abre": false,
+    "tecla": "2"
+   }
+  ]
+ },
+ {
+  "nome": "vila",
+  "cenario": "tutorial",
+  "amb": {
+   "TUTORIAL": "0",
+   "VISTAS": "A1,V2,N1,D1,K1,M1,L1",
+   "LUGAR": "vau",
+   "PERIODO": "1"
+  },
+  "ctx": {
+   "luta": false,
+   "titulo": false,
+   "tela": "",
+   "cena": "local",
+   "vila": false,
+   "doca": 8
+  },
+  "pergunta": "",
+  "classes": "escolhas",
+  "grupos": [
+   "Missão"
+  ],
+  "ops": [
+   {
+    "i": 0,
+    "texto": "Passear pela vila",
+    "meta": [
+     "tempo"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 1,
+    "texto": "Taverna: dormir até amanhã (10 ouro)",
+    "meta": [
+     "predio",
+     "servico",
+     "curto",
+     "preco",
+     "linhas"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 2,
+    "texto": "Taverna: pagar uma bebida e ouvir rumores (3 ouro)",
+    "meta": [
+     "predio",
+     "servico",
+     "curto",
+     "preco",
+     "efeito"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 3,
+    "texto": "Mercado",
+    "meta": [
+     "predio"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 4,
+    "texto": "Mural de contratos",
+    "meta": [
+     "predio"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 5,
+    "texto": "Ferreiro: reforçar arma ou armadura",
+    "meta": [
+     "predio"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 6,
+    "texto": "Examinar a fonte nova",
+    "meta": [
+     "missao",
+     "acao_missao"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 7,
+    "texto": "Viajar",
+    "meta": [
+     "predio"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 8,
+    "texto": "Talentos",
+    "meta": [
+     "sistema",
+     "pontos"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 9,
+    "texto": "Personagem e inventário",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 10,
+    "texto": "Mapa",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 11,
+    "texto": "Diário (contratos, rumores)",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 12,
+    "texto": "Bestiário",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 13,
+    "texto": "Salvar jogo",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 14,
+    "texto": "Sair do jogo",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 15,
+    "texto": "Usar Bandagem",
+    "meta": [
+     "usar"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 16,
+    "texto": "Usar Poção de Vida",
+    "meta": [
+     "usar"
+    ],
+    "teste": ""
+   }
+  ],
+  "botoes": [
+   {
+    "texto": "Passear pela vila",
+    "classes": "escolha",
+    "altura": 41,
+    "teste": "",
+    "nota": "",
+    "riscos": "",
+    "icone": false,
+    "abre": false,
+    "tecla": "1"
+   },
+   {
+    "texto": "Examinar a fonte nova",
+    "classes": "escolha op-missao",
+    "altura": 41,
+    "teste": "",
+    "nota": "",
+    "riscos": "",
+    "icone": true,
+    "abre": false,
+    "tecla": "2"
+   }
+  ]
+ },
+ {
+  "nome": "passear",
+  "cenario": "tutorial",
+  "amb": {
+   "TUTORIAL": "0",
+   "VISTAS": "A1,V2,N1,D1,K1,M1,L1",
+   "LUGAR": "vau",
+   "PERIODO": "1"
+  },
+  "ctx": {
+   "luta": false,
+   "titulo": false,
+   "tela": "",
+   "cena": "evento",
+   "vila": false,
+   "doca": 8
+  },
+  "pergunta": "Aceitar?",
+  "classes": "escolhas",
+  "grupos": [],
+  "ops": [
+   {
+    "i": 0,
+    "texto": "Prometer procurar",
+    "meta": [],
+    "teste": ""
+   },
+   {
+    "i": 1,
+    "texto": "Dizer que não pode",
+    "meta": [],
+    "teste": ""
+   }
+  ],
+  "botoes": [
+   {
+    "texto": "Prometer procurar",
+    "classes": "escolha",
+    "altura": 41,
+    "teste": "",
+    "nota": "",
+    "riscos": "",
+    "icone": false,
+    "abre": false,
+    "tecla": "1"
+   },
+   {
+    "texto": "Dizer que não pode",
+    "classes": "escolha",
+    "altura": 41,
+    "teste": "",
+    "nota": "",
+    "riscos": "",
+    "icone": false,
+    "abre": false,
+    "tecla": "2"
+   }
+  ]
+ },
+ {
+  "nome": "evento-enfermos",
+  "cenario": "covil",
+  "amb": {
+   "EVENTO": "os_enfermos",
+   "PERIODO": "1"
+  },
+  "ctx": {
+   "luta": false,
+   "titulo": false,
+   "tela": "",
+   "cena": "evento",
+   "vila": false,
+   "doca": 0
+  },
+  "pergunta": "O que faz?",
+  "classes": "escolhas",
+  "grupos": [],
+  "ops": [
+   {
+    "i": 0,
+    "texto": "Entrar e curar os doentes",
+    "meta": [
+     "nota"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 1,
+    "texto": "Deixar remédios na porta",
+    "meta": [
+     "nota",
+     "gasta"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 2,
+    "texto": "Seguir em frente",
+    "meta": [],
+    "teste": ""
+   }
+  ],
+  "botoes": [
+   {
+    "texto": "Entrar e curar os doentes",
+    "classes": "escolha",
+    "altura": 64,
+    "teste": "",
+    "nota": "Horas de esforço: cobra da sua vida.",
+    "riscos": "",
+    "icone": false,
+    "abre": false,
+    "tecla": "1"
+   },
+   {
+    "texto": "Deixar remédios na porta",
+    "classes": "escolha",
+    "altura": 64,
+    "teste": "",
+    "nota": "Usa 1 poção de vida da bolsa (você tem 2).",
+    "riscos": "",
+    "icone": true,
+    "abre": false,
+    "tecla": "2"
+   },
+   {
+    "texto": "Seguir em frente",
+    "classes": "escolha",
+    "altura": 41,
+    "teste": "",
+    "nota": "",
+    "riscos": "",
+    "icone": false,
+    "abre": false,
+    "tecla": "3"
+   }
+  ]
+ },
+ {
+  "nome": "evento-mendigo",
+  "cenario": "covil",
+  "amb": {
+   "EVENTO": "mendigo_misterioso",
+   "PERIODO": "1"
+  },
+  "ctx": {
+   "luta": false,
+   "titulo": false,
+   "tela": "",
+   "cena": "evento",
+   "vila": false,
+   "doca": 0
+  },
+  "pergunta": "O que faz?",
+  "classes": "escolhas",
+  "grupos": [],
+  "ops": [
+   {
+    "i": 0,
+    "texto": "Dar 5 moedas",
+    "meta": [],
+    "teste": ""
+   },
+   {
+    "i": 1,
+    "texto": "Pagar uma refeição para ele",
+    "meta": [],
+    "teste": ""
+   },
+   {
+    "i": 2,
+    "texto": "Ignorar",
+    "meta": [],
+    "teste": ""
+   }
+  ],
+  "botoes": [
+   {
+    "texto": "Dar 5 moedas",
+    "classes": "escolha",
+    "altura": 41,
+    "teste": "",
+    "nota": "",
+    "riscos": "",
+    "icone": false,
+    "abre": false,
+    "tecla": "1"
+   },
+   {
+    "texto": "Pagar uma refeição para ele",
+    "classes": "escolha",
+    "altura": 41,
+    "teste": "",
+    "nota": "",
+    "riscos": "",
+    "icone": false,
+    "abre": false,
+    "tecla": "2"
+   },
+   {
+    "texto": "Ignorar",
+    "classes": "escolha secundaria",
+    "altura": 40,
+    "teste": "",
+    "nota": "",
+    "riscos": "",
+    "icone": false,
+    "abre": false,
+    "tecla": "3"
+   }
+  ]
+ },
+ {
+  "nome": "evento-crianca",
+  "cenario": "covil",
+  "amb": {
+   "EVENTO": "crianca_perdida",
+   "PERIODO": "1"
+  },
+  "ctx": {
+   "luta": false,
+   "titulo": false,
+   "tela": "",
+   "cena": "evento",
+   "vila": false,
+   "doca": 0
+  },
+  "pergunta": "O que faz?",
+  "classes": "escolhas",
+  "grupos": [],
+  "ops": [
+   {
+    "i": 0,
+    "texto": "Levá-la até Cascata Fria",
+    "meta": [
+     "nota"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 1,
+    "texto": "Dar comida e indicar o caminho",
+    "meta": [],
+    "teste": ""
+   },
+   {
+    "i": 2,
+    "texto": "Ignorar",
+    "meta": [],
+    "teste": ""
+   }
+  ],
+  "botoes": [
+   {
+    "texto": "Levá-la até Cascata Fria",
+    "classes": "escolha",
+    "altura": 64,
+    "teste": "",
+    "nota": "Toma algumas horas do dia.",
+    "riscos": "",
+    "icone": false,
+    "abre": false,
+    "tecla": "1"
+   },
+   {
+    "texto": "Dar comida e indicar o caminho",
+    "classes": "escolha",
+    "altura": 41,
+    "teste": "",
+    "nota": "",
+    "riscos": "",
+    "icone": false,
+    "abre": false,
+    "tecla": "2"
+   },
+   {
+    "texto": "Ignorar",
+    "classes": "escolha secundaria",
+    "altura": 40,
+    "teste": "",
+    "nota": "",
+    "riscos": "",
+    "icone": false,
+    "abre": false,
+    "tecla": "3"
+   }
+  ]
+ },
+ {
+  "nome": "evento-madeira",
+  "cenario": "covil",
+  "amb": {
+   "EVENTO": "madeira_para_flechas",
+   "CLASSE": "arqueiro",
+   "PERIODO": "1"
+  },
+  "ctx": {
+   "luta": false,
+   "titulo": false,
+   "tela": "",
+   "cena": "evento",
+   "vila": false,
+   "doca": 0
+  },
+  "pergunta": "O que faz?",
+  "classes": "escolhas",
+  "grupos": [],
+  "ops": [
+   {
+    "i": 0,
+    "texto": "Parar e fabricar flechas",
+    "meta": [
+     "nota"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 1,
+    "texto": "Seguir",
+    "meta": [],
+    "teste": ""
+   }
+  ],
+  "botoes": [
+   {
+    "texto": "Parar e fabricar flechas",
+    "classes": "escolha",
+    "altura": 64,
+    "teste": "",
+    "nota": "Toma algumas horas do dia.",
+    "riscos": "",
+    "icone": false,
+    "abre": false,
+    "tecla": "1"
+   },
+   {
+    "texto": "Seguir",
+    "classes": "escolha",
+    "altura": 41,
+    "teste": "",
+    "nota": "",
+    "riscos": "",
+    "icone": false,
+    "abre": false,
+    "tecla": "2"
+   }
+  ]
+ },
+ {
+  "nome": "evento-odete",
+  "cenario": "covil",
+  "amb": {
+   "EVENTO": "odete_na_estrada",
+   "PERIODO": "1"
+  },
+  "ctx": {
+   "luta": false,
+   "titulo": false,
+   "tela": "",
+   "cena": "evento",
+   "vila": false,
+   "doca": 0
+  },
+  "pergunta": "O que faz?",
+  "classes": "escolhas",
+  "grupos": [],
+  "ops": [
+   {
+    "i": 0,
+    "texto": "Estancar o sangue com uma bandagem",
+    "meta": [
+     "nota",
+     "gasta"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 1,
+    "texto": "Segurar a ferida enquanto ela reza",
+    "meta": [],
+    "teste": "Vontade 2"
+   },
+   {
+    "i": 2,
+    "texto": "Perguntar quem ela é",
+    "meta": [],
+    "teste": ""
+   },
+   {
+    "i": 3,
+    "texto": "Revistar o moribundo enquanto ela está distraída",
+    "meta": [],
+    "teste": ""
+   },
+   {
+    "i": 4,
+    "texto": "Seguir seu caminho",
+    "meta": [],
+    "teste": ""
+   }
+  ],
+  "botoes": [
+   {
+    "texto": "Estancar o sangue com uma bandagem",
+    "classes": "escolha",
+    "altura": 64,
+    "teste": "",
+    "nota": "Usa 1 bandagem da bolsa (você tem 2).",
+    "riscos": "",
+    "icone": true,
+    "abre": false,
+    "tecla": "1"
+   },
+   {
+    "texto": "Segurar a ferida enquanto ela reza",
+    "classes": "escolha",
+    "altura": 41,
+    "teste": "VON +2",
+    "nota": "",
+    "riscos": "",
+    "icone": false,
+    "abre": false,
+    "tecla": "2"
+   },
+   {
+    "texto": "Perguntar quem ela é",
+    "classes": "escolha",
+    "altura": 41,
+    "teste": "",
+    "nota": "",
+    "riscos": "",
+    "icone": false,
+    "abre": false,
+    "tecla": "3"
+   },
+   {
+    "texto": "Revistar o moribundo enquanto ela está distraída",
+    "classes": "escolha",
+    "altura": 41,
+    "teste": "",
+    "nota": "",
+    "riscos": "",
+    "icone": false,
+    "abre": false,
+    "tecla": "4"
+   },
+   {
+    "texto": "Seguir seu caminho",
+    "classes": "escolha",
+    "altura": 41,
+    "teste": "",
+    "nota": "",
+    "riscos": "",
+    "icone": false,
+    "abre": false,
+    "tecla": "5"
+   }
+  ]
+ },
+ {
+  "nome": "missao-canal",
+  "cenario": "missao",
+  "amb": {},
+  "ctx": {
+   "luta": false,
+   "titulo": false,
+   "tela": "",
+   "cena": "local",
+   "vila": false,
+   "doca": 8
+  },
+  "pergunta": "O que você faz?",
+  "classes": "escolhas faixas",
+  "grupos": [
+   "Missão",
+   ""
+  ],
+  "ops": [
+   {
+    "i": 0,
+    "texto": "Seguir a água e examinar o canal",
+    "meta": [
+     "missao",
+     "acao_missao"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 1,
+    "texto": "Explorar a região",
+    "meta": [
+     "explorar"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 2,
+    "texto": "Acampar e descansar até o amanhecer",
+    "meta": [],
+    "teste": ""
+   },
+   {
+    "i": 3,
+    "texto": "Viajar",
+    "meta": [
+     "predio"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 4,
+    "texto": "Talentos",
+    "meta": [
+     "sistema",
+     "pontos"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 5,
+    "texto": "Personagem e inventário",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 6,
+    "texto": "Mapa",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 7,
+    "texto": "Diário (contratos, rumores)",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 8,
+    "texto": "Bestiário",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 9,
+    "texto": "Salvar jogo",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 10,
+    "texto": "Sair do jogo",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 11,
+    "texto": "Usar Bandagem",
+    "meta": [
+     "usar"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 12,
+    "texto": "Usar Poção de Vida",
+    "meta": [
+     "usar"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 13,
+    "texto": "Usar Tônico Restaurador",
+    "meta": [
+     "usar"
+    ],
+    "teste": ""
+   }
+  ],
+  "botoes": [
+   {
+    "texto": "Seguir a água e examinar o canal",
+    "classes": "escolha op-missao",
+    "altura": 46,
+    "teste": "",
+    "nota": "",
+    "riscos": "",
+    "icone": true,
+    "abre": false,
+    "tecla": "1"
+   },
+   {
+    "texto": "Explorar a região",
+    "classes": "escolha",
+    "altura": 46,
+    "teste": "",
+    "nota": "",
+    "riscos": "",
+    "icone": false,
+    "abre": false,
+    "tecla": "2"
+   },
+   {
+    "texto": "Acampar e descansar até o amanhecer",
+    "classes": "escolha",
+    "altura": 46,
+    "teste": "",
+    "nota": "",
+    "riscos": "",
+    "icone": false,
+    "abre": false,
+    "tecla": "3"
+   },
+   {
+    "texto": "Viajar",
+    "classes": "escolha",
+    "altura": 46,
+    "teste": "",
+    "nota": "",
+    "riscos": "",
+    "icone": false,
+    "abre": false,
+    "tecla": "4"
+   }
+  ]
+ },
+ {
+  "nome": "capela-tocha",
+  "cenario": "capela",
+  "amb": {
+   "ETAPA": "capela",
+   "PERIODO": "3",
+   "TOCHAS": "2"
+  },
+  "ctx": {
+   "luta": false,
+   "titulo": false,
+   "tela": "",
+   "cena": "local",
+   "vila": false,
+   "doca": 8
+  },
+  "pergunta": "O que você faz?",
+  "classes": "escolhas faixas",
+  "grupos": [
+   "Missão",
+   ""
+  ],
+  "ops": [
+   {
+    "i": 0,
+    "texto": "Entrar na capela pelo buraco do canal",
+    "meta": [
+     "missao",
+     "acao_missao",
+     "riscos"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 1,
+    "texto": "Explorar a região (à noite é mais perigoso)",
+    "meta": [
+     "explorar"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 2,
+    "texto": "Acampar e descansar até o amanhecer",
+    "meta": [],
+    "teste": ""
+   },
+   {
+    "i": 3,
+    "texto": "Viajar",
+    "meta": [
+     "predio"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 4,
+    "texto": "Talentos",
+    "meta": [
+     "sistema",
+     "pontos"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 5,
+    "texto": "Personagem e inventário",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 6,
+    "texto": "Mapa",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 7,
+    "texto": "Diário (contratos, rumores)",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 8,
+    "texto": "Bestiário",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 9,
+    "texto": "Salvar jogo",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 10,
+    "texto": "Sair do jogo",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 11,
+    "texto": "Usar Bandagem",
+    "meta": [
+     "usar"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 12,
+    "texto": "Usar Poção de Vida",
+    "meta": [
+     "usar"
+    ],
+    "teste": ""
+   }
+  ],
+  "botoes": [
+   {
+    "texto": "Entrar na capela pelo buraco do canal",
+    "classes": "escolha op-missao",
+    "altura": 81,
+    "teste": "",
+    "nota": "",
+    "riscos": "−1 tocha | +1 nível · +10% dano",
+    "icone": true,
+    "abre": false,
+    "tecla": "1"
+   },
+   {
+    "texto": "Explorar a região (à noite é mais perigoso)",
+    "classes": "escolha",
+    "altura": 46,
+    "teste": "",
+    "nota": "",
+    "riscos": "",
+    "icone": false,
+    "abre": false,
+    "tecla": "2"
+   },
+   {
+    "texto": "Acampar e descansar até o amanhecer",
+    "classes": "escolha",
+    "altura": 46,
+    "teste": "",
+    "nota": "",
+    "riscos": "",
+    "icone": false,
+    "abre": false,
+    "tecla": "3"
+   },
+   {
+    "texto": "Viajar",
+    "classes": "escolha",
+    "altura": 46,
+    "teste": "",
+    "nota": "",
+    "riscos": "",
+    "icone": false,
+    "abre": false,
+    "tecla": "4"
+   }
+  ]
+ },
+ {
+  "nome": "capela-escura",
+  "cenario": "capela",
+  "amb": {
+   "ETAPA": "capela",
+   "PERIODO": "3",
+   "TOCHAS": "0"
+  },
+  "ctx": {
+   "luta": false,
+   "titulo": false,
+   "tela": "",
+   "cena": "local",
+   "vila": false,
+   "doca": 8
+  },
+  "pergunta": "O que você faz?",
+  "classes": "escolhas faixas",
+  "grupos": [
+   "Missão",
+   ""
+  ],
+  "ops": [
+   {
+    "i": 0,
+    "texto": "Entrar na capela pelo buraco do canal",
+    "meta": [
+     "missao",
+     "acao_missao",
+     "riscos"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 1,
+    "texto": "Explorar a região (à noite é mais perigoso)",
+    "meta": [
+     "explorar"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 2,
+    "texto": "Acampar e descansar até o amanhecer",
+    "meta": [],
+    "teste": ""
+   },
+   {
+    "i": 3,
+    "texto": "Viajar",
+    "meta": [
+     "predio"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 4,
+    "texto": "Talentos",
+    "meta": [
+     "sistema",
+     "pontos"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 5,
+    "texto": "Personagem e inventário",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 6,
+    "texto": "Mapa",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 7,
+    "texto": "Diário (contratos, rumores)",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 8,
+    "texto": "Bestiário",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 9,
+    "texto": "Salvar jogo",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 10,
+    "texto": "Sair do jogo",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 11,
+    "texto": "Usar Bandagem",
+    "meta": [
+     "usar"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 12,
+    "texto": "Usar Poção de Vida",
+    "meta": [
+     "usar"
+    ],
+    "teste": ""
+   }
+  ],
+  "botoes": [
+   {
+    "texto": "Entrar na capela pelo buraco do canal",
+    "classes": "escolha op-missao",
+    "altura": 81,
+    "teste": "",
+    "nota": "",
+    "riscos": "Sem luz: inimigo age primeiro | +1 nível · +10% dano",
+    "icone": true,
+    "abre": false,
+    "tecla": "1"
+   },
+   {
+    "texto": "Explorar a região (à noite é mais perigoso)",
+    "classes": "escolha",
+    "altura": 46,
+    "teste": "",
+    "nota": "",
+    "riscos": "",
+    "icone": false,
+    "abre": false,
+    "tecla": "2"
+   },
+   {
+    "texto": "Acampar e descansar até o amanhecer",
+    "classes": "escolha",
+    "altura": 46,
+    "teste": "",
+    "nota": "",
+    "riscos": "",
+    "icone": false,
+    "abre": false,
+    "tecla": "3"
+   },
+   {
+    "texto": "Viajar",
+    "classes": "escolha",
+    "altura": 46,
+    "teste": "",
+    "nota": "",
+    "riscos": "",
+    "icone": false,
+    "abre": false,
+    "tecla": "4"
+   }
+  ]
+ },
+ {
+  "nome": "praca",
+  "cenario": "praca",
+  "amb": {},
+  "ctx": {
+   "luta": false,
+   "titulo": false,
+   "tela": "",
+   "cena": "local",
+   "vila": false,
+   "doca": 8
+  },
+  "pergunta": "",
+  "classes": "escolhas",
+  "grupos": [],
+  "ops": [
+   {
+    "i": 0,
+    "texto": "Passear pela vila",
+    "meta": [
+     "tempo"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 1,
+    "texto": "Taverna: dormir até amanhã (16 ouro)",
+    "meta": [
+     "predio",
+     "servico",
+     "curto",
+     "preco",
+     "linhas"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 2,
+    "texto": "Taverna: pagar uma bebida e ouvir rumores (3 ouro)",
+    "meta": [
+     "predio",
+     "servico",
+     "curto",
+     "preco",
+     "efeito"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 3,
+    "texto": "Mercado",
+    "meta": [
+     "predio"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 4,
+    "texto": "Mural de contratos",
+    "meta": [
+     "predio"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 5,
+    "texto": "Ferreiro: reforçar arma ou armadura",
+    "meta": [
+     "predio",
+     "curto",
+     "efeito"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 6,
+    "texto": "Ferreiro: o broquel que trouxeram da capela",
+    "meta": [
+     "predio",
+     "servico",
+     "curto",
+     "efeito"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 7,
+    "texto": "Viajar",
+    "meta": [
+     "predio"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 8,
+    "texto": "Talentos",
+    "meta": [
+     "sistema",
+     "pontos"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 9,
+    "texto": "Personagem e inventário",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 10,
+    "texto": "Mapa",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 11,
+    "texto": "Diário (contratos, rumores)",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 12,
+    "texto": "Bestiário",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 13,
+    "texto": "Salvar jogo",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 14,
+    "texto": "Sair do jogo",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 15,
+    "texto": "Usar Bandagem",
+    "meta": [
+     "usar"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 16,
+    "texto": "Usar Poção de Vida",
+    "meta": [
+     "usar"
+    ],
+    "teste": ""
+   }
+  ],
+  "botoes": [
+   {
+    "texto": "Passear pela vila",
+    "classes": "escolha",
+    "altura": 41,
+    "teste": "",
+    "nota": "",
+    "riscos": "",
+    "icone": false,
+    "abre": false,
+    "tecla": "1"
+   }
+  ]
+ },
+ {
+  "nome": "retorno",
+  "cenario": "retorno",
+  "amb": {},
+  "ctx": {
+   "luta": false,
+   "titulo": false,
+   "tela": "",
+   "cena": "evento",
+   "vila": false,
+   "doca": 0
+  },
+  "lista": null,
+  "continuar": true
+ },
+ {
+  "nome": "fogueira",
+  "cenario": "fogueira",
+  "amb": {},
+  "ctx": {
+   "luta": false,
+   "titulo": false,
+   "tela": "",
+   "cena": "local",
+   "vila": false,
+   "doca": 9
+  },
+  "pergunta": "O que você faz?",
+  "classes": "escolhas faixas",
+  "grupos": [],
+  "ops": [
+   {
+    "i": 0,
+    "texto": "Explorar a região (à noite é mais perigoso)",
+    "meta": [
+     "explorar"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 1,
+    "texto": "Acampar e descansar até o amanhecer",
+    "meta": [],
+    "teste": ""
+   },
+   {
+    "i": 2,
+    "texto": "Viajar",
+    "meta": [
+     "predio"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 3,
+    "texto": "Talentos",
+    "meta": [
+     "sistema",
+     "pontos"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 4,
+    "texto": "Personagem e inventário",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 5,
+    "texto": "Comitiva",
+    "meta": [
+     "sistema",
+     "carta"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 6,
+    "texto": "Mapa",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 7,
+    "texto": "Diário (contratos, rumores)",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 8,
+    "texto": "Bestiário",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 9,
+    "texto": "Salvar jogo",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 10,
+    "texto": "Sair do jogo",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 11,
+    "texto": "Usar Bandagem",
+    "meta": [
+     "usar"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 12,
+    "texto": "Usar Poção de Vida",
+    "meta": [
+     "usar"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 13,
+    "texto": "Usar Poção de Vida em Morel",
+    "meta": [
+     "usar",
+     "em"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 14,
+    "texto": "Usar Poção de Vida em Odette",
+    "meta": [
+     "usar",
+     "em"
+    ],
+    "teste": ""
+   }
+  ],
+  "botoes": [
+   {
+    "texto": "Explorar a região (à noite é mais perigoso)",
+    "classes": "escolha",
+    "altura": 46,
+    "teste": "",
+    "nota": "",
+    "riscos": "",
+    "icone": false,
+    "abre": false,
+    "tecla": "1"
+   },
+   {
+    "texto": "Acampar e descansar até o amanhecer",
+    "classes": "escolha",
+    "altura": 46,
+    "teste": "",
+    "nota": "",
+    "riscos": "",
+    "icone": false,
+    "abre": false,
+    "tecla": "2"
+   },
+   {
+    "texto": "Viajar",
+    "classes": "escolha",
+    "altura": 46,
+    "teste": "",
+    "nota": "",
+    "riscos": "",
+    "icone": false,
+    "abre": false,
+    "tecla": "3"
+   }
+  ]
+ },
+ {
+  "nome": "contrato",
+  "cenario": "tutorial",
+  "amb": {
+   "TUTORIAL": "0",
+   "VISTAS": "A1,V2,N1,D1,K1,M1,L1",
+   "LUGAR": "charco",
+   "PERIODO": "3",
+   "CONTRATO": "aceito",
+   "CONTRATO_EM": "charco"
+  },
+  "ctx": {
+   "luta": false,
+   "titulo": false,
+   "tela": "",
+   "cena": "local",
+   "vila": false,
+   "doca": 8
+  },
+  "pergunta": "O que você faz?",
+  "classes": "escolhas faixas",
+  "grupos": [
+   "Contratos",
+   ""
+  ],
+  "ops": [
+   {
+    "i": 0,
+    "texto": "Caçar afogados (contrato, 0/4)",
+    "meta": [
+     "cacar"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 1,
+    "texto": "Explorar a região (à noite é mais perigoso)",
+    "meta": [
+     "explorar"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 2,
+    "texto": "Acampar e descansar até o amanhecer",
+    "meta": [],
+    "teste": ""
+   },
+   {
+    "i": 3,
+    "texto": "Viajar",
+    "meta": [
+     "predio"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 4,
+    "texto": "Talentos",
+    "meta": [
+     "sistema",
+     "pontos"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 5,
+    "texto": "Personagem e inventário",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 6,
+    "texto": "Mapa",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 7,
+    "texto": "Diário (contratos, rumores)",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 8,
+    "texto": "Bestiário",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 9,
+    "texto": "Salvar jogo",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 10,
+    "texto": "Sair do jogo",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 11,
+    "texto": "Usar Bandagem",
+    "meta": [
+     "usar"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 12,
+    "texto": "Usar Poção de Vida",
+    "meta": [
+     "usar"
+    ],
+    "teste": ""
+   }
+  ],
+  "botoes": [
+   {
+    "texto": "Caçar afogados (contrato, 0/4)",
+    "classes": "escolha op-contrato",
+    "altura": 46,
+    "teste": "",
+    "nota": "",
+    "riscos": "",
+    "icone": true,
+    "abre": false,
+    "tecla": "1"
+   },
+   {
+    "texto": "Explorar a região (à noite é mais perigoso)",
+    "classes": "escolha",
+    "altura": 46,
+    "teste": "",
+    "nota": "",
+    "riscos": "",
+    "icone": false,
+    "abre": false,
+    "tecla": "2"
+   },
+   {
+    "texto": "Acampar e descansar até o amanhecer",
+    "classes": "escolha",
+    "altura": 46,
+    "teste": "",
+    "nota": "",
+    "riscos": "",
+    "icone": false,
+    "abre": false,
+    "tecla": "3"
+   },
+   {
+    "texto": "Viajar",
+    "classes": "escolha",
+    "altura": 46,
+    "teste": "",
+    "nota": "",
+    "riscos": "",
+    "icone": false,
+    "abre": false,
+    "tecla": "4"
+   }
+  ]
+ },
+ {
+  "nome": "mercado",
+  "cenario": "mercado",
+  "amb": {},
+  "ctx": {
+   "luta": false,
+   "titulo": false,
+   "tela": "tela loja chegando",
+   "cena": "menu",
+   "vila": false,
+   "doca": 0
+  },
+  "lista": null,
+  "continuar": false
+ },
+ {
+  "nome": "encruzilhada",
+  "cenario": "encruzilhada",
+  "amb": {},
+  "ctx": {
+   "luta": false,
+   "titulo": false,
+   "tela": "",
+   "cena": "evento",
+   "vila": false,
+   "doca": 0
+  },
+  "lista": null,
+  "continuar": true
+ },
+ {
+  "nome": "resgate",
+  "cenario": "resgate",
+  "amb": {},
+  "ctx": {
+   "luta": false,
+   "titulo": false,
+   "tela": "",
+   "cena": "local",
+   "vila": false,
+   "doca": 9
+  },
+  "pergunta": "O que você faz?",
+  "classes": "escolhas faixas",
+  "grupos": [],
+  "ops": [
+   {
+    "i": 0,
+    "texto": "Explorar a região (à noite é mais perigoso)",
+    "meta": [
+     "explorar"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 1,
+    "texto": "Acampar e descansar até o amanhecer",
+    "meta": [],
+    "teste": ""
+   },
+   {
+    "i": 2,
+    "texto": "Viajar",
+    "meta": [
+     "predio"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 3,
+    "texto": "Talentos",
+    "meta": [
+     "sistema",
+     "pontos"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 4,
+    "texto": "Personagem e inventário",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 5,
+    "texto": "Comitiva",
+    "meta": [
+     "sistema",
+     "carta"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 6,
+    "texto": "Mapa",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 7,
+    "texto": "Diário (contratos, rumores)",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 8,
+    "texto": "Bestiário",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 9,
+    "texto": "Salvar jogo",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 10,
+    "texto": "Sair do jogo",
+    "meta": [
+     "sistema"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 11,
+    "texto": "Usar Bandagem",
+    "meta": [
+     "usar"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 12,
+    "texto": "Usar Poção de Vida",
+    "meta": [
+     "usar"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 13,
+    "texto": "Usar Poção de Vida em Morel",
+    "meta": [
+     "usar",
+     "em"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 14,
+    "texto": "Usar Poção de Vida em Odette",
+    "meta": [
+     "usar",
+     "em"
+    ],
+    "teste": ""
+   },
+   {
+    "i": 15,
+    "texto": "Usar Tônico Restaurador",
+    "meta": [
+     "usar"
+    ],
+    "teste": ""
+   }
+  ],
+  "botoes": [
+   {
+    "texto": "Explorar a região (à noite é mais perigoso)",
+    "classes": "escolha",
+    "altura": 46,
+    "teste": "",
+    "nota": "",
+    "riscos": "",
+    "icone": false,
+    "abre": false,
+    "tecla": "1"
+   },
+   {
+    "texto": "Acampar e descansar até o amanhecer",
+    "classes": "escolha",
+    "altura": 46,
+    "teste": "",
+    "nota": "",
+    "riscos": "",
+    "icone": false,
+    "abre": false,
+    "tecla": "2"
+   },
+   {
+    "texto": "Viajar",
+    "classes": "escolha",
+    "altura": 46,
+    "teste": "",
+    "nota": "",
+    "riscos": "",
+    "icone": false,
+    "abre": false,
+    "tecla": "3"
+   }
+  ]
+ },
+ {
+  "nome": "abertura",
+  "cenario": "abertura",
+  "amb": {},
+  "ctx": {
+   "luta": false,
+   "titulo": false,
+   "tela": "",
+   "cena": "evento",
+   "vila": false,
+   "doca": 0
+  },
+  "lista": null,
+  "continuar": true
+ },
+ {
+  "nome": "titulo",
+  "cenario": "titulo",
+  "amb": {},
+  "ctx": {
+   "luta": false,
+   "titulo": true,
+   "tela": "",
+   "cena": "titulo",
+   "vila": false,
+   "doca": 0
+  },
+  "pergunta": "",
+  "classes": "escolhas",
+  "grupos": [],
+  "ops": [
+   {
+    "i": 0,
+    "texto": "Novo jogo",
+    "meta": [],
+    "teste": ""
+   },
+   {
+    "i": 1,
+    "texto": "Campanha",
+    "meta": [],
+    "teste": ""
+   },
+   {
+    "i": 2,
+    "texto": "Carregar jogo",
+    "meta": [],
+    "teste": ""
+   },
+   {
+    "i": 3,
+    "texto": "Sair",
+    "meta": [],
+    "teste": ""
+   }
+  ],
+  "botoes": [
+   {
+    "texto": "Novo jogo",
+    "classes": "escolha",
+    "altura": 67,
+    "teste": "",
+    "nota": "",
+    "riscos": "",
+    "icone": false,
+    "abre": false,
+    "tecla": "1"
+   },
+   {
+    "texto": "Campanha",
+    "classes": "escolha",
+    "altura": 67,
+    "teste": "",
+    "nota": "",
+    "riscos": "",
+    "icone": false,
+    "abre": false,
+    "tecla": "2"
+   },
+   {
+    "texto": "Carregar jogo",
+    "classes": "escolha",
+    "altura": 67,
+    "teste": "",
+    "nota": "",
+    "riscos": "",
+    "icone": false,
+    "abre": false,
+    "tecla": "3"
+   },
+   {
+    "texto": "Sair",
+    "classes": "escolha secundaria",
+    "altura": 67,
+    "teste": "",
+    "nota": "",
+    "riscos": "",
+    "icone": false,
+    "abre": false,
+    "tecla": "4"
+   }
+  ]
+ }
+]

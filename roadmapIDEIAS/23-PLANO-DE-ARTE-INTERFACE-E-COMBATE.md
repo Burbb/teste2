@@ -12,7 +12,7 @@ Não iniciar todo o plano numa única tarefa. As etapas técnicas A–I e a vali
 
 ## Estado de referência
 
-- Produção: **1.112.0** (17/10/2026): a HUD aprovada e as lutas cheias em `74b4d5d` (1.111.0); os capuzes e luvas em
+- Produção: **1.113.0** (17/10/2026), as escolhas da página em faixas; antes, a **1.112.0**: a HUD aprovada e as lutas cheias em `74b4d5d` (1.111.0); os capuzes e luvas em
   `ea8acb7` e a migração dos saves no commit seguinte (1.112.0). Antes: a 1.110.0, gibão e botas em `3c63546`.
 - Branch: `claude/tender-einstein-tx3tjl`.
 - Referência documental posterior consultada: `ab3a2b6`, diagnóstico da duração dos testes.
@@ -273,6 +273,17 @@ Pendente: a avaliação final de Jean; nada entrou no jogo.
   ~120 a 160 px para o registro; o seletor de Habilidades abre com uma fileira à vista e rola dentro (como já fazia
   quando faltava altura). Uma saída possível, ainda não proposta: os efeitos na linha do nome nas lutas cheias.
 
+### 1.9. As escolhas da página em faixas (integradas na 1.113.0)
+
+**Pedido de Jean:** as faixas, que a 1.111.0 limitou ao lugar selvagem, como a apresentação comum das escolhas
+narrativas e das ações da página. **Integrado:** a lista de escolhas da página fora da luta e do título ganha as faixas
+(o lugar, a vila, os eventos e diálogos com os testes de atributo, as cenas da missão, a viagem, a criação do
+personagem), sem depender do lugar, do texto nem de marca do motor; a etiqueta do teste, a seta ›, a secundária e a
+indisponível legíveis no carvão e no marfim. Ficam com o próprio tratamento: a luta, o título, as confirmações, o
+achado, a doca, os caminhos, os prédios da vila e as telas desenhadas (mercado, Inventário, fogueira, serviços). O
+mapa dos usos e a conferência (14 casos reais, antes × depois, conteúdo igual nas 26 comparações) estão em
+`ferramentas/prototipos/hud/escolhas-faixas/LEIA-ME.md`. Falta Jean jogar.
+
 ## 2. Telas de leitura, criação e celebrações
 
 - **Subida de nível:** preservar a boa organização das informações, redesenhando o acabamento para a linguagem atual.
@@ -373,7 +384,8 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
 
 ## Próxima passagem de trabalho
 
-1. A avaliação de Jean jogando a 1.111.0 (a HUD e as lutas cheias) e a 1.112.0 (os capuzes e luvas).
+1. A avaliação de Jean jogando a 1.111.0 a 1.113.0 (a HUD, as lutas cheias, os capuzes e luvas, as escolhas em
+   faixas) e a escolha entre as alternativas da composição compacta (item 1.8, protótipo).
 2. Integrar apenas os desenhos aprovados.
 3. Reproduzir e corrigir a percepção atrasada do custo de recurso e apresentar o bloqueio de vida máxima por ferimentos (1B).
 4. Prototipar os avisos e a consulta aos testes (1C), sem ampliar regras.

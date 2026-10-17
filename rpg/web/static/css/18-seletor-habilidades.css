@@ -187,12 +187,14 @@
   :root body .roda-janela.seletor .rj-linha:active { translate: none; }
 }
 
-/* ------------------------------------------------------------ as escolhas de um lugar selvagem */
-/* As escolhas de um lugar selvagem (Explorar, Acampar, Viajar e o que o lugar oferece junto: o contrato, a missão), na
-   linguagem do seletor, aprovadas pelo Jean em 17/10/2026 (ferramentas/prototipos/hud/LEIA-ME.md, a amostra e a
-   rodada 2). escolhas.js marca a lista com .faixas quando o motor manda a opção de explorar (meta "explorar",
-   Jogo.menu_selvagem); nenhuma outra tela recebe isto: a doca, os equipamentos, os caminhos, o mercado, as
-   confirmações e os menus da vila ficam como estão. Numa coluna só, mais larga:
+/* ------------------------------------------------------------ as escolhas da página */
+/* As escolhas narrativas e as ações da página, na linguagem do seletor (1.111.0 no lugar selvagem; 1.113.0 em todas):
+   o lugar (Explorar, Acampar, Viajar, a missão, o contrato), a vila (Passear, a ação da missão), os eventos e os
+   diálogos (com os testes de atributo), as cenas da missão, a viagem ("Para onde?"), a criação do personagem.
+   escolhas.js dá .faixas à lista de escolhas da página fora da luta e do título; não depende do lugar nem do texto.
+   Ficam com o tratamento próprio: a luta (a roda, o seletor, a mira), o menu do título, as confirmações (janela por
+   cima), a janela do achado, a doca, os caminhos, as telas desenhadas (o mercado, o Inventário, os serviços: os
+   controles delas nunca chegam a esta lista) e os prédios da vila. Numa coluna só, mais larga:
    - cada opção é um botão retangular inteiro (a área de clique não muda); a faixa é o ::before, recortado pelas pontas
      do seletor. As pontas escalam pela altura, como no seletor: numa opção de duas linhas a faixa é uma pincelada mais
      alta, com o meio contínuo atrás do texto e o desgaste só nas extremidades. Inclinação de 0,3° (numa faixa de 700 px,
@@ -200,7 +202,9 @@
    - a tecla é o paralelogramo do seletor; o texto, a nota e os riscos ficam retos, na letra de leitura de sempre, sem
      reduzir a fonte nem cortar palavra; a opção com informação embaixo (os riscos da sala, uma nota) tem mais folga;
    - estados: os do seletor (mouse marfim, pressionado afunda, foco com o fio e o anel na tecla); a indisponível (cinza
-     riscada, o motivo escrito) fica cinza riscada;
+     riscada, o motivo escrito) fica cinza riscada, também com o mouse em cima;
+   - as etiquetas (os riscos, o teste de atributo como "CAR +8") ficam escuras, com a cor delas, sobre o carvão e sobre
+     o marfim; a seta de quem abre outra escolha (›) e a opção secundária (Ignorar, Seguir em frente) leem nos dois;
    - o grupo (Contratos, Missão) continua o rótulo de sempre; a opção do contrato e a da missão levam o traço à esquerda
      dentro da faixa (ferro e latão), como a barra que têm nos outros menus. */
 
@@ -268,3 +272,21 @@
   :root body #prompt .faixas .escolha { animation: none; }
   :root body #prompt .faixas .escolha:active { translate: none; }
 }
+
+/* as escolhas de qualquer lugar (1.113.0): o teste de atributo, a seta ›, a secundária e a indisponível sob o mouse */
+:root body #prompt .faixas .escolha .teste { position: relative; z-index: 1; border: 1px solid #3a342a; }
+:root body #prompt .faixas .escolha:is(:hover, :focus-visible) .teste { background: #1d1a16; }
+:root body #prompt .faixas .escolha .op-abre { position: relative; z-index: 1; color: #b9af99; }
+:root body #prompt .faixas .escolha:is(:hover, :focus-visible) .op-abre { color: var(--sh-tinta); }
+:root body #prompt .faixas .escolha.secundaria { color: #cfc5ad; }
+:root body #prompt .faixas .escolha.secundaria:is(:hover, :focus-visible) { color: var(--sh-tinta); }
+:root body #prompt .faixas .escolha[aria-disabled="true"]:hover { color: #b9af99; text-shadow: 0 1px 0 rgba(0, 0, 0, 0.7); }
+:root body #prompt .faixas .escolha[aria-disabled="true"]:hover::before { background-color: rgba(35, 33, 37, 0.92);
+  background-image: var(--sh-grao), repeating-linear-gradient(-58deg, rgba(255, 255, 255, 0.045) 0 2px, transparent 2px 8px); }
+:root body #prompt .faixas .escolha[aria-disabled="true"]:hover .tecla { color: var(--sh-texto); }
+:root body #prompt .faixas .escolha[aria-disabled="true"]:hover .tecla::before { background: #0b0b0d; border-color: #5c554a; }
+:root body #prompt .faixas .escolha[aria-disabled="true"]:hover .op-nota:not(.op-motivo) { color: #b9af99; }
+/* a indisponível como a faixa bloqueada do seletor: o nome claro e riscado (o vermelho escuro sumia no carvão), o motivo
+   do motor no vermelho claro de perigo */
+:root body #prompt .faixas .escolha[aria-disabled="true"] .op-texto { color: #b9af99; opacity: 1; text-decoration-color: rgba(227, 154, 134, 0.85); }
+:root body #prompt .faixas .escolha[aria-disabled="true"] .op-motivo { color: var(--sh-perigo); opacity: 1; }

@@ -1,0 +1,407 @@
+cenário: combate
+  ok  na sua vez, as ações surgem em volta da sua carta
+  ok  sua carta vem para a frente
+  ok  a arena mostra herói, comitiva e inimigos
+  ok  o Grimório abre com P e mostra o dano
+  ok  Esc fecha o Grimório
+  ok  o balão de fala da comitiva não cobre outra carta nem as ações
+  ok  pular no meio do golpe final solta a câmera lenta
+  ok  Habilidades abre a janelinha com nome e custo
+  ok  Esc fecha a janelinha e as ações continuam
+  ok  Itens abre a janelinha com os itens
+  ok  fechar os itens devolve as ações
+  ok  a habilidade acende os alvos
+  ok  Voltar na escolha do alvo devolve as ações
+  ok  clicar no inimigo dispara: o alvo fica em chamas
+  ok  o efeito novo não faz o palco pular (maior passo num quadro: carta 3px, arena 0px)
+  ok  a luta termina
+  ok  o espólio espera o Continuar
+  ok  a paisagem sai da arena e volta para o topo da cena, fora da área que rola
+  ok  nenhuma dica fica presa depois da luta
+  ok  o contrato do lugar oferece seguir os rastros
+  ok  sem erros no console
+cenário: título e carregar save
+  ok  o menu principal oferece carregar
+  ok  o menu não tem mais Como jogar
+  ok  os saves aparecem como cartões
+  ok  dá para voltar da lista de saves
+  ok  o save carrega e o lugar aparece com a doca de atalhos
+  ok  a doca separa os atalhos em grupos
+  ok  entrar no save não deixa ecos do menu na página
+  ok  o atalho Inventário abre a ficha
+  ok  dentro do Inventário a doca segue acesa
+  ok  a doca marca a tela aberta
+  ok  o Inventário abre no topo da página (0)
+  ok  o Voltar fica na barra do topo, fora da área que rola
+  ok  a tela de menu não mostra a arte do lugar
+  ok  a doca cabe numa linha só (0)
+  ok  em 1280 px o painel do mundo continua à vista
+  ok  do Inventário, o atalho Bestiário abre o Bestiário direto
+  ok  a tecla D também troca de tela de dentro de outra
+  ok  clicar no atalho da tela aberta volta ao lugar
+  ok  telas da doca e o Voltar não entram no histórico
+  ok  o nome do lugar aparece uma vez só no histórico (Brejo das Cinzas: 1)
+  ok  o atalho Mapa abre o mapa por cima, sem sair do lugar
+  ok  sem erros no console
+cenário: saque, mural e mercado
+  ok  o item encontrado aparece como cartão, numa janela própria
+  ok  o item que você usa aparece ao lado
+  ok  o cartão do item não fica no log
+  ok  sem 'deixar para trás' com a mochila livre
+  ok  a moldura do item fica do mesmo tamanho da revelação aos botões (602x473 em 429,215)
+  ok  guardar fecha a janela do item
+  ok  os botões de aceitar ficam na mesma linha (588, 588, 588)
+  ok  aceitar um contrato não pula a página (0 → 0)
+  ok  abandonar um contrato pergunta numa janela própria
+  ok  Esc fecha a janela e o contrato fica
+  ok  na vila, os serviços ficam nos prédios, não na lista
+  ok  a taverna mostra as opções dela e o Voltar à vila
+  ok  Esc sai da taverna e volta à vila
+  ok  no bestiário, os balões dos prédios da vila não ficam na tela
+  ok  saindo do bestiário, a vila volta com os prédios
+  ok  clicar na poção sempre abre o "em quem usar" (3/3)
+  ok  a poção da bolsa lateral se usa com um clique
+  ok  clicar no balão com o nome do prédio entra nele
+  ok  segurar + não segue somando depois que a loja se redesenha
+  ok  o − desce a quantidade
+  ok  o mercado abre na aba Suprimentos
+  ok  a seta leva o foco e a lista para a aba Equipamentos
+  ok  trocar de aba não passa tempo nem espera o motor
+  ok  Vender: a grade com os 12 espaços, "Mochila N/12" e sem recompra antes de vender ({"celulas":12,"itens":1,"vaziosNoTab":0,"mochila":1,"rotulo":"Mochila 1/12","recompra":false,"velho":false})
+  ok  clique vende o item da mochila na hora
+  ok  vender não tira você do mercado
+  ok  o item vendido aparece em "Recomprar"
+  ok  depois de vender, a aba Vender continua aberta
+  ok  recomprar devolve o item pelo mesmo preço
+  ok  depois de cuidar de alguém, o templo continua no balcão, com menos gente e menos ouro (2 → 1)
+  ok  Voltar à vila sai do balcão do templo
+  ok  sem erros no console
+cenário: o mercado com abas e a banca (tela baixa, teclado, clique duplo, sair e voltar)
+  ok  em 1280×700, só a lista rola; abas, ouro e Sair à vista ({"pagina":0,"abas":true,"ouro":true,"sair":true})
+  ok  a banca é a faixa em cima, em pixel 2× ({"acima":true,"larga":true,"escala":2,"escalaV":2.0003810975609757})
+  ok  o que não se compra diz o motivo no cartão (Esgotado | Esgotado)
+  ok  no cartão, o esgotado diz só "Esgotado" (quando volta fica na dica)
+  ok  o que você tem e o que o mercador tem, separados (Na bolsa: 3Estoque: 4)
+  ok  Enter no cartão compra; o ouro e o que você tem atualizam
+  ok  clique duplo vende um item só (11 → 10)
+  ok  Esc sai do mercado para a vila
+  ok  de volta ao mercado: aba Suprimentos, sem a recompra da visita anterior
+  ok  sem erros no console
+cenário: compras rápidas de suprimentos (cada clique é uma compra; estoque, espaço e ouro acabam no meio)
+  ok  a quantidade escolhida (3) vai numa compra (3 → 6)
+  ok  3 cliques rápidos: compra o estoque inteiro (1), nem um a menos (6 → 7)
+  ok  os cliques depois do estoque acabar dão o aviso de recusa
+  ok  provisões: cinco cliques rápidos param no teto (10 → 12/12), cobrando só as duas
+  ok  dois Shift+cliques rápidos compram 5 + 5 flechas (20 → 30)
+  ok  o Esc derruba a fila: no máximo a compra que já estava no motor (226 → 186)
+  ok  fora do mercado, nenhuma compra da fila acontece depois (186 → 186)
+  ok  sem erros no console
+  ok  o ouro acaba no meio: compra 2, o que o ouro paga (3 → 5, ouro 2)
+  ok  sem erros no console
+cenário: o relatório da luta e o que vem depois (sem segundo Continuar; o clique que fecha não escolhe)
+  ok  a luta comum termina no relatório, com o Continuar dele
+  ok  clique duplo: do relatório direto ao menu do lugar, sem segundo Continuar (0)
+  ok  clique duplo: o gesto que fecha o relatório não escolhe nada no menu seguinte (0 respostas)
+  ok  a segunda luta também termina no relatório
+  ok  a subida de nível aparece depois do relatório, com o Continuar dela
+  ok  Enter segurado, depois a subida de nível: do relatório direto ao menu do lugar, sem segundo Continuar (0)
+  ok  Enter segurado, depois a subida de nível: o gesto que fecha o relatório não escolhe nada no menu seguinte (0 respostas)
+  ok  um gesto novo depois disso vale na hora
+  ok  sem erros no console
+cenário: campanha (protótipo do Vale do Turvo)
+  ok  o título oferece o novo jogo e a campanha
+  ok  o save da campanha diz a região e o modo
+  ok  o save do mundo gerado continua como era
+  ok  a criação pergunta o modo: resgate ou hardcore
+  ok  junto do modo, a caixa "Mostrar tutorial", marcada
+  ok  o prólogo diz o modo escolhido
+  ok  a abertura da missão toca depois do prólogo
+  ok  a abertura fica aberta esperando o Continuar
+  ok  a despensa é oferecida (sem tutorial, sem quadros)
+  ok  a campanha começa no Vau do Turvo, com a vila desenhada
+  ok  o mapa mostra a vila e as estradas dela; a capela ainda está na névoa
+  ok  a Estrada de Varn aparece como saída fechada
+  ok  escolher a saída fechada explica e não viaja
+  ok  depois do aviso, continua na vila
+  ok  a missão aparece no rastreador e o exame da fonte nova no menu da vila
+  ok  o cartão da missão leva ao exame da fonte
+  ok  no instantâneo, o exame da fonte espera o Continuar
+  ok  depois do exame, o objetivo aponta o canal e o exame some
+  ok  sem erros no console
+cenário: missão no Bosque do Moinho (o canal)
+  ok  no bosque, na etapa do canal, a ação aparece e o marcador está aqui
+  ok  adiantar o texto (clique duplo, Enter segurado) revela e para no Continuar, sem fechar a cena do canal
+  ok  deixada aberta, a cena do canal não fecha por tempo
+  ok  depois do Continuar, o objetivo e o marcador vão para a capela
+  ok  o Diário mostra o mais recente (o canal entra na capela) e guarda as três descobertas no histórico (3)
+  ok  sem erros no console
+cenário: carregar um save e ver a tela inteira antes de qualquer ação
+  ok  a campanha carregada aparece inteira: painéis, doca, mapa e missão (Bosque do Moinho, Dia 25 · Noite · Chuva)
+  ok  salvar, sair e carregar o mesmo save: a tela volta inteira (antes, só o centro até a primeira ação)
+  ok  recarregar a página mantém a tela inteira
+  ok  o save do mundo gerado também carrega inteiro, sem missão
+  ok  sem erros no console
+cenário: dentro da Capela Afogada (a sacristia, e salvar e carregar lá dentro)
+  ok  na capela, com o salão vencido: o passo seguinte é a sacristia
+  ok  vencida a luta, a sacristia mostra o livro embrulhado (o que ele diz, só lendo) e espera o Continuar
+  ok  a vitória na sacristia desenhada: os dois já não estão, o livro embrulhado no buraco, o baú no canto, nada para clicar
+  ok  um cartão só junta o que a sacristia mostrou e o objetivo novo (1)
+  ok  o objetivo passa ao ossuário, a sacristia some do menu e o baú fica no canto: o ponto e a opção para recolher
+  ok  salvar, sair e carregar lá dentro: a sala vencida continua vencida e a tela vem inteira
+  ok  carregado na sacristia: a sacristia no topo, o baú ainda no canto
+  ok  o baú pelo ponto (dois cliques): um só na bolsa, sem tempo; o canto vazio e a opção some
+  ok  carregado depois de recolher: o baú não volta ao canto nem à bolsa
+  ok  antes de ler, o personagem não sabe de Ilse
+  ok  a primeira leitura: o cartão com Ilse e o Sigilo
+  ok  o Diário sabe de Ilse e do Sigilo, e ainda não tem nada feito (saber o nome não prepara o rito)
+  ok  o Diário mostra o mais recente e as perguntas em aberto, sem a receita do rito antes de Berta, e o histórico fechado
+  ok  carregar o save não repete o cartão da sacristia
+  ok  sem erros no console
+cenário: as correntes do sarilho (uma ação só, os métodos dentro, e voltar sem gastar nada)
+  ok  as correntes são uma ação só, no grupo da missão (um rótulo para o grupo, nenhuma etiqueta por linha)
+  ok  nomes curtos; seta só nas que abrem outra escolha; a descida por último; um fio antes das ações de sempre
+  ok  dentro: à mão e o método da classe, cada um com o risco embaixo, e deixar como está (3)
+  ok  o mecanismo é descrito, sem ensinar o rito antes de Berta
+  ok  voltar não gasta nada, não mostra cartão e devolve o menu da capela
+  ok  a arte do topo é o ossuário com o sarilho (correntes presas), o ponto por cima; o texto sem imagem
+  ok  o mouse em cima acende o sarilho
+  ok  o foco do teclado acende do mesmo jeito
+  ok  Enter no sarilho aproxima e abre as mesmas formas de soltar, sem gastar nada
+  ok  o clique também só abre as alternativas
+  ok  de volta: a sala de antes, nada gasto
+  ok  sem erros no console
+cenário: a capela por fora e o salão alagado (pontos, olhar de perto, a cena de cada momento)
+  ok  antes de entrar, a página mostra a capela por fora, com o buraco e os sapos à vista
+  ok  Enter nos sapos aproxima a vista e leva o foco ao Afastar
+  ok  de perto, uma linha curta embaixo do texto (sem Continuar)
+  ok  afastar volta à vista inteira, tira a linha, sem gastar nada nem mudar a missão
+  ok  o mouse acende o buraco
+  ok  entrar pelo buraco abre o salão alagado, com a água inquieta (o ambiente que o texto descreve)
+  ok  na luta, o salão é o fundo da arena e os pontos ficam fora de alcance
+  ok  sem erros no console
+  ok  vencido o salão, a página mostra o salão quieto com a porta da sacristia
+  ok  sem erros no console
+cenário: andar pela capela (as salas vencidas, sem custo, pelos pontos e pelo menu; nomes só no mouse ou no destaque)
+  ok  no ossuário, os pontos sem nome fixo sobre a arte
+  ok  o mouse na escada mostra o nome dela
+  ok  F4 (destacar interações) mostra os nomes de todos os pontos
+  ok  F4 de novo desliga
+  ok  a escada sobe à sacristia desenhada, com a sala no subtítulo
+  ok  dentro da capela, sem Explorar a região (1.81.1)
+  ok  o livro, pelo teclado: as entradas do padre, em primeira pessoa, num livro aberto, com o Fechar no foco
+  ok  Esc fecha o livro e o Continuar devolve a sacristia: nada gasto nem escolhido
+  ok  reler pelo menu e fechar: nada muda, nada fica aceso
+  ok  de perto, com F4 ligado, nenhum nome da vista geral sobre a arte
+  ok  afastando, a vista geral volta com o F4 como estava
+  ok  afastado pelo mouse e F4 desligado: a janela não fica acesa nem com o contorno do foco
+  ok  pelo teclado, Esc afasta e o foco volta à janela, visível
+  ok  o salão vencido, quieto
+  ok  pela brecha, do lado de fora, onde se explora
+  ok  o buraco leva de volta ao salão vencido sem luta e sem Continuar
+  ok  ida e volta pela capela inteira: nada gasto, nenhum dia ou período a mais, a missão igual
+  ok  no ossuário, nada de recolher o lodo
+  ok  a descida: o fundo desenhado, Ilse presa entre as pedras, e a amostra entre as escolhas
+  ok  recolhida a amostra, Ilse continua na água, acordada e presa: sem luta, e a escolha some
+  ok  no fundo, o canto de Ilse tocando, um só
+  ok  voltar por enquanto: a arte sobe ao ossuário e o canto para
+  ok  de volta ao ossuário, sem tempo nem gasto, e a amostra não se recolhe de novo
+  ok  sem erros no console
+cenário: sair da capela para acampar (a saída contada antes da fogueira, o amanhecer do lado de fora)
+  ok  dentro da capela, a opção é "Sair e acampar"
+  ok  antes da fogueira, a faixa conta a saída pelo caminho da sala (o ossuário), com a capela por fora no topo e sem Continuar
+  ok  amanhece do lado de fora: a capela por fora, a volta pelas salas abertas e o acampar de sempre
+  ok  sem erros no console
+cenário: custo da bandagem, a proteção que levanta e a exaustão no mato
+  ok  sem bandagem, a ajuda da Odette fica à vista, desabilitada e com o motivo escrito
+  ok  nem clique nem a tecla escolhem a indisponível
+  ok  perguntar o nome devolve as ações, sem a pergunta, e a ajuda continua possível
+  ok  sem erros no console
+  ok  ao cair, a proteção do mendigo levanta o herói, com a frase dela e o aviso de que se foi
+  ok  sem erros no console
+  ok  exausto no mato: um Continuar para o fim do evento e a fogueira em seguida (1)
+  ok  sem erros no console
+cenário: a guardiã (o rito com tudo pronto, e salvar e carregar depois)
+  ok  com as correntes soltas, o ossuário já as desenha soltas e o sarilho não oferece ação
+  ok  com a verdade, a fita e as correntes, a descida oferece o rito e a luta para destruir
+  ok  o momento do rito chega com ela exatamente na metade (83/166)
+  ok  ela descansa: o relato de Ilse, esperando o Continuar
+  ok  desfecho guardado, o Sigilo na mão e o objetivo de voltar ao Vau
+  ok  carregado: ela segue descansada, sem descida nem Sigilo repetido
+  ok  carregado: o fundo sem Ilse, a água clara, nada animando de novo, a escada e o lodo (fundo/ausente/clara/false/escada,lodo)
+  ok  sem erros no console
+cenário: de volta ao Vau depois de dar descanso a Ilse (conclusão, Fonte, Pita, a herança)
+  ok  a volta ao Vau toca a cena do descanso, esperando o Continuar, sem contar uma noite que não veio
+  ok  a praça de Caspar vem depois da volta; sem prova, sem denúncia
+  ok  a febre concluída sai do rastreador; fica a resposta a Caspar, e a vila fala da Fonte que clareia
+  ok  Marta de cama: Pita atende na curandeira
+  ok  o Diário guarda a conclusão (recolhida) e deixa à vista que a herança espera
+  ok  a herança, depois de concluir, sai uma vez e o cartão some
+  ok  carregado: sem repetir a cena, a febre continua concluída e a tela vem inteira
+  ok  sem erros no console
+cenário: a praça de Caspar (destruir e denunciar, com prova e Yara no grupo)
+  ok  com o lodo e o canal, a praça oferece apoiar, denunciar e calar
+  ok  o fim do capítulo: Ilse, Caspar e Yara, e o aviso de que o Vale continua aberto
+  ok  decidido: nenhuma missão ativa, e a vila fala da praça depois da decisão
+  ok  o rastreador mostra o capítulo concluído no lugar da missão
+  ok  a missão decidida vai para Concluídas, recolhida
+  ok  o Diário abre com o capítulo concluído
+  ok  o Diário conta à parte o que houve com Ilse, com Caspar e com a Yara
+  ok  a Yara continua no grupo e à vista no painel
+  ok  sem erros no console
+cenário: a recuperação da campanha (infecção no Charco, com a comitiva)
+  ok  a infecção derruba e leva ao resgate, com Pita cuidando de todos
+  ok  no Vau, sem gastar a bolsa e sem a infecção ({"local":"Vau do Turvo","prov":0,"hp":15,"feridas":"Corte profundo"})
+  ok  acordado no Vau, o contrato cumprido paga num quadro só, na página da vila
+  ok  e o ouro do contrato entra, depois da cobrança do resgate
+  ok  sem erros no console
+cenário: a Yara depois da praça (barrada no Vau e de volta na estrada; livre no Charco)
+  ok  apoiada a vigília, a Yara continua na comitiva, mas o painel diz que espera fora do Vau (sem conversa ali)
+  ok  a vila conta onde ela está
+  ok  fora do Vau ela volta para o seu lado, e quer conversar sobre a praça
+  ok  sem erros no console
+  ok  denunciada a perseguição, a Yara que você não conhecia está livre no Charco, sem fogueira
+  ok  aceita, ela entra na comitiva
+  ok  carregado: o encontro não se repete e a Yara está lá uma vez só
+  ok  sem erros no console
+cenário: o Broquel do Vigia (a oferta única do ferreiro, o cartão com o Revide e a reação na luta)
+  ok  save que já venceu o ossuário: a forja mostra o reforço e o broquel, um cartão cada
+  ok  o cartão diz a regra (Revide) e a comparação mostra o ganho dela
+  ok  recebido o broquel, a forja volta a ser só o reforço (a oferta não se repete)
+  ok  sem erros no console
+  ok  com o escudo erguido, o golpe corpo a corpo volta como Revide, com o nome na carta
+  ok  sem erros no console
+cenário: o golpe preparado no ossuário (aviso na escolha, ficha, Investida que interrompe)
+  ok  na sua vez, a carta de quem prepara mostra o aviso, e as ações estão abertas para responder
+  ok  nada cobre o aviso (nem a faixa de ação de outro inimigo)
+  ok  a ficha do inimigo diz que ele prepara o golpe e como responder
+  ok  a Investida atordoa e interrompe: o golpe se perde e o aviso sai da carta
+  ok  o Esqueleto de Guarda prepara o golpe na luta do ossuário
+  ok  sem erros no console
+cenário: a Encruzilhada (comparar, olhar de perto, voltar sem efeito, confirmar uma vez)
+  ok  a escolha mostra os dois caminhos lado a lado
+  ok  cada carta tem atributos, habilidades, o que dá e limites (Berserker perde Defesa; Paladino resiste ao terror); a escolha é definitiva
+  ok  olhar de perto e voltar não mudam o herói
+  ok  confirmar aplica o caminho uma vez (vida 87 → 102)
+  ok  sem erros no console
+cenário: o Tiro Duplo (o 1º derruba o alvo, o 2º segue para o mais ferido)
+  ok  a luta abre com as ações do Patrulheiro
+  ok  o 1º disparo derruba Alfa e o 2º vai em Gama, o mais ferido; Beta, inteiro, não leva flecha
+  ok  sem erros no console
+cenário: baús abertos juntos
+  ok  a pilha abre num quadro só, com a pilha e o ×N dos baús que saíram (×3, 3 ícones, 3 na bolsa)
+  ok  o resumo lista os equipamentos (Talismã dos Espinhos, Elmo Enferrujado)
+  ok  depois do resumo, cada equipamento vem na janela dele, na mesma ordem
+  ok  um quadro de espólio só e a pilha vazia (1 quadro, 0 baús)
+  ok  a moldura de cada item fica estável
+  ok  sem erros no console
+cenário: a abertura guiada (a despensa, os quadros da primeira luta, a Ajuda e o Mural)
+  ok  C1: o quadro aponta Habilidades, sem cobrir carta nem ação
+  ok  C2: aberta a janelinha, o quadro aponta a habilidade da classe
+  ok  C3: na mira, o quadro pede o alvo sem cobrir os inimigos
+  ok  C4: depois do golpe, o nome, o custo real e o que o Atacar faz, em linhas separadas
+  ok  Entendi fecha só o quadro: a pergunta da luta continua a mesma e as orientações seguem ligadas
+  ok  F1 abre a Ajuda (antes de a luta acabar, ela ainda não lista a luta)
+  ok  na Ajuda, desligar tira os quadros na hora
+  ok  Esc fecha a Ajuda
+  ok  a despensa: o relatório da luta (12 XP, uma vez) vem antes da cena do taverneiro
+  ok  a cena depois da despensa (caneca e mural) espera o Continuar
+  ok  na vila, desligado: nenhum quadro
+  ok  religado na Ajuda: V1 aponta o Mural
+  ok  o quadro do V1 fica abaixo do cenário, sem cobrir o mural nem o nome; sem a legenda "clique: contratos"
+  ok  a taverna está na vila (a despensa feita, Morel à espera nela)
+  ok  Encerrar tutorial desliga e o quadro some
+  ok  sem erros no console
+cenário: o Foco do Arqueiro (a barra verde) e a carta de quem foge (some e não volta)
+  ok  a barra de Foco enche de verde na HUD e na carta da luta
+  ok  fugindo com sucesso, a carta do herói sai e não volta a aparecer no canto enquanto a luta termina
+  ok  sem erros no console
+cenário: a fogueira (quem vai, quem fica, a nota do acampamento) e a fome fora da barra
+  ok  a fome mora embaixo das barras (não em cima da vida)
+  ok  embaixo da fogueira: a instrução, o contador, quem vai e quem fica (a nota do acampamento fica no menu)
+  ok  a fogueira é a cena do topo: a arte à vista sem a barra do título, um ponto para cada um (Morel e Odette), o Dormir nela, nenhum nome fixo e nada de imagem no texto
+  ok  as áreas clicáveis não se encostam
+  ok  com o mouse em cima, só o nome dele aparece
+  ok  com "Destacar interações" (F4), todos os nomes à vista
+  ok  em 1280×720, cada ponto continua sobre a figura dele (a mesma posição na arte)
+  ok  em 1500×950, cada ponto continua sobre a figura dele (a mesma posição na arte)
+  ok  no menu de quem vai, a nota junto do "Deixar no acampamento"
+  ok  o amanhecer come a provisão: a fome some e o painel não muda de altura
+  ok  depois de dormir, a cena do acampamento sai do topo
+  ok  sem erros no console
+cenário: a orientação do Dormir (D3) aponta o botão da cena do acampamento
+  ok  D3: o quadro logo abaixo da cena, dentro da coluna, sem cobrir a roda; o contorno e a seta no Dormir de verdade (ponta a 0px)
+  ok  um Dormir só (nenhuma cópia para a orientação)
+  ok  Enter no Dormir dorme; depois, o D3 não volta e a cena sai do topo
+  ok  sem erros no console
+cenário: a segunda parte da abertura guiada (item achado, recuperar, noite e explorar)
+  ok  E1: no item achado, a comparação e as escolhas, sem cobrir a janela
+  ok  decidido o item, o E1 sai; na vila, V2 aponta o Templo (a vida baixa), sem cobrir prédio nem página
+  ok  V3: ao escolher o destino, as provisões do topo
+  ok  Entendi fecha o V3, e nenhum outro quadro entra na mesma tela
+  ok  sem erros no console
+  ok  N1: fora da vila, à noite, a linha da noite nos riscos do lugar, com a seta encostando nela, sem cobrir a página
+  ok  respondido o menu, o N1 não volta
+  ok  sem erros no console
+cenário: os ciclos básicos (o primeiro atendimento grátis do templo e o primeiro contrato)
+  ok  V2: o Templo e o primeiro atendimento grátis, sem misturar a Taverna
+  ok  no templo, o serviço diz "Primeiro atendimento — grátis"
+  ok  a cura grátis devolve a vida toda e não cobra
+  ok  K1: no mural, "Aceite este contrato para começar.", com a seta encostando no cartão destacado
+  ok  aceito o contrato, o quadro do mural sai
+  ok  K2: na vila, o cartão do contrato à direita, com a seta encostando nele
+  ok  o contrato indicado no Mural é o do cartão apontado, num lugar a uma viagem da vila
+  ok  rolando a coluna, o quadro acompanha o cartão
+  ok  o clique no contrato viaja direto até o lugar dele, onde o K3 aponta o Caçar
+  ok  sem erros no console
+cenário: os dois espaços de anel (comparar, equipar no espaço escolhido, a mochila)
+  ok  dois anéis: um botão por espaço, com o anel que sai e o espaço
+  ok  a comparação mostra a troca com cada anel, pelo nome do espaço
+  ok  a janela do anel cabe na tela de 1280×720
+  ok  a tecla 2 equipa no Anel 2; o Anel 1 fica como estava
+  ok  sem erros no console
+  ok  um espaço vazio: o botão, o cartão e a comparação dizem que ele está vazio
+  ok  a janela do anel cabe na tela de 1280×620
+  ok  a tecla 2 equipa no Anel 2; o Anel 1 fica como estava
+  ok  dois cliques num anel da mochila: o menu pergunta qual substituir
+  ok  pelo teclado, o Anel 2 é o substituído
+  ok  sem erros no console
+cenário: tentar pagar sem ouro (forja, taverna, mercado)
+  ok  ferreiro: três cliques sem ouro, um aviso só, dentro do cartão e sem cobrir o preço
+  ok  ferreiro: pelo teclado também, e a tentativa não gasta ouro nem muda a página
+  ok  taverna: três cliques sem ouro, um aviso só, dentro do cartão e sem cobrir o preço
+  ok  taverna: pelo teclado também, e a tentativa não gasta ouro nem muda a página
+  ok  sem erros no console
+  ok  sem ouro, o cartão Dormir fica (com o motivo) e o quadro não aparece
+  ok  sem erros no console
+  ok  com ouro para a cama, o quadro do cartão Dormir aparece
+  ok  sem erros no console
+  ok  mercado: o aviso diz o motivo do motor (ouro, ou esgotado), um de cada vez
+  ok  sem erros no console
+cenário: revelar o texto (A0) e a derrota na luta preparada do cenário tutorial
+  ok  A0: com o texto correndo numa cena que acaba em Continuar, o quadro de revelar
+  ok  revelado o texto, o mesmo quadro aponta o Continuar
+  ok  depois do Continuar, o A0 não volta
+  ok  sem erros no console
+  ok  derrota na luta preparada: o resgate de sempre, de volta ao menu do Vau, com o contrato
+  ok  a derrota: a faixa "Você caiu", o cenário escuro com o herói em 0 e, de volta ao menu, a luz de sempre
+  ok  da queda direto ao resgate, sem um Continuar segurando os registros da luta (eles ficam no Histórico)
+  ok  sem erros no console
+cenário: o quadro de acelerar a animação (AL), com Entendi pelo teclado
+  ok  AL: com a vez dos lobos correndo, o quadro com Entendi (o foco nele)
+  ok  Enter no Entendi fecha só o quadro: a vez do herói chega normalmente, sem ação escolhida, e ele não volta
+  ok  sem erros no console
+cenário: ferimentos e descanso (F1, F2, a Curandeira com o primeiro tratamento grátis, D1)
+  ok  F1: o nome, o efeito real e o que faz sarar, a seta no ferimento
+  ok  F2: na cena seguinte, a bandagem da bolsa
+  ok  usada a bandagem, a ficha mostra a ferida tratada e o quadro sai
+  ok  enfaixada a única ferida aberta, a bandagem fica à vista, apagada e sem pulsar
+  ok  o clique na bandagem sem ferida diz o motivo e não gasta nada (nem cura vida)
+  ok  sem erros no console
+  ok  F3: na vila, a Curandeira (e o Templo só recupera vida)
+  ok  F4: o cartão do ferimento (o grátis fica no cartão, não no quadro)
+  ok  com zero de ouro: um tratamento grátis, e o outro cartão volta ao preço de sempre na mesma tela
+  ok  sem erros no console
+  ok  D1: na taverna, o quadro diz a ação; o cartão Dormir, o custo, a recuperação e as provisões das regras
+  ok  dormir devolve exatamente o que o quadro disse (30 → 51 de vida, todo o Vigor)
+  ok  sem erros no console
+tudo certo

@@ -3300,3 +3300,17 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Continua:** o Chapéu de Couro com o capuz (pede desenho próprio); a Desaparecer com o sprite. Commits separados: os
   desenhos e os dados (`ea8acb7`), a migração (o seguinte).
 - **Próximo:** a avaliação do Jean jogando as duas entregas; nenhum outro lote começou.
+
+### 17/10/2026 (data do computador local) — Entrega: as escolhas da página em faixas (1.113.0)
+
+- **Pedido de Jean:** as faixas como a apresentação comum das escolhas narrativas e das ações da página, sem exceções
+  por lugar, sem identificar pelo texto, sem marca nova nos eventos; regras e conteúdo das opções intactos.
+- **Feito:** o mapa dos usos reais (`ferramentas/prototipos/hud/escolhas-faixas/levantar.mjs`); a lista de escolhas da
+  página fora da luta e do título em faixas (`escolhas.js`; a marca `explorar` do motor saiu); no CSS, o teste de
+  atributo, a seta ›, a secundária e a indisponível legíveis no carvão e no marfim.
+- **Conferido:** 14 casos reais × 2 janelas, antes × depois: conteúdo igual nas 26 comparações, contraste das
+  etiquetas no marfim de 7,1 a 12,7, teclado, mouse, pressionado, indisponível, a tecla do número; suíte, fumaça e
+  pyflakes; o gabarito (808 linhas, só a marca `explorar` saindo; nenhum texto, escolha ou sorteio).
+- **Fora desta entrega (decidido pela função):** mercado, confirmações, achado, doca, caminhos, prédios da vila,
+  fogueira e o título continuam com o próprio tratamento.
+- **Próximo:** Jean jogar; a composição compacta das lutas cheias segue em avaliação (protótipo, entrega à parte).
