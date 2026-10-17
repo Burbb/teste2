@@ -1,0 +1,17 @@
+/* Fluxo A (o ajuste direto no navegador e no CSS, com as ferramentas de hoje), por cima de 18-seletor-habilidades.css.
+   Só composição: o material (faixas, pontas, grão, cores) não muda. */
+
+/* 1. o custo duplo: cada ícone colado ao número dele, os pares separados (o texto "10 " vira item do flex: o espaço some) */
+:root body .roda-janela.seletor .rj-linha .rj-info { display: inline-flex; align-items: center; column-gap: 2px; white-space: nowrap; }
+:root body .roda-janela.seletor .rj-linha .rj-info img:not(:first-child) { margin-left: 7px; }
+/* 2. o nome e o custo: 12 px no mínimo entre eles (8 da grade e 4 do custo); para o custo mais largo não quebrar o nome
+   em 1280×720, a coluna do ícone (32 px) fica do tamanho do ícone e as folgas da grade descem de 9 para 8 px. Os 16 px
+   da ponta direita do pincel continuam livres. */
+:root body .roda-janela.seletor .rj-linha { column-gap: 8px; grid-template-columns: 30px 32px minmax(0, 1fr) auto; }
+:root body .roda-janela.seletor .rj-linha .rj-info { margin-left: 4px; }
+/* 3. uma borda esquerda só: a descrição começa onde começam o título e as teclas (a caixa vinha 12 px depois da tecla) */
+:root body .roda-janela.seletor .rj-desc-caixa { margin-left: -12px; }
+/* 4. o respiro da descrição: mais longe das faixas, o texto mais longe do fio; na janela baixa, os dois blocos afastados */
+:root body .roda-janela.seletor .rj-descricao { margin-top: 12px; }
+:root body .roda-janela.seletor .rj-desc-caixa { padding-top: 10px; }
+:root body .roda-janela.seletor .rj-desc-caixa[data-lado="junto"] { column-gap: 28px; }

@@ -3375,3 +3375,25 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   - a suíte, o gabarito (sem mudança), o pyflakes e a fumaça uma vez.
 - **Limitações:** abaixo de 920 px, a rolagem da página; entre 920 e 1100 px, o seletor aberto cobre o registro.
 - **Próximo:** Jean jogar. Nada começou além disso (nem a 1B, nem lote de arte, nem a nova direção visual da HUD).
+
+### 17/10/2026 (data do computador local) — Experimento: o pen.dev na composição da HUD (sem versão)
+
+- **Pedido de Jean:** testar o pen.dev (plano gratuito, Windows, MCP com o Claude Code) para ver se compor num canvas
+  editável facilita chegar ao resultado e levá-lo ao CSS. O mesmo ajuste em dois fluxos, num pedaço do seletor (duas
+  faixas, nome longo, custo duplo, a descrição; 1280×720 e 1500×950; normal, destacada e indisponível).
+- **Feito** (`ferramentas/prototipos/hud/pen-composicao/`, detalhes no LEIA-ME de lá):
+  - uma bancada com o seletor real e as folhas do jogo, com fotos e medidas;
+  - fluxo A, no CSS (cerca de 7 min);
+  - fluxo B, no canvas pelo MCP e depois no CSS (cerca de 18 min).
+  Os dois chegaram ao mesmo CSS.
+- **Achados:**
+  - a importação do localhost perde a tinta (pontas, inclinação, grão, tecla); fica fiel só reconstruindo com as
+    peças do jogo como imagem;
+  - reorganizar o componente apagou as personalizações das instâncias;
+  - o código exportado não serve (inline, fonte na internet);
+  - a tela de boas-vindas do app trava a importação até ser fechada.
+- **Instalado e configurado:** Pen 1.2.18. O servidor MCP `pencil` está registrado só neste projeto (escopo local, fora
+  do repositório), com o `aseprite-bridge` preservado; backup em `Tools\backups-config\`.
+- **Recomendação:** restringir. O pen.dev não entra no fluxo; fica instalado só se Jean quiser propor arranjos à mão
+  (o próximo teste possível: ele mexe no `seletor.pen` e eu levo ao CSS). A bancada é o que vale reaproveitar.
+- **Próximo:** Jean avaliar. Nada entrou no jogo; nenhuma versão mudou.

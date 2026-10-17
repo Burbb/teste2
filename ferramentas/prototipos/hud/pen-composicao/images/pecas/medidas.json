@@ -1,0 +1,90 @@
+{
+ "1280x720-normal": {
+  "faixa": [
+   324,
+   72
+  ],
+  "tecla": [
+   46,
+   50
+  ],
+  "folga": 8
+ },
+ "1280x720-indisponivel": {
+  "faixa": [
+   324,
+   72
+  ],
+  "tecla": [
+   46,
+   50
+  ],
+  "folga": 8
+ },
+ "1280x720-destaque": {
+  "faixa": [
+   324,
+   72
+  ],
+  "tecla": [
+   46,
+   50
+  ],
+  "folga": 8
+ },
+ "1280x720-indisponivel-destaque": {
+  "faixa": [
+   324,
+   72
+  ],
+  "tecla": [
+   46,
+   50
+  ],
+  "folga": 8
+ },
+ "1500x950-normal": {
+  "faixa": [
+   382,
+   72
+  ],
+  "tecla": [
+   46,
+   50
+  ],
+  "folga": 8
+ },
+ "1500x950-indisponivel": {
+  "faixa": [
+   382,
+   72
+  ],
+  "tecla": [
+   46,
+   50
+  ],
+  "folga": 8
+ },
+ "1500x950-destaque": {
+  "faixa": [
+   382,
+   72
+  ],
+  "tecla": [
+   46,
+   50
+  ],
+  "folga": 8
+ },
+ "1500x950-indisponivel-destaque": {
+  "faixa": [
+   382,
+   72
+  ],
+  "tecla": [
+   46,
+   50
+  ],
+  "folga": 8
+ }
+}

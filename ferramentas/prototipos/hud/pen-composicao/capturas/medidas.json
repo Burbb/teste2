@@ -1,0 +1,686 @@
+{
+ "1280x720-parado-atual": {
+  "seletor": "684×182",
+  "faixas": [
+   {
+    "nome": "Flecha Envenenada",
+    "linhas_do_nome": 2,
+    "folga_nome_custo": 53,
+    "altura_faixa": 56,
+    "centro_y": {
+     "tecla": 0,
+     "icone": 0,
+     "nome": 0,
+     "custo": 0
+    },
+    "custo_largura": 62
+   },
+   {
+    "nome": "Chuva de Flechas",
+    "linhas_do_nome": 1,
+    "folga_nome_custo": 18,
+    "altura_faixa": 56,
+    "centro_y": {
+     "tecla": 0,
+     "icone": 0,
+     "nome": 0,
+     "custo": 0
+    },
+    "custo_largura": 62
+   }
+  ],
+  "descricao": {
+   "distancia_da_faixa": 4,
+   "largura": 622,
+   "altura": 78,
+   "esquerda_relativa_ao_nome": -72
+  },
+  "cortados": []
+ },
+ "1280x720-destaque-atual": {
+  "seletor": "684×182",
+  "faixas": [
+   {
+    "nome": "Flecha Envenenada",
+    "linhas_do_nome": 2,
+    "folga_nome_custo": 53,
+    "altura_faixa": 56,
+    "centro_y": {
+     "tecla": 0,
+     "icone": 0,
+     "nome": 0,
+     "custo": 0
+    },
+    "custo_largura": 62
+   },
+   {
+    "nome": "Chuva de Flechas",
+    "linhas_do_nome": 1,
+    "folga_nome_custo": 18,
+    "altura_faixa": 56,
+    "centro_y": {
+     "tecla": 0,
+     "icone": 0,
+     "nome": 0,
+     "custo": 0
+    },
+    "custo_largura": 62
+   }
+  ],
+  "descricao": {
+   "distancia_da_faixa": 4,
+   "largura": 622,
+   "altura": 78,
+   "esquerda_relativa_ao_nome": -72
+  },
+  "cortados": []
+ },
+ "1280x720-indisponivel-atual": {
+  "seletor": "684×182",
+  "faixas": [
+   {
+    "nome": "Flecha Envenenada",
+    "linhas_do_nome": 2,
+    "folga_nome_custo": 53,
+    "altura_faixa": 56,
+    "centro_y": {
+     "tecla": 0,
+     "icone": 0,
+     "nome": 0,
+     "custo": 0
+    },
+    "custo_largura": 62
+   },
+   {
+    "nome": "Chuva de Flechas",
+    "linhas_do_nome": 1,
+    "folga_nome_custo": 18,
+    "altura_faixa": 56,
+    "centro_y": {
+     "tecla": 0,
+     "icone": 0,
+     "nome": 0,
+     "custo": 0
+    },
+    "custo_largura": 62
+   }
+  ],
+  "descricao": {
+   "distancia_da_faixa": 4,
+   "largura": 622,
+   "altura": 78,
+   "esquerda_relativa_ao_nome": -72
+  },
+  "cortados": []
+ },
+ "1500x950-parado-atual": {
+  "seletor": "800×290",
+  "faixas": [
+   {
+    "nome": "Flecha Envenenada",
+    "linhas_do_nome": 1,
+    "folga_nome_custo": 59,
+    "altura_faixa": 56,
+    "centro_y": {
+     "tecla": 0,
+     "icone": 0,
+     "nome": 0,
+     "custo": 0
+    },
+    "custo_largura": 62
+   },
+   {
+    "nome": "Chuva de Flechas",
+    "linhas_do_nome": 1,
+    "folga_nome_custo": 76,
+    "altura_faixa": 56,
+    "centro_y": {
+     "tecla": 0,
+     "icone": 0,
+     "nome": 0,
+     "custo": 0
+    },
+    "custo_largura": 62
+   }
+  ],
+  "descricao": {
+   "distancia_da_faixa": 4,
+   "largura": 354,
+   "altura": 161,
+   "esquerda_relativa_ao_nome": -72
+  },
+  "cortados": []
+ },
+ "1500x950-destaque-atual": {
+  "seletor": "800×290",
+  "faixas": [
+   {
+    "nome": "Flecha Envenenada",
+    "linhas_do_nome": 1,
+    "folga_nome_custo": 59,
+    "altura_faixa": 56,
+    "centro_y": {
+     "tecla": 0,
+     "icone": 0,
+     "nome": 0,
+     "custo": 0
+    },
+    "custo_largura": 62
+   },
+   {
+    "nome": "Chuva de Flechas",
+    "linhas_do_nome": 1,
+    "folga_nome_custo": 76,
+    "altura_faixa": 56,
+    "centro_y": {
+     "tecla": 0,
+     "icone": 0,
+     "nome": 0,
+     "custo": 0
+    },
+    "custo_largura": 62
+   }
+  ],
+  "descricao": {
+   "distancia_da_faixa": 4,
+   "largura": 354,
+   "altura": 161,
+   "esquerda_relativa_ao_nome": -72
+  },
+  "cortados": []
+ },
+ "1500x950-indisponivel-atual": {
+  "seletor": "800×290",
+  "faixas": [
+   {
+    "nome": "Flecha Envenenada",
+    "linhas_do_nome": 1,
+    "folga_nome_custo": 59,
+    "altura_faixa": 56,
+    "centro_y": {
+     "tecla": 0,
+     "icone": 0,
+     "nome": 0,
+     "custo": 0
+    },
+    "custo_largura": 62
+   },
+   {
+    "nome": "Chuva de Flechas",
+    "linhas_do_nome": 1,
+    "folga_nome_custo": 76,
+    "altura_faixa": 56,
+    "centro_y": {
+     "tecla": 0,
+     "icone": 0,
+     "nome": 0,
+     "custo": 0
+    },
+    "custo_largura": 62
+   }
+  ],
+  "descricao": {
+   "distancia_da_faixa": 4,
+   "largura": 354,
+   "altura": 161,
+   "esquerda_relativa_ao_nome": 312
+  },
+  "cortados": []
+ },
+ "1280x720-parado-a": {
+  "seletor": "684×193",
+  "faixas": [
+   {
+    "nome": "Flecha Envenenada",
+    "linhas_do_nome": 2,
+    "folga_nome_custo": 52,
+    "altura_faixa": 56,
+    "centro_y": {
+     "tecla": 0,
+     "icone": 0,
+     "nome": 0,
+     "custo": 0
+    },
+    "custo_largura": 69
+   },
+   {
+    "nome": "Chuva de Flechas",
+    "linhas_do_nome": 1,
+    "folga_nome_custo": 17,
+    "altura_faixa": 56,
+    "centro_y": {
+     "tecla": 0,
+     "icone": 0,
+     "nome": 0,
+     "custo": 0
+    },
+    "custo_largura": 69
+   }
+  ],
+  "descricao": {
+   "distancia_da_faixa": 12,
+   "largura": 622,
+   "altura": 81,
+   "esquerda_relativa_ao_nome": -78
+  },
+  "cortados": []
+ },
+ "1280x720-destaque-a": {
+  "seletor": "684×193",
+  "faixas": [
+   {
+    "nome": "Flecha Envenenada",
+    "linhas_do_nome": 2,
+    "folga_nome_custo": 52,
+    "altura_faixa": 56,
+    "centro_y": {
+     "tecla": 0,
+     "icone": 0,
+     "nome": 0,
+     "custo": 0
+    },
+    "custo_largura": 69
+   },
+   {
+    "nome": "Chuva de Flechas",
+    "linhas_do_nome": 1,
+    "folga_nome_custo": 17,
+    "altura_faixa": 56,
+    "centro_y": {
+     "tecla": 0,
+     "icone": 0,
+     "nome": 0,
+     "custo": 0
+    },
+    "custo_largura": 69
+   }
+  ],
+  "descricao": {
+   "distancia_da_faixa": 12,
+   "largura": 622,
+   "altura": 81,
+   "esquerda_relativa_ao_nome": -78
+  },
+  "cortados": []
+ },
+ "1280x720-indisponivel-a": {
+  "seletor": "684×193",
+  "faixas": [
+   {
+    "nome": "Flecha Envenenada",
+    "linhas_do_nome": 2,
+    "folga_nome_custo": 52,
+    "altura_faixa": 56,
+    "centro_y": {
+     "tecla": 0,
+     "icone": 0,
+     "nome": 0,
+     "custo": 0
+    },
+    "custo_largura": 69
+   },
+   {
+    "nome": "Chuva de Flechas",
+    "linhas_do_nome": 1,
+    "folga_nome_custo": 17,
+    "altura_faixa": 56,
+    "centro_y": {
+     "tecla": 0,
+     "icone": 0,
+     "nome": 0,
+     "custo": 0
+    },
+    "custo_largura": 69
+   }
+  ],
+  "descricao": {
+   "distancia_da_faixa": 12,
+   "largura": 622,
+   "altura": 81,
+   "esquerda_relativa_ao_nome": -78
+  },
+  "cortados": []
+ },
+ "1500x950-parado-a": {
+  "seletor": "800×264",
+  "faixas": [
+   {
+    "nome": "Flecha Envenenada",
+    "linhas_do_nome": 1,
+    "folga_nome_custo": 58,
+    "altura_faixa": 56,
+    "centro_y": {
+     "tecla": 0,
+     "icone": 0,
+     "nome": 0,
+     "custo": 0
+    },
+    "custo_largura": 69
+   },
+   {
+    "nome": "Chuva de Flechas",
+    "linhas_do_nome": 1,
+    "folga_nome_custo": 75,
+    "altura_faixa": 56,
+    "centro_y": {
+     "tecla": 0,
+     "icone": 0,
+     "nome": 0,
+     "custo": 0
+    },
+    "custo_largura": 69
+   }
+  ],
+  "descricao": {
+   "distancia_da_faixa": 12,
+   "largura": 354,
+   "altura": 127,
+   "esquerda_relativa_ao_nome": -78
+  },
+  "cortados": []
+ },
+ "1500x950-destaque-a": {
+  "seletor": "800×264",
+  "faixas": [
+   {
+    "nome": "Flecha Envenenada",
+    "linhas_do_nome": 1,
+    "folga_nome_custo": 58,
+    "altura_faixa": 56,
+    "centro_y": {
+     "tecla": 0,
+     "icone": 0,
+     "nome": 0,
+     "custo": 0
+    },
+    "custo_largura": 69
+   },
+   {
+    "nome": "Chuva de Flechas",
+    "linhas_do_nome": 1,
+    "folga_nome_custo": 75,
+    "altura_faixa": 56,
+    "centro_y": {
+     "tecla": 0,
+     "icone": 0,
+     "nome": 0,
+     "custo": 0
+    },
+    "custo_largura": 69
+   }
+  ],
+  "descricao": {
+   "distancia_da_faixa": 12,
+   "largura": 354,
+   "altura": 127,
+   "esquerda_relativa_ao_nome": -78
+  },
+  "cortados": []
+ },
+ "1500x950-indisponivel-a": {
+  "seletor": "800×264",
+  "faixas": [
+   {
+    "nome": "Flecha Envenenada",
+    "linhas_do_nome": 1,
+    "folga_nome_custo": 58,
+    "altura_faixa": 56,
+    "centro_y": {
+     "tecla": 0,
+     "icone": 0,
+     "nome": 0,
+     "custo": 0
+    },
+    "custo_largura": 69
+   },
+   {
+    "nome": "Chuva de Flechas",
+    "linhas_do_nome": 1,
+    "folga_nome_custo": 75,
+    "altura_faixa": 56,
+    "centro_y": {
+     "tecla": 0,
+     "icone": 0,
+     "nome": 0,
+     "custo": 0
+    },
+    "custo_largura": 69
+   }
+  ],
+  "descricao": {
+   "distancia_da_faixa": 12,
+   "largura": 354,
+   "altura": 127,
+   "esquerda_relativa_ao_nome": 306
+  },
+  "cortados": []
+ },
+ "1280x720-parado-b": {
+  "seletor": "684×193",
+  "faixas": [
+   {
+    "nome": "Flecha Envenenada",
+    "linhas_do_nome": 2,
+    "folga_nome_custo": 52,
+    "altura_faixa": 56,
+    "centro_y": {
+     "tecla": 0,
+     "icone": 0,
+     "nome": 0,
+     "custo": 0
+    },
+    "custo_largura": 69
+   },
+   {
+    "nome": "Chuva de Flechas",
+    "linhas_do_nome": 1,
+    "folga_nome_custo": 17,
+    "altura_faixa": 56,
+    "centro_y": {
+     "tecla": 0,
+     "icone": 0,
+     "nome": 0,
+     "custo": 0
+    },
+    "custo_largura": 69
+   }
+  ],
+  "descricao": {
+   "distancia_da_faixa": 12,
+   "largura": 622,
+   "altura": 81,
+   "esquerda_relativa_ao_nome": -78
+  },
+  "cortados": []
+ },
+ "1280x720-destaque-b": {
+  "seletor": "684×193",
+  "faixas": [
+   {
+    "nome": "Flecha Envenenada",
+    "linhas_do_nome": 2,
+    "folga_nome_custo": 52,
+    "altura_faixa": 56,
+    "centro_y": {
+     "tecla": 0,
+     "icone": 0,
+     "nome": 0,
+     "custo": 0
+    },
+    "custo_largura": 69
+   },
+   {
+    "nome": "Chuva de Flechas",
+    "linhas_do_nome": 1,
+    "folga_nome_custo": 17,
+    "altura_faixa": 56,
+    "centro_y": {
+     "tecla": 0,
+     "icone": 0,
+     "nome": 0,
+     "custo": 0
+    },
+    "custo_largura": 69
+   }
+  ],
+  "descricao": {
+   "distancia_da_faixa": 12,
+   "largura": 622,
+   "altura": 81,
+   "esquerda_relativa_ao_nome": -78
+  },
+  "cortados": []
+ },
+ "1280x720-indisponivel-b": {
+  "seletor": "684×193",
+  "faixas": [
+   {
+    "nome": "Flecha Envenenada",
+    "linhas_do_nome": 2,
+    "folga_nome_custo": 52,
+    "altura_faixa": 56,
+    "centro_y": {
+     "tecla": 0,
+     "icone": 0,
+     "nome": 0,
+     "custo": 0
+    },
+    "custo_largura": 69
+   },
+   {
+    "nome": "Chuva de Flechas",
+    "linhas_do_nome": 1,
+    "folga_nome_custo": 17,
+    "altura_faixa": 56,
+    "centro_y": {
+     "tecla": 0,
+     "icone": 0,
+     "nome": 0,
+     "custo": 0
+    },
+    "custo_largura": 69
+   }
+  ],
+  "descricao": {
+   "distancia_da_faixa": 12,
+   "largura": 622,
+   "altura": 81,
+   "esquerda_relativa_ao_nome": -78
+  },
+  "cortados": []
+ },
+ "1500x950-parado-b": {
+  "seletor": "800×264",
+  "faixas": [
+   {
+    "nome": "Flecha Envenenada",
+    "linhas_do_nome": 1,
+    "folga_nome_custo": 58,
+    "altura_faixa": 56,
+    "centro_y": {
+     "tecla": 0,
+     "icone": 0,
+     "nome": 0,
+     "custo": 0
+    },
+    "custo_largura": 69
+   },
+   {
+    "nome": "Chuva de Flechas",
+    "linhas_do_nome": 1,
+    "folga_nome_custo": 75,
+    "altura_faixa": 56,
+    "centro_y": {
+     "tecla": 0,
+     "icone": 0,
+     "nome": 0,
+     "custo": 0
+    },
+    "custo_largura": 69
+   }
+  ],
+  "descricao": {
+   "distancia_da_faixa": 12,
+   "largura": 354,
+   "altura": 127,
+   "esquerda_relativa_ao_nome": -78
+  },
+  "cortados": []
+ },
+ "1500x950-destaque-b": {
+  "seletor": "800×264",
+  "faixas": [
+   {
+    "nome": "Flecha Envenenada",
+    "linhas_do_nome": 1,
+    "folga_nome_custo": 58,
+    "altura_faixa": 56,
+    "centro_y": {
+     "tecla": 0,
+     "icone": 0,
+     "nome": 0,
+     "custo": 0
+    },
+    "custo_largura": 69
+   },
+   {
+    "nome": "Chuva de Flechas",
+    "linhas_do_nome": 1,
+    "folga_nome_custo": 75,
+    "altura_faixa": 56,
+    "centro_y": {
+     "tecla": 0,
+     "icone": 0,
+     "nome": 0,
+     "custo": 0
+    },
+    "custo_largura": 69
+   }
+  ],
+  "descricao": {
+   "distancia_da_faixa": 12,
+   "largura": 354,
+   "altura": 127,
+   "esquerda_relativa_ao_nome": -78
+  },
+  "cortados": []
+ },
+ "1500x950-indisponivel-b": {
+  "seletor": "800×264",
+  "faixas": [
+   {
+    "nome": "Flecha Envenenada",
+    "linhas_do_nome": 1,
+    "folga_nome_custo": 58,
+    "altura_faixa": 56,
+    "centro_y": {
+     "tecla": 0,
+     "icone": 0,
+     "nome": 0,
+     "custo": 0
+    },
+    "custo_largura": 69
+   },
+   {
+    "nome": "Chuva de Flechas",
+    "linhas_do_nome": 1,
+    "folga_nome_custo": 75,
+    "altura_faixa": 56,
+    "centro_y": {
+     "tecla": 0,
+     "icone": 0,
+     "nome": 0,
+     "custo": 0
+    },
+    "custo_largura": 69
+   }
+  ],
+  "descricao": {
+   "distancia_da_faixa": 12,
+   "largura": 354,
+   "altura": 127,
+   "esquerda_relativa_ao_nome": 306
+  },
+  "cortados": []
+ }
+}

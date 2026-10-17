@@ -1,0 +1,9 @@
+/* A bancada: só a moldura da demonstração (rótulos e espaçamento entre os quadros). O seletor usa as folhas do jogo. */
+:root body.bancada { margin: 0; padding: 24px; overflow: auto; background: #0a0a0b; color: #a59c8b; height: auto; min-height: 100vh; display: block; }
+.bancada #quadros { display: flex; flex-direction: column; gap: 28px; }
+.bancada .bq-rotulo { margin: 0 0 6px; font: 600 12px/1.2 system-ui, sans-serif; letter-spacing: 0.06em; color: #6f685c; }
+/* o palco tem a largura do seletor no jogo (a da arena naquela janela) */
+.bancada .bq-palco { position: relative; }
+:root body.bancada .roda-janela.seletor { position: relative; left: 0; top: 0; }
+/* parado para a foto: sem a entrada das faixas */
+:root body.bancada .roda-janela.seletor .rj-linha { animation: none; }

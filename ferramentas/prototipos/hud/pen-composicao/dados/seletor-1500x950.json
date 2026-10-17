@@ -1,0 +1,139 @@
+{
+ "janela": [
+  1500,
+  950
+ ],
+ "linhas": [
+  {
+   "hab": "tiro_certeiro",
+   "nome": "Tiro Certeiro",
+   "info": "<img class=\"sprite \" src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAJVJREFUOE9jZKAQMFKon4E2BvByc/3H5rLPX79hWIgiANP45OYurD6TUXcDiyMbBDcApBlZI0wxzCR0OZghYAOwaU7fuR/FFTPdHRmwGYJhAMhmkGaQBhD49OUrQ+nRU2A2siEgdSBXEDQApBHmGpwGoHsD5gpkP2DTDJLHGQvYAhFvLCDbRnY6ICdZ0yYpk+ISil0AAHSbYBEbSXGLAAAAAElFTkSuQmCC\" width=\"16\" height=\"16\" style=\"--s:16\" alt=\"\" draggable=\"false\">8 <img class=\"sprite \" src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAJRJREFUOE9jZCAT8HJz/QdpZSRHP0jz5rXzGHyDk0g3AKYZZDHJBoA01/orMTRvvAd2+Oev3xiJ9gKyZpBGmNeJMgCXZqICEZ9mggYQ0ozXAGI04zSAWM0oBsBSFkgQFlXIoY0rwYFjAaT5qo8Tg/aWfSRpBrsAphlmA8gQYmyGpwNk22Gpi5T8AfcCOZoJpgNiXAIA6+JddBozcjoAAAAASUVORK5CYII=\" width=\"16\" height=\"16\" style=\"--s:16\" alt=\"\" draggable=\"false\">1",
+   "bloqueada": false
+  },
+  {
+   "hab": "marcar_presa",
+   "nome": "Marcar Presa",
+   "info": "<img class=\"sprite \" src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAJVJREFUOE9jZKAQMFKon4E2BvByc/3H5rLPX79hWIgiANP45OYurD6TUXcDiyMbBDcApBlZI0wxzCR0OZghYAOwaU7fuR/FFTPdHRmwGYJhAMhmkGaQBhD49OUrQ+nRU2A2siEgdSBXEDQApBHmGpwGoHsD5gpkP2DTDJLHGQvYAhFvLCDbRnY6ICdZ0yYpk+ISil0AAHSbYBEbSXGLAAAAAElFTkSuQmCC\" width=\"16\" height=\"16\" style=\"--s:16\" alt=\"\" draggable=\"false\">6",
+   "bloqueada": false
+  },
+  {
+   "hab": "chuva_flechas",
+   "nome": "Chuva de Flechas",
+   "info": "<img class=\"sprite \" src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAJVJREFUOE9jZKAQMFKon4E2BvByc/3H5rLPX79hWIgiANP45OYurD6TUXcDiyMbBDcApBlZI0wxzCR0OZghYAOwaU7fuR/FFTPdHRmwGYJhAMhmkGaQBhD49OUrQ+nRU2A2siEgdSBXEDQApBHmGpwGoHsD5gpkP2DTDJLHGQvYAhFvLCDbRnY6ICdZ0yYpk+ISil0AAHSbYBEbSXGLAAAAAElFTkSuQmCC\" width=\"16\" height=\"16\" style=\"--s:16\" alt=\"\" draggable=\"false\">20 <img class=\"sprite \" src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAJRJREFUOE9jZCAT8HJz/QdpZSRHP0jz5rXzGHyDk0g3AKYZZDHJBoA01/orMTRvvAd2+Oev3xiJ9gKyZpBGmNeJMgCXZqICEZ9mggYQ0ozXAGI04zSAWM0oBsBSFkgQFlXIoY0rwYFjAaT5qo8Tg/aWfSRpBrsAphlmA8gQYmyGpwNk22Gpi5T8AfcCOZoJpgNiXAIA6+JddBozcjoAAAAASUVORK5CYII=\" width=\"16\" height=\"16\" style=\"--s:16\" alt=\"\" draggable=\"false\">3",
+   "bloqueada": true
+  },
+  {
+   "hab": "passo_agil",
+   "nome": "Passo Ágil",
+   "info": "<img class=\"sprite \" src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAJVJREFUOE9jZKAQMFKon4E2BvByc/3H5rLPX79hWIgiANP45OYurD6TUXcDiyMbBDcApBlZI0wxzCR0OZghYAOwaU7fuR/FFTPdHRmwGYJhAMhmkGaQBhD49OUrQ+nRU2A2siEgdSBXEDQApBHmGpwGoHsD5gpkP2DTDJLHGQvYAhFvLCDbRnY6ICdZ0yYpk+ISil0AAHSbYBEbSXGLAAAAAElFTkSuQmCC\" width=\"16\" height=\"16\" style=\"--s:16\" alt=\"\" draggable=\"false\">6",
+   "bloqueada": false
+  },
+  {
+   "hab": "desaparecer",
+   "nome": "Desaparecer",
+   "info": "<img class=\"sprite \" src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAJVJREFUOE9jZKAQMFKon4E2BvByc/3H5rLPX79hWIgiANP45OYurD6TUXcDiyMbBDcApBlZI0wxzCR0OZghYAOwaU7fuR/FFTPdHRmwGYJhAMhmkGaQBhD49OUrQ+nRU2A2siEgdSBXEDQApBHmGpwGoHsD5gpkP2DTDJLHGQvYAhFvLCDbRnY6ICdZ0yYpk+ISil0AAHSbYBEbSXGLAAAAAElFTkSuQmCC\" width=\"16\" height=\"16\" style=\"--s:16\" alt=\"\" draggable=\"false\">10",
+   "bloqueada": false
+  },
+  {
+   "hab": "flecha_envenenada",
+   "nome": "Flecha Envenenada",
+   "info": "<img class=\"sprite \" src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAJVJREFUOE9jZKAQMFKon4E2BvByc/3H5rLPX79hWIgiANP45OYurD6TUXcDiyMbBDcApBlZI0wxzCR0OZghYAOwaU7fuR/FFTPdHRmwGYJhAMhmkGaQBhD49OUrQ+nRU2A2siEgdSBXEDQApBHmGpwGoHsD5gpkP2DTDJLHGQvYAhFvLCDbRnY6ICdZ0yYpk+ISil0AAHSbYBEbSXGLAAAAAElFTkSuQmCC\" width=\"16\" height=\"16\" style=\"--s:16\" alt=\"\" draggable=\"false\">10 <img class=\"sprite \" src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAJRJREFUOE9jZCAT8HJz/QdpZSRHP0jz5rXzGHyDk0g3AKYZZDHJBoA01/orMTRvvAd2+Oev3xiJ9gKyZpBGmNeJMgCXZqICEZ9mggYQ0ozXAGI04zSAWM0oBsBSFkgQFlXIoY0rwYFjAaT5qo8Tg/aWfSRpBrsAphlmA8gQYmyGpwNk22Gpi5T8AfcCOZoJpgNiXAIA6+JddBozcjoAAAAASUVORK5CYII=\" width=\"16\" height=\"16\" style=\"--s:16\" alt=\"\" draggable=\"false\">1",
+   "bloqueada": false
+  },
+  {
+   "hab": "execucao",
+   "nome": "Execução",
+   "info": "<img class=\"sprite \" src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAJVJREFUOE9jZKAQMFKon4E2BvByc/3H5rLPX79hWIgiANP45OYurD6TUXcDiyMbBDcApBlZI0wxzCR0OZghYAOwaU7fuR/FFTPdHRmwGYJhAMhmkGaQBhD49OUrQ+nRU2A2siEgdSBXEDQApBHmGpwGoHsD5gpkP2DTDJLHGQvYAhFvLCDbRnY6ICdZ0yYpk+ISil0AAHSbYBEbSXGLAAAAAElFTkSuQmCC\" width=\"16\" height=\"16\" style=\"--s:16\" alt=\"\" draggable=\"false\">16 <img class=\"sprite \" src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAJRJREFUOE9jZCAT8HJz/QdpZSRHP0jz5rXzGHyDk0g3AKYZZDHJBoA01/orMTRvvAd2+Oev3xiJ9gKyZpBGmNeJMgCXZqICEZ9mggYQ0ozXAGI04zSAWM0oBsBSFkgQFlXIoY0rwYFjAaT5qo8Tg/aWfSRpBrsAphlmA8gQYmyGpwNk22Gpi5T8AfcCOZoJpgNiXAIA6+JddBozcjoAAAAASUVORK5CYII=\" width=\"16\" height=\"16\" style=\"--s:16\" alt=\"\" draggable=\"false\">1",
+   "bloqueada": true
+  }
+ ],
+ "desc": {
+  "tiro_certeiro": {
+   "html": "<b>Tiro Certeiro</b><div class=\"tipo\">8 de Foco · 1 flecha · Alvo: Inimigo único</div>\n    <div class=\"bonus\"><span class=\"rx rx-dano\">170% de dano</span>, <span class=\"rx rx-crit\">+30% chance de crítico</span>.</div><div class=\"melhor\">Dano: 48–65 (crítico 90)</div><div class=\"rodape\">Detalhes no Grimório (P).</div>",
+   "lado": "esquerda",
+   "estilo": "width: 348px; max-height: 144px; left: 30px; top: 0px;"
+  },
+  "marcar_presa": {
+   "html": "<b>Marcar Presa</b><div class=\"tipo\">6 de Foco · Alvo: Inimigo único</div>\n    <div class=\"bonus\">O alvo recebe <span class=\"rx rx-dano\">+25% de dano</span> de todos (você e aliados) por 3 turnos.</div>",
+   "lado": "esquerda",
+   "estilo": "width: 348px; max-height: 144px; left: 30px; top: 0px;"
+  },
+  "chuva_flechas": {
+   "html": "<b>Chuva de Flechas</b><div class=\"tipo\">20 de Foco · 3 flechas · Alvo: Todos os inimigos</div>\n    <div class=\"bonus\">Atinge todos os inimigos. Gasta uma flecha por inimigo.</div><div class=\"melhor\">Em cada inimigo: 28–38 (crítico 53)</div><div class=\"rodape\">Detalhes no Grimório (P).</div><div class=\"pior\">Foco insuficiente</div>",
+   "lado": "esquerda",
+   "estilo": "width: 348px; max-height: 144px; left: 30px; top: 0px;"
+  },
+  "passo_agil": {
+   "html": "<b>Passo Ágil</b><div class=\"tipo\">6 de Foco · Alvo: Você</div>\n    <div class=\"bonus\"><span class=\"rx rx-esquiva\">+30% de esquiva</span> por 2 turnos (a <span class=\"rx rx-esquiva\">esquiva</span> total não passa de <span class=\"rx rx-num\">60%</span>).</div>",
+   "lado": "esquerda",
+   "estilo": "width: 348px; max-height: 144px; left: 30px; top: 0px;"
+  },
+  "desaparecer": {
+   "html": "<b>Desaparecer</b><div class=\"tipo\">10 de Foco · Alvo: Você</div>\n    <div class=\"bonus\">Próximo ataque é <span class=\"rx rx-crit\">crítico</span> devastador; +<span class=\"rx rx-esquiva\">esquiva</span>.</div>",
+   "lado": "direita",
+   "estilo": "width: 348px; max-height: 144px; left: 408px; top: -66px;"
+  },
+  "flecha_envenenada": {
+   "html": "<b>Flecha Envenenada</b><div class=\"tipo\">10 de Foco · 1 flecha · Alvo: Inimigo único</div>\n    <div class=\"bonus\">Dano e <span class=\"rx rx-veneno\">veneno</span> forte por 4 turnos (não afeta mortos-vivos nem construtos).</div><div class=\"melhor\">Dano: 28–38 (crítico 53)</div><div class=\"rodape\">Detalhes no Grimório (P).</div>",
+   "lado": "direita",
+   "estilo": "width: 348px; max-height: 144px; left: 408px; top: -66px;"
+  },
+  "execucao": {
+   "html": "<b>Execução</b><div class=\"tipo\">16 de Foco · 1 flecha · Alvo: Inimigo único</div>\n    <div class=\"bonus\"><span class=\"rx rx-dano\">320% de dano</span> se o alvo estiver abaixo de <span class=\"rx rx-num\">35%</span> de vida.</div><div class=\"melhor\">Alvo com mais de 35% de vida: 33–45 (crítico 63)</div><div class=\"rodape\">Detalhes no Grimório (P).</div><div class=\"pior\">Foco insuficiente</div>",
+   "lado": "direita",
+   "estilo": "width: 348px; max-height: 144px; left: 408px; top: -66px;"
+  }
+ },
+ "seletor": {
+  "estilo": "left: 0px; width: 800px; top: 229px; max-height: 635px; --fundo-cena: 52px 39px; --fundo-palco: -12px -235px;",
+  "classes": "roda-janela seletor",
+  "tipo": "habilidades",
+  "largura": 800,
+  "altura": 447.390625,
+  "titulo": "<div class=\"rj-titulo\"><span>Habilidades</span></div>",
+  "voltar": "<button class=\"rj-fechar rj-voltar\" type=\"button\" title=\"Fechar (Esc)\"><kbd>Esc</kbd><span>Voltar</span></button>",
+  "lista_estilo": "--filas: 4;",
+  "zona_estilo": "height: 144px;",
+  "fundo": {
+   "cena": "52px 39px",
+   "palco": "-12px -235px"
+  },
+  "itens": [
+   {
+    "forma": "0",
+    "estilo": "--i: 0; --fila: 0;",
+    "html": "<button class=\"rj-linha el-fisico\" type=\"button\" data-hab=\"tiro_certeiro\"><span class=\"tecla\">1</span><span class=\"rj-icone\"><img class=\"sprite \" src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAJRJREFUOE9jZCAT8HJz/QdpZSRHP0jz5rXzGHyDk0g3AKYZZDHJBoA01/orMTRvvAd2+Oev3xiJ9gKyZpBGmNeJMgCXZqICEZ9mggYQ0ozXAGI04zSAWM0oBsBSFkgQFlXIoY0rwYFjAaT5qo8Tg/aWfSRpBrsAphlmA8gQYmyGpwNk22Gpi5T8AfcCOZoJpgNiXAIA6+JddBozcjoAAAAASUVORK5CYII=\" width=\"32\" height=\"32\" style=\"--s:32\" alt=\"\" draggable=\"false\"></span><span class=\"rj-texto\"><span class=\"rj-nome\">Tiro Certeiro</span></span><span class=\"rj-info\"><img class=\"sprite \" src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAJVJREFUOE9jZKAQMFKon4E2BvByc/3H5rLPX79hWIgiANP45OYurD6TUXcDiyMbBDcApBlZI0wxzCR0OZghYAOwaU7fuR/FFTPdHRmwGYJhAMhmkGaQBhD49OUrQ+nRU2A2siEgdSBXEDQApBHmGpwGoHsD5gpkP2DTDJLHGQvYAhFvLCDbRnY6ICdZ0yYpk+ISil0AAHSbYBEbSXGLAAAAAElFTkSuQmCC\" width=\"16\" height=\"16\" style=\"--s:16\" alt=\"\" draggable=\"false\">8 <img class=\"sprite \" src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAJRJREFUOE9jZCAT8HJz/QdpZSRHP0jz5rXzGHyDk0g3AKYZZDHJBoA01/orMTRvvAd2+Oev3xiJ9gKyZpBGmNeJMgCXZqICEZ9mggYQ0ozXAGI04zSAWM0oBsBSFkgQFlXIoY0rwYFjAaT5qo8Tg/aWfSRpBrsAphlmA8gQYmyGpwNk22Gpi5T8AfcCOZoJpgNiXAIA6+JddBozcjoAAAAASUVORK5CYII=\" width=\"16\" height=\"16\" style=\"--s:16\" alt=\"\" draggable=\"false\">1</span></button>"
+   },
+   {
+    "forma": "1",
+    "estilo": "--i: 1; --fila: 1;",
+    "html": "<button class=\"rj-linha el-forca\" type=\"button\" data-hab=\"marcar_presa\"><span class=\"tecla\">2</span><span class=\"rj-icone\"><img class=\"sprite \" src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAJVJREFUOE9jZKAQMFKon4E2BvByc/3H5rLPX79hWIgiANP45OYurD6TUXcDiyMbBDcApBlZI0wxzCR0OZghYAOwaU7fuR/FFTPdHRmwGYJhAMhmkGaQBhD49OUrQ+nRU2A2siEgdSBXEDQApBHmGpwGoHsD5gpkP2DTDJLHGQvYAhFvLCDbRnY6ICdZ0yYpk+ISil0AAHSbYBEbSXGLAAAAAElFTkSuQmCC\" width=\"32\" height=\"32\" style=\"--s:32\" alt=\"\" draggable=\"false\"></span><span class=\"rj-texto\"><span class=\"rj-nome\">Marcar Presa</span></span><span class=\"rj-info\"><img class=\"sprite \" src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAJVJREFUOE9jZKAQMFKon4E2BvByc/3H5rLPX79hWIgiANP45OYurD6TUXcDiyMbBDcApBlZI0wxzCR0OZghYAOwaU7fuR/FFTPdHRmwGYJhAMhmkGaQBhD49OUrQ+nRU2A2siEgdSBXEDQApBHmGpwGoHsD5gpkP2DTDJLHGQvYAhFvLCDbRnY6ICdZ0yYpk+ISil0AAHSbYBEbSXGLAAAAAElFTkSuQmCC\" width=\"16\" height=\"16\" style=\"--s:16\" alt=\"\" draggable=\"false\">6</span></button>"
+   },
+   {
+    "forma": "2",
+    "estilo": "--i: 2; --fila: 2;",
+    "html": "<button class=\"rj-linha el-fisico bloqueada\" type=\"button\" data-hab=\"chuva_flechas\"><span class=\"tecla\">3</span><span class=\"rj-icone\"><img class=\"sprite \" src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAKZJREFUOE9jZKAQMKLrfxTu819u5RZGdBqXPSgGgDSBFGpv2cdw1ccJrAfGBhmKzRAMQV5urv+1pWkMzd2zGJDpsoYJdDAAZDu+MP389RuGK1AEwM73V2IwM1BBMefUhTsMzRvvMZBkAEgTCIAMI8sAZCeQbAC2cCDZCxS5AObvgQkDX30hBgMFAZRguPDgA8Pmi+8IRyNIF67EhC0NgNRjTd+k5HAAErKFEWEDqZwAAAAASUVORK5CYII=\" width=\"32\" height=\"32\" style=\"--s:32\" alt=\"\" draggable=\"false\"></span><span class=\"rj-texto\"><span class=\"rj-nome\">Chuva de Flechas</span><span class=\"rj-motivo\">Foco insuficiente</span></span><span class=\"rj-info\"><img class=\"sprite \" src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAJVJREFUOE9jZKAQMFKon4E2BvByc/3H5rLPX79hWIgiANP45OYurD6TUXcDiyMbBDcApBlZI0wxzCR0OZghYAOwaU7fuR/FFTPdHRmwGYJhAMhmkGaQBhD49OUrQ+nRU2A2siEgdSBXEDQApBHmGpwGoHsD5gpkP2DTDJLHGQvYAhFvLCDbRnY6ICdZ0yYpk+ISil0AAHSbYBEbSXGLAAAAAElFTkSuQmCC\" width=\"16\" height=\"16\" style=\"--s:16\" alt=\"\" draggable=\"false\">20 <img class=\"sprite \" src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAJRJREFUOE9jZCAT8HJz/QdpZSRHP0jz5rXzGHyDk0g3AKYZZDHJBoA01/orMTRvvAd2+Oev3xiJ9gKyZpBGmNeJMgCXZqICEZ9mggYQ0ozXAGI04zSAWM0oBsBSFkgQFlXIoY0rwYFjAaT5qo8Tg/aWfSRpBrsAphlmA8gQYmyGpwNk22Gpi5T8AfcCOZoJpgNiXAIA6+JddBozcjoAAAAASUVORK5CYII=\" width=\"16\" height=\"16\" style=\"--s:16\" alt=\"\" draggable=\"false\">3</span></button>"
+   },
+   {
+    "forma": "0",
+    "estilo": "--i: 3; --fila: 3;",
+    "html": "<button class=\"rj-linha el-protecao\" type=\"button\" data-hab=\"passo_agil\"><span class=\"tecla\">4</span><span class=\"rj-icone\"><img class=\"sprite \" src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAMtJREFUOE9jZCAS8HJz/Qcp/fz1GyOyFhQOLrNAmh/vnQaWlnXOQjGEZAPQDSHZAAwXdDUUgP0GAmUNE1AMhPnbIGI/WP7CCkew80HisLDA6QKQIpBGkCaYATBDYOIgQ7AagE0zyCAQQNYM4mMYgEszzMnIzgcbgBwGsHDA5Xds0Qx3AbLJIHatvxJD88Z7DDAaPQHBDAMbgKwBxEfWhCyHzRAUF4A0ggDIZmTF+AzBGu/oNsEMwGY4PBDRExF6gFGUmfBlWKLyAj4DANAlmxG5iAfJAAAAAElFTkSuQmCC\" width=\"32\" height=\"32\" style=\"--s:32\" alt=\"\" draggable=\"false\"></span><span class=\"rj-texto\"><span class=\"rj-nome\">Passo Ágil</span></span><span class=\"rj-info\"><img class=\"sprite \" src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAJVJREFUOE9jZKAQMFKon4E2BvByc/3H5rLPX79hWIgiANP45OYurD6TUXcDiyMbBDcApBlZI0wxzCR0OZghYAOwaU7fuR/FFTPdHRmwGYJhAMhmkGaQBhD49OUrQ+nRU2A2siEgdSBXEDQApBHmGpwGoHsD5gpkP2DTDJLHGQvYAhFvLCDbRnY6ICdZ0yYpk+ISil0AAHSbYBEbSXGLAAAAAElFTkSuQmCC\" width=\"16\" height=\"16\" style=\"--s:16\" alt=\"\" draggable=\"false\">6</span></button>"
+   },
+   {
+    "forma": "1",
+    "estilo": "--i: 4; --fila: 0;",
+    "html": "<button class=\"rj-linha el-sombra\" type=\"button\" data-hab=\"desaparecer\"><span class=\"tecla\">5</span><span class=\"rj-icone\"><img class=\"sprite \" src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAJNJREFUOE9jZKAQMOLSz8vN9R9Z7vPXb1jVYhUEaRayl2YwCDCDm7GvcD0DNkMwDMCmGWYKNkNQDMCnGZcheA0A2QgDTv2BYCa6K+AGoNuOrBmfIYPQAJBzYdGHLQwubDjF8O7gU3iUYg1EZENg/gdpBAFkzSA+1nQAkgAlJGQA0ggC6ImJNkmZlPyF0wXEGkKxAQDjCGMRLltDXgAAAABJRU5ErkJggg==\" width=\"32\" height=\"32\" style=\"--s:32\" alt=\"\" draggable=\"false\"></span><span class=\"rj-texto\"><span class=\"rj-nome\">Desaparecer</span></span><span class=\"rj-info\"><img class=\"sprite \" src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAJVJREFUOE9jZKAQMFKon4E2BvByc/3H5rLPX79hWIgiANP45OYurD6TUXcDiyMbBDcApBlZI0wxzCR0OZghYAOwaU7fuR/FFTPdHRmwGYJhAMhmkGaQBhD49OUrQ+nRU2A2siEgdSBXEDQApBHmGpwGoHsD5gpkP2DTDJLHGQvYAhFvLCDbRnY6ICdZ0yYpk+ISil0AAHSbYBEbSXGLAAAAAElFTkSuQmCC\" width=\"16\" height=\"16\" style=\"--s:16\" alt=\"\" draggable=\"false\">10</span></button>"
+   },
+   {
+    "forma": "2",
+    "estilo": "--i: 5; --fila: 1;",
+    "html": "<button class=\"rj-linha el-veneno\" type=\"button\" data-hab=\"flecha_envenenada\"><span class=\"tecla\">6</span><span class=\"rj-icone\"><img class=\"sprite \" src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAItJREFUOE9jZKAQMOLTz8vN9f/z12941eCUBGlu2pLAUOezgAGfIbQxAGb7gdsfwT7cV7gepyuwuoAiA2CaCxymMgTMjoGHMS5XYLiAIgPQnY4exdhcgeICfAZc2HCK4d3BpxiBiWGAU38g1rRFlAEgnSBXoBuCSzNIPc5oRHcGrtSIN50Tk88G3gAAJ1lpEXsf1u4AAAAASUVORK5CYII=\" width=\"32\" height=\"32\" style=\"--s:32\" alt=\"\" draggable=\"false\"></span><span class=\"rj-texto\"><span class=\"rj-nome\">Flecha Envenenada</span></span><span class=\"rj-info\"><img class=\"sprite \" src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAJVJREFUOE9jZKAQMFKon4E2BvByc/3H5rLPX79hWIgiANP45OYurD6TUXcDiyMbBDcApBlZI0wxzCR0OZghYAOwaU7fuR/FFTPdHRmwGYJhAMhmkGaQBhD49OUrQ+nRU2A2siEgdSBXEDQApBHmGpwGoHsD5gpkP2DTDJLHGQvYAhFvLCDbRnY6ICdZ0yYpk+ISil0AAHSbYBEbSXGLAAAAAElFTkSuQmCC\" width=\"16\" height=\"16\" style=\"--s:16\" alt=\"\" draggable=\"false\">10 <img class=\"sprite \" src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAJRJREFUOE9jZCAT8HJz/QdpZSRHP0jz5rXzGHyDk0g3AKYZZDHJBoA01/orMTRvvAd2+Oev3xiJ9gKyZpBGmNeJMgCXZqICEZ9mggYQ0ozXAGI04zSAWM0oBsBSFkgQFlXIoY0rwYFjAaT5qo8Tg/aWfSRpBrsAphlmA8gQYmyGpwNk22Gpi5T8AfcCOZoJpgNiXAIA6+JddBozcjoAAAAASUVORK5CYII=\" width=\"16\" height=\"16\" style=\"--s:16\" alt=\"\" draggable=\"false\">1</span></button>"
+   },
+   {
+    "forma": "0",
+    "estilo": "--i: 6; --fila: 2;",
+    "html": "<button class=\"rj-linha el-sangue bloqueada\" type=\"button\" data-hab=\"execucao\"><span class=\"tecla\">7</span><span class=\"rj-icone\"><img class=\"sprite \" src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAJ9JREFUOE9jZKAQMKLr5+Xm+o/LzM9fv2GoRxEAaX5ycxdON8mouzGgGwI3AKaZT9qa4dPTo1gNOX/lCYNvcBKKIRgG4AsSogwAORMGQN5B5m9eO4+wCyg2ANkLIMOQAxWvF0AakWMB3SXYNIP0YE0HIL8a6sjAHYNLM04DYIGHThNMSDBvwEIbnSbKAJgh6OkBm2asXiA1b2EEIt0NAAAs1H4R15X11AAAAABJRU5ErkJggg==\" width=\"32\" height=\"32\" style=\"--s:32\" alt=\"\" draggable=\"false\"></span><span class=\"rj-texto\"><span class=\"rj-nome\">Execução</span><span class=\"rj-motivo\">Foco insuficiente</span></span><span class=\"rj-info\"><img class=\"sprite \" src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAJVJREFUOE9jZKAQMFKon4E2BvByc/3H5rLPX79hWIgiANP45OYurD6TUXcDiyMbBDcApBlZI0wxzCR0OZghYAOwaU7fuR/FFTPdHRmwGYJhAMhmkGaQBhD49OUrQ+nRU2A2siEgdSBXEDQApBHmGpwGoHsD5gpkP2DTDJLHGQvYAhFvLCDbRnY6ICdZ0yYpk+ISil0AAHSbYBEbSXGLAAAAAElFTkSuQmCC\" width=\"16\" height=\"16\" style=\"--s:16\" alt=\"\" draggable=\"false\">16 <img class=\"sprite \" src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAJRJREFUOE9jZCAT8HJz/QdpZSRHP0jz5rXzGHyDk0g3AKYZZDHJBoA01/orMTRvvAd2+Oev3xiJ9gKyZpBGmNeJMgCXZqICEZ9mggYQ0ozXAGI04zSAWM0oBsBSFkgQFlXIoY0rwYFjAaT5qo8Tg/aWfSRpBrsAphlmA8gQYmyGpwNk22Gpi5T8AfcCOZoJpgNiXAIA6+JddBozcjoAAAAASUVORK5CYII=\" width=\"16\" height=\"16\" style=\"--s:16\" alt=\"\" draggable=\"false\">1</span></button>"
+   }
+  ]
+ }
+}

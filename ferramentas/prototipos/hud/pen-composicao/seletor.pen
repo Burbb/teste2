@@ -1,0 +1,3653 @@
+{
+  "version": "2.21",
+  "children": [
+    {
+      "type": "frame",
+      "id": "tuLUf",
+      "x": 840,
+      "y": 0,
+      "name": "Importação direta do localhost (1500x950, destacada)",
+      "context": "div",
+      "clip": true,
+      "width": 800,
+      "height": 290.39,
+      "fill": [
+        "#0a0a0b",
+        {
+          "type": "image",
+          "enabled": true,
+          "url": "images/localhost/7d1375d2a103c672.png",
+          "mode": "stretch"
+        },
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "enabled": true,
+          "rotation": -180,
+          "size": {
+            "height": 1
+          },
+          "colors": [
+            {
+              "color": "#07080ab8",
+              "position": 0
+            },
+            {
+              "color": "#07080ad1",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "enabled": true,
+          "url": "images/localhost/7d1375d2a103c672.png",
+          "mode": "stretch"
+        },
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "enabled": true,
+          "rotation": -180,
+          "size": {
+            "height": 1
+          },
+          "colors": [
+            {
+              "color": "#0c0d0fb3",
+              "position": 0
+            },
+            {
+              "color": "#0b0c0ec7",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "pfuTL",
+          "x": 20,
+          "y": 8,
+          "name": "div",
+          "context": "div",
+          "gap": 222.74,
+          "padding": [
+            0,
+            435.09,
+            0,
+            0
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "W7prIj",
+              "name": "HABILIDADES",
+              "context": "span",
+              "fill": "#b49a64",
+              "content": "HABILIDADES",
+              "lineHeight": 1.36,
+              "fontFamily": "Alegreya",
+              "fontSize": 12.5,
+              "fontWeight": "600",
+              "letterSpacing": 2
+            },
+            {
+              "type": "ellipse",
+              "id": "UwzT4",
+              "name": "Icon",
+              "fill": {
+                "type": "gradient",
+                "gradientType": "linear",
+                "enabled": true,
+                "rotation": -90,
+                "size": {
+                  "height": 1
+                },
+                "colors": [
+                  {
+                    "color": "#b08a458c",
+                    "position": 0
+                  },
+                  {
+                    "color": "#b08a4500",
+                    "position": 1
+                  }
+                ]
+              },
+              "width": 1,
+              "height": 1
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "i7daa9",
+          "x": 16,
+          "y": 95,
+          "name": "div",
+          "context": "div",
+          "width": 764,
+          "height": 161,
+          "layout": "none",
+          "children": [
+            {
+              "type": "frame",
+              "id": "llHpy",
+              "x": 18,
+              "y": 0,
+              "name": "div",
+              "context": "div",
+              "width": 354,
+              "stroke": "#b08a4573",
+              "strokeWidth": {
+                "top": 1
+              },
+              "strokeAlignment": "inner",
+              "layout": "vertical",
+              "padding": [
+                8,
+                4,
+                0,
+                2
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "zkKXO",
+                  "name": "FLECHA ENVENENADA",
+                  "context": "b",
+                  "fill": "#b49a64",
+                  "content": "FLECHA ENVENENADA",
+                  "lineHeight": 1.2,
+                  "fontFamily": "Alegreya",
+                  "fontSize": 12.5,
+                  "fontWeight": "600",
+                  "letterSpacing": 1.75
+                },
+                {
+                  "type": "text",
+                  "id": "n77mhq",
+                  "name": "10 DE FOCO · 1 FLECHA · ALVO: INIMIGO ÚN",
+                  "context": "div",
+                  "fill": "#9d978b",
+                  "content": "10 DE FOCO · 1 FLECHA · ALVO: INIMIGO ÚNICO",
+                  "lineHeight": 1.35,
+                  "fontFamily": "Alegreya",
+                  "fontSize": 12.5,
+                  "fontWeight": "normal",
+                  "letterSpacing": 0.5
+                },
+                {
+                  "type": "frame",
+                  "id": "CStcV",
+                  "name": "spacer",
+                  "width": "fill_container",
+                  "height": 2.99,
+                  "layout": "none"
+                },
+                {
+                  "type": "text",
+                  "id": "tm9VZ",
+                  "name": "Dano e veneno forte por 4 turnos (não af",
+                  "context": "div",
+                  "fill": "#ece2cc",
+                  "textGrowth": "fixed-width-height",
+                  "width": "fill_container",
+                  "height": 40.5,
+                  "content": "Dano e veneno forte por 4 turnos (não afeta mortos-vivos nem construtos).",
+                  "lineHeight": 1.35,
+                  "fontFamily": "Alegreya",
+                  "fontSize": 15,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "DpU3Y",
+                  "name": "spacer",
+                  "width": "fill_container",
+                  "height": 2,
+                  "layout": "none"
+                },
+                {
+                  "type": "text",
+                  "id": "OvmVi",
+                  "name": "Dano: 28–38 (crítico 53)",
+                  "context": "div",
+                  "fill": "#9fc58a",
+                  "content": "Dano: 28–38 (crítico 53)",
+                  "lineHeight": 1.35,
+                  "fontFamily": "Alegreya",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "l3UBc",
+                  "name": "Detalhes no Grimório (P).",
+                  "context": "div",
+                  "fill": "#8f8775",
+                  "content": "Detalhes no Grimório (P).",
+                  "lineHeight": 1.35,
+                  "fontFamily": "Alegreya",
+                  "fontSize": 12.5,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "BncBY",
+          "x": 693.59,
+          "y": 258,
+          "name": "button",
+          "context": "button",
+          "gap": 7,
+          "padding": [
+            3,
+            4,
+            3,
+            8
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "i3atkT",
+              "name": "Esc",
+              "context": "kbd",
+              "width": 31.02,
+              "height": 18.39,
+              "fill": "#0b0b0d",
+              "cornerRadius": 2,
+              "stroke": "#4f4a42",
+              "strokeWidth": 1,
+              "strokeAlignment": "inner",
+              "layout": "vertical",
+              "padding": [
+                1,
+                6
+              ],
+              "justifyContent": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "rs31G",
+                  "fill": "#cfc4ad",
+                  "content": "Esc",
+                  "lineHeight": 1.2,
+                  "textAlign": "center",
+                  "fontFamily": "Alegreya",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "IaSA1",
+              "name": "Voltar",
+              "context": "span",
+              "fill": "#a59c8b",
+              "content": "Voltar",
+              "lineHeight": 1.2,
+              "textAlign": "center",
+              "fontFamily": "Alegreya",
+              "fontSize": 14,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "rectangle",
+          "id": "eZxgo",
+          "x": 12,
+          "y": 288.39,
+          "name": "Icon",
+          "fill": {
+            "type": "gradient",
+            "gradientType": "linear",
+            "enabled": true,
+            "rotation": -180,
+            "size": {
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#000000bf",
+                "position": 0
+              },
+              {
+                "color": "#000000bf",
+                "position": 0.5
+              },
+              {
+                "color": "#ffffff0d",
+                "position": 0.5
+              },
+              {
+                "color": "#ffffff0d",
+                "position": 1
+              }
+            ]
+          },
+          "width": 776,
+          "height": 2
+        },
+        {
+          "type": "frame",
+          "id": "RegJQ",
+          "x": 16,
+          "y": 27,
+          "name": "ul",
+          "context": "ul",
+          "clip": true,
+          "width": 764,
+          "gap": 18,
+          "padding": [
+            4,
+            8,
+            4,
+            6
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "IQR87",
+              "name": "li",
+              "context": "li",
+              "width": "fill_container",
+              "height": 56,
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "nSmbe",
+                  "name": "button",
+                  "context": "button",
+                  "width": "fill_container",
+                  "height": 56,
+                  "effect": {
+                    "type": "shadow",
+                    "shadowType": "outer",
+                    "color": "#0000008c",
+                    "offset": {
+                      "x": 0,
+                      "y": 2
+                    },
+                    "blur": 1
+                  },
+                  "layout": "none",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "NfQiG",
+                      "x": 12,
+                      "y": 4,
+                      "name": "Icon",
+                      "clip": true,
+                      "width": 354,
+                      "height": 48,
+                      "fill": [
+                        "#e6dbc0",
+                        {
+                          "type": "gradient",
+                          "gradientType": "linear",
+                          "enabled": true,
+                          "rotation": -180,
+                          "size": {
+                            "height": 1
+                          },
+                          "colors": [
+                            {
+                              "color": "#ffffff59",
+                              "position": 0
+                            },
+                            {
+                              "color": "#00000000",
+                              "position": 0.4
+                            },
+                            {
+                              "color": "#503c1e2e",
+                              "position": 1
+                            }
+                          ]
+                        }
+                      ],
+                      "layout": "none",
+                      "children": [
+                        {
+                          "type": "rectangle",
+                          "id": "yVK9X",
+                          "x": 0,
+                          "y": 0,
+                          "fill": "#000000",
+                          "width": 640,
+                          "height": 64
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "KfoE9",
+                      "x": 39,
+                      "y": 10,
+                      "name": "span",
+                      "context": "span",
+                      "width": 36,
+                      "height": 36,
+                      "cornerRadius": 2,
+                      "layout": "none",
+                      "children": [
+                        {
+                          "type": "rectangle",
+                          "id": "Q5UDV",
+                          "x": 2,
+                          "y": 2,
+                          "name": "img",
+                          "context": "img",
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "images/embedded-image.png",
+                            "mode": "stretch"
+                          },
+                          "width": 32,
+                          "height": 32,
+                          "effect": {
+                            "type": "shadow",
+                            "shadowType": "outer",
+                            "color": "#3c280a73",
+                            "offset": {
+                              "x": 0,
+                              "y": 1
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "gpEa0",
+                      "x": 84,
+                      "y": 17.92,
+                      "name": "Flecha Envenenada",
+                      "context": "span",
+                      "fill": "#1d1913",
+                      "content": "Flecha Envenenada",
+                      "lineHeight": 1.12,
+                      "fontFamily": "Alegreya",
+                      "fontSize": 18,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "OHSHR",
+                      "x": 287.69,
+                      "y": 16,
+                      "name": "span",
+                      "context": "span",
+                      "width": 62.31,
+                      "height": 24,
+                      "gap": 2,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "rectangle",
+                          "id": "QOisA",
+                          "name": "img",
+                          "context": "img",
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "images/embedded-image-1.png",
+                            "mode": "stretch"
+                          },
+                          "width": 16,
+                          "height": 16
+                        },
+                        {
+                          "type": "text",
+                          "id": "UlZX9",
+                          "name": "10",
+                          "fill": "#1d1913",
+                          "content": "10",
+                          "fontFamily": "Alegreya",
+                          "fontSize": 18,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "rectangle",
+                          "id": "Z6YHt",
+                          "name": "img",
+                          "context": "img",
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "images/embedded-image-2.png",
+                            "mode": "stretch"
+                          },
+                          "width": 16,
+                          "height": 16
+                        },
+                        {
+                          "type": "text",
+                          "id": "zfjJh",
+                          "name": "1",
+                          "fill": "#1d1913",
+                          "content": "1",
+                          "fontFamily": "Alegreya",
+                          "fontSize": 18,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Gky7N",
+                      "x": 0,
+                      "y": 11,
+                      "name": "1",
+                      "context": "span",
+                      "width": 30,
+                      "height": 34,
+                      "layout": "none",
+                      "children": [
+                        {
+                          "type": "rectangle",
+                          "id": "HZXtg",
+                          "x": 4.52,
+                          "y": 0.98,
+                          "name": "Icon",
+                          "rotation": 1.9899999999999998,
+                          "fill": "#b08a45",
+                          "width": 28,
+                          "height": 32,
+                          "stroke": "#5e4620",
+                          "strokeWidth": 1,
+                          "strokeAlignment": "inner"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "RVqgB",
+                          "x": 0,
+                          "y": 0,
+                          "width": 30,
+                          "height": 34,
+                          "layout": "vertical",
+                          "justifyContent": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "oba9Y",
+                              "fill": "#1a140c",
+                              "content": "1",
+                              "lineHeight": 1,
+                              "fontFamily": "Alegreya",
+                              "fontSize": 18,
+                              "fontWeight": "700"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "X6sGyw",
+              "name": "button",
+              "context": "button",
+              "width": "fill_container",
+              "height": 56,
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#0000008c",
+                "offset": {
+                  "x": 0,
+                  "y": 2
+                },
+                "blur": 1
+              },
+              "layout": "none",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "X7E6w",
+                  "x": 12,
+                  "y": 4,
+                  "name": "Icon",
+                  "clip": true,
+                  "width": 354,
+                  "height": 48,
+                  "fill": [
+                    "#232125",
+                    {
+                      "type": "gradient",
+                      "gradientType": "linear",
+                      "enabled": true,
+                      "rotation": 58,
+                      "size": {
+                        "height": 1
+                      },
+                      "colors": [
+                        {
+                          "color": "#ffffff0b",
+                          "position": 0
+                        },
+                        {
+                          "color": "#ffffff0b",
+                          "position": 0.0417
+                        },
+                        {
+                          "color": "#00000000",
+                          "position": 0.0417
+                        },
+                        {
+                          "color": "#00000000",
+                          "position": 0.1667
+                        }
+                      ]
+                    }
+                  ],
+                  "layout": "none",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "id": "UfWc9",
+                      "x": 0,
+                      "y": 0,
+                      "fill": "#000000",
+                      "width": 640,
+                      "height": 64
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "jKyaX",
+                  "x": 39,
+                  "y": 10,
+                  "name": "span",
+                  "context": "span",
+                  "width": 36,
+                  "height": 36,
+                  "cornerRadius": 2,
+                  "layout": "none",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "id": "IDDAx",
+                      "x": 2,
+                      "y": 2,
+                      "name": "img",
+                      "context": "img",
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "images/embedded-image-3.png",
+                        "mode": "stretch"
+                      },
+                      "width": 32,
+                      "height": 32
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "e45c8",
+                  "x": 84,
+                  "y": 10.73,
+                  "name": "span",
+                  "context": "span",
+                  "width": 194.69,
+                  "height": 34.53,
+                  "layout": "vertical",
+                  "justifyContent": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "McW4L",
+                      "name": "Chuva de Flechas",
+                      "context": "span",
+                      "fill": "#b9af99",
+                      "content": "Chuva de Flechas",
+                      "lineHeight": 1.12,
+                      "fontFamily": "Alegreya",
+                      "fontSize": 18,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "K9n3co",
+                      "name": "Foco insuficiente",
+                      "context": "span",
+                      "fill": "#e39a86",
+                      "content": "Foco insuficiente",
+                      "lineHeight": 1.15,
+                      "fontFamily": "Alegreya",
+                      "fontSize": 12.5,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Yv9hW",
+                  "x": 287.69,
+                  "y": 16,
+                  "name": "span",
+                  "context": "span",
+                  "width": 62.31,
+                  "height": 24,
+                  "gap": 2,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "id": "W7XLq",
+                      "name": "img",
+                      "context": "img",
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "images/embedded-image-1.png",
+                        "mode": "stretch"
+                      },
+                      "width": 16,
+                      "height": 16
+                    },
+                    {
+                      "type": "text",
+                      "id": "aWYqF",
+                      "name": "20",
+                      "fill": "#e39a86",
+                      "content": "20",
+                      "fontFamily": "Alegreya",
+                      "fontSize": 18,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "L1CTi",
+                      "name": "img",
+                      "context": "img",
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "images/embedded-image-2.png",
+                        "mode": "stretch"
+                      },
+                      "width": 16,
+                      "height": 16
+                    },
+                    {
+                      "type": "text",
+                      "id": "AC2ia",
+                      "name": "3",
+                      "fill": "#e39a86",
+                      "content": "3",
+                      "fontFamily": "Alegreya",
+                      "fontSize": 18,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "o9rUIi",
+                  "x": 0,
+                  "y": 11,
+                  "name": "2",
+                  "context": "span",
+                  "width": 30,
+                  "height": 34,
+                  "layout": "none",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "id": "N67Qc",
+                      "x": 4.52,
+                      "y": 0.98,
+                      "name": "Icon",
+                      "rotation": 1.9899999999999998,
+                      "fill": "#0b0b0d",
+                      "width": 28,
+                      "height": 32,
+                      "stroke": "#5c554a",
+                      "strokeWidth": 1,
+                      "strokeAlignment": "inner"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "g6NQV",
+                      "x": 0,
+                      "y": 0,
+                      "width": 30,
+                      "height": 34,
+                      "layout": "vertical",
+                      "justifyContent": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "bqLV8",
+                          "fill": "#ece2cc",
+                          "content": "2",
+                          "lineHeight": 1,
+                          "fontFamily": "Alegreya",
+                          "fontSize": 18,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "znRRz",
+      "x": 0,
+      "y": 680,
+      "name": "Faixa",
+      "reusable": true,
+      "width": 366,
+      "height": 56,
+      "gap": "$faixa-gap",
+      "padding": [
+        4,
+        "$faixa-pad-dir",
+        4,
+        0
+      ],
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "rectangle",
+          "id": "WHl3k",
+          "layoutPosition": "absolute",
+          "x": -8,
+          "y": -8,
+          "name": "Pincel",
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "images/pecas/faixa-1500x950-normal.png",
+            "mode": "stretch"
+          },
+          "width": 382,
+          "height": 72
+        },
+        {
+          "type": "frame",
+          "id": "dGkdM",
+          "name": "Tecla",
+          "width": 30,
+          "height": 34,
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "eukSm",
+              "layoutPosition": "absolute",
+              "x": -8,
+              "y": -8,
+              "name": "Tecla tinta",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "images/pecas/tecla-1500x950-normal.png",
+                "mode": "stretch"
+              },
+              "width": 46,
+              "height": 50
+            },
+            {
+              "type": "text",
+              "id": "qtcBw",
+              "name": "Tecla número",
+              "fill": "$sh-texto",
+              "content": "1",
+              "fontFamily": "$fonte",
+              "fontSize": 18,
+              "fontWeight": "700"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "Y7faH8",
+          "name": "Ícone",
+          "height": 36,
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "Z8duS",
+              "name": "Ícone imagem",
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "images/embedded-image.png",
+                "mode": "stretch"
+              },
+              "width": 32,
+              "height": 32
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "pG3kO",
+          "name": "Texto",
+          "width": "fill_container",
+          "layout": "vertical",
+          "justifyContent": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "l1zla",
+              "name": "Nome",
+              "fill": "$sh-texto",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Flecha Envenenada",
+              "lineHeight": 1.12,
+              "fontFamily": "$fonte",
+              "fontSize": 18,
+              "fontWeight": "700"
+            },
+            {
+              "type": "text",
+              "id": "sl5xJ",
+              "x": 0,
+              "y": 0,
+              "name": "Motivo",
+              "enabled": false,
+              "fill": "$sh-perigo",
+              "content": "Foco insuficiente",
+              "lineHeight": 1.15,
+              "fontFamily": "$fonte",
+              "fontSize": 12.5,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "PERIM",
+          "name": "Custo",
+          "gap": "$custo-pares",
+          "padding": [
+            0,
+            0,
+            0,
+            "$custo-folga"
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "owprt",
+              "name": "Par A",
+              "gap": "$custo-gap",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "rectangle",
+                  "id": "zGvEo",
+                  "name": "Custo A ícone",
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "images/embedded-image-1.png",
+                    "mode": "stretch"
+                  },
+                  "width": 16,
+                  "height": 16
+                },
+                {
+                  "type": "text",
+                  "id": "o9ycn1",
+                  "name": "Custo A",
+                  "fill": "$sh-texto",
+                  "content": "10",
+                  "fontFamily": "$fonte",
+                  "fontSize": 18,
+                  "fontWeight": "600"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "NHXwS",
+              "name": "Par B",
+              "gap": "$custo-gap",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "rectangle",
+                  "id": "EUMK3",
+                  "name": "Custo B ícone",
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "images/embedded-image-2.png",
+                    "mode": "stretch"
+                  },
+                  "width": 16,
+                  "height": 16
+                },
+                {
+                  "type": "text",
+                  "id": "e3M7Kx",
+                  "name": "Custo B",
+                  "fill": "$sh-texto",
+                  "content": "1",
+                  "fontFamily": "$fonte",
+                  "fontSize": 18,
+                  "fontWeight": "600"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "sf4Xl",
+      "x": 0,
+      "y": 820,
+      "name": "Seletor 1500x950 · normal",
+      "width": 800,
+      "fill": [
+        "#0a0a0b",
+        {
+          "type": "image",
+          "enabled": true,
+          "url": "images/localhost/7d1375d2a103c672.png",
+          "mode": "stretch"
+        },
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "enabled": true,
+          "rotation": -180,
+          "size": {
+            "height": 1
+          },
+          "colors": [
+            {
+              "color": "#07080ab8",
+              "position": 0
+            },
+            {
+              "color": "#07080ad1",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "enabled": true,
+          "url": "images/localhost/7d1375d2a103c672.png",
+          "mode": "stretch"
+        },
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "enabled": true,
+          "rotation": -180,
+          "size": {
+            "height": 1
+          },
+          "colors": [
+            {
+              "color": "#0c0d0fb3",
+              "position": 0
+            },
+            {
+              "color": "#0b0c0ec7",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "layout": "vertical",
+      "padding": [
+        8,
+        20,
+        8,
+        16
+      ],
+      "children": [
+        {
+          "type": "frame",
+          "id": "M8XvFN",
+          "name": "Título",
+          "width": "fill_container",
+          "gap": 10,
+          "padding": [
+            0,
+            0,
+            2,
+            4
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "jd31G",
+              "name": "Título rótulo",
+              "fill": "$sh-titulo",
+              "content": "HABILIDADES",
+              "fontFamily": "$fonte",
+              "fontSize": 12.5,
+              "fontWeight": "600",
+              "letterSpacing": 2
+            },
+            {
+              "type": "rectangle",
+              "id": "AMpgx",
+              "name": "Título fio",
+              "fill": {
+                "type": "gradient",
+                "gradientType": "linear",
+                "enabled": true,
+                "rotation": -90,
+                "size": {
+                  "height": 1
+                },
+                "colors": [
+                  {
+                    "color": "#b08a458c",
+                    "position": 0
+                  },
+                  {
+                    "color": "#b08a4500",
+                    "position": 1
+                  }
+                ]
+              },
+              "width": "fill_container",
+              "height": 1
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "GInBo",
+          "name": "Lista",
+          "gap": "$colunas-gap",
+          "padding": [
+            4,
+            8,
+            4,
+            6
+          ],
+          "children": [
+            {
+              "id": "vCXAk",
+              "type": "ref",
+              "ref": "znRRz",
+              "name": "Faixa Flecha · normal",
+              "width": 366,
+              "descendants": {
+                "WHl3k": {
+                  "width": 382,
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "images/pecas/faixa-1500x950-normal.png",
+                    "mode": "stretch"
+                  }
+                },
+                "eukSm": {
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "images/pecas/tecla-1500x950-normal.png",
+                    "mode": "stretch"
+                  }
+                },
+                "qtcBw": {
+                  "content": "1",
+                  "fill": "$sh-texto"
+                },
+                "l1zla": {
+                  "content": "Flecha Envenenada",
+                  "fill": "$sh-texto"
+                },
+                "sl5xJ": {
+                  "enabled": false,
+                  "fill": "$sh-perigo"
+                },
+                "o9ycn1": {
+                  "content": "10",
+                  "fill": "$sh-texto"
+                },
+                "e3M7Kx": {
+                  "content": "1",
+                  "fill": "$sh-texto"
+                }
+              }
+            },
+            {
+              "id": "tlhJN",
+              "type": "ref",
+              "ref": "znRRz",
+              "name": "Faixa Chuva · indisponivel",
+              "width": 366,
+              "descendants": {
+                "WHl3k": {
+                  "width": 382,
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "images/pecas/faixa-1500x950-indisponivel.png",
+                    "mode": "stretch"
+                  }
+                },
+                "eukSm": {
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "images/pecas/tecla-1500x950-indisponivel.png",
+                    "mode": "stretch"
+                  }
+                },
+                "qtcBw": {
+                  "content": "2",
+                  "fill": "$sh-texto"
+                },
+                "Z8duS": {
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "images/embedded-image-3.png",
+                    "mode": "stretch"
+                  }
+                },
+                "l1zla": {
+                  "content": "Chuva de Flechas",
+                  "fill": "$sh-nome-indisp"
+                },
+                "sl5xJ": {
+                  "enabled": true,
+                  "fill": "$sh-perigo"
+                },
+                "o9ycn1": {
+                  "content": "20",
+                  "fill": "$sh-perigo"
+                },
+                "e3M7Kx": {
+                  "content": "3",
+                  "fill": "$sh-perigo"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "RTHE6",
+          "name": "Descrição",
+          "width": "fill_container",
+          "layout": "vertical",
+          "padding": [
+            "$desc-distancia",
+            0,
+            0,
+            "$desc-esq"
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "gxF0U",
+              "name": "Descrição caixa",
+              "width": 354,
+              "stroke": "#b08a4573",
+              "strokeWidth": {
+                "top": 1
+              },
+              "strokeAlignment": "inner",
+              "layout": "vertical",
+              "padding": [
+                "$desc-pad-topo",
+                4,
+                0,
+                2
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "LB3O4",
+                  "name": "Desc nome",
+                  "fill": "$sh-titulo",
+                  "content": "FLECHA ENVENENADA",
+                  "lineHeight": 1.2,
+                  "fontFamily": "$fonte",
+                  "fontSize": 12.5,
+                  "fontWeight": "600",
+                  "letterSpacing": 1.75
+                },
+                {
+                  "type": "frame",
+                  "id": "jhF23",
+                  "name": "Desc tipo moldura",
+                  "width": "fill_container",
+                  "padding": [
+                    1,
+                    0,
+                    3,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "y9psmQ",
+                      "name": "Desc tipo",
+                      "fill": "$desc-tipo",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "10 DE FOCO · 1 FLECHA · ALVO: INIMIGO ÚNICO",
+                      "lineHeight": 1.35,
+                      "fontFamily": "$fonte",
+                      "fontSize": 12.5,
+                      "fontWeight": "normal",
+                      "letterSpacing": 0.5
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "OqEFq",
+                  "name": "Desc texto",
+                  "fill": "$sh-texto",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Dano e veneno forte por 4 turnos (não afeta mortos-vivos nem construtos).",
+                  "lineHeight": 1.35,
+                  "fontFamily": "$fonte",
+                  "fontSize": 15,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "uoALQ",
+                  "name": "Desc dano",
+                  "fill": "$desc-melhor",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Dano: 28–38 (crítico 53)",
+                  "lineHeight": 1.35,
+                  "fontFamily": "$fonte",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "bmEYX",
+                  "name": "Desc rodapé",
+                  "fill": "$desc-rodape",
+                  "content": "Detalhes no Grimório (P).",
+                  "lineHeight": 1.35,
+                  "fontFamily": "$fonte",
+                  "fontSize": 12.5,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "XpPwc",
+          "name": "Voltar linha",
+          "width": "fill_container",
+          "padding": [
+            2,
+            2,
+            0,
+            0
+          ],
+          "justifyContent": "end",
+          "children": [
+            {
+              "type": "frame",
+              "id": "t9oXn7",
+              "name": "Voltar",
+              "gap": 7,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "NseWs",
+                  "name": "Esc",
+                  "fill": "#0b0b0d",
+                  "stroke": "#4f4a42",
+                  "strokeWidth": 1,
+                  "strokeAlignment": "inner",
+                  "padding": [
+                    1,
+                    6
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "u07tvJ",
+                      "name": "Esc rótulo",
+                      "fill": "#cfc4ad",
+                      "content": "Esc",
+                      "fontFamily": "$fonte",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "GTwNp",
+                  "name": "Voltar rótulo",
+                  "fill": "#a59c8b",
+                  "content": "Voltar",
+                  "fontFamily": "$fonte",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "REvXa",
+      "x": 0,
+      "y": 1160,
+      "name": "Seletor 1500x950 · destaque",
+      "width": 800,
+      "fill": [
+        "#0a0a0b",
+        {
+          "type": "image",
+          "enabled": true,
+          "url": "images/localhost/7d1375d2a103c672.png",
+          "mode": "stretch"
+        },
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "enabled": true,
+          "rotation": -180,
+          "size": {
+            "height": 1
+          },
+          "colors": [
+            {
+              "color": "#07080ab8",
+              "position": 0
+            },
+            {
+              "color": "#07080ad1",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "enabled": true,
+          "url": "images/localhost/7d1375d2a103c672.png",
+          "mode": "stretch"
+        },
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "enabled": true,
+          "rotation": -180,
+          "size": {
+            "height": 1
+          },
+          "colors": [
+            {
+              "color": "#0c0d0fb3",
+              "position": 0
+            },
+            {
+              "color": "#0b0c0ec7",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "layout": "vertical",
+      "padding": [
+        8,
+        20,
+        8,
+        16
+      ],
+      "children": [
+        {
+          "type": "frame",
+          "id": "ETtdi",
+          "name": "Título",
+          "width": "fill_container",
+          "gap": 10,
+          "padding": [
+            0,
+            0,
+            2,
+            4
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "pkzvt",
+              "name": "Título rótulo",
+              "fill": "$sh-titulo",
+              "content": "HABILIDADES",
+              "fontFamily": "$fonte",
+              "fontSize": 12.5,
+              "fontWeight": "600",
+              "letterSpacing": 2
+            },
+            {
+              "type": "rectangle",
+              "id": "rUX6y",
+              "name": "Título fio",
+              "fill": {
+                "type": "gradient",
+                "gradientType": "linear",
+                "enabled": true,
+                "rotation": -90,
+                "size": {
+                  "height": 1
+                },
+                "colors": [
+                  {
+                    "color": "#b08a458c",
+                    "position": 0
+                  },
+                  {
+                    "color": "#b08a4500",
+                    "position": 1
+                  }
+                ]
+              },
+              "width": "fill_container",
+              "height": 1
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "auQS0",
+          "name": "Lista",
+          "gap": "$colunas-gap",
+          "padding": [
+            4,
+            8,
+            4,
+            6
+          ],
+          "children": [
+            {
+              "id": "K9MZ5y",
+              "type": "ref",
+              "ref": "znRRz",
+              "name": "Faixa Flecha · destaque",
+              "width": 366,
+              "descendants": {
+                "WHl3k": {
+                  "width": 382,
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "images/pecas/faixa-1500x950-destaque.png",
+                    "mode": "stretch"
+                  }
+                },
+                "eukSm": {
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "images/pecas/tecla-1500x950-destaque.png",
+                    "mode": "stretch"
+                  }
+                },
+                "qtcBw": {
+                  "content": "1",
+                  "fill": "#1a140c"
+                },
+                "l1zla": {
+                  "content": "Flecha Envenenada",
+                  "fill": "$sh-tinta"
+                },
+                "sl5xJ": {
+                  "enabled": false,
+                  "fill": "$sh-perigo-escuro"
+                },
+                "o9ycn1": {
+                  "content": "10",
+                  "fill": "$sh-tinta"
+                },
+                "e3M7Kx": {
+                  "content": "1",
+                  "fill": "$sh-tinta"
+                }
+              }
+            },
+            {
+              "id": "qYxCS",
+              "type": "ref",
+              "ref": "znRRz",
+              "name": "Faixa Chuva · indisponivel",
+              "width": 366,
+              "descendants": {
+                "WHl3k": {
+                  "width": 382,
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "images/pecas/faixa-1500x950-indisponivel.png",
+                    "mode": "stretch"
+                  }
+                },
+                "eukSm": {
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "images/pecas/tecla-1500x950-indisponivel.png",
+                    "mode": "stretch"
+                  }
+                },
+                "qtcBw": {
+                  "content": "2",
+                  "fill": "$sh-texto"
+                },
+                "Z8duS": {
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "images/embedded-image-3.png",
+                    "mode": "stretch"
+                  }
+                },
+                "l1zla": {
+                  "content": "Chuva de Flechas",
+                  "fill": "$sh-nome-indisp"
+                },
+                "sl5xJ": {
+                  "enabled": true,
+                  "fill": "$sh-perigo"
+                },
+                "o9ycn1": {
+                  "content": "20",
+                  "fill": "$sh-perigo"
+                },
+                "e3M7Kx": {
+                  "content": "3",
+                  "fill": "$sh-perigo"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "jixHq",
+          "name": "Descrição",
+          "width": "fill_container",
+          "layout": "vertical",
+          "padding": [
+            "$desc-distancia",
+            0,
+            0,
+            "$desc-esq"
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "S79JL",
+              "name": "Descrição caixa",
+              "width": 354,
+              "stroke": "#b08a4573",
+              "strokeWidth": {
+                "top": 1
+              },
+              "strokeAlignment": "inner",
+              "layout": "vertical",
+              "padding": [
+                "$desc-pad-topo",
+                4,
+                0,
+                2
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "IOsPn",
+                  "name": "Desc nome",
+                  "fill": "$sh-titulo",
+                  "content": "FLECHA ENVENENADA",
+                  "lineHeight": 1.2,
+                  "fontFamily": "$fonte",
+                  "fontSize": 12.5,
+                  "fontWeight": "600",
+                  "letterSpacing": 1.75
+                },
+                {
+                  "type": "frame",
+                  "id": "iMijF",
+                  "name": "Desc tipo moldura",
+                  "width": "fill_container",
+                  "padding": [
+                    1,
+                    0,
+                    3,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "cVsJL",
+                      "name": "Desc tipo",
+                      "fill": "$desc-tipo",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "10 DE FOCO · 1 FLECHA · ALVO: INIMIGO ÚNICO",
+                      "lineHeight": 1.35,
+                      "fontFamily": "$fonte",
+                      "fontSize": 12.5,
+                      "fontWeight": "normal",
+                      "letterSpacing": 0.5
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "UTxIF",
+                  "name": "Desc texto",
+                  "fill": "$sh-texto",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Dano e veneno forte por 4 turnos (não afeta mortos-vivos nem construtos).",
+                  "lineHeight": 1.35,
+                  "fontFamily": "$fonte",
+                  "fontSize": 15,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "w08kxR",
+                  "name": "Desc dano",
+                  "fill": "$desc-melhor",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Dano: 28–38 (crítico 53)",
+                  "lineHeight": 1.35,
+                  "fontFamily": "$fonte",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "X3EM5u",
+                  "name": "Desc rodapé",
+                  "fill": "$desc-rodape",
+                  "content": "Detalhes no Grimório (P).",
+                  "lineHeight": 1.35,
+                  "fontFamily": "$fonte",
+                  "fontSize": 12.5,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "NURVp",
+          "name": "Voltar linha",
+          "width": "fill_container",
+          "padding": [
+            2,
+            2,
+            0,
+            0
+          ],
+          "justifyContent": "end",
+          "children": [
+            {
+              "type": "frame",
+              "id": "ZcKEm",
+              "name": "Voltar",
+              "gap": 7,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "lBl6A",
+                  "name": "Esc",
+                  "fill": "#0b0b0d",
+                  "stroke": "#4f4a42",
+                  "strokeWidth": 1,
+                  "strokeAlignment": "inner",
+                  "padding": [
+                    1,
+                    6
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "JOXcj",
+                      "name": "Esc rótulo",
+                      "fill": "#cfc4ad",
+                      "content": "Esc",
+                      "fontFamily": "$fonte",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "HyVrn",
+                  "name": "Voltar rótulo",
+                  "fill": "#a59c8b",
+                  "content": "Voltar",
+                  "fontFamily": "$fonte",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "jmblT",
+      "x": 0,
+      "y": 1500,
+      "name": "Seletor 1500x950 · indisponivel",
+      "width": 800,
+      "fill": [
+        "#0a0a0b",
+        {
+          "type": "image",
+          "enabled": true,
+          "url": "images/localhost/7d1375d2a103c672.png",
+          "mode": "stretch"
+        },
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "enabled": true,
+          "rotation": -180,
+          "size": {
+            "height": 1
+          },
+          "colors": [
+            {
+              "color": "#07080ab8",
+              "position": 0
+            },
+            {
+              "color": "#07080ad1",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "enabled": true,
+          "url": "images/localhost/7d1375d2a103c672.png",
+          "mode": "stretch"
+        },
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "enabled": true,
+          "rotation": -180,
+          "size": {
+            "height": 1
+          },
+          "colors": [
+            {
+              "color": "#0c0d0fb3",
+              "position": 0
+            },
+            {
+              "color": "#0b0c0ec7",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "layout": "vertical",
+      "padding": [
+        8,
+        20,
+        8,
+        16
+      ],
+      "children": [
+        {
+          "type": "frame",
+          "id": "Brv47",
+          "name": "Título",
+          "width": "fill_container",
+          "gap": 10,
+          "padding": [
+            0,
+            0,
+            2,
+            4
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "k41aLz",
+              "name": "Título rótulo",
+              "fill": "$sh-titulo",
+              "content": "HABILIDADES",
+              "fontFamily": "$fonte",
+              "fontSize": 12.5,
+              "fontWeight": "600",
+              "letterSpacing": 2
+            },
+            {
+              "type": "rectangle",
+              "id": "q3EiFF",
+              "name": "Título fio",
+              "fill": {
+                "type": "gradient",
+                "gradientType": "linear",
+                "enabled": true,
+                "rotation": -90,
+                "size": {
+                  "height": 1
+                },
+                "colors": [
+                  {
+                    "color": "#b08a458c",
+                    "position": 0
+                  },
+                  {
+                    "color": "#b08a4500",
+                    "position": 1
+                  }
+                ]
+              },
+              "width": "fill_container",
+              "height": 1
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "E1z82v",
+          "name": "Lista",
+          "gap": "$colunas-gap",
+          "padding": [
+            4,
+            8,
+            4,
+            6
+          ],
+          "children": [
+            {
+              "id": "V4kAP0",
+              "type": "ref",
+              "ref": "znRRz",
+              "name": "Faixa Flecha · normal",
+              "width": 366,
+              "descendants": {
+                "WHl3k": {
+                  "width": 382,
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "images/pecas/faixa-1500x950-normal.png",
+                    "mode": "stretch"
+                  }
+                },
+                "eukSm": {
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "images/pecas/tecla-1500x950-normal.png",
+                    "mode": "stretch"
+                  }
+                },
+                "qtcBw": {
+                  "content": "1",
+                  "fill": "$sh-texto"
+                },
+                "l1zla": {
+                  "content": "Flecha Envenenada",
+                  "fill": "$sh-texto"
+                },
+                "sl5xJ": {
+                  "enabled": false,
+                  "fill": "$sh-perigo"
+                },
+                "o9ycn1": {
+                  "content": "10",
+                  "fill": "$sh-texto"
+                },
+                "e3M7Kx": {
+                  "content": "1",
+                  "fill": "$sh-texto"
+                }
+              }
+            },
+            {
+              "id": "PgMW9",
+              "type": "ref",
+              "ref": "znRRz",
+              "name": "Faixa Chuva · indisponivel-destaque",
+              "width": 366,
+              "descendants": {
+                "WHl3k": {
+                  "width": 382,
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "images/pecas/faixa-1500x950-indisponivel-destaque.png",
+                    "mode": "stretch"
+                  }
+                },
+                "eukSm": {
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "images/pecas/tecla-1500x950-indisponivel-destaque.png",
+                    "mode": "stretch"
+                  }
+                },
+                "qtcBw": {
+                  "content": "2",
+                  "fill": "$sh-texto"
+                },
+                "Z8duS": {
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "images/embedded-image-3.png",
+                    "mode": "stretch"
+                  }
+                },
+                "l1zla": {
+                  "content": "Chuva de Flechas",
+                  "fill": "$sh-tinta"
+                },
+                "sl5xJ": {
+                  "enabled": true,
+                  "fill": "$sh-perigo-escuro"
+                },
+                "o9ycn1": {
+                  "content": "20",
+                  "fill": "$sh-perigo-escuro"
+                },
+                "e3M7Kx": {
+                  "content": "3",
+                  "fill": "$sh-perigo-escuro"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "v2mo6F",
+          "name": "Descrição",
+          "width": "fill_container",
+          "layout": "vertical",
+          "padding": [
+            "$desc-distancia",
+            0,
+            0,
+            390
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "d56EG",
+              "name": "Descrição caixa",
+              "width": 354,
+              "stroke": "#b08a4573",
+              "strokeWidth": {
+                "top": 1
+              },
+              "strokeAlignment": "inner",
+              "layout": "vertical",
+              "padding": [
+                "$desc-pad-topo",
+                4,
+                0,
+                2
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "vf0eM",
+                  "name": "Desc nome",
+                  "fill": "$sh-titulo",
+                  "content": "CHUVA DE FLECHAS",
+                  "lineHeight": 1.2,
+                  "fontFamily": "$fonte",
+                  "fontSize": 12.5,
+                  "fontWeight": "600",
+                  "letterSpacing": 1.75
+                },
+                {
+                  "type": "frame",
+                  "id": "yGtQg",
+                  "name": "Desc tipo moldura",
+                  "width": "fill_container",
+                  "padding": [
+                    1,
+                    0,
+                    3,
+                    0
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "i7oFUH",
+                      "name": "Desc tipo",
+                      "fill": "$desc-tipo",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "20 DE FOCO · 3 FLECHAS · ALVO: TODOS OS INIMIGOS",
+                      "lineHeight": 1.35,
+                      "fontFamily": "$fonte",
+                      "fontSize": 12.5,
+                      "fontWeight": "normal",
+                      "letterSpacing": 0.5
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "gH9jC",
+                  "name": "Desc texto",
+                  "fill": "$sh-texto",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Atinge todos os inimigos. Gasta uma flecha por inimigo.",
+                  "lineHeight": 1.35,
+                  "fontFamily": "$fonte",
+                  "fontSize": 15,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "rWHQP",
+                  "name": "Desc dano",
+                  "fill": "$desc-melhor",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Em cada inimigo: 28–38 (crítico 53)",
+                  "lineHeight": 1.35,
+                  "fontFamily": "$fonte",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "B0TAUH",
+                  "name": "Desc motivo",
+                  "fill": "$sh-perigo",
+                  "content": "Foco insuficiente",
+                  "lineHeight": 1.35,
+                  "fontFamily": "$fonte",
+                  "fontSize": 14,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "EBLsM",
+                  "name": "Desc rodapé",
+                  "fill": "$desc-rodape",
+                  "content": "Detalhes no Grimório (P).",
+                  "lineHeight": 1.35,
+                  "fontFamily": "$fonte",
+                  "fontSize": 12.5,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "Qmuwl",
+          "name": "Voltar linha",
+          "width": "fill_container",
+          "padding": [
+            2,
+            2,
+            0,
+            0
+          ],
+          "justifyContent": "end",
+          "children": [
+            {
+              "type": "frame",
+              "id": "fNpfd",
+              "name": "Voltar",
+              "gap": 7,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "fqmxb",
+                  "name": "Esc",
+                  "fill": "#0b0b0d",
+                  "stroke": "#4f4a42",
+                  "strokeWidth": 1,
+                  "strokeAlignment": "inner",
+                  "padding": [
+                    1,
+                    6
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "ZJ4Qr",
+                      "name": "Esc rótulo",
+                      "fill": "#cfc4ad",
+                      "content": "Esc",
+                      "fontFamily": "$fonte",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "jCiNK",
+                  "name": "Voltar rótulo",
+                  "fill": "#a59c8b",
+                  "content": "Voltar",
+                  "fontFamily": "$fonte",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "w7EQXK",
+      "x": 0,
+      "y": 1840,
+      "name": "Seletor 1280x720 · normal",
+      "width": 684,
+      "fill": [
+        "#0a0a0b",
+        {
+          "type": "image",
+          "enabled": true,
+          "url": "images/localhost/7d1375d2a103c672.png",
+          "mode": "stretch"
+        },
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "enabled": true,
+          "rotation": -180,
+          "size": {
+            "height": 1
+          },
+          "colors": [
+            {
+              "color": "#07080ab8",
+              "position": 0
+            },
+            {
+              "color": "#07080ad1",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "enabled": true,
+          "url": "images/localhost/7d1375d2a103c672.png",
+          "mode": "stretch"
+        },
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "enabled": true,
+          "rotation": -180,
+          "size": {
+            "height": 1
+          },
+          "colors": [
+            {
+              "color": "#0c0d0fb3",
+              "position": 0
+            },
+            {
+              "color": "#0b0c0ec7",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "layout": "vertical",
+      "padding": [
+        8,
+        20,
+        8,
+        16
+      ],
+      "children": [
+        {
+          "type": "frame",
+          "id": "lqNnF",
+          "name": "Título",
+          "width": "fill_container",
+          "gap": 10,
+          "padding": [
+            0,
+            0,
+            2,
+            4
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "AjXpx",
+              "name": "Título rótulo",
+              "fill": "$sh-titulo",
+              "content": "HABILIDADES",
+              "fontFamily": "$fonte",
+              "fontSize": 12.5,
+              "fontWeight": "600",
+              "letterSpacing": 2
+            },
+            {
+              "type": "rectangle",
+              "id": "o1JF8",
+              "name": "Título fio",
+              "fill": {
+                "type": "gradient",
+                "gradientType": "linear",
+                "enabled": true,
+                "rotation": -90,
+                "size": {
+                  "height": 1
+                },
+                "colors": [
+                  {
+                    "color": "#b08a458c",
+                    "position": 0
+                  },
+                  {
+                    "color": "#b08a4500",
+                    "position": 1
+                  }
+                ]
+              },
+              "width": "fill_container",
+              "height": 1
+            },
+            {
+              "type": "frame",
+              "id": "NBPU7",
+              "name": "Voltar",
+              "gap": 7,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "FSUn3",
+                  "name": "Esc",
+                  "fill": "#0b0b0d",
+                  "stroke": "#4f4a42",
+                  "strokeWidth": 1,
+                  "strokeAlignment": "inner",
+                  "padding": [
+                    1,
+                    6
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "h0sEj",
+                      "name": "Esc rótulo",
+                      "fill": "#cfc4ad",
+                      "content": "Esc",
+                      "fontFamily": "$fonte",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "YFmUL",
+                  "name": "Voltar rótulo",
+                  "fill": "#a59c8b",
+                  "content": "Voltar",
+                  "fontFamily": "$fonte",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "zOzds",
+          "name": "Lista",
+          "gap": "$colunas-gap",
+          "padding": [
+            4,
+            8,
+            4,
+            6
+          ],
+          "children": [
+            {
+              "id": "r6kww",
+              "type": "ref",
+              "ref": "znRRz",
+              "name": "Faixa Flecha · normal",
+              "width": 308,
+              "descendants": {
+                "WHl3k": {
+                  "width": 324,
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "images/pecas/faixa-1280x720-normal.png",
+                    "mode": "stretch"
+                  }
+                },
+                "eukSm": {
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "images/pecas/tecla-1280x720-normal.png",
+                    "mode": "stretch"
+                  }
+                },
+                "qtcBw": {
+                  "content": "1",
+                  "fill": "$sh-texto"
+                },
+                "l1zla": {
+                  "content": "Flecha Envenenada",
+                  "fill": "$sh-texto"
+                },
+                "sl5xJ": {
+                  "enabled": false,
+                  "fill": "$sh-perigo"
+                },
+                "o9ycn1": {
+                  "content": "10",
+                  "fill": "$sh-texto"
+                },
+                "e3M7Kx": {
+                  "content": "1",
+                  "fill": "$sh-texto"
+                }
+              }
+            },
+            {
+              "id": "cwXgP",
+              "type": "ref",
+              "ref": "znRRz",
+              "name": "Faixa Chuva · indisponivel",
+              "width": 308,
+              "descendants": {
+                "WHl3k": {
+                  "width": 324,
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "images/pecas/faixa-1280x720-indisponivel.png",
+                    "mode": "stretch"
+                  }
+                },
+                "eukSm": {
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "images/pecas/tecla-1280x720-indisponivel.png",
+                    "mode": "stretch"
+                  }
+                },
+                "qtcBw": {
+                  "content": "2",
+                  "fill": "$sh-texto"
+                },
+                "Z8duS": {
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "images/embedded-image-3.png",
+                    "mode": "stretch"
+                  }
+                },
+                "l1zla": {
+                  "content": "Chuva de Flechas",
+                  "fill": "$sh-nome-indisp"
+                },
+                "sl5xJ": {
+                  "enabled": true,
+                  "fill": "$sh-perigo"
+                },
+                "o9ycn1": {
+                  "content": "20",
+                  "fill": "$sh-perigo"
+                },
+                "e3M7Kx": {
+                  "content": "3",
+                  "fill": "$sh-perigo"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "jn3vW",
+          "name": "Descrição",
+          "width": "fill_container",
+          "layout": "vertical",
+          "padding": [
+            "$desc-distancia",
+            0,
+            0,
+            "$desc-esq"
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "sZtXe",
+              "name": "Descrição caixa",
+              "width": 622,
+              "stroke": "#b08a4573",
+              "strokeWidth": {
+                "top": 1
+              },
+              "strokeAlignment": "inner",
+              "gap": 18,
+              "padding": [
+                "$desc-pad-topo",
+                4,
+                0,
+                2
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "UIXwC",
+                  "name": "Desc A",
+                  "width": 211,
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "ws1SM",
+                      "name": "Desc nome",
+                      "fill": "$sh-titulo",
+                      "content": "FLECHA ENVENENADA",
+                      "lineHeight": 1.2,
+                      "fontFamily": "$fonte",
+                      "fontSize": 12.5,
+                      "fontWeight": "600",
+                      "letterSpacing": 1.75
+                    },
+                    {
+                      "type": "frame",
+                      "id": "wdcFi",
+                      "name": "Desc tipo moldura",
+                      "width": "fill_container",
+                      "padding": [
+                        1,
+                        0,
+                        3,
+                        0
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "eo0G3",
+                          "name": "Desc tipo",
+                          "fill": "$desc-tipo",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "10 DE FOCO · 1 FLECHA · ALVO: INIMIGO ÚNICO",
+                          "lineHeight": 1.35,
+                          "fontFamily": "$fonte",
+                          "fontSize": 12.5,
+                          "fontWeight": "normal",
+                          "letterSpacing": 0.5
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "d0lOxd",
+                      "name": "Desc rodapé",
+                      "fill": "$desc-rodape",
+                      "content": "Detalhes no Grimório (P).",
+                      "lineHeight": 1.35,
+                      "fontFamily": "$fonte",
+                      "fontSize": 12.5,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "aiW4F",
+                  "name": "Desc B",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "WKMin",
+                      "name": "Desc texto",
+                      "fill": "$sh-texto",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Dano e veneno forte por 4 turnos (não afeta mortos-vivos nem construtos).",
+                      "lineHeight": 1.35,
+                      "fontFamily": "$fonte",
+                      "fontSize": 15,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "z4e4JL",
+                      "name": "Desc dano",
+                      "fill": "$desc-melhor",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Dano: 28–38 (crítico 53)",
+                      "lineHeight": 1.35,
+                      "fontFamily": "$fonte",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "G8lYBl",
+      "x": 0,
+      "y": 2180,
+      "name": "Seletor 1280x720 · destaque",
+      "width": 684,
+      "fill": [
+        "#0a0a0b",
+        {
+          "type": "image",
+          "enabled": true,
+          "url": "images/localhost/7d1375d2a103c672.png",
+          "mode": "stretch"
+        },
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "enabled": true,
+          "rotation": -180,
+          "size": {
+            "height": 1
+          },
+          "colors": [
+            {
+              "color": "#07080ab8",
+              "position": 0
+            },
+            {
+              "color": "#07080ad1",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "enabled": true,
+          "url": "images/localhost/7d1375d2a103c672.png",
+          "mode": "stretch"
+        },
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "enabled": true,
+          "rotation": -180,
+          "size": {
+            "height": 1
+          },
+          "colors": [
+            {
+              "color": "#0c0d0fb3",
+              "position": 0
+            },
+            {
+              "color": "#0b0c0ec7",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "layout": "vertical",
+      "padding": [
+        8,
+        20,
+        8,
+        16
+      ],
+      "children": [
+        {
+          "type": "frame",
+          "id": "aMRGS",
+          "name": "Título",
+          "width": "fill_container",
+          "gap": 10,
+          "padding": [
+            0,
+            0,
+            2,
+            4
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "En7Gg",
+              "name": "Título rótulo",
+              "fill": "$sh-titulo",
+              "content": "HABILIDADES",
+              "fontFamily": "$fonte",
+              "fontSize": 12.5,
+              "fontWeight": "600",
+              "letterSpacing": 2
+            },
+            {
+              "type": "rectangle",
+              "id": "iwMsO",
+              "name": "Título fio",
+              "fill": {
+                "type": "gradient",
+                "gradientType": "linear",
+                "enabled": true,
+                "rotation": -90,
+                "size": {
+                  "height": 1
+                },
+                "colors": [
+                  {
+                    "color": "#b08a458c",
+                    "position": 0
+                  },
+                  {
+                    "color": "#b08a4500",
+                    "position": 1
+                  }
+                ]
+              },
+              "width": "fill_container",
+              "height": 1
+            },
+            {
+              "type": "frame",
+              "id": "FCpFu",
+              "name": "Voltar",
+              "gap": 7,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "wkwTJ",
+                  "name": "Esc",
+                  "fill": "#0b0b0d",
+                  "stroke": "#4f4a42",
+                  "strokeWidth": 1,
+                  "strokeAlignment": "inner",
+                  "padding": [
+                    1,
+                    6
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "S6wqT",
+                      "name": "Esc rótulo",
+                      "fill": "#cfc4ad",
+                      "content": "Esc",
+                      "fontFamily": "$fonte",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "izmbN",
+                  "name": "Voltar rótulo",
+                  "fill": "#a59c8b",
+                  "content": "Voltar",
+                  "fontFamily": "$fonte",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "t1WIHd",
+          "name": "Lista",
+          "gap": "$colunas-gap",
+          "padding": [
+            4,
+            8,
+            4,
+            6
+          ],
+          "children": [
+            {
+              "id": "jCT5C",
+              "type": "ref",
+              "ref": "znRRz",
+              "name": "Faixa Flecha · destaque",
+              "width": 308,
+              "descendants": {
+                "WHl3k": {
+                  "width": 324,
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "images/pecas/faixa-1280x720-destaque.png",
+                    "mode": "stretch"
+                  }
+                },
+                "eukSm": {
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "images/pecas/tecla-1280x720-destaque.png",
+                    "mode": "stretch"
+                  }
+                },
+                "qtcBw": {
+                  "content": "1",
+                  "fill": "#1a140c"
+                },
+                "l1zla": {
+                  "content": "Flecha Envenenada",
+                  "fill": "$sh-tinta"
+                },
+                "sl5xJ": {
+                  "enabled": false,
+                  "fill": "$sh-perigo-escuro"
+                },
+                "o9ycn1": {
+                  "content": "10",
+                  "fill": "$sh-tinta"
+                },
+                "e3M7Kx": {
+                  "content": "1",
+                  "fill": "$sh-tinta"
+                }
+              }
+            },
+            {
+              "id": "S5hdzf",
+              "type": "ref",
+              "ref": "znRRz",
+              "name": "Faixa Chuva · indisponivel",
+              "width": 308,
+              "descendants": {
+                "WHl3k": {
+                  "width": 324,
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "images/pecas/faixa-1280x720-indisponivel.png",
+                    "mode": "stretch"
+                  }
+                },
+                "eukSm": {
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "images/pecas/tecla-1280x720-indisponivel.png",
+                    "mode": "stretch"
+                  }
+                },
+                "qtcBw": {
+                  "content": "2",
+                  "fill": "$sh-texto"
+                },
+                "Z8duS": {
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "images/embedded-image-3.png",
+                    "mode": "stretch"
+                  }
+                },
+                "l1zla": {
+                  "content": "Chuva de Flechas",
+                  "fill": "$sh-nome-indisp"
+                },
+                "sl5xJ": {
+                  "enabled": true,
+                  "fill": "$sh-perigo"
+                },
+                "o9ycn1": {
+                  "content": "20",
+                  "fill": "$sh-perigo"
+                },
+                "e3M7Kx": {
+                  "content": "3",
+                  "fill": "$sh-perigo"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "fks5W",
+          "name": "Descrição",
+          "width": "fill_container",
+          "layout": "vertical",
+          "padding": [
+            "$desc-distancia",
+            0,
+            0,
+            "$desc-esq"
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "nZjOV",
+              "name": "Descrição caixa",
+              "width": 622,
+              "stroke": "#b08a4573",
+              "strokeWidth": {
+                "top": 1
+              },
+              "strokeAlignment": "inner",
+              "gap": 18,
+              "padding": [
+                "$desc-pad-topo",
+                4,
+                0,
+                2
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "etMMJ",
+                  "name": "Desc A",
+                  "width": 211,
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "t6I6r",
+                      "name": "Desc nome",
+                      "fill": "$sh-titulo",
+                      "content": "FLECHA ENVENENADA",
+                      "lineHeight": 1.2,
+                      "fontFamily": "$fonte",
+                      "fontSize": 12.5,
+                      "fontWeight": "600",
+                      "letterSpacing": 1.75
+                    },
+                    {
+                      "type": "frame",
+                      "id": "wJyIl",
+                      "name": "Desc tipo moldura",
+                      "width": "fill_container",
+                      "padding": [
+                        1,
+                        0,
+                        3,
+                        0
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "WY9HJ",
+                          "name": "Desc tipo",
+                          "fill": "$desc-tipo",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "10 DE FOCO · 1 FLECHA · ALVO: INIMIGO ÚNICO",
+                          "lineHeight": 1.35,
+                          "fontFamily": "$fonte",
+                          "fontSize": 12.5,
+                          "fontWeight": "normal",
+                          "letterSpacing": 0.5
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "u1mboA",
+                      "name": "Desc rodapé",
+                      "fill": "$desc-rodape",
+                      "content": "Detalhes no Grimório (P).",
+                      "lineHeight": 1.35,
+                      "fontFamily": "$fonte",
+                      "fontSize": 12.5,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "NIW2T",
+                  "name": "Desc B",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "F7fw57",
+                      "name": "Desc texto",
+                      "fill": "$sh-texto",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Dano e veneno forte por 4 turnos (não afeta mortos-vivos nem construtos).",
+                      "lineHeight": 1.35,
+                      "fontFamily": "$fonte",
+                      "fontSize": 15,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "THSCh",
+                      "name": "Desc dano",
+                      "fill": "$desc-melhor",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Dano: 28–38 (crítico 53)",
+                      "lineHeight": 1.35,
+                      "fontFamily": "$fonte",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "b8AMoV",
+      "x": 0,
+      "y": 2520,
+      "name": "Seletor 1280x720 · indisponivel",
+      "width": 684,
+      "fill": [
+        "#0a0a0b",
+        {
+          "type": "image",
+          "enabled": true,
+          "url": "images/localhost/7d1375d2a103c672.png",
+          "mode": "stretch"
+        },
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "enabled": true,
+          "rotation": -180,
+          "size": {
+            "height": 1
+          },
+          "colors": [
+            {
+              "color": "#07080ab8",
+              "position": 0
+            },
+            {
+              "color": "#07080ad1",
+              "position": 1
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "enabled": true,
+          "url": "images/localhost/7d1375d2a103c672.png",
+          "mode": "stretch"
+        },
+        {
+          "type": "gradient",
+          "gradientType": "linear",
+          "enabled": true,
+          "rotation": -180,
+          "size": {
+            "height": 1
+          },
+          "colors": [
+            {
+              "color": "#0c0d0fb3",
+              "position": 0
+            },
+            {
+              "color": "#0b0c0ec7",
+              "position": 1
+            }
+          ]
+        }
+      ],
+      "layout": "vertical",
+      "padding": [
+        8,
+        20,
+        8,
+        16
+      ],
+      "children": [
+        {
+          "type": "frame",
+          "id": "y8HmK",
+          "name": "Título",
+          "width": "fill_container",
+          "gap": 10,
+          "padding": [
+            0,
+            0,
+            2,
+            4
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "aOZ5r",
+              "name": "Título rótulo",
+              "fill": "$sh-titulo",
+              "content": "HABILIDADES",
+              "fontFamily": "$fonte",
+              "fontSize": 12.5,
+              "fontWeight": "600",
+              "letterSpacing": 2
+            },
+            {
+              "type": "rectangle",
+              "id": "vE856",
+              "name": "Título fio",
+              "fill": {
+                "type": "gradient",
+                "gradientType": "linear",
+                "enabled": true,
+                "rotation": -90,
+                "size": {
+                  "height": 1
+                },
+                "colors": [
+                  {
+                    "color": "#b08a458c",
+                    "position": 0
+                  },
+                  {
+                    "color": "#b08a4500",
+                    "position": 1
+                  }
+                ]
+              },
+              "width": "fill_container",
+              "height": 1
+            },
+            {
+              "type": "frame",
+              "id": "iLTkU",
+              "name": "Voltar",
+              "gap": 7,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "iyK65",
+                  "name": "Esc",
+                  "fill": "#0b0b0d",
+                  "stroke": "#4f4a42",
+                  "strokeWidth": 1,
+                  "strokeAlignment": "inner",
+                  "padding": [
+                    1,
+                    6
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "p59Wf7",
+                      "name": "Esc rótulo",
+                      "fill": "#cfc4ad",
+                      "content": "Esc",
+                      "fontFamily": "$fonte",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "AqKNT",
+                  "name": "Voltar rótulo",
+                  "fill": "#a59c8b",
+                  "content": "Voltar",
+                  "fontFamily": "$fonte",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "qOB7A",
+          "name": "Lista",
+          "gap": "$colunas-gap",
+          "padding": [
+            4,
+            8,
+            4,
+            6
+          ],
+          "children": [
+            {
+              "id": "VFyal",
+              "type": "ref",
+              "ref": "znRRz",
+              "name": "Faixa Flecha · normal",
+              "width": 308,
+              "descendants": {
+                "WHl3k": {
+                  "width": 324,
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "images/pecas/faixa-1280x720-normal.png",
+                    "mode": "stretch"
+                  }
+                },
+                "eukSm": {
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "images/pecas/tecla-1280x720-normal.png",
+                    "mode": "stretch"
+                  }
+                },
+                "qtcBw": {
+                  "content": "1",
+                  "fill": "$sh-texto"
+                },
+                "l1zla": {
+                  "content": "Flecha Envenenada",
+                  "fill": "$sh-texto"
+                },
+                "sl5xJ": {
+                  "enabled": false,
+                  "fill": "$sh-perigo"
+                },
+                "o9ycn1": {
+                  "content": "10",
+                  "fill": "$sh-texto"
+                },
+                "e3M7Kx": {
+                  "content": "1",
+                  "fill": "$sh-texto"
+                }
+              }
+            },
+            {
+              "id": "I2o2g",
+              "type": "ref",
+              "ref": "znRRz",
+              "name": "Faixa Chuva · indisponivel-destaque",
+              "width": 308,
+              "descendants": {
+                "WHl3k": {
+                  "width": 324,
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "images/pecas/faixa-1280x720-indisponivel-destaque.png",
+                    "mode": "stretch"
+                  }
+                },
+                "eukSm": {
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "images/pecas/tecla-1280x720-indisponivel-destaque.png",
+                    "mode": "stretch"
+                  }
+                },
+                "qtcBw": {
+                  "content": "2",
+                  "fill": "$sh-texto"
+                },
+                "Z8duS": {
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "images/embedded-image-3.png",
+                    "mode": "stretch"
+                  }
+                },
+                "l1zla": {
+                  "content": "Chuva de Flechas",
+                  "fill": "$sh-tinta"
+                },
+                "sl5xJ": {
+                  "enabled": true,
+                  "fill": "$sh-perigo-escuro"
+                },
+                "o9ycn1": {
+                  "content": "20",
+                  "fill": "$sh-perigo-escuro"
+                },
+                "e3M7Kx": {
+                  "content": "3",
+                  "fill": "$sh-perigo-escuro"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "f0Ojqv",
+          "name": "Descrição",
+          "width": "fill_container",
+          "layout": "vertical",
+          "padding": [
+            "$desc-distancia",
+            0,
+            0,
+            "$desc-esq"
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "gQWUa",
+              "name": "Descrição caixa",
+              "width": 622,
+              "stroke": "#b08a4573",
+              "strokeWidth": {
+                "top": 1
+              },
+              "strokeAlignment": "inner",
+              "gap": 18,
+              "padding": [
+                "$desc-pad-topo",
+                4,
+                0,
+                2
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "CI9vx",
+                  "name": "Desc A",
+                  "width": 211,
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "BJmpS",
+                      "name": "Desc nome",
+                      "fill": "$sh-titulo",
+                      "content": "CHUVA DE FLECHAS",
+                      "lineHeight": 1.2,
+                      "fontFamily": "$fonte",
+                      "fontSize": 12.5,
+                      "fontWeight": "600",
+                      "letterSpacing": 1.75
+                    },
+                    {
+                      "type": "frame",
+                      "id": "oBhbq",
+                      "name": "Desc tipo moldura",
+                      "width": "fill_container",
+                      "padding": [
+                        1,
+                        0,
+                        3,
+                        0
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "QdNbd",
+                          "name": "Desc tipo",
+                          "fill": "$desc-tipo",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "20 DE FOCO · 3 FLECHAS · ALVO: TODOS OS INIMIGOS",
+                          "lineHeight": 1.35,
+                          "fontFamily": "$fonte",
+                          "fontSize": 12.5,
+                          "fontWeight": "normal",
+                          "letterSpacing": 0.5
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "AyrDY",
+                      "name": "Desc rodapé",
+                      "fill": "$desc-rodape",
+                      "content": "Detalhes no Grimório (P).",
+                      "lineHeight": 1.35,
+                      "fontFamily": "$fonte",
+                      "fontSize": 12.5,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "YnZrQ",
+                  "name": "Desc B",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "R83cN6",
+                      "name": "Desc texto",
+                      "fill": "$sh-texto",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Atinge todos os inimigos. Gasta uma flecha por inimigo.",
+                      "lineHeight": 1.35,
+                      "fontFamily": "$fonte",
+                      "fontSize": 15,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "y3BIFt",
+                      "name": "Desc dano",
+                      "fill": "$desc-melhor",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Em cada inimigo: 28–38 (crítico 53)",
+                      "lineHeight": 1.35,
+                      "fontFamily": "$fonte",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "kBKb0",
+                      "name": "Desc motivo",
+                      "fill": "$sh-perigo",
+                      "content": "Foco insuficiente",
+                      "lineHeight": 1.35,
+                      "fontFamily": "$fonte",
+                      "fontSize": 14,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variables": {
+    "sh-carvao": {
+      "type": "color",
+      "value": "#232125"
+    },
+    "sh-marfim": {
+      "type": "color",
+      "value": "#e6dbc0"
+    },
+    "sh-texto": {
+      "type": "color",
+      "value": "#ece2cc"
+    },
+    "sh-tinta": {
+      "type": "color",
+      "value": "#1d1913"
+    },
+    "sh-latao": {
+      "type": "color",
+      "value": "#b08a45"
+    },
+    "sh-perigo": {
+      "type": "color",
+      "value": "#e39a86"
+    },
+    "sh-perigo-escuro": {
+      "type": "color",
+      "value": "#7a2617"
+    },
+    "sh-titulo": {
+      "type": "color",
+      "value": "#b49a64"
+    },
+    "sh-nome-indisp": {
+      "type": "color",
+      "value": "#b9af99"
+    },
+    "desc-texto": {
+      "type": "color",
+      "value": "#ddd2bb"
+    },
+    "desc-tipo": {
+      "type": "color",
+      "value": "#9d978b"
+    },
+    "desc-melhor": {
+      "type": "color",
+      "value": "#9fc58a"
+    },
+    "desc-rodape": {
+      "type": "color",
+      "value": "#8f8775"
+    },
+    "fonte": {
+      "type": "string",
+      "value": "Alegreya"
+    },
+    "faixa-gap": {
+      "type": "number",
+      "value": 8
+    },
+    "faixa-pad-dir": {
+      "type": "number",
+      "value": 16
+    },
+    "icone-col": {
+      "type": "number",
+      "value": 32
+    },
+    "custo-gap": {
+      "type": "number",
+      "value": 2
+    },
+    "colunas-gap": {
+      "type": "number",
+      "value": 18
+    },
+    "desc-distancia": {
+      "type": "number",
+      "value": 12
+    },
+    "desc-pad-topo": {
+      "type": "number",
+      "value": 10
+    },
+    "desc-esq": {
+      "type": "number",
+      "value": 6
+    },
+    "custo-pares": {
+      "type": "number",
+      "value": 7
+    },
+    "custo-folga": {
+      "type": "number",
+      "value": 4
+    },
+    "desc-blocos": {
+      "type": "number",
+      "value": 28
+    }
+  }
+}

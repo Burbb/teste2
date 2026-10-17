@@ -1,0 +1,15 @@
+/* Fluxo B (o ajuste feito no canvas do pen.dev pelo MCP, seletor.pen, e trazido para cá), por cima de
+   18-seletor-habilidades.css. Cada número vem de uma variável do canvas (entre parênteses). No canvas o custo virou
+   dois "pares" (ícone e número); o jogo não tem esse invólucro no HTML (escolhas.js escreve ícone, número, ícone,
+   número), então o par é imitado com o flex e a margem do segundo ícone. */
+
+/* o custo: ícone e número a 2 px (custo-gap), os pares a 7 px (custo-pares), 4 px a mais antes do custo (custo-folga) */
+:root body .roda-janela.seletor .rj-linha .rj-info { display: inline-flex; align-items: center; column-gap: 2px; white-space: nowrap; margin-left: 4px; }
+:root body .roda-janela.seletor .rj-linha .rj-info img:not(:first-child) { margin-left: 7px; }
+/* a faixa: as folgas da grade (faixa-gap) e a coluna do ícone (icone-col) */
+:root body .roda-janela.seletor .rj-linha { column-gap: 8px; grid-template-columns: 30px 32px minmax(0, 1fr) auto; }
+/* a descrição: a distância das faixas (desc-distancia), o texto abaixo do fio (desc-pad-topo), a borda esquerda no
+   título (desc-esq 18 → 6: 12 px para a esquerda) e os dois blocos da janela baixa (desc-blocos) */
+:root body .roda-janela.seletor .rj-descricao { margin-top: 12px; }
+:root body .roda-janela.seletor .rj-desc-caixa { margin-left: -12px; padding-top: 10px; }
+:root body .roda-janela.seletor .rj-desc-caixa[data-lado="junto"] { column-gap: 28px; }

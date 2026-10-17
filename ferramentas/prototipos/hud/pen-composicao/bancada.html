@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bancada do seletor (teste do pen.dev)</title>
+<!-- as folhas do jogo, na ordem do index.html (servir.py entrega o static do jogo em /static/, sem cópia) -->
+<link rel="stylesheet" href="/static/css/01-base.css">
+<link rel="stylesheet" href="/static/css/02-hud.css">
+<link rel="stylesheet" href="/static/css/03-batalha.css">
+<link rel="stylesheet" href="/static/css/04-pagina.css">
+<link rel="stylesheet" href="/static/css/05-paineis.css">
+<link rel="stylesheet" href="/static/css/06-talentos-avisos.css">
+<link rel="stylesheet" href="/static/css/07-titulo-responsivo.css">
+<link rel="stylesheet" href="/static/css/08-mercado.css">
+<link rel="stylesheet" href="/static/css/09-comitiva.css">
+<link rel="stylesheet" href="/static/css/10-contratos.css">
+<link rel="stylesheet" href="/static/css/11-tipografia.css">
+<link rel="stylesheet" href="/static/css/12-acoes-combate.css">
+<link rel="stylesheet" href="/static/css/13-realce.css">
+<link rel="stylesheet" href="/static/css/14-hud.css">
+<link rel="stylesheet" href="/static/css/15-hud-luta.css">
+<link rel="stylesheet" href="/static/css/16-hud-telas.css">
+<link rel="stylesheet" href="/static/css/17-titulo.css">
+<link rel="stylesheet" href="/static/css/18-seletor-habilidades.css">
+<link rel="stylesheet" href="bancada.css">
+<!-- a versão ajustada (?versao=a: o ajuste direto no CSS; ?versao=b: o que veio do canvas do pen.dev) entra por cima -->
+<script>
+  const P = new URLSearchParams(location.search), VERSAO = P.get("versao") || "atual";
+  if (VERSAO !== "atual") document.write(`<link rel="stylesheet" href="${VERSAO}-ajuste.css">`);
+</script>
+</head>
+<body class="bancada" data-bioma="floresta" data-periodo="0">
+<main id="quadros"></main>
+<script src="bancada.js"></script>
+</body>
+</html>
