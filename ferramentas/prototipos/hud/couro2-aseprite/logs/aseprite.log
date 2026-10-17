@@ -1,0 +1,13 @@
+Rodada 1 no Aseprite pelo MCP (aseprite-bridge 1.0.0), 17/10/2026. Listas de auxiliares/couro2_r1.py (o 32, desenhado na grade); documento e camadas por ../couro-aseprite/auxiliares/montar.lua; cada camada por ferramentas/arte/aseprite/pintar.lua; .aseprite por saveCopyAs; PNG por Image:drawSprite + saveAs; reaberto por app.open; captura do editor por get_sprite_screenshot. O 64 e os @2x: duplicação exata em Python (Pillow, vizinho mais próximo).
+
+== pintura (escritos; todas as camadas com 0 diferentes na releitura e 0 fora da tela)
+capuz-32: capa 162 | capuz 172 | interior 90 | borda 30 | cordao 4 | desgaste 2 | contorno 85; reaberto: as mesmas 7 camadas e contagens, 32x32 RGB
+luva-32: bracadeira 129 | luva 165 | cordao 16 | desgaste 2 | contorno 83; reaberto: as mesmas 5 camadas e contagens, 32x32 RGB
+
+== conferência
+capuz-32: (32, 32) RGBA, alfas [0, 255], cores 17; editor = png True; reaberto = png True; png = prévia True
+  32@2x exato True; 64 = 32 ampliado 2× exato True; 64@2x exato True; 64 reduzido de 2×2 = 32 True
+luva-32: (32, 32) RGBA, alfas [0, 255], cores 18; editor = png True; reaberto = png True; png = prévia True
+  32@2x exato True; 64 = 32 ampliado 2× exato True; 64@2x exato True; 64 reduzido de 2×2 = 32 True
+
+== silhueta: primeira (peão, o pescoço estrangulado), segunda (sino), terceira (degrau dos ombros) e a final (a capa reta): as prévias k1 a k4 do scratchpad; a final é a pintada.

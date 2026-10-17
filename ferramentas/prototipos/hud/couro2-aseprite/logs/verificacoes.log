@@ -1,0 +1,31 @@
+== início Sat Oct 17 00:42:18     2026
+== git status
+?? ferramentas/prototipos/hud/comparar_couro2.py
+?? ferramentas/prototipos/hud/couro2-aseprite/
+?? ferramentas/prototipos/hud/fotografar_couro2.mjs
+(sem PLAYWRIGHT_* no ambiente do unittest)
+== unittest
+----------------------------------------------------------------------
+Ran 603 tests in 60.011s
+
+OK (skipped=1)
+segundos: 61
+== gabarito
+OK
+== pyflakes
+rpg\eventos\__init__.py:3:1: '.comuns' imported but unused
+rpg\eventos\__init__.py:3:1: '.biomas' imported but unused
+rpg\eventos\__init__.py:3:1: '.classe' imported but unused
+rpg\eventos\__init__.py:3:1: '.noite' imported but unused
+rpg\eventos\__init__.py:3:1: '.vila' imported but unused
+rpg\eventos\__init__.py:3:1: '.comitiva' imported but unused
+rpg\eventos\__init__.py:4:1: '.motor.REGISTRO' imported but unused
+rpg\eventos\__init__.py:4:1: '.motor.disparar' imported but unused
+rpg\eventos\__init__.py:4:1: '.motor.disparar_id' imported but unused
+== fumaca
+  ok  dormir devolve exatamente o que o quadro disse (30 → 51 de vida, todo o Vigor)
+  ok  sem erros no console
+tudo certo
+segundos: 491
+== gabarito.json
+== fim Sat Oct 17 00:51:38     2026

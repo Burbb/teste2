@@ -3157,3 +3157,20 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   `unittest` com Playwright inclui fumaça; evitar repeti-la.
 - **Escopo desta atualização:** quatro arquivos Markdown; leitura estática e revisão documental, sem executar testes
   ou navegador e sem mudar motor, interface, saves, arte ou versão. Os detalhes da história permanecem rascunho no 22.
+
+### 17/10/2026 (data do computador local) — Proposta: o capuz e a luva com braçadeira de couro (protótipo, sem versão)
+
+- **Pedido de Jean:** completar a família de couro do Arqueiro com a cabeça e as mãos, só no protótipo: o 32 como
+  fonte, o 64 como o 32 ampliado 2× (sem 64 redesenhado por padrão); 40 e 48 depois da aprovação.
+- **Os dados:** `capuz` = Capuz e Chapéu de Couro do Arqueiro (couro) e Capuz do Mago (tecido), sem único; `luva` =
+  Braçadeira do Arqueiro (couro), Luva de Seda do Mago (tecido) e o único Mãos do Estrangulador. A peça do Arqueiro é
+  uma braçadeira: a proposta é uma luva com braçadeira, que serve aos dois nomes. Contradições anotadas: o Chapéu de
+  Couro com desenho de capuz; os itens de tecido do Mago com desenhos de couro. A habilidade Desaparecer usa o sprite
+  `capuz` noutro papel e fica como está.
+- **Feito:** `ferramentas/prototipos/hud/couro2-aseprite/` (os `.aseprite` do 32 em camadas, os PNGs, o 64 derivado,
+  os @2x, as pranchas, as fotos, os logs e o `LEIA-ME.md`), com `fotografar_couro2.mjs` e `comparar_couro2.py`.
+- **Conferido:** silhueta numa cor só e cor, carvão ao lado do gibão, das botas e dos aprovados; editáveis reabertos
+  (captura do editor = PNG = prévia; alfa 0 e 255; o 64 é o 32 ampliado 2× exato); no jogo, atual × candidato na
+  ficha e no mercado em 32, no cartão do saque com o 64 derivado e nas telas inteiras, em 1500×950 e 1280×720, sem
+  erro no console. Verificações em `couro2-aseprite/logs/verificacoes.log`.
+- **Continua como está no jogo:** os sprites antigos. Próximo: a avaliação do Jean.
