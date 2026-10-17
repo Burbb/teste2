@@ -1,0 +1,304 @@
+{
+ "relatorio": [
+  {
+   "nome": "saudavel-1280x720",
+   "janela": "1280×720",
+   "medida": {
+    "estado": {
+     "vida": 146,
+     "limite": 146,
+     "saudavel": 146,
+     "bloqueio": "nenhum"
+    },
+    "topo": {
+     "preenchido": 146,
+     "bloqueado": 0,
+     "numero": "146/146"
+    },
+    "barra_vida_px": 242,
+    "barra_recurso_px": 242,
+    "etiqueta": "—",
+    "etiqueta_inteira": null,
+    "carta": null
+   }
+  },
+  {
+   "nome": "limite-1280x720",
+   "janela": "1280×720",
+   "medida": {
+    "estado": {
+     "vida": 104,
+     "limite": 104,
+     "saudavel": 146,
+     "bloqueio": "−42: Corte profundo −10% (−15), Queimadura grave −12% (−15), Fome −10% (−12)"
+    },
+    "topo": {
+     "preenchido": 104,
+     "bloqueado": 42,
+     "numero": "104/146"
+    },
+    "barra_vida_px": 242,
+    "barra_recurso_px": 242,
+    "etiqueta": "−42 de vida máxima",
+    "etiqueta_inteira": true,
+    "carta": null
+   },
+   "motivo_da_pocao": "Sua vida já está no limite de agora (104 de 146): Corte profundo, Queimadura grave e a fome bloqueiam o resto."
+  },
+  {
+   "nome": "abaixo-1280x720",
+   "janela": "1280×720",
+   "medida": {
+    "estado": {
+     "vida": 62,
+     "limite": 104,
+     "saudavel": 146,
+     "bloqueio": "−42: Corte profundo −10% (−15), Queimadura grave −12% (−15), Fome −10% (−12)"
+    },
+    "topo": {
+     "preenchido": 62,
+     "bloqueado": 42,
+     "numero": "62/146"
+    },
+    "barra_vida_px": 242,
+    "barra_recurso_px": 242,
+    "etiqueta": "−42 de vida máxima",
+    "etiqueta_inteira": true,
+    "carta": null
+   },
+   "dica": "Vida 62 de 104\n104 é o limite agora: uma cura comum não passa dele.\n42 bloqueados na vida máxima:\nCorte profundo −10% (−15)\nQueimadura grave −12% (−15)\nFome −10% (−12)\nSaudável: 146. Um ferimento devolve a sua parte quando sara (descansando) ou na Curandeira; a bandagem só evita a infecção. A fome devolve a dela quando você come."
+  },
+  {
+   "nome": "saudavel-1500x950",
+   "janela": "1500×950",
+   "medida": {
+    "estado": {
+     "vida": 146,
+     "limite": 146,
+     "saudavel": 146,
+     "bloqueio": "nenhum"
+    },
+    "topo": {
+     "preenchido": 146,
+     "bloqueado": 0,
+     "numero": "146/146"
+    },
+    "barra_vida_px": 302,
+    "barra_recurso_px": 302,
+    "etiqueta": "—",
+    "etiqueta_inteira": null,
+    "carta": null
+   }
+  },
+  {
+   "nome": "limite-1500x950",
+   "janela": "1500×950",
+   "medida": {
+    "estado": {
+     "vida": 104,
+     "limite": 104,
+     "saudavel": 146,
+     "bloqueio": "−42: Corte profundo −10% (−15), Queimadura grave −12% (−15), Fome −10% (−12)"
+    },
+    "topo": {
+     "preenchido": 104,
+     "bloqueado": 42,
+     "numero": "104/146"
+    },
+    "barra_vida_px": 302,
+    "barra_recurso_px": 302,
+    "etiqueta": "−42 de vida máxima",
+    "etiqueta_inteira": true,
+    "carta": null
+   },
+   "motivo_da_pocao": "Sua vida já está no limite de agora (104 de 146): Corte profundo, Queimadura grave e a fome bloqueiam o resto."
+  },
+  {
+   "nome": "abaixo-1500x950",
+   "janela": "1500×950",
+   "medida": {
+    "estado": {
+     "vida": 62,
+     "limite": 104,
+     "saudavel": 146,
+     "bloqueio": "−42: Corte profundo −10% (−15), Queimadura grave −12% (−15), Fome −10% (−12)"
+    },
+    "topo": {
+     "preenchido": 62,
+     "bloqueado": 42,
+     "numero": "62/146"
+    },
+    "barra_vida_px": 302,
+    "barra_recurso_px": 302,
+    "etiqueta": "−42 de vida máxima",
+    "etiqueta_inteira": true,
+    "carta": null
+   },
+   "dica": "Vida 62 de 104\n104 é o limite agora: uma cura comum não passa dele.\n42 bloqueados na vida máxima:\nCorte profundo −10% (−15)\nQueimadura grave −12% (−15)\nFome −10% (−12)\nSaudável: 146. Um ferimento devolve a sua parte quando sara (descansando) ou na Curandeira; a bandagem só evita a infecção. A fome devolve a dela quando você come."
+  },
+  {
+   "nome": "pocao",
+   "janela": "1280×720",
+   "antes": {
+    "estado": {
+     "vida": 93,
+     "limite": 104,
+     "saudavel": 146,
+     "bloqueio": "−42: Corte profundo −10% (−15), Queimadura grave −12% (−15), Fome −10% (−12)"
+    },
+    "topo": {
+     "preenchido": 93,
+     "bloqueado": 42,
+     "numero": "93/146"
+    },
+    "barra_vida_px": 242,
+    "barra_recurso_px": 242,
+    "etiqueta": "−42 de vida máxima",
+    "etiqueta_inteira": true,
+    "carta": null
+   },
+   "em_voce": "Poção de Vida Em você 93/146 · cura até 104 Em Morel caído, não luta Cancelar",
+   "depois": {
+    "estado": {
+     "vida": 104,
+     "limite": 104,
+     "saudavel": 146,
+     "bloqueio": "−42: Corte profundo −10% (−15), Queimadura grave −12% (−15), Fome −10% (−12)"
+    },
+    "topo": {
+     "preenchido": 104,
+     "bloqueado": 42,
+     "numero": "104/146"
+    },
+    "barra_vida_px": 242,
+    "barra_recurso_px": 242,
+    "etiqueta": "−42 de vida máxima",
+    "etiqueta_inteira": true,
+    "carta": null
+   },
+   "cura_obedece_o_limite": "sim (93 → 104, limite 104)"
+  },
+  {
+   "nome": "luta",
+   "janela": "1280×720",
+   "antes": {
+    "estado": {
+     "vida": 62,
+     "limite": 104,
+     "saudavel": 146,
+     "bloqueio": "−42: Corte profundo −10% (−15), Queimadura grave −12% (−15), Fome −10% (−12)"
+    },
+    "topo": null,
+    "barra_vida_px": 0,
+    "barra_recurso_px": 0,
+    "etiqueta": "−42 de vida máxima",
+    "etiqueta_inteira": true,
+    "carta": {
+     "preenchido": 61.6,
+     "bloqueado": 41.7,
+     "numero": "62/146"
+    }
+   },
+   "numeros_na_carta": "62/146 → 46/146",
+   "depois": {
+    "estado": {
+     "vida": 46,
+     "limite": 104,
+     "saudavel": 146,
+     "bloqueio": "−42: Corte profundo −10% (−15), Queimadura grave −12% (−15), Fome −10% (−12)"
+    },
+    "topo": null,
+    "barra_vida_px": 0,
+    "barra_recurso_px": 0,
+    "etiqueta": "−42 de vida máxima",
+    "etiqueta_inteira": true,
+    "carta": {
+     "preenchido": 45.7,
+     "bloqueado": 41.7,
+     "numero": "46/146"
+    }
+   }
+  },
+  {
+   "nome": "curandeira",
+   "janela": "1280×720",
+   "antes": {
+    "estado": {
+     "vida": 91,
+     "limite": 131,
+     "saudavel": 146,
+     "bloqueio": "−15: Corte profundo −10% (−15)"
+    },
+    "topo": {
+     "preenchido": 91,
+     "bloqueado": 15,
+     "numero": "91/146"
+    },
+    "barra_vida_px": 242,
+    "barra_recurso_px": 242,
+    "etiqueta": "−15 de vida máxima",
+    "etiqueta_inteira": true,
+    "carta": null
+   },
+   "depois": {
+    "estado": {
+     "vida": 106,
+     "limite": 146,
+     "saudavel": 146,
+     "bloqueio": "nenhum"
+    },
+    "topo": {
+     "preenchido": 106,
+     "bloqueado": 0,
+     "numero": "106/146"
+    },
+    "barra_vida_px": 242,
+    "barra_recurso_px": 242,
+    "etiqueta": "—",
+    "etiqueta_inteira": null,
+    "carta": null
+   }
+  },
+  {
+   "nome": "equipar",
+   "janela": "1280×720",
+   "antes": {
+    "estado": {
+     "vida": 91,
+     "limite": 131,
+     "saudavel": 146,
+     "bloqueio": "−15: Corte profundo −10% (−15)"
+    },
+    "topo": {
+     "preenchido": 91,
+     "bloqueado": 15,
+     "numero": "91/146"
+    },
+    "barra_vida_px": 242,
+    "barra_recurso_px": 242,
+    "etiqueta": "−15 de vida máxima",
+    "etiqueta_inteira": true,
+    "carta": null
+   },
+   "depois": {
+    "estado": {
+     "vida": 91,
+     "limite": 154,
+     "saudavel": 171,
+     "bloqueio": "−17: Corte profundo −10% (−17)"
+    },
+    "topo": {
+     "preenchido": 91,
+     "bloqueado": 17,
+     "numero": "91/171"
+    },
+    "barra_vida_px": 242,
+    "barra_recurso_px": 242,
+    "etiqueta": "−17 de vida máxima",
+    "etiqueta_inteira": true,
+    "carta": null
+   }
+  }
+ ],
+ "erros": []
+}

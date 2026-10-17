@@ -5,6 +5,12 @@
 (() => {
   const { h, esconderDica, ESPACOS, NOME_ESPACO } = Telas;
 
+  /** A vida do herói como no topo e na carta (vida/saudável); com ferimentos ou fome, o limite da cura junto, nomeado. */
+  function vidaHeroi(heroi) {
+    const vb = heroi.vida_bloqueio;
+    return vb ? `${heroi.hp}/${vb.saudavel} · cura até ${vb.limite}` : `${heroi.hp}/${heroi.max_hp}`;
+  }
+
   /** A poção com a comitiva por perto: em quem usar? (só fora de combate) */
   function menuUso(ancora, b) {
     fecharMenuItem();
@@ -14,7 +20,7 @@
     const m = document.createElement("div");
     m.className = "menu-item m-janela menu-uso";
     m.innerHTML = `<b>${h(b.nome)}</b>
-      ${linha("Em você", `${heroi.hp}/${heroi.max_hp}`, b.motivo, 'data-em=""')}
+      ${linha("Em você", vidaHeroi(heroi), b.motivo, 'data-em=""')}
       ${b.alvos.map((a) => linha(`Em ${h(a.nome)}`, a.ferido ? h(a.caido) : `${a.hp}/${a.max_hp}`, a.motivo, `data-em="${h(a.id)}"`)).join("")}
       <button type="button" data-em="-" class="secundaria">Cancelar</button>`;
     document.body.appendChild(m);

@@ -5,10 +5,12 @@ const { pct } = Telas;
 /** Uma barra. Com `chave`, ela sai da largura que estava na tela (larguraViva): um estado novo no meio da animação
  *  (a poção e, logo depois, outra mudança) continua de onde a barra está, em vez de saltar para o fim. Parada no lugar
  *  certo (a menos de meio ponto: o arredondamento do pixel), sai exatamente dele e não se mexe. */
-function barra(classe, atual, maximo, anterior, chave) {
+function barra(classe, atual, maximo, anterior, chave, bloqueado = 0) {
   const alvo = pct(atual, maximo), viva = chave ? larguraViva[chave] : undefined;
   const de = viva !== undefined ? (Math.abs(viva - alvo) < 0.5 ? alvo : viva) : anterior === undefined ? alvo : pct(anterior, maximo);
-  return `<span class="barra-px ${classe}"${chave ? ` data-chave="${chave}"` : ""} data-alvo="${alvo}"><span class="rastro" style="width:${de}%"></span><span class="enchimento" style="width:${de}%"></span></span>`;
+  // bloqueado: a parte do máximo que uma penalidade tira (a vida do herói com ferimentos ou fome), no fim da barra
+  const bloqueio = bloqueado > 0 ? `<span class="bloqueio" style="width:${pct(bloqueado, maximo)}%"></span>` : "";
+  return `<span class="barra-px ${classe}"${chave ? ` data-chave="${chave}"` : ""} data-alvo="${alvo}"><span class="rastro" style="width:${de}%"></span><span class="enchimento" style="width:${de}%"></span>${bloqueio}</span>`;
 }
 const larguraViva = {};
 /** Antes de redesenhar um painel: a largura que cada barra com chave mostra agora, em %. Medida contra o lado de dentro
@@ -198,13 +200,24 @@ function desenharHud(h, antes) {
   const pocoes = [h.pocoes ? "pocao" : "frasco_vazio"];
   Sensacao.vidaDoHeroi(h.hp, h.max_hp, h.vida_por_um_fio);
   guardarLarguras($("#hud-linha"));
-  const feridas = h.ferimentos.length ? `<div class="recurso alerta" data-rec="feridas" ${Telas.dica(h.ferimentos.map((f) => `<b>${esc(f.nome)}</b><div class="bonus pior">${esc((f.explica || [""])[0])}</div>`).join("") + '<div class="rodape">Detalhes no painel do herói, à esquerda.</div>')}><div class="icones">${spr("gota", 2)}</div><div class="qtd">${h.ferimentos.length}</div></div>` : "";
+  // Ferimentos e fome tiram parte da vida máxima (o motor: vida_bloqueio): a barra mede a vida saudável, com a parte
+  // bloqueada no fim, e o número é vida/saudável. O quanto e por quê ficam na linha das condições (a coluna dos números
+  // e as barras não mudam de tamanho quando o bloqueio entra ou sai) e na dica da vida.
+  const vb = h.vida_bloqueio, vidaMax = vb ? vb.saudavel : h.max_hp;
+  const dicaVida = () => (vb ? Telas.dica(`<b>Vida ${h.hp} de ${vb.limite}</b><div>${esc(vb.dica[0])}</div>` +
+    `<div class="bonus pior">${vb.bloqueado} bloqueados na vida máxima:<br>${vb.fontes.map((f) => `${esc(f.nome)} −${f.pct}% (−${f.perda})`).join("<br>")}</div>` +
+    `<div class="rodape">${esc(vb.dica[1])}</div>`) : Telas.dica("Vida", true));
+  const bloqueioVida = vb ? `<span class="condicao bloqueio-vida" ${dicaVida()}><i class="amostra"></i>${spr("cadeado", 1)}−${vb.bloqueado} de vida máxima</span>` : "";
+  const feridas = h.ferimentos.length ? `<div class="recurso alerta" data-rec="feridas" ${Telas.dica(h.ferimentos.map((f) => `<b>${esc(f.nome)}</b><div class="bonus pior">${esc((f.explica || [""])[0])}</div>`).join("") + '<div class="rodape">Detalhes no painel do herói, à esquerda.</div>')}><div class="icones">${spr("gota", 2)}</div><div class="qtd">${h.ferimentos.length}</div></div>`
+    // sem ferimento, o lugar da gota fica guardado (invisível): as barras não mudam de comprimento quando um ferimento
+    // chega ou sara (a hachura da vida bloqueada já mostra a mudança; o conjunto não encolhe junto)
+    : `<div class="recurso reserva" aria-hidden="true"><div class="icones">${spr("gota", 2)}</div><div class="qtd">0</div></div>`;
   $("#hud-linha").innerHTML = `
     <div class="hud-retrato" title="${esc(h.titulo)} nível ${h.nivel}">${Icones.cabeca(h.classe) || spr(h.classe, 3)}<span class="nivel">${h.nivel}</span></div>
     <div class="hud-vitais">
-      <div class="vital" data-vital="hp" ${Telas.dica("Vida", true)}>${Icones.vital("Vida") || spr("coracao", 1)}${barra("vida", h.hp, h.max_hp, antes ? antes.hp : undefined, "hud-hp")}<span class="num">${h.hp}/${h.max_hp}</span></div>
+      <div class="vital" data-vital="hp" ${dicaVida()}>${Icones.vital("Vida") || spr("coracao", 1)}${barra("vida", h.hp, vidaMax, antes ? antes.hp : undefined, "hud-hp", vb ? vb.bloqueado : 0)}<span class="num">${h.hp}/${vidaMax}</span></div>
       <div class="vital" data-vital="rec" ${Telas.dica(esc(h.recurso), true)}>${Icones.vital(h.recurso) || spr(RECURSO_ICONE[h.recurso] || "estrela", 1)}${barra(RECURSO_BARRA[h.recurso] || "mana", h.rec, h.max_rec, antes ? antes.rec : undefined, "hud-rec")}<span class="num">${h.rec}/${h.max_rec}</span></div>
-      <div class="hud-condicoes">${(h.condicoes || []).map((c) => `<span class="condicao${c.grave ? " grave" : ""}" data-condicao="${esc(c.id)}" ${Telas.dica(`<b>${esc(c.texto)}</b>${c.dica.map((l) => `<div>${esc(l)}</div>`).join("")}`)}>${spr(c.icone, 1)}${esc(c.texto)}</span>`).join("")}</div>
+      <div class="hud-condicoes">${bloqueioVida}${(h.condicoes || []).map((c) => `<span class="condicao${c.grave ? " grave" : ""}" data-condicao="${esc(c.id)}" ${Telas.dica(`<b>${esc(c.texto)}</b>${c.dica.map((l) => `<div>${esc(l)}</div>`).join("")}`)}>${spr(c.icone, 1)}${esc(c.texto)}</span>`).join("")}</div>
     </div>
     <div class="hud-recursos">
       ${recurso("provisoes", comida, `${h.provisoes}<small>d</small>`, { alerta: h.provisoes <= 1, vazio: !h.provisoes, titulo: h.provisoes ? `Comida para ${Texto.plural(h.provisoes, "dia")}. Cada dia consome 1 (e cada companheiro come também).` : "Sem comida! Você vai passar fome." })}

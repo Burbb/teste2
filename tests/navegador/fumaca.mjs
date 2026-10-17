@@ -1591,10 +1591,13 @@ async function cenarioFogueira(browser) {
   const { page, erros, esperar } = await abrir(browser, url);
   try {
     await esperar('#prompt .escolha:has-text("Acampar")', 30000);
-    const hud = () => page.evaluate(() => ({ cond: document.querySelector(".hud-condicoes").innerText.trim(),
+    // a etiqueta da fome e, ao lado dela, a da vida máxima que a fome bloqueia (1.115.0), na linha das condições
+    const hud = () => page.evaluate(() => ({ cond: (document.querySelector('.hud-condicoes [data-condicao="fome"]') || { innerText: "" }).innerText.trim(),
+      bloqueio: (document.querySelector(".hud-condicoes .bloqueio-vida") || { innerText: "" }).innerText.trim(),
       alto: Math.round(document.querySelector("#hud").getBoundingClientRect().height), fome: !!document.querySelector(".hud-fome") }));
     const antes = await hud();
-    conferir(antes.cond === "Com fome" && !antes.fome, "a fome mora embaixo das barras (não em cima da vida)");
+    conferir(antes.cond === "Com fome" && /^−\d+ de vida máxima$/.test(antes.bloqueio) && !antes.fome,
+      "a fome mora embaixo das barras (não em cima da vida), com a vida máxima que ela bloqueia ao lado");
     await page.click('#prompt .escolha:has-text("Acampar")');
     await esperar(".fogueira-rodape", 20000);
     const rod = await page.textContent(".fogueira-rodape");
@@ -1643,7 +1646,8 @@ async function cenarioFogueira(browser) {
       await page.waitForTimeout(150);
     }
     const depois = await hud();
-    conferir(depois.cond === "" && depois.alto === antes.alto, "o amanhecer come a provisão: a fome some e o painel não muda de altura");
+    conferir(depois.cond === "" && depois.bloqueio === "" && depois.alto === antes.alto,
+      "o amanhecer come a provisão: a fome (e o bloqueio dela) some e o painel não muda de altura");
     conferir(await page.evaluate(() => !document.getElementById("cena").classList.contains("acampando") && !document.querySelector("#acampamento-pontos")),
       "depois de dormir, a cena do acampamento sai do topo");
   } finally {

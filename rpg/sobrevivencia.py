@@ -88,6 +88,38 @@ def fontes_penalidade(jogador):
     return fontes
 
 
+def vida_bloqueio(jogador):
+    """A vida máxima que as penalidades (ferimentos e fome) tiram agora, para a tela mostrar a barra inteira: o que o
+    herói teria saudável (base, talentos e equipamento: Jogador.totais), o limite de agora (max_hp, com os fatores
+    multiplicados e arredondados como em recalcular) e de onde vem cada parte, na ordem da conta. A perda de cada fonte
+    é a diferença que ela faz naquela ordem; a última absorve o arredondamento final, e a soma fecha com saudável −
+    limite. None sem bloqueio. Só lê: nada aqui muda a vida nem os atributos."""
+    totais, _ = jogador.totais()
+    saudavel = max(1, int(round(totais["max_hp"])))
+    if jogador.max_hp >= saudavel:
+        return None
+    fontes, valor = [], float(totais["max_hp"])
+    for nome, fator in fontes_penalidade(jogador).get("max_hp", []):
+        depois = valor * fator
+        fontes.append({"nome": nome, "pct": round((1 - fator) * 100), "perda": round(valor) - round(depois)})
+        valor = depois
+    if fontes:
+        fontes[-1]["perda"] += (saudavel - jogador.max_hp) - sum(f["perda"] for f in fontes)
+    bloqueado = saudavel - jogador.max_hp
+    # o que devolve cada parte (as regras de hoje: o ferimento sara com descanso ou na Curandeira, que devolve a parte
+    # dele também como vida; a bandagem só evita a infecção; a fome passa comendo)
+    devolve = []
+    if any(f["nome"] != "Fome" for f in fontes):
+        devolve.append("Um ferimento devolve a sua parte quando sara (descansando) ou na Curandeira; a bandagem só "
+                       "evita a infecção.")
+    if any(f["nome"] == "Fome" for f in fontes):
+        devolve.append("A fome devolve a dela quando você come.")
+    return {"saudavel": saudavel, "limite": jogador.max_hp, "bloqueado": bloqueado, "fontes": fontes,
+            "causas": tx.lista_natural([f["nome"] if f["nome"] != "Fome" else "a fome" for f in fontes]),
+            "dica": [f"{jogador.max_hp} é o limite agora: uma cura comum não passa dele.",
+                     f"Saudável: {saudavel}. {' '.join(devolve)}"]}
+
+
 def tem(jogador, fid):
     return any(f["id"] == fid for f in jogador.ferimentos)
 

@@ -244,6 +244,25 @@ Entra na prioridade **1B**, junto da clareza do consumo de recurso, antes dos pr
 - **Pendências:** a linha "Em você" do uso de itens; integrar em `estado.py`, `paineis.js` e `batalha.js` se aprovado.
   O recurso (costelas, concussão) fica fora, como pedido.
 
+**Aprovado por Jean e integrado na 1.115.0** (17/10/2026):
+- **Motor:** `sobrevivencia.vida_bloqueio` (o saudável, o limite, as fontes na ordem da conta e as frases da dica);
+  o estado leva `heroi.vida_bloqueio`.
+- **Topo e carta:** a barra do herói mede a vida saudável, com o número `vida/saudável`. A etiqueta "−N de vida
+  máxima" (amostra da hachura e cadeado, com a dica das fontes) fica na linha das condições, não na coluna dos
+  números.
+- **Barras estáveis:** o lugar da gota dos ferimentos fica guardado sem ferimento, então as barras do topo têm o mesmo
+  comprimento com e sem penalidade (242 px em 1280×720, 302 px em 1500×950, medidos).
+- **Coerência dos textos:** "Em você" mostra `93/146 · cura até 104`. O motivo da poção no limite diz o limite e as
+  causas (antes: "Sua vida já está cheia." a 104/146). O efeito do Templo diz `(104/146: o limite de agora)`.
+- **Regras intactas:**
+  - a poção parou no limite (93 → 104);
+  - a Curandeira devolveu a parte do corte como vida (91 → 106);
+  - vestir a peça subiu o saudável e o limite (146/131 → 171/154);
+  - a carta só desce na luta.
+- **Gabarito:** mudou só a apresentação: o campo novo no estado, o efeito do Templo e o motivo da poção; nenhuma
+  partida, lance ou sorteio (`ferramentas/prototipos/hud/vida-bloqueada/LEIA-ME.md`, "A integração").
+- **Fica fora:** as reduções do máximo de Mana, Vigor e Foco. Falta Jean jogar.
+
 ### 1.8. Os comandos da luta na linguagem do seletor (integrados na 1.111.0)
 
 **Pedido de Jean (17/10/2026):** aproximar Atacar, Habilidades, Itens e Fugir do seletor D refinado (Clair Obscur como

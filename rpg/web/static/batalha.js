@@ -82,11 +82,19 @@ const Batalha = (() => {
 
   /** A vida na carta. A carta lembra o que mostra (_hp): quando o estado chega depois dos lances, só o que eles
    *  ainda não mostraram vira número (o Redemoinho não "apanha de novo" depois do roubo de vida). */
+  // A vida máxima que ferimentos e fome bloqueiam no herói (o motor: estado.heroi.vida_bloqueio), do último estado.
+  // Com ela, a barra da carta mede a vida saudável, e o fim dela fica bloqueado (02-hud.css, .bloqueio).
+  let bloqueioHeroi = null;
   function barra(carta, hp, max) {
     carta._hp = hp;
     const b = carta.querySelector(".carta-hp .barra-px");
     if (!b) return;
+    const bq = carta.dataset.uid === "j" ? bloqueioHeroi : null;
+    if (bq) max = bq.saudavel;  // o golpe e a cura trazem o limite de agora; a barra mede a saudável
     b.querySelectorAll(".rastro, .enchimento").forEach((x) => { x.style.width = pct(hp, max) + "%"; });
+    let z = b.querySelector(":scope > .bloqueio");
+    if (bq && !z) { z = document.createElement("span"); z.className = "bloqueio"; b.appendChild(z); }
+    if (z) { if (bq) z.style.width = pct(bq.bloqueado, bq.saudavel) + "%"; else z.remove(); }
     carta.querySelector(".carta-hp .num").textContent = hp > 0 ? `${hp}/${max}` : "caído";
   }
 
@@ -272,6 +280,7 @@ const Batalha = (() => {
 
   /** Desenha (ou atualiza no lugar) as cartas a partir do estado do combate. */
   function desenhar(cb, heroi, replay) {
+    bloqueioHeroi = (heroi && heroi.vida_bloqueio) || null;
     if (!cb) {
       esconderFicha();  // a carta sob o mouse some com a arena; a ficha não pode ficar presa
       cancelAnimationFrame(acomodando);

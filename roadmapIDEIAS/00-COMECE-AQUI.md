@@ -3423,3 +3423,20 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   - vestir uma peça com +vida máxima;
   - a tela fecha com o estado, sem erro no console.
 - **Próximo:** Jean avaliar. Nada da 1C nem lote de arte.
+
+### 17/10/2026 (data do computador local) — Etapa 1B: a vida máxima bloqueada no jogo (1.115.0)
+
+- **Pedido de Jean:** integrar a proposta aprovada (`e4fbd93`) com as barras do topo estáveis e a linha "Em você"
+  coerente.
+- **Feito:** `sobrevivencia.vida_bloqueio` no motor e `heroi.vida_bloqueio` no estado; a barra do herói mede a vida
+  saudável no topo e na carta. A etiqueta "−N de vida máxima" vai para a linha das condições, e o lugar da gota dos
+  ferimentos fica guardado (barras sempre de 242 px em 1280×720). "Em você", o motivo da poção e o Templo dizem o
+  limite pelo nome.
+- **Conferido** (`ferramentas/prototipos/hud/vida-bloqueada/integracao.mjs`):
+  - os três estados em 1280×720 e 1500×950;
+  - a poção para no limite;
+  - a luta (a carta só desce);
+  - a Curandeira devolve a parte do corte; vestir a peça;
+  - o movimento reduzido;
+  - a suíte, o pyflakes, o gabarito (só apresentação, investigado e atualizado) e a fumaça uma vez.
+- **Próximo:** Jean jogar. Fora: as reduções do recurso máximo; nada da 1C.

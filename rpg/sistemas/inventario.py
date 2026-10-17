@@ -176,6 +176,10 @@ class Inventario:
         if k == "pena_fenix":
             return PENA_FENIX_AGE_SOZINHA
         if k == "pocao_vida" and j.hp >= j.max_hp:
+            bloqueio = sobrevivencia.vida_bloqueio(j)  # cheia até o limite de agora: dizer qual, sem "cheia" a 104/146
+            if bloqueio:
+                return (f"Sua vida já está no limite de agora ({j.max_hp} de {bloqueio['saudavel']}): "
+                        f"{bloqueio['causas']} {'bloqueia' if len(bloqueio['fontes']) == 1 else 'bloqueiam'} o resto.")
             return "Sua vida já está cheia."
         if k == "tonico" and j.rec >= j.max_rec:
             return f"{j.nome_recurso} já está no máximo."

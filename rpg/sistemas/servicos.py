@@ -152,6 +152,7 @@ class Servicos:
         campanha é grátis (templo_gratis); o da comitiva, não."""
         j = self.j
         precisam = [(None, "você", j.max_hp - j.hp, j.max_hp)] if j.hp < j.max_hp else []
+        bloqueio = sobrevivencia.vida_bloqueio(j)  # o templo cura até o limite de agora, não até a vida saudável
         precisam += [(m, comitiva.nome(m["id"]), m["max_hp"] - m["hp"], m["max_hp"])
                      for m in comitiva.junto(self) if m["hp"] < m["max_hp"] or m["ferido"]]
         opcoes = []
@@ -160,7 +161,8 @@ class Servicos:
             preco = 0 if gratis else self.preco(max(1, falta // 2))
             meta = {"predio": "templo", "servico": "templo",
                     "curto": "Primeiro atendimento — grátis" if gratis else f"Cuidar de {quem}", "preco": preco,
-                    "efeito": f"+{falta} de vida ({maximo}/{maximo})" + (", de pé de novo" if m and m["ferido"] else ""),
+                    "efeito": (f"+{falta} de vida ({maximo}/{bloqueio['saudavel']}: o limite de agora)" if m is None and bloqueio
+                               else f"+{falta} de vida ({maximo}/{maximo})") + (", de pé de novo" if m and m["ferido"] else ""),
                     **self.motivo_pagar(preco)}
             if m:
                 meta["alvo"] = m["id"]

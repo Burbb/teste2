@@ -49,6 +49,8 @@ _heroi = estado_web.heroi
 
 def heroi(g):
     d = _heroi(g)
+    if "vida_bloqueio" in d:  # o jogo já manda (1.115.0, sobrevivencia.vida_bloqueio): fica o dele
+        return d
     b = vida_bloqueio(g.j)
     if b:
         d["vida_bloqueio"] = b
