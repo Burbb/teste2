@@ -70,7 +70,7 @@ varinha, gibão e botas já receberam arte trabalhada; conferir as lacunas reais
 | Etapa | Próximas entregas | Situação |
 |---|---|---|
 | **1A** | Concluir candidatos de cabeça/capuz e luvas da família de couro | Pedido enviado; ainda depende da proposta e avaliação |
-| **1B** | Sincronizar o consumo visual de Mana/Vigor/Foco com o início da habilidade, antes das consequências | Prioridade de clareza; relato ainda precisa de reprodução |
+| **1B** | Sincronizar o consumo visual de Mana/Vigor/Foco com o início da habilidade e mostrar a vida máxima bloqueada por ferimentos | Prioridade de clareza; reprodução e protótipo |
 | **1C** | Prototipar dado/tirinha mais visíveis, iniciativa, passagem dos turnos e consulta aos testes de atributos | Direção aprovada; apresentação a avaliar |
 | **1D** | Completar equipamentos e ícones de atributos, HP/recursos, ouro/flechas/bolsa, navegação/mapa, interface, talentos, mobs e pets | Lotes pequenos; habilidades/estados articulados com a etapa 8 |
 | **2** | Level up e celebrações, Grimório aberto, livro narrativo da capela e criação de personagem | Proposta |
@@ -92,6 +92,11 @@ mudar contas ou reações. Dado e tirinha preservados em uma apresentação mais
 entrada e indicador compacto enquanto vale; “Turno N” breve e número discreto. Evitar bloqueios, avisos sobrepostos
 e contagem paralela. Percepção e Destreza são testes derivados: mostrar bônus e composição na ficha detalhada,
 junto dos demais testes, usando dados do motor; não criar novos atributos distribuíveis.
+
+**Vida máxima reduzida:** no protótipo de 1B, distinguir vida atual, dano recuperável e capacidade bloqueada pelo
+ferimento. A barra pode usar a capacidade saudável como referência; “45/65” com limite atual 45 deve mostrar os 20
+bloqueados e explicar a restrição, sem sugerir que uma cura comum os recupera. Valores vêm do motor e acompanham
+equipamentos, nível e penalidades reais. Detalhes no item 1.7 do plano 23; não altera regras de cura ou tratamento.
 
 **Hipóteses guardadas:** reforçar atributos físicos e encantar uma propriedade; poucos materiais encontrados no
 mundo; investigar reforços iniciais garantidos e risco mais tarde, inicialmente sem destruir a peça ou perder

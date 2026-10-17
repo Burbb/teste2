@@ -3174,3 +3174,15 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   ficha e no mercado em 32, no cartão do saque com o 64 derivado e nas telas inteiras, em 1500×950 e 1280×720, sem
   erro no console. Verificações em `couro2-aseprite/logs/verificacoes.log`.
 - **Continua como está no jogo:** os sprites antigos. Próximo: a avaliação do Jean.
+
+### 17/10/2026 (Brasília) — Plano: mostrar a capacidade de vida bloqueada pelo ferimento
+
+- **Pedido de Jean:** quando um ferimento reduz a vida máxima, manter perceptível a capacidade saudável na barra,
+  inclusive quando o herói está cheio até o limite reduzido (exemplo: 45 de 65, com limite atual 45).
+- **Direção registrada:** no item 1.7 do plano 23 e no resumo de `docs/ROADMAP.md`, como parte da prioridade 1B:
+  distinguir preenchimento, dano recuperável e capacidade bloqueada no fim. A área bloqueada precisa de aparência
+  própria e explicação, não apenas espaço vazio. Se mostrar 45/65, acompanhar do limite atual ou da redução.
+- **Limites:** números e causas reais do motor, referência acompanhando equipamento/nível/penalidades; não mudar
+  cura, tratamento ou estado do personagem. Conferir demais penalidades antes de atribuir toda redução a ferimentos.
+  Protótipo e formato final ainda serão avaliados.
+- **Escopo:** só documentação; nenhuma implementação ou teste de jogo executado nesta atualização.

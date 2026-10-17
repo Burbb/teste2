@@ -34,7 +34,7 @@ os usos dos sprites estejam migrados. Conferir `Icones` e os catálogos antes de
 | Ordem | Entrega | Situação e limite |
 |---|---|---|
 | 1A | Concluir o lote de cabeça/capuz e luvas de couro | Pedido em andamento; proposta primeiro, integração após avaliação |
-| 1B | Corrigir a sequência visual do consumo de recurso nas habilidades | Prioridade de clareza; reproduzir antes de corrigir |
+| 1B | Corrigir a sequência visual do consumo de recurso e mostrar o bloqueio de vida máxima por ferimentos | Prioridade de clareza; reproduzir e avaliar a apresentação |
 | 1C | Prototipar dado mais visível, iniciativa e indicação dos turnos; facilitar consulta aos testes de atributos | Direção aprovada; composição e movimento ainda serão avaliados |
 | 1D | Retomar os lotes de equipamentos e demais ícones | Pequenos grupos por função; aproveitar os componentes aprovados |
 | 2–9 | Telas, serviços, cenários, habilidades e campanha | Sequência detalhada abaixo |
@@ -171,6 +171,50 @@ Esses números são constatação da versão consultada, não valores para copia
 reais do motor, incluindo penalidades. Explicar a relação com os atributos e o nível, sem prometer que cada +1 de
 Agilidade dá sempre +1 em todo teste. Preservar a regra do d20 e as exceções de 1/20 naturais.
 
+### 1.7. Vida máxima reduzida por ferimentos
+
+**Pedido adicional de Jean (17/10/2026):** tornar visível a capacidade de vida perdida por ferimento. A barra deve
+poder estar cheia até o limite atual sem parecer que o personagem está com toda a sua capacidade saudável.
+Exemplo sugerido: 45 de vida, limite atual de 45, capacidade sem a penalidade de 65.
+
+**Direção para o protótipo:** a largura útil representa a capacidade sem as penalidades de vida máxima em questão;
+dentro dela, distinguir três situações:
+
+| Parte da barra | Significado |
+|---|---|
+| Preenchida | Vida que o personagem tem agora |
+| Vazia e recuperável | Dano que pode ser curado até o limite atual |
+| Bloqueada, no fim | Capacidade indisponível enquanto o ferimento/penalidade durar |
+
+A parte bloqueada precisa de um tratamento próprio (por exemplo, hachura, tom dessaturado e marca de limite), além
+de cor, para não parecer apenas dano comum. Definir o desenho no protótipo, com a linguagem da HUD atual.
+
+| Exemplo | Vida atual | Limite atual | Capacidade sem a penalidade | Recuperável por cura | Bloqueada |
+|---|---|---|---|---|---|
+| Cheio até o limite do ferimento | 45 | 45 | 65 | 0 | 20 |
+| Ferido e também com dano | 30 | 45 | 65 | 15 | 20 |
+| Sem penalidade nem dano | 65 | 65 | 65 | 0 | 0 |
+
+Jean sugeriu “45/65” mesmo quando cheio até o limite. Esse formato pode ser testado, **acompanhado da indicação
+“−20 de vida máxima” ou “Limite atual: 45”** e da área bloqueada, para não prometer uma cura impossível.
+A dica deve explicar vida atual, limite atual, capacidade sem a penalidade e a causa; o texto definitivo e sua
+posição ainda dependem de avaliação. Uma barra apenas vazia com “45/65” não comunica sozinha a restrição.
+
+- Os limites e a causa vêm do motor. A capacidade de referência acompanha nível, equipamentos, talentos e as
+  regras atuais; não é um valor fixo da criação do personagem nem uma reconstrução aproximada na interface.
+- Conferir fome e outras penalidades acumuladas antes de decidir quais entram na capacidade de referência.
+  A soma visual deve explicar os valores reais, sem atribuir todo bloqueio a um único ferimento por suposição.
+- Conferir as barras e números do topo, da carta do herói e dos demais contextos que apresentem sua vida.
+  Não aplicar automaticamente a mesma representação a inimigos, pets e companheiros sem requisito e dados.
+- A cura comum preenche só a parte recuperável; a apresentação não muda as regras de cura, tratamento ou vida
+  concedida ao remover uma penalidade. Recurso Mana/Vigor/Foco não é abrangido automaticamente por este pedido.
+- Conferir dano, cura no limite, tratamento, fome se aplicável, troca de equipamento, evolução e salvar/carregar;
+  janela baixa, teclado/dicas e movimento reduzido.
+- Preservar o estado após cada evento e evitar pulos ou animações de “ganho de vida” sem ganho real.
+
+Entra na prioridade **1B**, junto da clareza do consumo de recurso, antes dos protótipos de avisos de 1C.
+Ainda é uma direção documentada: não houve implementação nem teste do protótipo nesta atualização.
+
 ## 2. Telas de leitura, criação e celebrações
 
 - **Subida de nível:** preservar a boa organização das informações, redesenhando o acabamento para a linguagem atual.
@@ -273,7 +317,7 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
 
 1. Conferir o resultado do lote de cabeça/capuz e luvas já solicitado.
 2. Integrar apenas os desenhos aprovados.
-3. Reproduzir e corrigir a percepção atrasada do custo de recurso (1B).
+3. Reproduzir e corrigir a percepção atrasada do custo de recurso e apresentar o bloqueio de vida máxima por ferimentos (1B).
 4. Prototipar os avisos e a consulta aos testes (1C), sem ampliar regras.
 5. Retomar os lotes de ícones (1D) e depois a etapa 2.
 
