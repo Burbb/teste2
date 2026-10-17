@@ -185,6 +185,8 @@ function mostrarOpcoes(m) {
   if (!naVila) fecharVila();
   if (m.pergunta && !naVila) promptEl.appendChild(el("div", "pergunta-rotulo", esc(m.pergunta)));
   const lista = el("ol", "escolhas");
+  // as escolhas de um lugar selvagem (o motor marca a de explorar): as faixas de pincel (18-seletor-habilidades.css)
+  if (!emLuta && m.opcoes.some((o) => o.meta && o.meta.explorar)) lista.classList.add("faixas");
   if (emLuta && ehAcaoDaLuta(m)) { lista.classList.add("acoes-combate"); Batalha.vez("j"); }
   if (emLuta && m.opcoes.some((o) => o.meta && o.meta.alvo)) {
     Batalha.alvos(m.opcoes, (i) => responder(m.id, i));
@@ -845,7 +847,8 @@ function rodaSubmenu(m) {
   abrirJanela(ancora, m.pergunta && /item/i.test(m.pergunta) ? "Itens" : "Habilidades", linhas, () => { if (voltar >= 0) voltarPergunta(); });
 }
 
-/** Mirando: os inimigos acendem; no alto da arena, o lembrete e o Voltar. As teclas 1, 2... escolhem o alvo. */
+/** Mirando: os inimigos acendem; o lembrete e o Voltar ficam na faixa dos comandos, ao lado da sua carta, onde a roda
+ *  estava (nenhuma carta entra nela: batalha.js, distribuir). As teclas 1, 2... escolhem o alvo. */
 function rodaMira(m) {
   prepararRoda();
   Batalha.alvos(m.opcoes, (i) => responder(m.id, i));
@@ -861,6 +864,10 @@ function rodaMira(m) {
     chip.appendChild(v);
   }
   rodaEl().appendChild(chip);
+  // no meio da faixa dos comandos, na altura da sua carta (sem passar do alto nem do pé da arena)
+  const g = geometriaHeroi(), meia = chip.offsetHeight / 2;
+  chip.style.left = Math.round(g.x + g.w * 1.06 + 12) + "px";
+  chip.style.top = Math.round(Math.max(6 + meia, Math.min(g.H - 6 - meia, g.y + g.h / 2))) + "px";
 }
 
 /** Os riscos de uma ação (a luz e a noite numa sala da capela): indicadores curtos com o ícone, a cor do tipo (custo,

@@ -246,7 +246,7 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   aparecessem juntos (`acomodarNomes`: sem cobrir rosto, fogo nem o Dormir). Com movimento reduzido, as chamas
   ficam paradas. A orientação do Dormir (D3) fica na faixa logo abaixo da cena, com a haste até o botão, como a dos
   prédios da vila.
-- `batalha.js` o palco da luta (o jeito de animar vem do motor: `anim` nos lances). Os avisos de passagem (números, faixas como o "AAARGH!", os selos dos estados) não moram nas cartas: nascem numa camada da página (`.avisos-luta`, 1.103.1), numa sombra do tamanho e no lugar da carta que os disparou, que a acompanha quadro a quadro; assim passam por cima da moldura do palco (que recorta o resto) e ficam dentro da janela. A sombra some com o último aviso e todas saem com a luta. A arena só cresce durante a luta e cresce devagar; quando uma carta entra ou ganha a linha de efeitos, as outras deslizam até o lugar novo (`acomodar`, desvio em `top`/`left` e em pixel inteiro: `transform` e `translate` são do foco e dos golpes) · `realce.js` cores dos termos de
+- `batalha.js` o palco da luta (o jeito de animar vem do motor: `anim` nos lances). Os avisos de passagem (números, faixas como o "AAARGH!", os selos dos estados) não moram nas cartas: nascem numa camada da página (`.avisos-luta`, 1.103.1), numa sombra do tamanho e no lugar da carta que os disparou, que a acompanha quadro a quadro; assim passam por cima da moldura do palco (que recorta o resto) e ficam dentro da janela. A sombra some com o último aviso e todas saem com a luta. A arena só cresce durante a luta e cresce devagar; quando uma carta entra ou ganha a linha de efeitos, as outras deslizam até o lugar novo (`acomodar`, desvio em `top`/`left` e em pixel inteiro: `transform` e `translate` são do foco e dos golpes). As áreas da arena (1.111.0) estão em "As lutas cheias", abaixo · `realce.js` cores dos termos de
   jogo (os nomes de habilidades e talentos chegam do motor no `glossario` do estado) · `sprites*.js`, `vista.js`, `mapa.js`, `som.js`
 - `sensacao.js` o peso dos momentos (parada no impacto, tremor, câmera lenta no golpe final...): as telas dizem o
   que aconteceu e perguntam a ele como aquilo se sente; os números ficam numa tabela só (`AJUSTES`). Os fatos vêm
@@ -326,6 +326,37 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   A conferência: `ferramentas/prototipos/hud/fotografar_seletor_d.mjs` com `VERSOES=atual RODADA=1` (as três classes
   com comitiva, o teste de 10 habilidades, as interações, a borda de baixo com o registro em várias rolagens) e
   `fotografar_itens_faixas.mjs` (o menu de Itens nas três classes, a bolsa vazia, a troca, a poção e a mira).
+- Os comandos da luta e as escolhas de um lugar selvagem na linguagem do seletor (1.111.0; o caminho, da proposta à
+  rodada 2, em `ferramentas/prototipos/hud/LEIA-ME.md`). As pontas e o meio das faixas são as mesmas peças do
+  seletor, declaradas em `18-seletor-habilidades.css` para `.roda-janela.seletor`, `#roda` e `#prompt`:
+  - *os comandos* (`15-hud-luta.css`, "a roda de ações"): Atacar, Habilidades, Itens e Fugir como faixas curtas de
+    pincel coladas à direita da carta do herói (`arcoDeBotoes`); tecla, ícone e nome numa peça só, sem nicho; o normal
+    num carvão quase opaco com um fio de luz no alto (a forma não some no cenário da noite); os estados do seletor
+    (marfim examinado, latão aberto, afundar, o fio e o anel do foco); com movimento reduzido, sem entrada nem afundar;
+  - *as cartas* (`15-hud-luta.css`): a vez do herói com uma aresta só de latão e a barra em cima; a vez de outro
+    pulsa a própria barra, sem anel por fora;
+  - *o aviso da cena na luta* ("Inimigos +1 nível", os do clima): a arena cresce 14 px embaixo só quando há aviso, e
+    ele fica no canto direito dessa faixa, sob os inimigos, fora do caminho dos comandos;
+  - *as escolhas de um lugar selvagem* (`18-seletor-habilidades.css`, no fim): o motor marca a opção de explorar
+    (`{"explorar": True}`, `Jogo.menu_selvagem`) e `escolhas.js` dá a classe `.faixas` à lista; nenhuma outra tela
+    recebe o estilo (mercado, confirmações, doca, caminhos, vila). As pontas escalam pela altura: a opção de duas
+    linhas (a ação da capela com os riscos embaixo) é uma pincelada só, com mais folga quando há riscos ou nota.
+- As lutas cheias (1.111.0): `batalha.js` (`distribuir`) divide a arena em três áreas, cada uma só sua: a sua fileira
+  (você em cima e a comitiva, o animal e os servos embaixo, sempre numa coluna), a faixa dos comandos (a roda e, na
+  mira, o lembrete com o Voltar, que `rodaMira` põe ao lado da sua carta, onde a roda estava; nenhuma carta entra ali:
+  `FAIXA_COMANDOS`) e a dos inimigos, à direita. Até três inimigos, uma coluna (a composição de sempre); com mais,
+  duas colunas só quando cabem fora da faixa dos comandos (janela larga), enchendo de cima para baixo e a da direita
+  primeiro (o reforço que entra vai para o fim; a luta não volta para uma coluna); senão, uma coluna mais alta, e a
+  arena cresce (`acomodar`). Numa arena estreita, a coluna dos inimigos cede (`--coluna`, mínimo 150 px) antes de
+  entrar na faixa. Quem sai no meio da luta (o ladrão que foge, o invocado que cai) deixa uma vaga do tamanho da carta
+  (`vagar`): ninguém salta sob o mouse enquanto você escolhe; a vaga fecha no próximo lance (`fecharVagas`). Quem foi
+  invocado e cai sai da arena depois de cair, dos dois lados (o servo do herói, o reforço que o guardião chama, que o
+  motor marca com `invocado`); os outros caídos ficam, apagados. Os maiores grupos reais (medidos com o robô de
+  `tests/arena.py`): 6 aliados (o necromante com a comitiva de 2, dois esqueletos da Legião de Ossos e o servo do Rei
+  dos Mortos) e 6 inimigos (o bando de caídos à noite com a comitiva e a escolta do xamã); a comitiva tem no máximo 2
+  companheiros (`comitiva/catalogo.py`, `LIMITE`). Em 1280×720, o caso mais cheio deixa ~160 px para o registro.
+  A conferência: `ferramentas/prototipos/hud/fotografar_lutas_cheias.mjs` (o jogo de antes, num checkout do commit
+  anterior, e o de agora, com os mesmos dados) e `comparar_lutas_cheias.py`.
 - A aba Vender do mercado (`telas/mercado.js`, 1.105.1): durante a visita, cada peça fica no espaço da grade em que
   estava (`arranjo`); vender deixa o espaço vazio, as outras não escorregam, e o que chega (a recompra, a peça que
   sai do corpo ao equipar) vai para o primeiro vazio. Cada peça tem uma ficha (`data-peca`) que o pedido de venda

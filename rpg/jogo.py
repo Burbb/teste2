@@ -570,7 +570,9 @@ class Jogo(Testes, Recompensas, Confronto, Inventario, Progressao, Tempo, Bestia
             opcoes.append((rotulo, f"cacar:{c['id']}", {"cacar": c["id"]}))
         opcoes += missoes.passagens(self)  # na capela: as salas vizinhas já vencidas (só a vista muda)
         if missoes.pode_explorar(self):  # dentro da capela, não: explorar a região é do lado de fora
-            opcoes.append(("Explorar a região" + (" (à noite é mais perigoso)" if self.noite else ""), "explorar"))
+            # a meta diz à tela que estas são as escolhas de um lugar selvagem (as faixas de pincel, na tela gráfica)
+            opcoes.append(("Explorar a região" + (" (à noite é mais perigoso)" if self.noite else ""), "explorar",
+                           {"explorar": True}))
         # Dentro da capela, acampar é sair primeiro (sair_para_acampar): a fogueira nunca fica dentro de uma sala.
         dentro = missoes.sala_atual(self) not in (None, "exterior")
         opcoes.append(("Sair e acampar" if dentro else "Acampar e descansar até o amanhecer", "acampar"))

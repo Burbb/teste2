@@ -3263,3 +3263,21 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   cartas inimigas; o jogo de hoje já faz isso. Entrega própria, a decidir.
 - **Continua no jogo:** os comandos, as cartas e as escolhas de hoje; versão sem mudança. Próximo: a avaliação final do
   Jean. Os tamanhos 40/48 e a integração dos capuzes e luvas continuam numa entrega separada.
+
+### 17/10/2026 (data do computador local) — Entrega: a HUD aprovada integrada e as lutas cheias (1.111.0)
+
+- **Pedido de Jean:** integrar o acabamento aprovado do `5795a9a` depois de resolver as lutas cheias (comandos sobre
+  cartas, mira cobrindo alvo), sem nova rodada estética.
+- **Feito:** os comandos em faixas, as cartas contidas, o aviso da cena separado e as escolhas de um lugar selvagem
+  em faixas, nas folhas do jogo (`15-hud-luta.css`, `18-seletor-habilidades.css`), sem depender do protótipo; a arena
+  em três áreas (`batalha.js`, `distribuir`: a fileira do herói numa coluna, a faixa dos comandos reservada, os
+  inimigos à direita, em duas colunas só onde cabem); a mira e o Voltar na faixa dos comandos; a vaga de quem sai no
+  meio da luta; quem foi invocado e cai sai da arena dos dois lados (antes, só do lado do herói). O motor ganhou dois
+  campos de apresentação: a opção de explorar marcada e o `invocado` no estado da luta.
+- **Os maiores grupos reais:** 6 aliados (necromante) e 6 inimigos (o bando de caídos); a comitiva tem no máximo 2.
+- **Conferido:** antes × depois com os mesmos dados (`ferramentas/prototipos/hud/fotografar_lutas_cheias.mjs`), 5 lutas
+  × 3 janelas e 6 telas de exploração × 4 janelas; nada cobre nada depois; menus, mira, Voltar, a saída e a entrada
+  simuladas e os comportamentos conferidos; sem erro no console. Suíte, fumaça, pyflakes e gabarito (atualizado: só
+  os dois campos novos mudaram, 915 linhas, nenhuma escolha, sorteio ou texto).
+- **Limite:** em 1280×720 com 5 ou 6 inimigos e efeitos, ~120 a 160 px de registro; o seletor rola dentro.
+- **Próximo:** a avaliação do Jean jogando; os capuzes e luvas (entrega seguinte).

@@ -230,6 +230,7 @@ def combate(g):
              **({"figura": c.figura} if getattr(c, "figura", None) else {})}
         if lado == "inimigo":
             d.update(nivel=c.nivel, chefe=c.chefe, unico=getattr(c, "unico", False), afixo=c.afixo,
+                     invocado=getattr(c, "invocado", False),
                      familia=c.familia, preparando=bool(c.carregando), ficha=_ficha_inimigo(g, c))
         return d
 

@@ -36,7 +36,7 @@ os usos dos sprites estejam migrados. Conferir `Icones` e os catálogos antes de
 
 | Ordem | Entrega | Situação e limite |
 |---|---|---|
-| 1A | Concluir o lote de cabeça/capuz e luvas de couro e tecido | 32 e 64 aprovados visualmente; 40, 48 e integração (com os saves antigos) pendentes, entrega separada |
+| 1A | Concluir o lote de cabeça/capuz e luvas de couro e tecido | 32 e 64 aprovados visualmente; 40, 48 e integração (com os saves antigos): ver o estado de referência |
 | 1B | Corrigir a sequência visual do consumo de recurso e mostrar o bloqueio de vida máxima por ferimentos | Prioridade de clareza; reproduzir e avaliar a apresentação |
 | 1C | Prototipar dado mais visível, iniciativa e indicação dos turnos; facilitar consulta aos testes de atributos | Direção aprovada; composição e movimento ainda serão avaliados |
 | 1D | Retomar os lotes de equipamentos e demais ícones | Pequenos grupos por função; aproveitar os componentes aprovados |
@@ -218,7 +218,7 @@ posição ainda dependem de avaliação. Uma barra apenas vazia com “45/65” 
 Entra na prioridade **1B**, junto da clareza do consumo de recurso, antes dos protótipos de avisos de 1C.
 Ainda é uma direção documentada: não houve implementação nem teste do protótipo nesta atualização.
 
-### 1.8. Protótipo: os comandos da luta na linguagem do seletor (pendente de avaliação)
+### 1.8. Os comandos da luta na linguagem do seletor (integrados na 1.111.0)
 
 **Pedido de Jean (17/10/2026):** aproximar Atacar, Habilidades, Itens e Fugir do seletor D refinado (Clair Obscur como
 referência de tratamento; o seletor do jogo como referência de implementação), com uma variação de acabamento contido
@@ -243,6 +243,31 @@ depois nas três janelas, de dia, à noite, com o bando (comitiva cheia e 5 lobo
 com 5 inimigos em 1280×720 e 1500×950, os comandos e a caixa da mira ficam sobre cartas inimigas (o jogo de hoje já
 faz isso); pede uma entrega própria. Detalhes no `LEIA-ME.md` de `ferramentas/prototipos/hud/` ("Rodada 2").
 Pendente: a avaliação final de Jean; nada entrou no jogo.
+
+**Aprovado por Jean (17/10/2026) e integrado na 1.111.0**, junto da solução das lutas cheias (o achado acima):
+- **No jogo, sem depender do protótipo:** os comandos em faixas (`15-hud-luta.css`, "a roda de ações"), o carvão mais
+  presente à noite, os estados, as cartas contidas, o aviso da cena numa faixa própria e as escolhas de um lugar
+  selvagem em faixas (`18-seletor-habilidades.css`, no fim; o motor marca a opção de explorar). As pontas de pincel
+  valem para o seletor, a roda e as escolhas. Nenhuma outra tela ganhou faixas.
+- **As lutas cheias:** aliados, comandos e inimigos em áreas próprias (`batalha.js`, `distribuir`): a sua fileira
+  sempre numa coluna, a faixa dos comandos reservada, os inimigos à direita, em duas colunas só onde cabem fora da
+  faixa (1920×1080), numa coluna mais alta nas janelas menores, e a arena cresce. A mira e o Voltar ficam na faixa dos
+  comandos. Quem sai no meio da luta deixa a vaga até o próximo lance. Quem foi invocado e cai sai da arena, dos dois
+  lados (antes só o servo do herói saía): os mortos de um guardião que invoca não se acumulam em cartas.
+- **Os maiores grupos reais** (o robô de `tests/arena.py`, 1.800 lutas): até 6 aliados (necromante com a comitiva de 2,
+  a Legião de Ossos e o Rei dos Mortos; a comitiva tem no máximo 2 companheiros, o cenário com três é artificial), até
+  6 inimigos num bando (caídos à noite com a comitiva e o xamã de escolta), até 4 vivos com um guardião que invoca (a
+  aranha-rainha chegou a 10 cartas numa luta longa antes desta entrega, com os mortos acumulados).
+- **Conferido** (`ferramentas/prototipos/hud/fotografar_lutas_cheias.mjs`, o jogo de antes num checkout do `5795a9a` e o
+  de agora, com os mesmos dados; registro no `LEIA-ME.md` de `ferramentas/prototipos/hud/`, "A integração"): 5 lutas
+  (poucos com um alvo derrotado, a noite com Erguer Servo, 5 lobos com a comitiva e o lobo do patrulheiro, o maior real
+  6 × 6, os nomes mais longos) em 1280×720, 1500×950 e 1920×1080; antes, os comandos (e às vezes a própria mira) cobriam
+  cartas em 7 das 9 combinações cheias; depois, nada cobre nada em nenhuma das 15. Abrir, alternar e fechar menus não mexe em carta nem
+  rolagem; a saída e a entrada SIMULADAS de um inimigo não mexem nas outras cartas; mouse, teclado, cliques depressa,
+  tecla segurada e movimento reduzido como antes (a roda agora não anima com movimento reduzido).
+- **Limite conhecido:** em 1280×720, numa luta de 5 ou 6 inimigos com os efeitos à mostra, a arena fica alta e sobram
+  ~120 a 160 px para o registro; o seletor de Habilidades abre com uma fileira à vista e rola dentro (como já fazia
+  quando faltava altura). Uma saída possível, ainda não proposta: os efeitos na linha do nome nas lutas cheias.
 
 ## 2. Telas de leitura, criação e celebrações
 

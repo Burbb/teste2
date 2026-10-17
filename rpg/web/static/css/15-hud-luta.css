@@ -2,18 +2,21 @@
    escuro, aresta fina, relevo discreto), sem a moldura pesada dos painéis. Disposição, ações e reações são as de
    03-batalha.css e 12-acoes-combate.css: dano, cura, fuga, derrota, proteção, contra-ataque, Revide, efeitos e golpe
    preparado. Cada estado tem forma, não só cor:
-     vez de alguém     barra de latão em cima e a marca ▸ antes do nome
-     sua carta, agindo a mesma barra, a carta à frente (o jogo a amplia) e o contorno claro
+     vez de alguém     barra de latão em cima e a marca ▸ antes do nome; a barra pulsa (latão ↔ latão claro)
+     sua carta, agindo a mesma barra e uma aresta só, de latão, com a carta à frente (o jogo a amplia) e uma sombra curta
      pode ser alvo     contorno tracejado
      alvo escolhido    contorno cheio claro e a seta ▼ do jogo
      fora da luta      aresta tracejada, apagada, com a caveira do jogo
      foco do teclado   anel claro por fora (como nos outros botões)
+   O acabamento contido (aprovado pelo Jean em 17/10/2026, ferramentas/prototipos/hud/LEIA-ME.md): a moldura dupla
+   dourada da sua vez virou uma aresta só, e o anel que piscava por fora na vez de alguém virou a barra pulsando dentro
+   da carta; as arestas de todas um tom mais perto da face, sem a sombra larga embaixo (a carta assenta no cenário).
    Prefixo ":root body" como em 14-hud.css. */
 
 :root body .carta {
   --lado-carta: inset 3px 0 0 #4a4e56;
-  --relevo-carta: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 1px 0 #000, 0 3px 6px rgba(0, 0, 0, 0.45);
-  border: 1px solid var(--aresta-face, #4a4e56); border-radius: 2px; padding: 5px 8px 6px 7px;
+  --relevo-carta: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 1px 0 rgba(0, 0, 0, 0.85), 0 2px 3px rgba(0, 0, 0, 0.35);
+  border: 1px solid #3d4047; border-radius: 2px; padding: 5px 8px 6px 7px;
   background: linear-gradient(rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.015) 45%, rgba(0, 0, 0, 0.2)), rgba(20, 21, 25, 0.94);
   box-shadow: var(--lado-carta), var(--relevo-carta); }
 /* o lado de cada um, pela marca à esquerda (latão: você; ferro-verde: a comitiva; ferrugem: o inimigo) e pela cor */
@@ -34,14 +37,15 @@
 :root body .carta-efeitos { border-top: 1px solid rgba(255, 255, 255, 0.07); }
 :root body .ef { border-width: 1px; border-radius: 2px; background: #0a0b0d; font-size: 14px; padding: 1px 4px 1px 2px; }
 
-/* vez: a barra de latão em cima e a marca ▸; o pulso do jogo vira um anel de latão que acende e apaga, sem tirar as
-   marcas (a animação do jogo troca a sombra inteira) */
-:root body .carta.vez { border-color: var(--latao); box-shadow: var(--lado-carta), inset 0 3px 0 var(--latao), var(--relevo-carta);
+/* vez: a barra de latão em cima e a marca ▸; o pulso é a própria barra (latão ↔ latão claro), dentro da carta, sem
+   tirar as marcas (a animação troca a sombra inteira) */
+:root body .carta.vez { border-color: #8a7038; box-shadow: var(--lado-carta), inset 0 3px 0 var(--latao), var(--relevo-carta);
   animation: vez-hud 1.2s steps(2) infinite; }
-@keyframes vez-hud { 50% { box-shadow: var(--lado-carta), inset 0 3px 0 var(--latao), 0 0 0 2px #000, 0 0 0 3px var(--latao); } }
+@keyframes vez-hud { 50% { box-shadow: var(--lado-carta), inset 0 3px 0 var(--latao-claro), var(--relevo-carta); } }
 :root body .carta.vez .carta-nome span::before { content: "▸ "; color: var(--latao-claro); }
-/* sua carta, na sua vez: à frente (o jogo a amplia), com contorno claro em vez do brilho dourado */
-:root body .carta.foco { animation: none; box-shadow: var(--lado-carta), inset 0 3px 0 var(--latao), 0 0 0 2px #000, 0 0 0 3px var(--latao-claro), 0 10px 22px rgba(0, 0, 0, 0.6); }
+/* sua carta, na sua vez: à frente (o jogo a amplia), com uma aresta de latão, a barra em cima e a sombra curta */
+:root body .carta.foco { border-color: var(--latao); animation: none;
+  box-shadow: var(--lado-carta), inset 0 3px 0 var(--latao), inset 0 0 0 1px rgba(242, 210, 122, 0.12), 0 1px 0 #000, 0 6px 12px rgba(0, 0, 0, 0.5); }
 :root body .carta.agindo { border-color: var(--latao-claro); }
 /* pode ser alvo: contorno tracejado (o piscar do jogo fica na aresta) */
 :root body .carta.alvejavel { outline: 1px dashed rgba(242, 210, 122, 0.7); outline-offset: 3px; }
@@ -52,41 +56,102 @@
 :root body .carta:focus-visible { outline: 2px solid var(--latao-claro); outline-offset: 3px; }
 
 /* ------------------------------------------------------------ a roda de ações */
-/* O medalhão vira um nicho de item: ferro escuro com o chanfro (luz em cima, sombra embaixo) e o fundo de carvão; o nome,
-   uma placa de carvão encaixada atrás do nicho (a sombra à esquerda); a tecla, um encaixe no canto do nicho, com o
-   número em latão (1.101.0, o acabamento aprovado da roda). O mouse clareia a aresta e acende a placa, com um fio de
-   latão de 2 px embaixo do nome; pressionado, o nicho e o nome afundam juntos; aberto, latão no nicho e na placa; o
-   foco do teclado, o anel claro de 2 px por fora; a tecla acende em latão no mouse e no foco, como a das opções. */
-:root body .roda-botao .rb-icone { width: 44px; height: 44px; border: 1px solid #3a3d43; border-radius: 2px;
-  background: radial-gradient(ellipse 70% 60% at 50% 40%, rgba(255, 255, 255, 0.05), transparent 70%), #0b0c0f;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), inset 0 -1px 0 rgba(0, 0, 0, 0.7), 0 1px 0 #000, 0 3px 6px rgba(0, 0, 0, 0.55); }
-:root body .roda-botao .rb-nome { margin-left: -1px; padding: 5px 12px 6px 10px; border: 1px solid #33363c; border-left: 0; border-radius: 0 2px 2px 0;
-  font-size: 14px; color: #e8dcc0; text-shadow: 0 1px 0 #000;
-  background: linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0) 55%, rgba(0, 0, 0, 0.18)), #15161a;
-  box-shadow: inset 4px 0 4px -2px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 2px 4px rgba(0, 0, 0, 0.45); }
-:root body .roda-botao .tecla { top: -1px; left: -1px; min-width: 15px; height: 15px; line-height: 14px; font-size: 11px;
-  color: var(--latao-claro); background: #08090b; border: 1px solid #3a3d43; border-width: 0 1px 1px 0; border-radius: 0 0 2px 0; box-shadow: none; }
-:root body .roda-botao:hover .rb-icone, :root body .roda-botao:focus-visible .rb-icone { transform: translateY(-2px); border-color: var(--aresta-viva, #6f737b);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 1px 0 #000, 0 5px 8px rgba(0, 0, 0, 0.55); }
-:root body .roda-botao:hover .rb-icone { border-color: #8a8f98;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), inset 0 0 12px rgba(201, 161, 74, 0.2), 0 1px 0 #000, 0 5px 9px rgba(0, 0, 0, 0.6); }
-:root body .roda-botao:hover .rb-nome { border-color: #7b8089; color: #fff4dc;
-  background: linear-gradient(rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04) 55%, rgba(0, 0, 0, 0.1)), #24262c;
-  box-shadow: inset 4px 0 4px -2px rgba(0, 0, 0, 0.8), inset 0 -2px 0 var(--latao), 0 2px 4px rgba(0, 0, 0, 0.45); }
-:root body .roda-botao:active .rb-icone { transform: translateY(1px); background: #08090b; border-color: #5a5e66; box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.9); }
-:root body .roda-botao:active .rb-nome { transform: translateY(1px); background: #111215; box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8); }
-/* a ação aberta (a janelinha de habilidades ou itens): latão no nicho e na placa, a barra à esquerda e o fio embaixo */
-:root body .roda-botao.ativo .rb-icone { border-color: var(--latao);
-  background: radial-gradient(ellipse 70% 60% at 50% 40%, rgba(201, 161, 74, 0.16), transparent 70%), #0d0d0f; }
-:root body .roda-botao.ativo .rb-nome { border-color: var(--latao); color: var(--latao-claro);
-  background: linear-gradient(rgba(201, 161, 74, 0.1), rgba(0, 0, 0, 0.15)), #17150f;
-  box-shadow: inset 3px 0 0 var(--latao), inset 0 -1px 0 var(--latao), 0 2px 4px rgba(0, 0, 0, 0.45); }
-:root body .roda-botao.ativo .tecla { color: #fff4dc; border-color: var(--latao); }
-:root body .roda-botao:focus-visible .rb-icone { outline: 2px solid var(--latao-claro); outline-offset: 2px; }
-:root body .roda-botao:focus-visible .rb-nome { color: #fff4dc; border-color: #7b8089;
-  background: linear-gradient(rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04) 55%, rgba(0, 0, 0, 0.1)), #24262c; }
-:root body .roda-botao:is(:hover, :focus-visible) .tecla { color: var(--latao-claro); border-color: var(--latao); }
-:root body .roda-botao:is([disabled], .bloqueada) .rb-icone, :root body .roda-botao:is([disabled], .bloqueada) .rb-nome { border-style: dashed; opacity: 0.6; }
+/* Os comandos da luta (Atacar, Habilidades, Itens, Fugir e, quando o motor oferece, Analisar) na linguagem do seletor
+   (18-seletor-habilidades.css), aprovados pelo Jean em 17/10/2026 (ferramentas/prototipos/hud/LEIA-ME.md, "Os comandos
+   da luta na linguagem do seletor" e a rodada 2). A disposição é a do jogo: o arco ")" colado à direita da carta do
+   herói (arcoDeBotoes, em escolhas.js), na faixa dos comandos que nenhuma carta ocupa (batalha.js, distribuir), a mesma
+   ordem, as mesmas teclas e a mesma área de clique (o botão inteiro). O acabamento:
+   - uma faixa curta de pincel por comando, o ::before do botão: um carvão quase opaco com um fio de luz no alto (o
+     normal é discreto, mas não some à noite), o grão de pincel e o degradê de volume, recortada pelas pontas do seletor
+     (as mesmas peças, declaradas no 18 também para #roda) e inclinada 2°. O desgaste fica nas pontas; o texto, o número
+     e o ícone ficam retos;
+   - a tecla, o ícone e o nome numa composição só, sobre a faixa: a tecla é o paralelogramo do seletor na ponta
+     esquerda, meio para fora dela; o ícone fica solto (sem o nicho preto, só a sombra de 1 px); o nome em marfim;
+   - os estados, os do seletor: examinado (mouse ou foco do teclado) marfim com texto escuro e a tecla em latão;
+     pressionado afunda 2 px e escurece; o foco do teclado tem ainda o fio de latão embaixo da faixa e o anel na tecla;
+     o menu aberto (Habilidades ou Itens) com a faixa de latão, a tecla de carvão e o nome escuro. Foco e aberto juntos:
+     a faixa de latão com o fio e o anel do foco por fora (o anel em marfim, que aparece sobre o latão);
+   - a entrada: cada faixa chega de 10 px em 140 ms, na ordem (o atraso de 35 ms de arcoDeBotoes); o botão vale desde o
+     primeiro quadro. Com movimento reduzido, sem deslocamento nem afundar.
+   O jogo não tem comando indisponível na roda: nada aqui inventa esse estado. */
+:root body #roda .roda-botao {
+  --cmd-fundo: rgba(50, 47, 52, 0.95);
+  isolation: isolate; gap: 5px; min-height: 42px; padding: 3px 15px 3px 21px; color: var(--sh-texto);
+  animation: cmd-entra 140ms cubic-bezier(0.2, 0.8, 0.3, 1) backwards; }
+@keyframes cmd-entra { from { opacity: 0; translate: -10px -50%; } }
+/* a faixa: o desenho do seletor; as pontas escaladas pela altura, como lá. No normal, um carvão um tom acima do seletor
+   e quase opaco, com um fio de luz morna no alto: o carvão translúcido (80%) tinha quase a luminância do céu noturno e
+   a forma sumia; assim ela fica à vista à noite e continua escura sobre o cenário claro (sem borda, brilho ou sombra) */
+:root body #roda .roda-botao::before { content: ""; position: absolute; z-index: -1; inset: 3px 0 3px 4px; rotate: -2deg;
+  background-color: var(--cmd-fundo);
+  background-image: var(--sh-grao), linear-gradient(180deg, rgba(255, 244, 220, 0.13), rgba(255, 244, 220, 0.04) 12%, transparent 40%, rgba(0, 0, 0, 0.3));
+  background-size: 640px 64px, 100% 100%;
+  -webkit-mask: var(--ponta-e) 0 0 / auto 100% no-repeat, var(--sh-meio) 24px 0 / calc(100% - 56px) 100% no-repeat, var(--ponta-d) 100% 0 / auto 100% no-repeat;
+  mask: var(--ponta-e) 0 0 / auto 100% no-repeat, var(--sh-meio) 24px 0 / calc(100% - 56px) 100% no-repeat, var(--ponta-d) 100% 0 / auto 100% no-repeat; }
+/* cada comando tem sempre o mesmo par de pontas (pelo lugar dele, nunca ao acaso) */
+:root body #roda .roda-botao[data-slot="atacar"] { --ponta-e: var(--sh-ponta-e0); --ponta-d: var(--sh-ponta-d1); }
+:root body #roda .roda-botao[data-slot="habilidades"] { --ponta-e: var(--sh-ponta-e1); --ponta-d: var(--sh-ponta-d2); }
+:root body #roda .roda-botao[data-slot="itens"] { --ponta-e: var(--sh-ponta-e2); --ponta-d: var(--sh-ponta-d0); }
+:root body #roda .roda-botao:is([data-slot="fugir"], [data-slot="analisar"]) { --ponta-e: var(--sh-ponta-e0); --ponta-d: var(--sh-ponta-d2); }
+
+/* o ícone solto sobre a faixa: sem o nicho; a tecla sai do canto do nicho e vai para a ponta da faixa */
+:root body #roda .roda-botao .rb-icone { position: static; width: 34px; height: 34px; border: 0; border-radius: 0; background: none;
+  box-shadow: none; outline: none; transform: none; transition: none; filter: none; }
+/* a sombra de 1 px vai na imagem: um filter no .rb-icone o faria de bloco de posição da tecla (ela cairia sobre o ícone) */
+:root body #roda .roda-botao .rb-icone img.sprite { filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.75)); }
+:root body #roda .roda-botao .rb-nome { margin: 0; padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; transform: none;
+  font-family: var(--texto); font-weight: 700; font-size: 15px; line-height: 1.1; letter-spacing: 0; color: var(--sh-texto);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.8); white-space: nowrap; transition: none; }
+/* a tecla: o paralelogramo de carvão do seletor, menor */
+:root body #roda .roda-botao .tecla { position: absolute; z-index: 1; top: 50%; left: -2px; translate: 0 -50%; display: grid; place-items: center;
+  width: 20px; min-width: 0; height: 24px; padding: 0; font-family: var(--num); font-weight: 700; font-size: 14px; line-height: 1;
+  color: var(--sh-texto); background: none; border: 0; border-radius: 0; box-shadow: none; }
+:root body #roda .roda-botao .tecla::before { content: ""; position: absolute; inset: 0; z-index: -1;
+  background: #0b0b0d; border: 1px solid #5c554a; transform: skewX(-10deg) rotate(-2deg); }
+
+/* examinado (mouse ou foco do teclado): a faixa marfim, o nome escuro, a tecla em latão (como no seletor) */
+:root body #roda .roda-botao:is(:hover, :focus-visible)::before { background-color: var(--sh-marfim);
+  background-image: var(--sh-grao-claro), linear-gradient(180deg, rgba(255, 255, 255, 0.35), transparent 40%, rgba(80, 60, 30, 0.18)); }
+:root body #roda .roda-botao:is(:hover, :focus-visible) .rb-nome { color: var(--sh-tinta); text-shadow: none; }
+:root body #roda .roda-botao:is(:hover, :focus-visible) .rb-icone img.sprite { filter: drop-shadow(0 1px 0 rgba(60, 40, 10, 0.45)); }
+:root body #roda .roda-botao:is(:hover, :focus-visible) .tecla { color: #1a140c; }
+:root body #roda .roda-botao:is(:hover, :focus-visible) .tecla::before { background: var(--sh-latao); border-color: #5e4620; }
+/* pressionado: afunda 2 px e escurece (o translate do jogo centra o botão: o afundar soma a ele) */
+:root body #roda .roda-botao:active { translate: 2px calc(-50% + 2px); }
+:root body #roda .roda-botao:active::before { background-color: var(--sh-marfim-fundo);
+  background-image: var(--sh-grao-claro), linear-gradient(180deg, rgba(0, 0, 0, 0.16), transparent 45%); }
+:root body #roda .roda-botao:active .rb-nome { color: var(--sh-tinta); text-shadow: none; }
+
+/* o menu aberto (Habilidades ou Itens): a faixa de latão, a tecla de carvão com o número aceso, o nome escuro; o mouse
+   sobre ele clareia o latão (não vira marfim: aberto continua sendo outro estado) */
+:root body #roda .roda-botao.ativo::before { background-color: var(--sh-latao);
+  background-image: var(--sh-grao-claro), linear-gradient(180deg, rgba(255, 240, 200, 0.22), transparent 40%, rgba(60, 40, 10, 0.3)); }
+:root body #roda .roda-botao.ativo:is(:hover, :focus-visible)::before { background-color: var(--sh-latao-claro); }
+:root body #roda .roda-botao.ativo .rb-nome { color: #1a140c; text-shadow: none; }
+:root body #roda .roda-botao.ativo .rb-icone img.sprite { filter: drop-shadow(0 1px 0 rgba(60, 40, 10, 0.5)); }
+:root body #roda .roda-botao.ativo .tecla { color: var(--sh-latao-claro); }
+:root body #roda .roda-botao.ativo .tecla::before { background: #0b0b0d; border-color: #2a2010; }
+
+/* o foco do teclado: o fio de latão embaixo da faixa e o anel na tecla (os do seletor); no aberto, o anel em marfim */
+:root body #roda .roda-botao:focus-visible { outline: none; }
+:root body #roda .roda-botao:focus-visible::after { content: ""; position: absolute; left: 14px; right: 4px; bottom: -2px; height: 2px; rotate: -2deg;
+  background: linear-gradient(90deg, var(--sh-latao-claro), var(--sh-latao) 70%, rgba(176, 138, 69, 0)); }
+:root body #roda .roda-botao:focus-visible .tecla::before { outline: 2px solid var(--sh-latao-claro); outline-offset: 2px; }
+:root body #roda .roda-botao.ativo:focus-visible .tecla::before { outline-color: var(--sh-marfim); }
+:root body #roda .roda-botao.ativo:focus-visible::after { background: linear-gradient(90deg, var(--sh-marfim), var(--sh-latao-claro) 70%, rgba(242, 210, 122, 0)); }
+
+/* o aviso da cena na luta ("Inimigos +1 nível" à noite, os do clima; paineis.js, desenharModificadores): ficava no meio
+   da borda de baixo, onde o Fugir passa (a roda vai de 6 a 200 px numa arena de 210), e o comando o cobria. Agora tem um
+   espaço próprio: a arena cresce 14 px embaixo só quando há aviso (o min-height junto, para a carta do herói sozinho
+   não subir), e o aviso vai para o canto direito dessa faixa, sob a coluna dos inimigos, de quem ele fala; abaixo de
+   todas as cartas, fora da faixa dos comandos. As cartas, a roda e a mira não mudam de lugar por ele. */
+:root body.em-combate #arena:has(> .mods-arena:not(:empty)) { padding-bottom: 32px; min-height: 224px; }
+:root body.em-combate #arena > .mods-arena { left: auto; right: 24px; bottom: 5px; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  :root body #roda .roda-botao { animation: none; }
+  :root body #roda .roda-botao:active { translate: 0 -50%; }
+}
 :root body .roda-botao .rb-icone img.desenho { width: 32px; height: 32px; image-rendering: auto; filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.7)); }
 /* o rosto do herói na carta e os desenhos da roda, no tamanho deles (32 px). Na vez do herói a carta é ampliada 1,12×
    (.carta.foco): o nome, as barras e a borda crescem, mas o nicho do retrato desfaz a ampliação (36 px, o rosto em 32
@@ -115,11 +180,12 @@
 :root body .rj-linha .rj-icone { border-width: 1px; border-radius: 2px; }
 :root body .rj-linha.bloqueada { border-style: dashed; }
 
-/* ------------------------------------------------------------ mirando: o lembrete no vão entre os dois lados */
+/* ------------------------------------------------------------ mirando: o lembrete na faixa dos comandos */
 /* No alto da arena, numa janela de 1280 px, o lembrete "escolha o alvo" cobria o nome, o rosto e a vida da carta de
-   cima dos inimigos. Agora ele fica no meio, no vão entre a sua fileira e a deles, compacto: o nome da ação, "escolha
-   o alvo" embaixo e o Voltar. Nenhuma carta, vida ou efeito fica por baixo dele. */
-:root body .roda-mira { top: 50%; translate: -50% -50%; flex-direction: column; gap: 6px; width: max-content; max-width: 150px; padding: 7px 10px 8px;
+   cima dos inimigos; depois, no meio da arena, cobria a coluna esquerda dos inimigos quando eles eram muitos. Agora ele
+   fica na faixa dos comandos, ao lado da sua carta, onde a roda estava (escolhas.js põe o lugar; batalha.js não deixa
+   carta nenhuma entrar ali): o nome da ação, "escolha o alvo" embaixo e o Voltar. */
+:root body .roda-mira { translate: 0 -50%; flex-direction: column; gap: 6px; width: max-content; max-width: 150px; padding: 7px 10px 8px;
   white-space: normal; text-align: center; line-height: 1.25; font-size: 15px; color: #e8dcc0;
   border: 1px solid var(--latao); border-radius: 2px; background: rgba(12, 13, 15, 0.94); box-shadow: 0 1px 0 #000, 0 6px 14px rgba(0, 0, 0, 0.6); }
 :root body .roda-mira b { display: block; color: var(--latao-claro); }

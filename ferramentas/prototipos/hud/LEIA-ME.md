@@ -2606,3 +2606,45 @@ mira, no meio da arena, também cobre uma dessas cartas, igual no jogo de hoje. 
 entrega própria (a disposição da arena com muitos inimigos), antes ou junto da integração.
 
 **Pendente:** a avaliação final do Jean. Nada disto vai para o jogo sem aprovação.
+
+### A integração (1.111.0): a HUD aprovada no jogo e as lutas cheias
+
+**Aprovado pelo Jean (17/10/2026):** o acabamento do `5795a9a` (comandos em faixas, a presença à noite, os estados, as
+cartas contidas, as faixas da exploração com o ajuste das opções altas, o aviso separado dos comandos). Antes de
+integrar, pediu resolver as lutas cheias (comandos sobre cartas e a mira cobrindo alvo com cinco inimigos).
+
+**O que entrou no jogo** (nada aqui é lido pelo jogo; as folhas desta pasta ficam como histórico):
+- as pontas de pincel do seletor valem também para `#roda` e `#prompt` (`css/18-seletor-habilidades.css`; a ponte de
+  `comandos/comandos.mjs` não é mais necessária e, como o bloco mudou de seletor, ela agora para com o aviso);
+- os comandos (`comandos/comandos.css`) no lugar da roda antiga, em `css/15-hud-luta.css`; as cartas contidas
+  (`comandos/cartas.css`) nas regras das cartas do mesmo arquivo; o aviso da cena também ali;
+- as escolhas de um lugar selvagem (`comandos/exploracao.css`, a classe `.amostra-faixas` virou `.faixas`) no fim de
+  `css/18-seletor-habilidades.css`; o motor marca a opção de explorar (`{"explorar": True}`) no lugar da troca de
+  texto do protótipo;
+- as lutas cheias (`batalha.js`, `escolhas.js`; a explicação está em `docs/ARQUITETURA.md`, "As lutas cheias").
+
+**Os maiores grupos reais** (simulados com o robô de `tests/arena.py`: guardiões dos cinco biomas com necromante,
+patrulheiro e paladino nos níveis 6, 9 e 12, e 800 bandos noturnos numa região perigosa com a comitiva de 2): até 6
+aliados (o herói, a comitiva de 2, dois esqueletos da Legião de Ossos e o servo do Rei dos Mortos); até 6 inimigos num
+bando (caídos: 4 + 1 pela noite ou pela comitiva, mais o xamã de escolta); com um guardião que invoca, até 4 vivos, mas
+os mortos ficavam: a aranha-rainha chegou a 10 cartas. A comitiva tem no máximo 2 companheiros (`LIMITE`): o cenário
+com Morel, Odette e Yara juntos, usado na rodada 2, é artificial.
+
+**Conferido** (`fotografar_lutas_cheias.mjs` e `comparar_lutas_cheias.py`, em `capturas-lutas-cheias/`: o jogo de antes num
+checkout do `5795a9a` e o de agora, com os mesmos dados; o relatório junta duas execuções, ver `relatorio.json` e
+`logs/`):
+- 5 lutas (poucos, com um rato que cai e fica; a noite com Erguer Servo; 5 lobos com o lobo do patrulheiro e a
+  comitiva; o maior real, 6 × 6; os nomes mais longos do jogo) × 1280×720, 1500×950 e 1920×1080 × antes e depois: o
+  que cobre o quê, a folga, a altura do registro, os nomes cortados, abrir/alternar/fechar os menus, a mira, o Voltar,
+  a saída e a entrada SIMULADAS (o estado da luta com um inimigo a menos e um a mais, desenhado pelo jogo) e a vaga;
+- antes, os comandos cobriam cartas em 7 das 9 combinações cheias (e a mira, em 4); depois, nada em nenhuma das 15;
+- os comportamentos (cinco cliques depressa, tecla segurada, Habilidades ↔ Itens depressa) iguais; com movimento
+  reduzido, a roda agora entra sem animação;
+- a exploração (o Bosque, o Charco com contrato, a Capela à noite com e sem tocha, o covil e o teste de esforço
+  SIMULADO) em quatro janelas: 46 px nas de uma linha, 81 na da Capela (os riscos preservados), nada cortado, todos os
+  pontos de cada opção respondem por ela; escolher a ação real da Capela segue como no jogo (entra, gasta a tocha ou
+  entra no escuro, e a luta começa); a vila não ganha faixas;
+- nenhum erro de console (uma passada própria nas lutas, `logs/console-lutas.log`).
+
+**Limite registrado:** em 1280×720, com 5 ou 6 inimigos e os efeitos à mostra, sobram ~120 a 160 px para o registro
+e o seletor abre com uma fileira à vista (rolando dentro). Não mudei o desenho das cartas para isso.

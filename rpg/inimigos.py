@@ -351,6 +351,7 @@ def _invocar(cb, e, alvo):
         novo.nome = f"{base} {letra} (invocado)"
     novo.xp //= 2
     novo.ouro = 0
+    novo.invocado = True  # a tela tira a carta dele quando cai, como a do servo invocado do seu lado
     cb.inimigos.append(novo)
     cb.dizer(f"{e.nome} convoca reforços: {novo.desc} entra na luta!", "vermelho+negrito")
 

@@ -815,8 +815,12 @@ def tutorial(ui):
     unguento e bomba de fumaça na bolsa; VITRINE=2, sem o machado e com
     a armadura (cota) vestida. ARMA=machado: a arma vestida. NIVEL e ESPEC: o herói já nesse nível, especializado (o
     seletor de habilidades); HABILIDADES=todas: também as habilidades da outra especialização (um teste de capacidade
-    do seletor, com mais habilidades do que um herói tem hoje). Sair leva ao título, com o save
-    (para carregar com orientações pendentes)."""
+    do seletor, com mais habilidades do que um herói tem hoje). ANIMAL (lobo, falcao...): o animal do patrulheiro.
+    As lutas cheias (a disposição da arena): GRUPO="caido:5,xama_caido:1" troca LUTA/QUANTOS por um grupo misto (o maior
+    bando real: caídos à noite com a comitiva, mais o xamã de escolta); SERVOS=n: n esqueletos invocados já de pé ao
+    lado do herói (o necromante com a Legião de Ossos e o Rei dos Mortos chega a três); LONGOS=1: o primeiro inimigo
+    com o nome de um único do sorteio (o mais longo visto: 49 letras) e os outros com a letra e "(invocado)", como o
+    reforço que um guardião chama. Sair leva ao título, com o save (para carregar com orientações pendentes)."""
     from rpg import abertura as ab, itens, missoes, sobrevivencia
     from rpg.__main__ import menu_principal
     pasta = tempfile.mkdtemp()
@@ -895,6 +899,12 @@ def tutorial(ui):
     if os.environ.get("NIVEL"):  # o herói num nível alto, especializado (ESPEC, ou a primeira da classe)
         from rpg import dev
         from rpg.classes import CLASSES, SPECS
+        if os.environ.get("ANIMAL"):  # o patrulheiro já com o animal pedido (sem a pergunta do nível 4)
+            from rpg import especializacao
+            from rpg.classes import COMPANHEIROS
+            tipo = os.environ["ANIMAL"]
+            g.escolher_companheiro = lambda *_: setattr(j, "companheiro", {"nome": COMPANHEIROS[tipo]["nome"],
+                                                                         **especializacao.animal(tipo, j.nivel)})
         dev.subir_ate(g, int(os.environ["NIVEL"]), spec=os.environ.get("ESPEC"))
         if os.environ.get("HABILIDADES") == "todas":  # o teste de capacidade: as da outra especialização também
             outra = next(e for e in CLASSES[j.classe]["specs"] if e != j.spec)
@@ -906,10 +916,27 @@ def tutorial(ui):
     if os.environ.get("TROCA"):  # uma arma da classe na mochila: a troca de arma na luta (o menu de Itens)
         j.mochila.append(gerar_equip(random.Random(9), j.classe, j.nivel, slot="arma"))
     try:  # a morte no modo hardcore (HARDCORE=1) já na luta preparada leva ao título, como no jogo
-        if os.environ.get("LUTA"):  # uma luta comum contra LUTA (família), para os selos das cartas
+        if os.environ.get("LUTA") or os.environ.get("GRUPO"):  # uma luta comum contra LUTA (família), para os selos das cartas
             g.ui.cena(g.loc["nome"], g.contexto_cena(), "evento")
-            lutar(g, [g.inimigo(os.environ["LUTA"], nivel=int(os.environ.get("NIVEL_LUTA", "1")))  # NIVEL_LUTA: inimigos que aguentam
-                      for _ in range(int(os.environ.get("QUANTOS", "2")))])                 # umas rodadas
+            nv = int(os.environ.get("NIVEL_LUTA", "1"))  # NIVEL_LUTA: inimigos que aguentam umas rodadas
+            if os.environ.get("GRUPO"):
+                grupo = [g.inimigo(f, nivel=nv) for f, n in (x.split(":") for x in os.environ["GRUPO"].split(",")) for _ in range(int(n))]
+            else:
+                grupo = [g.inimigo(os.environ["LUTA"], nivel=nv) for _ in range(int(os.environ.get("QUANTOS", "2")))]
+            if os.environ.get("LONGOS"):  # os nomes mais longos que o jogo dá: um único e os reforços invocados
+                grupo[0].nome = "Morion, o Troll da montanha Corrompido Flamejante"
+                for k, e in enumerate(grupo[1:]):
+                    e.nome = f"{e.nome} {'ABCDEFGHIJ'[k]} (invocado)"
+            if os.environ.get("SERVOS"):  # os servos já de pé quando a luta começa (depois da comitiva, como no jogo)
+                from rpg import comitiva as cm_luta
+                preparar = cm_luta.preparar_combate
+                def com_servos(cb):
+                    preparar(cb)
+                    for _ in range(int(os.environ["SERVOS"])):
+                        cb.invocar_aliado("Esqueleto (Invocado)", hp=60, atk=8, tipo="servo")
+                    cm_luta.preparar_combate = preparar
+                cm_luta.preparar_combate = com_servos
+            lutar(g, grupo)
         if os.environ.get("ITEM"):
             g.ui.cena(g.loc["nome"], g.contexto_cena(), "evento")
             g.dizer("No chão, entre a palha, alguma coisa brilha.")

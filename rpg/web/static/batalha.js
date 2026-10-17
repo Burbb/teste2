@@ -180,6 +180,48 @@ const Batalha = (() => {
     el.querySelector(".preparando").hidden = !(c.preparando && c.vivo);
   }
 
+  /* ------------------------------------------------------------ as áreas da arena
+     Três áreas lado a lado, cada uma só sua: a sua fileira (você em cima e a comitiva embaixo, numa coluna só, também
+     com os servos), a faixa dos comandos (a roda de ações e, mirando, o lembrete com o Voltar: nenhuma carta entra
+     nela) e a dos inimigos, encostada à direita. Até três inimigos, uma coluna: a composição de sempre. Com mais, duas
+     colunas quando elas cabem fora da faixa dos comandos (janela larga); senão, uma coluna mais alta, e a arena cresce
+     (acomodar). As duas colunas enchem de cima para baixo, a da direita primeiro: o reforço invocado entra no fim, sem
+     tirar ninguém do lugar, e a luta não volta para uma coluna quando alguém cai. Antes, com quatro inimigos ou cinco
+     aliados, as fileiras viravam duas colunas e entravam embaixo dos comandos. */
+  const FAIXA_COMANDOS = 190;  // da borda direita da sua carta (ampliada na sua vez) ao fim do comando mais largo, com folga
+  const COLUNA = 210, VAO_COLUNAS = 8;  // a largura de uma carta inimiga e o vão entre as colunas (03-batalha.css)
+  let colunasInimigos = 1, linhasInimigos = 0;
+  function distribuir() {
+    const n = colInimigos.children.length;
+    const est = getComputedStyle(arena);
+    const livre = arena.clientWidth - parseFloat(est.paddingLeft) - parseFloat(est.paddingRight)
+      - Math.round(colAliados.offsetWidth * 1.06) - FAIXA_COMANDOS;
+    if (n > 3 && colunasInimigos === 1 && livre >= 2 * COLUNA + VAO_COLUNAS) colunasInimigos = 2;
+    linhasInimigos = colunasInimigos === 2 ? Math.max(linhasInimigos, Math.ceil(n / 2)) : n;
+    colInimigos.classList.toggle("duas", colunasInimigos === 2);
+    colInimigos.style.setProperty("--linhas", Math.max(1, linhasInimigos));
+    // numa arena estreita, a coluna dos inimigos cede para não entrar na faixa dos comandos
+    colInimigos.style.setProperty("--coluna", Math.max(150, Math.min(COLUNA, Math.floor(livre))) + "px");
+  }
+
+  /* ------------------------------------------------------------ quem sai não puxa os outros
+     Uma carta que sai no meio da luta (o ladrão que foge com o ouro, o servo invocado que cai) deixa uma vaga do tamanho
+     dela: as outras ficam onde estavam, e o alvo sob o mouse continua o mesmo enquanto você escolhe. A vaga fecha no
+     próximo lance (alguém agindo, ninguém escolhendo), e as cartas deslizam para o lugar novo. */
+  function vagar(el) {
+    const v = document.createElement("div");
+    v.className = "vaga-carta";
+    v.style.height = el.offsetHeight + "px";
+    el.replaceWith(v);
+  }
+  function fecharVagas() {
+    if (!arena.querySelector(".vaga-carta")) return;
+    const foto = fotografar();
+    arena.querySelectorAll(".vaga-carta").forEach((v) => v.remove());
+    distribuir();
+    acomodar(foto, !rapido());
+  }
+
   /* ------------------------------------------------------------ o palco não pula
      Uma carta que entra (o servo invocado) ou a linha de efeitos que aparece numa carta mudam a altura de uma coluna.
      A arena centraliza as colunas e acompanha a mais alta: antes, tudo saltava num quadro só (as cartas, o registro
@@ -234,6 +276,7 @@ const Batalha = (() => {
       esconderFicha();  // a carta sob o mouse some com a arena; a ficha não pode ficar presa
       cancelAnimationFrame(acomodando);
       alturaArena = 0;
+      colunasInimigos = 1; linhasInimigos = 0;
       if (arena) { arena.style.height = ""; arena._altura = 0; }
       if (arena) paisagem(false);
       cartas.clear(); anteriores = {}; emArea = false;
@@ -246,8 +289,12 @@ const Batalha = (() => {
     montar();
     paisagem(true);
     const foto = anteriores.__iniciado ? fotografar() : null;  // onde as cartas estavam antes desta atualização
-    const aliados = [cb.heroi, ...cb.aliados.filter((a) => a.vivo || a.cid || (anteriores[a.uid] && anteriores[a.uid].vivo))];
-    const lista = [...aliados, ...cb.inimigos];
+    // Quem foi invocado e cai sai da arena depois de cair (o servo do seu lado, o reforço que o guardião chama): os
+    // mortos de uma luta longa contra quem invoca não se acumulam em cartas. Os outros caídos ficam, apagados.
+    const ficaNaArena = (c) => c.vivo || (anteriores[c.uid] && anteriores[c.uid].vivo);
+    const aliados = [cb.heroi, ...cb.aliados.filter((a) => a.cid || ficaNaArena(a))];
+    const inimigos = cb.inimigos.filter((e) => !e.invocado || ficaNaArena(e));
+    const lista = [...aliados, ...inimigos];
     const vistos = new Set();
     let morte = false, golpe = false;
     for (const c of lista) {
@@ -278,17 +325,19 @@ const Batalha = (() => {
       });
     }
     for (const [uid, el] of cartas) {
-      if (!vistos.has(uid)) { el.remove(); cartas.delete(uid); }
+      if (vistos.has(uid)) continue;
+      if (foto && el.isConnected) vagar(el); else el.remove();  // no meio da luta, quem sai deixa a vaga
+      cartas.delete(uid);
     }
-    // ordem: você primeiro, depois a comitiva; inimigos na ordem do motor.
-    // Só mexe no DOM se a ordem mudou: reinserir um nó reinicia as animações dele.
-    [[colAliados, aliados], [colInimigos, cb.inimigos]].forEach(([col, grupo]) => {
+    // ordem: você primeiro, depois a comitiva; inimigos na ordem do motor (quem entra depois vai para o fim).
+    // Só mexe no DOM se a ordem mudou: reinserir um nó reinicia as animações dele. Com uma vaga aberta, nada se mexe.
+    [[colAliados, aliados], [colInimigos, inimigos]].forEach(([col, grupo]) => {
+      if (col.querySelector(":scope > .vaga-carta")) return;
       const desejada = grupo.map((c) => c && cartas.get(c.uid)).filter((e) => e && e.parentElement === col);
       const atual = [...col.children];
       if (desejada.some((e, i) => atual[i] !== e)) desejada.forEach((e) => col.appendChild(e));
     });
-    colInimigos.classList.toggle("duas", cb.inimigos.length > 3);
-    colAliados.classList.toggle("duas", aliados.length > 4);
+    distribuir();
     acomodar(foto, !!foto && !replay && !rapido());
     anteriores = { __iniciado: true };
     lista.forEach((c) => { if (c && c.uid) anteriores[c.uid] = c; });
@@ -485,6 +534,7 @@ const Batalha = (() => {
 
   async function lance(m) {
     if (!arena) return;
+    fecharVagas();  // alguém age: ninguém está escolhendo, as cartas podem ir para o lugar novo
     if (entrando.length) { const e = entrando; entrando = []; await Promise.all(e); }  // quem acabou de ser invocado termina de chegar
     const de = carta(m.de), em = carta(m.em);
     if (["buff", "cura", "recurso", "golpe", "erro"].includes(m.tipo)) { emCena(de); emCena(em); }

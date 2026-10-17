@@ -50,7 +50,7 @@ body.modo-titulo .dica-pular { display: none; }
   .hud-recursos { flex: 1 1 100%; justify-content: space-between; }
   #folha { padding: 16px 12px 24px; font-size: 18px; }
   #arena { gap: 10px; padding: 10px 6px 14px; }
-  .fileira, .fileira.duas { grid-template-columns: minmax(0, 1fr); }
+  .fileira, .fileira.inimigos, .fileira.inimigos.duas { grid-template-columns: minmax(0, 1fr); }
   .carta { grid-template-columns: 28px 1fr; padding: 3px 5px; } .carta .icone { width: 28px; height: 28px; } .carta .icone img { --s: 16; }
   .ficha-colunas { grid-template-columns: 1fr; }
 }

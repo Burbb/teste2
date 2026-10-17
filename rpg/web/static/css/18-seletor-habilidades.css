@@ -1,8 +1,9 @@
 /* O seletor de faixas das ações da luta (1.103.0 em Habilidades; 1.105.0 também em Itens; aprovado pelo Jean como
    "D refinada", o caminho está em ferramentas/prototipos/hud/LEIA-ME.md, "O seletor de habilidades D", "A D refinada"
    e "O menu de Itens em faixas"). A janelinha .seletor de app/escolhas.js, com data-tipo="habilidades" ou "itens"; o
-   que é só do menu de Itens está no fim. O material (faixas de tinta, marfim, latão envelhecido) é deste componente:
-   não se espalha para outras telas.
+   que é só do menu de Itens vem depois. O material (faixas de tinta, marfim, latão envelhecido) é deste componente e de
+   mais dois, aprovados em 17/10/2026: os comandos da luta (15-hud-luta.css, "a roda de ações") e as escolhas de um
+   lugar selvagem (no fim deste arquivo). Não se espalha para outras telas (mercado, confirmações, doca, caminhos).
 
    As peças (tudo em código, nada de imagem com texto; o nome, o custo, a tecla e o motivo são elementos à parte):
    - a composição: o seletor tem a largura da arena e fica logo embaixo dela, por cima do registro (escolhas.js põe a
@@ -63,8 +64,9 @@
   background-image: var(--sh-grao), linear-gradient(180deg, rgba(255, 255, 255, 0.06), transparent 38%, rgba(0, 0, 0, 0.28));
   background-size: 640px 64px, 100% 100%; }
 /* as pontas: três de cada lado, desenhadas em SVG e escaladas só pela altura (o desenho é o mesmo em qualquer
-   largura), e o meio de bordas levemente onduladas esticado entre elas; cada posição tem sempre o mesmo par */
-:root body .roda-janela.seletor {
+   largura), e o meio de bordas levemente onduladas esticado entre elas; cada posição tem sempre o mesmo par. As mesmas
+   peças servem aos comandos da luta (#roda) e às escolhas de um lugar selvagem (#prompt). */
+:root body :is(.roda-janela.seletor, #roda, #prompt) {
   --sh-ponta-e0: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 46 50'><path fill-rule='evenodd' d='M46 2 L31 3 L24 1.5 L17 3.5 L12 2.5 L9 5 L5 6 L8 8.5 L3 11 L1 15.5 L6 17 L2 20 L0 24 L10 25.6 L1 27 L3 31 L0.5 35 L5 37 L3 41 L8 43.5 L13 46.5 L20 47 L26 49 L36 47.5 L46 48.5 Z M2 39.5 L6 40.2 L4.5 41.6 Z M18 4.4 L38 4.9 L18 5.6 Z'/></svg>");
   --sh-ponta-e1: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 46 50'><path fill-rule='evenodd' d='M46 1 L28 2 C21 2.5 18 0.5 12 2.5 C8 4 9.5 8 4.5 10 C1 12 4 16 2 20 C0 23.5 4 26 2.5 30 L11 31 L3 32.5 C1 36 5.5 39 3.5 43 C6 47 12 46 17 48.5 C22 50 27 48 33 49 L46 49 Z'/></svg>");
   --sh-ponta-e2: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 46 50'><path fill-rule='evenodd' d='M46 3 L35 2 L25 4 L17 2.5 L10 5.5 L4 10 L7 12 L2 17 L3.5 22 L0.5 27 L4 31 L1.5 36 L6 39 L4 43 L10 45.5 L15 48.5 L25 46.5 L33 48.5 L46 47 Z M8 6.5 L13 6.8 L11.5 8.3 L7.5 8 Z M14 44.2 L32 44.8 L14 45.4 Z'/></svg>");
@@ -183,4 +185,86 @@
 @media (prefers-reduced-motion: reduce) {
   :root body .roda-janela.seletor .rj-linha { animation: none; }
   :root body .roda-janela.seletor .rj-linha:active { translate: none; }
+}
+
+/* ------------------------------------------------------------ as escolhas de um lugar selvagem */
+/* As escolhas de um lugar selvagem (Explorar, Acampar, Viajar e o que o lugar oferece junto: o contrato, a missão), na
+   linguagem do seletor, aprovadas pelo Jean em 17/10/2026 (ferramentas/prototipos/hud/LEIA-ME.md, a amostra e a
+   rodada 2). escolhas.js marca a lista com .faixas quando o motor manda a opção de explorar (meta "explorar",
+   Jogo.menu_selvagem); nenhuma outra tela recebe isto: a doca, os equipamentos, os caminhos, o mercado, as
+   confirmações e os menus da vila ficam como estão. Numa coluna só, mais larga:
+   - cada opção é um botão retangular inteiro (a área de clique não muda); a faixa é o ::before, recortado pelas pontas
+     do seletor. As pontas escalam pela altura, como no seletor: numa opção de duas linhas a faixa é uma pincelada mais
+     alta, com o meio contínuo atrás do texto e o desgaste só nas extremidades. Inclinação de 0,3° (numa faixa de 700 px,
+     os 2° do seletor desceriam 24 px de uma ponta à outra);
+   - a tecla é o paralelogramo do seletor; o texto, a nota e os riscos ficam retos, na letra de leitura de sempre, sem
+     reduzir a fonte nem cortar palavra; a opção com informação embaixo (os riscos da sala, uma nota) tem mais folga;
+   - estados: os do seletor (mouse marfim, pressionado afunda, foco com o fio e o anel na tecla); a indisponível (cinza
+     riscada, o motivo escrito) fica cinza riscada;
+   - o grupo (Contratos, Missão) continua o rótulo de sempre; a opção do contrato e a da missão levam o traço à esquerda
+     dentro da faixa (ferro e latão), como a barra que têm nos outros menus. */
+
+:root body #prompt .escolhas.faixas { gap: 1px; }
+:root body #prompt .faixas > li { filter: drop-shadow(0 2px 1px rgba(0, 0, 0, 0.5)); }
+:root body #prompt .faixas > li:has(.escolha:is(:hover, :focus-visible)) { position: relative; z-index: 1; }
+:root body #prompt .faixas .escolha {
+  --ponta-e: var(--sh-ponta-e0); --ponta-d: var(--sh-ponta-d1); --traco: transparent;
+  isolation: isolate; min-height: 46px; gap: 12px; padding: 7px 34px 7px 6px; border: 0; border-radius: 0; background: none; box-shadow: none;
+  color: var(--sh-texto); text-shadow: 0 1px 0 rgba(0, 0, 0, 0.7);
+  opacity: 1; animation: faixa-entra 150ms cubic-bezier(0.2, 0.8, 0.3, 1) backwards; }
+@keyframes faixa-entra { from { opacity: 0; translate: -12px 0; } }
+:root body #prompt .faixas > li:nth-child(3n + 2) .escolha { --ponta-e: var(--sh-ponta-e1); --ponta-d: var(--sh-ponta-d2); }
+:root body #prompt .faixas > li:nth-child(3n) .escolha { --ponta-e: var(--sh-ponta-e2); --ponta-d: var(--sh-ponta-d0); }
+:root body #prompt .faixas .escolha::before { content: ""; position: absolute; z-index: -1; inset: 3px 0 3px 10px; rotate: -0.3deg;
+  background-color: rgba(35, 33, 37, 0.92);
+  background-image: linear-gradient(90deg, transparent 30px, var(--traco) 30px 33px, transparent 33px), var(--sh-grao),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), transparent 38%, rgba(0, 0, 0, 0.28));
+  background-size: 100% 100%, 640px max(64px, 100%), 100% 100%;
+  -webkit-mask: var(--ponta-e) 5px 0 / auto 100% no-repeat, var(--sh-meio) 40px 0 / calc(100% - 96px) 100% no-repeat, var(--ponta-d) right 6px top 0 / auto 100% no-repeat;
+  mask: var(--ponta-e) 5px 0 / auto 100% no-repeat, var(--sh-meio) 40px 0 / calc(100% - 96px) 100% no-repeat, var(--ponta-d) right 6px top 0 / auto 100% no-repeat; }
+/* a opção com informação embaixo (os riscos da sala, uma nota): mais folga em cima e embaixo da faixa alta */
+:root body #prompt .faixas .escolha:has(> .rotulo > :is(.op-riscos, .op-nota)) { padding-block: 11px 13px; }
+:root body #prompt .faixas .escolha.op-contrato { --traco: #6a6e76; box-shadow: none; }
+:root body #prompt .faixas .escolha.op-missao { --traco: #a8823a; box-shadow: none; }
+/* a tecla: o paralelogramo de carvão do seletor */
+:root body #prompt .faixas .escolha .tecla { position: relative; z-index: 1; width: 28px; height: 30px; margin-left: 4px;
+  font-family: var(--num); font-weight: 700; font-size: 18px; color: var(--sh-texto); background: none; border: 0; box-shadow: none; }
+:root body #prompt .faixas .escolha .tecla::before { content: ""; position: absolute; inset: 0; z-index: -1;
+  background: #0b0b0d; border: 1px solid #5c554a; transform: skewX(-10deg) rotate(-0.3deg); }
+:root body #prompt .faixas .escolha img.sprite { filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.75)); }
+:root body #prompt .faixas .escolha .rotulo { padding: 2px 0; }
+/* o nome da opção um degrau mais firme (a Alegreya 600 do jogo, a mesma família): lê sobre o carvão e sobre o marfim;
+   o mesmo peso em todos os estados (nada muda de largura ao passar o mouse) */
+:root body #prompt .faixas .escolha .op-texto { font-weight: 600; }
+:root body #prompt .faixas .escolha .op-nota { color: #b9af99; }
+
+/* mouse por cima: a faixa marfim, o texto escuro, a tecla em latão */
+:root body #prompt .faixas .escolha:is(:hover, :focus-visible) { color: var(--sh-tinta); text-shadow: none; background: none; border: 0; }
+:root body #prompt .faixas .escolha:is(:hover, :focus-visible)::before { background-color: var(--sh-marfim);
+  background-image: linear-gradient(90deg, transparent 30px, var(--traco) 30px 33px, transparent 33px), var(--sh-grao-claro),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.35), transparent 40%, rgba(80, 60, 30, 0.18)); }
+:root body #prompt .faixas .escolha:is(:hover, :focus-visible) .tecla { color: #1a140c; }
+:root body #prompt .faixas .escolha:is(:hover, :focus-visible) .tecla::before { background: var(--sh-latao); border-color: #5e4620; }
+:root body #prompt .faixas .escolha:is(:hover, :focus-visible) .op-nota { color: #4d4232; }
+/* os riscos (tocha, noite) continuam etiquetas escuras dentro da faixa clara */
+:root body #prompt .faixas .escolha:is(:hover, :focus-visible) .op-risco { background: #1d1a16; }
+:root body #prompt .faixas .escolha:is(:hover, :focus-visible) img.sprite { filter: drop-shadow(0 1px 0 rgba(60, 40, 10, 0.45)); }
+/* pressionado: afunda 2 px e escurece */
+:root body #prompt .faixas .escolha:active { translate: 2px 2px; box-shadow: none; background: none; }
+:root body #prompt .faixas .escolha:active::before { background-color: var(--sh-marfim-fundo);
+  background-image: var(--sh-grao-claro), linear-gradient(180deg, rgba(0, 0, 0, 0.16), transparent 45%); }
+/* foco do teclado: o fio de latão embaixo da faixa e o anel na tecla */
+:root body #prompt .faixas .escolha:focus-visible { outline: none; }
+:root body #prompt .faixas .escolha:focus-visible::after { content: ""; position: absolute; left: 22px; right: 6px; bottom: 1px; height: 2px;
+  rotate: -0.3deg; background: linear-gradient(90deg, var(--sh-latao-claro), var(--sh-latao) 70%, rgba(176, 138, 69, 0)); }
+:root body #prompt .faixas .escolha:focus-visible .tecla::before { outline: 2px solid var(--sh-latao-claro); outline-offset: 2px; }
+/* indisponível (o jogo já tem: o motivo escrito): a faixa cinza riscada, sem afundar */
+:root body #prompt .faixas .escolha[aria-disabled="true"] { color: #b9af99; background: none; border: 0; }
+:root body #prompt .faixas .escolha[aria-disabled="true"]::before {
+  background-image: var(--sh-grao), repeating-linear-gradient(-58deg, rgba(255, 255, 255, 0.045) 0 2px, transparent 2px 8px); }
+:root body #prompt .faixas .escolha[aria-disabled="true"]:active { translate: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  :root body #prompt .faixas .escolha { animation: none; }
+  :root body #prompt .faixas .escolha:active { translate: none; }
 }
