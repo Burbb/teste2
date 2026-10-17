@@ -3440,3 +3440,19 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   - o movimento reduzido;
   - a suíte, o pyflakes, o gabarito (só apresentação, investigado e atualizado) e a fumaça uma vez.
 - **Próximo:** Jean jogar. Fora: as reduções do recurso máximo; nada da 1C.
+
+### 17/10/2026 (data do computador local) — Etapa 1C: protótipo da iniciativa e dos turnos (em avaliação)
+
+- **Pedido de Jean:** perceber a vantagem de iniciativa, enquanto ela vale, e o começo de cada turno; só protótipo.
+- **Feito** (`ferramentas/prototipos/hud/turnos/`):
+  - o anúncio em faixa ("Turno N", "Iniciativa!" com o bônus real, "Emboscada!");
+  - a placa do turno de agora, com a linha da iniciativa até ela ser usada ou passar;
+  - tudo comandado pelos acontecimentos do motor (a mensagem `turno`, o lance `surpresa`, o estado `iniciativa`, o
+    golpe com `bonus_motivo`);
+  - lugar medido, sem cobrir nada e sem segurar a vez.
+- **Conferido:**
+  - produção × proposta em lutas reais (iniciativa, emboscada, luta cheia com comitiva, servos e efeitos);
+  - 1280×720, 1500×950 e movimento reduzido;
+  - vídeos em `capturas/videos/`; `abrir.mjs` para jogar.
+- **No cenário de teste:** `EMBOSCADA` e `LUTA_APOS_ESCOLHA`.
+- **Próximo:** Jean avaliar (e testar a vida bloqueada). Nada integrado; dado e atributos não começaram.

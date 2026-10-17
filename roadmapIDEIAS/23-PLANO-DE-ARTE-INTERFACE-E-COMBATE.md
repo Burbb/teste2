@@ -163,6 +163,32 @@ comitiva ou da luta inteira. Se mostrar o bônus, usar o valor real e suas condi
 Dado, iniciativa e turno podem compartilhar uma família visual, com intensidades distintas. Conferir que avisos não
 se empilham sobre o mesmo ponto da tela nem competem com dano e efeitos.
 
+**Protótipo (17/10/2026, em avaliação; nada no jogo):** `ferramentas/prototipos/hud/turnos/`.
+- **A fonte é o motor:** a mensagem `turno` (`ui.novo_turno`, uma vez por volta, no começo da sua vez; comitiva,
+  animal e servos não geram) e `estado.combate.turno`; o lance `surpresa` (de `j`: a sua iniciativa; de um inimigo: a
+  emboscada, o golpe livre do mais ágil antes do turno 1); o estado `iniciativa` na sua carta, com o texto do motor
+  (+25% no primeiro golpe); e o golpe com `bonus_motivo: "Iniciativa!"`, que a consome. O turno 1 com a iniciativa é só
+  seu, e ela passa sem golpe se o turno livre for gasto noutra coisa.
+- **A proposta:**
+  - um anúncio em faixa de pincel: "Turno N"; "Iniciativa!" com "Turno 1 · só você age agora" e o bônus real;
+    "Emboscada!" com quem ataca;
+  - uma placa para consulta: o turno de agora e, enquanto vale, "Iniciativa: +25% no 1º golpe", que termina em
+    "usada" ou "passou";
+  - o lugar é medido para nunca cobrir carta, comando, mira, seletor ou o aviso da cena: dentro da faixa dos comandos,
+    na luta cheia; abaixo da arena, na pequena;
+  - nada segura a vez (a camada não recebe o mouse); com movimento reduzido, sem deslocamento e com mais tempo.
+- **Conferido:** produção × proposta com os mesmos dados, em lutas reais (iniciativa, emboscada, luta cheia com
+  comitiva, servos e Maldição em área), em 1280×720, 1500×950 e com movimento reduzido. Um anúncio por mensagem de turno
+  do motor (mais a emboscada), nada coberto, e a vez clicável no mesmo tempo da produção. Há vídeos, e `abrir.mjs` abre
+  a luta numa janela para jogar.
+- **Novo no cenário de teste:** `EMBOSCADA` e `LUTA_APOS_ESCOLHA` (a luta começa com a página aberta, a surpresa ao
+  vivo).
+- **Para decidir:**
+  - o anúncio cobre o começo do registro por ~1 s na luta pequena;
+  - anunciar todo turno ou só o primeiro e a iniciativa.
+
+  Falta Jean avaliar. Dado e consulta aos atributos não começaram.
+
 ### 1.6. Consulta aos testes de atributos
 
 **Direção aprovada:** tornar consultáveis o bônus atual e sua composição numa seção “Testes” da ficha detalhada,

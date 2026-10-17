@@ -1,0 +1,385 @@
+{
+ "relatorio": [
+  {
+   "nome": "iniciativa-producao-1280x720",
+   "turno1": {
+    "mostra": [],
+    "cobre": "nada"
+   },
+   "depois_do_anuncio": {
+    "mostra": [],
+    "cobre": "nada"
+   },
+   "habilidades": {
+    "mostra": [],
+    "cobre": "nada"
+   },
+   "mira": {
+    "mostra": [],
+    "cobre": "nada"
+   },
+   "golpe": {
+    "mostra": [],
+    "cobre": "nada"
+   },
+   "turno2": {
+    "mostra": [],
+    "cobre": "nada"
+   },
+   "turno2_depois": {
+    "mostra": [],
+    "cobre": "nada"
+   },
+   "turnos": [
+    "turno 1: a vez clicável 61 ms depois",
+    "turno 2: a vez clicável 12 ms depois"
+   ],
+   "anuncios_mostrados": []
+  },
+  {
+   "nome": "emboscada-producao-1280x720",
+   "emboscada": {
+    "mostra": [],
+    "cobre": "nada"
+   },
+   "turno1": {
+    "mostra": [],
+    "cobre": "nada"
+   },
+   "depois": {
+    "mostra": [],
+    "cobre": "nada"
+   },
+   "turnos": [
+    "turno 1: a vez clicável 20 ms depois"
+   ],
+   "anuncios_mostrados": []
+  },
+  {
+   "nome": "cheia-producao-1280x720",
+   "turno1": {
+    "mostra": [],
+    "cobre": "nada"
+   },
+   "meditar": {
+    "mostra": [],
+    "cobre": "nada"
+   },
+   "turno2": {
+    "mostra": [],
+    "cobre": "nada"
+   },
+   "turno3": {
+    "mostra": [],
+    "cobre": "nada"
+   },
+   "turno3_depois": {
+    "mostra": [],
+    "cobre": "nada"
+   },
+   "habilidades": {
+    "mostra": [],
+    "cobre": "nada"
+   },
+   "turnos": [
+    "turno 1: a vez clicável 31 ms depois",
+    "turno 2: a vez clicável 9 ms depois",
+    "turno 3: a vez clicável 20 ms depois"
+   ],
+   "anuncios_mostrados": []
+  },
+  {
+   "nome": "iniciativa-proposta-1280x720",
+   "turno1": {
+    "mostra": [
+     "placa (abaixo da arena): TURNO1 Iniciativa: +25% no 1º golpe",
+     "anúncio (abaixo da arena): Iniciativa! Turno 1 · só você age agora +25% de dano no primeiro golpe deste turno"
+    ],
+    "cobre": "nada"
+   },
+   "depois_do_anuncio": {
+    "mostra": [
+     "placa (abaixo da arena): TURNO1 Iniciativa: +25% no 1º golpe"
+    ],
+    "cobre": "nada"
+   },
+   "habilidades": {
+    "mostra": [],
+    "cobre": "nada"
+   },
+   "mira": {
+    "mostra": [
+     "placa (abaixo da arena): TURNO1 Iniciativa: +25% no 1º golpe"
+    ],
+    "cobre": "nada"
+   },
+   "golpe": {
+    "mostra": [
+     "placa (abaixo da arena): TURNO1 Iniciativa usada (+25%)"
+    ],
+    "cobre": "nada"
+   },
+   "turno2": {
+    "mostra": [
+     "placa (abaixo da arena): TURNO2 Iniciativa usada (+25%)",
+     "anúncio (abaixo da arena): Turno 2"
+    ],
+    "cobre": "nada"
+   },
+   "turno2_depois": {
+    "mostra": [
+     "placa (abaixo da arena): TURNO2"
+    ],
+    "cobre": "nada"
+   },
+   "turnos": [
+    "turno 1: a vez clicável 62 ms depois",
+    "turno 2: a vez clicável 14 ms depois"
+   ],
+   "anuncios_mostrados": [
+    "Iniciativa! Turno 1 · só você age agora +25% de dano no primeiro golpe deste turno",
+    "Turno 2"
+   ]
+  },
+  {
+   "nome": "emboscada-proposta-1280x720",
+   "emboscada": {
+    "mostra": [
+     "anúncio (abaixo da arena): Emboscada! Lobo ataca antes de você"
+    ],
+    "cobre": "nada"
+   },
+   "turno1": {
+    "mostra": [
+     "anúncio (abaixo da arena): Turno 1"
+    ],
+    "cobre": "nada"
+   },
+   "depois": {
+    "mostra": [
+     "placa (abaixo da arena): TURNO1"
+    ],
+    "cobre": "nada"
+   },
+   "turnos": [
+    "turno 1: a vez clicável 20 ms depois"
+   ],
+   "anuncios_mostrados": [
+    "Emboscada! Lobo ataca antes de você",
+    "Turno 1"
+   ]
+  },
+  {
+   "nome": "cheia-proposta-1280x720",
+   "turno1": {
+    "mostra": [
+     "placa (na arena): TURNO1 Iniciativa: +25% no 1º golpe",
+     "anúncio (abaixo da arena): Iniciativa! Turno 1 · só você age agora +25% de dano no primeiro golpe deste turno"
+    ],
+    "cobre": "nada"
+   },
+   "meditar": {
+    "mostra": [
+     "placa (na arena): TURNO2 Iniciativa passou",
+     "anúncio (na arena): Turno 2"
+    ],
+    "cobre": "nada"
+   },
+   "turno2": {
+    "mostra": [
+     "placa (na arena): TURNO2 Iniciativa passou",
+     "anúncio (na arena): Turno 2"
+    ],
+    "cobre": "nada"
+   },
+   "turno3": {
+    "mostra": [
+     "placa (na arena): TURNO3",
+     "anúncio (na arena): Turno 3"
+    ],
+    "cobre": "nada"
+   },
+   "turno3_depois": {
+    "mostra": [
+     "placa (na arena): TURNO3"
+    ],
+    "cobre": "nada"
+   },
+   "habilidades": {
+    "mostra": [
+     "placa (na arena): TURNO3"
+    ],
+    "cobre": "nada"
+   },
+   "turnos": [
+    "turno 1: a vez clicável 35 ms depois",
+    "turno 2: a vez clicável 9 ms depois",
+    "turno 3: a vez clicável 18 ms depois"
+   ],
+   "anuncios_mostrados": [
+    "Iniciativa! Turno 1 · só você age agora +25% de dano no primeiro golpe deste turno",
+    "Turno 2",
+    "Turno 3"
+   ]
+  },
+  {
+   "nome": "iniciativa-proposta-1500x950",
+   "turno1": {
+    "mostra": [
+     "anúncio (abaixo da arena): Iniciativa! Turno 1 · só você age agora +25% de dano no primeiro golpe deste turno"
+    ],
+    "cobre": "nada"
+   },
+   "depois_do_anuncio": {
+    "mostra": [
+     "placa (abaixo da arena): TURNO1 Iniciativa: +25% no 1º golpe"
+    ],
+    "cobre": "nada"
+   },
+   "habilidades": {
+    "mostra": [],
+    "cobre": "nada"
+   },
+   "mira": {
+    "mostra": [
+     "placa (abaixo da arena): TURNO1 Iniciativa: +25% no 1º golpe"
+    ],
+    "cobre": "nada"
+   },
+   "golpe": {
+    "mostra": [
+     "placa (abaixo da arena): TURNO1 Iniciativa usada (+25%)"
+    ],
+    "cobre": "nada"
+   },
+   "turno2": {
+    "mostra": [
+     "placa (abaixo da arena): TURNO2 Iniciativa usada (+25%)",
+     "anúncio (abaixo da arena): Turno 2"
+    ],
+    "cobre": "nada"
+   },
+   "turno2_depois": {
+    "mostra": [
+     "placa (abaixo da arena): TURNO2"
+    ],
+    "cobre": "nada"
+   },
+   "turnos": [
+    "turno 1: a vez clicável 45 ms depois",
+    "turno 2: a vez clicável 14 ms depois"
+   ],
+   "anuncios_mostrados": [
+    "Iniciativa! Turno 1 · só você age agora +25% de dano no primeiro golpe deste turno",
+    "Turno 2"
+   ]
+  },
+  {
+   "nome": "cheia-proposta-1500x950",
+   "turno1": {
+    "mostra": [
+     "placa (na arena): TURNO1 Iniciativa: +25% no 1º golpe",
+     "anúncio (abaixo da arena): Iniciativa! Turno 1 · só você age agora +25% de dano no primeiro golpe deste turno"
+    ],
+    "cobre": "nada"
+   },
+   "meditar": {
+    "mostra": [
+     "placa (na arena): TURNO2 Iniciativa passou",
+     "anúncio (na arena): Turno 2"
+    ],
+    "cobre": "nada"
+   },
+   "turno2": {
+    "mostra": [
+     "placa (na arena): TURNO2 Iniciativa passou",
+     "anúncio (na arena): Turno 2"
+    ],
+    "cobre": "nada"
+   },
+   "turno3": {
+    "mostra": [
+     "placa (na arena): TURNO3",
+     "anúncio (na arena): Turno 3"
+    ],
+    "cobre": "nada"
+   },
+   "turno3_depois": {
+    "mostra": [
+     "placa (na arena): TURNO3"
+    ],
+    "cobre": "nada"
+   },
+   "habilidades": {
+    "mostra": [
+     "placa (na arena): TURNO3"
+    ],
+    "cobre": "nada"
+   },
+   "turnos": [
+    "turno 1: a vez clicável 31 ms depois",
+    "turno 2: a vez clicável 9 ms depois",
+    "turno 3: a vez clicável 18 ms depois"
+   ],
+   "anuncios_mostrados": [
+    "Iniciativa! Turno 1 · só você age agora +25% de dano no primeiro golpe deste turno",
+    "Turno 2",
+    "Turno 3"
+   ]
+  },
+  {
+   "nome": "iniciativa-proposta-1280x720-reduzido",
+   "turno1": {
+    "mostra": [
+     "placa (abaixo da arena): TURNO1 Iniciativa: +25% no 1º golpe",
+     "anúncio (abaixo da arena): Iniciativa! Turno 1 · só você age agora +25% de dano no primeiro golpe deste turno"
+    ],
+    "cobre": "nada"
+   },
+   "depois_do_anuncio": {
+    "mostra": [
+     "placa (abaixo da arena): TURNO1 Iniciativa: +25% no 1º golpe"
+    ],
+    "cobre": "nada"
+   },
+   "habilidades": {
+    "mostra": [],
+    "cobre": "nada"
+   },
+   "mira": {
+    "mostra": [
+     "placa (abaixo da arena): TURNO1 Iniciativa: +25% no 1º golpe"
+    ],
+    "cobre": "nada"
+   },
+   "golpe": {
+    "mostra": [
+     "placa (abaixo da arena): TURNO1 Iniciativa usada (+25%)"
+    ],
+    "cobre": "nada"
+   },
+   "turno2": {
+    "mostra": [
+     "placa (abaixo da arena): TURNO2 Iniciativa usada (+25%)",
+     "anúncio (abaixo da arena): Turno 2"
+    ],
+    "cobre": "nada"
+   },
+   "turno2_depois": {
+    "mostra": [
+     "placa (abaixo da arena): TURNO2 Iniciativa usada (+25%)"
+    ],
+    "cobre": "nada"
+   },
+   "turnos": [
+    "turno 1: a vez clicável 46 ms depois",
+    "turno 2: a vez clicável 15 ms depois"
+   ],
+   "anuncios_mostrados": [
+    "Iniciativa! Turno 1 · só você age agora +25% de dano no primeiro golpe deste turno",
+    "Turno 2"
+   ]
+  }
+ ],
+ "erros": []
+}

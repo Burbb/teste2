@@ -820,7 +820,8 @@ def tutorial(ui):
     bando real: caídos à noite com a comitiva, mais o xamã de escolta); SERVOS=n: n esqueletos invocados já de pé ao
     lado do herói (o necromante com a Legião de Ossos e o Rei dos Mortos chega a três); LONGOS=1: o primeiro inimigo
     com o nome de um único do sorteio (o mais longo visto: 49 letras) e os outros com a letra e "(invocado)", como o
-    reforço que um guardião chama. Sair leva ao título, com o save (para carregar com orientações pendentes)."""
+    reforço que um guardião chama. EMBOSCADA=jogador ou inimigo: a luta começa com a surpresa de um dos lados. LUTA_APOS_ESCOLHA=1: a luta só começa depois de um
+    clique ("Começar a luta"), com a página já aberta: sem isso, o começo dela chega antes da página e é relido sem animar. Sair leva ao título, com o save (para carregar com orientações pendentes)."""
     from rpg import abertura as ab, itens, missoes, sobrevivencia
     from rpg.__main__ import menu_principal
     pasta = tempfile.mkdtemp()
@@ -918,6 +919,8 @@ def tutorial(ui):
     try:  # a morte no modo hardcore (HARDCORE=1) já na luta preparada leva ao título, como no jogo
         if os.environ.get("LUTA") or os.environ.get("GRUPO"):  # uma luta comum contra LUTA (família), para os selos das cartas
             g.ui.cena(g.loc["nome"], g.contexto_cena(), "evento")
+            if os.environ.get("LUTA_APOS_ESCOLHA"):  # a luta começa com a página já aberta (a surpresa animada ao vivo)
+                g.ui.escolher("A luta começa quando você quiser.", ["Começar a luta"])
             nv = int(os.environ.get("NIVEL_LUTA", "1"))  # NIVEL_LUTA: inimigos que aguentam umas rodadas
             if os.environ.get("GRUPO"):
                 grupo = [g.inimigo(f, nivel=nv) for f, n in (x.split(":") for x in os.environ["GRUPO"].split(",")) for _ in range(int(n))]
@@ -936,7 +939,8 @@ def tutorial(ui):
                         cb.invocar_aliado("Esqueleto (Invocado)", hp=60, atk=8, tipo="servo")
                     cm_luta.preparar_combate = preparar
                 cm_luta.preparar_combate = com_servos
-            lutar(g, grupo)
+            # EMBOSCADA=jogador (a sua iniciativa) ou inimigo (o golpe deles primeiro): a surpresa do começo da luta
+            lutar(g, grupo, **({"emboscada": os.environ["EMBOSCADA"]} if os.environ.get("EMBOSCADA") else {}))
         if os.environ.get("ITEM"):
             g.ui.cena(g.loc["nome"], g.contexto_cena(), "evento")
             g.dizer("No chão, entre a palha, alguma coisa brilha.")
