@@ -353,6 +353,14 @@ inimigos. Duas alternativas contra a produção, com os mesmos dados, em 1280×7
 
 ## 2. Telas de leitura, criação e celebrações
 
+**Lembrete para o futuro estudo da HUD — pen.dev (experimento `9769305`):** antes de escolher ferramentas para
+uma composição nova, consultar [o relatório e a bancada](../ferramentas/prototipos/hud/pen-composicao/LEIA-ME.md).
+O teste comparou reprodução e ajuste de um seletor existente; o CSS direto foi mais rápido, e o pen.dev não entra
+como etapa obrigatória do fluxo. A criação de uma composição inédita no canvas ainda não foi avaliada e pode ser
+retomada como experimento opcional, inclusive pelo agente; não depende de Jean querer editar manualmente.
+O arquivo `seletor.pen`, os assets e as comparações estão preservados na mesma pasta. Este lembrete não autoriza
+redesenho global nem integração de uma nova HUD.
+
 - **Subida de nível:** preservar a boa organização das informações, redesenhando o acabamento para a linguagem atual.
   Manter a sensação de conquista com som, luz e movimento, sem depender do feixe suave com aparência renderizada.
   Testar feixes e partículas em pixel art e tags/faixas para os ganhos; posição e formato ainda são propostas.
