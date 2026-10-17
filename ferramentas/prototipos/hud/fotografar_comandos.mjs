@@ -1,21 +1,24 @@
-// Os comandos da luta e a amostra da exploração na linguagem do seletor D refinado (protótipo, comandos/): o jogo como
-// está e as propostas, com os mesmos dados (um jogo novo com a mesma semente para cada foto). O jogo não muda: a página
-// da proposta recebe as folhas de comandos/ por cima e, para a amostra, a cópia do escolhas.js com a troca de
+// Os comandos da luta e a amostra da exploração na linguagem do seletor D refinado (protótipo, comandos/): antes e
+// depois dos ajustes da avaliação, com os mesmos dados (um jogo novo com a mesma semente para cada foto). O jogo não
+// muda: a página da proposta recebe as folhas por cima e, para a amostra, a cópia do escolhas.js com a troca de
 // comandos/comandos.mjs.
-// As versões:
-//   atual      o jogo de hoje;
-//   comandos   os comandos novos com as cartas de hoje (comandos.css);
-//   cartas     os comandos novos e o acabamento contido das cartas (comandos.css + cartas.css);
-//   (a exploração: atual e "comandos", que leva exploracao.css)
+// As versões (as duas com as cartas contidas, a variação escolhida):
+//   antes      as folhas do commit da proposta (ANTES, padrão 206f3e6), lidas do git;
+//   depois     as folhas desta pasta: o carvão mais presente à noite, a faixa alta da exploração numa pincelada só e o
+//              aviso da cena no seu próprio espaço;
+//   atual      o jogo de hoje, sem protótipo (só pedido: VERSOES=atual,...).
 // As lutas (cenário tutorial, contra lobos de nível 9, depois de uma rodada de Atacar para o registro real ficar por
 // baixo; o herói no nível 12):
 //   dia      Guerreiro berserker com Morel e Odette, 3 lobos, no Vau de manhã (o cenário claro);
 //   noite    Mago necromante com Morel e Odette, 3 lobos, no Charco à noite (o escuro);
-//   arqueiro Arqueiro sombra com Morel, 2 lobos, no Bosque à tarde (os nomes e o custo em flechas no seletor).
+//   arqueiro Arqueiro sombra com Morel, 2 lobos, no Bosque à tarde (os nomes e o custo em flechas no seletor);
+//   bando    Guerreiro paladino com Morel, Odette e Yara, 5 lobos, no Charco à noite (a comitiva cheia e vários inimigos).
 // A exploração (cenário tutorial e covil, sem luta):
 //   bosque   o Bosque de dia, com Morel (Explorar, Acampar, Viajar);
 //   charco   o Charco à noite, com um contrato aceito ali (o grupo Contratos e "à noite é mais perigoso");
-//   capela   a Capela Afogada à noite, por fora: a ação da missão com os riscos da tocha e da noite (duas linhas);
+//   capela   a Capela Afogada à noite, por fora: a ação real da missão, "Entrar na capela pelo buraco do canal"
+//            (rpg/missoes.py, ACOES, id "nave"), com os riscos embaixo (sobrevivencia.riscos_sala: a tocha e a noite);
+//   escura   a mesma, sem tocha: o risco mais longo que o jogo tem ("Sem luz: inimigo age primeiro");
 //   covil    o covil de um guardião ainda vivo, à tarde: "Enfrentar Sarric, o Profeta das Cinzas (guardião)", o texto real
 //            mais longo desse menu (a fonte pixel não entra: vai sair do jogo);
 //   esforco  o mesmo covil com a primeira opção alongada só na página da foto (TESTE DE ESFORÇO, texto que o jogo não
@@ -29,17 +32,19 @@
 // Guarda em capturas-comandos/ (relatorio.json com as medidas); comparar_comandos.py monta as comparações.
 //   PLAYWRIGHT_MODULO=<caminho do playwright>/index.mjs node ferramentas/prototipos/hud/fotografar_comandos.mjs
 // (VERSOES=atual,comandos,cartas, LUTAS=dia,noite,arqueiro, EXPLORA=bosque,charco,capela,covil,esforco, JANELAS=normal,baixa,grande (a luta), JANELAS_EXPLORA=normal,baixa,grande,escala,
-// SAIDA=<pasta>; PYTHON=<executável> troca o Python que sobe os cenários)
-import { spawn } from "child_process";
-import { mkdirSync, readFileSync, rmSync, writeFileSync } from "fs";
+// SAIDA=<pasta>; PYTHON=<executável> troca o Python que sobe os cenários; ANTES=<commit> troca a referência do antes)
+import { execFileSync, spawn } from "child_process";
+import { mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "fs";
 import { fileURLToPath } from "url";
 import path from "path";
 import { escolhas, ponte } from "./comandos/comandos.mjs";
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULO || "playwright");
 const aqui = path.dirname(fileURLToPath(import.meta.url)), raiz = path.resolve(aqui, "../../..");
 const SAIDA = path.resolve(process.env.SAIDA || path.join(aqui, "capturas-comandos"));
-if (!process.env.MANTER) rmSync(SAIDA, { recursive: true, force: true });  // MANTER=1: refaz só as fotos pedidas, sem apagar as outras
 mkdirSync(SAIDA, { recursive: true });
+// MANTER=1: refaz só as fotos pedidas, sem apagar as outras. Sem ele, saem só as fotos soltas e o relatório (o
+// .gitignore, telas/ e comparacoes/, versionados, ficam; comparar_comandos.py refaz as comparações)
+if (!process.env.MANTER) for (const f of readdirSync(SAIDA)) if (/\.(png|json)$/.test(f)) rmSync(path.join(SAIDA, f));
 const espera = (ms) => new Promise((r) => setTimeout(r, ms));
 const filtro = (nome, todos) => (process.env[nome] ? process.env[nome].split(",") : todos);
 const PY = process.env.PYTHON || (process.platform === "win32" ? "python" : "python3");
@@ -47,8 +52,12 @@ const PY = process.env.PYTHON || (process.platform === "win32" ? "python" : "pyt
 const PASTA = path.join(aqui, "comandos");
 const PONTE = ponte(readFileSync(path.join(raiz, "rpg/web/static/css/18-seletor-habilidades.css"), "utf8"));
 const ESCOLHAS = escolhas(readFileSync(path.join(raiz, "rpg/web/static/app/escolhas.js"), "utf8"));
-const FOLHAS = { atual: [], comandos: ["comandos.css", "exploracao.css"], cartas: ["comandos.css", "exploracao.css", "cartas.css"] };
-const VERSOES = filtro("VERSOES", ["atual", "comandos", "cartas"]);
+const ANTES = process.env.ANTES || "206f3e6";
+const doGit = (f) => execFileSync("git", ["show", `${ANTES}:ferramentas/prototipos/hud/comandos/${f}`], { cwd: raiz, encoding: "utf8" });
+const FOLHAS_PROPOSTA = ["comandos.css", "exploracao.css", "cartas.css"];
+// cada folha como texto: a de antes vem do git, a de depois do arquivo
+const FOLHAS = { atual: [], antes: FOLHAS_PROPOSTA.map(doGit), depois: FOLHAS_PROPOSTA.map((f) => readFileSync(path.join(PASTA, f), "utf8")) };
+const VERSOES = filtro("VERSOES", ["antes", "depois"]);
 // "escala": 1280×720 com a escala de 125% do Windows (a página tem 1024×576 px de CSS): só com JANELAS=...,escala
 const JANELAS = Object.entries({ normal: [1500, 950], baixa: [1280, 720], grande: [1920, 1080], escala: [1024, 576] }).filter(([j]) => filtro("JANELAS", ["normal", "baixa", "grande"]).includes(j));
 const ESCALA = { escala: { deviceScaleFactor: 1.25 } };
@@ -60,12 +69,14 @@ const TODAS_LUTAS = {
   dia: { ...LUTA, CLASSE: "guerreiro", ESPEC: "berserker", COMITIVA: "morel,odete", QUANTOS: "3", LUGAR: "vau", PERIODO: "0", REC: "0" },
   noite: { ...LUTA, CLASSE: "mago", ESPEC: "necromante", COMITIVA: "morel,odete", QUANTOS: "3", LUGAR: "charco", PERIODO: "3", REC: "0.12" },
   arqueiro: { ...LUTA, CLASSE: "arqueiro", ESPEC: "sombra", COMITIVA: "morel", QUANTOS: "2", LUGAR: "bosque", PERIODO: "2", REC: "0" },
+  bando: { ...LUTA, CLASSE: "guerreiro", ESPEC: "paladino", COMITIVA: "morel,odete,yara", QUANTOS: "5", LUGAR: "charco", PERIODO: "3" },
 };
 const LUTAS = Object.entries(TODAS_LUTAS).filter(([l]) => filtro("LUTAS", Object.keys(TODAS_LUTAS)).includes(l));
 const TODAS_EXPLORA = {
   bosque: ["tutorial", { TUTORIAL: "0", VISTAS, COMITIVA: "morel", LUGAR: "bosque", PERIODO: "0" }],
   charco: ["tutorial", { TUTORIAL: "0", VISTAS, LUGAR: "charco", PERIODO: "3", CONTRATO: "aceito", CONTRATO_EM: "charco" }],
   capela: ["capela", { ETAPA: "capela", PERIODO: "3", TOCHAS: "2" }],
+  escura: ["capela", { ETAPA: "capela", PERIODO: "3", TOCHAS: "0" }],
   covil: ["covil", { PERIODO: "1" }],
   esforco: ["covil", { PERIODO: "1" }, "Enfrentar Sarric, o Profeta das Cinzas (guardião), que guarda o covil desde a queda da cidadela e não aceita rendição"],
 };
@@ -93,7 +104,7 @@ async function pagina(url, [W, H], versao, nome, opcoes = {}) {
   await p.goto(url);
   if (versao !== "atual") {
     await p.addStyleTag({ content: PONTE });
-    for (const f of FOLHAS[versao]) await p.addStyleTag({ path: path.join(PASTA, f) });
+    for (const f of FOLHAS[versao]) await p.addStyleTag({ content: f });
   }
   return p;
 }
@@ -161,7 +172,15 @@ const medirRoda = (p) => p.evaluate(() => {
   // a menor folga horizontal entre um comando e uma carta inimiga na mesma altura
   const folgas = [];
   for (const bt of bs) { const r = bt.getBoundingClientRect(); for (const c of document.querySelectorAll("#batalha .carta.inimigo")) { const q = c.getBoundingClientRect(); if (r.bottom > q.top && r.top < q.bottom) folgas.push(Math.round(q.left - r.right)); } }
-  return { folga_inimigos: folgas.length ? Math.min(...folgas) + " px" : "nenhuma na mesma altura", comandos: bs.map((bt) => { const r = bt.getBoundingClientRect(); return `${bt.dataset.slot} ${Math.round(r.width)}×${Math.round(r.height)}`; }).join(", "),
+  // o aviso da cena (a noite, o clima): o que ele toca, e a menor folga até um comando ou uma carta
+  const avisos = [...document.querySelectorAll("#arena > .mods-arena .mod")].map((m) => m.getBoundingClientRect());
+  const toca = (a, q) => a.right > q.left + 0.5 && a.left < q.right - 0.5 && a.bottom > q.top + 0.5 && a.top < q.bottom - 0.5;
+  const dist = (a, q) => Math.max(q.left - a.right, a.left - q.right, q.top - a.bottom, a.top - q.bottom);
+  const outros = [...bs.map((bt) => [bt.dataset.slot, bt.getBoundingClientRect()]), ...cartas];
+  const aviso = avisos.length ? { aviso: `${avisos.length} indicador(es), toca: ${avisos.flatMap((a) => outros.filter(([, q]) => toca(a, q)).map(([n]) => n)).join(", ") || "nada"}`,
+    aviso_folga: Math.round(Math.min(...avisos.flatMap((a) => outros.map(([, q]) => dist(a, q))))) + " px" } : { aviso: "sem aviso" };
+  return { ...aviso, arena_altura: Math.round(arena.height), cartas_pos: cartas.map(([, c]) => `${Math.round(c.left)},${Math.round(c.top)}`).join(" "),
+    folga_inimigos: folgas.length ? Math.min(...folgas) + " px" : "nenhuma na mesma altura", comandos: bs.map((bt) => { const r = bt.getBoundingClientRect(); return `${bt.dataset.slot} ${Math.round(r.width)}×${Math.round(r.height)}`; }).join(", "),
     cobre_carta: cobre.length ? cobre.join(", ") : "nenhuma",
     fora_da_arena: bs.filter((bt) => { const r = bt.getBoundingClientRect(); return r.right > arena.right + 0.5 || r.bottom > arena.bottom + 0.5 || r.top < arena.top - 0.5; }).map((bt) => bt.dataset.slot).join(", ") || "nenhum",
     cortados: bs.map((bt) => bt.querySelector(".rb-nome")).filter((e) => e && e.scrollWidth > e.clientWidth + 1).map((e) => e.textContent).join(", ") || "nenhum" };
@@ -228,6 +247,11 @@ for (const [luta, amb] of LUTAS) {
         await (await p.$(`.roda-janela .rj-linha[data-hab="${hab}"]`)).click(); await espera(900);
         await p.mouse.move(5, H - 5); await espera(250);
         r.escolha = `${hab} → ${(await p.$(".roda-mira")) ? "mira" : "sem mira"}; comandos na tela: ${await p.$$eval("#roda .roda-botao", (x) => x.length)}`;
+        r.mira_aviso = await p.evaluate(() => {
+          const m = document.querySelector(".roda-mira")?.getBoundingClientRect(), as = [...document.querySelectorAll("#arena > .mods-arena .mod")].map((a) => a.getBoundingClientRect());
+          if (!m || !as.length) return "sem aviso";
+          return as.some((a) => a.right > m.left && a.left < m.right && a.bottom > m.top && a.top < m.bottom) ? "A MIRA TOCA O AVISO" : "separados";
+        });
         await recortar(p, ["#arena"], n("8-mira"), 2);
         const v = await p.$(".mira-voltar");
         if (v) await v.click(); else await p.keyboard.press("Escape");
@@ -307,6 +331,7 @@ for (const [lugar, [cenario, amb, alongar]] of EXPLORA) {
       const p = await pagina(url, tam, versao, r.nome, ESCALA[jan]);
       await menu(p);
       if (alongar) await p.evaluate((t) => { document.querySelector("#prompt .escolha .op-texto").textContent = t; }, alongar);
+      r.simulado = alongar ? "SIM: a primeira opção recebe um texto que o jogo não tem (teste de esforço da quebra de linha)" : "não: texto real do jogo";
       await p.mouse.move(5, H - 5);
       await espera(800);
       await p.screenshot({ path: path.join(SAIDA, `${n("tela")}.png`) });
@@ -328,6 +353,10 @@ for (const [lugar, [cenario, amb, alongar]] of EXPLORA) {
       await recortar(p, ["#prompt"], n("3-pressionado"));
       await p.mouse.move(5, H - 5); await p.mouse.up(); await espera(300);
       r.soltar_fora = (await noMenu(p)) ? "nada escolhido" : "ERRO";
+      // o mouse numa de uma linha (a última: a mais alta, quando há, é a primeira)
+      await bs[bs.length - 1].hover(); await espera(400);
+      await recortar(p, ["#prompt"], n("2b-mouse-uma"));
+      await p.mouse.move(5, H - 5); await espera(300);
       await p.evaluate(() => document.activeElement && document.activeElement.blur());
       for (let k = 0; k < 40 && !(await p.evaluate(() => !!document.activeElement.closest("#prompt .escolha"))); k++) await p.keyboard.press("Tab");
       await p.keyboard.press("ArrowDown").catch(() => {});
@@ -349,5 +378,10 @@ for (const [lugar, [cenario, amb, alongar]] of EXPLORA) {
   }
 }
 await b.close();
-writeFileSync(path.join(SAIDA, process.env.MANTER ? "relatorio-parcial.json" : "relatorio.json"), JSON.stringify({ relatorio, comportamentos, erros }, null, 1));
+// as cartas no mesmo lugar em todas as versões (o aviso não pode empurrar nada)
+const cartasIguais = {};
+for (const r of relatorio.filter((x) => x.cartas_pos)) { const k = r.nome.split("-").slice(0, 2).join("-"); (cartasIguais[k] ||= new Set()).add(r.cartas_pos); }
+const cartas_entre_versoes = Object.fromEntries(Object.entries(cartasIguais).map(([k, v]) => [k, v.size === 1 ? "iguais" : "DIFERENTES: " + [...v].join(" | ")]));
+console.log(JSON.stringify(cartas_entre_versoes));
+writeFileSync(path.join(SAIDA, process.env.MANTER ? "relatorio-parcial.json" : "relatorio.json"), JSON.stringify({ antes: ANTES, versoes: VERSOES, cartas_entre_versoes, relatorio, comportamentos, erros }, null, 1));
 console.log(erros.length ? erros.join("\n") : "sem erros");

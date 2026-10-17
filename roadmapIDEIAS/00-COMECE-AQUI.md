@@ -3245,3 +3245,21 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   exploração quebra de linha: a quebra foi vista num teste de esforço declarado (texto alongado só na foto). A fonte
   pixel ficou de fora (vai sair do jogo).
 - **Continua no jogo:** os comandos, as cartas e as escolhas de hoje. Próximo: a avaliação do Jean.
+
+### 17/10/2026 (data do computador local) — Ajustes: os comandos da luta antes da avaliação final (protótipo, sem versão)
+
+- **Avaliação de Jean:** aprovada a direção visual dos comandos (faixas curtas de pincel, tecla, ícone e nome juntos,
+  sem o nicho preto, os ícones), das cartas contidas e das faixas da exploração. Pedidos três ajustes, só no protótipo.
+- **Feito, em `ferramentas/prototipos/hud/comandos/`:** o carvão dos comandos um tom acima e quase opaco, com um fio de
+  luz no alto (a forma não some mais à noite); a faixa alta da exploração numa pincelada só (as pontas escalam pela
+  altura; mais folga quando há riscos ou nota; as de uma linha iguais); o aviso "Inimigos +1 nível" numa faixa própria,
+  no canto direito da arena, sem cobrir o Fugir (anterior ao protótipo). `fotografar_comandos.mjs` passou a comparar
+  antes (`206f3e6`, lido do git) × depois e ganhou o bando (comitiva cheia e 5 lobos) e a Capela sem tocha.
+- **Conferido:** quatro lutas em 1500×950, 1280×720 e 1920×1080, com todos os estados, alternar, mira e volta,
+  comportamentos e movimento reduzido; seis telas de exploração em quatro janelas (o teste de esforço marcado como
+  simulado). Cartas no mesmo lugar antes e depois; o aviso não toca nada; sem erro no console. Suíte (603, a fumaça
+  não rodou: só arquivos do protótipo mudaram), gabarito e pyflakes OK.
+- **Achado, anterior ao protótipo:** com 5 inimigos em 1280×720 e 1500×950, os comandos e a caixa da mira ficam sobre
+  cartas inimigas; o jogo de hoje já faz isso. Entrega própria, a decidir.
+- **Continua no jogo:** os comandos, as cartas e as escolhas de hoje; versão sem mudança. Próximo: a avaliação final do
+  Jean. Os tamanhos 40/48 e a integração dos capuzes e luvas continuam numa entrega separada.

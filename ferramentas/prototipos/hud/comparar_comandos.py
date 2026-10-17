@@ -1,12 +1,12 @@
 """Monta as comparações dos comandos da luta e da amostra da exploração (comandos/) a partir das fotos de
-fotografar_comandos.mjs (capturas-comandos/), tudo em tamanho real (1×), na pasta comparacoes/ dentro dela:
-  - luta-<janela>-<luta>.png: a arena depois de uma rodada, com os mesmos dados: o jogo de hoje, os comandos novos com as
-    cartas de hoje e os comandos novos com o acabamento contido das cartas;
+fotografar_comandos.mjs (capturas-comandos/), tudo em tamanho real (1×), na pasta comparacoes/ dentro dela, antes e
+depois dos ajustes (e o jogo de hoje, quando fotografado):
+  - luta-<janela>-<luta>.png: a arena depois de uma rodada, com os mesmos dados, as versões lado a lado;
   - estados-<janela>-<luta>.png: os estados da roda (parado, mouse, pressionado, foco do teclado, Habilidades aberto,
-    foco e aberto juntos, Itens aberto, a volta da mira), uma linha por estado, as três versões lado a lado;
+    foco e aberto juntos, Itens aberto, a mira, a volta da mira), uma linha por estado;
   - golpe-<janela>-<luta>.png: o golpe no meio (o número e o efeito que passam da moldura);
-  - exploracao-<janela>-<lugar>.png: as escolhas de hoje e a amostra, paradas; e os estados da amostra (mouse na mais
-    alta, pressionado, foco do teclado);
+  - exploracao-<janela>-<lugar>.png: as escolhas paradas, antes e depois; e os estados de cada versão (mouse na mais
+    alta, mouse numa de uma linha, pressionado, foco do teclado). O teste de esforço (texto simulado) vem marcado;
   - comportamentos.png: a entrada e o movimento reduzido.
 As telas inteiras ficam nos arquivos de capturas-comandos/ (<janela>-<luta>-<versão>-tela.png e -tela-aberto.png).
 
@@ -15,18 +15,35 @@ As telas inteiras ficam nos arquivos de capturas-comandos/ (<janela>-<luta>-<ver
 import pathlib
 import sys
 
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 
 AQUI = pathlib.Path(__file__).resolve().parent
 sys.path.insert(0, str(AQUI))
-from comparar_varinha import FUNDO, em_colunas  # noqa: E402
+from comparar_varinha import FUNDO, TEXTO  # noqa: E402
+
+# os títulos com acento (a fonte padrão do Pillow não tem): uma TrueType do sistema, ou a padrão se não houver
+FONTE = next((ImageFont.truetype(f, 14) for f in ("C:/Windows/Fonts/segoeui.ttf", "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf")
+              if pathlib.Path(f).exists()), ImageFont.load_default())
+ALERTA = (240, 170, 70)  # o título do que é simulado
+
+
+def em_colunas(ims, titulos):
+    """As fotos lado a lado, cada uma com o título em cima (o simulado em âmbar)."""
+    ims = [Image.open(i).convert("RGB") for i in ims]
+    img = Image.new("RGB", (sum(i.width + 12 for i in ims) + 12, max(i.height for i in ims) + 30), FUNDO)
+    d, x = ImageDraw.Draw(img), 12
+    for i, tit in zip(ims, titulos):
+        img.paste(i, (x, 26)); d.text((x, 4), tit, fill=ALERTA if "SIMULADO" in tit else TEXTO, font=FONTE); x += i.width + 12
+    return img
 
 FOTOS = pathlib.Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else AQUI / "capturas-comandos"
 SAIDA = FOTOS / "comparacoes"
-VERSOES = {"atual": "o jogo de hoje", "comandos": "comandos novos, cartas de hoje", "cartas": "comandos novos, cartas contidas"}
+VERSOES = {"atual": "o jogo de hoje", "antes": "ANTES (206f3e6)", "depois": "DEPOIS (os ajustes)"}
+LUGARES = {"esforco": "TESTE DE ESFORÇO: 1ª opção com texto SIMULADO (o jogo não tem)",
+           "capela": "Capela à noite: ação real com os riscos", "escura": "Capela sem tocha: ação real, o risco mais longo"}
 ESTADOS = {"1-normal": "parado", "2-mouse": "mouse em Atacar", "3-pressionado": "pressionado", "4-foco": "foco do teclado (Tab)",
            "5-aberto": "Habilidades aberto", "6-foco-aberto": "foco e aberto juntos", "7-itens": "Itens aberto (alternou)",
-           "9-volta": "de volta da mira"}
+           "8-mira": "a mira", "9-volta": "de volta da mira"}
 
 
 def em_linhas(blocos, saida):
@@ -68,11 +85,12 @@ def main():
                 feitas.append(f"estados-{jan}-{luta}.png")
         lugares = sorted({n.split("-")[2] for n in nomes if n.startswith(f"{jan}-explora-")})
         for lugar in lugares:
-            base = f"{jan}-explora-{lugar}"
-            blocos = [linha([FOTOS / f"{base}-atual-1-normal.png", FOTOS / f"{base}-comandos-1-normal.png"],
-                            [f"{jan} · {lugar} · o jogo de hoje", "a amostra"]),
-                      linha([FOTOS / f"{base}-comandos-{e}.png" for e in ("2-mouse", "3-pressionado", "4-foco")],
-                            ["mouse (na mais alta)", "pressionado", "foco do teclado"])]
+            base, rot = f"{jan}-explora-{lugar}", LUGARES.get(lugar, lugar)
+            vs = [v for v in VERSOES if (FOTOS / f"{base}-{v}-1-normal.png").exists()]
+            blocos = [linha([FOTOS / f"{base}-{v}-1-normal.png" for v in vs], [f"{jan} · {rot} · {VERSOES[v]}" for v in vs])]
+            blocos += [linha([FOTOS / f"{base}-{v}-{e}.png" for e in ("2-mouse", "2b-mouse-uma", "3-pressionado", "4-foco")],
+                             [f"{VERSOES[v]} · {t}" for t in ("mouse na mais alta", "mouse numa de uma linha", "pressionado", "foco do teclado")])
+                       for v in vs if v != "atual"]
             if em_linhas(blocos, SAIDA / f"exploracao-{jan}-{lugar}.png"):
                 feitas.append(f"exploracao-{jan}-{lugar}.png")
     entradas = [linha([FOTOS / f"comportamento-{v}-{e}.png" for v in VERSOES], [f"{rot} · {VERSOES[v]}" for v in VERSOES])

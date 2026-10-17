@@ -1,25 +1,29 @@
 {
+ "antes": "206f3e6",
+ "versoes": [
+  "antes",
+  "depois"
+ ],
+ "cartas_entre_versoes": {
+  "normal-dia": "iguais",
+  "baixa-dia": "iguais",
+  "grande-dia": "iguais",
+  "normal-noite": "iguais",
+  "baixa-noite": "iguais",
+  "grande-noite": "iguais",
+  "normal-arqueiro": "iguais",
+  "baixa-arqueiro": "iguais",
+  "grande-arqueiro": "iguais",
+  "normal-bando": "iguais",
+  "baixa-bando": "iguais",
+  "grande-bando": "iguais"
+ },
  "relatorio": [
   {
-   "nome": "normal-dia-atual",
-   "folga_inimigos": "152 px",
-   "comandos": "atacar 105×44, habilidades 136×44, itens 96×44, fugir 98×44",
-   "cobre_carta": "nenhuma",
-   "fora_da_arena": "nenhum",
-   "cortados": "nenhum",
-   "soltar_fora": "nada escolhido",
-   "tab_chega": "roda-botao[atacar]: 1Atacar (foco visível)",
-   "abrir_mexe": "nada se mexe",
-   "foco_e_aberto": "habilidades focado (foco visível), aberto",
-   "alternar": "itens aberto, 1 seletor(es)",
-   "fechar_itens": "fechado",
-   "fechar_mexe": "nada se mexe",
-   "escolha": "furia_cega → mira; comandos na tela: 0",
-   "voltar": "a roda de volta",
-   "voltar_mexe": "nada se mexe"
-  },
-  {
-   "nome": "normal-dia-comandos",
+   "nome": "normal-dia-antes",
+   "aviso": "sem aviso",
+   "arena_altura": 213,
+   "cartas_pos": "341,82 354,159 354,217 896,94 896,152 896,210",
    "folga_inimigos": "138 px",
    "comandos": "atacar 116×42, habilidades 150×42, itens 107×42, fugir 109×42",
    "cobre_carta": "nenhuma",
@@ -33,11 +37,15 @@
    "fechar_itens": "fechado",
    "fechar_mexe": "nada se mexe",
    "escolha": "furia_cega → mira; comandos na tela: 0",
+   "mira_aviso": "sem aviso",
    "voltar": "a roda de volta",
    "voltar_mexe": "nada se mexe"
   },
   {
-   "nome": "normal-dia-cartas",
+   "nome": "normal-dia-depois",
+   "aviso": "sem aviso",
+   "arena_altura": 213,
+   "cartas_pos": "341,82 354,159 354,217 896,94 896,152 896,210",
    "folga_inimigos": "138 px",
    "comandos": "atacar 116×42, habilidades 150×42, itens 107×42, fugir 109×42",
    "cobre_carta": "nenhuma",
@@ -51,29 +59,15 @@
    "fechar_itens": "fechado",
    "fechar_mexe": "nada se mexe",
    "escolha": "furia_cega → mira; comandos na tela: 0",
+   "mira_aviso": "sem aviso",
    "voltar": "a roda de volta",
    "voltar_mexe": "nada se mexe"
   },
   {
-   "nome": "baixa-dia-atual",
-   "folga_inimigos": "36 px",
-   "comandos": "atacar 105×44, habilidades 136×44, itens 96×44, fugir 98×44",
-   "cobre_carta": "nenhuma",
-   "fora_da_arena": "nenhum",
-   "cortados": "nenhum",
-   "soltar_fora": "nada escolhido",
-   "tab_chega": "roda-botao[atacar]: 1Atacar (foco visível)",
-   "abrir_mexe": "nada se mexe",
-   "foco_e_aberto": "habilidades focado (foco visível), aberto",
-   "alternar": "itens aberto, 1 seletor(es)",
-   "fechar_itens": "fechado",
-   "fechar_mexe": "nada se mexe",
-   "escolha": "furia_cega → mira; comandos na tela: 0",
-   "voltar": "a roda de volta",
-   "voltar_mexe": "nada se mexe"
-  },
-  {
-   "nome": "baixa-dia-comandos",
+   "nome": "baixa-dia-antes",
+   "aviso": "sem aviso",
+   "arena_altura": 213,
+   "cartas_pos": "299,80 312,157 312,215 738,92 738,150 738,208",
    "folga_inimigos": "22 px",
    "comandos": "atacar 116×42, habilidades 150×42, itens 107×42, fugir 109×42",
    "cobre_carta": "nenhuma",
@@ -87,11 +81,15 @@
    "fechar_itens": "fechado",
    "fechar_mexe": "nada se mexe",
    "escolha": "furia_cega → mira; comandos na tela: 0",
+   "mira_aviso": "sem aviso",
    "voltar": "a roda de volta",
    "voltar_mexe": "nada se mexe"
   },
   {
-   "nome": "baixa-dia-cartas",
+   "nome": "baixa-dia-depois",
+   "aviso": "sem aviso",
+   "arena_altura": 213,
+   "cartas_pos": "299,80 312,157 312,215 738,92 738,150 738,208",
    "folga_inimigos": "22 px",
    "comandos": "atacar 116×42, habilidades 150×42, itens 107×42, fugir 109×42",
    "cobre_carta": "nenhuma",
@@ -105,29 +103,15 @@
    "fechar_itens": "fechado",
    "fechar_mexe": "nada se mexe",
    "escolha": "furia_cega → mira; comandos na tela: 0",
+   "mira_aviso": "sem aviso",
    "voltar": "a roda de volta",
    "voltar_mexe": "nada se mexe"
   },
   {
-   "nome": "grande-dia-atual",
-   "folga_inimigos": "392 px",
-   "comandos": "atacar 105×44, habilidades 136×44, itens 96×44, fugir 98×44",
-   "cobre_carta": "nenhuma",
-   "fora_da_arena": "nenhum",
-   "cortados": "nenhum",
-   "soltar_fora": "nada escolhido",
-   "tab_chega": "roda-botao[atacar]: 1Atacar (foco visível)",
-   "abrir_mexe": "nada se mexe",
-   "foco_e_aberto": "habilidades focado (foco visível), aberto",
-   "alternar": "itens aberto, 1 seletor(es)",
-   "fechar_itens": "fechado",
-   "fechar_mexe": "nada se mexe",
-   "escolha": "furia_cega → mira; comandos na tela: 0",
-   "voltar": "a roda de volta",
-   "voltar_mexe": "nada se mexe"
-  },
-  {
-   "nome": "grande-dia-comandos",
+   "nome": "grande-dia-antes",
+   "aviso": "sem aviso",
+   "arena_altura": 213,
+   "cartas_pos": "431,82 444,159 444,217 1226,94 1226,152 1226,210",
    "folga_inimigos": "378 px",
    "comandos": "atacar 116×42, habilidades 150×42, itens 107×42, fugir 109×42",
    "cobre_carta": "nenhuma",
@@ -141,11 +125,15 @@
    "fechar_itens": "fechado",
    "fechar_mexe": "nada se mexe",
    "escolha": "furia_cega → mira; comandos na tela: 0",
+   "mira_aviso": "sem aviso",
    "voltar": "a roda de volta",
    "voltar_mexe": "nada se mexe"
   },
   {
-   "nome": "grande-dia-cartas",
+   "nome": "grande-dia-depois",
+   "aviso": "sem aviso",
+   "arena_altura": 213,
+   "cartas_pos": "431,82 444,159 444,217 1226,94 1226,152 1226,210",
    "folga_inimigos": "378 px",
    "comandos": "atacar 116×42, habilidades 150×42, itens 107×42, fugir 109×42",
    "cobre_carta": "nenhuma",
@@ -159,29 +147,16 @@
    "fechar_itens": "fechado",
    "fechar_mexe": "nada se mexe",
    "escolha": "furia_cega → mira; comandos na tela: 0",
+   "mira_aviso": "sem aviso",
    "voltar": "a roda de volta",
    "voltar_mexe": "nada se mexe"
   },
   {
-   "nome": "normal-noite-atual",
-   "folga_inimigos": "152 px",
-   "comandos": "atacar 105×44, habilidades 136×44, itens 96×44, fugir 98×44",
-   "cobre_carta": "nenhuma",
-   "fora_da_arena": "nenhum",
-   "cortados": "nenhum",
-   "soltar_fora": "nada escolhido",
-   "tab_chega": "roda-botao[atacar]: 1Atacar (foco visível)",
-   "abrir_mexe": "nada se mexe",
-   "foco_e_aberto": "habilidades focado (foco visível), aberto",
-   "alternar": "itens aberto, 1 seletor(es)",
-   "fechar_itens": "fechado",
-   "fechar_mexe": "nada se mexe",
-   "escolha": "bola_fogo → mira; comandos na tela: 0",
-   "voltar": "a roda de volta",
-   "voltar_mexe": "nada se mexe"
-  },
-  {
-   "nome": "normal-noite-comandos",
+   "nome": "normal-noite-antes",
+   "aviso": "1 indicador(es), toca: fugir",
+   "aviso_folga": "-11 px",
+   "arena_altura": 213,
+   "cartas_pos": "341,82 354,159 354,217 896,94 896,152 896,210",
    "folga_inimigos": "138 px",
    "comandos": "atacar 116×42, habilidades 150×42, itens 107×42, fugir 109×42",
    "cobre_carta": "nenhuma",
@@ -195,11 +170,16 @@
    "fechar_itens": "fechado",
    "fechar_mexe": "nada se mexe",
    "escolha": "bola_fogo → mira; comandos na tela: 0",
+   "mira_aviso": "separados",
    "voltar": "a roda de volta",
    "voltar_mexe": "nada se mexe"
   },
   {
-   "nome": "normal-noite-cartas",
+   "nome": "normal-noite-depois",
+   "aviso": "1 indicador(es), toca: nada",
+   "aviso_folga": "16 px",
+   "arena_altura": 227,
+   "cartas_pos": "341,82 354,159 354,217 896,94 896,152 896,210",
    "folga_inimigos": "138 px",
    "comandos": "atacar 116×42, habilidades 150×42, itens 107×42, fugir 109×42",
    "cobre_carta": "nenhuma",
@@ -213,29 +193,16 @@
    "fechar_itens": "fechado",
    "fechar_mexe": "nada se mexe",
    "escolha": "bola_fogo → mira; comandos na tela: 0",
+   "mira_aviso": "separados",
    "voltar": "a roda de volta",
    "voltar_mexe": "nada se mexe"
   },
   {
-   "nome": "baixa-noite-atual",
-   "folga_inimigos": "36 px",
-   "comandos": "atacar 105×44, habilidades 136×44, itens 96×44, fugir 98×44",
-   "cobre_carta": "nenhuma",
-   "fora_da_arena": "nenhum",
-   "cortados": "nenhum",
-   "soltar_fora": "nada escolhido",
-   "tab_chega": "roda-botao[atacar]: 1Atacar (foco visível)",
-   "abrir_mexe": "nada se mexe",
-   "foco_e_aberto": "habilidades focado (foco visível), aberto",
-   "alternar": "itens aberto, 1 seletor(es)",
-   "fechar_itens": "fechado",
-   "fechar_mexe": "nada se mexe",
-   "escolha": "bola_fogo → mira; comandos na tela: 0",
-   "voltar": "a roda de volta",
-   "voltar_mexe": "nada se mexe"
-  },
-  {
-   "nome": "baixa-noite-comandos",
+   "nome": "baixa-noite-antes",
+   "aviso": "1 indicador(es), toca: fugir",
+   "aviso_folga": "-11 px",
+   "arena_altura": 213,
+   "cartas_pos": "299,80 312,157 312,215 738,92 738,150 738,208",
    "folga_inimigos": "22 px",
    "comandos": "atacar 116×42, habilidades 150×42, itens 107×42, fugir 109×42",
    "cobre_carta": "nenhuma",
@@ -249,11 +216,16 @@
    "fechar_itens": "fechado",
    "fechar_mexe": "nada se mexe",
    "escolha": "bola_fogo → mira; comandos na tela: 0",
+   "mira_aviso": "separados",
    "voltar": "a roda de volta",
    "voltar_mexe": "nada se mexe"
   },
   {
-   "nome": "baixa-noite-cartas",
+   "nome": "baixa-noite-depois",
+   "aviso": "1 indicador(es), toca: nada",
+   "aviso_folga": "16 px",
+   "arena_altura": 227,
+   "cartas_pos": "299,80 312,157 312,215 738,92 738,150 738,208",
    "folga_inimigos": "22 px",
    "comandos": "atacar 116×42, habilidades 150×42, itens 107×42, fugir 109×42",
    "cobre_carta": "nenhuma",
@@ -267,29 +239,16 @@
    "fechar_itens": "fechado",
    "fechar_mexe": "nada se mexe",
    "escolha": "bola_fogo → mira; comandos na tela: 0",
+   "mira_aviso": "separados",
    "voltar": "a roda de volta",
    "voltar_mexe": "nada se mexe"
   },
   {
-   "nome": "grande-noite-atual",
-   "folga_inimigos": "392 px",
-   "comandos": "atacar 105×44, habilidades 136×44, itens 96×44, fugir 98×44",
-   "cobre_carta": "nenhuma",
-   "fora_da_arena": "nenhum",
-   "cortados": "nenhum",
-   "soltar_fora": "nada escolhido",
-   "tab_chega": "roda-botao[atacar]: 1Atacar (foco visível)",
-   "abrir_mexe": "nada se mexe",
-   "foco_e_aberto": "habilidades focado (foco visível), aberto",
-   "alternar": "itens aberto, 1 seletor(es)",
-   "fechar_itens": "fechado",
-   "fechar_mexe": "nada se mexe",
-   "escolha": "bola_fogo → mira; comandos na tela: 0",
-   "voltar": "a roda de volta",
-   "voltar_mexe": "nada se mexe"
-  },
-  {
-   "nome": "grande-noite-comandos",
+   "nome": "grande-noite-antes",
+   "aviso": "1 indicador(es), toca: nada",
+   "aviso_folga": "73 px",
+   "arena_altura": 213,
+   "cartas_pos": "431,82 444,159 444,217 1226,94 1226,152 1226,210",
    "folga_inimigos": "378 px",
    "comandos": "atacar 116×42, habilidades 150×42, itens 107×42, fugir 109×42",
    "cobre_carta": "nenhuma",
@@ -303,11 +262,16 @@
    "fechar_itens": "fechado",
    "fechar_mexe": "nada se mexe",
    "escolha": "bola_fogo → mira; comandos na tela: 0",
+   "mira_aviso": "separados",
    "voltar": "a roda de volta",
    "voltar_mexe": "nada se mexe"
   },
   {
-   "nome": "grande-noite-cartas",
+   "nome": "grande-noite-depois",
+   "aviso": "1 indicador(es), toca: nada",
+   "aviso_folga": "16 px",
+   "arena_altura": 227,
+   "cartas_pos": "431,82 444,159 444,217 1226,94 1226,152 1226,210",
    "folga_inimigos": "378 px",
    "comandos": "atacar 116×42, habilidades 150×42, itens 107×42, fugir 109×42",
    "cobre_carta": "nenhuma",
@@ -321,29 +285,15 @@
    "fechar_itens": "fechado",
    "fechar_mexe": "nada se mexe",
    "escolha": "bola_fogo → mira; comandos na tela: 0",
+   "mira_aviso": "separados",
    "voltar": "a roda de volta",
    "voltar_mexe": "nada se mexe"
   },
   {
-   "nome": "normal-arqueiro-atual",
-   "folga_inimigos": "152 px",
-   "comandos": "atacar 105×44, habilidades 136×44, itens 96×44, fugir 98×44",
-   "cobre_carta": "nenhuma",
-   "fora_da_arena": "nenhum",
-   "cortados": "nenhum",
-   "soltar_fora": "nada escolhido",
-   "tab_chega": "roda-botao[atacar]: 1Atacar (foco visível)",
-   "abrir_mexe": "nada se mexe",
-   "foco_e_aberto": "habilidades focado (foco visível), aberto",
-   "alternar": "itens aberto, 1 seletor(es)",
-   "fechar_itens": "fechado",
-   "fechar_mexe": "nada se mexe",
-   "escolha": "marcar_presa → mira; comandos na tela: 0",
-   "voltar": "a roda de volta",
-   "voltar_mexe": "nada se mexe"
-  },
-  {
-   "nome": "normal-arqueiro-comandos",
+   "nome": "normal-arqueiro-antes",
+   "aviso": "sem aviso",
+   "arena_altura": 210,
+   "cartas_pos": "341,99 354,196 896,121 896,179",
    "folga_inimigos": "138 px",
    "comandos": "atacar 116×42, habilidades 150×42, itens 107×42, fugir 109×42",
    "cobre_carta": "nenhuma",
@@ -357,11 +307,15 @@
    "fechar_itens": "fechado",
    "fechar_mexe": "nada se mexe",
    "escolha": "marcar_presa → mira; comandos na tela: 0",
+   "mira_aviso": "sem aviso",
    "voltar": "a roda de volta",
    "voltar_mexe": "nada se mexe"
   },
   {
-   "nome": "normal-arqueiro-cartas",
+   "nome": "normal-arqueiro-depois",
+   "aviso": "sem aviso",
+   "arena_altura": 210,
+   "cartas_pos": "341,99 354,196 896,121 896,179",
    "folga_inimigos": "138 px",
    "comandos": "atacar 116×42, habilidades 150×42, itens 107×42, fugir 109×42",
    "cobre_carta": "nenhuma",
@@ -375,29 +329,15 @@
    "fechar_itens": "fechado",
    "fechar_mexe": "nada se mexe",
    "escolha": "marcar_presa → mira; comandos na tela: 0",
+   "mira_aviso": "sem aviso",
    "voltar": "a roda de volta",
    "voltar_mexe": "nada se mexe"
   },
   {
-   "nome": "baixa-arqueiro-atual",
-   "folga_inimigos": "36 px",
-   "comandos": "atacar 105×44, habilidades 136×44, itens 96×44, fugir 98×44",
-   "cobre_carta": "nenhuma",
-   "fora_da_arena": "nenhum",
-   "cortados": "nenhum",
-   "soltar_fora": "nada escolhido",
-   "tab_chega": "roda-botao[atacar]: 1Atacar (foco visível)",
-   "abrir_mexe": "nada se mexe",
-   "foco_e_aberto": "habilidades focado (foco visível), aberto",
-   "alternar": "itens aberto, 1 seletor(es)",
-   "fechar_itens": "fechado",
-   "fechar_mexe": "nada se mexe",
-   "escolha": "marcar_presa → mira; comandos na tela: 0",
-   "voltar": "a roda de volta",
-   "voltar_mexe": "nada se mexe"
-  },
-  {
-   "nome": "baixa-arqueiro-comandos",
+   "nome": "baixa-arqueiro-antes",
+   "aviso": "sem aviso",
+   "arena_altura": 210,
+   "cartas_pos": "299,97 312,194 738,119 738,177",
    "folga_inimigos": "22 px",
    "comandos": "atacar 116×42, habilidades 150×42, itens 107×42, fugir 109×42",
    "cobre_carta": "nenhuma",
@@ -411,11 +351,15 @@
    "fechar_itens": "fechado",
    "fechar_mexe": "nada se mexe",
    "escolha": "marcar_presa → mira; comandos na tela: 0",
+   "mira_aviso": "sem aviso",
    "voltar": "a roda de volta",
    "voltar_mexe": "nada se mexe"
   },
   {
-   "nome": "baixa-arqueiro-cartas",
+   "nome": "baixa-arqueiro-depois",
+   "aviso": "sem aviso",
+   "arena_altura": 210,
+   "cartas_pos": "299,97 312,194 738,119 738,177",
    "folga_inimigos": "22 px",
    "comandos": "atacar 116×42, habilidades 150×42, itens 107×42, fugir 109×42",
    "cobre_carta": "nenhuma",
@@ -429,29 +373,15 @@
    "fechar_itens": "fechado",
    "fechar_mexe": "nada se mexe",
    "escolha": "marcar_presa → mira; comandos na tela: 0",
+   "mira_aviso": "sem aviso",
    "voltar": "a roda de volta",
    "voltar_mexe": "nada se mexe"
   },
   {
-   "nome": "grande-arqueiro-atual",
-   "folga_inimigos": "392 px",
-   "comandos": "atacar 105×44, habilidades 136×44, itens 96×44, fugir 98×44",
-   "cobre_carta": "nenhuma",
-   "fora_da_arena": "nenhum",
-   "cortados": "nenhum",
-   "soltar_fora": "nada escolhido",
-   "tab_chega": "roda-botao[atacar]: 1Atacar (foco visível)",
-   "abrir_mexe": "nada se mexe",
-   "foco_e_aberto": "habilidades focado (foco visível), aberto",
-   "alternar": "itens aberto, 1 seletor(es)",
-   "fechar_itens": "fechado",
-   "fechar_mexe": "nada se mexe",
-   "escolha": "marcar_presa → mira; comandos na tela: 0",
-   "voltar": "a roda de volta",
-   "voltar_mexe": "nada se mexe"
-  },
-  {
-   "nome": "grande-arqueiro-comandos",
+   "nome": "grande-arqueiro-antes",
+   "aviso": "sem aviso",
+   "arena_altura": 210,
+   "cartas_pos": "431,99 444,196 1226,121 1226,179",
    "folga_inimigos": "378 px",
    "comandos": "atacar 116×42, habilidades 150×42, itens 107×42, fugir 109×42",
    "cobre_carta": "nenhuma",
@@ -465,11 +395,15 @@
    "fechar_itens": "fechado",
    "fechar_mexe": "nada se mexe",
    "escolha": "marcar_presa → mira; comandos na tela: 0",
+   "mira_aviso": "sem aviso",
    "voltar": "a roda de volta",
    "voltar_mexe": "nada se mexe"
   },
   {
-   "nome": "grande-arqueiro-cartas",
+   "nome": "grande-arqueiro-depois",
+   "aviso": "sem aviso",
+   "arena_altura": 210,
+   "cartas_pos": "431,99 444,196 1226,121 1226,179",
    "folga_inimigos": "378 px",
    "comandos": "atacar 116×42, habilidades 150×42, itens 107×42, fugir 109×42",
    "cobre_carta": "nenhuma",
@@ -483,26 +417,151 @@
    "fechar_itens": "fechado",
    "fechar_mexe": "nada se mexe",
    "escolha": "marcar_presa → mira; comandos na tela: 0",
+   "mira_aviso": "sem aviso",
    "voltar": "a roda de volta",
    "voltar_mexe": "nada se mexe"
   },
   {
-   "nome": "normal-explora-bosque-atual",
-   "amostra": false,
-   "opcoes": [
-    "Explorar a região (41 px)",
-    "Acampar e descansar até o amanhecer (41 px)",
-    "Viajar (41 px)"
-   ],
-   "fonte": "20px",
-   "cortados": 0,
-   "sobrepostas": false,
+   "nome": "normal-bando-antes",
+   "aviso": "1 indicador(es), toca: LoboNv.9",
+   "aviso_folga": "-2 px",
+   "arena_altura": 303,
+   "cartas_pos": "341,82 354,159 354,249 354,307 738,91 926,91 738,181 926,181 738,271",
+   "folga_inimigos": "-20 px",
+   "comandos": "atacar 116×42, habilidades 150×42, itens 107×42, fugir 109×42",
+   "cobre_carta": "habilidades×LoboNv.9",
+   "fora_da_arena": "nenhum",
+   "cortados": "nenhum",
    "soltar_fora": "nada escolhido",
-   "foco": "escolha: 3Viajar",
-   "clique": "3 de 3 opções à vista respondem em todos os pontos"
+   "tab_chega": "roda-botao[atacar]: 1Atacar (foco visível)",
+   "abrir_mexe": "nada se mexe",
+   "foco_e_aberto": "habilidades focado (foco visível), aberto",
+   "alternar": "itens aberto, 1 seletor(es)",
+   "fechar_itens": "fechado",
+   "fechar_mexe": "nada se mexe",
+   "escolha": "golpe_pesado → mira; comandos na tela: 0",
+   "mira_aviso": "separados",
+   "voltar": "a roda de volta",
+   "voltar_mexe": "nada se mexe"
   },
   {
-   "nome": "normal-explora-bosque-comandos",
+   "nome": "normal-bando-depois",
+   "aviso": "1 indicador(es), toca: nada",
+   "aviso_folga": "64 px",
+   "arena_altura": 317,
+   "cartas_pos": "341,82 354,159 354,249 354,307 738,91 926,91 738,181 926,181 738,271",
+   "folga_inimigos": "-20 px",
+   "comandos": "atacar 116×42, habilidades 150×42, itens 107×42, fugir 109×42",
+   "cobre_carta": "habilidades×LoboNv.9",
+   "fora_da_arena": "nenhum",
+   "cortados": "nenhum",
+   "soltar_fora": "nada escolhido",
+   "tab_chega": "roda-botao[atacar]: 1Atacar (foco visível)",
+   "abrir_mexe": "nada se mexe",
+   "foco_e_aberto": "habilidades focado (foco visível), aberto",
+   "alternar": "itens aberto, 1 seletor(es)",
+   "fechar_itens": "fechado",
+   "fechar_mexe": "nada se mexe",
+   "escolha": "golpe_pesado → mira; comandos na tela: 0",
+   "mira_aviso": "separados",
+   "voltar": "a roda de volta",
+   "voltar_mexe": "nada se mexe"
+  },
+  {
+   "nome": "baixa-bando-antes",
+   "aviso": "1 indicador(es), toca: LoboNv.9",
+   "aviso_folga": "-2 px",
+   "arena_altura": 303,
+   "cartas_pos": "301,80 312,157 312,247 312,305 616,89 786,89 616,179 786,179 616,269",
+   "folga_inimigos": "-78 px",
+   "comandos": "atacar 116×42, habilidades 150×42, itens 107×42, fugir 109×42",
+   "cobre_carta": "atacar×LoboNv.9, habilidades×LoboNv.9, itens×LoboNv.9, fugir×LoboNv.9",
+   "fora_da_arena": "nenhum",
+   "cortados": "nenhum",
+   "soltar_fora": "nada escolhido",
+   "tab_chega": "roda-botao[atacar]: 1Atacar (foco visível)",
+   "abrir_mexe": "nada se mexe",
+   "foco_e_aberto": "habilidades focado (foco visível), aberto",
+   "alternar": "itens aberto, 1 seletor(es)",
+   "fechar_itens": "fechado",
+   "fechar_mexe": "nada se mexe",
+   "escolha": "golpe_pesado → mira; comandos na tela: 0",
+   "mira_aviso": "separados",
+   "voltar": "a roda de volta",
+   "voltar_mexe": "nada se mexe"
+  },
+  {
+   "nome": "baixa-bando-depois",
+   "aviso": "1 indicador(es), toca: nada",
+   "aviso_folga": "46 px",
+   "arena_altura": 317,
+   "cartas_pos": "301,80 312,157 312,247 312,305 616,89 786,89 616,179 786,179 616,269",
+   "folga_inimigos": "-78 px",
+   "comandos": "atacar 116×42, habilidades 150×42, itens 107×42, fugir 109×42",
+   "cobre_carta": "atacar×LoboNv.9, habilidades×LoboNv.9, itens×LoboNv.9, fugir×LoboNv.9",
+   "fora_da_arena": "nenhum",
+   "cortados": "nenhum",
+   "soltar_fora": "nada escolhido",
+   "tab_chega": "roda-botao[atacar]: 1Atacar (foco visível)",
+   "abrir_mexe": "nada se mexe",
+   "foco_e_aberto": "habilidades focado (foco visível), aberto",
+   "alternar": "itens aberto, 1 seletor(es)",
+   "fechar_itens": "fechado",
+   "fechar_mexe": "nada se mexe",
+   "escolha": "golpe_pesado → mira; comandos na tela: 0",
+   "mira_aviso": "separados",
+   "voltar": "a roda de volta",
+   "voltar_mexe": "nada se mexe"
+  },
+  {
+   "nome": "grande-bando-antes",
+   "aviso": "1 indicador(es), toca: nada",
+   "aviso_folga": "66 px",
+   "arena_altura": 303,
+   "cartas_pos": "431,82 444,159 444,249 444,307 1068,91 1256,91 1068,181 1256,181 1068,271",
+   "folga_inimigos": "220 px",
+   "comandos": "atacar 116×42, habilidades 150×42, itens 107×42, fugir 109×42",
+   "cobre_carta": "nenhuma",
+   "fora_da_arena": "nenhum",
+   "cortados": "nenhum",
+   "soltar_fora": "nada escolhido",
+   "tab_chega": "roda-botao[atacar]: 1Atacar (foco visível)",
+   "abrir_mexe": "nada se mexe",
+   "foco_e_aberto": "habilidades focado (foco visível), aberto",
+   "alternar": "itens aberto, 1 seletor(es)",
+   "fechar_itens": "fechado",
+   "fechar_mexe": "nada se mexe",
+   "escolha": "golpe_pesado → mira; comandos na tela: 0",
+   "mira_aviso": "separados",
+   "voltar": "a roda de volta",
+   "voltar_mexe": "nada se mexe"
+  },
+  {
+   "nome": "grande-bando-depois",
+   "aviso": "1 indicador(es), toca: nada",
+   "aviso_folga": "64 px",
+   "arena_altura": 317,
+   "cartas_pos": "431,82 444,159 444,249 444,307 1068,91 1256,91 1068,181 1256,181 1068,271",
+   "folga_inimigos": "220 px",
+   "comandos": "atacar 116×42, habilidades 150×42, itens 107×42, fugir 109×42",
+   "cobre_carta": "nenhuma",
+   "fora_da_arena": "nenhum",
+   "cortados": "nenhum",
+   "soltar_fora": "nada escolhido",
+   "tab_chega": "roda-botao[atacar]: 1Atacar (foco visível)",
+   "abrir_mexe": "nada se mexe",
+   "foco_e_aberto": "habilidades focado (foco visível), aberto",
+   "alternar": "itens aberto, 1 seletor(es)",
+   "fechar_itens": "fechado",
+   "fechar_mexe": "nada se mexe",
+   "escolha": "golpe_pesado → mira; comandos na tela: 0",
+   "mira_aviso": "separados",
+   "voltar": "a roda de volta",
+   "voltar_mexe": "nada se mexe"
+  },
+  {
+   "nome": "normal-explora-bosque-antes",
+   "simulado": "não: texto real do jogo",
    "amostra": true,
    "opcoes": [
     "Explorar a região (46 px)",
@@ -517,22 +576,8 @@
    "clique": "3 de 3 opções à vista respondem em todos os pontos"
   },
   {
-   "nome": "baixa-explora-bosque-atual",
-   "amostra": false,
-   "opcoes": [
-    "Explorar a região (41 px)",
-    "Acampar e descansar até o amanhecer (41 px)",
-    "Viajar (41 px)"
-   ],
-   "fonte": "20px",
-   "cortados": 0,
-   "sobrepostas": false,
-   "soltar_fora": "nada escolhido",
-   "foco": "escolha: 3Viajar",
-   "clique": "3 de 3 opções à vista respondem em todos os pontos"
-  },
-  {
-   "nome": "baixa-explora-bosque-comandos",
+   "nome": "normal-explora-bosque-depois",
+   "simulado": "não: texto real do jogo",
    "amostra": true,
    "opcoes": [
     "Explorar a região (46 px)",
@@ -547,22 +592,8 @@
    "clique": "3 de 3 opções à vista respondem em todos os pontos"
   },
   {
-   "nome": "grande-explora-bosque-atual",
-   "amostra": false,
-   "opcoes": [
-    "Explorar a região (41 px)",
-    "Acampar e descansar até o amanhecer (41 px)",
-    "Viajar (41 px)"
-   ],
-   "fonte": "20px",
-   "cortados": 0,
-   "sobrepostas": false,
-   "soltar_fora": "nada escolhido",
-   "foco": "escolha: 3Viajar",
-   "clique": "3 de 3 opções à vista respondem em todos os pontos"
-  },
-  {
-   "nome": "grande-explora-bosque-comandos",
+   "nome": "baixa-explora-bosque-antes",
+   "simulado": "não: texto real do jogo",
    "amostra": true,
    "opcoes": [
     "Explorar a região (46 px)",
@@ -577,12 +608,61 @@
    "clique": "3 de 3 opções à vista respondem em todos os pontos"
   },
   {
-   "nome": "escala-explora-bosque-atual",
-   "amostra": false,
+   "nome": "baixa-explora-bosque-depois",
+   "simulado": "não: texto real do jogo",
+   "amostra": true,
    "opcoes": [
-    "Explorar a região (41 px)",
-    "Acampar e descansar até o amanhecer (41 px)",
-    "Viajar (41 px)"
+    "Explorar a região (46 px)",
+    "Acampar e descansar até o amanhecer (46 px)",
+    "Viajar (46 px)"
+   ],
+   "fonte": "20px",
+   "cortados": 0,
+   "sobrepostas": false,
+   "soltar_fora": "nada escolhido",
+   "foco": "escolha: 3Viajar",
+   "clique": "3 de 3 opções à vista respondem em todos os pontos"
+  },
+  {
+   "nome": "grande-explora-bosque-antes",
+   "simulado": "não: texto real do jogo",
+   "amostra": true,
+   "opcoes": [
+    "Explorar a região (46 px)",
+    "Acampar e descansar até o amanhecer (46 px)",
+    "Viajar (46 px)"
+   ],
+   "fonte": "20px",
+   "cortados": 0,
+   "sobrepostas": false,
+   "soltar_fora": "nada escolhido",
+   "foco": "escolha: 3Viajar",
+   "clique": "3 de 3 opções à vista respondem em todos os pontos"
+  },
+  {
+   "nome": "grande-explora-bosque-depois",
+   "simulado": "não: texto real do jogo",
+   "amostra": true,
+   "opcoes": [
+    "Explorar a região (46 px)",
+    "Acampar e descansar até o amanhecer (46 px)",
+    "Viajar (46 px)"
+   ],
+   "fonte": "20px",
+   "cortados": 0,
+   "sobrepostas": false,
+   "soltar_fora": "nada escolhido",
+   "foco": "escolha: 3Viajar",
+   "clique": "3 de 3 opções à vista respondem em todos os pontos"
+  },
+  {
+   "nome": "escala-explora-bosque-antes",
+   "simulado": "não: texto real do jogo",
+   "amostra": true,
+   "opcoes": [
+    "Explorar a região (46 px)",
+    "Acampar e descansar até o amanhecer (46 px)",
+    "Viajar (46 px)"
    ],
    "fonte": "20px",
    "cortados": 0,
@@ -592,7 +672,8 @@
    "clique": "3 de 3 opções à vista respondem em todos os pontos"
   },
   {
-   "nome": "escala-explora-bosque-comandos",
+   "nome": "escala-explora-bosque-depois",
+   "simulado": "não: texto real do jogo",
    "amostra": true,
    "opcoes": [
     "Explorar a região (46 px)",
@@ -607,23 +688,8 @@
    "clique": "3 de 3 opções à vista respondem em todos os pontos"
   },
   {
-   "nome": "normal-explora-charco-atual",
-   "amostra": false,
-   "opcoes": [
-    "Caçar afogados (contrato, 0/4) (41 px)",
-    "Explorar a região (à noite é mais perigoso) (41 px)",
-    "Acampar e descansar até o amanhecer (41 px)",
-    "Viajar (41 px)"
-   ],
-   "fonte": "20px",
-   "cortados": 0,
-   "sobrepostas": false,
-   "soltar_fora": "nada escolhido",
-   "foco": "escolha: 3Acampar e descansar até o ama",
-   "clique": "4 de 4 opções à vista respondem em todos os pontos"
-  },
-  {
-   "nome": "normal-explora-charco-comandos",
+   "nome": "normal-explora-charco-antes",
+   "simulado": "não: texto real do jogo",
    "amostra": true,
    "opcoes": [
     "Caçar afogados (contrato, 0/4) (46 px)",
@@ -639,23 +705,8 @@
    "clique": "4 de 4 opções à vista respondem em todos os pontos"
   },
   {
-   "nome": "baixa-explora-charco-atual",
-   "amostra": false,
-   "opcoes": [
-    "Caçar afogados (contrato, 0/4) (41 px)",
-    "Explorar a região (à noite é mais perigoso) (41 px)",
-    "Acampar e descansar até o amanhecer (41 px)",
-    "Viajar (41 px)"
-   ],
-   "fonte": "20px",
-   "cortados": 0,
-   "sobrepostas": false,
-   "soltar_fora": "nada escolhido",
-   "foco": "escolha: 3Acampar e descansar até o ama",
-   "clique": "4 de 4 opções à vista respondem em todos os pontos"
-  },
-  {
-   "nome": "baixa-explora-charco-comandos",
+   "nome": "normal-explora-charco-depois",
+   "simulado": "não: texto real do jogo",
    "amostra": true,
    "opcoes": [
     "Caçar afogados (contrato, 0/4) (46 px)",
@@ -671,23 +722,8 @@
    "clique": "4 de 4 opções à vista respondem em todos os pontos"
   },
   {
-   "nome": "grande-explora-charco-atual",
-   "amostra": false,
-   "opcoes": [
-    "Caçar afogados (contrato, 0/4) (41 px)",
-    "Explorar a região (à noite é mais perigoso) (41 px)",
-    "Acampar e descansar até o amanhecer (41 px)",
-    "Viajar (41 px)"
-   ],
-   "fonte": "20px",
-   "cortados": 0,
-   "sobrepostas": false,
-   "soltar_fora": "nada escolhido",
-   "foco": "escolha: 3Acampar e descansar até o ama",
-   "clique": "4 de 4 opções à vista respondem em todos os pontos"
-  },
-  {
-   "nome": "grande-explora-charco-comandos",
+   "nome": "baixa-explora-charco-antes",
+   "simulado": "não: texto real do jogo",
    "amostra": true,
    "opcoes": [
     "Caçar afogados (contrato, 0/4) (46 px)",
@@ -703,23 +739,8 @@
    "clique": "4 de 4 opções à vista respondem em todos os pontos"
   },
   {
-   "nome": "escala-explora-charco-atual",
-   "amostra": false,
-   "opcoes": [
-    "Caçar afogados (contrato, 0/4) (41 px)",
-    "Explorar a região (à noite é mais perigoso) (41 px)",
-    "Acampar e descansar até o amanhecer (41 px)",
-    "Viajar (41 px)"
-   ],
-   "fonte": "20px",
-   "cortados": 0,
-   "sobrepostas": false,
-   "soltar_fora": "nada escolhido",
-   "foco": "escolha: 3Acampar e descansar até o ama",
-   "clique": "4 de 4 opções à vista respondem em todos os pontos"
-  },
-  {
-   "nome": "escala-explora-charco-comandos",
+   "nome": "baixa-explora-charco-depois",
+   "simulado": "não: texto real do jogo",
    "amostra": true,
    "opcoes": [
     "Caçar afogados (contrato, 0/4) (46 px)",
@@ -732,16 +753,17 @@
    "sobrepostas": false,
    "soltar_fora": "nada escolhido",
    "foco": "escolha: 3Acampar e descansar até o ama",
-   "clique": "3 de 3 opções à vista respondem em todos os pontos"
+   "clique": "4 de 4 opções à vista respondem em todos os pontos"
   },
   {
-   "nome": "normal-explora-capela-atual",
-   "amostra": false,
+   "nome": "grande-explora-charco-antes",
+   "simulado": "não: texto real do jogo",
+   "amostra": true,
    "opcoes": [
-    "Entrar na capela pelo buraco do canal (67 px)",
-    "Explorar a região (à noite é mais perigoso) (41 px)",
-    "Acampar e descansar até o amanhecer (41 px)",
-    "Viajar (41 px)"
+    "Caçar afogados (contrato, 0/4) (46 px)",
+    "Explorar a região (à noite é mais perigoso) (46 px)",
+    "Acampar e descansar até o amanhecer (46 px)",
+    "Viajar (46 px)"
    ],
    "fonte": "20px",
    "cortados": 0,
@@ -751,7 +773,59 @@
    "clique": "4 de 4 opções à vista respondem em todos os pontos"
   },
   {
-   "nome": "normal-explora-capela-comandos",
+   "nome": "grande-explora-charco-depois",
+   "simulado": "não: texto real do jogo",
+   "amostra": true,
+   "opcoes": [
+    "Caçar afogados (contrato, 0/4) (46 px)",
+    "Explorar a região (à noite é mais perigoso) (46 px)",
+    "Acampar e descansar até o amanhecer (46 px)",
+    "Viajar (46 px)"
+   ],
+   "fonte": "20px",
+   "cortados": 0,
+   "sobrepostas": false,
+   "soltar_fora": "nada escolhido",
+   "foco": "escolha: 3Acampar e descansar até o ama",
+   "clique": "4 de 4 opções à vista respondem em todos os pontos"
+  },
+  {
+   "nome": "escala-explora-charco-antes",
+   "simulado": "não: texto real do jogo",
+   "amostra": true,
+   "opcoes": [
+    "Caçar afogados (contrato, 0/4) (46 px)",
+    "Explorar a região (à noite é mais perigoso) (46 px)",
+    "Acampar e descansar até o amanhecer (46 px)",
+    "Viajar (46 px)"
+   ],
+   "fonte": "20px",
+   "cortados": 0,
+   "sobrepostas": false,
+   "soltar_fora": "nada escolhido",
+   "foco": "escolha: 3Acampar e descansar até o ama",
+   "clique": "4 de 4 opções à vista respondem em todos os pontos"
+  },
+  {
+   "nome": "escala-explora-charco-depois",
+   "simulado": "não: texto real do jogo",
+   "amostra": true,
+   "opcoes": [
+    "Caçar afogados (contrato, 0/4) (46 px)",
+    "Explorar a região (à noite é mais perigoso) (46 px)",
+    "Acampar e descansar até o amanhecer (46 px)",
+    "Viajar (46 px)"
+   ],
+   "fonte": "20px",
+   "cortados": 0,
+   "sobrepostas": false,
+   "soltar_fora": "nada escolhido",
+   "foco": "escolha: 3Acampar e descansar até o ama",
+   "clique": "4 de 4 opções à vista respondem em todos os pontos"
+  },
+  {
+   "nome": "normal-explora-capela-antes",
+   "simulado": "não: texto real do jogo",
    "amostra": true,
    "opcoes": [
     "Entrar na capela pelo buraco do canal (71 px)",
@@ -767,23 +841,25 @@
    "clique": "4 de 4 opções à vista respondem em todos os pontos"
   },
   {
-   "nome": "baixa-explora-capela-atual",
-   "amostra": false,
+   "nome": "normal-explora-capela-depois",
+   "simulado": "não: texto real do jogo",
+   "amostra": true,
    "opcoes": [
-    "Entrar na capela pelo buraco do canal (67 px)",
-    "Explorar a região (à noite é mais perigoso) (41 px)",
-    "Acampar e descansar até o amanhecer (41 px)",
-    "Viajar (41 px)"
+    "Entrar na capela pelo buraco do canal (81 px)",
+    "Explorar a região (à noite é mais perigoso) (46 px)",
+    "Acampar e descansar até o amanhecer (46 px)",
+    "Viajar (46 px)"
    ],
    "fonte": "20px",
    "cortados": 0,
    "sobrepostas": false,
    "soltar_fora": "nada escolhido",
    "foco": "escolha: 3Acampar e descansar até o ama",
-   "clique": "3 de 3 opções à vista respondem em todos os pontos"
+   "clique": "4 de 4 opções à vista respondem em todos os pontos"
   },
   {
-   "nome": "baixa-explora-capela-comandos",
+   "nome": "baixa-explora-capela-antes",
+   "simulado": "não: texto real do jogo",
    "amostra": true,
    "opcoes": [
     "Entrar na capela pelo buraco do canal (71 px)",
@@ -799,23 +875,25 @@
    "clique": "3 de 3 opções à vista respondem em todos os pontos"
   },
   {
-   "nome": "grande-explora-capela-atual",
-   "amostra": false,
+   "nome": "baixa-explora-capela-depois",
+   "simulado": "não: texto real do jogo",
+   "amostra": true,
    "opcoes": [
-    "Entrar na capela pelo buraco do canal (67 px)",
-    "Explorar a região (à noite é mais perigoso) (41 px)",
-    "Acampar e descansar até o amanhecer (41 px)",
-    "Viajar (41 px)"
+    "Entrar na capela pelo buraco do canal (81 px)",
+    "Explorar a região (à noite é mais perigoso) (46 px)",
+    "Acampar e descansar até o amanhecer (46 px)",
+    "Viajar (46 px)"
    ],
    "fonte": "20px",
    "cortados": 0,
    "sobrepostas": false,
    "soltar_fora": "nada escolhido",
    "foco": "escolha: 3Acampar e descansar até o ama",
-   "clique": "4 de 4 opções à vista respondem em todos os pontos"
+   "clique": "3 de 3 opções à vista respondem em todos os pontos"
   },
   {
-   "nome": "grande-explora-capela-comandos",
+   "nome": "grande-explora-capela-antes",
+   "simulado": "não: texto real do jogo",
    "amostra": true,
    "opcoes": [
     "Entrar na capela pelo buraco do canal (71 px)",
@@ -831,23 +909,25 @@
    "clique": "4 de 4 opções à vista respondem em todos os pontos"
   },
   {
-   "nome": "escala-explora-capela-atual",
-   "amostra": false,
+   "nome": "grande-explora-capela-depois",
+   "simulado": "não: texto real do jogo",
+   "amostra": true,
    "opcoes": [
-    "Entrar na capela pelo buraco do canal (67 px)",
-    "Explorar a região (à noite é mais perigoso) (41 px)",
-    "Acampar e descansar até o amanhecer (41 px)",
-    "Viajar (41 px)"
+    "Entrar na capela pelo buraco do canal (81 px)",
+    "Explorar a região (à noite é mais perigoso) (46 px)",
+    "Acampar e descansar até o amanhecer (46 px)",
+    "Viajar (46 px)"
    ],
    "fonte": "20px",
    "cortados": 0,
    "sobrepostas": false,
    "soltar_fora": "nada escolhido",
    "foco": "escolha: 3Acampar e descansar até o ama",
-   "clique": "3 de 3 opções à vista respondem em todos os pontos"
+   "clique": "4 de 4 opções à vista respondem em todos os pontos"
   },
   {
-   "nome": "escala-explora-capela-comandos",
+   "nome": "escala-explora-capela-antes",
+   "simulado": "não: texto real do jogo",
    "amostra": true,
    "opcoes": [
     "Entrar na capela pelo buraco do canal (71 px)",
@@ -863,13 +943,31 @@
    "clique": "3 de 3 opções à vista respondem em todos os pontos"
   },
   {
-   "nome": "normal-explora-covil-atual",
-   "amostra": false,
+   "nome": "escala-explora-capela-depois",
+   "simulado": "não: texto real do jogo",
+   "amostra": true,
    "opcoes": [
-    "Enfrentar Sarric, o Profeta das Cinzas (guardião) (41 px)",
-    "Explorar a região (41 px)",
-    "Acampar e descansar até o amanhecer (41 px)",
-    "Viajar (41 px)"
+    "Entrar na capela pelo buraco do canal (81 px)",
+    "Explorar a região (à noite é mais perigoso) (46 px)",
+    "Acampar e descansar até o amanhecer (46 px)",
+    "Viajar (46 px)"
+   ],
+   "fonte": "20px",
+   "cortados": 0,
+   "sobrepostas": false,
+   "soltar_fora": "nada escolhido",
+   "foco": "escolha: 3Acampar e descansar até o ama",
+   "clique": "3 de 3 opções à vista respondem em todos os pontos"
+  },
+  {
+   "nome": "normal-explora-escura-antes",
+   "simulado": "não: texto real do jogo",
+   "amostra": true,
+   "opcoes": [
+    "Entrar na capela pelo buraco do canal (71 px)",
+    "Explorar a região (à noite é mais perigoso) (46 px)",
+    "Acampar e descansar até o amanhecer (46 px)",
+    "Viajar (46 px)"
    ],
    "fonte": "20px",
    "cortados": 0,
@@ -879,7 +977,127 @@
    "clique": "4 de 4 opções à vista respondem em todos os pontos"
   },
   {
-   "nome": "normal-explora-covil-comandos",
+   "nome": "normal-explora-escura-depois",
+   "simulado": "não: texto real do jogo",
+   "amostra": true,
+   "opcoes": [
+    "Entrar na capela pelo buraco do canal (81 px)",
+    "Explorar a região (à noite é mais perigoso) (46 px)",
+    "Acampar e descansar até o amanhecer (46 px)",
+    "Viajar (46 px)"
+   ],
+   "fonte": "20px",
+   "cortados": 0,
+   "sobrepostas": false,
+   "soltar_fora": "nada escolhido",
+   "foco": "escolha: 3Acampar e descansar até o ama",
+   "clique": "4 de 4 opções à vista respondem em todos os pontos"
+  },
+  {
+   "nome": "baixa-explora-escura-antes",
+   "simulado": "não: texto real do jogo",
+   "amostra": true,
+   "opcoes": [
+    "Entrar na capela pelo buraco do canal (71 px)",
+    "Explorar a região (à noite é mais perigoso) (46 px)",
+    "Acampar e descansar até o amanhecer (46 px)",
+    "Viajar (46 px)"
+   ],
+   "fonte": "20px",
+   "cortados": 0,
+   "sobrepostas": false,
+   "soltar_fora": "nada escolhido",
+   "foco": "escolha: 3Acampar e descansar até o ama",
+   "clique": "3 de 3 opções à vista respondem em todos os pontos"
+  },
+  {
+   "nome": "baixa-explora-escura-depois",
+   "simulado": "não: texto real do jogo",
+   "amostra": true,
+   "opcoes": [
+    "Entrar na capela pelo buraco do canal (81 px)",
+    "Explorar a região (à noite é mais perigoso) (46 px)",
+    "Acampar e descansar até o amanhecer (46 px)",
+    "Viajar (46 px)"
+   ],
+   "fonte": "20px",
+   "cortados": 0,
+   "sobrepostas": false,
+   "soltar_fora": "nada escolhido",
+   "foco": "escolha: 3Acampar e descansar até o ama",
+   "clique": "3 de 3 opções à vista respondem em todos os pontos"
+  },
+  {
+   "nome": "grande-explora-escura-antes",
+   "simulado": "não: texto real do jogo",
+   "amostra": true,
+   "opcoes": [
+    "Entrar na capela pelo buraco do canal (71 px)",
+    "Explorar a região (à noite é mais perigoso) (46 px)",
+    "Acampar e descansar até o amanhecer (46 px)",
+    "Viajar (46 px)"
+   ],
+   "fonte": "20px",
+   "cortados": 0,
+   "sobrepostas": false,
+   "soltar_fora": "nada escolhido",
+   "foco": "escolha: 3Acampar e descansar até o ama",
+   "clique": "4 de 4 opções à vista respondem em todos os pontos"
+  },
+  {
+   "nome": "grande-explora-escura-depois",
+   "simulado": "não: texto real do jogo",
+   "amostra": true,
+   "opcoes": [
+    "Entrar na capela pelo buraco do canal (81 px)",
+    "Explorar a região (à noite é mais perigoso) (46 px)",
+    "Acampar e descansar até o amanhecer (46 px)",
+    "Viajar (46 px)"
+   ],
+   "fonte": "20px",
+   "cortados": 0,
+   "sobrepostas": false,
+   "soltar_fora": "nada escolhido",
+   "foco": "escolha: 3Acampar e descansar até o ama",
+   "clique": "4 de 4 opções à vista respondem em todos os pontos"
+  },
+  {
+   "nome": "escala-explora-escura-antes",
+   "simulado": "não: texto real do jogo",
+   "amostra": true,
+   "opcoes": [
+    "Entrar na capela pelo buraco do canal (71 px)",
+    "Explorar a região (à noite é mais perigoso) (46 px)",
+    "Acampar e descansar até o amanhecer (46 px)",
+    "Viajar (46 px)"
+   ],
+   "fonte": "20px",
+   "cortados": 0,
+   "sobrepostas": false,
+   "soltar_fora": "nada escolhido",
+   "foco": "escolha: 3Acampar e descansar até o ama",
+   "clique": "3 de 3 opções à vista respondem em todos os pontos"
+  },
+  {
+   "nome": "escala-explora-escura-depois",
+   "simulado": "não: texto real do jogo",
+   "amostra": true,
+   "opcoes": [
+    "Entrar na capela pelo buraco do canal (81 px)",
+    "Explorar a região (à noite é mais perigoso) (46 px)",
+    "Acampar e descansar até o amanhecer (46 px)",
+    "Viajar (46 px)"
+   ],
+   "fonte": "20px",
+   "cortados": 0,
+   "sobrepostas": false,
+   "soltar_fora": "nada escolhido",
+   "foco": "escolha: 3Acampar e descansar até o ama",
+   "clique": "3 de 3 opções à vista respondem em todos os pontos"
+  },
+  {
+   "nome": "normal-explora-covil-antes",
+   "simulado": "não: texto real do jogo",
    "amostra": true,
    "opcoes": [
     "Enfrentar Sarric, o Profeta das Cinzas (guardião) (46 px)",
@@ -895,23 +1113,8 @@
    "clique": "4 de 4 opções à vista respondem em todos os pontos"
   },
   {
-   "nome": "baixa-explora-covil-atual",
-   "amostra": false,
-   "opcoes": [
-    "Enfrentar Sarric, o Profeta das Cinzas (guardião) (41 px)",
-    "Explorar a região (41 px)",
-    "Acampar e descansar até o amanhecer (41 px)",
-    "Viajar (41 px)"
-   ],
-   "fonte": "20px",
-   "cortados": 0,
-   "sobrepostas": false,
-   "soltar_fora": "nada escolhido",
-   "foco": "escolha: 3Acampar e descansar até o ama",
-   "clique": "4 de 4 opções à vista respondem em todos os pontos"
-  },
-  {
-   "nome": "baixa-explora-covil-comandos",
+   "nome": "normal-explora-covil-depois",
+   "simulado": "não: texto real do jogo",
    "amostra": true,
    "opcoes": [
     "Enfrentar Sarric, o Profeta das Cinzas (guardião) (46 px)",
@@ -927,23 +1130,8 @@
    "clique": "4 de 4 opções à vista respondem em todos os pontos"
   },
   {
-   "nome": "grande-explora-covil-atual",
-   "amostra": false,
-   "opcoes": [
-    "Enfrentar Sarric, o Profeta das Cinzas (guardião) (41 px)",
-    "Explorar a região (41 px)",
-    "Acampar e descansar até o amanhecer (41 px)",
-    "Viajar (41 px)"
-   ],
-   "fonte": "20px",
-   "cortados": 0,
-   "sobrepostas": false,
-   "soltar_fora": "nada escolhido",
-   "foco": "escolha: 3Acampar e descansar até o ama",
-   "clique": "4 de 4 opções à vista respondem em todos os pontos"
-  },
-  {
-   "nome": "grande-explora-covil-comandos",
+   "nome": "baixa-explora-covil-antes",
+   "simulado": "não: texto real do jogo",
    "amostra": true,
    "opcoes": [
     "Enfrentar Sarric, o Profeta das Cinzas (guardião) (46 px)",
@@ -959,23 +1147,8 @@
    "clique": "4 de 4 opções à vista respondem em todos os pontos"
   },
   {
-   "nome": "escala-explora-covil-atual",
-   "amostra": false,
-   "opcoes": [
-    "Enfrentar Sarric, o Profeta das Cinzas (guardião) (41 px)",
-    "Explorar a região (41 px)",
-    "Acampar e descansar até o amanhecer (41 px)",
-    "Viajar (41 px)"
-   ],
-   "fonte": "20px",
-   "cortados": 0,
-   "sobrepostas": false,
-   "soltar_fora": "nada escolhido",
-   "foco": "escolha: 3Acampar e descansar até o ama",
-   "clique": "2 de 2 opções à vista respondem em todos os pontos"
-  },
-  {
-   "nome": "escala-explora-covil-comandos",
+   "nome": "baixa-explora-covil-depois",
+   "simulado": "não: texto real do jogo",
    "amostra": true,
    "opcoes": [
     "Enfrentar Sarric, o Profeta das Cinzas (guardião) (46 px)",
@@ -988,16 +1161,17 @@
    "sobrepostas": false,
    "soltar_fora": "nada escolhido",
    "foco": "escolha: 3Acampar e descansar até o ama",
-   "clique": "2 de 2 opções à vista respondem em todos os pontos"
+   "clique": "4 de 4 opções à vista respondem em todos os pontos"
   },
   {
-   "nome": "normal-explora-esforco-atual",
-   "amostra": false,
+   "nome": "grande-explora-covil-antes",
+   "simulado": "não: texto real do jogo",
+   "amostra": true,
    "opcoes": [
-    "Enfrentar Sarric, o Profeta das Cinzas (guardião), que guarda o covil desde a queda da cidadela e não aceita rendição (68 px, 2 linhas)",
-    "Explorar a região (41 px)",
-    "Acampar e descansar até o amanhecer (41 px)",
-    "Viajar (41 px)"
+    "Enfrentar Sarric, o Profeta das Cinzas (guardião) (46 px)",
+    "Explorar a região (46 px)",
+    "Acampar e descansar até o amanhecer (46 px)",
+    "Viajar (46 px)"
    ],
    "fonte": "20px",
    "cortados": 0,
@@ -1007,7 +1181,59 @@
    "clique": "4 de 4 opções à vista respondem em todos os pontos"
   },
   {
-   "nome": "normal-explora-esforco-comandos",
+   "nome": "grande-explora-covil-depois",
+   "simulado": "não: texto real do jogo",
+   "amostra": true,
+   "opcoes": [
+    "Enfrentar Sarric, o Profeta das Cinzas (guardião) (46 px)",
+    "Explorar a região (46 px)",
+    "Acampar e descansar até o amanhecer (46 px)",
+    "Viajar (46 px)"
+   ],
+   "fonte": "20px",
+   "cortados": 0,
+   "sobrepostas": false,
+   "soltar_fora": "nada escolhido",
+   "foco": "escolha: 3Acampar e descansar até o ama",
+   "clique": "4 de 4 opções à vista respondem em todos os pontos"
+  },
+  {
+   "nome": "escala-explora-covil-antes",
+   "simulado": "não: texto real do jogo",
+   "amostra": true,
+   "opcoes": [
+    "Enfrentar Sarric, o Profeta das Cinzas (guardião) (46 px)",
+    "Explorar a região (46 px)",
+    "Acampar e descansar até o amanhecer (46 px)",
+    "Viajar (46 px)"
+   ],
+   "fonte": "20px",
+   "cortados": 0,
+   "sobrepostas": false,
+   "soltar_fora": "nada escolhido",
+   "foco": "escolha: 3Acampar e descansar até o ama",
+   "clique": "4 de 4 opções à vista respondem em todos os pontos"
+  },
+  {
+   "nome": "escala-explora-covil-depois",
+   "simulado": "não: texto real do jogo",
+   "amostra": true,
+   "opcoes": [
+    "Enfrentar Sarric, o Profeta das Cinzas (guardião) (46 px)",
+    "Explorar a região (46 px)",
+    "Acampar e descansar até o amanhecer (46 px)",
+    "Viajar (46 px)"
+   ],
+   "fonte": "20px",
+   "cortados": 0,
+   "sobrepostas": false,
+   "soltar_fora": "nada escolhido",
+   "foco": "escolha: 3Acampar e descansar até o ama",
+   "clique": "4 de 4 opções à vista respondem em todos os pontos"
+  },
+  {
+   "nome": "normal-explora-esforco-antes",
+   "simulado": "SIM: a primeira opção recebe um texto que o jogo não tem (teste de esforço da quebra de linha)",
    "amostra": true,
    "opcoes": [
     "Enfrentar Sarric, o Profeta das Cinzas (guardião), que guarda o covil desde a queda da cidadela e não aceita rendição (72 px, 2 linhas)",
@@ -1023,23 +1249,8 @@
    "clique": "4 de 4 opções à vista respondem em todos os pontos"
   },
   {
-   "nome": "baixa-explora-esforco-atual",
-   "amostra": false,
-   "opcoes": [
-    "Enfrentar Sarric, o Profeta das Cinzas (guardião), que guarda o covil desde a queda da cidadela e não aceita rendição (68 px, 2 linhas)",
-    "Explorar a região (41 px)",
-    "Acampar e descansar até o amanhecer (41 px)",
-    "Viajar (41 px)"
-   ],
-   "fonte": "20px",
-   "cortados": 0,
-   "sobrepostas": false,
-   "soltar_fora": "nada escolhido",
-   "foco": "escolha: 3Acampar e descansar até o ama",
-   "clique": "4 de 4 opções à vista respondem em todos os pontos"
-  },
-  {
-   "nome": "baixa-explora-esforco-comandos",
+   "nome": "normal-explora-esforco-depois",
+   "simulado": "SIM: a primeira opção recebe um texto que o jogo não tem (teste de esforço da quebra de linha)",
    "amostra": true,
    "opcoes": [
     "Enfrentar Sarric, o Profeta das Cinzas (guardião), que guarda o covil desde a queda da cidadela e não aceita rendição (72 px, 2 linhas)",
@@ -1055,23 +1266,8 @@
    "clique": "4 de 4 opções à vista respondem em todos os pontos"
   },
   {
-   "nome": "grande-explora-esforco-atual",
-   "amostra": false,
-   "opcoes": [
-    "Enfrentar Sarric, o Profeta das Cinzas (guardião), que guarda o covil desde a queda da cidadela e não aceita rendição (68 px, 2 linhas)",
-    "Explorar a região (41 px)",
-    "Acampar e descansar até o amanhecer (41 px)",
-    "Viajar (41 px)"
-   ],
-   "fonte": "20px",
-   "cortados": 0,
-   "sobrepostas": false,
-   "soltar_fora": "nada escolhido",
-   "foco": "escolha: 3Acampar e descansar até o ama",
-   "clique": "4 de 4 opções à vista respondem em todos os pontos"
-  },
-  {
-   "nome": "grande-explora-esforco-comandos",
+   "nome": "baixa-explora-esforco-antes",
+   "simulado": "SIM: a primeira opção recebe um texto que o jogo não tem (teste de esforço da quebra de linha)",
    "amostra": true,
    "opcoes": [
     "Enfrentar Sarric, o Profeta das Cinzas (guardião), que guarda o covil desde a queda da cidadela e não aceita rendição (72 px, 2 linhas)",
@@ -1087,23 +1283,76 @@
    "clique": "4 de 4 opções à vista respondem em todos os pontos"
   },
   {
-   "nome": "escala-explora-esforco-atual",
-   "amostra": false,
+   "nome": "baixa-explora-esforco-depois",
+   "simulado": "SIM: a primeira opção recebe um texto que o jogo não tem (teste de esforço da quebra de linha)",
+   "amostra": true,
    "opcoes": [
-    "Enfrentar Sarric, o Profeta das Cinzas (guardião), que guarda o covil desde a queda da cidadela e não aceita rendição (68 px, 2 linhas)",
-    "Explorar a região (41 px)",
-    "Acampar e descansar até o amanhecer (41 px)",
-    "Viajar (41 px)"
+    "Enfrentar Sarric, o Profeta das Cinzas (guardião), que guarda o covil desde a queda da cidadela e não aceita rendição (72 px, 2 linhas)",
+    "Explorar a região (46 px)",
+    "Acampar e descansar até o amanhecer (46 px)",
+    "Viajar (46 px)"
    ],
    "fonte": "20px",
    "cortados": 0,
    "sobrepostas": false,
    "soltar_fora": "nada escolhido",
    "foco": "escolha: 3Acampar e descansar até o ama",
-   "clique": "3 de 3 opções à vista respondem em todos os pontos"
+   "clique": "4 de 4 opções à vista respondem em todos os pontos"
   },
   {
-   "nome": "escala-explora-esforco-comandos",
+   "nome": "grande-explora-esforco-antes",
+   "simulado": "SIM: a primeira opção recebe um texto que o jogo não tem (teste de esforço da quebra de linha)",
+   "amostra": true,
+   "opcoes": [
+    "Enfrentar Sarric, o Profeta das Cinzas (guardião), que guarda o covil desde a queda da cidadela e não aceita rendição (72 px, 2 linhas)",
+    "Explorar a região (46 px)",
+    "Acampar e descansar até o amanhecer (46 px)",
+    "Viajar (46 px)"
+   ],
+   "fonte": "20px",
+   "cortados": 0,
+   "sobrepostas": false,
+   "soltar_fora": "nada escolhido",
+   "foco": "escolha: 3Acampar e descansar até o ama",
+   "clique": "4 de 4 opções à vista respondem em todos os pontos"
+  },
+  {
+   "nome": "grande-explora-esforco-depois",
+   "simulado": "SIM: a primeira opção recebe um texto que o jogo não tem (teste de esforço da quebra de linha)",
+   "amostra": true,
+   "opcoes": [
+    "Enfrentar Sarric, o Profeta das Cinzas (guardião), que guarda o covil desde a queda da cidadela e não aceita rendição (72 px, 2 linhas)",
+    "Explorar a região (46 px)",
+    "Acampar e descansar até o amanhecer (46 px)",
+    "Viajar (46 px)"
+   ],
+   "fonte": "20px",
+   "cortados": 0,
+   "sobrepostas": false,
+   "soltar_fora": "nada escolhido",
+   "foco": "escolha: 3Acampar e descansar até o ama",
+   "clique": "4 de 4 opções à vista respondem em todos os pontos"
+  },
+  {
+   "nome": "escala-explora-esforco-antes",
+   "simulado": "SIM: a primeira opção recebe um texto que o jogo não tem (teste de esforço da quebra de linha)",
+   "amostra": true,
+   "opcoes": [
+    "Enfrentar Sarric, o Profeta das Cinzas (guardião), que guarda o covil desde a queda da cidadela e não aceita rendição (72 px, 2 linhas)",
+    "Explorar a região (46 px)",
+    "Acampar e descansar até o amanhecer (46 px)",
+    "Viajar (46 px)"
+   ],
+   "fonte": "20px",
+   "cortados": 0,
+   "sobrepostas": false,
+   "soltar_fora": "nada escolhido",
+   "foco": "escolha: 3Acampar e descansar até o ama",
+   "clique": "4 de 4 opções à vista respondem em todos os pontos"
+  },
+  {
+   "nome": "escala-explora-esforco-depois",
+   "simulado": "SIM: a primeira opção recebe um texto que o jogo não tem (teste de esforço da quebra de linha)",
    "amostra": true,
    "opcoes": [
     "Enfrentar Sarric, o Profeta das Cinzas (guardião), que guarda o covil desde a queda da cidadela e não aceita rendição (72 px, 2 linhas)",
@@ -1121,16 +1370,7 @@
  ],
  "comportamentos": [
   {
-   "versao": "atual",
-   "depressa": "1 seletor(es) depois de 5 cliques (esperado 1)",
-   "tecla_segurada": "1 seletor(es) (esperado 1)",
-   "alternar_depressa": "1 seletor(es), itens (esperado 1, itens)",
-   "clique_na_entrada": "aceito (20 ms depois de a roda voltar)",
-   "reduzido_pressionado": "0px -50%",
-   "reduzido_animacao": "roda-surge"
-  },
-  {
-   "versao": "comandos",
+   "versao": "antes",
    "depressa": "1 seletor(es) depois de 5 cliques (esperado 1)",
    "tecla_segurada": "1 seletor(es) (esperado 1)",
    "alternar_depressa": "1 seletor(es), itens (esperado 1, itens)",
@@ -1139,7 +1379,7 @@
    "reduzido_animacao": "none"
   },
   {
-   "versao": "cartas",
+   "versao": "depois",
    "depressa": "1 seletor(es) depois de 5 cliques (esperado 1)",
    "tecla_segurada": "1 seletor(es) (esperado 1)",
    "alternar_depressa": "1 seletor(es), itens (esperado 1, itens)",
@@ -1148,6 +1388,5 @@
    "reduzido_animacao": "none"
   }
  ],
- "erros": [],
- "nota": "As fotos e medidas da amostra da exploração (versão comandos) foram refeitas com as opções de 46 px (MANTER=1, relatorio-parcial.json); o resto é da bateria completa."
+ "erros": []
 }

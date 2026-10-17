@@ -3,8 +3,10 @@
    a doca, os equipamentos, os caminhos, os contratos do painel e os menus da vila ficam como no jogo.
    A linguagem é a do seletor, numa coluna só e mais larga:
    - cada opção é um botão retangular inteiro (a área de clique não muda); a faixa é o ::before, recortado pelas pontas
-     do seletor. Aqui as pontas têm largura fixa e acompanham a altura: uma opção de duas linhas tem a faixa mais alta,
-     com as mesmas pontas esticadas na vertical, sem crescer para dentro do texto. Inclinação de 0,3° (numa faixa de
+     do seletor. As pontas escalam pela altura, como no seletor: numa opção de duas linhas a faixa é uma pincelada mais
+     alta, com o meio contínuo atrás do texto e o desgaste só nas extremidades. (Antes, com a largura fixa, o desenho de
+     46×50 da ponta ficava centralizado numa caixa mais alta que larga: sobravam vãos em cima e embaixo, e o meio
+     aparecia como degrau.) Nas de uma linha as pontas ficam no mesmo lugar de antes. Inclinação de 0,3° (numa faixa de
      700 px, os 2° do seletor desceriam 24 px de uma ponta à outra; 0,6° já encostava a opção de duas linhas na borda);
    - a tecla é o paralelogramo do seletor; o texto, a nota e os riscos ficam retos, na letra de leitura de sempre, sem
      reduzir a fonte nem cortar palavra;
@@ -28,9 +30,11 @@
   background-color: rgba(35, 33, 37, 0.92);
   background-image: linear-gradient(90deg, transparent 30px, var(--traco) 30px 33px, transparent 33px), var(--sh-grao),
     linear-gradient(180deg, rgba(255, 255, 255, 0.06), transparent 38%, rgba(0, 0, 0, 0.28));
-  background-size: 100% 100%, 640px 64px, 100% 100%;
-  -webkit-mask: var(--ponta-e) 0 0 / 46px 100% no-repeat, var(--sh-meio) 40px 0 / calc(100% - 96px) 100% no-repeat, var(--ponta-d) 100% 0 / 64px 100% no-repeat;
-  mask: var(--ponta-e) 0 0 / 46px 100% no-repeat, var(--sh-meio) 40px 0 / calc(100% - 96px) 100% no-repeat, var(--ponta-d) 100% 0 / 64px 100% no-repeat; }
+  background-size: 100% 100%, 640px max(64px, 100%), 100% 100%;
+  -webkit-mask: var(--ponta-e) 5px 0 / auto 100% no-repeat, var(--sh-meio) 40px 0 / calc(100% - 96px) 100% no-repeat, var(--ponta-d) right 6px top 0 / auto 100% no-repeat;
+  mask: var(--ponta-e) 5px 0 / auto 100% no-repeat, var(--sh-meio) 40px 0 / calc(100% - 96px) 100% no-repeat, var(--ponta-d) right 6px top 0 / auto 100% no-repeat; }
+/* a opção com informação embaixo (os riscos da sala, uma nota): mais folga em cima e embaixo da faixa alta */
+:root body #prompt .amostra-faixas .escolha:has(> .rotulo > :is(.op-riscos, .op-nota)) { padding-block: 11px 13px; }
 :root body #prompt .amostra-faixas .escolha.op-contrato { --traco: #6a6e76; box-shadow: none; }
 :root body #prompt .amostra-faixas .escolha.op-missao { --traco: #a8823a; box-shadow: none; }
 /* a tecla: o paralelogramo de carvão do seletor */

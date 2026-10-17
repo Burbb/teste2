@@ -2550,3 +2550,59 @@ mesmos dados; sem erro no console):
   faixas largas pesam mais que os botões de hoje, que ficavam mais calmos ao lado do texto da cena.
 
 **Pendente:** a avaliação do Jean. Nada disto vai para o jogo sem aprovação, nem vira regra de skill.
+
+### Rodada 2: os três ajustes antes da avaliação final (protótipo, sem versão)
+
+**A avaliação de Jean (17/10/2026):** direção aprovada (comandos em faixas curtas de pincel, tecla, ícone e nome
+juntos sem o nicho preto, os ícones, as cartas contidas, as faixas da exploração; o seletor D refinado como referência
+direta). Faltavam três ajustes localizados, só no protótipo:
+
+1. **Presença dos comandos à noite** (`comandos/comandos.css`): o carvão a 80% tinha quase a luminância do céu
+   noturno e a forma sumia. Agora é um carvão um tom acima (`rgba(50, 47, 52, 0.95)`) com um fio de luz morna no alto da
+   faixa (o degradê de volume começa em marfim a 13%), sem borda, brilho nem sombra. Escolhido entre quatro testes na
+   luta da noite e do dia (80%; 94%; 94% um tom acima; 95% um tom acima com o fio): à noite a forma aparece, de dia
+   continua escura sobre o cenário claro. Os estados (marfim, latão, pressionado, foco) não mudam.
+2. **A faixa alta da exploração** (`comandos/exploracao.css`): a causa dos degraus era o desenho das pontas (SVG de
+   46×50 e 64×50, proporção travada) numa caixa de largura fixa mais alta que larga: o navegador o centralizava com
+   vãos em cima e embaixo, e o meio (que estica) aparecia como degrau, com as lascas da ponta direita soltas. Agora as
+   pontas escalam pela altura, como no seletor, ancoradas onde ficavam (5 px da esquerda, 6 px da direita): a opção de
+   duas linhas é uma pincelada só, mais alta, com o meio contínuo atrás do texto e o desgaste nas extremidades; o grão
+   acompanha a altura (`max(64px, 100%)`, sem emenda). A opção com informação embaixo (os riscos, uma nota) ganha
+   folga: 11 px em cima e 13 embaixo (era 7 e 7), 81 px de altura (era 71). A fonte não muda. As de uma linha ficam
+   iguais: 46 px, e a diferença pixel a pixel no Bosque é de 2 pixels parado (arredondamento das pontas).
+   **O caso real:** "Entrar na capela pelo buraco do canal" (`rpg/missoes.py`, `ACOES`, id `nave`), com os riscos de
+   `sobrevivencia.riscos_sala` embaixo (`riscosDaOpcao` em `escolhas.js`): "−1 tocha" e "+1 nível · +10% dano" à
+   noite; sem tocha, "Sem luz: inimigo age primeiro" (o risco mais longo). A ação continua o nome em Alegreya 600 e os
+   riscos, etiquetas de 13 px embaixo, escuras também sobre o marfim. O teste de esforço (texto do covil alongado só na
+   foto) continua, e vem marcado em âmbar como SIMULADO nas comparações.
+3. **O aviso da noite sob o Fugir** (`comandos/comandos.css`, anterior ao protótipo): no jogo, o aviso da cena
+   ("Inimigos +1 nível", os do clima) fica no meio da borda de baixo da arena, onde o arco dos comandos passa (a roda vai
+   de 6 a 200 px numa arena de 210). Agora, só quando há aviso, a arena cresce 14 px embaixo (com o `min-height` junto,
+   para a carta do herói sozinho não subir) e o aviso vai para o canto direito dessa faixa, sob a coluna dos inimigos,
+   que é de quem ele fala. Os comandos não mudam de lugar (o arco só depende do alto da carta do herói); as cartas, a
+   mira e os golpes também não. O preço: na luta com aviso, o registro embaixo desce 14 px.
+
+**Conferido** (`fotografar_comandos.mjs`, agora antes × depois: o antes são as folhas do `206f3e6` lidas do git;
+`relatorio.json`; o jogo de hoje no bando e na noite em `relatorio-jogo-de-hoje.json`; sem erro no console):
+- lutas do dia, da noite, do Arqueiro e uma nova, o **bando** (Guerreiro com Morel, Odette e Yara contra 5 lobos, à
+  noite), em 1500×950, 1280×720 e 1920×1080: parado, mouse, pressionado, foco do teclado, Habilidades aberto, foco e
+  aberto juntos, Itens aberto (alternar), a mira e a volta; abrir, alternar, fechar e voltar da mira não mexem em carta
+  nem em rolagem; as cartas estão no mesmo lugar antes e depois nas 12 combinações; nenhum nome cortado, nada fora da
+  arena;
+- o aviso: antes, cobria o Fugir em 1500×950 e 1280×720 (−11 px; o jogo de hoje, −12) e, no bando, encostava numa
+  carta inimiga (−2 px); depois, não toca nada (16 px de folga na luta da noite, 46 a 64 no bando) e a mira fica
+  separada dele;
+- comportamentos (o dia em 1500×950), iguais antes e depois: cinco cliques depressa, tecla segurada, Habilidades ↔
+  Itens depressa (um seletor só, o de Itens), o clique 20 ms depois da volta da mira aceito, movimento reduzido sem
+  animação nem afundar;
+- exploração: o Bosque, o Charco com contrato, a Capela à noite, a Capela sem tocha, o covil e o teste de esforço, em
+  1500×950, 1280×720, 1920×1080 e 1280×720 a 125%: parado, mouse na mais alta e numa de uma linha, pressionado, foco do
+  teclado; nada cortado, nada sobreposto, cada ponto de cada opção à vista responde por ela, soltar fora não escolhe.
+
+**Achado, anterior ao protótipo e fora destes ajustes:** com a comitiva cheia e 5 inimigos (duas colunas de cartas),
+os comandos ficam sobre a coluna esquerda dos inimigos: em 1280×720 os quatro, em 1500×950 o Habilidades. O jogo de
+hoje já faz isso (folga −64 e −6 px); as faixas do protótipo, 14 px mais largas, aprofundam (−78 e −20). A caixa da
+mira, no meio da arena, também cobre uma dessas cartas, igual no jogo de hoje. Em 1920×1080 não acontece. Pede uma
+entrega própria (a disposição da arena com muitos inimigos), antes ou junto da integração.
+
+**Pendente:** a avaliação final do Jean. Nada disto vai para o jogo sem aprovação.

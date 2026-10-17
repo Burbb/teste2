@@ -2,8 +2,8 @@
    refinado (protótipo; a página da foto carrega esta folha por cima do jogo). A disposição é a do jogo: o arco ")" colado
    à direita da carta do herói (arcoDeBotoes, em escolhas.js), a mesma ordem, as mesmas teclas e a mesma área de clique
    (o botão inteiro). Só o acabamento muda:
-   - uma faixa curta de pincel por comando, o ::before do botão: o carvão do seletor um pouco translúcido (o normal é
-     discreto sobre o cenário), o grão de pincel e o degradê de volume, recortada pelas pontas do seletor (a ponte de
+   - uma faixa curta de pincel por comando, o ::before do botão: um carvão quase opaco com um fio de luz no alto (o
+     normal é discreto, mas não some à noite), o grão de pincel e o degradê de volume, recortada pelas pontas do seletor (a ponte de
      comandos.mjs as traz) e inclinada 2°. O desgaste fica nas pontas; o texto, o número e o ícone ficam retos;
    - a tecla, o ícone e o nome numa composição só, sobre a faixa: a tecla é o paralelogramo do seletor na ponta
      esquerda, meio para fora dela (no vão entre a carta e a faixa: assim a faixa não fica mais larga que o nicho e a
@@ -19,14 +19,16 @@
    O jogo não tem comando indisponível na roda: nada aqui inventa esse estado. */
 
 :root body #roda .roda-botao {
-  --cmd-fundo: rgba(35, 33, 37, 0.8);
+  --cmd-fundo: rgba(50, 47, 52, 0.95);
   isolation: isolate; gap: 5px; min-height: 42px; padding: 3px 15px 3px 21px; color: var(--sh-texto);
   animation: cmd-entra 140ms cubic-bezier(0.2, 0.8, 0.3, 1) backwards; }
 @keyframes cmd-entra { from { opacity: 0; translate: -10px -50%; } }
-/* a faixa: o desenho do seletor, um pouco translúcido no normal; as pontas escaladas pela altura, como lá */
+/* a faixa: o desenho do seletor; as pontas escaladas pela altura, como lá. No normal, um carvão um tom acima do seletor
+   e quase opaco, com um fio de luz morna no alto: o carvão translúcido (80%) tinha quase a luminância do céu noturno e
+   a forma sumia; assim ela fica à vista à noite e continua escura sobre o cenário claro (sem borda, brilho ou sombra) */
 :root body #roda .roda-botao::before { content: ""; position: absolute; z-index: -1; inset: 3px 0 3px 4px; rotate: -2deg;
   background-color: var(--cmd-fundo);
-  background-image: var(--sh-grao), linear-gradient(180deg, rgba(255, 255, 255, 0.06), transparent 38%, rgba(0, 0, 0, 0.28));
+  background-image: var(--sh-grao), linear-gradient(180deg, rgba(255, 244, 220, 0.13), rgba(255, 244, 220, 0.04) 12%, transparent 40%, rgba(0, 0, 0, 0.3));
   background-size: 640px 64px, 100% 100%;
   -webkit-mask: var(--ponta-e) 0 0 / auto 100% no-repeat, var(--sh-meio) 24px 0 / calc(100% - 56px) 100% no-repeat, var(--ponta-d) 100% 0 / auto 100% no-repeat;
   mask: var(--ponta-e) 0 0 / auto 100% no-repeat, var(--sh-meio) 24px 0 / calc(100% - 56px) 100% no-repeat, var(--ponta-d) 100% 0 / auto 100% no-repeat; }
@@ -81,6 +83,14 @@
 :root body #roda .roda-botao:focus-visible .tecla::before { outline: 2px solid var(--sh-latao-claro); outline-offset: 2px; }
 :root body #roda .roda-botao.ativo:focus-visible .tecla::before { outline-color: var(--sh-marfim); }
 :root body #roda .roda-botao.ativo:focus-visible::after { background: linear-gradient(90deg, var(--sh-marfim), var(--sh-latao-claro) 70%, rgba(242, 210, 122, 0)); }
+
+/* o aviso da cena na luta ("Inimigos +1 nível" à noite, os do clima): no jogo ele fica no meio da borda de baixo, onde
+   o Fugir passa (a roda vai de 6 a 200 px numa arena de 210), e o cobria. Aqui ganha um espaço próprio: a arena cresce
+   14 px embaixo só quando há aviso (o min-height junto, para a carta do herói sozinho não subir) e o aviso vai para o
+   canto direito dessa faixa, sob a coluna dos inimigos, aonde os comandos não chegam. As cartas, a roda e a mira ficam
+   onde estavam (o arco dos comandos só depende do alto da carta do herói). */
+:root body.em-combate #arena:has(> .mods-arena:not(:empty)) { padding-bottom: 32px; min-height: 224px; }
+:root body.em-combate #arena > .mods-arena { left: auto; right: 24px; bottom: 5px; transform: none; }
 
 @media (prefers-reduced-motion: reduce) {
   :root body #roda .roda-botao { animation: none; }
