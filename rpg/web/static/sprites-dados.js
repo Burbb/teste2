@@ -1326,6 +1326,9 @@ const SPRITES_GRADES = (() => {
   S.luva = trocar(S.manopla, { G: "n", g: "b", d: "B" });
   S.calca_couro = trocar(S.calca, { G: "n", g: "b", d: "B", c: "B" });
   S.calca_tecido = trocar(S.calca, { G: "U", g: "u", d: "v", c: "y" });
+  // a reserva 16×16 das peças de tecido do Mago (onde a tela não usa os ícones da HUD): o capuz e a luva em azul
+  S.capuz_tecido = trocar(S.capuz, { e: "u", f: "v" });
+  S.luva_seda = trocar(S.manopla, { G: "U", g: "u", d: "v" });
   S.bota_ferro = trocar(S.bota, { b: "g", n: "G", B: "d", h: "W" });
   S.sandalia = trocar(S.bota, { b: "B", n: "h" });
 

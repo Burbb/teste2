@@ -39,6 +39,10 @@ LUGARES = [
 DERIVADOS = {
     "gibao": {64: (32, 2)},     # 1.110.0: o 64 é o 32 final ampliado 2× (o 64 desenhado à parte é histórico)
     "bota": {64: (32, 2)},
+    "capuz": {64: (32, 2)},          # 1.112.0: a cabeça e as mãos de couro e de tecido, o 64 também é o 32 ampliado 2×
+    "luva": {64: (32, 2)},
+    "capuz_tecido": {64: (32, 2)},
+    "luva_seda": {64: (32, 2)},
 }
 
 

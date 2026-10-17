@@ -89,10 +89,11 @@ AMULETOS = [("Amuleto", "m", "amuleto"), ("Talismã", "m", "amuleto"), ("Pingent
 ANEIS = [("Anel", "m", "anel"), ("Sinete", "m", "anel"), ("Aro", "m", "anel")]
 PECAS = {  # partes da armadura e mão secundária, por classe
     "cabeca": {"guerreiro": [("Elmo", "m", "elmo"), ("Capacete", "m", "elmo"), ("Barbuta", "f", "elmo")],
+               # o Chapéu de Couro usa o capuz por ora (um chapéu pede desenho próprio); o Capuz do Mago é de tecido
                "arqueiro": [("Capuz", "m", "capuz"), ("Chapéu de Couro", "m", "capuz")],
-               "mago": [("Capuz", "m", "capuz"), ("Chapéu Pontudo", "m", "chapeu"), ("Diadema", "m", "coroa")]},
+               "mago": [("Capuz", "m", "capuz_tecido"), ("Chapéu Pontudo", "m", "chapeu"), ("Diadema", "m", "coroa")]},
     "maos": {"guerreiro": [("Manopla", "f", "manopla")], "arqueiro": [("Braçadeira", "f", "luva")],
-             "mago": [("Luva de Seda", "f", "luva")]},
+             "mago": [("Luva de Seda", "f", "luva_seda")]},
     "pernas": {"guerreiro": [("Perneira", "f", "calca"), ("Greva", "f", "calca")],
                "arqueiro": [("Calça de Couro", "f", "calca_couro")],
                "mago": [("Calça de Viagem", "f", "calca_tecido")]},
@@ -235,17 +236,24 @@ def unico_de(item):
 
 _ICONE_BASE = {b: ic for lista in (*ARMAS.values(), *ARMADURAS.values(), AMULETOS, ANEIS,
                                      *(l for p in PECAS.values() for l in p.values())) for b, _, ic in lista}
+# A mesma base pode ter desenhos diferentes por classe (o Capuz de couro do Arqueiro e o de tecido do Mago): a classe
+# para a qual a peça foi feita (o campo "classe" do item, não quem o carrega) decide primeiro.
+_ICONE_CLASSE = {(c, b): ic for grupo in (ARMAS, ARMADURAS, *PECAS.values()) for c, lista in grupo.items()
+                 for b, _, ic in lista}
 
 
 def icone_de(item):
-    """O desenho do item: o que veio com ele; nos saves antigos, o da base do catálogo (a mais longa que bate com o
-    tipo: "Bota Ferrada de Aço" é Bota Ferrada) ou o do espaço."""
+    """O desenho do item: o que veio com ele; nos saves antigos, o da base do catálogo para a classe do item (a mais
+    longa que bate com o tipo: "Bota Ferrada de Aço" é Bota Ferrada), o da base em qualquer classe, ou o do espaço."""
     if item.get("icone"):
         return item["icone"]
     u = unico_de(item)
     if u:
         return u["icone"]
     base = item.get("base") or ""
+    da_classe = [b for c, b in _ICONE_CLASSE if c == item.get("classe") and base.startswith(b)]
+    if da_classe:
+        return _ICONE_CLASSE[(item.get("classe"), max(da_classe, key=len))]
     achadas = [b for b in _ICONE_BASE if base.startswith(b)]
     return _ICONE_BASE[max(achadas, key=len)] if achadas else ICONE_ESPACO.get(item.get("slot"), "saco")
 

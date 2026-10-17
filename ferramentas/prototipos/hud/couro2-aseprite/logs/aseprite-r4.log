@@ -1,0 +1,41 @@
+Rodada 4 (o 40 e o 48 das quatro peças aprovadas) no Aseprite pelo MCP (aseprite-bridge 1.0.0, Aseprite da Steam), 17/10/2026.
+Ferramentas do conector: get_version, list_open_sprites.
+Lua pelo execute_script: o documento e as camadas por ../couro-aseprite/auxiliares/montar.lua; a pintura por
+ferramentas/arte/aseprite/pintar.lua (o put_pixels não foi usado); o .aseprite por saveCopyAs.
+Linha de comando do Aseprite: aseprite -b <fonte> --save-as <png> (o composto); aseprite -b --script (as fontes reabertas).
+Cálculos fora do editor: as listas (auxiliares/couro2_r4.py), os @2x (duplicação exata), as pranchas.
+Observação: cada aseprite -b carregou também a extensão do MCP, que ocupou o canal do editor; o editor aberto ficou
+sem conector depois disso, e a conferência das fontes reabertas foi pela linha de comando (o mesmo motor).
+
+== a construção no 32 (couro2_r4.py --conferir)
+capuz 32 igual ao aprovado; luva 32 igual ao aprovado; luva_seda 32 igual ao aprovado; capuz_tecido 32 igual ao aprovado
+
+== pintura (pintar.lua: escritos, diferentes na releitura, fora da tela)
+capuz-40: capa 190, capuz 281, interior 137, borda 39, cordao 4, desgaste 2, contorno 106 (0 diferentes, 0 fora)
+capuz-48: capa 285, capuz 402, interior 209, borda 49, cordao 4, desgaste 2, contorno 130 (0 diferentes, 0 fora)
+luva-40: bracadeira 197, luva 254, cordao 20, desgaste 2, contorno 104 (0 diferentes, 0 fora)
+luva-48: bracadeira 314, luva 379, cordao 24, desgaste 2, contorno 126 (0 diferentes, 0 fora)
+luva_seda-40: punho 98, luva 237, brilho 12, contorno 119 (0 diferentes, 0 fora)
+luva_seda-48: punho 118, luva 377, brilho 12, contorno 140 (0 diferentes, 0 fora)
+capuz_tecido-40: capa 320, capuz 252, interior 137, borda 41, contorno 110 (0 diferentes, 0 fora)
+capuz_tecido-48: capa 479, capuz 359, interior 209, borda 49, contorno 134 (0 diferentes, 0 fora)
+
+== o composto (linha de comando) e a prévia
+capuz-40: (40, 40) RGBA, alfas [0, 255], cores 14; composto = prévia True
+capuz-48: (48, 48) RGBA, alfas [0, 255], cores 14; composto = prévia True
+capuz_tecido-40: (40, 40) RGBA, alfas [0, 255], cores 11; composto = prévia True
+capuz_tecido-48: (48, 48) RGBA, alfas [0, 255], cores 11; composto = prévia True
+luva-40: (40, 40) RGBA, alfas [0, 255], cores 18; composto = prévia True
+luva-48: (48, 48) RGBA, alfas [0, 255], cores 18; composto = prévia True
+luva_seda-40: (40, 40) RGBA, alfas [0, 255], cores 7; composto = prévia True
+luva_seda-48: (48, 48) RGBA, alfas [0, 255], cores 7; composto = prévia True
+
+== as fontes reabertas (aseprite -b --script)
+capuz-40: 40x40 RGB, 7 camadas (capa,capuz,interior,borda,cordao,desgaste,contorno); desenho reaberto x png: 0 diferentes
+capuz-48: 48x48 RGB, 7 camadas (capa,capuz,interior,borda,cordao,desgaste,contorno); desenho reaberto x png: 0 diferentes
+luva-40: 40x40 RGB, 5 camadas (bracadeira,luva,cordao,desgaste,contorno); desenho reaberto x png: 0 diferentes
+luva-48: 48x48 RGB, 5 camadas (bracadeira,luva,cordao,desgaste,contorno); desenho reaberto x png: 0 diferentes
+luva_seda-40: 40x40 RGB, 4 camadas (punho,luva,brilho,contorno); desenho reaberto x png: 0 diferentes
+luva_seda-48: 48x48 RGB, 4 camadas (punho,luva,brilho,contorno); desenho reaberto x png: 0 diferentes
+capuz_tecido-40: 40x40 RGB, 5 camadas (capa,capuz,interior,borda,contorno); desenho reaberto x png: 0 diferentes
+capuz_tecido-48: 48x48 RGB, 5 camadas (capa,capuz,interior,borda,contorno); desenho reaberto x png: 0 diferentes

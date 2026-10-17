@@ -22,7 +22,8 @@ const Icones = (() => {
   // os lados que existem de cada peça (sem os @2x, que existem para todos)
   const TAMANHOS = {"aljava": [24, 32, 40, 48, 64], "amuleto": [32, 40, 48, 64], "anel": [32, 40, 48, 64], "antidoto": [32, 48, 64],
     "arco": [32, 40, 48, 64], "cajado": [32, 40, 48, 64], "orbe": [32, 40, 48, 64], "livro": [32, 40, 48, 64], "varinha": [32, 40, 48, 64],
-    "gibao": [32, 40, 48, 64], "bota": [32, 40, 48, 64],
+    "gibao": [32, 40, 48, 64], "bota": [32, 40, 48, 64], "capuz": [32, 40, 48, 64], "luva": [32, 40, 48, 64],
+    "capuz_tecido": [32, 40, 48, 64], "luva_seda": [32, 40, 48, 64],
     "atalho-bestiario": [32, 36], "atalho-diario": [32, 36], "atalho-grimorio": [32, 36], "atalho-inventario": [32, 36],
     "atalho-mapa": [32, 36], "atalho-sair": [32, 36], "atalho-salvar": [32, 36], "atalho-talentos": [32, 36],
     "attr-agilidade": [24, 32], "attr-ataque": [24, 32], "attr-defesa": [24, 32], "attr-poder": [24, 32],
@@ -36,7 +37,7 @@ const Icones = (() => {
     "vital-foco": [20], "vital-mana": [20], "vital-vida": [20], "vital-vigor": [20]};
 
   // Cada desenho vai para o tipo de ferro que o jogo já tem (elmo, armadura, manopla, calca = perneira, bota_ferro, maca);
-  // couro sem desenho (capuz, calça de couro, luva) e as outras peças sem desenho ficam com o do jogo. O anel tem
+  // couro sem desenho (a calça de couro) e as outras peças sem desenho ficam com o do jogo. O anel tem
   // uma pérola branca: não lembra nenhuma cor de raridade. O martelo é desenhado em código (desenhos.js).
   // O machado de barba (ferramentas/arte/, 1.99.0) vale para todo equipamento com o desenho "machado" (o Machado e os
   // únicos Lamento de Gharbad e O Açougueiro); o Redemoinho e a Fúria usam o mesmo sprite noutro papel e ficam com o
@@ -55,8 +56,15 @@ const Icones = (() => {
   // em todos os materiais de couro) e o único Pele do Penitente; as botas de couro (um par de cano dobrado) valem para
   // a Bota de Caça e o único Botas do Andarilho Morto. O 64 dos dois é o 32 ampliado 2×. O estado Iniciativa usa o
   // sprite "bota" noutro papel e continua com ele; o espaço vazio dos pés continua com a bota de ferro (VAZIO).
+  // A cabeça e as mãos de couro e de tecido (1.112.0; as fontes em ferramentas/arte/aseprite/, o 64 é o 32 ampliado
+  // 2×): o capuz de couro vale para o Capuz e o Chapéu de Couro do Arqueiro (o chapéu, por ora: pede desenho próprio);
+  // a luva de couro com braçadeira, para a Braçadeira do Arqueiro e o único Mãos do Estrangulador; o capuz de tecido e
+  // a luva de seda, para o Capuz e a Luva de Seda do Mago (o desenho vem do item: itens.py e a migração do save v5).
+  // A habilidade Desaparecer usa o sprite "capuz" noutro papel e continua com ele; os espaços vazios da cabeça e das
+  // mãos continuam com o elmo e a manopla de ferro (VAZIO).
   const ITEM = { elmo: "elmo", armadura: "cota", manopla: "manopla", calca: "perneiras", bota_ferro: "botas-ferro",
-    maca: "maca", espada: "espada", escudo: "escudo", amuleto: "amuleto", anel: "anel", aljava: "aljava", martelo: "martelo", machado: "machado", arco: "arco", cajado: "cajado", orbe: "orbe", livro: "livro", varinha: "varinha", gibao: "gibao", bota: "bota" };
+    maca: "maca", espada: "espada", escudo: "escudo", amuleto: "amuleto", anel: "anel", aljava: "aljava", martelo: "martelo", machado: "machado", arco: "arco", cajado: "cajado", orbe: "orbe", livro: "livro", varinha: "varinha", gibao: "gibao", bota: "bota",
+    capuz: "capuz", luva: "luva", capuz_tecido: "capuz_tecido", luva_seda: "luva_seda" };
   // o espaço vazio: a silhueta apagada do que vai nele (o material não aparece)
   const VAZIO = { cabeca: "elmo", armadura: "cota", maos: "manopla", pernas: "perneiras", pes: "botas-ferro", arma: "espada",
     secundaria: "escudo", amuleto: "amuleto", anel1: "anel", anel2: "anel" };

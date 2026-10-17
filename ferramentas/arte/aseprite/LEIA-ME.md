@@ -10,6 +10,10 @@ nada daqui: só os PNGs exportados para `rpg/web/static/hud/icones/`.
 | varinha | `varinha/varinha-32.aseprite`, `-40`, `-48`, `-64` (RGBA, 1 quadro, fundo transparente) | pomo, empunhadura, anel, haste, taca, pedra, garras, contorno | 1.109.0 |
 | gibao (peito de couro) | `gibao/gibao-32.aseprite`, `-40`, `-48`; **o 64 é o 32 ampliado 2×** (sem fonte própria) | forro, corpo, abas, pala, bordas, fecho, costuras, contorno | 1.110.0 |
 | bota (botas de couro) | `bota/bota-32.aseprite`, `-40`, `-48`; **o 64 é o 32 ampliado 2×** (sem fonte própria) | tras, tras_dobra, tras_sola, frente, frente_dobra, frente_sola, tira, detalhes, contorno | 1.110.0 |
+| capuz (capuz de couro) | `capuz/capuz-32.aseprite`, `-40`, `-48`; **o 64 é o 32 ampliado 2×** | capa, capuz, interior, borda, cordao, desgaste, contorno | 1.112.0 |
+| luva (luva de couro com braçadeira) | `luva/luva-32.aseprite`, `-40`, `-48`; **o 64 é o 32 ampliado 2×** | bracadeira, luva, cordao, desgaste, contorno | 1.112.0 |
+| capuz_tecido (capuz de tecido) | `capuz_tecido/capuz_tecido-32.aseprite`, `-40`, `-48`; **o 64 é o 32 ampliado 2×** | capa, capuz, interior, borda, contorno | 1.112.0 |
+| luva_seda (luva de seda) | `luva_seda/luva_seda-32.aseprite`, `-40`, `-48`; **o 64 é o 32 ampliado 2×** | punho, luva, brilho, contorno | 1.112.0 |
 
 A varinha é a aprovada pelo Jean (commit `451ff11`): a haste com o mesmo perfil nos quatro tamanhos e a pedra
 compacta (quadrada, de cantos cortados) também no 32. A camada `garras` do 32 fica vazia (lá a garra é um pixel da
@@ -21,6 +25,17 @@ o 64 do jogo é o 32 final ampliado exatamente 2× por vizinho mais próximo, se
 comparar no cartão do saque). Os 64 desenhados à parte (`historico/gibao-64-trabalhado.aseprite`,
 `historico/bota-64-trabalhado.aseprite`) ficam como histórico, fora da exportação. As rodadas estão em
 `ferramentas/prototipos/hud/couro-aseprite/`.
+
+A cabeça e as mãos de couro e de tecido são as aprovadas pelo Jean (registro em `df01f5a`): o capuz de couro revisado
+(rodada 2), a luva de couro com braçadeira (rodada 1), a luva de seda (rodada 2) e o capuz de tecido da rodada 3
+(`1c061e1`); os 32 são cópias exatas dessas fontes e o 64 de cada um é o 32 ampliado 2×. Os 40 e 48 (rodada 4) saem da
+mesma construção de cada peça, escrita para qualquer grade (`ferramentas/prototipos/hud/couro2-aseprite/auxiliares/
+couro2_r4.py`, que no 32 reproduz o aprovado pixel a pixel), pintados pelo `pintar.lua`. As rodadas estão em
+`ferramentas/prototipos/hud/couro2-aseprite/`.
+
+**Cuidado com a linha de comando e o conector:** cada `aseprite -b` (o exportador, a conferência) carrega também a
+extensão do MCP, que se conecta ao mesmo canal (`ws://127.0.0.1:6515`) e o fecha ao sair; o editor aberto perde o
+conector até ser reiniciado. Pinte e confira pelo editor primeiro; exporte pela linha de comando por último.
 
 ## Exportar os PNGs e os @2x
 

@@ -1,5 +1,5 @@
 // Conferência dos desenhos de item no jogo de verdade (o escudo e o Unguento de Prata da 1.94.0; o equipamento em 40 px
-// no Inventário da 1.95.0; o machado e a Bomba de Fumaça da 1.99.0; o arco da 1.101.0; o cajado da 1.106.0; o orbe da 1.107.0; o grimório da 1.108.0; a varinha da 1.109.0; o gibão e as botas de couro da 1.110.0), sem nenhum arquivo do protótipo, em janela normal (1500×950) e baixa (1280×720):
+// no Inventário da 1.95.0; o machado e a Bomba de Fumaça da 1.99.0; o arco da 1.101.0; o cajado da 1.106.0; o orbe da 1.107.0; o grimório da 1.108.0; a varinha da 1.109.0; o gibão e as botas de couro da 1.110.0; o capuz e a luva de couro, o capuz de tecido e a luva de seda da 1.112.0), sem nenhum arquivo do protótipo, em janela normal (1500×950) e baixa (1280×720):
 //   - o mercado (cenário mercado, AMOSTRAS=2, SEMENTE=1: um escudo na mochila, um unguento na bolsa e outro na
 //     prateleira): a prateleira de suprimentos, a compra, a bolsa da ficha e a aba Vender com a dica de comparação;
 //   - o cartão do saque com um escudo e a comparação com o que se usa (cenário vila, ACHADO=escudo) e o voo ao equipar;
@@ -27,9 +27,9 @@ import path from "path";
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULO || "playwright");
 const aqui = path.dirname(fileURLToPath(import.meta.url)), raiz = path.resolve(aqui, "../..");
 const SAIDA = path.resolve(process.env.SAIDA || path.join(aqui, "capturas-itens"));
-const SO = new Set((process.env.SO || "mercado,saque,bau,inventario,aneis,antigos,machado,arco,cajado,orbe,livro,varinha,gibao,bota").split(","));
+const SO = new Set((process.env.SO || "mercado,saque,bau,inventario,aneis,antigos,machado,arco,cajado,orbe,livro,varinha,gibao,bota,capuz,luva,capuz_tecido,luva_seda").split(","));
 // a peça vestida: a arma por ARMA; o peito e os pés por VESTIR (tests/navegador/cenarios.py)
-const veste = (peca) => (["gibao", "bota"].includes(peca) ? { VESTIR: peca } : { ARMA: peca });
+const veste = (peca) => (["gibao", "bota", "capuz", "luva", "capuz_tecido", "luva_seda"].includes(peca) ? { VESTIR: peca } : { ARMA: peca });
 mkdirSync(SAIDA, { recursive: true });
 const espera = (ms) => new Promise((r) => setTimeout(r, ms));
 async function subir(cenario, amb = {}) {
@@ -55,8 +55,8 @@ const onde = (p) => p.evaluate(() => {
   const linhas = {};
   for (const i of document.querySelectorAll("img")) {
     const s = i.getAttribute("src") || "";
-    const m = s.match(/hud\/icones\/([a-z-]+)-(\d+)(@2x)?\.png/);
-    if (!m || !/^(escudo|unguento|anel|cota|espada|elmo|manopla|perneiras|botas-ferro|maca|amuleto|aljava|machado|bomba|arco|cajado|orbe|livro|varinha|gibao|bota)$/.test(m[1])) continue;
+    const m = s.match(/hud\/icones\/([a-z_-]+)-(\d+)(@2x)?\.png/);
+    if (!m || !/^(escudo|unguento|anel|cota|espada|elmo|manopla|perneiras|botas-ferro|maca|amuleto|aljava|machado|bomba|arco|cajado|orbe|livro|varinha|gibao|bota|capuz|luva|capuz_tecido|luva_seda)$/.test(m[1])) continue;
     (linhas[m[1]] = linhas[m[1]] || []).push(`${lugar(i)}:${m[2]}${m[3] || ""}→${r(i)}`);
   }
   // os papéis que não mudam: a Curandeira, a caveira (a lixeira e os outros usos) e o machado das habilidades
@@ -391,12 +391,14 @@ if (SO.has("machado")) {
   await p.close(); proc.kill();
 }
 // 8. o arco (1.101.0), o cajado (1.106.0), o orbe (1.107.0), o grimório (1.108.0), a varinha (1.109.0), o gibão e as botas
-//    de couro (1.110.0), SO=arco, SO=cajado, SO=orbe, SO=livro, SO=varinha, SO=gibao ou SO=bota: a classe com a peça
+//    de couro (1.110.0), a cabeça e as mãos de couro (Arqueiro) e de tecido (Mago) (1.112.0), SO=arco, SO=cajado, SO=orbe,
+//    SO=livro, SO=varinha, SO=gibao, SO=bota, SO=capuz, SO=luva, SO=capuz_tecido ou SO=luva_seda: a classe com a peça
 //    vestida (ARMA, ou VESTIR para o peito e os pés) e outra na mochila
 //    (cenário mercado, AMOSTRA e ARMA): a ficha, a venda, a dica com a comparação, vender e recomprar, o Inventário em
 //    40; o cartão do saque, o voo ao equipar e o guardar na mochila (vila, ACHADO); a roda da luta, com o Atacar no sprite do jogo (e o Tiro Duplo do
 //    Arqueiro na janelinha de Habilidades)
-for (const [peca, classe] of [["arco", "arqueiro"], ["cajado", "mago"], ["orbe", "mago"], ["livro", "mago"], ["varinha", "mago"], ["gibao", "arqueiro"], ["bota", "arqueiro"]]) {
+for (const [peca, classe] of [["arco", "arqueiro"], ["cajado", "mago"], ["orbe", "mago"], ["livro", "mago"], ["varinha", "mago"], ["gibao", "arqueiro"], ["bota", "arqueiro"],
+  ["capuz", "arqueiro"], ["luva", "arqueiro"], ["capuz_tecido", "mago"], ["luva_seda", "mago"]]) {
   if (!SO.has(peca)) continue;
   for (const jan of Object.keys(JANELAS)) {
     const n = (c) => `${peca}-${jan}-${c}`;
@@ -472,8 +474,9 @@ for (const [peca, classe] of [["arco", "arqueiro"], ["cajado", "mago"], ["orbe",
     await p.close(); proc.kill();
   }
 }
-// 9. os únicos com os desenhos do couro (1.110.0): o cartão do saque com cada um, a peça comum vestida ao lado
-for (const [peca, id] of [["gibao", "pele_do_penitente"], ["bota", "botas_do_andarilho_morto"]]) {
+// 9. os únicos com os desenhos do couro (1.110.0; as Mãos do Estrangulador, 1.112.0): o cartão do saque com cada um, a
+//    peça comum vestida ao lado
+for (const [peca, id] of [["gibao", "pele_do_penitente"], ["bota", "botas_do_andarilho_morto"], ["luva", "maos_do_estrangulador"]]) {
   if (!SO.has(peca)) continue;
   for (const jan of Object.keys(JANELAS)) {
     const n = (c) => `${peca}-${jan}-${c}`;
