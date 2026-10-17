@@ -12,7 +12,7 @@ Não iniciar todo o plano numa única tarefa. As etapas técnicas A–I e a vali
 
 ## Estado de referência
 
-- Produção: **1.113.0** (17/10/2026), as escolhas da página em faixas; antes, a **1.112.0**: a HUD aprovada e as lutas cheias em `74b4d5d` (1.111.0); os capuzes e luvas em
+- Produção: **1.113.1** (17/10/2026), as escolhas narrativas em faixas (a regra pela função); antes, a **1.112.0**: a HUD aprovada e as lutas cheias em `74b4d5d` (1.111.0); os capuzes e luvas em
   `ea8acb7` e a migração dos saves no commit seguinte (1.112.0). Antes: a 1.110.0, gibão e botas em `3c63546`.
 - Branch: `claude/tender-einstein-tx3tjl`.
 - Referência documental posterior consultada: `ab3a2b6`, diagnóstico da duração dos testes.
@@ -276,9 +276,10 @@ Pendente: a avaliação final de Jean; nada entrou no jogo.
 ### 1.9. As escolhas da página em faixas (integradas na 1.113.0)
 
 **Pedido de Jean:** as faixas, que a 1.111.0 limitou ao lugar selvagem, como a apresentação comum das escolhas
-narrativas e das ações da página. **Integrado:** a lista de escolhas da página fora da luta e do título ganha as faixas
-(o lugar, a vila, os eventos e diálogos com os testes de atributo, as cenas da missão, a viagem, a criação do
-personagem), sem depender do lugar, do texto nem de marca do motor; a etiqueta do teste, a seta ›, a secundária e a
+narrativas e das ações da página. **Integrado (1.113.0; a regra pela função na 1.113.1):** as escolhas narrativas, as
+da partida em andamento fora da luta, ganham as faixas (o lugar, a vila, os eventos e diálogos com os testes de
+atributo, as cenas da missão, a viagem), sem depender do lugar, do texto nem de marca do motor; o título, a lista de
+saves e a criação do personagem (antes da partida) ficam de fora, a criação para a etapa própria; a etiqueta do teste, a seta ›, a secundária e a
 indisponível legíveis no carvão e no marfim. Ficam com o próprio tratamento: a luta, o título, as confirmações, o
 achado, a doca, os caminhos, os prédios da vila e as telas desenhadas (mercado, Inventário, fogueira, serviços). O
 mapa dos usos e a conferência (14 casos reais, antes × depois, conteúdo igual nas 26 comparações) estão em

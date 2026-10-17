@@ -1,0 +1,922 @@
+{
+ "antes": "31d56c0",
+ "versoes": [
+  "depois"
+ ],
+ "conteudo": {},
+ "relatorio": [
+  {
+   "nome": "normal-selvagem-depois",
+   "pergunta": "O que você faz?",
+   "faixas": true,
+   "fonte": "20px",
+   "cortados": 0,
+   "sobrepostas": false,
+   "opcoes": [
+    {
+     "conteudo": {
+      "tecla": "1",
+      "texto": "Explorar a região",
+      "teste": "",
+      "nota": "",
+      "motivo": "",
+      "riscos": "",
+      "icone": "",
+      "abre": false,
+      "bloqueada": false,
+      "classes": ""
+     },
+     "altura": 46,
+     "linhas": 1
+    },
+    {
+     "conteudo": {
+      "tecla": "2",
+      "texto": "Acampar e descansar até o amanhecer",
+      "teste": "",
+      "nota": "",
+      "motivo": "",
+      "riscos": "",
+      "icone": "",
+      "abre": false,
+      "bloqueada": false,
+      "classes": ""
+     },
+     "altura": 46,
+     "linhas": 1
+    },
+    {
+     "conteudo": {
+      "tecla": "3",
+      "texto": "Viajar",
+      "teste": "",
+      "nota": "",
+      "motivo": "",
+      "riscos": "",
+      "icone": "",
+      "abre": false,
+      "bloqueada": false,
+      "classes": ""
+     },
+     "altura": 46,
+     "linhas": 1
+    }
+   ],
+   "soltar_fora": "nada escolhido",
+   "foco": "Acampar e descansar até o amanhecer (foco visível)",
+   "clique": "3 de 3 opções à vista respondem em todos os pontos"
+  },
+  {
+   "nome": "normal-viajar-depois",
+   "pergunta": "Para onde?",
+   "faixas": true,
+   "fonte": "20px",
+   "cortados": 0,
+   "sobrepostas": false,
+   "opcoes": [
+    {
+     "conteudo": {
+      "tecla": "1",
+      "texto": "Vau do Turvo — vila · arredores Nv.1 · 1 trecho",
+      "teste": "",
+      "nota": "",
+      "motivo": "",
+      "riscos": "",
+      "icone": "data:image/png;base64,iVBORw0KGgoAAAANSU",
+      "abre": false,
+      "bloqueada": false,
+      "classes": ""
+     },
+     "altura": 46,
+     "linhas": 1
+    },
+    {
+     "conteudo": {
+      "tecla": "2",
+      "texto": "Capela Afogada — Ruínas · Nv.3 (PERIGOSO!) · 1 trecho · inexplorado",
+      "teste": "",
+      "nota": "",
+      "motivo": "",
+      "riscos": "",
+      "icone": "data:image/png;base64,iVBORw0KGgoAAAANSU",
+      "abre": false,
+      "bloqueada": false,
+      "classes": ""
+     },
+     "altura": 46,
+     "linhas": 1
+    }
+   ],
+   "soltar_fora": "nada escolhido",
+   "foco": "Capela Afogada — Ruínas · Nv.3 (PERIGOSO!) · 1 trecho · inexplorado (foco visível)",
+   "clique": "2 de 2 opções à vista respondem em todos os pontos"
+  },
+  {
+   "nome": "normal-vila-depois",
+   "pergunta": "",
+   "faixas": true,
+   "fonte": "20px",
+   "cortados": 0,
+   "sobrepostas": false,
+   "opcoes": [
+    {
+     "conteudo": {
+      "tecla": "1",
+      "texto": "Passear pela vila",
+      "teste": "",
+      "nota": "",
+      "motivo": "",
+      "riscos": "",
+      "icone": "",
+      "abre": false,
+      "bloqueada": false,
+      "classes": ""
+     },
+     "altura": 46,
+     "linhas": 1
+    },
+    {
+     "conteudo": {
+      "tecla": "2",
+      "texto": "Examinar a fonte nova",
+      "teste": "",
+      "nota": "",
+      "motivo": "",
+      "riscos": "",
+      "icone": "data:image/png;base64,iVBORw0KGgoAAAANSU",
+      "abre": false,
+      "bloqueada": false,
+      "classes": "op-missao"
+     },
+     "altura": 46,
+     "linhas": 1
+    }
+   ],
+   "soltar_fora": "nada escolhido",
+   "foco": "Examinar a fonte nova (foco visível)",
+   "clique": "2 de 2 opções à vista respondem em todos os pontos"
+  },
+  {
+   "nome": "normal-passear-depois",
+   "pergunta": "Aceitar?",
+   "faixas": true,
+   "fonte": "20px",
+   "cortados": 0,
+   "sobrepostas": false,
+   "opcoes": [
+    {
+     "conteudo": {
+      "tecla": "1",
+      "texto": "Prometer procurar",
+      "teste": "",
+      "nota": "",
+      "motivo": "",
+      "riscos": "",
+      "icone": "",
+      "abre": false,
+      "bloqueada": false,
+      "classes": ""
+     },
+     "altura": 46,
+     "linhas": 1
+    },
+    {
+     "conteudo": {
+      "tecla": "2",
+      "texto": "Dizer que não pode",
+      "teste": "",
+      "nota": "",
+      "motivo": "",
+      "riscos": "",
+      "icone": "",
+      "abre": false,
+      "bloqueada": false,
+      "classes": ""
+     },
+     "altura": 46,
+     "linhas": 1
+    }
+   ],
+   "soltar_fora": "nada escolhido",
+   "foco": "Dizer que não pode (foco visível)",
+   "clique": "2 de 2 opções à vista respondem em todos os pontos"
+  },
+  {
+   "nome": "normal-acampar-depois",
+   "sem_lista": "sem lista de escolhas; a tela: tela acampamento; faixas na página: 0"
+  },
+  {
+   "nome": "normal-enfermos-depois",
+   "pergunta": "O que faz?",
+   "faixas": true,
+   "fonte": "20px",
+   "cortados": 0,
+   "sobrepostas": false,
+   "opcoes": [
+    {
+     "conteudo": {
+      "tecla": "1",
+      "texto": "Entrar e curar os doentes",
+      "teste": "",
+      "nota": "Horas de esforço: cobra da sua vida.",
+      "motivo": "",
+      "riscos": "",
+      "icone": "",
+      "abre": false,
+      "bloqueada": false,
+      "classes": ""
+     },
+     "altura": 78,
+     "linhas": 1
+    },
+    {
+     "conteudo": {
+      "tecla": "2",
+      "texto": "Deixar remédios na porta",
+      "teste": "",
+      "nota": "Usa 1 poção de vida da bolsa (você tem 2).",
+      "motivo": "",
+      "riscos": "",
+      "icone": "data:image/png;base64,iVBORw0KGgoAAAANSU",
+      "abre": false,
+      "bloqueada": false,
+      "classes": ""
+     },
+     "altura": 78,
+     "linhas": 1
+    },
+    {
+     "conteudo": {
+      "tecla": "3",
+      "texto": "Seguir em frente",
+      "teste": "",
+      "nota": "",
+      "motivo": "",
+      "riscos": "",
+      "icone": "",
+      "abre": false,
+      "bloqueada": false,
+      "classes": ""
+     },
+     "altura": 46,
+     "linhas": 1
+    }
+   ],
+   "soltar_fora": "nada escolhido",
+   "foco": "Deixar remédios na porta (foco visível)",
+   "clique": "3 de 3 opções à vista respondem em todos os pontos"
+  },
+  {
+   "nome": "normal-enfermos-sem-depois",
+   "pergunta": "O que faz?",
+   "faixas": true,
+   "fonte": "20px",
+   "cortados": 0,
+   "sobrepostas": false,
+   "opcoes": [
+    {
+     "conteudo": {
+      "tecla": "1",
+      "texto": "Entrar e curar os doentes",
+      "teste": "",
+      "nota": "Horas de esforço: cobra da sua vida.",
+      "motivo": "",
+      "riscos": "",
+      "icone": "",
+      "abre": false,
+      "bloqueada": false,
+      "classes": ""
+     },
+     "altura": 78,
+     "linhas": 1
+    },
+    {
+     "conteudo": {
+      "tecla": "2",
+      "texto": "Deixar remédios na porta",
+      "teste": "",
+      "nota": "",
+      "motivo": "Você não tem poção de vida na bolsa.",
+      "riscos": "",
+      "icone": "data:image/png;base64,iVBORw0KGgoAAAANSU",
+      "abre": false,
+      "bloqueada": true,
+      "classes": "indisponivel"
+     },
+     "altura": 105,
+     "linhas": 1
+    },
+    {
+     "conteudo": {
+      "tecla": "3",
+      "texto": "Seguir em frente",
+      "teste": "",
+      "nota": "",
+      "motivo": "",
+      "riscos": "",
+      "icone": "",
+      "abre": false,
+      "bloqueada": false,
+      "classes": ""
+     },
+     "altura": 46,
+     "linhas": 1
+    }
+   ],
+   "contraste_motivo": 7.1,
+   "soltar_fora": "nada escolhido",
+   "foco": "Seguir em frente (foco visível)",
+   "clique": "3 de 3 opções à vista respondem em todos os pontos"
+  },
+  {
+   "nome": "normal-mercador-sem-depois",
+   "pergunta": "O que faz?",
+   "faixas": true,
+   "fonte": "20px",
+   "cortados": 0,
+   "sobrepostas": false,
+   "opcoes": [
+    {
+     "conteudo": {
+      "tecla": "1",
+      "texto": "Comprar (385 ouro)",
+      "teste": "",
+      "nota": "",
+      "motivo": "Ouro insuficiente",
+      "riscos": "",
+      "icone": "",
+      "abre": false,
+      "bloqueada": true,
+      "classes": "indisponivel"
+     },
+     "altura": 105,
+     "linhas": 1
+    },
+    {
+     "conteudo": {
+      "tecla": "2",
+      "texto": "Examinar a mercadoria com atenção",
+      "teste": "PER +2",
+      "nota": "",
+      "motivo": "",
+      "riscos": "",
+      "icone": "",
+      "abre": false,
+      "bloqueada": false,
+      "classes": ""
+     },
+     "altura": 46,
+     "linhas": 1
+    },
+    {
+     "conteudo": {
+      "tecla": "3",
+      "texto": "Comprar uma poção de vida (15 ouro)",
+      "teste": "",
+      "nota": "",
+      "motivo": "Ouro insuficiente",
+      "riscos": "",
+      "icone": "",
+      "abre": false,
+      "bloqueada": true,
+      "classes": "indisponivel"
+     },
+     "altura": 105,
+     "linhas": 1
+    },
+    {
+     "conteudo": {
+      "tecla": "4",
+      "texto": "Recusar",
+      "teste": "",
+      "nota": "",
+      "motivo": "",
+      "riscos": "",
+      "icone": "",
+      "abre": false,
+      "bloqueada": false,
+      "classes": ""
+     },
+     "altura": 46,
+     "linhas": 1
+    }
+   ],
+   "contraste_teste_marfim": 8.59,
+   "contraste_motivo": 7.1,
+   "soltar_fora": "nada escolhido",
+   "foco": "Examinar a mercadoria com atenção (foco visível)",
+   "clique": "4 de 4 opções à vista respondem em todos os pontos"
+  },
+  {
+   "nome": "normal-bandidos-depois",
+   "pergunta": "O que faz?",
+   "faixas": true,
+   "fonte": "20px",
+   "cortados": 0,
+   "sobrepostas": false,
+   "opcoes": [
+    {
+     "conteudo": {
+      "tecla": "1",
+      "texto": "Atacar de surpresa",
+      "teste": "",
+      "nota": "",
+      "motivo": "",
+      "riscos": "",
+      "icone": "",
+      "abre": false,
+      "bloqueada": false,
+      "classes": ""
+     },
+     "altura": 46,
+     "linhas": 1
+    },
+    {
+     "conteudo": {
+      "tecla": "2",
+      "texto": "Esgueirar-se e roubar os ladrões",
+      "teste": "DES +2",
+      "nota": "",
+      "motivo": "",
+      "riscos": "",
+      "icone": "",
+      "abre": false,
+      "bloqueada": false,
+      "classes": ""
+     },
+     "altura": 46,
+     "linhas": 1
+    },
+    {
+     "conteudo": {
+      "tecla": "3",
+      "texto": "Entrar e propor um acordo",
+      "teste": "CAR +0",
+      "nota": "",
+      "motivo": "",
+      "riscos": "",
+      "icone": "",
+      "abre": false,
+      "bloqueada": false,
+      "classes": ""
+     },
+     "altura": 46,
+     "linhas": 1
+    },
+    {
+     "conteudo": {
+      "tecla": "4",
+      "texto": "Dar a volta e evitar",
+      "teste": "",
+      "nota": "",
+      "motivo": "",
+      "riscos": "",
+      "icone": "",
+      "abre": false,
+      "bloqueada": false,
+      "classes": ""
+     },
+     "altura": 46,
+     "linhas": 1
+    }
+   ],
+   "contraste_teste_marfim": 8.59,
+   "soltar_fora": "nada escolhido",
+   "foco": "Esgueirar-se e roubar os ladrões (foco visível)",
+   "clique": "4 de 4 opções à vista respondem em todos os pontos"
+  },
+  {
+   "nome": "normal-odete-depois",
+   "pergunta": "O que faz?",
+   "faixas": true,
+   "fonte": "20px",
+   "cortados": 0,
+   "sobrepostas": false,
+   "opcoes": [
+    {
+     "conteudo": {
+      "tecla": "1",
+      "texto": "Estancar o sangue com uma bandagem",
+      "teste": "",
+      "nota": "Usa 1 bandagem da bolsa (você tem 2).",
+      "motivo": "",
+      "riscos": "",
+      "icone": "data:image/png;base64,iVBORw0KGgoAAAANSU",
+      "abre": false,
+      "bloqueada": false,
+      "classes": ""
+     },
+     "altura": 78,
+     "linhas": 1
+    },
+    {
+     "conteudo": {
+      "tecla": "2",
+      "texto": "Segurar a ferida enquanto ela reza",
+      "teste": "VON +2",
+      "nota": "",
+      "motivo": "",
+      "riscos": "",
+      "icone": "",
+      "abre": false,
+      "bloqueada": false,
+      "classes": ""
+     },
+     "altura": 46,
+     "linhas": 1
+    },
+    {
+     "conteudo": {
+      "tecla": "3",
+      "texto": "Perguntar quem ela é",
+      "teste": "",
+      "nota": "",
+      "motivo": "",
+      "riscos": "",
+      "icone": "",
+      "abre": false,
+      "bloqueada": false,
+      "classes": ""
+     },
+     "altura": 46,
+     "linhas": 1
+    },
+    {
+     "conteudo": {
+      "tecla": "4",
+      "texto": "Revistar o moribundo enquanto ela está distraída",
+      "teste": "",
+      "nota": "",
+      "motivo": "",
+      "riscos": "",
+      "icone": "",
+      "abre": false,
+      "bloqueada": false,
+      "classes": ""
+     },
+     "altura": 46,
+     "linhas": 1
+    },
+    {
+     "conteudo": {
+      "tecla": "5",
+      "texto": "Seguir seu caminho",
+      "teste": "",
+      "nota": "",
+      "motivo": "",
+      "riscos": "",
+      "icone": "",
+      "abre": false,
+      "bloqueada": false,
+      "classes": ""
+     },
+     "altura": 46,
+     "linhas": 1
+    }
+   ],
+   "contraste_teste_marfim": 8.59,
+   "soltar_fora": "nada escolhido",
+   "foco": "Segurar a ferida enquanto ela reza (foco visível)",
+   "clique": "5 de 5 opções à vista respondem em todos os pontos"
+  },
+  {
+   "nome": "normal-missao-depois",
+   "pergunta": "O que você faz?",
+   "faixas": true,
+   "fonte": "20px",
+   "cortados": 0,
+   "sobrepostas": false,
+   "opcoes": [
+    {
+     "conteudo": {
+      "tecla": "1",
+      "texto": "Seguir a água e examinar o canal",
+      "teste": "",
+      "nota": "",
+      "motivo": "",
+      "riscos": "",
+      "icone": "data:image/png;base64,iVBORw0KGgoAAAANSU",
+      "abre": false,
+      "bloqueada": false,
+      "classes": "op-missao"
+     },
+     "altura": 46,
+     "linhas": 1
+    },
+    {
+     "conteudo": {
+      "tecla": "2",
+      "texto": "Explorar a região",
+      "teste": "",
+      "nota": "",
+      "motivo": "",
+      "riscos": "",
+      "icone": "",
+      "abre": false,
+      "bloqueada": false,
+      "classes": ""
+     },
+     "altura": 46,
+     "linhas": 1
+    },
+    {
+     "conteudo": {
+      "tecla": "3",
+      "texto": "Acampar e descansar até o amanhecer",
+      "teste": "",
+      "nota": "",
+      "motivo": "",
+      "riscos": "",
+      "icone": "",
+      "abre": false,
+      "bloqueada": false,
+      "classes": ""
+     },
+     "altura": 46,
+     "linhas": 1
+    },
+    {
+     "conteudo": {
+      "tecla": "4",
+      "texto": "Viajar",
+      "teste": "",
+      "nota": "",
+      "motivo": "",
+      "riscos": "",
+      "icone": "",
+      "abre": false,
+      "bloqueada": false,
+      "classes": ""
+     },
+     "altura": 46,
+     "linhas": 1
+    }
+   ],
+   "soltar_fora": "nada escolhido",
+   "foco": "Explorar a região (foco visível)",
+   "clique": "4 de 4 opções à vista respondem em todos os pontos"
+  },
+  {
+   "nome": "normal-capela-tocha-depois",
+   "pergunta": "O que você faz?",
+   "faixas": true,
+   "fonte": "20px",
+   "cortados": 0,
+   "sobrepostas": false,
+   "opcoes": [
+    {
+     "conteudo": {
+      "tecla": "1",
+      "texto": "Entrar na capela pelo buraco do canal",
+      "teste": "",
+      "nota": "",
+      "motivo": "",
+      "riscos": "−1 tocha | +1 nível · +10% dano",
+      "icone": "data:image/png;base64,iVBORw0KGgoAAAANSU",
+      "abre": false,
+      "bloqueada": false,
+      "classes": "op-missao"
+     },
+     "altura": 81,
+     "linhas": 1
+    },
+    {
+     "conteudo": {
+      "tecla": "2",
+      "texto": "Explorar a região (à noite é mais perigoso)",
+      "teste": "",
+      "nota": "",
+      "motivo": "",
+      "riscos": "",
+      "icone": "",
+      "abre": false,
+      "bloqueada": false,
+      "classes": ""
+     },
+     "altura": 46,
+     "linhas": 1
+    },
+    {
+     "conteudo": {
+      "tecla": "3",
+      "texto": "Acampar e descansar até o amanhecer",
+      "teste": "",
+      "nota": "",
+      "motivo": "",
+      "riscos": "",
+      "icone": "",
+      "abre": false,
+      "bloqueada": false,
+      "classes": ""
+     },
+     "altura": 46,
+     "linhas": 1
+    },
+    {
+     "conteudo": {
+      "tecla": "4",
+      "texto": "Viajar",
+      "teste": "",
+      "nota": "",
+      "motivo": "",
+      "riscos": "",
+      "icone": "",
+      "abre": false,
+      "bloqueada": false,
+      "classes": ""
+     },
+     "altura": 46,
+     "linhas": 1
+    }
+   ],
+   "contraste_risco_marfim": 8.8,
+   "soltar_fora": "nada escolhido",
+   "foco": "Explorar a região (à noite é mais perigoso) (foco visível)",
+   "clique": "4 de 4 opções à vista respondem em todos os pontos"
+  },
+  {
+   "nome": "normal-capela-escura-depois",
+   "pergunta": "O que você faz?",
+   "faixas": true,
+   "fonte": "20px",
+   "cortados": 0,
+   "sobrepostas": false,
+   "opcoes": [
+    {
+     "conteudo": {
+      "tecla": "1",
+      "texto": "Entrar na capela pelo buraco do canal",
+      "teste": "",
+      "nota": "",
+      "motivo": "",
+      "riscos": "Sem luz: inimigo age primeiro | +1 nível · +10% dano",
+      "icone": "data:image/png;base64,iVBORw0KGgoAAAANSU",
+      "abre": false,
+      "bloqueada": false,
+      "classes": "op-missao"
+     },
+     "altura": 81,
+     "linhas": 1
+    },
+    {
+     "conteudo": {
+      "tecla": "2",
+      "texto": "Explorar a região (à noite é mais perigoso)",
+      "teste": "",
+      "nota": "",
+      "motivo": "",
+      "riscos": "",
+      "icone": "",
+      "abre": false,
+      "bloqueada": false,
+      "classes": ""
+     },
+     "altura": 46,
+     "linhas": 1
+    },
+    {
+     "conteudo": {
+      "tecla": "3",
+      "texto": "Acampar e descansar até o amanhecer",
+      "teste": "",
+      "nota": "",
+      "motivo": "",
+      "riscos": "",
+      "icone": "",
+      "abre": false,
+      "bloqueada": false,
+      "classes": ""
+     },
+     "altura": 46,
+     "linhas": 1
+    },
+    {
+     "conteudo": {
+      "tecla": "4",
+      "texto": "Viajar",
+      "teste": "",
+      "nota": "",
+      "motivo": "",
+      "riscos": "",
+      "icone": "",
+      "abre": false,
+      "bloqueada": false,
+      "classes": ""
+     },
+     "altura": 46,
+     "linhas": 1
+    }
+   ],
+   "contraste_risco_marfim": 8.58,
+   "soltar_fora": "nada escolhido",
+   "foco": "Explorar a região (à noite é mais perigoso) (foco visível)",
+   "clique": "4 de 4 opções à vista respondem em todos os pontos"
+  },
+  {
+   "nome": "normal-correntes-depois",
+   "pergunta": "O que você faz?",
+   "faixas": true,
+   "fonte": "20px",
+   "cortados": 0,
+   "sobrepostas": false,
+   "opcoes": [
+    {
+     "conteudo": {
+      "tecla": "1",
+      "texto": "Soltar as correntes",
+      "teste": "",
+      "nota": "",
+      "motivo": "",
+      "riscos": "",
+      "icone": "data:image/png;base64,iVBORw0KGgoAAAANSU",
+      "abre": true,
+      "bloqueada": false,
+      "classes": "op-missao"
+     },
+     "altura": 46,
+     "linhas": 1
+    },
+    {
+     "conteudo": {
+      "tecla": "2",
+      "texto": "Descer ao fundo alagado",
+      "teste": "",
+      "nota": "",
+      "motivo": "",
+      "riscos": "",
+      "icone": "data:image/png;base64,iVBORw0KGgoAAAANSU",
+      "abre": true,
+      "bloqueada": false,
+      "classes": "op-missao"
+     },
+     "altura": 46,
+     "linhas": 1
+    },
+    {
+     "conteudo": {
+      "tecla": "3",
+      "texto": "Subir à sacristia",
+      "teste": "",
+      "nota": "",
+      "motivo": "",
+      "riscos": "",
+      "icone": "",
+      "abre": false,
+      "bloqueada": false,
+      "classes": ""
+     },
+     "altura": 46,
+     "linhas": 1
+    },
+    {
+     "conteudo": {
+      "tecla": "4",
+      "texto": "Sair e acampar",
+      "teste": "",
+      "nota": "",
+      "motivo": "",
+      "riscos": "",
+      "icone": "",
+      "abre": false,
+      "bloqueada": false,
+      "classes": "secundaria"
+     },
+     "altura": 46,
+     "linhas": 1
+    },
+    {
+     "conteudo": {
+      "tecla": "5",
+      "texto": "Viajar",
+      "teste": "",
+      "nota": "",
+      "motivo": "",
+      "riscos": "",
+      "icone": "",
+      "abre": false,
+      "bloqueada": false,
+      "classes": ""
+     },
+     "altura": 46,
+     "linhas": 1
+    }
+   ],
+   "contraste_seta_marfim": 12.71,
+   "soltar_fora": "nada escolhido",
+   "foco": "Descer ao fundo alagado (foco visível)",
+   "clique": "5 de 5 opções à vista respondem em todos os pontos"
+  },
+  {
+   "nome": "tecla-depois",
+   "opcoes_antes": "Dar 5 moedas | Pagar uma refeição para ele | Ignorar",
+   "escolhida": "› Ignorar",
+   "a_seguir": "Enfrentar Sarric, o Profeta das Cinzas (guardião) | Explorar a região | Acampar e descansar até o amanhecer | Viajar | Talentos | Personagem e inventário | Mapa | Diário (contratos, rumores) | Bestiário | Salvar jogo | Sair do jogo | Usar Bandagem | Usar Poção de Vida"
+  },
+  {
+   "nome": "criacao-depois",
+   "titulo": "Novo jogo | Campanha | Carregar jogo | Sair: 0 lista(s) em faixas",
+   "classe": "Guerreiro | Arqueiro | Mago: 0 lista(s) em faixas"
+  }
+ ],
+ "erros": []
+}

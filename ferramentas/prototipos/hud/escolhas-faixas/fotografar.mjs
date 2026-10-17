@@ -19,7 +19,8 @@
 // Em cada um: a tela inteira, a lista parada, o mouse na opção mais alta, numa com teste e numa indisponível, o
 // pressionado, o foco do teclado (Tab), e as medidas: o conteúdo de cada opção (texto, tecla, teste, nota, riscos, motivo,
 // ícone, seta, bloqueio) igual antes e depois, as alturas, o contraste das etiquetas sobre o marfim, os cortes e as
-// sobreposições, os pontos de clique. No fim, a tecla do número escolhe a opção certa (evento do mendigo, "Ignorar").
+// sobreposições, os pontos de clique. No fim, a tecla do número escolhe a opção certa (evento do mendigo, "Ignorar"),
+// e a criação do personagem (título → Novo jogo → o nome → a classe) fica sem faixas: não há partida ainda (1.113.1).
 //   PLAYWRIGHT_MODULO=<caminho do playwright>/index.mjs node ferramentas/prototipos/hud/escolhas-faixas/fotografar.mjs
 // (VERSOES=antes,depois, CASOS=..., JANELAS=normal,baixa, SAIDA=<pasta>, ANTES=<commit>, ANTES_RAIZ=<checkout>,
 // PYTHON=<executável>, MANTER=1)
@@ -188,6 +189,23 @@ for (const versao of VERSOES) {
     const depois = await p.evaluate(() => ({ eco: [...document.querySelectorAll(".h-eco, #historico .eco, .eco")].map((e) => e.textContent.trim()).slice(-1)[0] || "",
       pergunta: typeof pergunta !== "undefined" && pergunta && pergunta.opcoes ? pergunta.opcoes.map((o) => o.texto).join(" | ") : (document.querySelector("#prompt .continuar") ? "(Continuar)" : "") }));
     relatorio.push({ nome: `tecla-${versao}`, opcoes_antes: antes, escolhida: depois.eco, a_seguir: depois.pergunta });
+    await p.close();
+  } finally { proc.kill(); }
+}
+// a criação do personagem (antes da partida): sem faixas no título nem na escolha da classe
+for (const versao of VERSOES) {
+  const { proc, url } = await subir(versao, "titulo", {});
+  try {
+    const p = await b.newPage({ viewport: { width: 1500, height: 950 } });
+    await p.goto(url); await espera(1500);
+    const ler = () => p.evaluate(() => `${[...document.querySelectorAll("#prompt .escolha .op-texto")].map((e) => e.textContent).join(" | ")}: ${document.querySelectorAll(".faixas").length} lista(s) em faixas`);
+    const titulo = await ler();
+    await (await p.$('#prompt .escolha:has-text("Novo jogo")')).click(); await espera(1200);
+    const inp = await p.$("#prompt input"); if (inp) { await inp.fill("Teste"); await p.keyboard.press("Enter"); }
+    for (let k = 0; k < 30 && !(await p.$("#prompt .escolha")); k++) { const c = await p.$("#prompt .continuar"); if (c) await c.click().catch(() => {}); await espera(300); }
+    await espera(600);
+    relatorio.push({ nome: `criacao-${versao}`, titulo, classe: await ler() });
+    await p.screenshot({ path: path.join(SAIDA, `criacao-${versao}-tela.png`) });
     await p.close();
   } finally { proc.kill(); }
 }

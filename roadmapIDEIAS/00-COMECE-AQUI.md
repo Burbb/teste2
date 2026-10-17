@@ -3314,3 +3314,14 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Fora desta entrega (decidido pela função):** mercado, confirmações, achado, doca, caminhos, prédios da vila,
   fogueira e o título continuam com o próprio tratamento.
 - **Próximo:** Jean jogar; a composição compacta das lutas cheias segue em avaliação (protótipo, entrega à parte).
+
+### 17/10/2026 (data do computador local) — Correção: as faixas pela função narrativa (1.113.1)
+
+- **Alinhamento de Jean:** a criação do personagem fica como estava (a apresentação dela terá a etapa própria); a
+  regra das faixas segue a função narrativa do controle, não só o uso da lista de escolhas.
+- **Feito:** `escolhas.js` dá as faixas às escolhas da partida em andamento, fora da luta (há partida quando o motor
+  manda o estado dela, só com herói e mundo). O título, a lista de saves e a criação ficam de fora sem exceção escrita.
+- **Conferido:** os 13 casos narrativos com lista continuam em faixas, a criação (título e classe) sem faixas, a tecla
+  do número, sem erro no console; suíte, gabarito (sem mudança), pyflakes e fumaça.
+- **O tempo das baterias (registrado nos LEIA-ME):** as escolhas, 60 cenários em ~7 min (~6 s cada); a composição
+  compacta, 39 cenários em ~12 min (15 a 21 s cada: a rodada de ataque, os dois menus, o mouse em cada habilidade).

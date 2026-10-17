@@ -190,9 +190,10 @@
 /* ------------------------------------------------------------ as escolhas da página */
 /* As escolhas narrativas e as ações da página, na linguagem do seletor (1.111.0 no lugar selvagem; 1.113.0 em todas):
    o lugar (Explorar, Acampar, Viajar, a missão, o contrato), a vila (Passear, a ação da missão), os eventos e os
-   diálogos (com os testes de atributo), as cenas da missão, a viagem ("Para onde?"), a criação do personagem.
-   escolhas.js dá .faixas à lista de escolhas da página fora da luta e do título; não depende do lugar nem do texto.
-   Ficam com o tratamento próprio: a luta (a roda, o seletor, a mira), o menu do título, as confirmações (janela por
+   diálogos (com os testes de atributo), as cenas da missão, a viagem ("Para onde?"). escolhas.js dá .faixas à lista
+   de escolhas da partida em andamento, fora da luta: pela função, não pelo lugar nem pelo texto. Ficam com o
+   tratamento próprio: a luta (a roda, o seletor, a mira), o que vem antes da partida (o título, a lista de saves, a
+   criação do personagem, que terá a etapa própria), as confirmações (janela por
    cima), a janela do achado, a doca, os caminhos, as telas desenhadas (o mercado, o Inventário, os serviços: os
    controles delas nunca chegam a esta lista) e os prédios da vila. Numa coluna só, mais larga:
    - cada opção é um botão retangular inteiro (a área de clique não muda); a faixa é o ::before, recortado pelas pontas

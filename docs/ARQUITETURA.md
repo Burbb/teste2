@@ -338,11 +338,13 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
     pulsa a própria barra, sem anel por fora;
   - *o aviso da cena na luta* ("Inimigos +1 nível", os do clima): a arena cresce 14 px embaixo só quando há aviso, e
     ele fica no canto direito dessa faixa, sob os inimigos, fora do caminho dos comandos;
-  - *as escolhas da página* (`18-seletor-habilidades.css`, no fim; 1.113.0): `escolhas.js` dá a classe `.faixas` à
-    lista de escolhas da página sempre que ela não é da luta nem do título: o lugar, a vila (Passear, a ação da
-    missão), os eventos e os diálogos (com os testes de atributo), as cenas da missão, a viagem ("Para onde?"), a
-    criação do personagem. Não depende do lugar, do texto nem de marca do motor (a marca `explorar` da 1.111.0 saiu).
-    Ficam com o tratamento próprio: a roda, o seletor e a mira da luta, o menu do título, a confirmação e a janela do
+  - *as escolhas da página* (`18-seletor-habilidades.css`, no fim; 1.113.0, a regra pela função na 1.113.1):
+    `escolhas.js` dá a classe `.faixas` às escolhas narrativas, as da partida em andamento fora da luta: o lugar, a
+    vila (Passear, a ação da missão), os eventos e os diálogos (com os testes de atributo), as cenas da missão, a
+    viagem ("Para onde?"). O critério é a função: há partida quando o motor manda o estado dela (`estado.py` só o
+    monta com herói e mundo); antes disso (o título, a lista de saves, a criação do personagem, que terá a etapa
+    própria) não há escolha narrativa. Não depende do lugar, do texto nem de marca do motor (a marca `explorar` da
+    1.111.0 saiu). Ficam com o tratamento próprio: a roda, o seletor e a mira da luta, a confirmação e a janela do
     achado (por cima), a doca, os caminhos, os prédios da vila e as telas desenhadas (o mercado, o Inventário, a
     fogueira, os serviços): os controles operacionais delas nunca chegam a esta lista (`ACOES_OCULTAS`). As pontas
     escalam pela altura (a opção de várias linhas é uma pincelada só, com mais folga quando há riscos ou nota); as

@@ -185,10 +185,12 @@ function mostrarOpcoes(m) {
   if (!naVila) fecharVila();
   if (m.pergunta && !naVila) promptEl.appendChild(el("div", "pergunta-rotulo", esc(m.pergunta)));
   const lista = el("ol", "escolhas");
-  // As escolhas da página (o lugar, a vila, os eventos, os diálogos, a missão, a viagem): as faixas de pincel
-  // (18-seletor-habilidades.css). Fora delas: a luta (a roda, o seletor, a mira) e o menu do título. Os controles de
-  // um serviço (comprar, vender, equipar, dormir...) não chegam aqui: as telas os desenham (ACOES_OCULTAS).
-  if (!emLuta && !corpo.classList.contains("modo-titulo")) lista.classList.add("faixas");
+  // As escolhas narrativas, as da partida em andamento (o lugar, a vila, os eventos, os diálogos, a missão, a viagem):
+  // as faixas de pincel (18-seletor-habilidades.css). Pela função, não pelo lugar: sem partida (o título, a lista de
+  // saves, a criação do personagem, antes de haver herói e mundo, quando o motor ainda não manda o estado) não há
+  // escolha narrativa; na luta, as ações são a roda, o seletor e a mira. Os controles de um serviço (comprar, vender,
+  // equipar, dormir...) não chegam a esta lista: as telas os desenham (ACOES_OCULTAS).
+  if (estado && !emLuta) lista.classList.add("faixas");
   if (emLuta && ehAcaoDaLuta(m)) { lista.classList.add("acoes-combate"); Batalha.vez("j"); }
   if (emLuta && m.opcoes.some((o) => o.meta && o.meta.alvo)) {
     Batalha.alvos(m.opcoes, (i) => responder(m.id, i));
