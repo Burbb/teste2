@@ -8,11 +8,19 @@ nada daqui: só os PNGs exportados para `rpg/web/static/hud/icones/`.
 | Peça | Arquivos | Camadas (de baixo para cima) | No jogo desde |
 |---|---|---|---|
 | varinha | `varinha/varinha-32.aseprite`, `-40`, `-48`, `-64` (RGBA, 1 quadro, fundo transparente) | pomo, empunhadura, anel, haste, taca, pedra, garras, contorno | 1.109.0 |
+| gibao (peito de couro) | `gibao/gibao-32.aseprite`, `-40`, `-48`; **o 64 é o 32 ampliado 2×** (sem fonte própria) | forro, corpo, abas, pala, bordas, fecho, costuras, contorno | 1.110.0 |
+| bota (botas de couro) | `bota/bota-32.aseprite`, `-40`, `-48`; **o 64 é o 32 ampliado 2×** (sem fonte própria) | tras, tras_dobra, tras_sola, frente, frente_dobra, frente_sola, tira, detalhes, contorno | 1.110.0 |
 
 A varinha é a aprovada pelo Jean (commit `451ff11`): a haste com o mesmo perfil nos quatro tamanhos e a pedra
 compacta (quadrada, de cantos cortados) também no 32. A camada `garras` do 32 fica vazia (lá a garra é um pixel da
 taça). As rodadas, as tentativas descartadas e as fotos estão em `ferramentas/prototipos/hud/varinha-aseprite/`
 (histórico: os `.aseprite` de lá são cópias das rodadas, não a fonte).
+
+O gibão e as botas são os aprovados pelo Jean na rodada 2 (commit `9d49726`). Neste lote, **o 32 é a fonte do 64**:
+o 64 do jogo é o 32 final ampliado exatamente 2× por vizinho mais próximo, sem retoque (a escolha do Jean depois de
+comparar no cartão do saque). Os 64 desenhados à parte (`historico/gibao-64-trabalhado.aseprite`,
+`historico/bota-64-trabalhado.aseprite`) ficam como histórico, fora da exportação. As rodadas estão em
+`ferramentas/prototipos/hud/couro-aseprite/`.
 
 ## Exportar os PNGs e os @2x
 
@@ -20,10 +28,20 @@ taça). As rodadas, as tentativas descartadas e as fotos estão em `ferramentas/
     python ferramentas/arte/exportar_aseprite.py varinha <pasta>     # grava numa pasta qualquer (uma proposta)
     python ferramentas/arte/exportar_aseprite.py varinha --conferir  # compara com os do jogo, byte a byte e pixel a pixel
 
+    python ferramentas/arte/exportar_aseprite.py gibao               # o gibão: 32, 40, 48 das fontes e o 64 derivado
+    python ferramentas/arte/exportar_aseprite.py todas --conferir    # todas as peças: reproduz e compara os 24 arquivos
+
 O 1× sai da linha de comando do Aseprite (`-b <fonte> --save-as <png>`: o composto das camadas visíveis); o @2x é a
 duplicação exata do 1× (vizinho mais próximo, pelo Pillow), como o `salvar` de `../pixel_comum.py`. O executável vem
 de `ASEPRITE=<executável>`, de `aseprite` no PATH ou do lugar de instalação comum (Steam). Na integração da 1.109.0, os
 oito arquivos exportados saíram idênticos, byte a byte, aos aprovados.
+
+Os tamanhos derivados são explícitos por peça na tabela `DERIVADOS` do exportador (lado: lado da fonte e fator
+inteiro): no gibão e nas botas, `64: (32, 2)`. O derivado sai do PNG exportado da fonte, ampliado pelo vizinho mais
+próximo, e o @2x dele é a duplicação exata. Uma peça fora da tabela (a varinha) exporta cada fonte que tem. O
+`--conferir` reproduz todos os arquivos numa pasta temporária, compara com os do jogo e confere que cada derivado,
+reduzido pegando um pixel de cada bloco, volta exatamente à fonte. Na integração da 1.110.0, os dezesseis arquivos do
+couro saíram idênticos, byte a byte, aos escolhidos.
 
 Mexeu numa fonte? Exporte para uma pasta, confira em tamanho real (`../prancha.py`) e no jogo
 (`../fotografar_itens.mjs`, `SO=varinha`), e só então grave no jogo.

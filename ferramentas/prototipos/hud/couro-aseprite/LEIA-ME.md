@@ -1,5 +1,14 @@
 # O peitoral e as botas de couro (rodada 1, proposta em 32 e 64)
 
+> **Integrados na 1.110.0 (histórico daqui para baixo).** Escolhidos pelo Jean: o 32, o 40 e o 48 da `rodada2/`
+> (commit `9d49726`, com a amarração corrigida do gibão de 32) e, como 64, o 32 ampliado 2× por vizinho mais próximo.
+> As fontes foram para `ferramentas/arte/aseprite/gibao/` e `bota/`; os 64 desenhados à parte, para
+> `ferramentas/arte/aseprite/historico/`; os PNGs do jogo saem de `ferramentas/arte/exportar_aseprite.py`. Papel dos
+> scripts daqui, todos histórico, nenhum grava no jogo: `auxiliares/couro_r1.py` e `couro_r2.py` calculam as listas
+> das camadas das rodadas numa pasta dada; `montar.lua`, `sprite_atual.py`, `fila.py` e `silhueta.py` montam e
+> conferem; `../fotografar_couro.mjs` e `../comparar_couro.py` fotografam e comparam as propostas com o `icones.js`
+> trocado na página. A conferência do jogo integrado é a de `ferramentas/arte/fotografar_itens.mjs` (`SO=gibao,bota`).
+
 Os desenhos "gibao" (o peito de couro) e "bota" (os pés de couro), desenhados no Aseprite pelo MCP. Só protótipo: o
 jogo, `icones.js`, a versão e os dados dos itens não mudaram. Espera a avaliação do Jean; 40 e 48 ficam para depois
 da aprovação.

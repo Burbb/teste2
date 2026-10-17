@@ -1,0 +1,52 @@
+== produção × escolhidos (rodada 2 de 9d49726: 32, 40, 48 e @2x; o 64 = o 32@2x da rodada 2; o 64@2x = o 64 duplicado)
+gibao-32.png × gibao-32.png: pixels iguais, bytes iguais
+gibao-32@2x.png × gibao-32@2x.png: pixels iguais, bytes iguais
+gibao-40.png × gibao-40.png: pixels iguais, bytes iguais
+gibao-40@2x.png × gibao-40@2x.png: pixels iguais, bytes iguais
+gibao-48.png × gibao-48.png: pixels iguais, bytes iguais
+gibao-48@2x.png × gibao-48@2x.png: pixels iguais, bytes iguais
+gibao-64.png × gibao-32@2x.png: pixels iguais, bytes iguais
+gibao-64@2x.png × 32@2x duplicado: pixels iguais
+gibao-64 trabalhado (histórico) diferente da produção: True
+bota-32.png × bota-32.png: pixels iguais, bytes iguais
+bota-32@2x.png × bota-32@2x.png: pixels iguais, bytes iguais
+bota-40.png × bota-40.png: pixels iguais, bytes iguais
+bota-40@2x.png × bota-40@2x.png: pixels iguais, bytes iguais
+bota-48.png × bota-48.png: pixels iguais, bytes iguais
+bota-48@2x.png × bota-48@2x.png: pixels iguais, bytes iguais
+bota-64.png × bota-32@2x.png: pixels iguais, bytes iguais
+bota-64@2x.png × 32@2x duplicado: pixels iguais
+bota-64 trabalhado (histórico) diferente da produção: True
+
+== exportar_aseprite.py todas --conferir
+== bota
+bota-32.png: pixels iguais, bytes iguais
+bota-32@2x.png: pixels iguais, bytes iguais
+bota-40.png: pixels iguais, bytes iguais
+bota-40@2x.png: pixels iguais, bytes iguais
+bota-48.png: pixels iguais, bytes iguais
+bota-48@2x.png: pixels iguais, bytes iguais
+bota-64.png: pixels iguais, bytes iguais
+bota-64@2x.png: pixels iguais, bytes iguais
+bota-64: blocos 2×2 uniformes; reduzido = bota-32
+== gibao
+gibao-32.png: pixels iguais, bytes iguais
+gibao-32@2x.png: pixels iguais, bytes iguais
+gibao-40.png: pixels iguais, bytes iguais
+gibao-40@2x.png: pixels iguais, bytes iguais
+gibao-48.png: pixels iguais, bytes iguais
+gibao-48@2x.png: pixels iguais, bytes iguais
+gibao-64.png: pixels iguais, bytes iguais
+gibao-64@2x.png: pixels iguais, bytes iguais
+gibao-64: blocos 2×2 uniformes; reduzido = gibao-32
+== varinha
+varinha-32.png: pixels iguais, bytes iguais
+varinha-32@2x.png: pixels iguais, bytes iguais
+varinha-40.png: pixels iguais, bytes iguais
+varinha-40@2x.png: pixels iguais, bytes iguais
+varinha-48.png: pixels iguais, bytes iguais
+varinha-48@2x.png: pixels iguais, bytes iguais
+varinha-64.png: pixels iguais, bytes iguais
+varinha-64@2x.png: pixels iguais, bytes iguais
+tudo igual ao jogo
+saída 0

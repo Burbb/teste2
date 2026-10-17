@@ -2448,3 +2448,11 @@ compacta do 32) estão em `varinha-aseprite/LEIA-ME.md`, com as fotos e as pranc
 `varinha-aseprite/rodada2/capturas/`. A versão aprovada é a de `varinha-aseprite/rodada2/` no commit `451ff11`; as
 fontes finais estão em `ferramentas/arte/aseprite/varinha/` e os PNGs do jogo saem de
 `ferramentas/arte/exportar_aseprite.py varinha`, idênticos byte a byte aos aprovados.
+
+## O peitoral e as botas de couro (desenhados no Aseprite; aprovados e no jogo na 1.110.0)
+
+As rodadas (a proposta em 32 e 64, a silhueta do gibão refeita, a amarração do 32, o 40 e o 48, a comparação do 64
+desenhado com o 32 ampliado 2×) estão em `couro-aseprite/LEIA-ME.md`, com as fotos e as pranchas em
+`couro-aseprite/capturas/` e `couro-aseprite/rodada2/capturas/`. Escolhidos: o 32, o 40 e o 48 da `rodada2/` (commit
+`9d49726`) e, como 64, o 32 ampliado 2×; as fontes estão em `ferramentas/arte/aseprite/gibao/` e `bota/`.
+

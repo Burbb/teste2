@@ -3081,3 +3081,36 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   tratamento nos próximos itens.
 - **Continua como está no jogo:** os sprites 16×16. Próximo: a avaliação do Jean.
 
+### 16/10/2026 (data do computador local) — 1.110.0: o gibão e as botas de couro no jogo (aprovados e integrados)
+
+- **Decisão de Jean:** o gibão e as botas aprovados; integrar a rodada 2 (commit `9d49726`) com esta escolha: 32, 40
+  e 48 os aprovados; o 64 é o 32 final ampliado 2× por vizinho mais próximo, sem retoque; os 64 desenhados à parte
+  ficam como histórico. A orientação da skill muda: a arte principal em 32 primeiro, ampliação inteira para os
+  tamanhos maiores quando aprovada, tamanhos intermediários derivados da fonte, versão detalhada só com ganho visível.
+- **Entrou:** `rpg/web/static/hud/icones/gibao-32/40/48/64.png` e `bota-32/40/48/64.png` com os @2x, exportados por
+  `ferramentas/arte/exportar_aseprite.py` (agora com `DERIVADOS`: no gibão e nas botas, `64: (32, 2)`) das fontes em
+  `ferramentas/arte/aseprite/gibao/` e `bota/` (32, 40, 48 em camadas); idênticos byte a byte aos escolhidos; reduzir
+  o 64 pegando um pixel de cada bloco 2×2 devolve o 32 (conferido pelo `--conferir`, que reproduz e compara as três
+  peças: varinha, gibão e botas). Os 64 desenhados à parte em `ferramentas/arte/aseprite/historico/`. `Icones`:
+  `TAMANHOS.gibao`, `TAMANHOS.bota`, `ITEM.gibao`, `ITEM.bota`.
+- **Alcance:** o desenho "gibao": Gibão de Couro, Capa de Patrulha e Colete Acolchoado (o peito do Arqueiro), em todos
+  os materiais de couro (Rasgado, Curtido, Reforçado, Tachonado, Rúnico), e o único Pele do Penitente (também a
+  recompensa da missão do Turvo); o desenho "bota": a Bota de Caça (os pés do Arqueiro), nos mesmos materiais, e o
+  único Botas do Andarilho Morto. Ficam como estão: o estado Iniciativa (o sprite "bota" noutro papel) e o espaço vazio
+  dos pés (a bota de ferro). A Capa de Patrulha segue com o desenho do gibão; um desenho próprio dela ficou registrado
+  em `docs/ROADMAP.md` (ideias guardadas).
+- **Skill e documentos:** `arte-itens-fenda` com o processo "Do 32 para os outros tamanhos" e o exemplo do couro
+  (os itens aprovados antes ficam com os arquivos que têm; trocar algum pede comparação própria);
+  `ferramentas/arte/aseprite/LEIA-ME.md` (o 32 é a fonte do 64 deste lote); `docs/ARQUITETURA.md`; o protótipo do
+  couro marcado como histórico.
+- **Ferramentas compartilhadas:** `tests/navegador/cenarios.py` ganhou `ACHADO_ID` (o achado é um único do catálogo);
+  `ferramentas/arte/fotografar_itens.mjs` confere `SO=gibao,bota` (a peça vestida por `VESTIR`, e os dois únicos no
+  cartão do saque).
+- **Conferido** (`fotografar_itens.mjs`, `SO=gibao,bota`): ficha e mercado em 32 (Vender, dica de comparação, vendido
+  em Recomprar e recomprado), corpo e mochila do Inventário em 40 (e o achado guardado na mochila), cartão do saque
+  com o 64 derivado e o "você usa" em 48, voo ao equipar, a roda da luta, e o cartão do saque com a Pele do Penitente e
+  as Botas do Andarilho Morto; em 1500×950 e 1280×720, sem erro no console. Preços, atributos, estoque, regras, áreas
+  clicáveis e animações não mudaram (em `rpg/`, só `icones.js`, a versão e os PNGs). Logs em
+  `ferramentas/prototipos/hud/couro-aseprite/logs/integracao-*.log`.
+- **Próximo:** nenhuma peça começou; os 64 dos itens anteriores ficam como estão.
+

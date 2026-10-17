@@ -118,6 +118,9 @@ Pendências registradas depois da 1.95.0 (para depois, sem executar):
   retratos haverá e como o jogador vai
   personalizar o herói continuam em aberto (nem seleção, nem recoloração, nem diferença por gênero, nem as outras
   classes por enquanto); o retrato não segue o elmo equipado nem os atributos.
+- Um desenho próprio para a Capa de Patrulha (peito do Arqueiro): desde a 1.110.0 ela usa o desenho do gibão de
+  couro (um colete), como as outras bases do peito do Arqueiro; uma capa não é um colete. Sem mudar dados nem regras
+  até lá.
 - "Ordens" leves para a comitiva.
 - Aliados na batalha final, repaginado (o sistema antigo saiu na 1.45: cada evento somava um aliado que tirava vida
   do chefe num texto antes da luta, invisível no resto do jogo). Se voltar: poucos aliados, ganhos por arcos

@@ -1,11 +1,14 @@
 """Exporta os ícones cuja fonte final é um .aseprite (ferramentas/arte/aseprite/<peça>/<peça>-<lado>.aseprite) para os
 PNGs do jogo: o 1× pela linha de comando do Aseprite (o composto das camadas visíveis) e o @2x pela duplicação exata
-(vizinho mais próximo), como o `salvar` de pixel_comum.py.
+(vizinho mais próximo), como o `salvar` de pixel_comum.py. Os tamanhos que uma peça tira de outro por ampliação inteira
+exata (DERIVADOS: no gibão e nas botas, o 64 é o 32 ampliado 2×) saem do PNG exportado da fonte, sem retoque; a pasta
+da peça não tem fonte desse tamanho (os 64 desenhados à parte ficam em aseprite/historico/, fora da exportação).
 
     python ferramentas/arte/exportar_aseprite.py varinha                 # grava em rpg/web/static/hud/icones/
     python ferramentas/arte/exportar_aseprite.py varinha <pasta>         # grava numa pasta qualquer (proposta)
     python ferramentas/arte/exportar_aseprite.py varinha --conferir      # exporta numa pasta temporária e compara
                                                                          # com os do jogo, byte a byte e pixel a pixel
+    python ferramentas/arte/exportar_aseprite.py todas --conferir        # todas as peças (as pastas com fontes)
 
 O Aseprite vem de ASEPRITE=<executável>; sem a variável, de `aseprite` no PATH ou do lugar de instalação comum (Steam
 no Windows, macOS e Linux). O jogo nunca lê nada daqui: só os PNGs exportados.
@@ -30,6 +33,18 @@ LUGARES = [
     pathlib.Path.home() / "Library/Application Support/Steam/steamapps/common/Aseprite/Aseprite.app/Contents/MacOS/aseprite",
     pathlib.Path.home() / ".steam/steam/steamapps/common/Aseprite/aseprite",
 ]
+
+
+# lado derivado: (lado da fonte, fator inteiro). Só as peças listadas; as outras exportam cada fonte que têm.
+DERIVADOS = {
+    "gibao": {64: (32, 2)},     # 1.110.0: o 64 é o 32 final ampliado 2× (o 64 desenhado à parte é histórico)
+    "bota": {64: (32, 2)},
+}
+
+
+def pecas():
+    """As peças com fontes (as pastas de aseprite/, menos o histórico)."""
+    return sorted(p.name for p in FONTES.iterdir() if p.is_dir() and p.name != "historico" and any(p.glob("*.aseprite")))
 
 
 def aseprite():
@@ -59,7 +74,28 @@ def exportar(peca, pasta):
         im = Image.open(png).convert("RGBA")
         im.resize((im.width * 2, im.height * 2), Image.NEAREST).save(pasta / f"{fonte.stem}@2x.png")
         feitos += [png.name, f"{fonte.stem}@2x.png"]
+    for lado, (base, fator) in DERIVADOS.get(peca, {}).items():
+        im = Image.open(pasta / f"{peca}-{base}.png").convert("RGBA")
+        der = im.resize((im.width * fator, im.height * fator), Image.NEAREST)
+        assert der.size == (lado, lado), f"{peca}: {base}×{fator} não dá {lado}"
+        der.save(pasta / f"{peca}-{lado}.png")
+        der.resize((lado * 2, lado * 2), Image.NEAREST).save(pasta / f"{peca}-{lado}@2x.png")
+        feitos += [f"{peca}-{lado}.png", f"{peca}-{lado}@2x.png"]
     return feitos
+
+
+def recupera(peca):
+    """Cada derivado do jogo, reduzido pegando um pixel de cada bloco fator×fator, volta exatamente à sua fonte?"""
+    ok = []
+    for lado, (base, fator) in DERIVADOS.get(peca, {}).items():
+        der, src = Image.open(JOGO / f"{peca}-{lado}.png").convert("RGBA"), Image.open(JOGO / f"{peca}-{base}.png").convert("RGBA")
+        blocos = all(len({der.getpixel((x * fator + i, y * fator + j)) for i in range(fator) for j in range(fator)}) == 1
+                     for y in range(base) for x in range(base))
+        volta = all(der.getpixel((x * fator, y * fator)) == src.getpixel((x, y)) for y in range(base) for x in range(base))
+        print(f"{peca}-{lado}: blocos {fator}×{fator} {'uniformes' if blocos else 'NÃO uniformes'}; reduzido "
+              f"{'= ' if volta else '≠ '}{peca}-{base}")
+        ok.append(blocos and volta)
+    return all(ok)
 
 
 def conferir(peca):
@@ -82,11 +118,15 @@ def main():
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     if not args:
         sys.exit(__doc__)
-    peca = args[0]
     if "--conferir" in sys.argv:
-        dif = conferir(peca)
-        print("tudo igual ao jogo" if not dif else "DIFERENTE: " + ", ".join(dif))
-        sys.exit(1 if dif else 0)
+        dif, derivados = [], True
+        for peca in (pecas() if args == ["todas"] else args):
+            print(f"== {peca}")
+            dif += conferir(peca)
+            derivados &= recupera(peca)
+        print("tudo igual ao jogo" if not dif and derivados else "DIFERENTE: " + ", ".join(dif or ["derivado"]))
+        sys.exit(1 if dif or not derivados else 0)
+    peca = args[0]
     pasta = pathlib.Path(args[1]) if len(args) > 1 else JOGO
     print("\n".join(str(pasta / n) for n in exportar(peca, pasta)))
 

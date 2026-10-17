@@ -338,7 +338,8 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   roda, o retrato, a cabeça e a figura do herói e dos companheiros (de `retratos.js`, abaixo). Devolve a `<img>` pronta ou `""` quando a família não tem aquele desenho; a
   tela usa então o sprite do jogo (`Icones.item(s) || S(s, 2)`). A origem e o destino de uma animação pedem o mesmo
   papel (o item que voa ao equipar, o selo de atributo, o consumível que cai na bolsa). Lacunas (desenho do jogo no
-  lugar, sem trocar por desenho de outro tipo de item): as peças de couro, os itens únicos com desenho próprio, a tocha apagada, a bolsa vazia e o frasco vazio no topo, os inimigos e as cartas deles, os
+  lugar, sem trocar por desenho de outro tipo de item): as peças de couro sem desenho (o capuz, a calça, a luva), os
+  itens únicos com desenho próprio, a tocha apagada, a bolsa vazia e o frasco vazio no topo, os inimigos e as cartas deles, os
   ícones de habilidade e de efeito, o covil vencido. O mercador da banca tem o busto no balcão (`telas/mercado.js`,
   com as cores da figura da banca).
 - O escudo e o Unguento de Prata (1.94.0), o machado e a Bomba de Fumaça (1.99.0) o arco (1.101.0,
@@ -347,12 +348,16 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   `desenhar_orbe_pixel.py`; a arma Orbe, o Foco Arcano e o Olho do Abismo) e o grimório fechado (1.108.0,
   `desenhar_grimorio_fechado_pixel.py`; a arma Grimório, o apoio Tomo e o Tomo do Nome Esquecido; o talento Mente
   Vasta, os atalhos do Diário e do Grimório e o livro da capela continuam com os deles) e a varinha (1.109.0; a arma
-  Varinha, o único equipamento com o desenho "varinha") são desenhados em pixel art, cada
+  Varinha, o único equipamento com o desenho "varinha") e o gibão e as botas de couro (1.110.0; o peito do Arqueiro, a
+  Bota de Caça e os únicos Pele do Penitente e Botas do Andarilho Morto) são desenhados em pixel art, cada
   tamanho na própria grade, por `ferramentas/arte/` (`desenhar_escudo_pixel.py`, `desenhar_unguento_pixel.py`,
   `desenhar_machado_pixel.py`, `desenhar_bomba_pixel.py`, com as etapas comuns em `pixel_comum.py`), que grava os
   arquivos prontos em `static/hud/icones/`; o jogo só lê os arquivos. A varinha é a primeira com a fonte num
   `.aseprite` em camadas (`ferramentas/arte/aseprite/varinha/`), desenhada no Aseprite pelo MCP; os PNGs saem de
-  `ferramentas/arte/exportar_aseprite.py varinha` (`--conferir` compara com os do jogo). O unguento e a bomba se acham só pelo id do
+  `ferramentas/arte/exportar_aseprite.py varinha` (`--conferir` compara com os do jogo). O gibão e as botas de couro
+  também (`aseprite/gibao/`, `aseprite/bota/`), com o 64 sendo o 32 ampliado 2× (`DERIVADOS` no exportador; os 64
+  desenhados à parte ficam em `aseprite/historico/`). O estado Iniciativa continua com o sprite "bota" e o espaço vazio
+  dos pés com a bota de ferro. O unguento e a bomba se acham só pelo id do
   consumível: o desenho "unguento" do jogo é também o da Curandeira, e a "caveira" da bomba é também retrato,
   Bestiário, derrota, fome e a lixeira, que ficam com o deles. O machado vale para todo equipamento com o desenho
   "machado" (os únicos Lamento de Gharbad e O Açougueiro também); o Redemoinho e a Fúria continuam com o sprite. A

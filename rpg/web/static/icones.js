@@ -11,7 +11,8 @@
    folhas aprovadas por ferramentas/prototipos/hud/preparar_hud4p.py), cada um com o dobro para telas densas; pedido um
    lado sem arquivo igual, vai o mais perto. O escudo e o Unguento de Prata são desenhados em pixel art na própria
    grade de cada tamanho (ferramentas/arte/, 1.94.0), como o machado e a Bomba de Fumaça (1.99.0). A varinha (1.109.0)
-   foi desenhada no Aseprite, em camadas, e exportada por ferramentas/arte/exportar_aseprite.py. O martelo e a Pena de
+   foi desenhada no Aseprite, em camadas, e exportada por ferramentas/arte/exportar_aseprite.py, como o gibão e as
+   botas de couro (1.110.0, com o 64 sendo o 32 ampliado 2×). O martelo e a Pena de
    Fênix são desenhados em código
    (desenhos.js), em 32×32. As lacunas (o que ainda não tem desenho) estão em docs/ARQUITETURA.md. */
 "use strict";
@@ -21,6 +22,7 @@ const Icones = (() => {
   // os lados que existem de cada peça (sem os @2x, que existem para todos)
   const TAMANHOS = {"aljava": [24, 32, 40, 48, 64], "amuleto": [32, 40, 48, 64], "anel": [32, 40, 48, 64], "antidoto": [32, 48, 64],
     "arco": [32, 40, 48, 64], "cajado": [32, 40, 48, 64], "orbe": [32, 40, 48, 64], "livro": [32, 40, 48, 64], "varinha": [32, 40, 48, 64],
+    "gibao": [32, 40, 48, 64], "bota": [32, 40, 48, 64],
     "atalho-bestiario": [32, 36], "atalho-diario": [32, 36], "atalho-grimorio": [32, 36], "atalho-inventario": [32, 36],
     "atalho-mapa": [32, 36], "atalho-sair": [32, 36], "atalho-salvar": [32, 36], "atalho-talentos": [32, 36],
     "attr-agilidade": [24, 32], "attr-ataque": [24, 32], "attr-defesa": [24, 32], "attr-poder": [24, 32],
@@ -34,7 +36,7 @@ const Icones = (() => {
     "vital-foco": [20], "vital-mana": [20], "vital-vida": [20], "vital-vigor": [20]};
 
   // Cada desenho vai para o tipo de ferro que o jogo já tem (elmo, armadura, manopla, calca = perneira, bota_ferro, maca);
-  // couro (capuz, gibão, calça de couro, bota de caça, luva) e as peças sem desenho ficam com o do jogo. O anel tem
+  // couro sem desenho (capuz, calça de couro, luva) e as outras peças sem desenho ficam com o do jogo. O anel tem
   // uma pérola branca: não lembra nenhuma cor de raridade. O martelo é desenhado em código (desenhos.js).
   // O machado de barba (ferramentas/arte/, 1.99.0) vale para todo equipamento com o desenho "machado" (o Machado e os
   // únicos Lamento de Gharbad e O Açougueiro); o Redemoinho e a Fúria usam o mesmo sprite noutro papel e ficam com o
@@ -48,9 +50,13 @@ const Icones = (() => {
   // sprite "livro" na árvore), o atalho do Diário e o do Grimório (desenhos próprios) e o livro da capela (desenhado na
   // cena) não passam por aqui e continuam como estão. A varinha de jacarandá com a pedra âmbar lapidada na taça de
   // bronze (1.109.0; a fonte é o .aseprite em ferramentas/arte/aseprite/varinha/) vale para a arma Varinha, em todos os
-  // materiais; nenhum único, apoio, habilidade, talento ou ação usa o desenho "varinha".
+  // materiais; nenhum único, apoio, habilidade, talento ou ação usa o desenho "varinha". O gibão de couro (colete sem
+  // mangas, amarrado, 1.110.0) vale para o peito do Arqueiro (Gibão de Couro, Capa de Patrulha e Colete Acolchoado,
+  // em todos os materiais de couro) e o único Pele do Penitente; as botas de couro (um par de cano dobrado) valem para
+  // a Bota de Caça e o único Botas do Andarilho Morto. O 64 dos dois é o 32 ampliado 2×. O estado Iniciativa usa o
+  // sprite "bota" noutro papel e continua com ele; o espaço vazio dos pés continua com a bota de ferro (VAZIO).
   const ITEM = { elmo: "elmo", armadura: "cota", manopla: "manopla", calca: "perneiras", bota_ferro: "botas-ferro",
-    maca: "maca", espada: "espada", escudo: "escudo", amuleto: "amuleto", anel: "anel", aljava: "aljava", martelo: "martelo", machado: "machado", arco: "arco", cajado: "cajado", orbe: "orbe", livro: "livro", varinha: "varinha" };
+    maca: "maca", espada: "espada", escudo: "escudo", amuleto: "amuleto", anel: "anel", aljava: "aljava", martelo: "martelo", machado: "machado", arco: "arco", cajado: "cajado", orbe: "orbe", livro: "livro", varinha: "varinha", gibao: "gibao", bota: "bota" };
   // o espaço vazio: a silhueta apagada do que vai nele (o material não aparece)
   const VAZIO = { cabeca: "elmo", armadura: "cota", maos: "manopla", pernas: "perneiras", pes: "botas-ferro", arma: "espada",
     secundaria: "escudo", amuleto: "amuleto", anel1: "anel", anel2: "anel" };

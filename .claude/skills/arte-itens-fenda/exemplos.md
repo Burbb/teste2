@@ -95,6 +95,24 @@ rodadas estão em `ferramentas/prototipos/hud/varinha-aseprite/LEIA-ME.md`.
 - **Medidas no sistema da diagonal:** u = x − y ao longo da varinha, s = x + y de través (um pixel existe quando u e s
   têm a mesma paridade); o perfil de cada parte é uma tabela {u: (s_baixo, s_alto)} por tamanho.
 
+## O gibão e as botas de couro (a escolha pelo 32 ampliado 2×)
+
+Fontes em `ferramentas/arte/aseprite/gibao/` e `bota/` (32, 40 e 48 em camadas), exportadas por
+`ferramentas/arte/exportar_aseprite.py` (1.110.0). As rodadas estão em `ferramentas/prototipos/hud/couro-aseprite/`.
+
+- **O 64 é o 32 ampliado 2×.** Os dois 64 foram desenhados à parte, com mais detalhe da mesma construção (ilhós e
+  cordão em X, quatro abas, costura em pontos, desgaste). No cartão do saque, com os mesmos dados, o 32 ampliado 2×
+  teve silhueta e contraste tão fortes quanto o 64; a diferença era de acabamento, não de leitura. O Jean escolheu o
+  2× (`DERIVADOS` no exportador); os 64 desenhados ficaram em `aseprite/historico/`.
+- **Gibão:** um colete sem mangas de frente (não camiseta nem placa): alças com a nuca mais baixa entre elas, decote
+  mostrando o avesso, pala costurada, amarração, cintura e saia em abas. A primeira silhueta era um retângulo; a
+  silhueta numa cor só mostrou o defeito antes da cor. No 32, pontos soltos de cordão liam como botões: o cordão
+  virou um zigue-zague contínuo dentro da fenda escura.
+- **Botas:** um par de perfil (o par, como as botas de ferro): cano dobrado mostrando o avesso de camurça, tira com
+  fivela no tornozelo, peito do pé, sola e salto; a de trás mais escura um tom e separada por uma linha de contorno.
+- **Um desenho para várias bases:** o gibão serve também à Capa de Patrulha (um desenho próprio dela fica para depois)
+  e aos materiais Tachonado e Rúnico, por isso não mostra tachas nem runas.
+
 ## O que se repetiu nos dois (e por isso está no SKILL.md)
 
 Ler o jogo antes de desenhar; a grade de cada tamanho com as medidas numa tabela; uma rampa e uma regra de luz por

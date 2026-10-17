@@ -1,6 +1,6 @@
 ---
 name: arte-itens-fenda
-description: Desenhar, revisar ou avaliar a arte de itens e ícones de Crônicas da Fenda (equipamento, consumíveis, ícones da HUD) em pixel art na grade de cada tamanho, e levar um desenho aprovado ao jogo pelo Icones. Use quando o Jean pedir um item novo ou refeito, uma proposta de ícone, a comparação de candidatos, um tamanho novo de um desenho existente ou a integração de um desenho aprovado. Não serve para cenários (vista.js), retratos (retratos.js) nem regras de item.
+description: Desenhar, revisar ou avaliar a arte de itens e ícones de Crônicas da Fenda (equipamento, consumíveis, ícones da HUD) em pixel art em cada tamanho de uso, e levar um desenho aprovado ao jogo pelo Icones. Use quando o Jean pedir um item novo ou refeito, uma proposta de ícone, a comparação de candidatos, um tamanho novo de um desenho existente ou a integração de um desenho aprovado. Não serve para cenários (vista.js), retratos (retratos.js) nem regras de item.
 ---
 
 # Arte de itens de Crônicas da Fenda
@@ -43,21 +43,30 @@ O desenho é um script Python em `ferramentas/arte/`, um por objeto, com as etap
 `ferramentas/arte/pixel_comum.py`. Copie a estrutura de `desenhar_unguento_pixel.py` (forma de revolução) ou de
 `desenhar_escudo_pixel.py` (disco com partes); não crie outra biblioteca.
 
-- **Cada tamanho na própria grade.** Monte a forma por regras na grade final (32, 40, 48, 64...), com as medidas de
-  cada tamanho numa tabela (`MEDIDAS`). Nunca reduza um tamanho de outro, nem use filtro, quantização ou "pixelização"
-  como acabamento. O @2x é a duplicação exata (`salvar`).
+- **Do 32 para os outros tamanhos** (o processo desde a 1.110.0). Comece pela arte principal em 32, o tamanho mais
+  visto, e avalie a leitura dela no jogo antes de fazer os outros. Aprovada a leitura:
+  - a apresentação maior (o 64 do cartão do saque) pode ser a ampliação inteira exata do 32 (2×, vizinho mais
+    próximo, sem retoque), quando o resultado no jogo for aprovado;
+  - os tamanhos intermediários (40, 48) se derivam da fonte aprovada: as mesmas formas e medidas na grade do tamanho
+    (`MEDIDAS`), retocando contornos ou detalhes onde for preciso;
+  - a construção, a silhueta e a identidade do objeto são as mesmas em todos (ver "Um objeto só" abaixo);
+  - uma versão própria mais detalhada de um tamanho só quando o ganho visual justificar o trabalho: compare no jogo,
+    no mesmo espaço e com os mesmos dados, a versão detalhada com a ampliação inteira antes de decidir.
+  Um arquivo final no tamanho de uso não precisa ter sido redesenhado do zero. Não vale como acabamento: filtro,
+  suavização, quantização, "pixelização" ou redução por fator não inteiro. O @2x é a duplicação exata (`salvar`). Os
+  itens aprovados antes desta orientação ficam com os arquivos que têm; trocar algum deles pede comparação própria.
 - **Leitura parada × animação.** São duas coisas diferentes:
   - *leitura parada* é onde o desenho fica para ser lido (a bolsa, o corpo, a mochila, a prateleira, o cartão do
-    saque, o quadro do baú). Cada tamanho desses tem arquivo nativo, desenhado na própria grade: é ali que vale tudo o
-    que esta skill pede;
+    saque, o quadro do baú). Cada tamanho desses tem arquivo nativo (desenhado na grade dele ou derivado da fonte
+    aprovada, como acima): é ali que vale tudo o que esta skill pede;
   - *transformação de animação* é o que uma animação faz com uma imagem enquanto ela anda e some em menos de um
     segundo: o consumível que voa até a bolsa é o arquivo de 32 com `scale` de 1,3 a 0,8 no caminho (`itemVoa`, em
     `app/pagina.js`); o item que voa até o corpo encolhe até 0,45 (`voarIcone`, em `telas/celebracoes.js`). Isso não é
     acabamento do desenho, não pede arquivo próprio e não muda com um item novo: as animações ficam como estão.
   - O que já existe e se apoia na redução do navegador para um tamanho parado (o martelo e a Pena de Fênix em 48, a 2×
     reduzida, em `desenhos.js`; um pedido de tamanho sem arquivo, que `Icones` serve com o mais perto) é herança, não
-    regra. Um desenho novo não usa a redução como acabamento: se ele fica parado num tamanho, esse tamanho é
-    desenhado.
+    regra. Um desenho novo não usa a redução do navegador como acabamento: se ele fica parado num tamanho, esse
+    tamanho tem arquivo próprio (desenhado ou derivado por ampliação inteira).
 - **Duas camadas.** `mat` (o material de cada pixel; `"c"` é o contorno) e `tom` (o índice na rampa do material);
   `fixo` protege o que foi desenhado de propósito (um brilho, um cravo) da limpeza.
 - **Luz deliberada.** A luz é a de `pixel_comum.LUZ` (de cima e da esquerda, um pouco de frente), igual para todos os
@@ -106,7 +115,8 @@ uso em `ferramentas/arte/aseprite/LEIA-ME.md`.
   objeto, não regra), o contorno por cima. Guarde em `ferramentas/arte/aseprite/<peça>/<peça>-<lado>.aseprite`.
 - **Exportar e comparar:** `python ferramentas/arte/exportar_aseprite.py <peça> [<pasta>]` (o 1× pela linha de comando
   do Aseprite, o @2x pela duplicação exata; sem pasta, grava no jogo, o que só se faz na integração);
-  `--conferir` exporta numa pasta temporária e compara com os do jogo. Na proposta, reabra cada `.aseprite` e confira
+  `--conferir` exporta numa pasta temporária e compara com os do jogo. Um tamanho tirado de outro por ampliação inteira
+  (o 64 do couro, o 32 ampliado 2×) fica explícito por peça na tabela `DERIVADOS` do exportador, sem fonte própria. Na proposta, reabra cada `.aseprite` e confira
   que o composto exportado é igual, pixel a pixel, à imagem do editor e ao que as listas pediam.
 
 ## Conferir
