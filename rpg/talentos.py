@@ -81,11 +81,16 @@ def _colheita(cb, u, rank, d):
     cb.recuperou(u, u.rec - antes, "Colheita")
 
 
+@uma_vez_por_luta("senhor_mortos")
 def _senhor_mortos(cb, u, rank, d):
+    # Só o primeiro a cair em cada combate (servo ou não, se for chefe, a vez passou). A marca fica na memória da luta,
+    # não no tamanho da lista de mortos: ela encolhe quando o xamã revive um caído ou um carniçal devora um corpo, e a
+    # morte seguinte contava de novo como a primeira.
     c = d["alvo"]
-    if len(cb.mortos) == 1 and not c.chefe:
+    if not c.chefe:
         cb.dizer(f"{c.nome} se ergue de novo — agora sob o seu comando!", "magenta")
         cb.invocar_aliado(f"{c.nome} (servo)", hp=int(c.max_hp * 0.4), atk=c.atk * 0.5)
+    return True
 
 
 def _frenesi(cb, u, rank, d):
