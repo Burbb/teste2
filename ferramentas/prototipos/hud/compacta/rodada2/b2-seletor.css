@@ -1,0 +1,13 @@
+/* B refinada (protótipo, rodada 2): na coluna da ficha, o custo numa linha própria, embaixo do nome; o motivo de não
+   poder, quando há, embaixo do custo. O nome ganha a largura que o custo ocupava e as opções se comparam pela mesma
+   coluna de custos. A letra, o ícone, a tecla e as pontas da faixa são os do seletor; os vãos voltam aos do seletor
+   (a rodada 1 apertava 9→5 e 16→8 para o nome caber ao lado do custo). Só vale no seletor sobre a ficha: embaixo da
+   arena, o custo continua ao lado do nome. */
+:root body .roda-janela.seletor.lateral .rj-linha { grid-template-columns: 30px 36px minmax(0, 1fr); grid-template-rows: auto auto auto;
+  column-gap: 9px; row-gap: 1px; padding-right: 16px; padding-top: 6px; padding-bottom: 6px; }
+:root body .roda-janela.seletor.lateral .rj-linha .tecla,
+:root body .roda-janela.seletor.lateral .rj-linha .rj-icone { grid-row: 1 / 4; align-self: center; }
+:root body .roda-janela.seletor.lateral .rj-linha .rj-texto { display: contents; }
+:root body .roda-janela.seletor.lateral .rj-linha .rj-nome { grid-column: 3; grid-row: 1; align-self: end; }
+:root body .roda-janela.seletor.lateral .rj-linha .rj-info { grid-column: 3; grid-row: 2; justify-self: start; align-self: start; line-height: 1.1; }
+:root body .roda-janela.seletor.lateral .rj-linha .rj-motivo { grid-column: 3; grid-row: 3; }

@@ -1,0 +1,60 @@
+paladino     caidos e xamã   {'cartas_aliados': 3, 'cartas_inimigos': 6, 'cartas_com_efeitos_aliados': 3, 'cartas_com_efeitos_inimigos': 6, 'icones_numa_carta': 3, 'icones_no_lado': 6}
+paladino     ratos           {'cartas_aliados': 3, 'cartas_inimigos': 5, 'cartas_com_efeitos_aliados': 3, 'cartas_com_efeitos_inimigos': 5, 'icones_numa_carta': 3, 'icones_no_lado': 6}
+paladino     lobos           {'cartas_aliados': 3, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 3, 'cartas_com_efeitos_inimigos': 4, 'icones_numa_carta': 3, 'icones_no_lado': 8}
+paladino     cultistas       {'cartas_aliados': 3, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 2, 'cartas_com_efeitos_inimigos': 4, 'icones_numa_carta': 3, 'icones_no_lado': 4}
+paladino     harpias         {'cartas_aliados': 3, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 3, 'cartas_com_efeitos_inimigos': 4, 'icones_numa_carta': 3, 'icones_no_lado': 5}
+paladino     cães infernais  {'cartas_aliados': 3, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 3, 'cartas_com_efeitos_inimigos': 4, 'icones_numa_carta': 3, 'icones_no_lado': 5}
+paladino     bandidos        {'cartas_aliados': 3, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 3, 'cartas_com_efeitos_inimigos': 4, 'icones_numa_carta': 2, 'icones_no_lado': 4}
+paladino     lobos gélidos   {'cartas_aliados': 3, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 2, 'cartas_com_efeitos_inimigos': 4, 'icones_numa_carta': 3, 'icones_no_lado': 8}
+paladino     afogados        {'cartas_aliados': 3, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 3, 'cartas_com_efeitos_inimigos': 4, 'icones_numa_carta': 2, 'icones_no_lado': 4}
+paladino     esqueletos      {'cartas_aliados': 3, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 3, 'cartas_com_efeitos_inimigos': 4, 'icones_numa_carta': 2, 'icones_no_lado': 4}
+berserker    caidos e xamã   {'cartas_aliados': 3, 'cartas_inimigos': 6, 'cartas_com_efeitos_aliados': 3, 'cartas_com_efeitos_inimigos': 6, 'icones_numa_carta': 3, 'icones_no_lado': 6}
+berserker    ratos           {'cartas_aliados': 3, 'cartas_inimigos': 5, 'cartas_com_efeitos_aliados': 3, 'cartas_com_efeitos_inimigos': 5, 'icones_numa_carta': 4, 'icones_no_lado': 6}
+berserker    lobos           {'cartas_aliados': 3, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 2, 'cartas_com_efeitos_inimigos': 4, 'icones_numa_carta': 3, 'icones_no_lado': 8}
+berserker    cultistas       {'cartas_aliados': 3, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 3, 'cartas_com_efeitos_inimigos': 4, 'icones_numa_carta': 3, 'icones_no_lado': 4}
+berserker    harpias         {'cartas_aliados': 3, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 2, 'cartas_com_efeitos_inimigos': 4, 'icones_numa_carta': 4, 'icones_no_lado': 5}
+berserker    cães infernais  {'cartas_aliados': 3, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 3, 'cartas_com_efeitos_inimigos': 4, 'icones_numa_carta': 3, 'icones_no_lado': 5}
+berserker    bandidos        {'cartas_aliados': 3, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 2, 'cartas_com_efeitos_inimigos': 4, 'icones_numa_carta': 3, 'icones_no_lado': 4}
+berserker    lobos gélidos   {'cartas_aliados': 3, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 2, 'cartas_com_efeitos_inimigos': 4, 'icones_numa_carta': 2, 'icones_no_lado': 8}
+berserker    afogados        {'cartas_aliados': 3, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 2, 'cartas_com_efeitos_inimigos': 4, 'icones_numa_carta': 2, 'icones_no_lado': 4}
+berserker    esqueletos      {'cartas_aliados': 3, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 2, 'cartas_com_efeitos_inimigos': 4, 'icones_numa_carta': 2, 'icones_no_lado': 4}
+patrulheiro  caidos e xamã   {'cartas_aliados': 4, 'cartas_inimigos': 6, 'cartas_com_efeitos_aliados': 3, 'cartas_com_efeitos_inimigos': 5, 'icones_numa_carta': 3, 'icones_no_lado': 7}
+patrulheiro  ratos           {'cartas_aliados': 4, 'cartas_inimigos': 5, 'cartas_com_efeitos_aliados': 3, 'cartas_com_efeitos_inimigos': 5, 'icones_numa_carta': 3, 'icones_no_lado': 7}
+patrulheiro  lobos           {'cartas_aliados': 4, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 3, 'cartas_com_efeitos_inimigos': 4, 'icones_numa_carta': 4, 'icones_no_lado': 10}
+patrulheiro  cultistas       {'cartas_aliados': 4, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 2, 'cartas_com_efeitos_inimigos': 4, 'icones_numa_carta': 3, 'icones_no_lado': 6}
+patrulheiro  harpias         {'cartas_aliados': 4, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 3, 'cartas_com_efeitos_inimigos': 4, 'icones_numa_carta': 3, 'icones_no_lado': 6}
+patrulheiro  cães infernais  {'cartas_aliados': 4, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 3, 'cartas_com_efeitos_inimigos': 4, 'icones_numa_carta': 3, 'icones_no_lado': 6}
+patrulheiro  bandidos        {'cartas_aliados': 4, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 2, 'cartas_com_efeitos_inimigos': 4, 'icones_numa_carta': 3, 'icones_no_lado': 6}
+patrulheiro  lobos gélidos   {'cartas_aliados': 4, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 2, 'cartas_com_efeitos_inimigos': 4, 'icones_numa_carta': 3, 'icones_no_lado': 10}
+patrulheiro  afogados        {'cartas_aliados': 4, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 2, 'cartas_com_efeitos_inimigos': 4, 'icones_numa_carta': 3, 'icones_no_lado': 6}
+patrulheiro  esqueletos      {'cartas_aliados': 4, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 2, 'cartas_com_efeitos_inimigos': 4, 'icones_numa_carta': 3, 'icones_no_lado': 6}
+sombra       caidos e xamã   {'cartas_aliados': 3, 'cartas_inimigos': 6, 'cartas_com_efeitos_aliados': 2, 'cartas_com_efeitos_inimigos': 2, 'icones_numa_carta': 2, 'icones_no_lado': 2}
+sombra       ratos           {'cartas_aliados': 3, 'cartas_inimigos': 5, 'cartas_com_efeitos_aliados': 3, 'cartas_com_efeitos_inimigos': 2, 'icones_numa_carta': 4, 'icones_no_lado': 5}
+sombra       lobos           {'cartas_aliados': 3, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 3, 'cartas_com_efeitos_inimigos': 4, 'icones_numa_carta': 3, 'icones_no_lado': 6}
+sombra       cultistas       {'cartas_aliados': 3, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 3, 'cartas_com_efeitos_inimigos': 1, 'icones_numa_carta': 3, 'icones_no_lado': 3}
+sombra       harpias         {'cartas_aliados': 3, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 3, 'cartas_com_efeitos_inimigos': 2, 'icones_numa_carta': 3, 'icones_no_lado': 4}
+sombra       cães infernais  {'cartas_aliados': 3, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 3, 'cartas_com_efeitos_inimigos': 2, 'icones_numa_carta': 2, 'icones_no_lado': 3}
+sombra       bandidos        {'cartas_aliados': 3, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 2, 'cartas_com_efeitos_inimigos': 2, 'icones_numa_carta': 2, 'icones_no_lado': 2}
+sombra       lobos gélidos   {'cartas_aliados': 3, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 2, 'cartas_com_efeitos_inimigos': 4, 'icones_numa_carta': 3, 'icones_no_lado': 6}
+sombra       afogados        {'cartas_aliados': 3, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 2, 'cartas_com_efeitos_inimigos': 2, 'icones_numa_carta': 2, 'icones_no_lado': 2}
+sombra       esqueletos      {'cartas_aliados': 3, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 2, 'cartas_com_efeitos_inimigos': 2, 'icones_numa_carta': 2, 'icones_no_lado': 2}
+piromante    caidos e xamã   {'cartas_aliados': 3, 'cartas_inimigos': 6, 'cartas_com_efeitos_aliados': 2, 'cartas_com_efeitos_inimigos': 6, 'icones_numa_carta': 2, 'icones_no_lado': 6}
+piromante    ratos           {'cartas_aliados': 3, 'cartas_inimigos': 5, 'cartas_com_efeitos_aliados': 3, 'cartas_com_efeitos_inimigos': 5, 'icones_numa_carta': 3, 'icones_no_lado': 6}
+piromante    lobos           {'cartas_aliados': 3, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 2, 'cartas_com_efeitos_inimigos': 4, 'icones_numa_carta': 3, 'icones_no_lado': 8}
+piromante    cultistas       {'cartas_aliados': 3, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 2, 'cartas_com_efeitos_inimigos': 4, 'icones_numa_carta': 2, 'icones_no_lado': 5}
+piromante    harpias         {'cartas_aliados': 3, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 3, 'cartas_com_efeitos_inimigos': 3, 'icones_numa_carta': 2, 'icones_no_lado': 4}
+piromante    cães infernais  {'cartas_aliados': 3, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 2, 'cartas_com_efeitos_inimigos': 1, 'icones_numa_carta': 2, 'icones_no_lado': 3}
+piromante    bandidos        {'cartas_aliados': 3, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 2, 'cartas_com_efeitos_inimigos': 4, 'icones_numa_carta': 3, 'icones_no_lado': 5}
+piromante    lobos gélidos   {'cartas_aliados': 3, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 2, 'cartas_com_efeitos_inimigos': 4, 'icones_numa_carta': 3, 'icones_no_lado': 8}
+piromante    afogados        {'cartas_aliados': 3, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 2, 'cartas_com_efeitos_inimigos': 4, 'icones_numa_carta': 2, 'icones_no_lado': 4}
+piromante    esqueletos      {'cartas_aliados': 3, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 2, 'cartas_com_efeitos_inimigos': 4, 'icones_numa_carta': 2, 'icones_no_lado': 4}
+necromante   caidos e xamã   {'cartas_aliados': 7, 'cartas_inimigos': 6, 'cartas_com_efeitos_aliados': 3, 'cartas_com_efeitos_inimigos': 6, 'icones_numa_carta': 3, 'icones_no_lado': 8}
+necromante   ratos           {'cartas_aliados': 6, 'cartas_inimigos': 5, 'cartas_com_efeitos_aliados': 3, 'cartas_com_efeitos_inimigos': 5, 'icones_numa_carta': 3, 'icones_no_lado': 7}
+necromante   lobos           {'cartas_aliados': 6, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 2, 'cartas_com_efeitos_inimigos': 4, 'icones_numa_carta': 3, 'icones_no_lado': 9}
+necromante   cultistas       {'cartas_aliados': 5, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 3, 'cartas_com_efeitos_inimigos': 4, 'icones_numa_carta': 3, 'icones_no_lado': 6}
+necromante   harpias         {'cartas_aliados': 5, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 3, 'cartas_com_efeitos_inimigos': 4, 'icones_numa_carta': 3, 'icones_no_lado': 6}
+necromante   cães infernais  {'cartas_aliados': 5, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 5, 'cartas_com_efeitos_inimigos': 4, 'icones_numa_carta': 2, 'icones_no_lado': 5}
+necromante   bandidos        {'cartas_aliados': 6, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 4, 'cartas_com_efeitos_inimigos': 4, 'icones_numa_carta': 3, 'icones_no_lado': 6}
+necromante   lobos gélidos   {'cartas_aliados': 5, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 2, 'cartas_com_efeitos_inimigos': 4, 'icones_numa_carta': 3, 'icones_no_lado': 9}
+necromante   afogados        {'cartas_aliados': 6, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 1, 'cartas_com_efeitos_inimigos': 4, 'icones_numa_carta': 2, 'icones_no_lado': 5}
+necromante   esqueletos      {'cartas_aliados': 5, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 3, 'cartas_com_efeitos_inimigos': 4, 'icones_numa_carta': 3, 'icones_no_lado': 6}

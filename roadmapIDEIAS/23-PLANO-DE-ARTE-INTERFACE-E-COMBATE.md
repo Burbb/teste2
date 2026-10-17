@@ -301,6 +301,20 @@ inimigos. Duas alternativas contra a produção, com os mesmos dados, em 1280×7
 - **Recomendação:** B. **Limite que fica:** com muitos efeitos em 1280×720 o registro encolhe (0 a 33 px no caso
   simulado extremo), porque a arena cresce; é outra entrega, se aparecer jogando. Falta Jean avaliar.
 
+**Rodada 2 (17/10/2026), B aprovada como direção; só no protótipo** (`ferramentas/prototipos/hud/compacta/rodada2/`):
+- **O custo numa linha própria na coluna da ficha (b2): escolhido.** Nenhum nome do arqueiro em três linhas, os custos
+  numa coluna, o Voltar na linha do título, a descrição igual ou maior; mesma letra. Corrigido também o que a rodada 1
+  deixou passar: o seletor ficava na tela durante a mira. A ficha coberta fica inerte, o Tab vai do seletor à arena, e
+  redimensionar acompanha a ficha sem perder a examinada, o foco ou o lugar das cartas.
+- **O registro sem espaço é real:** o robô (1.200 lutas, `compacta/efeitos_reais.py`) mostra as 6 cartas de um bando
+  de caídos com efeito ao mesmo tempo com 5 das 6 especializações, já no turno 2 ou 3. Com os efeitos de um momento
+  real, sobram 19 a 51 px em 1280×720. Proposta: nas lutas que deixariam menos de 140 px, o registro vai, para a luta
+  inteira, para a coluna do mundo (~13 linhas), por cima do minimapa, da missão e dos caminhos. Compromissos: esses
+  três cobertos durante a luta; linhas mais estreitas; nada muda abaixo de 1100 px.
+- **Achado de regra, sem mudar nada:** o necromante chega a 7 aliados, porque o Senhor dos Mortos dispara de novo
+  quando o xamã revive um caído (`talentos._senhor_mortos`, `len(cb.mortos) == 1`).
+- **Recomendação:** integrar a b2 e o registro na coluna do mundo juntos. Falta Jean avaliar.
+
 ## 2. Telas de leitura, criação e celebrações
 
 - **Subida de nível:** preservar a boa organização das informações, redesenhando o acabamento para a linguagem atual.
@@ -402,7 +416,8 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
 ## Próxima passagem de trabalho
 
 1. A avaliação de Jean jogando a 1.111.0 a 1.113.1 (a HUD, as lutas cheias, os capuzes e luvas, as escolhas em
-   faixas, integradas) e a decisão sobre a composição compacta (item 1.10, protótipo; recomendada a B).
+   faixas, integradas) e a decisão sobre a composição compacta (item 1.10: a B aprovada; rodada 2 em avaliação, a b2 e
+   o registro na coluna do mundo recomendados para integrar juntos).
 2. Integrar apenas os desenhos aprovados.
 3. Reproduzir e corrigir a percepção atrasada do custo de recurso e apresentar o bloqueio de vida máxima por ferimentos (1B).
 4. Prototipar os avisos e a consulta aos testes (1C), sem ampliar regras.

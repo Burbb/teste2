@@ -1,0 +1,3494 @@
+{
+ "lutas_por_combinacao": 20,
+ "nivel": 12,
+ "nivel_inimigo": 10,
+ "resumo": [
+  {
+   "spec": "paladino",
+   "bando": "caidos e xamã",
+   "cartas_aliados": 3,
+   "cartas_inimigos": 6,
+   "cartas_com_efeitos_aliados": 3,
+   "cartas_com_efeitos_inimigos": 6,
+   "icones_numa_carta": 3,
+   "icones_no_lado": 6,
+   "momentos": 164,
+   "todas_as_cartas_com_efeito": 1
+  },
+  {
+   "spec": "paladino",
+   "bando": "ratos",
+   "cartas_aliados": 3,
+   "cartas_inimigos": 5,
+   "cartas_com_efeitos_aliados": 3,
+   "cartas_com_efeitos_inimigos": 5,
+   "icones_numa_carta": 3,
+   "icones_no_lado": 6,
+   "momentos": 147,
+   "todas_as_cartas_com_efeito": 4
+  },
+  {
+   "spec": "paladino",
+   "bando": "lobos",
+   "cartas_aliados": 3,
+   "cartas_inimigos": 4,
+   "cartas_com_efeitos_aliados": 3,
+   "cartas_com_efeitos_inimigos": 4,
+   "icones_numa_carta": 3,
+   "icones_no_lado": 8,
+   "momentos": 344,
+   "todas_as_cartas_com_efeito": 59
+  },
+  {
+   "spec": "paladino",
+   "bando": "cultistas",
+   "cartas_aliados": 3,
+   "cartas_inimigos": 4,
+   "cartas_com_efeitos_aliados": 2,
+   "cartas_com_efeitos_inimigos": 4,
+   "icones_numa_carta": 3,
+   "icones_no_lado": 4,
+   "momentos": 275,
+   "todas_as_cartas_com_efeito": 1
+  },
+  {
+   "spec": "paladino",
+   "bando": "harpias",
+   "cartas_aliados": 3,
+   "cartas_inimigos": 4,
+   "cartas_com_efeitos_aliados": 3,
+   "cartas_com_efeitos_inimigos": 4,
+   "icones_numa_carta": 3,
+   "icones_no_lado": 5,
+   "momentos": 265,
+   "todas_as_cartas_com_efeito": 1
+  },
+  {
+   "spec": "paladino",
+   "bando": "cães infernais",
+   "cartas_aliados": 3,
+   "cartas_inimigos": 4,
+   "cartas_com_efeitos_aliados": 3,
+   "cartas_com_efeitos_inimigos": 4,
+   "icones_numa_carta": 3,
+   "icones_no_lado": 5,
+   "momentos": 175,
+   "todas_as_cartas_com_efeito": 0
+  },
+  {
+   "spec": "paladino",
+   "bando": "bandidos",
+   "cartas_aliados": 3,
+   "cartas_inimigos": 4,
+   "cartas_com_efeitos_aliados": 3,
+   "cartas_com_efeitos_inimigos": 4,
+   "icones_numa_carta": 2,
+   "icones_no_lado": 4,
+   "momentos": 282,
+   "todas_as_cartas_com_efeito": 2
+  },
+  {
+   "spec": "paladino",
+   "bando": "lobos gélidos",
+   "cartas_aliados": 3,
+   "cartas_inimigos": 4,
+   "cartas_com_efeitos_aliados": 2,
+   "cartas_com_efeitos_inimigos": 4,
+   "icones_numa_carta": 3,
+   "icones_no_lado": 8,
+   "momentos": 161,
+   "todas_as_cartas_com_efeito": 9
+  },
+  {
+   "spec": "paladino",
+   "bando": "afogados",
+   "cartas_aliados": 3,
+   "cartas_inimigos": 4,
+   "cartas_com_efeitos_aliados": 3,
+   "cartas_com_efeitos_inimigos": 4,
+   "icones_numa_carta": 2,
+   "icones_no_lado": 4,
+   "momentos": 256,
+   "todas_as_cartas_com_efeito": 1
+  },
+  {
+   "spec": "paladino",
+   "bando": "esqueletos",
+   "cartas_aliados": 3,
+   "cartas_inimigos": 4,
+   "cartas_com_efeitos_aliados": 3,
+   "cartas_com_efeitos_inimigos": 4,
+   "icones_numa_carta": 2,
+   "icones_no_lado": 4,
+   "momentos": 156,
+   "todas_as_cartas_com_efeito": 2
+  },
+  {
+   "spec": "berserker",
+   "bando": "caidos e xamã",
+   "cartas_aliados": 3,
+   "cartas_inimigos": 6,
+   "cartas_com_efeitos_aliados": 3,
+   "cartas_com_efeitos_inimigos": 6,
+   "icones_numa_carta": 3,
+   "icones_no_lado": 6,
+   "momentos": 95,
+   "todas_as_cartas_com_efeito": 0
+  },
+  {
+   "spec": "berserker",
+   "bando": "ratos",
+   "cartas_aliados": 3,
+   "cartas_inimigos": 5,
+   "cartas_com_efeitos_aliados": 3,
+   "cartas_com_efeitos_inimigos": 5,
+   "icones_numa_carta": 4,
+   "icones_no_lado": 6,
+   "momentos": 75,
+   "todas_as_cartas_com_efeito": 1
+  },
+  {
+   "spec": "berserker",
+   "bando": "lobos",
+   "cartas_aliados": 3,
+   "cartas_inimigos": 4,
+   "cartas_com_efeitos_aliados": 2,
+   "cartas_com_efeitos_inimigos": 4,
+   "icones_numa_carta": 3,
+   "icones_no_lado": 8,
+   "momentos": 137,
+   "todas_as_cartas_com_efeito": 6
+  },
+  {
+   "spec": "berserker",
+   "bando": "cultistas",
+   "cartas_aliados": 3,
+   "cartas_inimigos": 4,
+   "cartas_com_efeitos_aliados": 3,
+   "cartas_com_efeitos_inimigos": 4,
+   "icones_numa_carta": 3,
+   "icones_no_lado": 4,
+   "momentos": 157,
+   "todas_as_cartas_com_efeito": 1
+  },
+  {
+   "spec": "berserker",
+   "bando": "harpias",
+   "cartas_aliados": 3,
+   "cartas_inimigos": 4,
+   "cartas_com_efeitos_aliados": 2,
+   "cartas_com_efeitos_inimigos": 4,
+   "icones_numa_carta": 4,
+   "icones_no_lado": 5,
+   "momentos": 132,
+   "todas_as_cartas_com_efeito": 2
+  },
+  {
+   "spec": "berserker",
+   "bando": "cães infernais",
+   "cartas_aliados": 3,
+   "cartas_inimigos": 4,
+   "cartas_com_efeitos_aliados": 3,
+   "cartas_com_efeitos_inimigos": 4,
+   "icones_numa_carta": 3,
+   "icones_no_lado": 5,
+   "momentos": 94,
+   "todas_as_cartas_com_efeito": 0
+  },
+  {
+   "spec": "berserker",
+   "bando": "bandidos",
+   "cartas_aliados": 3,
+   "cartas_inimigos": 4,
+   "cartas_com_efeitos_aliados": 2,
+   "cartas_com_efeitos_inimigos": 4,
+   "icones_numa_carta": 3,
+   "icones_no_lado": 4,
+   "momentos": 158,
+   "todas_as_cartas_com_efeito": 0
+  },
+  {
+   "spec": "berserker",
+   "bando": "lobos gélidos",
+   "cartas_aliados": 3,
+   "cartas_inimigos": 4,
+   "cartas_com_efeitos_aliados": 2,
+   "cartas_com_efeitos_inimigos": 4,
+   "icones_numa_carta": 2,
+   "icones_no_lado": 8,
+   "momentos": 120,
+   "todas_as_cartas_com_efeito": 6
+  },
+  {
+   "spec": "berserker",
+   "bando": "afogados",
+   "cartas_aliados": 3,
+   "cartas_inimigos": 4,
+   "cartas_com_efeitos_aliados": 2,
+   "cartas_com_efeitos_inimigos": 4,
+   "icones_numa_carta": 2,
+   "icones_no_lado": 4,
+   "momentos": 122,
+   "todas_as_cartas_com_efeito": 3
+  },
+  {
+   "spec": "berserker",
+   "bando": "esqueletos",
+   "cartas_aliados": 3,
+   "cartas_inimigos": 4,
+   "cartas_com_efeitos_aliados": 2,
+   "cartas_com_efeitos_inimigos": 4,
+   "icones_numa_carta": 2,
+   "icones_no_lado": 4,
+   "momentos": 104,
+   "todas_as_cartas_com_efeito": 0
+  },
+  {
+   "spec": "patrulheiro",
+   "bando": "caidos e xamã",
+   "cartas_aliados": 4,
+   "cartas_inimigos": 6,
+   "cartas_com_efeitos_aliados": 3,
+   "cartas_com_efeitos_inimigos": 5,
+   "icones_numa_carta": 3,
+   "icones_no_lado": 7,
+   "momentos": 111,
+   "todas_as_cartas_com_efeito": 0
+  },
+  {
+   "spec": "patrulheiro",
+   "bando": "ratos",
+   "cartas_aliados": 4,
+   "cartas_inimigos": 5,
+   "cartas_com_efeitos_aliados": 3,
+   "cartas_com_efeitos_inimigos": 5,
+   "icones_numa_carta": 3,
+   "icones_no_lado": 7,
+   "momentos": 73,
+   "todas_as_cartas_com_efeito": 0
+  },
+  {
+   "spec": "patrulheiro",
+   "bando": "lobos",
+   "cartas_aliados": 4,
+   "cartas_inimigos": 4,
+   "cartas_com_efeitos_aliados": 3,
+   "cartas_com_efeitos_inimigos": 4,
+   "icones_numa_carta": 4,
+   "icones_no_lado": 10,
+   "momentos": 127,
+   "todas_as_cartas_com_efeito": 0
+  },
+  {
+   "spec": "patrulheiro",
+   "bando": "cultistas",
+   "cartas_aliados": 4,
+   "cartas_inimigos": 4,
+   "cartas_com_efeitos_aliados": 2,
+   "cartas_com_efeitos_inimigos": 4,
+   "icones_numa_carta": 3,
+   "icones_no_lado": 6,
+   "momentos": 158,
+   "todas_as_cartas_com_efeito": 0
+  },
+  {
+   "spec": "patrulheiro",
+   "bando": "harpias",
+   "cartas_aliados": 4,
+   "cartas_inimigos": 4,
+   "cartas_com_efeitos_aliados": 3,
+   "cartas_com_efeitos_inimigos": 4,
+   "icones_numa_carta": 3,
+   "icones_no_lado": 6,
+   "momentos": 123,
+   "todas_as_cartas_com_efeito": 0
+  },
+  {
+   "spec": "patrulheiro",
+   "bando": "cães infernais",
+   "cartas_aliados": 4,
+   "cartas_inimigos": 4,
+   "cartas_com_efeitos_aliados": 3,
+   "cartas_com_efeitos_inimigos": 4,
+   "icones_numa_carta": 3,
+   "icones_no_lado": 6,
+   "momentos": 107,
+   "todas_as_cartas_com_efeito": 0
+  },
+  {
+   "spec": "patrulheiro",
+   "bando": "bandidos",
+   "cartas_aliados": 4,
+   "cartas_inimigos": 4,
+   "cartas_com_efeitos_aliados": 2,
+   "cartas_com_efeitos_inimigos": 4,
+   "icones_numa_carta": 3,
+   "icones_no_lado": 6,
+   "momentos": 147,
+   "todas_as_cartas_com_efeito": 0
+  },
+  {
+   "spec": "patrulheiro",
+   "bando": "lobos gélidos",
+   "cartas_aliados": 4,
+   "cartas_inimigos": 4,
+   "cartas_com_efeitos_aliados": 2,
+   "cartas_com_efeitos_inimigos": 4,
+   "icones_numa_carta": 3,
+   "icones_no_lado": 10,
+   "momentos": 137,
+   "todas_as_cartas_com_efeito": 1
+  },
+  {
+   "spec": "patrulheiro",
+   "bando": "afogados",
+   "cartas_aliados": 4,
+   "cartas_inimigos": 4,
+   "cartas_com_efeitos_aliados": 2,
+   "cartas_com_efeitos_inimigos": 4,
+   "icones_numa_carta": 3,
+   "icones_no_lado": 6,
+   "momentos": 136,
+   "todas_as_cartas_com_efeito": 0
+  },
+  {
+   "spec": "patrulheiro",
+   "bando": "esqueletos",
+   "cartas_aliados": 4,
+   "cartas_inimigos": 4,
+   "cartas_com_efeitos_aliados": 2,
+   "cartas_com_efeitos_inimigos": 4,
+   "icones_numa_carta": 3,
+   "icones_no_lado": 6,
+   "momentos": 108,
+   "todas_as_cartas_com_efeito": 0
+  },
+  {
+   "spec": "sombra",
+   "bando": "caidos e xamã",
+   "cartas_aliados": 3,
+   "cartas_inimigos": 6,
+   "cartas_com_efeitos_aliados": 2,
+   "cartas_com_efeitos_inimigos": 2,
+   "icones_numa_carta": 2,
+   "icones_no_lado": 2,
+   "momentos": 107,
+   "todas_as_cartas_com_efeito": 0
+  },
+  {
+   "spec": "sombra",
+   "bando": "ratos",
+   "cartas_aliados": 3,
+   "cartas_inimigos": 5,
+   "cartas_com_efeitos_aliados": 3,
+   "cartas_com_efeitos_inimigos": 2,
+   "icones_numa_carta": 4,
+   "icones_no_lado": 5,
+   "momentos": 108,
+   "todas_as_cartas_com_efeito": 0
+  },
+  {
+   "spec": "sombra",
+   "bando": "lobos",
+   "cartas_aliados": 3,
+   "cartas_inimigos": 4,
+   "cartas_com_efeitos_aliados": 3,
+   "cartas_com_efeitos_inimigos": 4,
+   "icones_numa_carta": 3,
+   "icones_no_lado": 6,
+   "momentos": 123,
+   "todas_as_cartas_com_efeito": 10
+  },
+  {
+   "spec": "sombra",
+   "bando": "cultistas",
+   "cartas_aliados": 3,
+   "cartas_inimigos": 4,
+   "cartas_com_efeitos_aliados": 3,
+   "cartas_com_efeitos_inimigos": 1,
+   "icones_numa_carta": 3,
+   "icones_no_lado": 3,
+   "momentos": 143,
+   "todas_as_cartas_com_efeito": 1
+  },
+  {
+   "spec": "sombra",
+   "bando": "harpias",
+   "cartas_aliados": 3,
+   "cartas_inimigos": 4,
+   "cartas_com_efeitos_aliados": 3,
+   "cartas_com_efeitos_inimigos": 2,
+   "icones_numa_carta": 3,
+   "icones_no_lado": 4,
+   "momentos": 143,
+   "todas_as_cartas_com_efeito": 1
+  },
+  {
+   "spec": "sombra",
+   "bando": "cães infernais",
+   "cartas_aliados": 3,
+   "cartas_inimigos": 4,
+   "cartas_com_efeitos_aliados": 3,
+   "cartas_com_efeitos_inimigos": 2,
+   "icones_numa_carta": 2,
+   "icones_no_lado": 3,
+   "momentos": 95,
+   "todas_as_cartas_com_efeito": 0
+  },
+  {
+   "spec": "sombra",
+   "bando": "bandidos",
+   "cartas_aliados": 3,
+   "cartas_inimigos": 4,
+   "cartas_com_efeitos_aliados": 2,
+   "cartas_com_efeitos_inimigos": 2,
+   "icones_numa_carta": 2,
+   "icones_no_lado": 2,
+   "momentos": 139,
+   "todas_as_cartas_com_efeito": 0
+  },
+  {
+   "spec": "sombra",
+   "bando": "lobos gélidos",
+   "cartas_aliados": 3,
+   "cartas_inimigos": 4,
+   "cartas_com_efeitos_aliados": 2,
+   "cartas_com_efeitos_inimigos": 4,
+   "icones_numa_carta": 3,
+   "icones_no_lado": 6,
+   "momentos": 98,
+   "todas_as_cartas_com_efeito": 0
+  },
+  {
+   "spec": "sombra",
+   "bando": "afogados",
+   "cartas_aliados": 3,
+   "cartas_inimigos": 4,
+   "cartas_com_efeitos_aliados": 2,
+   "cartas_com_efeitos_inimigos": 2,
+   "icones_numa_carta": 2,
+   "icones_no_lado": 2,
+   "momentos": 105,
+   "todas_as_cartas_com_efeito": 0
+  },
+  {
+   "spec": "sombra",
+   "bando": "esqueletos",
+   "cartas_aliados": 3,
+   "cartas_inimigos": 4,
+   "cartas_com_efeitos_aliados": 2,
+   "cartas_com_efeitos_inimigos": 2,
+   "icones_numa_carta": 2,
+   "icones_no_lado": 2,
+   "momentos": 92,
+   "todas_as_cartas_com_efeito": 0
+  },
+  {
+   "spec": "piromante",
+   "bando": "caidos e xamã",
+   "cartas_aliados": 3,
+   "cartas_inimigos": 6,
+   "cartas_com_efeitos_aliados": 2,
+   "cartas_com_efeitos_inimigos": 6,
+   "icones_numa_carta": 2,
+   "icones_no_lado": 6,
+   "momentos": 64,
+   "todas_as_cartas_com_efeito": 0
+  },
+  {
+   "spec": "piromante",
+   "bando": "ratos",
+   "cartas_aliados": 3,
+   "cartas_inimigos": 5,
+   "cartas_com_efeitos_aliados": 3,
+   "cartas_com_efeitos_inimigos": 5,
+   "icones_numa_carta": 3,
+   "icones_no_lado": 6,
+   "momentos": 109,
+   "todas_as_cartas_com_efeito": 0
+  },
+  {
+   "spec": "piromante",
+   "bando": "lobos",
+   "cartas_aliados": 3,
+   "cartas_inimigos": 4,
+   "cartas_com_efeitos_aliados": 2,
+   "cartas_com_efeitos_inimigos": 4,
+   "icones_numa_carta": 3,
+   "icones_no_lado": 8,
+   "momentos": 85,
+   "todas_as_cartas_com_efeito": 4
+  },
+  {
+   "spec": "piromante",
+   "bando": "cultistas",
+   "cartas_aliados": 3,
+   "cartas_inimigos": 4,
+   "cartas_com_efeitos_aliados": 2,
+   "cartas_com_efeitos_inimigos": 4,
+   "icones_numa_carta": 2,
+   "icones_no_lado": 5,
+   "momentos": 63,
+   "todas_as_cartas_com_efeito": 0
+  },
+  {
+   "spec": "piromante",
+   "bando": "harpias",
+   "cartas_aliados": 3,
+   "cartas_inimigos": 4,
+   "cartas_com_efeitos_aliados": 3,
+   "cartas_com_efeitos_inimigos": 3,
+   "icones_numa_carta": 2,
+   "icones_no_lado": 4,
+   "momentos": 72,
+   "todas_as_cartas_com_efeito": 0
+  },
+  {
+   "spec": "piromante",
+   "bando": "cães infernais",
+   "cartas_aliados": 3,
+   "cartas_inimigos": 4,
+   "cartas_com_efeitos_aliados": 2,
+   "cartas_com_efeitos_inimigos": 1,
+   "icones_numa_carta": 2,
+   "icones_no_lado": 3,
+   "momentos": 56,
+   "todas_as_cartas_com_efeito": 0
+  },
+  {
+   "spec": "piromante",
+   "bando": "bandidos",
+   "cartas_aliados": 3,
+   "cartas_inimigos": 4,
+   "cartas_com_efeitos_aliados": 2,
+   "cartas_com_efeitos_inimigos": 4,
+   "icones_numa_carta": 3,
+   "icones_no_lado": 5,
+   "momentos": 92,
+   "todas_as_cartas_com_efeito": 0
+  },
+  {
+   "spec": "piromante",
+   "bando": "lobos gélidos",
+   "cartas_aliados": 3,
+   "cartas_inimigos": 4,
+   "cartas_com_efeitos_aliados": 2,
+   "cartas_com_efeitos_inimigos": 4,
+   "icones_numa_carta": 3,
+   "icones_no_lado": 8,
+   "momentos": 58,
+   "todas_as_cartas_com_efeito": 0
+  },
+  {
+   "spec": "piromante",
+   "bando": "afogados",
+   "cartas_aliados": 3,
+   "cartas_inimigos": 4,
+   "cartas_com_efeitos_aliados": 2,
+   "cartas_com_efeitos_inimigos": 4,
+   "icones_numa_carta": 2,
+   "icones_no_lado": 4,
+   "momentos": 65,
+   "todas_as_cartas_com_efeito": 0
+  },
+  {
+   "spec": "piromante",
+   "bando": "esqueletos",
+   "cartas_aliados": 3,
+   "cartas_inimigos": 4,
+   "cartas_com_efeitos_aliados": 2,
+   "cartas_com_efeitos_inimigos": 4,
+   "icones_numa_carta": 2,
+   "icones_no_lado": 4,
+   "momentos": 59,
+   "todas_as_cartas_com_efeito": 0
+  },
+  {
+   "spec": "necromante",
+   "bando": "caidos e xamã",
+   "cartas_aliados": 7,
+   "cartas_inimigos": 6,
+   "cartas_com_efeitos_aliados": 3,
+   "cartas_com_efeitos_inimigos": 6,
+   "icones_numa_carta": 3,
+   "icones_no_lado": 8,
+   "momentos": 80,
+   "todas_as_cartas_com_efeito": 0
+  },
+  {
+   "spec": "necromante",
+   "bando": "ratos",
+   "cartas_aliados": 6,
+   "cartas_inimigos": 5,
+   "cartas_com_efeitos_aliados": 3,
+   "cartas_com_efeitos_inimigos": 5,
+   "icones_numa_carta": 3,
+   "icones_no_lado": 7,
+   "momentos": 105,
+   "todas_as_cartas_com_efeito": 0
+  },
+  {
+   "spec": "necromante",
+   "bando": "lobos",
+   "cartas_aliados": 6,
+   "cartas_inimigos": 4,
+   "cartas_com_efeitos_aliados": 2,
+   "cartas_com_efeitos_inimigos": 4,
+   "icones_numa_carta": 3,
+   "icones_no_lado": 9,
+   "momentos": 92,
+   "todas_as_cartas_com_efeito": 0
+  },
+  {
+   "spec": "necromante",
+   "bando": "cultistas",
+   "cartas_aliados": 5,
+   "cartas_inimigos": 4,
+   "cartas_com_efeitos_aliados": 3,
+   "cartas_com_efeitos_inimigos": 4,
+   "icones_numa_carta": 3,
+   "icones_no_lado": 6,
+   "momentos": 103,
+   "todas_as_cartas_com_efeito": 0
+  },
+  {
+   "spec": "necromante",
+   "bando": "harpias",
+   "cartas_aliados": 5,
+   "cartas_inimigos": 4,
+   "cartas_com_efeitos_aliados": 3,
+   "cartas_com_efeitos_inimigos": 4,
+   "icones_numa_carta": 3,
+   "icones_no_lado": 6,
+   "momentos": 88,
+   "todas_as_cartas_com_efeito": 0
+  },
+  {
+   "spec": "necromante",
+   "bando": "cães infernais",
+   "cartas_aliados": 5,
+   "cartas_inimigos": 4,
+   "cartas_com_efeitos_aliados": 5,
+   "cartas_com_efeitos_inimigos": 4,
+   "icones_numa_carta": 2,
+   "icones_no_lado": 5,
+   "momentos": 66,
+   "todas_as_cartas_com_efeito": 1
+  },
+  {
+   "spec": "necromante",
+   "bando": "bandidos",
+   "cartas_aliados": 6,
+   "cartas_inimigos": 4,
+   "cartas_com_efeitos_aliados": 4,
+   "cartas_com_efeitos_inimigos": 4,
+   "icones_numa_carta": 3,
+   "icones_no_lado": 6,
+   "momentos": 102,
+   "todas_as_cartas_com_efeito": 0
+  },
+  {
+   "spec": "necromante",
+   "bando": "lobos gélidos",
+   "cartas_aliados": 5,
+   "cartas_inimigos": 4,
+   "cartas_com_efeitos_aliados": 2,
+   "cartas_com_efeitos_inimigos": 4,
+   "icones_numa_carta": 3,
+   "icones_no_lado": 9,
+   "momentos": 63,
+   "todas_as_cartas_com_efeito": 0
+  },
+  {
+   "spec": "necromante",
+   "bando": "afogados",
+   "cartas_aliados": 6,
+   "cartas_inimigos": 4,
+   "cartas_com_efeitos_aliados": 1,
+   "cartas_com_efeitos_inimigos": 4,
+   "icones_numa_carta": 2,
+   "icones_no_lado": 5,
+   "momentos": 83,
+   "todas_as_cartas_com_efeito": 0
+  },
+  {
+   "spec": "necromante",
+   "bando": "esqueletos",
+   "cartas_aliados": 5,
+   "cartas_inimigos": 4,
+   "cartas_com_efeitos_aliados": 3,
+   "cartas_com_efeitos_inimigos": 4,
+   "icones_numa_carta": 3,
+   "icones_no_lado": 6,
+   "momentos": 60,
+   "todas_as_cartas_com_efeito": 0
+  }
+ ],
+ "piores": [
+  {
+   "spec": "paladino",
+   "bando": "caidos e xamã",
+   "seed": 1018,
+   "par": [
+    "morel",
+    "odete"
+   ],
+   "cartas": [
+    3,
+    6
+   ],
+   "com_efeitos": [
+    2,
+    6
+   ],
+   "icones_numa_carta": 3,
+   "momento": {
+    "turno": 3,
+    "heroi": {
+     "nome": "Arena",
+     "efeitos": [
+      {
+       "nome": "com barreira",
+       "id": "barreira",
+       "turnos": 96,
+       "texto": "absorve mais 10 de dano"
+      },
+      {
+       "nome": "em guarda",
+       "id": "guarda",
+       "turnos": 1,
+       "texto": "dano recebido −50%"
+      },
+      {
+       "nome": "fortalecido",
+       "id": "fortalecido",
+       "turnos": 2,
+       "texto": "+30% de dano"
+      }
+     ]
+    },
+    "aliados": [
+     {
+      "nome": "Morel",
+      "efeitos": []
+     },
+     {
+      "nome": "Odette",
+      "efeitos": [
+       {
+        "nome": "enfraquecido",
+        "id": "enfraquecido",
+        "turnos": 2,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     }
+    ],
+    "inimigos": [
+     {
+      "nome": "Caído A",
+      "efeitos": [
+       {
+        "nome": "enfraquecido",
+        "id": "enfraquecido",
+        "turnos": 1,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     },
+     {
+      "nome": "Caído B",
+      "efeitos": [
+       {
+        "nome": "enfraquecido",
+        "id": "enfraquecido",
+        "turnos": 1,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     },
+     {
+      "nome": "Caído C",
+      "efeitos": [
+       {
+        "nome": "enfraquecido",
+        "id": "enfraquecido",
+        "turnos": 1,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     },
+     {
+      "nome": "Caído D",
+      "efeitos": [
+       {
+        "nome": "enfraquecido",
+        "id": "enfraquecido",
+        "turnos": 1,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     },
+     {
+      "nome": "Caído E",
+      "efeitos": [
+       {
+        "nome": "enfraquecido",
+        "id": "enfraquecido",
+        "turnos": 1,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     },
+     {
+      "nome": "Xamã caído",
+      "efeitos": [
+       {
+        "nome": "enfraquecido",
+        "id": "enfraquecido",
+        "turnos": 1,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     }
+    ]
+   },
+   "linhas": [
+    5,
+    12
+   ]
+  },
+  {
+   "spec": "necromante",
+   "bando": "caidos e xamã",
+   "seed": 1013,
+   "par": [
+    "morel",
+    "yara"
+   ],
+   "cartas": [
+    5,
+    6
+   ],
+   "com_efeitos": [
+    0,
+    6
+   ],
+   "icones_numa_carta": 3,
+   "momento": {
+    "turno": 2,
+    "heroi": {
+     "nome": "Arena",
+     "efeitos": []
+    },
+    "aliados": [
+     {
+      "nome": "Morel",
+      "efeitos": []
+     },
+     {
+      "nome": "Yara",
+      "efeitos": []
+     },
+     {
+      "nome": "Esqueleto (Invocado)",
+      "efeitos": []
+     },
+     {
+      "nome": "Esqueleto (Invocado)",
+      "efeitos": []
+     }
+    ],
+    "inimigos": [
+     {
+      "nome": "Caído A",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 3,
+        "por_turno": 17,
+        "texto": "defesa −40%"
+       },
+       {
+        "nome": "amaldiçoado por Yara",
+        "id": "enfraquecido",
+        "turnos": 1,
+        "texto": "causa −25% de dano"
+       },
+       {
+        "nome": "firme",
+        "id": "firme",
+        "turnos": 1,
+        "texto": "acabou de se soltar: não pode ser atordoado nem congelado agora"
+       }
+      ]
+     },
+     {
+      "nome": "Caído B",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 3,
+        "por_turno": 17,
+        "texto": "defesa −40%"
+       }
+      ]
+     },
+     {
+      "nome": "Caído C",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 3,
+        "por_turno": 17,
+        "texto": "defesa −40%"
+       }
+      ]
+     },
+     {
+      "nome": "Caído D",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 3,
+        "por_turno": 17,
+        "texto": "defesa −40%"
+       }
+      ]
+     },
+     {
+      "nome": "Caído E",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 3,
+        "por_turno": 17,
+        "texto": "defesa −40%"
+       }
+      ]
+     },
+     {
+      "nome": "Xamã caído",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 3,
+        "por_turno": 17,
+        "texto": "defesa −40%"
+       }
+      ]
+     }
+    ]
+   },
+   "linhas": [
+    5,
+    12
+   ]
+  },
+  {
+   "spec": "berserker",
+   "bando": "caidos e xamã",
+   "seed": 1018,
+   "par": [
+    "morel",
+    "odete"
+   ],
+   "cartas": [
+    3,
+    6
+   ],
+   "com_efeitos": [
+    2,
+    6
+   ],
+   "icones_numa_carta": 2,
+   "momento": {
+    "turno": 3,
+    "heroi": {
+     "nome": "Arena",
+     "efeitos": [
+      {
+       "nome": "em guarda",
+       "id": "guarda",
+       "turnos": 1,
+       "texto": "dano recebido −50%"
+      },
+      {
+       "nome": "fortalecido",
+       "id": "fortalecido",
+       "turnos": 2,
+       "texto": "+30% de dano"
+      }
+     ]
+    },
+    "aliados": [
+     {
+      "nome": "Morel",
+      "efeitos": []
+     },
+     {
+      "nome": "Odette",
+      "efeitos": [
+       {
+        "nome": "enfraquecido",
+        "id": "enfraquecido",
+        "turnos": 2,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     }
+    ],
+    "inimigos": [
+     {
+      "nome": "Caído A",
+      "efeitos": [
+       {
+        "nome": "enfraquecido",
+        "id": "enfraquecido",
+        "turnos": 1,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     },
+     {
+      "nome": "Caído B",
+      "efeitos": [
+       {
+        "nome": "enfraquecido",
+        "id": "enfraquecido",
+        "turnos": 1,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     },
+     {
+      "nome": "Caído C",
+      "efeitos": [
+       {
+        "nome": "enfraquecido",
+        "id": "enfraquecido",
+        "turnos": 1,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     },
+     {
+      "nome": "Caído D",
+      "efeitos": [
+       {
+        "nome": "enfraquecido",
+        "id": "enfraquecido",
+        "turnos": 1,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     },
+     {
+      "nome": "Caído E",
+      "efeitos": [
+       {
+        "nome": "enfraquecido",
+        "id": "enfraquecido",
+        "turnos": 1,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     },
+     {
+      "nome": "Xamã caído",
+      "efeitos": [
+       {
+        "nome": "enfraquecido",
+        "id": "enfraquecido",
+        "turnos": 1,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     }
+    ]
+   },
+   "linhas": [
+    5,
+    12
+   ]
+  },
+  {
+   "spec": "necromante",
+   "bando": "caidos e xamã",
+   "seed": 1001,
+   "par": [
+    "morel",
+    "yara"
+   ],
+   "cartas": [
+    5,
+    6
+   ],
+   "com_efeitos": [
+    0,
+    6
+   ],
+   "icones_numa_carta": 2,
+   "momento": {
+    "turno": 2,
+    "heroi": {
+     "nome": "Arena",
+     "efeitos": []
+    },
+    "aliados": [
+     {
+      "nome": "Morel",
+      "efeitos": []
+     },
+     {
+      "nome": "Yara",
+      "efeitos": []
+     },
+     {
+      "nome": "Esqueleto (Invocado)",
+      "efeitos": []
+     },
+     {
+      "nome": "Esqueleto (Invocado)",
+      "efeitos": []
+     }
+    ],
+    "inimigos": [
+     {
+      "nome": "Caído A",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 3,
+        "por_turno": 18,
+        "texto": "defesa −40%"
+       },
+       {
+        "nome": "amaldiçoado por Yara",
+        "id": "enfraquecido",
+        "turnos": 1,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     },
+     {
+      "nome": "Caído B",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 3,
+        "por_turno": 18,
+        "texto": "defesa −40%"
+       }
+      ]
+     },
+     {
+      "nome": "Caído C",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 3,
+        "por_turno": 18,
+        "texto": "defesa −40%"
+       }
+      ]
+     },
+     {
+      "nome": "Caído D",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 3,
+        "por_turno": 18,
+        "texto": "defesa −40%"
+       }
+      ]
+     },
+     {
+      "nome": "Caído E",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 3,
+        "por_turno": 18,
+        "texto": "defesa −40%"
+       }
+      ]
+     },
+     {
+      "nome": "Xamã caído",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 3,
+        "por_turno": 18,
+        "texto": "defesa −40%"
+       }
+      ]
+     }
+    ]
+   },
+   "linhas": [
+    5,
+    12
+   ]
+  },
+  {
+   "spec": "necromante",
+   "bando": "caidos e xamã",
+   "seed": 1002,
+   "par": [
+    "odete",
+    "yara"
+   ],
+   "cartas": [
+    5,
+    6
+   ],
+   "com_efeitos": [
+    1,
+    6
+   ],
+   "icones_numa_carta": 2,
+   "momento": {
+    "turno": 2,
+    "heroi": {
+     "nome": "Arena",
+     "efeitos": [
+      {
+       "nome": "enfraquecido",
+       "id": "enfraquecido",
+       "turnos": 1,
+       "texto": "causa −25% de dano"
+      }
+     ]
+    },
+    "aliados": [
+     {
+      "nome": "Odette",
+      "efeitos": []
+     },
+     {
+      "nome": "Yara",
+      "efeitos": []
+     },
+     {
+      "nome": "Esqueleto (Invocado)",
+      "efeitos": []
+     },
+     {
+      "nome": "Esqueleto (Invocado)",
+      "efeitos": []
+     }
+    ],
+    "inimigos": [
+     {
+      "nome": "Caído A",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 3,
+        "por_turno": 19,
+        "texto": "defesa −40%"
+       },
+       {
+        "nome": "amaldiçoado por Yara",
+        "id": "enfraquecido",
+        "turnos": 1,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     },
+     {
+      "nome": "Caído B",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 3,
+        "por_turno": 19,
+        "texto": "defesa −40%"
+       }
+      ]
+     },
+     {
+      "nome": "Caído C",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 3,
+        "por_turno": 19,
+        "texto": "defesa −40%"
+       }
+      ]
+     },
+     {
+      "nome": "Caído D",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 3,
+        "por_turno": 19,
+        "texto": "defesa −40%"
+       }
+      ]
+     },
+     {
+      "nome": "Caído E",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 3,
+        "por_turno": 19,
+        "texto": "defesa −40%"
+       }
+      ]
+     },
+     {
+      "nome": "Xamã caído",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 3,
+        "por_turno": 19,
+        "texto": "defesa −40%"
+       }
+      ]
+     }
+    ]
+   },
+   "linhas": [
+    6,
+    12
+   ]
+  },
+  {
+   "spec": "necromante",
+   "bando": "caidos e xamã",
+   "seed": 1003,
+   "par": [
+    "morel",
+    "odete"
+   ],
+   "cartas": [
+    5,
+    6
+   ],
+   "com_efeitos": [
+    3,
+    6
+   ],
+   "icones_numa_carta": 2,
+   "momento": {
+    "turno": 3,
+    "heroi": {
+     "nome": "Arena",
+     "efeitos": [
+      {
+       "nome": "com barreira",
+       "id": "barreira",
+       "turnos": 2,
+       "texto": "absorve mais 50 de dano"
+      }
+     ]
+    },
+    "aliados": [
+     {
+      "nome": "Morel",
+      "efeitos": [
+       {
+        "nome": "em chamas",
+        "id": "queimadura",
+        "turnos": 3,
+        "por_turno": 11,
+        "texto": "a Combustão detona o que falta arder"
+       }
+      ]
+     },
+     {
+      "nome": "Odette",
+      "efeitos": []
+     },
+     {
+      "nome": "Esqueleto (Invocado)",
+      "efeitos": []
+     },
+     {
+      "nome": "Esqueleto (Invocado)",
+      "efeitos": [
+       {
+        "nome": "enfraquecido",
+        "id": "enfraquecido",
+        "turnos": 2,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     }
+    ],
+    "inimigos": [
+     {
+      "nome": "Caído A",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 2,
+        "por_turno": 17,
+        "texto": "defesa −40%"
+       },
+       {
+        "nome": "firme",
+        "id": "firme",
+        "turnos": 1,
+        "texto": "acabou de se soltar: não pode ser atordoado nem congelado agora"
+       }
+      ]
+     },
+     {
+      "nome": "Caído B",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 2,
+        "por_turno": 17,
+        "texto": "defesa −40%"
+       }
+      ]
+     },
+     {
+      "nome": "Caído C",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 2,
+        "por_turno": 17,
+        "texto": "defesa −40%"
+       }
+      ]
+     },
+     {
+      "nome": "Caído D",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 2,
+        "por_turno": 17,
+        "texto": "defesa −40%"
+       }
+      ]
+     },
+     {
+      "nome": "Caído E",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 2,
+        "por_turno": 17,
+        "texto": "defesa −40%"
+       }
+      ]
+     },
+     {
+      "nome": "Xamã caído",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 2,
+        "por_turno": 17,
+        "texto": "defesa −40%"
+       }
+      ]
+     }
+    ]
+   },
+   "linhas": [
+    8,
+    12
+   ]
+  },
+  {
+   "spec": "necromante",
+   "bando": "caidos e xamã",
+   "seed": 1004,
+   "par": [
+    "morel",
+    "yara"
+   ],
+   "cartas": [
+    5,
+    6
+   ],
+   "com_efeitos": [
+    1,
+    6
+   ],
+   "icones_numa_carta": 2,
+   "momento": {
+    "turno": 2,
+    "heroi": {
+     "nome": "Arena",
+     "efeitos": []
+    },
+    "aliados": [
+     {
+      "nome": "Morel",
+      "efeitos": [
+       {
+        "nome": "enfraquecido",
+        "id": "enfraquecido",
+        "turnos": 2,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     },
+     {
+      "nome": "Yara",
+      "efeitos": []
+     },
+     {
+      "nome": "Esqueleto (Invocado)",
+      "efeitos": []
+     },
+     {
+      "nome": "Esqueleto (Invocado)",
+      "efeitos": []
+     }
+    ],
+    "inimigos": [
+     {
+      "nome": "Caído A",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 3,
+        "por_turno": 19,
+        "texto": "defesa −40%"
+       },
+       {
+        "nome": "amaldiçoado por Yara",
+        "id": "enfraquecido",
+        "turnos": 1,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     },
+     {
+      "nome": "Caído B",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 3,
+        "por_turno": 19,
+        "texto": "defesa −40%"
+       }
+      ]
+     },
+     {
+      "nome": "Caído C",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 3,
+        "por_turno": 19,
+        "texto": "defesa −40%"
+       }
+      ]
+     },
+     {
+      "nome": "Caído D",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 3,
+        "por_turno": 19,
+        "texto": "defesa −40%"
+       }
+      ]
+     },
+     {
+      "nome": "Caído E",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 3,
+        "por_turno": 19,
+        "texto": "defesa −40%"
+       }
+      ]
+     },
+     {
+      "nome": "Xamã caído",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 3,
+        "por_turno": 19,
+        "texto": "defesa −40%"
+       }
+      ]
+     }
+    ]
+   },
+   "linhas": [
+    6,
+    12
+   ]
+  },
+  {
+   "spec": "necromante",
+   "bando": "caidos e xamã",
+   "seed": 1007,
+   "par": [
+    "morel",
+    "yara"
+   ],
+   "cartas": [
+    5,
+    6
+   ],
+   "com_efeitos": [
+    2,
+    6
+   ],
+   "icones_numa_carta": 2,
+   "momento": {
+    "turno": 2,
+    "heroi": {
+     "nome": "Arena",
+     "efeitos": [
+      {
+       "nome": "enfraquecido",
+       "id": "enfraquecido",
+       "turnos": 1,
+       "texto": "causa −25% de dano"
+      }
+     ]
+    },
+    "aliados": [
+     {
+      "nome": "Morel",
+      "efeitos": [
+       {
+        "nome": "enfraquecido",
+        "id": "enfraquecido",
+        "turnos": 2,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     },
+     {
+      "nome": "Yara",
+      "efeitos": []
+     },
+     {
+      "nome": "Esqueleto (Invocado)",
+      "efeitos": []
+     },
+     {
+      "nome": "Esqueleto (Invocado)",
+      "efeitos": []
+     }
+    ],
+    "inimigos": [
+     {
+      "nome": "Caído A",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 3,
+        "por_turno": 18,
+        "texto": "defesa −40%"
+       },
+       {
+        "nome": "amaldiçoado por Yara",
+        "id": "enfraquecido",
+        "turnos": 1,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     },
+     {
+      "nome": "Caído B",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 3,
+        "por_turno": 18,
+        "texto": "defesa −40%"
+       }
+      ]
+     },
+     {
+      "nome": "Caído C",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 3,
+        "por_turno": 18,
+        "texto": "defesa −40%"
+       }
+      ]
+     },
+     {
+      "nome": "Caído D",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 3,
+        "por_turno": 18,
+        "texto": "defesa −40%"
+       }
+      ]
+     },
+     {
+      "nome": "Caído E",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 3,
+        "por_turno": 18,
+        "texto": "defesa −40%"
+       }
+      ]
+     },
+     {
+      "nome": "Xamã caído",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 3,
+        "por_turno": 18,
+        "texto": "defesa −40%"
+       }
+      ]
+     }
+    ]
+   },
+   "linhas": [
+    7,
+    12
+   ]
+  },
+  {
+   "spec": "necromante",
+   "bando": "caidos e xamã",
+   "seed": 1009,
+   "par": [
+    "morel",
+    "odete"
+   ],
+   "cartas": [
+    5,
+    6
+   ],
+   "com_efeitos": [
+    0,
+    6
+   ],
+   "icones_numa_carta": 2,
+   "momento": {
+    "turno": 3,
+    "heroi": {
+     "nome": "Arena",
+     "efeitos": []
+    },
+    "aliados": [
+     {
+      "nome": "Morel",
+      "efeitos": []
+     },
+     {
+      "nome": "Odette",
+      "efeitos": []
+     },
+     {
+      "nome": "Esqueleto (Invocado)",
+      "efeitos": []
+     },
+     {
+      "nome": "Esqueleto (Invocado)",
+      "efeitos": []
+     }
+    ],
+    "inimigos": [
+     {
+      "nome": "Caído A",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 2,
+        "por_turno": 19,
+        "texto": "defesa −40%"
+       },
+       {
+        "nome": "firme",
+        "id": "firme",
+        "turnos": 1,
+        "texto": "acabou de se soltar: não pode ser atordoado nem congelado agora"
+       }
+      ]
+     },
+     {
+      "nome": "Caído B",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 2,
+        "por_turno": 19,
+        "texto": "defesa −40%"
+       }
+      ]
+     },
+     {
+      "nome": "Caído C",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 2,
+        "por_turno": 19,
+        "texto": "defesa −40%"
+       }
+      ]
+     },
+     {
+      "nome": "Caído D",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 2,
+        "por_turno": 19,
+        "texto": "defesa −40%"
+       }
+      ]
+     },
+     {
+      "nome": "Caído E",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 2,
+        "por_turno": 19,
+        "texto": "defesa −40%"
+       }
+      ]
+     },
+     {
+      "nome": "Xamã caído",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 2,
+        "por_turno": 19,
+        "texto": "defesa −40%"
+       }
+      ]
+     }
+    ]
+   },
+   "linhas": [
+    5,
+    12
+   ]
+  },
+  {
+   "spec": "necromante",
+   "bando": "caidos e xamã",
+   "seed": 1016,
+   "par": [
+    "morel",
+    "yara"
+   ],
+   "cartas": [
+    4,
+    6
+   ],
+   "com_efeitos": [
+    0,
+    6
+   ],
+   "icones_numa_carta": 2,
+   "momento": {
+    "turno": 2,
+    "heroi": {
+     "nome": "Arena",
+     "efeitos": []
+    },
+    "aliados": [
+     {
+      "nome": "Morel",
+      "efeitos": []
+     },
+     {
+      "nome": "Yara",
+      "efeitos": []
+     },
+     {
+      "nome": "Esqueleto (Invocado)",
+      "efeitos": []
+     }
+    ],
+    "inimigos": [
+     {
+      "nome": "Caído A",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 3,
+        "por_turno": 17,
+        "texto": "defesa −40%"
+       },
+       {
+        "nome": "amaldiçoado por Yara",
+        "id": "enfraquecido",
+        "turnos": 1,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     },
+     {
+      "nome": "Caído B",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 3,
+        "por_turno": 17,
+        "texto": "defesa −40%"
+       }
+      ]
+     },
+     {
+      "nome": "Caído C",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 3,
+        "por_turno": 17,
+        "texto": "defesa −40%"
+       }
+      ]
+     },
+     {
+      "nome": "Caído D",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 3,
+        "por_turno": 17,
+        "texto": "defesa −40%"
+       }
+      ]
+     },
+     {
+      "nome": "Caído E",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 3,
+        "por_turno": 17,
+        "texto": "defesa −40%"
+       }
+      ]
+     },
+     {
+      "nome": "Xamã caído",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 3,
+        "por_turno": 17,
+        "texto": "defesa −40%"
+       }
+      ]
+     }
+    ]
+   },
+   "linhas": [
+    4,
+    12
+   ]
+  },
+  {
+   "spec": "paladino",
+   "bando": "caidos e xamã",
+   "seed": 1008,
+   "par": [
+    "odete",
+    "yara"
+   ],
+   "cartas": [
+    3,
+    6
+   ],
+   "com_efeitos": [
+    2,
+    6
+   ],
+   "icones_numa_carta": 1,
+   "momento": {
+    "turno": 2,
+    "heroi": {
+     "nome": "Arena",
+     "efeitos": [
+      {
+       "nome": "fortalecido",
+       "id": "fortalecido",
+       "turnos": 2,
+       "texto": "+30% de dano"
+      }
+     ]
+    },
+    "aliados": [
+     {
+      "nome": "Odette",
+      "efeitos": []
+     },
+     {
+      "nome": "Yara",
+      "efeitos": [
+       {
+        "nome": "enfraquecido",
+        "id": "enfraquecido",
+        "turnos": 2,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     }
+    ],
+    "inimigos": [
+     {
+      "nome": "Caído A",
+      "efeitos": [
+       {
+        "nome": "enfraquecido",
+        "id": "enfraquecido",
+        "turnos": 1,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     },
+     {
+      "nome": "Caído B",
+      "efeitos": [
+       {
+        "nome": "enfraquecido",
+        "id": "enfraquecido",
+        "turnos": 1,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     },
+     {
+      "nome": "Caído C",
+      "efeitos": [
+       {
+        "nome": "enfraquecido",
+        "id": "enfraquecido",
+        "turnos": 1,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     },
+     {
+      "nome": "Caído D",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado por Yara",
+        "id": "enfraquecido",
+        "turnos": 1,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     },
+     {
+      "nome": "Caído E",
+      "efeitos": [
+       {
+        "nome": "enfraquecido",
+        "id": "enfraquecido",
+        "turnos": 1,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     },
+     {
+      "nome": "Xamã caído",
+      "efeitos": [
+       {
+        "nome": "enfraquecido",
+        "id": "enfraquecido",
+        "turnos": 1,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     }
+    ]
+   },
+   "linhas": [
+    5,
+    12
+   ]
+  },
+  {
+   "spec": "berserker",
+   "bando": "caidos e xamã",
+   "seed": 1008,
+   "par": [
+    "odete",
+    "yara"
+   ],
+   "cartas": [
+    3,
+    6
+   ],
+   "com_efeitos": [
+    1,
+    6
+   ],
+   "icones_numa_carta": 1,
+   "momento": {
+    "turno": 2,
+    "heroi": {
+     "nome": "Arena",
+     "efeitos": [
+      {
+       "nome": "fortalecido",
+       "id": "fortalecido",
+       "turnos": 2,
+       "texto": "+30% de dano"
+      }
+     ]
+    },
+    "aliados": [
+     {
+      "nome": "Odette",
+      "efeitos": []
+     },
+     {
+      "nome": "Yara",
+      "efeitos": []
+     }
+    ],
+    "inimigos": [
+     {
+      "nome": "Caído A",
+      "efeitos": [
+       {
+        "nome": "enfraquecido",
+        "id": "enfraquecido",
+        "turnos": 1,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     },
+     {
+      "nome": "Caído B",
+      "efeitos": [
+       {
+        "nome": "enfraquecido",
+        "id": "enfraquecido",
+        "turnos": 1,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     },
+     {
+      "nome": "Caído C",
+      "efeitos": [
+       {
+        "nome": "enfraquecido",
+        "id": "enfraquecido",
+        "turnos": 1,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     },
+     {
+      "nome": "Caído D",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado por Yara",
+        "id": "enfraquecido",
+        "turnos": 1,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     },
+     {
+      "nome": "Caído E",
+      "efeitos": [
+       {
+        "nome": "enfraquecido",
+        "id": "enfraquecido",
+        "turnos": 1,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     },
+     {
+      "nome": "Xamã caído",
+      "efeitos": [
+       {
+        "nome": "enfraquecido",
+        "id": "enfraquecido",
+        "turnos": 1,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     }
+    ]
+   },
+   "linhas": [
+    4,
+    12
+   ]
+  }
+ ],
+ "mais_icones": [
+  {
+   "spec": "berserker",
+   "bando": "ratos",
+   "seed": 1018,
+   "par": [
+    "morel",
+    "odete"
+   ],
+   "cartas": [
+    3,
+    3
+   ],
+   "com_efeitos": [
+    3,
+    0
+   ],
+   "icones_numa_carta": 4,
+   "momento": {
+    "turno": 4,
+    "heroi": {
+     "nome": "Arena",
+     "efeitos": [
+      {
+       "nome": "fortalecido",
+       "id": "fortalecido",
+       "turnos": 1,
+       "texto": "+30% de dano"
+      },
+      {
+       "nome": "envenenado",
+       "id": "veneno",
+       "turnos": 2,
+       "por_turno": 8,
+       "texto": ""
+      },
+      {
+       "nome": "em frenesi",
+       "id": "frenesi",
+       "turnos": 98,
+       "texto": "frenesi: +20% de dano até o fim da luta"
+      },
+      {
+       "nome": "sangrando",
+       "id": "sangramento",
+       "turnos": 2,
+       "por_turno": 6,
+       "texto": ""
+      }
+     ]
+    },
+    "aliados": [
+     {
+      "nome": "Morel",
+      "efeitos": [
+       {
+        "nome": "envenenado",
+        "id": "veneno",
+        "turnos": 2,
+        "por_turno": 8,
+        "texto": ""
+       }
+      ]
+     },
+     {
+      "nome": "Odette",
+      "efeitos": [
+       {
+        "nome": "envenenado",
+        "id": "veneno",
+        "turnos": 2,
+        "por_turno": 8,
+        "texto": ""
+       }
+      ]
+     }
+    ],
+    "inimigos": [
+     {
+      "nome": "Rato gigante B",
+      "efeitos": []
+     },
+     {
+      "nome": "Rato gigante C",
+      "efeitos": []
+     },
+     {
+      "nome": "Rato gigante E",
+      "efeitos": []
+     }
+    ]
+   },
+   "linhas": [
+    6,
+    3
+   ]
+  },
+  {
+   "spec": "berserker",
+   "bando": "ratos",
+   "seed": 1005,
+   "par": [
+    "odete",
+    "yara"
+   ],
+   "cartas": [
+    3,
+    4
+   ],
+   "com_efeitos": [
+    2,
+    1
+   ],
+   "icones_numa_carta": 4,
+   "momento": {
+    "turno": 5,
+    "heroi": {
+     "nome": "Arena",
+     "efeitos": [
+      {
+       "nome": "em guarda",
+       "id": "guarda",
+       "turnos": 1,
+       "texto": "dano recebido −50%"
+      },
+      {
+       "nome": "envenenado",
+       "id": "veneno",
+       "turnos": 2,
+       "por_turno": 8,
+       "texto": ""
+      },
+      {
+       "nome": "sangrando",
+       "id": "sangramento",
+       "turnos": 1,
+       "por_turno": 6,
+       "texto": ""
+      },
+      {
+       "nome": "em frenesi",
+       "id": "frenesi",
+       "turnos": 98,
+       "texto": "frenesi: +20% de dano até o fim da luta"
+      }
+     ]
+    },
+    "aliados": [
+     {
+      "nome": "Odette",
+      "efeitos": [
+       {
+        "nome": "envenenado",
+        "id": "veneno",
+        "turnos": 2,
+        "por_turno": 8,
+        "texto": ""
+       },
+       {
+        "nome": "sangrando",
+        "id": "sangramento",
+        "turnos": 3,
+        "por_turno": 6,
+        "texto": ""
+       }
+      ]
+     },
+     {
+      "nome": "Yara",
+      "efeitos": []
+     }
+    ],
+    "inimigos": [
+     {
+      "nome": "Rato gigante A",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado por Yara",
+        "id": "enfraquecido",
+        "turnos": 1,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     },
+     {
+      "nome": "Rato gigante B",
+      "efeitos": []
+     },
+     {
+      "nome": "Rato gigante D",
+      "efeitos": []
+     },
+     {
+      "nome": "Rato gigante E",
+      "efeitos": []
+     }
+    ]
+   },
+   "linhas": [
+    5,
+    5
+   ]
+  },
+  {
+   "spec": "berserker",
+   "bando": "ratos",
+   "seed": 1013,
+   "par": [
+    "morel",
+    "yara"
+   ],
+   "cartas": [
+    3,
+    3
+   ],
+   "com_efeitos": [
+    2,
+    1
+   ],
+   "icones_numa_carta": 4,
+   "momento": {
+    "turno": 5,
+    "heroi": {
+     "nome": "Arena",
+     "efeitos": [
+      {
+       "nome": "envenenado",
+       "id": "veneno",
+       "turnos": 1,
+       "por_turno": 8,
+       "texto": ""
+      },
+      {
+       "nome": "sangrando",
+       "id": "sangramento",
+       "turnos": 1,
+       "por_turno": 6,
+       "texto": ""
+      },
+      {
+       "nome": "em guarda",
+       "id": "guarda",
+       "turnos": 1,
+       "texto": "dano recebido −50%"
+      },
+      {
+       "nome": "em frenesi",
+       "id": "frenesi",
+       "turnos": 98,
+       "texto": "frenesi: +20% de dano até o fim da luta"
+      }
+     ]
+    },
+    "aliados": [
+     {
+      "nome": "Morel",
+      "efeitos": [
+       {
+        "nome": "sangrando",
+        "id": "sangramento",
+        "turnos": 3,
+        "por_turno": 6,
+        "texto": ""
+       }
+      ]
+     },
+     {
+      "nome": "Yara",
+      "efeitos": []
+     }
+    ],
+    "inimigos": [
+     {
+      "nome": "Rato gigante B",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado por Yara",
+        "id": "enfraquecido",
+        "turnos": 1,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     },
+     {
+      "nome": "Rato gigante C",
+      "efeitos": []
+     },
+     {
+      "nome": "Rato gigante D",
+      "efeitos": []
+     }
+    ]
+   },
+   "linhas": [
+    5,
+    4
+   ]
+  },
+  {
+   "spec": "berserker",
+   "bando": "harpias",
+   "seed": 1018,
+   "par": [
+    "morel",
+    "odete"
+   ],
+   "cartas": [
+    3,
+    4
+   ],
+   "com_efeitos": [
+    2,
+    0
+   ],
+   "icones_numa_carta": 4,
+   "momento": {
+    "turno": 4,
+    "heroi": {
+     "nome": "Arena",
+     "efeitos": [
+      {
+       "nome": "em guarda",
+       "id": "guarda",
+       "turnos": 2,
+       "texto": "dano recebido −50%"
+      },
+      {
+       "nome": "sangrando",
+       "id": "sangramento",
+       "turnos": 1,
+       "por_turno": 12,
+       "texto": ""
+      },
+      {
+       "nome": "fortalecido",
+       "id": "fortalecido",
+       "turnos": 1,
+       "texto": "+30% de dano"
+      },
+      {
+       "nome": "enfraquecido",
+       "id": "enfraquecido",
+       "turnos": 1,
+       "texto": "causa −25% de dano"
+      }
+     ]
+    },
+    "aliados": [
+     {
+      "nome": "Morel",
+      "efeitos": []
+     },
+     {
+      "nome": "Odette",
+      "efeitos": [
+       {
+        "nome": "sangrando",
+        "id": "sangramento",
+        "turnos": 2,
+        "por_turno": 12,
+        "texto": ""
+       }
+      ]
+     }
+    ],
+    "inimigos": [
+     {
+      "nome": "Harpia A",
+      "efeitos": []
+     },
+     {
+      "nome": "Harpia B",
+      "efeitos": []
+     },
+     {
+      "nome": "Harpia C",
+      "efeitos": []
+     },
+     {
+      "nome": "Harpia D",
+      "efeitos": []
+     }
+    ]
+   },
+   "linhas": [
+    5,
+    4
+   ]
+  },
+  {
+   "spec": "patrulheiro",
+   "bando": "lobos",
+   "seed": 1016,
+   "par": [
+    "morel",
+    "yara"
+   ],
+   "cartas": [
+    4,
+    2
+   ],
+   "com_efeitos": [
+    1,
+    2
+   ],
+   "icones_numa_carta": 4,
+   "momento": {
+    "turno": 5,
+    "heroi": {
+     "nome": "Arena",
+     "efeitos": [
+      {
+       "nome": "esquivo",
+       "id": "esquiva",
+       "turnos": 1,
+       "texto": "+30% de chance de esquiva"
+      }
+     ]
+    },
+    "aliados": [
+     {
+      "nome": "Lobo Cinzento",
+      "efeitos": []
+     },
+     {
+      "nome": "Morel",
+      "efeitos": []
+     },
+     {
+      "nome": "Yara",
+      "efeitos": []
+     }
+    ],
+    "inimigos": [
+     {
+      "nome": "Lobo A",
+      "efeitos": [
+       {
+        "nome": "sangrando",
+        "id": "sangramento",
+        "turnos": 1,
+        "por_turno": 8,
+        "texto": ""
+       },
+       {
+        "nome": "amaldiçoado por Yara",
+        "id": "enfraquecido",
+        "turnos": 1,
+        "texto": "causa −25% de dano"
+       },
+       {
+        "nome": "firme",
+        "id": "firme",
+        "turnos": 1,
+        "texto": "acabou de se soltar: não pode ser atordoado nem congelado agora"
+       },
+       {
+        "nome": "fortalecido",
+        "id": "fortalecido",
+        "turnos": 2,
+        "texto": "+30% de dano"
+       }
+      ]
+     },
+     {
+      "nome": "Lobo B",
+      "efeitos": [
+       {
+        "nome": "sangrando",
+        "id": "sangramento",
+        "turnos": 1,
+        "por_turno": 8,
+        "texto": ""
+       },
+       {
+        "nome": "fortalecido",
+        "id": "fortalecido",
+        "turnos": 2,
+        "texto": "+30% de dano"
+       }
+      ]
+     }
+    ]
+   },
+   "linhas": [
+    5,
+    4
+   ]
+  }
+ ],
+ "pior_por_spec": {
+  "paladino": {
+   "spec": "paladino",
+   "bando": "caidos e xamã",
+   "seed": 1018,
+   "par": [
+    "morel",
+    "odete"
+   ],
+   "cartas": [
+    3,
+    6
+   ],
+   "com_efeitos": [
+    2,
+    6
+   ],
+   "icones_numa_carta": 3,
+   "momento": {
+    "turno": 3,
+    "heroi": {
+     "nome": "Arena",
+     "efeitos": [
+      {
+       "nome": "com barreira",
+       "id": "barreira",
+       "turnos": 96,
+       "texto": "absorve mais 10 de dano"
+      },
+      {
+       "nome": "em guarda",
+       "id": "guarda",
+       "turnos": 1,
+       "texto": "dano recebido −50%"
+      },
+      {
+       "nome": "fortalecido",
+       "id": "fortalecido",
+       "turnos": 2,
+       "texto": "+30% de dano"
+      }
+     ]
+    },
+    "aliados": [
+     {
+      "nome": "Morel",
+      "efeitos": []
+     },
+     {
+      "nome": "Odette",
+      "efeitos": [
+       {
+        "nome": "enfraquecido",
+        "id": "enfraquecido",
+        "turnos": 2,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     }
+    ],
+    "inimigos": [
+     {
+      "nome": "Caído A",
+      "efeitos": [
+       {
+        "nome": "enfraquecido",
+        "id": "enfraquecido",
+        "turnos": 1,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     },
+     {
+      "nome": "Caído B",
+      "efeitos": [
+       {
+        "nome": "enfraquecido",
+        "id": "enfraquecido",
+        "turnos": 1,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     },
+     {
+      "nome": "Caído C",
+      "efeitos": [
+       {
+        "nome": "enfraquecido",
+        "id": "enfraquecido",
+        "turnos": 1,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     },
+     {
+      "nome": "Caído D",
+      "efeitos": [
+       {
+        "nome": "enfraquecido",
+        "id": "enfraquecido",
+        "turnos": 1,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     },
+     {
+      "nome": "Caído E",
+      "efeitos": [
+       {
+        "nome": "enfraquecido",
+        "id": "enfraquecido",
+        "turnos": 1,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     },
+     {
+      "nome": "Xamã caído",
+      "efeitos": [
+       {
+        "nome": "enfraquecido",
+        "id": "enfraquecido",
+        "turnos": 1,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     }
+    ]
+   },
+   "linhas": [
+    5,
+    12
+   ]
+  },
+  "necromante": {
+   "spec": "necromante",
+   "bando": "caidos e xamã",
+   "seed": 1013,
+   "par": [
+    "morel",
+    "yara"
+   ],
+   "cartas": [
+    5,
+    6
+   ],
+   "com_efeitos": [
+    0,
+    6
+   ],
+   "icones_numa_carta": 3,
+   "momento": {
+    "turno": 2,
+    "heroi": {
+     "nome": "Arena",
+     "efeitos": []
+    },
+    "aliados": [
+     {
+      "nome": "Morel",
+      "efeitos": []
+     },
+     {
+      "nome": "Yara",
+      "efeitos": []
+     },
+     {
+      "nome": "Esqueleto (Invocado)",
+      "efeitos": []
+     },
+     {
+      "nome": "Esqueleto (Invocado)",
+      "efeitos": []
+     }
+    ],
+    "inimigos": [
+     {
+      "nome": "Caído A",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 3,
+        "por_turno": 17,
+        "texto": "defesa −40%"
+       },
+       {
+        "nome": "amaldiçoado por Yara",
+        "id": "enfraquecido",
+        "turnos": 1,
+        "texto": "causa −25% de dano"
+       },
+       {
+        "nome": "firme",
+        "id": "firme",
+        "turnos": 1,
+        "texto": "acabou de se soltar: não pode ser atordoado nem congelado agora"
+       }
+      ]
+     },
+     {
+      "nome": "Caído B",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 3,
+        "por_turno": 17,
+        "texto": "defesa −40%"
+       }
+      ]
+     },
+     {
+      "nome": "Caído C",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 3,
+        "por_turno": 17,
+        "texto": "defesa −40%"
+       }
+      ]
+     },
+     {
+      "nome": "Caído D",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 3,
+        "por_turno": 17,
+        "texto": "defesa −40%"
+       }
+      ]
+     },
+     {
+      "nome": "Caído E",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 3,
+        "por_turno": 17,
+        "texto": "defesa −40%"
+       }
+      ]
+     },
+     {
+      "nome": "Xamã caído",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado",
+        "id": "maldito",
+        "turnos": 3,
+        "por_turno": 17,
+        "texto": "defesa −40%"
+       }
+      ]
+     }
+    ]
+   },
+   "linhas": [
+    5,
+    12
+   ]
+  },
+  "berserker": {
+   "spec": "berserker",
+   "bando": "caidos e xamã",
+   "seed": 1018,
+   "par": [
+    "morel",
+    "odete"
+   ],
+   "cartas": [
+    3,
+    6
+   ],
+   "com_efeitos": [
+    2,
+    6
+   ],
+   "icones_numa_carta": 2,
+   "momento": {
+    "turno": 3,
+    "heroi": {
+     "nome": "Arena",
+     "efeitos": [
+      {
+       "nome": "em guarda",
+       "id": "guarda",
+       "turnos": 1,
+       "texto": "dano recebido −50%"
+      },
+      {
+       "nome": "fortalecido",
+       "id": "fortalecido",
+       "turnos": 2,
+       "texto": "+30% de dano"
+      }
+     ]
+    },
+    "aliados": [
+     {
+      "nome": "Morel",
+      "efeitos": []
+     },
+     {
+      "nome": "Odette",
+      "efeitos": [
+       {
+        "nome": "enfraquecido",
+        "id": "enfraquecido",
+        "turnos": 2,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     }
+    ],
+    "inimigos": [
+     {
+      "nome": "Caído A",
+      "efeitos": [
+       {
+        "nome": "enfraquecido",
+        "id": "enfraquecido",
+        "turnos": 1,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     },
+     {
+      "nome": "Caído B",
+      "efeitos": [
+       {
+        "nome": "enfraquecido",
+        "id": "enfraquecido",
+        "turnos": 1,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     },
+     {
+      "nome": "Caído C",
+      "efeitos": [
+       {
+        "nome": "enfraquecido",
+        "id": "enfraquecido",
+        "turnos": 1,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     },
+     {
+      "nome": "Caído D",
+      "efeitos": [
+       {
+        "nome": "enfraquecido",
+        "id": "enfraquecido",
+        "turnos": 1,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     },
+     {
+      "nome": "Caído E",
+      "efeitos": [
+       {
+        "nome": "enfraquecido",
+        "id": "enfraquecido",
+        "turnos": 1,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     },
+     {
+      "nome": "Xamã caído",
+      "efeitos": [
+       {
+        "nome": "enfraquecido",
+        "id": "enfraquecido",
+        "turnos": 1,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     }
+    ]
+   },
+   "linhas": [
+    5,
+    12
+   ]
+  },
+  "piromante": {
+   "spec": "piromante",
+   "bando": "caidos e xamã",
+   "seed": 1006,
+   "par": [
+    "morel",
+    "odete"
+   ],
+   "cartas": [
+    3,
+    6
+   ],
+   "com_efeitos": [
+    0,
+    6
+   ],
+   "icones_numa_carta": 1,
+   "momento": {
+    "turno": 3,
+    "heroi": {
+     "nome": "Arena",
+     "efeitos": []
+    },
+    "aliados": [
+     {
+      "nome": "Morel",
+      "efeitos": []
+     },
+     {
+      "nome": "Odette",
+      "efeitos": []
+     }
+    ],
+    "inimigos": [
+     {
+      "nome": "Caído A",
+      "efeitos": [
+       {
+        "nome": "em chamas",
+        "id": "queimadura",
+        "turnos": 2,
+        "por_turno": 8,
+        "texto": "a Combustão detona o que falta arder"
+       }
+      ]
+     },
+     {
+      "nome": "Caído B",
+      "efeitos": [
+       {
+        "nome": "em chamas ×2",
+        "id": "queimadura",
+        "turnos": 3,
+        "por_turno": 16,
+        "camadas": 2,
+        "texto": "a Combustão detona o que falta arder"
+       }
+      ]
+     },
+     {
+      "nome": "Caído C",
+      "efeitos": [
+       {
+        "nome": "em chamas",
+        "id": "queimadura",
+        "turnos": 3,
+        "por_turno": 8,
+        "texto": "a Combustão detona o que falta arder"
+       }
+      ]
+     },
+     {
+      "nome": "Caído D",
+      "efeitos": [
+       {
+        "nome": "em chamas",
+        "id": "queimadura",
+        "turnos": 3,
+        "por_turno": 8,
+        "texto": "a Combustão detona o que falta arder"
+       }
+      ]
+     },
+     {
+      "nome": "Caído E",
+      "efeitos": [
+       {
+        "nome": "em chamas",
+        "id": "queimadura",
+        "turnos": 2,
+        "por_turno": 8,
+        "texto": "a Combustão detona o que falta arder"
+       }
+      ]
+     },
+     {
+      "nome": "Xamã caído",
+      "efeitos": [
+       {
+        "nome": "em chamas",
+        "id": "queimadura",
+        "turnos": 2,
+        "por_turno": 8,
+        "texto": "a Combustão detona o que falta arder"
+       }
+      ]
+     }
+    ]
+   },
+   "linhas": [
+    3,
+    12
+   ]
+  },
+  "patrulheiro": {
+   "spec": "patrulheiro",
+   "bando": "caidos e xamã",
+   "seed": 1013,
+   "par": [
+    "morel",
+    "yara"
+   ],
+   "cartas": [
+    4,
+    5
+   ],
+   "com_efeitos": [
+    0,
+    5
+   ],
+   "icones_numa_carta": 3,
+   "momento": {
+    "turno": 2,
+    "heroi": {
+     "nome": "Arena",
+     "efeitos": []
+    },
+    "aliados": [
+     {
+      "nome": "Lobo Cinzento",
+      "efeitos": []
+     },
+     {
+      "nome": "Morel",
+      "efeitos": []
+     },
+     {
+      "nome": "Yara",
+      "efeitos": []
+     }
+    ],
+    "inimigos": [
+     {
+      "nome": "Caído A",
+      "efeitos": [
+       {
+        "nome": "sangrando",
+        "id": "sangramento",
+        "turnos": 2,
+        "por_turno": 10,
+        "texto": ""
+       },
+       {
+        "nome": "amaldiçoado por Yara",
+        "id": "enfraquecido",
+        "turnos": 1,
+        "texto": "causa −25% de dano"
+       },
+       {
+        "nome": "firme",
+        "id": "firme",
+        "turnos": 1,
+        "texto": "acabou de se soltar: não pode ser atordoado nem congelado agora"
+       }
+      ]
+     },
+     {
+      "nome": "Caído B",
+      "efeitos": [
+       {
+        "nome": "sangrando",
+        "id": "sangramento",
+        "turnos": 2,
+        "por_turno": 10,
+        "texto": ""
+       }
+      ]
+     },
+     {
+      "nome": "Caído C",
+      "efeitos": [
+       {
+        "nome": "sangrando",
+        "id": "sangramento",
+        "turnos": 2,
+        "por_turno": 10,
+        "texto": ""
+       }
+      ]
+     },
+     {
+      "nome": "Caído D",
+      "efeitos": [
+       {
+        "nome": "sangrando",
+        "id": "sangramento",
+        "turnos": 2,
+        "por_turno": 10,
+        "texto": ""
+       }
+      ]
+     },
+     {
+      "nome": "Xamã caído",
+      "efeitos": [
+       {
+        "nome": "sangrando",
+        "id": "sangramento",
+        "turnos": 2,
+        "por_turno": 10,
+        "texto": ""
+       }
+      ]
+     }
+    ]
+   },
+   "linhas": [
+    4,
+    10
+   ]
+  },
+  "sombra": {
+   "spec": "sombra",
+   "bando": "caidos e xamã",
+   "seed": 1007,
+   "par": [
+    "morel",
+    "yara"
+   ],
+   "cartas": [
+    3,
+    6
+   ],
+   "com_efeitos": [
+    1,
+    2
+   ],
+   "icones_numa_carta": 1,
+   "momento": {
+    "turno": 2,
+    "heroi": {
+     "nome": "Arena",
+     "efeitos": []
+    },
+    "aliados": [
+     {
+      "nome": "Morel",
+      "efeitos": [
+       {
+        "nome": "enfraquecido",
+        "id": "enfraquecido",
+        "turnos": 2,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     },
+     {
+      "nome": "Yara",
+      "efeitos": []
+     }
+    ],
+    "inimigos": [
+     {
+      "nome": "Caído A",
+      "efeitos": [
+       {
+        "nome": "amaldiçoado por Yara",
+        "id": "enfraquecido",
+        "turnos": 1,
+        "texto": "causa −25% de dano"
+       }
+      ]
+     },
+     {
+      "nome": "Caído B",
+      "efeitos": []
+     },
+     {
+      "nome": "Caído C",
+      "efeitos": []
+     },
+     {
+      "nome": "Caído D",
+      "efeitos": [
+       {
+        "nome": "firme",
+        "id": "firme",
+        "turnos": 1,
+        "texto": "acabou de se soltar: não pode ser atordoado nem congelado agora"
+       }
+      ]
+     },
+     {
+      "nome": "Caído E",
+      "efeitos": []
+     },
+     {
+      "nome": "Xamã caído",
+      "efeitos": []
+     }
+    ]
+   },
+   "linhas": [
+    4,
+    8
+   ]
+  }
+ }
+}

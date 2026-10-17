@@ -1,5 +1,10 @@
 # A composição compacta das lutas cheias (protótipo, em avaliação)
 
+> **Rodada 2** em `rodada2/LEIA-ME.md`: a B aprovada como direção, o custo numa linha própria, o registro
+> investigado no motor (`efeitos_reais.py`). Correções a esta rodada: a luta "cinco" (5 lobos) não acontece no jogo
+> (uma matilha vai a 4); o necromante chega a 7 aliados; o caso "simulado" de efeitos é o que o motor produz; e a B
+> daqui deixava o seletor na tela durante a mira.
+
 Pedido do Jean: nas lutas cheias em 1280×720, a arena, o seletor e a descrição juntos, com todas as habilidades da
 classe à vista sem rolar a lista e a descrição legível, sem perder o que a 1.111.0 aprovou (as cartas, os nomes, os
 números, os retratos, os recursos, os estados, as faixas). Sem carrossel, sem passo a mais para escolher o alvo; abrir

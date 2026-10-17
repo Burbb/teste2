@@ -1,0 +1,4 @@
+/* R (protótipo, rodada 2): o registro na coluna do mundo. A mesma página de leitura (fundo, letra, cores do
+   registro); só o lugar muda. Um fio de latão no alto separa do cabeçalho do lugar, que continua à vista. */
+:root body.registro-no-mundo #cena { box-shadow: 0 -1px 0 rgba(176, 138, 69, 0.45), 0 0 0 1px #000; border-image: none; border: 0; }
+:root body.registro-no-mundo #cena #pagina { padding-left: 10px; padding-right: 8px; }

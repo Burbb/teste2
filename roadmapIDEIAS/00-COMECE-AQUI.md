@@ -3340,3 +3340,18 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Recomendado:** B. **Custos:** cobre a ficha enquanto aberto; nomes em duas ou três linhas na coluna estreita.
   **Limite:** o registro curto com muitos efeitos em 1280×720 (a arena cresce) fica para outra entrega.
 - **Próximo:** Jean avaliar a 1.113.1 jogando e decidir a composição; nada integrado; nenhum outro lote nem a 1B.
+
+### 17/10/2026 (data do computador local) — Protótipo: composição compacta, rodada 2 (em avaliação)
+
+- **Pedido de Jean:** a B aprovada como direção; antes de integrar, o custo numa linha própria na coluna da ficha e a
+  investigação do registro sem espaço. Só protótipo (`ferramentas/prototipos/hud/compacta/rodada2/`).
+- **Custo embaixo do nome (b2): escolhido.** Nenhum nome em três linhas, custos alinhados, mesma letra, o Voltar no
+  título, a descrição igual ou maior. Corrigido o seletor que ficava na tela durante a mira (rodada 1). Conferidos a
+  ficha inerte, o Tab, o Esc, o clique fora, o redimensionar (examinada, foco e cartas no lugar) e o movimento reduzido.
+- **Registro:** o robô (`compacta/efeitos_reais.py`, 1.200 lutas) mostra que o bando de caídos com efeito em todas as
+  cartas é comum; com um momento real, sobram 19 a 51 px em 1280×720. Proposta: nessas lutas, o registro na coluna do
+  mundo, decidido no começo (~13 linhas); cobre o minimapa, a missão e os caminhos durante a luta.
+- **Achado de regra (não mudado):** o necromante chega a 7 aliados (o Senhor dos Mortos dispara de novo depois de o
+  xamã reviver um caído).
+- **Próximo:** Jean avaliar a b2 e o registro na coluna do mundo; integrar juntos se aprovados. Nenhuma outra etapa
+  começou (nem a 1B, nem lote de arte).
