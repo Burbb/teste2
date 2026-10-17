@@ -6,12 +6,16 @@ Grava <pasta>/<tamanho>/<camada>.txt ("x,y,RRGGBB;...", coordenadas do documento
 dofile do pintar.lua) e <pasta>/<tamanho>/previa.png (o
 composto, só para conferir a leitura do Aseprite). As camadas, de baixo para cima, estão em CAMADAS.
 
-- 32: o desenho aprovado (../varinha-32.png), só repartido em camadas pela família da cor e pela posição; nenhum pixel
-  muda.
-- 64: o aprovado (../varinha-64.png) com u <= 24 intacto (pomo, empunhadura, anel e haste; o contorno até u 22); a taça
-  e a pedra refeitas por regra, e o contorno da ponta recalculado. A pedra deixou de ser a ponta afilada (lia como
+- 32: o desenho aprovado (../varinha-32.png), repartido em camadas pela família da cor e pela posição; só a haste muda
+  (HASTE32: o perfil uniforme dos quatro tamanhos).
+- 64: o aprovado (../varinha-64.png) com o pomo, a empunhadura e o anel intactos (u <= -8); a haste, a taça e a pedra
+  por regra, e o contorno recalculado do anel para cima. A pedra deixou de ser a ponta afilada (lia como
   chama) e virou uma pedra lapidada quadrada (pedra_quadrada), assentada na taça.
 - 40 e 48: desenhados na própria grade, com as medidas de cada tamanho em MEDIDAS.
+
+O perfil da haste é o mesmo nos quatro tamanhos (a direção do 40): a borda da sombra é uma linha reta do anel à taça;
+a haste começa na largura do anel e afina num degrau só, do lado aceso, a cerca de 53% do comprimento (32: 3→2,
+40: 3→2, 48: 4→3, 64: 5→4), e entra na taça sem degrau de lado.
 
 A varinha corre na diagonal: u = x - y cresce para a ponta (em cima à direita), s = x + y cresce de través para o lado
 da sombra (embaixo à direita). Um pixel existe quando u e s têm a mesma paridade. A luz é a da família: de cima e da
@@ -181,6 +185,8 @@ def perfil(*trechos):
 
 MEDIDAS = {
     64: dict(
+        haste=perfil((-7, 9, 61, 65), (10, 24, 62, 65)),
+        tons_haste={5: [5, 4, 3, 2, 1], 4: [5, 4, 3, 1]}, brilho=(-4, 6), veio=(-2, 9, 18),
         taca=perfil((25, 26, 62, 65), (27, 29, 61, 66), (30, 31, 60, 67)), dobra=27,
         tons_taca=[4, 4, 3, 2, 1, 1],
         quadrado=(47, 11, 6), pedra_de=32, sem={(0, 0), (5, 5), (5, 0)}, tons_faces=(5, 6, 3, 1),
@@ -192,9 +198,9 @@ MEDIDAS = {
         pomo=perfil((-32, -32, 46, 49), (-31, -28, 45, 50), (-27, -26, 46, 49)), pescoco=2,
         pega=perfil((-25, -11, 46, 49)), tons_pega=[4, 3, 2, 1], costuras=(-21, -16),
         anel=perfil((-10, -8, 46, 49)), tons_anel=[6, 5, 3, 2],
-        haste=perfil((-7, 0, 46, 49), (1, 15, 46, 48)),
+        haste=perfil((-7, 4, 46, 49), (5, 15, 47, 49)),
         tons_haste={4: [5, 4, 3, 1], 3: [4, 3, 1]}, brilho=(-5, 3), veio=(-2, 7),
-        taca=perfil((16, 17, 46, 48), (18, 19, 45, 49), (20, 21, 45, 50)), dobra=18, tons_taca=[4, 4, 3, 2, 1],
+        taca=perfil((16, 17, 47, 49), (18, 19, 45, 49), (20, 21, 45, 50)), dobra=18, tons_taca=[4, 4, 3, 2, 1],
         quadrado=(34, 9, 5), pedra_de=22, sem={(0, 0), (4, 4), (4, 0)}, tons_faces=(5, 6, 3, 1),
         aresta_luz=5, aresta_sombra=2, aresta_eixo=(4, 3), centro=4,
         toques={(35, 10): 8, (36, 10): 7, (37, 12): 4},
@@ -215,16 +221,32 @@ MEDIDAS = {
 }
 
 
+# a haste do 32 na metade de baixo (u -1 a 5) com a largura do anel: a borda acesa (s 30) ganha os pixels que faltavam,
+# na cor clara da madeira, e o meio (s 31) desce um tom para a luz ficar na borda
+HASTE32 = {(0, 30): W[5], (2, 30): W[5], (4, 30): W[5], (1, 31): W[4], (3, 31): W[4]}
+
+
 def desenhar(n):
     if n == 32:
         _, px = ler_png("varinha-32.png")
-        return repartir(px, pega_de=-13, haste_de=0)
+        camadas = repartir(px, pega_de=-13, haste_de=0)
+        # a haste: começa na largura do anel (3) e afina num degrau só, do lado aceso, como no 40
+        for (u, s), cor in HASTE32.items():
+            camadas["haste"][((s + u) // 2, (s - u) // 2)] = cor
+        novos = {((s + u) // 2, (s - u) // 2) for u, s in HASTE32}
+        cheio = set().union(*(v.keys() for c, v in camadas.items() if c != "contorno"))
+        for p in novos: camadas["contorno"].pop(p, None)
+        camadas["contorno"].update({p: CONTORNO for p in contornar(novos, n) if p not in cheio})
+        return camadas
     m = MEDIDAS[n]
     if n == 64:
+        # do aprovado ficam o pomo, a empunhadura, o anel e o contorno deles (u <= -8); a haste sai da regra
         _, px = ler_png("varinha-64.png")
         velho = repartir(px, pega_de=-28, haste_de=-7)
-        camadas = {c: {p: k for p, k in v.items() if p[0] - p[1] <= 24} for c, v in velho.items() if c != "contorno"}
-        contorno_fixo = {p: k for p, k in velho["contorno"].items() if p[0] - p[1] <= 22}
+        camadas = {c: {p: k for p, k in v.items() if p[0] - p[1] <= -8}
+                   for c, v in velho.items() if c not in ("contorno", "haste")}
+        camadas["haste"] = haste(m)
+        contorno_fixo = {p: k for p, k in velho["contorno"].items() if p[0] - p[1] <= -9}
     else:
         camadas = {"pomo": pomo(m), "empunhadura": empunhadura(m), "anel": anel(m), "haste": haste(m)}
         contorno_fixo = {}
@@ -235,7 +257,7 @@ def desenhar(n):
             for d in CAMADAS[:CAMADAS.index(c)]:
                 camadas.get(d, {}).pop(p, None)
     cheio = set().union(*(v.keys() for v in camadas.values()))
-    novo = {p for p in contornar(cheio, n) if n != 64 or p[0] - p[1] >= 23}
+    novo = {p for p in contornar(cheio, n) if n != 64 or p[0] - p[1] >= -8}
     camadas["contorno"] = {**contorno_fixo, **{p: CONTORNO for p in novo}}
     return camadas
 

@@ -2953,3 +2953,18 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   aprovado; em tamanho real as duas leem como "ponta âmbar". A de 4×4 do 40 é quase só um bloco com reflexo.
 - **Continua como está no jogo:** a varinha com o sprite 16×16; `icones.js`, regras e versão não mudaram. Próximo:
   a avaliação dos quatro tamanhos pelo Jean; integração só depois dela.
+
+### 16/10/2026 (data do computador local) — Varinha: o mesmo perfil de haste nos quatro tamanhos (protótipo, sem versão)
+
+- **Feedback de Jean:** gostou da varinha; pediu a haste uniforme nos quatro tamanhos, na direção do 40 (reta, com
+  afunilamento suave), sem barrigas nem mudanças de lado no trecho avermelhado, podendo ajustar o 32 aprovado;
+  conferir a silhueta numa cor só e depois o desenho; preservar materiais, paleta, enquadramento e o resto.
+- **Feito:** uma regra só (`varinha_r2.py`): a borda da sombra da haste reta do anel à taça, a haste começando na
+  largura do anel e afinando num degrau só, do lado aceso, a ~53% do comprimento (32 3→2, 40 3→2, 48 4→3, 64 5→4),
+  sem degrau de lado na entrada da taça. Mudaram: no 32, 8 pixels da haste e do contorno; no 48, a haste e 4 pixels
+  do gargalo da taça; no 64, a haste (a barriga perto do anel e o zigue-zague do eixo saíram). O 40 não mudou.
+  Pintado no Aseprite pelo `pintar.lua`, nos mesmos arquivos de `varinha-aseprite/rodada2/`.
+- **Conferido:** a silhueta numa cor só e o desenho completo, antes e depois (`rodada2/capturas/haste-*.png`); os
+  `.aseprite` reabertos (8 camadas, composto igual ao PNG e à prévia); @2x refeitos; fotos da rodada 2 refeitas em
+  1500×950 e 1280×720 (ficha e mercado 32, Inventário 40, saque 64 e 48, voo), sem erro no console.
+- **Continua como está no jogo:** a varinha com o sprite 16×16. Próximo: a avaliação do Jean; integração só depois.

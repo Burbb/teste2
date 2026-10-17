@@ -179,9 +179,10 @@ pelo `pintar.lua`, com o documento e as camadas criados pelo `auxiliares/montar.
 camadas foram criadas pelas ferramentas `add_layer`/`rename_layer` do conector). Camadas, de baixo para cima: `pomo`,
 `empunhadura`, `anel`, `haste`, `taca`, `pedra`, `garras`, `contorno`.
 
-- **32**: o aprovado, intacto, só repartido nas camadas. O composto é idêntico pixel a pixel a `varinha-32.png` (o PNG
-  difere nos bytes só pela codificação). A camada `garras` fica vazia.
-- **64**: da haste para baixo, intacto (conferido: só 66 pixels mudaram, todos da taça para cima, u ≥ 25). A pedra da
+- **32**: o aprovado, só repartido nas camadas (depois, só a haste mudou: ver "Ajuste" abaixo). A camada `garras`
+  fica vazia.
+- **64**: da haste para baixo, intacto nesta primeira entrega (só 66 pixels mudaram, todos da taça para cima, u ≥ 25;
+  depois, a haste foi uniformizada: ver "Ajuste" abaixo). A pedra da
   primeira rodada (uma ponta afilada, que lia como chama) virou uma pedra lapidada quadrada na grade, de 6×6 com cantos
   cortados. Na diagonal da varinha ela fica como um losango baixo, com o canto de baixo afundado na taça e quatro faces
   planas divididas pelas diagonais (em cima e à esquerda acesas, à direita média, embaixo escura; as divisórias a 45°
@@ -226,3 +227,26 @@ rodada 2: ficha, Vender, dica, Inventário, cartão do saque, voo e as telas int
   como no 32 aprovado.
 - **O fluxo:** o conector novo resolve as camadas, que eram o maior limite da primeira rodada. O desenho continua
   vindo de listas calculadas fora, e o `put_pixels` só serve com a ressalva acima (o `pintar.lua` o substitui).
+
+## Ajuste: o mesmo perfil de haste nos quatro tamanhos
+
+Pedido do Jean: a haste reta, com afunilamento suave, na direção do 40, sem barrigas nem mudanças de lado no trecho
+avermelhado; o 32 aprovado pode mudar para isso; materiais, paleta, enquadramento e o resto ficam.
+
+- **O que estava errado** (o perfil de través de cada passo ao longo da varinha): cada tamanho afinava de um jeito. O 40
+  mantinha reta a borda da sombra e afinava uma vez pelo lado aceso; o 48 mantinha reta a borda acesa; o 64 começava
+  com 5 logo depois do anel (a barriga) e afinava para 4 pelo lado aceso e para 3 pela sombra, e o eixo ia e voltava;
+  o 32 afinava só no anel, com um entalhe logo depois dele.
+- **A regra agora** (`varinha_r2.py`, no cabeçalho): a borda da sombra da haste é uma linha reta do anel até a taça;
+  a haste começa na largura do anel e afina num degrau só, do lado aceso, a cerca de 53% do comprimento (onde o 40
+  afina); entra na taça sem degrau de lado. Espessuras: 32 3→2, 40 3→2, 48 4→3, 64 5→4 (o fim fica perto de 1/16 do
+  tamanho nos quatro).
+- **Mudou:** no 32, 8 pixels (3 de madeira clara na borda acesa da metade de baixo, 2 do meio um tom abaixo para a luz
+  ficar na borda, e o contorno ao lado; `HASTE32`); no 48, a haste e o gargalo da taça (4 pixels, uma unidade para o
+  lado da sombra, para a haste entrar reta); no 64, a haste sai da regra (antes vinha do PNG da primeira rodada) e o
+  contorno do anel para cima é recalculado. O 40 não mudou. Pomo, empunhadura, anel, pedra, garras e paleta iguais.
+- **Conferido:** primeiro a silhueta numa cor só (`capturas/haste-silhueta.png`: em cima antes, embaixo depois),
+  depois o desenho completo (`capturas/haste-cor.png`) e de perto (`capturas/haste-zoom.png`: o 32 aprovado e o novo,
+  e as emendas haste–taça do 48 e do 64). Pintado no Aseprite pelo `pintar.lua`; os `.aseprite` reabertos com as 8
+  camadas e o composto igual ao PNG salvo e à prévia; @2x refeitos; fotos da rodada 2 refeitas nas duas janelas
+  (as do jogo atual e da rodada 1 são as de antes), sem erro no console; pranchas remontadas.
