@@ -2456,3 +2456,97 @@ desenhado com o 32 ampliado 2×) estão em `couro-aseprite/LEIA-ME.md`, com as f
 `couro-aseprite/capturas/` e `couro-aseprite/rodada2/capturas/`. Escolhidos: o 32, o 40 e o 48 da `rodada2/` (commit
 `9d49726`) e, como 64, o 32 ampliado 2×; as fontes estão em `ferramentas/arte/aseprite/gibao/` e `bota/`.
 
+
+## Os comandos da luta na linguagem do seletor (protótipo, pendente de avaliação, sem versão)
+
+**O pedido de Jean (17/10/2026):** aproximar Atacar, Habilidades, Itens e Fugir da linguagem do seletor D refinado
+(referência de tratamento: Clair Obscur, com inscrições, pinceladas, tipografia expressiva, contraste de seleção e
+movimento curto; referência de implementação: o seletor do jogo, em carvão, marfim e latão discreto). Preservar a
+disposição compacta junto do herói, os ícones atuais, os atalhos, o alternar dos menus e as proteções contra execução
+duplicada. Numa variação separada, um acabamento mais contido das cartas, sobretudo a moldura dupla dourada do herói.
+E uma amostra fora da luta: só as escolhas de um lugar selvagem (Explorar, Acampar, Viajar). Tudo só no protótipo.
+
+**Os arquivos** (o jogo não carrega nada daqui):
+- `comandos/comandos.css`: os comandos da roda (versões "comandos" e "cartas");
+- `comandos/cartas.css`: o acabamento contido das cartas (só a versão "cartas");
+- `comandos/exploracao.css`: a amostra da exploração;
+- `comandos/comandos.mjs`: a ponte, que lê o bloco das pontas de pincel de `css/18-seletor-habilidades.css` e o declara
+  também para `#roda` e `#prompt` (nada é copiado: as pontas são as do seletor), e a única troca no `escolhas.js` da
+  página, que marca a lista de um lugar selvagem com `.amostra-faixas` (nenhuma outra tela recebe o estilo);
+- `fotografar_comandos.mjs` e `comparar_comandos.py`: as fotos e as medidas em `capturas-comandos/` (com
+  `relatorio.json`) e as comparações em `capturas-comandos/comparacoes/`. No repositório ficam só as comparações,
+  algumas telas inteiras (`telas/`) e o relatório: as 560 fotos soltas (136 MB) saem de novo pelo roteiro.
+Nenhum recurso gráfico novo: o grão, as pontas e o meio das faixas são os do seletor, desenhados em código.
+
+**Os comandos:**
+- a disposição é a do jogo: o arco ")" à direita da carta do herói (`arcoDeBotoes`), a mesma ordem, as mesmas teclas,
+  a área de clique sendo o botão inteiro; a faixa começa logo depois da carta, o que mantém o comando ligado ao herói;
+- cada comando é uma faixa curta de pincel (o `::before` do botão), recortada pelas pontas do seletor e inclinada 2°;
+  o desgaste fica nas pontas; tecla, ícone e nome ficam retos e formam uma peça só: a tecla é o paralelogramo do
+  seletor, metade para fora da ponta esquerda; o ícone fica solto sobre a faixa (sem o nicho preto); o nome em marfim;
+- normal: o carvão do seletor um pouco translúcido (80%), para ficar discreto sobre o cenário;
+- examinado (mouse ou foco do teclado): faixa marfim, nome escuro, tecla em latão, como no seletor;
+- pressionado: afunda 2 px e escurece;
+- foco do teclado: além do marfim, o fio de latão embaixo da faixa e o anel na tecla;
+- menu aberto (Habilidades ou Itens): a faixa de latão, a tecla de carvão com o número aceso e o nome escuro; o mouse
+  sobre ele só clareia o latão (aberto continua sendo outro estado). Foco e aberto juntos: a faixa de latão com o fio e
+  o anel do foco em marfim;
+- entrada: 10 px em 140 ms, na ordem que o jogo já dá; com movimento reduzido, sem deslocamento nem afundar (o jogo de
+  hoje, com movimento reduzido, ainda faz a roda surgir da carta: a proposta corrige isso só para os comandos);
+- não há comando indisponível no jogo, e a proposta não inventa esse estado.
+
+**As cartas (variação):** a moldura dupla dourada do herói na vez dele (aresta de latão, fio preto e anel claro por
+fora) vira uma aresta só de latão, com a barra em cima e uma sombra curta; a vez de outro perde o anel que piscava por
+fora e passa a pulsar a própria barra de cima; as arestas de todas ficam um tom mais perto da face, sem a sombra larga
+embaixo. Ficam iguais: o formato, os retratos, nomes, números e barras, a marca do lado (latão, ferro-verde,
+ferrugem), a marca ▸, o alvo (tracejado; cheio com a seta ▼), a proteção (o anel azul), o chefe, a carta caída.
+
+**A amostra da exploração:** cada opção é uma faixa de pincel na largura da coluna (a área de clique é o botão
+inteiro, como hoje), com as pontas de largura fixa que acompanham a altura do texto e inclinação de 0,3°; a tecla é o
+paralelogramo do seletor; o nome da opção em Alegreya 600 (a mesma família, um degrau mais firme, igual em todos os
+estados); os estados do seletor; a opção do contrato e a da missão levam o traço à esquerda dentro da faixa, no lugar
+da barra de hoje; os riscos (tocha, noite) continuam etiquetas escuras também sobre a faixa clara; a indisponível do
+jogo fica cinza riscada.
+As opções da amostra têm 46 px de altura mínima (as de hoje, 41): a primeira tentativa, com 52, empurrava a última
+opção para trás da doca mais cedo em 1280×720.
+
+**A opção longa:** nenhum texto real dessa tela quebra de linha nas janelas conferidas, nem a 125% (o mais longo é
+"Enfrentar Sarric, o Profeta das Cinzas (guardião)", no covil). O caso real de duas linhas é a ação da missão na
+Capela à noite (o nome e, embaixo, os riscos da tocha e da noite): a faixa acompanha a altura. Para ver a quebra de
+texto, o lugar `esforco` alonga a primeira opção do covil só na página da foto (um **teste de esforço com texto que o
+jogo não tem**): a faixa fica com a altura das duas linhas, a fonte não diminui, nenhuma palavra é cortada e a área
+de clique continua sendo a opção inteira. A fonte pixel não foi conferida: vai sair do jogo.
+
+**Conferido** (`capturas-comandos/relatorio.json`; um jogo novo com a mesma semente por foto, então as versões têm os
+mesmos dados; sem erro no console):
+- lutas: o Guerreiro de dia no Vau (claro), o Mago à noite no Charco (escuro), ambos com Morel e Odette contra 3 lobos,
+  e o Arqueiro à tarde no Bosque com Morel contra 2; depois de uma rodada de Atacar; em 1500×950, 1280×720 e
+  1920×1080; o jogo de hoje, os comandos novos com as cartas de hoje e com as cartas contidas (27 combinações);
+- em todas: nenhum comando cobre carta nem sai da arena, nenhum nome cortado; abrir Habilidades, alternar para Itens,
+  fechar, escolher uma habilidade de um alvo (a mira) e voltar não mexem nas cartas nem em nenhuma rolagem; o Tab
+  chega a Atacar com foco visível; foco e aberto juntos aparecem distintos; a escolha leva à mira e o Voltar devolve a
+  roda; o número de dano e o efeito do golpe continuam passando da moldura da arena (`golpe-*`);
+- a folga até as cartas inimigas na mesma altura: 22 px em 1280×720 (o jogo de hoje: 36), 138 em 1500×950 (152),
+  378 em 1920×1080 (392). As faixas são 11 a 14 px mais largas que o nicho e a placa de hoje;
+- comportamentos (o Guerreiro em 1500×950), iguais ao jogo nas três versões: cinco cliques depressa em Habilidades
+  deixam um seletor só; a tecla segurada abre uma vez; Habilidades ↔ Itens depressa termina com um seletor só, o de
+  Itens; o clique 20 ms depois de a roda voltar da mira é aceito (sem espera para aceitar); com movimento reduzido, os
+  comandos novos entram sem animação e não afundam (o jogo de hoje ainda anima a roda);
+- exploração: o Bosque de dia, o Charco à noite com contrato, a Capela à noite, o covil e o teste de esforço, em
+  1500×950, 1280×720, 1920×1080 e 1280×720 a 125%: nenhum texto cortado, nenhuma opção sobre outra, e cada ponto de
+  cada opção à vista responde por ela; soltar o clique fora não escolhe nada; o foco pelo Tab acende a faixa.
+
+## Avaliação curta
+
+- **Ganhos:** os comandos falam a mesma língua do seletor que abrem: a mesma faixa, a mesma tecla, o mesmo marfim no
+  examinado e o latão no aberto; tecla, ícone e nome viram uma peça só, e o nicho preto em volta do ícone sai. O
+  estado aberto ficou inconfundível (latão), e o foco do teclado tem marca própria. As cartas contidas tiram o anel
+  claro que disputava atenção com os comandos e a seleção. Na exploração, a escolha passa a ter o mesmo destaque do
+  combate, e a opção de duas linhas mantém a faixa inteira.
+- **Perdas e riscos:** à noite, as faixas translúcidas quase somem no cenário escuro (o texto continua legível, mas a
+  forma do comando se perde); na luta, as faixas são um pouco mais largas, e em 1280×720 a folga até os inimigos cai
+  de 36 para 22 px; Fugir continua cobrindo parte do rótulo "Inimigos +1 nível" da cena, como o nicho de hoje; a
+  diferença das cartas contidas é sutil em tamanho real e pode não justificar a troca sozinha; na exploração, as
+  faixas largas pesam mais que os botões de hoje, que ficavam mais calmos ao lado do texto da cena.
+
+**Pendente:** a avaliação do Jean. Nada disto vai para o jogo sem aprovação, nem vira regra de skill.

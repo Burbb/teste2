@@ -3229,3 +3229,19 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   `ferramentas/prototipos/hud/couro2-aseprite/`, com o 64 como o 32 ampliado 2×.
 - **Pendente, numa entrega separada:** os 40 e 48 derivados das fontes aprovadas e a integração no jogo, incluindo a
   compatibilidade dos itens dos saves antigos (a migração proposta no `LEIA-ME.md` da proposta). Nada entrou no jogo.
+
+### 17/10/2026 (data do computador local) — Proposta: os comandos da luta na linguagem do seletor (protótipo, sem versão)
+
+- **Pedido de Jean:** Atacar, Habilidades, Itens e Fugir na linguagem do seletor D refinado (Clair Obscur como
+  referência de tratamento), mantendo disposição, ícones, atalhos, alternar dos menus e proteções; uma variação com as
+  cartas mais contidas (a moldura dupla dourada do herói); uma amostra só nas escolhas de um lugar selvagem.
+- **Feito, só no protótipo:** `ferramentas/prototipos/hud/comandos/` (as folhas, a ponte que reaproveita as pontas do
+  seletor e a troca que marca a amostra), `fotografar_comandos.mjs` e `comparar_comandos.py`, com as fotos e as medidas
+  em `capturas-comandos/`. Registro e avaliação no `LEIA-ME.md` de `ferramentas/prototipos/hud/` e no item 1.8 do
+  plano 23.
+- **Conferido:** as três lutas (dia, noite, Arqueiro) nas três janelas e nas três versões, os comportamentos (cliques
+  depressa, tecla segurada, alternar, clique logo na volta, movimento reduzido) e cinco telas de exploração em quatro
+  janelas; nada cobre carta, nada se mexe ao abrir ou fechar, nada cortado, sem erro no console. Nenhum texto real da
+  exploração quebra de linha: a quebra foi vista num teste de esforço declarado (texto alongado só na foto). A fonte
+  pixel ficou de fora (vai sair do jogo).
+- **Continua no jogo:** os comandos, as cartas e as escolhas de hoje. Próximo: a avaliação do Jean.

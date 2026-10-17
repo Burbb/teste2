@@ -1,0 +1,88 @@
+/* Os comandos da luta (Atacar, Habilidades, Itens, Fugir e, quando o motor oferece, Analisar) na linguagem do seletor D
+   refinado (protótipo; a página da foto carrega esta folha por cima do jogo). A disposição é a do jogo: o arco ")" colado
+   à direita da carta do herói (arcoDeBotoes, em escolhas.js), a mesma ordem, as mesmas teclas e a mesma área de clique
+   (o botão inteiro). Só o acabamento muda:
+   - uma faixa curta de pincel por comando, o ::before do botão: o carvão do seletor um pouco translúcido (o normal é
+     discreto sobre o cenário), o grão de pincel e o degradê de volume, recortada pelas pontas do seletor (a ponte de
+     comandos.mjs as traz) e inclinada 2°. O desgaste fica nas pontas; o texto, o número e o ícone ficam retos;
+   - a tecla, o ícone e o nome numa composição só, sobre a faixa: a tecla é o paralelogramo do seletor na ponta
+     esquerda, meio para fora dela (no vão entre a carta e a faixa: assim a faixa não fica mais larga que o nicho e a
+     placa de hoje a ponto de encostar nas cartas inimigas em 1280×720), o ícone fica solto (sem o nicho preto, só a
+     sombra de 1 px), o nome em marfim;
+   - os estados, os do seletor: examinado (mouse ou foco do teclado) marfim com texto escuro e a tecla em latão;
+     pressionado afunda 2 px e escurece; o foco do teclado tem ainda o fio de latão embaixo da faixa e o anel na tecla;
+     e o menu aberto (Habilidades ou Itens) com a
+     faixa de latão, a tecla de carvão e o nome escuro. Foco e aberto juntos: a faixa de latão com o fio e o anel do
+     foco por fora (o anel em marfim, que aparece sobre o latão);
+   - a entrada: cada faixa chega de 10 px em 140 ms, na ordem (o atraso de 35 ms que o jogo já põe); o botão vale desde o
+     primeiro quadro. Com movimento reduzido, sem deslocamento nem afundar.
+   O jogo não tem comando indisponível na roda: nada aqui inventa esse estado. */
+
+:root body #roda .roda-botao {
+  --cmd-fundo: rgba(35, 33, 37, 0.8);
+  isolation: isolate; gap: 5px; min-height: 42px; padding: 3px 15px 3px 21px; color: var(--sh-texto);
+  animation: cmd-entra 140ms cubic-bezier(0.2, 0.8, 0.3, 1) backwards; }
+@keyframes cmd-entra { from { opacity: 0; translate: -10px -50%; } }
+/* a faixa: o desenho do seletor, um pouco translúcido no normal; as pontas escaladas pela altura, como lá */
+:root body #roda .roda-botao::before { content: ""; position: absolute; z-index: -1; inset: 3px 0 3px 4px; rotate: -2deg;
+  background-color: var(--cmd-fundo);
+  background-image: var(--sh-grao), linear-gradient(180deg, rgba(255, 255, 255, 0.06), transparent 38%, rgba(0, 0, 0, 0.28));
+  background-size: 640px 64px, 100% 100%;
+  -webkit-mask: var(--ponta-e) 0 0 / auto 100% no-repeat, var(--sh-meio) 24px 0 / calc(100% - 56px) 100% no-repeat, var(--ponta-d) 100% 0 / auto 100% no-repeat;
+  mask: var(--ponta-e) 0 0 / auto 100% no-repeat, var(--sh-meio) 24px 0 / calc(100% - 56px) 100% no-repeat, var(--ponta-d) 100% 0 / auto 100% no-repeat; }
+/* cada comando tem sempre o mesmo par de pontas (pelo lugar dele, nunca ao acaso) */
+:root body #roda .roda-botao[data-slot="atacar"] { --ponta-e: var(--sh-ponta-e0); --ponta-d: var(--sh-ponta-d1); }
+:root body #roda .roda-botao[data-slot="habilidades"] { --ponta-e: var(--sh-ponta-e1); --ponta-d: var(--sh-ponta-d2); }
+:root body #roda .roda-botao[data-slot="itens"] { --ponta-e: var(--sh-ponta-e2); --ponta-d: var(--sh-ponta-d0); }
+:root body #roda .roda-botao:is([data-slot="fugir"], [data-slot="analisar"]) { --ponta-e: var(--sh-ponta-e0); --ponta-d: var(--sh-ponta-d2); }
+
+/* o ícone solto sobre a faixa: sem o nicho; a tecla sai do canto do nicho e vai para a ponta da faixa */
+:root body #roda .roda-botao .rb-icone { position: static; width: 34px; height: 34px; border: 0; border-radius: 0; background: none;
+  box-shadow: none; outline: none; transform: none; transition: none; filter: none; }
+/* a sombra de 1 px vai na imagem: um filter no .rb-icone o faria de bloco de posição da tecla (ela cairia sobre o ícone) */
+:root body #roda .roda-botao .rb-icone img.sprite { filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.75)); }
+:root body #roda .roda-botao .rb-nome { margin: 0; padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; transform: none;
+  font-family: var(--texto); font-weight: 700; font-size: 15px; line-height: 1.1; letter-spacing: 0; color: var(--sh-texto);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.8); white-space: nowrap; transition: none; }
+/* a tecla: o paralelogramo de carvão do seletor, menor */
+:root body #roda .roda-botao .tecla { position: absolute; z-index: 1; top: 50%; left: -2px; translate: 0 -50%; display: grid; place-items: center;
+  width: 20px; min-width: 0; height: 24px; padding: 0; font-family: var(--num); font-weight: 700; font-size: 14px; line-height: 1;
+  color: var(--sh-texto); background: none; border: 0; border-radius: 0; box-shadow: none; }
+:root body #roda .roda-botao .tecla::before { content: ""; position: absolute; inset: 0; z-index: -1;
+  background: #0b0b0d; border: 1px solid #5c554a; transform: skewX(-10deg) rotate(-2deg); }
+
+/* examinado (mouse ou foco do teclado): a faixa marfim, o nome escuro, a tecla em latão (como no seletor) */
+:root body #roda .roda-botao:is(:hover, :focus-visible)::before { background-color: var(--sh-marfim);
+  background-image: var(--sh-grao-claro), linear-gradient(180deg, rgba(255, 255, 255, 0.35), transparent 40%, rgba(80, 60, 30, 0.18)); }
+:root body #roda .roda-botao:is(:hover, :focus-visible) .rb-nome { color: var(--sh-tinta); text-shadow: none; }
+:root body #roda .roda-botao:is(:hover, :focus-visible) .rb-icone img.sprite { filter: drop-shadow(0 1px 0 rgba(60, 40, 10, 0.45)); }
+:root body #roda .roda-botao:is(:hover, :focus-visible) .tecla { color: #1a140c; }
+:root body #roda .roda-botao:is(:hover, :focus-visible) .tecla::before { background: var(--sh-latao); border-color: #5e4620; }
+/* pressionado: afunda 2 px e escurece (o translate do jogo centra o botão: o afundar soma a ele) */
+:root body #roda .roda-botao:active { translate: 2px calc(-50% + 2px); }
+:root body #roda .roda-botao:active::before { background-color: var(--sh-marfim-fundo);
+  background-image: var(--sh-grao-claro), linear-gradient(180deg, rgba(0, 0, 0, 0.16), transparent 45%); }
+:root body #roda .roda-botao:active .rb-nome { color: var(--sh-tinta); text-shadow: none; }
+
+/* o menu aberto (Habilidades ou Itens): a faixa de latão, a tecla de carvão com o número aceso, o nome escuro; o mouse
+   sobre ele clareia o latão (não vira marfim: aberto continua sendo outro estado) */
+:root body #roda .roda-botao.ativo::before { background-color: var(--sh-latao);
+  background-image: var(--sh-grao-claro), linear-gradient(180deg, rgba(255, 240, 200, 0.22), transparent 40%, rgba(60, 40, 10, 0.3)); }
+:root body #roda .roda-botao.ativo:is(:hover, :focus-visible)::before { background-color: var(--sh-latao-claro); }
+:root body #roda .roda-botao.ativo .rb-nome { color: #1a140c; text-shadow: none; }
+:root body #roda .roda-botao.ativo .rb-icone img.sprite { filter: drop-shadow(0 1px 0 rgba(60, 40, 10, 0.5)); }
+:root body #roda .roda-botao.ativo .tecla { color: var(--sh-latao-claro); }
+:root body #roda .roda-botao.ativo .tecla::before { background: #0b0b0d; border-color: #2a2010; }
+
+/* o foco do teclado: o fio de latão embaixo da faixa e o anel na tecla (os do seletor); no aberto, o anel em marfim */
+:root body #roda .roda-botao:focus-visible { outline: none; }
+:root body #roda .roda-botao:focus-visible::after { content: ""; position: absolute; left: 14px; right: 4px; bottom: -2px; height: 2px; rotate: -2deg;
+  background: linear-gradient(90deg, var(--sh-latao-claro), var(--sh-latao) 70%, rgba(176, 138, 69, 0)); }
+:root body #roda .roda-botao:focus-visible .tecla::before { outline: 2px solid var(--sh-latao-claro); outline-offset: 2px; }
+:root body #roda .roda-botao.ativo:focus-visible .tecla::before { outline-color: var(--sh-marfim); }
+:root body #roda .roda-botao.ativo:focus-visible::after { background: linear-gradient(90deg, var(--sh-marfim), var(--sh-latao-claro) 70%, rgba(242, 210, 122, 0)); }
+
+@media (prefers-reduced-motion: reduce) {
+  :root body #roda .roda-botao { animation: none; }
+  :root body #roda .roda-botao:active { translate: 0 -50%; }
+}

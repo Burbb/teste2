@@ -218,6 +218,22 @@ posição ainda dependem de avaliação. Uma barra apenas vazia com “45/65” 
 Entra na prioridade **1B**, junto da clareza do consumo de recurso, antes dos protótipos de avisos de 1C.
 Ainda é uma direção documentada: não houve implementação nem teste do protótipo nesta atualização.
 
+### 1.8. Protótipo: os comandos da luta na linguagem do seletor (pendente de avaliação)
+
+**Pedido de Jean (17/10/2026):** aproximar Atacar, Habilidades, Itens e Fugir do seletor D refinado (Clair Obscur como
+referência de tratamento; o seletor do jogo como referência de implementação), com uma variação de acabamento contido
+das cartas e uma amostra só nas escolhas de um lugar selvagem (Explorar, Acampar, Viajar).
+
+**Feito, só no protótipo** (`ferramentas/prototipos/hud/comandos/`, `fotografar_comandos.mjs`, `comparar_comandos.py`;
+detalhes e fotos no `LEIA-ME.md` de `ferramentas/prototipos/hud/`): os comandos como faixas curtas de pincel com as
+pontas do próprio seletor, tecla, ícone e nome numa peça só, os estados do seletor e o aberto em latão; as cartas com
+uma aresta só de latão na vez do herói; a amostra da exploração em faixas que acompanham a altura do texto. Conferido
+em 1500×950, 1280×720 e 1920×1080 (e a exploração também a 125%), de dia, à noite, com comitiva e vários inimigos.
+
+**Ainda não é decisão:** o jogo não mudou; integrar, ajustar ou descartar depende da avaliação de Jean. As perdas
+anotadas (as faixas somem à noite, a folga menor até os inimigos em 1280×720, o peso maior das faixas na exploração)
+entram nessa avaliação. Não virar regra de skill antes disso.
+
 ## 2. Telas de leitura, criação e celebrações
 
 - **Subida de nível:** preservar a boa organização das informações, redesenhando o acabamento para a linguagem atual.

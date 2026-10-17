@@ -1,0 +1,27 @@
+/* As cartas com um acabamento mais contido (protótipo, a variação separada; por cima do jogo e de comandos.css). Só as
+   bordas e o destaque de quem age mudam: o formato retangular, os retratos, os nomes, os números, as barras, os
+   estados e as áreas de clique são os do jogo. Cada distinção continua com forma, não só cor:
+     vez de alguém      a barra de latão em cima e a marca ▸ (iguais); o anel de latão que piscava por fora sai: quem
+                        pulsa agora é a própria barra (latão ↔ latão claro), dentro da carta
+     sua carta, agindo  a moldura dupla dourada (aresta de latão + fio preto + anel claro por fora) vira uma aresta só,
+                        de latão, com a barra em cima; a carta continua à frente e ampliada (o jogo); uma sombra curta
+                        por baixo a separa do cenário
+     pode ser alvo,     iguais (contorno tracejado; contorno cheio e a seta ▼): são informação de mira, não acabamento
+     alvo escolhido
+     proteção, chefe    iguais (o anel azul e o anel de sangue)
+     fora da luta       igual
+   As bordas de todas: a aresta um tom mais perto da face e o relevo sem a sombra larga embaixo (a carta assenta no
+   cenário em vez de flutuar); a marca do lado (latão, ferro-verde, ferrugem) fica. */
+
+:root body .carta {
+  --relevo-carta: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 1px 0 rgba(0, 0, 0, 0.85), 0 2px 3px rgba(0, 0, 0, 0.35);
+  border-color: #3d4047; }
+
+/* a vez de alguém: a barra pulsa dentro da carta, sem o anel por fora */
+:root body .carta.vez { border-color: #8a7038; animation: vez-contida 1.2s steps(2) infinite; }
+@keyframes vez-contida { 50% { box-shadow: var(--lado-carta), inset 0 3px 0 var(--latao-claro), var(--relevo-carta); } }
+
+/* sua carta, na sua vez: uma aresta de latão, a barra em cima e a sombra curta; sem o anel claro por fora */
+:root body .carta.foco { border-color: var(--latao); animation: none;
+  box-shadow: var(--lado-carta), inset 0 3px 0 var(--latao), inset 0 0 0 1px rgba(242, 210, 122, 0.12), 0 1px 0 #000, 0 6px 12px rgba(0, 0, 0, 0.5); }
+:root body .carta.agindo { border-color: var(--latao-claro); }
