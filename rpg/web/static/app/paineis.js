@@ -81,6 +81,7 @@ function aplicarEstado(e) {
   if (mudouMapa) { desenharMundo(e); ultimoMundo = ""; }
   if (!$("#sobre-mapa").hidden && mudouMapa) desenharMapaGrande();
   acomodarRegistro();
+  Turnos.aoEstado(e);  // a placa do turno e a iniciativa (turnos.js)
 }
 
 /* ------------------------------------------------------------------ o registro nas lutas cheias */

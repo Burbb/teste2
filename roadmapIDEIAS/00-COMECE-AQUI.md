@@ -3456,3 +3456,17 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   - vídeos em `capturas/videos/`; `abrir.mjs` para jogar.
 - **No cenário de teste:** `EMBOSCADA` e `LUTA_APOS_ESCOLHA`.
 - **Próximo:** Jean avaliar (e testar a vida bloqueada). Nada integrado; dado e atributos não começaram.
+
+### 17/10/2026 (data do computador local) — Etapa 1C: a iniciativa e os turnos no jogo (1.116.0)
+
+- **Pedido de Jean:** integrar o protótipo aprovado (`5b519f0`) e tirar o estouro de pixels do começo da luta;
+  conferir o turno com o herói atordoado.
+- **Feito:**
+  - `turnos.js` e `19-turnos.css` no jogo;
+  - `perde_turno` no catálogo de estados: o turno perdido é anunciado como tal;
+  - o estouro era a festa de nível relida sem cerimônia: o som e as partículas agora só saem quando a festa aparece.
+- **Conferido** (`ferramentas/prototipos/hud/turnos/integracao.mjs`):
+  - lutas reais em 1280×720 e 1500×950, normal e reduzido;
+  - vídeos;
+  - a suíte, o pyflakes, o gabarito (só o campo novo, investigado e atualizado) e a fumaça uma vez.
+- **Próximo:** Jean jogar. Não começaram o dado, a consulta aos atributos nem outra mudança visual.

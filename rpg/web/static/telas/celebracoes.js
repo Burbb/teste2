@@ -279,7 +279,7 @@
     if (m.tipo === "espolio") return instantaneo ? Promise.resolve() : Sensacao.espolio(caixa, d);
     if (m.tipo === "atributo") return instantaneo ? Promise.resolve() : seloAtributo(d);
     if (m.tipo === "chegada") return instantaneo ? Promise.resolve() : chegada(d);
-    let html = "";
+    let html = "", festa = null;
     if (m.tipo === "nivel") {
       const icones = { Vida: "coracao", Ataque: "espada", Defesa: "escudo", Agilidade: "folha", Poder: "chama", Mana: "pocao_azul", Vigor: "chama", Foco: "olho" };
       const ganhos = Object.entries(d.ganhos).map(([k, v], i) => `<span class="ganho" style="animation-delay:${0.75 + i * 0.12}s">${S(icones[k] || "estrela", 1)}<b class="conta" data-alvo="${v}" data-atraso="${750 + i * 120}">+0</b>${h(k)}</span>`).join("");
@@ -291,29 +291,28 @@
         <div class="lista">${ganhos}<span class="ganho ouro" style="animation-delay:${atraso + 0.08}s">${S("estrela", 1)}+1 ponto de talento</span></div>${habs}
         ${d.especializacao ? '<div class="texto-festa" style="color:var(--arcano)">Uma encruzilhada se aproxima: em breve você escolherá sua especialização.</div>' : ""}
         <button class="continuar" type="button">Continuar <span>▸</span></button></div>`;
-      App.som("subir");
-      particulas(["#f2c94c", "#fff3a0", "#ff9d4d", "#8fbf6a"], 90);
-      setTimeout(() => contarGanhos(caixa), 0);
+      festa = () => { App.som("subir"); particulas(["#f2c94c", "#fff3a0", "#ff9d4d", "#8fbf6a"], 90); setTimeout(() => contarGanhos(caixa), 0); };
     } else if (m.tipo === "sigilo") {
       const los = [0, 1, 2].map((i) => `<i class="${i < d.sigilos ? "tem" : ""}${i === d.sigilos - 1 ? " novo" : ""}"></i>`).join("");
       html = `<div class="festa m-janela"><div class="rotulo-festa">${h(d.guardiao)} caiu</div><div class="grande">Sigilo ${d.sigilos}/3</div>
         <div class="losangos">${los}</div><div class="texto-festa">Uma runa ardente se grava na sua mão.</div>
         <div class="lista"><span class="ganho ouro">${S("estrela", 1)}+1 ponto de talento</span></div>
         <button class="continuar" type="button">Continuar <span>▸</span></button></div>`;
-      App.som("fanfarra");
-      particulas(["#f2c94c", "#ff4020", "#fff3a0"], 110);
+      festa = () => { App.som("fanfarra"); particulas(["#f2c94c", "#ff4020", "#fff3a0"], 110); };
     } else if (m.tipo === "spec") {
       const habs = d.habilidades.map((x, i) => `<div class="habilidade-nova" style="animation-delay:${0.6 + i * 0.25}s"><span class="rotulo-festa">nova habilidade</span><b>${h(x.nome)}</b>${Realce.texto(x.desc)}</div>`).join("");
       html = `<div class="festa m-janela"><div class="rotulo-festa">você agora é</div><div class="grande arcano">${h(d.nome)}</div>
         <div class="texto-festa">${h(d.desc)}</div>${habs}<button class="continuar" type="button">Continuar <span>▸</span></button></div>`;
-      App.som("fanfarra");
-      particulas(["#b49cff", "#c8b0ff", "#ffffff"], 90);
+      festa = () => { App.som("fanfarra"); particulas(["#b49cff", "#c8b0ff", "#ffffff"], 90); };
     } else {
       return Promise.resolve();
     }
+    // Sem cerimônia (refazendo a página ou no texto instantâneo), a festa não aparece: nem a janela, nem o som e o estouro
+    // de partículas dela. Antes eles saíam assim mesmo, e a página refeita soltava um estouro por nível ganho de uma vez.
     if (instantaneo) return Promise.resolve();
     caixa.innerHTML = html;
     caixa.hidden = false;
+    if (festa) festa();
     return new Promise((resolver) => {
       const fechar = () => {
         caixa.hidden = true; caixa.innerHTML = "";

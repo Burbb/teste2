@@ -222,7 +222,7 @@ async function tratar(m) {
       // Luta nova: nada da anterior (a câmera lenta de um golpe final que não terminou) nem da vila fica na arena.
       Sensacao.repor(); fecharVila(); Cenas.aoCombate();
       cenaInterrompida = true; faixaCombate(m); break;
-    case "lance": if (!replay) { Orientacao.aoLance(m); await Batalha.lance(m); } break;
+    case "lance": if (!replay) { Orientacao.aoLance(m); Turnos.aoLance(m); await Batalha.lance(m); } break;
     case "fala": await fala(m); break;
     case "opiniao": await opiniao(m); break;
     case "turno": turno(m); break;

@@ -189,6 +189,19 @@ se empilham sobre o mesmo ponto da tela nem competem com dano e efeitos.
 
   Falta Jean avaliar. Dado e consulta aos atributos não começaram.
 
+**Aprovado por Jean e integrado na 1.116.0** (17/10/2026):
+- **No jogo:** `turnos.js` e `19-turnos.css` (o anúncio, a placa, o lugar medido, nada esperando, o movimento
+  reduzido), chamados por `paineis.aplicarEstado`, `pagina.turno` e a fila de lances; nada da pasta de protótipos.
+- **O turno perdido:** o catálogo de estados ganhou `perde_turno`. O anúncio diz "Turno N · Preso na teia: você perde
+  este turno", e a roda não aparece nesse turno; a contagem segue a do motor.
+- **O estouro de pixels antes da luta:** eram as partículas da festa de nível, disparadas mesmo quando a festa passava
+  sem cerimônia (a página relendo a cena, ou o texto instantâneo). O som e as partículas passaram para depois dessa
+  linha, nas festas de nível, de Sigilo e de especialização. A festa ao vivo fica igual, e nada a substitui.
+- **Conferido em lutas reais:** iniciativa, emboscada, sem vantagem, luta cheia com comitiva e servos, preso na teia;
+  1280×720 e 1500×950; normal e reduzido. Um anúncio por mensagem de turno, nada coberto, 0 partículas no carregamento
+  (antes, 720).
+- **Gabarito:** só o campo novo `perde_turno` no catálogo (as 9 partidas web); nenhuma partida, lance ou sorteio.
+
 ### 1.6. Consulta aos testes de atributos
 
 **Direção aprovada:** tornar consultáveis o bônus atual e sua composição numa seção “Testes” da ficha detalhada,

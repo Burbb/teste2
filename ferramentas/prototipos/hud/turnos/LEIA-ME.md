@@ -1,7 +1,8 @@
-# A iniciativa e a passagem dos turnos (etapa 1C, protótipo em avaliação)
+# A iniciativa e a passagem dos turnos (etapa 1C: protótipo aprovado, integrado na 1.116.0)
 
 Pedido do Jean: o jogador deve perceber quando tem a vantagem de iniciativa, enquanto ela ainda vale e quando começa
-um turno novo, com impacto e sem perder a velocidade. **Nada disto entrou no jogo.**
+um turno novo, com impacto e sem perder a velocidade. O protótipo abaixo foi aprovado e entrou no jogo na 1.116.0
+("A integração", no fim).
 
 ## O que o motor diz (a fonte de tudo)
 
@@ -88,3 +89,44 @@ Abre uma janela do Chromium de 1280×720 com a luta e o protótipo anexado à p�
 - **Dentro da arena,** no instante em que ela se acomoda (uma carta entrando), a ponta transparente da faixa pode
   encostar numa carta que ainda desliza; a medida usa o lugar final das cartas.
 - **Fora desta rodada:** o dado, a consulta aos atributos e a família visual comum com eles (plano 23, itens 1.4 e 1.6).
+
+## A integração (1.116.0)
+
+O que entrou no jogo, sem nada desta pasta:
+- `rpg/web/static/turnos.js` (o módulo `Turnos`): a lógica do protótipo, chamada pelos pontos normais em vez de
+  interceptar funções:
+  - `paineis.aplicarEstado` chama `Turnos.aoEstado`;
+  - `pagina.turno` chama `Turnos.aoTurno` (refazendo a página, só a placa: sem anúncios repetidos ao recarregar);
+  - a fila de lances (`nucleo.js`) chama `Turnos.aoLance`.
+- `rpg/web/static/css/19-turnos.css`: a folha do protótipo, fora da trava de pixel art, como as faixas.
+- **O turno que você perde** (ficou sem cobertura no protótipo): o catálogo de estados que a tela recebe ganhou
+  `perde_turno` (`estados.para_tela`, o que o motor já usa para tirar a vez). No começo de um turno em que um estado
+  seu tira a vez, o anúncio diz "Turno 2 · Preso na teia: você perde este turno". A roda de comandos não aparece
+  nesse turno (é o motor que não pergunta), então nada sugere que você pode agir. A contagem segue a do motor: o
+  turno perdido é uma volta da luta, e o seguinte é o 3.
+
+**O estouro de pixels** que aparecia logo antes da luta, nos vídeos:
+- **O que era:** as partículas da festa de nível (`telas/celebracoes.js`, `particulas`). O cenário sobe o herói de
+  nível antes da luta. Ao abrir, a página relê as mensagens da cena e passa cada festa "sem cerimônia" (a janela não
+  aparece), mas o som e as partículas eram disparados antes dessa linha. Saíam 90 partículas por nível, 720 de uma
+  vez.
+- **Onde mais acontecia no jogo:** no texto "instantâneo" e ao recarregar a página.
+- **A correção:** nas festas de nível, de Sigilo e de especialização, o som e as partículas passaram para depois da
+  linha que encerra a festa sem cerimônia, como a vitória já fazia.
+- **O que fica igual:** a festa de nível jogando, com a janela, o som e as 90 partículas. Nada a substitui.
+
+Conferido (`integracao.mjs`; 10 cenários em ~100 s, lutas reais; `capturas-integracao/`):
+
+| luta | anúncios / mensagens de turno do motor | partículas desde o carregamento | cobre |
+|---|---|---|---|
+| a sua iniciativa, 1280×720, 1500×950 e movimento reduzido (Habilidades, mira e Voltar, o ataque que a usa) | 2 / 2 ("Iniciativa!" com +25%, "Turno 2") | 0 (antes: 720) | nada |
+| a emboscada deles | "Emboscada!" + 1 / 1 | 0 | nada |
+| sem vantagem | 1 / 1 | 0 | nada |
+| luta cheia com comitiva e 3 servos, 1280×720 e 1500×950 (Meditar: a iniciativa passa; Maldição em área) | 3 / 3 | 0 | nada |
+| 3 aranhas, semente 7, normal e reduzido: preso na teia no turno 2 | 4 / 4 ("Turno 2 · Preso na teia: você perde este turno"; 0 comandos à vista) | 0 | nada |
+| a festa de nível ao vivo / refazendo a página | — | 90 / 0 | — |
+
+- **A vez clicável:** de 9 a 34 ms depois da mensagem do turno. Na luta das aranhas, ~320 ms nos turnos 3 e 4, pelas
+  animações da vez delas e do "firme" depois da teia; o anúncio não espera nada.
+- **Gravações** (`capturas-integracao/videos/`): `iniciativa-jogo-1280x720.webm`, `emboscada-jogo-1280x720.webm`,
+  `atordoado-1280x720.webm` e `iniciativa-jogo-1280x720-reduzido.webm`.

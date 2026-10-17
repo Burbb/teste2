@@ -1,0 +1,423 @@
+{
+ "relatorio": [
+  {
+   "nome": "iniciativa-jogo-1280x720",
+   "turno1": {
+    "mostra": [
+     "anúncio (abaixo da arena): Iniciativa! Turno 1 · só você age agora +25% de dano no primeiro golpe deste turno"
+    ],
+    "cobre": "nada"
+   },
+   "depois_do_anuncio": {
+    "mostra": [
+     "placa (abaixo da arena): TURNO1 Iniciativa: +25% no 1º golpe"
+    ],
+    "cobre": "nada"
+   },
+   "habilidades": {
+    "mostra": [],
+    "cobre": "nada"
+   },
+   "mira": {
+    "mostra": [
+     "placa (abaixo da arena): TURNO1 Iniciativa: +25% no 1º golpe"
+    ],
+    "cobre": "nada"
+   },
+   "golpe": {
+    "mostra": [
+     "placa (abaixo da arena): TURNO1 Iniciativa usada (+25%)"
+    ],
+    "cobre": "nada"
+   },
+   "turno2": {
+    "mostra": [
+     "placa (abaixo da arena): TURNO2 Iniciativa usada (+25%)",
+     "anúncio (abaixo da arena): Turno 2"
+    ],
+    "cobre": "nada"
+   },
+   "turno2_depois": {
+    "mostra": [
+     "placa (abaixo da arena): TURNO2"
+    ],
+    "cobre": "nada"
+   },
+   "turnos": [
+    "turno 1: a vez clicável 31 ms depois",
+    "turno 2: a vez clicável 16 ms depois"
+   ],
+   "anuncios_mostrados": [
+    "Iniciativa! Turno 1 · só você age agora +25% de dano no primeiro golpe deste turno",
+    "Turno 2"
+   ],
+   "particulas_de_festa": 0
+  },
+  {
+   "nome": "iniciativa-jogo-1500x950",
+   "turno1": {
+    "mostra": [
+     "anúncio (abaixo da arena): Iniciativa! Turno 1 · só você age agora +25% de dano no primeiro golpe deste turno"
+    ],
+    "cobre": "nada"
+   },
+   "depois_do_anuncio": {
+    "mostra": [
+     "placa (abaixo da arena): TURNO1 Iniciativa: +25% no 1º golpe"
+    ],
+    "cobre": "nada"
+   },
+   "habilidades": {
+    "mostra": [],
+    "cobre": "nada"
+   },
+   "mira": {
+    "mostra": [
+     "placa (abaixo da arena): TURNO1 Iniciativa: +25% no 1º golpe"
+    ],
+    "cobre": "nada"
+   },
+   "golpe": {
+    "mostra": [
+     "placa (abaixo da arena): TURNO1 Iniciativa usada (+25%)"
+    ],
+    "cobre": "nada"
+   },
+   "turno2": {
+    "mostra": [
+     "placa (abaixo da arena): TURNO2 Iniciativa usada (+25%)",
+     "anúncio (abaixo da arena): Turno 2"
+    ],
+    "cobre": "nada"
+   },
+   "turno2_depois": {
+    "mostra": [
+     "placa (abaixo da arena): TURNO2"
+    ],
+    "cobre": "nada"
+   },
+   "turnos": [
+    "turno 1: a vez clicável 28 ms depois",
+    "turno 2: a vez clicável 13 ms depois"
+   ],
+   "anuncios_mostrados": [
+    "Iniciativa! Turno 1 · só você age agora +25% de dano no primeiro golpe deste turno",
+    "Turno 2"
+   ],
+   "particulas_de_festa": 0
+  },
+  {
+   "nome": "iniciativa-jogo-1280x720-reduzido",
+   "turno1": {
+    "mostra": [
+     "anúncio (abaixo da arena): Iniciativa! Turno 1 · só você age agora +25% de dano no primeiro golpe deste turno"
+    ],
+    "cobre": "nada"
+   },
+   "depois_do_anuncio": {
+    "mostra": [
+     "placa (abaixo da arena): TURNO1 Iniciativa: +25% no 1º golpe"
+    ],
+    "cobre": "nada"
+   },
+   "habilidades": {
+    "mostra": [],
+    "cobre": "nada"
+   },
+   "mira": {
+    "mostra": [
+     "placa (abaixo da arena): TURNO1 Iniciativa: +25% no 1º golpe"
+    ],
+    "cobre": "nada"
+   },
+   "golpe": {
+    "mostra": [
+     "placa (abaixo da arena): TURNO1 Iniciativa usada (+25%)"
+    ],
+    "cobre": "nada"
+   },
+   "turno2": {
+    "mostra": [
+     "placa (abaixo da arena): TURNO2 Iniciativa usada (+25%)",
+     "anúncio (abaixo da arena): Turno 2"
+    ],
+    "cobre": "nada"
+   },
+   "turno2_depois": {
+    "mostra": [
+     "placa (abaixo da arena): TURNO2 Iniciativa usada (+25%)"
+    ],
+    "cobre": "nada"
+   },
+   "turnos": [
+    "turno 1: a vez clicável 32 ms depois",
+    "turno 2: a vez clicável 14 ms depois"
+   ],
+   "anuncios_mostrados": [
+    "Iniciativa! Turno 1 · só você age agora +25% de dano no primeiro golpe deste turno",
+    "Turno 2"
+   ],
+   "particulas_de_festa": 0
+  },
+  {
+   "nome": "emboscada-jogo-1280x720",
+   "emboscada": {
+    "mostra": [
+     "anúncio (abaixo da arena): Emboscada! Lobo ataca antes de você"
+    ],
+    "cobre": "nada"
+   },
+   "turno1": {
+    "mostra": [
+     "anúncio (abaixo da arena): Turno 1"
+    ],
+    "cobre": "nada"
+   },
+   "depois": {
+    "mostra": [
+     "placa (abaixo da arena): TURNO1"
+    ],
+    "cobre": "nada"
+   },
+   "turnos": [
+    "turno 1: a vez clicável 19 ms depois"
+   ],
+   "anuncios_mostrados": [
+    "Emboscada! Lobo ataca antes de você",
+    "Turno 1"
+   ],
+   "particulas_de_festa": 0
+  },
+  {
+   "nome": "sem-vantagem-1280x720",
+   "turno1": {
+    "mostra": [
+     "anúncio (abaixo da arena): Turno 1"
+    ],
+    "cobre": "nada"
+   },
+   "depois": {
+    "mostra": [
+     "placa (abaixo da arena): TURNO1"
+    ],
+    "cobre": "nada"
+   },
+   "turnos": [
+    "turno 1: a vez clicável 17 ms depois"
+   ],
+   "anuncios_mostrados": [
+    "Turno 1"
+   ],
+   "particulas_de_festa": 0
+  },
+  {
+   "nome": "cheia-jogo-1280x720",
+   "turno1": {
+    "mostra": [
+     "anúncio (abaixo da arena): Iniciativa! Turno 1 · só você age agora +25% de dano no primeiro golpe deste turno"
+    ],
+    "cobre": "nada"
+   },
+   "meditar": {
+    "mostra": [
+     "placa (na arena): TURNO2 Iniciativa passou",
+     "anúncio (na arena): Turno 2"
+    ],
+    "cobre": "nada"
+   },
+   "turno2": {
+    "mostra": [
+     "placa (na arena): TURNO2 Iniciativa passou",
+     "anúncio (na arena): Turno 2"
+    ],
+    "cobre": "nada"
+   },
+   "turno3": {
+    "mostra": [
+     "placa (na arena): TURNO3",
+     "anúncio (na arena): Turno 3"
+    ],
+    "cobre": "nada"
+   },
+   "turno3_depois": {
+    "mostra": [
+     "placa (na arena): TURNO3"
+    ],
+    "cobre": "nada"
+   },
+   "habilidades": {
+    "mostra": [
+     "placa (na arena): TURNO3"
+    ],
+    "cobre": "nada"
+   },
+   "turnos": [
+    "turno 1: a vez clicável 34 ms depois",
+    "turno 2: a vez clicável 9 ms depois",
+    "turno 3: a vez clicável 19 ms depois"
+   ],
+   "anuncios_mostrados": [
+    "Iniciativa! Turno 1 · só você age agora +25% de dano no primeiro golpe deste turno",
+    "Turno 2",
+    "Turno 3"
+   ],
+   "particulas_de_festa": 0
+  },
+  {
+   "nome": "cheia-jogo-1500x950",
+   "turno1": {
+    "mostra": [
+     "anúncio (abaixo da arena): Iniciativa! Turno 1 · só você age agora +25% de dano no primeiro golpe deste turno"
+    ],
+    "cobre": "nada"
+   },
+   "meditar": {
+    "mostra": [
+     "placa (na arena): TURNO2 Iniciativa passou",
+     "anúncio (na arena): Turno 2"
+    ],
+    "cobre": "nada"
+   },
+   "turno2": {
+    "mostra": [
+     "placa (na arena): TURNO2 Iniciativa passou",
+     "anúncio (na arena): Turno 2"
+    ],
+    "cobre": "nada"
+   },
+   "turno3": {
+    "mostra": [
+     "placa (na arena): TURNO3",
+     "anúncio (na arena): Turno 3"
+    ],
+    "cobre": "nada"
+   },
+   "turno3_depois": {
+    "mostra": [
+     "placa (na arena): TURNO3"
+    ],
+    "cobre": "nada"
+   },
+   "habilidades": {
+    "mostra": [
+     "placa (na arena): TURNO3"
+    ],
+    "cobre": "nada"
+   },
+   "turnos": [
+    "turno 1: a vez clicável 31 ms depois",
+    "turno 2: a vez clicável 10 ms depois",
+    "turno 3: a vez clicável 21 ms depois"
+   ],
+   "anuncios_mostrados": [
+    "Iniciativa! Turno 1 · só você age agora +25% de dano no primeiro golpe deste turno",
+    "Turno 2",
+    "Turno 3"
+   ],
+   "particulas_de_festa": 0
+  },
+  {
+   "nome": "atordoado-1280x720",
+   "turnos_presos": [
+    2
+   ],
+   "turno1": {
+    "mostra": [
+     "anúncio (abaixo da arena): Turno 1"
+    ],
+    "cobre": "nada"
+   },
+   "turno2_preso": {
+    "mostra": [
+     "anúncio (abaixo da arena): Turno 2 Preso na teia: você perde este turno"
+    ],
+    "cobre": "nada"
+   },
+   "turno2_comandos_a_vista": 0,
+   "turno3": {
+    "mostra": [
+     "anúncio (abaixo da arena): Turno 3"
+    ],
+    "cobre": "nada"
+   },
+   "turno4": {
+    "mostra": [
+     "placa (abaixo da arena): TURNO4",
+     "anúncio (abaixo da arena): Turno 4"
+    ],
+    "cobre": "nada"
+   },
+   "turnos": [
+    "turno 1: a vez clicável 19 ms depois",
+    "turno 2: a vez clicável null ms depois",
+    "turno 3: a vez clicável 317 ms depois",
+    "turno 4: a vez clicável 339 ms depois"
+   ],
+   "anuncios_mostrados": [
+    "Turno 1",
+    "Turno 2 Preso na teia: você perde este turno",
+    "Turno 3",
+    "Turno 4"
+   ],
+   "particulas_de_festa": 0
+  },
+  {
+   "nome": "atordoado-1280x720-reduzido",
+   "turnos_presos": [
+    2
+   ],
+   "turno1": {
+    "mostra": [
+     "anúncio (abaixo da arena): Turno 1"
+    ],
+    "cobre": "nada"
+   },
+   "turno2_preso": {
+    "mostra": [
+     "anúncio (abaixo da arena): Turno 2 Preso na teia: você perde este turno"
+    ],
+    "cobre": "nada"
+   },
+   "turno2_comandos_a_vista": 0,
+   "turno3": {
+    "mostra": [
+     "anúncio (abaixo da arena): Turno 3"
+    ],
+    "cobre": "nada"
+   },
+   "turno4": {
+    "mostra": [
+     "placa (abaixo da arena): TURNO4",
+     "anúncio (abaixo da arena): Turno 4"
+    ],
+    "cobre": "nada"
+   },
+   "turnos": [
+    "turno 1: a vez clicável 19 ms depois",
+    "turno 2: a vez clicável null ms depois",
+    "turno 3: a vez clicável 317 ms depois",
+    "turno 4: a vez clicável 313 ms depois"
+   ],
+   "anuncios_mostrados": [
+    "Turno 1",
+    "Turno 2 Preso na teia: você perde este turno",
+    "Turno 3",
+    "Turno 4"
+   ],
+   "particulas_de_festa": 0
+  },
+  {
+   "nome": "festa-de-nivel",
+   "ao_vivo": "90 partículas, a janela da festa aberta",
+   "refazendo": "0 partículas, a janela fechada",
+   "turnos": [
+    "turno 1: a vez clicável 18 ms depois"
+   ],
+   "anuncios_mostrados": [
+    "Turno 1"
+   ],
+   "particulas_de_festa": 90
+  }
+ ],
+ "erros": []
+}

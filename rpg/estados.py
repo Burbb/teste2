@@ -216,5 +216,6 @@ def agora(efeito, v):
 
 def para_tela():
     """O que a interface precisa de cada estado: ícone, família (cor do brilho), nome, dica e se é um mal (o som)."""
-    return {k: {"icone": e["icone"], "familia": e["familia"], "nome": e["nome"], "dica": e["dica"], "negativo": e["negativo"]}
+    return {k: {"icone": e["icone"], "familia": e["familia"], "nome": e["nome"], "dica": e["dica"], "negativo": e["negativo"],
+                "perde_turno": bool(e["perde_turno"])}  # o anúncio do turno diz que você perde a vez (turnos.js)
             for k, e in ESTADOS.items()}

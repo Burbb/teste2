@@ -87,6 +87,7 @@ function cabecalho(m) {
   if (m.tipo === "titulo") {
     corpo.classList.add("sem-heroi"); corpo.classList.remove("em-combate"); estado = null; ultimoLugar = "";
     acomodarRegistro();  // o registro volta ao lugar (uma luta largada no meio)
+    Turnos.aoEstado(null);  // e a placa do turno sai
     Sensacao.vidaDoHeroi(1, 1);  // no título não há herói: sem borda vermelha nem coração
     const [r, g, b] = Vista.titulo();  // a paisagem desce até o rodapé; o céu de cima continua na mesma cor
     corpo.style.setProperty("--ceu-titulo", `rgb(${r}, ${g}, ${b})`);
@@ -469,6 +470,7 @@ function turno(m) {
   }
   anexar(el("div", "divisor-turno", `turno ${m.n}`));
   historico("h-turno", `— turno ${m.n} —`);
+  Turnos.aoTurno(m.n, replay);  // o anúncio "Turno N" na arena (refazendo a página, só a placa)
 }
 
 function bloco(m) {
