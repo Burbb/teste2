@@ -193,3 +193,11 @@
   background: linear-gradient(rgba(255, 255, 255, 0.07), rgba(0, 0, 0, 0.15)), #16171b; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 1px 0 #000; }
 :root body .mira-voltar:is(:hover, :focus-visible) { border-color: var(--aresta-viva, #6f737b); color: #fff7e6; }
 :root body .mira-voltar:focus-visible { outline: 2px solid var(--latao-claro); outline-offset: 2px; }
+/* o registro ao lado, numa luta cheia de janela baixa (paineis.js, acomodarRegistro): a mesma página de leitura, só o
+   lugar muda; um fio de latão no alto o separa do cabeçalho do painel, que continua à vista */
+:root body.registro-ao-lado #cena { box-shadow: 0 -1px 0 rgba(176, 138, 69, 0.45), 0 0 0 1px #000; border-image: none; border: 0; }
+:root body.registro-ao-lado #cena #pagina { padding-left: 10px; padding-right: 8px; }
+/* sem coluna ao lado (abaixo de 920 px): o registro embaixo da arena na altura de leitura, e a página rola até ele */
+:root body.registro-rola #mesa { height: auto; min-height: calc(100% - 50px); }
+:root body.registro-rola #palco { overflow: visible; }
+:root body.registro-rola #cena { flex: none; height: 240px; }

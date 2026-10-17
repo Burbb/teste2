@@ -476,6 +476,7 @@ function limparRoda() {
   previaAlvos(null);
   if (janelaAberta && janelaAberta.soltar) janelaAberta.soltar();
   const r = rodaEl();
+  document.querySelectorAll(".roda-janela.lateral").forEach((j) => { soltarFicha(j); j.remove(); });  // mora junto da ficha
   if (r && r.childElementCount) { Telas.esconderDica(); r.replaceChildren(); }
   janelaAberta = null;
   Batalha.foco(null);
@@ -655,36 +656,21 @@ function abrirJanela(ancora, titulo, linhas, aoFechar) {
   });
   j.appendChild(lista);
   if (!linhas.length) lista.insertAdjacentHTML("afterend", '<p class="rj-vazio">Nada na bolsa serve agora.</p>');  // só Itens chega vazio
-  // duas colunas na ordem das teclas (1, 2, 3 descendo; depois a segunda coluna)
-  const filas = Math.ceil(linhas.length / 2);
-  lista.style.setProperty("--filas", filas);
-  [...lista.children].forEach((li, k) => li.style.setProperty("--fila", k % filas));
   const v = el("button", "rj-fechar rj-voltar", "<kbd>Esc</kbd><span>Voltar</span>");
   v.type = "button";
   v.title = "Fechar (Esc)";
   j.appendChild(v);
   roda.appendChild(j);
   ancora.classList.add("ativo");
-  // Desce do botão para baixo da arena, por cima do texto: os alvos ficam à vista enquanto você escolhe.
-  const g = geometriaHeroi();
-  const topoTela = j.offsetParent.getBoundingClientRect().top;
-  // da largura da arena, colado embaixo dela (nada se mexe); a lista rola dentro se não couber
-  j.style.left = "0px";
-  j.style.width = g.W + "px";
-  j.style.top = g.H + "px";
-  j.style.maxHeight = Math.max(170, innerHeight - topoTela - g.H - 14) + "px";
-  // onde caem as texturas da página (a leitura da cena e o carvão do palco): o fundo do seletor continua a página
-  const pj = j.getBoundingClientRect(), cena = document.getElementById("cena"), palco = document.getElementById("palco");
-  if (cena && palco) {
-    const c = cena.getBoundingClientRect(), pa = palco.getBoundingClientRect();
-    j.style.setProperty("--fundo-cena", `${c.left + 64 - pj.left}px ${c.top + 32 - pj.top}px`);
-    j.style.setProperty("--fundo-palco", `${pa.left + 12 - pj.left}px ${pa.top + 12 - pj.top}px`);
-  }
+  let ajuste = 0;
+  const redispor = () => { clearTimeout(ajuste); ajuste = setTimeout(() => { if (j.isConnected) dispor(j, linhas); }, 160); };
   const fechar = () => {
     Telas.esconderDica();
     previaAlvos(null);
+    removeEventListener("resize", redispor);
     const devolver = j.contains(document.activeElement);  // fechou pelo teclado: o foco volta ao botão
     j.remove();
+    soltarFicha(j);
     ancora.classList.remove("ativo");
     if (devolver && ancora.isConnected && ancora.focus) ancora.focus({ preventScroll: true });
     if (pergunta) pergunta.teclasNum = teclasAntes;
@@ -697,9 +683,79 @@ function abrirJanela(ancora, titulo, linhas, aoFechar) {
   const fecharTudoJanela = () => { document.removeEventListener("pointerdown", fora, true); fechar(); };
   janelaAberta = { fechar: fecharTudoJanela, soltar: () => document.removeEventListener("pointerdown", fora, true) };
   Telas.ligarDicas(j);
-  descricoes(j, linhas, lista);
   faixasTeclado(j, linhas);
-  bordaLimpa(j);
+  dispor(j, linhas);
+  // a janela mudou de tamanho com o seletor aberto: ele se dispõe de novo, com a mesma examinada e o mesmo foco
+  addEventListener("resize", redispor);
+}
+/** Onde o seletor abre. Embaixo da arena, da largura dela, por cima do registro, quando cabem a lista inteira, em duas
+ *  colunas, e uma descrição legível (60 px): os alvos ficam à vista enquanto você escolhe. Senão (a luta cheia numa
+ *  janela baixa), sobre a coluna da ficha do herói, numa coluna só, com o custo embaixo do nome e o Voltar no título:
+ *  a escolha é dele (o que sabe e o que carrega), e a ficha coberta não recebe clique nem foco até o seletor fechar.
+ *  Sem a ficha à vista (janela estreita), embaixo, e a lista rola dentro. Nada disso mexe na arena, nas cartas ou no
+ *  registro. Redimensionar a janela dispõe de novo (resize), sem fechar: a habilidade examinada e o foco ficam. */
+function dispor(j, linhas) {
+  const lista = j.querySelector(".rj-lista"), v = j.querySelector(".rj-voltar"), ficha = document.getElementById("heroi");
+  const foco = j.contains(document.activeElement) ? document.activeElement : null;
+  // desfaz a disposição de antes
+  const zonaVelha = j.querySelector(".rj-descricao");
+  if (zonaVelha) zonaVelha.remove();
+  if (v) j.appendChild(v);
+  soltarFicha(j);
+  j.classList.remove("lateral");
+  ["left", "top", "width", "maxHeight", "minHeight", "paddingBottom"].forEach((k) => { j.style[k] = ""; });
+  if (j.parentElement !== rodaEl()) rodaEl().appendChild(j);
+  colunasDaLista(lista, 2);
+  const g = geometriaHeroi();
+  const topoTela = j.offsetParent.getBoundingClientRect().top;
+  // da largura da arena, colado embaixo dela (nada se mexe); a lista rola dentro se não couber
+  j.style.left = "0px";
+  j.style.width = g.W + "px";
+  j.style.top = g.H + "px";
+  j.style.maxHeight = Math.max(170, innerHeight - topoTela - g.H - 14) + "px";
+  const precisa = j.querySelector(".rj-titulo").offsetHeight + lista.scrollHeight + 60 + 44;
+  if (linhas.length && precisa > parseFloat(j.style.maxHeight) && ficha && ficha.getClientRects().length) {
+    j.classList.add("lateral");
+    ficha.after(j);  // logo depois da ficha: o Tab segue do seletor para a arena
+    colunasDaLista(lista, 1);
+    if (v) j.querySelector(".rj-titulo").appendChild(v);
+    const f = ficha.getBoundingClientRect();
+    j.style.left = Math.round(f.left) + "px";
+    j.style.top = Math.round(f.top) + "px";
+    j.style.width = Math.round(f.width) + "px";
+    j.style.maxHeight = Math.round(f.height) + "px";
+    ficha.inert = true;
+    j._ficha = ficha;
+  }
+  // onde caem as texturas da página (a leitura da cena e o carvão do palco): o fundo do seletor continua a página
+  const pj = j.getBoundingClientRect(), cena = document.getElementById("cena"), palco = document.getElementById("palco");
+  if (cena && palco) {
+    const c = cena.getBoundingClientRect(), pa = palco.getBoundingClientRect();
+    j.style.setProperty("--fundo-cena", `${c.left + 64 - pj.left}px ${c.top + 32 - pj.top}px`);
+    j.style.setProperty("--fundo-palco", `${pa.left + 12 - pj.left}px ${pa.top + 12 - pj.top}px`);
+  }
+  descricoes(j, linhas, lista);
+  // sobre a ficha, ele a cobre inteira (depois da descrição, que se mede pelo que sobra); embaixo, a borda limpa
+  if (j.classList.contains("lateral")) j.style.minHeight = j.style.maxHeight; else bordaLimpa(j);
+  // a examinada de antes; aberto pela tecla, a primeira, que já chega com o foco (faixasTeclado)
+  const k = j._examinada !== undefined ? j._examinada : foco ? [...lista.querySelectorAll(".rj-linha")].indexOf(foco) : -1;
+  if (k >= 0 && j._mostrar) j._mostrar(k);
+  if (foco && foco.isConnected) {
+    foco.focus({ preventScroll: true });
+    const r = foco.getBoundingClientRect(), lr = lista.getBoundingClientRect();  // a fileira com o foco à vista
+    if (r.top < lr.top) lista.scrollTop -= lr.top - r.top; else if (r.bottom > lr.bottom) lista.scrollTop += r.bottom - lr.bottom;
+  }
+}
+/** As colunas da lista na ordem das teclas (1, 2, 3 descendo; depois a coluna seguinte). */
+function colunasDaLista(lista, colunas) {
+  const filas = Math.max(1, Math.ceil(lista.children.length / colunas));
+  lista.style.setProperty("--filas", filas);
+  [...lista.children].forEach((li, k) => li.style.setProperty("--fila", k % filas));
+}
+/** A ficha que o seletor cobria volta a receber clique e foco. */
+function soltarFicha(j) {
+  if (j._ficha) j._ficha.inert = false;
+  j._ficha = null;
 }
 /** A descrição da habilidade examinada (mouse ou teclado), dentro do seletor, embaixo da coluna dela: o que a dica
  *  de antes mostrava (custo, alvo, o que faz, o dano, o motivo de não poder). Uma por vez; ela fica na última
@@ -707,11 +763,11 @@ function abrirJanela(ancora, titulo, linhas, aoFechar) {
  *  habilidade não mexe em nada. Se a descrição por coluna não couber na janela, vira uma área só, embaixo das duas
  *  colunas (mais larga, logo mais baixa); se nem assim couber, a lista rola dentro e a descrição fica inteira. */
 function descricoes(j, linhas, lista) {
-  const lis = [...lista.children], n = lis.length, filas = Math.ceil(n / 2);
+  const lateral = j.classList.contains("lateral"), lis = [...lista.children], n = lis.length, filas = lateral ? n : Math.ceil(n / 2);
   if (!n) return;
   const zona = el("div", "rj-descricao"), caixa = el("div", "rj-desc-caixa");
   zona.appendChild(caixa);
-  j.insertBefore(zona, j.querySelector(".rj-voltar"));
+  j.insertBefore(zona, j.querySelector(":scope > .rj-voltar"));  // sobre a ficha, o Voltar já está no título
   const Z = zona.getBoundingClientRect();
   const coluna = (li) => { const r = li.getBoundingClientRect(); return { esq: r.left - Z.left + 12, larg: r.width - 12 }; };  // a faixa começa 12 px depois da tecla
   const esq = coluna(lis[0]), dir = n > 1 ? coluna(lis[filas] || lis[n - 1]) : esq;
@@ -735,7 +791,7 @@ function descricoes(j, linhas, lista) {
   };
   let livre = parseFloat(j.style.maxHeight) - j.offsetHeight;
   let modo = "coluna", alt = medir(esq.larg, "esquerda");
-  if (alt > livre) {
+  if (alt > livre && !lateral) {  // sobre a ficha, a descrição fica sempre embaixo da coluna (a área junta é da arena)
     modo = "junto";
     alt = medir(junto.larg, "junto");
     // janela baixa: o "Esc · Voltar" sobe para a linha do título, e a descrição ganha a altura dele
@@ -752,6 +808,7 @@ function descricoes(j, linhas, lista) {
   const mostrar = (k) => {
     const l = linhas[k];
     if (!l || !l.dica) return;
+    j._examinada = k;
     const lado = modo === "junto" ? junto : k < filas ? esq : dir;
     caixa.style.left = lado.esq + "px";
     caixa.style.width = lado.larg + "px";
@@ -759,10 +816,13 @@ function descricoes(j, linhas, lista) {
     caixa.dataset.lado = modo === "junto" ? "junto" : k < filas ? "esquerda" : "direita";
     caixa.innerHTML = arranjar(l.dica, caixa.dataset.lado);
   };
+  j._mostrar = mostrar;  // dispor de novo (resize) troca a área e o jeito de mostrar; as faixas chamam o de agora
+  if (j._descricoesLigadas) return;
+  j._descricoesLigadas = true;
   lis.forEach((li, k) => {
     const b = li.querySelector(".rj-linha");
-    b.addEventListener("mouseenter", () => mostrar(k));
-    b.addEventListener("focus", () => mostrar(k));
+    b.addEventListener("mouseenter", () => j._mostrar(k));
+    b.addEventListener("focus", () => j._mostrar(k));
   });
 }
 /** O registro continua por baixo do seletor. A linha que a borda de baixo cortaria ao meio fica inteira coberta (o
@@ -772,8 +832,9 @@ function bordaLimpa(j) {
   const pagina = document.getElementById("pagina");
   if (!pagina) return;
   const pad = parseFloat(getComputedStyle(j).paddingBottom), teto = parseFloat(j.style.maxHeight);
+  if (j._bordaLimpa) pagina.removeEventListener("scroll", j._bordaLimpa);  // dispor de novo: a conta de antes sai
   const acertar = () => {
-    if (!j.isConnected) { pagina.removeEventListener("scroll", acertar); return; }
+    if (!j.isConnected || j.classList.contains("lateral")) { pagina.removeEventListener("scroll", acertar); return; }
     j.style.paddingBottom = "";
     j.style.maxHeight = teto + "px";
     const borda = j.getBoundingClientRect().bottom;
@@ -799,12 +860,14 @@ function bordaLimpa(j) {
       j.style.maxHeight = teto + mais + "px";
     }
   };
+  j._bordaLimpa = acertar;
   acertar();
   pagina.addEventListener("scroll", acertar, { passive: true });
 }
 /** As faixas pelo teclado e a prévia dos alvos no foco. */
 function faixasTeclado(j, linhas) {
-  const bs = [...j.querySelectorAll(".rj-linha")], n = bs.length, filas = Math.ceil(n / 2);
+  const bs = [...j.querySelectorAll(".rj-linha")], n = bs.length, lista = j.querySelector(".rj-lista");
+  const filas = () => Number(lista.style.getPropertyValue("--filas")) || Math.ceil(n / 2);  // muda ao dispor de novo
   bs.forEach((b, k) => {
     const alvo = linhas[k].alvo;
     if (alvo) {
@@ -813,7 +876,7 @@ function faixasTeclado(j, linhas) {
     }
   });
   j.addEventListener("keydown", (ev) => {  // cima e baixo na ordem; os lados trocam de coluna
-    const passo = { ArrowDown: 1, ArrowUp: -1, ArrowRight: filas, ArrowLeft: -filas }[ev.key];
+    const passo = { ArrowDown: 1, ArrowUp: -1, ArrowRight: filas(), ArrowLeft: -filas() }[ev.key];
     if (!passo) return;
     ev.preventDefault();
     ev.stopPropagation();

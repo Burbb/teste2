@@ -315,6 +315,20 @@ inimigos. Duas alternativas contra a produção, com os mesmos dados, em 1280×7
   quando o xamã revive um caído (`talentos._senhor_mortos`, `len(cb.mortos) == 1`).
 - **Recomendação:** integrar a b2 e o registro na coluna do mundo juntos. Falta Jean avaliar.
 
+**Aprovado por Jean e integrado na 1.114.0** (a correção do Rei dos Mortos antes, na 1.113.2, em commit próprio):
+- **O seletor (`app/escolhas.js`, `dispor`):** abre embaixo da arena quando cabe; senão, sobre a ficha, com o custo
+  embaixo do nome e o Voltar no título. A ficha fica inerte, a mira o tira, e redimensionar o dispõe de novo sem
+  fechar (a examinada e o foco ficam).
+- **O registro (`app/paineis.js`, `acomodarRegistro`):** a conta é feita no começo da luta e a cada novo tamanho de
+  janela. Na falta de espaço, vai para a coluna do mundo; sem ela (abaixo de 1100 px), para a da ficha; sem nenhuma
+  (abaixo de 920 px), fica embaixo com 240 px, e a página rola. Efeitos entrando e saindo não o mudam de lugar, e o fim
+  da luta devolve tudo.
+- **Os grupos:** depois da correção, 6 × 6 é ao mesmo tempo o limite das regras e o maior grupo visto pelo robô.
+- **Conferido:** igual ao protótipo aprovado com os mesmos dados; a passagem 1500 → 1280 → 1050 → 900 → 1280 → 1500
+  com a luta em andamento; teclado e movimento reduzido (`ferramentas/prototipos/hud/compacta/integracao/LEIA-ME.md`).
+- **Limitações:** abaixo de 920 px o seletor e o registro pedem a rolagem da página; entre 920 e 1100 px o seletor
+  aberto cobre o registro. Falta Jean jogar.
+
 ## 2. Telas de leitura, criação e celebrações
 
 - **Subida de nível:** preservar a boa organização das informações, redesenhando o acabamento para a linguagem atual.
@@ -415,9 +429,8 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
 
 ## Próxima passagem de trabalho
 
-1. A avaliação de Jean jogando a 1.111.0 a 1.113.1 (a HUD, as lutas cheias, os capuzes e luvas, as escolhas em
-   faixas, integradas) e a decisão sobre a composição compacta (item 1.10: a B aprovada; rodada 2 em avaliação, a b2 e
-   o registro na coluna do mundo recomendados para integrar juntos).
+1. A avaliação de Jean jogando a 1.111.0 a 1.114.0 (a HUD, as lutas cheias, os capuzes e luvas, as escolhas em
+   faixas, integradas) e a composição compacta das lutas cheias, integrada na 1.114.0 (item 1.10).
 2. Integrar apenas os desenhos aprovados.
 3. Reproduzir e corrigir a percepção atrasada do custo de recurso e apresentar o bloqueio de vida máxima por ferimentos (1B).
 4. Prototipar os avisos e a consulta aos testes (1C), sem ampliar regras.

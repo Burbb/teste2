@@ -3355,3 +3355,23 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   xamã reviver um caído).
 - **Próximo:** Jean avaliar a b2 e o registro na coluna do mundo; integrar juntos se aprovados. Nenhuma outra etapa
   começou (nem a 1B, nem lote de arte).
+
+### 17/10/2026 (data do computador local) — Rei dos Mortos (1.113.2) e a composição compacta integrada (1.114.0)
+
+- **Pedido de Jean:** integrar a B refinada e o registro na coluna do mundo, fechar a adaptação ao redimensionamento e
+  corrigir o Rei dos Mortos em commit separado.
+- **Rei dos Mortos (1.113.2):** uma vez por combate (`uma_vez_por_luta`). O xamã reviver um caído não abre uma segunda
+  vez; um combate novo ativa de novo. `tests/test_rei_dos_mortos.py` falha sem a correção. Gabarito sem mudança. Depois
+  dela, 6 × 6 é o limite das regras e o maior grupo visto.
+- **Integrado (1.114.0):**
+  - o seletor sobre a ficha (`escolhas.js`, `dispor`): custo embaixo do nome, Voltar no título, ficha inerte, sai na
+    mira, redispõe ao redimensionar sem fechar;
+  - o registro ao lado (`paineis.js`, `acomodarRegistro`): na coluna do mundo; abaixo de 1100 px, na da ficha; abaixo
+    de 920 px, embaixo com a página rolando.
+- **Conferido** (`ferramentas/prototipos/hud/compacta/integracao/`):
+  - igual ao protótipo aprovado com os mesmos dados;
+  - a passagem 1500 → 1280 → 1050 → 900 → volta, com a luta em andamento;
+  - teclado e movimento reduzido;
+  - a suíte, o gabarito (sem mudança), o pyflakes e a fumaça uma vez.
+- **Limitações:** abaixo de 920 px, a rolagem da página; entre 920 e 1100 px, o seletor aberto cobre o registro.
+- **Próximo:** Jean jogar. Nada começou além disso (nem a 1B, nem lote de arte, nem a nova direção visual da HUD).

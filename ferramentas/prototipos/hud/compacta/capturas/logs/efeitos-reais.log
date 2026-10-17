@@ -48,7 +48,7 @@ piromante    bandidos        {'cartas_aliados': 3, 'cartas_inimigos': 4, 'cartas
 piromante    lobos gélidos   {'cartas_aliados': 3, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 2, 'cartas_com_efeitos_inimigos': 4, 'icones_numa_carta': 3, 'icones_no_lado': 8}
 piromante    afogados        {'cartas_aliados': 3, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 2, 'cartas_com_efeitos_inimigos': 4, 'icones_numa_carta': 2, 'icones_no_lado': 4}
 piromante    esqueletos      {'cartas_aliados': 3, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 2, 'cartas_com_efeitos_inimigos': 4, 'icones_numa_carta': 2, 'icones_no_lado': 4}
-necromante   caidos e xamã   {'cartas_aliados': 7, 'cartas_inimigos': 6, 'cartas_com_efeitos_aliados': 3, 'cartas_com_efeitos_inimigos': 6, 'icones_numa_carta': 3, 'icones_no_lado': 8}
+necromante   caidos e xamã   {'cartas_aliados': 6, 'cartas_inimigos': 6, 'cartas_com_efeitos_aliados': 3, 'cartas_com_efeitos_inimigos': 6, 'icones_numa_carta': 3, 'icones_no_lado': 8}
 necromante   ratos           {'cartas_aliados': 6, 'cartas_inimigos': 5, 'cartas_com_efeitos_aliados': 3, 'cartas_com_efeitos_inimigos': 5, 'icones_numa_carta': 3, 'icones_no_lado': 7}
 necromante   lobos           {'cartas_aliados': 6, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 2, 'cartas_com_efeitos_inimigos': 4, 'icones_numa_carta': 3, 'icones_no_lado': 9}
 necromante   cultistas       {'cartas_aliados': 5, 'cartas_inimigos': 4, 'cartas_com_efeitos_aliados': 3, 'cartas_com_efeitos_inimigos': 4, 'icones_numa_carta': 3, 'icones_no_lado': 6}

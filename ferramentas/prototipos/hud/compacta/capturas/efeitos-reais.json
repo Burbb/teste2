@@ -606,13 +606,13 @@
   {
    "spec": "necromante",
    "bando": "caidos e xamã",
-   "cartas_aliados": 7,
+   "cartas_aliados": 6,
    "cartas_inimigos": 6,
    "cartas_com_efeitos_aliados": 3,
    "cartas_com_efeitos_inimigos": 6,
    "icones_numa_carta": 3,
    "icones_no_lado": 8,
-   "momentos": 80,
+   "momentos": 77,
    "todas_as_cartas_com_efeito": 0
   },
   {

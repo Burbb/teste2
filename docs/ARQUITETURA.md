@@ -296,10 +296,15 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
     a poção que pode ir num aliado abre a mira dos aliados, como antes; sem nada que sirva, o seletor abre com "Nada
     na bolsa serve agora." no lugar das faixas. A descrição do consumível vem do motor (`itens.descricao`: o Tônico
     diz só o recurso da classe, pelo `artigo_recurso` de `classes.py`);
-  - *composição:* da largura da arena, colado embaixo dela, por cima do registro (posição absoluta na camada da roda:
-    abrir e fechar não mexe nas cartas nem na rolagem); duas colunas na ordem das teclas (`--filas`, `--fila`); a
-    altura é a que sobra na tela, e a lista rola dentro se não couber; título pequeno e "Esc · Voltar" (o mesmo
-    fechar);
+  - *composição:* `dispor` decide onde. Da largura da arena, colado embaixo dela, por cima do registro (posição
+    absoluta na camada da roda: abrir e fechar não mexe nas cartas nem na rolagem), em duas colunas na ordem das
+    teclas (`--filas`, `--fila`), quando cabem a lista inteira e 60 px de descrição; título pequeno e "Esc · Voltar"
+    (o mesmo fechar). Senão (a luta cheia numa janela baixa; 1.114.0), sobre a coluna da ficha do herói
+    (`.lateral`, fixo, logo depois de `#heroi` no DOM: o Tab segue para a arena), numa coluna só, com o custo numa
+    linha própria embaixo do nome, o Voltar no título e a descrição embaixo; a ficha fica `inert` até ele fechar
+    (`soltarFicha`; `limparRoda` o tira junto ao entrar na mira). Sem a ficha à vista (abaixo de 920 px), embaixo, e a
+    lista rola dentro. Redimensionar dispõe de novo sem fechar (fechar o submenu de Itens responderia "Voltar" ao
+    motor), com a mesma examinada (`_examinada`, `_mostrar`) e o mesmo foco;
   - *marcação:* a tecla, o ícone, o nome com o motivo da indisponível (o texto do motor) e o custo, cada um no seu
     elemento: a tradução troca só o texto; um nome longo quebra em duas linhas em vez de ser cortado;
   - *a faixa:* o `::before` de cada linha (a cor do estado, um grão de pincel em SVG fixo e um degradê de volume),
@@ -364,7 +369,16 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   motor marca com `invocado`); os outros caídos ficam, apagados. Os maiores grupos reais (medidos com o robô de
   `tests/arena.py`): 6 aliados (o necromante com a comitiva de 2, dois esqueletos da Legião de Ossos e o servo do Rei
   dos Mortos) e 6 inimigos (o bando de caídos à noite com a comitiva e a escolta do xamã); a comitiva tem no máximo 2
-  companheiros (`comitiva/catalogo.py`, `LIMITE`). Em 1280×720, o caso mais cheio deixa ~160 px para o registro.
+  companheiros (`comitiva/catalogo.py`, `LIMITE`); o Rei dos Mortos age uma vez por combate (`uma_vez_por_luta`,
+  1.113.2: antes, o xamã reviver um caído abria uma segunda vez). Seis de cada lado é o limite das regras, e é também o
+  maior grupo que o robô viu (`ferramentas/prototipos/hud/compacta/efeitos_reais.py`, 1.200 lutas). Uma linha de
+  efeitos em cada carta é comum numa luta cheia (a Maldição, o enfraquecer, as chamas ou o sangramento em área), e em
+  1280×720 a arena cresce até o registro sumir. Por isso (1.114.0, `acomodarRegistro` em `app/paineis.js`): no começo
+  da luta e a cada novo tamanho de janela, se a coluna mais alta com uma linha de efeitos em cada carta deixasse menos
+  de 140 px ao registro, ele (`#cena`, fixo) vai para a coluna do mundo, embaixo do nome do lugar, do nível e dos
+  avisos (por cima do minimapa, da missão e dos caminhos, inertes); sem ela (abaixo de 1100 px), para a da ficha,
+  embaixo do nome e da experiência; sem nenhuma (abaixo de 920 px), fica embaixo com 240 px e a página rola
+  (`registro-rola`). No mesmo tamanho, efeitos que entram e saem não mudam nada de lugar; o fim da luta devolve tudo.
   A conferência: `ferramentas/prototipos/hud/fotografar_lutas_cheias.mjs` (o jogo de antes, num checkout do commit
   anterior, e o de agora, com os mesmos dados) e `comparar_lutas_cheias.py`.
 - A aba Vender do mercado (`telas/mercado.js`, 1.105.1): durante a visita, cada peça fica no espaço da grade em que

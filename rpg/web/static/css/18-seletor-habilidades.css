@@ -182,6 +182,24 @@
 :root body .roda-janela[data-tipo="itens"] .rj-linha.bloqueada .rj-info { color: #b9af99; }
 :root body .roda-janela[data-tipo="itens"] .rj-linha.bloqueada:is(:hover, :focus-visible) .rj-info { color: var(--sh-tinta); }
 
+/* sobre a ficha (escolhas.js, dispor): na luta cheia de uma janela baixa, quando a lista inteira e uma descrição
+   legível não cabem embaixo da arena, o seletor cobre a coluna da ficha do herói, da altura dela, numa coluna só. A
+   coluna é estreita (~250 px): o custo vai para uma linha própria, embaixo do nome (os nomes não se espalham por três
+   linhas e os custos se comparam descendo pela mesma coluna), e o motivo de não poder, embaixo do custo; o Voltar
+   fica na linha do título e a descrição, embaixo da lista. Letra, ícone, tecla e pontas da faixa são os do seletor. */
+:root body .roda-janela.seletor.lateral { position: fixed; z-index: 60; padding: 12px 14px 10px 10px; }
+:root body .roda-janela.seletor.lateral::before { content: ""; position: absolute; inset: 0; pointer-events: none;
+  border-right: 1px solid rgba(176, 138, 69, 0.35); }
+:root body .roda-janela.seletor.lateral .rj-lista { grid-template-columns: minmax(0, 1fr); padding-left: 6px; }
+:root body .roda-janela.seletor.lateral .rj-lista > li { translate: none; }
+:root body .roda-janela.seletor.lateral .rj-linha { grid-template-columns: 30px 36px minmax(0, 1fr); grid-template-rows: auto auto auto;
+  row-gap: 1px; padding-top: 6px; padding-bottom: 6px; }
+:root body .roda-janela.seletor.lateral .rj-linha :is(.tecla, .rj-icone) { grid-row: 1 / 4; align-self: center; }
+:root body .roda-janela.seletor.lateral .rj-linha .rj-texto { display: contents; }
+:root body .roda-janela.seletor.lateral .rj-linha .rj-nome { grid-column: 3; grid-row: 1; align-self: end; }
+:root body .roda-janela.seletor.lateral .rj-linha .rj-info { grid-column: 3; grid-row: 2; justify-self: start; align-self: start; line-height: 1.1; }
+:root body .roda-janela.seletor.lateral .rj-linha .rj-motivo { grid-column: 3; grid-row: 3; }
+
 @media (prefers-reduced-motion: reduce) {
   :root body .roda-janela.seletor .rj-linha { animation: none; }
   :root body .roda-janela.seletor .rj-linha:active { translate: none; }

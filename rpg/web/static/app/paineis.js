@@ -78,7 +78,91 @@ function aplicarEstado(e) {
     JSON.stringify(antes.capitulo) !== JSON.stringify(e.capitulo);
   if (mudouMapa) { desenharMundo(e); ultimoMundo = ""; }
   if (!$("#sobre-mapa").hidden && mudouMapa) desenharMapaGrande();
+  acomodarRegistro();
 }
+
+/* ------------------------------------------------------------------ o registro nas lutas cheias */
+/* Numa luta cheia, cada carta com um efeito ganha uma linha de ícones, e o motor produz isso de verdade (um bando de
+   caídos com a Maldição ou o enfraquecer em área: as seis cartas de uma vez, já no segundo turno). Numa janela baixa,
+   a arena cresce até o registro embaixo dela sumir. Então, no começo da luta, a conta é feita uma vez: se a coluna
+   mais alta, com uma linha de efeitos em cada carta que ainda não tem, deixasse menos de REGISTRO_MIN para o registro,
+   ele vai para uma coluna ao lado, embaixo do cabeçalho dela: a do mundo (por cima do minimapa, da missão e dos
+   caminhos, que não servem durante a luta; o nome do lugar, o nível e os avisos da noite continuam à vista) ou, sem
+   ela (janela abaixo de 1100 px), a da ficha (por cima de atributos, equipamento e bolsa; o nome, o nível e a
+   experiência continuam). O que fica por baixo não recebe clique nem foco. A decisão vale enquanto a janela tiver o
+   mesmo tamanho: efeitos que entram e saem não mudam nada de lugar. Redimensionar refaz a conta (do jeito que a
+   janela ficou), e o fim da luta devolve tudo. Sem coluna ao lado (abaixo de 920 px), o registro fica embaixo da
+   arena com a altura de leitura, e a página rola até ele (nessa largura ela já rola). */
+const REGISTRO_MIN = 140;   // ~5 linhas do registro
+const LINHA_EFEITOS = 28;   // a linha de ícones de uma carta (03-batalha.css: a margem, o fio e o ícone com a borda)
+const registroAoLado = { chave: null, coluna: null, cobertos: [] };
+function registroSemEspaco() {
+  const arena = $("#arena"), pagina = $("#pagina");
+  if (!arena || !pagina) return false;
+  const colunas = [...document.querySelectorAll("#batalha .aliados, #batalha .inimigos")];
+  // a altura que as cartas de cada coluna ocupam (pelo lugar no layout, sem os movimentos) e quanto ela cresceria: uma
+  // linha por carta sem efeitos (em duas colunas de inimigos, 1920 px, uma por fileira)
+  const ocupa = (c) => {
+    const cs = [...c.querySelectorAll(".carta")];
+    return cs.length ? Math.max(...cs.map((x) => x.offsetTop + x.offsetHeight)) - Math.min(...cs.map((x) => x.offsetTop)) : 0;
+  };
+  const crescer = (c) => {
+    const sem = [...c.querySelectorAll(".carta")].filter((x) => !x.querySelector(".carta-efeitos .ef")).length;
+    return (c.classList.contains("duas") ? Math.ceil(sem / 2) : sem) * LINHA_EFEITOS;
+  };
+  const hoje = Math.max(0, ...colunas.map(ocupa)), depois = Math.max(0, ...colunas.map((c) => ocupa(c) + crescer(c)));
+  // o registro de agora, com a arena já na altura final (ela pode estar crescendo neste instante: batalha.js, acomodar)
+  const livre = pagina.getBoundingClientRect().height - ((arena._altura || arena.offsetHeight) - arena.getBoundingClientRect().height);
+  return livre - (depois - hoje) < REGISTRO_MIN;
+}
+/** Onde o registro vai: a coluna à vista (o mundo antes da ficha) e o primeiro pedaço dela que ele cobre. */
+function colunaParaRegistro() {
+  const visivel = (x) => x && x.getClientRects().length;
+  const mundo = $("#mundo"), ficha = $("#heroi");
+  if (visivel(mundo) && !corpo.classList.contains("mostrar-mundo")) return { painel: mundo, desde: () => $("#mapa-mini") };
+  if (visivel(ficha) && !corpo.classList.contains("mostrar-heroi")) {
+    return { painel: ficha, desde: () => { const xp = ficha.querySelector(".xp-linha"); return xp && xp.nextElementSibling; } };
+  }
+  return null;
+}
+function soltarRegistro() {
+  const cena = $("#cena");
+  if (cena) ["position", "left", "top", "width", "height", "maxWidth", "zIndex"].forEach((k) => { cena.style[k] = ""; });
+  registroAoLado.cobertos.forEach((x) => { x.inert = false; });
+  registroAoLado.cobertos = [];
+  corpo.classList.remove("registro-ao-lado", "registro-rola");
+  delete corpo.dataset.registro;
+}
+function colocarRegistro(col) {
+  const cena = $("#cena"), desde = col.desde();
+  const p = col.painel.getBoundingClientRect();
+  const topo = Math.round((desde ? desde.getBoundingClientRect().top : p.top + p.height / 3) - 4);
+  Object.assign(cena.style, { position: "fixed", left: Math.round(p.left) + "px", top: topo + "px", width: Math.round(p.width) + "px",
+    height: Math.round(p.bottom - topo) + "px", maxWidth: "none", zIndex: 6 });
+  // o painel é redesenhado a cada estado: o que está embaixo do registro fica inerte de novo
+  registroAoLado.cobertos.forEach((x) => { x.inert = false; });
+  registroAoLado.cobertos = [...col.painel.children].filter((x) => x.getBoundingClientRect().bottom > topo + 1);
+  registroAoLado.cobertos.forEach((x) => { x.inert = true; });
+  corpo.classList.add("registro-ao-lado");
+  corpo.dataset.registro = col.painel.id;
+}
+function acomodarRegistro() {
+  if (!corpo.classList.contains("em-combate") || !$("#batalha .carta")) {
+    if (registroAoLado.chave) { soltarRegistro(); registroAoLado.chave = registroAoLado.coluna = null; }
+    return;
+  }
+  const chave = `${innerWidth}x${innerHeight}`;
+  if (registroAoLado.chave !== chave) {  // o começo da luta ou a janela de outro tamanho: a conta de novo
+    registroAoLado.chave = chave;
+    soltarRegistro();
+    const falta = registroSemEspaco();
+    registroAoLado.coluna = falta ? colunaParaRegistro() : null;
+    if (falta && !registroAoLado.coluna) { corpo.classList.add("registro-rola"); corpo.dataset.registro = "embaixo, a página rola"; }
+  }
+  if (registroAoLado.coluna) colocarRegistro(registroAoLado.coluna);
+}
+let ajusteRegistro = 0;  // depois do batalha.js reacomodar a arena (150 ms depois do último resize)
+addEventListener("resize", () => { clearTimeout(ajusteRegistro); ajusteRegistro = setTimeout(acomodarRegistro, 200); });
 
 let ultimosMods = "";
 /** Clima e hora que mexem nos números: ícone + porcentagem no topo (e no canto do palco, na luta). */
