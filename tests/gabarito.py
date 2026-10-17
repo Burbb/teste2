@@ -25,15 +25,26 @@ ARQUIVO = os.path.join(os.path.dirname(__file__), "gabarito.json")
 CLASSES = ("guerreiro", "arqueiro", "mago")
 SEMENTES = (3, 17, 42)
 DECISOES = 700
+# A pasta dos saves aparece no texto ("Jogo salvo em ..."), que quebra em 76 colunas antes de virar <PASTA>. As
+# transcrições de referência saíram no Linux, com a pasta em /tmp/tmp e oito letras; aqui ela entra sempre com esse
+# formato (mesmo tamanho, barras normais), onde quer que more a pasta temporária e qualquer que seja o separador.
+PASTA = "/tmp/tmp_PASTA__"
 
 
 class Gravador(BotUI):
     """O robô de sempre, mas anotando tudo o que a interface recebe."""
 
-    def __init__(self, rng, web=False):
+    def __init__(self, rng, web=False, pasta=None):
         super().__init__(rng, max_decisoes=DECISOES)
         self.linhas = []
         self.web = web  # web=True: o motor segue os caminhos da interface gráfica (painéis, metadados)
+        self.pasta = pasta
+
+    def dizer(self, texto="", cor=None):
+        if texto and self.pasta:
+            texto = re.sub(re.escape(self.pasta) + r"\S*",
+                           lambda m: PASTA + m.group()[len(self.pasta):].replace(os.sep, "/"), str(texto))
+        super().dizer(texto, cor)
 
     def _imprimir(self, linha):
         self.linhas.append(linha)
@@ -105,7 +116,7 @@ def transcrever(seed, classe, web=False):
     from rpg import combate
     combate._SERIE[0] = 0  # numeração dos combates (ids das cartas): cada partida começa do zero
     with tempfile.TemporaryDirectory() as pasta:
-        ui = (GravadorWeb if web else Gravador)(random.Random(seed * 7 + 1), web=web)
+        ui = (GravadorWeb if web else Gravador)(random.Random(seed * 7 + 1), web=web, pasta=pasta)
         # A semente 3 joga no hardcore (morte permanente); as outras no modo brando, para partidas mais longas.
         g = Jogo(ui, seed=seed, pasta_saves=pasta, hardcore=seed == 3)
         if web:
@@ -116,7 +127,7 @@ def transcrever(seed, classe, web=False):
         except LimiteBot:
             pass
         # O nome do registro da run leva data e hora: fora isso, tudo tem de bater.
-        linhas = [re.sub(r"\d{4}-\d{2}-\d{2}_\d{4}", "<DATA>", x.replace(pasta, "<PASTA>")) for x in ui.linhas]
+        linhas = [re.sub(r"\d{4}-\d{2}-\d{2}_\d{4}", "<DATA>", x.replace(PASTA, "<PASTA>")) for x in ui.linhas]
         # O estado final inteiro, do jeito que vai para o save.
         g.salvar(silencioso=True)
         for nome in sorted(os.listdir(pasta)):
@@ -135,7 +146,7 @@ def transcrever_comitiva(seed):
     from rpg import combate, comitiva
     combate._SERIE[0] = 0
     with tempfile.TemporaryDirectory() as pasta:
-        ui = Gravador(random.Random(seed))
+        ui = Gravador(random.Random(seed), pasta=pasta)
         g = Jogo(ui, seed=seed, pasta_saves=pasta, hardcore=False)
         g.iniciar("Robô", CLASSES[seed % 3])
         for _ in range(3):
@@ -153,7 +164,7 @@ def transcrever_comitiva(seed):
                 ui.linhas.append(f"FIM {type(e).__name__}")
                 break
             g.j.hp = g.j.max_hp
-        return [re.sub(r"\d{4}-\d{2}-\d{2}_\d{4}", "<DATA>", x.replace(pasta, "<PASTA>")) for x in ui.linhas]
+        return [re.sub(r"\d{4}-\d{2}-\d{2}_\d{4}", "<DATA>", x.replace(PASTA, "<PASTA>")) for x in ui.linhas]
 
 
 SEMENTES_COMITIVA = (1, 2, 3, 4, 5, 6)

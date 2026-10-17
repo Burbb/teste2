@@ -5,6 +5,7 @@
 //
 // Sai com código 0 se tudo passou, 1 se algo falhou e 77 se não há como rodar (playwright/navegador ausentes).
 import { spawn } from "child_process";
+import { fileURLToPath } from "url";
 import path from "path";
 
 let chromium;
@@ -15,12 +16,14 @@ try {
   process.exit(77);
 }
 
-const RAIZ = path.resolve(path.dirname(new URL(import.meta.url).pathname), "../..");
+const RAIZ = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
+// O Python que sobe os cenários: PYTHON=<executável>, se não for o de sempre (python no Windows, python3 nos outros).
+const PYTHON = process.env.PYTHON || (process.platform === "win32" ? "python" : "python3");
 const falhas = [];
 const conferir = (ok, msg) => { if (!ok) falhas.push(msg); console.log((ok ? "  ok  " : "  FALHOU ") + msg); };
 
 async function subir(cenario, ambiente = {}) {
-  const proc = spawn("python3", ["-m", "tests.navegador.cenarios", cenario], { cwd: RAIZ, env: { VELOCIDADE: "rapido", ...process.env, ...ambiente, PYTHONPATH: RAIZ } });
+  const proc = spawn(PYTHON, ["-m", "tests.navegador.cenarios", cenario], { cwd: RAIZ, env: { VELOCIDADE: "rapido", ...process.env, ...ambiente, PYTHONPATH: RAIZ } });
   let url = null;
   proc.stdout.on("data", (d) => { const m = String(d).match(/http:\S+/); if (m) url = m[0]; });
   proc.stderr.on("data", (d) => process.stderr.write(d));

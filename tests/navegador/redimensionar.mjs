@@ -10,12 +10,14 @@ import { fileURLToPath } from "url";
 import path from "path";
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULO || "playwright");
 const raiz = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
+// O Python que sobe os cenários: PYTHON=<executável>, se não for o de sempre (python no Windows, python3 nos outros).
+const PYTHON = process.env.PYTHON || (process.platform === "win32" ? "python" : "python3");
 const PASTA = process.argv[2] || "";
 const espera = (ms) => new Promise((r) => setTimeout(r, ms));
 let falhas = 0;
 const conferir = (ok, msg) => { console.log(`  ${ok ? "ok " : "FALHOU"} ${msg}`); if (!ok) falhas++; };
 async function subir(cenario, amb = {}) {
-  const proc = spawn("python3", ["-m", "tests.navegador.cenarios", cenario],
+  const proc = spawn(PYTHON, ["-m", "tests.navegador.cenarios", cenario],
     { cwd: raiz, env: { ...process.env, VELOCIDADE: "rapido", PYTHONPATH: raiz, ...amb } });
   let url = null;
   proc.stdout.on("data", (d) => { const m = String(d).match(/http:\S+/); if (m) url = m[0]; });

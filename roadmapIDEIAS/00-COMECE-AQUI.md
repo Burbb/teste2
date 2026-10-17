@@ -2978,3 +2978,36 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Conferido:** `.aseprite` reaberto (8 camadas, composto igual ao PNG), @2x, antes e depois em 1× sobre o carvão e no
   jogo (ficha, Vender e dica, 1500×950 e 1280×720), sem erro no console (`rodada2/capturas/pedra-32-*.png`).
 - **Continua como está no jogo:** a varinha com o sprite 16×16. Próximo: a avaliação do Jean; integração só depois.
+
+### 16/10/2026 (data do computador local) — Gabarito e fumaça no Windows (só testes, sem versão)
+
+- **Onde:** clone `teste2`, Windows 10, Python 3.12.4, Node 22.15.0 (1.108.0 na produção). Feito sobre `9a13a35`;
+  como a varinha ganhou `740de4e` e `451ff11` no meio, a correção foi reaplicada por cima deles (cherry-pick, juntando os dois
+  registros desta continuidade) e integrada em `claude/tender-einstein-tx3tjl` por `merge --ff-only`. A varinha não
+  entra neste commit.
+- **Pedido:** as duas verificações do `CLAUDE.md` que não rodavam neste Windows (registro anterior): o gabarito
+  DIFERENTE num checkout limpo e o `fumaca.mjs`; corrigir sem atualizar `tests/gabarito.json`.
+- **Causa do gabarito:** não era o fim de linha. A pasta dos saves aparece no texto ("Jogo salvo em ...",
+  "Registro parcial da partida: ...", "Registro da partida salvo em: ..."), que o `dizer` quebra em 76 colunas
+  **antes** de o gravador trocar a pasta por `<PASTA>`. Nas transcrições de referência (Linux) a pasta é `/tmp/tmp` e
+  oito letras (16 caracteres); aqui, `C:\Users\JEANWR~1\AppData\Local\Temp\tmp...` (cerca de 48) e com `\`: a linha
+  quebra noutro ponto, o caminho se parte entre duas linhas, a troca falha e o nome aleatório da pasta entra na
+  transcrição (e o `\rob.json` no lugar de `/rob.json`). Só as 18 partidas do robô salvam; as 6 da comitiva já batiam.
+- **Feito:** `tests/gabarito.py`: o `Gravador` recebe a pasta e, no `dizer`, troca o caminho (com o resto dele, em
+  barras normais) por `PASTA = "/tmp/tmp_PASTA__"`, do tamanho da pasta temporária do Linux; depois da quebra, `PASTA`
+  vira `<PASTA>`. `tests/navegador/fumaca.mjs`: a raiz por `fileURLToPath`; e nos três roteiros de
+  `tests/navegador` (`fumaca`, `cliques_seguidos`, `redimensionar`) o Python por `PYTHON=<executável>`, com `python`
+  no Windows e `python3` nos outros. Nada em `rpg/` mudou (por isso sem versão).
+- **Verificações, todas executadas só neste Windows:** `python -m tests.gabarito`: OK, as 24 partidas, com o
+  `gabarito.json` intacto (os hashes de referência vieram do Linux; agora o Windows os reproduz). `unittest`: 603
+  testes, OK (1 pulado). `fumaca.mjs`, `cliques_seguidos.mjs` e `redimensionar.mjs`: "tudo certo" (com
+  `PLAYWRIGHT_BROWSERS_PATH` e `PLAYWRIGHT_MODULO` de `C:\Users\Jean Wress\Tools\playwright`); a fumaça repetida sobre
+  `740de4e`; gabarito, `unittest` e pyflakes repetidos sobre `451ff11`. `python -m pyflakes rpg tests` (pyflakes 4.0.3, instalado
+  com `pip install --user` no Python do sistema, o que o `CLAUDE.md` usa; o projeto não tem venv nem lista de
+  desenvolvimento): só os 9 avisos de import de `rpg/eventos/__init__.py`, que o `CLAUDE.md` manda ignorar.
+- **Não verificado:** o código novo do gabarito e dos roteiros não rodou no Linux nesta entrega. Pela construção, lá
+  o marcador tem o mesmo tamanho da pasta real e o resultado deve ser o de antes; a próxima sessão na nuvem confirma
+  com `python -m tests.gabarito` e a fumaça.
+- **Em aberto, para uma entrega própria:** os roteiros de foto em `ferramentas/` (`arte/` e `prototipos/`), 29
+  arquivos, ainda chamam `python3` direto (o `fotografar_varinha.mjs` já usa `PYTHON` ou `python`). Ficaram fora desta
+  correção de propósito.
