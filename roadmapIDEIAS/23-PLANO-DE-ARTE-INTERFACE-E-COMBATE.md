@@ -285,6 +285,22 @@ achado, a doca, os caminhos, os prédios da vila e as telas desenhadas (mercado,
 mapa dos usos e a conferência (14 casos reais, antes × depois, conteúdo igual nas 26 comparações) estão em
 `ferramentas/prototipos/hud/escolhas-faixas/LEIA-ME.md`. Falta Jean jogar.
 
+### 1.10. A composição compacta das lutas cheias (protótipo, em avaliação)
+
+**Pedido de Jean:** nas lutas cheias em 1280×720, todas as habilidades à vista sem rolar, com a descrição legível,
+sem perder o que a 1.111.0 aprovou. **Só no protótipo** (`ferramentas/prototipos/hud/compacta/`, detalhes, medidas e
+comparações no `LEIA-ME.md` de lá); o jogo não mudou. Os grupos reais conferidos no código: até 6 aliados e 6
+inimigos. Duas alternativas contra a produção, com os mesmos dados, em 1280×720, 1500×950 e 1920×1080:
+- **A, arena compacta** (os efeitos na linha do nome, o seletor em três colunas): a luta maior continua rolando (5 de
+  7) e, com 3 ou 4 efeitos, os nomes das cartas são cortados. Descartada como regra; os efeitos na linha do nome
+  ficam fora.
+- **B, seletor na ficha** (quando a lista inteira não cabe embaixo, ele abre sobre a coluna da ficha do herói, numa
+  coluna): 7 de 7 habilidades e 5 de 5 itens em todos os casos, a descrição de 150 a 179 px, a arena intocada; nas
+  lutas pequenas e nas janelas maiores, igual à produção. Custos: cobre a ficha enquanto aberto; nomes em duas ou
+  três linhas na coluna estreita (o custo de dois recursos do patrulheiro).
+- **Recomendação:** B. **Limite que fica:** com muitos efeitos em 1280×720 o registro encolhe (0 a 33 px no caso
+  simulado extremo), porque a arena cresce; é outra entrega, se aparecer jogando. Falta Jean avaliar.
+
 ## 2. Telas de leitura, criação e celebrações
 
 - **Subida de nível:** preservar a boa organização das informações, redesenhando o acabamento para a linguagem atual.
@@ -385,8 +401,8 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
 
 ## Próxima passagem de trabalho
 
-1. A avaliação de Jean jogando a 1.111.0 a 1.113.0 (a HUD, as lutas cheias, os capuzes e luvas, as escolhas em
-   faixas) e a escolha entre as alternativas da composição compacta (item 1.8, protótipo).
+1. A avaliação de Jean jogando a 1.111.0 a 1.113.1 (a HUD, as lutas cheias, os capuzes e luvas, as escolhas em
+   faixas, integradas) e a decisão sobre a composição compacta (item 1.10, protótipo; recomendada a B).
 2. Integrar apenas os desenhos aprovados.
 3. Reproduzir e corrigir a percepção atrasada do custo de recurso e apresentar o bloqueio de vida máxima por ferimentos (1B).
 4. Prototipar os avisos e a consulta aos testes (1C), sem ampliar regras.

@@ -1,0 +1,13 @@
+/* Alternativa B, "seletor na ficha" (protótipo): a arena e as cartas como estão; quando o seletor de Habilidades ou de
+   Itens não cabe inteiro embaixo da arena (a lista toda e a descrição mínima de 60 px), ele abre sobre a coluna da ficha do
+   herói, à esquerda (a escolha é do herói: o que ele sabe e o que carrega), numa coluna só, da altura da coluna; a
+   descrição embaixo da lista. A arena, o registro e a rolagem não se mexem. As faixas, a tecla, o custo e os estados
+   são os do seletor. */
+:root body .roda-janela.seletor.lateral { position: fixed; z-index: 60; padding: 12px 14px 10px 10px; }
+:root body .roda-janela.seletor.lateral .rj-lista { grid-template-columns: minmax(0, 1fr); padding-left: 6px; }
+:root body .roda-janela.seletor.lateral .rj-lista > li { translate: none; }
+/* a coluna da ficha é estreita (~235 px): os espaços da faixa apertam (o vão 9→5, a margem direita 16→8) para o nome
+   caber em duas linhas sem estourar; a letra, o ícone e a tecla são os do seletor */
+:root body .roda-janela.seletor.lateral .rj-linha { column-gap: 5px; padding-right: 8px; }
+:root body .roda-janela.seletor.lateral::before { content: ""; position: absolute; inset: 0; pointer-events: none;
+  border-right: 1px solid rgba(176, 138, 69, 0.35); }

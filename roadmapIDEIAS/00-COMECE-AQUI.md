@@ -3325,3 +3325,18 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   do número, sem erro no console; suíte, gabarito (sem mudança), pyflakes e fumaça.
 - **O tempo das baterias (registrado nos LEIA-ME):** as escolhas, 60 cenários em ~7 min (~6 s cada); a composição
   compacta, 39 cenários em ~12 min (15 a 21 s cada: a rodada de ataque, os dois menus, o mouse em cada habilidade).
+  A "uma hora" estimada antes não se confirmou: as duas baterias juntas somam ~19 min.
+
+### 17/10/2026 (data do computador local) — Protótipo: a composição compacta das lutas cheias (em avaliação)
+
+- **Pedido de Jean:** nas lutas cheias em 1280×720, todas as habilidades à vista sem rolar e a descrição legível, sem
+  perder o que a 1.111.0 aprovou; só protótipo, até duas alternativas.
+- **Feito, só no protótipo** (`ferramentas/prototipos/hud/compacta/`): A, arena compacta (efeitos na linha do nome,
+  seletor em três colunas); B, seletor sobre a coluna da ficha quando a lista inteira não cabe embaixo. Produção, A e B
+  com os mesmos dados: 4 lutas reais (até 6 × 6, o máximo que as regras permitem) × 3 janelas, mais o teclado.
+- **Resultado:** A corta os nomes das cartas com 3 ou 4 efeitos e não resolve a luta maior (5 de 7); B mostra 7 de 7
+  habilidades e 5 de 5 itens em todos os casos, a descrição de 150 a 179 px, sem mexer na arena, e nas lutas pequenas é
+  igual à produção. Nas três: menus e mira não mexem nem cobrem cartas, teclado e movimento reduzido certos.
+- **Recomendado:** B. **Custos:** cobre a ficha enquanto aberto; nomes em duas ou três linhas na coluna estreita.
+  **Limite:** o registro curto com muitos efeitos em 1280×720 (a arena cresce) fica para outra entrega.
+- **Próximo:** Jean avaliar a 1.113.1 jogando e decidir a composição; nada integrado; nenhum outro lote nem a 1B.

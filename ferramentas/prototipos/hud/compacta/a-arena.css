@@ -1,0 +1,17 @@
+/* Alternativa A, "arena compacta" (protótipo): a partir de 5 cartas num lado (batalha.js, a troca de compacta.mjs), as
+   cartas assentam mais juntas e os efeitos vão para a linha do nome, à direita; o nome cede (reticências; a ficha do
+   inimigo mostra o nome inteiro). O retrato, a vida, o recurso, as flechas, o golpe preparado e o nível ficam.
+   O seletor abre em três colunas quando as duas não cabem embaixo da arena compacta. */
+:root body #arena.compacta .fileira { gap: 4px; }
+:root body #arena.compacta .carta { grid-template-columns: 36px minmax(0, 1fr) auto; padding-top: 3px; padding-bottom: 4px; }
+:root body #arena.compacta .carta .icone { grid-row: span 2; }
+:root body #arena.compacta .carta-nome { grid-column: 2; grid-row: 1; min-width: 0; }
+:root body #arena.compacta .carta-efeitos { grid-column: 3; grid-row: 1; margin: 0 0 0 4px; padding: 0; border: 0; flex-wrap: nowrap; gap: 2px; }
+:root body #arena.compacta :is(.carta-hp, .carta-rec, .carta-flechas) { grid-column: 2 / 4; }
+:root body #arena.compacta .ef { font-size: 12px; padding: 0 2px 0 1px; }
+:root body #arena.compacta .ef img.sprite { --s: 12; }
+:root body #arena.compacta .ef .camadas { font-size: 11px; padding: 0 1px; }
+:root body #arena.compacta .preparando { grid-column: 1 / -1; }
+/* o seletor em três colunas */
+:root body .roda-janela.seletor.tres .rj-lista { grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 12px; }
+:root body .roda-janela.seletor.tres .rj-linha { grid-template-columns: 26px 32px minmax(0, 1fr) auto; column-gap: 6px; padding-right: 10px; }
