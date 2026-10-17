@@ -1,0 +1,24 @@
+Pintura no Aseprite pelo MCP (aseprite-bridge, extensão 1.0.0), 16/10/2026. Cada camada foi escrita por
+ferramentas/arte/aseprite/pintar.lua (execute_script), a partir das listas de auxiliares/couro_r1.py; o documento e as
+camadas, por auxiliares/montar.lua; o .aseprite por saveCopyAs; o PNG por Image:drawSprite + saveAs (sem janela).
+
+== montagem 1 (gibão e botas; o gibão foi refeito depois, ver montagem 2)
+gibao-32 (primeira silhueta, substituída): forro 18 | corpo 108 | abas 92 | pala 52 | bordas 58 | fecho 38 | costuras 0 | contorno 80
+gibao-64 (primeira silhueta, substituída): forro 72 | corpo 466 | abas 453 | pala 192 | bordas 180 | fecho 94 | costuras 17 | contorno 160
+bota-32: tras 67 | tras_dobra 23 | tras_sola 11 | frente 137 | frente_dobra 40 | frente_sola 37 | tira 15 | detalhes 5 | contorno 118
+bota-64: tras 313 | tras_dobra 109 | tras_sola 45 | frente 589 | frente_dobra 171 | frente_sola 113 | tira 52 | detalhes 28 | contorno 241
+Em todas as camadas: 0 diferentes na releitura, 0 fora da tela.
+
+== montagem 2 (o gibão com a silhueta nova: alças, nuca, cavas e o recorte da barra)
+gibao-32: forro 10 | corpo 150 | abas 110 | pala 28 | bordas 54 | fecho 34 | costuras 0 | contorno 80
+  reaberto: as mesmas 8 camadas e contagens | 32x32 RGB
+gibao-64: forro 41 | corpo 620 | abas 513 | pala 122 | bordas 150 | fecho 84 | costuras 17 | contorno 162
+  reaberto: as mesmas 8 camadas e contagens | 64x64 RGB
+Em todas as camadas: 0 diferentes na releitura, 0 fora da tela.
+
+== conferência (open_sprite + get_sprite_screenshot do conector, comparação em Python)
+gibao-64: 8 camadas, 64x64; captura do editor = PNG exportado = prévia do gerador; alfa só 0 e 255; 16 cores
+gibao-32: 8 camadas, 32x32; captura do editor = PNG = prévia; alfa só 0 e 255; 13 cores
+bota-64: 9 camadas, 64x64; captura do editor = PNG = prévia; alfa só 0 e 255; 24 cores
+bota-32: 9 camadas, 32x32; captura do editor = PNG = prévia; alfa só 0 e 255; 21 cores
+@2x: a duplicação exata (vizinho mais próximo, Pillow), conferida pixel a pixel nos quatro.

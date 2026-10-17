@@ -1,0 +1,37 @@
+== unittest
+----------------------------------------------------------------------
+Ran 603 tests in 542.635s
+
+OK
+== gabarito
+OK
+== pyflakes
+rpg\eventos\__init__.py:3:1: '.comuns' imported but unused
+rpg\eventos\__init__.py:3:1: '.biomas' imported but unused
+rpg\eventos\__init__.py:3:1: '.classe' imported but unused
+rpg\eventos\__init__.py:3:1: '.noite' imported but unused
+rpg\eventos\__init__.py:3:1: '.vila' imported but unused
+rpg\eventos\__init__.py:3:1: '.comitiva' imported but unused
+rpg\eventos\__init__.py:4:1: '.motor.REGISTRO' imported but unused
+rpg\eventos\__init__.py:4:1: '.motor.disparar' imported but unused
+rpg\eventos\__init__.py:4:1: '.motor.disparar_id' imported but unused
+ferramentas/prototipos/hud/couro-aseprite/auxiliares\couro_r1.py:249:5: local variable 'frente' is assigned to but never used
+== fumaca
+  ok  D1: na taverna, o quadro diz a ação; o cartão Dormir, o custo, a recuperação e as provisões das regras
+  ok  dormir devolve exatamente o que o quadro disse (30 → 51 de vida, todo o Vigor)
+  ok  sem erros no console
+tudo certo
+== cliques_seguidos
+  ok   ao voltar ao mercado, a ordem de sempre (■■··········)
+  ok   as cartas ✉ de dois companheiros, uma logo depois da outra: Morel, Odette
+  ok   sem erros no console
+tudo certo
+== redimensionar
+  ok  capela, passo 5 (grande, 1920×1009): balões, pontas e áreas a 0 px da página aberta nesse tamanho
+  ok  capela, passo 6 (pequena, 1280×720): balões, pontas e áreas a 0 px da página aberta nesse tamanho
+  ok  o F4 liga o destaque das interações
+tudo certo
+== gabarito.json
+
+== depois: o aviso de couro_r1.py (variável sem uso) foi corrigido; python -m pyflakes nas auxiliares e em comparar_couro.py: limpo; o gerador reproduz os quatro PNGs.
+(unittest levou 542 s nesta rodada, contra ~55 s antes: havia um python jogar.py aberto fora desta sessão; a causa da lentidão não foi investigada.)

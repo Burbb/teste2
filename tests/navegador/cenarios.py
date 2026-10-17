@@ -43,13 +43,30 @@ from rpg.web.ponte import WebUI
 from rpg.web.servidor import Servidor
 
 
+def espaco_do_desenho(desenho):
+    """O espaço de uma peça pelo desenho das bases (itens.py): "gibao" é armadura, "bota" é pes; arma se não achar."""
+    from rpg import itens
+    if any(i == desenho for bases in itens.ARMADURAS.values() for _, _, i in bases):
+        return "armadura"
+    return next((slot for slot, por_classe in itens.PECAS.items()
+                 if any(i == desenho for bases in por_classe.values() for _, _, i in bases)), "arma")
+
+
 def vestir_arma(g):
     """ARMA=<desenho> (machado, maca...): a arma vestida passa a ser uma comum com esse desenho (para ver o desenho no
-    corpo, na ficha e na comparação). Sorteio próprio: sem ARMA, o cenário sai igual."""
+    corpo, na ficha e na comparação). VESTIR=<desenho>[,<desenho>] (gibao,bota...): o mesmo para as outras peças, cada
+    uma no seu espaço. Sorteios próprios: sem ARMA e sem VESTIR, o cenário sai igual."""
     if os.environ.get("ARMA"):
         r = random.Random(2)
         g.j.equip["arma"] = next(e for e in iter(lambda: gerar_equip(r, g.j.classe, max(1, g.j.nivel), slot="arma", raridade="comum"), None)
                                  if e["icone"] == os.environ["ARMA"])
+    if os.environ.get("VESTIR"):
+        r = random.Random(4)
+        for desenho in os.environ["VESTIR"].split(","):
+            espaco = espaco_do_desenho(desenho)
+            g.j.equip[espaco] = next(e for e in iter(lambda: gerar_equip(r, g.j.classe, max(1, g.j.nivel), slot=espaco,
+                                                                          raridade="comum"), None) if e["icone"] == desenho)
+    if os.environ.get("ARMA") or os.environ.get("VESTIR"):
         g.j.recalcular()
 
 
@@ -907,7 +924,8 @@ def mercado(ui):
     ferramentas/prototipos/hud): um Martelo na frente da mochila e uma Pena de Fênix na bolsa. AMOSTRAS=2 (o escudo e o
     unguento da 1.94.0): um escudo na frente da mochila e um Unguento de Prata na bolsa. AMOSTRAS=3 (a proposta do
     machado e da bomba): um machado na frente da mochila e uma Bomba de Fumaça na bolsa. ARMA=machado: a arma vestida.
-    AMOSTRA=<desenho> (arco, cajado...): uma arma da CLASSE com esse desenho na frente da mochila."""
+    AMOSTRA=<desenho> (arco, cajado, gibao, bota...): uma peça da CLASSE com esse desenho na frente da mochila.
+    VESTIR=gibao,bota: as peças vestidas."""
     g = Jogo(ui, seed=int(os.environ.get("SEMENTE", "8")), pasta_saves=tempfile.mkdtemp())
     ui.jogo = g
     classe = os.environ.get("CLASSE", "arqueiro")
@@ -928,7 +946,8 @@ def mercado(ui):
         g.j.consumiveis[consumivel] = 1
     if os.environ.get("AMOSTRA"):
         r = random.Random(3)
-        g.j.mochila.insert(0, next(e for e in iter(lambda: gerar_equip(r, classe, 2, slot="arma"), None) if e["icone"] == os.environ["AMOSTRA"]))
+        espaco = espaco_do_desenho(os.environ["AMOSTRA"])
+        g.j.mochila.insert(0, next(e for e in iter(lambda: gerar_equip(r, classe, 2, slot=espaco), None) if e["icone"] == os.environ["AMOSTRA"]))
     vestir_arma(g)
     g.loja()
     try:

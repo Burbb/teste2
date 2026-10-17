@@ -1,0 +1,25 @@
+normal atual gibao ok
+normal atual bota ok
+normal proposta gibao ok
+normal proposta bota ok
+baixa atual gibao ok
+baixa atual bota ok
+baixa proposta gibao ok
+baixa proposta bota ok
+{"nome":"normal-atual-gibao-mercado","sprite-gibao":["slot-px.mini→32","slot-px.celula→32"],"sprite-bota":["slot-px.mini→32","slot-px.r-comum→0","slot-px.celula→32"]}
+{"nome":"normal-atual-gibao-saque","cota-32":["slot-px.mini→32"],"botas-ferro-32":["slot-px.mini→32"],"sprite-gibao":["achado-arte→64"],"cota-48":["achado-arte.pequena→48"]}
+{"nome":"normal-atual-bota-mercado","sprite-gibao":["slot-px.mini→32"],"sprite-bota":["slot-px.mini→32","slot-px.r-comum→0","slot-px.celula→32","slot-px.celula→32"]}
+{"nome":"normal-atual-bota-saque","cota-32":["slot-px.mini→32"],"botas-ferro-32":["slot-px.mini→32"],"sprite-bota":["achado-arte→64"],"botas-ferro-48":["achado-arte.pequena→48"]}
+{"nome":"normal-proposta-gibao-mercado","gibao-32":["slot-px.mini→32","slot-px.celula→32"],"bota-32":["slot-px.mini→32","slot-px.r-comum→0","slot-px.celula→32"]}
+{"nome":"normal-proposta-gibao-saque","cota-32":["slot-px.mini→32"],"botas-ferro-32":["slot-px.mini→32"],"gibao-64":["achado-arte→64"],"cota-48":["achado-arte.pequena→48"]}
+{"nome":"normal-proposta-bota-mercado","gibao-32":["slot-px.mini→32"],"bota-32":["slot-px.mini→32","slot-px.r-comum→0","slot-px.celula→32","slot-px.celula→32"]}
+{"nome":"normal-proposta-bota-saque","cota-32":["slot-px.mini→32"],"botas-ferro-32":["slot-px.mini→32"],"bota-64":["achado-arte→64"],"botas-ferro-48":["achado-arte.pequena→48"]}
+{"nome":"baixa-atual-gibao-mercado","sprite-gibao":["slot-px.mini→32","slot-px.celula→32"],"sprite-bota":["slot-px.mini→32","slot-px.r-comum→0","slot-px.celula→32"]}
+{"nome":"baixa-atual-gibao-saque","cota-32":["slot-px.mini→32"],"botas-ferro-32":["slot-px.mini→32"],"sprite-gibao":["achado-arte→64"],"cota-48":["achado-arte.pequena→48"]}
+{"nome":"baixa-atual-bota-mercado","sprite-gibao":["slot-px.mini→32"],"sprite-bota":["slot-px.mini→32","slot-px.r-comum→0","slot-px.celula→32","slot-px.celula→32"]}
+{"nome":"baixa-atual-bota-saque","cota-32":["slot-px.mini→32"],"botas-ferro-32":["slot-px.mini→32"],"sprite-bota":["achado-arte→64"],"botas-ferro-48":["achado-arte.pequena→48"]}
+{"nome":"baixa-proposta-gibao-mercado","gibao-32":["slot-px.mini→32","slot-px.celula→32"],"bota-32":["slot-px.mini→32","slot-px.r-comum→0","slot-px.celula→32"]}
+{"nome":"baixa-proposta-gibao-saque","cota-32":["slot-px.mini→32"],"botas-ferro-32":["slot-px.mini→32"],"gibao-64":["achado-arte→64"],"cota-48":["achado-arte.pequena→48"]}
+{"nome":"baixa-proposta-bota-mercado","gibao-32":["slot-px.mini→32"],"bota-32":["slot-px.mini→32","slot-px.r-comum→0","slot-px.celula→32","slot-px.celula→32"]}
+{"nome":"baixa-proposta-bota-saque","cota-32":["slot-px.mini→32"],"botas-ferro-32":["slot-px.mini→32"],"bota-64":["achado-arte→64"],"botas-ferro-48":["achado-arte.pequena→48"]}
+sem erros

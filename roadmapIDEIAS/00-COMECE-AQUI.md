@@ -3039,3 +3039,25 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   os avisos de `rpg/eventos/__init__.py`; `fumaca.mjs`, `cliques_seguidos.mjs` e `redimensionar.mjs`: "tudo certo".
   Tudo neste Windows. `tests.equilibrio`/`replay` não rodaram (nenhum número mudou).
 - **Próximo:** nenhum item começou; parar aqui.
+
+### 16/10/2026 (data do computador local) — Proposta: o peitoral e as botas de couro em 32 e 64 (protótipo, sem versão)
+
+- **Pedido de Jean:** o próximo lote, só no protótipo: o peito e os pés de couro em 32 e 64, no Aseprite pelo MCP
+  com o `pintar.lua`; silhueta numa cor só antes da cor; comparar atual × candidato no jogo nas duas janelas; parar
+  para a avaliação (sem integrar, sem versão, sem outras peças; 40 e 48 depois da aprovação).
+- **Os dados:** `gibao` = Gibão de Couro, Capa de Patrulha e Colete Acolchoado (o peito do Arqueiro) e o único Pele do
+  Penitente; `bota` = Bota de Caça e o único Botas do Andarilho Morto; materiais de couro (Rasgado a Rúnico). O
+  sprite `bota` também é o estado Iniciativa (outro papel). Contradições anotadas para o Jean: a Capa de Patrulha
+  com um desenho de colete; Tachonado e Rúnico sem tachas nem runas no desenho comum.
+- **Feito:** `ferramentas/prototipos/hud/couro-aseprite/`: os `.aseprite` em camadas (o gibão com 8, as botas com 9),
+  os PNGs e @2x de `rodada1/`, as pranchas, as fotos, os logs e o `LEIA-ME.md` com as escolhas. O gibão é um colete
+  sem mangas com alças, decote mostrando o avesso, pala costurada, amarração, cintura e saia em abas; as botas, um par
+  de perfil com cano dobrado, tira com fivela no tornozelo, peito do pé e sola com salto. Listas calculadas por
+  `auxiliares/couro_r1.py` (polígonos na grade de cada tamanho); pintura pelo `pintar.lua`.
+- **Ferramenta compartilhada:** `tests/navegador/cenarios.py` ganhou `VESTIR` e `AMOSTRA` para peças que não são
+  arma (o sorteio das armas é o mesmo). Novos no protótipo: `fotografar_couro.mjs`, `comparar_couro.py`.
+- **Conferido:** os `.aseprite` reabertos (camadas, dimensões, alfa só 0 e 255), a captura do editor igual ao PNG e à
+  prévia; silhueta, carvão e as fotos atual × candidato (ficha e mercado 32, saque 64, telas inteiras) em 1500×950 e
+  1280×720, sem erro no console; verificações do `CLAUDE.md` em `couro-aseprite/logs/verificacoes.log`.
+- **Continua como está no jogo:** os sprites 16×16. Próximo: a avaliação do Jean.
+
