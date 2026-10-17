@@ -1,0 +1,429 @@
+{
+ "relatorio": [
+  {
+   "nome": "normal-atual-capuz-mercado",
+   "sprite-capuz": [
+    "slot-px.mini→32",
+    "slot-px.r-magico→0",
+    "slot-px.celula→32",
+    "slot-px.celula→32"
+   ],
+   "sprite-luva": [
+    "slot-px.mini→32"
+   ]
+  },
+  {
+   "nome": "normal-atual-capuz-saque",
+   "elmo-32": [
+    "slot-px.mini→32"
+   ],
+   "manopla-32": [
+    "slot-px.mini→32"
+   ],
+   "sprite-capuz": [
+    "achado-arte→64"
+   ],
+   "elmo-48": [
+    "achado-arte.pequena→48"
+   ]
+  },
+  {
+   "nome": "normal-atual-luva-mercado",
+   "sprite-capuz": [
+    "slot-px.mini→32",
+    "slot-px.r-magico→0",
+    "slot-px.celula→32"
+   ],
+   "sprite-luva": [
+    "slot-px.mini→32",
+    "slot-px.celula→32"
+   ]
+  },
+  {
+   "nome": "normal-atual-luva-saque",
+   "elmo-32": [
+    "slot-px.mini→32"
+   ],
+   "manopla-32": [
+    "slot-px.mini→32"
+   ],
+   "sprite-luva": [
+    "achado-arte→64"
+   ],
+   "manopla-48": [
+    "achado-arte.pequena→48"
+   ]
+  },
+  {
+   "nome": "normal-couro-capuz-mercado",
+   "capuz-32": [
+    "slot-px.mini→32",
+    "slot-px.r-magico→0",
+    "slot-px.celula→32",
+    "slot-px.celula→32"
+   ],
+   "luva-32": [
+    "slot-px.mini→32"
+   ]
+  },
+  {
+   "nome": "normal-couro-capuz-saque",
+   "elmo-32": [
+    "slot-px.mini→32"
+   ],
+   "manopla-32": [
+    "slot-px.mini→32"
+   ],
+   "capuz-64": [
+    "achado-arte→64"
+   ],
+   "elmo-48": [
+    "achado-arte.pequena→48"
+   ]
+  },
+  {
+   "nome": "normal-couro-luva-mercado",
+   "capuz-32": [
+    "slot-px.mini→32",
+    "slot-px.r-magico→0",
+    "slot-px.celula→32"
+   ],
+   "luva-32": [
+    "slot-px.mini→32",
+    "slot-px.celula→32"
+   ]
+  },
+  {
+   "nome": "normal-couro-luva-saque",
+   "elmo-32": [
+    "slot-px.mini→32"
+   ],
+   "manopla-32": [
+    "slot-px.mini→32"
+   ],
+   "luva-64": [
+    "achado-arte→64"
+   ],
+   "manopla-48": [
+    "achado-arte.pequena→48"
+   ]
+  },
+  {
+   "nome": "normal-atual_mago-capuz-mercado",
+   "sprite-capuz": [
+    "slot-px.mini→32",
+    "slot-px.r-magico→0",
+    "slot-px.celula→32"
+   ],
+   "sprite-luva": [
+    "slot-px.mini→32"
+   ]
+  },
+  {
+   "nome": "normal-atual_mago-capuz-saque",
+   "elmo-32": [
+    "slot-px.mini→32"
+   ],
+   "manopla-32": [
+    "slot-px.mini→32"
+   ],
+   "sprite-capuz": [
+    "achado-arte→64"
+   ],
+   "elmo-48": [
+    "achado-arte.pequena→48"
+   ]
+  },
+  {
+   "nome": "normal-atual_mago-luva-mercado",
+   "sprite-capuz": [
+    "slot-px.mini→32",
+    "slot-px.r-magico→0"
+   ],
+   "sprite-luva": [
+    "slot-px.mini→32",
+    "slot-px.celula→32"
+   ]
+  },
+  {
+   "nome": "normal-atual_mago-luva-saque",
+   "elmo-32": [
+    "slot-px.mini→32"
+   ],
+   "manopla-32": [
+    "slot-px.mini→32"
+   ],
+   "sprite-luva": [
+    "achado-arte→64"
+   ],
+   "manopla-48": [
+    "achado-arte.pequena→48"
+   ]
+  },
+  {
+   "nome": "normal-tecido-capuz-mercado",
+   "capuz-32": [
+    "slot-px.mini→32",
+    "slot-px.r-magico→0",
+    "slot-px.celula→32"
+   ],
+   "luva-32": [
+    "slot-px.mini→32"
+   ]
+  },
+  {
+   "nome": "normal-tecido-capuz-saque",
+   "elmo-32": [
+    "slot-px.mini→32"
+   ],
+   "manopla-32": [
+    "slot-px.mini→32"
+   ],
+   "capuz-64": [
+    "achado-arte→64"
+   ],
+   "elmo-48": [
+    "achado-arte.pequena→48"
+   ]
+  },
+  {
+   "nome": "normal-tecido-luva-mercado",
+   "capuz-32": [
+    "slot-px.mini→32",
+    "slot-px.r-magico→0"
+   ],
+   "luva-32": [
+    "slot-px.mini→32",
+    "slot-px.celula→32"
+   ]
+  },
+  {
+   "nome": "normal-tecido-luva-saque",
+   "elmo-32": [
+    "slot-px.mini→32"
+   ],
+   "manopla-32": [
+    "slot-px.mini→32"
+   ],
+   "luva-64": [
+    "achado-arte→64"
+   ],
+   "manopla-48": [
+    "achado-arte.pequena→48"
+   ]
+  },
+  {
+   "nome": "baixa-atual-capuz-mercado",
+   "sprite-capuz": [
+    "slot-px.mini→32",
+    "slot-px.r-magico→0",
+    "slot-px.celula→32",
+    "slot-px.celula→32"
+   ],
+   "sprite-luva": [
+    "slot-px.mini→32"
+   ]
+  },
+  {
+   "nome": "baixa-atual-capuz-saque",
+   "elmo-32": [
+    "slot-px.mini→32"
+   ],
+   "manopla-32": [
+    "slot-px.mini→32"
+   ],
+   "sprite-capuz": [
+    "achado-arte→64"
+   ],
+   "elmo-48": [
+    "achado-arte.pequena→48"
+   ]
+  },
+  {
+   "nome": "baixa-atual-luva-mercado",
+   "sprite-capuz": [
+    "slot-px.mini→32",
+    "slot-px.r-magico→0",
+    "slot-px.celula→32"
+   ],
+   "sprite-luva": [
+    "slot-px.mini→32",
+    "slot-px.celula→32"
+   ]
+  },
+  {
+   "nome": "baixa-atual-luva-saque",
+   "elmo-32": [
+    "slot-px.mini→32"
+   ],
+   "manopla-32": [
+    "slot-px.mini→32"
+   ],
+   "sprite-luva": [
+    "achado-arte→64"
+   ],
+   "manopla-48": [
+    "achado-arte.pequena→48"
+   ]
+  },
+  {
+   "nome": "baixa-couro-capuz-mercado",
+   "capuz-32": [
+    "slot-px.mini→32",
+    "slot-px.r-magico→0",
+    "slot-px.celula→32",
+    "slot-px.celula→32"
+   ],
+   "luva-32": [
+    "slot-px.mini→32"
+   ]
+  },
+  {
+   "nome": "baixa-couro-capuz-saque",
+   "elmo-32": [
+    "slot-px.mini→32"
+   ],
+   "manopla-32": [
+    "slot-px.mini→32"
+   ],
+   "capuz-64": [
+    "achado-arte→64"
+   ],
+   "elmo-48": [
+    "achado-arte.pequena→48"
+   ]
+  },
+  {
+   "nome": "baixa-couro-luva-mercado",
+   "capuz-32": [
+    "slot-px.mini→32",
+    "slot-px.r-magico→0",
+    "slot-px.celula→32"
+   ],
+   "luva-32": [
+    "slot-px.mini→32",
+    "slot-px.celula→32"
+   ]
+  },
+  {
+   "nome": "baixa-couro-luva-saque",
+   "elmo-32": [
+    "slot-px.mini→32"
+   ],
+   "manopla-32": [
+    "slot-px.mini→32"
+   ],
+   "luva-64": [
+    "achado-arte→64"
+   ],
+   "manopla-48": [
+    "achado-arte.pequena→48"
+   ]
+  },
+  {
+   "nome": "baixa-atual_mago-capuz-mercado",
+   "sprite-capuz": [
+    "slot-px.mini→32",
+    "slot-px.r-magico→0",
+    "slot-px.celula→32"
+   ],
+   "sprite-luva": [
+    "slot-px.mini→32"
+   ]
+  },
+  {
+   "nome": "baixa-atual_mago-capuz-saque",
+   "elmo-32": [
+    "slot-px.mini→32"
+   ],
+   "manopla-32": [
+    "slot-px.mini→32"
+   ],
+   "sprite-capuz": [
+    "achado-arte→64"
+   ],
+   "elmo-48": [
+    "achado-arte.pequena→48"
+   ]
+  },
+  {
+   "nome": "baixa-atual_mago-luva-mercado",
+   "sprite-capuz": [
+    "slot-px.mini→32",
+    "slot-px.r-magico→0"
+   ],
+   "sprite-luva": [
+    "slot-px.mini→32",
+    "slot-px.celula→32"
+   ]
+  },
+  {
+   "nome": "baixa-atual_mago-luva-saque",
+   "elmo-32": [
+    "slot-px.mini→32"
+   ],
+   "manopla-32": [
+    "slot-px.mini→32"
+   ],
+   "sprite-luva": [
+    "achado-arte→64"
+   ],
+   "manopla-48": [
+    "achado-arte.pequena→48"
+   ]
+  },
+  {
+   "nome": "baixa-tecido-capuz-mercado",
+   "capuz-32": [
+    "slot-px.mini→32",
+    "slot-px.r-magico→0",
+    "slot-px.celula→32"
+   ],
+   "luva-32": [
+    "slot-px.mini→32"
+   ]
+  },
+  {
+   "nome": "baixa-tecido-capuz-saque",
+   "elmo-32": [
+    "slot-px.mini→32"
+   ],
+   "manopla-32": [
+    "slot-px.mini→32"
+   ],
+   "capuz-64": [
+    "achado-arte→64"
+   ],
+   "elmo-48": [
+    "achado-arte.pequena→48"
+   ]
+  },
+  {
+   "nome": "baixa-tecido-luva-mercado",
+   "capuz-32": [
+    "slot-px.mini→32",
+    "slot-px.r-magico→0"
+   ],
+   "luva-32": [
+    "slot-px.mini→32",
+    "slot-px.celula→32"
+   ]
+  },
+  {
+   "nome": "baixa-tecido-luva-saque",
+   "elmo-32": [
+    "slot-px.mini→32"
+   ],
+   "manopla-32": [
+    "slot-px.mini→32"
+   ],
+   "luva-64": [
+    "achado-arte→64"
+   ],
+   "manopla-48": [
+    "achado-arte.pequena→48"
+   ]
+  }
+ ],
+ "erros": []
+}

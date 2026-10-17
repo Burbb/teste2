@@ -1,0 +1,33 @@
+== início Sat Oct 17 01:06:58     2026
+ M ferramentas/prototipos/hud/comparar_couro2.py
+ M ferramentas/prototipos/hud/fotografar_couro2.mjs
+?? ferramentas/prototipos/hud/couro2-aseprite/auxiliares/couro2_r2.py
+?? ferramentas/prototipos/hud/couro2-aseprite/logs/fotografar-r2.log
+?? ferramentas/prototipos/hud/couro2-aseprite/logs/verificacoes-r2.log
+?? ferramentas/prototipos/hud/couro2-aseprite/rodada2/
+(sem PLAYWRIGHT_* no ambiente do unittest: a fumaça roda uma vez só, separada)
+== unittest
+----------------------------------------------------------------------
+Ran 603 tests in 53.340s
+
+OK (skipped=1)
+segundos: 54
+== gabarito
+OK
+== pyflakes
+rpg\eventos\__init__.py:3:1: '.comuns' imported but unused
+rpg\eventos\__init__.py:3:1: '.biomas' imported but unused
+rpg\eventos\__init__.py:3:1: '.classe' imported but unused
+rpg\eventos\__init__.py:3:1: '.noite' imported but unused
+rpg\eventos\__init__.py:3:1: '.vila' imported but unused
+rpg\eventos\__init__.py:3:1: '.comitiva' imported but unused
+rpg\eventos\__init__.py:4:1: '.motor.REGISTRO' imported but unused
+rpg\eventos\__init__.py:4:1: '.motor.disparar' imported but unused
+rpg\eventos\__init__.py:4:1: '.motor.disparar_id' imported but unused
+== fumaca
+  ok  dormir devolve exatamente o que o quadro disse (30 → 51 de vida, todo o Vigor)
+  ok  sem erros no console
+tudo certo
+segundos: 497
+== gabarito.json
+== fim Sat Oct 17 01:16:19     2026

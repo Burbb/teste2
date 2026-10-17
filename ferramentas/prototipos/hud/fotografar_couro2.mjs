@@ -8,6 +8,9 @@
 //     Vender (32) e a dica com a comparação (Shift), uma rodada por peça;
 //   - saque (vila, CLASSE=arqueiro, ACHADO=<peça>): a tela inteira e o cartão do achado (64). O "você usa" fica com a
 //     peça de ferro que o cenário veste (o elmo e a manopla, 48 nativo): nesta rodada o couro não tem 48.
+// Rodada 2 (couro2-aseprite/rodada2/: o capuz de couro refeito, a luva de couro aprovada, o capuz de tecido e a luva de
+// seda): VERSOES=atual,couro,atual_mago,tecido, com SAIDA=ferramentas/prototipos/hud/couro2-aseprite/rodada2/capturas/jogo;
+// o couro no Arqueiro e o tecido no Mago, cada um nos dados da sua classe.
 // Guarda em SAIDA (padrão: couro2-aseprite/capturas/jogo) como <janela>-<versao>-<peça>-<lugar>.png e os recortes
 // pequenos como zoom-...; comparar_couro2.py monta as comparações.
 //   PLAYWRIGHT_MODULO=<caminho do playwright>/index.mjs node ferramentas/prototipos/hud/fotografar_couro2.mjs
@@ -41,6 +44,16 @@ async function subir(cenario, amb = {}) {
   return { proc, url };
 }
 const JANELAS = { normal: [1500, 950], baixa: [1280, 720] };
+// as versões: a classe do cenário, a pasta dos arquivos e qual arquivo responde por cada desenho (a rodada 2 separa
+// os materiais: o Arqueiro vê o couro, o Mago o tecido; o jogo de hoje escolhe só pelo nome do desenho)
+const R2 = path.join(aqui, "couro2-aseprite", "rodada2");
+const VERSAO = {
+  atual: { classe: "arqueiro" },
+  proposta: { classe: "arqueiro", pasta: PROPOSTA, mapa: { capuz: "capuz", luva: "luva" } },
+  couro: { classe: "arqueiro", pasta: R2, mapa: { capuz: "capuz", luva: "luva" } },
+  atual_mago: { classe: "mago" },
+  tecido: { classe: "mago", pasta: R2, mapa: { capuz: "capuz_tecido", luva: "luva_seda" } },
+};
 const VERSOES = process.env.VERSOES ? process.env.VERSOES.split(",") : ["atual", "proposta"];
 const PECAS = ["capuz", "luva"];
 const relatorio = [], erros = [];
@@ -48,10 +61,13 @@ const b = await chromium.launch(process.env.CHROMIUM ? { executablePath: process
 async function pagina(url, jan, versao, nome) {
   const [W, H] = JANELAS[jan];
   const p = await b.newPage({ viewport: { width: W, height: H } });
-  if (versao === "proposta") {
+  const v = VERSAO[versao];
+  if (v.pasta) {
     await p.route(/\/static\/icones\.js(\?|$)/, (r) => r.fulfill({ body: iconesProposta, contentType: "application/javascript" }));
-    await p.route(/\/static\/hud\/icones\/(capuz|luva)-[^/]+\.png/, (r) => r.fulfill({
-      path: path.join(PROPOSTA, path.basename(new URL(r.request().url()).pathname)), contentType: "image/png" }));
+    await p.route(/\/static\/hud\/icones\/(capuz|luva)-[^/]+\.png/, (r) => {
+      const m = path.basename(new URL(r.request().url()).pathname).match(/^(capuz|luva)(-.*)$/);
+      return r.fulfill({ path: path.join(v.pasta, v.mapa[m[1]] + m[2]), contentType: "image/png" });
+    });
   }
   p.on("pageerror", (e) => erros.push(`${nome}: ${e}`));
   p.on("console", (m) => { if (m.type() === "error" && !/favicon/.test(m.location().url || "")) erros.push(`${nome}: ${m.text()}`); });
@@ -106,7 +122,7 @@ async function dica(p, alvo, nome) {
 for (const jan of Object.keys(JANELAS)) for (const versao of VERSOES) for (const peca of PECAS) {
   const n = (c) => `${jan}-${versao}-${peca}-${c}`;
   // 1. o mercado: a ficha e a mochila em 32
-  let { proc, url } = await subir("mercado", { CLASSE: "arqueiro", VESTIR: "capuz,luva", AMOSTRA: peca, SEMENTE: "1" });
+  let { proc, url } = await subir("mercado", { CLASSE: VERSAO[versao].classe, VESTIR: "capuz,luva", AMOSTRA: peca, SEMENTE: "1" });
   let p = await pagina(url, jan, versao, n("mercado"));
   await parado(p); await espera(900); await p.mouse.move(2, 2); await espera(300);
   await p.screenshot({ path: path.join(SAIDA, `${n("tela-mercado")}.png`) });
@@ -119,7 +135,7 @@ for (const jan of Object.keys(JANELAS)) for (const versao of VERSOES) for (const
   await marcar(p, n("mercado"));
   await p.close(); proc.kill();
   // 2. o saque: o cartão do achado em 64
-  ({ proc, url } = await subir("vila", { CLASSE: "arqueiro", ACHADO: peca }));
+  ({ proc, url } = await subir("vila", { CLASSE: VERSAO[versao].classe, ACHADO: peca }));
   p = await pagina(url, jan, versao, n("saque"));
   await p.waitForSelector(".janela-achado", { timeout: 30000 }); await espera(2600);
   await p.mouse.move(2, 2); await espera(200);

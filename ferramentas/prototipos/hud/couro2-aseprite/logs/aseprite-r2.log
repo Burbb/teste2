@@ -1,0 +1,21 @@
+Rodada 2 no Aseprite pelo MCP (aseprite-bridge 1.0.0), 17/10/2026: listas de auxiliares/couro2_r2.py (os 32, desenhados na grade); documento e camadas por ../couro-aseprite/auxiliares/montar.lua; camadas por ferramentas/arte/aseprite/pintar.lua; .aseprite por saveCopyAs; PNG por Image:drawSprite + saveAs; reaberto por app.open; captura do editor por get_sprite_screenshot. O 64 e os @2x: duplicação exata em Python. A luva de couro: os arquivos da rodada 1 copiados, sem refazer.
+
+== pintura (escritos; todas as camadas com 0 diferentes na releitura e 0 fora da tela)
+capuz-32 (couro, revisado): capa 116 | capuz 178 | interior 90 | borda 30 | cordao 4 | desgaste 2 | contorno 85; reaberto: as mesmas 7 camadas, 32x32 RGB
+capuz_tecido-32: capa 171 | capuz 186 | interior 90 | borda 32 | contorno 91; reaberto: as mesmas 5 camadas, 32x32 RGB
+luva_seda-32: punho 57 | luva 155 | brilho 9 | contorno 93; reaberto: as mesmas 4 camadas, 32x32 RGB
+
+== conferência
+capuz-32: (32, 32) RGBA, alfas [0, 255], cores 14; editor = png True; reaberto = png True; png = prévia True
+  64 = 32 ampliado 2× exato True; reduzido de 2×2 = 32 True
+capuz_tecido-32: (32, 32) RGBA, alfas [0, 255], cores 11; editor = png True; reaberto = png True; png = prévia True
+  64 = 32 ampliado 2× exato True; reduzido de 2×2 = 32 True
+luva_seda-32: (32, 32) RGBA, alfas [0, 255], cores 7; editor = png True; reaberto = png True; png = prévia True
+  64 = 32 ampliado 2× exato True; reduzido de 2×2 = 32 True
+luva-32.aseprite: rodada2 = rodada1 (aprovada, só copiada) True
+luva-32.png: rodada2 = rodada1 (aprovada, só copiada) True
+luva-32@2x.png: rodada2 = rodada1 (aprovada, só copiada) True
+luva-64.png: rodada2 = rodada1 (aprovada, só copiada) True
+luva-64@2x.png: rodada2 = rodada1 (aprovada, só copiada) True
+
+== silhuetas: couro m1 (abas até a beira da tela), m2/m3 (o meio da barra uma linha abaixo); tecido m1 (a ponta em pixels soltos), m2 (topo redondo: lia como fantasma), m3 (os ombros, o pico macio, o pano mais escuro; o pixel solto da onda na beira tirado).

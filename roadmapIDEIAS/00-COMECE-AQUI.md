@@ -3186,3 +3186,20 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   cura, tratamento ou estado do personagem. Conferir demais penalidades antes de atribuir toda redução a ferimentos.
   Protótipo e formato final ainda serão avaliados.
 - **Escopo:** só documentação; nenhuma implementação ou teste de jogo executado nesta atualização.
+
+### 17/10/2026 (data do computador local) — Proposta: o caimento do capuz de couro e os materiais separados (protótipo, sem versão)
+
+- **Pedido de Jean:** a luva de couro com braçadeira aprovada visualmente (preservada); refazer o caimento do capuz de
+  couro (a base parecia gorro/balaclava); propor um capuz de tecido e uma luva de seda para os itens de tecido do Mago.
+- **Feito:** `ferramentas/prototipos/hud/couro2-aseprite/rodada2/` (o capuz de couro com a capa caindo em diagonal e
+  dois vincos de dobra, sem aro; o capuz de tecido com pico macio, dobra fina na borda e pano pendurado em dobras
+  verticais; a luva de seda justa, dedos separados, punho curto e o brilho da seda; a luva de couro copiada da rodada
+  1, igual byte a byte), pintados no Aseprite pelo `pintar.lua`; o 64 é o 32 ampliado 2×.
+- **Mapeamento:** hoje o desenho é escolhido só pelo nome do sprite, igual para as duas classes. Recomendado para a
+  integração: dar às bases de tecido do Mago (Capuz, Luva de Seda) os desenhos `capuz_tecido` e `luva_seda` nos dados
+  (só o ícone); a alternativa é o `Icones` receber o item. Não feito: espera a decisão do Jean. O Chapéu de Couro
+  segue precisando de desenho próprio.
+- **Conferido:** silhuetas e cor, carvão com o gibão e as botas, editáveis reabertos; no jogo, o Arqueiro com o couro e
+  o Mago com o tecido (ficha e mercado 32, saque com o 64, telas inteiras) em 1500×950 e 1280×720, sem erro no
+  console; verificações em `couro2-aseprite/logs/verificacoes-r2.log`.
+- **Continua como está no jogo:** os sprites antigos. Próximo: a avaliação do Jean.
