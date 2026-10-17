@@ -59,6 +59,9 @@ pacote: `from rpg.combate import Combate`.
   usada pelo covil e pela guardiã da campanha; `itens.fazer_unico` monta um único do catálogo pelo id.
 - Cada coisa visível vira um **lance** estruturado (`acao`, `golpe`, `erro`, `cura`, `buff`, `salva`, `fim_acao`...)
   que a tela anima (`rpg/web/static/batalha.js`) e a telemetria contabiliza.
+  Os lances não levam o estado: a ponte o manda junto dos textos e de `ui.atualizar()`. Por isso, quando o motor
+  muda algo que a tela precisa ver antes da animação seguinte (o custo de uma habilidade, a flecha do ataque),
+  ele chama `ui.atualizar()` logo depois (1.114.1: o recurso pago chega antes do lance `acao`).
 - O espólio da vitória (ouro, XP, contratos que andaram, o que se acha nos corpos, e o que o evento ainda der logo
   depois) é juntado pelo motor (`Recompensas.abrir_espolio`/`fechar_espolio`): na tela gráfica vira um quadro só,
   mostrado antes da próxima pergunta ao jogador ou no fim do evento; no texto, cada ganho é dito na hora.

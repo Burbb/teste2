@@ -1,0 +1,207 @@
+{
+ "hab": "chuva_flechas",
+ "rotulo": "depois",
+ "velocidade": "rapido",
+ "erros": [],
+ "linha": [
+  {
+   "t": 2,
+   "marca": "clique em Habilidades"
+  },
+  {
+   "t": 9,
+   "tela": {
+    "hud_vida": "83/166",
+    "hud_rec": "47/47",
+    "carta_vida": "83/166",
+    "carta_rec": "47/47"
+   }
+  },
+  {
+   "t": 862,
+   "marca": "clique em chuva_flechas"
+  },
+  {
+   "t": 915,
+   "estado": "vida 83 Foco 27"
+  },
+  {
+   "t": 929,
+   "lance": "acao",
+   "inicio": true
+  },
+  {
+   "t": 936,
+   "tela": {
+    "hud_vida": "83/166",
+    "hud_rec": "27/47",
+    "carta_vida": "83/166",
+    "carta_rec": "27/47"
+   }
+  },
+  {
+   "t": 1054,
+   "lance": "acao",
+   "fim": true
+  },
+  {
+   "t": 1054,
+   "lance": "salva",
+   "inicio": true
+  },
+  {
+   "t": 1702,
+   "marca": "na mira (cancelável)"
+  },
+  {
+   "t": 1851,
+   "lance": "salva",
+   "fim": true
+  },
+  {
+   "t": 1851,
+   "estado": "vida 83 Foco 27"
+  },
+  {
+   "t": 2128,
+   "lance": "fim_acao",
+   "inicio": true
+  },
+  {
+   "t": 2219,
+   "lance": "fim_acao",
+   "fim": true
+  },
+  {
+   "t": 2219,
+   "lance": "acao",
+   "inicio": true
+  },
+  {
+   "t": 2286,
+   "lance": "acao",
+   "fim": true
+  },
+  {
+   "t": 2286,
+   "lance": "golpe",
+   "inicio": true,
+   "hp": 15
+  },
+  {
+   "t": 2545,
+   "lance": "golpe",
+   "fim": true
+  },
+  {
+   "t": 2627,
+   "estado": "vida 83 Foco 27"
+  },
+  {
+   "t": 2631,
+   "lance": "fim_acao",
+   "inicio": true
+  },
+  {
+   "t": 2631,
+   "lance": "fim_acao",
+   "fim": true
+  },
+  {
+   "t": 2631,
+   "lance": "acao",
+   "inicio": true
+  },
+  {
+   "t": 2704,
+   "lance": "acao",
+   "fim": true
+  },
+  {
+   "t": 2704,
+   "lance": "erro",
+   "inicio": true
+  },
+  {
+   "t": 2902,
+   "lance": "erro",
+   "fim": true
+  },
+  {
+   "t": 2994,
+   "lance": "fim_acao",
+   "inicio": true
+  },
+  {
+   "t": 2994,
+   "lance": "fim_acao",
+   "fim": true
+  },
+  {
+   "t": 2994,
+   "lance": "acao",
+   "inicio": true
+  },
+  {
+   "t": 3070,
+   "lance": "acao",
+   "fim": true
+  },
+  {
+   "t": 3070,
+   "lance": "golpe",
+   "inicio": true,
+   "hp": 58
+  },
+  {
+   "t": 3328,
+   "lance": "golpe",
+   "fim": true
+  },
+  {
+   "t": 3410,
+   "estado": "vida 83 Foco 27"
+  },
+  {
+   "t": 3414,
+   "lance": "efeito",
+   "inicio": true
+  },
+  {
+   "t": 3569,
+   "lance": "efeito",
+   "fim": true
+  },
+  {
+   "t": 3651,
+   "estado": "vida 83 Foco 27"
+  },
+  {
+   "t": 3660,
+   "lance": "fim_acao",
+   "inicio": true
+  },
+  {
+   "t": 3660,
+   "lance": "fim_acao",
+   "fim": true
+  },
+  {
+   "t": 3660,
+   "estado": "vida 83 Foco 32"
+  },
+  {
+   "t": 3688,
+   "tela": {
+    "hud_vida": "83/166",
+    "hud_rec": "32/47",
+    "carta_vida": "83/166",
+    "carta_rec": "32/47"
+   }
+  },
+  {
+   "t": 4335,
+   "marca": "a vez do herói de novo"
+  }
+ ]
+}

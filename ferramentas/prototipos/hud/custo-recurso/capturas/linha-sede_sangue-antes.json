@@ -1,0 +1,165 @@
+{
+ "hab": "sede_sangue",
+ "rotulo": "antes",
+ "velocidade": "rapido",
+ "erros": [],
+ "linha": [
+  {
+   "t": 2,
+   "marca": "clique em Habilidades"
+  },
+  {
+   "t": 5,
+   "tela": {
+    "hud_vida": "84/169",
+    "hud_rec": "52/52",
+    "carta_vida": "84/169",
+    "carta_rec": "52/52"
+   }
+  },
+  {
+   "t": 888,
+   "marca": "clique em sede_sangue"
+  },
+  {
+   "t": 1732,
+   "marca": "na mira (cancelável)"
+  },
+  {
+   "t": 1734,
+   "marca": "Voltar da mira (cancelar)"
+  },
+  {
+   "t": 2575,
+   "marca": "de volta à roda"
+  },
+  {
+   "t": 3978,
+   "marca": "confirma o alvo"
+  },
+  {
+   "t": 4088,
+   "lance": "acao",
+   "inicio": true
+  },
+  {
+   "t": 4184,
+   "lance": "acao",
+   "fim": true
+  },
+  {
+   "t": 4185,
+   "lance": "golpe",
+   "inicio": true,
+   "hp": 0
+  },
+  {
+   "t": 4496,
+   "lance": "golpe",
+   "fim": true
+  },
+  {
+   "t": 4579,
+   "estado": "vida 84 Vigor 40"
+  },
+  {
+   "t": 4597,
+   "tela": {
+    "hud_vida": "84/169",
+    "hud_rec": "40/52",
+    "carta_vida": "84/169",
+    "carta_rec": "40/52"
+   }
+  },
+  {
+   "t": 4677,
+   "lance": "cura",
+   "inicio": true,
+   "hp": 108
+  },
+  {
+   "t": 5237,
+   "tela": {
+    "hud_vida": "84/169",
+    "hud_rec": "40/52",
+    "carta_vida": "108/169",
+    "carta_rec": "40/52"
+   }
+  },
+  {
+   "t": 5418,
+   "lance": "cura",
+   "fim": true
+  },
+  {
+   "t": 5510,
+   "estado": "vida 108 Vigor 40"
+  },
+  {
+   "t": 5522,
+   "lance": "fim_acao",
+   "inicio": true
+  },
+  {
+   "t": 5522,
+   "lance": "fim_acao",
+   "fim": true
+  },
+  {
+   "t": 5522,
+   "lance": "acao",
+   "inicio": true
+  },
+  {
+   "t": 5526,
+   "tela": {
+    "hud_vida": "108/169",
+    "hud_rec": "40/52",
+    "carta_vida": "108/169",
+    "carta_rec": "40/52"
+   }
+  },
+  {
+   "t": 5600,
+   "lance": "acao",
+   "fim": true
+  },
+  {
+   "t": 5600,
+   "lance": "erro",
+   "inicio": true
+  },
+  {
+   "t": 5816,
+   "lance": "erro",
+   "fim": true
+  },
+  {
+   "t": 5908,
+   "lance": "fim_acao",
+   "inicio": true
+  },
+  {
+   "t": 5908,
+   "lance": "fim_acao",
+   "fim": true
+  },
+  {
+   "t": 5908,
+   "estado": "vida 108 Vigor 46"
+  },
+  {
+   "t": 5938,
+   "tela": {
+    "hud_vida": "108/169",
+    "hud_rec": "46/52",
+    "carta_vida": "108/169",
+    "carta_rec": "46/52"
+   }
+  },
+  {
+   "t": 6547,
+   "marca": "a vez do herói de novo"
+  }
+ ]
+}

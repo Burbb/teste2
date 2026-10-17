@@ -1,0 +1,236 @@
+{
+ "hab": "drenar_vida",
+ "rotulo": "depois",
+ "velocidade": "rapido",
+ "erros": [],
+ "linha": [
+  {
+   "t": 3,
+   "tela": {
+    "hud_vida": "79/158",
+    "hud_rec": "95/95",
+    "carta_vida": "79/158",
+    "carta_rec": "95/95"
+   }
+  },
+  {
+   "t": 25,
+   "marca": "clique em Habilidades"
+  },
+  {
+   "t": 886,
+   "marca": "clique em drenar_vida"
+  },
+  {
+   "t": 1769,
+   "marca": "na mira (cancelável)"
+  },
+  {
+   "t": 1771,
+   "marca": "Voltar da mira (cancelar)"
+  },
+  {
+   "t": 2617,
+   "marca": "de volta à roda"
+  },
+  {
+   "t": 4004,
+   "marca": "confirma o alvo"
+  },
+  {
+   "t": 4174,
+   "estado": "vida 79 Mana 81"
+  },
+  {
+   "t": 4194,
+   "lance": "acao",
+   "inicio": true
+  },
+  {
+   "t": 4212,
+   "tela": {
+    "hud_vida": "79/158",
+    "hud_rec": "81/95",
+    "carta_vida": "79/158",
+    "carta_rec": "81/95"
+   }
+  },
+  {
+   "t": 4275,
+   "lance": "acao",
+   "fim": true
+  },
+  {
+   "t": 4275,
+   "lance": "golpe",
+   "inicio": true,
+   "hp": 22
+  },
+  {
+   "t": 4621,
+   "lance": "golpe",
+   "fim": true
+  },
+  {
+   "t": 4704,
+   "estado": "vida 79 Mana 81"
+  },
+  {
+   "t": 4708,
+   "lance": "cura",
+   "inicio": true,
+   "hp": 93
+  },
+  {
+   "t": 5213,
+   "tela": {
+    "hud_vida": "79/158",
+    "hud_rec": "81/95",
+    "carta_vida": "93/158",
+    "carta_rec": "81/95"
+   }
+  },
+  {
+   "t": 5394,
+   "lance": "cura",
+   "fim": true
+  },
+  {
+   "t": 5502,
+   "estado": "vida 93 Mana 81"
+  },
+  {
+   "t": 5517,
+   "lance": "fim_acao",
+   "inicio": true
+  },
+  {
+   "t": 5517,
+   "lance": "fim_acao",
+   "fim": true
+  },
+  {
+   "t": 5517,
+   "lance": "acao",
+   "inicio": true
+  },
+  {
+   "t": 5522,
+   "tela": {
+    "hud_vida": "93/158",
+    "hud_rec": "81/95",
+    "carta_vida": "93/158",
+    "carta_rec": "81/95"
+   }
+  },
+  {
+   "t": 5591,
+   "lance": "acao",
+   "fim": true
+  },
+  {
+   "t": 5591,
+   "lance": "golpe",
+   "inicio": true,
+   "hp": 61
+  },
+  {
+   "t": 5680,
+   "tela": {
+    "hud_vida": "93/158",
+    "hud_rec": "81/95",
+    "carta_vida": "61/158",
+    "carta_rec": "81/95"
+   }
+  },
+  {
+   "t": 5953,
+   "lance": "golpe",
+   "fim": true
+  },
+  {
+   "t": 6036,
+   "estado": "vida 61 Mana 81"
+  },
+  {
+   "t": 6055,
+   "lance": "fim_acao",
+   "inicio": true
+  },
+  {
+   "t": 6055,
+   "lance": "fim_acao",
+   "fim": true
+  },
+  {
+   "t": 6055,
+   "lance": "acao",
+   "inicio": true
+  },
+  {
+   "t": 6060,
+   "tela": {
+    "hud_vida": "61/158",
+    "hud_rec": "81/95",
+    "carta_vida": "61/158",
+    "carta_rec": "81/95"
+   }
+  },
+  {
+   "t": 6124,
+   "lance": "acao",
+   "fim": true
+  },
+  {
+   "t": 6124,
+   "lance": "golpe",
+   "inicio": true,
+   "hp": 37
+  },
+  {
+   "t": 6218,
+   "tela": {
+    "hud_vida": "61/158",
+    "hud_rec": "81/95",
+    "carta_vida": "37/158",
+    "carta_rec": "81/95"
+   }
+  },
+  {
+   "t": 6408,
+   "lance": "golpe",
+   "fim": true
+  },
+  {
+   "t": 6490,
+   "estado": "vida 37 Mana 81"
+  },
+  {
+   "t": 6509,
+   "lance": "fim_acao",
+   "inicio": true
+  },
+  {
+   "t": 6509,
+   "lance": "fim_acao",
+   "fim": true
+  },
+  {
+   "t": 6509,
+   "estado": "vida 37 Mana 84"
+  },
+  {
+   "t": 6544,
+   "tela": {
+    "hud_vida": "37/158",
+    "hud_rec": "84/95",
+    "carta_vida": "37/158",
+    "carta_rec": "84/95"
+   }
+  },
+  {
+   "t": 7193,
+   "marca": "a vez do herói de novo"
+  }
+ ]
+}

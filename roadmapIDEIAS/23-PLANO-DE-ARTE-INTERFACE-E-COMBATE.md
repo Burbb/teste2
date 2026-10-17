@@ -120,6 +120,16 @@ respeitando a ordem real do motor para roubo de vida, espinhos, contra-ataques, 
   cancelamento, repetição rápida, movimento reduzido e a ação seguinte.
 - Manter o gabarito sem alteração de partidas; se for necessário ampliar dados de apresentação, explicar o diff.
 
+**Feito e integrado (1.114.1, 17/10/2026).** Diagnóstico demonstrado: o motor desconta antes de agir (depois da mira
+confirmada), mas a ponte web só mandava o estado junto de um texto. O recurso pago chegava à tela depois da animação do
+golpe (alvo único) ou só no fim da salva (área), e a cura de uma salva podia vir antes do custo. Medido quadro a quadro
+(`ferramentas/prototipos/hud/custo-recurso/`): na Drenar Vida, o custo aparecia 666 ms depois da confirmação, contra
+132 ms do começo da ação; na Chuva de Flechas, 1012 ms, depois da salva inteira. Correção: `ui.atualizar()` logo depois
+do desconto (habilidades e a flecha do ataque básico). O custo agora chega no quadro do começo da ação (208 e 74 ms).
+A mira continua sem pagar; não mudam contas, sorteios, a ordem dos lances nem o gabarito.
+`tests/test_custo_na_tela.py` (Mana, Vigor, Foco e flechas, área, cancelar e executar) falha sem a correção.
+Fica para a avaliação: um sinal próprio de "pago" na carta (hoje o número e a barra só descem).
+
 ### 1.4. Protótipo: dado e tirinha mais visíveis
 
 Jean gosta do dado e da tirinha existentes. A direção aprovada é experimentar uma posição de maior destaque,

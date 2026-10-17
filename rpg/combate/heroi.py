@@ -86,6 +86,7 @@ class AcoesDoHeroi:
             if j.flechas > 0:
                 j.flechas -= 1
                 self.flechas_gastas += 1
+                self.ui.atualizar()  # a flecha sai da aljava junto do disparo (como o custo das habilidades)
             else:
                 nome, alcance, mult = "Adaga", "corpo", 0.6
         with self.agindo(j, nome, alvo, hab="ataque"):
@@ -174,6 +175,9 @@ class AcoesDoHeroi:
         flechas = self.flechas_de(h)
         j.flechas -= flechas
         self.flechas_gastas += flechas
+        # O custo aparece já, junto do começo da ação: sem isto, a tela só via o recurso pago no próximo estado (depois
+        # do texto do golpe, ou do fim de uma salva em área), e uma cura da própria habilidade podia vir antes dele.
+        self.ui.atualizar()
         with self.agindo(j, h["nome"], alvo, area=h["alvo"] == "todos", hab=h_ef, anim=h.get("anim")):
             antes, self._cura_j = j.hp, 0
             efeitos_antes = {k: dict(v) for k, v in j.efeitos.items()}

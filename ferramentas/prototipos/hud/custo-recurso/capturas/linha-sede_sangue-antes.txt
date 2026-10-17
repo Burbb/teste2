@@ -1,0 +1,29 @@
+     2 ms  ---- clique em Habilidades
+     5 ms  TELA  topo: vida 84/169  rec 52/52  | carta: vida 84/169  rec 52/52
+   888 ms  ---- clique em sede_sangue
+  1732 ms  ---- na mira (cancelável)
+  1734 ms  ---- Voltar da mira (cancelar)
+  2575 ms  ---- de volta à roda
+  3978 ms  ---- confirma o alvo
+  4088 ms  lance acao começa
+  4184 ms  lance acao acaba
+  4185 ms  lance golpe começa hp=0
+  4496 ms  lance golpe acaba
+  4579 ms  estado vida 84 Vigor 40
+  4597 ms  TELA  topo: vida 84/169  rec 40/52  | carta: vida 84/169  rec 40/52
+  4677 ms  lance cura começa hp=108
+  5237 ms  TELA  topo: vida 84/169  rec 40/52  | carta: vida 108/169  rec 40/52
+  5418 ms  lance cura acaba
+  5510 ms  estado vida 108 Vigor 40
+  5522 ms  lance fim_acao começa
+  5522 ms  lance fim_acao acaba
+  5522 ms  lance acao começa
+  5526 ms  TELA  topo: vida 108/169  rec 40/52  | carta: vida 108/169  rec 40/52
+  5600 ms  lance acao acaba
+  5600 ms  lance erro começa
+  5816 ms  lance erro acaba
+  5908 ms  lance fim_acao começa
+  5908 ms  lance fim_acao acaba
+  5908 ms  estado vida 108 Vigor 46
+  5938 ms  TELA  topo: vida 108/169  rec 46/52  | carta: vida 108/169  rec 46/52
+  6547 ms  ---- a vez do herói de novo

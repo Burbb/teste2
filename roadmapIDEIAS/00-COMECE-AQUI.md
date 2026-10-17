@@ -3397,3 +3397,14 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Recomendação:** restringir. O pen.dev não entra no fluxo; fica instalado só se Jean quiser propor arranjos à mão
   (o próximo teste possível: ele mexe no `seletor.pen` e eu levo ao CSS). A bancada é o que vale reaproveitar.
 - **Próximo:** Jean avaliar. Nada entrou no jogo; nenhuma versão mudou.
+
+### 17/10/2026 (data do computador local) — Etapa 1B: o custo do recurso na tela (1.114.1)
+
+- **Pedido de Jean:** o efeito da habilidade (a cura da Drenar Vida) aparecia antes de a Mana ser paga.
+- **Causa demonstrada:** o motor desconta antes de agir. A tela só recebia o recurso pago no primeiro texto da ação:
+  depois do golpe, no alvo único, ou do fim da salva, em área.
+- **Correção:** `ui.atualizar()` logo depois do desconto (`combate/heroi.py`: habilidades e a flecha do ataque
+  básico).
+- **Conferido:** a linha do tempo na página, antes e depois (`ferramentas/prototipos/hud/custo-recurso/`);
+  `tests/test_custo_na_tela.py`; suíte, gabarito (sem mudança), pyflakes e fumaça.
+- **Próximo:** o protótipo da vida bloqueada (entrega à parte); nada da 1C.

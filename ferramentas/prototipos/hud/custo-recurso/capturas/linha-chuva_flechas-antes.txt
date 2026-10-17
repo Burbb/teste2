@@ -1,0 +1,38 @@
+     2 ms  ---- clique em Habilidades
+    11 ms  TELA  topo: vida 83/166  rec 47/47  | carta: vida 83/166  rec 47/47
+   973 ms  ---- clique em chuva_flechas
+  1038 ms  lance acao começa
+  1168 ms  lance acao acaba
+  1168 ms  lance salva começa
+  1824 ms  ---- na mira (cancelável)
+  1966 ms  lance salva acaba
+  1966 ms  estado vida 83 Foco 27
+  1985 ms  TELA  topo: vida 83/166  rec 27/47  | carta: vida 83/166  rec 27/47
+  2243 ms  lance fim_acao começa
+  2351 ms  lance fim_acao acaba
+  2351 ms  lance acao começa
+  2436 ms  lance acao acaba
+  2436 ms  lance golpe começa hp=15
+  2695 ms  lance golpe acaba
+  2778 ms  estado vida 83 Foco 27
+  2782 ms  lance fim_acao começa
+  2782 ms  lance fim_acao acaba
+  2782 ms  lance acao começa
+  2852 ms  lance acao acaba
+  2852 ms  lance erro começa
+  3050 ms  lance erro acaba
+  3142 ms  lance fim_acao começa
+  3142 ms  lance fim_acao acaba
+  3142 ms  lance acao começa
+  3218 ms  lance acao acaba
+  3218 ms  lance golpe começa hp=58
+  3479 ms  lance golpe acaba
+  3561 ms  estado vida 83 Foco 27
+  3564 ms  lance efeito começa
+  3720 ms  lance efeito acaba
+  3801 ms  estado vida 83 Foco 27
+  3809 ms  lance fim_acao começa
+  3809 ms  lance fim_acao acaba
+  3809 ms  estado vida 83 Foco 32
+  3835 ms  TELA  topo: vida 83/166  rec 32/47  | carta: vida 83/166  rec 32/47
+  4479 ms  ---- a vez do herói de novo

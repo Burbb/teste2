@@ -1,0 +1,41 @@
+     3 ms  TELA  topo: vida 79/158  rec 95/95  | carta: vida 79/158  rec 95/95
+    25 ms  ---- clique em Habilidades
+   886 ms  ---- clique em drenar_vida
+  1769 ms  ---- na mira (cancelável)
+  1771 ms  ---- Voltar da mira (cancelar)
+  2617 ms  ---- de volta à roda
+  4004 ms  ---- confirma o alvo
+  4174 ms  estado vida 79 Mana 81
+  4194 ms  lance acao começa
+  4212 ms  TELA  topo: vida 79/158  rec 81/95  | carta: vida 79/158  rec 81/95
+  4275 ms  lance acao acaba
+  4275 ms  lance golpe começa hp=22
+  4621 ms  lance golpe acaba
+  4704 ms  estado vida 79 Mana 81
+  4708 ms  lance cura começa hp=93
+  5213 ms  TELA  topo: vida 79/158  rec 81/95  | carta: vida 93/158  rec 81/95
+  5394 ms  lance cura acaba
+  5502 ms  estado vida 93 Mana 81
+  5517 ms  lance fim_acao começa
+  5517 ms  lance fim_acao acaba
+  5517 ms  lance acao começa
+  5522 ms  TELA  topo: vida 93/158  rec 81/95  | carta: vida 93/158  rec 81/95
+  5591 ms  lance acao acaba
+  5591 ms  lance golpe começa hp=61
+  5680 ms  TELA  topo: vida 93/158  rec 81/95  | carta: vida 61/158  rec 81/95
+  5953 ms  lance golpe acaba
+  6036 ms  estado vida 61 Mana 81
+  6055 ms  lance fim_acao começa
+  6055 ms  lance fim_acao acaba
+  6055 ms  lance acao começa
+  6060 ms  TELA  topo: vida 61/158  rec 81/95  | carta: vida 61/158  rec 81/95
+  6124 ms  lance acao acaba
+  6124 ms  lance golpe começa hp=37
+  6218 ms  TELA  topo: vida 61/158  rec 81/95  | carta: vida 37/158  rec 81/95
+  6408 ms  lance golpe acaba
+  6490 ms  estado vida 37 Mana 81
+  6509 ms  lance fim_acao começa
+  6509 ms  lance fim_acao acaba
+  6509 ms  estado vida 37 Mana 84
+  6544 ms  TELA  topo: vida 37/158  rec 84/95  | carta: vida 37/158  rec 84/95
+  7193 ms  ---- a vez do herói de novo
