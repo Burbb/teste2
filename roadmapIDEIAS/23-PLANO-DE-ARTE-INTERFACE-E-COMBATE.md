@@ -12,15 +12,19 @@ Não iniciar todo o plano numa única tarefa. As etapas técnicas A–I e a vali
 
 ## Estado de referência
 
-- Produção consultada: **1.110.0**, integração do gibão e das botas em `3c63546`.
+- Produção: **1.112.0** (17/10/2026): a HUD aprovada e as lutas cheias em `74b4d5d` (1.111.0); os capuzes e luvas em
+  `ea8acb7` e a migração dos saves no commit seguinte (1.112.0). Antes: a 1.110.0, gibão e botas em `3c63546`.
 - Branch: `claude/tender-einstein-tx3tjl`.
 - Referência documental posterior consultada: `ab3a2b6`, diagnóstico da duração dos testes.
 - Leitura estática nesta organização; nenhum teste ou percurso do navegador foi executado por esta atualização.
-- **Cabeça e mãos (couro e tecido): aprovados visualmente por Jean em 17/10/2026, ainda não integrados.** O capuz
-  de couro revisado (rodada 2), a luva de couro com braçadeira (rodada 1), a luva de seda (rodada 2) e o capuz de
-  tecido da rodada 3 (`1c061e1`), em `ferramentas/prototipos/hud/couro2-aseprite/`. Pendentes, numa entrega separada:
-  os tamanhos 40 e 48 derivados da fonte aprovada e a integração, incluindo a compatibilidade dos itens dos saves
-  antigos (proposta de migração no `LEIA-ME.md` da proposta).
+- **Cabeça e mãos (couro e tecido): integrados na 1.112.0.** O capuz de couro revisado (rodada 2), a luva de couro
+  com braçadeira (rodada 1), a luva de seda (rodada 2) e o capuz de tecido da rodada 3 (`1c061e1`), aprovados em
+  17/10/2026, em 32 e 64 (o 32 ampliado 2×) pixel a pixel, mais o 40 e o 48 derivados da mesma construção (rodada 4,
+  `couro2_r4.py`, que no 32 reproduz os aprovados); fontes em `ferramentas/arte/aseprite/`. O Capuz e a Luva de Seda do
+  Mago com os desenhos de tecido (dados e `icone_de` pela classe do item); os saves antigos pela migração v4 → v5. O
+  Chapéu de Couro continua com o capuz (exceção registrada).
+- **A HUD aprovada (comandos em faixas, cartas contidas, escolhas de um lugar selvagem) e as lutas cheias: integradas
+  na 1.111.0** (item 1.8).
 
 ### Base já consolidada
 
@@ -36,7 +40,7 @@ os usos dos sprites estejam migrados. Conferir `Icones` e os catálogos antes de
 
 | Ordem | Entrega | Situação e limite |
 |---|---|---|
-| 1A | Concluir o lote de cabeça/capuz e luvas de couro e tecido | 32 e 64 aprovados visualmente; 40, 48 e integração (com os saves antigos): ver o estado de referência |
+| 1A | Concluir o lote de cabeça/capuz e luvas de couro e tecido | Integrado na 1.112.0 (32, 40, 48, 64; os saves antigos pela migração v5); falta Jean conferir jogando |
 | 1B | Corrigir a sequência visual do consumo de recurso e mostrar o bloqueio de vida máxima por ferimentos | Prioridade de clareza; reproduzir e avaliar a apresentação |
 | 1C | Prototipar dado mais visível, iniciativa e indicação dos turnos; facilitar consulta aos testes de atributos | Direção aprovada; composição e movimento ainda serão avaliados |
 | 1D | Retomar os lotes de equipamentos e demais ícones | Pequenos grupos por função; aproveitar os componentes aprovados |
@@ -369,7 +373,7 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
 
 ## Próxima passagem de trabalho
 
-1. Lote de cabeça/capuz e luvas: aprovado visualmente; falta a entrega separada dos 40/48 e da integração.
+1. A avaliação de Jean jogando a 1.111.0 (a HUD e as lutas cheias) e a 1.112.0 (os capuzes e luvas).
 2. Integrar apenas os desenhos aprovados.
 3. Reproduzir e corrigir a percepção atrasada do custo de recurso e apresentar o bloqueio de vida máxima por ferimentos (1B).
 4. Prototipar os avisos e a consulta aos testes (1C), sem ampliar regras.

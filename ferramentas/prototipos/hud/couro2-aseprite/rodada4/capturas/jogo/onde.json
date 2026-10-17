@@ -1,0 +1,3300 @@
+[
+ {
+  "nome": "capuz-normal-dica-comparacao",
+  "capuz": [
+   "slot-px.mini:32→32",
+   "slot-px.r-magico:32→0",
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "manopla": [
+   "slot-px.mini:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "aljava": [
+   "icones:24→24",
+   "slot-px:32→0",
+   "slot-px.r-comum:32→0"
+  ],
+  "unguento": [
+   "slot-px:32→0"
+  ],
+  "bomba": [
+   "slot-px:32→0"
+  ],
+  "bota": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "arco": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "cajado": [
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "curandeira": "sprite do jogo"
+ },
+ {
+  "nome": "capuz-normal-mercado",
+  "capuz": [
+   "slot-px.mini:32→32",
+   "slot-px.r-magico:32→0",
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "manopla": [
+   "slot-px.mini:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "aljava": [
+   "icones:24→24",
+   "slot-px:32→0",
+   "slot-px.r-comum:32→0"
+  ],
+  "unguento": [
+   "slot-px:32→0"
+  ],
+  "bomba": [
+   "slot-px:32→0"
+  ],
+  "bota": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "arco": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "cajado": [
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "curandeira": "sprite do jogo"
+ },
+ {
+  "nome": "capuz-normal-vendido",
+  "capuz": [
+   "slot-px.mini:32→32",
+   "slot-px.r-magico:32→0",
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "manopla": [
+   "slot-px.mini:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "aljava": [
+   "icones:24→24",
+   "slot-px:32→0",
+   "slot-px.r-comum:32→0"
+  ],
+  "unguento": [
+   "slot-px:32→0"
+  ],
+  "bomba": [
+   "slot-px:32→0"
+  ],
+  "bota": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "arco": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "cajado": [
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "curandeira": "sprite do jogo"
+ },
+ {
+  "nome": "capuz-normal-recomprado",
+  "capuz": [
+   "slot-px.mini:32→32",
+   "slot-px.r-magico:32→0",
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "manopla": [
+   "slot-px.mini:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "aljava": [
+   "icones:24→24",
+   "slot-px:32→0",
+   "slot-px.r-comum:32→0"
+  ],
+  "unguento": [
+   "slot-px:32→0"
+  ],
+  "bomba": [
+   "slot-px:32→0"
+  ],
+  "bota": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "arco": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "cajado": [
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "curandeira": "sprite do jogo"
+ },
+ {
+  "nome": "capuz-normal-inventario",
+  "medidas": [
+   "corpo:capuz-40:40px:centro0,0",
+   "corpo:amuleto-32:32px:centro0,0:vazio",
+   "corpo:cota-32:32px:centro0,0:vazio",
+   "corpo:manopla-32:32px:centro0,0:vazio",
+   "corpo:sprite:32px:centro0,0",
+   "corpo:escudo-32:32px:centro0,0:vazio",
+   "corpo:perneiras-32:32px:centro0,0:vazio",
+   "corpo:botas-ferro-32:32px:centro0,0:vazio",
+   "corpo:anel-32:32px:centro0,0:vazio",
+   "corpo:anel-32:32px:centro0,0:vazio",
+   "mochila:cajado-40:40px:centro0,0",
+   "mochila:arco-40:40px:centro0,0",
+   "mochila:sprite:32px:centro0,0",
+   "mochila:cajado-40:40px:centro0,0",
+   "mochila:arco-40:40px:centro0,0",
+   "mochila:bota-40:40px:centro0,0",
+   "mochila:sprite:32px:centro0,0",
+   "mochila:capuz-40:40px:centro0,0",
+   "mochila:capuz-40:40px:centro0,0"
+  ]
+ },
+ {
+  "nome": "capuz-normal-saque-cartao",
+  "capuz": [
+   "slot-px.mini:32→32",
+   "achado-arte:64→64",
+   "achado-arte.pequena:48→48"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "manopla": [
+   "slot-px.mini:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "aljava": [
+   "icones:24→24"
+  ],
+  "curandeira": "sprite do jogo"
+ },
+ {
+  "nome": "capuz-normal-saque-voo",
+  "capuz": [
+   "slot-px.mini:32→32",
+   "achado-arte:64→64",
+   "achado-arte.pequena:48→48",
+   "voo-item:48→51"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "manopla": [
+   "slot-px.mini:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "aljava": [
+   "icones:24→24"
+  ],
+  "curandeira": "sprite do jogo"
+ },
+ {
+  "nome": "capuz-normal-guardado-inventario",
+  "capuz": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40",
+   "slot-px.celula:40→40"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "cota": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "manopla": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40",
+   "espaco.slot-px:32→32"
+  ],
+  "aljava": [
+   "icones:24→24"
+  ],
+  "curandeira": "sprite do jogo",
+  "sprite-caveira": [
+   "slot-px.lixeira"
+  ]
+ },
+ {
+  "nome": "capuz-normal-luta",
+  "capuz": [
+   "slot-px.mini:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "manopla": [
+   "slot-px.mini:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "aljava": [
+   "icones:24→0"
+  ],
+  "curandeira": "sprite do jogo",
+  "sprite-arco": [
+   "rb-icone"
+  ]
+ },
+ {
+  "nome": "capuz-baixa-dica-comparacao",
+  "capuz": [
+   "slot-px.mini:32→32",
+   "slot-px.r-magico:32→0",
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "manopla": [
+   "slot-px.mini:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "aljava": [
+   "icones:24→24",
+   "slot-px:32→0",
+   "slot-px.r-comum:32→0"
+  ],
+  "unguento": [
+   "slot-px:32→0"
+  ],
+  "bomba": [
+   "slot-px:32→0"
+  ],
+  "bota": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "arco": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "cajado": [
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "curandeira": "sprite do jogo"
+ },
+ {
+  "nome": "capuz-baixa-mercado",
+  "capuz": [
+   "slot-px.mini:32→32",
+   "slot-px.r-magico:32→0",
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "manopla": [
+   "slot-px.mini:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "aljava": [
+   "icones:24→24",
+   "slot-px:32→0",
+   "slot-px.r-comum:32→0"
+  ],
+  "unguento": [
+   "slot-px:32→0"
+  ],
+  "bomba": [
+   "slot-px:32→0"
+  ],
+  "bota": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "arco": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "cajado": [
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "curandeira": "sprite do jogo"
+ },
+ {
+  "nome": "capuz-baixa-vendido",
+  "capuz": [
+   "slot-px.mini:32→32",
+   "slot-px.r-magico:32→0",
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "manopla": [
+   "slot-px.mini:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "aljava": [
+   "icones:24→24",
+   "slot-px:32→0",
+   "slot-px.r-comum:32→0"
+  ],
+  "unguento": [
+   "slot-px:32→0"
+  ],
+  "bomba": [
+   "slot-px:32→0"
+  ],
+  "bota": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "arco": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "cajado": [
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "curandeira": "sprite do jogo"
+ },
+ {
+  "nome": "capuz-baixa-recomprado",
+  "capuz": [
+   "slot-px.mini:32→32",
+   "slot-px.r-magico:32→0",
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "manopla": [
+   "slot-px.mini:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "aljava": [
+   "icones:24→24",
+   "slot-px:32→0",
+   "slot-px.r-comum:32→0"
+  ],
+  "unguento": [
+   "slot-px:32→0"
+  ],
+  "bomba": [
+   "slot-px:32→0"
+  ],
+  "bota": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "arco": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "cajado": [
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "curandeira": "sprite do jogo"
+ },
+ {
+  "nome": "capuz-baixa-inventario",
+  "medidas": [
+   "corpo:capuz-40:40px:centro0,0",
+   "corpo:amuleto-32:32px:centro0,0:vazio",
+   "corpo:cota-32:32px:centro0,0:vazio",
+   "corpo:manopla-32:32px:centro0,0:vazio",
+   "corpo:sprite:32px:centro0,0",
+   "corpo:escudo-32:32px:centro0,0:vazio",
+   "corpo:perneiras-32:32px:centro0,0:vazio",
+   "corpo:botas-ferro-32:32px:centro0,0:vazio",
+   "corpo:anel-32:32px:centro0,0:vazio",
+   "corpo:anel-32:32px:centro0,0:vazio",
+   "mochila:cajado-40:40px:centro0,0",
+   "mochila:arco-40:40px:centro0,0",
+   "mochila:sprite:32px:centro0,0",
+   "mochila:cajado-40:40px:centro0,0",
+   "mochila:arco-40:40px:centro0,0",
+   "mochila:bota-40:40px:centro0,0",
+   "mochila:sprite:32px:centro0,0",
+   "mochila:capuz-40:40px:centro0,0",
+   "mochila:capuz-40:40px:centro0,0"
+  ]
+ },
+ {
+  "nome": "capuz-baixa-saque-cartao",
+  "capuz": [
+   "slot-px.mini:32→32",
+   "achado-arte:64→64",
+   "achado-arte.pequena:48→48"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "manopla": [
+   "slot-px.mini:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "aljava": [
+   "icones:24→24"
+  ],
+  "curandeira": "sprite do jogo"
+ },
+ {
+  "nome": "capuz-baixa-saque-voo",
+  "capuz": [
+   "slot-px.mini:32→32",
+   "achado-arte:64→64",
+   "achado-arte.pequena:48→48",
+   "voo-item:48→51"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "manopla": [
+   "slot-px.mini:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "aljava": [
+   "icones:24→24"
+  ],
+  "curandeira": "sprite do jogo"
+ },
+ {
+  "nome": "capuz-baixa-guardado-inventario",
+  "capuz": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40",
+   "slot-px.celula:40→40"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "cota": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "manopla": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40",
+   "espaco.slot-px:32→32"
+  ],
+  "aljava": [
+   "icones:24→24"
+  ],
+  "curandeira": "sprite do jogo",
+  "sprite-caveira": [
+   "slot-px.lixeira"
+  ]
+ },
+ {
+  "nome": "capuz-baixa-luta",
+  "capuz": [
+   "slot-px.mini:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "manopla": [
+   "slot-px.mini:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "aljava": [
+   "icones:24→0"
+  ],
+  "curandeira": "sprite do jogo",
+  "sprite-arco": [
+   "rb-icone"
+  ]
+ },
+ {
+  "nome": "luva-normal-dica-comparacao",
+  "elmo": [
+   "slot-px.mini:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "luva": [
+   "slot-px.mini:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "aljava": [
+   "icones:24→24",
+   "slot-px:32→0",
+   "slot-px.r-comum:32→0"
+  ],
+  "unguento": [
+   "slot-px:32→0"
+  ],
+  "bomba": [
+   "slot-px:32→0"
+  ],
+  "bota": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "arco": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "capuz": [
+   "slot-px.r-magico:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "cajado": [
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "curandeira": "sprite do jogo"
+ },
+ {
+  "nome": "luva-normal-mercado",
+  "elmo": [
+   "slot-px.mini:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "luva": [
+   "slot-px.mini:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "aljava": [
+   "icones:24→24",
+   "slot-px:32→0",
+   "slot-px.r-comum:32→0"
+  ],
+  "unguento": [
+   "slot-px:32→0"
+  ],
+  "bomba": [
+   "slot-px:32→0"
+  ],
+  "bota": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "arco": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "capuz": [
+   "slot-px.r-magico:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "cajado": [
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "curandeira": "sprite do jogo"
+ },
+ {
+  "nome": "luva-normal-vendido",
+  "elmo": [
+   "slot-px.mini:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "luva": [
+   "slot-px.mini:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "aljava": [
+   "icones:24→24",
+   "slot-px:32→0",
+   "slot-px.r-comum:32→0"
+  ],
+  "unguento": [
+   "slot-px:32→0"
+  ],
+  "bomba": [
+   "slot-px:32→0"
+  ],
+  "bota": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "arco": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "capuz": [
+   "slot-px.r-magico:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "cajado": [
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "curandeira": "sprite do jogo"
+ },
+ {
+  "nome": "luva-normal-recomprado",
+  "elmo": [
+   "slot-px.mini:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "luva": [
+   "slot-px.mini:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "aljava": [
+   "icones:24→24",
+   "slot-px:32→0",
+   "slot-px.r-comum:32→0"
+  ],
+  "unguento": [
+   "slot-px:32→0"
+  ],
+  "bomba": [
+   "slot-px:32→0"
+  ],
+  "bota": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "arco": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "capuz": [
+   "slot-px.r-magico:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "cajado": [
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "curandeira": "sprite do jogo"
+ },
+ {
+  "nome": "luva-normal-inventario",
+  "medidas": [
+   "corpo:elmo-32:32px:centro0,0:vazio",
+   "corpo:amuleto-32:32px:centro0,0:vazio",
+   "corpo:cota-32:32px:centro0,0:vazio",
+   "corpo:luva-40:40px:centro0,0",
+   "corpo:sprite:32px:centro0,0",
+   "corpo:escudo-32:32px:centro0,0:vazio",
+   "corpo:perneiras-32:32px:centro0,0:vazio",
+   "corpo:botas-ferro-32:32px:centro0,0:vazio",
+   "corpo:anel-32:32px:centro0,0:vazio",
+   "corpo:anel-32:32px:centro0,0:vazio",
+   "mochila:cajado-40:40px:centro0,0",
+   "mochila:arco-40:40px:centro0,0",
+   "mochila:sprite:32px:centro0,0",
+   "mochila:cajado-40:40px:centro0,0",
+   "mochila:arco-40:40px:centro0,0",
+   "mochila:bota-40:40px:centro0,0",
+   "mochila:sprite:32px:centro0,0",
+   "mochila:capuz-40:40px:centro0,0",
+   "mochila:luva-40:40px:centro0,0"
+  ]
+ },
+ {
+  "nome": "luva-normal-saque-cartao",
+  "elmo": [
+   "slot-px.mini:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "luva": [
+   "slot-px.mini:32→32",
+   "achado-arte:64→64",
+   "achado-arte.pequena:48→48"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "aljava": [
+   "icones:24→24"
+  ],
+  "curandeira": "sprite do jogo"
+ },
+ {
+  "nome": "luva-normal-saque-voo",
+  "elmo": [
+   "slot-px.mini:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "luva": [
+   "slot-px.mini:32→32",
+   "achado-arte:64→64",
+   "achado-arte.pequena:48→48",
+   "voo-item:48→51"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "aljava": [
+   "icones:24→24"
+  ],
+  "curandeira": "sprite do jogo"
+ },
+ {
+  "nome": "luva-normal-guardado-inventario",
+  "elmo": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "cota": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "luva": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40",
+   "slot-px.celula:40→40"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40",
+   "espaco.slot-px:32→32"
+  ],
+  "aljava": [
+   "icones:24→24"
+  ],
+  "curandeira": "sprite do jogo",
+  "sprite-caveira": [
+   "slot-px.lixeira"
+  ]
+ },
+ {
+  "nome": "luva-normal-luta",
+  "elmo": [
+   "slot-px.mini:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "luva": [
+   "slot-px.mini:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "aljava": [
+   "icones:24→0"
+  ],
+  "curandeira": "sprite do jogo",
+  "sprite-arco": [
+   "rb-icone"
+  ]
+ },
+ {
+  "nome": "luva-baixa-dica-comparacao",
+  "elmo": [
+   "slot-px.mini:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "luva": [
+   "slot-px.mini:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "aljava": [
+   "icones:24→24",
+   "slot-px:32→0",
+   "slot-px.r-comum:32→0"
+  ],
+  "unguento": [
+   "slot-px:32→0"
+  ],
+  "bomba": [
+   "slot-px:32→0"
+  ],
+  "bota": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "arco": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "capuz": [
+   "slot-px.r-magico:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "cajado": [
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "curandeira": "sprite do jogo"
+ },
+ {
+  "nome": "luva-baixa-mercado",
+  "elmo": [
+   "slot-px.mini:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "luva": [
+   "slot-px.mini:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "aljava": [
+   "icones:24→24",
+   "slot-px:32→0",
+   "slot-px.r-comum:32→0"
+  ],
+  "unguento": [
+   "slot-px:32→0"
+  ],
+  "bomba": [
+   "slot-px:32→0"
+  ],
+  "bota": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "arco": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "capuz": [
+   "slot-px.r-magico:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "cajado": [
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "curandeira": "sprite do jogo"
+ },
+ {
+  "nome": "luva-baixa-vendido",
+  "elmo": [
+   "slot-px.mini:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "luva": [
+   "slot-px.mini:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "aljava": [
+   "icones:24→24",
+   "slot-px:32→0",
+   "slot-px.r-comum:32→0"
+  ],
+  "unguento": [
+   "slot-px:32→0"
+  ],
+  "bomba": [
+   "slot-px:32→0"
+  ],
+  "bota": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "arco": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "capuz": [
+   "slot-px.r-magico:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "cajado": [
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "curandeira": "sprite do jogo"
+ },
+ {
+  "nome": "luva-baixa-recomprado",
+  "elmo": [
+   "slot-px.mini:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "luva": [
+   "slot-px.mini:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "aljava": [
+   "icones:24→24",
+   "slot-px:32→0",
+   "slot-px.r-comum:32→0"
+  ],
+  "unguento": [
+   "slot-px:32→0"
+  ],
+  "bomba": [
+   "slot-px:32→0"
+  ],
+  "bota": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "arco": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "capuz": [
+   "slot-px.r-magico:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "cajado": [
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "curandeira": "sprite do jogo"
+ },
+ {
+  "nome": "luva-baixa-inventario",
+  "medidas": [
+   "corpo:elmo-32:32px:centro0,0:vazio",
+   "corpo:amuleto-32:32px:centro0,0:vazio",
+   "corpo:cota-32:32px:centro0,0:vazio",
+   "corpo:luva-40:40px:centro0,0",
+   "corpo:sprite:32px:centro0,0",
+   "corpo:escudo-32:32px:centro0,0:vazio",
+   "corpo:perneiras-32:32px:centro0,0:vazio",
+   "corpo:botas-ferro-32:32px:centro0,0:vazio",
+   "corpo:anel-32:32px:centro0,0:vazio",
+   "corpo:anel-32:32px:centro0,0:vazio",
+   "mochila:cajado-40:40px:centro0,0",
+   "mochila:arco-40:40px:centro0,0",
+   "mochila:sprite:32px:centro0,0",
+   "mochila:cajado-40:40px:centro0,0",
+   "mochila:arco-40:40px:centro0,0",
+   "mochila:bota-40:40px:centro0,0",
+   "mochila:sprite:32px:centro0,0",
+   "mochila:capuz-40:40px:centro0,0",
+   "mochila:luva-40:40px:centro0,0"
+  ]
+ },
+ {
+  "nome": "luva-baixa-saque-cartao",
+  "elmo": [
+   "slot-px.mini:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "luva": [
+   "slot-px.mini:32→32",
+   "achado-arte:64→64",
+   "achado-arte.pequena:48→48"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "aljava": [
+   "icones:24→24"
+  ],
+  "curandeira": "sprite do jogo"
+ },
+ {
+  "nome": "luva-baixa-saque-voo",
+  "elmo": [
+   "slot-px.mini:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "luva": [
+   "slot-px.mini:32→32",
+   "achado-arte:64→64",
+   "achado-arte.pequena:48→48",
+   "voo-item:48→51"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "aljava": [
+   "icones:24→24"
+  ],
+  "curandeira": "sprite do jogo"
+ },
+ {
+  "nome": "luva-baixa-guardado-inventario",
+  "elmo": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "cota": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "luva": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40",
+   "slot-px.celula:40→40"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40",
+   "espaco.slot-px:32→32"
+  ],
+  "aljava": [
+   "icones:24→24"
+  ],
+  "curandeira": "sprite do jogo",
+  "sprite-caveira": [
+   "slot-px.lixeira"
+  ]
+ },
+ {
+  "nome": "luva-baixa-luta",
+  "elmo": [
+   "slot-px.mini:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "luva": [
+   "slot-px.mini:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "aljava": [
+   "icones:24→0"
+  ],
+  "curandeira": "sprite do jogo",
+  "sprite-arco": [
+   "rb-icone"
+  ]
+ },
+ {
+  "nome": "capuz_tecido-normal-dica-comparacao",
+  "capuz_tecido": [
+   "slot-px.mini:32→32",
+   "slot-px.r-magico:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "manopla": [
+   "slot-px.mini:32→32"
+  ],
+  "livro": [
+   "slot-px.mini:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "unguento": [
+   "slot-px:32→0"
+  ],
+  "bomba": [
+   "slot-px:32→0"
+  ],
+  "orbe": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "varinha": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "espada": [
+   "slot-px.celula:32→32"
+  ],
+  "cajado": [
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "curandeira": "sprite do jogo"
+ },
+ {
+  "nome": "capuz_tecido-normal-mercado",
+  "capuz_tecido": [
+   "slot-px.mini:32→32",
+   "slot-px.r-magico:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "manopla": [
+   "slot-px.mini:32→32"
+  ],
+  "livro": [
+   "slot-px.mini:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "unguento": [
+   "slot-px:32→0"
+  ],
+  "bomba": [
+   "slot-px:32→0"
+  ],
+  "orbe": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "varinha": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "espada": [
+   "slot-px.celula:32→32"
+  ],
+  "cajado": [
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "curandeira": "sprite do jogo"
+ },
+ {
+  "nome": "capuz_tecido-normal-vendido",
+  "capuz_tecido": [
+   "slot-px.mini:32→32",
+   "slot-px.r-magico:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "manopla": [
+   "slot-px.mini:32→32"
+  ],
+  "livro": [
+   "slot-px.mini:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "unguento": [
+   "slot-px:32→0"
+  ],
+  "bomba": [
+   "slot-px:32→0"
+  ],
+  "orbe": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "varinha": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "espada": [
+   "slot-px.celula:32→32"
+  ],
+  "cajado": [
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "curandeira": "sprite do jogo"
+ },
+ {
+  "nome": "capuz_tecido-normal-recomprado",
+  "capuz_tecido": [
+   "slot-px.mini:32→32",
+   "slot-px.r-magico:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "manopla": [
+   "slot-px.mini:32→32"
+  ],
+  "livro": [
+   "slot-px.mini:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "unguento": [
+   "slot-px:32→0"
+  ],
+  "bomba": [
+   "slot-px:32→0"
+  ],
+  "orbe": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "varinha": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "espada": [
+   "slot-px.celula:32→32"
+  ],
+  "cajado": [
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "curandeira": "sprite do jogo"
+ },
+ {
+  "nome": "capuz_tecido-normal-inventario",
+  "medidas": [
+   "corpo:/capuz_tecido-40.png:40px:centro0,0",
+   "corpo:amuleto-32:32px:centro0,0:vazio",
+   "corpo:cota-32:32px:centro0,0:vazio",
+   "corpo:manopla-32:32px:centro0,0:vazio",
+   "corpo:livro-40:40px:centro0,0",
+   "corpo:escudo-32:32px:centro0,0:vazio",
+   "corpo:perneiras-32:32px:centro0,0:vazio",
+   "corpo:botas-ferro-32:32px:centro0,0:vazio",
+   "corpo:anel-32:32px:centro0,0:vazio",
+   "corpo:anel-32:32px:centro0,0:vazio",
+   "mochila:espada-40:40px:centro0,0",
+   "mochila:cajado-40:40px:centro0,0",
+   "mochila:livro-40:40px:centro0,0",
+   "mochila:desenhado:32px:centro0,0",
+   "mochila:cajado-40:40px:centro0,0",
+   "mochila:orbe-40:40px:centro0,0",
+   "mochila:perneiras-40:40px:centro0,0",
+   "mochila:varinha-40:40px:centro0,0",
+   "mochila:/capuz_tecido-40.png:40px:centro0,0"
+  ]
+ },
+ {
+  "nome": "capuz_tecido-normal-saque-cartao",
+  "capuz_tecido": [
+   "slot-px.mini:32→32",
+   "achado-arte:64→64",
+   "achado-arte.pequena:48→48"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "manopla": [
+   "slot-px.mini:32→32"
+  ],
+  "livro": [
+   "slot-px.mini:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "curandeira": "sprite do jogo"
+ },
+ {
+  "nome": "capuz_tecido-normal-saque-voo",
+  "capuz_tecido": [
+   "slot-px.mini:32→32",
+   "achado-arte:64→64",
+   "achado-arte.pequena:48→48",
+   "voo-item:48→51"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "manopla": [
+   "slot-px.mini:32→32"
+  ],
+  "livro": [
+   "slot-px.mini:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "curandeira": "sprite do jogo"
+ },
+ {
+  "nome": "capuz_tecido-normal-guardado-inventario",
+  "capuz_tecido": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40",
+   "slot-px.celula:40→40"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "cota": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "manopla": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "livro": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40",
+   "espaco.slot-px:32→32"
+  ],
+  "curandeira": "sprite do jogo",
+  "sprite-caveira": [
+   "slot-px.lixeira"
+  ]
+ },
+ {
+  "nome": "capuz_tecido-normal-luta",
+  "capuz_tecido": [
+   "slot-px.mini:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "manopla": [
+   "slot-px.mini:32→32"
+  ],
+  "livro": [
+   "slot-px.mini:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "curandeira": "sprite do jogo",
+  "sprite-cajado": [
+   "rb-icone"
+  ]
+ },
+ {
+  "nome": "capuz_tecido-baixa-dica-comparacao",
+  "capuz_tecido": [
+   "slot-px.mini:32→32",
+   "slot-px.r-magico:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "manopla": [
+   "slot-px.mini:32→32"
+  ],
+  "livro": [
+   "slot-px.mini:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "unguento": [
+   "slot-px:32→0"
+  ],
+  "bomba": [
+   "slot-px:32→0"
+  ],
+  "orbe": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "varinha": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "espada": [
+   "slot-px.celula:32→32"
+  ],
+  "cajado": [
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "curandeira": "sprite do jogo"
+ },
+ {
+  "nome": "capuz_tecido-baixa-mercado",
+  "capuz_tecido": [
+   "slot-px.mini:32→32",
+   "slot-px.r-magico:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "manopla": [
+   "slot-px.mini:32→32"
+  ],
+  "livro": [
+   "slot-px.mini:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "unguento": [
+   "slot-px:32→0"
+  ],
+  "bomba": [
+   "slot-px:32→0"
+  ],
+  "orbe": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "varinha": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "espada": [
+   "slot-px.celula:32→32"
+  ],
+  "cajado": [
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "curandeira": "sprite do jogo"
+ },
+ {
+  "nome": "capuz_tecido-baixa-vendido",
+  "capuz_tecido": [
+   "slot-px.mini:32→32",
+   "slot-px.r-magico:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "manopla": [
+   "slot-px.mini:32→32"
+  ],
+  "livro": [
+   "slot-px.mini:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "unguento": [
+   "slot-px:32→0"
+  ],
+  "bomba": [
+   "slot-px:32→0"
+  ],
+  "orbe": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "varinha": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "espada": [
+   "slot-px.celula:32→32"
+  ],
+  "cajado": [
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "curandeira": "sprite do jogo"
+ },
+ {
+  "nome": "capuz_tecido-baixa-recomprado",
+  "capuz_tecido": [
+   "slot-px.mini:32→32",
+   "slot-px.r-magico:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "manopla": [
+   "slot-px.mini:32→32"
+  ],
+  "livro": [
+   "slot-px.mini:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "unguento": [
+   "slot-px:32→0"
+  ],
+  "bomba": [
+   "slot-px:32→0"
+  ],
+  "orbe": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "varinha": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "espada": [
+   "slot-px.celula:32→32"
+  ],
+  "cajado": [
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "curandeira": "sprite do jogo"
+ },
+ {
+  "nome": "capuz_tecido-baixa-inventario",
+  "medidas": [
+   "corpo:/capuz_tecido-40.png:40px:centro0,0",
+   "corpo:amuleto-32:32px:centro0,0:vazio",
+   "corpo:cota-32:32px:centro0,0:vazio",
+   "corpo:manopla-32:32px:centro0,0:vazio",
+   "corpo:livro-40:40px:centro0,0",
+   "corpo:escudo-32:32px:centro0,0:vazio",
+   "corpo:perneiras-32:32px:centro0,0:vazio",
+   "corpo:botas-ferro-32:32px:centro0,0:vazio",
+   "corpo:anel-32:32px:centro0,0:vazio",
+   "corpo:anel-32:32px:centro0,0:vazio",
+   "mochila:espada-40:40px:centro0,0",
+   "mochila:cajado-40:40px:centro0,0",
+   "mochila:livro-40:40px:centro0,0",
+   "mochila:desenhado:32px:centro0,0",
+   "mochila:cajado-40:40px:centro0,0",
+   "mochila:orbe-40:40px:centro0,0",
+   "mochila:perneiras-40:40px:centro0,0",
+   "mochila:varinha-40:40px:centro0,0",
+   "mochila:/capuz_tecido-40.png:40px:centro0,0"
+  ]
+ },
+ {
+  "nome": "capuz_tecido-baixa-saque-cartao",
+  "capuz_tecido": [
+   "slot-px.mini:32→32",
+   "achado-arte:64→64",
+   "achado-arte.pequena:48→48"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "manopla": [
+   "slot-px.mini:32→32"
+  ],
+  "livro": [
+   "slot-px.mini:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "curandeira": "sprite do jogo"
+ },
+ {
+  "nome": "capuz_tecido-baixa-saque-voo",
+  "capuz_tecido": [
+   "slot-px.mini:32→32",
+   "achado-arte:64→64",
+   "achado-arte.pequena:48→48",
+   "voo-item:48→51"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "manopla": [
+   "slot-px.mini:32→32"
+  ],
+  "livro": [
+   "slot-px.mini:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "curandeira": "sprite do jogo"
+ },
+ {
+  "nome": "capuz_tecido-baixa-guardado-inventario",
+  "capuz_tecido": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40",
+   "slot-px.celula:40→40"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "cota": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "manopla": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "livro": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40",
+   "espaco.slot-px:32→32"
+  ],
+  "curandeira": "sprite do jogo",
+  "sprite-caveira": [
+   "slot-px.lixeira"
+  ]
+ },
+ {
+  "nome": "capuz_tecido-baixa-luta",
+  "capuz_tecido": [
+   "slot-px.mini:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "manopla": [
+   "slot-px.mini:32→32"
+  ],
+  "livro": [
+   "slot-px.mini:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "curandeira": "sprite do jogo",
+  "sprite-cajado": [
+   "rb-icone"
+  ]
+ },
+ {
+  "nome": "luva_seda-normal-dica-comparacao",
+  "elmo": [
+   "slot-px.mini:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "luva_seda": [
+   "slot-px.mini:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "livro": [
+   "slot-px.mini:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "unguento": [
+   "slot-px:32→0"
+  ],
+  "bomba": [
+   "slot-px:32→0"
+  ],
+  "orbe": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "varinha": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "capuz_tecido": [
+   "slot-px.r-magico:32→0"
+  ],
+  "espada": [
+   "slot-px.celula:32→32"
+  ],
+  "cajado": [
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "curandeira": "sprite do jogo"
+ },
+ {
+  "nome": "luva_seda-normal-mercado",
+  "elmo": [
+   "slot-px.mini:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "luva_seda": [
+   "slot-px.mini:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "livro": [
+   "slot-px.mini:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "unguento": [
+   "slot-px:32→0"
+  ],
+  "bomba": [
+   "slot-px:32→0"
+  ],
+  "orbe": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "varinha": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "capuz_tecido": [
+   "slot-px.r-magico:32→0"
+  ],
+  "espada": [
+   "slot-px.celula:32→32"
+  ],
+  "cajado": [
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "curandeira": "sprite do jogo"
+ },
+ {
+  "nome": "luva_seda-normal-vendido",
+  "elmo": [
+   "slot-px.mini:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "luva_seda": [
+   "slot-px.mini:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "livro": [
+   "slot-px.mini:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "unguento": [
+   "slot-px:32→0"
+  ],
+  "bomba": [
+   "slot-px:32→0"
+  ],
+  "orbe": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "varinha": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "capuz_tecido": [
+   "slot-px.r-magico:32→0"
+  ],
+  "espada": [
+   "slot-px.celula:32→32"
+  ],
+  "cajado": [
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "curandeira": "sprite do jogo"
+ },
+ {
+  "nome": "luva_seda-normal-recomprado",
+  "elmo": [
+   "slot-px.mini:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "luva_seda": [
+   "slot-px.mini:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "livro": [
+   "slot-px.mini:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "unguento": [
+   "slot-px:32→0"
+  ],
+  "bomba": [
+   "slot-px:32→0"
+  ],
+  "orbe": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "varinha": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "capuz_tecido": [
+   "slot-px.r-magico:32→0"
+  ],
+  "espada": [
+   "slot-px.celula:32→32"
+  ],
+  "cajado": [
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "curandeira": "sprite do jogo"
+ },
+ {
+  "nome": "luva_seda-normal-inventario",
+  "medidas": [
+   "corpo:elmo-32:32px:centro0,0:vazio",
+   "corpo:amuleto-32:32px:centro0,0:vazio",
+   "corpo:cota-32:32px:centro0,0:vazio",
+   "corpo:nes/luva_seda-40.png:40px:centro0,0",
+   "corpo:livro-40:40px:centro0,0",
+   "corpo:escudo-32:32px:centro0,0:vazio",
+   "corpo:perneiras-32:32px:centro0,0:vazio",
+   "corpo:botas-ferro-32:32px:centro0,0:vazio",
+   "corpo:anel-32:32px:centro0,0:vazio",
+   "corpo:anel-32:32px:centro0,0:vazio",
+   "mochila:espada-40:40px:centro0,0",
+   "mochila:cajado-40:40px:centro0,0",
+   "mochila:livro-40:40px:centro0,0",
+   "mochila:desenhado:32px:centro0,0",
+   "mochila:cajado-40:40px:centro0,0",
+   "mochila:orbe-40:40px:centro0,0",
+   "mochila:perneiras-40:40px:centro0,0",
+   "mochila:varinha-40:40px:centro0,0",
+   "mochila:nes/luva_seda-40.png:40px:centro0,0"
+  ]
+ },
+ {
+  "nome": "luva_seda-normal-saque-cartao",
+  "elmo": [
+   "slot-px.mini:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "luva_seda": [
+   "slot-px.mini:32→32",
+   "achado-arte:64→64",
+   "achado-arte.pequena:48→48"
+  ],
+  "livro": [
+   "slot-px.mini:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "curandeira": "sprite do jogo"
+ },
+ {
+  "nome": "luva_seda-normal-saque-voo",
+  "elmo": [
+   "slot-px.mini:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "luva_seda": [
+   "slot-px.mini:32→32",
+   "achado-arte:64→64",
+   "achado-arte.pequena:48→48",
+   "voo-item:48→51"
+  ],
+  "livro": [
+   "slot-px.mini:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "curandeira": "sprite do jogo"
+ },
+ {
+  "nome": "luva_seda-normal-guardado-inventario",
+  "elmo": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "cota": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "luva_seda": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40",
+   "slot-px.celula:40→40"
+  ],
+  "livro": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40",
+   "espaco.slot-px:32→32"
+  ],
+  "curandeira": "sprite do jogo",
+  "sprite-caveira": [
+   "slot-px.lixeira"
+  ]
+ },
+ {
+  "nome": "luva_seda-normal-luta",
+  "elmo": [
+   "slot-px.mini:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "luva_seda": [
+   "slot-px.mini:32→32"
+  ],
+  "livro": [
+   "slot-px.mini:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "curandeira": "sprite do jogo",
+  "sprite-cajado": [
+   "rb-icone"
+  ]
+ },
+ {
+  "nome": "luva_seda-baixa-dica-comparacao",
+  "elmo": [
+   "slot-px.mini:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "luva_seda": [
+   "slot-px.mini:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "livro": [
+   "slot-px.mini:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "unguento": [
+   "slot-px:32→0"
+  ],
+  "bomba": [
+   "slot-px:32→0"
+  ],
+  "orbe": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "varinha": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "capuz_tecido": [
+   "slot-px.r-magico:32→0"
+  ],
+  "espada": [
+   "slot-px.celula:32→32"
+  ],
+  "cajado": [
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "curandeira": "sprite do jogo"
+ },
+ {
+  "nome": "luva_seda-baixa-mercado",
+  "elmo": [
+   "slot-px.mini:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "luva_seda": [
+   "slot-px.mini:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "livro": [
+   "slot-px.mini:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "unguento": [
+   "slot-px:32→0"
+  ],
+  "bomba": [
+   "slot-px:32→0"
+  ],
+  "orbe": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "varinha": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "capuz_tecido": [
+   "slot-px.r-magico:32→0"
+  ],
+  "espada": [
+   "slot-px.celula:32→32"
+  ],
+  "cajado": [
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "curandeira": "sprite do jogo"
+ },
+ {
+  "nome": "luva_seda-baixa-vendido",
+  "elmo": [
+   "slot-px.mini:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "luva_seda": [
+   "slot-px.mini:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "livro": [
+   "slot-px.mini:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "unguento": [
+   "slot-px:32→0"
+  ],
+  "bomba": [
+   "slot-px:32→0"
+  ],
+  "orbe": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "varinha": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "capuz_tecido": [
+   "slot-px.r-magico:32→0"
+  ],
+  "espada": [
+   "slot-px.celula:32→32"
+  ],
+  "cajado": [
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "curandeira": "sprite do jogo"
+ },
+ {
+  "nome": "luva_seda-baixa-recomprado",
+  "elmo": [
+   "slot-px.mini:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "luva_seda": [
+   "slot-px.mini:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "livro": [
+   "slot-px.mini:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "unguento": [
+   "slot-px:32→0"
+  ],
+  "bomba": [
+   "slot-px:32→0"
+  ],
+  "orbe": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "varinha": [
+   "slot-px.r-comum:32→0",
+   "slot-px.celula:32→32"
+  ],
+  "capuz_tecido": [
+   "slot-px.r-magico:32→0"
+  ],
+  "espada": [
+   "slot-px.celula:32→32"
+  ],
+  "cajado": [
+   "slot-px.celula:32→32",
+   "slot-px.celula:32→32"
+  ],
+  "curandeira": "sprite do jogo"
+ },
+ {
+  "nome": "luva_seda-baixa-inventario",
+  "medidas": [
+   "corpo:elmo-32:32px:centro0,0:vazio",
+   "corpo:amuleto-32:32px:centro0,0:vazio",
+   "corpo:cota-32:32px:centro0,0:vazio",
+   "corpo:nes/luva_seda-40.png:40px:centro0,0",
+   "corpo:livro-40:40px:centro0,0",
+   "corpo:escudo-32:32px:centro0,0:vazio",
+   "corpo:perneiras-32:32px:centro0,0:vazio",
+   "corpo:botas-ferro-32:32px:centro0,0:vazio",
+   "corpo:anel-32:32px:centro0,0:vazio",
+   "corpo:anel-32:32px:centro0,0:vazio",
+   "mochila:espada-40:40px:centro0,0",
+   "mochila:cajado-40:40px:centro0,0",
+   "mochila:livro-40:40px:centro0,0",
+   "mochila:desenhado:32px:centro0,0",
+   "mochila:cajado-40:40px:centro0,0",
+   "mochila:orbe-40:40px:centro0,0",
+   "mochila:perneiras-40:40px:centro0,0",
+   "mochila:varinha-40:40px:centro0,0",
+   "mochila:nes/luva_seda-40.png:40px:centro0,0"
+  ]
+ },
+ {
+  "nome": "luva_seda-baixa-saque-cartao",
+  "elmo": [
+   "slot-px.mini:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "luva_seda": [
+   "slot-px.mini:32→32",
+   "achado-arte:64→64",
+   "achado-arte.pequena:48→48"
+  ],
+  "livro": [
+   "slot-px.mini:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "curandeira": "sprite do jogo"
+ },
+ {
+  "nome": "luva_seda-baixa-saque-voo",
+  "elmo": [
+   "slot-px.mini:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "luva_seda": [
+   "slot-px.mini:32→32",
+   "achado-arte:64→64",
+   "achado-arte.pequena:48→48",
+   "voo-item:48→51"
+  ],
+  "livro": [
+   "slot-px.mini:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "curandeira": "sprite do jogo"
+ },
+ {
+  "nome": "luva_seda-baixa-guardado-inventario",
+  "elmo": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "cota": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "luva_seda": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40",
+   "slot-px.celula:40→40"
+  ],
+  "livro": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32",
+   "espaco.slot-px:40→40",
+   "espaco.slot-px:32→32"
+  ],
+  "curandeira": "sprite do jogo",
+  "sprite-caveira": [
+   "slot-px.lixeira"
+  ]
+ },
+ {
+  "nome": "luva_seda-baixa-luta",
+  "elmo": [
+   "slot-px.mini:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "luva_seda": [
+   "slot-px.mini:32→32"
+  ],
+  "livro": [
+   "slot-px.mini:32→32"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "curandeira": "sprite do jogo",
+  "sprite-cajado": [
+   "rb-icone"
+  ]
+ },
+ {
+  "nome": "luva-normal-unico-cartao",
+  "unico": "maos_do_estrangulador",
+  "elmo": [
+   "slot-px.mini:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "luva": [
+   "slot-px.mini:32→32",
+   "achado-arte:64→64",
+   "achado-arte.pequena:48→48"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "aljava": [
+   "icones:24→24"
+  ],
+  "curandeira": "sprite do jogo"
+ },
+ {
+  "nome": "luva-baixa-unico-cartao",
+  "unico": "maos_do_estrangulador",
+  "elmo": [
+   "slot-px.mini:32→32"
+  ],
+  "amuleto": [
+   "slot-px.mini:32→32"
+  ],
+  "cota": [
+   "slot-px.mini:32→32"
+  ],
+  "luva": [
+   "slot-px.mini:32→32",
+   "achado-arte:64→64",
+   "achado-arte.pequena:48→48"
+  ],
+  "escudo": [
+   "slot-px.mini:32→32"
+  ],
+  "perneiras": [
+   "slot-px.mini:32→32"
+  ],
+  "botas-ferro": [
+   "slot-px.mini:32→32"
+  ],
+  "anel": [
+   "slot-px.mini:32→32",
+   "slot-px.mini:32→32"
+  ],
+  "aljava": [
+   "icones:24→24"
+  ],
+  "curandeira": "sprite do jogo"
+ }
+]

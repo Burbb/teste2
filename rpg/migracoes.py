@@ -5,7 +5,7 @@ acrescenta-se uma função `_vN_para_vN1` em MIGRACOES. Um save antigo passa por
 chegar à versão atual; assim nenhum código do jogo precisa se defender de saves velhos.
 """
 
-VERSAO_SAVE = 4
+VERSAO_SAVE = 5
 
 # Tudo o que o estado da partida guarda além do jogador, da semente e do gerador aleatório.
 CAMPOS_SAVE = ("mundo", "dia", "periodo", "clima", "passos", "flags", "historico", "contagem",
@@ -53,7 +53,33 @@ def _v3_para_v4(d):
     return d
 
 
-MIGRACOES = {1: _v1_para_v2, 2: _v2_para_v3, 3: _v3_para_v4}
+# O Capuz e a Luva de Seda do Mago ganharam desenhos de tecido (1.112.0); os itens guardados antes levam o desenho de
+# couro, que continua sendo o do Arqueiro (Capuz, Chapéu de Couro, Braçadeira) e o das Mãos do Estrangulador (sem
+# classe). O que decide é o próprio item: o espaço, a classe para a qual foi feito e o desenho que ele guarda.
+TECIDO_DO_MAGO = {("cabeca", "capuz"): "capuz_tecido", ("maos", "luva"): "luva_seda"}
+
+
+def _desenho_de_tecido(no):
+    """Percorre o save inteiro (o corpo, a mochila, as lojas, as ofertas, a comitiva, onde houver item) e troca o
+    desenho das peças de tecido do Mago. Só o campo "icone" muda; nome, base, bônus, preço, raridade e o resto ficam."""
+    if isinstance(no, dict):
+        novo = TECIDO_DO_MAGO.get((no.get("slot"), no.get("icone")))
+        if novo and no.get("classe") == "mago" and "bonus" in no:
+            no["icone"] = novo
+        for v in no.values():
+            _desenho_de_tecido(v)
+    elif isinstance(no, list):
+        for v in no:
+            _desenho_de_tecido(v)
+
+
+def _v4_para_v5(d):
+    """O Capuz e a Luva de Seda do Mago com os desenhos de tecido (os itens guardados antes estavam com o couro)."""
+    _desenho_de_tecido(d)
+    return d
+
+
+MIGRACOES = {1: _v1_para_v2, 2: _v2_para_v3, 3: _v3_para_v4, 4: _v4_para_v5}
 
 
 def migrar(dados):

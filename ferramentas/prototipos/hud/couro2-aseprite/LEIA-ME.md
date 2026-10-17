@@ -1,5 +1,8 @@
 # O capuz e a luva com braçadeira de couro (rodada 1, proposta: o 32 como fonte e o 64 ampliado 2×)
 
+> **Integrados na 1.112.0** (o 32 e o 64 aprovados, pixel a pixel, e o 40 e o 48 da rodada 4, no fim deste arquivo);
+> as fontes finais estão em `ferramentas/arte/aseprite/` (`capuz`, `luva`, `capuz_tecido`, `luva_seda`).
+>
 > **Escolha do Jean (17/10/2026): aprovados visualmente** o capuz de couro revisado (`rodada2/capuz-32`), a luva de
 > couro com braçadeira (`rodada1/luva-32`, igual em `rodada2/`), a luva de seda (`rodada2/luva_seda-32`) e o capuz de
 > tecido da rodada 3 (`rodada3/capuz_tecido-32`, commit `1c061e1`); o 64 de cada um é o 32 ampliado 2×. O capuz de
@@ -249,3 +252,67 @@ pranchas). O `put_pixels` não foi usado.
   Acompanham: `TAMANHOS` e `ITEM` no `icones.js`, um sprite 16×16 de reserva para os dois nomes em
   `sprites-dados.js` (como `S.luva`), testes da migração e o gabarito (a troca do nome não mexe no sorteio, mas
   confira se as transcrições mostram o desenho).
+
+---
+
+# Rodada 4: o 40 e o 48 das quatro peças aprovadas, e a integração (1.112.0)
+
+Pedido do Jean: o 40 (o Inventário) e o 48 (o "você usa" do saque) a partir das fontes aprovadas, com os retoques de
+grade necessários, mantendo construção, proporções, materiais, abertura, dobras e amarrações; sem ornamento novo nem
+outro conceito; o 32 e o 64 preservados pixel a pixel.
+
+## Como os tamanhos saíram
+
+`auxiliares/couro2_r4.py` escreve a construção de cada peça para qualquer grade, a partir das mesmas faixas e regras
+das rodadas 1 a 3 (nada é ampliação por fator não inteiro):
+- as formas (cabeça, abertura, capa, mão, dedos, polegar, cano, punho) são as faixas de cada linha do 32 lidas como
+  bordas contínuas que passam pelos centros das linhas; cada tamanho preenche os pixels cujo centro cai dentro: a
+  diagonal continua diagonal, sem os degraus repetidos de uma ampliação;
+- a luz é a mesma regra do 32, nas coordenadas do 32 (as faixas de tom ficam proporcionais);
+- os detalhes finos ficam finos: a costura do crânio, os vincos da capa (retas de 1 px), a fenda e o cordão em
+  zigue-zague da braçadeira (um pixel por linha), o vão entre os dedos (1 px; a largura que sobra vai para os dedos do
+  meio), o contorno; o cordão cruzado do capuz continua um 2×2, o desgaste dois pixels;
+- a borda da abertura, o forro e a parede de dentro saem da abertura de cada tamanho (o anel de 1 px).
+**A prova de fidelidade:** a mesma construção, no 32, sai igual pixel a pixel às quatro aprovadas
+(`python .../couro2_r4.py --conferir`). Um retoque só (`AJUSTES`): no capuz de tecido, a crista da dobra da esquerda
+cruzava o ombro aceso num ponto em que no 32 não cruza e deixava um pixel de tom 5 solto (dois no 40, três no 48);
+voltaram ao tom do plano. Nada mais precisou mudar.
+
+| Arquivo (`rodada4/`) | O que é |
+|---|---|
+| `<peça>-40.aseprite`, `-48.aseprite` | as fontes em camadas (as mesmas camadas do 32 de cada peça) |
+| `<peça>-40.png`, `-48.png` e os `@2x` | o composto exportado pela linha de comando e a duplicação exata |
+| `capturas/tamanhos-1x.png`, `-3x.png` | os quatro tamanhos de cada peça (32 e 64 aprovados, 40 e 48 novos) sobre o carvão |
+| `capturas/carvao-40.png`, `carvao-48.png` | as quatro peças em 1× sobre o carvão com o gibão e as botas aprovados |
+
+Papel de cada parte (`logs/aseprite-r4.log`): *ferramentas do conector* (versão, lista); *Lua pelo `execute_script`*
+(montar e pintar pelo `montar.lua` e o `pintar.lua`: 0 pixels diferentes na releitura e 0 fora da tela em todas as
+camadas; salvar pelo `saveCopyAs`); *linha de comando do Aseprite* (o composto e a conferência das fontes reabertas,
+`aseprite -b --script`: 0 diferentes entre o desenho reaberto e o PNG); *cálculos fora do editor* (as listas, os @2x,
+as pranchas). O `put_pixels` não foi usado. Cada `aseprite -b` derrubou o conector do editor aberto (a extensão da
+instância da linha de comando ocupa o mesmo canal); a conferência das fontes reabertas foi feita pelo mesmo motor, na
+linha de comando, em vez de pelo editor.
+
+## A integração
+
+- **Os arquivos do jogo:** `rpg/web/static/hud/icones/capuz-*`, `luva-*`, `capuz_tecido-*`, `luva_seda-*` (32, 40, 48 e
+  64, com os @2x), exportados pelo `ferramentas/arte/exportar_aseprite.py` das fontes finais em
+  `ferramentas/arte/aseprite/<peça>/` (o 64 de cada um é o 32 ampliado 2×, `DERIVADOS`). Conferido: o 32 e o 64 (e os
+  @2x) iguais pixel a pixel aos aprovados; o 40 e o 48 iguais à rodada 4; `exportar_aseprite.py todas --conferir`,
+  tudo igual ao jogo.
+- **Os papéis** (`Icones`, `ITEM` e `TAMANHOS`): o capuz de couro vale para o Capuz e o Chapéu de Couro do Arqueiro (o
+  chapéu, por ora: a exceção registrada); a luva de couro, para a Braçadeira e o único Mãos do Estrangulador; o capuz
+  de tecido e a luva de seda, para o Capuz e a Luva de Seda do Mago. A habilidade Desaparecer continua com o sprite
+  "capuz" (as habilidades usam o sprite, nunca `Icones.item`); os espaços vazios continuam com o elmo e a manopla.
+  Os sprites 16×16 de reserva dos dois nomes novos (`sprites-dados.js`) são o capuz e a manopla em azul.
+- **Os dados:** em `rpg/itens.py`, o terceiro campo das bases de tecido do Mago (`capuz_tecido`, `luva_seda`). Nome,
+  regra, material e preço não mudam. `icone_de` escolhe, para um item sem desenho guardado (os saves mais antigos),
+  pela classe para a qual a peça foi feita.
+- **Os saves antigos:** a migração v4 → v5 (`rpg/migracoes.py`), que percorre o save inteiro e troca o desenho das
+  peças de cabeça e mãos com classe `mago` que guardavam o do couro; só o campo `icone` muda (testes em
+  `tests/test_couro_tecido.py`, com a migração repetida sem mudança e um save v4 carregado e regravado). Conferida em
+  cópias dos 36 saves pessoais: 16 desenhos trocados, as 24 peças de tecido do Mago com o tecido, as 18 do Arqueiro com
+  o couro, nenhum erro ao carregar (os originais não foram tocados).
+- **No jogo** (`ferramentas/arte/fotografar_itens.mjs` com `SO=capuz,luva,capuz_tecido,luva_seda`, 1500×950 e
+  1280×720): a ficha e o mercado em 32, o Inventário em 40 (corpo e mochila), o cartão do saque em 64 com o "você usa"
+  em 48, o voo ao equipar, vender e recomprar, a luta; o único Mãos do Estrangulador no saque. Sem erro no console.

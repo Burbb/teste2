@@ -3281,3 +3281,22 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   os dois campos novos mudaram, 915 linhas, nenhuma escolha, sorteio ou texto).
 - **Limite:** em 1280×720 com 5 ou 6 inimigos e efeitos, ~120 a 160 px de registro; o seletor rola dentro.
 - **Próximo:** a avaliação do Jean jogando; os capuzes e luvas (entrega seguinte).
+
+### 17/10/2026 (data do computador local) — Entrega: capuzes e luvas de couro e tecido (1.112.0)
+
+- **Pedido de Jean:** o 40 e o 48 dos quatro desenhos aprovados, sem mudar o conceito, e a integração, com os saves
+  antigos recebendo o desenho certo pelos dados do próprio equipamento.
+- **Feito:** o 40 e o 48 da mesma construção de cada peça (`couro2_r4.py`, que no 32 reproduz os aprovados pixel a
+  pixel; um retoque de grade só, no capuz de tecido), pintados no Aseprite pelo `pintar.lua`; as fontes finais em
+  `ferramentas/arte/aseprite/<peça>/`; os 32 arquivos no jogo pelo exportador (o 64 é o 32 ampliado 2×); os papéis no
+  `Icones`; o Capuz e a Luva de Seda do Mago com os desenhos de tecido (`itens.py`); `icone_de` decide pela classe do
+  item quando ele não guarda o desenho; a migração v4 → v5 troca o desenho das peças de tecido do Mago guardadas antes
+  (só o campo `icone`).
+- **Conferido:** fontes reabertas iguais aos PNGs; 32 e 64 iguais aos aprovados; no jogo (`fotografar_itens.mjs`),
+  32 na ficha e no mercado, 40 no Inventário, 64 e 48 no saque, voo, venda, recompra, luta e as Mãos do Estrangulador;
+  a migração em testes (repetida sem mudança, um save v4 carregado e regravado) e em cópias dos 36 saves pessoais (16
+  trocas, nenhuma no Arqueiro, nenhum erro); suíte, fumaça e pyflakes; o gabarito (só o nome do desenho e a versão do
+  save mudaram).
+- **Continua:** o Chapéu de Couro com o capuz (pede desenho próprio); a Desaparecer com o sprite. Commits separados: os
+  desenhos e os dados (`ea8acb7`), a migração (o seguinte).
+- **Próximo:** a avaliação do Jean jogando as duas entregas; nenhum outro lote começou.

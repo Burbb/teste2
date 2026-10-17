@@ -369,7 +369,8 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   roda, o retrato, a cabeça e a figura do herói e dos companheiros (de `retratos.js`, abaixo). Devolve a `<img>` pronta ou `""` quando a família não tem aquele desenho; a
   tela usa então o sprite do jogo (`Icones.item(s) || S(s, 2)`). A origem e o destino de uma animação pedem o mesmo
   papel (o item que voa ao equipar, o selo de atributo, o consumível que cai na bolsa). Lacunas (desenho do jogo no
-  lugar, sem trocar por desenho de outro tipo de item): as peças de couro sem desenho (o capuz, a calça, a luva), os
+  lugar, sem trocar por desenho de outro tipo de item): as peças sem desenho (a calça de couro, o chapéu de couro, que
+  usa o capuz por ora, o Chapéu Pontudo, o Diadema, a calça de tecido, a sandália), os
   itens únicos com desenho próprio, a tocha apagada, a bolsa vazia e o frasco vazio no topo, os inimigos e as cartas deles, os
   ícones de habilidade e de efeito, o covil vencido. O mercador da banca tem o busto no balcão (`telas/mercado.js`,
   com as cores da figura da banca).
@@ -388,7 +389,12 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   `ferramentas/arte/exportar_aseprite.py varinha` (`--conferir` compara com os do jogo). O gibão e as botas de couro
   também (`aseprite/gibao/`, `aseprite/bota/`), com o 64 sendo o 32 ampliado 2× (`DERIVADOS` no exportador; os 64
   desenhados à parte ficam em `aseprite/historico/`). O estado Iniciativa continua com o sprite "bota" e o espaço vazio
-  dos pés com a bota de ferro. O unguento e a bomba se acham só pelo id do
+  dos pés com a bota de ferro. A cabeça e as mãos de couro e de tecido (1.112.0; `aseprite/capuz/`, `luva/`,
+  `capuz_tecido/`, `luva_seda/`, o 64 também derivado do 32): o capuz e a luva de couro para o Arqueiro (Capuz, Chapéu
+  de Couro, Braçadeira) e as Mãos do Estrangulador; o capuz de tecido e a luva de seda para o Capuz e a Luva de Seda do
+  Mago. O desenho vem do item (`itens.py`; `icone_de`, num item sem desenho guardado, decide pela classe para a qual a
+  peça foi feita); os itens guardados antes recebem o de tecido pela migração do save v4 → v5 (`migracoes.py`). A
+  habilidade Desaparecer continua com o sprite "capuz"; os espaços vazios da cabeça e das mãos, com o elmo e a manopla. O unguento e a bomba se acham só pelo id do
   consumível: o desenho "unguento" do jogo é também o da Curandeira, e a "caveira" da bomba é também retrato,
   Bestiário, derrota, fome e a lixeira, que ficam com o deles. O machado vale para todo equipamento com o desenho
   "machado" (os únicos Lamento de Gharbad e O Açougueiro também); o Redemoinho e a Fúria continuam com o sprite. A

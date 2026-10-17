@@ -1,0 +1,13 @@
+A migração do save v4 → v5 (rpg/migracoes.py, 1.112.0) conferida em cópias dos saves pessoais do Jean
+(~/.cronicas_da_fenda copiados para uma pasta temporária; os originais não foram abertos para escrita), 17/10/2026.
+
+- 37 arquivos, 36 saves (um não é save: fica de fora), das versões 1 a 4; todos levados à v5 e carregados pelo jogo
+  (Jogo.carregar), sem erro.
+- Desenhos trocados pela migração (itens com o desenho guardado): 16, todos peças de cabeça ou mãos com classe "mago"
+  (Capuz → capuz_tecido, Luva de Seda → luva_seda).
+- As 24 peças de tecido do Mago (Capuz, Luva de Seda; com o desenho guardado ou, nos saves mais antigos, sem ele) saem
+  com o desenho de tecido; as 18 peças de cabeça e mãos do Arqueiro (Capuz, Chapéu de Couro, Braçadeira) continuam com
+  o de couro; elmos, manoplas, o Chapéu Pontudo, o Diadema e as peças sem classe não mudam.
+- Migrar de novo um save já migrado não muda nada (em todos os 36).
+- Só o campo "icone" muda: nome, base, bônus, preço, raridade, nível, afixos, quantidades e identificadores ficam
+  (conferido no teste test_nada_alem_do_desenho_muda, que compara o save inteiro sem o desenho e a versão).
