@@ -3061,3 +3061,23 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   1280×720, sem erro no console; verificações do `CLAUDE.md` em `couro-aseprite/logs/verificacoes.log`.
 - **Continua como está no jogo:** os sprites 16×16. Próximo: a avaliação do Jean.
 
+### 16/10/2026 (data do computador local) — Peitoral e botas de couro: o fechamento do 32 e os tamanhos 40 e 48 (protótipo, sem versão)
+
+- **Pedido de Jean:** preservar os desenhos; no gibão de 32 só o fechamento (os pontos pareciam botões): poucos traços
+  conectados; depois o 40 e o 48 das duas peças com a construção aprovada.
+- **Feito:** `ferramentas/prototipos/hud/couro-aseprite/rodada2/` (os oito `.aseprite` em camadas, PNGs e @2x),
+  gerados por `auxiliares/couro_r2.py` (o `couro_r1.py` fica como histórico) e pintados pelo `pintar.lua`. O 64 das
+  duas peças e as botas de 32 iguais à rodada 1 pixel a pixel; no gibão de 32 mudaram só 5 pixels: o cordão num
+  zigue-zague contínuo dentro da fenda. O 40 segue a construção do 32 (cordão em zigue-zague, um corte na saia; botas
+  com uma dobra); o 48, a do 64 simplificada (ilhós e cordão em X, três cortes; botas com duas dobras e fivela com
+  furo).
+- **Conferido:** silhueta numa cor só e cor nos quatro tamanhos; editáveis reabertos e captura do editor = PNG =
+  prévia; no jogo, atual × rodada 2 nas duas janelas: ficha e mercado 32, Inventário 40, saque 64 com o 48 nativo ao
+  lado e o voo, sem erro no console. Nenhuma ferramenta compartilhada mudou nesta rodada; verificações em
+  `couro-aseprite/logs/verificacoes-r2.log`.
+- **Comparação pedida (avaliação em aberto, a regra da skill não muda):** no cartão do saque, com os mesmos dados, o
+  64 trabalhado × o 32 final ampliado exatamente 2× (vizinho mais próximo, sem retoque), das duas peças, nas duas
+  janelas (`couro-aseprite/rodada2/capturas/x2-gibao.png`, `x2-bota.png`). Decide se o detalhe extra do 64 justifica o
+  tratamento nos próximos itens.
+- **Continua como está no jogo:** os sprites 16×16. Próximo: a avaliação do Jean.
+

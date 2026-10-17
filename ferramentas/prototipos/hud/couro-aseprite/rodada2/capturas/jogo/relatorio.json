@@ -1,0 +1,437 @@
+{
+ "relatorio": [
+  {
+   "nome": "normal-atual-gibao-mercado",
+   "sprite-gibao": [
+    "slot-px.mini→32",
+    "slot-px.celula→32"
+   ],
+   "sprite-bota": [
+    "slot-px.mini→32",
+    "slot-px.r-comum→0",
+    "slot-px.celula→32"
+   ]
+  },
+  {
+   "nome": "normal-atual-gibao-inventario",
+   "sprite-gibao": [
+    "slot-px.mini→32",
+    "espaco.slot-px→32",
+    "slot-px.celula→32"
+   ],
+   "sprite-bota": [
+    "slot-px.mini→32",
+    "espaco.slot-px→32",
+    "slot-px.celula→32"
+   ]
+  },
+  {
+   "nome": "normal-atual-gibao-saque",
+   "sprite-gibao": [
+    "slot-px.mini→32",
+    "achado-arte→64",
+    "achado-arte.pequena→48"
+   ],
+   "botas-ferro-32": [
+    "slot-px.mini→32"
+   ]
+  },
+  {
+   "nome": "normal-atual-gibao-saque-voo",
+   "sprite-gibao": [
+    "slot-px.mini→32",
+    "achado-arte→64",
+    "achado-arte.pequena→48",
+    "voo-item→51"
+   ],
+   "botas-ferro-32": [
+    "slot-px.mini→32"
+   ]
+  },
+  {
+   "nome": "normal-atual-bota-mercado",
+   "sprite-gibao": [
+    "slot-px.mini→32"
+   ],
+   "sprite-bota": [
+    "slot-px.mini→32",
+    "slot-px.r-comum→0",
+    "slot-px.celula→32",
+    "slot-px.celula→32"
+   ]
+  },
+  {
+   "nome": "normal-atual-bota-inventario",
+   "sprite-gibao": [
+    "slot-px.mini→32",
+    "espaco.slot-px→32"
+   ],
+   "sprite-bota": [
+    "slot-px.mini→32",
+    "espaco.slot-px→32",
+    "slot-px.celula→32",
+    "slot-px.celula→32"
+   ]
+  },
+  {
+   "nome": "normal-atual-bota-saque",
+   "cota-32": [
+    "slot-px.mini→32"
+   ],
+   "sprite-bota": [
+    "slot-px.mini→32",
+    "achado-arte→64",
+    "achado-arte.pequena→48"
+   ]
+  },
+  {
+   "nome": "normal-atual-bota-saque-voo",
+   "cota-32": [
+    "slot-px.mini→32"
+   ],
+   "sprite-bota": [
+    "slot-px.mini→32",
+    "achado-arte→64",
+    "achado-arte.pequena→48",
+    "voo-item→51"
+   ]
+  },
+  {
+   "nome": "normal-rodada2-gibao-mercado",
+   "gibao-32": [
+    "slot-px.mini→32",
+    "slot-px.celula→32"
+   ],
+   "bota-32": [
+    "slot-px.mini→32",
+    "slot-px.r-comum→0",
+    "slot-px.celula→32"
+   ]
+  },
+  {
+   "nome": "normal-rodada2-gibao-inventario",
+   "gibao-32": [
+    "slot-px.mini→32"
+   ],
+   "bota-32": [
+    "slot-px.mini→32"
+   ],
+   "gibao-40": [
+    "espaco.slot-px→40",
+    "slot-px.celula→40"
+   ],
+   "bota-40": [
+    "espaco.slot-px→40",
+    "slot-px.celula→40"
+   ]
+  },
+  {
+   "nome": "normal-rodada2-gibao-saque",
+   "gibao-32": [
+    "slot-px.mini→32"
+   ],
+   "botas-ferro-32": [
+    "slot-px.mini→32"
+   ],
+   "gibao-64": [
+    "achado-arte→64"
+   ],
+   "gibao-48": [
+    "achado-arte.pequena→48"
+   ]
+  },
+  {
+   "nome": "normal-rodada2-gibao-saque-voo",
+   "gibao-32": [
+    "slot-px.mini→32"
+   ],
+   "botas-ferro-32": [
+    "slot-px.mini→32"
+   ],
+   "gibao-64": [
+    "achado-arte→64"
+   ],
+   "gibao-48": [
+    "achado-arte.pequena→48",
+    "voo-item→51"
+   ]
+  },
+  {
+   "nome": "normal-rodada2-bota-mercado",
+   "gibao-32": [
+    "slot-px.mini→32"
+   ],
+   "bota-32": [
+    "slot-px.mini→32",
+    "slot-px.r-comum→0",
+    "slot-px.celula→32",
+    "slot-px.celula→32"
+   ]
+  },
+  {
+   "nome": "normal-rodada2-bota-inventario",
+   "gibao-32": [
+    "slot-px.mini→32"
+   ],
+   "bota-32": [
+    "slot-px.mini→32"
+   ],
+   "gibao-40": [
+    "espaco.slot-px→40"
+   ],
+   "bota-40": [
+    "espaco.slot-px→40",
+    "slot-px.celula→40",
+    "slot-px.celula→40"
+   ]
+  },
+  {
+   "nome": "normal-rodada2-bota-saque",
+   "cota-32": [
+    "slot-px.mini→32"
+   ],
+   "bota-32": [
+    "slot-px.mini→32"
+   ],
+   "bota-64": [
+    "achado-arte→64"
+   ],
+   "bota-48": [
+    "achado-arte.pequena→48"
+   ]
+  },
+  {
+   "nome": "normal-rodada2-bota-saque-voo",
+   "cota-32": [
+    "slot-px.mini→32"
+   ],
+   "bota-32": [
+    "slot-px.mini→32"
+   ],
+   "bota-64": [
+    "achado-arte→64"
+   ],
+   "bota-48": [
+    "achado-arte.pequena→48",
+    "voo-item→51"
+   ]
+  },
+  {
+   "nome": "baixa-atual-gibao-mercado",
+   "sprite-gibao": [
+    "slot-px.mini→32",
+    "slot-px.celula→32"
+   ],
+   "sprite-bota": [
+    "slot-px.mini→32",
+    "slot-px.r-comum→0",
+    "slot-px.celula→32"
+   ]
+  },
+  {
+   "nome": "baixa-atual-gibao-inventario",
+   "sprite-gibao": [
+    "slot-px.mini→32",
+    "espaco.slot-px→32",
+    "slot-px.celula→32"
+   ],
+   "sprite-bota": [
+    "slot-px.mini→32",
+    "espaco.slot-px→32",
+    "slot-px.celula→32"
+   ]
+  },
+  {
+   "nome": "baixa-atual-gibao-saque",
+   "sprite-gibao": [
+    "slot-px.mini→32",
+    "achado-arte→64",
+    "achado-arte.pequena→48"
+   ],
+   "botas-ferro-32": [
+    "slot-px.mini→32"
+   ]
+  },
+  {
+   "nome": "baixa-atual-gibao-saque-voo",
+   "sprite-gibao": [
+    "slot-px.mini→32",
+    "achado-arte→64",
+    "achado-arte.pequena→48",
+    "voo-item→51"
+   ],
+   "botas-ferro-32": [
+    "slot-px.mini→32"
+   ]
+  },
+  {
+   "nome": "baixa-atual-bota-mercado",
+   "sprite-gibao": [
+    "slot-px.mini→32"
+   ],
+   "sprite-bota": [
+    "slot-px.mini→32",
+    "slot-px.r-comum→0",
+    "slot-px.celula→32",
+    "slot-px.celula→32"
+   ]
+  },
+  {
+   "nome": "baixa-atual-bota-inventario",
+   "sprite-gibao": [
+    "slot-px.mini→32",
+    "espaco.slot-px→32"
+   ],
+   "sprite-bota": [
+    "slot-px.mini→32",
+    "espaco.slot-px→32",
+    "slot-px.celula→32",
+    "slot-px.celula→32"
+   ]
+  },
+  {
+   "nome": "baixa-atual-bota-saque",
+   "cota-32": [
+    "slot-px.mini→32"
+   ],
+   "sprite-bota": [
+    "slot-px.mini→32",
+    "achado-arte→64",
+    "achado-arte.pequena→48"
+   ]
+  },
+  {
+   "nome": "baixa-atual-bota-saque-voo",
+   "cota-32": [
+    "slot-px.mini→32"
+   ],
+   "sprite-bota": [
+    "slot-px.mini→32",
+    "achado-arte→64",
+    "achado-arte.pequena→48",
+    "voo-item→51"
+   ]
+  },
+  {
+   "nome": "baixa-rodada2-gibao-mercado",
+   "gibao-32": [
+    "slot-px.mini→32",
+    "slot-px.celula→32"
+   ],
+   "bota-32": [
+    "slot-px.mini→32",
+    "slot-px.r-comum→0",
+    "slot-px.celula→32"
+   ]
+  },
+  {
+   "nome": "baixa-rodada2-gibao-inventario",
+   "gibao-32": [
+    "slot-px.mini→32"
+   ],
+   "bota-32": [
+    "slot-px.mini→32"
+   ],
+   "gibao-40": [
+    "espaco.slot-px→40",
+    "slot-px.celula→40"
+   ],
+   "bota-40": [
+    "espaco.slot-px→40",
+    "slot-px.celula→40"
+   ]
+  },
+  {
+   "nome": "baixa-rodada2-gibao-saque",
+   "gibao-32": [
+    "slot-px.mini→32"
+   ],
+   "botas-ferro-32": [
+    "slot-px.mini→32"
+   ],
+   "gibao-64": [
+    "achado-arte→64"
+   ],
+   "gibao-48": [
+    "achado-arte.pequena→48"
+   ]
+  },
+  {
+   "nome": "baixa-rodada2-gibao-saque-voo",
+   "gibao-32": [
+    "slot-px.mini→32"
+   ],
+   "botas-ferro-32": [
+    "slot-px.mini→32"
+   ],
+   "gibao-64": [
+    "achado-arte→64"
+   ],
+   "gibao-48": [
+    "achado-arte.pequena→48",
+    "voo-item→51"
+   ]
+  },
+  {
+   "nome": "baixa-rodada2-bota-mercado",
+   "gibao-32": [
+    "slot-px.mini→32"
+   ],
+   "bota-32": [
+    "slot-px.mini→32",
+    "slot-px.r-comum→0",
+    "slot-px.celula→32",
+    "slot-px.celula→32"
+   ]
+  },
+  {
+   "nome": "baixa-rodada2-bota-inventario",
+   "gibao-32": [
+    "slot-px.mini→32"
+   ],
+   "bota-32": [
+    "slot-px.mini→32"
+   ],
+   "gibao-40": [
+    "espaco.slot-px→40"
+   ],
+   "bota-40": [
+    "espaco.slot-px→40",
+    "slot-px.celula→40",
+    "slot-px.celula→40"
+   ]
+  },
+  {
+   "nome": "baixa-rodada2-bota-saque",
+   "cota-32": [
+    "slot-px.mini→32"
+   ],
+   "bota-32": [
+    "slot-px.mini→32"
+   ],
+   "bota-64": [
+    "achado-arte→64"
+   ],
+   "bota-48": [
+    "achado-arte.pequena→48"
+   ]
+  },
+  {
+   "nome": "baixa-rodada2-bota-saque-voo",
+   "cota-32": [
+    "slot-px.mini→32"
+   ],
+   "bota-32": [
+    "slot-px.mini→32"
+   ],
+   "bota-64": [
+    "achado-arte→64"
+   ],
+   "bota-48": [
+    "achado-arte.pequena→48",
+    "voo-item→51"
+   ]
+  }
+ ],
+ "erros": []
+}

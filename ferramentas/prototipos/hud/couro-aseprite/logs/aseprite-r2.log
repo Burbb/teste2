@@ -1,0 +1,22 @@
+Rodada 2 no Aseprite pelo MCP (aseprite-bridge 1.0.0), 16/10/2026: listas de auxiliares/couro_r2.py, documento e camadas por auxiliares/montar.lua, cada camada por ferramentas/arte/aseprite/pintar.lua, .aseprite por saveCopyAs, PNG por Image:drawSprite + saveAs; reaberto por app.open e reexportado.
+
+== contagem por camada (escritos; todas com 0 diferentes na releitura e 0 fora da tela)
+gibao-32: forro 10 | corpo 150 | abas 110 | pala 28 | bordas 54 | fecho 34 | costuras 0 | contorno 80
+gibao-40: forro 16 | corpo 224 | abas 196 | pala 48 | bordas 75 | fecho 44 | costuras 0 | contorno 100
+gibao-48: forro 24 | corpo 328 | abas 283 | pala 60 | bordas 110 | fecho 64 | costuras 11 | contorno 122
+gibao-64: forro 41 | corpo 620 | abas 513 | pala 122 | bordas 150 | fecho 84 | costuras 17 | contorno 162
+bota-32: tras 67 | tras_dobra 23 | tras_sola 11 | frente 137 | frente_dobra 40 | frente_sola 37 | tira 15 | detalhes 5 | contorno 118
+bota-40: tras 114 | tras_dobra 33 | tras_sola 20 | frente 223 | frente_dobra 72 | frente_sola 49 | tira 19 | detalhes 7 | contorno 148
+bota-48: tras 164 | tras_dobra 59 | tras_sola 24 | frente 326 | frente_dobra 100 | frente_sola 59 | tira 29 | detalhes 19 | contorno 177
+bota-64: tras 313 | tras_dobra 109 | tras_sola 45 | frente 589 | frente_dobra 171 | frente_sola 113 | tira 52 | detalhes 28 | contorno 241
+Reabertos: as mesmas camadas e contagens, nas dimensões 32/40/48/64, RGB.
+
+== conferência (Python; editor = get_sprite_screenshot do conector, nos cinco que mudaram ou são novos)
+gibao-32 png=reaberto True png=previa True alfas [0, 255] cores 13 editor=png True vs rodada1: 5 px [(16, 12), (15, 13), (16, 13), (16, 14), (16, 16)] @2x exato True
+gibao-40 png=reaberto True png=previa True alfas [0, 255] cores 13 editor=png True @2x exato True
+gibao-48 png=reaberto True png=previa True alfas [0, 255] cores 16 editor=png True @2x exato True
+gibao-64 png=reaberto True png=previa True alfas [0, 255] cores 16 vs rodada1: igual @2x exato True
+bota-32 png=reaberto True png=previa True alfas [0, 255] cores 21 vs rodada1: igual @2x exato True
+bota-40 png=reaberto True png=previa True alfas [0, 255] cores 22 editor=png True @2x exato True
+bota-48 png=reaberto True png=previa True alfas [0, 255] cores 24 editor=png True @2x exato True
+bota-64 png=reaberto True png=previa True alfas [0, 255] cores 24 vs rodada1: igual @2x exato True

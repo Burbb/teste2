@@ -7,6 +7,14 @@
 //     Vender (32) e a dica com a comparação (Shift), uma rodada por peça;
 //   - saque (vila, CLASSE=arqueiro, ACHADO=<peça>): a tela inteira e o cartão do achado (64). O "você usa" fica com a
 //     peça de ferro que o cenário veste (48 nativo): nesta rodada o couro não tem 48, e a página não mostra um.
+// A versão "rodada2" (couro-aseprite/rodada2/: o fechamento novo do gibão de 32 e os tamanhos 40 e 48) acrescenta o
+// Inventário (o corpo e a mochila em 40) e, no saque, veste a mesma peça (VESTIR=<peça>) para o "você usa" mostrar o 48
+// nativo, e fotografa o voo ao equipar:
+//   SAIDA=ferramentas/prototipos/hud/couro-aseprite/rodada2/capturas/jogo VERSOES=atual,rodada2
+// A versão "x2" é a rodada 2 com o 64 trocado pelo 32 final ampliado exatamente 2× (o *-32@2x.png, vizinho mais
+// próximo, sem retoque), para comparar no cartão do saque se o 64 trabalhado faz diferença; LUGARES=saque fotografa só
+// o saque:
+//   SAIDA=ferramentas/prototipos/hud/couro-aseprite/rodada2/capturas/jogo-x2 VERSOES=rodada2,x2 LUGARES=saque
 // Guarda em SAIDA (padrão: couro-aseprite/capturas/jogo) como <janela>-<versao>-<peça>-<lugar>.png e os recortes
 // pequenos como zoom-...; comparar_couro.py monta as comparações.
 //   PLAYWRIGHT_MODULO=<caminho do playwright>/index.mjs node ferramentas/prototipos/hud/fotografar_couro.mjs
@@ -17,12 +25,16 @@ import { fileURLToPath } from "url";
 import path from "path";
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULO || "playwright");
 const aqui = path.dirname(fileURLToPath(import.meta.url)), raiz = path.resolve(aqui, "../../..");
-const PROPOSTA = path.join(aqui, "couro-aseprite", "rodada1");
+const VERSAO = { proposta: { pasta: path.join(aqui, "couro-aseprite", "rodada1"), tamanhos: [32, 64] },
+  rodada2: { pasta: path.join(aqui, "couro-aseprite", "rodada2"), tamanhos: [32, 40, 48, 64] },
+  x2: { pasta: path.join(aqui, "couro-aseprite", "rodada2"), tamanhos: [32, 40, 48, 64], x2: true } };
+const LUGARES = (process.env.LUGARES || "mercado,saque").split(",");
+const R2 = /rodada2|x2/.test(process.env.VERSOES || "");   // com a rodada 2, o atual passa pelos mesmos lugares
 const SAIDA = path.resolve(process.env.SAIDA || path.join(aqui, "couro-aseprite", "capturas", "jogo"));
 mkdirSync(SAIDA, { recursive: true });
 const espera = (ms) => new Promise((r) => setTimeout(r, ms));
-const iconesProposta = [
-  ['const TAMANHOS = {', 'const TAMANHOS = {"gibao": [32, 64], "bota": [32, 64], '],
+const iconesProposta = (tam) => [
+  ['const TAMANHOS = {', `const TAMANHOS = {"gibao": ${JSON.stringify(tam)}, "bota": ${JSON.stringify(tam)}, `],
   ['varinha: "varinha" };', 'varinha: "varinha", gibao: "gibao", bota: "bota" };'],
 ].reduce((t, [a, b]) => {
   if (!t.includes(a)) throw new Error(`icones.js mudou: não achei ${a}`);
@@ -47,10 +59,14 @@ const b = await chromium.launch(process.env.CHROMIUM ? { executablePath: process
 async function pagina(url, jan, versao, nome) {
   const [W, H] = JANELAS[jan];
   const p = await b.newPage({ viewport: { width: W, height: H } });
-  if (versao === "proposta") {
-    await p.route(/\/static\/icones\.js(\?|$)/, (r) => r.fulfill({ body: iconesProposta, contentType: "application/javascript" }));
-    await p.route(/\/static\/hud\/icones\/(gibao|bota)-[^/]+\.png/, (r) => r.fulfill({
-      path: path.join(PROPOSTA, path.basename(new URL(r.request().url()).pathname)), contentType: "image/png" }));
+  const v = VERSAO[versao];
+  if (v) {
+    await p.route(/\/static\/icones\.js(\?|$)/, (r) => r.fulfill({ body: iconesProposta(v.tamanhos), contentType: "application/javascript" }));
+    await p.route(/\/static\/hud\/icones\/(gibao|bota)-[^/]+\.png/, (r) => {
+      let nome = path.basename(new URL(r.request().url()).pathname);
+      if (v.x2) nome = nome.replace(/-64(@2x)?\.png$/, "-32@2x.png");   // o 64 vira o 32 ampliado 2×
+      return r.fulfill({ path: path.join(v.pasta, nome), contentType: "image/png" });
+    });
   }
   p.on("pageerror", (e) => erros.push(`${nome}: ${e}`));
   p.on("console", (m) => { if (m.type() === "error" && !/favicon/.test(m.location().url || "")) erros.push(`${nome}: ${m.text()}`); });
@@ -90,6 +106,10 @@ const onde = (p) => p.evaluate(() => {
   }
   return linhas;
 });
+const pegarVoo = (p, sel, ms = 160) => p.evaluate(([s, ms]) => { window.__voo = false;
+  new MutationObserver((_, o) => { if (!document.querySelector(s)) return;
+    setTimeout(() => { document.getAnimations().forEach((a) => a.pause()); window.__voo = true; }, ms); o.disconnect(); })
+    .observe(document.body, { childList: true, subtree: true }); }, [sel, ms]);
 const marcar = async (p, nome) => relatorio.push({ nome, ...(await onde(p)) });
 async function dica(p, alvo, nome) {
   if (!alvo) return console.log(`  (sem o item da dica em ${nome})`);
@@ -104,9 +124,11 @@ async function dica(p, alvo, nome) {
 
 for (const jan of Object.keys(JANELAS)) for (const versao of VERSOES) for (const peca of PECAS) {
   const n = (c) => `${jan}-${versao}-${peca}-${c}`;
+  let proc, url, p;
+  if (LUGARES.includes("mercado")) {
   // 1. o mercado: a ficha e a mochila em 32
-  let { proc, url } = await subir("mercado", { CLASSE: "arqueiro", VESTIR: "gibao,bota", AMOSTRA: peca, SEMENTE: "1" });
-  let p = await pagina(url, jan, versao, n("mercado"));
+  ({ proc, url } = await subir("mercado", { CLASSE: "arqueiro", VESTIR: "gibao,bota", AMOSTRA: peca, SEMENTE: "1" }));
+  p = await pagina(url, jan, versao, n("mercado"));
   await parado(p); await espera(900); await p.mouse.move(2, 2); await espera(300);
   await p.screenshot({ path: path.join(SAIDA, `${n("tela-mercado")}.png`) });
   await recortar(p, "#heroi", n("ficha"), 0);
@@ -116,16 +138,39 @@ for (const jan of Object.keys(JANELAS)) for (const versao of VERSOES) for (const
   await zoom(p, await p.$('[data-mochila-loja="0"]'), `zoom-${n("vender")}`);
   await dica(p, await p.$('[data-mochila-loja="0"]'), n("mercado-dica"));
   await marcar(p, n("mercado"));
+  if (R2) {  // o Inventário: o corpo e a mochila em 40
+    await p.mouse.move(2, 2); await p.keyboard.press("Escape"); await espera(1500); await parado(p);
+    await p.keyboard.press("i"); await espera(1300); await p.mouse.move(2, 2); await espera(300);
+    await p.screenshot({ path: path.join(SAIDA, `${n("tela-inventario")}.png`) });
+    await recortar(p, ".tela.inventario", n("inventario"), 4);
+    await zoom(p, await p.$(`.tela.inventario [data-espaco="${peca === "gibao" ? "armadura" : "pes"}"]`), `zoom-${n("corpo")}`);
+    await zoom(p, await p.$('.tela.inventario [data-mochila="0"]'), `zoom-${n("mochila")}`);
+    await marcar(p, n("inventario"));
+  }
   await p.close(); proc.kill();
+  }
+  if (!LUGARES.includes("saque")) continue;
   // 2. o saque: o cartão do achado em 64
-  ({ proc, url } = await subir("vila", { CLASSE: "arqueiro", ACHADO: peca }));
+  ({ proc, url } = await subir("vila", { CLASSE: "arqueiro", ACHADO: peca, ...(R2 ? { VESTIR: peca } : {}) }));
   p = await pagina(url, jan, versao, n("saque"));
   await p.waitForSelector(".janela-achado", { timeout: 30000 }); await espera(2600);
   await p.mouse.move(2, 2); await espera(200);
   await p.screenshot({ path: path.join(SAIDA, `${n("tela-saque")}.png`) });
   await recortar(p, ".janela-achado", n("saque-cartao"), 6);
   await zoom(p, await p.$(".janela-achado .achado-cartao.novo .achado-arte"), `zoom-${n("saque-64")}`);
+  if (R2) await zoom(p, await p.$(".janela-achado .achado-cartao.atual .achado-arte"), `zoom-${n("saque-48")}`);
   await marcar(p, n("saque"));
+  if (R2) {  // o voo ao equipar, parado no meio do caminho
+    await pegarVoo(p, ".voo-item");
+    const eq = await p.$('#prompt .escolha:has-text("Equipar"), .achado-acoes button:has-text("Equipar")');
+    if (eq) await eq.click(); else await p.keyboard.press("1");
+    try {
+      await p.waitForFunction(() => window.__voo, null, { timeout: 8000 });
+      await recortar(p, ".voo-item", n("saque-voo"), 16);
+      await marcar(p, n("saque-voo"));
+      await p.evaluate(() => document.getAnimations().forEach((a) => a.play()));
+    } catch { console.log(`  ${n("saque-voo")}: o voo não apareceu`); }
+  }
   await p.close(); proc.kill();
   console.log(jan, versao, peca, "ok");
 }

@@ -1,0 +1,32 @@
+== git status (o que mudou)
+ M ferramentas/prototipos/hud/comparar_couro.py
+ M ferramentas/prototipos/hud/fotografar_couro.mjs
+?? ferramentas/prototipos/hud/couro-aseprite/auxiliares/couro_r2.py
+?? ferramentas/prototipos/hud/couro-aseprite/logs/fotografar-r2.log
+?? ferramentas/prototipos/hud/couro-aseprite/logs/verificacoes-r2.log
+?? ferramentas/prototipos/hud/couro-aseprite/rodada2/
+== unittest
+----------------------------------------------------------------------
+Ran 603 tests in 547.156s
+
+OK
+== gabarito
+OK
+== pyflakes
+rpg\eventos\__init__.py:3:1: '.comuns' imported but unused
+rpg\eventos\__init__.py:3:1: '.biomas' imported but unused
+rpg\eventos\__init__.py:3:1: '.classe' imported but unused
+rpg\eventos\__init__.py:3:1: '.noite' imported but unused
+rpg\eventos\__init__.py:3:1: '.vila' imported but unused
+rpg\eventos\__init__.py:3:1: '.comitiva' imported but unused
+rpg\eventos\__init__.py:4:1: '.motor.REGISTRO' imported but unused
+rpg\eventos\__init__.py:4:1: '.motor.disparar' imported but unused
+rpg\eventos\__init__.py:4:1: '.motor.disparar_id' imported but unused
+== fumaca
+  ok  dormir devolve exatamente o que o quadro disse (30 → 51 de vida, todo o Vigor)
+  ok  sem erros no console
+tudo certo
+== gabarito.json
+== fim
+
+== depois das fotos x2: fotografar_couro.mjs (versão x2, LUGARES) e comparar_couro.py (modo x2) mudaram; node --check e pyflakes neles: limpos. Nenhuma ferramenta compartilhada mudou nesta rodada.

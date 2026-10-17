@@ -1,0 +1,253 @@
+{
+ "relatorio": [
+  {
+   "nome": "normal-rodada2-gibao-saque",
+   "gibao-32": [
+    "slot-px.mini→32"
+   ],
+   "botas-ferro-32": [
+    "slot-px.mini→32"
+   ],
+   "gibao-64": [
+    "achado-arte→64"
+   ],
+   "gibao-48": [
+    "achado-arte.pequena→48"
+   ]
+  },
+  {
+   "nome": "normal-rodada2-gibao-saque-voo",
+   "gibao-32": [
+    "slot-px.mini→32"
+   ],
+   "botas-ferro-32": [
+    "slot-px.mini→32"
+   ],
+   "gibao-64": [
+    "achado-arte→64"
+   ],
+   "gibao-48": [
+    "achado-arte.pequena→48",
+    "voo-item→51"
+   ]
+  },
+  {
+   "nome": "normal-rodada2-bota-saque",
+   "cota-32": [
+    "slot-px.mini→32"
+   ],
+   "bota-32": [
+    "slot-px.mini→32"
+   ],
+   "bota-64": [
+    "achado-arte→64"
+   ],
+   "bota-48": [
+    "achado-arte.pequena→48"
+   ]
+  },
+  {
+   "nome": "normal-rodada2-bota-saque-voo",
+   "cota-32": [
+    "slot-px.mini→32"
+   ],
+   "bota-32": [
+    "slot-px.mini→32"
+   ],
+   "bota-64": [
+    "achado-arte→64"
+   ],
+   "bota-48": [
+    "achado-arte.pequena→48",
+    "voo-item→51"
+   ]
+  },
+  {
+   "nome": "normal-x2-gibao-saque",
+   "gibao-32": [
+    "slot-px.mini→32"
+   ],
+   "botas-ferro-32": [
+    "slot-px.mini→32"
+   ],
+   "gibao-64": [
+    "achado-arte→64"
+   ],
+   "gibao-48": [
+    "achado-arte.pequena→48"
+   ]
+  },
+  {
+   "nome": "normal-x2-gibao-saque-voo",
+   "gibao-32": [
+    "slot-px.mini→32"
+   ],
+   "botas-ferro-32": [
+    "slot-px.mini→32"
+   ],
+   "gibao-64": [
+    "achado-arte→64"
+   ],
+   "gibao-48": [
+    "achado-arte.pequena→48",
+    "voo-item→51"
+   ]
+  },
+  {
+   "nome": "normal-x2-bota-saque",
+   "cota-32": [
+    "slot-px.mini→32"
+   ],
+   "bota-32": [
+    "slot-px.mini→32"
+   ],
+   "bota-64": [
+    "achado-arte→64"
+   ],
+   "bota-48": [
+    "achado-arte.pequena→48"
+   ]
+  },
+  {
+   "nome": "normal-x2-bota-saque-voo",
+   "cota-32": [
+    "slot-px.mini→32"
+   ],
+   "bota-32": [
+    "slot-px.mini→32"
+   ],
+   "bota-64": [
+    "achado-arte→64"
+   ],
+   "bota-48": [
+    "achado-arte.pequena→48",
+    "voo-item→51"
+   ]
+  },
+  {
+   "nome": "baixa-rodada2-gibao-saque",
+   "gibao-32": [
+    "slot-px.mini→32"
+   ],
+   "botas-ferro-32": [
+    "slot-px.mini→32"
+   ],
+   "gibao-64": [
+    "achado-arte→64"
+   ],
+   "gibao-48": [
+    "achado-arte.pequena→48"
+   ]
+  },
+  {
+   "nome": "baixa-rodada2-gibao-saque-voo",
+   "gibao-32": [
+    "slot-px.mini→32"
+   ],
+   "botas-ferro-32": [
+    "slot-px.mini→32"
+   ],
+   "gibao-64": [
+    "achado-arte→64"
+   ],
+   "gibao-48": [
+    "achado-arte.pequena→48",
+    "voo-item→51"
+   ]
+  },
+  {
+   "nome": "baixa-rodada2-bota-saque",
+   "cota-32": [
+    "slot-px.mini→32"
+   ],
+   "bota-32": [
+    "slot-px.mini→32"
+   ],
+   "bota-64": [
+    "achado-arte→64"
+   ],
+   "bota-48": [
+    "achado-arte.pequena→48"
+   ]
+  },
+  {
+   "nome": "baixa-rodada2-bota-saque-voo",
+   "cota-32": [
+    "slot-px.mini→32"
+   ],
+   "bota-32": [
+    "slot-px.mini→32"
+   ],
+   "bota-64": [
+    "achado-arte→64"
+   ],
+   "bota-48": [
+    "achado-arte.pequena→48",
+    "voo-item→51"
+   ]
+  },
+  {
+   "nome": "baixa-x2-gibao-saque",
+   "gibao-32": [
+    "slot-px.mini→32"
+   ],
+   "botas-ferro-32": [
+    "slot-px.mini→32"
+   ],
+   "gibao-64": [
+    "achado-arte→64"
+   ],
+   "gibao-48": [
+    "achado-arte.pequena→48"
+   ]
+  },
+  {
+   "nome": "baixa-x2-gibao-saque-voo",
+   "gibao-32": [
+    "slot-px.mini→32"
+   ],
+   "botas-ferro-32": [
+    "slot-px.mini→32"
+   ],
+   "gibao-64": [
+    "achado-arte→64"
+   ],
+   "gibao-48": [
+    "achado-arte.pequena→48",
+    "voo-item→51"
+   ]
+  },
+  {
+   "nome": "baixa-x2-bota-saque",
+   "cota-32": [
+    "slot-px.mini→32"
+   ],
+   "bota-32": [
+    "slot-px.mini→32"
+   ],
+   "bota-64": [
+    "achado-arte→64"
+   ],
+   "bota-48": [
+    "achado-arte.pequena→48"
+   ]
+  },
+  {
+   "nome": "baixa-x2-bota-saque-voo",
+   "cota-32": [
+    "slot-px.mini→32"
+   ],
+   "bota-32": [
+    "slot-px.mini→32"
+   ],
+   "bota-64": [
+    "achado-arte→64"
+   ],
+   "bota-48": [
+    "achado-arte.pequena→48",
+    "voo-item→51"
+   ]
+  }
+ ],
+ "erros": []
+}

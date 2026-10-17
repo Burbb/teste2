@@ -97,3 +97,53 @@ Aseprite, `dofile("<auxiliares>/montar.lua").montar(n, "<pasta>/<peça>-<n>/", {
 - **Ainda fraco:** em 32 os dois são mais escuros e ocupam menos área que a cota e as botas de ferro; no espaço
   escuro da ficha ficam com menos presença que o placeholder laranja. A bota de trás mostra pouco do pé (o bico fica
   atrás da da frente). O cordão do gibão no 32 é só uma fileira de pontos. A fivela no 32 é um ponto.
+
+---
+
+# Rodada 2: o fechamento do gibão de 32 e os tamanhos 40 e 48
+
+Pedido do Jean: preservar os desenhos; no gibão de 32, só o fechamento da frente (os pontos soltos pareciam botões,
+enquanto o 64 mostra cordão): poucos traços conectados, lendo em tamanho real; depois o 40 e o 48 das duas peças, com
+a construção aprovada. Tudo em `rodada2/`; a `rodada1/` ficou intacta.
+
+- **O gerador:** `auxiliares/couro_r2.py` (cópia do `couro_r1.py`, que fica como histórico). O que era fixo para o
+  64 e o 32 virou medida de cada tamanho (`MEDIDAS_GIBAO`, `MEDIDAS_BOTA`: o tipo de cordão, os ilhós, o desgaste, a
+  fivela, o furo, os vincos, o brilho, quanto o par desce). Conferido: o 64 das duas peças e as botas de 32 saem
+  idênticos à rodada 1, pixel a pixel.
+- **O fechamento do 32:** o cordão num traço só, em zigue-zague dentro da fenda escura: um pixel por linha,
+  alternando as duas colunas (os pixels se tocam na diagonal), claro do lado aceso e médio do lado da sombra, de y 11
+  a 16. Mudaram só 5 pixels. Comparadas em 1× três variantes (`rodada2/capturas/fecho-variantes-32.png`; o antes e depois em
+  `rodada2/capturas/fecho-gibao-32.png`):
+  o zigue-zague sobre a fenda escura leu como cordão; a "trança" (o vão preenchido com cordão escuro) perdeu contraste;
+  a versão curta voltou a parecer pontos.
+- **Gibão 40:** a construção do 32 com mais uma fileira: o mesmo cordão em zigue-zague, só o corte central da saia,
+  borda de 1 px, sem costura nem desgaste; um ajuste tira a ponta de 1 px que a axila fazia (`AJUSTES_GIBAO[40]`).
+- **Gibão 48:** a do 64 simplificada: ilhós e cordão em X (4 vãos em vez de 6), três cortes na saia, a costura da pala
+  e da cintura em pontos, desgaste de 3 pixels.
+- **Botas 40:** como o 32: uma dobra no tornozelo, fivela de poucos pixels, sem furo nem desgaste.
+- **Botas 48:** como o 64: duas dobras no tornozelo com a linha clara em cima, fivela com furo, desgaste de 2 pixels no
+  bico.
+- **Conferido:** a silhueta numa cor só dos quatro tamanhos (`rodada2/capturas/silhueta.png`), depois a cor; os oito
+  `.aseprite` reabertos (8 e 9 camadas, dimensões, RGB) e a captura do editor dos cinco que mudaram ou são novos, igual
+  ao PNG e à prévia; alfa só 0 e 255; @2x exatos (`logs/aseprite-r2.log`). Sobre o carvão com os aprovados
+  (`rodada2/capturas/carvao-32/40/48/64.png`). No jogo, atual × rodada 2, 1500×950 e 1280×720 (`../fotografar_couro.mjs`
+  com `VERSOES=atual,rodada2`, que agora também fotografa o Inventário e o voo e, no saque, veste a mesma peça para o
+  "você usa" mostrar o 48 nativo): ficha e mercado 32, corpo e mochila do Inventário 40, cartão do saque 64 com o 48 ao
+  lado, voo a partir do 48 (`rodada2/capturas/comparacao-*.png`, `prancha-zoom.png`); sem erro no console
+  (`logs/fotografar-r2.log`).
+
+## Comparação pedida: o 64 trabalhado × o 32 final ampliado 2×
+
+Pedido do Jean: ver no cartão do saque, no mesmo espaço e com os mesmos dados, o 64 trabalhado e o 32 final ampliado
+exatamente 2× por vizinho mais próximo (o `rodada2/<peça>-32@2x.png`, sem suavização nem retoque), para avaliar se o
+detalhe extra do 64 justifica o tratamento nos próximos itens. Não substitui os arquivos; a regra da skill não muda.
+
+- **Como:** `../fotografar_couro.mjs` com `VERSOES=rodada2,x2 LUGARES=saque`: a versão "x2" é a rodada 2 com o pedido
+  do 64 respondido pelo 32@2x; o mesmo cenário (vila, Arqueiro, o achado e a mesma peça vestida para o "você usa" em
+  48), 1500×950 e 1280×720; fotos em `rodada2/capturas/jogo-x2/`, sem erro no console (`logs/fotografar-x2.log`).
+  Pranchas: `rodada2/capturas/x2-gibao.png` e `x2-bota.png` (`python ferramentas/prototipos/hud/comparar_couro.py x2`),
+  com os cartões rotulados "64 trabalhado" e "32 ampliado 2x" e as duas artes em 1× e 3×.
+- **Conferido que cada cartão mostra o arquivo certo:** procurando cada arquivo no recorte do cartão, a diferença média
+  é de 2,7 a 5,7 contra o arquivo pretendido e de 10 a 16 contra o outro (o resto vem do brilho de raridade, um
+  `drop-shadow` da arte do cartão).
+
