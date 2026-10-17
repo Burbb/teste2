@@ -1,6 +1,18 @@
-# roadmapIDEIAS — Crônicas da Fenda
+# roadmapIDEIAS — The Unquiet
 
 Revisão 2 — 09/10/2026. Plano de design e desenvolvimento atualizado após leitura estática do jogo refatorado (versão 1.46.0, commit d8d65b9778e85bb7eb8118fdd7a84acfd17e80ac).
+
+## Plano operacional atual — 17/10/2026
+
+Para as próximas entregas de arte, interface, clareza do combate e serviços, seguir
+[23 — Plano de arte, interface e combate](23-PLANO-DE-ARTE-INTERFACE-E-COMBATE.md).
+Ele consolida a ordem aprovada por Jean e diferencia implementação, direção aprovada e hipóteses.
+O resumo em [docs/ROADMAP.md](../docs/ROADMAP.md) aponta para ele. Os documentos anteriores preservam o histórico;
+sua data de revisão não é o estado atual do jogo.
+
+Referência desta atualização: produção 1.110.0; lote de cabeça/capuz e luvas de couro solicitado, ainda em proposta;
+em seguida, clareza do consumo de recurso, protótipos de dado/iniciativa/turnos e consulta aos testes de atributos.
+A discussão futura da campanha está em [22 — Ilse e a água](22-HISTORIA-ILSE-E-A-AGUA-RASCUNHO.md), como rascunho.
 
 ## Direção e escopo acordados
 
@@ -16,10 +28,10 @@ primeira entrega da E7 vem a avaliação integrada dele; a E8 fica adiada; a cam
 
 ## Como seguir
 
-Para uma nova conta ou sessão, começar por [00 — Comece aqui: continuidade](00-COMECE-AQUI.md). O arquivo registra a versão 1.47.1, as correções posteriores à revisão estática e o ponto de partida recomendado.
+Para uma nova conta ou sessão, começar por [00 — Comece aqui: continuidade](00-COMECE-AQUI.md). O arquivo preserva as passagens de contexto desde a versão 1.47.1; consultar os registros recentes e o plano 23 para o ponto de partida atual.
 
 1. Ler [01 — Visão](01-VISAO.md) e [09 — Base existente](09-BASE-EXISTENTE.md).
-2. Escolher uma entrega de [07 — Etapas](07-ETAPAS.md).
+2. Para o trabalho atual, escolher a próxima entrega do [23 — Plano de arte, interface e combate](23-PLANO-DE-ARTE-INTERFACE-E-COMBATE.md); consultar [07 — Etapas](07-ETAPAS.md) para os marcos de campanha e a E9.
 3. Consultar os temas pertinentes e [10 — Decisões](10-DECISOES.md).
 4. Usar um pedido de [08 — Trabalho com Claude](08-TRABALHO-COM-CLAUDE.md).
 5. Validar tecnicamente e jogar antes de ampliar.
@@ -49,6 +61,8 @@ Para uma nova conta ou sessão, começar por [00 — Comece aqui: continuidade](
 | [19-MERCADO.md](19-MERCADO.md) | O mercado com abas (Suprimentos, Equipamentos, Vender), a lista que rola sozinha, os motivos vindos do motor e a banca em pixel art (1.71.0); o acabamento das quantidades e do esgotado (1.73.0); a faixa única e a vendinha do Vale (1.74.0); a luz pelos períodos, a mão e a venda em grade (1.75.0) |
 | [20-CENA-INTERATIVA-OSSUARIO.md](20-CENA-INTERATIVA-OSSUARIO.md) | As cenas interativas da Capela Afogada: o ossuário com o sarilho (1.72.0); o mapa dos cinco ambientes e seus gatilhos, o exterior, o salão alagado e a escada do ossuário (1.76.0); a cena no topo (1.77.0), a luz e as criaturas (1.78.0), a navegação entre as salas e os pontos sem nome fixo (1.79.0); a água atrás dos bancos, a referência de iluminação, o lodo no fundo e a saída para acampar (1.79.1 a 1.81.0); a sacristia e o fundo planejados |
 | [21-DIAGNOSTICO-ATAQUES-EM-AREA.md](21-DIAGNOSTICO-ATAQUES-EM-AREA.md) | Os ataques em área dos inimigos: quem tem (só a Varredura dos guardiões) e quando usa, como os inimigos escolhem o alvo, o que protege o grupo hoje, quanto a comitiva apanha (medido), os candidatos coerentes e a recomendação de habilidade anunciada; só diagnóstico (1.82.0) |
+| [22-HISTORIA-ILSE-E-A-AGUA-RASCUNHO.md](22-HISTORIA-ILSE-E-A-AGUA-RASCUNHO.md) | Discussão futura de Ilse, água e responsabilidade da vila; rascunho, sem mudança de cânone |
+| [23-PLANO-DE-ARTE-INTERFACE-E-COMBATE.md](23-PLANO-DE-ARTE-INTERFACE-E-COMBATE.md) | Plano operacional atual: itens/ícones, clareza do combate, telas, serviços, cenários, habilidades e campanha; estados e próxima sequência |
 
 ## Estados e evidências
 
@@ -61,10 +75,14 @@ Para uma nova conta ou sessão, começar por [00 — Comece aqui: continuidade](
 
 Não há porcentagens de conclusão nem testes declarados como aprovados sem execução. A revisão leu código e testes, mas não executou o jogo ou a suíte. A refatoração estrutural está entregue; conferir a validação atual com Claude.
 
-## Limites da atualização
+## Limites da documentação
 
-Somente Markdown em roadmapIDEIAS. Nenhum arquivo fora desta pasta pode ser alterado por esta tarefa. Os documentos não concedem ao Claude autorização automática para implementar o plano inteiro. Seguir os guias técnicos atuais quando Jean solicitar uma implementação.
+A revisão inicial de 09/10/2026 ficou restrita a Markdown em `roadmapIDEIAS/`. A organização aprovada em
+17/10/2026 acrescenta o plano 23 e atualiza também o resumo correspondente em `docs/ROADMAP.md`, preservando as
+etapas técnicas e as ideias anteriores.
 
-Não substituir docs/ROADMAP.md: ele trata da evolução técnica e contém notas que podem estar desatualizadas. O código atual deve ser conferido antes de cada tarefa.
+Estes documentos não concedem autorização automática para implementar o plano inteiro. Seguir os guias técnicos e
+o código atual quando Jean solicitar uma entrega; a atualização de documentação não altera regras, arte ou versão.
 
-Seis classes iniciais, centenas de habilidades e várias gerações de evolução permanecem ideias futuras. O resultado deste ciclo é uma campanha completa e consistente com as três classes atuais, não a reprodução da escala de Baldur's Gate ou Path of Exile.
+Mais classes, centenas de habilidades e várias gerações de evolução permanecem direção futura. A validação E9 do
+Vale e das três classes atuais continua aberta.

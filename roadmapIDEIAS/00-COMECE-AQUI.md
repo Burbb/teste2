@@ -4,6 +4,9 @@ Registro de passagem de contexto — 09/10/2026 (horário de Brasília).
 
 Este arquivo permite continuar o projeto em uma nova conta ou sessão sem depender das conversas anteriores. É um ponto de entrada; os documentos temáticos detalham o plano. Atualize o estado ao concluir entregas relevantes, sem marcar proposta como decisão ou leitura como teste executado.
 
+**Plano operacional atual (17/10/2026):** [23 — Arte, interface e clareza do combate](23-PLANO-DE-ARTE-INTERFACE-E-COMBATE.md).
+As referências antigas abaixo são históricas; conferir os registros recentes e o código antes da próxima entrega.
+
 ## 1. Repositório e referência
 
 | Campo | Referência desta passagem |
@@ -3134,3 +3137,23 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   medições em `ferramentas/diagnostico-testes/` (`medicoes.log`, `tempos-sem-playwright.tsv`). Nenhum teste, espera
   ou critério mudou.
 
+### 17/10/2026 (Brasília) — Plano operacional consolidado: arte, interface e clareza do combate
+
+- **Pedido e aprovação de Jean:** organizar o documento do plano com a sequência já combinada e os novos pontos:
+  ícones de atributos, HP/recursos/ouro/flechas/bolsa, talentos, caminhos/mapa, mobs e pets; dado mais visível;
+  iniciativa e turnos claros; custo do recurso percebido antes das consequências; consulta aos testes de atributos.
+- **Onde seguir:** [23 — Plano de arte, interface e combate](23-PLANO-DE-ARTE-INTERFACE-E-COMBATE.md), com resumo em
+  `docs/ROADMAP.md` e entrada no índice desta pasta. O plano distingue direção aprovada, hipóteses e entrega
+  implementada; as etapas técnicas e o histórico foram preservados.
+- **Ordem imediata:** concluir/avaliar o lote de cabeça/capuz e luvas já solicitado; integrar só o aprovado;
+  reproduzir/corrigir a percepção atrasada do custo de recurso; prototipar dado, iniciativa, turnos e acesso aos
+  testes; retomar os lotes de ícones. Depois vêm telas/level up/livros/criação, forja visual, forja mecânica,
+  Templo/Curandeira/Taverna, cenários, eventos, habilidades e campanha.
+- **Direções:** iniciativa em indicador compacto no topo enquanto disponível, com entrada breve; “Turno N” breve
+  e número discreto; preservar o dado e a tirinha sem Continuar extra. Percepção/Destreza são bônus derivados,
+  consultáveis com a composição na ficha detalhada, não novos atributos distribuíveis.
+- **Base:** produção 1.110.0; o couro usa 32 principal/64 derivado 2×, com 40/48 aprovados. Preservados os 64 dos
+  itens anteriores até comparação própria. A E9 continua aberta. O diagnóstico dos ~9 min já está documentado:
+  `unittest` com Playwright inclui fumaça; evitar repeti-la.
+- **Escopo desta atualização:** quatro arquivos Markdown; leitura estática e revisão documental, sem executar testes
+  ou navegador e sem mudar motor, interface, saves, arte ou versão. Os detalhes da história permanecem rascunho no 22.

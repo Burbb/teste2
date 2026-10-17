@@ -55,46 +55,52 @@ mais brando para quem quiser; um robô de mapa que jogue partidas inteiras com j
 - Conteúdo: história fixa, personagens, mapa, cidades, masmorras com mapa interno.
 - Classes: árvores grandes, novas especializações, elites.
 
-## Apresentação e serviços (plano de 10/2026)
+## Apresentação, arte e clareza do combate (plano atualizado em 17/10/2026)
 
-A sequência combinada com Jean para a parte visual e para os serviços. Só a etapa 1 está em andamento; as outras são
-propostas, na ordem em que devem vir, e cada uma começa por protótipo e avaliação antes de entrar no jogo.
+A sequência aprovada por Jean está detalhada em
+[23 — Plano de arte, interface e combate](../roadmapIDEIAS/23-PLANO-DE-ARTE-INTERFACE-E-COMBATE.md).
+Consultar esse documento antes de escolher a próxima entrega. A ordem está aprovada; os protótipos e as regras
+ainda em aberto precisam de avaliação própria. Este plano não autoriza executar todas as etapas de uma vez.
 
-| Etapa | O quê | Situação |
+**Referência consultada:** 1.110.0 (`3c63546`), com o diagnóstico dos testes em `ab3a2b6`.
+Já estão no jogo a HUD nova, os seletores de Habilidades e Itens em faixas, os retratos, a fogueira como cena do
+topo e a Capela Afogada. O martelo, Pena de Fênix, escudo, unguento, machado, bomba, arco, cajado, orbe, grimório,
+varinha, gibão e botas já receberam arte trabalhada; conferir as lacunas reais no catálogo e no `Icones`.
+
+| Etapa | Próximas entregas | Situação |
 |---|---|---|
-| **1** | Itens, ícones e acabamento das ações: os itens no desenho do mundo (martelo e Pena de Fênix no jogo desde a 1.93.0), os ícones da interface (doca, ficha, Fugir) e o acabamento ao redor da roda de combate | em andamento: o primeiro lote de candidatos foi recusado (não integrar); o escudo e o Unguento de Prata, feitos pelo método da skill `.claude/skills/arte-itens-fenda/`, estão no jogo desde a 1.94.0, e o equipamento aparece em 40 px no Inventário desde a 1.95.0. Os outros itens continuam com o desenho de antes; novos lotes seguem a skill |
-| **2** | Grimório, o livro da capela e a apresentação da criação de personagem | proposta |
-| **3** | O interior da forja e a conversa com o ferreiro, de início com as regras de hoje | proposta |
-| **4** | Protótipo separado do novo reforço e do encantamento (hipóteses abaixo) | proposta |
-| **5** | Os interiores do Templo, da Curandeira e da Taverna | proposta |
-| **6** | Cenários dos lugares do mapa e das cenas principais da campanha | proposta |
-| **7** | Representações dos eventos recorrentes da estrada | proposta |
-| **8** | Preparação de habilidades, novas habilidades, ícones e animações (hipóteses abaixo) | proposta |
+| **1A** | Concluir candidatos de cabeça/capuz e luvas da família de couro | Pedido enviado; ainda depende da proposta e avaliação |
+| **1B** | Sincronizar o consumo visual de Mana/Vigor/Foco com o início da habilidade, antes das consequências | Prioridade de clareza; relato ainda precisa de reprodução |
+| **1C** | Prototipar dado/tirinha mais visíveis, iniciativa, passagem dos turnos e consulta aos testes de atributos | Direção aprovada; apresentação a avaliar |
+| **1D** | Completar equipamentos e ícones de atributos, HP/recursos, ouro/flechas/bolsa, navegação/mapa, interface, talentos, mobs e pets | Lotes pequenos; habilidades/estados articulados com a etapa 8 |
+| **2** | Level up e celebrações, Grimório aberto, livro narrativo da capela e criação de personagem | Proposta |
+| **3** | Interior da forja e ferreiro, inicialmente com as regras atuais | Proposta |
+| **4** | Protótipo de reforço e encantamento | Hipóteses, sem chances, custos, riscos ou limites finais aprovados |
+| **5** | Interiores do Templo, da Curandeira **e da Taverna** | Proposta |
+| **6** | Cenários dos lugares, entornos do acampamento e cenas principais da campanha | Proposta; conferir a permanência dos acontecimentos antes de produzir |
+| **7** | Cenas dos eventos recorrentes da estrada | Proposta |
+| **8** | Preparação de habilidades, novas habilidades, ícones e animações | Hipóteses a validar, incluindo proteção do grupo e ataques em área dos inimigos |
+| **9** | Expansão e reescrita da campanha, a partir de Ilse e da água | Rascunho em [22](../roadmapIDEIAS/22-HISTORIA-ILSE-E-A-AGUA-RASCUNHO.md), não cânone implementado |
 
-A referência dos serviços e cenários é a Capela Afogada: o ambiente desenhado conforme o texto, com a luz de onde se
-reconhece que ela vem (vela, lanterna, janela, fogo), animações discretas e a interação no próprio cenário (o que se
-usa está no desenho, não numa lista à parte).
+**Padrão atual dos itens:** 32 como fonte principal; 64 ampliado exatamente 2× quando aprovado; 40/48 derivados com
+retoques necessários à leitura. Versão maior redesenhada é uma exceção avaliada, não uma obrigação. Gibão e botas
+são o exemplo integrado (1.110.0). Os 64 dos itens anteriores ficam intactos até uma comparação própria.
+Preservar a construção do mesmo objeto entre tamanhos; placeholder não é molde obrigatório.
 
-Hipóteses para os protótipos das etapas 4 e 8. São pontos de partida, não decisões: nada de chances, custos,
-materiais, poderes, limites finais nem layout definitivo até o protótipo ser avaliado, e nada disso entra no jogo
-antes.
-- Reforçar melhora os atributos físicos da peça; encantar acrescenta uma propriedade especial.
-- Investigar reforços iniciais garantidos e risco só nos últimos níveis; de início sem destruir a peça nem tirar
-  reforços já conquistados.
-- Materiais de encantamento encontrados no mundo, começando com poucos tipos.
-- Preparar até seis habilidades na vila ou no acampamento, com no máximo uma elite entre elas.
-- Atacar, Itens e Fugir separados desses espaços.
-- Testar a apresentação das habilidades na HUD antes de decidir a posição e o formato.
+**Clareza do combate:** o motor já desconta recurso antes da habilidade; investigar o atraso percebido na tela sem
+mudar contas ou reações. Dado e tirinha preservados em uma apresentação mais visível; iniciativa com destaque de
+entrada e indicador compacto enquanto vale; “Turno N” breve e número discreto. Evitar bloqueios, avisos sobrepostos
+e contagem paralela. Percepção e Destreza são testes derivados: mostrar bônus e composição na ficha detalhada,
+junto dos demais testes, usando dados do motor; não criar novos atributos distribuíveis.
 
-Pendências registradas depois da 1.95.0 (para depois, sem executar):
-- O Mago na fogueira (sentado) está no jogo desde a 1.97.0. O Morel pequeno voltou ao desenho escolhido (a figura
-  da fogueira na carta, com a espada refeita) na 1.96.0; os candidatos novos de carta e cabeça foram recusados.
-- Novos lotes de itens, pela skill `arte-itens-fenda`, e as etapas acima.
-- A fogueira é a cena do topo desde a 1.98.0 (o protótipo de 15/10 aprovado). Só a Capela Afogada tem o entorno
-  desenhado à mão; os outros lugares usam a paisagem deles. Os fundos próprios de cada lugar (o Charco, o Bosque, os
-  biomas do mundo gerado) ficam para a etapa de cenários, na mesma organização (`ENTORNOS` em `telas/acampamento.js`).
-- Os itens que ainda são sprites 16×16 (as armas e peças de couro das outras classes) ficam em 32 px no Inventário
-  até ganharem desenho; o martelo e a Pena de Fênix (desenhados em 32) também.
+**Hipóteses guardadas:** reforçar atributos físicos e encantar uma propriedade; poucos materiais encontrados no
+mundo; investigar reforços iniciais garantidos e risco mais tarde, inicialmente sem destruir a peça ou perder
+reforços. Preparar até seis habilidades na vila/acampamento, com no máximo uma elite; Atacar, Itens e Fugir fora
+desses espaços. Pontos/tiers, quantidade final, formato e posição na HUD dependem de protótipo.
+
+A referência dos serviços e cenários continua sendo a Capela Afogada: luz reconhecível, animação discreta e
+interação coerente com o desenho. Fundos próprios dos demais acampamentos ficam na etapa 6.
+A E9 e a validação com jogadores novos seguem abertas ao longo do plano.
 
 ## Ideias guardadas (não agora)
 
