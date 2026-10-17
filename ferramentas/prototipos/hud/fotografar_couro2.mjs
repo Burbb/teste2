@@ -11,6 +11,8 @@
 // Rodada 2 (couro2-aseprite/rodada2/: o capuz de couro refeito, a luva de couro aprovada, o capuz de tecido e a luva de
 // seda): VERSOES=atual,couro,atual_mago,tecido, com SAIDA=ferramentas/prototipos/hud/couro2-aseprite/rodada2/capturas/jogo;
 // o couro no Arqueiro e o tecido no Mago, cada um nos dados da sua classe.
+// Rodada 3 (couro2-aseprite/rodada3/: só o capuz de tecido, com a passagem para a pala refeita): VERSOES=tecido,tecido_r3,
+// PECAS=capuz, com SAIDA=ferramentas/prototipos/hud/couro2-aseprite/rodada3/capturas/jogo.
 // Guarda em SAIDA (padrão: couro2-aseprite/capturas/jogo) como <janela>-<versao>-<peça>-<lugar>.png e os recortes
 // pequenos como zoom-...; comparar_couro2.py monta as comparações.
 //   PLAYWRIGHT_MODULO=<caminho do playwright>/index.mjs node ferramentas/prototipos/hud/fotografar_couro2.mjs
@@ -46,16 +48,17 @@ async function subir(cenario, amb = {}) {
 const JANELAS = { normal: [1500, 950], baixa: [1280, 720] };
 // as versões: a classe do cenário, a pasta dos arquivos e qual arquivo responde por cada desenho (a rodada 2 separa
 // os materiais: o Arqueiro vê o couro, o Mago o tecido; o jogo de hoje escolhe só pelo nome do desenho)
-const R2 = path.join(aqui, "couro2-aseprite", "rodada2");
+const R2 = path.join(aqui, "couro2-aseprite", "rodada2"), R3 = path.join(aqui, "couro2-aseprite", "rodada3");
 const VERSAO = {
   atual: { classe: "arqueiro" },
   proposta: { classe: "arqueiro", pasta: PROPOSTA, mapa: { capuz: "capuz", luva: "luva" } },
   couro: { classe: "arqueiro", pasta: R2, mapa: { capuz: "capuz", luva: "luva" } },
   atual_mago: { classe: "mago" },
   tecido: { classe: "mago", pasta: R2, mapa: { capuz: "capuz_tecido", luva: "luva_seda" } },
+  tecido_r3: { classe: "mago", pasta: R3, mapa: { capuz: "capuz_tecido", luva: path.join(R2, "luva_seda") } },  // a luva igual à da rodada 2
 };
 const VERSOES = process.env.VERSOES ? process.env.VERSOES.split(",") : ["atual", "proposta"];
-const PECAS = ["capuz", "luva"];
+const PECAS = process.env.PECAS ? process.env.PECAS.split(",") : ["capuz", "luva"];
 const relatorio = [], erros = [];
 const b = await chromium.launch(process.env.CHROMIUM ? { executablePath: process.env.CHROMIUM } : {});
 async function pagina(url, jan, versao, nome) {
@@ -66,7 +69,8 @@ async function pagina(url, jan, versao, nome) {
     await p.route(/\/static\/icones\.js(\?|$)/, (r) => r.fulfill({ body: iconesProposta, contentType: "application/javascript" }));
     await p.route(/\/static\/hud\/icones\/(capuz|luva)-[^/]+\.png/, (r) => {
       const m = path.basename(new URL(r.request().url()).pathname).match(/^(capuz|luva)(-.*)$/);
-      return r.fulfill({ path: path.join(v.pasta, v.mapa[m[1]] + m[2]), contentType: "image/png" });
+      const arq = v.mapa[m[1]];
+      return r.fulfill({ path: path.isAbsolute(arq) ? arq + m[2] : path.join(v.pasta, arq + m[2]), contentType: "image/png" });
     });
   }
   p.on("pageerror", (e) => erros.push(`${nome}: ${e}`));

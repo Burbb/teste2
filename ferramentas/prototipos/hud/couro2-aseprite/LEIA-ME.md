@@ -166,3 +166,79 @@ Gerador: `auxiliares/couro2_r2.py` (o `couro2_r1.py` fica como histórico).
 - **Ainda fraco ou a decidir:** o capuz de tecido é escuro e perde um pouco de contraste no cartão escuro do saque; a
   barra ondulada é sutil em 32. A separação no jogo depende da decisão de mapeamento acima. O Chapéu de Couro
   continua com o capuz.
+
+---
+
+# Rodada 3: a passagem do capuz de tecido para a pala
+
+Pedido do Jean: a luva de couro com braçadeira, o capuz de couro revisado e a luva de seda aprovados visualmente
+(não tocados); refinar só o capuz de tecido. Na rodada 2, a passagem do capuz para a pala era ambígua: a linha 21 era
+uma faixa escura de lado a lado, a silhueta abria num degrau, as dobras eram faixas verticais paralelas e a barra
+ondulava em pontas, e a parte de baixo lia como uma cortininha separada. Só protótipo; o 32 no Aseprite em camadas, o
+64 é o 32 ampliado 2×; 40 e 48 depois da aprovação. Tudo em `rodada3/`; a `rodada2/` ficou intacta para comparação.
+
+## O desenho
+
+- **A transição:** a silhueta desce do pescoço para os ombros em diagonal contínua (um pixel por linha de cada lado,
+  das linhas 19 a 22), sem degrau. Os lados do capuz, das linhas 16 a 18, já usam os planos da pala: o lado aceso da
+  cabeça continua no ombro aceso, o lado da sombra no ombro da sombra, sem a linha onde um terminava e o outro começava.
+- **Sem a divisão horizontal:** no lugar da faixa, só uma sombra curta logo abaixo da abertura, que segue a curva dela
+  e some para os lados em duas linhas.
+- **As dobras:** duas, uma de cada lado, saindo do pescoço e abrindo para fora e para baixo, na direção em que o pano
+  se espalha pelos ombros (raios a partir de um ponto acima do pescoço); cada uma é um vale um tom abaixo com a crista
+  acesa do lado da luz.
+- **Poucos planos:** o ombro esquerdo de frente para a luz (com o alto do ombro um tom acima), a frente média, o ombro
+  direito na sombra e a beira de fora mais escura.
+- **A barra:** uma curva lisa, mais alta na frente e mais baixa nos lados, sem ondas nem pontas; a beira vira só do
+  lado da sombra.
+- **Igual à rodada 2:** a cabeça (linhas 0 a 15), o pico macio, a abertura vazia, a borda em dobra fina, o interior e a
+  paleta (lã azul-acinzentada). Sem rosto nem pessoa dentro; a pala termina nos ombros (não virou capa).
+
+| Arquivo (`rodada3/`) | O que é |
+|---|---|
+| `capuz_tecido-32.aseprite` | 5 camadas: capa, capuz, interior, borda, contorno |
+| `capuz_tecido-32.png`, `-32@2x.png`, `-64.png`, `-64@2x.png` | o 32, a duplicação, o 32 ampliado 2× e a duplicação dele |
+| `capturas/` | `capuz-tecido-r2-r3.png` (antes × depois em 1×, 2× e 8×), `carvao-32.png` e `carvao-64.png` (com as outras três peças, o gibão, as botas e a varinha), `silhueta.png`, as comparações no jogo e `prancha-zoom.png`; as fotos em `jogo/` |
+
+Gerador: `auxiliares/couro2_r3.py` (importa a cabeça, a abertura e a paleta do `couro2_r2.py`). Papel de cada parte
+em `logs/aseprite-r3.log`: *ferramentas do conector* (versão, lista, captura do editor); *Lua pelo `execute_script`*
+(montar e pintar pelo `pintar.lua`, salvar, exportar, reabrir); *cálculos fora do editor* (as listas, o 64, os @2x, as
+pranchas). O `put_pixels` não foi usado.
+
+## Conferência
+
+- Os `.aseprite` reabertos (5 camadas, 32×32, RGB); a captura do editor, o arquivo reaberto e a prévia iguais ao PNG;
+  alfa só 0 e 255; 11 cores; o 64 é o 32 ampliado 2× exato. O interior e a borda iguais aos da rodada 2; a cabeça
+  igual até a linha 15; os 157 pixels que mudaram ficam da linha 16 para baixo (`logs/aseprite-r3.log`).
+- No jogo, rodada 2 × rodada 3, o Mago com os mesmos dados (a luva de seda da rodada 2 nas duas), 1500×950 e
+  1280×720: ficha e mercado (Vender, dica) em 32, o cartão do saque com o 64 derivado, as telas inteiras
+  (`rodada3/capturas/comparacao-<janela>-mago-capuz-<lugar>.png`), sem erro no console (`logs/fotografar-r3.log`).
+  `fotografar_couro2.mjs` ganhou a versão `tecido_r3` e `PECAS`; `comparar_couro2.py rodada3` monta as pranchas.
+
+## Avaliação curta
+
+- **Melhorou:** o capuz e a pala leem como uma peça só: o pano sai do pescoço e assenta nos ombros, as dobras apontam
+  para onde ele cai; sem a barra de franja. Em 1× fica mais limpo (menos riscos verticais) e o volume do ombro aceso
+  aparece.
+- **A conferir:** sem as pontas da barra, o pano perde um pouco o ar de "tecido mole" e a silhueta fica mais perto de
+  um sino largo (a forma a evitar no couro da rodada 1; aqui o degrau dos ombros a segura). A dobra do lado da sombra
+  é discreta em 32. O capuz de tecido continua escuro no cartão do saque.
+
+## Para a integração: distinguir couro de tecido também nos saves (investigado, não implementado)
+
+- **Hoje:** `gerar_item` (`rpg/itens.py`) copia o terceiro campo da base (`("Capuz", "m", "capuz")`) para o campo
+  `icone` do item, que vai no save. `icone_de` devolve esse campo primeiro; só sem ele cai no único, na base do
+  catálogo (`_ICONE_BASE`) e no espaço (`ICONE_ESPACO`). As telas recebem o desenho pelo `icone_de` (`ficha`,
+  `recompensas.py`; nenhum outro lugar lê o `icone` do item direto); o `Icones` escolhe o arquivo só pelo nome do desenho.
+- **Consequência:** trocar só os dados (`capuz_tecido`, `luva_seda` nas bases do Mago) vale para itens novos; os que já
+  estão nos saves (equipados, na mochila, nas lojas, nos baús, onde estiverem) continuam com `capuz` e `luva` e
+  mostrariam o couro. Pela base não dá para distinguir: o material Rúnico existe nas duas listas ("Capuz Rúnico" do
+  Arqueiro e do Mago); o que distingue é `classe` = `mago` com `slot` cabeça ou mãos.
+- **Recomendado:** os dados com os desenhos novos (itens novos) e uma migração do save (`rpg/migracoes.py`, v4 → v5,
+  o caminho que o projeto usa para "nenhum código do jogo se defender de saves velhos") que percorre o save inteiro
+  recursivamente e, em todo item com `classe` `mago`, `slot` `cabeca`/`maos` e `icone` `capuz`/`luva`, troca para
+  `capuz_tecido`/`luva_seda`. O percurso genérico não depende de saber onde cada lista de itens mora. Fica de fora,
+  sem mudar: as Mãos do Estrangulador (`classe` vazia, continuam `luva`), o Arqueiro e a habilidade Desaparecer.
+  Acompanham: `TAMANHOS` e `ITEM` no `icones.js`, um sprite 16×16 de reserva para os dois nomes em
+  `sprites-dados.js` (como `S.luva`), testes da migração e o gabarito (a troca do nome não mexe no sorteio, mas
+  confira se as transcrições mostram o desenho).

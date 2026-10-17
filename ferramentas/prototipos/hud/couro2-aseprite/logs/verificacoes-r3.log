@@ -1,0 +1,8 @@
+Rodada 3 (só o capuz de tecido), 17/10/2026, Windows local. Nada mudou em rpg/ nem em tests/.
+python -m unittest discover -s tests   -> Ran 603 tests in 48.951s, OK (skipped=1); sem o Playwright no ambiente (a fumaça rodou à parte)
+python -m tests.gabarito                -> OK (gabarito.json intacto)
+python -m pyflakes rpg tests            -> só os avisos conhecidos de rpg/eventos/__init__.py
+node tests/navegador/fumaca.mjs         -> "tudo certo" (uma vez, separada; Playwright de C:/Users/Jean Wress/Tools/playwright,
+                                           PLAYWRIGHT_MODULO como file:// e PLAYWRIGHT_BROWSERS_PATH para os navegadores de lá)
+python -m pyflakes comparar_couro2.py couro2-aseprite/auxiliares/couro2_r3.py -> sem avisos
+Fotos (fotografar_couro2.mjs, VERSOES=tecido,tecido_r3 PECAS=capuz): 1500x950 e 1280x720, "sem erros" (logs/fotografar-r3.log)

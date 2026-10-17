@@ -3203,3 +3203,21 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   o Mago com o tecido (ficha e mercado 32, saque com o 64, telas inteiras) em 1500×950 e 1280×720, sem erro no
   console; verificações em `couro2-aseprite/logs/verificacoes-r2.log`.
 - **Continua como está no jogo:** os sprites antigos. Próximo: a avaliação do Jean.
+
+### 17/10/2026 (data do computador local) — Proposta: a passagem do capuz de tecido para a pala (protótipo, sem versão)
+
+- **Avaliação de Jean da rodada 2:** aprovados visualmente a luva de couro com braçadeira, o capuz de couro revisado e
+  a luva de seda (não tocados). O capuz de tecido pedia um último ajuste: a divisão horizontal e as dobras verticais
+  paralelas faziam a pala parecer uma cortininha separada.
+- **Feito:** `ferramentas/prototipos/hud/couro2-aseprite/rodada3/` (a silhueta desce do pescoço para os ombros sem
+  degrau, os lados do capuz continuam nos planos da pala, só uma sombra curta sob a abertura, duas dobras abrindo do
+  pescoço para fora, poucos planos de luz, a barra numa curva lisa sem franja; cabeça, abertura, borda, interior e
+  paleta iguais), pintado no Aseprite pelo `pintar.lua`; o 64 é o 32 ampliado 2×. A rodada 2 ficou para comparação.
+- **Investigado para a integração (não feito):** o desenho vai gravado no item (`icone`) e o save o guarda; trocar só
+  os dados das bases do Mago não alcança os itens já salvos. Recomendado: os dados novos mais uma migração do save
+  (v4 → v5) que percorre o save e troca `capuz`/`luva` por `capuz_tecido`/`luva_seda` nos itens de `classe` `mago` da
+  cabeça e das mãos (detalhes no `LEIA-ME.md` da proposta).
+- **Conferido:** editável reaberto (captura do editor = PNG = prévia = composto da linha de comando), o 64 exato; no
+  jogo, rodada 2 × rodada 3 com o Mago (ficha e mercado 32, saque com o 64, telas inteiras) em 1500×950 e 1280×720,
+  sem erro no console; verificações em `couro2-aseprite/logs/verificacoes-r3.log`.
+- **Continua como está no jogo:** os sprites antigos. Próximo: a avaliação do Jean; depois, 40 e 48 e a integração.

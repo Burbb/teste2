@@ -1,0 +1,13 @@
+normal tecido capuz ok
+normal tecido_r3 capuz ok
+baixa tecido capuz ok
+baixa tecido_r3 capuz ok
+{"nome":"normal-tecido-capuz-mercado","capuz-32":["slot-px.mini→32","slot-px.r-magico→0","slot-px.celula→32"],"luva-32":["slot-px.mini→32"]}
+{"nome":"normal-tecido-capuz-saque","elmo-32":["slot-px.mini→32"],"manopla-32":["slot-px.mini→32"],"capuz-64":["achado-arte→64"],"elmo-48":["achado-arte.pequena→48"]}
+{"nome":"normal-tecido_r3-capuz-mercado","capuz-32":["slot-px.mini→32","slot-px.r-magico→0","slot-px.celula→32"],"luva-32":["slot-px.mini→32"]}
+{"nome":"normal-tecido_r3-capuz-saque","elmo-32":["slot-px.mini→32"],"manopla-32":["slot-px.mini→32"],"capuz-64":["achado-arte→64"],"elmo-48":["achado-arte.pequena→48"]}
+{"nome":"baixa-tecido-capuz-mercado","capuz-32":["slot-px.mini→32","slot-px.r-magico→0","slot-px.celula→32"],"luva-32":["slot-px.mini→32"]}
+{"nome":"baixa-tecido-capuz-saque","elmo-32":["slot-px.mini→32"],"manopla-32":["slot-px.mini→32"],"capuz-64":["achado-arte→64"],"elmo-48":["achado-arte.pequena→48"]}
+{"nome":"baixa-tecido_r3-capuz-mercado","capuz-32":["slot-px.mini→32","slot-px.r-magico→0","slot-px.celula→32"],"luva-32":["slot-px.mini→32"]}
+{"nome":"baixa-tecido_r3-capuz-saque","elmo-32":["slot-px.mini→32"],"manopla-32":["slot-px.mini→32"],"capuz-64":["achado-arte→64"],"elmo-48":["achado-arte.pequena→48"]}
+sem erros

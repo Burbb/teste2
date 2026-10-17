@@ -1,0 +1,17 @@
+Rodada 3 no Aseprite pelo MCP (aseprite-bridge 1.0.0, Aseprite 1.3.18.6 da Steam), 17/10/2026: só o capuz de tecido.
+Ferramentas do conector: get_version, list_open_sprites, get_sprite_screenshot (a captura do editor).
+Lua pelo execute_script: o documento e as camadas por ../couro-aseprite/auxiliares/montar.lua; a pintura por
+ferramentas/arte/aseprite/pintar.lua (o put_pixels não foi usado); .aseprite por saveCopyAs; PNG por Image:drawSprite +
+saveAs; reaberto por app.open (camadas) e pela linha de comando (aseprite -b ... --save-as, o composto).
+Cálculos fora do editor: as listas (auxiliares/couro2_r3.py), o 64 e os @2x (duplicação exata em Python), as pranchas.
+
+== pintura (todas as camadas com 0 diferentes na releitura e 0 fora da tela)
+capuz_tecido-32 (rodada 3): capa 208 | capuz 156 | interior 90 | borda 32 | contorno 88; reaberto: as mesmas 5 camadas, 32x32 RGB
+(uma primeira montagem descartada antes de salvar: a pala cobria a última linha da abertura, interior 86 e borda 26;
+corrigido para a abertura ficar intacta)
+
+== conferência
+capuz_tecido-32: (32, 32) RGBA, alfas [0, 255], cores 11; editor = png True; reaberto (linha de comando) = png True; png = prévia True
+  64 = 32 ampliado 2× exato True; reduzido de 2×2 = 32 True
+  interior e borda iguais aos da rodada 2 True; o capuz nas linhas 0 a 15 igual True; 157 pixels diferentes da rodada 2, todos da linha 16 para baixo
+Rodada 2 e as outras três peças (capuz de couro, luva de couro, luva de seda): não tocadas.

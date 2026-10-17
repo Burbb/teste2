@@ -15,6 +15,13 @@ capuz e da luva), carvao-32.png e carvao-64.png (com o gibão e as botas), silhu
 (comparacao-<janela>-<arqueiro|mago>-<peça>-<lugar>.png) e prancha-zoom.png:
 
     python ferramentas/prototipos/hud/comparar_couro2.py rodada2
+
+A rodada 3 (couro2-aseprite/rodada3/: só o capuz de tecido, com a passagem para a pala refeita), com as fotos em
+rodada3/capturas/jogo (VERSOES=tecido,tecido_r3 PECAS=capuz), monta em rodada3/capturas/: capuz-tecido-r2-r3.png (antes
+e depois), carvao-32.png e carvao-64.png (com as outras três peças, o gibão e as botas), silhueta.png, as comparações
+no jogo (comparacao-<janela>-mago-capuz-<lugar>.png) e prancha-zoom.png:
+
+    python ferramentas/prototipos/hud/comparar_couro2.py rodada3
 """
 
 import pathlib
@@ -124,6 +131,54 @@ def rodada2():
                                "silhueta.png", "prancha-zoom.png"]))
 
 
+R3 = PROPOSTA / "rodada3"
+FOTOS3, SAIDA3 = R3 / "capturas" / "jogo", R3 / "capturas"
+
+
+def rodada3():
+    from PIL import Image, ImageDraw
+    from comparar_varinha import FUNDO, TEXTO
+    py, feitas = sys.executable, []
+    _quadro([("capuz de tecido, rodada 2", R2 / "capuz_tecido-32.png"),
+             ("capuz de tecido, rodada 3", R3 / "capuz_tecido-32.png")], SAIDA3 / "capuz-tecido-r2-r3.png")
+    for n in (32, 64):
+        pares = [f"tecido r2={R2 / f'capuz_tecido-{n}.png'}", f"tecido r3={R3 / f'capuz_tecido-{n}.png'}",
+                 f"capuz couro={R2 / f'capuz-{n}.png'}", f"luva couro={R2 / f'luva-{n}.png'}",
+                 f"luva seda={R2 / f'luva_seda-{n}.png'}"]
+        pares += [f"{r}={ICONES / f'{r}-{n}.png'}" for r in ("gibao", "bota", "varinha")]
+        subprocess.run([py, str(AUX / "fila.py"), str(SAIDA3 / f"carvao-{n}.png"), *pares], check=True)
+    subprocess.run([py, str(AUX / "silhueta.py"), str(SAIDA3 / "silhueta.png"), str(R2 / "capuz_tecido-32.png"),
+                    str(R3 / "capuz_tecido-32.png"), str(R2 / "capuz-32.png")], check=True)
+    for jan in ("normal", "baixa"):
+        for lugar in LUGARES:
+            fotos = [FOTOS3 / f"{jan}-{v}-capuz-{lugar}.png" for v in ("tecido", "tecido_r3")]
+            if all(f.exists() for f in fotos):
+                nome = SAIDA3 / f"comparacao-{jan}-mago-capuz-{lugar}.png"
+                em_colunas(fotos, [f"{jan} · mago · capuz de tecido · {lugar}: rodada 2",
+                                   "rodada 3 (a pala refeita; o 64 é o 32 ampliado 2x)"]).save(nome)
+                feitas.append(nome.name)
+    linhas = []
+    for jan in ("normal", "baixa"):
+        for v in ("tecido", "tecido_r3"):
+            ims = [(n, FOTOS3 / f"zoom-{jan}-{v}-capuz-{n}.png") for n in ("ficha", "vender", "saque-64")]
+            ims = [(n, Image.open(p).convert("RGB")) for n, p in ims if p.exists()]
+            linhas.append((f"{jan} · {'rodada 2' if v == 'tecido' else 'rodada 3'}",
+                           [(n, i.resize((i.width * 3, i.height * 3), Image.NEAREST)) for n, i in ims]))
+    larg = max(sum(i.width + 16 for _, i in ims) for _, ims in linhas) + 24
+    alts = [max(i.height for _, i in ims) + 40 for _, ims in linhas]
+    img = Image.new("RGB", (larg, sum(alts) + 10), FUNDO)
+    d, y = ImageDraw.Draw(img), 10
+    for (titulo, ims), a in zip(linhas, alts):
+        d.text((12, y), titulo, fill=TEXTO)
+        x = 12
+        for n, i in ims:
+            img.paste(i, (x, y + 16)); d.text((x, y + 20 + i.height), n, fill=TEXTO); x += i.width + 16
+        y += a
+    img.save(SAIDA3 / "prancha-zoom.png")
+    print("\n".join(feitas + ["capuz-tecido-r2-r3.png", "carvao-32.png", "carvao-64.png", "silhueta.png",
+                               "prancha-zoom.png"]))
+
+
 def _zoom_pecas(pecas, z=3):
     """A prancha ampliada dos espaços no jogo (ficha, venda, saque 64), atual e candidato, das duas janelas."""
     from PIL import Image, ImageDraw
@@ -150,4 +205,4 @@ def _zoom_pecas(pecas, z=3):
 
 
 if __name__ == "__main__":
-    rodada2() if sys.argv[1:] == ["rodada2"] else main()
+    {"rodada2": rodada2, "rodada3": rodada3}.get(sys.argv[1] if sys.argv[1:] else "", main)()
