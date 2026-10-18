@@ -875,3 +875,31 @@ Jean aprovou os dois sem retoque (`4deb386`).
 - A seta do Salvar ocupa o alto do baú e cobre o meio da tampa.
 
 Nada disto entrou no jogo.
+
+### O Bestiário, rodada 3: a parte de baixo, no Aseprite
+
+**O pedido de Jean:** com uma referência de crânio de fera, refazer a parte de baixo. Os dentes em poucos grupos claros,
+separados por sombra e presos ao maxilar; a silhueta alongada; sem a base virar uma barra horizontal com duas pontas.
+Ele também pediu que o trabalho fosse no Aseprite.
+
+**Como foi feito**, só nas linhas de baixo (do nariz para baixo):
+- **No editor, pelo MCP:**
+  - a fonte em camadas (`doca_r5/fontes/atalho-bestiario/`) foi aberta no editor;
+  - as linhas de baixo das camadas `cranio` e `contorno` foram apagadas e repintadas pelo `pintar.lua` (operações em
+    Lua, com o alpha 00 para apagar);
+  - a captura do editor foi conferida a cada tamanho, e as fontes foram salvas.
+- **O desenho:** as linhas foram desenhadas à mão, uma por uma (`auxiliares/bestiario_boca36.py` e `bestiario_boca32.py`).
+  Um cálculo auxiliar as converte nas listas (`bestiario_boca_listas.py`).
+- **A fonte final:** é o `.aseprite`. As grades de `doca_r5/grades/` ficam com a rodada 2 do Bestiário.
+
+**A construção:**
+- **O focinho:** longo, afinando até a arcada, com a cavidade do nariz maior (6 px) e a lâmina de osso no meio.
+- **A arcada:** a linha da gengiva na sombra.
+- **Os dentes:** em quatro grupos pendurados nela: uma presa longa em cada canto, curvando para dentro, e dois dentes
+  curtos no meio. As fendas entre eles são de sombra marrom presa ao osso, e o contorno só aparece abaixo.
+- **O resto do crânio:** não mudou.
+
+**As rodadas guardadas:** a 1 (a barra com duas presas) em `doca_r5/bestiario_r1/`, e a 2 (as duas fileiras de dentes
+com o queixo) em `doca_r5/bestiario_r2/`. A comparação das três está em `doca_r5/bestiario-rodadas.png`.
+
+**Conferido:** o composto do editor, os PNGs exportados e os @2x são iguais. As fotos da doca a 1920×945 foram refeitas.

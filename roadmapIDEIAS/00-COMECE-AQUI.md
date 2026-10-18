@@ -3983,3 +3983,7 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
     integração, porque o jogo não mudou depois).
 - **Próximo:** Jean avaliar o Bestiário, o Salvar e o Sair. Com eles aprovados, a doca fica completa. A versão é a
   1.127.0.
+- **O Bestiário, rodada 3:** a parte de baixo foi refeita no Aseprite, pela referência de crânio de fera do Jean.
+  - **A forma:** o focinho longo e os dentes em grupos pendurados da arcada, presos por sombra, sem a barra com duas
+    pontas.
+  - **Guardadas:** as rodadas 1 e 2, em `doca_r5/`.
