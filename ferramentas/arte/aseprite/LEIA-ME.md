@@ -18,6 +18,8 @@ nada daqui: só os PNGs exportados para `rpg/web/static/hud/icones/`.
 | attr-ataque (o ícone de Ataque) | `attr-ataque/attr-ataque-24.aseprite`, `-32`; **o 64 é o 32 ampliado 2×** | lamina, guarda, cabo, pomo, contorno | 1.120.0 |
 | attr-defesa (o ícone de Defesa) | `attr-defesa/attr-defesa-24.aseprite`, `-32`; **o 64 é o 32 ampliado 2×** | face, borda, bossa, contorno | 1.120.0 |
 | attr-poder (o ícone de Poder) | `attr-poder/attr-poder-24.aseprite`, `-32`; **o 64 é o 32 ampliado 2×** | chama, miolo, faisca, contorno | 1.123.0 |
+| atalho-inventario (o Inventário da doca) | `atalho-inventario/atalho-inventario-36.aseprite`, `-32` | rolo, bolsos, corpo, aba, cinta, fivela, contorno | 1.124.0 |
+| atalho-mapa (o Mapa da doca) | `atalho-mapa/atalho-mapa-36.aseprite`, `-32` | espessura, papel, vincos, terreno, percurso, destino, contorno | 1.124.0 |
 | aljava (a aljava do Patrulheiro e as flechas do topo) | `aljava/aljava-24.aseprite`, `-32`, `-40`, `-48`; **o 64 é o 32 ampliado 2×** | alca, couro, cintas, latao, boca, hastes, penas, contorno | 1.122.0 |
 | attr-agilidade (a Agilidade e o Fugir) | `attr-agilidade/attr-agilidade-24.aseprite`, `-32`; **o 64 é o 32 ampliado 2×** | rastros, sola, bota, dobra, tira, fivela, contorno | 1.121.0 |
 
@@ -137,3 +139,15 @@ A chama violeta é a da rodada 2, aprovada pelo Jean (`c0dbab8`, `ferramentas/pr
 Foi desenhada em grade à mão e pintada no editor pelo `pintar.lua`. Os seis arquivos exportados das fontes são
 idênticos, byte a byte, aos aprovados, e `exportar_aseprite.py attr-poder --conferir` os reproduz. O
 `desenhar_attr_poder_pixel.py` é o candidato anterior, não aprovado, e fica como histórico: só grava numa pasta.
+
+## O Inventário e o Mapa da doca (1.124.0)
+
+Os primeiros atalhos da doca em pixel art: a mochila e o mapa dobrado da rodada 2. Jean os aprovou no `c02e566`, e eles
+estão em `ferramentas/prototipos/hud/itens-lote-noite/doca_r2/`.
+
+**As fontes:** o 36 (o da doca) e o 32 (as janelas estreitas), sem tamanho derivado. Foram desenhadas em grade à mão;
+a camada de cada pixel vem do mapa de camadas, e a pintura no editor foi pelo `pintar.lua`.
+
+**Conferido:** os oito arquivos exportados delas são idênticos, byte a byte, aos aprovados, e
+`exportar_aseprite.py atalho-inventario --conferir` (e `atalho-mapa`) os reproduz. O `desenhar_doca_pixel.py` é a
+primeira proposta, recusada, e fica como histórico.

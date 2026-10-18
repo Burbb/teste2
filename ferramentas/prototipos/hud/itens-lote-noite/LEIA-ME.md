@@ -624,3 +624,10 @@ primeiro, e o 32 tem a mesma construção.
 - O mapa dobrado é mais alto e mais estreito que o atual.
 
 Nada disto entrou no jogo, e os outros seis atalhos não foram começados.
+
+### Integrados: Inventário e Mapa (1.124.0)
+
+Jean aprovou os dois sem retoque (`c02e566`). As fontes saíram de `doca_r2/fontes/` para
+`ferramentas/arte/aseprite/atalho-inventario/` e `atalho-mapa/`, e os oito arquivos do jogo são idênticos, byte a
+byte, aos aprovados. O que ficou em `doca_r2/` é o histórico do processo. Os outros seis atalhos ficam para os
+próximos pares.

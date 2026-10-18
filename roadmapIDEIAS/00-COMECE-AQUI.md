@@ -3852,3 +3852,20 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   - a suíte, o gabarito e o pyflakes. A fumaça não foi repetida: nenhum arquivo do jogo mudou desde `2018add`.
 - **Próximo:** Jean avaliar o Inventário e o Mapa. Os outros seis atalhos ficam para os próximos pares. A versão
   continua 1.123.0.
+
+### 18/10/2026 (data do computador local) — Inventário e Mapa da doca no jogo (1.124.0)
+
+- **Pedido de Jean:** integrar o Inventário e o Mapa da rodada 2 da doca (`c02e566`) sem retoque.
+- **Feito:**
+  - **As fontes:** foram de `doca_r2/fontes/` para `ferramentas/arte/aseprite/atalho-inventario/` e `atalho-mapa/`
+    (36 e 32, sem derivado).
+  - **Os arquivos:** os oito do jogo são idênticos, byte a byte, aos aprovados, e `exportar_aseprite.py <peça>
+    --conferir` os reproduz.
+  - **O alcance:** só os atalhos da doca (`ATALHO`, `Icones.atalho`); nenhum outro papel usa esses arquivos. O
+    `desenhar_doca_pixel.py` (a primeira proposta) virou histórico.
+- **Conferido:**
+  - no jogo, sem injeção, a 1920×945 (`doca_r2/inventario-mapa-no-jogo.png`): a doca inteira, o Inventário aberto pela
+    doca com o atalho selecionado e o Mapa aberto (o escurecimento da tela do mapa ficou como estava);
+  - o tamanho, a posição, os textos e os cliques da doca não mudaram;
+  - a suíte, o gabarito, o pyflakes e a fumaça uma vez.
+- **Próximo:** os outros seis atalhos da doca, em pares.

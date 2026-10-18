@@ -91,6 +91,8 @@ const Icones = (() => {
   const RECURSO = { pernil: "provisoes", osso_diag: "osso", tocha: "tocha", moedas: "moedas", pocao: "pocao", bandagem: "bandagem",
     aljava: "aljava" };
   const VITAL = { Vida: "vital-vida", Vigor: "vital-vigor", Mana: "vital-mana", Foco: "vital-foco" };
+  // os atalhos da doca (36; o 32 nas janelas estreitas): o Inventário (a mochila de couro) e o Mapa (o mapa dobrado em
+  // sanfona) em pixel art desde a 1.124.0, fontes em ferramentas/arte/aseprite/; os outros seis ainda são os pintados
   const ATALHO = { Talentos: "atalho-talentos", "Grimório": "atalho-grimorio", "Inventário": "atalho-inventario", Mapa: "atalho-mapa",
     "Diário": "atalho-diario", "Bestiário": "atalho-bestiario", Salvar: "atalho-salvar", Sair: "atalho-sair" };
   // o desenho que o jogo escolhe para o destino (MapaPx.sprite); o covil vencido continua a bandeira do jogo

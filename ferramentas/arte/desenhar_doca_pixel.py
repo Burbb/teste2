@@ -1,4 +1,7 @@
-"""Os oito ícones do menu de baixo (a doca: Talentos, Grimório, Inventário, Mapa, Diário, Bestiário, Salvar, Sair) no
+"""Histórico: a primeira proposta da doca, recusada. O Inventário e o Mapa do jogo (1.124.0) vêm das fontes em camadas
+de ferramentas/arte/aseprite/atalho-inventario/ e atalho-mapa/ (exportar_aseprite.py); este script só grava numa pasta.
+
+Os oito ícones do menu de baixo (a doca: Talentos, Grimório, Inventário, Mapa, Diário, Bestiário, Salvar, Sair) no
 método da família: proposta, nada no jogo.
 
 Hoje são peças pintadas da família de ferro (`atalho-*-32` e `-36`). Ficam os conceitos que já se leem, redesenhados
