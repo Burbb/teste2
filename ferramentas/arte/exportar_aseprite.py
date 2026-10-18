@@ -44,6 +44,8 @@ DERIVADOS = {
     "capuz_tecido": {64: (32, 2)},
     "luva_seda": {64: (32, 2)},
     "calca_couro": {64: (32, 2)},    # 1.119.0: a Calça de Couro do Arqueiro, o 64 também é o 32 ampliado 2×
+    "attr-ataque": {64: (32, 2)},    # 1.120.0: os atributos Ataque e Defesa (24 e 32 das fontes); o 64 do selo é o 32 ×2
+    "attr-defesa": {64: (32, 2)},
 }
 
 

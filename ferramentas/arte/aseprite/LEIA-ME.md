@@ -15,6 +15,8 @@ nada daqui: só os PNGs exportados para `rpg/web/static/hud/icones/`.
 | capuz_tecido (capuz de tecido) | `capuz_tecido/capuz_tecido-32.aseprite`, `-40`, `-48`; **o 64 é o 32 ampliado 2×** | capa, capuz, interior, borda, contorno | 1.112.0 |
 | luva_seda (luva de seda) | `luva_seda/luva_seda-32.aseprite`, `-40`, `-48`; **o 64 é o 32 ampliado 2×** | punho, luva, brilho, contorno | 1.112.0 |
 | calca_couro (Calça de Couro do Arqueiro) | `calca_couro/calca_couro-32.aseprite`, `-40`, `-48`; **o 64 é o 32 ampliado 2×** | pernas, remendo, cos, barra, braguilha, desgaste, contorno | 1.119.0 |
+| attr-ataque (o ícone de Ataque) | `attr-ataque/attr-ataque-24.aseprite`, `-32`; **o 64 é o 32 ampliado 2×** | lamina, guarda, cabo, pomo, contorno | 1.120.0 |
+| attr-defesa (o ícone de Defesa) | `attr-defesa/attr-defesa-24.aseprite`, `-32`; **o 64 é o 32 ampliado 2×** | face, borda, bossa, contorno | 1.120.0 |
 
 A varinha é a aprovada pelo Jean (commit `451ff11`): a haste com o mesmo perfil nos quatro tamanhos e a pedra
 compacta (quadrada, de cantos cortados) também no 32. A camada `garras` do 32 fica vazia (lá a garra é um pixel da
@@ -87,3 +89,21 @@ A Calça de Couro (1.119.0) é a aprovada pelo Jean no commit `ee0f01a`. As cama
 (`ferramentas/prototipos/hud/itens-lote-noite/calca_couro/montar_fontes.sh`, com o `pintar.lua`). Os oito arquivos do
 jogo são idênticos, pixel a pixel, aos aprovados, e `exportar_aseprite.py calca_couro --conferir` os reproduz byte a
 byte.
+
+## Montar as fontes a partir de um script de desenho (1.120.0)
+
+Quando o desenho nasce num script de `ferramentas/arte/` (o método de `pixel_comum.py`), a fonte em camadas sai dele:
+
+    python ferramentas/arte/desenhar_attr_ataque_pixel.py <pasta> --listas   # as listas por camada (pixel_comum.listas_camadas)
+    python ferramentas/arte/montar_fontes.py attr-ataque <pasta>/listas      # aseprite/attr-ataque/attr-ataque-<lado>.aseprite
+    python ferramentas/arte/exportar_aseprite.py attr-ataque --conferir      # o composto exportado = o jogo, byte a byte
+
+- **As listas:** o script marca a camada de cada pixel (as `CAMADAS` dele). `listas_camadas` grava um `.lua` por
+  camada e a ordem (`ordem.txt`).
+- **A montagem:** `montar_fontes.py` roda o Aseprite em lote (`aseprite/montar_camadas.lua`, com o `pintar.lua`) para
+  cada tamanho e mostra a releitura de cada camada.
+- **Os espaços no caminho:** com um espaço no caminho do script, o Aseprite não o executa e não avisa. O
+  `montar_fontes.py` copia o `.lua` para uma pasta temporária e passa o `pintar.lua` por parâmetro.
+- **Na integração da 1.120.0:** os doze arquivos de Ataque e Defesa exportados das fontes saíram idênticos, pixel a
+  pixel, aos aprovados (`b8637d0`).
+- **A calça de couro:** foi montada pela versão de protótipo deste fluxo (`itens-lote-noite/calca_couro/`).

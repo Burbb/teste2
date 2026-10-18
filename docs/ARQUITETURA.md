@@ -426,8 +426,10 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
 - A Calça de Couro do Arqueiro (1.119.0): desenho próprio do conjunto de couro, para todas as calças de couro dele
   (Rasgada, Curtida, Reforçada e as raras com nome; os saves já guardam `icone: "calca_couro"`). Fontes em camadas
   em `ferramentas/arte/aseprite/calca_couro/` (32, 40, 48; o 64 é o 32 ampliado 2×, `DERIVADOS`), exportadas por
-  `exportar_aseprite.py calca_couro`. Os ícones de atributo e da doca são placeholders pintados, pendentes de pixel
-  art (plano 23, 1D).
+  `exportar_aseprite.py calca_couro`. Os ícones de Ataque e Defesa (1.120.0) são pixel art,
+  com fontes em `ferramentas/arte/aseprite/attr-ataque/` e `attr-defesa/` (24 e 32; o 64 do selo da festa de atributo
+  permanente é o 32 ampliado 2×). Agilidade, Poder e os ícones da doca ainda são placeholders pintados, pendentes de
+  pixel art (plano 23, 1D).
 - O escudo e o Unguento de Prata (1.94.0), o machado e a Bomba de Fumaça (1.99.0) o arco (1.101.0,
   `desenhar_arco_pixel.py`; o Atacar da roda, o Tiro Duplo e o contrato continuam com o sprite) e o cajado (1.106.0,
   `desenhar_cajado_pixel.py`; o Atacar do Mago na roda e o traço Conjurador continuam com o sprite) e o orbe (1.107.0,

@@ -39,7 +39,12 @@ M = {
 }
 
 
-def desenhar(lado):
+NOME = "attr-ataque"
+CAMADAS = ["lamina", "guarda", "cabo", "pomo", "contorno"]   # de baixo para cima (as fontes em camadas)
+
+
+def desenhar(lado, partes=False):
+    """A imagem do tamanho; com partes=True, também a camada de cada pixel (CAMADAS)."""
     s = lado / 24
     mat, tom, fixo, x, y = pc.grade(lado)
     X, Y = x / s, y / s
@@ -102,7 +107,16 @@ def desenhar(lado):
 
     tom = pc.limpar(mat, tom, fixo)
     pc.contornar(mat)
-    return pc.imagem(mat, tom, RAMPAS)
+    img = pc.imagem(mat, tom, RAMPAS)
+    if not partes:
+        return img
+    camada = np.full(mat.shape, "", dtype=object)
+    camada[mat == "a"] = "lamina"
+    camada[(mat == "l") & ~pomo] = "guarda"
+    camada[(mat == "l") & pomo] = "pomo"
+    camada[mat == "k"] = "cabo"
+    camada[mat == "c"] = "contorno"
+    return img, camada
 
 
 def main():
@@ -113,6 +127,9 @@ def main():
     img32 = desenhar(32)
     print(32, pc.salvar(img32, pasta, "attr-ataque"), "cores")
     print(64, pc.salvar(img32.resize((64, 64), Image.NEAREST), pasta, "attr-ataque"), "cores (o 32 ampliado 2×)")
+    if "--listas" in sys.argv:   # as listas por camada para as fontes em camadas (montar_fontes.py)
+        for lado in (24, 32):
+            print("listas", pc.listas_camadas(desenhar(lado, partes=True), pasta / "listas" / f"{NOME}-{lado}", CAMADAS))
 
 
 if __name__ == "__main__":

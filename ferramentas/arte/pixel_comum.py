@@ -86,6 +86,21 @@ def destino(argv):
     return pathlib.Path(argv[1]).resolve() if len(argv) > 1 else ICONES
 
 
+def listas_camadas(img_camada, pasta, camadas):
+    """As listas de pixels de cada camada ("x,y,RRGGBB;..."), cada uma num .lua que faz return: o que o pintar.lua
+    (aseprite/) pinta por dofile para montar a fonte em camadas (montar_fontes.py). img_camada: (a imagem, a camada de
+    cada pixel). Devolve a pasta."""
+    img, camada = img_camada
+    px = np.asarray(img)
+    pasta.mkdir(parents=True, exist_ok=True)
+    for c in camadas:
+        ys, xs = np.where(camada == c)
+        texto = ";".join(f"{x},{y},{px[y, x, 0]:02X}{px[y, x, 1]:02X}{px[y, x, 2]:02X}" for y, x in zip(ys, xs))
+        (pasta / f"{c}.lua").write_text(f'return "{texto}"\n', encoding="utf-8")
+    (pasta / "ordem.txt").write_text(",".join(camadas) + "\n", encoding="utf-8")   # de baixo para cima
+    return pasta
+
+
 def salvar(img, pasta, nome):
     """O arquivo e o dobro (a duplicação exata dos pixels, sem detalhe novo); devolve quantas cores o desenho usa."""
     pasta.mkdir(parents=True, exist_ok=True)
