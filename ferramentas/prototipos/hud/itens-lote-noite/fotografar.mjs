@@ -3,7 +3,7 @@
 // da proposta no lugar dos do jogo (page.route em /static/hud/icones/<peça>-*.png, como fotografar_escudo.mjs); uma
 // peça que ainda não tem papel em icones.js (a calça de couro) ganha o papel só nesta página.
 //   PLAYWRIGHT_MODULO=<caminho>/index.mjs node ferramentas/prototipos/hud/itens-lote-noite/fotografar.mjs <peça>
-// peça: calca_couro | aljava | atributos | ataque_defesa | agilidade_poder | agilidade | aljava_ref | poder | doca_r2 | doca_r3 | doca_r3_luta | doca
+// peça: calca_couro | aljava | atributos | ataque_defesa | agilidade_poder | agilidade | aljava_ref | poder | doca_r2 | doca_r3 | doca_r3_luta | doca_r4 | doca_r4_telas | doca
 import { spawn } from "child_process";
 import { readFileSync, existsSync, mkdirSync } from "fs";
 import { fileURLToPath } from "url";
@@ -61,6 +61,14 @@ const PECAS = {
   doca_r3_luta: { pasta: "doca_r3/proposta", saida: "doca_r3/capturas", nomes: ["atalho-grimorio", "atalho-diario"],
     cena: ["tutorial", { LUTA_APOS_ESCOLHA: "1", TUTORIAL: "0", VISTAS, CLASSE: "guerreiro", NIVEL: "8", ESPEC: "paladino", COMITIVA: "morel", LUTA: "lobo", QUANTOS: "3", NIVEL_LUTA: "7" }],
     fotos: ["luta"] },
+  // a doca, rodada 4 (doca_r4/): a Comitiva (um papel novo, só nesta página) e os Talentos. No tutorial, com um
+  // companheiro e pontos de talento (o selo ★ sobre os Talentos); na fogueira, com as telas abertas
+  doca_r4: { pasta: "doca_r4/proposta", saida: "doca_r4/capturas", nomes: ["atalho-comitiva", "atalho-talentos"],
+    papel_atalho: { rotulo: "Comitiva", peca: "atalho-comitiva", tamanhos: [32, 36] },
+    cena: ["tutorial", { TUTORIAL: "0", VISTAS, CLASSE: "guerreiro", NIVEL: "8", COMITIVA: "morel", PONTOS: "2" }], fotos: ["doca"] },
+  doca_r4_telas: { pasta: "doca_r4/proposta", saida: "doca_r4/capturas", nomes: ["atalho-comitiva", "atalho-talentos"],
+    papel_atalho: { rotulo: "Comitiva", peca: "atalho-comitiva", tamanhos: [32, 36] },
+    cena: ["fogueira", { COMITIVA: "morel,odete" }], fotos: ["doca", "doca-comitiva", "doca-talentos"] },
   doca: { pasta: "doca/proposta", nomes: ["atalho-talentos", "atalho-grimorio", "atalho-inventario", "atalho-mapa", "atalho-diario", "atalho-bestiario", "atalho-salvar", "atalho-sair"],
     cena: ["capela", { CLASSE: "arqueiro", NIVEL: "5", PERIODO: "0", SALA: "exterior" }], fotos: ["doca", "luta-doca"] },
 };
@@ -84,6 +92,16 @@ async function anexar(p) {
       const res = await r.fetch();
       let js = await res.text();
       for (const n of P.nomes) { const i = js.indexOf(`"${n}": [`), j = js.indexOf("]", i); if (i >= 0) js = js.slice(0, i) + `"${n}": ${JSON.stringify(P.papel_tamanhos)}` + js.slice(j + 1); }
+      r.fulfill({ response: res, body: js, headers: { ...res.headers(), "content-type": "application/javascript" } });
+    });
+  }
+  if (P.papel_atalho) {   // um atalho que ainda não tem desenho próprio no jogo (a Comitiva): o papel só nesta página
+    await p.route(/\/static\/icones\.js(\?|$)/, async (r) => {
+      const res = await r.fetch();
+      let js = await res.text();
+      const { rotulo, peca: nome, tamanhos } = P.papel_atalho;
+      js = js.replace('const TAMANHOS = {', `const TAMANHOS = {"${nome}": ${JSON.stringify(tamanhos)}, `);
+      js = js.replace('const ATALHO = {', `const ATALHO = { "${rotulo}": "${nome}", `);
       r.fulfill({ response: res, body: js, headers: { ...res.headers(), "content-type": "application/javascript" } });
     });
   }
@@ -139,7 +157,7 @@ for (const modo of (process.env.SO_ATUAL ? ["atual"] : process.env.SO_PROPOSTA ?
       if (f === "doca") { await p.screenshot({ path: nome("doca"), clip: await clipDe("#doca", 0) }); }
       // a doca com a tela do atalho aberta (o estado selecionado, .atual): "doca-inventario", "doca-mapa"
       if (f.startsWith("doca-")) {
-        const rotulo = { inventario: "Inventário", mapa: "Mapa", grimorio: "Grimório", diario: "Diário" }[f.slice(5)];
+        const rotulo = { inventario: "Inventário", mapa: "Mapa", grimorio: "Grimório", diario: "Diário", comitiva: "Comitiva", talentos: "Talentos" }[f.slice(5)];
         await p.evaluate((r) => pedirAtalho(r), rotulo); await espera(900);
         await p.screenshot({ path: nome(f), clip: await clipDe("#doca", 0) });
         (await desenhos()).forEach((d) => visto.add(d));

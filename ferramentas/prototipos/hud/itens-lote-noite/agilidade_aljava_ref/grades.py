@@ -43,6 +43,15 @@ _DOCA3 = {**{str(i + 1): c for i, c in enumerate(["230B1C", "33112A", "451838", 
           "V": "2E1180", "W": "5A1FC8", "X": "8A3CEA", "Y": "BC5CF2", "Z": "F2C8FC",
           "k": "3A2414", "l": "5E3C22", "m": "86582E", "n": "A87440", "o": "C89458",
           "t": "3C3A44", "u": "8C8A96", "w": "E8E4EC", "R": "7A1E1A", "S": "B83A2C", "h": "6A5A48"}
+# a doca, rodada 4 (doca_r4/): a Comitiva (pele, o verde do manto, o couro, o aço, o vermelho) e os Talentos (o latão e
+# a gema verde-água); a grade traz o contorno desenhado (O), também entre as figuras
+_DOCA4 = {"a": "5A3424", "b": "8E5A3C", "c": "C08A62", "d": "E0B088",
+          "1": "1E2A16", "2": "2E4020", "3": "44592C", "4": "5E763A", "5": "7C944C",
+          "e": "2E1E13", "f": "45301E", "g": "604229", "h": "7C5634", "i": "986C42", "j": "B48752",
+          "m": "2A3040", "n": "4A5468", "o": "7A869C", "p": "B4BECC", "q": "3A1414", "r": "5E2020", "s": "843028",
+          "x": "6A4A14", "y": "B48A30", "z": "F0D070",
+          "A": "40270C", "B": "623C12", "C": "8A571B", "D": "AE7526", "E": "CF9737", "F": "E9BB5C", "G": "F8DC94",
+          "H": "FFF6D8", "I": "2A1A08", "J": "164246", "K": "2A8480", "L": "62D2C0", "M": "D4FFF2", "O": CONTORNO}
 # o Grimório, rodada 3: o couro violeta (1 a 8), as folhas, o latão do emblema e dos cravos, a fita
 _GRIMORIO3 = {**{str(i + 1): c for i, c in enumerate(["1A0D28", "2A1640", "3E2258", "553272", "6E4690", "8A5EAE", "A87CC8", "C49CDE"])},
               "r": "8E7650", "p": "BFA272", "q": "E2CC9C", "s": "F6E8C2",
@@ -128,6 +137,18 @@ PECAS = {
         "legenda": {"c": "capa", "p": "paginas", "a": "anotacoes", "r": "fita", "e": "pena"},
         "letras": {k: (c, "") for k, c in _DOCA3.items()},
     },
+    "atalho-comitiva": {
+        "camadas": ["tras_esquerda", "tras_direita", "frente", "contorno"],
+        "sem_contorno": "",
+        "legenda": {"e": "tras_esquerda", "d": "tras_direita", "f": "frente", "o": "contorno"},
+        "letras": {k: (c, "") for k, c in _DOCA4.items()},
+    },
+    "atalho-talentos": {
+        "camadas": ["galhos", "nos", "contorno"],
+        "sem_contorno": "",
+        "legenda": {"g": "galhos", "n": "nos", "o": "contorno"},
+        "letras": {k: (c, "") for k, c in _DOCA4.items()},
+    },
     "attr-poder": {
         "camadas": ["chama", "miolo", "faisca", "contorno"],
         "sem_contorno": "",
@@ -152,7 +173,7 @@ def ler(peca, lado):
             if c != ".":
                 cor, camada = P["letras"][c]
                 px[(x, y)] = (cor, P["legenda"][cam[y][x]] if cam else camada)
-    forma = {(x, y) for (x, y), (_, cam) in px.items() if linhas[y][x] not in P["sem_contorno"]}
+    forma = {(x, y) for (x, y), (_, cam) in px.items() if linhas[y][x] not in P["sem_contorno"] and cam != "contorno"}
     for y in range(lado):
         for x in range(lado):
             if (x, y) not in px and any((x + dx, y + dy) in forma for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1))):

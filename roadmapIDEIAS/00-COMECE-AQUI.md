@@ -3942,3 +3942,20 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
     O entreaberto ficou marcado como não validado.
   - **Validada** pelo `quick_validate.py` do skill-creator, e os caminhos citados existem.
 - **Próximo:** Talentos, Bestiário, Salvar e Sair, em pares. A versão é a 1.126.0.
+
+### 18/10/2026 (data do computador local) — A doca, rodada 4: Talentos e Comitiva (nada no jogo)
+
+- **Pedido de Jean:** o próximo par, só no protótipo: os Talentos e a Comitiva, um conceito novo de grupo de
+  aventureiros no lugar do sprite de bandido.
+- **Feito** (`ferramentas/prototipos/hud/itens-lote-noite/doca_r4/`):
+  - **A Comitiva:** três viajantes (capuz, chapéu, ombreiras), num arquivo novo, `atalho-comitiva`. O papel entra só
+    na página da proposta, e o sprite `humano` (personagem e inimigo) não muda.
+  - **Os Talentos:** a árvore de latão com galhos curvos, os nós de gema e o caminho não escolhido.
+  - **Os arquivos:** o 36 e o 32, as fontes em camadas pintadas pelo MCP e a exportação igual às grades.
+  - **As ferramentas:** o `fotografar.mjs` ganhou o `papel_atalho` e as peças `doca_r4` e `doca_r4_telas`.
+  - **O plano:** registra os nove atalhos da doca, com a Comitiva.
+- **Conferido:**
+  - a 1920×945: a doca com companheiro e o selo de pontos, e os recortes normais e com as telas abertas;
+  - a suíte, o gabarito e o pyflakes. A fumaça não foi repetida: nenhum arquivo do jogo mudou desde `02c7f6d`.
+- **Próximo:** Jean avaliar os Talentos e a Comitiva. Bestiário, Salvar e Sair ficam para depois. A versão continua
+  1.126.0.

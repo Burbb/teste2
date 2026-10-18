@@ -773,3 +773,54 @@ Jean aprovou a rodada 3 sem retoque (`61dcb81`). As fontes saíram de `doca_r3/f
 `ferramentas/arte/aseprite/atalho-grimorio/`, e os quatro arquivos do jogo são idênticos, byte a byte, aos aprovados.
 Vale para o atalho da doca e para o comando Habilidades da luta. As rodadas 1 e 2 ficam em `doca_r3/grimorio_r1/` e
 `grimorio_r2/`.
+
+## A doca, rodada 4: Talentos e Comitiva (`doca_r4/`)
+
+**O pedido:** o próximo par. A Comitiva não estava na contagem dos oito atalhos.
+- **Os usos e os tamanhos:** a doca usa o 36 (o 32 nas janelas estreitas).
+- **A Comitiva:** só aparece quando há companheiro (`SISTEMA` em `app/nucleo.js`). Ela não tem papel em `Icones`: cai no
+  sprite 16×16 `humano`, que é também personagem e inimigo. O desenho novo é um arquivo próprio, `atalho-comitiva`, e o
+  `humano` não muda.
+- **O selo de pontos:** cobre o alto à esquerda do ícone dos Talentos (`.atalho .selo`).
+- **Na proposta:** o papel da Comitiva (`TAMANHOS` e `ATALHO`) entra só na página do protótipo (`papel_atalho` em
+  `fotografar.mjs`). O jogo não muda.
+
+**A Comitiva** (`auxiliares/comitiva.py`; camadas: tras_esquerda, tras_direita, frente, contorno):
+- **A composição:** três viajantes, um à frente e dois um pouco atrás.
+- **Os viajantes:**
+  - o da frente: capuz e manto verde, com o broche de latão;
+  - o de trás à esquerda: chapéu de copa alta e aba larga, com o casaco de couro;
+  - o de trás à direita: ombreiras de metal e a capa vermelho-escura.
+- **O desenho:** os rostos são simples, com dois olhos, e cada figura tem o contorno próprio. O da frente separa as de
+  trás.
+- **As tentativas:**
+  - a primeira tinha uma faixa escura no rosto, que lembrava a máscara de um bandido, e corpos sem ombros, como peças
+    de xadrez;
+  - a segunda tinha um cajado, que cortava o rosto do viajante de chapéu.
+
+**Os Talentos** (`auxiliares/talentos.py`; camadas: galhos, nos, contorno):
+- **A forma:** uma árvore de latão. O tronco é grosso embaixo e sobe com uma leve curva, e os dois galhos curvos saem
+  em alturas diferentes (os caminhos).
+- **A luz:** a beira virada para cima e para a esquerda acesa.
+- **Os nós:** medalhões. Os conquistados (a raiz, o alto e o da direita) têm uma gema verde-água acesa; o não
+  escolhido (à esquerda, onde o selo cobre) fica com o encaixe vazio.
+- **As tentativas:**
+  - a primeira, com galhos retos e simétricos, parecia um candelabro, e os nós acesos se confundiam com o latão;
+  - a segunda, simétrica, parecia um tridente.
+
+**As fontes:** em camadas, pintadas pelo `pintar.lua` no editor. O composto e a exportação são iguais às grades. O
+`grades.py` aceita o contorno desenhado na grade (a Comitiva tem contornos por dentro, entre as figuras).
+
+**Conferido a 1920×945** (`doca_r4/doca-atual-x-proposta-1920x945.png` e `doca_r4/talentos-comitiva-recortes.png`), sem
+erros:
+- **A doca completa:** no tutorial, com companheiro e pontos de talento (o selo ★ sobre os Talentos).
+- **Os recortes**, em tamanho real e ampliados 3×, na fogueira:
+  - sem pontos;
+  - com a Comitiva aberta (o sublinhado de latão);
+  - com os Talentos abertos (a tela da árvore escurece a página, no atual e na proposta).
+
+**O que pode ser pior:**
+- No 32, os rostos das figuras de trás ficam com 2 a 3 px.
+- Com o selo de pontos, a árvore perde o nó vazio, mas mantém o tronco, os galhos e os nós acesos.
+
+Nada disto entrou no jogo.
