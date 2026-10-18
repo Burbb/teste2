@@ -441,3 +441,21 @@ O tamanho real sobre o carvão, ao lado de Ataque, Defesa, da aljava atual e da 
 - A bota tem mais pixels soltos de ruga no cano que Ataque e Defesa têm de detalhe.
 
 Nada disto entrou no jogo. Os 40 e 48 da aljava ficam para depois da aprovação desta direção.
+
+### Agilidade: a junção da sola (rodada 2 das referências)
+
+**O pedido:** a bota nova está boa, e o calcanhar levantado fica. O problema era a faixa preta entre o couro e a sola:
+o degrau ali fazia o salto parecer um bloco solto do pé. Só a sola, o salto e a faixa do couro junto deles mudam, no 24 e no
+32; o cano, a dobra, a tira, a fivela, o bico e os riscos estão iguais pixel a pixel.
+
+**O ajuste:**
+- **O perfil contínuo:** a base desce do salto para o arco e depois para a frente, uma linha por trecho (no 32, a cada 4
+  a 6 px), sem o degrau escuro no arco.
+- **A sola:** 2 px na frente e no arco. O salto tem a beira de cima acesa e a face da frente na sombra (4 linhas no 32,
+  3 no 24).
+- **As cores:** o quase preto da sola (`21160F`) virou marrons profundos (`2E2016`, `4A3628`, `6E5442`). A junção com o
+  couro é 1 px do marrom escuro do couro, não uma fenda preta.
+
+O 64 é o 32 novo ampliado 2×. O antes (os PNGs da rodada 1) está em `agilidade_aljava_ref/rodada1_sola/`. Conferido a
+1920×945, antes × depois na ficha, no Fugir e no selo (`agilidade_aljava_ref/agilidade-sola-antes-x-depois.png`); a
+ampliação está em `agilidade-sola-ampliada.png`.

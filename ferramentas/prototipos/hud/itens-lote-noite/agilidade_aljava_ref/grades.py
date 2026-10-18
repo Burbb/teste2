@@ -27,7 +27,7 @@ PECAS = {
             **{str(i + 1): (c, "bota") for i, c in enumerate(_COURO)},
             **{"ABCDEFG"[i]: (c, "dobra") for i, c in enumerate(_COURO)}, "I": ("1A0904", "dobra"),
             "J": (_COURO[0], "tira"), "K": (_COURO[1], "tira"), "L": (_COURO[2], "tira"), "M": (_COURO[3], "tira"),
-            "q": ("21160F", "sola"), "w": ("382A20", "sola"), "e": ("57453A", "sola"),
+            "q": ("2E2016", "sola"), "w": ("4A3628", "sola"), "e": ("6E5442", "sola"),   # marrons profundos, não quase preto
             "x": ("6A4A14", "fivela"), "y": ("B48A30", "fivela"), "z": ("F0D070", "fivela"),
             "r": ("7A5228", "rastros"), "t": ("C08A48", "rastros"), "u": ("F2C47A", "rastros"),
         },
