@@ -4018,3 +4018,12 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   - os nove atalhos da doca estão concluídos, e o resumo da linha 1D do plano foi corrigido.
   - Conferido numa partida de teste, com os saves numa pasta temporária (`doca_r5/salvar-sair-no-jogo.png`): o Salvar
     grava, e o Sair abre a pergunta (não confirmada). A suíte, o gabarito, o pyflakes e a fumaça passaram uma vez.
+- **As propostas de Vida e Mana:** só no protótipo (`ferramentas/prototipos/hud/itens-lote-noite/vida_mana/`), nada
+  no jogo; aguardam a avaliação do Jean.
+  - **Os usos:** só o topo, em 20 px; desenhadas direto em 20, sem outros tamanhos.
+  - **A Vida:** um coração vermelho com volume (luz no lobo da esquerda, a volta de baixo mais funda).
+  - **A Mana:** uma gota de energia líquida no azul da barra, com o miolo aceso e o reflexo em crescente, sem halo;
+    separada do raio do Vigor, da estrela do Foco e da chama do Poder.
+  - Pintadas no Aseprite pelo MCP (`pintar.lua`), exportadas pelo `exportar_aseprite.py --fontes=`, conferidas no
+    topo de uma partida de Mago a 1920×945 (`vida_mana/vida-mana-topo.png`). Barras, números, cores e regras não
+    mudaram.

@@ -936,3 +936,33 @@ Jean aprovou os dois sem retoque (`a872915`, reapresentados no `682b189`).
 - **As fontes:** saíram de `doca_r5/fontes/` para `ferramentas/arte/aseprite/atalho-salvar/` e `atalho-sair/`.
 - **Os arquivos:** os oito do jogo são idênticos, byte a byte, aos aprovados.
 - **A doca:** os nove atalhos estão em pixel art.
+
+## Vida e recursos: Vida e Mana (`vida_mana/`)
+
+A primeira dupla do grupo Vida e recursos (etapa 1D). **Proposta, nada no jogo:** só as imagens dos dois ícones; as
+barras, os preenchimentos, os números, as cores funcionais, as regras e as animações ficam como estão.
+
+- **Os usos:** só o topo (`app/paineis.js`, `Icones.vital`), em 20 px; o `TAMANHOS` registra só o 20, e nenhum outro
+  lugar pede outro tamanho. Desenhados direto na grade de 20, sem reduzir de um maior.
+- **A Vida, o coração:** silhueta de coração cheia, com os dois lobos e a ponta; o vermelho da vida em quatro faixas
+  de tom (luz de cima e da esquerda, a volta de baixo e da direita mais funda), o brilho no lobo da esquerda e um
+  reflexo pequeno no da direita; o contorno comum.
+- **A Mana, a gota:** uma gota de energia líquida, com a ponta curvando um pouco e o fundo redondo, no azul da barra
+  de mana (`#a8c4ff`, `#4d74e0`, `#1c2a6b` na rampa), o miolo aceso e o reflexo em crescente do lado da luz; sem halo
+  em volta. Ela se separa do raio do Vigor (dourado), da estrela do Foco e da chama do Poder (violeta) pela forma e
+  pela cor, e do cristal facetado atual por ser líquida.
+- **As fontes:** `vida_mana/fontes/vital-vida/vital-vida-20.aseprite` (camadas coracao, brilho, contorno) e
+  `vital-mana/vital-mana-20.aseprite` (gota, brilho, contorno).
+- **As operações:**
+  - *cálculos fora do editor:* as grades e as listas por camada em `vida_mana/auxiliares/vida.py` e `mana.py` (o tom
+    por regra e os brilhos à mão; gravam as listas `.lua` e a prévia na pasta em que rodam);
+  - *Lua pelo `execute_script`:* o documento de 20×20 com as camadas e a pintura pelo `pintar.lua`
+    (`pintar_arquivo`, cada pixel relido; 0 diferentes, 0 fora da tela), e o `saveAs`;
+  - *ferramentas do conector:* a captura do editor e a lista de documentos abertos.
+- **A exportação:** `python ferramentas/arte/exportar_aseprite.py vital-vida|vital-mana
+  ferramentas/prototipos/hud/itens-lote-noite/vida_mana/proposta --fontes=ferramentas/prototipos/hud/itens-lote-noite/vida_mana/fontes`;
+  o composto exportado é igual, pixel a pixel, ao que as listas pediam, e o @2x é a duplicação exata.
+- **As fotos (1920×945):** `node ferramentas/prototipos/hud/itens-lote-noite/fotografar.mjs vida_mana` (uma partida
+  de Mago na capela, que mostra a Vida e a Mana; a proposta troca só os dois arquivos pela página).
+  `vida_mana/vida-mana-topo.png` junta o topo atual e o proposto em tamanho real e a ampliação 8× sobre o fundo real;
+  as capturas ficam em `vida_mana/capturas/`.
