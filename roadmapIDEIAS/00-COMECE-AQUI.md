@@ -3550,3 +3550,18 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   - nenhum arquivo do jogo mudou (a suíte, o gabarito e a fumaça valem os da 1.118.0).
 - **Para a consolidação:** a largura a 1920, a borda de baixo da arena e as janelinhas da luta.
 - **Próximo:** Jean avaliar. Versão de produção igual (1.118.0).
+
+### 18/10/2026 (data do computador local) — Prova de fidelidade: a coluna da ficha (em avaliação, nada no jogo)
+
+- **Pedido de Jean:** a proposta da HUD ficou longe da referência. Provar a linguagem só na coluna da ficha, com outro
+  método, antes de estender.
+- **Feito** (`ferramentas/prototipos/hud/direcao/ficha/`):
+  - a referência salva (`direcao/referencia.png`) e comparada na mesma escala;
+  - a arte por um gerador próprio (superfície com a borda rasgada e o papel da margem);
+  - o conteúdo em CSS, com proporções e tipografia da referência;
+  - a proposta anterior preservada.
+- **Conferido:**
+  - o centro com o mesmo tamanho e a ficha sem rolar;
+  - dicas abrindo, sem erros;
+  - nenhum arquivo do jogo mudou (a suíte, o gabarito e a fumaça valem os da 1.118.0).
+- **Próximo:** Jean avaliar a linguagem. Só depois estender a outras áreas. Versão igual (1.118.0).

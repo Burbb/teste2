@@ -1,0 +1,64 @@
+{
+ "jogo": {
+  "medidas": {
+   "rola_a_ficha": 0,
+   "heroi": [
+    100,
+    54,
+    290,
+    879
+   ],
+   "palco": [
+    396,
+    54,
+    1088,
+    879
+   ],
+   "mundo": [
+    1490,
+    54,
+    330,
+    879
+   ],
+   "arena_ou_vista": [
+    408,
+    139,
+    1064,
+    232
+   ]
+  },
+  "erros": []
+ },
+ "ficha": {
+  "medidas": {
+   "rola_a_ficha": 0,
+   "heroi": [
+    71,
+    54,
+    348,
+    879
+   ],
+   "palco": [
+    425,
+    54,
+    1088,
+    879
+   ],
+   "mundo": [
+    1519,
+    54,
+    330,
+    879
+   ],
+   "arena_ou_vista": [
+    437,
+    139,
+    1064,
+    232
+   ]
+  },
+  "erros": [],
+  "dica_item": false,
+  "foco": "testes-ficha: auto 1px rgb(16, 16, 16)"
+ }
+}

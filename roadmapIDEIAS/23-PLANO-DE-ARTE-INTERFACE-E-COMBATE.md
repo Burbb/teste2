@@ -509,6 +509,19 @@ borda externa gasta, contornos que se desfazem antes de fechar) e de Clair Obscu
 a mira), sem erros, com as interações de pé. Nada mudou de lugar. Falta Jean avaliar; o jogo e a versão continuam os
 da 1.118.0.
 
+**Avaliação de Jean (17/10/2026):** a proposta ficou longe da referência. Antes de estender o visual, mudar o método.
+
+**Prova de fidelidade da coluna da ficha** (`ferramentas/prototipos/hud/direcao/ficha/`, em avaliação, nada no jogo).
+A referência foi salva como `direcao/referencia.png`, e o método mudou:
+- **A comparação:** lado a lado com a referência na mesma escala, também ampliada a 2× na borda.
+- **A arte decorativa:** imagem própria, de um gerador reproduzível (`gerar_arte.py`): o carvão com variação discreta e
+  a borda rasgada (manchas grandes, fibras, trechos que se desfazem, respingos), mais o papel gasto da margem.
+- **O CSS:** só o conteúdo (retrato de 120 px, nome de 40 px, atributos de 26 px com ícones de 32, títulos em versal
+  espaçada, o fio vertical).
+
+A coluna ficou com 348 px, ganha da margem; o centro e a arena seguem com 1088 px. A proposta anterior ficou como
+estava. Os compromissos e o que ainda difere estão no LEIA-ME de lá.
+
 ## 2. Telas de leitura, criação e celebrações
 
 **Lembrete para o futuro estudo da HUD — pen.dev (experimento `9769305`):** antes de escolher ferramentas para
