@@ -3,7 +3,7 @@
 // da proposta no lugar dos do jogo (page.route em /static/hud/icones/<peça>-*.png, como fotografar_escudo.mjs); uma
 // peça que ainda não tem papel em icones.js (a calça de couro) ganha o papel só nesta página.
 //   PLAYWRIGHT_MODULO=<caminho>/index.mjs node ferramentas/prototipos/hud/itens-lote-noite/fotografar.mjs <peça>
-// peça: calca_couro | aljava | atributos | ataque_defesa | agilidade_poder | agilidade | aljava_ref | doca
+// peça: calca_couro | aljava | atributos | ataque_defesa | agilidade_poder | agilidade | aljava_ref | poder | doca
 import { spawn } from "child_process";
 import { readFileSync, existsSync, mkdirSync } from "fs";
 import { fileURLToPath } from "url";
@@ -47,6 +47,10 @@ const PECAS = {
   aljava_ref: { pasta: "agilidade_aljava_ref/proposta", saida: "agilidade_aljava_ref/capturas", nomes: ["aljava"],
     cena: ["capela", { CLASSE: "arqueiro", NIVEL: "5", PERIODO: "0", SALA: "exterior" }], fotos: ["topo", "ficha", "inventario"],
     saque: ["vila", { CLASSE: "arqueiro", ACHADO: "aljava", VESTIDO: "aljava" }] },
+  // o Poder em avaliação (35262ca, agilidade_poder/): só ele trocado, ao lado de Ataque, Defesa e Agilidade do jogo
+  poder: { pasta: "agilidade_poder/proposta", saida: "agilidade_poder/capturas", nomes: ["attr-poder"], papel_tamanhos: [24, 32, 64], selos: [["poder", "Poder"]],
+    cena: ["tutorial", { LUTA_APOS_ESCOLHA: "1", TUTORIAL: "0", VISTAS, CLASSE: "guerreiro", NIVEL: "8", ESPEC: "paladino", COMITIVA: "morel", LUTA: "lobo", QUANTOS: "3", NIVEL_LUTA: "7" }],
+    fotos: ["ficha", "selo"] },
   doca: { pasta: "doca/proposta", nomes: ["atalho-talentos", "atalho-grimorio", "atalho-inventario", "atalho-mapa", "atalho-diario", "atalho-bestiario", "atalho-salvar", "atalho-sair"],
     cena: ["capela", { CLASSE: "arqueiro", NIVEL: "5", PERIODO: "0", SALA: "exterior" }], fotos: ["doca", "luta-doca"] },
 };
