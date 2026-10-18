@@ -1,0 +1,163 @@
+/* Estudo da nova direção visual da HUD (plano 23; em avaliação, nada no jogo). Uma camada por cima das folhas do jogo
+   (01 a 20), anexada pela bancada (fotografar.mjs, abrir.mjs). Referência: a imagem de Jean (carvão e tinta, marfim,
+   bordas externas gastas, contornos retangulares que se desfazem antes de fechar) e Clair Obscur pela hierarquia.
+
+   Os pesos, do mais quieto ao mais forte:
+     superfície      carvão com grão; as três colunas sem moldura de ferro, com a borda externa gasta (uma máscara de
+                     pincel) sobre um fundo quente, que aparece nas emendas e nas falhas da borda
+     organização     contornos abertos: um canto e dois traços que somem antes de fechar (o contorno é o mesmo em
+                     colunas, cartas, rastros e caminhos; nunca é a única marca de um estado)
+     leitura         a página e o registro continuam lisos, sem contorno nem pincel
+     informação      nomes em serifa marfim (Alegreya), títulos de seção em versal espaçada com um fio que se apaga
+     seleção         a faixa de marfim do seletor e dos comandos (já aprovada; não muda aqui)
+     atenção         o latão, só em detalhe: a vez, o nível, o aviso de talento, a missão
+   O foco do teclado continua o anel claro de sempre, por fora, também onde o contorno é aberto.
+   Prefixo ":root:root body": vence o ":root body" das camadas 14 a 20 sem depender da ordem. */
+
+:root:root body {
+  --d-carvao: #131315;
+  --d-carvao-2: #1a1a1d;
+  --d-carvao-face: rgba(24, 24, 27, 0.9);
+  --d-marfim: #ece3cc;
+  --d-marfim-2: #cdbf9f;
+  --d-sec: #9a9184;
+  --d-fio: rgba(236, 227, 204, 0.16);
+  --d-cont: rgba(236, 227, 204, 0.34);
+  --d-cont-fraco: rgba(236, 227, 204, 0.1);
+  --d-latao: #c9a14a;
+  --d-queimado: #d0654a;
+  --d-grao: url(/static/hud/textura-painel.png);
+  /* a borda gasta das colunas: um retângulo deslocado por ruído (a máscara recorta a coluna inteira) */
+  --d-gasta: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='f' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.13' numOctaves='4' seed='4'/%3E%3CfeDisplacementMap in='SourceGraphic' scale='30' xChannelSelector='R' yChannelSelector='G'/%3E%3C/filter%3E%3Crect x='16' y='16' width='208' height='208' fill='white' filter='url(%23f)'/%3E%3C/svg%3E");
+  /* o fundo quente atrás das colunas (o papel queimado da referência, mais contido) */
+  background: radial-gradient(ellipse at 50% 45%, #3a2b1f, #1b140f 70%, #120e0b), #120e0b;
+}
+
+/* ------------------------------------------------------------ o contorno aberto
+   Dois cantos marcados (em cima à esquerda, embaixo à direita) e os traços deles se apagando antes do meio; os outros
+   dois cantos ficam abertos. Um pseudo-elemento por peça; a cor sai de --d-cont (e --d-cont-fraco) da própria peça. */
+:root:root body :is(#heroi, #mundo, #palco)::after, :root:root body .carta::after, :root:root body .rastro-contrato::after,
+:root:root body .caminho::before, :root:root body #heroi .retrato-grande::after, :root:root body .hud-retrato::after {
+  content: ""; position: absolute; pointer-events: none;
+  background:
+    linear-gradient(90deg, var(--d-cont) 0 26px, var(--d-cont-fraco) 26px, transparent 42%) 0 0 / 100% 1px no-repeat,
+    linear-gradient(180deg, var(--d-cont) 0 16px, var(--d-cont-fraco) 16px, transparent 38%) 0 0 / 1px 100% no-repeat,
+    linear-gradient(270deg, var(--d-cont) 0 26px, var(--d-cont-fraco) 26px, transparent 38%) 100% 100% / 100% 1px no-repeat,
+    linear-gradient(0deg, var(--d-cont) 0 16px, var(--d-cont-fraco) 16px, transparent 34%) 100% 100% / 1px 100% no-repeat; }
+
+/* ------------------------------------------------------------ o topo */
+:root:root body #topo { border: 0; border-image: none; background: linear-gradient(#0e0e10, #121214); box-shadow: 0 1px 0 #000;
+  -webkit-mask-box-image: var(--d-gasta) 40 / 0 0 16px 0 round; }
+:root:root body #topo::after { display: none; }
+:root:root body .topo-info { color: var(--d-marfim-2); }
+:root:root body #topo .marca { color: var(--d-marfim); text-shadow: 0 2px 0 #000; }
+:root:root body #acoes-topo button { color: var(--d-marfim-2); }
+:root:root body #acoes-topo button:hover { color: var(--d-marfim); }
+
+/* ------------------------------------------------------------ as três colunas */
+:root:root body #mesa { background: none; }
+:root:root body :is(#heroi, #mundo, #palco) {
+  border-image: none; border-color: transparent; background-clip: border-box;
+  background: linear-gradient(rgba(14, 14, 16, 0.82), rgba(12, 12, 14, 0.9)), var(--d-grao) 0 0 / 128px, var(--d-carvao);
+  -webkit-mask-box-image: var(--d-gasta) 42 / 28px round; position: relative;
+  /* a queimadura por dentro da borda gasta: o carvão esquenta perto da beira, como a tinta no papel */
+  box-shadow: inset 0 0 30px 4px rgba(98, 66, 38, 0.42); }
+/* o contorno aberto por dentro da borda gasta */
+:root:root body :is(#heroi, #mundo, #palco)::after { inset: 7px; z-index: 3; opacity: 0.9; }
+:root:root body #palco { background: var(--d-carvao); }
+:root:root body #pagina, :root:root body:not(.modo-titulo) #cena:not([data-tipo="menu"]) {
+  background: linear-gradient(rgba(19, 19, 21, 0.86), rgba(17, 17, 19, 0.9)), var(--d-grao) 64px 32px / 128px; }
+:root:root body:not(.modo-titulo) #cena:not([data-tipo="menu"]) > #pagina { background: none; }
+
+/* ------------------------------------------------------------ títulos de seção: versal espaçada, o fio que se apaga */
+:root:root body :is(#heroi, #mundo) .secao h3 { color: var(--d-marfim-2); letter-spacing: 0.22em; font-size: 12.5px; }
+:root:root body :is(#heroi, #mundo) .secao h3::after { background: linear-gradient(90deg, var(--d-fio), transparent 85%); box-shadow: none; }
+
+/* ------------------------------------------------------------ a ficha */
+:root:root body .heroi-nome { font-family: var(--texto); font-weight: 600; font-size: 32px; letter-spacing: 0.01em; color: var(--d-marfim);
+  text-shadow: 0 2px 0 #000; }
+:root:root body #heroi .heroi-titulo { color: var(--d-sec); font-size: 15px; }
+:root:root body #heroi .identidade { border-bottom: 0; box-shadow: none; }
+:root:root body #heroi .retrato-grande { border: 0; background: #0b0b0d; box-shadow: none; position: relative; }
+:root:root body #heroi .retrato-grande::after, :root:root body .hud-retrato::after { inset: -3px; }
+:root:root body .atributo .valor { color: var(--d-marfim); }
+:root:root body .atributo:nth-child(even) { border-left-color: var(--d-fio); }
+:root:root body .atributo:nth-child(-n+2) { border-bottom-color: var(--d-fio); }
+:root:root body .testes-ficha { border-top-color: var(--d-fio); }
+:root:root body .slot-px { border-color: rgba(236, 227, 204, 0.1); background: #0c0c0e; box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.9); }
+:root:root body .slot-px:is(.usavel, .clicavel, [draggable="true"]):hover { border-color: rgba(236, 227, 204, 0.4); background: #141416; }
+:root:root body #heroi .membro .icone { border-color: rgba(236, 227, 204, 0.12); }
+:root:root body #heroi .xp-linha .legenda-linha span:last-child, :root:root body .membro-vida { color: var(--d-marfim); }
+
+/* ------------------------------------------------------------ o topo das barras */
+:root:root body #hud { box-shadow: 0 1px 0 var(--d-fio); }
+:root:root body .hud-retrato { border: 0; position: relative; }
+:root:root body .barra-px { border: 1px solid #000; border-image: none; box-shadow: 0 0 0 1px rgba(236, 227, 204, 0.14); height: 11px; }
+:root:root body .vital .barra-px { height: 11px; }
+:root:root body .recurso + .recurso { box-shadow: -1px 0 0 var(--d-fio); }
+
+/* ------------------------------------------------------------ as cartas da luta */
+:root:root body .carta { border: 0; border-radius: 0; position: relative;
+  background: linear-gradient(rgba(255, 255, 255, 0.045), rgba(0, 0, 0, 0.15)), rgba(16, 16, 18, 0.9);
+  box-shadow: var(--lado-carta), 0 2px 6px rgba(0, 0, 0, 0.55); }
+:root:root body .carta::after { inset: 0; }
+:root:root body .carta.heroi { --lado-carta: inset 3px 0 0 var(--d-latao); }
+:root:root body .carta.vez { box-shadow: var(--lado-carta), inset 0 2px 0 var(--d-latao), 0 2px 6px rgba(0, 0, 0, 0.55); }
+@keyframes vez-hud { 50% { box-shadow: var(--lado-carta), inset 0 2px 0 #f2d27a, 0 2px 6px rgba(0, 0, 0, 0.55); } }
+:root:root body .carta.foco { --d-cont: rgba(242, 210, 122, 0.6); --d-cont-fraco: rgba(242, 210, 122, 0.14);
+  box-shadow: var(--lado-carta), inset 0 2px 0 var(--d-latao), 0 6px 14px rgba(0, 0, 0, 0.6); }
+:root:root body .carta.chefe { box-shadow: var(--lado-carta), 0 0 0 1px #000, 0 0 0 3px #6e1d1d; }
+:root:root body .carta.com-protecao { box-shadow: var(--lado-carta), 0 0 0 1px #000, 0 0 0 3px #3d63c9; }
+:root:root body .carta .icone { border-color: rgba(236, 227, 204, 0.12); }
+:root:root body .carta.heroi .icone { border-color: rgba(201, 161, 74, 0.5); }
+:root:root body .carta-nome { color: var(--d-marfim); }
+:root:root body .carta-efeitos { border-top-color: var(--d-fio); }
+/* morta: o contorno some com ela */
+:root:root body .carta.morta::after { opacity: 0.3; }
+
+/* ------------------------------------------------------------ o seletor (as faixas aprovadas não mudam) */
+/* a mesma superfície da página nova (sem virar caixa sobre ela); o título com mais presença, em versal espaçada de
+   marfim, ainda abaixo da faixa escolhida na hierarquia */
+:root:root body .roda-janela.seletor {
+  background: linear-gradient(rgba(19, 19, 21, 0.86), rgba(17, 17, 19, 0.9)), var(--d-grao) var(--fundo-cena, 64px 32px) / 128px, var(--d-carvao); }
+:root:root body .roda-janela.seletor::after { background: linear-gradient(90deg, transparent, var(--d-fio) 20%, var(--d-fio) 80%, transparent); height: 1px; }
+:root:root body .roda-janela.seletor .rj-titulo { font-size: 17px; letter-spacing: 0.32em; color: var(--d-marfim-2); margin-bottom: 6px; }
+:root:root body .roda-janela.seletor .rj-titulo::after { background: linear-gradient(90deg, rgba(236, 227, 204, 0.3), transparent); }
+:root:root body .roda-janela.seletor .rj-titulo .rj-voltar { letter-spacing: 0; }
+
+/* ------------------------------------------------------------ o mundo */
+:root:root body .local-nome, :root:root body #mundo .local-nome { font-family: var(--texto); font-weight: 600; font-size: 32px; line-height: 1.05;
+  color: var(--d-marfim); text-shadow: 0 2px 0 #000; }
+/* o mapa: a borda rasgada, como um pedaço de carta */
+:root:root body #mapa-mini .mapa-px { border: 0; box-shadow: none; -webkit-mask-box-image: var(--d-gasta) 36 / 14px round; }
+:root:root body .rastro-contrato { position: relative; background: rgba(255, 255, 255, 0.015); box-shadow: inset 2px 0 0 #4a4c52; }
+:root:root body .rastro-missao { box-shadow: inset 2px 0 0 var(--d-latao); }
+:root:root body .rastro-contrato::after { inset: 0; opacity: 0.7; }
+:root:root body .rastro-arte { border-color: rgba(236, 227, 204, 0.12); }
+/* os caminhos: a face de carvão, o contorno aberto e a seta › de quem leva a outro lugar */
+:root:root body .caminho { position: relative; border: 0; border-radius: 0; box-shadow: 0 1px 0 #000;
+  background: linear-gradient(rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.12)), rgba(22, 22, 25, 0.92); padding-right: 26px; }
+:root:root body .caminho::after { content: "›"; position: absolute; right: 9px; top: 50%; translate: 0 -54%; font-size: 22px; color: var(--d-sec);
+  pointer-events: none; }
+:root:root body .caminho::before { inset: 0; }
+:root:root body .caminho.clicavel:hover { background: linear-gradient(rgba(255, 255, 255, 0.09), rgba(0, 0, 0, 0.08)), rgba(30, 30, 34, 0.95); }
+:root:root body .caminho.clicavel:hover::after { color: var(--d-marfim); }
+
+/* ------------------------------------------------------------ a doca */
+:root:root body #doca { background: linear-gradient(rgba(16, 16, 18, 0.92), rgba(12, 12, 14, 0.96)); box-shadow: 0 -1px 0 var(--d-fio); }
+:root:root body #doca .atalho, :root:root body #doca .atalho + .atalho { box-shadow: none; }
+:root:root body #doca .doca-sep { background: var(--d-fio); box-shadow: none; }
+:root:root body #doca .atalho.atual { color: var(--d-marfim); background: rgba(236, 227, 204, 0.06); }
+:root:root body #doca .atalho.atual::after { background: var(--d-marfim); }
+
+/* ------------------------------------------------------------ as dicas: o mesmo carvão, o contorno aberto */
+:root:root body :is(#dica-item, #dica-equipado) { border: 1px solid rgba(236, 227, 204, 0.12); border-image: none; border-radius: 0;
+  background: linear-gradient(rgba(20, 20, 23, 0.97), rgba(15, 15, 17, 0.98)); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6), inset 3px 3px 0 -2px rgba(236, 227, 204, 0.3); }
+
+/* ------------------------------------------------------------ a dica "Testes do d20" */
+:root:root body :is(#dica-item, #dica-equipado) .testes-lista b { color: var(--d-marfim); }
+:root:root body :is(#dica-item, #dica-equipado) .testes-lista .total { font-family: var(--texto); font-weight: 700; font-size: 14.5px; color: var(--d-latao); margin-left: 3px; }
+:root:root body :is(#dica-item, #dica-equipado) .testes-lista small { color: #c4baa6; }
+:root:root body :is(#dica-item, #dica-equipado) .testes-lista .pior { color: var(--d-queimado); }
+:root:root body :is(#dica-item, #dica-equipado) .rodape.testes-regra { color: var(--d-sec); }
+:root:root body :is(#dica-item, #dica-equipado) .rodape.testes-regra em { font-style: normal; font-weight: 700; color: var(--d-marfim); }

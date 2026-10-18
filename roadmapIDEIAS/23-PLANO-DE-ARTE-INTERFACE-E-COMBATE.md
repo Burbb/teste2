@@ -488,6 +488,27 @@ inimigos. Duas alternativas contra a produção, com os mesmos dados, em 1280×7
 - **Limitações:** abaixo de 920 px o seletor e o registro pedem a rolagem da página; entre 920 e 1100 px o seletor
   aberto cobre o registro. Falta Jean jogar.
 
+### 1.11. Estudo: a nova direção visual da HUD principal (em avaliação, nada no jogo)
+
+**Pedido de Jean (17/10/2026):** a aparência do conjunto (topo, ficha, cartas, coluna do mundo, relação com os
+comandos e o seletor aprovados), só no protótipo, a partir de uma imagem de referência dele (carvão e tinta, marfim,
+borda externa gasta, contornos que se desfazem antes de fechar) e de Clair Obscur pela hierarquia. Uma proposta.
+
+**O estudo** (`ferramentas/prototipos/hud/direcao/`; decisões e compromissos no LEIA-ME de lá):
+- **As colunas:** sem as molduras de ferro e os rebites. Ficam carvão com a borda externa gasta (uma máscara de
+  pincel em CSS) sobre um fundo quente.
+- **O contorno aberto:** dois cantos e traços que se apagam, nas colunas, nos retratos, nas cartas, nos rastros e nos
+  caminhos.
+- **A tipografia:** nomes do herói e do lugar em serifa marfim; títulos de seção em versal espaçada.
+- **O latão:** só em detalhe (a vez, o nível, o talento, a missão).
+- **A seleção:** a faixa de marfim aprovada, que continua a marca mais forte.
+- **A dica "Testes do d20":** nomes em marfim, totais em latão, penalidades em vermelho queimado, e só as duas regras
+  do d20 em destaque no rodapé.
+
+**Conferido:** atual × proposta com os mesmos dados a 1920×945 (a exploração, com a dica, e a luta, com o seletor e
+a mira), sem erros, com as interações de pé. Nada mudou de lugar. Falta Jean avaliar; o jogo e a versão continuam os
+da 1.118.0.
+
 ## 2. Telas de leitura, criação e celebrações
 
 **Lembrete para o futuro estudo da HUD — pen.dev (experimento `9769305`):** antes de escolher ferramentas para

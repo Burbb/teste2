@@ -3532,3 +3532,21 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   - o gabarito, atualizado depois de investigar: só o estado do herói nas 9 partidas web.
 - **Registrado para outra entrega:** o aviso do painel do mundo sobre a escuridão antes de agir.
 - **Próximo:** Jean jogar. A nova HUD não começou.
+
+### 17/10/2026 (data do computador local) — Estudo: a nova direção visual da HUD (em avaliação, nada no jogo)
+
+- **Pedido de Jean:** uma proposta coerente e jogável da aparência da HUD principal a partir da imagem de referência
+  dele; só protótipo.
+- **Feito** (`ferramentas/prototipos/hud/direcao/`: `direcao.css`, `direcao.js` só para a dica dos testes,
+  `fotografar.mjs`, `abrir.mjs`):
+  - colunas de carvão com a borda gasta, sem o ferro;
+  - contornos abertos;
+  - nomes em serifa marfim;
+  - latão só em detalhe;
+  - o refinamento da dica "Testes do d20".
+- **Conferido:**
+  - atual × proposta a 1920×945, na exploração e na luta com o seletor e a mira;
+  - sem erros, com as interações de pé;
+  - nenhum arquivo do jogo mudou (a suíte, o gabarito e a fumaça valem os da 1.118.0).
+- **Para a consolidação:** a largura a 1920, a borda de baixo da arena e as janelinhas da luta.
+- **Próximo:** Jean avaliar. Versão de produção igual (1.118.0).

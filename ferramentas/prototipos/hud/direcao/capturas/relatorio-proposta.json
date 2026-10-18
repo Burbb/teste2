@@ -1,0 +1,14 @@
+[
+ {
+  "modo": "proposta",
+  "caso": "exploracao",
+  "erros": [],
+  "foco": "BUTTON. outline auto 1px rgb(16, 16, 16) sombra none"
+ },
+ {
+  "modo": "proposta",
+  "caso": "luta",
+  "erros": [],
+  "turno": 2
+ }
+]
