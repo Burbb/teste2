@@ -3884,3 +3884,14 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   - a suíte, o gabarito e o pyflakes. A fumaça não foi repetida: nenhum arquivo do jogo mudou desde `a8e38cd`.
 - **Próximo:** Jean avaliar o Grimório e o Diário. Talentos, Bestiário, Salvar e Sair ficam para depois. A versão
   continua 1.124.0.
+
+### 18/10/2026 (data do computador local) — O Diário da doca no jogo (1.125.0); o Grimório em refinamento
+
+- **Pedido de Jean:** integrar o Diário (`666b806`) sem retoque; refinar o Grimório: a perspectiva, o emblema e o
+  fecho, o volume da capa.
+- **O Diário:**
+  - as fontes foram para `ferramentas/arte/aseprite/atalho-diario/` (36 e 32);
+  - os quatro arquivos do jogo são idênticos, byte a byte, aos aprovados, e o exportador os reproduz;
+  - só o atalho da doca (`ATALHO`) usa o desenho.
+  - Conferido no jogo, sem injeção, a 1920×945 (`doca_r3/diario-no-jogo.png`): a doca e o Diário aberto, com o atalho
+    selecionado. A suíte, o gabarito, o pyflakes e a fumaça passaram uma vez.

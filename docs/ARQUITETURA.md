@@ -433,9 +433,10 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   aljava/`: 24 do topo, 32, 40 do Inventário, 48 do saque; o 64 é o 32 ampliado 2×), para toda Aljava do Patrulheiro
   (a comum e a única) e o recurso de flechas do topo. O Poder é só o atributo: a "chama" do Vigor, da Pena de Fênix e das
   habilidades de fogo é outro desenho.
-  Na doca, o Inventário (a mochila de couro) e o Mapa (o mapa dobrado) são pixel art desde a 1.124.0, com fontes em
-  `ferramentas/arte/aseprite/atalho-inventario/` e `atalho-mapa/` (36 e 32). Os outros seis atalhos ainda são
-  placeholders pintados, pendentes de pixel art (plano 23, 1D).
+  Na doca, o Inventário (a mochila de couro) e o Mapa (o mapa dobrado), da 1.124.0, e o Diário (o livro aberto), da
+  1.125.0, são pixel art, com fontes em `ferramentas/arte/aseprite/atalho-inventario/`, `atalho-mapa/` e
+  `atalho-diario/` (36 e 32). Os outros cinco atalhos ainda são placeholders pintados, pendentes de pixel art (plano
+  23, 1D).
 - O escudo e o Unguento de Prata (1.94.0), o machado e a Bomba de Fumaça (1.99.0) o arco (1.101.0,
   `desenhar_arco_pixel.py`; o Atacar da roda, o Tiro Duplo e o contrato continuam com o sprite) e o cajado (1.106.0,
   `desenhar_cajado_pixel.py`; o Atacar do Mago na roda e o traço Conjurador continuam com o sprite) e o orbe (1.107.0,

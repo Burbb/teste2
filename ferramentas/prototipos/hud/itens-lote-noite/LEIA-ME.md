@@ -684,3 +684,9 @@ de cima.
 - O Diário é mais largo que o atual.
 
 Nada disto entrou no jogo.
+
+### Integrado: o Diário (1.125.0)
+
+Jean aprovou o Diário sem retoque (`666b806`). As fontes saíram de `doca_r3/fontes/` para
+`ferramentas/arte/aseprite/atalho-diario/`, e os quatro arquivos do jogo são idênticos, byte a byte, aos aprovados. O
+Grimório continua no protótipo, em refinamento.

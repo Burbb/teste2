@@ -1,3 +1,3 @@
 """The Unquiet (antes Crônicas da Fenda) — um RPG de texto offline com eventos procedurais."""
 
-__version__ = "1.124.0"
+__version__ = "1.125.0"
