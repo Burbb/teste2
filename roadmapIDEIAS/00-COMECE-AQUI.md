@@ -3895,3 +3895,11 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   - só o atalho da doca (`ATALHO`) usa o desenho.
   - Conferido no jogo, sem injeção, a 1920×945 (`doca_r3/diario-no-jogo.png`): a doca e o Diário aberto, com o atalho
     selecionado. A suíte, o gabarito, o pyflakes e a fumaça passaram uma vez.
+- **O Grimório, rodada 2:** só no protótipo (`doca_r3/`); o anterior está em `doca_r3/grimorio_r1/`.
+  - O livro passou a ser um objeto só, visto de cima e da esquerda: a capa, a lombada com as nervuras inclinadas e a
+    borda das folhas entre as capas.
+  - O emblema ficou menor e centrado, com o fecho preso à beira.
+  - A capa tem poucos planos de luz.
+  - Conferido antes × depois a 1920×945, na doca e no Habilidades.
+  - Aguarda a avaliação.
+- **Próximo:** Jean avaliar o Grimório. Talentos, Bestiário, Salvar e Sair ficam para depois.

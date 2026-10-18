@@ -690,3 +690,40 @@ Nada disto entrou no jogo.
 Jean aprovou o Diário sem retoque (`666b806`). As fontes saíram de `doca_r3/fontes/` para
 `ferramentas/arte/aseprite/atalho-diario/`, e os quatro arquivos do jogo são idênticos, byte a byte, aos aprovados. O
 Grimório continua no protótipo, em refinamento.
+
+### O Grimório, rodada 2 (`doca_r3/`)
+
+**O pedido:**
+- a perspectiva não convencia: a capa quase de frente, a lombada à esquerda e as folhas à direita, que só se veriam
+  olhando pelo outro lado;
+- o emblema estava grande e deslocado, com o fecho apertado contra ele;
+- faltavam poucos planos de luz na capa.
+
+**O candidato anterior** está guardado em `doca_r3/grimorio_r1/`: os PNGs, as fontes e as grades.
+
+**A construção** (`auxiliares/gb36.py`, `gb32.py`):
+- **Um objeto só, visto de cima e da esquerda:** a profundidade vai para cima e para a esquerda (5 a 6 px). Ficam à
+  vista três faces:
+  - a capa da frente;
+  - a lombada, que é a face da esquerda, redonda, com as três nervuras inclinadas como a profundidade;
+  - a borda de cima das folhas, entre a beira acesa da capa da frente e a da contracapa.
+- **A lateral direita:** some, porque daqui não se vê.
+- **Os volumes primeiro:** a etapa `volumes` do script grava só eles.
+- **As ferragens depois:** a moldura em relevo e as cantoneiras.
+- **O emblema e o fecho:**
+  - o emblema ficou menor (o losango de 7 px) e centrado no plano útil da capa, entre a moldura do lado da lombada e o
+    fecho, com folga dos dois lados;
+  - a tira sai de trás da beira da direita (1 px por fora, na sombra), deita sobre a capa e termina na placa de latão
+    com o pino.
+- **A luz da capa:** três planos: o alto e o lado da lombada mais claros, o meio e a beira oposta na sombra. A quina
+  junto da lombada é acesa.
+
+**Os arquivos:** o 36 e o 32 com a mesma construção, as camadas pintadas pelo `pintar.lua` no editor e o composto e a
+exportação iguais às grades.
+
+**Conferido a 1920×945** (`doca_r3/grimorio-antes-x-depois.png`), sem erros: antes × depois em tamanho real, na doca
+(36) e no Habilidades da luta (32), e ampliados 4×.
+
+**O que pode ser pior:**
+- No tamanho real, o emblema menor vira mais um ponto de luz que um desenho.
+- A lombada larga deixa o livro mais pesado à esquerda.
