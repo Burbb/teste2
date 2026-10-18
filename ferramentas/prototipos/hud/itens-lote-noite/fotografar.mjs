@@ -73,6 +73,8 @@ const PECAS = {
   // ao lado dos atalhos já aprovados); Salvar e Sair não são clicados (não mudam nada na foto)
   doca_r5: { pasta: "doca_r5/proposta", saida: "doca_r5/capturas", nomes: ["atalho-bestiario", "atalho-salvar", "atalho-sair"],
     cena: ["tutorial", { TUTORIAL: "0", VISTAS, CLASSE: "guerreiro", NIVEL: "8", COMITIVA: "morel", PONTOS: "2" }], fotos: ["doca"] },
+  doca_r5_telas: { pasta: "doca_r5/proposta", saida: "doca_r5/capturas", nomes: ["atalho-bestiario", "atalho-salvar", "atalho-sair"],
+    cena: ["fogueira", { COMITIVA: "morel,odete" }], fotos: ["doca", "doca-bestiario"] },
   doca: { pasta: "doca/proposta", nomes: ["atalho-talentos", "atalho-grimorio", "atalho-inventario", "atalho-mapa", "atalho-diario", "atalho-bestiario", "atalho-salvar", "atalho-sair"],
     cena: ["capela", { CLASSE: "arqueiro", NIVEL: "5", PERIODO: "0", SALA: "exterior" }], fotos: ["doca", "luta-doca"] },
 };
@@ -161,7 +163,7 @@ for (const modo of (process.env.SO_ATUAL ? ["atual"] : process.env.SO_PROPOSTA ?
       if (f === "doca") { await p.screenshot({ path: nome("doca"), clip: await clipDe("#doca", 0) }); }
       // a doca com a tela do atalho aberta (o estado selecionado, .atual): "doca-inventario", "doca-mapa"
       if (f.startsWith("doca-")) {
-        const rotulo = { inventario: "Inventário", mapa: "Mapa", grimorio: "Grimório", diario: "Diário", comitiva: "Comitiva", talentos: "Talentos" }[f.slice(5)];
+        const rotulo = { inventario: "Inventário", mapa: "Mapa", grimorio: "Grimório", diario: "Diário", comitiva: "Comitiva", talentos: "Talentos", bestiario: "Bestiário" }[f.slice(5)];
         await p.evaluate((r) => pedirAtalho(r), rotulo); await espera(900);
         await p.screenshot({ path: nome(f), clip: await clipDe("#doca", 0) });
         (await desenhos()).forEach((d) => visto.add(d));

@@ -19,6 +19,7 @@ nada daqui: só os PNGs exportados para `rpg/web/static/hud/icones/`.
 | attr-defesa (o ícone de Defesa) | `attr-defesa/attr-defesa-24.aseprite`, `-32`; **o 64 é o 32 ampliado 2×** | face, borda, bossa, contorno | 1.120.0 |
 | attr-poder (o ícone de Poder) | `attr-poder/attr-poder-24.aseprite`, `-32`; **o 64 é o 32 ampliado 2×** | chama, miolo, faisca, contorno | 1.123.0 |
 | atalho-inventario (o Inventário da doca) | `atalho-inventario/atalho-inventario-36.aseprite`, `-32` | rolo, bolsos, corpo, aba, cinta, fivela, contorno | 1.124.0 |
+| atalho-bestiario (o Bestiário da doca) | `atalho-bestiario/atalho-bestiario-36.aseprite`, `-32` | chifres, cranio, contorno | 1.128.0 |
 | atalho-talentos (os Talentos da doca) | `atalho-talentos/atalho-talentos-36.aseprite`, `-32` | galhos, nos, contorno | 1.127.0 |
 | atalho-comitiva (a Comitiva da doca) | `atalho-comitiva/atalho-comitiva-36.aseprite`, `-32` | tras_esquerda, tras_direita, frente, contorno | 1.127.0 |
 | atalho-grimorio (o Grimório da doca e o Habilidades da luta) | `atalho-grimorio/atalho-grimorio-36.aseprite`, `-32` | contracapa, folhas, lombada, capa, emblema, cravos, fita, contorno | 1.126.0 |
@@ -178,3 +179,11 @@ Os dois são da rodada 4 da doca, aprovada pelo Jean no `4deb386` (`ferramentas/
   <peça> --conferir` os reproduz.
 - **A Comitiva:** ganhou papel próprio em `Icones` (`ATALHO`, `TAMANHOS`). O contorno dela está desenhado na camada
   `contorno`, também entre as figuras.
+
+## O Bestiário da doca (1.128.0)
+
+O crânio de fera com chifres foi aprovado pelo Jean no `e373618` (`ferramentas/prototipos/hud/itens-lote-noite/doca_r5/`).
+- **As fontes:** são as `.aseprite` editadas no editor pelo MCP. As rodadas 3 e 4 (a parte de baixo e a ligação entre o
+  focinho e a arcada) foram retocadas nelas, e as grades do protótipo ficam como histórico.
+- **Conferido:** os quatro arquivos exportados são idênticos, byte a byte, aos aprovados, e
+  `exportar_aseprite.py atalho-bestiario --conferir` os reproduz.

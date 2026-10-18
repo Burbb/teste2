@@ -3992,3 +3992,17 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
     diferentes. A silhueta não mudou.
   - **Guardada:** a rodada 3, em `doca_r5/bestiario_r3/`.
   - **Aguardam a avaliação:** o Bestiário, o Salvar e o Sair.
+
+### 18/10/2026 (data do computador local) — O Bestiário da doca no jogo (1.128.0)
+
+- **Pedido de Jean:** integrar o Bestiário de `e373618` sem retoque, a partir das fontes finais editadas, e
+  reapresentar o Salvar e o Sair como estão.
+- **Feito:**
+  - as fontes foram para `ferramentas/arte/aseprite/atalho-bestiario/`;
+  - os quatro arquivos do jogo são idênticos, byte a byte, aos aprovados, e o exportador os reproduz;
+  - o papel é só o atalho (`ATALHO`). A "caveira" 16×16 dos retratos, da derrota e da fome não mudou.
+- **Conferido:**
+  - no jogo, sem injeção, a 1920×945 (`doca_r5/bestiario-no-jogo.png`): a doca e o Bestiário aberto, com o atalho
+    selecionado;
+  - a suíte, o gabarito, o pyflakes e a fumaça uma vez.
+- **Continuam:** o Salvar e o Sair, no protótipo, aguardando a avaliação.

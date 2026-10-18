@@ -923,3 +923,9 @@ verticais dos dentes, que começavam todas na mesma altura e marcavam uma linha 
 
 **Conferido:** os PNGs exportados e os @2x batem com o editor. Antes × depois na doca a 1920×945, em tamanho real e
 4× (`doca_r5/bestiario-ligacao-antes-x-depois.png`). O Salvar e o Sair seguem como apresentados.
+
+### Integrado: o Bestiário (1.128.0)
+
+Jean aprovou a rodada 4 sem retoque (`e373618`). As fontes finais editadas saíram de `doca_r5/fontes/` para
+`ferramentas/arte/aseprite/atalho-bestiario/`, e os quatro arquivos do jogo são idênticos, byte a byte, aos aprovados. O
+Salvar e o Sair continuam no protótipo.
