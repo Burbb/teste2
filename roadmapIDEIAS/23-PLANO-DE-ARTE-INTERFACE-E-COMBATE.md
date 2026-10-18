@@ -41,9 +41,9 @@ os usos dos sprites estejam migrados. Conferir `Icones` e os catálogos antes de
 | Ordem | Entrega | Situação e limite |
 |---|---|---|
 | 1A | Concluir o lote de cabeça/capuz e luvas de couro e tecido | Integrado na 1.112.0 (32, 40, 48, 64; os saves antigos pela migração v5); falta Jean conferir jogando |
-| 1B | Corrigir a sequência visual do consumo de recurso e mostrar o bloqueio de vida máxima por ferimentos | Prioridade de clareza; reproduzir e avaliar a apresentação |
-| 1C | Prototipar dado mais visível, iniciativa e indicação dos turnos; facilitar consulta aos testes de atributos | Direção aprovada; composição e movimento ainda serão avaliados |
-| 1D | Retomar os lotes de equipamentos e demais ícones | Pequenos grupos por função; aproveitar os componentes aprovados |
+| 1B | Corrigir a sequência visual do consumo de recurso e mostrar o bloqueio de vida máxima por ferimentos | Feito: 1.114.1 (o custo) e 1.115.0 (a vida bloqueada) |
+| 1C | Prototipar dado mais visível, iniciativa e indicação dos turnos; facilitar consulta aos testes de atributos | Feito: 1.116.0/1.116.1 (iniciativa e turnos), 1.117.0 (a rolagem no centro), 1.118.0 (os testes na ficha) |
+| 1D | Retomar os lotes de equipamentos e demais ícones | **Próxima entrega.** Pequenos grupos por função (1.2); aproveitar os componentes aprovados |
 | 2–9 | Telas, serviços, cenários, habilidades e campanha | Sequência detalhada abaixo |
 
 A etapa 1 não precisa terminar todo o catálogo antes de tratar um defeito de compreensão no combate.
@@ -488,7 +488,7 @@ inimigos. Duas alternativas contra a produção, com os mesmos dados, em 1280×7
 - **Limitações:** abaixo de 920 px o seletor e o registro pedem a rolagem da página; entre 920 e 1100 px o seletor
   aberto cobre o registro. Falta Jean jogar.
 
-### 1.11. Estudo: a nova direção visual da HUD principal (em avaliação, nada no jogo)
+### 1.11. Estudo: a nova direção visual da HUD principal (não escolhido: fica a HUD de produção)
 
 **Pedido de Jean (17/10/2026):** a aparência do conjunto (topo, ficha, cartas, coluna do mundo, relação com os
 comandos e o seletor aprovados), só no protótipo, a partir de uma imagem de referência dele (carvão e tinta, marfim,
@@ -554,7 +554,23 @@ topo, ao centro e ao mundo, com peças derivadas da pintura (`derivar_pecas.py`)
 - **Os estados:** a vida máxima bloqueada e a habilidade indisponível foram conferidas, legíveis e com os motivos do
   motor.
 
-**Situação (18/10/2026): em avaliação, sem aprovação para integrar.**
+**Decisão de Jean (18/10/2026), depois de jogar as duas versões: fica a HUD de produção.** A direção com pintura nas
+colunas e no topo não será integrada.
+- **O estudo** (`ferramentas/prototipos/hud/direcao/`: a proposta, a ficha nas duas rodadas, o conjunto, o topo, a
+  comparação jogável e as pinturas `Painel vertical em tinta escura.png` e `topo.png`) fica guardado como estudo não
+  escolhido para a HUD principal. Pode servir de referência para outras telas, mas nenhum reaproveitamento está
+  aprovado automaticamente.
+- **A aprovação da ficha** valia só como base do estudo. Ela não autoriza integrar a ficha isolada nem transferir
+  tipografia, espaçamentos, cores ou outras partes do protótipo para a produção.
+- **Continuam em produção e aprovados:** a HUD atual e os menus de pincelada (comandos da luta, os seletores de
+  Habilidades e Itens, as escolhas narrativas em faixas).
+- **Pendência independente que ficou só no protótipo:** o refinamento de cores da dica "Testes do d20". Era nomes em
+  marfim, totais em latão, parcelas com mais contraste, penalidades em vermelho queimado e, no rodapé, só "20 sempre
+  passa" e "1 sempre falha" em destaque. Na produção (1.118.0) a dica tem os números do motor, mas o nome e o total
+  vêm juntos num negrito só e o rodapé inteiro fica em amarelo. Está em `direcao/direcao.js` e no fim de
+  `direcao/conjunto/conjunto.css`. Fazer numa entrega própria, se Jean pedir; não vem junto com a HUD.
+
+**Situação anterior (18/10/2026, antes da decisão): em avaliação, sem aprovação para integrar.**
 - **A ficha:** aprovada como base do estudo.
 - **A tela inteira:** a decisão continua aberta. A dúvida é se a pintura permanente combina com a pixel art ou chama
   mais atenção que o mundo.
@@ -676,9 +692,13 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
 1. A avaliação de Jean jogando a 1.111.0 a 1.114.0 (a HUD, as lutas cheias, os capuzes e luvas, as escolhas em
    faixas, integradas) e a composição compacta das lutas cheias, integrada na 1.114.0 (item 1.10).
 2. Integrar apenas os desenhos aprovados.
-3. Reproduzir e corrigir a percepção atrasada do custo de recurso e apresentar o bloqueio de vida máxima por ferimentos (1B).
-4. Prototipar os avisos e a consulta aos testes (1C), sem ampliar regras.
-5. Retomar os lotes de ícones (1D) e depois a etapa 2.
+3. ~~Reproduzir e corrigir a percepção atrasada do custo de recurso e apresentar o bloqueio de vida máxima por
+   ferimentos (1B).~~ Feito (1.114.1, 1.115.0).
+4. ~~Prototipar os avisos e a consulta aos testes (1C), sem ampliar regras.~~ Feito (1.116.0 a 1.118.0). O estudo da
+   nova HUD (1.11) não foi escolhido; fica a HUD de produção.
+5. **Agora:** retomar os lotes de ícones (1D, tabela 1.2), em pequenos grupos por função; depois, a etapa 2.
+   Pendências independentes: o refinamento de cores da dica "Testes do d20" (1.11, só no protótipo) e o aviso da
+   escuridão no painel do mundo antes de agir (1.6).
 
 Esta ordem substitui a descrição antiga que deixava toda a clareza do combate para a grande etapa de habilidades.
 O plano não altera o jogo por si só.

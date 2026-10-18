@@ -1,4 +1,13 @@
-# A nova direção visual da HUD principal (estudo em avaliação; nada no jogo)
+# A nova direção visual da HUD principal (estudo não escolhido; nada no jogo)
+
+**Decisão de Jean (18/10/2026), depois de jogar produção × protótipo (`comparar/`): fica a HUD de produção.** Esta pasta
+inteira (a proposta abaixo, `ficha/`, `conjunto/`, `topo/`, `comparar/` e as pinturas `Painel vertical em tinta
+escura.png` e `topo.png`) fica guardada como estudo não escolhido para a HUD principal.
+- **Para outras telas:** pode servir de referência, mas nenhum reaproveitamento está aprovado automaticamente.
+- **A ficha:** a aprovação dela valia só como base do estudo. Nada daqui (tipografia, espaçamentos, cores, peças) passa
+  para a produção sem um pedido próprio.
+- **A dica "Testes do d20":** o refinamento de cores (`direcao.js` e o fim de `conjunto/conjunto.css`) ficou só aqui,
+  como pendência independente.
 
 **Pedido de Jean (17/10/2026):** estudar, só no protótipo, a nova direção visual da HUD principal (o topo, a ficha, as
 cartas da luta, a coluna do mundo e a relação com os comandos e o seletor em faixas já aprovados). A referência

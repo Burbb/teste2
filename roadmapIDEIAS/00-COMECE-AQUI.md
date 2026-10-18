@@ -3628,3 +3628,18 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   - O estudo entra só no processo do protótipo; nenhum arquivo do jogo muda.
 - **Conferido:** o save real abre nas duas versões, sem erros; nada de arte nova, capturas ou vídeos.
 - **Próximo:** Jean jogar as duas e decidir. Versão igual (1.118.0).
+
+### 18/10/2026 (data do computador local) — Decisão: fica a HUD de produção (o estudo da nova HUD não será integrado)
+
+- **Decisão de Jean, depois de jogar as duas versões:** prefere a HUD atual de produção. A direção com pintura nas
+  colunas e no topo não será integrada.
+- **Em produção e aprovados:** a HUD atual e os menus de pincelada (comandos, seletores de Habilidades e Itens,
+  escolhas narrativas).
+- **O estudo** (`ferramentas/prototipos/hud/direcao/`, com as pinturas): guardado, sem apagar, como estudo não
+  escolhido para a HUD principal. Pode servir de referência para outras telas, sem reaproveitamento aprovado.
+- **A aprovação da ficha** valia só como base do estudo: não autoriza integrá-la isolada nem transferir tipografia,
+  espaçamentos, cores ou outras partes para a produção.
+- **Pendência independente:** o refinamento de cores da dica "Testes do d20" ficou só no protótipo
+  (`direcao/direcao.js` e o fim de `direcao/conjunto/conjunto.css`). Na produção a dica tem os números do motor, mas
+  não essas cores nem o destaque só nas regras do 20 e do 1.
+- **Próxima entrega do plano:** 1D, retomar os lotes de ícones (plano 23, tabela 1.2), em pequenos grupos por função.
