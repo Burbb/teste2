@@ -95,7 +95,8 @@ async function subir() {
 
 const b = await chromium.launch();
 const rel = [];
-for (const modo of (process.env.SO_PROPOSTA ? [ROTULO] : ["atual", ROTULO])) for (const [W, H] of JANELAS) {
+// SO_ATUAL=1: só o jogo como está (sem trocar arquivo nenhum), para conferir uma integração
+for (const modo of (process.env.SO_ATUAL ? ["atual"] : process.env.SO_PROPOSTA ? [ROTULO] : ["atual", ROTULO])) for (const [W, H] of JANELAS) {
   const { proc, url } = await subir();
   try {
     const p = await b.newPage({ viewport: { width: W, height: H } });

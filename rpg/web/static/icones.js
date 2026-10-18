@@ -26,7 +26,7 @@ const Icones = (() => {
     "capuz_tecido": [32, 40, 48, 64], "calca_couro": [32, 40, 48, 64], "luva_seda": [32, 40, 48, 64],
     "atalho-bestiario": [32, 36], "atalho-diario": [32, 36], "atalho-grimorio": [32, 36], "atalho-inventario": [32, 36],
     "atalho-mapa": [32, 36], "atalho-sair": [32, 36], "atalho-salvar": [32, 36], "atalho-talentos": [32, 36],
-    "attr-agilidade": [24, 32], "attr-ataque": [24, 32, 64], "attr-defesa": [24, 32, 64], "attr-poder": [24, 32],
+    "attr-agilidade": [24, 32, 64], "attr-ataque": [24, 32, 64], "attr-defesa": [24, 32, 64], "attr-poder": [24, 32],
     "bandagem": [24, 32, 48, 64], "bau": [32, 48, 64], "bomba": [32], "botas-ferro": [32, 40, 48, 64],
     "cota": [32, 40, 48, 64], "elmo": [32, 40, 48, 64], "escudo": [32, 40, 48, 64], "espada": [32, 40, 48, 64], "lugar-caverna": [32, 40],
     "lugar-cidadela": [32, 40], "lugar-floresta": [32, 40], "lugar-montanha": [32, 40], "lugar-pantano": [32, 40],
@@ -79,8 +79,9 @@ const Icones = (() => {
   // jogo é também o da Curandeira (o balcão e os cartões dela): ela continua com o dela, só o item muda. A Bomba de
   // Fumaça usa no jogo a "caveira", que também é retrato, Bestiário, derrota, fome e a lixeira: só o item muda
   const SO_PELO_ID = new Set(["pena_fenix", "unguento", "bomba_fumaca"]);
-  // os atributos: Ataque e Defesa em pixel art (1.120.0, fontes em ferramentas/arte/aseprite/; o 64 do selo da festa
-  // de atributo permanente é o 32 ampliado 2×); Agilidade e Poder ainda são os placeholders pintados
+  // os atributos: Ataque e Defesa (1.120.0) e Agilidade (1.121.0, a bota em passada, que também é o Fugir da roda)
+  // em pixel art, fontes em ferramentas/arte/aseprite/; o 64 do selo da festa de atributo permanente é o 32 ampliado
+  // 2×. Poder ainda é o placeholder pintado
   const ATRIBUTO = { Ataque: "attr-ataque", Defesa: "attr-defesa", Agilidade: "attr-agilidade", Poder: "attr-poder" };
   // os recursos do topo, pelo desenho que o jogo escolhe (sem comida, o osso; a tocha apagada, a bolsa vazia e o
   // frasco vazio ficam com o do jogo); a aljava são as flechas do Patrulheiro
