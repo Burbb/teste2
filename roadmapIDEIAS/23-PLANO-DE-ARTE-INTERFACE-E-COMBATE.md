@@ -554,6 +554,14 @@ topo, ao centro e ao mundo, com peças derivadas da pintura (`derivar_pecas.py`)
 - **Os estados:** a vida máxima bloqueada e a habilidade indisponível foram conferidas, legíveis e com os motivos do
   motor.
 
+**Situação (18/10/2026): em avaliação, sem aprovação para integrar.**
+- **A ficha:** aprovada como base do estudo.
+- **A tela inteira:** a decisão continua aberta. A dúvida é se a pintura permanente combina com a pixel art ou chama
+  mais atenção que o mundo.
+- **Os menus de pincelada:** os comandos, o seletor e as escolhas continuam aprovados e em produção.
+- **A comparação jogável:** `ferramentas/prototipos/hud/direcao/comparar/` (produção × protótipo com uma cópia do save
+  de Jean).
+
 ## 2. Telas de leitura, criação e celebrações
 
 **Lembrete para o futuro estudo da HUD — pen.dev (experimento `9769305`):** antes de escolher ferramentas para

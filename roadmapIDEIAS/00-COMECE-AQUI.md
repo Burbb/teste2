@@ -3612,3 +3612,19 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   - as indisponíveis com "Vigor insuficiente", iguais no jogo;
   - nenhum arquivo do jogo mudou.
 - **Próximo:** Jean avaliar. Versão igual (1.118.0).
+
+### 18/10/2026 (data do computador local) — A nova HUD pausada para avaliação jogando (nada no jogo)
+
+- **Situação:** a direção visual completa da HUD (`ferramentas/prototipos/hud/direcao/`: a ficha, o conjunto e o topo)
+  está em avaliação, sem aprovação para integrar.
+  - **A ficha:** aprovada como base do estudo.
+  - **A tela inteira:** a decisão continua aberta. A dúvida é se a pintura permanente combina com a pixel art ou chama
+    mais atenção que o mundo.
+  - **Os menus de pincelada (comandos, seletor, escolhas):** continuam aprovados e em produção.
+- **Feito:** a comparação jogável `ferramentas/prototipos/hud/direcao/comparar/jogar_comparacao.py producao|prototipo`.
+  - Abre a janela de sempre com uma cópia do save atual (`turvo_dadad`), numa pasta de teste separada por versão
+    (`%USERPROFILE%\.cronicas_da_fenda_teste_hud`).
+  - O original fica intacto (conferido pelo hash).
+  - O estudo entra só no processo do protótipo; nenhum arquivo do jogo muda.
+- **Conferido:** o save real abre nas duas versões, sem erros; nada de arte nova, capturas ou vídeos.
+- **Próximo:** Jean jogar as duas e decidir. Versão igual (1.118.0).
