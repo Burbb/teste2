@@ -30,8 +30,26 @@ Leia antes de mexer:
 - Conteúdo é dado: habilidades (`rpg/habilidades.py`), talentos e passivas (`rpg/talentos.py`, com `mod`/`disparar`
   de `rpg/modificadores.py`), estados (`rpg/estados.py`). Nada de perguntar "tem o talento X?" no combate.
 - Mudou algo visual? Suba o jogo num cenário e **veja** (Playwright tira captura); o Jean percebe pulos, sobreposições
-  e textos cortados. `tests/navegador/cenarios.py` mostra como montar uma situação.
+  e textos cortados. `tests/navegador/cenarios.py` mostra como montar uma situação. Use a janela principal do Jean
+  (monitor 1920×1080, considerando a área real do jogo) como referência. Não abra uma bateria de resoluções nem uma
+  revisão geral de dimensionamento a cada entrega: confira o componente afetado e corrija impedimentos de uso.
+  Registre outras adaptações para a consolidação da HUD, salvo pedido explícito ou necessidade demonstrada da tarefa.
 - Versão em `rpg/__init__.py`: correção sobe o último número, conjunto de mudanças sobe o do meio.
+
+## Como executar uma entrega
+
+Princípios adaptados das [diretrizes inspiradas em Karpathy](https://github.com/multica-ai/andrej-karpathy-skills),
+aplicados com julgamento, sem transformar tarefas simples em cerimônia:
+
+- **Entenda o objetivo.** Esclareça dúvidas que mudem o resultado ou o escopo. Resolva decisões rotineiras com o
+  contexto disponível; explicite suposições relevantes sem pedir confirmação a cada passo.
+- **Prefira simplicidade.** Implemente o necessário para a entrega, sem funcionalidades, abstrações ou configurações
+  especulativas. Pode refatorar localmente quando isso resolver melhor o problema; não amplie para uma limpeza geral.
+- **Mantenha o foco.** Preserve mudanças de outras sessões e partes sem relação com a tarefa. Remova o que a sua
+  alteração deixou sem uso; registre achados independentes para outra entrega.
+- **Conclua com evidência.** Defina o que comprova o resultado, confira e termine. Durante ajustes, repita as
+  verificações afetadas; antes do commit, cumpra a seção abaixo sem duplicar baterias já válidas para o código final.
+  Se um critério não puder ser atendido, explique o impedimento; não declare sucesso nem abra ciclos indefinidos.
 
 ## Antes de cada commit
 
