@@ -3959,3 +3959,16 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   - a suíte, o gabarito e o pyflakes. A fumaça não foi repetida: nenhum arquivo do jogo mudou desde `02c7f6d`.
 - **Próximo:** Jean avaliar os Talentos e a Comitiva. Bestiário, Salvar e Sair ficam para depois. A versão continua
   1.126.0.
+
+### 18/10/2026 (data do computador local) — Talentos e Comitiva no jogo (1.127.0); propostas de Bestiário, Salvar e Sair
+
+- **Pedido de Jean:** integrar os Talentos e a Comitiva (`4deb386`) sem retoque, e depois propor o Bestiário, o Salvar
+  e o Sair, só no protótipo, antes de parar.
+- **A integração:**
+  - as fontes foram para `ferramentas/arte/aseprite/atalho-talentos/` e `atalho-comitiva/` (36 e 32);
+  - os oito arquivos do jogo são idênticos, byte a byte, aos aprovados, e o exportador os reproduz;
+  - a Comitiva ganhou papel próprio em `Icones` (`ATALHO`, `TAMANHOS`). O sprite `humano` continua o de personagem e
+    de inimigo, e o atalho continua aparecendo só com companheiro.
+  - Conferido no jogo, sem injeção, a 1920×945 (`doca_r4/talentos-comitiva-no-jogo.png`): a doca com companheiro e o
+    selo de pontos, a Comitiva aberta (selecionada) e os Talentos abertos. A suíte, o gabarito, o pyflakes e a fumaça
+    passaram uma vez.

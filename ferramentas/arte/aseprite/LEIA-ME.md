@@ -19,6 +19,8 @@ nada daqui: só os PNGs exportados para `rpg/web/static/hud/icones/`.
 | attr-defesa (o ícone de Defesa) | `attr-defesa/attr-defesa-24.aseprite`, `-32`; **o 64 é o 32 ampliado 2×** | face, borda, bossa, contorno | 1.120.0 |
 | attr-poder (o ícone de Poder) | `attr-poder/attr-poder-24.aseprite`, `-32`; **o 64 é o 32 ampliado 2×** | chama, miolo, faisca, contorno | 1.123.0 |
 | atalho-inventario (o Inventário da doca) | `atalho-inventario/atalho-inventario-36.aseprite`, `-32` | rolo, bolsos, corpo, aba, cinta, fivela, contorno | 1.124.0 |
+| atalho-talentos (os Talentos da doca) | `atalho-talentos/atalho-talentos-36.aseprite`, `-32` | galhos, nos, contorno | 1.127.0 |
+| atalho-comitiva (a Comitiva da doca) | `atalho-comitiva/atalho-comitiva-36.aseprite`, `-32` | tras_esquerda, tras_direita, frente, contorno | 1.127.0 |
 | atalho-grimorio (o Grimório da doca e o Habilidades da luta) | `atalho-grimorio/atalho-grimorio-36.aseprite`, `-32` | contracapa, folhas, lombada, capa, emblema, cravos, fita, contorno | 1.126.0 |
 | atalho-diario (o Diário da doca) | `atalho-diario/atalho-diario-36.aseprite`, `-32` | capa, paginas, anotacoes, fita, pena, contorno | 1.125.0 |
 | atalho-mapa (o Mapa da doca) | `atalho-mapa/atalho-mapa-36.aseprite`, `-32` | espessura, papel, vincos, terreno, percurso, destino, contorno | 1.124.0 |
@@ -168,3 +170,11 @@ O livro violeta fechado e inclinado, com a estrela de latão, é a rodada 3 da d
 - **Conferido:** os quatro arquivos exportados das fontes são idênticos, byte a byte, aos aprovados, e
   `exportar_aseprite.py atalho-grimorio --conferir` os reproduz.
 - **As rodadas recusadas** estão no protótipo: `doca_r3/grimorio_r1/` e `grimorio_r2/`.
+
+## Os Talentos e a Comitiva da doca (1.127.0)
+
+Os dois são da rodada 4 da doca, aprovada pelo Jean no `4deb386` (`ferramentas/prototipos/hud/itens-lote-noite/doca_r4/`).
+- **Os arquivos:** os oito exportados das fontes são idênticos, byte a byte, aos aprovados, e `exportar_aseprite.py
+  <peça> --conferir` os reproduz.
+- **A Comitiva:** ganhou papel próprio em `Icones` (`ATALHO`, `TAMANHOS`). O contorno dela está desenhado na camada
+  `contorno`, também entre as figuras.

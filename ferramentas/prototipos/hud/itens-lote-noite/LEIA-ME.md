@@ -824,3 +824,10 @@ erros:
 - Com o selo de pontos, a árvore perde o nó vazio, mas mantém o tronco, os galhos e os nós acesos.
 
 Nada disto entrou no jogo.
+
+### Integrados: os Talentos e a Comitiva (1.127.0)
+
+Jean aprovou os dois sem retoque (`4deb386`).
+- **As fontes:** saíram de `doca_r4/fontes/` para `ferramentas/arte/aseprite/atalho-talentos/` e `atalho-comitiva/`.
+- **Os arquivos:** os oito do jogo são idênticos, byte a byte, aos aprovados.
+- **A Comitiva:** ganhou papel próprio em `Icones`. O `papel_atalho` do `fotografar.mjs` fica para outras propostas.

@@ -436,8 +436,10 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   Na doca, são pixel art, com fontes em `ferramentas/arte/aseprite/atalho-*/` (36 e 32):
   - o Inventário (a mochila de couro) e o Mapa (o mapa dobrado), da 1.124.0;
   - o Diário (o livro aberto), da 1.125.0;
-  - o Grimório (o livro fechado), da 1.126.0, que é também o Habilidades da roda da luta (`ACAO.grimorio`).
-  Talentos, Bestiário, Salvar e Sair ainda são placeholders pintados, pendentes de pixel art (plano 23, 1D).
+  - o Grimório (o livro fechado), da 1.126.0, que é também o Habilidades da roda da luta (`ACAO.grimorio`);
+  - os Talentos (a árvore de latão) e a Comitiva (três viajantes), da 1.127.0. A Comitiva só aparece com
+    companheiro e tem papel próprio; o sprite `humano` que ela usava continua o de personagem e de inimigo.
+  Bestiário, Salvar e Sair ainda são placeholders pintados, pendentes de pixel art (plano 23, 1D).
 - O escudo e o Unguento de Prata (1.94.0), o machado e a Bomba de Fumaça (1.99.0) o arco (1.101.0,
   `desenhar_arco_pixel.py`; o Atacar da roda, o Tiro Duplo e o contrato continuam com o sprite) e o cajado (1.106.0,
   `desenhar_cajado_pixel.py`; o Atacar do Mago na roda e o traço Conjurador continuam com o sprite) e o orbe (1.107.0,

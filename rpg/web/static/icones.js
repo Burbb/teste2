@@ -24,7 +24,7 @@ const Icones = (() => {
     "arco": [32, 40, 48, 64], "cajado": [32, 40, 48, 64], "orbe": [32, 40, 48, 64], "livro": [32, 40, 48, 64], "varinha": [32, 40, 48, 64],
     "gibao": [32, 40, 48, 64], "bota": [32, 40, 48, 64], "capuz": [32, 40, 48, 64], "luva": [32, 40, 48, 64],
     "capuz_tecido": [32, 40, 48, 64], "calca_couro": [32, 40, 48, 64], "luva_seda": [32, 40, 48, 64],
-    "atalho-bestiario": [32, 36], "atalho-diario": [32, 36], "atalho-grimorio": [32, 36], "atalho-inventario": [32, 36],
+    "atalho-bestiario": [32, 36], "atalho-comitiva": [32, 36], "atalho-diario": [32, 36], "atalho-grimorio": [32, 36], "atalho-inventario": [32, 36],
     "atalho-mapa": [32, 36], "atalho-sair": [32, 36], "atalho-salvar": [32, 36], "atalho-talentos": [32, 36],
     "attr-agilidade": [24, 32, 64], "attr-ataque": [24, 32, 64], "attr-defesa": [24, 32, 64], "attr-poder": [24, 32, 64],
     "bandagem": [24, 32, 48, 64], "bau": [32, 48, 64], "bomba": [32], "botas-ferro": [32, 40, 48, 64],
@@ -94,8 +94,11 @@ const Icones = (() => {
   // os atalhos da doca (36; o 32 nas janelas estreitas) em pixel art, fontes em ferramentas/arte/aseprite/: o
   // Inventário (a mochila de couro) e o Mapa (o mapa dobrado em sanfona), 1.124.0; o Diário (o livro aberto com a pena e
   // a fita), 1.125.0; o Grimório (o livro violeta fechado e inclinado, com a estrela de latão), 1.126.0, que é também o
-  // comando Habilidades da roda da luta (ACAO.grimorio, 32). Os outros quatro ainda são os pintados
-  const ATALHO = { Talentos: "atalho-talentos", "Grimório": "atalho-grimorio", "Inventário": "atalho-inventario", Mapa: "atalho-mapa",
+  // comando Habilidades da roda da luta (ACAO.grimorio, 32); os Talentos (a árvore de latão com os nós de gema) e a
+  // Comitiva (três viajantes), 1.127.0. A Comitiva só aparece com companheiro (SISTEMA, em app/nucleo.js) e tem papel
+  // próprio aqui: o sprite "humano" que ela usava continua o de personagem e de inimigo. Bestiário, Salvar e Sair
+  // ainda são os pintados
+  const ATALHO = { Talentos: "atalho-talentos", Comitiva: "atalho-comitiva", "Grimório": "atalho-grimorio", "Inventário": "atalho-inventario", Mapa: "atalho-mapa",
     "Diário": "atalho-diario", "Bestiário": "atalho-bestiario", Salvar: "atalho-salvar", Sair: "atalho-sair" };
   // o desenho que o jogo escolhe para o destino (MapaPx.sprite); o covil vencido continua a bandeira do jogo
   const LUGAR = { vila: "lugar-vila", floresta: "lugar-floresta", pantano: "lugar-pantano", ruinas: "lugar-ruinas",
