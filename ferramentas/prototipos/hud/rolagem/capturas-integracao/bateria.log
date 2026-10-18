@@ -1,0 +1,5 @@
+{"nome":"sucesso","semente":"11","girando":"precisa de 10 ou mais","resultado":"▸ Percepção 13 contra 12 — sucesso (d20 11)","da_rolagem_a_consequencia_ms":1628,"erros":[]}
+{"nome":"falha","semente":"4","girando":"precisa de 10 ou mais","resultado":"▸ Percepção 11 contra 12 — falha (d20 9)","da_rolagem_a_consequencia_ms":1633,"erros":[]}
+{"nome":"falha-reduzido","semente":"4","girando":"precisa de 10 ou mais","resultado":"▸ Percepção 11 contra 12 — falha (d20 9)","da_rolagem_a_consequencia_ms":1629,"erros":[]}
+{"nome":"pular","centro_some_ms_depois_do_clique":107,"resultado":"▸ Percepção 13 contra 12 — sucesso (d20 11)"}
+{"nome":"instantaneo","apareceu_no_centro":false,"resultado":"▸ Percepção 13 contra 12 — sucesso (d20 11)"}

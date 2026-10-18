@@ -157,7 +157,22 @@ atributo fora da luta. A mesma mensagem `rolagem` do motor, sem sortear nada:
 O ritmo é o de hoje (da tirinha à consequência: 1627–1631 ms, atual e proposta), sem clique novo. Pular corta; no
 instantâneo, ao refazer a página e na luta, a rolagem de sempre; movimento reduzido sem deslocamento. Comparado com os
 mesmos dados (o baú abandonado, Percepção 12: sucesso por 1 e falha por 1) a 1920×945. "Precisa de N" é derivado na
-tela; na integração viria do motor. Falta Jean avaliar.
+tela; na integração viria do motor.
+
+**Aprovado por Jean e integrado na 1.117.0** (17/10/2026):
+- **No jogo:** `app/rolagem.js` (a função `rolagem`, que saiu de `pagina.js`) e `20-rolagem.css`. As variáveis do pincel
+  valem também em `.rolagem-centro` (`18-seletor-habilidades.css`). Nada da pasta de protótipos, que fica como histórico
+  das alternativas.
+- **"Precisa de N ou mais" vem do motor:** `Testes.precisa_no_dado(cd, mod)` (o menor d20 que passa, com o 20 e o 1),
+  enviado por `teste()` em `ui.rolagem(..., precisa=)`. A tela só escreve a frase. `tests/test_rolagem.py` confere o
+  número contra a regra, valor por valor, e contra o resultado de 200 testes. Sorteios, bônus, dificuldades e
+  resultados iguais: o gabarito não mudou.
+- **Conferido no jogo** (`ferramentas/prototipos/hud/rolagem/integracao.mjs`, 1920×945):
+  - os mesmos sucesso e falha por 1, com "precisa de 10 ou mais" do motor;
+  - da tirinha à consequência, 1628–1633 ms (o protótipo: 1627–1631);
+  - pular tira o centro em ~110 ms; no texto instantâneo, nada no centro; movimento reduzido no mesmo tempo.
+- **Fica para depois:** o redesenho artístico do dado vai para o acabamento visual da HUD (seção 2), junto dos
+  efeitos de raridade e da subida de nível. Esta entrega não redesenha o dado.
 
 ### 1.5. Protótipo: iniciativa e passagem dos turnos
 
@@ -453,6 +468,9 @@ redesenho global nem integração de uma nova HUD.
   Testar feixes e partículas em pixel art e tags/faixas para os ganhos; posição e formato ainda são propostas.
 - **Celebrações e raridade:** harmonizar o tratamento dos efeitos, com intensidade proporcional ao acontecimento.
   Respeitar movimento reduzido sem fazer o aviso desaparecer antes de poder ser percebido.
+- **O dado dos testes:** o redesenho artístico do d20 (hoje o SVG de sempre, 2× no centro desde a 1.117.0, item 1.4)
+  entra neste acabamento visual da HUD, junto dos efeitos de raridade e da subida de nível. A apresentação central, o
+  ritmo e as faixas de sucesso e falha já aprovados ficam.
 - **Grimório da interface:** aparência do livro aberto, páginas, leitura e navegação.
 - **Livro narrativo da capela:** apresentação imersiva do relato. É outro objeto/contexto que o grimório equipado.
   A revisão visual não autoriza reescrever a história agora.

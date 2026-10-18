@@ -431,30 +431,6 @@ async function cartaoMissao(m) {
   if (!instantaneo()) await espera(ritmo(320));
 }
 
-async function rolagem(m) {
-  const caixa = el("div", "rolagem rolando");
-  const sinal = m.mod >= 0 ? "+" : "−";
-  caixa.innerHTML = `<div class="d20">${D20}</div><div class="rol-info"><div class="rol-attr">Teste de ${esc(m.atributo)}</div>
-    <div class="rol-conta">d20 ${sinal} ${Math.abs(m.mod)} contra dificuldade <b>${m.cd}</b></div></div><div class="rol-res"></div>`;
-  anexar(caixa);
-  const num = caixa.querySelector("text");
-  if (!instantaneo()) {
-    Som.tocar("dado");
-    const fim = performance.now() + 950;
-    while (performance.now() < fim && !pular) { num.textContent = 1 + Math.floor(Math.random() * 20); await espera(60); }
-  }
-  num.textContent = m.d20;
-  caixa.classList.remove("rolando");
-  const critico = m.d20 === 20, desastre = m.d20 === 1;
-  caixa.classList.add("pousou", m.sucesso ? "ok" : "falha");
-  if (critico) caixa.classList.add("critico");
-  caixa.querySelector(".rol-conta").innerHTML = `<b>${m.d20}</b> ${sinal} ${Math.abs(m.mod)} = <b>${m.total}</b> contra <b>${m.cd}</b>`;
-  caixa.querySelector(".rol-res").textContent = critico ? "Crítico!" : desastre ? "Desastre" : m.sucesso ? "Sucesso" : "Falha";
-  historico("h-chip", `▸ ${m.atributo} ${m.total} contra ${m.cd} — ${m.sucesso ? "sucesso" : "falha"} (d20 ${m.d20})`);
-  if (!replay) Som.tocar(critico ? "critico" : m.sucesso ? "sucesso" : "falha");
-  if (!instantaneo()) await espera(ritmo(650));
-}
-
 function faixaCombate(m) {
   anexar(el("div", "faixa-combate", `⚔ ${esc(suavizar(m.titulo))}`));
   if (m.subtitulo) anexar(el("div", "faixa-combate-sub", esc(m.subtitulo)));

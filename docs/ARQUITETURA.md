@@ -260,6 +260,12 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   placa, no pé da faixa dos comandos ou presa à borda de baixo da arena. Os dois se medem pelo layout (`offsetTop`),
   não pelo retângulo na tela, e por isso ficam parados enquanto a arena chega perto e treme no golpe final
   (`sensacao.js`) (`19-turnos.css`).
+- `app/rolagem.js` (1.117.0) a rolagem dos testes de atributo: fora da luta, o grupo no centro de `#palco` (o palco
+  escurece; o nome do teste e a dificuldade, o dado 2×, a tirinha em pincel com a conta e "precisa de N ou mais", a
+  faixa de resultado: Sucesso inteira em marfim, Falha rasgada em carvão), que desce até a tirinha do texto antes da
+  consequência, no tempo de sempre (950 ms + `ritmo(650)`). No texto instantâneo, refazendo a página e na luta, só a
+  tirinha. Lê a mensagem `rolagem` (`Testes.teste`: `atributo, cd, d20, mod, total, sucesso` e `precisa`, o menor d20
+  que passa, de `Testes.precisa_no_dado`) e as parcelas de `heroi.testes` (`20-rolagem.css`).
 - `batalha.js` o palco da luta (o jeito de animar vem do motor: `anim` nos lances). Os avisos de passagem (números, faixas como o "AAARGH!", os selos dos estados) não moram nas cartas: nascem numa camada da página (`.avisos-luta`, 1.103.1), numa sombra do tamanho e no lugar da carta que os disparou, que a acompanha quadro a quadro; assim passam por cima da moldura do palco (que recorta o resto) e ficam dentro da janela. A sombra some com o último aviso e todas saem com a luta. A arena só cresce durante a luta e cresce devagar; quando uma carta entra ou ganha a linha de efeitos, as outras deslizam até o lugar novo (`acomodar`, desvio em `top`/`left` e em pixel inteiro: `transform` e `translate` são do foco e dos golpes). As áreas da arena (1.111.0) estão em "As lutas cheias", abaixo · `realce.js` cores dos termos de
   jogo (os nomes de habilidades e talentos chegam do motor no `glossario` do estado) · `sprites*.js`, `vista.js`, `mapa.js`, `som.js`
 - `sensacao.js` o peso dos momentos (parada no impacto, tremor, câmera lenta no golpe final...): as telas dizem o

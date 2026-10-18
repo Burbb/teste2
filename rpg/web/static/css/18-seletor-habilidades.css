@@ -65,8 +65,9 @@
   background-size: 640px 64px, 100% 100%; }
 /* as pontas: três de cada lado, desenhadas em SVG e escaladas só pela altura (o desenho é o mesmo em qualquer
    largura), e o meio de bordas levemente onduladas esticado entre elas; cada posição tem sempre o mesmo par. As mesmas
-   peças servem aos comandos da luta (#roda) e às escolhas de um lugar selvagem (#prompt). */
-:root body :is(.roda-janela.seletor, #roda, #prompt) {
+   peças servem aos comandos da luta (#roda), às escolhas de um lugar selvagem (#prompt) e às faixas da rolagem
+   no centro (20-rolagem.css). */
+:root body :is(.roda-janela.seletor, #roda, #prompt, .rolagem-centro) {
   --sh-ponta-e0: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 46 50'><path fill-rule='evenodd' d='M46 2 L31 3 L24 1.5 L17 3.5 L12 2.5 L9 5 L5 6 L8 8.5 L3 11 L1 15.5 L6 17 L2 20 L0 24 L10 25.6 L1 27 L3 31 L0.5 35 L5 37 L3 41 L8 43.5 L13 46.5 L20 47 L26 49 L36 47.5 L46 48.5 Z M2 39.5 L6 40.2 L4.5 41.6 Z M18 4.4 L38 4.9 L18 5.6 Z'/></svg>");
   --sh-ponta-e1: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 46 50'><path fill-rule='evenodd' d='M46 1 L28 2 C21 2.5 18 0.5 12 2.5 C8 4 9.5 8 4.5 10 C1 12 4 16 2 20 C0 23.5 4 26 2.5 30 L11 31 L3 32.5 C1 36 5.5 39 3.5 43 C6 47 12 46 17 48.5 C22 50 27 48 33 49 L46 49 Z'/></svg>");
   --sh-ponta-e2: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 46 50'><path fill-rule='evenodd' d='M46 3 L35 2 L25 4 L17 2.5 L10 5.5 L4 10 L7 12 L2 17 L3.5 22 L0.5 27 L4 31 L1.5 36 L6 39 L4 43 L10 45.5 L15 48.5 L25 46.5 L33 48.5 L46 47 Z M8 6.5 L13 6.8 L11.5 8.3 L7.5 8 Z M14 44.2 L32 44.8 L14 45.4 Z'/></svg>");

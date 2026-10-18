@@ -3500,3 +3500,18 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   - uma gravação e quatro capturas.
   - O jogo não mudou: a suíte, o gabarito, o pyflakes e a fumaça não se aplicam (rodaram no mesmo código na 1.116.1).
 - **Próximo:** Jean avaliar. Nada integrado; versão igual (1.116.1).
+
+### 17/10/2026 (data do computador local) — A rolagem no centro, no jogo (1.117.0)
+
+- **Pedido de Jean:** integrar o protótipo aprovado da rolagem (`ferramentas/prototipos/hud/rolagem/`), com o visual e
+  o ritmo; "precisa de N ou mais" vindo do motor.
+- **Feito:**
+  - `app/rolagem.js` e `20-rolagem.css` no jogo;
+  - `Testes.precisa_no_dado` no motor, mandado com a rolagem;
+  - `tests/test_rolagem.py`.
+- **Conferido:**
+  - `integracao.mjs`: sucesso e falha por 1, 1920×945, o mesmo ritmo do protótipo, pular, instantâneo, reduzido;
+  - a suíte, o pyflakes, o gabarito (igual) e a fumaça uma vez.
+- **Registrado:** o redesenho do dado fica para o acabamento visual da HUD (plano 23, seção 2), com raridade e subida
+  de nível.
+- **Próximo:** Jean jogar. A consulta aos atributos (1.6) não começou.

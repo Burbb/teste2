@@ -1,4 +1,4 @@
-# A rolagem narrativa no centro (plano 23, item 1.4: protótipo, nada no jogo)
+# A rolagem narrativa no centro (plano 23, item 1.4: protótipo aprovado, integrado na 1.117.0)
 
 Pedido do Jean: mais destaque e expectativa para o sucesso ou a falha dos testes de atributo (escolhas, diálogos e
 eventos), preservando o dado, a tirinha e a animação atuais. Referências: Baldur's Gate 3 pela hierarquia (o teste,
@@ -92,3 +92,31 @@ a do navegador). Não houve bateria de resoluções.
 - O tempo continua o de hoje; se a expectativa pedir mais, um alongamento curto só no resultado (não no giro) seria a
   próxima coisa a testar.
 - Não conferido nesta rodada: outras resoluções e a HUD em geral (ficam para a consolidação).
+
+## A integração (1.117.0)
+
+Aprovado por Jean depois de jogar. O que entrou no jogo, sem nada desta pasta:
+- **`rpg/web/static/app/rolagem.js`:** a função `rolagem` (saiu de `app/pagina.js`), com o caminho do centro e o de
+  sempre (texto instantâneo, refazer a página, luta).
+- **`rpg/web/static/css/20-rolagem.css`:** a folha do protótipo (`rp-` virou `rc-`, e `.rp-palco` virou `.rolagem-centro`), fora
+  da trava de pixel art. As variáveis do pincel valem em `.rolagem-centro` (`18-seletor-habilidades.css`), sem cópia
+  pelo script.
+- **"Precisa de N ou mais" vem do motor:** `Testes.precisa_no_dado(cd, mod)` em `rpg/sistemas/testes.py`, mandado por
+  `teste()` (`ui.rolagem(..., precisa=)`, e a ponte põe na mensagem). `tests/test_rolagem.py` confere o número contra a
+  regra e contra 200 resultados. Nada mais muda no motor; o gabarito saiu igual.
+
+Conferido (`integracao.mjs`, os mesmos casos; `capturas-integracao/`):
+
+| caso | no giro | resultado | da tirinha à consequência |
+|---|---|---|---|
+| sucesso (semente 11) | precisa de 10 ou mais | Percepção 13 contra 12 — sucesso (d20 11) | 1628 ms |
+| falha (semente 4) | precisa de 10 ou mais | Percepção 11 contra 12 — falha (d20 9) | 1633 ms |
+| falha, movimento reduzido | precisa de 10 ou mais | o mesmo | 1629 ms |
+
+- **Pular no giro:** o centro some ~107 ms depois do clique.
+- **Texto instantâneo:** nada no centro.
+- **Capturas:** `capturas-integracao/representativas/` (o sucesso e a falha a 1920×945). Sem vídeo novo, porque o
+  comportamento é o do protótipo.
+
+O redesenho artístico do dado fica para o acabamento visual da HUD (plano 23, seção 2), junto dos efeitos de raridade
+e da subida de nível.

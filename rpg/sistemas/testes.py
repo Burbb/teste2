@@ -44,11 +44,17 @@ class Testes:
         """O mundo endurece com você: cada dois níveis acima do primeiro, +1 na dificuldade."""
         return cd + (self.j.nivel - 1) // 2
 
+    @staticmethod
+    def precisa_no_dado(cd, mod):
+        """O menor d20 que passa no teste (a regra de teste: o 20 sempre passa, o 1 sempre falha): 2 é "só falha com
+        1", 20 é "só passa com 20". A tela mostra; não decide nada."""
+        return min(20, max(2, cd - mod))
+
     def teste(self, attr, cd):
         d = self.rng.randint(1, 20)
         mod = self.mod_teste(attr)
         cd = self.dificuldade(cd)
         total = d + mod
         ok = d == 20 or (d != 1 and total >= cd)
-        self.ui.rolagem(NOMES_TESTE[attr], cd, d, mod, total, ok)
+        self.ui.rolagem(NOMES_TESTE[attr], cd, d, mod, total, ok, precisa=self.precisa_no_dado(cd, mod))
         return ok

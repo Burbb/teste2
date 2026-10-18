@@ -141,8 +141,8 @@ class UI:
             if c["objetivo"]:
                 self.dizer(f"   Objetivo: {c['objetivo']}", "ciano")
 
-    def rolagem(self, atributo, cd, d20, mod, total, sucesso):
-        """Resultado de um teste de atributo (a interface web anima o dado)."""
+    def rolagem(self, atributo, cd, d20, mod, total, sucesso, precisa=None):
+        """Resultado de um teste de atributo (a interface web anima o dado; precisa: o menor d20 que passa)."""
         extra = " · crítico!" if d20 == 20 else " · desastre!" if d20 == 1 else ""
         self.efeito(f"{atributo} {total} contra {cd} — {'SUCESSO' if sucesso else 'FALHA'} (d20 {d20} {mod:+d}){extra}",
                     "teste_ok" if sucesso else "teste_falha")

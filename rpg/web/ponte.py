@@ -211,8 +211,8 @@ class WebUI(InterfaceGrafica, UI):
     def arvore_talentos(self, dados):
         self._enviar("talentos", arvore=dados)
 
-    def rolagem(self, atributo, cd, d20, mod, total, sucesso):
-        self._enviar("rolagem", atributo=atributo, cd=cd, d20=d20, mod=mod, total=total, sucesso=sucesso)
+    def rolagem(self, atributo, cd, d20, mod, total, sucesso, precisa=None):
+        self._enviar("rolagem", atributo=atributo, cd=cd, d20=d20, mod=mod, total=total, sucesso=sucesso, precisa=precisa)
 
     def cena(self, titulo, subtitulo=None, tipo="evento"):
         if tipo == "titulo":
