@@ -459,3 +459,25 @@ o degrau ali fazia o salto parecer um bloco solto do pé. Só a sola, o salto e 
 O 64 é o 32 novo ampliado 2×. O antes (os PNGs da rodada 1) está em `agilidade_aljava_ref/rodada1_sola/`. Conferido a
 1920×945, antes × depois na ficha, no Fugir e no selo (`agilidade_aljava_ref/agilidade-sola-antes-x-depois.png`); a
 ampliação está em `agilidade-sola-ampliada.png`.
+
+### Aljava: os 40 e 48 da nova direção
+
+**O pedido:** Jean aprovou a aljava nova em 24 e 32 (`ea3835f`), e o 64 é o 32 ampliado 2×. Faltavam os
+intermediários. Os arquivos aprovados não mudaram (os 24, 32 e 64 exportados de novo são idênticos aos do commit).
+
+**Como saíram** (`agilidade_aljava_ref/auxiliares/gen_n.py`, que reproduz as grades 40 e 48):
+- **A construção:** a do 32 (o `corpo.py`, com o tubo, a base redonda, a boca e as cintas) medida na grade do tamanho.
+- **As partes feitas à mão no 32:** a alça, o latão e o caminho das três flechas, levados para a grade por n/32, com as
+  regras que o 32 seguiu (a borda da frente da boca acesa, as cintas com a beira de cima acesa e a de baixo escura).
+- **No 40 e no 48:** o latão ganha 2×2 px. As penas crescem com a grade (5 linhas no 40, 6 no 48), largas atrás e
+  afinando para a frente, e a pena de cá ganha 1 px atrás. As hastes continuam sem contorno e à vista entre a boca e as
+  penas.
+
+As fontes em camadas estão em `fontes/aljava/aljava-40/48.aseprite`, pintadas pelo `pintar.lua` no editor. O composto
+do editor e os PNGs exportados são iguais às grades.
+
+**Conferido a 1920×945** (`agilidade_aljava_ref/aljava-40-48.png`), sem erros:
+- o 40 no Inventário;
+- o 48 no cartão compacto do saque, ao lado do 64.
+
+`fotografar.mjs aljava_ref` ganhou o Inventário e o saque.

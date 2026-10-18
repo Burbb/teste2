@@ -39,13 +39,14 @@ const PECAS = {
     cena: ["tutorial", { LUTA_APOS_ESCOLHA: "1", TUTORIAL: "0", VISTAS, CLASSE: "guerreiro", NIVEL: "8", ESPEC: "paladino", COMITIVA: "morel", LUTA: "lobo", QUANTOS: "3", NIVEL_LUTA: "7" }],
     fotos: ["ficha", "inventario", "selo", "luta"] },
   // a rodada das referências (agilidade_aljava_ref/): a bota nova de Agilidade (ficha 24, Fugir 32, selo 64) e a aljava
-  // nova (topo 24 e ficha 32; os 40 e 48 ficam para depois da aprovação)
+  // nova (topo 24, ficha 32, Inventário 40 e o saque com o 48 ao lado do 64)
   agilidade: { pasta: "agilidade_aljava_ref/proposta", saida: "agilidade_aljava_ref/capturas", nomes: ["attr-agilidade"],
     papel_tamanhos: [24, 32, 64], selos: [["agi", "Agilidade"]],
     cena: ["tutorial", { LUTA_APOS_ESCOLHA: "1", TUTORIAL: "0", VISTAS, CLASSE: "guerreiro", NIVEL: "8", ESPEC: "paladino", COMITIVA: "morel", LUTA: "lobo", QUANTOS: "3", NIVEL_LUTA: "7" }],
     fotos: ["ficha", "selo", "luta"] },
   aljava_ref: { pasta: "agilidade_aljava_ref/proposta", saida: "agilidade_aljava_ref/capturas", nomes: ["aljava"],
-    cena: ["capela", { CLASSE: "arqueiro", NIVEL: "5", PERIODO: "0", SALA: "exterior" }], fotos: ["topo", "ficha"] },
+    cena: ["capela", { CLASSE: "arqueiro", NIVEL: "5", PERIODO: "0", SALA: "exterior" }], fotos: ["topo", "ficha", "inventario"],
+    saque: ["vila", { CLASSE: "arqueiro", ACHADO: "aljava", VESTIDO: "aljava" }] },
   doca: { pasta: "doca/proposta", nomes: ["atalho-talentos", "atalho-grimorio", "atalho-inventario", "atalho-mapa", "atalho-diario", "atalho-bestiario", "atalho-salvar", "atalho-sair"],
     cena: ["capela", { CLASSE: "arqueiro", NIVEL: "5", PERIODO: "0", SALA: "exterior" }], fotos: ["doca", "luta-doca"] },
 };

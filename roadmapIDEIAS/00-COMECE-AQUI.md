@@ -3756,3 +3756,19 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   - Jean avaliar as duas peças;
   - depois da aprovação, os 40 e 48 da aljava.
 - **Continuam:** Poder em avaliação; a doca, para os próximos pares. A versão não mudou (1.120.0).
+
+### 18/10/2026 (data do computador local) — A sola da Agilidade; os 40 e 48 da aljava nova (nada no jogo)
+
+- **Pedido de Jean:**
+  - Agilidade: refinar só a junção da sola e do salto (a faixa preta e o degrau);
+  - aljava: a nova em 24 e 32 aprovada (`ea3835f`); preparar os 40 e 48.
+- **Feito** (`ferramentas/prototipos/hud/itens-lote-noite/agilidade_aljava_ref/`):
+  - **A bota:** a base em perfil contínuo e a sola em marrons profundos, com a junção de 1 px de marrom escuro. O
+    resto da bota não mudou, e o antes está em `rodada1_sola/`.
+  - **A aljava:** os 40 e 48 derivados da construção aprovada (`auxiliares/gen_n.py`), com as fontes em camadas.
+  - Tudo pintado no Aseprite pelo MCP. A exportação é igual às grades, e os 24, 32 e 64 aprovados não mudaram.
+- **Conferido:**
+  - a 1920×945: a bota antes × depois na ficha, no Fugir e no selo; a aljava 40 no Inventário e a 48 no saque;
+  - a suíte, o gabarito e o pyflakes. A fumaça não foi repetida: nenhum arquivo do jogo mudou desde `35262ca`.
+- **Próximo:** Jean avaliar a sola e os 40/48. Depois, a integração do que ele aprovar.
+- **Continuam:** Poder pendente; nenhum outro ícone começado. A versão não mudou (1.120.0).
