@@ -529,6 +529,24 @@ estava. Os compromissos e o que ainda difere estão no LEIA-ME de lá.
 - **O conteúdo:** a mesma composição da rodada 1.
 - **A rodada 1:** preservada para comparar.
 
+**Avaliação de Jean (18/10/2026):** a ficha com a pintura está aprovada como base visual.
+
+**O conjunto** (`ferramentas/prototipos/hud/direcao/conjunto/`, em avaliação, nada no jogo): a direção estendida ao
+topo, ao centro e ao mundo, com peças derivadas da pintura (`derivar_pecas.py`), sem esticar pinceladas.
+- **A periferia:** o desgaste fica nos lados de fora (a ficha e o mundo, com a pintura espelhada).
+- **O centro:** carvão liso do miolo da pintura, sem moldura, com emendas retas e escuras; o cenário como
+  protagonista.
+- **O topo e a doca:** sem ferro.
+- **O resto do acabamento:**
+  - contornos abertos em retratos, cartas, missão, caminhos e na mira;
+  - o mapa com o rasgo da pintura;
+  - nomes e títulos em marfim;
+  - o título do seletor grande e espaçado;
+  - a seleção marfim como o destaque mais forte.
+- **Conferido:** a 1920×945, na exploração e na luta (seletor, mira e golpe). O centro tem o mesmo tamanho, nada rola,
+  nada deu erro.
+- **A peça que falta:** uma pintura horizontal no mesmo material para a borda do topo.
+
 ## 2. Telas de leitura, criação e celebrações
 
 **Lembrete para o futuro estudo da HUD — pen.dev (experimento `9769305`):** antes de escolher ferramentas para

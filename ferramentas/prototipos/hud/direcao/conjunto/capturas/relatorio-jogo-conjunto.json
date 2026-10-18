@@ -1,0 +1,114 @@
+{
+ "jogo": {
+  "exploracao": {
+   "medidas": {
+    "palco": [
+     396,
+     54,
+     1088,
+     879
+    ],
+    "heroi": [
+     100,
+     54,
+     290,
+     879
+    ],
+    "mundo": [
+     1490,
+     54,
+     330,
+     879
+    ],
+    "rola_pagina": 0,
+    "rola_ficha": 0,
+    "rola_mundo": 0
+   },
+   "caminho_acende_o_mapa": 1,
+   "erros": []
+  },
+  "luta": {
+   "medidas": {
+    "palco": [
+     396,
+     54,
+     1088,
+     879
+    ],
+    "heroi": [
+     100,
+     54,
+     290,
+     879
+    ],
+    "mundo": [
+     1490,
+     54,
+     330,
+     879
+    ],
+    "rola_pagina": 0,
+    "rola_ficha": 0,
+    "rola_mundo": 0
+   },
+   "turno": 2,
+   "erros": []
+  }
+ },
+ "conjunto": {
+  "exploracao": {
+   "medidas": {
+    "palco": [
+     425,
+     54,
+     1088,
+     879
+    ],
+    "heroi": [
+     71,
+     54,
+     348,
+     879
+    ],
+    "mundo": [
+     1519,
+     54,
+     330,
+     879
+    ],
+    "rola_pagina": 0,
+    "rola_ficha": 0,
+    "rola_mundo": 0
+   },
+   "caminho_acende_o_mapa": 1,
+   "erros": []
+  },
+  "luta": {
+   "medidas": {
+    "palco": [
+     425,
+     54,
+     1088,
+     879
+    ],
+    "heroi": [
+     71,
+     54,
+     348,
+     879
+    ],
+    "mundo": [
+     1519,
+     54,
+     330,
+     879
+    ],
+    "rola_pagina": 0,
+    "rola_ficha": 0,
+    "rola_mundo": 0
+   },
+   "turno": 2,
+   "erros": []
+  }
+ }
+}

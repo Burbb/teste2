@@ -1,0 +1,169 @@
+/* Estudo do conjunto da HUD principal (plano 23, item 1.11; em avaliação, nada no jogo). Por cima da ficha aprovada
+   (../ficha/ficha.css e pintura.css, que não mudam), estende a mesma direção ao topo, ao centro e ao mundo.
+   Material: a pintura aprovada ("../Painel vertical em tinta escura.png") e as peças derivadas dela
+   (derivar_pecas.py: a pintura espelhada, o ladrilho de carvão do miolo, a máscara do rasgo). Composição, hierarquia e
+   contornos abertos: a imagem conceitual de Jean ("../referencia.png").
+
+   A distribuição:
+     periferia   o desgaste expressivo: a pintura na ficha (esquerda) e espelhada no mundo (direita), transbordando
+                 as caixas; o fundo da tela em cinza quente aparece nas bordas de fora
+     centro      sem moldura pintada: o carvão do miolo da pintura, liso, e a coluna corta as sobras das pinturas dos
+                 lados numa emenda reta e escura (a divisão interna, quieta)
+     topo        o mesmo carvão, sem a faixa de ferro; o logotipo e as informações em marfim
+     leitura     a página, o registro e o seletor no carvão, com um véu que acalma o grão
+   Contornos abertos (dois cantos e traços que se apagam) organizam retratos, cartas, missão, caminhos e a mira; nunca
+   são a única marca de um estado. A seleção continua a faixa de marfim (já aprovada), o destaque mais forte.
+   Prefixo ":root:root body", como em ficha.css. */
+
+:root:root body {
+  --c-marfim: #efe5d0;
+  --c-marfim-2: #d9cfbf;
+  --c-sec: #a99f8e;
+  --c-fio: rgba(217, 207, 191, 0.16);
+  --c-latao: #c9a14a;
+  --c-carvao: url(/proto-conjunto/carvao.png);
+  --d-cont: rgba(236, 227, 204, 0.32);
+  --d-cont-fraco: rgba(236, 227, 204, 0.09);
+}
+
+/* ------------------------------------------------------------ o contorno aberto (o mesmo das rodadas anteriores)
+   Dois cantos marcados (em cima à esquerda, embaixo à direita) e os traços deles se apagando antes do meio. A cor vem
+   de --d-cont e --d-cont-fraco da própria peça. */
+:root:root body .carta::after, :root:root body #mundo .rastro-contrato::after, :root:root body #mundo .caminho::before,
+:root:root body .hud-retrato::after, :root:root body .roda-mira::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background:
+    linear-gradient(90deg, var(--d-cont) 0 24px, var(--d-cont-fraco) 24px, transparent 42%) 0 0 / 100% 1px no-repeat,
+    linear-gradient(180deg, var(--d-cont) 0 14px, var(--d-cont-fraco) 14px, transparent 38%) 0 0 / 1px 100% no-repeat,
+    linear-gradient(270deg, var(--d-cont) 0 24px, var(--d-cont-fraco) 24px, transparent 38%) 100% 100% / 100% 1px no-repeat,
+    linear-gradient(0deg, var(--d-cont) 0 14px, var(--d-cont-fraco) 14px, transparent 34%) 100% 100% / 1px 100% no-repeat; }
+
+/* ------------------------------------------------------------ o topo */
+:root:root body #topo { border: 0; border-image: none; box-shadow: 0 1px 0 rgba(0, 0, 0, 0.8);
+  background: linear-gradient(rgba(10, 10, 11, 0.55), rgba(10, 10, 11, 0.7)), var(--c-carvao) 0 0 / 440px 880px; }
+:root:root body #topo::after { display: none; }
+:root:root body #topo .marca { color: #ecdcb8; text-shadow: 0 2px 0 #000; }
+:root:root body .topo-info { color: var(--c-marfim-2); }
+:root:root body #acoes-topo button { color: var(--c-marfim-2); }
+:root:root body #acoes-topo button:hover { color: var(--c-marfim); }
+
+/* ------------------------------------------------------------ o centro: carvão liso, sem moldura */
+:root:root body #mesa > #palco { border-color: transparent; border-image: none;
+  background: linear-gradient(rgba(14, 14, 16, 0.35), rgba(14, 14, 16, 0.45)), var(--c-carvao) 0 0 / 440px 880px, #121214;
+  background-clip: border-box;
+  box-shadow: inset 0 0 0 1px rgba(217, 207, 191, 0.05), inset 0 0 50px rgba(0, 0, 0, 0.55), 0 0 0 1px #000; }
+:root:root body #hud { background: none; box-shadow: 0 1px 0 var(--c-fio); }
+/* a leitura: o mesmo carvão, com um véu que acalma o grão (a página, o registro, a cena) */
+:root:root body:not(.modo-titulo) #cena:not([data-tipo="menu"]), :root:root body #pagina {
+  background: linear-gradient(rgba(16, 16, 18, 0.62), rgba(16, 16, 18, 0.7)), var(--c-carvao) 120px 60px / 440px 880px; }
+:root:root body:not(.modo-titulo) #cena:not([data-tipo="menu"]) > #pagina { background: none; }
+:root:root body #cena > #vista { box-shadow: 0 1px 0 #000, 0 2px 0 rgba(217, 207, 191, 0.06); }
+:root:root body #cena-cab .cena-sub { color: var(--c-sec); }
+:root:root body .pergunta-rotulo { color: var(--c-sec); }
+
+/* o topo das barras: sem as molduras de ferro (a barra com a aresta fina da ficha); o retrato com o contorno aberto */
+:root:root body .hud-retrato { border: 0; background: #09090b; position: relative; }
+:root:root body .hud-retrato .nivel { background: var(--c-latao); }
+:root:root body .barra-px { border: 1px solid #050505; border-image: none; border-radius: 2px; background: #0b0a0c;
+  box-shadow: 0 0 0 1px rgba(200, 196, 210, 0.2), inset 0 1px 2px rgba(0, 0, 0, 0.8); }
+:root:root body .recurso + .recurso { box-shadow: -1px 0 0 var(--c-fio); }
+:root:root body .recurso .num, :root:root body .vital .num { color: var(--c-marfim); }
+
+/* a doca: o carvão, divisões que quase somem, a tela aberta em marfim */
+:root:root body #doca { background: linear-gradient(rgba(10, 10, 11, 0.5), rgba(10, 10, 11, 0.62)), var(--c-carvao) 60px 0 / 440px 880px;
+  box-shadow: 0 -1px 0 var(--c-fio); }
+:root:root body #doca .atalho, :root:root body #doca .atalho + .atalho { box-shadow: none; color: var(--c-marfim-2); }
+:root:root body #doca .atalho:hover { background: rgba(236, 227, 204, 0.06); color: var(--c-marfim); }
+:root:root body #doca .doca-sep { background: linear-gradient(transparent, var(--c-fio), transparent); box-shadow: none; }
+:root:root body #doca .atalho.atual { color: var(--c-marfim); background: rgba(236, 227, 204, 0.06); }
+:root:root body #doca .atalho.atual::after { background: var(--c-marfim); }
+
+/* o seletor: a superfície da página; o título grande e espaçado (a hierarquia da referência: "I T E N S") */
+:root:root body .roda-janela.seletor {
+  background: linear-gradient(rgba(16, 16, 18, 0.62), rgba(16, 16, 18, 0.7)), var(--c-carvao) 120px 60px / 440px 880px, #121214; }
+:root:root body .roda-janela.seletor::after { height: 1px; background: linear-gradient(90deg, transparent, var(--c-fio) 20%, var(--c-fio) 80%, transparent); }
+:root:root body .roda-janela.seletor .rj-titulo { font-family: var(--texto); font-weight: 600; font-size: 24px; letter-spacing: 0.36em;
+  color: var(--c-marfim-2); margin: 2px 0 8px 4px; }
+:root:root body .roda-janela.seletor .rj-titulo::after { background: linear-gradient(90deg, rgba(217, 207, 191, 0.32), transparent); }
+:root:root body .roda-janela.seletor .rj-titulo .rj-voltar { font-size: 14px; letter-spacing: 0; }
+
+/* ------------------------------------------------------------ as cartas da luta */
+:root:root body .carta { border: 0; border-radius: 0; position: relative;
+  background: linear-gradient(rgba(255, 255, 255, 0.04), rgba(0, 0, 0, 0.18)), rgba(14, 14, 16, 0.9);
+  box-shadow: var(--lado-carta), 0 2px 8px rgba(0, 0, 0, 0.6); }
+:root:root body .carta.heroi { --lado-carta: inset 3px 0 0 var(--c-latao); }
+:root:root body .carta-nome { color: var(--c-marfim); }
+:root:root body .carta .icone { border-color: rgba(217, 207, 191, 0.14); }
+:root:root body .carta.heroi .icone { border-color: rgba(201, 161, 74, 0.5); }
+:root:root body .carta-efeitos { border-top-color: var(--c-fio); }
+/* a vez: a barra de latão em cima (pulsando, como hoje); a sua carta na vez, com os cantos em latão */
+:root:root body .carta.vez { box-shadow: var(--lado-carta), inset 0 2px 0 var(--c-latao), 0 2px 8px rgba(0, 0, 0, 0.6); }
+@keyframes vez-hud { 50% { box-shadow: var(--lado-carta), inset 0 2px 0 #f2d27a, 0 2px 8px rgba(0, 0, 0, 0.6); } }
+:root:root body .carta.foco { --d-cont: rgba(242, 210, 122, 0.62); --d-cont-fraco: rgba(242, 210, 122, 0.14);
+  box-shadow: var(--lado-carta), inset 0 2px 0 var(--c-latao), 0 6px 16px rgba(0, 0, 0, 0.65); }
+:root:root body .carta.chefe { box-shadow: var(--lado-carta), 0 0 0 1px #000, 0 0 0 3px #6e1d1d; }
+:root:root body .carta.com-protecao { box-shadow: var(--lado-carta), 0 0 0 1px #000, 0 0 0 3px #3d63c9; }
+/* a mira: quem pode ser alvo, tracejado em marfim; o alvo escolhido, contorno cheio em marfim (e a seta do jogo) */
+:root:root body .carta.alvejavel { outline: 1px dashed rgba(239, 229, 208, 0.6); outline-offset: 3px; }
+:root:root body .carta.alvejavel:hover, :root:root body .carta.mirando { outline: 2px solid var(--c-marfim); outline-offset: 3px; }
+:root:root body .carta.morta::after { opacity: 0.3; }
+/* a janelinha da mira: o carvão com o contorno aberto, o nome da ação em marfim */
+:root:root body .roda-mira { position: absolute; border: 0; border-radius: 0; color: var(--c-marfim-2);
+  background: linear-gradient(rgba(12, 12, 14, 0.82), rgba(12, 12, 14, 0.9)), var(--c-carvao) 0 0 / 440px 880px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.65); }
+:root:root body .roda-mira b { color: var(--c-marfim); }
+:root:root body .mira-voltar { border-color: rgba(217, 207, 191, 0.2); background: rgba(255, 255, 255, 0.03); color: var(--c-marfim-2); }
+
+/* ------------------------------------------------------------ o mundo: a pintura espelhada atrás, como a ficha */
+:root:root body #mesa > #mundo { border: 0; border-image: none; box-shadow: none; background: none; position: relative; z-index: 1;
+  padding: 24px 22px 14px 24px; }
+:root:root body #mesa > .mundo-pintura { grid-column: 3; grid-row: 1; z-index: 0; pointer-events: none;
+  margin: -48px -34px -60px -34px; background: url(/proto-conjunto/pintura-espelhada.png) 0 0 / 398px 987px no-repeat; }
+:root:root body #mundo .local-nome { font-family: var(--texto); font-weight: 600; font-size: 36px; line-height: 1.05; color: var(--c-marfim);
+  text-shadow: 0 2px 0 #000, 0 0 12px rgba(0, 0, 0, 0.6); }
+:root:root body #mundo .local-desc { font-size: 17px; color: #b3a895; margin-top: 2px; }
+:root:root body #mundo .secao { margin-top: 14px; }
+:root:root body #mundo .secao h3 { font-family: var(--texto); font-weight: 600; font-size: 15px; letter-spacing: 0.24em; color: var(--c-marfim-2);
+  margin-bottom: 8px; text-shadow: 0 1px 0 #000; }
+:root:root body #mundo .secao h3::after { height: 1px; background: linear-gradient(90deg, rgba(217, 207, 191, 0.28), rgba(217, 207, 191, 0) 90%); box-shadow: none; }
+/* o mapa: a borda é o rasgo da própria pintura (máscara de nove partes) */
+:root:root body #mapa-mini { margin-top: 10px; }
+:root:root body #mapa-mini .mapa-px { border: 0; box-shadow: none; -webkit-mask-box-image: url(/proto-conjunto/borda-mascara.png) 34 / 14px round; }
+/* a missão e os contratos: sem caixa, o contorno aberto; a missão com o fio de latão (é atenção) */
+:root:root body #mundo .rastro-contrato { position: relative; background: none; box-shadow: inset 2px 0 0 rgba(217, 207, 191, 0.22); }
+:root:root body #mundo .rastro-missao { box-shadow: inset 2px 0 0 var(--c-latao); }
+:root:root body #mundo .rastro-contrato.cacavel:hover, :root:root body #mundo .rastro-contrato.clicavel:hover { background: rgba(236, 227, 204, 0.04); }
+:root:root body #mundo .rastro-arte { border-color: rgba(217, 207, 191, 0.14); background: #09090b; }
+/* os caminhos: a face de carvão, o contorno aberto e a seta › de quem leva a outro lugar */
+:root:root body #mundo .caminho { position: relative; border: 0; border-radius: 0; padding-right: 28px;
+  background: linear-gradient(rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.14)), rgba(20, 20, 23, 0.9); box-shadow: 0 1px 0 #000; }
+:root:root body #mundo .caminho::after { content: "›"; position: absolute; right: 10px; top: 50%; translate: 0 -54%; font-size: 24px;
+  color: var(--c-sec); pointer-events: none; }
+:root:root body #mundo .caminho.clicavel:hover { background: linear-gradient(rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.08)), rgba(30, 30, 34, 0.95); }
+:root:root body #mundo .caminho.clicavel:hover::after { color: var(--c-marfim); }
+:root:root body #mundo .caminho .nome { color: var(--c-marfim); }
+
+/* ------------------------------------------------------------ as dicas */
+:root:root body :is(#dica-item, #dica-equipado) { border: 1px solid rgba(217, 207, 191, 0.14); border-image: none; border-radius: 0;
+  background: linear-gradient(rgba(14, 14, 16, 0.9), rgba(12, 12, 14, 0.94)), var(--c-carvao) 0 0 / 440px 880px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.65); }
+/* a dica "Testes do d20" (../direcao.js): nomes em marfim, totais em latão, penalidades em vermelho queimado e, no
+   rodapé, só "20 sempre passa" e "1 sempre falha" em destaque */
+:root:root body :is(#dica-item, #dica-equipado) .testes-lista b { color: var(--c-marfim); }
+:root:root body :is(#dica-item, #dica-equipado) .testes-lista .total { font-family: var(--texto); font-weight: 700; font-size: 14.5px; color: var(--c-latao); margin-left: 3px; }
+:root:root body :is(#dica-item, #dica-equipado) .testes-lista small { color: #c4baa6; }
+:root:root body :is(#dica-item, #dica-equipado) .testes-lista .pior { color: #d0654a; }
+:root:root body :is(#dica-item, #dica-equipado) .rodape.testes-regra { color: var(--c-sec); }
+:root:root body :is(#dica-item, #dica-equipado) .rodape.testes-regra em { font-style: normal; font-weight: 700; color: var(--c-marfim); }
+
+/* ------------------------------------------------------------ a ficha na luta (ajuste local de espaço)
+   A composição aprovada da ficha não muda. Com a coluna mais larga, os espaços de item cresciam junto da grade, e na
+   luta (o aviso de talento, a comitiva com a aprovação) a coluna passava 51 px da altura e rolava: os espaços ficam
+   em 48 px (o tamanho de produção, ~46) e os vãos entre as seções, 3 px menores. */
+:root:root body #heroi .equip-mini, :root:root body #heroi .slots { grid-template-columns: repeat(5, 48px); gap: 7px; justify-content: start; }
+:root:root body #heroi .equip-mini .slot-px, :root:root body #heroi .slots .slot-px { width: 48px; height: 48px; }
+:root:root body #heroi .secao { margin-top: 8px; }
+:root:root body #heroi .atributos { row-gap: 8px; }
+:root:root body #heroi { padding-top: 22px; }
+:root:root body #heroi .xp-linha { margin-top: 8px; }
+:root:root body #heroi { padding-bottom: 10px; }

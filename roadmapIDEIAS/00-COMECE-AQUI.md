@@ -3581,3 +3581,18 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   - as dicas abrindo, sem erros;
   - nenhum arquivo do jogo mudou.
 - **Próximo:** Jean avaliar. Versão igual (1.118.0).
+
+### 18/10/2026 (data do computador local) — Estudo: o conjunto da HUD na direção da ficha (em avaliação, nada no jogo)
+
+- **Pedido de Jean:** estender a direção da ficha aprovada ao centro, ao mundo e ao topo, só no protótipo.
+- **Feito** (`ferramentas/prototipos/hud/direcao/conjunto/`):
+  - as peças derivadas da pintura (a espelhada para o mundo, o ladrilho de carvão, a máscara do rasgo);
+  - `conjunto.css`: o desgaste na periferia, o centro calmo sem moldura, contornos abertos, marfim;
+  - o ajuste local para a ficha não rolar na luta;
+  - as rodadas anteriores preservadas.
+- **Conferido:**
+  - na exploração e na luta (seletor, mira e golpe), a 1920×945: sem erros, sem rolagem e com o centro do mesmo
+    tamanho;
+  - nenhum arquivo do jogo mudou.
+- **A peça que falta:** uma pintura horizontal para a borda do topo.
+- **Próximo:** Jean avaliar antes de integrar. Versão igual (1.118.0).
