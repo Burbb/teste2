@@ -530,3 +530,43 @@ Nada disto entrou no jogo.
 Jean aprovou a rodada 2 (`c0dbab8`). As fontes saíram de `poder_r2/fontes/` para `ferramentas/arte/aseprite/attr-poder/`,
 e os seis arquivos do jogo são idênticos, byte a byte, aos aprovados. O que ficou em `poder_r2/` é o histórico do
 processo. Com o Poder, os quatro atributos estão concluídos.
+
+## Ataque e Defesa, rodada 2 (`ataque_defesa_r2/`)
+
+**O pedido:** uma exploração nova, sobretudo da espada (a silhueta, a proporção entre lâmina, guarda e empunhadura, os
+planos de luz do aço e a presença no tamanho pequeno), e um escudo com volume, espessura e leitura imediata. Os
+atuais (1.120.0) continuam no jogo.
+
+**Como foi feito:**
+- **O desenho na grade:** o 24 primeiro, avaliado a cada passo em tamanho real ao lado dos atuais; o 32 com a mesma
+  construção (`auxiliares/`: `e24c.py`, `e32.py`, `d24.py`, `d32.py`).
+- **As camadas no Aseprite, pelo MCP:** pintadas pelo `pintar.lua`, sem diferença na releitura, e salvas em `fontes/`.
+  O composto do editor e a exportação (`exportar_aseprite.py <peça> ... --fontes=ataque_defesa_r2/fontes`) são iguais
+  às grades; o 64 é o 32 ampliado 2×.
+
+**A espada** (camadas: lamina, guarda, cabo, pomo, contorno):
+- **A construção:** a 45°, nas diagonais da grade (`x+y` constante é uma linha de pixels paralela à lâmina). Cada plano
+  do aço é uma linha inteira, sem degrau solto: o bisel aceso, o plano claro com o brilho, o sulco escuro até dois
+  terços da lâmina, o plano escuro e o bisel escuro.
+- **As proporções:** a lâmina é mais longa que a atual e afina em ponta aguda. A guarda é mais curta, com o miolo
+  engrossado e as pontas viradas para a lâmina, e o cabo de couro tem as voltas à vista. O pomo é redondo.
+- **As tentativas:** a primeira, de 4 linhas, ficou fina e fraca; a segunda tinha a ponta quadrada e a guarda longa.
+
+**O escudo** (camadas: face, aro, lado, bossa, contorno):
+- **A forma:** um escudo de cavaleiro um pouco virado. A espessura aparece à direita como uma faixa de latão escuro,
+  com a beira acesa.
+- **A face:** aço convexo, com a luz numa faixa que segue o contorno, o brilho só no alto e o escuro para a direita e
+  para a ponta.
+- **O aro e a bossa:** o aro de latão tem 1 px, e a bossa em domo é acesa em cima, com a sombra no aço.
+- **A tentativa:** a primeira, por regras, ficou quadrada, com o aro grudado na espessura e a face listrada.
+
+**Conferido a 1920×945**, com os mesmos dados (`ataque_defesa_r2/ataque-defesa-atual-x-nova.png`), sem erros:
+- **Os quatro atributos juntos:** na ficha e no Inventário.
+- **Os selos:** de Ataque e de Defesa.
+- **O tamanho real sobre o carvão:** em `ataque_defesa_r2/prancha-carvao.png`.
+
+**O que pode ser pior:**
+- No 24, a espada nova é mais esbelta: pesa menos que a atual, embora leia melhor como espada.
+- O escudo virado ocupa menos largura que o atual.
+
+Nada disto entrou no jogo.

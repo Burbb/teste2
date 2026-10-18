@@ -3826,3 +3826,10 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Conferido:**
   - no jogo, sem injeção, a 1920×945 (`poder_r2/poder-no-jogo.png`): a ficha, o Inventário e o selo;
   - a suíte, o gabarito (sem diferença), o pyflakes e a fumaça uma vez.
+- **Ataque e Defesa, rodada 2:** só no protótipo (`ferramentas/prototipos/hud/itens-lote-noite/ataque_defesa_r2/`):
+  - a espada nova a 45°, com sulco, ponta aguda e guarda curta;
+  - o escudo virado, com a espessura à vista, a face convexa e a bossa;
+  - 24 e 32 desenhados, fontes em camadas pintadas pelo MCP, exportação igual às grades (o 64 é o 32 ×2);
+  - conferido a 1920×945 contra os atuais, na ficha, no Inventário e nos selos;
+  - aguarda a avaliação; os atuais continuam no jogo.
+- **Próximo:** Jean avaliar Ataque e Defesa. A doca vem depois. A versão continua 1.123.0.

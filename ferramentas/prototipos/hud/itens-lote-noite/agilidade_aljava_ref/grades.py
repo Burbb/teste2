@@ -26,6 +26,9 @@ _COURO = ["2E140A", "4E2210", "6E3317", "8F4620", "B0602C", "CF8040", "EAAA62"]
 # o Poder (rodada 2): a rampa violeta com deslocamento de matiz, do índigo da beira ao miolo creme; a chama (1 a 4), o
 # miolo (5 a 8) e a faísca solta em camadas próprias
 _VIOLETA = ["1E0B4A", "3A1488", "5E22C8", "8A3AE6", "B85CF0", "E08CF4", "F8C8F0", "FFF4DC"]
+# Ataque e Defesa (rodada 2, ataque_defesa_r2/): o aço (1 a 7), o latão (a a d) e o couro do cabo
+_ACO = ["1C2230", "3A4458", "6A768C", "8C98AC", "B8C2D0", "DDE4EC", "FFFFFF"]
+_LATAO = {"a": "5A3A10", "b": "9A6A1C", "c": "D8A438", "d": "F6DC80"}
 _COURO_ALJAVA = ["2A100A", "4A1E12", "6E2E1A", "8E4024", "AE5A32", "C87A46", "E29C62"]
 PECAS = {
     "attr-agilidade": {
@@ -55,6 +58,24 @@ PECAS = {
             "h": ("7A5530", "hastes"), "j": ("B08A58", "hastes"), "l": ("DCBC86", "hastes"),
             "m": ("8A8070", "penas"), "n": ("CFC6B0", "penas"), "o": ("F4EEDC", "penas"),
             "R": ("5A1410", "penas"), "S": ("9A2A1C", "penas"), "T": ("D04A2C", "penas"),
+        },
+    },
+    "attr-ataque": {
+        "camadas": ["lamina", "guarda", "cabo", "pomo", "contorno"],
+        "sem_contorno": "",
+        "letras": {
+            **{str(i + 1): (c, "lamina") for i, c in enumerate(_ACO)},
+            **{k: (c, "guarda") for k, c in _LATAO.items()}, **{k.upper(): (c, "pomo") for k, c in _LATAO.items()},
+            "k": ("3A2010", "cabo"), "l": ("6A4024", "cabo"), "m": ("9A6438", "cabo"),
+        },
+    },
+    "attr-defesa": {
+        "camadas": ["face", "aro", "lado", "bossa", "contorno"],
+        "sem_contorno": "",
+        "letras": {
+            **{str(i + 1): (c, "face") for i, c in enumerate(_ACO)},
+            **{k: (c, "aro") for k, c in _LATAO.items()}, **{k.upper(): (c, "bossa") for k, c in _LATAO.items()},
+            "Y": (_LATAO["a"], "lado"), "X": (_LATAO["b"], "lado"), "Z": ("3A240C", "lado"),
         },
     },
     "attr-poder": {
