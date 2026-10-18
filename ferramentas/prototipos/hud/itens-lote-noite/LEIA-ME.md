@@ -387,3 +387,57 @@ A Agilidade é também o comando Fugir da luta (32, `ACAO.fuga`): trocar um troc
   - A chama tem menos brilho que o placeholder pintado, mas lê como fogo vivo, e não como cristal ou gota.
 
 Nada disto entrou no jogo, e os mapeamentos não mudaram. A doca fica para os próximos pares.
+
+## Agilidade e aljava a partir das referências (`agilidade_aljava_ref/`)
+
+**O pedido:** Jean mandou duas imagens de referência (`agilidade_aljava_ref/referencias/`: a bota e a aljava) e pediu
+para refazer as duas peças por elas. Nenhuma proposta anterior fica aprovada para integração, nem a aljava da rodada 7;
+as rodadas antigas ficam como histórico. Poder continua em avaliação (`agilidade_poder/`).
+
+**Como foi feito** (as três operações, separadas):
+- **Cálculos auxiliares fora do editor:** a silhueta das referências medida numa grade, só para as proporções, e um
+  rascunho das regiões (polígonos e elipses postos à mão). Nada da referência foi reduzido para virar o desenho.
+- **O desenho na grade:** cada tamanho redesenhado pixel a pixel em texto (`agilidade_aljava_ref/grades/`: uma letra
+  por pixel, que diz a cor e a camada). `grades.py` acrescenta o contorno e grava as listas de cada camada.
+- **No Aseprite, pelo MCP:** as camadas pintadas pelo `pintar.lua` (`execute_script`, nunca o `put_pixels`), com a
+  releitura de cada pixel sem diferença, e salvas em `agilidade_aljava_ref/fontes/`. O composto do editor confere com
+  as grades nos quatro arquivos.
+- **A exportação:** `exportar_aseprite.py <peça> agilidade_aljava_ref/proposta --fontes=agilidade_aljava_ref/fontes`.
+  Os doze PNGs saem iguais às grades, e o 64 é o 32 ampliado 2×.
+
+**Agilidade (24 e 32, mesma bota e mesma pose):**
+- **A silhueta:** a da referência, com o cano largo e a dobra de couro na abertura (a boca escura à vista). O tornozelo
+  desce reto até o peito do pé, que só então avança, longo e baixo, até o bico redondo. O salto é um bloco sob o
+  calcanhar, e a sola grossa desce para a ponta (o calcanhar no ar: a passada).
+- **A luz:** a dobra é o plano mais claro, e embaixo dela fica a sombra no cano. O cano é um cilindro com um vinco
+  claro. O calcanhar é aceso, e o bico tem um brilho.
+- **Os detalhes:** a tira escura com a fivela quadrada vazada; os riscos de velocidade atrás, sem contorno, claros junto
+  da bota (três no 24, quatro no 32).
+- **As camadas:** rastros, sola, bota, dobra, tira, fivela, contorno.
+
+**Aljava (32 primeiro; o 24 do topo simplificado):**
+- **O recipiente:** um tubo de couro avermelhado, inclinado como na referência, com a base redonda e a faixa de luz à
+  esquerda.
+- **A boca:** elíptica, com o fundo escuro, a parede de trás acesa por dentro e a borda da frente com luz em cima.
+- **As cintas:** duas, escuras e com a beira acesa, uma abaixo da boca e outra perto da base, com o latão (a argola em
+  cima, o rebite embaixo). A alça pende do lado de fora; só no 32.
+- **As flechas:** três, como na referência, em leque, para separar. A da esquerda e a da direita têm penas claras, e
+  a do meio, vermelhas. As hastes claras aparecem entre a boca e as penas.
+  - **As penas:** largas atrás, junto do entalhe, e afinando para a frente.
+  - **O contorno:** as hastes ficam sem ele. Com o contorno, o fundo entre flechas a 1–2 px virava uma mancha escura.
+- **No 24:** as mesmas três flechas, com as penas mais curtas e sem a alça (não cabe com fundo entre ela e o corpo).
+- **As camadas:** alca, couro, cintas, latao, boca, hastes, penas, contorno.
+
+**Conferido a 1920×945** (`agilidade_aljava_ref/agilidade-aljava-atual-x-proposta.png`), sem erros:
+- a Agilidade na ficha (24), no Fugir da luta (32) e no selo (64);
+- a aljava na ficha (32) e no topo (24).
+
+O tamanho real sobre o carvão, ao lado de Ataque, Defesa, da aljava atual e da bota do equipamento, está em
+`agilidade_aljava_ref/prancha-carvao.png`.
+
+**O que pode ser pior:**
+- No 24, as penas das flechas da esquerda e do meio ficam a 1 px uma da outra.
+- A boca da aljava 24 fica quase toda coberta pelas hastes.
+- A bota tem mais pixels soltos de ruga no cano que Ataque e Defesa têm de detalhe.
+
+Nada disto entrou no jogo. Os 40 e 48 da aljava ficam para depois da aprovação desta direção.

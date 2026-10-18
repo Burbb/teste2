@@ -3738,3 +3738,21 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   - A suíte, o gabarito, o pyflakes e a fumaça uma vez.
 - **Próximo:** Jean avaliar os intermediários da aljava e as propostas de Agilidade e Poder. A doca fica para os
   próximos pares. Versão igual (1.120.0).
+
+### 18/10/2026 (data do computador local) — Agilidade e aljava refeitas pelas referências (nada no jogo)
+
+- **Pedido de Jean:** refazer a Agilidade (a bota) e a aljava a partir de duas imagens de referência, no Aseprite pelo
+  MCP. Nenhuma proposta anterior fica aprovada para integração, nem a aljava da rodada 7.
+- **Feito** (`ferramentas/prototipos/hud/itens-lote-noite/agilidade_aljava_ref/`):
+  - as grades desenhadas à mão (24 e 32 de cada peça);
+  - as camadas pintadas no editor pelo `pintar.lua` e salvas como fontes `.aseprite`;
+  - os PNGs exportados por `exportar_aseprite.py --fontes=`, iguais às grades (o 64 é o 32 ×2);
+  - `fotografar.mjs` ganhou as peças `agilidade` e `aljava_ref`.
+- **Conferido:**
+  - a 1920×945: a Agilidade na ficha, no Fugir e no selo; a aljava na ficha e no topo;
+  - a suíte, o gabarito e o pyflakes. A fumaça não foi repetida: nenhum arquivo do jogo mudou desde a última, que
+    passou (`35262ca`).
+- **Próximo:**
+  - Jean avaliar as duas peças;
+  - depois da aprovação, os 40 e 48 da aljava.
+- **Continuam:** Poder em avaliação; a doca, para os próximos pares. A versão não mudou (1.120.0).
