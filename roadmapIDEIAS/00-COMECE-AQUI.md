@@ -3795,3 +3795,18 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   `ferramentas/arte/desenhar_attr_poder_pixel.py`). Está mostrado ao lado do atual em `agilidade_poder/poder-atual-x-candidato.png`
   e aguarda a avaliação.
 - **Próximo:** a decisão sobre Poder. A doca fica para os próximos pares.
+
+### 18/10/2026 (data do computador local) — Poder, rodada 2 (nada no jogo)
+
+- **Pedido de Jean:** refazer o Poder. O candidato `35262ca` ficou estreito, rígido e com ar de cristal. A direção é
+  uma chama de energia com a base luminosa, o miolo claro e as línguas assimétricas.
+- **Feito** (`ferramentas/prototipos/hud/itens-lote-noite/poder_r2/`):
+  - o 24 e o 32 desenhados na grade;
+  - as fontes em camadas pintadas no Aseprite pelo MCP;
+  - a exportação reproduzível, igual às grades (o 64 é o 32 ×2);
+  - o `grades.py` ganhou `--pasta` e a peça `attr-poder`.
+- **Conferido:**
+  - a 1920×945: o atual, o candidato anterior e a nova proposta, na ficha e no selo;
+  - a suíte, o gabarito e o pyflakes. A fumaça não foi repetida: nenhum arquivo do jogo mudou desde a última, que
+    passou (antes de `b266714`).
+- **Próximo:** Jean avaliar o Poder. A doca vem depois. A versão não mudou (1.122.0).

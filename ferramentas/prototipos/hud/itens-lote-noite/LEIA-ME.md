@@ -492,3 +492,35 @@ processo: as grades, as listas, os auxiliares, as prévias e as propostas.
 
 **Conferido:** os dezesseis arquivos do jogo são idênticos, byte a byte, aos aprovados (`e9b0499`, `ea3835f` e
 `fb403f5`).
+
+## Poder, rodada 2 (`poder_r2/`)
+
+**O pedido:** o candidato `35262ca` ficou estreito e rígido, e as divisões verticais lembravam cristal. A direção pedida
+é uma chama de energia com a base encorpada e luminosa, o miolo claro cercado de violetas cada vez mais escuros e as
+línguas assimétricas, de recortes curvos.
+
+**Como foi feito:**
+- **O desenho na grade:** o 24 primeiro, tom a tom (`auxiliares/mao24.py`). O 32 repete a mesma silhueta na grade
+  dele, com os tons pela mesma lógica e retoques à mão (`auxiliares/mao32.py`).
+- **As grades:** em `grades/`. O `../agilidade_aljava_ref/grades.py --pasta=poder_r2` grava as listas das camadas.
+- **No Aseprite, pelo MCP:** as camadas pintadas pelo `pintar.lua`, sem diferença na releitura, e salvas em
+  `fontes/attr-poder/`. O composto do editor e a captura dele batem com as grades.
+- **A exportação:** `exportar_aseprite.py attr-poder poder_r2/proposta --fontes=poder_r2/fontes`. O 64 é o 32 ampliado
+  2×.
+
+**A chama:**
+- **A forma:** uma gota de base larga e redonda. A língua principal sobe, se estreita e curva a ponta para a direita.
+  A língua da direita, menor, abre para fora, e à esquerda há uma lambida curta colada ao corpo e uma faísca solta.
+- **A luz, sem desfoque:** o miolo creme (`FFF4DC`) fica baixo, onde a chama é mais quente. Em volta, os anéis seguem o
+  rosa-lilás, o magenta e o violeta até o índigo da beira, e a luz do miolo sobe pelo eixo da língua principal. O lado
+  de trás fica um tom abaixo, e a base termina em índigo escuro.
+- **As camadas:** chama (os violetas da beira), miolo (os claros), faisca, contorno.
+
+**Conferido a 1920×945**, com os mesmos dados (`poder_r2/poder-atual-x-anterior-x-nova.png`), sem erros: o atual, o
+candidato anterior e a nova proposta na ficha, com os quatro atributos (Ataque, Defesa e Agilidade já os do jogo), e
+no selo. O tamanho real sobre o carvão está em `poder_r2/prancha-carvao.png`.
+
+**O que pode ser pior:** sem o halo suave do placeholder, a chama ocupa um pouco menos o selo. No 24, a lambida da
+esquerda é só um degrau da silhueta.
+
+Nada disto entrou no jogo.

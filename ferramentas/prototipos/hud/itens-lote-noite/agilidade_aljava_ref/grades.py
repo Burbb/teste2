@@ -2,7 +2,9 @@
 a camada. Este script não desenha nada: lê a grade, acrescenta o contorno de 1 px por fora (só pelos lados) e grava
 as listas de cada camada para o pintar.lua montar a fonte no Aseprite, mais uma prévia para conferir a fonte.
 
-    python grades.py <peça> <lado>      # grava listas/<peça>-<lado>/ e previa/<peça>-<lado>.png
+    python grades.py <peça> <lado> [--pasta=<dir>]   # grava listas/<peça>-<lado>/ e previa/<peça>-<lado>.png
+
+--pasta: a pasta da rodada (com grades/), quando não é esta (o Poder: ../poder_r2).
 
 A fonte final é o .aseprite em fontes/<peça>/ (pintado no editor pelo MCP a partir dessas listas, e refinado lá); os
 PNGs da proposta saem dele por exportar_aseprite.py --fontes=fontes.
@@ -14,10 +16,16 @@ import sys
 from PIL import Image
 
 AQUI = pathlib.Path(__file__).resolve().parent
+for _a in sys.argv:
+    if _a.startswith("--pasta="):
+        AQUI = pathlib.Path(_a.split("=", 1)[1]).resolve()
 CONTORNO = "08080A"
 
 # couro da bota: 1 (sombra) a 7 (brilho); a dobra usa as mesmas cores com letras próprias (A a G), para ir à camada dela
 _COURO = ["2E140A", "4E2210", "6E3317", "8F4620", "B0602C", "CF8040", "EAAA62"]
+# o Poder (rodada 2): a rampa violeta com deslocamento de matiz, do índigo da beira ao miolo creme; a chama (1 a 4), o
+# miolo (5 a 8) e a faísca solta em camadas próprias
+_VIOLETA = ["1E0B4A", "3A1488", "5E22C8", "8A3AE6", "B85CF0", "E08CF4", "F8C8F0", "FFF4DC"]
 _COURO_ALJAVA = ["2A100A", "4A1E12", "6E2E1A", "8E4024", "AE5A32", "C87A46", "E29C62"]
 PECAS = {
     "attr-agilidade": {
@@ -49,6 +57,14 @@ PECAS = {
             "R": ("5A1410", "penas"), "S": ("9A2A1C", "penas"), "T": ("D04A2C", "penas"),
         },
     },
+    "attr-poder": {
+        "camadas": ["chama", "miolo", "faisca", "contorno"],
+        "sem_contorno": "",
+        "letras": {
+            **{str(i + 1): (c, "chama" if i < 4 else "miolo") for i, c in enumerate(_VIOLETA)},
+            "F": (_VIOLETA[4], "faisca"), "G": (_VIOLETA[5], "faisca"),
+        },
+    },
 }
 
 
@@ -71,7 +87,8 @@ def ler(peca, lado):
 
 
 def main():
-    peca, lado = sys.argv[1], int(sys.argv[2])
+    peca, lado = [a for a in sys.argv[1:] if not a.startswith("--")][:2]
+    lado = int(lado)
     px = ler(peca, lado)
     pasta = AQUI / "listas" / f"{peca}-{lado}"
     pasta.mkdir(parents=True, exist_ok=True)
