@@ -631,3 +631,56 @@ Jean aprovou os dois sem retoque (`c02e566`). As fontes saíram de `doca_r2/font
 `ferramentas/arte/aseprite/atalho-inventario/` e `atalho-mapa/`, e os oito arquivos do jogo são idênticos, byte a
 byte, aos aprovados. O que ficou em `doca_r2/` é o histórico do processo. Os outros seis atalhos ficam para os
 próximos pares.
+
+## A doca, rodada 3: Grimório e Diário (`doca_r3/`)
+
+**O pedido:** o próximo par, só no protótipo, com o Inventário e o Mapa integrados como referência de acabamento.
+
+**Os tamanhos de fato usados:**
+- a doca usa o 36 (o 32 nas janelas estreitas);
+- o Grimório é também o comando Habilidades da roda da luta (`ACAO.grimorio`, `Icones.acao`, 32).
+
+Nenhum outro tamanho foi feito. Os mapeamentos não mudaram.
+
+**Como foi feito:** o 36 primeiro, conferido em tamanho real a cada passo, e o 32 com a mesma construção
+(`doca_r3/auxiliares/`).
+- **As camadas:** cada pixel guarda a seção do desenho que o pintou (`rotulos.py`), e isso gera o mapa de camadas.
+- **No Aseprite, pelo MCP:** as camadas pintadas pelo `pintar.lua`, sem diferença na releitura, e salvas em
+  `doca_r3/fontes/`. O composto do editor e a exportação são iguais às grades.
+
+**O Grimório** (camadas: contracapa, paginas, lombada, capa, cantoneiras, fecho, gema, contorno): o livro fechado em
+pé, um pouco virado. Os materiais vêm do grimório do equipamento: o couro violeta, o latão e as folhas creme.
+- **A lombada:** redonda, com três nervuras e o sulco da dobradiça.
+- **A capa:** acesa em cima à esquerda, com a moldura em relevo e as cantoneiras de latão.
+- **O volume:** o bloco de páginas à vista à direita, e a contracapa na espessura.
+- **O fecho:** uma tira de couro com a fivela de latão.
+- **O elemento mágico:** uma gema violeta luminosa num engaste em losango.
+- **A tentativa:** na primeira, a lombada se confundia com a capa.
+
+**O Diário** (camadas: capa, paginas, anotacoes, fita, pena, contorno): o livro aberto, largo e baixo, visto um pouco
+de cima.
+- **As páginas:** em arco, altas no meio de cada página e fundas na dobra, que escurece em 2 px de cada lado. As
+  camadas das folhas aparecem nas beiras.
+- **A capa e as anotações:** a capa de couro marrom fica à vista embaixo e nos lados. As anotações são poucas linhas de
+  tinta clara, de tamanhos diferentes, acompanhando a curva.
+- **A fita:** vermelha, saindo da dobra.
+- **A pena:** a pluma é afunilada e recortada, num branco frio contra o papel creme, com a sombra dela na página.
+- **As tentativas:**
+  - a dobra era uma faixa larga, e a escrita, uma tabela;
+  - a pena, uma lâmina cinza; depois, branca sobre branco.
+- **A diferença do Grimório:** a silhueta (deitado e aberto × em pé e fechado), a composição (pena e fita × gema e
+  fecho) e a cor (couro marrom e papel × couro violeta).
+
+**Conferido a 1920×945**, sem erros (`fotografar.mjs doca_r3` e `doca_r3_luta`):
+- **A doca inteira:** atual × proposta (`doca_r3/doca-atual-x-proposta-1920x945.png`).
+- **Os recortes** em tamanho real e ampliados 3× (`doca_r3/grimorio-diario-recortes.png`), normais e com cada tela
+  aberta. Com o Diário aberto, aparece o sublinhado de latão. Com o Grimório aberto, a doca não marca o atalho, no
+  atual e na proposta.
+- **O Habilidades na roda da luta** (`doca_r3/habilidades-luta.png`).
+
+**O que pode ser pior:**
+- O Grimório no couro violeta-avermelhado do equipamento tem menos contraste com o fundo escuro da doca que o atual,
+  azulado.
+- O Diário é mais largo que o atual.
+
+Nada disto entrou no jogo.

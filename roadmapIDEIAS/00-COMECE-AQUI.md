@@ -3869,3 +3869,18 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   - o tamanho, a posição, os textos e os cliques da doca não mudaram;
   - a suíte, o gabarito, o pyflakes e a fumaça uma vez.
 - **Próximo:** os outros seis atalhos da doca, em pares.
+
+### 18/10/2026 (data do computador local) — A doca, rodada 3: Grimório e Diário (nada no jogo)
+
+- **Pedido de Jean:** o próximo par da doca, só no protótipo, com o Inventário e o Mapa (1.124.0) como referência.
+- **Feito** (`ferramentas/prototipos/hud/itens-lote-noite/doca_r3/`):
+  - **O Grimório:** fechado e em pé, com a lombada, as cantoneiras, o fecho, as páginas à vista e a gema.
+  - **O Diário:** aberto, com as páginas em arco, as anotações, a pena e a fita.
+  - **Os arquivos:** o 36 e o 32 (os tamanhos usados: a doca e o Habilidades da luta), as fontes em camadas pintadas
+    pelo MCP e a exportação igual às grades.
+  - **As ferramentas:** o `fotografar.mjs` ganhou as peças `doca_r3` e `doca_r3_luta`.
+- **Conferido:**
+  - a 1920×945: a doca inteira, os recortes normais e com a tela aberta, e o Habilidades na luta;
+  - a suíte, o gabarito e o pyflakes. A fumaça não foi repetida: nenhum arquivo do jogo mudou desde `a8e38cd`.
+- **Próximo:** Jean avaliar o Grimório e o Diário. Talentos, Bestiário, Salvar e Sair ficam para depois. A versão
+  continua 1.124.0.

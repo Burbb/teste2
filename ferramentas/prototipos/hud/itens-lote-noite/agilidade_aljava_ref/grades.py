@@ -35,6 +35,14 @@ _COURO_DOCA = ["1E130C", "2E1E13", "45301E", "604229", "7C5634", "986C42", "B487
 _LATAO_DOCA = {"x": "5A3C12", "y": "9C6E22", "z": "DDB45C"}
 _PANO = {"g": "262B1A", "h": "3E4628", "i": "5C663C", "j": "7E8A56", "k": "A0AC74"}
 _PAPEL = {"A": "3E2E1A", "B": "6E5634", "C": "9C8052", "D": "C4A874", "E": "E2CC98", "F": "F4E6C0"}
+# a doca, rodada 3 (doca_r3/): o Grimório (o couro violeta e o latão do grimório do equipamento, as folhas, a gema) e o
+# Diário (o couro marrom, o papel, a tinta, a pena, a fita)
+_DOCA3 = {**{str(i + 1): c for i, c in enumerate(["230B1C", "33112A", "451838", "582046", "6C2954", "833563", "9C4673"])},
+          **dict(zip("abcdefg", ["40270C", "623C12", "8A571B", "AE7526", "CF9737", "E9BB5C", "F8DC94"])),
+          "r": "9C7E4E", "p": "C7A76B", "q": "ECD9A9", "s": "FFF5D6",
+          "V": "2E1180", "W": "5A1FC8", "X": "8A3CEA", "Y": "BC5CF2", "Z": "F2C8FC",
+          "k": "3A2414", "l": "5E3C22", "m": "86582E", "n": "A87440", "o": "C89458",
+          "t": "3C3A44", "u": "8C8A96", "w": "E8E4EC", "R": "7A1E1A", "S": "B83A2C", "h": "6A5A48"}
 # Ataque e Defesa (rodada 2, ataque_defesa_r2/): o aço (1 a 7), o latão (a a d) e o couro do cabo
 _ACO = ["1C2230", "3A4458", "6A768C", "8C98AC", "B8C2D0", "DDE4EC", "FFFFFF"]
 _LATAO = {"a": "5A3A10", "b": "9A6A1C", "c": "D8A438", "d": "F6DC80"}
@@ -101,6 +109,18 @@ PECAS = {
         "letras": {**{k: (c, "") for k, c in _PAPEL.items()},
                    "v": ("7E8A52", ""), "w": ("A4AC72", ""), "l": ("6E8C9C", ""), "m": ("9CB4BC", ""),
                    "r": ("6A1C12", ""), "s": ("B23A24", ""), "t": ("E0603A", "")},
+    },
+    "atalho-grimorio": {
+        "camadas": ["contracapa", "paginas", "lombada", "capa", "cantoneiras", "fecho", "gema", "contorno"],
+        "sem_contorno": "",
+        "legenda": {"k": "contracapa", "p": "paginas", "l": "lombada", "c": "capa", "t": "cantoneiras", "f": "fecho", "g": "gema"},
+        "letras": {k: (c, "") for k, c in _DOCA3.items()},
+    },
+    "atalho-diario": {
+        "camadas": ["capa", "paginas", "anotacoes", "fita", "pena", "contorno"],
+        "sem_contorno": "",
+        "legenda": {"c": "capa", "p": "paginas", "a": "anotacoes", "r": "fita", "e": "pena"},
+        "letras": {k: (c, "") for k, c in _DOCA3.items()},
     },
     "attr-poder": {
         "camadas": ["chama", "miolo", "faisca", "contorno"],

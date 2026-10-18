@@ -3,7 +3,7 @@
 // da proposta no lugar dos do jogo (page.route em /static/hud/icones/<peça>-*.png, como fotografar_escudo.mjs); uma
 // peça que ainda não tem papel em icones.js (a calça de couro) ganha o papel só nesta página.
 //   PLAYWRIGHT_MODULO=<caminho>/index.mjs node ferramentas/prototipos/hud/itens-lote-noite/fotografar.mjs <peça>
-// peça: calca_couro | aljava | atributos | ataque_defesa | agilidade_poder | agilidade | aljava_ref | poder | doca_r2 | doca
+// peça: calca_couro | aljava | atributos | ataque_defesa | agilidade_poder | agilidade | aljava_ref | poder | doca_r2 | doca_r3 | doca_r3_luta | doca
 import { spawn } from "child_process";
 import { readFileSync, existsSync, mkdirSync } from "fs";
 import { fileURLToPath } from "url";
@@ -54,6 +54,13 @@ const PECAS = {
   // a doca, rodada 2 (doca_r2/): dois atalhos por vez; agora o Inventário e o Mapa, também com a tela aberta
   doca_r2: { pasta: "doca_r2/proposta", saida: "doca_r2/capturas", nomes: ["atalho-inventario", "atalho-mapa"],
     cena: ["capela", { CLASSE: "arqueiro", NIVEL: "5", PERIODO: "0", SALA: "exterior" }], fotos: ["doca", "doca-inventario", "doca-mapa"] },
+  // a doca, rodada 3 (doca_r3/): o Grimório e o Diário, também com a tela aberta; o Grimório é também o comando
+  // Habilidades da roda da luta (ACAO.grimorio, 32), fotografado no tutorial
+  doca_r3: { pasta: "doca_r3/proposta", saida: "doca_r3/capturas", nomes: ["atalho-grimorio", "atalho-diario"],
+    cena: ["capela", { CLASSE: "arqueiro", NIVEL: "5", PERIODO: "0", SALA: "exterior" }], fotos: ["doca", "doca-grimorio", "doca-diario"] },
+  doca_r3_luta: { pasta: "doca_r3/proposta", saida: "doca_r3/capturas", nomes: ["atalho-grimorio", "atalho-diario"],
+    cena: ["tutorial", { LUTA_APOS_ESCOLHA: "1", TUTORIAL: "0", VISTAS, CLASSE: "guerreiro", NIVEL: "8", ESPEC: "paladino", COMITIVA: "morel", LUTA: "lobo", QUANTOS: "3", NIVEL_LUTA: "7" }],
+    fotos: ["luta"] },
   doca: { pasta: "doca/proposta", nomes: ["atalho-talentos", "atalho-grimorio", "atalho-inventario", "atalho-mapa", "atalho-diario", "atalho-bestiario", "atalho-salvar", "atalho-sair"],
     cena: ["capela", { CLASSE: "arqueiro", NIVEL: "5", PERIODO: "0", SALA: "exterior" }], fotos: ["doca", "luta-doca"] },
 };
@@ -132,7 +139,7 @@ for (const modo of (process.env.SO_ATUAL ? ["atual"] : process.env.SO_PROPOSTA ?
       if (f === "doca") { await p.screenshot({ path: nome("doca"), clip: await clipDe("#doca", 0) }); }
       // a doca com a tela do atalho aberta (o estado selecionado, .atual): "doca-inventario", "doca-mapa"
       if (f.startsWith("doca-")) {
-        const rotulo = { inventario: "Inventário", mapa: "Mapa" }[f.slice(5)];
+        const rotulo = { inventario: "Inventário", mapa: "Mapa", grimorio: "Grimório", diario: "Diário" }[f.slice(5)];
         await p.evaluate((r) => pedirAtalho(r), rotulo); await espera(900);
         await p.screenshot({ path: nome(f), clip: await clipDe("#doca", 0) });
         (await desenhos()).forEach((d) => visto.add(d));
