@@ -19,7 +19,8 @@ for (x, y) in forma:
     px, py = x + 0.5, y + 0.5
     t = (px - CX) * 0.6 + (py - CY) * 0.75
     r = math.hypot(px - (CX + 0.4), py - (CY + 0.6))
-    c = "6" if r < 1.1 else "5" if r < 2.3 else ("4" if t < 1.0 else "3")    # o miolo aceso, em volta mais fundo
+    c = "4" if t < 1.0 else "3"     # o azul da gota, mais fundo do lado de trás (rodada 2: sem o miolo aceso, o bloco
+                                    # quadrado do centro; o brilho fica com o reflexo em crescente)
     if t > 3.4: c = "2"                                                      # a beira do lado de trás
     if (x + 1, y) not in forma and x > 9 or (x, y + 1) not in forma: c = "2" if c != "1" else c
     if (x - 1, y) not in forma and y < 9: c = "3"

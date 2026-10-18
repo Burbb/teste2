@@ -4027,3 +4027,11 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   - Pintadas no Aseprite pelo MCP (`pintar.lua`), exportadas pelo `exportar_aseprite.py --fontes=`, conferidas no
     topo de uma partida de Mago a 1920×945 (`vida_mana/vida-mana-topo.png`). Barras, números, cores e regras não
     mudaram.
+
+### 18/10/2026 (data do computador local) — A Vida aprovada; a Mana sem o miolo aceso (proposta)
+
+- **Pedido de Jean:** o coração de `a914f18` aprovado, sem alterações; na gota, tirar só o bloco quadrado de luz do
+  centro, mantendo o reflexo, a sombra, a silhueta e o resto. Vida e Mana entram juntas depois da conferência.
+- **Feito, só no protótipo** (`ferramentas/prototipos/hud/itens-lote-noite/vida_mana/`): os 16 pixels do bloco viraram
+  o azul em volta, na fonte em camadas, pelo MCP; o exportado confere com o editor e o @2x é exato. A rodada 1 está em
+  `vida_mana/mana_r1/`; o antes e o depois no topo do Mago, em `vida_mana/mana-r2-antes-depois.png`. Nada no jogo.

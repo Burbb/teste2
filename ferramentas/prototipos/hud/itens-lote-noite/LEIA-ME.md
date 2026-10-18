@@ -966,3 +966,21 @@ barras, os preenchimentos, os números, as cores funcionais, as regras e as anim
   de Mago na capela, que mostra a Vida e a Mana; a proposta troca só os dois arquivos pela página).
   `vida_mana/vida-mana-topo.png` junta o topo atual e o proposto em tamanho real e a ampliação 8× sobre o fundo real;
   as capturas ficam em `vida_mana/capturas/`.
+
+### Vida aprovada; a Mana, rodada 2: sem o miolo aceso
+
+O Jean aprovou o coração como está em `a914f18` (sem alterações). Na gota, pediu para tirar só o bloco quadrado de luz
+do centro: o reflexo em crescente já diz o brilho. Vida e Mana continuam no protótipo e entram juntas depois da
+conferência da gota.
+
+- **O que mudou:** só os 16 pixels do bloco (4×4, de x 8 a 11 e y 11 a 14), na camada gota, agora no 4 e no 3 da rampa
+  que continuam a diagonal do azul em volta. O reflexo, a sombra de baixo, a silhueta, o contorno e os outros pixels
+  ficam iguais.
+- **Como:** em `auxiliares/mana.py`, o tom do corpo perdeu o miolo; a diferença contra a rodada 1 (exatamente o bloco)
+  foi pintada pelo `pintar.lua` na fonte em camadas (16 escritos, 0 diferentes na releitura, 0 fora da tela) e salva.
+  O PNG exportado é igual à captura do editor e às listas, e o @2x é a duplicação exata. O coração exportado continua
+  idêntico, byte a byte, ao de `a914f18`.
+- **A rodada 1 guardada:** `vida_mana/mana_r1/` (a fonte, os PNGs e o auxiliar).
+- **As fotos:** `ROTULO=gota-r2 SO_PROPOSTA=1 JANELAS=1920x945 node .../fotografar.mjs vida_mana` (o mesmo roteiro e a
+  mesma partida de Mago; os dois topos só diferem no bloco 4×4). `vida_mana/mana-r2-antes-depois.png` mostra o antes
+  e o depois em tamanho real e a ampliação 8× sobre o fundo real.
