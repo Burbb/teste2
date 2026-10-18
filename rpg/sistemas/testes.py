@@ -13,8 +13,19 @@ class Testes:
         """Atributos ajudam nos testes, mas com retorno decrescente: 5 → +2, 11 → +4, 20 → +6, 43 → +8."""
         return int(round(2.5 * math.log2(1 + max(0, valor) / 5)))
 
-    def partes_teste(self, attr):
-        """De onde vem o bônus de cada teste: [(rótulo, valor), ...]."""
+    # para que serve cada teste (a ficha mostra; a lista vem dos eventos que pedem cada um)
+    USO_TESTE = {
+        "forca": "Arrombar, arrancar, separar uma briga, trabalho pesado.",
+        "destreza": "Esgueirar-se, fugir, pegar sem ser visto, trabalho delicado.",
+        "arcano": "Ler runas e escritos antigos, lidar com magia e anomalias.",
+        "percepcao": "Notar armadilhas, pistas, golpes e emboscadas (às vezes o dado rola sozinho, como ao cruzar com inimigos).",
+        "vontade": "Resistir a chamados, medo e impulsos; rezar; aguentar a dor.",
+        "carisma": "Convencer, negociar, intimidar.",
+    }
+    CD_MEDIA = 12  # a dificuldade típica de um teste antes do ajuste por nível (a chance que a dica mostra)
+
+    def partes_fixas_teste(self, attr):
+        """O que o personagem soma no teste em qualquer situação: o nível, o atributo de origem e a classe."""
         j = self.j
         b = self._bonus_atributo
         partes = [("nível", j.nivel // 2)]
@@ -33,9 +44,23 @@ class Testes:
         for fonte in (CLASSES[j.classe], SPECS.get(j.spec, {})):  # "olhos de arqueiro", "paladino"...
             if attr in fonte.get("testes", {}):
                 partes.append(fonte["testes"][attr])
+        return [p for p in partes if p[1]]
+
+    def situacao_teste(self, attr):
+        """O que vale só agora, pela situação (sem luz), e não é do personagem."""
+        partes = []
         if self.sem_luz and attr in ("percepcao", "destreza"):
             partes.append(("escuridão", -bal.ESCURO_TESTES))
-        return [p for p in partes if p[1]]
+        return partes
+
+    def partes_teste(self, attr):
+        """De onde vem o bônus de cada teste agora: [(rótulo, valor), ...] (as fixas e as da situação)."""
+        return self.partes_fixas_teste(attr) + self.situacao_teste(attr)
+
+    def chance_teste_media(self, attr):
+        """A chance (em %) de passar num teste de dificuldade típica (CD_MEDIA, com o ajuste do nível), pela regra do
+        teste: o menor d20 que passa, de 20 em 20 (5% cada face)."""
+        return (21 - self.precisa_no_dado(self.dificuldade(self.CD_MEDIA), self.mod_teste(attr))) * 5
 
     def mod_teste(self, attr):
         return sum(v for _, v in self.partes_teste(attr))

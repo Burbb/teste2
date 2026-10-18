@@ -269,11 +269,13 @@ function mostrarOpcoes(m) {
       const nivel = folga >= 6 ? "bom" : folga >= 3 ? "medio" : "ruim";
       const sinal = o.teste.mod >= 0 ? "+" : "−";
       const info = estado && estado.heroi.testes && estado.heroi.testes[o.teste.atributo];
-      const partes = info ? info.partes.map(([r, v]) => `<li>${esc(r)}: <b>${v >= 0 ? "+" : "−"}${Math.abs(v)}</b></li>`).join("") : "";
-      const chance = Math.max(5, Math.min(95, (21 - (12 + (estado ? estado.heroi.dificuldade_extra : 0) - o.teste.mod)) * 5));
+      // as partes do personagem e, à parte, as da situação de agora (sem luz); a chance numa dificuldade típica, do motor
+      const linha = (r, v, agora) => `<li${agora ? ' class="pior"' : ""}>${esc(r)}${agora ? " (agora)" : ""}: <b>${v >= 0 ? "+" : "−"}${Math.abs(v)}</b></li>`;
+      const partes = info ? [...info.fixas.map(([r, v]) => linha(r, v)), ...info.situacao.map(([r, v]) => linha(r, v, true))].join("") : "";
+      const chance = info ? info.chance_media : null;
       const dicaTeste = Telas.dica(`<b>Teste de ${esc(o.teste.atributo)} ${sinal}${Math.abs(o.teste.mod)}</b>
         <div class="tipo">d20 + bônus contra a dificuldade</div><ul class="dica-lista">${partes || "<li>sem bônus</li>"}</ul>
-        <div class="rodape">Tire 20 e passa sempre; 1 falha sempre. A dificuldade varia com a situação e sobe um pouco a cada dois níveis seus. Numa dificuldade média, sua chance é de cerca de ${chance}%.</div>`);
+        <div class="rodape">Tire 20 e passa sempre; 1 falha sempre. A dificuldade varia com a situação e sobe um pouco a cada dois níveis seus.${chance != null ? ` Numa dificuldade média, sua chance é de cerca de ${chance}%.` : ""}</div>`);
       teste = `<span class="teste ${nivel}" ${dicaTeste}>${SIGLA[o.teste.atributo] || esc(o.teste.atributo)} ${sinal}${Math.abs(o.teste.mod)}</span>`;
     }
     if (o.meta && o.meta.local !== undefined && estado) {

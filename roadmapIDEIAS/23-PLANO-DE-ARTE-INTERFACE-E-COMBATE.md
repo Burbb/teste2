@@ -271,6 +271,41 @@ Esses números são constatação da versão consultada, não valores para copia
 reais do motor, incluindo penalidades. Explicar a relação com os atributos e o nível, sem prometer que cada +1 de
 Agilidade dá sempre +1 em todo teste. Preservar a regra do d20 e as exceções de 1/20 naturais.
 
+**Feito e integrado (1.118.0, 17/10/2026).** São seis testes derivados (Força, Destreza, Arcano, Percepção, Vontade,
+Carisma), não atributos próprios: o bônus de cada um soma metade do nível, a parte de um atributo da ficha (Ataque,
+Agilidade, Poder, Defesa, ou a Reputação, no Carisma), o bônus de classe ou especialização e a situação (sem luz).
+
+**O que já estava claro e ficou:**
+- a etiqueta da escolha ("PER +2"), com as parcelas na dica;
+- a rolagem no centro (1.117.0), com a conta, as parcelas e "precisa de N".
+
+**As lacunas resolvidas:**
+- **Nenhum lugar com os seis juntos e a composição.** Os totais estavam espalhados nas dicas de Ataque, Defesa,
+  Agilidade, Poder e Reputação, sem dizer de onde vinham. Agora há uma linha "Testes do d20" na ficha, embaixo dos
+  atributos (os seis números ficam só na dica). Para cada teste, a dica mostra:
+  - o bônus do personagem;
+  - de onde vem (nível, atributo, classe);
+  - para que serve;
+  - se o atributo de origem está abaixo do normal, o porquê (ferimento, fome).
+  O rodapé dá a regra do 20 e do 1 e o ajuste da dificuldade pelo nível.
+- **A escuridão aparecia como valor do personagem.** Ela entrava nos totais das dicas dos atributos. O motor agora
+  separa as partes fixas (`partes_fixas_teste`) da situação (`situacao_teste`); a soma e o sorteio não mudam. A
+  escuridão só aparece como "Agora: escuridão −4 → +9", enquanto vale; na dica da escolha, como "(agora)".
+- **O total repetido nas dicas dos atributos.** Cada uma diz só a parte daquele atributo ("Nos testes, a Agilidade dá
+  +7 em Destreza e +6 em Percepção"); o total fica em Testes do d20.
+- **A chance da dica da escolha era calculada na tela.** Agora vem do motor (`chance_teste_media`, pela regra do teste
+  e `precisa_no_dado`, na dificuldade típica `CD_MEDIA`).
+
+**Conferido:**
+- `tests/test_testes_ficha.py` compara o mostrado com o motor nestes casos: básico; arqueiro patrulheiro de nível 5
+  (classe e nível); sem luz; perna torcida.
+- Uma captura na janela principal (1920×945).
+- Gabarito: nas 9 partidas web, só o estado do herói (os campos novos dos testes e a redação de cinco linhas das dicas).
+  Partidas, lances e sorteios iguais.
+
+**Para outra entrega:** o painel do mundo diz "Escuro e sem tocha: Percepção e Destreza −4" antes de você agir, quando
+a penalidade ainda não vale (ela entra ao explorar, caçar ou viajar sem tocha). Isso pode merecer um "ao agir".
+
 ### 1.7. Vida máxima reduzida por ferimentos
 
 **Pedido adicional de Jean (17/10/2026):** tornar visível a capacidade de vida perdida por ferimento. A barra deve

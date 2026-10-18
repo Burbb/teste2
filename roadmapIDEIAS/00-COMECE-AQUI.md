@@ -3515,3 +3515,20 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Registrado:** o redesenho do dado fica para o acabamento visual da HUD (plano 23, seção 2), com raridade e subida
   de nível.
 - **Próximo:** Jean jogar. A consulta aos atributos (1.6) não começou.
+
+### 17/10/2026 (data do computador local) — Os testes de atributo na ficha (1.118.0)
+
+- **Pedido de Jean:** entender os valores dos testes (quanto, de onde vêm, para que servem), resolvendo só lacunas
+  reais, sem redesenhar a ficha.
+- **Feito:**
+  - a linha "Testes do d20" na ficha, com a dica dos seis testes;
+  - o motor separa as partes fixas da situação (a escuridão só aparece como "agora");
+  - as dicas dos atributos dizem só a parte de cada um;
+  - a chance da dica da escolha vem do motor.
+- **Conferido:**
+  - `tests/test_testes_ficha.py`;
+  - uma captura a 1920×945;
+  - a suíte, o pyflakes e a fumaça;
+  - o gabarito, atualizado depois de investigar: só o estado do herói nas 9 partidas web.
+- **Registrado para outra entrega:** o aviso do painel do mundo sobre a escuridão antes de agir.
+- **Próximo:** Jean jogar. A nova HUD não começou.

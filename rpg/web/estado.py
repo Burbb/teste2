@@ -46,6 +46,27 @@ def _pct(x):
     return v + "%"
 
 
+def _parte_nos_testes(g, attr, nome):
+    """Quanto o atributo de nome dado soma no teste (a parte dele, sem o nível nem a classe): pelas partes do motor."""
+    return next((v for r, v in g.partes_fixas_teste(attr) if r.startswith(nome + " ")), 0)
+
+
+def explicar_testes(g):
+    """Os seis testes do d20 para a ficha: o bônus do personagem e de onde vem (nível, atributo, classe), o que a
+    situação de agora muda (sem luz) e o total de agora, para que serve, a chance numa dificuldade típica e, se o
+    atributo de origem está abaixo do normal (ferimento, fome), o porquê. Tudo do motor (sistemas/testes.py)."""
+    penal = penalidades_atributos(g.j)
+    saida = {}
+    for a, nome in NOMES_TESTE.items():
+        fixas, situacao = g.partes_fixas_teste(a), g.situacao_teste(a)
+        abaixo = [f"{n} abaixo do normal: {', '.join(p['fontes'])}" for n, p in penal.items()
+                  if any(r.startswith(n + " ") for r, _ in fixas)]
+        saida[nome] = {"mod": g.mod_teste(a), "partes": fixas + situacao, "fixo": sum(v for _, v in fixas),
+                       "fixas": fixas, "situacao": situacao, "uso": g.USO_TESTE[a],
+                       "chance_media": g.chance_teste_media(a), "abaixo": abaixo}
+    return saida
+
+
 def explicar_atributos(g):
     """Para que serve cada atributo, com os números de agora (o que a tela mostra ao passar o mouse)."""
     j = g.j
@@ -59,16 +80,18 @@ def explicar_atributos(g):
         ataque.append(f"É a base do seu ataque básico ({CLASSES[j.classe]['ataque'][0]}) e das habilidades físicas.")
     else:
         ataque.append("Pouco importa para você: suas magias usam Poder.")
-    ataque += [f"Testes de Força: {g.mod_teste('forca'):+d} no d20.", "+1 de Ataque ≈ +1 de dano por golpe, antes da defesa do inimigo."]
+    ataque += [f"Nos testes de Força, o Ataque dá {_parte_nos_testes(g, 'forca', 'Ataque'):+d} (o total está em Testes do d20).",
+               "+1 de Ataque ≈ +1 de dano por golpe, antes da defesa do inimigo."]
     defesa = [f"Reduz o dano de um inimigo do seu nível em {_pct(reducao)}. Inimigos de nível mais alto "
               "atravessam mais a armadura; os de nível mais baixo, menos.",
               f"Cada ponto a mais reduz cerca de {_pct(reducao_mais)} a mais (o ganho diminui aos poucos).",
-              f"Testes de Vontade: {g.mod_teste('vontade'):+d} no d20."]
+              f"Nos testes de Vontade, a Defesa dá {_parte_nos_testes(g, 'vontade', 'Defesa'):+d}."]
     agilidade = [f"Chance de se esquivar de um golpe: {_pct(esquiva)} (máximo {_pct(bal.ESQUIVA_MAX_AGI)} só pela "
                  f"Agilidade; com habilidades, até {_pct(bal.MAX_ESQUIVA)}).",
                  f"Chance de acerto crítico: {_pct(critico)} (máximo {_pct(bal.MAX_CRITICO)}).",
                  "Mais fácil fugir de uma luta.",
-                 f"Testes de Destreza: {g.mod_teste('destreza'):+d}, Percepção: {g.mod_teste('percepcao'):+d}.",
+                 f"Nos testes, a Agilidade dá {_parte_nos_testes(g, 'destreza', 'Agilidade'):+d} em Destreza e "
+                 f"{_parte_nos_testes(g, 'percepcao', 'Agilidade'):+d} em Percepção.",
                  f"+1 de Agilidade = +{_pct(bal.ESQUIVA_POR_AGI)} de esquiva e +{_pct(bal.CRITICO_POR_AGI)} de crítico."]
     poder = ["Força da magia e da fé."]
     usam_poder = grimorio.habilidades_que_usam(j, "poder")
@@ -80,7 +103,7 @@ def explicar_atributos(g):
         poder += [f"Aumenta {tx.lista_natural(usam_poder)}."]
     else:
         poder += ["Pouco importa para a sua classe (alguns itens e eventos usam)."]
-    poder.append(f"Testes de Arcano: {g.mod_teste('arcano'):+d} no d20.")
+    poder.append(f"Nos testes de Arcano, o Poder dá {_parte_nos_testes(g, 'arcano', 'Poder'):+d}.")
     info = {"Ataque": ataque, "Defesa": defesa, "Agilidade": agilidade, "Poder": poder}
     for nome, p in penalidades_atributos(j).items():  # abaixo do normal: a primeira linha diz por quê
         info[nome].insert(0, f"Abaixo do normal: {', '.join(p['fontes'])} (sem isso, {p['normal']}).")
@@ -117,7 +140,7 @@ def explicar_reputacao(g):
               "cai roubando, ameaçando e matando quem não devia.",
               (f"Mercados e serviços {_pct(desconto)} mais baratos." if r > 0 else
                f"Mercados e serviços {_pct(-desconto)} mais caros." if r < 0 else "Preços normais."),
-              f"Testes de Carisma: {g.mod_teste('carisma'):+d} no d20."]
+              f"Nos testes de Carisma, a Reputação dá {_parte_nos_testes(g, 'carisma', 'Reputação'):+d}."]
     if r <= -10:
         linhas.append("Guardas desconfiam de você e caçadores de recompensa podem aparecer.")
     if r >= 20:
@@ -143,7 +166,7 @@ def heroi(g):
         "atributos": {"Ataque": j.atk, "Defesa": j.defesa, "Agilidade": j.agi, "Poder": j.poder},
         "atributos_info": explicar_atributos(g), "atributos_penal": penalidades_atributos(j),
         "reputacao_info": explicar_reputacao(g),
-        "testes": {NOMES_TESTE[a]: {"mod": g.mod_teste(a), "partes": g.partes_teste(a)} for a in NOMES_TESTE},
+        "testes": explicar_testes(g),
         "dificuldade_extra": g.dificuldade(0),
         "ouro": j.ouro, "reputacao": j.reputacao, "flechas": j.flechas if j.classe == "arqueiro" else None,
         "max_flechas": g.max_flechas() if j.classe == "arqueiro" else None,

@@ -266,6 +266,11 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   consequência, no tempo de sempre (950 ms + `ritmo(650)`). No texto instantâneo, refazendo a página e na luta, só a
   tirinha. Lê a mensagem `rolagem` (`Testes.teste`: `atributo, cd, d20, mod, total, sucesso` e `precisa`, o menor d20
   que passa, de `Testes.precisa_no_dado`) e as parcelas de `heroi.testes` (`20-rolagem.css`).
+- Os testes de atributo na ficha (1.118.0): a linha "Testes do d20" embaixo dos atributos (`telas/inventario.js`,
+  `testesHtml`), com a dica dos seis testes. Tudo vem de `heroi.testes` (`web/estado.py`, `explicar_testes`): o total
+  de agora, as partes fixas (`Testes.partes_fixas_teste`: nível, atributo, classe), as da situação
+  (`situacao_teste`: sem luz), o uso (`USO_TESTE`), a chance numa dificuldade típica (`chance_teste_media`) e o
+  atributo de origem abaixo do normal. As dicas dos atributos dizem só a parte de cada um nos testes.
 - `batalha.js` o palco da luta (o jeito de animar vem do motor: `anim` nos lances). Os avisos de passagem (números, faixas como o "AAARGH!", os selos dos estados) não moram nas cartas: nascem numa camada da página (`.avisos-luta`, 1.103.1), numa sombra do tamanho e no lugar da carta que os disparou, que a acompanha quadro a quadro; assim passam por cima da moldura do palco (que recorta o resto) e ficam dentro da janela. A sombra some com o último aviso e todas saem com a luta. A arena só cresce durante a luta e cresce devagar; quando uma carta entra ou ganha a linha de efeitos, as outras deslizam até o lugar novo (`acomodar`, desvio em `top`/`left` e em pixel inteiro: `transform` e `translate` são do foco e dos golpes). As áreas da arena (1.111.0) estão em "As lutas cheias", abaixo · `realce.js` cores dos termos de
   jogo (os nomes de habilidades e talentos chegam do motor no `glossario` do estado) · `sprites*.js`, `vista.js`, `mapa.js`, `som.js`
 - `sensacao.js` o peso dos momentos (parada no impacto, tremor, câmera lenta no golpe final...): as telas dizem o

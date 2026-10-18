@@ -54,6 +54,24 @@
       return `<div class="atributo${penal[k] ? " abaixo" : ""}" data-atributo="${h(k)}" ${dica(`<b>${h(k)} ${v}${pen}</b><ul class="dica-lista">${linhas}</ul>`)}>${Icones.atributo(k) || S(ICONE_ATTR[k] || "estrela", 1)}<span class="nome">${h(k)}</span><span class="valor"><span class="num">${chegando.has(k) ? chegando.get(k) : v}</span>${aoLado}</span></div>`;
     }).join("");
   }
+  /** Os testes do d20 numa linha da ficha, com a dica: o bônus de cada teste e de onde vem (nível, atributo, classe),
+   *  o que a situação de agora muda (sem luz), para que serve e se o atributo de origem está abaixo do normal. Tudo
+   *  do motor (estado.heroi.testes; web/estado.py, explicar_testes). Seis números fixos ficam só na dica. */
+  function testesHtml(p) {
+    const t = p.testes || {};
+    const n = (v) => `${v >= 0 ? "+" : "−"}${Math.abs(v)}`;
+    const linhas = Object.entries(t).map(([nome, x]) => {
+      const de = x.fixas.length ? x.fixas.map(([r, v]) => `${h(r)} ${n(v)}`).join(" · ") : "sem bônus";
+      const agora = x.situacao.length ? `<div class="pior">Agora: ${x.situacao.map(([r, v]) => `${h(r)} ${n(v)}`).join(", ")} → <b>${n(x.mod)}</b></div>` : "";
+      const abaixo = x.abaixo.map((l) => `<div class="pior">${h(l)}</div>`).join("");
+      return `<li><b>${h(nome)} ${n(x.fixo)}</b> <small>${de}</small>${agora}${abaixo}<div class="uso">${h(x.uso)}</div></li>`;
+    }).join("");
+    const extra = p.dificuldade_extra ? ` (agora +${p.dificuldade_extra})` : "";
+    return `<div class="testes-ficha" tabindex="0" ${dica(`<b>Testes do d20</b><div class="tipo">d20 + bônus contra a dificuldade</div>
+      <ul class="dica-lista testes-lista">${linhas}</ul>
+      <div class="rodape">Tire 20 e passa sempre; 1 falha sempre. A dificuldade depende da situação e sobe 1 a cada dois níveis seus${extra}.</div>`)}>
+      <span class="d20">${D20}</span><span class="nome">Testes do d20</span><span class="seta" aria-hidden="true">›</span></div>`;
+  }
   function reputacaoHtml(p) {
     const r = p.reputacao_info || { titulo: "", linhas: [] };
     const valor = Realce.sinais(`${p.reputacao > 0 ? "+" : p.reputacao < 0 ? "−" : ""}${Math.abs(p.reputacao)}`);
@@ -122,5 +140,5 @@
 
   Telas.registrar("personagem", personagem, { ligar: ligarInventario });
 
-  Object.assign(Telas, { atributosHtml, chegando, reputacaoHtml });
+  Object.assign(Telas, { atributosHtml, chegando, reputacaoHtml, testesHtml });
 })();
