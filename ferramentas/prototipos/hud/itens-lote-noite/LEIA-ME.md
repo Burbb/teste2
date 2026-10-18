@@ -903,3 +903,23 @@ Ele também pediu que o trabalho fosse no Aseprite.
 com o queixo) em `doca_r5/bestiario_r2/`. A comparação das três está em `doca_r5/bestiario-rodadas.png`.
 
 **Conferido:** o composto do editor, os PNGs exportados e os @2x são iguais. As fotos da doca a 1920×945 foram refeitas.
+
+### O Bestiário, rodada 4: a ligação entre o focinho e a arcada (no Aseprite)
+
+**O pedido de Jean:** a rodada 3 está boa; refinar só a passagem dos planos largos do focinho para as faixas
+verticais dos dentes, que começavam todas na mesma altura e marcavam uma linha de encaixe.
+
+**O retoque:** feito direto nas fontes finais (`doca_r5/fontes/atalho-bestiario/`), só na camada `cranio`, pelo
+`pintar.lua`, com as linhas desenhadas à mão (`auxiliares/bestiario_ligacao.py`). As grades antigas não foram usadas.
+- **A luz:** os planos do focinho continuam até a raiz dos dentes. O lado da luz segue claro nos dentes da esquerda, e
+  a sombra da direita desce para os dentes da direita.
+- **As fendas:** a do meio começa uma linha mais acima (a gengiva) e as dos lados uma linha abaixo, o que quebra o
+  alinhamento horizontal. As fendas continuam inteiras, sem pixel solto.
+- **Nos dois tamanhos:** a mesma regra em cada grade, nas linhas 28 a 31 do 36 e 23 a 26 do 32.
+- **O que não mudou:** 14 pixels no 36 e 12 no 32 mudaram de tom, e nenhum de transparência. A silhueta e o resto do
+  crânio estão iguais.
+
+**A rodada 3:** guardada em `doca_r5/bestiario_r3/` (os PNGs e as fontes).
+
+**Conferido:** os PNGs exportados e os @2x batem com o editor. Antes × depois na doca a 1920×945, em tamanho real e
+4× (`doca_r5/bestiario-ligacao-antes-x-depois.png`). O Salvar e o Sair seguem como apresentados.

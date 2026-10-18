@@ -3987,3 +3987,8 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   - **A forma:** o focinho longo e os dentes em grupos pendurados da arcada, presos por sombra, sem a barra com duas
     pontas.
   - **Guardadas:** as rodadas 1 e 2, em `doca_r5/`.
+- **O Bestiário, rodada 4:** um retoque local no Aseprite, só a ligação entre o focinho e a arcada.
+  - **O que mudou:** os planos de luz e sombra continuam até a raiz dos dentes, e as fendas começam em alturas
+    diferentes. A silhueta não mudou.
+  - **Guardada:** a rodada 3, em `doca_r5/bestiario_r3/`.
+  - **Aguardam a avaliação:** o Bestiário, o Salvar e o Sair.
