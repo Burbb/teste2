@@ -68,14 +68,20 @@ O mercado desenha a sua aljava em código (`telas/mercado.js`, a banca); ela nã
   luz em faixas pela direção da superfície.
 - **Os detalhes de couro:** a boca com a borda escura acesa em cima, duas cintas costuradas, o fundo arredondado mais
   escuro e uma alça de couro em arco do lado da sombra.
-- **As flechas:** três, com a pena para cima, como se guardam; haste de madeira, penas claras e uma pena escura.
-- **14 cores** no 32 e 16 no 24.
+- **As flechas:** três, com a pena para cima, como se guardam; haste de madeira clara, penas claras e uma parda.
+- **13 cores.**
 
 **Rodadas descartadas:**
 - **1:** a 45°, curta e deitada.
 - **2:** em pé, mas o fundo encostava na borda (o contorno dava a volta na grade e aparecia no alto) e as penas se
   juntavam numa mancha.
-- **3 (a proposta):** a origem subiu e as flechas abriram em leque.
+- **3:** a origem subiu e as flechas abriram em leque.
+- **4 (a proposta, pedido de Jean: as hastes legíveis como na aljava pintada original):**
+  - a madeira ganhou um tom claro, para a haste ler contra o contorno;
+  - as flechas saem mais da boca, com a madeira à vista antes da pena;
+  - a pena virou um bloco claro de ~2 px, com a nervura de madeira por dentro;
+  - a pena parda ficou clara o bastante para o carvão;
+  - o tubo encurtou um pouco para caber.
 
 **Conferido (`aljava/capturas/`, `topo-atual-x-proposta-1500.png`, `ficha-atual-x-proposta-1500.png`):**
 - **Na ficha (32):** é da família do couro, mais sóbria que a atual pintada (sem a cinta dourada nem a fivela).

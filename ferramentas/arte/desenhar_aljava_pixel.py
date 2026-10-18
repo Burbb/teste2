@@ -27,24 +27,25 @@ import pixel_comum as pc
 
 COURO = ["#1C120C", "#2E1E13", "#45301E", "#604229", "#7C5634", "#986C42", "#B48752"]
 BORDA = ["#140C08", "#22150D", "#321F13", "#45301E"]
-MADEIRA = ["#3A2A1C", "#5C4630", "#80684A"]
+MADEIRA = ["#3A2A1C", "#6A5038", "#9C7E58", "#C4A57A"]   # a haste: clara, para ler contra o contorno
 PENA = ["#4A4640", "#7C766C", "#B4AE9E", "#E2DCCB"]
-PENA_ESCURA = ["#24201E", "#3E3833", "#5E564D"]
+PENA_ESCURA = ["#3A2E28", "#5E4A3E", "#86705E"]     # a pena escura (parda), clara o bastante para o carvão
 RAMPAS = {"k": COURO, "b": BORDA, "m": MADEIRA, "p": PENA, "q": PENA_ESCURA}
 
 # a origem (o centro do fundo do tubo), a inclinação e as medidas, em unidades do 32
 M = {
-    "fundo": (11.0, 27.2),         # o centro do fundo do tubo (o fundo não encosta na borda: o contorno cabe)
+    "fundo": (10.5, 27.4),         # o centro do fundo do tubo (o fundo não encosta na borda: o contorno cabe)
     "inclina": 22.0,               # graus a partir da vertical, para a direita
-    "tubo": 17.5,                  # o comprimento do tubo (a)
+    "tubo": 15.5,                  # o comprimento do tubo (a)
     "larg": (3.1, 3.8),            # a meia-largura no fundo e na boca (w)
     "boca": 1.6,                   # a borda da boca (a)
-    "cintas": ((4.2, 5.5), (11.4, 12.7)),
+    "cintas": ((3.8, 5.0), (10.2, 11.4)),
     "fundo_borda": 1.8,            # o fundo arredondado, mais escuro
     # as flechas: (desvio de w na boca, inclinação em graus a partir do eixo, comprimento além da boca, pena escura?)
-    "flechas": ((-2.0, -17.0, 8.6, False), (0.4, -2.0, 9.8, False), (2.6, 14.0, 8.0, True)),
-    "pena": 4.0,                   # o comprimento da pena (a partir da ponta de cima)
-    "alca": (3.2, 14.0, 3.0),      # a alça: de a=3,2 até a=14, saindo até w = meia-largura + 3
+    # (a haste fica à vista entre a boca e a pena, como na aljava pintada original: o pedido do Jean)
+    "flechas": ((-2.0, -16.0, 11.0, False), (0.4, -2.0, 12.6, False), (2.6, 13.0, 10.4, True)),
+    "pena": 4.4,                   # o comprimento da pena (a partir da ponta de cima)
+    "alca": (3.0, 12.6, 3.0),      # a alça: de a=3 até a=12,6, saindo até w = meia-largura + 3
 }
 
 
@@ -70,9 +71,10 @@ def desenhar(lado):
         d = -da * sa + dw_ * ca                   # distância de través
         haste = (t >= 0) & (t <= comp) & (np.abs(d) <= 0.5 * max(px, 0.75))
         mat[haste] = "m"
-        tom[haste] = np.where(d[haste] < 0, 2, 1)
+        tom[haste] = np.where(d[haste] < 0, 3, 2)
+        fixo[haste] = True
         pena0 = comp - M["pena"]
-        larg_pena = np.clip((t - pena0) / M["pena"], 0, 1) * 1.5 + 0.55
+        larg_pena = np.clip((t - pena0) / M["pena"], 0, 1) * 0.7 + 1.0   # a pena quase reta, ~2 px: um bloco claro
         pena = (t >= pena0) & (t <= comp) & (np.abs(d) <= larg_pena)
         mat[pena] = "q" if escura else "p"
         r = PENA_ESCURA if escura else PENA
@@ -80,7 +82,8 @@ def desenhar(lado):
         tom[pena] = tt[pena]
         # a nervura da pena: a haste continua por dentro, um tom abaixo
         nerv = pena & (np.abs(d) <= 0.5 * max(px, 0.75))
-        tom[nerv] = np.maximum(tom[nerv] - 1, 0)
+        mat[nerv] = "m"
+        tom[nerv] = 2
 
     # o tubo
     tubo = (a >= 0) & (a <= L) & (np.abs(w) <= meia)
