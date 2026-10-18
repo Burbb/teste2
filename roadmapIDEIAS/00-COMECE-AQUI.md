@@ -3643,3 +3643,17 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   (`direcao/direcao.js` e o fim de `direcao/conjunto/conjunto.css`). Na produção a dica tem os números do motor, mas
   não essas cores nem o destaque só nas regras do 20 e do 1.
 - **Próxima entrega do plano:** 1D, retomar os lotes de ícones (plano 23, tabela 1.2), em pequenos grupos por função.
+
+### 18/10/2026 (data do computador local) — Lote de ícones da noite (1D): propostas, nada no jogo
+
+- **Pedido de Jean:** com a skill `arte-itens-fenda`, uma peça por vez, sem substituir no jogo: a calça de couro do
+  conjunto, a aljava, os atributos e a doca.
+- **Feito** (`ferramentas/prototipos/hud/itens-lote-noite/`, scripts em `ferramentas/arte/desenhar_*_pixel.py`):
+  - **A Calça de Couro:** hoje o sprite 16×16 recolorido. Proposta em 32, com o 64 ampliado 2×.
+  - **A aljava:** proposta em 32, 64 e o 24 do topo. Na rodada 4, as hastes ficaram legíveis, a pedido de Jean.
+  - **Os quatro atributos:** propostas em 24 e 32. A bota é também o comando Fugir.
+  - **Os oito da doca:** propostas em 36 e 32. O Grimório é também o comando Habilidades.
+- **Conferido:** atual × proposta nos lugares de cada peça (1500×950 e 1280×720), com o jogo intacto e sem erros; o
+  LEIA-ME de lá tem, por peça, o que melhorou e o que pode ser pior.
+- **Próximo:** Jean avaliar cada peça. Os 40 e 48 da calça e da aljava saem depois da aprovação do 32, e o papel da
+  calça entra em `icones.js` na integração. Versão igual (1.118.0).

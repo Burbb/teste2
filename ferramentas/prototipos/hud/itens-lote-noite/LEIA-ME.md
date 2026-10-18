@@ -120,3 +120,34 @@ esquerda em faixas e o contorno comum. Saem os degradês suaves das peças pinta
 - **O que melhorou:** os quatro são legíveis em 24 e da mesma família pixel do couro. A bota é a mesma do conjunto.
 - **O que pode ser pior:** são mais chapados que os atuais (menos volume e brilho). A chama, em 24, perde o halo de
   fogo da atual e lê mais como chama estilizada. O Fugir muda junto.
+
+## 4. Os ícones da doca (`atalho-*`)
+
+`ferramentas/arte/desenhar_doca_pixel.py`; proposta em `doca/proposta/` (36 e 32, nas mesmas medidas). Uma função
+por ícone, desenhados um a um.
+
+**Os lugares:**
+- A doca usa o 36 (o 32 é para janelas mais estreitas; mesmo a 1280×720, ela usa o 36).
+- O Grimório é também o comando Habilidades da luta (`ACAO.grimorio`): trocar um troca os dois.
+
+**O desenho:** ficam os conceitos que já se leem, redesenhados na grade, com rampas por material e o contorno comum.
+- **Talentos:** três nós de latão ligados.
+- **Grimório:** o livro roxo com a lombada de nervuras, as folhas, os cantos e o fecho de ferro, o losango de latão e
+  a pedra violeta.
+- **Inventário:** a mochila nas rampas do conjunto de couro, com a alça, a aba, as alças de carregar, os bolsos e a
+  tira com a fivela.
+- **Mapa:** o pergaminho dobrado em três, o caminho tracejado e o X vermelho.
+- **Diário:** o livro aberto sobre a capa de couro, com as linhas e a pena.
+- **Bestiário:** o crânio de chifres.
+- **Salvar:** o baú escuro com o aro de latão e a seta de ferro descendo.
+- **Sair:** o arco de pedra com as juntas, a passagem escura com a luz no chão e a seta laranja saindo.
+
+**Rodadas descartadas:** na 1, os chifres do Bestiário ficaram curtos e a seta do Salvar pequena; a mochila não
+tinha as alças. Isso foi corrigido na 2, a proposta.
+
+**Conferido** (`doca/capturas/`, `doca-atual-x-proposta-1500x950.png` e `-1280x720.png`, sem erros):
+- **O que melhorou:** os oito são legíveis na doca e da mesma família pixel do couro.
+- **O que pode ser pior:** mais chapados que os pintados.
+  - No 36, as linhas do diário caem entre os pixels (aparecem só no 32).
+  - Os nós dos Talentos têm um sombreado granulado.
+  - O mapa tem menos textura de papel.
