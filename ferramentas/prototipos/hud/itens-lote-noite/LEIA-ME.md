@@ -727,3 +727,42 @@ exportação iguais às grades.
 **O que pode ser pior:**
 - No tamanho real, o emblema menor vira mais um ponto de luz que um desenho.
 - A lombada larga deixa o livro mais pesado à esquerda.
+
+### O Grimório, rodada 3: recomeçado pela referência (`doca_r3/`)
+
+**O pedido:** recomeçar a geometria. A rodada 2 parecia um bloco com tampa.
+- **As referências:** a principal, de construção, é um livro marrom inclinado com o símbolo laranja e a fita. A prancha
+  com o livro de olhos e o estrelado serve de acabamento. Os dois livros violeta citados como referência de identidade
+  e de simplificação não vieram anexados.
+- **O que fica guardado:** a rodada 1 em `doca_r3/grimorio_r1/`, e a 2 em `doca_r3/grimorio_r2/` (com os scripts dela).
+
+**A construção** (`auxiliares/grimorio_livro.py <36|32> [construcao]`): o livro é um objeto 3D simples numa projeção
+só, a da referência.
+- **O ângulo:** o livro está girado (a borda de cima sobe para a direita), e a profundidade vai para baixo e para a
+  esquerda.
+- **As faces à vista:**
+  - a capa da frente;
+  - a lombada redonda à esquerda, unindo as duas capas;
+  - o bloco de folhas embaixo, recuado das beiras das capas;
+  - a espessura das duas capas finas e a contracapa por trás das folhas.
+- **Como se desenha:** cada pixel vem da face mais à frente naquele ponto, com amostragem de 4×4. A etapa
+  `construcao` grava só os volumes, sem enfeite.
+- **A decoração:** desenhada no espaço do livro, para seguir a mesma perspectiva:
+  - duas nervuras na lombada e a moldura em baixo relevo;
+  - o emblema, uma estrela de quatro pontas de latão luminoso com halo no couro, centrado no plano útil da capa;
+  - quatro cravos;
+  - a fita saindo das folhas.
+  - Não tem fecho, para não disputar espaço com o emblema.
+- **A luz:** poucos planos: o alto e o lado da lombada mais claros, a beira oposta escura e a quina junto do sulco
+  acesa.
+- **Os tamanhos:** o 36 e o 32 saem do mesmo modelo, na mesma projeção.
+
+**As camadas:** contracapa, folhas, lombada, capa, emblema, cravos, fita, contorno. Foram pintadas pelo `pintar.lua`
+no editor, e o composto e a exportação são iguais às grades.
+
+**Conferido a 1920×945**, com os mesmos dados (`doca_r3/grimorio-producao-r2-r3.png`), sem erros: a produção, a
+rodada 2 e a rodada 3, na doca (36) e no Habilidades da luta (32), em tamanho real e ampliados.
+
+**O que pode ser pior:**
+- O livro inclinado ocupa o quadro na diagonal e fica um pouco menor que o atual.
+- No 32, o halo do emblema é só um pequeno disco mais claro.

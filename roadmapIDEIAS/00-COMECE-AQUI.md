@@ -3903,3 +3903,20 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   - Conferido antes × depois a 1920×945, na doca e no Habilidades.
   - Aguarda a avaliação.
 - **Próximo:** Jean avaliar o Grimório. Talentos, Bestiário, Salvar e Sair ficam para depois.
+
+### 18/10/2026 (data do computador local) — O Grimório da doca, rodada 3 (nada no jogo)
+
+- **Pedido de Jean:** recomeçar o Grimório a partir das referências; a geometria primeiro (duas capas finas, o bloco
+  de folhas entre elas, a lombada, um ângulo só), depois a identidade.
+- **Feito** (`ferramentas/prototipos/hud/itens-lote-noite/doca_r3/`):
+  - **A construção:** o livro modelado como um objeto 3D simples na projeção da referência principal (girado; a capa,
+    a lombada à esquerda e as folhas embaixo), em `auxiliares/grimorio_livro.py`.
+  - **A identidade:** o couro violeta, as nervuras, a moldura, a estrela de latão luminosa, os cravos e a fita.
+  - **Os arquivos:** o 36 e o 32 do mesmo modelo, as fontes em camadas pintadas pelo MCP e a exportação igual às
+    grades.
+  - **Guardadas:** as rodadas 1 e 2, em `grimorio_r1/` e `grimorio_r2/`.
+  - **As referências:** dos dois livros violeta citados, nenhum veio anexado.
+- **Conferido:**
+  - a produção × a rodada 2 × a rodada 3 a 1920×945, na doca e no Habilidades;
+  - a suíte, o gabarito e o pyflakes. A fumaça não foi repetida: nenhum arquivo do jogo mudou desde `6742ba9`.
+- **Próximo:** Jean avaliar o Grimório. Talentos, Bestiário, Salvar e Sair ficam para depois.
