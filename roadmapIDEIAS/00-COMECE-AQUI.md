@@ -3972,3 +3972,14 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   - Conferido no jogo, sem injeção, a 1920×945 (`doca_r4/talentos-comitiva-no-jogo.png`): a doca com companheiro e o
     selo de pontos, a Comitiva aberta (selecionada) e os Talentos abertos. A suíte, o gabarito, o pyflakes e a fumaça
     passaram uma vez.
+- **As propostas do Bestiário, do Salvar e do Sair:** só no protótipo
+  (`ferramentas/prototipos/hud/itens-lote-noite/doca_r5/`).
+  - **O Bestiário:** o crânio de criatura com chifres e a boca refeita pelo retorno do Jean, com a arcada e os dentes
+    de cima e de baixo e o queixo.
+  - **O Salvar:** o baú aberto com a seta de aço.
+  - **O Sair:** o arco de pedra com o vão fundo e a seta laranja.
+  - **Os arquivos:** o 36 e o 32, as fontes pintadas pelo MCP e a exportação igual às grades.
+  - **Conferido:** sobre o carvão e na doca, a 1920×945. A suíte, o gabarito e o pyflakes passaram (a fumaça foi a da
+    integração, porque o jogo não mudou depois).
+- **Próximo:** Jean avaliar o Bestiário, o Salvar e o Sair. Com eles aprovados, a doca fica completa. A versão é a
+  1.127.0.

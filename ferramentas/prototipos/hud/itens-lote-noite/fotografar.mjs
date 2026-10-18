@@ -3,7 +3,7 @@
 // da proposta no lugar dos do jogo (page.route em /static/hud/icones/<peça>-*.png, como fotografar_escudo.mjs); uma
 // peça que ainda não tem papel em icones.js (a calça de couro) ganha o papel só nesta página.
 //   PLAYWRIGHT_MODULO=<caminho>/index.mjs node ferramentas/prototipos/hud/itens-lote-noite/fotografar.mjs <peça>
-// peça: calca_couro | aljava | atributos | ataque_defesa | agilidade_poder | agilidade | aljava_ref | poder | doca_r2 | doca_r3 | doca_r3_luta | doca_r4 | doca_r4_telas | doca
+// peça: calca_couro | aljava | atributos | ataque_defesa | agilidade_poder | agilidade | aljava_ref | poder | doca_r2 | doca_r3 | doca_r3_luta | doca_r4 | doca_r4_telas | doca_r5 | doca
 import { spawn } from "child_process";
 import { readFileSync, existsSync, mkdirSync } from "fs";
 import { fileURLToPath } from "url";
@@ -69,6 +69,10 @@ const PECAS = {
   doca_r4_telas: { pasta: "doca_r4/proposta", saida: "doca_r4/capturas", nomes: ["atalho-comitiva", "atalho-talentos"],
     papel_atalho: { rotulo: "Comitiva", peca: "atalho-comitiva", tamanhos: [32, 36] },
     cena: ["fogueira", { COMITIVA: "morel,odete" }], fotos: ["doca", "doca-comitiva", "doca-talentos"] },
+  // a doca, rodada 5 (doca_r5/): o Bestiário, o Salvar e o Sair, na doca inteira (com companheiro e pontos de talento,
+  // ao lado dos atalhos já aprovados); Salvar e Sair não são clicados (não mudam nada na foto)
+  doca_r5: { pasta: "doca_r5/proposta", saida: "doca_r5/capturas", nomes: ["atalho-bestiario", "atalho-salvar", "atalho-sair"],
+    cena: ["tutorial", { TUTORIAL: "0", VISTAS, CLASSE: "guerreiro", NIVEL: "8", COMITIVA: "morel", PONTOS: "2" }], fotos: ["doca"] },
   doca: { pasta: "doca/proposta", nomes: ["atalho-talentos", "atalho-grimorio", "atalho-inventario", "atalho-mapa", "atalho-diario", "atalho-bestiario", "atalho-salvar", "atalho-sair"],
     cena: ["capela", { CLASSE: "arqueiro", NIVEL: "5", PERIODO: "0", SALA: "exterior" }], fotos: ["doca", "luta-doca"] },
 };

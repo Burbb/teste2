@@ -831,3 +831,47 @@ Jean aprovou os dois sem retoque (`4deb386`).
 - **As fontes:** saíram de `doca_r4/fontes/` para `ferramentas/arte/aseprite/atalho-talentos/` e `atalho-comitiva/`.
 - **Os arquivos:** os oito do jogo são idênticos, byte a byte, aos aprovados.
 - **A Comitiva:** ganhou papel próprio em `Icones`. O `papel_atalho` do `fotografar.mjs` fica para outras propostas.
+
+## A doca, rodada 5: Bestiário, Salvar e Sair (`doca_r5/`)
+
+**O pedido:** os três últimos atalhos, um de cada vez, só no protótipo. Os três só servem à doca (`ATALHO`), no 36 e no
+32.
+
+**O Bestiário** (`auxiliares/bestiario.py`; camadas: chifres, cranio, contorno): o crânio de uma criatura, de frente.
+- **O que o faz criatura:** os chifres grossos em C, com anéis e a luz na beira, e as órbitas inclinadas (o canto de
+  fora sobe), fundas e separadas pela ponte do nariz, com o sobrolho aceso.
+- **O volume do osso:** as têmporas afundadas e as maçãs largas, o focinho afinando, a cavidade do nariz em V invertido
+  e o osso marfim em poucos planos.
+- **A boca, depois do retorno do Jean** (a parte de baixo, com uma referência da internet): a arcada de cima e a de
+  baixo, com os dentes na grade do tamanho (dente de 2 px, fenda de 1), a linha escura da boca e o queixo arredondado,
+  um degrau para dentro das maçãs.
+- **A primeira versão:** uma barra fina com duas presas soltas, guardada em `doca_r5/bestiario_r1/`.
+
+**O Salvar** (`auxiliares/salvar.py`; camadas: tampa, corpo, latao, seta, contorno): o baú aberto, inteiro à vista.
+- **O baú:** a tampa para trás, com as tábuas de dentro e a beira de latão; a boca escura com a borda acesa; a frente de
+  madeira com as cintas e a fechadura.
+- **A seta:** de aço, descendo para dentro da boca. Ela é contida, para não esconder o baú, e fria, para se separar da
+  madeira, do latão e do Sair.
+- **A tentativa:** a tampa inclinada parecia um telhado, e a boca tinha só 1 px.
+
+**O Sair** (`auxiliares/sair.py`; camadas: arco, passagem, seta, contorno): o arco de pedra de uma passagem.
+- **O arco:** as pedras em aduelas e fiadas, acesas em cima à esquerda.
+- **A profundidade do vão:** o fundo escuro e o chão de pedra, com a parede de dentro à direita, clara junto da face e
+  separada por uma junta escura.
+- **A seta:** laranja, saindo para a direita com contorno próprio.
+- **A diferença do Salvar:** a silhueta (arco em pé, contra baú largo), a direção da seta (para fora, contra para
+  dentro) e a cor (quente, contra fria).
+
+**As fontes:** em camadas, pintadas pelo `pintar.lua` no editor. O composto e a exportação são iguais às grades.
+
+**Conferido:**
+- **Sobre o carvão:** o tamanho real, ao lado dos atuais e dos aprovados (`doca_r5/prancha-carvao.png`).
+- **Na doca, a 1920×945, sem erros:** atual × proposta (`doca_r5/doca-atual-x-proposta-1920x945.png`) e os recortes em
+  tamanho real e 3× (`doca_r5/bestiario-salvar-sair-recortes.png`).
+- **O Salvar e o Sair:** não foram clicados (não mudam na foto).
+
+**O que pode ser pior:**
+- O crânio é mais frontal e simétrico que o placeholder.
+- A seta do Salvar ocupa o alto do baú e cobre o meio da tampa.
+
+Nada disto entrou no jogo.

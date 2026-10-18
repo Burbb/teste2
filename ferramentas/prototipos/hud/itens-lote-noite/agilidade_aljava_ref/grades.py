@@ -43,6 +43,9 @@ _DOCA3 = {**{str(i + 1): c for i, c in enumerate(["230B1C", "33112A", "451838", 
           "V": "2E1180", "W": "5A1FC8", "X": "8A3CEA", "Y": "BC5CF2", "Z": "F2C8FC",
           "k": "3A2414", "l": "5E3C22", "m": "86582E", "n": "A87440", "o": "C89458",
           "t": "3C3A44", "u": "8C8A96", "w": "E8E4EC", "R": "7A1E1A", "S": "B83A2C", "h": "6A5A48"}
+# a doca, rodada 5 (doca_r5/): o Bestiário (o osso e o chifre), o Salvar (a madeira, o latão, a seta de aço) e o Sair
+# (a pedra, a seta laranja); a grade traz o contorno desenhado (O)
+_DOCA5 = {'e': '2E1E13', 'f': '45301E', 'g': '604229', 'h': '7C5634', 'i': '986C42', 'j': 'B48752', 'n': '4A5468', 'o': '7A869C', 'x': '6A4A14', 'y': 'B48A30', 'z': 'F0D070', 'Q': '2E2014', 'R': '5A4430', 'S': '8A704C', 'T': 'B89C70', 'U': 'DCC79A', 'V': 'F4E8C8', 'W': '140C08', 'X': '3A2618', 'Y': '5E4028', 'Z': '8A6644', 'k': 'B48E64', 'P': 'DCE6F0', 'w': '4A3018', 'v': '2A1A0C', '!': '1C1A22', '#': '36343E', '$': '57555F', '%': '76747E', '&': '97959E', '@': 'BEBCC4', '7': 'C25A18', '8': 'F28A2A', '9': 'FFC070', 'O': '08080A'}
 # a doca, rodada 4 (doca_r4/): a Comitiva (pele, o verde do manto, o couro, o aço, o vermelho) e os Talentos (o latão e
 # a gema verde-água); a grade traz o contorno desenhado (O), também entre as figuras
 _DOCA4 = {"a": "5A3424", "b": "8E5A3C", "c": "C08A62", "d": "E0B088",
@@ -148,6 +151,21 @@ PECAS = {
         "sem_contorno": "",
         "legenda": {"g": "galhos", "n": "nos", "o": "contorno"},
         "letras": {k: (c, "") for k, c in _DOCA4.items()},
+    },
+    "atalho-bestiario": {
+        "camadas": ["chifres", "cranio", "contorno"], "sem_contorno": "",
+        "legenda": {"h": "chifres", "c": "cranio", "o": "contorno"},
+        "letras": {k: (c, "") for k, c in _DOCA5.items()},
+    },
+    "atalho-salvar": {
+        "camadas": ["tampa", "corpo", "latao", "seta", "contorno"], "sem_contorno": "",
+        "legenda": {"t": "tampa", "b": "corpo", "l": "latao", "s": "seta", "o": "contorno"},
+        "letras": {k: (c, "") for k, c in _DOCA5.items()},
+    },
+    "atalho-sair": {
+        "camadas": ["arco", "passagem", "seta", "contorno"], "sem_contorno": "",
+        "legenda": {"a": "arco", "p": "passagem", "s": "seta", "o": "contorno"},
+        "letras": {k: (c, "") for k, c in _DOCA5.items()},
     },
     "attr-poder": {
         "camadas": ["chama", "miolo", "faisca", "contorno"],
