@@ -88,3 +88,35 @@ O mercado desenha a sua aljava em código (`telas/mercado.js`, a banca); ela nã
 - **No topo (24):** reconhecível, mas mais discreta que a atual, que é mais colorida (vale olhar no jogo).
 - **No Inventário (40):** continua a atual (o 40 vem depois).
 - Sem erros.
+
+## 3. Os ícones dos atributos (`attr-ataque`, `attr-defesa`, `attr-agilidade`, `attr-poder`)
+
+`ferramentas/arte/desenhar_atributos_pixel.py`; proposta em `atributos/proposta/` (24 e 32, cada um na sua grade, nas
+mesmas medidas).
+
+**Os lugares e os papéis:**
+- **Na ficha e no Inventário:** em 24, o mais visto.
+- **Na luta:** a bota da Agilidade é também o comando Fugir, em 32 (`ACAO.fuga` em `icones.js`). Trocar a bota troca
+  os dois.
+
+**O desenho:** ficam os conceitos que já se leem, redesenhados na grade com rampas por material, luz de cima e da
+esquerda em faixas e o contorno comum. Saem os degradês suaves das peças pintadas.
+- **Ataque:** a espada na diagonal, com a lâmina de aço (o fio aceso do lado da luz), a guarda e o pomo de latão e a
+  empunhadura de couro com o cordão.
+- **Defesa:** o escudo de bico com a face de aço em duas metades pela aresta do meio (a esquerda acesa), a borda de
+  latão e dois cravos.
+- **Agilidade:** a bota de couro do conjunto (as rampas da bota, a dobra de camurça, a tira com a fivela, a sola) e
+  três riscos de movimento de latão.
+- **Poder:** a chama roxa em três línguas, nascendo de uma base redonda, com o miolo claro embaixo.
+
+**Rodadas descartadas:**
+- **1:** pequenas e magras no quadro de 24.
+- **2:** a chama como uma gota de borda ondulada, que lia como cristal.
+- **3 (a proposta):** formas maiores, ocupando o quadro como as atuais; o escudo com três faixas de luz por metade; a
+  chama em três línguas.
+
+**Conferido** (`atributos/capturas/`, `atributos-ficha-atual-x-proposta.png`, `fugir-atual-x-proposta.png`, 1500×950 e
+1280×720, sem erros):
+- **O que melhorou:** os quatro são legíveis em 24 e da mesma família pixel do couro. A bota é a mesma do conjunto.
+- **O que pode ser pior:** são mais chapados que os atuais (menos volume e brilho). A chama, em 24, perde o halo de
+  fogo da atual e lê mais como chama estilizada. O Fugir muda junto.
