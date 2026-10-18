@@ -3833,3 +3833,22 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   - conferido a 1920×945 contra os atuais, na ficha, no Inventário e nos selos;
   - aguarda a avaliação; os atuais continuam no jogo.
 - **Próximo:** Jean avaliar Ataque e Defesa. A doca vem depois. A versão continua 1.123.0.
+
+### 18/10/2026 (data do computador local) — Os atributos concluídos; a doca, rodada 2: Inventário e Mapa (nada no jogo)
+
+- **Decisão de Jean:**
+  - Ataque e Defesa ficam os do jogo (1.120.0); a rodada 2 (`ataque_defesa_r2/`, `e96da95`) fica guardada como
+    alternativa não escolhida;
+  - os quatro atributos estão concluídos, com o Poder integrado na 1.123.0.
+- **Pedido:** começar a doca, dois atalhos por vez: o Inventário (uma mochila de aventureiro) e o Mapa (um mapa físico).
+- **Feito** (`ferramentas/prototipos/hud/itens-lote-noite/doca_r2/`):
+  - **A mochila:** de couro, com a aba, a fivela, os bolsos e o cobertor enrolado.
+  - **O mapa:** em sanfona, com o percurso tracejado até o X.
+  - **Os arquivos:** o 36 primeiro e o 32 com a mesma construção, as fontes em camadas pintadas pelo MCP e a
+    exportação igual às grades.
+  - **As ferramentas:** o `grades.py` ganhou os mapas de camadas; o `fotografar.mjs` ganhou a doca com a tela aberta.
+- **Conferido:**
+  - a 1920×945: a doca inteira e os recortes em tamanho real e ampliados, normais e com a tela aberta;
+  - a suíte, o gabarito e o pyflakes. A fumaça não foi repetida: nenhum arquivo do jogo mudou desde `2018add`.
+- **Próximo:** Jean avaliar o Inventário e o Mapa. Os outros seis atalhos ficam para os próximos pares. A versão
+  continua 1.123.0.

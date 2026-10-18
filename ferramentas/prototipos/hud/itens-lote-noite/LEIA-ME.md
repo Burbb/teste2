@@ -570,3 +570,57 @@ atuais (1.120.0) continuam no jogo.
 - O escudo virado ocupa menos largura que o atual.
 
 Nada disto entrou no jogo.
+
+**Decisão de Jean:** os Ataque e Defesa do jogo (1.120.0) ficam. A rodada 2 acima é uma alternativa guardada, não
+escolhida. Os quatro atributos estão concluídos.
+
+## A doca, rodada 2: Inventário e Mapa (`doca_r2/`)
+
+**O pedido:** dois atalhos por vez, começando pelo Inventário e pelo Mapa. A primeira proposta (`doca/`) foi recusada:
+a mochila parecia uma maleta, e o mapa, um tríptico chapado.
+
+**Os tamanhos:** a doca usa o 36 (`Icones.atalho`, o `--s` da imagem); o 32 é para janelas estreitas. O 36 foi feito
+primeiro, e o 32 tem a mesma construção.
+
+**Como foi feito:**
+- **O desenho na grade:** os auxiliares estão em `doca_r2/auxiliares/`. A mochila foi pintada à mão região por região
+  (`m36h.py`, `m32h.py`), depois de um rascunho por regras que virava um saco sem construção. O mapa tem os painéis por
+  geometria e o percurso, o X e o terreno à mão (`mapa.py`, `mapa32.py`).
+- **As cores e as camadas:** como as cores do couro se repetem entre as partes, a camada de cada pixel vem de um
+  segundo mapa (`grades/<peça>-<lado>-camadas.txt`, feito por `auxiliares/camadas.py`). O `grades.py` ganhou essa
+  leitura, e as peças antigas dão as mesmas listas.
+- **No Aseprite, pelo MCP:** as camadas pintadas pelo `pintar.lua`, sem diferença na releitura, e salvas em
+  `doca_r2/fontes/`. O composto do editor e a exportação (`exportar_aseprite.py <peça> doca_r2/proposta
+  --fontes=doca_r2/fontes`) são iguais às grades.
+
+**A mochila** (camadas: rolo, bolsos, corpo, aba, cinta, fivela, contorno), no couro do conjunto aprovado:
+- **A forma:** é mais alta que larga, com os ombros redondos e o fundo cheio.
+- **A aba:** a dobra de cima é acesa, e a borda de baixo, em U, é escura e faz sombra no corpo.
+- **O fechamento:** a cinta do meio passa por uma fivela de latão vazada, com o pino.
+- **Os bolsos:** dos lados, bojudos, com a abinha acesa e a costura junto do corpo. As costuras dos painéis do corpo
+  dão o volume.
+- **O cobertor:** verde-oliva, enrolado em cima, preso por duas tiras de couro e com as pontas em espiral. É o que dá
+  silhueta e cara de viajante.
+
+**O mapa** (camadas: espessura, papel, vincos, terreno, percurso, destino, contorno):
+- **A forma:** dobrado em sanfona, em três painéis inclinados. O de cima e o de baixo sobem e descem juntos (o
+  zigue-zague), alternando a luz: os painéis que sobem para a direita estão acesos, e o do meio, na sombra.
+- **O volume:** os vincos (a dobra de dentro escura, a de fora acesa) e a espessura do papel embaixo.
+- **O que diz "mapa", sem símbolos miúdos:**
+  - o percurso tracejado em vermelho, com 2 px (o traço e a sombra), subindo até um X de 5×5;
+  - duas manchas grandes de terreno: um bosque verde e um lago azul.
+- **A diferença do Diário e do Grimório:** é papel dobrado, sem lombada nem capa.
+
+**Conferido a 1920×945**, sem erros:
+- **A doca inteira:** atual × proposta (`doca_r2/doca-atual-x-proposta-1920x945.png`).
+- **Os recortes do Inventário e do Mapa** (`doca_r2/inventario-mapa-recortes.png`): em tamanho real e ampliados 3×,
+  normais e com a tela aberta.
+- **O estado selecionado:** com o Inventário aberto, aparece o sublinhado de latão. Com o Mapa aberto, a tela do mapa
+  escurece a página inteira, doca junto, no atual e na proposta.
+- O `fotografar.mjs` ganhou a peça `doca_r2` e as fotos `doca-inventario` e `doca-mapa`.
+
+**O que pode ser pior:**
+- A mochila em couro claro destaca menos que o placeholder avermelhado.
+- O mapa dobrado é mais alto e mais estreito que o atual.
+
+Nada disto entrou no jogo, e os outros seis atalhos não foram começados.

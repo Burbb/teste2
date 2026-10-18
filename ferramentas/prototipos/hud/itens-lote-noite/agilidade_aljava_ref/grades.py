@@ -6,6 +6,10 @@ as listas de cada camada para o pintar.lua montar a fonte no Aseprite, mais uma 
 
 --pasta: a pasta da rodada (com grades/), quando não é esta (o Poder: ../poder_r2).
 
+Quando as cores se repetem entre partes (o couro da mochila no corpo, na aba e nos bolsos), a camada vem de um segundo
+mapa, grades/<peça>-<lado>-camadas.txt (um caractere por pixel, pela "legenda" da peça), e a letra da grade fica só
+com a cor.
+
 A fonte final é o .aseprite em fontes/<peça>/ (pintado no editor pelo MCP a partir dessas listas, e refinado lá); os
 PNGs da proposta saem dele por exportar_aseprite.py --fontes=fontes.
 """
@@ -26,6 +30,11 @@ _COURO = ["2E140A", "4E2210", "6E3317", "8F4620", "B0602C", "CF8040", "EAAA62"]
 # o Poder (rodada 2): a rampa violeta com deslocamento de matiz, do índigo da beira ao miolo creme; a chama (1 a 4), o
 # miolo (5 a 8) e a faísca solta em camadas próprias
 _VIOLETA = ["1E0B4A", "3A1488", "5E22C8", "8A3AE6", "B85CF0", "E08CF4", "F8C8F0", "FFF4DC"]
+# a doca (rodada 2, doca_r2/): a mochila no couro do conjunto aprovado, o latão, o pano do cobertor; o mapa de papel
+_COURO_DOCA = ["1E130C", "2E1E13", "45301E", "604229", "7C5634", "986C42", "B48752", "CFA36C"]
+_LATAO_DOCA = {"x": "5A3C12", "y": "9C6E22", "z": "DDB45C"}
+_PANO = {"g": "262B1A", "h": "3E4628", "i": "5C663C", "j": "7E8A56", "k": "A0AC74"}
+_PAPEL = {"A": "3E2E1A", "B": "6E5634", "C": "9C8052", "D": "C4A874", "E": "E2CC98", "F": "F4E6C0"}
 # Ataque e Defesa (rodada 2, ataque_defesa_r2/): o aço (1 a 7), o latão (a a d) e o couro do cabo
 _ACO = ["1C2230", "3A4458", "6A768C", "8C98AC", "B8C2D0", "DDE4EC", "FFFFFF"]
 _LATAO = {"a": "5A3A10", "b": "9A6A1C", "c": "D8A438", "d": "F6DC80"}
@@ -78,6 +87,21 @@ PECAS = {
             "Y": (_LATAO["a"], "lado"), "X": (_LATAO["b"], "lado"), "Z": ("3A240C", "lado"),
         },
     },
+    "atalho-inventario": {
+        "camadas": ["rolo", "bolsos", "corpo", "aba", "cinta", "fivela", "contorno"],
+        "sem_contorno": "",
+        "legenda": {"r": "rolo", "b": "bolsos", "c": "corpo", "a": "aba", "t": "cinta", "f": "fivela"},
+        "letras": {**{str(i + 1): (c, "") for i, c in enumerate(_COURO_DOCA)},
+                   **{k: (c, "") for k, c in _LATAO_DOCA.items()}, **{k: (c, "") for k, c in _PANO.items()}},
+    },
+    "atalho-mapa": {
+        "camadas": ["espessura", "papel", "vincos", "terreno", "percurso", "destino", "contorno"],
+        "sem_contorno": "",
+        "legenda": {"s": "espessura", "p": "papel", "v": "vincos", "e": "terreno", "q": "percurso", "x": "destino"},
+        "letras": {**{k: (c, "") for k, c in _PAPEL.items()},
+                   "v": ("7E8A52", ""), "w": ("A4AC72", ""), "l": ("6E8C9C", ""), "m": ("9CB4BC", ""),
+                   "r": ("6A1C12", ""), "s": ("B23A24", ""), "t": ("E0603A", "")},
+    },
     "attr-poder": {
         "camadas": ["chama", "miolo", "faisca", "contorno"],
         "sem_contorno": "",
@@ -94,11 +118,14 @@ def ler(peca, lado):
     P = PECAS[peca]
     linhas = [l for l in (AQUI / "grades" / f"{peca}-{lado}.txt").read_text(encoding="utf-8").splitlines() if l]
     assert len(linhas) == lado and all(len(l) == lado for l in linhas), "a grade não é quadrada do lado"
+    mapa = AQUI / "grades" / f"{peca}-{lado}-camadas.txt"
+    cam = [l for l in mapa.read_text(encoding="utf-8").splitlines() if l] if mapa.exists() else None
     px = {}
     for y, l in enumerate(linhas):
         for x, c in enumerate(l):
             if c != ".":
-                px[(x, y)] = P["letras"][c]
+                cor, camada = P["letras"][c]
+                px[(x, y)] = (cor, P["legenda"][cam[y][x]] if cam else camada)
     forma = {(x, y) for (x, y), (_, cam) in px.items() if linhas[y][x] not in P["sem_contorno"]}
     for y in range(lado):
         for x in range(lado):

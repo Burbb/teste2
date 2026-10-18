@@ -1,0 +1,1 @@
+espessura,papel,vincos,terreno,percurso,destino,contorno
