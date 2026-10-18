@@ -1,0 +1,16 @@
+/* Prova da ficha, rodada 2 (em avaliação, nada no jogo): a decoração é a pintura escolhida por Jean,
+   "../Painel vertical em tinta escura.png" (797×1974, com transparência), no lugar do carvão e do papel gerados na
+   rodada 1 (gerar_arte.py, arte/, que ficam para comparar). Vem por cima de ficha.css (a composição do conteúdo é a
+   mesma). A pintura é uma peça à parte (.ficha-pintura, pintura.js), na mesma célula da grade da coluna, atrás dela e
+   sem receber clique: escala 0,5 exata (398×987 px, sem esticar as pinceladas), transbordando a caixa da coluna para a
+   área escura sólida dela (x 86–723, y 127–1847 na imagem) ficar por trás de todo o conteúdo. */
+:root:root body #mesa > #heroi { grid-column: 1; grid-row: 1; position: relative; z-index: 1; background: none; }
+:root:root body #mesa > #palco { grid-column: 2; grid-row: 1; position: relative; z-index: 1; }
+:root:root body #mesa > #mundo { grid-column: 3; grid-row: 1; }
+:root:root body #mesa > .ficha-pintura { grid-column: 1; grid-row: 1; z-index: 0; pointer-events: none;
+  margin: -48px -25px -60px -25px; background: url(/proto-ficha/painel-tinta.png) 0 0 / 398px 987px no-repeat; }
+/* o fundo da tela: um cinza quente escuro, para as pinceladas pretas da borda aparecerem (sobre o quase preto da
+   rodada 1 elas sumiam) */
+:root:root body { background: #26231f; }
+/* a pintura passa da borda de baixo da janela (como a coluna da referência): a mesa a recorta, e a página não rola */
+:root:root body #mesa { overflow: clip; }

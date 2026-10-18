@@ -1,6 +1,7 @@
 {
  "jogo": {
   "medidas": {
+   "rola_a_pagina": 0,
    "rola_a_ficha": 0,
    "heroi": [
     100,
@@ -31,6 +32,7 @@
  },
  "ficha": {
   "medidas": {
+   "rola_a_pagina": 0,
    "rola_a_ficha": 0,
    "heroi": [
     71,

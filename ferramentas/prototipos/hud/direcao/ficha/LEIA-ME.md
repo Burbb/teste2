@@ -101,3 +101,53 @@ para o retoque à mão, se a avaliação pedir manchas desenhadas em pontos cert
 - **A experiência:** a barra roxa cheia não aparece, porque o caso começa com 0 de experiência.
 - **Os ícones:** os de atributo são os de 32 px que já existiam; os da referência são um pouco maiores e mais
   pintados.
+
+## Rodada 2: a pintura de Jean (18/10/2026)
+
+**Pedido de Jean:** gostou da textura que mandou e pediu para usá-la como a decoração da ficha, no lugar do carvão e do
+papel gerados na rodada 1.
+
+**A fonte da decoração:** `../Painel vertical em tinta escura.png`, de Jean (797×1974, com transparência):
+- tinta preta em pinceladas diagonais;
+- borda rasgada com respingos;
+- manchas de papel bege nos cantos e nos lados.
+
+Ela entra como está: sem recorte, sem atenuar nada e sem esticar.
+
+**Como entra:**
+- **`pintura.css` e `pintura.js`, por cima de `ficha.css` e `ficha.js`.** A composição do conteúdo é a mesma da rodada 1.
+- **A pintura é uma peça à parte.** É um `div.ficha-pintura` (só decoração, `aria-hidden`, sem clique), na mesma célula
+  da grade da coluna e atrás dela. As três colunas ganharam lugar explícito na grade para a peça nova não deslocá-las.
+- **Escala 0,5 exata (398×987 px).** A proporção da imagem é mantida e as pinceladas não deformam.
+- **O transbordo.** A pintura passa da caixa da coluna 25 px de cada lado, 48 em cima (por baixo da barra do topo) e
+  60 embaixo (além da janela, como a coluna da referência). Assim a área escura sólida dela (x 86–723, y 127–1847 na
+  imagem, medida com alfa acima de 230 e luminância abaixo de 70) fica por trás de todo o conteúdo.
+- **O recorte embaixo.** A mesa recorta a sobra (`overflow: clip`), e a página não rola.
+- **O fundo da tela** passou a um cinza quente escuro (#26231f). Sobre o quase preto da rodada 1, as pinceladas
+  pretas da borda sumiam.
+- **Nenhuma mancha clara foi atenuada.** As bege ficam nas bordas, e a mais próxima do conteúdo (à direita, na altura do
+  equipamento) passa ao lado dos espaços de item sem encostar neles.
+
+**Conferido (`fotografar.mjs`; `PROVA=gerada` refaz a rodada 1):**
+- o centro e a arena seguem com 1088 px;
+- a página e a ficha não rolam;
+- a dica de um atributo e a dos testes abrem por cima da pintura, legíveis;
+- nenhum erro na página.
+
+**Comparações (`comparacoes/`, tamanho real):**
+- `referencia-x-pintura.png`;
+- `referencia-x-gerada-x-pintura.png` (a referência, a rodada 1 e a rodada 2);
+- `pintura-ficha.png`;
+- `pintura-tela-inteira.png`.
+
+A rodada 1 continua em `gerar_arte.py`, `arte/` e nas comparações dela.
+
+**Compromissos e o que ainda difere:**
+- **A borda direita.** A pintura passa por baixo da coluna do centro, que a cobre (a emenda fica limpa, mas parte dos
+  respingos da direita não aparece).
+- **O canto de cima à esquerda.** Fica em parte sob a barra do topo.
+- **A borda de baixo.** Fica além da janela.
+- **Outra altura de janela.** A pintura tem altura fixa (987 px): numa janela mais alta, a coluna passaria do fim dela.
+  Sem bateria de resoluções nesta rodada; adaptar fica para quando a linguagem for aprovada (repetir o miolo ou separar
+  os cantos).
+- **O resto da tela.** O topo e as outras colunas seguem como em produção.

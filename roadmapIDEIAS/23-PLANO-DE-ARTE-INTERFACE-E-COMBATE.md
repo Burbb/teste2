@@ -522,6 +522,13 @@ A referência foi salva como `direcao/referencia.png`, e o método mudou:
 A coluna ficou com 348 px, ganha da margem; o centro e a arena seguem com 1088 px. A proposta anterior ficou como
 estava. Os compromissos e o que ainda difere estão no LEIA-ME de lá.
 
+**Rodada 2 (18/10/2026):** a decoração passou a ser a pintura de Jean
+(`direcao/Painel vertical em tinta escura.png`), aplicada como está.
+- **O encaixe:** escala 0,5 exata, numa peça própria atrás da coluna, transbordando a caixa para a área escura sólida
+  ficar por trás do conteúdo. Nenhuma mancha foi atenuada.
+- **O conteúdo:** a mesma composição da rodada 1.
+- **A rodada 1:** preservada para comparar.
+
 ## 2. Telas de leitura, criação e celebrações
 
 **Lembrete para o futuro estudo da HUD — pen.dev (experimento `9769305`):** antes de escolher ferramentas para

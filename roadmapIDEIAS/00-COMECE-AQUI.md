@@ -3565,3 +3565,19 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   - dicas abrindo, sem erros;
   - nenhum arquivo do jogo mudou (a suíte, o gabarito e a fumaça valem os da 1.118.0).
 - **Próximo:** Jean avaliar a linguagem. Só depois estender a outras áreas. Versão igual (1.118.0).
+
+### 18/10/2026 (data do computador local) — Prova da ficha, rodada 2: a pintura de Jean (em avaliação, nada no jogo)
+
+- **Pedido de Jean:** usar a textura dele (`direcao/Painel vertical em tinta escura.png`) como a decoração da ficha, no
+  lugar da arte gerada.
+- **Feito:**
+  - `ficha/pintura.css` e `ficha/pintura.js`: a pintura numa peça à parte atrás da coluna, na escala 0,5 exata, sem
+    esticar, transbordando a caixa para o conteúdo ficar sobre o escuro;
+  - o fundo da tela em cinza quente escuro;
+  - nenhuma mancha atenuada;
+  - a rodada 1 preservada.
+- **Conferido:**
+  - o centro com o mesmo tamanho e sem rolagem;
+  - as dicas abrindo, sem erros;
+  - nenhum arquivo do jogo mudou.
+- **Próximo:** Jean avaliar. Versão igual (1.118.0).

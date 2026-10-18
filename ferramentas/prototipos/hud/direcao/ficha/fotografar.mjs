@@ -14,11 +14,18 @@ const SAIDA = path.join(aqui, "capturas"), ARTE = path.join(aqui, "arte");
 mkdirSync(SAIDA, { recursive: true });
 const JANELA = { width: 1920, height: 945 };
 const so_medir = process.argv[2] === "medir";
+// a rodada: "pintura" (2: a pintura de Jean, pintura.css/js por cima de ficha.css/js) ou "gerada" (1: a arte de
+// gerar_arte.py); PROVA=gerada para refazer a rodada 1
+const RODADA = process.env.PROVA || "pintura";
 const PY = process.env.PYTHON || (process.platform === "win32" ? "python" : "python3");
 const espera = (ms) => new Promise((r) => setTimeout(r, ms));
 
 export async function anexarFicha(p) {
-  const JS = readFileSync(path.join(aqui, "ficha.js"), "utf8"), CSS = readFileSync(path.join(aqui, "ficha.css"), "utf8");
+  let JS = readFileSync(path.join(aqui, "ficha.js"), "utf8"), CSS = readFileSync(path.join(aqui, "ficha.css"), "utf8");
+  if (RODADA === "pintura") {
+    JS += "\n" + readFileSync(path.join(aqui, "pintura.js"), "utf8");
+    CSS += "\n" + readFileSync(path.join(aqui, "pintura.css"), "utf8");
+  }
   await p.route(/\/static\/app\/controles\.js(\?|$)/, async (r) => {
     const res = await r.fetch();
     const corpo = (await res.text()) + `\n;(() => { const s = document.createElement("style"); s.id = "ficha-prova"; s.textContent = ${JSON.stringify(CSS)}; document.head.appendChild(s); })();\n${JS}`;
@@ -27,7 +34,8 @@ export async function anexarFicha(p) {
   // a arte da prova, servida da pasta arte/
   await p.route(/\/proto-ficha\//, async (r) => {
     const nome = decodeURIComponent(new URL(r.request().url()).pathname.split("/").pop());
-    try { r.fulfill({ body: readFileSync(path.join(ARTE, nome)), contentType: "image/png" }); } catch { r.fulfill({ status: 404, body: "" }); }
+    const arquivo = nome === "painel-tinta.png" ? path.join(aqui, "..", "Painel vertical em tinta escura.png") : path.join(ARTE, nome);
+    try { r.fulfill({ body: readFileSync(arquivo), contentType: "image/png" }); } catch { r.fulfill({ status: 404, body: "" }); }
   });
 }
 
@@ -43,12 +51,14 @@ async function subir() {
 const medir = (p) => p.evaluate(() => {
   const r = (s) => { const q = document.querySelector(s).getBoundingClientRect(); return [Math.round(q.left), Math.round(q.top), Math.round(q.width), Math.round(q.height)]; };
   const h = document.querySelector("#heroi");
-  return { rola_a_ficha: h.scrollHeight - h.clientHeight, heroi: r("#heroi"), palco: r("#palco"), mundo: r("#mundo"), arena_ou_vista: r("#vista") };
+  const tela = { rola_a_pagina: document.documentElement.scrollHeight - innerHeight };
+  return { ...tela, rola_a_ficha: h.scrollHeight - h.clientHeight, heroi: r("#heroi"), palco: r("#palco"), mundo: r("#mundo"), arena_ou_vista: r("#vista") };
 });
 
 const b = await chromium.launch();
 const rel = {};
 for (const modo of so_medir ? ["ficha"] : ["jogo", "ficha"]) {
+  const nome = modo === "ficha" ? `ficha-${RODADA}` : modo;
   const { proc, url } = await subir();
   try {
     const p = await b.newPage({ viewport: JANELA });
@@ -58,21 +68,21 @@ for (const modo of so_medir ? ["ficha"] : ["jogo", "ficha"]) {
     await p.waitForFunction(() => !processando && pergunta, null, { timeout: 30000 }); await espera(1500);
     rel[modo] = { medidas: await medir(p), erros };
     if (!so_medir) {
-      await p.screenshot({ path: path.join(SAIDA, `${modo}-tela.png`) });
+      await p.screenshot({ path: path.join(SAIDA, `${nome}-tela.png`) });
       const [x, y, w, h] = rel[modo].medidas.heroi;
-      await p.screenshot({ path: path.join(SAIDA, `${modo}-ficha.png`), clip: { x: Math.max(0, x - 40), y: 0, width: w + 80, height: JANELA.height } });
+      await p.screenshot({ path: path.join(SAIDA, `${nome}-ficha.png`), clip: { x: Math.max(0, x - 40), y: 0, width: w + 80, height: JANELA.height } });
       if (modo === "ficha") {
         // as interações da coluna: a dica de um atributo, a dos testes, um espaço de item e o foco do teclado
         await p.hover('#heroi .atributo[data-atributo="Agilidade"]'); await espera(500);
-        await p.screenshot({ path: path.join(SAIDA, "ficha-dica-atributo.png"), clip: { x: 0, y: 0, width: 900, height: JANELA.height } });
+        await p.screenshot({ path: path.join(SAIDA, `${nome}-dica-atributo.png`), clip: { x: 0, y: 0, width: 900, height: JANELA.height } });
         await p.hover("#heroi .testes-ficha"); await espera(500);
-        await p.screenshot({ path: path.join(SAIDA, "ficha-dica-testes.png"), clip: { x: 0, y: 0, width: 900, height: JANELA.height } });
+        await p.screenshot({ path: path.join(SAIDA, `${nome}-dica-testes.png`), clip: { x: 0, y: 0, width: 900, height: JANELA.height } });
         await p.hover("#heroi .equip-mini .slot-px:not(.vazio)"); await espera(500);
         rel[modo].dica_item = await p.evaluate(() => { const d = document.getElementById("dica-item"); return !!(d && !d.hidden && d.offsetParent !== null && d.textContent.trim()); });
         await p.mouse.move(960, 600);
         await p.focus("#heroi .testes-ficha");
         rel[modo].foco = await p.evaluate(() => { const cs = getComputedStyle(document.activeElement); return `${document.activeElement.className}: ${cs.outlineStyle} ${cs.outlineWidth} ${cs.outlineColor}`; });
-        await p.screenshot({ path: path.join(SAIDA, "ficha-foco.png"), clip: { x: 60, y: 300, width: 400, height: 160 } });
+        await p.screenshot({ path: path.join(SAIDA, `${nome}-foco.png`), clip: { x: 60, y: 300, width: 400, height: 160 } });
       }
     }
     rel[modo].erros = erros;
