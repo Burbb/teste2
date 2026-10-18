@@ -14,6 +14,7 @@ nada daqui: só os PNGs exportados para `rpg/web/static/hud/icones/`.
 | luva (luva de couro com braçadeira) | `luva/luva-32.aseprite`, `-40`, `-48`; **o 64 é o 32 ampliado 2×** | bracadeira, luva, cordao, desgaste, contorno | 1.112.0 |
 | capuz_tecido (capuz de tecido) | `capuz_tecido/capuz_tecido-32.aseprite`, `-40`, `-48`; **o 64 é o 32 ampliado 2×** | capa, capuz, interior, borda, contorno | 1.112.0 |
 | luva_seda (luva de seda) | `luva_seda/luva_seda-32.aseprite`, `-40`, `-48`; **o 64 é o 32 ampliado 2×** | punho, luva, brilho, contorno | 1.112.0 |
+| calca_couro (Calça de Couro do Arqueiro) | `calca_couro/calca_couro-32.aseprite`, `-40`, `-48`; **o 64 é o 32 ampliado 2×** | pernas, remendo, cos, barra, braguilha, desgaste, contorno | 1.119.0 |
 
 A varinha é a aprovada pelo Jean (commit `451ff11`): a haste com o mesmo perfil nos quatro tamanhos e a pedra
 compacta (quadrada, de cantos cortados) também no 32. A camada `garras` do 32 fica vazia (lá a garra é um pixel da
@@ -80,3 +81,9 @@ lista o pixel fora da tela; relê cada pixel depois de gravar.
 Cuidados: as listas entram por `dofile` (um `.lua` que só faz `return "<lista>"`); `io.open` e `sprite:saveCopyAs`
 para PNG num `execute_script` abrem uma janela do Aseprite e travam o conector. Para exportar, use a ferramenta
 `export_png` do conector ou o `exportar_aseprite.py`.
+
+A Calça de Couro (1.119.0) é a aprovada pelo Jean no commit `ee0f01a`. As camadas saem de
+`ferramentas/arte/desenhar_calca_couro_pixel.py --listas` e foram montadas pela linha de comando do Aseprite
+(`ferramentas/prototipos/hud/itens-lote-noite/calca_couro/montar_fontes.sh`, com o `pintar.lua`). Os oito arquivos do
+jogo são idênticos, pixel a pixel, aos aprovados, e `exportar_aseprite.py calca_couro --conferir` os reproduz byte a
+byte.

@@ -418,11 +418,16 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   roda, o retrato, a cabeça e a figura do herói e dos companheiros (de `retratos.js`, abaixo). Devolve a `<img>` pronta ou `""` quando a família não tem aquele desenho; a
   tela usa então o sprite do jogo (`Icones.item(s) || S(s, 2)`). A origem e o destino de uma animação pedem o mesmo
   papel (o item que voa ao equipar, o selo de atributo, o consumível que cai na bolsa). Lacunas (desenho do jogo no
-  lugar, sem trocar por desenho de outro tipo de item): as peças sem desenho (a calça de couro, o chapéu de couro, que
+  lugar, sem trocar por desenho de outro tipo de item): as peças sem desenho (o chapéu de couro, que
   usa o capuz por ora, o Chapéu Pontudo, o Diadema, a calça de tecido, a sandália), os
   itens únicos com desenho próprio, a tocha apagada, a bolsa vazia e o frasco vazio no topo, os inimigos e as cartas deles, os
   ícones de habilidade e de efeito, o covil vencido. O mercador da banca tem o busto no balcão (`telas/mercado.js`,
   com as cores da figura da banca).
+- A Calça de Couro do Arqueiro (1.119.0): desenho próprio do conjunto de couro, para todas as calças de couro dele
+  (Rasgada, Curtida, Reforçada e as raras com nome; os saves já guardam `icone: "calca_couro"`). Fontes em camadas
+  em `ferramentas/arte/aseprite/calca_couro/` (32, 40, 48; o 64 é o 32 ampliado 2×, `DERIVADOS`), exportadas por
+  `exportar_aseprite.py calca_couro`. Os ícones de atributo e da doca são placeholders pintados, pendentes de pixel
+  art (plano 23, 1D).
 - O escudo e o Unguento de Prata (1.94.0), o machado e a Bomba de Fumaça (1.99.0) o arco (1.101.0,
   `desenhar_arco_pixel.py`; o Atacar da roda, o Tiro Duplo e o contrato continuam com o sprite) e o cajado (1.106.0,
   `desenhar_cajado_pixel.py`; o Atacar do Mago na roda e o traço Conjurador continuam com o sprite) e o orbe (1.107.0,

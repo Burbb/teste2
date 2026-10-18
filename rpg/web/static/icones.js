@@ -23,7 +23,7 @@ const Icones = (() => {
   const TAMANHOS = {"aljava": [24, 32, 40, 48, 64], "amuleto": [32, 40, 48, 64], "anel": [32, 40, 48, 64], "antidoto": [32, 48, 64],
     "arco": [32, 40, 48, 64], "cajado": [32, 40, 48, 64], "orbe": [32, 40, 48, 64], "livro": [32, 40, 48, 64], "varinha": [32, 40, 48, 64],
     "gibao": [32, 40, 48, 64], "bota": [32, 40, 48, 64], "capuz": [32, 40, 48, 64], "luva": [32, 40, 48, 64],
-    "capuz_tecido": [32, 40, 48, 64], "luva_seda": [32, 40, 48, 64],
+    "capuz_tecido": [32, 40, 48, 64], "calca_couro": [32, 40, 48, 64], "luva_seda": [32, 40, 48, 64],
     "atalho-bestiario": [32, 36], "atalho-diario": [32, 36], "atalho-grimorio": [32, 36], "atalho-inventario": [32, 36],
     "atalho-mapa": [32, 36], "atalho-sair": [32, 36], "atalho-salvar": [32, 36], "atalho-talentos": [32, 36],
     "attr-agilidade": [24, 32], "attr-ataque": [24, 32], "attr-defesa": [24, 32], "attr-poder": [24, 32],
@@ -61,10 +61,11 @@ const Icones = (() => {
   // a luva de couro com braçadeira, para a Braçadeira do Arqueiro e o único Mãos do Estrangulador; o capuz de tecido e
   // a luva de seda, para o Capuz e a Luva de Seda do Mago (o desenho vem do item: itens.py e a migração do save v5).
   // A habilidade Desaparecer usa o sprite "capuz" noutro papel e continua com ele; os espaços vazios da cabeça e das
-  // mãos continuam com o elmo e a manopla de ferro (VAZIO).
+  // mãos continuam com o elmo e a manopla de ferro (VAZIO). A Calça de Couro do Arqueiro (1.119.0) tem desenho próprio
+  // (o 64 é o 32 ampliado 2×); a Calça de Viagem do Mago continua com o sprite do jogo.
   const ITEM = { elmo: "elmo", armadura: "cota", manopla: "manopla", calca: "perneiras", bota_ferro: "botas-ferro",
     maca: "maca", espada: "espada", escudo: "escudo", amuleto: "amuleto", anel: "anel", aljava: "aljava", martelo: "martelo", machado: "machado", arco: "arco", cajado: "cajado", orbe: "orbe", livro: "livro", varinha: "varinha", gibao: "gibao", bota: "bota",
-    capuz: "capuz", luva: "luva", capuz_tecido: "capuz_tecido", luva_seda: "luva_seda" };
+    capuz: "capuz", luva: "luva", capuz_tecido: "capuz_tecido", luva_seda: "luva_seda", calca_couro: "calca_couro" };
   // o espaço vazio: a silhueta apagada do que vai nele (o material não aparece)
   const VAZIO = { cabeca: "elmo", armadura: "cota", maos: "manopla", pernas: "perneiras", pes: "botas-ferro", arma: "espada",
     secundaria: "escudo", amuleto: "amuleto", anel1: "anel", anel2: "anel" };
