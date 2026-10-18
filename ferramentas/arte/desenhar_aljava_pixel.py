@@ -39,13 +39,15 @@ PERFIL = {
     32: {"fundo": (10.8, 26.6), "inclina": 20.0, "tubo": 13.4, "larg": (3.5, 4.1),
          "cintas": ((2.8, 4.0), (8.6, 9.8)), "fundo_borda": 1.8, "aro": 1.0, "boca_k": 0.56,
          "alca": (2.6, 11.6, 2.6),
-         # as flechas: (desvio de través na boca, inclinação em graus a partir da vertical, comprimento, penas, vermelha)
-         "flechas": ((-2.2, -12.0, 11.6, 4, False), (0.4, 3.0, 12.6, 4, True), (2.6, 18.0, 10.6, 4, False)),
+         # as flechas: (desvio de través na boca, inclinação em graus a partir da vertical, comprimento, penas vermelhas?)
+         "flechas": ((-1.6, -10.0, 12.4, False), (2.0, 13.0, 11.4, True)),
+         "pena": (0, 1, 2, 2, 1),   # a meia-largura das penas em cada linha a partir do fim (0: o entalhe, só a haste)
          "entalhe": True},
     24: {"fundo": (8.6, 19.0), "inclina": 22.0, "tubo": 9.8, "larg": (3.2, 3.6),
          "cintas": ((4.0, 5.2),), "fundo_borda": 1.6, "aro": 0.9, "boca_k": 0.56,
          "alca": None,
-         "flechas": ((-1.8, -12.0, 8.4, 3, False), (0.4, 4.0, 9.2, 3, True), (2.6, 21.0, 7.6, 3, False)),
+         "flechas": ((-1.4, -10.0, 8.6, False), (1.8, 14.0, 7.8, True)),
+         "pena": (1, 1, 1),
          "entalhe": False},
 }
 
@@ -110,38 +112,43 @@ def desenhar(lado):
     tom[dentro] = 0
     fixo[aro] = True
 
-    # as flechas: começam dentro da abertura, a haste de 1 px até a ponta, as penas dos dois lados nas últimas
-    # linhas, e o entalhe além delas (no 32)
+    # as flechas (rodada 7): a haste de 1 px da boca até o fim, à vista entre as penas e a boca; as penas como dois
+    # paralelogramos contínuos presos à haste, um de cada lado, inclinados para trás (a parte de fora mais perto do
+    # fim da flecha); no 32, o entalhe é só 1 px de haste escura além das penas (sem o U)
     centro_boca = (x0 + ax * L, y0 + ay * L)
-    for (dw, ang, comp, n_pena, vermelha) in M["flechas"]:
+    for (dw, ang, comp, vermelha) in M["flechas"]:
         sx = centro_boca[0] + px_ * dw
         sy = centro_boca[1] + py_ * dw
         t = math.radians(ang)
-        dx, dy = math.sin(t), -math.cos(t)
-        ex, ey = sx + dx * comp, sy + dy * comp
-        pts = _reta(sx, sy, ex, ey)
-        entalhe = M["entalhe"]
-        corpo_flecha = pts[:-1] if entalhe else pts
-        rampa_pena = "v" if vermelha else "p"
-        for i, (hx, hy) in enumerate(corpo_flecha):
+        dx, dy = math.sin(t), -math.cos(t)          # do pé (na boca) para o fim da flecha
+        ex, ey = sx + dx * comp, sy + dy * comp       # o fim (o entalhe)
+        # a haste
+        for i, (hx, hy) in enumerate(_reta(sx, sy, ex, ey)):
             if not (0 <= hx < lado and 0 <= hy < lado):
                 continue
-            if mat[hy, hx] == "x" and i < 2:      # o pé da haste, ainda dentro da boca: a sombra de dentro
-                mat[hy, hx], tom[hy, hx] = "m", 0
-            else:
-                mat[hy, hx], tom[hy, hx] = "m", 2 if i < len(corpo_flecha) - n_pena else 1
+            mat[hy, hx] = "m"
+            tom[hy, hx] = 0 if (mat[hy, hx] == "x" and i < 2) else 2
             fixo[hy, hx] = True
-        # as penas: palhetas de 1 px de cada lado da haste, nas últimas n_pena linhas (antes do entalhe)
-        cauda = corpo_flecha[-n_pena:]
-        for (hx, hy) in cauda:
-            for lado_s in (-1, 1):
-                qx = hx + lado_s
-                if 0 <= qx < lado and mat[hy, qx] in ("", "x", "k", "b"):
-                    mat[hy, qx] = rampa_pena
-                    tom[hy, qx] = 2 if lado_s < 0 else 1
-                    fixo[hy, qx] = True
-        if entalhe:
-            nx, ny = pts[-1]
+        # as penas, linha a linha a partir do fim da haste: em cada linha, a meia-largura de PENA (a primeira linha é a
+        # do entalhe, quando há), centrada no pixel da haste daquela linha; o lado da luz (à esquerda) mais claro
+        linhas = {}
+        for (hx, hy) in reversed(_reta(sx, sy, ex, ey)):
+            linhas.setdefault(hy, hx)
+        ordem = sorted(linhas, key=lambda yy: (yy - ey) * (1 if dy > 0 else -1), reverse=True)
+        for k, larg in enumerate(M["pena"]):
+            if k >= len(ordem) or larg == 0:
+                continue
+            hy = ordem[k]
+            hx = linhas[hy]
+            for off in range(1, larg + 1):
+                for lado_s in (-1, 1):
+                    qx = hx + lado_s * off
+                    if 0 <= qx < lado and 0 <= hy < lado and mat[hy, qx] in ("", "x", "k", "b"):
+                        mat[hy, qx] = "v" if vermelha else "p"
+                        tom[hy, qx] = 2 if lado_s < 0 else 1
+                        fixo[hy, qx] = True
+        if M["entalhe"]:                              # o fim da haste além das penas, escuro (sem o U)
+            nx, ny = int(round(ex)), int(round(ey))
             if 0 <= nx < lado and 0 <= ny < lado:
                 mat[ny, nx], tom[ny, nx], fixo[ny, nx] = "m", 0, True
 

@@ -243,8 +243,8 @@ um bloco claro de 2 px).
 
 O 64 é o 32 ampliado 2×. A rodada 5 está em `aljava/rodada5/`, com o script dela.
 
-**Conferido a 1920×945** (`aljava/atual-x-anterior-x-refinada.png`): no topo e na ficha, a atual, a rodada 5 e a 6,
-sem erros. Os 40 e 48 aguardam a aprovação.
+**Conferido a 1920×945:** no topo e na ficha, a atual, a rodada 5 e a 6, sem erros. A comparação foi substituída pela
+da rodada 7 (abaixo); a rodada 6 está em `aljava/rodada6/`.
 
 ## Ataque e Defesa, a rodada nova (`ataque_defesa/`)
 
@@ -275,3 +275,45 @@ rampa:
 
 **Conferido a 1920×945** (`ataque_defesa/ataque-defesa-atual-x-proposta.png`, atual × proposta): a ficha (24), o
 Inventário (24) e os dois selos (64), sem erros. Agilidade, Poder e os oito da doca ficam para os próximos pares.
+
+## Ataque e Defesa integrados (1.120.0)
+
+Jean aprovou os dois da comparação anterior; entraram sem retoque.
+
+**As fontes em camadas:**
+- **Ataque:** `ferramentas/arte/aseprite/attr-ataque/attr-ataque-24/32.aseprite` (lâmina, guarda, cabo, pomo,
+  contorno).
+- **Defesa:** `ferramentas/arte/aseprite/attr-defesa/attr-defesa-24/32.aseprite` (face, borda, bossa, contorno).
+
+**O fluxo:** o script de cada ícone (`--listas`) e o montador genérico `ferramentas/arte/montar_fontes.py`. O 64 do
+selo é o 32 ampliado 2× (`DERIVADOS`), e `TAMANHOS` em `icones.js` ganhou o 64.
+
+**Conferido:**
+- os doze arquivos exportados das fontes são idênticos aos aprovados (`b8637d0`);
+- `exportar_aseprite.py todas --conferir` reproduz o jogo;
+- na produção, a 1920×945: a ficha e o Inventário (24) e o selo de atributo permanente (64), sem erros.
+
+Agilidade, Poder e os oito da doca continuam placeholders, pendentes em pares.
+
+## Rodada 7 da aljava: só as flechas
+
+**O pedido:** na rodada 6, as pontas ainda pareciam garfos ou argolas. O recipiente de couro fica igual; só as flechas
+mudam.
+
+**As flechas:**
+- **Duas no lugar de três:** separam melhor. Uma tem as penas claras e a outra vermelhas.
+- **As penas:** contínuas, desenhadas linha a linha a partir do fim da haste e centradas no pixel da haste daquela
+  linha.
+  - No 32, a meia-largura por linha é 0, 1, 2, 2, 1: o entalhe e depois uma folha de cada lado.
+  - No 24, 1, 1, 1.
+  - Como as hastes são inclinadas, as linhas deslocam e a forma fica diagonal. Os dois lados são simétricos, sem dentes
+    soltos.
+  - Por que linha a linha: a palheta medida na direção da flecha caía sobre os pixels da própria haste num dos lados e
+    virava uma bandeira.
+- **A haste:** de madeira, à vista entre as penas e a boca.
+- **O entalhe:** só no 32, como 1 px escuro da haste além das penas (sem o "U").
+
+O 64 é o 32 ampliado 2×.
+
+**Conferido a 1920×945** (`aljava/antes-x-depois-rodada7.png`): o topo (24) e a ficha (32), antes (rodada 6) ×
+depois, sem erros. Os 40 e 48 e a integração aguardam a aprovação.

@@ -3699,3 +3699,23 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
     na ficha, no Inventário e no selo;
   - a suíte, o gabarito, o pyflakes e a fumaça uma vez.
 - **Próximo:** Jean avaliar a aljava e Ataque/Defesa. Depois, Agilidade e Poder, e a doca em pares.
+
+### 18/10/2026 (data do computador local) — Ataque e Defesa no jogo (1.120.0); aljava rodada 7 em proposta
+
+- **Pedido de Jean:** integrar Ataque e Defesa (aprovados) sem retoque, com fontes em camadas; refinar só as flechas
+  da aljava (as pontas pareciam garfos ou argolas).
+- **Feito:**
+  - **Ataque e Defesa no jogo:**
+    - as fontes em `ferramentas/arte/aseprite/attr-ataque/` e `attr-defesa/` (24 e 32), montadas pelo fluxo novo
+      (`--listas` no script do ícone e `ferramentas/arte/montar_fontes.py`);
+    - o 64 do selo é o 32 ampliado 2× (`DERIVADOS`, `TAMANHOS`);
+    - os doze arquivos são idênticos aos aprovados.
+  - **A aljava, rodada 7:** duas flechas, as penas contínuas e simétricas linha a linha, a haste à vista, o entalhe só
+    no 32. O recipiente não mudou.
+- **Conferido:**
+  - a 1920×945: Ataque e Defesa na ficha, no Inventário e no selo (produção), e a aljava antes × depois no topo e na
+    ficha;
+  - a suíte, o gabarito, o pyflakes e a fumaça uma vez.
+- **Pendentes:**
+  - a aljava (40, 48 e a integração) aguarda a avaliação;
+  - Agilidade, Poder e a doca continuam placeholders, para os próximos pares.
