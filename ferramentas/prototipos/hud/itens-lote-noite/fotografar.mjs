@@ -32,6 +32,12 @@ const PECAS = {
   // festa de atributo permanente (64), pelo mesmo caminho do jogo (Telas.celebrar com a mensagem "atributo")
   ataque_defesa: { pasta: "ataque_defesa/proposta", nomes: ["attr-ataque", "attr-defesa"], papel_tamanhos: [24, 32, 64],
     cena: ["capela", { CLASSE: "arqueiro", NIVEL: "5", PERIODO: "0", SALA: "exterior" }], fotos: ["ficha", "inventario", "selo"] },
+  // Agilidade e Poder (a rodada nova): a ficha e o Inventário (24), os selos (64) e o comando Fugir da luta (32: a
+  // Agilidade é também a ação de fugir, ACAO.fuga)
+  agilidade_poder: { pasta: "agilidade_poder/proposta", nomes: ["attr-agilidade", "attr-poder"], papel_tamanhos: [24, 32, 64],
+    selos: [["agi", "Agilidade"], ["poder", "Poder"]],
+    cena: ["tutorial", { LUTA_APOS_ESCOLHA: "1", TUTORIAL: "0", VISTAS, CLASSE: "guerreiro", NIVEL: "8", ESPEC: "paladino", COMITIVA: "morel", LUTA: "lobo", QUANTOS: "3", NIVEL_LUTA: "7" }],
+    fotos: ["ficha", "inventario", "selo", "luta"] },
   doca: { pasta: "doca/proposta", nomes: ["atalho-talentos", "atalho-grimorio", "atalho-inventario", "atalho-mapa", "atalho-diario", "atalho-bestiario", "atalho-salvar", "atalho-sair"],
     cena: ["capela", { CLASSE: "arqueiro", NIVEL: "5", PERIODO: "0", SALA: "exterior" }], fotos: ["doca", "luta-doca"] },
 };
@@ -97,7 +103,7 @@ for (const modo of (process.env.SO_PROPOSTA ? [ROTULO] : ["atual", ROTULO])) for
       if (f === "ficha") { await p.screenshot({ path: nome("ficha"), clip: await clipDe("#heroi", 0) }); }
       if (f === "topo") { await p.screenshot({ path: nome("topo"), clip: await clipDe("#hud", 0) }); }
       if (f === "selo") {
-        for (const [stat, nomeAttr] of [["atk", "Ataque"], ["defesa", "Defesa"]]) {
+        for (const [stat, nomeAttr] of (P.selos || [["atk", "Ataque"], ["defesa", "Defesa"]])) {
           await p.evaluate(([st, nm]) => { Telas.celebrar({ tipo: "atributo", dados: { stat: st, nome: nm, valor: 2, total: 27 } }, false); }, [stat, nomeAttr]);
           await espera(350);
           const sel = await p.$(".selo-atributo");

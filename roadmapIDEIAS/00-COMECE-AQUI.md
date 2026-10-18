@@ -3719,3 +3719,22 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Pendentes:**
   - a aljava (40, 48 e a integração) aguarda a avaliação;
   - Agilidade, Poder e a doca continuam placeholders, para os próximos pares.
+
+### 18/10/2026 (data do computador local) — Aljava 40/48 e propostas de Agilidade e Poder (nada no jogo)
+
+- **Pedido de Jean:** a aljava da rodada 7 (`5689148`) aprovada em 24, 32 e 64. Preparar os 40 e 48, e propor
+  Agilidade e Poder, um por vez.
+- **Feito:**
+  - **A aljava:**
+    - os 40 e 48 derivados da construção aprovada (`_derivado`); o 24, o 32 e o 64 continuam iguais;
+    - as fontes em camadas no protótipo (`aljava/fontes/`);
+    - `montar_fontes.py` e `exportar_aseprite.py` ganharam `--fontes=<pasta>` para propostas.
+  - **Agilidade:** a bota de couro em passada, com rastros de velocidade.
+  - **Poder:** a chama violeta viva em três línguas, com camadas aninhadas e faíscas.
+  - Fontes em camadas e PNGs no protótipo (`agilidade_poder/`).
+- **Conferido a 1920×945:**
+  - a aljava no Inventário (40) e no saque (48 ao lado do 64);
+  - Agilidade e Poder na ficha (os quatro juntos), no Fugir da luta e nos selos.
+  - A suíte, o gabarito, o pyflakes e a fumaça uma vez.
+- **Próximo:** Jean avaliar os intermediários da aljava e as propostas de Agilidade e Poder. A doca fica para os
+  próximos pares. Versão igual (1.120.0).

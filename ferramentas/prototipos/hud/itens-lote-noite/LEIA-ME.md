@@ -343,3 +343,47 @@ integração, as fontes vão para `ferramentas/arte/aseprite/aljava/`.
 **Conferido a 1920×945** (`aljava/intermediarios-inventario-e-saque.png`, atual × proposta): o 40 no Inventário, e o
 48 no "você usa" do saque, ao lado do 64 no achado. O cenário `vila` usou `VESTIDO=aljava` e `ACHADO=aljava`. Sem
 erros. A integração aguarda a avaliação.
+
+## Agilidade e Poder, as propostas novas (`agilidade_poder/`)
+
+Um script por ícone, pela skill, com o acabamento de Ataque e Defesa como referência:
+- `ferramentas/arte/desenhar_attr_agilidade_pixel.py`;
+- `ferramentas/arte/desenhar_attr_poder_pixel.py`.
+
+**As fontes em camadas** ficam no protótipo (`agilidade_poder/fontes/`), montadas pelo fluxo de sempre com
+`--fontes=`. Os doze PNGs exportados das fontes são iguais à proposta, e o 64 é o 32 ampliado 2× (`DERIVADOS`).
+
+**Agilidade:** uma bota de couro em pleno passo, com pose própria (não é a bota do equipamento).
+- **A pose:** inclinada para a frente, o calcanhar no ar e a ponta descendo (o impulso).
+- **O volume:** o cano como cilindro, a dobra de camurça, a tira com a fivela, o peito do pé aceso, o brilho na ponta,
+  a sola e o salto.
+- **O movimento:** três rastros de velocidade atrás, claros junto da bota e apagando para trás.
+- **As camadas:** rastros, sola, bota, dobra, tira, contorno.
+
+A Agilidade é também o comando Fugir da luta (32, `ACAO.fuga`): trocar um troca os dois.
+
+**Rodadas descartadas da Agilidade:**
+- **1:** o cano inclinava para trás, e a bota parecia chutar; o couro estava claro demais.
+- **2:** os rastros encostavam na borda, e o contorno voltava pela grade.
+- **3:** deslocada para a esquerda.
+- **4 (pedido de Jean):** o giro comia a ponta, que ficava com um corte reto. Agora o pé e a sola são uma forma só:
+  o peito do pé desce do cano até um bico arredondado, o fundo sobe um pouco na ponta, e a sola acompanha a curva.
+
+**Poder:** uma chama violeta viva.
+- **A forma:** três línguas que ondulam, nascendo de uma base redonda, e faíscas soltas (uma no 24, duas no 32).
+- **A luz:** sem desfoque. As camadas aninhadas são a silhueta da chama encolhida para a base, com uma rampa de
+  deslocamento de matiz (do índigo da beira ao violeta, ao magenta-lilás e ao núcleo branco rosado); o lado de trás de
+  cada camada fica um tom abaixo.
+- **As camadas:** chama, núcleo, faíscas, contorno.
+
+**Rodada descartada do Poder:** na 1, o núcleo era pequeno e o roxo chapado.
+
+**Conferido a 1920×945** (`agilidade_poder/agilidade-poder-atual-x-proposta.png`):
+- **Os quatro atributos juntos:** na ficha (24), com Ataque e Defesa já integrados e sem mudança.
+- **Os outros usos:** o Fugir na roda da luta (32) e os selos de Agilidade e Poder (64).
+- **Erros:** nenhum.
+- **O que pode ser pior:**
+  - A Agilidade ocupa menos o quadro que o placeholder e fica menor no selo.
+  - A chama tem menos brilho que o placeholder pintado, mas lê como fogo vivo, e não como cristal ou gota.
+
+Nada disto entrou no jogo, e os mapeamentos não mudaram. A doca fica para os próximos pares.
