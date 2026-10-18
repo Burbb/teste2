@@ -93,7 +93,8 @@ const Icones = (() => {
   const VITAL = { Vida: "vital-vida", Vigor: "vital-vigor", Mana: "vital-mana", Foco: "vital-foco" };
   // os atalhos da doca (36; o 32 nas janelas estreitas) em pixel art, fontes em ferramentas/arte/aseprite/: o
   // Inventário (a mochila de couro) e o Mapa (o mapa dobrado em sanfona), 1.124.0; o Diário (o livro aberto com a pena e
-  // a fita), 1.125.0. Os outros cinco ainda são os pintados
+  // a fita), 1.125.0; o Grimório (o livro violeta fechado e inclinado, com a estrela de latão), 1.126.0, que é também o
+  // comando Habilidades da roda da luta (ACAO.grimorio, 32). Os outros quatro ainda são os pintados
   const ATALHO = { Talentos: "atalho-talentos", "Grimório": "atalho-grimorio", "Inventário": "atalho-inventario", Mapa: "atalho-mapa",
     "Diário": "atalho-diario", "Bestiário": "atalho-bestiario", Salvar: "atalho-salvar", Sair: "atalho-sair" };
   // o desenho que o jogo escolhe para o destino (MapaPx.sprite); o covil vencido continua a bandeira do jogo

@@ -19,6 +19,7 @@ nada daqui: só os PNGs exportados para `rpg/web/static/hud/icones/`.
 | attr-defesa (o ícone de Defesa) | `attr-defesa/attr-defesa-24.aseprite`, `-32`; **o 64 é o 32 ampliado 2×** | face, borda, bossa, contorno | 1.120.0 |
 | attr-poder (o ícone de Poder) | `attr-poder/attr-poder-24.aseprite`, `-32`; **o 64 é o 32 ampliado 2×** | chama, miolo, faisca, contorno | 1.123.0 |
 | atalho-inventario (o Inventário da doca) | `atalho-inventario/atalho-inventario-36.aseprite`, `-32` | rolo, bolsos, corpo, aba, cinta, fivela, contorno | 1.124.0 |
+| atalho-grimorio (o Grimório da doca e o Habilidades da luta) | `atalho-grimorio/atalho-grimorio-36.aseprite`, `-32` | contracapa, folhas, lombada, capa, emblema, cravos, fita, contorno | 1.126.0 |
 | atalho-diario (o Diário da doca) | `atalho-diario/atalho-diario-36.aseprite`, `-32` | capa, paginas, anotacoes, fita, pena, contorno | 1.125.0 |
 | atalho-mapa (o Mapa da doca) | `atalho-mapa/atalho-mapa-36.aseprite`, `-32` | espessura, papel, vincos, terreno, percurso, destino, contorno | 1.124.0 |
 | aljava (a aljava do Patrulheiro e as flechas do topo) | `aljava/aljava-24.aseprite`, `-32`, `-40`, `-48`; **o 64 é o 32 ampliado 2×** | alca, couro, cintas, latao, boca, hastes, penas, contorno | 1.122.0 |
@@ -158,3 +159,12 @@ primeira proposta, recusada, e fica como histórico.
 O livro aberto com a pena e a fita é o da rodada 3 da doca, aprovado pelo Jean no `666b806`
 (`ferramentas/prototipos/hud/itens-lote-noite/doca_r3/`). Tem o 36 e o 32, sem derivado. Os quatro arquivos exportados
 das fontes são idênticos, byte a byte, aos aprovados, e `exportar_aseprite.py atalho-diario --conferir` os reproduz.
+
+## O Grimório da doca (1.126.0)
+
+O livro violeta fechado e inclinado, com a estrela de latão, é a rodada 3 da doca, aprovada pelo Jean no `61dcb81`
+(`ferramentas/prototipos/hud/itens-lote-noite/doca_r3/`; o modelo do livro está em `auxiliares/grimorio_livro.py`).
+- **Os usos:** o atalho da doca e o comando Habilidades da roda da luta (`ACAO.grimorio`, o 32).
+- **Conferido:** os quatro arquivos exportados das fontes são idênticos, byte a byte, aos aprovados, e
+  `exportar_aseprite.py atalho-grimorio --conferir` os reproduz.
+- **As rodadas recusadas** estão no protótipo: `doca_r3/grimorio_r1/` e `grimorio_r2/`.

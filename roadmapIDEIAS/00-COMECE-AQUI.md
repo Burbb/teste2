@@ -3920,3 +3920,14 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   - a produção × a rodada 2 × a rodada 3 a 1920×945, na doca e no Habilidades;
   - a suíte, o gabarito e o pyflakes. A fumaça não foi repetida: nenhum arquivo do jogo mudou desde `6742ba9`.
 - **Próximo:** Jean avaliar o Grimório. Talentos, Bestiário, Salvar e Sair ficam para depois.
+
+### 18/10/2026 (data do computador local) — O Grimório da doca no jogo (1.126.0); a skill de livros
+
+- **Pedido de Jean:** integrar o Grimório da rodada 3 (`61dcb81`) sem retoque, e registrar o aprendizado numa skill de
+  livros.
+- **O Grimório:**
+  - as fontes foram para `ferramentas/arte/aseprite/atalho-grimorio/` (36 e 32);
+  - os quatro arquivos do jogo são idênticos, byte a byte, aos aprovados, e o exportador os reproduz;
+  - vale para o atalho da doca e para o comando Habilidades da luta (`ACAO.grimorio`), sem mudança de mapeamento.
+  - Conferido no jogo, sem injeção, a 1920×945 (`doca_r3/grimorio-no-jogo.png`). A suíte, o gabarito, o pyflakes e a
+    fumaça passaram uma vez.

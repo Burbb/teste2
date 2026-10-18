@@ -766,3 +766,10 @@ rodada 2 e a rodada 3, na doca (36) e no Habilidades da luta (32), em tamanho re
 **O que pode ser pior:**
 - O livro inclinado ocupa o quadro na diagonal e fica um pouco menor que o atual.
 - No 32, o halo do emblema é só um pequeno disco mais claro.
+
+### Integrado: o Grimório (1.126.0)
+
+Jean aprovou a rodada 3 sem retoque (`61dcb81`). As fontes saíram de `doca_r3/fontes/` para
+`ferramentas/arte/aseprite/atalho-grimorio/`, e os quatro arquivos do jogo são idênticos, byte a byte, aos aprovados.
+Vale para o atalho da doca e para o comando Habilidades da luta. As rodadas 1 e 2 ficam em `doca_r3/grimorio_r1/` e
+`grimorio_r2/`.

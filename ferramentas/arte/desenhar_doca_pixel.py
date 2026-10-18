@@ -1,5 +1,5 @@
-"""Histórico: a primeira proposta da doca, recusada. O Inventário e o Mapa (1.124.0) e o Diário (1.125.0) do jogo vêm das
-fontes em camadas de ferramentas/arte/aseprite/atalho-inventario/, atalho-mapa/ e atalho-diario/ (exportar_aseprite.py); este script só grava numa pasta.
+"""Histórico: a primeira proposta da doca, recusada. O Inventário e o Mapa (1.124.0), o Diário (1.125.0) e o Grimório (1.126.0)
+do jogo vêm das fontes em camadas de ferramentas/arte/aseprite/atalho-*/ (exportar_aseprite.py); este script só grava numa pasta.
 
 Os oito ícones do menu de baixo (a doca: Talentos, Grimório, Inventário, Mapa, Diário, Bestiário, Salvar, Sair) no
 método da família: proposta, nada no jogo.
