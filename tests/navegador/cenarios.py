@@ -146,7 +146,8 @@ def vila(ui):
     """Guerreiro numa vila: acha um item raro (cartão do saque) e depois abre o mural de contratos. ACHADO=martelo: o
     item achado é um martelo (para conferir o desenho no cartão e no voo ao equipar); ARMA=machado: a arma vestida
     (o cartão "você usa" ao lado). CLASSE (padrão guerreiro): o herói e o achado dessa classe (ACHADO=arco, cajado...).
-    ACHADO_ID=<id> (pele_do_penitente...): o achado é esse único do catálogo (itens.UNICOS), no nível 4."""
+    ACHADO_ID=<id> (pele_do_penitente...): o achado é esse único do catálogo (itens.UNICOS), no nível 4. VESTIDO=<desenho>
+    (calca_couro...): uma peça desse desenho da classe vestida no espaço dela (o cartão "você usa" ao lado do achado)."""
     g = Jogo(ui, seed=8, pasta_saves=tempfile.mkdtemp())
     ui.jogo = g
     g.iniciar("Jean", os.environ.get("CLASSE", "guerreiro"))
@@ -172,6 +173,10 @@ def vila(ui):
         from rpg import itens
         it = itens.fazer_unico(itens.UNICOS_POR_ID[os.environ["ACHADO_ID"]], 4)
     vestir_arma(g)
+    if os.environ.get("VESTIDO"):
+        vest = next(e for e in iter(lambda: gerar_equip(rng, g.j.classe, 2), None) if e["icone"] == os.environ["VESTIDO"])
+        g.j.equip["anel1" if vest["slot"] == "anel" else vest["slot"]] = vest
+        g.j.recalcular()
     ui.cena("Ruínas do caminho", g.contexto_cena(), "evento")
     g.dizer("Entre as pedras, algo reluz.")
     g.oferecer_equip(it)

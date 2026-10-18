@@ -13,13 +13,15 @@ const aqui = path.dirname(fileURLToPath(import.meta.url)), raiz = path.resolve(a
 const peca = process.argv[2];
 const PY = process.env.PYTHON || (process.platform === "win32" ? "python" : "python3");
 const espera = (ms) => new Promise((r) => setTimeout(r, ms));
-const JANELAS = [[1500, 950], [1280, 720]];
+// JANELAS=1920x945 (a janela principal do Jean) ou a lista padrão: a normal e a baixa
+const JANELAS = process.env.JANELAS ? process.env.JANELAS.split(",").map((j) => j.split("x").map(Number)) : [[1500, 950], [1280, 720]];
 const VISTAS = "A1,A0,AL,V2,V5,N1,D1,K1,M1,L1,F1,F2,F3,F4";
 
 // cada peça: a pasta da proposta, os nomes de arquivo que ela troca, o papel novo (se houver) e as fotos
 const PECAS = {
-  calca_couro: { pasta: "calca_couro/proposta", nomes: ["calca_couro"], papel: { item: "calca_couro", tamanhos: [32, 64] },
-    cena: ["capela", { CLASSE: "arqueiro", NIVEL: "5", PERIODO: "0", SALA: "exterior" }], fotos: ["ficha", "inventario"] },
+  calca_couro: { pasta: "calca_couro/proposta", nomes: ["calca_couro"], papel: { item: "calca_couro", tamanhos: [32, 40, 48, 64] },
+    cena: ["capela", { CLASSE: "arqueiro", NIVEL: "5", PERIODO: "0", SALA: "exterior" }], fotos: ["ficha", "inventario"],
+    saque: ["vila", { CLASSE: "arqueiro", ACHADO: "calca_couro", VESTIDO: "calca_couro" }] },
   aljava: { pasta: "aljava/proposta", nomes: ["aljava"],
     cena: ["capela", { CLASSE: "arqueiro", NIVEL: "5", PERIODO: "0", SALA: "exterior" }], fotos: ["topo", "ficha", "inventario"] },
   atributos: { pasta: "atributos/proposta", nomes: ["attr-ataque", "attr-defesa", "attr-agilidade", "attr-poder"],
@@ -30,7 +32,9 @@ const PECAS = {
 };
 const P = PECAS[peca];
 if (!P) throw new Error(`peça desconhecida: ${peca}`);
-const PROPOSTA = path.join(aqui, P.pasta), SAIDA = path.join(aqui, peca, "capturas");
+// PASTA=<pasta relativa> troca a proposta (aljava/rodada4: a anterior); ROTULO=<nome> no lugar de "proposta" nas fotos
+const PROPOSTA = path.join(aqui, process.env.PASTA || P.pasta), SAIDA = path.join(aqui, peca, "capturas");
+const ROTULO = process.env.ROTULO || "proposta";
 mkdirSync(SAIDA, { recursive: true });
 
 async function anexar(p) {
@@ -63,12 +67,12 @@ async function subir() {
 
 const b = await chromium.launch();
 const rel = [];
-for (const modo of ["atual", "proposta"]) for (const [W, H] of JANELAS) {
+for (const modo of (process.env.SO_PROPOSTA ? [ROTULO] : ["atual", ROTULO])) for (const [W, H] of JANELAS) {
   const { proc, url } = await subir();
   try {
     const p = await b.newPage({ viewport: { width: W, height: H } });
     const erros = []; p.on("pageerror", (e) => erros.push(String(e)));
-    if (modo === "proposta") await anexar(p);
+    if (modo !== "atual") await anexar(p);
     await p.goto(url); await p.waitForFunction(() => !processando && pergunta, null, { timeout: 30000 }); await espera(1200);
     const nome = (f) => path.join(SAIDA, `${modo}-${W}x${H}-${f}.png`);
     const clipDe = async (sel, m = 8) => { const bb = await (await p.$(sel)).boundingBox(); return { x: Math.max(0, bb.x - m), y: Math.max(0, bb.y - m), width: bb.width + 2 * m, height: bb.height + 2 * m }; };
@@ -98,6 +102,26 @@ for (const modo of ["atual", "proposta"]) for (const [W, H] of JANELAS) {
       (await desenhos()).forEach((d) => visto.add(d));
     }
     rel.push({ modo, janela: `${W}x${H}`, desenhos: [...visto].sort(), erros });
+    await p.close();
+  } finally { proc.kill(); }
+}
+// o cartão do saque (64 e 48: o achado e o "você usa") e o voo ao equipar, quando a peça tem cena de saque
+if (P.saque) for (const modo of ["atual", "proposta"]) for (const [W, H] of JANELAS) {
+  const [cenario, amb] = P.saque;
+  const proc = spawn(PY, ["-m", "tests.navegador.cenarios", cenario], { cwd: raiz, env: { ...process.env, PYTHONPATH: raiz, PYTHONIOENCODING: "utf-8", VELOCIDADE: "rapido", ...amb } });
+  let url = null; proc.stdout.on("data", (d) => { const m = String(d).match(/http:\S+/); if (m) url = m[0]; });
+  for (let k = 0; k < 300 && !url; k++) await espera(100);
+  try {
+    const p = await b.newPage({ viewport: { width: W, height: H } });
+    const erros = []; p.on("pageerror", (e) => erros.push(String(e)));
+    if (modo === "proposta") await anexar(p);
+    await p.goto(url);
+    await p.waitForSelector(".janela-achado", { timeout: 30000 }); await espera(2500);
+    const bb = await (await p.$(".janela-achado")).boundingBox();
+    await p.screenshot({ path: path.join(SAIDA, `${modo}-${W}x${H}-saque.png`), clip: { x: bb.x - 6, y: bb.y - 6, width: bb.width + 12, height: bb.height + 12 } });
+    const desenhos = await p.evaluate((nomes) => [...document.querySelectorAll("img")].filter((i) => nomes.some((n) => (i.currentSrc || i.src).includes(`/${n}-`)))
+      .map((i) => `${(i.currentSrc || i.src).split("/").pop()} ${Math.round(i.getBoundingClientRect().width)}px`), P.nomes);
+    rel.push({ modo, janela: `${W}x${H}`, saque: [...new Set(desenhos)].sort(), erros });
     await p.close();
   } finally { proc.kill(); }
 }

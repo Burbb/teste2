@@ -37,6 +37,12 @@ Caminhos relativos à raiz do repositório. O que é de um objeto só (as medida
    Compare também com os vizinhos da família (`espada-32.png`, `anel-32.png`, `pocao-32.png`): o novo precisa caber
    ao lado deles.
 
+**Símbolos da interface não são equipamentos.** Os ícones de atributo, da doca, dos recursos e das ações são
+símbolos funcionais: a skill orienta o acabamento e a coerência com a família, mas eles não precisam copiar
+literalmente um equipamento do jogo. A bota da Agilidade, por exemplo, pode ter pose própria para comunicar movimento
+em vez de repetir a bota de couro de perfil. Volume, personalidade e leitura do material contam mais que a semelhança
+com a peça (decisão do Jean, 18/10/2026, ao recusar as propostas chapadas dos atributos e da doca).
+
 ## Desenhar
 
 O desenho é um script Python em `ferramentas/arte/`, um por objeto, com as etapas comuns de

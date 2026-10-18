@@ -3657,3 +3657,25 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   LEIA-ME de lá tem, por peça, o que melhorou e o que pode ser pior.
 - **Próximo:** Jean avaliar cada peça. Os 40 e 48 da calça e da aljava saem depois da aprovação do 32, e o papel da
   calça entra em `icones.js` na integração. Versão igual (1.118.0).
+
+### 18/10/2026 (data do computador local) — Lote de ícones: a calça nos quatro tamanhos e a aljava refinada (propostas)
+
+- **Decisões de Jean sobre o lote da noite:**
+  - **A calça de couro:** o 32 aprovado.
+  - **A aljava:** refinar a leitura no topo.
+  - **Os atributos e a doca:** ficam os atuais. As propostas ficam como alternativas não escolhidas, sem outra rodada
+    agora. A skill `arte-itens-fenda` ganhou a orientação de que símbolos da interface não precisam copiar
+    equipamentos.
+- **Feito** (`ferramentas/prototipos/hud/itens-lote-noite/`, nada no jogo):
+  - **A calça:** 40 e 48 da mesma construção em degraus (o 32 aprovado e o 64 iguais), mais a fonte em camadas
+    (`calca_couro/fontes/*.aseprite`), conferida pixel a pixel.
+  - **A aljava:** o 24 do topo refeito com simplificações próprias (mais largo, mais claro, sem a alça); o 32 sem
+    mudança.
+  - **O cenário `vila`:** ganhou `VESTIDO=<desenho>` (o "você usa" do saque).
+- **Conferido:** a 1920×945, a calça no Inventário, no saque e na ficha, e a aljava atual × anterior × refinada no topo
+  e na ficha. A suíte, o gabarito, o pyflakes e a fumaça uma vez.
+- **Pendentes:**
+  - Jean avaliar os quatro tamanhos da calça e a aljava refinada;
+  - os 40 e 48 da aljava, depois da aprovação;
+  - a integração das duas.
+  Versão igual (1.118.0).

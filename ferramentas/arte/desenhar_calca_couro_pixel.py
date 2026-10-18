@@ -11,10 +11,15 @@ escuro de borda, a braguilha amarrada com o cordão do gibão, o reforço costur
 perna da direita fica um tom abaixo (a luz vem da esquerda). Sem tachas, fivela grande nem bolsos: a calça é a peça
 mais simples do conjunto.
 
-Medidas no 32 (MEDIDAS); o 64 é o 32 ampliado 2× (como no couro); 40 e 48 saem das mesmas medidas na grade deles,
-depois de aprovada a leitura do 32 (a prévia deles ainda pede retoque no remendo do joelho).
+Medidas no 32 (MEDIDAS); o 64 é o 32 ampliado 2× (como no couro). O 32 foi aprovado (18/10/2026); os 40 e 48 saem
+da mesma construção na grade deles: as formas em degraus nas mesmas alturas relativas (o quadril, a fenda do gancho, o
+vão que abre), a luz pelas mesmas faixas, as costuras do remendo, o cordão e o contorno com 1 px. O 32 sai igual,
+pixel a pixel, ao aprovado.
 
-    python ferramentas/arte/desenhar_calca_couro_pixel.py <pasta> [--intermediarios]   # grava a proposta numa pasta
+    python ferramentas/arte/desenhar_calca_couro_pixel.py <pasta> [--intermediarios] [--listas]
+
+--intermediarios grava também os 40 e 48; --listas grava as listas de pixels por camada (CAMADAS) para montar as
+fontes em camadas no Aseprite (`montar_fontes.lua` da pasta da proposta).
 """
 
 import math
@@ -37,47 +42,62 @@ RAMPAS = {"k": COURO, "b": BORDA, "o": CORDAO, "g": GASTO}
 MEDIDAS = {
     "cos": (2.0, 5.0),            # o cós: do topo até a primeira linha das pernas
     "cos_x": (8.0, 24.0),         # largura do cós
-    "gancho": 12.0,               # onde as pernas se separam (abaixo, o vão em V)
-    "vao": (15.5, 16.5),          # o vão no gancho (1 px no 32); embaixo ele abre (as pernas de dentro)
-    "perna_esq": ((8.0, 15.5), (9.0, 14.2)),     # (x de fora, x de dentro) no quadril e na barra
-    "perna_dir": ((16.5, 24.0), (17.8, 23.0)),
+    "gancho": 12.0,               # onde as pernas se separam (a fenda do contorno)
+    "quadril": 16.0,              # até aqui o quadril tem a largura do cós; abaixo, a perna recua 1
+    "abre": 24.0,                 # daqui à barra o vão entre as pernas abre
+    # a luz: cada perna como um cone suave, (x de fora, x de dentro) no quadril e na barra (só para as faixas)
+    "luz_esq": ((8.0, 15.5), (9.0, 14.2)),
+    "luz_dir": ((16.5, 24.0), (17.8, 23.0)),
     "barra": (28.0, 30.0),        # o barrado: as últimas linhas
     "joelho": (17.0, 21.0),       # o remendo do joelho (das costuras de cima e de baixo), dentro da perna
     "bragueta": (5.0, 11.0),      # a amarração da braguilha (abaixo do cós até perto do gancho)
 }
 
 
-def desenhar(lado):
+CAMADAS = ["pernas", "remendo", "cos", "barra", "braguilha", "desgaste", "contorno"]   # de baixo para cima
+
+
+def desenhar(lado, partes=False):
+    """A imagem do tamanho; com partes=True, também a camada de cada pixel (CAMADAS), para a fonte do Aseprite."""
     s = lado / 32
     mat, tom, fixo, x, y = pc.grade(lado)
     u, v = x / s, y / s      # o centro de cada pixel em unidades do 32
     M = MEDIDAS
     topo, base = M["cos"][0], M["barra"][1]
 
-    def perna(lims, uu, vv):
-        (fq, dq), (fb, db) = lims
-        t = np.clip((vv - topo) / (base - topo), 0, 1)
-        return (uu >= fq + (fb - fq) * t) & (uu < dq + (db - dq) * t)
+    # As pernas em degraus, nas mesmas alturas relativas em todos os tamanhos (as bordas nas linhas e colunas do 32):
+    # o quadril até v 16, a perna recuada 1 depois; a fenda do gancho (o contorno, 2 unidades) de v 12 a 24 e o vão
+    # aberto (4 unidades) de 24 à barra. Uma afunilada contínua punha o degrau em outra altura em cada grade.
+    def limites(lado_esq):
+        fora = np.where(v < M["quadril"], M["cos_x"][0], M["cos_x"][0] + 1) if lado_esq else             np.where(v < M["quadril"], M["cos_x"][1], M["cos_x"][1] - 1)
+        if lado_esq:
+            dentro = np.where(v < M["gancho"], 16, np.where(v < M["abre"], 15, 14))
+            return fora, dentro
+        dentro = np.where(v < M["gancho"] - 1, 16, np.where(v < M["abre"], 17, 18))
+        return dentro, fora
 
-    esq = perna(M["perna_esq"], u, v) & (v >= topo) & (v < base)
-    dir_ = perna(M["perna_dir"], u, v) & (v >= topo) & (v < base)
-    meio = (u >= M["vao"][0]) & (u < M["vao"][1]) & (v >= topo) & (v < M["gancho"])   # acima do gancho, o vão é tecido
-    corpo = esq | dir_ | meio
+    a_e, b_e = limites(True)
+    a_d, b_d = limites(False)
+    alto = (v >= topo) & (v < base)
+    esq = alto & (u >= a_e) & (u < b_e)
+    dir_ = alto & (u >= a_d) & (u < b_d)
+    corpo = esq | dir_
     mat[corpo] = "k"
 
-    # a luz em faixas por perna: pela posição de través (0 fora/esquerda, 1 dentro/direita)
-    def faixas(mask, lims, base_tom):
+    # a luz em faixas por perna, pela posição de través (0 fora/esquerda, 1 dentro/direita) nas medidas de luz (LUZ:
+    # a perna como um cone suave, as faixas do 32 aprovado); a última coluna (a beira) um tom abaixo, pela forma
+    def faixas(mask, lims, b_forma, base_tom):
         (fq, dq), (fb, db) = lims
         t = np.clip((v - topo) / (base - topo), 0, 1)
         a, b = fq + (fb - fq) * t, dq + (db - dq) * t
         p = (u - a) / np.maximum(b - a, 1e-6)
         tt = np.where(p < 0.28, base_tom + 1, np.where(p < 0.72, base_tom, base_tom - 1))
-        ultima = (u + 1 / s >= b)            # a última coluna da perna (a beira), um tom abaixo
+        ultima = (u + 1 / s >= b_forma)
         tt = np.where(ultima & (p > 0.5), tt - 1, tt)
         tom[mask] = tt[mask]
 
-    faixas(esq | (meio & (u < 16)), M["perna_esq"], 5)
-    faixas(dir_ | (meio & (u >= 16)), M["perna_dir"], 4)
+    faixas(esq, M["luz_esq"], np.where(v < M["gancho"], 15, b_e), 5)   # acima do gancho a beira é a da braguilha
+    faixas(dir_, M["luz_dir"], b_d, 4)
     # o gancho na sombra: as colunas junto do vão, logo abaixo do cós, escurecem
     sombra = corpo & (v >= M["gancho"] - 3) & (v < M["gancho"] + 2) & (np.abs(u - 16) < 2.2)
     tom[sombra] = np.minimum(tom[sombra], 3)
@@ -97,11 +117,7 @@ def desenhar(lado):
     # o reforço do joelho: as costuras de cima e de baixo (linhas de borda) e o meio um tom acima
     j0, j1 = M["joelho"]
     # o remendo fica dentro de cada perna: 1 px (no 32) longe das duas beiras
-    def dentro_da_perna(lims, mask):
-        (fq, dq), (fb, db) = lims
-        t = np.clip((v - topo) / (base - topo), 0, 1)
-        return mask & (u >= fq + (fb - fq) * t + 1.0) & (u < dq + (db - dq) * t - 1.0)
-    remendo_area = (dentro_da_perna(M["perna_esq"], esq) | dentro_da_perna(M["perna_dir"], dir_))
+    remendo_area = (esq & (u >= a_e + 1.0) & (u < b_e - 1.0)) | (dir_ & (u >= a_d + 1.0) & (u < b_d - 1.0))
     for vv in (j0, j1):   # a costura tem 1 px em todos os tamanhos: a linha do pixel onde ela cai
         linha = remendo_area & (np.floor(y) == math.floor(vv * s))
         tom[linha] = np.where(u[linha] < 16, 2, 1)
@@ -131,7 +147,36 @@ def desenhar(lado):
 
     tom = pc.limpar(mat, tom, fixo)
     pc.contornar(mat)
-    return pc.imagem(mat, tom, RAMPAS)
+    camada = np.full(mat.shape, "pernas", dtype=object)
+    joelho = remendo_area & (np.floor(y) >= math.floor(j0 * s)) & (np.floor(y) <= math.floor(j1 * s))
+    camada[joelho] = "remendo"   # o remendo: as duas costuras e o couro entre elas
+    camada[cos] = "cos"
+    camada[barra] = "barra"
+    # a fenda do gancho fica escura e fechada em todos os tamanhos (no 48 ela tem 3 px e o do meio ficava vazio)
+    fenda = (v >= M["gancho"]) & (v < M["abre"]) & (u >= 14.5) & (u < 17.5) & (mat == "")
+    mat[fenda] = "c"
+    img = pc.imagem(mat, tom, RAMPAS)
+    if not partes:
+        return img
+    camada[mat == "o"] = "braguilha"
+    camada[mat == "g"] = "desgaste"
+    camada[mat == "c"] = "contorno"
+    camada[mat == ""] = ""
+    return img, camada
+
+
+def listas(lado, pasta):
+    """As listas de pixels de cada camada ("x,y,RRGGBB;..."), num .lua que faz return (o pintar.lua as lê por dofile:
+    o io.open num script do Aseprite pede permissão numa janela)."""
+    img, camada = desenhar(lado, partes=True)
+    px = np.asarray(img)
+    d = pasta / f"calca_couro-{lado}"
+    d.mkdir(parents=True, exist_ok=True)
+    for c in CAMADAS:
+        ys, xs = np.where(camada == c)
+        texto = ";".join(f"{x},{y},{px[y, x, 0]:02X}{px[y, x, 1]:02X}{px[y, x, 2]:02X}" for y, x in zip(ys, xs))
+        (d / f"{c}.lua").write_text(f'return "{texto}"\n', encoding="utf-8")
+    return d
 
 
 def main():
@@ -143,9 +188,12 @@ def main():
     img32 = desenhar(32)
     print(32, pc.salvar(img32, pasta, "calca_couro"), "cores")
     print(64, pc.salvar(img32.resize((64, 64), Image.NEAREST), pasta, "calca_couro"), "cores (o 32 ampliado 2×)")
-    if "--intermediarios" in sys.argv:
+    if "--intermediarios" in sys.argv or "--listas" in sys.argv:
         for lado in (40, 48):
-            print(lado, pc.salvar(desenhar(lado), pasta, "calca_couro"), "cores (prévia)")
+            print(lado, pc.salvar(desenhar(lado), pasta, "calca_couro"), "cores")
+    if "--listas" in sys.argv:   # as listas por camada para montar as fontes no Aseprite (montar_fontes.lua)
+        for lado in (32, 40, 48):
+            print("listas", listas(lado, pasta / "listas"))
 
 
 if __name__ == "__main__":

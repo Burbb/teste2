@@ -33,7 +33,7 @@ PENA_ESCURA = ["#3A2E28", "#5E4A3E", "#86705E"]     # a pena escura (parda), cla
 RAMPAS = {"k": COURO, "b": BORDA, "m": MADEIRA, "p": PENA, "q": PENA_ESCURA}
 
 # a origem (o centro do fundo do tubo), a inclinação e as medidas, em unidades do 32
-M = {
+MEDIDAS = {
     "fundo": (10.5, 27.4),         # o centro do fundo do tubo (o fundo não encosta na borda: o contorno cabe)
     "inclina": 22.0,               # graus a partir da vertical, para a direita
     "tubo": 15.5,                  # o comprimento do tubo (a)
@@ -46,10 +46,20 @@ M = {
     "flechas": ((-2.0, -16.0, 11.0, False), (0.4, -2.0, 12.6, False), (2.6, 13.0, 10.4, True)),
     "pena": 4.4,                   # o comprimento da pena (a partir da ponta de cima)
     "alca": (3.0, 12.6, 3.0),      # a alça: de a=3 até a=12,6, saindo até w = meia-largura + 3
+    "claro": 0,                    # degraus a mais na rampa do couro (o 24 do topo fica um degrau mais claro)
+}
+# O 24 (o ícone das flechas no topo, onde ela fica parada pequena) tem simplificações próprias do mesmo objeto: o tubo
+# mais largo e mais inclinado, ocupando o quadro; o couro um degrau mais claro; sem a alça (a 24 ela virava um risco
+# escuro solto); a boca e as cintas com a borda de cima acesa; duas cintas viram uma; as penas em blocos.
+PERFIL = {
+    24: {"fundo": (10.0, 26.4), "inclina": 28.0, "tubo": 14.0, "larg": (4.4, 5.0), "boca": 2.4,
+         "cintas": ((6.6, 8.6),), "fundo_borda": 2.4, "alca": None, "claro": 1, "pena": 4.8,
+         "flechas": ((-2.6, -16.0, 8.8, False), (0.6, -1.0, 10.0, False), (3.4, 14.0, 8.4, True))},
 }
 
 
 def desenhar(lado):
+    M = {**MEDIDAS, **PERFIL.get(lado, {})}
     s = lado / 32
     mat, tom, fixo, x, y = pc.grade(lado)
     X, Y = x / s, y / s                          # o centro do pixel em unidades do 32
@@ -92,7 +102,8 @@ def desenhar(lado):
     corpo = tubo | fundo
     mat[corpo] = "k"
     p = w / meia
-    tom[corpo] = np.where(p < -0.45, 5, np.where(p < 0.15, 4, np.where(p < 0.6, 3, 2)))[corpo]
+    k = M["claro"]
+    tom[corpo] = np.where(p < -0.45, 5 + k, np.where(p < 0.15, 4 + k, np.where(p < 0.6, 3 + k, 2 + k)))[corpo]
     borda_fundo = corpo & (a < M["fundo_borda"])
     mat[borda_fundo] = "b"
     tom[borda_fundo] = np.where(p < 0, 2, 1)[borda_fundo]
@@ -100,12 +111,22 @@ def desenhar(lado):
         cinta = corpo & (a >= c0) & (a < c1)
         mat[cinta] = "b"
         tom[cinta] = np.where(p < -0.3, 3, np.where(p < 0.4, 2, 1))[cinta]
+        if k:   # a borda de cima da cinta acesa: o couro do lado da luz (mostra que a cinta é uma tira por cima)
+            topo_c = cinta & (a >= c1 - 1 / s) & (p < 0.2)
+            mat[topo_c], tom[topo_c] = "k", 4
     # a boca: a borda (acesa do lado da luz) e o escuro de dentro na ponta
     boca = (a > L - M["boca"]) & (a <= L) & (np.abs(w) <= meia)
     mat[boca] = "b"
     tom[boca] = np.where(p < 0, 3, 2)[boca]
+    if k:   # a borda da boca acesa no lado da luz (o couro dobrado), o resto na sombra
+        aro = boca & (a > L - 1 / s) & (p < 0.3)
+        mat[aro], tom[aro] = "k", 5
 
     # a alça: um arco de couro escuro do lado da sombra, fora do tubo
+    if M["alca"] is None:
+        tom = pc.limpar(mat, tom, fixo)
+        pc.contornar(mat)
+        return pc.imagem(mat, tom, RAMPAS)
     a0, a1, sai = M["alca"]
     meio = (a0 + a1) / 2
     k = np.clip(1 - ((a - meio) / ((a1 - a0) / 2)) ** 2, 0, 1)

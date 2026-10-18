@@ -20,6 +20,15 @@ Pela skill, cada peça começa pelo 32 (o tamanho mais visto), para Jean avaliar
 2× (como no couro aprovado); os 40 e 48 se derivam das mesmas medidas depois da aprovação do 32 (os scripts gravam a
 prévia com `--intermediarios`).
 
+## As decisões de Jean (18/10/2026)
+
+- **A calça de couro:** o 32 foi aprovado. Os 40 e 48 estão prontos (rodada 2, abaixo), e os quatro tamanhos aguardam a
+  avaliação de Jean.
+- **A aljava:** refinar a leitura, principalmente no topo. A refinada está abaixo; os 40 e 48 aguardam a aprovação.
+- **Os atributos e a doca:** ficam os atuais. As propostas perderam volume, personalidade e leitura dos materiais. Elas
+  ficam aqui como alternativas não escolhidas, sem outra rodada agora. A skill ganhou a orientação de que símbolos da
+  interface não precisam copiar equipamentos (a bota da Agilidade pode ter pose própria).
+
 ## 1. A Calça de Couro (`calca_couro`)
 
 `ferramentas/arte/desenhar_calca_couro_pixel.py`; proposta em `calca_couro/proposta/` (32 e 64).
@@ -89,7 +98,7 @@ O mercado desenha a sua aljava em código (`telas/mercado.js`, a banca); ela nã
 - **No Inventário (40):** continua a atual (o 40 vem depois).
 - Sem erros.
 
-## 3. Os ícones dos atributos (`attr-ataque`, `attr-defesa`, `attr-agilidade`, `attr-poder`)
+## 3. Os ícones dos atributos (alternativa não escolhida: ficam os atuais)
 
 `ferramentas/arte/desenhar_atributos_pixel.py`; proposta em `atributos/proposta/` (24 e 32, cada um na sua grade, nas
 mesmas medidas).
@@ -121,7 +130,7 @@ esquerda em faixas e o contorno comum. Saem os degradês suaves das peças pinta
 - **O que pode ser pior:** são mais chapados que os atuais (menos volume e brilho). A chama, em 24, perde o halo de
   fogo da atual e lê mais como chama estilizada. O Fugir muda junto.
 
-## 4. Os ícones da doca (`atalho-*`)
+## 4. Os ícones da doca (alternativa não escolhida: ficam os atuais)
 
 `ferramentas/arte/desenhar_doca_pixel.py`; proposta em `doca/proposta/` (36 e 32, nas mesmas medidas). Uma função
 por ícone, desenhados um a um.
@@ -151,3 +160,53 @@ tinha as alças. Isso foi corrigido na 2, a proposta.
   - No 36, as linhas do diário caem entre os pixels (aparecem só no 32).
   - Os nós dos Talentos têm um sombreado granulado.
   - O mapa tem menos textura de papel.
+
+## Rodada 2 da calça: os 40 e 48, e a fonte em camadas
+
+O 32 aprovado e o 64 (o 32 ampliado 2×) ficam iguais, pixel a pixel. Os dois intermediários saem da mesma construção
+em `desenhar_calca_couro_pixel.py`.
+
+**As formas em degraus, nas mesmas alturas relativas:**
+- o quadril com a largura do cós até a linha 16 (do 32) e a perna recuada 1 depois;
+- a fenda do gancho, escura e fechada, de 12 a 24;
+- o vão aberto de 24 à barra.
+
+A afunilada contínua da prévia punha o degrau em outra altura em cada grade: o vão mudava de proporção, e no 48 a
+fenda tinha um fio transparente.
+
+**A luz e os detalhes:** a luz pelas mesmas faixas; as costuras do remendo, o cordão da braguilha e o contorno ficam
+com 1 px; o desgaste é um ponto. A fenda fica com 2 px no 40 e 3 no 48 (a proporção do 32).
+
+**A fonte em camadas, como no couro:** `calca_couro/fontes/calca_couro-32/40/48.aseprite`.
+- **As camadas** (de baixo para cima): pernas, remendo, cos, barra, braguilha, desgaste, contorno.
+- **A montagem:** a linha de comando do Aseprite (`montar_fontes.sh` e `montar_fontes.lua`), com as listas por camada
+  do script (`--listas`) e o `pintar.lua` de sempre. Cada camada foi relida sem diferença.
+- **A conferência** (`conferir_fontes.py`): o composto de cada `.aseprite` é igual, pixel a pixel, à proposta, e o 64
+  é o 32 ampliado 2×.
+- **Na integração:** as fontes vão para `ferramentas/arte/aseprite/calca_couro/` com `64: (32, 2)` em `DERIVADOS`.
+
+**Conferido a 1920×945** (`calca_couro/tamanhos-inventario-e-saque-atual-x-proposta.png`, atual × proposta):
+- **O Inventário:** o 40.
+- **O cartão do saque:** o 64 no achado e o 48 no "você usa". O cenário `vila` ganhou `VESTIDO=<desenho>`, para vestir
+  uma calça e compará-la.
+- **A ficha:** o 32.
+- **Sem erros.**
+
+## Rodada 5 da aljava: o refinamento do topo
+
+**O pedido:** a rodada 4 ficou mais fina e escura que a atual e, no topo (24), perdeu presença.
+
+**O 24 ganhou simplificações próprias do mesmo objeto (`PERFIL[24]`):**
+- o tubo mais largo e mais inclinado, ocupando o quadro;
+- o couro um degrau mais claro;
+- a boca e a cinta com a borda acesa do lado da luz;
+- uma cinta só;
+- sem a alça (a 24 ela virava um risco escuro solto);
+- as três flechas mais curtas, para caber no quadro, com as hastes claras e separadas e as penas em blocos.
+
+**O 32 não mudou.** Na ficha ele já funcionava, e o 64 continua o 32 ampliado 2×.
+
+**A rodada 4** fica em `aljava/rodada4/`.
+
+**Conferido a 1920×945** (`aljava/atual-x-anterior-x-refinada.png`): no topo e na ficha, a atual, a anterior (rodada 4)
+e a refinada. No topo, a refinada tem presença parecida com a atual. Sem erros.
