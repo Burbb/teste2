@@ -3,7 +3,7 @@
 // da proposta no lugar dos do jogo (page.route em /static/hud/icones/<peça>-*.png, como fotografar_escudo.mjs); uma
 // peça que ainda não tem papel em icones.js (a calça de couro) ganha o papel só nesta página.
 //   PLAYWRIGHT_MODULO=<caminho>/index.mjs node ferramentas/prototipos/hud/itens-lote-noite/fotografar.mjs <peça>
-// peça: calca_couro | aljava | atributos | doca
+// peça: calca_couro | aljava | atributos | ataque_defesa | agilidade_poder | agilidade | aljava_ref | doca
 import { spawn } from "child_process";
 import { readFileSync, existsSync, mkdirSync } from "fs";
 import { fileURLToPath } from "url";
@@ -38,13 +38,21 @@ const PECAS = {
     selos: [["agi", "Agilidade"], ["poder", "Poder"]],
     cena: ["tutorial", { LUTA_APOS_ESCOLHA: "1", TUTORIAL: "0", VISTAS, CLASSE: "guerreiro", NIVEL: "8", ESPEC: "paladino", COMITIVA: "morel", LUTA: "lobo", QUANTOS: "3", NIVEL_LUTA: "7" }],
     fotos: ["ficha", "inventario", "selo", "luta"] },
+  // a rodada das referências (agilidade_aljava_ref/): a bota nova de Agilidade (ficha 24, Fugir 32, selo 64) e a aljava
+  // nova (topo 24 e ficha 32; os 40 e 48 ficam para depois da aprovação)
+  agilidade: { pasta: "agilidade_aljava_ref/proposta", saida: "agilidade_aljava_ref/capturas", nomes: ["attr-agilidade"],
+    papel_tamanhos: [24, 32, 64], selos: [["agi", "Agilidade"]],
+    cena: ["tutorial", { LUTA_APOS_ESCOLHA: "1", TUTORIAL: "0", VISTAS, CLASSE: "guerreiro", NIVEL: "8", ESPEC: "paladino", COMITIVA: "morel", LUTA: "lobo", QUANTOS: "3", NIVEL_LUTA: "7" }],
+    fotos: ["ficha", "selo", "luta"] },
+  aljava_ref: { pasta: "agilidade_aljava_ref/proposta", saida: "agilidade_aljava_ref/capturas", nomes: ["aljava"],
+    cena: ["capela", { CLASSE: "arqueiro", NIVEL: "5", PERIODO: "0", SALA: "exterior" }], fotos: ["topo", "ficha"] },
   doca: { pasta: "doca/proposta", nomes: ["atalho-talentos", "atalho-grimorio", "atalho-inventario", "atalho-mapa", "atalho-diario", "atalho-bestiario", "atalho-salvar", "atalho-sair"],
     cena: ["capela", { CLASSE: "arqueiro", NIVEL: "5", PERIODO: "0", SALA: "exterior" }], fotos: ["doca", "luta-doca"] },
 };
 const P = PECAS[peca];
 if (!P) throw new Error(`peça desconhecida: ${peca}`);
 // PASTA=<pasta relativa> troca a proposta (aljava/rodada4: a anterior); ROTULO=<nome> no lugar de "proposta" nas fotos
-const PROPOSTA = path.join(aqui, process.env.PASTA || P.pasta), SAIDA = path.join(aqui, peca, "capturas");
+const PROPOSTA = path.join(aqui, process.env.PASTA || P.pasta), SAIDA = path.join(aqui, P.saida || path.join(peca, "capturas"));
 const ROTULO = process.env.ROTULO || "proposta";
 mkdirSync(SAIDA, { recursive: true });
 

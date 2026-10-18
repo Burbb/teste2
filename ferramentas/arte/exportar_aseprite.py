@@ -51,9 +51,9 @@ DERIVADOS = {
     "calca_couro": {64: (32, 2)},    # 1.119.0: a Calça de Couro do Arqueiro, o 64 também é o 32 ampliado 2×
     "attr-ataque": {64: (32, 2)},    # 1.120.0: os atributos Ataque e Defesa (24 e 32 das fontes); o 64 do selo é o 32 ×2
     "attr-defesa": {64: (32, 2)},
-    "aljava": {64: (32, 2)},
-    "attr-agilidade": {64: (32, 2)},  # propostas (fontes no protótipo, --fontes=): o 64 do selo é o 32 ×2
-    "attr-poder": {64: (32, 2)},         # a aljava (proposta: as fontes ainda no protótipo, --fontes=); o 64 é o 32 ×2
+    "aljava": {64: (32, 2)},          # propostas (as fontes no protótipo, --fontes=): o 64 é o 32 ×2
+    "attr-agilidade": {64: (32, 2)},
+    "attr-poder": {64: (32, 2)},
 }
 
 
