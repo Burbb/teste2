@@ -1,0 +1,272 @@
+{
+ "jogo": {
+  "exploracao": {
+   "medidas": {
+    "topo": [
+     0,
+     0,
+     1920,
+     46
+    ],
+    "palco": [
+     396,
+     54,
+     1088,
+     879
+    ],
+    "heroi": [
+     100,
+     54,
+     290,
+     879
+    ],
+    "mundo": [
+     1490,
+     54,
+     330,
+     879
+    ],
+    "rola_pagina": 0,
+    "rola_ficha": 0,
+    "rola_mundo": 0
+   },
+   "caminho_acende_o_mapa": 1,
+   "erros": []
+  },
+  "luta": {
+   "medidas": {
+    "topo": [
+     0,
+     0,
+     1920,
+     46
+    ],
+    "palco": [
+     396,
+     54,
+     1088,
+     879
+    ],
+    "heroi": [
+     100,
+     54,
+     290,
+     879
+    ],
+    "mundo": [
+     1490,
+     54,
+     330,
+     879
+    ],
+    "rola_pagina": 0,
+    "rola_ficha": 0,
+    "rola_mundo": 0
+   },
+   "turno": 2,
+   "erros": []
+  },
+  "estados": {
+   "medidas": {
+    "topo": [
+     0,
+     0,
+     1920,
+     46
+    ],
+    "palco": [
+     396,
+     54,
+     1088,
+     879
+    ],
+    "heroi": [
+     100,
+     54,
+     290,
+     879
+    ],
+    "mundo": [
+     1490,
+     54,
+     330,
+     879
+    ],
+    "rola_pagina": 0,
+    "rola_ficha": 0,
+    "rola_mundo": 0
+   },
+   "vida_bloqueio": {
+    "saudavel": 146,
+    "limite": 105,
+    "bloqueado": 41,
+    "fontes": [
+     {
+      "nome": "Mordida dilacerada",
+      "pct": 10,
+      "perda": 15
+     },
+     {
+      "nome": "Fome",
+      "pct": 20,
+      "perda": 26
+     }
+    ],
+    "causas": "Mordida dilacerada e a fome",
+    "dica": [
+     "105 é o limite agora: uma cura comum não passa dele.",
+     "Saudável: 146. Um ferimento devolve a sua parte quando sara (descansando) ou na Curandeira; a bandagem só evita a infecção. A fome devolve a dela quando você come."
+    ]
+   },
+   "hp": [
+    105,
+    105
+   ],
+   "indisponiveis": [
+    "1Golpe PesadoVigor insuficiente10",
+    "2Erguer EscudoVigor insuficiente8",
+    "3InvestidaVigor insuficiente12",
+    "4Grito de GuerraVigor insuficiente14",
+    "5Golpe SagradoVigor insuficiente15",
+    "6PreceVigor insuficiente20",
+    "7Julgamento DivinoVigor insuficiente36"
+   ],
+   "erros": []
+  }
+ },
+ "topo": {
+  "exploracao": {
+   "medidas": {
+    "topo": [
+     0,
+     0,
+     1920,
+     46
+    ],
+    "palco": [
+     425,
+     54,
+     1088,
+     879
+    ],
+    "heroi": [
+     71,
+     54,
+     348,
+     879
+    ],
+    "mundo": [
+     1519,
+     54,
+     330,
+     879
+    ],
+    "rola_pagina": 0,
+    "rola_ficha": 0,
+    "rola_mundo": 0
+   },
+   "caminho_acende_o_mapa": 1,
+   "erros": []
+  },
+  "luta": {
+   "medidas": {
+    "topo": [
+     0,
+     0,
+     1920,
+     46
+    ],
+    "palco": [
+     425,
+     54,
+     1088,
+     879
+    ],
+    "heroi": [
+     71,
+     54,
+     348,
+     879
+    ],
+    "mundo": [
+     1519,
+     54,
+     330,
+     879
+    ],
+    "rola_pagina": 0,
+    "rola_ficha": 0,
+    "rola_mundo": 0
+   },
+   "turno": 2,
+   "erros": []
+  },
+  "estados": {
+   "medidas": {
+    "topo": [
+     0,
+     0,
+     1920,
+     46
+    ],
+    "palco": [
+     425,
+     54,
+     1088,
+     879
+    ],
+    "heroi": [
+     71,
+     54,
+     348,
+     879
+    ],
+    "mundo": [
+     1519,
+     54,
+     330,
+     879
+    ],
+    "rola_pagina": 0,
+    "rola_ficha": 0,
+    "rola_mundo": 0
+   },
+   "vida_bloqueio": {
+    "saudavel": 146,
+    "limite": 105,
+    "bloqueado": 41,
+    "fontes": [
+     {
+      "nome": "Mordida dilacerada",
+      "pct": 10,
+      "perda": 15
+     },
+     {
+      "nome": "Fome",
+      "pct": 20,
+      "perda": 26
+     }
+    ],
+    "causas": "Mordida dilacerada e a fome",
+    "dica": [
+     "105 é o limite agora: uma cura comum não passa dele.",
+     "Saudável: 146. Um ferimento devolve a sua parte quando sara (descansando) ou na Curandeira; a bandagem só evita a infecção. A fome devolve a dela quando você come."
+    ]
+   },
+   "hp": [
+    105,
+    105
+   ],
+   "indisponiveis": [
+    "1Golpe PesadoVigor insuficiente10",
+    "2Erguer EscudoVigor insuficiente8",
+    "3InvestidaVigor insuficiente12",
+    "4Grito de GuerraVigor insuficiente14",
+    "5Golpe SagradoVigor insuficiente15",
+    "6PreceVigor insuficiente20",
+    "7Julgamento DivinoVigor insuficiente36"
+   ],
+   "erros": []
+  }
+ }
+}

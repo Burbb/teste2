@@ -3596,3 +3596,19 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   - nenhum arquivo do jogo mudou.
 - **A peça que falta:** uma pintura horizontal para a borda do topo.
 - **Próximo:** Jean avaliar antes de integrar. Versão igual (1.118.0).
+
+### 18/10/2026 (data do computador local) — Estudo: o topo pintado da HUD (em avaliação, nada no jogo)
+
+- **Pedido de Jean:** concluir o topo com a pintura horizontal dele (`direcao/topo.png`), sem aumentar a barra;
+  conferir a vida máxima bloqueada e a habilidade indisponível.
+- **Feito** (`ferramentas/prototipos/hud/direcao/topo/`):
+  - o recorte reproduzível (`derivar_topo.py`);
+  - a pintura atrás dos textos;
+  - as manchas das pontas atenuadas só atrás do texto;
+  - o conjunto preservado.
+- **Conferido:**
+  - a barra com 46 px e o centro com 1088 px, sem rolagem e sem erros;
+  - a vida bloqueada (105 de 146) legível na carta e na ficha;
+  - as indisponíveis com "Vigor insuficiente", iguais no jogo;
+  - nenhum arquivo do jogo mudou.
+- **Próximo:** Jean avaliar. Versão igual (1.118.0).

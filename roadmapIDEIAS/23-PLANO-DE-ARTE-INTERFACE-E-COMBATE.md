@@ -547,6 +547,13 @@ topo, ao centro e ao mundo, com peças derivadas da pintura (`derivar_pecas.py`)
   nada deu erro.
 - **A peça que falta:** uma pintura horizontal no mesmo material para a borda do topo.
 
+**O topo pintado** (18/10/2026; `ferramentas/prototipos/hud/direcao/topo/`, em avaliação, nada no jogo):
+- **A decoração:** a pintura horizontal de Jean (`direcao/topo.png`), recortada sem esticar. A barra fica com 46 px e as
+  pontas do rasgo descem ~22 px sobre as colunas.
+- **A atenuação:** as manchas bege das pontas foram escurecidas só atrás dos textos.
+- **Os estados:** a vida máxima bloqueada e a habilidade indisponível foram conferidas, legíveis e com os motivos do
+  motor.
+
 ## 2. Telas de leitura, criação e celebrações
 
 **Lembrete para o futuro estudo da HUD — pen.dev (experimento `9769305`):** antes de escolher ferramentas para

@@ -1,0 +1,11 @@
+/* Estudo da HUD, o topo (em avaliação, nada no jogo): a pintura horizontal de Jean ("../topo.png"), recortada por
+   derivar_topo.py, como a decoração da barra de cima. Vem por cima do conjunto (../conjunto/conjunto.css), que fica
+   como estava. A barra não cresce (46 px) e os textos não mudam de lugar: a pintura é um pseudo-elemento atrás deles
+   (z-index -1 dentro da barra), em escala uniforme (a largura dela é a da tela; a altura vem da proporção, sem
+   esticar), com o carvão sólido atrás dos textos e só as pontas do rasgo passando ~22 px abaixo da barra, sobre as
+   bordas de cima das colunas, sem receber clique. */
+:root:root body #topo { background: none; box-shadow: none; overflow: visible; }
+:root:root body #topo::before { content: ""; position: absolute; left: 0; top: 0; width: 100%; aspect-ratio: 2144 / 76; z-index: -1;
+  pointer-events: none; background: url(/proto-topo/topo-faixa.png) 0 0 / 100% 100% no-repeat; }
+/* a ficha na luta com um ferimento (a linha dele em Ferimentos) passava 4 px da altura: 4 px a menos em cima */
+:root:root body #heroi { padding-top: 18px; }
