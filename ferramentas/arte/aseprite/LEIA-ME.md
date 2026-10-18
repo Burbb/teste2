@@ -17,6 +17,7 @@ nada daqui: só os PNGs exportados para `rpg/web/static/hud/icones/`.
 | calca_couro (Calça de Couro do Arqueiro) | `calca_couro/calca_couro-32.aseprite`, `-40`, `-48`; **o 64 é o 32 ampliado 2×** | pernas, remendo, cos, barra, braguilha, desgaste, contorno | 1.119.0 |
 | attr-ataque (o ícone de Ataque) | `attr-ataque/attr-ataque-24.aseprite`, `-32`; **o 64 é o 32 ampliado 2×** | lamina, guarda, cabo, pomo, contorno | 1.120.0 |
 | attr-defesa (o ícone de Defesa) | `attr-defesa/attr-defesa-24.aseprite`, `-32`; **o 64 é o 32 ampliado 2×** | face, borda, bossa, contorno | 1.120.0 |
+| attr-poder (o ícone de Poder) | `attr-poder/attr-poder-24.aseprite`, `-32`; **o 64 é o 32 ampliado 2×** | chama, miolo, faisca, contorno | 1.123.0 |
 | aljava (a aljava do Patrulheiro e as flechas do topo) | `aljava/aljava-24.aseprite`, `-32`, `-40`, `-48`; **o 64 é o 32 ampliado 2×** | alca, couro, cintas, latao, boca, hastes, penas, contorno | 1.122.0 |
 | attr-agilidade (a Agilidade e o Fugir) | `attr-agilidade/attr-agilidade-24.aseprite`, `-32`; **o 64 é o 32 ampliado 2×** | rastros, sola, bota, dobra, tira, fivela, contorno | 1.121.0 |
 
@@ -129,3 +130,10 @@ agilidade_aljava_ref/`):
 idênticos, byte a byte, aos aprovados.
 
 **O script antigo:** `desenhar_aljava_pixel.py` é a direção anterior, guardada como histórico, e só grava numa pasta.
+
+## O Poder (1.123.0)
+
+A chama violeta é a da rodada 2, aprovada pelo Jean (`c0dbab8`, `ferramentas/prototipos/hud/itens-lote-noite/poder_r2/`).
+Foi desenhada em grade à mão e pintada no editor pelo `pintar.lua`. Os seis arquivos exportados das fontes são
+idênticos, byte a byte, aos aprovados, e `exportar_aseprite.py attr-poder --conferir` os reproduz. O
+`desenhar_attr_poder_pixel.py` é o candidato anterior, não aprovado, e fica como histórico: só grava numa pasta.

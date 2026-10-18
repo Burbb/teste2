@@ -1,4 +1,7 @@
-"""O ícone de Poder (`attr-poder`): proposta, nada no jogo. O atual é um placeholder pintado (a chama roxa com halo
+"""Histórico: o candidato de Poder de `35262ca`, não aprovado. O Poder do jogo (1.123.0) vem das fontes em camadas de
+ferramentas/arte/aseprite/attr-poder/ (exportar_aseprite.py attr-poder); este script só grava numa pasta.
+
+O ícone de Poder (`attr-poder`): proposta, nada no jogo. O atual é um placeholder pintado (a chama roxa com halo
 suave); a proposta de 18/10/2026 (`desenhar_atributos_pixel.py`) foi recusada (lia como cristal ou gota rígida).
 
 O objeto: uma chama violeta viva, a energia mágica. Três línguas que nascem de uma base redonda e ondulam (a do meio

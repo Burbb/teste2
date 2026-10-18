@@ -3810,3 +3810,19 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   - a suíte, o gabarito e o pyflakes. A fumaça não foi repetida: nenhum arquivo do jogo mudou desde a última, que
     passou (antes de `b266714`).
 - **Próximo:** Jean avaliar o Poder. A doca vem depois. A versão não mudou (1.122.0).
+
+### 18/10/2026 (data do computador local) — Poder no jogo (1.123.0): os quatro atributos concluídos
+
+- **Pedido de Jean:** integrar o Poder da rodada 2 (`c0dbab8`) sem retoque e, depois, propor um novo Ataque e uma
+  nova Defesa só no protótipo.
+- **Feito:**
+  - **As fontes:** foram de `poder_r2/fontes/` para `ferramentas/arte/aseprite/attr-poder/` (24, 32). O 64 é o 32
+    ampliado 2× (`DERIVADOS`), e `TAMANHOS` ganhou o 64.
+  - **Os arquivos:** os seis do jogo são idênticos, byte a byte, aos aprovados, e `exportar_aseprite.py attr-poder
+    --conferir` os reproduz.
+  - **O alcance:** só o atributo Poder (`ATRIBUTO`: a ficha, o Inventário e o selo). A "chama" do Vigor, da Pena de
+    Fênix e das habilidades de fogo é outro desenho e ficou como estava.
+  - O `desenhar_attr_poder_pixel.py` (o candidato anterior) virou histórico.
+- **Conferido:**
+  - no jogo, sem injeção, a 1920×945 (`poder_r2/poder-no-jogo.png`): a ficha, o Inventário e o selo;
+  - a suíte, o gabarito (sem diferença), o pyflakes e a fumaça uma vez.

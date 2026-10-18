@@ -426,13 +426,14 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
 - A Calça de Couro do Arqueiro (1.119.0): desenho próprio do conjunto de couro, para todas as calças de couro dele
   (Rasgada, Curtida, Reforçada e as raras com nome; os saves já guardam `icone: "calca_couro"`). Fontes em camadas
   em `ferramentas/arte/aseprite/calca_couro/` (32, 40, 48; o 64 é o 32 ampliado 2×, `DERIVADOS`), exportadas por
-  `exportar_aseprite.py calca_couro`. Os ícones de Ataque e Defesa (1.120.0) e de Agilidade (1.121.0) são pixel art,
-  com fontes em `ferramentas/arte/aseprite/attr-ataque/`, `attr-defesa/` e `attr-agilidade/` (24 e 32; o 64 do selo
-  da festa de atributo permanente é o 32 ampliado 2×). A Agilidade é também o Fugir da roda da luta (`ACAO.fuga`); a
-  bota do equipamento é outro desenho. A aljava (1.122.0) também tem fontes em camadas (`ferramentas/arte/aseprite/
+  `exportar_aseprite.py calca_couro`. Os quatro atributos são pixel art: Ataque e Defesa (1.120.0), Agilidade (1.121.0) e
+  Poder (1.123.0), com fontes em `ferramentas/arte/aseprite/attr-ataque/`, `attr-defesa/`, `attr-agilidade/` e
+  `attr-poder/` (24 e 32; o 64 do selo da festa de atributo permanente é o 32 ampliado 2×). A Agilidade é também o
+  Fugir da roda da luta (`ACAO.fuga`); a bota do equipamento é outro desenho. A aljava (1.122.0) também tem fontes em camadas (`ferramentas/arte/aseprite/
   aljava/`: 24 do topo, 32, 40 do Inventário, 48 do saque; o 64 é o 32 ampliado 2×), para toda Aljava do Patrulheiro
-  (a comum e a única) e o recurso de flechas do topo. Poder e os ícones da doca ainda são placeholders pintados, pendentes de pixel
-  art (plano 23, 1D).
+  (a comum e a única) e o recurso de flechas do topo. O Poder é só o atributo: a "chama" do Vigor, da Pena de Fênix e das
+  habilidades de fogo é outro desenho. Os ícones da doca ainda são placeholders pintados, pendentes de pixel art
+  (plano 23, 1D).
 - O escudo e o Unguento de Prata (1.94.0), o machado e a Bomba de Fumaça (1.99.0) o arco (1.101.0,
   `desenhar_arco_pixel.py`; o Atacar da roda, o Tiro Duplo e o contrato continuam com o sprite) e o cajado (1.106.0,
   `desenhar_cajado_pixel.py`; o Atacar do Mago na roda e o traço Conjurador continuam com o sprite) e o orbe (1.107.0,

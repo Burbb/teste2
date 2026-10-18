@@ -524,3 +524,9 @@ no selo. O tamanho real sobre o carvão está em `poder_r2/prancha-carvao.png`.
 esquerda é só um degrau da silhueta.
 
 Nada disto entrou no jogo.
+
+### Integrado: Poder (1.123.0)
+
+Jean aprovou a rodada 2 (`c0dbab8`). As fontes saíram de `poder_r2/fontes/` para `ferramentas/arte/aseprite/attr-poder/`,
+e os seis arquivos do jogo são idênticos, byte a byte, aos aprovados. O que ficou em `poder_r2/` é o histórico do
+processo. Com o Poder, os quatro atributos estão concluídos.
