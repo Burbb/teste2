@@ -3931,3 +3931,14 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   - vale para o atalho da doca e para o comando Habilidades da luta (`ACAO.grimorio`), sem mudança de mapeamento.
   - Conferido no jogo, sem injeção, a 1920×945 (`doca_r3/grimorio-no-jogo.png`). A suíte, o gabarito, o pyflakes e a
     fumaça passaram uma vez.
+- **A skill de livros:** `.claude/skills/arte-livros-fenda/`, com `SKILL.md` e `exemplos.md`, para usar junto da
+  `arte-itens-fenda` (que ganhou a indicação de consultá-la).
+  - **Os princípios:** a referência principal e o papel de cada secundária; as quatro partes ligadas num ângulo só; os
+    volumes sem decoração primeiro; a decoração no plano onde está; o emblema na área útil e o espaço do fecho
+    reservado; o tamanho real.
+  - **Os problemas recorrentes:** o L, as folhas no ângulo errado, o bloco com tampa, o emblema fora do plano, o fecho
+    esmagado.
+  - **Os exemplos:** o Grimório da doca, o Diário, o grimório do equipamento e os candidatos recusados, com os motivos.
+    O entreaberto ficou marcado como não validado.
+  - **Validada** pelo `quick_validate.py` do skill-creator, e os caminhos citados existem.
+- **Próximo:** Talentos, Bestiário, Salvar e Sair, em pares. A versão é a 1.126.0.

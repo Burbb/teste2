@@ -12,6 +12,11 @@ pare para a conferência.
 Caminhos relativos à raiz do repositório. O que é de um objeto só (as medidas do escudo, a forma do pote) está em
 [exemplos.md](exemplos.md); não transforme aquilo em regra.
 
+**Livros:** quando o objeto é um livro (o grimório e o tomo do equipamento, o Grimório e o Diário da doca, um livro
+fechado, entreaberto ou aberto), consulte também a skill `arte-livros-fenda`
+([../arte-livros-fenda/SKILL.md](../arte-livros-fenda/SKILL.md)). Ela trata das referências, da construção do livro
+como um objeto só e da decoração no plano; o resto continua sendo o desta skill.
+
 ## Antes de desenhar
 
 1. **O que o jogo diz do item.** Leia o nome, a descrição, o preço, o tipo e os usos em `rpg/itens.py` e onde o item
