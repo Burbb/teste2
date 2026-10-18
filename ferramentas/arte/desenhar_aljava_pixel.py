@@ -13,9 +13,9 @@ O tubo é o couro do conjunto aprovado (as rampas de `couro_r2.py`), em pé e in
 de borda e, no 32, a alça do lado da sombra. Sem ornamento.
 
 O 32 (a ficha) e o 24 (o topo) têm cada um as suas medidas, em pixels da própria grade (PERFIL); o 64 é o 32 ampliado
-2×; 40 e 48 depois da aprovação.
+2×. Os 40 e 48 (rodada 8) se derivam da construção aprovada do 32 (`_derivado`).
 
-    python ferramentas/arte/desenhar_aljava_pixel.py <pasta>
+    python ferramentas/arte/desenhar_aljava_pixel.py <pasta> [--listas]
 """
 
 import math
@@ -52,6 +52,24 @@ PERFIL = {
 }
 
 
+def _derivado(n):
+    """Os intermediários (40 e 48, rodada 8): a construção aprovada do 32 (rodada 7) nas medidas da grade deles (as
+    posições e os comprimentos multiplicados por n/32); o que é de 1 px (a haste, a palheta das penas, a alça, o
+    entalhe, o contorno) continua de 1 px; as penas ganham uma linha a mais por tamanho."""
+    b, k = PERFIL[32], n / 32
+    return {"fundo": (b["fundo"][0] * k, b["fundo"][1] * k), "inclina": b["inclina"], "tubo": b["tubo"] * k,
+            "larg": (b["larg"][0] * k, b["larg"][1] * k),
+            "cintas": tuple((c0 * k, c1 * k) for c0, c1 in b["cintas"]), "fundo_borda": b["fundo_borda"] * k,
+            "aro": b["aro"] * k, "boca_k": b["boca_k"], "alca": (b["alca"][0] * k, b["alca"][1] * k, b["alca"][2] * k),
+            "flechas": tuple((dw * k, ang, comp * k, verm) for dw, ang, comp, verm in b["flechas"]),
+            "pena": {40: (0, 1, 2, 2, 2, 1), 48: (0, 1, 2, 3, 3, 2, 1)}[n], "entalhe": True}
+
+
+PERFIL[40] = _derivado(40)
+PERFIL[48] = _derivado(48)
+CAMADAS = ["couro", "borda", "boca", "hastes", "penas", "contorno"]   # de baixo para cima (as fontes em camadas)
+
+
 def _reta(x0, y0, x1, y1):
     """Os pixels da reta (Bresenham) de (x0, y0) a (x1, y1), na ordem."""
     x0, y0, x1, y1 = (int(round(v)) for v in (x0, y0, x1, y1))
@@ -68,7 +86,8 @@ def _reta(x0, y0, x1, y1):
             err += dx; y0 += sy
 
 
-def desenhar(lado):
+def desenhar(lado, partes=False):
+    """A imagem do tamanho; com partes=True, também a camada de cada pixel (CAMADAS)."""
     M = PERFIL[lado]
     mat, tom, fixo, X, Y = pc.grade(lado)
     x0, y0 = M["fundo"]
@@ -163,7 +182,13 @@ def desenhar(lado):
 
     tom = pc.limpar(mat, tom, fixo)
     pc.contornar(mat)
-    return pc.imagem(mat, tom, RAMPAS)
+    img = pc.imagem(mat, tom, RAMPAS)
+    if not partes:
+        return img
+    camada = np.full(mat.shape, "", dtype=object)
+    for m, c in (("k", "couro"), ("b", "borda"), ("x", "boca"), ("m", "hastes"), ("p", "penas"), ("v", "penas"), ("c", "contorno")):
+        camada[mat == m] = c
+    return img, camada
 
 
 def main():
@@ -174,6 +199,11 @@ def main():
     print(32, pc.salvar(img32, pasta, "aljava"), "cores")
     print(64, pc.salvar(img32.resize((64, 64), Image.NEAREST), pasta, "aljava"), "cores (o 32 ampliado 2×)")
     print(24, pc.salvar(desenhar(24), pasta, "aljava"), "cores (o topo)")
+    for lado in (40, 48):
+        print(lado, pc.salvar(desenhar(lado), pasta, "aljava"), "cores (intermediário)")
+    if "--listas" in sys.argv:   # as listas por camada para as fontes em camadas (montar_fontes.py)
+        for lado in (24, 32, 40, 48):
+            print("listas", pc.listas_camadas(desenhar(lado, partes=True), pasta / "listas" / f"aljava-{lado}", CAMADAS))
 
 
 if __name__ == "__main__":

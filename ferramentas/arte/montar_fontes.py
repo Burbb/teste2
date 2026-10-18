@@ -3,7 +3,8 @@
 `aseprite/<peça>/<peça>-<lado>.aseprite`, pela linha de comando do Aseprite (`aseprite/montar_camadas.lua`, com o
 `pintar.lua`). Depois, `exportar_aseprite.py <peça>` exporta os PNGs e `--conferir` os compara com os do jogo.
 
-    python ferramentas/arte/montar_fontes.py <peça> <pasta das listas>   # a pasta tem <peça>-<lado>/ com ordem.txt
+    python ferramentas/arte/montar_fontes.py <peça> <pasta das listas> [--fontes=<pasta>]
+    (a pasta das listas tem <peça>-<lado>/ com ordem.txt; --fontes=<pasta>: uma proposta, fora de aseprite/)
 """
 import pathlib
 import shutil
@@ -11,13 +12,14 @@ import subprocess
 import sys
 import tempfile
 
-from exportar_aseprite import FONTES, aseprite
+import exportar_aseprite as ex
+from exportar_aseprite import aseprite
 
 AQUI = pathlib.Path(__file__).resolve().parent
 
 
 def montar(peca, listas):
-    destino = FONTES / peca
+    destino = ex.FONTES / peca
     destino.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory() as tmp:
         script = pathlib.Path(tmp) / "montar_camadas.lua"
@@ -37,4 +39,5 @@ def montar(peca, listas):
 
 
 if __name__ == "__main__":
-    montar(sys.argv[1], pathlib.Path(sys.argv[2]).resolve())
+    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+    montar(args[0], pathlib.Path(args[1]).resolve())

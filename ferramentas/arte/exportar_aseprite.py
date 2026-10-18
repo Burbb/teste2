@@ -25,6 +25,11 @@ from PIL import Image
 
 RAIZ = pathlib.Path(__file__).resolve().parents[2]
 FONTES = RAIZ / "ferramentas" / "arte" / "aseprite"
+# --fontes=<pasta>: as fontes de uma proposta (a pasta tem <peça>/<peça>-<lado>.aseprite), fora de aseprite/: o
+# exportador grava os PNGs numa pasta dada, e o --conferir de uma proposta é contra ela, não contra o jogo
+for _a in sys.argv[1:]:
+    if _a.startswith("--fontes="):
+        FONTES = pathlib.Path(_a.split("=", 1)[1]).resolve()
 JOGO = RAIZ / "rpg" / "web" / "static" / "hud" / "icones"
 LUGARES = [
     pathlib.Path(os.environ.get("ProgramFiles(x86)", r"C:\Program Files (x86)")) / "Steam/steamapps/common/Aseprite/Aseprite.exe",
@@ -46,6 +51,7 @@ DERIVADOS = {
     "calca_couro": {64: (32, 2)},    # 1.119.0: a Calça de Couro do Arqueiro, o 64 também é o 32 ampliado 2×
     "attr-ataque": {64: (32, 2)},    # 1.120.0: os atributos Ataque e Defesa (24 e 32 das fontes); o 64 do selo é o 32 ×2
     "attr-defesa": {64: (32, 2)},
+    "aljava": {64: (32, 2)},         # a aljava (proposta: as fontes ainda no protótipo, --fontes=); o 64 é o 32 ×2
 }
 
 

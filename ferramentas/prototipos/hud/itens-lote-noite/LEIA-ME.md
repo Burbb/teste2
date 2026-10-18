@@ -317,3 +317,29 @@ O 64 é o 32 ampliado 2×.
 
 **Conferido a 1920×945** (`aljava/antes-x-depois-rodada7.png`): o topo (24) e a ficha (32), antes (rodada 6) ×
 depois, sem erros. Os 40 e 48 e a integração aguardam a aprovação.
+
+## Rodada 8 da aljava: os intermediários 40 e 48
+
+A rodada 7 (`5689148`) foi aprovada em 24 e 32, com o 64 ampliado 2×. Esses arquivos continuam iguais, pixel a
+pixel.
+
+**A derivação:** os 40 e 48 saem da construção aprovada do 32, pela função `_derivado` do script. As posições e os
+comprimentos são multiplicados por n/32:
+- **O que fica igual:** o recipiente, as duas flechas (a clara e a vermelha), as hastes à vista e a alça.
+- **O que continua com 1 px:** a haste, a palheta das penas, a alça, o entalhe e o contorno.
+- **As penas:** uma linha a mais por tamanho (40: 0,1,2,2,2,1; 48: 0,1,2,3,3,2,1).
+
+**As fontes em camadas** (couro, borda, boca, hastes, penas, contorno) ficam no protótipo, em
+`aljava/fontes/aljava/aljava-24/32/40/48.aseprite`, porque a aljava ainda não está no jogo. Elas são montadas pelo
+fluxo de sempre, que ganhou a opção `--fontes=<pasta>` para propostas:
+
+    python ferramentas/arte/desenhar_aljava_pixel.py <proposta> --listas
+    python ferramentas/arte/montar_fontes.py aljava <proposta>/listas --fontes=<pasta>
+    python ferramentas/arte/exportar_aseprite.py aljava <saida> --fontes=<pasta>
+
+**A conferência:** os oito PNGs exportados das fontes são iguais à proposta, e o 64 sai do 32 (`DERIVADOS`). Na
+integração, as fontes vão para `ferramentas/arte/aseprite/aljava/`.
+
+**Conferido a 1920×945** (`aljava/intermediarios-inventario-e-saque.png`, atual × proposta): o 40 no Inventário, e o
+48 no "você usa" do saque, ao lado do 64 no achado. O cenário `vila` usou `VESTIDO=aljava` e `ACHADO=aljava`. Sem
+erros. A integração aguarda a avaliação.
