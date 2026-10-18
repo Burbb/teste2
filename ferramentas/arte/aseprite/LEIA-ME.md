@@ -19,6 +19,8 @@ nada daqui: só os PNGs exportados para `rpg/web/static/hud/icones/`.
 | attr-defesa (o ícone de Defesa) | `attr-defesa/attr-defesa-24.aseprite`, `-32`; **o 64 é o 32 ampliado 2×** | face, borda, bossa, contorno | 1.120.0 |
 | attr-poder (o ícone de Poder) | `attr-poder/attr-poder-24.aseprite`, `-32`; **o 64 é o 32 ampliado 2×** | chama, miolo, faisca, contorno | 1.123.0 |
 | atalho-inventario (o Inventário da doca) | `atalho-inventario/atalho-inventario-36.aseprite`, `-32` | rolo, bolsos, corpo, aba, cinta, fivela, contorno | 1.124.0 |
+| atalho-salvar (o Salvar da doca) | `atalho-salvar/atalho-salvar-36.aseprite`, `-32` | tampa, corpo, latao, seta, contorno | 1.129.0 |
+| atalho-sair (o Sair da doca) | `atalho-sair/atalho-sair-36.aseprite`, `-32` | arco, passagem, seta, contorno | 1.129.0 |
 | atalho-bestiario (o Bestiário da doca) | `atalho-bestiario/atalho-bestiario-36.aseprite`, `-32` | chifres, cranio, contorno | 1.128.0 |
 | atalho-talentos (os Talentos da doca) | `atalho-talentos/atalho-talentos-36.aseprite`, `-32` | galhos, nos, contorno | 1.127.0 |
 | atalho-comitiva (a Comitiva da doca) | `atalho-comitiva/atalho-comitiva-36.aseprite`, `-32` | tras_esquerda, tras_direita, frente, contorno | 1.127.0 |
@@ -187,3 +189,11 @@ O crânio de fera com chifres foi aprovado pelo Jean no `e373618` (`ferramentas/
   focinho e a arcada) foram retocadas nelas, e as grades do protótipo ficam como histórico.
 - **Conferido:** os quatro arquivos exportados são idênticos, byte a byte, aos aprovados, e
   `exportar_aseprite.py atalho-bestiario --conferir` os reproduz.
+
+## O Salvar e o Sair da doca (1.129.0): a doca concluída
+
+O baú aberto e o arco de pedra foram aprovados pelo Jean (`a872915`, reapresentados sem mudança no `682b189`;
+`ferramentas/prototipos/hud/itens-lote-noite/doca_r5/`).
+- **Conferido:** os oito arquivos exportados das fontes são idênticos, byte a byte, aos aprovados.
+- **A doca:** com eles, os nove atalhos estão em pixel art: Talentos, Grimório, Inventário, Comitiva, Mapa, Diário,
+  Bestiário, Salvar e Sair.

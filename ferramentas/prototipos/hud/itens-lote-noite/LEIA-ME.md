@@ -929,3 +929,10 @@ verticais dos dentes, que começavam todas na mesma altura e marcavam uma linha 
 Jean aprovou a rodada 4 sem retoque (`e373618`). As fontes finais editadas saíram de `doca_r5/fontes/` para
 `ferramentas/arte/aseprite/atalho-bestiario/`, e os quatro arquivos do jogo são idênticos, byte a byte, aos aprovados. O
 Salvar e o Sair continuam no protótipo.
+
+### Integrados: o Salvar e o Sair (1.129.0); a doca concluída
+
+Jean aprovou os dois sem retoque (`a872915`, reapresentados no `682b189`).
+- **As fontes:** saíram de `doca_r5/fontes/` para `ferramentas/arte/aseprite/atalho-salvar/` e `atalho-sair/`.
+- **Os arquivos:** os oito do jogo são idênticos, byte a byte, aos aprovados.
+- **A doca:** os nove atalhos estão em pixel art.

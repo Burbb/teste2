@@ -97,8 +97,9 @@ const Icones = (() => {
   // comando Habilidades da roda da luta (ACAO.grimorio, 32); os Talentos (a árvore de latão com os nós de gema) e a
   // Comitiva (três viajantes), 1.127.0. A Comitiva só aparece com companheiro (SISTEMA, em app/nucleo.js) e tem papel
   // próprio aqui: o sprite "humano" que ela usava continua o de personagem e de inimigo; o Bestiário (o crânio de
-  // fera com chifres), 1.128.0, só o atalho: a "caveira" 16×16 (retratos, derrota, fome, lixeira) é outro desenho.
-  // Salvar e Sair ainda são os pintados
+  // fera com chifres), 1.128.0, só o atalho: a "caveira" 16×16 (retratos, derrota, fome, lixeira) é outro desenho; o
+  // Salvar (o baú aberto com a seta de aço) e o Sair (o arco de pedra com a seta laranja), 1.129.0. Os nove atalhos
+  // da doca estão em pixel art
   const ATALHO = { Talentos: "atalho-talentos", Comitiva: "atalho-comitiva", "Grimório": "atalho-grimorio", "Inventário": "atalho-inventario", Mapa: "atalho-mapa",
     "Diário": "atalho-diario", "Bestiário": "atalho-bestiario", Salvar: "atalho-salvar", Sair: "atalho-sair" };
   // o desenho que o jogo escolhe para o destino (MapaPx.sprite); o covil vencido continua a bandeira do jogo

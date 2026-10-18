@@ -4006,3 +4006,15 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
     selecionado;
   - a suíte, o gabarito, o pyflakes e a fumaça uma vez.
 - **Continuam:** o Salvar e o Sair, no protótipo, aguardando a avaliação.
+
+### 18/10/2026 (data do computador local) — O Salvar e o Sair no jogo (1.129.0): a doca concluída; propostas de Vida e Mana
+
+- **Pedido de Jean:** integrar o Salvar e o Sair (`a872915`/`682b189`) sem retoque; depois propor a Vida e a Mana
+  (grupo Vida e recursos), só no protótipo.
+- **A integração:**
+  - as fontes foram para `ferramentas/arte/aseprite/atalho-salvar/` e `atalho-sair/`;
+  - os oito arquivos do jogo são idênticos, byte a byte, aos aprovados, e o exportador os reproduz;
+  - só os atalhos da doca usam os desenhos;
+  - os nove atalhos da doca estão concluídos, e o resumo da linha 1D do plano foi corrigido.
+  - Conferido numa partida de teste, com os saves numa pasta temporária (`doca_r5/salvar-sair-no-jogo.png`): o Salvar
+    grava, e o Sair abre a pergunta (não confirmada). A suíte, o gabarito, o pyflakes e a fumaça passaram uma vez.
