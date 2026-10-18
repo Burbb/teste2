@@ -1,4 +1,7 @@
-"""A aljava (o equipamento secundário do Patrulheiro e o ícone das flechas no topo) no método da família: proposta,
+"""Histórico: a direção anterior da aljava (rodadas 1 a 8, recusada em 18/10/2026). A aljava do jogo (1.122.0) vem das
+fontes em camadas de ferramentas/arte/aseprite/aljava/ (exportar_aseprite.py aljava); este script só grava numa pasta.
+
+A aljava (o equipamento secundário do Patrulheiro e o ícone das flechas no topo) no método da família: proposta,
 nada no jogo. Rodada 6 (a 5 e as anteriores em ferramentas/prototipos/hud/itens-lote-noite/aljava/rodadaN/).
 
 O pedido do Jean na rodada 6: a aljava lembrava uma bolsa de tacos de golfe; as pontas das flechas pareciam cabeças

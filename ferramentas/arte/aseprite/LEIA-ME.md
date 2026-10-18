@@ -17,6 +17,7 @@ nada daqui: só os PNGs exportados para `rpg/web/static/hud/icones/`.
 | calca_couro (Calça de Couro do Arqueiro) | `calca_couro/calca_couro-32.aseprite`, `-40`, `-48`; **o 64 é o 32 ampliado 2×** | pernas, remendo, cos, barra, braguilha, desgaste, contorno | 1.119.0 |
 | attr-ataque (o ícone de Ataque) | `attr-ataque/attr-ataque-24.aseprite`, `-32`; **o 64 é o 32 ampliado 2×** | lamina, guarda, cabo, pomo, contorno | 1.120.0 |
 | attr-defesa (o ícone de Defesa) | `attr-defesa/attr-defesa-24.aseprite`, `-32`; **o 64 é o 32 ampliado 2×** | face, borda, bossa, contorno | 1.120.0 |
+| aljava (a aljava do Patrulheiro e as flechas do topo) | `aljava/aljava-24.aseprite`, `-32`, `-40`, `-48`; **o 64 é o 32 ampliado 2×** | alca, couro, cintas, latao, boca, hastes, penas, contorno | 1.122.0 |
 | attr-agilidade (a Agilidade e o Fugir) | `attr-agilidade/attr-agilidade-24.aseprite`, `-32`; **o 64 é o 32 ampliado 2×** | rastros, sola, bota, dobra, tira, fivela, contorno | 1.121.0 |
 
 A varinha é a aprovada pelo Jean (commit `451ff11`): a haste com o mesmo perfil nos quatro tamanhos e a pedra
@@ -115,3 +116,16 @@ A bota em passada é a aprovada pelo Jean (`e9b0499`, a sola corrigida). As font
 (`ferramentas/prototipos/hud/itens-lote-noite/agilidade_aljava_ref/`), desenhadas em grade à mão e pintadas no editor
 pelo `pintar.lua`. Os seis arquivos exportados delas são idênticos, byte a byte, aos aprovados, e
 `exportar_aseprite.py attr-agilidade --conferir` os reproduz.
+
+## A aljava (1.122.0)
+
+**A origem:** é a direção nova, feita a partir da referência do Jean (`ferramentas/prototipos/hud/itens-lote-noite/
+agilidade_aljava_ref/`):
+- 24 e 32 aprovados em `ea3835f`;
+- 40 e 48, derivados da construção do 32, em `fb403f5`;
+- o 64 é o 32 ampliado 2×.
+
+**As fontes:** desenhadas em grade à mão e pintadas no editor pelo `pintar.lua`. Os dez arquivos exportados delas são
+idênticos, byte a byte, aos aprovados.
+
+**O script antigo:** `desenhar_aljava_pixel.py` é a direção anterior, guardada como histórico, e só grava numa pasta.

@@ -481,3 +481,14 @@ do editor e os PNGs exportados são iguais às grades.
 - o 48 no cartão compacto do saque, ao lado do 64.
 
 `fotografar.mjs aljava_ref` ganhou o Inventário e o saque.
+
+### Integradas: Agilidade (1.121.0) e aljava (1.122.0)
+
+Jean aprovou as duas sem novos retoques.
+
+**As fontes finais** saíram de `agilidade_aljava_ref/fontes/` para `ferramentas/arte/aseprite/attr-agilidade/` e
+`aljava/`, e o exportador as reproduz (`exportar_aseprite.py <peça> --conferir`). O que ficou aqui é o histórico do
+processo: as grades, as listas, os auxiliares, as prévias e as propostas.
+
+**Conferido:** os dezesseis arquivos do jogo são idênticos, byte a byte, aos aprovados (`e9b0499`, `ea3835f` e
+`fb403f5`).

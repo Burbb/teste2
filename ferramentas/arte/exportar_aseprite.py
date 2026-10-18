@@ -52,7 +52,7 @@ DERIVADOS = {
     "attr-ataque": {64: (32, 2)},    # 1.120.0: os atributos Ataque e Defesa (24 e 32 das fontes); o 64 do selo é o 32 ×2
     "attr-defesa": {64: (32, 2)},
     "attr-agilidade": {64: (32, 2)},  # 1.121.0: a Agilidade (a bota em passada, também o Fugir); o 64 do selo é o 32 ×2
-    "aljava": {64: (32, 2)},          # proposta (as fontes no protótipo, --fontes=); o 64 é o 32 ×2
+    "aljava": {64: (32, 2)},          # 1.122.0: a aljava (24 e 32 aprovados; 40 e 48 derivados); o 64 é o 32 ×2
     "attr-poder": {64: (32, 2)},
 }
 

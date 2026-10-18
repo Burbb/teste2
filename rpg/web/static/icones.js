@@ -62,7 +62,9 @@ const Icones = (() => {
   // a luva de seda, para o Capuz e a Luva de Seda do Mago (o desenho vem do item: itens.py e a migração do save v5).
   // A habilidade Desaparecer usa o sprite "capuz" noutro papel e continua com ele; os espaços vazios da cabeça e das
   // mãos continuam com o elmo e a manopla de ferro (VAZIO). A Calça de Couro do Arqueiro (1.119.0) tem desenho próprio
-  // (o 64 é o 32 ampliado 2×); a Calça de Viagem do Mago continua com o sprite do jogo.
+  // (o 64 é o 32 ampliado 2×); a Calça de Viagem do Mago continua com o sprite do jogo. A aljava (1.122.0, a da
+  // referência do Jean) vale para toda Aljava do Patrulheiro, a comum e a única dos Mil Corvos, e para o recurso de
+  // flechas do topo (RECURSO); o 24 é o do topo, o 40 o do Inventário, o 48 o do cartão compacto do saque.
   const ITEM = { elmo: "elmo", armadura: "cota", manopla: "manopla", calca: "perneiras", bota_ferro: "botas-ferro",
     maca: "maca", espada: "espada", escudo: "escudo", amuleto: "amuleto", anel: "anel", aljava: "aljava", martelo: "martelo", machado: "machado", arco: "arco", cajado: "cajado", orbe: "orbe", livro: "livro", varinha: "varinha", gibao: "gibao", bota: "bota",
     capuz: "capuz", luva: "luva", capuz_tecido: "capuz_tecido", luva_seda: "luva_seda", calca_couro: "calca_couro" };

@@ -3772,3 +3772,26 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   - a suíte, o gabarito e o pyflakes. A fumaça não foi repetida: nenhum arquivo do jogo mudou desde `35262ca`.
 - **Próximo:** Jean avaliar a sola e os 40/48. Depois, a integração do que ele aprovar.
 - **Continuam:** Poder pendente; nenhum outro ícone começado. A versão não mudou (1.120.0).
+
+### 18/10/2026 (data do computador local) — Agilidade (1.121.0) e aljava (1.122.0) no jogo
+
+- **Pedido de Jean:** integrar as duas aprovadas, sem retoque, e apresentar de novo o candidato de Poder (sem
+  redesenhar).
+- **Feito:**
+  - **As fontes finais:** foram para `ferramentas/arte/aseprite/attr-agilidade/` (24, 32) e `aljava/` (24, 32, 40,
+    48); o 64 de cada uma é o 32 ampliado 2× (`DERIVADOS`). Os dezesseis arquivos do jogo são idênticos, byte a byte,
+    aos aprovados (`e9b0499`, `ea3835f`, `fb403f5`), e `exportar_aseprite.py <peça> --conferir` os reproduz.
+  - **Os mapeamentos não mudaram:**
+    - a Agilidade é o atributo e o Fugir (`ACAO.fuga`); a bota do equipamento é outro desenho;
+    - a aljava é toda Aljava do Patrulheiro (a comum, a única dos Mil Corvos, os saves pelo `icone`) e o recurso de
+      flechas do topo.
+  - **Os ajustes:** `TAMANHOS` ganhou o 64 da Agilidade. O `desenhar_aljava_pixel.py` antigo virou histórico (só grava
+    numa pasta). O `fotografar.mjs` ganhou `SO_ATUAL=1` (o jogo sem troca nenhuma) e a peça `poder`.
+- **Conferido:**
+  - no jogo, sem injeção, a 1920×945 (`agilidade_aljava_ref/integradas-no-jogo.png`): a Agilidade na ficha, no Fugir
+    e no selo; a aljava no topo, na ficha, no Inventário e no saque (48 e 64);
+  - a suíte, o gabarito (sem diferença), o pyflakes e a fumaça uma vez.
+- **Poder:** o candidato é o de `35262ca` (`ferramentas/prototipos/hud/itens-lote-noite/agilidade_poder/`, script
+  `ferramentas/arte/desenhar_attr_poder_pixel.py`). Está mostrado ao lado do atual em `agilidade_poder/poder-atual-x-candidato.png`
+  e aguarda a avaliação.
+- **Próximo:** a decisão sobre Poder. A doca fica para os próximos pares.

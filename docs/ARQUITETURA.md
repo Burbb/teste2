@@ -429,7 +429,9 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   `exportar_aseprite.py calca_couro`. Os ícones de Ataque e Defesa (1.120.0) e de Agilidade (1.121.0) são pixel art,
   com fontes em `ferramentas/arte/aseprite/attr-ataque/`, `attr-defesa/` e `attr-agilidade/` (24 e 32; o 64 do selo
   da festa de atributo permanente é o 32 ampliado 2×). A Agilidade é também o Fugir da roda da luta (`ACAO.fuga`); a
-  bota do equipamento é outro desenho. Poder e os ícones da doca ainda são placeholders pintados, pendentes de pixel
+  bota do equipamento é outro desenho. A aljava (1.122.0) também tem fontes em camadas (`ferramentas/arte/aseprite/
+  aljava/`: 24 do topo, 32, 40 do Inventário, 48 do saque; o 64 é o 32 ampliado 2×), para toda Aljava do Patrulheiro
+  (a comum e a única) e o recurso de flechas do topo. Poder e os ícones da doca ainda são placeholders pintados, pendentes de pixel
   art (plano 23, 1D).
 - O escudo e o Unguento de Prata (1.94.0), o machado e a Bomba de Fumaça (1.99.0) o arco (1.101.0,
   `desenhar_arco_pixel.py`; o Atacar da roda, o Tiro Duplo e o contrato continuam com o sprite) e o cajado (1.106.0,
