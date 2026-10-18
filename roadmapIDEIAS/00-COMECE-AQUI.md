@@ -3470,3 +3470,17 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   - vídeos;
   - a suíte, o pyflakes, o gabarito (só o campo novo, investigado e atualizado) e a fumaça uma vez.
 - **Próximo:** Jean jogar. Não começaram o dado, a consulta aos atributos nem outra mudança visual.
+
+### 17/10/2026 (data do computador local) — Os avisos de turno: placa parada e anúncio num lugar só (1.116.1)
+
+- **Pedido de Jean:** a placa parada durante o zoom e a tremida do golpe final; o anúncio centralizado, num lugar
+  previsível, sem cobrir comandos, a placa ou o registro.
+- **Feito:**
+  - a placa e o anúncio se medem pelo layout e ficam parados no impacto (0 px; a arena, até 64 px);
+  - o anúncio fica no centro da arena, na borda de cima, numa linha; a iniciativa diz "Turno 1 · Só você age", e o
+    bônus fica na placa.
+- **O compromisso:** entre os grupos não cabe sem cobrir comandos na luta pequena (a roda ocupa a faixa inteira); por
+  isso a borda de cima, e numa linha.
+- **Conferido:** `integracao.mjs` (luta pequena e cheia, 1280×720 e 1500×950, iniciativa, emboscada, turno perdido,
+  golpe final, reduzido, redimensionar), a suíte, o pyflakes, o gabarito (sem mudança) e a fumaça uma vez.
+- **Próximo:** Jean jogar. O dado e outras mudanças visuais não começaram.

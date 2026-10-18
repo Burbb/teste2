@@ -1,0 +1,1083 @@
+{
+ "relatorio": [
+  {
+   "nome": "iniciativa-jogo-1280x720",
+   "turno1": {
+    "mostra": [
+     "anúncio (borda de cima da área de combate): Iniciativa!Turno 1 · Só você age"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": {
+     "centro_do_anuncio_menos_centro_da_arena": 0,
+     "sobre_o_texto_do_topo": false,
+     "texto_cortado": false,
+     "sobre_a_placa": false,
+     "sobre_o_registro": false,
+     "caixa": [
+      454,
+      35,
+      807,
+      74
+     ]
+    }
+   },
+   "depois_do_anuncio": {
+    "mostra": [
+     "placa (presa à borda de baixo da arena): Turno1Iniciativa: +25% no 1º golpe"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": null
+   },
+   "habilidades": {
+    "mostra": [],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": null
+   },
+   "mira": {
+    "mostra": [
+     "placa (presa à borda de baixo da arena): Turno1Iniciativa: +25% no 1º golpe"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": null
+   },
+   "golpe": {
+    "mostra": [
+     "placa (presa à borda de baixo da arena): Turno1Iniciativa usada (+25%)"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": null
+   },
+   "turno2": {
+    "mostra": [
+     "placa (presa à borda de baixo da arena): Turno2Iniciativa usada (+25%)",
+     "anúncio (borda de cima da área de combate): Turno 2"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": {
+     "centro_do_anuncio_menos_centro_da_arena": 0,
+     "sobre_o_texto_do_topo": false,
+     "texto_cortado": false,
+     "sobre_a_placa": false,
+     "sobre_o_registro": false,
+     "caixa": [
+      557,
+      40,
+      704,
+      74
+     ]
+    }
+   },
+   "turno2_depois": {
+    "mostra": [
+     "placa (presa à borda de baixo da arena): Turno2"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": null
+   },
+   "turnos": [
+    "turno 1: a vez clicável 29 ms depois",
+    "turno 2: a vez clicável 14 ms depois"
+   ],
+   "anuncios_mostrados": [
+    "Iniciativa!Turno 1 · Só você age (1100 ms à vista)",
+    "Turno 2 (1100 ms à vista)"
+   ],
+   "particulas_de_festa": 0
+  },
+  {
+   "nome": "iniciativa-jogo-1500x950",
+   "turno1": {
+    "mostra": [
+     "anúncio (borda de cima da área de combate): Iniciativa!Turno 1 · Só você age"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": {
+     "centro_do_anuncio_menos_centro_da_arena": 0,
+     "sobre_o_texto_do_topo": false,
+     "texto_cortado": false,
+     "sobre_a_placa": false,
+     "sobre_o_registro": false,
+     "caixa": [
+      554,
+      37,
+      907,
+      76
+     ]
+    }
+   },
+   "depois_do_anuncio": {
+    "mostra": [
+     "placa (presa à borda de baixo da arena): Turno1Iniciativa: +25% no 1º golpe"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": null
+   },
+   "habilidades": {
+    "mostra": [],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": null
+   },
+   "mira": {
+    "mostra": [
+     "placa (presa à borda de baixo da arena): Turno1Iniciativa: +25% no 1º golpe"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": null
+   },
+   "golpe": {
+    "mostra": [
+     "placa (presa à borda de baixo da arena): Turno1Iniciativa usada (+25%)"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": null
+   },
+   "turno2": {
+    "mostra": [
+     "placa (presa à borda de baixo da arena): Turno2Iniciativa usada (+25%)",
+     "anúncio (borda de cima da área de combate): Turno 2"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": {
+     "centro_do_anuncio_menos_centro_da_arena": 0,
+     "sobre_o_texto_do_topo": false,
+     "texto_cortado": false,
+     "sobre_a_placa": false,
+     "sobre_o_registro": false,
+     "caixa": [
+      657,
+      42,
+      804,
+      76
+     ]
+    }
+   },
+   "turno2_depois": {
+    "mostra": [
+     "placa (presa à borda de baixo da arena): Turno2"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": null
+   },
+   "turnos": [
+    "turno 1: a vez clicável 29 ms depois",
+    "turno 2: a vez clicável 12 ms depois"
+   ],
+   "anuncios_mostrados": [
+    "Iniciativa!Turno 1 · Só você age (1100 ms à vista)",
+    "Turno 2 (1100 ms à vista)"
+   ],
+   "particulas_de_festa": 0
+  },
+  {
+   "nome": "iniciativa-jogo-1280x720-reduzido",
+   "turno1": {
+    "mostra": [
+     "anúncio (borda de cima da área de combate): Iniciativa!Turno 1 · Só você age"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": {
+     "centro_do_anuncio_menos_centro_da_arena": 0,
+     "sobre_o_texto_do_topo": false,
+     "texto_cortado": false,
+     "sobre_a_placa": false,
+     "sobre_o_registro": false,
+     "caixa": [
+      454,
+      35,
+      807,
+      74
+     ]
+    }
+   },
+   "depois_do_anuncio": {
+    "mostra": [
+     "placa (presa à borda de baixo da arena): Turno1Iniciativa: +25% no 1º golpe"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": null
+   },
+   "habilidades": {
+    "mostra": [],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": null
+   },
+   "mira": {
+    "mostra": [
+     "placa (presa à borda de baixo da arena): Turno1Iniciativa: +25% no 1º golpe"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": null
+   },
+   "golpe": {
+    "mostra": [
+     "placa (presa à borda de baixo da arena): Turno1Iniciativa usada (+25%)"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": null
+   },
+   "turno2": {
+    "mostra": [
+     "placa (presa à borda de baixo da arena): Turno2Iniciativa usada (+25%)",
+     "anúncio (borda de cima da área de combate): Turno 2"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": {
+     "centro_do_anuncio_menos_centro_da_arena": 0,
+     "sobre_o_texto_do_topo": false,
+     "texto_cortado": false,
+     "sobre_a_placa": false,
+     "sobre_o_registro": false,
+     "caixa": [
+      557,
+      40,
+      704,
+      74
+     ]
+    }
+   },
+   "turno2_depois": {
+    "mostra": [
+     "placa (presa à borda de baixo da arena): Turno2Iniciativa usada (+25%)"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": null
+   },
+   "turnos": [
+    "turno 1: a vez clicável 29 ms depois",
+    "turno 2: a vez clicável 13 ms depois"
+   ],
+   "anuncios_mostrados": [
+    "Iniciativa!Turno 1 · Só você age (1800 ms à vista)",
+    "Turno 2 (1800 ms à vista)"
+   ],
+   "particulas_de_festa": 0
+  },
+  {
+   "nome": "emboscada-jogo-1280x720",
+   "emboscada": {
+    "mostra": [
+     "anúncio (borda de cima da área de combate): Emboscada!Lobo ataca antes de você"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": {
+     "centro_do_anuncio_menos_centro_da_arena": 0,
+     "sobre_o_texto_do_topo": false,
+     "texto_cortado": false,
+     "sobre_a_placa": false,
+     "sobre_o_registro": false,
+     "caixa": [
+      427,
+      35,
+      833,
+      74
+     ]
+    }
+   },
+   "turno1": {
+    "mostra": [
+     "anúncio (borda de cima da área de combate): Turno 1"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": {
+     "centro_do_anuncio_menos_centro_da_arena": 0,
+     "sobre_o_texto_do_topo": false,
+     "texto_cortado": false,
+     "sobre_a_placa": false,
+     "sobre_o_registro": false,
+     "caixa": [
+      558,
+      40,
+      702,
+      74
+     ]
+    }
+   },
+   "depois": {
+    "mostra": [
+     "placa (presa à borda de baixo da arena): Turno1"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": null
+   },
+   "turnos": [
+    "turno 1: a vez clicável 18 ms depois"
+   ],
+   "anuncios_mostrados": [
+    "Emboscada!Lobo ataca antes de você (502 ms à vista)",
+    "Turno 1 (1099 ms à vista)"
+   ],
+   "particulas_de_festa": 0
+  },
+  {
+   "nome": "emboscada-jogo-1500x950",
+   "emboscada": {
+    "mostra": [
+     "anúncio (borda de cima da área de combate): Emboscada!Lobo ataca antes de você"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": {
+     "centro_do_anuncio_menos_centro_da_arena": 0,
+     "sobre_o_texto_do_topo": false,
+     "texto_cortado": false,
+     "sobre_a_placa": false,
+     "sobre_o_registro": false,
+     "caixa": [
+      530,
+      37,
+      930,
+      76
+     ]
+    }
+   },
+   "turno1": {
+    "mostra": [
+     "anúncio (borda de cima da área de combate): Turno 1"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": {
+     "centro_do_anuncio_menos_centro_da_arena": 0,
+     "sobre_o_texto_do_topo": false,
+     "texto_cortado": false,
+     "sobre_a_placa": false,
+     "sobre_o_registro": false,
+     "caixa": [
+      658,
+      42,
+      802,
+      76
+     ]
+    }
+   },
+   "depois": {
+    "mostra": [
+     "placa (presa à borda de baixo da arena): Turno1"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": null
+   },
+   "turnos": [
+    "turno 1: a vez clicável 17 ms depois"
+   ],
+   "anuncios_mostrados": [
+    "Emboscada!Lobo ataca antes de você (502 ms à vista)",
+    "Turno 1 (1100 ms à vista)"
+   ],
+   "particulas_de_festa": 0
+  },
+  {
+   "nome": "sem-vantagem-1280x720",
+   "turno1": {
+    "mostra": [
+     "anúncio (borda de cima da área de combate): Turno 1"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": {
+     "centro_do_anuncio_menos_centro_da_arena": 0,
+     "sobre_o_texto_do_topo": false,
+     "texto_cortado": false,
+     "sobre_a_placa": false,
+     "sobre_o_registro": false,
+     "caixa": [
+      558,
+      40,
+      702,
+      74
+     ]
+    }
+   },
+   "depois": {
+    "mostra": [
+     "placa (presa à borda de baixo da arena): Turno1"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": null
+   },
+   "turnos": [
+    "turno 1: a vez clicável 17 ms depois"
+   ],
+   "anuncios_mostrados": [
+    "Turno 1 (1100 ms à vista)"
+   ],
+   "particulas_de_festa": 0
+  },
+  {
+   "nome": "cheia-jogo-1280x720",
+   "turno1": {
+    "mostra": [
+     "anúncio (borda de cima da área de combate): Iniciativa!Turno 1 · Só você age"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": {
+     "centro_do_anuncio_menos_centro_da_arena": 0,
+     "sobre_o_texto_do_topo": false,
+     "texto_cortado": false,
+     "sobre_a_placa": false,
+     "sobre_o_registro": false,
+     "caixa": [
+      454,
+      35,
+      807,
+      74
+     ]
+    }
+   },
+   "meditar": {
+    "mostra": [
+     "placa (no pé da faixa dos comandos): Turno2Iniciativa passou",
+     "anúncio (borda de cima da área de combate): Turno 2"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": {
+     "centro_do_anuncio_menos_centro_da_arena": -26,
+     "sobre_o_texto_do_topo": false,
+     "texto_cortado": false,
+     "sobre_a_placa": false,
+     "sobre_o_registro": false,
+     "caixa": [
+      534,
+      41,
+      675,
+      73
+     ]
+    }
+   },
+   "turno2": {
+    "mostra": [
+     "placa (no pé da faixa dos comandos): Turno2Iniciativa passou",
+     "anúncio (borda de cima da área de combate): Turno 2"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": {
+     "centro_do_anuncio_menos_centro_da_arena": 0,
+     "sobre_o_texto_do_topo": false,
+     "texto_cortado": false,
+     "sobre_a_placa": false,
+     "sobre_o_registro": false,
+     "caixa": [
+      557,
+      40,
+      704,
+      74
+     ]
+    }
+   },
+   "turno3": {
+    "mostra": [
+     "placa (no pé da faixa dos comandos): Turno3",
+     "anúncio (borda de cima da área de combate): Turno 3"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": {
+     "centro_do_anuncio_menos_centro_da_arena": 0,
+     "sobre_o_texto_do_topo": false,
+     "texto_cortado": false,
+     "sobre_a_placa": false,
+     "sobre_o_registro": false,
+     "caixa": [
+      556,
+      40,
+      704,
+      74
+     ]
+    }
+   },
+   "turno3_depois": {
+    "mostra": [
+     "placa (no pé da faixa dos comandos): Turno3"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": null
+   },
+   "habilidades": {
+    "mostra": [
+     "placa (no pé da faixa dos comandos): Turno3"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": null
+   },
+   "turnos": [
+    "turno 1: a vez clicável 33 ms depois",
+    "turno 2: a vez clicável 8 ms depois",
+    "turno 3: a vez clicável 21 ms depois"
+   ],
+   "anuncios_mostrados": [
+    "Iniciativa!Turno 1 · Só você age (1099 ms à vista)",
+    "Turno 2 (1101 ms à vista)",
+    "Turno 3 (1100 ms à vista)"
+   ],
+   "particulas_de_festa": 0
+  },
+  {
+   "nome": "cheia-jogo-1500x950",
+   "turno1": {
+    "mostra": [
+     "anúncio (borda de cima da área de combate): Iniciativa!Turno 1 · Só você age"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": {
+     "centro_do_anuncio_menos_centro_da_arena": 0,
+     "sobre_o_texto_do_topo": false,
+     "texto_cortado": false,
+     "sobre_a_placa": false,
+     "sobre_o_registro": false,
+     "caixa": [
+      554,
+      37,
+      907,
+      76
+     ]
+    }
+   },
+   "meditar": {
+    "mostra": [
+     "placa (no pé da faixa dos comandos): Turno2Iniciativa passou",
+     "anúncio (borda de cima da área de combate): Turno 2"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": {
+     "centro_do_anuncio_menos_centro_da_arena": -26,
+     "sobre_o_texto_do_topo": false,
+     "texto_cortado": false,
+     "sobre_a_placa": false,
+     "sobre_o_registro": false,
+     "caixa": [
+      634,
+      43,
+      775,
+      75
+     ]
+    }
+   },
+   "turno2": {
+    "mostra": [
+     "placa (no pé da faixa dos comandos): Turno2Iniciativa passou",
+     "anúncio (borda de cima da área de combate): Turno 2"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": {
+     "centro_do_anuncio_menos_centro_da_arena": 0,
+     "sobre_o_texto_do_topo": false,
+     "texto_cortado": false,
+     "sobre_a_placa": false,
+     "sobre_o_registro": false,
+     "caixa": [
+      657,
+      42,
+      804,
+      76
+     ]
+    }
+   },
+   "turno3": {
+    "mostra": [
+     "placa (no pé da faixa dos comandos): Turno3",
+     "anúncio (borda de cima da área de combate): Turno 3"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": {
+     "centro_do_anuncio_menos_centro_da_arena": 0,
+     "sobre_o_texto_do_topo": false,
+     "texto_cortado": false,
+     "sobre_a_placa": false,
+     "sobre_o_registro": false,
+     "caixa": [
+      656,
+      42,
+      804,
+      76
+     ]
+    }
+   },
+   "turno3_depois": {
+    "mostra": [
+     "placa (no pé da faixa dos comandos): Turno3"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": null
+   },
+   "habilidades": {
+    "mostra": [
+     "placa (no pé da faixa dos comandos): Turno3"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": null
+   },
+   "turnos": [
+    "turno 1: a vez clicável 33 ms depois",
+    "turno 2: a vez clicável 12 ms depois",
+    "turno 3: a vez clicável 27 ms depois"
+   ],
+   "anuncios_mostrados": [
+    "Iniciativa!Turno 1 · Só você age (1101 ms à vista)",
+    "Turno 2 (1099 ms à vista)",
+    "Turno 3 (1099 ms à vista)"
+   ],
+   "particulas_de_festa": 0
+  },
+  {
+   "nome": "atordoado-1280x720",
+   "turnos_presos": [
+    2
+   ],
+   "turno1": {
+    "mostra": [
+     "anúncio (borda de cima da área de combate): Turno 1"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": {
+     "centro_do_anuncio_menos_centro_da_arena": 0,
+     "sobre_o_texto_do_topo": false,
+     "texto_cortado": false,
+     "sobre_a_placa": false,
+     "sobre_o_registro": false,
+     "caixa": [
+      558,
+      40,
+      702,
+      74
+     ]
+    }
+   },
+   "turno2_preso": {
+    "mostra": [
+     "placa (presa à borda de baixo da arena): Turno2Preso na teia: perde este turno",
+     "anúncio (borda de cima da área de combate): Turno 2Preso na teia: você perde este turno"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": {
+     "centro_do_anuncio_menos_centro_da_arena": 1,
+     "sobre_o_texto_do_topo": false,
+     "texto_cortado": false,
+     "sobre_a_placa": false,
+     "sobre_o_registro": false,
+     "caixa": [
+      437,
+      40,
+      824,
+      74
+     ]
+    }
+   },
+   "turno2_comandos_a_vista": 0,
+   "turno3": {
+    "mostra": [
+     "placa (presa à borda de baixo da arena): Turno3",
+     "anúncio (borda de cima da área de combate): Turno 3"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": {
+     "centro_do_anuncio_menos_centro_da_arena": 0,
+     "sobre_o_texto_do_topo": false,
+     "texto_cortado": false,
+     "sobre_a_placa": false,
+     "sobre_o_registro": false,
+     "caixa": [
+      556,
+      40,
+      704,
+      74
+     ]
+    }
+   },
+   "turno4": {
+    "mostra": [
+     "placa (presa à borda de baixo da arena): Turno4",
+     "anúncio (borda de cima da área de combate): Turno 4"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": {
+     "centro_do_anuncio_menos_centro_da_arena": 1,
+     "sobre_o_texto_do_topo": false,
+     "texto_cortado": false,
+     "sobre_a_placa": false,
+     "sobre_o_registro": false,
+     "caixa": [
+      555,
+      40,
+      706,
+      74
+     ]
+    }
+   },
+   "turnos": [
+    "turno 1: a vez clicável 17 ms depois",
+    "turno 2: a vez clicável null ms depois",
+    "turno 3: a vez clicável 320 ms depois",
+    "turno 4: a vez clicável 318 ms depois"
+   ],
+   "anuncios_mostrados": [
+    "Turno 1 (588 ms à vista)",
+    "Turno 2Preso na teia: você perde este turno (749 ms à vista)",
+    "Turno 3 (717 ms à vista)",
+    "Turno 4"
+   ],
+   "particulas_de_festa": 0
+  },
+  {
+   "nome": "atordoado-1500x950",
+   "turnos_presos": [
+    2
+   ],
+   "turno1": {
+    "mostra": [
+     "anúncio (borda de cima da área de combate): Turno 1"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": {
+     "centro_do_anuncio_menos_centro_da_arena": 0,
+     "sobre_o_texto_do_topo": false,
+     "texto_cortado": false,
+     "sobre_a_placa": false,
+     "sobre_o_registro": false,
+     "caixa": [
+      658,
+      42,
+      802,
+      76
+     ]
+    }
+   },
+   "turno2_preso": {
+    "mostra": [
+     "anúncio (borda de cima da área de combate): Turno 2Preso na teia: você perde este turno"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": {
+     "centro_do_anuncio_menos_centro_da_arena": 1,
+     "sobre_o_texto_do_topo": false,
+     "texto_cortado": false,
+     "sobre_a_placa": false,
+     "sobre_o_registro": false,
+     "caixa": [
+      537,
+      42,
+      924,
+      76
+     ]
+    }
+   },
+   "turno2_comandos_a_vista": 0,
+   "turno3": {
+    "mostra": [
+     "anúncio (borda de cima da área de combate): Turno 3"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": {
+     "centro_do_anuncio_menos_centro_da_arena": 0,
+     "sobre_o_texto_do_topo": false,
+     "texto_cortado": false,
+     "sobre_a_placa": false,
+     "sobre_o_registro": false,
+     "caixa": [
+      656,
+      42,
+      804,
+      76
+     ]
+    }
+   },
+   "turno4": {
+    "mostra": [
+     "anúncio (borda de cima da área de combate): Turno 4"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": {
+     "centro_do_anuncio_menos_centro_da_arena": 1,
+     "sobre_o_texto_do_topo": false,
+     "texto_cortado": false,
+     "sobre_a_placa": false,
+     "sobre_o_registro": false,
+     "caixa": [
+      655,
+      42,
+      806,
+      76
+     ]
+    }
+   },
+   "turnos": [
+    "turno 1: a vez clicável 17 ms depois",
+    "turno 2: a vez clicável null ms depois",
+    "turno 3: a vez clicável 317 ms depois",
+    "turno 4: a vez clicável 318 ms depois"
+   ],
+   "anuncios_mostrados": [
+    "Turno 1 (586 ms à vista)",
+    "Turno 2Preso na teia: você perde este turno (740 ms à vista)",
+    "Turno 3 (750 ms à vista)",
+    "Turno 4"
+   ],
+   "particulas_de_festa": 0
+  },
+  {
+   "nome": "atordoado-1280x720-reduzido",
+   "turnos_presos": [
+    2
+   ],
+   "turno1": {
+    "mostra": [
+     "anúncio (borda de cima da área de combate): Turno 1"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": {
+     "centro_do_anuncio_menos_centro_da_arena": 0,
+     "sobre_o_texto_do_topo": false,
+     "texto_cortado": false,
+     "sobre_a_placa": false,
+     "sobre_o_registro": false,
+     "caixa": [
+      558,
+      40,
+      702,
+      74
+     ]
+    }
+   },
+   "turno2_preso": {
+    "mostra": [
+     "anúncio (borda de cima da área de combate): Turno 2Preso na teia: você perde este turno"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": {
+     "centro_do_anuncio_menos_centro_da_arena": 1,
+     "sobre_o_texto_do_topo": false,
+     "texto_cortado": false,
+     "sobre_a_placa": false,
+     "sobre_o_registro": false,
+     "caixa": [
+      437,
+      40,
+      824,
+      74
+     ]
+    }
+   },
+   "turno2_comandos_a_vista": 0,
+   "turno3": {
+    "mostra": [
+     "anúncio (borda de cima da área de combate): Turno 3"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": {
+     "centro_do_anuncio_menos_centro_da_arena": 0,
+     "sobre_o_texto_do_topo": false,
+     "texto_cortado": false,
+     "sobre_a_placa": false,
+     "sobre_o_registro": false,
+     "caixa": [
+      556,
+      40,
+      704,
+      74
+     ]
+    }
+   },
+   "turno4": {
+    "mostra": [
+     "placa (presa à borda de baixo da arena): Turno4",
+     "anúncio (borda de cima da área de combate): Turno 4"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": {
+     "centro_do_anuncio_menos_centro_da_arena": 1,
+     "sobre_o_texto_do_topo": false,
+     "texto_cortado": false,
+     "sobre_a_placa": false,
+     "sobre_o_registro": false,
+     "caixa": [
+      555,
+      40,
+      706,
+      74
+     ]
+    }
+   },
+   "turnos": [
+    "turno 1: a vez clicável 19 ms depois",
+    "turno 2: a vez clicável null ms depois",
+    "turno 3: a vez clicável 317 ms depois",
+    "turno 4: a vez clicável 314 ms depois"
+   ],
+   "anuncios_mostrados": [
+    "Turno 1 (589 ms à vista)",
+    "Turno 2Preso na teia: você perde este turno (744 ms à vista)",
+    "Turno 3 (658 ms à vista)",
+    "Turno 4"
+   ],
+   "particulas_de_festa": 0
+  },
+  {
+   "nome": "festa-de-nivel",
+   "ao_vivo": "90 partículas, a janela da festa aberta",
+   "refazendo": "0 partículas, a janela fechada",
+   "turnos": [
+    "turno 1: a vez clicável 19 ms depois"
+   ],
+   "anuncios_mostrados": [
+    "Turno 1 (1100 ms à vista)"
+   ],
+   "particulas_de_festa": 90
+  },
+  {
+   "nome": "finalizacao-1280x720",
+   "quadros": "674 quadros, 60 com a arena se mexendo (zoom do golpe final ou tremida): a arena se deslocou ou cresceu até 54.7 px; a placa se moveu 0.0 px; o anúncio, 0.0 px",
+   "fim": "a luta acabou",
+   "turnos": [
+    "turno 1: a vez clicável 68 ms depois",
+    "turno 2: a vez clicável 16 ms depois",
+    "turno 3: a vez clicável 15 ms depois",
+    "turno 4: a vez clicável 17 ms depois"
+   ],
+   "anuncios_mostrados": [
+    "Iniciativa!Turno 1 · Só você age (825 ms à vista)",
+    "Turno 2 (1101 ms à vista)",
+    "Turno 3 (914 ms à vista)",
+    "Turno 4 (1100 ms à vista)"
+   ],
+   "particulas_de_festa": 30
+  },
+  {
+   "nome": "finalizacao-1500x950",
+   "quadros": "674 quadros, 60 com a arena se mexendo (zoom do golpe final ou tremida): a arena se deslocou ou cresceu até 64.0 px; a placa se moveu 0.0 px; o anúncio, 0.0 px",
+   "fim": "a luta acabou",
+   "turnos": [
+    "turno 1: a vez clicável 31 ms depois",
+    "turno 2: a vez clicável 15 ms depois",
+    "turno 3: a vez clicável 16 ms depois",
+    "turno 4: a vez clicável 17 ms depois"
+   ],
+   "anuncios_mostrados": [
+    "Iniciativa!Turno 1 · Só você age (759 ms à vista)",
+    "Turno 2 (1100 ms à vista)",
+    "Turno 3 (918 ms à vista)",
+    "Turno 4 (1100 ms à vista)"
+   ],
+   "particulas_de_festa": 30
+  },
+  {
+   "nome": "finalizacao-1280x720-reduzido",
+   "quadros": "674 quadros, 60 com a arena se mexendo (zoom do golpe final ou tremida): a arena se deslocou ou cresceu até 54.7 px; a placa se moveu 0.0 px; o anúncio, 0.0 px",
+   "fim": "a luta acabou",
+   "turnos": [
+    "turno 1: a vez clicável 29 ms depois",
+    "turno 2: a vez clicável 15 ms depois",
+    "turno 3: a vez clicável 14 ms depois",
+    "turno 4: a vez clicável 16 ms depois"
+   ],
+   "anuncios_mostrados": [
+    "Iniciativa!Turno 1 · Só você age (731 ms à vista)",
+    "Turno 2 (1799 ms à vista)",
+    "Turno 3 (918 ms à vista)",
+    "Turno 4 (1800 ms à vista)"
+   ],
+   "particulas_de_festa": 30
+  },
+  {
+   "nome": "redimensionar",
+   "passos": [
+    {
+     "janela": "1280×720",
+     "mostra": [
+      "placa (no pé da faixa dos comandos): Turno1Iniciativa: +25% no 1º golpe"
+     ],
+     "cobre": "nada",
+     "comandos_sob_o_anuncio": "nenhum",
+     "anuncio": null
+    },
+    {
+     "janela": "1500×950",
+     "mostra": [
+      "placa (no pé da faixa dos comandos): Turno1Iniciativa: +25% no 1º golpe"
+     ],
+     "cobre": "nada",
+     "comandos_sob_o_anuncio": "nenhum",
+     "anuncio": null
+    }
+   ],
+   "turno2": {
+    "mostra": [
+     "placa (no pé da faixa dos comandos): Turno2Iniciativa passou",
+     "anúncio (borda de cima da área de combate): Turno 2"
+    ],
+    "cobre": "nada",
+    "comandos_sob_o_anuncio": "nenhum",
+    "anuncio": {
+     "centro_do_anuncio_menos_centro_da_arena": 0,
+     "sobre_o_texto_do_topo": false,
+     "texto_cortado": false,
+     "sobre_a_placa": false,
+     "sobre_o_registro": false,
+     "caixa": [
+      657,
+      42,
+      804,
+      76
+     ]
+    }
+   },
+   "turnos": [
+    "turno 1: a vez clicável 32 ms depois",
+    "turno 2: a vez clicável 9 ms depois"
+   ],
+   "anuncios_mostrados": [
+    "Iniciativa!Turno 1 · Só você age (1100 ms à vista)",
+    "Turno 2"
+   ],
+   "particulas_de_festa": 0
+  }
+ ],
+ "erros": []
+}

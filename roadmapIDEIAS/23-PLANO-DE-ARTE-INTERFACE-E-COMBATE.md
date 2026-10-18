@@ -202,6 +202,20 @@ se empilham sobre o mesmo ponto da tela nem competem com dano e efeitos.
   (antes, 720).
 - **Gabarito:** só o campo novo `perde_turno` no catálogo (as 9 partidas web); nenhuma partida, lance ou sorteio.
 
+**Ajuste na 1.116.1** (17/10/2026, direção de Jean, integrado direto):
+- **A placa e o anúncio parados no golpe final:** a arena chega perto (zoom) e treme no impacto; os dois são interface e
+  se medem pelo layout, não pelo retângulo na tela. Medido quadro a quadro: a arena se move até 55–64 px; a placa e o
+  anúncio, 0 px. O zoom, a tremida e o impacto ficam iguais.
+- **O anúncio num lugar só:** no centro da área de combate, na borda de cima, logo acima das cartas e dos comandos,
+  numa linha ("Turno 2"; "Iniciativa! | Turno 1 · Só você age"; "Emboscada! | Lobo ataca antes de você"; "Turno 2 |
+  Preso na teia: você perde este turno"). O bônus da iniciativa fica na placa.
+- **Por que ali:** entre os grupos não há lugar na luta pequena; a roda ocupa a faixa inteira (de 77 a 269 px a
+  1280×720), e qualquer altura ali esconde algum comando. Encaixar o anúncio nos vãos mudava o lugar e estreitava o
+  texto a cada composição. A borda de cima é a mesma em todas as lutas.
+- **Conferido:** luta pequena e cheia, 1280×720 e 1500×950, iniciativa, emboscada, turno perdido, golpe final,
+  movimento reduzido e redimensionar. Nada coberto (comandos, cartas, placa, registro, texto do topo), nada cortado; a
+  vez clicável segue em 9–33 ms.
+
 ### 1.6. Consulta aos testes de atributos
 
 **Direção aprovada:** tornar consultáveis o bônus atual e sua composição numa seção “Testes” da ficha detalhada,

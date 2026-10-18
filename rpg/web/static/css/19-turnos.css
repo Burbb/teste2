@@ -1,11 +1,12 @@
 /* A iniciativa e a passagem dos turnos na luta (1.116.0; turnos.js; o caminho em ferramentas/prototipos/hud/turnos/).
    Uma camada própria na página, sem clique (pointer-events: none):
-   - o anúncio: uma faixa de pincel larga ("Turno 2"; "Iniciativa!"; "Emboscada!"; o turno que você perde) que entra no vão
-     embaixo da roda de comandos (ou, sem vão ali, logo abaixo da arena, sobre o começo do registro) e sai em ~1,1 s, sem
-     segurar a vez;
+   - o anúncio: uma faixa de pincel numa linha ("Turno 2", contida; "Iniciativa!" e "Emboscada!", maiores, com a frase
+     curta ao lado; o turno que você perde, com o porquê), num lugar só: no centro da área de combate, na borda de cima,
+     acima das cartas e dos comandos (1.116.1); entra e sai em ~1,1 s, sem segurar a vez;
    - a placa: no pé da faixa dos comandos (ou presa à borda de baixo da arena, na luta pequena), o turno de agora e,
      enquanto ela vale, a linha da iniciativa ("Iniciativa: +25% no 1º golpe"), que diz "usada" ou "passou" e sai.
-   O lugar é medido (turnos.js): nunca sobre cartas, comandos, mira, seletor ou o aviso da cena. As pontas e o meio da
+   Os lugares são medidos (turnos.js): nunca sobre comandos, cartas, a mira, o seletor ou o aviso da cena; os dois ficam parados
+   enquanto a arena chega perto e treme no impacto (são interface, não cena). As pontas e o meio da
    faixa são os do seletor e dos comandos (18-seletor-habilidades.css), copiados de #roda pelo script; carvão, marfim e
    latão do seletor. Material pintado, como a HUD de ferro: fora da trava de pixel art (tests/test_estilo_pixel.py).
    Com movimento reduzido, nada se desloca nem escala: o anúncio aparece inteiro e fica 1,8 s, e a placa continua. */
@@ -14,33 +15,37 @@
 body:has(.roda-janela:not(.lateral)) .turnos-placa[data-lugar="fora"] { visibility: hidden; }
 .turnos-camada * { pointer-events: none; }
 
-/* a faixa de pincel, na mesma receita dos comandos (o ::before mascarado, inclinado 2°, com o grão) */
+/* a faixa de pincel, na mesma receita dos comandos (o ::before mascarado, inclinado 2°, com o grão); as pontas com largura
+   fixa, esticando com a altura: um anúncio de duas ou três linhas continua uma faixa (escaladas pela altura, viravam mancha) */
 .turnos-faixa { position: absolute; isolation: isolate; display: flex; flex-direction: column; align-items: center; justify-content: center;
   text-align: center; color: var(--sh-texto, #ece2cc); white-space: nowrap; }
 .turnos-faixa::before { content: ""; position: absolute; z-index: -1; inset: 0; rotate: -2deg;
   background-color: var(--fundo, #232125);
   background-image: var(--sh-grao), linear-gradient(180deg, rgba(255, 244, 220, 0.13), rgba(255, 244, 220, 0.04) 12%, transparent 40%, rgba(0, 0, 0, 0.3));
   background-size: 640px 64px, 100% 100%;
-  -webkit-mask: var(--sh-ponta-e1) 0 0 / auto 100% no-repeat, var(--sh-meio) 30px 0 / calc(100% - 70px) 100% no-repeat, var(--sh-ponta-d2) 100% 0 / auto 100% no-repeat;
-  mask: var(--sh-ponta-e1) 0 0 / auto 100% no-repeat, var(--sh-meio) 30px 0 / calc(100% - 70px) 100% no-repeat, var(--sh-ponta-d2) 100% 0 / auto 100% no-repeat;
+  -webkit-mask: var(--sh-ponta-e1) 0 0 / 32px 100% no-repeat, var(--sh-meio) 30px 0 / calc(100% - 68px) 100% no-repeat, var(--sh-ponta-d2) 100% 0 / 40px 100% no-repeat;
+  mask: var(--sh-ponta-e1) 0 0 / 32px 100% no-repeat, var(--sh-meio) 30px 0 / calc(100% - 68px) 100% no-repeat, var(--sh-ponta-d2) 100% 0 / 40px 100% no-repeat;
   filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.6)); }
 
-/* o anúncio */
-.turnos-anuncio { padding: 10px 36px 11px; --fundo: #1c1a1e; }
-.turnos-anuncio b { font-family: var(--titulo, serif); font-size: 30px; line-height: 1; letter-spacing: 0.5px; color: #f2e7cc;
+/* o anúncio: numa linha (cabe na borda de cima da área de combate); a frase de apoio ao lado, depois de um fio de latão */
+.turnos-anuncio { flex-direction: row; align-items: baseline; gap: 12px; padding: 5px 30px 6px; --fundo: #1c1a1e; }
+/* a passagem comum de turno, contida; a iniciativa e a emboscada, com mais destaque (abaixo) */
+.turnos-anuncio b { font-family: var(--titulo, serif); font-size: 23px; line-height: 1; letter-spacing: 0.5px; color: #f2e7cc;
   text-shadow: 0 2px 0 #000; }
-.turnos-anuncio small { margin-top: 4px; font-family: var(--texto, serif); font-size: 15px; line-height: 1.15; color: #d8cdb2; text-shadow: 0 1px 0 #000; }
-.turnos-anuncio .fio { width: 46%; height: 2px; margin-top: 5px; background: linear-gradient(90deg, transparent, var(--sh-latao, #b08a45), transparent); }
+.turnos-anuncio small { padding-left: 12px; border-left: 2px solid var(--sh-latao, #b08a45); font-family: var(--texto, serif); font-size: 15px;
+  line-height: 1.1; color: #e3d8bd; text-shadow: 0 1px 0 #000; overflow: hidden; text-overflow: ellipsis; }
+.turnos-anuncio:is(.iniciativa, .emboscada) { padding: 5px 34px 6px; }
+.turnos-anuncio:is(.iniciativa, .emboscada) b { font-size: 28px; }
 .turnos-anuncio.iniciativa { --fundo: #2c2410; }
 .turnos-anuncio.iniciativa b { color: #f6d98a; }
 .turnos-anuncio.emboscada { --fundo: #3a120d; }
 .turnos-anuncio.emboscada b { color: #ffb8a6; }
-.turnos-anuncio.emboscada .fio { background: linear-gradient(90deg, transparent, #c4533c, transparent); }
+.turnos-anuncio.emboscada small { border-left-color: #c4533c; }
 /* o turno que você perde (atordoado, preso na teia...): o número e o porquê, sem a cor de quem age */
 .turnos-anuncio.perde { --fundo: #26222a; }
 .turnos-anuncio.perde b { color: #c9c0d6; }
 .turnos-anuncio.perde small { color: #e3c6b9; }
-.turnos-anuncio { animation: turno-entra 1100ms cubic-bezier(.2, .8, .3, 1) forwards; }
+.turnos-anuncio.entrando { animation: turno-entra 1100ms cubic-bezier(.2, .8, .3, 1) forwards; }
 @keyframes turno-entra {
   0% { opacity: 0; translate: -26px 0; scale: 0.96; }
   14% { opacity: 1; translate: 0 0; scale: 1.04; }
@@ -56,11 +61,14 @@ body:has(.roda-janela:not(.lateral)) .turnos-placa[data-lugar="fora"] { visibili
 .turnos-placa .ini { font-family: var(--texto, serif); font-size: 13.5px; line-height: 1.1; color: #f6d98a; }
 .turnos-placa .ini.acabou { color: #a59c8a; text-decoration: line-through; text-decoration-color: rgba(165, 156, 138, 0.7); }
 .turnos-placa .ini.usada { color: #b8f0a0; }
+.turnos-placa .ini.perde { color: #e3c6b9; }
+/* alguém começou a agir (turnos.js, aoLance): o anúncio sai depressa, sem esperar o fim da entrada */
+.turnos-anuncio.saindo { animation: none; opacity: 0; transition: opacity 120ms linear; }
 .turnos-placa.pisca .t b { animation: placa-pisca 600ms ease-out; }
 @keyframes placa-pisca { 0% { color: #fff3c8; text-shadow: 0 0 8px #f2d27a; } 100% { color: #f2e7cc; text-shadow: none; } }
 
 @media (prefers-reduced-motion: reduce) {
-  .turnos-anuncio { animation: turno-fica 1800ms steps(1, end) forwards; }
+  .turnos-anuncio.entrando { animation: turno-fica 1800ms steps(1, end) forwards; }
   @keyframes turno-fica { 0% { opacity: 1; } 100% { opacity: 0; } }
   .turnos-placa.pisca .t b { animation: none; }
 }

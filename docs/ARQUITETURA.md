@@ -255,8 +255,11 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   turno de agora e a iniciativa enquanto vale ("usada"/"passou"). Só lê o motor: a mensagem `turno` (`ui.novo_turno`,
   uma vez por volta, no começo da sua vez; comitiva, animal e servos não a geram), `estado.combate.turno`, o lance
   `surpresa`, o estado `iniciativa` da sua carta e o golpe com `bonus_motivo`. Chamado por `paineis.aplicarEstado`,
-  `pagina.turno` (refazendo a página, só a placa) e a fila de lances (`nucleo.js`). Camada fixa sem mouse; o lugar é
-  medido para não cobrir cartas, comandos, mira, seletor e o aviso da cena (`19-turnos.css`).
+  `pagina.turno` (refazendo a página, só a placa) e a fila de lances (`nucleo.js`). Camada fixa sem mouse. O anúncio
+  (1.116.1) fica num lugar só, numa linha: no centro da arena, na borda de cima, acima das cartas e dos comandos; a
+  placa, no pé da faixa dos comandos ou presa à borda de baixo da arena. Os dois se medem pelo layout (`offsetTop`),
+  não pelo retângulo na tela, e por isso ficam parados enquanto a arena chega perto e treme no golpe final
+  (`sensacao.js`) (`19-turnos.css`).
 - `batalha.js` o palco da luta (o jeito de animar vem do motor: `anim` nos lances). Os avisos de passagem (números, faixas como o "AAARGH!", os selos dos estados) não moram nas cartas: nascem numa camada da página (`.avisos-luta`, 1.103.1), numa sombra do tamanho e no lugar da carta que os disparou, que a acompanha quadro a quadro; assim passam por cima da moldura do palco (que recorta o resto) e ficam dentro da janela. A sombra some com o último aviso e todas saem com a luta. A arena só cresce durante a luta e cresce devagar; quando uma carta entra ou ganha a linha de efeitos, as outras deslizam até o lugar novo (`acomodar`, desvio em `top`/`left` e em pixel inteiro: `transform` e `translate` são do foco e dos golpes). As áreas da arena (1.111.0) estão em "As lutas cheias", abaixo · `realce.js` cores dos termos de
   jogo (os nomes de habilidades e talentos chegam do motor no `glossario` do estado) · `sprites*.js`, `vista.js`, `mapa.js`, `som.js`
 - `sensacao.js` o peso dos momentos (parada no impacto, tremor, câmera lenta no golpe final...): as telas dizem o

@@ -11,9 +11,11 @@
    - um estado seu que tira o turno (o catálogo do motor: perde_turno, como atordoado ou preso na teia), no começo do
      turno: o anúncio diz que você perde este turno, para não parecer a sua vez de agir.
    O anúncio é uma faixa de pincel (as pontas do seletor e dos comandos) que entra e sai em ~1,1 s; a placa, uma faixa
-   pequena. O lugar é medido para nunca cobrir carta, comando, mira, seletor ou o aviso da cena: dentro da faixa dos
-   comandos quando ela tem vão (a luta cheia); senão, logo abaixo da arena (a luta pequena). Nada espera: a camada não
-   recebe o mouse, e a fila de mensagens e a vez seguem no tempo delas. Com movimento reduzido (19-turnos.css), nada se
+   pequena na borda da arena (no pé da faixa dos comandos; na luta pequena, presa à borda de baixo dela). O anúncio fica
+   num lugar só (1.116.1): no centro da área de combate, na borda de cima, logo acima das cartas e dos comandos, numa
+   linha; nunca cobre comando, carta, a placa ou o registro. Os dois
+   são interface: medidos pelo layout, ficam parados enquanto a arena chega perto e treme no impacto. Nada espera: a
+   camada não recebe o mouse, e a fila de mensagens e a vez seguem no tempo delas. Com movimento reduzido (19-turnos.css), nada se
    desloca e o anúncio fica mais tempo. */
 "use strict";
 
@@ -24,11 +26,13 @@ const Turnos = (() => {
   let camada = null, placa = null, anuncio = null, ultimoTurno = 0;
   let ini = { ativa: false, texto: "", usada: false, mostrandoFim: false };
   let fundoRoda = 0;  // o pé da roda de comandos (a última vez que ela esteve à vista), em px da arena
-  let lugarPlaca = null;  // {chave: o tamanho da janela, nome: dentro|fora}, decidido uma vez por luta
+  let lugarPlaca = null;  // {chave: o tamanho da janela, nome: dentro|fora}, decidido uma vez por luta (a placa)
   let ajuste = 0;
+  let perde = null;  // o estado que tira o turno de agora ("preso na teia"), para a placa: até o turno seguinte
 
-  // A camada mora na página (fixa), acima da arena e do registro: o anúncio e a placa podem ficar dentro da arena (onde
-  // houver vão) ou logo abaixo dela, e passam por cima da roda de comandos sem ficar atrás dela.
+  // A camada mora na página (fixa), acima da arena: a placa e o anúncio são interface, não fazem parte da cena. Ficam
+  // parados enquanto a arena chega perto no golpe final (transform) e treme no impacto (translate): a medida é feita com
+  // a arena parada e guardada (medir); enquanto ela se mexe, vale a última, e a placa não se move.
   function garantirCamada() {
     const arena = $("#arena");
     if (!arena) return null;
@@ -42,29 +46,49 @@ const Turnos = (() => {
     }
     return camada;
   }
-  // o que não pode ser coberto: as cartas (no lugar final: enquanto a arena se acomoda, elas deslizam com um desvio
-  // _acX/_acY de batalha.js), os comandos, a mira, o seletor e o aviso da cena
-  function obstaculos() {
-    return [...document.querySelectorAll("#batalha .carta, #roda .roda-botao, .roda-mira, .roda-janela, #arena > .mods-arena .mod")]
-      .map((e) => {
-        const q = e.getBoundingClientRect(), dx = e._acX || 0, dy = e._acY || 0;
-        return { left: q.left - dx, right: q.right - dx, top: q.top - dy, bottom: q.bottom - dy, width: q.width, height: q.height };
-      }).filter((q) => q.width && q.height);
+  // A caixa de um elemento na janela; dx/dy: um desvio a descontar (o deslizar das cartas quando a arena se acomoda,
+  // _acX/_acY de batalha.js: vale o lugar final).
+  function caixa(el, dx = 0, dy = 0) {
+    const q = el.getBoundingClientRect();
+    return { left: q.left - dx, top: q.top - dy, right: q.right - dx, bottom: q.bottom - dy, width: q.width, height: q.height };
+  }
+  // a arena se mexendo: chegando perto no golpe final (foco-final, transform) ou tremendo no impacto (translate)
+  function arenaMexendo() {
+    const a = $("#arena");
+    if (!a) return false;
+    const cs = getComputedStyle(a);
+    return a.classList.contains("foco-final") || (cs.transform && cs.transform !== "none") || (cs.translate && cs.translate !== "none");
+  }
+  let medida = null;
+  function medir() {
+    if (medida && arenaMexendo()) return medida;  // a última medida com a arena parada
+    medida = { g: faixaComandos(), obs: obstaculos() };
+    return medida;
   }
   const toca = (a, q) => a.right > q.left + 1 && a.left < q.right - 1 && a.bottom > q.top + 1 && a.top < q.bottom - 1;
-  // a faixa dos comandos, entre a sua fileira e a dos inimigos (nenhuma carta entra ali: batalha.js, distribuir), pelas
-  // colunas e não pelas cartas: a sua carta cresce na sua vez (1,06×, como em batalha.js) e as cartas deslizam quando a
-  // arena se acomoda; as colunas ficam paradas. A altura é a final da arena (ela cresce devagar: batalha.js, acomodar).
+  // o que não pode ser coberto: as cartas (no lugar final), a mira, o seletor e o aviso da cena; os comandos à parte
+  function obstaculos() {
+    const visiveis = (s) => [...document.querySelectorAll(s)].filter((e) => e.getClientRects().length);
+    return {
+      firmes: [...visiveis("#batalha .carta").map((e) => caixa(e, e._acX || 0, e._acY || 0)),
+        ...visiveis(".roda-mira, #arena > .mods-arena .mod").map((e) => caixa(e)),
+        ...visiveis(".roda-janela").map((e) => (e.classList.contains("lateral") ? e.getBoundingClientRect() : caixa(e)))],
+      comandos: visiveis("#roda .roda-botao").map((e) => caixa(e)),
+    };
+  }
+  // a área de combate, entre a sua fileira e a dos inimigos (a faixa dos comandos: nenhuma carta entra ali), pelas
+  // colunas e não pelas cartas: a sua carta cresce na sua vez (1,06×, como em batalha.js); as colunas ficam paradas.
+  // A altura é a final da arena (ela cresce devagar: batalha.js, acomodar).
   function faixaComandos() {
-    const arena = $("#arena"), R = arena.getBoundingClientRect(), al = $("#batalha .aliados"), inim = $("#batalha .inimigos");
+    const arena = $("#arena"), R = caixa(arena), al = $("#batalha .aliados"), inim = $("#batalha .inimigos");
     const alto = arena._altura || R.height;
-    const A = { left: R.left, right: R.right, top: R.top, width: R.width, height: alto, bottom: R.top + alto };
-    const ra = al && al.getBoundingClientRect(), ri = inim && inim.getBoundingClientRect();
+    const A = { ...R, height: alto, bottom: R.top + alto };
+    const ra = al && caixa(al), ri = inim && caixa(inim);
     const esq = ra && ra.width ? ra.left + ra.width * 1.06 : A.left + A.width * 0.33;
     const dir = ri && ri.width ? ri.left : A.left + A.width * 0.66;
-    const botoes = [...document.querySelectorAll("#roda .roda-botao")].map((c) => c.getBoundingClientRect());
+    const botoes = [...document.querySelectorAll("#roda .roda-botao")].map((c) => caixa(c));
     if (botoes.length) fundoRoda = Math.max(...botoes.map((r) => r.bottom)) - A.top;
-    return { A, meio: (esq + dir) / 2, larg: dir - esq, fundoRoda: A.top + (fundoRoda || A.height * 0.3), rodaMedida: !!fundoRoda };
+    return { A, esq, dir, meio: (esq + dir) / 2, larg: dir - esq, fundoRoda: A.top + (fundoRoda || A.height * 0.3), rodaMedida: !!fundoRoda };
   }
   function faixa(classe, html) {
     const f = document.createElement("div");
@@ -72,55 +96,61 @@ const Turnos = (() => {
     f.innerHTML = html;
     return f;
   }
-  // põe o elemento no primeiro lugar da lista que não cobre nada; sem nenhum livre, no último (o de fora da arena)
-  function posicionar(el, lugares, fixo) {
-    const w = el.offsetWidth, h = el.offsetHeight, obs = obstaculos();
-    let escolhido = (fixo && lugares.find((l) => l.nome === fixo)) || lugares[lugares.length - 1];
-    if (!fixo) for (const l of lugares) {
-      const q = { left: l.x - w / 2, right: l.x + w / 2, top: l.y, bottom: l.y + h };
-      if (l.ok !== false && q.top >= 0 && q.bottom <= innerHeight && !obs.some((o) => toca(q, o))) { escolhido = l; break; }
+  // a placa: no pé da faixa dos comandos, dentro da arena; sem lugar ali (a luta pequena), presa à borda de baixo dela.
+  // O lugar é decidido uma vez por luta e tamanho de janela, com a roda já medida (ela some na vez dos inimigos).
+  function posicionarPlaca(g) {
+    const w = placa.offsetWidth, h = placa.offsetHeight, { firmes, comandos } = medir().obs;
+    const dentro = { nome: "dentro", y: g.A.bottom - h - 10 }, fora = { nome: "fora", y: g.A.bottom - 4 };
+    const chave = `${innerWidth}x${innerHeight}`;
+    let l = lugarPlaca && lugarPlaca.chave === chave ? (lugarPlaca.nome === "dentro" ? dentro : fora) : null;
+    if (!l) {
+      const q = { left: g.meio - w / 2, right: g.meio + w / 2, top: dentro.y, bottom: dentro.y + h };
+      l = dentro.y >= g.fundoRoda + 8 && ![...firmes, ...comandos].some((o) => toca(q, o)) ? dentro : fora;
+      if (g.rodaMedida) lugarPlaca = { chave, nome: l.nome };
     }
-    el.style.left = Math.round(escolhido.x - w / 2) + "px";
-    el.style.top = Math.round(Math.min(innerHeight - h - 2, escolhido.y)) + "px";
-    el.dataset.lugar = escolhido.nome;
+    placa.style.left = Math.round(g.meio - w / 2) + "px";
+    placa.style.top = Math.round(Math.min(innerHeight - h - 2, l.y)) + "px";
+    placa.dataset.lugar = l.nome;
   }
-  // o anúncio: dentro da arena, no meio do vão embaixo da roda (só com a roda já vista nesta luta e se couber na largura
-  // da faixa dos comandos, com folga); senão, logo abaixo da arena, sobre o começo do registro. Um por vez.
+  // o anúncio: um lugar só, previsível, no centro da área de combate, na borda de cima: termina logo abaixo da borda da
+  // arena, acima da primeira carta e do primeiro comando (que começam uns 7 px abaixo dela), e longe da placa e do
+  // registro, embaixo. Entre os grupos não serve: na luta pequena a roda ocupa a faixa inteira, e qualquer altura ali
+  // esconde algum comando. Medido pelo layout (o zoom e a tremida não o movem). Um por vez, numa linha (19-turnos.css).
+  function posicionarAnuncio(g) {
+    anuncio.style.left = Math.round(g.A.left + g.A.width / 2 - anuncio.offsetWidth / 2) + "px";
+    anuncio.style.top = Math.max(2, Math.round(g.A.top + 4 - anuncio.offsetHeight)) + "px";
+  }
   function anunciar(classe, titulo, linhas = []) {
     if (!garantirCamada()) return;
     if (anuncio) anuncio.remove();
-    const g = faixaComandos();
-    anuncio = faixa(`turnos-anuncio ${classe}`, `<b>${esc(titulo)}</b>${linhas.map((l) => `<small>${esc(l)}</small>`).join("")}<span class="fio"></span>`);
+    const { g } = medir();
+    anuncio = faixa(`turnos-anuncio ${classe}`, `<b>${esc(titulo)}</b>${linhas.map((l) => `<small>${esc(l)}</small>`).join("")}`);
+    anuncio.style.maxWidth = Math.floor(g.A.width - 16) + "px";
     camada.appendChild(anuncio);
-    const h = anuncio.offsetHeight, placaAlto = placa && placa.dataset.lugar === "dentro" ? placa.offsetHeight + 14 : 8;
-    const livreTopo = g.fundoRoda + 10, livreFim = g.A.bottom - placaAlto;
-    const y = livreTopo + Math.max(0, (livreFim - livreTopo - h) / 2);
-    const cabe = g.rodaMedida && y + h <= livreFim && anuncio.offsetWidth <= g.larg - 12;
-    posicionar(anuncio, [{ nome: "dentro", x: g.meio, y, ok: cabe }, { nome: "fora", x: g.meio, y: g.A.bottom + 10 }]);
+    posicionarAnuncio(g);
+    anuncio.classList.add("entrando");
     const este = anuncio;
     setTimeout(() => { if (este.isConnected) este.remove(); if (anuncio === este) anuncio = null; }, reduzido() ? 1800 : 1100);
   }
-  // a placa: no pé da faixa dos comandos, dentro da arena; sem lugar ali (a luta pequena), presa à borda de baixo dela.
-  // O lugar é decidido uma vez por luta e tamanho de janela, com a roda já medida (ela some na vez dos inimigos).
   function desenharPlaca(turno, pisca) {
     if (!garantirCamada()) return;
     if (!placa) { placa = faixa("turnos-placa", ""); camada.appendChild(placa); }
-    const linhaIni = ini.ativa ? `<span class="ini">Iniciativa: ${esc(ini.curto)}</span>`
+    const linhaIni = perde ? `<span class="ini perde">${esc(perde)}: perde este turno</span>`
+      : ini.ativa ? `<span class="ini">Iniciativa: ${esc(ini.curto)}</span>`
       : ini.mostrandoFim ? `<span class="ini ${ini.usada ? "usada" : "acabou"}">${ini.usada ? `Iniciativa usada (${esc(ini.pct)})` : "Iniciativa passou"}</span>` : "";
-    placa.innerHTML = `<span class="t">Turno<b>${turno}</b></span>${linhaIni}`;
-    const g = faixaComandos(), y = g.A.bottom - placa.offsetHeight - 10;
-    placa.style.visibility = g.rodaMedida ? "" : "hidden";  // o lugar depende da roda: a placa entra quando ela aparece
-    const chave = `${innerWidth}x${innerHeight}`;
-    const fixo = lugarPlaca && lugarPlaca.chave === chave ? lugarPlaca.nome : null;
-    posicionar(placa, [{ nome: "dentro", x: g.meio, y, ok: y >= g.fundoRoda + 8 }, { nome: "fora", x: g.meio, y: g.A.bottom - 4 }], fixo);
-    if (!fixo && g.rodaMedida) lugarPlaca = { chave, nome: placa.dataset.lugar };
+    const html = `<span class="t">Turno<b>${turno}</b></span>${linhaIni}`;
+    if (placa._html !== html) { placa._html = html; placa.innerHTML = html; }
     placa.classList.toggle("pisca", !!pisca);
     if (pisca) setTimeout(() => placa && placa.classList.remove("pisca"), 650);
+    if (arenaMexendo() && placa.style.top) return;  // o impacto: a placa fica onde está
+    const { g } = medir();
+    placa.style.visibility = g.rodaMedida ? "" : "hidden";  // o lugar depende da roda: a placa entra quando ela aparece
+    posicionarPlaca(g);
   }
   function limpar() {
     if (camada) camada.remove();
-    camada = placa = anuncio = null;
-    ultimoTurno = 0; fundoRoda = 0; lugarPlaca = null;
+    camada = placa = anuncio = medida = null;
+    ultimoTurno = 0; fundoRoda = 0; lugarPlaca = null; perde = null;
     ini = { ativa: false, texto: "", usada: false, mostrandoFim: false };
     clearInterval(ajuste); ajuste = 0;
   }
@@ -153,14 +183,23 @@ const Turnos = (() => {
     if (!refazendo) {
       const efs = (estado && estado.combate && estado.combate.heroi && estado.combate.heroi.efeitos) || [];
       const trava = efs.find((x) => estado.estados && estado.estados[x.id] && estado.estados[x.id].perde_turno);
+      perde = trava ? maiuscula(trava.nome) : null;
       if (trava) anunciar("perde", `Turno ${n}`, [`${maiuscula(trava.nome)}: você perde este turno`]);
-      else if (n === 1 && ini.ativa) anunciar("iniciativa", "Iniciativa!", ["Turno 1 · só você age agora", maiuscula(ini.texto)].filter(Boolean));
+      // o bônus fica na placa ("Iniciativa: +25% no 1º golpe"); o anúncio só diz que a vez é sua
+      else if (n === 1 && ini.ativa) anunciar("iniciativa", "Iniciativa!", ["Turno 1 · Só você age"]);
       else anunciar("", `Turno ${n}`);
     }
     desenharPlaca(n, !refazendo);
   }
-  /** Os lances (fora do replay): a emboscada deles; o golpe que usa a iniciativa (também numa salva em área). */
+  /** Os lances (fora do replay): alguém começando a agir tira o anúncio (a atenção vai para o golpe; o turno segue na
+   *  placa); a emboscada deles; o golpe que usa a iniciativa (também numa salva em área). */
   function aoLance(m) {
+    if ((m.tipo === "acao" || m.tipo === "salva") && anuncio) {
+      const este = anuncio;
+      anuncio = null;
+      este.classList.add("saindo");
+      setTimeout(() => este.remove(), 140);
+    }
     if (m.tipo === "surpresa" && m.de && m.de !== "j") {
       const c = Batalha.elCarta(m.de), nome = c ? c.querySelector(".carta-nome span").textContent : "Um inimigo";
       anunciar("emboscada", "Emboscada!", [`${nome} ataca antes de você`]);

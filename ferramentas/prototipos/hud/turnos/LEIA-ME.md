@@ -130,3 +130,19 @@ Conferido (`integracao.mjs`; 10 cenários em ~100 s, lutas reais; `capturas-inte
   animações da vez delas e do "firme" depois da teia; o anúncio não espera nada.
 - **Gravações** (`capturas-integracao/videos/`): `iniciativa-jogo-1280x720.webm`, `emboscada-jogo-1280x720.webm`,
   `atordoado-1280x720.webm` e `iniciativa-jogo-1280x720-reduzido.webm`.
+
+## O ajuste da 1.116.1
+
+- **A placa e o anúncio parados no golpe final:** medidos pelo layout (`offsetLeft`/`offsetTop`), que ignora o zoom
+  (`transform`) e a tremida (`translate`) da arena. A medida feita com a arena parada vale enquanto ela se mexe.
+- **O anúncio num lugar só:** no centro da arena, na borda de cima, numa linha: o título e, ao lado, depois de um fio
+  de latão, a frase curta. Antes ele procurava um vão entre os grupos; na luta pequena não há vão (a roda ocupa a faixa
+  inteira) e ele acabava sobre parte dos comandos.
+- **Conferido** (`integracao.mjs`, agora com a finalização e o redimensionar; `capturas-1.116.1/`):
+  - o anúncio termina sempre na mesma linha (74 px a 1280×720, 76 a 1500×950), centrado na arena;
+  - nada coberto: comandos, cartas, placa, registro e o texto do topo; nenhum texto cortado;
+  - no golpe final (3 lutas até o fim, uma com movimento reduzido), a arena se move até 55–64 px; a placa e o
+    anúncio, 0 px;
+  - a vez clicável de 9 a 33 ms depois da mensagem do turno.
+- **Capturas versionadas:** `capturas-1.116.1/representativas/` (a iniciativa na luta pequena e o turno perdido, a
+  1280×720). As outras fotos são reproduzidas pelo script.
