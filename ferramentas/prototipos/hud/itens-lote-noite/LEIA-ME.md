@@ -25,9 +25,11 @@ prévia com `--intermediarios`).
 - **A calça de couro:** o 32 foi aprovado. Os 40 e 48 estão prontos (rodada 2, abaixo), e os quatro tamanhos aguardam a
   avaliação de Jean.
 - **A aljava:** refinar a leitura, principalmente no topo. A refinada está abaixo; os 40 e 48 aguardam a aprovação.
-- **Os atributos e a doca:** ficam os atuais. As propostas perderam volume, personalidade e leitura dos materiais. Elas
-  ficam aqui como alternativas não escolhidas, sem outra rodada agora. A skill ganhou a orientação de que símbolos da
-  interface não precisam copiar equipamentos (a bota da Agilidade pode ter pose própria).
+- **Os atributos e a doca:** as propostas perderam volume, personalidade e leitura dos materiais e ficam aqui como
+  alternativas não escolhidas. **Correção de Jean (18/10/2026):** os ícones atuais de atributos e da doca são
+  placeholders e continuam pendentes de substituição por pixel art de verdade; não foi decidido mantê-los. A skill
+  ganhou a orientação de que símbolos da interface não precisam copiar equipamentos (a bota da Agilidade pode ter pose
+  própria).
 
 ## 1. A Calça de Couro (`calca_couro`)
 
@@ -98,7 +100,7 @@ O mercado desenha a sua aljava em código (`telas/mercado.js`, a banca); ela nã
 - **No Inventário (40):** continua a atual (o 40 vem depois).
 - Sem erros.
 
-## 3. Os ícones dos atributos (alternativa não escolhida: ficam os atuais)
+## 3. Os ícones dos atributos (alternativa recusada; os atuais são placeholders pendentes)
 
 `ferramentas/arte/desenhar_atributos_pixel.py`; proposta em `atributos/proposta/` (24 e 32, cada um na sua grade, nas
 mesmas medidas).
@@ -130,7 +132,7 @@ esquerda em faixas e o contorno comum. Saem os degradês suaves das peças pinta
 - **O que pode ser pior:** são mais chapados que os atuais (menos volume e brilho). A chama, em 24, perde o halo de
   fogo da atual e lê mais como chama estilizada. O Fugir muda junto.
 
-## 4. Os ícones da doca (alternativa não escolhida: ficam os atuais)
+## 4. Os ícones da doca (alternativa recusada; os atuais são placeholders pendentes)
 
 `ferramentas/arte/desenhar_doca_pixel.py`; proposta em `doca/proposta/` (36 e 32, nas mesmas medidas). Uma função
 por ícone, desenhados um a um.
@@ -210,3 +212,66 @@ com 1 px; o desgaste é um ponto. A fenda fica com 2 px no 40 e 3 no 48 (a propo
 
 **Conferido a 1920×945** (`aljava/atual-x-anterior-x-refinada.png`): no topo e na ficha, a atual, a anterior (rodada 4)
 e a refinada. No topo, a refinada tem presença parecida com a atual. Sem erros.
+
+## A calça de couro integrada (1.119.0)
+
+Os quatro tamanhos do `ee0f01a` foram aprovados e estão no jogo, sem mudança de desenho. Como entraram:
+- **As fontes:** `ferramentas/arte/aseprite/calca_couro/`.
+- **A exportação:** `DERIVADOS`, com o 64 como o 32 ampliado 2×.
+- **O papel:** `TAMANHOS` e `ITEM` em `icones.js`.
+
+O desenho vale para todas as calças de couro do Arqueiro (Rasgada, Curtida, Reforçada e as raras com nome, como
+"Mordida Antiga"); não há único de pernas. Os saves já guardam `icone: "calca_couro"` (conferido em quatro saves de
+Jean), sem migração. A Calça de Viagem do Mago continua com o sprite.
+
+**Conferido no jogo de produção, a 1920×945:** a ficha (32), o Inventário (40) e o saque (64 no achado, 48 no "você
+usa"), sem erros.
+
+## Rodada 6 da aljava: hastes e penas
+
+**O pedido:** a rodada 5 lembrava uma bolsa de tacos de golfe; as pontas pareciam cabeças engrossadas (as penas eram
+um bloco claro de 2 px).
+
+**A reconstrução** (`desenhar_aljava_pixel.py`, com medidas próprias do 32 e do 24):
+- **As hastes:** de 1 px, traçadas na grade.
+- **As penas:** palhetas de 1 px dos dois lados da haste, que continua em madeira pelo meio; a flecha do meio tem as
+  penas vermelhas, para separar as três.
+- **O entalhe:** 1 px escuro além das penas, no 32.
+- **A boca:** uma elipse em perspectiva, com o aro de couro aceso (o lábio da frente também) e o fundo escuro; as
+  flechas saem de dentro dela.
+- **A alça:** fica no 32 e sai do 24.
+
+O 64 é o 32 ampliado 2×. A rodada 5 está em `aljava/rodada5/`, com o script dela.
+
+**Conferido a 1920×945** (`aljava/atual-x-anterior-x-refinada.png`): no topo e na ficha, a atual, a rodada 5 e a 6,
+sem erros. Os 40 e 48 aguardam a aprovação.
+
+## Ataque e Defesa, a rodada nova (`ataque_defesa/`)
+
+Um script por ícone, que é a fonte editável, pelo fluxo da skill:
+- `ferramentas/arte/desenhar_attr_ataque_pixel.py`;
+- `ferramentas/arte/desenhar_attr_defesa_pixel.py`.
+
+A proposta recusada (`desenhar_atributos_pixel.py`) fica como histórico.
+
+**Os tamanhos:**
+- **24:** o mais usado (a ficha e o Inventário), desenhado na própria grade.
+- **32:** desenhado também. É a fonte do 64.
+- **64:** o selo da festa de atributo permanente; é o 32 ampliado 2×. Hoje o placeholder não tem 64, e o selo usa o
+  `32@2x`.
+
+**Ataque:** uma espada de lâmina larga na diagonal, que ocupa o quadro.
+- **A lâmina de aço em dois planos:** a face da luz clara, a da sombra escura, a aresta do meio acesa e o fio claro;
+  um brilho especular na metade de baixo.
+- **A guarda de latão:** um cilindro de través, acesa em cima, com as pontas arredondadas.
+- **A empunhadura:** couro enrolado em faixas inclinadas.
+- **O pomo:** uma esfera de latão, sombreada pela luz da família, com o ponto de brilho.
+
+**Defesa:** um escudo de bico abaulado. A face de aço é sombreada pela normal de uma superfície curva, em faixas da
+rampa:
+- **A luz:** a esquerda de cima acende, a direita vira para a sombra, com um reflexo largo em cima à esquerda.
+- **A borda de latão chanfrada:** a quina de fora acesa do lado da luz e a sombra dela sobre o aço.
+- **A bossa no centro:** uma cúpula com brilho e a sombra embaixo à direita.
+
+**Conferido a 1920×945** (`ataque_defesa/ataque-defesa-atual-x-proposta.png`, atual × proposta): a ficha (24), o
+Inventário (24) e os dois selos (64), sem erros. Agilidade, Poder e os oito da doca ficam para os próximos pares.

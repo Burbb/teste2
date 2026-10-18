@@ -43,7 +43,7 @@ os usos dos sprites estejam migrados. Conferir `Icones` e os catálogos antes de
 | 1A | Concluir o lote de cabeça/capuz e luvas de couro e tecido | Integrado na 1.112.0 (32, 40, 48, 64; os saves antigos pela migração v5); falta Jean conferir jogando |
 | 1B | Corrigir a sequência visual do consumo de recurso e mostrar o bloqueio de vida máxima por ferimentos | Feito: 1.114.1 (o custo) e 1.115.0 (a vida bloqueada) |
 | 1C | Prototipar dado mais visível, iniciativa e indicação dos turnos; facilitar consulta aos testes de atributos | Feito: 1.116.0/1.116.1 (iniciativa e turnos), 1.117.0 (a rolagem no centro), 1.118.0 (os testes na ficha) |
-| 1D | Retomar os lotes de equipamentos e demais ícones | **Em andamento** (`ferramentas/prototipos/hud/itens-lote-noite/`): a calça de couro (32 aprovado; 40, 48 e 64 em avaliação) e a aljava refinada em avaliação; atributos e doca ficam os atuais (propostas não escolhidas) |
+| 1D | Retomar os lotes de equipamentos e demais ícones | **Em andamento** (`ferramentas/prototipos/hud/itens-lote-noite/`): a calça de couro integrada (1.119.0); a aljava (rodada 6) em avaliação; os ícones de atributos e da doca são placeholders pendentes de pixel art (a primeira proposta foi recusada); Ataque e Defesa em avaliação, depois Agilidade e Poder, e a doca em pares |
 | 2–9 | Telas, serviços, cenários, habilidades e campanha | Sequência detalhada abaixo |
 
 A etapa 1 não precisa terminar todo o catálogo antes de tratar um defeito de compreensão no combate.

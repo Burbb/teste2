@@ -3663,9 +3663,9 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Decisões de Jean sobre o lote da noite:**
   - **A calça de couro:** o 32 aprovado.
   - **A aljava:** refinar a leitura no topo.
-  - **Os atributos e a doca:** ficam os atuais. As propostas ficam como alternativas não escolhidas, sem outra rodada
-    agora. A skill `arte-itens-fenda` ganhou a orientação de que símbolos da interface não precisam copiar
-    equipamentos.
+  - **Os atributos e a doca:** as propostas ficam como alternativas não escolhidas. (Corrigido depois por Jean: os
+    ícones atuais são placeholders, pendentes de pixel art; não foi decidido mantê-los.) A skill `arte-itens-fenda`
+    ganhou a orientação de que símbolos da interface não precisam copiar equipamentos.
 - **Feito** (`ferramentas/prototipos/hud/itens-lote-noite/`, nada no jogo):
   - **A calça:** 40 e 48 da mesma construção em degraus (o 32 aprovado e o 64 iguais), mais a fonte em camadas
     (`calca_couro/fontes/*.aseprite`), conferida pixel a pixel.
@@ -3679,3 +3679,23 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   - os 40 e 48 da aljava, depois da aprovação;
   - a integração das duas.
   Versão igual (1.118.0).
+
+### 18/10/2026 (data do computador local) — A calça de couro no jogo (1.119.0); aljava e Ataque/Defesa em proposta
+
+- **Pedido de Jean:**
+  - integrar a calça de couro (os quatro tamanhos do `ee0f01a`);
+  - refinar a aljava (as flechas pareciam cabeças engrossadas);
+  - novos Ataque e Defesa em pixel art, um por vez.
+  - Correção do registro: os ícones atuais de atributos e da doca são placeholders pendentes, não mantidos de vez.
+- **Feito:**
+  - **A calça no jogo:** as fontes em `ferramentas/arte/aseprite/calca_couro/`, `DERIVADOS` e `TAMANHOS`/`ITEM` em
+    `icones.js`. Os oito arquivos são idênticos aos aprovados e a exportação se reproduz. Vale para todas as calças de
+    couro do Arqueiro; os saves já usam `calca_couro`.
+  - **A aljava, rodada 6:** hastes de 1 px, penas como palhetas, entalhe e a boca em perspectiva.
+  - **Ataque e Defesa:** com volume (a espada em dois planos, o escudo abaulado), em 24 e 32, com o 64 do selo como o
+    32 ampliado 2×.
+- **Conferido:**
+  - a 1920×945: a calça na produção (ficha, Inventário, saque), a aljava atual × rodada 5 × rodada 6, e Ataque e Defesa
+    na ficha, no Inventário e no selo;
+  - a suíte, o gabarito, o pyflakes e a fumaça uma vez.
+- **Próximo:** Jean avaliar a aljava e Ataque/Defesa. Depois, Agilidade e Poder, e a doca em pares.

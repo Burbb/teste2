@@ -27,6 +27,10 @@ const PECAS = {
   atributos: { pasta: "atributos/proposta", nomes: ["attr-ataque", "attr-defesa", "attr-agilidade", "attr-poder"],
     cena: ["tutorial", { LUTA_APOS_ESCOLHA: "1", TUTORIAL: "0", VISTAS, CLASSE: "guerreiro", NIVEL: "8", ESPEC: "paladino", COMITIVA: "morel", LUTA: "lobo", QUANTOS: "3", NIVEL_LUTA: "7" }],
     fotos: ["ficha", "luta"] },
+  // Ataque e Defesa (a rodada nova, depois da proposta recusada de "atributos"): a ficha e o Inventário (24) e o selo da
+  // festa de atributo permanente (64), pelo mesmo caminho do jogo (Telas.celebrar com a mensagem "atributo")
+  ataque_defesa: { pasta: "ataque_defesa/proposta", nomes: ["attr-ataque", "attr-defesa"], papel_tamanhos: [24, 32, 64],
+    cena: ["capela", { CLASSE: "arqueiro", NIVEL: "5", PERIODO: "0", SALA: "exterior" }], fotos: ["ficha", "inventario", "selo"] },
   doca: { pasta: "doca/proposta", nomes: ["atalho-talentos", "atalho-grimorio", "atalho-inventario", "atalho-mapa", "atalho-diario", "atalho-bestiario", "atalho-salvar", "atalho-sair"],
     cena: ["capela", { CLASSE: "arqueiro", NIVEL: "5", PERIODO: "0", SALA: "exterior" }], fotos: ["doca", "luta-doca"] },
 };
@@ -45,6 +49,14 @@ async function anexar(p) {
     if (P.nomes.includes(base) && existsSync(arquivo)) return r.fulfill({ body: readFileSync(arquivo), contentType: "image/png" });
     return r.continue();
   });
+  if (P.papel_tamanhos) {   // os tamanhos novos de um desenho que já tem papel (o 64 do selo)
+    await p.route(/\/static\/icones\.js(\?|$)/, async (r) => {
+      const res = await r.fetch();
+      let js = await res.text();
+      for (const n of P.nomes) { const i = js.indexOf(`"${n}": [`), j = js.indexOf("]", i); if (i >= 0) js = js.slice(0, i) + `"${n}": ${JSON.stringify(P.papel_tamanhos)}` + js.slice(j + 1); }
+      r.fulfill({ response: res, body: js, headers: { ...res.headers(), "content-type": "application/javascript" } });
+    });
+  }
   if (P.papel) {
     await p.route(/\/static\/icones\.js(\?|$)/, async (r) => {
       const res = await r.fetch();
@@ -83,6 +95,16 @@ for (const modo of (process.env.SO_PROPOSTA ? [ROTULO] : ["atual", ROTULO])) for
     for (const f of P.fotos) {
       if (f === "ficha") { await p.screenshot({ path: nome("ficha"), clip: await clipDe("#heroi", 0) }); }
       if (f === "topo") { await p.screenshot({ path: nome("topo"), clip: await clipDe("#hud", 0) }); }
+      if (f === "selo") {
+        for (const [stat, nomeAttr] of [["atk", "Ataque"], ["defesa", "Defesa"]]) {
+          await p.evaluate(([st, nm]) => { Telas.celebrar({ tipo: "atributo", dados: { stat: st, nome: nm, valor: 2, total: 27 } }, false); }, [stat, nomeAttr]);
+          await espera(350);
+          const sel = await p.$(".selo-atributo");
+          if (sel) { const bb = await sel.boundingBox(); await p.screenshot({ path: nome(`selo-${stat}`), clip: { x: bb.x - 10, y: bb.y - 10, width: bb.width + 20, height: bb.height + 20 } }); }
+          (await desenhos()).forEach((d) => visto.add(d));
+          await espera(2600);
+        }
+      }
       if (f === "doca") { await p.screenshot({ path: nome("doca"), clip: await clipDe("#doca", 0) }); }
       if (f === "inventario") {
         await p.evaluate(() => pedirAtalho("Inventário")); await espera(900);

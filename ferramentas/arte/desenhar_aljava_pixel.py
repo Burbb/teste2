@@ -1,20 +1,21 @@
 """A aljava (o equipamento secundário do Patrulheiro e o ícone das flechas no topo) no método da família: proposta,
-nada no jogo.
+nada no jogo. Rodada 6 (a 5 e as anteriores em ferramentas/prototipos/hud/itens-lote-noite/aljava/rodadaN/).
 
-Hoje é a peça pintada da família de ferro. O desenho novo segue o conjunto de couro aprovado (o gibão, as botas, o
-capuz e a luva): as mesmas rampas de couro (`couro_r2.py`), a luz em faixas chapadas pela direção da superfície, as
-cintas como bordas escuras e o contorno comum.
+O pedido do Jean na rodada 6: a aljava lembrava uma bolsa de tacos de golfe; as pontas das flechas pareciam cabeças
+engrossadas (as penas eram um bloco claro de 2 px). O que se lê agora, primeiro em tamanho real:
+  - as hastes: madeira de 1 px, traçadas na grade (Bresenham) da boca até a ponta;
+  - as penas: palhetas de 1 px dos dois lados da haste, nas últimas linhas (a haste continua visível pelo meio, em
+    madeira); a do meio com penas vermelhas, para as três não virarem uma mancha;
+  - o entalhe: no 32, 1 px de madeira escura além das penas;
+  - a boca: uma elipse em perspectiva no topo do tubo, com o aro de couro aceso e o fundo escuro, de onde as hastes
+    saem (elas começam dentro da abertura).
+O tubo é o couro do conjunto aprovado (as rampas de `couro_r2.py`), em pé e inclinado para a direita, com as cintas
+de borda e, no 32, a alça do lado da sombra. Sem ornamento.
 
-O objeto: um tubo de couro em pé, inclinado 22° para a direita (como se carrega nas costas; a 45° ele deitava e
-ocupava pouco do quadro), a boca com a borda de couro escuro
-acesa em cima, duas cintas costuradas, o fundo arredondado mais escuro e uma alça de couro em arco do lado da sombra;
-saindo da boca, três flechas com a pena para cima (como se guardam), a haste de madeira e as penas claras, uma delas
-mais escura. Sem fivela grande, tachas ou brilho: o jogo só diz "Aljava".
+O 32 (a ficha) e o 24 (o topo) têm cada um as suas medidas, em pixels da própria grade (PERFIL); o 64 é o 32 ampliado
+2×; 40 e 48 depois da aprovação.
 
-Medidas no sistema do tubo: `a` ao longo dele (do fundo para a boca), `w` de través (negativo do lado da luz). O 32 é a arte principal; o 64 é o 32 ampliado 2× (como no couro); o 24 (o topo, onde ela também fica parada)
-sai das mesmas medidas na grade dele. 40 e 48 depois da aprovação do 32.
-
-    python ferramentas/arte/desenhar_aljava_pixel.py <pasta> [--intermediarios]
+    python ferramentas/arte/desenhar_aljava_pixel.py <pasta>
 """
 
 import math
@@ -27,114 +28,131 @@ import pixel_comum as pc
 
 COURO = ["#1C120C", "#2E1E13", "#45301E", "#604229", "#7C5634", "#986C42", "#B48752"]
 BORDA = ["#140C08", "#22150D", "#321F13", "#45301E"]
-MADEIRA = ["#3A2A1C", "#6A5038", "#9C7E58", "#C4A57A"]   # a haste: clara, para ler contra o contorno
-PENA = ["#4A4640", "#7C766C", "#B4AE9E", "#E2DCCB"]
-PENA_ESCURA = ["#3A2E28", "#5E4A3E", "#86705E"]     # a pena escura (parda), clara o bastante para o carvão
-RAMPAS = {"k": COURO, "b": BORDA, "m": MADEIRA, "p": PENA, "q": PENA_ESCURA}
+MADEIRA = ["#4A3424", "#7A5C3C", "#B08A5E", "#D8B888"]          # a haste: do entalhe escuro à madeira acesa
+PENA = ["#8A8476", "#C4BEAE", "#ECE6D6"]                           # as penas claras
+PENA_V = ["#5E1A12", "#962C1C", "#C8462C"]                         # as penas vermelhas (a flecha do meio)
+FUNDO = ["#0C0806"]                                                # o escuro de dentro da boca
+RAMPAS = {"k": COURO, "b": BORDA, "m": MADEIRA, "p": PENA, "v": PENA_V, "x": FUNDO}
 
-# a origem (o centro do fundo do tubo), a inclinação e as medidas, em unidades do 32
-MEDIDAS = {
-    "fundo": (10.5, 27.4),         # o centro do fundo do tubo (o fundo não encosta na borda: o contorno cabe)
-    "inclina": 22.0,               # graus a partir da vertical, para a direita
-    "tubo": 15.5,                  # o comprimento do tubo (a)
-    "larg": (3.1, 3.8),            # a meia-largura no fundo e na boca (w)
-    "boca": 1.6,                   # a borda da boca (a)
-    "cintas": ((3.8, 5.0), (10.2, 11.4)),
-    "fundo_borda": 1.8,            # o fundo arredondado, mais escuro
-    # as flechas: (desvio de w na boca, inclinação em graus a partir do eixo, comprimento além da boca, pena escura?)
-    # (a haste fica à vista entre a boca e a pena, como na aljava pintada original: o pedido do Jean)
-    "flechas": ((-2.0, -16.0, 11.0, False), (0.4, -2.0, 12.6, False), (2.6, 13.0, 10.4, True)),
-    "pena": 4.4,                   # o comprimento da pena (a partir da ponta de cima)
-    "alca": (3.0, 12.6, 3.0),      # a alça: de a=3 até a=12,6, saindo até w = meia-largura + 3
-    "claro": 0,                    # degraus a mais na rampa do couro (o 24 do topo fica um degrau mais claro)
-}
-# O 24 (o ícone das flechas no topo, onde ela fica parada pequena) tem simplificações próprias do mesmo objeto: o tubo
-# mais largo e mais inclinado, ocupando o quadro; o couro um degrau mais claro; sem a alça (a 24 ela virava um risco
-# escuro solto); a boca e as cintas com a borda de cima acesa; duas cintas viram uma; as penas em blocos.
+# as medidas de cada tamanho, em pixels da própria grade
 PERFIL = {
-    24: {"fundo": (10.0, 26.4), "inclina": 28.0, "tubo": 14.0, "larg": (4.4, 5.0), "boca": 2.4,
-         "cintas": ((6.6, 8.6),), "fundo_borda": 2.4, "alca": None, "claro": 1, "pena": 4.8,
-         "flechas": ((-2.6, -16.0, 8.8, False), (0.6, -1.0, 10.0, False), (3.4, 14.0, 8.4, True))},
+    32: {"fundo": (10.8, 26.6), "inclina": 20.0, "tubo": 13.4, "larg": (3.5, 4.1),
+         "cintas": ((2.8, 4.0), (8.6, 9.8)), "fundo_borda": 1.8, "aro": 1.0, "boca_k": 0.56,
+         "alca": (2.6, 11.6, 2.6),
+         # as flechas: (desvio de través na boca, inclinação em graus a partir da vertical, comprimento, penas, vermelha)
+         "flechas": ((-2.2, -12.0, 11.6, 4, False), (0.4, 3.0, 12.6, 4, True), (2.6, 18.0, 10.6, 4, False)),
+         "entalhe": True},
+    24: {"fundo": (8.6, 19.0), "inclina": 22.0, "tubo": 9.8, "larg": (3.2, 3.6),
+         "cintas": ((4.0, 5.2),), "fundo_borda": 1.6, "aro": 0.9, "boca_k": 0.56,
+         "alca": None,
+         "flechas": ((-1.8, -12.0, 8.4, 3, False), (0.4, 4.0, 9.2, 3, True), (2.6, 21.0, 7.6, 3, False)),
+         "entalhe": False},
 }
+
+
+def _reta(x0, y0, x1, y1):
+    """Os pixels da reta (Bresenham) de (x0, y0) a (x1, y1), na ordem."""
+    x0, y0, x1, y1 = (int(round(v)) for v in (x0, y0, x1, y1))
+    pts, dx, dy = [], abs(x1 - x0), -abs(y1 - y0)
+    sx, sy, err = (1 if x0 < x1 else -1), (1 if y0 < y1 else -1), dx + dy
+    while True:
+        pts.append((x0, y0))
+        if (x0, y0) == (x1, y1):
+            return pts
+        e2 = 2 * err
+        if e2 >= dy:
+            err += dy; x0 += sx
+        if e2 <= dx:
+            err += dx; y0 += sy
 
 
 def desenhar(lado):
-    M = {**MEDIDAS, **PERFIL.get(lado, {})}
-    s = lado / 32
-    mat, tom, fixo, x, y = pc.grade(lado)
-    X, Y = x / s, y / s                          # o centro do pixel em unidades do 32
+    M = PERFIL[lado]
+    mat, tom, fixo, X, Y = pc.grade(lado)
     x0, y0 = M["fundo"]
     th = math.radians(M["inclina"])
-    a = (X - x0) * math.sin(th) - (Y - y0) * math.cos(th)    # ao longo do tubo (para cima, inclinado à direita)
-    w = (X - x0) * math.cos(th) + (Y - y0) * math.sin(th)    # de través (negativo: à esquerda, o lado da luz)
+    ax, ay = math.sin(th), -math.cos(th)            # o eixo do tubo (para cima, inclinado à direita)
+    px_, py_ = math.cos(th), math.sin(th)           # de través (positivo: à direita, o lado da sombra)
+    a = (X - x0) * ax + (Y - y0) * ay
+    w = (X - x0) * px_ + (Y - y0) * py_
     L = M["tubo"]
     meia = M["larg"][0] + (M["larg"][1] - M["larg"][0]) * np.clip(a / L, 0, 1)
 
-    # as flechas primeiro (o tubo fica por cima do que estiver dentro dele)
-    px = 1.0 / s
-    for (dw, ang, comp, escura) in M["flechas"]:
-        th = math.radians(ang)
-        ca, sa = math.cos(th), math.sin(th)
-        # a reta da flecha no sistema (a, w): começa em (L - 1, dw) e segue a direção girada
-        da, dw_ = a - (L - 1), w - dw
-        t = da * ca + dw_ * sa                    # ao longo da flecha
-        d = -da * sa + dw_ * ca                   # distância de través
-        haste = (t >= 0) & (t <= comp) & (np.abs(d) <= 0.5 * max(px, 0.75))
-        mat[haste] = "m"
-        tom[haste] = np.where(d[haste] < 0, 3, 2)
-        fixo[haste] = True
-        pena0 = comp - M["pena"]
-        larg_pena = np.clip((t - pena0) / M["pena"], 0, 1) * 0.7 + 1.0   # a pena quase reta, ~2 px: um bloco claro
-        pena = (t >= pena0) & (t <= comp) & (np.abs(d) <= larg_pena)
-        mat[pena] = "q" if escura else "p"
-        r = PENA_ESCURA if escura else PENA
-        tt = np.where(d < -0.3, len(r) - 1, np.where(d < 0.5, len(r) - 2, len(r) - 3))
-        tom[pena] = tt[pena]
-        # a nervura da pena: a haste continua por dentro, um tom abaixo
-        nerv = pena & (np.abs(d) <= 0.5 * max(px, 0.75))
-        mat[nerv] = "m"
-        tom[nerv] = 2
-
-    # o tubo
+    # o tubo de couro: o cilindro em faixas pela direção da superfície, o fundo arredondado mais escuro
     tubo = (a >= 0) & (a <= L) & (np.abs(w) <= meia)
-    # o fundo arredondado: um semicírculo abaixo de a = 0
     fundo = (a < 0) & (a * a + w * w <= M["larg"][0] ** 2)
     corpo = tubo | fundo
     mat[corpo] = "k"
     p = w / meia
-    k = M["claro"]
-    tom[corpo] = np.where(p < -0.45, 5 + k, np.where(p < 0.15, 4 + k, np.where(p < 0.6, 3 + k, 2 + k)))[corpo]
+    tom[corpo] = np.where(p < -0.5, 6, np.where(p < -0.05, 5, np.where(p < 0.45, 4, 3)))[corpo]
     borda_fundo = corpo & (a < M["fundo_borda"])
     mat[borda_fundo] = "b"
-    tom[borda_fundo] = np.where(p < 0, 2, 1)[borda_fundo]
-    for (c0, c1) in M["cintas"]:
+    tom[borda_fundo] = np.where(p < 0, 3, 2)[borda_fundo]
+    for (c0, c1) in M["cintas"]:   # as cintas: borda escura, a linha de cima acesa do lado da luz
         cinta = corpo & (a >= c0) & (a < c1)
         mat[cinta] = "b"
-        tom[cinta] = np.where(p < -0.3, 3, np.where(p < 0.4, 2, 1))[cinta]
-        if k:   # a borda de cima da cinta acesa: o couro do lado da luz (mostra que a cinta é uma tira por cima)
-            topo_c = cinta & (a >= c1 - 1 / s) & (p < 0.2)
-            mat[topo_c], tom[topo_c] = "k", 4
-    # a boca: a borda (acesa do lado da luz) e o escuro de dentro na ponta
-    boca = (a > L - M["boca"]) & (a <= L) & (np.abs(w) <= meia)
-    mat[boca] = "b"
-    tom[boca] = np.where(p < 0, 3, 2)[boca]
-    if k:   # a borda da boca acesa no lado da luz (o couro dobrado), o resto na sombra
-        aro = boca & (a > L - 1 / s) & (p < 0.3)
-        mat[aro], tom[aro] = "k", 5
+        tom[cinta] = np.where(p < 0.3, 2, 1)[cinta]
+        topo_c = cinta & (a >= c1 - 1.0) & (p < 0.1)
+        tom[topo_c] = 3
+    # a boca em perspectiva: a elipse do topo (semieixo de través = a largura, ao longo do eixo = boca_k × largura);
+    # o anel de fora é o aro de couro dobrado (aceso do lado da luz), o miolo é o escuro de dentro
+    R = M["larg"][1] + 0.35
+    da = a - L
+    elipse = (w / R) ** 2 + (da / (R * M["boca_k"])) ** 2
+    aro = (elipse <= 1.0)
+    dentro = (w / (R - M["aro"])) ** 2 + (da / ((R - M["aro"]) * M["boca_k"])) ** 2 <= 1.0
+    mat[aro] = "k"
+    tom[aro] = np.where(w < -0.3 * R, 6, np.where(w < 0.4 * R, 5, 3))[aro]
+    # o lábio da frente (a metade de baixo do aro) um tom abaixo: a espessura do couro
+    labio = aro & ~dentro & (da > 0.15)
+    tom[labio] = np.where(w[labio] < 0.4 * R, 6, 4)
+    mat[dentro] = "x"
+    tom[dentro] = 0
+    fixo[aro] = True
 
-    # a alça: um arco de couro escuro do lado da sombra, fora do tubo
-    if M["alca"] is None:
-        tom = pc.limpar(mat, tom, fixo)
-        pc.contornar(mat)
-        return pc.imagem(mat, tom, RAMPAS)
-    a0, a1, sai = M["alca"]
-    meio = (a0 + a1) / 2
-    k = np.clip(1 - ((a - meio) / ((a1 - a0) / 2)) ** 2, 0, 1)
-    w_alca = meia + 0.2 + sai * k
-    alca = (a >= a0) & (a <= a1) & (np.abs(w - w_alca) <= 0.5 * max(px, 0.8)) & (mat == "")
-    mat[alca] = "b"
-    tom[alca] = 2
-    fixo[alca] = True
+    # as flechas: começam dentro da abertura, a haste de 1 px até a ponta, as penas dos dois lados nas últimas
+    # linhas, e o entalhe além delas (no 32)
+    centro_boca = (x0 + ax * L, y0 + ay * L)
+    for (dw, ang, comp, n_pena, vermelha) in M["flechas"]:
+        sx = centro_boca[0] + px_ * dw
+        sy = centro_boca[1] + py_ * dw
+        t = math.radians(ang)
+        dx, dy = math.sin(t), -math.cos(t)
+        ex, ey = sx + dx * comp, sy + dy * comp
+        pts = _reta(sx, sy, ex, ey)
+        entalhe = M["entalhe"]
+        corpo_flecha = pts[:-1] if entalhe else pts
+        rampa_pena = "v" if vermelha else "p"
+        for i, (hx, hy) in enumerate(corpo_flecha):
+            if not (0 <= hx < lado and 0 <= hy < lado):
+                continue
+            if mat[hy, hx] == "x" and i < 2:      # o pé da haste, ainda dentro da boca: a sombra de dentro
+                mat[hy, hx], tom[hy, hx] = "m", 0
+            else:
+                mat[hy, hx], tom[hy, hx] = "m", 2 if i < len(corpo_flecha) - n_pena else 1
+            fixo[hy, hx] = True
+        # as penas: palhetas de 1 px de cada lado da haste, nas últimas n_pena linhas (antes do entalhe)
+        cauda = corpo_flecha[-n_pena:]
+        for (hx, hy) in cauda:
+            for lado_s in (-1, 1):
+                qx = hx + lado_s
+                if 0 <= qx < lado and mat[hy, qx] in ("", "x", "k", "b"):
+                    mat[hy, qx] = rampa_pena
+                    tom[hy, qx] = 2 if lado_s < 0 else 1
+                    fixo[hy, qx] = True
+        if entalhe:
+            nx, ny = pts[-1]
+            if 0 <= nx < lado and 0 <= ny < lado:
+                mat[ny, nx], tom[ny, nx], fixo[ny, nx] = "m", 0, True
+
+    # a alça: um arco de couro escuro do lado da sombra, fora do tubo (só no 32)
+    if M["alca"]:
+        a0, a1, sai = M["alca"]
+        meio = (a0 + a1) / 2
+        k = np.clip(1 - ((a - meio) / ((a1 - a0) / 2)) ** 2, 0, 1)
+        w_alca = meia + 0.3 + sai * k
+        alca = (a >= a0) & (a <= a1) & (np.abs(w - w_alca) <= 0.55) & (mat == "")
+        mat[alca], tom[alca], fixo[alca] = "b", 2, True
 
     tom = pc.limpar(mat, tom, fixo)
     pc.contornar(mat)
@@ -149,9 +167,6 @@ def main():
     print(32, pc.salvar(img32, pasta, "aljava"), "cores")
     print(64, pc.salvar(img32.resize((64, 64), Image.NEAREST), pasta, "aljava"), "cores (o 32 ampliado 2×)")
     print(24, pc.salvar(desenhar(24), pasta, "aljava"), "cores (o topo)")
-    if "--intermediarios" in sys.argv:
-        for lado in (40, 48):
-            print(lado, pc.salvar(desenhar(lado), pasta, "aljava"), "cores (prévia)")
 
 
 if __name__ == "__main__":
