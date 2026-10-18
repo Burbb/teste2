@@ -3484,3 +3484,19 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Conferido:** `integracao.mjs` (luta pequena e cheia, 1280×720 e 1500×950, iniciativa, emboscada, turno perdido,
   golpe final, reduzido, redimensionar), a suíte, o pyflakes, o gabarito (sem mudança) e a fumaça uma vez.
 - **Próximo:** Jean jogar. O dado e outras mudanças visuais não começaram.
+
+### 17/10/2026 (data do computador local) — Protótipo: a rolagem narrativa no centro (plano 23, item 1.4)
+
+- **Pedido de Jean:** mais destaque e expectativa nas rolagens de atributo (escolhas, diálogos e eventos), mantendo o
+  dado, a tirinha e a animação; uma alternativa; só protótipo.
+- **Feito** (`ferramentas/prototipos/hud/rolagem/`):
+  - o grupo no centro da área principal (o teste e a dificuldade, o dado 2×, a tirinha em pincel, a faixa de resultado);
+  - Sucesso em marfim inteiro; Falha em carvão rasgado;
+  - o grupo desce até a tirinha do texto antes da consequência.
+- **Conferido:**
+  - mesmos dados nos dois modos (sucesso e falha por 1), 1920×945;
+  - mesmo ritmo (1627–1631 ms);
+  - pular, instantâneo e movimento reduzido;
+  - uma gravação e quatro capturas.
+  - O jogo não mudou: a suíte, o gabarito, o pyflakes e a fumaça não se aplicam (rodaram no mesmo código na 1.116.1).
+- **Próximo:** Jean avaliar. Nada integrado; versão igual (1.116.1).

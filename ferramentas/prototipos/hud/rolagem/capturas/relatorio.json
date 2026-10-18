@@ -1,0 +1,47 @@
+[
+ {
+  "nome": "sucesso-atual",
+  "semente": "11",
+  "resultado": "▸ Percepção 13 contra 12 — sucesso (d20 11)",
+  "da_rolagem_a_consequencia_ms": 1631,
+  "erros": []
+ },
+ {
+  "nome": "sucesso-proposta",
+  "semente": "11",
+  "resultado": "▸ Percepção 13 contra 12 — sucesso (d20 11)",
+  "da_rolagem_a_consequencia_ms": 1629,
+  "erros": []
+ },
+ {
+  "nome": "falha-atual",
+  "semente": "4",
+  "resultado": "▸ Percepção 11 contra 12 — falha (d20 9)",
+  "da_rolagem_a_consequencia_ms": 1627,
+  "erros": []
+ },
+ {
+  "nome": "falha-proposta",
+  "semente": "4",
+  "resultado": "▸ Percepção 11 contra 12 — falha (d20 9)",
+  "da_rolagem_a_consequencia_ms": 1631,
+  "erros": []
+ },
+ {
+  "nome": "falha-proposta-reduzido",
+  "semente": "4",
+  "resultado": "▸ Percepção 11 contra 12 — falha (d20 9)",
+  "da_rolagem_a_consequencia_ms": 1628,
+  "erros": []
+ },
+ {
+  "nome": "pular",
+  "centro_some_ms_depois_do_clique": 111,
+  "resultado": "▸ Percepção 13 contra 12 — sucesso (d20 11)"
+ },
+ {
+  "nome": "instantaneo",
+  "apareceu_no_centro": false,
+  "resultado": "▸ Percepção 13 contra 12 — sucesso (d20 11)"
+ }
+]

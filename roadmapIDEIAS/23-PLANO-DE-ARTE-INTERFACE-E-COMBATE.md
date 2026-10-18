@@ -144,6 +144,21 @@ preferencialmente no centro da coluna principal durante a resolução, preservan
 
 A posição e a duração exatas ainda dependem do protótipo. Não mover todas as notificações para o centro.
 
+**Protótipo (17/10/2026, nada no jogo; `ferramentas/prototipos/hud/rolagem/`):** uma alternativa só, nos testes de
+atributo fora da luta. A mesma mensagem `rolagem` do motor, sem sortear nada:
+- **o teste:** a área principal (sem as colunas laterais) escurece, mais no centro; no meio, o nome do teste e a
+  dificuldade;
+- **a rolagem:** o dado de sempre, 2×, girando, com a tirinha em pincel embaixo ("d20 + 2", "precisa de 10 ou mais",
+  as parcelas do estado);
+- **o resultado:** o dado pousa, a conta fecha e aparece a faixa de resultado. Sucesso: marfim inteira, e o contorno de
+  latão se fecha. Falha: carvão rasgada, o texto caído. Crítico e Desastre, idem, com mais peso;
+- **a consequência:** o grupo desce até a tirinha de sempre no texto, e só então ela vem.
+
+O ritmo é o de hoje (da tirinha à consequência: 1627–1631 ms, atual e proposta), sem clique novo. Pular corta; no
+instantâneo, ao refazer a página e na luta, a rolagem de sempre; movimento reduzido sem deslocamento. Comparado com os
+mesmos dados (o baú abandonado, Percepção 12: sucesso por 1 e falha por 1) a 1920×945. "Precisa de N" é derivado na
+tela; na integração viria do motor. Falta Jean avaliar.
+
 ### 1.5. Protótipo: iniciativa e passagem dos turnos
 
 **Iniciativa:** destaque breve de entrada e indicador compacto no topo da arena enquanto a oportunidade estiver

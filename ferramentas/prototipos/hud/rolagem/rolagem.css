@@ -1,0 +1,89 @@
+/* Protótipo (plano 23, item 1.4): a rolagem narrativa no centro da área principal (rolagem.js). O dado é o de sempre
+   (o mesmo SVG de app/nucleo.js, as mesmas cores de 04-pagina.css), maior; a tirinha e a faixa de resultado usam o
+   pincel aprovado dos comandos e das escolhas (18-seletor-habilidades.css: as pontas gastas, o meio ondulado e o
+   grão, copiados de #prompt pelo script), com um contorno de latão incompleto e o centro limpo. */
+.rp-palco { position: fixed; inset: 0; z-index: 40; pointer-events: none; }
+.rp-palco * { pointer-events: none; }
+/* o véu: só sobre a área principal, discreto (a cena continua reconhecível) */
+/* mais escuro no meio, onde fica o grupo; nas bordas o cenário continua à vista */
+.rp-veu { position: fixed; background: radial-gradient(ellipse 34% 46% at var(--cx, 50%) var(--cy, 50%), rgba(8, 6, 5, 0.86), rgba(8, 6, 5, 0.62) 60%, rgba(8, 6, 5, 0.32) 100%); }
+.rp-palco.rp-entra .rp-veu { animation: rp-aparece 160ms ease-out both; }
+
+.rp-grupo { position: fixed; display: flex; flex-direction: column; align-items: center; gap: 6px; width: 400px; }
+.rp-grupo::before { content: ""; position: absolute; z-index: -2; inset: -36px -90px -30px;
+  background: radial-gradient(closest-side, rgba(8, 6, 5, 0.94), rgba(8, 6, 5, 0.86) 62%, rgba(8, 6, 5, 0)); }  /* a poça: o texto de trás não disputa com o grupo */
+.rp-palco.rp-entra .rp-grupo { animation: rp-entra 180ms cubic-bezier(.2, .8, .3, 1) both; }
+
+/* 1. o teste: o nome e a dificuldade, antes de tudo */
+.rp-cab { display: flex; flex-direction: column; align-items: center; gap: 1px; text-shadow: 0 2px 0 #000, 0 0 10px #000; }
+.rp-nome { font-size: 15px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #e6dbc0; }
+.rp-cd { font-family: var(--num); font-size: 18px; color: #cdbf9f; }
+.rp-cd b { font-weight: 400; font-size: 26px; color: #fff3d6; margin-left: 4px; }
+
+/* 2. o dado: o de sempre, 2× */
+.rp-dado.d20 { width: 128px; height: 128px; margin: 6px 0 2px; filter: drop-shadow(0 6px 6px rgba(0, 0, 0, 0.7)); }
+.rp-dado.d20 .face { stroke-width: 2; }
+.rp-dado.d20 text { font-size: 19px; }
+.rp-palco.rolando .rp-dado svg { animation: rolar 0.32s steps(4) infinite; }
+.rp-palco.pousou .rp-dado svg { animation: rp-pousa 0.32s steps(3); }
+.rp-palco.ok .rp-dado .face { stroke: var(--bom); fill: #17200f; }
+.rp-palco.falha .rp-dado .face { stroke: var(--sangue-2); fill: #241010; }
+.rp-palco.critico .rp-dado .face { stroke: var(--ouro); fill: #2a2110; }
+.rp-palco.critico .rp-dado.d20 { filter: drop-shadow(0 0 14px rgba(226, 189, 99, 0.65)) drop-shadow(0 6px 6px rgba(0, 0, 0, 0.7)); }
+
+/* as faixas de pincel (a tirinha e o resultado): a receita dos comandos, com o contorno de latão por cima */
+.rp-faixa { position: relative; isolation: isolate; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; color: var(--sh-texto, #ece2cc); white-space: nowrap; }
+.rp-faixa::before { content: ""; position: absolute; z-index: -1; inset: 0; rotate: -1.5deg; background-color: var(--fundo, #1c1a1e);
+  background-image: var(--sh-grao), linear-gradient(180deg, rgba(255, 244, 220, 0.12), rgba(255, 244, 220, 0.03) 14%, transparent 42%, rgba(0, 0, 0, 0.3));
+  background-size: 640px 64px, 100% 100%;
+  -webkit-mask: var(--sh-ponta-e1) 0 0 / 34px 100% no-repeat, var(--sh-meio) 32px 0 / calc(100% - 72px) 100% no-repeat, var(--sh-ponta-d2) 100% 0 / 42px 100% no-repeat;
+  mask: var(--sh-ponta-e1) 0 0 / 34px 100% no-repeat, var(--sh-meio) 32px 0 / calc(100% - 72px) 100% no-repeat, var(--sh-ponta-d2) 100% 0 / 42px 100% no-repeat;
+  filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.65)); }
+.rp-contorno { position: absolute; inset: 3px 14px; width: calc(100% - 28px); height: calc(100% - 6px); overflow: visible; rotate: -1.5deg; z-index: -1; }
+.rp-contorno path { fill: none; stroke: var(--sh-latao, #b08a45); stroke-width: 1.4; vector-effect: non-scaling-stroke; stroke-linecap: round; opacity: 0.75; }
+.rp-contorno .b { opacity: 0; }
+
+/* a tirinha: a conta e o que é preciso tirar (rolando); a conta fechada (pousou) */
+.rp-tirinha { padding: 7px 46px 8px; gap: 1px; min-width: 250px; --fundo: #34302f; }
+.rp-conta { font-family: var(--num); font-size: 22px; line-height: 1.1; color: #e6dbc0; }
+.rp-conta i { font-style: normal; color: #cdbf9f; }
+.rp-conta b { font-weight: 400; color: #fff3d6; }
+.rp-precisa { font-size: 14px; color: #d8cdb2; }
+.rp-partes { font-size: 13px; color: #bdb3a0; }
+
+/* 3. o resultado: aparece quando o dado pousa */
+.rp-resultado { margin-top: 2px; padding: 8px 54px 10px; min-width: 230px; --fundo: #232125; opacity: 0; }
+.rp-resultado b { font-family: var(--titulo); font-weight: 400; font-size: 40px; line-height: 1; letter-spacing: 0.5px; text-shadow: 0 3px 0 #000; }
+.rp-palco.pousou .rp-resultado { opacity: 1; }
+/* Sucesso: a faixa de marfim (a das escolhas marcadas), inteira, com tinta escura; o contorno se fecha */
+.rp-palco.ok .rp-resultado { --fundo: #e6dbc0; animation: rp-carimbo 260ms cubic-bezier(.2, .9, .3, 1.2) both; }
+.rp-palco.ok .rp-resultado::before { background-image: var(--sh-grao-claro, none), linear-gradient(180deg, rgba(255, 255, 255, 0.25), transparent 40%, rgba(60, 40, 10, 0.18)); }
+.rp-palco.ok .rp-resultado b { color: #1f3a12; text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4); }
+.rp-palco.ok .rp-resultado .rp-contorno path { stroke: #5b4a28; }
+.rp-palco.ok .rp-faixa .rp-contorno .b { opacity: 0.75; transition: opacity 200ms 80ms; }
+/* Falha: a faixa rasgada no meio, a metade da direita caída, o contorno ainda mais aberto, o texto torto */
+.rp-palco.falha .rp-resultado { --fundo: #2e1210; animation: rp-rasga 300ms steps(4) both;
+  clip-path: polygon(0 0, 48% 0, 52% 30%, 48.5% 52%, 53% 74%, 50% 100%, 0 100%, 0 0, 100% 0, 100% 100%, 53% 100%, 56% 74%, 51.5% 52%, 55% 30%, 51% 0); }
+.rp-palco.falha .rp-resultado b { color: #ffb8a6; rotate: -3deg; translate: 0 2px; }
+.rp-palco.falha .rp-resultado .rp-contorno .a { stroke-dasharray: 9 7; }
+/* o Crítico: o Sucesso dourado; o Desastre: a Falha mais caída */
+.rp-palco.critico .rp-resultado { --fundo: #f0d58e; }
+.rp-palco.critico .rp-resultado b { color: #4a3008; text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5), 0 0 12px rgba(255, 236, 170, 0.8); }
+.rp-palco.critico .rp-faixa .rp-contorno path { stroke: #8a6420; }
+.rp-palco.desastre .rp-resultado b { rotate: -6deg; translate: 0 4px; }
+
+@keyframes rp-aparece { from { opacity: 0; } to { opacity: 1; } }
+@keyframes rp-entra { from { opacity: 0; scale: 0.94; } to { opacity: 1; scale: 1; } }
+@keyframes rp-pousa { from { transform: scale(1.35); } to { transform: scale(1); } }
+@keyframes rp-carimbo { 0% { opacity: 0; scale: 1.25; } 60% { opacity: 1; scale: 0.97; } 100% { opacity: 1; scale: 1; } }
+@keyframes rp-rasga { 0% { opacity: 0; translate: 0 -6px; } 50% { opacity: 1; translate: 3px 2px; } 75% { translate: -2px 0; } 100% { opacity: 1; translate: 0 0; } }
+
+/* a tirinha do texto, guardada enquanto o grupo está no centro (ocupa o lugar: a página não pula depois) */
+.rolagem.rp-guardada { visibility: hidden; }
+
+@media (prefers-reduced-motion: reduce) {
+  .rp-palco.rp-entra .rp-veu, .rp-palco.rp-entra .rp-grupo, .rp-palco.rolando .rp-dado svg, .rp-palco.pousou .rp-dado svg,
+  .rp-palco.ok .rp-resultado, .rp-palco.falha .rp-resultado { animation: none; }
+  .rp-palco.ok .rp-faixa .rp-contorno .b { transition: none; }
+}
