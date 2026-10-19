@@ -282,8 +282,9 @@ function mostrarOpcoes(m) {
       const n = estado.mapa.nos.find((x) => x.id === o.meta.local);
       if (n) icone = spr(MapaPx.sprite(n), 1);
     }
-    if (o.meta && o.meta.item) icone = spr(Telas.iconeConsumivel(o.meta.item), 1);
-    if (o.meta && o.meta.gasta) icone = spr(Telas.iconeConsumivel(o.meta.gasta), 1);  // o item que a escolha usa
+    const miudo = (n) => Icones.miudo(n) || spr(n, 1);
+    if (o.meta && o.meta.item) icone = miudo(Telas.iconeConsumivel(o.meta.item));
+    if (o.meta && o.meta.gasta) icone = miudo(Telas.iconeConsumivel(o.meta.gasta));  // o item que a escolha usa
     // Indisponível: fica à vista, apagada, com o motivo escrito (não só a cor) e sem responder a clique ou tecla.
     const indisponivel = o.meta && o.meta.indisponivel;
     if (indisponivel) { b.classList.add("indisponivel"); b.disabled = true; b.setAttribute("aria-disabled", "true"); }
@@ -943,7 +944,7 @@ function rodaMira(m) {
  *  perigo, noite) e a dica com o detalhe. Vêm prontos do motor (sobrevivencia.riscos_sala). */
 function riscosDaOpcao(meta) {
   if (!meta || !meta.riscos || !meta.riscos.length) return "";
-  return `<span class="op-riscos">${meta.riscos.map((r) => `<span class="op-risco ${esc(r.tipo)}" ${Telas.dica(esc(r.dica), true)}>${spr(r.icone, 1)}${esc(r.texto)}</span>`).join("")}</span>`;
+  return `<span class="op-riscos">${meta.riscos.map((r) => `<span class="op-risco ${esc(r.tipo)}" ${Telas.dica(esc(r.dica), true)}>${Icones.miudo(r.icone) || spr(r.icone, 1)}${esc(r.texto)}</span>`).join("")}</span>`;
 }
 
 const ICONE_ACAO = { habilidades: "grimorio", itens: "pocao", analisar: "olho", fugir: "fuga" };

@@ -33,7 +33,7 @@ const Icones = (() => {
     "lugar-planicie": [32, 40], "lugar-ruinas": [32, 40], "lugar-vila": [32, 40], "maca": [32, 40, 48, 64],
     "machado": [32, 40, 48, 64],
     "manopla": [32, 40, 48, 64], "moeda": [16, 32], "moedas": [24, 32], "osso": [24], "perneiras": [32, 40, 48, 64], "pocao": [24, 32, 48, 64],
-    "provisoes": [24, 32], "tocha": [24, 32], "tonico": [32, 48, 64], "unguento": [32, 64],
+    "provisoes": [24, 32], "tocha": [16, 24, 32], "tocha_apagada": [16, 24], "tonico": [32, 48, 64], "unguento": [32, 64],
     "vital-foco": [20], "vital-mana": [20], "vital-vida": [20], "vital-vigor": [20]};
 
   // Cada desenho vai para o tipo de ferro que o jogo já tem (elmo, armadura, manopla, calca = perneira, bota_ferro, maca);
@@ -91,9 +91,13 @@ const Icones = (() => {
   // ferramentas/arte/aseprite/): o Ouro (a pilha de moedas, 24 no topo; o 32, a mesma construção, é o seu ouro no
   // balcão do mercado e dos serviços, 1.133.0, pelo Icones.ouro) e as Provisões (o pernil, 24 no topo e 32 nativo no
   // cartão "Provisões (1 dia)" do mercado, por porDesenho); a tocha (1.135.0, o cabo de madeira, o pano enrolado e a
-  // chama em línguas), 24 no topo e 32 no mercado, na bolsa, no espólio e no voo até a bolsa (só esses tamanhos)
-  const RECURSO = { pernil: "provisoes", osso_diag: "osso", tocha: "tocha", moedas: "moedas", pocao: "pocao", bandagem: "bandagem",
+  // chama em línguas), 24 no topo e 32 no mercado, na bolsa, no espólio e no voo até a bolsa; a tocha apagada (1.136.0,
+  // o pano queimado e a fumaça) no topo sem tochas, em 24 como os vizinhos
+  const RECURSO = { pernil: "provisoes", osso_diag: "osso", tocha: "tocha", tocha_apagada: "tocha_apagada", moedas: "moedas", pocao: "pocao", bandagem: "bandagem",
     aljava: "aljava" };
+  // os ícones de 16 que a tela pede pelo nome do desenho (o chip e o aviso de um efeito, o item e os riscos de uma
+  // escolha, os riscos do lugar, a linha de custo de um serviço, os ganhos de um contrato): a moeda avulsa (1.134.0), a tocha e a tocha apagada (1.136.0); os outros nomes ficam com o sprite do jogo
+  const MIUDO = { moeda: "moeda", tocha: "tocha", tocha_apagada: "tocha_apagada" };
   // os ícones das barras do topo (20), em pixel art: a Vida (o coração) e a Mana (a gota de energia líquida, no azul
   // da barra), 1.130.0; o Vigor (o punho cerrado) e o Foco (o alvo, no verde da barra), 1.131.0. Só o topo usa
   // estes desenhos: o custo das habilidades continua com os sprites do jogo (RECURSO_ICONE, em app/nucleo.js)
@@ -177,6 +181,8 @@ const Icones = (() => {
      *  o chip de ouro, o espólio (32), a moeda que o ladrão leva e as que voam até o topo. Só esse papel: o sprite
      *  "moeda" do jogo fica para o resto, e a pilha do saldo é o ouro (acima). */
     moeda: (lado = 16, classe = "") => img("moeda", lado, classe),
+    /** Um ícone de 16 pelo nome do desenho (MIUDO), ou "" para o sprite do jogo. */
+    miudo: (sprite, lado = 16) => img(MIUDO[sprite], lado),
     vital: (recurso, lado = 20) => img(VITAL[recurso], lado),
     atalho: (nome, lado = 36) => img(ATALHO[nome], lado),
     lugar: (sprite, lado = 32) => img(LUGAR[sprite], lado),

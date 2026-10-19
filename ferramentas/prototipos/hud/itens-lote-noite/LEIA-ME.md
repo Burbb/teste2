@@ -1244,3 +1244,12 @@ uso é o topo. Com eles, os quatro ícones das barras do topo estão em pixel ar
   (`montar.py variantes`).
 - **Na integração:** um papel em `Icones` para a tocha em 16 e para a apagada (o `RECURSO` do topo e os 16 do chip, do
   aviso e dos riscos, que hoje vêm do `spr`); o tremular do topo (`controles.js`) só troca os sprites e não muda.
+- **As variantes integradas na 1.136.0, sem retoque** (aprovadas no `ef71aa3`): as fontes foram para
+  `ferramentas/arte/aseprite/tocha/` (o 16, junto do 24 e do 32) e `tocha_apagada/`; os seis arquivos do jogo são
+  idênticos, byte a byte, aos da proposta. Os papéis: a apagada no `RECURSO` do topo (24) e o `Icones.miudo` para os
+  16 pedidos pelo nome (o chip, o aviso, o item e os riscos das escolhas). Fotos com os arquivos de produção a 1920×945
+  (`variantes/capturas/*/no-jogo-1.136.0-*`, o roteiro com `SO_ATUAL=1`): o aviso e o topo sem tochas são idênticos às
+  fotos da proposta; no chip e nos riscos, os pixels da tocha são os mesmos. A caixa do recurso no topo e a escolha
+  têm as mesmas medidas de antes (só o ícone do topo passou de 32 para 24). Na conferência apareceu mais um uso de 16,
+  o aviso de escuro do painel do lugar (`risco-lugar`, com e sem tocha): entrou no mesmo papel
+  (`no-jogo-1.136.0-1920x945-riscos-lugar.png`).

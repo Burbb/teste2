@@ -21,7 +21,7 @@
     const r = raridade ? ` r-${h(raridade)}` : "";
     const fim = linhas ? "" : (preco === 0 ? '<span class="preco gratis">grátis</span>' : preco != null ? `<span class="preco">${Icones.moeda() || S("moeda", 1)}${preco}</span>` : "") + (tempo ? `<small class="serv-tempo">⧗ ${h(tempo)}</small>` : "");
     const corpo = linhas ? linhas.map((l) => l.nota ? `<span class="serv-nota">${h(l.nota)}</span>`
-      : `<span class="serv-linha">${(l.icone === "moeda" && Icones.moeda()) || S(l.icone, 1)}<span class="serv-rotulo">${h(l.rotulo)}:</span> ${Realce.texto(l.texto)}</span>`).join("")
+      : `<span class="serv-linha">${Icones.miudo(l.icone) || S(l.icone, 1)}<span class="serv-rotulo">${h(l.rotulo)}:</span> ${Realce.texto(l.texto)}</span>`).join("")
       : efeito ? `<span class="serv-efeito">${Realce.texto(efeito)}</span>` : "";
     return `<button type="button" class="servico${motivo ? " caro" : ""}${limite ? " limite" : ""}" ${attrs} ${dicaAttr}${motivo ? ` aria-disabled="true" data-motivo="${h(motivo)}"` : ""}>
       <span class="slot-px${r}">${Icones.porDesenho(icone) || S(icone, 2)}</span>

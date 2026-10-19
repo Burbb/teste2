@@ -4216,3 +4216,18 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   iguais), mas não são gravadas nem conferidas ali, e o `--conferir` indica o `exportar_aseprite.py <peça>
   --conferir` para elas. Nenhum arquivo de arte mudou; documentado em `docs/ARQUITETURA.md` e na skill
   `arte-itens-fenda`.
+
+### 19/10/2026 (data do computador local) — A tocha em 16 e a tocha apagada no jogo (1.136.0)
+
+- **Pedido de Jean:** integrar as três variantes do `ef71aa3` sem retoque.
+- **A integração:**
+  - as fontes foram para `ferramentas/arte/aseprite/tocha/` (o 16) e `tocha_apagada/`; os seis arquivos do jogo são
+    idênticos, byte a byte, aos aprovados, e o exportador os reproduz; o 24 e o 32 da tocha não mudaram;
+  - a tocha em 16 no chip e no aviso de um item ganho, no ícone das escolhas que a gastam, no risco "−1 tocha" e no
+    aviso de escuro do painel do lugar (achado na conferência); a apagada no topo sem tochas (24, no lugar do sprite em
+    32), no risco "Sem luz" e no aviso do lugar sem tocha (16). O papel novo `Icones.miudo`
+    serve os 16 pedidos pelo nome (a moeda, a tocha, a apagada);
+  - conferido a 1920×945 com os arquivos de produção: o ganho de uma tocha (aviso e chip), a escolha que consome uma e
+    o estado sem tochas no topo e na escolha saem como nas fotos da proposta; a caixa do recurso e a escolha têm as
+    mesmas medidas. Quantidades, regras, textos e áreas de interação não mudaram.
+- **A tocha inteira em pixel art:** 16, 24 e 32 acesa e 16 e 24 apagada.

@@ -26,7 +26,8 @@ nada daqui: só os PNGs exportados para `rpg/web/static/hud/icones/`.
 | moedas (o Ouro do topo e do balcão) | `moedas/moedas-24.aseprite`, `-32` | pilha, topo, moeda, contorno | 1.132.0 (o 32, 1.133.0) |
 | provisoes (as Provisões do topo e do mercado) | `provisoes/provisoes-24.aseprite`, `-32` | carne, osso, contorno | 1.132.0 |
 | moeda (a moeda avulsa dos preços e dos ganhos) | `moeda/moeda-16.aseprite`, `-32` | espessura, beira, anel, face, contorno | 1.134.0 |
-| tocha (a tocha do topo e da bolsa) | `tocha/tocha-24.aseprite`, `-32` | cabo, pano, chama, contorno | 1.135.0 |
+| tocha (a tocha do topo, da bolsa e de 16) | `tocha/tocha-16.aseprite`, `-24`, `-32` | cabo, pano, chama, contorno | 1.135.0 (o 16, 1.136.0) |
+| tocha_apagada (o topo sem tochas e o risco "Sem luz") | `tocha_apagada/tocha_apagada-16.aseprite`, `-24` | cabo, pano, queimado, contorno, fumaca | 1.136.0 |
 | atalho-salvar (o Salvar da doca) | `atalho-salvar/atalho-salvar-36.aseprite`, `-32` | tampa, corpo, latao, seta, contorno | 1.129.0 |
 | atalho-sair (o Sair da doca) | `atalho-sair/atalho-sair-36.aseprite`, `-32` | arco, passagem, seta, contorno | 1.129.0 |
 | atalho-bestiario (o Bestiário da doca) | `atalho-bestiario/atalho-bestiario-36.aseprite`, `-32` | chifres, cranio, contorno | 1.128.0 |
@@ -263,3 +264,15 @@ moeda_tocha/`; a rodada 1 em `moeda_tocha/tocha_r1/`).
   `exportar_aseprite.py tocha --conferir` os reproduz.
 - **Os auxiliares** que geraram as listas por camada ficam em `moeda_tocha/auxiliares/` (`tocha.py <24|32>`, a
   rodada 2; a 1 em `tocha_r1/tocha_r1.py`).
+
+## A tocha em 16 e a tocha apagada (1.136.0)
+
+As três variantes do `ef71aa3` foram aprovadas pelo Jean (`ferramentas/prototipos/hud/itens-lote-noite/moeda_tocha/
+variantes/`).
+- **Os usos:** a tocha em 16, o chip e o aviso de um item ganho, o ícone das escolhas que a gastam, o risco "−1
+  tocha" e o aviso de escuro do painel do lugar; a apagada em 24, o topo sem tochas (no lugar do sprite em 32), e em
+  16, o risco "Sem luz" e o aviso do lugar sem tocha. O 24 e o 32 da
+  tocha não mudaram.
+- **Conferido:** os seis arquivos exportados das fontes são idênticos, byte a byte, aos aprovados, e
+  `exportar_aseprite.py tocha --conferir` e `tocha_apagada --conferir` os reproduzem (com o 24 e o 32).
+- **Os auxiliares:** `moeda_tocha/auxiliares/tocha.py <16|24|32> [apagada]`.
