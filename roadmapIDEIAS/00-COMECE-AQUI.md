@@ -4543,3 +4543,18 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   pendência de nomenclatura seguem registradas.
 - **Próximo par (decisão do Jean):** a espada e a maça. Não começado.
 
+### 19/10/2026 (data do computador local) — O remake do ferro, 1: a espada e a maça (proposta do 32)
+
+- **Pedido de Jean:** começar o remake do ferro pela espada e pela maça, uma peça por vez, só no protótipo; o escudo e o
+  machado como referências; primeiro o 32 e o 64 (= 32 ×2), os 40 e 48 depois da aprovação da forma.
+- **Os usos:** a espada é também a arma vazia de todas as classes e o Atacar do Guerreiro; o ícone do atributo Ataque é
+  outro arquivo e não muda. A maça é só a base Maça.
+- **Feito, só no protótipo** (`ferramentas/prototipos/hud/itens-lote-noite/espada_maca/`), **não aprovado**: a espada (a
+  lâmina larga em dois planos, a guarda e o pomo de latão, a empunhadura de couro) e a maça (o bulbo de aço em três gomos,
+  com os dentes na ponta, o cabo de freixo); 32 e 64; fontes em camadas pelo `pintar.lua`; composto, exportação e
+  prévia conferem; @2x exatos.
+- **Fotos a 1920×945:** atual × proposta na ficha, no Inventário, no saque e no Atacar da luta, e a fileira em tamanho
+  real com o machado, o escudo e o ícone de Ataque.
+- **A avaliar com atenção:** a maça pode ler como lança ou tocha no 32.
+- **Aguardando avaliação.** Nada integrado; a versão não mudou; as armaduras e o 40/48 do martelo não começaram.
+

@@ -134,8 +134,8 @@ de antes não vale como arte final.
 
 | Desenho | Bases (e únicos) que usam a imagem | Situação | Sustentação | Atenção |
 |---|---|---|---|---|
-| `espada` | Espada, Montante (Guerreiro) | **Placeholder integrado, pendente de remake** | redução da pintura (`familia_ferro.py`) | Também é o comando de ataque da luta (`ACAO`) e a silhueta da arma vazia (`VAZIO`), de todas as classes |
-| `maca` | Maça (Guerreiro) | **Placeholder integrado, pendente de remake** | redução da pintura | — |
+| `espada` | Espada, Montante (Guerreiro) | **Placeholder integrado, pendente de remake**; proposta do 32 em avaliação | redução da pintura (`familia_ferro.py`) | Também é o comando de ataque da luta (`ACAO`) e a silhueta da arma vazia (`VAZIO`), de todas as classes |
+| `maca` | Maça (Guerreiro) | **Placeholder integrado, pendente de remake**; proposta do 32 em avaliação | redução da pintura | — |
 | `elmo` | Elmo, Capacete, Barbuta (Guerreiro) | **Placeholder integrado, pendente de remake** | redução da pintura | Também a silhueta da cabeça vazia, de todas as classes (`VAZIO`) |
 | `armadura` → `cota` | Cota de Malha, Peitoral, Couraça, Brigantina (Guerreiro) | **Placeholder integrado, pendente de remake** | redução da pintura | Também a silhueta da armadura vazia (`VAZIO`) |
 | `manopla` | Manopla (Guerreiro) | **Placeholder integrado, pendente de remake** | redução da pintura | Também a silhueta das mãos vazias (`VAZIO`) |
@@ -188,7 +188,17 @@ ferro), que continuam placeholders, reduções da arte pintada, pendentes de rem
 o desenho aprovado preservado e a pendência separada de completar o 40 e o 48 sem redesenho. Ficam também os
 compartilhamentos provisórios (a Capa de Patrulha, o Chapéu de Couro, a Coroa dos Afogados) e a pendência de
 nomenclatura (a Sandália e o Diadema com os materiais de tecido nos nomes). **O próximo par, decidido pelo Jean: a
-espada e a maça** (o começo do remake do ferro; não começado).
+espada e a maça** (o começo do remake do ferro).
+
+**O remake do ferro, 1: a espada e a maça (proposta do 32, 19/10/2026; nada no jogo).** Em
+`ferramentas/prototipos/hud/itens-lote-noite/espada_maca/` (o registro completo no `LEIA-ME.md` do lote):
+- **Os usos:** `espada` vale para as bases Espada e Montante (nenhum único), para a silhueta da arma vazia de todas as
+  classes (`VAZIO`) e para o comando Atacar do Guerreiro na roda da luta (`ACAO`; `icone_ataque` da classe, a mesma
+  espada qualquer que seja a arma). O ícone do atributo Ataque é outro arquivo (`attr-ataque`, aprovado) e não muda. O
+  sprite 16×16 `espada` (estados, talentos, habilidades, selos) também é outro e não muda. `maca` vale só para a base
+  Maça.
+- **Só o 32 e o 64 (= 32 ×2):** os 40 e 48 ficam para depois da aprovação da forma. Uma futura integração da espada
+  muda também a arma vazia e o Atacar.
 
 **A ordem recomendada (separada da contagem):** primeiro a **Sandália e o Chapéu Pontudo**, que são o placeholder
 mais frequente do Mago e fecham o vestuário de tecido dele, já com capuz, luva, calça e manto aprovados como referência

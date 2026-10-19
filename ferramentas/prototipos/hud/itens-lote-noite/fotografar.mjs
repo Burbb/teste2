@@ -7,7 +7,7 @@
 //       | vida_mana | vigor_foco | vigor_foco_arqueiro | ouro_provisoes | moeda | tocha | tocha16 | tocha16_risco | tocha_apagada
 //       | bandagem_pocao | bandagem_pocao_luta | tonico_antidoto | calca_manto | calca_manto_saque_calca
 //       | frasco_vazio | frasco_cheio | antidoto_base | anel_amuleto | anel_amuleto_saque_amuleto | sandalia_chapeu | sandalia_chapeu_saque_chapeu
-//       | chapeu_no_jogo | sandalia_r2 | besta | diadema | coroa_afogados
+//       | chapeu_no_jogo | sandalia_r2 | besta | diadema | coroa_afogados | espada | espada_luta | maca
 import { spawn } from "child_process";
 import { readFileSync, existsSync, mkdirSync } from "fs";
 import { fileURLToPath } from "url";
@@ -191,6 +191,19 @@ const PECAS = {
     papeis: [{ item: "coroa", peca: "diadema", tamanhos: [32, 40, 48, 64] }],
     cena: ["tutorial", { CLASSE: "mago", TUTORIAL: "0" }], fotos: [],
     saque: ["vila", { CLASSE: "mago", ACHADO_ID: "coroa_dos_afogados", VESTIDO: "coroa" }] },
+  // a espada e a maça (espada_maca/, o começo do remake do ferro): só o 32 e o 64 (= 32 x2) na proposta, então os
+  // tamanhos ficam [32, 64] nesta página (o 40 do Inventário e o 48 do "você usa" mostram o mais perto, como o jogo faz
+  // com um tamanho sem arquivo). A espada: o Guerreiro com ela na mão (ARMA, no tutorial), a ficha, o Inventário, o
+  // saque e a roda da luta (o Atacar do Guerreiro é o desenho "espada"); a maça: a ficha, o Inventário e o saque
+  espada: { pasta: "espada_maca/proposta", saida: "espada_maca/capturas/espada", nomes: ["espada", "maca"], papel_tamanhos: [32, 64],
+    cena: ["tutorial", { CLASSE: "guerreiro", TUTORIAL: "0", PERIODO: "0", ARMA: "espada" }], fotos: ["ficha", "inventario"],
+    saque: ["vila", { CLASSE: "guerreiro", ACHADO: "espada", VESTIDO: "espada" }] },
+  espada_luta: { pasta: "espada_maca/proposta", saida: "espada_maca/capturas/espada", nomes: ["espada", "maca"], papel_tamanhos: [32, 64],
+    cena: ["tutorial", { LUTA_APOS_ESCOLHA: "1", TUTORIAL: "0", VISTAS, CLASSE: "guerreiro", NIVEL: "8", ESPEC: "paladino", COMITIVA: "morel", LUTA: "lobo", QUANTOS: "3", NIVEL_LUTA: "7", ARMA: "espada" }],
+    fotos: ["luta"] },
+  maca: { pasta: "espada_maca/proposta", saida: "espada_maca/capturas/maca", nomes: ["espada", "maca"], papel_tamanhos: [32, 64],
+    cena: ["tutorial", { CLASSE: "guerreiro", TUTORIAL: "0", PERIODO: "0", ARMA: "maca" }], fotos: ["ficha", "inventario"],
+    saque: ["vila", { CLASSE: "guerreiro", ACHADO: "maca", VESTIDO: "maca" }] },
   frasco_vazio: { pasta: "bandagem_pocao/variantes/proposta", saida: "bandagem_pocao/variantes/capturas/vazia", nomes: ["frasco_vazio"],
     papel_recurso: { frasco_vazio: [24] }, cena: ["covil", { LUGAR: "vila", BOLSA: "pocao_vida=0" }], fotos: ["topo"] },
   frasco_cheio: { pasta: "bandagem_pocao/variantes/proposta", saida: "bandagem_pocao/variantes/capturas/cheia", nomes: ["frasco_vazio"],

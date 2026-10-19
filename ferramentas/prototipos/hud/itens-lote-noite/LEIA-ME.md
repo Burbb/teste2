@@ -1704,3 +1704,52 @@ no 32 o oco de dentro lê como sombra.
 (`DERIVADOS`). O papel é `coroa` → `diadema` (o Diadema e, por ora, a Coroa dos Afogados); a reputação continua com o
 sprite. Conferido com os arquivos do jogo e os saves temporários (`capturas/integracao/no-jogo-1.144.0-*`).
 
+## O remake do ferro, 1: a espada e a maça (`espada_maca/`)
+
+**Pedido de Jean (19/10/2026):** começar o remake da família de ferro (placeholders, reduções da arte pintada) pela
+espada e pela maça, uma peça por vez, só no protótipo, com a skill `arte-itens-fenda` e o Aseprite pelo MCP. O escudo e
+o machado aprovados são as referências de material, luz, contorno e acabamento; os atuais não precisam ser reproduzidos.
+Sem efeitos mágicos. Primeiro o 32 e o 64 (= 32 ×2); os 40 e 48 depois da aprovação da forma. **Nada no jogo.**
+
+**Os usos (antes de desenhar):**
+- `espada`: as bases Espada e Montante (sem únicos); a silhueta apagada da arma vazia de todas as classes (`VAZIO`); o
+  comando Atacar do Guerreiro na roda da luta (`ACAO`: o `icone_ataque` da classe é sempre a espada, qualquer que seja
+  a arma). O ícone do atributo Ataque é o `attr-ataque` (aprovado, outro arquivo) e fica como está; o sprite 16×16
+  `espada` (estados, talentos, habilidades, selos de atributo) também é outro.
+- `maca`: só a base Maça.
+
+**A construção** (`auxiliares/desenho.py`): na diagonal da família (o pomo embaixo à esquerda, a ponta em cima à
+direita), as medidas num sistema que segue a arma (u ao longo do eixo, v através; a metade de cima na luz). O ferro do
+machado (o cinza neutro), o latão do escudo, o freixo do cabo do machado, o couro do arco.
+- **A espada:** a lâmina larga de dois gumes em dois planos (o de cima claro, com o gume aceso; o de baixo na sombra),
+  o sulco no plano claro, a ponta afilada e acesa, o talão junto da guarda; a guarda de latão reta, com as pontas
+  curvadas para a lâmina; a empunhadura de couro com as voltas; o pomo de latão redondo. Camadas: empunhadura, pomo,
+  guarda, lamina, contorno.
+- **A maça:** a cabeça de aço em bulbo (um ovo ao longo do eixo), dividida em três gomos pelas aletas (a da frente clara
+  no meio, a de cima na luz, a de baixo na sombra), com os vãos escuros recortando a ponta de cima em dentes curtos e
+  uma ponta curta no alto; o colar de aço; o cabo de freixo; a empunhadura de couro; o botão de latão no pé. Camadas:
+  cabo, empunhadura, cabeca, contorno.
+- **Tentativas descartadas (só na bancada):** a espada com a guarda de aço e o plano de baixo escuro perdia presença (a
+  guarda sumia, a lâmina afinava); a maça com as aletas de perfil saindo do miolo parecia uma pá e, com três aletas
+  largas, um machado de dois gumes; com cinco gomos, um garfo (no 32 os vãos ocupavam quase metade da cabeça).
+- **Um cuidado do método:** o `limpar` do `pixel_comum` apaga linhas diagonais de 1 pixel (cada pixel fica cercado por
+  outro tom); o sulco, os vãos das aletas e as voltas da empunhadura vão em `fixo`.
+
+**O Aseprite (pelo MCP):** as listas do 32 pintadas pelo `pintar.lua` (0 diferenças na releitura, 0 fora da tela), em
+`fontes/<peça>/<peça>-32.aseprite`; reabertas, o composto (`soma.lua`) é igual ao PNG exportado pelo
+`exportar_aseprite.py <peça> espada_maca/proposta --fontes=espada_maca/fontes` e à prévia; o 64 é o 32 ×2; @2x exatos.
+
+**As fotos (1920×945, `fotografar.mjs espada`, `espada_luta` e `maca`):** atual × proposta com os mesmos dados
+(`espada_maca-no-jogo.png`): o Guerreiro com a espada e com a maça na mão (o `tutorial` com `ARMA`), a ficha (32), o
+Inventário (40), o saque (64 e 48) e a roda da luta com o Atacar. Sem erro no console. Como a proposta só tem o 32 e o
+64, a página trata as duas peças com os tamanhos [32, 64] (`papel_tamanhos`): o Inventário mostra o 32 (como o jogo faz
+com um tamanho sem arquivo) e o "você usa" do saque reduz o 64 para 48 no navegador; os dois se resolvem com os
+intermediários. A fileira em tamanho real (`fileira-guerreiro-32.png`: a espada e a maça com o machado, o escudo, o
+ícone de Ataque e os placeholders atuais) e a prancha (`prancha-carvao.png`, com as silhuetas).
+
+**Para a avaliação:**
+- **A espada:** presença no tamanho real (a lâmina larga, a guarda de latão), coerente com o escudo e o machado; fica
+  mais larga e mais curta que o ícone de Ataque, que continua o mesmo.
+- **A maça:** se separa do machado (sem lâmina de um lado) e do martelo (sem bloco atravessado), mas no 32 a cabeça em
+  bulbo com os gomos ficou estreita e pode ler como lança ou tocha; a leitura imediata ainda não está garantida.
+

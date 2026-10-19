@@ -181,6 +181,25 @@ def diadema_r2():
             base / "fileira-mago-32.png")
     prancha([P / f"diadema-{n}.png" for n in (32, 40, 48, 64)] + [R1 / "diadema-32.png"], base / "diadema-prancha-carvao.png")
 
+def espada_maca():
+    """A espada e a maça (o começo do remake do ferro): atual × proposta no jogo (tamanho real), a fileira com o machado,
+    o escudo e o ícone de Ataque, e a prancha."""
+    base = LOTE / "espada_maca"; P = base / "proposta"
+    folha(base / "capturas", [("a ficha do Guerreiro com a espada na mão (32)", "ficha", (18, 362, 272, 472), "espada"),
+                              ("o corpo no Inventário (40: a proposta só tem o 32 e o 64, e o jogo mostra o 32)", "inventario", (150, 140, 480, 520), "espada"),
+                              ("o cartão do saque da espada (64; o 48 do 'você usa' sai do 64 reduzido, sem o 48 próprio)", "saque", None, "espada"),
+                              ("a roda da luta: o Atacar do Guerreiro é o desenho da espada (32)", "luta", (250, 10, 470, 225), "espada"),
+                              ("a ficha do Guerreiro com a maça (32)", "ficha", (18, 362, 272, 472), "maca"),
+                              ("o corpo no Inventário (40, idem)", "inventario", (150, 140, 480, 520), "maca"),
+                              ("o cartão do saque da maça (64 e 48, idem)", "saque", None, "maca")],
+          base / "espada_maca-no-jogo.png")
+    fileira([("espada (prop.)", P / "espada-32.png"), ("maça (prop.)", P / "maca-32.png"), ("machado", JOGO / "machado-32.png"),
+             ("escudo", JOGO / "escudo-32.png"), ("Ataque (atributo)", JOGO / "attr-ataque-32.png"),
+             ("espada (atual)", JOGO / "espada-32.png"), ("maça (atual)", JOGO / "maca-32.png")],
+            base / "fileira-guerreiro-32.png")
+    prancha([P / "espada-32.png", P / "espada-64.png", base / "previa" / "espada" / "32" / "espada_silhueta_32.png",
+             P / "maca-32.png", P / "maca-64.png", base / "previa" / "maca" / "32" / "maca_silhueta_32.png"], base / "prancha-carvao.png")
+
 def sandalia_no_jogo():
     """A Sandália no jogo (1.142.0), em tamanho real: o saque, a ficha e o Inventário depois de "Equipar agora"."""
     pasta = LOTE / "sandalia_chapeu" / "capturas" / "integracao"
@@ -195,7 +214,8 @@ def sandalia_no_jogo():
     saida = LOTE / "sandalia_chapeu" / "sandalia-1.142.0-no-jogo.png"; o.save(saida); print(saida)
 
 if __name__ == "__main__" and sys.argv[1] in ("antidoto_base", "frasco_vazio", "anel_referencia", "conjunto_mago", "sandalia_r2",
-                                              "sandalia_no_jogo", "besta_diadema", "diadema_r2"):
+                                              "sandalia_no_jogo", "besta_diadema", "diadema_r2",
+                                              "espada_maca"):
     globals()[sys.argv[1]](); sys.exit()
 if __name__ == "__main__":
     nome = sys.argv[1]; cfg = LOTES[nome]; base = LOTE / nome
