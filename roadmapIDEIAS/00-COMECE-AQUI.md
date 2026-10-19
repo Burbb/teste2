@@ -4743,3 +4743,14 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Folha:** a referência × a rodada 3 × a nova, em tamanho real e ampliadas sem suavização.
 - **Aguardando avaliação.** Nada integrado; a versão não mudou; nenhuma outra peça começou.
 
+### 19/10/2026 (data do computador local) — 1.146.0: a cota do Guerreiro no jogo
+
+- **Decisões de Jean:** o elmo da rodada 4 (`b4e920d`) aprovado em 32 e 64; a cota aprovada nos quatro tamanhos.
+  Três entregas, uma por vez: integrar a cota; completar o 40 e o 48 do elmo (protótipo); propor a manopla e as
+  perneiras (32 e 64).
+- **Entrou no jogo:** a cota (o 32 e o 64 do `119f479`, o 40 e o 48 do `998373c`), sem retoque, para as quatro bases do
+  peito do Guerreiro e a silhueta do peito vazio; fontes em `ferramentas/arte/aseprite/cota/`. Conferida no saque, na
+  ficha, no Inventário e no peito vazio a 1920×945.
+- **Continua antigo:** elmo, manopla, perneiras e botas de ferro (placeholders), o 40 e o 48 do martelo.
+- **Verificações:** unittest (627, OK), gabarito OK, pyflakes (só o aviso conhecido), fumaça (tudo certo).
+

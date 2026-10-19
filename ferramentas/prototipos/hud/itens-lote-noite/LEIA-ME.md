@@ -2147,3 +2147,18 @@ dela não mudaram).
 **A folha:** `elmo-referencia-r3-r4.png` (a rodada 3 e a nova em tamanho real sobre o carvão, o 32 e o 64; a referência,
 reduzida só para a folha, e as duas ampliadas 8× sem suavização).
 
+### A cota no jogo (1.146.0)
+
+**Aprovada por Jean (19/10/2026)** nos quatro tamanhos e integrada sem retoque: o 32 e o 64 do `119f479`, o 40 e o 48 do
+`998373c` (os PNGs e as fontes do protótipo conferidos contra esses commits antes da cópia). As fontes em
+`ferramentas/arte/aseprite/cota/`; `DERIVADOS` com o 64 = 32 ×2; os 8 arquivos do jogo idênticos, byte a byte, aos
+aprovados, e `exportar_aseprite.py cota --conferir` os reproduz; o `familia_ferro.py` a reconhece pela fonte e não a
+grava mais. Os papéis já existiam: o desenho `armadura` (Cota de Malha, Peitoral, Couraça, Brigantina) e a silhueta do
+peito vazio.
+
+**Conferido no jogo** a 1920×945 com os arquivos do jogo e os saves temporários (`elmo_cota/capturas/integracao/`): o
+saque com a cota em 64 e o "você usa" em 48, "Equipar agora" (veste o achado e guarda o antigo) e "Guardar na mochila",
+a ficha (32), o Inventário (40) e o peito vazio depois de tirar a armadura com dois cliques, na ficha e no Inventário
+(`sandalia_chapeu/auxiliares/equipar.mjs guerreiro armadura armadura 1.146.0 cota` e
+`elmo_cota/auxiliares/integracao.mjs`). Sem erro no console.
+

@@ -37,6 +37,7 @@ nada daqui: só os PNGs exportados para `rpg/web/static/hud/icones/`.
 | besta (a Besta Leve do Arqueiro) | `besta/besta-32.aseprite`, `-40`, `-48`; **o 64 é o 32 ampliado 2×** | coronha, empunhadura, corda, arco, metal, contorno | 1.143.0 |
 | espada (a espada do Guerreiro: a Espada, o Montante, a arma vazia e o Atacar) | `espada/espada-32.aseprite`, `-40`, `-48`; **o 64 é o 32 ampliado 2×** | empunhadura, pomo, guarda, lamina, contorno | 1.145.0 |
 | maca (a Maça do Guerreiro) | `maca/maca-32.aseprite`, `-40`, `-48`; **o 64 é o 32 ampliado 2×** | cabo, empunhadura, cabeca, contorno | 1.145.0 |
+| cota (o desenho `armadura` do Guerreiro: Cota de Malha, Peitoral, Couraça, Brigantina; o peito vazio) | `cota/cota-32.aseprite`, `-40`, `-48`; **o 64 é o 32 ampliado 2×** | malha, couro, ferragem, contorno | 1.146.0 |
 | diadema (o Diadema do Mago, também a Coroa dos Afogados por ora; o desenho `coroa`) | `diadema/diadema-32.aseprite`, `-40`, `-48`; **o 64 é o 32 ampliado 2×** | aro, placa, gema, contorno | 1.144.0 |
 | sandalia (a Sandália do Mago, o par) | `sandalia/sandalia-32.aseprite`, `-40`, `-48`; **o 64 é o 32 ampliado 2×** | tras_sola, tras_palmilha, tras_tiras, frente_sola, frente_palmilha, frente_tiras, contorno | 1.142.0 |
 | amuleto (o amuleto: Amuleto, Talismã, Pingente e Medalhão; o vazio) | `amuleto/amuleto-32.aseprite`, `-40`, `-48`; **o 64 é o 32 ampliado 2×** | cordao, argola, engaste, pedra, brilho, contorno | 1.140.0 |
