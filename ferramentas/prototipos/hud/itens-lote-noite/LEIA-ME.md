@@ -1462,3 +1462,30 @@ escolhida**: guardada inteira em `anel_amuleto/rodada1/` (as fontes, os PNGs e o
   `SO_PROPOSTA`. Folha `anel_amuleto/anel_amuleto-no-jogo.png` e prancha `anel_amuleto/prancha-carvao.png`.
 - **O alcance segue o da rodada 1:** os compartilhamentos atuais (Anel, Sinete, Aro e o Anel do Último Rei; Amuleto,
   Talismã, Pingente e Medalhão; os vazios com a mesma imagem), sem mudar os dados.
+
+### O anel, rodada 3 (`anel_amuleto/`); o amuleto da rodada 2 aprovado
+
+- **O amuleto da rodada 2 foi aprovado** (a gema violeta no engaste de latão); as fontes e os PNGs dele
+  (`anel_amuleto/fontes/amuleto/`, `proposta/amuleto-*`) ficam como estão, sem retoque, à espera da integração.
+- **O anel da rodada 2 não foi escolhido** (a abertura inclinada para o lado oposto ao da referência): guardado em
+  `anel_amuleto/rodada2/` (os PNGs, as fontes, `aro_rodada2.py`, a folha e a prancha dela).
+- **As referências:** os PNGs originais em `ferramentas/arte/referencias/aneis/`, com a hierarquia na skill
+  (`referencias-aneis.md`): a principal é `sample (2).png` (a perspectiva, a inclinação, a abertura e a espessura); as
+  secundárias são as pranchas do mesmo artista (o metal e o acabamento).
+- **A construção (rodada 3):** o mesmo modelo do aro (um cilindro curto), com o ângulo e as proporções achados pela
+  sobreposição com a referência principal reduzida a 32 (`auxiliares/ajuste_aro.py`: a silhueta e o vão sobrepõem
+  0,93 e 0,97; das duas famílias de eixo com a mesma silhueta, ficou a que põe as faces como na referência: a de fora
+  larga em cima e à esquerda, a de dentro embaixo e à direita). A parede afinada à mão (1,4), porque na referência a
+  borda é uma linha fina: a correspondência visual decidiu, não a nota. Comparação lado a lado na mesma escala:
+  `anel_amuleto/anel-referencia-r2-r3.png` (ampliado e em tamanho real).
+- **O metal:** o ouro das moedas aprovadas em poucos planos largos (a face de fora em três, o chanfro de 1 px nas
+  beiras, a face de dentro escura em cima e clara embaixo, as bordas claras, o reflexo agrupado), limpo face a face
+  pelo `limpar` do `pixel_comum`. **O ornamento leve** (o Jean liberou durante o trabalho): um ziguezague gravado no meio
+  da face de fora, que acompanha a curva da faixa (feito numa segunda passada, para a linha sair contínua). A versão lisa
+  (`aro.py <N> liso`) ficou como alternativa em `anel_amuleto/rodada3_liso/`.
+- **Tamanhos:** o 32 resolvido primeiro; 40 e 48 da mesma construção; 64 = 32 ×2. Fontes em `anel_amuleto/fontes/anel/`
+  (dentro, fora, gravacao, borda, brilho, contorno), pelo `pintar.lua`; o composto do editor confere (`soma.lua`); @2x
+  exatos.
+- **As fotos (1920×945):** produção × rodada 2 × rodada 3 na ficha, no Inventário (com o anel vazio) e no saque
+  (`anel_amuleto/anel_amuleto-no-jogo.png`; `fotografar.mjs anel_amuleto` com `SO_PROPOSTA=1 ROTULO=rodada3`) e a
+  prancha `anel_amuleto/prancha-carvao.png`.

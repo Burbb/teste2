@@ -1,28 +1,25 @@
-# Referência dos anéis
+# Referências dos anéis
 
-A prancha que o Jean mandou em 19/10/2026: `ferramentas/arte/referencias/aneis/prancha-aneis-jean.png` (315×250, nove
-anéis em pixel art). É a referência principal para o **ângulo e a construção** de qualquer anel do jogo.
+As referências do Jean ficam em `ferramentas/arte/referencias/aneis/` (os PNGs originais; inspecione os pixels sem
+suavizar). **Há uma hierarquia:**
 
-## O que vale para todo anel (a construção)
+1. **A principal: `sample (2).png`** (64×64), o anel dourado isolado. Ela define a **perspectiva, a inclinação, a
+   proporção da abertura e a distribuição da espessura**: o aro em pé, de três quartos; o vão elíptico com o eixo
+   comprido de baixo à esquerda para cima à direita; a face de fora larga em cima e à esquerda; a face de dentro
+   aparecendo embaixo e à direita (escura em cima, clara embaixo); as bordas da faixa como linhas finas e claras. É o
+   ângulo preferido para os anéis. Compare o anel lado a lado com ela, na mesma escala: a silhueta de fora, o formato do
+   vão, as faces de dentro e quais trechos ficam na frente (um modelo 3D ajuda, mas a coerência do modelo não substitui
+   a correspondência visual).
+2. **As secundárias: as pranchas do mesmo artista** (`prancha-aneis-jean.png`, `EqoGsE.png`, `FB77t9.png`). Servem
+   para estudar o **metal, os chanfros, o contraste e o acabamento** (o ouro claro e saturado, as bordas chanfradas, os
+   reflexos agrupados, o contorno escuro).
 
-- **O ângulo preferido:** o aro em pé, visto de três quartos e inclinado, com a abertura elíptica em diagonal.
-- **A espessura legível:** a faixa de metal tem largura e parede. A face de fora do lado de perto aparece larga; pela
-  abertura se vê a face de dentro do lado de trás, mais escura; as bordas da faixa separam as duas.
-- **O metal com volume:** poucos planos de luz largos, contraste e reflexos bem agrupados (não pontilhados soltos).
-- **A presença no quadro:** o aro ocupa bem o espaço sem ser deformado (não achatar nem esticar para caber).
+## O que é só exemplo (os efeitos e os ornamentos)
 
-## O que é só exemplo (os efeitos)
+Os efeitos das pranchas (fogo, água, vento, raio, sombra, runas) e os ornamentos pesados são **exemplos reservados para
+possíveis acessórios especiais** (um único, um lendário), **não exigência** para os anéis comuns. Um anel comum é o aro
+com o acabamento das referências e, no máximo, um ornamento leve (o Jean liberou "uns ornamentos leves", 19/10/2026);
+a gravação entrelaçada do `sample (2).png` não é obrigatória.
 
-A prancha também mostra fogo, água, vento, raio, sombra e runas em volta dos aros. São **exemplos de efeitos** que podem
-inspirar acessórios especiais no futuro (um único, um lendário), **não exigência** para os anéis comuns: um anel básico
-do início do jogo é o aro com o acabamento da prancha, sem aura, partícula ou ornamento.
-
-A prancha não define regra de cor, de gema nem de poder: o material, a pedra (ou a falta dela) e os detalhes saem dos
-dados do item e da leitura no tamanho real.
-
-## O sample do anel simples (19/10/2026)
-
-Depois da prancha, o Jean mandou na conversa um sample de **um aro de ouro liso, com o mesmo acabamento** (a imagem não
-ficou como arquivo no projeto). O que ele acrescenta para os anéis comuns: o ouro claro e saturado, as duas bordas da
-faixa chanfradas e claras com o meio um pouco mais fundo, a face de dentro num laranja escuro e quente, o contorno
-escuro. A gravação entrelaçada do sample é opcional e, no 32, vira ruído.
+As referências não definem regra de cor, de gema nem de poder: o material, a pedra (ou a falta dela) e os detalhes
+saem dos dados do item e da leitura no tamanho real.

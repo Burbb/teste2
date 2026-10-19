@@ -1,6 +1,7 @@
-# Referência dos anéis
+# Referências dos anéis
 
-`prancha-aneis-jean.png`: a prancha de anéis que o Jean mandou em 19/10/2026, a referência principal do ângulo e da
-construção dos anéis (o aro em pé, de três quartos, a abertura em diagonal, a espessura e o metal com volume). Os
-efeitos da prancha são exemplos para acessórios especiais, não regra para os comuns. O que vale e o que não vale está na
-skill `arte-itens-fenda`, em `.claude/skills/arte-itens-fenda/referencias-aneis.md`.
+Os PNGs originais que o Jean mandou (19/10/2026). A hierarquia e o que vale de cada um estão na skill `arte-itens-fenda`,
+em `.claude/skills/arte-itens-fenda/referencias-aneis.md`:
+- **a principal:** `sample (2).png`, o anel dourado isolado (a perspectiva, a inclinação, a abertura e a espessura);
+- **as secundárias:** `prancha-aneis-jean.png`, `EqoGsE.png`, `FB77t9.png`, as pranchas do mesmo artista (o metal, os
+  chanfros, o contraste e o acabamento; os efeitos são exemplos para acessórios especiais).

@@ -4339,3 +4339,13 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   `anel_amuleto/rodada1/`). **Aguardando avaliação:** o anel de ouro em pé, modelado como um cilindro curto, com o
   acabamento do sample que o Jean mandou (o chanfro nas bordas); o amuleto com a gema violeta alongada no engaste de
   latão e o cordão em gota. 32, 40, 48 e o 64 = 32 ×2; fotos produção × anterior × nova a 1920×945.
+
+### 19/10/2026 (data do computador local) — O anel, rodada 3 (proposta); o amuleto aprovado
+
+- **O amuleto da rodada 2 está aprovado** (a gema violeta no engaste de latão), sem retoque e ainda não integrado.
+- **O anel da rodada 2 não foi escolhido** (guardado em `anel_amuleto/rodada2/`).
+- **As referências:** os PNGs originais em `ferramentas/arte/referencias/aneis/`; a principal é `sample (2).png` (o
+  ângulo, a abertura e a espessura), as pranchas do mesmo artista são secundárias (o acabamento). Hierarquia na skill.
+- **Aguardando avaliação:** o anel da rodada 3, com o ângulo e as proporções da referência principal (o modelo do aro
+  ajustado pela sobreposição da silhueta e do vão), o metal em poucos planos e um ornamento leve (um ziguezague gravado,
+  liberado pelo Jean; a versão lisa como alternativa). 32, 40, 48 e o 64 = 32 ×2.

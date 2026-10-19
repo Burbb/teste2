@@ -58,16 +58,14 @@ LOTES = {
                            JOGO / "calca_couro-32.png",
                            P / "manto-32.png", P / "manto-40.png", P / "manto-48.png", P / "manto-64.png",
                            JOGO / "capuz_tecido-32.png", JOGO / "luva_seda-32.png"]),
-    "anel_amuleto": dict(
-        linhas=[("a ficha do Mago: o amuleto e um anel vestidos, o outro anel vazio (32)", "ficha", (18, 362, 272, 472)),
+    "anel_amuleto": dict(                                    # rodada 3 do anel (o amuleto da rodada 2, aprovado, igual)
+        linhas=[("a ficha do Mago: um anel vestido, o outro vazio (32)", "ficha", (18, 362, 272, 472)),
                 ("o corpo no Inventário (40; o Anel 1 vazio é a silhueta apagada)", "inventario", (150, 140, 480, 520)),
-                ("o cartão do saque do anel (64) e o que você usa (48)", "saque", None),
-                ("o cartão do saque do amuleto (64 e 48)", "saque", None, "saque_amuleto")],
-        modos=("atual", "anterior", "nova"),                   # a produção, a rodada 1 e a rodada 2
-        prancha=lambda P: [JOGO / "anel-32.png", P.parent / "rodada1" / "proposta" / "anel-32.png",
+                ("o cartão do saque do anel (64) e o que você usa (48)", "saque", None)],
+        modos=("atual", "rodada2", "rodada3"),                 # a produção, a rodada 2 e a rodada 3 do anel
+        prancha=lambda P: [JOGO / "anel-32.png", P.parent / "rodada2" / "proposta" / "anel-32.png",
                            P / "anel-32.png", P / "anel-40.png", P / "anel-48.png", P / "anel-64.png",
-                           JOGO / "amuleto-32.png", P.parent / "rodada1" / "proposta" / "amuleto-32.png",
-                           P / "amuleto-32.png", P / "amuleto-40.png", P / "amuleto-48.png", P / "amuleto-64.png"]),
+                           P.parent / "rodada3_liso" / "anel-liso-32.png", P / "amuleto-32.png"]),
 }
 
 def antidoto_base():
@@ -88,7 +86,20 @@ def frasco_vazio():
           v / "frasco-cheia-vazia.png", ("cheia", "atual", "proposta"))
     prancha([LOTE / "bandagem_pocao" / "proposta" / "pocao-24.png", v / "proposta" / "frasco_vazio-24.png"], v / "prancha-carvao.png")
 
-if __name__ == "__main__" and sys.argv[1] in ("antidoto_base", "frasco_vazio"):
+def anel_referencia():
+    """O anel: a referência principal (sample (2).png) × a rodada 2 × a rodada 3, ampliados 8x e em tamanho real."""
+    base = LOTE / "anel_amuleto"
+    def sobre(p):
+        im = Image.open(p).convert("RGBA"); bg = Image.new("RGBA", im.size, (30, 30, 36, 255)); bg.alpha_composite(im); return bg.convert("RGB")
+    ims = [("referência (sample (2).png)", sobre(RAIZ / "ferramentas/arte/referencias/aneis/sample (2).png")),
+           ("rodada 2", sobre(base / "rodada2" / "proposta" / "anel-32.png")), ("rodada 3", sobre(base / "proposta" / "anel-32.png"))]
+    o = Image.new("RGB", (3 * 266 + 10, 256 + 80), (245, 245, 245)); d = ImageDraw.Draw(o)
+    for k, (rot, im) in enumerate(ims):
+        o.paste(im.resize((256, 256), Image.NEAREST), (10 + k * 266, 22)); d.text((10 + k * 266, 4), rot, fill=(0, 0, 0), font=FONTE)
+        o.paste(im if im.size[0] == 32 else im.resize((32, 32), Image.NEAREST), (10 + k * 266 + 112, 290))
+    o.save(base / "anel-referencia-r2-r3.png"); print(base / "anel-referencia-r2-r3.png")
+
+if __name__ == "__main__" and sys.argv[1] in ("antidoto_base", "frasco_vazio", "anel_referencia"):
     globals()[sys.argv[1]](); sys.exit()
 if __name__ == "__main__":
     nome = sys.argv[1]; cfg = LOTES[nome]; base = LOTE / nome
