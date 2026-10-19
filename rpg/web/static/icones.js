@@ -32,7 +32,7 @@ const Icones = (() => {
     "lugar-cidadela": [32, 40], "lugar-floresta": [32, 40], "lugar-montanha": [32, 40], "lugar-pantano": [32, 40],
     "lugar-planicie": [32, 40], "lugar-ruinas": [32, 40], "lugar-vila": [32, 40], "maca": [32, 40, 48, 64],
     "machado": [32, 40, 48, 64],
-    "manopla": [32, 40, 48, 64], "moedas": [24], "osso": [24], "perneiras": [32, 40, 48, 64], "pocao": [24, 32, 48, 64],
+    "manopla": [32, 40, 48, 64], "moedas": [24, 32], "osso": [24], "perneiras": [32, 40, 48, 64], "pocao": [24, 32, 48, 64],
     "provisoes": [24, 32], "tocha": [24, 32, 48, 64], "tonico": [32, 48, 64], "unguento": [32, 64],
     "vital-foco": [20], "vital-mana": [20], "vital-vida": [20], "vital-vigor": [20]};
 
@@ -88,9 +88,9 @@ const Icones = (() => {
   const ATRIBUTO = { Ataque: "attr-ataque", Defesa: "attr-defesa", Agilidade: "attr-agilidade", Poder: "attr-poder" };
   // os recursos do topo, pelo desenho que o jogo escolhe (sem comida, o osso; a tocha apagada, a bolsa vazia e o
   // frasco vazio ficam com o do jogo); a aljava são as flechas do Patrulheiro. Em pixel art (1.132.0, fontes em
-  // ferramentas/arte/aseprite/): o Ouro (a pilha de moedas, 24, só o topo: o ouro do mercado e dos serviços,
-  // ouro-loja, continua com o sprite "moedas" do jogo) e as Provisões (o pernil, 24 no topo e 32 nativo no cartão
-  // "Provisões (1 dia)" do mercado, por porDesenho)
+  // ferramentas/arte/aseprite/): o Ouro (a pilha de moedas, 24 no topo; o 32, a mesma construção, é o seu ouro no
+  // balcão do mercado e dos serviços, 1.133.0, pelo Icones.ouro) e as Provisões (o pernil, 24 no topo e 32 nativo no
+  // cartão "Provisões (1 dia)" do mercado, por porDesenho)
   const RECURSO = { pernil: "provisoes", osso_diag: "osso", tocha: "tocha", moedas: "moedas", pocao: "pocao", bandagem: "bandagem",
     aljava: "aljava" };
   // os ícones das barras do topo (20), em pixel art: a Vida (o coração) e a Mana (a gota de energia líquida, no azul
@@ -169,6 +169,9 @@ const Icones = (() => {
     porDesenho: (sprite, lado = 32, classe = "") => img(ITEM[sprite] || consumivelDoDesenho(sprite) || RECURSO[sprite], lado, classe),
     atributo: (nome, lado = 24) => img(ATRIBUTO[nome], lado),
     recurso: (sprite, lado = 24) => img(RECURSO[sprite], lado),
+    /** O seu ouro no balcão do mercado e dos serviços (.ouro-loja): a pilha de moedas do topo, em 32. Só esse papel: o
+     *  sprite "moedas" do jogo e a moeda dos preços (S("moeda", 1)) ficam como estão. */
+    ouro: (lado = 32) => img("moedas", lado),
     vital: (recurso, lado = 20) => img(VITAL[recurso], lado),
     atalho: (nome, lado = 36) => img(ATALHO[nome], lado),
     lugar: (sprite, lado = 32) => img(LUGAR[sprite], lado),

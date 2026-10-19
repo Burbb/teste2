@@ -118,7 +118,7 @@
       <div class="loja-banca"><canvas class="banca-cena"></canvas></div>
       <div class="loja-lado">
         <div class="loja-topo"><span class="npc-retrato"><img src="${retratoMercador(2)}" srcset="${retratoMercador(4)} 2x" width="48" height="48" alt="O mercador" draggable="false"></span><div><b>O mercador</b><span class="lore">"Tudo tem preço. Até você."</span></div>
-          <span class="ouro-loja" aria-label="seu ouro">${S("moedas", 2)}${d.ouro}</span></div>
+          <span class="ouro-loja" aria-label="seu ouro">${Icones.ouro() || S("moedas", 2)}${d.ouro}</span></div>
         <div class="loja-abas" role="tablist" aria-label="Mercado">${abas}</div>
         ${paineis}
       </div></div>`;

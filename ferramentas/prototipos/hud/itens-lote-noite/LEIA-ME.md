@@ -1132,3 +1132,7 @@ uso é o topo. Com eles, os quatro ícones das barras do topo estão em pixel ar
   e `provisoes/`; os seis arquivos do jogo são idênticos, byte a byte, aos da proposta. As fotos com os arquivos de
   produção a 1920×945 estão em `ouro_provisoes/capturas/no-jogo-1.132.0-*` (`SO_ATUAL=1`): os ícones batem pixel a
   pixel com as fotos da proposta, e o cartão das Provisões carrega o `provisoes-32.png`.
+- **O Ouro do balcão (1.133.0):** o seu ouro no mercado e nos serviços (ferreiro, curandeira, templo, taverna; 32 px)
+  passou a ser a pilha aprovada, num 32 derivado da construção do 24 (`ferramentas/arte/aseprite/moedas/moedas-32.aseprite`,
+  `ouro.py final 32`). Antes e depois a 1920×945 em `ouro_provisoes/capturas/ouro-loja/` (o mercado e o ferreiro
+  inteiros; o recorte do ouro nos cinco; `ouro-loja-antes-depois.png`): medidas, textos e posições iguais.

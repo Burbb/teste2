@@ -1,15 +1,18 @@
 # o Ouro (24): uma pilha de moedas vista um pouco de cima (a de cima de face, as laterais empilhadas) e uma moeda
-# apoiada na frente, à esquerda. Etapas: python ouro.py silhueta | final. Grava as listas por camada e a prévia.
+# apoiada na frente, à esquerda. Etapas: python ouro.py silhueta | final [32]. Grava as listas por camada e a prévia.
+# O 32 (o ouro do mercado e dos serviços, 1.133.0) é a mesma construção na grade de 32: as medidas do 24 escaladas por
+# 4/3 e as quatro moedas com 3 px de altura em vez de 2 (a junta continua de 1 px).
 import sys, math
 from PIL import Image
-N = 24
 ETAPA = sys.argv[1] if len(sys.argv) > 1 else "final"
+N = int(sys.argv[2]) if len(sys.argv) > 2 else 24
+K = N / 24
 R = {"1": "3A1C04", "2": "6E3C08", "3": "A86410", "4": "D69018", "5": "F0B828", "6": "FFDC5A", "7": "FFF0A8", "O": "08080A"}
 g, cam = {}, {}
 def pinta(x, y, c, camada):
     if 0 <= x < N and 0 <= y < N: g[(x, y)] = c; cam[(x, y)] = camada
 # a pilha: quatro moedas (cilindros de raio 6,5 e 2 px de altura), centro em x 13,5; a face de cima em y 7
-CX, RX, RY, TOPO, MOEDAS, ALT = 13.5, 6.6, 2.6, 7.0, 4, 2
+CX, RX, RY, TOPO, MOEDAS, ALT = 13.5 * K, 6.6 * K, 2.6 * K, 7.0 * K, 4, (2 if N == 24 else 3)
 base = TOPO + MOEDAS * ALT
 for y in range(N):
     for x in range(N):
@@ -29,7 +32,7 @@ for y in range(N):
             if sep: c = {"5": "3", "4": "3", "3": "2", "2": "1"}[c]
             pinta(x, y, c, "pilha")
 # a moeda apoiada na frente, à esquerda: de pé e um pouco virada (uma elipse alta), com a beira e a face
-MX, MY, MRX, MRY = 7.2, 15.6, 4.7, 5.0
+MX, MY, MRX, MRY = 7.2 * K, 15.6 * K, 4.7 * K, 5.0 * K
 for y in range(N):
     for x in range(N):
         px, py = x + 0.5, y + 0.5
@@ -48,12 +51,13 @@ for y in range(N):
             pinta(x, y, "O", "contorno")
 # o contorno também entre a moeda da frente e a pilha (a moeda na frente se separa)
 for (x, y) in list(forma):
-    if cam[(x, y)] != "moeda" and any(cam.get((x + a, y + b)) == "moeda" for a, b in ((1, 0), (0, 1), (-1, 0), (0, -1))) and x >= 6:
+    if cam[(x, y)] != "moeda" and any(cam.get((x + a, y + b)) == "moeda" for a, b in ((1, 0), (0, 1), (-1, 0), (0, -1))) and x >= round(6 * K):
         pinta(x, y, "O", "contorno")
 im = Image.new("RGBA", (N, N))
 for (x, y), c in g.items(): im.putpixel((x, y), tuple(int(R[c][i:i + 2], 16) for i in (0, 2, 4)) + (255,))
-im.save(f"ouro_{ETAPA}.png")
+sufixo = "" if N == 24 else f"_{N}"
+im.save(f"ouro_{ETAPA}{sufixo}.png")
 for camada in set(cam.values()):
-    open(f"ouro_{camada}.lua", "w").write('return "' + ";".join(f"{x},{y},{R[g[(x, y)]]}" for (x, y) in sorted(g) if cam[(x, y)] == camada) + '"\n')
+    open(f"ouro_{camada}{sufixo}.lua", "w").write('return "' + ";".join(f"{x},{y},{R[g[(x, y)]]}" for (x, y) in sorted(g) if cam[(x, y)] == camada) + '"\n')
 print(sorted(set(cam.values())))
 print("".join("\n" + "".join(g.get((x, y), ".") for x in range(N)) for y in range(N)))

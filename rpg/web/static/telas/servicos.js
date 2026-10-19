@@ -10,7 +10,7 @@
   /** O topo de um balcão: o ícone, quem atende e o que diz, e o seu ouro. */
   function topoBalcao(icone, quem, fala, ouro) {
     return `<div class="loja-topo">${S(icone, 3)}<div><b>${h(quem)}</b><span class="lore">${h(fala)}</span></div>` +
-      (ouro === undefined ? "" : `<span class="ouro-loja">${S("moedas", 2)}${ouro}</span>`) + "</div>";
+      (ouro === undefined ? "" : `<span class="ouro-loja">${Icones.ouro() || S("moedas", 2)}${ouro}</span>`) + "</div>";
   }
   /** Um serviço num cartão: o ícone, o nome, o que dá, o preço e o tempo. Com `motivo` (sem ouro), apagado; sem preço
    *  nem motivo e com `limite`, é só mostruário. `attrs`: o que identifica a ação (data-...). */

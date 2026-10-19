@@ -4122,3 +4122,18 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   - conferido a 1920×945 no mercado do Guerreiro, com saves temporários: medidas do cartão, dos botões e do topo iguais
     às de antes; a compra de 1 e de 2 Provisões dá os mesmos números de antes (4 → 5 → 7 dias; 300 → 296 → 288 de
     ouro), e o topo acompanha. Preços, quantidades e regras não mudaram.
+
+### 18/10/2026 (data do computador local) — O Ouro no balcão do mercado e dos serviços (1.133.0)
+
+- **Pedido de Jean:** trocar o ícone do seu ouro no mercado e nos serviços pelas moedas aprovadas, preservando a
+  construção, os valores, os textos, o alinhamento e as áreas de clique; só os usos de dinheiro.
+- **Os usos conferidos:** o saldo no topo do balcão (`.ouro-loja`, 32 px) no mercado e nos quatro serviços que mostram
+  o seu ouro (ferreiro, curandeira, templo, taverna; `telas/mercado.js` e `topoBalcao` em `telas/servicos.js`). Usava o
+  sprite `moedas` do jogo ampliado 2×; o sprite fica para os papéis dele, a troca é pelo `Icones.ouro`.
+- **O desenho:** um 32 próprio, derivado da construção do 24 aprovado (as medidas escaladas e as moedas da pilha com
+  3 px de altura), pintado no Aseprite pelo MCP (`ferramentas/arte/aseprite/moedas/moedas-32.aseprite`), sem retoque.
+- **Conferido a 1920×945:** nos cinco lugares, as medidas do ouro, do ícone e do topo do balcão e o texto são iguais aos
+  de antes (`ouro_provisoes/capturas/ouro-loja/`).
+- **Dinheiro ainda com o desenho antigo** (o sprite `moeda`, uma moeda só, outro tamanho e outro papel): os preços do
+  mercado e dos serviços (16), a linha de ouro do espólio, os ganhos da celebração, o prêmio do contrato, o chip de ouro
+  do relatório e as moedas que voam até o topo.

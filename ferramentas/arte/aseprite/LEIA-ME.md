@@ -23,6 +23,8 @@ nada daqui: só os PNGs exportados para `rpg/web/static/hud/icones/`.
 | vital-mana (a Mana do topo) | `vital-mana/vital-mana-20.aseprite` | gota, brilho, contorno | 1.130.0 |
 | vital-vigor (o Vigor do topo) | `vital-vigor/vital-vigor-20.aseprite` | pulso, dedos, polegar, dobras, contorno | 1.131.0 |
 | vital-foco (o Foco do topo) | `vital-foco/vital-foco-20.aseprite` | anel, marcas, centro, contorno | 1.131.0 |
+| moedas (o Ouro do topo e do balcão) | `moedas/moedas-24.aseprite`, `-32` | pilha, topo, moeda, contorno | 1.132.0 (o 32, 1.133.0) |
+| provisoes (as Provisões do topo e do mercado) | `provisoes/provisoes-24.aseprite`, `-32` | carne, osso, contorno | 1.132.0 |
 | atalho-salvar (o Salvar da doca) | `atalho-salvar/atalho-salvar-36.aseprite`, `-32` | tampa, corpo, latao, seta, contorno | 1.129.0 |
 | atalho-sair (o Sair da doca) | `atalho-sair/atalho-sair-36.aseprite`, `-32` | arco, passagem, seta, contorno | 1.129.0 |
 | atalho-bestiario (o Bestiário da doca) | `atalho-bestiario/atalho-bestiario-36.aseprite`, `-32` | chifres, cranio, contorno | 1.128.0 |
@@ -227,8 +229,14 @@ A pilha de moedas e o pernil sem barbantes foram aprovados pelo Jean no `33d8a6c
 (`ferramentas/prototipos/hud/itens-lote-noite/ouro_provisoes/`; a versão com barbantes em `ouro_provisoes/recusados/`).
 - **As fontes:** `moedas/moedas-24.aseprite` (camadas pilha, topo, moeda, contorno) e `provisoes/provisoes-24.aseprite`,
   `-32` (carne, osso, contorno).
-- **Os usos:** o Ouro só no topo, em 24; o ouro do mercado e dos serviços (`ouro-loja`) continua com o sprite `moedas`
-  do jogo, uso ainda pendente. As Provisões no topo, em 24, e no cartão do mercado, em 32 nativo (`TAMANHOS` [24, 32]).
+- **Os usos:** o Ouro no topo, em 24; as Provisões no topo, em 24, e no cartão do mercado, em 32 nativo (`TAMANHOS`
+  [24, 32]).
+- **O Ouro do balcão (1.133.0):** o seu ouro no mercado e nos serviços (`.ouro-loja`, 32) passou do sprite `moedas` do
+  jogo para a pilha aprovada, com uma fonte de 32 (`moedas/moedas-32.aseprite`, as mesmas quatro camadas) derivada da
+  construção do 24: as medidas escaladas por 4/3 e as moedas da pilha com 3 px de altura em vez de 2. As listas saem do
+  `ouro_provisoes/auxiliares/ouro.py final 32` (que no 24 reproduz o aprovado pixel a pixel), pintadas pelo
+  `pintar.lua` (0 diferentes, 0 fora da tela); o composto do editor, as listas e o exportado são iguais, e o @2x é a
+  duplicação exata. Sem retoque.
 - **Conferido:** os seis arquivos exportados das fontes são idênticos, byte a byte, aos aprovados, e
   `exportar_aseprite.py moedas|provisoes --conferir` os reproduz.
 - **Os auxiliares** que geraram as listas por camada ficam em `ouro_provisoes/auxiliares/` (`ouro.py`, `pernil.py`).
