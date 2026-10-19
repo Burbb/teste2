@@ -1,1 +1,1 @@
-calota,interior,faixa,contorno
+interior,calota,faces,tiras,contorno

@@ -141,8 +141,8 @@ substituições posteriores, incluindo espada e maça na 1.145.0):
 |---|---|---|---|---|
 | `espada` | Espada, Montante (Guerreiro) | Arte final, padrão atual (o remake do ferro, integrada na 1.145.0) | `aseprite/espada/` (1.145.0) | Também é o comando de ataque da luta (`ACAO`) e a silhueta da arma vazia (`VAZIO`), de todas as classes; o ícone do atributo Ataque é outro desenho |
 | `maca` | Maça (Guerreiro) | Arte final, padrão atual (o remake do ferro, integrada na 1.145.0) | `aseprite/maca/` (1.145.0) | — |
-| `elmo` | Elmo, Capacete, Barbuta (Guerreiro) | **Placeholder integrado, pendente de remake**; proposta do 32 em avaliação | redução da pintura | Também a silhueta da cabeça vazia, de todas as classes (`VAZIO`) |
-| `armadura` → `cota` | Cota de Malha, Peitoral, Couraça, Brigantina (Guerreiro) | **Placeholder integrado, pendente de remake**; proposta do 32 em avaliação | redução da pintura | Também a silhueta da armadura vazia (`VAZIO`) |
+| `elmo` | Elmo, Capacete, Barbuta (Guerreiro) | **Placeholder integrado, pendente de remake**; rodada 2 do 32 (pela referência) em avaliação | redução da pintura | Também a silhueta da cabeça vazia, de todas as classes (`VAZIO`) |
+| `armadura` → `cota` | Cota de Malha, Peitoral, Couraça, Brigantina (Guerreiro) | **Placeholder integrado, pendente de remake**; rodada 2 do 32 (pela referência) em avaliação | redução da pintura | Também a silhueta da armadura vazia (`VAZIO`) |
 | `manopla` | Manopla (Guerreiro) | **Placeholder integrado, pendente de remake** | redução da pintura | Também a silhueta das mãos vazias (`VAZIO`) |
 | `calca` → `perneiras` | Perneira, Greva (Guerreiro) | **Placeholder integrado, pendente de remake** | redução da pintura | Também a silhueta das pernas vazias (`VAZIO`) |
 | `bota_ferro` → `botas-ferro` | Bota Ferrada (Guerreiro) | **Placeholder integrado, pendente de remake** | redução da pintura | Também a silhueta dos pés vazios (`VAZIO`) |
@@ -297,6 +297,15 @@ cota** (não começado).
   possibilidade futura, para o Jean decidir.
 - **Só o 32 e o 64 (= 32 ×2):** o 40 e o 48 depois da aprovação. Uma futura integração muda também as silhuetas da
   cabeça e do peito vazios.
+- **A rodada 2 (19/10/2026), pelas referências do Jean** (`ferramentas/arte/referencias/capacete/` e `peitoral/`, os
+  papéis no `LEIA-ME.md` de cada pasta): o elmo da rodada 1 não foi aprovado (a parte de baixo parecia um bloco, a
+  abertura em T desenhada na superfície, a faixa de latão rígida atravessando a peça). O capacete recomeçou pela
+  principal (o capacete aberto de frente, um pouco virado: a calota com a tira, a faixa da testa em curva, o nariz, as
+  faces longas, o fundo escuro com o vazio abaixo); a cota foi ajustada pela principal do peito (a camisa de malha de
+  aço: a gola na malha, as mangas e a barra em dentes, o volume escurecendo nos lados). A rodada 1 está guardada em
+  `elmo_cota/rodada1/`. A cota de malha continua compartilhada: representa melhor a Cota de Malha, razoavelmente a
+  Brigantina (uma armadura flexível de tronco) e pior o Peitoral e a Couraça, que são de placa (as couraças de aço da
+  prancha ficam como referência de uma variante futura).
 
 ### 1.3. Prioridade: consumo do recurso antes das consequências
 

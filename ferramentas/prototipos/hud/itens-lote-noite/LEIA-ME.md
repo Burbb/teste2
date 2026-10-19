@@ -2017,3 +2017,60 @@ Sem erro no console. Como só há o 32 e o 64, o Inventário mostra o 32 e o "vo
 malha com couro, mas no 32 a malha fica fina, quase uma textura; e, por ser malha, representa menos bem o Peitoral, a
 Couraça e a Brigantina.
 
+### O capacete e o peito, rodada 2, pelas referências (`elmo_cota/`)
+
+**Pedido de Jean (19/10/2026):** rever o elmo e o peito pelas referências que ele pôs em
+`ferramentas/arte/referencias/capacete/` e `peitoral/`, uma peça por vez, começando pelo capacete; escolher uma referência
+principal de construção para cada peça e registrar o que vem das secundárias, sem misturar perspectivas; o escudo e as
+armas continuam orientando o acabamento. O capacete do `6d5c8fa` não foi aprovado: a parte de baixo parecia um bloco, a
+abertura em T parecia desenhada na superfície e a faixa de latão ficava rígida atravessando a peça ("reconhecer um
+capacete não basta"); recomeçar pela referência (a calota, as partes que protegem o rosto e as laterais, a profundidade
+da abertura, a espessura das bordas, os planos de luz pelo volume), sem precisar manter a barbuta, o T, a crista ou o
+latão. O peito: a cota tinha a base mais aproveitável; ajustar pela referência, o volume antes da textura, sem misturar
+construções; o desenho continua compartilhado. Só o 32 e o 64; a pasta `calça` (para as perneiras) não entrou.
+
+**A escolha das referências** (os papéis no `LEIA-ME.md` de cada pasta; os objetos das pranchas foram separados pela
+transparência e numerados por fila para escolher):
+- **O capacete:** principal, o capacete aberto de frente, um pouco virado (o 62.º da prancha `5+N9Nb.png`). Dele vêm a
+  construção (a calota com a tira vertical, a faixa da testa em curva, a tira que vira o protetor do nariz, as faces
+  laterais descendo até embaixo, o fundo escuro do interior até cerca de 3/4 da altura e o vazio abaixo) e o ângulo (a
+  frente à esquerda do meio, a face da esquerda estreita, quase de perfil, e a da direita larga). Das secundárias (o
+  106.º e o 107.º, abertos parecidos): a espessura da borda e a faixa seguindo a curva. A pintura de bronze não vem: o
+  material é o ferro da família.
+- **O peito:** principal, a camisa de malha de aço de frente (o 103.º da prancha `etbij8.png`). Dela vêm a gola na
+  própria malha com o vão escuro do pescoço, os ombros caindo nas mangas curtas que abrem, o corpo abrindo um pouco para
+  baixo, a malha escurecendo nos lados e nas axilas, o cinto de couro com fivela, a barra e as mangas em dentes. Das
+  secundárias (o 3.º e o 100.º): como as fileiras da malha seguem o volume. As couraças de aço (o 7.º, o 54.º, o 87.º)
+  ficam registradas para uma variante futura do Peitoral e da Couraça.
+
+**A rodada 1 guardada** em `elmo_cota/rodada1/` (a proposta, as fontes, a prévia, as fotos, as folhas e o script
+daquela versão, `auxiliares/desenho_rodada1.py`, que a reproduz pixel a pixel).
+
+**A rodada 2** (`auxiliares/desenho.py`):
+- **O capacete:** a calota em volume pela luz da família, um tom abaixo das tiras (na referência, as tiras e a faixa são
+  o mais claro); a tira vertical na linha da frente (à esquerda do meio) virando o protetor do nariz, clara à esquerda e
+  escura à direita; a faixa da testa em curva (mais baixa na frente, que está mais perto), com a beira de cima clara e a
+  de baixo escura (a espessura); as faces laterais, a da esquerda estreita e na luz, a da direita larga e na sombra, com
+  a beira de fora clara e a de dentro escura, a barra virando para dentro; o fundo do interior escuro, um pouco mais
+  claro junto da borda de trás, até cerca de 3/4 da altura, e o vazio abaixo entre as faces: o capacete vazio. Camadas:
+  interior, calota, faces, tiras, contorno.
+- **A cota:** o volume primeiro (o alto do peito mais claro, a luz da esquerda, os lados e as axilas na sombra, as
+  mangas a da esquerda na luz e a da direita na sombra, abaixo do cinto um tom abaixo); a malha em anéis numa grade
+  deslocada por cima (a da rodada 1); a gola na própria malha, com a beira clara e o vão escuro (o lado de dentro das
+  costas); a barra e as mangas acabando em dentes; o cinto de couro com a fivela de ferro. Saíram a gola, os punhos e a
+  barra de couro da rodada 1. Camadas: malha, couro, ferragem, contorno.
+- **Tentativas da bancada:** o primeiro capacete desta rodada saiu simétrico e atarracado (a calota grande, a abertura
+  rasa); com as proporções e o ângulo da referência, ficou com as faces longas e o vazio abaixo. A tira vertical saía da
+  calota no alto; a calota tinha uma área branca grande que competia com as tiras e desceu um tom.
+
+**O Aseprite (pelo MCP):** as listas do 32 pintadas pelo `pintar.lua` (0 diferenças, 0 fora da tela), em
+`fontes/<peça>/<peça>-32.aseprite`; o composto do editor é igual ao PNG exportado e à prévia; o 64 é o 32 ×2; @2x exatos.
+
+**As folhas:** `elmo_cota-referencias-r1-r2.png` (a referência principal × a rodada 1 × a nova, em tamanho real sobre o
+carvão, com o escudo e as armas aprovadas ao lado, e ampliadas sem suavização); `elmo_cota-r2-no-jogo.png` (uma captura
+de cada no jogo a 1920×945: a ficha com os dois e o saque de cada um; `fotografar.mjs elmo_cota` e
+`elmo_cota_saque_cota`, `ROTULO=rodada2 SO_PROPOSTA=1`). Sem erro no console.
+
+**As bases do peito:** a cota de malha representa melhor a Cota de Malha; razoavelmente a Brigantina (armadura flexível de
+tronco); pior o Peitoral e a Couraça, que são de placa. Sem variantes nem mudança de dados nesta entrega.
+

@@ -4700,3 +4700,21 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Aguardando avaliação.** Nada integrado; a versão não mudou; manopla, perneiras, botas e o 40/48 do martelo não
   começaram.
 
+### 19/10/2026 (data do computador local) — O capacete e o peito, rodada 2, pelas referências (proposta do 32)
+
+- **Pedido de Jean:** rever o elmo e o peito pelas referências de `ferramentas/arte/referencias/capacete/` e
+  `peitoral/` (o elmo da rodada 1 não foi aprovado: o bloco embaixo, o T na superfície, a faixa rígida). Escolher uma
+  principal por peça, sem misturar perspectivas.
+- **As escolhas:** o capacete aberto de frente, um pouco virado (o 62.º da prancha `5+N9Nb.png`); a camisa de malha de
+  aço (o 103.º da `etbij8.png`). Os papéis de todas as imagens no `LEIA-ME.md` de cada pasta (versionadas agora, sem
+  autoria inventada). A pasta `calça` não entrou nesta entrega.
+- **Feito, só no protótipo** (`ferramentas/prototipos/hud/itens-lote-noite/elmo_cota/`), **não aprovado**: o capacete
+  recomeçado pela referência (a calota com a tira, a faixa em curva, o nariz, as faces longas, o fundo escuro com o vazio
+  abaixo, o ângulo de três quartos) e a cota ajustada (a gola na malha, as mangas e a barra em dentes, o volume nos
+  lados). 32 e 64 (= 32 ×2); fontes pelo `pintar.lua`; composto, exportação e prévia conferem; @2x exatos. A rodada 1
+  guardada em `elmo_cota/rodada1/`.
+- **A cota compartilhada** representa melhor a Cota de Malha, razoavelmente a Brigantina, pior o Peitoral e a Couraça.
+- **Folhas:** a referência × a rodada 1 × a nova (tamanho real e ampliadas, com o escudo e as armas) e uma captura de
+  cada no jogo a 1920×945.
+- **Aguardando avaliação.** Nada integrado; a versão não mudou; nenhuma outra peça começou.
+

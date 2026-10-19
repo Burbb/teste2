@@ -363,6 +363,39 @@ def elmo_cota():
     prancha([P / "elmo-32.png", P / "elmo-64.png", base / "previa/elmo/32/elmo_silhueta_32.png",
              P / "cota-32.png", P / "cota-64.png", base / "previa/cota/32/cota_silhueta_32.png"], base / "prancha-carvao.png")
 
+def elmo_cota_r2():
+    """O capacete e o peito, rodada 2 (pelas referências de ferramentas/arte/referencias/capacete/ e peitoral/): a
+    referência principal × a rodada 1 × a nova, em tamanho real sobre o carvão (com o escudo e as armas aprovadas) e
+    ampliadas sem suavização."""
+    base = LOTE / "elmo_cota"; P = base / "proposta"; R1 = base / "rodada1" / "proposta"
+    REF = RAIZ / "ferramentas/arte/referencias"
+    refs = {"elmo": Image.open(REF / "capacete/5+N9Nb.png").convert("RGBA").crop((147, 479, 191, 532)),   # o nº 62
+            "cota": Image.open(REF / "peitoral/etbij8.png").convert("RGBA").crop((433, 684, 494, 742))}   # o nº 103
+    linhas = [(f"{p}", [("referência", refs[p]), ("rodada 1", Image.open(R1 / f"{p}-32.png").convert("RGBA")),
+                         ("nova", Image.open(P / f"{p}-32.png").convert("RGBA"))]) for p in ("elmo", "cota")]
+    viz = [(r, Image.open(JOGO / f"{n}-32.png").convert("RGBA")) for r, n in (("escudo", "escudo"), ("espada", "espada"),
+                                                                               ("maça", "maca"), ("machado", "machado"))]
+    W = 250
+    o = Image.new("RGB", (10 + 3 * (W + 10) + 4 * 60, 2 * (22 + 72 + 6 + W) + 30), (245, 245, 245)); d = ImageDraw.Draw(o)
+    y = 6
+    for nome, ims in linhas:
+        d.text((10, y), f"{nome}: tamanho real sobre o carvão (a referência no tamanho dela) e ampliado sem suavização; à direita, o escudo e as armas aprovadas", fill=(0, 0, 0), font=FONTE)
+        y += 18
+        for k, (rot, im) in enumerate(ims):
+            x = 10 + k * (W + 10)
+            f = Image.new("RGBA", (72, 72), (24, 24, 28, 255)); f.alpha_composite(im, ((72 - im.width) // 2, (72 - im.height) // 2))
+            o.paste(f.convert("RGB"), (x, y)); d.text((x + 78, y + 28), rot, fill=(0, 0, 0), font=FONTE)
+            z = W // max(im.size)
+            g = Image.new("RGBA", (W, W), (24, 24, 28, 255)); g.alpha_composite(im.resize((im.width * z, im.height * z), Image.NEAREST),
+                                                                             ((W - im.width * z) // 2, (W - im.height * z) // 2))
+            o.paste(g.convert("RGB"), (x, y + 78))
+        for k, (rot, im) in enumerate(viz):
+            x = 10 + 3 * (W + 10) + k * 60
+            f = Image.new("RGBA", (40, 40), (24, 24, 28, 255)); f.alpha_composite(im, (4, 4)); o.paste(f.convert("RGB"), (x, y + 16))
+            d.text((x, y + 60), rot, fill=(0, 0, 0), font=FONTE)
+        y += 78 + W + 10
+    o.save(base / "elmo_cota-referencias-r1-r2.png"); print(base / "elmo_cota-referencias-r1-r2.png")
+
 def sandalia_no_jogo():
     """A Sandália no jogo (1.142.0), em tamanho real: o saque, a ficha e o Inventário depois de "Equipar agora"."""
     pasta = LOTE / "sandalia_chapeu" / "capturas" / "integracao"
@@ -380,7 +413,7 @@ if __name__ == "__main__" and sys.argv[1] in ("antidoto_base", "frasco_vazio", "
                                               "sandalia_no_jogo", "besta_diadema", "diadema_r2",
                                               "espada_maca", "espada_maca_r2", "espada_ponta",
                                               "espada_ponta3", "espada_ponta4", "espada_tamanhos",
-                                              "elmo_cota"):
+                                              "elmo_cota", "elmo_cota_r2"):
     globals()[sys.argv[1]](); sys.exit()
 if __name__ == "__main__":
     nome = sys.argv[1]; cfg = LOTES[nome]; base = LOTE / nome
