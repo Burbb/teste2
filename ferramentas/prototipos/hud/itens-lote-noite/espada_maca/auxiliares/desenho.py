@@ -158,6 +158,23 @@ else:
 if ETAPA == "final":
     tom = limpar(mat, tom, fixo)
 mat[:, -1] = ""; mat[-1, :] = ""; mat[:, 0] = ""; mat[0, :] = ""
+if PECA == "espada" and N == 32:
+    # A ponta no 32, desenhada pixel a pixel (a terceira tentativa; ver o LEIA-ME do lote). Na grade de 32 a fórmula dos
+    # gumes deixava o fio claro terminar uma linha antes do vértice e o último pixel escuro (a "tampa" que corta a
+    # lâmina). Aqui, como na espada de aço da referência: o fio claro segue reto até o vértice, que é claro; o plano médio
+    # some primeiro e o escuro se estreita e acaba uma linha antes; o gume de baixo quase não avança nas últimas linhas,
+    # fechando contra o de cima. As linhas de 0 a 6 da lâmina são refeitas; o contorno vem da regra comum.
+    # a largura cai um pixel a cada duas linhas (5 no corpo, 4, 4, 3, 3, 2, 1): o gume de baixo avança meio pixel por
+    # linha enquanto o de cima segue reto, um fechamento longo como o da referência, sem dobrar a ponta para cima
+    PONTA = {6: {23: 8, 24: 8, 25: 5, 26: 3}, 5: {24: 8, 25: 8, 26: 5, 27: 3}, 4: {25: 8, 26: 8, 27: 3},
+             3: {26: 8, 27: 8, 28: 3}, 2: {27: 8, 28: 3}, 1: {28: 8}}
+    for yy in range(0, 7):
+        for xx in range(22, N):
+            if cam[yy, xx] == "lamina" or (ETAPA == "silhueta" and mat[yy, xx] == "f" and xx >= 23):
+                mat[yy, xx] = ""; cam[yy, xx] = ""
+    for yy, linha in PONTA.items():
+        for xx, t in linha.items():
+            mat[yy, xx] = "f"; tom[yy, xx] = t if ETAPA == "final" else 5; cam[yy, xx] = "lamina"
 contornar(mat)
 cam[mat == "c"] = "contorno"
 img = imagem(mat, tom, RAMPAS)

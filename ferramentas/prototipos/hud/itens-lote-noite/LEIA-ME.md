@@ -1839,3 +1839,49 @@ composto do editor é igual aos PNGs exportados e à prévia; a maça 32 e 64 s�
   usa") e na ficha (`fotografar.mjs maca_tamanhos`, `ROTULO=tamanhos SO_PROPOSTA=1`);
 - `prancha-carvao.png`: a maça nos quatro tamanhos, a espada nova e a ponta antiga. Sem erro no console.
 
+### A ponta da espada, terceira tentativa (`espada_maca/`)
+
+**Pedido de Jean (19/10/2026):** a correção do `723cf8d` tirou a agulha, mas a extremidade ficou rombuda: o fio claro
+terminava antes da ponta e deixava uma pequena "tampa" escura, e a lâmina parecia cortada. Uma ponta aguda formada
+pela convergência contínua dos gumes, com os planos do aço acompanhando o fechamento, como na espada de aço de
+`espadasample.png`; podendo reconstruir um trecho maior do fim da lâmina (sem ficar preso aos últimos pixels), sem a
+agulha nem a ponta arredondada ou truncada; o resto da espada fica. Guardar a tentativa anterior e registrar o
+diagnóstico e a solução, para a futura skill de espadas (que só vem depois de um resultado aprovado; isto ainda não é
+regra).
+
+**O histórico das pontas (todas em `espada_maca/`):**
+1. `rodada2_ponta_antiga/` (a rodada 2, `87c12eb`): a largura em rampa reta até o vértice; no pixel, o corpo acabava e
+   sobrava 1 px por um trecho comprido: a **agulha**.
+2. `rodada2_ponta_r2/` (`723cf8d`): os gumes por fórmula (o de cima quase reto, o de baixo em curva). Na grade de 32 o
+   resultado foi a **ponta rombuda**: o fio claro (o tom 8) parava uma linha antes do vértice, os dois últimos pixels
+   eram do plano médio e do escuro (5 e 3), e o gume de baixo fechava junto com o de cima, deixando o fim largo.
+3. A nova (`proposta/`): desenhada pixel a pixel no 32.
+
+**O diagnóstico, pela leitura dos pixels da referência** (a espada de aço da direita de `espadasample.png`, 64 px):
+- o **fio claro do gume de cima corre sem interrupção até o último pixel**, e o vértice é claro;
+- o plano escuro de baixo é que se estreita e **acaba uma linha antes do vértice**; o plano médio some antes dele;
+- o gume de cima segue reto; **o de baixo avança devagar** no fim (no 64, a borda de baixo fica parada por várias
+  linhas), e é isso que fecha a lâmina contra o de cima, num trecho longo (cerca de um quarto da lâmina).
+- O erro de forma e o de luz eram separáveis: a silhueta da ponta rombuda já fechava rápido demais (forma), e o fio
+  parando antes do vértice com o pixel final escuro fazia a "tampa" (luz).
+
+**A solução (no `auxiliares/desenho.py`, o bloco `PONTA` do 32):** as linhas 0 a 6 da lâmina refeitas. O corte da
+lâmina no corpo é `# 8 8 5 3 3 #` (o fio de 2 px, o plano médio, o plano escuro). Na ponta a largura cai um pixel a cada
+duas linhas (5, 4, 4, 3, 3, 2, 1): o gume de cima segue reto, o de baixo avança meio pixel por linha; o plano médio some
+primeiro (8 8 5 3 → 8 8 3), o escuro acaba uma linha antes do vértice (8 3 → 8), e o vértice é o tom 8. O contorno vem
+da regra comum (`contornar`), e a etapa da silhueta usa o mesmo desenho. Uma tentativa na bancada com o gume de baixo
+parado por quatro linhas fazia a ponta parecer dobrar para cima; o fechamento de meio pixel por linha resolveu.
+
+**O Aseprite (pelo MCP):** a fonte `fontes/espada/espada-32.aseprite` repintada pelo `pintar.lua` (0 diferenças, 0 fora
+da tela); o composto do editor é igual ao PNG exportado e à prévia; o 64 é o 32 ×2; @2x exatos. A maça (os quatro
+tamanhos) não mudou.
+
+**As folhas (1920×945):**
+- `espada-ponta3.png`: a referência × a agulha × a rombuda × a nova, em tamanho real sobre o carvão, a silhueta da
+  ponta numa cor e a ponta com a luz, ampliadas sem suavização;
+- `espada-ponta3-no-jogo.png`: a rombuda (as fotos `ponta_nova`) × a nova (`ponta3`) no saque, no Atacar e na ficha
+  (`fotografar.mjs espada` e `espada_luta`, `ROTULO=ponta3 SO_PROPOSTA=1`). Sem erro no console.
+
+O 40 e o 48 da espada esperam a aprovação desta ponta; quando vierem, o ajuste do 32 não se aplica a eles (o bloco
+`PONTA` é só da grade de 32), e a ponta deles terá de seguir o mesmo diagnóstico.
+

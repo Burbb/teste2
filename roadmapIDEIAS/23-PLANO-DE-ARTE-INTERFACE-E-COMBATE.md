@@ -134,7 +134,7 @@ de antes não vale como arte final.
 
 | Desenho | Bases (e únicos) que usam a imagem | Situação | Sustentação | Atenção |
 |---|---|---|---|---|
-| `espada` | Espada, Montante (Guerreiro) | **Placeholder integrado, pendente de remake**; rodada 2 com a ponta corrigida em avaliação (32) | redução da pintura (`familia_ferro.py`) | Também é o comando de ataque da luta (`ACAO`) e a silhueta da arma vazia (`VAZIO`), de todas as classes |
+| `espada` | Espada, Montante (Guerreiro) | **Placeholder integrado, pendente de remake**; rodada 2 com a ponta refeita (terceira tentativa) em avaliação (32) | redução da pintura (`familia_ferro.py`) | Também é o comando de ataque da luta (`ACAO`) e a silhueta da arma vazia (`VAZIO`), de todas as classes |
 | `maca` | Maça (Guerreiro) | **Placeholder integrado, pendente de remake**; rodada 2 aprovada (`87c12eb`), 40 e 48 em avaliação | redução da pintura | — |
 | `elmo` | Elmo, Capacete, Barbuta (Guerreiro) | **Placeholder integrado, pendente de remake** | redução da pintura | Também a silhueta da cabeça vazia, de todas as classes (`VAZIO`) |
 | `armadura` → `cota` | Cota de Malha, Peitoral, Couraça, Brigantina (Guerreiro) | **Placeholder integrado, pendente de remake** | redução da pintura | Também a silhueta da armadura vazia (`VAZIO`) |
@@ -214,6 +214,9 @@ espada e a maça** (o começo do remake do ferro).
     o 48 em proposta, com as aletas no mesmo formato do 32 (botões rombudos com a junção escura). Na espada, só a ponta
     voltou: o trecho final parecia um biquinho acrescentado (uma agulha depois do corpo); a ponta corrigida (os gumes
     convergindo sem degrau, como na referência) está em avaliação, com o 40 e o 48 dela aguardando.
+  - **A ponta, terceira tentativa (19/10/2026):** a do `723cf8d` tirou a agulha, mas ficou rombuda (o fio claro acabava
+    antes do vértice e o último pixel era escuro, uma "tampa"). Refeita pixel a pixel no 32 (o diagnóstico no
+    `LEIA-ME.md` do lote); em avaliação. Ainda não vira regra: a skill de espadas espera o resultado aprovado.
 
 **A ordem recomendada (separada da contagem):** primeiro a **Sandália e o Chapéu Pontudo**, que são o placeholder
 mais frequente do Mago e fecham o vestuário de tecido dele, já com capuz, luva, calça e manto aprovados como referência

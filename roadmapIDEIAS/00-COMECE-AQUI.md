@@ -4588,3 +4588,17 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Aguardando avaliação.** Nada integrado; a versão não mudou; nenhuma outra peça começou; a skill de espadas fica para
   depois.
 
+### 19/10/2026 (data do computador local) — A ponta da espada, terceira tentativa (proposta)
+
+- **Pedido de Jean:** a ponta do `723cf8d` ficou rombuda (o fio claro acabava antes e deixava uma "tampa" escura).
+  Uma ponta aguda pela convergência contínua dos gumes, com os planos acompanhando, como na espada de aço de
+  `espadasample.png`.
+- **Feito, só no protótipo** (`ferramentas/prototipos/hud/itens-lote-noite/espada_maca/`), **não aprovado**: as
+  últimas linhas da lâmina no 32 desenhadas pixel a pixel (o fio claro até o vértice claro, o plano escuro acabando uma
+  linha antes, o gume de baixo fechando meio pixel por linha); o 64 = 32 ×2; a fonte repintada pelo `pintar.lua`. A
+  tentativa anterior guardada em `espada_maca/rodada2_ponta_r2/`. O diagnóstico e a solução estão no `LEIA-ME.md` do
+  lote, como histórico para a futura skill de espadas (ainda não é regra).
+- **Folhas a 1920×945:** a referência × as três pontas (tamanho real, silhueta e luz ampliadas) e a rombuda × a nova
+  no saque, no Atacar e na ficha. A maça não mudou.
+- **Aguardando avaliação.** Nada integrado; a versão não mudou; nenhuma outra peça começou.
+
