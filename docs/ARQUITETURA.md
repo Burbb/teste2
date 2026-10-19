@@ -419,7 +419,8 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   tela usa então o sprite do jogo (`Icones.item(s) || S(s, 2)`). A origem e o destino de uma animação pedem o mesmo
   papel (o item que voa ao equipar, o selo de atributo, o consumível que cai na bolsa). Lacunas (desenho do jogo no
   lugar, sem trocar por desenho de outro tipo de item): as peças sem desenho (o chapéu de couro, que
-  usa o capuz por ora, o Chapéu Pontudo, o Diadema, a calça de tecido, a sandália), os
+  usa o capuz por ora, o Chapéu Pontudo, o Diadema e a Coroa dos Afogados, a sandália, a Besta Leve; a conferência de
+  19/10/2026 no plano 23, seção 1.2.1), os
   itens únicos com desenho próprio, a bolsa vazia e o frasco vazio no topo, os inimigos e as cartas deles, os
   ícones de habilidade e de efeito, o covil vencido. O mercador da banca tem o busto no balcão (`telas/mercado.js`,
   com as cores da figura da banca).

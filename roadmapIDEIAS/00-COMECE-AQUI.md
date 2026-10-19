@@ -4373,3 +4373,15 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   básicos e avançados, sem impor efeitos nem animações; os tamanhos; as ferramentas; os problemas já vistos; a entrega)
   e `exemplos.md` (a rodada 3 aprovada, a alternativa lisa e as rodadas recusadas, com os problemas). A autoria e a
   origem das referências não foram informadas e não estão inventadas. Nenhum anel novo.
+
+### 19/10/2026 (data do computador local) — Conferência dos equipamentos que ainda pedem arte
+
+- **Pedido de Jean:** um levantamento curto dos equipamentos das classes, para escolher o próximo par sem repetir
+  trabalho aprovado; só documentação.
+- **Feito:** a tabela por desenho no plano 23 (seção 1.2.1), cruzando os dados, os papéis em `Icones` e as fontes.
+  **Arte ainda por fazer:** a Sandália (a única base dos pés do Mago), o Chapéu Pontudo, o Diadema (com o único Coroa
+  dos Afogados) e a Besta Leve; o resto está aprovado e integrado, e nenhuma proposta está pendente.
+- **Recomendação:** a Sandália e o Chapéu Pontudo (o placeholder mais frequente e o vestuário do Mago completo); depois
+  a Besta Leve e o Diadema. **Dúvidas registradas, sem reabrir:** a família de ferro pintada (anterior ao método atual)
+  e o martelo em código (sem 40, o 48 reduzido pelo navegador). A lista de lacunas da `docs/ARQUITETURA.md` foi
+  corrigida (a calça de tecido saiu; a Besta Leve e a Coroa dos Afogados entraram). Nada no jogo mudou.
