@@ -4362,3 +4362,14 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   - conferido a 1920×945 com os arquivos do jogo e os saves temporários: a ficha e o Inventário com um anel vestido e o
     outro vazio, a comparação no saque e o anel equipado no espaço vazio, o amuleto equipado. Atributos, preços,
     regras, áreas de interação e animações não mudaram.
+
+### 19/10/2026 (data do computador local) — A skill dos anéis (`arte-aneis-fenda`)
+
+- **Pedido de Jean:** uma skill especializada em anéis, na organização da de livros, complementando a
+  `arte-itens-fenda` (que agora indica consultá-la quando o objeto for um anel).
+- **Feito:** `.claude/skills/arte-aneis-fenda/SKILL.md` (as referências e a hierarquia, sem duplicar os PNGs de
+  `ferramentas/arte/referencias/aneis/`; a perspectiva preferida; a construção do aro antes de pedra, engaste ou
+  ornamento; a comparação com a referência principal, com o modelo 3D e a sobreposição como ajuda; o metal; os anéis
+  básicos e avançados, sem impor efeitos nem animações; os tamanhos; as ferramentas; os problemas já vistos; a entrega)
+  e `exemplos.md` (a rodada 3 aprovada, a alternativa lisa e as rodadas recusadas, com os problemas). A autoria e a
+  origem das referências não foram informadas e não estão inventadas. Nenhum anel novo.

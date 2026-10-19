@@ -1,5 +1,8 @@
 # Referências dos anéis
 
+**A skill dos anéis é a `arte-aneis-fenda`** ([../arte-aneis-fenda/SKILL.md](../arte-aneis-fenda/SKILL.md)): ela reúne
+as referências, a construção e os exemplos. Este registro fica como o primeiro, com o mesmo conteúdo das referências.
+
 As referências do Jean ficam em `ferramentas/arte/referencias/aneis/` (os PNGs originais; inspecione os pixels sem
 suavizar). **Há uma hierarquia:**
 

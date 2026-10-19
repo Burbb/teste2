@@ -12,10 +12,11 @@ pare para a conferência.
 Caminhos relativos à raiz do repositório. O que é de um objeto só (as medidas do escudo, a forma do pote) está em
 [exemplos.md](exemplos.md); não transforme aquilo em regra.
 
-**Anéis:** as referências do Jean estão em `ferramentas/arte/referencias/aneis/`, com a hierarquia em
-[referencias-aneis.md](referencias-aneis.md): a **principal** é `sample (2).png` (a perspectiva, a inclinação, a
-abertura e a espessura: compare lado a lado na mesma escala); as **secundárias** são as pranchas do mesmo artista (o
-metal, os chanfros e o acabamento). Os efeitos das pranchas são exemplos para acessórios especiais, não exigência.
+**Anéis:** quando o objeto é um anel, consulte também a skill `arte-aneis-fenda`
+([../arte-aneis-fenda/SKILL.md](../arte-aneis-fenda/SKILL.md)): as referências do Jean e a hierarquia delas, a
+perspectiva preferida, a construção do aro antes da decoração, a comparação com a referência principal e os anéis
+básicos e avançados. As referências estão em `ferramentas/arte/referencias/aneis/` (o registro anterior em
+[referencias-aneis.md](referencias-aneis.md)); o resto continua sendo o desta skill.
 
 **Livros:** quando o objeto é um livro (o grimório e o tomo do equipamento, o Grimório e o Diário da doca, um livro
 fechado, entreaberto ou aberto), consulte também a skill `arte-livros-fenda`
