@@ -4303,3 +4303,16 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
     (hoje o sprite em 32).
   - Fontes pelo `pintar.lua`, exportação conferida, @2x exatos; antes × depois do Antídoto no jogo e ampliado; cheia ×
     vazia no topo a 1920×945.
+
+### 19/10/2026 (data do computador local) — O Antídoto e o frasco vazio no jogo (1.139.0)
+
+- **Pedido de Jean:** integrar o Antídoto com a base plana e o frasco vazio do `b872544`, sem retoque.
+- **A integração:**
+  - as fontes foram para `ferramentas/arte/aseprite/antidoto/` e `frasco_vazio/`; os seis arquivos do jogo são
+    idênticos, byte a byte, aos aprovados, e o exportador os reproduz; os 48 e 64 antigos do Antídoto saíram;
+  - o Antídoto em 32 nos consumíveis e em 16 pelo item (a `folha` antiga segue como a Agilidade); o frasco vazio no
+    topo sem poções, em 24, no lugar do sprite em 32;
+  - conferido a 1920×945 com os arquivos do jogo e um save temporário: o Antídoto no mercado, na bolsa e no aviso de
+    ganho; o topo sem poções, a compra (a passagem para com poções) e o gole (a volta), com a caixa do recurso igual.
+    Preços, efeitos, quantidades e o comportamento do recurso não mudaram.
+- **A família de frascos inteira em pixel art:** a Poção de Vida, o frasco vazio, o Tônico e o Antídoto.

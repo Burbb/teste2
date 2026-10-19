@@ -1391,3 +1391,12 @@ como o comando Itens da luta e o Manto segue compartilhado (decisões do Jean).
   cenário `covil` na vila com `BOLSA=pocao_vida=0`; `frasco_cheio` com 2 poções): `variantes/frasco-cheia-vazia.png`
   (com poções | sem poções hoje | sem poções, a proposta) e `variantes/prancha-carvao.png`. Na integração, o papel é o
   `RECURSO` do topo em 24.
+- **Integrados na 1.139.0, sem retoque** (aprovados no `b872544`): as fontes do Antídoto e do frasco vazio foram para
+  `ferramentas/arte/aseprite/antidoto/` e `frasco_vazio/`; os seis arquivos do jogo são idênticos, byte a byte, aos das
+  propostas. O 16 do Antídoto vem pelo item (`Icones.pequeno`); a `folha` segue como a Agilidade. Conferido a 1920×945
+  com os arquivos do jogo: o cartão do mercado e o aviso de ganho idênticos às fotos aprovadas
+  (`tonico_antidoto/capturas/no-jogo-1.139.0-*`); com o save temporário do cenário `tutorial`
+  (`bandagem_pocao/auxiliares/frasco_topo.mjs`, fotos em `bandagem_pocao/variantes/capturas/integracao/`): o topo sem
+  poções (o frasco vazio em 24), a compra de uma Poção no mercado (o topo passa para a poção, 1) e o gole pela bolsa (a
+  vida de 30 para 51, o topo volta ao frasco vazio), a caixa do recurso com as mesmas medidas nos três estados e na
+  versão anterior (que mostrava o sprite em 32); o Antídoto comprado aparece na bolsa (32).

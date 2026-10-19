@@ -20,7 +20,7 @@
 const Icones = (() => {
   const DIR = "/static/hud/icones/";
   // os lados que existem de cada peça (sem os @2x, que existem para todos)
-  const TAMANHOS = {"aljava": [24, 32, 40, 48, 64], "amuleto": [32, 40, 48, 64], "anel": [32, 40, 48, 64], "antidoto": [32, 48, 64],
+  const TAMANHOS = {"aljava": [24, 32, 40, 48, 64], "amuleto": [32, 40, 48, 64], "anel": [32, 40, 48, 64], "antidoto": [16, 32],
     "arco": [32, 40, 48, 64], "cajado": [32, 40, 48, 64], "orbe": [32, 40, 48, 64], "livro": [32, 40, 48, 64], "varinha": [32, 40, 48, 64],
     "gibao": [32, 40, 48, 64], "bota": [32, 40, 48, 64], "capuz": [32, 40, 48, 64], "luva": [32, 40, 48, 64],
     "capuz_tecido": [32, 40, 48, 64], "calca_couro": [32, 40, 48, 64], "luva_seda": [32, 40, 48, 64],
@@ -33,7 +33,7 @@ const Icones = (() => {
     "lugar-planicie": [32, 40], "lugar-ruinas": [32, 40], "lugar-vila": [32, 40], "maca": [32, 40, 48, 64],
     "machado": [32, 40, 48, 64],
     "manopla": [32, 40, 48, 64], "moeda": [16, 32], "moedas": [24, 32], "osso": [24], "perneiras": [32, 40, 48, 64], "pocao": [16, 24, 32],
-    "provisoes": [24, 32], "tocha": [16, 24, 32], "tocha_apagada": [16, 24], "tonico": [16, 32], "calca_tecido": [32, 40, 48, 64], "manto": [32, 40, 48, 64], "unguento": [32, 64],
+    "provisoes": [24, 32], "tocha": [16, 24, 32], "tocha_apagada": [16, 24], "frasco_vazio": [24], "tonico": [16, 32], "calca_tecido": [32, 40, 48, 64], "manto": [32, 40, 48, 64], "unguento": [32, 64],
     "vital-foco": [20], "vital-mana": [20], "vital-vida": [20], "vital-vigor": [20]};
 
   // Cada desenho vai para o tipo de ferro que o jogo já tem (elmo, armadura, manopla, calca = perneira, bota_ferro, maca);
@@ -94,13 +94,15 @@ const Icones = (() => {
   // balcão do mercado e dos serviços, 1.133.0, pelo Icones.ouro) e as Provisões (o pernil, 24 no topo e 32 nativo no
   // cartão "Provisões (1 dia)" do mercado, por porDesenho); a tocha (1.135.0, o cabo de madeira, o pano enrolado e a
   // chama em línguas), 24 no topo e 32 no mercado, na bolsa, no espólio e no voo até a bolsa; a tocha apagada (1.136.0,
-  // o pano queimado e a fumaça) no topo sem tochas, em 24 como os vizinhos
-  const RECURSO = { pernil: "provisoes", osso_diag: "osso", tocha: "tocha", tocha_apagada: "tocha_apagada", moedas: "moedas", pocao: "pocao", bandagem: "bandagem",
+  // o pano queimado e a fumaça) no topo sem tochas, em 24 como os vizinhos; o frasco vazio (1.139.0, a Poção de Vida
+  // sem o líquido) no topo sem poções, em 24, no lugar do sprite em 32
+  const RECURSO = { pernil: "provisoes", osso_diag: "osso", tocha: "tocha", tocha_apagada: "tocha_apagada", frasco_vazio: "frasco_vazio", moedas: "moedas", pocao: "pocao", bandagem: "bandagem",
     aljava: "aljava" };
   // os ícones de 16 que a tela pede pelo nome do desenho (o chip e o aviso de um efeito, o item e os riscos de uma
   // escolha, os riscos do lugar, a linha de custo de um serviço, os ganhos de um contrato): a moeda avulsa (1.134.0), a tocha e a tocha apagada (1.136.0), a bandagem e a Poção de Vida
   // (1.138.0; esses sprites só significam esses itens); os outros nomes ficam com o sprite do jogo. O Tônico não entra
-  // aqui: o sprite dele ("pocao_azul") é também a Mana e o Unguento; o 16 dele vem pelo item (Icones.pequeno)
+  // aqui: o sprite dele ("pocao_azul") é também a Mana e o Unguento; o 16 dele vem pelo item (Icones.pequeno). O
+  // Antídoto (1.139.0) também: o sprite dele ("folha") é a Agilidade da celebração e do Inventário
   const MIUDO = { moeda: "moeda", tocha: "tocha", tocha_apagada: "tocha_apagada", bandagem: "bandagem", pocao: "pocao" };
   // os ícones das barras do topo (20), em pixel art: a Vida (o coração) e a Mana (a gota de energia líquida, no azul
   // da barra), 1.130.0; o Vigor (o punho cerrado) e o Foco (o alvo, no verde da barra), 1.131.0. Só o topo usa

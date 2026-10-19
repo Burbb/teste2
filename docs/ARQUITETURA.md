@@ -475,7 +475,9 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   poção e do tônico saíram (sem uso). O 16 de um consumível vem pelo id do item quando a tela sabe qual é
   (`Icones.pequeno`: o chip, o aviso, o item e o gasto de uma escolha), e só no tamanho nativo; o sprite do Tônico
   (`pocao_azul`) continua a Mana e o Unguento nos outros lugares. A bandagem e a poção entram também no `Icones.miudo`
-  (esses sprites só significam esses itens). Ficam com o desenho do jogo o Antídoto e o frasco vazio do topo.
+  (esses sprites só significam esses itens). Desde a 1.139.0, também o Antídoto (16 e 32; o tubo verde de base plana,
+  lacrado com cera; o 16 pelo item, porque o sprite dele, `folha`, é a Agilidade em outros lugares) e o frasco vazio
+  (24, o topo sem poções, no lugar do sprite em 32; a Poção de Vida sem o líquido).
 - O escudo e o Unguento de Prata (1.94.0), o machado e a Bomba de Fumaça (1.99.0) o arco (1.101.0,
   `desenhar_arco_pixel.py`; o Atacar da roda, o Tiro Duplo e o contrato continuam com o sprite) e o cajado (1.106.0,
   `desenhar_cajado_pixel.py`; o Atacar do Mago na roda e o traço Conjurador continuam com o sprite) e o orbe (1.107.0,
