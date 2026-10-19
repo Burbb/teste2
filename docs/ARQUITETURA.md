@@ -420,7 +420,8 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   papel (o item que voa ao equipar, o selo de atributo, o consumível que cai na bolsa). Lacunas (desenho do jogo no
   lugar, sem trocar por desenho de outro tipo de item): as peças sem desenho (o chapéu de couro, que
   usa o capuz por ora, o Chapéu Pontudo, o Diadema, a calça de tecido, a sandália), os
-  itens únicos com desenho próprio, a tocha apagada, a bolsa vazia e o frasco vazio no topo, os inimigos e as cartas deles, os
+  itens únicos com desenho próprio, a tocha apagada, a bolsa vazia e o frasco vazio no topo, a tocha em 16 (o chip, o aviso e as escolhas que a
+  gastam: o sprite 16×16), os inimigos e as cartas deles, os
   ícones de habilidade e de efeito, o covil vencido. O mercador da banca tem o busto no balcão (`telas/mercado.js`,
   com as cores da figura da banca).
 - A Calça de Couro do Arqueiro (1.119.0): desenho próprio do conjunto de couro, para todas as calças de couro dele
@@ -458,6 +459,10 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   até o topo (16); a linha de Ouro do espólio e a moeda que o ladrão leva na luta (32). Onde a tela só tem o nome do
   desenho (o chip, o aviso, os ganhos, a linha "Custo", o projétil), `"moeda"` vai para o `Icones.moeda`; o sprite
   `moeda` do jogo continua no resto.
+- A tocha (1.135.0, `ferramentas/arte/aseprite/tocha/`, 24 e 32): o cabo de madeira, o pano enrolado e a chama em
+  línguas, no topo (24) e no cartão do mercado, na bolsa, no espólio e no voo até a bolsa (32). Os 48 e 64 da família
+  de ferro saíram do jogo (nenhum lugar os usava); no `familia_ferro.py` a tocha continua na conta da escala do grupo,
+  mas o arquivo não sai mais de lá (`DESENHADOS`, como o escudo).
 - O escudo e o Unguento de Prata (1.94.0), o machado e a Bomba de Fumaça (1.99.0) o arco (1.101.0,
   `desenhar_arco_pixel.py`; o Atacar da roda, o Tiro Duplo e o contrato continuam com o sprite) e o cajado (1.106.0,
   `desenhar_cajado_pixel.py`; o Atacar do Mago na roda e o traço Conjurador continuam com o sprite) e o orbe (1.107.0,

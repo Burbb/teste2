@@ -4176,3 +4176,19 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   `chama` e `contorno`; a rodada 1 inteira em `moeda_tocha/tocha_r1/`.
 - **Fotos:** o jogo, a rodada 1 e a rodada 2 no topo, no cartão do mercado e na bolsa, a 1920×945 com os mesmos dados
   (`moeda_tocha/tocha-no-jogo.png`), e a prancha sobre o carvão.
+
+### 19/10/2026 (data do computador local) — A tocha no jogo (1.135.0)
+
+- **Pedido de Jean:** integrar a tocha da rodada 2 (`1c6a2c2`, 24 e 32) sem retoque, e parar depois desta integração.
+- **A integração:**
+  - as fontes foram para `ferramentas/arte/aseprite/tocha/`; os quatro arquivos do jogo são idênticos, byte a byte,
+    aos aprovados, e o exportador os reproduz;
+  - o topo (24) e, em 32, o cartão do mercado, a bolsa, o espólio e o voo até a bolsa; os arquivos 48 e 64 antigos
+    (placeholder, sem uso) saíram e o `TAMANHOS` ficou [24, 32]; o `familia_ferro.py` não grava mais a tocha;
+  - conferido a 1920×945 com os arquivos de produção: no topo, no mercado e na bolsa, os pixels são os da rodada 2;
+    o recebimento de uma tocha voa o arquivo novo do chip até o topo. Quantidades, preços, medidas e animações não
+    mudaram.
+- **Ainda com o desenho do jogo:** a tocha em 16 (o chip "+1 Tocha", o aviso e as escolhas que a gastam, o sprite
+  16×16) e a tocha apagada do topo.
+- **Achado independente, não tratado:** o `familia_ferro.py --conferir` acusa a aljava (8 arquivos) desde a 1.122.0,
+  quando ela passou a vir do Aseprite sem entrar em `DESENHADOS`.

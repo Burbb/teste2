@@ -29,7 +29,8 @@ EQUIPAMENTO = ["elmo", "cota", "manopla", "perneiras", "botas-ferro", "maca", "e
 LADOS = {n: (32, 48, 64) for n in GRUPO}  # os de sempre: a bolsa, a mochila, o mercado, o voo, o cartão do saque
 for n in EQUIPAMENTO:
     LADOS[n] = (32, 40, 48, 64)           # o 40: o corpo e a mochila do Inventário
-DESENHADOS = {"escudo"}                   # os que saem de um desenho por regras, não daqui
+DESENHADOS = {"escudo", "tocha"}          # os que saem de outro desenho, não daqui (a tocha, 1.135.0, do Aseprite),
+                                          # mas continuam na conta da escala do grupo
 
 
 def area_visivel(img):

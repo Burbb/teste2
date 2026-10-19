@@ -1206,3 +1206,10 @@ uso é o topo. Com eles, os quatro ícones das barras do topo estão em pixel ar
   - **As fotos (1920×945, os mesmos dados):** `ROTULO=rodada2 node .../fotografar.mjs tocha` e
     `SO_PROPOSTA=1 ROTULO=rodada1 PASTA=moeda_tocha/tocha_r1/proposta ...`; a folha `moeda_tocha/tocha-no-jogo.png`
     (o jogo, a rodada 1, a rodada 2: o topo, o cartão do mercado e a bolsa) e a prancha `prancha-carvao.png`.
+- **A tocha integrada na 1.135.0, sem retoque** (a rodada 2, aprovada no `1c6a2c2`): as fontes foram para
+  `ferramentas/arte/aseprite/tocha/`; os quatro arquivos do jogo são idênticos, byte a byte, aos da proposta; o
+  `TAMANHOS` passou a [24, 32] e os 48 e 64 antigos saíram (sem uso). Fotos com os arquivos de produção a 1920×945
+  (`moeda_tocha/capturas/tocha/no-jogo-1.135.0-*`): no topo, no cartão do mercado e na bolsa, os pixels da tocha são
+  os mesmos da rodada 2; o recebimento de uma tocha (`auxiliares/tocha_voo.mjs`, o `efeito` do jogo) voa o
+  `tocha-32.png` do chip até o topo, no movimento de sempre (`moeda_tocha/tocha-voo-1.135.0.png`). O chip, o aviso e
+  as escolhas mostram a tocha em 16, o sprite do jogo: não há arquivo desse tamanho.

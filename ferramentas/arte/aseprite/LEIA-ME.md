@@ -26,6 +26,7 @@ nada daqui: só os PNGs exportados para `rpg/web/static/hud/icones/`.
 | moedas (o Ouro do topo e do balcão) | `moedas/moedas-24.aseprite`, `-32` | pilha, topo, moeda, contorno | 1.132.0 (o 32, 1.133.0) |
 | provisoes (as Provisões do topo e do mercado) | `provisoes/provisoes-24.aseprite`, `-32` | carne, osso, contorno | 1.132.0 |
 | moeda (a moeda avulsa dos preços e dos ganhos) | `moeda/moeda-16.aseprite`, `-32` | espessura, beira, anel, face, contorno | 1.134.0 |
+| tocha (a tocha do topo e da bolsa) | `tocha/tocha-24.aseprite`, `-32` | cabo, pano, chama, contorno | 1.135.0 |
 | atalho-salvar (o Salvar da doca) | `atalho-salvar/atalho-salvar-36.aseprite`, `-32` | tampa, corpo, latao, seta, contorno | 1.129.0 |
 | atalho-sair (o Sair da doca) | `atalho-sair/atalho-sair-36.aseprite`, `-32` | arco, passagem, seta, contorno | 1.129.0 |
 | atalho-bestiario (o Bestiário da doca) | `atalho-bestiario/atalho-bestiario-36.aseprite`, `-32` | chifres, cranio, contorno | 1.128.0 |
@@ -251,3 +252,14 @@ A moeda de frente, com a espessura embaixo à direita, foi aprovada pelo Jean no
 - **Conferido:** os quatro arquivos exportados das fontes são idênticos, byte a byte, aos aprovados, e
   `exportar_aseprite.py moeda --conferir` os reproduz.
 - **Os auxiliares** que geraram as listas por camada ficam em `moeda_tocha/auxiliares/` (`moeda.py <16|32>`).
+
+## A tocha (1.135.0)
+
+A rodada 2, com a chama refinada, foi aprovada pelo Jean no `1c6a2c2` (`ferramentas/prototipos/hud/itens-lote-noite/
+moeda_tocha/`; a rodada 1 em `moeda_tocha/tocha_r1/`).
+- **Os usos:** o topo (24) e, em 32, o cartão do mercado, a bolsa, o espólio e o voo até a bolsa. Só esses tamanhos:
+  os 48 e 64 antigos saíram do jogo, sem uso. A tocha em 16 (o chip, o aviso, as escolhas) continua o sprite do jogo.
+- **Conferido:** os quatro arquivos exportados das fontes são idênticos, byte a byte, aos aprovados, e
+  `exportar_aseprite.py tocha --conferir` os reproduz.
+- **Os auxiliares** que geraram as listas por camada ficam em `moeda_tocha/auxiliares/` (`tocha.py <24|32>`, a
+  rodada 2; a 1 em `tocha_r1/tocha_r1.py`).
