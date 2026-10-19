@@ -1136,3 +1136,48 @@ uso é o topo. Com eles, os quatro ícones das barras do topo estão em pixel ar
   passou a ser a pilha aprovada, num 32 derivado da construção do 24 (`ferramentas/arte/aseprite/moedas/moedas-32.aseprite`,
   `ouro.py final 32`). Antes e depois a 1920×945 em `ouro_provisoes/capturas/ouro-loja/` (o mercado e o ferreiro
   inteiros; o recorte do ouro nos cinco; `ouro-loja-antes-depois.png`): medidas, textos e posições iguais.
+
+## Vida e recursos: a moeda avulsa e a tocha (`moeda_tocha/`)
+
+**Proposta, nada no jogo.** Uma peça por vez, primeiro a moeda e depois a tocha; aguardam a avaliação do Jean.
+
+- **Os usos, conferidos:**
+  - **A moeda avulsa** (o sprite `moeda` do jogo, 16×16; não tem papel em `Icones`): em 16, os preços dos cartões do
+    mercado e dos serviços, a linha "Custo" da taverna, a dica de venda e recompra, o prêmio dos cartazes do mural, os
+    ganhos do pagamento de contratos (o CSS pede 32 para `.festa .ganho`, mas o `--s` do próprio `<img>` vale e ele fica
+    em 16), o chip de ouro do relatório e as moedas que voam até o ouro do topo (`moedasPara`, de 1 a 0,6 no caminho);
+    em 32, a linha de Ouro do espólio e a moeda que o ladrão leva na luta (`projetil`, animação). Tamanhos: 16 e 32.
+  - **A tocha** (`tocha`, papel de consumível e de recurso): o topo (24), o cartão do mercado, a bolsa do Inventário, o
+    espólio e o voo até a bolsa (32). Os 48 e 64 do jogo não aparecem parados em lugar nenhum: a proposta tem só 24 e
+    32. O tremular do topo (`app/controles.js`) só troca os sprites do jogo e não age sobre os arquivos (como hoje).
+- **A moeda (16 e 32):** a moeda da frente da pilha aprovada (`moedas-24`), sozinha e de frente: o mesmo ouro, as
+  mesmas regras de luz (a beira em relevo clara, o sulco do anel fundo, a face) e a espessura aparecendo embaixo à
+  direita, que dá volume e a distingue da pilha do saldo. Sem cunhagem: no 16 não cabe com clareza, e o 32 é a mesma
+  construção. Camadas: espessura, beira, anel, face, contorno.
+- **A tocha (24 e 32):** a tocha simples de aventureiro, o placeholder não foi seguido: o cabo de madeira em
+  diagonal, a cabeça de pano encerado enrolado (as voltas em faixas de tom) e a chama subindo reta, uma gota de base
+  redonda com a ponta ondulando e duas línguas soltas, o miolo quente embaixo (perto do pano) e as beiras de cima
+  escurecendo para o vermelho. Camadas: cabo, pano, chama, contorno.
+- **As rodadas da tocha (no desenho, antes do Aseprite):** a primeira chama saiu branca demais e em forma de lâmina, e
+  a cabeça lia como uma porca; a gota com o miolo menor e a cabeça mais larga resolveram. Depois, a chama escondida
+  atrás do pano (torta para a direita) e a ponta de 1 px (um pavio) foram corrigidas subindo a base e encurtando a
+  ponta.
+- **As etapas:** as listas por camada saem de `moeda_tocha/auxiliares/moeda.py <16|32>` e `tocha.py <24|32>` (cálculo
+  fora do editor; `silhueta` dá a etapa numa cor só), conferidas em tamanho real pela `prancha.py`; a pintura no
+  Aseprite pelo MCP com o `pintar.lua` (operações em Lua; 0 diferentes, 0 fora da tela em todas as camadas); salvar
+  pelo editor. Fontes em `moeda_tocha/fontes/moeda/moeda-16.aseprite`, `-32` e `fontes/tocha/tocha-24.aseprite`, `-32`.
+- **A exportação:** `exportar_aseprite.py moeda|tocha moeda_tocha/proposta --fontes=moeda_tocha/fontes`; os quatro
+  compostos são iguais, pixel a pixel, à captura do editor e às listas, e os @2x são a duplicação exata.
+- **As fotos (1920×945, os mesmos dados nos dois modos):** `node .../fotografar.mjs moeda` (o mercado: os preços; o
+  ferreiro; o chip e o voo das moedas, pelo `efeito` do jogo; o espólio e o pagamento de um contrato, pelo
+  `Telas.celebrar`; o mural) e `... tocha` (o topo, o cartão do mercado, a bolsa do Inventário). A moeda ganha o papel
+  só na página da proposta: o `sprites.js` servido com o `Sprites.img("moeda")` trocado pelo arquivo da proposta
+  (`papel_sprite`). As folhas `moeda_tocha/moeda-no-jogo.png` e `tocha-no-jogo.png` (atual × proposta, em tamanho real)
+  e a prancha `moeda_tocha/prancha-carvao.png` saem do `auxiliares/montar.py`.
+- **A avaliar:** a moeda proposta lê como moeda (aro e face) nos preços, no chip e no voo, onde a atual é uma mancha
+  amarela; no espólio a atual, a 32, lê quase como uma pilha. A tocha proposta é mais leve que a atual no topo (o cabo
+  mais fino e a chama menor que a bola de fogo atual), em troca do pano e da chama em línguas.
+- **Limitações:** a moeda que o ladrão leva na luta (32, `projetil`) não foi fotografada (pede uma luta com ladrão).
+  Integrar a moeda pede um papel novo em `Icones` e trocar o `S("moeda", …)` dos lugares acima, sem tocar no sprite
+  (o mapa e as cenas não o usam). A tocha apagada do topo e o chip "tocha" do relatório (o sprite 16×16) ficam com o
+  do jogo.

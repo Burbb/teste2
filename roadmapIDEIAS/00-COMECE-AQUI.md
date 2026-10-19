@@ -4137,3 +4137,17 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Dinheiro ainda com o desenho antigo** (o sprite `moeda`, uma moeda só, outro tamanho e outro papel): os preços do
   mercado e dos serviços (16), a linha de ouro do espólio, os ganhos da celebração, o prêmio do contrato, o chip de ouro
   do relatório e as moedas que voam até o topo.
+
+### 18/10/2026 (data do computador local) — Propostas da moeda avulsa e da tocha
+
+- **Pedido de Jean:** a moeda avulsa e a tocha, uma peça por vez, só no protótipo, no Aseprite pelo MCP.
+- **Feito, só no protótipo** (`ferramentas/prototipos/hud/itens-lote-noite/moeda_tocha/`), nada no jogo:
+  - **a moeda avulsa** (16 e 32): a moeda da frente da pilha aprovada, sozinha, com a espessura embaixo à direita; nos
+    preços, no mural, no chip e no voo das moedas (16), no espólio (32);
+  - **a tocha** (24 e 32): cabo de madeira, cabeça de pano enrolado e chama em gota com línguas; no topo (24), no cartão
+    do mercado e na bolsa (32). Os 48 e 64 da tocha atual não aparecem parados em nenhum lugar.
+  - Fontes em camadas pintadas pelo `pintar.lua`; exportadas pelo `exportar_aseprite.py --fontes=` (o composto igual ao
+    editor, os @2x exatos); fotos a 1920×945 atual × proposta com os mesmos dados (`moeda-no-jogo.png`,
+    `tocha-no-jogo.png`) e a prancha sobre o carvão.
+- **Limitações:** a moeda não tem papel em `Icones` (a página da proposta o recebe só nas fotos); a moeda do ladrão na
+  luta não foi fotografada; a tocha proposta é mais leve que a atual no topo (ponto a avaliar).

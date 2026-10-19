@@ -4,6 +4,7 @@
 // peça que ainda não tem papel em icones.js (a calça de couro) ganha o papel só nesta página.
 //   PLAYWRIGHT_MODULO=<caminho>/index.mjs node ferramentas/prototipos/hud/itens-lote-noite/fotografar.mjs <peça>
 // peça: calca_couro | aljava | atributos | ataque_defesa | agilidade_poder | agilidade | aljava_ref | poder | doca_r2 | doca_r3 | doca_r3_luta | doca_r4 | doca_r4_telas | doca_r5 | doca
+//       | vida_mana | vigor_foco | vigor_foco_arqueiro | ouro_provisoes | moeda | tocha
 import { spawn } from "child_process";
 import { readFileSync, existsSync, mkdirSync } from "fs";
 import { fileURLToPath } from "url";
@@ -88,6 +89,15 @@ const PECAS = {
   // Ouro e Provisões: o topo (24) e o mercado (as Provisões em 32, no cartão "Provisões (1 dia)")
   ouro_provisoes: { pasta: "ouro_provisoes/proposta", saida: "ouro_provisoes/capturas", nomes: ["moedas", "provisoes"], papel_tamanhos: [24, 32],
     cena: ["mercado", { CLASSE: "guerreiro" }], fotos: ["topo", "mercado"] },
+  // a moeda avulsa (moeda_tocha/): os preços do mercado e de um serviço (16), o chip de ouro e as moedas que voam até o
+  // topo (16), o espólio e o pagamento de contratos (32) e o prêmio dos cartazes do mural (16), com os mesmos dados nos
+  // dois modos. A moeda não tem papel em
+  // Icones (é o sprite 16×16 do jogo): só nesta página, o Sprites.img("moeda") serve o arquivo da proposta
+  moeda: { pasta: "moeda_tocha/proposta", saida: "moeda_tocha/capturas/moeda", nomes: ["moeda"], papel_sprite: { sprite: "moeda", tamanhos: [16, 32] },
+    cena: ["mercado", { CLASSE: "guerreiro" }], fotos: ["precos", "servico", "chip-voo", "espolio", "contratos", "mural"] },
+  // a tocha (moeda_tocha/): o topo (24), o cartão do mercado e a bolsa do Inventário (32); só esses tamanhos
+  tocha: { pasta: "moeda_tocha/proposta", saida: "moeda_tocha/capturas/tocha", nomes: ["tocha"], papel_tamanhos: [24, 32],
+    cena: ["mercado", { CLASSE: "guerreiro" }], fotos: ["topo", "mercado", "inventario"] },
 };
 const P = PECAS[peca];
 if (!P) throw new Error(`peça desconhecida: ${peca}`);
@@ -119,6 +129,21 @@ async function anexar(p) {
       const { rotulo, peca: nome, tamanhos } = P.papel_atalho;
       js = js.replace('const TAMANHOS = {', `const TAMANHOS = {"${nome}": ${JSON.stringify(tamanhos)}, `);
       js = js.replace('const ATALHO = {', `const ATALHO = { "${rotulo}": "${nome}", `);
+      r.fulfill({ response: res, body: js, headers: { ...res.headers(), "content-type": "application/javascript" } });
+    });
+  }
+  if (P.papel_sprite) {   // um sprite do jogo sem papel em Icones (a moeda): só nesta página, o desenho da proposta
+    await p.route(/\/static\/sprites\.js(\?|$)/, async (r) => {
+      const res = await r.fetch();
+      const { sprite, tamanhos } = P.papel_sprite;
+      const js = (await res.text()) + `
+;(() => { const orig = Sprites.img, T = ${JSON.stringify(tamanhos)};
+  Sprites.img = (nome, escala = 2, classe = "", o = {}) => {
+    if (nome !== ${JSON.stringify(sprite)}) return orig(nome, escala, classe, o);
+    const lado = 16 * escala, t = T.includes(lado) ? lado : T.reduce((m, x) => (Math.abs(x - lado) < Math.abs(m - lado) ? x : m));
+    const f = "/static/hud/icones/${sprite}-" + t;
+    return '<img class="sprite desenho ' + classe + '" src="' + f + '.png" srcset="' + f + '@2x.png 2x" width="' + lado + '" height="' + lado + '" style="--s:' + lado + '" alt="" draggable="false">';
+  }; })();`;
       r.fulfill({ response: res, body: js, headers: { ...res.headers(), "content-type": "application/javascript" } });
     });
   }
@@ -179,6 +204,56 @@ for (const modo of (process.env.SO_ATUAL ? ["atual"] : process.env.SO_PROPOSTA ?
         }
       }
       if (f === "doca") { await p.screenshot({ path: nome("doca"), clip: await clipDe("#doca", 0) }); }
+      // a moeda: a união das caixas de um seletor, para recortar os cartões
+      const uniao = (sel, n = 8) => p.evaluate(([s, n]) => {
+        const cs = [...document.querySelectorAll(s)].slice(0, n).map((e) => e.getBoundingClientRect()).filter((r) => r.width);
+        const x = Math.min(...cs.map((r) => r.left)), y = Math.min(...cs.map((r) => r.top));
+        return { x: x - 6, y: y - 6, width: Math.max(...cs.map((r) => r.right)) - x + 12, height: Math.max(...cs.map((r) => r.bottom)) - y + 12 };
+      }, [sel, n]);
+      if (f === "precos") {   // os preços dos cartões do mercado
+        await p.screenshot({ path: nome("precos") });
+        await p.screenshot({ path: nome("precos-cartoes"), clip: await uniao(".mercadoria") });
+      }
+      if (f === "servico") {  // o preço dos cartões do ferreiro
+        await p.keyboard.press("Escape");
+        await (await p.waitForSelector('#predios .predio[data-predio="ferreiro"]', { timeout: 8000 })).click();
+        await p.waitForSelector(".servico", { timeout: 8000 }); await espera(1000);
+        await p.screenshot({ path: nome("servico") });
+        await p.screenshot({ path: nome("servico-cartoes"), clip: await uniao(".servico") });
+        (await desenhos()).forEach((d) => visto.add(d));
+        await p.keyboard.press("Escape"); await espera(800);
+        if (!(await p.$('#predios:not(.focado) .predio[data-predio="mercado"]'))) { await p.keyboard.press("Escape"); await espera(800); }
+      }
+      if (f === "chip-voo") { // o chip de ouro no texto e as moedas que voam dele até o ouro do topo (a animação do jogo)
+        await p.evaluate(() => { efeito({ tipo: "ouro", texto: "+25 de ouro" }); });
+        await espera(150); await p.screenshot({ path: nome("voo-1") });
+        await espera(150); await p.screenshot({ path: nome("voo-2") });
+        await espera(1500);
+        await p.screenshot({ path: nome("chip"), clip: await clipDe("#texto .chip.ouro", 10) });
+      }
+      if (f === "espolio") {  // o espólio de uma luta, com ouro e experiência
+        p.evaluate(() => { Telas.celebrar({ tipo: "espolio", dados: { ouro: 37, xp: 24, nivel: 3, trechos: [[10, 34, 60]] } }, false); });
+        await espera(3500);
+        await p.screenshot({ path: nome("espolio"), clip: await clipDe("#celebracao .festa-espolio", 10) });
+        (await desenhos()).forEach((d) => visto.add(d));
+        const c = await p.$("#celebracao .continuar"); if (c) await c.click();
+        await espera(1200);
+      }
+      if (f === "contratos") { // o pagamento de um contrato e, ao receber, as moedas voando até o topo
+        p.evaluate(() => { Telas.celebrar({ tipo: "contratos", dados: { ouro: 45, xp: 30, reputacao: 3, contratos: [{ id: 1, tipo: "caca",
+          desc: "Eliminar 4 Lobos em Bosque do Lobo Branco", lugar: "Bosque do Lobo Branco", lugar_tipo: "floresta", bioma: "floresta", ouro: 45, xp: 30, nivel: 2 }] } }, false); });
+        await espera(3000);
+        await p.screenshot({ path: nome("contratos"), clip: await clipDe("#celebracao .festa-contratos", 10) });
+        (await desenhos()).forEach((d) => visto.add(d));
+        const c = await p.$("#celebracao .continuar"); if (c) { await c.click(); await espera(160); await p.screenshot({ path: nome("contratos-voo") }); }
+        await espera(1500);
+      }
+      if (f === "mural") {    // o prêmio nos cartazes do mural (o prédio da vila)
+        await (await p.waitForSelector('#predios .predio[data-predio="mural"]', { timeout: 8000 })).click();
+        await p.waitForSelector("[data-aceitar]", { timeout: 10000 }); await p.mouse.move(4, 400); await espera(800);
+        await p.screenshot({ path: nome("mural") });
+        await p.screenshot({ path: nome("mural-cartazes"), clip: await uniao(".mural .contrato", 3) });
+      }
       // a doca com a tela do atalho aberta (o estado selecionado, .atual): "doca-inventario", "doca-mapa"
       if (f.startsWith("doca-")) {
         const rotulo = { inventario: "Inventário", mapa: "Mapa", grimorio: "Grimório", diario: "Diário", comitiva: "Comitiva", talentos: "Talentos", bestiario: "Bestiário" }[f.slice(5)];
@@ -188,6 +263,7 @@ for (const modo of (process.env.SO_ATUAL ? ["atual"] : process.env.SO_PROPOSTA ?
         await p.keyboard.press("Escape"); await espera(500);
       }
       if (f === "inventario") {
+        if (await p.$(".tela.loja")) { await p.keyboard.press("Escape"); await espera(900); }   // do mercado, sai antes
         await p.evaluate(() => pedirAtalho("Inventário")); await espera(900);
         await p.screenshot({ path: nome("inventario"), clip: await clipDe("#palco", 0) });
         (await desenhos()).forEach((d) => visto.add(d));
