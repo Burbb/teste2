@@ -4073,3 +4073,13 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   direito (as versões com fogo dos dois lados ou em volta do topo voltavam a parecer uma cabeça). A proposta anterior
   está em `vigor_foco/recusados/vigor-punho-r1/`; o antes e o depois no topo do Guerreiro, as etapas e os quatro
   símbolos em `vigor_foco/vigor-punho-r2.png`. Nada no jogo.
+
+### 18/10/2026 (data do computador local) — O Vigor sem fogo (proposta)
+
+- **Pedido de Jean:** usar o punho da rodada 2 (`2c4bf85`) sem a labareda, recentrado no quadro, sem aumentar a mão;
+  reapresentar o Foco inalterado para avaliar o par.
+- **Feito, só no protótipo** (`ferramentas/prototipos/hud/itens-lote-noite/vigor_foco/`): na fonte em camadas, pelo
+  MCP, saiu a camada da chama e o contorno dela, o punho andou 2 px para a direita e 2 para cima, e a base do pulso
+  fechou com o contorno; a mão é a mesma, pixel a pixel. A versão com fogo está em `recusados/vigor-punho-r2-fogo/`.
+  Fotos no topo do Guerreiro e do Arqueiro a 1920×945 e os quatro símbolos em `vigor_foco/vigor-punho-r3.png`. Nada
+  no jogo.

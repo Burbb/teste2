@@ -1059,3 +1059,25 @@ no Aseprite pelo MCP, da construção aos retoques, com o punho resolvido antes 
 - **As fotos:** `ROTULO=punho-r2 SO_PROPOSTA=1 JANELAS=1920x945 node .../fotografar.mjs vigor_foco` (o Guerreiro).
   `vigor_foco/vigor-punho-r2.png`: o topo no jogo, o antes e o depois em tamanho real e 6×, as etapas no Aseprite e
   os quatro símbolos juntos.
+
+### O Vigor, rodada 3: o punho sem fogo
+
+O Jean escolheu o punho sem fogo para o Vigor. A mão da rodada 2 (`2c4bf85`) ficou como estava (os dedos dobrados, o
+polegar, o pulso e a luz, pixel a pixel); só saiu a labareda e o punho voltou para o meio do quadro.
+
+- **Na fonte em camadas, pelo MCP:** a camada chama foi apagada, e os pixels do contorno dela, tirados da camada de
+  contorno (`pintar.lua`, com alfa 00); as camadas andaram 2 px para a direita e 2 para cima (`cel.position`, numa
+  transação), desfazendo o deslocamento feito para a labareda; a base do pulso, que deixou de encostar na beira,
+  fechou com uma linha de contorno (11 pixels). Camadas: pulso, dedos, polegar, dobras, contorno.
+- **O alinhamento:** o punho ocupa x 2..16 e y 4..18, com o centro em (9,6; 11,6), como a Mana (9,6; 11,5); a Vida e o
+  Foco ficam em x 10. A mão não cresceu: ao lado dos outros três, em tamanho real, a presença é parecida (15 px de
+  largura, contra 16 da gota e 18 e 19 do coração e do alvo).
+- **Conferido:** o PNG é igual à captura do editor, o @2x é exato, e cada pixel do punho é o da rodada 2 deslocado
+  (os únicos novos são os do fecho do pulso). `auxiliares/punho/` refaz o desenho: `e2_partes.py` e depois
+  `e3_sem_fogo.py` (a etapa do fogo saiu daqui e ficou no histórico).
+- **O histórico com fogo:** `vigor_foco/recusados/vigor-punho-r2-fogo/` (a fonte com a camada chama, os PNGs, os
+  auxiliares e a foto do topo).
+- **As fotos (1920×945):** `ROTULO=punho-r3 SO_PROPOSTA=1 ... fotografar.mjs vigor_foco` (o Guerreiro). O Foco foi
+  fotografado de novo no Arqueiro e é o mesmo, pixel a pixel, da apresentação anterior. `vigor_foco/vigor-punho-r3.png`
+  junta o topo do Guerreiro (no jogo, com fogo, sem fogo), o do Arqueiro (no jogo e com o Foco), a ampliação 6× e os
+  quatro símbolos juntos.
