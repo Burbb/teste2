@@ -33,7 +33,7 @@ const Icones = (() => {
     "lugar-planicie": [32, 40], "lugar-ruinas": [32, 40], "lugar-vila": [32, 40], "maca": [32, 40, 48, 64],
     "machado": [32, 40, 48, 64],
     "manopla": [32, 40, 48, 64], "moeda": [16, 32], "moedas": [24, 32], "osso": [24], "perneiras": [32, 40, 48, 64], "pocao": [16, 24, 32],
-    "provisoes": [24, 32], "tocha": [16, 24, 32], "tocha_apagada": [16, 24], "frasco_vazio": [24], "tonico": [16, 32], "calca_tecido": [32, 40, 48, 64], "manto": [32, 40, 48, 64], "chapeu": [32, 40, 48, 64], "sandalia": [32, 40, 48, 64], "besta": [32, 40, 48, 64], "unguento": [32, 64],
+    "provisoes": [24, 32], "tocha": [16, 24, 32], "tocha_apagada": [16, 24], "frasco_vazio": [24], "tonico": [16, 32], "calca_tecido": [32, 40, 48, 64], "manto": [32, 40, 48, 64], "chapeu": [32, 40, 48, 64], "sandalia": [32, 40, 48, 64], "besta": [32, 40, 48, 64], "diadema": [32, 40, 48, 64], "unguento": [32, 64],
     "vital-foco": [20], "vital-mana": [20], "vital-vida": [20], "vital-vigor": [20]};
 
   // Cada desenho vai para o tipo de ferro que o jogo já tem (elmo, armadura, manopla, calca = perneira, bota_ferro, maca);
@@ -73,11 +73,14 @@ const Icones = (() => {
   // três quartos, de couro, com a palmilha e as tiras; o 64 é o 32 ampliado 2×) vale para a base Sandália; o espaço
   // vazio dos pés continua com as botas de ferro (VAZIO). A Besta Leve do Arqueiro (1.143.0; deitada na diagonal, a
   // coronha de madeira, o arco de aço atravessado e a corda em V até a noz; o 64 é o 32 ampliado 2×) vale para a base
-  // Besta Leve; a arma vazia continua com a espada de ferro (VAZIO).
+  // Besta Leve; a arma vazia continua com a espada de ferro (VAZIO). O Diadema do Mago (1.144.0; o aro de latão de
+  // frente, a ponta com a gema violeta; o 64 é o 32 ampliado 2×) vale para o desenho "coroa" do equipamento: a base
+  // Diadema e, por ora, o único Coroa dos Afogados (que pede arte própria). O símbolo da reputação usa o sprite "coroa"
+  // fora daqui (S e MIUDO) e não muda; a cabeça vazia continua com o elmo de ferro (VAZIO).
   const ITEM = { elmo: "elmo", armadura: "cota", manopla: "manopla", calca: "perneiras", bota_ferro: "botas-ferro",
     maca: "maca", espada: "espada", escudo: "escudo", amuleto: "amuleto", anel: "anel", aljava: "aljava", martelo: "martelo", machado: "machado", arco: "arco", cajado: "cajado", orbe: "orbe", livro: "livro", varinha: "varinha", gibao: "gibao", bota: "bota",
     capuz: "capuz", luva: "luva", capuz_tecido: "capuz_tecido", luva_seda: "luva_seda", calca_couro: "calca_couro",
-    calca_tecido: "calca_tecido", manto: "manto", chapeu: "chapeu", sandalia: "sandalia", besta: "besta" };
+    calca_tecido: "calca_tecido", manto: "manto", chapeu: "chapeu", sandalia: "sandalia", besta: "besta", coroa: "diadema" };
   // o espaço vazio: a silhueta apagada do que vai nele (o material não aparece)
   const VAZIO = { cabeca: "elmo", armadura: "cota", maos: "manopla", pernas: "perneiras", pes: "botas-ferro", arma: "espada",
     secundaria: "escudo", amuleto: "amuleto", anel1: "anel", anel2: "anel" };

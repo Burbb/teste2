@@ -4520,3 +4520,26 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Aguardando avaliação.** O compartilhamento com a Coroa dos Afogados segue provisório (a arte própria do único fica
   para o futuro).
 
+### 19/10/2026 (data do computador local) — O Diadema no jogo (1.144.0)
+
+- **Pedido de Jean:** integrar o Diadema da rodada 2 (`731ab5c`) sem retoque, mantendo o compartilhamento provisório
+  com a Coroa dos Afogados, o símbolo da reputação, a cabeça vazia, os nomes, os materiais e as regras.
+- **A integração:**
+  - as fontes em camadas foram para `ferramentas/arte/aseprite/diadema/` (32, 40, 48: aro, placa, gema, contorno);
+    `DERIVADOS` com o 64 = 32 ×2;
+  - os 8 arquivos do jogo são idênticos, byte a byte, aos aprovados, e `exportar_aseprite.py diadema --conferir` os
+    reproduz;
+  - o papel no mapa de equipamento: `coroa` → `diadema` em `ITEM` (e `diadema` em `TAMANHOS`), para a base Diadema e,
+    por ora, o único Coroa dos Afogados; o símbolo da reputação continua com o sprite `coroa` (`S` e `MIUDO`, fora de
+    `ITEM`) e a cabeça vazia com o elmo de ferro;
+  - conferido a 1920×945 com os arquivos do jogo e os saves temporários (`sandalia_chapeu/auxiliares/equipar.mjs`, agora
+    também com o nome do arquivo por argumento; fotos em `besta_diadema/capturas/integracao/`): o saque (64 e 48),
+    "Equipar agora" (Vida 50 → 51, como a comparação do cartão; o vestido vai para a mochila; a ficha em 32 e o
+    Inventário em 40) e "Guardar na mochila" (nada muda no corpo). A ficha e o corpo do Inventário no `tutorial` são
+    idênticos às fotos aprovadas; a reputação na ficha é igual à de antes; nos saques do Diadema e da Coroa dos Afogados,
+    só os raios animados mudam. Sem erro no console. O jogo não lê nada de `ferramentas/`.
+- **O levantamento:** os 31 desenhos de equipamento existem no jogo; continuam pendentes as sete peças de ferro
+  (placeholders, remake) e o 40/48 do martelo (o desenho aprovado fica). A arte própria da Coroa dos Afogados e a
+  pendência de nomenclatura seguem registradas.
+- **Próximo par (decisão do Jean):** a espada e a maça. Não começado.
+

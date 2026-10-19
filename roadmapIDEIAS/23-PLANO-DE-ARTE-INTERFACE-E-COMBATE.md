@@ -144,7 +144,7 @@ de antes não vale como arte final.
 | `martelo` | Martelo (Guerreiro) | **Arte aprovada, preservada; faltam o 40 e o 48** | grade de 32 em `desenhos.js` (1.93.0) | Desenho próprio, não da pintura; completar o 40 e o 48 pela mesma construção, sem redesenhar (outra entrega) |
 | `besta` | Besta Leve (Arqueiro) | Arte final, padrão atual (integrada na 1.143.0) | `aseprite/besta/` (1.143.0) | Uma das quatro armas do Arqueiro |
 | `chapeu` | Chapéu Pontudo (Mago) | Arte final, padrão atual (integrada na 1.141.0) | `aseprite/chapeu/` (1.141.0) | Um terço das cabeças do Mago |
-| `coroa` | Diadema (Mago); único Coroa dos Afogados | **Desenho inexistente** no jogo; rodada 2 em avaliação | sem papel em `Icones`; proposta em `itens-lote-noite/besta_diadema/` | O sprite `coroa` é também o símbolo da reputação (fica); a Coroa dos Afogados pede arte própria no futuro |
+| `coroa` → `diadema` | Diadema (Mago); único Coroa dos Afogados | Arte final, padrão atual (integrada na 1.144.0) | `aseprite/diadema/` (1.144.0) | A Coroa dos Afogados: compartilhamento provisório (pede arte própria); o sprite `coroa` da reputação fica |
 | `sandalia` | Sandália (Mago, a única base dos pés dele) | Arte final, padrão atual (integrada na 1.142.0) | `aseprite/sandalia/` (1.142.0) | Nomes dos materiais de tecido num desenho de couro: pendência de nomenclatura |
 | `escudo` | Escudo, Broquel; únicos Égide do Mártir, Broquel do Vigia | Arte final, padrão atual | `desenhar_escudo_pixel.py` (1.94.0) | Também a silhueta da secundária vazia (`VAZIO`) |
 | `machado` | Machado; únicos Lamento de Gharbad, O Açougueiro | Arte final, padrão atual | `desenhar_machado_pixel.py` (1.99.0) | — |
@@ -167,19 +167,28 @@ de antes não vale como arte final.
 | `amuleto` | Amuleto, Talismã, Pingente, Medalhão | Arte final, padrão atual | `aseprite/amuleto/` (1.140.0) | Compartilhamento mantido |
 
 **A contagem:** 31 desenhos de equipamento.
-- **Arte final aprovada no padrão atual:** 22 (o escudo, o machado e os 20 do Arqueiro, do Mago e dos acessórios; o
-  Chapéu Pontudo entrou na 1.141.0, a Sandália na 1.142.0 e a Besta Leve na 1.143.0).
+- **Arte final aprovada no padrão atual:** 23 (o escudo, o machado e os 21 do Arqueiro, do Mago e dos acessórios; o
+  Chapéu Pontudo entrou na 1.141.0, a Sandália na 1.142.0, a Besta Leve na 1.143.0 e o Diadema na 1.144.0).
 - **Placeholder integrado, pendente de remake:** 7, todos do Guerreiro (espada, maça, elmo, cota, manopla, perneiras,
   botas de ferro). O equipamento do Guerreiro **não está concluído**: só o escudo e o machado são finais.
-- **Desenho inexistente:** 1 (o Diadema, com a Coroa dos Afogados).
+- **Desenho inexistente:** nenhum (desde a 1.144.0, todo desenho de equipamento das classes tem arte no jogo).
 - **Arte aprovada com tamanhos pendentes:** 1 (o martelo: o desenho fica; faltam o 40 e o 48, sem redesenho).
 - **Compartilhamento provisório aceito** (a peça usa o desenho de outra até ganhar o seu): a Capa de Patrulha no gibão
-  (o lote de capas) e o Chapéu de Couro no capuz. Os compartilhamentos do manto, do anel, do amuleto, do orbe e do livro
+  (o lote de capas), o Chapéu de Couro no capuz e o único Coroa dos Afogados no Diadema. Os compartilhamentos do manto, do anel, do amuleto, do orbe e do livro
   são definitivos, não pendência. As silhuetas apagadas dos espaços vazios (`VAZIO`) vêm do elmo, da cota, da manopla,
   das perneiras, das botas de ferro e da espada para todas as classes: mudam junto quando essas peças forem refeitas.
 
 Nenhuma proposta pendente de equipamento na data da conferência. Depois dela, a Sandália e o Chapéu Pontudo entraram
-em proposta (abaixo, "O par do Mago"): o chapéu foi integrado na 1.141.0 e a sandália na 1.142.0.
+em proposta (abaixo, "O par do Mago"): o chapéu foi integrado na 1.141.0 e a sandália na 1.142.0; depois, a Besta
+Leve (1.143.0) e o Diadema (1.144.0).
+
+**O levantamento depois da 1.144.0 (19/10/2026):** os 31 desenhos de equipamento das classes existem no jogo. **Não
+estão concluídos:** as **sete peças de ferro** do Guerreiro (espada, maça, elmo, cota, manopla, perneiras, botas de
+ferro), que continuam placeholders, reduções da arte pintada, pendentes de remake no padrão atual; e o **martelo**, com
+o desenho aprovado preservado e a pendência separada de completar o 40 e o 48 sem redesenho. Ficam também os
+compartilhamentos provisórios (a Capa de Patrulha, o Chapéu de Couro, a Coroa dos Afogados) e a pendência de
+nomenclatura (a Sandália e o Diadema com os materiais de tecido nos nomes). **O próximo par, decidido pelo Jean: a
+espada e a maça** (o começo do remake do ferro; não começado).
 
 **A ordem recomendada (separada da contagem):** primeiro a **Sandália e o Chapéu Pontudo**, que são o placeholder
 mais frequente do Mago e fecham o vestuário de tecido dele, já com capuz, luva, calça e manto aprovados como referência
@@ -210,7 +219,8 @@ execução fica para outra entrega.
   decidir depois se a base ganha materiais próprios (couro) ou se os nomes ficam.
 
 **A Besta Leve e o Diadema (19/10/2026).** A Besta Leve foi aprovada sem retoque (`63a7a85`) e integrada na 1.143.0
-(fontes em `ferramentas/arte/aseprite/besta/`); o Diadema voltou para uma revisão de apresentação. Em
+(fontes em `ferramentas/arte/aseprite/besta/`); o Diadema voltou para uma revisão de apresentação, e a rodada 2 foi
+aprovada sem retoque (`731ab5c`) e integrada na 1.144.0 (fontes em `ferramentas/arte/aseprite/diadema/`). Em
 `ferramentas/prototipos/hud/itens-lote-noite/besta_diadema/` (o registro completo no `LEIA-ME.md` do lote):
 - **O alcance de uma futura troca:**
   - `besta`: só a base Besta Leve (uma das quatro armas do Arqueiro, com os materiais de metal: "Besta Leve
@@ -224,7 +234,7 @@ execução fica para outra entrega.
   e o diadema de latão é uma peça simples). Nenhum dado mudou e nenhum item foi criado.
 - **Os nomes:** o Diadema leva os materiais de tecido ("Diadema de Lã Negra"), mas o desenho é de latão: a mesma
   pendência de nomenclatura da Sandália.
-- **O Diadema, rodada 2 (em avaliação):** a rodada 1 ficou achatada (no tamanho real, uma elipse dourada com um ponto
+- **O Diadema, rodada 2 (integrada na 1.144.0):** a rodada 1 ficou achatada (no tamanho real, uma elipse dourada com um ponto
   no meio; a frente pouco visível) e está guardada em `besta_diadema/diadema_r1/`. A rodada 2 vira a peça de frente,
   pela imagem que o Jean mandou para o ângulo: a face da frente da faixa à mostra, a face de dentro do lado de trás
   escura por cima dela, a ponta com a gema; o latão e a gema violeta ficam. O compartilhamento com a Coroa dos Afogados

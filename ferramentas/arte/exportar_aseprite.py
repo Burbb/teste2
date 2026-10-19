@@ -60,7 +60,8 @@ DERIVADOS = {
     "amuleto": {64: (32, 2)},
     "chapeu": {64: (32, 2)},         # 1.141.0: o Chapéu Pontudo do Mago (32, 40, 48 das fontes); o 64 é o 32 ×2
     "sandalia": {64: (32, 2)},
-    "besta": {64: (32, 2)},          # 1.143.0: a Besta Leve do Arqueiro (32, 40, 48 das fontes); o 64 é o 32 ×2       # 1.142.0: a Sandália do Mago (o par, rodada 2; 32, 40, 48 das fontes); o 64 é o 32 ×2
+    "besta": {64: (32, 2)},          # 1.143.0: a Besta Leve do Arqueiro (32, 40, 48 das fontes); o 64 é o 32 ×2
+    "diadema": {64: (32, 2)},        # 1.144.0: o Diadema do Mago (a rodada 2, de frente; 32, 40, 48); o 64 é o 32 ×2       # 1.142.0: a Sandália do Mago (o par, rodada 2; 32, 40, 48 das fontes); o 64 é o 32 ×2
 }
 
 

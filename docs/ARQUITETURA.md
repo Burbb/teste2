@@ -418,8 +418,8 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   roda, o retrato, a cabeça e a figura do herói e dos companheiros (de `retratos.js`, abaixo). Devolve a `<img>` pronta ou `""` quando a família não tem aquele desenho; a
   tela usa então o sprite do jogo (`Icones.item(s) || S(s, 2)`). A origem e o destino de uma animação pedem o mesmo
   papel (o item que voa ao equipar, o selo de atributo, o consumível que cai na bolsa). Lacunas (desenho do jogo no
-  lugar, sem trocar por desenho de outro tipo de item): as peças sem desenho (o chapéu de couro, que
-  usa o capuz por ora, o Diadema e a Coroa dos Afogados), a família de
+  lugar, sem trocar por desenho de outro tipo de item): o chapéu de couro (usa o capuz por ora), a Coroa dos Afogados
+  (usa o Diadema por ora; pede arte própria), a família de
   ferro do Guerreiro, que é placeholder pendente de remake (a espada, a maça, o elmo, a cota, a manopla, as perneiras e
   as botas de ferro, reduções da arte pintada da HUD de ferro por `familia_ferro.py`; elas também dão as silhuetas
   dos espaços vazios e a espada do comando de ataque), o martelo sem o 40 e o 48 (o desenho aprovado de 32 fica, sem
@@ -493,7 +493,10 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   ferro. Os nomes da Sandália vêm dos materiais de tecido ("Sandália de Lã Negra"), embora o desenho seja de couro:
   pendência de nomenclatura no plano 23. Desde a 1.143.0, a Besta Leve do Arqueiro (deitada na diagonal: a coronha de
   madeira, o arco de aço atravessado, a corda em V até a noz; 32, 40, 48 e o 64 = 32 ×2, fontes em `aseprite/besta/`); a
-  arma vazia continua com a espada de ferro.
+  arma vazia continua com a espada de ferro. Desde a 1.144.0, o Diadema do Mago (o aro de latão de frente, a ponta com a
+  gema violeta; 32, 40, 48 e o 64 = 32 ×2, fontes em `aseprite/diadema/`), o papel do desenho `coroa` do equipamento
+  (`ITEM`: `coroa` → `diadema`): a base Diadema e, por ora, o único Coroa dos Afogados. O símbolo da reputação continua
+  com o sprite `coroa` (`S` e `MIUDO`, fora de `ITEM`); a cabeça vazia continua com o elmo de ferro.
 - O escudo e o Unguento de Prata (1.94.0), o machado e a Bomba de Fumaça (1.99.0) o arco (1.101.0,
   `desenhar_arco_pixel.py`; o Atacar da roda, o Tiro Duplo e o contrato continuam com o sprite) e o cajado (1.106.0,
   `desenhar_cajado_pixel.py`; o Atacar do Mago na roda e o traço Conjurador continuam com o sprite) e o orbe (1.107.0,

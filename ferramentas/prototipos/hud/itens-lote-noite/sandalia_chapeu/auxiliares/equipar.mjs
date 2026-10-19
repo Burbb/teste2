@@ -3,12 +3,13 @@
 // depois, a ficha e o Inventário); numa segunda partida, "Guardar na mochila" guarda (a vestida fica, a mochila ganha
 // uma). Registra os arquivos de cada lugar, os atributos e as fotos. Depois do saque, a cena pede "Continuar" e o
 // cenário abre o mural: o roteiro passa pelos dois antes de abrir o Inventário.
-// Serve a outra peça pelos argumentos opcionais (a Besta Leve, 1.143.0: mago → arqueiro, sandalia → besta, pes → arma).
-//   PLAYWRIGHT_MODULO=<caminho>/index.mjs node equipar.mjs <raiz do repositório> <pasta das fotos> [classe desenho espaço versão]
+// Serve a outra peça pelos argumentos opcionais (a Besta Leve, 1.143.0: mago → arqueiro, sandalia → besta, pes → arma;
+// o Diadema, 1.144.0: o desenho coroa, o arquivo diadema).
+//   PLAYWRIGHT_MODULO=<caminho>/index.mjs node equipar.mjs <raiz do repositório> <pasta das fotos> [classe desenho espaço versão [arquivo]]
 import { spawn } from "child_process";
 import path from "path";
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULO);
-const [raiz, saida, CLASSE = "mago", DESENHO = "sandalia", ESPACO = "pes", VERSAO = "1.142.0"] = process.argv.slice(2);
+const [raiz, saida, CLASSE = "mago", DESENHO = "sandalia", ESPACO = "pes", VERSAO = "1.142.0", ARQUIVO = DESENHO] = process.argv.slice(2);
 const espera = (ms) => new Promise((r) => setTimeout(r, ms));
 async function subir() {
   const proc = spawn("python", ["-m", "tests.navegador.cenarios", "vila"], { cwd: raiz,
@@ -35,7 +36,7 @@ for (const [caso, botao] of [["equipar", "Equipar agora"], ["guardar", "Guardar 
   await espera(2500);
   for (let k = 0; k < 10 && (await p.$("#sobre-achado")); k++) await espera(300);
   const depois = await heroi(p);
-  const ficha = await arquivos(p, `#heroi img[src*="/${DESENHO}-"]`);
+  const ficha = await arquivos(p, `#heroi img[src*="/${ARQUIVO}-"]`);
   const fb = await (await p.$("#heroi")).boundingBox();
   await p.screenshot({ path: path.join(saida, `no-jogo-${VERSAO}-1920x945-ficha-${caso}.png`), clip: { x: fb.x, y: fb.y + 355, width: fb.width, height: 120 } });
   // a cena espera o "Continuar" e depois abre o mural do cenário: os dois antes do Inventário
@@ -45,7 +46,7 @@ for (const [caso, botao] of [["equipar", "Equipar agora"], ["guardar", "Guardar 
     await p.keyboard.press("Escape"); await espera(700);
     await p.evaluate(() => pedirAtalho("Inventário")); await espera(1500);
   }
-  const inv = await arquivos(p, `img[src*="/${DESENHO}-"]`);
+  const inv = await arquivos(p, `img[src*="/${ARQUIVO}-"]`);
   const pb = await (await p.$("#palco")).boundingBox();
   await p.screenshot({ path: path.join(saida, `no-jogo-${VERSAO}-1920x945-inventario-${caso}.png`), clip: { x: pb.x + 150, y: pb.y + 140, width: 330, height: 380 } });
   rel[caso] = { antes, depois, saque, ficha, inventario: inv, erros };

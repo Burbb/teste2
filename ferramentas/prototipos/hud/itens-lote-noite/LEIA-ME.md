@@ -1699,3 +1699,8 @@ tamanhos (`diadema-prancha-carvao.png`).
 **Para a avaliação:** a face da frente aparece e a peça ocupa mais o espaço; continua mais larga que alta (é um aro), e
 no 32 o oco de dentro lê como sombra.
 
+**O Diadema integrado na 1.144.0, sem retoque** (a rodada 2, aprovada no `731ab5c`): as fontes foram para
+`ferramentas/arte/aseprite/diadema/`; os 8 arquivos do jogo são idênticos, byte a byte, aos da proposta; o 64 é o 32 ×2
+(`DERIVADOS`). O papel é `coroa` → `diadema` (o Diadema e, por ora, a Coroa dos Afogados); a reputação continua com o
+sprite. Conferido com os arquivos do jogo e os saves temporários (`capturas/integracao/no-jogo-1.144.0-*`).
+

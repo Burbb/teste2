@@ -35,6 +35,7 @@ nada daqui: só os PNGs exportados para `rpg/web/static/hud/icones/`.
 | anel (o anel: Anel, Sinete, Aro e o Anel do Último Rei; o vazio) | `anel/anel-32.aseprite`, `-40`, `-48`; **o 64 é o 32 ampliado 2×** | dentro, fora, gravacao, borda, brilho, contorno | 1.140.0 |
 | chapeu (o Chapéu Pontudo do Mago) | `chapeu/chapeu-32.aseprite`, `-40`, `-48`; **o 64 é o 32 ampliado 2×** | aba, copa, dobras, fita, contorno | 1.141.0 |
 | besta (a Besta Leve do Arqueiro) | `besta/besta-32.aseprite`, `-40`, `-48`; **o 64 é o 32 ampliado 2×** | coronha, empunhadura, corda, arco, metal, contorno | 1.143.0 |
+| diadema (o Diadema do Mago, também a Coroa dos Afogados por ora; o desenho `coroa`) | `diadema/diadema-32.aseprite`, `-40`, `-48`; **o 64 é o 32 ampliado 2×** | aro, placa, gema, contorno | 1.144.0 |
 | sandalia (a Sandália do Mago, o par) | `sandalia/sandalia-32.aseprite`, `-40`, `-48`; **o 64 é o 32 ampliado 2×** | tras_sola, tras_palmilha, tras_tiras, frente_sola, frente_palmilha, frente_tiras, contorno | 1.142.0 |
 | amuleto (o amuleto: Amuleto, Talismã, Pingente e Medalhão; o vazio) | `amuleto/amuleto-32.aseprite`, `-40`, `-48`; **o 64 é o 32 ampliado 2×** | cordao, argola, engaste, pedra, brilho, contorno | 1.140.0 |
 | antidoto (o Antídoto) | `antidoto/antidoto-16.aseprite`, `-32` | vidro, liquido, rolha, brilho, contorno | 1.139.0 |
