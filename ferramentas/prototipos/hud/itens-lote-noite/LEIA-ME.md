@@ -984,3 +984,9 @@ conferência da gota.
 - **As fotos:** `ROTULO=gota-r2 SO_PROPOSTA=1 JANELAS=1920x945 node .../fotografar.mjs vida_mana` (o mesmo roteiro e a
   mesma partida de Mago; os dois topos só diferem no bloco 4×4). `vida_mana/mana-r2-antes-depois.png` mostra o antes
   e o depois em tamanho real e a ampliação 8× sobre o fundo real.
+
+### Integradas: a Vida e a Mana (1.130.0)
+
+O coração de `a914f18` e a gota de `f02566d`, sem retoque. As fontes foram para `ferramentas/arte/aseprite/vital-vida/`
+e `vital-mana/`; os quatro arquivos do jogo (20 e @2x) são idênticos, byte a byte, aos aprovados, e o exportador os
+reproduz (`--conferir`). Os papéis em `Icones` (`VITAL`) não mudaram; o único uso é o topo.

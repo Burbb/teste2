@@ -90,6 +90,8 @@ const Icones = (() => {
   // frasco vazio ficam com o do jogo); a aljava são as flechas do Patrulheiro
   const RECURSO = { pernil: "provisoes", osso_diag: "osso", tocha: "tocha", moedas: "moedas", pocao: "pocao", bandagem: "bandagem",
     aljava: "aljava" };
+  // os ícones das barras do topo (20): a Vida (o coração) e a Mana (a gota de energia líquida, no azul da barra) em
+  // pixel art, 1.130.0; o Vigor e o Foco ainda os de antes
   const VITAL = { Vida: "vital-vida", Vigor: "vital-vigor", Mana: "vital-mana", Foco: "vital-foco" };
   // os atalhos da doca (36; o 32 nas janelas estreitas) em pixel art, fontes em ferramentas/arte/aseprite/: o
   // Inventário (a mochila de couro) e o Mapa (o mapa dobrado em sanfona), 1.124.0; o Diário (o livro aberto com a pena e

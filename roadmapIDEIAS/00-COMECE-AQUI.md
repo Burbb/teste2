@@ -4035,3 +4035,13 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Feito, só no protótipo** (`ferramentas/prototipos/hud/itens-lote-noite/vida_mana/`): os 16 pixels do bloco viraram
   o azul em volta, na fonte em camadas, pelo MCP; o exportado confere com o editor e o @2x é exato. A rodada 1 está em
   `vida_mana/mana_r1/`; o antes e o depois no topo do Mago, em `vida_mana/mana-r2-antes-depois.png`. Nada no jogo.
+
+### 18/10/2026 (data do computador local) — A Vida e a Mana no jogo (1.130.0); propostas de Vigor e Foco
+
+- **Pedido de Jean:** integrar a Vida (`a914f18`) e a Mana (`f02566d`) sem retoque; depois propor o Vigor e o Foco, só
+  no protótipo.
+- **A integração:**
+  - as fontes foram para `ferramentas/arte/aseprite/vital-vida/` e `vital-mana/`;
+  - os quatro arquivos do jogo são idênticos, byte a byte, aos aprovados, e o exportador os reproduz;
+  - o único uso é o topo (`Icones.vital`, 20 px); barras, preenchimentos, números, posição, regras e animações não
+    mudaram.

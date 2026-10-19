@@ -443,6 +443,8 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
     outro desenho.
   - o Salvar (o baú aberto com a seta de aço) e o Sair (o arco de pedra com a seta laranja), da 1.129.0. Com eles,
     os nove atalhos da doca estão em pixel art (plano 23, 1D).
+- A Vida (o coração) e a Mana (a gota de energia líquida, no azul da barra) do topo, em 20, da 1.130.0
+  (`ferramentas/arte/aseprite/vital-vida/`, `vital-mana/`); o Vigor e o Foco continuam os de antes.
 - O escudo e o Unguento de Prata (1.94.0), o machado e a Bomba de Fumaça (1.99.0) o arco (1.101.0,
   `desenhar_arco_pixel.py`; o Atacar da roda, o Tiro Duplo e o contrato continuam com o sprite) e o cajado (1.106.0,
   `desenhar_cajado_pixel.py`; o Atacar do Mago na roda e o traço Conjurador continuam com o sprite) e o orbe (1.107.0,
