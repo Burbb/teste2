@@ -126,8 +126,9 @@ de antes não vale como arte final.
   **Desenho próprio, no padrão atual.**
 - `martelo`: não está na pintura; uma grade de 32 em `desenhos.js`, desenhada à mão no experimento de resolução
   (1.93.0, `d34b8a4`). Não é derivado da pintura, mas não tem arquivo de 40 (o Inventário o mostra em 32) e o 48 é a
-  2× reduzida pelo navegador, o que a skill chama de herança, não de padrão. **A decidir pelo Jean** (ver abaixo); não
-  entra como final nem como placeholder.
+  2× reduzida pelo navegador, o que a skill chama de herança, não de padrão. **Decisão do Jean (19/10/2026): o desenho
+  aprovado fica preservado**; a pendência é só completar o 40 e o 48 mantendo a construção dele, sem redesenho. A
+  execução fica para outra entrega.
 
 **A tabela, por situação:**
 
@@ -140,11 +141,11 @@ de antes não vale como arte final.
 | `manopla` | Manopla (Guerreiro) | **Placeholder integrado, pendente de remake** | redução da pintura | Também a silhueta das mãos vazias (`VAZIO`) |
 | `calca` → `perneiras` | Perneira, Greva (Guerreiro) | **Placeholder integrado, pendente de remake** | redução da pintura | Também a silhueta das pernas vazias (`VAZIO`) |
 | `bota_ferro` → `botas-ferro` | Bota Ferrada (Guerreiro) | **Placeholder integrado, pendente de remake** | redução da pintura | Também a silhueta dos pés vazios (`VAZIO`) |
-| `martelo` | Martelo (Guerreiro) | **A decidir** | grade de 32 em `desenhos.js` (1.93.0) | Desenho próprio, não da pintura; fora da política de tamanhos (sem 40, 48 pelo navegador) |
+| `martelo` | Martelo (Guerreiro) | **Arte aprovada, preservada; faltam o 40 e o 48** | grade de 32 em `desenhos.js` (1.93.0) | Desenho próprio, não da pintura; completar o 40 e o 48 pela mesma construção, sem redesenhar (outra entrega) |
 | `besta` | Besta Leve (Arqueiro) | **Desenho inexistente** | sem papel em `Icones` (o sprite 16×16) | Uma das quatro armas do Arqueiro |
-| `chapeu` | Chapéu Pontudo (Mago) | **Desenho inexistente** | sem papel em `Icones` | Um terço das cabeças do Mago |
+| `chapeu` | Chapéu Pontudo (Mago) | **Desenho inexistente** no jogo; proposta em avaliação | sem papel em `Icones`; proposta em `itens-lote-noite/sandalia_chapeu/` | Um terço das cabeças do Mago |
 | `coroa` | Diadema (Mago); único Coroa dos Afogados | **Desenho inexistente** | sem papel em `Icones` | Decidir se um desenho serve aos dois |
-| `sandalia` | Sandália (Mago, a única base dos pés dele) | **Desenho inexistente** | sem papel em `Icones` | Todo calçado do Mago é este placeholder |
+| `sandalia` | Sandália (Mago, a única base dos pés dele) | **Desenho inexistente** no jogo; proposta em avaliação | sem papel em `Icones`; proposta em `itens-lote-noite/sandalia_chapeu/` | Todo calçado do Mago é este placeholder |
 | `escudo` | Escudo, Broquel; únicos Égide do Mártir, Broquel do Vigia | Arte final, padrão atual | `desenhar_escudo_pixel.py` (1.94.0) | Também a silhueta da secundária vazia (`VAZIO`) |
 | `machado` | Machado; únicos Lamento de Gharbad, O Açougueiro | Arte final, padrão atual | `desenhar_machado_pixel.py` (1.99.0) | — |
 | `arco` | Arco Curto, Longo, Recurvo; únicos Ventre da Tempestade, Sussurro do Vazio | Arte final, padrão atual | `desenhar_arco_pixel.py` (1.101.0) | — |
@@ -170,13 +171,14 @@ de antes não vale como arte final.
 - **Placeholder integrado, pendente de remake:** 7, todos do Guerreiro (espada, maça, elmo, cota, manopla, perneiras,
   botas de ferro). O equipamento do Guerreiro **não está concluído**: só o escudo e o machado são finais.
 - **Desenho inexistente:** 4 (Besta Leve, Chapéu Pontudo, Diadema, Sandália).
-- **A decidir:** 1 (o martelo).
+- **Arte aprovada com tamanhos pendentes:** 1 (o martelo: o desenho fica; faltam o 40 e o 48, sem redesenho).
 - **Compartilhamento provisório aceito** (a peça usa o desenho de outra até ganhar o seu): a Capa de Patrulha no gibão
   (o lote de capas) e o Chapéu de Couro no capuz. Os compartilhamentos do manto, do anel, do amuleto, do orbe e do livro
   são definitivos, não pendência. As silhuetas apagadas dos espaços vazios (`VAZIO`) vêm do elmo, da cota, da manopla,
   das perneiras, das botas de ferro e da espada para todas as classes: mudam junto quando essas peças forem refeitas.
 
-Nenhuma proposta pendente de equipamento nesta data.
+Nenhuma proposta pendente de equipamento na data da conferência. Depois dela, a Sandália e o Chapéu Pontudo entraram
+em proposta (abaixo, "O par do Mago"); continuam contados como inexistentes até a integração.
 
 **A ordem recomendada (separada da contagem):** primeiro a **Sandália e o Chapéu Pontudo**, que são o placeholder
 mais frequente do Mago e fecham o vestuário de tecido dele, já com capuz, luva, calça e manto aprovados como referência
@@ -184,8 +186,19 @@ do material. Fazer esse par antes não declara o Guerreiro concluído. Depois, a
 ferro como um lote próprio (as sete peças têm de conviver entre si, com o escudo e o machado, e mudam as silhuetas dos
 espaços vazios), na ordem que o Jean decidir.
 
-**Para o Jean decidir:** o martelo é um desenho próprio de 32 (não da pintura), mas fora da política de tamanhos.
-Pode ficar como está, ganhar o 40 e o 48 derivados da mesma grade ou entrar no lote do ferro.
+**O martelo (decisão do Jean, 19/10/2026):** o desenho aprovado é preservado. A pendência é completar o 40 e o 48
+mantendo a construção da grade de 32; não há autorização para redesenhá-lo, e ele não entra no lote do ferro. A
+execução fica para outra entrega.
+
+**O par do Mago: a Sandália e o Chapéu Pontudo (proposta, 19/10/2026; nada no jogo).** Em
+`ferramentas/prototipos/hud/itens-lote-noite/sandalia_chapeu/` (o registro completo no `LEIA-ME.md` do lote):
+- **O alcance de uma futura troca:** os desenhos `sandalia` (a Sandália, a única base dos pés do Mago) e `chapeu` (o
+  Chapéu Pontudo, uma das três cabeças) não têm papel em `Icones` hoje e não são usados por nenhum único, símbolo,
+  habilidade ou estado; os espaços vazios da cabeça e dos pés continuam com o elmo e as botas de ferro (`VAZIO`). Os
+  materiais (Puído, de Linho, de Lã Negra, Bordado, Rúnico) só mudam o nome. Integrar pede o papel em `ITEM` e
+  `TAMANHOS` e o 64 em `DERIVADOS`, nada mais.
+- **A proposta:** 32, 40 e 48 da mesma construção, 64 = 32 ×2, fontes em camadas no Aseprite; aguardando a avaliação
+  do Jean.
 
 ### 1.3. Prioridade: consumo do recurso antes das consequências
 

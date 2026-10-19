@@ -4400,3 +4400,21 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Ordem recomendada, à parte da contagem:** Sandália e Chapéu Pontudo primeiro; depois a Besta Leve, o Diadema e o
   remake do ferro como lote próprio (ele muda também as silhuetas dos espaços vazios e o comando de ataque). A lista de
   lacunas da `docs/ARQUITETURA.md` ganhou a família de ferro e o martelo. Nada no jogo mudou.
+
+### 19/10/2026 (data do computador local) — A Sandália e o Chapéu Pontudo do Mago (proposta); a decisão do martelo
+
+- **Pedido de Jean:** o par do Mago, uma peça por vez, só no protótipo, com a skill `arte-itens-fenda` e as fontes no
+  Aseprite pelo MCP; e a decisão do martelo.
+- **O martelo:** o desenho aprovado fica preservado; a pendência é completar o 40 e o 48 mantendo a construção, sem
+  redesenho. Execução em outra entrega (plano 23, seção 1.2.1; a lacuna da `docs/ARQUITETURA.md` atualizada).
+- **Feito, só no protótipo** (`ferramentas/prototipos/hud/itens-lote-noite/sandalia_chapeu/`), **não aprovado**:
+  - **a Sandália** (32, 40, 48; 64 = 32 ×2): de lado, a sola grossa de couro com a palmilha, a gaiola de tiras (as
+    alças dos dedos e do peito do pé, as subidas e o anel do tornozelo), vazia; um laço de linho no anel;
+  - **o Chapéu Pontudo** (32, 40, 48; 64 = 32 ×2): a aba em perspectiva, a copa de lã em cone com a ponta tombada para
+    a direita, o vinco e as dobras, a fita de linho na base.
+  - Fontes em camadas pelo `pintar.lua`; o composto do editor, os PNGs exportados e a prévia conferem; @2x exatos.
+  - Fotos a 1920×945 (ficha, Inventário, saque) e o conjunto de tecido lado a lado (`conjunto-mago-32.png`).
+- **O alcance:** os dois desenhos não têm papel em `Icones` e nenhum outro uso (símbolo, único, vazio).
+- **Achado da bancada:** o cenário `capela` não aplica `VESTIR`; as fotos deste par usam o `tutorial`.
+- **Aguardando avaliação.** Nada integrado; o martelo e o próximo par não começaram.
+

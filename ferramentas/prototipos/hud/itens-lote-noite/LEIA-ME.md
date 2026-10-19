@@ -1498,3 +1498,61 @@ escolhida**: guardada inteira em `anel_amuleto/rodada1/` (as fontes, os PNGs e o
   Anel 1 ocupado e o Anel 2 vazio, a comparação do saque e "Equipar no Anel 2 (vazio)" (os dois espaços ocupados na
   ficha e no Inventário), e um Talismã equipado pela comparação. Sem erro no console. A alternativa lisa fica como
   histórico.
+
+## A Sandália e o Chapéu Pontudo do Mago (`sandalia_chapeu/`)
+
+**Pedido de Jean (19/10/2026):** o par seguinte da conferência dos equipamentos (plano 23, seção 1.2.1), uma peça por
+vez, só no protótipo, com a skill `arte-itens-fenda` e as fontes no Aseprite pelo MCP. Referências do conjunto: o capuz
+de tecido, a luva de seda, o manto e a calça de viagem aprovados; os placeholders não são copiados. **Nada no jogo.**
+
+**Antes de desenhar:**
+- **Os dados:** a Sandália (`("Sandália", "f", "sandalia")`) é a única base dos pés do Mago; o Chapéu Pontudo
+  (`("Chapéu Pontudo", "m", "chapeu")`) é uma das três cabeças (com o Capuz e o Diadema). Os materiais de tecido (Puído,
+  de Linho, de Lã Negra, Bordado, Rúnico) só mudam o nome e a força. Nenhum único usa estes desenhos.
+- **Hoje:** os dois não têm papel em `Icones`; o jogo mostra os sprites 16×16 ampliados (`S.chapeu` e `S.sandalia`, a
+  bota recolorida). Nenhum outro papel (símbolo, habilidade, estado, retrato) usa esses sprites; os espaços vazios da
+  cabeça e dos pés são do elmo e das botas de ferro (`VAZIO`) e não mudam.
+- **Os tamanhos:** 32 na ficha e nas dicas, 40 no corpo e na mochila do Inventário, 48 no "você usa" do saque, 64 no
+  cartão do saque.
+
+**A construção** (`auxiliares/mago.py`: as medidas no quadro de 32, a mesma em 32, 40 e 48; o 64 é o 32 ×2):
+- **A Sandália:** de lado e um pouco de cima, com a ponta à esquerda (como as botas de couro). A sola grossa de couro (a
+  rampa das botas aprovadas), com a palmilha clara aparecendo por cima. As tiras formam a gaiola do pé e se prendem nas
+  beiras da sola: a alça dos dedos, a do peito do pé (cada uma sobe da beira de perto, passa por cima e desce na de
+  longe, a perna de trás mais escura), as duas que sobem até o anel do tornozelo (da frente e de trás do calcanhar) e o
+  anel. Por dentro das alças e do anel aparece o fundo: o espaço do pé, vazio. Um laço de linho cru (o das faixas da
+  calça) fecha o anel. Camadas: sola, palmilha, tiras, no, contorno.
+- **O Chapéu Pontudo:** de frente e um pouco de cima. A aba larga em perspectiva (a elipse, com a beira da frente
+  caindo um pouco à direita e a espessura embaixo; a parte de trás mais escura), a copa de lã (a rampa do capuz de
+  tecido) em cone, com a luz da esquerda em faixas pela posição através da copa, subindo inclinada e tombando a ponta
+  para a direita; o vinco onde o pano dobra e duas dobras descendo; a fita de linho cru na base, curvando com a elipse.
+  Sem estrela nem brilho. Camadas: aba, copa, dobras, fita, contorno.
+- **Rodadas descartadas da sandália (só na bancada, sem arquivo):** a vista de três quartos com o pé em perspectiva
+  achatava a palmilha e as tiras viravam um bloco; a vista de cima (a sola inteira) lia como palmilha solta. A de lado
+  com a gaiola foi a que mostrou o vazio do pé no 32.
+
+**O Aseprite (pelo MCP):** as listas de cada camada (`previa/<peça>/<N>/listas/`) pintadas pelo `pintar.lua` num
+`execute_script` (0 diferenças na releitura, 0 fora da tela), salvas em `fontes/<peça>/<peça>-<N>.aseprite`. Reabertas,
+o código do composto (`bandagem_pocao/auxiliares/soma.lua`) é igual ao dos PNGs exportados pelo
+`exportar_aseprite.py <peça> sandalia_chapeu/proposta --fontes=sandalia_chapeu/fontes` e ao da prévia (`soma.py`), nos
+seis. Os @2x são a duplicação exata e o 64 é o 32 ×2 (feito à parte, porque `DERIVADOS` do exportador só ganha as
+duas peças na integração).
+
+**As fotos (1920×945, `fotografar.mjs sandalia_chapeu` e `sandalia_chapeu_saque_chapeu`):**
+- `sandalia_chapeu-no-jogo.png`: atual × proposta na ficha (32), no Inventário (40) e nos cartões do saque de cada um
+  (64 e 48), com os mesmos dados; sem erro no console.
+- `conjunto-mago-32.png`: o conjunto de tecido lado a lado em 32 (tamanho real e a 3×); `prancha-carvao.png`: os tamanhos
+  das duas peças em 1×, com as aprovadas ao lado.
+- **A cena da ficha:** o `tutorial` com `CLASSE=mago` e `VESTIR` (o Chapéu, o Manto, a Calça, a Sandália e a Luva de
+  Seda). A `capela` não aplica o `VESTIR` (ela veste pelo `dev.vestir` com o sorteio fixo): no lote da calça e do manto,
+  as duas peças apareceram porque o sorteio já as dava.
+
+**Para a avaliação:**
+- **O que melhorou:** as duas peças ganham construção e material do conjunto; o chapéu se lê de longe pela silhueta
+  (a aba e a ponta tombada) e combina com o capuz e o manto; a sandália mostra a sola, a espessura, as tiras e o vazio.
+- **O que pode pedir ajuste:** a sandália é baixa e larga, e no 32 da ficha tem menos massa que as peças vizinhas; o
+  anel do tornozelo vira uma faixa escura no 32 (a abertura só aparece a partir do 40). Ela é de couro (o material de
+  uma sandália de viagem), embora os nomes venham dos materiais de tecido ("Sandália de Lã Negra").
+- **Para a integração (só depois da aprovação):** o papel `sandalia` e `chapeu` em `ITEM` e `TAMANHOS`, as fontes em
+  `ferramentas/arte/aseprite/`, `DERIVADOS` com o 64 = 32 ×2, `exportar_aseprite.py --conferir`.
+

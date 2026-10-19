@@ -66,6 +66,15 @@ LOTES = {
         prancha=lambda P: [JOGO / "anel-32.png", P.parent / "rodada2" / "proposta" / "anel-32.png",
                            P / "anel-32.png", P / "anel-40.png", P / "anel-48.png", P / "anel-64.png",
                            P.parent / "rodada3_liso" / "anel-liso-32.png", P / "amuleto-32.png"]),
+    "sandalia_chapeu": dict(                                 # o par do Mago: a prancha junto das peças de tecido aprovadas
+        linhas=[("a ficha do Mago: o Chapéu Pontudo e a Sandália vestidos, com o manto, a calça e a luva de seda (32)", "ficha", (18, 362, 272, 472)),
+                ("o corpo no Inventário (40)", "inventario", (150, 140, 480, 520)),
+                ("o cartão do saque da Sandália (64) e o que você usa (48)", "saque", None),
+                ("o cartão do saque do Chapéu Pontudo (64 e 48)", "saque", None, "saque_chapeu")],
+        prancha=lambda P: [P / "chapeu-32.png", JOGO / "capuz_tecido-32.png", JOGO / "luva_seda-32.png", JOGO / "manto-32.png",
+                           JOGO / "calca_tecido-32.png", P / "sandalia-32.png", JOGO / "bota-32.png",
+                           P / "chapeu-40.png", P / "chapeu-48.png", P / "chapeu-64.png",
+                           P / "sandalia-40.png", P / "sandalia-48.png", P / "sandalia-64.png"]),
 }
 
 def antidoto_base():
@@ -99,7 +108,23 @@ def anel_referencia():
         o.paste(im if im.size[0] == 32 else im.resize((32, 32), Image.NEAREST), (10 + k * 266 + 112, 290))
     o.save(base / "anel-referencia-r2-r3.png"); print(base / "anel-referencia-r2-r3.png")
 
-if __name__ == "__main__" and sys.argv[1] in ("antidoto_base", "frasco_vazio", "anel_referencia"):
+def conjunto_mago():
+    """O conjunto de tecido do Mago lado a lado, em 32: em tamanho real (num nicho de 40 sobre o carvão) e a 3× (vizinho
+    mais próximo), com o Chapéu Pontudo e a Sandália propostos entre as peças aprovadas."""
+    base = LOTE / "sandalia_chapeu"
+    pecas = [("chapéu (proposta)", base / "proposta" / "chapeu-32.png"), ("capuz", JOGO / "capuz_tecido-32.png"),
+             ("manto", JOGO / "manto-32.png"), ("luva de seda", JOGO / "luva_seda-32.png"),
+             ("calça de viagem", JOGO / "calca_tecido-32.png"), ("sandália (proposta)", base / "proposta" / "sandalia-32.png")]
+    o = Image.new("RGB", (10 + len(pecas) * 110, 202), (245, 245, 245)); d = ImageDraw.Draw(o)
+    d.text((10, 4), "tamanho real (32 px num nicho de 40 sobre o carvão) e a 3x", fill=(0, 0, 0), font=FONTE)
+    for k, (rotulo, arq) in enumerate(pecas):
+        im = Image.open(arq).convert("RGBA"); x = 10 + k * 110
+        nicho = Image.new("RGBA", (40, 40), (24, 24, 28, 255)); nicho.alpha_composite(im, (4, 4)); o.paste(nicho.convert("RGB"), (x, 24))
+        g = Image.new("RGBA", (96, 96), (24, 24, 28, 255)); g.alpha_composite(im.resize((96, 96), Image.NEAREST)); o.paste(g.convert("RGB"), (x, 74))
+        d.text((x, 176), rotulo, fill=(0, 0, 0), font=FONTE)
+    saida = base / "conjunto-mago-32.png"; o.save(saida); print(saida)
+
+if __name__ == "__main__" and sys.argv[1] in ("antidoto_base", "frasco_vazio", "anel_referencia", "conjunto_mago"):
     globals()[sys.argv[1]](); sys.exit()
 if __name__ == "__main__":
     nome = sys.argv[1]; cfg = LOTES[nome]; base = LOTE / nome
