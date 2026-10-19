@@ -4434,3 +4434,19 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
     (que continua com o sprite), e o saque é igual ao aprovado (a não ser 2 pixels do brilho animado). Regras, medidas,
     preços e funcionamento não mudaram.
 
+### 19/10/2026 (data do computador local) — A Sandália, rodada 2 (proposta)
+
+- **Pedido de Jean:** refazer a Sandália pela referência dele (`ferramentas/arte/referencias/botas/`): o par
+  sobreposto em três quartos, visto um pouco de cima. A rodada 1 (de perfil) foi recusada e está guardada em
+  `ferramentas/prototipos/hud/itens-lote-noite/sandalia_chapeu/rodada1/`.
+- **Feito, só no protótipo** (`sandalia_chapeu/rodada2/`, `auxiliares/sandalia_par.py`), **não aprovado**: uma
+  sandália primeiro (a palmilha clara com o contorno de um pé, a sola baixa com espessura, duas tiras largas e
+  inclinadas que passam por cima do espaço do pé, o tornozelo com o vão), depois o par (a de trás deslocada e um tom mais
+  escura, separada pelo contorno). Couro das botas aprovadas. 32, 40, 48 da mesma construção; 64 = 32 ×2; fontes em
+  camadas pelo `pintar.lua`; composto, exportação e prévia conferem; @2x exatos.
+- **Fotos a 1920×945:** atual × rodada 1 × rodada 2 na ficha, no Inventário e no saque (`sandalia-r2-no-jogo.png`) e o
+  conjunto do Mago (`conjunto-mago-32.png`).
+- **Registrado, sem mudar regra:** a Sandália usa os materiais de tecido nos nomes ("Sandália de Lã Negra"), mas é de
+  couro.
+- **Aguardando avaliação.** A sandália não foi integrada; nenhum outro item começou.
+

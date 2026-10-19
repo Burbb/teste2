@@ -1556,3 +1556,47 @@ duas peças na integração).
 - **Para a integração (só depois da aprovação):** o papel `sandalia` e `chapeu` em `ITEM` e `TAMANHOS`, as fontes em
   `ferramentas/arte/aseprite/`, `DERIVADOS` com o 64 = 32 ×2, `exportar_aseprite.py --conferir`.
 
+### O Chapéu Pontudo no jogo (1.141.0) e a Sandália, rodada 2 (`sandalia_chapeu/`)
+
+**Decisão de Jean (19/10/2026):** o Chapéu Pontudo do `b361a47` aprovado sem retoque e integrado na 1.141.0 (`0235c25`;
+fotos com os arquivos do jogo em `capturas/integracao/`). A Sandália da rodada 1 foi recusada: ficou quase de perfil,
+as tiras viraram arcos verticais e o conjunto parecia uma armação sobre a sola.
+
+**A rodada 1 guardada** em `sandalia_chapeu/rodada1/` (a proposta, as fontes, a prévia e as fotos dela). Para refazer as
+fotos dela: `PASTA=sandalia_chapeu/rodada1/proposta ROTULO=rodada1 SO_PROPOSTA=1 fotografar.mjs sandalia_r2`.
+
+**A rodada 2** (`auxiliares/sandalia_par.py`; proposta em `rodada2/`), pela referência do Jean
+(`ferramentas/arte/referencias/botas/`, a imagem gerada que ele mandou; a origem não foi informada): o par de sandálias
+em três quartos, visto um pouco de cima, com a ponta embaixo à esquerda e o calcanhar em cima à direita.
+- **Uma sandália primeiro** (`rodada2/previa/<N>/sandalia_uma_final_<N>.png`), por formas no quadro de 32:
+  - a palmilha clara (o couro cru) com o contorno de um pé, larga nos dedos e redonda no calcanhar;
+  - a sola baixa, com a espessura embaixo e a beira de baixo mais escura;
+  - as duas tiras do pé, largas e inclinadas: cada uma sobe da beira de perto (meio-tom), passa por cima do espaço do pé
+    (o alto, claro) e desce na beira de longe (escura), uma curva só; a sombra de cada tira cai na palmilha à direita;
+  - o tornozelo: a tira larga em volta (a metade de longe escura, a de perto clara em cima), presa pela frente e pelo
+    calcanhar, com o vão por onde a perna entraria (o calcanhar da palmilha aparece lá embaixo).
+- **O par:** a de trás é a mesma, deslocada para cima e para a esquerda e um tom mais escura; o contorno da da frente
+  passa por cima dela e separa as duas. Vazias, sem pé.
+- **Da referência ficou:** a palmilha visível, a sola baixa com espessura, as tiras largas e inclinadas, o tornozelo alto e
+  a separação entre as duas. **Não ficou:** o vermelho (o couro é o das botas aprovadas) e parte das tiras (no 32,
+  duas no pé e uma no tornozelo).
+- **Tentativas descartadas (só na bancada):** o modelo em 3D com as tiras em arco levantava as tiras e cobria a
+  palmilha, e as peças viravam um bloco; as tiras como paralelogramos retos viravam dentes e o tornozelo, uma caixa.
+- **Tamanhos:** a mesma construção em 32, 40 e 48 (as medidas no quadro de 32); 64 = 32 ×2. Camadas: tras_sola,
+  tras_palmilha, tras_tiras, frente_sola, frente_palmilha, frente_tiras, contorno.
+- **O Aseprite (pelo MCP):** as listas pintadas pelo `pintar.lua` (0 diferenças na releitura, 0 fora da tela), fontes em
+  `rodada2/fontes/sandalia/`; reabertas, o composto do editor (`soma.lua`) é igual aos PNGs exportados pelo
+  `exportar_aseprite.py sandalia rodada2/proposta --fontes=rodada2/fontes` e à prévia; @2x exatos; 64 = 32 ×2.
+
+**As fotos (1920×945, `fotografar.mjs sandalia_r2`):** atual (o jogo, com o chapéu integrado e o sprite da sandália) ×
+rodada 1 × rodada 2 na ficha, no Inventário e no saque, com os mesmos dados (`sandalia-r2-no-jogo.png`;
+`capturas/r2/`); o conjunto do Mago em tamanho real e a 3× (`conjunto-mago-32.png`); a prancha da rodada 2
+(`rodada2/prancha-carvao.png`). Sem erro no console.
+
+**Para a avaliação:** o par ocupa o espaço como as botas vizinhas e se lê como sandálias nos três lugares; no 32, as
+tiras e o vão do tornozelo são simplificados, e a de trás aparece sobretudo pela ponta e pelo tornozelo.
+
+**Os nomes dos materiais (registrado, sem mudar regra):** a Sandália recebe os materiais de tecido
+(`MATERIAIS_TECIDO`: "Sandália de Lã Negra", "Sandália de Linho", "Sandália Bordada"...), mas o desenho é de couro.
+Fica para decidir se a base ganha materiais próprios ou se os nomes ficam.
+

@@ -110,11 +110,12 @@ def anel_referencia():
 
 def conjunto_mago():
     """O conjunto de tecido do Mago lado a lado, em 32: em tamanho real (num nicho de 40 sobre o carvão) e a 3× (vizinho
-    mais próximo), com o Chapéu Pontudo e a Sandália propostos entre as peças aprovadas."""
+    mais próximo): o Chapéu Pontudo (no jogo desde a 1.141.0), as peças aprovadas e as duas rodadas da Sandália."""
     base = LOTE / "sandalia_chapeu"
-    pecas = [("chapéu (proposta)", base / "proposta" / "chapeu-32.png"), ("capuz", JOGO / "capuz_tecido-32.png"),
+    pecas = [("chapéu (no jogo)", JOGO / "chapeu-32.png"), ("capuz", JOGO / "capuz_tecido-32.png"),
              ("manto", JOGO / "manto-32.png"), ("luva de seda", JOGO / "luva_seda-32.png"),
-             ("calça de viagem", JOGO / "calca_tecido-32.png"), ("sandália (proposta)", base / "proposta" / "sandalia-32.png")]
+             ("calça de viagem", JOGO / "calca_tecido-32.png"), ("sandália, rodada 1", base / "rodada1" / "proposta" / "sandalia-32.png"),
+             ("sandália, rodada 2", base / "rodada2" / "proposta" / "sandalia-32.png")]
     o = Image.new("RGB", (10 + len(pecas) * 110, 202), (245, 245, 245)); d = ImageDraw.Draw(o)
     d.text((10, 4), "tamanho real (32 px num nicho de 40 sobre o carvão) e a 3x", fill=(0, 0, 0), font=FONTE)
     for k, (rotulo, arq) in enumerate(pecas):
@@ -124,7 +125,19 @@ def conjunto_mago():
         d.text((x, 176), rotulo, fill=(0, 0, 0), font=FONTE)
     saida = base / "conjunto-mago-32.png"; o.save(saida); print(saida)
 
-if __name__ == "__main__" and sys.argv[1] in ("antidoto_base", "frasco_vazio", "anel_referencia", "conjunto_mago"):
+def sandalia_r2():
+    """A Sandália: atual (o sprite) × rodada 1 × rodada 2 no jogo (tamanho real), a prancha da rodada 2 e o conjunto."""
+    base = LOTE / "sandalia_chapeu"
+    folha(base / "capturas" / "r2", [("a ficha do Mago: a Sandália com o chapéu, o manto, a calça e a luva de seda (32)", "ficha", (18, 362, 272, 472)),
+                                     ("o corpo no Inventário (40)", "inventario", (150, 140, 480, 520)),
+                                     ("o cartão do saque da Sandália (64) e o que você usa (48)", "saque", None)],
+          base / "sandalia-r2-no-jogo.png", ("atual", "rodada1", "rodada2"))
+    r2 = base / "rodada2"
+    prancha([r2 / "proposta" / f"sandalia-{n}.png" for n in (32, 40, 48, 64)] + [r2 / "previa" / "32" / "sandalia_uma_final_32.png",
+             base / "rodada1" / "proposta" / "sandalia-32.png", JOGO / "bota-32.png"], r2 / "prancha-carvao.png")
+    conjunto_mago()
+
+if __name__ == "__main__" and sys.argv[1] in ("antidoto_base", "frasco_vazio", "anel_referencia", "conjunto_mago", "sandalia_r2"):
     globals()[sys.argv[1]](); sys.exit()
 if __name__ == "__main__":
     nome = sys.argv[1]; cfg = LOTES[nome]; base = LOTE / nome

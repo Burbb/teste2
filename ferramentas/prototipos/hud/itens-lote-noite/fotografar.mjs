@@ -7,7 +7,7 @@
 //       | vida_mana | vigor_foco | vigor_foco_arqueiro | ouro_provisoes | moeda | tocha | tocha16 | tocha16_risco | tocha_apagada
 //       | bandagem_pocao | bandagem_pocao_luta | tonico_antidoto | calca_manto | calca_manto_saque_calca
 //       | frasco_vazio | frasco_cheio | antidoto_base | anel_amuleto | anel_amuleto_saque_amuleto | sandalia_chapeu | sandalia_chapeu_saque_chapeu
-//       | chapeu_no_jogo
+//       | chapeu_no_jogo | sandalia_r2
 import { spawn } from "child_process";
 import { readFileSync, existsSync, mkdirSync } from "fs";
 import { fileURLToPath } from "url";
@@ -166,6 +166,13 @@ const PECAS = {
   chapeu_no_jogo: { pasta: "sandalia_chapeu/proposta", saida: "sandalia_chapeu/capturas/integracao", nomes: ["chapeu"],
     cena: ["tutorial", { CLASSE: "mago", TUTORIAL: "0", PERIODO: "0", VESTIR: "chapeu,manto,calca_tecido,sandalia,luva_seda" }], fotos: ["ficha", "inventario"],
     saque: ["vila", { CLASSE: "mago", ACHADO: "chapeu", VESTIDO: "chapeu" }] },
+  // a Sandália, rodada 2 (o par em três quartos, pela referência ferramentas/arte/referencias/botas/): o papel só nesta
+  // página (o chapéu já está no jogo). Atual (SO_ATUAL), rodada 1 (PASTA=sandalia_chapeu/rodada1/proposta
+  // ROTULO=rodada1 SO_PROPOSTA=1) e rodada 2 (ROTULO=rodada2 SO_PROPOSTA=1), com os mesmos dados
+  sandalia_r2: { pasta: "sandalia_chapeu/rodada2/proposta", saida: "sandalia_chapeu/capturas/r2", nomes: ["sandalia", "chapeu"],
+    papeis: [{ item: "sandalia", tamanhos: [32, 40, 48, 64] }],
+    cena: ["tutorial", { CLASSE: "mago", TUTORIAL: "0", PERIODO: "0", VESTIR: "chapeu,manto,calca_tecido,sandalia,luva_seda" }], fotos: ["ficha", "inventario"],
+    saque: ["vila", { CLASSE: "mago", ACHADO: "sandalia", VESTIDO: "sandalia" }] },
   frasco_vazio: { pasta: "bandagem_pocao/variantes/proposta", saida: "bandagem_pocao/variantes/capturas/vazia", nomes: ["frasco_vazio"],
     papel_recurso: { frasco_vazio: [24] }, cena: ["covil", { LUGAR: "vila", BOLSA: "pocao_vida=0" }], fotos: ["topo"] },
   frasco_cheio: { pasta: "bandagem_pocao/variantes/proposta", saida: "bandagem_pocao/variantes/capturas/cheia", nomes: ["frasco_vazio"],
