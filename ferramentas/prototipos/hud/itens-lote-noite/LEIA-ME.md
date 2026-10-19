@@ -1253,3 +1253,39 @@ uso é o topo. Com eles, os quatro ícones das barras do topo estão em pixel ar
   têm as mesmas medidas de antes (só o ícone do topo passou de 32 para 24). Na conferência apareceu mais um uso de 16,
   o aviso de escuro do painel do lugar (`risco-lugar`, com e sem tocha): entrou no mesmo papel
   (`no-jogo-1.136.0-1920x945-riscos-lugar.png`).
+
+## Lote da noite de 19/10, lote 1: a Bandagem e a Poção de Vida (`bandagem_pocao/`)
+
+**Proposta, nada no jogo, não aprovada.** Os atuais são placeholders da família de ferro; as propostas os reinterpretam.
+
+- **Os usos, conferidos:**
+  - **a Poção de Vida** (`pocao`): o topo (24), a bolsa da ficha, o Inventário, o mercado, o espólio, o voo e as
+    escolhas que a usam (32) e o comando **Itens** da roda da luta (`ACAO.pocao`, 32: papel compartilhado, a mesma
+    imagem); em 16, o sprite `pocao` do chip, do aviso e do ícone das escolhas;
+  - **a Bandagem** (`bandagem`): o topo (24), os mesmos usos de consumível (32) e o sprite de 16;
+  - os arquivos 48 e 64 das duas não aparecem parados em lugar nenhum (só o baú usa 48). Tamanhos da proposta: 16, 24, 32.
+- **A Bandagem:** um rolo de linho deitado, um cilindro quase horizontal com as bordas paralelas; a face da ponta
+  virada para a luz, com uma espiral só, solta e em tom de pano, e o miolo (não anéis escuros: nada de rosca); duas
+  bordas de volta no corpo, suaves e inclinadas, com a sombra e a beira clara da espessura que sobrepõe; a ponta solta
+  deitada para a direita, a face larga clara, a dobra e o corte desfiado (dobra e desfiado só no 32). Camadas: tira,
+  corpo, face, contorno.
+- **A Poção de Vida:** um balão redondo de vidro (o perfil de revolução de `auxiliares/frasco.py`, a base da família de
+  frascos): o líquido vermelho até perto de dois terços, a superfície clara marcando o nível, o vidro vazio escuro em
+  cima com a beira clara (a espessura), o fundo tingido pelo líquido, o brilho agrupado em cima à esquerda e um reflexo
+  vertical; o gargalo, o anel da boca e a rolha de cortiça. Camadas: vidro, liquido, rolha, brilho, contorno.
+- **As tentativas descartadas** (em `bandagem_pocao/recusados/`): a bandagem com a espiral forte e o corpo subindo
+  (parecia uma concha de caracol; antes, a tira estreita fazia um martelo) e a poção com o balão menor (pouca presença
+  no espaço de 32 ao lado da bandagem e da tocha). A primeira poção também saiu rosada; o vermelho foi aprofundado.
+- **As etapas:** listas pelos auxiliares (`bandagem.py <N>`, `frasco.py pocao <N>`, com `silhueta` para a etapa numa
+  cor), conferidas pela `prancha.py`; pintura no Aseprite pelo MCP com o `pintar.lua` (0 diferentes, 0 fora da tela);
+  fontes em `bandagem_pocao/fontes/bandagem/bandagem-16|24|32.aseprite` e `fontes/pocao/pocao-16|24|32.aseprite`;
+  exportação pelo `exportar_aseprite.py <peça> bandagem_pocao/proposta --fontes=bandagem_pocao/fontes`. O composto do
+  editor confere com o exportado e com a prévia por um código de conferência (`auxiliares/soma.lua` no editor,
+  `soma.py` nos PNGs); os @2x são exatos.
+- **As fotos (1920×945, os mesmos dados):** `fotografar.mjs bandagem_pocao` (o topo, a bolsa da ficha e os cartões do
+  mercado, o aviso e o chip de cada item ganho, a bolsa do Inventário; o 16 pelo `papel_sprite`, só na página) e
+  `bandagem_pocao_luta` (a roda da luta). O roteiro ganhou as fotos `aviso-item` e `chip-item` (a lista em `itens`).
+  Folha `bandagem_pocao/bandagem_pocao-no-jogo.png` e prancha `bandagem_pocao/prancha-carvao.png`
+  (`bandagem_pocao/auxiliares/montar.py bandagem_pocao`).
+- **A decidir na avaliação:** o comando Itens da roda da luta muda junto com a poção (o papel é a mesma imagem); o
+  frasco vazio do topo (sem poções) continua o sprite do jogo e pediria a sua variante, como a tocha apagada.

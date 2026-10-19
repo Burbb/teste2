@@ -5,6 +5,7 @@
 //   PLAYWRIGHT_MODULO=<caminho>/index.mjs node ferramentas/prototipos/hud/itens-lote-noite/fotografar.mjs <peça>
 // peça: calca_couro | aljava | atributos | ataque_defesa | agilidade_poder | agilidade | aljava_ref | poder | doca_r2 | doca_r3 | doca_r3_luta | doca_r4 | doca_r4_telas | doca_r5 | doca
 //       | vida_mana | vigor_foco | vigor_foco_arqueiro | ouro_provisoes | moeda | tocha | tocha16 | tocha16_risco | tocha_apagada
+//       | bandagem_pocao | bandagem_pocao_luta
 import { spawn } from "child_process";
 import { readFileSync, existsSync, mkdirSync } from "fs";
 import { fileURLToPath } from "url";
@@ -108,6 +109,14 @@ const PECAS = {
   tocha_apagada: { pasta: "moeda_tocha/variantes/proposta", saida: "moeda_tocha/variantes/capturas/apagada", nomes: ["tocha_apagada"],
     papel_sprite: { tocha_apagada: [16] }, papel_recurso: { tocha_apagada: [16, 24] },
     cena: ["capela", { CLASSE: "guerreiro", NIVEL: "5", ETAPA: "capela", SALA: "exterior", PERIODO: "3", TOCHAS: "0" }], fotos: ["topo", "riscos"] },
+  // lote 1 (bandagem_pocao/): a Bandagem e a Poção de Vida. O topo (24), os cartões do mercado e a bolsa do Inventário
+  // (32), o aviso e o chip de um item ganho (16, o sprite só nesta página); na luta, o comando Itens da roda (a poção, 32)
+  bandagem_pocao: { pasta: "bandagem_pocao/proposta", saida: "bandagem_pocao/capturas", nomes: ["bandagem", "pocao"],
+    papel_sprite: { bandagem: [16], pocao: [16] }, itens: [["pocao_vida", "+1 Poção de Vida"], ["bandagem", "+1 Bandagem"]],
+    cena: ["mercado", { CLASSE: "guerreiro" }], fotos: ["topo", "mercado", "aviso-item", "chip-item", "inventario"] },
+  bandagem_pocao_luta: { pasta: "bandagem_pocao/proposta", saida: "bandagem_pocao/capturas", nomes: ["bandagem", "pocao"],
+    cena: ["tutorial", { LUTA_APOS_ESCOLHA: "1", TUTORIAL: "0", VISTAS, CLASSE: "guerreiro", NIVEL: "8", ESPEC: "paladino", COMITIVA: "morel", LUTA: "lobo", QUANTOS: "3", NIVEL_LUTA: "7" }],
+    fotos: ["luta"] },
 };
 const P = PECAS[peca];
 if (!P) throw new Error(`peça desconhecida: ${peca}`);
@@ -282,6 +291,25 @@ for (const modo of (process.env.SO_ATUAL ? ["atual"] : process.env.SO_PROPOSTA ?
         await p.evaluate(() => { efeito({ tipo: "item", texto: "+1 Tocha", item: "tocha" }); });
         await espera(1500);
         await p.screenshot({ path: nome("chip"), clip: await clipDe("#texto .chip.item", 10) });
+        (await desenhos()).forEach((d) => visto.add(d));
+      }
+      if (f === "aviso-item") {   // numa tela (o mercado), cada item ganho vira o aviso flutuante perto do clique
+        for (const [id, texto] of P.itens) {
+          await p.mouse.click(1100, 700); await espera(300);
+          await p.evaluate(([i, t]) => { efeito({ tipo: "item", texto: t, item: i }); }, [id, texto]);
+          await espera(400);
+          await p.screenshot({ path: nome(`aviso-${id}`), clip: await clipDe(".aviso-flutuante", 12) });
+          (await desenhos()).forEach((d) => visto.add(d));
+          await espera(2000);
+        }
+      }
+      if (f === "chip-item") {    // na vila, o chip de cada item ganho no texto (16)
+        if (await p.$(".tela.loja")) { await p.keyboard.press("Escape"); await p.waitForSelector('#predios:not(.focado) .predio[data-predio="mercado"]', { timeout: 8000 }); await espera(800); }
+        for (const [id, texto] of P.itens) {
+          await p.evaluate(([i, t]) => { efeito({ tipo: "item", texto: t, item: i }); }, [id, texto]);
+          await espera(1500);
+        }
+        await p.screenshot({ path: nome("chips"), clip: await clipDe("#texto .chips:last-of-type", 10) });
         (await desenhos()).forEach((d) => visto.add(d));
       }
       if (f === "riscos") {        // os riscos da escolha que entra na sala escura (a tocha que ela gasta, ou sem luz)

@@ -4246,3 +4246,14 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
     (`tests/navegador/mostruario.html`). Logotipo e títulos (Alagard) não mudam.
   - Conferido a 1920×945 com a preferência antiga salva: a chave some, a prosa fica na Alegreya, nos mesmos tamanhos, e
     não há erro no console.
+
+### 19/10/2026 (data do computador local) — Lote da noite, 1: propostas da Bandagem e da Poção de Vida
+
+- **Pedido de Jean** (para a noite, com autonomia): três lotes, uma peça por vez, só no protótipo; nada integrado.
+- **Feito, só no protótipo** (`ferramentas/prototipos/hud/itens-lote-noite/bandagem_pocao/`), **não aprovado**:
+  - **a Bandagem** (16, 24, 32): o rolo de linho deitado, a espiral solta na face, as voltas suaves e a tira solta;
+  - **a Poção de Vida** (16, 24, 32): o balão de vidro com o líquido vermelho até dois terços, a superfície marcando o
+    nível, a beira do vidro, o brilho agrupado e a rolha; é a base da família de frascos (`auxiliares/frasco.py`).
+  - Fontes em camadas pelo `pintar.lua`, exportação conferida (o composto do editor pelo `soma.lua`), @2x exatos;
+    fotos atual × proposta a 1920×945 e a prancha sobre o carvão.
+- **A decidir:** o comando Itens da roda da luta é a mesma imagem da poção; o frasco vazio do topo continua o sprite.
