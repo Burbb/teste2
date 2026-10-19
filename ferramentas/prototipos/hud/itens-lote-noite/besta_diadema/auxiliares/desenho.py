@@ -16,6 +16,7 @@ RAMPAS = {
     "f": ["#5f584a", "#8f8670", "#bdb497", "#e1dabe"],                                             # a corda (a do arco)
     "o": ["#5E3E14", "#946422", "#C89434", "#EED070", "#FFF0B0"],                                  # o latão (o do manto)
     "g": ["#2A1240", "#4A2470", "#7040A8", "#A070D8", "#D8B8F8"],                                  # a gema violeta (a do amuleto)
+    "d": ["#140D06", "#24170A", "#3A2610"],                                                        # o latão por dentro, na sombra
 }
 mat, tom, fixo, X, Y = grade(N)
 cam = np.full((N, N), "", dtype=object)
@@ -102,45 +103,60 @@ if PECA == "besta":
         pinta(noz & (x32 < NOZ[0]) & (y32 < NOZ[1]), "o", 3, "metal")
     camadas = ["coronha", "empunhadura", "corda", "arco", "metal", "contorno"]
 else:
-    # O diadema visto de frente e um pouco de cima: o aro de latão (uma chapa fina e baixa, a elipse larga), a face de
-    # fora na frente, clara na beira de cima, e o lado de trás mais escuro, com o fundo aparecendo pelo meio; a ponta da frente, uma placa pontuda que sobe do aro, com a
-    # gema violeta (a do amuleto aprovado) num engaste.
-    C = np.array([16.0, 20.0]); RX, RY, ALT = 12.8, 4.2, 1.7
-    ang = np.linspace(0, 2 * np.pi, 160)
+    # O Diadema, rodada 2: de frente, a face da frente da faixa à mostra (a apresentação da imagem que o Jean mandou para
+    # o ângulo), com pouco do aro visto de cima. A faixa de latão (o do broche do manto) é um cilindro baixo visto quase
+    # de frente: a face de fora em curva, clara à esquerda, com a beira de cima acesa e um friso no meio; atrás, por cima
+    # da faixa, a face de dentro do lado de trás, escura, e por baixo dela o vão (o lugar da cabeça); a borda de trás,
+    # uma linha fina. Na frente, a ponta estreita sobe da faixa com a gema violeta (a do amuleto aprovado) no engaste,
+    # Sem coroa: uma ponta só, a faixa fina.
+    C = np.array([16.0, 17.6]); RX, RY, ALT = 13.6, 2.6, 4.0
+    ang = np.linspace(0, 2 * np.pi, 200)
     def elipse(cx, cy, rx, ry):
         return poligono([(cx + rx * np.cos(a), cy + ry * np.sin(a)) for a in ang])
     topo = elipse(C[0], C[1], RX, RY); base = elipse(C[0], C[1] + ALT, RX, RY)
     entre = poligono([(C[0] - RX, C[1]), (C[0] + RX, C[1]), (C[0] + RX, C[1] + ALT), (C[0] - RX, C[1] + ALT)])
-    ESP = 0.8                                                                   # a espessura da chapa
-    furo_cima = elipse(C[0], C[1], RX - ESP, RY - ESP * 0.45)
-    furo_baixo = elipse(C[0], C[1] + ALT, RX - ESP, RY - ESP * 0.45)
-    vazado = furo_cima & furo_baixo                                             # o que se vê através do aro: o fundo
-    aro = (topo | base | entre) & ~vazado
-    # a ponta da frente: a placa que sobe do aro acima da borda de trás, com o engaste e a gema
-    PE = C[1] + RY + 0.8                                                        # o pé da placa, na beira de baixo da frente
-    placa = poligono([(C[0] - 3.0, PE), (C[0] - 2.8, PE - 4.4), (C[0] - 1.1, PE - 11.0), (C[0], PE - 13.6),
-                      (C[0] + 1.1, PE - 11.0), (C[0] + 2.8, PE - 4.4), (C[0] + 3.0, PE)])
-    G = np.array([C[0], PE - 6.2])
-    gema = np.hypot((x32 - G[0]) * 1.1, (y32 - G[1]) * 0.8) * K <= max(2.0 * K, 1.0)
-    engaste = np.hypot((x32 - G[0]) * 1.1, (y32 - G[1]) * 0.8) * K <= max(2.9 * K, 1.6)
+    ESP = 0.9                                                                   # a espessura da chapa
+    abertura = elipse(C[0], C[1], RX - ESP, RY - ESP * 0.45)                    # a boca de cima, por dentro
+    corpo = topo | base | entre
+    # a face de fora, na frente: abaixo da beira de cima da frente (a metade de baixo da elipse de cima)
+    frente_y = C[1] + RY * np.sqrt(np.clip(1 - ((x32 - C[0]) / RX) ** 2, 0, 1))
+    face = corpo & (y32 >= frente_y - 0.5)
+    # pela boca: a face de dentro do lado de trás (de cima até ALT abaixo da borda de trás) e, abaixo dela, o vão
+    tras_y = C[1] - (RY - ESP * 0.45) * np.sqrt(np.clip(1 - ((x32 - C[0]) / (RX - ESP)) ** 2, 0, 1))
+    dentro = abertura & ~face & (y32 < tras_y + ALT)
+    vao = abertura & ~face & ~dentro
+    aro = corpo & ~vao
+    # a ponta da frente, a gema e as contas dos lados
+    PE = C[1] + RY + 1.4                                                        # o pé da ponta, na faixa da frente
+    placa = poligono([(C[0] - 3.0, PE), (C[0] - 2.7, PE - 5.6), (C[0] - 1.1, PE - 12.4), (C[0], PE - 15.2),
+                      (C[0] + 1.1, PE - 12.4), (C[0] + 2.7, PE - 5.6), (C[0] + 3.0, PE)])
+    G = np.array([C[0], PE - 6.6])
+    gema = np.hypot((x32 - G[0]) * 1.05, (y32 - G[1]) * 0.78) * K <= max(2.15 * K, 1.0)
+    engaste = np.hypot((x32 - G[0]) * 1.05, (y32 - G[1]) * 0.78) * K <= max(3.0 * K, 1.6)
     if ETAPA == "silhueta":
         pinta(aro | placa, "o", 2, "aro")
+        pinta(vao, "", 0, "")
     else:
-        # o aro: a face de fora da frente em faixas (a luz da esquerda); a beira de cima clara; o lado de trás escuro
-        pinta(aro, "o", np.where(x32 < C[0] - RX * 0.45, 3, np.where(x32 < C[0] + RX * 0.35, 2, 1)), "aro")
-        tras = aro & (y32 < C[1]) & topo
-        pinta(tras, "o", np.where(x32 < C[0] - RX * 0.3, 1, 0), "aro")
-        beira = aro & topo & ~elipse(C[0], C[1] + 1.0, RX, RY) & (y32 >= C[1])
-        pinta(beira, "o", np.where(x32 < C[0] + RX * 0.3, 3, 2), "aro")
-        pinta(beira & (np.abs(x32 - (C[0] - RX * 0.55)) < 1.8), "o", 4, "aro")
-        # a placa da frente: a face clara à esquerda, a sombra à direita; o engaste e a gema
+        # a face de dentro, atrás: na sombra (mais escura embaixo, perto da face da frente); a borda de trás um tom acima
+        pinta(dentro, "d", np.where(y32 < tras_y + 1.2, 2, np.where(y32 < tras_y + 2.4, 1, 0)), "aro")
+        borda_tras = aro & ~face & ~dentro
+        pinta(borda_tras, "o", np.where(x32 < C[0], 2, 1), "aro")
+        # a face de fora: a luz da esquerda em faixas, a beira de cima acesa, a beira de baixo na sombra, o friso
+        tf = np.where(x32 < C[0] + RX * 0.1, 2, 1)
+        pinta(face, "o", tf, "aro")
+        beira = face & (y32 < frente_y + 0.9 * K ** 0)
+        pinta(beira, "o", np.minimum(tf + 1, 4), "aro")
+        pinta(beira & (np.abs(x32 - (C[0] - RX * 0.55)) < 2.0), "o", 4, "aro")
+        baixo_y = frente_y + ALT
+        pinta(face & (y32 > baixo_y - 1.0), "o", np.maximum(tf - 1, 0), "aro")
+        # a ponta: a face clara à esquerda, a sombra à direita; o engaste e a gema
         pinta(placa, "o", np.where(x32 < C[0] - 0.3, 3, 2), "placa")
-        pinta(placa & (x32 > C[0] + 1.2), "o", 1, "placa")
+        pinta(placa & (x32 > C[0] + 1.0), "o", 1, "placa")
         pinta(engaste, "o", 1, "placa")
         pinta(gema, "g", 2, "gema")
         pinta(gema & (x32 < G[0] + 0.2) & (y32 < G[1] + 0.2), "g", 3, "gema")
         pinta(gema & (x32 > G[0] + 0.6) & (y32 > G[1] + 0.4), "g", 1, "gema")
-        pinta(np.hypot(x32 - (G[0] - 0.7), y32 - (G[1] - 0.7)) * K <= 0.6, "g", 4, "gema")
+        pinta(np.hypot(x32 - (G[0] - 0.7), y32 - (G[1] - 0.8)) * K <= 0.6, "g", 4, "gema")
     camadas = ["aro", "placa", "gema", "contorno"]
 
 if ETAPA == "final":

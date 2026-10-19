@@ -4507,3 +4507,16 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
     saque, só os raios animados atrás do ícone mudam.
   - Preços, atributos, regras, medidas, áreas de clique e animações não mudaram.
 
+### 19/10/2026 (data do computador local) — O Diadema, rodada 2 (proposta)
+
+- **Pedido de Jean:** rever o ângulo do Diadema (a rodada 1 ficou achatada), mostrando mais a face da frente, sem
+  engrossar a chapa nem virar coroa grande; mandou uma imagem de referência de uma coroa de frente.
+- **Feito, só no protótipo** (`ferramentas/prototipos/hud/itens-lote-noite/besta_diadema/`), **não aprovado**: a faixa
+  de latão vista de frente (a face da frente à mostra, a de dentro escura por cima, a ponta com a gema violeta); 32,
+  40, 48 da mesma construção, 64 = 32 ×2; fontes em camadas pelo `pintar.lua`; composto, exportação e prévia conferem;
+  @2x exatos. A rodada 1 está guardada em `besta_diadema/diadema_r1/`.
+- **Fotos a 1920×945:** atual × antes × depois na ficha, no Inventário e nos saques do Diadema e da Coroa dos Afogados
+  (`diadema-r2-no-jogo.png`), a fileira do Mago e a prancha. O símbolo da reputação não mudou.
+- **Aguardando avaliação.** O compartilhamento com a Coroa dos Afogados segue provisório (a arte própria do único fica
+  para o futuro).
+

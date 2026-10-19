@@ -167,6 +167,20 @@ def besta_diadema():
             base / "fileira-mago-32.png")
     prancha([P / f"besta-{n}.png" for n in (32, 40, 48, 64)] + [P / f"diadema-{n}.png" for n in (32, 40, 48, 64)], base / "prancha-carvao.png")
 
+def diadema_r2():
+    """O Diadema, rodada 2: atual (o sprite) × antes (rodada 1) × depois (rodada 2) no jogo, a fileira do Mago e a prancha."""
+    base = LOTE / "besta_diadema"; P = base / "proposta"; R1 = base / "diadema_r1" / "proposta"
+    folha(base / "capturas", [("a ficha do Mago com o Diadema (32)", "ficha", (18, 362, 272, 472), "diadema"),
+                              ("o corpo no Inventário (40)", "inventario", (150, 140, 480, 520), "diadema"),
+                              ("o cartão do saque do Diadema (64 e 48)", "saque", None, "diadema"),
+                              ("o cartão da Coroa dos Afogados (o mesmo desenho por ora; 64 e 48)", "saque", None, "coroa_afogados")],
+          base / "diadema-r2-no-jogo.png", ("atual", "antes", "depois"))
+    fileira([("Diadema r2", P / "diadema-32.png"), ("Diadema r1", R1 / "diadema-32.png"),
+             ("Chapéu Pontudo", JOGO / "chapeu-32.png"), ("capuz", JOGO / "capuz_tecido-32.png"),
+             ("amuleto", JOGO / "amuleto-32.png"), ("anel", JOGO / "anel-32.png"), ("manto", JOGO / "manto-32.png")],
+            base / "fileira-mago-32.png")
+    prancha([P / f"diadema-{n}.png" for n in (32, 40, 48, 64)] + [R1 / "diadema-32.png"], base / "diadema-prancha-carvao.png")
+
 def sandalia_no_jogo():
     """A Sandália no jogo (1.142.0), em tamanho real: o saque, a ficha e o Inventário depois de "Equipar agora"."""
     pasta = LOTE / "sandalia_chapeu" / "capturas" / "integracao"
@@ -181,7 +195,7 @@ def sandalia_no_jogo():
     saida = LOTE / "sandalia_chapeu" / "sandalia-1.142.0-no-jogo.png"; o.save(saida); print(saida)
 
 if __name__ == "__main__" and sys.argv[1] in ("antidoto_base", "frasco_vazio", "anel_referencia", "conjunto_mago", "sandalia_r2",
-                                              "sandalia_no_jogo", "besta_diadema"):
+                                              "sandalia_no_jogo", "besta_diadema", "diadema_r2"):
     globals()[sys.argv[1]](); sys.exit()
 if __name__ == "__main__":
     nome = sys.argv[1]; cfg = LOTES[nome]; base = LOTE / nome

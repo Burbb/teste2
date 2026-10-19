@@ -181,12 +181,14 @@ const PECAS = {
     papeis: [{ item: "besta", tamanhos: [32, 40, 48, 64] }, { item: "coroa", peca: "diadema", tamanhos: [32, 40, 48, 64] }],
     cena: ["tutorial", { CLASSE: "arqueiro", TUTORIAL: "0", PERIODO: "0", ARMA: "besta" }], fotos: ["ficha", "inventario"],
     saque: ["vila", { CLASSE: "arqueiro", ACHADO: "besta", VESTIDO: "besta" }] },
+  // o Diadema, rodada 2 (a besta já no jogo, 1.143.0): antes (PASTA=besta_diadema/diadema_r1/proposta ROTULO=antes
+  // SO_PROPOSTA=1) e depois (ROTULO=depois SO_PROPOSTA=1), com os mesmos dados
   diadema: { pasta: "besta_diadema/proposta", saida: "besta_diadema/capturas/diadema", nomes: ["besta", "diadema"],
-    papeis: [{ item: "besta", tamanhos: [32, 40, 48, 64] }, { item: "coroa", peca: "diadema", tamanhos: [32, 40, 48, 64] }],
+    papeis: [{ item: "coroa", peca: "diadema", tamanhos: [32, 40, 48, 64] }],
     cena: ["tutorial", { CLASSE: "mago", TUTORIAL: "0", PERIODO: "0", VESTIR: "coroa,manto,calca_tecido,sandalia,luva_seda" }], fotos: ["ficha", "inventario"],
     saque: ["vila", { CLASSE: "mago", ACHADO: "coroa", VESTIDO: "coroa" }] },
   coroa_afogados: { pasta: "besta_diadema/proposta", saida: "besta_diadema/capturas/coroa_afogados", nomes: ["besta", "diadema"],
-    papeis: [{ item: "besta", tamanhos: [32, 40, 48, 64] }, { item: "coroa", peca: "diadema", tamanhos: [32, 40, 48, 64] }],
+    papeis: [{ item: "coroa", peca: "diadema", tamanhos: [32, 40, 48, 64] }],
     cena: ["tutorial", { CLASSE: "mago", TUTORIAL: "0" }], fotos: [],
     saque: ["vila", { CLASSE: "mago", ACHADO_ID: "coroa_dos_afogados", VESTIDO: "coroa" }] },
   frasco_vazio: { pasta: "bandagem_pocao/variantes/proposta", saida: "bandagem_pocao/variantes/capturas/vazia", nomes: ["frasco_vazio"],

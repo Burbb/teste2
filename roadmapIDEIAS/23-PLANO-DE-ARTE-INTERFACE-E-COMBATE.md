@@ -144,7 +144,7 @@ de antes não vale como arte final.
 | `martelo` | Martelo (Guerreiro) | **Arte aprovada, preservada; faltam o 40 e o 48** | grade de 32 em `desenhos.js` (1.93.0) | Desenho próprio, não da pintura; completar o 40 e o 48 pela mesma construção, sem redesenhar (outra entrega) |
 | `besta` | Besta Leve (Arqueiro) | Arte final, padrão atual (integrada na 1.143.0) | `aseprite/besta/` (1.143.0) | Uma das quatro armas do Arqueiro |
 | `chapeu` | Chapéu Pontudo (Mago) | Arte final, padrão atual (integrada na 1.141.0) | `aseprite/chapeu/` (1.141.0) | Um terço das cabeças do Mago |
-| `coroa` | Diadema (Mago); único Coroa dos Afogados | **Desenho inexistente** no jogo; proposta em avaliação | sem papel em `Icones`; proposta em `itens-lote-noite/besta_diadema/` | O sprite `coroa` é também o símbolo da reputação (fica); a Coroa dos Afogados pede arte própria no futuro |
+| `coroa` | Diadema (Mago); único Coroa dos Afogados | **Desenho inexistente** no jogo; rodada 2 em avaliação | sem papel em `Icones`; proposta em `itens-lote-noite/besta_diadema/` | O sprite `coroa` é também o símbolo da reputação (fica); a Coroa dos Afogados pede arte própria no futuro |
 | `sandalia` | Sandália (Mago, a única base dos pés dele) | Arte final, padrão atual (integrada na 1.142.0) | `aseprite/sandalia/` (1.142.0) | Nomes dos materiais de tecido num desenho de couro: pendência de nomenclatura |
 | `escudo` | Escudo, Broquel; únicos Égide do Mártir, Broquel do Vigia | Arte final, padrão atual | `desenhar_escudo_pixel.py` (1.94.0) | Também a silhueta da secundária vazia (`VAZIO`) |
 | `machado` | Machado; únicos Lamento de Gharbad, O Açougueiro | Arte final, padrão atual | `desenhar_machado_pixel.py` (1.99.0) | — |
@@ -224,6 +224,11 @@ execução fica para outra entrega.
   e o diadema de latão é uma peça simples). Nenhum dado mudou e nenhum item foi criado.
 - **Os nomes:** o Diadema leva os materiais de tecido ("Diadema de Lã Negra"), mas o desenho é de latão: a mesma
   pendência de nomenclatura da Sandália.
+- **O Diadema, rodada 2 (em avaliação):** a rodada 1 ficou achatada (no tamanho real, uma elipse dourada com um ponto
+  no meio; a frente pouco visível) e está guardada em `besta_diadema/diadema_r1/`. A rodada 2 vira a peça de frente,
+  pela imagem que o Jean mandou para o ângulo: a face da frente da faixa à mostra, a face de dentro do lado de trás
+  escura por cima dela, a ponta com a gema; o latão e a gema violeta ficam. O compartilhamento com a Coroa dos Afogados
+  continua provisório, e o símbolo da reputação não muda.
 
 ### 1.3. Prioridade: consumo do recurso antes das consequências
 

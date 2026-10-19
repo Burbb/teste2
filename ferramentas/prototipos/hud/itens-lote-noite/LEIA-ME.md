@@ -1665,3 +1665,37 @@ o machado) e `fileira-mago-32.png` (o diadema com o Chapéu Pontudo, o capuz, o 
 (`DERIVADOS`). Conferida com os arquivos do jogo e os saves temporários (`capturas/integracao/no-jogo-1.143.0-*`): o
 saque, equipar (os atributos mudam como a comparação do cartão), guardar, a ficha e o Inventário.
 
+### O Diadema, rodada 2 (`besta_diadema/`)
+
+**Pedido de Jean (19/10/2026):** o latão e a gema violeta funcionam, mas a apresentação da rodada 1 ficou achatada: no
+tamanho real, uma elipse dourada com um ponto central, e a frente da peça pouco visível. Mostrar mais a face da frente e
+menos o aro visto de cima, ganhar presença pela apresentação e pelos planos, sem engrossar a chapa toda nem virar uma
+coroa grande. Durante o trabalho, o Jean mandou uma imagem de referência para o ângulo ("mais assim talvez?"): uma
+coroa vista de frente, com a faixa da frente grande e a borda de cima aparecendo pouco.
+
+**A rodada 1 guardada** em `besta_diadema/diadema_r1/` (a proposta, as fontes, a prévia e o script daquela versão,
+`auxiliares/desenho_rodada1.py`, que a reproduz pixel a pixel).
+
+**A rodada 2** (`auxiliares/desenho.py`, a mesma construção em 32, 40 e 48; o 64 é o 32 ×2): de frente, um pouco de
+cima. A faixa de latão é um cilindro baixo visto quase de frente (a elipse de cima com pouca altura): a face de fora
+em curva, em duas faixas de luz (clara à esquerda), com a beira de cima acesa e o reflexo à esquerda, a beira de baixo
+na sombra; por cima dela, pela boca, a face de dentro do lado de trás, escura (uma rampa própria, o latão na sombra), e
+uma fresta do vão no 32; a borda de trás, uma linha fina. Na frente, a ponta estreita sobe da faixa com a gema violeta
+no engaste. Uma ponta só e a chapa fina: a presença vem da face da frente, não de uma chapa mais grossa. Camadas: aro,
+placa, gema, contorno. **Tentativas da bancada:** as contas de latão dos lados da ponta sumiam no 32 e saíram; com a face
+de dentro no tom do latão, a peça parecia uma torta, e a sombra passou para a rampa escura.
+
+**O Aseprite (pelo MCP):** as listas pintadas pelo `pintar.lua` (0 diferenças na releitura, 0 fora da tela), em
+`fontes/diadema/`; o composto do editor (`soma.lua`) é igual aos PNGs exportados e à prévia nos três; @2x exatos; o
+64 é o 32 ×2.
+
+**As fotos (1920×945, `fotografar.mjs diadema` e `coroa_afogados`, com `ROTULO=antes PASTA=besta_diadema/diadema_r1/
+proposta` e `ROTULO=depois`):** atual (o sprite) × antes × depois com os mesmos dados (`diadema-r2-no-jogo.png`): a
+ficha (32), o Inventário (40), o saque do Diadema e o da Coroa dos Afogados (64 e 48). Sem erro no console. O símbolo da
+reputação na ficha é igual nas três (o sprite `coroa`, fora do mapa de equipamento). A fileira do Mago em tamanho real
+(`fileira-mago-32.png`, as duas rodadas com o Chapéu Pontudo, o capuz, o amuleto, o anel e o manto) e a prancha dos
+tamanhos (`diadema-prancha-carvao.png`).
+
+**Para a avaliação:** a face da frente aparece e a peça ocupa mais o espaço; continua mais larga que alta (é um aro), e
+no 32 o oco de dentro lê como sombra.
+
