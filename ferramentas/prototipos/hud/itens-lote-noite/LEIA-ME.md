@@ -1213,3 +1213,34 @@ uso é o topo. Com eles, os quatro ícones das barras do topo estão em pixel ar
   os mesmos da rodada 2; o recebimento de uma tocha (`auxiliares/tocha_voo.mjs`, o `efeito` do jogo) voa o
   `tocha-32.png` do chip até o topo, no movimento de sempre (`moeda_tocha/tocha-voo-1.135.0.png`). O chip, o aviso e
   as escolhas mostram a tocha em 16, o sprite do jogo: não há arquivo desse tamanho.
+
+## As variantes da tocha: o 16 e a apagada (`moeda_tocha/variantes/`)
+
+**Proposta, nada no jogo.** Aguardam a avaliação do Jean; o 24 e o 32 integrados (1.135.0) não mudam.
+
+- **Os usos, conferidos:**
+  - **a tocha em 16** (o sprite `tocha` do jogo, sem papel em `Icones`): o chip de um item ganho no texto, o aviso
+    flutuante (o mesmo, numa tela), o risco "−1 tocha" da escolha que entra numa sala escura da capela à noite e o
+    ícone das escolhas que gastam o item (`escolhas.js`, `meta.gasta`);
+  - **a apagada** (`tocha_apagada`, o estado "sem tochas": o contador em 0, em alerta): o topo (hoje o sprite 16×16
+    ampliado a 32, maior que os vizinhos de 24) e o risco "Sem luz: inimigo age primeiro" das mesmas escolhas (16).
+    Tamanhos da proposta: 24 (o topo, como os outros recursos) e 16.
+- **O 16:** a mesma construção da tocha aprovada na grade de 16 (o `tocha.py 16`, sem retoque: a redução já manteve
+  o cabo de 2 px, o pano com as voltas e a chama com três pontas de alturas diferentes e o miolo claro). Camadas: cabo,
+  pano, chama, contorno.
+- **A apagada:** o mesmo cabo e o mesmo pano da aprovada, sem chama; a ponta de cima do pano queimada (quase preta)
+  e dois fios curtos de fumaça cinza subindo, com um vão entre eles e mais fracos em cima, sem contorno (vapor). É o
+  significado do sprite do jogo (a tocha que se apagou). Camadas: cabo, pano, queimado, contorno, fumaca. A primeira
+  fumaça (um fio longo) parecia um gancho e depois uma vareta; os dois fios curtos resolveram.
+- **As etapas:** listas pelo `auxiliares/tocha.py <16|24|32> [apagada]` (o 24 e o 32 aprovados saem iguais, pixel a
+  pixel), pintadas no Aseprite pelo MCP com o `pintar.lua` (0 diferentes, 0 fora da tela); fontes em
+  `variantes/fontes/tocha/tocha-16.aseprite` e `variantes/fontes/tocha_apagada/tocha_apagada-16.aseprite`, `-24`;
+  exportadas pelo `exportar_aseprite.py tocha|tocha_apagada variantes/proposta --fontes=variantes/fontes` (o composto
+  igual à captura do editor e às listas, os @2x exatos).
+- **As fotos (1920×945, os mesmos dados):** `fotografar.mjs tocha16` (o aviso numa tela, o chip na vila),
+  `tocha16_risco` e `tocha_apagada` (a capela à noite, com 2 tochas e sem tochas). O roteiro ganhou o papel de sprite
+  por tamanho (`papel_sprite`: só os tamanhos que a proposta tem) e o recurso do topo só na página (`papel_recurso`).
+  Folhas `variantes/tocha16-no-jogo.png`, `apagada-no-jogo.png` e a prancha `variantes/prancha-carvao.png`
+  (`montar.py variantes`).
+- **Na integração:** um papel em `Icones` para a tocha em 16 e para a apagada (o `RECURSO` do topo e os 16 do chip, do
+  aviso e dos riscos, que hoje vêm do `spr`); o tremular do topo (`controles.js`) só troca os sprites e não muda.

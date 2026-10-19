@@ -4,7 +4,7 @@
 // peça que ainda não tem papel em icones.js (a calça de couro) ganha o papel só nesta página.
 //   PLAYWRIGHT_MODULO=<caminho>/index.mjs node ferramentas/prototipos/hud/itens-lote-noite/fotografar.mjs <peça>
 // peça: calca_couro | aljava | atributos | ataque_defesa | agilidade_poder | agilidade | aljava_ref | poder | doca_r2 | doca_r3 | doca_r3_luta | doca_r4 | doca_r4_telas | doca_r5 | doca
-//       | vida_mana | vigor_foco | vigor_foco_arqueiro | ouro_provisoes | moeda | tocha
+//       | vida_mana | vigor_foco | vigor_foco_arqueiro | ouro_provisoes | moeda | tocha | tocha16 | tocha16_risco | tocha_apagada
 import { spawn } from "child_process";
 import { readFileSync, existsSync, mkdirSync } from "fs";
 import { fileURLToPath } from "url";
@@ -93,11 +93,21 @@ const PECAS = {
   // topo (16), o espólio e o pagamento de contratos (32) e o prêmio dos cartazes do mural (16), com os mesmos dados nos
   // dois modos. A moeda não tem papel em
   // Icones (é o sprite 16×16 do jogo): só nesta página, o Sprites.img("moeda") serve o arquivo da proposta
-  moeda: { pasta: "moeda_tocha/proposta", saida: "moeda_tocha/capturas/moeda", nomes: ["moeda"], papel_sprite: { sprite: "moeda", tamanhos: [16, 32] },
+  moeda: { pasta: "moeda_tocha/proposta", saida: "moeda_tocha/capturas/moeda", nomes: ["moeda"], papel_sprite: { moeda: [16, 32] },
     cena: ["mercado", { CLASSE: "guerreiro" }], fotos: ["precos", "servico", "chip-voo", "espolio", "contratos", "mural"] },
   // a tocha (moeda_tocha/): o topo (24), o cartão do mercado e a bolsa do Inventário (32); só esses tamanhos
   tocha: { pasta: "moeda_tocha/proposta", saida: "moeda_tocha/capturas/tocha", nomes: ["tocha"], papel_tamanhos: [24, 32],
     cena: ["mercado", { CLASSE: "guerreiro" }], fotos: ["topo", "mercado", "inventario"] },
+  // as variantes da tocha (moeda_tocha/variantes/): o 16 (o sprite "tocha" em 16, só nesta página) no aviso flutuante
+  // e no chip de um item ganho, e no risco "−1 tocha" da escolha que entra numa sala escura da capela, à noite
+  tocha16: { pasta: "moeda_tocha/variantes/proposta", saida: "moeda_tocha/variantes/capturas/tocha16", nomes: ["tocha"], papel_sprite: { tocha: [16] },
+    cena: ["mercado", { CLASSE: "guerreiro" }], fotos: ["aviso-tocha", "chip-tocha"] },
+  tocha16_risco: { pasta: "moeda_tocha/variantes/proposta", saida: "moeda_tocha/variantes/capturas/tocha16", nomes: ["tocha"], papel_sprite: { tocha: [16] },
+    cena: ["capela", { CLASSE: "guerreiro", NIVEL: "5", ETAPA: "capela", SALA: "exterior", PERIODO: "3", TOCHAS: "2" }], fotos: ["riscos"] },
+  // a apagada: o topo sem tochas (24, o recurso só nesta página: hoje é o sprite em 32) e o risco "Sem luz" (16)
+  tocha_apagada: { pasta: "moeda_tocha/variantes/proposta", saida: "moeda_tocha/variantes/capturas/apagada", nomes: ["tocha_apagada"],
+    papel_sprite: { tocha_apagada: [16] }, papel_recurso: { tocha_apagada: [16, 24] },
+    cena: ["capela", { CLASSE: "guerreiro", NIVEL: "5", ETAPA: "capela", SALA: "exterior", PERIODO: "3", TOCHAS: "0" }], fotos: ["topo", "riscos"] },
 };
 const P = PECAS[peca];
 if (!P) throw new Error(`peça desconhecida: ${peca}`);
@@ -122,6 +132,17 @@ async function anexar(p) {
       r.fulfill({ response: res, body: js, headers: { ...res.headers(), "content-type": "application/javascript" } });
     });
   }
+  if (P.papel_recurso) {  // um recurso do topo que ainda não tem desenho (a tocha apagada): o papel só nesta página
+    await p.route(/\/static\/icones\.js(\?|$)/, async (r) => {
+      const res = await r.fetch();
+      let js = await res.text();
+      for (const [nome, tamanhos] of Object.entries(P.papel_recurso)) {
+        js = js.replace('const TAMANHOS = {', `const TAMANHOS = {"${nome}": ${JSON.stringify(tamanhos)}, `);
+        js = js.replace('const RECURSO = {', `const RECURSO = { ${nome}: "${nome}", `);
+      }
+      r.fulfill({ response: res, body: js, headers: { ...res.headers(), "content-type": "application/javascript" } });
+    });
+  }
   if (P.papel_atalho) {   // um atalho que ainda não tem desenho próprio no jogo (a Comitiva): o papel só nesta página
     await p.route(/\/static\/icones\.js(\?|$)/, async (r) => {
       const res = await r.fetch();
@@ -132,16 +153,16 @@ async function anexar(p) {
       r.fulfill({ response: res, body: js, headers: { ...res.headers(), "content-type": "application/javascript" } });
     });
   }
-  if (P.papel_sprite) {   // um sprite do jogo sem papel em Icones (a moeda): só nesta página, o desenho da proposta
+  if (P.papel_sprite) {   // sprites do jogo sem papel em Icones ({sprite: tamanhos}): só nesta página, o desenho da
+    // proposta nos tamanhos que ela tem; nos outros, o sprite do jogo
     await p.route(/\/static\/sprites\.js(\?|$)/, async (r) => {
       const res = await r.fetch();
-      const { sprite, tamanhos } = P.papel_sprite;
       const js = (await res.text()) + `
-;(() => { const orig = Sprites.img, T = ${JSON.stringify(tamanhos)};
+;(() => { const orig = Sprites.img, T = ${JSON.stringify(P.papel_sprite)};
   Sprites.img = (nome, escala = 2, classe = "", o = {}) => {
-    if (nome !== ${JSON.stringify(sprite)}) return orig(nome, escala, classe, o);
-    const lado = 16 * escala, t = T.includes(lado) ? lado : T.reduce((m, x) => (Math.abs(x - lado) < Math.abs(m - lado) ? x : m));
-    const f = "/static/hud/icones/${sprite}-" + t;
+    const lado = 16 * escala;
+    if (!T[nome] || !T[nome].includes(lado)) return orig(nome, escala, classe, o);
+    const t = lado, f = "/static/hud/icones/" + nome + "-" + t;
     return '<img class="sprite desenho ' + classe + '" src="' + f + '.png" srcset="' + f + '@2x.png 2x" width="' + lado + '" height="' + lado + '" style="--s:' + lado + '" alt="" draggable="false">';
   }; })();`;
       r.fulfill({ response: res, body: js, headers: { ...res.headers(), "content-type": "application/javascript" } });
@@ -247,6 +268,25 @@ for (const modo of (process.env.SO_ATUAL ? ["atual"] : process.env.SO_PROPOSTA ?
         (await desenhos()).forEach((d) => visto.add(d));
         const c = await p.$("#celebracao .continuar"); if (c) { await c.click(); await espera(160); await p.screenshot({ path: nome("contratos-voo") }); }
         await espera(1500);
+      }
+      if (f === "aviso-tocha") {   // numa tela (o mercado), um item ganho vira o aviso flutuante perto do último clique
+        await p.mouse.click(1100, 700); await espera(300);
+        await p.evaluate(() => { efeito({ tipo: "item", texto: "+1 Tocha", item: "tocha" }); });
+        await espera(400);
+        await p.screenshot({ path: nome("aviso"), clip: await clipDe(".aviso-flutuante", 12) });
+        (await desenhos()).forEach((d) => visto.add(d));
+        await espera(1800);
+      }
+      if (f === "chip-tocha") {    // na vila, o chip no texto (o ícone dele; a tocha que voa é a de 32, já no jogo)
+        await p.keyboard.press("Escape"); await p.waitForSelector('#predios:not(.focado) .predio[data-predio="mercado"]', { timeout: 8000 }); await espera(800);
+        await p.evaluate(() => { efeito({ tipo: "item", texto: "+1 Tocha", item: "tocha" }); });
+        await espera(1500);
+        await p.screenshot({ path: nome("chip"), clip: await clipDe("#texto .chip.item", 10) });
+        (await desenhos()).forEach((d) => visto.add(d));
+      }
+      if (f === "riscos") {        // os riscos da escolha que entra na sala escura (a tocha que ela gasta, ou sem luz)
+        await p.screenshot({ path: nome("riscos"), clip: await clipDe("#prompt .escolha:has(.op-riscos)", 10) });
+        await p.screenshot({ path: nome("pagina") });
       }
       if (f === "mural") {    // o prêmio nos cartazes do mural (o prédio da vila)
         await (await p.waitForSelector('#predios .predio[data-predio="mural"]', { timeout: 8000 })).click();

@@ -1,5 +1,6 @@
 # junta as fotos de fotografar.mjs (moeda, tocha) em folhas atual × proposta, em tamanho real (1×), e a prancha sobre o
 # carvão (a moeda, já no jogo, e a tocha: o jogo, a rodada 1 e a rodada 2). Uso (na raiz): python <esta pasta>/montar.py
+# (com `variantes`: só as folhas e a prancha das variantes da tocha, o 16 e a apagada, em variantes/)
 import pathlib, shutil, subprocess, sys, tempfile
 from PIL import Image, ImageDraw, ImageFont
 AQUI = pathlib.Path(__file__).resolve().parents[1]
@@ -37,6 +38,17 @@ T = AQUI / "capturas" / "tocha"
 folha(T, [("topo (24)", "topo", (440, 0, 800, 73)), ("cartão do mercado (32)", "mercado-0", None),
           ("bolsa do Inventário (32)", "inventario", (460, 600, 660, 680))], AQUI / "tocha-no-jogo.png",
       ("atual", "rodada1", "rodada2"))
+V = AQUI / "variantes"
+if "variantes" in sys.argv[1:]:                               # as variantes da tocha: o 16 e a apagada
+    folha(V / "capturas" / "tocha16", [("aviso flutuante de um item ganho, numa tela (16)", "aviso", None),
+                                       ("chip de um item ganho, no texto (16)", "chip", None),
+                                       ("risco da escolha que entra na sala escura (16)", "riscos", None)], V / "tocha16-no-jogo.png")
+    folha(V / "capturas" / "apagada", [("topo sem tochas (hoje o sprite em 32; a proposta em 24)", "topo", (440, 0, 800, 73)),
+                                       ("risco \"Sem luz\" da escolha, sem tochas (16)", "riscos", None)], V / "apagada-no-jogo.png")
+    subprocess.run([sys.executable, str(RAIZ / "ferramentas" / "arte" / "prancha.py"), str(V / "proposta" / "tocha-16.png"),
+                    str(RAIZ / "rpg" / "web" / "static" / "hud" / "icones" / "tocha-24.png"), str(V / "proposta" / "tocha_apagada-16.png"),
+                    str(V / "proposta" / "tocha_apagada-24.png"), "-o", str(V / "prancha-carvao.png")], check=True)
+    sys.exit()                                                # as folhas de antes ficam como estavam
 P = AQUI / "proposta"; J = RAIZ / "rpg" / "web" / "static" / "hud" / "icones"
 with tempfile.TemporaryDirectory() as tmp:                    # o atual com outro nome, para a prancha distinguir
     def copia(origem, rotulo, n):

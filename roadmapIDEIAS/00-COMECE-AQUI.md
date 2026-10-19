@@ -4192,3 +4192,14 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   16×16) e a tocha apagada do topo.
 - **Achado independente, não tratado:** o `familia_ferro.py --conferir` acusa a aljava (8 arquivos) desde a 1.122.0,
   quando ela passou a vir do Aseprite sem entrar em `DESENHADOS`.
+
+### 19/10/2026 (data do computador local) — Propostas da tocha em 16 e da tocha apagada
+
+- **Pedido de Jean:** as variantes que faltavam da tocha, só no protótipo: o 16 como simplificação da aprovada e a
+  apagada derivada dela (cabo e pano preservados, sem chama).
+- **Feito, só no protótipo** (`ferramentas/prototipos/hud/itens-lote-noite/moeda_tocha/variantes/`), nada no jogo:
+  - **o 16** (o chip, o aviso, o risco "−1 tocha" das escolhas): a mesma construção na grade de 16, sem retoque;
+  - **a apagada** (24 no topo sem tochas, onde hoje o sprite aparece em 32; 16 no risco "Sem luz"): a ponta do pano
+    queimada e dois fios de fumaça, sem cor de fogo.
+  - Fontes em camadas pelo `pintar.lua`, exportação conferida, @2x exatos; fotos atual × proposta a 1920×945 com os
+    mesmos dados e a prancha sobre o carvão.

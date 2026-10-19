@@ -4,14 +4,21 @@
 # Rodada 2 (a chama refinada; o cabo e o pano aprovados não mudam; a rodada 1 em tocha_r1/): o calor segue o eixo
 # curvo de cada língua, em vez de anéis em volta de um ponto (sem a faixa larga e sem o miolo quadrado), e as línguas
 # têm alturas e curvas desiguais.
-# Uso: python tocha.py <24|32> [silhueta]. Grava as listas por camada (tocha_<camada>_<N>.lua) e a prévia.
+# O 16 (o chip, o aviso, o risco da escolha) é a mesma construção na grade de 16. A apagada (16 do risco "Sem luz" e
+# 24 do topo sem tochas): o mesmo cabo e o mesmo pano, sem chama; a ponta de cima do pano queimada e um fio de fumaça
+# subindo em dois trechos, sem contorno (o significado do sprite do jogo, a tocha que se apagou).
+# Uso: python tocha.py <16|24|32> [silhueta|apagada]. Grava as listas por camada (tocha_<camada>_<N>.lua, ou
+# tocha_apagada_<camada>_<N>.lua) e a prévia.
 import sys, math
 from PIL import Image
 N = int(sys.argv[1]); ETAPA = sys.argv[2] if len(sys.argv) > 2 else "final"
 R = {"m1": "3A2414", "m2": "5C3A20", "m3": "7E5430", "m4": "A07444",                  # a madeira
      "p1": "2A1E16", "p2": "45342A", "p3": "66503C", "p4": "8A7052",                  # o pano encerado
      "f1": "9A2408", "f2": "D4420E", "f3": "F47A16", "f4": "FFB22A", "f5": "FFE070", "f6": "FFF6C8",  # a chama
+     "q1": "17120E", "q2": "2A1E16",                                                   # o pano queimado (apagada)
+     "s1": "5E5A56", "s2": "8C8782", "s3": "B4AFA8",                                   # a fumaça (apagada)
      "O": "08080A"}
+APAGADA = ETAPA == "apagada"
 F = lambda v: v * N / 24
 A = (F(4.2), F(21.8)); B = (F(15.6), F(10.4))                # o eixo: do pé do cabo ao alto da cabeça
 L = math.hypot(B[0] - A[0], B[1] - A[1]); ux, uy = (B[0] - A[0]) / L, (B[1] - A[1]) / L
@@ -73,6 +80,13 @@ for y in range(N):
             h = (1 - d) * (1 - t)
             c = "f4" if h > 0.5 else "f3" if h > 0.22 else "f2"
         pinta(x, y, c, "chama")
+if APAGADA:                                                   # sem chama: a ponta de cima do pano queimada
+    for (x, y) in [k for k, v in cam.items() if v == "chama"]:
+        del g[(x, y)], cam[(x, y)]
+    for (x, y) in [k for k, v in cam.items() if v == "pano"]:
+        dx, dy = x + 0.5 - A[0], y + 0.5 - A[1]
+        u = (dx * ux + dy * uy) / L
+        if u > 0.8: pinta(x, y, "q1" if u > 0.9 else "q2", "queimado")
 chama = {k for k, v in cam.items() if v == "chama"}
 for (x, y) in list(chama):                                    # a beira de cima e dos lados: um tom mais escuro
     if ETAPA != "silhueta" and y < BY and any((x + a, y + b) not in g for a, b in ((1, 0), (-1, 0), (0, -1))):
@@ -82,11 +96,20 @@ for y in range(N):
     for x in range(N):
         if (x, y) not in g and any((x + a, y + b) in forma for a, b in ((1, 0), (-1, 0), (0, 1), (0, -1))):
             pinta(x, y, "O", "contorno")
+if APAGADA:                                                   # a fumaça: dois fios curtos e curvos, com um vão entre
+    for t0, t1, tom in ((0.0, 0.36, ("s3", "s2")), (0.6, 0.92, ("s2", "s1"))):   # eles, mais fracos em cima; sem contorno
+        for k in range(40):
+            t = t0 + (t1 - t0) * k / 39
+            x = int(B[0] + F(0.6) + F(1.2) * math.sin(t * math.pi * 2.6))
+            y = int(B[1] - F(2.6) - t * F(8.2))
+            if 0 <= x < N and 0 <= y < N and (x, y) not in g:
+                pinta(x, y, tom[0] if t - t0 < (t1 - t0) / 2 else tom[1], "fumaca")
 im = Image.new("RGBA", (N, N))
 for (x, y), c in g.items(): im.putpixel((x, y), tuple(int(R[c][i:i + 2], 16) for i in (0, 2, 4)) + (255,))
-im.save(f"tocha_{ETAPA}_{N}.png")
+nome = "tocha_apagada" if APAGADA else "tocha"
+im.save(f"{nome}_{'final' if APAGADA else ETAPA}_{N}.png")
 for k in sorted(set(cam.values())):
-    open(f"tocha_{k}_{N}.lua", "w").write('return "' + ";".join(f"{x},{y},{R[g[(x, y)]]}" for (x, y) in sorted(g) if cam[(x, y)] == k) + '"\n')
+    open(f"{nome}_{k}_{N}.lua", "w").write('return "' + ";".join(f"{x},{y},{R[g[(x, y)]]}" for (x, y) in sorted(g) if cam[(x, y)] == k) + '"\n')
 print(N, sorted(set(cam.values())), im.getbbox())
-sim = {"m1": "a", "m2": "b", "m3": "c", "m4": "d", "p1": "1", "p2": "2", "p3": "3", "p4": "4", "f1": "R", "f2": "r", "f3": "o", "f4": "y", "f5": "Y", "f6": "W", "O": "#"}
+sim = {"m1": "a", "m2": "b", "m3": "c", "m4": "d", "p1": "1", "p2": "2", "p3": "3", "p4": "4", "f1": "R", "f2": "r", "f3": "o", "f4": "y", "f5": "Y", "f6": "W", "q1": "Q", "q2": "q", "s1": ":", "s2": "+", "s3": "*", "O": "#"}
 print("".join("\n" + "".join(sim[g[(x, y)]] if (x, y) in g else "." for x in range(N)) for y in range(N)))
