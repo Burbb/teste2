@@ -447,6 +447,15 @@ def elmo_r4():
         o.paste(g.convert("RGB"), (10 + (k + 1) * (W + 10), y + 18))
     o.save(base / "elmo-referencia-r3-r4.png"); print(base / "elmo-referencia-r3-r4.png")
 
+def elmo_tamanhos():
+    """O elmo aprovado (b4e920d) com o 40 e o 48: no Inventário (40) e no "você usa" do saque (48), atual × tamanhos; e
+    os quatro tamanhos em tamanho real sobre o carvão."""
+    base = LOTE / "elmo_cota"; P = base / "proposta"
+    folha(base / "capturas", [("o corpo no Inventário: o elmo em 40 (atual: o placeholder; tamanhos: o aprovado com o 40)", "inventario", (150, 140, 480, 520), "elmo_tamanhos"),
+                              ("o cartão do saque: o elmo em 64 e o 'você usa' em 48", "saque", None, "elmo_tamanhos")],
+          base / "elmo-tamanhos-no-jogo.png", ("atual", "tamanhos"))
+    prancha([P / f"elmo-{n}.png" for n in (32, 40, 48, 64)] + [P / f"cota-{n}.png" for n in (32, 40, 48, 64)], base / "prancha-carvao.png")
+
 def sandalia_no_jogo():
     """A Sandália no jogo (1.142.0), em tamanho real: o saque, a ficha e o Inventário depois de "Equipar agora"."""
     pasta = LOTE / "sandalia_chapeu" / "capturas" / "integracao"
@@ -464,7 +473,7 @@ if __name__ == "__main__" and sys.argv[1] in ("antidoto_base", "frasco_vazio", "
                                               "sandalia_no_jogo", "besta_diadema", "diadema_r2",
                                               "espada_maca", "espada_maca_r2", "espada_ponta",
                                               "espada_ponta3", "espada_ponta4", "espada_tamanhos",
-                                              "elmo_cota", "elmo_cota_r2", "elmo_r3", "elmo_r4"):
+                                              "elmo_cota", "elmo_cota_r2", "elmo_r3", "elmo_r4", "elmo_tamanhos"):
     globals()[sys.argv[1]](); sys.exit()
 if __name__ == "__main__":
     nome = sys.argv[1]; cfg = LOTES[nome]; base = LOTE / nome

@@ -2162,3 +2162,26 @@ a ficha (32), o Inventário (40) e o peito vazio depois de tirar a armadura com 
 (`sandalia_chapeu/auxiliares/equipar.mjs guerreiro armadura armadura 1.146.0 cota` e
 `elmo_cota/auxiliares/integracao.mjs`). Sem erro no console.
 
+### O elmo em 40 e 48 (`elmo_cota/`)
+
+**Decisão de Jean (19/10/2026):** o elmo da rodada 4 (`b4e920d`) aprovado em 32 e 64; fazer o 40 e o 48 mantendo a
+construção frontal, o alinhamento, a abertura e as faces que fecham para dentro, adaptando os pixels a cada grade. Sem
+integrar.
+
+**O 40 e o 48** saem do mesmo `auxiliares/desenho.py` (as medidas no quadro de 32), com três adaptações de grade; o 32
+continua idêntico ao aprovado, pixel a pixel:
+- **A beira de fora das faces com 1 px em todo tamanho** (no 48 ela saía de 1 ou 2 px conforme a linha, um serrilhado).
+- **A cintura antes do pé**, desenhada nos dois lados: no 32 a beira de dentro da face recua 1 px por umas três linhas
+  e o pé volta para dentro (é o que faz o pé ler como um gancho fechando sobre o rosto); no 40 e no 48 esse recuo saía
+  de um lado só ou de uma linha só (um entalhe), e agora tem a mesma altura proporcional nos dois.
+- **A simetria:** uma medida que cai bem no centro de um pixel (a ponta da faixa, a beira da face) arredondava para um
+  lado só; fica o pixel que existe dos dois lados. As silhuetas dos três tamanhos são simétricas.
+
+**O Aseprite (pelo MCP):** o 40 e o 48 pintados pelo `pintar.lua` em documentos novos com as cinco camadas (0
+diferenças, 0 fora da tela), em `fontes/elmo/elmo-40.aseprite` e `-48`; o composto do editor é igual aos PNGs
+exportados e à prévia; @2x exatos. O 32 e o 64 da proposta não mudaram.
+
+**As fotos** (`fotografar.mjs elmo_tamanhos`, `ROTULO=tamanhos`, 1920×945): o Inventário (40) e o saque (64 e o "você
+usa" em 48), atual × tamanhos, em `elmo-tamanhos-no-jogo.png`; a prancha `prancha-carvao.png` com o elmo e a cota nos
+quatro tamanhos. Sem erro no console.
+

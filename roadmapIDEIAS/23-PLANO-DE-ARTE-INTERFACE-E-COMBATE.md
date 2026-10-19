@@ -141,7 +141,7 @@ substituições posteriores, incluindo espada e maça na 1.145.0):
 |---|---|---|---|---|
 | `espada` | Espada, Montante (Guerreiro) | Arte final, padrão atual (o remake do ferro, integrada na 1.145.0) | `aseprite/espada/` (1.145.0) | Também é o comando de ataque da luta (`ACAO`) e a silhueta da arma vazia (`VAZIO`), de todas as classes; o ícone do atributo Ataque é outro desenho |
 | `maca` | Maça (Guerreiro) | Arte final, padrão atual (o remake do ferro, integrada na 1.145.0) | `aseprite/maca/` (1.145.0) | — |
-| `elmo` | Elmo, Capacete, Barbuta (Guerreiro) | **Placeholder integrado, pendente de remake**; rodada 4 do 32 (em pé e de frente, pela nova referência) em avaliação | redução da pintura | Também a silhueta da cabeça vazia, de todas as classes (`VAZIO`) |
+| `elmo` | Elmo, Capacete, Barbuta (Guerreiro) | **Placeholder integrado, pendente de remake**; a rodada 4 aprovada em 32 e 64 (`b4e920d`), 40 e 48 em avaliação | redução da pintura | Também a silhueta da cabeça vazia, de todas as classes (`VAZIO`) |
 | `armadura` → `cota` | Cota de Malha, Peitoral, Couraça, Brigantina (Guerreiro) | Arte final, padrão atual (o remake do ferro, integrada na 1.146.0) | `aseprite/cota/` (1.146.0) | Também a silhueta da armadura vazia (`VAZIO`); a camisa de malha representa pior o Peitoral e a Couraça (de placa) |
 | `manopla` | Manopla (Guerreiro) | **Placeholder integrado, pendente de remake** | redução da pintura | Também a silhueta das mãos vazias (`VAZIO`) |
 | `calca` → `perneiras` | Perneira, Greva (Guerreiro) | **Placeholder integrado, pendente de remake** | redução da pintura | Também a silhueta das pernas vazias (`VAZIO`) |

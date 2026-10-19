@@ -8,7 +8,7 @@
 //       | bandagem_pocao | bandagem_pocao_luta | tonico_antidoto | calca_manto | calca_manto_saque_calca
 //       | frasco_vazio | frasco_cheio | antidoto_base | anel_amuleto | anel_amuleto_saque_amuleto | sandalia_chapeu | sandalia_chapeu_saque_chapeu
 //       | chapeu_no_jogo | sandalia_r2 | besta | diadema | coroa_afogados | espada | espada_luta | maca | maca_tamanhos | espada_tamanhos
-//       | elmo_cota | elmo_cota_saque_cota | cota_tamanhos
+//       | elmo_cota | elmo_cota_saque_cota | cota_tamanhos | elmo_tamanhos
 import { spawn } from "child_process";
 import { readFileSync, existsSync, mkdirSync } from "fs";
 import { fileURLToPath } from "url";
@@ -224,6 +224,11 @@ const PECAS = {
   cota_tamanhos: { pasta: "elmo_cota/proposta", saida: "elmo_cota/capturas/cota_tamanhos", nomes: ["cota"],
     cena: ["tutorial", { CLASSE: "guerreiro", TUTORIAL: "0", PERIODO: "0", VESTIR: "armadura" }], fotos: ["inventario"],
     saque: ["vila", { CLASSE: "guerreiro", ACHADO: "armadura", VESTIDO: "armadura" }] },
+  // o elmo aprovado (b4e920d) com o 40 e o 48: elmo_tamanhos (ROTULO=tamanhos SO_PROPOSTA=1), os quatro tamanhos; o
+  // Inventário (40) e o "você usa" do saque (48)
+  elmo_tamanhos: { pasta: "elmo_cota/proposta", saida: "elmo_cota/capturas/elmo_tamanhos", nomes: ["elmo"],
+    cena: ["tutorial", { CLASSE: "guerreiro", TUTORIAL: "0", PERIODO: "0", VESTIR: "elmo" }], fotos: ["inventario"],
+    saque: ["vila", { CLASSE: "guerreiro", ACHADO: "elmo", VESTIDO: "elmo" }] },
   elmo_cota_saque_cota: { pasta: "elmo_cota/proposta", saida: "elmo_cota/capturas/saque_cota", nomes: ["elmo", "cota"], papel_tamanhos: [32, 64],
     cena: ["tutorial", { CLASSE: "guerreiro", TUTORIAL: "0" }], fotos: [],
     saque: ["vila", { CLASSE: "guerreiro", ACHADO: "armadura", VESTIDO: "armadura" }] },

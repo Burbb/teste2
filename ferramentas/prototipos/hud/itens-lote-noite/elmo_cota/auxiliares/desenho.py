@@ -86,13 +86,23 @@ if PECA == "elmo":
         pinta(faixa, "f", np.where(y32 < 13.6, 8, np.where(x32 < CX + 3, 6, 4)), "tiras")
         pinta(faixa & (y32 > 14.0), "f", np.where(x32 < CX, 3, 2), "tiras")
         # as faces: o lado de dentro aceso, o de fora escuro; a da esquerda mais clara; as pontas de baixo escurecendo
-        de = np.abs(x32 - CX); borda = de > fora(y32) - 1.05                    # a beira de fora, 1 px
+        de = np.abs(x32 - CX); borda = de > fora(y32) - 1.05 / K                # a beira de fora, 1 px em todo tamanho
         pinta(face_e, "f", np.where(borda, 3, np.where(de < 9.0, 7, 5)), "faces")
         pinta(face_d, "f", np.where(borda, 2, np.where(de < 9.0, 5, 4)), "faces")
         # o pé que vira para dentro: o alto dele aceso (pega a luz de cima), a ponta de baixo escurecendo
         pe = (face_e | face_d) & (de < 7.4) & (y32 > 25.6)
         pinta(pe, "f", np.where(x32 < CX, 6, 4), "faces")
         pinta((face_e | face_d) & (y32 > 28.2), "f", np.where(x32 < CX, 4, 2), "faces")
+    # no 40 e no 48, a cintura da face antes do pé, como no 32 aprovado (lá ela sai do arredondamento: a beira de dentro
+    # recua 1 px por umas três linhas e o pé volta para dentro); aqui, desenhada nos dois lados, por igual
+    CINTURA = {40: (10, range(29, 32)), 48: (12, range(33, 38))}
+    if N in CINTURA:
+        xc, linhas = CINTURA[N]
+        for yy in linhas:
+            mat[yy, xc] = mat[yy, N - 1 - xc] = ""
+    # a construção simétrica em todo tamanho: uma medida que cai bem no centro de um pixel (a ponta da faixa, a beira
+    # da face) arredonda para um lado só; fica o pixel que existe dos dois lados (no 32 nada muda)
+    mat[(mat != "") & (mat[:, ::-1] == "")] = ""
     camadas = ["interior", "calota", "faces", "tiras", "contorno"]
 else:
     # A cota de malha, rodada 2, pela referência principal (ferramentas/arte/referencias/peitoral/etbij8.png, o nº 103 do

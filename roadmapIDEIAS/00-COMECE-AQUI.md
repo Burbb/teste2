@@ -4754,3 +4754,11 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Continua antigo:** elmo, manopla, perneiras e botas de ferro (placeholders), o 40 e o 48 do martelo.
 - **Verificações:** unittest (627, OK), gabarito OK, pyflakes (só o aviso conhecido), fumaça (tudo certo).
 
+### 19/10/2026 (data do computador local) — O elmo em 40 e 48 (proposta)
+
+- **Feito, só no protótipo** (`ferramentas/prototipos/hud/itens-lote-noite/elmo_cota/`), **não aprovado**: o 40 e o 48
+  do elmo aprovado (o 32 e o 64 do `b4e920d` intocados), com a mesma construção (a beira de fora com 1 px, a cintura e o
+  pé para dentro nos dois lados, a silhueta simétrica). Fontes pelo `pintar.lua`; composto, exportação e prévia
+  conferem; @2x exatos. Fotos no Inventário (40) e no "você usa" do saque (48) a 1920×945.
+- **Aguardando avaliação.** O elmo não foi integrado; a versão continua 1.146.0.
+
