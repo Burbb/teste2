@@ -4573,3 +4573,18 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   rodadas em tamanho real e ampliadas; a fileira com o escudo e o machado.
 - **Aguardando avaliação.** Nada integrado; a versão não mudou; nenhuma outra peça começou.
 
+### 19/10/2026 (data do computador local) — A ponta da espada e o 40/48 da maça (proposta)
+
+- **Decisões de Jean:** a maça da rodada 2 (`87c12eb`) aprovada (32 e 64 sem retoque); na espada, só a ponta (parecia
+  uma agulha acrescentada ao corpo). Pediu também que as aletas da maça mantenham o formato em todos os tamanhos.
+- **Feito, só no protótipo** (`ferramentas/prototipos/hud/itens-lote-noite/espada_maca/`), **não aprovado**:
+  - a ponta da espada: o gume de cima quase reto e o de baixo subindo em curva até o vértice, como na referência; os
+    planos seguindo os gumes; 32 e 64 (= 32 ×2); a ponta antiga guardada em `espada_maca/rodada2_ponta_antiga/`;
+  - a maça em 40 e 48, com as aletas como botões rombudos na proporção do 32 e a junção escura de 1 pixel; o 32 e o 64
+    aprovados idênticos, byte a byte.
+  - Fontes em camadas pelo `pintar.lua`; composto, exportação e prévia conferem; @2x exatos.
+- **Fotos a 1920×945:** a ponta antes × depois (tamanho real, ampliada e no saque, no Atacar e na ficha), junto da
+  referência; a maça no Inventário (40), no saque (64 e 48) e na ficha.
+- **Aguardando avaliação.** Nada integrado; a versão não mudou; nenhuma outra peça começou; a skill de espadas fica para
+  depois.
+

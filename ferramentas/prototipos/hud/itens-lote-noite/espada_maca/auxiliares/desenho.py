@@ -60,12 +60,19 @@ if PECA == "espada":
     # abaixo) e a aresta no meio; a guarda curta de latão, a empunhadura de couro com as voltas e o pomo de aço. As
     # proporções da referência: a lâmina em 2/3 do comprimento, a ponta no último quarto dela, a guarda com 1,6 vez a
     # largura da lâmina; a lâmina um pouco mais larga que a da referência, para ter presença no 32.
-    U0, U1, UP = 10.8, 37.0, 31.2                                               # o começo da lâmina, a ponta, o começo da ponta
+    U0, U1, UP = 10.8, 36.8, 30.0                                               # o começo da lâmina, a ponta, o começo da ponta
     ML = 1.75                                                                   # a meia largura da lâmina
+    VP = -0.45                                                                  # o vértice, um pouco acima do eixo
+    # a ponta, como na espada de aço da referência: o gume de cima segue quase reto até perto do fim e o de baixo sobe em
+    # curva para encontrá-lo; os dois convergem sem degrau até o vértice (sem a rampa reta que deixava uma agulha)
+    def gumes(u):
+        t = np.clip((np.asarray(u, float) - UP) / (U1 - UP), 0, 1)
+        return -ML + (ML + VP) * t ** 2.2, ML - (ML - VP) * t ** 1.15          # o de cima, o de baixo
     def larg(u):
-        return np.interp(u, [U0, UP, U1], [ML, ML, 0.0])
-    us = np.linspace(U0, U1, 60)
-    lamina = poligono_uv([(u, -larg(u)) for u in us] + [(u, larg(u)) for u in us[::-1]])
+        cima, baixo = gumes(u)
+        return (baixo - cima) / 2
+    us = np.linspace(U0, U1, 80)
+    lamina = poligono_uv([(u, gumes(u)[0]) for u in us] + [(u, gumes(u)[1]) for u in us[::-1]])
     guarda = poligono_uv([(8.6, -4.2), (10.6, -4.2), (10.6, 4.2), (8.6, 4.2)])
     empunhadura = faixa_uv(2.0, 8.8, 0.95)
     pomo = disco(1.0, 0.0, 1.45)
@@ -74,13 +81,13 @@ if PECA == "espada":
     else:
         # os planos: o de cima (v < 0) claro, o gume de cima aceso; a aresta no meio; o de baixo um tom abaixo, o gume de
         # baixo na sombra; na ponta, os dois gumes acesos até o vértice
-        lp = larg(np.clip(U, U0, U1))
-        tl = np.where(V < -0.05, 6, 4)
-        tl = np.where(V < -lp + 0.75, 8, tl)                                    # o gume de cima
-        tl = np.where(V > lp - 0.7, 3, tl)                                      # o gume de baixo
-        tl = np.where((U > UP) & (V < 0.35), np.maximum(tl, 7), tl)            # a ponta, na luz
+        cima, baixo = gumes(np.clip(U, U0, U1)); meio = (cima + baixo) / 2   # os planos seguem os gumes até a ponta
+        tl = np.where(V < meio - 0.05, 6, 4)
+        tl = np.where(V < cima + 0.75, 8, tl)                                   # o gume de cima
+        tl = np.where(V > baixo - 0.7, 3, tl)                                   # o gume de baixo
+        tl = np.where((U > U1 - 1.2) & (V < VP + 0.6), 8, tl)                   # o vértice, aceso
         pinta(lamina, "f", tl, "lamina")
-        aresta = lamina & (np.abs(V - 0.05) * K < max(0.4 * K, 0.5)) & (U > U0 + 1.2) & (U < UP + 1.5)
+        aresta = lamina & (np.abs(V - meio - 0.05) * K < max(0.4 * K, 0.5)) & (U > U0 + 1.2) & (U < U1 - 1.8)
         pinta(aresta, "f", 5, "lamina"); fixo[aresta] = True                    # linha diagonal: a limpeza não mexe
         # a guarda de latão: a face de cima acesa, a de baixo na sombra; as pontas um tom acima
         pinta(guarda, "o", np.where(U < 9.6, 6, 3), "guarda")
@@ -110,10 +117,16 @@ else:
     aletas = np.zeros((N, N), bool); qual = np.full((N, N), -1)
     for k, (du, dv) in enumerate(ALETAS):
         n = np.hypot(du, dv); du, dv = du / n, dv / n
-        a = poligono_uv([(CU + du * (R - 0.6) - dv * 1.25, dv * (R - 0.6) + du * 1.25),
-                         (CU + du * (R + 1.75) - dv * 0.95, dv * (R + 1.75) + du * 0.95),
-                         (CU + du * (R + 1.75) + dv * 0.95, dv * (R + 1.75) - du * 0.95),
-                         (CU + du * (R - 0.6) + dv * 1.25, dv * (R - 0.6) - du * 1.25)])
+        if N == 32:   # o 32 aprovado (87c12eb): o polígono que, na grade de 32, sai como um botão rombudo de ~2 px
+            a = poligono_uv([(CU + du * (R - 0.6) - dv * 1.25, dv * (R - 0.6) + du * 1.25),
+                             (CU + du * (R + 1.75) - dv * 0.95, dv * (R + 1.75) + du * 0.95),
+                             (CU + du * (R + 1.75) + dv * 0.95, dv * (R + 1.75) - du * 0.95),
+                             (CU + du * (R - 0.6) + dv * 1.25, dv * (R - 0.6) - du * 1.25)])
+        else:         # nos maiores, o mesmo botão rombudo (retangular, sem afilar), para manter o formato do 32
+            a = poligono_uv([(CU + du * (R - 0.6) - dv * 1.3, dv * (R - 0.6) + du * 1.3),
+                             (CU + du * (R + 2.0) - dv * 1.3, dv * (R + 2.0) + du * 1.3),
+                             (CU + du * (R + 2.0) + dv * 1.3, dv * (R + 2.0) - du * 1.3),
+                             (CU + du * (R - 0.6) + dv * 1.3, dv * (R - 0.6) - du * 1.3)])
         qual = np.where(a & ~bulbo, k, qual); aletas |= a
     aletas &= ~bulbo
     cabeca = bulbo | aletas
@@ -138,7 +151,7 @@ else:
             luz_a = dxy[0] * LUZ[0] + dxy[1] * LUZ[1]
             ta = 7 if luz_a > 0.3 else (5 if luz_a > -0.2 else 3)
             pinta(aletas & (qual == k), "f", ta, "cabeca")
-        juncao = aletas & (np.hypot(x32 - C[0], y32 - C[1]) <= R + 0.75)
+        juncao = aletas & (np.hypot(x32 - C[0], y32 - C[1]) <= R + (0.75 if N == 32 else 0.6 + 0.5 / K))   # 1 px escuro na base
         pinta(juncao, "f", 2, "cabeca")
     camadas = ["cabo", "empunhadura", "cabeca", "contorno"]
 

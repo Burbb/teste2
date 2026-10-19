@@ -134,8 +134,8 @@ de antes não vale como arte final.
 
 | Desenho | Bases (e únicos) que usam a imagem | Situação | Sustentação | Atenção |
 |---|---|---|---|---|
-| `espada` | Espada, Montante (Guerreiro) | **Placeholder integrado, pendente de remake**; rodada 2 do 32 em avaliação | redução da pintura (`familia_ferro.py`) | Também é o comando de ataque da luta (`ACAO`) e a silhueta da arma vazia (`VAZIO`), de todas as classes |
-| `maca` | Maça (Guerreiro) | **Placeholder integrado, pendente de remake**; rodada 2 do 32 em avaliação | redução da pintura | — |
+| `espada` | Espada, Montante (Guerreiro) | **Placeholder integrado, pendente de remake**; rodada 2 com a ponta corrigida em avaliação (32) | redução da pintura (`familia_ferro.py`) | Também é o comando de ataque da luta (`ACAO`) e a silhueta da arma vazia (`VAZIO`), de todas as classes |
+| `maca` | Maça (Guerreiro) | **Placeholder integrado, pendente de remake**; rodada 2 aprovada (`87c12eb`), 40 e 48 em avaliação | redução da pintura | — |
 | `elmo` | Elmo, Capacete, Barbuta (Guerreiro) | **Placeholder integrado, pendente de remake** | redução da pintura | Também a silhueta da cabeça vazia, de todas as classes (`VAZIO`) |
 | `armadura` → `cota` | Cota de Malha, Peitoral, Couraça, Brigantina (Guerreiro) | **Placeholder integrado, pendente de remake** | redução da pintura | Também a silhueta da armadura vazia (`VAZIO`) |
 | `manopla` | Manopla (Guerreiro) | **Placeholder integrado, pendente de remake** | redução da pintura | Também a silhueta das mãos vazias (`VAZIO`) |
@@ -210,6 +210,10 @@ espada e a maça** (o começo do remake do ferro).
   - **A maça:** a cabeça redonda e pesada (a massa e a proporção com o cabo do placeholder antigo, sem a pintura dele),
     cinco aletas curtas e separadas, a luz pelo volume (o bulbo como esfera), sem a faixa clara.
   - Uma skill de espadas fica para depois de um resultado validado.
+  - **Depois da avaliação (19/10/2026):** a maça da rodada 2 foi aprovada (o 32 e o 64 ficam sem retoque) e ganhou o 40 e
+    o 48 em proposta, com as aletas no mesmo formato do 32 (botões rombudos com a junção escura). Na espada, só a ponta
+    voltou: o trecho final parecia um biquinho acrescentado (uma agulha depois do corpo); a ponta corrigida (os gumes
+    convergindo sem degrau, como na referência) está em avaliação, com o 40 e o 48 dela aguardando.
 
 **A ordem recomendada (separada da contagem):** primeiro a **Sandália e o Chapéu Pontudo**, que são o placeholder
 mais frequente do Mago e fecham o vestuário de tecido dele, já com capuz, luva, calça e manto aprovados como referência

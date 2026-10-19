@@ -1801,3 +1801,41 @@ rodada 1, `PASTA=espada_maca/rodada1/proposta ROTULO=rodada1 SO_PROPOSTA=1`):**
 mais comprida que a rodada 1; a maça recuperou a massa redonda do placeholder e lê como maça no 32, com as aletas
 curtas no lugar dos espinhos.
 
+### A ponta da espada e os tamanhos da maça (`espada_maca/`)
+
+**Decisões de Jean (19/10/2026):** a maça da rodada 2 (`87c12eb`) está aprovada; o 32 e o 64 dela ficam sem retoque, e
+faltam o 40 e o 48. Na espada, falta só a ponta: o corpo da lâmina terminava e sobrava um trecho fino, como uma agulha
+(um biquinho acrescentado). Retocar o trecho final para os gumes convergirem continuamente até a extremidade, com os
+planos do aço acompanhando, pela espada de aço de `espadasample.png`; o resto da espada (corpo, guarda, empunhadura,
+pomo, paleta) fica. Durante o trabalho, o Jean pediu cuidado com a maça: as aletas (as pontinhas da cabeça) precisam
+ter o mesmo formato em todos os tamanhos.
+
+**A ponta (só o 32 e o 64 = 32 ×2; o 40 e o 48 da espada esperam a aprovação deste ajuste):**
+- **Antes** (guardada em `espada_maca/rodada2_ponta_antiga/`: os PNGs e a fonte): a largura caía em rampa reta do começo
+  da ponta até o vértice; no pixel, o corpo terminava e sobrava 1 px por um trecho comprido.
+- **Uma tentativa na bancada:** o perfil curvo simétrico (cheio no começo, fechando rápido no fim) tirou a agulha, mas
+  arredondou a ponta.
+- **Depois** (`auxiliares/desenho.py`, a função `gumes`): como na referência, a ponta é assimétrica: o gume de cima
+  segue quase reto até perto do fim e o de baixo sobe em curva até encontrá-lo, com o vértice um pouco acima do eixo; a
+  ponta começa um pouco antes (30,0 em vez de 31,2) e vai até 36,8. Os planos seguem os gumes (o meio entre eles divide
+  o plano claro do escuro; a aresta acompanha o meio e para antes do vértice); o vértice aceso.
+
+**A maça em 40 e 48:** a mesma construção, mas o polígono das aletas que, na grade de 32, sai como um botão rombudo de
+cerca de 2 pixels (o topo claro e 1 pixel escuro na base), sai pontudo e fino nas grades maiores, que desenham a forma
+com mais fidelidade. Nos tamanhos maiores, a aleta é um botão retangular rombudo na proporção que o 32 mostra (cerca de 2
+pixels de saliência e 2 a 3 de largura no 32) e a junção escura tem 1 pixel; o caminho do 32 ficou exatamente o
+aprovado (o PNG e o código de conferência não mudaram).
+
+**O Aseprite (pelo MCP):** a espada 32 e a maça 40 e 48 pintadas pelo `pintar.lua` (0 diferenças, 0 fora da tela); o
+composto do editor é igual aos PNGs exportados e à prévia; a maça 32 e 64 são as aprovadas, byte a byte; @2x exatos; o
+64 da espada é o 32 ×2.
+
+**As fotos e as folhas (1920×945):**
+- `espada-ponta-antes-depois.png`: a referência × antes × depois em tamanho real, a espada inteira ampliada na mesma
+  escala e a ponta recortada e ampliada, sem suavização;
+- `espada-ponta-no-jogo.png`: antes (`rodada2`) × depois (`ponta_nova`) no saque, no Atacar e na ficha
+  (`fotografar.mjs espada` e `espada_luta`, `ROTULO=ponta_nova SO_PROPOSTA=1`);
+- `maca-tamanhos-no-jogo.png`: atual × a maça com os quatro tamanhos no Inventário (40), no saque (64 e o 48 do "você
+  usa") e na ficha (`fotografar.mjs maca_tamanhos`, `ROTULO=tamanhos SO_PROPOSTA=1`);
+- `prancha-carvao.png`: a maça nos quatro tamanhos, a espada nova e a ponta antiga. Sem erro no console.
+

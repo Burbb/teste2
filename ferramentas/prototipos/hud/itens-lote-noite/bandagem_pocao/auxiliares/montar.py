@@ -231,6 +231,36 @@ def espada_maca_r2():
     prancha([P / "espada-32.png", P / "espada-64.png", base / "previa" / "espada" / "32" / "espada_silhueta_32.png",
              P / "maca-32.png", P / "maca-64.png", base / "previa" / "maca" / "32" / "maca_silhueta_32.png"], base / "prancha-carvao.png")
 
+def espada_ponta():
+    """A ponta da espada (rodada 2): a referência × antes × depois, em tamanho real, a espada inteira ampliada na mesma
+    escala e a ponta recortada e ampliada; no jogo, antes × depois no saque e no Atacar; a maça com os 40 e 48."""
+    base = LOTE / "espada_maca"; P = base / "proposta"; A = base / "rodada2_ponta_antiga" / "proposta"
+    ref = Image.open(RAIZ / "ferramentas/arte/referencias/espada/espadasample.png").convert("RGBA").crop((64, 0, 128, 64))
+    ims = [("referência (64)", ref, 4, (40, 0, 64, 24)), ("antes (32)", Image.open(A / "espada-32.png").convert("RGBA"), 8, (20, 0, 32, 12)),
+           ("depois (32)", Image.open(P / "espada-32.png").convert("RGBA"), 8, (20, 0, 32, 12))]
+    o = Image.new("RGB", (3 * 300 + 20, 680), (245, 245, 245)); d = ImageDraw.Draw(o)
+    d.text((10, 4), "tamanho real sobre o carvão; a referência é a espada de aço da direita de espadasample.png", fill=(0, 0, 0), font=FONTE)
+    d.text((10, 104), "a espada inteira, ampliada na mesma escala sem suavização (a referência 4x, as de 32 8x)", fill=(0, 0, 0), font=FONTE)
+    d.text((10, 392), "a ponta recortada, ampliada na mesma escala (a referência 10x, as de 32 20x)", fill=(0, 0, 0), font=FONTE)
+    for k, (rot, im, z, corte) in enumerate(ims):
+        x = 10 + k * 300
+        fundo = Image.new("RGBA", (72, 72), (24, 24, 28, 255)); fundo.alpha_composite(im, ((72 - im.width) // 2, (72 - im.height) // 2))
+        o.paste(fundo.convert("RGB"), (x, 22)); d.text((x + 80, 50), rot, fill=(0, 0, 0), font=FONTE)
+        g = Image.new("RGBA", (256, 256), (24, 24, 28, 255)); g.alpha_composite(im.resize((256, 256), Image.NEAREST)); o.paste(g.convert("RGB"), (x, 124))
+        pc = im.crop(corte); zz = 240 // pc.width
+        g2 = Image.new("RGBA", (240, 240), (24, 24, 28, 255)); g2.alpha_composite(pc.resize((pc.width * zz, pc.height * zz), Image.NEAREST)); o.paste(g2.convert("RGB"), (x, 412))
+    o.save(base / "espada-ponta-antes-depois.png"); print(base / "espada-ponta-antes-depois.png")
+    folha(base / "capturas", [("o cartão do saque da espada (64; o 48 sai do 64 reduzido)", "saque", None, "espada"),
+                              ("a roda da luta: o Atacar do Guerreiro (32)", "luta", (250, 10, 470, 225), "espada"),
+                              ("a ficha (32)", "ficha", (18, 362, 272, 472), "espada")],
+          base / "espada-ponta-no-jogo.png", ("rodada2", "ponta_nova"))
+    folha(base / "capturas", [("o corpo no Inventário: a maça em 40 (atual: o placeholder; tamanhos: a aprovada com o 40)", "inventario", (150, 140, 480, 520), "maca"),
+                              ("o cartão do saque: a maça em 64 e o 'você usa' em 48", "saque", None, "maca"),
+                              ("a ficha (32)", "ficha", (18, 362, 272, 472), "maca")],
+          base / "maca-tamanhos-no-jogo.png", ("atual", "tamanhos"))
+    prancha([P / f"maca-{n}.png" for n in (32, 40, 48, 64)] + [P / "espada-32.png", P / "espada-64.png", A / "espada-32.png"],
+            base / "prancha-carvao.png")
+
 def sandalia_no_jogo():
     """A Sandália no jogo (1.142.0), em tamanho real: o saque, a ficha e o Inventário depois de "Equipar agora"."""
     pasta = LOTE / "sandalia_chapeu" / "capturas" / "integracao"
@@ -246,7 +276,7 @@ def sandalia_no_jogo():
 
 if __name__ == "__main__" and sys.argv[1] in ("antidoto_base", "frasco_vazio", "anel_referencia", "conjunto_mago", "sandalia_r2",
                                               "sandalia_no_jogo", "besta_diadema", "diadema_r2",
-                                              "espada_maca", "espada_maca_r2"):
+                                              "espada_maca", "espada_maca_r2", "espada_ponta"):
     globals()[sys.argv[1]](); sys.exit()
 if __name__ == "__main__":
     nome = sys.argv[1]; cfg = LOTES[nome]; base = LOTE / nome
