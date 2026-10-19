@@ -348,6 +348,21 @@ def espada_tamanhos():
                               ("a ficha (32)", "ficha", (18, 362, 272, 472), "espada")],
           base / "espada-tamanhos-no-jogo.png", ("atual", "tamanhos"))
 
+def elmo_cota():
+    """O elmo e a cota (o remake do ferro, 2): atual × proposta no jogo, a fileira com o escudo e as armas aprovadas e a
+    prancha."""
+    base = LOTE / "elmo_cota"; P = base / "proposta"
+    folha(base / "capturas", [("a ficha do Guerreiro com o elmo e a cota (32)", "ficha", (18, 362, 272, 472)),
+                              ("o corpo no Inventário (40: a proposta só tem o 32 e o 64, e o jogo mostra o 32)", "inventario", (150, 140, 480, 520)),
+                              ("o cartão do saque do elmo (64; o 48 sai do 64 reduzido, sem o 48 próprio)", "saque", None),
+                              ("o cartão do saque da cota (64 e 48, idem)", "saque", None, "saque_cota")],
+          base / "elmo_cota-no-jogo.png")
+    fileira([("elmo (prop.)", P / "elmo-32.png"), ("cota (prop.)", P / "cota-32.png"), ("escudo", JOGO / "escudo-32.png"),
+             ("espada", JOGO / "espada-32.png"), ("maça", JOGO / "maca-32.png"), ("machado", JOGO / "machado-32.png"),
+             ("elmo (atual)", JOGO / "elmo-32.png"), ("cota (atual)", JOGO / "cota-32.png")], base / "fileira-guerreiro-32.png")
+    prancha([P / "elmo-32.png", P / "elmo-64.png", base / "previa/elmo/32/elmo_silhueta_32.png",
+             P / "cota-32.png", P / "cota-64.png", base / "previa/cota/32/cota_silhueta_32.png"], base / "prancha-carvao.png")
+
 def sandalia_no_jogo():
     """A Sandália no jogo (1.142.0), em tamanho real: o saque, a ficha e o Inventário depois de "Equipar agora"."""
     pasta = LOTE / "sandalia_chapeu" / "capturas" / "integracao"
@@ -364,7 +379,8 @@ def sandalia_no_jogo():
 if __name__ == "__main__" and sys.argv[1] in ("antidoto_base", "frasco_vazio", "anel_referencia", "conjunto_mago", "sandalia_r2",
                                               "sandalia_no_jogo", "besta_diadema", "diadema_r2",
                                               "espada_maca", "espada_maca_r2", "espada_ponta",
-                                              "espada_ponta3", "espada_ponta4", "espada_tamanhos"):
+                                              "espada_ponta3", "espada_ponta4", "espada_tamanhos",
+                                              "elmo_cota"):
     globals()[sys.argv[1]](); sys.exit()
 if __name__ == "__main__":
     nome = sys.argv[1]; cfg = LOTES[nome]; base = LOTE / nome

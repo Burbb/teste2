@@ -1970,3 +1970,50 @@ saves temporários (`espada_maca/auxiliares/integracao.mjs` e `sandalia_chapeu/a
 `espada_maca/capturas/integracao/`): a ficha (32), o Inventário (40), a arma tirada com dois cliques (a silhueta da
 arma vazia, na ficha e no Inventário), o Atacar da luta, o saque (64 e 48), equipar e guardar.
 
+## O remake do ferro, 2: o elmo e a cota (`elmo_cota/`)
+
+**Pedido de Jean (19/10/2026):** depois da integração da espada e da maça, o próximo par, uma peça por vez, só no
+protótipo, com a skill `arte-itens-fenda` e o Aseprite pelo MCP. O escudo, o machado e as armas novas como referências de
+metal, luz, contorno e acabamento; os atuais (reduções da arte pintada) orientam o conceito, sem ser reproduzidos. O
+elmo: silhueta reconhecível, a calota em volume, a abertura do rosto resolvida, o interior vazio, poucos planos, sem
+ornamento de lendário. A cota: primeiro o volume (a gola, os ombros, as mangas, a barra); a malha em grupos que sigam o
+volume, sem ruído uniforme nem tricô; couro e ferragens onde fizerem sentido. Só o 32 e o 64; nada no jogo.
+
+**Os usos (antes de desenhar):**
+- `elmo`: o Elmo, o Capacete e a Barbuta (nenhum único); a silhueta da cabeça vazia de todas as classes (`VAZIO`); o
+  desenho de reserva de um item de cabeça sem base reconhecida (`ICONE_ESPACO` em `rpg/itens.py`).
+- `cota` (o desenho `armadura` nos dados): a Cota de Malha, o Peitoral, a Couraça e a Brigantina (nenhum único); a
+  silhueta do peito vazio de todas as classes; o desenho de reserva do peito.
+- **A limitação:** os nomes das quatro bases do peito são de construções diferentes (malha; peitoral e couraça de placa;
+  brigantina de placas rebitadas sob tecido). O desenho segue o conceito do atual (a cota de malha, o primeiro nome) e
+  serve às quatro por ora; uma variante por base fica para o Jean decidir (os dados não mudaram).
+
+**A construção** (`auxiliares/desenho.py`; as medidas no quadro de 32):
+- **O elmo:** uma barbuta de ferro, de frente e um pouco virada para a esquerda: a calota arredondada, sombreada como
+  um volume pela luz da família (faixas largas, o brilho só no alto à esquerda, a lateral que vira para trás na
+  sombra), a crista no alto com a sombra ao lado, a faixa da testa de latão com três rebites, a borda de baixo contínua e
+  um tom abaixo (a chapa virando para dentro), a abertura em T (o vão dos olhos sob a faixa e o vão do rosto descendo),
+  escura, com a parede de dentro um pouco mais clara embaixo: o interior vazio. Camadas: calota, interior, faixa,
+  contorno.
+- **A cota:** de frente, o volume primeiro (a gola, os ombros, as mangas curtas abrindo, o corpo até a barra); a malha
+  como anéis numa grade deslocada (o alto de cada anel um tom acima do volume, a base logo abaixo um tom abaixo, a cada
+  2 px na fileira e meio passo ao lado na fileira seguinte), sobre a luz do volume (clara à esquerda, mais escura à
+  direita, as mangas e os lados embaixo dos braços na sombra); a gola de couro com o vão escuro do pescoço, as barras
+  de couro nos punhos e embaixo, o cinto de couro com a fivela de ferro. Camadas: malha, couro, ferragem, contorno.
+- **Tentativas da bancada:** o primeiro elmo tinha um recorte embaixo, entre a frente e a nuca, que lia como pernas, e
+  uma abertura pequena; a primeira malha, em faixas horizontais, lia como placas (lamelar), e foi trocada pelos anéis
+  em grade deslocada. Os anéis e a crista vão em `fixo` (a limpeza apagaria os pontos isolados).
+
+**O Aseprite (pelo MCP):** as listas do 32 pintadas pelo `pintar.lua` (0 diferenças, 0 fora da tela), em
+`fontes/<peça>/<peça>-32.aseprite`; o composto do editor é igual ao PNG exportado e à prévia; o 64 é o 32 ×2; @2x exatos.
+
+**As fotos e as folhas (1920×945, `fotografar.mjs elmo_cota` e `elmo_cota_saque_cota`):** atual × proposta com os mesmos
+dados (`elmo_cota-no-jogo.png`): a ficha e o Inventário do Guerreiro com os dois vestidos (`VESTIR`, no `tutorial`), o
+saque do elmo e o da cota (o Peitoral de Aço do Lobo, comparado com uma Couraça: a mesma imagem para as duas bases); a
+fileira em tamanho real com o escudo, a espada, a maça, o machado e os atuais (`fileira-guerreiro-32.png`); a prancha.
+Sem erro no console. Como só há o 32 e o 64, o Inventário mostra o 32 e o "você usa" do saque reduz o 64.
+
+**Para a avaliação:** o elmo se lê como elmo já no 32 (a abertura em T e a faixa de latão); a cota se lê como camisa de
+malha com couro, mas no 32 a malha fica fina, quase uma textura; e, por ser malha, representa menos bem o Peitoral, a
+Couraça e a Brigantina.
+

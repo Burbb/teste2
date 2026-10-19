@@ -141,8 +141,8 @@ substituições posteriores, incluindo espada e maça na 1.145.0):
 |---|---|---|---|---|
 | `espada` | Espada, Montante (Guerreiro) | Arte final, padrão atual (o remake do ferro, integrada na 1.145.0) | `aseprite/espada/` (1.145.0) | Também é o comando de ataque da luta (`ACAO`) e a silhueta da arma vazia (`VAZIO`), de todas as classes; o ícone do atributo Ataque é outro desenho |
 | `maca` | Maça (Guerreiro) | Arte final, padrão atual (o remake do ferro, integrada na 1.145.0) | `aseprite/maca/` (1.145.0) | — |
-| `elmo` | Elmo, Capacete, Barbuta (Guerreiro) | **Placeholder integrado, pendente de remake** | redução da pintura | Também a silhueta da cabeça vazia, de todas as classes (`VAZIO`) |
-| `armadura` → `cota` | Cota de Malha, Peitoral, Couraça, Brigantina (Guerreiro) | **Placeholder integrado, pendente de remake** | redução da pintura | Também a silhueta da armadura vazia (`VAZIO`) |
+| `elmo` | Elmo, Capacete, Barbuta (Guerreiro) | **Placeholder integrado, pendente de remake**; proposta do 32 em avaliação | redução da pintura | Também a silhueta da cabeça vazia, de todas as classes (`VAZIO`) |
+| `armadura` → `cota` | Cota de Malha, Peitoral, Couraça, Brigantina (Guerreiro) | **Placeholder integrado, pendente de remake**; proposta do 32 em avaliação | redução da pintura | Também a silhueta da armadura vazia (`VAZIO`) |
 | `manopla` | Manopla (Guerreiro) | **Placeholder integrado, pendente de remake** | redução da pintura | Também a silhueta das mãos vazias (`VAZIO`) |
 | `calca` → `perneiras` | Perneira, Greva (Guerreiro) | **Placeholder integrado, pendente de remake** | redução da pintura | Também a silhueta das pernas vazias (`VAZIO`) |
 | `bota_ferro` → `botas-ferro` | Bota Ferrada (Guerreiro) | **Placeholder integrado, pendente de remake** | redução da pintura | Também a silhueta dos pés vazios (`VAZIO`) |
@@ -285,6 +285,18 @@ aprovada sem retoque (`731ab5c`) e integrada na 1.144.0 (fontes em `ferramentas/
 remakes do elmo, da cota, da manopla, das perneiras e das botas de ferro (placeholders, reduções da arte pintada; também
 as silhuetas dos espaços vazios) e o 40 e o 48 do martelo aprovado. **O próximo par, decidido pelo Jean: o elmo e a
 cota** (não começado).
+
+**O remake do ferro, 2: o elmo e a cota (proposta do 32, 19/10/2026; nada no jogo).** Em
+`ferramentas/prototipos/hud/itens-lote-noite/elmo_cota/` (o registro completo no `LEIA-ME.md` do lote):
+- **Os usos:** `elmo` vale para o Elmo, o Capacete e a Barbuta (nenhum único), para a silhueta da cabeça vazia de todas
+  as classes e para o desenho de reserva de um item de cabeça sem base reconhecida (`ICONE_ESPACO`). `cota` (o desenho
+  `armadura` nos dados) vale para a Cota de Malha, o Peitoral, a Couraça e a Brigantina (nenhum único), para a silhueta
+  do peito vazio e para o desenho de reserva do peito.
+- **A limitação registrada:** uma cota de malha só para quatro bases de construções diferentes (malha, peitoral de
+  placa, couraça, brigantina de placas rebitadas). Sem criar variantes nesta entrega; um desenho por base fica como
+  possibilidade futura, para o Jean decidir.
+- **Só o 32 e o 64 (= 32 ×2):** o 40 e o 48 depois da aprovação. Uma futura integração muda também as silhuetas da
+  cabeça e do peito vazios.
 
 ### 1.3. Prioridade: consumo do recurso antes das consequências
 

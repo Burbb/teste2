@@ -8,6 +8,7 @@
 //       | bandagem_pocao | bandagem_pocao_luta | tonico_antidoto | calca_manto | calca_manto_saque_calca
 //       | frasco_vazio | frasco_cheio | antidoto_base | anel_amuleto | anel_amuleto_saque_amuleto | sandalia_chapeu | sandalia_chapeu_saque_chapeu
 //       | chapeu_no_jogo | sandalia_r2 | besta | diadema | coroa_afogados | espada | espada_luta | maca | maca_tamanhos | espada_tamanhos
+//       | elmo_cota | elmo_cota_saque_cota
 import { spawn } from "child_process";
 import { readFileSync, existsSync, mkdirSync } from "fs";
 import { fileURLToPath } from "url";
@@ -213,6 +214,14 @@ const PECAS = {
   maca: { pasta: "espada_maca/proposta", saida: "espada_maca/capturas/maca", nomes: ["espada", "maca"], papel_tamanhos: [32, 64],
     cena: ["tutorial", { CLASSE: "guerreiro", TUTORIAL: "0", PERIODO: "0", ARMA: "maca" }], fotos: ["ficha", "inventario"],
     saque: ["vila", { CLASSE: "guerreiro", ACHADO: "maca", VESTIDO: "maca" }] },
+  // o elmo e a cota (elmo_cota/, o remake do ferro, 2): só o 32 e o 64 na proposta (tamanhos [32, 64] nesta página). O
+  // Guerreiro com os dois vestidos (VESTIR, no tutorial): a ficha e o Inventário; o saque de cada um (64 e 48)
+  elmo_cota: { pasta: "elmo_cota/proposta", saida: "elmo_cota/capturas", nomes: ["elmo", "cota"], papel_tamanhos: [32, 64],
+    cena: ["tutorial", { CLASSE: "guerreiro", TUTORIAL: "0", PERIODO: "0", VESTIR: "elmo,armadura" }], fotos: ["ficha", "inventario"],
+    saque: ["vila", { CLASSE: "guerreiro", ACHADO: "elmo", VESTIDO: "elmo" }] },
+  elmo_cota_saque_cota: { pasta: "elmo_cota/proposta", saida: "elmo_cota/capturas/saque_cota", nomes: ["elmo", "cota"], papel_tamanhos: [32, 64],
+    cena: ["tutorial", { CLASSE: "guerreiro", TUTORIAL: "0" }], fotos: [],
+    saque: ["vila", { CLASSE: "guerreiro", ACHADO: "armadura", VESTIDO: "armadura" }] },
   frasco_vazio: { pasta: "bandagem_pocao/variantes/proposta", saida: "bandagem_pocao/variantes/capturas/vazia", nomes: ["frasco_vazio"],
     papel_recurso: { frasco_vazio: [24] }, cena: ["covil", { LUGAR: "vila", BOLSA: "pocao_vida=0" }], fotos: ["topo"] },
   frasco_cheio: { pasta: "bandagem_pocao/variantes/proposta", saida: "bandagem_pocao/variantes/capturas/cheia", nomes: ["frasco_vazio"],

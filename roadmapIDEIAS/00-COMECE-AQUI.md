@@ -4680,3 +4680,23 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Outra sessão em andamento:** sincronizar este commit de documentação antes do próximo push, preservando as
   alterações locais. Esta atualização já vem depois da integração de espada/maça; não exige reaplicá-la.
 - Somente três arquivos Markdown mudaram; nenhum código, sprite, teste, regra, versão ou save foi alterado.
+
+### 19/10/2026 (data do computador local) — Sincronização e o remake do ferro, 2: o elmo e a cota (proposta do 32)
+
+- **Sincronização:** o commit de documentação do Jean (`1882da5`, a ordem do plano 23 depois dos itens) trazido por
+  avanço direto, antes do próximo push; a árvore local estava limpa, nada se perdeu, e a integração da espada e da maça
+  (`ed967d1`) segue intacta.
+- **Pedido de Jean:** o próximo par, o elmo e a cota, uma peça por vez, só no protótipo; o 32 e o 64 primeiro.
+- **Os usos:** o elmo vale para o Elmo, o Capacete e a Barbuta, a cabeça vazia e o desenho de reserva da cabeça; a cota,
+  para a Cota de Malha, o Peitoral, a Couraça e a Brigantina, o peito vazio e o desenho de reserva do peito.
+- **Feito, só no protótipo** (`ferramentas/prototipos/hud/itens-lote-noite/elmo_cota/`), **não aprovado**: o elmo (uma
+  barbuta de ferro com a calota em volume, a crista, a faixa de latão com rebites e a abertura em T, o interior vazio) e
+  a cota (a camisa de malha em anéis numa grade deslocada sobre o volume, a gola, os punhos e a barra de couro, o cinto
+  com fivela de ferro). 32 e 64 (= 32 ×2); fontes em camadas pelo `pintar.lua`; composto, exportação e prévia
+  conferem; @2x exatos.
+- **Limitação registrada:** uma cota de malha só para as quatro bases do peito (malha, peitoral, couraça, brigantina);
+  variantes ficam para o Jean decidir.
+- **Fotos a 1920×945:** atual × proposta na ficha, no Inventário e nos saques; a fileira com o escudo e as armas.
+- **Aguardando avaliação.** Nada integrado; a versão não mudou; manopla, perneiras, botas e o 40/48 do martelo não
+  começaram.
+
