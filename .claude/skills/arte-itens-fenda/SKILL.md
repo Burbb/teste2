@@ -12,6 +12,10 @@ pare para a conferência.
 Caminhos relativos à raiz do repositório. O que é de um objeto só (as medidas do escudo, a forma do pote) está em
 [exemplos.md](exemplos.md); não transforme aquilo em regra.
 
+**Anéis:** o ângulo e a construção preferidos estão em [referencias-aneis.md](referencias-aneis.md) (a prancha do Jean
+em `ferramentas/arte/referencias/aneis/`): o aro em pé, de três quartos, com a abertura em diagonal e a espessura
+legível. Os efeitos da prancha (fogo, raio, runas) são exemplos para acessórios especiais, não exigência dos comuns.
+
 **Livros:** quando o objeto é um livro (o grimório e o tomo do equipamento, o Grimório e o Diário da doca, um livro
 fechado, entreaberto ou aberto), consulte também a skill `arte-livros-fenda`
 ([../arte-livros-fenda/SKILL.md](../arte-livros-fenda/SKILL.md)). Ela trata das referências, da construção do livro

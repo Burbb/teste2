@@ -410,7 +410,7 @@ for (const modo of (process.env.SO_ATUAL ? ["atual"] : process.env.SO_PROPOSTA ?
   } finally { proc.kill(); }
 }
 // o cartão do saque (64 e 48: o achado e o "você usa") e o voo ao equipar, quando a peça tem cena de saque
-if (P.saque) for (const modo of ["atual", "proposta"]) for (const [W, H] of JANELAS) {
+if (P.saque) for (const modo of (process.env.SO_ATUAL ? ["atual"] : process.env.SO_PROPOSTA ? [ROTULO] : ["atual", ROTULO])) for (const [W, H] of JANELAS) {
   const [cenario, amb] = P.saque;
   const proc = spawn(PY, ["-m", "tests.navegador.cenarios", cenario], { cwd: raiz, env: { ...process.env, PYTHONPATH: raiz, PYTHONIOENCODING: "utf-8", VELOCIDADE: "rapido", ...amb } });
   let url = null; proc.stdout.on("data", (d) => { const m = String(d).match(/http:\S+/); if (m) url = m[0]; });
@@ -418,7 +418,7 @@ if (P.saque) for (const modo of ["atual", "proposta"]) for (const [W, H] of JANE
   try {
     const p = await b.newPage({ viewport: { width: W, height: H } });
     const erros = []; p.on("pageerror", (e) => erros.push(String(e)));
-    if (modo === "proposta") await anexar(p);
+    if (modo !== "atual") await anexar(p);
     await p.goto(url);
     await p.waitForSelector(".janela-achado", { timeout: 30000 }); await espera(2500);
     const bb = await (await p.$(".janela-achado")).boundingBox();

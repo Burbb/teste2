@@ -2,8 +2,8 @@
 # A construção é a mesma em 32, 40 e 48 (as medidas em frações do quadro de 32); o 64 é o 32 ampliado 2x.
 #   o anel: o aro visto de três quartos, um pouco de cima; a abertura vazada (o fundo aparece), a parede de dentro do
 #     lado de trás (mais escura: a espessura), o lado de fora em poucos planos de luz e o engaste com a granada no alto;
-#   o amuleto: o medalhão redondo (a borda em relevo, o campo e o botão do meio), a argola no alto e o cordão de couro
-#     que passa pela argola e fecha o laço do colar.
+#   o amuleto (rodada 2): a gema violeta alongada (um cabochão) no engaste de latão, a argola no alto e o cordão de
+#     couro que passa pela argola e fecha o laço do colar (o medalhão da rodada 1 em rodada1/joias_rodada1.py).
 # Uso: python joias.py <anel|amuleto> <32|40|48> [silhueta] [<pasta>]. Grava a prévia e as listas em <pasta>/<N>/.
 import math, pathlib, sys
 import numpy as np
@@ -17,6 +17,7 @@ RAMPAS = {
     "o": ["#40270C", "#623C12", "#8A571B", "#AE7526", "#CF9737", "#E9BB5C", "#F8DC94", "#FFF5D6"],   # o latão do escudo
     "g": ["#3E0812", "#6E1020", "#A41C30", "#D63E48", "#FF9C94"],                                     # a granada
     "u": ["#2A1A0E", "#46301C", "#6A4A2C", "#8E6A44"],                                                 # o cordão de couro
+    "v": ["#22043E", "#3A0C68", "#541890", "#7028B8", "#9450D6", "#C08EEC", "#F4DEFF"],                 # a gema violeta
 }
 mat, tom, fixo, X, Y = grade(N)
 cam = np.full((N, N), "", dtype=object)
@@ -69,9 +70,12 @@ if PECA == "anel":
         pinta(pedra & elipse(15.2, 8.4, 0.7, 0.5), "g", 4, "pedra")
     camadas = ["aro", "parede", "brilho", "engaste", "pedra", "contorno"]
 else:
-    MX, MY, MR = 16.0, 20.6, 7.6                                 # o medalhão
-    disco = elipse(MX, MY, MR, MR)
-    argola = elipse(16.0, 12.0, 2.0, 2.3) & ~elipse(16.0, 12.0, 0.9, 1.1)
+    # rodada 2: a gema violeta alongada num engaste de latão contido (o medalhão da rodada 1 lembrava uma moeda)
+    GX, GY, GRX, GRY = 16.0, 21.4, 3.9, 6.3                      # a gema (um cabochão alongado)
+    pedra = elipse(GX, GY, GRX, GRY)
+    engaste = elipse(GX, GY, GRX + 1.4, GRY + 1.4) & ~pedra
+    argola = elipse(16.0, 12.4, 1.9, 2.2) & ~elipse(16.0, 12.4, 0.8, 1.0)
+    disco = pedra | engaste
     # o cordão: o colar deitado, um laço em gota (redondo em cima, estreitando até a argola, onde ele passa)
     cordao = np.zeros((N, N), bool)
     for k in range(2400):
@@ -83,23 +87,23 @@ else:
             cordao[y, x] = True
     cordao &= ~elipse(16.0, 12.0, 2.0, 2.3)
     if ETAPA == "silhueta":
-        pinta(cordao, "u", 2, "cordao"); pinta(argola, "o", 4, "argola"); pinta(disco, "o", 4, "medalhao")
+        pinta(cordao, "u", 2, "cordao"); pinta(argola, "o", 4, "argola"); pinta(disco, "o", 4, "engaste")
     else:
         tc = np.where((x32 < 16.0) & (y32 < 6.2), 3, np.where(y32 < 6.2, 2, 1))      # o couro: a luz em cima à esquerda
         pinta(cordao, "u", tc, "cordao")
-        ta = np.where(luz_ang(16.0, 12.0) > 0.2, 6, np.where(luz_ang(16.0, 12.0) > -0.4, 4, 2))
+        ta = np.where(luz_ang(16.0, 12.4) > 0.2, 6, np.where(luz_ang(16.0, 12.4) > -0.4, 4, 2))
         pinta(argola, "o", ta, "argola")
-        rr = np.sqrt((x32 - MX) ** 2 + (y32 - MY) ** 2) / MR
-        la = luz_ang(MX, MY)
-        # a borda em relevo (clara do lado da luz, escura do outro), o campo (um pouco fundo) e o botão do meio
-        tb = np.where(la > 0.3, 6, np.where(la > -0.4, 5, 3))                # a borda em relevo
-        tbot = np.where(la > 0.2, 6, np.where(la > -0.4, 5, 3))              # o botão do meio
-        t = np.where(rr > 0.8, tb, np.where(rr > 0.3, 4, tbot))               # o campo plano, num tom só
-        t = np.where((rr > 0.66) & (rr <= 0.8), 2, t)                        # o sulco: um anel inteiro
-        t = np.where((rr > 0.3) & (rr <= 0.42), 3, t)                        # a base do botão
-        pinta(disco, "o", t, "medalhao")
-        pinta(disco & elipse(MX - MR * 0.55, MY - MR * 0.5, 1.4, 1.0), "o", 7, "brilho")
-    camadas = ["cordao", "argola", "medalhao", "brilho", "contorno"]
+        le = luz_ang(GX, GY)                                     # o engaste: claro do lado da luz, escuro do outro
+        pinta(engaste, "o", np.where(le > 0.35, 6, np.where(le > -0.35, 4, 2)), "engaste")
+        # a gema: um domo (cabochão) iluminado de cima e da esquerda, em poucos planos; a beira mais funda
+        nx_ = (x32 - GX) / GRX; ny_ = (y32 - GY) / GRY; nz_ = np.sqrt(np.clip(1 - nx_ ** 2 - ny_ ** 2, 0, 1))
+        d = -0.58 * nx_ - 0.62 * ny_ + 0.53 * nz_
+        tg = np.where(d > 0.78, 4, np.where(d > 0.5, 3, np.where(d > 0.15, 2, 1)))   # violeta fundo, como a pedra de hoje
+        tg = np.where(nx_ ** 2 + ny_ ** 2 > 0.78, np.maximum(tg - 1, 0), tg)
+        pinta(pedra, "v", tg, "pedra")
+        pinta(pedra & elipse(GX - GRX * 0.4, GY - GRY * 0.45, 0.9, 1.3), "v", 6, "brilho")     # o reflexo agrupado
+        pinta(pedra & elipse(GX + GRX * 0.35, GY + GRY * 0.5, 0.7, 0.8), "v", 4, "brilho")      # o brilho de dentro
+    camadas = ["cordao", "argola", "engaste", "pedra", "brilho", "contorno"]
 
 mat[:, -1] = ""; mat[-1, :] = ""; mat[:, 0] = ""; mat[0, :] = ""
 contornar(mat)

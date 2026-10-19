@@ -4328,3 +4328,14 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Alcance e limitações:** o anel vale para Anel, Sinete, Aro e o Anel do Último Rei, e o amuleto para Amuleto,
   Talismã, Pingente e Medalhão; os espaços vazios usam a mesma imagem (mudam junto). O Aro (liso) e o Sinete (de selo)
   pediriam desenhos próprios, se o Jean quiser; os dados não mudaram.
+
+### 19/10/2026 (data do computador local) — O anel e o amuleto, rodada 2 (propostas)
+
+- **Pedido de Jean:** refazer os dois, só no protótipo: o anel pela prancha de referência (o aro em pé, de três
+  quartos, a abertura em diagonal, a espessura), básico, sem pedra nem decoração; o amuleto com uma gema violeta num
+  engaste de latão, o pingente alongado. Guardar a prancha como referência permanente.
+- **Feito:** a prancha em `ferramentas/arte/referencias/aneis/` e na skill (`referencias-aneis.md`: o ângulo preferido
+  dos anéis; os efeitos são exemplos para acessórios especiais). **A rodada 1 não foi escolhida** (guardada em
+  `anel_amuleto/rodada1/`). **Aguardando avaliação:** o anel de ouro em pé, modelado como um cilindro curto, com o
+  acabamento do sample que o Jean mandou (o chanfro nas bordas); o amuleto com a gema violeta alongada no engaste de
+  latão e o cordão em gota. 32, 40, 48 e o 64 = 32 ×2; fotos produção × anterior × nova a 1920×945.

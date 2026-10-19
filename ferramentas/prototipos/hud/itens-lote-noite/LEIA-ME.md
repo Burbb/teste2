@@ -1434,3 +1434,31 @@ como o comando Itens da luta e o Manto segue compartilhado (decisões do Jean).
   pedra; o Anel do Último Rei combina com o engaste. Se o Jean quiser o Aro liso e o Sinete com o selo, a proposta é
   um desenho por base (sem mudar os dados nesta rodada). No espaço de 32, o anel é mais baixo que os outros
   equipamentos (um aro em perspectiva é largo e achatado).
+
+### O anel e o amuleto, rodada 2 (`anel_amuleto/`)
+
+**Propostas, nada no jogo, aguardando avaliação.** A rodada 1 (o anel achatado com a granada e o medalhão) **não foi
+escolhida**: guardada inteira em `anel_amuleto/rodada1/` (as fontes, os PNGs e o gerador `joias_rodada1.py`).
+
+- **A referência:** a prancha de anéis do Jean, guardada em `ferramentas/arte/referencias/aneis/prancha-aneis-jean.png`
+  e documentada na skill (`.claude/skills/arte-itens-fenda/referencias-aneis.md`: o ângulo preferido para os anéis, a
+  construção separada dos efeitos, sem regra de cor, gema ou poder), e o sample de um aro liso de ouro que ele mandou
+  durante o trabalho (o acabamento).
+- **O anel:** o aro em pé, de três quartos e inclinado, com a abertura elíptica em diagonal; modelado como um cilindro
+  curto (a face de fora, a de dentro e as duas bordas projetadas, cada pixel com a superfície mais perto: a perspectiva
+  e a espessura coerentes em todo tamanho), `anel_amuleto/auxiliares/aro.py <N>`. No ouro das moedas aprovadas (claro
+  e saturado como o sample), a face de fora em poucos tons com o chanfro claro nas bordas e o meio mais fundo, a face de
+  dentro laranja escura, o reflexo agrupado. Sem pedra nem decoração (o anel básico). As rodadas do desenho: o eixo
+  virado demais para o lado (uma fresta, um bracelete grosso), depois a luz barrenta; o sample trouxe o ouro e o
+  chanfro. Camadas: dentro, fora, borda, brilho, contorno.
+- **O amuleto:** a gema violeta alongada (um cabochão) num engaste de latão contido, a argola encaixada no alto e o
+  mesmo cordão de couro em gota da rodada 1 passando por ela. A gema em poucos planos (a luz em cima à esquerda, o
+  violeta fundo embaixo, a beira mais funda), o reflexo agrupado e um brilho de dentro do lado oposto; o contraste
+  pedra × metal do placeholder, sem halo nem runa. Camadas: cordao, argola, engaste, pedra, brilho, contorno.
+- **Tamanhos:** 32, 40 e 48 da mesma construção; o 64 é o 32 ampliado 2×. Fontes em `anel_amuleto/fontes/anel/` e
+  `amuleto/`, pelo `pintar.lua` (0 diferentes, 0 fora da tela); o composto do editor confere (`soma.lua`); @2x exatos.
+- **As fotos (1920×945, os mesmos dados):** produção × anterior × nova (`ROTULO=nova`; `SO_PROPOSTA=1 ROTULO=anterior
+  PASTA=anel_amuleto/rodada1/proposta`); o laço do saque do roteiro passou a seguir `ROTULO`, `SO_ATUAL` e
+  `SO_PROPOSTA`. Folha `anel_amuleto/anel_amuleto-no-jogo.png` e prancha `anel_amuleto/prancha-carvao.png`.
+- **O alcance segue o da rodada 1:** os compartilhamentos atuais (Anel, Sinete, Aro e o Anel do Último Rei; Amuleto,
+  Talismã, Pingente e Medalhão; os vazios com a mesma imagem), sem mudar os dados.

@@ -63,9 +63,11 @@ LOTES = {
                 ("o corpo no Inventário (40; o Anel 1 vazio é a silhueta apagada)", "inventario", (150, 140, 480, 520)),
                 ("o cartão do saque do anel (64) e o que você usa (48)", "saque", None),
                 ("o cartão do saque do amuleto (64 e 48)", "saque", None, "saque_amuleto")],
-        prancha=lambda P: [P / "anel-32.png", P / "anel-40.png", P / "anel-48.png", P / "anel-64.png", JOGO / "anel-32.png",
-                           P / "amuleto-32.png", P / "amuleto-40.png", P / "amuleto-48.png", P / "amuleto-64.png", JOGO / "amuleto-32.png",
-                           JOGO / "escudo-32.png"]),
+        modos=("atual", "anterior", "nova"),                   # a produção, a rodada 1 e a rodada 2
+        prancha=lambda P: [JOGO / "anel-32.png", P.parent / "rodada1" / "proposta" / "anel-32.png",
+                           P / "anel-32.png", P / "anel-40.png", P / "anel-48.png", P / "anel-64.png",
+                           JOGO / "amuleto-32.png", P.parent / "rodada1" / "proposta" / "amuleto-32.png",
+                           P / "amuleto-32.png", P / "amuleto-40.png", P / "amuleto-48.png", P / "amuleto-64.png"]),
 }
 
 def antidoto_base():
@@ -90,5 +92,5 @@ if __name__ == "__main__" and sys.argv[1] in ("antidoto_base", "frasco_vazio"):
     globals()[sys.argv[1]](); sys.exit()
 if __name__ == "__main__":
     nome = sys.argv[1]; cfg = LOTES[nome]; base = LOTE / nome
-    folha(base / "capturas", cfg["linhas"], base / f"{nome}-no-jogo.png")
+    folha(base / "capturas", cfg["linhas"], base / f"{nome}-no-jogo.png", cfg.get("modos", ("atual", "proposta")))
     prancha(cfg["prancha"](base / "proposta"), base / "prancha-carvao.png")
