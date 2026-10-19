@@ -100,61 +100,92 @@ todo rosto ou sprite. Reconhecimento, identidade e peso visual no tamanho de uso
 como registrado no roadmap. Conferir também os demais compartilhamentos de bases e únicos para não transformar
 uma limitação antiga de mapeamento numa regra artística permanente.
 
-### 1.2.1. Conferência dos equipamentos das classes (19/10/2026, na 1.140.0)
+### 1.2.1. Conferência dos equipamentos das classes (19/10/2026, na 1.140.0; corrigida no mesmo dia)
 
 Só os equipamentos (armas, apoios, roupas, armaduras e acessórios), um desenho por linha; os únicos só onde
 compartilham a imagem. Fontes: os dados (`rpg/itens.py`: `ARMAS`, `ARMADURAS`, `PECAS`, `AMULETOS`, `ANEIS`,
-`UNICOS`), os papéis em `rpg/web/static/icones.js` (`ITEM`, `TAMANHOS`) e `desenhos.js`, as fontes de arte
-(`ferramentas/arte/aseprite/`, os `desenhar_*_pixel.py`, `familia-ferro/`) e os registros (`docs/ARQUITETURA.md`,
-"A interface web"; `ferramentas/arte/aseprite/LEIA-ME.md`; a continuidade). Os materiais e os afixos não mudam a
-imagem e não entram como pendência. Sem papel em `Icones`, o jogo mostra o sprite 16×16 de `sprites-dados.js` ampliado:
-é o que conta como **arte ainda por fazer**.
+`UNICOS`), os papéis em `rpg/web/static/icones.js` (`ITEM`, `VAZIO`, `ACAO`, `TAMANHOS`) e `desenhos.js`, a fonte real
+de cada arquivo (o `.aseprite`, o `desenhar_*_pixel.py`, a redução de `familia_ferro.py`) e o histórico dos arquivos no
+git. Os materiais e os afixos não mudam a imagem e não entram como pendência. "Está integrado", "tem PNG de 32" ou "é
+feito em código" não provam nada sozinhos: vale de onde o arquivo sai.
+
+**A correção (decisão do Jean, 19/10/2026):** a primeira versão desta tabela contou a família de ferro como aprovada,
+com uma dúvida. Ela é **placeholder**: as sete peças abaixo são reduções da arte pintada das folhas da HUD 4 pixel,
+aprovada para uso na 1.89.0, anterior ao padrão atual de pixel art, e precisam ser refeitas nele. A aprovação de uso
+de antes não vale como arte final.
+
+**A fonte das peças de ferro, uma a uma** (conferida nesta data):
+- `elmo`, `cota`, `manopla`, `perneiras`, `botas-ferro`, `maca`, `espada`: os arquivos do jogo saem de
+  `ferramentas/arte/familia-ferro/<peça>.png` (a pintura recortada) pela redução "paleta" de `familia_ferro.py`;
+  `familia_ferro.py --conferir` refaz todos os tamanhos e dá "tudo igual", e os PNGs de 32 não mudaram desde o commit
+  da HUD de ferro (`58c20d8`). Nenhuma delas tem desenho próprio refeito depois. **Derivadas da pintura.**
+- `escudo`: está na pintura e na conta da escala da família, mas o arquivo do jogo sai de `desenhar_escudo_pixel.py`,
+  desenhado na grade de cada tamanho (1.94.0, `bbeda6a`); é uma das duas referências do método na skill
+  `arte-itens-fenda`. **Desenho próprio, no padrão atual.**
+- `machado`: não está na pintura; `desenhar_machado_pixel.py`, na grade de cada tamanho (1.99.0, `85547a5`).
+  **Desenho próprio, no padrão atual.**
+- `martelo`: não está na pintura; uma grade de 32 em `desenhos.js`, desenhada à mão no experimento de resolução
+  (1.93.0, `d34b8a4`). Não é derivado da pintura, mas não tem arquivo de 40 (o Inventário o mostra em 32) e o 48 é a
+  2× reduzida pelo navegador, o que a skill chama de herança, não de padrão. **A decidir pelo Jean** (ver abaixo); não
+  entra como final nem como placeholder.
+
+**A tabela, por situação:**
 
 | Desenho | Bases (e únicos) que usam a imagem | Situação | Sustentação | Atenção |
 |---|---|---|---|---|
-| `espada` | Espada, Montante (Guerreiro) | Aprovada e integrada | família de ferro (1.89.0; o 40 na 1.95.0) | Dúvida: a família de ferro é uma redução da arte pintada, anterior ao método atual (não reaberta) |
-| `maca` | Maça (Guerreiro) | Aprovada e integrada | família de ferro | Dúvida da família de ferro |
-| `martelo` | Martelo (Guerreiro) | Aprovada e integrada | `desenhos.js` (1.93.0) | Dúvida: sem arquivo de 40 (o Inventário o mostra em 32) e o 48 é a 2× reduzida pelo navegador (herança registrada na skill) |
-| `machado` | Machado; únicos Lamento de Gharbad, O Açougueiro | Aprovada e integrada | `desenhar_machado_pixel.py` (1.99.0) | — |
-| `escudo` | Escudo, Broquel; únicos Égide do Mártir, Broquel do Vigia | Aprovada e integrada | `desenhar_escudo_pixel.py` (1.94.0) | — |
-| `elmo` | Elmo, Capacete, Barbuta (Guerreiro) | Aprovada e integrada | família de ferro | Dúvida da família de ferro |
-| `armadura` → `cota` | Cota de Malha, Peitoral, Couraça, Brigantina | Aprovada e integrada | família de ferro | Dúvida da família de ferro |
-| `manopla` | Manopla (Guerreiro) | Aprovada e integrada | família de ferro | Dúvida da família de ferro |
-| `calca` → `perneiras` | Perneira, Greva | Aprovada e integrada | família de ferro | Dúvida da família de ferro |
-| `bota_ferro` → `botas-ferro` | Bota Ferrada | Aprovada e integrada | família de ferro | Dúvida da família de ferro |
-| `arco` | Arco Curto, Longo, Recurvo; únicos Ventre da Tempestade, Sussurro do Vazio | Aprovada e integrada | `desenhar_arco_pixel.py` (1.101.0) | — |
-| `besta` | Besta Leve (Arqueiro) | **Arte por fazer** | sem papel em `Icones` (sprite 16×16) | Uma das quatro armas do Arqueiro; não estava na lista de lacunas |
-| `aljava` | Aljava; único Aljava dos Mil Corvos | Aprovada e integrada | `aseprite/aljava/` (1.122.0) | É também o recurso de flechas do topo |
-| `gibao` | Gibão de Couro, Capa de Patrulha, Colete Acolchoado; único Pele do Penitente | Aprovada e integrada | `aseprite/gibao/` (1.110.0) | A Capa de Patrulha compartilha por ora (o lote de capas, registrado acima) |
-| `capuz` | Capuz, Chapéu de Couro (Arqueiro) | Aprovada e integrada | `aseprite/capuz/` (1.112.0) | O Chapéu de Couro compartilha por ora (pede desenho próprio, registrado) |
-| `luva` | Braçadeira; único Mãos do Estrangulador | Aprovada e integrada | `aseprite/luva/` (1.112.0) | — |
-| `calca_couro` | Calça de Couro (Arqueiro) | Aprovada e integrada | `aseprite/calca_couro/` (1.119.0) | — |
-| `bota` | Bota de Caça; único Botas do Andarilho Morto | Aprovada e integrada | `aseprite/bota/` (1.110.0) | — |
-| `cajado` | Cajado; único Cajado da Peste | Aprovada e integrada | `desenhar_cajado_pixel.py` (1.106.0) | — |
-| `varinha` | Varinha | Aprovada e integrada | `aseprite/varinha/` (1.109.0) | — |
-| `orbe` | Orbe (arma), Foco Arcano (apoio); único Olho do Abismo | Aprovada e integrada | `desenhar_orbe_pixel.py` (1.107.0) | A arma e o apoio dividem a imagem |
-| `livro` | Grimório (arma), Tomo (apoio); único Tomo do Nome Esquecido | Aprovada e integrada | `desenhar_livro_pixel.py` (1.108.0) | A arma e o apoio dividem a imagem |
-| `capuz_tecido` | Capuz (Mago) | Aprovada e integrada | `aseprite/capuz_tecido/` (1.112.0) | — |
-| `chapeu` | Chapéu Pontudo (Mago) | **Arte por fazer** | sem papel em `Icones` | Lacuna registrada na `docs/ARQUITETURA.md` |
-| `coroa` | Diadema (Mago); único Coroa dos Afogados | **Arte por fazer** | sem papel em `Icones` | Diadema e coroa dividem: decidir se um desenho serve aos dois |
-| `luva_seda` | Luva de Seda | Aprovada e integrada | `aseprite/luva_seda/` (1.112.0) | — |
-| `manto` | Manto, Túnica, Veste Rúnica; único Manto de Cinzas | Aprovada e integrada | `aseprite/manto/` (1.138.0) | Compartilhamento mantido por decisão do Jean |
-| `calca_tecido` | Calça de Viagem; único Mordida do Túmulo | Aprovada e integrada | `aseprite/calca_tecido/` (1.138.0) | — |
-| `sandalia` | Sandália (Mago, a **única base** dos pés do Mago) | **Arte por fazer** | sem papel em `Icones` | Todo calçado do Mago é este placeholder |
-| `anel` | Anel, Sinete, Aro; único Anel do Último Rei | Aprovada e integrada | `aseprite/anel/` (1.140.0) | Compartilhamento mantido |
-| `amuleto` | Amuleto, Talismã, Pingente, Medalhão | Aprovada e integrada | `aseprite/amuleto/` (1.140.0) | Compartilhamento mantido |
+| `espada` | Espada, Montante (Guerreiro) | **Placeholder integrado, pendente de remake** | redução da pintura (`familia_ferro.py`) | Também é o comando de ataque da luta (`ACAO`) e a silhueta da arma vazia (`VAZIO`), de todas as classes |
+| `maca` | Maça (Guerreiro) | **Placeholder integrado, pendente de remake** | redução da pintura | — |
+| `elmo` | Elmo, Capacete, Barbuta (Guerreiro) | **Placeholder integrado, pendente de remake** | redução da pintura | Também a silhueta da cabeça vazia, de todas as classes (`VAZIO`) |
+| `armadura` → `cota` | Cota de Malha, Peitoral, Couraça, Brigantina (Guerreiro) | **Placeholder integrado, pendente de remake** | redução da pintura | Também a silhueta da armadura vazia (`VAZIO`) |
+| `manopla` | Manopla (Guerreiro) | **Placeholder integrado, pendente de remake** | redução da pintura | Também a silhueta das mãos vazias (`VAZIO`) |
+| `calca` → `perneiras` | Perneira, Greva (Guerreiro) | **Placeholder integrado, pendente de remake** | redução da pintura | Também a silhueta das pernas vazias (`VAZIO`) |
+| `bota_ferro` → `botas-ferro` | Bota Ferrada (Guerreiro) | **Placeholder integrado, pendente de remake** | redução da pintura | Também a silhueta dos pés vazios (`VAZIO`) |
+| `martelo` | Martelo (Guerreiro) | **A decidir** | grade de 32 em `desenhos.js` (1.93.0) | Desenho próprio, não da pintura; fora da política de tamanhos (sem 40, 48 pelo navegador) |
+| `besta` | Besta Leve (Arqueiro) | **Desenho inexistente** | sem papel em `Icones` (o sprite 16×16) | Uma das quatro armas do Arqueiro |
+| `chapeu` | Chapéu Pontudo (Mago) | **Desenho inexistente** | sem papel em `Icones` | Um terço das cabeças do Mago |
+| `coroa` | Diadema (Mago); único Coroa dos Afogados | **Desenho inexistente** | sem papel em `Icones` | Decidir se um desenho serve aos dois |
+| `sandalia` | Sandália (Mago, a única base dos pés dele) | **Desenho inexistente** | sem papel em `Icones` | Todo calçado do Mago é este placeholder |
+| `escudo` | Escudo, Broquel; únicos Égide do Mártir, Broquel do Vigia | Arte final, padrão atual | `desenhar_escudo_pixel.py` (1.94.0) | Também a silhueta da secundária vazia (`VAZIO`) |
+| `machado` | Machado; únicos Lamento de Gharbad, O Açougueiro | Arte final, padrão atual | `desenhar_machado_pixel.py` (1.99.0) | — |
+| `arco` | Arco Curto, Longo, Recurvo; únicos Ventre da Tempestade, Sussurro do Vazio | Arte final, padrão atual | `desenhar_arco_pixel.py` (1.101.0) | — |
+| `aljava` | Aljava; único Aljava dos Mil Corvos | Arte final, padrão atual | `aseprite/aljava/` (1.122.0) | Também o recurso de flechas do topo |
+| `gibao` | Gibão de Couro, Colete Acolchoado, Capa de Patrulha; único Pele do Penitente | Arte final, padrão atual | `aseprite/gibao/` (1.110.0) | A Capa de Patrulha: compartilhamento provisório |
+| `capuz` | Capuz, Chapéu de Couro (Arqueiro) | Arte final, padrão atual | `aseprite/capuz/` (1.112.0) | O Chapéu de Couro: compartilhamento provisório |
+| `luva` | Braçadeira; único Mãos do Estrangulador | Arte final, padrão atual | `aseprite/luva/` (1.112.0) | — |
+| `calca_couro` | Calça de Couro (Arqueiro) | Arte final, padrão atual | `aseprite/calca_couro/` (1.119.0) | — |
+| `bota` | Bota de Caça; único Botas do Andarilho Morto | Arte final, padrão atual | `aseprite/bota/` (1.110.0) | — |
+| `cajado` | Cajado; único Cajado da Peste | Arte final, padrão atual | `desenhar_cajado_pixel.py` (1.106.0) | — |
+| `varinha` | Varinha | Arte final, padrão atual | `aseprite/varinha/` (1.109.0) | — |
+| `orbe` | Orbe (arma), Foco Arcano (apoio); único Olho do Abismo | Arte final, padrão atual | `desenhar_orbe_pixel.py` (1.107.0) | Arma e apoio na mesma imagem desde a integração |
+| `livro` | Grimório (arma), Tomo (apoio); único Tomo do Nome Esquecido | Arte final, padrão atual | `desenhar_livro_pixel.py` (1.108.0) | Arma e apoio na mesma imagem desde a integração |
+| `capuz_tecido` | Capuz (Mago) | Arte final, padrão atual | `aseprite/capuz_tecido/` (1.112.0) | — |
+| `luva_seda` | Luva de Seda | Arte final, padrão atual | `aseprite/luva_seda/` (1.112.0) | — |
+| `manto` | Manto, Túnica, Veste Rúnica; único Manto de Cinzas | Arte final, padrão atual | `aseprite/manto/` (1.138.0) | Compartilhamento mantido por decisão do Jean |
+| `calca_tecido` | Calça de Viagem; único Mordida do Túmulo | Arte final, padrão atual | `aseprite/calca_tecido/` (1.138.0) | — |
+| `anel` | Anel, Sinete, Aro; único Anel do Último Rei | Arte final, padrão atual | `aseprite/anel/` (1.140.0) | Compartilhamento mantido |
+| `amuleto` | Amuleto, Talismã, Pingente, Medalhão | Arte final, padrão atual | `aseprite/amuleto/` (1.140.0) | Compartilhamento mantido |
 
-Nenhuma proposta pendente de equipamento nesta data: todas as rodadas avaliadas foram integradas ou recusadas.
+**A contagem:** 31 desenhos de equipamento.
+- **Arte final aprovada no padrão atual:** 19 (o escudo, o machado e os 17 do Arqueiro, do Mago e dos acessórios).
+- **Placeholder integrado, pendente de remake:** 7, todos do Guerreiro (espada, maça, elmo, cota, manopla, perneiras,
+  botas de ferro). O equipamento do Guerreiro **não está concluído**: só o escudo e o machado são finais.
+- **Desenho inexistente:** 4 (Besta Leve, Chapéu Pontudo, Diadema, Sandália).
+- **A decidir:** 1 (o martelo).
+- **Compartilhamento provisório aceito** (a peça usa o desenho de outra até ganhar o seu): a Capa de Patrulha no gibão
+  (o lote de capas) e o Chapéu de Couro no capuz. Os compartilhamentos do manto, do anel, do amuleto, do orbe e do livro
+  são definitivos, não pendência. As silhuetas apagadas dos espaços vazios (`VAZIO`) vêm do elmo, da cota, da manopla,
+  das perneiras, das botas de ferro e da espada para todas as classes: mudam junto quando essas peças forem refeitas.
 
-**Recomendação para o próximo par: a Sandália e o Chapéu Pontudo.** A Sandália é o placeholder mais frequente (é a
-única base dos pés do Mago: todo calçado dele aparece no sprite 16×16) e, com o Chapéu Pontudo (um terço das cabeças do
-Mago), fecha o vestuário de tecido do Mago, que já tem o capuz, a luva de seda, a calça de viagem e o manto aprovados
-como referência de material. Depois: a Besta Leve (um quarto das armas do Arqueiro, o único placeholder dele) e o
-Diadema (que define se a Coroa dos Afogados divide o desenho).
+Nenhuma proposta pendente de equipamento nesta data.
 
-**Dúvidas registradas, sem reabrir desenho:** a família de ferro pintada (espada, maça, elmo, cota, manopla, perneiras,
-botas de ferro), aprovada na HUD de ferro (1.89.0), é uma redução da arte pintada anterior ao método atual; e o martelo
-em código não tem arquivo de 40 e usa a redução do navegador no 48.
+**A ordem recomendada (separada da contagem):** primeiro a **Sandália e o Chapéu Pontudo**, que são o placeholder
+mais frequente do Mago e fecham o vestuário de tecido dele, já com capuz, luva, calça e manto aprovados como referência
+do material. Fazer esse par antes não declara o Guerreiro concluído. Depois, a Besta Leve e o Diadema, e o remake do
+ferro como um lote próprio (as sete peças têm de conviver entre si, com o escudo e o machado, e mudam as silhuetas dos
+espaços vazios), na ordem que o Jean decidir.
+
+**Para o Jean decidir:** o martelo é um desenho próprio de 32 (não da pintura), mas fora da política de tamanhos.
+Pode ficar como está, ganhar o 40 e o 48 derivados da mesma grade ou entrar no lote do ferro.
 
 ### 1.3. Prioridade: consumo do recurso antes das consequências
 

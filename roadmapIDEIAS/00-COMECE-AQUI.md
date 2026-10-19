@@ -4385,3 +4385,18 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   a Besta Leve e o Diadema. **Dúvidas registradas, sem reabrir:** a família de ferro pintada (anterior ao método atual)
   e o martelo em código (sem 40, o 48 reduzido pelo navegador). A lista de lacunas da `docs/ARQUITETURA.md` foi
   corrigida (a calça de tecido saiu; a Besta Leve e a Coroa dos Afogados entraram). Nada no jogo mudou.
+
+### 19/10/2026 (data do computador local) — Correção da conferência: a família de ferro é placeholder
+
+- **Pedido de Jean:** a conferência anterior contou só quatro peças por fazer; a família de ferro derivada da arte
+  pintada é placeholder e precisa ser refeita no padrão atual, mesmo aprovada para uso antes. Separar as situações,
+  revisar o ferro peça a peça pela fonte real e corrigir o total. Só registros.
+- **Feito:** a seção 1.2.1 do plano 23 reescrita, com a fonte de cada peça de ferro e quatro situações (mais "a
+  decidir"). **Placeholder pendente de remake:** a espada, a maça, o elmo, a cota, a manopla, as perneiras e as botas de
+  ferro, todas reduções da pintura (`familia_ferro.py --conferir`: tudo igual; os PNGs não mudaram desde `58c20d8`).
+  **Desenho próprio no padrão atual:** o escudo (1.94.0) e o machado (1.99.0). **A decidir:** o martelo (grade de 32 em
+  `desenhos.js`, não da pintura, mas sem 40 e com o 48 pelo navegador). **Inexistentes:** Besta Leve, Chapéu Pontudo,
+  Diadema, Sandália. **Final:** 19 de 31; o Guerreiro não está concluído.
+- **Ordem recomendada, à parte da contagem:** Sandália e Chapéu Pontudo primeiro; depois a Besta Leve, o Diadema e o
+  remake do ferro como lote próprio (ele muda também as silhuetas dos espaços vazios e o comando de ataque). A lista de
+  lacunas da `docs/ARQUITETURA.md` ganhou a família de ferro e o martelo. Nada no jogo mudou.
