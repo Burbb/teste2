@@ -4662,3 +4662,21 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   manopla, das perneiras e das botas de ferro, e o 40/48 do martelo.
 - **Próximo par (decisão do Jean):** o elmo e a cota. Não começado.
 
+
+### 19/10/2026 — Sequência do plano 23 atualizada por Jean: flechas/estados, criaturas e navegação
+
+- Pedido explícito nesta conversa: depois de terminar os itens, priorizar o ícone da contagem de flechas do Arqueiro,
+  os buffs/estados (especialmente Firme); depois ícones/retratos de inimigos e pets, caminhos e símbolos internos do
+  minimapa/mapa. Criaturas/navegação já existiam no escopo, agora ordenados na nova **etapa 1E**, item 1.12.
+- Confirmado na leitura: a carta usa `S("flecha", 1)`, separadamente da aljava aprovada; Firme usa `cadeado` no
+  catálogo para proteção temporária após perder turno. Nenhum novo desenho nem mudança de regra foi aprovado aqui.
+- Acrescentado o menu de carregar e as fichas dos saves à etapa 2. O Grimório da interface, a revisão visual da
+  árvore e os ícones de habilidades/talentos ficam juntos dos respectivos sistemas na etapa 8.
+- Atualizados o estado e a sequência do plano 23 e o resumo de `docs/ROADMAP.md`, preservando o histórico e o restante
+  das etapas. A avaliação de refatoração/manutenção continua para depois do plano, por diagnóstico.
+- Durante esta atualização, a outra sessão publicou **1.145.0**, espada e maça integradas em `ed967d1`. Reli os
+  documentos novos e preservei essa integração, sua contagem de 25 artes finais, as fontes e os registros. Elmo/cota
+  é o próximo par solicitado; não foi executado por esta atualização.
+- **Outra sessão em andamento:** sincronizar este commit de documentação antes do próximo push, preservando as
+  alterações locais. Esta atualização já vem depois da integração de espada/maça; não exige reaplicá-la.
+- Somente três arquivos Markdown mudaram; nenhum código, sprite, teste, regra, versão ou save foi alterado.

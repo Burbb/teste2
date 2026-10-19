@@ -55,57 +55,60 @@ mais brando para quem quiser; um robô de mapa que jogue partidas inteiras com j
 - Conteúdo: história fixa, personagens, mapa, cidades, masmorras com mapa interno.
 - Classes: árvores grandes, novas especializações, elites.
 
-## Apresentação, arte e clareza do combate (plano atualizado em 17/10/2026)
+## Apresentação, arte e clareza do combate (atualizado em 19/10/2026)
 
 A sequência aprovada por Jean está detalhada em
 [23 — Plano de arte, interface e combate](../roadmapIDEIAS/23-PLANO-DE-ARTE-INTERFACE-E-COMBATE.md).
-Consultar esse documento antes de escolher a próxima entrega. A ordem está aprovada; os protótipos e as regras
-ainda em aberto precisam de avaliação própria. Este plano não autoriza executar todas as etapas de uma vez.
+Consultar esse documento antes de escolher a próxima entrega. Aprovar a ordem não aprova automaticamente
+protótipos, desenhos ou regras e não autoriza executar todo o plano de uma vez.
 
-**Referência consultada:** 1.110.0 (`3c63546`), com o diagnóstico dos testes em `ab3a2b6`.
-Já estão no jogo a HUD nova, os seletores de Habilidades e Itens em faixas, os retratos, a fogueira como cena do
-topo e a Capela Afogada. O martelo, Pena de Fênix, escudo, unguento, machado, bomba, arco, cajado, orbe, grimório,
-varinha, gibão e botas já receberam arte trabalhada; conferir as lacunas reais no catálogo e no `Icones`.
+**Estado confirmado nesta atualização:** produção remota **1.145.0**, espada e maça integradas em `ed967d1`.
+**Estamos em 1D**, fechando os equipamentos. Próximo par solicitado: **elmo e cota**, só no protótipo.
+A integração da outra sessão foi publicada durante esta atualização e está preservada.
 
-| Etapa | Próximas entregas | Situação |
+**Concluído:** clareza de custo, vida bloqueada, iniciativa/turnos e rolagem central; consulta aos testes;
+atributos, nove atalhos da doca, principais recursos/consumíveis e grande parte dos equipamentos. A HUD de ferro e
+carvão e os menus de pincelada continuam; o estudo com pintura permanente nas colunas/topo não foi escolhido.
+A migração das artes e seus usos específicos consta no plano 23; não contar pintura reduzida como pixel art final.
+
+| Etapa | Entregas | Situação |
 |---|---|---|
-| **1A** | Concluir candidatos de cabeça/capuz e luvas da família de couro | Pedido enviado; ainda depende da proposta e avaliação |
-| **1B** | Sincronizar o consumo visual de Mana/Vigor/Foco com o início da habilidade e mostrar a vida máxima bloqueada por ferimentos | Prioridade de clareza; reprodução e protótipo |
-| **1C** | Prototipar dado/tirinha mais visíveis, iniciativa, passagem dos turnos e consulta aos testes de atributos | Direção aprovada; apresentação a avaliar |
-| **1D** | Completar equipamentos e ícones de atributos, HP/recursos, ouro/flechas/bolsa, navegação/mapa, interface, talentos, mobs e pets | Lotes pequenos; habilidades/estados articulados com a etapa 8 |
-| **2** | Level up e celebrações, Grimório aberto, livro narrativo da capela e criação de personagem | Proposta |
-| **3** | Interior da forja e ferreiro, inicialmente com as regras atuais | Proposta |
-| **4** | Protótipo de reforço e encantamento | Hipóteses, sem chances, custos, riscos ou limites finais aprovados |
-| **5** | Interiores do Templo, da Curandeira **e da Taverna** | Proposta |
-| **6** | Cenários dos lugares, entornos do acampamento e cenas principais da campanha | Proposta; conferir a permanência dos acontecimentos antes de produzir |
-| **7** | Cenas dos eventos recorrentes da estrada | Proposta |
-| **8** | Preparação de habilidades, novas habilidades, ícones e animações | Hipóteses a validar, incluindo proteção do grupo e ataques em área dos inimigos |
-| **9** | Expansão e reescrita da campanha, a partir de Ilse e da água | Rascunho em [22](../roadmapIDEIAS/22-HISTORIA-ILSE-E-A-AGUA-RASCUNHO.md), não cânone implementado |
+| **1A** | Capuzes e luvas de couro/tecido, tamanhos e saves | **Concluída**, 1.112.0 |
+| **1B** | Custo no início da ação e vida máxima bloqueada | **Concluída**, 1.114.1 e 1.115.0 |
+| **1C** | Iniciativa/turnos, rolagem no centro e testes na ficha | **Concluída**, 1.116.0–1.118.0 |
+| **1D** | Equipamentos, objetos da bolsa e ícones gerais | **Agora**: espada/maça integradas na 1.145.0; remakes de elmo, cota, manopla, perneiras, botas; 40/48 do martelo aprovado; conferir usos residuais |
+| **1E** | Desvio visual depois dos itens | **Sequência aprovada**: primeiro contagem de flechas do Arqueiro e buffs/estados (Firme); depois inimigos/pets e caminhos/ícones internos do minimapa/mapa |
+| **2** | Menu de carregar e fichas dos saves, criação, livro da capela, dado, subida de nível, celebrações e raridade | Pendente; Grimório e árvore passam ao mesmo ciclo dos sistemas na etapa 8 |
+| **3** | Interior da forja e ferreiro | Pendente; começar com as regras atuais |
+| **4** | Protótipo de reforço e encantamento | Hipóteses; chances, custos, riscos e limites não aprovados |
+| **5** | Interiores do Templo, Curandeira e Taverna | Pendente |
+| **6** | Cenários dos lugares, entornos de acampamentos e cenas principais | Pendente; conferir a permanência dos acontecimentos |
+| **7** | Cenas dos eventos recorrentes da estrada | Pendente |
+| **8** | Habilidades/build, Grimório, árvore de talentos, ícones e animações | Pendente; definir/validar sistemas e produzir os ícones no mesmo ciclo, evitando arte para conceitos prestes a mudar |
+| **9** | Expansão e reescrita da campanha, Ilse e a água | Rascunho em [22](../roadmapIDEIAS/22-HISTORIA-ILSE-E-A-AGUA-RASCUNHO.md), não cânone |
+| **Depois** | Avaliação de refatoração/manutenção | Retomar por diagnóstico do código então existente; não interromper os lotes com limpeza geral |
 
-**Padrão atual dos itens:** 32 como fonte principal; 64 ampliado exatamente 2× quando aprovado; 40/48 derivados com
-retoques necessários à leitura. Versão maior redesenhada é uma exceção avaliada, não uma obrigação. Gibão e botas
-são o exemplo integrado (1.110.0). Os 64 dos itens anteriores ficam intactos até uma comparação própria.
-Preservar a construção do mesmo objeto entre tamanhos; placeholder não é molde obrigatório.
+**Prioridades novas de 19/10:** o ícone da contagem de flechas na carta do Arqueiro ainda usa o sprite antigo
+`flecha`, distinto da aljava já aprovada do topo. O estado Firme ainda usa `cadeado`; revisar sua representação da
+proteção temporária contra nova perda de turno. Desenhos finais a avaliar; preservar regras e números.
+Os demais buffs/estados não ficam esperando a revisão de habilidades. Criaturas e navegação já estavam no escopo;
+agora têm uma posição explícita. O menu de carregar/fichas e a revisão visual da árvore também ficam registrados.
 
-**Clareza do combate:** o motor já desconta recurso antes da habilidade; investigar o atraso percebido na tela sem
-mudar contas ou reações. Dado e tirinha preservados em uma apresentação mais visível; iniciativa com destaque de
-entrada e indicador compacto enquanto vale; “Turno N” breve e número discreto. Evitar bloqueios, avisos sobrepostos
-e contagem paralela. Percepção e Destreza são testes derivados: mostrar bônus e composição na ficha detalhada,
-junto dos demais testes, usando dados do motor; não criar novos atributos distribuíveis.
+**Estado dos equipamentos na produção consultada:** 31 desenhos existem; **25 são finais**, cinco peças de ferro
+continuam placeholders (elmo, cota, manopla, perneiras e botas de ferro), e o martelo é aprovado com 40/48 pendentes.
+Compartilhamentos provisórios continuam registrados (Capa de Patrulha, Chapéu de Couro, Coroa dos Afogados), assim
+como a nomenclatura da Sandália/Diadema. Não afirmar que só restam talentos e habilidades sem conferir o catálogo.
 
-**Vida máxima reduzida:** no protótipo de 1B, distinguir vida atual, dano recuperável e capacidade bloqueada pelo
-ferimento. A barra pode usar a capacidade saudável como referência; “45/65” com limite atual 45 deve mostrar os 20
-bloqueados e explicar a restrição, sem sugerir que uma cura comum os recupera. Valores vêm do motor e acompanham
-equipamentos, nível e penalidades reais. Detalhes no item 1.7 do plano 23; não altera regras de cura ou tratamento.
+**Processo:** fontes editáveis e PNGs de produção independentes do protótipo; referência principal e comparação em
+tamanho real; tamanhos conforme o contexto. Preservar os aprovados. Usar a janela principal de Jean e evidência
+dirigida à alteração, sem repetir matrizes de resoluções ou baterias desnecessárias. Seguir o CLAUDE.md e evitar
+rodar a mesma fumaça duas vezes por acidente.
 
-**Hipóteses guardadas:** reforçar atributos físicos e encantar uma propriedade; poucos materiais encontrados no
-mundo; investigar reforços iniciais garantidos e risco mais tarde, inicialmente sem destruir a peça ou perder
-reforços. Preparar até seis habilidades na vila/acampamento, com no máximo uma elite; Atacar, Itens e Fugir fora
-desses espaços. Pontos/tiers, quantidade final, formato e posição na HUD dependem de protótipo.
-
-A referência dos serviços e cenários continua sendo a Capela Afogada: luz reconhecível, animação discreta e
-interação coerente com o desenho. Fundos próprios dos demais acampamentos ficam na etapa 6.
-A E9 e a validação com jogadores novos seguem abertas ao longo do plano.
+**Hipóteses guardadas:** reforço de atributos físicos e encantamento de propriedades, com materiais e riscos a
+validar; preparação de habilidades em vila/acampamento, hipótese de até seis com no máximo uma elite, sem decidir
+quantidade, tiers, custos, pontos ou formato da HUD de antemão. A Capela Afogada continua referência de atmosfera
+para os serviços/cenários. A etapa técnica I entra quando a narrativa a exigir; E9 e testes com jogadores seguem
+abertos ao longo do plano.
 
 ## Ideias guardadas (não agora)
 

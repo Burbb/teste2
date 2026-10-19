@@ -1,6 +1,7 @@
 # 23 — Plano de arte, interface, combate e próximos sistemas
 
-Atualização aprovada por Jean em **17/10/2026, horário de Brasília**.
+Plano inicial aprovado por Jean em **17/10/2026**; sequência e prioridades atualizadas por ele em
+**19/10/2026, horário de Brasília**.
 
 Este é o plano operacional de sequência para as próximas entregas de **The Unquiet**. Consolida a conversa de
 direção de arte e os acréscimos de clareza do combate. A visão geral está em [docs/ROADMAP.md](../docs/ROADMAP.md);
@@ -10,21 +11,21 @@ a passagem de sessão, em [00-COMECE-AQUI.md](00-COMECE-AQUI.md).
 Executar a entrega solicitada por Jean, apresentar a proposta quando previsto e registrar o que de fato entrou.
 Não iniciar todo o plano numa única tarefa. As etapas técnicas A–I e a validação E9 mantêm seus próprios critérios.
 
-## Estado de referência
+## Estado de referência — 19/10/2026
 
-- Produção: **1.113.1** (17/10/2026), as escolhas narrativas em faixas (a regra pela função); antes, a **1.112.0**: a HUD aprovada e as lutas cheias em `74b4d5d` (1.111.0); os capuzes e luvas em
-  `ea8acb7` e a migração dos saves no commit seguinte (1.112.0). Antes: a 1.110.0, gibão e botas em `3c63546`.
-- Branch: `claude/tender-einstein-tx3tjl`.
-- Referência documental posterior consultada: `ab3a2b6`, diagnóstico da duração dos testes.
-- Leitura estática nesta organização; nenhum teste ou percurso do navegador foi executado por esta atualização.
-- **Cabeça e mãos (couro e tecido): integrados na 1.112.0.** O capuz de couro revisado (rodada 2), a luva de couro
-  com braçadeira (rodada 1), a luva de seda (rodada 2) e o capuz de tecido da rodada 3 (`1c061e1`), aprovados em
-  17/10/2026, em 32 e 64 (o 32 ampliado 2×) pixel a pixel, mais o 40 e o 48 derivados da mesma construção (rodada 4,
-  `couro2_r4.py`, que no 32 reproduz os aprovados); fontes em `ferramentas/arte/aseprite/`. O Capuz e a Luva de Seda do
-  Mago com os desenhos de tecido (dados e `icone_de` pela classe do item); os saves antigos pela migração v4 → v5. O
-  Chapéu de Couro continua com o capuz (exceção registrada).
-- **A HUD aprovada (comandos em faixas, cartas contidas, escolhas de um lugar selvagem) e as lutas cheias: integradas
-  na 1.111.0** (item 1.8).
+- Produção confirmada no remoto nesta atualização: **1.145.0**, espada e maça integradas (`ed967d1`).
+- Branch: `claude/tender-einstein-tx3tjl`; esta atualização documental vem depois da integração publicada pela outra
+  sessão. Não altera sua arte nem suas verificações.
+- **Agora: etapa 1D, fechamento dos equipamentos.** Espada e maça aprovadas nos quatro tamanhos e integradas.
+  O próximo par solicitado é **elmo e cota**, só no protótipo; ainda não há entrega publicada desse par.
+- Dos 31 desenhos básicos de equipamento: **25 finais, 5 placeholders de ferro e 1 martelo aprovado com 40/48
+  pendentes**. Faltam os remakes de elmo, cota, manopla, perneiras e botas de ferro.
+- A sequência aprovada passa a ser: **fechar os itens → 1E (flechas e estados primeiro; depois inimigos/pets e
+  caminhos/minimapa) → retomar as etapas 2–9**. Ícones de habilidades e talentos serão tratados com seus sistemas,
+  Grimório e árvore na etapa 8; não entram numa produção em massa antes disso.
+- A HUD principal de ferro e carvão e os menus de pincelada continuam aprovados. O estudo da HUD com pintura
+  permanente (1.11) não foi escolhido e não está autorizado para integração.
+- Atualização documental: leitura dos arquivos e decisões de Jean; nenhum desenho, código de jogo ou regra mudou.
 
 ### Base já consolidada
 
@@ -43,11 +44,13 @@ os usos dos sprites estejam migrados. Conferir `Icones` e os catálogos antes de
 | 1A | Concluir o lote de cabeça/capuz e luvas de couro e tecido | Integrado na 1.112.0 (32, 40, 48, 64; os saves antigos pela migração v5); falta Jean conferir jogando |
 | 1B | Corrigir a sequência visual do consumo de recurso e mostrar o bloqueio de vida máxima por ferimentos | Feito: 1.114.1 (o custo) e 1.115.0 (a vida bloqueada) |
 | 1C | Prototipar dado mais visível, iniciativa e indicação dos turnos; facilitar consulta aos testes de atributos | Feito: 1.116.0/1.116.1 (iniciativa e turnos), 1.117.0 (a rolagem no centro), 1.118.0 (os testes na ficha) |
-| 1D | Retomar os lotes de equipamentos e demais ícones | **Em andamento** (`ferramentas/prototipos/hud/itens-lote-noite/`): a calça de couro integrada (1.119.0); Ataque e Defesa integrados (1.120.0); Agilidade integrada (1.121.0, também o Fugir); a aljava nova integrada (1.122.0: 24 do topo, 32, 40, 48, 64); os quatro atributos concluídos (Ataque e Defesa de 1.120.0, Agilidade 1.121.0, Poder 1.123.0; a rodada 2 de Ataque e Defesa, `ataque_defesa_r2/`, fica guardada como alternativa não escolhida); a doca concluída, com os nove atalhos em pixel art (a Comitiva só aparece com companheiro e tem papel próprio no `Icones`): Inventário e Mapa (1.124.0, `doca_r2/`), Diário (1.125.0) e Grimório (1.126.0, também o Habilidades da luta; `doca_r3/`), Talentos e Comitiva (1.127.0, `doca_r4/`), Bestiário (1.128.0), Salvar e Sair (1.129.0; `doca_r5/`); a skill `arte-livros-fenda` registra o processo dos livros; o grupo Vida e recursos começou: os quatro ícones das barras do topo integrados, Vida e Mana (1.130.0, `vida_mana/`), Vigor e Foco (1.131.0, `vigor_foco/`); Ouro e Provisões integrados (1.132.0, `ouro_provisoes/`): o Ouro no topo e, desde a 1.133.0, no balcão do mercado e dos serviços (32 derivado), as Provisões no topo e no cartão do mercado (32 nativo); a moeda avulsa dos preços, do espólio e dos ganhos integrada (1.134.0, 16 e 32, `moeda_tocha/`); a tocha integrada (1.135.0, a rodada 2: 24 e 32); a tocha em 16 e a apagada (16 e 24) integradas (1.136.0); o `familia_ferro.py --conferir` reconhece as peças com fonte no Aseprite (aljava, tocha); a Bandagem, a Poção de Vida, o Tônico Restaurador, a Calça de Viagem e o Manto do Mago integrados (1.138.0; o Manto segue compartilhado com a Túnica, a Veste Rúnica e o Manto de Cinzas); o Antídoto e o frasco vazio do topo integrados (1.139.0); o anel (a rodada 3, com o ziguezague) e o amuleto violeta integrados (1.140.0; as referências permanentes dos anéis em `ferramentas/arte/referencias/aneis/`, a principal `sample (2).png`, e a skill `arte-aneis-fenda`; o desenho do anel é também do Aro, do Sinete e do Anel do Último Rei, e os vazios usam a mesma imagem) |
+| 1D | Fechar equipamentos e objetos da bolsa; concluir ícones gerais já trabalhados | **Agora.** Atributos, nove atalhos da doca e principais recursos/consumíveis integrados. Espada e maça integradas (1.145.0); próximo elmo/cota, depois manopla/perneiras/botas e 40/48 do martelo. Conferir usos residuais antes de fechar o lote |
+| 1E | Desvio visual após os itens: flechas, buffs/estados, inimigos, pets, caminhos e minimapa | **Próximo bloco, aprovado como sequência em 19/10.** Começar pela contagem de flechas do Arqueiro e por Firme; critérios no item 1.12. Talentos e habilidades ficam para a etapa 8 |
 | 2–9 | Telas, serviços, cenários, habilidades e campanha | Sequência detalhada abaixo |
 
 A etapa 1 não precisa terminar todo o catálogo antes de tratar um defeito de compreensão no combate.
-Concluir o lote em andamento antes de iniciar outra exploração visual.
+Concluir o lote em andamento antes de iniciar outra exploração visual. A nova prioridade de flechas e estados
+não interrompe o par já solicitado; abre a etapa 1E, antes de criaturas e navegação.
 
 ## 1. Itens, ícones e clareza do combate
 
@@ -85,12 +88,13 @@ O jogo depende dos PNGs de produção, não do editor, do MCP ou de pastas de pr
 | Equipamentos | Fechar cabeça, mãos e pernas de couro e tecido, armas e demais lacunas reais do catálogo |
 | Objetos da bolsa | Consumíveis e itens restantes; estados vazios/esgotados quando houver uso real |
 | Atributos | Ataque, Defesa, Agilidade e Poder |
-| Vida e recursos | Ícones de HP, Mana, Vigor, Foco, ouro, flechas e demais recursos do topo |
+| Vida e recursos | HP, Mana, Vigor, Foco, ouro e demais recursos já migrados; **a contagem de flechas do Arqueiro tem prioridade na 1E**, distinta da aljava do topo já aprovada |
 | Navegação | Ícones dos caminhos/destinos e símbolos internos do mapa; auditar os dois contextos |
 | Interface e ações | Ícones da ficha, opções e ações (a doca foi concluída na 1.129.0); conferir o que já está aprovado antes de refazer |
 | Criaturas | Mobs, chefes e pets/animais; aparência compatível com o mundo e leitura nas cartas, painéis e cenários pertinentes |
-| Talentos | Ícones que expressem a função e se distingam na árvore; não alterar os efeitos para combinar com o desenho |
-| Habilidades e estados | Articular com a etapa 8; não refazer em massa agora os ícones de poderes cujo conceito poderá mudar |
+| Talentos | Ícones e revisão visual da árvore juntos na etapa 8, após definir o sistema; não alterar efeitos para combinar com o desenho |
+| Buffs e estados | **Prioridade da etapa 1E**, começando por Firme; separar os símbolos dos estados existentes dos ícones de habilidades que os aplicam |
+| Habilidades | Ícones e animações com os sistemas e o Grimório na etapa 8; não refazer em massa poderes cujo conceito poderá mudar |
 
 Este é um levantamento de escopo, não a afirmação de que todos esses ícones estão ausentes ou ruins.
 Criaturas e retratos exigem avaliação própria; o processo dos objetos não obriga a mesma resolução de origem para
@@ -114,7 +118,8 @@ com uma dúvida. Ela é **placeholder**: as sete peças abaixo são reduções d
 aprovada para uso na 1.89.0, anterior ao padrão atual de pixel art, e precisam ser refeitas nele. A aprovação de uso
 de antes não vale como arte final.
 
-**A fonte das peças de ferro, uma a uma** (conferida nesta data):
+**A fonte das peças de ferro, uma a uma** (histórico da auditoria na 1.140.0; a tabela abaixo registra as
+substituições posteriores, incluindo espada e maça na 1.145.0):
 - `elmo`, `cota`, `manopla`, `perneiras`, `botas-ferro`, `maca`, `espada`: os arquivos do jogo saem de
   `ferramentas/arte/familia-ferro/<peça>.png` (a pintura recortada) pela redução "paleta" de `familia_ferro.py`;
   `familia_ferro.py --conferir` refaz todos os tamanhos e dá "tudo igual", e os PNGs de 32 não mudaram desde o commit
@@ -221,8 +226,8 @@ espada e a maça** (o começo do remake do ferro).
   - **A ponta, quarta forma (19/10/2026):** a terceira era válida, mas diferente da referência (o fechamento deslocado
     para um lado, com uma mudança brusca de direção no fim). O Jean trocou a abordagem: em vez de um gume reto e o
     outro avançando, os dois gumes convergindo de forma contínua para uma ponta alinhada com a lâmina. Refeita assim
-    (regra simétrica no eixo, o vértice sobre o eixo); **aprovada** (`0fcfe18`). O 40 e o 48 dela estão em avaliação,
-    com a maça (os quatro tamanhos); **as duas foram aprovadas e integradas na 1.145.0** (fontes em
+    (regra simétrica no eixo, o vértice sobre o eixo); **aprovada** (`0fcfe18`). **Os quatro tamanhos das duas peças foram aprovados por Jean em 19/10 e integrados na 1.145.0**
+    (os 40/48 da espada em `441787e`; os da maça em `723cf8d`; fontes em
     `ferramentas/arte/aseprite/espada/` e `maca/`). O aprendizado
     virou a skill `arte-espadas-fenda` (`.claude/skills/`), complementar à `arte-itens-fenda`.
 
@@ -625,7 +630,7 @@ achado, a doca, os caminhos, os prédios da vila e as telas desenhadas (mercado,
 mapa dos usos e a conferência (14 casos reais, antes × depois, conteúdo igual nas 26 comparações) estão em
 `ferramentas/prototipos/hud/escolhas-faixas/LEIA-ME.md`. Falta Jean jogar.
 
-### 1.10. A composição compacta das lutas cheias (protótipo, em avaliação)
+### 1.10. A composição compacta das lutas cheias (integrada na 1.114.0; histórico do protótipo abaixo)
 
 **Pedido de Jean:** nas lutas cheias em 1280×720, todas as habilidades à vista sem rolar, com a descrição legível,
 sem perder o que a 1.111.0 aprovou. **Só no protótipo** (`ferramentas/prototipos/hud/compacta/`, detalhes, medidas e
@@ -759,7 +764,44 @@ colunas e no topo não será integrada.
 - **A comparação jogável:** `ferramentas/prototipos/hud/direcao/comparar/` (produção × protótipo com uma cópia do save
   de Jean).
 
-## 2. Telas de leitura, criação e celebrações
+### 1.12. Desvio visual após os itens — flechas, estados, criaturas e navegação (etapa 1E)
+
+**Decisão de Jean (19/10/2026):** depois de fechar os itens, tratar estes símbolos antes de retomar a sequência
+das telas e dos serviços. Criaturas e navegação já constavam no escopo de 1.2, mas sem esta ordem. Buffs e estados
+agora têm prioridade independente dos ícones de habilidades. Esta seção organiza o trabalho, não aprova desenhos.
+
+**Ordem do bloco:**
+
+| Ordem | Entrega | Resultado e limites |
+|---|---|---|
+| 1E.1 | **Contagem de flechas do Arqueiro — prioridade** | Ícone próprio legível junto do número, principalmente na carta de combate; conferir também custos e outros contadores para decidir os usos. Preservar quantidade, avisos de poucas/zero, dicas e áreas de clique |
+| 1E.2 | **Buffs e estados, começando por Firme — prioridade** | Auditar o catálogo e os usos reais, trabalhar em pequenos grupos por função; símbolos reconhecíveis em tamanho real e distintos entre si, sem depender só da cor |
+| 1E.3 | **Inimigos e pets/animais** | Ícones/retratos usados em cartas, painéis e Bestiário, conforme os usos de cada criatura. Mobs, chefes e pets em lotes pequenos; preservar identidade e silhueta reconhecíveis. Não refazer os retratos aprovados do herói e da comitiva por extensão |
+| 1E.4 | **Caminhos/destinos e ícones do minimapa/mapa** | Auditar os dois contextos; linguagem coerente para lugares, serviços, perigos e marcadores que realmente existam. Conferir estados visitado/atual/bloqueado quando aplicáveis, sem alterar geografia, regras ou navegação |
+
+**Flechas — distinguir os papéis antes de desenhar:** na produção consultada, a aljava de equipamento e do recurso
+do topo já é a arte aprovada da 1.122.0. A contagem na carta ainda usa `S("flecha", 1)` em `batalha.js`
+(`.carta-flechas`). Isso é um uso visual próprio; não implica rejeitar a aljava nem substituir automaticamente
+projéteis e todos os usos de `flecha`. Levantar também os indicadores de custo antes de decidir os compartilhamentos.
+
+**Firme — significado antes do símbolo:** `rpg/estados.py` usa hoje o `cadeado`, família `protecao`, para a proteção
+temporária após perder o turno; a dica informa que não pode ser atordoado/congelado agora. Jean considera o cadeado
+pouco representativo. Procurar uma imagem de recuperação/estabilidade ou resistência temporária a nova perda de
+turno, distinta de ganho de Defesa, Guarda e atordoamento. O desenho final continua em aberto: apresentar proposta
+em tamanho real e no conjunto dos estados, sem mudar nome, duração, imunidades ou outras regras para adequá-las à arte.
+
+O atalho **Mapa** da doca já foi concluído; esta frente trata dos símbolos internos de caminhos e mapas.
+Não afirmar que só restam talentos e habilidades após este bloco sem conferir os consumíveis, variantes e
+compartilhamentos provisórios ainda registrados. A Capa de Patrulha, o Chapéu de Couro e a Coroa dos Afogados continuam
+com a pendência de arte própria; Sandália e Diadema, com a de nomenclatura. Esses registros não autorizam variantes
+ou mudanças de dados por iniciativa do agente.
+
+**Fluxo:** levantamento dos usos reais → proposta em pequenos lotes → avaliação de Jean → tamanhos e integração.
+Usar os tamanhos de cada contexto, sem aplicar automaticamente a grade de equipamento a rostos, estados ou minimapa.
+Reaproveitar bancadas e capturas; a janela principal é 1920×945. Não reabrir a matriz de resoluções em cada desenho.
+Habilidades e talentos ficam na etapa 8, junto dos respectivos sistemas e telas.
+
+## 2. Telas de leitura, criação, carregamento e celebrações
 
 **Lembrete para o futuro estudo da HUD — pen.dev (experimento `9769305`):** antes de escolher ferramentas para
 uma composição nova, consultar [o relatório e a bancada](../ferramentas/prototipos/hud/pen-composicao/LEIA-ME.md).
@@ -777,7 +819,11 @@ redesenho global nem integração de uma nova HUD.
 - **O dado dos testes:** o redesenho artístico do d20 (hoje o SVG de sempre, 2× no centro desde a 1.117.0, item 1.4)
   entra neste acabamento visual da HUD, junto dos efeitos de raridade e da subida de nível. A apresentação central, o
   ritmo e as faixas de sucesso e falha já aprovados ficam.
-- **Grimório da interface:** aparência do livro aberto, páginas, leitura e navegação.
+- **Grimório da interface:** aparência do livro aberto, páginas, leitura e navegação serão revistas **com o sistema
+  de habilidades na etapa 8**, para evitar uma rodada só de acabamento antes de redefinir o conteúdo da tela.
+- **Carregar jogo e fichas dos saves:** revisar o visual antigo da lista e das fichas, com identificação clara da
+  partida e ações legíveis. Preservar os dados, a compatibilidade dos saves e a semântica de carregar/excluir;
+  não confundir o menu com o atalho Salvar da doca, já concluído.
 - **Livro narrativo da capela:** apresentação imersiva do relato. É outro objeto/contexto que o grimório equipado.
   A revisão visual não autoriza reescrever a história agora.
 - **Criação de personagem:** clareza e apresentação. Retratos adicionais por classe, quantidade, seleção e possível
@@ -822,9 +868,22 @@ Representar mercadores, viajantes vendendo objetos, pessoas feridas e outros eve
 composições reutilizáveis com variações coerentes quando isso evitar trabalho repetido. Preservar escolhas e
 consequências; cenário interativo não precisa virar exploração por movimento.
 
-## 8. Habilidades, animações e liberdade de build
+## 8. Habilidades, Grimório, árvore de talentos, animações e liberdade de build
 
-- Revisar ícones e animações de habilidades e efeitos, com leitura das fontes, alvos, custos e consequências.
+**Decisão de Jean (19/10/2026):** produzir os ícones de habilidades e talentos junto da revisão dos respectivos
+sistemas e telas, evitando arte para conceitos prestes a mudar. O visual antigo do Grimório e da árvore não está
+no patamar atual do jogo e precisa de uma revisão própria; isso não aprova uma mudança de regras por si só.
+
+- **Grimório da interface:** revisar o livro aberto, páginas, hierarquia, leitura, seleção e navegação de acordo com
+  o sistema validado. É uma tela diferente do item Grimório e do atalho da doca, cujos desenhos estão aprovados.
+- **Árvore de talentos:** revisar estrutura visual, conexões, nós e estados (disponível, adquirido e bloqueado),
+  explicações e seleção. Preservar o suporte técnico a árvores extensíveis; aparência nova não define tiers,
+  quantidade ou efeitos dos talentos.
+- **Ícones de habilidades e talentos:** criar em lotes após estabilizar o conceito e a função de cada grupo;
+  reconhecer função e identidade em tamanho real. O atalho Talentos da doca já está pronto e não é este escopo.
+- Revisar animações de habilidades e efeitos, com leitura das fontes, alvos, custos e consequências. Os símbolos
+  dos buffs/estados existentes são prioridade anterior (1E); reaproveitar os aprovados e só reabrir os afetados por
+  mudança real de sistema.
 - Prototipar preparação de habilidades em locais seguros: vila e acampamento.
 - Hipótese inicial: até seis habilidades preparadas, no máximo uma elite, mantendo Atacar/Itens/Fugir separados.
 - Quantidade de espaços, definição de elite/ult, custos por pontos, tiers, restrições e equilíbrio não estão fechados.
@@ -853,7 +912,9 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
 - A E9 e os testes com jogadores novos continuam abertos; não esperar todo o plano terminar para observar compreensão,
   ritmo e dificuldade. Teste técnico não aprova arte nem substitui essa validação.
 - Distinguir **relato**, **leitura estática**, **reprodução**, **protótipo aprovado**, **integração** e **teste executado**.
-- Mudança visual: conferir no jogo, em janela normal e baixa, mouse, teclado e movimento reduzido conforme o contexto.
+- Mudança visual: usar a janela principal de Jean (1920×945 na área do jogo) e conferir o componente afetado;
+  mouse, teclado e movimento reduzido conforme o contexto. Não abrir uma bateria de resoluções a cada entrega.
+  Corrigir impedimentos de uso e registrar adaptações gerais para a consolidação, conforme o CLAUDE.md.
 - Motor decide regras e números; interface apresenta. Mudanças só de apresentação preservam sorteios e consequências.
 - Preservar os gabaritos; atualizar apenas após mudança intencional conferida, conforme o `CLAUDE.md`.
 - Windows: gabarito e roteiros principais já foram compatibilizados. A confirmação de execução no Linux permanece
@@ -868,18 +929,30 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
 - Atualizar este plano quando uma entrega mudar de estado, mantendo propostas recusadas no histórico e o código
   atual como referência da implementação.
 
-## Próxima passagem de trabalho
+## Próxima passagem de trabalho — sequência aprovada em 19/10/2026
 
-1. A avaliação de Jean jogando a 1.111.0 a 1.114.0 (a HUD, as lutas cheias, os capuzes e luvas, as escolhas em
-   faixas, integradas) e a composição compacta das lutas cheias, integrada na 1.114.0 (item 1.10).
-2. Integrar apenas os desenhos aprovados.
-3. ~~Reproduzir e corrigir a percepção atrasada do custo de recurso e apresentar o bloqueio de vida máxima por
-   ferimentos (1B).~~ Feito (1.114.1, 1.115.0).
-4. ~~Prototipar os avisos e a consulta aos testes (1C), sem ampliar regras.~~ Feito (1.116.0 a 1.118.0). O estudo da
-   nova HUD (1.11) não foi escolhido; fica a HUD de produção.
-5. **Agora:** retomar os lotes de ícones (1D, tabela 1.2), em pequenos grupos por função; depois, a etapa 2.
-   Pendências independentes: o refinamento de cores da dica "Testes do d20" (1.11, só no protótipo) e o aviso da
-   escuridão no painel do mundo antes de agir (1.6).
+1. **Espada e maça concluídas na 1.145.0** (`ed967d1`), sem retoques nos aprovados.
+2. **Agora, fechar o equipamento básico restante:** elmo e cota (próximo par solicitado); depois manopla, perneiras e botas
+   de ferro em lotes pequenos; completar os 40/48 do martelo aprovado, sem redesenhá-lo. Conferir objetos da bolsa e
+   usos residuais para saber o que de fato falta, preservando compartilhamentos aceitos.
+3. **Abrir a etapa 1E:** contagem de flechas do Arqueiro primeiro; buffs/estados com Firme; depois inimigos e pets;
+   caminhos e símbolos internos do minimapa/mapa. Não interromper o par em andamento nem redesenhar peças já aprovadas
+   por extensão.
+4. **Retomar a etapa 2:** telas antigas e acabamento — menu de carregar/fichas dos saves, criação de personagem,
+   livro narrativo da capela, dado, subida de nível, celebrações e raridade. Grimório e árvore de talentos ficam
+   consolidados com a etapa 8.
+5. **Seguir 3–7:** interior da forja; protótipo de reforço/encantamento; serviços da vila; cenários e acampamentos;
+   eventos recorrentes.
+6. **Etapa 8:** sistemas de habilidades e talentos, Grimório e árvore, ícones e animações no mesmo ciclo, com
+   protótipos e decisões de regras ainda necessários.
+7. **Etapa 9:** expansão/revisão da campanha. A etapa técnica I entra quando o trabalho de narrativa a exigir.
+8. **Depois do plano:** retomar a avaliação de refatoração/manutenção acordada na conversa, guiada por um diagnóstico
+   do código então existente; sem antecipar uma limpeza geral durante os lotes de arte.
 
-Esta ordem substitui a descrição antiga que deixava toda a clareza do combate para a grande etapa de habilidades.
-O plano não altera o jogo por si só.
+**Pendências independentes, sem ampliar a próxima entrega:** refinamento de cores da dica "Testes do d20" (1.11,
+só no protótipo); redação do aviso da escuridão antes de agir (1.6); artes próprias dos compartilhamentos provisórios
+e nomenclatura da Sandália/Diadema. A E9, testes com jogadores e impedimentos de compreensão continuam sendo
+tratados ao longo do projeto, sem esperar a última etapa.
+
+Esta ordem atualiza a sequência anterior. Não autoriza executar todo o plano numa tarefa nem aprova automaticamente
+protótipos, desenhos ou regras. O plano não altera o jogo por si só.
