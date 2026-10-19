@@ -9,7 +9,10 @@ a borda dura), aqui fora do protótipo, com o 40 px do Inventário (1.95.0) para
     python ferramentas/arte/familia_ferro.py --todos      (grava todos os tamanhos, se uma peça mudar)
 
 O escudo é do grupo (entra na conta da escala, como sempre), mas o arquivo dele é desenhado por regras
-(desenhar_escudo_pixel.py) e não sai daqui. Precisa do Pillow e do numpy."""
+(desenhar_escudo_pixel.py) e não sai daqui. Do mesmo jeito, uma peça do grupo com fonte própria no Aseprite
+(aseprite/<peça>/<peça>-<lado>.aseprite: a aljava desde a 1.122.0, a tocha desde a 1.135.0) continua na conta da
+escala, mas não é gravada nem conferida aqui: os arquivos dela saem do exportar_aseprite.py, que os confere
+(`exportar_aseprite.py <peça> --conferir`). Precisa do Pillow e do numpy."""
 
 import pathlib
 import sys
@@ -29,8 +32,10 @@ EQUIPAMENTO = ["elmo", "cota", "manopla", "perneiras", "botas-ferro", "maca", "e
 LADOS = {n: (32, 48, 64) for n in GRUPO}  # os de sempre: a bolsa, a mochila, o mercado, o voo, o cartão do saque
 for n in EQUIPAMENTO:
     LADOS[n] = (32, 40, 48, 64)           # o 40: o corpo e a mochila do Inventário
-DESENHADOS = {"escudo", "tocha"}          # os que saem de outro desenho, não daqui (a tocha, 1.135.0, do Aseprite),
-                                          # mas continuam na conta da escala do grupo
+ASEPRITE = pathlib.Path(__file__).resolve().parent / "aseprite"
+# as do grupo com fonte própria no Aseprite (achadas pelas pastas das fontes): saem do exportar_aseprite.py
+NO_ASEPRITE = {n for n in GRUPO if any((ASEPRITE / n).glob(f"{n}-*.aseprite"))}
+DESENHADOS = {"escudo"} | NO_ASEPRITE     # os que saem de outro desenho, não daqui, mas continuam na conta da escala
 
 
 def area_visivel(img):
@@ -115,6 +120,8 @@ def main(argv):
             n = int((a != b).any(-1).sum()) if a.shape == b.shape else -1
             dif += n != 0
             print(f"{nome}: {'igual' if n == 0 else f'{n} pixels diferentes' if n > 0 else 'outro tamanho'}")
+        for n in sorted(NO_ASEPRITE):
+            print(f"{n}: fonte no Aseprite, fora daqui (confira com exportar_aseprite.py {n} --conferir)")
         print("tudo igual" if not dif else f"{dif} arquivos diferentes")
         return
     for nome, img in arquivos(pecas, None if "--todos" in argv else 40).items():

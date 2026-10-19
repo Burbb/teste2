@@ -462,7 +462,8 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
 - A tocha (1.135.0, `ferramentas/arte/aseprite/tocha/`, 24 e 32): o cabo de madeira, o pano enrolado e a chama em
   línguas, no topo (24) e no cartão do mercado, na bolsa, no espólio e no voo até a bolsa (32). Os 48 e 64 da família
   de ferro saíram do jogo (nenhum lugar os usava); no `familia_ferro.py` a tocha continua na conta da escala do grupo,
-  mas o arquivo não sai mais de lá (`DESENHADOS`, como o escudo).
+  mas o arquivo não sai mais de lá (como o escudo e a aljava: as peças do grupo com fonte no Aseprite são achadas pelas
+  pastas das fontes e conferidas pelo `exportar_aseprite.py`).
 - O escudo e o Unguento de Prata (1.94.0), o machado e a Bomba de Fumaça (1.99.0) o arco (1.101.0,
   `desenhar_arco_pixel.py`; o Atacar da roda, o Tiro Duplo e o contrato continuam com o sprite) e o cajado (1.106.0,
   `desenhar_cajado_pixel.py`; o Atacar do Mago na roda e o traço Conjurador continuam com o sprite) e o orbe (1.107.0,
@@ -494,7 +495,8 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
 - O equipamento no corpo e na mochila do Inventário aparece em 40 px (1.95.0), com arquivos nativos de 40
   (`Icones.equipamento`): a família de ferro pintada sai de `ferramentas/arte/familia_ferro.py` (as peças aprovadas em
   `familia-ferro/`, o mesmo processo dos tamanhos de sempre: a escala do grupo e a redução "paleta"; `--conferir`
-  refaz todos e compara com os do jogo) e o escudo das regras dele. O que não tem arquivo de 40 (o martelo, desenhado
+  refaz todos e compara com os do jogo) e o escudo das regras dele. As peças do grupo que passaram para fontes no
+  Aseprite (a aljava, a tocha) continuam na conta da escala, mas saem e são conferidas pelo `exportar_aseprite.py`. O que não tem arquivo de 40 (o martelo, desenhado
   em 32; os sprites 16×16 das armas e peças de couro) fica em 32 px, nítido e centrado no mesmo espaço. As silhuetas
   dos espaços vazios, a bolsa, a ficha, os atributos, a doca, o mercado e a luta continuam em 32.
 - `desenhos.js` (`Desenhos`): os itens desenhados em código, pelo mesmo método (desde a 1.93.0): o martelo e a Pena de

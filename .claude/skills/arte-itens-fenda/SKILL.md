@@ -104,6 +104,9 @@ O desenho é um script Python em `ferramentas/arte/`, um por objeto, com as etap
 Para os itens pintados da família de ferro (as peças em `ferramentas/arte/familia-ferro/`), um tamanho novo sai de
 `python ferramentas/arte/familia_ferro.py` (a mesma escala do grupo e a redução "paleta" de sempre; `--conferir` refaz
 todos e compara com os do jogo). Isso não é redesenho: é o processo de preparação da família, que preserva o desenho.
+Uma peça do grupo que ganha fonte no Aseprite (a aljava, a tocha) sai dessa conferência sozinha, pela pasta da fonte
+em `ferramentas/arte/aseprite/<peça>/`: continua na conta da escala do grupo e passa a ser conferida pelo
+`exportar_aseprite.py <peça> --conferir`.
 
 ### Desenhar no Aseprite (pelo MCP)
 

@@ -4203,3 +4203,16 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
     queimada e dois fios de fumaça, sem cor de fogo.
   - Fontes em camadas pelo `pintar.lua`, exportação conferida, @2x exatos; fotos atual × proposta a 1920×945 com os
     mesmos dados e a prancha sobre o carvão.
+
+### 19/10/2026 (data do computador local) — A conferência da família de ferro e a aljava (manutenção)
+
+- **Pedido de Jean:** investigar a divergência da aljava no `familia_ferro.py --conferir` (registrada na 1.135.0) e,
+  se viesse da migração para o Aseprite, fazer o gerador reconhecer essa origem.
+- **A causa, confirmada:** até a 1.121 os arquivos da aljava do jogo eram exatamente a saída do gerador (conferido
+  contra o `b266714^`); na 1.122.0 (`b266714`) eles passaram a sair das fontes do Aseprite, que o
+  `exportar_aseprite.py aljava --conferir` reproduz byte a byte, mas o gerador continuou conferindo a peça antiga.
+- **A correção:** o `familia_ferro.py` acha sozinho as peças do grupo com fonte no Aseprite (a aljava e a tocha, pelas
+  pastas em `ferramentas/arte/aseprite/`); elas continuam na conta da escala do grupo (os 102 arquivos dele saem
+  iguais), mas não são gravadas nem conferidas ali, e o `--conferir` indica o `exportar_aseprite.py <peça>
+  --conferir` para elas. Nenhum arquivo de arte mudou; documentado em `docs/ARQUITETURA.md` e na skill
+  `arte-itens-fenda`.
