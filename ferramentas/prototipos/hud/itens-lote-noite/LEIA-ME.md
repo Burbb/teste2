@@ -996,3 +996,36 @@ reproduz (`--conferir`). Os papéis em `Icones` (`VITAL`) não mudaram; o único
 O desenho não mudou: o ícone anda 4 px para a direita na doca (CSS), para a porta ficar sobre a palavra; a seta sai
 para a direita sem tirar a porta do centro. `doca_r5/sair-alinhado.png`: a doca antes e depois em tamanho real e a
 ampliação 4×.
+
+## Vida e recursos: Vigor e Foco (`vigor_foco/`)
+
+**Proposta, nada no jogo:** só as imagens dos dois ícones do topo (20, o único uso: `Icones.vital`); barras,
+números, cores funcionais, regras e animações ficam como estão. O custo das habilidades usa outros sprites (`chama`,
+`olho`), num papel separado, e não muda.
+
+- **O Vigor, o punho em chamas:** pela ideia da referência do Jean (a chama e o punho cerrado, sem o coração) e pelas
+  referências de punho dele. O punho de frente, com os quatro dedos separados por linhas, os nós em alturas
+  diferentes, o polegar atravessado e o antebraço abrindo para baixo, num dourado de pele que conversa com o vigor;
+  três línguas de fogo saindo dos nós, laranja e mais quentes junto da mão. A chama só em cima: as rodadas em que ela
+  envolvia o punho liam como um rosto com cabelo e foram descartadas antes da entrega.
+- **O Foco, o alvo:** a concentração (os anéis concêntricos) e a precisão (as quatro marcas curtas da mira), no
+  **verde** da barra de foco (`#b8f0a0`, `#62b86e`, `#1f4a25`). A estrela atual é violeta, a cor do Poder; o alvo
+  devolve a cor funcional do Foco e tem silhueta redonda, diferente da estrela, da chama, da gota, do coração e do
+  punho.
+- **As recusadas, guardadas:** o raio com volume (a primeira proposta do Vigor, antes da ideia do Jean) em
+  `vigor_foco/recusados/vigor-raio/` (fonte, PNG e auxiliar) e a mira de anel fino em `recusados/foco-mira/` (o
+  contorno entupia os vãos de dentro, e a silhueta lembrava a estrela).
+- **As fontes:** `vigor_foco/fontes/vital-vigor/vital-vigor-20.aseprite` (camadas chama, punho, contorno) e
+  `vital-foco/vital-foco-20.aseprite` (anel, marcas, centro, contorno).
+- **As operações:**
+  - *cálculos fora do editor:* `vigor_foco/auxiliares/vigor.py` (o punho à mão, pixel a pixel, e a chama por regra) e
+    `foco.py` (os anéis e as marcas por regra); gravam as listas `.lua` e a prévia na pasta em que rodam;
+  - *Lua pelo `execute_script`:* o documento de 20×20 com as camadas, a pintura pelo `pintar.lua` (cada pixel relido;
+    0 diferentes, 0 fora da tela) e o `saveAs`, um ícone por vez;
+  - *ferramentas do conector:* a captura do editor.
+- **A exportação:** `python ferramentas/arte/exportar_aseprite.py vital-vigor|vital-foco
+  ferramentas/prototipos/hud/itens-lote-noite/vigor_foco/proposta --fontes=ferramentas/prototipos/hud/itens-lote-noite/vigor_foco/fontes`;
+  o composto é igual à captura do editor e às listas, e o @2x é a duplicação exata.
+- **As fotos (1920×945):** `fotografar.mjs vigor_foco` (Guerreiro, o Vigor) e `vigor_foco_arqueiro` (Arqueiro, o
+  Foco). `vigor_foco/vigor-foco-topo.png` junta os topos atual e proposto em tamanho real, a ampliação 6× e os quatro
+  símbolos juntos sobre o fundo da HUD.

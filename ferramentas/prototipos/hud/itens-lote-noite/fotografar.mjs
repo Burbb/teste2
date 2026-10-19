@@ -80,6 +80,11 @@ const PECAS = {
   // Vida e Mana (o grupo Vida e recursos): o topo (20), o único uso; uma partida de Mago, que mostra as duas
   vida_mana: { pasta: "vida_mana/proposta", saida: "vida_mana/capturas", nomes: ["vital-vida", "vital-mana"],
     cena: ["capela", { CLASSE: "mago", NIVEL: "5", PERIODO: "0", SALA: "exterior" }], fotos: ["topo"] },
+  // Vigor e Foco: o topo (20), o único uso; o Guerreiro mostra o Vigor, o Arqueiro, o Foco
+  vigor_foco: { pasta: "vigor_foco/proposta", saida: "vigor_foco/capturas/guerreiro", nomes: ["vital-vigor", "vital-foco"],
+    cena: ["capela", { CLASSE: "guerreiro", NIVEL: "5", PERIODO: "0", SALA: "exterior" }], fotos: ["topo"] },
+  vigor_foco_arqueiro: { pasta: "vigor_foco/proposta", saida: "vigor_foco/capturas/arqueiro", nomes: ["vital-vigor", "vital-foco"],
+    cena: ["capela", { CLASSE: "arqueiro", NIVEL: "5", PERIODO: "0", SALA: "exterior" }], fotos: ["topo"] },
 };
 const P = PECAS[peca];
 if (!P) throw new Error(`peça desconhecida: ${peca}`);

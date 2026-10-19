@@ -4045,6 +4045,14 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   - os quatro arquivos do jogo são idênticos, byte a byte, aos aprovados, e o exportador os reproduz;
   - o único uso é o topo (`Icones.vital`, 20 px); barras, preenchimentos, números, posição, regras e animações não
     mudaram.
+- **As propostas de Vigor e Foco:** só no protótipo (`ferramentas/prototipos/hud/itens-lote-noite/vigor_foco/`),
+  nada no jogo; aguardam a avaliação do Jean.
+  - **O Vigor:** o punho cerrado com três línguas de fogo saindo dos nós, pela ideia e pelas referências de punho do
+    Jean (o raio da primeira proposta ficou em `recusados/`).
+  - **O Foco:** um alvo de anéis com as marcas da mira, no verde da barra de foco (a estrela atual é violeta, a cor
+    do Poder).
+  - Pintados no Aseprite pelo MCP, um por vez; exportados pelo `exportar_aseprite.py --fontes=`; fotos no topo do
+    Guerreiro e do Arqueiro a 1920×945 e os quatro símbolos juntos (`vigor_foco/vigor-foco-topo.png`).
 
 ### 18/10/2026 (data do computador local) — O Sair alinhado na doca (1.130.1)
 
