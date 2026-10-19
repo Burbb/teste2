@@ -43,60 +43,56 @@ def luz_esfera(cx, cy, rx, ry):
 
 
 if PECA == "elmo":
-    # O capacete, rodada 3, pela mesma referência principal (ferramentas/arte/referencias/capacete/5+N9Nb.png, o
-    # capacete aberto da caixa (147, 479, 191, 532)), com as medidas tiradas dela: as formas são definidas nas
-    # coordenadas da referência (R: x de 5 a 38, y de 6 a 47) e levadas ao quadro de 32 na mesma proporção (a peça mais
-    # alta que larga). A peça está um pouco girada: a faixa da testa sobe da esquerda para a direita, com uma leve curva
-    # (mais baixa no meio, mais perto); as faces descem inclinadas, a da esquerda entrando para a direita e mais longa, a
-    # da direita mais curta; o nariz longo, até cerca de 2/3 da altura. A abertura: uma sombra curta do lado de dentro
-    # da calota logo abaixo da faixa, e abaixo dela o vazio entre as faces (o fundo; sem travessa). As tiras e a faixa
-    # são o mais claro, separadas da calota por uma emenda escura; a calota em volume um tom abaixo.
-    ESC = 0.70
-    xr = 21.0 + (x32 - 16.0) / ESC                                              # o quadro de 32 nas coordenadas da referência
-    yr = 6.0 + (y32 - 2.2) / ESC
-    def poli_r(pts):                                                            # um polígono dado nas coordenadas da referência
-        return poligono([(16.0 + (x - 21.0) * ESC, 2.2 + (y - 6.0) * ESC) for x, y in pts])
-    def yb(x):                                                                  # o meio da faixa da testa
-        return 23.3 - 0.118 * (x - 7.0) + 0.5 * np.clip(1 - ((x - 19.5) / 14.0) ** 2, 0, 1)
-    # a calota: uma elipse um pouco girada (como a faixa), até a faixa
-    ang = np.deg2rad(-6.0)
-    cx, cy = 20.6, 21.6
-    u = (xr - cx) * np.cos(ang) + (yr - cy) * np.sin(ang); v = -(xr - cx) * np.sin(ang) + (yr - cy) * np.cos(ang)
-    calota = ((u / 14.4) ** 2 + (v / 15.6) ** 2 <= 1) & (yr <= yb(xr) + 1.4)
-    faixa = (np.abs(yr - yb(xr)) <= 1.6) & (xr >= 6.0) & (xr <= 34.8)
-    fx = lambda y: 18.4 + 0.03 * (y - 6.0)                                      # a borda esquerda da tira e do nariz
-    tira = (xr >= fx(yr)) & (xr <= fx(yr) + 3.2) & calota & (yr < yb(xr))
-    nariz = poli_r([(18.9, 22.0), (22.2, 22.0), (22.0, 31.0), (21.0, 34.2), (19.8, 34.2), (19.0, 31.0)])
-    face_e = poli_r([(5.0, 23.4), (10.6, 24.6), (14.2, 44.6), (12.6, 47.6), (9.2, 47.6), (5.6, 30.0)])
-    face_d = poli_r([(31.2, 22.4), (37.2, 22.0), (38.4, 30.0), (38.0, 42.8), (35.0, 44.0), (32.8, 30.0)])
-    # a sombra do lado de dentro: logo abaixo da faixa, entre as faces, curta (mais funda junto do nariz e da esquerda)
-    fundo = (yr > yb(xr) + 1.0) & (yr < yb(xr) + 4.2 - 0.06 * np.clip(xr - 22.0, 0, 20)) & (xr > 9.0) & (xr < 33.6)
+    # O capacete, rodada 4, pela nova referência principal do Jean (ferramentas/arte/referencias/capacete/
+    # elmo-frente-jean.webp, a coluna da direita): em pé e de frente, com o eixo vertical. A calota arredondada com a
+    # tira vertical no centro; a faixa da testa horizontal, um pouco mais larga que a calota (a aba), com espessura; o
+    # protetor do nariz centralizado; uma sombra curta do lado de dentro logo abaixo da faixa e, abaixo dela, o vazio
+    # entre as faces; as duas faces simétricas, abrindo um pouco para fora e voltando embaixo, separadas do nariz. A
+    # construção alinhada e simétrica; a luz da família (de cima e da esquerda) assimétrica: a calota em facetas, clara à
+    # esquerda; as faces com o lado de dentro aceso e a beira de fora escura; o nariz claro à esquerda.
+    CX = 16.0
+    calota = elipse(CX, 13.4, 10.4, 10.8) & (y32 <= 13.4)
+    faixa = (y32 > 12.6) & (y32 < 14.8) & (np.abs(x32 - CX) <= 11.6)
+    tira = (np.abs(x32 - CX) <= 1.05) & calota
+    nariz = poligono([(CX - 1.05, 14.0), (CX + 1.05, 14.0), (CX + 1.05, 19.6), (CX + 0.5, 20.8), (CX - 0.5, 20.8), (CX - 1.05, 19.6)])
+    # uma face, pela distância ao eixo (u) e pela altura (v): a beira de dentro quase reta (7,2 a 7,6 do eixo); a de fora
+    # larga sob a faixa e entrando para baixo (de 12 até 10,4), a ponta arredondada: a face afina como na referência
+    # embaixo a face vira para dentro, fechando sobre o rosto (o pé de cada face aponta para o nariz)
+    FACE = [(12.0, 14.6), (7.2, 14.6), (7.4, 18.0), (7.6, 25.2), (6.8, 26.8), (5.8, 28.2), (5.8, 29.4), (9.8, 29.4),
+            (10.6, 27.4), (11.4, 20.0), (12.0, 16.4)]
+    fora = lambda v: np.interp(v, [14.6, 16.4, 20.0, 27.4, 29.4], [12.0, 12.0, 11.4, 10.6, 9.8])
+    def face(lado):                                                             # lado: -1 a da esquerda, +1 a da direita
+        return poligono([(CX + lado * u, v) for u, v in FACE])
+    face_e = face(-1); face_d = face(+1)
+    fundo = (y32 > 14.6) & (y32 < 16.6) & (np.abs(x32 - CX) < 7.6)          # a sombra do lado de dentro, curta
     metal = calota | faixa | tira | nariz | face_e | face_d
     if ETAPA == "silhueta":
         pinta(metal, "f", 5, "calota")
         pinta(fundo & ~metal, "f", 1, "interior")
     else:
-        pinta(fundo & ~metal, "f", np.where(yr < yb(xr) + 2.6, 0, 1), "interior")
-        # a calota: a luz da família pelo volume, um tom abaixo das tiras; a emenda escura junto da tira e da faixa
-        li = luz_esfera(16.0 + (cx - 21.0) * ESC, 2.2 + (cy - 6.0) * ESC, 14.4 * ESC + 0.6, 15.6 * ESC)
-        pinta(calota, "f", np.select([li > 0.82, li > 0.6, li > 0.36], [7, 6, 5], 4), "calota")
-        emenda = calota & ~tira & ~faixa & ((np.abs(xr - fx(yr)) < 1.2 / ESC * 0.6) | (np.abs(xr - (fx(yr) + 3.2)) < 1.2 / ESC * 0.6) | (yr > yb(xr) - 2.6))
-        pinta(emenda, "f", 3, "calota")
-        # a tira e o nariz: claros à esquerda, a beira direita um tom abaixo; a ponta do nariz na sombra
-        pinta(tira, "f", np.where(xr < fx(yr) + 2.0, 8, 6), "tiras")
-        pinta(nariz, "f", np.where(xr < 20.8, 8, 5), "tiras")
-        pinta(nariz & (yr > 32.4), "f", 4, "tiras")
-        # a faixa da testa: a beira de cima acesa, o meio claro, a de baixo escura (a espessura); mais escura à direita
-        tf = np.where(yr < yb(xr) - 0.5, 8, np.where(yr < yb(xr) + 0.7, 7, 3))
-        tf = np.where((xr > 27.0) & (tf > 3), tf - 2, tf)
-        pinta(faixa, "f", tf, "tiras")
-        # as faces: a da esquerda na luz (a beira de dentro clara, a de fora um tom abaixo), a da direita na sombra; as
-        # pontas de baixo escurecendo
-        pinta(face_e, "f", 5, "faces")
-        pinta(face_e & (xr > 7.8 + 0.2 * (yr - 24.0)), "f", 7, "faces")
-        pinta(face_d, "f", 4, "faces")
-        pinta(face_d & (xr < 35.0), "f", 6, "faces")
-        pinta((face_e & (yr > 44.0)) | (face_d & (yr > 40.6)), "f", 3, "faces")
+        pinta(fundo & ~metal, "f", np.where(y32 < 15.6, 0, 1), "interior")
+        # a calota em facetas: clara à esquerda da tira (mais clara no alto), escura à direita, a beira de baixo um tom
+        # abaixo; a emenda escura junto da tira (do lado da sombra)
+        tc = np.where(x32 < CX, np.where((y32 < 8.4) & (x32 > 8.6), 7, 6), np.where(x32 < CX + 5.0, 5, 4))
+        tc = np.where((x32 < CX) & (x32 < 9.0), 5, tc)
+        tc = np.where(y32 > 11.4, tc - 1, tc)
+        pinta(calota, "f", tc, "calota")
+        pinta(calota & (x32 > CX + 1.05) & (x32 < CX + 2.1), "f", 3, "calota")
+        # a tira e o nariz: o mais claro, a beira direita um tom abaixo; a ponta do nariz na sombra
+        pinta(tira, "f", np.where(x32 < CX, 8, 7), "tiras")
+        pinta(nariz, "f", np.where(x32 < CX, 8, 5), "tiras")
+        pinta(nariz & (y32 > 19.6), "f", 4, "tiras")
+        # a faixa: a beira de cima acesa, a de baixo escura (a espessura), mais escura à direita
+        pinta(faixa, "f", np.where(y32 < 13.6, 8, np.where(x32 < CX + 3, 6, 4)), "tiras")
+        pinta(faixa & (y32 > 14.0), "f", np.where(x32 < CX, 3, 2), "tiras")
+        # as faces: o lado de dentro aceso, o de fora escuro; a da esquerda mais clara; as pontas de baixo escurecendo
+        de = np.abs(x32 - CX); borda = de > fora(y32) - 1.05                    # a beira de fora, 1 px
+        pinta(face_e, "f", np.where(borda, 3, np.where(de < 9.0, 7, 5)), "faces")
+        pinta(face_d, "f", np.where(borda, 2, np.where(de < 9.0, 5, 4)), "faces")
+        # o pé que vira para dentro: o alto dele aceso (pega a luz de cima), a ponta de baixo escurecendo
+        pe = (face_e | face_d) & (de < 7.4) & (y32 > 25.6)
+        pinta(pe, "f", np.where(x32 < CX, 6, 4), "faces")
+        pinta((face_e | face_d) & (y32 > 28.2), "f", np.where(x32 < CX, 4, 2), "faces")
     camadas = ["interior", "calota", "faces", "tiras", "contorno"]
 else:
     # A cota de malha, rodada 2, pela referência principal (ferramentas/arte/referencias/peitoral/etbij8.png, o nº 103 do

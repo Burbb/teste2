@@ -4731,3 +4731,15 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   Inventário (40) e no "você usa" do saque (48) a 1920×945.
 - **Aguardando avaliação.** Nada integrado; a versão não mudou; nenhuma outra peça começou.
 
+### 19/10/2026 (data do computador local) — O elmo, rodada 4, em pé e de frente (proposta)
+
+- **Pedido de Jean:** nova referência principal do elmo (`ferramentas/arte/referencias/capacete/elmo-frente-jean.webp`,
+  a coluna da direita): em pé e de frente, eixo vertical, nariz centralizado, laterais equilibradas; no meio da rodada,
+  o pé das faces virando para dentro, fechando sobre o rosto.
+- **Feito, só no protótipo** (`ferramentas/prototipos/hud/itens-lote-noite/elmo_cota/`), **não aprovado**: o elmo
+  redesenhado na grade de 32 (a calota arredondada, a faixa com espessura, a abertura vazia, as faces separadas com o pé
+  para dentro), 32 e 64 (= 32 ×2); fonte pelo `pintar.lua`; composto, exportação e prévia conferem; @2x exatos. A
+  rodada 3 guardada em `elmo_cota/elmo_r3/`. A cota aprovada e os tamanhos dela intocados.
+- **Folha:** a referência × a rodada 3 × a nova, em tamanho real e ampliadas sem suavização.
+- **Aguardando avaliação.** Nada integrado; a versão não mudou; nenhuma outra peça começou.
+

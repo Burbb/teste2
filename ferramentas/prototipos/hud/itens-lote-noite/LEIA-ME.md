@@ -2117,3 +2117,33 @@ silhueta numa cor e o acabamento, ampliados sem suavização); `cota-tamanhos-no
 tamanhos no Inventário, em 40, e no saque, em 64 e o "você usa" em 48; `fotografar.mjs cota_tamanhos`, `ROTULO=tamanhos
 SO_PROPOSTA=1`); `prancha-carvao.png`. Sem erro no console.
 
+### O elmo, rodada 4, em pé e de frente (`elmo_cota/`)
+
+**Pedido de Jean (19/10/2026):** a coluna da direita de uma imagem que ele gerou a partir da nossa folha da rodada 3 é a
+nova referência principal (`ferramentas/arte/referencias/capacete/elmo-frente-jean.webp`, o papel no `LEIA-ME.md` da
+pasta). Ela substitui a orientação de acompanhar a inclinação: o capacete em pé e de frente, eixo vertical, nariz
+centralizado, laterais equilibradas; a luz pode ser assimétrica, a construção é alinhada. Redesenhar na grade de 32 (a
+referência não é reduzida), preservando a calota arredondada, a espessura da faixa, a abertura vazia e a separação das
+faces. No meio da rodada: "tem que ter esse detalhe pra dentro que fecha no rosto" (o pé de cada face virando para
+dentro). Só o 32 e o 64 (= 32 ×2); a cota aprovada e os tamanhos dela intocados.
+
+**O elmo da rodada 3 guardado** em `elmo_cota/elmo_r3/` (a proposta, a fonte, a prévia e o script daquela versão).
+
+**A rodada 4** (`auxiliares/desenho.py`, tudo simétrico em torno de x = 16): a calota como meia elipse; a faixa da testa
+de 2 px, um pouco mais larga que a calota (a aba); a tira vertical e o nariz de 2 px no eixo, o nariz até a linha 20;
+uma sombra curta do lado de dentro logo abaixo da faixa e o vazio abaixo; as faces medidas por um polígono só (a
+distância ao eixo e a altura) espelhado: a beira de dentro quase reta, a de fora larga sob a faixa e entrando para
+baixo, e o pé virando para dentro, na direção do nariz. A luz (de cima e da esquerda) assimétrica: a calota em
+facetas, clara à esquerda da tira e escura à direita, com a emenda escura do lado da sombra; a tira e o nariz o mais
+claro; a faixa com a beira de cima acesa e a de baixo escura; as faces com o lado de dentro aceso, a beira de fora
+escura, o alto do pé claro e a ponta escurecendo; a face da esquerda mais clara. Na bancada, as faces saíram retas na
+primeira passada (barras) e passaram a afinar para baixo; depois o pé para dentro, pedido pelo Jean.
+
+**O Aseprite (pelo MCP):** as listas pintadas pelo `pintar.lua` num documento novo, cinco camadas (interior, calota,
+faces, tiras, contorno; 0 diferenças, 0 fora da tela), em `fontes/elmo/elmo-32.aseprite`; o composto do editor é igual
+ao PNG exportado e à prévia (o código 1641977722); o 64 é o 32 ×2; @2x exatos. A cota não foi reexportada (os arquivos
+dela não mudaram).
+
+**A folha:** `elmo-referencia-r3-r4.png` (a rodada 3 e a nova em tamanho real sobre o carvão, o 32 e o 64; a referência,
+reduzida só para a folha, e as duas ampliadas 8× sem suavização).
+
