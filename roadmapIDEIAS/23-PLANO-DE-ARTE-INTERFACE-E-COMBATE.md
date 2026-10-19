@@ -134,8 +134,8 @@ de antes não vale como arte final.
 
 | Desenho | Bases (e únicos) que usam a imagem | Situação | Sustentação | Atenção |
 |---|---|---|---|---|
-| `espada` | Espada, Montante (Guerreiro) | **Placeholder integrado, pendente de remake**; a rodada 2 com a ponta da quarta forma aprovada (`0fcfe18`); 40 e 48 em avaliação | redução da pintura (`familia_ferro.py`) | Também é o comando de ataque da luta (`ACAO`) e a silhueta da arma vazia (`VAZIO`), de todas as classes |
-| `maca` | Maça (Guerreiro) | **Placeholder integrado, pendente de remake**; rodada 2 aprovada (`87c12eb`), 40 e 48 em avaliação | redução da pintura | — |
+| `espada` | Espada, Montante (Guerreiro) | Arte final, padrão atual (o remake do ferro, integrada na 1.145.0) | `aseprite/espada/` (1.145.0) | Também é o comando de ataque da luta (`ACAO`) e a silhueta da arma vazia (`VAZIO`), de todas as classes; o ícone do atributo Ataque é outro desenho |
+| `maca` | Maça (Guerreiro) | Arte final, padrão atual (o remake do ferro, integrada na 1.145.0) | `aseprite/maca/` (1.145.0) | — |
 | `elmo` | Elmo, Capacete, Barbuta (Guerreiro) | **Placeholder integrado, pendente de remake** | redução da pintura | Também a silhueta da cabeça vazia, de todas as classes (`VAZIO`) |
 | `armadura` → `cota` | Cota de Malha, Peitoral, Couraça, Brigantina (Guerreiro) | **Placeholder integrado, pendente de remake** | redução da pintura | Também a silhueta da armadura vazia (`VAZIO`) |
 | `manopla` | Manopla (Guerreiro) | **Placeholder integrado, pendente de remake** | redução da pintura | Também a silhueta das mãos vazias (`VAZIO`) |
@@ -167,10 +167,11 @@ de antes não vale como arte final.
 | `amuleto` | Amuleto, Talismã, Pingente, Medalhão | Arte final, padrão atual | `aseprite/amuleto/` (1.140.0) | Compartilhamento mantido |
 
 **A contagem:** 31 desenhos de equipamento.
-- **Arte final aprovada no padrão atual:** 23 (o escudo, o machado e os 21 do Arqueiro, do Mago e dos acessórios; o
-  Chapéu Pontudo entrou na 1.141.0, a Sandália na 1.142.0, a Besta Leve na 1.143.0 e o Diadema na 1.144.0).
-- **Placeholder integrado, pendente de remake:** 7, todos do Guerreiro (espada, maça, elmo, cota, manopla, perneiras,
-  botas de ferro). O equipamento do Guerreiro **não está concluído**: só o escudo e o machado são finais.
+- **Arte final aprovada no padrão atual:** 25 (o escudo, o machado, a espada e a maça e os 21 do Arqueiro, do Mago e
+  dos acessórios; o Chapéu Pontudo entrou na 1.141.0, a Sandália na 1.142.0, a Besta Leve na 1.143.0, o Diadema na
+  1.144.0, a espada e a maça na 1.145.0).
+- **Placeholder integrado, pendente de remake:** 5, todos do Guerreiro (elmo, cota, manopla, perneiras, botas de
+  ferro). O equipamento do Guerreiro **não está concluído**: o escudo, o machado, a espada e a maça são finais.
 - **Desenho inexistente:** nenhum (desde a 1.144.0, todo desenho de equipamento das classes tem arte no jogo).
 - **Arte aprovada com tamanhos pendentes:** 1 (o martelo: o desenho fica; faltam o 40 e o 48, sem redesenho).
 - **Compartilhamento provisório aceito** (a peça usa o desenho de outra até ganhar o seu): a Capa de Patrulha no gibão
@@ -221,7 +222,8 @@ espada e a maça** (o começo do remake do ferro).
     para um lado, com uma mudança brusca de direção no fim). O Jean trocou a abordagem: em vez de um gume reto e o
     outro avançando, os dois gumes convergindo de forma contínua para uma ponta alinhada com a lâmina. Refeita assim
     (regra simétrica no eixo, o vértice sobre o eixo); **aprovada** (`0fcfe18`). O 40 e o 48 dela estão em avaliação,
-    com a maça (os quatro tamanhos); as duas só entram no jogo depois da avaliação final dos tamanhos. O aprendizado
+    com a maça (os quatro tamanhos); **as duas foram aprovadas e integradas na 1.145.0** (fontes em
+    `ferramentas/arte/aseprite/espada/` e `maca/`). O aprendizado
     virou a skill `arte-espadas-fenda` (`.claude/skills/`), complementar à `arte-itens-fenda`.
 
 **A ordem recomendada (separada da contagem):** primeiro a **Sandália e o Chapéu Pontudo**, que são o placeholder
@@ -273,6 +275,11 @@ aprovada sem retoque (`731ab5c`) e integrada na 1.144.0 (fontes em `ferramentas/
   pela imagem que o Jean mandou para o ângulo: a face da frente da faixa à mostra, a face de dentro do lado de trás
   escura por cima dela, a ponta com a gema; o latão e a gema violeta ficam. O compartilhamento com a Coroa dos Afogados
   continua provisório, e o símbolo da reputação não muda.
+
+**O levantamento depois da 1.145.0 (19/10/2026):** a espada e a maça passaram a arte final. Continuam pendentes os
+remakes do elmo, da cota, da manopla, das perneiras e das botas de ferro (placeholders, reduções da arte pintada; também
+as silhuetas dos espaços vazios) e o 40 e o 48 do martelo aprovado. **O próximo par, decidido pelo Jean: o elmo e a
+cota** (não começado).
 
 ### 1.3. Prioridade: consumo do recurso antes das consequências
 

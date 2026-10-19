@@ -4640,3 +4640,25 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   princípios ficam separados das escolhas deste exemplo (a diagonal, o latão, a paleta, a largura, a ponta centrada, as
   contagens de pixels), e a skill registra que instruções prescritivas demais contribuíram para os desvios.
 
+### 19/10/2026 (data do computador local) — A espada e a maça no jogo (1.145.0)
+
+- **Pedido de Jean:** integrar a espada (32 e 64 do `0fcfe18`, 40 e 48 do `441787e`) e a maça (a rodada 2, com o 40 e
+  o 48 do `723cf8d`) sem retoque.
+- **A integração:**
+  - os PNGs e as fontes do protótipo conferidos contra os commits aprovados; as fontes em camadas foram para
+    `ferramentas/arte/aseprite/espada/` e `maca/`; `DERIVADOS` com o 64 = 32 ×2;
+  - os 16 arquivos do jogo são idênticos, byte a byte, aos aprovados; `exportar_aseprite.py espada|maca --conferir` os
+    reproduz;
+  - os papéis já existiam: a espada vale para a Espada, o Montante, a silhueta da arma vazia (`VAZIO`) e o Atacar do
+    Guerreiro (`ACAO`); a maça, para a Maça. O ícone do atributo Ataque (`attr-ataque`) não mudou;
+  - o `familia_ferro.py` reconhece as duas pelas fontes no Aseprite e não as grava; a conferência dele continua "tudo
+    igual" para o elmo, a cota, a manopla, as perneiras, as botas de ferro e o baú;
+  - conferido a 1920×945 com os arquivos do jogo e os saves temporários: a ficha (32), o Inventário (40), a arma tirada
+    (dois cliques no espaço, a silhueta apagada da espada na ficha e no Inventário), o Atacar da luta (32), o saque (64
+    e 48), "Equipar agora" (a espada +2 de Ataque; a maça +1 de Ataque e +9 de Vigor, como a comparação do cartão) e
+    "Guardar na mochila" (nada muda no corpo). Sem erro no console. O jogo não lê nada de `ferramentas/`.
+  - Regras, nomes, atributos, medidas, áreas de clique e animações não mudaram.
+- **O levantamento:** a espada e a maça passaram a arte final; continuam pendentes os remakes do elmo, da cota, da
+  manopla, das perneiras e das botas de ferro, e o 40/48 do martelo.
+- **Próximo par (decisão do Jean):** o elmo e a cota. Não começado.
+

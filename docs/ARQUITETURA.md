@@ -420,9 +420,9 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   papel (o item que voa ao equipar, o selo de atributo, o consumível que cai na bolsa). Lacunas (desenho do jogo no
   lugar, sem trocar por desenho de outro tipo de item): o chapéu de couro (usa o capuz por ora), a Coroa dos Afogados
   (usa o Diadema por ora; pede arte própria), a família de
-  ferro do Guerreiro, que é placeholder pendente de remake (a espada, a maça, o elmo, a cota, a manopla, as perneiras e
-  as botas de ferro, reduções da arte pintada da HUD de ferro por `familia_ferro.py`; elas também dão as silhuetas
-  dos espaços vazios e a espada do comando de ataque), o martelo sem o 40 e o 48 (o desenho aprovado de 32 fica, sem
+  ferro do Guerreiro, que é placeholder pendente de remake (o elmo, a cota, a manopla, as perneiras e as botas de
+  ferro, reduções da arte pintada da HUD de ferro por `familia_ferro.py`; elas também dão as silhuetas dos espaços
+  vazios da cabeça, da armadura, das mãos, das pernas e dos pés), o martelo sem o 40 e o 48 (o desenho aprovado de 32 fica, sem
   redesenho; o 48 vem hoje do navegador; a conferência de 19/10/2026 no plano 23, seção 1.2.1), os
   itens únicos com desenho próprio, a bolsa vazia e o frasco vazio no topo, os inimigos e as cartas deles, os
   ícones de habilidade e de efeito, o covil vencido. O mercador da banca tem o busto no balcão (`telas/mercado.js`,
@@ -496,7 +496,11 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   arma vazia continua com a espada de ferro. Desde a 1.144.0, o Diadema do Mago (o aro de latão de frente, a ponta com a
   gema violeta; 32, 40, 48 e o 64 = 32 ×2, fontes em `aseprite/diadema/`), o papel do desenho `coroa` do equipamento
   (`ITEM`: `coroa` → `diadema`): a base Diadema e, por ora, o único Coroa dos Afogados. O símbolo da reputação continua
-  com o sprite `coroa` (`S` e `MIUDO`, fora de `ITEM`); a cabeça vazia continua com o elmo de ferro.
+  com o sprite `coroa` (`S` e `MIUDO`, fora de `ITEM`); a cabeça vazia continua com o elmo de ferro. Desde a 1.145.0, o
+  remake do ferro começou pela espada (a lâmina regular de gumes contínuos e a ponta no eixo, a guarda de latão; também
+  o Montante, a silhueta da arma vazia e o Atacar do Guerreiro) e pela maça (o bulbo de aço com as aletas curtas), 32,
+  40, 48 e o 64 = 32 ×2, fontes em `aseprite/espada/` e `maca/`; o `familia_ferro.py` as reconhece pelas fontes e não as
+  grava mais. O ícone do atributo Ataque é outro desenho.
 - O escudo e o Unguento de Prata (1.94.0), o machado e a Bomba de Fumaça (1.99.0) o arco (1.101.0,
   `desenhar_arco_pixel.py`; o Atacar da roda, o Tiro Duplo e o contrato continuam com o sprite) e o cajado (1.106.0,
   `desenhar_cajado_pixel.py`; o Atacar do Mago na roda e o traço Conjurador continuam com o sprite) e o orbe (1.107.0,

@@ -40,7 +40,10 @@ const Icones = (() => {
   // couro sem desenho (a calça de couro) e as outras peças sem desenho ficam com o do jogo. O anel (1.140.0, o aro de
   // ouro em pé com o ziguezague gravado) vale para o Anel, o Sinete, o Aro e o Anel do Último Rei; o amuleto (1.140.0, a
   // gema violeta no engaste de latão), para o Amuleto, o Talismã, o Pingente e o Medalhão; os dois são também as
-  // silhuetas apagadas dos espaços vazios (VAZIO). O martelo é desenhado em código (desenhos.js).
+  // silhuetas apagadas dos espaços vazios (VAZIO). O martelo é desenhado em código (desenhos.js). A espada e a maça
+  // (1.145.0, o começo do remake do ferro; as fontes em ferramentas/arte/aseprite/, o 64 é o 32 ampliado 2×): a espada
+  // de lâmina regular com a guarda de latão vale para a Espada e o Montante, a silhueta da arma vazia (VAZIO) e o
+  // Atacar do Guerreiro (ACAO); a maça de bulbo com aletas, para a Maça. O ícone do atributo Ataque é outro desenho.
   // O machado de barba (ferramentas/arte/, 1.99.0) vale para todo equipamento com o desenho "machado" (o Machado e os
   // únicos Lamento de Gharbad e O Açougueiro); o Redemoinho e a Fúria usam o mesmo sprite noutro papel e ficam com o
   // do jogo. O arco de teixo (1.101.0) vale para os três arcos e os únicos Ventre da Tempestade e Sussurro do Vazio;
@@ -133,7 +136,7 @@ const Icones = (() => {
   // o desenho que o jogo escolhe para o destino (MapaPx.sprite); o covil vencido continua a bandeira do jogo
   const LUGAR = { vila: "lugar-vila", floresta: "lugar-floresta", pantano: "lugar-pantano", ruinas: "lugar-ruinas",
     montanha: "lugar-montanha", planicie: "lugar-planicie", cidadela: "lugar-cidadela", covil: "lugar-caverna" };
-  // a roda da luta: o ataque da classe (a espada do Guerreiro), Habilidades (o grimório), Itens (a poção) e Fugir (a
+  // a roda da luta: o ataque da classe (a espada do Guerreiro, 1.145.0), Habilidades (o grimório), Itens (a poção) e Fugir (a
   // bota com os riscos de movimento, a mesma da Agilidade: correr, não a porta do Sair)
   const ACAO = { espada: "espada", grimorio: "atalho-grimorio", pocao: "pocao", fuga: "attr-agilidade" };
 

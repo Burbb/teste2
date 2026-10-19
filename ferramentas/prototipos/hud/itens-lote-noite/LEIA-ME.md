@@ -1961,3 +1961,12 @@ e a maça (os quatro tamanhos) não mudou.
 (atual × a espada com os quatro tamanhos no Inventário, em 40, na comparação do saque, em 64 e 48, e na ficha;
 `fotografar.mjs espada_tamanhos`, `ROTULO=tamanhos SO_PROPOSTA=1`). Sem erro no console.
 
+**A espada e a maça integradas na 1.145.0, sem retoque** (a espada: o 32 e o 64 do `0fcfe18`, o 40 e o 48 do
+`441787e`; a maça: a rodada 2 do `87c12eb`, o 40 e o 48 do `723cf8d`; os PNGs e as fontes do protótipo conferidos contra
+esses commits antes da cópia). As fontes foram para `ferramentas/arte/aseprite/espada/` e `maca/`; os 16 arquivos do
+jogo são idênticos, byte a byte, aos aprovados; o 64 é o 32 ×2 (`DERIVADOS`). O `familia_ferro.py` passa a deixá-las de
+fora (detecta as fontes) e continua "tudo igual" para as peças que ainda gera. Conferido com os arquivos do jogo e os
+saves temporários (`espada_maca/auxiliares/integracao.mjs` e `sandalia_chapeu/auxiliares/equipar.mjs`; fotos em
+`espada_maca/capturas/integracao/`): a ficha (32), o Inventário (40), a arma tirada com dois cliques (a silhueta da
+arma vazia, na ficha e no Inventário), o Atacar da luta, o saque (64 e 48), equipar e guardar.
+
