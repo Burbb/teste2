@@ -420,7 +420,8 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   papel (o item que voa ao equipar, o selo de atributo, o consumível que cai na bolsa). Lacunas (desenho do jogo no
   lugar, sem trocar por desenho de outro tipo de item): as peças sem desenho (o chapéu de couro, que
   usa o capuz por ora, o Chapéu Pontudo, o Diadema, a calça de tecido, a sandália), os
-  itens únicos com desenho próprio, a tocha apagada, a bolsa vazia e o frasco vazio no topo, os inimigos e as cartas deles, os
+  itens únicos com desenho próprio, a tocha apagada, a bolsa vazia e o frasco vazio no topo, o ouro do mercado e dos
+  serviços (`ouro-loja`, o sprite `moedas`; o Ouro do topo já é pixel art), os inimigos e as cartas deles, os
   ícones de habilidade e de efeito, o covil vencido. O mercador da banca tem o busto no balcão (`telas/mercado.js`,
   com as cores da figura da banca).
 - A Calça de Couro do Arqueiro (1.119.0): desenho próprio do conjunto de couro, para todas as calças de couro dele
@@ -446,6 +447,10 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
 - A Vida (o coração) e a Mana (a gota de energia líquida, no azul da barra) do topo, em 20, da 1.130.0, e o Vigor
   (o punho cerrado) e o Foco (o alvo, no verde da barra), da 1.131.0 (`ferramentas/arte/aseprite/vital-*/`): os
   quatro ícones das barras do topo em pixel art. O custo das habilidades continua com os sprites do jogo.
+- O Ouro (a pilha de moedas) e as Provisões (o pernil) do topo, da 1.132.0 (`ferramentas/arte/aseprite/moedas/`,
+  `provisoes/`): o Ouro em 24, só no topo (`Icones.recurso`); as Provisões em 24 no topo e em 32 nativo no cartão
+  "Provisões (1 dia)" do mercado (`Icones.porDesenho`), no lugar do @2x do 24 reduzido. Sem comida, o topo continua com
+  o osso; o ouro do mercado e dos serviços continua com o sprite do jogo.
 - O escudo e o Unguento de Prata (1.94.0), o machado e a Bomba de Fumaça (1.99.0) o arco (1.101.0,
   `desenhar_arco_pixel.py`; o Atacar da roda, o Tiro Duplo e o contrato continuam com o sprite) e o cajado (1.106.0,
   `desenhar_cajado_pixel.py`; o Atacar do Mago na roda e o traço Conjurador continuam com o sprite) e o orbe (1.107.0,

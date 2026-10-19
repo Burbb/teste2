@@ -4108,3 +4108,17 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
     em `ouro_provisoes/ouro-provisoes.png`.
 - **Limitações:** a integração precisa do 32 no `TAMANHOS` das Provisões; o ouro do mercado e dos serviços continua
   com o sprite do jogo.
+
+### 18/10/2026 (data do computador local) — O Ouro e as Provisões no jogo (1.132.0)
+
+- **Pedido de Jean:** integrar o Ouro e as Provisões do `33d8a6c` sem retoque, e parar depois desta integração.
+- **A integração:**
+  - as fontes foram para `ferramentas/arte/aseprite/moedas/` e `provisoes/`;
+  - os seis arquivos do jogo são idênticos, byte a byte, aos aprovados, e o exportador os reproduz;
+  - o **Ouro do topo** (24) é a pilha de moedas; o ouro do mercado e dos serviços (`ouro-loja`) continua com o sprite
+    do jogo, uso pendente, não tratado aqui;
+  - as **Provisões** (o pernil) estão no topo (24) e no cartão "Provisões (1 dia)" do mercado, agora no 32 nativo em
+    vez do @2x do 24 reduzido; sem comida, o topo continua com o osso;
+  - conferido a 1920×945 no mercado do Guerreiro, com saves temporários: medidas do cartão, dos botões e do topo iguais
+    às de antes; a compra de 1 e de 2 Provisões dá os mesmos números de antes (4 → 5 → 7 dias; 300 → 296 → 288 de
+    ouro), e o topo acompanha. Preços, quantidades e regras não mudaram.

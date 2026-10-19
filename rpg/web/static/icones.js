@@ -33,7 +33,7 @@ const Icones = (() => {
     "lugar-planicie": [32, 40], "lugar-ruinas": [32, 40], "lugar-vila": [32, 40], "maca": [32, 40, 48, 64],
     "machado": [32, 40, 48, 64],
     "manopla": [32, 40, 48, 64], "moedas": [24], "osso": [24], "perneiras": [32, 40, 48, 64], "pocao": [24, 32, 48, 64],
-    "provisoes": [24], "tocha": [24, 32, 48, 64], "tonico": [32, 48, 64], "unguento": [32, 64],
+    "provisoes": [24, 32], "tocha": [24, 32, 48, 64], "tonico": [32, 48, 64], "unguento": [32, 64],
     "vital-foco": [20], "vital-mana": [20], "vital-vida": [20], "vital-vigor": [20]};
 
   // Cada desenho vai para o tipo de ferro que o jogo já tem (elmo, armadura, manopla, calca = perneira, bota_ferro, maca);
@@ -87,7 +87,10 @@ const Icones = (() => {
   // ampliado 2×
   const ATRIBUTO = { Ataque: "attr-ataque", Defesa: "attr-defesa", Agilidade: "attr-agilidade", Poder: "attr-poder" };
   // os recursos do topo, pelo desenho que o jogo escolhe (sem comida, o osso; a tocha apagada, a bolsa vazia e o
-  // frasco vazio ficam com o do jogo); a aljava são as flechas do Patrulheiro
+  // frasco vazio ficam com o do jogo); a aljava são as flechas do Patrulheiro. Em pixel art (1.132.0, fontes em
+  // ferramentas/arte/aseprite/): o Ouro (a pilha de moedas, 24, só o topo: o ouro do mercado e dos serviços,
+  // ouro-loja, continua com o sprite "moedas" do jogo) e as Provisões (o pernil, 24 no topo e 32 nativo no cartão
+  // "Provisões (1 dia)" do mercado, por porDesenho)
   const RECURSO = { pernil: "provisoes", osso_diag: "osso", tocha: "tocha", moedas: "moedas", pocao: "pocao", bandagem: "bandagem",
     aljava: "aljava" };
   // os ícones das barras do topo (20), em pixel art: a Vida (o coração) e a Mana (a gota de energia líquida, no azul

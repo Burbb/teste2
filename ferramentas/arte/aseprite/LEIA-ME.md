@@ -220,3 +220,15 @@ aprovados pelo Jean (`ferramentas/prototipos/hud/itens-lote-noite/vigor_foco/`; 
 - **Os auxiliares** que geraram as listas por camada ficam em `vigor_foco/auxiliares/` (`punho/`: `e2_partes.py` e
   depois `e3_sem_fogo.py`; `foco.py`).
 - **Com eles,** os quatro ícones das barras do topo (Vida, Mana, Vigor, Foco) estão em pixel art.
+
+## O Ouro e as Provisões (1.132.0)
+
+A pilha de moedas e o pernil sem barbantes foram aprovados pelo Jean no `33d8a6c`
+(`ferramentas/prototipos/hud/itens-lote-noite/ouro_provisoes/`; a versão com barbantes em `ouro_provisoes/recusados/`).
+- **As fontes:** `moedas/moedas-24.aseprite` (camadas pilha, topo, moeda, contorno) e `provisoes/provisoes-24.aseprite`,
+  `-32` (carne, osso, contorno).
+- **Os usos:** o Ouro só no topo, em 24; o ouro do mercado e dos serviços (`ouro-loja`) continua com o sprite `moedas`
+  do jogo, uso ainda pendente. As Provisões no topo, em 24, e no cartão do mercado, em 32 nativo (`TAMANHOS` [24, 32]).
+- **Conferido:** os seis arquivos exportados das fontes são idênticos, byte a byte, aos aprovados, e
+  `exportar_aseprite.py moedas|provisoes --conferir` os reproduz.
+- **Os auxiliares** que geraram as listas por camada ficam em `ouro_provisoes/auxiliares/` (`ouro.py`, `pernil.py`).

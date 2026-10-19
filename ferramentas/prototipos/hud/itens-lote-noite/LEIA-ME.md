@@ -1128,3 +1128,7 @@ uso é o topo. Com eles, os quatro ícones das barras do topo estão em pixel ar
   tamanho real, as ampliações e a prancha sobre o carvão (`prancha-carvao.png`).
 - **Limitações:** na integração, o `TAMANHOS` de `provisoes` passa a [24, 32]; o Ouro do mercado e dos serviços
   continua no sprite do jogo.
+- **Integrados na 1.132.0, sem retoque** (aprovados no `33d8a6c`): as fontes foram para `ferramentas/arte/aseprite/moedas/`
+  e `provisoes/`; os seis arquivos do jogo são idênticos, byte a byte, aos da proposta. As fotos com os arquivos de
+  produção a 1920×945 estão em `ouro_provisoes/capturas/no-jogo-1.132.0-*` (`SO_ATUAL=1`): os ícones batem pixel a
+  pixel com as fotos da proposta, e o cartão das Provisões carrega o `provisoes-32.png`.
