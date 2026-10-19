@@ -27,13 +27,13 @@ const Icones = (() => {
     "atalho-bestiario": [32, 36], "atalho-comitiva": [32, 36], "atalho-diario": [32, 36], "atalho-grimorio": [32, 36], "atalho-inventario": [32, 36],
     "atalho-mapa": [32, 36], "atalho-sair": [32, 36], "atalho-salvar": [32, 36], "atalho-talentos": [32, 36],
     "attr-agilidade": [24, 32, 64], "attr-ataque": [24, 32, 64], "attr-defesa": [24, 32, 64], "attr-poder": [24, 32, 64],
-    "bandagem": [24, 32, 48, 64], "bau": [32, 48, 64], "bomba": [32], "botas-ferro": [32, 40, 48, 64],
+    "bandagem": [16, 24, 32], "bau": [32, 48, 64], "bomba": [32], "botas-ferro": [32, 40, 48, 64],
     "cota": [32, 40, 48, 64], "elmo": [32, 40, 48, 64], "escudo": [32, 40, 48, 64], "espada": [32, 40, 48, 64], "lugar-caverna": [32, 40],
     "lugar-cidadela": [32, 40], "lugar-floresta": [32, 40], "lugar-montanha": [32, 40], "lugar-pantano": [32, 40],
     "lugar-planicie": [32, 40], "lugar-ruinas": [32, 40], "lugar-vila": [32, 40], "maca": [32, 40, 48, 64],
     "machado": [32, 40, 48, 64],
-    "manopla": [32, 40, 48, 64], "moeda": [16, 32], "moedas": [24, 32], "osso": [24], "perneiras": [32, 40, 48, 64], "pocao": [24, 32, 48, 64],
-    "provisoes": [24, 32], "tocha": [16, 24, 32], "tocha_apagada": [16, 24], "tonico": [32, 48, 64], "unguento": [32, 64],
+    "manopla": [32, 40, 48, 64], "moeda": [16, 32], "moedas": [24, 32], "osso": [24], "perneiras": [32, 40, 48, 64], "pocao": [16, 24, 32],
+    "provisoes": [24, 32], "tocha": [16, 24, 32], "tocha_apagada": [16, 24], "tonico": [16, 32], "calca_tecido": [32, 40, 48, 64], "manto": [32, 40, 48, 64], "unguento": [32, 64],
     "vital-foco": [20], "vital-mana": [20], "vital-vida": [20], "vital-vigor": [20]};
 
   // Cada desenho vai para o tipo de ferro que o jogo já tem (elmo, armadura, manopla, calca = perneira, bota_ferro, maca);
@@ -62,12 +62,14 @@ const Icones = (() => {
   // a luva de seda, para o Capuz e a Luva de Seda do Mago (o desenho vem do item: itens.py e a migração do save v5).
   // A habilidade Desaparecer usa o sprite "capuz" noutro papel e continua com ele; os espaços vazios da cabeça e das
   // mãos continuam com o elmo e a manopla de ferro (VAZIO). A Calça de Couro do Arqueiro (1.119.0) tem desenho próprio
-  // (o 64 é o 32 ampliado 2×); a Calça de Viagem do Mago continua com o sprite do jogo. A aljava (1.122.0, a da
+  // (o 64 é o 32 ampliado 2×); a Calça de Viagem do Mago (a lã com as faixas nos tornozelos) e o Manto (a veste aberta
+  // na frente, também da Túnica, da Veste Rúnica e do Manto de Cinzas), 1.138.0, com o 64 = 32 ampliado 2×. A aljava (1.122.0, a da
   // referência do Jean) vale para toda Aljava do Patrulheiro, a comum e a única dos Mil Corvos, e para o recurso de
   // flechas do topo (RECURSO); o 24 é o do topo, o 40 o do Inventário, o 48 o do cartão compacto do saque.
   const ITEM = { elmo: "elmo", armadura: "cota", manopla: "manopla", calca: "perneiras", bota_ferro: "botas-ferro",
     maca: "maca", espada: "espada", escudo: "escudo", amuleto: "amuleto", anel: "anel", aljava: "aljava", martelo: "martelo", machado: "machado", arco: "arco", cajado: "cajado", orbe: "orbe", livro: "livro", varinha: "varinha", gibao: "gibao", bota: "bota",
-    capuz: "capuz", luva: "luva", capuz_tecido: "capuz_tecido", luva_seda: "luva_seda", calca_couro: "calca_couro" };
+    capuz: "capuz", luva: "luva", capuz_tecido: "capuz_tecido", luva_seda: "luva_seda", calca_couro: "calca_couro",
+    calca_tecido: "calca_tecido", manto: "manto" };
   // o espaço vazio: a silhueta apagada do que vai nele (o material não aparece)
   const VAZIO = { cabeca: "elmo", armadura: "cota", maos: "manopla", pernas: "perneiras", pes: "botas-ferro", arma: "espada",
     secundaria: "escudo", amuleto: "amuleto", anel1: "anel", anel2: "anel" };
@@ -96,8 +98,10 @@ const Icones = (() => {
   const RECURSO = { pernil: "provisoes", osso_diag: "osso", tocha: "tocha", tocha_apagada: "tocha_apagada", moedas: "moedas", pocao: "pocao", bandagem: "bandagem",
     aljava: "aljava" };
   // os ícones de 16 que a tela pede pelo nome do desenho (o chip e o aviso de um efeito, o item e os riscos de uma
-  // escolha, os riscos do lugar, a linha de custo de um serviço, os ganhos de um contrato): a moeda avulsa (1.134.0), a tocha e a tocha apagada (1.136.0); os outros nomes ficam com o sprite do jogo
-  const MIUDO = { moeda: "moeda", tocha: "tocha", tocha_apagada: "tocha_apagada" };
+  // escolha, os riscos do lugar, a linha de custo de um serviço, os ganhos de um contrato): a moeda avulsa (1.134.0), a tocha e a tocha apagada (1.136.0), a bandagem e a Poção de Vida
+  // (1.138.0; esses sprites só significam esses itens); os outros nomes ficam com o sprite do jogo. O Tônico não entra
+  // aqui: o sprite dele ("pocao_azul") é também a Mana e o Unguento; o 16 dele vem pelo item (Icones.pequeno)
+  const MIUDO = { moeda: "moeda", tocha: "tocha", tocha_apagada: "tocha_apagada", bandagem: "bandagem", pocao: "pocao" };
   // os ícones das barras do topo (20), em pixel art: a Vida (o coração) e a Mana (a gota de energia líquida, no azul
   // da barra), 1.130.0; o Vigor (o punho cerrado) e o Foco (o alvo, no verde da barra), 1.131.0. Só o topo usa
   // estes desenhos: o custo das habilidades continua com os sprites do jogo (RECURSO_ICONE, em app/nucleo.js)
@@ -181,6 +185,9 @@ const Icones = (() => {
      *  o chip de ouro, o espólio (32), a moeda que o ladrão leva e as que voam até o topo. Só esse papel: o sprite
      *  "moeda" do jogo fica para o resto, e a pilha do saldo é o ouro (acima). */
     moeda: (lado = 16, classe = "") => img("moeda", lado, classe),
+    /** O consumível em `lado` px pelo id do motor, só quando o desenho tem esse tamanho nativo (o 16 do chip, do aviso e
+     *  das escolhas: a Bandagem, a Poção de Vida, o Tônico, a tocha), ou "" para o sprite do jogo, sem reduzir outro. */
+    pequeno: (id, lado = 16) => { const p = CONSUMIVEL[id]; return p && TAMANHOS[p] && TAMANHOS[p].includes(lado) ? img(p, lado) : ""; },
     /** Um ícone de 16 pelo nome do desenho (MIUDO), ou "" para o sprite do jogo. */
     miudo: (sprite, lado = 16) => img(MIUDO[sprite], lado),
     vital: (recurso, lado = 20) => img(VITAL[recurso], lado),

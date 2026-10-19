@@ -27,6 +27,11 @@ nada daqui: só os PNGs exportados para `rpg/web/static/hud/icones/`.
 | provisoes (as Provisões do topo e do mercado) | `provisoes/provisoes-24.aseprite`, `-32` | carne, osso, contorno | 1.132.0 |
 | moeda (a moeda avulsa dos preços e dos ganhos) | `moeda/moeda-16.aseprite`, `-32` | espessura, beira, anel, face, contorno | 1.134.0 |
 | tocha (a tocha do topo, da bolsa e de 16) | `tocha/tocha-16.aseprite`, `-24`, `-32` | cabo, pano, chama, contorno | 1.135.0 (o 16, 1.136.0) |
+| bandagem (a Bandagem) | `bandagem/bandagem-16.aseprite`, `-24`, `-32` | tira, corpo, face, contorno | 1.138.0 |
+| pocao (a Poção de Vida e o comando Itens) | `pocao/pocao-16.aseprite`, `-24`, `-32` | vidro, liquido, rolha, brilho, contorno | 1.138.0 |
+| tonico (o Tônico Restaurador) | `tonico/tonico-16.aseprite`, `-32` | vidro, liquido, rolha, brilho, contorno | 1.138.0 |
+| calca_tecido (a Calça de Viagem do Mago) | `calca_tecido/calca_tecido-32.aseprite`, `-40`, `-48`; **o 64 é o 32 ampliado 2×** | pernas, dobras, barra, cintura, cordao, contorno | 1.138.0 |
+| manto (o Manto do Mago, também Túnica, Veste Rúnica e Manto de Cinzas) | `manto/manto-32.aseprite`, `-40`, `-48`; **o 64 é o 32 ampliado 2×** | mangas, corpo, forro, gola, debrum, faixa, fecho, contorno | 1.138.0 |
 | tocha_apagada (o topo sem tochas e o risco "Sem luz") | `tocha_apagada/tocha_apagada-16.aseprite`, `-24` | cabo, pano, queimado, contorno, fumaca | 1.136.0 |
 | atalho-salvar (o Salvar da doca) | `atalho-salvar/atalho-salvar-36.aseprite`, `-32` | tampa, corpo, latao, seta, contorno | 1.129.0 |
 | atalho-sair (o Sair da doca) | `atalho-sair/atalho-sair-36.aseprite`, `-32` | arco, passagem, seta, contorno | 1.129.0 |
@@ -276,3 +281,13 @@ variantes/`).
 - **Conferido:** os seis arquivos exportados das fontes são idênticos, byte a byte, aos aprovados, e
   `exportar_aseprite.py tocha --conferir` e `tocha_apagada --conferir` os reproduzem (com o 24 e o 32).
 - **Os auxiliares:** `moeda_tocha/auxiliares/tocha.py <16|24|32> [apagada]`.
+
+## A Bandagem, a Poção de Vida, o Tônico, a Calça de Viagem e o Manto (1.138.0)
+
+Aprovados pelo Jean sem retoque: a Bandagem e a Poção no `211b8e2`, o Tônico no `d401a92`, a Calça de Viagem e o Manto
+no `c63f84b` (`ferramentas/prototipos/hud/itens-lote-noite/bandagem_pocao/`, `tonico_antidoto/`, `calca_manto/`).
+- **Conferido:** os 46 arquivos exportados das fontes são idênticos, byte a byte, aos aprovados (o 64 da calça e do
+  manto pelo `DERIVADOS`), e o `--conferir` de cada peça os reproduz.
+- **Na família de ferro:** a bandagem, a poção e o tônico passaram a ter fonte aqui e saem sozinhos do
+  `familia_ferro.py` (continuam na conta da escala do grupo).
+- **Os auxiliares:** `bandagem_pocao/auxiliares/bandagem.py`, `frasco.py` (a família de frascos), `calca_manto/auxiliares/tecido.py`.

@@ -283,8 +283,8 @@ function mostrarOpcoes(m) {
       if (n) icone = spr(MapaPx.sprite(n), 1);
     }
     const miudo = (n) => Icones.miudo(n) || spr(n, 1);
-    if (o.meta && o.meta.item) icone = miudo(Telas.iconeConsumivel(o.meta.item));
-    if (o.meta && o.meta.gasta) icone = miudo(Telas.iconeConsumivel(o.meta.gasta));  // o item que a escolha usa
+    if (o.meta && o.meta.item) icone = Icones.pequeno(o.meta.item) || miudo(Telas.iconeConsumivel(o.meta.item));
+    if (o.meta && o.meta.gasta) icone = Icones.pequeno(o.meta.gasta) || miudo(Telas.iconeConsumivel(o.meta.gasta));  // o item que a escolha usa
     // Indisponível: fica à vista, apagada, com o motivo escrito (não só a cor) e sem responder a clique ou tecla.
     const indisponivel = o.meta && o.meta.indisponivel;
     if (indisponivel) { b.classList.add("indisponivel"); b.disabled = true; b.setAttribute("aria-disabled", "true"); }

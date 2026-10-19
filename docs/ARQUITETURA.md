@@ -468,6 +468,14 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   do lugar sem tocha), com fontes em `aseprite/tocha/` e
   `aseprite/tocha_apagada/`. Os ícones de 16 que a tela pede pelo nome do desenho (o chip, o aviso, o item e os riscos
   de uma escolha) passam pelo `Icones.miudo` (a moeda, a tocha e a apagada); os outros nomes ficam com o sprite.
+- Desde a 1.138.0, em pixel art (fontes em `ferramentas/arte/aseprite/`): a Bandagem e a Poção de Vida (16, 24, 32: o
+  topo, os usos de consumível, o chip, o aviso e as escolhas; a Poção é também o comando Itens da roda da luta), o
+  Tônico Restaurador (16 e 32) e, de equipamento, a Calça de Viagem e o Manto do Mago (32, 40, 48; o 64 é o 32 ampliado
+  2×; o Manto vale para o Manto, a Túnica, a Veste Rúnica e o Manto de Cinzas). Os 48 e 64 antigos da bandagem, da
+  poção e do tônico saíram (sem uso). O 16 de um consumível vem pelo id do item quando a tela sabe qual é
+  (`Icones.pequeno`: o chip, o aviso, o item e o gasto de uma escolha), e só no tamanho nativo; o sprite do Tônico
+  (`pocao_azul`) continua a Mana e o Unguento nos outros lugares. A bandagem e a poção entram também no `Icones.miudo`
+  (esses sprites só significam esses itens). Ficam com o desenho do jogo o Antídoto e o frasco vazio do topo.
 - O escudo e o Unguento de Prata (1.94.0), o machado e a Bomba de Fumaça (1.99.0) o arco (1.101.0,
   `desenhar_arco_pixel.py`; o Atacar da roda, o Tiro Duplo e o contrato continuam com o sprite) e o cajado (1.106.0,
   `desenhar_cajado_pixel.py`; o Atacar do Mago na roda e o traço Conjurador continuam com o sprite) e o orbe (1.107.0,

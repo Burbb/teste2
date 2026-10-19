@@ -330,15 +330,15 @@ function dispensarAvisosLongos() {
 function emTela() { return !!textoEl.querySelector(".tela:not(.achado):not(.saves)") && !(estado && estado.combate); }
 const avisosPorChave = {};
 /** Aviso flutuante perto do clique. Com `chave`, clicar de novo troca o aviso aberto por um novo (aparece toda vez,
- *  sem empilhar cópias). */
-function aviso(texto, tipo, icone, chave) {
+ *  sem empilhar cópias). `item`: o id do item ganho, para o ícone de 16 dele (Icones.pequeno). */
+function aviso(texto, tipo, icone, chave, item) {
   if (replay) return;
   const velho = chave && avisosPorChave[chave];
   if (velho && velho.isConnected) { clearTimeout(velho._t); velho.remove(); avisosAtivos = Math.max(0, avisosAtivos - 1); }
   // Frase longa (o carinho no animal, um acontecimento na fogueira) quebra em linhas e fica o tempo de ler.
   const longo = String(texto).length > 60;
   const dura = longo ? Math.min(9000, Math.max(3500, 1500 + String(texto).length * 55)) : 2400;
-  const a = el("div", `aviso-flutuante ${tipo || "info"}${longo ? " longo" : ""}`, (icone ? Icones.miudo(icone) || spr(icone, 1) : "") + `<span>${esc(texto)}</span>`);
+  const a = el("div", `aviso-flutuante ${tipo || "info"}${longo ? " longo" : ""}`, (icone ? (item && Icones.pequeno(item)) || Icones.miudo(icone) || spr(icone, 1) : "") + `<span>${esc(texto)}</span>`);
   a.style.setProperty("--dura", dura + "ms");
   a._nasceu = performance.now();
   document.body.appendChild(a);
@@ -386,7 +386,7 @@ document.addEventListener("scroll", () => { if (avisoControle) { avisoControle.r
 
 async function efeito(m) {
   if (emTela()) {
-    aviso(m.texto, m.tipo, iconeChip(m));
+    aviso(m.texto, m.tipo, iconeChip(m), undefined, m.item);
     historico("h-chip", "▸ " + m.texto);
     if (replay) return;
     Som.tocar({ ouro: "moeda", perda: "moeda", item: "item", cura: "item", nivel: "nivel" }[m.tipo] || "item");
@@ -395,7 +395,7 @@ async function efeito(m) {
   }
   let linha = textoEl.lastElementChild;
   if (!linha || !linha.classList.contains("chips") || linha.classList.contains("passado")) linha = anexar(el("div", "chips"));
-  const chip = linha.appendChild(el("span", `chip ${m.tipo || "info"}`, (Icones.cabeca(iconeChip(m), 16) || Icones.miudo(iconeChip(m)) || spr(iconeChip(m), 1)) + esc(m.texto)));
+  const chip = linha.appendChild(el("span", `chip ${m.tipo || "info"}`, (Icones.cabeca(iconeChip(m), 16) || (m.item && Icones.pequeno(m.item)) || Icones.miudo(iconeChip(m)) || spr(iconeChip(m), 1)) + esc(m.texto)));
   rolarFim();
   // Ouro ganho num evento (o baú aberto, a recompensa): o chip fica no texto e as moedas voam até o ouro do topo,
   // sem parar a cena (a festa de tela cheia fica para o que é raro: atributo para sempre, nível, Sigilo).

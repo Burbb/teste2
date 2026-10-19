@@ -4277,3 +4277,19 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **A decidir:** o desenho `manto` vale hoje para três bases (Manto, Túnica, Veste Rúnica) e o Manto de Cinzas;
   proposta de um desenho por base (sem mudar os dados nesta rodada). As duas peças não têm papel em `Icones` hoje.
 - **Os três lotes da noite** (Bandagem e Poção, Tônico e Antídoto, Calça e Manto) estão no protótipo, sem integração.
+
+### 19/10/2026 (data do computador local) — A Bandagem, a Poção, o Tônico, a Calça de Viagem e o Manto no jogo (1.138.0)
+
+- **Pedido de Jean:** integrar os cinco aprovados sem retoque; o Antídoto só com a base ajustada, no protótipo; e
+  preparar o frasco vazio, também no protótipo.
+- **A integração:**
+  - as fontes foram para `ferramentas/arte/aseprite/` (bandagem, pocao, tonico, calca_tecido, manto); os 46 arquivos do
+    jogo são idênticos, byte a byte, aos aprovados, e o exportador os reproduz; os 48 e 64 antigos da bandagem, da poção
+    e do tônico saíram (sem uso);
+  - os papéis: a calça e o manto como equipamento; a poção segue como o comando Itens da luta e o manto segue
+    compartilhado (decisões do Jean); o 16 de um consumível vem pelo id do item (`Icones.pequeno`), o que preserva o
+    sprite antigo do Tônico como a Mana e o Unguento;
+  - conferido a 1920×945 com os arquivos do jogo (topo, mercado, bolsa, combate; ficha, Inventário, saque) e, com os
+    saves temporários, a compra dos três consumíveis e o Manto vestido pelo saque. Regras, preços, atributos,
+    quantidades, animações e áreas de interação não mudaram.
+- **Em avaliação, fora do jogo:** o Antídoto (a base plana) e o frasco vazio do topo.

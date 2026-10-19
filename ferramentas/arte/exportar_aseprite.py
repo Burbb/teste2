@@ -54,6 +54,8 @@ DERIVADOS = {
     "attr-agilidade": {64: (32, 2)},  # 1.121.0: a Agilidade (a bota em passada, também o Fugir); o 64 do selo é o 32 ×2
     "aljava": {64: (32, 2)},          # 1.122.0: a aljava (24 e 32 aprovados; 40 e 48 derivados); o 64 é o 32 ×2
     "attr-poder": {64: (32, 2)},     # 1.123.0: o Poder (a chama violeta); o 64 do selo é o 32 ×2
+    "calca_tecido": {64: (32, 2)},   # 1.138.0: a Calça de Viagem e o Manto do Mago (32, 40, 48 das fontes); o 64 é o 32 ×2
+    "manto": {64: (32, 2)},
 }
 
 

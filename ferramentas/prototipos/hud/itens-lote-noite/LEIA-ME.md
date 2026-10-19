@@ -1353,3 +1353,19 @@ uso é o topo. Com eles, os quatro ícones das barras do topo estão em pixel ar
   as duas, `VESTIR`; o saque do Manto) e `calca_manto_saque_calca` (o saque da calça); o roteiro ganhou `papeis`
   (vários papéis de item só na página). Folha `calca_manto/calca_manto-no-jogo.png` e prancha
   `calca_manto/prancha-carvao.png` (com a calça de couro, o capuz e a luva de seda para comparar).
+
+## Integração na 1.138.0: a Bandagem, a Poção de Vida, o Tônico, a Calça de Viagem e o Manto
+
+**No jogo, sem retoque** (aprovados no `211b8e2`, `d401a92` e `c63f84b`). As fontes foram para `ferramentas/arte/aseprite/`;
+os 46 arquivos do jogo são idênticos, byte a byte, aos das propostas. Os papéis: a calça e o manto no `ITEM`; a
+bandagem e a poção também no `Icones.miudo`; o 16 de um consumível pelo id do item (`Icones.pequeno`: o chip, o aviso,
+o item e o gasto das escolhas), o que deixa o sprite do Tônico (`pocao_azul`) como a Mana e o Unguento. A Poção segue
+como o comando Itens da luta e o Manto segue compartilhado (decisões do Jean).
+- **Conferido a 1920×945 com os arquivos do jogo** (`*/capturas/no-jogo-1.138.0-*`, o roteiro com `SO_ATUAL=1`): o
+  topo, a bolsa e os cartões do mercado, o aviso e os chips, a roda da luta, o espólio, a ficha, o Inventário e o saque
+  saem com os ícones das propostas (as diferenças que sobram são o fade do aviso, os raios do saque e o antialiasing dos
+  números; o Antídoto, que não entrou, e os consumíveis antigos nas fotos da proposta da calça e do manto).
+- **As interações, com os saves temporários dos cenários** (`bandagem_pocao/auxiliares/interacoes.mjs`): comprar um
+  Tônico, uma Poção e uma Bandagem no mercado (85 de ouro, os preços somados; as quantidades sobem uma cada; a bolsa da
+  ficha e o topo nos arquivos novos) e vestir o Manto achado pelo "Equipar agora" (64 e 48 no saque, 32 na ficha). Sem
+  erro no console.
