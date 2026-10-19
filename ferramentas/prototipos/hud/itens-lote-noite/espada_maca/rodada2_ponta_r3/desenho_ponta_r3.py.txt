@@ -1,0 +1,184 @@
+# A espada e a maça do Guerreiro (o começo do remake do ferro, proposta de 19/10/2026): na diagonal da família (o pomo
+# embaixo à esquerda, a ponta em cima à direita), com o ferro do machado aprovado (o cinza neutro), o latão do escudo e
+# a madeira do cabo do machado; a luz de cima e da esquerda (a metade de cima de cada peça na luz). Rodada 2 (a 1 está
+# em rodada1/). As medidas estão num
+# sistema que segue a arma: u ao longo do eixo (do pomo à ponta), v através dele (- em cima/à esquerda, + embaixo/à
+# direita), no quadro de 32. Primeiro o 32; o 64 é o 32 ampliado 2x (a política da skill); 40 e 48 depois da aprovação.
+# Uso: python desenho.py <espada|maca> <32|40|48> [silhueta] [<pasta>]. Grava a prévia e as listas em <pasta>/<N>/.
+import pathlib, sys
+import numpy as np
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[6] / "ferramentas" / "arte"))
+from pixel_comum import grade, contornar, imagem, limpar, listas_camadas
+
+PECA = sys.argv[1]; N = int(sys.argv[2]); ETAPA = "silhueta" if "silhueta" in sys.argv[3:] else "final"
+SAIDA = pathlib.Path(next((a for a in sys.argv[3:] if a != "silhueta"), "."))
+K = N / 32
+RAMPAS = {
+    "f": ["#0e0f11", "#1a1c20", "#282b31", "#383c44", "#4c5159", "#646a73", "#848b94", "#b0b6bd", "#e4e8ec"],   # o ferro (o do machado)
+    "o": ["#26170a", "#40270c", "#623c12", "#8a571b", "#ae7526", "#cf9737", "#e9bb5c", "#f8dc94"],              # o latão (o do escudo)
+    "m": ["#20150c", "#3a2716", "#583c21", "#77532e", "#946b3c", "#ae844e", "#c49d66", "#d8b886"],              # o freixo (o do machado)
+    "k": ["#140b09", "#251412", "#3a1f1a", "#522c23", "#6b3b2d", "#86503c"],                                    # o couro (o do arco)
+}
+mat, tom, fixo, X, Y = grade(N)
+cam = np.full((N, N), "", dtype=object)
+x32, y32 = X / K, Y / K
+O = np.array([4.4, 27.6])                                    # a origem: o centro do pomo
+D = np.array([1.0, -1.0]) / np.sqrt(2); Pp = np.array([1.0, 1.0]) / np.sqrt(2)
+U = (x32 - O[0]) * D[0] + (y32 - O[1]) * D[1]                # ao longo da arma
+V = (x32 - O[0]) * Pp[0] + (y32 - O[1]) * Pp[1]              # através (- em cima, na luz)
+
+
+def pinta(onde, m, t, c):
+    mat[onde] = m; tom[onde] = t if np.isscalar(t) else t[onde]; cam[onde] = c
+
+
+def poligono_uv(pts):
+    """Os pixels dentro do polígono dado em (u, v)."""
+    xy = [tuple(O + u * D + v * Pp) for u, v in pts]
+    dentro = np.zeros((N, N), bool)
+    n = len(xy)
+    for i in range(n):
+        (xa, ya), (xb, yb) = xy[i], xy[(i + 1) % n]
+        cruza = ((ya > y32) != (yb > y32)) & (x32 < (xb - xa) * (y32 - ya) / ((yb - ya) or 1e-9) + xa)
+        dentro ^= cruza
+    return dentro
+
+
+def disco(u, v, r):
+    c = O + u * D + v * Pp
+    return np.hypot(x32 - c[0], y32 - c[1]) * K <= max(r * K, 0.6)
+
+
+def faixa_uv(u0, u1, meia):
+    return (U >= u0) & (U <= u1) & (np.abs(V) * K <= max(meia * K, 0.5))
+
+
+if PECA == "espada":
+    # A espada, rodada 2, pela referência principal (ferramentas/arte/referencias/espada/espadasample.png, a espada de aço
+    # da direita): a lâmina comprida de largura constante, os gumes paralelos e contínuos até a ponta, que se forma num
+    # trecho curto (os dois gumes convergindo); dois planos do aço (o de cima na luz, com o gume aceso; o de baixo um tom
+    # abaixo) e a aresta no meio; a guarda curta de latão, a empunhadura de couro com as voltas e o pomo de aço. As
+    # proporções da referência: a lâmina em 2/3 do comprimento, a ponta no último quarto dela, a guarda com 1,6 vez a
+    # largura da lâmina; a lâmina um pouco mais larga que a da referência, para ter presença no 32.
+    U0, U1, UP = 10.8, 36.8, 30.0                                               # o começo da lâmina, a ponta, o começo da ponta
+    ML = 1.75                                                                   # a meia largura da lâmina
+    VP = -0.45                                                                  # o vértice, um pouco acima do eixo
+    # a ponta, como na espada de aço da referência: o gume de cima segue quase reto até perto do fim e o de baixo sobe em
+    # curva para encontrá-lo; os dois convergem sem degrau até o vértice (sem a rampa reta que deixava uma agulha)
+    def gumes(u):
+        t = np.clip((np.asarray(u, float) - UP) / (U1 - UP), 0, 1)
+        return -ML + (ML + VP) * t ** 2.2, ML - (ML - VP) * t ** 1.15          # o de cima, o de baixo
+    def larg(u):
+        cima, baixo = gumes(u)
+        return (baixo - cima) / 2
+    us = np.linspace(U0, U1, 80)
+    lamina = poligono_uv([(u, gumes(u)[0]) for u in us] + [(u, gumes(u)[1]) for u in us[::-1]])
+    guarda = poligono_uv([(8.6, -4.2), (10.6, -4.2), (10.6, 4.2), (8.6, 4.2)])
+    empunhadura = faixa_uv(2.0, 8.8, 0.95)
+    pomo = disco(1.0, 0.0, 1.45)
+    if ETAPA == "silhueta":
+        pinta(lamina | guarda | empunhadura | pomo, "f", 5, "lamina")
+    else:
+        # os planos: o de cima (v < 0) claro, o gume de cima aceso; a aresta no meio; o de baixo um tom abaixo, o gume de
+        # baixo na sombra; na ponta, os dois gumes acesos até o vértice
+        cima, baixo = gumes(np.clip(U, U0, U1)); meio = (cima + baixo) / 2   # os planos seguem os gumes até a ponta
+        tl = np.where(V < meio - 0.05, 6, 4)
+        tl = np.where(V < cima + 0.75, 8, tl)                                   # o gume de cima
+        tl = np.where(V > baixo - 0.7, 3, tl)                                   # o gume de baixo
+        tl = np.where((U > U1 - 1.2) & (V < VP + 0.6), 8, tl)                   # o vértice, aceso
+        pinta(lamina, "f", tl, "lamina")
+        aresta = lamina & (np.abs(V - meio - 0.05) * K < max(0.4 * K, 0.5)) & (U > U0 + 1.2) & (U < U1 - 1.8)
+        pinta(aresta, "f", 5, "lamina"); fixo[aresta] = True                    # linha diagonal: a limpeza não mexe
+        # a guarda de latão: a face de cima acesa, a de baixo na sombra; as pontas um tom acima
+        pinta(guarda, "o", np.where(U < 9.6, 6, 3), "guarda")
+        pinta(guarda & (np.abs(V) > 3.3), "o", np.where(V < 0, 7, 4), "guarda")
+        # a empunhadura: o couro com as voltas
+        volta = ((U * 1.0 + V * 0.6) % 1.6) < 0.55
+        pinta(empunhadura, "k", np.where(V < 0, 5, 3), "empunhadura")
+        pinta(empunhadura & volta, "k", 2, "empunhadura"); fixo[empunhadura & volta] = True
+        # o pomo de aço: a luz em cima à esquerda
+        pinta(pomo, "f", np.where(V + (U - 1.0) < -0.5, 7, np.where(V + (U - 1.0) < 0.8, 5, 3)), "pomo")
+    camadas = ["empunhadura", "pomo", "guarda", "lamina", "contorno"]
+else:
+    # A maça, rodada 2: a cabeça pesada e redonda (a proporção entre cabeça e cabo e a massa arredondada vêm do
+    # placeholder antigo, sem a pintura dele), com cinco aletas curtas e bem separadas saindo do bulbo (a da ponta, duas
+    # nos lados, duas embaixo, junto do cabo); a luz acompanha o volume (o bulbo como uma esfera, a luz de cima e da
+    # esquerda, o brilho agrupado), sem a faixa clara atravessando a cabeça; o colar de aço, o cabo de freixo, a
+    # empunhadura de couro e o botão de latão.
+    from pixel_comum import LUZ
+    CU, R = 25.0, 4.25                                                          # o centro do bulbo (no eixo) e o raio
+    C = O + CU * D
+    botao = disco(1.0, 0.0, 1.4)
+    empunhadura = faixa_uv(2.0, 8.4, 1.05)
+    cabo = faixa_uv(8.4, 21.4, 0.95)
+    colar = faixa_uv(19.8, 21.6, 1.55)
+    bulbo = np.hypot(x32 - C[0], y32 - C[1]) <= R
+    ALETAS = [(1.0, 0.0), (0.42, -0.91), (0.42, 0.91), (-0.55, -0.83), (-0.55, 0.83)]   # as direções em (u, v)
+    aletas = np.zeros((N, N), bool); qual = np.full((N, N), -1)
+    for k, (du, dv) in enumerate(ALETAS):
+        n = np.hypot(du, dv); du, dv = du / n, dv / n
+        if N == 32:   # o 32 aprovado (87c12eb): o polígono que, na grade de 32, sai como um botão rombudo de ~2 px
+            a = poligono_uv([(CU + du * (R - 0.6) - dv * 1.25, dv * (R - 0.6) + du * 1.25),
+                             (CU + du * (R + 1.75) - dv * 0.95, dv * (R + 1.75) + du * 0.95),
+                             (CU + du * (R + 1.75) + dv * 0.95, dv * (R + 1.75) - du * 0.95),
+                             (CU + du * (R - 0.6) + dv * 1.25, dv * (R - 0.6) - du * 1.25)])
+        else:         # nos maiores, o mesmo botão rombudo (retangular, sem afilar), para manter o formato do 32
+            a = poligono_uv([(CU + du * (R - 0.6) - dv * 1.3, dv * (R - 0.6) + du * 1.3),
+                             (CU + du * (R + 2.0) - dv * 1.3, dv * (R + 2.0) + du * 1.3),
+                             (CU + du * (R + 2.0) + dv * 1.3, dv * (R + 2.0) - du * 1.3),
+                             (CU + du * (R - 0.6) + dv * 1.3, dv * (R - 0.6) - du * 1.3)])
+        qual = np.where(a & ~bulbo, k, qual); aletas |= a
+    aletas &= ~bulbo
+    cabeca = bulbo | aletas
+    if ETAPA == "silhueta":
+        pinta(botao | empunhadura | cabo | colar | cabeca, "f", 5, "cabeca")
+    else:
+        pinta(cabo, "m", np.where(V < -0.2, 6, np.where(V < 0.4, 5, 3)), "cabo")
+        volta = ((U * 1.0 + V * 0.6) % 1.6) < 0.55
+        pinta(empunhadura, "k", np.where(V < 0, 5, 3), "empunhadura")
+        pinta(empunhadura & volta, "k", 2, "empunhadura"); fixo[empunhadura & volta] = True
+        pinta(botao, "o", np.where(V + (U - 1.0) < -0.4, 6, 4), "empunhadura")
+        pinta(colar, "f", np.where(V < 0, 6, 3), "cabeca")
+        # o bulbo como esfera: o tom pela normal e pela luz, em faixas largas; o brilho agrupado em cima à esquerda
+        nx = (x32 - C[0]) / R; ny = (y32 - C[1]) / R; nz = np.sqrt(np.clip(1 - nx * nx - ny * ny, 0, 1))
+        li = nx * LUZ[0] + ny * LUZ[1] + nz * LUZ[2]
+        tb = np.select([li > 0.86, li > 0.62, li > 0.32, li > 0.0], [8, 6, 5, 4], 2)
+        pinta(bulbo, "f", tb, "cabeca")
+        # as aletas: cada uma no tom da direção para onde aponta (as de cima e da esquerda na luz), a beira de fora acesa
+        # nas de cima; a junção com o bulbo, uma linha escura
+        for k, (du, dv) in enumerate(ALETAS):
+            n = np.hypot(du, dv); dxy = (du * D + dv * Pp) / n
+            luz_a = dxy[0] * LUZ[0] + dxy[1] * LUZ[1]
+            ta = 7 if luz_a > 0.3 else (5 if luz_a > -0.2 else 3)
+            pinta(aletas & (qual == k), "f", ta, "cabeca")
+        juncao = aletas & (np.hypot(x32 - C[0], y32 - C[1]) <= R + (0.75 if N == 32 else 0.6 + 0.5 / K))   # 1 px escuro na base
+        pinta(juncao, "f", 2, "cabeca")
+    camadas = ["cabo", "empunhadura", "cabeca", "contorno"]
+
+if ETAPA == "final":
+    tom = limpar(mat, tom, fixo)
+mat[:, -1] = ""; mat[-1, :] = ""; mat[:, 0] = ""; mat[0, :] = ""
+if PECA == "espada" and N == 32:
+    # A ponta no 32, desenhada pixel a pixel (a terceira tentativa; ver o LEIA-ME do lote). Na grade de 32 a fórmula dos
+    # gumes deixava o fio claro terminar uma linha antes do vértice e o último pixel escuro (a "tampa" que corta a
+    # lâmina). Aqui, como na espada de aço da referência: o fio claro segue reto até o vértice, que é claro; o plano médio
+    # some primeiro e o escuro se estreita e acaba uma linha antes; o gume de baixo quase não avança nas últimas linhas,
+    # fechando contra o de cima. As linhas de 0 a 6 da lâmina são refeitas; o contorno vem da regra comum.
+    # a largura cai um pixel a cada duas linhas (5 no corpo, 4, 4, 3, 3, 2, 1): o gume de baixo avança meio pixel por
+    # linha enquanto o de cima segue reto, um fechamento longo como o da referência, sem dobrar a ponta para cima
+    PONTA = {6: {23: 8, 24: 8, 25: 5, 26: 3}, 5: {24: 8, 25: 8, 26: 5, 27: 3}, 4: {25: 8, 26: 8, 27: 3},
+             3: {26: 8, 27: 8, 28: 3}, 2: {27: 8, 28: 3}, 1: {28: 8}}
+    for yy in range(0, 7):
+        for xx in range(22, N):
+            if cam[yy, xx] == "lamina" or (ETAPA == "silhueta" and mat[yy, xx] == "f" and xx >= 23):
+                mat[yy, xx] = ""; cam[yy, xx] = ""
+    for yy, linha in PONTA.items():
+        for xx, t in linha.items():
+            mat[yy, xx] = "f"; tom[yy, xx] = t if ETAPA == "final" else 5; cam[yy, xx] = "lamina"
+contornar(mat)
+cam[mat == "c"] = "contorno"
+img = imagem(mat, tom, RAMPAS)
+pasta = SAIDA / str(N); pasta.mkdir(parents=True, exist_ok=True)
+img.save(pasta / f"{PECA}_{ETAPA}_{N}.png")
+if ETAPA == "final":
+    listas_camadas((img, cam), pasta / "listas", camadas)

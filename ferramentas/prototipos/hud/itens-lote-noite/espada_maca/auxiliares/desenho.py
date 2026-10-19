@@ -60,18 +60,18 @@ if PECA == "espada":
     # abaixo) e a aresta no meio; a guarda curta de latão, a empunhadura de couro com as voltas e o pomo de aço. As
     # proporções da referência: a lâmina em 2/3 do comprimento, a ponta no último quarto dela, a guarda com 1,6 vez a
     # largura da lâmina; a lâmina um pouco mais larga que a da referência, para ter presença no 32.
-    U0, U1, UP = 10.8, 36.8, 30.0                                               # o começo da lâmina, a ponta, o começo da ponta
+    U0, U1 = 10.8, 36.2                                                         # o começo da lâmina e o vértice
     ML = 1.75                                                                   # a meia largura da lâmina
-    VP = -0.45                                                                  # o vértice, um pouco acima do eixo
-    # a ponta, como na espada de aço da referência: o gume de cima segue quase reto até perto do fim e o de baixo sobe em
-    # curva para encontrá-lo; os dois convergem sem degrau até o vértice (sem a rampa reta que deixava uma agulha)
-    def gumes(u):
-        t = np.clip((np.asarray(u, float) - UP) / (U1 - UP), 0, 1)
-        return -ML + (ML + VP) * t ** 2.2, ML - (ML - VP) * t ** 1.15          # o de cima, o de baixo
+    LT = 4.6                                                                    # o comprimento do fechamento
+    # a ponta (a quarta forma, 19/10/2026): como na espada de aço da referência, os dois gumes convergem juntos, em linha
+    # reta, até o vértice no eixo da lâmina, num fechamento de cerca de duas vezes a meia largura; sem um gume reto e o
+    # outro avançando (que deslocava o vértice para um lado e fazia uma curva brusca no fim)
     def larg(u):
-        cima, baixo = gumes(u)
-        return (baixo - cima) / 2
-    us = np.linspace(U0, U1, 80)
+        return ML * np.clip((U1 - np.asarray(u, float)) / LT, 0, 1)
+    def gumes(u):
+        m = larg(u)
+        return -m, m                                                            # o de cima, o de baixo
+    us = np.concatenate([np.linspace(U0, U1 - LT, 20), np.linspace(U1 - LT, U1, 40)])
     lamina = poligono_uv([(u, gumes(u)[0]) for u in us] + [(u, gumes(u)[1]) for u in us[::-1]])
     guarda = poligono_uv([(8.6, -4.2), (10.6, -4.2), (10.6, 4.2), (8.6, 4.2)])
     empunhadura = faixa_uv(2.0, 8.8, 0.95)
@@ -81,14 +81,29 @@ if PECA == "espada":
     else:
         # os planos: o de cima (v < 0) claro, o gume de cima aceso; a aresta no meio; o de baixo um tom abaixo, o gume de
         # baixo na sombra; na ponta, os dois gumes acesos até o vértice
-        cima, baixo = gumes(np.clip(U, U0, U1)); meio = (cima + baixo) / 2   # os planos seguem os gumes até a ponta
-        tl = np.where(V < meio - 0.05, 6, 4)
-        tl = np.where(V < cima + 0.75, 8, tl)                                   # o gume de cima
-        tl = np.where(V > baixo - 0.7, 3, tl)                                   # o gume de baixo
-        tl = np.where((U > U1 - 1.2) & (V < VP + 0.6), 8, tl)                   # o vértice, aceso
+        # os planos e o fio seguem o fechamento: a posição através da lâmina, normalizada pela largura local (VS), recebe
+        # as mesmas regras do corpo (o fio de cima aceso, o plano médio, o de baixo na sombra); o vértice, aceso
+        VS = V * ML / np.maximum(larg(np.clip(U, U0, U1)), 1e-3)
+        tl = np.where(VS < -0.05, 6, 4)
+        tl = np.where(VS < -ML + 0.75, 8, tl)                                   # o gume de cima
+        tl = np.where(VS > ML - 0.7, 3, tl)                                     # o gume de baixo
+        tl = np.where(U > U1 - 1.1, 8, tl)                                      # o vértice, aceso
         pinta(lamina, "f", tl, "lamina")
-        aresta = lamina & (np.abs(V - meio - 0.05) * K < max(0.4 * K, 0.5)) & (U > U0 + 1.2) & (U < U1 - 1.8)
+        aresta = lamina & (np.abs(V - 0.05) * K < max(0.4 * K, 0.5)) & (U > U0 + 1.2) & (U < U1 - LT)
         pinta(aresta, "f", 5, "lamina"); fixo[aresta] = True                    # linha diagonal: a limpeza não mexe
+        # no fechamento, os tons pela posição de cada pixel na sua linha (a lâmina é diagonal: cada linha da grade é um
+        # corte dela, como o 8 8 5 3 3 do corpo): o fio claro junto do gume de cima até o vértice, o plano escuro junto do
+        # de baixo até a linha antes do vértice, o médio no meio quando cabe; o vértice, aceso
+        fecho = lamina & (U > U1 - LT - 0.4)
+        for yy in np.unique(np.nonzero(fecho)[0]):
+            xs = np.nonzero(lamina[yy])[0]
+            w = len(xs)
+            for i, xx in enumerate(xs):
+                if not fecho[yy, xx]:
+                    continue
+                q = (i + 0.5) / w
+                t = 8 if (w == 1 or q < 0.4) else (3 if q >= 0.6 else 5)
+                mat[yy, xx] = "f"; tom[yy, xx] = t; fixo[yy, xx] = True
         # a guarda de latão: a face de cima acesa, a de baixo na sombra; as pontas um tom acima
         pinta(guarda, "o", np.where(U < 9.6, 6, 3), "guarda")
         pinta(guarda & (np.abs(V) > 3.3), "o", np.where(V < 0, 7, 4), "guarda")
@@ -158,23 +173,6 @@ else:
 if ETAPA == "final":
     tom = limpar(mat, tom, fixo)
 mat[:, -1] = ""; mat[-1, :] = ""; mat[:, 0] = ""; mat[0, :] = ""
-if PECA == "espada" and N == 32:
-    # A ponta no 32, desenhada pixel a pixel (a terceira tentativa; ver o LEIA-ME do lote). Na grade de 32 a fórmula dos
-    # gumes deixava o fio claro terminar uma linha antes do vértice e o último pixel escuro (a "tampa" que corta a
-    # lâmina). Aqui, como na espada de aço da referência: o fio claro segue reto até o vértice, que é claro; o plano médio
-    # some primeiro e o escuro se estreita e acaba uma linha antes; o gume de baixo quase não avança nas últimas linhas,
-    # fechando contra o de cima. As linhas de 0 a 6 da lâmina são refeitas; o contorno vem da regra comum.
-    # a largura cai um pixel a cada duas linhas (5 no corpo, 4, 4, 3, 3, 2, 1): o gume de baixo avança meio pixel por
-    # linha enquanto o de cima segue reto, um fechamento longo como o da referência, sem dobrar a ponta para cima
-    PONTA = {6: {23: 8, 24: 8, 25: 5, 26: 3}, 5: {24: 8, 25: 8, 26: 5, 27: 3}, 4: {25: 8, 26: 8, 27: 3},
-             3: {26: 8, 27: 8, 28: 3}, 2: {27: 8, 28: 3}, 1: {28: 8}}
-    for yy in range(0, 7):
-        for xx in range(22, N):
-            if cam[yy, xx] == "lamina" or (ETAPA == "silhueta" and mat[yy, xx] == "f" and xx >= 23):
-                mat[yy, xx] = ""; cam[yy, xx] = ""
-    for yy, linha in PONTA.items():
-        for xx, t in linha.items():
-            mat[yy, xx] = "f"; tom[yy, xx] = t if ETAPA == "final" else 5; cam[yy, xx] = "lamina"
 contornar(mat)
 cam[mat == "c"] = "contorno"
 img = imagem(mat, tom, RAMPAS)

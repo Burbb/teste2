@@ -1885,3 +1885,52 @@ tamanhos) não mudou.
 O 40 e o 48 da espada esperam a aprovação desta ponta; quando vierem, o ajuste do 32 não se aplica a eles (o bloco
 `PONTA` é só da grade de 32), e a ponta deles terá de seguir o mesmo diagnóstico.
 
+### A ponta da espada, quarta forma (`espada_maca/`)
+
+**Pedido de Jean (19/10/2026):** a ponta do `3962b93` é válida, mas diferente da referência: o fechamento ficou
+deslocado para um lado, com uma mudança brusca de direção perto da extremidade. **Mudança de abordagem:** o pedido
+substitui as receitas anteriores (manter um gume reto e fazer só o outro avançar), que levaram a outro formato. O alvo
+é o fechamento visual da espada de aço de `espadasample.png`: os dois gumes convergindo de forma contínua para uma ponta
+alinhada com a direção da lâmina, sem exigir simetria perfeita pixel a pixel. Resolver primeiro a forma (a silhueta numa
+cor, com o eixo da lâmina numa camada auxiliar), depois o fio e os planos; conferir a espada inteira em tamanho real e
+a ponta ampliada; o resto da espada e a maça intocados.
+
+**A medição (antes de desenhar):**
+- **O eixo:** no 32, o miolo da lâmina vai de `x = 29 − y` a `33 − y` em cada linha; o eixo passa em `x = 31 − y`
+  (nas coordenadas das bordas, `x + y = 32`).
+- **O desvio do vértice em relação ao eixo** (através da lâmina): a referência, −0,7 px no 64 (menos de meio pixel no
+  32, quase no eixo); a agulha, 0; a rombuda, −0,35; a terceira (`3962b93`), **−1,06 px no 32**: era o deslocamento que
+  o Jean viu.
+- **O perfil dos gumes da referência no fim:** os dois andam juntos em direção ao eixo, em linha quase reta, por um
+  comprimento de cerca de **duas vezes a meia largura** da lâmina (no 64, cerca de 7 px), o de baixo um pouco mais
+  rápido só no último pixel. Um fechamento curto e simétrico, nem o longo nem o de um lado só.
+
+**A solução (no `auxiliares/desenho.py`; o bloco `PONTA` da terceira tentativa saiu):**
+- **A forma:** a lâmina é a faixa em torno do eixo, e no fechamento a meia largura cai em linha reta até zero no
+  vértice, igual dos dois lados (`larg(u) = ML · (U1 − u) / LT`). Um estudo fora do script variou o comprimento do
+  fechamento: com 3,5 a ponta acabava em 2 px (truncada); com 4,2 e 5, num pixel sobre o eixo; com um perfil curvo,
+  arredondava. No script, uma varredura do comprimento (`LT`) e do vértice (`U1`) procurou as combinações que terminam
+  num pixel sobre o eixo e cujas larguras descem sem degrau. Ficaram duas famílias, ambas com o vértice uma linha
+  antes do da terceira tentativa (o Jean permitiu encurtar): **o fechamento curto** (larguras 1, 3, 4, 5; `LT` 3,6 a
+  4,2), que deixava um degrau de 3 px no gume de cima perto do fim, e **o fechamento longo** (1, 2, 4, 4, 5; `LT` 4,4 a
+  5,4). **Escolhido: o longo, `U1 = 36,2`, `LT = 4,6`.**
+- **O fio e os planos:** no fechamento, os tons pela posição de cada pixel na sua linha (a lâmina é diagonal, e cada
+  linha da grade é um corte dela, como o `8 8 5 3 3` do corpo): o fio claro junto do gume de cima até o vértice, o plano
+  escuro junto do de baixo até a linha antes do vértice, o médio no meio quando cabe; o vértice no tom 8. Na primeira
+  passada, os tons pela coordenada normalizada deixavam o plano escuro sumir três linhas antes e um tom intermediário
+  solto.
+
+**O Aseprite (pelo MCP):** a fonte `fontes/espada/espada-32.aseprite` repintada pelo `pintar.lua` (0 diferenças, 0 fora
+da tela); o composto do editor é igual ao PNG exportado e à prévia; o 64 é o 32 ×2; @2x exatos. O estudo da forma fica
+em `fontes/estudo/espada-32-eixo.aseprite`: a silhueta numa cor (camada `silhueta`) e o eixo da lâmina numa camada
+auxiliar (`eixo`), separado da fonte que se exporta. A maça (os quatro tamanhos) não mudou.
+
+**A prancha** (`espada-ponta4.png`): a referência × a anterior (`3962b93`) × a nova, a espada inteira em tamanho real
+sobre o carvão, a silhueta da ponta numa cor com o eixo marcado e o acabamento, ampliados sem suavização. As fotos das
+telas não foram repetidas nesta rodada.
+
+**O histórico das pontas:** `rodada2_ponta_antiga/` (a agulha), `rodada2_ponta_r2/` (a rombuda, `723cf8d`),
+`rodada2_ponta_r3/` (a terceira, `3962b93`, com o script daquela versão em `desenho_ponta_r3.py.txt`), `proposta/` (a
+quarta). Para a futura skill de espadas, depois de um resultado aprovado: medir o eixo e o desvio do vértice; fechar os
+dois gumes juntos; e tratar a forma (silhueta e eixo) separada da luz (o fio e os planos por linha).
+

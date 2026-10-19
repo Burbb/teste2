@@ -297,6 +297,37 @@ def espada_ponta3(nova=None):
                                   ("a ficha (32)", "ficha", (18, 362, 272, 472), "espada")],
               base / "espada-ponta3-no-jogo.png", ("ponta_nova", "ponta3"))
 
+def espada_ponta4(*novas):
+    """A ponta da espada, quarta forma: a referência × a anterior (3962b93) × a(s) nova(s): a espada inteira em tamanho
+    real sobre o carvão, a silhueta da ponta numa cor com o eixo da lâmina marcado (vermelho) e o acabamento, ampliados
+    sem suavização. novas: (rótulo, png) de cada candidata; sem argumento, a proposta."""
+    base = LOTE / "espada_maca"
+    ref = Image.open(RAIZ / "ferramentas/arte/referencias/espada/espadasample.png").convert("RGBA").crop((64, 0, 128, 64))
+    novas = novas or (("nova", base / "proposta/espada-32.png"),)
+    # o eixo de cada uma: a reta x + y = c (nas coordenadas das bordas dos pixels) no recorte da ponta
+    col = [("referência (64)", ref, (36, 0, 64, 28), 65.5 - 36)] +           [("anterior (3962b93)", Image.open(base / "rodada2_ponta_r3/proposta/espada-32.png").convert("RGBA"), (18, 0, 32, 14), 32 - 18)] +           [(r, Image.open(f).convert("RGBA"), (18, 0, 32, 14), 32 - 18) for r, f in novas]
+    W = 224
+    o = Image.new("RGB", (len(col) * (W + 10) + 10, 22 + 72 + 22 + W + 22 + W + 16), (245, 245, 245)); d = ImageDraw.Draw(o)
+    d.text((10, 4), "a espada inteira em tamanho real sobre o carvão (a referência: a espada de aço da direita de espadasample.png)", fill=(0, 0, 0), font=FONTE)
+    y1 = 22 + 72 + 4; d.text((10, y1), "a silhueta da ponta numa cor, com o eixo da lâmina (vermelho), ampliada sem suavização", fill=(0, 0, 0), font=FONTE)
+    y2 = y1 + 18 + W + 4; d.text((10, y2), "o acabamento (o fio e os planos do aço), ampliado sem suavização", fill=(0, 0, 0), font=FONTE)
+    for k, (rot, im, corte, eixo) in enumerate(col):
+        x = 10 + k * (W + 10)
+        f = Image.new("RGBA", (72, 72), (24, 24, 28, 255)); f.alpha_composite(im, ((72 - im.width) // 2, (72 - im.height) // 2))
+        o.paste(f.convert("RGB"), (x, 22)); d.text((x + 78, 50), rot, fill=(0, 0, 0), font=FONTE)
+        pc = im.crop(corte); z = W // pc.width
+        sil = Image.new("RGBA", pc.size, (0, 0, 0, 0)); spx = sil.load(); px = pc.load()
+        for yy in range(pc.height):
+            for xx in range(pc.width):
+                if px[xx, yy][3]:
+                    spx[xx, yy] = (20, 20, 24, 255) if sum(px[xx, yy][:3]) < 60 and px[xx, yy][:3] == (8, 8, 10) or (pc is not None and sum(px[xx, yy][:3]) < 30) else (150, 156, 166, 255)
+        for img, yy, marca in ((sil, y1 + 18, True), (pc, y2 + 18, False)):
+            g = Image.new("RGBA", (W, W), (24, 24, 28, 255)); g.alpha_composite(img.resize((pc.width * z, pc.height * z), Image.NEAREST))
+            if marca:
+                ImageDraw.Draw(g).line([(eixo * z, 0), (0, eixo * z)], fill=(230, 60, 60, 255), width=2)
+            o.paste(g.convert("RGB"), (x, yy))
+    saida = base / "espada-ponta4.png"; o.save(saida); print(saida)
+
 def sandalia_no_jogo():
     """A Sandália no jogo (1.142.0), em tamanho real: o saque, a ficha e o Inventário depois de "Equipar agora"."""
     pasta = LOTE / "sandalia_chapeu" / "capturas" / "integracao"
@@ -313,7 +344,7 @@ def sandalia_no_jogo():
 if __name__ == "__main__" and sys.argv[1] in ("antidoto_base", "frasco_vazio", "anel_referencia", "conjunto_mago", "sandalia_r2",
                                               "sandalia_no_jogo", "besta_diadema", "diadema_r2",
                                               "espada_maca", "espada_maca_r2", "espada_ponta",
-                                              "espada_ponta3"):
+                                              "espada_ponta3", "espada_ponta4"):
     globals()[sys.argv[1]](); sys.exit()
 if __name__ == "__main__":
     nome = sys.argv[1]; cfg = LOTES[nome]; base = LOTE / nome

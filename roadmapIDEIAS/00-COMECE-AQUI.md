@@ -4602,3 +4602,17 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   no saque, no Atacar e na ficha. A maça não mudou.
 - **Aguardando avaliação.** Nada integrado; a versão não mudou; nenhuma outra peça começou.
 
+### 19/10/2026 (data do computador local) — A ponta da espada, quarta forma (proposta)
+
+- **Pedido de Jean:** a ponta do `3962b93` era válida, mas deslocada para um lado, com uma mudança brusca no fim.
+  Mudança de abordagem: os dois gumes convergindo de forma contínua para uma ponta alinhada com a lâmina, como na espada
+  de aço de `espadasample.png`; primeiro a forma, depois a luz.
+- **Medido:** o vértice da terceira estava cerca de 1 px fora do eixo no 32; o da referência, praticamente no eixo, com
+  um fechamento curto e simétrico (cerca de duas vezes a meia largura).
+- **Feito, só no protótipo** (`ferramentas/prototipos/hud/itens-lote-noite/espada_maca/`), **não aprovado**: a meia
+  largura caindo em linha reta, igual dos dois lados, até o vértice no eixo (o fechamento longo, larguras 1, 2, 4, 4,
+  5, escolhido entre as combinações sem degrau); o fio e os planos por linha; o 64 = 32 ×2. Estudo da silhueta com o
+  eixo numa camada auxiliar no Aseprite. A terceira tentativa guardada em `espada_maca/rodada2_ponta_r3/`.
+- **Prancha:** a referência × a anterior × a nova (tamanho real, silhueta com o eixo e acabamento). A maça não mudou.
+- **Aguardando avaliação.** Nada integrado; a versão não mudou; a skill de espadas fica para depois.
+
