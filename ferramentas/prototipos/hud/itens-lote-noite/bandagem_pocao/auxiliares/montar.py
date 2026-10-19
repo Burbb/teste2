@@ -41,6 +41,14 @@ LOTES = {
                 ("roda da luta: o comando Itens é a Poção (32)", "luta", (260, 20, 460, 215))],
         prancha=lambda P: [P / "bandagem-16.png", P / "bandagem-24.png", P / "bandagem-32.png", JOGO / "bandagem-32.png",
                            P / "pocao-16.png", P / "pocao-24.png", P / "pocao-32.png", JOGO / "pocao-32.png"]),
+    "tonico_antidoto": dict(
+        linhas=[("cartões do mercado (32)", "mercado-0", None), ("", "mercado-1", None),
+                ("espólio com os dois achados (32)", "espolio", None),
+                ("aviso de um Tônico ganho (16)", "aviso-tonico", None), ("aviso de um Antídoto ganho (16)", "aviso-antidoto", None),
+                ("chips no texto (16)", "chips", None)],
+        prancha=lambda P: [P / "tonico-16.png", P / "tonico-32.png", JOGO / "tonico-32.png",
+                           P / "antidoto-16.png", P / "antidoto-32.png", JOGO / "antidoto-32.png",
+                           LOTE / "bandagem_pocao" / "proposta" / "pocao-32.png"]),
 }
 
 if __name__ == "__main__":

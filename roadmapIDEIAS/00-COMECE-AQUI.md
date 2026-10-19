@@ -4257,3 +4257,12 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   - Fontes em camadas pelo `pintar.lua`, exportação conferida (o composto do editor pelo `soma.lua`), @2x exatos;
     fotos atual × proposta a 1920×945 e a prancha sobre o carvão.
 - **A decidir:** o comando Itens da roda da luta é a mesma imagem da poção; o frasco vazio do topo continua o sprite.
+
+### 19/10/2026 (data do computador local) — Lote da noite, 2: propostas do Tônico Restaurador e do Antídoto
+
+- **Feito, só no protótipo** (`ferramentas/prototipos/hud/itens-lote-noite/tonico_antidoto/`), **não aprovado**: a
+  mesma família de frascos da nova Poção de Vida, com silhueta e fechamento próprios:
+  - **o Tônico** (16, 32): a garrafa alta de paredes retas, a rolha larga, o líquido azul;
+  - **o Antídoto** (16, 32): o tubo estreito de fundo redondo, lacrado com cera de abelha, o líquido verde.
+- **A decidir:** os sprites de 16 (`pocao_azul`, `folha`) têm outros papéis (a Mana, a Agilidade): um 16 integrado
+  pede o papel pelo id do item.

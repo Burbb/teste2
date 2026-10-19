@@ -1289,3 +1289,31 @@ uso é o topo. Com eles, os quatro ícones das barras do topo estão em pixel ar
   (`bandagem_pocao/auxiliares/montar.py bandagem_pocao`).
 - **A decidir na avaliação:** o comando Itens da roda da luta muda junto com a poção (o papel é a mesma imagem); o
   frasco vazio do topo (sem poções) continua o sprite do jogo e pediria a sua variante, como a tocha apagada.
+
+## Lote da noite de 19/10, lote 2: o Tônico Restaurador e o Antídoto (`tonico_antidoto/`)
+
+**Proposta, nada no jogo, não aprovada.** A mesma família de frascos da nova Poção de Vida (`bandagem_pocao/`).
+
+- **Os dados e os usos, conferidos:** o **Tônico Restaurador** recupera metade da mana, do vigor ou do foco (o sprite
+  `pocao_azul`; o arquivo `tonico`, hoje em 32, 48, 64); o **Antídoto** cura veneno e vale na luta (o sprite `folha`;
+  o arquivo `antidoto`, 32, 48, 64). Os dois: 32 nos usos de consumível (o mercado, a bolsa, o espólio, o voo, as
+  escolhas) e 16 no chip, no aviso e nas escolhas. Os 48 e 64 atuais não aparecem parados. **Os sprites de 16 são
+  compartilhados:** o `pocao_azul` é também o ícone de custo da Mana (`RECURSO_ICONE`) e a Mana da celebração, e a
+  `folha` é a Agilidade da celebração e do Inventário. Um 16 integrado viria pelo id do item, não pelo nome do sprite.
+- **A família:** o perfil de revolução, o vidro, a luz e a leitura do nível do `frasco.py`; cada um com a sua silhueta
+  e o seu fechamento, não só a cor:
+  - **o Tônico:** a garrafa alta de paredes retas e ombros redondos, a rolha larga, o líquido azul (a cor que já o
+    identifica) quase cheio;
+  - **o Antídoto:** o frasco estreito em tubo, o fundo arredondado, o gargalo comprido e a boca lacrada com cera de
+    abelha que escorre pelo gargalo; o líquido verde (a cor de hoje). Nada de folha nem símbolo: o lacre é só o
+    fechamento. No 16, o tubo um pouco mais largo (com a largura do 32 o líquido ficaria com 1 px; a versão estreita
+    em `recusados/antidoto-16-estreito/`).
+- **As etapas:** listas pelo `bandagem_pocao/auxiliares/frasco.py tonico|antidoto <16|32>` (o gerador da família
+  ganhou a garrafa reta, o reflexo pela largura do vidro e o lacre de cera; a poção sai igual, pixel a pixel), pintura
+  no Aseprite pelo `pintar.lua` (0 diferentes, 0 fora da tela); fontes em `tonico_antidoto/fontes/tonico/` e
+  `antidoto/` (16 e 32); exportação pelo `exportar_aseprite.py --fontes=`; o composto do editor confere pelo
+  `soma.lua`; @2x exatos. A primeira pintura saiu com o antídoto nas duas peças (as listas das duas na mesma pasta);
+  refeita com uma pasta por variante.
+- **As fotos (1920×945, os mesmos dados):** `fotografar.mjs tonico_antidoto` (os cartões do mercado, o espólio com os
+  dois achados, o aviso e o chip de cada um); o `papel_sprite` aceita o sprite que serve um arquivo de outro nome. Folha
+  `tonico_antidoto/tonico_antidoto-no-jogo.png` e prancha `tonico_antidoto/prancha-carvao.png`.

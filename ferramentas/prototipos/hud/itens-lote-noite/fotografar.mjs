@@ -5,7 +5,7 @@
 //   PLAYWRIGHT_MODULO=<caminho>/index.mjs node ferramentas/prototipos/hud/itens-lote-noite/fotografar.mjs <peça>
 // peça: calca_couro | aljava | atributos | ataque_defesa | agilidade_poder | agilidade | aljava_ref | poder | doca_r2 | doca_r3 | doca_r3_luta | doca_r4 | doca_r4_telas | doca_r5 | doca
 //       | vida_mana | vigor_foco | vigor_foco_arqueiro | ouro_provisoes | moeda | tocha | tocha16 | tocha16_risco | tocha_apagada
-//       | bandagem_pocao | bandagem_pocao_luta
+//       | bandagem_pocao | bandagem_pocao_luta | tonico_antidoto
 import { spawn } from "child_process";
 import { readFileSync, existsSync, mkdirSync } from "fs";
 import { fileURLToPath } from "url";
@@ -117,6 +117,12 @@ const PECAS = {
   bandagem_pocao_luta: { pasta: "bandagem_pocao/proposta", saida: "bandagem_pocao/capturas", nomes: ["bandagem", "pocao"],
     cena: ["tutorial", { LUTA_APOS_ESCOLHA: "1", TUTORIAL: "0", VISTAS, CLASSE: "guerreiro", NIVEL: "8", ESPEC: "paladino", COMITIVA: "morel", LUTA: "lobo", QUANTOS: "3", NIVEL_LUTA: "7" }],
     fotos: ["luta"] },
+  // lote 2 (tonico_antidoto/): o Tônico Restaurador e o Antídoto. Os cartões do mercado e o espólio (32), o aviso e o
+  // chip de um item ganho (16: os sprites pocao_azul e folha, só nesta página; fora dela eles têm outros papéis)
+  tonico_antidoto: { pasta: "tonico_antidoto/proposta", saida: "tonico_antidoto/capturas", nomes: ["tonico", "antidoto"],
+    papel_sprite: { pocao_azul: { peca: "tonico", tamanhos: [16] }, folha: { peca: "antidoto", tamanhos: [16] } },
+    itens: [["tonico", "+1 Tônico Restaurador"], ["antidoto", "+1 Antídoto"]],
+    cena: ["mercado", { CLASSE: "guerreiro" }], fotos: ["mercado", "espolio-itens", "aviso-item", "chip-item"] },
 };
 const P = PECAS[peca];
 if (!P) throw new Error(`peça desconhecida: ${peca}`);
@@ -162,16 +168,17 @@ async function anexar(p) {
       r.fulfill({ response: res, body: js, headers: { ...res.headers(), "content-type": "application/javascript" } });
     });
   }
-  if (P.papel_sprite) {   // sprites do jogo sem papel em Icones ({sprite: tamanhos}): só nesta página, o desenho da
-    // proposta nos tamanhos que ela tem; nos outros, o sprite do jogo
+  if (P.papel_sprite) {   // sprites do jogo sem papel em Icones ({sprite: tamanhos} ou {sprite: {peca, tamanhos}}, quando o
+    // arquivo tem outro nome): só nesta página, o desenho da proposta nos tamanhos que ela tem; nos outros, o sprite
     await p.route(/\/static\/sprites\.js(\?|$)/, async (r) => {
       const res = await r.fetch();
       const js = (await res.text()) + `
 ;(() => { const orig = Sprites.img, T = ${JSON.stringify(P.papel_sprite)};
   Sprites.img = (nome, escala = 2, classe = "", o = {}) => {
-    const lado = 16 * escala;
-    if (!T[nome] || !T[nome].includes(lado)) return orig(nome, escala, classe, o);
-    const t = lado, f = "/static/hud/icones/" + nome + "-" + t;
+    const lado = 16 * escala, d = T[nome];
+    const peca = d && !Array.isArray(d) ? d.peca : nome, tam = d && (Array.isArray(d) ? d : d.tamanhos);
+    if (!d || !tam.includes(lado)) return orig(nome, escala, classe, o);
+    const t = lado, f = "/static/hud/icones/" + peca + "-" + t;
     return '<img class="sprite desenho ' + classe + '" src="' + f + '.png" srcset="' + f + '@2x.png 2x" width="' + lado + '" height="' + lado + '" style="--s:' + lado + '" alt="" draggable="false">';
   }; })();`;
       r.fulfill({ response: res, body: js, headers: { ...res.headers(), "content-type": "application/javascript" } });
@@ -292,6 +299,14 @@ for (const modo of (process.env.SO_ATUAL ? ["atual"] : process.env.SO_PROPOSTA ?
         await espera(1500);
         await p.screenshot({ path: nome("chip"), clip: await clipDe("#texto .chip.item", 10) });
         (await desenhos()).forEach((d) => visto.add(d));
+      }
+      if (f === "espolio-itens") {  // o espólio com os itens achados (32)
+        p.evaluate((itens) => { Telas.celebrar({ tipo: "espolio", dados: { itens: itens.map(([id, t]) => ({ id, nome: t.replace(/^\+1 /, ""), qtd: 1 })) } }, false); }, P.itens);
+        await espera(3000);
+        await p.screenshot({ path: nome("espolio"), clip: await clipDe("#celebracao .festa-espolio", 10) });
+        (await desenhos()).forEach((d) => visto.add(d));
+        const c = await p.$("#celebracao .continuar"); if (c) await c.click();
+        await espera(1200);
       }
       if (f === "aviso-item") {   // numa tela (o mercado), cada item ganho vira o aviso flutuante perto do clique
         for (const [id, texto] of P.itens) {
