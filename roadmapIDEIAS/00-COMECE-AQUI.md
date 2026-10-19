@@ -4762,3 +4762,15 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   conferem; @2x exatos. Fotos no Inventário (40) e no "você usa" do saque (48) a 1920×945.
 - **Aguardando avaliação.** O elmo não foi integrado; a versão continua 1.146.0.
 
+### 19/10/2026 (data do computador local) — A manopla e as perneiras (proposta do 32)
+
+- **Feito, só no protótipo** (`ferramentas/prototipos/hud/itens-lote-noite/manopla_perneiras/`), **não aprovado**: a
+  manopla de placas (uma só, pelas costas da mão: dedos articulados, polegar, placa dos nós, punho em lâminas) pela
+  referência de `referencias/Luvas/`; as perneiras como placas de ferro (rodada 2: a placa do meio, coxote com a ponta do
+  quadril, joelheira, greva; o arco), pela imagem que o Jean mandou depois de recusar a 1.ª passada ("muito calça").
+  32 e 64 (= 32 ×2); fontes pelo `pintar.lua`; composto, exportação e prévia conferem; @2x exatos.
+- **Referências versionadas:** `referencias/Luvas/` e `referencias/calça/` (esta marcada como inadequada para armadura
+  de ferro, por decisão do Jean).
+- **Folhas:** a família em tamanho real e a ficha e o saque a 1920×945.
+- **Aguardando avaliação.** Nada integrado; a versão continua 1.146.0. Botas, martelo e variantes não começaram.
+

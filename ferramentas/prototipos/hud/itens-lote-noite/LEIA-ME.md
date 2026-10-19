@@ -2185,3 +2185,54 @@ exportados e à prévia; @2x exatos. O 32 e o 64 da proposta não mudaram.
 usa" em 48), atual × tamanhos, em `elmo-tamanhos-no-jogo.png`; a prancha `prancha-carvao.png` com o elmo e a cota nos
 quatro tamanhos. Sem erro no console.
 
+### A manopla e as perneiras, o remake do ferro, 3 (`manopla_perneiras/`)
+
+**Pedido de Jean (19/10/2026):** o próximo par, só propostas: confirmar bases, únicos, tamanhos e compartilhamentos (os
+espaços vazios também); abrir as referências (a pasta `calça`, examinada, versionada se usada); uma principal de
+construção por peça; a família de materiais e acabamento do elmo, da cota, do escudo e das armas aprovados, sem
+obrigação de seguir os placeholders. A manopla: uma luva de armadura reconhecível, com volume, polegar, dedos articulados
+e o punho bem separado; a forma antes das divisões e dos rebites. As perneiras: proteção de pernas com volume,
+articulações e sobreposições coerentes, sem virar uma calça recolorida. Vazias. Só o 32 e o 64 (= 32 ×2).
+
+**Os usos (nada muda nesta entrega):**
+- `manopla`: a base Manopla do Guerreiro (nenhum único; os raros, como "Fome Negra (Manopla de Ferro)", usam o desenho
+  da base) e a silhueta das mãos vazias de todas as classes (`VAZIO`). A habilidade Grito de Guerra usa o sprite
+  `manopla` do jogo noutro papel e fica com ele. O desenho de reserva das mãos sem base (`ICONE_ESPACO`) é a luva de
+  couro, não a manopla.
+- `perneiras` (o desenho `calca` nos dados): a Perneira e a Greva do Guerreiro (nenhum único), a silhueta das pernas
+  vazias (`VAZIO`) e o desenho de reserva das pernas (`ICONE_ESPACO`: `calca`).
+- Tamanhos no jogo: 32 (ficha, mochila), 40 (Inventário), 48 ("você usa" do saque), 64 (cartão do saque).
+
+**As referências** (os papéis no `LEIA-ME.md` de cada pasta, agora versionadas):
+- **A manopla:** principal, o par de manoplas de placas de aço de `referencias/Luvas/tQXl+6.png` (a caixa `(534, 148, 594,
+  202)`): os dedos em segmentos, a placa dos nós, a placa da mão abaulada, o polegar de lado, o punho em lâminas que
+  abrem. Uma só manopla, de pé e pelas costas da mão, como as luvas da família.
+- **As perneiras:** a 1.ª passada usou a calça de placas de `referencias/calça/jA2fex.png` (a caixa `(421, 554, 465,
+  619)`) e saiu como uma calça: cinto, faltas e pernas com corpo de pano. **Jean recusou** ("ta muito calça... é uma
+  armadura de ferro"), mandou na conversa uma imagem de perneiras de placas e pediu para esquecer a pasta `calça` para
+  isso. A 1.ª passada está guardada em `manopla_perneiras/perneiras_r1/` (o script e a prévia).
+
+**O desenho** (`auxiliares/desenho.py`, as medidas no quadro de 32):
+- **A manopla:** os quatro dedos de 2 px com 1 px de vão (o do meio o mais comprido), cada um um cilindro aceso à
+  esquerda, com duas juntas escuras e a ponta na luz; o polegar saindo da beira esquerda na altura da mão, em dois
+  segmentos; a placa dos nós com a beira de cima acesa e a sombra sobre a mão; a placa da mão pela luz da esfera; o
+  pulso estreito na sombra; o punho em duas lâminas que abrem (a beira de cima acesa, a sombra da lâmina de cima sobre a
+  de baixo, a barra virando). Sem rebites. Camadas: punho, mao, dedos, contorno. Na bancada: os dedos de 2,6 de largura
+  colavam (o vão não pegava pixel), o punho em sino largo e o polegar levantado faziam um troféu; a luz do `cilindro`
+  saía da direita (o sinal trocado) e foi corrigida.
+- **As perneiras (rodada 2):** uma placa no meio, no alto, ligando as pernas; cada perna uma cadeia de placas abauladas,
+  uma sobre a outra (o coxote alongado com a ponta do quadril para cima e para fora, a joelheira mais larga e saliente,
+  a greva mais fina e comprida, o tornozelo abrindo um pouco), cada uma pela luz da esfera com a beira de baixo escura
+  sobre a seguinte; os entalhes entre as placas na silhueta; o vão aberto desde o alto (o arco). Sem cinto, sem couro.
+  A perna da direita um tom abaixo. Camadas: grevas, joelhos, coxotes, centro, contorno.
+
+**O Aseprite (pelo MCP):** as listas do 32 pintadas pelo `pintar.lua` em documentos novos (0 diferenças, 0 fora da
+tela), em `fontes/<peça>/<peça>-32.aseprite`; o composto do editor é igual aos PNGs exportados e à prévia; o 64 é o 32
+×2; @2x exatos. (O Aseprite tinha fechado no meio da entrega; reaberto, o conector voltou.)
+
+**As folhas:** `manopla_perneiras-familia.png` (em tamanho real sobre o carvão ao lado do elmo, da cota, da espada, da
+maça e do escudo; o 64; as duas e a 1.ª passada das perneiras ampliadas 8×); `manopla_perneiras-no-jogo.png` (a ficha
+com as duas vestidas e o saque de cada uma, atual × proposta, a 1920×945; `fotografar.mjs manopla_perneiras` e
+`manopla_perneiras_saque_perneiras`). O "você usa" em 48 ainda vem do 32 ×2 reduzido pela página (sem o 48 na proposta).
+Sem erro no console.
+
