@@ -4062,3 +4062,14 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   sem borrar). A 1920×945, o centro da porta fica a 1,5 px do centro da palavra (antes, 5,5 px); a seta continua
   dentro do botão, e o botão, o texto e o clique ficaram com as mesmas medidas. Comparados 2, 3 e 4 px na doca real;
   antes e depois em `ferramentas/prototipos/hud/itens-lote-noite/doca_r5/sair-alinhado.png`.
+
+### 18/10/2026 (data do computador local) — O Vigor refeito: o punho cerrado (proposta)
+
+- **Pedido de Jean:** o punho de `1a1dae3` lia como mão aberta; refazer no Aseprite, primeiro o punho sem fogo
+  (dedos dobrados num volume compacto, os nós, o polegar pela frente, o pulso), depois o fogo como elemento
+  secundário. O Foco fica como está; nada nos símbolos integrados.
+- **Feito, só no protótipo** (`ferramentas/prototipos/hud/itens-lote-noite/vigor_foco/`): o punho de frente pela
+  palma, num bloco mais largo que alto, com o polegar deitado na frente; o fogo como uma labareda atrás do lado
+  direito (as versões com fogo dos dois lados ou em volta do topo voltavam a parecer uma cabeça). A proposta anterior
+  está em `vigor_foco/recusados/vigor-punho-r1/`; o antes e o depois no topo do Guerreiro, as etapas e os quatro
+  símbolos em `vigor_foco/vigor-punho-r2.png`. Nada no jogo.

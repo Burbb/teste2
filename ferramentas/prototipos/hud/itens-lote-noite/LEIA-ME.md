@@ -1029,3 +1029,33 @@ números, cores funcionais, regras e animações ficam como estão. O custo das 
 - **As fotos (1920×945):** `fotografar.mjs vigor_foco` (Guerreiro, o Vigor) e `vigor_foco_arqueiro` (Arqueiro, o
   Foco). `vigor_foco/vigor-foco-topo.png` junta os topos atual e proposto em tamanho real, a ampliação 6× e os quatro
   símbolos juntos sobre o fundo da HUD.
+
+### O Vigor, rodada 2: o punho cerrado refeito no Aseprite
+
+O punho de `1a1dae3` foi recusado: lia como mão aberta, com os dedos levantados (as quatro barras verticais). Refeito
+no Aseprite pelo MCP, da construção aos retoques, com o punho resolvido antes do fogo; o Foco ficou como estava.
+
+- **A referência de construção:** o punho cerrado de frente pela palma (o ✊): os quatro dedos dobrados num bloco
+  mais largo que alto, os nós em degrau (o médio mais alto, o mínimo mais baixo), as dobras entre eles só em sombra
+  e curtas, a dobra escura onde os dedos entram, o polegar deitado atravessando pela frente, com a ponta separada
+  das pontas dos dedos, a palma e o pulso mais estreito.
+- **As etapas, no mesmo `.aseprite`:** a construção numa cor só com o contorno (conferida em 20); as partes em
+  camadas com a luz de cima e da esquerda (pulso, dedos, polegar, dobras, contorno); um retoque na ponta do polegar;
+  o fogo numa camada embaixo de tudo. Duas tentativas de fogo foram descartadas por voltarem a ler como cabeça: as
+  línguas nos dois cantos de cima (orelhas) e a chama em volta do topo (cabelo, com os nós virando sobrancelhas). O
+  punho desceu 2 px (o pulso ficou com 4 linhas) e foi 2 px para a esquerda; o fogo ficou como **uma labareda só,
+  atrás do lado direito**, mais alta que o punho, laranja do vigor e mais quente junto da mão: secundária, sem
+  cobrir a mão nem sair das pontas dos dedos.
+- **A fonte:** `vigor_foco/fontes/vital-vigor/vital-vigor-20.aseprite` (camadas chama, pulso, dedos, polegar,
+  dobras, contorno). A proposta anterior está em `vigor_foco/recusados/vigor-punho-r1/` (fonte, PNGs, auxiliar e a
+  foto do topo).
+- **As operações:** *cálculos fora do editor:* `vigor_foco/auxiliares/punho/` (`grade.py`, que passa uma grade de
+  letras para as listas por camada; `e1_construcao.py`, `e2_partes.py` e `e3_chama.py`, as três etapas, rodadas na
+  própria pasta e nessa ordem; `ver.py`, a captura do editor em 1× e 10×); *Lua pelo `execute_script`:* o documento,
+  as camadas, a pintura pelo `pintar.lua` (cada pixel relido; 0 diferentes, 0 fora da tela), a limpeza das cels ao
+  refazer uma etapa e o `saveAs`; *ferramentas do conector:* a captura do editor a cada etapa.
+- **A exportação:** `exportar_aseprite.py vital-vigor ... --fontes=...`; o composto é igual à captura do editor e às
+  listas das camadas, e o @2x é a duplicação exata.
+- **As fotos:** `ROTULO=punho-r2 SO_PROPOSTA=1 JANELAS=1920x945 node .../fotografar.mjs vigor_foco` (o Guerreiro).
+  `vigor_foco/vigor-punho-r2.png`: o topo no jogo, o antes e o depois em tamanho real e 6×, as etapas no Aseprite e
+  os quatro símbolos juntos.
