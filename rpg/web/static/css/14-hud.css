@@ -195,6 +195,9 @@
 :root body #doca .atalho.atual { color: var(--latao-claro); background: rgba(201, 161, 74, 0.09); }
 :root body #doca .atalho.atual::after { left: 18%; right: 18%; bottom: 0; height: 2px; background: var(--latao-claro); }
 :root body #doca .atalho:focus-visible { outline-offset: -3px; }
+/* O Sair: a porta fica à esquerda do quadro e a seta sai para a direita; o desenho anda 4 px para a porta ficar
+   sobre a palavra (alinhamento óptico). Deslocamento inteiro e relativo: o botão, a caixa e o clique não mudam. */
+:root body #doca .atalho[data-rotulo="Sair"] .atalho-icone img { position: relative; left: 4px; }
 :root body #doca .doca-sep { display: block; width: 2px; margin: 8px 3px; background: var(--fio-escuro); box-shadow: 1px 0 0 var(--fio-claro); }
 @media (max-width: 1280px) {
   :root body #doca .atalho, :root body #doca .atalho + .atalho { width: 76px; }

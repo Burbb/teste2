@@ -4045,3 +4045,12 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   - os quatro arquivos do jogo são idênticos, byte a byte, aos aprovados, e o exportador os reproduz;
   - o único uso é o topo (`Icones.vital`, 20 px); barras, preenchimentos, números, posição, regras e animações não
     mudaram.
+
+### 18/10/2026 (data do computador local) — O Sair alinhado na doca (1.130.1)
+
+- **Pedido de Jean:** a porta do Sair parecia deslocada para a esquerda da palavra; alinhar o ícone opticamente, sem
+  mudar desenho, tamanho, texto, espaço do botão nem área de clique.
+- **Feito:** em `css/14-hud.css`, o desenho do Sair anda 4 px para a direita (`position: relative; left: 4px`, inteiro,
+  sem borrar). A 1920×945, o centro da porta fica a 1,5 px do centro da palavra (antes, 5,5 px); a seta continua
+  dentro do botão, e o botão, o texto e o clique ficaram com as mesmas medidas. Comparados 2, 3 e 4 px na doca real;
+  antes e depois em `ferramentas/prototipos/hud/itens-lote-noite/doca_r5/sair-alinhado.png`.

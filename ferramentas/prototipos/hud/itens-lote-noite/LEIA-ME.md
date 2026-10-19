@@ -990,3 +990,9 @@ conferência da gota.
 O coração de `a914f18` e a gota de `f02566d`, sem retoque. As fontes foram para `ferramentas/arte/aseprite/vital-vida/`
 e `vital-mana/`; os quatro arquivos do jogo (20 e @2x) são idênticos, byte a byte, aos aprovados, e o exportador os
 reproduz (`--conferir`). Os papéis em `Icones` (`VITAL`) não mudaram; o único uso é o topo.
+
+### O Sair alinhado (1.130.1)
+
+O desenho não mudou: o ícone anda 4 px para a direita na doca (CSS), para a porta ficar sobre a palavra; a seta sai
+para a direita sem tirar a porta do centro. `doca_r5/sair-alinhado.png`: a doca antes e depois em tamanho real e a
+ampliação 4×.
