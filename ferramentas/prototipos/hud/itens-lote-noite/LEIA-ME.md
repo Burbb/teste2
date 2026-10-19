@@ -1081,3 +1081,10 @@ polegar, o pulso e a luz, pixel a pixel); só saiu a labareda e o punho voltou p
   fotografado de novo no Arqueiro e é o mesmo, pixel a pixel, da apresentação anterior. `vigor_foco/vigor-punho-r3.png`
   junta o topo do Guerreiro (no jogo, com fogo, sem fogo), o do Arqueiro (no jogo e com o Foco), a ampliação 6× e os
   quatro símbolos juntos.
+
+### Integrados: o Vigor e o Foco (1.131.0)
+
+O punho sem fogo de `4eea5b6` e o alvo de `1a1dae3`, sem retoque. As fontes foram para
+`ferramentas/arte/aseprite/vital-vigor/` e `vital-foco/`; os quatro arquivos do jogo (20 e @2x) são idênticos, byte a
+byte, aos aprovados, e o exportador os reproduz (`--conferir`). Os papéis em `Icones` (`VITAL`) não mudaram; o único
+uso é o topo. Com eles, os quatro ícones das barras do topo estão em pixel art.

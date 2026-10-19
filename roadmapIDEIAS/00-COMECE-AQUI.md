@@ -4083,3 +4083,14 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   fechou com o contorno; a mão é a mesma, pixel a pixel. A versão com fogo está em `recusados/vigor-punho-r2-fogo/`.
   Fotos no topo do Guerreiro e do Arqueiro a 1920×945 e os quatro símbolos em `vigor_foco/vigor-punho-r3.png`. Nada
   no jogo.
+
+### 18/10/2026 (data do computador local) — O Vigor e o Foco no jogo (1.131.0): os quatro recursos do topo
+
+- **Pedido de Jean:** integrar o Vigor (o punho sem fogo, `4eea5b6`) e o Foco (o alvo verde, `1a1dae3`) sem retoque, e
+  parar depois desta integração.
+- **A integração:**
+  - as fontes foram para `ferramentas/arte/aseprite/vital-vigor/` e `vital-foco/`;
+  - os quatro arquivos do jogo são idênticos, byte a byte, aos aprovados, e o exportador os reproduz;
+  - o único uso é o topo (`Icones.vital`, 20 px); o custo das habilidades continua com os sprites do jogo, e barras,
+    números, posições, áreas de interação e regras não mudaram;
+  - os quatro ícones das barras do topo (Vida, Mana, Vigor, Foco) estão em pixel art.

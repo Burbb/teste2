@@ -21,6 +21,8 @@ nada daqui: só os PNGs exportados para `rpg/web/static/hud/icones/`.
 | atalho-inventario (o Inventário da doca) | `atalho-inventario/atalho-inventario-36.aseprite`, `-32` | rolo, bolsos, corpo, aba, cinta, fivela, contorno | 1.124.0 |
 | vital-vida (a Vida do topo) | `vital-vida/vital-vida-20.aseprite` | coracao, brilho, contorno | 1.130.0 |
 | vital-mana (a Mana do topo) | `vital-mana/vital-mana-20.aseprite` | gota, brilho, contorno | 1.130.0 |
+| vital-vigor (o Vigor do topo) | `vital-vigor/vital-vigor-20.aseprite` | pulso, dedos, polegar, dobras, contorno | 1.131.0 |
+| vital-foco (o Foco do topo) | `vital-foco/vital-foco-20.aseprite` | anel, marcas, centro, contorno | 1.131.0 |
 | atalho-salvar (o Salvar da doca) | `atalho-salvar/atalho-salvar-36.aseprite`, `-32` | tampa, corpo, latao, seta, contorno | 1.129.0 |
 | atalho-sair (o Sair da doca) | `atalho-sair/atalho-sair-36.aseprite`, `-32` | arco, passagem, seta, contorno | 1.129.0 |
 | atalho-bestiario (o Bestiário da doca) | `atalho-bestiario/atalho-bestiario-36.aseprite`, `-32` | chifres, cranio, contorno | 1.128.0 |
@@ -207,3 +209,14 @@ O coração (`a914f18`) e a gota sem o miolo aceso (`f02566d`) foram aprovados p
 - **O uso:** só o topo, em 20 (`Icones.vital`); não há outro tamanho.
 - **Conferido:** os quatro arquivos exportados das fontes são idênticos, byte a byte, aos aprovados.
 - **Os auxiliares** que geraram as listas por camada ficam em `vida_mana/auxiliares/` (`vida.py`, `mana.py`).
+
+## O Vigor e o Foco do topo (1.131.0): os quatro recursos concluídos
+
+O punho cerrado sem fogo (`4eea5b6`) e o alvo verde (`1a1dae3`, reapresentado sem mudança no `4eea5b6`) foram
+aprovados pelo Jean (`ferramentas/prototipos/hud/itens-lote-noite/vigor_foco/`; as rodadas recusadas em
+`vigor_foco/recusados/`).
+- **O uso:** só o topo, em 20 (`Icones.vital`); não há outro tamanho.
+- **Conferido:** os quatro arquivos exportados das fontes são idênticos, byte a byte, aos aprovados.
+- **Os auxiliares** que geraram as listas por camada ficam em `vigor_foco/auxiliares/` (`punho/`: `e2_partes.py` e
+  depois `e3_sem_fogo.py`; `foco.py`).
+- **Com eles,** os quatro ícones das barras do topo (Vida, Mana, Vigor, Foco) estão em pixel art.
