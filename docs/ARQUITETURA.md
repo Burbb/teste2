@@ -420,9 +420,7 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   papel (o item que voa ao equipar, o selo de atributo, o consumível que cai na bolsa). Lacunas (desenho do jogo no
   lugar, sem trocar por desenho de outro tipo de item): as peças sem desenho (o chapéu de couro, que
   usa o capuz por ora, o Chapéu Pontudo, o Diadema, a calça de tecido, a sandália), os
-  itens únicos com desenho próprio, a tocha apagada, a bolsa vazia e o frasco vazio no topo, a moeda dos
-  preços, do espólio, dos ganhos, do prêmio do contrato e das moedas que voam (o sprite `moeda`; o seu ouro no topo e
-  no balcão já é pixel art), os inimigos e as cartas deles, os
+  itens únicos com desenho próprio, a tocha apagada, a bolsa vazia e o frasco vazio no topo, os inimigos e as cartas deles, os
   ícones de habilidade e de efeito, o covil vencido. O mercador da banca tem o busto no balcão (`telas/mercado.js`,
   com as cores da figura da banca).
 - A Calça de Couro do Arqueiro (1.119.0): desenho próprio do conjunto de couro, para todas as calças de couro dele
@@ -453,7 +451,13 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   "Provisões (1 dia)" do mercado (`Icones.porDesenho`), no lugar do @2x do 24 reduzido. Sem comida, o topo continua com
   o osso. Desde a 1.133.0, o seu ouro no balcão do mercado e dos serviços (ferreiro, curandeira, templo, taverna;
   `.ouro-loja`) é a mesma pilha em 32 (`Icones.ouro`, fonte `moedas-32.aseprite`, a construção do 24 na grade de 32);
-  o sprite `moedas` do jogo e a moeda dos preços (`moeda`) ficam como estão.
+  o sprite `moedas` do jogo fica como está.
+- A moeda avulsa (1.134.0, `ferramentas/arte/aseprite/moeda/`, 16 e 32; `Icones.moeda`), a que acompanha preços e
+  ganhos, distinta da pilha do saldo: os preços do mercado e dos serviços, a linha "Custo", a dica de venda e
+  recompra, o prêmio do contrato, os ganhos do pagamento de contratos, o chip e o aviso de ouro e as moedas que voam
+  até o topo (16); a linha de Ouro do espólio e a moeda que o ladrão leva na luta (32). Onde a tela só tem o nome do
+  desenho (o chip, o aviso, os ganhos, a linha "Custo", o projétil), `"moeda"` vai para o `Icones.moeda`; o sprite
+  `moeda` do jogo continua no resto.
 - O escudo e o Unguento de Prata (1.94.0), o machado e a Bomba de Fumaça (1.99.0) o arco (1.101.0,
   `desenhar_arco_pixel.py`; o Atacar da roda, o Tiro Duplo e o contrato continuam com o sprite) e o cajado (1.106.0,
   `desenhar_cajado_pixel.py`; o Atacar do Mago na roda e o traço Conjurador continuam com o sprite) e o orbe (1.107.0,

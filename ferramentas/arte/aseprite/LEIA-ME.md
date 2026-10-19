@@ -25,6 +25,7 @@ nada daqui: só os PNGs exportados para `rpg/web/static/hud/icones/`.
 | vital-foco (o Foco do topo) | `vital-foco/vital-foco-20.aseprite` | anel, marcas, centro, contorno | 1.131.0 |
 | moedas (o Ouro do topo e do balcão) | `moedas/moedas-24.aseprite`, `-32` | pilha, topo, moeda, contorno | 1.132.0 (o 32, 1.133.0) |
 | provisoes (as Provisões do topo e do mercado) | `provisoes/provisoes-24.aseprite`, `-32` | carne, osso, contorno | 1.132.0 |
+| moeda (a moeda avulsa dos preços e dos ganhos) | `moeda/moeda-16.aseprite`, `-32` | espessura, beira, anel, face, contorno | 1.134.0 |
 | atalho-salvar (o Salvar da doca) | `atalho-salvar/atalho-salvar-36.aseprite`, `-32` | tampa, corpo, latao, seta, contorno | 1.129.0 |
 | atalho-sair (o Sair da doca) | `atalho-sair/atalho-sair-36.aseprite`, `-32` | arco, passagem, seta, contorno | 1.129.0 |
 | atalho-bestiario (o Bestiário da doca) | `atalho-bestiario/atalho-bestiario-36.aseprite`, `-32` | chifres, cranio, contorno | 1.128.0 |
@@ -240,3 +241,13 @@ A pilha de moedas e o pernil sem barbantes foram aprovados pelo Jean no `33d8a6c
 - **Conferido:** os seis arquivos exportados das fontes são idênticos, byte a byte, aos aprovados, e
   `exportar_aseprite.py moedas|provisoes --conferir` os reproduz.
 - **Os auxiliares** que geraram as listas por camada ficam em `ouro_provisoes/auxiliares/` (`ouro.py`, `pernil.py`).
+
+## A moeda avulsa (1.134.0)
+
+A moeda de frente, com a espessura embaixo à direita, foi aprovada pelo Jean no `c00d0cf`, nos dois tamanhos
+(`ferramentas/prototipos/hud/itens-lote-noite/moeda_tocha/`).
+- **Os usos:** em 16, os preços, os custos, o prêmio e os ganhos dos contratos, o chip e o aviso de ouro e as moedas
+  que voam até o topo; em 32, o espólio e a moeda que o ladrão leva. A pilha do saldo (`moedas`) não muda.
+- **Conferido:** os quatro arquivos exportados das fontes são idênticos, byte a byte, aos aprovados, e
+  `exportar_aseprite.py moeda --conferir` os reproduz.
+- **Os auxiliares** que geraram as listas por camada ficam em `moeda_tocha/auxiliares/` (`moeda.py <16|32>`).

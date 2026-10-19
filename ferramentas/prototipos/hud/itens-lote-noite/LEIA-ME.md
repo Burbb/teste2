@@ -1181,3 +1181,10 @@ uso é o topo. Com eles, os quatro ícones das barras do topo estão em pixel ar
   Integrar a moeda pede um papel novo em `Icones` e trocar o `S("moeda", …)` dos lugares acima, sem tocar no sprite
   (o mapa e as cenas não o usam). A tocha apagada do topo e o chip "tocha" do relatório (o sprite 16×16) ficam com o
   do jogo.
+- **A moeda integrada na 1.134.0, sem retoque** (aprovada no `c00d0cf`): as fontes foram para
+  `ferramentas/arte/aseprite/moeda/`; os quatro arquivos do jogo são idênticos, byte a byte, aos da proposta. O papel é
+  o `Icones.moeda`. As fotos com os arquivos de produção a 1920×945 (`moeda_tocha/capturas/moeda/no-jogo-1.134.0-*`, o
+  roteiro com `SO_ATUAL=1`): nos preços, no ferreiro, no chip, no espólio, no pagamento de contrato e no mural, os
+  pixels da moeda são os mesmos da proposta. O ladrão, que faltava: uma luta contra bandidos até um roubar
+  (`moeda_tocha/auxiliares/ladrao.mjs`); as seis moedas que voam até ele são o `moeda-32.png`
+  (`no-jogo-1.134.0-1920x945-ladrao.png`), com o mesmo movimento.

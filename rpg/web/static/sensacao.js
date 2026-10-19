@@ -384,7 +384,7 @@ const Sensacao = (() => {
     caixa.innerHTML = `<div class="festa festa-espolio">
       <div class="rotulo-festa">${esc(d.titulo || "espólio")}</div>${pilha}
       ${d.frase ? `<p class="espolio-frase">${esc(d.frase)}</p>` : ""}
-      ${d.ouro ? `<div class="espolio-linha ouro">${S("moeda", 2)}<span class="nome">Ouro</span><b>+<span class="conta">0</span></b></div>` : ""}
+      ${d.ouro ? `<div class="espolio-linha ouro">${Icones.moeda(32) || S("moeda", 2)}<span class="nome">Ouro</span><b>+<span class="conta">0</span></b></div>` : ""}
       ${d.xp ? `<div class="espolio-xp${d.ouro ? " esperando" : ""}">
         <div class="espolio-linha xp">${S("estrela", 2)}<span class="nome">Experiência</span><b>+<span class="conta">0</span> <small>XP</small></b></div>
         <div class="espolio-nivel"><span>Nível <b>${d.nivel}</b></span><div class="espolio-barra"><i></i></div>

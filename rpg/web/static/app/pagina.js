@@ -338,7 +338,7 @@ function aviso(texto, tipo, icone, chave) {
   // Frase longa (o carinho no animal, um acontecimento na fogueira) quebra em linhas e fica o tempo de ler.
   const longo = String(texto).length > 60;
   const dura = longo ? Math.min(9000, Math.max(3500, 1500 + String(texto).length * 55)) : 2400;
-  const a = el("div", `aviso-flutuante ${tipo || "info"}${longo ? " longo" : ""}`, (icone ? spr(icone, 1) : "") + `<span>${esc(texto)}</span>`);
+  const a = el("div", `aviso-flutuante ${tipo || "info"}${longo ? " longo" : ""}`, (icone ? (icone === "moeda" && Icones.moeda()) || spr(icone, 1) : "") + `<span>${esc(texto)}</span>`);
   a.style.setProperty("--dura", dura + "ms");
   a._nasceu = performance.now();
   document.body.appendChild(a);
@@ -395,7 +395,7 @@ async function efeito(m) {
   }
   let linha = textoEl.lastElementChild;
   if (!linha || !linha.classList.contains("chips") || linha.classList.contains("passado")) linha = anexar(el("div", "chips"));
-  const chip = linha.appendChild(el("span", `chip ${m.tipo || "info"}`, (Icones.cabeca(iconeChip(m), 16) || spr(iconeChip(m), 1)) + esc(m.texto)));
+  const chip = linha.appendChild(el("span", `chip ${m.tipo || "info"}`, (Icones.cabeca(iconeChip(m), 16) || (iconeChip(m) === "moeda" && Icones.moeda()) || spr(iconeChip(m), 1)) + esc(m.texto)));
   rolarFim();
   // Ouro ganho num evento (o baú aberto, a recompensa): o chip fica no texto e as moedas voam até o ouro do topo,
   // sem parar a cena (a festa de tela cheia fica para o que é raro: atributo para sempre, nível, Sigilo).

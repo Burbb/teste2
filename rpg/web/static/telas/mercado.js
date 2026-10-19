@@ -28,14 +28,14 @@
       <span class="merc-nome">${h(c.nome)}</span>
       <span class="merc-contas"><span class="merc-bolsa${cheio ? " cheio" : ""}">Na bolsa: <b>${tem}</b></span><span class="merc-estoque${c.estoque ? "" : " esgotado"}">Estoque: <b>${c.estoque}</b></span></span>
       ${c.motivo ? motivoHtml(c.motivo) : `<span class="merc-acao"><span class="qtd-ctrl"><button type="button" data-q="-1" aria-label="menos ${h(c.nome)}">−</button><b aria-label="quantidade">${q}</b><button type="button" data-q="1" aria-label="mais ${h(c.nome)}">+</button></span>
-        <span class="merc-total" title="Preço total">${S("moeda", 1)}<span class="total">${c.preco * q}</span></span></span>`}</div>`;
+        <span class="merc-total" title="Preço total">${Icones.moeda() || S("moeda", 1)}<span class="total">${c.preco * q}</span></span></span>`}</div>`;
   }
 
   function equipamento(it, i) {
     return `<button type="button" class="mercadoria equip${it.motivo ? " caro" : ""}" data-comprar-item="${i}" ${dicaItem(it, it.motivo ? h(it.motivo) : "Clique para comprar. Se o espaço do corpo estiver vazio, você já sai vestindo.")}>
       <span class="slot-px r-${h(it.raridade)}">${Icones.item(iconeItem(it)) || S(iconeItem(it), 2)}</span>
       <span class="merc-nome r-${h(it.raridade)}">${h(it.nome)}</span><span class="merc-bonus">${h(it.bonus)}</span>
-      ${it.motivo ? motivoHtml(it.motivo) : `<span class="preco">${S("moeda", 1)}${it.preco}</span>`}</button>`;
+      ${it.motivo ? motivoHtml(it.motivo) : `<span class="preco">${Icones.moeda() || S("moeda", 1)}${it.preco}</span>`}</button>`;
   }
 
   // Vender: a mochila como no inventário, uma grade com todos os espaços (os vazios também, apagados e fora do Tab).
@@ -75,7 +75,7 @@
   }
   const espacoDa = (n) => (arranjo || []).find((e) => e && e.n === n);
   function paraVender(it, e) {
-    const venda = `<div class="preco-venda">${S("moeda", 1)} O mercador paga <b>${it.preco}</b></div>` +
+    const venda = `<div class="preco-venda">${Icones.moeda() || S("moeda", 1)} O mercador paga <b>${it.preco}</b></div>` +
       `Clique: vender${it.usavel ? " · botão direito: equipar" : " · não é para a sua classe"}`;
     return `<div role="button" tabindex="0" class="slot-px celula r-${h(it.raridade)}${it.usavel ? "" : " inutil"}" draggable="true" data-mochila-loja="${e.i}" data-peca="${e.n}"
         aria-label="Vender ${h(it.nome)} por ${it.preco} de ouro" ${dicaItem(it, venda)}>${Icones.item(iconeItem(it)) || S(iconeItem(it), 2)}<span class="preco-canto">${it.preco}</span></div>`;
@@ -91,7 +91,7 @@
   function recompra(d) {
     if (!(d.recompra || []).length) return "";
     const itens = d.recompra.map((it, i) => `<div role="button" tabindex="0" class="slot-px celula r-${h(it.raridade)}${it.motivo ? " caro" : ""}" data-recomprar="${i}"
-        aria-label="Recomprar ${h(it.nome)} por ${it.preco} de ouro" ${dicaItem(it, `<div class="preco-venda">${S("moeda", 1)} Recomprar por <b>${it.preco}</b></div>${it.motivo ? h(it.motivo) : "Clique para desfazer a venda."}`)}>${Icones.item(iconeItem(it)) || S(iconeItem(it), 2)}<span class="preco-canto">${it.preco}</span></div>`).join("");
+        aria-label="Recomprar ${h(it.nome)} por ${it.preco} de ouro" ${dicaItem(it, `<div class="preco-venda">${Icones.moeda() || S("moeda", 1)} Recomprar por <b>${it.preco}</b></div>${it.motivo ? h(it.motivo) : "Clique para desfazer a venda."}`)}>${Icones.item(iconeItem(it)) || S(iconeItem(it), 2)}<span class="preco-canto">${it.preco}</span></div>`).join("");
     return `<section class="loja-recompra" aria-label="Recomprar"><h5>Recomprar</h5><div class="mochila-grade mochila-loja recompra">${itens}</div></section>`;
   }
 

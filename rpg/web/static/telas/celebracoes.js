@@ -335,7 +335,7 @@
     const atraso = 0.5 + d.contratos.length * 0.35;
     const ganhos = [[d.ouro, "moeda", "ouro", "ouro"], [d.xp, "estrela", "XP", ""], [d.reputacao, "coroa", "reputação", "rep"]]
       .filter(([v]) => v > 0)
-      .map(([v, ic, nome, cls], i) => `<span class="ganho ${cls}" style="animation-delay:${atraso + i * 0.15}s">${S(ic, 1)}+${v} ${nome}</span>`).join("");
+      .map(([v, ic, nome, cls], i) => `<span class="ganho ${cls}" style="animation-delay:${atraso + i * 0.15}s">${(ic === "moeda" && Icones.moeda()) || S(ic, 1)}+${v} ${nome}</span>`).join("");
     caixa.innerHTML = `<div class="festa festa-contratos m-janela">
       <div class="rotulo-festa">${um ? "contrato cumprido" : `${d.contratos.length} contratos cumpridos`}</div>
       <div class="cartazes-pagos">${cartazes}</div>

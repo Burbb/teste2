@@ -82,7 +82,7 @@
       <div class="contrato-titulo">${h(titulo)}</div>
       <div class="contrato-desc">${h(c.desc)}</div>
       <div class="contrato-lugar">${lugar}</div>${progresso}
-      <div class="contrato-premio"><span>${S("moeda", 1)} ${c.ouro}</span><span>${S("estrela", 1)} ${c.xp} XP</span></div>
+      <div class="contrato-premio"><span>${Icones.moeda() || S("moeda", 1)} ${c.ouro}</span><span>${S("estrela", 1)} ${c.xp} XP</span></div>
       ${botao}</div>`;
   }
   let contratosVistos = null;  // os contratos que você já tinha: o recém-aceito chega pregado com destaque

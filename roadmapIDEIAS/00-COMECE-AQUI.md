@@ -4151,3 +4151,17 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
     `tocha-no-jogo.png`) e a prancha sobre o carvão.
 - **Limitações:** a moeda não tem papel em `Icones` (a página da proposta o recebe só nas fotos); a moeda do ladrão na
   luta não foi fotografada; a tocha proposta é mais leve que a atual no topo (ponto a avaliar).
+
+### 18/10/2026 (data do computador local) — A moeda avulsa no jogo (1.134.0)
+
+- **Pedido de Jean:** integrar a moeda avulsa do `c00d0cf` (16 e 32) sem retoque, com papel próprio no catálogo, nos
+  usos mapeados; a pilha do saldo continua igual.
+- **A integração:**
+  - as fontes foram para `ferramentas/arte/aseprite/moeda/`; os quatro arquivos do jogo são idênticos, byte a byte, aos
+    aprovados, e o exportador os reproduz;
+  - o papel `Icones.moeda`: em 16, os preços do mercado e dos serviços, a linha "Custo", a dica de venda e recompra, o
+    prêmio dos cartazes, os ganhos do pagamento de contratos, o chip e o aviso de ouro e as moedas que voam até o
+    topo; em 32, o espólio e a moeda que o ladrão leva na luta. Valores, medidas e animações não mudaram;
+  - conferido a 1920×945 com os arquivos de produção: a moeda sai com os mesmos pixels da proposta nos lugares
+    fotografados, e o roubo do bandido leva seis `moeda-32.png` no voo de sempre.
+- **Dinheiro ainda com o desenho do jogo:** nenhum uso de tela conhecido (o saldo é a pilha, o resto é a moeda avulsa).

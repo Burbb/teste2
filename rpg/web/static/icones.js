@@ -32,7 +32,7 @@ const Icones = (() => {
     "lugar-cidadela": [32, 40], "lugar-floresta": [32, 40], "lugar-montanha": [32, 40], "lugar-pantano": [32, 40],
     "lugar-planicie": [32, 40], "lugar-ruinas": [32, 40], "lugar-vila": [32, 40], "maca": [32, 40, 48, 64],
     "machado": [32, 40, 48, 64],
-    "manopla": [32, 40, 48, 64], "moedas": [24, 32], "osso": [24], "perneiras": [32, 40, 48, 64], "pocao": [24, 32, 48, 64],
+    "manopla": [32, 40, 48, 64], "moeda": [16, 32], "moedas": [24, 32], "osso": [24], "perneiras": [32, 40, 48, 64], "pocao": [24, 32, 48, 64],
     "provisoes": [24, 32], "tocha": [24, 32, 48, 64], "tonico": [32, 48, 64], "unguento": [32, 64],
     "vital-foco": [20], "vital-mana": [20], "vital-vida": [20], "vital-vigor": [20]};
 
@@ -170,8 +170,12 @@ const Icones = (() => {
     atributo: (nome, lado = 24) => img(ATRIBUTO[nome], lado),
     recurso: (sprite, lado = 24) => img(RECURSO[sprite], lado),
     /** O seu ouro no balcão do mercado e dos serviços (.ouro-loja): a pilha de moedas do topo, em 32. Só esse papel: o
-     *  sprite "moedas" do jogo e a moeda dos preços (S("moeda", 1)) ficam como estão. */
+     *  sprite "moedas" do jogo fica como está, e a moeda dos preços é a avulsa (Icones.moeda). */
     ouro: (lado = 32) => img("moedas", lado),
+    /** A moeda avulsa (1.134.0), a que acompanha preços e ganhos: os preços, os custos, o prêmio do contrato, os ganhos,
+     *  o chip de ouro, o espólio (32), a moeda que o ladrão leva e as que voam até o topo. Só esse papel: o sprite
+     *  "moeda" do jogo fica para o resto, e a pilha do saldo é o ouro (acima). */
+    moeda: (lado = 16, classe = "") => img("moeda", lado, classe),
     vital: (recurso, lado = 20) => img(VITAL[recurso], lado),
     atalho: (nome, lado = 36) => img(ATALHO[nome], lado),
     lugar: (sprite, lado = 32) => img(LUGAR[sprite], lado),

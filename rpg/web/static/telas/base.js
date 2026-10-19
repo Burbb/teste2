@@ -58,7 +58,7 @@ const Telas = new Proxy({}, {
     for (let i = 0; i < 10; i++) {
       const m = document.createElement("span");
       m.className = "moeda-voando";
-      m.innerHTML = S("moeda", 1);
+      m.innerHTML = Icones.moeda() || S("moeda", 1);
       m.style.left = a.left + a.width / 2 + (Math.random() - 0.5) * 40 + "px";
       m.style.top = a.top + a.height / 2 + "px";
       document.body.appendChild(m);

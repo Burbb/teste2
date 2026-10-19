@@ -410,7 +410,7 @@ const Batalha = (() => {
     const ang = sprite === "flecha" ? Math.atan2(y1 - y0, x1 - x0) * 180 / Math.PI + 45 : 0;
     const p = document.createElement("div");
     p.className = "projetil" + (sprite === "flecha" ? "" : " brilhante");
-    p.innerHTML = S(sprite, 2);
+    p.innerHTML = (sprite === "moeda" && Icones.moeda(32)) || S(sprite, 2);
     camadaFx.appendChild(p);
     const quadros = [{ transform: `translate(${x0}px, ${y0}px) rotate(${ang}deg) scale(0.6)` },
       { transform: `translate(${(x0 + x1) / 2}px, ${(y0 + y1) / 2 - 14}px) rotate(${ang}deg) scale(1.1)` },
