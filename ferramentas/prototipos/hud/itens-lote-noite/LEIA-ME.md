@@ -1188,3 +1188,21 @@ uso é o topo. Com eles, os quatro ícones das barras do topo estão em pixel ar
   pixels da moeda são os mesmos da proposta. O ladrão, que faltava: uma luta contra bandidos até um roubar
   (`moeda_tocha/auxiliares/ladrao.mjs`); as seis moedas que voam até ele são o `moeda-32.png`
   (`no-jogo-1.134.0-1920x945-ladrao.png`), com o mesmo movimento.
+- **A tocha, rodada 2: só a chama refinada (proposta, nada no jogo).** O cabo, o pano, a paleta e o tamanho no topo
+  ficaram aprovados; o Jean pediu a chama sem a faixa horizontal larga (sobretudo no 32), com línguas de alturas e
+  curvas desiguais e a passagem do miolo claro menos quadrada, sem halo. O Jean gostou também da rodada 1: as duas
+  ficam para comparar.
+  - **O que mudou:** o calor da gota principal segue o eixo curvo da língua (mais forte perto do eixo e embaixo, perto
+    do pano), em vez de anéis em volta de um ponto: os tons sobem em línguas, sem atravessar a chama na mesma altura,
+    e o miolo claro vira uma gota alongada. A ponta principal em S virando à esquerda; a língua da esquerda alta e
+    abrindo para fora; a da direita curta. Onde as línguas cruzam a principal, vale a principal (sem pontos escuros
+    por dentro). O fogo continua saindo da beira de cima do pano.
+  - **No Aseprite pelo MCP:** nas fontes `moeda_tocha/fontes/tocha/tocha-24.aseprite` e `-32`, as cels de `chama` e
+    `contorno` saíram e foram repintadas pelo `pintar.lua` (0 diferentes, 0 fora da tela); `cabo` e `pano` não foram
+    tocados (as listas são as mesmas da rodada 1). Listas pelo `auxiliares/tocha.py <24|32>` (agora a rodada 2).
+  - **Conferido:** os compostos exportados são iguais à captura do editor e às listas; os @2x exatos.
+  - **A rodada 1 guardada inteira** em `moeda_tocha/tocha_r1/` (as fontes, os PNGs, as fotos, a folha e o script
+    `tocha_r1.py`).
+  - **As fotos (1920×945, os mesmos dados):** `ROTULO=rodada2 node .../fotografar.mjs tocha` e
+    `SO_PROPOSTA=1 ROTULO=rodada1 PASTA=moeda_tocha/tocha_r1/proposta ...`; a folha `moeda_tocha/tocha-no-jogo.png`
+    (o jogo, a rodada 1, a rodada 2: o topo, o cartão do mercado e a bolsa) e a prancha `prancha-carvao.png`.

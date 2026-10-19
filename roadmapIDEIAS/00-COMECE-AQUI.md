@@ -4165,3 +4165,14 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   - conferido a 1920×945 com os arquivos de produção: a moeda sai com os mesmos pixels da proposta nos lugares
     fotografados, e o roubo do bandido leva seis `moeda-32.png` no voo de sempre.
 - **Dinheiro ainda com o desenho do jogo:** nenhum uso de tela conhecido (o saldo é a pilha, o resto é a moeda avulsa).
+
+### 19/10/2026 (data do computador local) — A tocha, rodada 2: a chama refinada (proposta)
+
+- **Pedido de Jean:** refinar só a chama da tocha (o cabo, o pano e a presença no topo aprovados): sem a faixa
+  horizontal larga, línguas desiguais, o miolo menos quadrado, sem halo; guardar a rodada 1, de que ele também gostou,
+  para comparar e decidir.
+- **Feito, só no protótipo** (`moeda_tocha/`), nada no jogo: o calor segue o eixo curvo de cada língua; a ponta em S,
+  a língua da esquerda alta e aberta, a da direita curta. As fontes repintadas no Aseprite pelo MCP só nas camadas
+  `chama` e `contorno`; a rodada 1 inteira em `moeda_tocha/tocha_r1/`.
+- **Fotos:** o jogo, a rodada 1 e a rodada 2 no topo, no cartão do mercado e na bolsa, a 1920×945 com os mesmos dados
+  (`moeda_tocha/tocha-no-jogo.png`), e a prancha sobre o carvão.

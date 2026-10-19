@@ -1,6 +1,9 @@
 # a tocha (24 e 32): a tocha simples de aventureiro. O cabo de madeira em diagonal (de baixo à esquerda para cima à
 # direita), a cabeça de pano enrolado e encerado na ponta (as voltas do pano em faixas) e a chama subindo reta, em
 # línguas, mais quente no miolo. A mesma construção nos dois tamanhos (as medidas em frações do quadro).
+# Rodada 2 (a chama refinada; o cabo e o pano aprovados não mudam; a rodada 1 em tocha_r1/): o calor segue o eixo
+# curvo de cada língua, em vez de anéis em volta de um ponto (sem a faixa larga e sem o miolo quadrado), e as línguas
+# têm alturas e curvas desiguais.
 # Uso: python tocha.py <24|32> [silhueta]. Grava as listas por camada (tocha_<camada>_<N>.lua) e a prévia.
 import sys, math
 from PIL import Image
@@ -36,24 +39,23 @@ for y in range(N):
             if abs(v) > CABO_W: continue
             if ETAPA == "silhueta": pinta(x, y, "m3", "cabo"); continue
             pinta(x, y, "m4" if v < -0.35 * CABO_W else "m3" if v < 0.45 * CABO_W else "m2", "cabo")
-# a chama: uma gota que sobe reta do alto da cabeça (a base redonda, a ponta ondulando) e duas línguas soltas dos lados;
-# o miolo quente embaixo, perto do pano, e as bordas de cima escurecendo para o vermelho
-BX, BY = F(15.7), F(8.9)                                     # o meio da base redonda
-def gota(px, py, bx, by, r, alto, ondula):
+# a chama: uma gota que sobe do alto da cabeça (a base redonda, a ponta em S) e duas línguas soltas, a da esquerda alta
+# e curvada para fora, a da direita curta; o calor é mais forte perto do eixo de cada língua e embaixo, perto do pano
+BX, BY = F(15.7), F(8.9)                                      # o meio da base redonda
+def gota(px, py, bx, by, r, alto, ondula, voltas):
     """(distância normalizada ao eixo, altura de 0 na base a 1 na ponta) ou None fora."""
     if py >= by:
         d = math.hypot((px - bx) / r, (py - by) / (r * 0.9))
         return (d, 0.0) if d <= 1 else None
     t = (by - py) / alto
     if t > 1: return None
-    cx = bx + ondula * math.sin(t * math.pi * 0.9)
+    cx = bx + ondula * math.sin(t * math.pi * voltas)
     meia = r * (1 - t) ** 1.05
     d = abs(px - cx) / meia if meia > 0 else 9
     return (d, t) if d <= 1 else None
-GOTAS = [(BX, BY, F(4.1), F(8.2), F(-1.0)),                   # a principal, a ponta virando um pouco à esquerda
-         (BX - F(3.0), BY - F(2.0), F(1.4), F(3.8), F(-0.5)),   # a língua da esquerda
-         (BX + F(2.7), BY - F(2.6), F(1.2), F(3.4), F(0.5))]    # a da direita
-NUCLEO = (BX - F(0.3), BY + F(0.2))
+GOTAS = [(BX, BY, F(4.1), F(8.6), F(-1.3), 1.15),             # a principal, a ponta em S virando à esquerda
+         (BX - F(3.1), BY - F(1.5), F(1.4), F(5.0), F(-1.2), 0.6),   # a língua da esquerda: alta, abrindo para fora
+         (BX + F(2.8), BY - F(2.2), F(1.15), F(2.6), F(0.7), 0.5)]   # a da direita: curta
 for y in range(N):
     for x in range(N):
         px, py = x + 0.5, y + 0.5
@@ -63,12 +65,13 @@ for y in range(N):
             dx, dy = px - A[0], py - A[1]
             if (dx * ux + dy * uy) / L < 0.88: continue          # o pano fica na frente; só a beira de cima queima
         if ETAPA == "silhueta": pinta(x, y, "f3", "chama"); continue
-        i, (d, t) = min(dentro, key=lambda e: e[1][1])
-        if i == 0:
-            e = math.hypot((px - NUCLEO[0]) / F(2.1), (py - NUCLEO[1]) / F(3.3))
-            c = "f6" if e < 0.45 else "f5" if e < 0.85 else "f4" if e < 1.25 else "f3" if e < 1.8 else "f2" if e < 2.6 else "f1"
+        i, (d, t) = dentro[0]                                 # a principal prevalece onde as línguas a cruzam
+        if i == 0:                                            # o calor pelo eixo da língua, mais forte embaixo
+            h = (1 - d) ** 0.9 * (1.05 - 0.95 * t)
+            c = "f6" if h > 0.66 else "f5" if h > 0.47 else "f4" if h > 0.3 else "f3" if h > 0.16 else "f2" if h > 0.06 else "f1"
         else:
-            c = "f4" if t < 0.2 else "f3" if t < 0.55 else "f2"
+            h = (1 - d) * (1 - t)
+            c = "f4" if h > 0.5 else "f3" if h > 0.22 else "f2"
         pinta(x, y, c, "chama")
 chama = {k for k, v in cam.items() if v == "chama"}
 for (x, y) in list(chama):                                    # a beira de cima e dos lados: um tom mais escuro
