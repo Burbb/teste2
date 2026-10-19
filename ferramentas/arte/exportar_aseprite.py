@@ -56,6 +56,8 @@ DERIVADOS = {
     "attr-poder": {64: (32, 2)},     # 1.123.0: o Poder (a chama violeta); o 64 do selo é o 32 ×2
     "calca_tecido": {64: (32, 2)},   # 1.138.0: a Calça de Viagem e o Manto do Mago (32, 40, 48 das fontes); o 64 é o 32 ×2
     "manto": {64: (32, 2)},
+    "anel": {64: (32, 2)},           # 1.140.0: o anel (a rodada 3) e o amuleto (a gema violeta); o 64 é o 32 ×2
+    "amuleto": {64: (32, 2)},
 }
 
 

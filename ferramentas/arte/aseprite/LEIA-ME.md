@@ -32,6 +32,8 @@ nada daqui: só os PNGs exportados para `rpg/web/static/hud/icones/`.
 | tonico (o Tônico Restaurador) | `tonico/tonico-16.aseprite`, `-32` | vidro, liquido, rolha, brilho, contorno | 1.138.0 |
 | calca_tecido (a Calça de Viagem do Mago) | `calca_tecido/calca_tecido-32.aseprite`, `-40`, `-48`; **o 64 é o 32 ampliado 2×** | pernas, dobras, barra, cintura, cordao, contorno | 1.138.0 |
 | manto (o Manto do Mago, também Túnica, Veste Rúnica e Manto de Cinzas) | `manto/manto-32.aseprite`, `-40`, `-48`; **o 64 é o 32 ampliado 2×** | mangas, corpo, forro, gola, debrum, faixa, fecho, contorno | 1.138.0 |
+| anel (o anel: Anel, Sinete, Aro e o Anel do Último Rei; o vazio) | `anel/anel-32.aseprite`, `-40`, `-48`; **o 64 é o 32 ampliado 2×** | dentro, fora, gravacao, borda, brilho, contorno | 1.140.0 |
+| amuleto (o amuleto: Amuleto, Talismã, Pingente e Medalhão; o vazio) | `amuleto/amuleto-32.aseprite`, `-40`, `-48`; **o 64 é o 32 ampliado 2×** | cordao, argola, engaste, pedra, brilho, contorno | 1.140.0 |
 | antidoto (o Antídoto) | `antidoto/antidoto-16.aseprite`, `-32` | vidro, liquido, rolha, brilho, contorno | 1.139.0 |
 | frasco_vazio (o topo sem poções) | `frasco_vazio/frasco_vazio-24.aseprite` | vidro, rolha, brilho, contorno | 1.139.0 |
 | tocha_apagada (o topo sem tochas e o risco "Sem luz") | `tocha_apagada/tocha_apagada-16.aseprite`, `-24` | cabo, pano, queimado, contorno, fumaca | 1.136.0 |
@@ -303,3 +305,16 @@ O Antídoto com a base plana e o frasco vazio foram aprovados pelo Jean no `b872
 - **Conferido:** os seis arquivos exportados das fontes são idênticos, byte a byte, aos aprovados, e o `--conferir` os
   reproduz.
 - **Os auxiliares:** `bandagem_pocao/auxiliares/frasco.py antidoto|frasco_vazio <N>`.
+
+## O anel e o amuleto (1.140.0)
+
+O anel da rodada 3 (com o ziguezague gravado) e o amuleto violeta da rodada 2 foram aprovados pelo Jean no `9ae59a9`
+(`ferramentas/prototipos/hud/itens-lote-noite/anel_amuleto/`; a alternativa lisa do anel em `rodada3_liso/` e as rodadas
+recusadas em `rodada1/` e `rodada2/` ficam como histórico).
+- **Os usos:** o anel para o Anel, o Sinete, o Aro e o Anel do Último Rei; o amuleto para o Amuleto, o Talismã, o
+  Pingente e o Medalhão; os espaços vazios com as mesmas imagens, apagadas. 32, 40, 48 e o 64 = 32 ×2 (`DERIVADOS`).
+- **Conferido:** os 16 arquivos exportados das fontes são idênticos, byte a byte, aos aprovados, e o `--conferir` os
+  reproduz; os dois saíram sozinhos da conferência da família de ferro (fonte no Aseprite).
+- **Os auxiliares:** `anel_amuleto/auxiliares/aro.py <N>` (o anel: o aro como um cilindro curto; `ajuste_aro.py`, a
+  busca do ângulo pela referência principal) e `joias.py amuleto <N>`. As referências permanentes:
+  `ferramentas/arte/referencias/aneis/`.

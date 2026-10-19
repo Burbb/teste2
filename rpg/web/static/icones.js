@@ -37,8 +37,10 @@ const Icones = (() => {
     "vital-foco": [20], "vital-mana": [20], "vital-vida": [20], "vital-vigor": [20]};
 
   // Cada desenho vai para o tipo de ferro que o jogo já tem (elmo, armadura, manopla, calca = perneira, bota_ferro, maca);
-  // couro sem desenho (a calça de couro) e as outras peças sem desenho ficam com o do jogo. O anel tem
-  // uma pérola branca: não lembra nenhuma cor de raridade. O martelo é desenhado em código (desenhos.js).
+  // couro sem desenho (a calça de couro) e as outras peças sem desenho ficam com o do jogo. O anel (1.140.0, o aro de
+  // ouro em pé com o ziguezague gravado) vale para o Anel, o Sinete, o Aro e o Anel do Último Rei; o amuleto (1.140.0, a
+  // gema violeta no engaste de latão), para o Amuleto, o Talismã, o Pingente e o Medalhão; os dois são também as
+  // silhuetas apagadas dos espaços vazios (VAZIO). O martelo é desenhado em código (desenhos.js).
   // O machado de barba (ferramentas/arte/, 1.99.0) vale para todo equipamento com o desenho "machado" (o Machado e os
   // únicos Lamento de Gharbad e O Açougueiro); o Redemoinho e a Fúria usam o mesmo sprite noutro papel e ficam com o
   // do jogo. O arco de teixo (1.101.0) vale para os três arcos e os únicos Ventre da Tempestade e Sussurro do Vazio;

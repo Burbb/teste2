@@ -4349,3 +4349,16 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Aguardando avaliação:** o anel da rodada 3, com o ângulo e as proporções da referência principal (o modelo do aro
   ajustado pela sobreposição da silhueta e do vão), o metal em poucos planos e um ornamento leve (um ziguezague gravado,
   liberado pelo Jean; a versão lisa como alternativa). 32, 40, 48 e o 64 = 32 ×2.
+
+### 19/10/2026 (data do computador local) — O anel e o amuleto no jogo (1.140.0)
+
+- **Pedido de Jean:** integrar o anel da rodada 3 (com o ziguezague) e o amuleto violeta da rodada 2, sem retoque; a
+  alternativa lisa fica como histórico.
+- **A integração:**
+  - as fontes foram para `ferramentas/arte/aseprite/anel/` e `amuleto/`; os 16 arquivos do jogo (32, 40, 48 e o 64 =
+    32 ×2) são idênticos, byte a byte, aos aprovados, e o exportador os reproduz;
+  - os compartilhamentos seguem (o anel: Anel, Sinete, Aro, o Anel do Último Rei; o amuleto: Amuleto, Talismã,
+    Pingente, Medalhão), e os espaços vazios acompanham, apagados;
+  - conferido a 1920×945 com os arquivos do jogo e os saves temporários: a ficha e o Inventário com um anel vestido e o
+    outro vazio, a comparação no saque e o anel equipado no espaço vazio, o amuleto equipado. Atributos, preços,
+    regras, áreas de interação e animações não mudaram.

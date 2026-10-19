@@ -1489,3 +1489,12 @@ escolhida**: guardada inteira em `anel_amuleto/rodada1/` (as fontes, os PNGs e o
 - **As fotos (1920×945):** produção × rodada 2 × rodada 3 na ficha, no Inventário (com o anel vazio) e no saque
   (`anel_amuleto/anel_amuleto-no-jogo.png`; `fotografar.mjs anel_amuleto` com `SO_PROPOSTA=1 ROTULO=rodada3`) e a
   prancha `anel_amuleto/prancha-carvao.png`.
+- **Integrados na 1.140.0, sem retoque** (aprovados no `9ae59a9`): o anel da rodada 3 (com o ziguezague) e o amuleto
+  violeta da rodada 2. As fontes foram para `ferramentas/arte/aseprite/anel/` e `amuleto/`; os 16 arquivos do jogo são
+  idênticos, byte a byte, aos da proposta; o 64 é o 32 ×2 (`DERIVADOS`). Os compartilhamentos seguem (o anel: Anel,
+  Sinete, Aro, o Anel do Último Rei; o amuleto: Amuleto, Talismã, Pingente, Medalhão) e os vazios acompanham. Conferido
+  a 1920×945 com os arquivos do jogo (`anel_amuleto/capturas/no-jogo-1.140.0-*`): a ficha e o Inventário idênticos às
+  fotos aprovadas; e, com os saves temporários (`auxiliares/equipar.mjs`, `capturas/integracao/`): um anel achado com o
+  Anel 1 ocupado e o Anel 2 vazio, a comparação do saque e "Equipar no Anel 2 (vazio)" (os dois espaços ocupados na
+  ficha e no Inventário), e um Talismã equipado pela comparação. Sem erro no console. A alternativa lisa fica como
+  histórico.
