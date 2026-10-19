@@ -137,6 +137,36 @@ def sandalia_r2():
              base / "rodada1" / "proposta" / "sandalia-32.png", JOGO / "bota-32.png"], r2 / "prancha-carvao.png")
     conjunto_mago()
 
+def fileira(pecas, saida, titulo="tamanho real (32 px num nicho de 40 sobre o carvão) e a 3x"):
+    """Uma fileira de peças de 32 lado a lado: em tamanho real (num nicho de 40 sobre o carvão) e a 3×."""
+    o = Image.new("RGB", (10 + len(pecas) * 110, 202), (245, 245, 245)); d = ImageDraw.Draw(o)
+    d.text((10, 4), titulo, fill=(0, 0, 0), font=FONTE)
+    for k, (rotulo, arq) in enumerate(pecas):
+        im = Image.open(arq).convert("RGBA"); x = 10 + k * 110
+        nicho = Image.new("RGBA", (40, 40), (24, 24, 28, 255)); nicho.alpha_composite(im, (4, 4)); o.paste(nicho.convert("RGB"), (x, 24))
+        g = Image.new("RGBA", (96, 96), (24, 24, 28, 255)); g.alpha_composite(im.resize((96, 96), Image.NEAREST)); o.paste(g.convert("RGB"), (x, 74))
+        d.text((x, 176), rotulo, fill=(0, 0, 0), font=FONTE)
+    o.save(saida); print(saida)
+
+def besta_diadema():
+    """A Besta Leve e o Diadema: atual × proposta no jogo (tamanho real), as fileiras com as peças vizinhas e a prancha."""
+    base = LOTE / "besta_diadema"; P = base / "proposta"
+    folha(base / "capturas", [("a ficha do Arqueiro com a Besta Leve na mão (32)", "ficha", (18, 362, 272, 472), "besta"),
+                              ("o corpo no Inventário do Arqueiro (40)", "inventario", (150, 140, 480, 520), "besta"),
+                              ("o cartão do saque da Besta Leve (64) e o que você usa (48)", "saque", None, "besta"),
+                              ("a ficha do Mago com o Diadema (32)", "ficha", (18, 362, 272, 472), "diadema"),
+                              ("o corpo no Inventário do Mago (40)", "inventario", (150, 140, 480, 520), "diadema"),
+                              ("o cartão do saque do Diadema (64 e 48)", "saque", None, "diadema"),
+                              ("o cartão do saque da Coroa dos Afogados (o único, base Diadema; 64 e 48)", "saque", None, "coroa_afogados")],
+          base / "besta_diadema-no-jogo.png")
+    fileira([("Besta Leve (prop.)", P / "besta-32.png"), ("arco", JOGO / "arco-32.png"), ("aljava", JOGO / "aljava-32.png"),
+             ("capuz de couro", JOGO / "capuz-32.png"), ("gibão", JOGO / "gibao-32.png"), ("machado", JOGO / "machado-32.png")],
+            base / "fileira-arqueiro-32.png")
+    fileira([("Diadema (prop.)", P / "diadema-32.png"), ("Chapéu Pontudo", JOGO / "chapeu-32.png"), ("capuz", JOGO / "capuz_tecido-32.png"),
+             ("amuleto", JOGO / "amuleto-32.png"), ("anel", JOGO / "anel-32.png"), ("manto", JOGO / "manto-32.png")],
+            base / "fileira-mago-32.png")
+    prancha([P / f"besta-{n}.png" for n in (32, 40, 48, 64)] + [P / f"diadema-{n}.png" for n in (32, 40, 48, 64)], base / "prancha-carvao.png")
+
 def sandalia_no_jogo():
     """A Sandália no jogo (1.142.0), em tamanho real: o saque, a ficha e o Inventário depois de "Equipar agora"."""
     pasta = LOTE / "sandalia_chapeu" / "capturas" / "integracao"
@@ -151,7 +181,7 @@ def sandalia_no_jogo():
     saida = LOTE / "sandalia_chapeu" / "sandalia-1.142.0-no-jogo.png"; o.save(saida); print(saida)
 
 if __name__ == "__main__" and sys.argv[1] in ("antidoto_base", "frasco_vazio", "anel_referencia", "conjunto_mago", "sandalia_r2",
-                                              "sandalia_no_jogo"):
+                                              "sandalia_no_jogo", "besta_diadema"):
     globals()[sys.argv[1]](); sys.exit()
 if __name__ == "__main__":
     nome = sys.argv[1]; cfg = LOTES[nome]; base = LOTE / nome

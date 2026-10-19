@@ -4473,3 +4473,20 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **O vestuário de tecido do Mago está completo** (capuz, Chapéu Pontudo, manto, luva de seda, calça de viagem,
   sandália); faltam o Diadema e a Besta Leve como desenhos inexistentes, o remake do ferro e o 40/48 do martelo.
 
+### 19/10/2026 (data do computador local) — A Besta Leve e o Diadema (proposta)
+
+- **Pedido de Jean:** o par seguinte, uma peça por vez, só no protótipo, com a skill `arte-itens-fenda` e o Aseprite pelo
+  MCP. Sem integrar, sem o remake do ferro e sem o martelo.
+- **Os dados e os usos:** a besta só vale para a base Besta Leve. O desenho `coroa` vale para o Diadema e para o único
+  Coroa dos Afogados, e o sprite `coroa` é também o símbolo da reputação, que não muda com um papel de equipamento.
+- **Feito, só no protótipo** (`ferramentas/prototipos/hud/itens-lote-noite/besta_diadema/`), **não aprovado**:
+  - **a Besta Leve** (32, 40, 48; 64 = 32 ×2): deitada na diagonal; a coronha de madeira, o arco de aço atravessado, a
+    corda em V até a noz, a empunhadura de couro, o estribo;
+  - **o Diadema** (32, 40, 48; 64 = 32 ×2): o aro de latão fino em perspectiva, a ponta da frente com a gema violeta.
+  - Fontes em camadas pelo `pintar.lua`; composto, exportação e prévia conferem; @2x exatos.
+  - Fotos a 1920×945 (ficha, Inventário, saque; o cartão da Coroa dos Afogados também) e as fileiras em tamanho real
+    com as armas do Arqueiro e as peças do Mago.
+- **Proposto para a Coroa dos Afogados:** o desenho comum por ora; a arte própria do único fica registrada como
+  necessidade futura (plano 23). Nenhum dado mudou.
+- **Aguardando avaliação.**
+

@@ -142,9 +142,9 @@ de antes não vale como arte final.
 | `calca` → `perneiras` | Perneira, Greva (Guerreiro) | **Placeholder integrado, pendente de remake** | redução da pintura | Também a silhueta das pernas vazias (`VAZIO`) |
 | `bota_ferro` → `botas-ferro` | Bota Ferrada (Guerreiro) | **Placeholder integrado, pendente de remake** | redução da pintura | Também a silhueta dos pés vazios (`VAZIO`) |
 | `martelo` | Martelo (Guerreiro) | **Arte aprovada, preservada; faltam o 40 e o 48** | grade de 32 em `desenhos.js` (1.93.0) | Desenho próprio, não da pintura; completar o 40 e o 48 pela mesma construção, sem redesenhar (outra entrega) |
-| `besta` | Besta Leve (Arqueiro) | **Desenho inexistente** | sem papel em `Icones` (o sprite 16×16) | Uma das quatro armas do Arqueiro |
+| `besta` | Besta Leve (Arqueiro) | **Desenho inexistente** no jogo; proposta em avaliação | sem papel em `Icones` (o sprite 16×16); proposta em `itens-lote-noite/besta_diadema/` | Uma das quatro armas do Arqueiro |
 | `chapeu` | Chapéu Pontudo (Mago) | Arte final, padrão atual (integrada na 1.141.0) | `aseprite/chapeu/` (1.141.0) | Um terço das cabeças do Mago |
-| `coroa` | Diadema (Mago); único Coroa dos Afogados | **Desenho inexistente** | sem papel em `Icones` | Decidir se um desenho serve aos dois |
+| `coroa` | Diadema (Mago); único Coroa dos Afogados | **Desenho inexistente** no jogo; proposta em avaliação | sem papel em `Icones`; proposta em `itens-lote-noite/besta_diadema/` | O sprite `coroa` é também o símbolo da reputação (fica); a Coroa dos Afogados pede arte própria no futuro |
 | `sandalia` | Sandália (Mago, a única base dos pés dele) | Arte final, padrão atual (integrada na 1.142.0) | `aseprite/sandalia/` (1.142.0) | Nomes dos materiais de tecido num desenho de couro: pendência de nomenclatura |
 | `escudo` | Escudo, Broquel; únicos Égide do Mártir, Broquel do Vigia | Arte final, padrão atual | `desenhar_escudo_pixel.py` (1.94.0) | Também a silhueta da secundária vazia (`VAZIO`) |
 | `machado` | Machado; únicos Lamento de Gharbad, O Açougueiro | Arte final, padrão atual | `desenhar_machado_pixel.py` (1.99.0) | — |
@@ -208,6 +208,21 @@ execução fica para outra entrega.
   "Sandália de Lã Negra", "Sandália de Linho", "Sandália Bordada"), mas o desenho é de couro, como uma sandália de
   viagem. **Pendência de nomenclatura** (não impediu a integração visual; nomes e materiais mantidos na 1.142.0):
   decidir depois se a base ganha materiais próprios (couro) ou se os nomes ficam.
+
+**A Besta Leve e o Diadema (proposta, 19/10/2026; nada no jogo).** Em
+`ferramentas/prototipos/hud/itens-lote-noite/besta_diadema/` (o registro completo no `LEIA-ME.md` do lote):
+- **O alcance de uma futura troca:**
+  - `besta`: só a base Besta Leve (uma das quatro armas do Arqueiro, com os materiais de metal: "Besta Leve
+    Enferrujada", "de Aço"...); nenhum único, símbolo ou espaço vazio (a arma vazia é a espada de ferro).
+  - `coroa`: a base Diadema (uma das três cabeças do Mago, materiais de tecido nos nomes: "Diadema de Lã Negra") e o
+    único Coroa dos Afogados (base Diadema, lendário, de qualquer classe; "Achada na cabeça de um rei no fundo do
+    pântano"). O mesmo sprite `coroa` é o símbolo da reputação (`S("coroa")` no Inventário e `Icones.miudo` nos ganhos
+    de contrato, fora do mapa `ITEM`): a troca do equipamento não o muda. O espaço vazio da cabeça é o elmo de ferro.
+- **A decisão proposta para o Diadema:** um desenho comum (o diadema) para a base e para a Coroa dos Afogados por ora;
+  **a Coroa dos Afogados pede arte própria no futuro** (o nome e a história são de uma coroa de rei afogado, lendária,
+  e o diadema de latão é uma peça simples). Nenhum dado mudou e nenhum item foi criado.
+- **Os nomes:** o Diadema leva os materiais de tecido ("Diadema de Lã Negra"), mas o desenho é de latão: a mesma
+  pendência de nomenclatura da Sandália.
 
 ### 1.3. Prioridade: consumo do recurso antes das consequências
 

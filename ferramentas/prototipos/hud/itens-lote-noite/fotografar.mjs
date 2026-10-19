@@ -7,7 +7,7 @@
 //       | vida_mana | vigor_foco | vigor_foco_arqueiro | ouro_provisoes | moeda | tocha | tocha16 | tocha16_risco | tocha_apagada
 //       | bandagem_pocao | bandagem_pocao_luta | tonico_antidoto | calca_manto | calca_manto_saque_calca
 //       | frasco_vazio | frasco_cheio | antidoto_base | anel_amuleto | anel_amuleto_saque_amuleto | sandalia_chapeu | sandalia_chapeu_saque_chapeu
-//       | chapeu_no_jogo | sandalia_r2
+//       | chapeu_no_jogo | sandalia_r2 | besta | diadema | coroa_afogados
 import { spawn } from "child_process";
 import { readFileSync, existsSync, mkdirSync } from "fs";
 import { fileURLToPath } from "url";
@@ -173,6 +173,22 @@ const PECAS = {
     papeis: [{ item: "sandalia", tamanhos: [32, 40, 48, 64] }],
     cena: ["tutorial", { CLASSE: "mago", TUTORIAL: "0", PERIODO: "0", VESTIR: "chapeu,manto,calca_tecido,sandalia,luva_seda" }], fotos: ["ficha", "inventario"],
     saque: ["vila", { CLASSE: "mago", ACHADO: "sandalia", VESTIDO: "sandalia" }] },
+  // a Besta Leve e o Diadema (besta_diadema/), sem papel em Icones hoje (o sprite do jogo): os papéis só nesta página (o
+  // Diadema é o desenho "coroa" nos dados; o arquivo, "diadema"). A besta: o Arqueiro com ela na mão (ARMA, no
+  // tutorial), a ficha (32), o Inventário (40) e o saque (64 e 48). O diadema: o Mago com ele na cabeça, a ficha, o
+  // Inventário e o saque; e o cartão da Coroa dos Afogados (o único, base Diadema), com o mesmo desenho
+  besta: { pasta: "besta_diadema/proposta", saida: "besta_diadema/capturas/besta", nomes: ["besta", "diadema"],
+    papeis: [{ item: "besta", tamanhos: [32, 40, 48, 64] }, { item: "coroa", peca: "diadema", tamanhos: [32, 40, 48, 64] }],
+    cena: ["tutorial", { CLASSE: "arqueiro", TUTORIAL: "0", PERIODO: "0", ARMA: "besta" }], fotos: ["ficha", "inventario"],
+    saque: ["vila", { CLASSE: "arqueiro", ACHADO: "besta", VESTIDO: "besta" }] },
+  diadema: { pasta: "besta_diadema/proposta", saida: "besta_diadema/capturas/diadema", nomes: ["besta", "diadema"],
+    papeis: [{ item: "besta", tamanhos: [32, 40, 48, 64] }, { item: "coroa", peca: "diadema", tamanhos: [32, 40, 48, 64] }],
+    cena: ["tutorial", { CLASSE: "mago", TUTORIAL: "0", PERIODO: "0", VESTIR: "coroa,manto,calca_tecido,sandalia,luva_seda" }], fotos: ["ficha", "inventario"],
+    saque: ["vila", { CLASSE: "mago", ACHADO: "coroa", VESTIDO: "coroa" }] },
+  coroa_afogados: { pasta: "besta_diadema/proposta", saida: "besta_diadema/capturas/coroa_afogados", nomes: ["besta", "diadema"],
+    papeis: [{ item: "besta", tamanhos: [32, 40, 48, 64] }, { item: "coroa", peca: "diadema", tamanhos: [32, 40, 48, 64] }],
+    cena: ["tutorial", { CLASSE: "mago", TUTORIAL: "0" }], fotos: [],
+    saque: ["vila", { CLASSE: "mago", ACHADO_ID: "coroa_dos_afogados", VESTIDO: "coroa" }] },
   frasco_vazio: { pasta: "bandagem_pocao/variantes/proposta", saida: "bandagem_pocao/variantes/capturas/vazia", nomes: ["frasco_vazio"],
     papel_recurso: { frasco_vazio: [24] }, cena: ["covil", { LUGAR: "vila", BOLSA: "pocao_vida=0" }], fotos: ["topo"] },
   frasco_cheio: { pasta: "bandagem_pocao/variantes/proposta", saida: "bandagem_pocao/variantes/capturas/cheia", nomes: ["frasco_vazio"],
@@ -242,9 +258,9 @@ async function anexar(p) {
     await p.route(/\/static\/icones\.js(\?|$)/, async (r) => {
       const res = await r.fetch();
       let js = await res.text();
-      for (const { item, tamanhos } of P.papeis) {
-        js = js.replace('const TAMANHOS = {', `const TAMANHOS = {"${item}": ${JSON.stringify(tamanhos)}, `);
-        js = js.replace('const ITEM = {', `const ITEM = { ${item}: "${item}", `);
+      for (const { item, peca: arq = item, tamanhos } of P.papeis) {   // peca: o arquivo, quando não é o nome do desenho
+        js = js.replace('const TAMANHOS = {', `const TAMANHOS = {"${arq}": ${JSON.stringify(tamanhos)}, `);
+        js = js.replace('const ITEM = {', `const ITEM = { ${item}: "${arq}", `);
       }
       r.fulfill({ response: res, body: js, headers: { ...res.headers(), "content-type": "application/javascript" } });
     });

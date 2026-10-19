@@ -1607,3 +1607,56 @@ equipar.mjs`; `capturas/integracao/no-jogo-1.142.0-*`): o saque, equipar (os atr
 cartão) e guardar (nada muda no corpo), a ficha e o Inventário. Os nomes e materiais ficaram como estão (pendência de
 nomenclatura no plano 23).
 
+## A Besta Leve e o Diadema (`besta_diadema/`)
+
+**Pedido de Jean (19/10/2026):** o par seguinte, uma peça por vez, só no protótipo, com a skill `arte-itens-fenda` e as
+fontes no Aseprite pelo MCP. Os atuais (os sprites 16×16) são placeholders e não foram copiados. **Nada no jogo.**
+
+**Antes de desenhar (os dados e os usos):**
+- **A Besta Leve** (`("Besta Leve", "f", "besta")`): uma das quatro armas do Arqueiro, com os materiais de metal
+  (`MATERIAIS`: Enferrujada, de Ferro, de Aço, Temperada, Rúnica). Nenhum único; o sprite `besta` não tem outro papel;
+  a arma vazia é a espada de ferro (`VAZIO`).
+- **O Diadema** (`("Diadema", "m", "coroa")`): uma das três cabeças do Mago, com os materiais de tecido nos nomes. O
+  desenho `coroa` vale também para o único **Coroa dos Afogados** (base Diadema, lendário, `classe=None`, +Vida,
+  regeneração e Defesa; "Achada na cabeça de um rei no fundo do pântano. Ele não estava morto."). O sprite `coroa` é
+  ainda o símbolo da reputação (`S("coroa")` no Inventário; `Icones.miudo("coroa")` nos ganhos de contrato, sem papel em
+  `MIUDO`): um papel em `ITEM` não o muda. A cabeça vazia é o elmo de ferro.
+- **Tamanhos:** 32 na ficha, 40 no Inventário, 48 no "você usa" do saque, 64 no cartão.
+
+**A construção** (`auxiliares/desenho.py`; as medidas no quadro de 32, a mesma em 32, 40 e 48; o 64 é o 32 ×2):
+- **A Besta Leve:** deitada, vista de cima, na diagonal das armas aprovadas (a soleira embaixo à esquerda, a frente em
+  cima à direita). A coronha de madeira (o teixo do arco aprovado), larga na soleira e estreita na frente, com a face
+  clara em cima, a espessura embaixo e o sulco do virote; o arco de aço atravessado na frente, perpendicular à coronha,
+  com as pontas puxadas para trás; a corda (a do arco) das pontas até a noz de latão no meio da coronha: o V da besta
+  armada, que a separa do arco (uma curva com a corda reta), do cajado e do martelo (sem o arco atravessado); a
+  empunhadura de couro atrás da noz, a alavanca do gatilho por baixo e o estribo de aço na ponta. Sem virote (o sulco
+  basta e o 32 fica mais limpo). Camadas: coronha, empunhadura, corda, arco, metal, contorno.
+- **O Diadema:** de frente e um pouco de cima. O aro de latão (o do broche do manto) numa chapa fina e baixa, a elipse
+  larga: a face de fora na frente, clara na beira de cima, com o reflexo à esquerda, e o lado de trás mais escuro; o
+  fundo aparece pelo meio. Na frente, a ponta: uma placa estreita que sobe acima da borda de trás, com a gema violeta (a
+  do amuleto aprovado) num engaste. Camadas: aro, placa, gema, contorno.
+- **Rodadas descartadas do diadema (só na bancada):** com a chapa alta e o aro visto muito de cima, ele virava uma
+  bandeja ou uma máscara; a camada da face de dentro saiu vazia com a chapa fina e foi tirada. As prévias de
+  `previa/diadema/<N>/listas/` ainda têm um `dentro.lua` vazio dessa tentativa (a remoção ficou para o Jean).
+
+**O Aseprite (pelo MCP):** as listas pintadas pelo `pintar.lua` (0 diferenças na releitura, 0 fora da tela), salvas em
+`fontes/<peça>/<peça>-<N>.aseprite`; reabertas, o composto (`soma.lua`) é igual aos PNGs exportados pelo
+`exportar_aseprite.py <peça> besta_diadema/proposta --fontes=besta_diadema/fontes` e à prévia, nos seis; @2x exatos; o
+64 é o 32 ×2.
+
+**As fotos (1920×945, `fotografar.mjs besta`, `diadema` e `coroa_afogados`):** atual × proposta com os mesmos dados
+(`besta_diadema-no-jogo.png`): o Arqueiro com a besta na mão (o `tutorial` com `ARMA=besta`) e o Mago com o diadema
+(`VESTIR`) na ficha (32) e no Inventário (40); os cartões do saque (64 e 48) da besta, do diadema e da Coroa dos
+Afogados. Sem erro no console. O `fotografar.mjs` aceita agora `peca` num papel (o desenho `coroa` com o arquivo
+`diadema`). As fileiras em tamanho real: `fileira-arqueiro-32.png` (a besta com o arco, a aljava, o capuz, o gibão e
+o machado) e `fileira-mago-32.png` (o diadema com o Chapéu Pontudo, o capuz, o amuleto, o anel e o manto);
+`prancha-carvao.png`, os quatro tamanhos das duas.
+
+**Para a avaliação:**
+- **A besta:** se lê como besta no 32 pelo arco atravessado e pelo V da corda, com a madeira e o couro do arco aprovado.
+- **O diadema:** se lê como aro com a ponta e a gema, mas tem menos massa que os vizinhos (a chapa fina ocupa pouca área
+  do espaço); na ficha fica pequeno ao lado do chapéu.
+- **A Coroa dos Afogados** usa o mesmo desenho na proposta; a arte própria dela fica registrada como necessidade futura.
+- **Para a integração (só depois da aprovação):** os papéis `besta` e `coroa` (→ `diadema`) em `ITEM` e `TAMANHOS`,
+  as fontes em `ferramentas/arte/aseprite/`, `DERIVADOS` com o 64 = 32 ×2.
+
