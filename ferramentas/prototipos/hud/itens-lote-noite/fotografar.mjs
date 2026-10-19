@@ -7,6 +7,7 @@
 //       | vida_mana | vigor_foco | vigor_foco_arqueiro | ouro_provisoes | moeda | tocha | tocha16 | tocha16_risco | tocha_apagada
 //       | bandagem_pocao | bandagem_pocao_luta | tonico_antidoto | calca_manto | calca_manto_saque_calca
 //       | frasco_vazio | frasco_cheio | antidoto_base | anel_amuleto | anel_amuleto_saque_amuleto | sandalia_chapeu | sandalia_chapeu_saque_chapeu
+//       | chapeu_no_jogo
 import { spawn } from "child_process";
 import { readFileSync, existsSync, mkdirSync } from "fs";
 import { fileURLToPath } from "url";
@@ -160,6 +161,10 @@ const PECAS = {
   sandalia_chapeu_saque_chapeu: { pasta: "sandalia_chapeu/proposta", saida: "sandalia_chapeu/capturas/saque_chapeu", nomes: ["sandalia", "chapeu"],
     papeis: [{ item: "sandalia", tamanhos: [32, 40, 48, 64] }, { item: "chapeu", tamanhos: [32, 40, 48, 64] }],
     cena: ["capela", { CLASSE: "mago", NIVEL: "5", PERIODO: "0", SALA: "exterior" }], fotos: [],
+    saque: ["vila", { CLASSE: "mago", ACHADO: "chapeu", VESTIDO: "chapeu" }] },
+  // o Chapéu Pontudo no jogo (1.141.0): com SO_ATUAL=1, os arquivos reais na ficha, no Inventário e no saque
+  chapeu_no_jogo: { pasta: "sandalia_chapeu/proposta", saida: "sandalia_chapeu/capturas/integracao", nomes: ["chapeu"],
+    cena: ["tutorial", { CLASSE: "mago", TUTORIAL: "0", PERIODO: "0", VESTIR: "chapeu,manto,calca_tecido,sandalia,luva_seda" }], fotos: ["ficha", "inventario"],
     saque: ["vila", { CLASSE: "mago", ACHADO: "chapeu", VESTIDO: "chapeu" }] },
   frasco_vazio: { pasta: "bandagem_pocao/variantes/proposta", saida: "bandagem_pocao/variantes/capturas/vazia", nomes: ["frasco_vazio"],
     papel_recurso: { frasco_vazio: [24] }, cena: ["covil", { LUGAR: "vila", BOLSA: "pocao_vida=0" }], fotos: ["topo"] },

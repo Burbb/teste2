@@ -58,6 +58,7 @@ DERIVADOS = {
     "manto": {64: (32, 2)},
     "anel": {64: (32, 2)},           # 1.140.0: o anel (a rodada 3) e o amuleto (a gema violeta); o 64 é o 32 ×2
     "amuleto": {64: (32, 2)},
+    "chapeu": {64: (32, 2)},         # 1.141.0: o Chapéu Pontudo do Mago (32, 40, 48 das fontes); o 64 é o 32 ×2
 }
 
 

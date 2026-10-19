@@ -33,7 +33,7 @@ const Icones = (() => {
     "lugar-planicie": [32, 40], "lugar-ruinas": [32, 40], "lugar-vila": [32, 40], "maca": [32, 40, 48, 64],
     "machado": [32, 40, 48, 64],
     "manopla": [32, 40, 48, 64], "moeda": [16, 32], "moedas": [24, 32], "osso": [24], "perneiras": [32, 40, 48, 64], "pocao": [16, 24, 32],
-    "provisoes": [24, 32], "tocha": [16, 24, 32], "tocha_apagada": [16, 24], "frasco_vazio": [24], "tonico": [16, 32], "calca_tecido": [32, 40, 48, 64], "manto": [32, 40, 48, 64], "unguento": [32, 64],
+    "provisoes": [24, 32], "tocha": [16, 24, 32], "tocha_apagada": [16, 24], "frasco_vazio": [24], "tonico": [16, 32], "calca_tecido": [32, 40, 48, 64], "manto": [32, 40, 48, 64], "chapeu": [32, 40, 48, 64], "unguento": [32, 64],
     "vital-foco": [20], "vital-mana": [20], "vital-vida": [20], "vital-vigor": [20]};
 
   // Cada desenho vai para o tipo de ferro que o jogo já tem (elmo, armadura, manopla, calca = perneira, bota_ferro, maca);
@@ -67,11 +67,13 @@ const Icones = (() => {
   // (o 64 é o 32 ampliado 2×); a Calça de Viagem do Mago (a lã com as faixas nos tornozelos) e o Manto (a veste aberta
   // na frente, também da Túnica, da Veste Rúnica e do Manto de Cinzas), 1.138.0, com o 64 = 32 ampliado 2×. A aljava (1.122.0, a da
   // referência do Jean) vale para toda Aljava do Patrulheiro, a comum e a única dos Mil Corvos, e para o recurso de
-  // flechas do topo (RECURSO); o 24 é o do topo, o 40 o do Inventário, o 48 o do cartão compacto do saque.
+  // flechas do topo (RECURSO); o 24 é o do topo, o 40 o do Inventário, o 48 o do cartão compacto do saque. O Chapéu
+  // Pontudo do Mago (1.141.0; a aba larga e a copa de lã com a ponta tombada; o 64 é o 32 ampliado 2×) vale para a base
+  // Chapéu Pontudo; o espaço vazio da cabeça continua com o elmo de ferro (VAZIO).
   const ITEM = { elmo: "elmo", armadura: "cota", manopla: "manopla", calca: "perneiras", bota_ferro: "botas-ferro",
     maca: "maca", espada: "espada", escudo: "escudo", amuleto: "amuleto", anel: "anel", aljava: "aljava", martelo: "martelo", machado: "machado", arco: "arco", cajado: "cajado", orbe: "orbe", livro: "livro", varinha: "varinha", gibao: "gibao", bota: "bota",
     capuz: "capuz", luva: "luva", capuz_tecido: "capuz_tecido", luva_seda: "luva_seda", calca_couro: "calca_couro",
-    calca_tecido: "calca_tecido", manto: "manto" };
+    calca_tecido: "calca_tecido", manto: "manto", chapeu: "chapeu" };
   // o espaço vazio: a silhueta apagada do que vai nele (o material não aparece)
   const VAZIO = { cabeca: "elmo", armadura: "cota", maos: "manopla", pernas: "perneiras", pes: "botas-ferro", arma: "espada",
     secundaria: "escudo", amuleto: "amuleto", anel1: "anel", anel2: "anel" };

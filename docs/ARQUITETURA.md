@@ -419,7 +419,7 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   tela usa então o sprite do jogo (`Icones.item(s) || S(s, 2)`). A origem e o destino de uma animação pedem o mesmo
   papel (o item que voa ao equipar, o selo de atributo, o consumível que cai na bolsa). Lacunas (desenho do jogo no
   lugar, sem trocar por desenho de outro tipo de item): as peças sem desenho (o chapéu de couro, que
-  usa o capuz por ora, o Chapéu Pontudo, o Diadema e a Coroa dos Afogados, a sandália, a Besta Leve), a família de
+  usa o capuz por ora, o Diadema e a Coroa dos Afogados, a sandália, a Besta Leve), a família de
   ferro do Guerreiro, que é placeholder pendente de remake (a espada, a maça, o elmo, a cota, a manopla, as perneiras e
   as botas de ferro, reduções da arte pintada da HUD de ferro por `familia_ferro.py`; elas também dão as silhuetas
   dos espaços vazios e a espada do comando de ataque), o martelo sem o 40 e o 48 (o desenho aprovado de 32 fica, sem
@@ -485,7 +485,9 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   de ouro em pé, de três quartos, com o ziguezague gravado; o Anel, o Sinete, o Aro e o Anel do Último Rei) e o amuleto
   (a gema violeta no engaste de latão; o Amuleto, o Talismã, o Pingente e o Medalhão), 32, 40, 48 e o 64 = 32 ×2, fontes
   em `aseprite/anel/` e `amuleto/`; os espaços vazios do anel e do amuleto usam as mesmas imagens, apagadas. As
-  referências permanentes dos anéis estão em `ferramentas/arte/referencias/aneis/`.
+  referências permanentes dos anéis estão em `ferramentas/arte/referencias/aneis/`. Desde a 1.141.0, o Chapéu Pontudo
+  do Mago (a aba larga em perspectiva, a copa de lã com a ponta tombada, a fita de linho; 32, 40, 48 e o 64 = 32 ×2,
+  fontes em `aseprite/chapeu/`); o espaço vazio da cabeça continua com o elmo de ferro.
 - O escudo e o Unguento de Prata (1.94.0), o machado e a Bomba de Fumaça (1.99.0) o arco (1.101.0,
   `desenhar_arco_pixel.py`; o Atacar da roda, o Tiro Duplo e o contrato continuam com o sprite) e o cajado (1.106.0,
   `desenhar_cajado_pixel.py`; o Atacar do Mago na roda e o traço Conjurador continuam com o sprite) e o orbe (1.107.0,

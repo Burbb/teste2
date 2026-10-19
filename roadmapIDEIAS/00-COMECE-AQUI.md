@@ -4418,3 +4418,19 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Achado da bancada:** o cenário `capela` não aplica `VESTIR`; as fotos deste par usam o `tutorial`.
 - **Aguardando avaliação.** Nada integrado; o martelo e o próximo par não começaram.
 
+### 19/10/2026 (data do computador local) — O Chapéu Pontudo no jogo (1.141.0)
+
+- **Pedido de Jean:** integrar o Chapéu Pontudo do `b361a47` sem retoque; a Sandália volta para uma rodada 2 (a
+  rodada 1, de perfil, foi recusada).
+- **A integração:**
+  - as fontes em camadas foram para `ferramentas/arte/aseprite/chapeu/` (32, 40, 48: aba, copa, dobras, fita,
+    contorno); `DERIVADOS` do exportador com o 64 = 32 ×2;
+  - os 8 arquivos do jogo (32, 40, 48, 64 e os @2x) são idênticos, byte a byte, aos aprovados, e
+    `exportar_aseprite.py chapeu --conferir` os reproduz;
+  - o papel `chapeu` em `ITEM` e `TAMANHOS` de `icones.js` (a base Chapéu Pontudo); o espaço vazio da cabeça continua
+    com o elmo de ferro;
+  - conferido a 1920×945 com os arquivos do jogo (`sandalia_chapeu/capturas/integracao/`, `fotografar.mjs
+    chapeu_no_jogo` com `SO_ATUAL=1`): a ficha e o Inventário diferem das fotos aprovadas só no espaço da sandália
+    (que continua com o sprite), e o saque é igual ao aprovado (a não ser 2 pixels do brilho animado). Regras, medidas,
+    preços e funcionamento não mudaram.
+

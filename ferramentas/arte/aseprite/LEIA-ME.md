@@ -33,6 +33,7 @@ nada daqui: só os PNGs exportados para `rpg/web/static/hud/icones/`.
 | calca_tecido (a Calça de Viagem do Mago) | `calca_tecido/calca_tecido-32.aseprite`, `-40`, `-48`; **o 64 é o 32 ampliado 2×** | pernas, dobras, barra, cintura, cordao, contorno | 1.138.0 |
 | manto (o Manto do Mago, também Túnica, Veste Rúnica e Manto de Cinzas) | `manto/manto-32.aseprite`, `-40`, `-48`; **o 64 é o 32 ampliado 2×** | mangas, corpo, forro, gola, debrum, faixa, fecho, contorno | 1.138.0 |
 | anel (o anel: Anel, Sinete, Aro e o Anel do Último Rei; o vazio) | `anel/anel-32.aseprite`, `-40`, `-48`; **o 64 é o 32 ampliado 2×** | dentro, fora, gravacao, borda, brilho, contorno | 1.140.0 |
+| chapeu (o Chapéu Pontudo do Mago) | `chapeu/chapeu-32.aseprite`, `-40`, `-48`; **o 64 é o 32 ampliado 2×** | aba, copa, dobras, fita, contorno | 1.141.0 |
 | amuleto (o amuleto: Amuleto, Talismã, Pingente e Medalhão; o vazio) | `amuleto/amuleto-32.aseprite`, `-40`, `-48`; **o 64 é o 32 ampliado 2×** | cordao, argola, engaste, pedra, brilho, contorno | 1.140.0 |
 | antidoto (o Antídoto) | `antidoto/antidoto-16.aseprite`, `-32` | vidro, liquido, rolha, brilho, contorno | 1.139.0 |
 | frasco_vazio (o topo sem poções) | `frasco_vazio/frasco_vazio-24.aseprite` | vidro, rolha, brilho, contorno | 1.139.0 |
