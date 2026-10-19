@@ -4558,3 +4558,18 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **A avaliar com atenção:** a maça pode ler como lança ou tocha no 32.
 - **Aguardando avaliação.** Nada integrado; a versão não mudou; as armaduras e o 40/48 do martelo não começaram.
 
+### 19/10/2026 (data do computador local) — A espada e a maça, rodada 2 (proposta do 32)
+
+- **Pedidos de Jean:** a maça precisa de peso e reconhecimento (a rodada 1 ficou estreita, com uma faixa clara de
+  ponta); a espada foi reavaliada e também volta (a lâmina da rodada 1 lembrava uma cunha), pelas referências que ele
+  pôs em `ferramentas/arte/referencias/espada/` (a principal: `espadasample.png`, a espada de aço da direita). O
+  complemento substitui a aprovação e o pedido de tamanhos da espada do `796edd2`.
+- **Feito, só no protótipo** (`ferramentas/prototipos/hud/itens-lote-noite/espada_maca/`), **não aprovado**: a espada com
+  a lâmina regular, os gumes paralelos e a ponta formada no último quarto, a guarda curta de latão e o pomo de aço; a
+  maça com o bulbo redondo e cinco aletas curtas, a luz pelo volume. 32 e 64; fontes em camadas pelo `pintar.lua`;
+  composto, exportação e prévia conferem; @2x exatos. A rodada 1 guardada em `espada_maca/rodada1/`.
+- **As referências versionadas**, com o papel de cada uma no `LEIA-ME.md` da pasta. A skill de espadas fica para depois.
+- **Fotos a 1920×945:** atual × rodada 1 × rodada 2 na ficha, no Inventário, no saque e no Atacar; a referência × as
+  rodadas em tamanho real e ampliadas; a fileira com o escudo e o machado.
+- **Aguardando avaliação.** Nada integrado; a versão não mudou; nenhuma outra peça começou.
+

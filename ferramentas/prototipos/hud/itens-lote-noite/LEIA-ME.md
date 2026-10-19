@@ -1753,3 +1753,51 @@ intermediários. A fileira em tamanho real (`fileira-guerreiro-32.png`: a espada
 - **A maça:** se separa do machado (sem lâmina de um lado) e do martelo (sem bloco atravessado), mas no 32 a cabeça em
   bulbo com os gomos ficou estreita e pode ler como lança ou tocha; a leitura imediata ainda não está garantida.
 
+### A espada e a maça, rodada 2 (`espada_maca/`)
+
+**Pedidos de Jean (19/10/2026):**
+- **A maça:** recuperar peso e reconhecimento. A da rodada 1 tinha a cabeça estreita e alongada, com uma faixa clara
+  que lembrava uma ponta metálica ou lâmina. O placeholder antigo é a referência da proporção entre cabeça e cabo e da
+  massa arredondada (sem reduzir nem copiar a pintura); o escudo e o machado, do material, da luz e do acabamento. Volume
+  mais redondo, aletas ou saliências curtas e bem separadas, a luz acompanhando o volume; poucos elementos claros.
+- **A espada:** refeita também (o complemento substitui a aprovação e o pedido de tamanhos da rodada 1). A lâmina da
+  rodada 1, larga na base e afinando por um trecho longo, lembrava uma cunha. Pela referência que o Jean pôs em
+  `ferramentas/arte/referencias/espada/` (a hierarquia no `LEIA-ME.md` de lá): uma espada básica com o corpo alongado e
+  regular, os gumes contínuos e a ponta aguda de formação clara; sem ponta cortada ou arredondada, sem uma faixa clara
+  que engula a face, sem espessura demais junto da guarda. Sem efeitos.
+- Só o 32 e o 64 (= 32 ×2); os intermediários depois da aprovação. Nada no jogo.
+
+**A rodada 1 guardada** em `espada_maca/rodada1/` (a proposta, as fontes, a prévia, as fotos, as folhas e o script
+daquela versão, `auxiliares/desenho_rodada1.py`, que a reproduz pixel a pixel).
+
+**A rodada 2** (`auxiliares/desenho.py`):
+- **A espada:** as proporções medidas na espada de aço da referência (a lâmina em cerca de 2/3 do comprimento, de
+  largura constante, afinando só no último quarto até a ponta; a guarda com cerca de 1,6 vez a largura da lâmina; a
+  empunhadura curta), adaptadas à grade de 32 (a lâmina um pouco mais larga que a da referência, para ter presença).
+  Os planos: o de cima na luz, com o gume aceso; a aresta no meio; o de baixo um tom abaixo, o gume de baixo na sombra;
+  a ponta acesa até o vértice. A guarda curta de latão (o do escudo), a empunhadura de couro com as voltas, o pomo de
+  aço. Na bancada, o plano de cima saiu primeiro quase branco (a faixa que engole a face) e desceu um tom.
+- **A maça:** o bulbo redondo (o raio perto do da bola do placeholder) com cinco aletas curtas e separadas (a da
+  ponta, duas nos lados, duas embaixo, junto do cabo); o bulbo sombreado como esfera pela luz da família (faixas
+  largas, o brilho agrupado em cima à esquerda), cada aleta no tom da direção para onde aponta, a junção com o bulbo
+  escura; o colar, o cabo de freixo, a empunhadura de couro e o botão de latão.
+- Camadas: a espada, empunhadura, pomo, guarda, lamina, contorno; a maça, cabo, empunhadura, cabeca, contorno.
+
+**O Aseprite (pelo MCP):** as listas do 32 pintadas pelo `pintar.lua` (0 diferenças na releitura, 0 fora da tela), em
+`fontes/<peça>/<peça>-32.aseprite`; o composto (`soma.lua`) é igual ao PNG exportado e à prévia; o 64 é o 32 ×2; @2x
+exatos.
+
+**As fotos e as folhas (1920×945, `fotografar.mjs espada`, `espada_luta` e `maca`, com `ROTULO=rodada2` e, para a
+rodada 1, `PASTA=espada_maca/rodada1/proposta ROTULO=rodada1 SO_PROPOSTA=1`):**
+- `espada-referencia-r1-r2.png`: a referência × a rodada 1 × a rodada 2, em tamanho real sobre o carvão e ampliadas na
+  mesma escala, sem suavização;
+- `espada-no-jogo.png`: atual × rodada 1 × rodada 2 na ficha (32), no saque (64 e 48) e no Atacar da luta (32);
+- `maca-no-jogo.png`: atual × rodada 1 × rodada 2 na ficha, no Inventário e no saque;
+- `fileira-guerreiro-32.png`: as três maças, as duas espadas, o escudo e o machado em tamanho real e a 3×;
+  `prancha-carvao.png`, com as silhuetas. Sem erro no console.
+- Como antes, a proposta só tem o 32 e o 64: o Inventário mostra o 32 e o "você usa" do saque reduz o 64 para 48.
+
+**Para a avaliação:** a espada segue a construção da referência (a lâmina regular, a ponta formada) e fica mais fina e
+mais comprida que a rodada 1; a maça recuperou a massa redonda do placeholder e lê como maça no 32, com as aletas
+curtas no lugar dos espinhos.
+

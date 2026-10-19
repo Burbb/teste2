@@ -134,8 +134,8 @@ de antes não vale como arte final.
 
 | Desenho | Bases (e únicos) que usam a imagem | Situação | Sustentação | Atenção |
 |---|---|---|---|---|
-| `espada` | Espada, Montante (Guerreiro) | **Placeholder integrado, pendente de remake**; proposta do 32 em avaliação | redução da pintura (`familia_ferro.py`) | Também é o comando de ataque da luta (`ACAO`) e a silhueta da arma vazia (`VAZIO`), de todas as classes |
-| `maca` | Maça (Guerreiro) | **Placeholder integrado, pendente de remake**; proposta do 32 em avaliação | redução da pintura | — |
+| `espada` | Espada, Montante (Guerreiro) | **Placeholder integrado, pendente de remake**; rodada 2 do 32 em avaliação | redução da pintura (`familia_ferro.py`) | Também é o comando de ataque da luta (`ACAO`) e a silhueta da arma vazia (`VAZIO`), de todas as classes |
+| `maca` | Maça (Guerreiro) | **Placeholder integrado, pendente de remake**; rodada 2 do 32 em avaliação | redução da pintura | — |
 | `elmo` | Elmo, Capacete, Barbuta (Guerreiro) | **Placeholder integrado, pendente de remake** | redução da pintura | Também a silhueta da cabeça vazia, de todas as classes (`VAZIO`) |
 | `armadura` → `cota` | Cota de Malha, Peitoral, Couraça, Brigantina (Guerreiro) | **Placeholder integrado, pendente de remake** | redução da pintura | Também a silhueta da armadura vazia (`VAZIO`) |
 | `manopla` | Manopla (Guerreiro) | **Placeholder integrado, pendente de remake** | redução da pintura | Também a silhueta das mãos vazias (`VAZIO`) |
@@ -199,6 +199,17 @@ espada e a maça** (o começo do remake do ferro).
   Maça.
 - **Só o 32 e o 64 (= 32 ×2):** os 40 e 48 ficam para depois da aprovação da forma. Uma futura integração da espada
   muda também a arma vazia e o Atacar.
+- **A rodada 2 (19/10/2026; nada no jogo).** O Jean reavaliou a espada da rodada 1 (`796edd2`): a lâmina larga na
+  base, afinando por um trecho longo, lembrava uma cunha; o pedido de completar os tamanhos dela foi substituído pela
+  rodada 2. A maça da rodada 1 tinha a cabeça estreita e alongada, com uma faixa clara que lembrava uma ponta. As duas
+  da rodada 1 estão guardadas em `espada_maca/rodada1/` como tentativas não escolhidas.
+  - **A espada, pela referência** (`ferramentas/arte/referencias/espada/`, a hierarquia no `LEIA-ME.md` de lá; a
+    principal é `espadasample.png`, a espada de aço da direita): a lâmina comprida de largura constante, os gumes
+    paralelos e contínuos, a ponta formada no último quarto, dois planos e a aresta, a guarda curta de latão, o pomo de
+    aço.
+  - **A maça:** a cabeça redonda e pesada (a massa e a proporção com o cabo do placeholder antigo, sem a pintura dele),
+    cinco aletas curtas e separadas, a luz pelo volume (o bulbo como esfera), sem a faixa clara.
+  - Uma skill de espadas fica para depois de um resultado validado.
 
 **A ordem recomendada (separada da contagem):** primeiro a **Sandália e o Chapéu Pontudo**, que são o placeholder
 mais frequente do Mago e fecham o vestuário de tecido dele, já com capuz, luva, calça e manto aprovados como referência

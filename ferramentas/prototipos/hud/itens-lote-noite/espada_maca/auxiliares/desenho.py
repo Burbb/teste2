@@ -1,6 +1,7 @@
 # A espada e a maça do Guerreiro (o começo do remake do ferro, proposta de 19/10/2026): na diagonal da família (o pomo
 # embaixo à esquerda, a ponta em cima à direita), com o ferro do machado aprovado (o cinza neutro), o latão do escudo e
-# a madeira do cabo do machado; a luz de cima e da esquerda (a metade de cima de cada peça na luz). As medidas estão num
+# a madeira do cabo do machado; a luz de cima e da esquerda (a metade de cima de cada peça na luz). Rodada 2 (a 1 está
+# em rodada1/). As medidas estão num
 # sistema que segue a arma: u ao longo do eixo (do pomo à ponta), v através dele (- em cima/à esquerda, + embaixo/à
 # direita), no quadro de 32. Primeiro o 32; o 64 é o 32 ampliado 2x (a política da skill); 40 e 48 depois da aprovação.
 # Uso: python desenho.py <espada|maca> <32|40|48> [silhueta] [<pasta>]. Grava a prévia e as listas em <pasta>/<N>/.
@@ -53,87 +54,92 @@ def faixa_uv(u0, u1, meia):
 
 
 if PECA == "espada":
-    # A espada de uma mão: a lâmina larga de dois gumes, em dois planos (a metade de cima na luz, a de baixo na sombra),
-    # com o sulco no plano claro e a ponta afilada; a guarda de latão reta, as pontas curvadas para a lâmina; a empunhadura de
-    # couro com as voltas; o pomo de latão.
+    # A espada, rodada 2, pela referência principal (ferramentas/arte/referencias/espada/espadasample.png, a espada de aço
+    # da direita): a lâmina comprida de largura constante, os gumes paralelos e contínuos até a ponta, que se forma num
+    # trecho curto (os dois gumes convergindo); dois planos do aço (o de cima na luz, com o gume aceso; o de baixo um tom
+    # abaixo) e a aresta no meio; a guarda curta de latão, a empunhadura de couro com as voltas e o pomo de aço. As
+    # proporções da referência: a lâmina em 2/3 do comprimento, a ponta no último quarto dela, a guarda com 1,6 vez a
+    # largura da lâmina; a lâmina um pouco mais larga que a da referência, para ter presença no 32.
+    U0, U1, UP = 10.8, 37.0, 31.2                                               # o começo da lâmina, a ponta, o começo da ponta
+    ML = 1.75                                                                   # a meia largura da lâmina
     def larg(u):
-        return np.interp(u, [8.2, 10.0, 22.0, 27.6, 31.2, 32.4], [2.35, 2.3, 2.05, 1.7, 0.6, 0.0])
-    us = np.linspace(8.2, 32.4, 50)
+        return np.interp(u, [U0, UP, U1], [ML, ML, 0.0])
+    us = np.linspace(U0, U1, 60)
     lamina = poligono_uv([(u, -larg(u)) for u in us] + [(u, larg(u)) for u in us[::-1]])
-    guarda = poligono_uv([(7.2, -6.6), (6.2, -5.8), (6.4, 0.0), (6.2, 5.8), (7.2, 6.6), (8.8, 6.4), (8.2, 5.2), (8.4, 0.0),
-                          (8.2, -5.2), (8.8, -6.4)])
-    empunhadura = faixa_uv(1.5, 6.6, 1.05)
-    pomo = disco(0.0, 0.0, 1.9)
+    guarda = poligono_uv([(8.6, -4.2), (10.6, -4.2), (10.6, 4.2), (8.6, 4.2)])
+    empunhadura = faixa_uv(2.0, 8.8, 0.95)
+    pomo = disco(1.0, 0.0, 1.45)
     if ETAPA == "silhueta":
         pinta(lamina | guarda | empunhadura | pomo, "f", 5, "lamina")
     else:
-        # a lâmina: o plano de cima claro, o de baixo escuro; o gume de cima aceso, o de baixo um tom acima da sombra
-        lp = larg(np.clip(U, 8.2, 32.4))
-        tl = np.where(V < -0.15, 7, 5)
-        tl = np.where((V < -0.15) & (V < -lp + 0.85), 8, tl)                    # o gume de cima, na luz
-        tl = np.where((V > 0.15) & (V > lp - 0.75), 4, tl)                      # o gume de baixo, na sombra
-        tl = np.where((U > 29.4) & (V < 0.15), 8, tl)                           # a ponta, acesa
+        # os planos: o de cima (v < 0) claro, o gume de cima aceso; a aresta no meio; o de baixo um tom abaixo, o gume de
+        # baixo na sombra; na ponta, os dois gumes acesos até o vértice
+        lp = larg(np.clip(U, U0, U1))
+        tl = np.where(V < -0.05, 6, 4)
+        tl = np.where(V < -lp + 0.75, 8, tl)                                    # o gume de cima
+        tl = np.where(V > lp - 0.7, 3, tl)                                      # o gume de baixo
+        tl = np.where((U > UP) & (V < 0.35), np.maximum(tl, 7), tl)            # a ponta, na luz
         pinta(lamina, "f", tl, "lamina")
-        sulco = lamina & (U > 9.6) & (U < 23.0) & (np.abs(V + 0.55) * K < max(0.42 * K, 0.5))
-        pinta(sulco, "f", 5, "lamina"); fixo[sulco] = True                      # linha diagonal: a limpeza não mexe
-        pinta(lamina & (U < 9.4), "f", np.where(V < 0, 6, 5), "lamina")          # o talão, junto da guarda
-        # a guarda de latão (o do escudo): a face de cima acesa, a de baixo na sombra, as pontas um tom acima
-        pinta(guarda, "o", np.where(U < 7.5, 6, 3), "guarda")
-        pinta(guarda & (np.abs(V) > 5.5), "o", np.where(V < 0, 7, 4), "guarda")
-        # a empunhadura: o couro com as voltas (as faixas escuras inclinadas)
+        aresta = lamina & (np.abs(V - 0.05) * K < max(0.4 * K, 0.5)) & (U > U0 + 1.2) & (U < UP + 1.5)
+        pinta(aresta, "f", 5, "lamina"); fixo[aresta] = True                    # linha diagonal: a limpeza não mexe
+        # a guarda de latão: a face de cima acesa, a de baixo na sombra; as pontas um tom acima
+        pinta(guarda, "o", np.where(U < 9.6, 6, 3), "guarda")
+        pinta(guarda & (np.abs(V) > 3.3), "o", np.where(V < 0, 7, 4), "guarda")
+        # a empunhadura: o couro com as voltas
         volta = ((U * 1.0 + V * 0.6) % 1.6) < 0.55
         pinta(empunhadura, "k", np.where(V < 0, 5, 3), "empunhadura")
         pinta(empunhadura & volta, "k", 2, "empunhadura"); fixo[empunhadura & volta] = True
-        # o pomo de latão: a luz em cima à esquerda
-        pinta(pomo, "o", np.where(V + U < -0.6, 6, np.where(V + U < 0.8, 5, 3)), "pomo")
-        pinta(disco(-0.5, -0.6, 0.55) & pomo, "o", 7, "pomo")
+        # o pomo de aço: a luz em cima à esquerda
+        pinta(pomo, "f", np.where(V + (U - 1.0) < -0.5, 7, np.where(V + (U - 1.0) < 0.8, 5, 3)), "pomo")
     camadas = ["empunhadura", "pomo", "guarda", "lamina", "contorno"]
 else:
-    # A maça de aletas: a cabeça de aço em bulbo, simétrica no eixo, dividida em gomos pelas aletas (os vãos escuros, que
-    # recortam a ponta de cima em dentes curtos), a luz de cima e da esquerda; a ponta curta no alto; o colar de
-    # aço; o cabo de freixo; a empunhadura de couro e o botão de latão no pé.
-    botao = disco(0.0, 0.0, 1.45)
-    empunhadura = faixa_uv(1.1, 7.4, 1.1)
-    cabo = faixa_uv(7.4, 20.0, 0.92)
-    colar = faixa_uv(18.8, 20.8, 1.55)
-    # a cabeça: um bulbo de aço (o ovo ao longo do eixo) dividido em três gomos pelas aletas (a da frente no meio, as dos
-    # lados nas beiras; no 32 não cabem mais); os vãos entre elas, escuros, recortam a ponta de cima em dentes curtos
-    CU, RU, RV = 25.6, 5.1, 4.5                                                 # o centro e os raios do bulbo
-    BORDAS = [-RV, -1.55, 1.55, RV]
-    def topo(v):
-        return CU + RU * np.sqrt(np.clip(1 - (v / RV) ** 2, 0, 1))
-    def pe(v):
-        return CU - RU * np.sqrt(np.clip(1 - (v / RV) ** 2, 0, 1))
-    cabeca = ((U - CU) / RU) ** 2 + (V / RV) ** 2 <= 1
-    vaos = np.zeros((N, N), bool)
-    for b in BORDAS[1:-1]:
-        vaos |= np.abs(V - b) * K <= max(0.38 * K, 0.5)
-    vaos &= (U > pe(V) + 0.8)                                                   # o pé do bulbo fica inteiro
-    recorte = vaos & (U > topo(V) - 0.9)                                        # os dentes da ponta de cima
-    cabeca &= ~recorte
-    aleta = np.digitize(V, BORDAS[1:-1])                                        # 0..2: o gomo de cima, o da frente, o de baixo
-    ponta = poligono_uv([(30.2, -1.0), (32.4, 0.0), (30.2, 1.0)])
+    # A maça, rodada 2: a cabeça pesada e redonda (a proporção entre cabeça e cabo e a massa arredondada vêm do
+    # placeholder antigo, sem a pintura dele), com cinco aletas curtas e bem separadas saindo do bulbo (a da ponta, duas
+    # nos lados, duas embaixo, junto do cabo); a luz acompanha o volume (o bulbo como uma esfera, a luz de cima e da
+    # esquerda, o brilho agrupado), sem a faixa clara atravessando a cabeça; o colar de aço, o cabo de freixo, a
+    # empunhadura de couro e o botão de latão.
+    from pixel_comum import LUZ
+    CU, R = 25.0, 4.25                                                          # o centro do bulbo (no eixo) e o raio
+    C = O + CU * D
+    botao = disco(1.0, 0.0, 1.4)
+    empunhadura = faixa_uv(2.0, 8.4, 1.05)
+    cabo = faixa_uv(8.4, 21.4, 0.95)
+    colar = faixa_uv(19.8, 21.6, 1.55)
+    bulbo = np.hypot(x32 - C[0], y32 - C[1]) <= R
+    ALETAS = [(1.0, 0.0), (0.42, -0.91), (0.42, 0.91), (-0.55, -0.83), (-0.55, 0.83)]   # as direções em (u, v)
+    aletas = np.zeros((N, N), bool); qual = np.full((N, N), -1)
+    for k, (du, dv) in enumerate(ALETAS):
+        n = np.hypot(du, dv); du, dv = du / n, dv / n
+        a = poligono_uv([(CU + du * (R - 0.6) - dv * 1.25, dv * (R - 0.6) + du * 1.25),
+                         (CU + du * (R + 1.75) - dv * 0.95, dv * (R + 1.75) + du * 0.95),
+                         (CU + du * (R + 1.75) + dv * 0.95, dv * (R + 1.75) - du * 0.95),
+                         (CU + du * (R - 0.6) + dv * 1.25, dv * (R - 0.6) - du * 1.25)])
+        qual = np.where(a & ~bulbo, k, qual); aletas |= a
+    aletas &= ~bulbo
+    cabeca = bulbo | aletas
     if ETAPA == "silhueta":
-        pinta(botao | empunhadura | cabo | colar | cabeca | ponta, "f", 5, "cabeca")
+        pinta(botao | empunhadura | cabo | colar | cabeca, "f", 5, "cabeca")
     else:
         pinta(cabo, "m", np.where(V < -0.2, 6, np.where(V < 0.4, 5, 3)), "cabo")
         volta = ((U * 1.0 + V * 0.6) % 1.6) < 0.55
         pinta(empunhadura, "k", np.where(V < 0, 5, 3), "empunhadura")
         pinta(empunhadura & volta, "k", 2, "empunhadura"); fixo[empunhadura & volta] = True
-        pinta(botao, "o", np.where(V + U < -0.4, 6, 4), "empunhadura")
+        pinta(botao, "o", np.where(V + (U - 1.0) < -0.4, 6, 4), "empunhadura")
         pinta(colar, "f", np.where(V < 0, 6, 3), "cabeca")
-        pinta(colar & (np.abs(U - 19.8) < 0.35), "f", 2, "cabeca")
-        # as aletas: a de perfil de cima e a de 45 graus de cima na luz, a da frente a mais clara, as de baixo na sombra;
-        # a beira de fora de cada aleta um tom acima; os vãos escuros
-        # os gomos: a luz de cima e da esquerda, mais forte no da frente; o alto de cada gomo aceso, o pé na sombra
-        ta = np.choose(aleta, [6, 8, 4])
-        ta = np.where((aleta == 0) & (V < -3.3), 7, ta)                         # a beira de cima, na luz
-        ta = np.where((aleta == 2) & (V > 3.3), 3, ta)
-        ta = np.where(U > topo(V) - 1.5, np.minimum(ta + 1, 8), ta)
-        ta = np.where(U < pe(V) + 1.3, np.maximum(ta - 2, 2), ta)
-        pinta(cabeca, "f", ta, "cabeca")
-        pinta(cabeca & vaos, "f", 2, "cabeca"); fixo[cabeca & vaos] = True
-        pinta(ponta, "f", np.where(V < 0, 7, 4), "cabeca")
+        # o bulbo como esfera: o tom pela normal e pela luz, em faixas largas; o brilho agrupado em cima à esquerda
+        nx = (x32 - C[0]) / R; ny = (y32 - C[1]) / R; nz = np.sqrt(np.clip(1 - nx * nx - ny * ny, 0, 1))
+        li = nx * LUZ[0] + ny * LUZ[1] + nz * LUZ[2]
+        tb = np.select([li > 0.86, li > 0.62, li > 0.32, li > 0.0], [8, 6, 5, 4], 2)
+        pinta(bulbo, "f", tb, "cabeca")
+        # as aletas: cada uma no tom da direção para onde aponta (as de cima e da esquerda na luz), a beira de fora acesa
+        # nas de cima; a junção com o bulbo, uma linha escura
+        for k, (du, dv) in enumerate(ALETAS):
+            n = np.hypot(du, dv); dxy = (du * D + dv * Pp) / n
+            luz_a = dxy[0] * LUZ[0] + dxy[1] * LUZ[1]
+            ta = 7 if luz_a > 0.3 else (5 if luz_a > -0.2 else 3)
+            pinta(aletas & (qual == k), "f", ta, "cabeca")
+        juncao = aletas & (np.hypot(x32 - C[0], y32 - C[1]) <= R + 0.75)
+        pinta(juncao, "f", 2, "cabeca")
     camadas = ["cabo", "empunhadura", "cabeca", "contorno"]
 
 if ETAPA == "final":

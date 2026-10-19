@@ -194,7 +194,8 @@ const PECAS = {
   // a espada e a maça (espada_maca/, o começo do remake do ferro): só o 32 e o 64 (= 32 x2) na proposta, então os
   // tamanhos ficam [32, 64] nesta página (o 40 do Inventário e o 48 do "você usa" mostram o mais perto, como o jogo faz
   // com um tamanho sem arquivo). A espada: o Guerreiro com ela na mão (ARMA, no tutorial), a ficha, o Inventário, o
-  // saque e a roda da luta (o Atacar do Guerreiro é o desenho "espada"); a maça: a ficha, o Inventário e o saque
+  // saque e a roda da luta (o Atacar do Guerreiro é o desenho "espada"); a maça: a ficha, o Inventário e o saque.
+  // Rodada 2 (a vigente: ROTULO=rodada2) e rodada 1 (PASTA=espada_maca/rodada1/proposta ROTULO=rodada1 SO_PROPOSTA=1)
   espada: { pasta: "espada_maca/proposta", saida: "espada_maca/capturas/espada", nomes: ["espada", "maca"], papel_tamanhos: [32, 64],
     cena: ["tutorial", { CLASSE: "guerreiro", TUTORIAL: "0", PERIODO: "0", ARMA: "espada" }], fotos: ["ficha", "inventario"],
     saque: ["vila", { CLASSE: "guerreiro", ACHADO: "espada", VESTIDO: "espada" }] },

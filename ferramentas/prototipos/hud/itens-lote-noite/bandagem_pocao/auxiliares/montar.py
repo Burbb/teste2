@@ -200,6 +200,37 @@ def espada_maca():
     prancha([P / "espada-32.png", P / "espada-64.png", base / "previa" / "espada" / "32" / "espada_silhueta_32.png",
              P / "maca-32.png", P / "maca-64.png", base / "previa" / "maca" / "32" / "maca_silhueta_32.png"], base / "prancha-carvao.png")
 
+def espada_maca_r2():
+    """A espada e a maça, rodada 2: a espada contra a referência principal (tamanho real e ampliadas na mesma escala), as
+    duas no jogo (atual × rodada 1 × rodada 2) e a fileira com o escudo e o machado."""
+    base = LOTE / "espada_maca"; P = base / "proposta"; R1 = base / "rodada1" / "proposta"
+    ref = Image.open(RAIZ / "ferramentas/arte/referencias/espada/espadasample.png").convert("RGBA").crop((64, 0, 128, 64))
+    ims = [("referência (64)", ref), ("rodada 1 (32)", Image.open(R1 / "espada-32.png").convert("RGBA")),
+           ("rodada 2 (32)", Image.open(P / "espada-32.png").convert("RGBA"))]
+    o = Image.new("RGB", (3 * 300 + 20, 400), (245, 245, 245)); d = ImageDraw.Draw(o)
+    d.text((10, 4), "tamanho real (sobre o carvão); a referência é a espada de aço da direita de espadasample.png", fill=(0, 0, 0), font=FONTE)
+    d.text((10, 104), "ampliadas na mesma escala, sem suavização (a referência 4x, as de 32 8x)", fill=(0, 0, 0), font=FONTE)
+    for k, (rot, im) in enumerate(ims):
+        x = 10 + k * 300
+        fundo = Image.new("RGBA", (72, 72), (24, 24, 28, 255)); fundo.alpha_composite(im, ((72 - im.width) // 2, (72 - im.height) // 2))
+        o.paste(fundo.convert("RGB"), (x, 22)); d.text((x + 80, 50), rot, fill=(0, 0, 0), font=FONTE)
+        g = Image.new("RGBA", (256, 256), (24, 24, 28, 255)); g.alpha_composite(im.resize((256, 256), Image.NEAREST)); o.paste(g.convert("RGB"), (x, 124))
+    o.save(base / "espada-referencia-r1-r2.png"); print(base / "espada-referencia-r1-r2.png")
+    modos = ("atual", "rodada1", "rodada2")
+    folha(base / "capturas", [("a ficha do Guerreiro com a espada (32)", "ficha", (18, 362, 272, 472), "espada"),
+                              ("o cartão do saque da espada (64; o 48 do 'você usa' sai do 64 reduzido, sem o 48 próprio)", "saque", None, "espada"),
+                              ("a roda da luta: o Atacar do Guerreiro (32)", "luta", (250, 10, 470, 225), "espada")],
+          base / "espada-no-jogo.png", modos)
+    folha(base / "capturas", [("a ficha do Guerreiro com a maça (32)", "ficha", (18, 362, 272, 472), "maca"),
+                              ("o corpo no Inventário (40: sem o 40 próprio, o jogo mostra o 32)", "inventario", (150, 140, 480, 520), "maca"),
+                              ("o cartão do saque da maça (64; o 48 sai do 64 reduzido)", "saque", None, "maca")],
+          base / "maca-no-jogo.png", modos)
+    fileira([("maça (atual)", JOGO / "maca-32.png"), ("maça r1", R1 / "maca-32.png"), ("maça r2", P / "maca-32.png"),
+             ("espada r2", P / "espada-32.png"), ("espada r1", R1 / "espada-32.png"), ("escudo", JOGO / "escudo-32.png"),
+             ("machado", JOGO / "machado-32.png")], base / "fileira-guerreiro-32.png")
+    prancha([P / "espada-32.png", P / "espada-64.png", base / "previa" / "espada" / "32" / "espada_silhueta_32.png",
+             P / "maca-32.png", P / "maca-64.png", base / "previa" / "maca" / "32" / "maca_silhueta_32.png"], base / "prancha-carvao.png")
+
 def sandalia_no_jogo():
     """A Sandália no jogo (1.142.0), em tamanho real: o saque, a ficha e o Inventário depois de "Equipar agora"."""
     pasta = LOTE / "sandalia_chapeu" / "capturas" / "integracao"
@@ -215,7 +246,7 @@ def sandalia_no_jogo():
 
 if __name__ == "__main__" and sys.argv[1] in ("antidoto_base", "frasco_vazio", "anel_referencia", "conjunto_mago", "sandalia_r2",
                                               "sandalia_no_jogo", "besta_diadema", "diadema_r2",
-                                              "espada_maca"):
+                                              "espada_maca", "espada_maca_r2"):
     globals()[sys.argv[1]](); sys.exit()
 if __name__ == "__main__":
     nome = sys.argv[1]; cfg = LOTES[nome]; base = LOTE / nome
