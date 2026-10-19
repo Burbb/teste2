@@ -88,8 +88,7 @@ Pixel art, no espírito de Daggerfall e Tibia, e tudo desenhado em código: não
 imagem. Os sprites são grades de pixels no `sprites.js`, sempre desenhados em pixels inteiros da
 tela (mesmo com zoom de 125% ou 150% no sistema). As fontes são livres (OFL) e cada uma tem um
 papel: a gótica **Jacquard 24** nos títulos e nomes; **Jersey 15** nos números e rótulos curtos;
-**Pixelify Sans** na interface; e **Alegreya** na história, feita para leitura longa. O botão "Fonte"
-no topo troca só a fonte da história, pela pixel.
+**Pixelify Sans** na interface; e **Alegreya** na história, feita para leitura longa.
 
 - **A história em primeiro lugar.** Uma cena por página, com uma **paisagem em pixel art** no
   topo que muda com o bioma, o período do dia e o clima (chuva, neve, névoa,

@@ -1,8 +1,8 @@
 /* The Unquiet — a interface da referência do Jean: painéis quase pretos num quadro de bronze com rebites nos
    cantos, títulos góticos em ouro com contorno, tudo o mais numa serifa clássica. A arte (sprites, paisagem, quadros
    e enfeites) é pixel art na paleta indexada de sprites.js.
-   Fontes (embutidas): Alagard nos títulos ("Titulo"), Alegreya na interface e na prosa (11-tipografia.css), e
-   Pixelify Sans quando o jogador pede "Fonte: pixel" para a história. */
+   Fontes (embutidas): Alagard nos títulos ("Titulo") e Alegreya na interface e na prosa (11-tipografia.css). A
+   Pixelify Sans e a Jersey 15 servem ao mostruário dos materiais (tests/navegador/mostruario.html), não ao jogo. */
 
 @font-face { font-family: "Jacquard 24"; src: url(../fontes/jacquard-24-latin-400-normal.woff2) format("woff2"); font-display: swap; }
 /* Títulos: a Alagard (Hewett Tsoi), gótica em pixel e legível, a da referência do Jean. A original só tem ASCII: os

@@ -4231,3 +4231,18 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
     o estado sem tochas no topo e na escolha saem como nas fotos da proposta; a caixa do recurso e a escolha têm as
     mesmas medidas. Quantidades, regras, textos e áreas de interação não mudaram.
 - **A tocha inteira em pixel art:** 16, 24 e 32 acesa e 16 e 24 apagada.
+
+### 19/10/2026 (data do computador local) — A fonte de livro como única (1.137.0)
+
+- **Pedido de Jean:** tirar a fonte pixel alternativa da história; a de livro fica como padrão único, sem o controle
+  "Fonte" no topo, e quem tinha a preferência pixel salva passa sozinho para a de livro.
+- **Feito:**
+  - o botão "Fonte" saiu do topo (`index.html`) e o `alternarFonte` saiu de `app/controles.js`; ao iniciar, a
+    preferência antiga `cdf-fonte` é apagada (protegido para armazenamento bloqueado);
+  - em `css/11-tipografia.css`, as regras da `fonte-pixel` saíram; os tamanhos da prosa ficam os de sempre (21 px na
+    folha, 20 nas escolhas, 18 nas secundárias);
+  - a Pixeloid Sans negrito (`fontes/pixeloid-sans-bold.ttf`) saiu: era só da alternativa. A Pixeloid regular fica,
+    porque é a da seta de quem abre outra escolha; a Pixelify Sans e a Jersey 15 ficam para o mostruário dos materiais
+    (`tests/navegador/mostruario.html`). Logotipo e títulos (Alagard) não mudam.
+  - Conferido a 1920×945 com a preferência antiga salva: a chave some, a prosa fica na Alegreya, nos mesmos tamanhos, e
+    não há erro no console.

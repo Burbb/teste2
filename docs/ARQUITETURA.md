@@ -297,7 +297,7 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   gerados em `sprites.js`; nada de gradiente liso, desfoque, canto redondo ou cor translúcida
   (`tests/test_estilo_pixel.py` trava isso, arquivo por arquivo). Títulos em Alagard (`fontes/alagard-pt.ttf`, com os
   acentos desenhados por `ferramentas/acentuar_alagard.py`), em múltiplos de 16 px de arte; interface, números e prosa
-  em Alegreya ("Fonte: pixel" troca só a prosa, para Pixelify Sans).
+  em Alegreya, a única fonte da prosa (a "Fonte: pixel" do topo saiu na 1.137.0).
 - A HUD de ferro (1.89.0; o caminho até ela está em `ferramentas/prototipos/hud/`, que fica como histórico). Os
   materiais da interface por cima da estrutura de 01 a 13, em três folhas: `css/14-hud.css` (as três molduras
   principais da ficha, da coluna do centro e do mundo, as superfícies de carvão, o topo, a doca, os botões, a ficha, os

@@ -16,12 +16,6 @@ function mudarVelocidade() {
   guardar("cdf-velocidade", velocidade);
   $("#vel-rotulo").textContent = NOME_VEL[velocidade];
 }
-function alternarFonte(forcar) {
-  const pixel = forcar === undefined ? !corpo.classList.contains("fonte-pixel") : forcar;
-  corpo.classList.toggle("fonte-pixel", pixel);
-  $("#fonte-rotulo").textContent = pixel ? "pixel" : "livro";
-  if (forcar === undefined) guardar("cdf-fonte", pixel ? "pixel" : "livro");
-}
 function alternarSom() {
   Som.iniciar();
   const ligado = Som.alternar();
@@ -54,7 +48,6 @@ document.addEventListener("click", (ev) => {
     else if (a === "mapa") alternarMapa();
     else if (a === "velocidade") mudarVelocidade();
     else if (a === "som") alternarSom();
-    else if (a === "fonte") alternarFonte();
     else if (a === "heroi") corpo.classList.toggle("mostrar-heroi");
     else if (a === "mundo") corpo.classList.toggle("mostrar-mundo");
     else if (a === "fechar-talentos") fecharTudo();
@@ -197,7 +190,8 @@ async function iniciar() {
     if (!ler("cdf-velocidade") && VELOCIDADES[cfg.velocidade] !== undefined) velocidade = cfg.velocidade;
   } catch (e) { /* usa o padrão */ }
   $("#vel-rotulo").textContent = NOME_VEL[velocidade];
-  alternarFonte(ler("cdf-fonte") === "pixel");
+  // A fonte pixel da história saiu (1.137.0): a de livro é a única. A preferência antiga guardada só é apagada.
+  try { localStorage.removeItem("cdf-fonte"); } catch (e) { /* sem armazenamento */ }
   $("#botao-som").classList.toggle("desligado", !Som.ligado);
   brasas();
   conectar();

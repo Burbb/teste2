@@ -1,10 +1,10 @@
 /* ================================================================== tipografia
    Como na referência do Jean: o gótico só nos títulos ("Titulo", 01-base.css) e uma serifa clássica em todo o resto,
    a interface e a prosa. A Alegreya tem itálico de verdade e algarismos alinhados (lining-nums no body).
-   "Fonte: pixel" no topo troca só a prosa da história, pela Pixeloid Sans.
    A Alegreya Sans (a irmã sem serifa da Alegreya, OFL) é a fonte de leitura dos papéis do Diário e das notas das opções:
    traço mais firme sobre o pergaminho, a mesma família da história. A Pixeloid Sans (GGBotNet, OFL), que tem 9 pixels
-   por eme (cada pixel inteiro em 18px), é a da "Fonte: pixel" e da seta de quem abre outra escolha. */
+   por eme (cada pixel inteiro em 18px), é só a da seta de quem abre outra escolha (a "Fonte: pixel" da história saiu
+   na 1.137.0: a prosa é sempre a de livro). */
 @font-face { font-family: "Alegreya"; font-weight: 400; src: url(../fontes/alegreya-latin-400-normal.woff2) format("woff2"); font-display: swap; }
 @font-face { font-family: "Alegreya"; font-weight: 400; font-style: italic; src: url(../fontes/alegreya-latin-400-italic.woff2) format("woff2"); font-display: swap; }
 @font-face { font-family: "Alegreya"; font-weight: 600; src: url(../fontes/alegreya-latin-600-normal.woff2) format("woff2"); font-display: swap; }
@@ -12,18 +12,15 @@
 @font-face { font-family: "Alegreya Sans"; font-weight: 400; src: url(../fontes/alegreya-sans-latin-400-normal.woff2) format("woff2"); font-display: swap; }
 @font-face { font-family: "Alegreya Sans"; font-weight: 700; src: url(../fontes/alegreya-sans-latin-700-normal.woff2) format("woff2"); font-display: swap; }
 @font-face { font-family: "Pixeloid Sans"; font-weight: 400; src: url(../fontes/pixeloid-sans.ttf) format("truetype"); font-display: swap; }
-@font-face { font-family: "Pixeloid Sans"; font-weight: 700; src: url(../fontes/pixeloid-sans-bold.ttf) format("truetype"); font-display: swap; }
 :root { --prosa: "Alegreya", Georgia, serif; --leitura: "Alegreya Sans", "Alegreya", sans-serif;
   --pixel: "Pixeloid Sans", "Trebuchet MS", sans-serif; }
-body.fonte-pixel { --prosa: var(--pixel); }
-body.fonte-pixel #folha, body.fonte-pixel .escolha { font-size: 18px; line-height: 1.6; }
 /* O Diário e a nota de uma opção leem na Alegreya Sans, sem itálico em letra pequena (era o que cansava). O cartão de
    novidade é parte da história: fica na fonte dela (10-contratos.css). */
 .missao-diario, .escolha .op-nota { font-family: var(--leitura); }
 .missao-diario * { font-style: normal; }
 #folha, .escolha, .balao span, .cc-fala, .bilhete, .contrato-desc, .lore { font-family: var(--prosa); }
-body:not(.fonte-pixel) #folha { font-size: 21px; line-height: 1.55; }
-body:not(.fonte-pixel) .escolha { font-size: 20px; }
-body:not(.fonte-pixel) .escolha.secundaria { font-size: 18px; }
+body #folha { font-size: 21px; line-height: 1.55; }
+body .escolha { font-size: 20px; }
+body .escolha.secundaria { font-size: 18px; }
 /* As cartas de ação do combate são botões, não prosa: ficam na fonte da interface. */
-body:not(.fonte-pixel) .acoes-combate .escolha { font-family: var(--texto); }
+body .acoes-combate .escolha { font-family: var(--texto); }
