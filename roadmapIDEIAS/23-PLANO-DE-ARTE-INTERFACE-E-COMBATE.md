@@ -142,7 +142,7 @@ de antes não vale como arte final.
 | `calca` → `perneiras` | Perneira, Greva (Guerreiro) | **Placeholder integrado, pendente de remake** | redução da pintura | Também a silhueta das pernas vazias (`VAZIO`) |
 | `bota_ferro` → `botas-ferro` | Bota Ferrada (Guerreiro) | **Placeholder integrado, pendente de remake** | redução da pintura | Também a silhueta dos pés vazios (`VAZIO`) |
 | `martelo` | Martelo (Guerreiro) | **Arte aprovada, preservada; faltam o 40 e o 48** | grade de 32 em `desenhos.js` (1.93.0) | Desenho próprio, não da pintura; completar o 40 e o 48 pela mesma construção, sem redesenhar (outra entrega) |
-| `besta` | Besta Leve (Arqueiro) | **Desenho inexistente** no jogo; proposta em avaliação | sem papel em `Icones` (o sprite 16×16); proposta em `itens-lote-noite/besta_diadema/` | Uma das quatro armas do Arqueiro |
+| `besta` | Besta Leve (Arqueiro) | Arte final, padrão atual (integrada na 1.143.0) | `aseprite/besta/` (1.143.0) | Uma das quatro armas do Arqueiro |
 | `chapeu` | Chapéu Pontudo (Mago) | Arte final, padrão atual (integrada na 1.141.0) | `aseprite/chapeu/` (1.141.0) | Um terço das cabeças do Mago |
 | `coroa` | Diadema (Mago); único Coroa dos Afogados | **Desenho inexistente** no jogo; proposta em avaliação | sem papel em `Icones`; proposta em `itens-lote-noite/besta_diadema/` | O sprite `coroa` é também o símbolo da reputação (fica); a Coroa dos Afogados pede arte própria no futuro |
 | `sandalia` | Sandália (Mago, a única base dos pés dele) | Arte final, padrão atual (integrada na 1.142.0) | `aseprite/sandalia/` (1.142.0) | Nomes dos materiais de tecido num desenho de couro: pendência de nomenclatura |
@@ -167,11 +167,11 @@ de antes não vale como arte final.
 | `amuleto` | Amuleto, Talismã, Pingente, Medalhão | Arte final, padrão atual | `aseprite/amuleto/` (1.140.0) | Compartilhamento mantido |
 
 **A contagem:** 31 desenhos de equipamento.
-- **Arte final aprovada no padrão atual:** 21 (o escudo, o machado e os 19 do Arqueiro, do Mago e dos acessórios; o
-  Chapéu Pontudo entrou na 1.141.0 e a Sandália na 1.142.0).
+- **Arte final aprovada no padrão atual:** 22 (o escudo, o machado e os 20 do Arqueiro, do Mago e dos acessórios; o
+  Chapéu Pontudo entrou na 1.141.0, a Sandália na 1.142.0 e a Besta Leve na 1.143.0).
 - **Placeholder integrado, pendente de remake:** 7, todos do Guerreiro (espada, maça, elmo, cota, manopla, perneiras,
   botas de ferro). O equipamento do Guerreiro **não está concluído**: só o escudo e o machado são finais.
-- **Desenho inexistente:** 2 (Besta Leve, Diadema).
+- **Desenho inexistente:** 1 (o Diadema, com a Coroa dos Afogados).
 - **Arte aprovada com tamanhos pendentes:** 1 (o martelo: o desenho fica; faltam o 40 e o 48, sem redesenho).
 - **Compartilhamento provisório aceito** (a peça usa o desenho de outra até ganhar o seu): a Capa de Patrulha no gibão
   (o lote de capas) e o Chapéu de Couro no capuz. Os compartilhamentos do manto, do anel, do amuleto, do orbe e do livro
@@ -209,7 +209,8 @@ execução fica para outra entrega.
   viagem. **Pendência de nomenclatura** (não impediu a integração visual; nomes e materiais mantidos na 1.142.0):
   decidir depois se a base ganha materiais próprios (couro) ou se os nomes ficam.
 
-**A Besta Leve e o Diadema (proposta, 19/10/2026; nada no jogo).** Em
+**A Besta Leve e o Diadema (19/10/2026).** A Besta Leve foi aprovada sem retoque (`63a7a85`) e integrada na 1.143.0
+(fontes em `ferramentas/arte/aseprite/besta/`); o Diadema voltou para uma revisão de apresentação. Em
 `ferramentas/prototipos/hud/itens-lote-noite/besta_diadema/` (o registro completo no `LEIA-ME.md` do lote):
 - **O alcance de uma futura troca:**
   - `besta`: só a base Besta Leve (uma das quatro armas do Arqueiro, com os materiais de metal: "Besta Leve

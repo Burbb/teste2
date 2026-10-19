@@ -4490,3 +4490,20 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   necessidade futura (plano 23). Nenhum dado mudou.
 - **Aguardando avaliação.**
 
+### 19/10/2026 (data do computador local) — A Besta Leve no jogo (1.143.0)
+
+- **Pedido de Jean:** integrar a Besta Leve do `63a7a85` sem retoque; o Diadema volta para uma revisão do ângulo.
+- **A integração:**
+  - as fontes em camadas foram para `ferramentas/arte/aseprite/besta/` (32, 40, 48: coronha, empunhadura, corda, arco,
+    metal, contorno); `DERIVADOS` com o 64 = 32 ×2;
+  - os 8 arquivos do jogo são idênticos, byte a byte, aos aprovados, e `exportar_aseprite.py besta --conferir` os
+    reproduz;
+  - o papel `besta` em `ITEM` e `TAMANHOS` de `icones.js`; a arma vazia continua com a espada de ferro (`VAZIO`);
+  - conferido a 1920×945 com os arquivos do jogo e os saves temporários (`sandalia_chapeu/auxiliares/equipar.mjs`, agora
+    com a classe, o desenho, o espaço e a versão por argumento; fotos em `besta_diadema/capturas/integracao/`): o saque
+    (64 e 48), "Equipar agora" (Ataque 13 → 15, Vida 60 → 73, como a comparação do cartão; a vestida vai para a
+    mochila; a ficha em 32 e o Inventário em 40, no corpo e na mochila) e "Guardar na mochila" (nada muda no corpo; a
+    achada na mochila). Sem erro no console. A ficha e o corpo do Inventário são idênticos às fotos aprovadas; no
+    saque, só os raios animados atrás do ícone mudam.
+  - Preços, atributos, regras, medidas, áreas de clique e animações não mudaram.
+

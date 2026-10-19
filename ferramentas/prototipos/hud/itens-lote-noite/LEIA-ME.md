@@ -1660,3 +1660,8 @@ o machado) e `fileira-mago-32.png` (o diadema com o Chapéu Pontudo, o capuz, o 
 - **Para a integração (só depois da aprovação):** os papéis `besta` e `coroa` (→ `diadema`) em `ITEM` e `TAMANHOS`,
   as fontes em `ferramentas/arte/aseprite/`, `DERIVADOS` com o 64 = 32 ×2.
 
+**A Besta Leve integrada na 1.143.0, sem retoque** (aprovada no `63a7a85`): as fontes foram para
+`ferramentas/arte/aseprite/besta/`; os 8 arquivos do jogo são idênticos, byte a byte, aos da proposta; o 64 é o 32 ×2
+(`DERIVADOS`). Conferida com os arquivos do jogo e os saves temporários (`capturas/integracao/no-jogo-1.143.0-*`): o
+saque, equipar (os atributos mudam como a comparação do cartão), guardar, a ficha e o Inventário.
+
