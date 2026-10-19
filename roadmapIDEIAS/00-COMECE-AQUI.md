@@ -4628,3 +4628,15 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   48) e na ficha.
 - **Aguardando a avaliação final dos tamanhos** da espada e da maça antes de entrar no jogo. A versão não mudou.
 
+### 19/10/2026 (data do computador local) — A skill das espadas (`arte-espadas-fenda`)
+
+- **Pedido de Jean:** registrar o aprendizado da espada numa skill própria, na organização das de livros e anéis,
+  complementar à `arte-itens-fenda` (que agora indica consultá-la quando o objeto for uma espada).
+- **Feito:** `.claude/skills/arte-espadas-fenda/SKILL.md` (as referências de `ferramentas/arte/referencias/espada/` e a
+  hierarquia, sem duplicar os PNGs; a silhueta e as proporções antes do acabamento; a continuidade dos gumes e a
+  formação da ponta; a comparação com a referência pela silhueta e pelo eixo; os planos do aço; básicas e avançadas,
+  com os efeitos como possibilidade futura; o Aseprite, a exportação e a avaliação em tamanho real) e `exemplos.md` (a
+  espada aprovada e as recusadas: a cunha, a agulha, a rombuda e o fechamento deslocado, com os defeitos). Os
+  princípios ficam separados das escolhas deste exemplo (a diagonal, o latão, a paleta, a largura, a ponta centrada, as
+  contagens de pixels), e a skill registra que instruções prescritivas demais contribuíram para os desvios.
+

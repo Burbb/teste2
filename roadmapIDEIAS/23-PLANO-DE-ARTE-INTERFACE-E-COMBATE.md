@@ -221,7 +221,8 @@ espada e a maça** (o começo do remake do ferro).
     para um lado, com uma mudança brusca de direção no fim). O Jean trocou a abordagem: em vez de um gume reto e o
     outro avançando, os dois gumes convergindo de forma contínua para uma ponta alinhada com a lâmina. Refeita assim
     (regra simétrica no eixo, o vértice sobre o eixo); **aprovada** (`0fcfe18`). O 40 e o 48 dela estão em avaliação,
-    com a maça (os quatro tamanhos); as duas só entram no jogo depois da avaliação final dos tamanhos.
+    com a maça (os quatro tamanhos); as duas só entram no jogo depois da avaliação final dos tamanhos. O aprendizado
+    virou a skill `arte-espadas-fenda` (`.claude/skills/`), complementar à `arte-itens-fenda`.
 
 **A ordem recomendada (separada da contagem):** primeiro a **Sandália e o Chapéu Pontudo**, que são o placeholder
 mais frequente do Mago e fecham o vestuário de tecido dele, já com capuz, luva, calça e manto aprovados como referência

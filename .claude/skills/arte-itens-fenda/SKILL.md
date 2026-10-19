@@ -23,6 +23,12 @@ fechado, entreaberto ou aberto), consulte também a skill `arte-livros-fenda`
 ([../arte-livros-fenda/SKILL.md](../arte-livros-fenda/SKILL.md)). Ela trata das referências, da construção do livro
 como um objeto só e da decoração no plano; o resto continua sendo o desta skill.
 
+**Espadas:** quando o objeto é uma espada ou outra arma de lâmina longa (a Espada, o Montante, um sabre), consulte
+também a skill `arte-espadas-fenda` ([../arte-espadas-fenda/SKILL.md](../arte-espadas-fenda/SKILL.md)): as referências
+do Jean e a hierarquia delas (em `ferramentas/arte/referencias/espada/`), a silhueta e as proporções antes do
+acabamento, a continuidade dos gumes e a formação da ponta, a comparação com a referência pelo eixo da lâmina e as
+tentativas recusadas; o resto continua sendo o desta skill.
+
 ## Antes de desenhar
 
 1. **O que o jogo diz do item.** Leia o nome, a descrição, o preço, o tipo e os usos em `rpg/itens.py` e onde o item
