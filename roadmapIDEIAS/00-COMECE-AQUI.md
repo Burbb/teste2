@@ -4616,3 +4616,15 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Prancha:** a referência × a anterior × a nova (tamanho real, silhueta com o eixo e acabamento). A maça não mudou.
 - **Aguardando avaliação.** Nada integrado; a versão não mudou; a skill de espadas fica para depois.
 
+### 19/10/2026 (data do computador local) — A espada em 40 e 48 (proposta)
+
+- **Decisão de Jean:** a espada do `0fcfe18` aprovada (32 e 64 sem retoque); completar o 40 e o 48 com o fechamento
+  aprovado da ponta, adaptado a cada grade.
+- **Feito, só no protótipo** (`ferramentas/prototipos/hud/itens-lote-noite/espada_maca/`): a mesma construção, com o
+  vértice ajustado por grade (para terminar num pixel sobre o eixo, sem degrau) e a luz da lâmina pela proporção do
+  corte do 32 nos maiores; fontes pelo `pintar.lua`; composto, exportação e prévia conferem; @2x exatos. O 32, o 64 e a
+  maça intocados.
+- **Folhas a 1920×945:** os quatro tamanhos e a ponta de cada grade; atual × a espada no Inventário (40), no saque (64 e
+  48) e na ficha.
+- **Aguardando a avaliação final dos tamanhos** da espada e da maça antes de entrar no jogo. A versão não mudou.
+

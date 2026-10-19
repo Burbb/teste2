@@ -7,7 +7,7 @@
 //       | vida_mana | vigor_foco | vigor_foco_arqueiro | ouro_provisoes | moeda | tocha | tocha16 | tocha16_risco | tocha_apagada
 //       | bandagem_pocao | bandagem_pocao_luta | tonico_antidoto | calca_manto | calca_manto_saque_calca
 //       | frasco_vazio | frasco_cheio | antidoto_base | anel_amuleto | anel_amuleto_saque_amuleto | sandalia_chapeu | sandalia_chapeu_saque_chapeu
-//       | chapeu_no_jogo | sandalia_r2 | besta | diadema | coroa_afogados | espada | espada_luta | maca | maca_tamanhos
+//       | chapeu_no_jogo | sandalia_r2 | besta | diadema | coroa_afogados | espada | espada_luta | maca | maca_tamanhos | espada_tamanhos
 import { spawn } from "child_process";
 import { readFileSync, existsSync, mkdirSync } from "fs";
 import { fileURLToPath } from "url";
@@ -202,6 +202,10 @@ const PECAS = {
   espada_luta: { pasta: "espada_maca/proposta", saida: "espada_maca/capturas/espada", nomes: ["espada", "maca"], papel_tamanhos: [32, 64],
     cena: ["tutorial", { LUTA_APOS_ESCOLHA: "1", TUTORIAL: "0", VISTAS, CLASSE: "guerreiro", NIVEL: "8", ESPEC: "paladino", COMITIVA: "morel", LUTA: "lobo", QUANTOS: "3", NIVEL_LUTA: "7", ARMA: "espada" }],
     fotos: ["luta"] },
+  // a espada aprovada (0fcfe18) com os 40 e 48: espada_tamanhos (ROTULO=tamanhos SO_PROPOSTA=1), os quatro tamanhos
+  espada_tamanhos: { pasta: "espada_maca/proposta", saida: "espada_maca/capturas/espada", nomes: ["espada"],
+    cena: ["tutorial", { CLASSE: "guerreiro", TUTORIAL: "0", PERIODO: "0", ARMA: "espada" }], fotos: ["ficha", "inventario"],
+    saque: ["vila", { CLASSE: "guerreiro", ACHADO: "espada", VESTIDO: "espada" }] },
   // a maça aprovada (rodada 2) com os 40 e 48: maca_tamanhos (ROTULO=tamanhos SO_PROPOSTA=1), os quatro tamanhos
   maca_tamanhos: { pasta: "espada_maca/proposta", saida: "espada_maca/capturas/maca", nomes: ["maca"],
     cena: ["tutorial", { CLASSE: "guerreiro", TUTORIAL: "0", PERIODO: "0", ARMA: "maca" }], fotos: ["ficha", "inventario"],

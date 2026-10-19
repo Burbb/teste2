@@ -1934,3 +1934,30 @@ telas não foram repetidas nesta rodada.
 quarta). Para a futura skill de espadas, depois de um resultado aprovado: medir o eixo e o desvio do vértice; fechar os
 dois gumes juntos; e tratar a forma (silhueta e eixo) separada da luz (o fio e os planos por linha).
 
+### A espada em 40 e 48 (`espada_maca/`)
+
+**Decisão de Jean (19/10/2026):** a espada do `0fcfe18` está aprovada; o 32 e o 64 ficam sem retoque; faltam o 40 e o
+48, com as proporções, os materiais e a construção da lâmina, e a ponta com o fechamento aprovado (os gumes convergindo
+continuamente, o vértice alinhado com a lâmina, os planos acompanhando), adaptando os pixels de cada grade sem repetir a
+contagem do 32.
+
+**A construção:** a mesma do 32, nas medidas do quadro de 32 (o comprimento do fechamento `LT` = 4,6, a mesma
+proporção). Duas adaptações por grade:
+- **O vértice (`U1`) por grade:** a posição exata do vértice muda onde a ponta cai nos pixels. A primeira geração do 40
+  terminava com 2 pixels (achatada) e a do 48 saltava de 2 para 5 de largura (um degrau no gume de cima). Uma varredura
+  da posição do vértice, com o comprimento fixo, escolheu em cada grade o valor que termina num pixel sobre o eixo e
+  desce sem degrau, o mais perto do aprovado: 36,2 no 32 (o aprovado), 36,3 no 40 e 36,05 no 48. As larguras no fim:
+  32, 1, 2, 4, 4, 5; 40 e 48, 1, 2, 4, 5, 6, 6, 7.
+- **A luz por linha em toda a lâmina nos maiores:** a regra dos planos do corpo, escrita em medidas fixas, deixava o fio
+  claro fino no 48 e o plano médio dominando (a lâmina opaca). No 40 e no 48, a lâmina toda usa a proporção do corte do
+  32 (`8 8 5 3 3`: o fio em 2/5 da largura, o médio em 1/5, o escuro em 2/5), a mesma regra que já fazia o fechamento.
+  O 32 ficou com a regra aprovada (o PNG e o código de conferência não mudaram).
+
+**O Aseprite (pelo MCP):** o 40 e o 48 pintados pelo `pintar.lua` (0 diferenças, 0 fora da tela), em
+`fontes/espada/`; o composto do editor é igual aos PNGs exportados e à prévia; @2x exatos; o 32 e o 64 são os aprovados,
+e a maça (os quatro tamanhos) não mudou.
+
+**As folhas:** `espada-tamanhos.png` (os quatro tamanhos ampliados e a ponta de cada grade); `espada-tamanhos-no-jogo.png`
+(atual × a espada com os quatro tamanhos no Inventário, em 40, na comparação do saque, em 64 e 48, e na ficha;
+`fotografar.mjs espada_tamanhos`, `ROTULO=tamanhos SO_PROPOSTA=1`). Sem erro no console.
+

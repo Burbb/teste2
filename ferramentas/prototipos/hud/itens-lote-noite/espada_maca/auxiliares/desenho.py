@@ -60,7 +60,10 @@ if PECA == "espada":
     # abaixo) e a aresta no meio; a guarda curta de latão, a empunhadura de couro com as voltas e o pomo de aço. As
     # proporções da referência: a lâmina em 2/3 do comprimento, a ponta no último quarto dela, a guarda com 1,6 vez a
     # largura da lâmina; a lâmina um pouco mais larga que a da referência, para ter presença no 32.
-    U0, U1 = 10.8, 36.2                                                         # o começo da lâmina e o vértice
+    # o começo da lâmina e o vértice: o vértice ajustado por grade (uma fração de pixel), para a ponta terminar num pixel
+    # sobre o eixo e as larguras descerem sem degrau em cada tamanho (32: 1, 2, 4, 4, 5; 40 e 48: 1, 2, 4, 5, 6, 6, 7);
+    # o 32 é o aprovado (0fcfe18)
+    U0, U1 = 10.8, {32: 36.2, 40: 36.3, 48: 36.05}.get(N, 36.2)
     ML = 1.75                                                                   # a meia largura da lâmina
     LT = 4.6                                                                    # o comprimento do fechamento
     # a ponta (a quarta forma, 19/10/2026): como na espada de aço da referência, os dois gumes convergem juntos, em linha
@@ -91,10 +94,12 @@ if PECA == "espada":
         pinta(lamina, "f", tl, "lamina")
         aresta = lamina & (np.abs(V - 0.05) * K < max(0.4 * K, 0.5)) & (U > U0 + 1.2) & (U < U1 - LT)
         pinta(aresta, "f", 5, "lamina"); fixo[aresta] = True                    # linha diagonal: a limpeza não mexe
-        # no fechamento, os tons pela posição de cada pixel na sua linha (a lâmina é diagonal: cada linha da grade é um
+        # no fechamento (e, nos tamanhos maiores, em toda a lâmina), os tons pela posição de cada pixel na sua linha (a lâmina é diagonal: cada linha da grade é um
         # corte dela, como o 8 8 5 3 3 do corpo): o fio claro junto do gume de cima até o vértice, o plano escuro junto do
         # de baixo até a linha antes do vértice, o médio no meio quando cabe; o vértice, aceso
         fecho = lamina & (U > U1 - LT - 0.4)
+        if N != 32:   # nos maiores, a mesma proporção do corte do 32 (8 8 5 3 3) em toda a lâmina, não só no fechamento
+            fecho = lamina.copy()
         for yy in np.unique(np.nonzero(fecho)[0]):
             xs = np.nonzero(lamina[yy])[0]
             w = len(xs)

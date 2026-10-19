@@ -134,7 +134,7 @@ de antes não vale como arte final.
 
 | Desenho | Bases (e únicos) que usam a imagem | Situação | Sustentação | Atenção |
 |---|---|---|---|---|
-| `espada` | Espada, Montante (Guerreiro) | **Placeholder integrado, pendente de remake**; rodada 2 com a ponta refeita (quarta forma, simétrica no eixo) em avaliação (32) | redução da pintura (`familia_ferro.py`) | Também é o comando de ataque da luta (`ACAO`) e a silhueta da arma vazia (`VAZIO`), de todas as classes |
+| `espada` | Espada, Montante (Guerreiro) | **Placeholder integrado, pendente de remake**; a rodada 2 com a ponta da quarta forma aprovada (`0fcfe18`); 40 e 48 em avaliação | redução da pintura (`familia_ferro.py`) | Também é o comando de ataque da luta (`ACAO`) e a silhueta da arma vazia (`VAZIO`), de todas as classes |
 | `maca` | Maça (Guerreiro) | **Placeholder integrado, pendente de remake**; rodada 2 aprovada (`87c12eb`), 40 e 48 em avaliação | redução da pintura | — |
 | `elmo` | Elmo, Capacete, Barbuta (Guerreiro) | **Placeholder integrado, pendente de remake** | redução da pintura | Também a silhueta da cabeça vazia, de todas as classes (`VAZIO`) |
 | `armadura` → `cota` | Cota de Malha, Peitoral, Couraça, Brigantina (Guerreiro) | **Placeholder integrado, pendente de remake** | redução da pintura | Também a silhueta da armadura vazia (`VAZIO`) |
@@ -220,7 +220,8 @@ espada e a maça** (o começo do remake do ferro).
   - **A ponta, quarta forma (19/10/2026):** a terceira era válida, mas diferente da referência (o fechamento deslocado
     para um lado, com uma mudança brusca de direção no fim). O Jean trocou a abordagem: em vez de um gume reto e o
     outro avançando, os dois gumes convergindo de forma contínua para uma ponta alinhada com a lâmina. Refeita assim
-    (regra simétrica no eixo, o vértice sobre o eixo); em avaliação.
+    (regra simétrica no eixo, o vértice sobre o eixo); **aprovada** (`0fcfe18`). O 40 e o 48 dela estão em avaliação,
+    com a maça (os quatro tamanhos); as duas só entram no jogo depois da avaliação final dos tamanhos.
 
 **A ordem recomendada (separada da contagem):** primeiro a **Sandália e o Chapéu Pontudo**, que são o placeholder
 mais frequente do Mago e fecham o vestuário de tecido dele, já com capuz, luva, calça e manto aprovados como referência

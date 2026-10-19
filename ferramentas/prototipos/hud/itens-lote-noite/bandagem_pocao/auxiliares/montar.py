@@ -328,6 +328,26 @@ def espada_ponta4(*novas):
             o.paste(g.convert("RGB"), (x, yy))
     saida = base / "espada-ponta4.png"; o.save(saida); print(saida)
 
+def espada_tamanhos():
+    """A espada aprovada com o 40 e o 48: os quatro tamanhos ampliados (a ponta de cada grade) e, no jogo, atual × a espada
+    com os quatro tamanhos no Inventário (40) e na comparação do saque (64 e 48)."""
+    base = LOTE / "espada_maca"; P = base / "proposta"
+    o = Image.new("RGB", (4 * 250 + 10, 22 + 240 + 22 + 240 + 10), (245, 245, 245)); d = ImageDraw.Draw(o)
+    d.text((10, 4), "a espada nos quatro tamanhos (o 64 é o 32 ampliado 2x), ampliados sem suavização", fill=(0, 0, 0), font=FONTE)
+    d.text((10, 22 + 240 + 4), "a ponta de cada grade, recortada e ampliada (o 32 e o 64 são os aprovados)", fill=(0, 0, 0), font=FONTE)
+    for k, n in enumerate((32, 40, 48, 64)):
+        im = Image.open(P / f"espada-{n}.png").convert("RGBA"); x = 10 + k * 250
+        z = 240 // n
+        g = Image.new("RGBA", (240, 240), (24, 24, 28, 255)); g.alpha_composite(im.resize((n * z, n * z), Image.NEAREST)); o.paste(g.convert("RGB"), (x, 22))
+        c = im.crop((n * 9 // 16, 0, n, n * 7 // 16)); zz = 240 // c.width
+        g = Image.new("RGBA", (240, 240), (24, 24, 28, 255)); g.alpha_composite(c.resize((c.width * zz, c.height * zz), Image.NEAREST)); o.paste(g.convert("RGB"), (x, 22 + 240 + 22))
+        d.text((x + 4, 26), f"{n}", fill=(230, 230, 230), font=FONTE)
+    o.save(base / "espada-tamanhos.png"); print(base / "espada-tamanhos.png")
+    folha(base / "capturas", [("o corpo no Inventário: a espada em 40 (atual: o placeholder; tamanhos: a aprovada com o 40)", "inventario", (150, 140, 480, 520), "espada"),
+                              ("o cartão do saque: a espada em 64 e o 'você usa' em 48", "saque", None, "espada"),
+                              ("a ficha (32)", "ficha", (18, 362, 272, 472), "espada")],
+          base / "espada-tamanhos-no-jogo.png", ("atual", "tamanhos"))
+
 def sandalia_no_jogo():
     """A Sandália no jogo (1.142.0), em tamanho real: o saque, a ficha e o Inventário depois de "Equipar agora"."""
     pasta = LOTE / "sandalia_chapeu" / "capturas" / "integracao"
@@ -344,7 +364,7 @@ def sandalia_no_jogo():
 if __name__ == "__main__" and sys.argv[1] in ("antidoto_base", "frasco_vazio", "anel_referencia", "conjunto_mago", "sandalia_r2",
                                               "sandalia_no_jogo", "besta_diadema", "diadema_r2",
                                               "espada_maca", "espada_maca_r2", "espada_ponta",
-                                              "espada_ponta3", "espada_ponta4"):
+                                              "espada_ponta3", "espada_ponta4", "espada_tamanhos"):
     globals()[sys.argv[1]](); sys.exit()
 if __name__ == "__main__":
     nome = sys.argv[1]; cfg = LOTES[nome]; base = LOTE / nome
