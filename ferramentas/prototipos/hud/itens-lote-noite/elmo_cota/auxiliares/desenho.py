@@ -43,52 +43,60 @@ def luz_esfera(cx, cy, rx, ry):
 
 
 if PECA == "elmo":
-    # O capacete, rodada 2, pela referência principal (ferramentas/arte/referencias/capacete/5+N9Nb.png, o nº 62 do
-    # índice: o elmo aberto de frente, um pouco de cima): a calota arredondada com a tira vertical no meio, a faixa da
-    # testa contornando a peça em curva (mais baixa no meio, que está mais perto), a tira que desce da calota e vira o
-    # protetor do nariz, as duas faces laterais descendo até embaixo, e entre elas o fundo escuro do interior até cerca de
-    # 3/4 da altura, com o vazio abaixo (a profundidade da abertura). As tiras e as faces com a beira clara (a espessura da
-    # chapa) e a beira de dentro escura. Ferro do machado e da espada; sem latão, sem crista.
-    # o ângulo da referência: de frente, um pouco virado (vê-se mais o lado direito): a frente (a tira e o nariz) fica à
-    # esquerda do meio, a face da esquerda aparece estreita, quase de perfil, e a da direita larga
-    CX, CY, RX, RY = 16.2, 13.4, 12.6, 10.8
-    FX = 13.6                                                                   # a linha da frente (a tira e o nariz)
-    calota = elipse(CX, CY, RX, RY) & (y32 <= CY + 0.6)
-    def yb(x):                                                                  # o meio da faixa da testa: mais baixa na frente
-        return CY - 0.4 + 2.4 * np.clip(1 - ((x - FX) / (RX + 2.6)) ** 2, 0, 1)
-    faixa = (np.abs(y32 - yb(x32)) <= 1.3) & (np.abs(x32 - CX) <= RX)
-    face_e = poligono([(3.6, CY - 0.2), (6.6, CY + 1.2), (6.4, 26.0), (5.8, 30.0), (4.0, 29.8), (3.6, 22.0)])
-    face_d = poligono([(28.8, CY - 0.2), (22.6, CY + 1.4), (23.2, 25.0), (24.6, 30.0), (28.0, 29.8), (28.6, 22.0)])
-    tira = (np.abs(x32 - FX) <= 1.3) & (y32 <= yb(x32)) & (elipse(CX, CY, RX, RY) | (y32 > CY))
-    nariz = poligono([(FX - 1.3, 14.6), (FX + 1.3, 14.6), (FX + 1.15, 20.6), (FX + 0.6, 21.8), (FX - 0.6, 21.8), (FX - 1.15, 20.6)])
-    # o fundo do interior: a parede de trás vista pela abertura, entre as faces, até a borda de trás (a 3/4 da altura);
-    # abaixo dela, entre as faces, o vazio
-    def yfundo(x):
-        return 23.8 + 1.4 * np.sqrt(np.clip(1 - ((x - 15.0) / 8.6) ** 2, 0, 1))
-    interior = (x32 > 6.2) & (x32 < 23.4) & (y32 > yb(x32)) & (y32 < yfundo(x32))
-    metal = calota | faixa | face_e | face_d | tira | nariz
+    # O capacete, rodada 3, pela mesma referência principal (ferramentas/arte/referencias/capacete/5+N9Nb.png, o
+    # capacete aberto da caixa (147, 479, 191, 532)), com as medidas tiradas dela: as formas são definidas nas
+    # coordenadas da referência (R: x de 5 a 38, y de 6 a 47) e levadas ao quadro de 32 na mesma proporção (a peça mais
+    # alta que larga). A peça está um pouco girada: a faixa da testa sobe da esquerda para a direita, com uma leve curva
+    # (mais baixa no meio, mais perto); as faces descem inclinadas, a da esquerda entrando para a direita e mais longa, a
+    # da direita mais curta; o nariz longo, até cerca de 2/3 da altura. A abertura: uma sombra curta do lado de dentro
+    # da calota logo abaixo da faixa, e abaixo dela o vazio entre as faces (o fundo; sem travessa). As tiras e a faixa
+    # são o mais claro, separadas da calota por uma emenda escura; a calota em volume um tom abaixo.
+    ESC = 0.70
+    xr = 21.0 + (x32 - 16.0) / ESC                                              # o quadro de 32 nas coordenadas da referência
+    yr = 6.0 + (y32 - 2.2) / ESC
+    def poli_r(pts):                                                            # um polígono dado nas coordenadas da referência
+        return poligono([(16.0 + (x - 21.0) * ESC, 2.2 + (y - 6.0) * ESC) for x, y in pts])
+    def yb(x):                                                                  # o meio da faixa da testa
+        return 23.3 - 0.118 * (x - 7.0) + 0.5 * np.clip(1 - ((x - 19.5) / 14.0) ** 2, 0, 1)
+    # a calota: uma elipse um pouco girada (como a faixa), até a faixa
+    ang = np.deg2rad(-6.0)
+    cx, cy = 20.6, 21.6
+    u = (xr - cx) * np.cos(ang) + (yr - cy) * np.sin(ang); v = -(xr - cx) * np.sin(ang) + (yr - cy) * np.cos(ang)
+    calota = ((u / 14.4) ** 2 + (v / 15.6) ** 2 <= 1) & (yr <= yb(xr) + 1.4)
+    faixa = (np.abs(yr - yb(xr)) <= 1.6) & (xr >= 6.0) & (xr <= 34.8)
+    fx = lambda y: 18.4 + 0.03 * (y - 6.0)                                      # a borda esquerda da tira e do nariz
+    tira = (xr >= fx(yr)) & (xr <= fx(yr) + 3.2) & calota & (yr < yb(xr))
+    nariz = poli_r([(18.9, 22.0), (22.2, 22.0), (22.0, 31.0), (21.0, 34.2), (19.8, 34.2), (19.0, 31.0)])
+    face_e = poli_r([(5.0, 23.4), (10.6, 24.6), (14.2, 44.6), (12.6, 47.6), (9.2, 47.6), (5.6, 30.0)])
+    face_d = poli_r([(31.2, 22.4), (37.2, 22.0), (38.4, 30.0), (38.0, 42.8), (35.0, 44.0), (32.8, 30.0)])
+    # a sombra do lado de dentro: logo abaixo da faixa, entre as faces, curta (mais funda junto do nariz e da esquerda)
+    fundo = (yr > yb(xr) + 1.0) & (yr < yb(xr) + 4.2 - 0.06 * np.clip(xr - 22.0, 0, 20)) & (xr > 9.0) & (xr < 33.6)
+    metal = calota | faixa | tira | nariz | face_e | face_d
     if ETAPA == "silhueta":
         pinta(metal, "f", 5, "calota")
-        pinta(interior & ~metal, "f", 1, "interior")
+        pinta(fundo & ~metal, "f", 1, "interior")
     else:
-        # o interior: escuro no alto (a sombra da calota), um pouco mais claro embaixo, junto da borda de trás
-        pinta(interior, "f", np.where(y32 > yfundo(x32) - 1.6, 2, np.where(y32 > 19.0, 1, 0)), "interior")
-        # a calota em volume: a luz da família em faixas largas, o brilho agrupado em cima à esquerda
-        li = luz_esfera(CX - 0.5, CY + 1.5, RX + 0.6, RY + 3.0)
-        pinta(calota, "f", np.select([li > 0.93, li > 0.74, li > 0.5], [7, 6, 5], 4), "calota")   # as tiras, o mais claro
-        pinta(calota & (x32 > CX + 9.0), "f", 3, "calota")                      # a curva que vira para o lado de trás
-        # as faces laterais: a da esquerda na luz, a da direita na sombra; a beira de fora clara, a de dentro escura
-        pinta(face_e, "f", 6, "faces"); pinta(face_d, "f", 4, "faces")
-        pinta(face_e & (x32 < 4.6), "f", 7, "faces"); pinta(face_e & (x32 > 5.6), "f", 3, "faces")
-        pinta(face_d & (x32 > 27.4), "f", 5, "faces"); pinta(face_d & (x32 < 24.0), "f", 2, "faces")
-        pinta((face_e | face_d) & (y32 > 27.6), "f", 2, "faces")                # a barra, virando para dentro
-        # a faixa da testa: a beira de cima clara, a de baixo escura (a espessura); a direita na sombra
-        tf = np.where(y32 < yb(x32) - 0.35, np.where(x32 < CX + 5, 8, 6), np.where(y32 < yb(x32) + 0.55, np.where(x32 < CX + 5, 7, 5), 2))
+        pinta(fundo & ~metal, "f", np.where(yr < yb(xr) + 2.6, 0, 1), "interior")
+        # a calota: a luz da família pelo volume, um tom abaixo das tiras; a emenda escura junto da tira e da faixa
+        li = luz_esfera(16.0 + (cx - 21.0) * ESC, 2.2 + (cy - 6.0) * ESC, 14.4 * ESC + 0.6, 15.6 * ESC)
+        pinta(calota, "f", np.select([li > 0.82, li > 0.6, li > 0.36], [7, 6, 5], 4), "calota")
+        emenda = calota & ~tira & ~faixa & ((np.abs(xr - fx(yr)) < 1.2 / ESC * 0.6) | (np.abs(xr - (fx(yr) + 3.2)) < 1.2 / ESC * 0.6) | (yr > yb(xr) - 2.6))
+        pinta(emenda, "f", 3, "calota")
+        # a tira e o nariz: claros à esquerda, a beira direita um tom abaixo; a ponta do nariz na sombra
+        pinta(tira, "f", np.where(xr < fx(yr) + 2.0, 8, 6), "tiras")
+        pinta(nariz, "f", np.where(xr < 20.8, 8, 5), "tiras")
+        pinta(nariz & (yr > 32.4), "f", 4, "tiras")
+        # a faixa da testa: a beira de cima acesa, o meio claro, a de baixo escura (a espessura); mais escura à direita
+        tf = np.where(yr < yb(xr) - 0.5, 8, np.where(yr < yb(xr) + 0.7, 7, 3))
+        tf = np.where((xr > 27.0) & (tf > 3), tf - 2, tf)
         pinta(faixa, "f", tf, "tiras")
-        # a tira da calota e o nariz: clara à esquerda, escura à direita
-        pinta(tira, "f", np.where(x32 < FX, 8, 6), "tiras")
-        pinta(nariz, "f", np.where(x32 < FX - 0.2, 8, 5), "tiras")
-        pinta(nariz & (y32 > 20.8), "f", 3, "tiras")
+        # as faces: a da esquerda na luz (a beira de dentro clara, a de fora um tom abaixo), a da direita na sombra; as
+        # pontas de baixo escurecendo
+        pinta(face_e, "f", 5, "faces")
+        pinta(face_e & (xr > 7.8 + 0.2 * (yr - 24.0)), "f", 7, "faces")
+        pinta(face_d, "f", 4, "faces")
+        pinta(face_d & (xr < 35.0), "f", 6, "faces")
+        pinta((face_e & (yr > 44.0)) | (face_d & (yr > 40.6)), "f", 3, "faces")
     camadas = ["interior", "calota", "faces", "tiras", "contorno"]
 else:
     # A cota de malha, rodada 2, pela referência principal (ferramentas/arte/referencias/peitoral/etbij8.png, o nº 103 do
@@ -105,7 +113,9 @@ else:
     beira_gola = poligono([(10.8, 3.8), (21.2, 3.8), (20.8, 7.0), (18.2, 9.8), (13.8, 9.8), (11.2, 7.0)]) & ~pescoco
     cinto = corpo & (y32 > 19.0) & (y32 < 21.4)
     fivela = poligono([(17.0, 18.6), (20.0, 18.6), (20.0, 21.8), (17.0, 21.8)])
-    xi = np.floor(x32).astype(int); yi = np.floor(y32).astype(int)
+    # a malha e os dentes na grade de pixels de cada tamanho (no 32, o mesmo que o quadro de 32): os anéis ficam do mesmo
+    # tamanho em pixels em todos os tamanhos, em vez de esticar com a escala
+    xi = np.floor(X).astype(int); yi = np.floor(Y).astype(int)
     dentes = ((xi % 2) == 1)                                                    # a beira da malha em dentes (barra e mangas)
     barra_dente = corpo & (y32 > 26.0) & dentes
     manga_dente = mangas & (y32 > 16.6) & dentes
@@ -126,6 +136,9 @@ else:
         alto = ((yi % 2) == 0) & (((xi + des) % 2) == 0)
         base = ((yi % 2) == 1) & (((xi + des) % 2) == 0)
         anel = np.clip(np.where(alto, tv + 1, np.where(base, tv - 1, tv)), 1, 8)
+        if N != 32:   # nos maiores, o alto do peito mais claro só nos topos dos anéis (sem um bloco de borda reta)
+            peito = (x32 > 11.0) & (x32 < 16.5) & (y32 < 14.0)
+            anel = np.where(peito & ~alto & ~base, 6, anel)
         pinta(peca, "f", anel, "malha")
         fixo[(alto | base) & peca] = True
         # a gola: a beira da malha clara em volta do vão; o vão do pescoço, escuro (o lado de dentro das costas)

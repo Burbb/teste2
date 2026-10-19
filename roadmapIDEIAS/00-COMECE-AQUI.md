@@ -4718,3 +4718,16 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   cada no jogo a 1920×945.
 - **Aguardando avaliação.** Nada integrado; a versão não mudou; nenhuma outra peça começou.
 
+### 19/10/2026 (data do computador local) — O elmo, rodada 3, e a cota em 40 e 48 (proposta)
+
+- **Decisões de Jean:** a cota do `119f479` aprovada (32 e 64 sem retoque); completar o 40 e o 48. O elmo volta para
+  uma rodada 3 pela mesma referência (a faixa quase horizontal, as laterais como barras, a "travessa" na abertura).
+- **Feito, só no protótipo** (`ferramentas/prototipos/hud/itens-lote-noite/elmo_cota/`), **não aprovado**: o elmo com as
+  formas nas coordenadas da referência medida (a faixa inclinada e em curva, as faces inclinadas e de comprimentos
+  diferentes, o nariz longo, a sombra curta do lado de dentro e o vazio abaixo), levadas ao 32 na mesma proporção; a
+  cota em 40 e 48 com a malha na grade de pixels de cada tamanho. Fontes pelo `pintar.lua`; composto, exportação e
+  prévia conferem; @2x exatos. O elmo da rodada 2 guardado em `elmo_cota/elmo_r2/`.
+- **Folhas:** o elmo, a referência × a rodada 2 × a nova (tamanho real, silhueta e acabamento ampliados); a cota no
+  Inventário (40) e no "você usa" do saque (48) a 1920×945.
+- **Aguardando avaliação.** Nada integrado; a versão não mudou; nenhuma outra peça começou.
+

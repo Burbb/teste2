@@ -2074,3 +2074,46 @@ de cada no jogo a 1920×945: a ficha com os dois e o saque de cada um; `fotograf
 **As bases do peito:** a cota de malha representa melhor a Cota de Malha; razoavelmente a Brigantina (armadura flexível de
 tronco); pior o Peitoral e a Couraça, que são de placa. Sem variantes nem mudança de dados nesta entrega.
 
+### O elmo, rodada 3, e a cota em 40 e 48 (`elmo_cota/`)
+
+**Decisões de Jean (19/10/2026):** a cota do `119f479` está aprovada; faltam o 40 e o 48 (o 32 e o 64 sem retoque; o
+compartilhamento entre as quatro bases continua, com a limitação registrada). O elmo melhorou, mas precisa de mais uma
+rodada pela mesma referência: na rodada 2 a faixa da testa estava quase horizontal e as laterais pareciam duas barras
+verticais, enquanto a referência tem curvas e uma inclinação que explicam o volume; a faixa escura dentro da abertura
+parecia uma travessa ligando as laterais. Reavaliar as proporções e a perspectiva do objeto inteiro (não inclinar a
+imagem pronta) e separar o interior sombreado, a espessura das bordas e o vazio.
+
+**O elmo da rodada 2 guardado** em `elmo_cota/elmo_r2/` (os PNGs, a fonte, a prévia e o script daquela versão).
+
+**A leitura da referência, medida pixel a pixel** (o capacete aberto da caixa `(147, 479, 191, 532)` de
+`ferramentas/arte/referencias/capacete/5+N9Nb.png`):
+- **A abertura:** o interior escuro é só uma sombra curta logo abaixo da faixa (o lado de dentro da calota); abaixo dela,
+  entre as faces, já é vazio (o fundo). A "travessa" da rodada 2 era o fundo escuro descendo demais.
+- **A inclinação:** a peça está um pouco girada: a faixa sobe da esquerda para a direita (umas 3 linhas na referência)
+  com uma leve curva; as faces não são verticais: a da esquerda desce entrando para a direita e é mais longa, a da
+  direita é mais curta.
+- **As proporções:** mais alta que larga; a calota em pouco mais de 1/3 da altura; o nariz longo (até cerca de 2/3); as
+  faces ocupando a metade de baixo.
+- **O volume:** as tiras e a faixa são o mais claro, separadas da calota por uma emenda escura.
+
+**A rodada 3** (`auxiliares/desenho.py`): as formas definidas **nas coordenadas da referência** (a calota como uma elipse
+girada como a faixa, a faixa pela curva medida, a tira e o nariz, as duas faces como quadriláteros inclinados, a sombra
+do lado de dentro) e levadas ao quadro de 32 na mesma proporção (a escala 0,70); a luz depois: a calota pela luz da
+família um tom abaixo das tiras, a emenda escura junto da tira e da faixa, a faixa com a beira de cima acesa e a de
+baixo escura (a espessura), as faces com a beira de dentro clara (a da esquerda na luz, a da direita na sombra) e as
+pontas escurecendo, o nariz claro à esquerda; a sombra do lado de dentro curta e o vazio abaixo. Na bancada, as faces
+saíram finas demais na primeira passada e a calota escura; alargadas e clareadas, com as tiras ainda como o mais claro.
+
+**A cota em 40 e 48:** a mesma construção; duas adaptações: a malha e os dentes da barra na grade de pixels de cada
+tamanho (os anéis do mesmo tamanho em pixels, em vez de esticar com a escala; no 32 é o mesmo que antes) e, nos
+maiores, o alto do peito mais claro só nos topos dos anéis (no 40 a área clara virava um retângulo de borda reta). O 32 e
+o 64 são os aprovados, byte a byte.
+
+**O Aseprite (pelo MCP):** o elmo 32 e a cota 40 e 48 pintados pelo `pintar.lua` (0 diferenças, 0 fora da tela); o
+composto do editor é igual aos PNGs exportados e à prévia; @2x exatos; o 64 do elmo é o 32 ×2.
+
+**As folhas:** `elmo-referencia-r2-r3.png` (a referência × a rodada 2 × a nova: em tamanho real sobre o carvão, a
+silhueta numa cor e o acabamento, ampliados sem suavização); `cota-tamanhos-no-jogo.png` (atual × a cota com os quatro
+tamanhos no Inventário, em 40, e no saque, em 64 e o "você usa" em 48; `fotografar.mjs cota_tamanhos`, `ROTULO=tamanhos
+SO_PROPOSTA=1`); `prancha-carvao.png`. Sem erro no console.
+

@@ -141,8 +141,8 @@ substituições posteriores, incluindo espada e maça na 1.145.0):
 |---|---|---|---|---|
 | `espada` | Espada, Montante (Guerreiro) | Arte final, padrão atual (o remake do ferro, integrada na 1.145.0) | `aseprite/espada/` (1.145.0) | Também é o comando de ataque da luta (`ACAO`) e a silhueta da arma vazia (`VAZIO`), de todas as classes; o ícone do atributo Ataque é outro desenho |
 | `maca` | Maça (Guerreiro) | Arte final, padrão atual (o remake do ferro, integrada na 1.145.0) | `aseprite/maca/` (1.145.0) | — |
-| `elmo` | Elmo, Capacete, Barbuta (Guerreiro) | **Placeholder integrado, pendente de remake**; rodada 2 do 32 (pela referência) em avaliação | redução da pintura | Também a silhueta da cabeça vazia, de todas as classes (`VAZIO`) |
-| `armadura` → `cota` | Cota de Malha, Peitoral, Couraça, Brigantina (Guerreiro) | **Placeholder integrado, pendente de remake**; rodada 2 do 32 (pela referência) em avaliação | redução da pintura | Também a silhueta da armadura vazia (`VAZIO`) |
+| `elmo` | Elmo, Capacete, Barbuta (Guerreiro) | **Placeholder integrado, pendente de remake**; rodada 3 do 32 (pela referência) em avaliação | redução da pintura | Também a silhueta da cabeça vazia, de todas as classes (`VAZIO`) |
+| `armadura` → `cota` | Cota de Malha, Peitoral, Couraça, Brigantina (Guerreiro) | **Placeholder integrado, pendente de remake**; a rodada 2 aprovada (`119f479`), 40 e 48 em avaliação | redução da pintura | Também a silhueta da armadura vazia (`VAZIO`) |
 | `manopla` | Manopla (Guerreiro) | **Placeholder integrado, pendente de remake** | redução da pintura | Também a silhueta das mãos vazias (`VAZIO`) |
 | `calca` → `perneiras` | Perneira, Greva (Guerreiro) | **Placeholder integrado, pendente de remake** | redução da pintura | Também a silhueta das pernas vazias (`VAZIO`) |
 | `bota_ferro` → `botas-ferro` | Bota Ferrada (Guerreiro) | **Placeholder integrado, pendente de remake** | redução da pintura | Também a silhueta dos pés vazios (`VAZIO`) |
@@ -306,6 +306,9 @@ cota** (não começado).
   `elmo_cota/rodada1/`. A cota de malha continua compartilhada: representa melhor a Cota de Malha, razoavelmente a
   Brigantina (uma armadura flexível de tronco) e pior o Peitoral e a Couraça, que são de placa (as couraças de aço da
   prancha ficam como referência de uma variante futura).
+- **Depois da avaliação (19/10/2026):** a cota da rodada 2 foi aprovada (o 32 e o 64 sem retoque) e ganhou o 40 e o 48
+  em proposta. O elmo voltou para uma rodada 3, pela mesma referência: a faixa quase horizontal, as laterais como barras
+  verticais e uma faixa escura atravessando a abertura (uma "travessa") foram refeitas pelas medidas da referência.
 
 ### 1.3. Prioridade: consumo do recurso antes das consequências
 
