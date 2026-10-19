@@ -137,7 +137,21 @@ def sandalia_r2():
              base / "rodada1" / "proposta" / "sandalia-32.png", JOGO / "bota-32.png"], r2 / "prancha-carvao.png")
     conjunto_mago()
 
-if __name__ == "__main__" and sys.argv[1] in ("antidoto_base", "frasco_vazio", "anel_referencia", "conjunto_mago", "sandalia_r2"):
+def sandalia_no_jogo():
+    """A Sandália no jogo (1.142.0), em tamanho real: o saque, a ficha e o Inventário depois de "Equipar agora"."""
+    pasta = LOTE / "sandalia_chapeu" / "capturas" / "integracao"
+    ims = [("o cartão do saque (64) e o que você usa (48)", "no-jogo-1.142.0-1920x945-saque.png"),
+           ("a ficha depois de equipar (32)", "no-jogo-1.142.0-1920x945-ficha-equipar.png"),
+           ("o corpo no Inventário (40)", "no-jogo-1.142.0-1920x945-inventario-equipar.png")]
+    ims = [(r, Image.open(pasta / a).convert("RGB")) for r, a in ims]
+    o = Image.new("RGB", (sum(i.width for _, i in ims) + 10 * (len(ims) + 1), max(i.height for _, i in ims) + 30), (245, 245, 245))
+    d = ImageDraw.Draw(o); x = 10
+    for r, i in ims:
+        d.text((x, 6), r, fill=(0, 0, 0), font=FONTE); o.paste(i, (x, 24)); x += i.width + 10
+    saida = LOTE / "sandalia_chapeu" / "sandalia-1.142.0-no-jogo.png"; o.save(saida); print(saida)
+
+if __name__ == "__main__" and sys.argv[1] in ("antidoto_base", "frasco_vazio", "anel_referencia", "conjunto_mago", "sandalia_r2",
+                                              "sandalia_no_jogo"):
     globals()[sys.argv[1]](); sys.exit()
 if __name__ == "__main__":
     nome = sys.argv[1]; cfg = LOTES[nome]; base = LOTE / nome

@@ -145,7 +145,7 @@ de antes não vale como arte final.
 | `besta` | Besta Leve (Arqueiro) | **Desenho inexistente** | sem papel em `Icones` (o sprite 16×16) | Uma das quatro armas do Arqueiro |
 | `chapeu` | Chapéu Pontudo (Mago) | Arte final, padrão atual (integrada na 1.141.0) | `aseprite/chapeu/` (1.141.0) | Um terço das cabeças do Mago |
 | `coroa` | Diadema (Mago); único Coroa dos Afogados | **Desenho inexistente** | sem papel em `Icones` | Decidir se um desenho serve aos dois |
-| `sandalia` | Sandália (Mago, a única base dos pés dele) | **Desenho inexistente** no jogo; rodada 2 em avaliação | sem papel em `Icones`; proposta em `itens-lote-noite/sandalia_chapeu/` | Todo calçado do Mago é este placeholder |
+| `sandalia` | Sandália (Mago, a única base dos pés dele) | Arte final, padrão atual (integrada na 1.142.0) | `aseprite/sandalia/` (1.142.0) | Nomes dos materiais de tecido num desenho de couro: pendência de nomenclatura |
 | `escudo` | Escudo, Broquel; únicos Égide do Mártir, Broquel do Vigia | Arte final, padrão atual | `desenhar_escudo_pixel.py` (1.94.0) | Também a silhueta da secundária vazia (`VAZIO`) |
 | `machado` | Machado; únicos Lamento de Gharbad, O Açougueiro | Arte final, padrão atual | `desenhar_machado_pixel.py` (1.99.0) | — |
 | `arco` | Arco Curto, Longo, Recurvo; únicos Ventre da Tempestade, Sussurro do Vazio | Arte final, padrão atual | `desenhar_arco_pixel.py` (1.101.0) | — |
@@ -167,11 +167,11 @@ de antes não vale como arte final.
 | `amuleto` | Amuleto, Talismã, Pingente, Medalhão | Arte final, padrão atual | `aseprite/amuleto/` (1.140.0) | Compartilhamento mantido |
 
 **A contagem:** 31 desenhos de equipamento.
-- **Arte final aprovada no padrão atual:** 20 (o escudo, o machado e os 18 do Arqueiro, do Mago e dos acessórios; o
-  Chapéu Pontudo entrou na 1.141.0).
+- **Arte final aprovada no padrão atual:** 21 (o escudo, o machado e os 19 do Arqueiro, do Mago e dos acessórios; o
+  Chapéu Pontudo entrou na 1.141.0 e a Sandália na 1.142.0).
 - **Placeholder integrado, pendente de remake:** 7, todos do Guerreiro (espada, maça, elmo, cota, manopla, perneiras,
   botas de ferro). O equipamento do Guerreiro **não está concluído**: só o escudo e o machado são finais.
-- **Desenho inexistente:** 3 (Besta Leve, Diadema, Sandália).
+- **Desenho inexistente:** 2 (Besta Leve, Diadema).
 - **Arte aprovada com tamanhos pendentes:** 1 (o martelo: o desenho fica; faltam o 40 e o 48, sem redesenho).
 - **Compartilhamento provisório aceito** (a peça usa o desenho de outra até ganhar o seu): a Capa de Patrulha no gibão
   (o lote de capas) e o Chapéu de Couro no capuz. Os compartilhamentos do manto, do anel, do amuleto, do orbe e do livro
@@ -179,8 +179,7 @@ de antes não vale como arte final.
   das perneiras, das botas de ferro e da espada para todas as classes: mudam junto quando essas peças forem refeitas.
 
 Nenhuma proposta pendente de equipamento na data da conferência. Depois dela, a Sandália e o Chapéu Pontudo entraram
-em proposta (abaixo, "O par do Mago"): o chapéu foi integrado na 1.141.0; a sandália segue contada como inexistente
-até a integração.
+em proposta (abaixo, "O par do Mago"): o chapéu foi integrado na 1.141.0 e a sandália na 1.142.0.
 
 **A ordem recomendada (separada da contagem):** primeiro a **Sandália e o Chapéu Pontudo**, que são o placeholder
 mais frequente do Mago e fecham o vestuário de tecido dele, já com capuz, luva, calça e manto aprovados como referência
@@ -203,10 +202,12 @@ execução fica para outra entrega.
   `ferramentas/arte/aseprite/chapeu/`; 32, 40, 48 e o 64 = 32 ×2).
 - **A Sandália: a rodada 1 (de perfil, a gaiola de tiras) foi recusada:** as tiras viraram arcos verticais e o conjunto
   parecia uma armação sobre a sola. A rodada 2 é o par em três quartos, visto um pouco de cima, pela referência do Jean
-  (`ferramentas/arte/referencias/botas/`); em avaliação.
+  (`ferramentas/arte/referencias/botas/`); **aprovada nos quatro tamanhos (`b9ec78a`) e integrada na 1.142.0** (fontes em
+  `ferramentas/arte/aseprite/sandalia/`; 32, 40, 48 e o 64 = 32 ×2).
 - **Os nomes dos materiais (registrado, sem mudar regra):** a Sandália recebe os materiais de tecido (`MATERIAIS_TECIDO`:
   "Sandália de Lã Negra", "Sandália de Linho", "Sandália Bordada"), mas o desenho é de couro, como uma sandália de
-  viagem. Decidir depois se a base ganha materiais próprios (couro) ou se os nomes ficam.
+  viagem. **Pendência de nomenclatura** (não impediu a integração visual; nomes e materiais mantidos na 1.142.0):
+  decidir depois se a base ganha materiais próprios (couro) ou se os nomes ficam.
 
 ### 1.3. Prioridade: consumo do recurso antes das consequências
 

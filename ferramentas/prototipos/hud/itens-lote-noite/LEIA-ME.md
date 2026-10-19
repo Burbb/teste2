@@ -1600,3 +1600,10 @@ tiras e o vão do tornozelo são simplificados, e a de trás aparece sobretudo p
 (`MATERIAIS_TECIDO`: "Sandália de Lã Negra", "Sandália de Linho", "Sandália Bordada"...), mas o desenho é de couro.
 Fica para decidir se a base ganha materiais próprios ou se os nomes ficam.
 
+**Integrada na 1.142.0, sem retoque** (aprovada no `b9ec78a`): a Sandália da rodada 2. As fontes foram para
+`ferramentas/arte/aseprite/sandalia/`; os 8 arquivos do jogo são idênticos, byte a byte, aos da proposta; o 64 é o 32 ×2
+(`DERIVADOS`). Conferida a 1920×945 com os arquivos do jogo e os saves temporários (`sandalia_chapeu/auxiliares/
+equipar.mjs`; `capturas/integracao/no-jogo-1.142.0-*`): o saque, equipar (os atributos mudam como a comparação do
+cartão) e guardar (nada muda no corpo), a ficha e o Inventário. Os nomes e materiais ficaram como estão (pendência de
+nomenclatura no plano 23).
+

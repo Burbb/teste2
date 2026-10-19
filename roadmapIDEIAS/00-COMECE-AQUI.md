@@ -4450,3 +4450,26 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   couro.
 - **Aguardando avaliação.** A sandália não foi integrada; nenhum outro item começou.
 
+### 19/10/2026 (data do computador local) — A Sandália no jogo (1.142.0)
+
+- **Pedido de Jean:** integrar a Sandália da rodada 2 (`b9ec78a`, aprovada nos quatro tamanhos) sem retoque, mantendo
+  nomes e materiais; o espaço vazio dos pés continua com as botas de ferro.
+- **A integração:**
+  - as fontes em camadas foram para `ferramentas/arte/aseprite/sandalia/` (32, 40, 48: tras_sola, tras_palmilha,
+    tras_tiras, frente_sola, frente_palmilha, frente_tiras, contorno); `DERIVADOS` com o 64 = 32 ×2;
+  - os 8 arquivos do jogo são idênticos, byte a byte, aos aprovados, e `exportar_aseprite.py sandalia --conferir` os
+    reproduz;
+  - o papel `sandalia` em `ITEM` e `TAMANHOS` de `icones.js`; `VAZIO` dos pés intacto (`botas-ferro`);
+  - conferido a 1920×945 com os arquivos do jogo e os saves temporários (`sandalia_chapeu/auxiliares/equipar.mjs`,
+    fotos em `sandalia_chapeu/capturas/integracao/`): o saque (64 e 48), "Equipar agora" (Agilidade 5 → 8, Vida 60 →
+    50, Mana 40 → 49, como a comparação do cartão; a vestida vai para a mochila; a ficha em 32 e o Inventário em 40, no
+    corpo e na mochila) e "Guardar na mochila" (atributos e a vestida iguais; a achada na mochila). Sem erro no console.
+    A ficha e o corpo do Inventário no `tutorial` são idênticos às fotos aprovadas da rodada 2 (o resto, só o
+    antialiasing do texto); o saque, menos 2 pixels do brilho animado.
+  - Preços, atributos, regras, medidas, áreas de clique e animações não mudaram; o jogo não lê nada de `ferramentas/`
+    (as menções no `rpg/` são comentários).
+- **Pendência de nomenclatura (registrada, sem mudar regra):** os nomes da Sandália vêm dos materiais de tecido
+  ("Sandália de Lã Negra"), mas o desenho é de couro (plano 23).
+- **O vestuário de tecido do Mago está completo** (capuz, Chapéu Pontudo, manto, luva de seda, calça de viagem,
+  sandália); faltam o Diadema e a Besta Leve como desenhos inexistentes, o remake do ferro e o 40/48 do martelo.
+
