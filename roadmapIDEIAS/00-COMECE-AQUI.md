@@ -4293,3 +4293,13 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
     saves temporários, a compra dos três consumíveis e o Manto vestido pelo saque. Regras, preços, atributos,
     quantidades, animações e áreas de interação não mudaram.
 - **Em avaliação, fora do jogo:** o Antídoto (a base plana) e o frasco vazio do topo.
+
+### 19/10/2026 (data do computador local) — Propostas: a base do Antídoto e o frasco vazio
+
+- **Feito, só no protótipo, não aprovado:**
+  - **o Antídoto** (16, 32; `tonico_antidoto/`): a base curta e plana com os cantos arredondados, o resto igual (só as
+    linhas da base mudaram); a versão anterior em `tonico_antidoto/recusados/antidoto-base-redonda/`;
+  - **o frasco vazio** (24; `bandagem_pocao/variantes/`): a Poção de Vida aprovada sem o líquido, para o topo sem poções
+    (hoje o sprite em 32).
+  - Fontes pelo `pintar.lua`, exportação conferida, @2x exatos; antes × depois do Antídoto no jogo e ampliado; cheia ×
+    vazia no topo a 1920×945.

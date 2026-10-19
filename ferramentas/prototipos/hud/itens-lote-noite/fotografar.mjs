@@ -6,6 +6,7 @@
 // peça: calca_couro | aljava | atributos | ataque_defesa | agilidade_poder | agilidade | aljava_ref | poder | doca_r2 | doca_r3 | doca_r3_luta | doca_r4 | doca_r4_telas | doca_r5 | doca
 //       | vida_mana | vigor_foco | vigor_foco_arqueiro | ouro_provisoes | moeda | tocha | tocha16 | tocha16_risco | tocha_apagada
 //       | bandagem_pocao | bandagem_pocao_luta | tonico_antidoto | calca_manto | calca_manto_saque_calca
+//       | frasco_vazio | frasco_cheio | antidoto_base
 import { spawn } from "child_process";
 import { readFileSync, existsSync, mkdirSync } from "fs";
 import { fileURLToPath } from "url";
@@ -134,6 +135,17 @@ const PECAS = {
     papeis: [{ item: "calca_tecido", tamanhos: [32, 40, 48, 64] }, { item: "manto", tamanhos: [32, 40, 48, 64] }],
     cena: ["capela", { CLASSE: "mago", NIVEL: "5", PERIODO: "0", SALA: "exterior" }], fotos: [],
     saque: ["vila", { CLASSE: "mago", ACHADO: "calca_tecido", VESTIDO: "calca_tecido" }] },
+  // o frasco vazio (bandagem_pocao/variantes/): o topo sem poções (24, o recurso só nesta página; hoje o sprite em 32)
+  // e, para comparar, o topo com poções (a Poção de Vida do jogo, SO_ATUAL)
+  // o Antídoto com a base plana (tonico_antidoto/): antes (PASTA=tonico_antidoto/recusados/antidoto-base-redonda, ROTULO=antes)
+  // e depois (ROTULO=depois), os dois com SO_PROPOSTA=1, nos mesmos lugares da proposta
+  antidoto_base: { pasta: "tonico_antidoto/proposta", saida: "tonico_antidoto/capturas/base", nomes: ["antidoto"],
+    papel_sprite: { folha: { peca: "antidoto", tamanhos: [16] } }, itens: [["antidoto", "+1 Antídoto"]],
+    cena: ["mercado", { CLASSE: "guerreiro" }], fotos: ["mercado", "espolio-itens", "aviso-item", "chip-item"] },
+  frasco_vazio: { pasta: "bandagem_pocao/variantes/proposta", saida: "bandagem_pocao/variantes/capturas/vazia", nomes: ["frasco_vazio"],
+    papel_recurso: { frasco_vazio: [24] }, cena: ["covil", { LUGAR: "vila", BOLSA: "pocao_vida=0" }], fotos: ["topo"] },
+  frasco_cheio: { pasta: "bandagem_pocao/variantes/proposta", saida: "bandagem_pocao/variantes/capturas/cheia", nomes: ["frasco_vazio"],
+    cena: ["covil", { LUGAR: "vila", BOLSA: "pocao_vida=2" }], fotos: ["topo"] },
 };
 const P = PECAS[peca];
 if (!P) throw new Error(`peça desconhecida: ${peca}`);

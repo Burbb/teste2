@@ -37,16 +37,20 @@ VARIANTES = {
     "pocao": dict(cx=16.0, partes=[("rolha", 1.6, 5.6, lambda y: 2.8), ("boca", 5.6, 7.4, lambda y: 3.8),
                                    ("gargalo", 7.4, 11.2, lambda y: 2.5), ("corpo", 11.2, 30.4, bola(20.2, 10.2))],
                   nivel=15.8, liquido="r", centro=(16.0, 20.2), raio=10.2),
+    # o frasco vazio (o topo sem poções): a Poção de Vida aprovada sem o líquido; o resto igual
+    "frasco_vazio": dict(cx=16.0, partes=[("rolha", 1.6, 5.6, lambda y: 2.8), ("boca", 5.6, 7.4, lambda y: 3.8),
+                                          ("gargalo", 7.4, 11.2, lambda y: 2.5), ("corpo", 11.2, 30.4, bola(20.2, 10.2))],
+                         nivel=99.0, liquido="r", centro=(16.0, 20.2), raio=10.2),
     # o Tônico Restaurador: a garrafa alta de paredes retas e ombros redondos, a rolha larga, o líquido azul quase cheio
     "tonico": dict(cx=16.0, partes=[("rolha", 1.4, 5.4, lambda y: 3.2), ("boca", 5.4, 7.0, lambda y: 3.9),
                                     ("gargalo", 7.0, 9.6, lambda y: 2.8), ("corpo", 9.6, 30.4, garrafa(9.6, 30.4, 7.4, 4.2, 2.8))],
                    nivel=13.6, liquido="a", centro=(16.0, 20.0), raio=10.6, reflexo_largura=True),
-    # o Antídoto: o frasco estreito em tubo, o fundo redondo, o gargalo comprido e a boca lacrada com cera escura que
+    # o Antídoto: o frasco estreito em tubo, a base curta e plana (fica de pé numa mesa) com os cantos arredondados, o gargalo comprido e a boca lacrada com cera escura que
     # escorre um pouco pelo gargalo; o líquido verde
     # (no 16 o tubo e o gargalo um pouco mais largos: com a largura do 32, o líquido ficaria com 1 px)
     "antidoto": dict(cx=16.0, partes=[("rolha", 1.6, 5.8, lambda y: 3.0), ("boca", 5.8, 7.2, lambda y: 3.5),
                                       ("gargalo", 7.2, 12.4, lambda y: 2.2 if N >= 24 else 2.9),
-                                      ("corpo", 12.4, 30.6, garrafa(12.4, 30.6, 4.9 if N >= 24 else 6.3, 3.6, 4.6))],
+                                      ("corpo", 12.4, 30.2, garrafa(12.4, 30.2, 4.9 if N >= 24 else 6.3, 3.6, 2.0))],
                      nivel=15.6, liquido="g", centro=(16.0, 21.5), raio=9.0, reflexo_largura=True, fecho="cera"),
 }
 V = VARIANTES[VAR]; CX = V["cx"] * K

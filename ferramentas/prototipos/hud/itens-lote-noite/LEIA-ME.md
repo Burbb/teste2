@@ -1369,3 +1369,25 @@ como o comando Itens da luta e o Manto segue compartilhado (decisões do Jean).
   Tônico, uma Poção e uma Bandagem no mercado (85 de ouro, os preços somados; as quantidades sobem uma cada; a bolsa da
   ficha e o topo nos arquivos novos) e vestir o Manto achado pelo "Equipar agora" (64 e 48 no saque, 32 na ficha). Sem
   erro no console.
+
+## Em avaliação depois da 1.138.0: a base do Antídoto e o frasco vazio
+
+**Propostas, nada no jogo, não aprovadas.**
+
+- **O Antídoto, rodada 2 (`tonico_antidoto/`): só a base.** O Jean pediu uma base curta e plana, que fique de pé numa
+  mesa, com os cantos de baixo arredondados, sem mudar o resto. No `frasco.py`, o corpo do antídoto termina mais cedo
+  e arredonda em 2 px em vez de 4,6 (o fundo afunilado virou uma base plana com a última linha um pixel mais estreita de
+  cada lado). Só as linhas da base mudaram (14 e 15 no 16; 28 a 31 no 32); o corpo estreito, o gargalo, o lacre, o
+  líquido e o acabamento são os mesmos. As fontes (`tonico_antidoto/fontes/antidoto/`) repintadas no Aseprite pelo
+  `pintar.lua` (0 diferentes, 0 fora da tela); o exportado confere com o editor e com a prévia, @2x exatos. A versão
+  anterior inteira (as fontes e os PNGs) em `tonico_antidoto/recusados/antidoto-base-redonda/`. Antes × depois no jogo
+  a 1920×945 (`fotografar.mjs antidoto_base`, com `SO_PROPOSTA=1` e `ROTULO=antes` + `PASTA=` a versão anterior, ou
+  `ROTULO=depois`): `tonico_antidoto/antidoto-base-antes-depois.png`; ampliado: `antidoto-base-prancha.png`.
+- **O frasco vazio (`bandagem_pocao/variantes/`):** o estado do topo quando as poções acabam (`frasco_vazio`; hoje o
+  sprite 16×16 em 32, maior que os vizinhos). A variante `frasco_vazio` do `frasco.py` é a Poção de Vida aprovada sem o
+  líquido (o mesmo balão, o gargalo, a boca, a rolha, o vidro com a beira clara e o brilho); só o 24, o tamanho do topo
+  (não há outro uso). Fonte em `variantes/fontes/frasco_vazio/frasco_vazio-24.aseprite` (vidro, rolha, brilho,
+  contorno), pelo `pintar.lua`; exportado conferido, @2x exato. No topo a 1920×945 (`fotografar.mjs frasco_vazio`, o
+  cenário `covil` na vila com `BOLSA=pocao_vida=0`; `frasco_cheio` com 2 poções): `variantes/frasco-cheia-vazia.png`
+  (com poções | sem poções hoje | sem poções, a proposta) e `variantes/prancha-carvao.png`. Na integração, o papel é o
+  `RECURSO` do topo em 24.

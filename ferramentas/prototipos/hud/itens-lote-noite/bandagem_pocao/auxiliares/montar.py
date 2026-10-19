@@ -60,6 +60,26 @@ LOTES = {
                            JOGO / "capuz_tecido-32.png", JOGO / "luva_seda-32.png"]),
 }
 
+def antidoto_base():
+    """O Antídoto com a base plana: antes × depois no jogo (tamanho real) e ampliado (a prancha)."""
+    base = LOTE / "tonico_antidoto"
+    folha(base / "capturas" / "base", [("o cartão do mercado (32)", "mercado-0", None), ("o espólio (32)", "espolio", None),
+                                       ("o aviso (16)", "aviso-antidoto", None), ("o chip (16)", "chips", None)],
+          base / "antidoto-base-antes-depois.png", ("antes", "depois"))
+    antes = base / "recusados" / "antidoto-base-redonda"
+    prancha([antes / "antidoto-16.png", base / "proposta" / "antidoto-16.png", antes / "antidoto-32.png", base / "proposta" / "antidoto-32.png"],
+            base / "antidoto-base-prancha.png")
+
+def frasco_vazio():
+    """O frasco vazio no topo: cheia (o jogo), vazia hoje (o sprite) e vazia proposta."""
+    v = LOTE / "bandagem_pocao" / "variantes"
+    (v / "capturas" / "vazia" / "cheia-1920x945-topo.png").write_bytes((v / "capturas" / "cheia" / "atual-1920x945-topo.png").read_bytes())
+    folha(v / "capturas" / "vazia", [("o topo: com poções | sem poções hoje (o sprite em 32) | sem poções, a proposta (24)", "topo", (440, 0, 800, 73))],
+          v / "frasco-cheia-vazia.png", ("cheia", "atual", "proposta"))
+    prancha([LOTE / "bandagem_pocao" / "proposta" / "pocao-24.png", v / "proposta" / "frasco_vazio-24.png"], v / "prancha-carvao.png")
+
+if __name__ == "__main__" and sys.argv[1] in ("antidoto_base", "frasco_vazio"):
+    globals()[sys.argv[1]](); sys.exit()
 if __name__ == "__main__":
     nome = sys.argv[1]; cfg = LOTES[nome]; base = LOTE / nome
     folha(base / "capturas", cfg["linhas"], base / f"{nome}-no-jogo.png")
