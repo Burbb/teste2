@@ -1317,3 +1317,39 @@ uso é o topo. Com eles, os quatro ícones das barras do topo estão em pixel ar
 - **As fotos (1920×945, os mesmos dados):** `fotografar.mjs tonico_antidoto` (os cartões do mercado, o espólio com os
   dois achados, o aviso e o chip de cada um); o `papel_sprite` aceita o sprite que serve um arquivo de outro nome. Folha
   `tonico_antidoto/tonico_antidoto-no-jogo.png` e prancha `tonico_antidoto/prancha-carvao.png`.
+
+## Lote da noite de 19/10, lote 3: a Calça de Viagem e o Manto do Mago (`calca_manto/`)
+
+**Proposta, nada no jogo, não aprovada.** As duas peças existem nos dados e são de tecido (nenhuma substituição).
+
+- **Os dados, conferidos:** a **Calça de Viagem** é a calça do Mago (`PECAS["pernas"]["mago"]`, o desenho
+  `calca_tecido`; também a base do único Mordida do Túmulo); hoje é o sprite 16×16 da perneira recolorido e não tem
+  papel em `Icones`. O **Manto** (o desenho `manto`) é de **três bases do Mago — Manto, Túnica e Veste Rúnica** — e do
+  único Manto de Cinzas; também só o sprite. Os materiais do Mago são de tecido (Puído, de Linho, de Lã Negra, Bordado,
+  Rúnico). Usos de equipamento: 32 (a ficha, a mochila do mercado, as dicas), 40 (o corpo e a mochila do Inventário),
+  48 (o "você usa" do saque) e 64 (o cartão do saque).
+- **Compartilhamento a separar (os dados não mudaram):** um manto aberto na frente não é uma túnica (fechada, vestida
+  pela cabeça) nem uma veste rúnica. A proposta é um desenho por base: o Manto (este, a frente aberta mostrando o forro),
+  a Túnica (a mesma lã, fechada, só a faixa e a gola) e a Veste Rúnica (a veste longa com o debrum de runas bordadas),
+  com o `icone` de cada base em `ARMADURAS["mago"]` e a migração dos saves. Na foto do saque, o item vestido é uma
+  Túnica Puída com o desenho do manto.
+- **A Calça de Viagem:** a lã azul-acinzentada do capuz de tecido aprovado (a mesma rampa), solta, as pernas abrindo um
+  pouco e franzindo sobre as faixas de linho enroladas nos tornozelos (a calça de quem viaja), o cordão com o laço na
+  cintura no lugar do cinto, vincos leves nas coxas e no joelho; sem costura nem remendo: o que a separa da calça de
+  couro. Camadas: pernas, dobras, barra, cintura, cordao, contorno.
+- **O Manto:** a veste vista de frente, construída por partes: a gola fechada com o broche de latão, o tronco que afina
+  até a cintura, a faixa de pano com a ponta do nó, a saia que abre até a barra com duas pregas, a frente aberta da
+  cintura à barra mostrando o forro escuro (a frente e o fundo) com o debrum claro da seda da luva, e as mangas largas
+  saindo dos ombros, separadas do corpo por uma costura escura, com o vão escuro da boca. Camadas: mangas, corpo, forro,
+  gola, debrum, faixa, fecho, contorno.
+- **Tamanhos:** 32 (a arte principal), 40 e 48 da mesma construção (as medidas em frações do quadro, sem retoque), o 64
+  é o 32 ampliado 2× (a política da skill; na integração, `DERIVADOS` no exportador).
+- **As etapas:** `calca_manto/auxiliares/tecido.py <calca|manto> <N> [silhueta]`, conferido pela `prancha.py`; a
+  primeira rodada saiu com as faixas pretas (a letra da rampa de linho era a do contorno no `pixel_comum`) e com as
+  mangas sumindo no corpo do manto; refeito em partes. Pintura no Aseprite pelo `pintar.lua` (0 diferentes, 0 fora da
+  tela); fontes em `calca_manto/fontes/calca_tecido/` e `manto/` (32, 40, 48); exportação pelo `exportar_aseprite.py
+  --fontes=`; o composto do editor confere pelo `soma.lua`; @2x exatos.
+- **As fotos (1920×945, os mesmos dados):** `fotografar.mjs calca_manto` (a ficha e o Inventário de um Mago vestindo
+  as duas, `VESTIR`; o saque do Manto) e `calca_manto_saque_calca` (o saque da calça); o roteiro ganhou `papeis`
+  (vários papéis de item só na página). Folha `calca_manto/calca_manto-no-jogo.png` e prancha
+  `calca_manto/prancha-carvao.png` (com a calça de couro, o capuz e a luva de seda para comparar).

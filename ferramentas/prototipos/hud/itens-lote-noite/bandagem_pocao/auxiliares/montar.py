@@ -12,10 +12,10 @@ except OSError:
     FONTE = ImageFont.load_default()
 
 def folha(pasta, linhas, saida, modos=("atual", "proposta")):
-    """linhas: (rótulo, arquivo sem o prefixo do modo, recorte ou None). Um modo por coluna."""
+    """linhas: (rótulo, arquivo sem o prefixo do modo, recorte ou None[, subpasta]). Um modo por coluna."""
     grupos = []
-    for rotulo, nome, corte in linhas:
-        ims = [Image.open(pasta / f"{m}-1920x945-{nome}.png").convert("RGB") for m in modos]
+    for rotulo, nome, corte, *sub in linhas:
+        ims = [Image.open(pasta / (sub[0] if sub else "") / f"{m}-1920x945-{nome}.png").convert("RGB") for m in modos]
         if corte: ims = [i.crop(corte) for i in ims]
         grupos.append((rotulo, ims))
     w = max(i.width for _, ims in grupos for i in ims)
@@ -49,6 +49,15 @@ LOTES = {
         prancha=lambda P: [P / "tonico-16.png", P / "tonico-32.png", JOGO / "tonico-32.png",
                            P / "antidoto-16.png", P / "antidoto-32.png", JOGO / "antidoto-32.png",
                            LOTE / "bandagem_pocao" / "proposta" / "pocao-32.png"]),
+    "calca_manto": dict(
+        linhas=[("a ficha do Mago: o equipado (32; o capuz e a luva de seda aprovados ao lado)", "ficha", (18, 362, 272, 472)),
+                ("o corpo no Inventário (40)", "inventario", (150, 140, 480, 520)),
+                ("o cartão do saque do Manto (64) e o que você usa (48)", "saque", None),
+                ("o cartão do saque da Calça de Viagem (64 e 48)", "saque", None, "saque_calca")],
+        prancha=lambda P: [P / "calca_tecido-32.png", P / "calca_tecido-40.png", P / "calca_tecido-48.png", P / "calca_tecido-64.png",
+                           JOGO / "calca_couro-32.png",
+                           P / "manto-32.png", P / "manto-40.png", P / "manto-48.png", P / "manto-64.png",
+                           JOGO / "capuz_tecido-32.png", JOGO / "luva_seda-32.png"]),
 }
 
 if __name__ == "__main__":

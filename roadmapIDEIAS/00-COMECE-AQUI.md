@@ -4266,3 +4266,14 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   - **o Antídoto** (16, 32): o tubo estreito de fundo redondo, lacrado com cera de abelha, o líquido verde.
 - **A decidir:** os sprites de 16 (`pocao_azul`, `folha`) têm outros papéis (a Mana, a Agilidade): um 16 integrado
   pede o papel pelo id do item.
+
+### 19/10/2026 (data do computador local) — Lote da noite, 3: propostas da Calça de Viagem e do Manto do Mago
+
+- **Feito, só no protótipo** (`ferramentas/prototipos/hud/itens-lote-noite/calca_manto/`), **não aprovado**, na lã do
+  capuz de tecido aprovado:
+  - **a Calça de Viagem** (32, 40, 48; 64 = 32 ×2): lã solta, as faixas de linho nos tornozelos, o cordão na cintura;
+  - **o Manto** (32, 40, 48; 64 = 32 ×2): a veste com as mangas largas, a gola com o broche, a faixa, a frente aberta
+    mostrando o forro.
+- **A decidir:** o desenho `manto` vale hoje para três bases (Manto, Túnica, Veste Rúnica) e o Manto de Cinzas;
+  proposta de um desenho por base (sem mudar os dados nesta rodada). As duas peças não têm papel em `Icones` hoje.
+- **Os três lotes da noite** (Bandagem e Poção, Tônico e Antídoto, Calça e Manto) estão no protótipo, sem integração.

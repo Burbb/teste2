@@ -5,7 +5,7 @@
 //   PLAYWRIGHT_MODULO=<caminho>/index.mjs node ferramentas/prototipos/hud/itens-lote-noite/fotografar.mjs <peça>
 // peça: calca_couro | aljava | atributos | ataque_defesa | agilidade_poder | agilidade | aljava_ref | poder | doca_r2 | doca_r3 | doca_r3_luta | doca_r4 | doca_r4_telas | doca_r5 | doca
 //       | vida_mana | vigor_foco | vigor_foco_arqueiro | ouro_provisoes | moeda | tocha | tocha16 | tocha16_risco | tocha_apagada
-//       | bandagem_pocao | bandagem_pocao_luta | tonico_antidoto
+//       | bandagem_pocao | bandagem_pocao_luta | tonico_antidoto | calca_manto | calca_manto_saque_calca
 import { spawn } from "child_process";
 import { readFileSync, existsSync, mkdirSync } from "fs";
 import { fileURLToPath } from "url";
@@ -123,6 +123,17 @@ const PECAS = {
     papel_sprite: { pocao_azul: { peca: "tonico", tamanhos: [16] }, folha: { peca: "antidoto", tamanhos: [16] } },
     itens: [["tonico", "+1 Tônico Restaurador"], ["antidoto", "+1 Antídoto"]],
     cena: ["mercado", { CLASSE: "guerreiro" }], fotos: ["mercado", "espolio-itens", "aviso-item", "chip-item"] },
+  // lote 3 (calca_manto/): a Calça de Viagem (calca_tecido) e o Manto (manto) do Mago, sem papel em Icones hoje (o sprite
+  // do jogo): os papéis só nesta página. A ficha (32) e o Inventário (40) do Mago vestindo as duas; o cartão do saque de
+  // cada uma (64 e o 48 do "você usa")
+  calca_manto: { pasta: "calca_manto/proposta", saida: "calca_manto/capturas", nomes: ["calca_tecido", "manto"],
+    papeis: [{ item: "calca_tecido", tamanhos: [32, 40, 48, 64] }, { item: "manto", tamanhos: [32, 40, 48, 64] }],
+    cena: ["capela", { CLASSE: "mago", NIVEL: "5", PERIODO: "0", SALA: "exterior", VESTIR: "manto,calca_tecido" }], fotos: ["ficha", "inventario"],
+    saque: ["vila", { CLASSE: "mago", ACHADO: "manto", VESTIDO: "manto" }] },
+  calca_manto_saque_calca: { pasta: "calca_manto/proposta", saida: "calca_manto/capturas/saque_calca", nomes: ["calca_tecido", "manto"],
+    papeis: [{ item: "calca_tecido", tamanhos: [32, 40, 48, 64] }, { item: "manto", tamanhos: [32, 40, 48, 64] }],
+    cena: ["capela", { CLASSE: "mago", NIVEL: "5", PERIODO: "0", SALA: "exterior" }], fotos: [],
+    saque: ["vila", { CLASSE: "mago", ACHADO: "calca_tecido", VESTIDO: "calca_tecido" }] },
 };
 const P = PECAS[peca];
 if (!P) throw new Error(`peça desconhecida: ${peca}`);
@@ -181,6 +192,17 @@ async function anexar(p) {
     const t = lado, f = "/static/hud/icones/" + peca + "-" + t;
     return '<img class="sprite desenho ' + classe + '" src="' + f + '.png" srcset="' + f + '@2x.png 2x" width="' + lado + '" height="' + lado + '" style="--s:' + lado + '" alt="" draggable="false">';
   }; })();`;
+      r.fulfill({ response: res, body: js, headers: { ...res.headers(), "content-type": "application/javascript" } });
+    });
+  }
+  if (P.papeis) {  // várias peças sem papel em Icones (a calça de tecido e o manto): os papéis só nesta página
+    await p.route(/\/static\/icones\.js(\?|$)/, async (r) => {
+      const res = await r.fetch();
+      let js = await res.text();
+      for (const { item, tamanhos } of P.papeis) {
+        js = js.replace('const TAMANHOS = {', `const TAMANHOS = {"${item}": ${JSON.stringify(tamanhos)}, `);
+        js = js.replace('const ITEM = {', `const ITEM = { ${item}: "${item}", `);
+      }
       r.fulfill({ response: res, body: js, headers: { ...res.headers(), "content-type": "application/javascript" } });
     });
   }
