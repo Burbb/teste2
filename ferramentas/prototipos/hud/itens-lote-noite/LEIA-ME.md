@@ -1400,3 +1400,37 @@ como o comando Itens da luta e o Manto segue compartilhado (decisões do Jean).
   poções (o frasco vazio em 24), a compra de uma Poção no mercado (o topo passa para a poção, 1) e o gole pela bolsa (a
   vida de 30 para 51, o topo volta ao frasco vazio), a caixa do recurso com as mesmas medidas nos três estados e na
   versão anterior (que mostrava o sprite em 32); o Antídoto comprado aparece na bolsa (32).
+
+## O anel e o amuleto (`anel_amuleto/`)
+
+**Proposta, nada no jogo, não aprovada.** Os atuais são placeholders da família de ferro (32, 40, 48, 64).
+
+- **Os dados, conferidos:** o desenho `anel` é das bases **Anel, Sinete e Aro** e do único **Anel do Último Rei** ("O
+  reino caiu. O anel não."); o `amuleto`, das bases **Amuleto, Talismã, Pingente e Medalhão** (nenhum único). Os
+  acessórios não têm material no nome (só os afixos). **Os espaços vazios** do amuleto e dos dois anéis usam os mesmos
+  arquivos, apagados (`VAZIO`, a classe `fantasma`): a troca alcança também essas silhuetas (32 no corpo, 48 no "você
+  usa" do saque). Usos: 32 (a ficha, a mochila do mercado), 40 (o Inventário), 48 e 64 (o saque).
+- **O anel:** o aro de latão (a rampa do aro do escudo aprovado) visto de três quartos, um pouco de cima: a abertura
+  vazada (o fundo aparece), a parede de dentro do lado de trás, mais escura (a espessura), o lado de fora em poucos
+  planos de luz com o brilho agrupado em cima à esquerda, e um engaste pequeno com uma granada no alto (a identidade no
+  tamanho real). Camadas: aro, parede, brilho, engaste, pedra, contorno. Uma primeira versão com o aro menor ficou em
+  `recusados/anel-menor/` (pouca presença no espaço de 32).
+- **O amuleto:** um medalhão redondo de latão (a borda em relevo, o sulco, o campo plano e o botão do meio), a argola
+  no alto e o cordão de couro em gota, que passa pela argola e fecha o laço do colar (nada solto). Serve ao Amuleto,
+  ao Talismã, ao Pingente e ao Medalhão sem símbolo que prometa efeito. Camadas: cordao, argola, medalhao, brilho,
+  contorno.
+- **Tamanhos:** 32 (a arte principal), 40 e 48 da mesma construção, 64 = 32 ampliado 2× (na integração, `DERIVADOS`
+  como a calça e o manto). O cordão fica com 1 px também no 48.
+- **As etapas:** `anel_amuleto/auxiliares/joias.py <anel|amuleto> <N> [silhueta]`; as rodadas do desenho: o anel grosso
+  com a abertura pequena e o engaste borrado; o amuleto com o cordão chato (um chapéu) e o campo do medalhão como uma
+  pepita, refeitos com o laço em gota e os tons limpos. Pintura no Aseprite pelo `pintar.lua` (0 diferentes, 0 fora da
+  tela); fontes em `anel_amuleto/fontes/anel/` e `amuleto/` (32, 40, 48); exportação pelo `exportar_aseprite.py
+  --fontes=`; o composto do editor confere (`soma.lua`); @2x exatos.
+- **As fotos (1920×945, os mesmos dados):** `fotografar.mjs anel_amuleto` (a ficha e o Inventário do Mago com um anel
+  vestido e o outro espaço vazio; o saque do anel) e `anel_amuleto_saque_amuleto`. Folha
+  `anel_amuleto/anel_amuleto-no-jogo.png` e prancha `anel_amuleto/prancha-carvao.png` (com os atuais e o escudo).
+- **Alcance proposto e limitações:** trocar o desenho para todas as bases e o único, e as silhuetas dos vazios junto
+  (são a mesma imagem). O **Aro** (um aro liso, pelo nome) e o **Sinete** (um anel de selo) recebem um anel com uma
+  pedra; o Anel do Último Rei combina com o engaste. Se o Jean quiser o Aro liso e o Sinete com o selo, a proposta é
+  um desenho por base (sem mudar os dados nesta rodada). No espaço de 32, o anel é mais baixo que os outros
+  equipamentos (um aro em perspectiva é largo e achatado).

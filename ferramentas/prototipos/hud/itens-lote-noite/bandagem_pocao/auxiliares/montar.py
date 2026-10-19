@@ -1,5 +1,5 @@
 # As folhas atual × proposta (as fotos do fotografar.mjs a 1920x945, em tamanho real) e a prancha sobre o carvão de
-# cada lote da noite de 19/10/2026: bandagem_pocao, tonico_antidoto, calca_manto.
+# cada lote da noite de 19/10/2026 (bandagem_pocao, tonico_antidoto, calca_manto) e do par seguinte (anel_amuleto).
 # Uso (na raiz): python <esta pasta>/montar.py <lote>
 import pathlib, subprocess, sys
 from PIL import Image, ImageDraw, ImageFont
@@ -58,6 +58,14 @@ LOTES = {
                            JOGO / "calca_couro-32.png",
                            P / "manto-32.png", P / "manto-40.png", P / "manto-48.png", P / "manto-64.png",
                            JOGO / "capuz_tecido-32.png", JOGO / "luva_seda-32.png"]),
+    "anel_amuleto": dict(
+        linhas=[("a ficha do Mago: o amuleto e um anel vestidos, o outro anel vazio (32)", "ficha", (18, 362, 272, 472)),
+                ("o corpo no Inventário (40; o Anel 1 vazio é a silhueta apagada)", "inventario", (150, 140, 480, 520)),
+                ("o cartão do saque do anel (64) e o que você usa (48)", "saque", None),
+                ("o cartão do saque do amuleto (64 e 48)", "saque", None, "saque_amuleto")],
+        prancha=lambda P: [P / "anel-32.png", P / "anel-40.png", P / "anel-48.png", P / "anel-64.png", JOGO / "anel-32.png",
+                           P / "amuleto-32.png", P / "amuleto-40.png", P / "amuleto-48.png", P / "amuleto-64.png", JOGO / "amuleto-32.png",
+                           JOGO / "escudo-32.png"]),
 }
 
 def antidoto_base():

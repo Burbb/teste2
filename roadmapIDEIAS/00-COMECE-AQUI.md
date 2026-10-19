@@ -4316,3 +4316,15 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
     ganho; o topo sem poções, a compra (a passagem para com poções) e o gole (a volta), com a caixa do recurso igual.
     Preços, efeitos, quantidades e o comportamento do recurso não mudaram.
 - **A família de frascos inteira em pixel art:** a Poção de Vida, o frasco vazio, o Tônico e o Antídoto.
+
+### 19/10/2026 (data do computador local) — Propostas do anel e do amuleto
+
+- **Feito, só no protótipo** (`ferramentas/prototipos/hud/itens-lote-noite/anel_amuleto/`), **não aprovado**, no latão
+  do escudo aprovado:
+  - **o anel** (32, 40, 48; 64 = 32 ×2): o aro em três quartos com a abertura vazada, a parede de dentro e a granada no
+    engaste;
+  - **o amuleto** (32, 40, 48; 64 = 32 ×2): o medalhão com a borda em relevo e o botão, a argola e o cordão de couro em
+    gota passando por ela.
+- **Alcance e limitações:** o anel vale para Anel, Sinete, Aro e o Anel do Último Rei, e o amuleto para Amuleto,
+  Talismã, Pingente e Medalhão; os espaços vazios usam a mesma imagem (mudam junto). O Aro (liso) e o Sinete (de selo)
+  pediriam desenhos próprios, se o Jean quiser; os dados não mudaram.

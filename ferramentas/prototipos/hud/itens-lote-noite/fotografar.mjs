@@ -6,7 +6,7 @@
 // peça: calca_couro | aljava | atributos | ataque_defesa | agilidade_poder | agilidade | aljava_ref | poder | doca_r2 | doca_r3 | doca_r3_luta | doca_r4 | doca_r4_telas | doca_r5 | doca
 //       | vida_mana | vigor_foco | vigor_foco_arqueiro | ouro_provisoes | moeda | tocha | tocha16 | tocha16_risco | tocha_apagada
 //       | bandagem_pocao | bandagem_pocao_luta | tonico_antidoto | calca_manto | calca_manto_saque_calca
-//       | frasco_vazio | frasco_cheio | antidoto_base
+//       | frasco_vazio | frasco_cheio | antidoto_base | anel_amuleto | anel_amuleto_saque_amuleto
 import { spawn } from "child_process";
 import { readFileSync, existsSync, mkdirSync } from "fs";
 import { fileURLToPath } from "url";
@@ -142,6 +142,14 @@ const PECAS = {
   antidoto_base: { pasta: "tonico_antidoto/proposta", saida: "tonico_antidoto/capturas/base", nomes: ["antidoto"],
     papel_sprite: { folha: { peca: "antidoto", tamanhos: [16] } }, itens: [["antidoto", "+1 Antídoto"]],
     cena: ["mercado", { CLASSE: "guerreiro" }], fotos: ["mercado", "espolio-itens", "aviso-item", "chip-item"] },
+  // o anel e o amuleto (anel_amuleto/): a ficha (32) e o Inventário (40) do Mago, com um anel vestido e o outro espaço
+  // vazio (a silhueta do vazio é o mesmo arquivo, apagado); o saque de cada um (64 e o 48 do "você usa")
+  anel_amuleto: { pasta: "anel_amuleto/proposta", saida: "anel_amuleto/capturas", nomes: ["anel", "amuleto"],
+    cena: ["capela", { CLASSE: "mago", NIVEL: "5", PERIODO: "0", SALA: "exterior" }], fotos: ["ficha", "inventario"],
+    saque: ["vila", { CLASSE: "mago", ACHADO: "anel", VESTIDO: "anel" }] },
+  anel_amuleto_saque_amuleto: { pasta: "anel_amuleto/proposta", saida: "anel_amuleto/capturas/saque_amuleto", nomes: ["anel", "amuleto"],
+    cena: ["capela", { CLASSE: "mago", NIVEL: "5", PERIODO: "0", SALA: "exterior" }], fotos: [],
+    saque: ["vila", { CLASSE: "mago", ACHADO: "amuleto", VESTIDO: "amuleto" }] },
   frasco_vazio: { pasta: "bandagem_pocao/variantes/proposta", saida: "bandagem_pocao/variantes/capturas/vazia", nomes: ["frasco_vazio"],
     papel_recurso: { frasco_vazio: [24] }, cena: ["covil", { LUGAR: "vila", BOLSA: "pocao_vida=0" }], fotos: ["topo"] },
   frasco_cheio: { pasta: "bandagem_pocao/variantes/proposta", saida: "bandagem_pocao/variantes/capturas/cheia", nomes: ["frasco_vazio"],
