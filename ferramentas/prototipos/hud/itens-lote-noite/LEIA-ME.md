@@ -1088,3 +1088,43 @@ O punho sem fogo de `4eea5b6` e o alvo de `1a1dae3`, sem retoque. As fontes fora
 `ferramentas/arte/aseprite/vital-vigor/` e `vital-foco/`; os quatro arquivos do jogo (20 e @2x) são idênticos, byte a
 byte, aos aprovados, e o exportador os reproduz (`--conferir`). Os papéis em `Icones` (`VITAL`) não mudaram; o único
 uso é o topo. Com eles, os quatro ícones das barras do topo estão em pixel art.
+
+## Vida e recursos: Ouro e Provisões (`ouro_provisoes/`)
+
+**Proposta, nada no jogo.** Os atuais (`moedas-24`, `provisoes-24`) são placeholders; as propostas não os copiam.
+
+- **Os usos, conferidos:**
+  - **Ouro** (`moedas`): só o topo, em 24 (`Icones.recurso`, a quantidade de ouro; sem ouro, a bolsa vazia do jogo). O
+    ouro do mercado e dos serviços (`ouro-loja`) usa o sprite `moedas` do jogo, outro papel: fica como está (lacuna
+    registrada, não tratada aqui).
+  - **Provisões** (`provisoes`, papel do desenho `pernil` em `RECURSO`): o topo, em 24, e o cartão "Provisões (1 dia)"
+    do mercado, em 32 (pelo `Icones.porDesenho`). Hoje o 32 é o @2x do 24 reduzido pelo navegador; a proposta tem um
+    32 próprio. Sem comida, o topo mostra o osso (`osso-24`), que não muda.
+  - **O que são as Provisões nos dados:** comida de viagem contada em dias (`provisoes`; o mercado vende "Provisões
+    (1 dia)"; acabou, vem a fome). O desenho do jogo para elas é o `pernil` (os relatórios, o mercado).
+- **O Ouro (24):** uma pilha de moedas vista um pouco de cima, a de cima de face e as juntas entre elas nas laterais,
+  e uma moeda apoiada na frente, com a beira em relevo e o sulco do anel. Poucos planos de luz (a face de cima, a
+  lateral em degradê, a beira), sem brilho solto. Camadas: pilha, topo, moeda, contorno.
+- **As Provisões (24 e 32):** o pernil, a coxa de carne curada com o osso; a casca com a luz de cima e da esquerda em
+  faixas e o brilho na parte larga, o osso no creme do osso do topo (o par: o pernil quando há comida, o osso quando
+  acaba). A mesma construção nos dois tamanhos (um modelo ao longo de um eixo diagonal). Distinto da mochila (sem
+  saco), da aljava e das poções; a massa embaixo à esquerda, ao contrário da tocha vizinha. Camadas: carne, osso,
+  contorno.
+- **As rodadas:** o pernil tinha dois barbantes cruzando a carne; o Jean não gostou e eles saíram (a camada apagada
+  na fonte e a casca completada embaixo). A versão com barbante fica em `ouro_provisoes/recusados/provisoes-barbante/`
+  (os PNGs, o script e as fotos; a fonte é a mesma, sem a camada).
+- **As etapas no Aseprite, pelo MCP:** a silhueta numa cor só, conferida em tamanho real; os materiais e a luz; os
+  retoques (no Ouro, a rampa mais saturada, a face de cima sem o claro quase branco, a moeda da frente mais redonda e
+  com aro; no pernil, a luz no lado certo, o fundo redondo e a saída dos barbantes). Tudo pelo `pintar.lua` (cada
+  pixel relido; 0 diferentes, 0 fora da tela), com a limpeza das cels a cada refação.
+- **As fontes:** `ouro_provisoes/fontes/moedas/moedas-24.aseprite` e `fontes/provisoes/provisoes-24.aseprite`, `-32`.
+  Os auxiliares em `ouro_provisoes/auxiliares/` (`ouro.py silhueta|final`, `pernil.py <24|32> [silhueta]`, `ver.py`)
+  reproduzem as exportações.
+- **A exportação:** `exportar_aseprite.py moedas|provisoes ... --fontes=...`; o composto é igual à captura do editor
+  e o @2x é a duplicação exata.
+- **As fotos (1920×945):** `node .../fotografar.mjs ouro_provisoes` (o mercado, o Guerreiro: o topo e o cartão das
+  Provisões; a foto nova `mercado` do roteiro recorta o cartão de cada desenho da peça fora do topo; a proposta
+  registra o 32 só na página, pelo `papel_tamanhos`). `ouro_provisoes/ouro-provisoes.png` junta o topo e o cartão em
+  tamanho real, as ampliações e a prancha sobre o carvão (`prancha-carvao.png`).
+- **Limitações:** na integração, o `TAMANHOS` de `provisoes` passa a [24, 32]; o Ouro do mercado e dos serviços
+  continua no sprite do jogo.

@@ -4094,3 +4094,17 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   - o único uso é o topo (`Icones.vital`, 20 px); o custo das habilidades continua com os sprites do jogo, e barras,
     números, posições, áreas de interação e regras não mudaram;
   - os quatro ícones das barras do topo (Vida, Mana, Vigor, Foco) estão em pixel art.
+
+### 18/10/2026 (data do computador local) — Propostas de Ouro e Provisões
+
+- **Pedido de Jean:** Ouro e Provisões, uma peça por vez, só no protótipo, conferindo antes os usos e o que as
+  Provisões representam.
+- **Feito, só no protótipo** (`ferramentas/prototipos/hud/itens-lote-noite/ouro_provisoes/`), nada no jogo:
+  - **Ouro** (24, o único uso é o topo): uma pilha de moedas com uma moeda apoiada na frente.
+  - **Provisões** (24 no topo e 32 no cartão do mercado, que hoje reduz o @2x do 24): o pernil curado com o osso,
+    fazendo par com o osso do topo; os barbantes da primeira versão saíram a pedido do Jean (guardada em
+    `recusados/`).
+  - Desenhados em etapas no Aseprite pelo MCP; fotos a 1920×945 no mercado (topo e cartão) e a prancha sobre o carvão
+    em `ouro_provisoes/ouro-provisoes.png`.
+- **Limitações:** a integração precisa do 32 no `TAMANHOS` das Provisões; o ouro do mercado e dos serviços continua
+  com o sprite do jogo.

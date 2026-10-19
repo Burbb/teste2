@@ -85,6 +85,9 @@ const PECAS = {
     cena: ["capela", { CLASSE: "guerreiro", NIVEL: "5", PERIODO: "0", SALA: "exterior" }], fotos: ["topo"] },
   vigor_foco_arqueiro: { pasta: "vigor_foco/proposta", saida: "vigor_foco/capturas/arqueiro", nomes: ["vital-vigor", "vital-foco"],
     cena: ["capela", { CLASSE: "arqueiro", NIVEL: "5", PERIODO: "0", SALA: "exterior" }], fotos: ["topo"] },
+  // Ouro e Provisões: o topo (24) e o mercado (as Provisões em 32, no cartão "Provisões (1 dia)")
+  ouro_provisoes: { pasta: "ouro_provisoes/proposta", saida: "ouro_provisoes/capturas", nomes: ["moedas", "provisoes"], papel_tamanhos: [24, 32],
+    cena: ["mercado", { CLASSE: "guerreiro" }], fotos: ["topo", "mercado"] },
 };
 const P = PECAS[peca];
 if (!P) throw new Error(`peça desconhecida: ${peca}`);
@@ -158,6 +161,13 @@ for (const modo of (process.env.SO_ATUAL ? ["atual"] : process.env.SO_PROPOSTA ?
     for (const f of P.fotos) {
       if (f === "ficha") { await p.screenshot({ path: nome("ficha"), clip: await clipDe("#heroi", 0) }); }
       if (f === "topo") { await p.screenshot({ path: nome("topo"), clip: await clipDe("#hud", 0) }); }
+      // o mercado: a tela inteira e um recorte em volta de cada desenho da peça fora do topo (o cartão onde ele está)
+      if (f === "mercado") {
+        await p.screenshot({ path: nome("mercado") });
+        const caixas = await p.evaluate((nomes) => [...document.querySelectorAll("img")].filter((i) => !i.closest("#hud") && nomes.some((n) => (i.currentSrc || i.src).includes(`/${n}-`)))
+          .map((i) => { const c = (i.closest(".slot, .carta-loja, .item-loja, li, .cartao") || i).getBoundingClientRect(); return { x: c.x, y: c.y, width: c.width, height: c.height }; }), P.nomes);
+        for (const [k, c] of caixas.entries()) await p.screenshot({ path: nome(`mercado-${k}`), clip: { x: Math.max(0, c.x - 12), y: Math.max(0, c.y - 12), width: c.width + 24, height: c.height + 24 } });
+      }
       if (f === "selo") {
         for (const [stat, nomeAttr] of (P.selos || [["atk", "Ataque"], ["defesa", "Defesa"]])) {
           await p.evaluate(([st, nm]) => { Telas.celebrar({ tipo: "atributo", dados: { stat: st, nome: nm, valor: 2, total: 27 } }, false); }, [stat, nomeAttr]);
