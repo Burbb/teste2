@@ -3301,3 +3301,52 @@ Nenhuma habilidade nem estado usa o sprite.
 64 e o "você usa" em 48 (o 32 centrado), "Equipar agora" e "Guardar na mochila", a ficha (32), o Inventário (40, o corpo
 e a mochila) e as pernas vazias, na ficha e no Inventário. As medidas, as áreas de clique, as regras e os atributos não
 mudaram. Sem erro no console. A folha: `perneiras_p7/p7-integracao-1.152.0.png`.
+
+### O capacete com malha, o C1 (`capacete_malha/`)
+
+**Pedido de Jean (20/10/2026):** uma proposta separada de um capacete com malha, com a imagem gerada que ele mandou como
+referência principal (a composição, as proporções e os materiais); o conjunto integrado orienta a paleta e a intensidade
+da luz. Pelo processo das botas B3: preservar a calota arredondada, a faixa da testa e a nasal de aço, o capacete em pé,
+equilibrado e quase frontal, a malha envolvendo as laterais e a nuca, a abertura do rosto vazia (sem pessoa) e o couro
+discreto nos pontos de fixação; sem transformar a malha em placas lisas nem acrescentar microdetalhes. Só o 32 e o 64 =
+32 ×2. O elmo do jogo, a luva e as perneiras não mudam; nada integrado.
+
+**A referência** em `ferramentas/arte/referencias/capacete/capacete-malha-gerada.webp` (o papel no `LEIA-ME.md` de lá):
+pixel art ampliada, o pixel de ~24 px (um desenho de ~36 × 44 px), o fundo transparente.
+
+**O caminho:**
+- **a guia** (`auxiliares/guia.py`, `previa/guia-32.png`): a caixa do desenho reduzida pela média, na proporção, para 30
+  px de altura: 24 × 30, de x 4 a 27, centrada (o meio do capacete cai entre x 15 e 16); o script imprime a cobertura e o
+  tom médio de cada pixel;
+- **a grade à mão** (`auxiliares/grade.py`, `grades/C1.txt`): a silhueta linha a linha pela cobertura da guia, simétrica
+  (`EXTENSAO`, com o topo da calota um pouco mais cheio, como o topo plano da referência), e o contorno tirado dela; depois
+  as partes:
+  - a calota (linhas 1 a 9) com o brilho em cima à esquerda, escurecendo para a direita e para baixo, e a crista de aço
+    no meio (x 15 e 16, acesa, com as juntas escuras dos lados);
+  - a faixa da testa (10 a 12): a junta com a calota, a faixa acesa e a beira de baixo, um pouco mais larga que a calota;
+  - a nasal (x 15 e 16) descendo da crista, cruzando a faixa e terminando na linha 17, a ponta mais escura;
+  - a abertura do rosto (13 a 23) vazia, no escuro do interior (uma camada própria), estreitando embaixo;
+  - as tiras de couro (13 a 15) presas embaixo da faixa dos dois lados, com o rebite;
+  - a malha (16 a 30) envolvendo os lados e a nuca, no xadrez da cota (o tom do volume e o de baixo): acesa do lado de
+    fora da esquerda, média na frente, mais escura à direita, embaixo, logo abaixo das tiras e na beira de dentro, onde
+    ela vira para o interior. Um tom abaixo saía chapado perto da cota; ficou no nível dela.
+
+**As simplificações e as diferenças da referência:**
+- os rebites da faixa da testa e da crista saem (cairiam como pontos soltos de 1 px);
+- a crista e a nasal com 2 px acesos (na referência, ~3 px nativos com o brilho num lado), as juntas da crista com 1 px;
+- a malha em xadrez de 1 px, no contraste da cota (os anéis da referência são maiores e mais contrastados), sem os
+  degraus da beira de baixo;
+- as tiras de couro com 2 × 3 px e o rebite de 1 px; a malha logo abaixo delas começa na linha 16;
+- o brilho da calota num grupo de 3 px (a referência tem manchas de luz espalhadas);
+- a abertura toda no escuro do interior, sem a sombra de dentro do capacete.
+
+**A conferência:** fonte `fontes/C1/C1-32.aseprite` com as camadas guia (oculta, fora da exportação), interior, malha,
+aco, couro e contorno, pelo `pintar.lua` (0 diferenças na releitura, 0 fora da tela); exportada por
+`exportar_aseprite.py C1 capacete_malha/proposta --fontes=capacete_malha/fontes`; o composto do editor é igual ao PNG e
+à grade (0 pixels diferentes); @2x exato; o 64 é o 32 ×2 (conferido pixel a pixel). PNGs em `proposta/` (as cópias com
+o nome `elmo` em `tamanhos/`, só para as fotos).
+
+**As folhas:** `capacete_malha/c1.png` (a referência, a guia e o C1 ampliados 12× sem suavização; o elmo do jogo e o C1
+em tamanho real e a 4×, junto da cota, da luva L7, das perneiras e das botas; `auxiliares/prancha.py`) e
+`capacete_malha/c1-ficha.png` (a ficha a 1920×945 com os mesmos dados, o elmo do jogo × o C1; `fotografar.mjs
+capacete_c1`, as capturas em `capturas/`). Sem erro no console. Nada integrado.

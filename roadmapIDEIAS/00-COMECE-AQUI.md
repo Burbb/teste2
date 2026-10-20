@@ -5113,3 +5113,12 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   Conferido no jogo a 1920×945: o saque, equipar e guardar, a ficha, o Inventário e as pernas vazias.
 - **Continua:** a luva L7 com a origem e a licença do recorte pendentes; em seguida, a proposta do capacete com malha
   (só no protótipo).
+
+### 20/10/2026 (data do computador local) — O capacete com malha, o C1 (proposta do 32)
+
+- **Pedido de Jean:** uma proposta separada de um capacete com malha, com a imagem gerada dele como referência principal
+  (`ferramentas/arte/referencias/capacete/capacete-malha-gerada.webp`); só o 32 e o 64 = 32 ×2.
+- **Feito:** o C1 em `ferramentas/prototipos/hud/itens-lote-noite/capacete_malha/` (a guia reduzida sem esticar, a grade à
+  mão pela silhueta e pelas partes, a fonte `fontes/C1/C1-32.aseprite` em camadas com a guia oculta, as folhas `c1.png` e
+  `c1-ficha.png`); as simplificações no `LEIA-ME.md` do lote.
+- **Continua:** o elmo do jogo sem mudança; o C1 em avaliação; a versão continua 1.152.0.
