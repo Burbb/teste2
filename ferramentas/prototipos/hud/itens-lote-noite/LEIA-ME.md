@@ -2942,3 +2942,30 @@ releitura); o composto do editor é igual ao PNG exportado e à grade nova (1929
 
 **A folha:** `luvas_l7/luvas-l7-limpeza.png` (antes × depois em tamanho real sobre o carvão, junto do elmo, da cota e
 das perneiras, e sobre o magenta; ampliados 12× sem suavização, com a imagem gerada ao lado). Nada integrado.
+
+### A L7, o retoque localizado (`luvas_l7/`)
+
+**Pedido de Jean (20/10/2026):** mais um retoque na L7 do `10772117`, só no protótipo, preservando a forma e a
+composição, com a imagem gerada como apoio para as dobras do couro: a palma da esquerda (sombras muito escuras como
+recortes acidentais), um quadradinho cinza na borda esquerda do punho dessa luva, o encontro da palma com o pulso
+(serrilhado entre preto e marrom). Indicações para inspeção, não para apagar tudo que for escuro. Sem 40 e 48; a
+integração e a pendência de origem e licença continuam como estavam.
+
+**O antes** guardado em `luvas_l7/anterior_10772117/`.
+
+**O retoque** (`auxiliares/retoque.py`, cada pixel com o valor esperado antes, o novo e o porquê; aplicado na fonte em
+camadas pelo `pintar.lua`): 21 pixels.
+- **a palma da esquerda:** os escuros soltos eram meia dobra; ficou a dobra da base do polegar contínua em diagonal (da
+  linha dos nós até o pé da palma, como na imagem gerada), com a sombra logo abaixo dela; os escuros soltos fora da
+  dobra passaram ao tom médio do couro;
+- **o quadradinho cinza:** pertence à construção (o canto de cima da malha do punho), mas estava claro ao lado de um
+  quase preto; ficou no mesmo xadrez da malha, com os tons de sombra do alto do punho, embaixo da luva;
+- **o encontro da palma com o pulso:** a costura contínua em marrom escuro (o preto e o marrom alternados a
+  serrilhavam), com o contorno preto da sobreposição das luvas logo abaixo.
+Ficaram os vãos entre os dedos, o polegar, a sobreposição das luvas e as sombras estruturais.
+
+**A conferência:** a fonte `fontes/L7/L7-32.aseprite` (guia oculta, couro, malha, contorno; 0 diferenças na releitura);
+o composto do editor é igual ao PNG exportado e à grade (1360971530); @2x exato; o 64 é o 32 ×2.
+
+**A folha:** `luvas_l7/luvas-l7-retoque.png` (antes × depois em tamanho real sobre o carvão, junto do elmo, da cota e
+das perneiras, e ampliados 12× sem suavização). Nada integrado.

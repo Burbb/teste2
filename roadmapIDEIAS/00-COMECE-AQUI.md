@@ -4997,3 +4997,12 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   fonte em camadas (`auxiliares/limpeza.py`, cada um com o porquê); a versão anterior em `anterior_8a844975/`; composto =
   exportação = grade; o 64 = 32 ×2; a folha `luvas-l7-limpeza.png`. Sem 40 e 48; nada integrado; a M5 continua no jogo.
 - **Pendente:** a origem e a licença do recorte (com marca d'água), antes de qualquer integração.
+
+### 20/10/2026 (data do computador local) — A L7, o retoque localizado (proposta)
+
+- **Pedido de Jean:** retocar a palma da esquerda, um quadradinho cinza no punho e o encontro da palma com o pulso,
+  preservando a forma.
+- **Feito, só no protótipo** (`ferramentas/prototipos/hud/itens-lote-noite/luvas_l7/`): 21 pixels na fonte em camadas
+  (`auxiliares/retoque.py`, cada um com o porquê): a dobra da base do polegar contínua, o canto da malha do punho no
+  xadrez, a costura do pulso lisa; o antes em `anterior_10772117/`; composto = exportação = grade; o 64 = 32 ×2; a folha
+  `luvas-l7-retoque.png`. Sem 40 e 48; nada integrado; a licença do recorte continua pendente.
