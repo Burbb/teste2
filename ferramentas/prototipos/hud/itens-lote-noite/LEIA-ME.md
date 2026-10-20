@@ -2375,3 +2375,70 @@ fino como um palito engrossou.
 **A folha:** `manopla_perneiras-r5.png`: antes (`9509530`) × depois em tamanho real junto do elmo, da cota, da espada, da
 maça e do escudo; cada peça com a referência principal ao lado e o antes e o depois ampliados 6× sem suavização.
 
+### O lote de exploração: cinco luvas e cinco pernas (`manopla_perneiras/lote_exploracao/`)
+
+**Pedido de Jean (20/10/2026, para avaliar no dia seguinte):** nenhuma versão anterior das duas peças aprovada; o
+histórico fica, sem ser base obrigatória. Cinco propostas de luva e cinco de pernas, com silhuetas, poses e construções
+diferentes de verdade, todas na família (a cota, o elmo, o escudo e as armas). As referências novas (a luva e a calça de
+malha) guardadas e com papel; a malha talvez combine melhor com a cota, sem estar escolhida.
+- **Luvas:** L1 malha pela referência nova; L2 placas pela prancha Raven (uma principal clara, pose diferente das
+  horizontais recusadas); L3 livre em malha; L4 livre em placas; L5 livre mista. Em todas, cinco dedos reconhecíveis
+  (quatro e o polegar), comprimentos naturais, o polegar ligado, sem hastes paralelas, ganchos nem bloco; vazias.
+- **Pernas:** P1 calça de malha pela referência nova (a perspectiva dela não serve de inspiração); P2 placas por uma
+  referência existente, sem joelheiras desproporcionais; P3 livre em malha; P4 livre mista; P5 livre em placas. Sem a
+  proteção central até os tornozelos, sem joelhos inchados ou em losango; cinto, tecido ou couro de suporte permitidos;
+  vazias, sem botas.
+- **No meio do trabalho:** o Jean mandou guias de mãos e luvas (o guia de mãos para agentes do aseprite-ai-artist, a
+  construção da mão do Proko, a luva sobre a mão do Clip Studio): primeiro uma mão simples e convincente numa camada
+  auxiliar, depois o material. Recusou a primeira base de mão (a palma em pá, os dedos em franjas retas) e pediu
+  construções independentes em cada proposta; pediu a pesquisa de referências de mãos e luvas em pixel art, e apontou as
+  luvas da Dungeon Crawl Stone Soup (as de cima) como ótima referência. As tentativas com aquela base foram descartadas
+  antes do commit.
+
+**O que guiou a construção** (estudo, nada copiado): a luva ocupando um ícone de 32 é a escala de uma mão de 64 num
+personagem, onde os quatro dedos aparecem; a palma larga e inclinada, a linha dos nós em arco ou diagonal, os dedos
+saindo dos quartos da palma (o médio o mais longo, o anelar e o indicador quase iguais, o mínimo o mais curto), separados
+por um pixel de sombra ou pelo contorno, sem linhas que façam um código de barras; o polegar com a base na palma, perto
+do pulso, apontando para outra direção; o punho como parte da luva, curto. As luvas da Dungeon Crawl (lidas pixel a pixel)
+mostraram a mão na diagonal com os dedos de 3 px contornados um a um.
+
+**O fluxo:** cada candidato é um arquivo de grades à mão (`lote_exploracao/grades/<id>.lua`, um caractere por pixel),
+aplicado no Aseprite pelo `auxiliares/grade.lua` (o `pintar.lua`) em camadas, conferido em tamanho real a cada etapa. Nas
+luvas, a camada `estudo_mao` (a mão nua na pose, oculta, fora do contorno e da exportação) foi resolvida antes da luva. O
+`grade.lua` ganhou: a malha (`A`..`I`, o xadrez da cota, como um pincel de padrão: a área e o tom à mão), o estudo da mão
+(`s`, `t`, `u`) e o executor por candidato.
+
+**Os candidatos** (fontes em `fontes/<id>/<id>-32.aseprite`, PNGs em `proposta/`, 32 e @2x; sem 64, 40 e 48):
+- **L1, malha (luva-malha):** o punho em cima à direita com a boca e a tira de couro, a mão pendendo, os quatro dedos
+  juntos com vincos escuros e as pontas em degraus, o polegar à direita. Forte: a família da cota e a leitura de luva
+  vazia. Limite: a mão relaxada mostra os dedos menos do que as outras.
+- **L2, placas (Raven, 2.ª linha, 3.ª):** o sino aberto no alto à esquerda, a placa da mão, a placa dos nós, os quatro
+  dedos abertos para baixo com as juntas em alturas diferentes, o polegar à esquerda. Forte: os cinco dedos legíveis.
+  Limite: o sino é grande e os dedos ainda curtos.
+- **L3, livre em malha:** a mão aberta na diagonal (o punho embaixo à esquerda), os dedos contornados um a um, o polegar
+  com a membrana, a tira de couro no pulso, o punho com a barra em dentes. Forte: a anatomia mais clara do lote. Limite:
+  o polegar ainda fino.
+- **L4, livre em placas:** o punho cerrado de frente, os quatro dedos dobrados com os nós acesos, o polegar atravessado,
+  o manguito curto. Forte: a silhueta mais diferente. Limite: lembra uma peça de xadrez; os dedos só como nós.
+- **L5, livre mista:** a luva de couro de pé com plaquinhas de ferro em alturas diferentes e a placa dos nós, o punho de
+  malha. Forte: a identidade própria. Limite: o couro escuro tira contraste no 32.
+- **P1, malha (calca-malha):** de frente, o cinto com a fivela, as duas pernas de malha acompanhando o volume, a liga de
+  couro abaixo do joelho, a barra em dentes. Forte: a família com a cota. Limite: chapada, é a mais "calça".
+- **P2, placas (Lion Knight):** o cinto, as faltas curtas, o coxote abaulado, a joelheira em placa da largura da perna, a
+  greva afinando, a beira do tornozelo. Forte: armadura coerente e simples. Limite: as lâminas ainda fazem faixas.
+- **P3, livre em malha:** as meias de malha separadas, presas ao cinto por correias, o vão aberto desde o cinto. Forte:
+  a silhueta própria. Limite: parecem dois tubos.
+- **P4, livre mista:** a calça de malha com uma placa de ferro na frente de cada coxa e uma joelheira pequena integrada.
+  Forte: une a cota e o ferro. Limite: as placas ainda planas.
+- **P5, livre em placas:** de perfil, num passo, as duas pernas em V invertido (a de trás mais escura), o coxote, a
+  joelheira pequena na frente do joelho, a greva. Forte: a pose mais distinta. Limite: no slot de 32 a vista de perfil
+  lê menos como "equipamento das pernas" do que as de frente.
+
+**A conferência:** o composto do editor é igual aos PNGs exportados nos dez; @2x exatos; a camada do estudo fica fora.
+
+**As pranchas:** `lote-luvas.png` e `lote-pernas.png` (os candidatos em tamanho real sobre o carvão ao lado das peças
+aprovadas; ampliados 6× sem suavização; nas luvas, o estudo da mão de cada uma; a referência principal das guiadas) e
+`lote-favoritos-ficha.png` (a ficha a 1920×945: o atual, A = L3 + P1, B = L2 + P4; `fotografar.mjs lote_favoritos`,
+com `PASTA=.../favoritos/A` ou `B`, `ROTULO=favoritos-A` ou `-B`, `SO_PROPOSTA=1`). Os favoritos são a minha avaliação,
+não aprovação: L3 e L2 nas luvas (uma de malha, uma de placas), P1 e P4 nas pernas.
+

@@ -8,7 +8,7 @@
 //       | bandagem_pocao | bandagem_pocao_luta | tonico_antidoto | calca_manto | calca_manto_saque_calca
 //       | frasco_vazio | frasco_cheio | antidoto_base | anel_amuleto | anel_amuleto_saque_amuleto | sandalia_chapeu | sandalia_chapeu_saque_chapeu
 //       | chapeu_no_jogo | sandalia_r2 | besta | diadema | coroa_afogados | espada | espada_luta | maca | maca_tamanhos | espada_tamanhos
-//       | elmo_cota | elmo_cota_saque_cota | cota_tamanhos | elmo_tamanhos | manopla_perneiras | manopla_perneiras_saque_perneiras | manopla_perneiras_ficha
+//       | elmo_cota | elmo_cota_saque_cota | cota_tamanhos | elmo_tamanhos | manopla_perneiras | manopla_perneiras_saque_perneiras | manopla_perneiras_ficha | lote_favoritos
 import { spawn } from "child_process";
 import { readFileSync, existsSync, mkdirSync } from "fs";
 import { fileURLToPath } from "url";
@@ -236,6 +236,10 @@ const PECAS = {
     saque: ["vila", { CLASSE: "guerreiro", ACHADO: "manopla", VESTIDO: "manopla" }] },
   // a nova rodada (as referências novas do Jean): só a ficha, atual × proposta (ROTULO=rodada3)
   manopla_perneiras_ficha: { pasta: "manopla_perneiras/proposta", saida: "manopla_perneiras/capturas", nomes: ["manopla", "perneiras"], papel_tamanhos: [32, 64],
+    cena: ["tutorial", { CLASSE: "guerreiro", TUTORIAL: "0", PERIODO: "0", VESTIR: "manopla,calca" }], fotos: ["ficha"] },
+  // o lote de exploração (manopla_perneiras/lote_exploracao/): os favoritos na ficha, em pares (PASTA=.../favoritos/A ou B,
+  // com os arquivos já nos nomes manopla e perneiras; ROTULO=favoritos-A ou -B; SO_PROPOSTA=1)
+  lote_favoritos: { pasta: "manopla_perneiras/lote_exploracao/favoritos/A", saida: "manopla_perneiras/lote_exploracao/capturas", nomes: ["manopla", "perneiras"], papel_tamanhos: [32],
     cena: ["tutorial", { CLASSE: "guerreiro", TUTORIAL: "0", PERIODO: "0", VESTIR: "manopla,calca" }], fotos: ["ficha"] },
   manopla_perneiras_saque_perneiras: { pasta: "manopla_perneiras/proposta", saida: "manopla_perneiras/capturas/saque_perneiras", nomes: ["manopla", "perneiras"], papel_tamanhos: [32, 64],
     cena: ["tutorial", { CLASSE: "guerreiro", TUTORIAL: "0" }], fotos: [],

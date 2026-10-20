@@ -601,6 +601,71 @@ def manopla_perneiras_r5():
         y += 16 + L + 6
     o.save(base / "manopla_perneiras-r5.png"); print(base / "manopla_perneiras-r5.png", o.size)
 
+def lote_exploracao():
+    """O lote de exploração (20/10/2026): duas pranchas, as luvas L1 a L5 e as pernas P1 a P5. Em cada uma: os candidatos
+    em tamanho real sobre o carvão ao lado das peças aprovadas (o elmo, a cota, a espada, a maça, o escudo); cada
+    candidato ampliado 6× sem suavização com o nome; nas guiadas, a referência principal ao lado (só reduzida para a
+    folha); nas luvas, o estudo da mão (a camada estudo_mao, oculta na fonte) por baixo de cada uma."""
+    base = LOTE / "manopla_perneiras" / "lote_exploracao"; P = base / "proposta"; J = RAIZ / "rpg/web/static/hud/icones"
+    REF = RAIZ / "ferramentas/arte/referencias"
+    ASE = r"C:\Program Files (x86)\Steam\steamapps\common\Aseprite\Aseprite.exe"
+    ap = [Image.open(a).convert("RGBA") for a in (LOTE / "elmo_cota/proposta/elmo-32.png", J / "cota-32.png", J / "espada-32.png", J / "maca-32.png", J / "escudo-32.png")]
+    raven = Image.open(REF / "Luvas/1.gif").convert("RGBA").crop((630, 410, 790, 580))
+    lion = Image.open(REF / "calça/1.gif").convert("RGBA").crop((430, 170, 560, 300))
+    grupos = {
+        "luvas": [("L1", "malha (luva-malha)", REF / "Luvas/luva-malha.png"), ("L2", "placas (Raven)", raven),
+                  ("L3", "livre em malha", None), ("L4", "livre em placas", None), ("L5", "livre mista", None)],
+        "pernas": [("P1", "malha (calca-malha)", REF / "calça/calca-malha.png"), ("P2", "placas (Lion Knight)", lion),
+                   ("P3", "livre em malha", None), ("P4", "livre mista", None), ("P5", "livre em placas", None)],
+    }
+    Z = 6; L = 32 * Z
+    for nome, cands in grupos.items():
+        luvas = nome == "luvas"
+        H = 22 + 52 + 10 + 18 + L + (18 + 128 if luvas else 0) + 26 + L // 2 + 12
+        W = 10 + 5 * (L + 10)
+        o = Image.new("RGB", (W, H), (245, 245, 245)); d = ImageDraw.Draw(o)
+        d.text((10, 4), f"{nome}: tamanho real sobre o carvão, com o elmo, a cota, a espada, a maça e o escudo aprovados", fill=(0, 0, 0), font=FONTE)
+        ims = [Image.open(P / f"{c}-32.png").convert("RGBA") for c, _, _ in cands]
+        f = Image.new("RGBA", (10 * 48 + 20, 48), (24, 24, 28, 255))
+        for k, im in enumerate(ap[:2] + ims + ap[2:]):
+            f.alpha_composite(im, (10 + k * 48 + 8, 8))
+        o.paste(f.convert("RGB"), (10, 22))
+        for k, (c, _, _) in enumerate(cands):
+            d.text((10 + (k + 2) * 48 + 18, 22 + 50), c, fill=(0, 0, 0), font=FONTE)
+        y = 22 + 52 + 14
+        for k, ((c, rot, _), im) in enumerate(zip(cands, ims)):
+            x = 10 + k * (L + 10)
+            g = Image.new("RGBA", (L, L), (24, 24, 28, 255)); g.alpha_composite(im.resize((L, L), Image.NEAREST))
+            o.paste(g.convert("RGB"), (x, y + 18)); d.text((x, y + 2), f"{c}: {rot} (6×)", fill=(0, 0, 0), font=FONTE)
+        y += 18 + L
+        if luvas:
+            d.text((10, y + 2), "o estudo da mão de cada uma (a camada estudo_mao, oculta na fonte), 4×", fill=(0, 0, 0), font=FONTE)
+            for k, (c, _, _) in enumerate(cands):
+                tmp = base / f"_estudo_{c}.png"
+                subprocess.run([ASE, "-b", "--layer", "estudo_mao", str(base / f"fontes/{c}/{c}-32.aseprite"), "--save-as", str(tmp)], check=True, capture_output=True)
+                e = Image.open(tmp).convert("RGBA"); tmp.unlink()
+                e.putalpha(e.getchannel("A").point(lambda a: 255 if a else 0))
+                g = Image.new("RGBA", (128, 128), (24, 24, 28, 255)); g.alpha_composite(e.resize((128, 128), Image.NEAREST))
+                o.paste(g.convert("RGB"), (10 + k * (L + 10), y + 18))
+            y += 18 + 128
+        d.text((10, y + 4), "a referência principal das guiadas (reduzida só para a folha)", fill=(0, 0, 0), font=FONTE)
+        for k, (c, _, r) in enumerate(cands):
+            if r is None:
+                continue
+            r = Image.open(r).convert("RGBA") if not isinstance(r, Image.Image) else r
+            bg = Image.new("RGBA", r.size, (24, 24, 28, 255)); bg.alpha_composite(r)
+            z = max(1, (L // 2) // max(r.size)); r2 = bg.resize((r.width * z, r.height * z), Image.NEAREST) if z > 1 else bg.copy()
+            r2.thumbnail((L // 2, L // 2), Image.LANCZOS)
+            o.paste(r2.convert("RGB"), (10 + k * (L + 10), y + 22)); d.text((10 + k * (L + 10) + r2.width + 6, y + 24), c, fill=(0, 0, 0), font=FONTE)
+        o.save(base / f"lote-{nome}.png"); print(base / f"lote-{nome}.png", o.size)
+    # os favoritos na ficha a 1920×945 (a minha avaliação, não aprovação): A = L3 + P1, B = L2 + P4
+    fichas = [Image.open(base / f"capturas/{m}-1920x945-ficha.png").convert("RGB") for m in ("atual", "favoritos-A", "favoritos-B")]
+    fichas = [f.crop((20, 370, f.width - 20, 480)) for f in fichas]
+    o = Image.new("RGB", (3 * (fichas[0].width + 10) + 10, fichas[0].height + 30), (245, 245, 245)); d = ImageDraw.Draw(o)
+    for k, (fi, rot) in enumerate(zip(fichas, ("atual", "A: L3 + P1", "B: L2 + P4"))):
+        x = 10 + k * (fi.width + 10); d.text((x, 4), f"{rot} (1920x945, tamanho real)", fill=(0, 0, 0), font=FONTE); o.paste(fi, (x, 22))
+    o.save(base / "lote-favoritos-ficha.png"); print(base / "lote-favoritos-ficha.png", o.size)
+
 def sandalia_no_jogo():
     """A Sandália no jogo (1.142.0), em tamanho real: o saque, a ficha e o Inventário depois de "Equipar agora"."""
     pasta = LOTE / "sandalia_chapeu" / "capturas" / "integracao"
@@ -618,7 +683,7 @@ if __name__ == "__main__" and sys.argv[1] in ("antidoto_base", "frasco_vazio", "
                                               "sandalia_no_jogo", "besta_diadema", "diadema_r2",
                                               "espada_maca", "espada_maca_r2", "espada_ponta",
                                               "espada_ponta3", "espada_ponta4", "espada_tamanhos",
-                                              "elmo_cota", "elmo_cota_r2", "elmo_r3", "elmo_r4", "elmo_tamanhos", "manopla_perneiras", "manopla_perneiras_r3", "manopla_perneiras_r4", "manopla_perneiras_r5"):
+                                              "elmo_cota", "elmo_cota_r2", "elmo_r3", "elmo_r4", "elmo_tamanhos", "manopla_perneiras", "manopla_perneiras_r3", "manopla_perneiras_r4", "manopla_perneiras_r5", "lote_exploracao"):
     globals()[sys.argv[1]](); sys.exit()
 if __name__ == "__main__":
     nome = sys.argv[1]; cfg = LOTES[nome]; base = LOTE / nome

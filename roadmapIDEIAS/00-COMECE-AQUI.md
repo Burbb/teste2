@@ -4814,3 +4814,18 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Folha:** `manopla_perneiras-r5.png`.
 - **Aguardando avaliação.** Nada integrado; a versão continua 1.146.0; a cota e o elmo intocados.
 
+### 20/10/2026 (data do computador local) — O lote de exploração: cinco luvas e cinco pernas (só o 32)
+
+- **Pedido de Jean:** nenhuma versão anterior da manopla e das perneiras aprovada; um lote de exploração com cinco
+  luvas (L1 malha pela luva de malha nova, L2 placas pela Raven, L3 livre malha, L4 livre placas, L5 livre mista) e cinco
+  pernas (P1 malha pela calça de malha nova, P2 placas por uma referência existente, P3 livre malha, P4 livre mista, P5
+  livre placas), construções independentes, cinco dedos reconhecíveis, sem placa central até o tornozelo, sem joelhos
+  inchados; vazias, sem botas. No meio: guias de mãos e luvas, o estudo da mão numa camada auxiliar antes do material,
+  a recusa da mão em pá com dedos em franja, a pesquisa de referências (as luvas da Dungeon Crawl apontadas pelo Jean).
+- **Feito, só no protótipo** (`ferramentas/prototipos/hud/itens-lote-noite/manopla_perneiras/lote_exploracao/`), **não
+  aprovado**: os dez candidatos em grades à mão aplicadas pelo `grade.lua` no Aseprite, em camadas (as luvas com o
+  estudo da mão, oculto); 32 e @2x; composto = exportação. Pranchas `lote-luvas.png`, `lote-pernas.png`,
+  `lote-favoritos-ficha.png` (favoritos: L3 e L2; P1 e P4; minha avaliação). Referências novas versionadas com papel.
+- **Aguardando avaliação.** Nada integrado; a versão continua 1.146.0; a cota e o elmo intocados; botas, martelo e
+  outros itens não começaram.
+
