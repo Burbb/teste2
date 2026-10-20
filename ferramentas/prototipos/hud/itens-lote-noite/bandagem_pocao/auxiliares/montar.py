@@ -667,6 +667,42 @@ def lote_exploracao():
         x = 10 + k * (fi.width + 10); d.text((x, 4), f"{rot} (1920x945, tamanho real)", fill=(0, 0, 0), font=FONTE); o.paste(fi, (x, 22))
     o.save(base / "lote-favoritos-ficha.png"); print(base / "lote-favoritos-ficha.png", o.size)
 
+def adaptacao_idylwild():
+    """O teste de adaptação de arte externa (20/10/2026): as luvas do pacote CC0 Idylwild's Armory examinadas
+    (cloth_gloves, chainmail_gloves, gauntlets) e as duas escolhidas, original × adaptação (a troca de paleta para a rampa
+    da família e o acabamento), em tamanho real sobre o carvão junto da cota e das armas aprovadas, e ampliadas 8× sem
+    suavização."""
+    base = LOTE / "manopla_perneiras" / "adaptacao_idylwild"; P = base / "proposta"; J = RAIZ / "rpg/web/static/hud/icones"
+    E = RAIZ / "ferramentas/arte/externas/idylwilds_armory/original"
+    ap = [Image.open(a).convert("RGBA") for a in (LOTE / "elmo_cota/proposta/elmo-32.png", J / "cota-32.png", J / "espada-32.png", J / "maca-32.png", J / "escudo-32.png")]
+    exam = [(n, Image.open(E / f"{n}.png").convert("RGBA")) for n in ("cloth_gloves", "chainmail_gloves", "gauntlets")]
+    pares = [("I1", "cloth_gloves", "de cloth_gloves (o par de mãos abertas)"), ("I2", "gauntlets", "de gauntlets (o par de manoplas)")]
+    Z = 8; L = 32 * Z
+    W = 10 + 4 * (L + 10); H = 22 + 4 * 48 + 22 + 2 * (22 + L) + 20
+    o = Image.new("RGB", (W, H), (245, 245, 245)); d = ImageDraw.Draw(o)
+    d.text((10, 4), "as três luvas examinadas do Idylwild's Armory (CC0, Idylwild), originais, 1x e 3x", fill=(0, 0, 0), font=FONTE)
+    f = Image.new("RGBA", (3 * 110 + 10, 100), (24, 24, 28, 255))
+    for k, (n, im) in enumerate(exam):
+        f.alpha_composite(im, (10 + k * 110, 34)); f.alpha_composite(im.resize((96, 96), Image.NEAREST), (10 + k * 110 + 10, 2))
+    o.paste(f.convert("RGB"), (10, 22))
+    for k, (n, _) in enumerate(exam):
+        d.text((10 + k * 110 + 4, 124), n, fill=(0, 0, 0), font=FONTE)
+    y = 22 + 104 + 18
+    d.text((10, y), "original | adaptação, em tamanho real, com o elmo, a cota, a espada, a maça e o escudo", fill=(0, 0, 0), font=FONTE)
+    for k, (cid, orig, _) in enumerate(pares):
+        f = Image.new("RGBA", (9 * 48 + 20, 48), (24, 24, 28, 255))
+        for j, im in enumerate([dict(exam)[orig], Image.open(P / f"{cid}-32.png").convert("RGBA")] + ap):
+            f.alpha_composite(im, (10 + j * 48 + 8, 8))
+        o.paste(f.convert("RGB"), (10, y + 18 + k * 52)); d.text((9 * 48 + 40, y + 34 + k * 52), cid, fill=(0, 0, 0), font=FONTE)
+    y += 18 + 2 * 52 + 6
+    for k, (cid, orig, rot) in enumerate(pares):
+        d.text((10 + 2 * k * (L + 10), y), f"{cid}, {rot}: original | adaptação (8x)", fill=(0, 0, 0), font=FONTE)
+        for j, im in enumerate([dict(exam)[orig], Image.open(P / f"{cid}-32.png").convert("RGBA")]):
+            g = Image.new("RGBA", (L, L), (24, 24, 28, 255)); g.alpha_composite(im.resize((L, L), Image.NEAREST))
+            o.paste(g.convert("RGB"), (10 + (2 * k + j) * (L + 10), y + 18))
+    o = o.crop((0, 0, W, y + 18 + L + 10))
+    o.save(base / "adaptacao-idylwild.png"); print(base / "adaptacao-idylwild.png", o.size)
+
 def sandalia_no_jogo():
     """A Sandália no jogo (1.142.0), em tamanho real: o saque, a ficha e o Inventário depois de "Equipar agora"."""
     pasta = LOTE / "sandalia_chapeu" / "capturas" / "integracao"
@@ -684,7 +720,7 @@ if __name__ == "__main__" and sys.argv[1] in ("antidoto_base", "frasco_vazio", "
                                               "sandalia_no_jogo", "besta_diadema", "diadema_r2",
                                               "espada_maca", "espada_maca_r2", "espada_ponta",
                                               "espada_ponta3", "espada_ponta4", "espada_tamanhos",
-                                              "elmo_cota", "elmo_cota_r2", "elmo_r3", "elmo_r4", "elmo_tamanhos", "manopla_perneiras", "manopla_perneiras_r3", "manopla_perneiras_r4", "manopla_perneiras_r5", "lote_exploracao"):
+                                              "elmo_cota", "elmo_cota_r2", "elmo_r3", "elmo_r4", "elmo_tamanhos", "manopla_perneiras", "manopla_perneiras_r3", "manopla_perneiras_r4", "manopla_perneiras_r5", "lote_exploracao", "adaptacao_idylwild"):
     globals()[sys.argv[1]](); sys.exit()
 if __name__ == "__main__":
     nome = sys.argv[1]; cfg = LOTES[nome]; base = LOTE / nome

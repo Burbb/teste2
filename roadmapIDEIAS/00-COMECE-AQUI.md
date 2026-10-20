@@ -4831,3 +4831,14 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Depois do lote (20/10/2026):** o L6, a forma de mão de uma imagem que o Jean mostrou (só a forma da mão enluvada de
   pé, os quatro dedos curtos juntos em arco e o polegar no canto; sem detalhes nem cores dela), no lote, não aprovado.
 
+### 20/10/2026 (data do computador local) — As luvas por adaptação de arte externa CC0 (proposta do 32)
+
+- **Decisão de Jean:** mudar o método das luvas (nenhuma das do lote aprovada; P1 e P4 ficam como candidatas das
+  pernas, sem mexer). Adaptar sprites existentes do pacote CC0 Idylwild's Armory sobre cópias: primeiro a paleta, depois
+  o acabamento, sem redesenhar.
+- **Feito, só no protótipo** (`ferramentas/prototipos/hud/itens-lote-noite/manopla_perneiras/adaptacao_idylwild/`),
+  **não aprovado**: o pacote baixado e registrado (Idylwild, CC0 1.0, `ferramentas/arte/externas/idylwilds_armory/`);
+  I1 (de `cloth_gloves`) e I2 (de `gauntlets`), cada uma com as camadas original (oculta), paleta e acabamento; 32 e @2x;
+  composto = exportação. Prancha `adaptacao-idylwild.png`.
+- **Aguardando avaliação.** Nada integrado; a versão continua 1.146.0.
+

@@ -2451,3 +2451,41 @@ pequeno no canto de baixo do outro lado, dobrando para baixo, separado do indica
 por baixo (oculto) e o ferro da família por cima: o punho com uma lâmina, a linha dos nós, os dedos acesos à esquerda.
 Fonte `fontes/L6/L6-32.aseprite`, PNGs em `proposta/`; composto = exportação; @2x exato; na prancha `lote-luvas.png`.
 
+### As luvas, o teste de adaptação de arte externa (`manopla_perneiras/adaptacao_idylwild/`)
+
+**Decisão de Jean (20/10/2026):** mudar o método das luvas; nenhuma das cinco do lote aprovada. P1 e P4 ficam como
+candidatas das pernas, sem integrar nem redesenhar. Um teste de adaptação direta de sprites existentes, pelo pacote CC0
+Idylwild's Armory (https://idylwild.itch.io/idylwilds-armory; o espelho com download no OpenGameArt): baixar, registrar
+autor, origem e licença, abrir os originais no Aseprite, examinar `cloth_gloves`, `chainmail_gloves` e `gauntlets`,
+escolher duas bases (a mão com os quatro dedos e o polegar reconhecíveis); não redesenhar de memória nem reconstruir por
+aproximação: trabalhar sobre cópias dos sprites, primeiro a paleta (preservando forma, pose e dedos), depois o material
+e o acabamento só onde preciso; sem linhas pretas novas entre os dedos nem textura na mão inteira.
+
+**O pacote:** autor Idylwild, CC0 1.0, baixado do OpenGameArt; o original intacto em
+`ferramentas/arte/externas/idylwilds_armory/original/` (com o registro no `LEIA-ME.md` de lá).
+
+**A escolha** (as três originais estão na prancha): `cloth_gloves` (o par de mãos abertas, os quatro dedos e o polegar
+de cada mão bem definidos) e `gauntlets` (o par de manoplas de placas, já de metal, os dedos em segmentos). Fora:
+`chainmail_gloves` (quase mitenes, os dedos não aparecem). Fora do pedido, `leather_gloves` (uma luva só na diagonal,
+muito legível) fica anotada como alternativa.
+
+**As adaptações** (fontes em `fontes/<id>/<id>-32.aseprite`, PNGs em `proposta/`, 32 e @2x), **adaptações de arte
+externa**: a forma, a pose e os dedos são os do original, pixel a pixel.
+- **I1, de `cloth_gloves`:** a camada `original` (a cópia intacta, oculta); a camada `paleta`: cada cor do original
+  trocada por um tom da rampa de ferro da família (o preto pelo contorno da família; o pano escuro subido na rampa para
+  ler como ferro: `#27262b` → 4, `#555664` → 6, `#737375` → 7); a camada `acabamento`: sete dos claros do original nas
+  cristas (o alto das costas das mãos, os nós, uma ponta de dedo) levados ao mais claro, o brilho localizado do metal.
+  Forte: os cinco dedos de cada mão, claros; a família do ferro. Limite: o par de mãos abertas lê como luvas leves, não
+  como manoplas de placas.
+- **I2, de `gauntlets`:** a mesma troca de paleta, para os tons mais próximos da rampa (o original já é quase a mesma
+  rampa); o acabamento baixa um tom os brancos soltos pelos dedos e pelas beiras (29 pixels), deixando o brilho só no
+  núcleo das manchetes e das costas das mãos, para ficar perto da cota e das armas. Forte: placas de verdade, com a
+  manchete e os segmentos dos dedos. Limite: o par na horizontal e os dedos miúdos; a leitura dos cinco dedos é mais
+  fraca que a do I1.
+
+**A conferência:** a troca cobriu todos os pixels do original (534 e 504, sem cor fora do mapa); o composto do editor é
+igual aos PNGs exportados (I1 1379912430, I2 2042165508); @2x exatos; a camada `original` fica fora da exportação.
+
+**A prancha:** `adaptacao-idylwild.png` (as três originais examinadas; original × adaptação em tamanho real sobre o
+carvão com o elmo, a cota, a espada, a maça e o escudo; e ampliados 8× sem suavização).
+
