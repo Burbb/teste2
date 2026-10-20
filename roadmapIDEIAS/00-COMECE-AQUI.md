@@ -4851,3 +4851,13 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   origem, licença e resolução; nada desenhado nem adaptado. P1 e P4 intocadas.
 - **Aguardando a escolha do Jean.** Nada integrado; a versão continua 1.146.0.
 
+### 20/10/2026 (data do computador local) — As luvas em malha de ferro a partir de B4 e B5 (proposta do 32)
+
+- **Decisão de Jean:** as bases B4 e B5 (`glove_03` e `glove_04` da Dungeon Crawl, CC0) escolhidas pela forma; trocar o
+  material para malha de ferro, preservando a construção.
+- **Feito, só no protótipo** (`ferramentas/prototipos/hud/itens-lote-noite/manopla_perneiras/malha_dcss/`), **não
+  aprovado**: M4 e M5, sobre cópias (`auxiliares/malha_dcss.lua`: o tom pelo volume do original, a malha da cota na mão e
+  no punho, os dedos lisos, o ouro e os rebites trocados pela malha, uma tira de couro na divisa do pulso); a silhueta
+  idêntica à original; 32 e @2x; composto = exportação. Prancha `malha-dcss.png`. P1 e P4 intocadas.
+- **Aguardando avaliação.** Nada integrado; a versão continua 1.146.0.
+

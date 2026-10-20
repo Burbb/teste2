@@ -741,6 +741,31 @@ def escolha_base_luvas():
             d.text((x, y + L + 4 + j * 14), t, fill=(0, 0, 0), font=FONTE)
     o.save(base / "escolha-base-luvas.png"); print(base / "escolha-base-luvas.png", o.size)
 
+def malha_dcss():
+    """As luvas em malha de ferro a partir de B4 e B5 (glove_03 e glove_04 da Dungeon Crawl Stone Soup, CC0, via a
+    coleção CC0 Hand Wear Icons; 20/10/2026): original × malha, em tamanho real sobre o carvão junto do elmo, da cota, da
+    espada, da maça e do escudo, e ampliados 8× sem suavização."""
+    base = LOTE / "manopla_perneiras" / "malha_dcss"; P = base / "proposta"; J = RAIZ / "rpg/web/static/hud/icones"
+    O = RAIZ / "ferramentas/arte/externas/cc0_hand_wear_icons/original/glove-dcss/32x32/glove"
+    ap = [Image.open(a).convert("RGBA") for a in (LOTE / "elmo_cota/proposta/elmo-32.png", J / "cota-32.png", J / "espada-32.png", J / "maca-32.png", J / "escudo-32.png")]
+    pares = [("B4", "glove_03", "M4"), ("B5", "glove_04", "M5")]
+    Z = 8; L = 32 * Z
+    W = 10 + 4 * (L + 10); H = 22 + 2 * 52 + 24 + L + 10
+    o = Image.new("RGB", (W, H), (245, 245, 245)); d = ImageDraw.Draw(o)
+    d.text((10, 4), "original | em malha, em tamanho real, com o elmo, a cota, a espada, a maça e o escudo", fill=(0, 0, 0), font=FONTE)
+    for k, (b, orig, m) in enumerate(pares):
+        f = Image.new("RGBA", (9 * 48 + 20, 48), (24, 24, 28, 255))
+        for j, im in enumerate([Image.open(O / f"{orig}.png").convert("RGBA"), Image.open(P / f"{m}-32.png").convert("RGBA")] + ap):
+            f.alpha_composite(im, (10 + j * 48 + 8, 8))
+        o.paste(f.convert("RGB"), (10, 22 + k * 52)); d.text((9 * 48 + 40, 38 + k * 52), f"{b} ({orig}.png) | {m}", fill=(0, 0, 0), font=FONTE)
+    y = 22 + 2 * 52 + 6
+    for k, (b, orig, m) in enumerate(pares):
+        d.text((10 + 2 * k * (L + 10), y), f"{b}, {orig}.png: original | {m}, em malha (8x)", fill=(0, 0, 0), font=FONTE)
+        for j, im in enumerate([Image.open(O / f"{orig}.png").convert("RGBA"), Image.open(P / f"{m}-32.png").convert("RGBA")]):
+            g = Image.new("RGBA", (L, L), (24, 24, 28, 255)); g.alpha_composite(im.resize((L, L), Image.NEAREST))
+            o.paste(g.convert("RGB"), (10 + (2 * k + j) * (L + 10), y + 18))
+    o.save(base / "malha-dcss.png"); print(base / "malha-dcss.png", o.size)
+
 def sandalia_no_jogo():
     """A Sandália no jogo (1.142.0), em tamanho real: o saque, a ficha e o Inventário depois de "Equipar agora"."""
     pasta = LOTE / "sandalia_chapeu" / "capturas" / "integracao"
@@ -758,7 +783,7 @@ if __name__ == "__main__" and sys.argv[1] in ("antidoto_base", "frasco_vazio", "
                                               "sandalia_no_jogo", "besta_diadema", "diadema_r2",
                                               "espada_maca", "espada_maca_r2", "espada_ponta",
                                               "espada_ponta3", "espada_ponta4", "espada_tamanhos",
-                                              "elmo_cota", "elmo_cota_r2", "elmo_r3", "elmo_r4", "elmo_tamanhos", "manopla_perneiras", "manopla_perneiras_r3", "manopla_perneiras_r4", "manopla_perneiras_r5", "lote_exploracao", "adaptacao_idylwild", "escolha_base_luvas"):
+                                              "elmo_cota", "elmo_cota_r2", "elmo_r3", "elmo_r4", "elmo_tamanhos", "manopla_perneiras", "manopla_perneiras_r3", "manopla_perneiras_r4", "manopla_perneiras_r5", "lote_exploracao", "adaptacao_idylwild", "escolha_base_luvas", "malha_dcss"):
     globals()[sys.argv[1]](); sys.exit()
 if __name__ == "__main__":
     nome = sys.argv[1]; cfg = LOTES[nome]; base = LOTE / nome

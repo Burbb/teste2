@@ -2529,3 +2529,35 @@ OpenClipart são vetores reduzidos.
 o escudo; ampliadas 8× sem suavização; o arquivo, o autor, a origem, a licença e a resolução de cada uma). P1 e P4
 continuam em avaliação, intocadas.
 
+### As luvas em malha de ferro, a partir de B4 e B5 (`manopla_perneiras/malha_dcss/`)
+
+**Decisão de Jean (20/10/2026):** escolhidas B4 e B5 da prancha `2f91cf62` (`glove_03.png` e `glove_04.png` da Dungeon
+Crawl Stone Soup, CC0, via a coleção CC0 Hand Wear Icons) pela forma da mão e pela silhueta. Duas adaptações para malha
+de ferro, só no protótipo: preservar a construção (pose, proporções, dedos, polegar, contorno, tamanho do punho), sobre
+cópias, sem redesenho; mudar o material de armadura pesada para a malha da cota: o ouro da B4 e os reforços de placas
+das duas pela malha, a malha acompanhando o volume (sem um xadrez uniforme), os dedos simplificados (sem linhas pretas
+novas), couro discreto na borda ou no fechamento se ajudar.
+
+**As adaptações** (**adaptações de arte externa**; fontes em `fontes/<id>/<id>-32.aseprite`, com as camadas `original`
+(a cópia intacta, oculta), `malha` e `couro`; PNGs em `proposta/`, 32 e @2x). A troca de material está em
+`auxiliares/malha_dcss.lua`, rodada no Aseprite sobre a cópia, sem mover nenhum pixel:
+- o contorno de fora e as linhas pretas entre os dedos ficam (na cor do contorno da família);
+- cada pixel de dentro vira um tom da rampa de ferro pela luminosidade do original, na faixa da cota: a luz e a sombra
+  são as que o artista desenhou (o volume da mão e do punho);
+- na mão e no punho, a malha como na cota: um tom acima e um abaixo do volume, alternando (a média é o volume; nas
+  partes claras e escuras o xadrez acompanha); os vincos pretos de dentro das placas (1 na B4, 12 na B5) viram malha;
+- nos dedos e no polegar, o tom liso, sem xadrez, para não apagar a separação e as juntas;
+- o ouro (ornamento, não volume), os rebites e os pontos brancos viram a malha no tom dos vizinhos (nos dedos, um tom
+  acima: o brilho do nó);
+- uma tira de couro discreta onde o original tinha a divisa do pulso: na M4, a faixa dourada do punho (8 px); na M5, a
+  linha diagonal escura entre o punho e a mão (9 px).
+**Na bancada:** a primeira passada subia os tons um passo e saía lavada, mais clara que a cota, com o ouro virando ferro
+claro; a segunda, na faixa da cota, perdia o xadrez nos tons médios e a divisa do pulso; a terceira abriu a alternância
+da malha e pôs a tira de couro.
+
+**A conferência:** a silhueta das duas é idêntica à do original, pixel a pixel; nenhuma linha preta nova; o composto do
+editor é igual aos PNGs exportados (M4 1849302430, M5 1395526323); @2x exatos; a camada `original` fica fora.
+
+**A prancha:** `malha-dcss.png` (B4 original × M4 e B5 original × M5 em tamanho real sobre o carvão junto do elmo, da
+cota, da espada, da maça e do escudo; ampliados 8× sem suavização). P1 e P4 continuam intocadas.
+

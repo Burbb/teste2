@@ -21,5 +21,11 @@
 | `glove-scratchio` | ScratchIO (https://opengameart.org/node/108781, 108295, 108448) | ver a fonte |
 | `glove-ocal_0` | OpenClipart (vetores; os endereços no `glove-OCAL.txt`) | vetor reduzido |
 
+**Adaptações (20/10/2026, só no protótipo, não aprovadas):** `glove-dcss/32x32/glove/glove_03.png` (a base B4) e
+`glove_04.png` (a B5) foram adaptadas para malha de ferro (M4 e M5), sobre cópias, em
+`ferramentas/prototipos/hud/itens-lote-noite/manopla_perneiras/malha_dcss/`: a silhueta, o contorno, a pose, os dedos,
+o polegar e o punho são os do original (artistas do Dungeon Crawl Stone Soup, CC0); mudou o material. Se uma entrar no
+jogo, este registro e o crédito acompanham a integração.
+
 Uso registrado: a prancha de escolha de base das luvas, em
 `ferramentas/prototipos/hud/itens-lote-noite/manopla_perneiras/escolha_base/` (o registro no `LEIA-ME.md` do lote).
