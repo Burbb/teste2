@@ -2781,3 +2781,48 @@ com o nome `botas-ferro` em `tamanhos_b2/`, só para as fotos).
 12× sem suavização; a referência entra quando o arquivo for salvo) e `botas-ferro-b2-ficha.png` (a ficha a 1920×945, o
 Guerreiro com o conjunto de ferro inteiro: atual × B1 × B2; `fotografar.mjs botas_ferro` com `PASTA=botas_ferro/tamanhos_b2
 ROTULO=b2 SO_PROPOSTA=1`). Sem erro no console. Nada integrado.
+
+### As botas de ferro, a B3: a transposição da referência gerada (`botas_ferro/b3/`)
+
+**Pedido de Jean (20/10/2026):** a imagem gerada que ele mandou (salva em
+`ferramentas/arte/referencias/botas/Botas blindadas de ferro pesado.png`) é a referência principal e o alvo visual,
+no lugar das anteriores: uma transposição fiel para a escala do jogo, preservando a composição do par (uma à frente, a
+outra atrás), os ângulos, as proporções do cano e o formato dos pés, a canela moldada em planos, as placas sobrepostas
+do tornozelo até a biqueira, as aberturas escuras, as tiras de couro e as solas. Sem reinterpretar nem usar a B1 como
+molde; uma redução proporcional como ponto de partida, depois os pixels ajustados para contornos, placas e volumes
+legíveis em 32; a paleta do conjunto, separando aço, couro e interior escuro; sem esticar. Só o 32 e o 64 = 32 ×2. A B1
+(`725b2695`) e a B2 (`f41b2832`) ficam como tentativas, intactas.
+
+**A referência:** pixel art ampliada, o pixel de ~17,6 px (um desenho de ~58 px na caixa de 1014 px do alfa); em 32, a
+caixa quadrada vai para 30 × 30, centrada, sem esticar (cada pixel do 32 cobre ~1,9 pixel do original: a simplificação
+é inevitável).
+
+**O caminho** (`auxiliares/reducao.py` e `auxiliares/ajustes.py`):
+- **a guia** (`previa/guia-32.png`): a redução proporcional (a média de cada bloco, sobre o alfa); ela entra no Aseprite
+  como a camada `guia`, oculta;
+- **o rascunho** (`grades/rascunho.txt`): cada pixel da guia na cor mais perto da paleta do conjunto (a rampa de ferro,
+  a de couro, o interior das aberturas, o contorno), e o contorno de fora com 1 px;
+- **os ajustes à mão** (`grades/B3.txt`, 113 pixels, cada um com o porquê em `ajustes.py`), guiados pela medida das
+  linhas pretas da referência em cada pixel: a boca das duas botas (a beira do fundo em aço, o vão escuro, o lábio
+  aceso); a linha entre as duas botas; as duas tiras inteiras com a fivela à direita (o ouro da referência em ferro
+  claro, a paleta do conjunto); as junções em diagonal das placas do pé da frente até a biqueira; as solas e o
+  calcanhar em couro; depois o contorno com 1 px (a beira escura do desenho vira contorno e o anel de fora que sobra
+  sai).
+**Na bancada:** a média de cada bloco embarrava o contorno com o aço; o material dominante por bloco perdia o couro do
+calcanhar e as placas da bota de trás; a cor mais perto da paleta, sobre a guia, ficou mais fiel. Pôr as linhas da
+referência automaticamente dobrava o contorno e fechava a boca de trás; ficaram os ajustes à mão.
+
+**A conferência:** fonte `fontes/B3/B3-32.aseprite` com as camadas guia (oculta, fora da exportação), interior, couro,
+aco e contorno (0 diferenças na releitura, 0 fora da tela); o composto do editor é igual ao PNG exportado pelo
+`exportar_aseprite.py` e à grade `B3.txt` (2141358114); @2x exato; o 64 é o 32 ×2. PNGs em `proposta/` (as cópias com o
+nome `botas-ferro` em `tamanhos/`, só para as fotos).
+
+**A avaliação (minha):** em tamanho real, a B3 lê como a referência reduzida: o par com uma bota à frente e a outra
+atrás, as bocas escuras, o cano moldado, as tiras com a fivela, as solas e o calcanhar. As sobreposições das placas do
+pé da frente aparecem como faixas com as junções escuras; na bota de trás, abaixo da tira, as placas ficam fracas (em 32
+sobram poucos pixels entre a tira, a fivela e o salto).
+
+**As folhas:** `botas_ferro/botas-ferro-b3.png` (a referência e a B3 em tamanho real com o conjunto de ferro do jogo, o
+64, e a referência original, a guia e a B3 ampliadas) e `botas_ferro/botas-ferro-b3-ficha.png` (a ficha a 1920×945,
+atual × B3; `fotografar.mjs botas_ferro` com `PASTA=botas_ferro/b3/tamanhos ROTULO=b3 SO_PROPOSTA=1`). Sem erro no
+console. Nada integrado.

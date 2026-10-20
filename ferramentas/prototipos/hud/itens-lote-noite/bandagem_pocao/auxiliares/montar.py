@@ -916,6 +916,37 @@ def botas_b2():
     folha(base / "capturas", [("a ficha: as botas em 32 com o conjunto de ferro vestido", "ficha", (0, 360, 290, 470))],
           base / "botas-ferro-b2-ficha.png", ("atual", "proposta", "b2"))
 
+def botas_b3():
+    """As botas de ferro, a B3 (a transposição da referência gerada do Jean): a referência × a proposta em tamanho real
+    sobre o carvão junto do conjunto de ferro do jogo (a referência reduzida só para a folha), o 64, e ampliadas sem
+    suavização (a referência original, a guia da redução, a B3); e a ficha a 1920×945, atual × B3."""
+    base = LOTE / "botas_ferro"; b3 = base / "b3"; J = RAIZ / "rpg/web/static/hud/icones"
+    abre = lambda a: Image.open(a).convert("RGBA")
+    viz = [abre(J / f"{n}-32.png") for n in ("elmo", "cota", "manopla", "perneiras", "espada", "escudo")]
+    ref = abre(RAIZ / "ferramentas/arte/referencias/botas/Botas blindadas de ferro pesado.png")
+    guia, nova = abre(b3 / "previa/guia-32.png"), abre(b3 / "proposta/B3-32.png")
+    W = 10 + 3 * 394; H = 22 + 2 * 76 + 8 + 16 + 384 + 10
+    o = Image.new("RGB", (W, H), (245, 245, 245)); d = ImageDraw.Draw(o)
+    d.text((10, 4), "as botas de ferro em tamanho real com o conjunto de ferro do jogo: a referência (reduzida só para a folha) | a B3", fill=(0, 0, 0), font=FONTE)
+    for k, (rot, b) in enumerate((("referência", guia), ("B3", nova))):
+        y = 22 + k * 76
+        f = Image.new("RGBA", (W - 20, 72), (24, 24, 28, 255)); x = 8
+        for im in viz[:4] + [b] + viz[4:]:
+            f.alpha_composite(im, (x, 20)); x += 44
+        f.alpha_composite(b.resize((64, 64), Image.NEAREST), (x + 20, 4))
+        o.paste(f.convert("RGB"), (10, y)); d.text((W - 90, y + 28), rot, fill=(255, 255, 255), font=FONTE)
+    y = 22 + 2 * 76 + 8
+    fundo = Image.new("RGBA", ref.size, (24, 24, 28, 255)); fundo.alpha_composite(ref)
+    for k, (rot, im) in enumerate((("a referência original", fundo.resize((384, 384), Image.LANCZOS)),
+                                   ("a guia: a redução proporcional (12x)", guia.resize((384, 384), Image.NEAREST)),
+                                   ("a B3 (12x, sem suavizar)", nova.resize((384, 384), Image.NEAREST)))):
+        d.text((10 + k * 394, y), rot, fill=(0, 0, 0), font=FONTE)
+        g = Image.new("RGBA", (384, 384), (24, 24, 28, 255)); g.alpha_composite(im)
+        o.paste(g.convert("RGB"), (10 + k * 394, y + 16))
+    o.save(base / "botas-ferro-b3.png"); print(base / "botas-ferro-b3.png", o.size)
+    folha(base / "capturas", [("a ficha: as botas em 32 com o conjunto de ferro vestido", "ficha", (0, 360, 290, 470))],
+          base / "botas-ferro-b3-ficha.png", ("atual", "b3"))
+
 def sandalia_no_jogo():
     """A Sandália no jogo (1.142.0), em tamanho real: o saque, a ficha e o Inventário depois de "Equipar agora"."""
     pasta = LOTE / "sandalia_chapeu" / "capturas" / "integracao"
@@ -933,7 +964,7 @@ if __name__ == "__main__" and sys.argv[1] in ("antidoto_base", "frasco_vazio", "
                                               "sandalia_no_jogo", "besta_diadema", "diadema_r2",
                                               "espada_maca", "espada_maca_r2", "espada_ponta",
                                               "espada_ponta3", "espada_ponta4", "espada_tamanhos",
-                                              "elmo_cota", "elmo_cota_r2", "elmo_r3", "elmo_r4", "elmo_tamanhos", "manopla_perneiras", "manopla_perneiras_r3", "manopla_perneiras_r4", "manopla_perneiras_r5", "lote_exploracao", "adaptacao_idylwild", "escolha_base_luvas", "malha_dcss", "m5_tamanhos", "p4_tamanhos", "botas_ferro", "martelo_tamanhos", "botas_b2"):
+                                              "elmo_cota", "elmo_cota_r2", "elmo_r3", "elmo_r4", "elmo_tamanhos", "manopla_perneiras", "manopla_perneiras_r3", "manopla_perneiras_r4", "manopla_perneiras_r5", "lote_exploracao", "adaptacao_idylwild", "escolha_base_luvas", "malha_dcss", "m5_tamanhos", "p4_tamanhos", "botas_ferro", "martelo_tamanhos", "botas_b2", "botas_b3"):
     globals()[sys.argv[1]](); sys.exit()
 if __name__ == "__main__":
     nome = sys.argv[1]; cfg = LOTES[nome]; base = LOTE / nome

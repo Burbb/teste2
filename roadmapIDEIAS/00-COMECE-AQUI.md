@@ -4945,3 +4945,14 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   `botas-ferro-b2-ficha.png` (1920×945). A B1 preservada como tentativa não escolhida.
 - **Pendente:** salvar a imagem da referência em `ferramentas/arte/referencias/botas/botas-ferro-ref.png` (veio anexada
   na conversa; os papéis já estão no `LEIA-ME.md` de lá). Aguardando avaliação; nada integrado; a versão continua 1.149.0.
+
+### 20/10/2026 (data do computador local) — As botas de ferro, a B3 (a transposição da referência gerada)
+
+- **Pedido de Jean:** a imagem gerada que ele mandou é a referência principal e o alvo visual; transpor fielmente para
+  32 (e o 64 = 32 ×2), sem reinterpretar, na paleta do conjunto.
+- **Feito, só no protótipo** (`ferramentas/prototipos/hud/itens-lote-noite/botas_ferro/b3/`): a referência salva em
+  `ferramentas/arte/referencias/botas/` (o original, com o `LEIA-ME.md`); a redução proporcional como guia, o rascunho
+  na paleta e os ajustes à mão (`auxiliares/`); a fonte em camadas no Aseprite (a guia oculta, interior, couro, aço,
+  contorno); composto = exportação = grade; a prancha `botas-ferro-b3.png` e a ficha `botas-ferro-b3-ficha.png`.
+  B1 e B2 preservadas como tentativas.
+- **Aguardando avaliação.** Nada integrado; a versão continua 1.149.0.
