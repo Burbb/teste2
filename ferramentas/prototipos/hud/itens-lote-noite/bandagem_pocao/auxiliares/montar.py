@@ -1037,16 +1037,19 @@ def luvas_l7_limpeza():
         o.paste(g.convert("RGB"), (10 + k * 394, y + 16))
     o.save(base / "luvas-l7-limpeza.png"); print(base / "luvas-l7-limpeza.png", o.size)
 
+ANTES_RETOQUE = "anterior_ba650ddd"   # o antes do retoque mais recente da L7 (era anterior_10772117 no ba650ddd)
+
+
 def luvas_l7_retoque():
     """O retoque localizado da L7: antes (10772117) × depois, em tamanho real sobre o carvão (junto do elmo, da cota e das
     perneiras do jogo) e ampliados sem suavização."""
     base = LOTE / "luvas_l7"; J = RAIZ / "rpg/web/static/hud/icones"
     abre = lambda a: Image.open(a).convert("RGBA")
     viz = [abre(J / f"{n}-32.png") for n in ("elmo", "cota", "perneiras")]
-    antes, depois = abre(base / "anterior_10772117/L7-32.png"), abre(base / "proposta/L7-32.png")
+    antes, depois = abre(base / ANTES_RETOQUE / "L7-32.png"), abre(base / "proposta/L7-32.png")
     W = 10 + 2 * 394; H = 22 + 2 * 76 + 8 + 16 + 384 + 10
     o = Image.new("RGB", (W, H), (245, 245, 245)); d = ImageDraw.Draw(o)
-    d.text((10, 4), "a L7: antes (10772117) | depois do retoque, em tamanho real e ampliados", fill=(0, 0, 0), font=FONTE)
+    d.text((10, 4), f"a L7: antes ({ANTES_RETOQUE[9:]}) | depois do retoque, em tamanho real e ampliados", fill=(0, 0, 0), font=FONTE)
     for k, (rot, b) in enumerate((("antes", antes), ("depois", depois))):
         y = 22 + k * 76
         f = Image.new("RGBA", (W - 20, 72), (24, 24, 28, 255)); x = 8
@@ -1059,7 +1062,7 @@ def luvas_l7_retoque():
         d.text((10 + k * 394, y), rot, fill=(0, 0, 0), font=FONTE)
         g = Image.new("RGBA", (384, 384), (24, 24, 28, 255)); g.alpha_composite(im.resize((384, 384), Image.NEAREST))
         o.paste(g.convert("RGB"), (10 + k * 394, y + 16))
-    o.save(base / "luvas-l7-retoque.png"); print(base / "luvas-l7-retoque.png", o.size)
+    saida = base / f"luvas-l7-retoque-{ANTES_RETOQUE[9:]}.png"; o.save(saida); print(saida, o.size)
 
 def sandalia_no_jogo():
     """A Sandália no jogo (1.142.0), em tamanho real: o saque, a ficha e o Inventário depois de "Equipar agora"."""

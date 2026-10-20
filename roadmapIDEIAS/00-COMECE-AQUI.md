@@ -5006,3 +5006,6 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   (`auxiliares/retoque.py`, cada um com o porquê): a dobra da base do polegar contínua, o canto da malha do punho no
   xadrez, a costura do pulso lisa; o antes em `anterior_10772117/`; composto = exportação = grade; o 64 = 32 ×2; a folha
   `luvas-l7-retoque.png`. Sem 40 e 48; nada integrado; a licença do recorte continua pendente.
+
+- **Mais um retoque (20/10/2026):** o pixel perdido e a ponta de sombra na beira esquerda do punho da luva da esquerda
+  (2 pixels, `auxiliares/retoque2.py`; o antes em `anterior_ba650ddd/`; a folha `luvas-l7-retoque-ba650ddd.png`).

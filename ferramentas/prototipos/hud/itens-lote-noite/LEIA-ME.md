@@ -2969,3 +2969,10 @@ o composto do editor é igual ao PNG exportado e à grade (1360971530); @2x exat
 
 **A folha:** `luvas_l7/luvas-l7-retoque.png` (antes × depois em tamanho real sobre o carvão, junto do elmo, da cota e
 das perneiras, e ampliados 12× sem suavização). Nada integrado.
+
+**O segundo retoque (apontado pelo Jean na folha do `ba650ddd`):** na beira esquerda do alto do punho da luva da
+esquerda, um pixel perdido (o couro claro solto em (4, 20)) e uma ponta de sombra para a esquerda (o contorno em
+(2, 20), além do das linhas de baixo). O pixel entrou no xadrez da malha, no tom de sombra do alto do punho, e a ponta
+saiu, ficando o contorno em (3, 20), alinhado com as linhas 21 e 22 (`auxiliares/retoque2.py`, 2 pixels; o antes em
+`anterior_ba650ddd/`). Composto = exportação = grade (1113157205); @2x exato; o 64 é o 32 ×2. A folha
+`luvas-l7-retoque-ba650ddd.png` (antes × depois).
