@@ -2561,3 +2561,24 @@ editor é igual aos PNGs exportados (M4 1849302430, M5 1395526323); @2x exatos; 
 **A prancha:** `malha-dcss.png` (B4 original × M4 e B5 original × M5 em tamanho real sobre o carvão junto do elmo, da
 cota, da espada, da maça e do escudo; ampliados 8× sem suavização). P1 e P4 continuam intocadas.
 
+### A M5 em 40, 48 e 64 (`manopla_perneiras/malha_dcss/`)
+
+**Decisão de Jean (20/10/2026):** a M5 aprovada em 32 (`53d28893`; o tamanho e a presença ao lado do conjunto bons, sem
+reduzir). Completar os tamanhos no protótipo: o 32 sem retoque; o 40 e o 48 com a mesma pose, anatomia, proporções,
+material e leitura dos dedos; o 64 = 32 ×2.
+
+**O 40 e o 48** saem do mesmo `auxiliares/malha_dcss.lua` (agora com o tamanho N): a silhueta, a pose e os tons de
+volume amostrados do original de 32 (o vizinho mais próximo); o contorno, as linhas entre os dedos e a tira de couro com
+1 px (a linha do original que dobrava na amostragem fica só no primeiro pixel, em qualquer um dos eixos; exigir os dois
+apagava as linhas diagonais dos dedos); a malha na grade de cada tamanho (os anéis do mesmo tamanho em pixels, como a
+cota em 40 e 48). O script refeito em 32 reproduz o aprovado pixel a pixel, e o PNG de 32 não mudou (byte a byte).
+Fontes `fontes/M5/M5-40.aseprite` e `-48` (as camadas original, malha, couro); PNGs em `proposta/` (32, 40, 48, 64 e os
+@2x); o composto é igual à exportação (40 213358429, 48 350600371); @2x exatos; o 64 é o 32 ×2.
+
+**No jogo** a 1920×945 (`fotografar.mjs m5_tamanhos`, `ROTULO=tamanhos`; os arquivos servidos pelo nome `manopla` só na
+página, a partir de `malha_dcss/tamanhos/`): o Inventário (40) e o saque (64 e o "você usa" em 48), atual × tamanhos.
+Sem erro no console.
+
+**As folhas:** `m5-tamanhos.png` (os quatro tamanhos em tamanho real com o elmo, a cota e as armas, e ampliados) e
+`m5-tamanhos-no-jogo.png`. P1 e P4 intocadas. Nada integrado.
+

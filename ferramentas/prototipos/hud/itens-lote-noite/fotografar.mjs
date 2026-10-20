@@ -8,7 +8,7 @@
 //       | bandagem_pocao | bandagem_pocao_luta | tonico_antidoto | calca_manto | calca_manto_saque_calca
 //       | frasco_vazio | frasco_cheio | antidoto_base | anel_amuleto | anel_amuleto_saque_amuleto | sandalia_chapeu | sandalia_chapeu_saque_chapeu
 //       | chapeu_no_jogo | sandalia_r2 | besta | diadema | coroa_afogados | espada | espada_luta | maca | maca_tamanhos | espada_tamanhos
-//       | elmo_cota | elmo_cota_saque_cota | cota_tamanhos | elmo_tamanhos | manopla_perneiras | manopla_perneiras_saque_perneiras | manopla_perneiras_ficha | lote_favoritos
+//       | elmo_cota | elmo_cota_saque_cota | cota_tamanhos | elmo_tamanhos | manopla_perneiras | manopla_perneiras_saque_perneiras | manopla_perneiras_ficha | lote_favoritos | m5_tamanhos
 import { spawn } from "child_process";
 import { readFileSync, existsSync, mkdirSync } from "fs";
 import { fileURLToPath } from "url";
@@ -239,6 +239,11 @@ const PECAS = {
     cena: ["tutorial", { CLASSE: "guerreiro", TUTORIAL: "0", PERIODO: "0", VESTIR: "manopla,calca" }], fotos: ["ficha"] },
   // o lote de exploração (manopla_perneiras/lote_exploracao/): os favoritos na ficha, em pares (PASTA=.../favoritos/A ou B,
   // com os arquivos já nos nomes manopla e perneiras; ROTULO=favoritos-A ou -B; SO_PROPOSTA=1)
+  // a M5 aprovada em 32 (manopla_perneiras/malha_dcss/, a luva de malha adaptada da glove_04 da Dungeon Crawl, CC0) com o
+  // 40, o 48 e o 64 = 32 x2 (ROTULO=tamanhos SO_PROPOSTA=1): o Inventário (40) e o saque (64 e o "você usa" em 48)
+  m5_tamanhos: { pasta: "manopla_perneiras/malha_dcss/tamanhos", saida: "manopla_perneiras/malha_dcss/capturas", nomes: ["manopla"],
+    cena: ["tutorial", { CLASSE: "guerreiro", TUTORIAL: "0", PERIODO: "0", VESTIR: "manopla" }], fotos: ["inventario"],
+    saque: ["vila", { CLASSE: "guerreiro", ACHADO: "manopla", VESTIDO: "manopla" }] },
   lote_favoritos: { pasta: "manopla_perneiras/lote_exploracao/favoritos/A", saida: "manopla_perneiras/lote_exploracao/capturas", nomes: ["manopla", "perneiras"], papel_tamanhos: [32],
     cena: ["tutorial", { CLASSE: "guerreiro", TUTORIAL: "0", PERIODO: "0", VESTIR: "manopla,calca" }], fotos: ["ficha"] },
   manopla_perneiras_saque_perneiras: { pasta: "manopla_perneiras/proposta", saida: "manopla_perneiras/capturas/saque_perneiras", nomes: ["manopla", "perneiras"], papel_tamanhos: [32, 64],

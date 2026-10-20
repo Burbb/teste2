@@ -9,7 +9,11 @@
 --   * nos dedos (e no polegar), o tom liso, sem o xadrez, para não apagar a separação nem as juntas;
 --   * os rebites, os pontos brancos e o ouro (ornamento, não volume) viram a malha no tom dos vizinhos (nos dedos, um tom
 --     acima: o brilho do nó).
--- Uso (execute_script): local C = dofile("<pasta>/auxiliares/malha_dcss.lua"); return C.converter(<png original>, <destino .aseprite>)
+-- Uso (execute_script): local C = dofile("<pasta>/auxiliares/malha_dcss.lua"); return C.converter(<png original>, <destino .aseprite>[, tira[, N]])
+-- N (40, 48): o mesmo desenho na grade de N, derivado do original de 32 (o 32 aprovado não passa por aqui): a silhueta,
+-- a pose e os tons de volume amostrados do original (o vizinho mais próximo); o contorno, as linhas entre os dedos e a
+-- tira com 1 px (a linha do original que dobra na amostragem fica só no primeiro pixel); a malha na grade de N (os anéis
+-- do mesmo tamanho em pixels, como a cota em 40 e 48).
 local C = {}
 C.FERRO = {"0e0f11", "1a1c20", "282b31", "383c44", "4c5159", "646a73", "848b94", "b0b6bd", "e4e8ec"}
 C.CONTORNO = "08080a"
@@ -27,17 +31,28 @@ C.COURO = {"251412", "3a1f1a", "522c23", "6b3b2d", "86503c"}   -- do escuro ao c
 
 -- tira(x, y, r, g, b): opcional, os pixels da divisa entre o punho e a mão (onde o original tinha a faixa ou a borda da
 -- placa), que viram uma tira de couro discreta
-function C.converter(png, destino, tira)
+function C.converter(png, destino, tira, N)
   local orig = app.open(png)
-  local img = Image(orig.width, orig.height, ColorMode.RGB); img:clear(); img:drawSprite(orig, 1)
+  local src = Image(orig.width, orig.height, ColorMode.RGB); src:clear(); src:drawSprite(orig, 1)
   orig:close()
-  local W, H = img.width, img.height
-  local function px(x, y)
-    if x < 0 or y < 0 or x >= W or y >= H then return nil end
-    local p = img:getPixel(x, y)
+  local S = src.width
+  N = N or S
+  local W, H = N, N
+  local function fonte(x) return math.floor((x + 0.5) * S / N) end          -- o pixel do original para o pixel de N
+  local function primeiro(x) return x == 0 or fonte(x) ~= fonte(x - 1) end  -- o primeiro dos pixels de N de um do original
+  local function spx(x, y)
+    if x < 0 or y < 0 or x >= S or y >= S then return nil end
+    local p = src:getPixel(x, y)
     if app.pixelColor.rgbaA(p) == 0 then return nil end
     return app.pixelColor.rgbaR(p), app.pixelColor.rgbaG(p), app.pixelColor.rgbaB(p)
   end
+  local function px(x, y)
+    if x < 0 or y < 0 or x >= W or y >= H then return nil end
+    return spx(fonte(x), fonte(y))
+  end
+  -- um pixel preto do original na borda da silhueta dele (o contorno), ou de dentro (as linhas entre os dedos, os vincos)
+  local function contorno_fonte(x, y) return not spx(x + 1, y) or not spx(x - 1, y) or not spx(x, y + 1) or not spx(x, y - 1) end
+  local dedo = function(x, y) return C.dedo(fonte(x), fonte(y)) end
   local function lum(r, g, b) return 0.3 * r + 0.59 * g + 0.11 * b end
   local function preto(r, g, b) return r + g + b < 12 end
   local function branco(r, g, b) return r > 235 and g > 235 and b > 220 end
@@ -68,14 +83,17 @@ function C.converter(png, destino, tira)
       copia:drawPixel(x, y, app.pixelColor.rgba(r, g, b, 255))
       local fora = not px(x + 1, y) or not px(x - 1, y) or not px(x, y + 1) or not px(x, y - 1)
       local h
-      if preto(r, g, b) then
-        if fora or C.dedo(x, y) then h = C.CONTORNO; conta.contorno = conta.contorno + 1
+      local sx, sy = fonte(x), fonte(y)
+      -- na grade de N, a linha preta do original que dobrou fica com 1 px: o pixel a mais vira o tom dos vizinhos
+      local dobra = N ~= S and preto(r, g, b) and not fora and (contorno_fonte(sx, sy) or not (primeiro(x) or primeiro(y)))
+      if preto(r, g, b) and not dobra then
+        if fora or dedo(x, y) then h = C.CONTORNO; conta.contorno = conta.contorno + 1
         else h = C.FERRO[((x + y) % 2 == 0 and 3 or 2) + 1]; conta.vinco = conta.vinco + 1 end
       else
         local t = tons[y][x]
-        if not t then t = math.min(8, vizinhos(x, y) + (C.dedo(x, y) and 1 or 0)); conta.rebite = conta.rebite + 1 end
-        if C.dedo(x, y) then h = C.FERRO[t + 1]; conta.dedo = conta.dedo + 1
-        elseif tira and not fora and tira(x, y, r, g, b) then
+        if not t then t = math.min(8, vizinhos(x, y) + (dedo(x, y) and 1 or 0)); conta.rebite = conta.rebite + 1 end
+        if dedo(x, y) then h = C.FERRO[t + 1]; conta.dedo = conta.dedo + 1
+        elseif tira and not fora and tira(sx, sy, r, g, b) and (N == S or (primeiro(x) or primeiro(y))) then
           couro:drawPixel(x, y, cor(C.COURO[math.max(1, math.min(5, t - 1))])); conta.couro = conta.couro + 1
         else
           -- a malha: um tom acima e um abaixo do volume, alternando (a média é o volume)

@@ -4861,3 +4861,10 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   idêntica à original; 32 e @2x; composto = exportação. Prancha `malha-dcss.png`. P1 e P4 intocadas.
 - **Aguardando avaliação.** Nada integrado; a versão continua 1.146.0.
 
+### 20/10/2026 (data do computador local) — A M5 aprovada em 32; o 40, o 48 e o 64 (proposta)
+
+- **Decisão de Jean:** a M5 (a luva de malha adaptada da `glove_04` da Dungeon Crawl, CC0) aprovada em 32, `53d28893`.
+- **Feito, só no protótipo** (`ferramentas/prototipos/hud/itens-lote-noite/manopla_perneiras/malha_dcss/`): o 40 e o 48
+  pela mesma troca de material, na grade de cada tamanho; o 64 = 32 ×2; o 32 intocado. Conferidos no Inventário e no saque
+  a 1920×945 (`m5-tamanhos.png`, `m5-tamanhos-no-jogo.png`). Aguardando avaliação; nada integrado; P1 e P4 intocadas.
+
