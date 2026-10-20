@@ -4965,3 +4965,15 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   fontes em camadas; composto = exportação = grade; @2x exatos; o 32 e o 64 idênticos ao aprovado. Conferidos no
   Inventário e no saque a 1920×945 (`b3-tamanhos.png`, `b3-tamanhos-no-jogo.png`).
 - **Aguardando avaliação.** Nada integrado; a versão continua 1.149.0.
+
+### 20/10/2026 (data do computador local) — As luvas, a L7 (proposta do 32)
+
+- **Pedido de Jean:** uma nova proposta de luvas pelo processo das botas B3, a partir do recorte de um par que ele
+  escolheu (a forma) e de uma imagem gerada (os volumes); sem a mão da M5 como molde.
+- **Feito, só no protótipo** (`ferramentas/prototipos/hud/itens-lote-noite/luvas_l7/`): as referências em
+  `ferramentas/arte/referencias/Luvas/` (o recorte tem marca d'água: a licença a esclarecer antes de integrar); a grade
+  nativa do recorte na escala 1:1 como guia, a paleta do conjunto e os ajustes; a fonte em camadas; composto = exportação
+  = grade; a prancha `luvas-l7.png` e a ficha `luvas-l7-ficha.png`. A skill `arte-luvas-fenda` atualizada: os dois
+  caminhos (transpor uma referência escolhida, adaptar uma base pronta), a anatomia da M5 deixa de ser obrigatória, a M5
+  documentada como histórico e como a luva do jogo, a L7 como a direção escolhida e ainda em avaliação.
+- **Aguardando avaliação.** A M5 continua no jogo; nada integrado.

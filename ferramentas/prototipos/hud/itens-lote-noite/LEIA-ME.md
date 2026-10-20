@@ -2854,3 +2854,40 @@ contorno; 0 diferenças na releitura, 0 fora da tela); o composto do editor é i
 
 **As folhas:** `b3/b3-tamanhos.png` (os quatro tamanhos em tamanho real ao lado da cota e das perneiras do jogo no mesmo
 tamanho, e ampliados) e `b3/b3-tamanhos-no-jogo.png`. Nada integrado.
+
+### As luvas, a L7: a transposição da referência escolhida (`luvas_l7/`)
+
+**Pedido de Jean (20/10/2026):** uma nova proposta de luvas pelo processo das botas B3, sem voltar à mão da M5 como
+molde: o recorte do par que ele mandou define o desenho (composição, pose, proporções, a divisão entre couro e malha);
+a imagem gerada esclarece os volumes e o acabamento (onde diferem, vale o recorte). Uma transposição fiel: a guia
+proporcional para 32 sem esticar, a paleta do conjunto, os pixels ajustados para preservar mãos, dedos, polegares,
+contornos e a separação entre as luvas, a malha simplificada pela escala; a fonte em camadas com a guia oculta. Só o 32 e
+o 64 = 32 ×2. A M5 continua no jogo; as fontes anteriores intocadas. A skill `arte-luvas-fenda` atualizada (sem criar
+outra).
+
+**As referências** guardadas em `ferramentas/arte/referencias/Luvas/` (`luvas-par-recorte.png` e
+`luvas-par-gerada.webp`, com os papéis no `LEIA-ME.md` de lá). **O recorte tem marca d'água** ("©" e uma linha clara):
+a origem e a licença não foram informadas e precisam ser esclarecidas antes de qualquer integração.
+
+**O caminho** (`auxiliares/transpor.py` e `auxiliares/ajustes.py`):
+- **a guia** (`previa/guia-32.png`): o recorte é uma captura de pixel art com o pixel de ~3,45 px de tela (o período e a
+  fase medidos pela autocorrelação das bordas); a grade nativa (a cor mediana do miolo de cada célula, fora do borrão) dá
+  o par em ~29 × 30 px, que cabe no 32 na escala 1:1, só deslocado para centrar; o fundo e a marca d'água fora do par
+  saem;
+- **o rascunho** (`grades/rascunho.txt`): cada pixel na cor mais perto da paleta do conjunto (o couro, o ferro, o
+  contorno);
+- **os ajustes** (`grades/L7.txt`): o halo do fundo da captura sai (13 px) e a beira que sobra vira contorno (o par todo
+  contornado, como na referência); a malha pelo tom médio da vizinhança de malha com o xadrez de um tom acima e um abaixo,
+  como na cota e na M5 (a mediana da captura apagava o xadrez das costas da mão; o tom de cada pixel isolado anulava o
+  xadrez irregular da captura); à mão, o dedo mínimo da luva da direita refeito em couro, com o contorno dos lados (o "©"
+  o clareava).
+O couro sai mais quente que o do recorte: é a rampa do conjunto.
+
+**A conferência:** fonte `fontes/L7/L7-32.aseprite` com as camadas guia (oculta, fora da exportação), couro, malha e
+contorno (0 diferenças na releitura, 0 fora da tela); o composto do editor é igual ao PNG exportado e à grade
+(778926358); @2x exato; o 64 é o 32 ×2. PNGs em `proposta/` (as cópias com o nome `manopla` em `tamanhos/`, só para as
+fotos).
+
+**As folhas:** `luvas-l7.png` (a M5 do jogo e a L7 em tamanho real junto do elmo, da cota, das perneiras e das armas, o
+64; o recorte, a imagem gerada, a guia e a L7 ampliados) e `luvas-l7-ficha.png` (a ficha a 1920×945, atual × L7;
+`fotografar.mjs luvas_l7`). Sem erro no console. Nada integrado.

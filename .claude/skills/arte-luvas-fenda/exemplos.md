@@ -1,4 +1,4 @@
-# A luva aprovada e as tentativas recusadas
+# As luvas: a M5 no jogo, a L7 em avaliação e as tentativas recusadas
 
 Exemplos de raciocínio, não regras: a malha, a paleta de ferro e a tira de couro são escolhas da M5, para combinar com a
 cota. O histórico completo está em `ferramentas/prototipos/hud/itens-lote-noite/LEIA-ME.md` (as seções "A manopla e as
@@ -28,7 +28,27 @@ perneiras" até "A M5 em 40, 48 e 64") e as pastas das rodadas em
   `malha_dcss/` como histórico.
 - **As fontes finais** estão em `ferramentas/arte/aseprite/manopla/` (cópias das do protótipo, sem retoque).
 
-## A lição: adaptar funcionou melhor que reconstruir
+## A L7 (20/10/2026, em avaliação; a direção escolhida pelo Jean)
+
+- **As referências:** o recorte escolhido (`ferramentas/arte/referencias/Luvas/luvas-par-recorte.png`) define o desenho:
+  o par, a pose, as proporções e a divisão entre o couro (os dedos, a palma, as tiras) e a malha (as costas da mão
+  direita e os dois punhos); a imagem gerada (`luvas-par-gerada.webp`) esclarece os volumes e o acabamento. Onde as duas
+  diferem, vale o recorte.
+- **A guia:** o recorte é uma captura de pixel art, o pixel de ~3,45 px de tela; a grade nativa (a mediana do miolo de
+  cada célula) dá um par de ~29 × 30 px, que cabe no 32 na escala 1:1, só deslocado para centrar.
+- **A transposição** (`luvas_l7/auxiliares/transpor.py` e `ajustes.py`): a cor mais perto da paleta do conjunto; o halo
+  do fundo da captura saiu e a beira cinza virou contorno (o par todo contornado, como na referência); a malha pelo tom
+  médio da vizinhança com o xadrez da cota (a mediana da captura apagava o xadrez das costas da mão; a tentativa com o
+  tom de cada pixel anulava o xadrez irregular da captura); o dedo mínimo da direita refeito em couro (a marca d'água
+  "©" o clareava). O couro sai mais quente que o do recorte: é a rampa do conjunto.
+
+## A lição: partir de um desenho de mão que funciona
+
+Adaptar uma base pronta (a M5) funcionou melhor que reconstruir a mão por medidas, grades ou descrições; transpor uma
+referência visual escolhida (a L7, como as botas B3) é o mesmo princípio: a anatomia vem resolvida por quem desenhou, e o
+trabalho fica na escala, na paleta e na leitura.
+
+### Adaptar funcionou melhor que reconstruir (a M5)
 
 As rodadas que construíram a mão (por medidas num script, por grades à mão no Aseprite, a partir de referências de
 manoplas, de guias de anatomia e das luvas da Dungeon Crawl lidas pixel a pixel) resolviam um defeito e traziam outro.

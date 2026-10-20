@@ -31,9 +31,10 @@ tentativas recusadas; o resto continua sendo o desta skill.
 
 **Luvas:** quando o objeto é uma luva ou uma manopla (a Manopla do Guerreiro, a silhueta das mãos vazias, uma luva de
 couro, de tecido, de malha ou de placas), consulte também a skill `arte-luvas-fenda`
-([../arte-luvas-fenda/SKILL.md](../arte-luvas-fenda/SKILL.md)): a base canônica da mão (a M5, adaptada da `glove_04`
-da Dungeon Crawl Stone Soup, CC0, com a origem e a licença registradas), a regra de partir dela sem redesenhar a
-anatomia, o acabamento separado da construção e as tentativas recusadas; o resto continua sendo o desta skill.
+([../arte-luvas-fenda/SKILL.md](../arte-luvas-fenda/SKILL.md)): os dois caminhos que funcionaram (a transposição fiel
+de uma referência visual escolhida, como a L7 e as botas B3, e a adaptação de uma base pronta, como a M5 da `glove_04`
+da Dungeon Crawl Stone Soup, CC0, a luva do jogo hoje), a regra de não inventar a anatomia, o acabamento separado da
+construção e as tentativas recusadas; o resto continua sendo o desta skill.
 
 ## Antes de desenhar
 
