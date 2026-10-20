@@ -54,7 +54,9 @@ const Icones = (() => {
   // faces que fecham para dentro) vale para o Elmo, o Capacete e a Barbuta e para a silhueta da cabeça vazia (VAZIO);
   // as perneiras (1.148.0, a calça de malha com o cinto de couro, as placas de ferro nas coxas e a joelheira pequena)
   // valem para o desenho "calca": a Perneira e a Greva, a silhueta das pernas vazias (VAZIO) e o desenho de reserva
-  // das pernas (ICONE_ESPACO, em itens.py).
+  // das pernas (ICONE_ESPACO, em itens.py). As botas de ferro (1.150.0, o par em três quartos, uma à frente e a outra
+  // atrás: o cano moldado com a boca escura, as tiras de couro com fivela, as placas do tornozelo até a biqueira, a
+  // sola e o salto de couro) valem para o desenho "bota_ferro": a Bota Ferrada e a silhueta dos pés vazios (VAZIO).
   // O machado de barba (ferramentas/arte/, 1.99.0) vale para todo equipamento com o desenho "machado" (o Machado e os
   // únicos Lamento de Gharbad e O Açougueiro); o Redemoinho e a Fúria usam o mesmo sprite noutro papel e ficam com o
   // do jogo. O arco de teixo (1.101.0) vale para os três arcos e os únicos Ventre da Tempestade e Sussurro do Vazio;

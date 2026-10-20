@@ -12,9 +12,9 @@ O escudo é do grupo (entra na conta da escala, como sempre), mas o arquivo dele
 (desenhar_escudo_pixel.py) e não sai daqui. Do mesmo jeito, uma peça do grupo com fonte própria no Aseprite
 (aseprite/<peça>/<peça>-<lado>.aseprite: a aljava desde a 1.122.0, a tocha desde a 1.135.0) continua na conta da
 escala, mas não é gravada nem conferida aqui: os arquivos dela saem do exportar_aseprite.py, que os confere
-(`exportar_aseprite.py <peça> --conferir`). Desde a 1.148.0, das peças de ferro do equipamento só as botas de ferro
-ainda saem daqui (a espada e a maça desde a 1.145.0, a cota desde a 1.146.0, a manopla desde a 1.147.0, o elmo e as
-perneiras desde a 1.148.0 têm fonte no Aseprite), além do baú da bolsa. Precisa do Pillow e do numpy."""
+(`exportar_aseprite.py <peça> --conferir`). Desde a 1.150.0, nenhuma peça de ferro do equipamento sai daqui (a
+espada e a maça desde a 1.145.0, a cota desde a 1.146.0, a manopla desde a 1.147.0, o elmo e as perneiras desde a
+1.148.0, as botas de ferro desde a 1.150.0 têm fonte no Aseprite): só o baú da bolsa. Precisa do Pillow e do numpy."""
 
 import pathlib
 import sys

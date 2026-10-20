@@ -4977,3 +4977,14 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   caminhos (transpor uma referência escolhida, adaptar uma base pronta), a anatomia da M5 deixa de ser obrigatória, a M5
   documentada como histórico e como a luva do jogo, a L7 como a direção escolhida e ainda em avaliação.
 - **Aguardando avaliação.** A M5 continua no jogo; nada integrado.
+
+### 20/10/2026 (data do computador local) — As botas de ferro no jogo (1.150.0): os 31 equipamentos-base concluídos
+
+- **Decisão de Jean:** a B3 aprovada nos quatro tamanhos (32 e 64 do `5a4f75bd`, 40 e 48 do `61545bd7`); integrar sem
+  retoque.
+- **Feito:** as fontes em `ferramentas/arte/aseprite/botas-ferro/`, `DERIVADOS` com o 64 = 32 ×2; os 8 PNGs do jogo
+  idênticos aos aprovados e reproduzidos pelo exportador; o `familia_ferro.py` produz só o baú. Conferido a 1920×945
+  (saque, equipar e guardar, ficha, Inventário, pés vazios). **Os 31 equipamentos-base estão concluídos.**
+- **Continua:** as variantes (únicos e raros com desenho próprio) e os compartilhamentos provisórios (a Capa de Patrulha,
+  o Chapéu de Couro, a Coroa dos Afogados); a L7 das luvas em avaliação (a M5 do jogo não muda). A próxima etapa do
+  plano (1E) não começou.

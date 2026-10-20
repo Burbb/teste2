@@ -419,9 +419,7 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   tela usa então o sprite do jogo (`Icones.item(s) || S(s, 2)`). A origem e o destino de uma animação pedem o mesmo
   papel (o item que voa ao equipar, o selo de atributo, o consumível que cai na bolsa). Lacunas (desenho do jogo no
   lugar, sem trocar por desenho de outro tipo de item): o chapéu de couro (usa o capuz por ora), a Coroa dos Afogados
-  (usa o Diadema por ora; pede arte própria), a família de
-  ferro do Guerreiro que ainda é placeholder pendente de remake (as botas de ferro, redução da arte pintada da HUD de
-  ferro por `familia_ferro.py`; elas também dão a silhueta dos pés vazios), os
+  (usa o Diadema por ora; pede arte própria), os
   itens únicos com desenho próprio, a bolsa vazia e o frasco vazio no topo, os inimigos e as cartas deles, os
   ícones de habilidade e de efeito, o covil vencido. O mercador da banca tem o busto no balcão (`telas/mercado.js`,
   com as cores da figura da banca).
@@ -509,8 +507,12 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   calota com a faixa, a abertura do rosto e as faces que fecham para dentro; o Elmo, o Capacete e a Barbuta, e a
   cabeça vazia) e as perneiras (a calça de malha com o cinto de couro, as placas de ferro nas coxas e a joelheira
   pequena; o desenho `calca`: a Perneira e a Greva, as pernas vazias e a reserva das pernas, `ICONE_ESPACO`), 32, 40,
-  48 e o 64 = 32 ×2, fontes em `aseprite/elmo/` e `perneiras/`. Das peças de ferro do equipamento, só as botas de
-  ferro continuam saindo do `familia_ferro.py`.
+  48 e o 64 = 32 ×2, fontes em `aseprite/elmo/` e `perneiras/`. Desde a 1.150.0, as botas de ferro (o par em três
+  quartos: o cano moldado com a boca escura, as tiras de couro com fivela, as placas do tornozelo até a biqueira, a
+  sola de couro; a transposição da referência gerada do Jean, `ferramentas/arte/referencias/botas/`; 32, 40, 48 e o
+  64 = 32 ×2, fontes em `aseprite/botas-ferro/`): a Bota Ferrada e a silhueta dos pés vazios. Nenhuma peça de ferro do
+  equipamento sai mais do `familia_ferro.py` (só o baú da bolsa): os 31 desenhos-base de equipamento das classes
+  estão no padrão atual.
 - O escudo e o Unguento de Prata (1.94.0), o machado e a Bomba de Fumaça (1.99.0) o arco (1.101.0,
   `desenhar_arco_pixel.py`; o Atacar da roda, o Tiro Duplo e o contrato continuam com o sprite) e o cajado (1.106.0,
   `desenhar_cajado_pixel.py`; o Atacar do Mago na roda e o traço Conjurador continuam com o sprite) e o orbe (1.107.0,

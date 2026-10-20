@@ -2891,3 +2891,24 @@ fotos).
 **As folhas:** `luvas-l7.png` (a M5 do jogo e a L7 em tamanho real junto do elmo, da cota, das perneiras e das armas, o
 64; o recorte, a imagem gerada, a guia e a L7 ampliados) e `luvas-l7-ficha.png` (a ficha a 1920×945, atual × L7;
 `fotografar.mjs luvas_l7`). Sem erro no console. Nada integrado.
+
+### As botas de ferro no jogo (1.150.0): os 31 equipamentos-base concluídos
+
+**Aprovadas por Jean (20/10/2026)** e integradas sem retoque: a B3 com o 32 e o 64 do `5a4f75bd` e o 40 e o 48 do
+`61545bd7` (os PNGs e as fontes do protótipo conferidos contra esses commits antes da cópia). As fontes em
+`ferramentas/arte/aseprite/botas-ferro/` (`botas-ferro-32.aseprite`, `-40`, `-48`, com a guia oculta);
+`DERIVADOS` com o 64 = 32 ×2; os 8 arquivos do jogo idênticos, byte a byte, aos aprovados, e
+`exportar_aseprite.py botas-ferro --conferir` os reproduz. O `familia_ferro.py` as reconhece pela fonte e não as grava:
+ele produz agora só o baú da bolsa, e a conferência continua "tudo igual". Os papéis já existiam: o desenho `bota_ferro`
+(a Bota Ferrada) e a silhueta dos pés vazios (`VAZIO`); a reserva dos pés (`ICONE_ESPACO`) é a bota de couro e não
+muda; nenhuma habilidade nem estado usa o sprite.
+
+**Conferido no jogo** a 1920×945 com os arquivos do jogo e os saves temporários (`botas_ferro/b3/capturas/integracao/`;
+`sandalia_chapeu/auxiliares/equipar.mjs guerreiro bota_ferro pes 1.150.0 botas-ferro` e
+`elmo_cota/auxiliares/integracao.mjs pes bota_ferro 1.150.0 botas-ferro pes-vazios`): o saque com as botas em 64 e o
+"você usa" em 48, "Equipar agora" e "Guardar na mochila", a ficha (32), o Inventário (40, o corpo e a mochila) e os pés
+vazios depois de tirar as botas, na ficha e no Inventário (na foto do Inventário o aviso "Você tira…" cobre a fileira de
+baixo; o arquivo do espaço vazio, `botas-ferro-32`, está no registro do roteiro). Sem erro no console.
+
+Com as botas, os 31 desenhos-base de equipamento das classes estão no padrão atual. Continuam as variantes e os
+compartilhamentos provisórios; a L7 das luvas segue em avaliação, e a M5 do jogo não mudou.
