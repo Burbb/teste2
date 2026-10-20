@@ -4868,3 +4868,16 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   pela mesma troca de material, na grade de cada tamanho; o 64 = 32 ×2; o 32 intocado. Conferidos no Inventário e no saque
   a 1920×945 (`m5-tamanhos.png`, `m5-tamanhos-no-jogo.png`). Aguardando avaliação; nada integrado; P1 e P4 intocadas.
 
+### 20/10/2026 (data do computador local) — A skill das luvas (`arte-luvas-fenda`)
+
+- **Pedido de Jean:** registrar o aprendizado das luvas numa skill própria, na organização das de livros, anéis e
+  espadas, complementar à `arte-itens-fenda` (que agora indica consultá-la quando o objeto for uma luva ou uma manopla).
+- **Feito:** `.claude/skills/arte-luvas-fenda/SKILL.md` (a base canônica: a mão da M5 aprovada, adaptada da `glove_04`
+  da Dungeon Crawl Stone Soup, com os caminhos das fontes, a origem, a autoria e a licença CC0; a regra de partir dela,
+  preservando a pose, a construção da mão, os dedos, o polegar e as proporções, sem redesenhar a anatomia; o acabamento
+  separado: os materiais, os metais e ornamentos, os níveis simples, real e de fim de jogo, os efeitos como possibilidade
+  futura; o fluxo em camadas no Aseprite, a exportação e a avaliação em tamanho real) e `exemplos.md` (a M5 e as
+  recusadas: os dedos em hastes e em ganchos, o pente, os dedos fundidos, a mão em pá, a luva leve demais e o punho
+  dominando; e a lição de que adaptar uma base pronta funcionou melhor que reconstruí-la). A malha, a paleta e a tira da
+  M5 ficam como escolhas do exemplar. Nada no jogo; P1 e P4 intocadas.
+

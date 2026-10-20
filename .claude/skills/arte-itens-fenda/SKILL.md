@@ -29,6 +29,12 @@ do Jean e a hierarquia delas (em `ferramentas/arte/referencias/espada/`), a silh
 acabamento, a continuidade dos gumes e a formação da ponta, a comparação com a referência pelo eixo da lâmina e as
 tentativas recusadas; o resto continua sendo o desta skill.
 
+**Luvas:** quando o objeto é uma luva ou uma manopla (a Manopla do Guerreiro, a silhueta das mãos vazias, uma luva de
+couro, de tecido, de malha ou de placas), consulte também a skill `arte-luvas-fenda`
+([../arte-luvas-fenda/SKILL.md](../arte-luvas-fenda/SKILL.md)): a base canônica da mão (a M5, adaptada da `glove_04`
+da Dungeon Crawl Stone Soup, CC0, com a origem e a licença registradas), a regra de partir dela sem redesenhar a
+anatomia, o acabamento separado da construção e as tentativas recusadas; o resto continua sendo o desta skill.
+
 ## Antes de desenhar
 
 1. **O que o jogo diz do item.** Leia o nome, a descrição, o preço, o tipo e os usos em `rpg/itens.py` e onde o item
