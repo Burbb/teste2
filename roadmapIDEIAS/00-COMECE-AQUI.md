@@ -4890,3 +4890,13 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   (saque, equipar e guardar, ficha, Inventário, mãos vazias). O Grito de Guerra continua com o sprite do jogo.
 - **Continua:** o elmo (40 e 48 em proposta), as perneiras (P1 e P4 em avaliação), as botas de ferro e o 40/48 do
   martelo. Equipamento: 27 de 31 finais.
+
+### 20/10/2026 (data do computador local) — A P4 aprovada em 32; o 40, o 48 e o 64 (proposta); o elmo reapresentado
+
+- **Decisão de Jean:** as perneiras serão a P4 do lote `90c69a89` (a malha com as placas nas coxas), aprovada em 32; a
+  P1 fica guardada como alternativa não escolhida.
+- **Feito, só no protótipo** (`ferramentas/prototipos/hud/itens-lote-noite/manopla_perneiras/p4_tamanhos/`): o 40 e o
+  48 em grades à mão com a mesma construção, aplicadas no Aseprite pelo `grade.lua` (agora com o tamanho da grade); o 64
+  = 32 ×2; o 32 intocado. Conferidos na ficha, no Inventário e no saque a 1920×945, com a cota e a manopla do jogo
+  (`p4-tamanhos.png`, `p4-tamanhos-no-jogo.png`). O elmo reapresentado com a comparação do `3f9292a`, sem refazer.
+- **Aguardando avaliação** dos tamanhos da P4 e do elmo. Nada integrado; a versão continua 1.147.0.

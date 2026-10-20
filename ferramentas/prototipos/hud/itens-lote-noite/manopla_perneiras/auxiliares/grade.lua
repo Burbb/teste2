@@ -97,6 +97,7 @@ end
 
 -- Um candidato do lote de exploração: o arquivo de grades (lote_exploracao/grades/<id>.lua) devolve
 --   { silhueta = {...}, tons = {...}, camadas = { {"nome", filtro(x, y, ch)}, ... } }  (tons e camadas podem faltar)
+-- (def.lado: o tamanho da grade, 32 se faltar; o 40 e o 48 da P4 usam G.linha_de(40) e G.linha_de(48))
 -- etapa "estudo": só a mão nua (estudo, visível); etapa "silhueta": a camada silhueta numa cor e o contorno; etapa
 -- "volumes": as camadas pelos tons (cada pixel vai para a primeira camada cujo filtro aceita) e o contorno. Quando há
 -- estudo, ele fica na camada estudo_mao, embaixo e oculta (fora do contorno e da exportação). Grava em <destino>.
@@ -110,12 +111,14 @@ function G.candidato(arquivo, destino, etapa)
     s:saveAs(destino)
     return r
   end
+  local N = def.lado or 32
+  local vazia = string.rep(".", N)
   local grade = etapa == "silhueta" and def.silhueta or def.tons
-  for i, l in ipairs(grade) do if #l ~= 32 then error("linha " .. (i - 1) .. " com " .. #l) end end
-  if #grade > 32 then error(#grade .. " linhas") end
-  while #grade < 32 do grade[#grade + 1] = G.VAZIA end                -- completa embaixo com linhas vazias
-  if def.estudo then while #def.estudo < 32 do def.estudo[#def.estudo + 1] = G.VAZIA end end
-  local s = Sprite(32, 32, ColorMode.RGB)
+  for i, l in ipairs(grade) do if #l ~= N then error("linha " .. (i - 1) .. " com " .. #l) end end
+  if #grade > N then error(#grade .. " linhas") end
+  while #grade < N do grade[#grade + 1] = vazia end                   -- completa embaixo com linhas vazias
+  if def.estudo then while #def.estudo < N do def.estudo[#def.estudo + 1] = vazia end end
+  local s = Sprite(N, N, ColorMode.RGB)
   local out = {}
   if etapa == "silhueta" then
     s.layers[1].name = "silhueta"
@@ -147,17 +150,21 @@ function G.candidato(arquivo, destino, etapa)
   return table.concat(out, " | ")
 end
 
--- uma linha de 32 pixels com trechos em posições dadas: G.linha(7, "5555", 20, "666") (o resto vazio)
-function G.linha(...)
-  local a = {...}
-  local t = {}
-  for i = 1, 32 do t[i] = "." end
-  for i = 1, #a, 2 do
-    local x0, s = a[i], a[i + 1]
-    for k = 1, #s do t[x0 + k] = s:sub(k, k) end
+-- uma linha de N pixels (32 em G.linha) com trechos em posições dadas: G.linha(7, "5555", 20, "666") (o resto vazio)
+function G.linha_de(N)
+  return function(...)
+    local a = {...}
+    local t = {}
+    for i = 1, N do t[i] = "." end
+    for i = 1, #a, 2 do
+      local x0, s = a[i], a[i + 1]
+      if x0 + #s > N then error("trecho fora da linha: " .. x0 .. " " .. s) end
+      for k = 1, #s do t[x0 + k] = s:sub(k, k) end
+    end
+    return table.concat(t)
   end
-  return table.concat(t)
 end
+G.linha = G.linha_de(32)
 G.VAZIA = "................................"
 
 -- os filtros por material, para as camadas

@@ -144,7 +144,7 @@ substituições posteriores, incluindo espada e maça na 1.145.0):
 | `elmo` | Elmo, Capacete, Barbuta (Guerreiro) | **Placeholder integrado, pendente de remake**; a rodada 4 aprovada em 32 e 64 (`b4e920d`), 40 e 48 em avaliação | redução da pintura | Também a silhueta da cabeça vazia, de todas as classes (`VAZIO`) |
 | `armadura` → `cota` | Cota de Malha, Peitoral, Couraça, Brigantina (Guerreiro) | Arte final, padrão atual (o remake do ferro, integrada na 1.146.0) | `aseprite/cota/` (1.146.0) | Também a silhueta da armadura vazia (`VAZIO`); a camisa de malha representa pior o Peitoral e a Couraça (de placa) |
 | `manopla` | Manopla (Guerreiro) | Arte final, padrão atual (a M5, a luva de malha adaptada da `glove_04` da Dungeon Crawl, CC0; 32 do `53d28893`, 40, 48 e 64 = 32 ×2 do `2d18ce15`; integrada na 1.147.0); a mão dela é a base das próximas luvas (a skill `arte-luvas-fenda`) | `aseprite/manopla/` (1.147.0) | Também a silhueta das mãos vazias (`VAZIO`); a habilidade Grito de Guerra usa o sprite `manopla` noutro papel e não muda; o crédito da arte externa no `LEIA-ME.md` das fontes e em `externas/cc0_hand_wear_icons/` |
-| `calca` → `perneiras` | Perneira, Greva (Guerreiro) | **Placeholder integrado, pendente de remake**; nenhuma versão aprovada; P1 e P4 do lote de exploração preservadas como candidatas (sem integrar nem redesenhar) | redução da pintura | Também a silhueta das pernas vazias (`VAZIO`) e o desenho de reserva das pernas (`ICONE_ESPACO`) |
+| `calca` → `perneiras` | Perneira, Greva (Guerreiro) | **Placeholder integrado, pendente de remake**; **a P4 aprovada em 32** (`90c69a89`, a calça de malha com as placas de ferro nas coxas e a joelheira pequena); o 40, o 48 e o 64 = 32 ×2 em avaliação, no protótipo (`manopla_perneiras/p4_tamanhos/`); a P1 guardada como alternativa não escolhida | redução da pintura | Também a silhueta das pernas vazias (`VAZIO`) e o desenho de reserva das pernas (`ICONE_ESPACO`) |
 | `bota_ferro` → `botas-ferro` | Bota Ferrada (Guerreiro) | **Placeholder integrado, pendente de remake** | redução da pintura | Também a silhueta dos pés vazios (`VAZIO`) |
 | `martelo` | Martelo (Guerreiro) | **Arte aprovada, preservada; faltam o 40 e o 48** | grade de 32 em `desenhos.js` (1.93.0) | Desenho próprio, não da pintura; completar o 40 e o 48 pela mesma construção, sem redesenhar (outra entrega) |
 | `besta` | Besta Leve (Arqueiro) | Arte final, padrão atual (integrada na 1.143.0) | `aseprite/besta/` (1.143.0) | Uma das quatro armas do Arqueiro |
@@ -967,7 +967,7 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
 
 1. **Espada e maça concluídas na 1.145.0** (`ed967d1`) e a cota na 1.146.0, sem retoques nos aprovados.
 2. **Agora, fechar o equipamento básico restante:** o elmo (32 e 64 aprovados, 40 e 48 em proposta); a manopla
-   integrada na 1.147.0; as perneiras (P1 e P4 em avaliação); depois botas
+   integrada na 1.147.0; as perneiras (a P4 aprovada em 32; o 40, o 48 e o 64 em avaliação, com o 40 e o 48 do elmo reapresentados); depois botas
    de ferro em lotes pequenos; completar os 40/48 do martelo aprovado, sem redesenhá-lo. Conferir objetos da bolsa e
    usos residuais para saber o que de fato falta, preservando compartilhamentos aceitos.
 3. **Abrir a etapa 1E:** contagem de flechas do Arqueiro primeiro; buffs/estados com Firme; depois inimigos e pets;

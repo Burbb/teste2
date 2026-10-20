@@ -2599,3 +2599,42 @@ o saque com a manopla em 64 e o "você usa" em 48 (a Manopla de Aço do Urso con
 ficha e no Inventário (`sandalia_chapeu/auxiliares/equipar.mjs guerreiro manopla maos 1.147.0 manopla` e
 `elmo_cota/auxiliares/integracao.mjs`, que ganhou os argumentos opcionais da peça: `maos manopla 1.147.0 manopla
 maos-vazias`). Sem erro no console. P1 e P4 continuam em avaliação.
+
+### A P4 em 40, 48 e 64 (`manopla_perneiras/p4_tamanhos/`); o elmo reapresentado
+
+**Decisão de Jean (20/10/2026):** escolhida a P4 do lote `90c69a89` (a calça de malha com as placas de ferro nas
+coxas), aprovada em 32 como está. Completar os tamanhos no protótipo: o 32 sem retoque; o 40 e o 48 com a mesma
+construção, as proporções, as placas e a leitura da malha; o 64 = 32 ×2. A P1 fica guardada como alternativa não
+escolhida. Reapresentar o elmo (32 e 64 do `b4e920d`, 40 e 48 do `3f9292a`) para a avaliação dos tamanhos, sem
+redesenho.
+
+**O 40 e o 48** são grades à mão (`p4_tamanhos/grades/P4-40.lua` e `-48`), no mesmo formato da do 32
+(`lote_exploracao/grades/P4.lua`), aplicadas no Aseprite pelo `auxiliares/grade.lua`, que ganhou o tamanho da grade
+(`def.lado`, `G.linha_de(N)`; o 32 refeito por ele continua igual ao aprovado). As medidas do 32 vezes 1,25 e 1,5,
+arredondadas, e a mesma construção em cada grade:
+- o cinto de couro com a fivela no meio (no 48, três linhas, a fivela estreita em cima e mais larga embaixo, como no
+  32); a faixa escura e o quadril de malha, o último passo para fora como no 32;
+- em cada coxa a placa de ferro com uma coluna de malha dos dois lados, a faixa de reflexo à esquerda, um tom abaixo na
+  perna da direita e a beira de baixo escura com 1 px;
+- uma linha de malha (duas no 48); a joelheira com a malha dos dois lados e a sombra embaixo;
+- as canelas de malha, mais estreitas por fora, e a barra em dentes de 1 px alternados;
+- o vão entre as pernas com 2 px, os dois contornos encostados, como no 32 (com 3 px apareceria o fundo no meio);
+- a malha (`A` a `I`) é o xadrez da cota, com os anéis do mesmo tamanho em pixels em todo tamanho, como na cota.
+**Na bancada:** um rascunho por amostragem da grade de 32 só serviu de medida (as linhas escuras e as beiras saíam com 2
+px, a fivela torta, os dentes irregulares). No 48, a joelheira com 8 px ficava larga para a perna (ficou com 6 e duas
+colunas de malha de cada lado) e a fivela de seis colunas iguais virava um bloco.
+
+**A conferência:** o 32 da proposta é o do `90c69a89`, byte a byte (o `.aseprite` dele, em `lote_exploracao/fontes/P4/`,
+não mudou); fontes `p4_tamanhos/fontes/P4/P4-40.aseprite` e `-48` (camadas malha, placas, cinto,
+contorno; 0 diferenças na releitura, 0 fora da tela); o composto do editor é igual aos PNGs exportados pelo
+`exportar_aseprite.py` e à prévia da grade (32 571889163, 40 1907993860, 48 1656064768); @2x exatos; o 64 é o 32 ×2.
+PNGs em `p4_tamanhos/proposta/` (e as cópias com o nome `perneiras` em `p4_tamanhos/tamanhos/`, só para as fotos).
+
+**No jogo** a 1920×945 (`fotografar.mjs p4_tamanhos`, `ROTULO=tamanhos`, `SO_PROPOSTA=1`; só os arquivos `perneiras-*`
+trocados pela página): o Guerreiro com a cota e a manopla do jogo e as perneiras, na ficha (32) e no Inventário (40), e
+o saque (64 e o "você usa" em 48). Sem erro no console.
+
+**As folhas:** `p4_tamanhos/p4-tamanhos.png` (cada tamanho em tamanho real entre a cota e a manopla do jogo no mesmo
+tamanho; ampliados sem suavização) e `p4_tamanhos/p4-tamanhos-no-jogo.png`. **O elmo**, sem mudança: a comparação do
+`3f9292a` continua válida (`elmo_cota/elmo-tamanhos-no-jogo.png` e `elmo_cota/prancha-carvao.png`; os PNGs da proposta
+conferidos contra o `b4e920d` e o `3f9292a`). Nada integrado.
