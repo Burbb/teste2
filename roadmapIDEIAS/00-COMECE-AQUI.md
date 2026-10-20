@@ -4917,3 +4917,12 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Feito, só no protótipo** (`ferramentas/prototipos/hud/itens-lote-noite/botas_ferro/`): a B1, uma grade à mão aplicada
   no Aseprite em camadas (couro, bota de trás, bota da frente, contorno); composto = exportação = prévia; a prancha
   `botas-ferro.png` e a ficha `botas-ferro-ficha.png` (1920×945). Aguardando avaliação; nada integrado.
+
+### 20/10/2026 (data do computador local) — O martelo em 40 e 48 (proposta)
+
+- **Pedido de Jean:** completar o 40 e o 48 do martelo aprovado, sem mexer no 32 e no 64 do jogo.
+- **Feito, só no protótipo** (`ferramentas/prototipos/hud/itens-lote-noite/martelo/`): as medidas do 32 nas diagonais
+  (`auxiliares/medidas.py`, que refaz o 32 aprovado) dão o rascunho; as grades do 40 e do 48 ajustadas à mão (o cabo do
+  40, a empunhadura, o pomo); fontes em camadas no Aseprite; composto = exportação; @2x exatos. Conferidos no Inventário
+  (40) e no saque (48, com o 64 do jogo) a 1920×945 (`martelo-tamanhos.png`, `martelo-tamanhos-no-jogo.png`).
+- **Aguardando avaliação** do martelo e das botas de ferro (B1, `725b2695`). Nada integrado; a versão continua 1.148.0.

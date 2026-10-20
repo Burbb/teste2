@@ -8,7 +8,7 @@
 //       | bandagem_pocao | bandagem_pocao_luta | tonico_antidoto | calca_manto | calca_manto_saque_calca
 //       | frasco_vazio | frasco_cheio | antidoto_base | anel_amuleto | anel_amuleto_saque_amuleto | sandalia_chapeu | sandalia_chapeu_saque_chapeu
 //       | chapeu_no_jogo | sandalia_r2 | besta | diadema | coroa_afogados | espada | espada_luta | maca | maca_tamanhos | espada_tamanhos
-//       | elmo_cota | elmo_cota_saque_cota | cota_tamanhos | elmo_tamanhos | manopla_perneiras | manopla_perneiras_saque_perneiras | manopla_perneiras_ficha | lote_favoritos | m5_tamanhos | p4_tamanhos | botas_ferro
+//       | elmo_cota | elmo_cota_saque_cota | cota_tamanhos | elmo_tamanhos | manopla_perneiras | manopla_perneiras_saque_perneiras | manopla_perneiras_ficha | lote_favoritos | m5_tamanhos | p4_tamanhos | botas_ferro | martelo_tamanhos
 import { spawn } from "child_process";
 import { readFileSync, existsSync, mkdirSync } from "fs";
 import { fileURLToPath } from "url";
@@ -254,6 +254,13 @@ const PECAS = {
   // conjunto de ferro inteiro do jogo (o elmo, a cota, a manopla, as perneiras) e as botas: a ficha, atual × proposta
   botas_ferro: { pasta: "botas_ferro/tamanhos", saida: "botas_ferro/capturas", nomes: ["botas-ferro"], papel_tamanhos: [32, 64],
     cena: ["tutorial", { CLASSE: "guerreiro", TUTORIAL: "0", PERIODO: "0", VESTIR: "elmo,armadura,manopla,calca,bota_ferro" }], fotos: ["ficha"] },
+  // o martelo aprovado (a grade de 32 de desenhos.js) com o 40 e o 48 da proposta (martelo/): só nesta página, os
+  // tamanhos que têm arquivo (papel_desenho) vêm da proposta e os outros, o 32 e o 64, continuam o desenho em código do
+  // jogo. O Guerreiro com o Martelo (ARMA): o Inventário (40); o saque com um martelo achado e outro vestido (o 64 e o
+  // "você usa" em 48)
+  martelo_tamanhos: { pasta: "martelo/tamanhos", saida: "martelo/capturas", nomes: ["martelo"], papel_desenho: { martelo: [40, 48] },
+    cena: ["tutorial", { CLASSE: "guerreiro", TUTORIAL: "0", PERIODO: "0", ARMA: "martelo" }], fotos: ["inventario"],
+    saque: ["vila", { CLASSE: "guerreiro", ACHADO: "martelo", VESTIDO: "martelo" }] },
   lote_favoritos: { pasta: "manopla_perneiras/lote_exploracao/favoritos/A", saida: "manopla_perneiras/lote_exploracao/capturas", nomes: ["manopla", "perneiras"], papel_tamanhos: [32],
     cena: ["tutorial", { CLASSE: "guerreiro", TUTORIAL: "0", PERIODO: "0", VESTIR: "manopla,calca" }], fotos: ["ficha"] },
   manopla_perneiras_saque_perneiras: { pasta: "manopla_perneiras/proposta", saida: "manopla_perneiras/capturas/saque_perneiras", nomes: ["manopla", "perneiras"], papel_tamanhos: [32, 64],
@@ -287,6 +294,18 @@ async function anexar(p) {
       const res = await r.fetch();
       let js = await res.text();
       for (const n of P.nomes) { const i = js.indexOf(`"${n}": [`), j = js.indexOf("]", i); if (i >= 0) js = js.slice(0, i) + `"${n}": ${JSON.stringify(P.papel_tamanhos)}` + js.slice(j + 1); }
+      r.fulfill({ response: res, body: js, headers: { ...res.headers(), "content-type": "application/javascript" } });
+    });
+  }
+  if (P.papel_desenho) {  // um desenho em código (desenhos.js) com arquivos novos em alguns tamanhos (o 40 e o 48 do
+    // martelo): só nesta página, esses tamanhos vêm do arquivo; os outros continuam o desenho em código
+    await p.route(/\/static\/icones\.js(\?|$)/, async (r) => {
+      const res = await r.fetch();
+      let js = await res.text();
+      for (const [nome, tamanhos] of Object.entries(P.papel_desenho))
+        js = js.replace('const TAMANHOS = {', `const TAMANHOS = {"${nome}": ${JSON.stringify(tamanhos)}, `);
+      js = js.replace("if (peca && Desenhos.tem(peca)) return desenhado(", "if (peca && Desenhos.tem(peca) && !(TAMANHOS[peca] && TAMANHOS[peca].includes(lado))) return desenhado(");
+      js = js.replace("if (peca && !Desenhos.tem(peca) && TAMANHOS[peca] && TAMANHOS[peca].includes(lado))", "if (peca && TAMANHOS[peca] && TAMANHOS[peca].includes(lado))");
       r.fulfill({ response: res, body: js, headers: { ...res.headers(), "content-type": "application/javascript" } });
     });
   }

@@ -2694,3 +2694,36 @@ faixa escura, e no 32 o desenho lê mais como uma bota do que como duas.
 **As folhas:** `botas-ferro.png` (atual × proposta em tamanho real com o conjunto de ferro e a bota de couro, o 64 dos
 dois, ampliados 12× sem suavização) e `botas-ferro-ficha.png` (a ficha a 1920×945, o Guerreiro com o conjunto de ferro
 inteiro, `fotografar.mjs botas_ferro`). Sem erro no console. Nada integrado.
+
+### O martelo em 40 e 48 (`martelo/`)
+
+**Pedido de Jean (20/10/2026):** completar o 40 e o 48 do martelo aprovado (1.93.0), com a mesma forma, proporções,
+perspectiva, paleta e acabamento, mantendo a leitura da cabeça, das faces do metal e do cabo; o 32 e o 64 do jogo
+intactos. Sem integrar.
+
+**Como ele é hoje:** uma grade de 32 em `rpg/web/static/desenhos.js` (`MARTELO`, a paleta `CORES_MARTELO`), pintada em
+código: o 32 a 1×, o 64 a 2× pixel a pixel; o 48 (o "você usa" do saque) é a 2× reduzida pelo navegador; no Inventário
+(40) aparece o 32 (`nativo` de `icones.js`). Usos: a base Martelo do Guerreiro e os raros dela (`ITEM`); o Golpe Pesado, o
+traço Gigante e o ferreiro da vila usam o sprite 16×16 "martelo" do jogo, outro desenho, e não mudam.
+
+**O 40 e o 48:** o desenho de 32 é todo alinhado às duas diagonais (o cabo numa faixa de x + y, a cabeça atravessada):
+`auxiliares/medidas.py` lê as medidas dele nessas coordenadas (a cabeça com a beira de trás escura, o topo aceso, o meio,
+a ponta de baixo na sombra e a beira de bater clara; o colar de latão; o cabo com a luz, o meio e a sombra; a empunhadura;
+o pomo) e confere que elas refazem o 32 aprovado pixel a pixel. Delas sai o rascunho do 40 e do 48, com as beiras em
+degraus de 45 graus limpos (a amostragem da grade repetia degraus e dobrava o contorno), e as grades finais
+(`grades/martelo-40.txt` e `-48.txt`) foram ajustadas à mão: no 40, o cabo com 4 px (`MMmn`; com 3 ficava fino para a
+cabeça) e a ponta de baixo da cabeça; no 40 e no 48, a empunhadura (a volta clara, as lisas, a volta da beira, como no
+32) e o pomo (a beira de latão, a bola, o fim arredondado um pixel para dentro). A paleta é a do desenho, sem cor nova.
+
+**O Aseprite (pelo MCP):** as listas das grades pintadas pelo `pintar.lua` em documentos novos com as camadas cabo,
+empunhadura, pomo, colar, cabeca e contorno (0 diferenças, 0 fora da tela), em `fontes/martelo/martelo-40.aseprite` e
+`-48`; o composto do editor é igual aos PNGs exportados pelo `exportar_aseprite.py` e à prévia (40 884730622, 48
+934035712); @2x exatos. PNGs em `proposta/` (e as cópias em `tamanhos/`, para as fotos).
+
+**No jogo** a 1920×945 (`fotografar.mjs martelo_tamanhos`, `ROTULO=tamanhos`, atual × tamanhos): o roteiro ganhou o
+`papel_desenho` (só na página, os tamanhos que têm arquivo vêm da proposta e os outros continuam o desenho em código do
+jogo): o Inventário com o martelo em 40 (atual: o 32 no espaço de 40) e o saque com o 64 do jogo e o "você usa" em 48
+(atual: a 2× reduzida). Sem erro no console.
+
+**As folhas:** `martelo-tamanhos.png` (o 32 e o 64 do jogo, o 40 e o 48 da proposta, em tamanho real com a espada, a
+maça e o escudo, e ampliados) e `martelo-tamanhos-no-jogo.png`. Nada integrado; as botas do `725b2695` intocadas.

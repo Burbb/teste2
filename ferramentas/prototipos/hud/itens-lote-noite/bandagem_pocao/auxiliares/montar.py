@@ -852,6 +852,33 @@ def botas_ferro():
     folha(base / "capturas", [("a ficha: as botas em 32 com o conjunto de ferro vestido", "ficha", (0, 360, 290, 470))],
           base / "botas-ferro-ficha.png", ("atual", "proposta"))
 
+def martelo_tamanhos():
+    """O martelo aprovado (o 32 e o 64 do jogo, a grade de desenhos.js) com o 40 e o 48 da proposta: os quatro em tamanho
+    real sobre o carvão junto da espada, da maça e do escudo, ampliados sem suavização; e no jogo a 1920×945, o Inventário
+    (40) e o saque (o 64 e o "você usa" em 48), atual × tamanhos."""
+    base = LOTE / "martelo"; J = RAIZ / "rpg/web/static/hud/icones"
+    abre = lambda a: Image.open(a).convert("RGBA")
+    ims = [abre(base / "previa/martelo-32-jogo.png"), abre(base / "proposta/martelo-40.png"), abre(base / "proposta/martelo-48.png"),
+           abre(base / "previa/martelo-64-jogo.png")]
+    viz = [abre(J / f"{n}-32.png") for n in ("espada", "maca", "escudo")]
+    W = 10 + 4 * 394; H = 22 + 80 + 26 + 384 + 10
+    o = Image.new("RGB", (W, H), (245, 245, 245)); d = ImageDraw.Draw(o)
+    d.text((10, 4), "o martelo: 32 e 64 (= 32 x2) do jogo, 40 e 48 da proposta, em tamanho real com a espada, a maça e o escudo", fill=(0, 0, 0), font=FONTE)
+    f = Image.new("RGBA", (W - 20, 76), (24, 24, 28, 255)); x = 8
+    for im in viz[:2] + ims + viz[2:]:
+        f.alpha_composite(im, (x, (76 - im.height) // 2)); x += im.width + 12
+    o.paste(f.convert("RGB"), (10, 22))
+    y = 22 + 80 + 6
+    for k, (n, rot, im) in enumerate(zip((32, 40, 48, 64), ("jogo", "proposta", "proposta", "jogo"), ims)):
+        z = 384 // n
+        d.text((10 + k * 394, y), f"{n}, {rot} ({z}x, sem suavizar)", fill=(0, 0, 0), font=FONTE)
+        g = Image.new("RGBA", (384, 384), (24, 24, 28, 255)); g.alpha_composite(im.resize((n * z, n * z), Image.NEAREST))
+        o.paste(g.convert("RGB"), (10 + k * 394, y + 16))
+    o.save(base / "martelo-tamanhos.png"); print(base / "martelo-tamanhos.png", o.size)
+    folha(base / "capturas", [("o corpo no Inventário: o martelo em 40 (atual: o 32 no espaço de 40; tamanhos: o 40)", "inventario", (150, 140, 480, 520)),
+                              ("o cartão do saque: o martelo em 64 (do jogo) e o 'você usa' em 48 (atual: a 2x reduzida pelo navegador)", "saque", None)],
+          base / "martelo-tamanhos-no-jogo.png", ("atual", "tamanhos"))
+
 def sandalia_no_jogo():
     """A Sandália no jogo (1.142.0), em tamanho real: o saque, a ficha e o Inventário depois de "Equipar agora"."""
     pasta = LOTE / "sandalia_chapeu" / "capturas" / "integracao"
@@ -869,7 +896,7 @@ if __name__ == "__main__" and sys.argv[1] in ("antidoto_base", "frasco_vazio", "
                                               "sandalia_no_jogo", "besta_diadema", "diadema_r2",
                                               "espada_maca", "espada_maca_r2", "espada_ponta",
                                               "espada_ponta3", "espada_ponta4", "espada_tamanhos",
-                                              "elmo_cota", "elmo_cota_r2", "elmo_r3", "elmo_r4", "elmo_tamanhos", "manopla_perneiras", "manopla_perneiras_r3", "manopla_perneiras_r4", "manopla_perneiras_r5", "lote_exploracao", "adaptacao_idylwild", "escolha_base_luvas", "malha_dcss", "m5_tamanhos", "p4_tamanhos", "botas_ferro"):
+                                              "elmo_cota", "elmo_cota_r2", "elmo_r3", "elmo_r4", "elmo_tamanhos", "manopla_perneiras", "manopla_perneiras_r3", "manopla_perneiras_r4", "manopla_perneiras_r5", "lote_exploracao", "adaptacao_idylwild", "escolha_base_luvas", "malha_dcss", "m5_tamanhos", "p4_tamanhos", "botas_ferro", "martelo_tamanhos"):
     globals()[sys.argv[1]](); sys.exit()
 if __name__ == "__main__":
     nome = sys.argv[1]; cfg = LOTES[nome]; base = LOTE / nome
