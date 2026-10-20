@@ -17,9 +17,9 @@ Não iniciar todo o plano numa única tarefa. As etapas técnicas A–I e a vali
 - Branch: `claude/tender-einstein-tx3tjl`; esta atualização documental vem depois da integração publicada pela outra
   sessão. Não altera sua arte nem suas verificações.
 - **Agora: etapa 1D, fechamento dos equipamentos.** Espada e maça aprovadas nos quatro tamanhos e integradas.
-  A cota foi integrada na 1.146.0; o elmo (rodada 4) aprovado no 32 e no 64, com o 40 e o 48 em proposta.
-- Dos 31 desenhos básicos de equipamento: **26 finais, 4 placeholders de ferro e 1 martelo aprovado com 40/48
-  pendentes**. Faltam os remakes de elmo, manopla, perneiras e botas de ferro.
+  A cota foi integrada na 1.146.0 e a manopla na 1.147.0; o elmo (rodada 4) aprovado no 32 e no 64, com o 40 e o 48 em proposta.
+- Dos 31 desenhos básicos de equipamento: **27 finais, 3 placeholders de ferro e 1 martelo aprovado com 40/48
+  pendentes**. Faltam os remakes de elmo, perneiras e botas de ferro.
 - A sequência aprovada passa a ser: **fechar os itens → 1E (flechas e estados primeiro; depois inimigos/pets e
   caminhos/minimapa) → retomar as etapas 2–9**. Ícones de habilidades e talentos serão tratados com seus sistemas,
   Grimório e árvore na etapa 8; não entram numa produção em massa antes disso.
@@ -44,7 +44,7 @@ os usos dos sprites estejam migrados. Conferir `Icones` e os catálogos antes de
 | 1A | Concluir o lote de cabeça/capuz e luvas de couro e tecido | Integrado na 1.112.0 (32, 40, 48, 64; os saves antigos pela migração v5); falta Jean conferir jogando |
 | 1B | Corrigir a sequência visual do consumo de recurso e mostrar o bloqueio de vida máxima por ferimentos | Feito: 1.114.1 (o custo) e 1.115.0 (a vida bloqueada) |
 | 1C | Prototipar dado mais visível, iniciativa e indicação dos turnos; facilitar consulta aos testes de atributos | Feito: 1.116.0/1.116.1 (iniciativa e turnos), 1.117.0 (a rolagem no centro), 1.118.0 (os testes na ficha) |
-| 1D | Fechar equipamentos e objetos da bolsa; concluir ícones gerais já trabalhados | **Agora.** Atributos, nove atalhos da doca e principais recursos/consumíveis integrados. Espada e maça integradas (1.145.0), a cota (1.146.0); o elmo em fechamento, depois manopla/perneiras/botas e 40/48 do martelo. Conferir usos residuais antes de fechar o lote |
+| 1D | Fechar equipamentos e objetos da bolsa; concluir ícones gerais já trabalhados | **Agora.** Atributos, nove atalhos da doca e principais recursos/consumíveis integrados. Espada e maça integradas (1.145.0), a cota (1.146.0), a manopla (1.147.0); o elmo em fechamento, depois perneiras/botas e 40/48 do martelo. Conferir usos residuais antes de fechar o lote |
 | 1E | Desvio visual após os itens: flechas, buffs/estados, inimigos, pets, caminhos e minimapa | **Próximo bloco, aprovado como sequência em 19/10.** Começar pela contagem de flechas do Arqueiro e por Firme; critérios no item 1.12. Talentos e habilidades ficam para a etapa 8 |
 | 2–9 | Telas, serviços, cenários, habilidades e campanha | Sequência detalhada abaixo |
 
@@ -143,7 +143,7 @@ substituições posteriores, incluindo espada e maça na 1.145.0):
 | `maca` | Maça (Guerreiro) | Arte final, padrão atual (o remake do ferro, integrada na 1.145.0) | `aseprite/maca/` (1.145.0) | — |
 | `elmo` | Elmo, Capacete, Barbuta (Guerreiro) | **Placeholder integrado, pendente de remake**; a rodada 4 aprovada em 32 e 64 (`b4e920d`), 40 e 48 em avaliação | redução da pintura | Também a silhueta da cabeça vazia, de todas as classes (`VAZIO`) |
 | `armadura` → `cota` | Cota de Malha, Peitoral, Couraça, Brigantina (Guerreiro) | Arte final, padrão atual (o remake do ferro, integrada na 1.146.0) | `aseprite/cota/` (1.146.0) | Também a silhueta da armadura vazia (`VAZIO`); a camisa de malha representa pior o Peitoral e a Couraça (de placa) |
-| `manopla` | Manopla (Guerreiro) | **Placeholder integrado, pendente de remake**; nenhuma versão aprovada (o lote L1 a L6 também não); I1 e I2 (adaptações CC0) também não; **a M5 aprovada em 32** (`53d28893`; a luva de malha adaptada da `glove_04` da Dungeon Crawl, CC0); o 40, o 48 e o 64 = 32 ×2 em avaliação, no protótipo; a mão dela é a base das próximas luvas (a skill `arte-luvas-fenda`) | redução da pintura | Também a silhueta das mãos vazias (`VAZIO`); a habilidade Grito de Guerra usa o sprite `manopla` noutro papel e não muda |
+| `manopla` | Manopla (Guerreiro) | Arte final, padrão atual (a M5, a luva de malha adaptada da `glove_04` da Dungeon Crawl, CC0; 32 do `53d28893`, 40, 48 e 64 = 32 ×2 do `2d18ce15`; integrada na 1.147.0); a mão dela é a base das próximas luvas (a skill `arte-luvas-fenda`) | `aseprite/manopla/` (1.147.0) | Também a silhueta das mãos vazias (`VAZIO`); a habilidade Grito de Guerra usa o sprite `manopla` noutro papel e não muda; o crédito da arte externa no `LEIA-ME.md` das fontes e em `externas/cc0_hand_wear_icons/` |
 | `calca` → `perneiras` | Perneira, Greva (Guerreiro) | **Placeholder integrado, pendente de remake**; nenhuma versão aprovada; P1 e P4 do lote de exploração preservadas como candidatas (sem integrar nem redesenhar) | redução da pintura | Também a silhueta das pernas vazias (`VAZIO`) e o desenho de reserva das pernas (`ICONE_ESPACO`) |
 | `bota_ferro` → `botas-ferro` | Bota Ferrada (Guerreiro) | **Placeholder integrado, pendente de remake** | redução da pintura | Também a silhueta dos pés vazios (`VAZIO`) |
 | `martelo` | Martelo (Guerreiro) | **Arte aprovada, preservada; faltam o 40 e o 48** | grade de 32 em `desenhos.js` (1.93.0) | Desenho próprio, não da pintura; completar o 40 e o 48 pela mesma construção, sem redesenhar (outra entrega) |
@@ -172,11 +172,11 @@ substituições posteriores, incluindo espada e maça na 1.145.0):
 | `amuleto` | Amuleto, Talismã, Pingente, Medalhão | Arte final, padrão atual | `aseprite/amuleto/` (1.140.0) | Compartilhamento mantido |
 
 **A contagem:** 31 desenhos de equipamento.
-- **Arte final aprovada no padrão atual:** 26 (o escudo, o machado, a espada, a maça e a cota e os 21 do Arqueiro, do
-  Mago e dos acessórios; o Chapéu Pontudo entrou na 1.141.0, a Sandália na 1.142.0, a Besta Leve na 1.143.0, o Diadema
-  na 1.144.0, a espada e a maça na 1.145.0, a cota na 1.146.0).
-- **Placeholder integrado, pendente de remake:** 4, todos do Guerreiro (elmo, manopla, perneiras, botas de ferro). O
-  equipamento do Guerreiro **não está concluído**: o escudo, o machado, a espada, a maça e a cota são finais.
+- **Arte final aprovada no padrão atual:** 27 (o escudo, o machado, a espada, a maça, a cota e a manopla e os 21 do
+  Arqueiro, do Mago e dos acessórios; o Chapéu Pontudo entrou na 1.141.0, a Sandália na 1.142.0, a Besta Leve na
+  1.143.0, o Diadema na 1.144.0, a espada e a maça na 1.145.0, a cota na 1.146.0, a manopla na 1.147.0).
+- **Placeholder integrado, pendente de remake:** 3, todos do Guerreiro (elmo, perneiras, botas de ferro). O
+  equipamento do Guerreiro **não está concluído**: o escudo, o machado, a espada, a maça, a cota e a manopla são finais.
 - **Desenho inexistente:** nenhum (desde a 1.144.0, todo desenho de equipamento das classes tem arte no jogo).
 - **Arte aprovada com tamanhos pendentes:** 1 (o martelo: o desenho fica; faltam o 40 e o 48, sem redesenho).
 - **Compartilhamento provisório aceito** (a peça usa o desenho de outra até ganhar o seu): a Capa de Patrulha no gibão
@@ -966,8 +966,8 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
 ## Próxima passagem de trabalho — sequência aprovada em 19/10/2026
 
 1. **Espada e maça concluídas na 1.145.0** (`ed967d1`) e a cota na 1.146.0, sem retoques nos aprovados.
-2. **Agora, fechar o equipamento básico restante:** o elmo (32 e 64 aprovados, 40 e 48 em proposta); manopla e
-   perneiras (o próximo par, em proposta); depois botas
+2. **Agora, fechar o equipamento básico restante:** o elmo (32 e 64 aprovados, 40 e 48 em proposta); a manopla
+   integrada na 1.147.0; as perneiras (P1 e P4 em avaliação); depois botas
    de ferro em lotes pequenos; completar os 40/48 do martelo aprovado, sem redesenhá-lo. Conferir objetos da bolsa e
    usos residuais para saber o que de fato falta, preservando compartilhamentos aceitos.
 3. **Abrir a etapa 1E:** contagem de flechas do Arqueiro primeiro; buffs/estados com Firme; depois inimigos e pets;

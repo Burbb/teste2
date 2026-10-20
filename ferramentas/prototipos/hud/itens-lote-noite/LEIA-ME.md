@@ -2582,3 +2582,20 @@ Sem erro no console.
 **As folhas:** `m5-tamanhos.png` (os quatro tamanhos em tamanho real com o elmo, a cota e as armas, e ampliados) e
 `m5-tamanhos-no-jogo.png`. P1 e P4 intocadas. Nada integrado.
 
+### A manopla no jogo (1.147.0)
+
+**Aprovada por Jean (20/10/2026)** nos quatro tamanhos e integrada sem retoque: o 32 do `53d28893`, o 40, o 48 e o 64 do
+`2d18ce15` (os PNGs e as fontes de `manopla_perneiras/malha_dcss/` conferidos contra esses commits antes da cópia). As
+fontes em `ferramentas/arte/aseprite/manopla/` (as camadas original, oculta, malha e couro); `DERIVADOS` com o 64 = 32
+×2; os 8 arquivos do jogo idênticos, byte a byte, aos aprovados, e `exportar_aseprite.py manopla --conferir` os
+reproduz; o `familia_ferro.py` a reconhece pela fonte e não a grava mais (a conferência dele continua "tudo igual"). A
+origem, a autoria e a licença (a `glove_04` da Dungeon Crawl Stone Soup, CC0) seguem nos `LEIA-ME.md` das externas e
+das fontes. Os papéis já existiam: o desenho `manopla` (a Manopla do Guerreiro e os raros dela) e a silhueta das mãos
+vazias; o Grito de Guerra desenha o sprite do jogo (`spr`), fora do `Icones`, e não mudou.
+
+**Conferido no jogo** a 1920×945 com os arquivos do jogo e os saves temporários (`manopla_perneiras/capturas/integracao/`):
+o saque com a manopla em 64 e o "você usa" em 48 (a Manopla de Aço do Urso contra a Fome Negra), "Equipar agora" e
+"Guardar na mochila", a ficha (32), o Inventário (40) e as mãos vazias depois de tirar a manopla com dois cliques, na
+ficha e no Inventário (`sandalia_chapeu/auxiliares/equipar.mjs guerreiro manopla maos 1.147.0 manopla` e
+`elmo_cota/auxiliares/integracao.mjs`, que ganhou os argumentos opcionais da peça: `maos manopla 1.147.0 manopla
+maos-vazias`). Sem erro no console. P1 e P4 continuam em avaliação.

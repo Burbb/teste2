@@ -27,5 +27,11 @@
 o polegar e o punho são os do original (artistas do Dungeon Crawl Stone Soup, CC0); mudou o material. Se uma entrar no
 jogo, este registro e o crédito acompanham a integração.
 
+**No jogo (1.147.0):** a M5 (da `glove_04.png`) aprovada pelo Jean é a manopla do Guerreiro: as fontes em
+`ferramentas/arte/aseprite/manopla/manopla-32.aseprite`, `-40`, `-48` (a camada `original` guarda o sprite da Dungeon
+Crawl, oculta e fora da exportação) e os PNGs `rpg/web/static/hud/icones/manopla-*.png`. Crédito: arte original dos
+artistas do Dungeon Crawl Stone Soup ("Dungeon Crawl 32x32 tiles", https://opengameart.org/node/12210, CC0), via a
+coleção CC0 Hand Wear Icons de AntumDeluge; adaptada (o material) para The Unquiet. A M4 ficou no protótipo.
+
 Uso registrado: a prancha de escolha de base das luvas, em
 `ferramentas/prototipos/hud/itens-lote-noite/manopla_perneiras/escolha_base/` (o registro no `LEIA-ME.md` do lote).

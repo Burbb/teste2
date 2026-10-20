@@ -420,9 +420,9 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   papel (o item que voa ao equipar, o selo de atributo, o consumível que cai na bolsa). Lacunas (desenho do jogo no
   lugar, sem trocar por desenho de outro tipo de item): o chapéu de couro (usa o capuz por ora), a Coroa dos Afogados
   (usa o Diadema por ora; pede arte própria), a família de
-  ferro do Guerreiro, que é placeholder pendente de remake (o elmo, a manopla, as perneiras e as botas de ferro,
-  reduções da arte pintada da HUD de ferro por `familia_ferro.py`; elas também dão as silhuetas dos espaços vazios da
-  cabeça, das mãos, das pernas e dos pés), o martelo sem o 40 e o 48 (o desenho aprovado de 32 fica, sem
+  ferro do Guerreiro, que é placeholder pendente de remake (o elmo, as perneiras e as botas de ferro, reduções da
+  arte pintada da HUD de ferro por `familia_ferro.py`; elas também dão as silhuetas dos espaços vazios da cabeça, das
+  pernas e dos pés), o martelo sem o 40 e o 48 (o desenho aprovado de 32 fica, sem
   redesenho; o 48 vem hoje do navegador; a conferência de 19/10/2026 no plano 23, seção 1.2.1), os
   itens únicos com desenho próprio, a bolsa vazia e o frasco vazio no topo, os inimigos e as cartas deles, os
   ícones de habilidade e de efeito, o covil vencido. O mercador da banca tem o busto no balcão (`telas/mercado.js`,
@@ -503,7 +503,11 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   grava mais. O ícone do atributo Ataque é outro desenho. Desde a 1.146.0, a cota (a camisa de malha de aço, a gola na
   malha, as mangas e a barra em dentes, o cinto de couro; 32, 40, 48 e o 64 = 32 ×2, fontes em `aseprite/cota/`), o
   desenho `armadura` (`ITEM`: `armadura` → `cota`): a Cota de Malha, o Peitoral, a Couraça e a Brigantina, e a silhueta
-  do peito vazio; o compartilhamento representa pior o Peitoral e a Couraça, que são de placa.
+  do peito vazio; o compartilhamento representa pior o Peitoral e a Couraça, que são de placa. Desde a 1.147.0, a
+  manopla (a luva de malha de ferro com a tira de couro no pulso, adaptada da `glove_04` da Dungeon Crawl Stone Soup,
+  CC0: a mão do original, o material trocado; a origem em `ferramentas/arte/externas/cc0_hand_wear_icons/`; 32, 40, 48
+  e o 64 = 32 ×2, fontes em `aseprite/manopla/`): a Manopla do Guerreiro e os raros dela, e a silhueta das mãos
+  vazias. A habilidade Grito de Guerra continua com o sprite "manopla" do jogo.
 - O escudo e o Unguento de Prata (1.94.0), o machado e a Bomba de Fumaça (1.99.0) o arco (1.101.0,
   `desenhar_arco_pixel.py`; o Atacar da roda, o Tiro Duplo e o contrato continuam com o sprite) e o cajado (1.106.0,
   `desenhar_cajado_pixel.py`; o Atacar do Mago na roda e o traço Conjurador continuam com o sprite) e o orbe (1.107.0,

@@ -28,14 +28,15 @@ tecido bordado, dourada ou com uma gema. O detalhe da M5 e das tentativas recusa
   desenhada em 32 (nativa), reunida na coleção "CC0 Hand Wear Icons" montada por AntumDeluge
   (https://opengameart.org/content/cc0-hand-wear-icons). O registro completo da origem e da licença está em
   `ferramentas/arte/externas/cc0_hand_wear_icons/LEIA-ME.md`. O original fica intacto: adaptações trabalham sobre cópias.
-- **A adaptação aprovada (M5, 32):** `ferramentas/prototipos/hud/itens-lote-noite/manopla_perneiras/malha_dcss/`, a fonte
-  `fontes/M5/M5-32.aseprite` (camadas `original` oculta, `malha`, `couro`) e o PNG `proposta/M5-32.png`. A silhueta, o
-  contorno, a pose, os dedos, o polegar e o punho são os do original, pixel a pixel; mudou só o material (o couro preto
-  com rebites virou a malha de ferro da cota). Os tamanhos 40, 48 e 64 (`fontes/M5/M5-40.aseprite`, `-48`;
-  `proposta/M5-40.png`, `-48`, `-64`) foram propostos em `2d18ce15` e aguardam avaliação: confira o estado no plano
-  (`roadmapIDEIAS/23-PLANO-DE-ARTE-INTERFACE-E-COMBATE.md`) antes de tratá-los como base.
-- **O crédito acompanha:** se uma luva derivada entrar no jogo, o registro da origem (o `LEIA-ME.md` das externas) e o
-  crédito vão junto na integração. Não invente autoria além da registrada.
+- **A adaptação aprovada (a M5, no jogo desde a 1.147.0):** as fontes finais em
+  `ferramentas/arte/aseprite/manopla/manopla-32.aseprite`, `-40`, `-48` (camadas `original` oculta, `malha`, `couro`) e
+  os PNGs `rpg/web/static/hud/icones/manopla-32.png`, `-40`, `-48`, `-64` (o 64 é o 32 ×2, pelo `DERIVADOS` do
+  exportador). A silhueta, o contorno, a pose, os dedos, o polegar e o punho são os do original, pixel a pixel; mudou só
+  o material (o couro preto com rebites virou a malha de ferro da cota). O 32 aprovado no `53d28893`, o 40, o 48 e o 64
+  no `2d18ce15`. O histórico da adaptação (a M4, as pranchas, o script) fica no protótipo,
+  `ferramentas/prototipos/hud/itens-lote-noite/manopla_perneiras/malha_dcss/`.
+- **O crédito acompanha:** o registro da origem e o crédito da manopla estão no `LEIA-ME.md` das externas e no das
+  fontes (`ferramentas/arte/aseprite/LEIA-ME.md`); uma luva derivada que entrar no jogo leva o mesmo registro. Não invente autoria além da registrada.
 
 ## A regra: a mão não se redesenha
 
@@ -77,7 +78,8 @@ O jogo diz o que a luva é (`rpg/itens.py`): o acabamento mostra isso, sem brilh
 ## O fluxo
 
 1. **A cópia da base no Aseprite:** um documento novo com a camada `original` (a base intacta, oculta, fora da
-   exportação) e as camadas do material por cima (na M5: `malha` e `couro`). Guarde em `fontes/<id>/<id>-32.aseprite` no
+   exportação; a da manopla já está em `ferramentas/arte/aseprite/manopla/`) e as camadas do material por cima (na M5:
+   `malha` e `couro`). Guarde em `fontes/<id>/<id>-32.aseprite` no
    protótipo.
 2. **A troca de material:** por regra sobre a cópia, sem mover pixel (o `manopla_perneiras/auxiliares/malha_dcss.lua` da M5 é o exemplo:
    o tom pela luminosidade do original, o contorno e as linhas dos dedos mantidos, o ornamento trocado pelo tom dos
@@ -86,8 +88,8 @@ O jogo diz o que a luva é (`rpg/itens.py`): o acabamento mostra isso, sem brilh
 3. **Os tamanhos:** o 32 primeiro, avaliado no jogo; o 64 = 32 ×2; o 40 e o 48 da mesma base na grade de cada tamanho
    (o `malha_dcss.lua` com `N`: a forma amostrada do original de 32, as linhas com 1 px, o padrão do material na grade do
    tamanho). O 32 aprovado não passa de novo pela regra.
-4. **Exportar:** `python ferramentas/arte/exportar_aseprite.py <id> <pasta proposta> --fontes=<pasta fontes>` (a camada
-   `original` fica fora); confira o composto do editor contra o PNG (`bandagem_pocao/auxiliares/soma.lua` e `soma.py`) e
+4. **Exportar:** `python ferramentas/arte/exportar_aseprite.py <id> <pasta proposta> --fontes=<pasta fontes>` numa
+   proposta, e `exportar_aseprite.py manopla --conferir` para a manopla do jogo (a camada `original` fica fora); confira o composto do editor contra o PNG (`bandagem_pocao/auxiliares/soma.lua` e `soma.py`) e
    a silhueta contra a base (tem de ser idêntica, salvo o acréscimo combinado).
 5. **Avaliar em tamanho real:** a prancha sobre o carvão junto do elmo, da cota, da espada, da maça e do escudo, com a
    base original ao lado e a ampliação sem suavização (as funções `malha_dcss` e `m5_tamanhos` de

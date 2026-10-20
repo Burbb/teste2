@@ -4881,3 +4881,12 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   dominando; e a lição de que adaptar uma base pronta funcionou melhor que reconstruí-la). A malha, a paleta e a tira da
   M5 ficam como escolhas do exemplar. Nada no jogo; P1 e P4 intocadas.
 
+### 20/10/2026 (data do computador local) — A manopla no jogo (1.147.0)
+
+- **Decisão de Jean:** os tamanhos da M5 aprovados (`2d18ce15`); integrar sem retoque, com o 32 do `53d28893`.
+- **Feito:** as fontes em `ferramentas/arte/aseprite/manopla/`, `DERIVADOS` com o 64 = 32 ×2; os 8 PNGs do jogo
+  idênticos aos aprovados e reproduzidos pelo exportador; a origem e o crédito (Dungeon Crawl Stone Soup, CC0) nos
+  `LEIA-ME.md` das externas e das fontes; a skill `arte-luvas-fenda` aponta para as fontes finais. Conferido a 1920×945
+  (saque, equipar e guardar, ficha, Inventário, mãos vazias). O Grito de Guerra continua com o sprite do jogo.
+- **Continua:** o elmo (40 e 48 em proposta), as perneiras (P1 e P4 em avaliação), as botas de ferro e o 40/48 do
+  martelo. Equipamento: 27 de 31 finais.

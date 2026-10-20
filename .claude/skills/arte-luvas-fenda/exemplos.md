@@ -5,7 +5,7 @@ cota. O histórico completo está em `ferramentas/prototipos/hud/itens-lote-noit
 perneiras" até "A M5 em 40, 48 e 64") e as pastas das rodadas em
 `ferramentas/prototipos/hud/itens-lote-noite/manopla_perneiras/`.
 
-## A M5 (aprovada em 32 no `53d28893`; o 40, o 48 e o 64 no `2d18ce15`, em avaliação)
+## A M5 (o 32 aprovado no `53d28893`, o 40, o 48 e o 64 no `2d18ce15`; no jogo desde a 1.147.0)
 
 - **A base:** a B5, `glove_04.png` da Dungeon Crawl Stone Soup (CC0; a origem na [SKILL.md](SKILL.md)), escolhida pelo
   Jean na prancha `escolha_base/escolha-base-luvas.png` pela forma da mão e pela silhueta. A original é uma manopla preta
@@ -26,6 +26,7 @@ perneiras" até "A M5 em 40, 48 e 64") e as pastas das rodadas em
   em qualquer um dos eixos: exigir os dois apagava as linhas diagonais dos dedos), a malha na grade do tamanho.
 - **A M4** (da B4, `glove_03.png`, o couro preto com ouro) saiu da mesma regra e não foi a escolhida; fica em
   `malha_dcss/` como histórico.
+- **As fontes finais** estão em `ferramentas/arte/aseprite/manopla/` (cópias das do protótipo, sem retoque).
 
 ## A lição: adaptar funcionou melhor que reconstruir
 

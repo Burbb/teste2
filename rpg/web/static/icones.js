@@ -45,7 +45,10 @@ const Icones = (() => {
   // de lâmina regular com a guarda de latão vale para a Espada e o Montante, a silhueta da arma vazia (VAZIO) e o
   // Atacar do Guerreiro (ACAO); a maça de bulbo com aletas, para a Maça. O ícone do atributo Ataque é outro desenho.
   // A cota (1.146.0, a camisa de malha de aço com o cinto de couro) vale para o desenho "armadura": a Cota de Malha, o
-  // Peitoral, a Couraça e a Brigantina, e a silhueta do peito vazio (VAZIO).
+  // Peitoral, a Couraça e a Brigantina, e a silhueta do peito vazio (VAZIO). A manopla (1.147.0, a luva de malha de
+  // ferro adaptada da glove_04 da Dungeon Crawl Stone Soup, CC0) vale para a Manopla do Guerreiro e os raros dela e
+  // para a silhueta das mãos vazias (VAZIO); a habilidade Grito de Guerra usa o sprite "manopla" do jogo noutro papel
+  // e fica com ele.
   // O machado de barba (ferramentas/arte/, 1.99.0) vale para todo equipamento com o desenho "machado" (o Machado e os
   // únicos Lamento de Gharbad e O Açougueiro); o Redemoinho e a Fúria usam o mesmo sprite noutro papel e ficam com o
   // do jogo. O arco de teixo (1.101.0) vale para os três arcos e os únicos Ventre da Tempestade e Sussurro do Vazio;
