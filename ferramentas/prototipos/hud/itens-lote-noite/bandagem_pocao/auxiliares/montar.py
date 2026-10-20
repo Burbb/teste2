@@ -716,8 +716,9 @@ def escolha_base_luvas():
         ("B1", X / "idylwilds_armory/original/leather_gloves.png", "leather_gloves.png", "Idylwild", "Idylwild's Armory", "CC0 1.0", "32 nativo"),
         ("B2", X / "cc0_hand_wear_icons/original/glove-dcss/32x32/glove/glove_01.png", "glove-dcss/.../glove_01.png", dcss, via, "CC0", "32 nativo"),
         ("B3", X / "cc0_hand_wear_icons/original/glove-dcss/32x32/gauntlet/gauntlet_01.png", "glove-dcss/.../gauntlet_01.png", dcss, via, "CC0", "32 nativo"),
-        ("B4", X / "cc0_hand_wear_icons/original/glove-dcss/32x32/urand/urand_fencer_01.png", "glove-dcss/.../urand_fencer_01.png", dcss, via, "CC0", "32 nativo"),
-        ("B5", X / "cc0_hand_wear_icons/original/glove-dcss/32x32/urand/urand_fencers_01.png", "glove-dcss/.../urand_fencers_01.png", dcss, via, "CC0", "32 nativo"),
+        ("B4", X / "cc0_hand_wear_icons/original/glove-dcss/32x32/glove/glove_03.png", "glove-dcss/.../glove_03.png", dcss, via, "CC0", "32 nativo"),
+        ("B5", X / "cc0_hand_wear_icons/original/glove-dcss/32x32/glove/glove_04.png", "glove-dcss/.../glove_04.png", dcss, via, "CC0", "32 nativo"),
+        ("B6", X / "cc0_hand_wear_icons/original/glove-dcss/32x32/glove/glove_05.png", "glove-dcss/.../glove_05.png", dcss, via, "CC0", "32 nativo"),
     ]
     ims = [Image.open(c[1]).convert("RGBA") for c in cand]
     Z = 8; L = 32 * Z
