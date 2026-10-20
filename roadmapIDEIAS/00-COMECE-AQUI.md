@@ -5041,3 +5041,7 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   exportação; @2x exatos; o 32 e o 64 do `c7639438` intactos; conferido no Inventário e no saque; a folha
   `l7-revisao-40-48-fd60dd2c.png`. A skill registra a regra de réplica.
 - **Aguardando avaliação.** A M5 continua no jogo; a licença do recorte continua pendente.
+
+- **O teste do 32 centrado (20/10/2026):** o 32 aprovado, sem redimensionar, no centro dos espaços de 40 e 48
+  (`luvas_l7/alternativa_32/`), ao lado da réplica no Inventário e no saque (`l7-centrado-no-jogo.png`,
+  `l7-centrado-espacos.png`). Aguardando avaliação; nada integrado.

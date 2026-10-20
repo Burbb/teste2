@@ -3071,3 +3071,26 @@ e `-48` (guia oculta, couro, malha, contorno; 0 diferenças na releitura); o com
 
 **As folhas:** `luvas_l7/l7-revisao-40-48-fd60dd2c.png` (o 32, o antes e a réplica à mesma altura e em tamanho real),
 `l7-tamanhos.png` e `l7-tamanhos-no-jogo.png` (refeitas). Nada integrado; a pendência de origem e licença continua.
+
+### A L7, o teste do 32 centrado nos espaços de 40 e 48 (`luvas_l7/alternativa_32/`)
+
+**Pedido de Jean (20/10/2026):** testar uma alternativa simples, só no protótipo: o PNG de 32 aprovado, sem
+redimensionar, centrado nos espaços de 40 do Inventário e de 48 do "você usa" no saque, com as medidas, o alinhamento e
+as áreas de clique dos espaços preservados; o 32 da ficha e o 64 = 32 ×2 como estão. Avaliar se a menor presença
+compensa a preservação exata da mão aprovada. Sem redesenho, sem integrar, as alternativas existentes preservadas.
+
+**Os arquivos** (`alternativa_32/`, com o nome `manopla` para a página): o 40 e o 48 são o 32 aprovado no centro de um
+quadro transparente de 40 e de 48 (deslocado 4 e 8 px; o miolo igual ao 32, a beira transparente, conferidos), com os
+@2x exatos; o 32 e o 64 são os da proposta (os do `c7639438`). O catálogo continua pedindo os arquivos de 40 e 48, e as
+imagens continuam com 40 e 48 px na página: os espaços, o alinhamento e as áreas de clique não mudam.
+
+**No jogo** a 1920×945 (`fotografar.mjs l7_tamanhos` com `PASTA=luvas_l7/alternativa_32 ROTULO=centrado SO_PROPOSTA=1`;
+as capturas `capturas/tamanhos/centrado-*`): o Inventário (40) e o saque (64 e o "você usa" em 48). Sem erro no console.
+
+**A avaliação (minha):** no Inventário, o 32 centrado fica só um pouco menor que a réplica e convive com o elmo, a cota
+e as perneiras; no "você usa" do saque, a diferença pesa mais: o 32 dentro do 48 fica claramente menor que a réplica e
+que o 64 do "você encontrou" ao lado.
+
+**As folhas:** `luvas_l7/l7-centrado-no-jogo.png` (a M5 do jogo × a réplica pelo vizinho × o 32 centrado, no Inventário
+e no saque, em tamanho real) e `luvas_l7/l7-centrado-espacos.png` (os três desenhos do 40 e do 48, ampliados 6× e em
+tamanho real). Nada integrado; a réplica (`proposta/L7-40`, `-48`) e as tentativas anteriores continuam guardadas.

@@ -1118,6 +1118,30 @@ def l7_revisao():
         d.text((10 + 3 * (A + 10), y), "tamanho real: 32 | antes | depois", fill=(0, 0, 0), font=FONTE)
     saida = base / f"l7-revisao-40-48-{ANTES_REVISAO[9:]}.png"; o.save(saida); print(saida, o.size)
 
+def l7_centrado():
+    """O teste da L7 com o 32 aprovado centrado nos espaços de 40 e de 48 (a beira transparente): no jogo a 1920×945, o
+    Inventário (40) e o saque (64 e o "você usa" em 48), a M5 do jogo × a réplica pelo vizinho × o 32 centrado, em tamanho
+    real; e os três desenhos do 40 e do 48 lado a lado, em tamanho real e ampliados 6×."""
+    base = LOTE / "luvas_l7"; abre = lambda a: Image.open(a).convert("RGBA")
+    folha(base / "capturas" / "tamanhos", [("o corpo no Inventário: as luvas em 40", "inventario", (150, 140, 480, 520)),
+                                           ("o cartão do saque: o 64 e o 'você usa' em 48", "saque", None)],
+          base / "l7-centrado-no-jogo.png", ("atual", "tamanhos", "centrado"))
+    J = RAIZ / "rpg/web/static/hud/icones"
+    lin = [("40", abre(J / "manopla-40.png"), abre(base / "proposta/L7-40.png"), abre(base / "alternativa_32/manopla-40.png")),
+           ("48", abre(J / "manopla-48.png"), abre(base / "proposta/L7-48.png"), abre(base / "alternativa_32/manopla-48.png"))]
+    W = 10 + 3 * 300 + 10; H = 22 + 2 * (300 + 70)
+    o = Image.new("RGB", (W, H), (245, 245, 245)); d = ImageDraw.Draw(o)
+    d.text((10, 4), "os espaços de 40 e de 48: a M5 do jogo | a réplica da L7 pelo vizinho | o 32 da L7 centrado (6x e tamanho real)", fill=(0, 0, 0), font=FONTE)
+    for k, (n, *ims) in enumerate(lin):
+        y = 22 + k * 370
+        for j, (rot, im) in enumerate(zip(("M5 (jogo)", "réplica", "32 centrado"), ims)):
+            d.text((10 + j * 300, y), f"{n}: {rot}", fill=(0, 0, 0), font=FONTE)
+            g = Image.new("RGBA", (290, 290), (24, 24, 28, 255)); b = im.resize((im.width * 6,) * 2, Image.NEAREST)
+            g.alpha_composite(b, ((290 - b.width) // 2, (290 - b.height) // 2)); o.paste(g.convert("RGB"), (10 + j * 300, y + 16))
+            r = Image.new("RGBA", (60, 60), (24, 24, 28, 255)); r.alpha_composite(im, ((60 - im.width) // 2, (60 - im.height) // 2))
+            o.paste(r.convert("RGB"), (10 + j * 300, y + 310))
+    o.save(base / "l7-centrado-espacos.png"); print(base / "l7-centrado-espacos.png", o.size)
+
 def sandalia_no_jogo():
     """A Sandália no jogo (1.142.0), em tamanho real: o saque, a ficha e o Inventário depois de "Equipar agora"."""
     pasta = LOTE / "sandalia_chapeu" / "capturas" / "integracao"
@@ -1135,7 +1159,7 @@ if __name__ == "__main__" and sys.argv[1] in ("antidoto_base", "frasco_vazio", "
                                               "sandalia_no_jogo", "besta_diadema", "diadema_r2",
                                               "espada_maca", "espada_maca_r2", "espada_ponta",
                                               "espada_ponta3", "espada_ponta4", "espada_tamanhos",
-                                              "elmo_cota", "elmo_cota_r2", "elmo_r3", "elmo_r4", "elmo_tamanhos", "manopla_perneiras", "manopla_perneiras_r3", "manopla_perneiras_r4", "manopla_perneiras_r5", "lote_exploracao", "adaptacao_idylwild", "escolha_base_luvas", "malha_dcss", "m5_tamanhos", "p4_tamanhos", "botas_ferro", "martelo_tamanhos", "botas_b2", "botas_b3", "b3_tamanhos", "luvas_l7", "luvas_l7_limpeza", "luvas_l7_retoque", "l7_tamanhos", "l7_revisao"):
+                                              "elmo_cota", "elmo_cota_r2", "elmo_r3", "elmo_r4", "elmo_tamanhos", "manopla_perneiras", "manopla_perneiras_r3", "manopla_perneiras_r4", "manopla_perneiras_r5", "lote_exploracao", "adaptacao_idylwild", "escolha_base_luvas", "malha_dcss", "m5_tamanhos", "p4_tamanhos", "botas_ferro", "martelo_tamanhos", "botas_b2", "botas_b3", "b3_tamanhos", "luvas_l7", "luvas_l7_limpeza", "luvas_l7_retoque", "l7_tamanhos", "l7_revisao", "l7_centrado"):
     globals()[sys.argv[1]](); sys.exit()
 if __name__ == "__main__":
     nome = sys.argv[1]; cfg = LOTES[nome]; base = LOTE / nome
