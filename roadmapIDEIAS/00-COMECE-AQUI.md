@@ -4828,4 +4828,6 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   `lote-favoritos-ficha.png` (favoritos: L3 e L2; P1 e P4; minha avaliação). Referências novas versionadas com papel.
 - **Aguardando avaliação.** Nada integrado; a versão continua 1.146.0; a cota e o elmo intocados; botas, martelo e
   outros itens não começaram.
+- **Depois do lote (20/10/2026):** o L6, a forma de mão de uma imagem que o Jean mostrou (só a forma da mão enluvada de
+  pé, os quatro dedos curtos juntos em arco e o polegar no canto; sem detalhes nem cores dela), no lote, não aprovado.
 

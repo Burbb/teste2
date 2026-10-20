@@ -614,7 +614,8 @@ def lote_exploracao():
     lion = Image.open(REF / "calça/1.gif").convert("RGBA").crop((430, 170, 560, 300))
     grupos = {
         "luvas": [("L1", "malha (luva-malha)", REF / "Luvas/luva-malha.png"), ("L2", "placas (Raven)", raven),
-                  ("L3", "livre em malha", None), ("L4", "livre em placas", None), ("L5", "livre mista", None)],
+                  ("L3", "livre em malha", None), ("L4", "livre em placas", None), ("L5", "livre mista", None),
+                  ("L6", "a forma de mão pedida", None)],
         "pernas": [("P1", "malha (calca-malha)", REF / "calça/calca-malha.png"), ("P2", "placas (Lion Knight)", lion),
                    ("P3", "livre em malha", None), ("P4", "livre mista", None), ("P5", "livre em placas", None)],
     }
@@ -622,11 +623,11 @@ def lote_exploracao():
     for nome, cands in grupos.items():
         luvas = nome == "luvas"
         H = 22 + 52 + 10 + 18 + L + (18 + 128 if luvas else 0) + 26 + L // 2 + 12
-        W = 10 + 5 * (L + 10)
+        W = 10 + len(cands) * (L + 10)
         o = Image.new("RGB", (W, H), (245, 245, 245)); d = ImageDraw.Draw(o)
         d.text((10, 4), f"{nome}: tamanho real sobre o carvão, com o elmo, a cota, a espada, a maça e o escudo aprovados", fill=(0, 0, 0), font=FONTE)
         ims = [Image.open(P / f"{c}-32.png").convert("RGBA") for c, _, _ in cands]
-        f = Image.new("RGBA", (10 * 48 + 20, 48), (24, 24, 28, 255))
+        f = Image.new("RGBA", ((len(cands) + 5) * 48 + 20, 48), (24, 24, 28, 255))
         for k, im in enumerate(ap[:2] + ims + ap[2:]):
             f.alpha_composite(im, (10 + k * 48 + 8, 8))
         o.paste(f.convert("RGB"), (10, 22))

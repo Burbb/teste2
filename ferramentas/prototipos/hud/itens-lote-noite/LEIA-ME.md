@@ -2442,3 +2442,12 @@ aprovadas; ampliados 6× sem suavização; nas luvas, o estudo da mão de cada u
 com `PASTA=.../favoritos/A` ou `B`, `ROTULO=favoritos-A` ou `-B`, `SO_PROPOSTA=1`). Os favoritos são a minha avaliação,
 não aprovação: L3 e L2 nas luvas (uma de malha, uma de placas), P1 e P4 nas pernas.
 
+**L6, a forma de mão pedida (20/10/2026, depois do lote):** o Jean mostrou na conversa uma imagem de banco (um par de
+manoplas de pé, com marca d'água; não guardada no projeto) e pediu só a forma da mão enluvada, para ter essa base: nem os
+detalhes, nem as cores, nem o arranjo das placas dela. A forma: a luva de pé, o punho em cima com o topo arredondado,
+quase metade da altura; as costas da mão da largura do punho; os quatro dedos curtos (2 px), juntos, separados pela
+linha do contorno até os nós, alinhados do lado do mínimo, as pontas em arco (os dois do meio mais longos); o polegar
+pequeno no canto de baixo do outro lado, dobrando para baixo, separado do indicador por um entalhe. O estudo da mão nua
+por baixo (oculto) e o ferro da família por cima: o punho com uma lâmina, a linha dos nós, os dedos acesos à esquerda.
+Fonte `fontes/L6/L6-32.aseprite`, PNGs em `proposta/`; composto = exportação; @2x exato; na prancha `lote-luvas.png`.
+
