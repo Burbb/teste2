@@ -2489,3 +2489,38 @@ igual aos PNGs exportados (I1 1379912430, I2 2042165508); @2x exatos; a camada `
 **A prancha:** `adaptacao-idylwild.png` (as três originais examinadas; original × adaptação em tamanho real sobre o
 carvão com o elmo, a cota, a espada, a maça e o escudo; e ampliados 8× sem suavização).
 
+### A escolha da base visual das luvas (`manopla_perneiras/escolha_base/`)
+
+**Decisão de Jean (20/10/2026):** I1 e I2 não aprovadas (a I1 tinha a anatomia melhor, mas não serve como equipamento);
+ficam como histórico. Antes de outra adaptação, escolher a base: uma prancha com quatro a seis luvas prontas, **sem
+modificação**, incluindo a `leather_gloves` do Idylwild's Armory; outras opções gratuitas com licença clara, começando
+pela coleção CC0 Hand Wear Icons. Critérios: uma luva só, mão e punho bem proporcionados no quadro, quatro dedos e o
+polegar reconhecíveis, pose natural, construção legível, de preferência desenhada em 32 (a resolução original
+registrada); qualquer material (a forma primeiro, sem recolorir). Nesta entrega nada é desenhado nem adaptado. No meio:
+"as urand_fencers ali nas referências são boas também".
+
+**A busca:** o pacote Idylwild's Armory (já no projeto) e a coleção CC0 Hand Wear Icons (montada por AntumDeluge;
+baixados os oito conjuntos, guardados intactos em `ferramentas/arte/externas/cc0_hand_wear_icons/original/`, com a
+origem, o autor e a resolução de cada conjunto no `LEIA-ME.md` de lá). Os 50 sprites de luva em 32 foram vistos; ficaram
+cinco candidatas com formas diferentes entre si:
+- **B1, `leather_gloves.png`** (Idylwild, Idylwild's Armory, CC0 1.0, 32 nativo): uma luva de couro na diagonal, os
+  dedos abertos, o punho longo abrindo.
+- **B2, `glove-dcss/32x32/glove/glove_01.png`** (artistas do Dungeon Crawl Stone Soup, "Dungeon Crawl 32x32 tiles", via
+  a coleção; CC0; 32 nativo): a luva de couro na diagonal, os dedos juntos, o punho curto com a fivela.
+- **B3, `glove-dcss/32x32/gauntlet/gauntlet_01.png`** (o mesmo): a manopla de placas, os dedos abertos e o polegar.
+- **B4, `glove-dcss/32x32/urand/urand_fencer_01.png`** (o mesmo): a luva de esgrima de tecido, a mão aberta; ocupa menos
+  o quadro.
+- **B5, `glove-dcss/32x32/urand/urand_fencers_01.png`** (o mesmo): o par de luvas de esgrima (entrou pelo pedido do
+  Jean; é um par, não uma luva só).
+
+**Fora, e por quê:** `glove_02` a `glove_07` da Dungeon Crawl são o mesmo desenho da `glove_01` recolorido (as
+silhuetas 87 a 99% iguais; a `glove_07`, a amarelo-queimada, já recusada); `gauntlet_02` (o manguito comprido domina a
+mão); `urand_war` (os dedos fundidos num bloco); `urand_fencer_02` (variante da 01); os pares e cruzados restantes
+(studded, Flare); mitenes, luva de boxe e de beisebol (sem dedos); os punhos fechados (7Soul1, Fleurman, babysamurai) e
+os miúdos no quadro (babysamurai); as do yd e do Flare são reduções de originais de 72 e 64 (não nativas em 32); as do
+OpenClipart são vetores reduzidos.
+
+**A prancha:** `escolha-base-luvas.png` (as cinco em tamanho real sobre o carvão com o elmo, a cota, a espada, a maça e
+o escudo; ampliadas 8× sem suavização; o arquivo, o autor, a origem, a licença e a resolução de cada uma). P1 e P4
+continuam em avaliação, intocadas.
+

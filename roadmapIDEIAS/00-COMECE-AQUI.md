@@ -4842,3 +4842,12 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   composto = exportação. Prancha `adaptacao-idylwild.png`.
 - **Aguardando avaliação.** Nada integrado; a versão continua 1.146.0.
 
+### 20/10/2026 (data do computador local) — A escolha da base visual das luvas (sprites CC0 prontos)
+
+- **Decisão de Jean:** I1 e I2 não aprovadas (histórico); escolher a base visual entre luvas prontas, sem modificar.
+- **Feito:** a coleção CC0 Hand Wear Icons baixada e guardada com a origem (`ferramentas/arte/externas/cc0_hand_wear_icons/`);
+  cinco candidatas (B1 `leather_gloves` do Idylwild; B2 `glove_01`, B3 `gauntlet_01`, B4 `urand_fencer_01` e B5
+  `urand_fencers_01` da Dungeon Crawl) na prancha `manopla_perneiras/escolha_base/escolha-base-luvas.png`, com autor,
+  origem, licença e resolução; nada desenhado nem adaptado. P1 e P4 intocadas.
+- **Aguardando a escolha do Jean.** Nada integrado; a versão continua 1.146.0.
+
