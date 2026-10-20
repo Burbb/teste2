@@ -14,7 +14,7 @@
    foi desenhada no Aseprite, em camadas, e exportada por ferramentas/arte/exportar_aseprite.py, como o gibão e as
    botas de couro (1.110.0, com o 64 sendo o 32 ampliado 2×). O martelo e a Pena de
    Fênix são desenhados em código
-   (desenhos.js), em 32×32. As lacunas (o que ainda não tem desenho) estão em docs/ARQUITETURA.md. */
+   (desenhos.js), em 32×32; o martelo tem também o 40 e o 48 em arquivo (1.149.0), que valem nesses tamanhos. As lacunas (o que ainda não tem desenho) estão em docs/ARQUITETURA.md. */
 "use strict";
 
 const Icones = (() => {
@@ -32,7 +32,7 @@ const Icones = (() => {
     "lugar-cidadela": [32, 40], "lugar-floresta": [32, 40], "lugar-montanha": [32, 40], "lugar-pantano": [32, 40],
     "lugar-planicie": [32, 40], "lugar-ruinas": [32, 40], "lugar-vila": [32, 40], "maca": [32, 40, 48, 64],
     "machado": [32, 40, 48, 64],
-    "manopla": [32, 40, 48, 64], "moeda": [16, 32], "moedas": [24, 32], "osso": [24], "perneiras": [32, 40, 48, 64], "pocao": [16, 24, 32],
+    "manopla": [32, 40, 48, 64], "martelo": [40, 48], "moeda": [16, 32], "moedas": [24, 32], "osso": [24], "perneiras": [32, 40, 48, 64], "pocao": [16, 24, 32],
     "provisoes": [24, 32], "tocha": [16, 24, 32], "tocha_apagada": [16, 24], "frasco_vazio": [24], "tonico": [16, 32], "calca_tecido": [32, 40, 48, 64], "manto": [32, 40, 48, 64], "chapeu": [32, 40, 48, 64], "sandalia": [32, 40, 48, 64], "besta": [32, 40, 48, 64], "diadema": [32, 40, 48, 64], "unguento": [32, 64],
     "vital-foco": [20], "vital-mana": [20], "vital-vida": [20], "vital-vigor": [20]};
 
@@ -40,7 +40,9 @@ const Icones = (() => {
   // couro sem desenho (a calça de couro) e as outras peças sem desenho ficam com o do jogo. O anel (1.140.0, o aro de
   // ouro em pé com o ziguezague gravado) vale para o Anel, o Sinete, o Aro e o Anel do Último Rei; o amuleto (1.140.0, a
   // gema violeta no engaste de latão), para o Amuleto, o Talismã, o Pingente e o Medalhão; os dois são também as
-  // silhuetas apagadas dos espaços vazios (VAZIO). O martelo é desenhado em código (desenhos.js). A espada e a maça
+  // silhuetas apagadas dos espaços vazios (VAZIO). O martelo é desenhado em código (desenhos.js) no 32 e no 64; o 40 e o
+  // 48 (1.149.0, a mesma construção na grade de cada tamanho; as fontes em ferramentas/arte/aseprite/martelo/) vêm dos
+  // arquivos (TAMANHOS), para o Inventário e o "você usa" do saque. A espada e a maça
   // (1.145.0, o começo do remake do ferro; as fontes em ferramentas/arte/aseprite/, o 64 é o 32 ampliado 2×): a espada
   // de lâmina regular com a guarda de latão vale para a Espada e o Montante, a silhueta da arma vazia (VAZIO) e o
   // Atacar do Guerreiro (ACAO); a maça de bulbo com aletas, para a Maça. O ícone do atributo Ataque é outro desenho.
@@ -156,15 +158,17 @@ const Icones = (() => {
     const um = `${DIR}${peca}-${t}.png`, dois = `${DIR}${peca}-${t}@2x.png`;
     return lado > t && 2 * t >= lado ? { src: dois, srcset: "" } : { src: um, srcset: `${dois} 2x` };
   }
+  /** Um desenho em código (desenhos.js) com arquivo próprio neste lado (o 40 e o 48 do martelo): vale o arquivo. */
+  const temArquivo = (peca, lado) => !!(TAMANHOS[peca] && TAMANHOS[peca].includes(lado));
   /** A <img> de uma peça em `lado` px (com a classe "sprite" do jogo, para as regras de tamanho e de lugar dele). */
   function img(peca, lado, classe = "", alt = "") {
-    if (peca && Desenhos.tem(peca)) return desenhado(peca, lado, classe, alt);
+    if (peca && Desenhos.tem(peca) && !temArquivo(peca, lado)) return desenhado(peca, lado, classe, alt);
     if (!peca || !TAMANHOS[peca]) return "";
     const { src, srcset } = arquivos(peca, lado);
     return `<img class="sprite desenho ${classe}" src="${src}"${srcset ? ` srcset="${srcset}"` : ""} width="${lado}" height="${lado}" style="--s:${lado}" alt="${alt}" draggable="false">`;
   }
   /** Uma peça desenhada em código (desenhos.js): numa escala inteira do desenho, pixel a pixel; senão (48 px de um
-   *  desenho de 32), a versão a 2× reduzida pelo navegador, como os outros ícones da HUD. */
+   *  desenho de 32 sem arquivo de 48, a Pena de Fênix), a versão a 2× reduzida pelo navegador. */
   function desenhado(peca, lado, classe, alt) {
     const n = Desenhos.lado(peca), inteira = lado % n === 0, e = inteira ? lado / n : Math.ceil(lado / n);
     return `<img class="sprite desenho${inteira ? " pixel" : ""} ${classe}" src="${Desenhos.url(peca, e)}" srcset="${Desenhos.url(peca, 2 * e)} 2x" ` +
@@ -179,14 +183,15 @@ const Icones = (() => {
   }
   /** O equipamento num tamanho que só alguns desenhos têm (o 40 do Inventário): no lado pedido quando há arquivo nativo
    *  dele; senão, no tamanho em que o desenho foi feito (32 px, pixel a pixel, centrado no mesmo espaço), em vez de um
-   *  32 esticado pelo navegador. O martelo (desenhos.js) e os sprites 16×16 do jogo (Icones dá "") ficam em 32. */
+   *  32 esticado pelo navegador. O martelo tem o 40 em arquivo (1.149.0); os sprites 16×16 do jogo (Icones dá "")
+   *  ficam em 32. */
   function nativo(peca, lado, classe) {
-    if (peca && !Desenhos.tem(peca) && TAMANHOS[peca] && TAMANHOS[peca].includes(lado)) return img(peca, lado, `${classe} lado-${lado}`);
+    if (peca && temArquivo(peca, lado)) return img(peca, lado, `${classe} lado-${lado}`);
     return img(peca, 32, classe);
   }
   /** Um endereço só (para um canvas ou uma imagem de arrasto): o do lado pedido, ou "" sem desenho. */
   function url(peca, lado) {
-    if (peca && Desenhos.tem(peca)) return Desenhos.url(peca, Math.max(1, Math.round(lado / Desenhos.lado(peca))));
+    if (peca && Desenhos.tem(peca) && !temArquivo(peca, lado)) return Desenhos.url(peca, Math.max(1, Math.round(lado / Desenhos.lado(peca))));
     return peca && TAMANHOS[peca] ? arquivos(peca, lado).src : "";
   }
 

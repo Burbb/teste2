@@ -69,6 +69,8 @@ DERIVADOS = {
     "elmo": {64: (32, 2)},           # 1.148.0: o elmo de frente (a rodada 4) e as perneiras de malha com placas (a P4); o 64 é o 32 ×2
     "perneiras": {64: (32, 2)},
 }
+# O martelo (1.149.0) só tem fontes do 40 e do 48 (aseprite/martelo/): o 32 e o 64 são a grade de desenhos.js, no
+# jogo, e não saem daqui.
 
 
 def pecas():

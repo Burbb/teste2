@@ -3,7 +3,9 @@
    quando ele existe; o resto continua com os desenhos da HUD (hud/icones/). Cada item é desenhado em 32×32, o tamanho
    em que vive (a bolsa, a mochila, o mercado, o espólio); em 64 px aparece a 2×, pixel a pixel; em 48 px (o item que
    voa para o corpo, o cartão compacto do saque), a versão a 2× reduzida pelo navegador, como os outros ícones da HUD.
-   Aprovados no experimento de resolução (ferramentas/prototipos/hud/resolucao-teste.html), desde a 1.93.0. */
+   Aprovados no experimento de resolução (ferramentas/prototipos/hud/resolucao-teste.html), desde a 1.93.0. O martelo
+   tem, desde a 1.149.0, o 40 e o 48 em arquivo (hud/icones/martelo-40.png e -48, a mesma construção na grade de cada
+   tamanho), que o Icones usa nesses tamanhos; a grade daqui continua sendo o 32 e o 64. */
 "use strict";
 
 const Desenhos = (() => {

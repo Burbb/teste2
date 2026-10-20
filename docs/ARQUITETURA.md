@@ -421,8 +421,7 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   lugar, sem trocar por desenho de outro tipo de item): o chapéu de couro (usa o capuz por ora), a Coroa dos Afogados
   (usa o Diadema por ora; pede arte própria), a família de
   ferro do Guerreiro que ainda é placeholder pendente de remake (as botas de ferro, redução da arte pintada da HUD de
-  ferro por `familia_ferro.py`; elas também dão a silhueta dos pés vazios), o martelo sem o 40 e o 48 (o desenho aprovado de 32 fica, sem
-  redesenho; o 48 vem hoje do navegador; a conferência de 19/10/2026 no plano 23, seção 1.2.1), os
+  ferro por `familia_ferro.py`; elas também dão a silhueta dos pés vazios), os
   itens únicos com desenho próprio, a bolsa vazia e o frasco vazio no topo, os inimigos e as cartas deles, os
   ícones de habilidade e de efeito, o covil vencido. O mercador da banca tem o busto no balcão (`telas/mercado.js`,
   com as cores da figura da banca).
@@ -544,13 +543,16 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   (`Icones.equipamento`): a família de ferro pintada sai de `ferramentas/arte/familia_ferro.py` (as peças aprovadas em
   `familia-ferro/`, o mesmo processo dos tamanhos de sempre: a escala do grupo e a redução "paleta"; `--conferir`
   refaz todos e compara com os do jogo) e o escudo das regras dele. As peças do grupo que passaram para fontes no
-  Aseprite (a aljava, a tocha) continuam na conta da escala, mas saem e são conferidas pelo `exportar_aseprite.py`. O que não tem arquivo de 40 (o martelo, desenhado
-  em 32; os sprites 16×16 das armas e peças de couro) fica em 32 px, nítido e centrado no mesmo espaço. As silhuetas
+  Aseprite (a aljava, a tocha) continuam na conta da escala, mas saem e são conferidas pelo `exportar_aseprite.py`. O que não tem arquivo de 40 (os sprites 16×16 das armas
+  e peças de couro) fica em 32 px, nítido e centrado no mesmo espaço. As silhuetas
   dos espaços vazios, a bolsa, a ficha, os atributos, a doca, o mercado e a luta continuam em 32.
 - `desenhos.js` (`Desenhos`): os itens desenhados em código, pelo mesmo método (desde a 1.93.0): o martelo e a Pena de
   Fênix, em 32×32, o tamanho em que vivem (bolsa, mochila, mercado, espólio). `Icones` os entrega como os outros
   desenhos: em 32 e 64 px pixel a pixel; em 48 (o item que voa para o corpo, o cartão compacto do saque) a versão a 2×
-  reduzida pelo navegador, como os outros ícones da HUD. A Pena de Fênix só se acha pelo id do consumível, nunca pelo
+  reduzida pelo navegador, como os outros ícones da HUD. Desde a 1.149.0 o martelo tem o 40 e o 48 em arquivo
+  (`hud/icones/martelo-40.png` e `-48`, fontes em `ferramentas/arte/aseprite/martelo/`, a mesma construção na grade de
+  cada tamanho): nesses lados `Icones` usa o arquivo (`TAMANHOS`), no Inventário e no "você usa" do saque; o 32 e o
+  64 continuam a grade daqui. A Pena de Fênix só se acha pelo id do consumível, nunca pelo
   desenho: no jogo ela usa a "chama", que também é o Vigor, o Poder e as habilidades de fogo.
 - `retratos.js` (`Retratos`): os retratos do herói e dos companheiros desenhados em código, pelo método das cenas
   (uma grade de letras com a paleta do desenho, pintada por `Sprites.grade`, o mesmo pintor do busto do mercador). As

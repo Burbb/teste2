@@ -4926,3 +4926,12 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   40, a empunhadura, o pomo); fontes em camadas no Aseprite; composto = exportação; @2x exatos. Conferidos no Inventário
   (40) e no saque (48, com o 64 do jogo) a 1920×945 (`martelo-tamanhos.png`, `martelo-tamanhos-no-jogo.png`).
 - **Aguardando avaliação** do martelo e das botas de ferro (B1, `725b2695`). Nada integrado; a versão continua 1.148.0.
+
+### 20/10/2026 (data do computador local) — O martelo em 40 e 48 no jogo (1.149.0)
+
+- **Decisão de Jean:** o 40 e o 48 do martelo aprovados (`244cdbd4`); integrar sem retoque, preservando o 32 e o 64.
+- **Feito:** as fontes em `ferramentas/arte/aseprite/martelo/`; os 4 PNGs idênticos aos aprovados e reproduzidos pelo
+  exportador; `icones.js` usa o arquivo nos lados que ele tem (o 40 no Inventário, o 48 no "você usa"), e o desenho em
+  código no 32 e no 64. Conferido a 1920×945 (saque, equipar e guardar, ficha, Inventário). Os outros papéis do martelo
+  (Golpe Pesado, Gigante, ferreiro) continuam com o sprite do jogo.
+- **Continua:** as botas de ferro (a B1, `725b2695`, em avaliação). Equipamento: 30 de 31 finais.

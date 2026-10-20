@@ -2727,3 +2727,20 @@ jogo): o Inventário com o martelo em 40 (atual: o 32 no espaço de 40) e o saqu
 
 **As folhas:** `martelo-tamanhos.png` (o 32 e o 64 do jogo, o 40 e o 48 da proposta, em tamanho real com a espada, a
 maça e o escudo, e ampliados) e `martelo-tamanhos-no-jogo.png`. Nada integrado; as botas do `725b2695` intocadas.
+
+### O martelo em 40 e 48 no jogo (1.149.0)
+
+**Aprovados por Jean (20/10/2026)** e integrados sem retoque: o 40 e o 48 do `244cdbd4` (os PNGs e as fontes do protótipo
+conferidos contra esse commit antes da cópia). O 32 e o 64 continuam a grade de `desenhos.js`, sem mudança. As fontes em
+`ferramentas/arte/aseprite/martelo/` (só o 40 e o 48); os 4 arquivos do jogo (`martelo-40`, `-48` e os @2x) idênticos,
+byte a byte, aos aprovados, e `exportar_aseprite.py martelo --conferir` os reproduz. Em `icones.js`, o martelo ganhou
+`TAMANHOS` com o 40 e o 48, e um desenho em código com arquivo no lado pedido usa o arquivo (`img`, `nativo` e `url`):
+o Inventário carrega o 40 próprio (o corpo e a mochila) e o "você usa" do saque o 48 próprio (também o item que voa
+para o corpo, em 48); o 32 e o 64 continuam o desenho em código. A Pena de Fênix, sem arquivos, não muda. O Golpe Pesado,
+o traço Gigante e o ferreiro da vila usam o sprite 16×16 "martelo" do jogo (outro caminho, fora do `Icones`) e não mudam.
+
+**Conferido no jogo** a 1920×945 com os arquivos do jogo e os saves temporários (`martelo/capturas/integracao/`;
+`sandalia_chapeu/auxiliares/equipar.mjs guerreiro martelo arma 1.149.0 martelo`): o saque com o 64 do desenho em código
+e o "você usa" em `martelo-48.png`; "Equipar agora" e "Guardar na mochila"; a ficha em 32 (o desenho em código); o
+Inventário com `martelo-40.png` no corpo e na mochila. Sem erro no console. As botas do `725b2695` continuam em
+avaliação.
