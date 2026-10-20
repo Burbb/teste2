@@ -5082,3 +5082,14 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   mãos; o Grito de Guerra continua com o sprite do jogo). Conferido no jogo a 1920×945: o saque (64, "você usa" em 48),
   equipar e guardar, a ficha (32), o Inventário (40) e as mãos vazias.
 - **Continua:** as perneiras P6 em avaliação (a P4 no jogo); nenhum desenho novo começado.
+
+### 20/10/2026 (data do computador local) — As perneiras, a P7 (alternativa do 32)
+
+- **Pedido de Jean:** uma alternativa P7 das perneiras com a segunda imagem gerada como referência principal
+  (`ferramentas/arte/referencias/calça/perneiras-gerada-2.webp`), sem partir da P6; só o 32 e o 64 = 32 ×2.
+- **Feito:** a P7 em `ferramentas/prototipos/hud/itens-lote-noite/perneiras_p7/` (a guia reduzida sem esticar, a grade à
+  mão na ordem silhueta, volume, textura, com as larguras do quadril, da coxa, do joelho e do tornozelo; a fonte
+  `fontes/P7/P7-32.aseprite` em camadas com a guia oculta; as folhas `p7.png` e `p7-ficha.png`, P6 × P7 a 1920×945); as
+  simplificações no `LEIA-ME.md` do lote.
+- **Continua:** a P4 no jogo; a P6 e a P7 em avaliação; a luva L7 no jogo com a origem e a licença do recorte pendentes;
+  a versão continua 1.151.0.

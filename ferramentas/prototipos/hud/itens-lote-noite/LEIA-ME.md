@@ -3191,3 +3191,58 @@ habilidade Grito de Guerra usa o sprite "manopla" do jogo por outro caminho e n�
 o "você usa" em 48 (o 32 centrado), "Equipar agora" e "Guardar na mochila", a ficha (32), o Inventário (40, o corpo e
 a mochila) e as mãos vazias depois de tirar a luva, na ficha e no Inventário. As medidas dos espaços, as áreas de
 clique, as regras e os atributos não mudaram. Sem erro no console. A folha: `luvas_l7/l7-integracao-1.151.0.png`.
+
+### As perneiras, a P7: a transposição da segunda imagem gerada (`perneiras_p7/`)
+
+**Pedido de Jean (20/10/2026):** uma alternativa P7 com a nova imagem gerada que ele mandou como referência principal,
+pelo mesmo processo, sem usar a P6 como molde: o cinto de couro e a fivela simples, as coxas de malha com os reforços dos
+lados, a separação das pernas, as joelheiras e as juntas, as canelas de malha com as bordas de aço, os acabamentos de
+couro nos tornozelos. A silhueta e os volumes antes da textura; as mudanças de largura entre a coxa, o joelho e o
+tornozelo (nada de dois retângulos); a malha coerente com a cota. Só o 32 e o 64 = 32 ×2. A P6 (`52de4445`) fica para a
+comparação e a P4 no jogo; a luva não muda; nada integrado.
+
+**A referência** em `ferramentas/arte/referencias/calça/perneiras-gerada-2.webp` (o papel no `LEIA-ME.md` de lá): pixel
+art ampliada, o pixel de ~17,5 px (um desenho de ~35 × 53 px), não uma grade de 32; o fundo transparente.
+
+**O caminho:**
+- **a guia** (`auxiliares/guia.py`, `previa/guia-32.png`): a caixa do desenho reduzida pela média, na proporção, para 30
+  px de altura: 20 × 30, de x 6 a 25, centrada. O script imprime a cobertura de cada pixel (a silhueta) e o tom de ferro
+  mais perto da luminosidade de cada um (o volume) para a grade à mão; o rascunho automático por cor (o mosaico da P6) não
+  foi refeito;
+- **a grade à mão** (`auxiliares/grade.py`, `grades/P7.txt`), na ordem silhueta, volume, textura:
+  - *a silhueta* pela cobertura da guia: o cinto mais estreito (x 8 a 23), o quadril abrindo (linhas 5 e 6, x 7 a 24) até
+    as coxas (7 a 14, x 6 a 25); as pernas se encostam na linha 11 e se separam da 12 em diante; a faixa do joelho (15) na
+    largura do fim da coxa; a joelheira (16 a 22) mais estreita, 5 px por dentro; o alto da canela (23 e 24) abrindo de
+    novo, a asa da caneleira; a canela (25 a 27) de 5 px; o fim da canela (28) afinando e o punho de couro (29) um pouco
+    mais largo;
+  - *o volume* pelo tom médio da guia, com a luz do conjunto (de cima e da esquerda): as placas dos lados acesas por fora
+    com a junta escura contra a malha, a placa de cima e a de baixo separadas por uma junta (linha 11); a faixa do joelho
+    acesa; a cúpula da joelheira com o brilho em cima à esquerda, as juntas escuras em cima e embaixo; a asa da caneleira
+    acesa por fora; as tiras de aço dos dois lados da canela;
+  - *a textura:* a malha no xadrez da cota (o tom do volume e o de baixo), só nas coxas e nas canelas;
+  - o cinto: as pontas sobem um pouco nos lados (a linha 2), o cós escuro no meio acima dele, a fivela simples de 3 × 3
+    com o couro no vão, o alto das placas de aço nas pontas.
+  As duas pernas têm a mesma construção (a da direita é a da esquerda deslocada 11 px; a luz não é espelhada), menos nas
+  coxas, que se encontram no meio (a costura de aço é da perna da esquerda).
+
+**As simplificações e as diferenças da referência:**
+- a borda de cima: as abas das placas que sobem acima do cinto na referência (~1 px nativo da escala) ficam na mesma
+  linha do contorno de cima;
+- a malha em xadrez de 1 px, no contraste da cota (a referência tem anéis maiores e mais contraste);
+- as placas das coxas com 2 px (a placa acesa e a junta) e a saliência da placa de baixo sem o degrau no contorno;
+- a joelheira sem a asa de fora separada (a cúpula ocupa os 5 px), a faixa de cima com 1 px e sem rebites;
+- a asa da caneleira com 2 linhas (a faixa e o começo da malha);
+- o punho de couro com 1 linha, sem o detalhe de cima e de baixo;
+- o couro na rampa do conjunto (mais quente que o da referência).
+
+**A conferência:** fonte `fontes/P7/P7-32.aseprite` com as camadas guia (oculta, fora da exportação), malha, aço, couro
+e contorno, pelo `pintar.lua` (0 diferenças na releitura, 0 fora da tela); exportada por
+`exportar_aseprite.py P7 perneiras_p7/proposta --fontes=perneiras_p7/fontes`; o composto do editor é igual ao PNG e à
+grade (0 pixels diferentes); @2x exato; o 64 é o 32 ×2 (conferido pixel a pixel). PNGs em `proposta/` (as cópias com o
+nome `perneiras` em `tamanhos/`, só para as fotos).
+
+**As folhas:** `perneiras_p7/p7.png` (a referência, a guia e a P7 ampliadas 12× sem suavização; o elmo, a cota, a P4 do
+jogo, a P6, a P7 e as botas em tamanho real e a 4×; `auxiliares/prancha.py`) e `perneiras_p7/p7-ficha.png` (a ficha a
+1920×945 com os mesmos dados, P6 × P7, a luva do jogo nas duas; `fotografar.mjs perneiras_p7` com
+`PASTA=perneiras_p6/tamanhos ROTULO=p6 SO_PROPOSTA=1` e `ROTULO=p7 SO_PROPOSTA=1`). Sem erro no console. Nada
+integrado.

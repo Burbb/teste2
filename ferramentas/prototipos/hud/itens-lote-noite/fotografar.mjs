@@ -8,7 +8,7 @@
 //       | bandagem_pocao | bandagem_pocao_luta | tonico_antidoto | calca_manto | calca_manto_saque_calca
 //       | frasco_vazio | frasco_cheio | antidoto_base | anel_amuleto | anel_amuleto_saque_amuleto | sandalia_chapeu | sandalia_chapeu_saque_chapeu
 //       | chapeu_no_jogo | sandalia_r2 | besta | diadema | coroa_afogados | espada | espada_luta | maca | maca_tamanhos | espada_tamanhos
-//       | elmo_cota | elmo_cota_saque_cota | cota_tamanhos | elmo_tamanhos | manopla_perneiras | manopla_perneiras_saque_perneiras | manopla_perneiras_ficha | lote_favoritos | m5_tamanhos | p4_tamanhos | botas_ferro | martelo_tamanhos | b3_tamanhos | luvas_l7 | l7_tamanhos | perneiras_p6
+//       | elmo_cota | elmo_cota_saque_cota | cota_tamanhos | elmo_tamanhos | manopla_perneiras | manopla_perneiras_saque_perneiras | manopla_perneiras_ficha | lote_favoritos | m5_tamanhos | p4_tamanhos | botas_ferro | martelo_tamanhos | b3_tamanhos | luvas_l7 | l7_tamanhos | perneiras_p6 | perneiras_p7
 import { spawn } from "child_process";
 import { readFileSync, existsSync, mkdirSync } from "fs";
 import { fileURLToPath } from "url";
@@ -278,6 +278,11 @@ const PECAS = {
   // a P6, as perneiras transpostas da imagem gerada (perneiras_p6/): só o 32 e o 64 = 32 x2 (tamanhos [32, 64] nesta
   // página, no lugar da P4 do jogo); o Guerreiro com o conjunto de ferro final: a ficha, atual × proposta
   perneiras_p6: { pasta: "perneiras_p6/tamanhos", saida: "perneiras_p6/capturas", nomes: ["perneiras"], papel_tamanhos: [32, 64],
+    cena: ["tutorial", { CLASSE: "guerreiro", TUTORIAL: "0", PERIODO: "0", VESTIR: "elmo,armadura,manopla,calca,bota_ferro" }], fotos: ["ficha"] },
+  // a P7, as perneiras da segunda imagem gerada (perneiras_p7/): só o 32 e o 64 = 32 x2, no lugar da P4 do jogo; a
+  // ficha com os mesmos dados da P6: P6 (PASTA=perneiras_p6/tamanhos ROTULO=p6 SO_PROPOSTA=1) e P7 (ROTULO=p7
+  // SO_PROPOSTA=1), as duas com a luva do jogo
+  perneiras_p7: { pasta: "perneiras_p7/tamanhos", saida: "perneiras_p7/capturas", nomes: ["perneiras"], papel_tamanhos: [32, 64],
     cena: ["tutorial", { CLASSE: "guerreiro", TUTORIAL: "0", PERIODO: "0", VESTIR: "elmo,armadura,manopla,calca,bota_ferro" }], fotos: ["ficha"] },
   lote_favoritos: { pasta: "manopla_perneiras/lote_exploracao/favoritos/A", saida: "manopla_perneiras/lote_exploracao/capturas", nomes: ["manopla", "perneiras"], papel_tamanhos: [32],
     cena: ["tutorial", { CLASSE: "guerreiro", TUTORIAL: "0", PERIODO: "0", VESTIR: "manopla,calca" }], fotos: ["ficha"] },
