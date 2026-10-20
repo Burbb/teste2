@@ -5093,3 +5093,12 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   simplificações no `LEIA-ME.md` do lote.
 - **Continua:** a P4 no jogo; a P6 e a P7 em avaliação; a luva L7 no jogo com a origem e a licença do recorte pendentes;
   a versão continua 1.151.0.
+
+### 20/10/2026 (data do computador local) — A P7, as laterais suavizadas (proposta)
+
+- **Pedido de Jean:** suavizar só as laterais da P7 do `3cb041db` (liam como placas ou apetrechos de metal separados);
+  a construção, o cinto, as joelheiras e a separação das pernas preservados; só o 32, o 64 = 32 ×2.
+- **Feito:** o retoque localizado (`perneiras_p7/auxiliares/retoque.py`, 66 pixels) na fonte: a beira das coxas e das
+  canelas no volume da malha, as juntas escuras incorporadas, a asa acima da canela reduzida a uma linha; o antes em
+  `perneiras_p7/anterior_3cb041db/`; as folhas `p7-retoque.png` e `p7-retoque-ficha.png`.
+- **Continua:** a P4 no jogo; a P6 e a P7 em avaliação; a versão continua 1.151.0.

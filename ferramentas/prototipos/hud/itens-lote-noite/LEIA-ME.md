@@ -3246,3 +3246,33 @@ jogo, a P6, a P7 e as botas em tamanho real e a 4×; `auxiliares/prancha.py`) e 
 1920×945 com os mesmos dados, P6 × P7, a luva do jogo nas duas; `fotografar.mjs perneiras_p7` com
 `PASTA=perneiras_p6/tamanhos ROTULO=p6 SO_PROPOSTA=1` e `ROTULO=p7 SO_PROPOSTA=1`). Sem erro no console. Nada
 integrado.
+
+### A P7, as laterais suavizadas (`perneiras_p7/`)
+
+**Pedido de Jean (20/10/2026):** a P7 do `3cb041db` aprovada como direção; só suavizar as laterais, que no 32 liam como
+placas ou apetrechos de metal separados, fortes demais perto da malha. A construção, as proporções, o cinto, as
+joelheiras e a separação das pernas ficam; as joelheiras continuam o aço mais evidente. Interromper, suavizar ou
+incorporar à malha as linhas certas, não escurecer tudo por igual. Só o 32 (o 64 refeito = 32 ×2); a P7 anterior
+guardada.
+
+**O retoque** (`auxiliares/retoque.py`, 74 itens com o pixel de antes conferido, 66 pixels mudados; o antes em
+`anterior_3cb041db/`: a grade, a fonte, os PNGs, as listas, a folha e a captura da ficha):
+- **a beira de fora das coxas:** a faixa acesa contínua (o 7 na da esquerda, o 6 na da direita) vira um tom liso perto
+  do da malha, mais claro em cima e mais escuro embaixo, acompanhando a luz da perna;
+- **a junta escura entre a beira e a malha** entra na malha (o xadrez da cota, com o volume da coluna vizinha); no
+  quadril, a placa de 1 px também;
+- **a junta entre a placa de cima e a de baixo** (linha 11) fica só sugerida, um tom abaixo da beira;
+- **a asa acima da canela:** a linha 24 volta à largura da canela (a asa de duas linhas lia como aba de metal); a
+  saliência fica só na 23, a borda de cima da caneleira, com as pontas e a faixa mais baixas (sem o brilho de aba);
+- **as tiras das canelas:** a de fora vira o tom liso da beira; a de dentro entra na malha, na sombra.
+Sem mudança: o cinto, a faixa e a cúpula das joelheiras, as juntas do joelho, o vão entre as pernas, os punhos de couro.
+
+**A conferência:** o retoque pintado na fonte `fontes/P7/P7-32.aseprite` pelo `pintar.lua` (as listas em
+`listas/retoque/`; o pixel que muda de camada apagado na antiga: 0 diferenças na releitura, 0 fora da tela; as camadas
+sem pixel sobreposto); exportada de novo; o composto do editor é igual ao PNG e à grade (0 pixels diferentes); @2x
+exato; o 64 refeito é o 32 ×2 (conferido pixel a pixel).
+
+**As folhas:** `perneiras_p7/p7-retoque.png` (antes × depois a 12× sem suavização; com o elmo, a cota e as botas em
+tamanho real e a 4×) e `perneiras_p7/p7-retoque-ficha.png` (a ficha a 1920×945, antes × depois, com os mesmos dados;
+`fotografar.mjs perneiras_p7` com `ROTULO=p7 SO_PROPOSTA=1`). `p7.png` e `p7-ficha.png` foram refeitas com a P7 nova
+(a de antes em `anterior_3cb041db/p7.png`). Sem erro no console. Nada integrado.

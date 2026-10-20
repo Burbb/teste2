@@ -1,7 +1,9 @@
 """As folhas da P7:
   - p7.png: a referência, a guia e a P7 ampliadas sem suavização (12×, a referência na mesma altura); o elmo, a cota, a
     P4 do jogo, a P6 (52de4445), a P7 e as botas em tamanho real e a 4×;
-  - p7-ficha.png: a ficha a 1920×945 com os mesmos dados, P6 × P7 (as capturas de fotografar.mjs perneiras_p7).
+  - p7-ficha.png: a ficha a 1920×945 com os mesmos dados, P6 × P7 (as capturas de fotografar.mjs perneiras_p7);
+  - p7-retoque.png e p7-retoque-ficha.png: o retoque das laterais (retoque.py), antes (anterior_3cb041db/) × depois, em
+    tamanho real junto do conjunto, a 4× e a 12× sem suavização, e na ficha (a captura de antes guardada lá).
     python prancha.py <pasta da P7>
 """
 import pathlib
@@ -57,3 +59,28 @@ if __name__ == "__main__":
         d.text((20 + k * (w + 20), 8), rotulo, fill=TEXTO)
         out.alpha_composite(im, (20 + k * (w + 20), 26))
     out.save(base / "p7-ficha.png")
+
+    # o retoque das laterais: antes × depois
+    antes = Image.open(base / "anterior_3cb041db/proposta/P7-32.png").convert("RGBA")
+    conjunto = [("elmo", Image.open(ICONES / "elmo-32.png")), ("cota", Image.open(ICONES / "cota-32.png")),
+                ("P7 antes", antes), ("P7 depois", p7), ("botas", Image.open(ICONES / "botas-ferro-32.png"))]
+    out, d = desenho(20 + 2 * (32 * Z + 30), 32 * Z + 300)
+    for k, (rotulo, im) in enumerate((("antes (3cb041db), 12×", antes), ("depois, 12×", p7))):
+        d.text((20 + k * (32 * Z + 30), 8), rotulo, fill=TEXTO)
+        out.alpha_composite(im.resize((32 * Z,) * 2, Image.NEAREST), (20 + k * (32 * Z + 30), 26))
+    y = 32 * Z + 50
+    d.text((20, y - 16), "tamanho real", fill=TEXTO)
+    for k, (_, im) in enumerate(conjunto): out.alpha_composite(im.convert("RGBA"), (20 + k * 44, y))
+    y += 56
+    for k, (rotulo, im) in enumerate(conjunto):
+        d.text((20 + k * 150, y), rotulo, fill=TEXTO)
+        out.alpha_composite(im.convert("RGBA").resize((128, 128), Image.NEAREST), (20 + k * 150, y + 16))
+    out.save(base / "p7-retoque.png")
+    fichas = [Image.open(base / "anterior_3cb041db/p7-1920x945-ficha.png").convert("RGBA"),
+              Image.open(base / "capturas/p7-1920x945-ficha.png").convert("RGBA")]
+    w, h = fichas[0].size
+    out, d = desenho(2 * w + 60, h + 30)
+    for k, (rotulo, im) in enumerate(zip(("P7 antes", "P7 depois"), fichas)):
+        d.text((20 + k * (w + 20), 8), rotulo, fill=TEXTO)
+        out.alpha_composite(im, (20 + k * (w + 20), 26))
+    out.save(base / "p7-retoque-ficha.png")

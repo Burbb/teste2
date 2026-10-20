@@ -13,6 +13,8 @@ menos nas coxas, que se encontram no meio (a costura de aço é da perna da esqu
 Grava grades/P7.txt e as listas por camada para o pintar.lua (listas/<camada>.lua: a malha, o aço, o couro, o contorno
 e a guia, que fica escondida na fonte).
     python grade.py <pasta da P7>
+(Esta é a grade do 3cb041db, guardada em anterior_3cb041db/; o retoque das laterais, retoque.py, vem por cima dela e é o
+que está em grades/P7.txt e na fonte.)
 """
 import pathlib
 import sys
