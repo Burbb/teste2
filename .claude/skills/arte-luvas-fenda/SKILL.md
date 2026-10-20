@@ -36,8 +36,9 @@ da L7 e das tentativas recusadas está em [exemplos.md](exemplos.md).
   - **O crédito acompanha:** no `LEIA-ME.md` das externas e no das fontes (`ferramentas/arte/aseprite/LEIA-ME.md`).
 - **A direção escolhida (20/10/2026): a L7**, o par de luvas de couro com a malha nas costas da mão e nos punhos, pela
   referência que o Jean escolheu (`ferramentas/arte/referencias/Luvas/luvas-par-recorte.png`, a forma; a
-  `luvas-par-gerada.webp`, os volumes; os papéis no `LEIA-ME.md` de lá). **O sprite de 32 aguarda avaliação**, só no
-  protótipo (`ferramentas/prototipos/hud/itens-lote-noite/luvas_l7/`); a M5 continua no jogo até o Jean decidir. O
+  `luvas-par-gerada.webp`, os volumes; os papéis no `LEIA-ME.md` de lá). **O 32 está aprovado visualmente**
+  (`c7639438`, depois da limpeza e de dois retoques); **o 40, o 48 e o 64 = 32 ×2 estão em proposta**, só no protótipo
+  (`ferramentas/prototipos/hud/itens-lote-noite/luvas_l7/`); nada integrado: a M5 continua no jogo. O
   recorte tem marca d'água (um "©" e uma linha clara): a licença precisa ser esclarecida antes de qualquer integração.
 
 ## Os dois caminhos

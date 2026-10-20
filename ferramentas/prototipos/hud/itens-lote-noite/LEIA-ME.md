@@ -2981,3 +2981,35 @@ saiu, ficando o contorno em (3, 20), alinhado com as linhas 21 e 22 (`auxiliares
 mão da direita, já na linha da faixa de couro do pulso, em (20, 21): virou contorno preto, como o Jean sugeriu, fechando
 a beira da malha com a faixa (`auxiliares/retoque2.py <pasta> 3`, 1 pixel; o antes em `anterior_9a9e2281/`). Composto =
 exportação = grade (1371411850); @2x exato; o 64 é o 32 ×2. A folha `luvas-l7-retoque-9a9e2281.png`.
+
+### A L7 em 40, 48 e 64 (`luvas_l7/`)
+
+**Decisão de Jean (20/10/2026):** a L7 aprovada visualmente no 32 (`c7639438`, depois da limpeza e dos dois retoques);
+completar o 40 e o 48 no protótipo, o 32 e o 64 preservados byte a byte (o 64 = 32 ×2). A mesma composição do par, a
+pose, as proporções, os cinco dedos, os polegares e a sobreposição; o couro e a malha nos mesmos lugares, a paleta e os
+volumes aprovados; o 32 final como autoridade; sem reintroduzir os resíduos da limpeza. A M5 continua no jogo; a
+pendência de origem e licença do recorte continua.
+
+**O caminho** (`auxiliares/tamanhos.py`, o princípio da M5 em 40 e 48): cada pixel de N vem do pixel do 32 pelo vizinho
+mais próximo (o quadro inteiro na mesma escala); o contorno de fora com 1 px; as linhas de dentro (os vãos dos dedos, a
+sobreposição, a costura do pulso, a linha dos nós) com 1 px, o primeiro pixel de N na direção da espessura de cada
+linha no 32, e o pixel a mais no material vizinho, sem preto novo; a sombra sólida do tom 1 tratada como linha (a dela,
+não a do contorno); a malha refeita na grade de cada tamanho, com o volume do 32 e o xadrez de um tom acima e um abaixo;
+o couro no tom do 32. **Na bancada:** a regra de manter o primeiro pixel em qualquer eixo pontilhava as linhas deitadas
+(a costura entre a faixa e o punho da direita, no 48); o tom 1 entrava na malha refeita (a linha dos nós virava um
+xadrez escuro) e, encostado no contorno, engrossava. Os ajustes à mão (8, com o porquê): no 40, um cinza solto à esquerda
+e a beira direita do punho da esquerda; no 48, as sobras de cruzamento nos cantos da malha e da faixa à direita e na
+beira esquerda do punho da direita.
+
+**A conferência:** fontes `fontes/L7/L7-40.aseprite` e `-48` com as camadas guia (o 32 aprovado no quadro de N, oculta),
+couro, malha e contorno (0 diferenças na releitura, 0 fora da tela); o composto do editor é igual aos PNGs exportados e
+às grades (40 891954211, 48 1760550789); @2x exatos. A exportação foi numa pasta à parte, e só o 40 e o 48 foram
+copiados para `proposta/`; o 32 reexportado sai igual ao aprovado, e o 32, o 64 e os @2x continuam os do `c7639438`.
+
+**No jogo** a 1920×945 (`fotografar.mjs l7_tamanhos`, `ROTULO=tamanhos`; os arquivos `manopla-*` só na página, no lugar
+da M5): o Guerreiro com o conjunto de ferro final; o Inventário (40) e o saque (64 e o "você usa" em 48), atual (a M5) ×
+tamanhos. Sem erro no console.
+
+**As folhas:** `luvas_l7/l7-tamanhos.png` (os quatro tamanhos em tamanho real ao lado da cota, das perneiras e das botas
+do jogo no mesmo tamanho, e ampliados) e `luvas_l7/l7-tamanhos-no-jogo.png`. Nada integrado. A skill `arte-luvas-fenda`
+registra o estado: o 32 aprovado visualmente, o 40, o 48 e o 64 em proposta.

@@ -1,4 +1,4 @@
-# As luvas: a M5 no jogo, a L7 em avaliação e as tentativas recusadas
+# As luvas: a M5 no jogo, a L7 em proposta e as tentativas recusadas
 
 Exemplos de raciocínio, não regras: a malha, a paleta de ferro e a tira de couro são escolhas da M5, para combinar com a
 cota. O histórico completo está em `ferramentas/prototipos/hud/itens-lote-noite/LEIA-ME.md` (as seções "A manopla e as
@@ -28,7 +28,7 @@ perneiras" até "A M5 em 40, 48 e 64") e as pastas das rodadas em
   `malha_dcss/` como histórico.
 - **As fontes finais** estão em `ferramentas/arte/aseprite/manopla/` (cópias das do protótipo, sem retoque).
 
-## A L7 (20/10/2026, em avaliação; a direção escolhida pelo Jean)
+## A L7 (20/10/2026: o 32 aprovado visualmente no `c7639438`; o 40, o 48 e o 64 em proposta; nada integrado)
 
 - **As referências:** o recorte escolhido (`ferramentas/arte/referencias/Luvas/luvas-par-recorte.png`) define o desenho:
   o par, a pose, as proporções e a divisão entre o couro (os dedos, a palma, as tiras) e a malha (as costas da mão
@@ -41,6 +41,14 @@ perneiras" até "A M5 em 40, 48 e 64") e as pastas das rodadas em
   médio da vizinhança com o xadrez da cota (a mediana da captura apagava o xadrez das costas da mão; a tentativa com o
   tom de cada pixel anulava o xadrez irregular da captura); o dedo mínimo da direita refeito em couro (a marca d'água
   "©" o clareava). O couro sai mais quente que o do recorte: é a rampa do conjunto.
+- **A limpeza e os retoques** (`limpeza.py`, `retoque.py`, `retoque2.py`, cada pixel com o porquê; as versões
+  anteriores em `anterior_<commit>/`): os pixels residuais nas beiras, as manchas cinza no couro em sombras, os recortes
+  pretos acidentais, a dobra da base do polegar contínua, a costura do pulso lisa, as junções da malha com o couro; o
+  Jean apontou nas folhas um pixel perdido, uma ponta de sombra e um pixel prata na borda da malha (em contorno).
+- **O 40 e o 48** (`tamanhos.py`), do 32 final como autoridade, pelo princípio da M5: a forma pelo vizinho mais
+  próximo; o contorno de fora com 1 px e as linhas de dentro com 1 px na direção da espessura de cada linha no 32 (a
+  regra de "primeiro pixel em qualquer eixo" pontilhava as linhas deitadas); a sombra sólida do tom 1 tratada como
+  linha, não como malha; a malha refeita na grade de cada tamanho; poucos ajustes à mão nas sobras de cruzamento.
 
 ## A lição: partir de um desenho de mão que funciona
 

@@ -5012,3 +5012,12 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 
 - **E o pixel prata (20/10/2026):** na borda da malha da direita, junto da faixa do pulso, virou contorno preto (1 pixel;
   o antes em `anterior_9a9e2281/`; a folha `luvas-l7-retoque-9a9e2281.png`).
+
+### 20/10/2026 (data do computador local) — A L7 aprovada no 32; o 40, o 48 e o 64 (proposta)
+
+- **Decisão de Jean:** a L7 aprovada visualmente no 32 (`c7639438`); completar o 40 e o 48, o 32 e o 64 preservados.
+- **Feito, só no protótipo** (`ferramentas/prototipos/hud/itens-lote-noite/luvas_l7/`): o 40 e o 48 do 32 final como
+  autoridade (`auxiliares/tamanhos.py`: o vizinho mais próximo, as linhas com 1 px na direção da espessura, a malha na
+  grade de cada tamanho, 8 ajustes à mão); fontes em camadas; composto = exportação = grade; @2x exatos; o 32 e o 64
+  idênticos ao aprovado. Conferidos no Inventário e no saque a 1920×945 (`l7-tamanhos.png`, `l7-tamanhos-no-jogo.png`).
+- **Aguardando avaliação.** A M5 continua no jogo; a licença do recorte continua pendente; a versão continua 1.150.0.
