@@ -5058,3 +5058,13 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   e 48 continuam válidos); as de espadas e anéis sem a exigência do 40 e do 48 próprios.
 - **Continua:** a integração da L7 espera a origem e a licença do recorte; a M5 continua no jogo; a versão continua
   1.150.0. Nenhum desenho novo começado.
+
+### 20/10/2026 (data do computador local) — As perneiras, a P6 (proposta do 32)
+
+- **Pedido de Jean:** uma nova proposta das perneiras pelo processo das botas B3, com a imagem gerada que ele mandou como
+  referência principal (`ferramentas/arte/referencias/calça/perneiras-gerada.webp`); só o 32 e o 64 = 32 ×2.
+- **Feito:** a P6 em `ferramentas/prototipos/hud/itens-lote-noite/perneiras_p6/` (a guia reduzida sem esticar, a grade
+  montada à mão por parte sobre ela, a fonte `fontes/P6/P6-32.aseprite` em camadas com a guia oculta, a prancha `p6.png`
+  e a ficha a 1920×945 em `p6-ficha.png`); as simplificações e as diferenças da referência no `LEIA-ME.md` do lote.
+- **Continua:** a P4 no jogo; a P6 em avaliação, sem integrar; a L7 das luvas espera a origem e a licença do recorte; a
+  versão continua 1.150.0.

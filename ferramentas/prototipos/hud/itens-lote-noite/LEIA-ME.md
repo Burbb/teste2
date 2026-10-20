@@ -3116,3 +3116,52 @@ valem quando melhoram a leitura ou a presença e não são obrigatórias, que a 
 original com margens, que a aprovação é pelo tamanho real no jogo e que os equipamentos já aprovados com 40 e 48
 continuam válidos; as instruções que exigiam o 40 e o 48 próprios (nela e nas de espadas e anéis) ficaram condicionadas.
 A `arte-luvas-fenda` registra a L7 como o exemplo dessa escolha, com as adaptações recusadas e os motivos.
+
+### As perneiras, a P6: a transposição da imagem gerada (`perneiras_p6/`)
+
+**Pedido de Jean (20/10/2026):** uma nova proposta das perneiras pelo processo das botas B3, com a imagem gerada que ele
+mandou como referência principal: transpor fielmente para o 32 a construção, as proporções, o cinto, a separação das
+pernas, os reforços de aço, as joelheiras e a distribuição da malha, sem reconstruir das tentativas antigas. A guia
+proporcional sem esticar nem alargar as pernas, a paleta do conjunto, a limpeza à mão, a malha acompanhando o volume como
+na cota; a fonte em camadas com a guia oculta. Só o 32 e o 64 = 32 ×2. A P4 continua no jogo; nada integrado; sem skill
+nova.
+
+**A referência** em `ferramentas/arte/referencias/calça/perneiras-gerada.webp` (o papel no `LEIA-ME.md` de lá): uma
+pixel art com o pixel de ~11,8 px, o desenho em ~48 × 81 px nativos.
+
+**O caminho:**
+- **a guia** (`auxiliares/transpor.py`, `previa/guia-32.png`): a caixa do desenho reduzida pela média, na proporção, para
+  30 px de altura (18 × 30, de x 7 a 24, centrada); também o mapa do contraste da malha (`previa/malha.npy`);
+- **o rascunho** (`grades/rascunho.txt`): a cor mais perto da paleta, com a malha onde o contraste é alto; saiu um
+  mosaico (com cada perna de 7 a 8 px, a malha, as tiras e as joelheiras viravam tons soltos) e ficou só como registro;
+- **a grade à mão** (`auxiliares/grade.py`, `grades/P6.txt`): cada parte da referência nas linhas e colunas que a
+  redução dá a ela, com o tom do volume pela luminosidade média da guia: o contorno de cima (1); o cinto de couro (2 e 3)
+  com a fivela de aço no meio, um pouco à direita, e o alto das tiras de aço nas pontas; as coxas de malha (4 a 13) com as
+  tiras de aço de fora (2 px; a da esquerda acesa, a da direita na sombra) e a costura de aço no meio até a separação
+  das pernas (linha 11, os dois contornos encostados); a tira de couro em diagonal na coxa direita (2 px, uma linha por
+  coluna) com a argola em cima e a fivela embaixo; a junta escura (14) e a faixa acesa do joelho com dois rebites (15); a
+  joelheira em cúpula (16 a 21) com o brilho em cima à esquerda; as canelas de malha (22 a 28) com as tiras de aço dos
+  dois lados; o punho de couro (29) e o contorno de baixo (30). A malha é o xadrez da cota (o tom do volume e o de baixo),
+  a metade de fora mais clara.
+
+**As simplificações e as diferenças da referência:**
+- a malha em xadrez de 1 px (os anéis da referência têm ~2 px nativos e mais contraste); o tom médio é o da guia;
+- as pernas mais juntas: o vão entre os joelhos e as canelas tem 2 px (na referência, ~4); com o contorno de 1 px e as
+  pernas de 6 px por dentro, o vão inteiro não cabe nos 18 px de largura;
+- a faixa do joelho com 1 px aceso (na referência, ~2 px com a beira de baixo), a junta com a coxa em cima;
+- a fivela do cinto em 3 × 2 px (sem o vão do meio), a argola e a fivela da tira em 1 px cada; os rebites da faixa em
+  1 px; as tachas do cinto e dos punhos saem;
+- as pequenas tiras de couro dos lados das joelheiras saem (cairiam no contorno);
+- o alto das tiras de aço das coxas, que na referência sobe por trás do cinto, fica nas pontas do cinto, mais escuro;
+- a silhueta reta dos lados (na referência, as joelheiras e o fim das coxas saem um pouco para fora);
+- o couro na rampa do conjunto (mais quente que o da referência).
+
+**A conferência:** fonte `fontes/P6/P6-32.aseprite` com as camadas guia (oculta, fora da exportação), malha, aço, couro
+e contorno, pelo `pintar.lua` (0 diferenças na releitura, 0 fora da tela); exportada por
+`exportar_aseprite.py P6 perneiras_p6/proposta --fontes=perneiras_p6/fontes`; o composto do editor é igual ao PNG e à
+grade (0 pixels diferentes); @2x exato; o 64 é o 32 ×2. PNGs em `proposta/` (as cópias com o nome `perneiras` em
+`tamanhos/`, só para as fotos).
+
+**As folhas:** `perneiras_p6/p6.png` (a referência, a guia e a P6 ampliadas 12× sem suavização; o elmo, a cota, a P4 do
+jogo, a P6 e as botas em tamanho real e a 4×; `auxiliares/prancha.py`) e `perneiras_p6/p6-ficha.png` (a ficha a
+1920×945, atual × P6; `fotografar.mjs perneiras_p6`, as capturas em `capturas/`). Sem erro no console. Nada integrado.
