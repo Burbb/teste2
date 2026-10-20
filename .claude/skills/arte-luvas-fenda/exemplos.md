@@ -49,6 +49,12 @@ perneiras" até "A M5 em 40, 48 e 64") e as pastas das rodadas em
   próximo; o contorno de fora com 1 px e as linhas de dentro com 1 px na direção da espessura de cada linha no 32 (a
   regra de "primeiro pixel em qualquer eixo" pontilhava as linhas deitadas); a sombra sólida do tom 1 tratada como
   linha, não como malha; a malha refeita na grade de cada tamanho; poucos ajustes à mão nas sobras de cruzamento.
+  **Revisto a pedido do Jean** (tinham perdido parte da leitura da mão): forçar toda linha de dentro a 1 px deixava as
+  linhas finas demais para dedos maiores (riscos e cruzes no 48) e apagava os vãos dos dedos e do polegar no 40; as
+  linhas de dentro passaram a vir do 32 pelo vizinho mais próximo (1 ou 2 px, na proporção do 32), com os ajustes à
+  mão onde o arredondamento engrossou, afinou ou fundiu as formas (o bloco preto do encontro das luvas, a sombra do
+  polegar da direita, a ponta do dedo do meio, os nós da direita na proporção, a costura do punho). Lição: compare os
+  tamanhos ampliados à mesma altura antes de entregar; a regra de 1 px não vale mais que a leitura da mão.
 
 ## A lição: partir de um desenho de mão que funciona
 

@@ -17,13 +17,33 @@ import sys
 from collections import Counter
 
 LINHA = "#1"   # o contorno e a sombra sólida (a linha dos nós da direita, as separações): linhas, não malha
-CRUZA = "a sobra de um cruzamento de linhas do 32 na beira: o contorno com 1 px, como no 32"
-MALHA = "a sobra de um cruzamento de linhas do 32 dentro da malha: o xadrez da malha"
+# A revisão (20/10/2026, pedido do Jean: o 40 e o 48 do aeb5ad75 tinham perdido parte da leitura da mão do 32): as linhas
+# de dentro passam a vir do 32 pelo vizinho mais próximo (com 1 ou 2 px, na proporção do 32; só o contorno de fora com
+# 1 px), e os ajustes à mão corrigem onde o arredondamento engrossou, afinou ou fundiu as formas. A versão anterior (as
+# linhas forçadas a 1 px, que no 48 viravam riscos e no 40 apagavam os vãos dos dedos e do polegar) fica em
+# anterior_aeb5ad75/.
+SO_FORA = True
+ENGROSSA = "a linha que a escala dobrou (2 px onde o 32 tem 1, fora da proporção): 1 px, o resto no material vizinho"
+NOS = "os nós da direita na proporção do 32 (a linha preta, a faixa acesa, a sombra escura, cada uma com a mesma altura)"
+PONTA = "a ponta do dedo do meio da esquerda, plana como no 32 (a escala a afinava em 1 px)"
 AJUSTES = {   # (y, x0, trecho, porquê); " " no trecho mantém o pixel
-    40: [(23, 7, "#", "o cinza solto à esquerda da luva da esquerda (um preto dobrado que virou malha): contorno"),
-         (28, 14, "#", "a beira direita do punho da esquerda: o contorno, como no 32 (a malha passava para o couro)")],
-    48: [(28, 43, "#", CRUZA), (29, 43, "#", CRUZA), (33, 43, "#", CRUZA), (35, 40, "3535", MALHA),
-         (37, 27, "3", MALHA), (38, 26, "#", "a beira esquerda do punho da direita: o contorno com 1 px")]}
+    40: [(13, 22, "ccd", ENGROSSA + ": o bloco preto do encontro das luvas, abaixo dos dedos"),
+         (16, 23, "4", ENGROSSA + ": a sombra do polegar da direita, ao lado da malha"),
+         (17, 23, "6", ENGROSSA + ": a sombra do polegar da direita"), (18, 23, "4", ENGROSSA + ": a sombra do polegar da direita"),
+         (24, 23, "3", ENGROSSA + ": a sombra do polegar da direita"),
+         (23, 6, "424", ENGROSSA + ": o canto preto da junção da luva da esquerda com o punho"),
+         (28, 14, "53", ENGROSSA + ": a beira direita do punho da esquerda")],
+    48: [(2, 21, "#ddd#", PONTA), (1, 22, "###", PONTA),
+         (5, 26, "de", ENGROSSA + ": o contorno duplo no alto do dedo seguinte"),
+         (11, 10, "#e", ENGROSSA + ": o topo do polegar da esquerda"), (11, 13, "#e", ENGROSSA + ": o topo do polegar da esquerda"),
+         (14, 30, "deeefffff", NOS), (17, 31, "646464646", NOS),
+         (18, 41, "c", ENGROSSA + ": a sombra da beira da malha"),
+         (22, 43, "4", ENGROSSA + ": a sombra da beira direita da malha"), (23, 43, "6", ENGROSSA + ": a sombra da beira direita da malha"),
+         (37, 43, "6", ENGROSSA + ": a sombra da beira direita do punho"), (38, 43, "4", ENGROSSA + ": a sombra da beira direita do punho"),
+         (24, 29, "4", ENGROSSA + ": a sombra do polegar da direita, ao lado da malha"),
+         (25, 29, "6", ENGROSSA + ": a sombra do polegar da direita"), (26, 29, "4", ENGROSSA + ": a sombra do polegar da direita"),
+         (27, 29, "6", ENGROSSA + ": a sombra do polegar da direita"),
+         (35, 28, "3546464646464646", ENGROSSA + ": a costura entre a faixa e o punho da direita (2 linhas pretas inteiras: 1)")]}
 
 
 def ler(base):
@@ -42,7 +62,7 @@ def volume_malha(g):
     return v
 
 
-def tamanho(g, N):
+def tamanho(g, N, so_fora=False):
     fonte = lambda X: int((X + 0.5) * 32 / N)
     primeiro = lambda X: X == 0 or fonte(X) != fonte(X - 1)
     vol = volume_malha(g)
@@ -69,6 +89,7 @@ def tamanho(g, N):
             elif em_pe and not deitada: fica = primeiro(X)            # a espessura é horizontal
             elif deitada and em_pe: fica = primeiro(X) or primeiro(Y)  # o canto, o cruzamento
             else: fica = primeiro(X) and primeiro(Y)                   # o ponto solto: 1 px
+            if so_fora: fica = True                                    # a forma do 32 pelo vizinho (as linhas de dentro com 1 ou 2 px)
             if borda_fonte or not fica: dobra.append((X, Y))
     for X, Y in dobra:
         viz = [m[Y + dy][X + dx] for dy in (-1, 0, 1) for dx in (-1, 0, 1)
@@ -86,7 +107,7 @@ def tamanho(g, N):
 
 if __name__ == "__main__":
     base = pathlib.Path(sys.argv[1]); N = int(sys.argv[2])
-    g, d = tamanho(ler(base), N)
+    g, d = tamanho(ler(base), N, so_fora=SO_FORA)
     g = [list(l) for l in g]
     for y, x0, trecho, _ in AJUSTES[N]:
         for k, ch in enumerate(trecho):

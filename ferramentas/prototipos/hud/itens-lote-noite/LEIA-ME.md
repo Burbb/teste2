@@ -3013,3 +3013,37 @@ tamanhos. Sem erro no console.
 **As folhas:** `luvas_l7/l7-tamanhos.png` (os quatro tamanhos em tamanho real ao lado da cota, das perneiras e das botas
 do jogo no mesmo tamanho, e ampliados) e `luvas_l7/l7-tamanhos-no-jogo.png`. Nada integrado. A skill `arte-luvas-fenda`
 registra o estado: o 32 aprovado visualmente, o 40, o 48 e o 64 em proposta.
+
+### A L7 em 40 e 48, a revisão da forma (`luvas_l7/`)
+
+**Pedido de Jean (20/10/2026):** o 40 e o 48 do `aeb5ad75` perderam parte da leitura da mão do 32; revisar antes de
+aprovar, com o 32 e o 64 do `c7639438` preservados byte a byte. Comparar os três tamanhos à mesma altura (as proporções
+de dedos, palma e punho; os dedos, os vãos e os polegares; a sobreposição; as sombras e linhas de dentro que engrossaram
+ou fundiram), partir do mapeamento e corrigir à mão; a regra de 1 px para as linhas de dentro pode ceder para preservar
+o desenho; a anatomia e os volumes antes da malha.
+
+**O antes** guardado em `luvas_l7/anterior_aeb5ad75/` (as fontes, os PNGs e as grades do 40 e do 48).
+
+**O diagnóstico** (a comparação à mesma altura): no 40, a luva da esquerda tinha perdido vãos entre os dedos e o polegar
+se fundia com o indicador; no 48, as linhas de dentro com 1 px ficavam finas demais para dedos 1,5 vez maiores e viravam
+riscos (uma cruz na palma da esquerda, um traço dividindo um dedo da direita); no 32, as sombras de dentro pesam
+proporcionalmente mais. A causa: a regra de forçar toda linha de dentro a 1 px.
+
+**A revisão** (`auxiliares/tamanhos.py`, `SO_FORA`): as linhas de dentro vêm do 32 pelo vizinho mais próximo (1 ou 2 px,
+na proporção do 32), só o contorno de fora com 1 px; os ajustes à mão (7 no 40, 17 no 48, cada um com o porquê) onde o
+arredondamento engrossou, afinou ou fundiu as formas: no 40, o bloco preto do encontro das luvas abaixo dos dedos, a
+sombra do polegar da direita ao lado da malha (2 px), o canto preto da junção da luva da esquerda com o punho e a beira
+direita do punho da esquerda; no 48, a ponta do dedo do meio da esquerda plana como no 32, o contorno duplo no alto do
+dedo seguinte, o topo do polegar da esquerda, os nós da direita na proporção do 32 (a linha preta, a faixa acesa e a
+sombra escura com a mesma altura), as sombras dobradas na beira da malha, a sombra do polegar da direita e a costura
+entre a faixa e o punho da direita (2 linhas pretas inteiras: 1). A malha continua refeita na grade de cada tamanho.
+
+**A conferência:** fontes `fontes/L7/L7-40.aseprite` e `-48` (guia oculta, couro, malha, contorno; 0 diferenças na
+releitura); o composto do editor é igual aos PNGs exportados e às grades (40 243900364, 48 614999552); @2x exatos; a
+exportação numa pasta à parte, o 32 reexportado igual ao aprovado, e o 32, o 64 e os @2x continuam os do `c7639438`. No
+jogo a 1920×945 (`fotografar.mjs l7_tamanhos`): o Inventário (40) e o saque (64 e o "você usa" em 48). Sem erro no
+console.
+
+**As folhas:** `luvas_l7/l7-revisao-40-48.png` (o 32 aprovado, o antes e o depois do 40 e do 48, à mesma altura sem
+suavização e em tamanho real), `l7-tamanhos.png` e `l7-tamanhos-no-jogo.png` (refeitas com o depois). Nada integrado; a
+pendência de origem e licença do recorte continua.

@@ -5021,3 +5021,13 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   grade de cada tamanho, 8 ajustes à mão); fontes em camadas; composto = exportação = grade; @2x exatos; o 32 e o 64
   idênticos ao aprovado. Conferidos no Inventário e no saque a 1920×945 (`l7-tamanhos.png`, `l7-tamanhos-no-jogo.png`).
 - **Aguardando avaliação.** A M5 continua no jogo; a licença do recorte continua pendente; a versão continua 1.150.0.
+
+### 20/10/2026 (data do computador local) — A L7 em 40 e 48, a revisão da forma (proposta)
+
+- **Pedido de Jean:** o 40 e o 48 do `aeb5ad75` perderam parte da leitura da mão do 32; revisar, com o 32 e o 64
+  preservados.
+- **Feito, só no protótipo** (`ferramentas/prototipos/hud/itens-lote-noite/luvas_l7/`): a comparação à mesma altura
+  achou a causa (as linhas de dentro forçadas a 1 px); as linhas de dentro passaram a vir do 32 pelo vizinho mais próximo,
+  com ajustes à mão (7 no 40, 17 no 48); o antes em `anterior_aeb5ad75/`; composto = exportação = grade; @2x exatos; o 32
+  e o 64 idênticos ao aprovado; conferido no Inventário e no saque a 1920×945; a folha `l7-revisao-40-48.png`.
+- **Aguardando avaliação.** A M5 continua no jogo; a licença do recorte continua pendente.
