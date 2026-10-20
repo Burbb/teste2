@@ -2284,3 +2284,44 @@ tela), em `fontes/<peça>/<peça>-32.aseprite`; o composto do editor é igual ao
 maça e do escudo; o 64; as duas ampliadas 6× sem suavização ao lado das recusadas do `c5fd33b`; e a ficha a 1920×945,
 atual × a rodada nova (`fotografar.mjs manopla_perneiras_ficha`, `ROTULO=rodada3`). Sem erro no console.
 
+### A manopla e as perneiras, rodada 4 (`manopla_perneiras/`)
+
+**Pedido de Jean (19/10/2026):** outra rodada das duas, só no protótipo, pelas imagens que ele mandou (guardadas como
+`referencias/calça/perneiras-jean.webp` e `referencias/Luvas/manopla-jean.webp`; os papéis nos `LEIA-ME.md`).
+- **As perneiras:** a ligação melhorou, mas o metal ainda parecia arredondado e macio, e os joelhos pareciam inchaços.
+  Placas com faces, arestas e espessura; reflexos definidos contra planos escuros; a joelheira organizada por uma
+  aresta, resultado da construção (não um risco por cima); sombras onde uma placa cobre a outra. Ficam o conjunto
+  inteiro, o cinto e a continuidade.
+- **A manopla:** os dedos pareciam ganchos de garra mecânica e a manchete dominava. A mão primeiro (costas, dedos
+  levemente dobrados, polegar ligado, pulso), depois as placas; não precisa mostrar todos os dedos; a manchete
+  equilibrada com a mão.
+
+**A rodada anterior guardada** em `manopla_perneiras/rodada3_89be986/` (a proposta, as fontes, as prévias, a captura,
+a folha e o script, `desenho_89be986.py.txt`).
+
+**As perneiras** (`auxiliares/desenho.py`): mais estreitas, como na referência (as pernas afastadas logo abaixo da placa
+do meio); o metal em planos, não pela luz de esfera: cada placa com uma faixa de reflexo definida no terço da
+esquerda, um plano médio e a beira da direita escura; as lâminas (a do quadril, a de cima da joelheira, a curta abaixo
+dela, a tornozeleira) com a sombra de 1 px da placa de cima e a espessura acesa; a joelheira em losango com a aresta
+vertical e a horizontal e quatro faces (a de cima à esquerda clara, a de cima à direita média, as de baixo escuras), as
+asas em ponta passando do contorno da perna, a beira escura só embaixo; a lâmina do coxote em volta dela escurecida
+(recolhida atrás), para a joelheira ficar na frente; a placa do meio em duas faces; o cinto com a boca escura em cima;
+uma correia de couro em diagonal no vão. **Na bancada:** a joelheira feita por regra se misturava com as faixas do
+coxote (o mesmo tom, sem contorno); no 32 ela foi desenhada à mão (9 × 7 px). As correias enchendo o vão juntavam as
+pernas num bloco; ficou uma tira.
+
+**A manopla:** pelas costas da mão, de lado; **três dedos** no 32 (o indicador, o médio e o anelar com o mínimo por
+trás), de 3 px com 1 px de vão, levemente dobrados, o do meio o mais longo, cada um aceso em cima e escuro embaixo, com
+duas juntas discretas e a ponta na luz; o polegar embaixo, ligado à base da mão, com uma junta; a placa das costas da
+mão em pentágono com a ponta para os dedos; os anéis do pulso; a manchete menor (mais baixa e mais curta), acesa em
+cima, com a costura no meio e a beira da boca. **Na bancada:** com quatro dedos de 2 px ficava um pente de linhas
+escuras; com três de 3 px, dedos.
+
+**O Aseprite (pelo MCP):** as listas do 32 pintadas pelo `pintar.lua` em documentos novos (0 diferenças, 0 fora da
+tela), em `fontes/<peça>/<peça>-32.aseprite`; o composto do editor é igual aos PNGs exportados e à prévia (manopla
+609699151, perneiras 377480868); o 64 é o 32 ×2; @2x exatos.
+
+**A folha:** `manopla_perneiras-r4.png`: antes (`89be986`) × depois em tamanho real junto das peças de ferro aprovadas;
+cada peça ampliada 6× sem suavização com a referência ao lado (reduzida só para a folha); a ficha a 1920×945, antes ×
+depois (`fotografar.mjs manopla_perneiras_ficha`, `ROTULO=rodada4`). Sem erro no console.
+

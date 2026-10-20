@@ -4789,3 +4789,16 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Aguardando avaliação.** Nada integrado; a versão continua 1.146.0; a cota e o elmo intocados. Botas, martelo e
   variantes não começaram.
 
+### 19/10/2026 (data do computador local) — A manopla e as perneiras, rodada 4 (proposta do 32)
+
+- **Pedido de Jean:** perneiras de armadura pesada (placas com faces e arestas, joelheira com aresta, não inchaço) e a
+  manopla reconstruída pela mão (sem dedos de garra, a manchete equilibrada), pelas imagens que ele mandou
+  (`referencias/calça/perneiras-jean.webp`, `referencias/Luvas/manopla-jean.webp`).
+- **Feito, só no protótipo** (`ferramentas/prototipos/hud/itens-lote-noite/manopla_perneiras/`), **não aprovado**: as
+  perneiras em planos (faixas de reflexo, lâminas com sombra e espessura, joelheira em losango com asas desenhada à mão
+  no 32); a manopla com três dedos de 3 px levemente dobrados, o polegar, a placa em pentágono, os anéis do pulso e a
+  manchete menor. 32 e 64 (= 32 ×2); fontes pelo `pintar.lua`; composto, exportação e prévia conferem; @2x exatos. A
+  rodada anterior em `rodada3_89be986/`.
+- **Folha:** `manopla_perneiras-r4.png` (antes × depois com a família, ampliadas com a referência, a ficha).
+- **Aguardando avaliação.** Nada integrado; a versão continua 1.146.0; a cota e o elmo intocados.
+
