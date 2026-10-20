@@ -36,9 +36,11 @@ da L7 e das tentativas recusadas está em [exemplos.md](exemplos.md).
   - **O crédito acompanha:** no `LEIA-ME.md` das externas e no das fontes (`ferramentas/arte/aseprite/LEIA-ME.md`).
 - **A direção escolhida (20/10/2026): a L7**, o par de luvas de couro com a malha nas costas da mão e nos punhos, pela
   referência que o Jean escolheu (`ferramentas/arte/referencias/Luvas/luvas-par-recorte.png`, a forma; a
-  `luvas-par-gerada.webp`, os volumes; os papéis no `LEIA-ME.md` de lá). **O 32 está aprovado visualmente**
-  (`c7639438`, depois da limpeza e de dois retoques); **o 40, o 48 e o 64 = 32 ×2 estão em proposta**, só no protótipo
-  (`ferramentas/prototipos/hud/itens-lote-noite/luvas_l7/`); nada integrado: a M5 continua no jogo. O
+  `luvas-par-gerada.webp`, os volumes; os papéis no `LEIA-ME.md` de lá). **A proposta visual aprovada:** o 32
+  (`c7639438`, depois da limpeza e de dois retoques) na ficha; o mesmo 32, sem redimensionar, centrado nos quadros
+  transparentes de 40 e de 48 (`fa9711bb`); o 64 = 32 ×2. Os arquivos em
+  `ferramentas/prototipos/hud/itens-lote-noite/luvas_l7/proposta/`; nada integrado: a integração espera a origem e a
+  licença do recorte, e a M5 continua no jogo. O
   recorte tem marca d'água (um "©" e uma linha clara): a licença precisa ser esclarecida antes de qualquer integração.
 
 ## Os dois caminhos
@@ -99,13 +101,16 @@ O jogo diz o que a luva é (`rpg/itens.py`): o acabamento mostra isso, sem brilh
 
 ## Os tamanhos, a exportação e a avaliação
 
-- **O 32 primeiro**, avaliado no jogo; o 64 = 32 ×2; o 40 e o 48 só depois da aprovação. **Quando o 32 aprovado é a
-  autoridade e o Jean pede réplicas idênticas (a L7), o 40 e o 48 são o 32 pelo vizinho mais próximo, puro:** cada
-  pixel de N é o pixel do 32 de que ele vem (`int((X + 0,5) × 32 / N)`), sem afinar o contorno, sem refazer a malha e
-  sem ajustes; confira pixel a pixel contra o 32 e compare os tamanhos ampliados à mesma altura. Regras por cima do
-  mapeamento (o contorno forçado a 1 px, a malha refeita na grade de N) mudaram o desenho da L7: o dedo mínimo da
-  direita perdeu o vão, o alto dos dedos mudou. Na B3 e na M5, o 40 e o 48 saíram da referência ou da base na grade
-  de cada tamanho, com os ajustes de cada grade. O 32 aprovado não passa de novo pelo processo.
+- **O 32 primeiro**, avaliado no jogo; o 64 = 32 ×2. Para o 40 e o 48, a política da `arte-itens-fenda` ("Do 32 para
+  os outros tamanhos"): o tamanho do espaço não determina o tamanho do desenho; teste antes a arte-base em tamanho
+  nativo, centrada no espaço com margem transparente, ou ampliada por fator inteiro; versões próprias valem quando
+  melhoram a leitura ou a presença, e não são obrigatórias; quando uma adaptação deformar a mão aprovada, compare-a com
+  o original centrado; aprove pelo tamanho real no jogo, e use as ampliações só para achar defeitos.
+- **O exemplo da L7:** a mão aprovada em 32 deformava em qualquer grade de 40 e de 48 (as escalas de 1,25 e 1,5 não são
+  inteiras), e o Jean escolheu o 32 centrado nos dois espaços, aceitando a menor presença para preservar a mão exata. As
+  adaptações recusadas e os motivos estão em [exemplos.md](exemplos.md). A M5 e a B3 têm 40 e 48 próprios, derivados na
+  grade de cada tamanho, e continuam válidos: a L7 não é obrigação para as outras peças. O 32 aprovado não passa de novo
+  pelo processo.
 - **Exportar:** `python ferramentas/arte/exportar_aseprite.py <id> <pasta proposta> --fontes=<pasta fontes>` (a guia e
   a `original` ocultas ficam fora); confira o composto do editor contra o PNG (`bandagem_pocao/auxiliares/soma.lua` e
   `soma.py`) e contra a grade, e os @2x.

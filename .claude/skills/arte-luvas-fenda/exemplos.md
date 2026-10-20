@@ -1,4 +1,4 @@
-# As luvas: a M5 no jogo, a L7 em proposta e as tentativas recusadas
+# As luvas: a M5 no jogo, a L7 aprovada como proposta visual e as tentativas recusadas
 
 Exemplos de raciocínio, não regras: a malha, a paleta de ferro e a tira de couro são escolhas da M5, para combinar com a
 cota. O histórico completo está em `ferramentas/prototipos/hud/itens-lote-noite/LEIA-ME.md` (as seções "A manopla e as
@@ -28,7 +28,7 @@ perneiras" até "A M5 em 40, 48 e 64") e as pastas das rodadas em
   `malha_dcss/` como histórico.
 - **As fontes finais** estão em `ferramentas/arte/aseprite/manopla/` (cópias das do protótipo, sem retoque).
 
-## A L7 (20/10/2026: o 32 aprovado visualmente no `c7639438`; o 40, o 48 e o 64 em proposta; nada integrado)
+## A L7 (20/10/2026: a proposta visual aprovada; nada integrado, a licença do recorte pendente)
 
 - **As referências:** o recorte escolhido (`ferramentas/arte/referencias/Luvas/luvas-par-recorte.png`) define o desenho:
   o par, a pose, as proporções e a divisão entre o couro (os dedos, a palma, as tiras) e a malha (as costas da mão
@@ -45,22 +45,28 @@ perneiras" até "A M5 em 40, 48 e 64") e as pastas das rodadas em
   anteriores em `anterior_<commit>/`): os pixels residuais nas beiras, as manchas cinza no couro em sombras, os recortes
   pretos acidentais, a dobra da base do polegar contínua, a costura do pulso lisa, as junções da malha com o couro; o
   Jean apontou nas folhas um pixel perdido, uma ponta de sombra e um pixel prata na borda da malha (em contorno).
-- **O 40 e o 48** (`tamanhos.py`), do 32 final como autoridade, pelo princípio da M5: a forma pelo vizinho mais
-  próximo; o contorno de fora com 1 px e as linhas de dentro com 1 px na direção da espessura de cada linha no 32 (a
-  regra de "primeiro pixel em qualquer eixo" pontilhava as linhas deitadas); a sombra sólida do tom 1 tratada como
-  linha, não como malha; a malha refeita na grade de cada tamanho; poucos ajustes à mão nas sobras de cruzamento.
-  **Revisto a pedido do Jean** (tinham perdido parte da leitura da mão): forçar toda linha de dentro a 1 px deixava as
-  linhas finas demais para dedos maiores (riscos e cruzes no 48) e apagava os vãos dos dedos e do polegar no 40; as
-  linhas de dentro passaram a vir do 32 pelo vizinho mais próximo (1 ou 2 px, na proporção do 32), com os ajustes à
-  mão onde o arredondamento engrossou, afinou ou fundiu as formas (o bloco preto do encontro das luvas, a sombra do
-  polegar da direita, a ponta do dedo do meio, os nós da direita na proporção, a costura do punho). Lição: compare os
-  tamanhos ampliados à mesma altura antes de entregar; a regra de 1 px não vale mais que a leitura da mão.
-  **E por fim a réplica:** o Jean comparou pixel a pixel com o 32 e circulou erros (o dedo mínimo da direita sem o vão,
-  o alto dos dedos da esquerda): as versões com regras divergiam do 32 em 189 (40) e 311 (48) pixels; ficou o 32 pelo
-  vizinho mais próximo, puro, cada pixel de N igual ao pixel do 32 de que vem (as tentativas em `anterior_aeb5ad75/` e
-  `anterior_fd60dd2c/`).
+- **O 40 e o 48: o 32 centrado** (`fa9711bb`, a escolha do Jean): o mesmo PNG de 32, sem redimensionar, no centro de um
+  quadro transparente de 40 e de 48 (deslocado 4 e 8 px); os espaços, o alinhamento e as áreas de clique iguais. No
+  Inventário fica um pouco menor que uma versão de 40; no "você usa" do saque, a menor presença é mais visível, e o Jean a
+  aceitou para preservar a mão exata do 32.
+- **As adaptações recusadas** (as versões guardadas em `luvas_l7/anterior_<commit>/`):
+  - **as linhas de dentro forçadas a 1 px** (`aeb5ad75`): a forma pelo vizinho mais próximo, mas o contorno e as linhas
+    de dentro afinados a 1 px e a malha refeita na grade de cada tamanho; as linhas ficavam finas demais para dedos
+    maiores (riscos, uma cruz na palma, no 48) e os vãos dos dedos e do polegar sumiam (no 40);
+  - **as linhas pelo vizinho, com ajustes** (`fd60dd2c`): mais perto do 32, mas ainda 189 (40) e 311 (48) pixels
+    diferentes dele pelo vizinho; o dedo mínimo da direita perdeu o vão e o alto dos dedos da esquerda mudou (o Jean
+    circulou os erros);
+  - **a réplica pelo vizinho mais próximo, puro** (`9cd3f340`): cada pixel igual ao do 32 de que vem, mas, como as
+    escalas não são inteiras, cada pixel do 32 vira um bloco de 1 ou 2 px e a mão fica desigual; não escolhida, frente
+    ao 32 centrado.
 
-## A lição: partir de um desenho de mão que funciona
+## As lições
+
+**Nos tamanhos:** antes de produzir várias grades, teste a arte-base em tamanho nativo (centrada no espaço) ou
+ampliada por fator inteiro; compare a adaptação com o original centrado e aprove pelo tamanho real no jogo (a política
+da `arte-itens-fenda`). A L7 é o exemplo dessa escolha; as luvas e as botas com 40 e 48 próprios continuam válidas.
+
+### Partir de um desenho de mão que funciona
 
 Adaptar uma base pronta (a M5) funcionou melhor que reconstruir a mão por medidas, grades ou descrições; transpor uma
 referência visual escolhida (a L7, como as botas B3) é o mesmo princípio: a anatomia vem resolvida por quem desenhou, e o

@@ -3094,3 +3094,25 @@ que o 64 do "você encontrou" ao lado.
 **As folhas:** `luvas_l7/l7-centrado-no-jogo.png` (a M5 do jogo × a réplica pelo vizinho × o 32 centrado, no Inventário
 e no saque, em tamanho real) e `luvas_l7/l7-centrado-espacos.png` (os três desenhos do 40 e do 48, ampliados 6× e em
 tamanho real). Nada integrado; a réplica (`proposta/L7-40`, `-48`) e as tentativas anteriores continuam guardadas.
+
+### A L7: a proposta visual consolidada (`luvas_l7/proposta/`)
+
+**Decisão de Jean (20/10/2026):** escolhida a alternativa do 32 centrado (`fa9711bb`); encerradas as tentativas de
+redesenho do 40 e do 48. A proposta visual aprovada: o 32 original na ficha (o `c7639438`); o mesmo desenho de 32, sem
+redimensionar, centrado nos quadros transparentes de 40 e de 48; o 64 = 32 ×2. A integração continua pendente da origem
+e da licença do recorte; a M5 continua no jogo.
+
+**Os arquivos:** `luvas_l7/proposta/` é o conjunto escolhido (o `L7-40` e o `-48` com os @2x idênticos, byte a byte,
+aos de `alternativa_32/` do `fa9711bb`; o 32, o 64 e os @2x os do `c7639438`); as cópias com o nome `manopla` em
+`tamanhos/` também. A fonte em camadas é a do 32 (`fontes/L7/L7-32.aseprite`): o 40 e o 48 saem dela centrados, sem
+fonte própria; numa integração, o exportador precisa dessa derivação (o 32 no centro do quadro), como o `DERIVADOS` faz
+com o 64. **O histórico:** as versões redesenhadas do 40 e do 48 guardadas em `anterior_aeb5ad75/` (as linhas forçadas a
+1 px), `anterior_fd60dd2c/` (as linhas pelo vizinho, com ajustes) e `anterior_9cd3f340/` (a réplica pelo vizinho, puro:
+as fontes, os PNGs e as grades), e o `auxiliares/tamanhos.py` como registro delas.
+
+**As skills:** a `arte-itens-fenda` ("Do 32 para os outros tamanhos") registra que o tamanho do espaço não determina o
+tamanho do desenho, que se testa antes a arte-base em tamanho nativo ou ampliada por fator inteiro, que versões próprias
+valem quando melhoram a leitura ou a presença e não são obrigatórias, que a adaptação que deforma se compara com o
+original com margens, que a aprovação é pelo tamanho real no jogo e que os equipamentos já aprovados com 40 e 48
+continuam válidos; as instruções que exigiam o 40 e o 48 próprios (nela e nas de espadas e anéis) ficaram condicionadas.
+A `arte-luvas-fenda` registra a L7 como o exemplo dessa escolha, com as adaptações recusadas e os motivos.

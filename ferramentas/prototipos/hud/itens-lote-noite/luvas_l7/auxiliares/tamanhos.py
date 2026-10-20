@@ -11,7 +11,8 @@ O mesmo princípio da M5 em 40 e 48 (manopla_perneiras/auxiliares/malha_dcss.lua
   - o couro: o tom do pixel do 32.
 Depois, os ajustes à mão de cada grade (AJUSTES), cada um com o porquê. Grava grades/L7-<N>.txt.
     python tamanhos.py <pasta da L7> 40|48
-(Hoje vale PURO, logo abaixo: a réplica pelo vizinho mais próximo; o resto fica como histórico das tentativas.)
+(Histórico: nenhuma destas saídas foi escolhida. O Jean escolheu o 32 centrado nos quadros de 40 e 48, fa9711bb, que
+está em proposta/; as saídas deste script ficam em anterior_aeb5ad75/, anterior_fd60dd2c/ e anterior_9cd3f340/.)
 """
 import pathlib
 import sys

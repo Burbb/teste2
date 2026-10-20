@@ -92,7 +92,9 @@ Resolva a espada numa cor só antes de qualquer luz:
 ## Os tamanhos
 
 A política da `arte-itens-fenda`: o 32 primeiro (o tamanho mais visto), avaliado no jogo; o 64 como o 32 ampliado 2×; o
-40 e o 48 depois da aprovação, **pela mesma construção**. A ponta não se copia contando pixels: em cada grade, o fecho
+40 e o 48 depois da aprovação, **pela mesma construção** quando a espada ganhar versões próprias desses tamanhos (elas
+não são obrigatórias: a `arte-itens-fenda` pede testar antes a arte-base em tamanho nativo ou ampliada por fator
+inteiro; as espadas já aprovadas com 40 e 48 próprios continuam válidas). A ponta não se copia contando pixels: em cada grade, o fecho
 dos gumes cai de um jeito; ajuste o que for preciso (uma fração de pixel na posição do vértice, a regra dos planos pela
 proporção do corte) para manter a mesma forma e a mesma leitura. Confira a ponta de cada grade ampliada lado a lado.
 

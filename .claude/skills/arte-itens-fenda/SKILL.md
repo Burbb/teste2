@@ -49,7 +49,9 @@ construção e as tentativas recusadas; o resto continua sendo o desta skill.
 3. **Onde ele aparece e em que tamanho.** O tamanho de exibição vem do lugar parado: 32 px na bolsa, mochila do
    mercado, ficha, dicas e quadro do baú; 40 px no corpo e na mochila do Inventário (equipamento); 48 no cartão
    compacto do saque e na pilha de baús; 64 no cartão do saque. Desenhe para os tamanhos em que ele de fato fica
-   parado na tela; o mais visto (em geral o 32) tem prioridade. Veja abaixo o que é leitura parada e o que é animação.
+   parado na tela; o mais visto (em geral o 32) tem prioridade, e os outros espaços podem receber a arte-base sem
+   redimensionar, centrada, ou ampliada por fator inteiro (ver "Do 32 para os outros tamanhos"). Veja abaixo o que é
+   leitura parada e o que é animação.
 4. **Silhueta, materiais e identidade.** Escreva em poucas linhas: a forma que se reconhece no tamanho pequeno, os
    materiais (cada um terá rampa e regra de luz), as características que o fazem ser este objeto e não outro, e o
    que o atual tem de bom e precisa ficar (volume, presença, personalidade). Se o pedido muda o conceito (o pote de
@@ -75,20 +77,31 @@ O desenho é um script Python em `ferramentas/arte/`, um por objeto, com as etap
 
 - **Do 32 para os outros tamanhos** (o processo desde a 1.110.0). Comece pela arte principal em 32, o tamanho mais
   visto, e avalie a leitura dela no jogo antes de fazer os outros. Aprovada a leitura:
-  - a apresentação maior (o 64 do cartão do saque) pode ser a ampliação inteira exata do 32 (2×, vizinho mais
-    próximo, sem retoque), quando o resultado no jogo for aprovado;
-  - os tamanhos intermediários (40, 48) se derivam da fonte aprovada: as mesmas formas e medidas na grade do tamanho
-    (`MEDIDAS`), retocando contornos ou detalhes onde for preciso;
-  - a construção, a silhueta e a identidade do objeto são as mesmas em todos (ver "Um objeto só" abaixo);
-  - uma versão própria mais detalhada de um tamanho só quando o ganho visual justificar o trabalho: compare no jogo,
-    no mesmo espaço e com os mesmos dados, a versão detalhada com a ampliação inteira antes de decidir.
+  - **o tamanho do espaço da interface não determina o tamanho ocupado pelo desenho.** Um espaço de 40 ou de 48 pede um
+    arquivo de 40 ou de 48 (o catálogo de `Icones`), mas o desenho dentro dele pode ser a arte-base em tamanho nativo,
+    sem redimensionar, centrada com margem transparente (as medidas, o alinhamento e as áreas de clique do espaço não
+    mudam);
+  - **antes de produzir várias grades, teste o reaproveitamento da arte-base:** em tamanho nativo (centrada no espaço)
+    ou ampliada por um fator inteiro (o 64 do cartão do saque como o 32 ×2, vizinho mais próximo, sem retoque);
+  - **versões próprias de outros tamanhos** (o 40 e o 48 derivados da fonte aprovada: as mesmas formas e medidas na
+    grade do tamanho, `MEDIDAS`, retocando contornos ou detalhes onde for preciso) **são válidas quando melhoram a
+    leitura ou a presença no contexto; não são obrigatórias para todo item.** Uma versão própria mais detalhada de um
+    tamanho, só quando o ganho visual justificar o trabalho;
+  - **quando uma adaptação deformar o desenho aprovado** (uma escala não inteira muda a espessura das linhas, funde
+    partes, troca um vão), compare o benefício dela com a alternativa de preservar o original e aceitar as margens: as
+    duas, no jogo, no mesmo espaço e com os mesmos dados;
+  - **a aprovação considera o tamanho real no jogo;** as ampliações servem para investigar defeitos, não para aprovar;
+  - a construção, a silhueta e a identidade do objeto são as mesmas em todos (ver "Um objeto só" abaixo).
   Um arquivo final no tamanho de uso não precisa ter sido redesenhado do zero. Não vale como acabamento: filtro,
-  suavização, quantização, "pixelização" ou redução por fator não inteiro. O @2x é a duplicação exata (`salvar`). Os
-  itens aprovados antes desta orientação ficam com os arquivos que têm; trocar algum deles pede comparação própria.
+  suavização, quantização, "pixelização" ou redução por fator não inteiro. O @2x é a duplicação exata (`salvar`).
+  **Os equipamentos já aprovados com 40 e 48 próprios continuam válidos:** esta orientação não reabre nenhum deles;
+  trocar algum pede comparação própria e o pedido do Jean. O exemplo da escolha da arte-base centrada é a luva L7 (a
+  `arte-luvas-fenda`), e não é obrigação para as outras peças.
 - **Leitura parada × animação.** São duas coisas diferentes:
   - *leitura parada* é onde o desenho fica para ser lido (a bolsa, o corpo, a mochila, a prateleira, o cartão do
-    saque, o quadro do baú). Cada tamanho desses tem arquivo nativo (desenhado na grade dele ou derivado da fonte
-    aprovada, como acima): é ali que vale tudo o que esta skill pede;
+    saque, o quadro do baú). Cada tamanho desses tem arquivo próprio no tamanho do espaço (desenhado na grade dele,
+    derivado da fonte aprovada, ampliado por fator inteiro ou a arte-base sem redimensionar centrada com margem, como
+    acima): é ali que vale tudo o que esta skill pede;
   - *transformação de animação* é o que uma animação faz com uma imagem enquanto ela anda e some em menos de um
     segundo: o consumível que voa até a bolsa é o arquivo de 32 com `scale` de 1,3 a 0,8 no caminho (`itemVoa`, em
     `app/pagina.js`); o item que voa até o corpo encolhe até 0,45 (`voarIcone`, em `telas/celebracoes.js`). Isso não é
@@ -96,7 +109,7 @@ O desenho é um script Python em `ferramentas/arte/`, um por objeto, com as etap
   - O que já existe e se apoia na redução do navegador para um tamanho parado (o martelo e a Pena de Fênix em 48, a 2×
     reduzida, em `desenhos.js`; um pedido de tamanho sem arquivo, que `Icones` serve com o mais perto) é herança, não
     regra. Um desenho novo não usa a redução do navegador como acabamento: se ele fica parado num tamanho, esse
-    tamanho tem arquivo próprio (desenhado ou derivado por ampliação inteira).
+    tamanho tem arquivo próprio (desenhado, derivado, ampliado por fator inteiro ou a arte-base centrada com margem).
 - **Duas camadas.** `mat` (o material de cada pixel; `"c"` é o contorno) e `tom` (o índice na rampa do material);
   `fixo` protege o que foi desenhado de propósito (um brilho, um cravo) da limpeza.
 - **Luz deliberada.** A luz é a de `pixel_comum.LUZ` (de cima e da esquerda, um pouco de frente), igual para todos os

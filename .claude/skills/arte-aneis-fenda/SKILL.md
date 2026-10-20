@@ -91,7 +91,9 @@ ornamento só entram com o aro aprovado na comparação.
 ## Os tamanhos
 
 A política da `arte-itens-fenda`: comece pelo **tamanho principal de uso** (o 32 do equipamento, na ficha), resolva a
-perspectiva nele e só então derive os outros (40 e 48 pela mesma construção; o 64 como o 32 ampliado 2×). A mesma
+perspectiva nele e só então derive os outros (o 64 como o 32 ampliado 2×; o 40 e o 48, quando houver versões próprias,
+pela mesma construção: elas não são obrigatórias, e a `arte-itens-fenda` pede testar antes a arte-base em tamanho
+nativo ou ampliada por fator inteiro; os anéis já aprovados com 40 e 48 próprios continuam válidos). A mesma
 construção em todos: a simplificação por grade é esperada (um chanfro que vira 1 px, um ornamento mais simples); mudar
 o ângulo ou as proporções num tamanho, não. Julgue pelo tamanho real; a ampliação serve para achar o pixel.
 

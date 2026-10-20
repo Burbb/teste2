@@ -5045,3 +5045,16 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **O teste do 32 centrado (20/10/2026):** o 32 aprovado, sem redimensionar, no centro dos espaços de 40 e 48
   (`luvas_l7/alternativa_32/`), ao lado da réplica no Inventário e no saque (`l7-centrado-no-jogo.png`,
   `l7-centrado-espacos.png`). Aguardando avaliação; nada integrado.
+
+### 20/10/2026 (data do computador local) — A L7: a proposta visual consolidada; as skills dos tamanhos
+
+- **Decisão de Jean:** a L7 com o 32 centrado nos espaços de 40 e 48 (`fa9711bb`); encerradas as tentativas de redesenho
+  desses tamanhos.
+- **Feito:** a proposta da L7 consolidada (`luvas_l7/proposta/`: o 32 na ficha, o 32 centrado nos quadros de 40 e 48, o
+  64 = 32 ×2; as versões redesenhadas guardadas como histórico em `anterior_aeb5ad75/`, `anterior_fd60dd2c/` e
+  `anterior_9cd3f340/`). As skills `arte-itens-fenda` e `arte-luvas-fenda` com o aprendizado (o espaço não determina o
+  tamanho do desenho; testar antes a arte-base nativa ou ampliada por fator inteiro; versões próprias quando melhoram, sem
+  obrigação; comparar a adaptação com o original centrado; aprovar pelo tamanho real; os equipamentos já aprovados em 40
+  e 48 continuam válidos); as de espadas e anéis sem a exigência do 40 e do 48 próprios.
+- **Continua:** a integração da L7 espera a origem e a licença do recorte; a M5 continua no jogo; a versão continua
+  1.150.0. Nenhum desenho novo começado.
