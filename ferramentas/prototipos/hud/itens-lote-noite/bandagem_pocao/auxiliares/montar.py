@@ -530,7 +530,7 @@ def manopla_perneiras_r4():
     """A rodada 4 da manopla e das perneiras (só o 32 e o 64): antes (a rodada do 89be986) × depois, em tamanho real
     sobre o carvão junto das peças de ferro aprovadas; ampliadas sem suavização, com o recorte da referência ao lado
     (a imagem do Jean, só reduzida para a folha); e a ficha a 1920×945, antes × depois."""
-    base = LOTE / "manopla_perneiras"; P = base / "proposta"; A = base / "rodada3_89be986"; J = RAIZ / "rpg/web/static/hud/icones"
+    base = LOTE / "manopla_perneiras" / "rodada4_9509530"; P = base / "proposta"; A = base.parent / "rodada3_89be986"; J = RAIZ / "rpg/web/static/hud/icones"   # (guardada)
     REF = RAIZ / "ferramentas/arte/referencias"
     ap = [LOTE / "elmo_cota/proposta/elmo-32.png", J / "cota-32.png", J / "espada-32.png", J / "maca-32.png", J / "escudo-32.png"]
     ap = [Image.open(a).convert("RGBA") for a in ap]
@@ -567,6 +567,40 @@ def manopla_perneiras_r4():
         o.paste(fi, (10 + k * (fi.width + 10), y + 16))
     o.save(base / "manopla_perneiras-r4.png"); print(base / "manopla_perneiras-r4.png", o.size)
 
+def manopla_perneiras_r5():
+    """A rodada 5 (o recomeço, desenhada à mão no Aseprite; só o 32 e o 64): antes (a rodada 4, 9509530) × depois em
+    tamanho real sobre o carvão junto do equipamento aprovado; cada peça com a referência principal escolhida ao lado
+    (pixel art, ampliada sem suavização), o antes e o depois ampliados 6× sem suavização."""
+    base = LOTE / "manopla_perneiras"; P = base / "proposta"; A = base / "rodada4_9509530/proposta"; J = RAIZ / "rpg/web/static/hud/icones"
+    REF = RAIZ / "ferramentas/arte/referencias"
+    ap = [LOTE / "elmo_cota/proposta/elmo-32.png", J / "cota-32.png", J / "espada-32.png", J / "maca-32.png", J / "escudo-32.png"]
+    ap = [Image.open(a).convert("RGBA") for a in ap]
+    novos = {n: Image.open(P / f"{n}-32.png").convert("RGBA") for n in ("manopla", "perneiras")}
+    velhos = {n: Image.open(A / f"{n}-32.png").convert("RGBA") for n in ("manopla", "perneiras")}
+    refs = {"perneiras": Image.open(REF / "calça/perneiras-escuras.png").convert("RGB"),
+            "manopla": Image.open(REF / "Luvas/1.gif").convert("RGB").crop((860, 410, 1020, 580))}
+    Z = 6; L = 32 * Z
+    W = 10 + 3 * (L + 10)
+    H = 22 + 2 * 52 + 8 + 2 * (22 + L) + 10
+    o = Image.new("RGB", (W, H), (245, 245, 245)); d = ImageDraw.Draw(o)
+    d.text((10, 4), "tamanho real, com o equipamento aprovado: antes (9509530) | depois", fill=(0, 0, 0), font=FONTE)
+    y = 22
+    for rot, par in (("antes", velhos), ("depois", novos)):
+        f = Image.new("RGBA", (7 * 48 + 20, 48), (24, 24, 28, 255))
+        for k, im in enumerate([ap[0], ap[1], par["manopla"], par["perneiras"]] + ap[2:]):
+            f.alpha_composite(im, (10 + k * 48 + 8, 8))
+        o.paste(f.convert("RGB"), (10, y)); d.text((7 * 48 + 40, y + 18), rot, fill=(0, 0, 0), font=FONTE); y += 52
+    y += 8
+    for n, nome_ref in (("perneiras", "perneiras-escuras.png"), ("manopla", "Raven, 2.ª linha, 4.ª")):
+        d.text((10, y), f"{n}: referência ({nome_ref}) | antes | depois (6×, sem suavizar)", fill=(0, 0, 0), font=FONTE)
+        r = refs[n]; z = max(1, L // max(r.size)); r = r.resize((r.width * z, r.height * z), Image.NEAREST)
+        g = Image.new("RGB", (L, L), (24, 24, 28)); g.paste(r, ((L - r.width) // 2, (L - r.height) // 2)); o.paste(g, (10, y + 16))
+        for k, im in enumerate((velhos[n], novos[n])):
+            g = Image.new("RGBA", (L, L), (24, 24, 28, 255)); g.alpha_composite(im.resize((L, L), Image.NEAREST))
+            o.paste(g.convert("RGB"), (10 + (k + 1) * (L + 10), y + 16))
+        y += 16 + L + 6
+    o.save(base / "manopla_perneiras-r5.png"); print(base / "manopla_perneiras-r5.png", o.size)
+
 def sandalia_no_jogo():
     """A Sandália no jogo (1.142.0), em tamanho real: o saque, a ficha e o Inventário depois de "Equipar agora"."""
     pasta = LOTE / "sandalia_chapeu" / "capturas" / "integracao"
@@ -584,7 +618,7 @@ if __name__ == "__main__" and sys.argv[1] in ("antidoto_base", "frasco_vazio", "
                                               "sandalia_no_jogo", "besta_diadema", "diadema_r2",
                                               "espada_maca", "espada_maca_r2", "espada_ponta",
                                               "espada_ponta3", "espada_ponta4", "espada_tamanhos",
-                                              "elmo_cota", "elmo_cota_r2", "elmo_r3", "elmo_r4", "elmo_tamanhos", "manopla_perneiras", "manopla_perneiras_r3", "manopla_perneiras_r4"):
+                                              "elmo_cota", "elmo_cota_r2", "elmo_r3", "elmo_r4", "elmo_tamanhos", "manopla_perneiras", "manopla_perneiras_r3", "manopla_perneiras_r4", "manopla_perneiras_r5"):
     globals()[sys.argv[1]](); sys.exit()
 if __name__ == "__main__":
     nome = sys.argv[1]; cfg = LOTES[nome]; base = LOTE / nome

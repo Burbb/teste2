@@ -2325,3 +2325,53 @@ tela), em `fontes/<peça>/<peça>-32.aseprite`; o composto do editor é igual ao
 cada peça ampliada 6× sem suavização com a referência ao lado (reduzida só para a folha); a ficha a 1920×945, antes ×
 depois (`fotografar.mjs manopla_perneiras_ficha`, `ROTULO=rodada4`). Sem erro no console.
 
+### A manopla e as perneiras, rodada 5: o recomeço à mão no Aseprite (`manopla_perneiras/`)
+
+**Decisão de Jean (20/10/2026):** nenhuma das duas da rodada 4 (`9509530`) aprovada; recomeçar o desenho do zero, só no
+protótipo, guardando as tentativas como histórico (sem reset de Git). O desenho construído desde o início no Aseprite:
+primeiro a silhueta, depois os volumes e o acabamento; nada de gerar a peça por fórmulas ou grades externas e só
+pintá-la no fim (o `pintar.lua` continua aplicando os pixels com segurança).
+- **As perneiras:** principal, a armadura escura sobre fundo cinza (`referencias/calça/perneiras-escuras.png`); secundária,
+  a de metal com o tabardo vermelho (`perneiras-tabardo.png`). O problema era de proporção e de construção: os joelhos
+  pareciam peças grandes atravessadas nas pernas. A proteção do joelho integrada ao perfil, com espessura, arestas e
+  sobreposição, sem as asas largas nem o losango obrigatório; o conjunto inteiro; suporte de couro ou tecido discreto
+  permitido; a postura equilibrada; vazia.
+- **A manopla:** abandonar a construção dos dedos. Principal de pose e simplificação: uma manopla simples da prancha
+  Raven Fantasy (`Luvas/1.gif`); a `2.webp` de apoio; a imagem gerada não é mais forma obrigatória. A mão compreensível,
+  os dedos agrupados, o polegar ligado, sem hastes, ganchos nem vãos escuros; o punho parte da luva.
+
+**A rodada 4 guardada** em `manopla_perneiras/rodada4_9509530/` (a proposta, as fontes, as prévias, a captura, a folha
+e o script daquela versão, `desenho_9509530.py.txt`). O script de geração saiu do uso: nesta rodada não há.
+
+**O fluxo:** cada etapa é uma grade de texto desenhada à mão, um caractere por pixel (`.` vazio, `0` a `8` o ferro da
+família, `a` a `f` o couro), aplicada no documento do Aseprite pelo `auxiliares/grade.lua` (que chama o `pintar.lua`) e
+conferida em tamanho real, ao lado da referência e do equipamento aprovado, antes da etapa seguinte. Primeiro uma camada
+`silhueta` numa cor com o contorno; depois os volumes, camada por camada, e a `silhueta` sai. O contorno de 1 px pelos
+lados é o único passo automático (o mesmo do `contornar`). As grades finais estão nas fontes (as camadas) e no registro
+da conversa.
+
+**As perneiras** (camadas pernas, faltas, joelhos, meio, cinto, contorno): a forma da referência, compacta e em sino: o
+cinto de couro com a fivela; as faltas do quadril abrindo em degraus, uma placa grande por lado e uma lâmina embaixo,
+com a divisa caindo para fora; a placa do meio comprida em ponta entre as pernas, com a beira escura dos dois lados por
+cima das faltas e a aresta clara no meio; as coxas na sombra das faltas; a joelheira da largura da perna, a placa mais
+clara dela, com a beira de cima acesa, o vinco vertical no meio e a sombra embaixo sobre a greva (sem asas); as grevas
+terminando em ponta para fora, com a tornozeleira. **Na bancada:** a primeira silhueta tinha a placa do meio curta e as
+pernas coladas nela (alongada, os vãos abertos mais cedo); a primeira pintura, clara e com três lâminas iguais, lia
+como uma saia sanfonada (ficaram uma placa e uma lâmina por lado, tudo um tom abaixo); a placa do meio se misturava
+com as faltas e ganhou a beira escura.
+
+**A manopla** (camadas punho, mao, dedos, polegar, contorno): pela manopla lisa da 2.ª linha, 4.ª coluna da prancha
+Raven: de pé, a manchete em cima, abrindo inclinada, com a boca à mostra (a beira de trás acesa, o vazio escuro dentro, a
+beira da frente clara: a luva vazia); o pulso estreito na sombra dela; a placa das costas da mão abaulada; os dedos
+juntos num volume só, as divisas um tom abaixo, as pontas curvando para dentro e separadas só na beira de baixo; o
+polegar grosso saindo para baixo e para fora. **Na bancada:** a primeira silhueta, simétrica e reta, lia como um saco
+(ficou na diagonal da referência); os dedos com uma junta além das divisas viravam uma grade (saiu a junta); o polegar
+fino como um palito engrossou.
+
+**O Aseprite (pelo MCP):** os pixels aplicados pelo `pintar.lua` (0 diferenças, 0 fora da tela), em
+`fontes/<peça>/<peça>-32.aseprite`; o composto do editor é igual aos PNGs exportados pelo `exportar_aseprite.py`
+(manopla 609186613, perneiras 29523653); o 64 é o 32 ×2; @2x exatos. Sem captura no jogo nesta rodada (pedido do Jean).
+
+**A folha:** `manopla_perneiras-r5.png`: antes (`9509530`) × depois em tamanho real junto do elmo, da cota, da espada, da
+maça e do escudo; cada peça com a referência principal ao lado e o antes e o depois ampliados 6× sem suavização.
+

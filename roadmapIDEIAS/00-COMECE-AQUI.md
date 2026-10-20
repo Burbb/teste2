@@ -4802,3 +4802,15 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Folha:** `manopla_perneiras-r4.png` (antes × depois com a família, ampliadas com a referência, a ficha).
 - **Aguardando avaliação.** Nada integrado; a versão continua 1.146.0; a cota e o elmo intocados.
 
+### 20/10/2026 (data do computador local) — A manopla e as perneiras, rodada 5: recomeço à mão (proposta do 32)
+
+- **Decisão de Jean:** a rodada 4 (`9509530`) recusada nas duas; recomeçar do zero, desenhando no Aseprite desde a
+  silhueta (sem gerar por fórmula). Perneiras pela armadura escura (`referencias/calça/perneiras-escuras.png`; a do
+  tabardo, secundária), joelhos integrados ao perfil; manopla pela manopla lisa da prancha Raven (`Luvas/1.gif`, 2.ª
+  linha, 4.ª coluna), a `2.webp` de apoio.
+- **Feito, só no protótipo** (`ferramentas/prototipos/hud/itens-lote-noite/manopla_perneiras/`), **não aprovado**: as
+  duas desenhadas pixel a pixel em grades à mão, aplicadas pelo `auxiliares/grade.lua` (o `pintar.lua`), etapa por etapa
+  (silhueta, volumes). 32 e 64 (= 32 ×2); composto, exportação e @2x conferem. A rodada 4 em `rodada4_9509530/`.
+- **Folha:** `manopla_perneiras-r5.png`.
+- **Aguardando avaliação.** Nada integrado; a versão continua 1.146.0; a cota e o elmo intocados.
+
