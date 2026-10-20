@@ -819,6 +819,39 @@ def p4_tamanhos():
                               ("o cartão do saque: as perneiras em 64 e o 'você usa' em 48", "saque", None)],
           base / "p4-tamanhos-no-jogo.png", ("tamanhos",))
 
+def botas_ferro():
+    """As botas de ferro (a B1, só o 32 e o 64 = 32 ×2): atual × proposta em tamanho real sobre o carvão junto do conjunto
+    de ferro do jogo (o elmo, a cota, a manopla, as perneiras, a espada, a maça, o escudo) e da bota de couro aprovada
+    (o apoio de construção), o 64 dos dois, as duas ampliadas sem suavização; e a ficha a 1920×945, atual × proposta."""
+    base = LOTE / "botas_ferro"; J = RAIZ / "rpg/web/static/hud/icones"
+    abre = lambda a: Image.open(a).convert("RGBA")
+    viz = [abre(J / f"{n}-32.png") for n in ("elmo", "cota", "manopla", "perneiras")]
+    armas = [abre(J / f"{n}-32.png") for n in ("espada", "maca", "escudo")]
+    atual, nova = abre(J / "botas-ferro-32.png"), abre(base / "proposta/B1-32.png")
+    a64, n64 = abre(J / "botas-ferro-64.png"), abre(base / "proposta/B1-64.png")
+    couro = abre(J / "bota-32.png")
+    W = 10 + 2 * 394 + 10 + 300; H = 22 + 2 * 76 + 8 + 16 + 384 + 10
+    o = Image.new("RGB", (W, H), (245, 245, 245)); d = ImageDraw.Draw(o)
+    d.text((10, 4), "as botas de ferro em tamanho real com o conjunto de ferro do jogo e a bota de couro (o apoio de construção): atual | proposta (B1)", fill=(0, 0, 0), font=FONTE)
+    for k, (rot, b, b64) in enumerate((("atual", atual, a64), ("proposta", nova, n64))):
+        y = 22 + k * 76
+        f = Image.new("RGBA", (W - 20, 72), (24, 24, 28, 255)); x = 8
+        for im in viz + [b] + armas + [couro]:
+            f.alpha_composite(im, (x, 20)); x += 44
+        f.alpha_composite(b64, (x + 20, 4))
+        o.paste(f.convert("RGB"), (10, y)); d.text((W - 80, y + 28), rot, fill=(255, 255, 255), font=FONTE)
+    y = 22 + 2 * 76 + 8
+    for k, (rot, b) in enumerate((("atual (12x, sem suavizar)", atual), ("proposta B1 (12x, sem suavizar)", nova))):
+        d.text((10 + k * 394, y), rot, fill=(0, 0, 0), font=FONTE)
+        g = Image.new("RGBA", (384, 384), (24, 24, 28, 255)); g.alpha_composite(b.resize((384, 384), Image.NEAREST))
+        o.paste(g.convert("RGB"), (10 + k * 394, y + 16))
+    d.text((10 + 2 * 394, y), "a bota de couro aprovada (8x)", fill=(0, 0, 0), font=FONTE)
+    g = Image.new("RGBA", (256, 256), (24, 24, 28, 255)); g.alpha_composite(couro.resize((256, 256), Image.NEAREST))
+    o.paste(g.convert("RGB"), (10 + 2 * 394, y + 16))
+    o.save(base / "botas-ferro.png"); print(base / "botas-ferro.png", o.size)
+    folha(base / "capturas", [("a ficha: as botas em 32 com o conjunto de ferro vestido", "ficha", (0, 360, 290, 470))],
+          base / "botas-ferro-ficha.png", ("atual", "proposta"))
+
 def sandalia_no_jogo():
     """A Sandália no jogo (1.142.0), em tamanho real: o saque, a ficha e o Inventário depois de "Equipar agora"."""
     pasta = LOTE / "sandalia_chapeu" / "capturas" / "integracao"
@@ -836,7 +869,7 @@ if __name__ == "__main__" and sys.argv[1] in ("antidoto_base", "frasco_vazio", "
                                               "sandalia_no_jogo", "besta_diadema", "diadema_r2",
                                               "espada_maca", "espada_maca_r2", "espada_ponta",
                                               "espada_ponta3", "espada_ponta4", "espada_tamanhos",
-                                              "elmo_cota", "elmo_cota_r2", "elmo_r3", "elmo_r4", "elmo_tamanhos", "manopla_perneiras", "manopla_perneiras_r3", "manopla_perneiras_r4", "manopla_perneiras_r5", "lote_exploracao", "adaptacao_idylwild", "escolha_base_luvas", "malha_dcss", "m5_tamanhos", "p4_tamanhos"):
+                                              "elmo_cota", "elmo_cota_r2", "elmo_r3", "elmo_r4", "elmo_tamanhos", "manopla_perneiras", "manopla_perneiras_r3", "manopla_perneiras_r4", "manopla_perneiras_r5", "lote_exploracao", "adaptacao_idylwild", "escolha_base_luvas", "malha_dcss", "m5_tamanhos", "p4_tamanhos", "botas_ferro"):
     globals()[sys.argv[1]](); sys.exit()
 if __name__ == "__main__":
     nome = sys.argv[1]; cfg = LOTES[nome]; base = LOTE / nome

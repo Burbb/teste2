@@ -4909,3 +4909,11 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   baú. Conferido a 1920×945 (saque, equipar e guardar, ficha, Inventário, cabeça e pernas vazias).
 - **Continua:** as botas de ferro (o último placeholder do equipamento) e o 40/48 do martelo, na próxima entrega.
   Equipamento: 29 de 31 finais.
+
+### 20/10/2026 (data do computador local) — As botas de ferro, a B1 (proposta do 32)
+
+- **Pedido de Jean:** o último placeholder do equipamento; a bota de couro aprovada como apoio de construção, o conjunto
+  de ferro como material; o 32 e o 64 = 32 ×2.
+- **Feito, só no protótipo** (`ferramentas/prototipos/hud/itens-lote-noite/botas_ferro/`): a B1, uma grade à mão aplicada
+  no Aseprite em camadas (couro, bota de trás, bota da frente, contorno); composto = exportação = prévia; a prancha
+  `botas-ferro.png` e a ficha `botas-ferro-ficha.png` (1920×945). Aguardando avaliação; nada integrado.

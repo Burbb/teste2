@@ -2657,3 +2657,40 @@ habilidade nem estado usa esses sprites.
 vazio depois de tirar a peça com dois cliques, na ficha e no Inventário (`sandalia_chapeu/auxiliares/equipar.mjs guerreiro
 elmo cabeca 1.148.0 elmo` e `... calca pernas 1.148.0 perneiras`; `elmo_cota/auxiliares/integracao.mjs cabeca elmo
 1.148.0 elmo cabeca-vazia` e `pernas calca 1.148.0 perneiras pernas-vazias`). Sem erro no console.
+
+### As botas de ferro, a B1 (`botas_ferro/`)
+
+**Pedido de Jean (20/10/2026):** o último placeholder do equipamento. Botas vestíveis e vazias, com pé, tornozelo, sola e
+proteção metálica compreensíveis, a silhueta e o volume em tamanho real, placas articuladas onde fizer sentido, junto do
+elmo, da cota e das perneiras. A bota de couro aprovada como apoio de construção e o conjunto de ferro como referência de
+material; sem forçar referências de sandálias ou de outros calçados. Só o 32 e o 64 = 32 ×2.
+
+**Os usos (nada muda nesta entrega):** o desenho `bota_ferro` → `botas-ferro`: a Bota Ferrada do Guerreiro (nenhum
+único; os raros usam o desenho da base) e a silhueta dos pés vazios de todas as classes (`VAZIO`). Nenhuma habilidade nem
+estado usa o sprite. **As referências:** a única de `referencias/botas/` é a das sandálias (a da Sandália, rodada 2), que
+fica de fora; a construção vem da bota de couro (`rpg/web/static/hud/icones/bota-32.png`, `aseprite/bota/`: o par de
+perfil, o bico para a esquerda, a bota de trás deslocada para a direita e para cima, mais escura, aparecendo como uma
+faixa ao lado do cano, com uma linha escura entre as duas) e o material, do elmo, da cota, da manopla e das perneiras do
+jogo (a rampa de ferro, a luz da esquerda, as beiras de 1 px, o couro nas tiras).
+
+**O desenho** (uma grade à mão, `grades/B1.lua`, aplicada no Aseprite pelo `manopla_perneiras/auxiliares/grade.lua`; as
+camadas couro, bota_tras, bota_frente e contorno): a boca aberta (a beira do fundo, o vão escuro, a beira da frente
+dobrada: a bota vazia); o cano de aço com a barriga da panturrilha do lado de trás, a faixa clara à esquerda e o
+reflexo só no alto da panturrilha, escurecendo até o tornozelo; a tira de couro com a fivela na canela; duas lâminas
+articuladas sobre o tornozelo, cada uma mais larga que a de cima; o pé de placas com a biqueira separada por uma linha
+que curva até o bico; a sola de couro com o arco aberto e o salto. A bota de trás: a beira, o lado escuro do cano, a
+tira, as lâminas e o salto, dois tons abaixo. **Na bancada:** a primeira passada tinha o cano reto e claro com a beira
+fechada em cima (lia como um cano de chaminé com tampa); com a boca aberta, a panturrilha e o reflexo localizado, lê como
+bota.
+
+**A conferência:** o composto do editor é igual ao PNG exportado pelo `exportar_aseprite.py` e à prévia da grade
+(251899964); 0 diferenças na releitura, 0 fora da tela; @2x exato; o 64 é o 32 ×2. Fonte `fontes/B1/B1-32.aseprite`, PNGs
+em `proposta/` (e as cópias com o nome `botas-ferro` em `tamanhos/`, só para as fotos).
+
+**A avaliação (minha):** melhora o material (o aço do conjunto, sem o latão e as manchas da redução), o volume do cano e
+a leitura de bota vazia com o pé de placas; perde a leitura imediata do par: como na bota de couro, a de trás é só uma
+faixa escura, e no 32 o desenho lê mais como uma bota do que como duas.
+
+**As folhas:** `botas-ferro.png` (atual × proposta em tamanho real com o conjunto de ferro e a bota de couro, o 64 dos
+dois, ampliados 12× sem suavização) e `botas-ferro-ficha.png` (a ficha a 1920×945, o Guerreiro com o conjunto de ferro
+inteiro, `fotografar.mjs botas_ferro`). Sem erro no console. Nada integrado.
