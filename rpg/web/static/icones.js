@@ -52,8 +52,8 @@ const Icones = (() => {
   // 1.147.0 virou histórico) vale para a Manopla do Guerreiro e os raros dela e para a silhueta das mãos vazias (VAZIO); a habilidade Grito de Guerra usa o sprite "manopla" do jogo noutro papel
   // e fica com ele. O elmo (1.148.0, o elmo de ferro de frente, a calota com a faixa e a abertura do rosto entre as
   // faces que fecham para dentro) vale para o Elmo, o Capacete e a Barbuta e para a silhueta da cabeça vazia (VAZIO);
-  // as perneiras (1.148.0, a calça de malha com o cinto de couro, as placas de ferro nas coxas e a joelheira pequena)
-  // valem para o desenho "calca": a Perneira e a Greva, a silhueta das pernas vazias (VAZIO) e o desenho de reserva
+  // as perneiras (1.152.0, a P7: a calça de malha com o cinto de couro, as joelheiras em cúpula e as caneleiras; o 40 e
+  // o 48 são o 32 centrado num quadro transparente; a P4 da 1.148.0 virou histórico) valem para o desenho "calca": a Perneira e a Greva, a silhueta das pernas vazias (VAZIO) e o desenho de reserva
   // das pernas (ICONE_ESPACO, em itens.py). As botas de ferro (1.150.0, o par em três quartos, uma à frente e a outra
   // atrás: o cano moldado com a boca escura, as tiras de couro com fivela, as placas do tornozelo até a biqueira, a
   // sola e o salto de couro) valem para o desenho "bota_ferro": a Bota Ferrada e a silhueta dos pés vazios (VAZIO).

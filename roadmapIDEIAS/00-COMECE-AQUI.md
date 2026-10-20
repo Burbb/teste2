@@ -5102,3 +5102,14 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   canelas no volume da malha, as juntas escuras incorporadas, a asa acima da canela reduzida a uma linha; o antes em
   `perneiras_p7/anterior_3cb041db/`; as folhas `p7-retoque.png` e `p7-retoque-ficha.png`.
 - **Continua:** a P4 no jogo; a P6 e a P7 em avaliação; a versão continua 1.151.0.
+
+### 20/10/2026 (data do computador local) — As perneiras P7 no jogo (1.152.0)
+
+- **Decisão de Jean:** integrar a P7 suavizada do `6dc582e3`, sem retoques; o 40 e o 48 pela solução da L7 (o 32
+  centrado em quadros transparentes).
+- **Feito:** a fonte em `ferramentas/arte/aseprite/perneiras/perneiras-32.aseprite`; a P4 em
+  `aseprite/historico/perneiras-p4/`; o `DERIVADOS` das perneiras com o `CENTRO` (40 e 48) e o ×2 (64); o 32 e o 64
+  idênticos aos aprovados, os centros do 40 e do 48 iguais ao 32. Os usos não mudaram (`ITEM`, `VAZIO`, `ICONE_ESPACO`).
+  Conferido no jogo a 1920×945: o saque, equipar e guardar, a ficha, o Inventário e as pernas vazias.
+- **Continua:** a luva L7 com a origem e a licença do recorte pendentes; em seguida, a proposta do capacete com malha
+  (só no protótipo).

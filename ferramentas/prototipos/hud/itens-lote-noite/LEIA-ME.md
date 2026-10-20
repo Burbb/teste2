@@ -3276,3 +3276,28 @@ exato; o 64 refeito é o 32 ×2 (conferido pixel a pixel).
 tamanho real e a 4×) e `perneiras_p7/p7-retoque-ficha.png` (a ficha a 1920×945, antes × depois, com os mesmos dados;
 `fotografar.mjs perneiras_p7` com `ROTULO=p7 SO_PROPOSTA=1`). `p7.png` e `p7-ficha.png` foram refeitas com a P7 nova
 (a de antes em `anterior_3cb041db/p7.png`). Sem erro no console. Nada integrado.
+
+### As perneiras P7 no jogo (1.152.0)
+
+**Decisão de Jean (20/10/2026):** a P7 suavizada do `6dc582e3` aprovada e integrada sem novos retoques: o 32 aprovado e o
+64 = 32 ×2; no Inventário e no "você usa" do saque, a solução da L7 (o mesmo 32, sem redimensionar, centrado nos quadros
+transparentes de 40 e 48), sem versões intermediárias desenhadas.
+
+**Os arquivos:** a fonte `perneiras_p7/fontes/P7/P7-32.aseprite` do `6dc582e3` copiada sem mudança para
+`ferramentas/arte/aseprite/perneiras/perneiras-32.aseprite` (camadas guia oculta, malha, aco, couro, contorno); as fontes
+da P4 movidas para `ferramentas/arte/aseprite/historico/perneiras-p4/` (fora da exportação). No `exportar_aseprite.py`, o
+`DERIVADOS` das perneiras usa a derivação `CENTRO` da L7 (40 deslocado 4 px, 48 deslocado 8 px) e o 64 = 32 ×2. O 32, o
+64 e os @2x do jogo são idênticos, byte a byte, aos de `perneiras_p7/proposta/` do `6dc582e3`; os centros do 40 e do 48
+são iguais ao 32, as beiras transparentes, os @2x exatos; `exportar_aseprite.py todas --conferir` e
+`familia_ferro.py --conferir`: tudo igual.
+
+**Os usos:** sem mudança nas chamadas: `ITEM` (`calca` → `perneiras`: a Perneira e a Greva) e `VAZIO` (as pernas vazias)
+em `icones.js`; a reserva das pernas (`ICONE_ESPACO`, `calca`, em `itens.py`); `TAMANHOS` já tinha 32, 40, 48 e 64.
+Nenhuma habilidade nem estado usa o sprite.
+
+**Conferido no jogo** a 1920×945 com os arquivos do jogo e os saves temporários (`perneiras_p7/capturas/integracao/`;
+`sandalia_chapeu/auxiliares/equipar.mjs . <pasta> guerreiro calca pernas 1.152.0 perneiras` e
+`elmo_cota/auxiliares/integracao.mjs . <pasta> pernas calca 1.152.0 perneiras pernas-vazias`): o saque com as perneiras em
+64 e o "você usa" em 48 (o 32 centrado), "Equipar agora" e "Guardar na mochila", a ficha (32), o Inventário (40, o corpo
+e a mochila) e as pernas vazias, na ficha e no Inventário. As medidas, as áreas de clique, as regras e os atributos não
+mudaram. Sem erro no console. A folha: `perneiras_p7/p7-integracao-1.152.0.png`.
