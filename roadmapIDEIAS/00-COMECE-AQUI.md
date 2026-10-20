@@ -5009,3 +5009,6 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 
 - **Mais um retoque (20/10/2026):** o pixel perdido e a ponta de sombra na beira esquerda do punho da luva da esquerda
   (2 pixels, `auxiliares/retoque2.py`; o antes em `anterior_ba650ddd/`; a folha `luvas-l7-retoque-ba650ddd.png`).
+
+- **E o pixel prata (20/10/2026):** na borda da malha da direita, junto da faixa do pulso, virou contorno preto (1 pixel;
+  o antes em `anterior_9a9e2281/`; a folha `luvas-l7-retoque-9a9e2281.png`).

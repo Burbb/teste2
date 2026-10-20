@@ -2976,3 +2976,8 @@ esquerda, um pixel perdido (o couro claro solto em (4, 20)) e uma ponta de sombr
 saiu, ficando o contorno em (3, 20), alinhado com as linhas 21 e 22 (`auxiliares/retoque2.py`, 2 pixels; o antes em
 `anterior_ba650ddd/`). Composto = exportação = grade (1113157205); @2x exato; o 64 é o 32 ×2. A folha
 `luvas-l7-retoque-ba650ddd.png` (antes × depois).
+
+**O terceiro retoque (apontado pelo Jean na folha do `9a9e2281`):** um pixel prata solto na borda da malha das costas da
+mão da direita, já na linha da faixa de couro do pulso, em (20, 21): virou contorno preto, como o Jean sugeriu, fechando
+a beira da malha com a faixa (`auxiliares/retoque2.py <pasta> 3`, 1 pixel; o antes em `anterior_9a9e2281/`). Composto =
+exportação = grade (1371411850); @2x exato; o 64 é o 32 ×2. A folha `luvas-l7-retoque-9a9e2281.png`.

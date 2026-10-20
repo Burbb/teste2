@@ -1037,7 +1037,7 @@ def luvas_l7_limpeza():
         o.paste(g.convert("RGB"), (10 + k * 394, y + 16))
     o.save(base / "luvas-l7-limpeza.png"); print(base / "luvas-l7-limpeza.png", o.size)
 
-ANTES_RETOQUE = "anterior_ba650ddd"   # o antes do retoque mais recente da L7 (era anterior_10772117 no ba650ddd)
+ANTES_RETOQUE = "anterior_9a9e2281"   # o antes do retoque mais recente da L7 (antes: anterior_10772117, anterior_ba650ddd)
 
 
 def luvas_l7_retoque():
