@@ -2638,3 +2638,22 @@ o saque (64 e o "você usa" em 48). Sem erro no console.
 tamanho; ampliados sem suavização) e `p4_tamanhos/p4-tamanhos-no-jogo.png`. **O elmo**, sem mudança: a comparação do
 `3f9292a` continua válida (`elmo_cota/elmo-tamanhos-no-jogo.png` e `elmo_cota/prancha-carvao.png`; os PNGs da proposta
 conferidos contra o `b4e920d` e o `3f9292a`). Nada integrado.
+
+### O elmo e as perneiras no jogo (1.148.0)
+
+**Aprovados por Jean (20/10/2026)** nos quatro tamanhos e integrados sem retoque: o elmo com o 32 e o 64 do `b4e920d` e o
+40 e o 48 do `3f9292a`; as perneiras P4 com os arquivos do `73adee41` (o 32 é o do `90c69a89`). Os PNGs e as fontes do
+protótipo conferidos contra esses commits antes da cópia. As fontes em `ferramentas/arte/aseprite/elmo/` e
+`perneiras/` (as da P4 renomeadas de `P4-<lado>` para `perneiras-<lado>`); `DERIVADOS` com o 64 = 32 ×2; os 16 arquivos do
+jogo idênticos, byte a byte, aos aprovados, e `exportar_aseprite.py elmo --conferir` e `perneiras --conferir` os
+reproduzem. O `familia_ferro.py` as reconhece pelas fontes e não as grava; ele produz agora só as botas de ferro e o baú,
+e a conferência continua "tudo igual". Os papéis já existiam: o `elmo` (o Elmo, o Capacete, a Barbuta e a cabeça vazia)
+e o `calca` → `perneiras` (a Perneira, a Greva, as pernas vazias e a reserva das pernas, `ICONE_ESPACO`); nenhuma
+habilidade nem estado usa esses sprites.
+
+**Conferido no jogo** a 1920×945 com os arquivos do jogo e os saves temporários (`elmo_cota/capturas/integracao/` e
+`manopla_perneiras/capturas/integracao/`, os arquivos `no-jogo-1.148.0-*`): o saque com cada peça em 64 e o "você usa" em
+48, "Equipar agora" (veste o achado e guarda o antigo) e "Guardar na mochila", a ficha (32), o Inventário (40) e o espaço
+vazio depois de tirar a peça com dois cliques, na ficha e no Inventário (`sandalia_chapeu/auxiliares/equipar.mjs guerreiro
+elmo cabeca 1.148.0 elmo` e `... calca pernas 1.148.0 perneiras`; `elmo_cota/auxiliares/integracao.mjs cabeca elmo
+1.148.0 elmo cabeca-vazia` e `pernas calca 1.148.0 perneiras pernas-vazias`). Sem erro no console.

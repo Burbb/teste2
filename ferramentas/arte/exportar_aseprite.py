@@ -66,6 +66,8 @@ DERIVADOS = {
     "maca": {64: (32, 2)},
     "cota": {64: (32, 2)},           # 1.146.0: a cota de malha do Guerreiro (32, 40, 48 das fontes); o 64 é o 32 ×2
     "manopla": {64: (32, 2)},        # 1.147.0: a manopla de malha (a M5, da glove_04 da Dungeon Crawl, CC0); o 64 é o 32 ×2
+    "elmo": {64: (32, 2)},           # 1.148.0: o elmo de frente (a rodada 4) e as perneiras de malha com placas (a P4); o 64 é o 32 ×2
+    "perneiras": {64: (32, 2)},
 }
 
 

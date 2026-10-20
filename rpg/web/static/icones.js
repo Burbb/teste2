@@ -48,7 +48,11 @@ const Icones = (() => {
   // Peitoral, a Couraça e a Brigantina, e a silhueta do peito vazio (VAZIO). A manopla (1.147.0, a luva de malha de
   // ferro adaptada da glove_04 da Dungeon Crawl Stone Soup, CC0) vale para a Manopla do Guerreiro e os raros dela e
   // para a silhueta das mãos vazias (VAZIO); a habilidade Grito de Guerra usa o sprite "manopla" do jogo noutro papel
-  // e fica com ele.
+  // e fica com ele. O elmo (1.148.0, o elmo de ferro de frente, a calota com a faixa e a abertura do rosto entre as
+  // faces que fecham para dentro) vale para o Elmo, o Capacete e a Barbuta e para a silhueta da cabeça vazia (VAZIO);
+  // as perneiras (1.148.0, a calça de malha com o cinto de couro, as placas de ferro nas coxas e a joelheira pequena)
+  // valem para o desenho "calca": a Perneira e a Greva, a silhueta das pernas vazias (VAZIO) e o desenho de reserva
+  // das pernas (ICONE_ESPACO, em itens.py).
   // O machado de barba (ferramentas/arte/, 1.99.0) vale para todo equipamento com o desenho "machado" (o Machado e os
   // únicos Lamento de Gharbad e O Açougueiro); o Redemoinho e a Fúria usam o mesmo sprite noutro papel e ficam com o
   // do jogo. O arco de teixo (1.101.0) vale para os três arcos e os únicos Ventre da Tempestade e Sussurro do Vazio;

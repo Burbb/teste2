@@ -4900,3 +4900,12 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   = 32 ×2; o 32 intocado. Conferidos na ficha, no Inventário e no saque a 1920×945, com a cota e a manopla do jogo
   (`p4-tamanhos.png`, `p4-tamanhos-no-jogo.png`). O elmo reapresentado com a comparação do `3f9292a`, sem refazer.
 - **Aguardando avaliação** dos tamanhos da P4 e do elmo. Nada integrado; a versão continua 1.147.0.
+
+### 20/10/2026 (data do computador local) — O elmo e as perneiras no jogo (1.148.0)
+
+- **Decisão de Jean:** os tamanhos da P4 e do elmo aprovados; integrar os dois sem retoque.
+- **Feito:** as fontes em `ferramentas/arte/aseprite/elmo/` e `perneiras/`, `DERIVADOS` com o 64 = 32 ×2; os 16 PNGs do
+  jogo idênticos aos aprovados e reproduzidos pelo exportador; o `familia_ferro.py` produz agora só as botas de ferro e o
+  baú. Conferido a 1920×945 (saque, equipar e guardar, ficha, Inventário, cabeça e pernas vazias).
+- **Continua:** as botas de ferro (o último placeholder do equipamento) e o 40/48 do martelo, na próxima entrega.
+  Equipamento: 29 de 31 finais.
