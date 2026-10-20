@@ -2826,3 +2826,31 @@ sobram poucos pixels entre a tira, a fivela e o salto).
 64, e a referência original, a guia e a B3 ampliadas) e `botas_ferro/botas-ferro-b3-ficha.png` (a ficha a 1920×945,
 atual × B3; `fotografar.mjs botas_ferro` com `PASTA=botas_ferro/b3/tamanhos ROTULO=b3 SO_PROPOSTA=1`). Sem erro no
 console. Nada integrado.
+
+### A B3 das botas em 40, 48 e 64 (`botas_ferro/b3/`)
+
+**Decisão de Jean (20/10/2026):** a B3 aprovada em 32 (`5a4f75bd`), o 32 e o 64 sem retoques. Completar o 40 e o 48 no
+protótipo, com a composição do par, os ângulos, as proporções, as bocas, as tiras, as solas e a construção das placas;
+a mesma referência e a B3 como guia, sem reinterpretar; sem forçar mais detalhe na bota de trás.
+
+**O caminho** é o do 32: `auxiliares/reducao.py` (agora com `--quadro=N`; o 32 refeito por ele saiu igual) dá a guia
+(`previa/guia-40.png`, `-48`) e o rascunho na paleta, com a caixa do desenho em 38 e 45 px, a proporção do 32 (30 de 32);
+`auxiliares/intermediarios.py` faz o contorno por dentro (a silhueta é o que a guia cobre em metade ou mais, e o pixel
+dela que encosta no lado de fora vira contorno: o mesmo resultado da regra do 32, que nos tamanhos maiores deixava
+sobras), passa o interior escuro fora das bocas para o couro escuro e aplica os ajustes à mão de cada grade (12 em cada,
+com o porquê): as duas bocas (a beira do fundo em aço, o vão escuro, o lábio aceso), no 40 o vão entre os canos, e as
+fivelas em ferro claro na ponta das tiras. As grades finais: `grades/B3-40.txt` e `-48`. Na grade maior, as junções
+das placas do pé aparecem mais que no 32, pela própria redução.
+
+**A conferência:** fontes `fontes/B3/B3-40.aseprite` e `-48` com as camadas da B3 (guia oculta, interior, couro, aco,
+contorno; 0 diferenças na releitura, 0 fora da tela); o composto do editor é igual aos PNGs exportados e às grades (40
+1560496190, 48 731090228); @2x exatos. A exportação foi numa pasta à parte, e só o 40 e o 48 foram copiados para
+`proposta/`; o 32 reexportado sai igual ao aprovado, byte a byte, e o 32, o 64 e os @2x de `proposta/` continuam os do
+`5a4f75bd`.
+
+**No jogo** a 1920×945 (`fotografar.mjs b3_tamanhos`, `ROTULO=tamanhos`; os arquivos `botas-ferro-*` só na página, de
+`b3/tamanhos/`): o Guerreiro com o conjunto de ferro do jogo; o Inventário (40) e o saque (64 e o "você usa" em 48), atual
+× tamanhos. Sem erro no console.
+
+**As folhas:** `b3/b3-tamanhos.png` (os quatro tamanhos em tamanho real ao lado da cota e das perneiras do jogo no mesmo
+tamanho, e ampliados) e `b3/b3-tamanhos-no-jogo.png`. Nada integrado.

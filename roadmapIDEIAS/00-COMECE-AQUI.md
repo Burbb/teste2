@@ -4956,3 +4956,12 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   contorno); composto = exportação = grade; a prancha `botas-ferro-b3.png` e a ficha `botas-ferro-b3-ficha.png`.
   B1 e B2 preservadas como tentativas.
 - **Aguardando avaliação.** Nada integrado; a versão continua 1.149.0.
+
+### 20/10/2026 (data do computador local) — A B3 das botas aprovada em 32; o 40, o 48 e o 64 (proposta)
+
+- **Decisão de Jean:** a B3 (`5a4f75bd`) aprovada em 32; o 32 e o 64 sem retoques; completar o 40 e o 48.
+- **Feito, só no protótipo** (`ferramentas/prototipos/hud/itens-lote-noite/botas_ferro/b3/`): o 40 e o 48 pelo mesmo
+  caminho do 32 (a guia da referência, o rascunho na paleta, o contorno por dentro e os ajustes à mão de cada grade);
+  fontes em camadas; composto = exportação = grade; @2x exatos; o 32 e o 64 idênticos ao aprovado. Conferidos no
+  Inventário e no saque a 1920×945 (`b3-tamanhos.png`, `b3-tamanhos-no-jogo.png`).
+- **Aguardando avaliação.** Nada integrado; a versão continua 1.149.0.

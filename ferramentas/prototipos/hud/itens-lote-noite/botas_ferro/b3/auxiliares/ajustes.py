@@ -42,17 +42,18 @@ poe(23, 25, "b", "a sola da bota de trás, couro")
 
 
 def contorno_1px(g):
+    N = len(g)
     """O contorno com 1 px: a beira escura do desenho (o tom 2 ou o couro escuro b encostando no contorno de fora) vira
     contorno, e o contorno de fora que sobra (sem nada cheio do lado) sai."""
     g = [list(l) for l in g]
-    fora = lambda x, y: not (0 <= x < 32 and 0 <= y < 32) or g[y][x] == "."
-    externo = lambda x, y: 0 <= x < 32 and 0 <= y < 32 and g[y][x] == "#" and any(
+    fora = lambda x, y: not (0 <= x < N and 0 <= y < N) or g[y][x] == "."
+    externo = lambda x, y: 0 <= x < N and 0 <= y < N and g[y][x] == "#" and any(
         fora(x + dx, y + dy) for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)))
-    vira = [(x, y) for y in range(32) for x in range(32) if g[y][x] in "2b" and any(
+    vira = [(x, y) for y in range(N) for x in range(N) if g[y][x] in "2b" and any(
         externo(x + dx, y + dy) for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)))]
     for x, y in vira: g[y][x] = "#"
-    cheio = lambda x, y: 0 <= x < 32 and 0 <= y < 32 and g[y][x] not in ".#"
-    sobra = [(x, y) for y in range(32) for x in range(32) if g[y][x] == "#" and not any(
+    cheio = lambda x, y: 0 <= x < N and 0 <= y < N and g[y][x] not in ".#"
+    sobra = [(x, y) for y in range(N) for x in range(N) if g[y][x] == "#" and not any(
         cheio(x + dx, y + dy) for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)))]
     for x, y in sobra: g[y][x] = "."
     return ["".join(l) for l in g], len(vira), len(sobra)
