@@ -2236,3 +2236,51 @@ com as duas vestidas e o saque de cada uma, atual × proposta, a 1920×945; `fot
 `manopla_perneiras_saque_perneiras`). O "você usa" em 48 ainda vem do 32 ×2 reduzido pela página (sem o 48 na proposta).
 Sem erro no console.
 
+### A manopla e as perneiras, refeitas pelas referências novas (`manopla_perneiras/`)
+
+**Decisão de Jean (19/10/2026):** as propostas do `c5fd33b` não foram aprovadas; refazer as duas pelas referências
+novas, que orientam a construção (não só os detalhes por cima do desenho anterior). Só no protótipo, 32 e 64 (= 32 ×2).
+- **A manopla:** na recusada, os dedos pareciam hastes retas presas a uma peça mecânica. Principal: `referencias/Luvas/
+  2.webp` (a manopla isolada de perfil, os dedos à esquerda, o punho à direita): a construção da mão, a articulação do
+  polegar e a sobreposição das placas; os dedos com curvatura natural e as placas acompanhando; o punho ligado à mão
+  como uma luva vestível, com espessura e volume. Secundária: a prancha Raven Fantasy (`Luvas/1.gif`), para a
+  simplificação de ícone. Sem todos os rebites.
+- **As perneiras:** a recusada parecia pernas robóticas (coxas, joelhos e canelas separados). Principal: o conjunto de
+  placas prateadas da 3.ª linha, última coluna de `referencias/calça/2.png`; a prancha de armaduras `calça/1.gif` de
+  apoio. Um equipamento coerente, com ligações e sobreposições compreensíveis; o cinto, as tiras ou um suporte discreto
+  podem voltar (a restrição anterior caiu); sem joelheiras como pequenas esferas.
+
+**As recusadas guardadas** em `manopla_perneiras/recusadas_c5fd33b/` (a proposta, as fontes, as prévias, as capturas,
+as folhas e o script daquela versão, `desenho_c5fd33b.py.txt`); a 1.ª passada das perneiras (a calça) continua em
+`perneiras_r1/`.
+
+**O desenho** (`auxiliares/desenho.py`, refeito; uma peça por vez, a silhueta numa cor e os volumes antes da luz):
+- **A manopla**, de perfil e um pouco inclinada (a manchete mais alta), pelas proporções da referência: os dedos em um
+  terço do comprimento, a mão em um quarto, o pulso estreito, a manchete o resto. Os quatro dedos como faixas de 2 a 2,5
+  px que saem dos nós e curvam para baixo nas pontas (o terceiro o mais longo); cada um por cima do de baixo, com a
+  linha escura onde se cruzam (como na referência); uma junta discreta no meio de cada dedo e a ponta um tom abaixo; o
+  polegar saindo de baixo da mão, largo na base, com a dobra no meio. As costas da mão com a placa em relevo (a quina de
+  cima acesa, a de baixo e a da direita escuras); a faixa do pulso escura com uma tira acesa (a luva entrando na
+  manchete); a manchete em cone, acesa por cima, abrindo só cerca de 1,4 vez e terminando arredondada na beira da boca.
+  Camadas: punho, mao, dedos, contorno. **Na bancada:** a construção levada da referência por uma escala só deixava os
+  dedos com 1,7 px (um bloco); girar a peça 18 graus apagava os vãos de 1 px entre os dedos (pontos soltos); com as
+  proporções na grade e a inclinação nas medidas, os dedos ficaram separados. A manchete larga em sino lia como um
+  megafone e foi reduzida; as duas juntas por dedo viravam um xadrez no 32 e ficou uma.
+- **As perneiras**, de frente: o cinto de couro com a fivela de ferro; a placa do meio em ponta, clara, com a beira
+  escura por cima das coxas; cada perna contínua, um cilindro aceso à esquerda (a faixa clara no terço da esquerda, como
+  na referência), com o contorno de fora em degraus onde as placas se sobrepõem (o coxote sai além do cinto, a lâmina de
+  baixo entra, a asa da joelheira sai, a greva entra e afina, a beira do tornozelo sai um pouco); a joelheira larga por
+  cima do fim do coxote e do começo da greva, abaulada pela luz da esquerda com um reflexo curto, a asa de fora um tom
+  abaixo; as linhas de sobreposição finas, de 1 px. A perna da direita um tom abaixo. Camadas: grevas, coxotes,
+  joelhos, meio, cinto, contorno. **Na bancada:** o contorno liso lia como calça; com os degraus, como placas; a
+  joelheira e o coxote em faixas horizontais acesas viravam barras (o risco dos segmentos separados) e passaram ao
+  volume pela luz.
+
+**O Aseprite (pelo MCP):** as listas do 32 pintadas pelo `pintar.lua` em documentos novos (0 diferenças, 0 fora da
+tela), em `fontes/<peça>/<peça>-32.aseprite`; o composto do editor é igual aos PNGs exportados e à prévia (manopla
+78892166, perneiras 671966350); o 64 é o 32 ×2; @2x exatos.
+
+**A folha:** `manopla_perneiras-r3.png`: as duas em tamanho real sobre o carvão ao lado do elmo, da cota, da espada, da
+maça e do escudo; o 64; as duas ampliadas 6× sem suavização ao lado das recusadas do `c5fd33b`; e a ficha a 1920×945,
+atual × a rodada nova (`fotografar.mjs manopla_perneiras_ficha`, `ROTULO=rodada3`). Sem erro no console.
+

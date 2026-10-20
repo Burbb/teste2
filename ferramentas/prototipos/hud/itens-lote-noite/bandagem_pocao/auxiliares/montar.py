@@ -460,12 +460,12 @@ def manopla_perneiras():
     """A manopla e as perneiras (o remake do ferro, 3; só o 32 e o 64): em tamanho real sobre o carvão ao lado das peças
     aprovadas da família (o elmo, a cota, a espada, a maça, o escudo), o 64 e a ampliação sem suavização; e no jogo, a
     ficha (32) e o saque de cada uma (64 e o "você usa" em 48), atual × proposta."""
-    base = LOTE / "manopla_perneiras"; P = base / "proposta"; J = RAIZ / "rpg/web/static/hud/icones"
+    base = LOTE / "manopla_perneiras" / "recusadas_c5fd33b"; P = base / "proposta"; J = RAIZ / "rpg/web/static/hud/icones"   # (guardada)
     fam = [("elmo", LOTE / "elmo_cota/proposta/elmo-32.png"), ("cota", J / "cota-32.png"), ("manopla", P / "manopla-32.png"),
            ("perneiras", P / "perneiras-32.png"), ("espada", J / "espada-32.png"), ("maça", J / "maca-32.png"), ("escudo", J / "escudo-32.png")]
     ims = [(r, Image.open(a).convert("RGBA")) for r, a in fam]
     novos = [Image.open(P / f"{n}-32.png").convert("RGBA") for n in ("manopla", "perneiras")]
-    r1 = Image.open(base / "perneiras_r1/previa/32/perneiras_final_32.png").convert("RGBA")
+    r1 = Image.open(base.parent / "perneiras_r1/previa/32/perneiras_final_32.png").convert("RGBA")
     W = 7 * 48 + 20; Z = 8
     o = Image.new("RGB", (max(W, 3 * (32 * Z + 10)) + 20, 22 + 48 + 22 + 72 + 22 + 32 * Z + 30), (245, 245, 245)); d = ImageDraw.Draw(o)
     d.text((10, 4), "tamanho real sobre o carvão: " + ", ".join(r for r, _ in ims), fill=(0, 0, 0), font=FONTE)
@@ -489,6 +489,43 @@ def manopla_perneiras():
                               ("o cartão do saque: as perneiras em 64 e o 'você usa' em 48", "saque", None, "saque_perneiras")],
           base / "manopla_perneiras-no-jogo.png")
 
+def manopla_perneiras_r3():
+    """A manopla e as perneiras refeitas pelas referências novas (só o 32 e o 64): em tamanho real sobre o carvão ao lado
+    das peças de ferro aprovadas (o elmo, a cota, a espada, a maça, o escudo); o 64; as duas ampliadas 8× sem suavização
+    ao lado das recusadas do c5fd33b; e a ficha a 1920×945, atual × a rodada nova (o recorte do equipamento)."""
+    base = LOTE / "manopla_perneiras"; P = base / "proposta"; R = base / "recusadas_c5fd33b/proposta"; J = RAIZ / "rpg/web/static/hud/icones"
+    fam = [LOTE / "elmo_cota/proposta/elmo-32.png", J / "cota-32.png", P / "manopla-32.png", P / "perneiras-32.png",
+           J / "espada-32.png", J / "maca-32.png", J / "escudo-32.png"]
+    fam = [Image.open(a).convert("RGBA") for a in fam]
+    novos = [Image.open(P / f"{n}-32.png").convert("RGBA") for n in ("manopla", "perneiras")]
+    velhos = [Image.open(R / f"{n}-32.png").convert("RGBA") for n in ("manopla", "perneiras")]
+    Z = 6; L = 32 * Z
+    fichas = [Image.open(base / f"capturas/{m}-1920x945-ficha.png").convert("RGB") for m in ("atual", "rodada3")]
+    fichas = [f.crop((20, 370, f.width - 20, 480)) for f in fichas]
+    W = 10 + 4 * (L + 10)
+    H = 22 + 48 + 22 + 72 + 22 + L + 22 + max(f.height for f in fichas) + 12
+    o = Image.new("RGB", (W, H), (245, 245, 245)); d = ImageDraw.Draw(o)
+    d.text((10, 4), "tamanho real sobre o carvão: elmo, cota, manopla (nova), perneiras (nova), espada, maça, escudo", fill=(0, 0, 0), font=FONTE)
+    f = Image.new("RGBA", (7 * 48 + 20, 48), (24, 24, 28, 255))
+    for k, im in enumerate(fam):
+        f.alpha_composite(im, (10 + k * 48 + 8, 8))
+    o.paste(f.convert("RGB"), (10, 22))
+    y = 22 + 48 + 6; d.text((10, y), "o 64 (= 32 ×2) das duas", fill=(0, 0, 0), font=FONTE)
+    f = Image.new("RGBA", (2 * 72 + 10, 72), (24, 24, 28, 255))
+    for k, im in enumerate(novos):
+        f.alpha_composite(im.resize((64, 64), Image.NEAREST), (4 + k * 78, 4))
+    o.paste(f.convert("RGB"), (10, y + 16))
+    y += 16 + 72 + 6
+    d.text((10, y), "ampliadas 6× sem suavização: a manopla e as perneiras novas | as recusadas do c5fd33b", fill=(0, 0, 0), font=FONTE)
+    for k, im in enumerate(novos + velhos):
+        g = Image.new("RGBA", (L, L), (24, 24, 28, 255)); g.alpha_composite(im.resize((L, L), Image.NEAREST))
+        o.paste(g.convert("RGB"), (10 + k * (L + 10), y + 16))
+    y += 16 + L + 6
+    d.text((10, y), "a ficha a 1920×945 (o equipamento, tamanho real): atual | a rodada nova", fill=(0, 0, 0), font=FONTE)
+    for k, fi in enumerate(fichas):
+        o.paste(fi, (10 + k * (fi.width + 10), y + 16))
+    o.save(base / "manopla_perneiras-r3.png"); print(base / "manopla_perneiras-r3.png", o.size)
+
 def sandalia_no_jogo():
     """A Sandália no jogo (1.142.0), em tamanho real: o saque, a ficha e o Inventário depois de "Equipar agora"."""
     pasta = LOTE / "sandalia_chapeu" / "capturas" / "integracao"
@@ -506,7 +543,7 @@ if __name__ == "__main__" and sys.argv[1] in ("antidoto_base", "frasco_vazio", "
                                               "sandalia_no_jogo", "besta_diadema", "diadema_r2",
                                               "espada_maca", "espada_maca_r2", "espada_ponta",
                                               "espada_ponta3", "espada_ponta4", "espada_tamanhos",
-                                              "elmo_cota", "elmo_cota_r2", "elmo_r3", "elmo_r4", "elmo_tamanhos", "manopla_perneiras"):
+                                              "elmo_cota", "elmo_cota_r2", "elmo_r3", "elmo_r4", "elmo_tamanhos", "manopla_perneiras", "manopla_perneiras_r3"):
     globals()[sys.argv[1]](); sys.exit()
 if __name__ == "__main__":
     nome = sys.argv[1]; cfg = LOTES[nome]; base = LOTE / nome

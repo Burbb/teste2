@@ -4774,3 +4774,18 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Folhas:** a família em tamanho real e a ficha e o saque a 1920×945.
 - **Aguardando avaliação.** Nada integrado; a versão continua 1.146.0. Botas, martelo e variantes não começaram.
 
+### 19/10/2026 (data do computador local) — A manopla e as perneiras, refeitas (proposta do 32)
+
+- **Decisão de Jean:** as propostas do `c5fd33b` recusadas (a manopla com dedos de hastes retas; as perneiras como
+  pernas robóticas). Referências novas: `referencias/Luvas/2.webp` (principal da manopla) e `Luvas/1.gif` (Raven
+  Fantasy, secundária); o conjunto prateado da 3.ª linha, última coluna de `referencias/calça/2.png` (principal das
+  perneiras) e `calça/1.gif` (apoio). Cinto e tiras liberados; sem joelheiras como esferas.
+- **Feito, só no protótipo** (`ferramentas/prototipos/hud/itens-lote-noite/manopla_perneiras/`), **não aprovado**: a
+  manopla de perfil (dedos curvos sobrepostos, polegar articulado, placa da mão, pulso, manchete arredondada); as
+  perneiras como uma peça (cinto, placa do meio, pernas contínuas com o contorno em degraus, joelheira larga com asa).
+  32 e 64 (= 32 ×2); fontes pelo `pintar.lua`; composto, exportação e prévia conferem; @2x exatos. As recusadas em
+  `recusadas_c5fd33b/`.
+- **Folha:** `manopla_perneiras-r3.png` (tamanho real com a família, ampliadas, a ficha a 1920×945).
+- **Aguardando avaliação.** Nada integrado; a versão continua 1.146.0; a cota e o elmo intocados. Botas, martelo e
+  variantes não começaram.
+
