@@ -2744,3 +2744,40 @@ o traço Gigante e o ferreiro da vila usam o sprite 16×16 "martelo" do jogo (ou
 e o "você usa" em `martelo-48.png`; "Equipar agora" e "Guardar na mochila"; a ficha em 32 (o desenho em código); o
 Inventário com `martelo-40.png` no corpo e na mochila. Sem erro no console. As botas do `725b2695` continuam em
 avaliação.
+
+### As botas de ferro, a B2: pela referência nova (`botas_ferro/`)
+
+**Decisão de Jean (20/10/2026):** a B1 (`725b2695`) não foi escolhida: lisa demais, o cano lembra uma bota de couro com
+brilho de metal. Refazer a construção pela referência nova (o par em pixel art à direita da imagem; a pintura à esquerda
+para os volumes; a redução do centro não é o acabamento): uma bota de armadura pesada, peças rígidas moldadas e
+articuladas; a proteção da canela com faces e arestas, as bordas com espessura e a sombra de uma peça sobre a outra, o
+tornozelo que mostra como o pé se articula, as placas do peito do pé até uma biqueira definida, as duas botas distintas
+pela posição e pelo ângulo. A estrutura antes do acabamento; sem riscos, rebites ou brilhos sobre a B1. Vazias; o ferro e
+a luz do conjunto; couro como suporte, fechamento ou sola. A bota de couro deixa de ser o molde. Só o 32 e o 64 = 32 ×2;
+a B1 fica como tentativa não escolhida (os arquivos dela intactos).
+
+**A referência:** os papéis registrados em `ferramentas/arte/referencias/botas/LEIA-ME.md`; **o arquivo ainda precisa ser
+salvo lá** (`botas-ferro-ref.png`): a imagem veio anexada na conversa e o anexo não fica no disco. A prancha a inclui
+quando ele existir.
+
+**O desenho** (uma grade à mão, `grades/B2.lua`, aplicada no Aseprite pelo `manopla_perneiras/auxiliares/grade.lua`; as
+camadas couro, bota_tras, bota_frente e contorno): o par de pé, os bicos para a esquerda como na referência; a da frente
+mais baixa e à esquerda, de perfil; a de trás 2 px mais alta no topo e 3 na sola, à direita, o pé encurtado (mais de
+frente), com uma coluna livre entre os pés para o contorno separá-los. Em cada uma: o corte de cima inclinado (a ponta
+da canela mais alta, a beira da frente acesa, o vão escuro, a beira do fundo acesa: a espessura); a grevas com a face da
+canela até a aresta e a queda para a face do lado e a beira de trás, a canela reta na frente e a panturrilha
+estreitando até o tornozelo; a tira de couro; a borda de baixo da grevas com a sombra sobre a lâmina do tornozelo; a
+sombra dessa lâmina sobre a do peito do pé; a biqueira separada por uma linha escura; a sola de couro.
+**Na bancada:** a primeira passada (as duas de pé, a de trás de frente, com a beira larga em volta da boca) lia como dois
+carretéis, e a biqueira de frente como um pedestal; a segunda, com o corte inclinado e as peças em diagonal, já lia como
+grevas, mas clara demais e a de trás 8 px acima, flutuando; a final desce a de trás, dá a ela as mesmas peças no pé e
+acende a beira do fundo.
+
+**A conferência:** o composto do editor é igual ao PNG exportado e à prévia da grade (1832912017); 0 diferenças na
+releitura, 0 fora da tela; @2x exato; o 64 é o 32 ×2. Fonte `fontes/B2/B2-32.aseprite`, PNGs em `proposta/` (as cópias
+com o nome `botas-ferro` em `tamanhos_b2/`, só para as fotos).
+
+**As folhas:** `botas-ferro-b2.png` (B1 × B2 em tamanho real com o conjunto de ferro do jogo, o 64 de cada, ampliadas
+12× sem suavização; a referência entra quando o arquivo for salvo) e `botas-ferro-b2-ficha.png` (a ficha a 1920×945, o
+Guerreiro com o conjunto de ferro inteiro: atual × B1 × B2; `fotografar.mjs botas_ferro` com `PASTA=botas_ferro/tamanhos_b2
+ROTULO=b2 SO_PROPOSTA=1`). Sem erro no console. Nada integrado.

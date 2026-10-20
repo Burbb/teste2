@@ -4935,3 +4935,13 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   código no 32 e no 64. Conferido a 1920×945 (saque, equipar e guardar, ficha, Inventário). Os outros papéis do martelo
   (Golpe Pesado, Gigante, ferreiro) continuam com o sprite do jogo.
 - **Continua:** as botas de ferro (a B1, `725b2695`, em avaliação). Equipamento: 30 de 31 finais.
+
+### 20/10/2026 (data do computador local) — As botas de ferro, a B2 (proposta do 32)
+
+- **Decisão de Jean:** a B1 (`725b2695`) não escolhida; refazer pela referência nova (o par em pixel art à direita da
+  imagem que ele mandou): armadura pesada, peças rígidas articuladas, as duas botas distintas pela posição e pelo ângulo.
+- **Feito, só no protótipo** (`ferramentas/prototipos/hud/itens-lote-noite/botas_ferro/`): a B2, uma grade à mão aplicada
+  no Aseprite em camadas; composto = exportação = prévia; 32 e 64 = 32 ×2; a prancha `botas-ferro-b2.png` e a ficha
+  `botas-ferro-b2-ficha.png` (1920×945). A B1 preservada como tentativa não escolhida.
+- **Pendente:** salvar a imagem da referência em `ferramentas/arte/referencias/botas/botas-ferro-ref.png` (veio anexada
+  na conversa; os papéis já estão no `LEIA-ME.md` de lá). Aguardando avaliação; nada integrado; a versão continua 1.149.0.
