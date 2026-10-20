@@ -1,11 +1,11 @@
-# As luvas: a M5 no jogo, a L7 aprovada como proposta visual e as tentativas recusadas
+# As luvas: a L7 no jogo, a M5 como histórico e as tentativas recusadas
 
 Exemplos de raciocínio, não regras: a malha, a paleta de ferro e a tira de couro são escolhas da M5, para combinar com a
 cota. O histórico completo está em `ferramentas/prototipos/hud/itens-lote-noite/LEIA-ME.md` (as seções "A manopla e as
 perneiras" até "A M5 em 40, 48 e 64") e as pastas das rodadas em
 `ferramentas/prototipos/hud/itens-lote-noite/manopla_perneiras/`.
 
-## A M5 (o 32 aprovado no `53d28893`, o 40, o 48 e o 64 no `2d18ce15`; no jogo desde a 1.147.0)
+## A M5 (o 32 aprovado no `53d28893`, o 40, o 48 e o 64 no `2d18ce15`; no jogo da 1.147.0 à 1.150.0, hoje histórico)
 
 - **A base:** a B5, `glove_04.png` da Dungeon Crawl Stone Soup (CC0; a origem na [SKILL.md](SKILL.md)), escolhida pelo
   Jean na prancha `escolha_base/escolha-base-luvas.png` pela forma da mão e pela silhueta. A original é uma manopla preta
@@ -26,9 +26,10 @@ perneiras" até "A M5 em 40, 48 e 64") e as pastas das rodadas em
   em qualquer um dos eixos: exigir os dois apagava as linhas diagonais dos dedos), a malha na grade do tamanho.
 - **A M4** (da B4, `glove_03.png`, o couro preto com ouro) saiu da mesma regra e não foi a escolhida; fica em
   `malha_dcss/` como histórico.
-- **As fontes finais** estão em `ferramentas/arte/aseprite/manopla/` (cópias das do protótipo, sem retoque).
+- **As fontes** estão em `ferramentas/arte/aseprite/historico/manopla-m5/` (cópias das do protótipo, sem retoque; fora da
+  exportação desde a 1.151.0).
 
-## A L7 (20/10/2026: a proposta visual aprovada; nada integrado, a licença do recorte pendente)
+## A L7 (aprovada em 20/10/2026; no jogo desde a 1.151.0, a origem e a licença do recorte pendentes)
 
 - **As referências:** o recorte escolhido (`ferramentas/arte/referencias/Luvas/luvas-par-recorte.png`) define o desenho:
   o par, a pose, as proporções e a divisão entre o couro (os dedos, a palma, as tiras) e a malha (as costas da mão
@@ -49,6 +50,9 @@ perneiras" até "A M5 em 40, 48 e 64") e as pastas das rodadas em
   quadro transparente de 40 e de 48 (deslocado 4 e 8 px); os espaços, o alinhamento e as áreas de clique iguais. No
   Inventário fica um pouco menor que uma versão de 40; no "você usa" do saque, a menor presença é mais visível, e o Jean a
   aceitou para preservar a mão exata do 32.
+- **A integração (1.151.0):** a fonte do 32 em `ferramentas/arte/aseprite/manopla/manopla-32.aseprite`, sem retoque; o
+  exportador deriva o 40 e o 48 (o 32 no centro de um quadro transparente, `CENTRO` no `DERIVADOS`) e o 64 (o 32 ×2); os
+  8 PNGs do jogo idênticos, byte a byte, aos da proposta do `63f5c81e`.
 - **As adaptações recusadas** (as versões guardadas em `luvas_l7/anterior_<commit>/`):
   - **as linhas de dentro forçadas a 1 px** (`aeb5ad75`): a forma pelo vizinho mais próximo, mas o contorno e as linhas
     de dentro afinados a 1 px e a malha refeita na grade de cada tamanho; as linhas ficavam finas demais para dedos

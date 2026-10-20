@@ -499,11 +499,12 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   grava mais. O ícone do atributo Ataque é outro desenho. Desde a 1.146.0, a cota (a camisa de malha de aço, a gola na
   malha, as mangas e a barra em dentes, o cinto de couro; 32, 40, 48 e o 64 = 32 ×2, fontes em `aseprite/cota/`), o
   desenho `armadura` (`ITEM`: `armadura` → `cota`): a Cota de Malha, o Peitoral, a Couraça e a Brigantina, e a silhueta
-  do peito vazio; o compartilhamento representa pior o Peitoral e a Couraça, que são de placa. Desde a 1.147.0, a
-  manopla (a luva de malha de ferro com a tira de couro no pulso, adaptada da `glove_04` da Dungeon Crawl Stone Soup,
-  CC0: a mão do original, o material trocado; a origem em `ferramentas/arte/externas/cc0_hand_wear_icons/`; 32, 40, 48
-  e o 64 = 32 ×2, fontes em `aseprite/manopla/`): a Manopla do Guerreiro e os raros dela, e a silhueta das mãos
-  vazias. A habilidade Grito de Guerra continua com o sprite "manopla" do jogo. Desde a 1.148.0, o elmo (de frente: a
+  do peito vazio; o compartilhamento representa pior o Peitoral e a Couraça, que são de placa. Desde a 1.151.0, a
+  manopla é a L7 (o par de luvas de couro com a malha nas costas da mão e nos punhos, a transposição da referência que
+  o Jean escolheu; a origem e a licença do recorte de referência pendentes; a fonte `aseprite/manopla/manopla-32.aseprite`;
+  o 40 e o 48 são o 32 centrado num quadro transparente e o 64 = 32 ×2, pelo `DERIVADOS` do exportador): a Manopla do
+  Guerreiro e os raros dela, e a silhueta das mãos vazias. A M5 (1.147.0, adaptada da `glove_04` da Dungeon Crawl
+  Stone Soup, CC0) é histórico, em `aseprite/historico/manopla-m5/`. A habilidade Grito de Guerra continua com o sprite "manopla" do jogo. Desde a 1.148.0, o elmo (de frente: a
   calota com a faixa, a abertura do rosto e as faces que fecham para dentro; o Elmo, o Capacete e a Barbuta, e a
   cabeça vazia) e as perneiras (a calça de malha com o cinto de couro, as placas de ferro nas coxas e a joelheira
   pequena; o desenho `calca`: a Perneira e a Greva, as pernas vazias e a reserva das pernas, `ICONE_ESPACO`), 32, 40,

@@ -33,5 +33,9 @@ Crawl, oculta e fora da exportação) e os PNGs `rpg/web/static/hud/icones/manop
 artistas do Dungeon Crawl Stone Soup ("Dungeon Crawl 32x32 tiles", https://opengameart.org/node/12210, CC0), via a
 coleção CC0 Hand Wear Icons de AntumDeluge; adaptada (o material) para The Unquiet. A M4 ficou no protótipo.
 
+**Histórico desde a 1.151.0:** a manopla do jogo passou a ser a L7 (outra referência, sem relação com esta coleção nem
+com a licença CC0 dela). As fontes da M5 foram para `ferramentas/arte/aseprite/historico/manopla-m5/` (fora da
+exportação); o crédito acima continua valendo para elas.
+
 Uso registrado: a prancha de escolha de base das luvas, em
 `ferramentas/prototipos/hud/itens-lote-noite/manopla_perneiras/escolha_base/` (o registro no `LEIA-ME.md` do lote).

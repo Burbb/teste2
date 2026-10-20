@@ -3165,3 +3165,29 @@ grade (0 pixels diferentes); @2x exato; o 64 é o 32 ×2. PNGs em `proposta/` (a
 **As folhas:** `perneiras_p6/p6.png` (a referência, a guia e a P6 ampliadas 12× sem suavização; o elmo, a cota, a P4 do
 jogo, a P6 e as botas em tamanho real e a 4×; `auxiliares/prancha.py`) e `perneiras_p6/p6-ficha.png` (a ficha a
 1920×945, atual × P6; `fotografar.mjs perneiras_p6`, as capturas em `capturas/`). Sem erro no console. Nada integrado.
+
+### As luvas L7 no jogo (1.151.0)
+
+**Decisão de Jean (20/10/2026):** integrar a L7 visualmente aprovada, a versão consolidada no `63f5c81e`, sem retoques
+e sem as versões redesenhadas do 40 e do 48. A origem e a licença do recorte de referência (com marca d'água) serão
+investigadas depois: **a pendência continua aberta**, e a L7 não herda a licença CC0 da M5.
+
+**Os arquivos:** a fonte `luvas_l7/fontes/L7/L7-32.aseprite` (o `c7639438`) copiada sem mudança para
+`ferramentas/arte/aseprite/manopla/manopla-32.aseprite` (camadas guia oculta, couro, malha, contorno); as fontes da M5
+movidas para `ferramentas/arte/aseprite/historico/manopla-m5/` (fora da exportação, com o crédito CC0 nos `LEIA-ME.md`
+das fontes e das externas). O `exportar_aseprite.py` ganhou a derivação `CENTRO` (o 32 sem redimensionar no centro de
+um quadro transparente: 40 deslocado 4 px, 48 deslocado 8 px) ao lado da ampliação inteira (o 64 = 32 ×2); o
+`--conferir` confere o miolo igual ao 32 e a beira toda transparente. Os 8 PNGs do jogo (`manopla-32`, `-40`, `-48`,
+`-64` e os @2x) são idênticos, byte a byte, aos de `luvas_l7/proposta/` do `63f5c81e` (que por sua vez são os do
+`c7639438` e do `fa9711bb`); `exportar_aseprite.py todas --conferir` e `familia_ferro.py --conferir`: tudo igual.
+
+**Os usos:** sem mudança nas chamadas: `ITEM` (`manopla` → `manopla`: a Manopla do Guerreiro e os raros dela) e `VAZIO`
+(as mãos vazias) em `icones.js`, o `VAZIO` das mãos em `telas/itens.js`; `TAMANHOS` já tinha 32, 40, 48 e 64. A
+habilidade Grito de Guerra usa o sprite "manopla" do jogo por outro caminho e não muda.
+
+**Conferido no jogo** a 1920×945 com os arquivos do jogo e os saves temporários (`luvas_l7/capturas/integracao/`;
+`sandalia_chapeu/auxiliares/equipar.mjs . <pasta> guerreiro manopla maos 1.151.0 manopla` e
+`elmo_cota/auxiliares/integracao.mjs . <pasta> maos manopla 1.151.0 manopla maos-vazias`): o saque com a luva em 64 e
+o "você usa" em 48 (o 32 centrado), "Equipar agora" e "Guardar na mochila", a ficha (32), o Inventário (40, o corpo e
+a mochila) e as mãos vazias depois de tirar a luva, na ficha e no Inventário. As medidas dos espaços, as áreas de
+clique, as regras e os atributos não mudaram. Sem erro no console. A folha: `luvas_l7/l7-integracao-1.151.0.png`.

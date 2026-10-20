@@ -20,13 +20,14 @@ Uso registrado: `ferramentas/prototipos/hud/itens-lote-noite/manopla_perneiras/`
 `recusadas_c5fd33b/`) e `roadmapIDEIAS/23-PLANO-DE-ARTE-INTERFACE-E-COMBATE.md`.
 
 **A referência da L7 (20/10/2026), a direção escolhida pelo Jean para as luvas** (a proposta visual aprovada em 20/10/2026: o 32, o 32 centrado nos espaços de 40 e 48, o 64 = 32 ×2;
-nada integrado, a licença do recorte pendente; a M5
-continua no jogo):
+**integrada na 1.151.0 a pedido do Jean, com a origem e a licença do recorte ainda pendentes**, a investigar depois; a
+M5 virou histórico):
 - **`luvas-par-recorte.png`** (119×131, a captura que o Jean mandou): **define o desenho**: o par de luvas de couro, a
   pose, as proporções e a divisão entre o couro e a malha (as costas da mão direita e os punhos). É pixel art (o pixel de
   ~3,45 px de tela) sobre um fundo azul-acinzentado, **com marca d'água** (um "©" sobre os dedos da luva da direita e uma
   linha clara no alto à esquerda): parece vir de um banco de imagens; a autoria, a origem e a licença não foram
-  informadas (não invente). **Antes de qualquer integração, a licença precisa ser esclarecida.**
+  informadas (não invente). **A licença continua por esclarecer** (o Jean decidiu integrar antes e investigar depois;
+a pendência fica aberta e a L7 não herda a licença CC0 da M5).
 - **`luvas-par-gerada.webp`** (1254×1254, a imagem gerada que o Jean mandou): esclarece os volumes e o acabamento (o
   couro em gomos nos dedos, a malha em anéis, as tiras). Onde as duas diferem, vale o recorte.
 Uso: `ferramentas/prototipos/hud/itens-lote-noite/luvas_l7/` e a skill `arte-luvas-fenda`.

@@ -5068,3 +5068,17 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   e a ficha a 1920×945 em `p6-ficha.png`); as simplificações e as diferenças da referência no `LEIA-ME.md` do lote.
 - **Continua:** a P4 no jogo; a P6 em avaliação, sem integrar; a L7 das luvas espera a origem e a licença do recorte; a
   versão continua 1.150.0.
+
+### 20/10/2026 (data do computador local) — As luvas L7 no jogo (1.151.0)
+
+- **Decisão de Jean:** integrar a L7 visualmente aprovada, a consolidada no `63f5c81e` (o 32 do `c7639438`; o 40 e o 48
+  com o mesmo 32 centrado, do `fa9711bb`; o 64 = 32 ×2), sem retoques e sem as versões redesenhadas. **A origem e a
+  licença do recorte de referência (com marca d'água) ficam para investigar depois: pendência aberta; a L7 não herda a
+  licença CC0 da M5.**
+- **Feito:** a fonte em camadas em `ferramentas/arte/aseprite/manopla/manopla-32.aseprite`; a M5 em
+  `aseprite/historico/manopla-m5/` (fora da exportação, com o crédito CC0 preservado); o `exportar_aseprite.py` deriva o
+  40 e o 48 pelo 32 centrado (`CENTRO`, 4 e 8 px) e o 64 pelo ×2, e o `--conferir` verifica o miolo e a beira
+  transparente; os 8 PNGs do jogo idênticos, byte a byte, aos da proposta. Os usos não mudaram (`ITEM` e `VAZIO` das
+  mãos; o Grito de Guerra continua com o sprite do jogo). Conferido no jogo a 1920×945: o saque (64, "você usa" em 48),
+  equipar e guardar, a ficha (32), o Inventário (40) e as mãos vazias.
+- **Continua:** as perneiras P6 em avaliação (a P4 no jogo); nenhum desenho novo começado.

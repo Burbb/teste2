@@ -23,25 +23,29 @@ da L7 e das tentativas recusadas está em [exemplos.md](exemplos.md).
 
 ## Onde as luvas estão
 
-- **No jogo hoje: a M5** (1.147.0), a luva de malha de ferro adaptada da `glove_04` da Dungeon Crawl Stone Soup.
+- **No jogo hoje: a L7** (1.151.0), o par de luvas de couro com a malha nas costas da mão e nos punhos, a transposição
+  da referência que o Jean escolheu (`ferramentas/arte/referencias/Luvas/luvas-par-recorte.png`, a forma; a
+  `luvas-par-gerada.webp`, os volumes; os papéis no `LEIA-ME.md` de lá).
+  - **As fontes finais:** `ferramentas/arte/aseprite/manopla/manopla-32.aseprite` (camadas `guia` oculta, `couro`,
+    `malha`, `contorno`) e os PNGs `rpg/web/static/hud/icones/manopla-32.png`, `-40`, `-48`, `-64`: o 40 e o 48 são o 32
+    sem redimensionar, centrado num quadro transparente (4 e 8 px), e o 64 é o 32 ×2, os dois pelo `DERIVADOS` do
+    exportador. O 32 aprovado no `c7639438`, o 40 e o 48 centrados no `fa9711bb` (consolidados no `63f5c81e`); o
+    histórico da transposição e das versões redesenhadas recusadas fica em
+    `ferramentas/prototipos/hud/itens-lote-noite/luvas_l7/`.
+  - **A origem e a licença do recorte estão pendentes:** ele tem marca d'água (um "©" e uma linha clara) e a autoria
+    não foi informada. O Jean decidiu integrar e investigar depois; não atribua à L7 nenhuma licença (em especial a CC0
+    da M5) nem invente autoria.
+- **Histórico: a M5** (no jogo da 1.147.0 à 1.150.0), a luva de malha de ferro adaptada da `glove_04` da Dungeon Crawl
+  Stone Soup.
   - **A origem:** `ferramentas/arte/externas/cc0_hand_wear_icons/original/glove-dcss/32x32/glove/glove_04.png`, arte dos
     **artistas do Dungeon Crawl Stone Soup** (esforço coletivo; mantenedor Chris Hamons; a lista de artistas no pacote
     original), do pacote "Dungeon Crawl 32x32 tiles" (https://opengameart.org/node/12210), **CC0**, desenhada em 32,
     reunida na coleção "CC0 Hand Wear Icons" montada por AntumDeluge (https://opengameart.org/content/cc0-hand-wear-icons).
     O registro completo está em `ferramentas/arte/externas/cc0_hand_wear_icons/LEIA-ME.md`.
-  - **As fontes finais:** `ferramentas/arte/aseprite/manopla/manopla-32.aseprite`, `-40`, `-48` (camadas `original`
-    oculta, `malha`, `couro`) e os PNGs `rpg/web/static/hud/icones/manopla-32.png`, `-40`, `-48`, `-64` (o 64 é o 32 ×2,
-    pelo `DERIVADOS` do exportador). O 32 aprovado no `53d28893`, o 40, o 48 e o 64 no `2d18ce15`; o histórico da
-    adaptação fica em `ferramentas/prototipos/hud/itens-lote-noite/manopla_perneiras/malha_dcss/`.
-  - **O crédito acompanha:** no `LEIA-ME.md` das externas e no das fontes (`ferramentas/arte/aseprite/LEIA-ME.md`).
-- **A direção escolhida (20/10/2026): a L7**, o par de luvas de couro com a malha nas costas da mão e nos punhos, pela
-  referência que o Jean escolheu (`ferramentas/arte/referencias/Luvas/luvas-par-recorte.png`, a forma; a
-  `luvas-par-gerada.webp`, os volumes; os papéis no `LEIA-ME.md` de lá). **A proposta visual aprovada:** o 32
-  (`c7639438`, depois da limpeza e de dois retoques) na ficha; o mesmo 32, sem redimensionar, centrado nos quadros
-  transparentes de 40 e de 48 (`fa9711bb`); o 64 = 32 ×2. Os arquivos em
-  `ferramentas/prototipos/hud/itens-lote-noite/luvas_l7/proposta/`; nada integrado: a integração espera a origem e a
-  licença do recorte, e a M5 continua no jogo. O
-  recorte tem marca d'água (um "©" e uma linha clara): a licença precisa ser esclarecida antes de qualquer integração.
+  - **As fontes:** `ferramentas/arte/aseprite/historico/manopla-m5/manopla-32.aseprite`, `-40`, `-48` (camadas
+    `original` oculta, `malha`, `couro`; fora da exportação). O 32 aprovado no `53d28893`, o 40, o 48 e o 64 no
+    `2d18ce15`; o histórico da adaptação em `ferramentas/prototipos/hud/itens-lote-noite/manopla_perneiras/malha_dcss/`.
+  - **O crédito acompanha** as fontes: no `LEIA-ME.md` das externas e no das fontes (`ferramentas/arte/aseprite/LEIA-ME.md`).
 
 ## Os dois caminhos
 

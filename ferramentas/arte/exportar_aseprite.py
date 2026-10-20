@@ -1,8 +1,9 @@
 """Exporta os ícones cuja fonte final é um .aseprite (ferramentas/arte/aseprite/<peça>/<peça>-<lado>.aseprite) para os
 PNGs do jogo: o 1× pela linha de comando do Aseprite (o composto das camadas visíveis) e o @2x pela duplicação exata
 (vizinho mais próximo), como o `salvar` de pixel_comum.py. Os tamanhos que uma peça tira de outro por ampliação inteira
-exata (DERIVADOS: no gibão e nas botas, o 64 é o 32 ampliado 2×) saem do PNG exportado da fonte, sem retoque; a pasta
-da peça não tem fonte desse tamanho (os 64 desenhados à parte ficam em aseprite/historico/, fora da exportação).
+exata (DERIVADOS: no gibão e nas botas, o 64 é o 32 ampliado 2×), ou o centram num quadro transparente maior (o 40 e o
+48 da manopla são o 32 no meio), saem do PNG exportado da fonte, sem retoque; a pasta da peça não tem fonte desse tamanho
+(os desenhados à parte ficam em aseprite/historico/, fora da exportação).
 
     python ferramentas/arte/exportar_aseprite.py varinha                 # grava em rpg/web/static/hud/icones/
     python ferramentas/arte/exportar_aseprite.py varinha <pasta>         # grava numa pasta qualquer (proposta)
@@ -40,7 +41,10 @@ LUGARES = [
 ]
 
 
-# lado derivado: (lado da fonte, fator inteiro). Só as peças listadas; as outras exportam cada fonte que têm.
+# lado derivado: (lado da fonte, fator inteiro) para a ampliação exata, ou (lado da fonte, CENTRO) para o desenho da fonte
+# sem redimensionar, no centro de um quadro transparente do lado (deslocado (lado - fonte) / 2 px). Só as peças listadas;
+# as outras exportam cada fonte que têm.
+CENTRO = "centro"
 DERIVADOS = {
     "gibao": {64: (32, 2)},     # 1.110.0: o 64 é o 32 final ampliado 2× (o 64 desenhado à parte é histórico)
     "bota": {64: (32, 2)},
@@ -65,7 +69,8 @@ DERIVADOS = {
     "espada": {64: (32, 2)},         # 1.145.0: o remake do ferro, a espada e a maça (32, 40, 48 das fontes); o 64 é o 32 ×2
     "maca": {64: (32, 2)},
     "cota": {64: (32, 2)},           # 1.146.0: a cota de malha do Guerreiro (32, 40, 48 das fontes); o 64 é o 32 ×2
-    "manopla": {64: (32, 2)},        # 1.147.0: a manopla de malha (a M5, da glove_04 da Dungeon Crawl, CC0); o 64 é o 32 ×2
+    "manopla": {40: (32, CENTRO), 48: (32, CENTRO), 64: (32, 2)},  # 1.151.0: as luvas L7 (a M5 da 1.147.0 em historico/):
+                                     # o 40 e o 48 são o 32 centrado (4 e 8 px), o 64 é o 32 ×2
     "elmo": {64: (32, 2)},           # 1.148.0: o elmo de frente (a rodada 4) e as perneiras de malha com placas (a P4); o 64 é o 32 ×2
     "perneiras": {64: (32, 2)},
     "botas-ferro": {64: (32, 2)},    # 1.150.0: as botas de ferro (a B3, da referência gerada do Jean); o 64 é o 32 ×2
@@ -108,7 +113,12 @@ def exportar(peca, pasta):
         feitos += [png.name, f"{fonte.stem}@2x.png"]
     for lado, (base, fator) in DERIVADOS.get(peca, {}).items():
         im = Image.open(pasta / f"{peca}-{base}.png").convert("RGBA")
-        der = im.resize((im.width * fator, im.height * fator), Image.NEAREST)
+        if fator == CENTRO:
+            assert (lado - base) % 2 == 0, f"{peca}: {base} não centra em {lado}"
+            der = Image.new("RGBA", (lado, lado), (0, 0, 0, 0))
+            der.paste(im, ((lado - base) // 2,) * 2)
+        else:
+            der = im.resize((im.width * fator, im.height * fator), Image.NEAREST)
         assert der.size == (lado, lado), f"{peca}: {base}×{fator} não dá {lado}"
         der.save(pasta / f"{peca}-{lado}.png")
         der.resize((lado * 2, lado * 2), Image.NEAREST).save(pasta / f"{peca}-{lado}@2x.png")
@@ -117,10 +127,20 @@ def exportar(peca, pasta):
 
 
 def recupera(peca):
-    """Cada derivado do jogo, reduzido pegando um pixel de cada bloco fator×fator, volta exatamente à sua fonte?"""
+    """Cada derivado do jogo volta exatamente à sua fonte? A ampliação, reduzida pegando um pixel de cada bloco
+    fator×fator; o centrado, recortado no meio (e a beira toda transparente)."""
     ok = []
     for lado, (base, fator) in DERIVADOS.get(peca, {}).items():
         der, src = Image.open(JOGO / f"{peca}-{lado}.png").convert("RGBA"), Image.open(JOGO / f"{peca}-{base}.png").convert("RGBA")
+        if fator == CENTRO:
+            d = (lado - base) // 2
+            miolo = list(der.crop((d, d, d + base, d + base)).getdata()) == list(src.getdata())
+            beira = all(der.getpixel((x, y))[3] == 0 for y in range(lado) for x in range(lado)
+                        if not (d <= x < d + base and d <= y < d + base))
+            print(f"{peca}-{lado}: o miolo {'= ' if miolo else '≠ '}{peca}-{base} (deslocado {d} px); a beira "
+                  f"{'transparente' if beira else 'NÃO transparente'}")
+            ok.append(miolo and beira)
+            continue
         blocos = all(len({der.getpixel((x * fator + i, y * fator + j)) for i in range(fator) for j in range(fator)}) == 1
                      for y in range(base) for x in range(base))
         volta = all(der.getpixel((x * fator, y * fator)) == src.getpixel((x, y)) for y in range(base) for x in range(base))
