@@ -5031,3 +5031,13 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   com ajustes à mão (7 no 40, 17 no 48); o antes em `anterior_aeb5ad75/`; composto = exportação = grade; @2x exatos; o 32
   e o 64 idênticos ao aprovado; conferido no Inventário e no saque a 1920×945; a folha `l7-revisao-40-48.png`.
 - **Aguardando avaliação.** A M5 continua no jogo; a licença do recorte continua pendente.
+
+### 20/10/2026 (data do computador local) — A L7 em 40 e 48, a réplica do 32 (proposta)
+
+- **Pedido de Jean:** réplicas idênticas do 32 no 40 e no 48, comparadas pixel a pixel (ele circulou o dedo mínimo da
+  direita e o alto dos dedos da esquerda).
+- **Feito, só no protótipo:** o 40 e o 48 são o 32 pelo vizinho mais próximo, puro (cada pixel igual ao do 32 de que
+  vem); as tentativas com regras em `anterior_aeb5ad75/` e `anterior_fd60dd2c/`; fontes em camadas; composto =
+  exportação; @2x exatos; o 32 e o 64 do `c7639438` intactos; conferido no Inventário e no saque; a folha
+  `l7-revisao-40-48-fd60dd2c.png`. A skill registra a regra de réplica.
+- **Aguardando avaliação.** A M5 continua no jogo; a licença do recorte continua pendente.

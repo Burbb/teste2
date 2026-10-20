@@ -3047,3 +3047,27 @@ console.
 **As folhas:** `luvas_l7/l7-revisao-40-48.png` (o 32 aprovado, o antes e o depois do 40 e do 48, à mesma altura sem
 suavização e em tamanho real), `l7-tamanhos.png` e `l7-tamanhos-no-jogo.png` (refeitas com o depois). Nada integrado; a
 pendência de origem e licença do recorte continua.
+
+### A L7 em 40 e 48, a réplica do 32 (`luvas_l7/`)
+
+**Pedido de Jean (20/10/2026):** comparar pixel a pixel o 40 e o 48 com o 32 como base (principalmente o contorno), com
+o 32 a 2× se preciso: réplicas idênticas. Ele circulou na folha do `fd60dd2c` erros crassos: o dedo mínimo da luva da
+direita (sem o vão, a ponta mudada) e o alto dos dedos da esquerda.
+
+**A comparação:** contra o 32 pelo vizinho mais próximo (cada pixel de N vindo do pixel do 32 em
+`int((X + 0,5) × 32 / N)`), o 40 do `fd60dd2c` divergia em 189 pixels e o 48 em 311, quase todos de contorno trocado (o
+contorno de 1 px, as linhas afinadas) e da malha refeita na grade de N. As regras por cima do mapeamento mudavam o
+desenho.
+
+**A réplica** (`auxiliares/tamanhos.py`, `PURO`): o 40 e o 48 são o 32 pelo vizinho mais próximo, puro: cada pixel é o
+do 32 de que vem, sem afinar o contorno, sem refazer a malha e sem ajustes (como o 64 é o 32 ×2, numa escala não
+inteira: cada pixel do 32 vira um bloco de 1 ou 2 px). O antes em `luvas_l7/anterior_fd60dd2c/`.
+
+**A conferência:** cada pixel do 40 e do 48 igual ao do 32 de que vem (grade e PNG); fontes `fontes/L7/L7-40.aseprite`
+e `-48` (guia oculta, couro, malha, contorno; 0 diferenças na releitura); o composto do editor igual aos PNGs exportados
+(40 1789454964, 48 1248096801); @2x exatos; a exportação numa pasta à parte, o 32 reexportado igual, e o 32, o 64 e os
+@2x continuam os do `c7639438`. No jogo a 1920×945 (`fotografar.mjs l7_tamanhos`): o Inventário (40) e o saque (64 e o
+"você usa" em 48). Sem erro no console.
+
+**As folhas:** `luvas_l7/l7-revisao-40-48-fd60dd2c.png` (o 32, o antes e a réplica à mesma altura e em tamanho real),
+`l7-tamanhos.png` e `l7-tamanhos-no-jogo.png` (refeitas). Nada integrado; a pendência de origem e licença continua.

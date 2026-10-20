@@ -99,9 +99,13 @@ O jogo diz o que a luva é (`rpg/itens.py`): o acabamento mostra isso, sem brilh
 
 ## Os tamanhos, a exportação e a avaliação
 
-- **O 32 primeiro**, avaliado no jogo; o 64 = 32 ×2; o 40 e o 48 só depois da aprovação, pelo mesmo caminho na grade de
-  cada tamanho (na B3: a guia com a caixa na proporção do 32, o contorno por dentro e os ajustes de cada grade; na M5: o
-  `malha_dcss.lua` com `N`). O 32 aprovado não passa de novo pelo processo.
+- **O 32 primeiro**, avaliado no jogo; o 64 = 32 ×2; o 40 e o 48 só depois da aprovação. **Quando o 32 aprovado é a
+  autoridade e o Jean pede réplicas idênticas (a L7), o 40 e o 48 são o 32 pelo vizinho mais próximo, puro:** cada
+  pixel de N é o pixel do 32 de que ele vem (`int((X + 0,5) × 32 / N)`), sem afinar o contorno, sem refazer a malha e
+  sem ajustes; confira pixel a pixel contra o 32 e compare os tamanhos ampliados à mesma altura. Regras por cima do
+  mapeamento (o contorno forçado a 1 px, a malha refeita na grade de N) mudaram o desenho da L7: o dedo mínimo da
+  direita perdeu o vão, o alto dos dedos mudou. Na B3 e na M5, o 40 e o 48 saíram da referência ou da base na grade
+  de cada tamanho, com os ajustes de cada grade. O 32 aprovado não passa de novo pelo processo.
 - **Exportar:** `python ferramentas/arte/exportar_aseprite.py <id> <pasta proposta> --fontes=<pasta fontes>` (a guia e
   a `original` ocultas ficam fora); confira o composto do editor contra o PNG (`bandagem_pocao/auxiliares/soma.lua` e
   `soma.py`) e contra a grade, e os @2x.

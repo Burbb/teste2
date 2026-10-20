@@ -55,6 +55,10 @@ perneiras" até "A M5 em 40, 48 e 64") e as pastas das rodadas em
   mão onde o arredondamento engrossou, afinou ou fundiu as formas (o bloco preto do encontro das luvas, a sombra do
   polegar da direita, a ponta do dedo do meio, os nós da direita na proporção, a costura do punho). Lição: compare os
   tamanhos ampliados à mesma altura antes de entregar; a regra de 1 px não vale mais que a leitura da mão.
+  **E por fim a réplica:** o Jean comparou pixel a pixel com o 32 e circulou erros (o dedo mínimo da direita sem o vão,
+  o alto dos dedos da esquerda): as versões com regras divergiam do 32 em 189 (40) e 311 (48) pixels; ficou o 32 pelo
+  vizinho mais próximo, puro, cada pixel de N igual ao pixel do 32 de que vem (as tentativas em `anterior_aeb5ad75/` e
+  `anterior_fd60dd2c/`).
 
 ## A lição: partir de um desenho de mão que funciona
 

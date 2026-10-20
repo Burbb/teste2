@@ -11,6 +11,7 @@ O mesmo princípio da M5 em 40 e 48 (manopla_perneiras/auxiliares/malha_dcss.lua
   - o couro: o tom do pixel do 32.
 Depois, os ajustes à mão de cada grade (AJUSTES), cada um com o porquê. Grava grades/L7-<N>.txt.
     python tamanhos.py <pasta da L7> 40|48
+(Hoje vale PURO, logo abaixo: a réplica pelo vizinho mais próximo; o resto fica como histórico das tentativas.)
 """
 import pathlib
 import sys
@@ -23,6 +24,12 @@ LINHA = "#1"   # o contorno e a sombra sólida (a linha dos nós da direita, as 
 # linhas forçadas a 1 px, que no 48 viravam riscos e no 40 apagavam os vãos dos dedos e do polegar) fica em
 # anterior_aeb5ad75/.
 SO_FORA = True
+# A réplica (20/10/2026, pedido do Jean: "precisamos de réplicas idênticas no 40 e no 48", olhando pixel a pixel contra o
+# 32): o 40 e o 48 são o 32 pelo vizinho mais próximo, puro: cada pixel de N é o pixel do 32 de que ele vem, sem afinar o
+# contorno, sem refazer a malha e sem ajustes (como o 64 é o 32 ×2, numa escala não inteira: cada pixel do 32 vira um
+# bloco de 1 ou 2 px). As regras anteriores (o contorno de 1 px, a malha na grade de N, os ajustes) mudavam o desenho:
+# o dedo mínimo da direita perdia o vão, o alto dos dedos da esquerda mudava (fd60dd2c, em anterior_fd60dd2c/).
+PURO = True
 ENGROSSA = "a linha que a escala dobrou (2 px onde o 32 tem 1, fora da proporção): 1 px, o resto no material vizinho"
 NOS = "os nós da direita na proporção do 32 (a linha preta, a faixa acesa, a sombra escura, cada uma com a mesma altura)"
 PONTA = "a ponta do dedo do meio da esquerda, plana como no 32 (a escala a afinava em 1 px)"
@@ -107,8 +114,13 @@ def tamanho(g, N, so_fora=False):
 
 if __name__ == "__main__":
     base = pathlib.Path(sys.argv[1]); N = int(sys.argv[2])
-    g, d = tamanho(ler(base), N, so_fora=SO_FORA)
-    g = [list(l) for l in g]
+    if PURO:
+        g32 = ler(base); fonte = lambda X: int((X + 0.5) * 32 / N)
+        g = [[g32[fonte(Y)][fonte(X)] for X in range(N)] for Y in range(N)]; d = 0
+        AJUSTES[N] = []
+    else:
+        g, d = tamanho(ler(base), N, so_fora=SO_FORA)
+        g = [list(l) for l in g]
     for y, x0, trecho, _ in AJUSTES[N]:
         for k, ch in enumerate(trecho):
             if ch != " ": g[y][x0 + k] = ch

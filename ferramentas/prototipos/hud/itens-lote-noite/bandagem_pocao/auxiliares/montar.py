@@ -1091,17 +1091,20 @@ def l7_tamanhos():
                               ("o cartão do saque: as luvas em 64 e o 'você usa' em 48", "saque", None)],
           base / "l7-tamanhos-no-jogo.png", ("atual", "tamanhos"))
 
+ANTES_REVISAO = "anterior_fd60dd2c"   # o antes da revisão mais recente do 40 e do 48 (antes: anterior_aeb5ad75)
+
+
 def l7_revisao():
     """A revisão da forma da L7 em 40 e 48: antes (aeb5ad75) × depois, junto do 32 aprovado, em tamanho real sobre o
     carvão e na comparação à mesma altura (sem suavização)."""
     base = LOTE / "luvas_l7"; abre = lambda a: Image.open(a).convert("RGBA")
     l32 = abre(base / "proposta/L7-32.png")
-    linhas = [("40", abre(base / "anterior_aeb5ad75/L7-40.png"), abre(base / "proposta/L7-40.png")),
-              ("48", abre(base / "anterior_aeb5ad75/L7-48.png"), abre(base / "proposta/L7-48.png"))]
+    linhas = [("40", abre(base / ANTES_REVISAO / "L7-40.png"), abre(base / "proposta/L7-40.png")),
+              ("48", abre(base / ANTES_REVISAO / "L7-48.png"), abre(base / "proposta/L7-48.png"))]
     A = 300
     W = 10 + 3 * (A + 10) + 10 + 200; H = 22 + 2 * (A + 40) + 10
     o = Image.new("RGB", (W, H), (245, 245, 245)); d = ImageDraw.Draw(o)
-    d.text((10, 4), "a L7 em 40 e 48: o 32 aprovado | antes (aeb5ad75) | depois da revisão, à mesma altura (sem suavizar) e em tamanho real", fill=(0, 0, 0), font=FONTE)
+    d.text((10, 4), f"a L7 em 40 e 48: o 32 aprovado | antes ({ANTES_REVISAO[9:]}) | depois, à mesma altura (sem suavizar) e em tamanho real", fill=(0, 0, 0), font=FONTE)
     for k, (n, antes, depois) in enumerate(linhas):
         y = 22 + k * (A + 40)
         for j, (rot, im) in enumerate((("32 aprovado", l32), (f"{n} antes", antes), (f"{n} depois", depois))):
@@ -1113,7 +1116,7 @@ def l7_revisao():
             f.alpha_composite(im, (x, (A - im.height) // 2)); x += im.width + 12
         o.paste(f.convert("RGB"), (10 + 3 * (A + 10), y + 16))
         d.text((10 + 3 * (A + 10), y), "tamanho real: 32 | antes | depois", fill=(0, 0, 0), font=FONTE)
-    o.save(base / "l7-revisao-40-48.png"); print(base / "l7-revisao-40-48.png", o.size)
+    saida = base / f"l7-revisao-40-48-{ANTES_REVISAO[9:]}.png"; o.save(saida); print(saida, o.size)
 
 def sandalia_no_jogo():
     """A Sandália no jogo (1.142.0), em tamanho real: o saque, a ficha e o Inventário depois de "Equipar agora"."""
