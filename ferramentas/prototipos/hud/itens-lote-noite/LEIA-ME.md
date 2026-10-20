@@ -2912,3 +2912,33 @@ baixo; o arquivo do espaço vazio, `botas-ferro-32`, está no registro do roteir
 
 Com as botas, os 31 desenhos-base de equipamento das classes estão no padrão atual. Continuam as variantes e os
 compartilhamentos provisórios; a L7 das luvas segue em avaliação, e a M5 do jogo não mudou.
+
+### A L7, a limpeza localizada (`luvas_l7/`)
+
+**Decisão de Jean (20/10/2026):** a L7 aprovada como direção (a forma, a pose, os dedos, o couro com a malha); só uma
+limpeza localizada dos pixels, no protótipo, com a imagem gerada como referência de acabamento (quais sombras são dobras
+do couro, como os planos se ligam), sem trocar a silhueta da L7 pela dela. Direto na fonte em camadas; julgado em 32
+sobre o carvão e sobre um fundo contrastante (magenta). Sem 40 e 48, sem integrar. A pendência de origem e licença do
+recorte continua: esta limpeza não a resolve.
+
+**A versão anterior** guardada em `luvas_l7/anterior_8a844975/` (a fonte, os PNGs e a grade).
+
+**A limpeza** (`auxiliares/limpeza.py`: cada pixel com o valor esperado antes, o novo e o porquê; o script confere o
+antes, grava a grade nova e as listas por camada, e o `pintar.lua` as aplicou na fonte, com o pixel novo na sua camada e
+o apagamento, alfa 0, na camada que ele deixou): 62 itens, 55 pixels mudados.
+- o toco escuro entre as pontas dos dedos da esquerda saiu (fica o vão);
+- a faixa cinza no meio da palma da esquerda e os pontos cinza em três dedos viraram sombras do couro;
+- os recortes pretos acidentais no couro (o vão de dedo que reaparecia na palma, pontos pretos no punho e no couro) e
+  os pretos que engrossavam a beira do polegar viraram a sombra escura do couro, ficando o contorno de 1 px;
+- a faixa de couro do pulso da direita, contínua (os pretos a cortavam), com a sombra da malha em cima;
+- as junções da malha com o couro: a fileira de pontos quase pretos no punho da direita voltou ao xadrez das fileiras
+  vizinhas, o furo da malha foi fechado, a beirada de couro de baixo ficou contínua (os pretos e o claro solto a
+  cortavam) e os pixels soltos da junção viraram contorno.
+Ficaram os vãos entre os dedos, a separação do polegar, a sobreposição das duas luvas, a linha dos nós da direita e a
+malha (sem textura nova).
+
+**A conferência:** a fonte `fontes/L7/L7-32.aseprite` (as camadas guia oculta, couro, malha, contorno; 0 diferenças na
+releitura); o composto do editor é igual ao PNG exportado e à grade nova (1929043458); @2x exato; o 64 é o 32 ×2.
+
+**A folha:** `luvas_l7/luvas-l7-limpeza.png` (antes × depois em tamanho real sobre o carvão, junto do elmo, da cota e
+das perneiras, e sobre o magenta; ampliados 12× sem suavização, com a imagem gerada ao lado). Nada integrado.

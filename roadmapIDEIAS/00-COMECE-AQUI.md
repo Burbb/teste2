@@ -4988,3 +4988,12 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Continua:** as variantes (únicos e raros com desenho próprio) e os compartilhamentos provisórios (a Capa de Patrulha,
   o Chapéu de Couro, a Coroa dos Afogados); a L7 das luvas em avaliação (a M5 do jogo não muda). A próxima etapa do
   plano (1E) não começou.
+
+### 20/10/2026 (data do computador local) — A L7, a limpeza localizada (proposta)
+
+- **Decisão de Jean:** a L7 aprovada como direção; só limpar os pixels, sem mudar a silhueta, a pose, os dedos nem a
+  malha, com a imagem gerada como referência de acabamento.
+- **Feito, só no protótipo** (`ferramentas/prototipos/hud/itens-lote-noite/luvas_l7/`): 55 pixels mudados direto na
+  fonte em camadas (`auxiliares/limpeza.py`, cada um com o porquê); a versão anterior em `anterior_8a844975/`; composto =
+  exportação = grade; o 64 = 32 ×2; a folha `luvas-l7-limpeza.png`. Sem 40 e 48; nada integrado; a M5 continua no jogo.
+- **Pendente:** a origem e a licença do recorte (com marca d'água), antes de qualquer integração.
