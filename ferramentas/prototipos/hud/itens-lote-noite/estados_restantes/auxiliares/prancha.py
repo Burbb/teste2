@@ -27,8 +27,9 @@ def cartas(n):
     """As fotos do lote: [(situação, [(modo, [cartas])])]."""
     pasta = LOTE / f"capturas/lote{n}"
     sits = sorted({p.name.split("-atual-")[0] for p in pasta.glob("*-atual-carta*.png")})
-    return [(s, [(m, [abre(p) for p in sorted(pasta.glob(f"{s}-{m}-carta*.png"))]) for m in ("atual", "proposta")])
-            for s in sits]
+    modos = ["atual", "proposta"] + sorted({p.name.split("-carta")[0].split(f"{s}-")[1] for s in sits
+                                            for p in pasta.glob(f"{s}-proposta-*-carta*.png")})
+    return [(s, [(m, [abre(p) for p in sorted(pasta.glob(f"{s}-{m}-carta*.png"))]) for m in modos]) for s in sits]
 
 
 def folha_lote(n):
@@ -36,9 +37,9 @@ def folha_lote(n):
     fotos = cartas(n)
     f, f2 = fonte(14), fonte(12)
     # medidas
-    larg_cartas = max(sum(c.width + 16 for c in cs) for _, ms in fotos for _, cs in ms) if fotos else 0
+    larg_cartas = max(sum(sum(2 * c.width + 16 for c in cs) + 30 for _, cs in ms) for _, ms in fotos) if fotos else 0
     alt_fotos = sum(30 + max(c.height for _, cs in ms for c in cs) * 3 + 40 for _, ms in fotos)
-    W = max(60 + 2 * (2 * (16 * Z) + 60), 40 + 2 * larg_cartas * 2 + 60, 900)
+    W = max(60 + 2 * (2 * (16 * Z) + 60), 40 + larg_cartas, 900)
     H = 80 + 150 + 40 + 16 * Z + 60 + alt_fotos + 40
     out = Image.new("RGBA", (W, H), CARVAO)
     d = ImageDraw.Draw(out)
@@ -76,7 +77,8 @@ def folha_lote(n):
     y += 16 * Z + 40
     for sit, ms in fotos:
         h = max(c.height for _, cs in ms for c in cs)
-        d.text((20, y), f"{sit}: a carta na luta a 1920×945, os mesmos dados — atual | proposta (tamanho real e 2×)",
+        d.text((20, y), f"{sit}: a carta na luta a 1920×945, os mesmos dados — {' | '.join(m for m, _ in ms)} "
+                        "(tamanho real e 2×)",
                fill=TEXTO, font=f2)
         y += 22
         x = 20

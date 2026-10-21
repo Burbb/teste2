@@ -301,6 +301,78 @@ VENENO_PRESAS = com_contorno([
           "................",
           "................"])
 
+ATORDOADO_ORBITA = com_contorno([
+                    "................",
+                    "................",
+                    "...........e....",
+                    "..........eDd...",
+                    ".........eDDdd..",
+                    "..........Ddc...",
+                    "....ccccccdcdc..",
+                    "..cc..........c.",
+                    ".d.e..........d.",
+                    ".deDd.........d.",
+                    "eDDdd........d..",
+                    ".Ddc.DDDDDDDd...",
+                    ".d.c............",
+                    "................",
+                    "................",
+                    "................"])
+
+ENFRAQUECIDO_SETAS = com_contorno([
+                "................",
+                ".....dc.........",
+                ".....LM.........",
+                ".....LM.........",
+                "..DDdddddc......",
+                "....786.........",
+                "....786....QQQq.",
+                "....786.....Qq..",
+                "....786......q..",
+                "....786.........",
+                "....786....QQQq.",
+                "....786.....Qq..",
+                "....786......q..",
+                ".....8..........",
+                "................",
+                "................"])
+
+ENFRAQUECIDO_SETA = com_contorno([
+                "................",
+                "....d...........",
+                "....L......Qq...",
+                "....L......Qq...",
+                ".DDdddc....Qq...",
+                "...786.....Qq...",
+                "...786.....Qq...",
+                "...786.....Qq...",
+                "...786.....Qq...",
+                "...786...QQQqqq.",
+                "...786....QQqq..",
+                "...786.....Qq...",
+                "...786..........",
+                "....8...........",
+                "................",
+                "................"])
+
+FORTALECIDO_SETA = com_contorno([
+               "................",
+               "....8...........",
+               "...786.....De...",
+               "...786....DDdc..",
+               "...786...DDDdcc.",
+               "...786.....Dc...",
+               "...786.....Dc...",
+               "...786.....dc...",
+               "...786.....dc...",
+               "...786.....dc...",
+               ".DDdddc....dC...",
+               "....L......cC...",
+               "....L...........",
+               "....d...........",
+               "................",
+               "................"])
+
 # as camadas de cada desenho, de baixo para cima, pela letra
 def _por(mapa, resto):
     return lambda ch: "contorno" if ch == "#" else next((k for k, v in mapa.items() if ch in v), resto)
@@ -316,9 +388,10 @@ ICONES = {
     "estado-maldito": (MALDICAO, ["cranio", "olhos", "contorno"],
                        lambda x, y, ch: "contorno" if ch == "#" else "olhos" if ch == "m" else "cranio"),
     "estado-atordoado": (ATORDOADO, ["espiral", "contorno"], lambda x, y, ch: "contorno" if ch == "#" else "espiral"),
-    "estado-enfraquecido": (ENFRAQUECIDO, ["lamina", "ponta", "punho", "contorno"],
-                            lambda x, y, ch: "contorno" if ch == "#" else "punho" if ch not in "345678"
-                            else "ponta" if y >= 10 else "lamina"),
+    "estado-enfraquecido": (ENFRAQUECIDO_SETA, ["espada", "seta", "contorno"],
+                            lambda x, y, ch: "contorno" if ch == "#" else "seta" if ch in "Qq" else "espada"),
+    "estado-enfraquecido-setinhas": (ENFRAQUECIDO_SETAS, ["espada", "setas", "contorno"],
+                                     lambda x, y, ch: "contorno" if ch == "#" else "setas" if ch in "Qq" else "espada"),
     "estado-marcado": (MARCADO, ["mira", "contorno"], lambda x, y, ch: "contorno" if ch == "#" else "mira"),
     "estado-furtivo": (FURTIVO, ["capuz", "rosto", "olhos", "contorno"],
                        lambda x, y, ch: "contorno" if ch == "#" else "olhos" if ch == "U" else "rosto" if ch == "k" else "capuz"),
@@ -326,13 +399,22 @@ ICONES = {
                         lambda x, y, ch: "contorno" if ch == "#" else "reflexo" if 4 <= y <= 6 and 4 <= x <= 7 else "bolha"),
     "estado-provocando": (PROVOCANDO, ["figura", "setas", "contorno"],
                           lambda x, y, ch: "contorno" if ch == "#" else "setas" if ch in "SsrR" else "figura"),
-    "estado-fortalecido": (FORTALECIDO, ["espada", "setas", "contorno"],
-                           lambda x, y, ch: "contorno" if ch == "#" else "setas" if x >= 11 and y <= 10 else "espada"),
+    "estado-fortalecido": (FORTALECIDO_SETA, ["espada", "seta", "contorno"],
+                           lambda x, y, ch: "contorno" if ch == "#" else "seta" if x >= 9 else "espada"),
+    "estado-fortalecido-setinhas": (FORTALECIDO, ["espada", "setas", "contorno"],
+                                    lambda x, y, ch: "contorno" if ch == "#" else "setas" if x >= 11 and y <= 10
+                                    else "espada"),
     "estado-iniciativa": (INICIATIVA, ["exclamacao", "raios", "contorno"],
                           lambda x, y, ch: "contorno" if ch == "#" else "exclamacao" if 6 <= x <= 9 else "raios"),
     "estado-furia": (FURIA, ["rosto", "sobrancelhas", "olhos", "contorno"],
                      lambda x, y, ch: "contorno" if ch == "#" else "olhos" if ch in "yOo" else "sobrancelhas" if ch in "Rs"
                      else "rosto"),
+    "estado-atordoado-orbita": (ATORDOADO_ORBITA, ["orbita", "estrelas", "contorno"],
+                                lambda x, y, ch: "contorno" if ch == "#" else "estrelas" if ch in "eD" or y <= 5
+                                or (y >= 8 and x <= 5) else "orbita"),
+    "estado-enfraquecido-partida": (ENFRAQUECIDO, ["lamina", "ponta", "punho", "contorno"],
+                                    lambda x, y, ch: "contorno" if ch == "#" else "punho" if ch not in "345678"
+                                    else "ponta" if y >= 10 else "lamina"),
     # tentativas guardadas (fora da proposta principal)
     "estado-veneno-presas": (VENENO_PRESAS, ["presas", "veneno", "contorno"],
                              lambda x, y, ch: "contorno" if ch == "#" else "presas" if ch in "Wwx" else "veneno"),

@@ -42,6 +42,8 @@ Esquiva (E6), já no jogo, são a referência de acabamento e não foram redesen
 | Sangramento (`sangramento`) | dano por turno; não pega em construtos nem etéreos | no herói (Mordida Sangrenta de lobos e ratos) e no inimigo (Sede de Sangue, o lobo do Patrulheiro) |
 | Chamas (`queimadura`) | dano por turno, acumula camadas ("em chamas ×N"); a chuva enfraquece; a Combustão detona o que falta arder | no herói (Bola de Fogo de cultistas e demônios) e no inimigo (Bola de Fogo, Inferno) |
 | Maldição (`maldito`) | dano por turno e −40% de defesa | no herói (a maldição de cultistas, afogados, chefes) e no inimigo (Drenar Vida e a Maldição do Necromante) |
+| Atordoado (`atordoado`; o rótulo "congelado" é o mesmo estado) | perde o próximo turno e não se esquiva; depois fica Firme por um turno; chefes e gigantes podem resistir | no inimigo (Golpe Pesado, Lança de Gelo, Combustão) e no herói (teia, imobilizar, congelar) |
+| Enfraquecido (`enfraquecido`) | causa −25% de dano | no inimigo (Grito de Guerra) e no herói (Grito de Terror, ataques de alguns inimigos) |
 
 ## Lote 1: Veneno e Sangramento
 
@@ -77,3 +79,20 @@ Esquiva (E6), já no jogo, são a referência de acabamento e não foram redesen
   "maldição" (a cor roxa e os olhos acesos ajudam). As Chamas leem como fogo de imediato, mas ficaram próximas do sprite
   atual: a mudança é de acabamento, não de conceito. A queda de 40% de defesa da Maldição não aparece no ícone (a dica
   diz).
+
+## Lote 3: Atordoado e Enfraquecido
+
+- **Atordoado — a espiral** (`estado-atordoado`): a espiral dourada de tontura, duas voltas e meia; camadas espiral,
+  contorno. Vale para o congelado (o mesmo estado, só outro rótulo): não foi criado outro estado nem outro ícone.
+- **Enfraquecido — a espada com a seta para baixo** (`estado-enfraquecido`): a espada de ferro apontada para baixo e uma
+  seta roxa grande descendo ao lado ("ataque ↓"); camadas espada, seta, contorno. É o par oposto do Fortalecido (a
+  espada para cima com a seta dourada subindo, lote 6): a direção e a cor separam os dois.
+- **Tentativas guardadas:** `estado-atordoado-orbita` (a órbita com duas estrelinhas, a linguagem das estrelas que o jogo
+  anima sobre o retrato do atordoado; na carta lia como um anel com uma joia, pior que a espiral);
+  `estado-enfraquecido-partida` (a espada partida, a ponta caída; em tamanho real lia como "†,");
+  `estado-enfraquecido-setinhas` (a espada com dois triângulos pequenos; encostados no número liam como ":").
+- **Fotos:** os lobos atordoados e enfraquecidos pelo Guerreiro e o herói enfraquecido. O herói atordoado **não tem
+  foto parada válida**: o estado se gasta no começo do turno dele, antes de o jogador poder agir (só aparece durante o
+  turno dos inimigos). Sem erro nem aviso no console. Folha: `lote3.png`.
+- **Avaliação sincera:** o Enfraquecido ficou claro e conversa com o Fortalecido. A espiral lê como tontura, mas também
+  pode ler como "@"; é o ponto frágil do lote. A órbita fica guardada caso o Jean prefira as estrelas que o jogo já usa.

@@ -15,14 +15,18 @@ const espera = (ms) => new Promise((r) => setTimeout(r, ms));
 const aqui = path.join(raiz, "ferramentas/prototipos/hud/itens-lote-noite/estados_restantes");
 const SITUACOES = JSON.parse(readFileSync(path.join(aqui, "auxiliares/situacoes.json"), "utf8"))[lote];
 const png = (id) => path.join(aqui, `proposta/estado-${id}-16.png`);
-// a proposta troca todo estado do lote que já tem desenho
-const TROCA = Object.fromEntries(SITUACOES.flatMap((s) => s.estados).filter((id) => existsSync(png(id)))
-  .map((id) => [`.ef[data-ef="${id}"] img.sprite`, "data:image/png;base64," + readFileSync(png(id)).toString("base64")]));
+// a proposta troca todo estado do lote que já tem desenho; VARIANTES=orbita,... acrescenta um modo por variante
+// (proposta-<variante>), com estado-<id>-<variante>-16.png onde ela existe e a proposta principal nos outros
+const troca = (v) => Object.fromEntries(SITUACOES.flatMap((s) => s.estados).map((id) => [id, v && existsSync(png(`${id}-${v}`)) ? png(`${id}-${v}`) : png(id)])
+  .filter(([, arq]) => existsSync(arq))
+  .map(([id, arq]) => [`.ef[data-ef="${id}"] img.sprite`, "data:image/png;base64," + readFileSync(arq).toString("base64")]));
+const VARIANTES = (process.env.VARIANTES || "").split(",").filter(Boolean);
+const TROCAS = { proposta: troca(null), ...Object.fromEntries(VARIANTES.map((v) => [`proposta-${v}`, troca(v)])) };
 mkdirSync(saida, { recursive: true });
 const b = await chromium.launch();
 const registro = {};
 for (const sit of SITUACOES) {
-  for (const modo of ["atual", "proposta"]) {
+  for (const modo of ["atual", ...Object.keys(TROCAS)]) {
     const proc = spawn(PY, ["-m", "tests.navegador.cenarios", sit.cenario], { cwd: raiz,
       env: { ...process.env, PYTHONPATH: raiz, PYTHONIOENCODING: "utf-8", VELOCIDADE: "rapido", PERIODO: "0", ...sit.amb } });
     let url = null; proc.stdout.on("data", (d) => { const m = String(d).match(/http:\S+/); if (m) url = m[0]; });
@@ -41,11 +45,11 @@ for (const sit of SITUACOES) {
       }
       await p.waitForSelector(`.carta .ef[data-ef="${sit.estados[0]}"]`, { timeout: 30000 });
       await espera(sit.habilidade ? 2500 : 1500);
-      if (modo === "proposta") {
+      if (TROCAS[modo]) {
         await p.evaluate((troca) => {
           const aplica = () => { for (const [sel, src] of Object.entries(troca)) for (const im of document.querySelectorAll(sel)) if (im.src !== src) im.src = src; };
           aplica(); new MutationObserver(aplica).observe(document.body, { subtree: true, childList: true, attributes: true, attributeFilter: ["src"] });
-        }, TROCA);
+        }, TROCAS[modo]);
         await espera(500);
       }
       // cada carta com um dos estados procurados, uma vez

@@ -18,10 +18,10 @@
  "3": [
   {"nome": "inimigo-lobos", "cenario": "covil", "estados": ["atordoado", "enfraquecido"],
    "amb": {"CLASSE": "guerreiro", "LUTA": "lobo", "NIVEL_LUTA": "2", "QUANTOS": "2", "VIDA": "40",
-           "EFEITOS_INIMIGO": "atordoado:1,enfraquecido:2"}},
-  {"nome": "heroi-aranhas", "cenario": "covil", "estados": ["atordoado"],
-   "amb": {"CLASSE": "arqueiro", "LUTA": "aranha", "NIVEL_LUTA": "2", "QUANTOS": "2", "VIDA": "40",
-           "EFEITOS": "atordoado:1"}}
+           "EFEITOS_INIMIGO": "atordoado:2,enfraquecido:2"}},
+  {"nome": "heroi-enfraquecido", "cenario": "covil", "estados": ["enfraquecido"],
+   "amb": {"CLASSE": "arqueiro", "LUTA": "lobo", "NIVEL_LUTA": "2", "QUANTOS": "2", "VIDA": "40",
+           "EFEITOS": "enfraquecido:2"}}
  ],
  "4": [
   {"nome": "inimigo-lobos", "cenario": "covil", "estados": ["marcado"],
