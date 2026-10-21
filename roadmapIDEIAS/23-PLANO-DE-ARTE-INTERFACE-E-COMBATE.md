@@ -849,9 +849,9 @@ talentos com o mesmo `icone`, e outros usos na interface): trocar o desenho de u
 | Estado | Efeito real | Ícone atual | Compartilha | Arte |
 |---|---|---|---|---|
 | Em guarda (`guarda`, +) | dano recebido −v% em todo golpe que acerta (Erguer Escudo: −50% por 2 turnos; Ordem da Fera: −30% no animal); ativa o Revide do Broquel do Vigia | `escudo` | Erguer Escudo; os talentos Aura de Proteção, Escudo Rúnico, Muralha e Pele de Ferro; o escudo/apoio vazio e outros usos (todos ficam com o sprite) | **final** (G1, 1.156.0, `estado-guarda`) |
-| Fortalecido (`fortalecido`, +) | dano causado +v% | `espada` | Investida; Contra-ataque, Golpe Brutal; o elemento físico e outros | proposta: o candidato do `b17ab3dd` e a alternativa da rodada 2 (`estados_restantes/`, 21/10), em avaliação |
+| Fortalecido (`fortalecido`, +) | dano causado +v% | `estado-fortalecido` (próprio) | nenhum (a `espada` ficou em: Investida; Contra-ataque, Golpe Brutal; o elemento físico e outros) | **final** (1.159.0; a R2 do `39f85d92`, sem retoque) |
 | Fúria (`furia`, +) | dano causado +v% (soma com o Fortalecido) | `estado-furia` (próprio) | nenhum (o `machado` ficou em: Redemoinho) | **final** (1.158.0; a proposta do `b17ab3dd`, sem retoque) |
-| Frenesi (`frenesi`, +) | cada abate soma dano até o fim da luta | `raio` | Julgamento Divino | proposta: o candidato do `b17ab3dd` e a alternativa da rodada 2 (`estados_restantes/`, 21/10), em avaliação |
+| Frenesi (`frenesi`, +) | cada abate soma dano até o fim da luta | `estado-frenesi` (próprio) | nenhum (o `raio` ficou em: Julgamento Divino) | **final** (1.159.0; as garras do `b17ab3dd`, sem retoque) |
 | Iniciativa (`iniciativa`, +) | o primeiro golpe deste turno sai +v% mais forte | `bota` | a reserva dos pés (a bota de couro) | proposta: o candidato do `b17ab3dd` e a alternativa da rodada 2 (`estados_restantes/`, 21/10), em avaliação |
 | Esquiva (`esquiva`, +) | +v na chance de esquiva, até o teto (Passo Ágil: +30% por 2 turnos; Desaparecer: +50% por 1) | `estado-esquiva` (próprio) | nenhum (a `folha` ficou na Fúria da Natureza, no Pés Leves, no Antídoto e na Agilidade das celebrações e do Inventário) | **final** (a E6 corrigida, 1.157.0; a origem e a licença da referência pendentes; as tentativas E1 a E5 no protótipo) |
 | Barreira (`barreira`, +) | absorve v de dano | `escudo_azul` | Barreira Arcana | proposta: o candidato do `b17ab3dd` e a alternativa da rodada 2 (`estados_restantes/`, 21/10), em avaliação |
@@ -860,10 +860,10 @@ talentos com o mesmo `icone`, e outros usos na interface): trocar o desenho de u
 | Firme (`firme`, +) | depois de um atordoamento ou congelamento, não pode ser atordoado nem congelado de novo naquele turno | `estado-firme` (próprio) | nenhum (o `cadeado` ficou nos outros papéis) | **final** (R2, 1.155.0) |
 | Veneno (`veneno`, −) | dano por turno | `gota_verde` | Flecha Envenenada; os serviços | proposta: o candidato do `b17ab3dd` e a alternativa da rodada 2 (`estados_restantes/`, 21/10), em avaliação |
 | Sangramento (`sangramento`, −) | dano por turno | `estado-sangramento` (próprio) | nenhum (a `gota` ficou em: Sede de Sangue; Pacto Sombrio, Pontas Venenosas, Sede Insaciável; os ferimentos e os serviços) | **final** (1.158.0; a proposta do `b17ab3dd`, sem retoque) |
-| Chamas (`queimadura`, −) | dano por turno; a Combustão detona o que falta arder | `chama` | Bola de Fogo; Brasas Eternas, Chama Viva, Coração Ardente, Frenesi, Ignição; o Vigor, o Poder e a Pena de Fênix | proposta: o candidato do `b17ab3dd` e a alternativa da rodada 2 (`estados_restantes/`, 21/10), em avaliação |
+| Chamas (`queimadura`, −) | dano por turno; a Combustão detona o que falta arder | `estado-queimadura` (próprio) | nenhum (a `chama` ficou em: Bola de Fogo; Brasas Eternas, Chama Viva, Coração Ardente, Frenesi, Ignição; o Vigor, o Poder e a Pena de Fênix) | **final** (1.159.0; a R2 do `805c238d`, sem retoque) |
 | Maldição (`maldito`, −) | dano por turno e −40% de defesa | `estado-maldito` (próprio) | nenhum (a `gota_roxa` ficou em: Drenar Vida) | **final** (1.158.0; a proposta do `b17ab3dd`, sem retoque) |
 | Atordoado (`atordoado`, −; também "congelado") | perde o próximo turno; depois fica Firme | `estrela` | Combustão; Eficiência, Luz Curativa; dezenas de usos genéricos da estrela | proposta: o candidato do `b17ab3dd` e a alternativa da rodada 2 (`estados_restantes/`, 21/10), em avaliação |
-| Enfraquecido (`enfraquecido`, −) | dano causado −25% | `osso` | Erguer Servo | proposta: o candidato do `b17ab3dd` e a alternativa da rodada 2 (`estados_restantes/`, 21/10), em avaliação |
+| Enfraquecido (`enfraquecido`, −) | dano causado −25% | `estado-enfraquecido` (próprio) | nenhum (o `osso` ficou em: Erguer Servo) | **final** (1.159.0; a R2 do `805c238d`, sem retoque) |
 | Marcado (`marcado`, −) | recebe mais dano de todos | `estado-marcado` (próprio) | nenhum (a `flecha` ficou em: Tiro Certeiro; Mira Firme, Tiro de Abertura; o custo das habilidades, a orientação, o elemento "à distância", os projéteis) | **final** (1.158.0; a proposta do `b17ab3dd`, sem retoque) |
 
 **Os 14 restantes (21/10/2026, lote da madrugada):** uma proposta por estado em sete lotes, só no protótipo, em
@@ -871,7 +871,7 @@ talentos com o mesmo `icone`, e outros usos na interface): trocar o desenho de u
 `geral.png` com os 17, as tentativas guardadas e a avaliação no `LEIA-ME.md` da pasta). **Aprovados por Jean e
 integrados na 1.158.0, sem retoque:** Sangramento, Maldição, Marcado, Furtivo e Fúria (o chip e o selo; o Marcado não
 tem selo de chegada no jogo, porque as duas fontes dele aplicam o estado direto). Os outros nove seguem no protótipo,
-numa segunda rodada de ajustes: as alternativas novas ao lado dos candidatos preservados (as folhas `rodada2-*.png` e a prancha `geral.png`, 21/10/2026), em avaliação.
+numa segunda rodada de ajustes: as alternativas novas ao lado dos candidatos preservados (as folhas `rodada2-*.png` e a prancha `geral.png`, 21/10/2026), em avaliação. **Integrados na 1.159.0, sem retoque:** as Chamas (R2), o Fortalecido (R2), o Enfraquecido (R2) e o Frenesi (as garras da primeira rodada). O Fortalecido e o Frenesi não têm selo de chegada no jogo (o Grito de Guerra dispensa o selo; o uivo, o grito dos inimigos e o talento aplicam direto).
 
 **Primeiro par de estados (20/10/2026):** Em guarda (G1, o escudo de ferro), **integrado na 1.156.0**; Esquiva
 (E1, a rajada de vento, recusada por lembrar um símbolo meteorológico; E2, os crescentes, recusada por não comunicar

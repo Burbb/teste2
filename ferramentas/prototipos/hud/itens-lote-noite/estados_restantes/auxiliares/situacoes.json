@@ -401,5 +401,218 @@
     "PRISAO": "prisao"
    }
   }
+ ],
+ "integracao-1.159.0": [
+  {
+   "nome": "chip-heroi-chamas",
+   "cenario": "covil",
+   "estados": [
+    "queimadura",
+    "maldito"
+   ],
+   "amb": {
+    "CLASSE": "guerreiro",
+    "LUTA": "cultista",
+    "NIVEL_LUTA": "2",
+    "QUANTOS": "2",
+    "VIDA": "40",
+    "EFEITOS": "queimadura:3:3,maldito:3:3"
+   }
+  },
+  {
+   "nome": "chip-inimigo-chamas",
+   "cenario": "covil",
+   "estados": [
+    "queimadura"
+   ],
+   "amb": {
+    "CLASSE": "mago",
+    "LUTA": "lobo",
+    "NIVEL_LUTA": "2",
+    "QUANTOS": "2",
+    "VIDA": "40",
+    "EFEITOS_INIMIGO": "queimadura:3:4"
+   }
+  },
+  {
+   "nome": "chip-heroi-fortalecido",
+   "cenario": "covil",
+   "estados": [
+    "fortalecido"
+   ],
+   "amb": {
+    "CLASSE": "guerreiro",
+    "LUTA": "lobo",
+    "NIVEL_LUTA": "2",
+    "QUANTOS": "2",
+    "VIDA": "40",
+    "EFEITOS": "fortalecido:3:0.3",
+    "EFEITOS_INIMIGO": "enfraquecido:2"
+   },
+   "cartas": 3
+  },
+  {
+   "nome": "chip-inimigo-enfraquecido",
+   "cenario": "covil",
+   "estados": [
+    "atordoado",
+    "enfraquecido"
+   ],
+   "amb": {
+    "CLASSE": "guerreiro",
+    "LUTA": "lobo",
+    "NIVEL_LUTA": "2",
+    "QUANTOS": "2",
+    "VIDA": "40",
+    "EFEITOS_INIMIGO": "atordoado:2,enfraquecido:2"
+   }
+  },
+  {
+   "nome": "chip-heroi-berserker",
+   "cenario": "covil",
+   "estados": [
+    "furia",
+    "frenesi",
+    "fortalecido"
+   ],
+   "amb": {
+    "CLASSE": "guerreiro",
+    "LUTA": "lobo",
+    "NIVEL_LUTA": "2",
+    "QUANTOS": "2",
+    "VIDA": "40",
+    "EFEITOS": "fortalecido:3:0.3,furia:3:0.6,frenesi:99:0.2"
+   }
+  },
+  {
+   "nome": "selo-chamas",
+   "cenario": "covil",
+   "estados": [
+    "queimadura"
+   ],
+   "habilidade": "bola_fogo",
+   "selo": true,
+   "carta": "c1-1",
+   "amb": {
+    "LUTA": "bandido",
+    "NIVEL_LUTA": "1",
+    "QUANTOS": "1",
+    "VIDA": "40",
+    "CLASSE": "mago"
+   }
+  },
+  {
+   "nome": "selo-enfraquecido",
+   "cenario": "covil",
+   "estados": [
+    "enfraquecido"
+   ],
+   "habilidade": "grito_guerra",
+   "selo": true,
+   "carta": "c1-1",
+   "amb": {
+    "LUTA": "bandido",
+    "NIVEL_LUTA": "1",
+    "QUANTOS": "1",
+    "VIDA": "40",
+    "CLASSE": "guerreiro",
+    "HABILIDADES": "grito_guerra"
+   }
+  }
+ ],
+ "rodada3": [
+  {
+   "nome": "veneno-heroi-ratos",
+   "cenario": "covil",
+   "estados": [
+    "veneno",
+    "sangramento"
+   ],
+   "amb": {
+    "CLASSE": "guerreiro",
+    "LUTA": "rato",
+    "NIVEL_LUTA": "2",
+    "QUANTOS": "2",
+    "VIDA": "40",
+    "EFEITOS": "veneno:3:2,sangramento:3:2"
+   }
+  },
+  {
+   "nome": "veneno-inimigo-lobos",
+   "cenario": "covil",
+   "estados": [
+    "veneno"
+   ],
+   "amb": {
+    "CLASSE": "arqueiro",
+    "LUTA": "lobo",
+    "NIVEL_LUTA": "2",
+    "QUANTOS": "2",
+    "VIDA": "40",
+    "EFEITOS_INIMIGO": "veneno:3:4"
+   }
+  },
+  {
+   "nome": "iniciativa-heroi",
+   "cenario": "covil",
+   "estados": [
+    "iniciativa"
+   ],
+   "amb": {
+    "CLASSE": "arqueiro",
+    "LUTA": "lobo",
+    "NIVEL_LUTA": "2",
+    "QUANTOS": "2",
+    "VIDA": "40",
+    "EFEITOS": "iniciativa:2:0.5"
+   }
+  },
+  {
+   "nome": "atordoado-inimigo-lobos",
+   "cenario": "covil",
+   "estados": [
+    "atordoado",
+    "enfraquecido"
+   ],
+   "amb": {
+    "CLASSE": "guerreiro",
+    "LUTA": "lobo",
+    "NIVEL_LUTA": "2",
+    "QUANTOS": "2",
+    "VIDA": "40",
+    "EFEITOS_INIMIGO": "atordoado:2,enfraquecido:2"
+   }
+  },
+  {
+   "nome": "barreira-heroi",
+   "cenario": "covil",
+   "estados": [
+    "barreira"
+   ],
+   "amb": {
+    "CLASSE": "mago",
+    "LUTA": "lobo",
+    "NIVEL_LUTA": "2",
+    "QUANTOS": "2",
+    "VIDA": "40",
+    "EFEITOS": "barreira:3:24"
+   }
+  },
+  {
+   "nome": "barreira-heroi-guarda",
+   "cenario": "covil",
+   "estados": [
+    "barreira",
+    "guarda"
+   ],
+   "amb": {
+    "CLASSE": "mago",
+    "LUTA": "lobo",
+    "NIVEL_LUTA": "2",
+    "QUANTOS": "2",
+    "VIDA": "40",
+    "EFEITOS": "barreira:3:24,guarda:2:0.3"
+   }
+  }
  ]
 }

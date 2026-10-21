@@ -5319,3 +5319,15 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   fora dos commits.
 - **Próximo passo:** o Jean avaliar os nove (as folhas `rodada2-*` e `geral.png`) e decidir o giro do selo do
   Atordoado. Nada novo integrado; a versão continua 1.158.0. Inimigos, pets e outras etapas não começados.
+
+### 21/10/2026 (data do computador local) — Chamas, Fortalecido, Enfraquecido e Frenesi no jogo (1.159.0)
+
+- **Decisão de Jean:** integrar sem retoques as Chamas R2 (`805c238d`), o Fortalecido R2 (`39f85d92`), o Enfraquecido
+  R2 (`805c238d`) e o Frenesi das três garras da primeira rodada (`b17ab3dd`; não as divisas da R2).
+- **Feito:** as fontes em `ferramentas/arte/aseprite/estado-<id>/` (queimadura, fortalecido, enfraquecido, frenesi), os
+  PNGs de 16 e @2x idênticos byte a byte aos aprovados (`todas --conferir`: tudo igual); o papel `ESTADO` em
+  `icones.js`; os sprites `chama`, `espada`, `osso` e `raio` nos outros usos. Conferido no jogo a 1920×945 com os
+  arquivos de produção (os chips e os selos das Chamas e do Enfraquecido); o Fortalecido e o Frenesi não têm selo de
+  chegada no jogo. O MCP do Aseprite continuou conectado depois das exportações em lote. Folha:
+  `estados_restantes/integracao-1.159.0.png`.
+- **Continua:** Veneno, Iniciativa, Atordoado e Barreira em novas alternativas; Provocando pendente, sem mudança.

@@ -297,3 +297,16 @@ estados de dano juntos (Fortalecido, Fúria, Frenesi, Iniciativa e Enfraquecido,
 - *Continua frágil:* Barreira (a figura saiu do "avatar", mas no 1× o que se lê é uma esfera azul).
 - *Atordoado:* a espiral parada fica; o giro do selo funciona e respeita o movimento reduzido, e é uma decisão de
   interface para o Jean (a mudança no jogo seria pequena).
+
+## A integração da 1.159.0: Chamas, Fortalecido, Enfraquecido e Frenesi
+
+**Decisão de Jean (21/10/2026):** as Chamas R2, o Fortalecido R2 e o Enfraquecido R2 da segunda rodada, e o Frenesi das
+três garras da primeira (`b17ab3dd`), sem retoques. As fontes (`fontes/estado-queimadura-r2/`,
+`estado-fortalecido-r2/`, `estado-enfraquecido-r2/` e `estado-frenesi/`) foram copiadas sem mudança, com o nome do
+estado, para `ferramentas/arte/aseprite/estado-<id>/`; o exportador grava os PNGs idênticos, byte a byte, aos de
+`proposta/`. Conferido no jogo a 1920×945 (`MODOS=atual`, as situações `integracao-1.159.0`; as fotos em
+`capturas/integracao-1.159.0/`): os chips no herói, nos lobos e no Berserker, e os selos de chegada da Bola de Fogo
+(Chamas ▼) e do Grito de Guerra (Enfraquecido ▼ nos inimigos). **O Fortalecido e o Frenesi não têm selo de chegada no
+jogo:** o Grito de Guerra usa a animação do grito, que dispensa o selo, e o uivo, o grito dos inimigos e o talento
+Frenesi aplicam o estado direto. O Atordoado continua com o sprite. Sem erro nem aviso no console. Folha:
+`integracao-1.159.0.png`.

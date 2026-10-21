@@ -172,23 +172,108 @@ def folha_geral():
     print("geral.png", out.size)
 
 
-def folha_integracao():
-    """integracao-1.158.0.png: os cinco aprovados no jogo, antes (o sprite) × depois (os arquivos de produção), na carta a
-    1920×945 com os mesmos dados (as fotos "atual" dos lotes × capturas/integracao-1.158.0/), e os selos de chegada."""
+INTEGRACOES = {
+    "1.158.0": dict(
+        titulo="os cinco aprovados", sem_selo="o Marcado não tem selo: as duas fontes dele aplicam direto, sem lance",
+        pares=[("Sangramento", "lote1/heroi-ratos", "chip-heroi-ratos"), ("Maldição", "lote2/heroi-cultistas", "chip-heroi-cultistas"),
+               ("Marcado", "lote4/inimigo-lobos", "chip-inimigo-marcado"), ("Furtivo", "lote4/heroi-desaparecer", "chip-heroi-furtivo"),
+               ("Fúria", "lote7/heroi-berserker", "chip-heroi-berserker")],
+        selos=[("Sangramento (Sede de Sangue)", "sangramento"), ("Maldição (a Maldição do Necromante)", "maldicao"),
+               ("Furtivo (Desaparecer, com a Esquiva)", "furtivo"), ("Fúria (Fúria Cega)", "furia")]),
+    "1.159.0": dict(
+        titulo="Chamas, Fortalecido, Enfraquecido e Frenesi",
+        sem_selo="o Fortalecido e o Frenesi não têm selo: o Grito de Guerra dispensa o selo (a animação do grito), e o "
+                 "uivo, o grito dos inimigos e o talento Frenesi aplicam direto",
+        pares=[("Chamas (no herói)", "lote2/heroi-cultistas", "chip-heroi-chamas"), ("Chamas (no lobo)", "lote2/inimigo-lobos", "chip-inimigo-chamas"),
+               ("Fortalecido", "lote6/heroi-grito", "chip-heroi-fortalecido"), ("Enfraquecido", "lote3/inimigo-lobos", "chip-inimigo-enfraquecido"),
+               ("Fortalecido, Fúria e Frenesi", "lote7/heroi-berserker", "chip-heroi-berserker")],
+        selos=[("Chamas (Bola de Fogo)", "chamas"), ("Enfraquecido (Grito de Guerra, nos inimigos)", "enfraquecido")]),
+}
+
+RODADA3 = {   # a terceira rodada (21/10/2026): o estado, as opções (nome do arquivo, rótulo) e a pasta das fotos
+    "veneno": [("estado-veneno", "serpente (preservada)"), ("estado-veneno-gota", "gota com a poça (rodada 2)"),
+               ("estado-veneno-gota2", "NOVA: a gota sem a poça")],
+    "iniciativa": [("estado-iniciativa", "exclamação com raios (preservada)"), ("estado-iniciativa-cunha", "NOVA A: a barra larga"),
+                   ("estado-iniciativa-estouro", "NOVA B: o estouro"), ("estado-iniciativa-italico", "NOVA C: inclinada, com rastro")],
+    "atordoado": [("estado-atordoado", "espiral (não aprovada)"), ("estado-atordoado-estrelas", "NOVA A: as estrelinhas"),
+                  ("estado-atordoado-ampulheta", "NOVA B: a ampulheta parada"), ("estado-atordoado-elmo", "NOVA C: o elmo rachado")],
+    "barreira": [("estado-barreira-r2", "figura na bolha (rodada 2)"), ("estado-barreira-cupula", "NOVA A: a cúpula"),
+                 ("estado-barreira-parede", "NOVA B: a parede que para a flecha"), ("estado-barreira-impacto", "NOVA C: o golpe na película")],
+}
+MODOS_RODADA3 = {"veneno": {"proposta": "serpente", "proposta-gota": "gota com a poça", "proposta-gota2": "NOVA: gota sem a poça"},
+                 "iniciativa": {"proposta": "exclamação com raios", "proposta-cunha": "A", "proposta-estouro": "B",
+                                "proposta-italico": "C"},
+                 "atordoado": {"proposta": "espiral", "proposta-estrelas": "A", "proposta-ampulheta": "B", "proposta-elmo": "C"},
+                 "barreira": {"proposta": "figura na bolha (b17ab3dd)", "proposta-r2": "figura na bolha (r2)", "proposta-cupula": "A",
+                              "proposta-parede": "B", "proposta-impacto": "C"}}
+
+
+def folha_estado(k):
+    """rodada3-<estado>.png: as opções do estado identificadas, em chips no tamanho real com os estados finais ao lado, a
+    2× e a 12× (só para inspecionar), e a carta na luta a 1920×945 com os mesmos dados em cada opção (o atual é o sprite
+    do jogo), em tamanho real e a 2×."""
+    f, f2 = fonte(14), fonte(12)
+    opcoes = [(rot, proposta(ident)) for ident, rot in RODADA3[k]]
+    pasta = LOTE / f"capturas/rodada3-{k}"
+    sits = sorted({p.name.split("-atual-")[0] for p in pasta.glob("*-atual-carta*.png")})
+    modos = ["atual"] + [m for m in MODOS_RODADA3[k] if any(pasta.glob(f"*-{m}-carta*.png"))]
+    finais = [final(i) for i in ("firme", "guarda", "esquiva", "sangramento", "maldito", "marcado", "furtivo", "furia",
+                                 "queimadura", "fortalecido", "enfraquecido", "frenesi")]
+    out = Image.new("RGBA", (2000, 4000), CARVAO)
+    d = ImageDraw.Draw(out)
+    d.text((20, 10), f"{TITULO[k]} — terceira rodada (21/10/2026), 16 px; proposta, nada aprovado. Atual no jogo: o sprite.",
+           fill=TEXTO, font=f)
+    y = 40
+    for j, (rot, im) in enumerate([("atual (o sprite do jogo)", sprite(ATUAL[k]))] + opcoes):
+        d.text((20, y + 4), rot, fill=TEXTO if rot.startswith("NOVA") else TEXTO2, font=f2)
+        for n, o in enumerate(finais + [im]):
+            chip(out, d, o, 300 + n * 24, y)
+        out.alpha_composite(amplia(im, 2), (300 + len(finais) * 24 + 20, y - 6))
+        y += 40
+    d.text((300, y), "a fileira: os 12 estados no jogo e a opção (no fim)", fill=TEXTO2, font=f2)
+    y += 30
+    x = 20
+    for rot, im in [("atual", sprite(ATUAL[k]))] + opcoes:
+        d.text((x, y), rot[:30], fill=TEXTO2, font=f2)
+        out.alpha_composite(grade_px(im, Z), (x, y + 18))
+        x += 16 * Z + 20
+    y += 16 * Z + 40
+    for sit in sits:
+        cs = [(m, sorted(pasta.glob(f"{sit}-{m}-carta*.png"))) for m in modos]
+        cs = [(m, abre(a[0])) for m, a in cs if a]
+        d.text((20, y), f"{sit}: a carta na luta a 1920×945, os mesmos dados — "
+                        + " | ".join("atual" if m == "atual" else MODOS_RODADA3[k][m] for m, _ in cs), fill=TEXTO, font=f2)
+        y += 22
+        x = 20
+        for m, c in cs:
+            if x + c.width > 1990:
+                x, y = 20, y + c.height + 10
+            out.alpha_composite(c, (x, y)); x += c.width + 14
+        y += cs[0][1].height + 10
+        x = 20
+        for m, c in cs:
+            if x + 2 * c.width > 1990:
+                x, y = 20, y + 2 * c.height + 10
+            out.alpha_composite(amplia(c, 2), (x, y)); x += 2 * c.width + 14
+        y += 2 * cs[0][1].height + 30
+    out = out.crop((0, 0, 2000, y))
+    out.save(LOTE / f"rodada3-{k}.png")
+    print(f"rodada3-{k}.png", out.size)
+
+
+def folha_integracao(versao="1.158.0"):
+    """integracao-<versão>.png: os aprovados no jogo, antes (o sprite) × depois (os arquivos de produção), na carta a
+    1920×945 com os mesmos dados (as fotos "atual" dos lotes × capturas/integracao-<versão>/), e os selos de chegada."""
     f2 = fonte(12)
     cap = LOTE / "capturas"
-    pares = [("Sangramento", "lote1/heroi-ratos", "chip-heroi-ratos"), ("Maldição", "lote2/heroi-cultistas", "chip-heroi-cultistas"),
-             ("Marcado", "lote4/inimigo-lobos", "chip-inimigo-marcado"), ("Furtivo", "lote4/heroi-desaparecer", "chip-heroi-furtivo"),
-             ("Fúria", "lote7/heroi-berserker", "chip-heroi-berserker")]
-    linhas = [(t, abre(cap / f"{a}-atual-carta0.png"), abre(cap / f"integracao-1.158.0/{b}-atual-carta0.png")) for t, a, b in pares]
-    selos = [(t, abre(cap / f"integracao-1.158.0/selo-{n}-atual-selo.png")) for t, n in
-             (("Sangramento (Sede de Sangue)", "sangramento"), ("Maldição (a Maldição do Necromante)", "maldicao"),
-              ("Furtivo (Desaparecer, com a Esquiva)", "furtivo"), ("Fúria (Fúria Cega)", "furia"))]
+    cfg = INTEGRACOES[versao]
+    linhas = [(t, abre(cap / f"{a}-atual-carta0.png"), abre(cap / f"integracao-{versao}/{b}-atual-carta0.png")) for t, a, b in cfg["pares"]]
+    selos = [(t, abre(cap / f"integracao-{versao}/selo-{n}-atual-selo.png")) for t, n in cfg["selos"]]
     W = 40 + max([2 * a.width + 2 * b.width + 80 for _, a, b in linhas] + [3 * s.width + 40 for _, s in selos])
     H = 40 + sum(2 * max(a.height, b.height) + 40 for _, a, b in linhas) + 40 + sum(2 * s.height + 30 for _, s in selos)
     out = Image.new("RGBA", (W, H), CARVAO)
     d = ImageDraw.Draw(out)
-    d.text((20, 10), "1.158.0: os cinco aprovados no jogo — antes (sprite) | depois (arquivos de produção), carta a 1920×945, "
+    d.text((20, 10), f"{versao}: {cfg['titulo']} no jogo — antes (sprite) | depois (arquivos de produção), carta a 1920×945, "
                      "tamanho real e 2×", fill=TEXTO, font=fonte(14))
     y = 40
     for t, a, b in linhas:
@@ -196,15 +281,14 @@ def folha_integracao():
         out.alpha_composite(a, (20, y + 18)); out.alpha_composite(b, (40 + a.width, y + 18))
         out.alpha_composite(amplia(b, 2), (60 + a.width + b.width, y + 18))
         y += 2 * max(a.height, b.height) + 40
-    d.text((20, y), "os selos de chegada no jogo (a habilidade usada pela roda); o Marcado não tem selo: as duas fontes dele "
-                    "aplicam direto, sem lance", fill=TEXTO, font=f2)
+    d.text((20, y), f"os selos de chegada no jogo (a habilidade usada pela roda); {cfg['sem_selo']}", fill=TEXTO, font=f2)
     y += 20
     for t, s in selos:
         d.text((20, y), t, fill=TEXTO2, font=f2)
         out.alpha_composite(s, (20, y + 18)); out.alpha_composite(amplia(s, 2), (40 + s.width, y + 18))
         y += 2 * s.height + 30
-    out.save(LOTE / "integracao-1.158.0.png")
-    print("integracao-1.158.0.png", out.size)
+    out.save(LOTE / f"integracao-{versao}.png")
+    print(f"integracao-{versao}.png", out.size)
 
 
 def folha_gira():
@@ -241,10 +325,12 @@ def folha_gira():
 
 
 if __name__ == "__main__":
-    if sys.argv[1] == "gira":
+    if sys.argv[1] == "rodada3":   # rodada3 <estado>
+        folha_estado(sys.argv[2])
+    elif sys.argv[1] == "gira":
         folha_gira()
-    elif sys.argv[1] == "integracao":
-        folha_integracao()
+    elif sys.argv[1] == "integracao":   # integracao [versão]
+        folha_integracao(*sys.argv[2:3])
     elif sys.argv[1] == "lote":   # lote <n> [rodada2]: a folha da segunda rodada lê capturas/rodada2-lote<n>/
         folha_lote(int(sys.argv[2]), f"{sys.argv[3]}-" if len(sys.argv) > 3 else "")
     else:

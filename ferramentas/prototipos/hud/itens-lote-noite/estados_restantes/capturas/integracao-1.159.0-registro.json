@@ -1,0 +1,100 @@
+{
+ "chip-heroi-chamas/atual": {
+  "estados": [
+   "j:queimadura",
+   "j:maldito"
+  ],
+  "imagens": [
+   "queimadura 16px → 17.9px /static/hud/icones/estado-queimadura-16.png",
+   "maldito 16px → 17.9px /static/hud/icones/estado-maldito-16.png"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "chip-inimigo-chamas/atual": {
+  "estados": [
+   "c1-1:queimadura",
+   "c1-2:queimadura"
+  ],
+  "imagens": [
+   "queimadura 16px → 16.0px /static/hud/icones/estado-queimadura-16.png"
+  ],
+  "cartas": [
+   "c1-1",
+   "c1-2"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "chip-heroi-fortalecido/atual": {
+  "estados": [
+   "j:fortalecido",
+   "c1-1:enfraquecido",
+   "c1-2:enfraquecido"
+  ],
+  "imagens": [
+   "fortalecido 16px → 17.9px /static/hud/icones/estado-fortalecido-16.png"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "chip-inimigo-enfraquecido/atual": {
+  "estados": [
+   "c1-1:atordoado",
+   "c1-1:enfraquecido",
+   "c1-2:atordoado",
+   "c1-2:enfraquecido"
+  ],
+  "imagens": [
+   "atordoado 16px → 16.0px (sprite ou troca da página)",
+   "enfraquecido 16px → 16.0px /static/hud/icones/estado-enfraquecido-16.png"
+  ],
+  "cartas": [
+   "c1-1",
+   "c1-2"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "chip-heroi-berserker/atual": {
+  "estados": [
+   "j:fortalecido",
+   "j:furia",
+   "j:frenesi"
+  ],
+  "imagens": [
+   "furia 16px → 17.9px /static/hud/icones/estado-furia-16.png",
+   "frenesi 16px → 17.9px /static/hud/icones/estado-frenesi-16.png",
+   "fortalecido 16px → 17.9px /static/hud/icones/estado-fortalecido-16.png"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "selo-chamas/atual": {
+  "selo": [
+   "/static/hud/icones/estado-queimadura-16.png"
+  ],
+  "dono": "c1-1",
+  "giro": [],
+  "erros": [],
+  "avisos": []
+ },
+ "selo-enfraquecido/atual": {
+  "selo": [
+   "/static/hud/icones/estado-enfraquecido-16.png"
+  ],
+  "dono": "c1-1",
+  "giro": [],
+  "erros": [],
+  "avisos": []
+ }
+}
