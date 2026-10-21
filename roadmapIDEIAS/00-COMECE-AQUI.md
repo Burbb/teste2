@@ -5424,3 +5424,15 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   lado a lado; todos ao lado do Morel e da Odette; a luta, o Bestiário e a carta da Ilse a 1920×945). A avaliação no
   `LEIA-ME.md` da pasta; a referência registrada no `LEIA-ME.md` de `referencias/icones/`.
 - **Continua:** nada aprovado; a versão continua 1.161.0. Mapeamentos, regras, arte de cena e produção intactos.
+
+### 21/10/2026 (data do computador local) — Criaturas, o primeiro par no jogo: o Afogado C e a Ilse R3 (1.162.0)
+
+- **Decisão de Jean:** o Afogado C (`afogado-cranio`) sem retoques e a Ilse R3 com o olho 1 px para a esquerda; as
+  outras alternativas ficam no protótipo como histórico.
+- **Feito:** fontes em `ferramentas/arte/aseprite/retrato-afogado/` e `retrato-ilse/` (16; o 32 e o 48 derivados ×2
+  e ×3); `dados.retrato` escolhe pela chave (a Ilse) e pela família (o Afogado) antes dos traços; `Icones.criatura`
+  na luta, no Bestiário, no mural e no rastro dos contratos e na faixa do mestre caçador. Teste novo
+  `tests/test_retratos.py`; o cenário `tutorial` ganhou `CONTRATO_FAMILIA`. A folha
+  `ferramentas/prototipos/hud/criaturas/afogado_ilse/afogado-ilse-final.png`.
+- **Continua:** as outras criaturas seguem pelos traços (o levantamento: o rosto de lobo compartilhado, o troll na
+  caveira, o humano genérico, o Lich que troca de desenho). O próximo par é decisão do Jean.

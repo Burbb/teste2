@@ -155,9 +155,17 @@ RETRATOS = ("demonio", "etereo", "corrompido", "morto-vivo", "construto", "voado
             "conjurador")
 
 
-def retrato(tracos):
-    """O desenho de uma criatura pelos traços dela (o primeiro de RETRATOS que ela tem; sem nenhum, uma caveira)."""
-    return next((TRACOS_FICHA[t]["retrato"] for t in RETRATOS if t in tracos), "caveira")
+# As cabeças próprias (1.162.0), antes dos traços: a da criatura única pela chave dela (a Ilse da capela, missoes.py) e a
+# da espécie pela família (a variante e o invocado da mesma família também). Quem não está aqui segue pelos traços.
+RETRATO_CHAVE = {"ilse": "ilse"}
+RETRATO_FAMILIA = {"afogado": "afogado"}
+
+
+def retrato(tracos, familia=None, chave=None):
+    """O desenho de uma criatura: o próprio dela (pela chave ou pela família), senão pelos traços (o primeiro de
+    RETRATOS que ela tem; sem nenhum, uma caveira)."""
+    return (RETRATO_CHAVE.get(chave) or RETRATO_FAMILIA.get(familia)
+            or next((TRACOS_FICHA[t]["retrato"] for t in RETRATOS if t in tracos), "caveira"))
 
 # nome, plural, gênero, atributos base (nível 1), traços, habilidades, xp, ouro, tamanho de grupo e, quando há:
 #   nivel_min  o nível da região a partir do qual a espécie aparece (sem ele, desde o começo)

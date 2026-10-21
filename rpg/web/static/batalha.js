@@ -58,7 +58,7 @@ const Batalha = (() => {
   function icone(c) {
     if (c.uid === "j") return c.classe;
     if (c.lado === "aliado") return c.cid || (c.tipo === "servo" ? "caveira" : c.tipo === "falcao" ? "voador" : "fera");
-    return c.retrato || "caveira";  // o motor escolhe pelos traços (dados.py: retrato)
+    return c.retrato || "caveira";  // o motor escolhe pela chave, pela família ou pelos traços (dados.py: retrato)
   }
 
   function criarCarta(c) {
@@ -66,7 +66,7 @@ const Batalha = (() => {
     e.dataset.uid = c.uid;
     if (c.cid) e.dataset.cid = c.cid;
     if (c.tipo) e.dataset.tipo = c.tipo;
-    e.innerHTML = `<div class="carta-fx"></div><div class="icone">${Icones.cabeca(c.uid === "j" ? c.classe : c.cid, 32) || S(icone(c), 2)}</div>
+    e.innerHTML = `<div class="carta-fx"></div><div class="icone">${Icones.cabeca(c.uid === "j" ? c.classe : c.cid, 32) || Icones.criatura(icone(c), 32) || S(icone(c), 2)}</div>
       <div class="carta-nome"><span></span><small></small></div>
       <div class="carta-hp"><span class="barra-px vida"><span class="rastro"></span><span class="enchimento"></span></span><span class="num"></span></div>
       ${c.uid === "j" ? '<div class="carta-rec"><span class="barra-px mana"><span class="enchimento"></span></span><span class="num"></span></div><div class="carta-flechas" hidden></div>' : ""}

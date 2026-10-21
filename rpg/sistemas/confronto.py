@@ -137,7 +137,7 @@ class Confronto:
                     f = FAMILIAS[e.familia]
                     if self.ui.conquistas_na_tela:  # uma faixa com a criatura, como as outras conquistas
                         self.ui.celebrar("mestre", {"familia": e.familia, "plural": f["plural"], "tracos": f["tracos"],
-                                                    "retrato": retrato(f["tracos"])})
+                                                    "retrato": retrato(f["tracos"], e.familia)})
                     else:
                         self.dizer(f"Você agora conhece {f['plural']} como ninguém. "
                                    f"(mestre caçador: +10% de dano contra eles)", "verde")

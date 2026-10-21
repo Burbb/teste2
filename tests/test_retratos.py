@@ -1,0 +1,42 @@
+"""O retrato das criaturas (dados.retrato): as cabeças próprias pela chave e pela família, o resto pelos traços."""
+
+import pathlib
+import re
+import unittest
+
+from rpg.dados import FAMILIAS, RETRATO_CHAVE, RETRATO_FAMILIA, retrato
+
+ESTATICO = pathlib.Path(__file__).resolve().parents[1] / "rpg" / "web" / "static"
+
+
+class TestRetratos(unittest.TestCase):
+    def test_afogado_pela_familia(self):
+        self.assertEqual(retrato(FAMILIAS["afogado"]["tracos"], "afogado"), "afogado")
+
+    def test_ilse_pela_chave_antes_dos_tracos(self):
+        # a Ilse é morta-viva e conjuradora (a caveira pelos traços); a família dela é "guardiao"
+        self.assertEqual(retrato(["morto-vivo", "conjurador"], "guardiao", "ilse"), "ilse")
+
+    def test_os_outros_continuam_pelos_tracos(self):
+        # o esqueleto e os outros mortos-vivos seguem com a caveira; o guardião genérico da Bruxa Afogada também
+        self.assertEqual(retrato(FAMILIAS["esqueleto"]["tracos"], "esqueleto"), "caveira")
+        self.assertEqual(retrato(["morto-vivo", "conjurador"], "guardiao", "guardiao:3"), "caveira")
+        self.assertEqual(retrato(["fera"]), "fera")
+        self.assertEqual(retrato([]), "caveira")
+        for fam, f in FAMILIAS.items():
+            if fam not in RETRATO_FAMILIA:
+                self.assertEqual(retrato(f["tracos"], fam), retrato(f["tracos"]), fam)
+
+    def test_cada_cabeca_propria_tem_arquivos_e_papel(self):
+        icones = (ESTATICO / "icones.js").read_text(encoding="utf-8")
+        papel = re.search(r"const CRIATURA = \{([^}]*)\}", icones).group(1)
+        for nome in set(RETRATO_CHAVE.values()) | set(RETRATO_FAMILIA.values()):
+            self.assertIn(f'{nome}: "retrato-{nome}"', papel)
+            self.assertIn(f'"retrato-{nome}": [16, 32, 48]', icones)
+            for lado in (16, 32, 48):
+                for sufixo in ("", "@2x"):
+                    self.assertTrue((ESTATICO / f"hud/icones/retrato-{nome}-{lado}{sufixo}.png").exists(), (nome, lado, sufixo))
+
+
+if __name__ == "__main__":
+    unittest.main()

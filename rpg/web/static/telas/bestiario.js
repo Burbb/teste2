@@ -11,7 +11,7 @@
         ? f.tracos_nomes.map((t) => `<span class="tag">${h(t)}</span>`).join("") + f.fraquezas.map((t) => `<span class="tag fraco">fraco: ${h(t)}</span>`).join("") +
           f.resiste.map((t) => `<span class="tag forte">resiste: ${h(t)}</span>`).join("")
         : '<span class="tag">??? derrote mais destas para aprender</span>';
-      return `<div class="cartao${f.conhecido ? "" : " desconhecido"}${f.mestre ? " mestre" : ""}"><div class="cab">${S(f.retrato || "caveira", 3)}
+      return `<div class="cartao${f.conhecido ? "" : " desconhecido"}${f.mestre ? " mestre" : ""}"><div class="cab">${Icones.criatura(f.retrato, 48) || S(f.retrato || "caveira", 3)}
         <div><b>${h(f.nome)}</b><span class="sub">${Texto.plural(f.abates, "abate")}</span></div></div>
         <span class="lore">${h(f.lore)}</span><div class="tags">${f.mestre ? '<span class="tag mestre">mestre caçador +10% dano</span>' : ""}${tags}</div></div>`;
     }).join("");

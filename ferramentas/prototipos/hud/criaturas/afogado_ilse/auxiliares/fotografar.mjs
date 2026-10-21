@@ -19,7 +19,8 @@ const TROCAS = { proposta: [["^Afogado", dados("afogado")], ["Bruxa Afogada|^Ils
 // a terceira rodada: a Ilse transposta da referência gerada e os três Afogados livres
 for (const af of ["cabelo", "perfil", "cranio"])
   TROCAS[`r3-${af}`] = [["^Afogado", dados(`afogado-${af}`)], ["Bruxa Afogada|^Ilse", dados("ilse-r3")]];
-// MODOS=atual,r3-perfil ... escolhe os modos (sem ele, os da primeira e da segunda rodada)
+// MODOS=atual,r3-perfil ... escolhe os modos (sem ele, os da primeira e da segunda rodada); um modo sem troca (o
+// "final", 1.162.0) fotografa o jogo como está, com os retratos integrados
 const MODOS = (process.env.MODOS || "atual,proposta,r2").split(",");
 const SITUACOES = [
   { nome: "afogado-luta", cenario: "tutorial", amb: { TUTORIAL: "0", CLASSE: "guerreiro", NIVEL_LUTA: "2", GRUPO: "afogado:2,esqueleto:1,sanguessuga:1" },
@@ -27,6 +28,9 @@ const SITUACOES = [
   { nome: "afogado-bestiario", cenario: "covil", amb: { CLASSE: "guerreiro", LUGAR: "vila",
     BESTIARIO: "afogado:3,esqueleto:3,sanguessuga:2,aranha:2" }, passos: [{ tecla: "b" }], espera: ".cartao .cab",
     fotos: [["body", "pagina"]] },
+  // 1.162.0: o rastro do contrato de caça de afogados (a coluna da missão), no Charco
+  { nome: "afogado-contrato", cenario: "tutorial", amb: { TUTORIAL: "0", CLASSE: "guerreiro", CONTRATO: "aceito",
+    CONTRATO_EM: "charco", CONTRATO_FAMILIA: "afogado" }, espera: ".rastro-contrato", fotos: [["body", "pagina"]] },
   { nome: "ilse-luta", cenario: "capela", amb: { SALA: "ossuario", ETAPA: "fundo" },
     passos: [{ clicar: "Descer ao fundo alagado" }, { clicar: "Lutar para destruí-la" }], espera: '.carta[data-uid="j"]',
     fotos: [["body", "pagina"], ["#palco", "palco"]] },
@@ -84,9 +88,11 @@ for (const sit of SITUACOES) {
         const alvo = sel === "body" ? p : p.locator(sel).first();
         await alvo.screenshot({ path: path.join(saida, `${sit.nome}-${modo}-${nome}.png`) }).catch((e) => erros.push(String(e)));
       }
-      registro[`${sit.nome}/${modo}`] = { erros, avisos, cartas: await p.evaluate(() => [...document.querySelectorAll(".carta, .cartao")]
-        .map((c) => ((c.querySelector(".carta-nome span, b") || {}).textContent || "").trim() + ": "
-          + ((c.querySelector(".icone img, .cab img") || {}).src || "").slice(0, 30))) };
+      registro[`${sit.nome}/${modo}`] = { erros, avisos, cartas: await p.evaluate(() => [...document.querySelectorAll(".carta, .cartao, .rastro-contrato")]
+        .map((c) => { const im = c.querySelector(".icone img, .cab img, .rastro-arte img") || {};
+          // o nome, o começo do endereço e a medida: o lado na tela / o lado do arquivo (o modo final: o jogo integrado)
+          return ((c.querySelector(".carta-nome span, b, .rastro-contrato > :not(.rastro-arte)") || {}).textContent || "").trim().slice(0, 40) + ": "
+            + (im.getAttribute ? im.getAttribute("src") : "").slice(0, 40) + ` ${im.width}/${im.naturalWidth}`; })) };
       await p.close();
     } finally { proc.kill(); }
   }

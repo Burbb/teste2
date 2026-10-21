@@ -156,5 +156,44 @@
    "Jean: data:image/png;base64,iVBORw0K",
    "Ilse, a Bruxa Afogada: data:image/png;base64,iVBORw0K"
   ]
+ },
+ "afogado-luta/final": {
+  "erros": [],
+  "avisos": [],
+  "cartas": [
+   "Jean: data:image/png;base64,iVBORw0KGgoAAAANSU 32/32",
+   "Afogado: /static/hud/icones/retrato-afogado-32.pn 32/32",
+   "Afogado: /static/hud/icones/retrato-afogado-32.pn 32/32",
+   "Esqueleto: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Sanguessuga gigante: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "A Febre do TurvoDescobrir de onde vem a : data:image/png;base64,iVBORw0KGgoAAAANSU 32/16"
+  ]
+ },
+ "afogado-bestiario/final": {
+  "erros": [],
+  "avisos": [],
+  "cartas": [
+   "Afogado: /static/hud/icones/retrato-afogado-48.pn 48/48",
+   "Aranha gigante: data:image/png;base64,iVBORw0KGgoAAAANSU 48/16",
+   "Esqueleto: data:image/png;base64,iVBORw0KGgoAAAANSU 48/16",
+   "Sanguessuga gigante: data:image/png;base64,iVBORw0KGgoAAAANSU 48/16"
+  ]
+ },
+ "ilse-luta/final": {
+  "erros": [],
+  "avisos": [],
+  "cartas": [
+   "Jean: data:image/png;base64,iVBORw0KGgoAAAANSU 32/32",
+   "Ilse, a Bruxa Afogada: /static/hud/icones/retrato-ilse-32.png 32/32",
+   "A Febre do TurvoDescer ao fundo alagado : data:image/png;base64,iVBORw0KGgoAAAANSU 32/16"
+  ]
+ },
+ "afogado-contrato/final": {
+  "erros": [],
+  "avisos": [],
+  "cartas": [
+   "A Febre do TurvoDescobrir de onde vem a : data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "4 afogados\n          Charco dos Juncos ·: /static/hud/icones/retrato-afogado-32.pn 32/32"
+  ]
  }
 }

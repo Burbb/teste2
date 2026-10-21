@@ -249,7 +249,7 @@ def combate(g):
     def ficha(c, lado):
         d = {"uid": cb.uid(c), "nome": c.nome, "hp": max(0, c.hp), "max_hp": c.max_hp, "efeitos": _efeitos(c, cb), "lado": lado,
              "vivo": c.vivo, "tracos": list(getattr(c, "tracos", []) or []), "cid": getattr(c, "cid", None),
-             "retrato": retrato(getattr(c, "tracos", []) or []),
+             "retrato": retrato(getattr(c, "tracos", []) or [], getattr(c, "familia", None), getattr(c, "chave", None)),
              "tipo": getattr(c, "tipo", None),
              # o desenho da sala que é este inimigo (a sacristia: os dois de capa escura), para a tela seguir a carta
              **({"figura": c.figura} if getattr(c, "figura", None) else {})}

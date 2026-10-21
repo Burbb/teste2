@@ -76,6 +76,10 @@ DERIVADOS = {
     "perneiras": {40: (32, CENTRO), 48: (32, CENTRO), 64: (32, 2)},  # 1.152.0: a P7 (a P4 da 1.148.0 em historico/):
                                      # o 40 e o 48 são o 32 centrado, como na manopla; o 64 é o 32 ×2
     "botas-ferro": {64: (32, 2)},    # 1.154.0: as botas de ferro com o acabamento A1 (a B3 da 1.150.0 em historico/); o 64 é o 32 ×2
+    # 1.162.0: as cabeças das criaturas (16×16, como os retratos de carta da comitiva): o 32 é a carta da luta (×2) e
+    # o 48 o Bestiário, o mural e a faixa do mestre caçador (×3). O Afogado C e a Ilse R3 (as alternativas no protótipo)
+    "retrato-afogado": {32: (16, 2), 48: (16, 3)},
+    "retrato-ilse": {32: (16, 2), 48: (16, 3)},
 }
 # O martelo (1.149.0) só tem fontes do 40 e do 48 (aseprite/martelo/): o 32 e o 64 são a grade de desenhos.js, no
 # jogo, e não saem daqui.

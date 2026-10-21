@@ -85,7 +85,7 @@ class Bestiario:
             fracos, resiste = _eficacias_familia(fam)
             fichas.append({"id": fam, "nome": tx.maiuscula(f["nome"]), "abates": b["abates"], "lore": LORE.get(fam, ""),
                            "conhecido": conhece, "mestre": self.mestre_caca(fam), "tracos": f["tracos"],
-                           "retrato": retrato(f["tracos"]),
+                           "retrato": retrato(f["tracos"], fam),
                            "tracos_nomes": [TRACOS_FICHA[t]["nome"] for t in f["tracos"]] if conhece else [],
                            "fraquezas": fracos if conhece else [],
                            "resiste": resiste if self.conhece_resistencias(fam) else []})

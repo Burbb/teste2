@@ -144,3 +144,27 @@ ficam como histórico.
   outro), mas o osso claro chama mais atenção que o resto da carta e pode ler como "zumbi" genérico.
 - **A, o do cabelo**, é o mais sombrio e o mais "do pântano"; a boca aberta ainda puxa um pouco para o grito, e o cabelo
   verde colado fica perto da linguagem da Ilse (os dois são mortos da água: pode ser vantagem ou confusão).
+
+## Integração (1.162.0)
+
+**Escolha de Jean:** o Afogado **C** (`afogado-cranio`, do `e4a9a252`), sem retoques; a Ilse **R3** (`ilse-r3`, do mesmo
+commit), com um único ajuste: o olho claro 1 px para a esquerda, e o ponto anterior com o tom claro do rosto. As outras
+(`afogado`, `afogado-b`, `afogado-cabelo`, `afogado-perfil`, `ilse`, `ilse-r2`) ficam aqui como histórico.
+
+- **As fontes de produção** (`ferramentas/arte/aseprite/retrato-afogado/` e `retrato-ilse/`, 16×16 em camadas): abertas
+  das fontes do protótipo pelo MCP e gravadas lá; o Afogado sem mudança; na Ilse, a camada `rosto` com (6,4) no claro
+  do olho (`#c4d4da`) e (7,4) no claro do rosto (`#a0b8c2`), pelo `pintar.lua` (relidos). A guia da Ilse continua
+  oculta. A exportação reproduzível é o `exportar_aseprite.py retrato-afogado` / `retrato-ilse` (`DERIVADOS`: o 32 é
+  o 16 ×2, o 48 o 16 ×3, cada um com o @2x), conferida com `--conferir` (tudo igual ao jogo; os blocos uniformes).
+- **Antes × depois:** o `retrato-afogado-16.png` é igual pixel a pixel ao `proposta/afogado-cranio-16.png`; o
+  `retrato-ilse-16.png` difere do `proposta/ilse-r3-16.png` só em (6,4) e (7,4).
+- **No jogo:** `dados.retrato(tracos, familia, chave)` dá "ilse" pela chave da capela e "afogado" pela família (o
+  Afogado Inchado e os invocados pela Ilse também); o resto continua pelos traços. A tela pede `Icones.criatura`
+  antes do sprite na carta da luta (32), no Bestiário (48), no mural (48) e no rastro dos contratos (32) e na faixa
+  do mestre caçador (48). A escolha não lê o nome da carta. A cena da Ilse (`telas/cenas.js`) e os retratos de
+  `retratos.js` não mudaram.
+- **Fotos a 1920×945** (o modo `final` do `fotografar.mjs`, o jogo como está, sem troca na página): os dois afogados
+  ao lado do esqueleto (a caveira continua) e da sanguessuga; o Bestiário; o rastro do contrato de caça de afogados (o
+  cenário `tutorial` com `CONTRATO_FAMILIA=afogado`, novo); a Ilse na luta do fundo da capela, com a cena igual pixel a
+  pixel à da foto `atual`. As medidas, no registro: a carta 32 px de um arquivo de 32, o Bestiário 48 de 48, o rastro
+  32 de 32. Sem erro nem aviso no console. A folha: `afogado-ilse-final.png` (`python auxiliares/prancha.py final`).

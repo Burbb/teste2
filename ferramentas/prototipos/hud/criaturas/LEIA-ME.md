@@ -67,7 +67,7 @@ quadrada e pequena, e o Bestiário e o mural só ampliam o mesmo desenho.
    Troll** aparecem como caveira. A caveira também é o afogado, o esqueleto, o carniçal, o cavaleiro sombrio, o Lich e
    os servos invocados (14 entidades).
 3. **A guardiã da campanha sem rosto na luta.** A Ilse tem arte de cena aprovada no fundo da capela, mas a carta dela
-   na luta é a mesma caveira do esqueleto e do afogado.
+   na luta é a mesma caveira do esqueleto e do afogado. **Resolvido na 1.162.0** para a Ilse e o Afogado (abaixo).
 4. **O humano genérico.** O bandido de lenço vermelho é também o cultista, o mercenário, a bruxa do pântano, os chefes
    humanos (o Senhor da Guerra, o Profeta das Cinzas) e o antagonista. Os vultos de capa escura da sacristia viram, na
    carta, o mesmo bandido.
@@ -101,3 +101,10 @@ guardiã um rosto coerente com a arte de cena dela. O troll e o Rei Troll (a cav
 correção pequena e visível para um lote seguinte.
 
 A escolha do par e da direção é do Jean; nada foi começado.
+
+## Integrados
+
+- **1.162.0: o Afogado e a Ilse** (o primeiro par, `afogado_ilse/`): o Afogado C (`afogado-cranio`) pela família e a
+  Ilse R3 (`ilse-r3`, com o olho 1 px para a esquerda) pela chave da capela, em `dados.retrato` e `Icones.criatura`. O
+  esqueleto, o carniçal, o cavaleiro sombrio, o Lich, os servos e o guardião genérico da Bruxa Afogada continuam com a
+  caveira; as outras criaturas continuam pelos traços. Os problemas 1, 2, 4 e 5 continuam abertos.

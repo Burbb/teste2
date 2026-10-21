@@ -17,7 +17,7 @@
     python -m tests.navegador.cenarios resgate       # a recuperação: fome ou infecção no Charco, à noite (CLASSE, CAUSA, COMITIVA, CONTRATOS)
     python -m tests.navegador.cenarios abertura      # campanha nova no Vau: a despensa e as orientações (CLASSE, TUTORIAL, MOREL, DESPENSA, VIDA_RATOS)
     python -m tests.navegador.cenarios fogueira      # a comitiva na fogueira e a fome (LUGAR, SALA, CLASSE, COMITIVA, RESERVA, FERIDO, FERA, FOME, PROVISOES, TOCHAS, PERIODO, CLIMA, EXAUSTO)
-    python -m tests.navegador.cenarios tutorial      # a segunda parte da abertura guiada (LUGAR, PERIODO, VIDA, REC, OURO, PROVISOES, COMITIVA, PONTOS, ITEM, BAUS, CONTRATO, LUTA, VISTAS, BOLSA, TROCA)
+    python -m tests.navegador.cenarios tutorial      # a segunda parte da abertura guiada (LUGAR, PERIODO, VIDA, REC, OURO, PROVISOES, COMITIVA, PONTOS, ITEM, BAUS, CONTRATO, CONTRATO_FAMILIA, LUTA, VISTAS, BOLSA, TROCA)
     python -m tests.navegador.cenarios gelo          # Mago com a iniciativa contra um lobo: duas Lanças antes de ele agir (PRISAO, NIVEL, SEMENTE)
     python -m tests.navegador.cenarios aneis         # acha um anel com os dois espaços ocupados (ANEIS=1: um vazio; CHEIA, OURO)
     python -m tests.navegador.cenarios reacoes       # Contra-ataque, espinhos, roubo de vida e o Revide juntos (CONTRA, ESPINHOS, ROUBO, LUTA)
@@ -881,7 +881,9 @@ def tutorial(ui):
     if os.environ.get("CONTRATO"):  # um contrato de caça aceito (CONTRATO=aceito) ou já cumprido (feito), no CONTRATO_EM
         alvo = {"charco": "charco_dos_juncos", "bosque": "bosque_do_moinho"}.get(os.environ.get("CONTRATO_EM", "bosque"))
         lid = next(l["id"] for l in g.mundo["locais"] if l["chave"] == alvo)
-        c = next(c for c in (g.gerar_contrato() for _ in range(400)) if c["tipo"] == "caca" and c["local"] == lid)
+        fam = os.environ.get("CONTRATO_FAMILIA")  # CONTRATO_FAMILIA=afogado: a caça dessa espécie
+        c = next(c for c in (g.gerar_contrato() for _ in range(400))
+                 if c["tipo"] == "caca" and c["local"] == lid and (not fam or c.get("familia") == fam))
         if os.environ["CONTRATO"] == "feito":
             c["feito"], c["concluido"] = c["total"], True
         g.contratos.append(c)

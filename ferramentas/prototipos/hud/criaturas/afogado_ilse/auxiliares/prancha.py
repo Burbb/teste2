@@ -10,6 +10,11 @@ A folha da terceira rodada (afogado-ilse-r3.png): a Ilse transposta junto da ref
 três Afogados livres lado a lado; todos na caixa da comitiva aprovada, em tamanho real e a 3×; a luta, o Bestiário e a
 carta da Ilse a 1920×945, com os mesmos dados; ampliações sem suavização.
     python prancha.py r3
+A folha da integração (afogado-ilse-final.png, 1.162.0): os PNGs do jogo × os escolhidos (o Afogado C idêntico; a Ilse R3
+só com o olho 1 px para a esquerda, os pixels diferentes marcados); as cabeças na caixa da comitiva; o jogo a 1920×945
+(o modo "final" do fotografar.mjs, sem troca na página): a luta com o esqueleto, o Bestiário, a Ilse com a cena e o
+rastro do contrato de caça.
+    python prancha.py final
 """
 import pathlib
 import sys
@@ -174,7 +179,65 @@ def folha_r3():
     print("afogado-ilse-r3.png", out.size)
 
 
-if __name__ == "__main__" and sys.argv[1:] == ["r3"]:
+def folha_final():
+    f, f2 = ImageFont.truetype("arial.ttf", 15), ImageFont.truetype("arial.ttf", 12)
+    jogo = AQUI.parents[5] / "rpg/web/static/hud/icones"
+    out = Image.new("RGBA", (1800, 2400), CARVAO)
+    d = ImageDraw.Draw(out)
+    d.text((20, 10), "Criaturas, o primeiro par no jogo (1.162.0): o Afogado C e a Ilse R3 com o olho 1 px para a esquerda",
+           fill=TEXTO, font=f)
+    y = 44
+    # 1. os PNGs do jogo × os escolhidos, a 1× e a 12× (na Ilse, os pixels diferentes num quadro vermelho)
+    pares = (("Afogado C: escolhido (afogado-cranio) | no jogo (retrato-afogado-16)", "proposta/afogado-cranio-16.png",
+              "retrato-afogado-16.png"),
+             ("Ilse: R3 escolhida (ilse-r3) | no jogo (retrato-ilse-16)", "proposta/ilse-r3-16.png", "retrato-ilse-16.png"))
+    for j, (rot, antes, depois) in enumerate(pares):
+        x = 20 + j * 900
+        a, b = Image.open(PASTA / antes).convert("RGBA"), Image.open(jogo / depois).convert("RGBA")
+        dif = [(i % 16, i // 16) for i, (p, q) in enumerate(zip(a.getdata(), b.getdata())) if p != q and not (p[3] == q[3] == 0)]
+        d.text((x, y), rot, fill=TEXTO, font=f2)
+        d.text((x, y + 16), "idêntico" if not dif else "diferentes: " + ", ".join(f"({px},{py})" for px, py in dif),
+               fill=TEXTO2, font=f2)
+        for k, im in enumerate((a, b)):
+            g = grade12(im)
+            if dif and k == 1:
+                dd = ImageDraw.Draw(g)
+                for px, py in dif:
+                    dd.rectangle([px * 12, py * 12, px * 12 + 11, py * 12 + 11], outline=(220, 40, 40, 255))
+            out.alpha_composite(im, (x + k * 230, y + 36)); out.alpha_composite(g, (x + k * 230 + 24, y + 36))
+    y += 36 + 192 + 20
+    # 2. na caixa da comitiva aprovada, com os PNGs do jogo
+    ali = Image.open(PASTA.parent / "capturas/aliados-palco.png").convert("RGBA")
+    d.text((20, y), "na mesma caixa: Morel e Odette | Afogado e Ilse do jogo — tamanho real e 3×", fill=TEXTO, font=f2)
+    y += 20
+    caixas = [ali.crop((46, 176, 84, 214)), ali.crop((46, 234, 84, 272))] +         [caixa(Image.open(jogo / f"retrato-{n}-16.png").convert("RGBA"), 1) for n in ("afogado", "ilse")]
+    for j, cx in enumerate(caixas):
+        out.alpha_composite(cx, (20 + j * 46, y)); out.alpha_composite(amplia(cx, 3), (260 + j * 124, y))
+    y += 3 * 38 + 24
+    # 3. o jogo a 1920×945
+    c = abre("afogado-luta-final-palco.png").crop((600, 40, 1060, 210))
+    d.text((20, y), "a luta: dois afogados com o esqueleto (a caveira continua) e a sanguessuga — tamanho real e 2×",
+           fill=TEXTO, font=f2)
+    out.alpha_composite(c, (20, y + 18)); out.alpha_composite(amplia(c, 2), (500, y + 18))
+    y += 18 + 2 * c.height + 16
+    b = abre("afogado-bestiario-final-pagina.png").crop((585, 248, 1296, 404))
+    k = abre("afogado-contrato-final-pagina.png").crop((1505, 490, 1800, 600))
+    d.text((20, y), "o Bestiário (tamanho real) | o rastro do contrato de caça, no Vau (tamanho real e 2×)", fill=TEXTO, font=f2)
+    out.alpha_composite(b, (20, y + 18)); out.alpha_composite(k, (760, y + 18)); out.alpha_composite(amplia(k, 2), (1080, y + 18))
+    y += 18 + max(b.height, 2 * k.height) + 16
+    c = abre("ilse-luta-final-palco.png").crop((0, 0, 1088, 230))
+    carta = abre("ilse-luta-final-palco.png").crop((826, 92, 1030, 150))
+    d.text((20, y), "a Ilse na luta do fundo da capela, com a cena intacta — tamanho real; a carta a 3×", fill=TEXTO, font=f2)
+    out.alpha_composite(c, (20, y + 18)); out.alpha_composite(amplia(carta, 3), (1130, y + 18))
+    y += 18 + c.height + 16
+    out = out.crop((0, 0, 1800, y))
+    out.save(PASTA / "afogado-ilse-final.png")
+    print("afogado-ilse-final.png", out.size)
+
+
+if __name__ == "__main__" and sys.argv[1:] == ["final"]:
+    folha_final()
+elif __name__ == "__main__" and sys.argv[1:] == ["r3"]:
     folha_r3()
 elif __name__ == "__main__" and sys.argv[1:] == ["r2"]:
     folha_r2()

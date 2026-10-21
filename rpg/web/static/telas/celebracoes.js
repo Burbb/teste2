@@ -97,7 +97,8 @@
   function faixa(titulo, sub, icone, classe = "") {
     const f = document.createElement("div");
     f.className = "faixa-festa " + classe;
-    const arte = icone ? Icones.cabeca(icone, 48) || S(icone, 3) : "";  // quem chega à comitiva: a cabeça do retrato
+    // quem chega à comitiva: a cabeça do retrato; a espécie do mestre caçador: a cabeça própria dela, se tem
+    const arte = icone ? Icones.cabeca(icone, 48) || Icones.criatura(icone, 48) || S(icone, 3) : "";
     f.innerHTML = `<b>${arte}${h(titulo)}${arte}</b>${sub ? `<span>${h(sub)}</span>` : ""}`;
     document.body.appendChild(f);
     // Sai quando a animação acaba (a sombria, do exausto, dura mais: um tempo fixo a cortava no meio da frase).

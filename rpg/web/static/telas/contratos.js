@@ -78,7 +78,7 @@
     const recem = ativo && contratosVistos && !contratosVistos.has(c.id);
     return `<div class="contrato tipo-${h(c.tipo)}${ativo ? " ativo" : ""}${c.concluido && !c.recebendo ? " concluido" : ""}${recem ? " recem" : ""}">
       <span class="prego"></span><div class="contrato-tipo">${TIPO_CONTRATO[c.tipo] || h(c.tipo)}</div>
-      <div class="contrato-arte">${S(arte, 3)}</div>
+      <div class="contrato-arte">${Icones.criatura(arte, 48) || S(arte, 3)}</div>
       <div class="contrato-titulo">${h(titulo)}</div>
       <div class="contrato-desc">${h(c.desc)}</div>
       <div class="contrato-lugar">${lugar}</div>${progresso}
@@ -129,7 +129,7 @@
       if (c.tipo === "caca" && c.progresso) { const [f, t] = c.progresso.split("/").map(Number); prog = `${barra("xp", f, t)}<small>${f}/${t}</small>`; }
       const perigo = c.nivel == null ? "" : c.nivel - nivelHeroi >= 2 ? "alto" : c.nivel >= nivelHeroi ? "medio" : "baixo";
       return `<div class="rastro-contrato${c.concluido ? " feito" : ""}" data-local="${c.lugar_id}" data-contrato="${c.id}" title="${h(c.desc)}">
-        <span class="rastro-arte">${S(arte, 2)}</span>
+        <span class="rastro-arte">${Icones.criatura(arte, 32) || S(arte, 2)}</span>
         <span class="rastro-info"><b>${h(alvo)}</b>
           <span class="rastro-lugar">${c.concluido ? "Feito! Receba numa vila" : `${h(c.lugar)}${c.distancia ? ` · ${Texto.plural(c.distancia, "trecho")}` : c.distancia === 0 ? " · você está aqui" : ""}`}${c.nivel != null && !c.concluido ? ` <span class="perigo-tag ${perigo}">Nv.${c.nivel}</span>` : ""}</span>
           ${prog ? `<span class="rastro-prog">${prog}</span>` : ""}</span></div>`;

@@ -439,9 +439,18 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   papel (o item que voa ao equipar, o selo de atributo, o consumível que cai na bolsa). Lacunas (desenho do jogo no
   lugar, sem trocar por desenho de outro tipo de item): o chapéu de couro (usa o capuz por ora), a Coroa dos Afogados
   (usa o Diadema por ora; pede arte própria), os
-  itens únicos com desenho próprio, a bolsa vazia e o frasco vazio no topo, os inimigos e as cartas deles, os
+  itens únicos com desenho próprio, a bolsa vazia e o frasco vazio no topo, os inimigos e as cartas deles (menos o
+  Afogado e a Ilse, abaixo), os
   ícones de habilidade e de efeito, o covil vencido. O mercador da banca tem o busto no balcão (`telas/mercado.js`,
   com as cores da figura da banca).
+- As cabeças próprias das criaturas (1.162.0): o motor dá o retrato (`dados.retrato(tracos, familia, chave)`): a
+  chave da criatura única (`RETRATO_CHAVE`: a Ilse da capela, `chefe.chave = "ilse"` em `missoes.py`), senão a
+  família (`RETRATO_FAMILIA`: o afogado, com o Afogado Inchado e os afogados que a Ilse invoca), senão os traços,
+  como antes (a caveira dos outros mortos-vivos continua). A luta, o Bestiário, o mural e o rastro dos contratos e a
+  faixa do mestre caçador pedem `Icones.criatura(retrato, lado)` (o papel `CRIATURA`) antes do sprite: o 16×16 a 2×
+  (32) e a 3× (48), em arquivos (`retrato-afogado`, `retrato-ilse`; fontes em `ferramentas/arte/aseprite/`). O nome
+  da carta não entra na escolha. As outras criaturas seguem pelos traços (o levantamento em
+  `ferramentas/prototipos/hud/criaturas/LEIA-ME.md`).
 - A Calça de Couro do Arqueiro (1.119.0): desenho próprio do conjunto de couro, para todas as calças de couro dele
   (Rasgada, Curtida, Reforçada e as raras com nome; os saves já guardam `icone: "calca_couro"`). Fontes em camadas
   em `ferramentas/arte/aseprite/calca_couro/` (32, 40, 48; o 64 é o 32 ampliado 2×, `DERIVADOS`), exportadas por

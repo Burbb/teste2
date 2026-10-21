@@ -112,7 +112,7 @@ class Contratos:
                 "lugar": lugar["nome"], "lugar_id": lugar["id"], "lugar_tipo": lugar["tipo"], "bioma": lugar["bioma"], "distancia": dist,
                 "nivel": None if lugar["tipo"] == "vila" else nivel_regiao(lugar),
                 "alvo": c.get("nome"), "familia": c.get("familia"), "familia_nome": f.get("nome"),
-                "tracos": f.get("tracos", []), "retrato": retrato(f.get("tracos", [])), "objeto": c.get("objeto"),
+                "tracos": f.get("tracos", []), "retrato": retrato(f.get("tracos", []), c.get("familia")), "objeto": c.get("objeto"),
                 "progresso": progresso,
                 "concluido": bool(c.get("concluido")), "penalidade": 6 if c["tipo"] == "entrega" else 3}
 
