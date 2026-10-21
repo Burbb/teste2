@@ -147,6 +147,47 @@ FALCAO_T = [
     "..WWWWwWWWvvvXXX",
 ]
 
+# O último ajuste localizado (21/10/2026, pedido do Jean), sobre o urso-t e o falcao-t (que ficam como o antes): no urso,
+# só a boca e o acabamento do focinho (o queixo claro embaixo da boca, que sugeria um sorriso, vira o tom médio; a boca
+# fica reta, com os cantos mais escuros por fora, e o focinho guarda o volume); no falcão, um pixel amarelo fechando o
+# canto de trás do olho (7,5), sem engrossar o anel.
+URSO_T2 = [
+    "................",
+    "..bb........bb..",
+    ".bNNb......bNNd.",
+    ".bNbbdbBBbdbbNd.",
+    ".dbBOBBBBBBbbbd.",
+    "bbBOBBbBBbBBbbdd",
+    "bBBDDDbBBbDDDbdd",
+    "bBbbDaDbbDaDbbdd",
+    "dbBbbQQQQQqbbbdd",
+    "dbbbQQKKKKQqbbdd",
+    "dbbbQQqKKqQqbbd.",
+    ".dbbQQQQQQQqbdd.",
+    ".ddbqQddddQqbdd.",
+    "..ddbbqqqqbbdd..",
+    "...ddbbbbbbddD..",
+    "....ddbbbbbdDD..",
+]
+FALCAO_T2 = [
+    "................",
+    "......vVVVv.....",
+    ".....vLLLVVv....",
+    "....vLLVVVVvv...",
+    "...vVmmmmmmvvv..",
+    "..IJmJeJmmmmvvv.",
+    ".GRJmmJmmmvvvvX.",
+    ".GGRWWWWvvvvvvX.",
+    "..X.WWWWWWvvvvX.",
+    "....WWWWWWWvvvXX",
+    "....WWWWWWLvvvXX",
+    "...WWWWWWvLLvvXX",
+    "...WwWWWWWvLLvXX",
+    "..WWWWwWWWvLvvXX",
+    "..WwWWWWwWvvvvXX",
+    "..WWWWwWWWvvvXXX",
+]
+
 URSO = lambda x, y, ch: "focinho" if ch in "Zz" else "detalhes" if ch in "kn" else "pelagem"
 FALCAO = lambda x, y, ch: "peito" if ch in "cC" else "bico" if ch == "g" or (ch in "Ey" and x <= 3) else "olho" if ch in "Ey"     else "plumagem"
 CAMADAS = {
@@ -160,6 +201,9 @@ CAMADAS = {
                  lambda x, y, ch: "peito" if ch in "Ww" else "mascara" if ch == "m" else "bico" if ch in "GRI" or (ch in "XJ" and x <= 3)
                  else "olho" if ch in "Je" else "plumagem"),
 }
+# o último ajuste: as mesmas camadas do urso-t e do falcao-t
+CAMADAS["urso-t2"] = (URSO_T2,) + CAMADAS["urso-t"][1:]
+CAMADAS["falcao-t2"] = (FALCAO_T2,) + CAMADAS["falcao-t"][1:]
 
 
 def gravar(base, ids=None):

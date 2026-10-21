@@ -5491,3 +5491,5 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   no painel a 1920×945, a 3×, a 12×, a fileira com os retratos aprovados). As referências registradas no `LEIA-ME.md`
   de `referencias/icones/`.
 - **Continua:** nada aprovado; a versão continua 1.163.0.
+- **Último ajuste (pedido de Jean):** `falcao-t2` (o amarelo fechando o canto de trás do olho) e `urso-t2` (a boca reta
+  e o queixo sem a linha clara), sobre os `t`, que ficam; a folha `ajuste.png`. Nada aprovado.

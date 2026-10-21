@@ -105,3 +105,28 @@ propostas A e B ficam; o Lobo Cinzento não muda. Nada integrado.
 - **Falcão t:** a cabeça e o bico de gancho leem melhor que no A, e a máscara indo para a nuca dá o olhar atento; o
   queixo e a garganta ficam limpos. Limite: a 2× o anel amarelo e a cera ficam a um pixel um do outro (o olho depende
   do ponto preto entre eles), e as pintas do peito são poucas.
+
+## O último ajuste localizado (21/10/2026)
+
+**Pedido de Jean:** sobre os candidatos do `cf859322`, que ficam como o antes (`urso-t`, `falcao-t`): no falcão, um pixel
+amarelo fechando o canto de trás do olho, sem engrossar o anel; no urso, só a boca e o acabamento do focinho (a linha
+clara embaixo da boca, junto do focinho arredondado, sugeria um sorriso), com a boca fechada mais neutra e firme. Nada
+integrado.
+
+- **Falcão t2** (`falcao-t2`): (7,5) passa da máscara para o amarelo do anel (`#d89a1c`, na camada `olho`); o olho fica
+  fechado pelo amarelo à frente, embaixo e atrás, e a máscara continua para a direita a partir de (8,5). O bico, a
+  garganta e o resto iguais.
+- **Urso t2** (`urso-t2`): o queixo embaixo da boca, (6..8,13), passa do claro do focinho para o tom médio; os cantos da
+  boca, (4,12) e (11,12), ficam no tom médio (saem do pelo) e (10,12) no claro, de modo que a linha da boca fica reta e o
+  focinho guarda o volume dos lados. A cabeça, os olhos, as orelhas e a paleta iguais.
+- **Processo:** as fontes do `t` abertas pelo MCP e gravadas como `fontes/urso-t2/` e `fontes/falcao-t2/` (a guia continua oculta); só os
+  pixels mudados pintados pelo `pintar.lua` (0 diferentes na releitura), apagando da camada antiga quando a camada muda;
+  o composto do editor com os mesmos pixels opacos (196 e 177). A exportação conferida (igual à grade `URSO_T2` e
+  `FALCAO_T2`, @2x exato, 2× e 3× exatos); o `t2` difere do `t` só nos pixels acima.
+- **A folha:** `ajuste.png` (`python auxiliares/prancha.py ajuste`): antes × depois na caixa da carta em tamanho real e
+  a 3×, junto do Morel, da Odette, do herói, do Lobo e do Bandido, e a 12× com os pixels mudados marcados.
+
+**Avaliação (a 32 px; quem aprova é o Jean):** no urso, a boca lê fechada e reta, e o queixo não sorri mais; a mudança é
+pequena a 2×, mas a expressão fica mais séria, e o focinho continua com volume. No falcão, o olho volta a ser um olho
+delimitado, como no A, e se separa da máscara; o risco é o amarelo dos dois lados lembrar um pouco os óculos da primeira
+passada, o que a 32 px não acontece porque o anel de baixo e o preto do olho ficam entre eles.

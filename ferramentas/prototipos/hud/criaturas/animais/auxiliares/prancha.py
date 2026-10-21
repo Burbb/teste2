@@ -193,9 +193,59 @@ def folha_transposicao():
     print("transposicao.png", out.size)
 
 
+def folha_ajuste():
+    """O último ajuste (ajuste.png): antes (t) × depois (t2) na caixa da carta em tamanho real e a 3×, junto dos retratos
+    aprovados, e a 12× com os pixels mudados marcados."""
+    f, f2 = ImageFont.truetype("arial.ttf", 15), ImageFont.truetype("arial.ttf", 12)
+
+    def caixa(im):
+        cx = Image.new("RGBA", (38, 38), (42, 36, 32, 255)); cx.paste((13, 11, 10, 255), (2, 2, 36, 36))
+        cx.alpha_composite(amplia(im, 2), (3, 3))
+        return cx
+    ali = Image.open(PASTA.parent / "capturas/aliados-palco.png").convert("RGBA")
+    luta = abre("lobo-atual-palco.png")
+    caixas = [("Morel", ali.crop((46, 176, 84, 214))), ("Odette", ali.crop((46, 234, 84, 272))),
+              ("o herói", luta.crop((46, 54, 84, 92))), ("Lobo", luta.crop((836, 45, 874, 83))),
+              ("Bandido", luta.crop((836, 103, 874, 141)))] + \
+        [(rot, caixa(imagem(i))) for i, rot in (("urso-t", "Urso antes"), ("urso-t2", "Urso depois"),
+                                               ("falcao-t", "Falcão antes"), ("falcao-t2", "Falcão depois"))]
+    out = Image.new("RGBA", (1400, 700), CARVAO)
+    d = ImageDraw.Draw(out)
+    d.text((20, 10), "O último ajuste: antes (t, cf859322) × depois (t2) — a caixa da carta em tamanho real e a 3×, com os "
+                     "retratos aprovados; a 12× com os pixels mudados", fill=TEXTO, font=f)
+    y = 40
+    for j, (_, cx) in enumerate(caixas):
+        out.alpha_composite(cx, (20 + j * 46, y))
+    y += 50
+    for j, (rot, cx) in enumerate(caixas):
+        out.alpha_composite(amplia(cx, 3), (20 + j * 124, y))
+        d.text((20 + j * 124, y + 118), rot, fill=TEXTO2, font=f2)
+    y += 3 * 38 + 36
+    for j, (a, b, rot) in enumerate((("urso-t", "urso-t2", "Urso: o queixo e os cantos da boca"),
+                                     ("falcao-t", "falcao-t2", "Falcão: o canto de trás do olho"))):
+        x = 20 + j * 680
+        ia, ib = imagem(a), imagem(b)
+        d.text((x, y), rot, fill=TEXTO, font=f2)
+        for k, im in enumerate((ia, ib)):
+            g = grade12(im)
+            if k:
+                dd = ImageDraw.Draw(g)
+                for py in range(16):
+                    for px in range(16):
+                        if ia.getpixel((px, py)) != ib.getpixel((px, py)):
+                            dd.rectangle([px * 12, py * 12, px * 12 + 11, py * 12 + 11], outline=(230, 40, 40, 255))
+            out.alpha_composite(g, (x + k * 210, y + 18))
+        y2 = y + 18 + 192
+    out = out.crop((0, 0, 1400, y2 + 16))
+    out.save(PASTA / "ajuste.png")
+    print("ajuste.png", out.size)
+
+
 if __name__ == "__main__":
     import sys
-    if sys.argv[1:] == ["t"]:
+    if sys.argv[1:] == ["ajuste"]:
+        folha_ajuste()
+    elif sys.argv[1:] == ["t"]:
         folha_transposicao()
     else:
         for animal in ANIMAIS:
