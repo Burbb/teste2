@@ -141,3 +141,49 @@ Rei Troll fica fora do mapeamento (continua na caveira); a Aranha segue no prot�
   aranha no `fera` e o lobo e o afogado com os retratos deles; uma luta nova com o Rei Troll (o cenário `tutorial`
   ganhou `CHEFE=<id>`, o guardião pelo `instanciar_guardiao`), um troll e uma aranha. Sem erro nem aviso no console. A
   folha: `troll-final.png` (`python auxiliares/prancha.py troll`).
+
+## O Rei Troll e a Aranha 2B (propostas, 21/10/2026)
+
+**Pedido de Jean:** uma proposta própria para o Rei Troll a partir do Troll 2, de frente, da mesma espécie do Troll
+comum; e a Aranha 2 (a base escolhida, não aprovada) reconstruída onde falhava. Os dois fora de produção; a Rainha
+Aracnídea fora.
+
+- **O que os dados dizem do Rei** (`GUARDIOES["montanha"]`, `rei_troll`): o guardião da montanha, o traço `gigante`,
+  170 de vida, ataque 13, agilidade 1, esmagar, regenerar, investida e varredura; "sobre um trono de ossos de gigante, um
+  troll colossal usa uma coroa feita de um elmo amassado"; na fase 2, "arranca uma rocha do chão e ruge de fúria". Não
+  tem Bestiário (não é família); aparece na carta da luta.
+- **Rei Troll, a sucata** (`rei-troll`; roupa, pele, presas, rosto, coroa): a primeira passada, com uma coroa de pontas
+  de ferro, foi recusada pelo Jean na hora ("tem que ser uma coroa de lixo, algo que um rei troll usaria achado por aí").
+  Ficou o elmo velho amassado (o que os dados dizem), enferrujado e torto, pequeno para a cabeça, com um osso espetado de
+  um lado e um prego do outro; a cabeça desce uma linha para caber; a cicatriz clara na sobrancelha e na bochecha, a
+  presa da direita quebrada (a idade). **Não escolhida** pelo Jean, que mandou depois a referência da coroa dourada.
+- **Rei Troll, a coroa dourada** (`rei-troll-ouro`; as camadas do Troll 2 e a `coroa` por cima): pela imagem gerada que
+  o Jean mandou (`ferramentas/arte/referencias/icones/rei-troll-coroa-gerada-na-conversa.webp`; só a coroa, não a cabeça).
+  A base volta a ser o Troll 2 sem nenhum pixel do rosto mexido: a coroa cobre só o alto do crânio (as linhas 0 a 3); da
+  linha 4 para baixo, igual pixel a pixel ao `troll-2` (conferido). O aro grosso de ouro velho em duas linhas, mais largo
+  que o alto da cabeça, e três pontas robustas e desiguais (a do meio mais alta, as dos lados tortas para fora), a luz da
+  esquerda, a sombra nas pontas e na borda, sem joias. Na bancada, as versões de aro numa linha só ficavam finas demais.
+  A fonte é o Troll 2 aberto pelo MCP e gravado como `rei-troll-ouro`, com a camada `coroa` nova pintada pelo `pintar.lua`.
+- **Aranha 2B** (`aranha-2b`; patas, corpo, quelíceras, presas, olhos): as quelíceras na cor do corpo, volumosas, com a
+  luz no alto e uma costura marrom (não preta) entre elas; as presas escuras, curtas, curvadas para dentro, com a
+  pontinha clara; os olhos pequenos e separados (dois de frente e quatro de lado, os de lado num âmbar mais escuro); as
+  patas ligadas aos lados da carapaça. Na bancada: as quelíceras cinza claras ainda faziam os dentes de morsa, e um vão
+  preto entre elas lia como uma boca aberta gritando.
+- **Processo:** as grades em `auxiliares/grades.py`; as fontes pelo MCP (`pintar.lua`, 0 diferentes na releitura; o
+  composto com a soma das camadas visíveis; a guia oculta); a exportação conferida (igual à grade, @2x exato, o 32 e o 48
+  em blocos inteiros). Fotos a 1920×945 com os mesmos dados: a Aranha 2B na luta e no Bestiário (o modo `r3`), o Rei na
+  luta do guardião (o cenário `tutorial` com `CHEFE=rei_troll`; os modos `rei` e `rei2`), sem erro nem aviso no console.
+- **As folhas:** `rei-aranha.png` (`python auxiliares/prancha.py r3`: o Troll comum × o Rei de sucata, a Aranha 2 × a 2B,
+  a carta, o Bestiário e a fileira) e `rei-coroa.png` (`python auxiliares/prancha.py coroa <a referência>`: a referência,
+  o Troll comum, a base sem coroa, a sucata e a coroa dourada na caixa da carta, em tamanho real, a 3× e a 12×, e a carta
+  na luta do Rei).
+
+**Avaliação (a minha leitura a 32 px; quem aprova é o Jean):**
+
+- **O Rei com a coroa dourada:** a coroa lê na hora como coroa pesada (o ouro contra o verde e o fundo escuro), e o rosto
+  é o mesmo do Troll 2, então é claramente da mesma espécie que o Troll comum, só que maior de frente e coroado. Limite:
+  a coroa ocupa as quatro linhas de cima e a expressão é a do Troll 2 (sem a cicatriz e a presa quebrada da sucata);
+  como chefe, o que o separa do Troll comum é o ângulo de frente e a coroa.
+- **A Aranha 2B:** saíram os dentes de morsa e o par de olhos grandes; ficou uma aranha de perto, com as quelíceras, as
+  presas curtas e os olhos pequenos, e as patas presas ao corpo mantêm a espécie. Limite: as presas são pequenas a 32 px,
+  e o rosto ficou mais escuro e menos agressivo que a 2.

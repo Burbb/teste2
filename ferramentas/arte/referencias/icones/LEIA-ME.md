@@ -48,3 +48,8 @@ quelíceras fortes com as presas separadas, as patas articuladas em volta. O tro
 direção de cabeça de pedra e musgo), em três quartos, a testa baixa, o nariz largo, a mandíbula pesada com duas presas
 saindo de baixo, o pescoço grosso. Ampliadas, não grades nativas: as propostas em 16×16 estão em
 `ferramentas/prototipos/hud/criaturas/aranha_troll/` (`aranha-1` a `-3`, `troll-1` a `-3`).
+
+**`rei-troll-coroa-gerada-na-conversa.webp`** (21/10/2026): **a referência da coroa do Rei Troll**, uma imagem gerada
+mandada pelo Jean na conversa (guardada aqui com esse nome; sem outra origem ou autoria informada). Vale só para a
+coroa: o aro grosso de ouro velho e as três pontas desiguais, a do meio mais alta. A cabeça da imagem **não** é
+referência: a base do Rei continua o Troll 2 de `ferramentas/prototipos/hud/criaturas/aranha_troll/`.

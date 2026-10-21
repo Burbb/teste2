@@ -29,6 +29,11 @@ CORES = {
     # âmbar, as quelíceras cinza e as presas claras) e o troll de carne (o verde, a sombra, os olhos pálidos, as presas,
     # a roupa de couro)
     "Q": "17120f", "R": "3a2f28", "S": "5e4c40", "U": "86705e", "V": "b8a48e", "P": "e08a34", "C": "7a746c", "c": "3e3a36", "X": "d8d0c0", "Y": "5a544c", "A": "6e8a4c", "I": "88a262", "i": "52683a", "N": "34482a", "Z": "1e2a18", "W": "c8b884", "B": "ecdcb4", "b": "b8a47e", "h": "6a4a30", "j": "46301e",
+    # a terceira rodada: o ferro do elmo amassado da coroa do Rei Troll (a luz, o meio, a sombra, a ferrugem) e o âmbar
+    # mais escuro dos olhos de lado da aranha
+    "l": "a2a6aa", "p": "686c72", "q": "383c40", "r": "8a4a2c", "u": "b06a28",
+    # a coroa dourada do Rei Troll (a quarta rodada): o ouro velho na luz, no meio, na sombra e no escuro do contorno
+    "s": "f0c858", "t": "c8962e", "v": "8a6020", "w": "4e3414",
 }
 
 ARANHA_A = [
@@ -223,6 +228,69 @@ TROLL_3 = [
     "...hhhhhjjhhhjjj",
 ]
 
+# A terceira rodada (21/10/2026, pedido do Jean; só no protótipo). O Rei Troll (o guardião `rei_troll`: "um troll
+# colossal usa uma coroa feita de um elmo amassado", fases com a rocha arrancada do chão) a partir do Troll 2, de frente,
+# da mesma espécie que o Troll comum: a cabeça desce para caber a "coroa", que é sucata achada por aí (pedido do Jean, que
+# recusou a coroa de pontas): um elmo velho amassado, enferrujado e torto, pequeno para a cabeça, com um osso espetado de
+# um lado e um prego do outro; a mandíbula larga com as presas, a da direita quebrada (o sinal de
+# idade); a cicatriz clara cortando a sobrancelha e a bochecha do lado esquerdo; a testa baixa e o olhar sob a sombra. A
+# Aranha 2B: a Aranha 2 reconstruída onde ela falhava (as presas claras e retas pareciam dentes de morsa e os olhos um
+# par só): as quelíceras na cor do corpo, volumosas, com a luz no alto e a costura escura entre elas; as presas escuras,
+# curtas, curvadas para dentro, com a pontinha clara; os olhos pequenos e separados (dois de frente e quatro de lado, os
+# de lado num âmbar mais escuro); as patas ligadas aos lados da carapaça.
+REI_TROLL = [
+    "....B......l....",
+    "....BqplplpN....",
+    "...NBpprrppqN...",
+    "..NAqplpprqqAN..",
+    "..NZZbZAAZZZZN..",
+    ".NZWZZbAAZZWZN..",
+    ".NAAbAiIIiAAAiN.",
+    ".NAAAiIIIIiAAiN.",
+    "NAAAiZNNZiAAAAiN",
+    "NABAAAAAAAAAAAiN",
+    "AiBiZZZZZZiZBiiN",
+    "AiBbZAAAAZbBiiiN",
+    "AiAAAAAAAAAAAiiN",
+    ".NiiiiiiiiiiiiN.",
+    "hjjNNNNNNNNNNjjh",
+    "hhhjjjjjjjjjjjhh",
+]
+ARANHA_2B = [
+    "..V..........V..",
+    ".VSQ........QSV.",
+    ".SQR.RSSSSR.RQS.",
+    "VSQRSUUUUUUSRQSV",
+    "SQ.RSUSPSPSUSR.Q",
+    "SQRSuQPQQPQuSRQS",
+    "Q.RSSSSSSSSSSR.Q",
+    ".VRSUSSRRSUSSRV.",
+    "VSQSVUSRRSVUSQSV",
+    "SQ.SUSSRRSUSS.QS",
+    "SQ..SSRRRRSS..QS",
+    "Q...RYS..SYR...Q",
+    ".....XY..YX.....",
+    "................",
+    "................",
+    "................",
+]
+
+# A quarta rodada do Rei Troll (21/10/2026, pedido do Jean, pela imagem gerada que ele mandou na conversa): só a coroa
+# muda, e a base volta a ser o Troll 2 de frente, sem nenhum pixel do rosto mexido (as linhas 4 a 15 são as do TROLL_2):
+# um aro grosso de ouro velho em duas linhas, mais largo que o alto da cabeça, e três pontas robustas e desiguais, a do
+# meio mais alta e as dos lados tortas para fora; a luz da esquerda, a sombra embaixo e nas pontas, sem joias. A coroa
+# cobre só o alto do crânio (as linhas 0 a 3), numa camada própria por cima.
+COROA_OURO = [
+    ".......st.......",
+    "..st..wstv...st.",
+    ".wsttwsstttvwstv",
+    "..wstttttttttvw.",
+]
+REI_TROLL_OURO = [
+    "".join(c if c != "." else t for c, t in zip(linha, TROLL_2[y])) if y < len(COROA_OURO) else TROLL_2[y]
+    for y, linha in enumerate(COROA_OURO + [""] * (16 - len(COROA_OURO)))
+]
+
 
 def _aranha(patas):
     return lambda x, y, ch: "olhos" if ch in "Ex" else "presas" if ch in "Ff" else "patas" if patas(x, y) else "corpo"
@@ -245,6 +313,14 @@ CAMADAS["aranha-1"] = (ARANHA_1, ["patas", "corpo", "queliceras", "presas", "olh
 CAMADAS["aranha-2"] = (ARANHA_2, ["patas", "corpo", "queliceras", "presas", "olhos"], _ARANHA2(lambda x, y: x <= 2 or x >= 13))
 CAMADAS["aranha-3"] = (ARANHA_3, ["patas", "corpo", "queliceras", "presas", "olhos"],
                        _ARANHA2(lambda x, y: x <= 3 or x >= 12 or (y <= 5 and not 6 <= x <= 9)))
+# a terceira rodada: o Rei Troll com a coroa numa camada própria; a Aranha 2B com as camadas da 2
+_REI = lambda x, y, ch: "coroa" if ch in "lpqr" or (ch == "B" and y <= 3) else "rosto" if ch == "b" and y <= 7 else _TROLL2(x, y, ch)  # a cicatriz
+CAMADAS["rei-troll"] = (REI_TROLL, ["roupa", "pele", "presas", "rosto", "coroa"], _REI)
+CAMADAS["rei-troll-ouro"] = (REI_TROLL_OURO, ["roupa", "pele", "presas", "rosto", "coroa"],
+                             lambda x, y, ch: "coroa" if ch in "stvw" else _TROLL2(x, y, ch))
+CAMADAS["aranha-2b"] = (ARANHA_2B, ["patas", "corpo", "queliceras", "presas", "olhos"],
+                        lambda x, y, ch: "olhos" if ch in "Pu" else "presas" if ch in "XY" else
+                        "queliceras" if 7 <= y <= 11 and 3 <= x <= 12 and ch in "SUVR" else "patas" if x <= 2 or x >= 13 else "corpo")
 for _i, _g in (("1", TROLL_1), ("2", TROLL_2), ("3", TROLL_3)):
     CAMADAS[f"troll-{_i}"] = (_g, ["roupa", "pele", "presas", "rosto"], _TROLL2)
 

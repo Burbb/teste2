@@ -5537,3 +5537,13 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   `RETRATO_FAMILIA` e `CRIATURA` com o troll; `tests/test_retratos.py` com o troll e o Rei na caveira; o cenário
   `tutorial` ganhou `CHEFE`. A folha `ferramentas/prototipos/hud/criaturas/aranha_troll/troll-final.png`.
 - **Continua:** o Rei Troll e a Aranha no protótipo; a Rainha Aracnídea fora.
+
+### 21/10/2026 (data do computador local) — O Rei Troll e a Aranha 2B (propostas)
+
+- **Pedido de Jean:** o Rei Troll a partir do Troll 2 (a coroa de sucata, recusada; depois a coroa dourada pela
+  referência gerada que ele mandou, sem mexer no rosto) e a Aranha 2 reconstruída (as quelíceras, as presas curtas e
+  escuras, os olhos pequenos, as patas ligadas ao corpo).
+- **Feito:** `rei-troll` (a sucata), `rei-troll-ouro` (a coroa dourada numa camada própria sobre o Troll 2) e
+  `aranha-2b`, em `ferramentas/prototipos/hud/criaturas/aranha_troll/`; as folhas `rei-aranha.png` e `rei-coroa.png`;
+  a referência da coroa guardada em `ferramentas/arte/referencias/icones/`.
+- **Continua:** nada aprovado; o Rei e a Aranha fora de produção; a versão continua 1.166.0.
