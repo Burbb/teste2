@@ -1,0 +1,1 @@
+espada,brilho,rastro,contorno

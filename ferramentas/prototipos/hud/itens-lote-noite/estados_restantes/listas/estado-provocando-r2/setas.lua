@@ -1,0 +1,1 @@
+return "7,0,c42a2e;8,0,c42a2e;1,1,c42a2e;7,1,c42a2e;8,1,c42a2e;14,1,c42a2e;2,2,c42a2e;6,2,ec5a4c;7,2,ec5a4c;8,2,c42a2e;9,2,c42a2e;13,2,c42a2e;3,3,c42a2e;5,3,ec5a4c;7,3,ec5a4c;8,3,c42a2e;10,3,ec5a4c;12,3,c42a2e;4,4,ec5a4c;5,4,ec5a4c;10,4,c42a2e;11,4,ec5a4c;3,5,ec5a4c;4,5,ec5a4c;5,5,ec5a4c;10,5,c42a2e;11,5,ec5a4c;12,5,ec5a4c"

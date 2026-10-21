@@ -1,0 +1,114 @@
+{
+ "heroi-grito/atual": {
+  "estados": [
+   "j:fortalecido",
+   "c1-1:enfraquecido",
+   "c1-2:enfraquecido"
+  ],
+  "imagens": [
+   "fortalecido 16px → 17.9px (sprite ou troca da página)"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "heroi-grito/proposta": {
+  "estados": [
+   "j:fortalecido",
+   "c1-1:enfraquecido",
+   "c1-2:enfraquecido"
+  ],
+  "imagens": [
+   "fortalecido 16px → 17.9px (sprite ou troca da página)"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "heroi-grito/proposta-gota": {
+  "estados": [
+   "j:fortalecido",
+   "c1-1:enfraquecido",
+   "c1-2:enfraquecido"
+  ],
+  "imagens": [
+   "fortalecido 16px → 17.9px (sprite ou troca da página)"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "heroi-grito/proposta-r2": {
+  "estados": [
+   "j:fortalecido",
+   "c1-1:enfraquecido",
+   "c1-2:enfraquecido"
+  ],
+  "imagens": [
+   "fortalecido 16px → 17.9px (sprite ou troca da página)"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "heroi-iniciativa/atual": {
+  "estados": [
+   "j:iniciativa"
+  ],
+  "imagens": [
+   "iniciativa 16px → 17.9px (sprite ou troca da página)"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "heroi-iniciativa/proposta": {
+  "estados": [
+   "j:iniciativa"
+  ],
+  "imagens": [
+   "iniciativa 16px → 17.9px (sprite ou troca da página)"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "heroi-iniciativa/proposta-gota": {
+  "estados": [
+   "j:iniciativa"
+  ],
+  "imagens": [
+   "iniciativa 16px → 17.9px (sprite ou troca da página)"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "heroi-iniciativa/proposta-r2": {
+  "estados": [
+   "j:iniciativa"
+  ],
+  "imagens": [
+   "iniciativa 16px → 17.9px (sprite ou troca da página)"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ }
+}

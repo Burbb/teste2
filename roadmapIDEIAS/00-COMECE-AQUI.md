@@ -5305,3 +5305,17 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   `rodada2-lote3.png`, `rodada2-atordoado-gira.png`). O MCP do Aseprite continua fora; as fontes saíram pela linha de
   comando, com a releitura e a conferência da exportação.
 - **Continua:** nada novo aprovado; a versão continua 1.158.0.
+
+### 21/10/2026 (data do computador local) — A segunda rodada dos estados, grupo 2: Barreira, Provocando, Fortalecido, Iniciativa e Frenesi (proposta)
+
+- **Feito:** a figura de corpo inteiro na bolha preenchida (Barreira), a figura de braços abertos com três setas
+  separadas (Provocando), a seta verde com a guarda equilibrada (Fortalecido), o golpe rápido com brilho na ponta
+  (Iniciativa; a exclamação preservada) e as três divisas crescentes (Frenesi; as garras preservadas), em
+  `estados_restantes/` (`rodada2-lote5.png` a `rodada2-lote7.png`); a prancha `geral.png` atualizada, com os
+  integrados, os candidatos preservados e as alternativas novas identificados; a avaliação no `LEIA-ME.md` da pasta.
+- **Pendências:** o conector do Aseprite (MCP) não conectou nesta sessão (para usá-lo de novo: reconectar o
+  `aseprite-bridge` pelo `/mcp` e, se preciso, reabrir o Aseprite, porque a linha de comando derruba o canal do editor
+  aberto); a exclusão local de `ferramentas/arte/referencias/capacete/elmo-frente-jean.webp`, feita pelo Jean, continua
+  fora dos commits.
+- **Próximo passo:** o Jean avaliar os nove (as folhas `rodada2-*` e `geral.png`) e decidir o giro do selo do
+  Atordoado. Nada novo integrado; a versão continua 1.158.0. Inimigos, pets e outras etapas não começados.

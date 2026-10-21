@@ -259,3 +259,41 @@ proposta-gota), em tamanho real e a 2×, e a 12× com a grade.
 - **Fotos:** as mesmas situações dos lotes 1, 2 e 3 (`capturas/rodada2-lote<n>/`), atual × candidato × alternativa; o
   Sangramento e a Maldição, agora no jogo, aparecem com os arquivos de produção. Sem erro nem aviso no console. Folhas:
   `rodada2-lote1.png`, `rodada2-lote2.png`, `rodada2-lote3.png`.
+
+**Grupo 2: lotes 5, 6 e 7.**
+
+- **Barreira — a figura de corpo inteiro dentro da bolha** (`estado-barreira-r2`): a mesma bolha azul, agora com o
+  interior preenchido de azul escuro (a esfera) e uma figura clara de cabeça, tronco e pernas (o ferro claro), com
+  espaço em volta; o reflexo saiu de perto da figura. Deixa de ser o busto de "conta de usuário". No 1×, porém, lê mais
+  como "orbe azul" do que como "figura protegida": a figura só aparece com clareza a 2×.
+- **Provocando — a figura e as setas separadas** (`estado-provocando-r2`): a figura de corpo inteiro com os braços
+  abertos e três setas vermelhas finas, com pontas próprias, vindo da esquerda, do alto e da direita na direção da
+  cabeça, com um vão entre as pontas e o corpo; o corpo fica inteiro à vista, sem a mancha vermelha.
+- **Fortalecido — a seta verde e a guarda equilibrada** (`estado-fortalecido-r2`): a seta subindo em verde claro (o
+  verde do veneno, com o contorno escuro; contraste bom no chip escuro e na borda dourada) e a guarda com 3 px de cada
+  lado. A leitura "ataque ↑" continua.
+- **Iniciativa — o golpe que sai primeiro** (`estado-iniciativa-r2`), com a exclamação preservada: a espada em
+  estocada na diagonal, os riscos de velocidade atrás e um brilho dourado na ponta (o golpe rápido que acerta forte).
+  Se separa do Fortalecido (espada em pé com a seta) pelo movimento.
+- **Frenesi — as divisas que crescem** (`estado-frenesi-r2`), com as garras preservadas: três divisas empilhadas, a de
+  baixo pequena e vermelho-escura, a do alto larga e amarela (a intensidade subindo a cada abate). A diferença aparece
+  no 1×: "três degraus subindo", não "três traços".
+- **Fotos:** as mesmas situações dos lotes 5, 6 e 7 (`capturas/rodada2-lote<n>/`), atual × candidato × alternativa; a
+  Fúria, agora no jogo, aparece com o arquivo de produção. Sem erro nem aviso no console. Folhas: `rodada2-lote5.png`,
+  `rodada2-lote6.png`, `rodada2-lote7.png`.
+
+**A prancha geral** (`geral.png`, atualizada): os oito integrados (Firme, Em guarda, Esquiva e os cinco da 1.158.0),
+os nove em avaliação com o sprite atual, o candidato preservado e a alternativa nova lado a lado, a fileira inteira e os
+estados de dano juntos (Fortalecido, Fúria, Frenesi, Iniciativa e Enfraquecido, candidato e nova).
+
+**Avaliação da segunda rodada (a minha leitura em tamanho real; quem aprova é o Jean):**
+
+- *Melhoraram de verdade:* Chamas (a chama única), Fortalecido e Enfraquecido (equilibrados; a seta verde lê melhor que
+  a dourada sobre a borda dourada), Provocando (as setas e o corpo separados), Frenesi (as divisas leem "crescer" no 1×,
+  o que as garras não faziam).
+- *Alternativas sem ganho claro:* Veneno (a gota com a poça é clara, mas a serpente é mais forte; recomendo a
+  serpente); Iniciativa (o golpe rápido diz "primeiro golpe" melhor que a exclamação, mas no 1× é uma espadinha na
+  diagonal; a exclamação continua mais legível, e diz "surpresa").
+- *Continua frágil:* Barreira (a figura saiu do "avatar", mas no 1× o que se lê é uma esfera azul).
+- *Atordoado:* a espiral parada fica; o giro do selo funciona e respeita o movimento reduzido, e é uma decisão de
+  interface para o Jean (a mudança no jogo seria pequena).
