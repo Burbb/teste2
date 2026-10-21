@@ -1,0 +1,111 @@
+{
+ "chip-heroi-ratos/atual": {
+  "estados": [
+   "j:veneno",
+   "j:sangramento"
+  ],
+  "imagens": [
+   "veneno 16px → 17.9px (sprite ou troca da página)",
+   "sangramento 16px → 17.9px /static/hud/icones/estado-sangramento-16.png"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "chip-heroi-cultistas/atual": {
+  "estados": [
+   "j:queimadura",
+   "j:maldito"
+  ],
+  "imagens": [
+   "queimadura 16px → 17.9px (sprite ou troca da página)",
+   "maldito 16px → 17.9px /static/hud/icones/estado-maldito-16.png"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "chip-inimigo-marcado/atual": {
+  "estados": [
+   "c1-1:marcado",
+   "c1-2:marcado"
+  ],
+  "imagens": [
+   "marcado 16px → 16.0px /static/hud/icones/estado-marcado-16.png"
+  ],
+  "cartas": [
+   "c1-1",
+   "c1-2"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "chip-heroi-furtivo/atual": {
+  "estados": [
+   "j:furtivo"
+  ],
+  "imagens": [
+   "furtivo 16px → 17.9px /static/hud/icones/estado-furtivo-16.png",
+   "esquiva ausente"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "chip-heroi-berserker/atual": {
+  "estados": [
+   "j:fortalecido",
+   "j:furia",
+   "j:frenesi"
+  ],
+  "imagens": [
+   "furia 16px → 17.9px /static/hud/icones/estado-furia-16.png",
+   "frenesi 16px → 17.9px (sprite ou troca da página)",
+   "fortalecido 16px → 17.9px (sprite ou troca da página)"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "selo-sangramento/atual": {
+  "selo": [
+   "/static/hud/icones/estado-sangramento-16.png"
+  ],
+  "dono": "c1-1",
+  "erros": [],
+  "avisos": []
+ },
+ "selo-maldicao/atual": {
+  "selo": [
+   "/static/hud/icones/estado-maldito-16.png"
+  ],
+  "dono": "c1-1",
+  "erros": [],
+  "avisos": []
+ },
+ "selo-furtivo/atual": {
+  "selo": [
+   "/static/hud/icones/estado-furtivo-16.png",
+   "/static/hud/icones/estado-esquiva-16.png"
+  ],
+  "dono": "j",
+  "erros": [],
+  "avisos": []
+ },
+ "selo-furia/atual": {
+  "selo": [
+   "/static/hud/icones/estado-furia-16.png"
+  ],
+  "dono": "j",
+  "erros": [],
+  "avisos": []
+ }
+}

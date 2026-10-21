@@ -23,28 +23,32 @@ def chip(out, d, im, x, y, borda=(60, 60, 66, 255)):
     out.alpha_composite(im, (x + 2, y + 2))
 
 
-def cartas(n):
+NOVAS = ("gota", "r2")   # as alternativas da segunda rodada (21/10/2026): estado-<id>-gota, estado-<id>-r2
+
+
+def cartas(n, pre=""):
     """As fotos do lote: [(situação, [(modo, [cartas])])]."""
-    pasta = LOTE / f"capturas/lote{n}"
+    pasta = LOTE / f"capturas/{pre}lote{n}"
     sits = sorted({p.name.split("-atual-")[0] for p in pasta.glob("*-atual-carta*.png")})
     modos = ["atual", "proposta"] + sorted({p.name.split("-carta")[0].split(f"{s}-")[1] for s in sits
                                             for p in pasta.glob(f"{s}-proposta-*-carta*.png")})
     return [(s, [(m, [abre(p) for p in sorted(pasta.glob(f"{s}-{m}-carta*.png"))]) for m in modos]) for s in sits]
 
 
-def folha_lote(n):
+def folha_lote(n, pre=""):
     ids = LOTES[n]
-    fotos = cartas(n)
+    fotos = cartas(n, pre)
     f, f2 = fonte(14), fonte(12)
     # medidas
     larg_cartas = max(sum(sum(2 * c.width + 16 for c in cs) + 30 for _, cs in ms) for _, ms in fotos) if fotos else 0
     alt_fotos = sum(30 + max(c.height for _, cs in ms for c in cs) * 3 + 40 for _, ms in fotos)
-    W = max(60 + 2 * (2 * (16 * Z) + 60), 40 + larg_cartas, 900)
+    W = max(60 + (2 + len(NOVAS)) * (16 * Z + 20) * 2, 40 + larg_cartas, 900)
     H = 80 + 150 + 40 + 16 * Z + 60 + alt_fotos + 40
     out = Image.new("RGBA", (W, H), CARVAO)
     d = ImageDraw.Draw(out)
-    d.text((20, 10), f"Lote {n}: {' e '.join(TITULO[i] for i in ids)} — 16 px (o chip da carta e o selo); "
-                     "proposta, nada no jogo", fill=TEXTO, font=f)
+    d.text((20, 10), f"{'Rodada 2, ' if pre else ''}Lote {n}: {' e '.join(TITULO[i] for i in ids)} — 16 px (o chip da carta e o "
+                     "selo); proposta, nada no jogo" + (" (atual = o sprite; proposta = o candidato do b17ab3dd; "
+                     "proposta-r2/-gota = a alternativa nova)" if pre else ""), fill=TEXTO, font=f)
     y = 44
     finais = [final(k) for k, _ in FINAIS]
     for k, (rot, lado) in enumerate((("atual", [sprite(ATUAL[i]) for i in ids]),
@@ -57,9 +61,10 @@ def folha_lote(n):
             out.alpha_composite(amplia(im, 2), (260 + j * 40, yy - 6))
         d.text((480, yy + 4), "Firme · Em guarda · Esquiva · " + " · ".join(TITULO[i] for i in ids), fill=TEXTO2, font=f2)
     # as tentativas guardadas do lote (proposta/estado-<id>-<nome>-16.png), fora da proposta principal
-    tent = [(p.name[:-7], abre(p)) for i in ids for p in sorted((LOTE / "proposta").glob(f"estado-{i}-*-16.png"))]
+    tent = [(p.name[:-7], abre(p)) for i in ids for p in sorted((LOTE / "proposta").glob(f"estado-{i}-*-16.png"))
+            if p.name[:-7].rsplit("-", 1)[1] not in NOVAS]
     if tent:
-        d.text((20, y + 144), "tentativas guardadas (recusadas na bancada):", fill=TEXTO2, font=f2)
+        d.text((20, y + 144), "tentativas guardadas:", fill=TEXTO2, font=f2)
         for j, (nome, im) in enumerate(tent):
             chip(out, d, im, 300 + j * 200, y + 140)
             out.alpha_composite(amplia(im, 2), (326 + j * 200, y + 134))
@@ -70,7 +75,8 @@ def folha_lote(n):
     y += 22
     x = 20
     for i in ids:
-        for rot, im in (("atual", sprite(ATUAL[i])), ("proposta", proposta(f"estado-{i}"))):
+        novas = [(f"nova: {v}", proposta(f"estado-{i}-{v}")) for v in NOVAS if pre and proposta(f"estado-{i}-{v}")]
+        for rot, im in [("atual", sprite(ATUAL[i])), ("candidato" if pre else "proposta", proposta(f"estado-{i}"))] + novas:
             d.text((x, y), f"{TITULO[i]} ({rot})", fill=TEXTO, font=f2)
             out.alpha_composite(grade_px(im, Z), (x, y + 18))
             x += 16 * Z + 20
@@ -94,8 +100,8 @@ def folha_lote(n):
             x += 30
         y += 2 * h + 30
     out = out.crop((0, 0, W, y + 10))
-    out.save(LOTE / f"lote{n}.png")
-    print(f"lote{n}.png", out.size)
+    out.save(LOTE / f"{pre}lote{n}.png")
+    print(f"{pre}lote{n}.png", out.size)
 
 
 def folha_geral():
@@ -147,8 +153,45 @@ def folha_geral():
     print("geral.png", out.size)
 
 
+def folha_integracao():
+    """integracao-1.158.0.png: os cinco aprovados no jogo, antes (o sprite) × depois (os arquivos de produção), na carta a
+    1920×945 com os mesmos dados (as fotos "atual" dos lotes × capturas/integracao-1.158.0/), e os selos de chegada."""
+    f2 = fonte(12)
+    cap = LOTE / "capturas"
+    pares = [("Sangramento", "lote1/heroi-ratos", "chip-heroi-ratos"), ("Maldição", "lote2/heroi-cultistas", "chip-heroi-cultistas"),
+             ("Marcado", "lote4/inimigo-lobos", "chip-inimigo-marcado"), ("Furtivo", "lote4/heroi-desaparecer", "chip-heroi-furtivo"),
+             ("Fúria", "lote7/heroi-berserker", "chip-heroi-berserker")]
+    linhas = [(t, abre(cap / f"{a}-atual-carta0.png"), abre(cap / f"integracao-1.158.0/{b}-atual-carta0.png")) for t, a, b in pares]
+    selos = [(t, abre(cap / f"integracao-1.158.0/selo-{n}-atual-selo.png")) for t, n in
+             (("Sangramento (Sede de Sangue)", "sangramento"), ("Maldição (a Maldição do Necromante)", "maldicao"),
+              ("Furtivo (Desaparecer, com a Esquiva)", "furtivo"), ("Fúria (Fúria Cega)", "furia"))]
+    W = 40 + max([2 * a.width + 2 * b.width + 80 for _, a, b in linhas] + [3 * s.width + 40 for _, s in selos])
+    H = 40 + sum(2 * max(a.height, b.height) + 40 for _, a, b in linhas) + 40 + sum(2 * s.height + 30 for _, s in selos)
+    out = Image.new("RGBA", (W, H), CARVAO)
+    d = ImageDraw.Draw(out)
+    d.text((20, 10), "1.158.0: os cinco aprovados no jogo — antes (sprite) | depois (arquivos de produção), carta a 1920×945, "
+                     "tamanho real e 2×", fill=TEXTO, font=fonte(14))
+    y = 40
+    for t, a, b in linhas:
+        d.text((20, y), t, fill=TEXTO, font=f2)
+        out.alpha_composite(a, (20, y + 18)); out.alpha_composite(b, (40 + a.width, y + 18))
+        out.alpha_composite(amplia(b, 2), (60 + a.width + b.width, y + 18))
+        y += 2 * max(a.height, b.height) + 40
+    d.text((20, y), "os selos de chegada no jogo (a habilidade usada pela roda); o Marcado não tem selo: as duas fontes dele "
+                    "aplicam direto, sem lance", fill=TEXTO, font=f2)
+    y += 20
+    for t, s in selos:
+        d.text((20, y), t, fill=TEXTO2, font=f2)
+        out.alpha_composite(s, (20, y + 18)); out.alpha_composite(amplia(s, 2), (40 + s.width, y + 18))
+        y += 2 * s.height + 30
+    out.save(LOTE / "integracao-1.158.0.png")
+    print("integracao-1.158.0.png", out.size)
+
+
 if __name__ == "__main__":
-    if sys.argv[1] == "lote":
-        folha_lote(int(sys.argv[2]))
+    if sys.argv[1] == "integracao":
+        folha_integracao()
+    elif sys.argv[1] == "lote":   # lote <n> [rodada2]: a folha da segunda rodada lê capturas/rodada2-lote<n>/
+        folha_lote(int(sys.argv[2]), f"{sys.argv[3]}-" if len(sys.argv) > 3 else "")
     else:
         folha_geral()

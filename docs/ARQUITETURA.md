@@ -82,7 +82,12 @@ pacote: `from rpg.combate import Combate`.
   corrente rompida, `estado-firme-16.png`), enquanto o sprite `cadeado` fica nos outros papéis; desde a 1.156.0, o Em
   guarda (o escudo de ferro, `estado-guarda-16.png`), enquanto o sprite `escudo` fica no Erguer Escudo, nos talentos e
   no espaço vazio; desde a 1.157.0, a Esquiva (a figura em movimento, `estado-esquiva-16.png`), enquanto o sprite
-  `folha` fica na Fúria da Natureza, no Pés Leves, no Antídoto e na Agilidade das celebrações. A flecha ao lado da
+  `folha` fica na Fúria da Natureza, no Pés Leves, no Antídoto e na Agilidade das celebrações; desde a 1.158.0, o
+  Sangramento (`estado-sangramento-16.png`), a Maldição (`estado-maldito-16.png`), o Marcado (`estado-marcado-16.png`),
+  o Furtivo (`estado-furtivo-16.png`) e a Fúria (`estado-furia-16.png`), enquanto os sprites `gota`, `gota_roxa`,
+  `flecha`, `olho` e `machado` ficam nas habilidades, nos talentos, nos ferimentos e nos outros usos. Os outros estados
+  (Veneno, Chamas, Atordoado, Enfraquecido, Barreira, Provocando, Fortalecido, Iniciativa, Frenesi) seguem com o sprite
+  do catálogo. A flecha ao lado da
   quantidade de flechas na carta do Arqueiro também tem papel próprio (`Icones.contadorFlechas`, 1.155.0); o sprite
   `flecha` fica no custo das habilidades, na orientação, no elemento "à distância" e nos projéteis.
 - Acúmulo de bônus, como nos jogos do gênero: **a mesma fonte renova** (aplicar o mesmo estado de novo fica com o

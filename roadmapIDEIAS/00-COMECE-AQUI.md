@@ -5282,3 +5282,16 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   Jean, continua fora dos commits.
 - **Próximo passo:** o Jean avaliar as folhas `lote1.png` a `lote7.png` e `geral.png`; aprovar, pedir retoque ou outra
   construção por estado. Nada integrado; a versão continua 1.157.0.
+
+### 21/10/2026 (data do computador local) — Sangramento, Maldição, Marcado, Furtivo e Fúria no jogo (1.158.0)
+
+- **Decisão de Jean:** integrar os cinco aprovados nas versões da prancha geral do `b17ab3dd`, sem retoques, só nos
+  estados.
+- **Feito:** as fontes em `ferramentas/arte/aseprite/estado-<id>/` (sangramento, maldito, marcado, furtivo, furia); os
+  PNGs de 16 e o @2x pelo `exportar_aseprite.py`, idênticos byte a byte aos aprovados (`todas --conferir`: tudo igual);
+  o papel `ESTADO` em `icones.js` (o chip e o selo); os sprites `gota`, `gota_roxa`, `flecha`, `olho` e `machado`
+  intactos nos outros papéis. Conferido no jogo a 1920×945 com os arquivos de produção (os chips e os selos de chegada
+  pela roda: Sede de Sangue, a Maldição do Necromante, Desaparecer, Fúria Cega); o Marcado não tem selo de chegada no
+  jogo (o Marcar Presa e o evento da estrada aplicam direto, sem lance). Folha:
+  `estados_restantes/integracao-1.158.0.png`.
+- **Continua:** os outros nove estados numa segunda rodada no protótipo.

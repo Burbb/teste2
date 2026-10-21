@@ -3752,3 +3752,10 @@ habilidades ao herói; sem ela, o cenário é o mesmo). Sem erro no console. A f
 **Pedido de Jean (21/10/2026, para a madrugada):** uma proposta por estado para os 14 estados que ainda usam os sprites
 do jogo, em sete lotes, só no protótipo. O processo, as regras conferidas, as tentativas e a avaliação de cada lote
 estão em `estados_restantes/LEIA-ME.md`; as folhas em `estados_restantes/lote<n>.png` e `geral.png`. Nada integrado.
+
+### Sangramento, Maldição, Marcado, Furtivo e Fúria no jogo (1.158.0)
+
+**Decisão de Jean (21/10/2026):** os cinco da prancha geral do `b17ab3dd` aprovados e integrados sem retoques, só nos
+estados (o chip e o selo). As fontes copiadas sem mudança para `ferramentas/arte/aseprite/estado-<id>/`; o
+`exportar_aseprite.py` grava os PNGs de 16 e @2x idênticos, byte a byte, aos aprovados. O registro da conferência no
+jogo e a folha em `estados_restantes/` (`integracao-1.158.0.png`, `capturas/integracao-1.158.0/`).

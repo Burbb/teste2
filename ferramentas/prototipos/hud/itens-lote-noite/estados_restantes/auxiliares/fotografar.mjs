@@ -4,6 +4,12 @@
 // (.ef[data-ef="<id>"] img.sprite). O jogo fica intacto: os sprites e os outros papéis deles não são tocados.
 // A situação vem de situacoes.json (por lote): o cenário, as variáveis, a habilidade usada antes da foto (opcional) e
 // os estados que a foto procura; cada carta que tem um deles é fotografada, e o palco inteiro também.
+// Uma situação com "gira": true é o teste da rotação do selo do Atordoado (só nesta página): os modos proposta-gira e
+// proposta-gira-reduzido (o mesmo com prefers-reduced-motion: reduce); o selo do Atordoado ganha a espiral proposta e uma
+// volta em 4 passos de 90° (sem borrar o pixel), só sem movimento reduzido; o chip fica parado.
+// MODOS=atual: só os arquivos do jogo (a conferência de uma integração). Uma situação com "selo": true usa a habilidade e
+// fotografa o selo do estado que chega (.faixa-acao.selos) sobre a carta; nas de alvo único, clica no primeiro inimigo
+// se o jogo pedir o alvo.
 //   PLAYWRIGHT_MODULO=<file:// do index.mjs> node fotografar.mjs <raiz> <lote> <pasta das fotos>
 import { spawn } from "child_process";
 import { readFileSync, mkdirSync, existsSync } from "fs";
@@ -13,7 +19,9 @@ const [raiz, lote, saida] = process.argv.slice(2);
 const PY = process.env.PYTHON || (process.platform === "win32" ? "python" : "python3");
 const espera = (ms) => new Promise((r) => setTimeout(r, ms));
 const aqui = path.join(raiz, "ferramentas/prototipos/hud/itens-lote-noite/estados_restantes");
-const SITUACOES = JSON.parse(readFileSync(path.join(aqui, "auxiliares/situacoes.json"), "utf8"))[lote];
+// SO=<nome>,...: só essas situações do lote
+const SITUACOES = JSON.parse(readFileSync(path.join(aqui, "auxiliares/situacoes.json"), "utf8"))[lote]
+  .filter((s) => !process.env.SO || process.env.SO.split(",").includes(s.nome));
 const png = (id) => path.join(aqui, `proposta/estado-${id}-16.png`);
 // a proposta troca todo estado do lote que já tem desenho; VARIANTES=orbita,... acrescenta um modo por variante
 // (proposta-<variante>), com estado-<id>-<variante>-16.png onde ela existe e a proposta principal nos outros
@@ -26,7 +34,9 @@ mkdirSync(saida, { recursive: true });
 const b = await chromium.launch();
 const registro = {};
 for (const sit of SITUACOES) {
-  for (const modo of ["atual", ...Object.keys(TROCAS)]) {
+  const modos = sit.gira ? ["proposta-gira", "proposta-gira-reduzido"]
+    : process.env.MODOS ? process.env.MODOS.split(",") : ["atual", ...Object.keys(TROCAS)];
+  for (const modo of modos) {
     const proc = spawn(PY, ["-m", "tests.navegador.cenarios", sit.cenario], { cwd: raiz,
       env: { ...process.env, PYTHONPATH: raiz, PYTHONIOENCODING: "utf-8", VELOCIDADE: "rapido", PERIODO: "0", ...sit.amb } });
     let url = null; proc.stdout.on("data", (d) => { const m = String(d).match(/http:\S+/); if (m) url = m[0]; });
@@ -36,12 +46,50 @@ for (const sit of SITUACOES) {
       const erros = [], avisos = [];
       p.on("pageerror", (e) => erros.push(String(e)));
       p.on("console", (m) => { if (m.type() === "error" || m.type() === "warning") avisos.push(m.text()); });
+      if (modo === "proposta-gira-reduzido") await p.emulateMedia({ reducedMotion: "reduce" });
       await p.goto(url);
       await p.waitForSelector('.carta[data-uid="j"]', { timeout: 30000 });
+      if (sit.gira) await p.evaluate((espiral) => {
+        const css = document.createElement("style");
+        css.textContent = "@keyframes gira-estado { to { transform: rotate(360deg); } }"
+          + "@media (prefers-reduced-motion: no-preference) { .faixa-acao.selos img.gira { animation: gira-estado .6s steps(4, end) 1; } }";
+        document.head.append(css);
+        const estrela = new DOMParser().parseFromString(Sprites.img("estrela", 1), "text/html").querySelector("img").getAttribute("src");
+        new MutationObserver(() => {
+          for (const im of document.querySelectorAll(".faixa-acao.selos img")) if (im.getAttribute("src") === estrela) { im.src = espiral; im.classList.add("gira"); }
+          for (const im of document.querySelectorAll('.ef[data-ef="atordoado"] img.sprite')) if (im.src !== espiral) im.src = espiral;
+        }).observe(document.body, { subtree: true, childList: true });
+      }, "data:image/png;base64," + readFileSync(png("atordoado")).toString("base64"));
       if (sit.habilidade) {   // usa a habilidade pela roda e pelo seletor, como o jogador
         await espera(1500);
         await p.click('.roda-botao[data-slot="habilidades"]', { timeout: 30000 });
-        await p.click(`.rj-linha[data-hab="${sit.habilidade}"]`, { timeout: 10000 });
+        await p.click(sit.habilidade.split("|").map((h) => `.rj-linha[data-hab="${h}"]`).join(","), { timeout: 10000 });
+        if (sit.selo) {
+          // o alvo, quando o jogo pede (clique num inimigo); o selo dura 1,5 s: a foto sai assim que ele aparece
+          const alvo = p.locator('.carta[data-uid^="c"]').first();
+          const selo = p.waitForSelector(".faixa-acao.selos", { timeout: 20000 });
+          await espera(700);
+          if (!(await p.$(".faixa-acao.selos"))) await alvo.click({ timeout: 5000 }).catch(() => {});
+          const s = await selo;
+          // a rotação: o ângulo da imagem do selo em quatro instantes (a matriz do transform), e quatro fotos seguidas
+          const giro = [];
+          if (sit.gira) for (let k = 0; k < 4; k++) {
+            giro.push(await p.evaluate(() => { const i = document.querySelector(".faixa-acao.selos img.gira");
+              return i ? `${getComputedStyle(i).animationName} ${getComputedStyle(i).transform}` : "sem a espiral"; }));
+            await s.screenshot({ path: path.join(saida, `${sit.nome}-${modo}-quadro${k}.png`) }).catch(() => {});
+            await espera(120);
+          }
+          await espera(200);
+          const dono = sit.carta || await s.evaluate((el) => el.closest(".carta") ? el.closest(".carta").dataset.uid : null);
+          const c = dono ? await p.locator(`.carta[data-uid="${dono}"]`).boundingBox() : await s.boundingBox(), b = await s.boundingBox();
+          const x = Math.min(c.x, b.x) - 8, y = Math.min(c.y, b.y) - 8;
+          await p.screenshot({ path: path.join(saida, `${sit.nome}-${modo}-selo.png`),
+            clip: { x, y, width: Math.max(c.x + c.width, b.x + b.width) - x + 8, height: Math.max(c.y + c.height, b.y + b.height) - y + 8 } });
+          registro[`${sit.nome}/${modo}`] = { selo: await s.evaluate((el) => [...el.querySelectorAll("img")].map((i) => i.getAttribute("src").slice(0, 60))),
+                                              dono, giro, erros, avisos };
+          await p.close();
+          continue;
+        }
       }
       await p.waitForSelector(`.carta .ef[data-ef="${sit.estados[0]}"]`, { timeout: 30000 });
       await espera(sit.habilidade ? 2500 : 1500);
@@ -61,7 +109,7 @@ for (const sit of SITUACOES) {
       registro[`${sit.nome}/${modo}`] = await p.evaluate((ids) => ({
         estados: [...document.querySelectorAll(".carta .ef")].map((e) => `${e.closest(".carta").dataset.uid}:${e.dataset.ef}`),
         imagens: ids.map((id) => { const i = document.querySelector(`.ef[data-ef="${id}"] img`);
-          return i ? `${id} ${i.naturalWidth}px → ${i.getBoundingClientRect().width.toFixed(1)}px ${i.src.startsWith("data:image/png;base64,iVBOR") && i.naturalWidth === 16 ? "(png 16)" : ""}` : `${id} ausente`; }),
+          return i ? `${id} ${i.naturalWidth}px → ${i.getBoundingClientRect().width.toFixed(1)}px ${i.src.startsWith("data:") ? "(sprite ou troca da página)" : i.getAttribute("src")}` : `${id} ausente`; }),
       }), sit.estados);
       Object.assign(registro[`${sit.nome}/${modo}`], { cartas: uids, erros, avisos });
       await p.close();

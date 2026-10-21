@@ -209,3 +209,20 @@ console. O jogo não mudou (`rpg/` e `tests/` intactos; a troca das fotos é só
   Fortalecido e Enfraquecido são o mesmo desenho de propósito, com a direção e a cor invertidas.
 - *Limites das fotos:* o selo de chegada não foi trocado (não tem seletor por estado); o herói atordoado e a Esquiva de
   1 turno do Desaparecer não têm foto parada válida (se gastam antes de o jogador agir).
+
+## A integração dos cinco aprovados (1.158.0)
+
+**Decisão de Jean (21/10/2026):** Sangramento, Maldição, Marcado, Furtivo e Fúria, nas versões da prancha geral do
+`b17ab3dd`, aprovados e integrados sem retoques. As fontes destes cinco (`fontes/estado-<id>/`) foram copiadas sem
+mudança para `ferramentas/arte/aseprite/estado-<id>/`; os PNGs do jogo saem do `exportar_aseprite.py` idênticos, byte a
+byte, aos de `proposta/`. O papel é `ESTADO` em `rpg/web/static/icones.js` (o chip da carta e o selo do estado que
+chega); os sprites do jogo ficam nos outros papéis.
+
+**Conferido no jogo** com os arquivos de produção e os saves temporários dos cenários, a 1920×945
+(`auxiliares/fotografar.mjs` com `MODOS=atual` e as situações `integracao` de `situacoes.json`; as fotos e o registro
+em `capturas/integracao-1.158.0/`): os chips nas mesmas situações dos lotes, e os selos de chegada pela roda e pelo
+seletor de habilidades, como o jogador faz (o roteiro ganhou `selo`, `carta` e `SO`): Sede de Sangue (Sangramento ▼ no
+bandido), a Maldição do Necromante (▼), Desaparecer (Furtivo ▲, com a Esquiva) e Fúria Cega (▲). **O Marcado não tem
+selo de chegada no jogo:** as duas fontes dele (o Marcar Presa e o evento da estrada) aplicam o estado direto, sem
+lance; o papel cobre o selo se um dia houver. O registro confirma que o Veneno, as Chamas, o Frenesi e o Fortalecido
+continuam com os sprites. Sem erro nem aviso no console. A folha: `integracao-1.158.0.png`.

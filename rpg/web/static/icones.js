@@ -29,6 +29,7 @@ const Icones = (() => {
     "attr-agilidade": [24, 32, 64], "attr-ataque": [24, 32, 64], "attr-defesa": [24, 32, 64], "attr-poder": [24, 32, 64],
     "bandagem": [16, 24, 32], "bau": [32, 48, 64], "bomba": [32], "botas-ferro": [32, 40, 48, 64],
     "contador-flechas": [16], "estado-firme": [16], "estado-guarda": [16], "estado-esquiva": [16],
+    "estado-sangramento": [16], "estado-maldito": [16], "estado-marcado": [16], "estado-furtivo": [16], "estado-furia": [16],
     "cota": [32, 40, 48, 64], "elmo": [32, 40, 48, 64], "escudo": [32, 40, 48, 64], "espada": [32, 40, 48, 64], "lugar-caverna": [32, 40],
     "lugar-cidadela": [32, 40], "lugar-floresta": [32, 40], "lugar-montanha": [32, 40], "lugar-pantano": [32, 40],
     "lugar-planicie": [32, 40], "lugar-ruinas": [32, 40], "lugar-vila": [32, 40], "maca": [32, 40, 48, 64],
@@ -157,11 +158,15 @@ const Icones = (() => {
   // os ícones dos estados da luta (16, o chip da carta e o selo do estado que chega), pelo id do estado no motor
   // (rpg/estados.py): o Firme (1.155.0, a corrente rompida: dois elos com o vão da ruptura), o Em guarda (1.156.0, o
   // escudo de ferro em pé, o aro e a face em duas águas) e a Esquiva (1.157.0, a figura em movimento: a cabeça, o braço
-  // para trás, o tronco inclinado, as pernas em passada e os riscos de velocidade). Só os estados: o "cadeado" do jogo
-  // fica nos outros papéis (o talento Armadilheiro, o bloqueio de vida, os motivos do mercado, o Salvar), o "escudo" no
-  // Erguer Escudo, nos talentos e no espaço vazio, e a "folha" na Fúria da Natureza, no Pés Leves, no Antídoto e na
-  // Agilidade das celebrações; os estados sem desenho aqui ficam com o sprite que o catálogo do motor dá a eles
-  const ESTADO = { firme: "estado-firme", guarda: "estado-guarda", esquiva: "estado-esquiva" };
+  // para trás, o tronco inclinado, as pernas em passada e os riscos de velocidade). Desde a 1.158.0: o Sangramento (a
+  // gota grande e a pequena atrás), a Maldição (a caveira roxa de olhos acesos), o Marcado (o alvo de anéis), o Furtivo
+  // (o capuz com os olhos) e a Fúria (o rosto vermelho de raiva). Só os estados: o "cadeado" do jogo fica nos outros
+  // papéis (o talento Armadilheiro, o bloqueio de vida, os motivos do mercado, o Salvar), o "escudo" no Erguer Escudo,
+  // nos talentos e no espaço vazio, a "folha" na Fúria da Natureza, no Pés Leves, no Antídoto e na Agilidade das
+  // celebrações, e a "gota", a "gota_roxa", a "flecha", o "olho" e o "machado" nas habilidades, nos talentos, nos
+  // ferimentos, nos serviços e nos outros usos; os estados sem desenho aqui ficam com o sprite do catálogo do motor
+  const ESTADO = { firme: "estado-firme", guarda: "estado-guarda", esquiva: "estado-esquiva", sangramento: "estado-sangramento",
+                   maldito: "estado-maldito", marcado: "estado-marcado", furtivo: "estado-furtivo", furia: "estado-furia" };
 
   /** O arquivo de `peca` para mostrar em `lado` px: o tamanho igual ou o mais perto; maior que o maior, o dobro dele. */
   function arquivos(peca, lado) {
