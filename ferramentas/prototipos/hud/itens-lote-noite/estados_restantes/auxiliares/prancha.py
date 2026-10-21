@@ -240,8 +240,7 @@ def folha_estado(k):
     pasta = LOTE / f"capturas/rodada3-{k}"
     sits = sorted({p.name.split("-atual-")[0] for p in pasta.glob("*-atual-carta*.png")})
     modos = ["atual"] + [m for m in MODOS_RODADA3[k] if any(pasta.glob(f"*-{m}-carta*.png"))]
-    finais = [final(i) for i in ("firme", "guarda", "esquiva", "sangramento", "maldito", "marcado", "furtivo", "furia",
-                                 "queimadura", "fortalecido", "enfraquecido", "frenesi")]
+    finais = [final(i) for i, _ in FINAIS] + [final(i) for i in INTEGRADOS if i != k]
     out = Image.new("RGBA", (2000, 4000), CARVAO)
     d = ImageDraw.Draw(out)
     d.text((20, 10), f"{TITULO[k]} — terceira rodada (21/10/2026), 16 px; proposta, nada aprovado. Atual no jogo: o sprite.",
@@ -253,7 +252,7 @@ def folha_estado(k):
             chip(out, d, o, 300 + n * 24, y)
         out.alpha_composite(amplia(im, 2), (300 + len(finais) * 24 + 20, y - 6))
         y += 40
-    d.text((300, y), "a fileira: os 12 estados no jogo e a opção (no fim)", fill=TEXTO2, font=f2)
+    d.text((300, y), f"a fileira: os {len(finais)} estados no jogo e a opção (no fim)", fill=TEXTO2, font=f2)
     y += 30
     x = 20
     for rot, im in [("atual", sprite(ATUAL[k]))] + opcoes:

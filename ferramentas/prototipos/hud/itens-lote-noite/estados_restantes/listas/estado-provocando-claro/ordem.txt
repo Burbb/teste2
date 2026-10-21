@@ -1,0 +1,1 @@
+figura,setas,contorno

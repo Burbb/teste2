@@ -384,3 +384,24 @@ na bolha (candidatos antigos); no jogo, os arquivos com esses nomes são os apro
 lobos, a Barreira sozinha e ao lado do Em guarda, e os selos de chegada da Flecha Envenenada (Veneno ▼), da Prisão de
 Gelo (Atordoado ▼, o congelado) e da Barreira Arcana (▲). Sem erro nem aviso no console. A cúpula e a parede da
 Barreira ficam como alternativas não escolhidas. Folha: `integracao-1.160.0.png`.
+
+## Provocando: o acabamento do busto do `b17ab3dd` (proposta)
+
+**Pedido de Jean (21/10/2026):** retomar o candidato da primeira rodada (o busto com as três setas vermelhas
+convergindo) e ajustar só o acabamento da figura: mais branca e legível no fundo escuro, sem os planos cinza de boneco
+modelado, com sombras contidas para separar a cabeça dos ombros, e as setas distintas. Sem a figura de braços abertos
+da rodada 2, sem outra pose e sem anatomia.
+
+**Feito** (`estado-provocando-claro`): cada pixel no mesmo lugar do original (a mesma silhueta e o mesmo contorno; as
+setas idênticas: nenhum pixel mudou fora da figura, conferido na comparação dos PNGs); a figura passa de quatro cinzas
+(e4e8ec, b0b6bd, 848b94, 646a73, o volume modelado) para dois tons: o branco (f2f4f6) em toda a figura e uma sombra
+contida (b4bcc6) só no pescoço, que separa a cabeça dos ombros, e na beira direita, do lado oposto à luz. Camadas
+figura, setas, contorno. A fonte foi montada no editor pelo MCP (`montar_mcp.py`, 0 diferentes na releitura) e
+exportada com a conferência (`montar.py --so-exportar`); o conector continuou de pé. A folha `rodada3-provocando.png`:
+o sprite atual, o original e o ajuste, junto dos 15 estados do jogo, a 12× e na carta do esqueleto do Necromante a
+1920×945 com os mesmos dados. Sem erro nem aviso no console.
+
+**Leitura:** a figura passa a ler como uma silhueta clara e inteira contra o chip escuro, sem o aspecto de peça cinza
+modelada; as setas vermelhas continuam à parte. O que não muda (de propósito, por ser a composição aprovada para
+retomar): as setas ainda formam um grupo vermelho denso no alto, e a figura em busto continua parecida com a da
+Barreira de antes (que saiu do jogo nesta mesma rodada; a Barreira integrada não tem figura).

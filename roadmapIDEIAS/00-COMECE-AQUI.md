@@ -5354,3 +5354,12 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   os chips (a Barreira também ao lado do Em guarda) e os três selos de chegada (Flecha Envenenada, Prisão de Gelo,
   Barreira Arcana). Folha: `estados_restantes/integracao-1.160.0.png`.
 - **Continua:** Iniciativa (A e B finalistas) e Provocando (o acabamento do busto, no protótipo) em avaliação.
+
+### 21/10/2026 (data do computador local) — Provocando: o acabamento do busto (proposta)
+
+- **Feito:** o candidato do `b17ab3dd` (o busto com as setas convergindo) com a figura em branco e uma sombra contida no
+  pescoço e na beira direita, no lugar dos quatro cinzas modelados; a mesma silhueta e as mesmas setas
+  (`estado-provocando-claro`, fonte pelo MCP). Folha `estados_restantes/rodada3-provocando.png` (original × ajuste na
+  carta a 1920×945) e a prancha `geral.png`.
+- **Continua em avaliação:** Provocando (o ajuste) e Iniciativa (as finalistas A, a barra larga, e B, o estouro, sem
+  mudança). A versão continua 1.160.0. Nenhuma outra etapa começada.

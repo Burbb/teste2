@@ -35,6 +35,8 @@ CORES = {
     "E": "6e5442", "I": "4a3628", "J": "f0d070", "V": "c08a48",
     # a energia arcana da terceira rodada (Barreira): ciano do escuro ao claro
     "<": "16384c", "=": "2a7894", ">": "62c4e0", "^": "d4f4ff", "@": "1a1c20",
+    # a figura clara do Provocando (o acabamento do busto, 21/10/2026): o branco e a sombra contida
+    "!": "f2f4f6", "?": "b4bcc6",
 }
 
 def com_contorno(grade):
@@ -882,6 +884,24 @@ BARREIRA_IMPACTO = com_contorno([
             "................",
             "................"])
 
+PROVOCANDO_BUSTO_CLARO = [
+                         "#S#....#S#...#S#",
+                         ".#S#...#S#..#S#.",
+                         "..#S##.#S#.#S#..",
+                         "..#rSr#SSS#rSr#.",
+                         "...#rS##S##Sr#..",
+                         "....#r#####r#...",
+                         ".....#!!!?##....",
+                         "....#!!!!!?#....",
+                         "....#!!!!!?#....",
+                         ".....#!!!?#.....",
+                         "...###????###...",
+                         "..#!!!!!!!!??#..",
+                         ".#!!!!!!!!!!??#.",
+                         ".#!!!!!!!!!!??#.",
+                         ".#!!!!!!!!!!??#.",
+                         "..############.."]
+
 # as camadas de cada desenho, de baixo para cima, pela letra
 def _por(mapa, resto):
     return lambda ch: "contorno" if ch == "#" else next((k for k, v in mapa.items() if ch in v), resto)
@@ -985,6 +1005,9 @@ ICONES = {
     "estado-barreira-impacto": (BARREIRA_IMPACTO, ["pelicula", "impacto", "contorno"],
                                 lambda x, y, ch: "contorno" if ch == "#" else "impacto" if ch in "^@" and x <= 6 and 4 <= y <= 10
                                 else "pelicula"),
+    # o Provocando do b17ab3dd com o acabamento da figura: a mesma silhueta e as mesmas setas, a figura em dois tons claros
+    "estado-provocando-claro": (PROVOCANDO_BUSTO_CLARO, ["figura", "setas", "contorno"],
+                                lambda x, y, ch: "contorno" if ch == "#" else "setas" if ch in "SsrR" else "figura"),
     # tentativas guardadas (fora da proposta principal)
     "estado-veneno-presas": (VENENO_PRESAS, ["presas", "veneno", "contorno"],
                              lambda x, y, ch: "contorno" if ch == "#" else "presas" if ch in "Wwx" else "veneno"),
