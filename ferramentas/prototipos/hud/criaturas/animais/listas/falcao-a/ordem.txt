@@ -1,0 +1,1 @@
+plumagem,peito,bico,olho

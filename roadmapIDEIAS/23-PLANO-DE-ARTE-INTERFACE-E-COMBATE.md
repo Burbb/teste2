@@ -908,6 +908,9 @@ folhas `lobo-r2.png` e `bandido-r2.png`.
 **Reservado:** o Bandido do chapéu, conceito para um possível chefe futuro, fora do jogo (sem chefe, nome, história,
 atributos nem mapeamento); fonte, PNGs e prévia em `ferramentas/prototipos/hud/criaturas/lobo_bandido/` (a seção
 "Conceito reservado" do `LEIA-ME.md`).
+**Os animais do patrulheiro (21/10/2026, proposta):** duas direções do Urso Pardo e do Falcão Peregrino e o teste do
+retrato do Lobo integrado no Lobo Cinzento aliado, em `ferramentas/prototipos/hud/criaturas/animais/`; a carta aliada e
+o painel da comitiva são os usos reais. O `fera` e o `voador` continuam; nada aprovado.
 
 O atalho **Mapa** da doca já foi concluído; esta frente trata dos símbolos internos de caminhos e mapas.
 Não afirmar que só restam talentos e habilidades após este bloco sem conferir os consumíveis, variantes e

@@ -5469,3 +5469,15 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   conceito reservado no `LEIA-ME.md` de lá ("Conceito reservado").
 - **Continua:** as outras criaturas seguem pelos traços (o `fera` do animal do herói e das outras feras, o `humano`
   dos outros humanos, a caveira do troll). O próximo par é decisão do Jean.
+
+### 21/10/2026 (data do computador local) — Os animais do patrulheiro (proposta)
+
+- **Pedido de Jean:** duas propostas do Urso Pardo e duas do Falcão Peregrino, e o teste do retrato do Lobo integrado,
+  sem mudança, no lugar do Lobo Cinzento aliado; só no protótipo.
+- **Feito:** em `ferramentas/prototipos/hud/criaturas/animais/`: `urso-a` (de frente), `urso-b` (de perfil),
+  `falcao-a` (a cabeça de perfil) e `falcao-b` (três quartos com a asa); fontes pelo MCP, exportação conferida; as
+  folhas `urso.png`, `falcao.png`, `lobo-cinzento.png` e `animais.png` (a carta aliada e o painel da comitiva a
+  1920×945 com os mesmos dados, a 3× e a 12×; a fileira com os retratos aprovados). Os usos reais (a carta aliada e o
+  painel; a figura do acampamento fica fora) e a avaliação no `LEIA-ME.md` da pasta. Minha preferência: o Urso A, o
+  Falcão A e o Lobo reaproveitado.
+- **Continua:** nada aprovado; a versão continua 1.163.0. O `fera` e o `voador` iguais.

@@ -112,6 +112,11 @@ A escolha do par e da direção é do Jean; nada foi começado.
   Bandido do capuz, da máscara e da faca, pela família. O `fera` continua no animal do herói, no lobo gélido e nas
   outras feras, e o `humano` nos outros humanos: o problema 1 e o 4 ficam menores, não resolvidos.
 
+## Em proposta
+
+- **Os animais do patrulheiro** (`animais/`, 21/10/2026): duas propostas do Urso e duas do Falcão, e o teste do Lobo
+  integrado no lugar do Lobo Cinzento aliado (só na página). O `fera` e o `voador` continuam; nada integrado.
+
 ## Reservado
 
 - **O Bandido do chapéu** (`lobo_bandido/`, a segunda rodada): conceito guardado para um possível chefe futuro, fora
