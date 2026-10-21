@@ -941,7 +941,8 @@ patrulheiro estão concluídos.** O `fera` das outras criaturas e a figura do ac
 **O par seguinte (21/10/2026, proposta): a Aranha Gigante e o Troll**, duas direções de cada em
 `ferramentas/prototipos/hud/criaturas/aranha_troll/` (a aranha de frente e de lado em ameaça; o troll de frente e de
 perfil com a corcunda), as folhas `aranha.png` e `troll.png`; o alcance previsto só nas famílias `aranha` e `troll` (a
-Rainha Aracnídea e o Rei Troll fora). Nada aprovado.
+Rainha Aracnídea e o Rei Troll fora). Segunda rodada: três de cada pelas referências geradas (a aranha de frente; o
+troll de carne), as folhas `aranha-r2.png` e `troll-r2.png`. Nada aprovado.
 
 O atalho **Mapa** da doca já foi concluído; esta frente trata dos símbolos internos de caminhos e mapas.
 Não afirmar que só restam talentos e habilidades após este bloco sem conferir os consumíveis, variantes e

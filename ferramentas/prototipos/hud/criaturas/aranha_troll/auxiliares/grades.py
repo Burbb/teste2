@@ -25,6 +25,10 @@ CORES = {
     "k": "1e1813", "K": "3a2e24", "M": "5c4a38", "L": "7e664c", "H": "a68a64", "a": "b09a5a", "E": "060505", "x": "8a8a84", "F": "d2c09a", "f": "7a3a24",
     # o troll: a pele de pedra, a luz do nariz, as sombras, o musgo, os olhos, a boca, as presas
     "G": "8a8f80", "J": "a6ac98", "g": "6a7062", "d": "4c5248", "D": "30342e", "O": "5e6a3e", "o": "3e4a2c", "y": "c0a040", "e": "0e0c0a", "m": "2a1a14", "T": "d8d0b4",
+    # a segunda rodada, das referências geradas: a aranha (o corpo marrom-acinzentado, as juntas claras, os olhos
+    # âmbar, as quelíceras cinza e as presas claras) e o troll de carne (o verde, a sombra, os olhos pálidos, as presas,
+    # a roupa de couro)
+    "Q": "17120f", "R": "3a2f28", "S": "5e4c40", "U": "86705e", "V": "b8a48e", "P": "e08a34", "C": "7a746c", "c": "3e3a36", "X": "d8d0c0", "Y": "5a544c", "A": "6e8a4c", "I": "88a262", "i": "52683a", "N": "34482a", "Z": "1e2a18", "W": "c8b884", "B": "ecdcb4", "b": "b8a47e", "h": "6a4a30", "j": "46301e",
 }
 
 ARANHA_A = [
@@ -100,6 +104,125 @@ TROLL_B = [
     "OOoOOoOOOoOOoOOO",
 ]
 
+# A segunda rodada (21/10/2026, pedido do Jean; as propostas A e B ficam como histórico): três de cada, pelas duas
+# referências geradas na conversa (ferramentas/arte/referencias/icones/: "Retrato pixelado da aranha sombria-1.png" e
+# "Retrato pixelado de troll montanhês-2.png"), redesenhadas à mão na grade de 16 com a referência reduzida como guia
+# oculta (guias/). A aranha: 1, a transposição de frente (as patas grossas e articuladas dos dois lados, os olhos âmbar
+# em duas fileiras, as quelíceras cinza e as presas claras separadas); 2, o rosto de perto (os olhos e as quelíceras
+# grandes, as presas compridas, só a ponta das patas nos cantos); 3, as patas da frente erguidas em arco por cima da
+# cabeça. O troll de carne: 1, a transposição em três quartos (a orelha, a testa baixa, o olho pálido na sombra, o
+# nariz largo, a mandíbula pesada com as duas presas, o pescoço grosso, a roupa de couro); 2, de frente (a cabeça
+# estreita em cima e a mandíbula larga embaixo, a boca caída, as presas subindo por cima do lábio); 3, de perfil para
+# a esquerda (a testa saliente, o nariz, a boca inclinada, o queixo projetado com a presa, a nuca e o pescoço grosso).
+ARANHA_1 = [
+    "................",
+    "..VS........SV..",
+    ".VSSQ.RSSR.QSSV.",
+    ".SSQ.RSUUSR.QSS.",
+    "VSQ.RSSSSSSR.QSV",
+    "SSQ.RUSSSSUR.QSS",
+    "SQ.VRSPSSPSRV.QS",
+    "SQ.SRPSPPSPRS.QS",
+    "Q.VSQRCCQCCRQSV.",
+    ".VSQ.CCXQXCC.QSV",
+    ".SSQ.cCXQXCc.QSS",
+    "VSQ..cXQ.QXc..QS",
+    "SSQ...Y...Y...QS",
+    "SQ............QS",
+    "Q..............Q",
+    "................",
+]
+ARANHA_2 = [
+    ".V............V.",
+    ".SQ..RSSSSR..QS.",
+    "VSQ.RSUUUUSR.QSV",
+    "SQ.RSUSSSSUSR.QS",
+    "SQ.RSPQSSPQSR.QS",
+    "Q.RSPQPSSPQPSR.Q",
+    ".VRSSSSSSSSSSRV.",
+    "VSQRCCCQQCCCRQSV",
+    "SQQCCXCQQCXCCQQS",
+    "SQ.cCXCQ.CXCc.QS",
+    "Q..cCXc...XCc..Q",
+    "...ccXc...XCc...",
+    "....cY.....Yc...",
+    ".....Y.....Y....",
+    "................",
+    "................",
+]
+ARANHA_3 = [
+    "..VSQ......QSV..",
+    ".VSSQ......QSSV.",
+    ".SSQ..V..V..QSS.",
+    "VSQ..VSQQSV..QSV",
+    "SSQ.VSQ..QSV.QSS",
+    "SQ..SSRSSRSS..QS",
+    "SQ..QRSUUSRQ..QS",
+    "Q...RSPSSPSR...Q",
+    "....RPSPPSPR....",
+    "...VRCCQQCCRV...",
+    "..VSQCXQ.QXCQSV.",
+    "..SSQcX...XcQSS.",
+    ".VSQ..Y...Y..QSV",
+    ".SSQ.........QSS",
+    "VSQ...........QS",
+    "SQ.............Q",
+]
+TROLL_1 = [
+    "................",
+    "......NAAAAN....",
+    ".....NAIIIAAN...",
+    "....NAAAAAAAAN..",
+    "..NNAZZZAAZZZAN.",
+    ".NAiAZWZAAAZWZN.",
+    ".NAiNAAAAiIIAiN.",
+    ".NAiAAAAAiIIIiN.",
+    "..NAAiBAAiZNZiN.",
+    "..NAiBiZZZZZBiN.",
+    "..NiABbZAAAZBbN.",
+    "..NiiAAAAAAAAiN.",
+    ".NNiiAAAAAAAiiN.",
+    "hjNNiiiiiiiiiiN.",
+    "hhjjNNNNNNNNNNjh",
+    "hhhhjjjjjjjjjjhh",
+]
+TROLL_2 = [
+    "................",
+    "......NAAAN.....",
+    ".....NAIIAAN....",
+    "....NAAAAAAAN...",
+    "...NZZZAAAZZZN..",
+    "...NZWZAAAZWZN..",
+    "..NAAAiIIiAAAiN.",
+    "..NAAiIIIIiAAiN.",
+    ".NAAAiZNNZiAAAiN",
+    ".NABAAAAAAAABAiN",
+    "NAiBiZZZZZZiBiiN",
+    "NAiBbZAAAAZbBiiN",
+    "NAiAAAAAAAAAAiiN",
+    ".NiiiiiiiiiiiiN.",
+    "hjjNNNNNNNNNNjjh",
+    "hhhjjjjjjjjjjjhh",
+]
+TROLL_3 = [
+    "................",
+    "................",
+    ".......NNNNN....",
+    ".....NAAIIAAN...",
+    "....NAIIAAAAiN..",
+    "..NZZZZAAAAiiN..",
+    "..NZWZAAANiiiiN.",
+    ".NIIAAAAANiAiiN.",
+    "NIIIAiAAAANiiiiN",
+    "NAiZNAAAAiiiiiN.",
+    ".NAAAZZZAiiiiiN.",
+    ".NBAAAAZZiiiiN..",
+    "NBBbAAAAAiiiNhj.",
+    ".NAAAAAiiiNNhhhj",
+    "..NNNiiiiNNhhhjj",
+    "...hhhhhjjhhhjjj",
+]
+
 
 def _aranha(patas):
     return lambda x, y, ch: "olhos" if ch in "Ex" else "presas" if ch in "Ff" else "patas" if patas(x, y) else "corpo"
@@ -113,6 +236,17 @@ CAMADAS = {
     "troll-a": (TROLL_A, ["musgo", "pele", "rosto"], TROLL),
     "troll-b": (TROLL_B, ["musgo", "pele", "rosto"], TROLL),
 }
+# a segunda rodada: as patas (as partes do corpo nas bordas), o corpo, os olhos, as quelíceras e as presas; o troll em
+# pele, rosto, presas e roupa
+_ARANHA2 = lambda borda: lambda x, y, ch: ("olhos" if ch == "P" else "queliceras" if ch in "Cc" else "presas" if ch in "XY"
+                                          else "patas" if borda(x, y) else "corpo")
+_TROLL2 = lambda x, y, ch: "rosto" if ch == "W" else "presas" if ch in "Bb" else "roupa" if ch in "hj" else "pele"
+CAMADAS["aranha-1"] = (ARANHA_1, ["patas", "corpo", "queliceras", "presas", "olhos"], _ARANHA2(lambda x, y: x <= 3 or x >= 12))
+CAMADAS["aranha-2"] = (ARANHA_2, ["patas", "corpo", "queliceras", "presas", "olhos"], _ARANHA2(lambda x, y: x <= 2 or x >= 13))
+CAMADAS["aranha-3"] = (ARANHA_3, ["patas", "corpo", "queliceras", "presas", "olhos"],
+                       _ARANHA2(lambda x, y: x <= 3 or x >= 12 or (y <= 5 and not 6 <= x <= 9)))
+for _i, _g in (("1", TROLL_1), ("2", TROLL_2), ("3", TROLL_3)):
+    CAMADAS[f"troll-{_i}"] = (_g, ["roupa", "pele", "presas", "rosto"], _TROLL2)
 
 
 def gravar(base, ids=None):

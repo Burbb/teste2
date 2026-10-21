@@ -436,5 +436,443 @@
    "Lobo: /static/hud/icones/retrato-lobo-48.png 48/48",
    "Troll da montanha: data:image/png;base64,iVBORw0KGgoAAAANSU 48/16"
   ]
+ },
+ "luta/r2-1": {
+  "erros": [],
+  "avisos": [],
+  "caixas": [
+   {
+    "nome": "Aranha gigante",
+    "caixa": [
+     830,
+     67,
+     1040,
+     117
+    ],
+    "retrato": [
+     840,
+     76,
+     872,
+     108
+    ]
+   },
+   {
+    "nome": "Aranha gigante",
+    "caixa": [
+     830,
+     125,
+     1040,
+     175
+    ],
+    "retrato": [
+     840,
+     134,
+     872,
+     166
+    ]
+   },
+   {
+    "nome": "Troll da montanha",
+    "caixa": [
+     612,
+     67,
+     822,
+     117
+    ],
+    "retrato": [
+     622,
+     76,
+     654,
+     108
+    ]
+   },
+   {
+    "nome": "Lobo",
+    "caixa": [
+     612,
+     125,
+     822,
+     175
+    ],
+    "retrato": [
+     622,
+     134,
+     654,
+     166
+    ]
+   }
+  ],
+  "cartas": [
+   "Jean: data:image/png;base64,iVBORw0KGgoAAAANSU 32/32",
+   "Aranha gigante: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Aranha gigante: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Troll da montanha: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Lobo: /static/hud/icones/retrato-lobo-32.png 32/32",
+   "A Febre do TurvoDescobrir de onde vem a : data:image/png;base64,iVBORw0KGgoAAAANSU 32/16"
+  ]
+ },
+ "luta/r2-2": {
+  "erros": [],
+  "avisos": [],
+  "caixas": [
+   {
+    "nome": "Aranha gigante",
+    "caixa": [
+     830,
+     67,
+     1040,
+     117
+    ],
+    "retrato": [
+     840,
+     76,
+     872,
+     108
+    ]
+   },
+   {
+    "nome": "Aranha gigante",
+    "caixa": [
+     830,
+     125,
+     1040,
+     175
+    ],
+    "retrato": [
+     840,
+     134,
+     872,
+     166
+    ]
+   },
+   {
+    "nome": "Troll da montanha",
+    "caixa": [
+     612,
+     67,
+     822,
+     117
+    ],
+    "retrato": [
+     622,
+     76,
+     654,
+     108
+    ]
+   },
+   {
+    "nome": "Lobo",
+    "caixa": [
+     612,
+     125,
+     822,
+     175
+    ],
+    "retrato": [
+     622,
+     134,
+     654,
+     166
+    ]
+   }
+  ],
+  "cartas": [
+   "Jean: data:image/png;base64,iVBORw0KGgoAAAANSU 32/32",
+   "Aranha gigante: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Aranha gigante: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Troll da montanha: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Lobo: /static/hud/icones/retrato-lobo-32.png 32/32",
+   "A Febre do TurvoDescobrir de onde vem a : data:image/png;base64,iVBORw0KGgoAAAANSU 32/16"
+  ]
+ },
+ "luta/r2-3": {
+  "erros": [],
+  "avisos": [],
+  "caixas": [
+   {
+    "nome": "Aranha gigante",
+    "caixa": [
+     830,
+     67,
+     1040,
+     117
+    ],
+    "retrato": [
+     840,
+     76,
+     872,
+     108
+    ]
+   },
+   {
+    "nome": "Aranha gigante",
+    "caixa": [
+     830,
+     125,
+     1040,
+     175
+    ],
+    "retrato": [
+     840,
+     134,
+     872,
+     166
+    ]
+   },
+   {
+    "nome": "Troll da montanha",
+    "caixa": [
+     612,
+     67,
+     822,
+     117
+    ],
+    "retrato": [
+     622,
+     76,
+     654,
+     108
+    ]
+   },
+   {
+    "nome": "Lobo",
+    "caixa": [
+     612,
+     125,
+     822,
+     175
+    ],
+    "retrato": [
+     622,
+     134,
+     654,
+     166
+    ]
+   }
+  ],
+  "cartas": [
+   "Jean: data:image/png;base64,iVBORw0KGgoAAAANSU 32/32",
+   "Aranha gigante: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Aranha gigante: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Troll da montanha: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Lobo: /static/hud/icones/retrato-lobo-32.png 32/32",
+   "A Febre do TurvoDescobrir de onde vem a : data:image/png;base64,iVBORw0KGgoAAAANSU 32/16"
+  ]
+ },
+ "bestiario/r2-1": {
+  "erros": [],
+  "avisos": [],
+  "caixas": [
+   {
+    "nome": "Afogado",
+    "caixa": [
+     585,
+     248,
+     935,
+     403
+    ],
+    "retrato": [
+     598,
+     262,
+     646,
+     310
+    ]
+   },
+   {
+    "nome": "Aranha gigante",
+    "caixa": [
+     945,
+     248,
+     1295,
+     403
+    ],
+    "retrato": [
+     958,
+     262,
+     1006,
+     310
+    ]
+   },
+   {
+    "nome": "Lobo",
+    "caixa": [
+     585,
+     413,
+     935,
+     600
+    ],
+    "retrato": [
+     598,
+     427,
+     646,
+     475
+    ]
+   },
+   {
+    "nome": "Troll da montanha",
+    "caixa": [
+     945,
+     413,
+     1295,
+     600
+    ],
+    "retrato": [
+     958,
+     443,
+     1006,
+     491
+    ]
+   }
+  ],
+  "cartas": [
+   "Afogado: /static/hud/icones/retrato-afogado-48.pn 48/48",
+   "Aranha gigante: data:image/png;base64,iVBORw0KGgoAAAANSU 48/16",
+   "Lobo: /static/hud/icones/retrato-lobo-48.png 48/48",
+   "Troll da montanha: data:image/png;base64,iVBORw0KGgoAAAANSU 48/16"
+  ]
+ },
+ "bestiario/r2-2": {
+  "erros": [],
+  "avisos": [],
+  "caixas": [
+   {
+    "nome": "Afogado",
+    "caixa": [
+     585,
+     248,
+     935,
+     403
+    ],
+    "retrato": [
+     598,
+     262,
+     646,
+     310
+    ]
+   },
+   {
+    "nome": "Aranha gigante",
+    "caixa": [
+     945,
+     248,
+     1295,
+     403
+    ],
+    "retrato": [
+     958,
+     262,
+     1006,
+     310
+    ]
+   },
+   {
+    "nome": "Lobo",
+    "caixa": [
+     585,
+     413,
+     935,
+     600
+    ],
+    "retrato": [
+     598,
+     427,
+     646,
+     475
+    ]
+   },
+   {
+    "nome": "Troll da montanha",
+    "caixa": [
+     945,
+     413,
+     1295,
+     600
+    ],
+    "retrato": [
+     958,
+     443,
+     1006,
+     491
+    ]
+   }
+  ],
+  "cartas": [
+   "Afogado: /static/hud/icones/retrato-afogado-48.pn 48/48",
+   "Aranha gigante: data:image/png;base64,iVBORw0KGgoAAAANSU 48/16",
+   "Lobo: /static/hud/icones/retrato-lobo-48.png 48/48",
+   "Troll da montanha: data:image/png;base64,iVBORw0KGgoAAAANSU 48/16"
+  ]
+ },
+ "bestiario/r2-3": {
+  "erros": [],
+  "avisos": [],
+  "caixas": [
+   {
+    "nome": "Afogado",
+    "caixa": [
+     585,
+     248,
+     935,
+     403
+    ],
+    "retrato": [
+     598,
+     262,
+     646,
+     310
+    ]
+   },
+   {
+    "nome": "Aranha gigante",
+    "caixa": [
+     945,
+     248,
+     1295,
+     403
+    ],
+    "retrato": [
+     958,
+     262,
+     1006,
+     310
+    ]
+   },
+   {
+    "nome": "Lobo",
+    "caixa": [
+     585,
+     413,
+     935,
+     600
+    ],
+    "retrato": [
+     598,
+     427,
+     646,
+     475
+    ]
+   },
+   {
+    "nome": "Troll da montanha",
+    "caixa": [
+     945,
+     413,
+     1295,
+     600
+    ],
+    "retrato": [
+     958,
+     443,
+     1006,
+     491
+    ]
+   }
+  ],
+  "cartas": [
+   "Afogado: /static/hud/icones/retrato-afogado-48.pn 48/48",
+   "Aranha gigante: data:image/png;base64,iVBORw0KGgoAAAANSU 48/16",
+   "Lobo: /static/hud/icones/retrato-lobo-48.png 48/48",
+   "Troll da montanha: data:image/png;base64,iVBORw0KGgoAAAANSU 48/16"
+  ]
  }
 }

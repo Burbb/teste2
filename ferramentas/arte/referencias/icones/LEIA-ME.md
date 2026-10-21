@@ -40,3 +40,11 @@ autoria informada. O urso: de frente, os olhos pequenos e fundos, a sombra das �
 as orelhas redondas. O falcão: de perfil para a esquerda, o bico curto com o gancho, o olhar atento, a máscara escura em
 volta do olho seguindo para a nuca, o queixo e a garganta claros. Ampliadas, não grades nativas: a transposição para
 16×16 está em `ferramentas/prototipos/hud/criaturas/animais/` (`urso-t`, `falcao-t`).
+
+**`Retrato pixelado da aranha sombria-1.png`** e **`Retrato pixelado de troll montanhês-2.png`** (1254×1254 cada,
+21/10/2026): **as referências da segunda rodada da Aranha Gigante e do Troll** (a 1E.3). Imagens geradas na conversa com
+o Jean e deixadas aqui por ele; sem outra origem ou autoria informada. A aranha: de frente, os olhos âmbar agrupados, as
+quelíceras fortes com as presas separadas, as patas articuladas em volta. O troll: de carne (a referência substitui a
+direção de cabeça de pedra e musgo), em três quartos, a testa baixa, o nariz largo, a mandíbula pesada com duas presas
+saindo de baixo, o pescoço grosso. Ampliadas, não grades nativas: as propostas em 16×16 estão em
+`ferramentas/prototipos/hud/criaturas/aranha_troll/` (`aranha-1` a `-3`, `troll-1` a `-3`).

@@ -5524,3 +5524,7 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   fileira com os retratos aprovados, a 12×). O alcance previsto e a avaliação no `LEIA-ME.md` da pasta. Minha
   preferência: a Aranha A e o Troll A.
 - **Continua:** nada aprovado; a versão continua 1.165.0.
+- **Segunda rodada (pedido de Jean; o A e o B não escolhidos, como histórico):** três de cada pelas duas referências
+  geradas que ele deixou em `ferramentas/arte/referencias/icones/`: `aranha-1` a `-3` e `troll-1` a `-3` (o troll de
+  carne), com a guia oculta nas fontes; as folhas `aranha-r2.png` e `troll-r2.png`. Minha preferência: a Aranha 2 e o
+  Troll 1. Nada aprovado.

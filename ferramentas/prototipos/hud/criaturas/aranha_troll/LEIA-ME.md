@@ -71,3 +71,57 @@ desenhadas pela silhueta e o volume primeiro; nenhum desenho nativo de 32 nem de
 - **Troll B:** a silhueta mais diferente de todos os retratos (a corcunda de pedra e musgo com a cabeça pequena na
   frente), e o perfil com o nariz comprido é o mais "troll de conto". Limite: o rosto ocupa só um terço do quadro; a 2×
   o olho e a presa são pequenos, e a corcunda pode ler como uma pedra.
+
+## Segunda rodada: três de cada pelas referências geradas (21/10/2026)
+
+**Pedido de Jean:** as propostas A e B não foram escolhidas (ficam aqui como histórico). Três propostas livres de cada
+pelas duas referências geradas na conversa, que ele deixou em `ferramentas/arte/referencias/icones/` (registradas no
+`LEIA-ME.md` de lá): a aranha de frente (os olhos agrupados, as quelíceras fortes, as presas separadas, as patas
+articuladas) e o troll **de carne** (a referência substitui a direção de pedra e musgo: a testa baixa, o nariz largo, a
+mandíbula pesada, o pescoço grosso, duas presas saindo da mandíbula de baixo; bruto e pouco inteligente, sem caricatura).
+A Rainha Aracnídea e o Rei Troll continuam fora. Nada integrado.
+
+- **Aranha 1, a transposição de frente** (`aranha-1`; patas, corpo, quelíceras, presas, olhos): o abdome atrás, a
+  carapaça, os olhos âmbar em duas fileiras, as quelíceras cinza com as presas claras separadas, e as patas grossas
+  (segmentos de 2 px com as juntas claras) subindo para os cantos de cima e descendo pelos lados.
+- **Aranha 2, o rosto de perto** (`aranha-2`): os olhos e as quelíceras grandes, as presas compridas até embaixo, só a
+  ponta das patas nos cantos.
+- **Aranha 3, as patas erguidas em arco** (`aranha-3`): as patas da frente erguidas por cima da cabeça, de canto a canto,
+  o corpo menor embaixo no meio, os olhos e as presas.
+- **Troll 1, a transposição em três quartos** (`troll-1`; roupa, pele, presas, rosto): a orelha à esquerda, a testa baixa
+  com a sombra sobre os olhos pálidos, o nariz largo, a boca caída nos cantos, as duas presas subindo da mandíbula por
+  cima do lábio, o pescoço grosso e a roupa de couro nos ombros.
+- **Troll 2, de frente** (`troll-2`): a cabeça estreita em cima e a mandíbula larga embaixo, a testa baixa, as presas dos
+  dois lados da boca caída, o pescoço que vira os ombros.
+- **Troll 3, de perfil para a esquerda** (`troll-3`): a testa saliente, o olho pálido, o nariz, a boca inclinada para
+  baixo, o queixo projetado com a presa, a nuca pequena e o pescoço grosso com a roupa.
+- **Na bancada:** as patas finas da primeira passada viravam linhas (o que o Jean pediu para evitar) e ficaram com 2 px e
+  as juntas claras; os trolls sorriam (a boca reta de ponta a ponta, o olho com brilho branco e o verde claro demais
+  davam um sapo simpático): a pele escureceu, a boca encurtou e caiu nos cantos, o olho virou um ponto pálido na sombra
+  e as presas passaram por cima do lábio; o perfil, que lia como uma massa verde, ganhou a testa, o nariz e o queixo.
+- **Processo:** a referência reduzida a 16×16 por média (`guias/aranha-guia-16.png`, `guias/troll-guia-16.png`) para
+  medir, e as grades redesenhadas à mão em `auxiliares/grades.py` (letras próprias; as cores das propostas A e B não
+  mudam). As fontes pelo MCP (`pintar.lua`, 0 diferentes na releitura em todas as camadas; a guia oculta); o composto do
+  editor com exatamente a soma das camadas visíveis; a exportação conferida (igual à grade, @2x exato, o 32 e o 48 em
+  blocos inteiros com os @2x). Fotos a 1920×945 com os mesmos dados (`MODOS=r2-1,r2-2,r2-3`: a aranha e o troll de
+  mesmo número juntos), sem erro nem aviso no console.
+- **As folhas:** `aranha-r2.png` e `troll-r2.png` (`python auxiliares/prancha.py r2`): a referência e a guia; as três na
+  carta a 32 px (tamanho real e 2×) e no Bestiário a 48 px; a fileira com os retratos aprovados; a 12×.
+
+**Avaliação (a minha leitura a 32 px; quem aprova é o Jean):**
+
+- **Aranha 1:** a mais fiel à referência e a mais completa (as patas dos dois lados dizem "aranha" de longe). Limite: a
+  6 px de largura o rosto fica pequeno, e os olhos âmbar viram uma faixa laranja.
+- **Aranha 2 (minha preferência):** a mais ameaçadora a 32 px: as presas compridas e os olhos grandes leem na hora, e as
+  pontas das patas nos cantos bastam para a espécie. Limite: sem as patas inteiras, depende das presas; de longe pode
+  lembrar uma máscara com presas.
+- **Aranha 3:** a pose de ataque, com as patas em arco, tem a silhueta mais forte. Limite: o corpo e os olhos ficam
+  pequenos no meio, e as patas, com as juntas claras, ganham mais peso que o rosto.
+- **Troll 1 (minha preferência):** o mais próximo da referência: a mandíbula pesada com as presas, a testa baixa e a
+  orelha dão o tamanho e a brutalidade. Limite: a 32 px o olho é um ponto só, e a expressão vem mais da boca e das presas
+  do que do olhar.
+- **Troll 2:** o de frente é o mais imponente na carta (a mandíbula de lado a lado). Limite: de frente e simétrico,
+  chega mais perto de um ogro genérico; a orelha some.
+- **Troll 3:** a silhueta mais diferente (a testa e o queixo projetados), e o perfil reforça a ideia de pouca
+  inteligência. Limite: o rosto ocupa a metade de cima à esquerda; a 32 px a presa é pequena e o nariz se confunde com a
+  testa.

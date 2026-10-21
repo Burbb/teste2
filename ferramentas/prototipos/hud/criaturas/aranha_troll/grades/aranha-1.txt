@@ -1,0 +1,16 @@
+................
+..VS........SV..
+.VSSQ.RSSR.QSSV.
+.SSQ.RSUUSR.QSS.
+VSQ.RSSSSSSR.QSV
+SSQ.RUSSSSUR.QSS
+SQ.VRSPSSPSRV.QS
+SQ.SRPSPPSPRS.QS
+Q.VSQRCCQCCRQSV.
+.VSQ.CCXQXCC.QSV
+.SSQ.cCXQXCc.QSS
+VSQ..cXQ.QXc..QS
+SSQ...Y...Y...QS
+SQ............QS
+Q..............Q
+................

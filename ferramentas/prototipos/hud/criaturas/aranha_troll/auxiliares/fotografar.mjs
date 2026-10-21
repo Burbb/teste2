@@ -3,7 +3,7 @@
 // cujo nome começa por "Aranha" ou "Troll" (o Rei Troll, que começa por "Rei", fica de fora). Situações: uma luta com
 // duas aranhas, um troll e um lobo (o retrato aprovado da 1.163.0, ao lado); e o Bestiário com as duas espécies, o
 // Lobo e o Afogado (aprovados). O registro guarda a caixa de cada carta e de cada cartão, para a folha recortar.
-//   [MODOS=atual,a,b] PLAYWRIGHT_MODULO=<file:// do index.mjs> node fotografar.mjs <raiz> <pasta das fotos>
+//   [MODOS=atual,a,b | r2-1,r2-2,r2-3] PLAYWRIGHT_MODULO=<file:// do index.mjs> node fotografar.mjs <raiz> <pasta das fotos>
 import { spawn } from "child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import path from "path";
@@ -15,6 +15,8 @@ const aqui = path.join(raiz, "ferramentas/prototipos/hud/criaturas/aranha_troll/
 const dados = (id) => "data:image/png;base64," + readFileSync(path.join(aqui, `${id}-16.png`)).toString("base64");
 const TROCAS = { a: [["^Aranha( |$)", dados("aranha-a")], ["^Troll( |$)", dados("troll-a")]],
   b: [["^Aranha( |$)", dados("aranha-b")], ["^Troll( |$)", dados("troll-b")]] };
+// a segunda rodada, das referências geradas: a aranha e o troll de mesmo número juntos (r2-1, r2-2, r2-3)
+for (const i of ["1", "2", "3"]) TROCAS[`r2-${i}`] = [["^Aranha( |$)", dados(`aranha-${i}`)], ["^Troll( |$)", dados(`troll-${i}`)]];
 const MODOS = (process.env.MODOS || "atual,a,b").split(",");
 const SITUACOES = [
   { nome: "luta", cenario: "tutorial", amb: { TUTORIAL: "0", CLASSE: "guerreiro", NIVEL_LUTA: "4",
