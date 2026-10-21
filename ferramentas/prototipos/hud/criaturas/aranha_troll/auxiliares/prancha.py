@@ -185,9 +185,166 @@ def folha_r2(chave):
     print(f"{chave}-r2.png", out.size)
 
 
+def folha_troll_final():
+    """O Troll no jogo (1.166.0, troll-final.png): o aprovado × o PNG de produção; a carta e o Bestiário com os
+    arquivos reais (o modo "final", sem troca); a luta com o Rei Troll, que continua na caveira; a fileira."""
+    f, f2 = ImageFont.truetype("arial.ttf", 15), ImageFont.truetype("arial.ttf", 12)
+    out = Image.new("RGBA", (1800, 1200), CARVAO)
+    d = ImageDraw.Draw(out)
+    d.text((20, 10), "O Troll da montanha no jogo (1.166.0): o troll-1 da segunda rodada, sem retoques, pela família",
+           fill=TEXTO, font=f)
+    a, b = imagem("troll-1"), Image.open(JOGO / "retrato-troll-16.png").convert("RGBA")
+    d.text((20, 32), f"troll-1 (aprovado) | retrato-troll-16 (no jogo): {'idênticos' if a.tobytes() == b.tobytes() else 'DIFERENTES'}",
+           fill=TEXTO2, font=f2)
+    out.alpha_composite(grade12(a), (20, 50)); out.alpha_composite(grade12(b), (230, 50))
+    y = 50 + 192 + 20
+    carta = abre("luta-final-palco.png").crop(caixa_de("luta", "final", "Troll da montanha"))
+    cartao = abre("bestiario-final-pagina.png").crop(caixa_de("bestiario", "final", "Troll da montanha"))
+    d.text((20, y), "a carta (32 px, tamanho real e 2×) e o Bestiário (48 px, tamanho real), com os arquivos de produção",
+           fill=TEXTO, font=f2)
+    out.alpha_composite(carta, (20, y + 18)); out.alpha_composite(amplia(carta, 2), (20, y + 18 + carta.height + 8))
+    out.alpha_composite(cartao, (480, y + 18))
+    y += 18 + max(3 * carta.height + 8, cartao.height) + 20
+    luta = abre("rei-final-palco.png").crop((30, 30, 1060, 210))
+    d.text((20, y), "o Rei Troll (o guardião) continua na caveira; o troll da montanha ao lado, com o retrato — tamanho real",
+           fill=TEXTO, font=f2)
+    out.alpha_composite(luta, (20, y + 18))
+    y += 18 + luta.height + 16
+    ali = Image.open(PASTA.parent / "capturas/aliados-palco.png").convert("RGBA")
+    linha = [("Morel", ali.crop((46, 176, 84, 214))), ("Odette", ali.crop((46, 234, 84, 272)))] + \
+        [(n.capitalize(), caixa(Image.open(JOGO / f"retrato-{n}-16.png").convert("RGBA")))
+         for n in ("afogado", "ilse", "lobo", "bandido", "urso", "falcao", "troll")]
+    d.text((20, y), "a fileira dos retratos do jogo, na caixa da carta — tamanho real e 3×", fill=TEXTO, font=f2)
+    y += 20
+    for j, (_, cx) in enumerate(linha):
+        out.alpha_composite(cx, (20 + j * 46, y))
+    y += 50
+    for j, (rot, cx) in enumerate(linha):
+        out.alpha_composite(amplia(cx, 3), (20 + j * 124, y))
+        d.text((20 + j * 124, y + 118), rot, fill=TEXTO2, font=f2)
+    y += 3 * 38 + 40
+    out = out.crop((0, 0, 1800, y))
+    out.save(PASTA / "troll-final.png")
+    print("troll-final.png", out.size)
+
+
+def folha_r3():
+    """A terceira rodada (rei-aranha.png): o Troll comum (no jogo) × a proposta do Rei Troll, e a Aranha 2 anterior × a
+    2B; 1×, a caixa da carta, a 3× e a 12×; a carta a 32 px (e o Bestiário a 48, a aranha; o Rei é guardião e não tem
+    Bestiário) com os mesmos dados a 1920×945; a fileira com os retratos do jogo."""
+    f, f2 = ImageFont.truetype("arial.ttf", 15), ImageFont.truetype("arial.ttf", 12)
+    out = Image.new("RGBA", (1800, 2000), CARVAO)
+    d = ImageDraw.Draw(out)
+    d.text((20, 10), "O Rei Troll (a partir do Troll 2) e a Aranha 2B — propostas, nada no jogo", fill=TEXTO, font=f)
+    y = 40
+    pares = (("Troll comum (no jogo, 1.166.0)", Image.open(JOGO / "retrato-troll-16.png").convert("RGBA"),
+              "Rei Troll (proposta: o Troll 2 com a coroa de sucata)", imagem("rei-troll")),
+             ("Aranha 2 (anterior)", imagem("aranha-2"), "Aranha 2B (proposta)", imagem("aranha-2b")))
+    for ra, a, rb, b in pares:
+        for k, (rot, im) in enumerate(((ra, a), (rb, b))):
+            x = 20 + k * 660
+            d.text((x, y), rot, fill=TEXTO, font=f2)
+            out.alpha_composite(im, (x, y + 18)); out.alpha_composite(caixa(im), (x + 22, y + 18))
+            out.alpha_composite(amplia(caixa(im), 3), (x + 66, y + 18)); out.alpha_composite(grade12(im), (x + 190, y + 18))
+        y += 18 + 192 + 22
+    d.text((20, y), "a luta do Rei Troll a 1920×945 (os mesmos dados): no jogo (a caveira) × a proposta — a carta em tamanho real e 2×",
+           fill=TEXTO, font=f2)
+    y += 20
+    for k, modo in enumerate(("final", "rei")):
+        # a caixa do modo "rei" vale para os dois: a mesma luta, os mesmos dados, o mesmo lugar da carta
+        cx = abre(f"rei-{modo}-palco.png").crop(caixa_de("rei", "rei", "Rei Troll"))
+        out.alpha_composite(cx, (20 + k * 460, y)); out.alpha_composite(amplia(cx, 2), (20 + k * 460, y + cx.height + 6))
+    y += 3 * 50 + 30
+    luta = abre("rei-rei-palco.png").crop((30, 30, 1060, 210))
+    d.text((20, y), "a luta com a proposta do Rei (tamanho real): o Rei ao lado do Troll comum do jogo", fill=TEXTO, font=f2)
+    out.alpha_composite(luta, (20, y + 18))
+    y += 18 + luta.height + 16
+    d.text((20, y), "a Aranha a 1920×945: anterior (2) × nova (2B) — a carta a 32 px e o Bestiário a 48 px", fill=TEXTO, font=f2)
+    y += 20
+    for k, modo in enumerate(("r2-2", "r3")):
+        cx = abre(f"luta-{modo}-palco.png").crop(caixa_de("luta", modo, "Aranha gigante"))
+        cartao = abre(f"bestiario-{modo}-pagina.png").crop(caixa_de("bestiario", modo, "Aranha gigante"))
+        x = 20 + k * 760
+        out.alpha_composite(cx, (x, y)); out.alpha_composite(amplia(cx, 2), (x, y + cx.height + 6))
+        out.alpha_composite(cartao, (x, y + 3 * cx.height + 20))
+    y += 3 * 50 + 20 + 160 + 20
+    ali = Image.open(PASTA.parent / "capturas/aliados-palco.png").convert("RGBA")
+    linha = [("Morel", ali.crop((46, 176, 84, 214))), ("Odette", ali.crop((46, 234, 84, 272)))] + \
+        [(n.capitalize(), caixa(Image.open(JOGO / f"retrato-{n}-16.png").convert("RGBA")))
+         for n in ("afogado", "ilse", "lobo", "bandido", "urso", "falcao", "troll")] + \
+        [("Rei Troll (proposta)", caixa(imagem("rei-troll"))), ("Aranha 2B (proposta)", caixa(imagem("aranha-2b")))]
+    d.text((20, y), "a fileira, na caixa da carta, com os retratos do jogo — tamanho real e 3×", fill=TEXTO, font=f2)
+    y += 20
+    for j, (_, cx) in enumerate(linha):
+        out.alpha_composite(cx, (20 + j * 46, y))
+    y += 50
+    for j, (rot, cx) in enumerate(linha):
+        out.alpha_composite(amplia(cx, 3), (20 + j * 124, y))
+        d.text((20 + j * 124, y + 118), rot[:18], fill=TEXTO2, font=f2)
+    y += 3 * 38 + 40
+    out = out.crop((0, 0, 1800, y))
+    out.save(PASTA / "rei-aranha.png")
+    print("rei-aranha.png", out.size)
+
+
+def folha_coroa(ref):
+    """A coroa dourada do Rei Troll (rei-coroa.png): a referência; o Troll comum do jogo, a base sem coroa (o Troll 2), a
+    proposta anterior (a sucata) e a nova (o ouro) na caixa da carta, em tamanho real, a 3× e a 12×; e a carta na luta do
+    Rei a 1920×945 (tamanho real e 2×), a anterior e a nova."""
+    f, f2 = ImageFont.truetype("arial.ttf", 15), ImageFont.truetype("arial.ttf", 12)
+    out = Image.new("RGBA", (1800, 1200), CARVAO)
+    d = ImageDraw.Draw(out)
+    d.text((20, 10), "O Rei Troll: a coroa dourada pela referência, sobre o Troll 2 sem mexer no rosto — proposta, nada no jogo",
+           fill=TEXTO, font=f)
+    r = Image.open(ref).convert("RGBA")
+    fundo = Image.new("RGBA", r.size, CARVAO); fundo.alpha_composite(r)
+    d.text((20, 32), "a referência (reduzida, só para olhar)", fill=TEXTO2, font=f2)
+    out.alpha_composite(fundo.resize((192, 192), Image.LANCZOS), (20, 50))
+    y = 50 + 192 + 20
+    linha = (("Troll comum (no jogo)", Image.open(JOGO / "retrato-troll-16.png").convert("RGBA")),
+             ("base: o Troll 2, sem coroa", imagem("troll-2")), ("anterior: a sucata", imagem("rei-troll")),
+             ("nova: a coroa dourada", imagem("rei-troll-ouro")))
+    d.text((20, y), "na caixa da carta: tamanho real, 3× e 12× (na nova, os pixels que mudaram em relação à base em vermelho: "
+                    "só as quatro linhas da coroa)", fill=TEXTO, font=f2)
+    y += 20
+    base = imagem("troll-2")
+    for j, (rot, im) in enumerate(linha):
+        x = 20 + j * 440
+        d.text((x, y), rot, fill=TEXTO2, font=f2)
+        out.alpha_composite(caixa(im), (x, y + 18)); out.alpha_composite(amplia(caixa(im), 3), (x + 46, y + 18))
+        g = grade12(im)
+        if rot.startswith("nova"):
+            dd = ImageDraw.Draw(g)
+            for py in range(16):
+                for px in range(16):
+                    if im.getpixel((px, py)) != base.getpixel((px, py)):
+                        dd.rectangle([px * 12, py * 12, px * 12 + 11, py * 12 + 11], outline=(230, 40, 40, 255))
+        out.alpha_composite(g, (x + 170, y + 18))
+    y += 18 + 192 + 24
+    d.text((20, y), "a carta na luta do Rei a 1920×945 (os mesmos dados): a anterior × a nova — tamanho real e 2×", fill=TEXTO, font=f2)
+    y += 20
+    for k, modo in enumerate(("rei", "rei2")):
+        cx = abre(f"rei-{modo}-palco.png").crop(caixa_de("rei", modo, "Rei Troll"))
+        out.alpha_composite(cx, (20 + k * 460, y)); out.alpha_composite(amplia(cx, 2), (20 + k * 460, y + cx.height + 6))
+    y += 3 * 50 + 20
+    luta = abre("rei-rei2-palco.png").crop((30, 30, 1060, 210))
+    d.text((20, y), "a luta (tamanho real): o Rei com a coroa nova ao lado do Troll comum do jogo", fill=TEXTO, font=f2)
+    out.alpha_composite(luta, (20, y + 18))
+    y += 18 + luta.height + 16
+    out = out.crop((0, 0, 1800, y))
+    out.save(PASTA / "rei-coroa.png")
+    print("rei-coroa.png", out.size)
+
+
 if __name__ == "__main__":
     import sys
-    if sys.argv[1:] == ["r2"]:
+    if sys.argv[1:2] == ["coroa"]:
+        folha_coroa(sys.argv[2])
+    elif sys.argv[1:] == ["r3"]:
+        folha_r3()
+    elif sys.argv[1:] == ["troll"]:
+        folha_troll_final()
+    elif sys.argv[1:] == ["r2"]:
         for chave in CRIATURAS:
             folha_r2(chave)
     else:

@@ -24,6 +24,11 @@ class TestRetratos(unittest.TestCase):
         for fam, tr in (("lobo_gelido", "fera"), ("aranha", "fera"), ("cultista", "humano"), ("mercenario", "humano")):
             self.assertEqual(retrato(FAMILIAS[fam]["tracos"], fam), tr, fam)
 
+    def test_troll_pela_familia_e_o_rei_fora(self):
+        # o troll da montanha tem cabeça própria (1.166.0); o Rei Troll, um guardião com o mesmo traço, continua na caveira
+        self.assertEqual(retrato(FAMILIAS["troll"]["tracos"], "troll"), "troll")
+        self.assertEqual(retrato(["gigante"], "guardiao", "guardiao:5"), "caveira")
+
     def test_os_outros_continuam_pelos_tracos(self):
         # o esqueleto e os outros mortos-vivos seguem com a caveira; o guardião genérico da Bruxa Afogada também
         self.assertEqual(retrato(FAMILIAS["esqueleto"]["tracos"], "esqueleto"), "caveira")

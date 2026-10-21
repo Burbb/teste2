@@ -115,6 +115,8 @@ A escolha do par e da direção é do Jean; nada foi começado.
   do animal, na carta aliada e no painel da comitiva. O `fera` e o `voador` dos inimigos continuam.
 - **1.165.0: o Lobo Cinzento do patrulheiro** com o mesmo arquivo do Lobo inimigo (`retrato-lobo`), pelo tipo do
   animal: os três animais do patrulheiro concluídos. O mesmo rosto dos dois lados é de propósito.
+- **1.166.0: o Troll da montanha** (`aranha_troll/`, o `troll-1`, de carne, pela referência gerada): pela família. O
+  Rei Troll (guardião) continua na caveira; a Aranha segue no protótipo.
 
 ## Em proposta
 

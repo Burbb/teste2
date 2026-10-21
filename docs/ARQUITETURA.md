@@ -446,10 +446,11 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
 - As cabeças próprias das criaturas (1.162.0): o motor dá o retrato (`dados.retrato(tracos, familia, chave)`): a
   chave da criatura única (`RETRATO_CHAVE`: a Ilse da capela, `chefe.chave = "ilse"` em `missoes.py`), senão a
   família (`RETRATO_FAMILIA`: o afogado, com o Afogado Inchado e os afogados que a Ilse invoca; desde a 1.163.0, o
-  lobo e o bandido, com os líderes e os invocados), senão os traços, como antes (a caveira dos outros mortos-vivos, o
+  lobo e o bandido, com os líderes e os invocados; desde a 1.166.0, o troll da montanha, sem o Rei Troll, que é um
+  guardião), senão os traços, como antes (a caveira dos outros mortos-vivos, o
   `fera` do animal do herói e das outras feras e o `humano` dos outros humanos continuam). A luta, o Bestiário, o mural e o rastro dos contratos e a
   faixa do mestre caçador pedem `Icones.criatura(retrato, lado)` (o papel `CRIATURA`) antes do sprite: o 16×16 a 2×
-  (32) e a 3× (48), em arquivos (`retrato-afogado`, `retrato-ilse`, `retrato-lobo`, `retrato-bandido`; fontes em
+  (32) e a 3× (48), em arquivos (`retrato-afogado`, `retrato-ilse`, `retrato-lobo`, `retrato-bandido`, `retrato-troll`; fontes em
   `ferramentas/arte/aseprite/`). O animal do patrulheiro (1.164.0) tem o papel `ANIMAL` (`Icones.animal(tipo, 32)`,
   pelo `tipo` de `classes.COMPANHEIROS`): o Urso Pardo e o Falcão Peregrino na carta aliada e no painel da comitiva
   (`retrato-urso`, `retrato-falcao`); desde a 1.165.0, o Lobo Cinzento com o mesmo arquivo do Lobo inimigo

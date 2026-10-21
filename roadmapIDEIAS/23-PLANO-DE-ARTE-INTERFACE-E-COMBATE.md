@@ -13,7 +13,8 @@ Não iniciar todo o plano numa única tarefa. As etapas técnicas A–I e a vali
 
 ## Estado de referência — 21/10/2026
 
-- Produção: **1.165.0** na branch `claude/tender-einstein-tx3tjl` (os três animais do patrulheiro com retrato).
+- Produção: **1.166.0** na branch `claude/tender-einstein-tx3tjl` (o Troll da montanha com retrato; antes, na 1.165.0,
+  os três animais do patrulheiro).
 - **Etapa 1D concluída:** os **31 equipamentos-base** estão finais desde a 1.150.0, com os acabamentos das luvas L7
   (1.151.0), das perneiras P7 (1.152.0), do capacete C1 (1.153.0) e das botas A1 (1.154.0). **Fora dessa contagem, e
   ainda abertos:** as variantes (os únicos e raros com desenho próprio) e os compartilhamentos provisórios (a Capa de
@@ -22,8 +23,8 @@ Não iniciar todo o plano numa única tarefa. As etapas técnicas A–I e a vali
 - **Etapa 1E em andamento.** Concluídos: o **contador de flechas** da carta do Arqueiro (1.155.0) e os **17 estados**
   do catálogo (1.155.0 a 1.161.0). Criaturas com retrato próprio: o **Afogado e a Ilse** (1.162.0), o **Lobo e o
   Bandido** (1.163.0) e os **três animais do patrulheiro** (o Urso Pardo e o Falcão Peregrino na 1.164.0; o Lobo
-  Cinzento, com o mesmo retrato do Lobo inimigo, na 1.165.0). O Bandido do chapéu está reservado como conceito de um
-  possível chefe, fora do jogo.
+  Cinzento, com o mesmo retrato do Lobo inimigo, na 1.165.0) e o **Troll da montanha** (1.166.0, pela família; o Rei
+  Troll fora). O Bandido do chapéu está reservado como conceito de um possível chefe, fora do jogo.
 - **Agora: 1E.3, as demais criaturas, os chefes e as invocações** (as outras ainda saem dos traços: o `fera`, o
   `humano`, a caveira e os outros sprites de 16×16; o levantamento em `ferramentas/prototipos/hud/criaturas/`).
   **Depois: 1E.4**, os caminhos e os símbolos internos do mapa e do minimapa. Em seguida, as **etapas 2–9** como estão
@@ -942,7 +943,9 @@ patrulheiro estão concluídos.** O `fera` das outras criaturas e a figura do ac
 `ferramentas/prototipos/hud/criaturas/aranha_troll/` (a aranha de frente e de lado em ameaça; o troll de frente e de
 perfil com a corcunda), as folhas `aranha.png` e `troll.png`; o alcance previsto só nas famílias `aranha` e `troll` (a
 Rainha Aracnídea e o Rei Troll fora). Segunda rodada: três de cada pelas referências geradas (a aranha de frente; o
-troll de carne), as folhas `aranha-r2.png` e `troll-r2.png`. Nada aprovado.
+troll de carne), as folhas `aranha-r2.png` e `troll-r2.png`.
+**No jogo desde a 1.166.0:** o Troll da montanha (o `troll-1`, em três quartos), pela família; o Rei Troll continua na
+caveira e a Aranha no protótipo.
 
 O atalho **Mapa** da doca já foi concluído; esta frente trata dos símbolos internos de caminhos e mapas.
 Não afirmar que só restam talentos e habilidades após este bloco sem conferir os consumíveis, variantes e

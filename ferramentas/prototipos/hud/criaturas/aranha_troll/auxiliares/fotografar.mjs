@@ -3,7 +3,7 @@
 // cujo nome começa por "Aranha" ou "Troll" (o Rei Troll, que começa por "Rei", fica de fora). Situações: uma luta com
 // duas aranhas, um troll e um lobo (o retrato aprovado da 1.163.0, ao lado); e o Bestiário com as duas espécies, o
 // Lobo e o Afogado (aprovados). O registro guarda a caixa de cada carta e de cada cartão, para a folha recortar.
-//   [MODOS=atual,a,b | r2-1,r2-2,r2-3] PLAYWRIGHT_MODULO=<file:// do index.mjs> node fotografar.mjs <raiz> <pasta das fotos>
+//   [MODOS=atual,a,b | r2-1,r2-2,r2-3 | final | r3,rei | rei2] PLAYWRIGHT_MODULO=<file:// do index.mjs> node fotografar.mjs <raiz> <pasta das fotos>
 import { spawn } from "child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import path from "path";
@@ -17,13 +17,22 @@ const TROCAS = { a: [["^Aranha( |$)", dados("aranha-a")], ["^Troll( |$)", dados(
   b: [["^Aranha( |$)", dados("aranha-b")], ["^Troll( |$)", dados("troll-b")]] };
 // a segunda rodada, das referências geradas: a aranha e o troll de mesmo número juntos (r2-1, r2-2, r2-3)
 for (const i of ["1", "2", "3"]) TROCAS[`r2-${i}`] = [["^Aranha( |$)", dados(`aranha-${i}`)], ["^Troll( |$)", dados(`troll-${i}`)]];
+// a terceira rodada: a Aranha 2B (r3, na luta e no Bestiário) e o Rei Troll (rei, só na luta do guardião)
+TROCAS.r3 = [["^Aranha( |$)", dados("aranha-2b")]];
+TROCAS.rei = [["^Rei Troll$", dados("rei-troll")]];
+// a quarta rodada: o Rei com a coroa dourada sobre o Troll 2 (rei2, só na luta do guardião)
+TROCAS.rei2 = [["^Rei Troll$", dados("rei-troll-ouro")]];
 const MODOS = (process.env.MODOS || "atual,a,b").split(",");
 const SITUACOES = [
   { nome: "luta", cenario: "tutorial", amb: { TUTORIAL: "0", CLASSE: "guerreiro", NIVEL_LUTA: "4",
-    GRUPO: "aranha:2,troll:1,lobo:1" }, espera: '.carta[data-uid="j"]', fotos: [["#palco", "palco"]] },
+    GRUPO: "aranha:2,troll:1,lobo:1" }, espera: '.carta[data-uid="j"]', fotos: [["#palco", "palco"]], nao: ["rei", "rei2"] },
   { nome: "bestiario", cenario: "covil", amb: { CLASSE: "guerreiro", LUGAR: "vila",
     BESTIARIO: "aranha:3,troll:3,lobo:2,afogado:2" }, passos: [{ tecla: "b" }], espera: ".cartao .cab",
-    fotos: [["body", "pagina"]] },
+    fotos: [["body", "pagina"]], nao: ["rei", "rei2"] },
+  // 1.166.0: o Rei Troll (o guardião, pelo CHEFE do cenário) com um troll da montanha e uma aranha; o modo "final" (sem
+  // troca) mostra o jogo como está: o troll com o retrato integrado e o Rei na caveira
+  { nome: "rei", cenario: "tutorial", amb: { TUTORIAL: "0", CLASSE: "guerreiro", NIVEL_LUTA: "4", CHEFE: "rei_troll",
+    GRUPO: "troll:1,aranha:1" }, espera: '.carta[data-uid="j"]', fotos: [["#palco", "palco"]], so: ["final", "rei", "rei2"] },
 ];
 mkdirSync(saida, { recursive: true });
 const b = await chromium.launch();
@@ -31,7 +40,7 @@ const b = await chromium.launch();
 const arqRegistro = path.join(saida, "registro.json");
 const registro = existsSync(arqRegistro) ? JSON.parse(readFileSync(arqRegistro, "utf-8")) : {};
 for (const sit of SITUACOES) {
-  for (const modo of MODOS.filter((m) => !sit.so || sit.so.includes(m))) {
+  for (const modo of MODOS.filter((m) => (!sit.so || sit.so.includes(m)) && !(sit.nao || []).includes(m))) {
     const proc = spawn(PY, ["-m", "tests.navegador.cenarios", sit.cenario], { cwd: raiz,
       env: { ...process.env, PYTHONPATH: raiz, PYTHONIOENCODING: "utf-8", VELOCIDADE: "rapido", PERIODO: "0", ...sit.amb } });
     let url = null; proc.stdout.on("data", (d) => { const m = String(d).match(/http:\S+/); if (m) url = m[0]; });
@@ -87,7 +96,7 @@ for (const sit of SITUACOES) {
           return { nome: n, caixa: [r.left - o.left, r.top - o.top, r.right - o.left, r.bottom - o.top].map(Math.round),
                    retrato: [im.left - o.left, im.top - o.top, im.right - o.left, im.bottom - o.top].map(Math.round) };
         });
-      }, sit.nome === "luta");
+      }, sit.fotos[0][0] === "#palco");  // a foto do palco: as caixas relativas a ele
       registro[`${sit.nome}/${modo}`] = { erros, avisos, caixas, cartas: await p.evaluate(() => [...document.querySelectorAll(".carta, .cartao, .rastro-contrato")]
         .map((c) => { const im = c.querySelector(".icone img, .cab img, .rastro-arte img") || {};
           // o nome, o começo do endereço e a medida: o lado na tela / o lado do arquivo (o modo final: o jogo integrado)

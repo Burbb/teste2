@@ -17,7 +17,7 @@
     python -m tests.navegador.cenarios resgate       # a recuperação: fome ou infecção no Charco, à noite (CLASSE, CAUSA, COMITIVA, CONTRATOS)
     python -m tests.navegador.cenarios abertura      # campanha nova no Vau: a despensa e as orientações (CLASSE, TUTORIAL, MOREL, DESPENSA, VIDA_RATOS)
     python -m tests.navegador.cenarios fogueira      # a comitiva na fogueira e a fome (LUGAR, SALA, CLASSE, COMITIVA, RESERVA, FERIDO, FERA, FOME, PROVISOES, TOCHAS, PERIODO, CLIMA, EXAUSTO)
-    python -m tests.navegador.cenarios tutorial      # a segunda parte da abertura guiada (LUGAR, PERIODO, VIDA, REC, OURO, PROVISOES, COMITIVA, PONTOS, ITEM, BAUS, CONTRATO, CONTRATO_FAMILIA, LUTA, VISTAS, BOLSA, TROCA)
+    python -m tests.navegador.cenarios tutorial      # a segunda parte da abertura guiada (LUGAR, PERIODO, VIDA, REC, OURO, PROVISOES, COMITIVA, PONTOS, ITEM, BAUS, CONTRATO, CONTRATO_FAMILIA, LUTA, CHEFE, VISTAS, BOLSA, TROCA)
     python -m tests.navegador.cenarios gelo          # Mago com a iniciativa contra um lobo: duas Lanças antes de ele agir (PRISAO, NIVEL, SEMENTE)
     python -m tests.navegador.cenarios aneis         # acha um anel com os dois espaços ocupados (ANEIS=1: um vazio; CHEIA, OURO)
     python -m tests.navegador.cenarios reacoes       # Contra-ataque, espinhos, roubo de vida e o Revide juntos (CONTRA, ESPINHOS, ROUBO, LUTA)
@@ -944,6 +944,14 @@ def tutorial(ui):
                 grupo = [g.inimigo(f, nivel=nv) for f, n in (x.split(":") for x in os.environ["GRUPO"].split(",")) for _ in range(int(n))]
             else:
                 grupo = [g.inimigo(os.environ["LUTA"], nivel=nv) for _ in range(int(os.environ.get("QUANTOS", "2")))]
+            if os.environ.get("CHEFE"):  # CHEFE=rei_troll: o guardião desse id na luta, com o nome e a chave dele
+                from rpg.dados import GUARDIOES
+                from rpg.inimigos import instanciar_guardiao
+                spec = next(dict(s, nome=s["base"], bioma=b) for b, ls in GUARDIOES.items() for s in ls
+                            if s["id"] == os.environ["CHEFE"])
+                chefe = instanciar_guardiao(spec, nv)
+                chefe.chave = f"guardiao:{os.environ['CHEFE']}"
+                grupo.insert(0, chefe)
             if os.environ.get("LONGOS"):  # os nomes mais longos que o jogo dá: um único e os reforços invocados
                 grupo[0].nome = "Morion, o Troll da montanha Corrompido Flamejante"
                 for k, e in enumerate(grupo[1:]):

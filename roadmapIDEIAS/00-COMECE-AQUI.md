@@ -5528,3 +5528,12 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   geradas que ele deixou em `ferramentas/arte/referencias/icones/`: `aranha-1` a `-3` e `troll-1` a `-3` (o troll de
   carne), com a guia oculta nas fontes; as folhas `aranha-r2.png` e `troll-r2.png`. Minha preferência: a Aranha 2 e o
   Troll 1. Nada aprovado.
+
+### 21/10/2026 (data do computador local) — O Troll da montanha no jogo (1.166.0)
+
+- **Decisão de Jean:** o Troll 1 (em três quartos, de carne) do `4d43ce10`, sem retoques, pela família `troll`; o Rei
+  Troll fora.
+- **Feito:** a fonte em `ferramentas/arte/aseprite/retrato-troll/` (a guia oculta; o 32 e o 48 derivados ×2 e ×3);
+  `RETRATO_FAMILIA` e `CRIATURA` com o troll; `tests/test_retratos.py` com o troll e o Rei na caveira; o cenário
+  `tutorial` ganhou `CHEFE`. A folha `ferramentas/prototipos/hud/criaturas/aranha_troll/troll-final.png`.
+- **Continua:** o Rei Troll e a Aranha no protótipo; a Rainha Aracnídea fora.

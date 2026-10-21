@@ -125,3 +125,19 @@ A Rainha Aracnídea e o Rei Troll continuam fora. Nada integrado.
 - **Troll 3:** a silhueta mais diferente (a testa e o queixo projetados), e o perfil reforça a ideia de pouca
   inteligência. Limite: o rosto ocupa a metade de cima à esquerda; a 32 px a presa é pequena e o nariz se confunde com a
   testa.
+
+## Integração do Troll (1.166.0)
+
+**Escolha de Jean:** o **Troll 1**, em três quartos (`troll-1`, do `4d43ce10`), sem retoques, pela família `troll`. O
+Rei Troll fica fora do mapeamento (continua na caveira); a Aranha segue no protótipo.
+
+- **A fonte de produção:** `ferramentas/arte/aseprite/retrato-troll/retrato-troll-16.aseprite`, aberta do `troll-1` pelo
+  MCP, com a guia oculta. A exportação: `exportar_aseprite.py retrato-troll` (`DERIVADOS`: o 32 é o 16 ×2 e o 48 o 16 ×3,
+  cada um com o @2x); `--conferir`: tudo igual ao jogo. O 16 é igual pixel a pixel ao `proposta/troll-1-16.png`.
+- **No jogo:** `RETRATO_FAMILIA` com `troll` (`dados.py`) e `CRIATURA` com `retrato-troll` (`icones.js`): a família
+  inteira, com os afixos, os líderes de nome próprio e o nêmesis. O **Rei Troll** é um guardião (família `guardiao`, o
+  traço `gigante`) e continua na caveira (conferido no teste e na foto). Traços, regras, atributos e medidas iguais.
+- **Fotos a 1920×945** (o modo `final`, sem troca): a carta (32 px de um arquivo de 32) e o Bestiário (48 de 48), com a
+  aranha no `fera` e o lobo e o afogado com os retratos deles; uma luta nova com o Rei Troll (o cenário `tutorial`
+  ganhou `CHEFE=<id>`, o guardião pelo `instanciar_guardiao`), um troll e uma aranha. Sem erro nem aviso no console. A
+  folha: `troll-final.png` (`python auxiliares/prancha.py troll`).
