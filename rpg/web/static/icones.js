@@ -189,9 +189,10 @@ const Icones = (() => {
   // sprites do jogo, também noutros papéis
   const CRIATURA = { afogado: "retrato-afogado", ilse: "retrato-ilse", lobo: "retrato-lobo", bandido: "retrato-bandido" };
   // o animal do patrulheiro (1.164.0), pelo tipo dele (classes.COMPANHEIROS), na carta aliada da luta e no painel da
-  // comitiva, a 2×: o Urso Pardo (de frente, severo) e o Falcão Peregrino (de perfil, a máscara escura). O Lobo Cinzento
-  // continua no "fera"; o "fera" e o "voador" dos inimigos e a figura do acampamento não mudam
-  const ANIMAL = { urso: "retrato-urso", falcao: "retrato-falcao" };
+  // comitiva, a 2×: o Urso Pardo (de frente, severo) e o Falcão Peregrino (de perfil, a máscara escura); desde a 1.165.0,
+  // o Lobo Cinzento com o mesmo arquivo do Lobo inimigo (o mesmo rosto de propósito: o lado, o nome e a borda separam os
+  // papéis). O "fera" e o "voador" dos inimigos e a figura do acampamento não mudam
+  const ANIMAL = { urso: "retrato-urso", falcao: "retrato-falcao", lobo: "retrato-lobo" };
 
   /** O arquivo de `peca` para mostrar em `lado` px: o tamanho igual ou o mais perto; maior que o maior, o dobro dele. */
   function arquivos(peca, lado) {

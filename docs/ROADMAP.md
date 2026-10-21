@@ -55,16 +55,22 @@ mais brando para quem quiser; um robô de mapa que jogue partidas inteiras com j
 - Conteúdo: história fixa, personagens, mapa, cidades, masmorras com mapa interno.
 - Classes: árvores grandes, novas especializações, elites.
 
-## Apresentação, arte e clareza do combate (atualizado em 19/10/2026)
+## Apresentação, arte e clareza do combate (atualizado em 21/10/2026)
 
 A sequência aprovada por Jean está detalhada em
 [23 — Plano de arte, interface e combate](../roadmapIDEIAS/23-PLANO-DE-ARTE-INTERFACE-E-COMBATE.md).
 Consultar esse documento antes de escolher a próxima entrega. Aprovar a ordem não aprova automaticamente
 protótipos, desenhos ou regras e não autoriza executar todo o plano de uma vez.
 
-**Estado confirmado nesta atualização:** produção remota **1.145.0**, espada e maça integradas em `ed967d1`.
-**Estamos em 1D**, fechando os equipamentos. Próximo par solicitado: **elmo e cota**, só no protótipo.
-A integração da outra sessão foi publicada durante esta atualização e está preservada.
+**Estado confirmado nesta atualização (21/10/2026):** produção **1.165.0**. A 1D está concluída: **31
+equipamentos-base** finais (as variantes e os compartilhamentos provisórios ficam separados, ainda abertos). Na 1E, o
+**contador de flechas** e os **17 estados** estão concluídos; o **Afogado, a Ilse, o Lobo e o Bandido** estão integrados,
+e os **três animais do patrulheiro** (Urso, Falcão e Lobo Cinzento) concluídos. **Agora: 1E.3**, as demais criaturas,
+os chefes e as invocações; **depois: 1E.4**, os caminhos e os símbolos internos do mapa/minimapa. As etapas 2–9 seguem,
+com habilidades, talentos, Grimório e árvore juntos na etapa 8.
+
+Histórico (19/10/2026): produção remota 1.145.0, espada e maça integradas em `ed967d1`; a 1D estava fechando os
+equipamentos, com o elmo e a cota como o próximo par.
 
 **Concluído:** clareza de custo, vida bloqueada, iniciativa/turnos e rolagem central; consulta aos testes;
 atributos, nove atalhos da doca, principais recursos/consumíveis e grande parte dos equipamentos. A HUD de ferro e
@@ -76,8 +82,8 @@ A migração das artes e seus usos específicos consta no plano 23; não contar 
 | **1A** | Capuzes e luvas de couro/tecido, tamanhos e saves | **Concluída**, 1.112.0 |
 | **1B** | Custo no início da ação e vida máxima bloqueada | **Concluída**, 1.114.1 e 1.115.0 |
 | **1C** | Iniciativa/turnos, rolagem no centro e testes na ficha | **Concluída**, 1.116.0–1.118.0 |
-| **1D** | Equipamentos, objetos da bolsa e ícones gerais | **Agora**: espada/maça integradas na 1.145.0; remakes de elmo, cota, manopla, perneiras, botas; 40/48 do martelo aprovado; conferir usos residuais |
-| **1E** | Desvio visual depois dos itens | **Sequência aprovada**: primeiro contagem de flechas do Arqueiro e buffs/estados (Firme); depois inimigos/pets e caminhos/ícones internos do minimapa/mapa |
+| **1D** | Equipamentos, objetos da bolsa e ícones gerais | **Concluída**: 31 equipamentos-base finais (1.150.0; acabamentos até a 1.154.0); variantes e compartilhamentos provisórios separados, ainda abertos |
+| **1E** | Desvio visual depois dos itens | **Agora**: contador de flechas (1.155.0) e 17 estados (1.155.0–1.161.0) concluídos; Afogado, Ilse, Lobo e Bandido integrados (1.162.0–1.163.0); os três animais do patrulheiro concluídos (1.164.0–1.165.0); em andamento as demais criaturas, os chefes e as invocações (1E.3); depois caminhos e símbolos do mapa/minimapa (1E.4) |
 | **2** | Menu de carregar e fichas dos saves, criação, livro da capela, dado, subida de nível, celebrações e raridade | Pendente; Grimório e árvore passam ao mesmo ciclo dos sistemas na etapa 8 |
 | **3** | Interior da forja e ferreiro | Pendente; começar com as regras atuais |
 | **4** | Protótipo de reforço e encantamento | Hipóteses; chances, custos, riscos e limites não aprovados |
@@ -88,14 +94,15 @@ A migração das artes e seus usos específicos consta no plano 23; não contar 
 | **9** | Expansão e reescrita da campanha, Ilse e a água | Rascunho em [22](../roadmapIDEIAS/22-HISTORIA-ILSE-E-A-AGUA-RASCUNHO.md), não cânone |
 | **Depois** | Avaliação de refatoração/manutenção | Retomar por diagnóstico do código então existente; não interromper os lotes com limpeza geral |
 
-**Prioridades novas de 19/10:** o ícone da contagem de flechas na carta do Arqueiro ainda usa o sprite antigo
+**Prioridades novas de 19/10 (histórico; resolvidas: o contador de flechas na 1.155.0, o Firme e os outros 16 estados
+até a 1.161.0):** o ícone da contagem de flechas na carta do Arqueiro ainda usa o sprite antigo
 `flecha`, distinto da aljava já aprovada do topo. O estado Firme ainda usa `cadeado`; revisar sua representação da
 proteção temporária contra nova perda de turno. Desenhos finais a avaliar; preservar regras e números.
 Os demais buffs/estados não ficam esperando a revisão de habilidades. Criaturas e navegação já estavam no escopo;
 agora têm uma posição explícita. O menu de carregar/fichas e a revisão visual da árvore também ficam registrados.
 
-**Estado dos equipamentos na produção consultada:** 31 desenhos existem; **25 são finais**, cinco peças de ferro
-continuam placeholders (elmo, cota, manopla, perneiras e botas de ferro), e o martelo é aprovado com 40/48 pendentes.
+**Estado dos equipamentos (atualizado em 21/10):** os **31 desenhos-base são finais** desde a 1.150.0 (o histórico de
+19/10 dizia 25 finais, com cinco peças de ferro e o 40/48 do martelo pendentes).
 Compartilhamentos provisórios continuam registrados (Capa de Patrulha, Chapéu de Couro, Coroa dos Afogados), assim
 como a nomenclatura da Sandália/Diadema. Não afirmar que só restam talentos e habilidades sem conferir o catálogo.
 

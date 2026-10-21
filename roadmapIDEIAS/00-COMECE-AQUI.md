@@ -5502,3 +5502,15 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   com os dois. A folha `ferramentas/prototipos/hud/criaturas/animais/final.png`.
 - **Continua:** o Lobo Cinzento no `fera`; o `fera` e o `voador` dos inimigos e a figura do acampamento iguais. O
   próximo trabalho de criaturas é decisão do Jean.
+
+### 21/10/2026 (data do computador local) — O Lobo Cinzento no jogo e os resumos do plano (1.165.0)
+
+- **Decisão de Jean:** o Lobo Cinzento aliado com exatamente o retrato do Lobo inimigo (1.163.0), sem redesenho; e os
+  resumos do plano 23 e do `docs/ROADMAP.md` em dia com as entregas.
+- **Feito:** `lobo: "retrato-lobo"` no `ANIMAL` de `icones.js` (o mesmo arquivo, sem cópia); a carta aliada e o
+  painel iguais ao teste aprovado; a folha `ferramentas/prototipos/hud/criaturas/animais/lobo-cinzento-final.png`.
+  **Os três animais do patrulheiro estão concluídos.** No plano 23, o estado de referência de 21/10 (o de 19/10 como
+  histórico), a tabela da ordem imediata, a situação de cada parte da 1E e a próxima passagem de trabalho; no
+  ROADMAP, o estado e a tabela.
+- **Agora:** 1E.3, as demais criaturas, os chefes e as invocações (o próximo par é decisão do Jean); depois 1E.4, os
+  caminhos e os símbolos do mapa/minimapa; depois as etapas 2–9, com habilidades, talentos, Grimório e árvore na 8.

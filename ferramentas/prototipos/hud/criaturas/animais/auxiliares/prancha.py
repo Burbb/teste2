@@ -277,9 +277,41 @@ def folha_final():
     print("final.png", out.size)
 
 
+def folha_lobo_final():
+    """O Lobo Cinzento no jogo (1.165.0, lobo-cinzento-final.png): o "fera" de antes × o teste aprovado (a troca na
+    página) × o jogo (o arquivo do Lobo inimigo, sem troca), na carta aliada e no painel; e a luta contra três lobos."""
+    f, f2 = ImageFont.truetype("arial.ttf", 15), ImageFont.truetype("arial.ttf", 12)
+    out = Image.new("RGBA", (1500, 900), CARVAO)
+    d = ImageDraw.Draw(out)
+    d.text((20, 10), "O Lobo Cinzento no jogo (1.165.0): o mesmo arquivo do Lobo inimigo (retrato-lobo), sem redesenho",
+           fill=TEXTO, font=f)
+    teste_c, final_c = abre("lobo-reaproveitado-palco.png").crop(CARTA), abre("lobo-final-palco.png").crop(CARTA)
+    teste_p, final_p = abre("lobo-reaproveitado-pagina.png").crop(PAINEL), abre("lobo-final-pagina.png").crop(PAINEL)
+    igual = teste_c.tobytes() == final_c.tobytes() and teste_p.tobytes() == final_p.tobytes()
+    d.text((20, 30), f"o jogo × o teste aprovado (a carta e o painel): {'iguais pixel a pixel' if igual else 'diferentes'}",
+           fill=TEXTO2, font=f2)
+    y = 56
+    for rot, c, p in (("antes (o fera)", abre("lobo-atual-palco.png").crop(CARTA), abre("lobo-atual-pagina.png").crop(PAINEL)),
+                      ("no jogo (1.165.0)", final_c, final_p)):
+        d.text((20, y), f"{rot}: a carta aliada e o painel da comitiva — tamanho real e 2×", fill=TEXTO, font=f2)
+        out.alpha_composite(c, (20, y + 18)); out.alpha_composite(p, (20 + c.width + 16, y + 18))
+        out.alpha_composite(amplia(c, 2), (540, y + 18)); out.alpha_composite(amplia(p, 2), (540 + 2 * c.width + 16, y + 18))
+        y += 18 + 2 * c.height + 18
+    luta = abre("lobos-final-palco.png").crop((30, 30, 1060, 210))
+    d.text((20, y), "o Lobo Cinzento contra três lobos: o mesmo rosto de propósito; o lado, o nome e a borda separam os papéis",
+           fill=TEXTO, font=f2)
+    out.alpha_composite(luta, (20, y + 18))
+    y += 18 + luta.height + 16
+    out = out.crop((0, 0, 1500, y))
+    out.save(PASTA / "lobo-cinzento-final.png")
+    print("lobo-cinzento-final.png", out.size, "igual ao teste" if igual else "DIFERENTE do teste")
+
+
 if __name__ == "__main__":
     import sys
-    if sys.argv[1:] == ["final"]:
+    if sys.argv[1:] == ["lobo"]:
+        folha_lobo_final()
+    elif sys.argv[1:] == ["final"]:
         folha_final()
     elif sys.argv[1:] == ["ajuste"]:
         folha_ajuste()

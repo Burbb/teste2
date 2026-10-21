@@ -149,3 +149,20 @@ referências geradas que deram o `t` estão registradas no `LEIA-ME.md` de `ferr
   (32 px de um arquivo de 32), o Lobo Cinzento no `fera`, o lobo e o bandido inimigos com os retratos da 1.163.0, a aranha
   no `fera` e, numa luta extra, duas harpias no `voador`. Sem erro nem aviso no console. A folha: `final.png`
   (`python auxiliares/prancha.py final`).
+
+## O Lobo Cinzento (1.165.0)
+
+**Decisão de Jean:** reaproveitar exatamente o retrato do Lobo inimigo integrado na 1.163.0 (o teste mostrado aqui), sem
+redesenho, coleira, recoloração ou outro detalhe. O mesmo rosto é intencional: o lado da tela, o nome e a borda separam
+os papéis.
+
+- **No jogo:** o `ANIMAL` de `icones.js` ganhou `lobo: "retrato-lobo"`, o mesmo arquivo de produção do Lobo inimigo (o
+  16, o 32 e o 48 já existentes; nenhuma cópia nem fonte nova). A carta aliada da luta e o painel da comitiva pedem a
+  cabeça pelo tipo, como no Urso e no Falcão. O `fera` das outras criaturas (a aranha, o javali, o rato, o lobo gélido e
+  as outras feras), o Urso e o Falcão da 1.164.0 e a figura do acampamento não mudam; regras, habilidades, atributos,
+  medidas e áreas de clique iguais.
+- **Fotos a 1920×945** (o modo `final`, sem troca): a carta aliada e o painel com o `retrato-lobo-32.png` (32 px de 32),
+  **iguais pixel a pixel ao teste aprovado** (o modo `reaproveitado`); uma luta nova do Lobo Cinzento contra três lobos
+  (`lobos`); a aranha no `fera`. Sem erro nem aviso no console. A folha: `lobo-cinzento-final.png`
+  (`python auxiliares/prancha.py lobo`). As fotos `lobo-final-*` agora mostram o jogo da 1.165.0; a folha `final.png`
+  guarda o Lobo Cinzento no `fera`, como era na 1.164.0.

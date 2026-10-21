@@ -117,9 +117,9 @@
   "erros": [],
   "avisos": [],
   "cartas": [
-   "painel: 43/43: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "painel: 43/43: /static/hud/icones/retrato-lobo-32.png 32/32",
    "carta: Jean: data:image/png;base64,iVBORw0KGgoAAAANSU 32/32",
-   "carta: Lobo Cinzento: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "carta: Lobo Cinzento: /static/hud/icones/retrato-lobo-32.png 32/32",
    "carta: Lobo: /static/hud/icones/retrato-lobo-32.png 32/32",
    "carta: Bandido: /static/hud/icones/retrato-bandido-32.pn 32/32",
    "carta: Aranha gigante: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16"
@@ -134,6 +134,18 @@
    "carta: Falcão Peregrino: /static/hud/icones/retrato-falcao-32.png 32/32",
    "carta: Harpia: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
    "carta: Harpia: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "carta: Lobo: /static/hud/icones/retrato-lobo-32.png 32/32"
+  ]
+ },
+ "lobos/final": {
+  "erros": [],
+  "avisos": [],
+  "cartas": [
+   "painel: 43/43: /static/hud/icones/retrato-lobo-32.png 32/32",
+   "carta: Jean: data:image/png;base64,iVBORw0KGgoAAAANSU 32/32",
+   "carta: Lobo Cinzento: /static/hud/icones/retrato-lobo-32.png 32/32",
+   "carta: Lobo: /static/hud/icones/retrato-lobo-32.png 32/32",
+   "carta: Lobo: /static/hud/icones/retrato-lobo-32.png 32/32",
    "carta: Lobo: /static/hud/icones/retrato-lobo-32.png 32/32"
   ]
  }

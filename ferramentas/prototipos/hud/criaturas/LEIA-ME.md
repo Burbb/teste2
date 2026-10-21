@@ -112,13 +112,12 @@ A escolha do par e da direção é do Jean; nada foi começado.
   Bandido do capuz, da máscara e da faca, pela família. O `fera` continua no animal do herói, no lobo gélido e nas
   outras feras, e o `humano` nos outros humanos: o problema 1 e o 4 ficam menores, não resolvidos.
 - **1.164.0: o Urso Pardo e o Falcão Peregrino do patrulheiro** (`animais/`, o `urso-t2` e o `falcao-t2`): pelo tipo
-  do animal, na carta aliada e no painel da comitiva. O Lobo Cinzento continua no `fera`; o `fera` e o `voador` dos
-  inimigos também.
+  do animal, na carta aliada e no painel da comitiva. O `fera` e o `voador` dos inimigos continuam.
+- **1.165.0: o Lobo Cinzento do patrulheiro** com o mesmo arquivo do Lobo inimigo (`retrato-lobo`), pelo tipo do
+  animal: os três animais do patrulheiro concluídos. O mesmo rosto dos dois lados é de propósito.
 
 ## Em proposta
 
-- **O Lobo Cinzento do patrulheiro** (`animais/`): o teste do retrato do Lobo no lugar do `fera` do aliado (só na
-  página); continua no `fera`.
 
 ## Reservado
 

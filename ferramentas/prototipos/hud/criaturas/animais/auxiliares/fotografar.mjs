@@ -24,6 +24,8 @@ const MODOS = {
   lobo: { atual: null, reaproveitado: png(path.join(raiz, "rpg/web/static/hud/icones/retrato-lobo-16.png")), final: null },
   // a luta extra do modo final: o falcão do herói contra duas harpias e um lobo (os voadores e o lobo inimigo continuam)
   voadores: { final: null },
+  // 1.165.0: o Lobo Cinzento contra três lobos (o mesmo rosto dos dois lados, de propósito)
+  lobos: { final: null },
 };
 const ANIMAIS = (process.env.ANIMAIS || "urso,falcao,lobo").split(",");
 // SO=t: só esses modos (a transposição das referências, "t", sem regravar as fotos das outras)
@@ -35,6 +37,9 @@ const SITUACOES = ANIMAIS.map((tipo) => ({ nome: tipo, tipo, cenario: "tutorial"
 if (ANIMAIS.includes("voadores")) SITUACOES.splice(SITUACOES.findIndex((s) => s.tipo === "voadores"), 1, { nome: "voadores",
   tipo: "voadores", cenario: "tutorial", amb: { TUTORIAL: "0", CLASSE: "arqueiro", NIVEL: "4", ANIMAL: "falcao", NIVEL_LUTA: "2",
     GRUPO: "harpia:2,lobo:1" }, espera: '.carta[data-uid="j"]', fotos: [["#palco", "palco"], ["body", "pagina"]] });
+if (ANIMAIS.includes("lobos")) SITUACOES.splice(SITUACOES.findIndex((s) => s.tipo === "lobos"), 1, { nome: "lobos",
+  tipo: "lobos", cenario: "tutorial", amb: { TUTORIAL: "0", CLASSE: "arqueiro", NIVEL: "4", ANIMAL: "lobo", NIVEL_LUTA: "2",
+    GRUPO: "lobo:3" }, espera: '.carta[data-uid="j"]', fotos: [["#palco", "palco"], ["body", "pagina"]] });
 mkdirSync(saida, { recursive: true });
 const b = await chromium.launch();
 // o registro acumula: um modo fotografado de novo substitui só a entrada dele

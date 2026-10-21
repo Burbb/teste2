@@ -11,7 +11,27 @@ a passagem de sessão, em [00-COMECE-AQUI.md](00-COMECE-AQUI.md).
 Executar a entrega solicitada por Jean, apresentar a proposta quando previsto e registrar o que de fato entrou.
 Não iniciar todo o plano numa única tarefa. As etapas técnicas A–I e a validação E9 mantêm seus próprios critérios.
 
-## Estado de referência — 19/10/2026
+## Estado de referência — 21/10/2026
+
+- Produção: **1.165.0** na branch `claude/tender-einstein-tx3tjl` (os três animais do patrulheiro com retrato).
+- **Etapa 1D concluída:** os **31 equipamentos-base** estão finais desde a 1.150.0, com os acabamentos das luvas L7
+  (1.151.0), das perneiras P7 (1.152.0), do capacete C1 (1.153.0) e das botas A1 (1.154.0). **Fora dessa contagem, e
+  ainda abertos:** as variantes (os únicos e raros com desenho próprio) e os compartilhamentos provisórios (a Capa de
+  Patrulha no gibão, o Chapéu de Couro no capuz, a Coroa dos Afogados no Diadema), a nomenclatura da Sandália e do
+  Diadema, e a origem e a licença das referências da L7 e da Esquiva.
+- **Etapa 1E em andamento.** Concluídos: o **contador de flechas** da carta do Arqueiro (1.155.0) e os **17 estados**
+  do catálogo (1.155.0 a 1.161.0). Criaturas com retrato próprio: o **Afogado e a Ilse** (1.162.0), o **Lobo e o
+  Bandido** (1.163.0) e os **três animais do patrulheiro** (o Urso Pardo e o Falcão Peregrino na 1.164.0; o Lobo
+  Cinzento, com o mesmo retrato do Lobo inimigo, na 1.165.0). O Bandido do chapéu está reservado como conceito de um
+  possível chefe, fora do jogo.
+- **Agora: 1E.3, as demais criaturas, os chefes e as invocações** (as outras ainda saem dos traços: o `fera`, o
+  `humano`, a caveira e os outros sprites de 16×16; o levantamento em `ferramentas/prototipos/hud/criaturas/`).
+  **Depois: 1E.4**, os caminhos e os símbolos internos do mapa e do minimapa. Em seguida, as **etapas 2–9** como estão
+  abaixo, com as habilidades, os talentos, o Grimório e a árvore juntos na etapa 8.
+- A HUD principal de ferro e carvão e os menus de pincelada continuam aprovados; o estudo da HUD com pintura permanente
+  (1.11) não foi escolhido.
+
+## Estado de referência anterior — 19/10/2026 (histórico)
 
 - Produção confirmada no remoto nesta atualização: **1.146.0**, a cota integrada (depois da espada e da maça, 1.145.0).
 - Branch: `claude/tender-einstein-tx3tjl`; esta atualização documental vem depois da integração publicada pela outra
@@ -49,8 +69,8 @@ os usos dos sprites estejam migrados. Conferir `Icones` e os catálogos antes de
 | 1A | Concluir o lote de cabeça/capuz e luvas de couro e tecido | Integrado na 1.112.0 (32, 40, 48, 64; os saves antigos pela migração v5); falta Jean conferir jogando |
 | 1B | Corrigir a sequência visual do consumo de recurso e mostrar o bloqueio de vida máxima por ferimentos | Feito: 1.114.1 (o custo) e 1.115.0 (a vida bloqueada) |
 | 1C | Prototipar dado mais visível, iniciativa e indicação dos turnos; facilitar consulta aos testes de atributos | Feito: 1.116.0/1.116.1 (iniciativa e turnos), 1.117.0 (a rolagem no centro), 1.118.0 (os testes na ficha) |
-| 1D | Fechar equipamentos e objetos da bolsa; concluir ícones gerais já trabalhados | **Agora.** Atributos, nove atalhos da doca e principais recursos/consumíveis integrados. Espada e maça integradas (1.145.0), a cota (1.146.0), a manopla (1.147.0), o elmo e as perneiras (1.148.0), o 40/48 do martelo (1.149.0) e as botas de ferro (1.150.0): os 31 equipamentos-base concluídos. Conferir usos residuais antes de fechar o lote |
-| 1E | Desvio visual após os itens: flechas, buffs/estados, inimigos, pets, caminhos e minimapa | **Próximo bloco, aprovado como sequência em 19/10.** Começar pela contagem de flechas do Arqueiro e por Firme; critérios no item 1.12. **A flecha da carta (F2) e o Firme (R2) no jogo desde a 1.155.0.** Talentos e habilidades ficam para a etapa 8 |
+| 1D | Fechar equipamentos e objetos da bolsa; concluir ícones gerais já trabalhados | **Concluída** (31 equipamentos-base finais na 1.150.0; acabamentos até a 1.154.0; variantes e compartilhamentos provisórios separados, ainda abertos). Histórico: atributos, nove atalhos da doca e principais recursos/consumíveis integrados. Espada e maça integradas (1.145.0), a cota (1.146.0), a manopla (1.147.0), o elmo e as perneiras (1.148.0), o 40/48 do martelo (1.149.0) e as botas de ferro (1.150.0): os 31 equipamentos-base concluídos. Conferir usos residuais antes de fechar o lote |
+| 1E | Desvio visual após os itens: flechas, buffs/estados, inimigos, pets, caminhos e minimapa | **Agora (21/10).** Contador de flechas (1.155.0) e 17 estados (1.155.0–1.161.0) concluídos; Afogado, Ilse, Lobo e Bandido (1.162.0–1.163.0) e os três animais do patrulheiro (1.164.0–1.165.0) integrados; em andamento, 1E.3: as demais criaturas, os chefes e as invocações; depois 1E.4: caminhos e símbolos do mapa/minimapa. Histórico: aprovado como sequência em 19/10. Começar pela contagem de flechas do Arqueiro e por Firme; critérios no item 1.12. **A flecha da carta (F2) e o Firme (R2) no jogo desde a 1.155.0.** Talentos e habilidades ficam para a etapa 8 |
 | 2–9 | Telas, serviços, cenários, habilidades e campanha | Sequência detalhada abaixo |
 
 A etapa 1 não precisa terminar todo o catálogo antes de tratar um defeito de compreensão no combate.
@@ -818,10 +838,10 @@ agora têm prioridade independente dos ícones de habilidades. Esta seção orga
 
 | Ordem | Entrega | Resultado e limites |
 |---|---|---|
-| 1E.1 | **Contagem de flechas do Arqueiro — prioridade** | Ícone próprio legível junto do número, principalmente na carta de combate; conferir também custos e outros contadores para decidir os usos. Preservar quantidade, avisos de poucas/zero, dicas e áreas de clique |
-| 1E.2 | **Buffs e estados, começando por Firme — prioridade** | Auditar o catálogo e os usos reais, trabalhar em pequenos grupos por função; símbolos reconhecíveis em tamanho real e distintos entre si, sem depender só da cor |
-| 1E.3 | **Inimigos e pets/animais** | Ícones/retratos usados em cartas, painéis e Bestiário, conforme os usos de cada criatura. Mobs, chefes e pets em lotes pequenos; preservar identidade e silhueta reconhecíveis. Não refazer os retratos aprovados do herói e da comitiva por extensão |
-| 1E.4 | **Caminhos/destinos e ícones do minimapa/mapa** | Auditar os dois contextos; linguagem coerente para lugares, serviços, perigos e marcadores que realmente existam. Conferir estados visitado/atual/bloqueado quando aplicáveis, sem alterar geografia, regras ou navegação |
+| 1E.1 | **Contagem de flechas do Arqueiro — prioridade** | **Concluída na 1.155.0** (a F2). Ícone próprio legível junto do número, principalmente na carta de combate; conferir também custos e outros contadores para decidir os usos. Preservar quantidade, avisos de poucas/zero, dicas e áreas de clique |
+| 1E.2 | **Buffs e estados, começando por Firme — prioridade** | **Concluída: os 17 estados, 1.155.0–1.161.0.** Auditar o catálogo e os usos reais, trabalhar em pequenos grupos por função; símbolos reconhecíveis em tamanho real e distintos entre si, sem depender só da cor |
+| 1E.3 | **Inimigos e pets/animais** | **Em andamento:** Afogado e Ilse (1.162.0), Lobo e Bandido (1.163.0), os três animais do patrulheiro (1.164.0–1.165.0); faltam as demais criaturas, os chefes e as invocações. Ícones/retratos usados em cartas, painéis e Bestiário, conforme os usos de cada criatura. Mobs, chefes e pets em lotes pequenos; preservar identidade e silhueta reconhecíveis. Não refazer os retratos aprovados do herói e da comitiva por extensão |
+| 1E.4 | **Caminhos/destinos e ícones do minimapa/mapa** | **Depois da 1E.3.** Auditar os dois contextos; linguagem coerente para lugares, serviços, perigos e marcadores que realmente existam. Conferir estados visitado/atual/bloqueado quando aplicáveis, sem alterar geografia, regras ou navegação |
 
 **Flechas — distinguir os papéis antes de desenhar:** na produção consultada, a aljava de equipamento e do recurso
 do topo já é a arte aprovada da 1.122.0. A contagem na carta ainda usa `S("flecha", 1)` em `batalha.js`
@@ -915,6 +935,9 @@ referências geradas (`urso-t`, `falcao-t`; as referências em `ferramentas/arte
 `transposicao.png`; o último ajuste (`urso-t2`, `falcao-t2`, a folha `ajuste.png`).
 **No jogo desde a 1.164.0:** o Urso Pardo e o Falcão Peregrino do patrulheiro (o `t2` de cada), pelo tipo do animal,
 na carta aliada e no painel da comitiva; o Lobo Cinzento continua no `fera`.
+**No jogo desde a 1.165.0:** o Lobo Cinzento com o mesmo arquivo do Lobo inimigo (`retrato-lobo`), sem redesenho, pelo
+tipo do animal; o mesmo rosto é de propósito (o lado, o nome e a borda separam os papéis). **Os três animais do
+patrulheiro estão concluídos.** O `fera` das outras criaturas e a figura do acampamento continuam.
 
 O atalho **Mapa** da doca já foi concluído; esta frente trata dos símbolos internos de caminhos e mapas.
 Não afirmar que só restam talentos e habilidades após este bloco sem conferir os consumíveis, variantes e
@@ -1055,7 +1078,19 @@ volta à pauta quando essa expansão exigir; não é uma migração de engine.
 - Atualizar este plano quando uma entrega mudar de estado, mantendo propostas recusadas no histórico e o código
   atual como referência da implementação.
 
-## Próxima passagem de trabalho — sequência aprovada em 19/10/2026
+## Próxima passagem de trabalho — atualizada em 21/10/2026
+
+1. **Concluídos:** os 31 equipamentos-base (1D); na 1E, o contador de flechas e os 17 estados; o Afogado, a Ilse, o Lobo,
+   o Bandido e os três animais do patrulheiro. As variantes e os compartilhamentos provisórios ficam abertos, separados.
+2. **Agora, 1E.3:** as demais criaturas, os chefes e as invocações, em pares pequenos escolhidos pelo Jean, pelo mesmo
+   caminho (o retrato por família, por chave ou pelo tipo, sem trocar o sprite compartilhado). Pendências registradas no
+   levantamento: o rosto de lobo (`fera`) ainda em várias feras, o troll e o Rei Troll na caveira, o `humano` dos chefes e
+   do antagonista, o Lich que troca de desenho na fase 2, os servos invocados. O Bandido do chapéu está reservado.
+3. **Depois, 1E.4:** os caminhos/destinos e os símbolos internos do mapa e do minimapa.
+4. **Retomar a etapa 2** e **seguir 3–7**, como na sequência abaixo; **etapa 8** com habilidades, talentos, Grimório e
+   árvore no mesmo ciclo; **etapa 9**, a campanha; **depois do plano**, a avaliação de refatoração.
+
+## Próxima passagem de trabalho — sequência aprovada em 19/10/2026 (histórico)
 
 1. **Espada e maça concluídas na 1.145.0** (`ed967d1`) e a cota na 1.146.0, sem retoques nos aprovados.
 2. **Agora, fechar o equipamento básico restante:** a manopla integrada na 1.147.0, o elmo e as perneiras na 1.148.0;
