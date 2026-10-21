@@ -22,4 +22,5 @@ Jean pode deixar o arquivo nesta pasta.
 conversa: uma silhueta preta de figura em movimento (a cabeça redonda, o tronco inclinado, um braço para trás, as pernas
 em passada, os riscos de velocidade). **A origem, a autoria e a licença não foram informadas** (o estilo lembra os ícones
 de silhueta de bancos como o game-icons.net, que pedem crédito); a E6 a copia de perto, e por isso a origem precisa ser
-esclarecida antes de qualquer integração, como na L7. Não atribua licença nem autoria.
+esclarecida, como na L7. Não atribua licença nem autoria. **A E6 foi integrada na 1.157.0 a pedido do Jean, com
+a origem e a licença ainda pendentes.**

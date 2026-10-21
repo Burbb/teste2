@@ -22,8 +22,11 @@ const TROCAS = process.env.TROCAS ? Object.fromEntries(Object.entries(JSON.parse
   proposta: { ".carta-flechas img.sprite": dados("flecha_contador-16.png"), '.ef[data-ef="firme"] img.sprite': dados("firme-16.png") },
   rodada2: { ".carta-flechas img.sprite": dados("flecha_contador_f2-16.png"), '.ef[data-ef="firme"] img.sprite': dados("firme_r2-16.png") },
 };
+// SELO=<habilidade> (com MODOS): o herói começa sem a Esquiva, usa essa habilidade na primeira vez (pela roda e pelo
+// seletor de Habilidades) e a foto pega o selo do estado que chega (.faixa-acao.selos) sobre a carta
 const AMB = { CLASSE: "arqueiro", LUTA: "lobo", NIVEL_LUTA: "2", QUANTOS: "2", VIDA: "40", PERIODO: "0",
-              EFEITOS: "firme:2,guarda:2:0.3,esquiva:2:0.2", EFEITOS_INIMIGO: "atordoado:2" };
+              EFEITOS: process.env.SELO ? "firme:2,guarda:2:0.3" : "firme:2,guarda:2:0.3,esquiva:2:0.2", EFEITOS_INIMIGO: "atordoado:2",
+              ...(process.env.SELO ? { HABILIDADES: process.env.SELO } : {}) };
 mkdirSync(saida, { recursive: true });
 const b = await chromium.launch();
 const registro = {};
@@ -39,6 +42,19 @@ for (const modo of (process.env.MODOS || (process.env.TROCAS ? ["atual", ...Obje
     await p.waitForSelector('.carta[data-uid="j"] .carta-flechas:not([hidden]) img', { timeout: 30000 });
     await p.waitForSelector('.carta[data-uid="j"] .ef[data-ef="firme"]', { timeout: 30000 });
     await espera(1500);
+    if (process.env.SELO) {   // usa a habilidade e fotografa o selo do estado que chega, sobre a carta do herói
+      await p.click('.roda-botao[data-slot="habilidades"]', { timeout: 30000 });
+      await p.click(`.rj-linha[data-hab="${process.env.SELO}"]`, { timeout: 10000 });
+      const selo = await p.waitForSelector(".faixa-acao.selos", { timeout: 15000 });
+      await espera(250);
+      const cx = await p.locator('.carta[data-uid="j"]').boundingBox(), sx = await selo.boundingBox();
+      const x = Math.min(cx.x, sx.x) - 8, y = Math.min(cx.y, sx.y) - 8;
+      await p.screenshot({ path: path.join(saida, `${modo}-1920x945-selo.png`),
+        clip: { x, y, width: Math.max(cx.x + cx.width, sx.x + sx.width) - x + 8, height: Math.max(cx.y + cx.height, sx.y + sx.height) - y + 8 } });
+      registro[modo] = { selo: await selo.innerHTML(), erros };
+      await p.close();
+      continue;
+    }
     if (TROCAS[modo]) {
       await p.evaluate((troca) => {
         const aplica = () => { for (const [sel, src] of Object.entries(troca)) for (const im of document.querySelectorAll(sel)) if (im.src !== src) im.src = src; };

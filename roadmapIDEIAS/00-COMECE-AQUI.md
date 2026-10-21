@@ -5221,3 +5221,12 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   carta a 1920×945 (a folha, a E3, a E6). A referência em `ferramentas/arte/referencias/icones/`, com a origem e a
   licença pendentes.
 - **Continua:** nenhuma Esquiva aprovada; a versão continua 1.156.0.
+
+### 21/10/2026 (data do computador local) — A Esquiva E6 no jogo (1.157.0)
+
+- **Decisão de Jean:** integrar a E6 corrigida do `df6a433d`, sem retoques, só no estado Esquiva.
+- **Feito:** a fonte em `ferramentas/arte/aseprite/estado-esquiva/`; o PNG de 16 e o @2x idênticos aos aprovados; o papel
+  `ESTADO.esquiva` em `icones.js` (o chip e o selo, nítidos); a `folha` intacta nos outros papéis. Conferido no jogo a
+  1920×945: o chip e o selo de chegada (o Passo Ágil). A origem e a licença da referência continuam pendentes.
+- **Continua:** os outros estados (Fortalecido, Fúria, Frenesi, Iniciativa, Barreira, Furtivo, Provocando e os
+  negativos) com os sprites do jogo; não começados.

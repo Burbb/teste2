@@ -3721,3 +3721,28 @@ em `estados_guarda_esquiva/anterior_03527be4/` (a grade, os PNGs, a fonte e a ca
 `pintar.lua` (0 diferenças); o editor, o PNG e a grade iguais; @2x exato; a carta a 1920×945 refotografada com os mesmos
 dados. A folha: `estados_guarda_esquiva/esquiva-e6-retoque.png` (antes × depois na fileira, a 12× e na carta).
 
+### A Esquiva E6 no jogo (1.157.0)
+
+**Decisão de Jean (21/10/2026):** a E6 corrigida do `df6a433d` aprovada e integrada exatamente, sem retoques, só no
+estado Esquiva (o chip da carta e o selo de chegada). A origem e a licença da referência continuam pendentes (o
+`LEIA-ME.md` de `referencias/icones/`); nenhuma licença atribuída. As tentativas E1 a E5 e o antes do retoque
+(`anterior_03527be4/`) ficam no protótipo como histórico.
+
+**Os arquivos:** a fonte `estados_guarda_esquiva/fontes/estado-esquiva-e6/estado-esquiva-e6-16.aseprite` do `df6a433d`
+copiada sem mudança para `ferramentas/arte/aseprite/estado-esquiva/estado-esquiva-16.aseprite` (camadas riscos, figura,
+contorno); o `exportar_aseprite.py` grava `rpg/web/static/hud/icones/estado-esquiva-16.png` e o @2x, idênticos, byte a
+byte, aos `estado-esquiva-e6-16` aprovados.
+
+**O papel:** em `icones.js`, o `TAMANHOS` com o `estado-esquiva` de 16 e o `ESTADO` com `esquiva` → `estado-esquiva`; as
+chamadas de `batalha.js` (o chip e o selo, por `Icones.estado`, com a classe `pixel`, nítido no zoom da HUD como o
+Firme e o Em guarda) já existiam. A `folha` fica na Fúria da Natureza, no Pés Leves, no Antídoto e na Agilidade das
+celebrações; as regras, os valores, as durações, os textos, as medidas e as interações não mudam.
+
+**Conferido no jogo** com os arquivos de produção e os saves temporários dos cenários, a 1920×945
+(`flechas_firme/auxiliares/fotografar_luta.mjs`, as capturas em `estados_guarda_esquiva/capturas/integracao-esquiva/`):
+a Esquiva ativa na carta (`MODOS=atual`; o chip igual ao aprovado, 12 pixels de no máximo 11 níveis, o brilho animado
+da borda) e o selo quando ela chega (`MODOS=atual SELO=passo_agil`: o Arqueiro sem a Esquiva usa o Passo Ágil pela roda
+e pelo seletor, e a foto pega o selo `.faixa-acao.selos` com `estado-esquiva-16.png`; o chip passa a 2 turnos). Para
+isso, o roteiro ganhou o `SELO` e o cenário `covil` dos testes de navegador, a variável `HABILIDADES` (acrescenta
+habilidades ao herói; sem ela, o cenário é o mesmo). Sem erro no console. A folha:
+`estados_guarda_esquiva/esquiva-integracao-1.157.0.png` (antes × depois na carta e o selo, a 2×).

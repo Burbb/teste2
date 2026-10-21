@@ -28,7 +28,7 @@ const Icones = (() => {
     "atalho-mapa": [32, 36], "atalho-sair": [32, 36], "atalho-salvar": [32, 36], "atalho-talentos": [32, 36],
     "attr-agilidade": [24, 32, 64], "attr-ataque": [24, 32, 64], "attr-defesa": [24, 32, 64], "attr-poder": [24, 32, 64],
     "bandagem": [16, 24, 32], "bau": [32, 48, 64], "bomba": [32], "botas-ferro": [32, 40, 48, 64],
-    "contador-flechas": [16], "estado-firme": [16], "estado-guarda": [16],
+    "contador-flechas": [16], "estado-firme": [16], "estado-guarda": [16], "estado-esquiva": [16],
     "cota": [32, 40, 48, 64], "elmo": [32, 40, 48, 64], "escudo": [32, 40, 48, 64], "espada": [32, 40, 48, 64], "lugar-caverna": [32, 40],
     "lugar-cidadela": [32, 40], "lugar-floresta": [32, 40], "lugar-montanha": [32, 40], "lugar-pantano": [32, 40],
     "lugar-planicie": [32, 40], "lugar-ruinas": [32, 40], "lugar-vila": [32, 40], "maca": [32, 40, 48, 64],
@@ -155,11 +155,13 @@ const Icones = (() => {
   // bota com os riscos de movimento, a mesma da Agilidade: correr, não a porta do Sair)
   const ACAO = { espada: "espada", grimorio: "atalho-grimorio", pocao: "pocao", fuga: "attr-agilidade" };
   // os ícones dos estados da luta (16, o chip da carta e o selo do estado que chega), pelo id do estado no motor
-  // (rpg/estados.py): o Firme (1.155.0, a corrente rompida: dois elos com o vão da ruptura) e o Em guarda (1.156.0, o
-  // escudo de ferro em pé, o aro e a face em duas águas). Só os estados: o "cadeado" do jogo fica nos outros papéis (o
-  // talento Armadilheiro, o bloqueio de vida, os motivos do mercado, o Salvar), e o "escudo", no Erguer Escudo, nos
-  // talentos e no espaço vazio; os estados sem desenho aqui ficam com o sprite que o catálogo do motor dá a eles
-  const ESTADO = { firme: "estado-firme", guarda: "estado-guarda" };
+  // (rpg/estados.py): o Firme (1.155.0, a corrente rompida: dois elos com o vão da ruptura), o Em guarda (1.156.0, o
+  // escudo de ferro em pé, o aro e a face em duas águas) e a Esquiva (1.157.0, a figura em movimento: a cabeça, o braço
+  // para trás, o tronco inclinado, as pernas em passada e os riscos de velocidade). Só os estados: o "cadeado" do jogo
+  // fica nos outros papéis (o talento Armadilheiro, o bloqueio de vida, os motivos do mercado, o Salvar), o "escudo" no
+  // Erguer Escudo, nos talentos e no espaço vazio, e a "folha" na Fúria da Natureza, no Pés Leves, no Antídoto e na
+  // Agilidade das celebrações; os estados sem desenho aqui ficam com o sprite que o catálogo do motor dá a eles
+  const ESTADO = { firme: "estado-firme", guarda: "estado-guarda", esquiva: "estado-esquiva" };
 
   /** O arquivo de `peca` para mostrar em `lado` px: o tamanho igual ou o mais perto; maior que o maior, o dobro dele. */
   function arquivos(peca, lado) {

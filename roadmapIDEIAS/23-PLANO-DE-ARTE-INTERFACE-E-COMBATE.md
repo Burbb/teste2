@@ -853,7 +853,7 @@ talentos com o mesmo `icone`, e outros usos na interface): trocar o desenho de u
 | Fúria (`furia`, +) | dano causado +v% (soma com o Fortalecido) | `machado` | Redemoinho | pendente |
 | Frenesi (`frenesi`, +) | cada abate soma dano até o fim da luta | `raio` | Julgamento Divino | pendente |
 | Iniciativa (`iniciativa`, +) | o primeiro golpe deste turno sai +v% mais forte | `bota` | a reserva dos pés (a bota de couro) | pendente |
-| Esquiva (`esquiva`, +) | +v na chance de esquiva, até o teto (Passo Ágil: +30% por 2 turnos; Desaparecer: +50% por 1) | `folha` | Fúria da Natureza; Pés Leves; o Antídoto; a Agilidade das celebrações e do Inventário | pendente: a E1 (vento) e a E2 (crescentes) recusadas; a E4 (a figura com o fantasma) e a E5 (a pose à mão) recusadas; **a E3 (a bota dando um passo) e a E6 (a cópia da figura em movimento da referência; a origem dela pendente)** em avaliação |
+| Esquiva (`esquiva`, +) | +v na chance de esquiva, até o teto (Passo Ágil: +30% por 2 turnos; Desaparecer: +50% por 1) | `estado-esquiva` (próprio) | nenhum (a `folha` ficou na Fúria da Natureza, no Pés Leves, no Antídoto e na Agilidade das celebrações e do Inventário) | **final** (a E6 corrigida, 1.157.0; a origem e a licença da referência pendentes; as tentativas E1 a E5 no protótipo) |
 | Barreira (`barreira`, +) | absorve v de dano | `escudo_azul` | Barreira Arcana | pendente |
 | Furtivo (`furtivo`, +) | o próximo ataque é crítico garantido | `olho` | Marcar Presa; Canalização, Olho de Águia; a névoa e outros | pendente |
 | Provocando (`provocando`, +) | os inimigos atacam ele | `caveira` | Execução, Fúria Cega; Assassino, Colheita, Golpe Sombrio, Imortal, Legião de Ossos, Rei dos Mortos; derrota, fome e outros | pendente |
@@ -868,7 +868,7 @@ talentos com o mesmo `icone`, e outros usos na interface): trocar o desenho de u
 
 **Primeiro par de estados (20/10/2026):** Em guarda (G1, o escudo de ferro), **integrado na 1.156.0**; Esquiva
 (E1, a rajada de vento, recusada por lembrar um símbolo meteorológico; E2, os crescentes, recusada por não comunicar
-evasão; as alternativas E3, a bota dando um passo, e E4, a figura saindo do lugar, em avaliação), em 16 px, em `ferramentas/prototipos/hud/itens-lote-noite/estados_guarda_esquiva/`.
+evasão; a E6, a figura em movimento copiada da referência e corrigida, **integrada na 1.157.0**), em 16 px, em `ferramentas/prototipos/hud/itens-lote-noite/estados_guarda_esquiva/`.
 
 O atalho **Mapa** da doca já foi concluído; esta frente trata dos símbolos internos de caminhos e mapas.
 Não afirmar que só restam talentos e habilidades após este bloco sem conferir os consumíveis, variantes e
