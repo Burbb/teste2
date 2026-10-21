@@ -1,0 +1,1 @@
+rosto,sobrancelhas,olhos,contorno

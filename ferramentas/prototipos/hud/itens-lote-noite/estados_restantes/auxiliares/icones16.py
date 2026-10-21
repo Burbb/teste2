@@ -484,6 +484,24 @@ INICIATIVA_TACA = com_contorno([
               "................",
               "................"])
 
+FURIA_ROSTO = com_contorno([
+               "................",
+               ".....SSSSss.....",
+               "...SSSssssssr...",
+               "..SSssssssssrr..",
+               ".SXXssssssssXXr.",
+               ".SsXXXssssXXXrr.",
+               ".SsssXXssXXsssr.",
+               ".SssYYyssyYYssr.",
+               ".SssyOOssOOyssr.",
+               ".Sssssssssssrrr.",
+               ".ssssXXXXXXssrr.",
+               ".sssXssssssXrrR.",
+               "..rsssssssrrrR..",
+               "...rrrrrrrrRR...",
+               ".....RRRRRR.....",
+               "................"])
+
 # as camadas de cada desenho, de baixo para cima, pela letra
 def _por(mapa, resto):
     return lambda ch: "contorno" if ch == "#" else next((k for k, v in mapa.items() if ch in v), resto)
@@ -522,7 +540,10 @@ ICONES = {
                                     else "espada"),
     "estado-iniciativa": (INICIATIVA, ["exclamacao", "raios", "contorno"],
                           lambda x, y, ch: "contorno" if ch == "#" else "exclamacao" if 6 <= x <= 9 else "raios"),
-    "estado-furia": (FURIA, ["rosto", "sobrancelhas", "olhos", "contorno"],
+    "estado-furia": (FURIA_ROSTO, ["rosto", "sobrancelhas", "olhos", "contorno"],
+                     lambda x, y, ch: "contorno" if ch == "#" else "olhos" if ch in "YyOo" else "sobrancelhas" if ch == "X"
+                     else "rosto"),
+    "estado-furia-escuro": (FURIA, ["rosto", "sobrancelhas", "olhos", "contorno"],
                      lambda x, y, ch: "contorno" if ch == "#" else "olhos" if ch in "yOo" else "sobrancelhas" if ch in "Rs"
                      else "rosto"),
     "estado-atordoado-orbita": (ATORDOADO_ORBITA, ["orbita", "estrelas", "contorno"],

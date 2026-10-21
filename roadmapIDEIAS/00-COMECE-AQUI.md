@@ -5263,3 +5263,9 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Feito:** a espada com a seta dourada subindo (Fortalecido) e a exclamação com raios (Iniciativa, sugestão do Jean),
   com a bota da Agilidade em 16 px como alternativa da Iniciativa, em `estados_restantes/`; `lote6.png` a 1920×945.
 - **Continua:** nada aprovado; a versão continua 1.157.0.
+
+### 21/10/2026 (data do computador local) — Os estados restantes, lote 7: Fúria e Frenesi (proposta)
+
+- **Feito:** o rosto vermelho de raiva (Fúria) e as três garras crescentes (Frenesi) em `estados_restantes/`;
+  `lote7.png` com o Berserker fortalecido, em fúria e em frenesi ao mesmo tempo, a 1920×945.
+- **Continua:** nada aprovado; a versão continua 1.157.0. Falta a prancha geral dos 17.

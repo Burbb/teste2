@@ -1,0 +1,62 @@
+{
+ "heroi-berserker/atual": {
+  "estados": [
+   "j:fortalecido",
+   "j:furia",
+   "j:frenesi"
+  ],
+  "imagens": [
+   "furia 16px → 17.9px (png 16)",
+   "frenesi 16px → 17.9px (png 16)",
+   "fortalecido 16px → 17.9px (png 16)"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "heroi-berserker/proposta": {
+  "estados": [
+   "j:fortalecido",
+   "j:furia",
+   "j:frenesi"
+  ],
+  "imagens": [
+   "furia 16px → 17.9px (png 16)",
+   "frenesi 16px → 17.9px (png 16)",
+   "fortalecido 16px → 17.9px (png 16)"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "heroi-furia/atual": {
+  "estados": [
+   "j:furia"
+  ],
+  "imagens": [
+   "furia 16px → 17.9px (png 16)"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "heroi-furia/proposta": {
+  "estados": [
+   "j:furia"
+  ],
+  "imagens": [
+   "furia 16px → 17.9px (png 16)"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ }
+}

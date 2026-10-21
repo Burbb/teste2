@@ -49,6 +49,8 @@ Esquiva (E6), já no jogo, são a referência de acabamento e não foram redesen
 | Barreira (`barreira`) | absorve v de dano e se gasta ("absorve mais N de dano") | no herói (Barreira, do Mago) |
 | Provocando (`provocando`) | os inimigos atacam quem está assim | no aliado: o esqueleto do Erguer Servo e o urso da Ordem da Fera (com Em guarda) |
 | Fortalecido (`fortalecido`) | dano causado +v% enquanto dura (Grito de Guerra +30% por 3 turnos; o uivo dos lobos; outros) | no herói e no inimigo |
+| Fúria (`furia`) | dano causado +v% enquanto dura; soma com o Fortalecido (cada fonte multiplica o golpe) | no herói (Fúria Cega e o talento do Berserker) |
+| Frenesi (`frenesi`) | cada abate soma uma carga (até 3) e o dano cresce até o fim da luta (99 turnos, "∞" no chip) | no herói (o talento Frenesi do Berserker) |
 | Iniciativa (`iniciativa`) | o primeiro golpe deste turno sai +v% mais forte e gasta o estado; usado para outra coisa, o turno passa e o estado vai junto | no herói, no turno livre de quem pegou o inimigo de surpresa |
 
 ## Lote 1: Veneno e Sangramento
@@ -159,3 +161,22 @@ Esquiva (E6), já no jogo, são a referência de acabamento e não foram redesen
 - **Avaliação sincera:** a exclamação é clara e se distingue de tudo; o raio dos lados é o "legal" pedido, sem virar
   ruído. O Fortalecido é explícito ("ataque ↑"), mas é o mais "de interface" do conjunto (seta), menos pintado que os
   finais.
+
+## Lote 7: Fúria e Frenesi
+
+- **Fúria — o rosto vermelho de raiva** (`estado-furia`): o rosto redondo vermelho, as sobrancelhas em V, os olhos
+  acesos em amarelo e a boca fechada para baixo (o "😡" conhecido); camadas rosto, sobrancelhas, olhos, contorno.
+- **Frenesi — as três garras crescentes** (`estado-frenesi`): três rasgos vermelhos inclinados, cada um maior que o
+  anterior; camadas garras, contorno. O tamanho que cresce fala do dano que cresce a cada abate.
+- **Comparados com o Fortalecido e a Iniciativa** (lote 6): a espada com a seta (ferro e ouro), o rosto (vermelho e
+  redondo), as garras (traços vermelhos abertos) e a exclamação (barra fina dourada) têm silhuetas diferentes; a Fúria e
+  o Frenesi dividem o vermelho, mas não a forma. A foto do Berserker com os três ao mesmo tempo (Fortalecido + Fúria +
+  Frenesi, uma combinação real) está na folha.
+- **Tentativa guardada:** `estado-furia-escuro` (o mesmo rosto em vermelho quase preto, com olhos laranja; em tamanho
+  real lia como uma bola escura com olhos, as sobrancelhas sumiam). Antes, na bancada: só os olhos e as sobrancelhas
+  (liam como bigode).
+- **Fotos:** o Berserker com Fortalecido, Fúria e Frenesi e o herói só com a Fúria. Sem erro nem aviso no console.
+  Folha: `lote7.png`.
+- **Avaliação sincera:** a Fúria é direta, mas é um emoji: o mais "moderno" da família, menos dentro do mundo que o
+  capuz ou a serpente. As garras do Frenesi leem como "rasgos" e o crescimento aparece a 2×; no 1× o que fica é "três
+  traços vermelhos", o que ainda as separa do resto.
