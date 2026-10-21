@@ -450,7 +450,9 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   `fera` do animal do herói e das outras feras e o `humano` dos outros humanos continuam). A luta, o Bestiário, o mural e o rastro dos contratos e a
   faixa do mestre caçador pedem `Icones.criatura(retrato, lado)` (o papel `CRIATURA`) antes do sprite: o 16×16 a 2×
   (32) e a 3× (48), em arquivos (`retrato-afogado`, `retrato-ilse`, `retrato-lobo`, `retrato-bandido`; fontes em
-  `ferramentas/arte/aseprite/`). O nome
+  `ferramentas/arte/aseprite/`). O animal do patrulheiro (1.164.0) tem o papel `ANIMAL` (`Icones.animal(tipo, 32)`,
+  pelo `tipo` de `classes.COMPANHEIROS`): o Urso Pardo e o Falcão Peregrino na carta aliada e no painel da comitiva
+  (`retrato-urso`, `retrato-falcao`); o Lobo Cinzento continua no `fera`. O nome
   da carta não entra na escolha. As outras criaturas seguem pelos traços (o levantamento em
   `ferramentas/prototipos/hud/criaturas/LEIA-ME.md`).
 - A Calça de Couro do Arqueiro (1.119.0): desenho próprio do conjunto de couro, para todas as calças de couro dele

@@ -130,3 +130,22 @@ integrado.
 pequena a 2×, mas a expressão fica mais séria, e o focinho continua com volume. No falcão, o olho volta a ser um olho
 delimitado, como no A, e se separa da máscara; o risco é o amarelo dos dois lados lembrar um pouco os óculos da primeira
 passada, o que a 32 px não acontece porque o anel de baixo e o preto do olho ficam entre eles.
+
+## Integração (1.164.0)
+
+**Escolha de Jean:** o Urso **t2** e o Falcão **t2** do `ca36d71d`, sem retoques. O Lobo Cinzento continua no `fera`. As
+outras propostas (`urso-a`, `urso-b`, `urso-t`, `falcao-a`, `falcao-b`, `falcao-t`) ficam aqui como histórico; as
+referências geradas que deram o `t` estão registradas no `LEIA-ME.md` de `ferramentas/arte/referencias/icones/`.
+
+- **As fontes de produção:** `ferramentas/arte/aseprite/retrato-urso/retrato-urso-16.aseprite` e
+  `retrato-falcao/retrato-falcao-16.aseprite`, abertas das fontes `t2` pelo MCP, com a guia oculta (fora da exportação).
+  A exportação reproduzível: `exportar_aseprite.py retrato-urso` / `retrato-falcao` (`DERIVADOS`: só o 32, o 16 ×2, com
+  o @2x; o animal só aparece a 2×); `--conferir`: tudo igual ao jogo. Os dois 16 são iguais pixel a pixel aos `t2`.
+- **No jogo:** o papel `ANIMAL` em `icones.js` (`Icones.animal(tipo, lado)`), pelo `tipo` do animal
+  (`classes.COMPANHEIROS`): a carta aliada da luta (`batalha.js`, só no lado aliado) e o ícone do painel da comitiva
+  (`app/paineis.js`) pedem a cabeça própria antes do sprite. O Lobo Cinzento, o `fera` e o `voador` dos inimigos e a
+  figura do acampamento não mudam; regras, habilidades, atributos, medidas e áreas de clique iguais.
+- **Fotos a 1920×945** (o modo `final` do `fotografar.mjs`, sem troca): o urso e o falcão na carta aliada e no painel
+  (32 px de um arquivo de 32), o Lobo Cinzento no `fera`, o lobo e o bandido inimigos com os retratos da 1.163.0, a aranha
+  no `fera` e, numa luta extra, duas harpias no `voador`. Sem erro nem aviso no console. A folha: `final.png`
+  (`python auxiliares/prancha.py final`).

@@ -39,7 +39,8 @@ const Icones = (() => {
     "manopla": [32, 40, 48, 64], "martelo": [40, 48], "moeda": [16, 32], "moedas": [24, 32], "osso": [24], "perneiras": [32, 40, 48, 64], "pocao": [16, 24, 32],
     "provisoes": [24, 32], "tocha": [16, 24, 32], "tocha_apagada": [16, 24], "frasco_vazio": [24], "tonico": [16, 32], "calca_tecido": [32, 40, 48, 64], "manto": [32, 40, 48, 64], "chapeu": [32, 40, 48, 64], "sandalia": [32, 40, 48, 64], "besta": [32, 40, 48, 64], "diadema": [32, 40, 48, 64], "unguento": [32, 64],
     "vital-foco": [20], "vital-mana": [20], "vital-vida": [20], "vital-vigor": [20],
-    "retrato-afogado": [16, 32, 48], "retrato-ilse": [16, 32, 48], "retrato-lobo": [16, 32, 48], "retrato-bandido": [16, 32, 48]};
+    "retrato-afogado": [16, 32, 48], "retrato-ilse": [16, 32, 48], "retrato-lobo": [16, 32, 48], "retrato-bandido": [16, 32, 48],
+    "retrato-urso": [16, 32], "retrato-falcao": [16, 32]};
 
   // Cada desenho vai para o tipo de ferro que o jogo já tem (elmo, armadura, manopla, calca = perneira, bota_ferro, maca);
   // couro sem desenho (a calça de couro) e as outras peças sem desenho ficam com o do jogo. O anel (1.140.0, o aro de
@@ -187,6 +188,10 @@ const Icones = (() => {
   // do mestre caçador) são o 16 ampliado 2× e 3×. Os outros retratos ("caveira", "fera", "humano"...) continuam os
   // sprites do jogo, também noutros papéis
   const CRIATURA = { afogado: "retrato-afogado", ilse: "retrato-ilse", lobo: "retrato-lobo", bandido: "retrato-bandido" };
+  // o animal do patrulheiro (1.164.0), pelo tipo dele (classes.COMPANHEIROS), na carta aliada da luta e no painel da
+  // comitiva, a 2×: o Urso Pardo (de frente, severo) e o Falcão Peregrino (de perfil, a máscara escura). O Lobo Cinzento
+  // continua no "fera"; o "fera" e o "voador" dos inimigos e a figura do acampamento não mudam
+  const ANIMAL = { urso: "retrato-urso", falcao: "retrato-falcao" };
 
   /** O arquivo de `peca` para mostrar em `lado` px: o tamanho igual ou o mais perto; maior que o maior, o dobro dele. */
   function arquivos(peca, lado) {
@@ -267,6 +272,8 @@ const Icones = (() => {
     estado: (id, lado = 16) => img(ESTADO[id], lado, "pixel"),
     /** A cabeça própria de uma criatura pelo retrato do motor (CRIATURA), ou "" para o sprite do traço. Pixel a pixel. */
     criatura: (retrato, lado = 32) => img(CRIATURA[retrato], lado, "pixel"),
+    /** A cabeça do animal do herói pelo tipo (ANIMAL), ou "" para o sprite de sempre. Pixel a pixel. */
+    animal: (tipo, lado = 32) => img(ANIMAL[tipo], lado, "pixel"),
     /** A flecha ao lado da quantidade de flechas na carta do Arqueiro (1.155.0, 16 px: a ponta de aço, a haste e as
      *  penas na traseira). Só esse papel: o sprite "flecha" do jogo fica no custo das habilidades, na orientação, no
      *  elemento "à distância" e nos projéteis, e a aljava é o recurso do topo. Pixel a pixel, como o estado. */

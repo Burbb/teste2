@@ -280,7 +280,7 @@ function desenharHeroi(h, antes) {
     (f.animado ? '<div class="melhor">Animado: +15% de dano na próxima luta.</div>' : "") +
     '<div class="rodape">A poção da bolsa também serve nele. Na fogueira, um carinho.</div>') : "";
   const fera = f ? `<div class="membro fera${f.hp <= 0 ? " ferido" : ""}" data-fera="1">
-      <div class="icone" ${dicaFera}>${spr(f.tipo === "falcao" ? "voador" : "fera", 2)}</div>
+      <div class="icone" ${dicaFera}>${Icones.animal(f.tipo, 32) || spr(f.tipo === "falcao" ? "voador" : "fera", 2)}</div>
       ${linhaNome(f.nome, f.animado ? ' <b class="fera-animado" title="animado">♥</b>' : "", f.hp, f.max_hp, dicaFera)}
       ${barra("vida fina", Math.max(0, f.hp), f.max_hp, antes && antes.companheiro ? Math.max(0, antes.companheiro.hp) : undefined, "fera")}</div>` : "";
   const membros = (h.comitiva || []).map((m) => {

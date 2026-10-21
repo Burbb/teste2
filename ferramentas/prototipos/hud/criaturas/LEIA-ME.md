@@ -111,11 +111,14 @@ A escolha do par e da direção é do Jean; nada foi começado.
 - **1.163.0: o Lobo e o Bandido** (o segundo par, `lobo_bandido/`): o Lobo de frente com o começo do pescoço e o
   Bandido do capuz, da máscara e da faca, pela família. O `fera` continua no animal do herói, no lobo gélido e nas
   outras feras, e o `humano` nos outros humanos: o problema 1 e o 4 ficam menores, não resolvidos.
+- **1.164.0: o Urso Pardo e o Falcão Peregrino do patrulheiro** (`animais/`, o `urso-t2` e o `falcao-t2`): pelo tipo
+  do animal, na carta aliada e no painel da comitiva. O Lobo Cinzento continua no `fera`; o `fera` e o `voador` dos
+  inimigos também.
 
 ## Em proposta
 
-- **Os animais do patrulheiro** (`animais/`, 21/10/2026): duas propostas do Urso e duas do Falcão, e o teste do Lobo
-  integrado no lugar do Lobo Cinzento aliado (só na página). O `fera` e o `voador` continuam; nada integrado.
+- **O Lobo Cinzento do patrulheiro** (`animais/`): o teste do retrato do Lobo no lugar do `fera` do aliado (só na
+  página); continua no `fera`.
 
 ## Reservado
 

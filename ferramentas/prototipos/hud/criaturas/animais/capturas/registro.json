@@ -88,5 +88,53 @@
    "carta: Jean: data:image/png;base64,iVBORw0KGgoAAAANSU 32/32",
    "carta: Falcão Peregrino: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16"
   ]
+ },
+ "urso/final": {
+  "erros": [],
+  "avisos": [],
+  "cartas": [
+   "painel: 72/72: /static/hud/icones/retrato-urso-32.png 32/32",
+   "carta: Jean: data:image/png;base64,iVBORw0KGgoAAAANSU 32/32",
+   "carta: Urso Pardo: /static/hud/icones/retrato-urso-32.png 32/32",
+   "carta: Lobo: /static/hud/icones/retrato-lobo-32.png 32/32",
+   "carta: Bandido: /static/hud/icones/retrato-bandido-32.pn 32/32",
+   "carta: Aranha gigante: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16"
+  ]
+ },
+ "falcao/final": {
+  "erros": [],
+  "avisos": [],
+  "cartas": [
+   "painel: 26/26: /static/hud/icones/retrato-falcao-32.png 32/32",
+   "carta: Jean: data:image/png;base64,iVBORw0KGgoAAAANSU 32/32",
+   "carta: Falcão Peregrino: /static/hud/icones/retrato-falcao-32.png 32/32",
+   "carta: Lobo: /static/hud/icones/retrato-lobo-32.png 32/32",
+   "carta: Bandido: /static/hud/icones/retrato-bandido-32.pn 32/32",
+   "carta: Aranha gigante: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16"
+  ]
+ },
+ "lobo/final": {
+  "erros": [],
+  "avisos": [],
+  "cartas": [
+   "painel: 43/43: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "carta: Jean: data:image/png;base64,iVBORw0KGgoAAAANSU 32/32",
+   "carta: Lobo Cinzento: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "carta: Lobo: /static/hud/icones/retrato-lobo-32.png 32/32",
+   "carta: Bandido: /static/hud/icones/retrato-bandido-32.pn 32/32",
+   "carta: Aranha gigante: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16"
+  ]
+ },
+ "voadores/final": {
+  "erros": [],
+  "avisos": [],
+  "cartas": [
+   "painel: 26/26: /static/hud/icones/retrato-falcao-32.png 32/32",
+   "carta: Jean: data:image/png;base64,iVBORw0KGgoAAAANSU 32/32",
+   "carta: Falcão Peregrino: /static/hud/icones/retrato-falcao-32.png 32/32",
+   "carta: Harpia: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "carta: Harpia: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "carta: Lobo: /static/hud/icones/retrato-lobo-32.png 32/32"
+  ]
  }
 }

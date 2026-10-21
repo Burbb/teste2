@@ -5493,3 +5493,12 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Continua:** nada aprovado; a versão continua 1.163.0.
 - **Último ajuste (pedido de Jean):** `falcao-t2` (o amarelo fechando o canto de trás do olho) e `urso-t2` (a boca reta
   e o queixo sem a linha clara), sobre os `t`, que ficam; a folha `ajuste.png`. Nada aprovado.
+
+### 21/10/2026 (data do computador local) — O Urso e o Falcão do patrulheiro no jogo (1.164.0)
+
+- **Decisão de Jean:** o Urso t2 e o Falcão t2 do `ca36d71d`, sem retoques; o Lobo Cinzento como está.
+- **Feito:** fontes em `ferramentas/arte/aseprite/retrato-urso/` e `retrato-falcao/` (a guia oculta; o 32 derivado ×2);
+  o papel `ANIMAL` em `icones.js` pelo tipo do animal, na carta aliada e no painel da comitiva; `tests/test_retratos.py`
+  com os dois. A folha `ferramentas/prototipos/hud/criaturas/animais/final.png`.
+- **Continua:** o Lobo Cinzento no `fera`; o `fera` e o `voador` dos inimigos e a figura do acampamento iguais. O
+  próximo trabalho de criaturas é decisão do Jean.

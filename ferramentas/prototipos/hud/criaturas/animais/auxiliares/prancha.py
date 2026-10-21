@@ -241,9 +241,47 @@ def folha_ajuste():
     print("ajuste.png", out.size)
 
 
+def folha_final():
+    """A integração (1.164.0, final.png): os PNGs do jogo × os aprovados (t2); a carta aliada e o painel da comitiva com os
+    arquivos de produção (o modo "final", sem troca); o Lobo Cinzento, a aranha e as harpias que continuam no desenho de
+    sempre."""
+    f, f2 = ImageFont.truetype("arial.ttf", 15), ImageFont.truetype("arial.ttf", 12)
+    jogo = RAIZ / "rpg/web/static/hud/icones"
+    out = Image.new("RGBA", (1500, 1200), CARVAO)
+    d = ImageDraw.Draw(out)
+    d.text((20, 10), "O Urso Pardo e o Falcão Peregrino no jogo (1.164.0): o urso-t2 e o falcao-t2, sem retoques", fill=TEXTO, font=f)
+    y = 40
+    for j, (tipo, aprovado) in enumerate((("urso", "urso-t2"), ("falcao", "falcao-t2"))):
+        a, b = imagem(aprovado), Image.open(jogo / f"retrato-{tipo}-16.png").convert("RGBA")
+        d.text((20 + j * 470, y), f"{aprovado} (aprovado) | retrato-{tipo}-16 (no jogo): "
+               f"{'idênticos' if a.tobytes() == b.tobytes() else 'DIFERENTES'}", fill=TEXTO2, font=f2)
+        out.alpha_composite(grade12(a), (20 + j * 470, y + 18)); out.alpha_composite(grade12(b), (230 + j * 470, y + 18))
+    y += 18 + 192 + 20
+    for animal, rot in (("urso", "Urso Pardo"), ("falcao", "Falcão Peregrino"), ("lobo", "Lobo Cinzento (continua no fera)")):
+        carta, painel = abre(f"{animal}-final-palco.png").crop(CARTA), abre(f"{animal}-final-pagina.png").crop(PAINEL)
+        d.text((20, y), f"{rot}: a carta aliada e o painel da comitiva (1920×945) — tamanho real e 2×", fill=TEXTO, font=f2)
+        out.alpha_composite(carta, (20, y + 18)); out.alpha_composite(painel, (20 + carta.width + 16, y + 18))
+        out.alpha_composite(amplia(carta, 2), (540, y + 18)); out.alpha_composite(amplia(painel, 2), (540 + 2 * carta.width + 16, y + 18))
+        y += 18 + 2 * carta.height + 18
+    luta = abre("voadores-final-palco.png").crop((30, 30, 1060, 210))
+    d.text((20, y), "o falcão do herói contra duas harpias (o \"voador\" continua) e um lobo (o retrato da 1.163.0) — tamanho real",
+           fill=TEXTO, font=f2)
+    out.alpha_composite(luta, (20, y + 18))
+    y += 18 + luta.height + 16
+    luta = abre("urso-final-palco.png").crop((30, 30, 1060, 210))
+    d.text((20, y), "o urso do herói contra um lobo, um bandido e uma aranha (o \"fera\" continua) — tamanho real", fill=TEXTO, font=f2)
+    out.alpha_composite(luta, (20, y + 18))
+    y += 18 + luta.height + 16
+    out = out.crop((0, 0, 1500, y))
+    out.save(PASTA / "final.png")
+    print("final.png", out.size)
+
+
 if __name__ == "__main__":
     import sys
-    if sys.argv[1:] == ["ajuste"]:
+    if sys.argv[1:] == ["final"]:
+        folha_final()
+    elif sys.argv[1:] == ["ajuste"]:
         folha_ajuste()
     elif sys.argv[1:] == ["t"]:
         folha_transposicao()

@@ -83,6 +83,10 @@ DERIVADOS = {
     # 1.163.0: o Lobo (o "só a base" da segunda rodada, sem as três sobras soltas) e o Bandido da faca
     "retrato-lobo": {32: (16, 2), 48: (16, 3)},
     "retrato-bandido": {32: (16, 2), 48: (16, 3)},
+    # 1.164.0: o Urso Pardo e o Falcão Peregrino do patrulheiro (o urso-t2 e o falcao-t2, a transposição das referências
+    # geradas, com a guia oculta); só o 32 (o 16 ×2: a carta aliada e o painel do animal), que é o único uso
+    "retrato-urso": {32: (16, 2)},
+    "retrato-falcao": {32: (16, 2)},
 }
 # O martelo (1.149.0) só tem fontes do 40 e do 48 (aseprite/martelo/): o 32 e o 64 são a grade de desenhos.js, no
 # jogo, e não saem daqui.

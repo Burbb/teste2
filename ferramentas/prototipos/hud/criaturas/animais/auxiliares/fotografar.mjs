@@ -19,9 +19,11 @@ const png = (arq) => "data:image/png;base64," + readFileSync(arq).toString("base
 const dados = (id) => png(path.join(aqui, `${id}-16.png`));
 // os modos de cada animal e a imagem que a página põe no lugar (o "atual" não troca nada)
 const MODOS = {
-  urso: { atual: null, a: dados("urso-a"), b: dados("urso-b"), t: dados("urso-t") },
-  falcao: { atual: null, a: dados("falcao-a"), b: dados("falcao-b"), t: dados("falcao-t") },
-  lobo: { atual: null, reaproveitado: png(path.join(raiz, "rpg/web/static/hud/icones/retrato-lobo-16.png")) },
+  urso: { atual: null, a: dados("urso-a"), b: dados("urso-b"), t: dados("urso-t"), final: null },
+  falcao: { atual: null, a: dados("falcao-a"), b: dados("falcao-b"), t: dados("falcao-t"), final: null },
+  lobo: { atual: null, reaproveitado: png(path.join(raiz, "rpg/web/static/hud/icones/retrato-lobo-16.png")), final: null },
+  // a luta extra do modo final: o falcão do herói contra duas harpias e um lobo (os voadores e o lobo inimigo continuam)
+  voadores: { final: null },
 };
 const ANIMAIS = (process.env.ANIMAIS || "urso,falcao,lobo").split(",");
 // SO=t: só esses modos (a transposição das referências, "t", sem regravar as fotos das outras)
@@ -29,6 +31,10 @@ const SO = process.env.SO ? process.env.SO.split(",") : null;
 const SITUACOES = ANIMAIS.map((tipo) => ({ nome: tipo, tipo, cenario: "tutorial",
   amb: { TUTORIAL: "0", CLASSE: "arqueiro", NIVEL: "4", ANIMAL: tipo, NIVEL_LUTA: "2", GRUPO: "lobo:1,bandido:1,aranha:1" },
   espera: '.carta[data-uid="j"]', fotos: [["#palco", "palco"], ["body", "pagina"]] }));
+// o modo "final" (1.164.0): o jogo como está, sem troca, com os arquivos de produção; e a luta extra dos voadores
+if (ANIMAIS.includes("voadores")) SITUACOES.splice(SITUACOES.findIndex((s) => s.tipo === "voadores"), 1, { nome: "voadores",
+  tipo: "voadores", cenario: "tutorial", amb: { TUTORIAL: "0", CLASSE: "arqueiro", NIVEL: "4", ANIMAL: "falcao", NIVEL_LUTA: "2",
+    GRUPO: "harpia:2,lobo:1" }, espera: '.carta[data-uid="j"]', fotos: [["#palco", "palco"], ["body", "pagina"]] });
 mkdirSync(saida, { recursive: true });
 const b = await chromium.launch();
 // o registro acumula: um modo fotografado de novo substitui só a entrada dele
@@ -72,7 +78,7 @@ for (const sit of SITUACOES) {
         const alvo = sel === "body" ? p : p.locator(sel).first();
         await alvo.screenshot({ path: path.join(saida, `${sit.nome}-${modo}-${nome}.png`) }).catch((e) => erros.push(String(e)));
       }
-      registro[`${sit.nome}/${modo}`] = { erros, avisos, cartas: await p.evaluate(() => [...document.querySelectorAll(".aliados .carta, .membro.fera")]
+      registro[`${sit.nome}/${modo}`] = { erros, avisos, cartas: await p.evaluate(() => [...document.querySelectorAll(".carta, .membro.fera")]
         .map((c) => { const im = c.querySelector(".icone img") || {};
           // o nome, o começo do endereço e a medida: o lado na tela / o lado do arquivo (o modo final: o jogo integrado)
           return (c.classList.contains("fera") ? "painel: " : "carta: ") + ((c.querySelector(".carta-nome span, .nome, b") || {}).textContent || "").trim().slice(0, 30) + ": "

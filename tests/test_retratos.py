@@ -44,6 +44,20 @@ class TestRetratos(unittest.TestCase):
                 for sufixo in ("", "@2x"):
                     self.assertTrue((ESTATICO / f"hud/icones/retrato-{nome}-{lado}{sufixo}.png").exists(), (nome, lado, sufixo))
 
+    def test_animais_do_patrulheiro_pelo_tipo(self):
+        # o urso e o falcão do herói têm cabeça própria (Icones.animal); o lobo continua no "fera" (1.164.0)
+        from rpg.classes import COMPANHEIROS
+        icones = (ESTATICO / "icones.js").read_text(encoding="utf-8")
+        papel = re.search(r"const ANIMAL = \{([^}]*)\}", icones).group(1)
+        self.assertNotIn("lobo", papel)
+        for tipo in ("urso", "falcao"):
+            self.assertIn(tipo, COMPANHEIROS)
+            self.assertIn(f'{tipo}: "retrato-{tipo}"', papel)
+            self.assertIn(f'"retrato-{tipo}": [16, 32]', icones)
+            for lado in (16, 32):
+                for sufixo in ("", "@2x"):
+                    self.assertTrue((ESTATICO / f"hud/icones/retrato-{tipo}-{lado}{sufixo}.png").exists(), (tipo, lado))
+
 
 if __name__ == "__main__":
     unittest.main()

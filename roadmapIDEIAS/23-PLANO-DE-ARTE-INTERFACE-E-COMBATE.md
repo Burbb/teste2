@@ -912,7 +912,9 @@ atributos nem mapeamento); fonte, PNGs e prévia em `ferramentas/prototipos/hud/
 retrato do Lobo integrado no Lobo Cinzento aliado, em `ferramentas/prototipos/hud/criaturas/animais/`; a carta aliada e
 o painel da comitiva são os usos reais. O `fera` e o `voador` continuam; nada aprovado. A transposição das duas
 referências geradas (`urso-t`, `falcao-t`; as referências em `ferramentas/arte/referencias/icones/`), a folha
-`transposicao.png`; o último ajuste (`urso-t2`, `falcao-t2`, a folha `ajuste.png`); nada aprovado.
+`transposicao.png`; o último ajuste (`urso-t2`, `falcao-t2`, a folha `ajuste.png`).
+**No jogo desde a 1.164.0:** o Urso Pardo e o Falcão Peregrino do patrulheiro (o `t2` de cada), pelo tipo do animal,
+na carta aliada e no painel da comitiva; o Lobo Cinzento continua no `fera`.
 
 O atalho **Mapa** da doca já foi concluído; esta frente trata dos símbolos internos de caminhos e mapas.
 Não afirmar que só restam talentos e habilidades após este bloco sem conferir os consumíveis, variantes e
