@@ -877,6 +877,19 @@ numa segunda rodada de ajustes: as alternativas novas ao lado dos candidatos pre
 (E1, a rajada de vento, recusada por lembrar um símbolo meteorológico; E2, os crescentes, recusada por não comunicar
 evasão; a E6, a figura em movimento copiada da referência e corrigida, **integrada na 1.157.0**), em 16 px, em `ferramentas/prototipos/hud/itens-lote-noite/estados_guarda_esquiva/`.
 
+**Levantamento de inimigos, chefes, animais e invocações (1E.3, 21/10/2026; em andamento, nada desenhado):** em
+`ferramentas/prototipos/hud/criaturas/` (o `LEIA-ME.md`, a tabela `levantamento.md`, as folhas `tracos.png`,
+`compartilhamentos.png` e `referencias.png`, as capturas a 1920×945). O desenho de uma criatura sai dos **traços**
+(`dados.retrato`), não da espécie: 57 entidades, 51 delas com desenho de criatura servidas por **9 sprites de 16×16**
+(`caveira` 14, `fera` 12, `humano` 10, `voador` 4, `etereo` 3, `demonio` 3, `planta` 2, `construto` 2, `corrompido` 1),
+todos do commit inicial da interface em pixel art, sem registro de aprovação. Aprovados e preservados: os retratos dos
+heróis e da comitiva (`retratos.js`) e as figuras de cena da Ilse e da sacristia. Problemas: o mesmo rosto de lobo no
+Lobo inimigo, na Aranha e no Urso do herói; o troll e o Rei Troll na caveira (o traço `gigante` não tem retrato); a Ilse
+com a caveira genérica na carta; o bandido como todo humano (os vultos da sacristia, os chefes, o antagonista). O
+espaço real é a **cabeça** de 16×16 (a carta a 2×, 32 px; o Bestiário e o mural a 3×). Recomendação do primeiro par:
+**Lobo e Bandido** (os mais frequentes do Vale, donos dos dois desenhos mais compartilhados); em seguida Afogado e Ilse.
+A escolha fica com o Jean.
+
 O atalho **Mapa** da doca já foi concluído; esta frente trata dos símbolos internos de caminhos e mapas.
 Não afirmar que só restam talentos e habilidades após este bloco sem conferir os consumíveis, variantes e
 compartilhamentos provisórios ainda registrados. A Capa de Patrulha, o Chapéu de Couro e a Coroa dos Afogados continuam

@@ -1,0 +1,426 @@
+{
+ "luta-mista-a": {
+  "erros": [],
+  "avisos": [],
+  "retratos": [
+   {
+    "onde": "carta da luta",
+    "quem": "Jean",
+    "nativo": "32×32",
+    "pedido": "32",
+    "tela": "32.0×32.0",
+    "arquivo": "sprite em código"
+   },
+   {
+    "onde": "carta da luta",
+    "quem": "Lobo",
+    "nativo": "16×16",
+    "pedido": "32",
+    "tela": "32.0×32.0",
+    "arquivo": "sprite em código"
+   },
+   {
+    "onde": "carta da luta",
+    "quem": "Bandido",
+    "nativo": "16×16",
+    "pedido": "32",
+    "tela": "32.0×32.0",
+    "arquivo": "sprite em código"
+   },
+   {
+    "onde": "carta da luta",
+    "quem": "Esqueleto",
+    "nativo": "16×16",
+    "pedido": "32",
+    "tela": "32.0×32.0",
+    "arquivo": "sprite em código"
+   },
+   {
+    "onde": "carta da luta",
+    "quem": "Espectro",
+    "nativo": "16×16",
+    "pedido": "32",
+    "tela": "32.0×32.0",
+    "arquivo": "sprite em código"
+   },
+   {
+    "onde": "carta da luta",
+    "quem": "Caído",
+    "nativo": "16×16",
+    "pedido": "32",
+    "tela": "32.0×32.0",
+    "arquivo": "sprite em código"
+   },
+   {
+    "onde": "carta da luta",
+    "quem": "Golem de pedra",
+    "nativo": "16×16",
+    "pedido": "32",
+    "tela": "32.0×32.0",
+    "arquivo": "sprite em código"
+   },
+   {
+    "onde": "rastreador",
+    "quem": "A Febre do Turvo",
+    "nativo": "16×16",
+    "pedido": "32",
+    "tela": "32.0×32.0",
+    "arquivo": "sprite em código"
+   }
+  ]
+ },
+ "luta-mista-b": {
+  "erros": [],
+  "avisos": [],
+  "retratos": [
+   {
+    "onde": "carta da luta",
+    "quem": "Jean",
+    "nativo": "32×32",
+    "pedido": "32",
+    "tela": "32.0×32.0",
+    "arquivo": "sprite em código"
+   },
+   {
+    "onde": "carta da luta",
+    "quem": "Harpia",
+    "nativo": "16×16",
+    "pedido": "32",
+    "tela": "32.0×32.0",
+    "arquivo": "sprite em código"
+   },
+   {
+    "onde": "carta da luta",
+    "quem": "Ent jovem",
+    "nativo": "16×16",
+    "pedido": "32",
+    "tela": "32.0×32.0",
+    "arquivo": "sprite em código"
+   },
+   {
+    "onde": "carta da luta",
+    "quem": "Abominação",
+    "nativo": "16×16",
+    "pedido": "32",
+    "tela": "32.0×32.0",
+    "arquivo": "sprite em código"
+   },
+   {
+    "onde": "carta da luta",
+    "quem": "Troll da montanha",
+    "nativo": "16×16",
+    "pedido": "32",
+    "tela": "32.0×32.0",
+    "arquivo": "sprite em código"
+   },
+   {
+    "onde": "carta da luta",
+    "quem": "Afogado",
+    "nativo": "16×16",
+    "pedido": "32",
+    "tela": "32.0×32.0",
+    "arquivo": "sprite em código"
+   },
+   {
+    "onde": "carta da luta",
+    "quem": "Cultista",
+    "nativo": "16×16",
+    "pedido": "32",
+    "tela": "32.0×32.0",
+    "arquivo": "sprite em código"
+   },
+   {
+    "onde": "rastreador",
+    "quem": "A Febre do Turvo",
+    "nativo": "16×16",
+    "pedido": "32",
+    "tela": "32.0×32.0",
+    "arquivo": "sprite em código"
+   }
+  ]
+ },
+ "aliados": {
+  "erros": [],
+  "avisos": [],
+  "retratos": [
+   {
+    "onde": "painel da comitiva",
+    "quem": "79/79",
+    "nativo": "32×32",
+    "pedido": "32",
+    "tela": "32.0×32.0",
+    "arquivo": "sprite em código"
+   },
+   {
+    "onde": "painel da comitiva",
+    "quem": "48/48",
+    "nativo": "32×32",
+    "pedido": "32",
+    "tela": "32.0×32.0",
+    "arquivo": "sprite em código"
+   },
+   {
+    "onde": "painel da comitiva",
+    "quem": "72/72",
+    "nativo": "16×16",
+    "pedido": "32",
+    "tela": "32.0×32.0",
+    "arquivo": "sprite em código"
+   },
+   {
+    "onde": "carta da luta",
+    "quem": "Jean",
+    "nativo": "32×32",
+    "pedido": "32",
+    "tela": "32.0×32.0",
+    "arquivo": "sprite em código"
+   },
+   {
+    "onde": "carta da luta",
+    "quem": "Urso Pardo",
+    "nativo": "16×16",
+    "pedido": "32",
+    "tela": "32.0×32.0",
+    "arquivo": "sprite em código"
+   },
+   {
+    "onde": "carta da luta",
+    "quem": "Morel",
+    "nativo": "32×32",
+    "pedido": "32",
+    "tela": "32.0×32.0",
+    "arquivo": "sprite em código"
+   },
+   {
+    "onde": "carta da luta",
+    "quem": "Odette",
+    "nativo": "32×32",
+    "pedido": "32",
+    "tela": "32.0×32.0",
+    "arquivo": "sprite em código"
+   },
+   {
+    "onde": "carta da luta",
+    "quem": "Esqueleto (Invocado)",
+    "nativo": "16×16",
+    "pedido": "32",
+    "tela": "32.0×32.0",
+    "arquivo": "sprite em código"
+   },
+   {
+    "onde": "carta da luta",
+    "quem": "Lobo",
+    "nativo": "16×16",
+    "pedido": "32",
+    "tela": "32.0×32.0",
+    "arquivo": "sprite em código"
+   },
+   {
+    "onde": "rastreador",
+    "quem": "A Febre do Turvo",
+    "nativo": "16×16",
+    "pedido": "32",
+    "tela": "32.0×32.0",
+    "arquivo": "sprite em código"
+   }
+  ]
+ },
+ "falcao": {
+  "erros": [],
+  "avisos": [],
+  "retratos": [
+   {
+    "onde": "painel da comitiva",
+    "quem": "26/26",
+    "nativo": "16×16",
+    "pedido": "32",
+    "tela": "32.0×32.0",
+    "arquivo": "sprite em código"
+   },
+   {
+    "onde": "carta da luta",
+    "quem": "Jean",
+    "nativo": "32×32",
+    "pedido": "32",
+    "tela": "32.0×32.0",
+    "arquivo": "sprite em código"
+   },
+   {
+    "onde": "carta da luta",
+    "quem": "Falcão Peregrino",
+    "nativo": "16×16",
+    "pedido": "32",
+    "tela": "32.0×32.0",
+    "arquivo": "sprite em código"
+   },
+   {
+    "onde": "carta da luta",
+    "quem": "Lobo",
+    "nativo": "16×16",
+    "pedido": "32",
+    "tela": "32.0×32.0",
+    "arquivo": "sprite em código"
+   },
+   {
+    "onde": "rastreador",
+    "quem": "A Febre do Turvo",
+    "nativo": "16×16",
+    "pedido": "32",
+    "tela": "32.0×32.0",
+    "arquivo": "sprite em código"
+   }
+  ]
+ },
+ "bestiario": {
+  "erros": [],
+  "avisos": [],
+  "retratos": [
+   {
+    "onde": "bestiário",
+    "quem": "Afogado",
+    "nativo": "16×16",
+    "pedido": "48",
+    "tela": "48.0×48.0",
+    "arquivo": "sprite em código"
+   },
+   {
+    "onde": "bestiário",
+    "quem": "Aranha gigante",
+    "nativo": "16×16",
+    "pedido": "48",
+    "tela": "48.0×48.0",
+    "arquivo": "sprite em código"
+   },
+   {
+    "onde": "bestiário",
+    "quem": "Bandido",
+    "nativo": "16×16",
+    "pedido": "48",
+    "tela": "48.0×48.0",
+    "arquivo": "sprite em código"
+   },
+   {
+    "onde": "bestiário",
+    "quem": "Caído",
+    "nativo": "16×16",
+    "pedido": "48",
+    "tela": "48.0×48.0",
+    "arquivo": "sprite em código"
+   },
+   {
+    "onde": "bestiário",
+    "quem": "Cria do Vazio",
+    "nativo": "16×16",
+    "pedido": "48",
+    "tela": "48.0×48.0",
+    "arquivo": "sprite em código"
+   },
+   {
+    "onde": "bestiário",
+    "quem": "Ent jovem",
+    "nativo": "16×16",
+    "pedido": "48",
+    "tela": "48.0×48.0",
+    "arquivo": "sprite em código"
+   },
+   {
+    "onde": "bestiário",
+    "quem": "Espectro",
+    "nativo": "16×16",
+    "pedido": "48",
+    "tela": "48.0×48.0",
+    "arquivo": "sprite em código"
+   },
+   {
+    "onde": "bestiário",
+    "quem": "Esqueleto",
+    "nativo": "16×16",
+    "pedido": "48",
+    "tela": "48.0×48.0",
+    "arquivo": "sprite em código"
+   },
+   {
+    "onde": "bestiário",
+    "quem": "Golem de pedra",
+    "nativo": "16×16",
+    "pedido": "48",
+    "tela": "48.0×48.0",
+    "arquivo": "sprite em código"
+   },
+   {
+    "onde": "bestiário",
+    "quem": "Harpia",
+    "nativo": "16×16",
+    "pedido": "48",
+    "tela": "48.0×48.0",
+    "arquivo": "sprite em código"
+   },
+   {
+    "onde": "bestiário",
+    "quem": "Lobo",
+    "nativo": "16×16",
+    "pedido": "48",
+    "tela": "48.0×48.0",
+    "arquivo": "sprite em código"
+   },
+   {
+    "onde": "bestiário",
+    "quem": "Troll da montanha",
+    "nativo": "16×16",
+    "pedido": "48",
+    "tela": "48.0×48.0",
+    "arquivo": "sprite em código"
+   }
+  ]
+ },
+ "contratos": {
+  "erros": [],
+  "avisos": [],
+  "retratos": [
+   {
+    "onde": "rastreador",
+    "quem": "A Febre do Turvo",
+    "nativo": "16×16",
+    "pedido": "32",
+    "tela": "32.0×32.0",
+    "arquivo": "sprite em código"
+   },
+   {
+    "onde": "rastreador",
+    "quem": "3 aranhas gigantes",
+    "nativo": "16×16",
+    "pedido": "32",
+    "tela": "32.0×32.0",
+    "arquivo": "sprite em código"
+   }
+  ]
+ },
+ "capela-fundo": {
+  "erros": [],
+  "avisos": [],
+  "retratos": [
+   {
+    "onde": "rastreador",
+    "quem": "A Febre do Turvo",
+    "nativo": "16×16",
+    "pedido": "32",
+    "tela": "32.0×32.0",
+    "arquivo": "sprite em código"
+   }
+  ]
+ },
+ "sacristia": {
+  "erros": [],
+  "avisos": [],
+  "retratos": [
+   {
+    "onde": "rastreador",
+    "quem": "A Febre do Turvo",
+    "nativo": "16×16",
+    "pedido": "32",
+    "tela": "32.0×32.0",
+    "arquivo": "sprite em código"
+   }
+  ]
+ }
+}

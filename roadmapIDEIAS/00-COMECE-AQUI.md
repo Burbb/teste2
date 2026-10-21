@@ -5378,3 +5378,15 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Os 17 estados concluídos:** 17 no catálogo (`rpg/estados.py`), 17 no `ESTADO`, todos com arquivo; a prancha final
   `estados_restantes/estados-final.png` (os 17, identificados, com a versão e a origem) e a geral `geral.png`.
 - **Continua:** o bloco 1E segue com inimigos, pets, caminhos e minimapa, **não começados**; a versão é 1.161.0.
+
+### 21/10/2026 (data do computador local) — O levantamento visual das criaturas (1E.3, só levantamento)
+
+- **Pedido de Jean:** levantar inimigos, chefes, animais, invocações e companheiros, os usos, os tamanhos e os
+  compartilhamentos, com folhas de contato e capturas; recomendar o primeiro par. Nada desenhado nem integrado.
+- **Feito:** `ferramentas/prototipos/hud/criaturas/` (o `LEIA-ME.md` com as conclusões, a tabela gerada `levantamento.md`,
+  as folhas `tracos.png`, `compartilhamentos.png` e `referencias.png`, as capturas a 1920×945 e o `registro.json` com os
+  tamanhos medidos). O cenário `covil` dos testes de navegador ganhou `BESTIARIO` (só para abrir o Bestiário com
+  criaturas). Contagem: 57 entidades, 9 desenhos únicos de criatura (pelos traços), nenhum com registro de aprovação.
+- **Recomendação (aguarda o Jean):** Lobo e Bandido, como cabeças de 16×16 para a carta (2×) e o Bestiário (3×), no
+  padrão dos retratos de carta aprovados; depois Afogado e Ilse.
+- **Continua:** a frente 1E.3 em andamento; caminhos, minimapa, talentos e habilidades não começados. Versão 1.161.0.

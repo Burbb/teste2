@@ -599,7 +599,8 @@ def covil(ui):
     herói quase sem vida (VIDA, NIVEL_LUTA e QUANTOS mudam isso). Com EVENTO (o nome da função: crianca_perdida, madeira_para_flechas, os_enfermos, odete_na_estrada,
     mendigo_misterioso...), o evento toca antes do menu. EFEITOS e EFEITOS_INIMIGO ("firme:2,guarda:2:0.3": o estado, os turnos e o
     valor) começam a LUTA com esses estados no herói e em cada inimigo (para ver os ícones dos estados na carta);
-    HABILIDADES ("passo_agil,...") acrescenta essas habilidades ao herói (para ver o selo de um estado que chega)."""
+    HABILIDADES ("passo_agil,...") acrescenta essas habilidades ao herói (para ver o selo de um estado que chega).
+    BESTIARIO ("lobo:5,bandido:2,..."): a família e os abates, para abrir o Bestiário já com essas criaturas."""
     from rpg import balanceamento as bal, sobrevivencia
     from rpg.eventos import classe as ev_classe, comitiva as ev_comitiva, comuns as ev_comuns, vila as ev_vila
     g = Jogo(ui, seed=int(os.environ.get("SEMENTE", "8")), pasta_saves=tempfile.mkdtemp(), hardcore=False)
@@ -608,6 +609,8 @@ def covil(ui):
     loc = next(l for l in g.mundo["locais"] if l["tipo"] == "covil")
     g.mundo["atual"], loc["visitado"] = loc["id"], True
     g.periodo, g.clima = int(os.environ.get("PERIODO", "0")), "limpo"
+    for fam, abates in (x.split(":") for x in os.environ.get("BESTIARIO", "").split(",") if x):  # o Bestiário já com
+        g.bestiario[fam] = {"vistos": max(1, int(abates)), "abates": int(abates)}  # essas criaturas (BESTIARIO="lobo:5,...")
     if os.environ.get("LUGAR"):  # outro tipo de lugar: "vila" ou "selvagem" (o primeiro do mapa)
         loc = next(l for l in g.mundo["locais"] if l["tipo"] == os.environ["LUGAR"])
         g.mundo["atual"], loc["visitado"] = loc["id"], True
