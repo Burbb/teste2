@@ -890,6 +890,10 @@ espaço real é a **cabeça** de 16×16 (a carta a 2×, 32 px; o Bestiário e o 
 **Lobo e Bandido** (os mais frequentes do Vale, donos dos dois desenhos mais compartilhados); em seguida Afogado e Ilse.
 A escolha fica com o Jean.
 
+**Primeiro par escolhido pelo Jean (21/10/2026): o Afogado e a carta da Ilse** (proposta, nada no jogo), em
+`ferramentas/prototipos/hud/criaturas/afogado_ilse/`: cabeças de 16×16 no formato dos retratos de carta aprovados,
+fontes pelo MCP, a folha `afogado-ilse.png` com as cartas na luta a 1920×945, o Bestiário e a Ilse com a cena dela.
+
 O atalho **Mapa** da doca já foi concluído; esta frente trata dos símbolos internos de caminhos e mapas.
 Não afirmar que só restam talentos e habilidades após este bloco sem conferir os consumíveis, variantes e
 compartilhamentos provisórios ainda registrados. A Capa de Patrulha, o Chapéu de Couro e a Coroa dos Afogados continuam

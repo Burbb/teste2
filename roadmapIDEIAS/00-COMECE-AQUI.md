@@ -5390,3 +5390,14 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Recomendação (aguarda o Jean):** Lobo e Bandido, como cabeças de 16×16 para a carta (2×) e o Bestiário (3×), no
   padrão dos retratos de carta aprovados; depois Afogado e Ilse.
 - **Continua:** a frente 1E.3 em andamento; caminhos, minimapa, talentos e habilidades não começados. Versão 1.161.0.
+
+### 21/10/2026 (data do computador local) — Criaturas, primeiro par: o Afogado e a carta da Ilse (proposta)
+
+- **Decisão de Jean:** começar pelo Afogado e pela carta da Ilse.
+- **Feito:** as duas cabeças de 16×16 no formato dos retratos de carta aprovados (sem contorno, cabeça e ombros até a
+  base), a Ilse transposta da figura da cena com a mesma paleta; fontes montadas no editor pelo MCP, exportação
+  conferida; a folha `ferramentas/prototipos/hud/criaturas/afogado_ilse/afogado-ilse.png` com as cartas na luta a
+  1920×945 (o Afogado ao lado do esqueleto; a Ilse na luta real do fundo da capela), o Bestiário e as duas ao lado do
+  Morel e da Odette. A avaliação no `LEIA-ME.md` da pasta.
+- **Continua:** nada aprovado; a versão continua 1.161.0. A integração vai pedir um papel do retrato pela espécie e
+  pelo chefe (sem mexer nos traços).
