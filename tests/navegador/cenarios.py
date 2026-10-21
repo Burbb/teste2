@@ -597,7 +597,8 @@ def covil(ui):
     tipo LUGAR: vila, selvagem), no PERIODO (0 manhã ... 3 noite; padrão 0). BOLSA: "bandagem=0,pocao_vida=2" acerta a
     bolsa; OURO, o ouro; FERIMENTOS, os do herói; RECOLHER, a chance de cada flecha gasta voltar (1 ou 0). PROTECAO (mendigo, santuario ou 1) dá a proteção; LUTA (uma família: lobo, troll, aranha...) começa uma luta com o
     herói quase sem vida (VIDA, NIVEL_LUTA e QUANTOS mudam isso). Com EVENTO (o nome da função: crianca_perdida, madeira_para_flechas, os_enfermos, odete_na_estrada,
-    mendigo_misterioso...), o evento toca antes do menu."""
+    mendigo_misterioso...), o evento toca antes do menu. EFEITOS e EFEITOS_INIMIGO ("firme:2,guarda:2:0.3": o estado, os turnos e o
+    valor) começam a LUTA com esses estados no herói e em cada inimigo (para ver os ícones dos estados na carta)."""
     from rpg import balanceamento as bal, sobrevivencia
     from rpg.eventos import classe as ev_classe, comitiva as ev_comitiva, comuns as ev_comuns, vila as ev_vila
     g = Jogo(ui, seed=int(os.environ.get("SEMENTE", "8")), pasta_saves=tempfile.mkdtemp(), hardcore=False)
@@ -624,8 +625,12 @@ def covil(ui):
         g.j.hp = int(os.environ.get("VIDA", "1"))  # VIDA e NIVEL_LUTA: uma luta comum (a teia da aranha, por exemplo)
         ui.cena(loc["nome"], g.contexto_cena(), "evento")
         g.dizer("Um vulto enorme sai da névoa.")
-        lutar(g, [g.inimigo(os.environ["LUTA"], nivel=int(os.environ.get("NIVEL_LUTA", "6")))
-                  for _ in range(int(os.environ.get("QUANTOS", "1")))])
+        inimigos = [g.inimigo(os.environ["LUTA"], nivel=int(os.environ.get("NIVEL_LUTA", "6")))
+                    for _ in range(int(os.environ.get("QUANTOS", "1")))]
+        for quem, var in [(g.j, "EFEITOS")] + [(e, "EFEITOS_INIMIGO") for e in inimigos]:
+            for ef in [x.split(":") for x in os.environ.get(var, "").split(",") if x]:
+                quem.aplicar(ef[0], int(ef[1]), float(ef[2]) if len(ef) > 2 else 0)
+        lutar(g, inimigos)
     if os.environ.get("EVENTO"):
         nome = os.environ["EVENTO"]
         fn = next(getattr(m, nome) for m in (ev_comuns, ev_classe, ev_comitiva, ev_vila) if hasattr(m, nome))

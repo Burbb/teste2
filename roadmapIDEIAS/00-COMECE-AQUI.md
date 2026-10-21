@@ -5148,3 +5148,14 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Feito:** o 40 e o 48 pelas mesmas regras (só os tons do aço; 135 e 213 pixels), as cópias das fontes pintadas, o 32
   e o 64 idênticos aos aprovados; as folhas `a1-tamanhos.png` e `a1-tamanhos-no-jogo.png` (o Inventário e o saque).
 - **Continua:** a B3 no jogo; a A1 completa aguardando a avaliação; a versão continua 1.153.0.
+
+### 20/10/2026 (data do computador local) — A flecha da carta (F1) e o Firme (R1) (proposta)
+
+- **Pedido de Jean:** o primeiro par do desvio visual (1E): o ícone da quantidade de flechas na carta do Arqueiro e um
+  símbolo próprio para o Firme, com as referências geradas em `ferramentas/arte/referencias/icones/`.
+- **Feito:** o levantamento (os dois aparecem em 16 px na luta; o `flecha` e o `cadeado` têm outros papéis, que ficam;
+  o Firme é o turno depois de um atordoamento ou congelamento, sem nova trava, sem bônus de Defesa); a F1 e o R1 em 16 px
+  em `ferramentas/prototipos/hud/itens-lote-noite/flechas_firme/`, com as fontes em camadas e as fotos na luta a
+  1920×945; o cenário `covil` dos testes de navegador aceita `EFEITOS` e `EFEITOS_INIMIGO`.
+- **Continua:** nada integrado; a versão continua 1.153.0. Não começados: inimigos, pets, caminhos, talentos,
+  habilidades.

@@ -3436,3 +3436,59 @@ composto do editor igual ao PNG e à grade (0 pixels diferentes), a silhueta igu
 o conjunto C1, cota, L7 e P7 no 32 e no 40 com a A1) e `a1-tamanhos-no-jogo.png` (o Inventário com o 40 e o saque com o
 64 e o "você usa" em 48, B3 do jogo × A1, com os mesmos dados; `fotografar.mjs botas_a1_tamanhos`, as capturas em
 `capturas/tamanhos/`). Sem erro no console.
+
+### A flecha da carta do Arqueiro (F1) e o estado Firme (R1) (`flechas_firme/`)
+
+**Pedido de Jean (20/10/2026):** os primeiros itens do desvio visual do plano 23 (1E.1 e 1E.2): o ícone que acompanha a
+quantidade de flechas na carta do Arqueiro durante a luta e um símbolo próprio para o Firme, com as referências geradas
+que ele deixou em `ferramentas/arte/referencias/icones/` (o papel de cada uma no `LEIA-ME.md` de lá). Levantar antes os
+usos reais; desenhar na resolução em que cada um aparece; não mudar regras, textos, contadores, medidas nem
+comportamento; nada integrado.
+
+**O levantamento:**
+- **A flecha da carta:** `batalha.js` desenha `.carta-flechas` com `S("flecha", 1)`, o sprite de 16 × 16 de
+  `sprites-dados.js` em escala 1 (`.carta-flechas img.sprite { --s: 16 }`); a 1920×945, a arte de 16 px aparece com
+  ~17,9 px de tela (o zoom da HUD). O mesmo desenho `flecha` tem outros papéis, que ficam: o custo em flechas das
+  habilidades (`escolhas.js`, também 16), a orientação (`orientacao.js`), o ícone do elemento "à distância"
+  (`batalha.js`, `ELEMENTO`) e os projéteis da luta (escala 2). A aljava (o equipamento e o recurso do topo, 1.122.0) é
+  outro desenho e não muda.
+- **O Firme:** `rpg/estados.py` (`"firme"`, ícone `cadeado`, família `protecao`), mostrado no chip de estado da carta
+  (`.ef`, `S(ícone, 1)`, 16 px, `.ef img.sprite { --s: 16 }`) e na orientação da primeira vez (`abertura.py`, `SF`). O
+  `cadeado` também é o ícone do talento Armadilheiro (`talentos.py`), do bloqueio de vida na HUD (`paineis.js`), dos
+  motivos no mercado (`mercado.js`) e do Salvar na doca (`nucleo.js`): todos ficam.
+- **A regra do Firme, numa frase:** é o estado de um turno que fica depois de um atordoamento (o congelamento usa o mesmo
+  estado): enquanto dura, a unidade não pode ser atordoada nem congelada de novo; não dá Defesa, dano nem esquiva.
+
+**As propostas** (`auxiliares/icones16.py`, as grades à mão; as fontes
+`fontes/flecha_contador/flecha_contador-16.aseprite` e `fontes/firme/firme-16.aseprite`, em camadas, pelo `pintar.lua`):
+- **F1, a flecha:** a ponta de aço em cima à direita (o triângulo com o vértice no canto, a aresta acesa no meio, a face
+  de cima clara e a de baixo escura, as duas barbas, o encaixe escuro), a haste de madeira clara na diagonal, as penas
+  dos dois lados (a de cima clara, a de baixo na sombra), estreitas na frente e largas atrás, o amarrado vermelho no fim
+  das penas e o fim da haste em madeira mais escura. As cores da madeira, das penas e do vermelho são as das flechas da
+  aljava; o aço, a rampa de ferro do conjunto. Camadas: haste, penas, amarrado, ponta, contorno.
+- **R1, o Firme:** a corrente rompida, dois elos ovais na diagonal com o furo comprido e a luz de cima e da esquerda, um
+  vão entre eles, a ponta de cada elo voltada para o vão aberta com a face do corte acesa, e dois traços azuis curtos de
+  cada lado do vão (as faíscas da referência) numa camada própria, para saírem se o Jean achar ruído. Camadas: elos,
+  faiscas, contorno. Comunica soltar-se e resistir a nova prisão, sem escudo nem bota: distinto do Em guarda (escudo),
+  da Esquiva (folha), do Atordoado (estrela) e do cadeado de indisponível.
+- **Na bancada:** a primeira ponta saiu um bloco quadrado e as penas uma mancha; refeitas por partes. Os primeiros elos
+  saíram como dois "C" (lidos como ganchos), depois encostados (lidos como corrente inteira), depois como arruelas; a
+  versão final alonga os elos, separa-os pelo vão e abre um pixel de cada ponta.
+- **As simplificações:** as duas imagens são ampliadas; em 16 px a ponta da flecha vira o triângulo do canto (a
+  diagonal de 45° põe as arestas na horizontal e na vertical), a haste fica com 1 px, as penas com duas faixas; os elos
+  ficam com o furo de 1 a 2 px, e o corte de cada elo com um pixel (a ruptura lê sobretudo pelo vão entre os elos e pelas
+  faíscas).
+
+**A conferência:** as duas fontes pintadas pelo `pintar.lua` (0 diferenças na releitura, 0 fora da tela); exportadas por
+`exportar_aseprite.py flecha_contador|firme flechas_firme/proposta --fontes=flechas_firme/fontes`; o composto do editor
+igual ao PNG e à grade (0 pixels diferentes); @2x exatos.
+
+**No contexto** (`auxiliares/fotografar_luta.mjs`, a 1920×945, atual × proposta, com os mesmos dados): o cenário `covil`
+com o Arqueiro contra dois lobos, o Firme, o Em guarda e a Esquiva no herói e os lobos atordoados (as variáveis novas
+`EFEITOS` e `EFEITOS_INIMIGO` do cenário, em `tests/navegador/cenarios.py`, só para montar a situação). Na proposta, a
+página troca só as duas imagens pelos seletores dos dois papéis (`.carta-flechas img` e `.ef[data-ef="firme"] img`);
+a quantidade (20) e os chips não mudam. Sem erro no console.
+
+**As folhas:** `flechas_firme/flechas-firme.png` (atual × proposta em tamanho real sobre o carvão, a flecha ao lado do
+número, o Firme na fileira com os outros estados, as ampliações 12× e as referências) e `flechas-firme-luta.png` (a carta
+do Arqueiro em tamanho real e 2× e a luta a 1920×945, atual × proposta). Nada integrado.

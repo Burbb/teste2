@@ -834,6 +834,11 @@ pouco representativo. Procurar uma imagem de recuperação/estabilidade ou resis
 turno, distinta de ganho de Defesa, Guarda e atordoamento. O desenho final continua em aberto: apresentar proposta
 em tamanho real e no conjunto dos estados, sem mudar nome, duração, imunidades ou outras regras para adequá-las à arte.
 
+**Primeiro par proposto (20/10/2026, em avaliação, nada integrado):** a flecha da carta do Arqueiro (F1) e o Firme (R1),
+em 16 px, em `ferramentas/prototipos/hud/itens-lote-noite/flechas_firme/` (o levantamento, as referências e as fotos no
+`LEIA-ME.md` do lote). A troca futura atinge só esses dois papéis: um desenho próprio para `.carta-flechas` e um ícone
+próprio para o estado `firme`; a aljava, os outros usos de `flecha` e os outros cadeados ficam.
+
 O atalho **Mapa** da doca já foi concluído; esta frente trata dos símbolos internos de caminhos e mapas.
 Não afirmar que só restam talentos e habilidades após este bloco sem conferir os consumíveis, variantes e
 compartilhamentos provisórios ainda registrados. A Capa de Patrulha, o Chapéu de Couro e a Coroa dos Afogados continuam
