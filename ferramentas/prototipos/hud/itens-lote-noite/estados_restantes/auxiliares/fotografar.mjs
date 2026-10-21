@@ -48,6 +48,14 @@ for (const sit of SITUACOES) {
       p.on("console", (m) => { if (m.type() === "error" || m.type() === "warning") avisos.push(m.text()); });
       if (modo === "proposta-gira-reduzido") await p.emulateMedia({ reducedMotion: "reduce" });
       await p.goto(url);
+      // "clicar": o botão que começa a luta com a página aberta (LUTA_APOS_ESCOLHA do cenário tutorial), para ver ao vivo
+      // o que acontece no começo dela (a surpresa da emboscada); o selo é esperado desde antes do clique
+      let seloCedo = null;
+      if (sit.clicar) {
+        await p.waitForSelector(`text=${sit.clicar}`, { timeout: 30000 });
+        if (sit.selo) seloCedo = p.waitForSelector(".faixa-acao.selos", { timeout: 20000 });
+        await p.click(`text=${sit.clicar}`);
+      }
       await p.waitForSelector('.carta[data-uid="j"]', { timeout: 30000 });
       if (sit.gira) await p.evaluate((espiral) => {
         const css = document.createElement("style");
@@ -60,16 +68,18 @@ for (const sit of SITUACOES) {
           for (const im of document.querySelectorAll('.ef[data-ef="atordoado"] img.sprite')) if (im.src !== espiral) im.src = espiral;
         }).observe(document.body, { subtree: true, childList: true });
       }, "data:image/png;base64," + readFileSync(png("atordoado")).toString("base64"));
-      if (sit.habilidade) {   // usa a habilidade pela roda e pelo seletor, como o jogador
-        await espera(1500);
-        await p.click('.roda-botao[data-slot="habilidades"]', { timeout: 30000 });
-        await p.click(sit.habilidade.split("|").map((h) => `.rj-linha[data-hab="${h}"]`).join(","), { timeout: 10000 });
+      if (sit.habilidade || seloCedo) {   // usa a habilidade pela roda e pelo seletor, como o jogador
+        if (sit.habilidade) {
+          await espera(1500);
+          await p.click('.roda-botao[data-slot="habilidades"]', { timeout: 30000 });
+          await p.click(sit.habilidade.split("|").map((h) => `.rj-linha[data-hab="${h}"]`).join(","), { timeout: 10000 });
+        }
         if (sit.selo) {
           // o alvo, quando o jogo pede (clique num inimigo); o selo dura 1,5 s: a foto sai assim que ele aparece
           const alvo = p.locator('.carta[data-uid^="c"]').first();
-          const selo = p.waitForSelector(".faixa-acao.selos", { timeout: 20000 });
-          await espera(700);
-          if (!(await p.$(".faixa-acao.selos"))) await alvo.click({ timeout: 5000 }).catch(() => {});
+          const selo = seloCedo || p.waitForSelector(".faixa-acao.selos", { timeout: 20000 });
+          await espera(seloCedo ? 0 : 700);
+          if (!seloCedo && !(await p.$(".faixa-acao.selos"))) await alvo.click({ timeout: 5000 }).catch(() => {});
           const s = await selo;
           // a rotação: o ângulo da imagem do selo em quatro instantes (a matriz do transform), e quatro fotos seguidas
           const giro = [];

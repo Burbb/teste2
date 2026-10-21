@@ -405,3 +405,24 @@ o sprite atual, o original e o ajuste, junto dos 15 estados do jogo, a 12× e na
 modelada; as setas vermelhas continuam à parte. O que não muda (de propósito, por ser a composição aprovada para
 retomar): as setas ainda formam um grupo vermelho denso no alto, e a figura em busto continua parecida com a da
 Barreira de antes (que saiu do jogo nesta mesma rodada; a Barreira integrada não tem figura).
+
+## A integração da 1.161.0: Provocando e Iniciativa — os 17 estados concluídos
+
+**Decisão de Jean (21/10/2026):** o Provocando com a figura branca do `9e4ec85a` (`estado-provocando-claro`, as três
+setas da composição original) e a Iniciativa A da terceira rodada (`estado-iniciativa-cunha`, a barra larga), sem
+retoques; o estouro B fica como alternativa não escolhida. As fontes foram copiadas sem mudança, com o nome do estado,
+para `ferramentas/arte/aseprite/estado-<id>/`; o exportador grava os PNGs idênticos, byte a byte, aos de `proposta/`.
+
+**Conferido no jogo** a 1920×945 (`MODOS=atual`, as situações `integracao-1.161.0`; as fotos em
+`capturas/integracao-1.161.0/`): o chip do Provocando no esqueleto do Necromante; o selo dele pela Ordem da Fera do urso
+do Patrulheiro (o motor manda o aviso com a animação do rugido, junto do Em guarda; o Erguer Servo aplica direto e não
+tem selo); o chip da Iniciativa; e o selo dela numa emboscada real do jogador (o cenário `tutorial` com `EMBOSCADA=jogador`
+e `LUTA_APOS_ESCOLHA=1`, que já existiam: o roteiro só clica em "Começar a luta" para ver a surpresa ao vivo, campo
+`clicar` das situações). Nada foi acrescentado ao jogo para fotografar. Sem erro nem aviso no console. Folha:
+`integracao-1.161.0.png`.
+
+**Os 17:** conferido que o catálogo (`rpg/estados.py`) tem 17 estados, o `ESTADO` de `icones.js` os 17, e todos têm o
+16 e o @2x. A prancha final `estados-final.png` (`prancha.py final`) mostra os 17 ícones de produção identificados
+(nome, o que é, a versão e a origem), em chip no tamanho real, a 2× e a 8× sem suavização, e a fileira dos 17; a geral
+`geral.png` passa a mostrar os 17 integrados e as alternativas não escolhidas (nada em avaliação). Nenhuma alternativa
+nem registro de origem foi apagado.

@@ -31,7 +31,7 @@ const Icones = (() => {
     "contador-flechas": [16], "estado-firme": [16], "estado-guarda": [16], "estado-esquiva": [16],
     "estado-sangramento": [16], "estado-maldito": [16], "estado-marcado": [16], "estado-furtivo": [16], "estado-furia": [16],
     "estado-queimadura": [16], "estado-fortalecido": [16], "estado-enfraquecido": [16], "estado-frenesi": [16],
-    "estado-veneno": [16], "estado-atordoado": [16], "estado-barreira": [16],
+    "estado-veneno": [16], "estado-atordoado": [16], "estado-barreira": [16], "estado-provocando": [16], "estado-iniciativa": [16],
     "cota": [32, 40, 48, 64], "elmo": [32, 40, 48, 64], "escudo": [32, 40, 48, 64], "espada": [32, 40, 48, 64], "lugar-caverna": [32, 40],
     "lugar-cidadela": [32, 40], "lugar-floresta": [32, 40], "lugar-montanha": [32, 40], "lugar-pantano": [32, 40],
     "lugar-planicie": [32, 40], "lugar-ruinas": [32, 40], "lugar-vila": [32, 40], "maca": [32, 40, 48, 64],
@@ -166,17 +166,18 @@ const Icones = (() => {
   // duas línguas menores), o Fortalecido (a espada em pé e a seta verde subindo), o Enfraquecido (a espada para baixo e
   // a seta roxa descendo) e o Frenesi (as três garras vermelhas crescentes). Desde a 1.160.0: o Veneno (a gota verde
   // com o reflexo e a bolha), o Atordoado (três estrelinhas em arco, também no congelado) e a Barreira (a película de
-  // energia com o golpe estourando na borda). Só os estados: o "cadeado" do jogo fica nos outros papéis (o talento
-  // Armadilheiro, o bloqueio de vida, os motivos do mercado, o Salvar), o "escudo" no Erguer Escudo, nos talentos e no
-  // espaço vazio, a "folha" na Fúria da Natureza, no Pés Leves, no Antídoto e na Agilidade das celebrações, e a "gota",
-  // a "gota_roxa", a "gota_verde", a "flecha", o "olho", o "machado", a "chama", a "espada", o "osso", o "raio", a
-  // "estrela" e o "escudo_azul" nas habilidades, nos talentos, nos ferimentos, nos serviços e nos outros usos; os
-  // estados sem desenho aqui ficam com o sprite do catálogo do motor
+  // energia com o golpe estourando na borda). Desde a 1.161.0: o Provocando (a figura branca com as três setas
+  // vermelhas convergindo) e a Iniciativa (a exclamação dourada de barra larga). Só os estados: o "cadeado" do jogo fica
+  // nos outros papéis (o talento Armadilheiro, o bloqueio de vida, os motivos do mercado, o Salvar), o "escudo" no
+  // Erguer Escudo, nos talentos e no espaço vazio, a "folha" na Fúria da Natureza, no Pés Leves, no Antídoto e na
+  // Agilidade das celebrações, e a "gota", a "gota_roxa", a "gota_verde", a "flecha", o "olho", o "machado", a "chama",
+  // a "espada", o "osso", o "raio", a "estrela", o "escudo_azul", a "caveira" e a "bota" nas habilidades, nos talentos,
+  // nos ferimentos, nos serviços e nos outros usos
   const ESTADO = { firme: "estado-firme", guarda: "estado-guarda", esquiva: "estado-esquiva", sangramento: "estado-sangramento",
                    maldito: "estado-maldito", marcado: "estado-marcado", furtivo: "estado-furtivo", furia: "estado-furia",
                    queimadura: "estado-queimadura", fortalecido: "estado-fortalecido", enfraquecido: "estado-enfraquecido",
                    frenesi: "estado-frenesi", veneno: "estado-veneno", atordoado: "estado-atordoado",
-                   barreira: "estado-barreira" };
+                   barreira: "estado-barreira", provocando: "estado-provocando", iniciativa: "estado-iniciativa" };
 
   /** O arquivo de `peca` para mostrar em `lado` px: o tamanho igual ou o mais perto; maior que o maior, o dobro dele. */
   function arquivos(peca, lado) {

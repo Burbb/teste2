@@ -3759,3 +3759,10 @@ estão em `estados_restantes/LEIA-ME.md`; as folhas em `estados_restantes/lote<n
 estados (o chip e o selo). As fontes copiadas sem mudança para `ferramentas/arte/aseprite/estado-<id>/`; o
 `exportar_aseprite.py` grava os PNGs de 16 e @2x idênticos, byte a byte, aos aprovados. O registro da conferência no
 jogo e a folha em `estados_restantes/` (`integracao-1.158.0.png`, `capturas/integracao-1.158.0/`).
+
+### Os 17 estados no jogo (1.155.0 a 1.161.0)
+
+Firme (1.155.0), Em guarda (1.156.0), Esquiva (1.157.0); Sangramento, Maldição, Marcado, Furtivo e Fúria (1.158.0);
+Chamas, Fortalecido, Enfraquecido e Frenesi (1.159.0); Veneno, Atordoado e Barreira (1.160.0); Provocando e Iniciativa
+(1.161.0). As rodadas, as alternativas e as conferências estão em `estados_restantes/LEIA-ME.md`; a prancha final em
+`estados_restantes/estados-final.png`.

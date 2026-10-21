@@ -743,5 +743,78 @@
     "HABILIDADES": "barreira"
    }
   }
+ ],
+ "integracao-1.161.0": [
+  {
+   "nome": "chip-servo-provocando",
+   "cenario": "tutorial",
+   "estados": [
+    "provocando"
+   ],
+   "habilidade": "erguer_servo",
+   "amb": {
+    "CLASSE": "mago",
+    "NIVEL": "4",
+    "ESPEC": "necromante",
+    "LUTA": "lobo",
+    "NIVEL_LUTA": "2",
+    "QUANTOS": "2",
+    "TUTORIAL": "0"
+   }
+  },
+  {
+   "nome": "chip-heroi-iniciativa",
+   "cenario": "covil",
+   "estados": [
+    "iniciativa"
+   ],
+   "amb": {
+    "CLASSE": "arqueiro",
+    "LUTA": "lobo",
+    "NIVEL_LUTA": "2",
+    "QUANTOS": "2",
+    "VIDA": "40",
+    "EFEITOS": "iniciativa:2:0.5"
+   }
+  },
+  {
+   "nome": "selo-provocando",
+   "cenario": "tutorial",
+   "estados": [
+    "provocando"
+   ],
+   "habilidade": "comando_fera",
+   "selo": true,
+   "carta": "inimigo",
+   "amb": {
+    "CLASSE": "arqueiro",
+    "NIVEL": "4",
+    "ESPEC": "patrulheiro",
+    "ANIMAL": "urso",
+    "LUTA": "lobo",
+    "NIVEL_LUTA": "1",
+    "QUANTOS": "1",
+    "TUTORIAL": "0"
+   }
+  },
+  {
+   "nome": "selo-iniciativa",
+   "cenario": "tutorial",
+   "estados": [
+    "iniciativa"
+   ],
+   "clicar": "Começar a luta",
+   "selo": true,
+   "carta": "j",
+   "amb": {
+    "CLASSE": "arqueiro",
+    "LUTA": "lobo",
+    "NIVEL_LUTA": "1",
+    "QUANTOS": "1",
+    "TUTORIAL": "0",
+    "EMBOSCADA": "jogador",
+    "LUTA_APOS_ESCOLHA": "1"
+   }
+  }
  ]
 }

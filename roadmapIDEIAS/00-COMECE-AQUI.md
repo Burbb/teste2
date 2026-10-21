@@ -5363,3 +5363,18 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   carta a 1920×945) e a prancha `geral.png`.
 - **Continua em avaliação:** Provocando (o ajuste) e Iniciativa (as finalistas A, a barra larga, e B, o estouro, sem
   mudança). A versão continua 1.160.0. Nenhuma outra etapa começada.
+
+### 21/10/2026 (data do computador local) — Provocando e Iniciativa no jogo (1.161.0): os 17 estados concluídos
+
+- **Decisão de Jean:** integrar sem retoques o Provocando (a figura branca do `9e4ec85a`, com as três setas da
+  composição original) e a Iniciativa (a opção A da terceira rodada, a exclamação de barra larga; o estouro B fica como
+  alternativa não escolhida).
+- **Feito:** as fontes em `ferramentas/arte/aseprite/estado-provocando/` e `estado-iniciativa/`; os PNGs de 16 e @2x
+  idênticos byte a byte aos aprovados (`todas --conferir`: tudo igual); o papel `ESTADO` em `icones.js`; a `caveira` e a
+  `bota` nos outros usos. Conferido no jogo a 1920×945 com os arquivos de produção e saves temporários: o chip do
+  Provocando no esqueleto do Necromante e no urso do Patrulheiro, o selo pela Ordem da Fera (o urso, junto do Em
+  guarda), o chip da Iniciativa e o selo da surpresa numa emboscada real (`EMBOSCADA=jogador`, a luta começada com a
+  página aberta). Nenhum aviso ou comportamento foi acrescentado para as fotos.
+- **Os 17 estados concluídos:** 17 no catálogo (`rpg/estados.py`), 17 no `ESTADO`, todos com arquivo; a prancha final
+  `estados_restantes/estados-final.png` (os 17, identificados, com a versão e a origem) e a geral `geral.png`.
+- **Continua:** o bloco 1E segue com inimigos, pets, caminhos e minimapa, **não começados**; a versão é 1.161.0.

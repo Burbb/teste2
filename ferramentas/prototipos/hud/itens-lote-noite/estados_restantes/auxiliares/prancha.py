@@ -11,7 +11,7 @@ import sys
 
 from PIL import Image, ImageDraw
 
-from comum import (ATUAL, CARVAO, FINAIS, LOTE, LOTES, TEXTO, TEXTO2, TITULO, abre, amplia, final, fonte,
+from comum import (ATUAL, CARVAO, FINAIS, STATIC, LOTE, LOTES, TEXTO, TEXTO2, TITULO, abre, amplia, final, fonte,
                    grade_px, proposta, sprite)
 
 CHIP = (10, 11, 13, 255)
@@ -26,7 +26,8 @@ def chip(out, d, im, x, y, borda=(60, 60, 66, 255)):
 NOVAS = ("gota", "r2")
 INTEGRADOS = ("sangramento", "maldito", "marcado", "furtivo", "furia",   # no jogo desde a 1.158.0
               "queimadura", "fortalecido", "enfraquecido", "frenesi",   # desde a 1.159.0
-              "veneno", "atordoado", "barreira")   # desde a 1.160.0   # as alternativas da segunda rodada (21/10/2026): estado-<id>-gota, estado-<id>-r2
+              "veneno", "atordoado", "barreira",   # desde a 1.160.0
+              "provocando", "iniciativa")   # desde a 1.161.0   # as alternativas da segunda rodada (21/10/2026): estado-<id>-gota, estado-<id>-r2
 
 
 def cartas(n, pre=""):
@@ -107,6 +108,11 @@ def folha_lote(n, pre=""):
     print(f"{pre}lote{n}.png", out.size)
 
 
+# no protótipo, estes nomes são candidatos antigos (no jogo, os arquivos com o mesmo nome são os aprovados)
+NOMES_PROTOTIPO = {"estado-veneno": "serpente", "estado-atordoado": "espiral", "estado-barreira": "figura na bolha",
+                   "estado-provocando": "busto cinza (b17ab3dd)", "estado-iniciativa": "exclamação com raios"}
+
+
 def folha_geral():
     """geral.png (atualizada na terceira rodada): os 17 estados em três grupos — os integrados (no jogo), as alternativas
     não escolhidas dos estados já resolvidos e as propostas em avaliação (os candidatos novos e os preservados)."""
@@ -119,19 +125,18 @@ def folha_geral():
                       ("Atordoado", ["estado-atordoado", "estado-atordoado-ampulheta", "estado-atordoado-elmo",
                                      "estado-atordoado-orbita"]),
                       ("Barreira", ["estado-barreira-cupula", "estado-barreira-parede", "estado-barreira-r2",
-                                    "estado-barreira"])]
-    avaliacao = [("Iniciativa", [("estado-iniciativa-cunha", "FINALISTA A: a barra larga"),
-                                 ("estado-iniciativa-estouro", "FINALISTA B: o estouro"),
-                                 ("estado-iniciativa", "exclamação com raios"), ("estado-iniciativa-italico", "C: inclinada")]),
-                 ("Provocando", [("estado-provocando", "original (b17ab3dd)"), ("estado-provocando-claro", "NOVA: a figura clara"),
-                                 ("estado-provocando-r2", "braços abertos (não usar)")])]
+                                    "estado-barreira"]),
+                      ("Provocando", ["estado-provocando", "estado-provocando-r2", "estado-provocando-lados"]),
+                      ("Iniciativa", ["estado-iniciativa-estouro", "estado-iniciativa", "estado-iniciativa-italico",
+                                      "estado-iniciativa-r2", "estado-iniciativa-bota"])]
+    avaliacao = []   # desde a 1.161.0 os 17 estão no jogo: nada em avaliação
     out = Image.new("RGBA", (1700, 2600), CARVAO)
     d = ImageDraw.Draw(out)
-    d.text((20, 10), "Os 17 estados (terceira rodada, 21/10/2026). Chips no tamanho real, 2× e 4× (a 4× só para inspecionar).",
+    d.text((20, 10), "Os 17 estados (1.161.0, 21/10/2026). Chips no tamanho real, 2× e 4× (a 4× só para inspecionar).",
            fill=TEXTO, font=f)
     y = 44
     d.text((20, y), f"INTEGRADOS ({len(integrados)}, no jogo: Firme 1.155.0, Em guarda 1.156.0, Esquiva 1.157.0, "
-                    "cinco na 1.158.0, quatro na 1.159.0, três na 1.160.0)", fill=TEXTO, font=f2)
+                    "cinco na 1.158.0, quatro na 1.159.0, três na 1.160.0, dois na 1.161.0)", fill=TEXTO, font=f2)
     y += 44
     for j, (t, im) in enumerate(integrados):
         x, yy = 20 + (j % 4) * 400, y + (j // 4) * 74
@@ -146,14 +151,15 @@ def folha_geral():
         d.text((20, y + 4), t, fill=TEXTO2, font=f2)
         for j, ident in enumerate(ids):
             im, x = proposta(ident), 160 + j * 300
-            if ident in ("estado-veneno", "estado-atordoado", "estado-barreira"):
-                ident = {"estado-veneno": "serpente", "estado-atordoado": "espiral", "estado-barreira": "figura na bolha"}[ident]
+            if ident in NOMES_PROTOTIPO:
+                ident = NOMES_PROTOTIPO[ident]
             chip(out, d, im, x, y)
             out.alpha_composite(amplia(im, 2), (x + 28, y - 6))
             d.text((x + 70, y + 4), ident.replace("estado-", ""), fill=TEXTO2, font=f2)
         y += 44
     y += 10
-    d.text((20, y), "EM AVALIAÇÃO: o sprite atual do jogo, as opções preservadas e as novas (NOVA)", fill=TEXTO, font=f2)
+    d.text((20, y), "EM AVALIAÇÃO: " + ("nenhum; os 17 estão no jogo (1.161.0)" if not avaliacao else
+                    "o sprite atual do jogo, as opções preservadas e as novas (NOVA)"), fill=TEXTO, font=f2)
     y += 44
     for t, ops in avaliacao:
         k = next(c for c, tt in TITULO.items() if tt == t)
@@ -167,9 +173,14 @@ def folha_geral():
             d.text((x + 136, y + 4), rot[:26], fill=TEXTO if rot.startswith(("NOVA", "FINALISTA")) else TEXTO2, font=f2)
         y += 80
     y += 10
-    d.text((20, y), f"a fileira dos {len(integrados)} integrados com cada opção em avaliação no fim (tamanho real e 2×):",
-           fill=TEXTO2, font=f2)
+    d.text((20, y), f"a fileira dos {len(integrados)} integrados (tamanho real e 2×)" + (", com cada opção em avaliação "
+                    "no fim:" if avaliacao else ":"), fill=TEXTO2, font=f2)
     y += 22
+    if not avaliacao:
+        for j, (_, im) in enumerate(integrados):
+            chip(out, d, im, 20 + j * 24, y)
+            out.alpha_composite(amplia(im, 2), (460 + j * 36, y - 6))
+        y += 40
     for t, ops in avaliacao:
         for ident, rot in ops:
             if not rot.startswith(("NOVA", "FINALISTA", "original")):
@@ -209,6 +220,12 @@ INTEGRACOES = {
                ("Barreira ao lado do Em guarda", "rodada3-barreira/barreira-heroi-guarda", "chip-heroi-barreira-guarda")],
         selos=[("Veneno (Flecha Envenenada)", "veneno"), ("Atordoado (Prisão de Gelo, congelado)", "atordoado"),
                ("Barreira (Barreira Arcana)", "barreira")]),
+    "1.161.0": dict(
+        titulo="Provocando e Iniciativa", sem_selo="os dois têm selo",
+        pares=[("Provocando (o esqueleto do Necromante)", "lote5/servo-provocando", "chip-servo-provocando"),
+               ("Iniciativa", "lote6/heroi-iniciativa", "chip-heroi-iniciativa")],
+        selos=[("Provocando (a Ordem da Fera do urso, com o Em guarda)", "provocando"),
+               ("Iniciativa (a emboscada do jogador, ao vivo)", "iniciativa")]),
 }
 
 RODADA3 = {   # a terceira rodada (21/10/2026): o estado, as opções (nome do arquivo, rótulo) e a pasta das fotos
@@ -283,6 +300,58 @@ def folha_estado(k):
     print(f"rodada3-{k}.png", out.size)
 
 
+ORIGEM = {   # os 17 integrados: versão, de onde veio e o que é
+    "firme": ("1.155.0", "R2 (bc849647)", "a corrente rompida"), "guarda": ("1.156.0", "G1 (118725b6)", "o escudo de ferro"),
+    "esquiva": ("1.157.0", "E6 (df6a433d)", "a figura em movimento"),
+    "sangramento": ("1.158.0", "b17ab3dd", "as duas gotas"), "maldito": ("1.158.0", "b17ab3dd", "a caveira roxa"),
+    "marcado": ("1.158.0", "b17ab3dd", "o alvo de anéis"), "furtivo": ("1.158.0", "b17ab3dd", "o capuz"),
+    "furia": ("1.158.0", "b17ab3dd", "o rosto de raiva"),
+    "queimadura": ("1.159.0", "R2 (805c238d)", "a chama dominante"), "fortalecido": ("1.159.0", "R2 (39f85d92)", "espada e seta verde"),
+    "enfraquecido": ("1.159.0", "R2 (805c238d)", "espada e seta roxa"), "frenesi": ("1.159.0", "b17ab3dd", "as três garras"),
+    "veneno": ("1.160.0", "rodada 3 (69c6ded3)", "a gota verde"), "atordoado": ("1.160.0", "rodada 3 (33f97dde)", "as três estrelinhas"),
+    "barreira": ("1.160.0", "rodada 3 (33f97dde)", "o golpe na película"),
+    "provocando": ("1.161.0", "ajuste (9e4ec85a)", "a figura e as setas"), "iniciativa": ("1.161.0", "rodada 3 (69c6ded3)", "a exclamação larga"),
+}
+
+
+def folha_final():
+    """estados-final.png: os 17 ícones de estado efetivamente no jogo (rpg/web/static/hud/icones/estado-<id>-16.png),
+    identificados pelo nome, a versão e a origem; em chips no tamanho real, a 2× e a 8× sem suavização, e a fileira dos 17."""
+    import re
+    texto = (STATIC / "icones.js").read_text(encoding="utf-8")
+    papel = dict(re.findall(r'(\w+): "estado-([\w-]+)"', re.search(r"const ESTADO = \{(.*?)\};", texto, re.S).group(1)))
+    assert sorted(papel) == sorted(ORIGEM) and all(papel[k] == k for k in papel), papel
+    f, f2 = fonte(14), fonte(12)
+    ids = [k for k, _ in FINAIS] + list(INTEGRADOS)
+    out = Image.new("RGBA", (1600, 1400), CARVAO)
+    d = ImageDraw.Draw(out)
+    d.text((20, 10), f"Os {len(ids)} estados no jogo (1.161.0): os arquivos de produção, pelo papel ESTADO de icones.js. "
+                     "Chip no tamanho real, 2× e 8× sem suavização.", fill=TEXTO, font=f)
+    y = 46
+    for j, k in enumerate(ids):
+        im = final(k)
+        x, yy = 20 + (j % 3) * 520, y + (j // 3) * 150
+        chip(out, d, im, x, yy + 40)
+        out.alpha_composite(amplia(im, 2), (x + 28, yy + 34))
+        out.alpha_composite(grade_px(im, 8), (x + 72, yy))
+        v, o, c = ORIGEM[k]
+        nome = dict(FINAIS).get(k) or TITULO[k]
+        d.text((x + 72 + 128 + 14, yy + 20), nome, fill=TEXTO, font=f)
+        d.text((x + 72 + 128 + 14, yy + 44), c, fill=TEXTO2, font=f2)
+        d.text((x + 72 + 128 + 14, yy + 64), f"{v} · {o}", fill=TEXTO2, font=f2)
+        d.text((x + 72 + 128 + 14, yy + 84), f"estado-{k}-16.png", fill=TEXTO2, font=f2)
+    y += ((len(ids) + 2) // 3) * 150 + 10
+    d.text((20, y), "a fileira dos 17, como numa carta cheia (tamanho real em chips e 2×):", fill=TEXTO2, font=f2)
+    y += 24
+    for j, k in enumerate(ids):
+        chip(out, d, final(k), 20 + j * 24, y)
+        out.alpha_composite(amplia(final(k), 2), (20 + j * 40, y + 32))
+    y += 80
+    out = out.crop((0, 0, 1600, y))
+    out.save(LOTE / "estados-final.png")
+    print("estados-final.png", out.size)
+
+
 def folha_integracao(versao="1.158.0"):
     """integracao-<versão>.png: os aprovados no jogo, antes (o sprite) × depois (os arquivos de produção), na carta a
     1920×945 com os mesmos dados (as fotos "atual" dos lotes × capturas/integracao-<versão>/), e os selos de chegada."""
@@ -347,7 +416,9 @@ def folha_gira():
 
 
 if __name__ == "__main__":
-    if sys.argv[1] == "rodada3":   # rodada3 <estado>
+    if sys.argv[1] == "final":
+        folha_final()
+    elif sys.argv[1] == "rodada3":   # rodada3 <estado>
         folha_estado(sys.argv[2])
     elif sys.argv[1] == "gira":
         folha_gira()

@@ -1,0 +1,49 @@
+{
+ "chip-servo-provocando/atual": {
+  "estados": [
+   "c1-3:provocando",
+   "c1-1:fortalecido",
+   "c1-2:fortalecido"
+  ],
+  "imagens": [
+   "provocando 16px → 16.0px /static/hud/icones/estado-provocando-16.png"
+  ],
+  "cartas": [
+   "c1-3"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "chip-heroi-iniciativa/atual": {
+  "estados": [
+   "j:iniciativa"
+  ],
+  "imagens": [
+   "iniciativa 16px → 17.9px /static/hud/icones/estado-iniciativa-16.png"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "selo-provocando/atual": {
+  "selo": [
+   "/static/hud/icones/estado-provocando-16.png",
+   "/static/hud/icones/estado-guarda-16.png"
+  ],
+  "dono": "c1-2",
+  "giro": [],
+  "erros": [],
+  "avisos": []
+ },
+ "selo-iniciativa/atual": {
+  "selo": [
+   "/static/hud/icones/estado-iniciativa-16.png"
+  ],
+  "dono": "j",
+  "giro": [],
+  "erros": [],
+  "avisos": []
+ }
+}

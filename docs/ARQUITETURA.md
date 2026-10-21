@@ -90,8 +90,10 @@ pacote: `from rpg.combate import Combate`.
   (`estado-enfraquecido-16.png`) e o Frenesi (`estado-frenesi-16.png`), enquanto os sprites `chama`, `espada`, `osso` e
   `raio` ficam nos outros usos; desde a 1.160.0, o Veneno (`estado-veneno-16.png`, a gota verde), o Atordoado
   (`estado-atordoado-16.png`, as três estrelinhas, também no congelado) e a Barreira (`estado-barreira-16.png`, o golpe
-  na película), enquanto os sprites `gota_verde`, `estrela` e `escudo_azul` ficam nos outros usos. Provocando e
-  Iniciativa seguem com o sprite do catálogo. A flecha ao lado da
+  na película), enquanto os sprites `gota_verde`, `estrela` e `escudo_azul` ficam nos outros usos. desde a
+  1.161.0, o Provocando (`estado-provocando-16.png`, a figura branca com as setas convergindo) e a Iniciativa
+  (`estado-iniciativa-16.png`, a exclamação de barra larga), enquanto a `caveira` e a `bota` ficam nos outros usos. Os
+  17 estados do catálogo (`rpg/estados.py`) têm ícone próprio desde a 1.161.0. A flecha ao lado da
   quantidade de flechas na carta do Arqueiro também tem papel próprio (`Icones.contadorFlechas`, 1.155.0); o sprite
   `flecha` fica no custo das habilidades, na orientação, no elemento "à distância" e nos projéteis.
 - Acúmulo de bônus, como nos jogos do gênero: **a mesma fonte renova** (aplicar o mesmo estado de novo fica com o
