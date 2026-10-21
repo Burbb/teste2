@@ -44,6 +44,8 @@ Esquiva (E6), já no jogo, são a referência de acabamento e não foram redesen
 | Maldição (`maldito`) | dano por turno e −40% de defesa | no herói (a maldição de cultistas, afogados, chefes) e no inimigo (Drenar Vida e a Maldição do Necromante) |
 | Atordoado (`atordoado`; o rótulo "congelado" é o mesmo estado) | perde o próximo turno e não se esquiva; depois fica Firme por um turno; chefes e gigantes podem resistir | no inimigo (Golpe Pesado, Lança de Gelo, Combustão) e no herói (teia, imobilizar, congelar) |
 | Enfraquecido (`enfraquecido`) | causa −25% de dano | no inimigo (Grito de Guerra) e no herói (Grito de Terror, ataques de alguns inimigos) |
+| Marcado (`marcado`) | recebe +v% de dano de todos os golpes (os seus, os da comitiva e os do animal) | no inimigo (Marcar Presa, Tiro Certeiro) |
+| Furtivo (`furtivo`) | o próximo ataque é crítico garantido e o estado se gasta; os inimigos continuam mirando você | no herói (Desaparecer, que também dá Esquiva por 1 turno) |
 
 ## Lote 1: Veneno e Sangramento
 
@@ -96,3 +98,17 @@ Esquiva (E6), já no jogo, são a referência de acabamento e não foram redesen
   turno dos inimigos). Sem erro nem aviso no console. Folha: `lote3.png`.
 - **Avaliação sincera:** o Enfraquecido ficou claro e conversa com o Fortalecido. A espiral lê como tontura, mas também
   pode ler como "@"; é o ponto frágil do lote. A órbita fica guardada caso o Jean prefira as estrelas que o jogo já usa.
+
+## Lote 4: Marcado e Furtivo
+
+- **Marcado — o alvo** (`estado-marcado`): o alvo de anéis vermelho e creme com o centro aceso; camadas aneis, contorno.
+  "Este é o alvo": recebe mais dano de todos.
+- **Furtivo — o capuz** (`estado-furtivo`): o capuz escuro de frente, o rosto em sombra e dois olhos claros; camadas
+  capuz, rosto, olhos, contorno. Fala da furtividade (o Desaparecer); o crítico garantido fica na dica.
+- **Tentativa guardada:** `estado-marcado-mira` (a mira com os quatro traços e o ponto; em tamanho real parecia a face
+  "5" de um dado num círculo escuro).
+- **Fotos:** os lobos marcados pelo Arqueiro e o herói furtivo. A Esquiva do Desaparecer dura 1 turno e já se gastou
+  quando o jogador pode agir; por isso a foto mostra o Furtivo sozinho (a Esquiva final aparece na fileira da folha).
+  Sem erro nem aviso no console. Folha: `lote4.png`.
+- **Avaliação sincera:** o alvo é o mais legível do conjunto até aqui. O capuz lê como figura encapuzada, mas é escuro
+  sobre o chip escuro: funciona pela silhueta e pelos olhos, não pelo contraste.

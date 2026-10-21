@@ -5243,3 +5243,9 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   (Enfraquecido) em `estados_restantes/`, com as tentativas guardadas (a órbita com estrelas, a espada partida, as
   setinhas); `lote3.png` com os lobos e o herói a 1920×945.
 - **Continua:** nada aprovado; a versão continua 1.157.0.
+
+### 21/10/2026 (data do computador local) — Os estados restantes, lote 4: Marcado e Furtivo (proposta)
+
+- **Feito:** o alvo de anéis (Marcado) e o capuz com os olhos (Furtivo) em `estados_restantes/`, a mira guardada como
+  tentativa; `lote4.png` com os lobos marcados e o herói furtivo a 1920×945.
+- **Continua:** nada aprovado; a versão continua 1.157.0.

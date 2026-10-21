@@ -373,6 +373,24 @@ FORTALECIDO_SETA = com_contorno([
                "................",
                "................"])
 
+MARCADO_ALVO = com_contorno([
+            "................",
+            ".....SSSSSS.....",
+            "...SSSSSSSSss...",
+            "..SSSWWWWWWssr..",
+            "..SSWWWWWWWWsr..",
+            ".SSWWWSSSSwwwsr.",
+            ".SSWWSSSSSswwsr.",
+            ".SSWWSSWWsswwsr.",
+            ".SsWWsswwsrwwrr.",
+            ".SsWWssssrrwwrr.",
+            ".sswwwssrrwwwrr.",
+            "..sswwwwwwwwrr..",
+            "..ssrwwwwwwrrR..",
+            "...srrrrrrrrR...",
+            ".....rrRRRR.....",
+            "................"])
+
 # as camadas de cada desenho, de baixo para cima, pela letra
 def _por(mapa, resto):
     return lambda ch: "contorno" if ch == "#" else next((k for k, v in mapa.items() if ch in v), resto)
@@ -392,7 +410,8 @@ ICONES = {
                             lambda x, y, ch: "contorno" if ch == "#" else "seta" if ch in "Qq" else "espada"),
     "estado-enfraquecido-setinhas": (ENFRAQUECIDO_SETAS, ["espada", "setas", "contorno"],
                                      lambda x, y, ch: "contorno" if ch == "#" else "setas" if ch in "Qq" else "espada"),
-    "estado-marcado": (MARCADO, ["mira", "contorno"], lambda x, y, ch: "contorno" if ch == "#" else "mira"),
+    "estado-marcado": (MARCADO_ALVO, ["aneis", "contorno"], lambda x, y, ch: "contorno" if ch == "#" else "aneis"),
+    "estado-marcado-mira": (MARCADO, ["mira", "contorno"], lambda x, y, ch: "contorno" if ch == "#" else "mira"),
     "estado-furtivo": (FURTIVO, ["capuz", "rosto", "olhos", "contorno"],
                        lambda x, y, ch: "contorno" if ch == "#" else "olhos" if ch == "U" else "rosto" if ch == "k" else "capuz"),
     "estado-barreira": (BARREIRA, ["bolha", "reflexo", "contorno"],

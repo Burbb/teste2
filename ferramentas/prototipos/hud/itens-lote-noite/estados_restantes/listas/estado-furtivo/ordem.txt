@@ -1,0 +1,1 @@
+capuz,rosto,olhos,contorno
