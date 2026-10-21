@@ -23,7 +23,8 @@ Não iniciar todo o plano numa única tarefa. As etapas técnicas A–I e a vali
   variantes (os únicos e raros com desenho próprio) e os compartilhamentos provisórios (a Capa de Patrulha no gibão, o
   Chapéu de Couro no capuz, a Coroa dos Afogados no Diadema). A manopla trocada pela L7 na 1.151.0 (a M5 virou
   histórico), **com a origem e a licença do recorte de referência ainda por investigar** (pendência aberta). As
-  perneiras trocadas pela P7 na 1.152.0 (a P4 virou histórico).
+  perneiras trocadas pela P7 na 1.152.0 (a P4 virou histórico) e o elmo pelo capacete com malha C1 na 1.153.0 (o elmo
+  de frente virou histórico).
 - A sequência aprovada passa a ser: **fechar os itens → 1E (flechas e estados primeiro; depois inimigos/pets e
   caminhos/minimapa) → retomar as etapas 2–9**. Ícones de habilidades e talentos serão tratados com seus sistemas,
   Grimório e árvore na etapa 8; não entram numa produção em massa antes disso.
@@ -146,7 +147,7 @@ substituições posteriores, incluindo espada e maça na 1.145.0):
 |---|---|---|---|---|
 | `espada` | Espada, Montante (Guerreiro) | Arte final, padrão atual (o remake do ferro, integrada na 1.145.0) | `aseprite/espada/` (1.145.0) | Também é o comando de ataque da luta (`ACAO`) e a silhueta da arma vazia (`VAZIO`), de todas as classes; o ícone do atributo Ataque é outro desenho |
 | `maca` | Maça (Guerreiro) | Arte final, padrão atual (o remake do ferro, integrada na 1.145.0) | `aseprite/maca/` (1.145.0) | — |
-| `elmo` | Elmo, Capacete, Barbuta (Guerreiro) | Arte final, padrão atual (a rodada 4, de frente: 32 e 64 = 32 ×2 do `b4e920d`, 40 e 48 do `3f9292a`; integrada na 1.148.0); **o C1** (o capacete com malha, a transposição da imagem gerada do Jean, `referencias/capacete/capacete-malha-gerada.webp`: a calota com a crista, a faixa da testa e a nasal de aço, a malha envolvendo os lados e a nuca, a abertura vazia, as tiras de couro): proposta do 32 e do 64 = 32 ×2 em avaliação, no protótipo (`capacete_malha/proposta/`); o elmo continua no jogo | `aseprite/elmo/` (1.148.0) | Também a silhueta da cabeça vazia, de todas as classes (`VAZIO`) |
+| `elmo` | Elmo, Capacete, Barbuta (Guerreiro) | Arte final, padrão atual (**o C1**, o capacete com malha, a transposição da imagem gerada do Jean, `referencias/capacete/capacete-malha-gerada.webp`: o 32 do `b6af648f`; o 40 e o 48 são o mesmo 32 centrado em quadros transparentes, como na L7 e na P7; o 64 = 32 ×2; integrado na 1.153.0); o elmo de frente (a rodada 4, 1.148.0) é histórico | `aseprite/elmo/` (1.153.0; a rodada 4 em `aseprite/historico/elmo-r4/`) | Também a silhueta da cabeça vazia, de todas as classes (`VAZIO`), e a reserva da cabeça (`ICONE_ESPACO`) |
 | `armadura` → `cota` | Cota de Malha, Peitoral, Couraça, Brigantina (Guerreiro) | Arte final, padrão atual (o remake do ferro, integrada na 1.146.0) | `aseprite/cota/` (1.146.0) | Também a silhueta da armadura vazia (`VAZIO`); a camisa de malha representa pior o Peitoral e a Couraça (de placa) |
 | `manopla` | Manopla (Guerreiro) | Arte final, padrão atual (**a L7**, o par de luvas de couro com a malha, a transposição da referência escolhida pelo Jean, `referencias/Luvas/luvas-par-recorte.png`: o 32 do `c7639438`; o 40 e o 48 são o mesmo 32 centrado em quadros transparentes, do `fa9711bb`; o 64 = 32 ×2; consolidada no `63f5c81e`, integrada na 1.151.0); **pendente: a origem e a licença do recorte** (com marca d'água; não informadas, a investigar; a L7 não é CC0); a M5 (1.147.0, da `glove_04` da Dungeon Crawl, CC0) é histórico | `aseprite/manopla/` (1.151.0; a M5 em `aseprite/historico/manopla-m5/`) | Também a silhueta das mãos vazias (`VAZIO`); a habilidade Grito de Guerra usa o sprite `manopla` noutro papel e não muda; o crédito da M5 no `LEIA-ME.md` das fontes e em `externas/cc0_hand_wear_icons/` |
 | `calca` → `perneiras` | Perneira, Greva (Guerreiro) | Arte final, padrão atual (**a P7**, a transposição da segunda imagem gerada do Jean, `referencias/calça/perneiras-gerada-2.webp`, com as laterais suavizadas: o 32 do `6dc582e3`; o 40 e o 48 são o mesmo 32 centrado em quadros transparentes, como na L7; o 64 = 32 ×2; integrada na 1.152.0); a P4 (1.148.0) é histórico; a P1 e a P6 ficam no protótipo como alternativas não escolhidas | `aseprite/perneiras/` (1.152.0; a P4 em `aseprite/historico/perneiras-p4/`) | Também a silhueta das pernas vazias (`VAZIO`) e o desenho de reserva das pernas (`ICONE_ESPACO`) |
@@ -182,7 +183,7 @@ substituições posteriores, incluindo espada e maça na 1.145.0):
   Arqueiro, do Mago e dos acessórios; o Chapéu Pontudo entrou na 1.141.0, a Sandália na 1.142.0, a Besta Leve na
   1.143.0, o Diadema na 1.144.0, a espada e a maça na 1.145.0, a cota na 1.146.0, a manopla na 1.147.0, o elmo e as
   perneiras na 1.148.0, o 40 e o 48 do martelo na 1.149.0, as botas de ferro na 1.150.0; a manopla trocada pela L7 na
-  1.151.0; as perneiras pela P7 na 1.152.0).
+  1.151.0; as perneiras pela P7 na 1.152.0; o elmo pelo C1 na 1.153.0).
 - **Placeholder integrado, pendente de remake:** nenhum (desde a 1.150.0). O equipamento-base do Guerreiro está
   concluído: o escudo, o machado, a espada, a maça, o martelo, a cota, a manopla, o elmo, as perneiras e as botas de
   ferro são finais.

@@ -5122,3 +5122,12 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   mão pela silhueta e pelas partes, a fonte `fontes/C1/C1-32.aseprite` em camadas com a guia oculta, as folhas `c1.png` e
   `c1-ficha.png`); as simplificações no `LEIA-ME.md` do lote.
 - **Continua:** o elmo do jogo sem mudança; o C1 em avaliação; a versão continua 1.152.0.
+
+### 20/10/2026 (data do computador local) — O capacete C1 no jogo (1.153.0)
+
+- **Decisão de Jean:** integrar o C1 do `b6af648f`, sem retoques; o 40 e o 48 pela solução da L7 (o 32 centrado).
+- **Feito:** a fonte em `ferramentas/arte/aseprite/elmo/elmo-32.aseprite`; o elmo de frente em
+  `aseprite/historico/elmo-r4/`; o `DERIVADOS` do elmo com o `CENTRO` e o ×2; o 32 e o 64 idênticos aos aprovados, os
+  centros do 40 e do 48 iguais ao 32. Os usos não mudaram (`ITEM`, `VAZIO`, `ICONE_ESPACO`). Conferido no jogo a 1920×945:
+  o saque, equipar e guardar, a ficha, o Inventário e a cabeça vazia.
+- **Continua:** em seguida, o teste de acabamento das botas B3 (só no protótipo).

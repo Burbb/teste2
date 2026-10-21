@@ -3350,3 +3350,26 @@ o nome `elmo` em `tamanhos/`, só para as fotos).
 em tamanho real e a 4×, junto da cota, da luva L7, das perneiras e das botas; `auxiliares/prancha.py`) e
 `capacete_malha/c1-ficha.png` (a ficha a 1920×945 com os mesmos dados, o elmo do jogo × o C1; `fotografar.mjs
 capacete_c1`, as capturas em `capturas/`). Sem erro no console. Nada integrado.
+
+### O capacete C1 no jogo (1.153.0)
+
+**Decisão de Jean (20/10/2026):** o C1 do `b6af648f` aprovado e integrado sem retoques: o 32 aprovado e o 64 = 32 ×2;
+no Inventário e no "você usa" do saque, o mesmo 32 centrado nos quadros transparentes de 40 e 48, como na L7 e na P7.
+
+**Os arquivos:** a fonte `capacete_malha/fontes/C1/C1-32.aseprite` copiada sem mudança para
+`ferramentas/arte/aseprite/elmo/elmo-32.aseprite` (camadas guia oculta, interior, malha, aco, couro, contorno); as fontes
+do elmo de frente (a rodada 4) movidas para `ferramentas/arte/aseprite/historico/elmo-r4/` (fora da exportação). O
+`DERIVADOS` do elmo com o `CENTRO` (40 deslocado 4 px, 48 deslocado 8 px) e o 64 = 32 ×2. O 32, o 64 e os @2x do jogo
+idênticos, byte a byte, aos de `capacete_malha/proposta/` do `b6af648f`; os centros do 40 e do 48 iguais ao 32, as beiras
+transparentes, os @2x exatos; `exportar_aseprite.py todas --conferir` e `familia_ferro.py --conferir`: tudo igual.
+
+**Os usos:** sem mudança nas chamadas: `ITEM` (`elmo` → `elmo`: o Elmo, o Capacete e a Barbuta), `VAZIO` (a cabeça vazia,
+em `icones.js` e em `telas/itens.js`) e a reserva da cabeça (`ICONE_ESPACO`, em `itens.py`). Nenhuma habilidade nem estado
+usa o sprite; o retrato do herói é outro desenho.
+
+**Conferido no jogo** a 1920×945 com os arquivos do jogo e os saves temporários (`capacete_malha/capturas/integracao/`;
+`sandalia_chapeu/auxiliares/equipar.mjs . <pasta> guerreiro elmo cabeca 1.153.0 elmo` e
+`elmo_cota/auxiliares/integracao.mjs . <pasta> cabeca elmo 1.153.0 elmo cabeca-vazia`): o saque com o capacete em 64 e o
+"você usa" em 48 (o 32 centrado), "Equipar agora" e "Guardar na mochila", a ficha (32), o Inventário (40, o corpo e a
+mochila) e a cabeça vazia, na ficha e no Inventário. As medidas, as áreas de clique, as regras e os atributos não
+mudaram. Sem erro no console. A folha: `capacete_malha/c1-integracao-1.153.0.png`.

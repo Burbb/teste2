@@ -504,10 +504,12 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   o Jean escolheu; a origem e a licença do recorte de referência pendentes; a fonte `aseprite/manopla/manopla-32.aseprite`;
   o 40 e o 48 são o 32 centrado num quadro transparente e o 64 = 32 ×2, pelo `DERIVADOS` do exportador): a Manopla do
   Guerreiro e os raros dela, e a silhueta das mãos vazias. A M5 (1.147.0, adaptada da `glove_04` da Dungeon Crawl
-  Stone Soup, CC0) é histórico, em `aseprite/historico/manopla-m5/`. A habilidade Grito de Guerra continua com o sprite "manopla" do jogo. Desde a 1.148.0, o elmo (de frente: a
-  calota com a faixa, a abertura do rosto e as faces que fecham para dentro; o Elmo, o Capacete e a Barbuta, e a
-  cabeça vazia), 32, 40, 48 e o 64 = 32 ×2, fontes em
-  `aseprite/elmo/`. Desde a 1.152.0, as perneiras são a P7 (a calça de malha com o cinto de couro e a fivela, as
+  Stone Soup, CC0) é histórico, em `aseprite/historico/manopla-m5/`. A habilidade Grito de Guerra continua com o sprite "manopla" do jogo. Desde a 1.153.0, o elmo é o
+  capacete com malha C1 (a calota arredondada com a crista, a faixa da testa e a nasal de aço, a malha envolvendo os
+  lados e a nuca, a abertura do rosto vazia, as tiras de couro; a transposição da imagem gerada do Jean): o Elmo, o
+  Capacete e a Barbuta, a cabeça vazia e a reserva da cabeça (`ICONE_ESPACO`); a fonte `aseprite/elmo/elmo-32.aseprite`;
+  o 40 e o 48 são o 32 centrado num quadro transparente e o 64 = 32 ×2, pelo `DERIVADOS`; o elmo de frente da 1.148.0 é
+  histórico, em `aseprite/historico/elmo-r4/`. Desde a 1.152.0, as perneiras são a P7 (a calça de malha com o cinto de couro e a fivela, as
   laterais no volume da malha, as joelheiras em cúpula com as juntas, as caneleiras e os punhos de couro; a
   transposição da segunda imagem gerada do Jean): o desenho `calca`, a Perneira e a Greva, as pernas vazias e a reserva
   das pernas (`ICONE_ESPACO`); a fonte `aseprite/perneiras/perneiras-32.aseprite`; o 40 e o 48 são o 32 centrado num

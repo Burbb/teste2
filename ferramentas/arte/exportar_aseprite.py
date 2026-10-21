@@ -71,7 +71,8 @@ DERIVADOS = {
     "cota": {64: (32, 2)},           # 1.146.0: a cota de malha do Guerreiro (32, 40, 48 das fontes); o 64 é o 32 ×2
     "manopla": {40: (32, CENTRO), 48: (32, CENTRO), 64: (32, 2)},  # 1.151.0: as luvas L7 (a M5 da 1.147.0 em historico/):
                                      # o 40 e o 48 são o 32 centrado (4 e 8 px), o 64 é o 32 ×2
-    "elmo": {64: (32, 2)},           # 1.148.0: o elmo de frente (a rodada 4) e as perneiras de malha com placas (a P4); o 64 é o 32 ×2
+    "elmo": {40: (32, CENTRO), 48: (32, CENTRO), 64: (32, 2)},  # 1.153.0: o capacete com malha C1 (o elmo de frente da
+                                     # 1.148.0 em historico/): o 40 e o 48 são o 32 centrado, o 64 é o 32 ×2
     "perneiras": {40: (32, CENTRO), 48: (32, CENTRO), 64: (32, 2)},  # 1.152.0: a P7 (a P4 da 1.148.0 em historico/):
                                      # o 40 e o 48 são o 32 centrado, como na manopla; o 64 é o 32 ×2
     "botas-ferro": {64: (32, 2)},    # 1.150.0: as botas de ferro (a B3, da referência gerada do Jean); o 64 é o 32 ×2
