@@ -5,7 +5,8 @@
 // continua com os sprites "fera" e "voador". Situações, uma por animal: uma luta do patrulheiro nível 4 com esse animal
 // contra um lobo, um bandido e uma aranha (o cenário tutorial com NIVEL, ANIMAL e GRUPO), fotografando o palco e a
 // página inteira (o painel da comitiva com o animal).
-//   [ANIMAIS=urso,falcao,lobo] PLAYWRIGHT_MODULO=<file:// do index.mjs> node fotografar.mjs <raiz> <pasta das fotos>
+// O modo "t" (21/10/2026): a transposição das duas referências geradas (urso-t, falcao-t).
+//   [ANIMAIS=urso,falcao,lobo] [SO=t] PLAYWRIGHT_MODULO=<file:// do index.mjs> node fotografar.mjs <raiz> <pasta das fotos>
 import { spawn } from "child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import path from "path";
@@ -18,11 +19,13 @@ const png = (arq) => "data:image/png;base64," + readFileSync(arq).toString("base
 const dados = (id) => png(path.join(aqui, `${id}-16.png`));
 // os modos de cada animal e a imagem que a página põe no lugar (o "atual" não troca nada)
 const MODOS = {
-  urso: { atual: null, a: dados("urso-a"), b: dados("urso-b") },
-  falcao: { atual: null, a: dados("falcao-a"), b: dados("falcao-b") },
+  urso: { atual: null, a: dados("urso-a"), b: dados("urso-b"), t: dados("urso-t") },
+  falcao: { atual: null, a: dados("falcao-a"), b: dados("falcao-b"), t: dados("falcao-t") },
   lobo: { atual: null, reaproveitado: png(path.join(raiz, "rpg/web/static/hud/icones/retrato-lobo-16.png")) },
 };
 const ANIMAIS = (process.env.ANIMAIS || "urso,falcao,lobo").split(",");
+// SO=t: só esses modos (a transposição das referências, "t", sem regravar as fotos das outras)
+const SO = process.env.SO ? process.env.SO.split(",") : null;
 const SITUACOES = ANIMAIS.map((tipo) => ({ nome: tipo, tipo, cenario: "tutorial",
   amb: { TUTORIAL: "0", CLASSE: "arqueiro", NIVEL: "4", ANIMAL: tipo, NIVEL_LUTA: "2", GRUPO: "lobo:1,bandido:1,aranha:1" },
   espera: '.carta[data-uid="j"]', fotos: [["#palco", "palco"], ["body", "pagina"]] }));
@@ -32,7 +35,7 @@ const b = await chromium.launch();
 const arqRegistro = path.join(saida, "registro.json");
 const registro = existsSync(arqRegistro) ? JSON.parse(readFileSync(arqRegistro, "utf-8")) : {};
 for (const sit of SITUACOES) {
-  for (const [modo, src] of Object.entries(MODOS[sit.tipo])) {
+  for (const [modo, src] of Object.entries(MODOS[sit.tipo]).filter(([m]) => !SO || SO.includes(m))) {
     const proc = spawn(PY, ["-m", "tests.navegador.cenarios", sit.cenario], { cwd: raiz,
       env: { ...process.env, PYTHONPATH: raiz, PYTHONIOENCODING: "utf-8", VELOCIDADE: "rapido", PERIODO: "0", ...sit.amb } });
     let url = null; proc.stdout.on("data", (d) => { const m = String(d).match(/http:\S+/); if (m) url = m[0]; });

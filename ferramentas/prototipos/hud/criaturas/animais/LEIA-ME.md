@@ -68,3 +68,40 @@ Cabeças de 16×16 no formato dos retratos de carta aprovados (sem contorno, cor
   vermelhos para um companheiro. Limite: numa luta contra lobos, o aliado e os inimigos ficam com o mesmo rosto; a
   distinção vem só da posição da carta, da borda e do nome. Para mim, funciona; se incomodar, o caminho é um detalhe
   de cor (uma coleira), não outro desenho.
+
+## A transposição das referências geradas (21/10/2026)
+
+**Pedido de Jean:** um candidato de Urso e um de Falcão transpostos das duas imagens geradas na conversa, que ele deixou
+em `ferramentas/arte/referencias/icones/` (registradas no `LEIA-ME.md` de lá), pelo mesmo processo da Ilse: a construção,
+as proporções e a expressão da referência na grade de 16, agrupando as cores e tirando o detalhe que não cabe. As
+propostas A e B ficam; o Lobo Cinzento não muda. Nada integrado.
+
+- **Urso t** (`urso-t`; pelagem, focinho, detalhes e a guia oculta): de frente, a expressão severa da referência: as
+  orelhas redondas com o fundo escuro, a testa clara, as órbitas fundas em sombra com o ponto âmbar do olho, a sombra
+  das sobrancelhas descendo para dentro, o focinho claro e forte, o nariz escuro, uma faixa clara, a boca fechada numa
+  linha e o queixo; a cabeça larga como na referência, e embaixo o pescoço que recua para o corpo fora do quadro (os
+  ombros de pelo da referência saíram). Na bancada: as orelhas quadradas ficaram redondas, e o nariz colado na boca, que
+  parecia boca aberta, ganhou a faixa clara entre os dois.
+- **Falcão t** (`falcao-t`; plumagem, máscara, peito, bico, olho e a guia oculta): de perfil para a esquerda, o bico curto
+  cinza-azulado com o gancho escuro, a cera amarela, o anel amarelo à esquerda e embaixo do olho, a máscara escura que
+  envolve o olho e segue para a nuca (sem descer pela bochecha), o alto da cabeça claro, o queixo e a garganta creme, o
+  peito com poucas pintas, a nuca e a asa em cinza-azulado com a mancha clara. Na bancada, o amarelo dos dois lados do
+  olho lia como óculos: o anel ficou só à esquerda e embaixo.
+- **Processo:** a referência reduzida a 16×16 por média (`guias/<id>-guia-16.png`) para medir onde cai cada parte, e a
+  grade redesenhada à mão (`auxiliares/grades.py`: `URSO_T`, `FALCAO_T`, com letras próprias para não mudar as cores das
+  propostas anteriores). As fontes pelo MCP (`pintar.lua`, 0 diferentes na releitura; a guia por `Image{fromFile=...}`,
+  oculta); o composto do editor com os mesmos pixels opacos das camadas visíveis (196 e 177); a exportação conferida
+  (igual à grade, @2x exato; o 2× e o 3× por vizinho mais próximo voltam ao 16). Fotos a 1920×945 com os mesmos dados
+  (`ANIMAIS=urso,falcao SO=t node auxiliares/fotografar.mjs ...`, o modo `t`), sem erro nem aviso no console.
+- **A folha:** `transposicao.png` (`python auxiliares/prancha.py t`): a referência, a guia, A anterior × t (1×, a carta,
+  a 12×), a carta aliada e o painel da comitiva (tamanho real, 2× e a caixa a 3×) e a fileira com os retratos aprovados.
+
+**Avaliação (a minha leitura a 32 px; quem aprova é o Jean):**
+
+- **Urso t:** a expressão severa passa para a carta (as órbitas fundas e a testa franzida), e o urso fica mais selvagem
+  que o A, que era um ursinho. A boca fechada e o focinho forte leem; as orelhas são pequenas a 2×. Sem pixel solto.
+  Limite: a cabeça enche o quadro de lado a lado, como na referência, e o pescoço quase não aparece; o nariz grande puxa
+  a atenção.
+- **Falcão t:** a cabeça e o bico de gancho leem melhor que no A, e a máscara indo para a nuca dá o olhar atento; o
+  queixo e a garganta ficam limpos. Limite: a 2× o anel amarelo e a cera ficam a um pixel um do outro (o olho depende
+  do ponto preto entre eles), e as pintas do peito são poucas.

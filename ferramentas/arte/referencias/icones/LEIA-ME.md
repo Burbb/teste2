@@ -32,3 +32,11 @@ mecha pequena de alga sobre a testa, as algas pendentes em grupos com vãos e o 
 células de ~38 px), não uma grade nativa: a transposição para 16×16 está em
 `ferramentas/prototipos/hud/criaturas/afogado_ilse/` (`ilse-r3`). A figura da cena (`telas/cenas.js`, `ilseDesenho`)
 continua a referência de identidade e de paleta.
+
+**`Retrato pixelado de urso pardo severo-1.png`** e **`Falcão-peregrino com máscara ocular em pixel art-2.png`**
+(1254×1254 cada, 21/10/2026): **as referências principais dos retratos do Urso Pardo e do Falcão Peregrino**, os
+animais do patrulheiro. São imagens geradas na conversa com o Jean e deixadas aqui por ele; não têm outra origem ou
+autoria informada. O urso: de frente, os olhos pequenos e fundos, a sombra das órbitas, o focinho forte, a boca fechada,
+as orelhas redondas. O falcão: de perfil para a esquerda, o bico curto com o gancho, o olhar atento, a máscara escura em
+volta do olho seguindo para a nuca, o queixo e a garganta claros. Ampliadas, não grades nativas: a transposição para
+16×16 está em `ferramentas/prototipos/hud/criaturas/animais/` (`urso-t`, `falcao-t`).

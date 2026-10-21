@@ -5481,3 +5481,13 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   painel; a figura do acampamento fica fora) e a avaliação no `LEIA-ME.md` da pasta. Minha preferência: o Urso A, o
   Falcão A e o Lobo reaproveitado.
 - **Continua:** nada aprovado; a versão continua 1.163.0. O `fera` e o `voador` iguais.
+
+### 21/10/2026 (data do computador local) — Os animais do patrulheiro: a transposição das referências (proposta)
+
+- **Pedido de Jean:** um candidato de Urso e um de Falcão transpostos das duas imagens geradas que ele deixou em
+  `ferramentas/arte/referencias/icones/`, pelo processo da Ilse; o Lobo Cinzento intacto.
+- **Feito:** `urso-t` e `falcao-t` em `ferramentas/prototipos/hud/criaturas/animais/` (a guia oculta nas fontes),
+  fontes pelo MCP, exportação conferida; a folha `transposicao.png` (a referência, A anterior × t na carta aliada e
+  no painel a 1920×945, a 3×, a 12×, a fileira com os retratos aprovados). As referências registradas no `LEIA-ME.md`
+  de `referencias/icones/`.
+- **Continua:** nada aprovado; a versão continua 1.163.0.

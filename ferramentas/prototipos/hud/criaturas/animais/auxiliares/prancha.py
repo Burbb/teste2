@@ -128,7 +128,76 @@ def fileira():
     print("animais.png", out.size)
 
 
+REFS = {"urso": "Retrato pixelado de urso pardo severo-1.png", "falcao": "Falcão-peregrino com máscara ocular em pixel art-2.png"}
+
+
+def folha_transposicao():
+    """A transposição das duas referências geradas (transposicao.png): por animal, a referência, a proposta A anterior ×
+    a transposição (t) na carta aliada e no painel da comitiva a 1920×945 (tamanho real e 2×), a caixa a 3×, a 12× com a
+    guia; e a fileira com os retratos aprovados."""
+    f, f2 = ImageFont.truetype("arial.ttf", 15), ImageFont.truetype("arial.ttf", 12)
+    out = Image.new("RGBA", (1800, 2000), CARVAO)
+    d = ImageDraw.Draw(out)
+    d.text((20, 10), "Urso e Falcão: a transposição das referências geradas (t) × a proposta A anterior — 16×16 a 2× na carta "
+                     "aliada e no painel; proposta, nada no jogo", fill=TEXTO, font=f)
+    y = 44
+    for animal in ("urso", "falcao"):
+        a = ANIMAIS[animal]
+        ref = Image.open(RAIZ / "ferramentas/arte/referencias/icones" / REFS[animal]).convert("RGBA")
+        fundo = Image.new("RGBA", ref.size, CARVAO); fundo.alpha_composite(ref)
+        d.text((20, y), f"{a['titulo']}: a referência (reduzida, só para olhar) | a guia a 16 | A anterior × t: 1×, a carta "
+                        "(2×), a 12×", fill=TEXTO, font=f2)
+        out.alpha_composite(fundo.resize((192, 192), Image.LANCZOS), (20, y + 18))
+        guia = Image.open(PASTA / f"guias/{animal}-t-guia-16.png").convert("RGBA")
+        g = Image.new("RGBA", (192, 192), CARVAO); g.alpha_composite(amplia(guia, 12)); out.alpha_composite(g, (222, y + 18))
+        for j, ident in enumerate((f"{animal}-a", f"{animal}-t")):
+            x = 440 + j * 300
+            im = imagem(ident)
+            cx = Image.new("RGBA", (38, 38), (42, 36, 32, 255)); cx.paste((13, 11, 10, 255), (2, 2, 36, 36))
+            cx.alpha_composite(amplia(im, 2), (3, 3))
+            d.text((x, y + 18), "A anterior" if j == 0 else "t, a transposição", fill=TEXTO2, font=f2)
+            out.alpha_composite(im, (x, y + 36)); out.alpha_composite(cx, (x + 24, y + 36))
+            out.alpha_composite(grade12(im), (x + 70, y + 36))
+        y += 18 + 192 + 26
+        nic_c, nic_p = caixa_dif(animal, "palco", CARTA, "a"), caixa_dif(animal, "pagina", PAINEL, "a")
+        for j, (modo, rot) in enumerate((("atual", a["modos"][0][1]), ("a", "A anterior"), ("t", "t, a transposição"))):
+            x = 20 + j * 590
+            carta, painel = abre(f"{animal}-{modo}-palco.png").crop(CARTA), abre(f"{animal}-{modo}-pagina.png").crop(PAINEL)
+            d.text((x, y), f"{rot} — a carta aliada e o painel da comitiva (1920×945): tamanho real, 2× e a caixa a 3×",
+                   fill=TEXTO2, font=f2)
+            out.alpha_composite(carta, (x, y + 16)); out.alpha_composite(painel, (x + carta.width + 12, y + 16))
+            out.alpha_composite(amplia(carta, 2), (x, y + 16 + 62))
+            out.alpha_composite(amplia(abre(f"{animal}-{modo}-palco.png").crop(nic_c), 3), (x, y + 16 + 62 + 112))
+            out.alpha_composite(amplia(abre(f"{animal}-{modo}-pagina.png").crop(nic_p), 3), (x + 124, y + 16 + 62 + 112))
+        y += 16 + 62 + 112 + 114 + 24
+    # a fileira com os retratos aprovados
+    ali = Image.open(PASTA.parent / "capturas/aliados-palco.png").convert("RGBA")
+    luta = abre("lobo-atual-palco.png")
+    caixas = [("Morel", ali.crop((46, 176, 84, 214))), ("Odette", ali.crop((46, 234, 84, 272))),
+              ("o herói", luta.crop((46, 54, 84, 92))), ("Lobo (inimigo)", luta.crop((836, 45, 874, 83))),
+              ("Bandido (inimigo)", luta.crop((836, 103, 874, 141))),
+              ("Lobo Cinzento (fera)", luta.crop(caixa_dif("lobo", "palco", CARTA, "reaproveitado")))] + \
+        [(f"{ANIMAIS[an]['titulo'].split()[0]}: t", abre(f"{an}-t-palco.png").crop(caixa_dif(an, "palco", CARTA, "a")))
+         for an in ("urso", "falcao")]
+    d.text((20, y), "a fileira, na caixa da carta, com os retratos aprovados — tamanho real e 3×", fill=TEXTO, font=f2)
+    y += 20
+    for j, (rot, cx) in enumerate(caixas):
+        out.alpha_composite(cx, (20 + j * 46, y))
+    y += 50
+    for j, (rot, cx) in enumerate(caixas):
+        out.alpha_composite(amplia(cx, 3), (20 + j * 136, y))
+        d.text((20 + j * 136, y + 118), rot, fill=TEXTO2, font=f2)
+    y += 3 * 38 + 36
+    out = out.crop((0, 0, 1800, y))
+    out.save(PASTA / "transposicao.png")
+    print("transposicao.png", out.size)
+
+
 if __name__ == "__main__":
-    for animal in ANIMAIS:
-        folha(animal)
-    fileira()
+    import sys
+    if sys.argv[1:] == ["t"]:
+        folha_transposicao()
+    else:
+        for animal in ANIMAIS:
+            folha(animal)
+        fileira()

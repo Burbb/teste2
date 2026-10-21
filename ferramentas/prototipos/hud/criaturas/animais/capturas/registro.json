@@ -70,5 +70,23 @@
    "carta: Jean: data:image/png;base64,iVBORw0KGgoAAAANSU 32/32",
    "carta: Lobo Cinzento: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16"
   ]
+ },
+ "urso/t": {
+  "erros": [],
+  "avisos": [],
+  "cartas": [
+   "painel: 72/72: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "carta: Jean: data:image/png;base64,iVBORw0KGgoAAAANSU 32/32",
+   "carta: Urso Pardo: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16"
+  ]
+ },
+ "falcao/t": {
+  "erros": [],
+  "avisos": [],
+  "cartas": [
+   "painel: 26/26: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "carta: Jean: data:image/png;base64,iVBORw0KGgoAAAANSU 32/32",
+   "carta: Falcão Peregrino: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16"
+  ]
  }
 }
