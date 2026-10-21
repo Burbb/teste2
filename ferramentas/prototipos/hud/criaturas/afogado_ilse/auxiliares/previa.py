@@ -30,7 +30,7 @@ def amplia(im, z):
 
 if __name__ == "__main__":
     f = ImageFont.truetype("arial.ttf", 13)
-    out = Image.new("RGBA", (900, 520), CARVAO)
+    out = Image.new("RGBA", (1000, 520), CARVAO)
     d = ImageDraw.Draw(out)
     ali = Image.open(CRIATURAS / "capturas/aliados-palco.png").convert("RGBA")
     odette = ali.crop((55, 252, 93, 290))
@@ -40,10 +40,11 @@ if __name__ == "__main__":
         x = 80 + j * 60
         d.rectangle([x, 34, x + 35, 69], fill=CAIXA, outline=BORDA, width=2)
         out.alpha_composite(amplia(imagem(ident), 2), (x + 2, 36))
-    d.text((220, 34), "1×:", fill=(140, 140, 148, 255), font=f)
+    x0 = 100 + len(gr.CAMADAS) * 60
+    d.text((x0, 34), "1×:", fill=(140, 140, 148, 255), font=f)
     for j, ident in enumerate(gr.CAMADAS):
-        out.alpha_composite(imagem(ident), (250 + j * 24, 36))
-        out.alpha_composite(amplia(imagem(ident), 3), (320 + j * 60, 24))
+        out.alpha_composite(imagem(ident), (x0 + 30 + j * 24, 36))
+        out.alpha_composite(amplia(imagem(ident), 3), (x0 + 60 + len(gr.CAMADAS) * 24 + j * 60, 24))
     y = 100
     for j, ident in enumerate(gr.CAMADAS):
         g = amplia(imagem(ident), 12)

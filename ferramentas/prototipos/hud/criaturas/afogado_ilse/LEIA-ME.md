@@ -52,3 +52,40 @@ recomendados no levantamento, `../LEIA-ME.md`). Só no protótipo: nada integrad
 - **Para a integração,** quando houver aprovação: dar ao retrato um papel pela espécie e pelo chefe (a carta pede o
   retrato pela família, `afogado`, e pela chave da Ilse), sem mudar os traços nem as regras, como foi o `ESTADO` dos
   estados.
+
+## Segunda rodada: a Ilse com fios de alga e o Afogado B (proposta, 21/10/2026)
+
+**Pedido de Jean:** refinar a Ilse, usando a arte da cena como referência principal: mais volume de algas, "fios de
+cabelo jogados avulsos mas juntos", não um maço único, com cabelo na frente do rosto; o rosto azulado, o olho claro e
+a mecha sobre o outro olho; vãos e diferenças de tom separando os fios do rosto e dos ombros (nada de capuz); legível
+na caixa escura sem só clarear. E uma alternativa do Afogado, preservando a atual, que lia como uma "carinha surpresa"
+(cabeça redonda, olhos quadrados, boca central): um morto humano da água, com testa, bochechas e mandíbula, inchaço,
+decomposição e alguma assimetria, sem três buracos regulares. As primeiras (`ilse`, `afogado`) ficaram intactas.
+
+- **Ilse ajustada** (`ilse-r2`; camadas vestido, rosto, algas): os fios de alga traçados um a um (de 1 px, em cinco
+  tons, da alga iluminada `#4f6e47` à quase preta), repartidos no alto da cabeça e caindo em grupos de dois ou três,
+  com o fundo da carta aparecendo entre os grupos; um fio claro solto descendo pela frente da face esquerda, a mecha
+  da direita em dois fios escuros juntos sobre o olho, que se abrem embaixo; os fios de trás, mais escuros, até a base
+  do quadro, por fora dos ombros. Na bancada ficaram três tentativas: as massas largas de alga (lia como capuz, de
+  novo), uma trama de fios em diagonal (lia como rede) e os fios convergindo para o rosto (o rosto sumia).
+- **Afogado B** (`afogado-b`; camadas roupa, pele, rosto, algas): a cabeça mais larga embaixo do que em cima (as
+  bochechas e a papada inchadas), a testa com a sombra pesada das sobrancelhas, um olho turvo e claro de um lado e a
+  pálpebra inchada quase fechada do outro, uma mancha escura na bochecha direita, a narina, a boca frouxa e torta,
+  caída para baixo, com o lábio de baixo; a pele e a roupa podre da primeira.
+- **Processo:** as grades em `auxiliares/grades.py` (`ILSE_R2`, `AFOGADO_B`; a Ilse montada à mão a partir dos fios,
+  de trás para a frente); as fontes no editor pelo MCP (`pintar.lua`, 0 diferentes na releitura) em `fontes/ilse-r2/`
+  e `fontes/afogado-b/`; a exportação conferida (`auxiliares/exportar.py`: igual à grade, @2x exato). Fotos a
+  1920×945 com os mesmos dados (`auxiliares/fotografar.mjs`, o modo `r2`), sem erro nem aviso no console.
+- **A folha:** `afogado-ilse-r2.png` (`python auxiliares/prancha.py r2`): a Ilse da cena a 3× ao lado das duas Ilses
+  (1×, a carta a 2×, a caixa a 3× e a 6×); os dois Afogados do mesmo jeito; as quatro cabeças na caixa da comitiva, ao
+  lado do Morel e da Odette, em tamanho real e a 3×; a luta, o Bestiário e a carta da Ilse na luta do fundo da capela.
+
+**Avaliação (a minha leitura em tamanho real; quem aprova é o Jean):**
+
+- **A Ilse ajustada** tem mais volume e mais verde que a primeira, e o cabelo agora tem desenho próprio: na carta, a
+  2×, lê como cabelo molhado e solto em volta de um rosto pálido, e a mecha escura continua no olho certo. O custo: o
+  rosto ficou mais estreito (os fios na frente dele tomam um pixel de cada lado) e a silhueta sobe em ponta no alto da
+  cabeça. A 1× os fios viram uma textura; a leitura é a da carta.
+- **O Afogado B** deixou de ser a carinha surpresa: a cabeça larga e mole, o olho turvo e o outro inchado tiram a
+  simetria, e na luta, ao lado do esqueleto, continua separado da caveira. O risco é a boca torta ler como um sorriso
+  bobo a 2×; se for o caso, o próximo passo é fechar mais a boca (uma fenda caída) em vez de abrir.

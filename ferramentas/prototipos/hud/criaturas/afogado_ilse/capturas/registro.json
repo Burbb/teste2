@@ -21,6 +21,17 @@
    "Sanguessuga gigante: data:image/png;base64,iVBORw0K"
   ]
  },
+ "afogado-luta/r2": {
+  "erros": [],
+  "avisos": [],
+  "cartas": [
+   "Jean: data:image/png;base64,iVBORw0K",
+   "Afogado: data:image/png;base64,iVBORw0K",
+   "Afogado: data:image/png;base64,iVBORw0K",
+   "Esqueleto: data:image/png;base64,iVBORw0K",
+   "Sanguessuga gigante: data:image/png;base64,iVBORw0K"
+  ]
+ },
  "afogado-bestiario/atual": {
   "erros": [],
   "avisos": [],
@@ -41,6 +52,16 @@
    "Sanguessuga gigante: data:image/png;base64,iVBORw0K"
   ]
  },
+ "afogado-bestiario/r2": {
+  "erros": [],
+  "avisos": [],
+  "cartas": [
+   "Afogado: data:image/png;base64,iVBORw0K",
+   "Aranha gigante: data:image/png;base64,iVBORw0K",
+   "Esqueleto: data:image/png;base64,iVBORw0K",
+   "Sanguessuga gigante: data:image/png;base64,iVBORw0K"
+  ]
+ },
  "ilse-luta/atual": {
   "erros": [],
   "avisos": [],
@@ -50,6 +71,14 @@
   ]
  },
  "ilse-luta/proposta": {
+  "erros": [],
+  "avisos": [],
+  "cartas": [
+   "Jean: data:image/png;base64,iVBORw0K",
+   "Ilse, a Bruxa Afogada: data:image/png;base64,iVBORw0K"
+  ]
+ },
+ "ilse-luta/r2": {
   "erros": [],
   "avisos": [],
   "cartas": [

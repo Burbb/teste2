@@ -5401,3 +5401,13 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   Morel e da Odette. A avaliação no `LEIA-ME.md` da pasta.
 - **Continua:** nada aprovado; a versão continua 1.161.0. A integração vai pedir um papel do retrato pela espécie e
   pelo chefe (sem mexer nos traços).
+
+### 21/10/2026 (data do computador local) — Criaturas, segunda rodada: a Ilse com fios de alga e o Afogado B (proposta)
+
+- **Pedido de Jean:** refinar a Ilse (mais volume de algas, com fios soltos mas juntos, não um maço, e fios na frente
+  do rosto) e fazer uma alternativa do Afogado (o atual lia como "carinha surpresa": testa, bochechas, mandíbula,
+  inchaço e assimetria), preservando a primeira proposta. Só no protótipo.
+- **Feito:** `ilse-r2` e `afogado-b` ao lado das primeiras (`ilse`, `afogado`, intactas), fontes pelo MCP, exportação
+  conferida; a folha `ferramentas/prototipos/hud/criaturas/afogado_ilse/afogado-ilse-r2.png` (a Ilse da cena, as
+  cartas a 2× e a caixa a 3× ao lado do Morel e da Odette, a luta e o Bestiário a 1920×945). A avaliação no `LEIA-ME.md`.
+- **Continua:** nada aprovado; a versão continua 1.161.0. Mapeamentos, regras, arte de cena e produção intactos.

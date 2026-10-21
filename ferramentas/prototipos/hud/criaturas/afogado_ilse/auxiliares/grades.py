@@ -27,6 +27,10 @@ CORES = {
     "S": "a0b8c2", "s": "7d98a6", "z": "55707e", "W": "c4d4da",
     "H": "3d5a40", "h": "2c4130", "g": "1c2b1f", "G": "0d160f",
     "V": "3a3430", "v": "25211e",
+    # os fios de alga da Ilse R2: o fio iluminado um pouco mais verde, sem subir muito o brilho
+    "I": "4f6e47",
+    # o Afogado B: a pele manchada e a carne mais escura do inchaço
+    "M": "5f6f55", "n": "2a332b",
 }
 
 AFOGADO = [
@@ -66,11 +70,54 @@ ILSE = [
     "h.hVVVVVVVvvvvvg",
 ]
 
+# A segunda rodada (21/10/2026, pedido do Jean): a Ilse com fios de alga soltos (traçados um a um, de trás para a
+# frente) e o Afogado com outra construção do rosto
+ILSE_R2 = [
+    "................",
+    ".....hHIhGh.....",
+    "....hIIhGGGh....",
+    "...hHISSSGG.hH..",
+    "..ghHISSSGG.hH..",
+    "..ghHISWSGG.hHg.",
+    ".gh.HISSsGG.h.H.",
+    ".ghH..ISGszGh.Hg",
+    ".ghH..ISsszGh.Hg",
+    ".ghH.I.Ssz.G.hHg",
+    "g.hH.I..sz.G.hHg",
+    "gh.HVVV.sz.VVhHg",
+    "ghHVVVVVssVVVhvg",
+    "ghVVVVVVVVVvvhvg",
+    "gVVVVVVVVVvvvvvg",
+    "VVVVVVVVVvvvvvvv",
+]
+AFOGADO_B = [
+    "................",
+    ".....baAAa......",
+    "....aPPPPPpa....",
+    "...aPPPPPPppa...",
+    "...PPPPPPPppob..",
+    "..aPnnPPpnnpob..",
+    "..aPnEnPpneopob.",
+    "..PPPnPPpppMoob.",
+    ".aPPPPPPoppMooo.",
+    ".bPPPPpppppoooO.",
+    "..PPPpnmmmnpoOO.",
+    "..aPppmmmmpoOOb.",
+    "...poppnnpoOO...",
+    ".RRRooooooORRR..",
+    "RRRrRRoooRRrrRrq",
+    "RRrrrRRRORRrrrqq",
+]
+
 CAMADAS = {
     "afogado": (AFOGADO, ["roupa", "pele", "olhos", "algas"],
                 lambda x, y, ch: "roupa" if ch in "Rrq" else "olhos" if ch in "eEm" else "algas" if ch in "Aab" else "pele"),
     "ilse": (ILSE, ["vestido", "rosto", "cabelo"],
              lambda x, y, ch: "vestido" if ch in "Vv" else "rosto" if ch in "SsW" or (ch == "z" and y >= 4) else "cabelo"),
+    "ilse-r2": (ILSE_R2, ["vestido", "rosto", "algas"],
+                lambda x, y, ch: "vestido" if ch in "Vv" else "rosto" if ch in "SsWz" else "algas"),
+    "afogado-b": (AFOGADO_B, ["roupa", "pele", "rosto", "algas"],
+                  lambda x, y, ch: "roupa" if ch in "Rrq" else "rosto" if ch in "eEmn" else "algas" if ch in "Aab" else "pele"),
 }
 
 

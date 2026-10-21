@@ -893,6 +893,8 @@ A escolha fica com o Jean.
 **Primeiro par escolhido pelo Jean (21/10/2026): o Afogado e a carta da Ilse** (proposta, nada no jogo), em
 `ferramentas/prototipos/hud/criaturas/afogado_ilse/`: cabeças de 16×16 no formato dos retratos de carta aprovados,
 fontes pelo MCP, a folha `afogado-ilse.png` com as cartas na luta a 1920×945, o Bestiário e a Ilse com a cena dela.
+Segunda rodada (21/10/2026, proposta): a Ilse com fios de alga soltos e na frente do rosto (`ilse-r2`) e o Afogado B,
+com outra construção do rosto (`afogado-b`); as primeiras preservadas; a folha `afogado-ilse-r2.png`.
 
 O atalho **Mapa** da doca já foi concluído; esta frente trata dos símbolos internos de caminhos e mapas.
 Não afirmar que só restam talentos e habilidades após este bloco sem conferir os consumíveis, variantes e

@@ -13,7 +13,9 @@ const PY = process.env.PYTHON || (process.platform === "win32" ? "python" : "pyt
 const espera = (ms) => new Promise((r) => setTimeout(r, ms));
 const aqui = path.join(raiz, "ferramentas/prototipos/hud/criaturas/afogado_ilse/proposta");
 const dados = (id) => "data:image/png;base64," + readFileSync(path.join(aqui, `${id}-16.png`)).toString("base64");
-const TROCA = [["^Afogado", dados("afogado")], ["Bruxa Afogada|^Ilse", dados("ilse")]];
+// a segunda rodada (r2): a Ilse com os fios de alga soltos e o Afogado B, com outra construção do rosto
+const TROCAS = { proposta: [["^Afogado", dados("afogado")], ["Bruxa Afogada|^Ilse", dados("ilse")]],
+  r2: [["^Afogado", dados("afogado-b")], ["Bruxa Afogada|^Ilse", dados("ilse-r2")]] };
 const SITUACOES = [
   { nome: "afogado-luta", cenario: "tutorial", amb: { TUTORIAL: "0", CLASSE: "guerreiro", NIVEL_LUTA: "2", GRUPO: "afogado:2,esqueleto:1,sanguessuga:1" },
     espera: '.carta[data-uid="j"]', fotos: [["#palco", "palco"]] },
@@ -28,7 +30,7 @@ mkdirSync(saida, { recursive: true });
 const b = await chromium.launch();
 const registro = {};
 for (const sit of SITUACOES) {
-  for (const modo of ["atual", "proposta"]) {
+  for (const modo of ["atual", "proposta", "r2"]) {
     const proc = spawn(PY, ["-m", "tests.navegador.cenarios", sit.cenario], { cwd: raiz,
       env: { ...process.env, PYTHONPATH: raiz, PYTHONIOENCODING: "utf-8", VELOCIDADE: "rapido", PERIODO: "0", ...sit.amb } });
     let url = null; proc.stdout.on("data", (d) => { const m = String(d).match(/http:\S+/); if (m) url = m[0]; });
@@ -40,7 +42,7 @@ for (const sit of SITUACOES) {
       p.on("console", (m) => { if (m.type() === "error" || m.type() === "warning") avisos.push(m.text()); });
       await p.goto(url);
       await espera(2500);
-      if (modo === "proposta") await p.evaluate((troca) => {
+      if (TROCAS[modo]) await p.evaluate((troca) => {
         const aplica = () => {
           for (const [padrao, src] of troca) {
             const re = new RegExp(padrao);
@@ -56,7 +58,7 @@ for (const sit of SITUACOES) {
           }
         };
         aplica(); new MutationObserver(aplica).observe(document.body, { subtree: true, childList: true, characterData: true });
-      }, TROCA);
+      }, TROCAS[modo]);
       for (const passo of sit.passos || []) {
         if (passo.tecla) await p.keyboard.press(passo.tecla);
         if (passo.clicar) {   // o texto pode vir depois de "Continuar": clica no que aparecer primeiro
