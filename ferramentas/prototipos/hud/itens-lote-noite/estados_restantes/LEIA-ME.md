@@ -371,3 +371,16 @@ com o sprite atual, as opções preservadas e as novas); e a fileira dos 12 inte
 Atordoado B (a ampulheta) é o conceito mais claro e mais distinto, com o A (as estrelas) logo atrás; Barreira B (a
 parede parando a flecha) é a que melhor diz "absorve dano". Veneno: a serpente, não a gota. Frágeis: Iniciativa C,
 Atordoado C e Barreira C.
+
+## A integração da 1.160.0: Veneno, Atordoado e Barreira
+
+**Decisão de Jean (21/10/2026):** a gota verde sem a poça (`estado-veneno-gota2`), as três estrelinhas
+(`estado-atordoado-estrelas`, estática) e o golpe na película (`estado-barreira-impacto`), sem retoques. As fontes
+foram copiadas sem mudança, com o nome do estado, para `ferramentas/arte/aseprite/estado-<id>/`; o exportador grava os
+PNGs idênticos, byte a byte, aos de `proposta/`. Atenção aos nomes: no protótipo, `proposta/estado-veneno-16.png`
+continua sendo a serpente, e `estado-atordoado-16.png` e `estado-barreira-16.png` continuam sendo a espiral e a figura
+na bolha (candidatos antigos); no jogo, os arquivos com esses nomes são os aprovados. Conferido no jogo a 1920×945
+(`MODOS=atual`, as situações `integracao-1.160.0`; as fotos em `capturas/integracao-1.160.0/`): os chips no herói e nos
+lobos, a Barreira sozinha e ao lado do Em guarda, e os selos de chegada da Flecha Envenenada (Veneno ▼), da Prisão de
+Gelo (Atordoado ▼, o congelado) e da Barreira Arcana (▲). Sem erro nem aviso no console. A cúpula e a parede da
+Barreira ficam como alternativas não escolhidas. Folha: `integracao-1.160.0.png`.

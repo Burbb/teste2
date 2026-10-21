@@ -5342,3 +5342,15 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   em avaliação; a avaliação no `LEIA-ME.md` de `estados_restantes/`.
 - **Continua:** nada destes aprovado; Provocando pendente, sem mudança; a versão continua 1.159.0. Inimigos, pets e
   outras etapas não começados.
+
+### 21/10/2026 (data do computador local) — Veneno, Atordoado e Barreira no jogo (1.160.0)
+
+- **Decisão de Jean:** integrar sem retoques, da terceira rodada, a gota verde sem a poça (Veneno), as três
+  estrelinhas estáticas (Atordoado) e o golpe na película (Barreira); a cúpula e a parede da Barreira ficam guardadas
+  como não escolhidas.
+- **Feito:** as fontes em `ferramentas/arte/aseprite/estado-<id>/` (veneno, atordoado, barreira), os PNGs de 16 e @2x
+  idênticos byte a byte aos aprovados (`todas --conferir`: tudo igual); o papel `ESTADO` em `icones.js`; os sprites
+  `gota_verde`, `estrela` e `escudo_azul` nos outros usos. Conferido no jogo a 1920×945 com os arquivos de produção:
+  os chips (a Barreira também ao lado do Em guarda) e os três selos de chegada (Flecha Envenenada, Prisão de Gelo,
+  Barreira Arcana). Folha: `estados_restantes/integracao-1.160.0.png`.
+- **Continua:** Iniciativa (A e B finalistas) e Provocando (o acabamento do busto, no protótipo) em avaliação.

@@ -1,0 +1,105 @@
+{
+ "chip-heroi-veneno/atual": {
+  "estados": [
+   "j:veneno",
+   "j:sangramento"
+  ],
+  "imagens": [
+   "veneno 16px → 17.9px /static/hud/icones/estado-veneno-16.png",
+   "sangramento 16px → 17.9px /static/hud/icones/estado-sangramento-16.png"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "chip-inimigo-veneno/atual": {
+  "estados": [
+   "c1-1:veneno",
+   "c1-2:veneno"
+  ],
+  "imagens": [
+   "veneno 16px → 16.0px /static/hud/icones/estado-veneno-16.png"
+  ],
+  "cartas": [
+   "c1-1",
+   "c1-2"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "chip-inimigo-atordoado/atual": {
+  "estados": [
+   "c1-1:atordoado",
+   "c1-1:enfraquecido",
+   "c1-2:atordoado",
+   "c1-2:enfraquecido"
+  ],
+  "imagens": [
+   "atordoado 16px → 16.0px /static/hud/icones/estado-atordoado-16.png",
+   "enfraquecido 16px → 16.0px /static/hud/icones/estado-enfraquecido-16.png"
+  ],
+  "cartas": [
+   "c1-1",
+   "c1-2"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "chip-heroi-barreira/atual": {
+  "estados": [
+   "j:barreira"
+  ],
+  "imagens": [
+   "barreira 16px → 17.9px /static/hud/icones/estado-barreira-16.png"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "chip-heroi-barreira-guarda/atual": {
+  "estados": [
+   "j:barreira",
+   "j:guarda"
+  ],
+  "imagens": [
+   "barreira 16px → 17.9px /static/hud/icones/estado-barreira-16.png",
+   "guarda 16px → 17.9px /static/hud/icones/estado-guarda-16.png"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "selo-veneno/atual": {
+  "selo": [
+   "/static/hud/icones/estado-veneno-16.png"
+  ],
+  "dono": "c1-1",
+  "giro": [],
+  "erros": [],
+  "avisos": []
+ },
+ "selo-atordoado/atual": {
+  "selo": [
+   "/static/hud/icones/estado-atordoado-16.png"
+  ],
+  "dono": "c1-1",
+  "giro": [],
+  "erros": [],
+  "avisos": []
+ },
+ "selo-barreira/atual": {
+  "selo": [
+   "/static/hud/icones/estado-barreira-16.png"
+  ],
+  "dono": "j",
+  "giro": [],
+  "erros": [],
+  "avisos": []
+ }
+}

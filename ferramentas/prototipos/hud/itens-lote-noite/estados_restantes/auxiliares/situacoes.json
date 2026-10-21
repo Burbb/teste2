@@ -614,5 +614,134 @@
     "EFEITOS": "barreira:3:24,guarda:2:0.3"
    }
   }
+ ],
+ "integracao-1.160.0": [
+  {
+   "nome": "chip-heroi-veneno",
+   "cenario": "covil",
+   "estados": [
+    "veneno",
+    "sangramento"
+   ],
+   "amb": {
+    "CLASSE": "guerreiro",
+    "LUTA": "rato",
+    "NIVEL_LUTA": "2",
+    "QUANTOS": "2",
+    "VIDA": "40",
+    "EFEITOS": "veneno:3:2,sangramento:3:2"
+   }
+  },
+  {
+   "nome": "chip-inimigo-veneno",
+   "cenario": "covil",
+   "estados": [
+    "veneno"
+   ],
+   "amb": {
+    "CLASSE": "arqueiro",
+    "LUTA": "lobo",
+    "NIVEL_LUTA": "2",
+    "QUANTOS": "2",
+    "VIDA": "40",
+    "EFEITOS_INIMIGO": "veneno:3:4"
+   }
+  },
+  {
+   "nome": "chip-inimigo-atordoado",
+   "cenario": "covil",
+   "estados": [
+    "atordoado",
+    "enfraquecido"
+   ],
+   "amb": {
+    "CLASSE": "guerreiro",
+    "LUTA": "lobo",
+    "NIVEL_LUTA": "2",
+    "QUANTOS": "2",
+    "VIDA": "40",
+    "EFEITOS_INIMIGO": "atordoado:2,enfraquecido:2"
+   }
+  },
+  {
+   "nome": "chip-heroi-barreira",
+   "cenario": "covil",
+   "estados": [
+    "barreira"
+   ],
+   "amb": {
+    "CLASSE": "mago",
+    "LUTA": "lobo",
+    "NIVEL_LUTA": "2",
+    "QUANTOS": "2",
+    "VIDA": "40",
+    "EFEITOS": "barreira:3:24"
+   }
+  },
+  {
+   "nome": "chip-heroi-barreira-guarda",
+   "cenario": "covil",
+   "estados": [
+    "barreira",
+    "guarda"
+   ],
+   "amb": {
+    "CLASSE": "mago",
+    "LUTA": "lobo",
+    "NIVEL_LUTA": "2",
+    "QUANTOS": "2",
+    "VIDA": "40",
+    "EFEITOS": "barreira:3:24,guarda:2:0.3"
+   }
+  },
+  {
+   "nome": "selo-veneno",
+   "cenario": "covil",
+   "estados": [
+    "veneno"
+   ],
+   "habilidade": "flecha_envenenada",
+   "selo": true,
+   "carta": "c1-1",
+   "amb": {
+    "LUTA": "bandido",
+    "NIVEL_LUTA": "1",
+    "QUANTOS": "1",
+    "VIDA": "40",
+    "CLASSE": "arqueiro",
+    "HABILIDADES": "flecha_envenenada"
+   }
+  },
+  {
+   "nome": "selo-atordoado",
+   "cenario": "gelo",
+   "estados": [
+    "atordoado"
+   ],
+   "habilidade": "prisao_gelo|lanca_gelo",
+   "selo": true,
+   "carta": "inimigo",
+   "amb": {
+    "PRISAO": "prisao"
+   }
+  },
+  {
+   "nome": "selo-barreira",
+   "cenario": "covil",
+   "estados": [
+    "barreira"
+   ],
+   "habilidade": "barreira",
+   "selo": true,
+   "carta": "j",
+   "amb": {
+    "LUTA": "bandido",
+    "NIVEL_LUTA": "1",
+    "QUANTOS": "1",
+    "VIDA": "40",
+    "CLASSE": "mago",
+    "HABILIDADES": "barreira"
+   }
+  }
  ]
 }

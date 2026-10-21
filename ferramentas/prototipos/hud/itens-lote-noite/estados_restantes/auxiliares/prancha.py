@@ -25,7 +25,8 @@ def chip(out, d, im, x, y, borda=(60, 60, 66, 255)):
 
 NOVAS = ("gota", "r2")
 INTEGRADOS = ("sangramento", "maldito", "marcado", "furtivo", "furia",   # no jogo desde a 1.158.0
-              "queimadura", "fortalecido", "enfraquecido", "frenesi")   # desde a 1.159.0   # as alternativas da segunda rodada (21/10/2026): estado-<id>-gota, estado-<id>-r2
+              "queimadura", "fortalecido", "enfraquecido", "frenesi",   # desde a 1.159.0
+              "veneno", "atordoado", "barreira")   # desde a 1.160.0   # as alternativas da segunda rodada (21/10/2026): estado-<id>-gota, estado-<id>-r2
 
 
 def cartas(n, pre=""):
@@ -113,16 +114,24 @@ def folha_geral():
     integrados = [(t, final(k)) for k, t in FINAIS] + [(TITULO[k], final(k)) for k in INTEGRADOS]
     nao_escolhidas = [("Chamas", ["estado-queimadura"]), ("Fortalecido", ["estado-fortalecido", "estado-fortalecido-setinhas"]),
                       ("Enfraquecido", ["estado-enfraquecido", "estado-enfraquecido-setinhas", "estado-enfraquecido-partida"]),
-                      ("Frenesi", ["estado-frenesi-r2"]), ("Marcado", ["estado-marcado-mira"])]
-    avaliacao = [(TITULO[k], [(ident, rot) for ident, rot in RODADA3[k]]) for k in ("veneno", "iniciativa", "atordoado", "barreira")]
-    avaliacao.append(("Provocando", [("estado-provocando", "candidato (b17ab3dd)"), ("estado-provocando-r2", "figura e setas (rodada 2)")]))
-    out = Image.new("RGBA", (1700, 2200), CARVAO)
+                      ("Frenesi", ["estado-frenesi-r2"]), ("Marcado", ["estado-marcado-mira"]),
+                      ("Veneno", ["estado-veneno", "estado-veneno-gota", "estado-veneno-presas"]),
+                      ("Atordoado", ["estado-atordoado", "estado-atordoado-ampulheta", "estado-atordoado-elmo",
+                                     "estado-atordoado-orbita"]),
+                      ("Barreira", ["estado-barreira-cupula", "estado-barreira-parede", "estado-barreira-r2",
+                                    "estado-barreira"])]
+    avaliacao = [("Iniciativa", [("estado-iniciativa-cunha", "FINALISTA A: a barra larga"),
+                                 ("estado-iniciativa-estouro", "FINALISTA B: o estouro"),
+                                 ("estado-iniciativa", "exclamação com raios"), ("estado-iniciativa-italico", "C: inclinada")]),
+                 ("Provocando", [("estado-provocando", "original (b17ab3dd)"), ("estado-provocando-claro", "NOVA: a figura clara"),
+                                 ("estado-provocando-r2", "braços abertos (não usar)")])]
+    out = Image.new("RGBA", (1700, 2600), CARVAO)
     d = ImageDraw.Draw(out)
     d.text((20, 10), "Os 17 estados (terceira rodada, 21/10/2026). Chips no tamanho real, 2× e 4× (a 4× só para inspecionar).",
            fill=TEXTO, font=f)
     y = 44
     d.text((20, y), f"INTEGRADOS ({len(integrados)}, no jogo: Firme 1.155.0, Em guarda 1.156.0, Esquiva 1.157.0, "
-                    "cinco na 1.158.0, quatro na 1.159.0)", fill=TEXTO, font=f2)
+                    "cinco na 1.158.0, quatro na 1.159.0, três na 1.160.0)", fill=TEXTO, font=f2)
     y += 44
     for j, (t, im) in enumerate(integrados):
         x, yy = 20 + (j % 4) * 400, y + (j // 4) * 74
@@ -137,6 +146,8 @@ def folha_geral():
         d.text((20, y + 4), t, fill=TEXTO2, font=f2)
         for j, ident in enumerate(ids):
             im, x = proposta(ident), 160 + j * 300
+            if ident in ("estado-veneno", "estado-atordoado", "estado-barreira"):
+                ident = {"estado-veneno": "serpente", "estado-atordoado": "espiral", "estado-barreira": "figura na bolha"}[ident]
             chip(out, d, im, x, y)
             out.alpha_composite(amplia(im, 2), (x + 28, y - 6))
             d.text((x + 70, y + 4), ident.replace("estado-", ""), fill=TEXTO2, font=f2)
@@ -153,20 +164,21 @@ def folha_geral():
             chip(out, d, im, x, y)
             out.alpha_composite(amplia(im, 2), (x + 28, y - 6))
             out.alpha_composite(amplia(im, 4), (x + 68, y - 22))
-            d.text((x + 136, y + 4), rot[:24], fill=TEXTO if rot.startswith("NOVA") else TEXTO2, font=f2)
+            d.text((x + 136, y + 4), rot[:26], fill=TEXTO if rot.startswith(("NOVA", "FINALISTA")) else TEXTO2, font=f2)
         y += 80
     y += 10
-    d.text((20, y), "a fileira dos 12 integrados com cada nova opção no fim (tamanho real e 2×):", fill=TEXTO2, font=f2)
+    d.text((20, y), f"a fileira dos {len(integrados)} integrados com cada opção em avaliação no fim (tamanho real e 2×):",
+           fill=TEXTO2, font=f2)
     y += 22
-    for t, ops in avaliacao[:4]:
+    for t, ops in avaliacao:
         for ident, rot in ops:
-            if not rot.startswith("NOVA"):
+            if not rot.startswith(("NOVA", "FINALISTA", "original")):
                 continue
             fila = [im for _, im in integrados] + [proposta(ident)]
             for j, im in enumerate(fila):
                 chip(out, d, im, 20 + j * 24, y)
-                out.alpha_composite(amplia(im, 2), (360 + j * 36, y - 6))
-            d.text((360 + len(fila) * 36 + 10, y + 4), f"{t}: {rot}", fill=TEXTO2, font=f2)
+                out.alpha_composite(amplia(im, 2), (440 + j * 36, y - 6))
+            d.text((440 + len(fila) * 36 + 10, y + 4), f"{t}: {rot}", fill=TEXTO2, font=f2)
             y += 40
     out = out.crop((0, 0, 1700, y + 10))
     out.save(LOTE / "geral.png")
@@ -189,6 +201,14 @@ INTEGRACOES = {
                ("Fortalecido", "lote6/heroi-grito", "chip-heroi-fortalecido"), ("Enfraquecido", "lote3/inimigo-lobos", "chip-inimigo-enfraquecido"),
                ("Fortalecido, Fúria e Frenesi", "lote7/heroi-berserker", "chip-heroi-berserker")],
         selos=[("Chamas (Bola de Fogo)", "chamas"), ("Enfraquecido (Grito de Guerra, nos inimigos)", "enfraquecido")]),
+    "1.160.0": dict(
+        titulo="Veneno, Atordoado e Barreira", sem_selo="os três têm selo",
+        pares=[("Veneno (no herói)", "lote1/heroi-ratos", "chip-heroi-veneno"), ("Veneno (no lobo)", "lote1/inimigo-lobos", "chip-inimigo-veneno"),
+               ("Atordoado (no lobo)", "lote3/inimigo-lobos", "chip-inimigo-atordoado"),
+               ("Barreira", "lote5/heroi-barreira", "chip-heroi-barreira"),
+               ("Barreira ao lado do Em guarda", "rodada3-barreira/barreira-heroi-guarda", "chip-heroi-barreira-guarda")],
+        selos=[("Veneno (Flecha Envenenada)", "veneno"), ("Atordoado (Prisão de Gelo, congelado)", "atordoado"),
+               ("Barreira (Barreira Arcana)", "barreira")]),
 }
 
 RODADA3 = {   # a terceira rodada (21/10/2026): o estado, as opções (nome do arquivo, rótulo) e a pasta das fotos
@@ -200,13 +220,15 @@ RODADA3 = {   # a terceira rodada (21/10/2026): o estado, as opções (nome do a
                   ("estado-atordoado-ampulheta", "NOVA B: a ampulheta parada"), ("estado-atordoado-elmo", "NOVA C: o elmo rachado")],
     "barreira": [("estado-barreira-r2", "figura na bolha (rodada 2)"), ("estado-barreira-cupula", "NOVA A: a cúpula"),
                  ("estado-barreira-parede", "NOVA B: a parede que para a flecha"), ("estado-barreira-impacto", "NOVA C: o golpe na película")],
+    "provocando": [("estado-provocando", "original (b17ab3dd)"), ("estado-provocando-claro", "NOVA: o ajuste da figura")],
 }
 MODOS_RODADA3 = {"veneno": {"proposta": "serpente", "proposta-gota": "gota com a poça", "proposta-gota2": "NOVA: gota sem a poça"},
                  "iniciativa": {"proposta": "exclamação com raios", "proposta-cunha": "A", "proposta-estouro": "B",
                                 "proposta-italico": "C"},
                  "atordoado": {"proposta": "espiral", "proposta-estrelas": "A", "proposta-ampulheta": "B", "proposta-elmo": "C"},
                  "barreira": {"proposta": "figura na bolha (b17ab3dd)", "proposta-r2": "figura na bolha (r2)", "proposta-cupula": "A",
-                              "proposta-parede": "B", "proposta-impacto": "C"}}
+                              "proposta-parede": "B", "proposta-impacto": "C"},
+                 "provocando": {"proposta": "original (b17ab3dd)", "proposta-claro": "ajuste: a figura clara"}}
 
 
 def folha_estado(k):
