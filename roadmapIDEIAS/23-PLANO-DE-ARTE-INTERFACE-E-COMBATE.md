@@ -938,6 +938,10 @@ na carta aliada e no painel da comitiva; o Lobo Cinzento continua no `fera`.
 **No jogo desde a 1.165.0:** o Lobo Cinzento com o mesmo arquivo do Lobo inimigo (`retrato-lobo`), sem redesenho, pelo
 tipo do animal; o mesmo rosto é de propósito (o lado, o nome e a borda separam os papéis). **Os três animais do
 patrulheiro estão concluídos.** O `fera` das outras criaturas e a figura do acampamento continuam.
+**O par seguinte (21/10/2026, proposta): a Aranha Gigante e o Troll**, duas direções de cada em
+`ferramentas/prototipos/hud/criaturas/aranha_troll/` (a aranha de frente e de lado em ameaça; o troll de frente e de
+perfil com a corcunda), as folhas `aranha.png` e `troll.png`; o alcance previsto só nas famílias `aranha` e `troll` (a
+Rainha Aracnídea e o Rei Troll fora). Nada aprovado.
 
 O atalho **Mapa** da doca já foi concluído; esta frente trata dos símbolos internos de caminhos e mapas.
 Não afirmar que só restam talentos e habilidades após este bloco sem conferir os consumíveis, variantes e

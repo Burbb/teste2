@@ -5514,3 +5514,13 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   ROADMAP, o estado e a tabela.
 - **Agora:** 1E.3, as demais criaturas, os chefes e as invocações (o próximo par é decisão do Jean); depois 1E.4, os
   caminhos e os símbolos do mapa/minimapa; depois as etapas 2–9, com habilidades, talentos, Grimório e árvore na 8.
+
+### 21/10/2026 (data do computador local) — 1E.3: a Aranha Gigante e o Troll (proposta)
+
+- **Pedido de Jean:** duas direções de cada, só no protótipo; o Rei Troll fora.
+- **Feito:** em `ferramentas/prototipos/hud/criaturas/aranha_troll/`: `aranha-a` (de frente), `aranha-b` (de lado em
+  ameaça), `troll-a` (de frente) e `troll-b` (de perfil com a corcunda); fontes pelo MCP, exportação conferida (com o
+  32 e o 48 derivados); as folhas `aranha.png` e `troll.png` (a carta e o Bestiário a 1920×945 com os mesmos dados, a
+  fileira com os retratos aprovados, a 12×). O alcance previsto e a avaliação no `LEIA-ME.md` da pasta. Minha
+  preferência: a Aranha A e o Troll A.
+- **Continua:** nada aprovado; a versão continua 1.165.0.

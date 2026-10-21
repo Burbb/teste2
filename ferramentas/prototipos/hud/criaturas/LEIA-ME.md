@@ -119,6 +119,12 @@ A escolha do par e da direção é do Jean; nada foi começado.
 ## Em proposta
 
 
+## Em proposta
+
+- **A Aranha Gigante e o Troll** (`aranha_troll/`, 21/10/2026): duas propostas de cada (a aranha de frente e de lado
+  em ameaça; o troll de frente e de perfil com a corcunda), com o alcance previsto pelos dados (só as famílias `aranha`
+  e `troll`; a Rainha Aracnídea e o Rei Troll ficam fora). Nada integrado.
+
 ## Reservado
 
 - **O Bandido do chapéu** (`lobo_bandido/`, a segunda rodada): conceito guardado para um possível chefe futuro, fora
