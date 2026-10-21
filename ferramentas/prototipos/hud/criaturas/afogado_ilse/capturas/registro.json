@@ -85,5 +85,76 @@
    "Jean: data:image/png;base64,iVBORw0K",
    "Ilse, a Bruxa Afogada: data:image/png;base64,iVBORw0K"
   ]
+ },
+ "afogado-luta/r3-cabelo": {
+  "erros": [],
+  "avisos": [],
+  "cartas": [
+   "Jean: data:image/png;base64,iVBORw0K",
+   "Afogado: data:image/png;base64,iVBORw0K",
+   "Afogado: data:image/png;base64,iVBORw0K",
+   "Esqueleto: data:image/png;base64,iVBORw0K",
+   "Sanguessuga gigante: data:image/png;base64,iVBORw0K"
+  ]
+ },
+ "afogado-luta/r3-perfil": {
+  "erros": [],
+  "avisos": [],
+  "cartas": [
+   "Jean: data:image/png;base64,iVBORw0K",
+   "Afogado: data:image/png;base64,iVBORw0K",
+   "Afogado: data:image/png;base64,iVBORw0K",
+   "Esqueleto: data:image/png;base64,iVBORw0K",
+   "Sanguessuga gigante: data:image/png;base64,iVBORw0K"
+  ]
+ },
+ "afogado-luta/r3-cranio": {
+  "erros": [],
+  "avisos": [],
+  "cartas": [
+   "Jean: data:image/png;base64,iVBORw0K",
+   "Afogado: data:image/png;base64,iVBORw0K",
+   "Afogado: data:image/png;base64,iVBORw0K",
+   "Esqueleto: data:image/png;base64,iVBORw0K",
+   "Sanguessuga gigante: data:image/png;base64,iVBORw0K"
+  ]
+ },
+ "afogado-bestiario/r3-cabelo": {
+  "erros": [],
+  "avisos": [],
+  "cartas": [
+   "Afogado: data:image/png;base64,iVBORw0K",
+   "Aranha gigante: data:image/png;base64,iVBORw0K",
+   "Esqueleto: data:image/png;base64,iVBORw0K",
+   "Sanguessuga gigante: data:image/png;base64,iVBORw0K"
+  ]
+ },
+ "afogado-bestiario/r3-perfil": {
+  "erros": [],
+  "avisos": [],
+  "cartas": [
+   "Afogado: data:image/png;base64,iVBORw0K",
+   "Aranha gigante: data:image/png;base64,iVBORw0K",
+   "Esqueleto: data:image/png;base64,iVBORw0K",
+   "Sanguessuga gigante: data:image/png;base64,iVBORw0K"
+  ]
+ },
+ "afogado-bestiario/r3-cranio": {
+  "erros": [],
+  "avisos": [],
+  "cartas": [
+   "Afogado: data:image/png;base64,iVBORw0K",
+   "Aranha gigante: data:image/png;base64,iVBORw0K",
+   "Esqueleto: data:image/png;base64,iVBORw0K",
+   "Sanguessuga gigante: data:image/png;base64,iVBORw0K"
+  ]
+ },
+ "ilse-luta/r3-cabelo": {
+  "erros": [],
+  "avisos": [],
+  "cartas": [
+   "Jean: data:image/png;base64,iVBORw0K",
+   "Ilse, a Bruxa Afogada: data:image/png;base64,iVBORw0K"
+  ]
  }
 }

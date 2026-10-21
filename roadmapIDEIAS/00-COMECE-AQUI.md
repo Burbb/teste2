@@ -5411,3 +5411,16 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   conferida; a folha `ferramentas/prototipos/hud/criaturas/afogado_ilse/afogado-ilse-r2.png` (a Ilse da cena, as
   cartas a 2× e a caixa a 3× ao lado do Morel e da Odette, a luta e o Bestiário a 1920×945). A avaliação no `LEIA-ME.md`.
 - **Continua:** nada aprovado; a versão continua 1.161.0. Mapeamentos, regras, arte de cena e produção intactos.
+
+### 21/10/2026 (data do computador local) — Criaturas, terceira rodada: a Ilse transposta e três Afogados (proposta)
+
+- **Pedido de Jean:** transpor para 16×16 a imagem gerada na conversa que ele guardou em
+  `ferramentas/arte/referencias/icones/Retrato pixelado azul com algas soltas.png` (a cena continua a referência de
+  identidade e paleta) e fazer três Afogados livres, com construções diferentes, na linguagem da comitiva; as versões
+  anteriores ficam como histórico.
+- **Feito:** `ilse-r3` (com a referência reduzida numa camada guia oculta) e `afogado-cabelo`, `afogado-perfil`,
+  `afogado-cranio`, na escala da comitiva; fontes pelo MCP, exportação conferida; a folha
+  `ferramentas/prototipos/hud/criaturas/afogado_ilse/afogado-ilse-r3.png` (a referência, a cena e a transposta; os três
+  lado a lado; todos ao lado do Morel e da Odette; a luta, o Bestiário e a carta da Ilse a 1920×945). A avaliação no
+  `LEIA-ME.md` da pasta; a referência registrada no `LEIA-ME.md` de `referencias/icones/`.
+- **Continua:** nada aprovado; a versão continua 1.161.0. Mapeamentos, regras, arte de cena e produção intactos.

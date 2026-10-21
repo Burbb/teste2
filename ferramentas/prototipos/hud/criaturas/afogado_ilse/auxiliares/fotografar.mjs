@@ -3,9 +3,9 @@
 // tem papel por espécie ainda; o retrato sai do traço). Situações: o Afogado numa luta com um esqueleto e uma
 // sanguessuga (o cenário tutorial com GRUPO) e no Bestiário (covil com BESTIARIO); a Ilse na luta real do fundo da
 // capela (o cenário capela no ossuário: "Descer ao fundo alagado" e "Lutar para destruí-la").
-//   PLAYWRIGHT_MODULO=<file:// do index.mjs> node fotografar.mjs <raiz> <pasta das fotos>
+//   [MODOS=...] PLAYWRIGHT_MODULO=<file:// do index.mjs> node fotografar.mjs <raiz> <pasta das fotos>
 import { spawn } from "child_process";
-import { mkdirSync, readFileSync, writeFileSync } from "fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import path from "path";
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULO || "playwright");
 const [raiz, saida] = process.argv.slice(2);
@@ -16,6 +16,11 @@ const dados = (id) => "data:image/png;base64," + readFileSync(path.join(aqui, `$
 // a segunda rodada (r2): a Ilse com os fios de alga soltos e o Afogado B, com outra construção do rosto
 const TROCAS = { proposta: [["^Afogado", dados("afogado")], ["Bruxa Afogada|^Ilse", dados("ilse")]],
   r2: [["^Afogado", dados("afogado-b")], ["Bruxa Afogada|^Ilse", dados("ilse-r2")]] };
+// a terceira rodada: a Ilse transposta da referência gerada e os três Afogados livres
+for (const af of ["cabelo", "perfil", "cranio"])
+  TROCAS[`r3-${af}`] = [["^Afogado", dados(`afogado-${af}`)], ["Bruxa Afogada|^Ilse", dados("ilse-r3")]];
+// MODOS=atual,r3-perfil ... escolhe os modos (sem ele, os da primeira e da segunda rodada)
+const MODOS = (process.env.MODOS || "atual,proposta,r2").split(",");
 const SITUACOES = [
   { nome: "afogado-luta", cenario: "tutorial", amb: { TUTORIAL: "0", CLASSE: "guerreiro", NIVEL_LUTA: "2", GRUPO: "afogado:2,esqueleto:1,sanguessuga:1" },
     espera: '.carta[data-uid="j"]', fotos: [["#palco", "palco"]] },
@@ -28,9 +33,11 @@ const SITUACOES = [
 ];
 mkdirSync(saida, { recursive: true });
 const b = await chromium.launch();
-const registro = {};
+// o registro acumula: um modo fotografado de novo substitui só a entrada dele
+const arqRegistro = path.join(saida, "registro.json");
+const registro = existsSync(arqRegistro) ? JSON.parse(readFileSync(arqRegistro, "utf-8")) : {};
 for (const sit of SITUACOES) {
-  for (const modo of ["atual", "proposta", "r2"]) {
+  for (const modo of MODOS) {
     const proc = spawn(PY, ["-m", "tests.navegador.cenarios", sit.cenario], { cwd: raiz,
       env: { ...process.env, PYTHONPATH: raiz, PYTHONIOENCODING: "utf-8", VELOCIDADE: "rapido", PERIODO: "0", ...sit.amb } });
     let url = null; proc.stdout.on("data", (d) => { const m = String(d).match(/http:\S+/); if (m) url = m[0]; });
@@ -85,5 +92,5 @@ for (const sit of SITUACOES) {
   }
 }
 await b.close();
-writeFileSync(path.join(saida, "registro.json"), JSON.stringify(registro, null, 1));
-for (const [k, v] of Object.entries(registro)) console.log(k, v.cartas.length, "cartas", v.erros, v.avisos);
+writeFileSync(arqRegistro, JSON.stringify(registro, null, 1));
+for (const [k, v] of Object.entries(registro)) if (MODOS.includes(k.split("/")[1])) console.log(k, v.cartas.length, "cartas", v.erros, v.avisos);

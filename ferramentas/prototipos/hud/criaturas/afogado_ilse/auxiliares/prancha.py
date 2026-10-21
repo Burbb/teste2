@@ -6,6 +6,10 @@ A folha da segunda rodada (afogado-ilse-r2.png): a Ilse da primeira proposta × 
 junto da arte da cena; o Afogado da primeira proposta × a alternativa B; as duas na carta (a 2×) e na caixa a 3× (a do
 Bestiário e do mural), ao lado das cartas aprovadas da comitiva; a luta e o Bestiário a 1920×945, com os mesmos dados.
     python prancha.py r2
+A folha da terceira rodada (afogado-ilse-r3.png): a Ilse transposta junto da referência gerada e da figura da cena; os
+três Afogados livres lado a lado; todos na caixa da comitiva aprovada, em tamanho real e a 3×; a luta, o Bestiário e a
+carta da Ilse a 1920×945, com os mesmos dados; ampliações sem suavização.
+    python prancha.py r3
 """
 import pathlib
 import sys
@@ -97,7 +101,82 @@ def folha_r2():
     print("afogado-ilse-r2.png", out.size)
 
 
-if __name__ == "__main__" and sys.argv[1:] == ["r2"]:
+AFOGADOS_R3 = (("afogado-cabelo", "A, o do cabelo"), ("afogado-perfil", "B, o de perfil"), ("afogado-cranio", "C, o do crânio"))
+
+
+def grade12(im16):
+    g = amplia(im16, 12)
+    fundo = Image.new("RGBA", g.size, (24, 21, 19, 255))
+    fundo.alpha_composite(g)
+    dd = ImageDraw.Draw(fundo)
+    for i in range(1, 16):
+        dd.line([(i * 12, 0), (i * 12, 192)], fill=(40, 36, 34, 255)); dd.line([(0, i * 12), (192, i * 12)], fill=(40, 36, 34, 255))
+    return fundo
+
+
+def folha_r3():
+    f, f2 = ImageFont.truetype("arial.ttf", 15), ImageFont.truetype("arial.ttf", 12)
+    out = Image.new("RGBA", (1800, 3000), CARVAO)
+    d = ImageDraw.Draw(out)
+    d.text((20, 10), "Criaturas, terceira rodada: a Ilse transposta da referência gerada e três Afogados livres — "
+                     "proposta, nada no jogo", fill=TEXTO, font=f)
+    y = 44
+    # 1. a Ilse: a referência gerada (reduzida a 240 px, só para olhar), a figura da cena a 3× e a transposta
+    ref = Image.open(AQUI.parents[4] / "arte/referencias/icones/Retrato pixelado azul com algas soltas.png").convert("RGBA")
+    fundo_ref = Image.new("RGBA", ref.size, (13, 11, 10, 255)); fundo_ref.alpha_composite(ref)
+    fundo_ref = fundo_ref.resize((240, 240), Image.LANCZOS)
+    cena = Image.open(PASTA.parent / "capturas/capela-fundo-pagina.png").convert("RGBA").crop((930, 175, 1010, 275))
+    ilse = imagem("ilse-r3")
+    d.text((20, y), "a referência gerada (reduzida) | a Ilse da cena (3×) | a transposta: 1×, a carta (2×), a caixa a 3× e "
+                    "a 12×", fill=TEXTO, font=f2)
+    y += 20
+    out.alpha_composite(fundo_ref, (20, y)); out.alpha_composite(amplia(cena, 3), (280, y))
+    out.alpha_composite(ilse, (540, y)); out.alpha_composite(caixa(ilse, 1), (570, y))
+    out.alpha_composite(caixa(ilse, 3), (620, y)); out.alpha_composite(grade12(ilse), (760, y))
+    y += 300 + 16
+    # 2. os três Afogados lado a lado
+    d.text((20, y), "os três Afogados: 1×, a carta (2×), a caixa a 3× e a 12×", fill=TEXTO, font=f2)
+    y += 20
+    for j, (ident, rot) in enumerate(AFOGADOS_R3):
+        x = 20 + j * 420
+        im = imagem(ident)
+        d.text((x, y), rot, fill=TEXTO, font=f2)
+        out.alpha_composite(im, (x, y + 22)); out.alpha_composite(caixa(im, 1), (x + 24, y + 22))
+        out.alpha_composite(caixa(im, 3), (x + 70, y + 22)); out.alpha_composite(grade12(im), (x + 200, y + 22))
+    y += 22 + 192 + 20
+    # 3. na caixa da comitiva aprovada, tamanho real e 3×
+    ali = Image.open(PASTA.parent / "capturas/aliados-palco.png").convert("RGBA")
+    d.text((20, y), "na mesma caixa: Morel e Odette aprovados | Afogados A, B, C | Ilse transposta — tamanho real e 3×",
+           fill=TEXTO, font=f2)
+    y += 20
+    caixas = [ali.crop((46, 176, 84, 214)), ali.crop((46, 234, 84, 272))] +         [caixa(imagem(i), 1) for i, _ in AFOGADOS_R3] + [caixa(ilse, 1)]
+    for j, cx in enumerate(caixas):
+        out.alpha_composite(cx, (20 + j * 46, y))
+        out.alpha_composite(amplia(cx, 3), (360 + j * 124, y))
+    y += 3 * 38 + 24
+    # 4. a luta e o Bestiário a 1920×945 (os mesmos dados), tamanho real e 2×; a carta da Ilse na luta do fundo
+    for ident, rot in AFOGADOS_R3:
+        modo = "r3-" + ident.split("-")[1]
+        c = abre(f"afogado-luta-{modo}-palco.png").crop((600, 40, 1060, 210))
+        b = abre(f"afogado-bestiario-{modo}-pagina.png").crop((585, 248, 945, 404))
+        d.text((20, y), f"Afogado {rot}: a luta (tamanho real e 2×) e o Bestiário (tamanho real)", fill=TEXTO, font=f2)
+        out.alpha_composite(c, (20, y + 18)); out.alpha_composite(amplia(c, 2), (500, y + 18))
+        out.alpha_composite(b, (1430, y + 18))
+        y += 18 + 2 * c.height + 16
+    c = abre("ilse-luta-r3-cabelo-palco.png").crop((0, 0, 1088, 230))
+    carta = abre("ilse-luta-r3-cabelo-palco.png").crop((826, 92, 1030, 150))
+    d.text((20, y), "Ilse na luta do fundo da capela, a cena e a carta (transposta) — tamanho real; a carta a 3×",
+           fill=TEXTO, font=f2)
+    out.alpha_composite(c, (20, y + 18)); out.alpha_composite(amplia(carta, 3), (1130, y + 18))
+    y += 18 + c.height + 16
+    out = out.crop((0, 0, 1800, y))
+    out.save(PASTA / "afogado-ilse-r3.png")
+    print("afogado-ilse-r3.png", out.size)
+
+
+if __name__ == "__main__" and sys.argv[1:] == ["r3"]:
+    folha_r3()
+elif __name__ == "__main__" and sys.argv[1:] == ["r2"]:
     folha_r2()
 elif __name__ == "__main__":
     f, f2 = ImageFont.truetype("arial.ttf", 15), ImageFont.truetype("arial.ttf", 12)

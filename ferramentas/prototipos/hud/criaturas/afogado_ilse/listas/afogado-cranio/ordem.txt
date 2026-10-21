@@ -1,0 +1,1 @@
+roupa,pele,osso,rosto,cabelo

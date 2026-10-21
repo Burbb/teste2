@@ -24,3 +24,11 @@ em passada, os riscos de velocidade). **A origem, a autoria e a licença não fo
 de silhueta de bancos como o game-icons.net, que pedem crédito); a E6 a copia de perto, e por isso a origem precisa ser
 esclarecida, como na L7. Não atribua licença nem autoria. **A E6 foi integrada na 1.157.0 a pedido do Jean, com
 a origem e a licença ainda pendentes.**
+
+**`Retrato pixelado azul com algas soltas.png`** (1254×1254, 21/10/2026): **a referência principal do retrato da Ilse
+na carta (a terceira rodada)**. É uma imagem gerada na conversa com o Jean e deixada aqui por ele; não tem outra origem
+ou autoria informada. Mostra a Ilse da cena do fundo da capela num busto: o rosto azul com o contorno, o olho claro, a
+mecha pequena de alga sobre a testa, as algas pendentes em grupos com vãos e o vestido escuro. É ampliada (cerca de 33
+células de ~38 px), não uma grade nativa: a transposição para 16×16 está em
+`ferramentas/prototipos/hud/criaturas/afogado_ilse/` (`ilse-r3`). A figura da cena (`telas/cenas.js`, `ilseDesenho`)
+continua a referência de identidade e de paleta.

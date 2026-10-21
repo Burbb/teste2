@@ -89,3 +89,58 @@ decomposição e alguma assimetria, sem três buracos regulares. As primeiras (`
 - **O Afogado B** deixou de ser a carinha surpresa: a cabeça larga e mole, o olho turvo e o outro inchado tiram a
   simetria, e na luta, ao lado do esqueleto, continua separado da caveira. O risco é a boca torta ler como um sorriso
   bobo a 2×; se for o caso, o próximo passo é fechar mais a boca (uma fenda caída) em vez de abrir.
+
+## Terceira rodada: a Ilse transposta da referência gerada e três Afogados livres (proposta, 21/10/2026)
+
+**Pedido de Jean:** (1) transpor para 16×16 a última imagem gerada na conversa, guardada por ele em
+`ferramentas/arte/referencias/icones/Retrato pixelado azul com algas soltas.png`, mantendo a figura da cena como
+referência de identidade e paleta: o rosto azul com contorno reconhecível, o pescoço um pouco mais largo, a mecha pequena
+sobre a testa e o olho (sem faixa escura na bochecha), as algas irregulares e pendentes em grupos com vãos, as pontas
+avulsas, o vestido e os ombros escuros, na paleta do jogo, sem mosaico nem capuz. (2) Três Afogados livres, com
+construções diferentes, que combinem com os retratos da comitiva; as duas versões anteriores (`afogado`, `afogado-b`)
+ficam como histórico.
+
+- **Ilse transposta** (`ilse-r3`; camadas vestido, rosto, algas e a guia oculta): a figura medida na referência (das
+  algas no alto à base do vestido em 16 linhas, o centro do rosto na fronteira das colunas 7 e 8), contada célula a
+  célula (a cor que domina, só para orientar) e redesenhada à mão. O rosto tem 4 colunas, com a metade da luz mais clara,
+  o olho claro no alto à esquerda e um ponto de sombra no lugar da boca; o pescoço tem 3 colunas; a mecha é um pixel
+  escuro com a ponta verde sobre a testa, ao lado do olho. As algas: o alto em mechas curtas; à esquerda, dois grupos (o
+  de fora até o ombro, o de dentro junto da face) com o fundo entre eles; à direita, um fio escuro junto da face, um
+  claro que desce até o vestido e um de fora; fios soltos por cima do vestido dos dois lados. Na bancada, a primeira
+  passada tinha os fios da esquerda alternados em xadrez (mosaico) e virou fios contínuos. A paleta é a da Ilse (o azul
+  do rosto, os verdes das algas, o vestido `#3a3430`/`#25211e`); o marrom mais claro da referência não entrou. A camada
+  `guia` da fonte é a referência reduzida a 16×16 (`guias/ilse-r3-guia-16.png`), oculta: não entra na exportação
+  (conferido).
+- **Os três Afogados**, na escala da comitiva (a cabeça de 6 a 8 px sobre os ombros, como o Morel e a Odette; as duas
+  versões anteriores enchiam o quadro com a cabeça e por isso ficavam redondas):
+  - **A, o do cabelo** (`afogado-cabelo`; roupa, pele, rosto, cabelo): a cabeça caída, o cabelo e as algas colados no
+    crânio e pendentes dos dois lados até o peito, a sombra da testa sobre os olhos com um olho claro, a boca aberta e
+    torta, as algas sobre o ombro.
+  - **B, o de perfil** (`afogado-perfil`; roupa, pele, rosto, algas): em três quartos para a esquerda, inchado: a testa,
+    a sobrancelha pesada, o olho claro, o nariz, os lábios inchados e entreabertos, a papada caída, uma mancha na
+    bochecha, algas no alto da cabeça.
+  - **C, o do crânio** (`afogado-cranio`; roupa, pele, osso, rosto, cabelo): de frente e magro, metade do rosto
+    apodrecida até o osso (o osso `#b4b29a`/`#85846e`, a órbita vazia, os dentes `#d2ccb0`), a outra metade com a pele,
+    o olho claro e a bochecha funda.
+- **Processo:** as grades em `auxiliares/grades.py` (`ILSE_R3`, `AFOGADO_CABELO`, `AFOGADO_PERFIL`, `AFOGADO_CRANIO`);
+  as fontes no editor pelo MCP (`pintar.lua`, 0 diferentes na releitura; a guia por `Image{fromFile=...}`, oculta) em
+  `fontes/<id>/`; a exportação conferida (`auxiliares/exportar.py`, as oito: iguais à grade, @2x exato). Fotos a
+  1920×945 com os mesmos dados (`MODOS=r3-cabelo,r3-perfil,r3-cranio node auxiliares/fotografar.mjs ...`; o registro
+  agora acumula os modos), sem erro nem aviso no console. A luta da Ilse é a mesma nos três modos: fica só a foto do
+  primeiro (`ilse-luta-r3-cabelo-*`).
+- **A folha:** `afogado-ilse-r3.png` (`python auxiliares/prancha.py r3`): a referência gerada, a Ilse da cena a 3× e a
+  transposta (1×, carta, caixa a 3×, 12×); os três Afogados lado a lado; todos na caixa da comitiva, em tamanho real e a
+  3×; cada Afogado na luta (tamanho real e 2×) e no Bestiário; a carta da Ilse na luta do fundo da capela.
+
+**Avaliação (a minha leitura em tamanho real; quem aprova é o Jean):**
+
+- **A Ilse transposta** é a mais próxima da referência e da cena até aqui: o rosto azul tem contorno, o pescoço lê, a
+  mecha é pequena e as algas caem em grupos com vãos, sem capuz. A 1× as algas viram uma franja verde em volta do rosto;
+  a leitura dos fios é a da carta (2×) e da caixa a 3×. A referência tem mais fios do que cabem em 16 colunas: ficaram
+  os grupos, não cada fio.
+- **B, o de perfil**, é o mais legível dos três e o que mais combina com a comitiva: a silhueta do rosto inchado de lado
+  diz "afogado" sem depender de olhos ou boca, e não repete nada das versões anteriores.
+- **C, o do crânio**, é o mais forte como morto e o mais distante do esqueleto ao lado (pele de um lado, osso do
+  outro), mas o osso claro chama mais atenção que o resto da carta e pode ler como "zumbi" genérico.
+- **A, o do cabelo**, é o mais sombrio e o mais "do pântano"; a boca aberta ainda puxa um pouco para o grito, e o cabelo
+  verde colado fica perto da linguagem da Ilse (os dois são mortos da água: pode ser vantagem ou confusão).

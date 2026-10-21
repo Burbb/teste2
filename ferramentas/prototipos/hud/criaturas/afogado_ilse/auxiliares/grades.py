@@ -31,6 +31,8 @@ CORES = {
     "I": "4f6e47",
     # o Afogado B: a pele manchada e a carne mais escura do inchaço
     "M": "5f6f55", "n": "2a332b",
+    # o Afogado do crânio: o osso exposto (a luz, a sombra) e os dentes
+    "K": "b4b29a", "k": "85846e", "T": "d2ccb0",
 }
 
 AFOGADO = [
@@ -109,6 +111,87 @@ AFOGADO_B = [
     "RRrrrRRRORRrrrqq",
 ]
 
+# A terceira rodada (21/10/2026, pedido do Jean). A Ilse transposta da referência gerada que ele mandou
+# (ferramentas/arte/referencias/icones/Retrato pixelado azul com algas soltas.png): o rosto azul com o contorno, o
+# pescoço um pouco mais largo, a mecha pequena sobre a testa e o olho, as algas pendentes em grupos com vãos, o vestido
+# e os ombros escuros; a paleta do jogo.
+ILSE_R3 = [
+    ".......g........",
+    "......gIhg......",
+    ".....IghIgHg....",
+    "....IgSSgSgH....",
+    "...IgHSWHsgH....",
+    "..Ig.HSSSsgH.h..",
+    "..Ig.HSSSsgH.h..",
+    ".Ig.HgSsSs..Hh..",
+    ".Ig.HggSSz..H.h.",
+    ".g..Hg.sSsg.H.h.",
+    "....hHgsSsggH.h.",
+    "..I.VhVVVVVvHvg.",
+    "..IVVhVVVVvvHv..",
+    "..hVVVhVVvvvvv..",
+    ".IgVVVhVVvvvvv..",
+    ".g.VVVVVVvvvvv..",
+]
+# Os três Afogados livres, na escala da comitiva (a cabeça de 6 a 8 px sobre os ombros, não o quadro inteiro):
+# o do cabelo (a cabeça caída, o cabelo e as algas colados e pendentes, um olho claro sob a sombra da testa, a boca
+# aberta torta), o de perfil (três quartos para a esquerda, inchado: a testa, o nariz, os lábios inchados, a papada) e
+# o do crânio (de frente, magro, metade do rosto apodrecida até o osso, a órbita vazia e os dentes).
+AFOGADO_CABELO = [
+    "................",
+    "......bbabb.....",
+    ".....baAaAab....",
+    ".....aPaPPab....",
+    "....baPPPPpab...",
+    "....bnEnPnnob...",
+    "....aPPpPppoa...",
+    "....bPpPmmob....",
+    ".....aPpmmoa....",
+    ".....bopomoab...",
+    ".....a.oo.ab....",
+    "...RRRaooaRRR...",
+    "..RRrRaRRRaRrr..",
+    ".RRRrrRaRRRarrq.",
+    "RRRrrRRaRRrarrqq",
+    "RRrrrRRRRrrrrrqq",
+]
+AFOGADO_PERFIL = [
+    "................",
+    "......aAAa......",
+    ".....PPPPppa....",
+    "....PPPPPppoa...",
+    "....nnPPpppooa..",
+    "....PEnPpppoob..",
+    "...PPPPPMpppob..",
+    "....oPPPPppoob..",
+    "...pmPPPppooob..",
+    "....pPPppoooO...",
+    ".....oppooOO....",
+    "...RRRoooOORRR..",
+    ".RRRrRRooRRRrRr.",
+    "RRRrrRRRRRRrrrrq",
+    "RRrrrRRRrRrrrrqq",
+    "RRrrrRRRrRrrrrqq",
+]
+AFOGADO_CRANIO = [
+    "................",
+    "......aabb......",
+    ".....aPPKKb.....",
+    ".....PPPKKk.....",
+    "....aPnPKKk.....",
+    "....aPEPKek.....",
+    "....aPpPKKk.....",
+    "....bPopKKk.....",
+    "....aPmmTkT.....",
+    ".....omTkT......",
+    "......okk.......",
+    "....RRRookRRR...",
+    "..RRRrRRoRRRrR..",
+    ".RRRrrRRRRRrrrRq",
+    "RRRrrRRRRRrrrrqq",
+    "RRrrrRRRrRrrrrqq",
+]
+
 CAMADAS = {
     "afogado": (AFOGADO, ["roupa", "pele", "olhos", "algas"],
                 lambda x, y, ch: "roupa" if ch in "Rrq" else "olhos" if ch in "eEm" else "algas" if ch in "Aab" else "pele"),
@@ -116,6 +199,14 @@ CAMADAS = {
              lambda x, y, ch: "vestido" if ch in "Vv" else "rosto" if ch in "SsW" or (ch == "z" and y >= 4) else "cabelo"),
     "ilse-r2": (ILSE_R2, ["vestido", "rosto", "algas"],
                 lambda x, y, ch: "vestido" if ch in "Vv" else "rosto" if ch in "SsWz" else "algas"),
+    "ilse-r3": (ILSE_R3, ["vestido", "rosto", "algas"],
+                lambda x, y, ch: "vestido" if ch in "Vv" else "rosto" if ch in "SsWz" else "algas"),
+    "afogado-cabelo": (AFOGADO_CABELO, ["roupa", "pele", "rosto", "cabelo"],
+                       lambda x, y, ch: "roupa" if ch in "Rrq" else "cabelo" if ch in "aAb" else "rosto" if ch in "eEmn" else "pele"),
+    "afogado-perfil": (AFOGADO_PERFIL, ["roupa", "pele", "rosto", "algas"],
+                       lambda x, y, ch: "roupa" if ch in "Rrq" else "algas" if ch in "aAb" else "rosto" if ch in "eEmn" else "pele"),
+    "afogado-cranio": (AFOGADO_CRANIO, ["roupa", "pele", "osso", "rosto", "cabelo"],
+                       lambda x, y, ch: "roupa" if ch in "Rrq" else "cabelo" if ch in "aAb" else "osso" if ch in "KkTe" else "rosto" if ch in "Emn" else "pele"),
     "afogado-b": (AFOGADO_B, ["roupa", "pele", "rosto", "algas"],
                   lambda x, y, ch: "roupa" if ch in "Rrq" else "rosto" if ch in "eEmn" else "algas" if ch in "Aab" else "pele"),
 }
