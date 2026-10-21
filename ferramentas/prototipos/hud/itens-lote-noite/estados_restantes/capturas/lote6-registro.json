@@ -1,0 +1,86 @@
+{
+ "heroi-grito/atual": {
+  "estados": [
+   "j:fortalecido",
+   "c1-1:enfraquecido",
+   "c1-2:enfraquecido"
+  ],
+  "imagens": [
+   "fortalecido 16px → 17.9px (png 16)"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "heroi-grito/proposta": {
+  "estados": [
+   "j:fortalecido",
+   "c1-1:enfraquecido",
+   "c1-2:enfraquecido"
+  ],
+  "imagens": [
+   "fortalecido 16px → 17.9px (png 16)"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "heroi-grito/proposta-bota": {
+  "estados": [
+   "j:fortalecido",
+   "c1-1:enfraquecido",
+   "c1-2:enfraquecido"
+  ],
+  "imagens": [
+   "fortalecido 16px → 17.9px (png 16)"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "heroi-iniciativa/atual": {
+  "estados": [
+   "j:iniciativa"
+  ],
+  "imagens": [
+   "iniciativa 16px → 17.9px (png 16)"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "heroi-iniciativa/proposta": {
+  "estados": [
+   "j:iniciativa"
+  ],
+  "imagens": [
+   "iniciativa 16px → 17.9px (png 16)"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "heroi-iniciativa/proposta-bota": {
+  "estados": [
+   "j:iniciativa"
+  ],
+  "imagens": [
+   "iniciativa 16px → 17.9px (png 16)"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ }
+}

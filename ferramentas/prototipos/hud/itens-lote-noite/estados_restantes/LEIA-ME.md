@@ -48,6 +48,8 @@ Esquiva (E6), já no jogo, são a referência de acabamento e não foram redesen
 | Furtivo (`furtivo`) | o próximo ataque é crítico garantido e o estado se gasta; os inimigos continuam mirando você | no herói (Desaparecer, que também dá Esquiva por 1 turno) |
 | Barreira (`barreira`) | absorve v de dano e se gasta ("absorve mais N de dano") | no herói (Barreira, do Mago) |
 | Provocando (`provocando`) | os inimigos atacam quem está assim | no aliado: o esqueleto do Erguer Servo e o urso da Ordem da Fera (com Em guarda) |
+| Fortalecido (`fortalecido`) | dano causado +v% enquanto dura (Grito de Guerra +30% por 3 turnos; o uivo dos lobos; outros) | no herói e no inimigo |
+| Iniciativa (`iniciativa`) | o primeiro golpe deste turno sai +v% mais forte e gasta o estado; usado para outra coisa, o turno passa e o estado vai junto | no herói, no turno livre de quem pegou o inimigo de surpresa |
 
 ## Lote 1: Veneno e Sangramento
 
@@ -136,3 +138,24 @@ Esquiva (E6), já no jogo, são a referência de acabamento e não foram redesen
   a 2×; no 1× as setas viram um borrão vermelho sobre a figura. Os dois repetem a mesma figura de cabeça e ombros, o
   que os aproxima. Se o Jean recusar, a próxima tentativa do Provocando seria de outra construção (o grito, ou a mão
   chamando), não um retoque desta.
+
+## Lote 6: Fortalecido e Iniciativa
+
+- **Fortalecido — a espada com a seta para cima** (`estado-fortalecido`): a espada de ferro em pé e uma seta dourada
+  grande subindo ao lado ("ataque ↑"); camadas espada, seta, contorno. O par do Enfraquecido (lote 3): a mesma espada,
+  a direção e a cor da seta invertidas.
+- **Iniciativa — a exclamação** (`estado-iniciativa`), como o Jean sugeriu: a barra dourada de largura constante, o
+  ponto bem separado e dois raios curtos de cada lado ("pegou de surpresa"); camadas exclamacao, raios, contorno.
+- **Alternativa pedida pelo Jean:** `estado-iniciativa-bota`, a bota da Agilidade (a bota de couro em passada,
+  `attr-agilidade-24.png`) reduzida à mão para 16 px, com o rastro. Está na foto da carta (o modo `proposta-bota`).
+  Fica perto do sprite atual da Iniciativa e é o mesmo desenho da Agilidade e do Fugir: lê "rapidez", não "primeiro
+  golpe mais forte".
+- **Tentativas guardadas:** `estado-iniciativa-taca` (a exclamação larga em cima e fina embaixo; em tamanho real lia
+  como uma taça dourada); `estado-fortalecido-setinhas` (a espada com dois triângulos pequenos; encostados no número
+  liam como ":", o mesmo defeito do Enfraquecido).
+- **Fotos:** o Guerreiro fortalecido pelo Grito de Guerra (com os lobos enfraquecidos, ainda com o sprite atual do
+  Enfraquecido, que não é deste lote) e o Arqueiro com a Iniciativa; atual × proposta × a bota. Sem erro nem aviso no
+  console. Folha: `lote6.png`.
+- **Avaliação sincera:** a exclamação é clara e se distingue de tudo; o raio dos lados é o "legal" pedido, sem virar
+  ruído. O Fortalecido é explícito ("ataque ↑"), mas é o mais "de interface" do conjunto (seta), menos pintado que os
+  finais.

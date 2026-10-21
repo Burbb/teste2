@@ -30,6 +30,9 @@ CORES = {
     "1": "28222f", "2": "3e3850", "9": "5e5672", "0": "8a80a0", "k": "050407",
     # osso (as presas) e o rosto da fúria
     "W": "f1e4c4", "w": "c0b8a8", "x": "8a8070", "n": "5a1c16", "X": "3a100c",
+    # a bota da Agilidade (attr-agilidade-24.png), para a alternativa da Iniciativa
+    "a": "eaaa62", "j": "cf8040", "l": "b0602c", "t": "8f4620", "z": "6e3317", "A": "4e2210",
+    "E": "6e5442", "I": "4a3628", "J": "f0d070", "V": "c08a48",
 }
 
 def com_contorno(grade):
@@ -232,18 +235,18 @@ FORTALECIDO = com_contorno([
                "................"])
 INICIATIVA = com_contorno([
               "................",
-              "......eDDd......",
-              "......eDdc......",
-              "..d...DDdc...c..",
-              "...d..Ddcc..c...",
-              "......Ddcc......",
+              ".......eD.......",
+              ".......eD.......",
+              "..d....Dd....c..",
+              "...d...Dd...c...",
+              ".......Dd.......",
               ".......Dc.......",
               ".dd....dc....cc.",
+              ".......dc.......",
               ".......dC.......",
-              ".......cC.......",
+              "................",
               "................",
               ".......eD.......",
-              "......eDdc......",
               ".......cC.......",
               "................",
               "................"])
@@ -445,6 +448,42 @@ BARREIRA_FIGURA = com_contorno([
             ".....bBBBB......",
             "................"])
 
+INICIATIVA_BOTA = com_contorno([
+              "................",
+              "........jaal....",
+              "........ljjtz...",
+              "........lttzA...",
+              "..VVV...ltzzA...",
+              "........lttzA...",
+              "...VVV..ltzzA...",
+              "........JJJzA...",
+              ".......lttttA...",
+              "....VV.lttttzA..",
+              "......llttttzzAA",
+              "......ljtttzzzlj",
+              "......EEEEtttzzj",
+              ".......IIIEEEEEA",
+              "..........IIIII.",
+              "................"])
+
+INICIATIVA_TACA = com_contorno([
+              "................",
+              "......eDDd......",
+              "......eDdc......",
+              "..d...DDdc...c..",
+              "...d..Ddcc..c...",
+              "......Ddcc......",
+              ".......Dc.......",
+              ".dd....dc....cc.",
+              ".......dC.......",
+              ".......cC.......",
+              "................",
+              ".......eD.......",
+              "......eDdc......",
+              ".......cC.......",
+              "................",
+              "................"])
+
 # as camadas de cada desenho, de baixo para cima, pela letra
 def _por(mapa, resto):
     return lambda ch: "contorno" if ch == "#" else next((k for k, v in mapa.items() if ch in v), resto)
@@ -495,6 +534,11 @@ ICONES = {
     "estado-barreira-cheia": (BARREIRA_CHEIA, ["bolha", "reflexo", "contorno"],
                               lambda x, y, ch: "contorno" if ch == "#" else "reflexo" if 4 <= y <= 6 and 4 <= x <= 7 and ch == "U"
                               else "bolha"),
+    "estado-iniciativa-bota": (INICIATIVA_BOTA, ["bota", "fivela", "rastro", "contorno"],
+                               lambda x, y, ch: "contorno" if ch == "#" else "rastro" if ch == "V" else "fivela" if ch == "J"
+                               else "bota"),
+    "estado-iniciativa-taca": (INICIATIVA_TACA, ["exclamacao", "raios", "contorno"],
+                               lambda x, y, ch: "contorno" if ch == "#" else "exclamacao" if 6 <= x <= 9 else "raios"),
     # tentativas guardadas (fora da proposta principal)
     "estado-veneno-presas": (VENENO_PRESAS, ["presas", "veneno", "contorno"],
                              lambda x, y, ch: "contorno" if ch == "#" else "presas" if ch in "Wwx" else "veneno"),

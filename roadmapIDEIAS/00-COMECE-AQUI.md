@@ -5257,3 +5257,9 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   `lote5.png` com o Mago e o esqueleto do Necromante a 1920×945. Os dois são os mais frágeis da noite (avaliação no
   `LEIA-ME.md` da pasta).
 - **Continua:** nada aprovado; a versão continua 1.157.0.
+
+### 21/10/2026 (data do computador local) — Os estados restantes, lote 6: Fortalecido e Iniciativa (proposta)
+
+- **Feito:** a espada com a seta dourada subindo (Fortalecido) e a exclamação com raios (Iniciativa, sugestão do Jean),
+  com a bota da Agilidade em 16 px como alternativa da Iniciativa, em `estados_restantes/`; `lote6.png` a 1920×945.
+- **Continua:** nada aprovado; a versão continua 1.157.0.
