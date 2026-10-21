@@ -1,0 +1,67 @@
+{
+ "iniciativa-heroi/atual": {
+  "estados": [
+   "j:iniciativa"
+  ],
+  "imagens": [
+   "iniciativa 16px → 17.9px (sprite ou troca da página)"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "iniciativa-heroi/proposta": {
+  "estados": [
+   "j:iniciativa"
+  ],
+  "imagens": [
+   "iniciativa 16px → 17.9px (sprite ou troca da página)"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "iniciativa-heroi/proposta-cunha": {
+  "estados": [
+   "j:iniciativa"
+  ],
+  "imagens": [
+   "iniciativa 16px → 17.9px (sprite ou troca da página)"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "iniciativa-heroi/proposta-estouro": {
+  "estados": [
+   "j:iniciativa"
+  ],
+  "imagens": [
+   "iniciativa 16px → 17.9px (sprite ou troca da página)"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "iniciativa-heroi/proposta-italico": {
+  "estados": [
+   "j:iniciativa"
+  ],
+  "imagens": [
+   "iniciativa 16px → 17.9px (sprite ou troca da página)"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ }
+}

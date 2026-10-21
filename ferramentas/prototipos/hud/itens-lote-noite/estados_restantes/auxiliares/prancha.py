@@ -11,7 +11,7 @@ import sys
 
 from PIL import Image, ImageDraw
 
-from comum import (ATUAL, CARVAO, ESTADOS, FINAIS, LOTE, LOTES, TEXTO, TEXTO2, TITULO, abre, amplia, final, fonte,
+from comum import (ATUAL, CARVAO, FINAIS, LOTE, LOTES, TEXTO, TEXTO2, TITULO, abre, amplia, final, fonte,
                    grade_px, proposta, sprite)
 
 CHIP = (10, 11, 13, 255)
@@ -24,7 +24,8 @@ def chip(out, d, im, x, y, borda=(60, 60, 66, 255)):
 
 
 NOVAS = ("gota", "r2")
-INTEGRADOS = ("sangramento", "maldito", "marcado", "furtivo", "furia")   # no jogo desde a 1.158.0   # as alternativas da segunda rodada (21/10/2026): estado-<id>-gota, estado-<id>-r2
+INTEGRADOS = ("sangramento", "maldito", "marcado", "furtivo", "furia",   # no jogo desde a 1.158.0
+              "queimadura", "fortalecido", "enfraquecido", "frenesi")   # desde a 1.159.0   # as alternativas da segunda rodada (21/10/2026): estado-<id>-gota, estado-<id>-r2
 
 
 def cartas(n, pre=""):
@@ -106,68 +107,68 @@ def folha_lote(n, pre=""):
 
 
 def folha_geral():
-    """geral.png (atualizada na segunda rodada): os 17 estados, identificados como integrados (no jogo), candidatos
-    preservados (o b17ab3dd) e alternativas novas (a segunda rodada); e os estados de dano juntos."""
+    """geral.png (atualizada na terceira rodada): os 17 estados em três grupos — os integrados (no jogo), as alternativas
+    não escolhidas dos estados já resolvidos e as propostas em avaliação (os candidatos novos e os preservados)."""
     f, f2 = fonte(14), fonte(12)
-    no_jogo = [(t, final(k)) for k, t in FINAIS] + [(TITULO[k], final(k)) for k in INTEGRADOS]
-    pendentes = [k for k, _, _ in ESTADOS if k not in INTEGRADOS]
-    out = Image.new("RGBA", (1500, 1700), CARVAO)
+    integrados = [(t, final(k)) for k, t in FINAIS] + [(TITULO[k], final(k)) for k in INTEGRADOS]
+    nao_escolhidas = [("Chamas", ["estado-queimadura"]), ("Fortalecido", ["estado-fortalecido", "estado-fortalecido-setinhas"]),
+                      ("Enfraquecido", ["estado-enfraquecido", "estado-enfraquecido-setinhas", "estado-enfraquecido-partida"]),
+                      ("Frenesi", ["estado-frenesi-r2"]), ("Marcado", ["estado-marcado-mira"])]
+    avaliacao = [(TITULO[k], [(ident, rot) for ident, rot in RODADA3[k]]) for k in ("veneno", "iniciativa", "atordoado", "barreira")]
+    avaliacao.append(("Provocando", [("estado-provocando", "candidato (b17ab3dd)"), ("estado-provocando-r2", "figura e setas (rodada 2)")]))
+    out = Image.new("RGBA", (1700, 2200), CARVAO)
     d = ImageDraw.Draw(out)
-    d.text((20, 10), "Os 17 estados (segunda rodada, 21/10/2026). Chips no tamanho real, 2× e 4× (a 4× só para inspecionar). "
-                     "Nada aprovado além dos integrados.", fill=TEXTO, font=f)
+    d.text((20, 10), "Os 17 estados (terceira rodada, 21/10/2026). Chips no tamanho real, 2× e 4× (a 4× só para inspecionar).",
+           fill=TEXTO, font=f)
     y = 44
-    d.text((20, y), "INTEGRADOS (no jogo: Firme 1.155.0, Em guarda 1.156.0, Esquiva 1.157.0, os outros cinco 1.158.0)",
-           fill=TEXTO, font=f2)
+    d.text((20, y), f"INTEGRADOS ({len(integrados)}, no jogo: Firme 1.155.0, Em guarda 1.156.0, Esquiva 1.157.0, "
+                    "cinco na 1.158.0, quatro na 1.159.0)", fill=TEXTO, font=f2)
     y += 44
-    for j, (t, im) in enumerate(no_jogo):
-        x = 20 + (j % 4) * 360
-        yy = y + (j // 4) * 74
+    for j, (t, im) in enumerate(integrados):
+        x, yy = 20 + (j % 4) * 400, y + (j // 4) * 74
         chip(out, d, im, x, yy)
         out.alpha_composite(amplia(im, 2), (x + 28, yy - 6))
         out.alpha_composite(amplia(im, 4), (x + 68, yy - 22))
         d.text((x + 136, yy + 4), t, fill=TEXTO, font=f2)
-    y += 2 * 74 + 20
-    d.text((20, y), "EM AVALIAÇÃO: atual (o sprite do jogo) | candidato preservado (b17ab3dd) | alternativa nova (rodada 2)",
-           fill=TEXTO, font=f2)
+    y += ((len(integrados) + 3) // 4) * 74 + 20
+    d.text((20, y), "ALTERNATIVAS NÃO ESCOLHIDAS dos estados já integrados (guardadas no protótipo)", fill=TEXTO, font=f2)
+    y += 40
+    for t, ids in nao_escolhidas:
+        d.text((20, y + 4), t, fill=TEXTO2, font=f2)
+        for j, ident in enumerate(ids):
+            im, x = proposta(ident), 160 + j * 300
+            chip(out, d, im, x, y)
+            out.alpha_composite(amplia(im, 2), (x + 28, y - 6))
+            d.text((x + 70, y + 4), ident.replace("estado-", ""), fill=TEXTO2, font=f2)
+        y += 44
+    y += 10
+    d.text((20, y), "EM AVALIAÇÃO: o sprite atual do jogo, as opções preservadas e as novas (NOVA)", fill=TEXTO, font=f2)
     y += 44
-    for k in pendentes:
-        d.text((20, y + 4), TITULO[k], fill=TEXTO, font=f2)
-        cols = [("atual", sprite(ATUAL[k])), ("candidato", proposta(f"estado-{k}"))] + [
-            (f"nova ({v})", proposta(f"estado-{k}-{v}")) for v in NOVAS if proposta(f"estado-{k}-{v}")]
+    for t, ops in avaliacao:
+        k = next(c for c, tt in TITULO.items() if tt == t)
+        d.text((20, y + 4), t, fill=TEXTO, font=f2)
+        cols = [("atual (jogo)", sprite(ATUAL[k]))] + [(rot, proposta(ident)) for ident, rot in ops]
         for j, (rot, im) in enumerate(cols):
-            x = 140 + j * 330
+            x = 140 + j * 310
             chip(out, d, im, x, y)
             out.alpha_composite(amplia(im, 2), (x + 28, y - 6))
             out.alpha_composite(amplia(im, 4), (x + 68, y - 22))
-            d.text((x + 136, y + 4), rot, fill=TEXTO2 if rot != "atual" else (110, 110, 116, 255), font=f2)
-        if len(cols) == 2:
-            d.text((140 + 2 * 330, y + 4), "(sem alternativa nova: a espiral fica; o teste de rotação está em "
-                                           "rodada2-atordoado-gira.png)" if k == "atordoado" else "", fill=TEXTO2, font=f2)
-        y += 74
+            d.text((x + 136, y + 4), rot[:24], fill=TEXTO if rot.startswith("NOVA") else TEXTO2, font=f2)
+        y += 80
     y += 10
-    d.text((20, y), "a fileira lado a lado, tamanho real em chips e 2×: os integrados + as alternativas novas (onde há) "
-                    "ou o candidato", fill=TEXTO2, font=f2)
+    d.text((20, y), "a fileira dos 12 integrados com cada nova opção no fim (tamanho real e 2×):", fill=TEXTO2, font=f2)
     y += 22
-    fila = [im for _, im in no_jogo] + [proposta(f"estado-{k}-r2") or proposta(f"estado-{k}-gota") or proposta(f"estado-{k}")
-                                         for k in pendentes]
-    for j, im in enumerate(fila):
-        chip(out, d, im, 20 + j * 24, y)
-        out.alpha_composite(amplia(im, 2), (20 + j * 40, y + 30))
-    y += 90
-    d.text((20, y), "os estados de dano juntos: Fortalecido, Fúria (integrada), Frenesi, Iniciativa e Enfraquecido — "
-                    "candidato e alternativa nova; tamanho real, 2× e 6×", fill=TEXTO2, font=f2)
-    y += 22
-    x = 20
-    for k in ("fortalecido", "furia", "frenesi", "iniciativa", "enfraquecido"):
-        for rot, im in ([("integrada", final(k))] if k in INTEGRADOS else
-                        [("candidato", proposta(f"estado-{k}")), ("nova", proposta(f"estado-{k}-r2"))]):
-            chip(out, d, im, x, y)
-            out.alpha_composite(amplia(im, 2), (x + 26, y - 6))
-            out.alpha_composite(amplia(im, 6), (x, y + 34))
-            d.text((x, y + 34 + 96 + 4), f"{TITULO[k]} ({rot})", fill=TEXTO, font=f2)
-            x += 140
-    y += 34 + 96 + 30
-    out = out.crop((0, 0, 1500, y))
+    for t, ops in avaliacao[:4]:
+        for ident, rot in ops:
+            if not rot.startswith("NOVA"):
+                continue
+            fila = [im for _, im in integrados] + [proposta(ident)]
+            for j, im in enumerate(fila):
+                chip(out, d, im, 20 + j * 24, y)
+                out.alpha_composite(amplia(im, 2), (360 + j * 36, y - 6))
+            d.text((360 + len(fila) * 36 + 10, y + 4), f"{t}: {rot}", fill=TEXTO2, font=f2)
+            y += 40
+    out = out.crop((0, 0, 1700, y + 10))
     out.save(LOTE / "geral.png")
     print("geral.png", out.size)
 

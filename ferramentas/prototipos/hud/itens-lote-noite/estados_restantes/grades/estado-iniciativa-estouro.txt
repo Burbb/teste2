@@ -1,0 +1,16 @@
+..#...#o#....#..
+.#o###oyo####o#.
+..#ooyyYyyooo#..
+.##oyYY##YYyo##.
+#ooyYYY##YYYyoo#
+.#oyYYY##YYYyo#.
+##oyYYY##YYYyy##
+oyyYYYY##YYYYyyo
+##oyYYY##YYYyo##
+.#oyYYYYYYYYyo#.
+.#oyYYY##YYYyo#.
+#ooyYYY##YYYyoo#
+.##oyYYYYYYyo##.
+..#ooyyYyyooo#..
+.#o###oyo####o#.
+..#...#o#....#..

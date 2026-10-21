@@ -1,12 +1,14 @@
-"""Monta as fontes em camadas e exporta as propostas dos estados, pela linha de comando do Aseprite (o conector do MCP
-não subiu nesta sessão, 21/10/2026; o caminho é o de ferramentas/arte/montar_fontes.py, com o montar_camadas.lua e o
-pintar.lua, que relê cada pixel gravado):
+"""Monta as fontes em camadas e exporta as propostas dos estados. Dois caminhos para a fonte: pela linha de comando do
+Aseprite (o de ferramentas/arte/montar_fontes.py, com o montar_camadas.lua e o pintar.lua, que relê cada pixel; usado
+quando o conector do MCP estava fora, 21/10/2026) ou no editor pelo MCP (montar_mcp.py, o mesmo pintar.lua; desde a
+recuperação do conector). A exportação e a conferência são as mesmas:
   1. icones16.py grava grades/<id>.txt e listas/<id>/<camada>.lua (com ordem.txt);
   2. o Aseprite (-b) monta fontes/<id>/<id>-16.aseprite, uma camada por parte, o contorno por cima;
   3. o Aseprite (-b <fonte> --save-as) exporta proposta/<id>-16.png, o composto das camadas visíveis;
   4. o @2x é a duplicação exata do 1× (vizinho mais próximo);
   5. a conferência: 16×16, RGBA, fundo transparente, o 1× igual pixel a pixel à grade e o @2x igual ao 1× ampliado.
     python montar.py <id> [<id> ...]      (ou: python montar.py lote <n>)
+    python montar.py --so-exportar <id> ...   (a fonte já montada no editor pelo MCP: só os passos 3 a 5)
 """
 import pathlib
 import shutil
@@ -35,10 +37,13 @@ def da_grade(ident):
     return im
 
 
-def montar(ident, tmp):
+def montar(ident, tmp, so_exportar=False):
     listas = LOTE / f"listas/{ident}"
     fonte = LOTE / f"fontes/{ident}/{ident}-16.aseprite"
     fonte.parent.mkdir(parents=True, exist_ok=True)
+    if so_exportar:   # a fonte já foi montada no editor pelo MCP (montar_mcp.py): só exporta e confere
+        linhas = ["fonte montada pelo MCP"]
+        return exportar(ident, fonte, linhas)
     camadas = (listas / "ordem.txt").read_text(encoding="utf-8").strip()
     r = subprocess.run([aseprite(), "-b", "--script-param", "n=16", "--script-param", f"listas={listas}",
                         "--script-param", f"camadas={camadas}", "--script-param", f"saida={fonte}",
@@ -47,6 +52,10 @@ def montar(ident, tmp):
     linhas = [l for l in r.stdout.splitlines() if "escritos" in l]
     if not fonte.exists() or not linhas:
         sys.exit(f"O Aseprite não montou {fonte.name}:\n{r.stdout}{r.stderr}")
+    return exportar(ident, fonte, linhas)
+
+
+def exportar(ident, fonte, linhas):
     png = LOTE / f"proposta/{ident}-16.png"
     png.parent.mkdir(exist_ok=True)
     r = subprocess.run([aseprite(), "-b", str(fonte), "--save-as", str(png)], capture_output=True, text=True)
@@ -70,12 +79,14 @@ def montar(ident, tmp):
 
 
 if __name__ == "__main__":
-    args = sys.argv[1:]
+    so_exportar = "--so-exportar" in sys.argv
+    args = [a for a in sys.argv[1:] if a != "--so-exportar"]
     ids = ([k for e in LOTES[int(args[1])] for k in ic.ICONES if k == f"estado-{e}" or k.startswith(f"estado-{e}-")]
            if args[0] == "lote" else args)
-    ic.gravar(LOTE, ids)
+    if not so_exportar:
+        ic.gravar(LOTE, ids)
     with tempfile.TemporaryDirectory() as t:
         tmp = pathlib.Path(t)
         shutil.copy(LUA / "montar_camadas.lua", tmp / "montar_camadas.lua")   # sem espaço no caminho do script
         for ident in ids:
-            montar(ident, tmp)
+            montar(ident, tmp, so_exportar)

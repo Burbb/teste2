@@ -1,0 +1,122 @@
+{
+ "veneno-heroi-ratos/atual": {
+  "estados": [
+   "j:veneno",
+   "j:sangramento"
+  ],
+  "imagens": [
+   "veneno 16px → 17.9px (sprite ou troca da página)",
+   "sangramento 16px → 17.9px /static/hud/icones/estado-sangramento-16.png"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "veneno-heroi-ratos/proposta": {
+  "estados": [
+   "j:veneno",
+   "j:sangramento"
+  ],
+  "imagens": [
+   "veneno 16px → 17.9px (sprite ou troca da página)",
+   "sangramento 16px → 17.9px (sprite ou troca da página)"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "veneno-heroi-ratos/proposta-gota": {
+  "estados": [
+   "j:veneno",
+   "j:sangramento"
+  ],
+  "imagens": [
+   "veneno 16px → 17.9px (sprite ou troca da página)",
+   "sangramento 16px → 17.9px (sprite ou troca da página)"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "veneno-heroi-ratos/proposta-gota2": {
+  "estados": [
+   "j:veneno",
+   "j:sangramento"
+  ],
+  "imagens": [
+   "veneno 16px → 17.9px (sprite ou troca da página)",
+   "sangramento 16px → 17.9px (sprite ou troca da página)"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "veneno-inimigo-lobos/atual": {
+  "estados": [
+   "c1-1:veneno",
+   "c1-2:veneno"
+  ],
+  "imagens": [
+   "veneno 16px → 16.0px (sprite ou troca da página)"
+  ],
+  "cartas": [
+   "c1-1",
+   "c1-2"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "veneno-inimigo-lobos/proposta": {
+  "estados": [
+   "c1-1:veneno",
+   "c1-2:veneno"
+  ],
+  "imagens": [
+   "veneno 16px → 16.0px (sprite ou troca da página)"
+  ],
+  "cartas": [
+   "c1-1",
+   "c1-2"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "veneno-inimigo-lobos/proposta-gota": {
+  "estados": [
+   "c1-1:veneno",
+   "c1-2:veneno"
+  ],
+  "imagens": [
+   "veneno 16px → 16.0px (sprite ou troca da página)"
+  ],
+  "cartas": [
+   "c1-1",
+   "c1-2"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "veneno-inimigo-lobos/proposta-gota2": {
+  "estados": [
+   "c1-1:veneno",
+   "c1-2:veneno"
+  ],
+  "imagens": [
+   "veneno 16px → 16.0px (sprite ou troca da página)"
+  ],
+  "cartas": [
+   "c1-1",
+   "c1-2"
+  ],
+  "erros": [],
+  "avisos": []
+ }
+}

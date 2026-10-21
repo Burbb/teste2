@@ -33,6 +33,8 @@ CORES = {
     # a bota da Agilidade (attr-agilidade-24.png), para a alternativa da Iniciativa
     "a": "eaaa62", "j": "cf8040", "l": "b0602c", "t": "8f4620", "z": "6e3317", "A": "4e2210",
     "E": "6e5442", "I": "4a3628", "J": "f0d070", "V": "c08a48",
+    # a energia arcana da terceira rodada (Barreira): ciano do escuro ao claro
+    "<": "16384c", "=": "2a7894", ">": "62c4e0", "^": "d4f4ff", "@": "1a1c20",
 }
 
 def com_contorno(grade):
@@ -646,6 +648,240 @@ FRENESI_R2 = com_contorno([
            "................",
            "................"])
 
+VENENO_GOTA2 = com_contorno([
+          "................",
+          "................",
+          ".......h........",
+          "......hHg.......",
+          "......hHg.......",
+          ".....hHhgg......",
+          ".....hHhgg......",
+          "....hHihhgg.....",
+          "....hiGihgG.....",
+          "...hhhihhggG....",
+          "...hhhhhhggG....",
+          "...ghhhhhgGG....",
+          "....ghhhgGG.....",
+          ".....GGGGG......",
+          "................",
+          "................"])
+
+INICIATIVA_CUNHA = com_contorno([
+              "................",
+              "......eDDd......",
+              "......eDDc......",
+              "......DDdc......",
+              "......DDdc......",
+              "......DDdc......",
+              "......Ddcc......",
+              "......Ddcc......",
+              ".......dc.......",
+              ".......cC.......",
+              "................",
+              "......eDdc......",
+              "......DdcC......",
+              "......dcCC......",
+              "................",
+              "................"])
+
+INICIATIVA_ESTOURO = com_contorno([
+              ".......o........",
+              "..o...oyo....o..",
+              "...ooyyYyyooo...",
+              "...oyYY##YYyo...",
+              ".ooyYYY##YYYyoo.",
+              "..oyYYY##YYYyo..",
+              "..oyYYY##YYYyy..",
+              "oyyYYYY##YYYYyyo",
+              "..oyYYY##YYYyo..",
+              "..oyYYYYYYYYyo..",
+              "..oyYYY##YYYyo..",
+              ".ooyYYY##YYYyoo.",
+              "...oyYYYYYYyo...",
+              "...ooyyYyyooo...",
+              "..o...oyo....o..",
+              ".......o........"])
+
+INICIATIVA_ITALICO = com_contorno([
+              "................",
+              "..........eD....",
+              ".........eDd....",
+              ".........DDc....",
+              "..cccc...Ddc....",
+              "........DdC.....",
+              "........DdC.....",
+              "...ccc..dC......",
+              ".......ddC......",
+              ".......cC.......",
+              "................",
+              "......eD........",
+              "......dC........",
+              "................",
+              "................",
+              "................"])
+
+ATORDOADO_ESTRELAS = com_contorno([
+              "................",
+              ".......e........",
+              "......eDd.......",
+              "....eeDDDdd.....",
+              ".....DDDdd......",
+              "......Ddd.......",
+              ".....Dd.dc......",
+              "..D..c...c..D...",
+              ".DDd.......DDd..",
+              "DDDdd.....DDDdd.",
+              ".Dcd.......Dcd..",
+              ".d.c.......d.c..",
+              "................",
+              "................",
+              "................",
+              "................"])
+
+ATORDOADO_AMPULHETA = com_contorno([
+              "................",
+              "...KKKKKKKKKK...",
+              "....LLLLLLLL....",
+              ".....8dDDd6.....",
+              ".....7dDDd6.....",
+              "......7dd6......",
+              ".......d6.......",
+              ".......76.......",
+              "......7..6......",
+              ".....7....6.....",
+              ".....7.dd.6.....",
+              ".....7dDDd6.....",
+              "....LLLLLLLL....",
+              "...KMMMMMMMMN...",
+              "................",
+              "................"])
+
+ATORDOADO_CORRENTE = com_contorno([
+              "................",
+              "................",
+              "................",
+              "................",
+              ".87766.....8776.",
+              "7.....6...7....5",
+              "8.....5876654..5",
+              "7.....5876654..4",
+              "7.....6...7....4",
+              ".66554.....6544.",
+              "................",
+              "................",
+              "................",
+              "................",
+              "................",
+              "................"])
+
+BARREIRA_CUPULA = com_contorno([
+            "................",
+            "................",
+            ".....^^^>>......",
+            "...^^.....>=....",
+            "..^.........=...",
+            ".^...^.......=..",
+            ".^..^........=<.",
+            "^...^.........=.",
+            "^..............<",
+            ">..............<",
+            ">..............<",
+            "=<<<<<<<<<<<<<<<",
+            ".=============<.",
+            "................",
+            "................",
+            "................"])
+
+BARREIRA_COLMEIA = com_contorno([
+            "................",
+            "....^.....>.....",
+            "...^=>...>=<....",
+            "..^===>.>===<...",
+            "..^===>.>===<...",
+            "...>=>...<=<....",
+            "....>..^..<.....",
+            ".......^=>......",
+            "......^===>.....",
+            "......^===>.....",
+            ".......>=<......",
+            "........<.......",
+            "................",
+            "................",
+            "................",
+            "................"])
+
+BARREIRA_PAREDE = com_contorno([
+            "...........^>...",
+            "...........^>=..",
+            "..........^>=...",
+            "..........^>=...",
+            "..........^>=...",
+            ".........^.>=...",
+            "......8.^^^>=...",
+            "566666788^^>=...",
+            "......8.^^^>=...",
+            ".........^.>=...",
+            "..........^>=...",
+            "..........^>=...",
+            "..........^>=...",
+            "...........^>=..",
+            "...........^>...",
+            "................"])
+
+ATORDOADO_ELMO = com_contorno([
+              "................",
+              "............^...",
+              "...........^8^..",
+              ".....8777^6.^...",
+              "....8777^766....",
+              "...87777^76665..",
+              "...7777^776655..",
+              "...@@@@@@@@@@...",
+              "...777@@776655..",
+              "...7776666555...",
+              "...7766665554...",
+              "....76666554....",
+              ".....665544.....",
+              "................",
+              "................",
+              "................"])
+
+BARREIRA_CAMPO = com_contorno([
+            "................",
+            "...<=>>>>>>=<...",
+            "..=..........=..",
+            "..>..^....>..>..",
+            "..>..^....>..>..",
+            "..>..^....>..=..",
+            "..^..^....=..=..",
+            "..^..>....=..=..",
+            "..^..>....=..<..",
+            "..^..>....<..<..",
+            ".^>>>>>>>>>>>=<.",
+            "^^>==========>=<",
+            ".>>==========<<.",
+            "...<<<<<<<<<<...",
+            "................",
+            "................"])
+
+BARREIRA_IMPACTO = com_contorno([
+            "................",
+            ".....>>>>>>.....",
+            "...>>======>>...",
+            "..>==......==<..",
+            ".^.>=........=<.",
+            "^^^.@........=<.",
+            ".^^^.@@......=<.",
+            "^^^^^.@......=<.",
+            ".^^^.@@......=<.",
+            "^^^.@........=<.",
+            ".^.>=........=<.",
+            "..>==......==<..",
+            "...<<======<<...",
+            ".....<<<<<<.....",
+            "................",
+            "................"])
+
 # as camadas de cada desenho, de baixo para cima, pela letra
 def _por(mapa, resto):
     return lambda ch: "contorno" if ch == "#" else next((k for k, v in mapa.items() if ch in v), resto)
@@ -722,6 +958,33 @@ ICONES = {
                              else "rastro" if ch == "7" and x <= 6 and y in (5, 7, 9) and not (y == 9 and x >= 6)
                              else "espada"),
     "estado-frenesi-r2": (FRENESI_R2, ["divisas", "contorno"], lambda x, y, ch: "contorno" if ch == "#" else "divisas"),
+    # a terceira rodada (21/10/2026): Veneno sem a poça; Iniciativa, Atordoado e Barreira em três alternativas cada
+    "estado-veneno-gota2": (VENENO_GOTA2, ["gota", "contorno"], lambda x, y, ch: "contorno" if ch == "#" else "gota"),
+    "estado-iniciativa-cunha": (INICIATIVA_CUNHA, ["exclamacao", "contorno"],
+                                lambda x, y, ch: "contorno" if ch == "#" else "exclamacao"),
+    "estado-iniciativa-estouro": (INICIATIVA_ESTOURO, ["estouro", "exclamacao", "contorno"],
+                                  lambda x, y, ch: "exclamacao" if ch == "#" and 7 <= x <= 8 and 3 <= y <= 11
+                                  else "contorno" if ch == "#" else "estouro"),
+    "estado-iniciativa-italico": (INICIATIVA_ITALICO, ["rastro", "exclamacao", "contorno"],
+                                  lambda x, y, ch: "contorno" if ch == "#" else "rastro" if ch == "c" and x <= 6 and y <= 9
+                                  else "exclamacao"),
+    "estado-atordoado-estrelas": (ATORDOADO_ESTRELAS, ["estrelas", "contorno"],
+                                  lambda x, y, ch: "contorno" if ch == "#" else "estrelas"),
+    "estado-atordoado-ampulheta": (ATORDOADO_AMPULHETA, ["madeira", "vidro", "areia", "contorno"],
+                                   lambda x, y, ch: "contorno" if ch == "#" else "madeira" if ch in "KLMN"
+                                   else "areia" if ch in "dD" else "vidro"),
+    "estado-atordoado-elmo": (ATORDOADO_ELMO, ["elmo", "impacto", "contorno"],
+                              lambda x, y, ch: "contorno" if ch == "#" else "impacto" if ch == "^"
+                              or (y <= 2 and ch == "8") else "elmo"),
+    "estado-barreira-cupula": (BARREIRA_CUPULA, ["cupula", "chao", "contorno"],
+                               lambda x, y, ch: "contorno" if ch == "#" else "chao" if y >= 11 else "cupula"),
+    "estado-barreira-campo": (BARREIRA_CAMPO, ["campo", "chao", "contorno"],
+                              lambda x, y, ch: "contorno" if ch == "#" else "chao" if y >= 10 else "campo"),
+    "estado-barreira-parede": (BARREIRA_PAREDE, ["parede", "flecha", "contorno"],
+                               lambda x, y, ch: "contorno" if ch == "#" else "flecha" if ch in "5678" else "parede"),
+    "estado-barreira-impacto": (BARREIRA_IMPACTO, ["pelicula", "impacto", "contorno"],
+                                lambda x, y, ch: "contorno" if ch == "#" else "impacto" if ch in "^@" and x <= 6 and 4 <= y <= 10
+                                else "pelicula"),
     # tentativas guardadas (fora da proposta principal)
     "estado-veneno-presas": (VENENO_PRESAS, ["presas", "veneno", "contorno"],
                              lambda x, y, ch: "contorno" if ch == "#" else "presas" if ch in "Wwx" else "veneno"),
