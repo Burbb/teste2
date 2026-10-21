@@ -27,6 +27,23 @@ meteorológico):
   - E4 (estado-esquiva-e4), a figura que sai do lugar: uma silhueta simples (a cabeça e o corpo, sem anatomia, o
     contorno do conjunto) inclinada para a direita, e o fantasma pontilhado, em pé, onde ela estava (sem contorno: a
     imagem que ficou para trás). Na bancada, os fantasmas sólidos liam como uma fileira de peças de xadrez.
+  - E5 (estado-esquiva-e5, 21/10/2026), a figura desviando o corpo: pela construção da silhueta da referência
+    (ferramentas/arte/referencias/icones/esquiva-figura-movimento.png, a figura em movimento que o Jean mandou: a cabeça
+    reconhecível, o tronco inclinado, os braços e as pernas separados), mas no gesto de desviar: os pés plantados à
+    direita, embaixo, o tronco inclinado para trás e para a esquerda, saindo da base, a cabeça fora do eixo dos pés, um
+    braço para cima e para a direita e o outro para baixo e para a esquerda, para equilibrar. A pose primeiro, numa cor
+    só (ESQUIVA_E5_POSE, a camada oculta "silhueta" da fonte): o tronco de 3 px e os membros de 2 px, com os espaços que
+    separam os membros (os membros de 1 px viravam um boneco de palitos; o avanço para a frente lia como ataque). Depois
+    dois tons do ferro dos estados: a cabeça e o tronco claros, os braços e as pernas um tom abaixo, o brilho curto na
+    cabeça. Sem rastro (dois traços de ar ao lado da cabeça liam como ruído) e sem fantasma. Recusada pelo Jean ("achei
+    horrível"), guardada como histórico;
+  - E6 (estado-esquiva-e6, 21/10/2026), a cópia da referência ("copiar 1 pra 1", pedido do Jean): a silhueta da
+    figura em movimento reduzida pela cobertura (a caixa da figura, 182 × 136, em 16 px; a redução direta fundia tudo
+    num bloco) e limpa à mão pixel a pixel seguindo a imagem: a cabeça redonda de 3 a 4 px, destacada do braço de trás;
+    o braço de trás fino, para cima e para a esquerda; o tronco de 3 px inclinado; o braço da frente para baixo e para
+    a direita, separado do tronco; a perna da frente dobrada e a de trás esticada para a esquerda, com a cunha vazia
+    entre elas; os riscos de velocidade como dois traços curtos à esquerda, nas alturas do braço e do tronco. Numa cor
+    chapada, como a referência (o ferro claro dos estados; os riscos um tom abaixo), com o contorno do conjunto.
 Grava grades/<id>.txt e as listas por camada para o pintar.lua (listas/<id>/<camada>.lua).
     python icones16.py <pasta>
 """
@@ -97,6 +114,15 @@ ESQUIVA_E4 = ["................", "................", "................", ".....
               "................"]
 
 
+ESQUIVA_E6 = ['...........##...', '..........#77#..', '.######..#7777#.', '#667777#.#7777#.', '.####777###77#..', '.....##777777#..', '.##..#77777777#.', '#66##77777##777#', '.###77777#..#77#', '...#777777#..##.', '..#7777##77#....', '.#777###7777#...', '#777#...####....', '77##............', '##..............', '................']
+ESQUIVA_E5_POSE = ['................', '..XX............', '.XXXX.......XX..', '.XXXX.....XXX...', '..XX.....XX.....', '...XXX..XXX.....', '...XXXXXXX......', '..XX.XXXXXX.....', '.XX....XXXX.....', '.X......XXXX....', '.........XXX....', '........XX.XX...', '.......XX...XX..', '......XX....XX..', '.....XXX....XXX.', '................']
+ESQUIVA_E5 = ['..##............', '.#77#.......##..', '#7887#....##66#.', '#6776#...#666#..', '.#66##..#66##...', '..#677##777#....', '..#6777777#.....', '.#66#777777#....', '#66#.##7777#....', '#6#....#7777#...', '.#......#777#...', '.......#66#66#..', '......#66#.#66#.', '.....#66#..#66#.', '....#666#..#666#', '.....###....###.']
+
+
+def camada_e5(x, y, ch, grade):
+    return "contorno" if ch == "#" else "membros" if ch == "6" else "corpo"
+
+
 def camada_e2(x, y, ch, grade):
     return "contorno" if ch == "#" else "crescentes"
 
@@ -111,7 +137,8 @@ def camada_e4(x, y, ch, grade):
 
 ICONES = {"estado-guarda": (GUARDA, camada_guarda), "estado-esquiva": (ESQUIVA, camada_esquiva),
           "estado-esquiva-e2": (ESQUIVA_E2, camada_e2), "estado-esquiva-e3": (ESQUIVA_E3, camada_e3),
-          "estado-esquiva-e4": (ESQUIVA_E4, camada_e4)}
+          "estado-esquiva-e4": (ESQUIVA_E4, camada_e4), "estado-esquiva-e5": (ESQUIVA_E5, camada_e5),
+          "estado-esquiva-e6": (ESQUIVA_E6, lambda x, y, ch, grade: "contorno" if ch == "#" else "riscos" if ch == "6" else "figura")}
 
 if __name__ == "__main__":
     base = pathlib.Path(sys.argv[1])
@@ -123,6 +150,8 @@ if __name__ == "__main__":
         for y, l in enumerate(grade):
             for x, ch in enumerate(l):
                 if ch != ".": listas.setdefault(camada(x, y, ch, grade), []).append(f"{x},{y},{CORES[ch]}")
+        if ident == "estado-esquiva-e5":   # a pose numa cor só, a camada oculta da fonte
+            listas["silhueta"] = [f"{x},{y},b0b6bd" for y, l in enumerate(ESQUIVA_E5_POSE) for x, ch in enumerate(l) if ch == "X"]
         d = base / f"listas/{ident}"; d.mkdir(parents=True, exist_ok=True)
         for k, v in listas.items():
             (d / f"{k}.lua").write_text(f'return "{";".join(v)}"\n', encoding="utf-8")

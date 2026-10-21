@@ -5211,3 +5211,13 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   `ferramentas/prototipos/hud/itens-lote-noite/estados_guarda_esquiva/`, a E2 como histórico; a prancha nova pelo nome de
   cada ícone (as duas curvas eram de um visualizador de rascunho que montava por posição; o jogo nunca mapeou a Esquiva).
 - **Continua:** a Esquiva fora de produção (a folha do jogo) até a avaliação; a versão continua 1.156.0.
+
+### 21/10/2026 (data do computador local) — A Esquiva: a E5 recusada e a E6, a cópia da referência (proposta)
+
+- **Pedido de Jean:** uma Esquiva com figura humana pela referência de movimento que ele mandou; a pose à mão (E5) foi
+  recusada durante a rodada, com o pedido de copiar a referência "1 pra 1".
+- **Feito:** a E6 (a silhueta da referência reduzida e limpa à mão, numa cor chapada com o contorno) e a E5 como
+  histórico, em `ferramentas/prototipos/hud/itens-lote-noite/estados_guarda_esquiva/`; a folha `esquiva-e6.png` com a
+  carta a 1920×945 (a folha, a E3, a E6). A referência em `ferramentas/arte/referencias/icones/`, com a origem e a
+  licença pendentes.
+- **Continua:** nenhuma Esquiva aprovada; a versão continua 1.156.0.

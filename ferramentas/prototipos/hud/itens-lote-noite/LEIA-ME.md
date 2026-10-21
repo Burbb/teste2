@@ -3676,3 +3676,39 @@ dados; as capturas em `capturas/rodada3/`. Sem erro no console.
 **A folha:** `estados_guarda_esquiva/esquiva-alternativas.png` (a fileira Firme · Em guarda · Esquiva para o jogo, a E1, a
 E2, a E3 e a E4, em tamanho real e a 2×, com o nome de cada uma; as ampliações 12×; a carta na luta com a folha, a E1, a
 E3 e a E4, e a E3 e a E4 a 2×). Nada integrado; a Esquiva continua a folha do jogo.
+
+### A Esquiva: a E5 (a pose à mão, recusada) e a E6 (a cópia da referência) (`estados_guarda_esquiva/`)
+
+**Pedidos de Jean (21/10/2026):** primeiro, uma Esquiva com figura humana pela referência de movimento que ele mandou
+(`ferramentas/arte/referencias/icones/esquiva-figura-movimento.png`, o papel e a origem pendente no `LEIA-ME.md` de lá):
+a construção da silhueta da imagem (a cabeça, o tronco inclinado, os braços e as pernas separados) num gesto de desviar,
+a pose primeiro numa cor só, depois poucos tons, sem fantasma; durante a rodada, vendo a pose, "achei horrível, tenta
+copiar 1 pra 1".
+
+**E5, a pose à mão (recusada, histórico):** a figura com os pés plantados à direita e o tronco inclinado para trás,
+saindo da base, os braços abertos (a pose numa cor só fica na camada oculta "silhueta" da fonte); na bancada, os membros
+de 1 px viravam um boneco de palitos e o avanço para a frente lia como ataque. Dois tons do ferro dos estados, sem
+rastro. Fonte: `fontes/estado-esquiva-e5/`.
+
+**E6, a cópia da referência:** a silhueta da imagem reduzida pela cobertura para 16 px (a caixa da figura, 182 × 136;
+a redução direta fundia o braço, os riscos e a perna da frente no tronco) e limpa à mão seguindo a imagem: a cabeça
+redonda destacada, o braço de trás fino com os riscos de velocidade à esquerda, o tronco de 3 px inclinado, o braço da
+frente separado, a perna da frente dobrada e a de trás esticada, com a cunha vazia entre elas. Numa cor chapada como a
+referência (o ferro claro; os dois riscos um tom abaixo), com o contorno do conjunto. Camadas: riscos, figura, contorno.
+**A origem e a licença da referência não foram informadas**: como a E6 a copia de perto, a integração depende de
+esclarecer isso, como na L7.
+
+**A avaliação (minha):** em tamanho real, a E6 lê de imediato como uma figura correndo, com a mesma leitura da
+referência; a leitura é de corrida, não de desvio, e fica perto do "Fugir" (a bota em passada) e da Agilidade. A E3
+continua a alternativa sem figura.
+
+**A conferência:** as fontes pelo `pintar.lua` (0 diferenças na releitura, 0 fora da tela); a E6 lida no editor igual ao
+PNG (0 pixels diferentes); a grade igual ao PNG nas duas; @2x exatos; a camada oculta da E5 fora da exportação; os PNGs
+anteriores (G1, E1 a E4) não mudaram.
+
+**No contexto:** `flechas_firme/auxiliares/fotografar_luta.mjs` com `TROCAS=auxiliares/trocas-r4.json` (só o chip
+`.ef[data-ef="esquiva"]`), a 1920×945, com os mesmos dados; as capturas em `capturas/rodada4/`. Sem erro no console.
+
+**A folha:** `estados_guarda_esquiva/esquiva-e6.png` (a fileira Firme · Em guarda · Esquiva para a folha, a E3, a E5 e a
+E6, pelo nome; a E6 numa cor só em tamanho real, a 2× e a 12×, ao lado da E6 acabada e da referência; a carta na luta
+com a folha, a E3 e a E6, e a E3 e a E6 a 2×). Nada integrado; nenhuma Esquiva aprovada.

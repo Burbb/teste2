@@ -853,7 +853,7 @@ talentos com o mesmo `icone`, e outros usos na interface): trocar o desenho de u
 | Fúria (`furia`, +) | dano causado +v% (soma com o Fortalecido) | `machado` | Redemoinho | pendente |
 | Frenesi (`frenesi`, +) | cada abate soma dano até o fim da luta | `raio` | Julgamento Divino | pendente |
 | Iniciativa (`iniciativa`, +) | o primeiro golpe deste turno sai +v% mais forte | `bota` | a reserva dos pés (a bota de couro) | pendente |
-| Esquiva (`esquiva`, +) | +v na chance de esquiva, até o teto (Passo Ágil: +30% por 2 turnos; Desaparecer: +50% por 1) | `folha` | Fúria da Natureza; Pés Leves; o Antídoto; a Agilidade das celebrações e do Inventário | pendente: a E1 (vento) e a E2 (crescentes) recusadas; **as alternativas E3 (a bota dando um passo) e E4 (a figura saindo do lugar)** em avaliação |
+| Esquiva (`esquiva`, +) | +v na chance de esquiva, até o teto (Passo Ágil: +30% por 2 turnos; Desaparecer: +50% por 1) | `folha` | Fúria da Natureza; Pés Leves; o Antídoto; a Agilidade das celebrações e do Inventário | pendente: a E1 (vento) e a E2 (crescentes) recusadas; a E4 (a figura com o fantasma) e a E5 (a pose à mão) recusadas; **a E3 (a bota dando um passo) e a E6 (a cópia da figura em movimento da referência; a origem dela pendente)** em avaliação |
 | Barreira (`barreira`, +) | absorve v de dano | `escudo_azul` | Barreira Arcana | pendente |
 | Furtivo (`furtivo`, +) | o próximo ataque é crítico garantido | `olho` | Marcar Presa; Canalização, Olho de Águia; a névoa e outros | pendente |
 | Provocando (`provocando`, +) | os inimigos atacam ele | `caveira` | Execução, Fúria Cega; Assassino, Colheita, Golpe Sombrio, Imortal, Legião de Ossos, Rei dos Mortos; derrota, fome e outros | pendente |

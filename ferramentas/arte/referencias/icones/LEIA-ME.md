@@ -17,3 +17,9 @@ a comparar a posição das penas; as cores, os efeitos e os ornamentos delas nã
 Jean pode deixar o arquivo nesta pasta.
 
 **No jogo desde a 1.155.0:** a F2 (a flecha da carta) e a R2 (o Firme).
+
+**`esquiva-figura-movimento.png`** (224×215, 21/10/2026): a referência principal da Esquiva E5 e E6, mandada pelo Jean na
+conversa: uma silhueta preta de figura em movimento (a cabeça redonda, o tronco inclinado, um braço para trás, as pernas
+em passada, os riscos de velocidade). **A origem, a autoria e a licença não foram informadas** (o estilo lembra os ícones
+de silhueta de bancos como o game-icons.net, que pedem crédito); a E6 a copia de perto, e por isso a origem precisa ser
+esclarecida antes de qualquer integração, como na L7. Não atribua licença nem autoria.
