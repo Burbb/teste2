@@ -75,7 +75,7 @@ DERIVADOS = {
                                      # 1.148.0 em historico/): o 40 e o 48 são o 32 centrado, o 64 é o 32 ×2
     "perneiras": {40: (32, CENTRO), 48: (32, CENTRO), 64: (32, 2)},  # 1.152.0: a P7 (a P4 da 1.148.0 em historico/):
                                      # o 40 e o 48 são o 32 centrado, como na manopla; o 64 é o 32 ×2
-    "botas-ferro": {64: (32, 2)},    # 1.150.0: as botas de ferro (a B3, da referência gerada do Jean); o 64 é o 32 ×2
+    "botas-ferro": {64: (32, 2)},    # 1.154.0: as botas de ferro com o acabamento A1 (a B3 da 1.150.0 em historico/); o 64 é o 32 ×2
 }
 # O martelo (1.149.0) só tem fontes do 40 e do 48 (aseprite/martelo/): o 32 e o 64 são a grade de desenhos.js, no
 # jogo, e não saem daqui.

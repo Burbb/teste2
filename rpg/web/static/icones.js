@@ -57,7 +57,7 @@ const Icones = (() => {
   // o 48 são o 32 centrado num quadro transparente; a P4 da 1.148.0 virou histórico) valem para o desenho "calca": a Perneira e a Greva, a silhueta das pernas vazias (VAZIO) e o desenho de reserva
   // das pernas (ICONE_ESPACO, em itens.py). As botas de ferro (1.150.0, o par em três quartos, uma à frente e a outra
   // atrás: o cano moldado com a boca escura, as tiras de couro com fivela, as placas do tornozelo até a biqueira, a
-  // sola e o salto de couro) valem para o desenho "bota_ferro": a Bota Ferrada e a silhueta dos pés vazios (VAZIO).
+  // sola e o salto de couro; desde a 1.154.0 com o acabamento A1, os reflexos contidos) valem para o desenho "bota_ferro": a Bota Ferrada e a silhueta dos pés vazios (VAZIO).
   // O machado de barba (ferramentas/arte/, 1.99.0) vale para todo equipamento com o desenho "machado" (o Machado e os
   // únicos Lamento de Gharbad e O Açougueiro); o Redemoinho e a Fúria usam o mesmo sprite noutro papel e ficam com o
   // do jogo. O arco de teixo (1.101.0) vale para os três arcos e os únicos Ventre da Tempestade e Sussurro do Vazio;

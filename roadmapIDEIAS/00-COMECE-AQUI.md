@@ -5159,3 +5159,11 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   1920×945; o cenário `covil` dos testes de navegador aceita `EFEITOS` e `EFEITOS_INIMIGO`.
 - **Continua:** nada integrado; a versão continua 1.153.0. Não começados: inimigos, pets, caminhos, talentos,
   habilidades.
+
+### 20/10/2026 (data do computador local) — As botas A1 no jogo (1.154.0)
+
+- **Decisão de Jean:** integrar os quatro tamanhos da A1 (32 e 64 do `945a54a8`, 40 e 48 do `3c41c7a0`), sem retoques.
+- **Feito:** as fontes da A1 em `ferramentas/arte/aseprite/botas-ferro/`; a B3 em `aseprite/historico/botas-ferro-b3/`;
+  os 8 PNGs do jogo idênticos aos aprovados; os usos sem mudança (`ITEM`, `VAZIO`). Conferido no jogo a 1920×945: o
+  saque, equipar e guardar, a ficha, o Inventário e os pés vazios.
+- **Continua:** o Firme (R1) e a flecha da carta (F1) em ajuste no protótipo.

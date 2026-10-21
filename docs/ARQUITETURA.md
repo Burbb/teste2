@@ -516,7 +516,9 @@ crítico (`chance_critico`, `mult_critico`) que o combate, a ficha e o livro usa
   quadro transparente e o 64 = 32 ×2, pelo `DERIVADOS`; a P4 (1.148.0) é histórico, em `aseprite/historico/perneiras-p4/`. Desde a 1.150.0, as botas de ferro (o par em três
   quartos: o cano moldado com a boca escura, as tiras de couro com fivela, as placas do tornozelo até a biqueira, a
   sola de couro; a transposição da referência gerada do Jean, `ferramentas/arte/referencias/botas/`; 32, 40, 48 e o
-  64 = 32 ×2, fontes em `aseprite/botas-ferro/`): a Bota Ferrada e a silhueta dos pés vazios. Nenhuma peça de ferro do
+  64 = 32 ×2, fontes em `aseprite/botas-ferro/`; desde a 1.154.0 com o acabamento A1, os reflexos contidos e o aço
+  no tom médio, a mesma forma; as fontes da B3 em `aseprite/historico/botas-ferro-b3/`): a Bota Ferrada e a silhueta
+  dos pés vazios. Nenhuma peça de ferro do
   equipamento sai mais do `familia_ferro.py` (só o baú da bolsa): os 31 desenhos-base de equipamento das classes
   estão no padrão atual.
 - O escudo e o Unguento de Prata (1.94.0), o machado e a Bomba de Fumaça (1.99.0) o arco (1.101.0,

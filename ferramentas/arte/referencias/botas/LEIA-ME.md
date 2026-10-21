@@ -13,7 +13,7 @@ jogo como está; meça nela e desenhe na grade de cada tamanho. Autoria e origem
   imagem gerada que o Jean salvou aqui para o teste de um acabamento mais contido nas botas. Orienta **só** a paleta, os
   reflexos e a divisão dos planos (o aço no tom médio, poucos brilhos claros, as placas em planos com as juntas
   escuras); a forma continua a da B3 integrada, e a bota não é reconstruída a partir dela
-  (`ferramentas/prototipos/hud/itens-lote-noite/botas_ferro/acabamento_a1/`).
+  (`ferramentas/prototipos/hud/itens-lote-noite/botas_ferro/acabamento_a1/`). **No jogo desde a 1.154.0.**
 - **A referência da B2** (20/10/2026, anexada na conversa e não salva aqui): uma faixa com três versões de um par de
   botas de armadura (a pintura à esquerda para os volumes; a redução em 32×32 no centro, que não era o acabamento; o par
   em pixel art 32×32 à direita, a principal). Substituída pela de cima.

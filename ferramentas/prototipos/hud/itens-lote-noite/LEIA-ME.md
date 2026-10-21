@@ -3492,3 +3492,24 @@ a quantidade (20) e os chips não mudam. Sem erro no console.
 **As folhas:** `flechas_firme/flechas-firme.png` (atual × proposta em tamanho real sobre o carvão, a flecha ao lado do
 número, o Firme na fileira com os outros estados, as ampliações 12× e as referências) e `flechas-firme-luta.png` (a carta
 do Arqueiro em tamanho real e 2× e a luta a 1920×945, atual × proposta). Nada integrado.
+
+### As botas A1 no jogo (1.154.0)
+
+**Decisão de Jean (20/10/2026):** os quatro tamanhos da A1 aprovados e integrados sem retoques: o 32 e o 64 do
+`945a54a8`, o 40 e o 48 do `3c41c7a0`, com os @2x.
+
+**Os arquivos:** as fontes `botas_ferro/acabamento_a1/fontes/A1/A1-32.aseprite`, `-40`, `-48` (conferidas iguais, byte a
+byte, às do `3c41c7a0`) copiadas sem mudança para `ferramentas/arte/aseprite/botas-ferro/botas-ferro-32.aseprite`, `-40`,
+`-48`; as fontes da B3 movidas para `ferramentas/arte/aseprite/historico/botas-ferro-b3/` (fora da exportação). O
+`DERIVADOS` continua com o 64 = 32 ×2. Os 8 PNGs do jogo idênticos, byte a byte, aos aprovados;
+`exportar_aseprite.py todas --conferir` e `familia_ferro.py --conferir`: tudo igual.
+
+**Os usos:** sem mudança nas chamadas: `ITEM` (`bota_ferro` → `botas-ferro`: a Bota Ferrada) e `VAZIO` (os pés vazios);
+a reserva dos pés (`ICONE_ESPACO`) é a bota de couro e não muda; nenhuma habilidade nem estado usa o sprite.
+
+**Conferido no jogo** a 1920×945 com os arquivos do jogo e os saves temporários
+(`botas_ferro/acabamento_a1/capturas/integracao/`; `sandalia_chapeu/auxiliares/equipar.mjs . <pasta> guerreiro bota_ferro
+pes 1.154.0 botas-ferro` e `elmo_cota/auxiliares/integracao.mjs . <pasta> pes bota_ferro 1.154.0 botas-ferro
+pes-vazios`): o saque com as botas em 64 e o "você usa" em 48, "Equipar agora" e "Guardar na mochila", a ficha (32), o
+Inventário (40) e os pés vazios (na foto do Inventário depois de guardar, o aviso "Você tira…" cobre a fileira de baixo,
+como na integração da B3). Sem erro no console. A folha: `botas_ferro/acabamento_a1/a1-integracao-1.154.0.png`.
