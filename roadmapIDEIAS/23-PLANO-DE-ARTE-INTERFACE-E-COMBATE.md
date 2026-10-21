@@ -839,6 +839,36 @@ em 16 px, em `ferramentas/prototipos/hud/itens-lote-noite/flechas_firme/` (o lev
 `LEIA-ME.md` do lote). A troca futura atinge só esses dois papéis: um desenho próprio para `.carta-flechas` e um ícone
 próprio para o estado `firme`; a aljava, os outros usos de `flecha` e os outros cadeados ficam. Segunda rodada (20/10/2026): a F2 (as penas na traseira, menores, sem madeira atrás) e a R2 (sem as faíscas, o furo dos elos mais legível), **aprovadas e integradas na 1.155.0** por papéis próprios (`Icones.contadorFlechas` e `Icones.estado`), com o sprite `flecha` e o `cadeado` intactos nos outros papéis. Os outros estados e o resto do bloco 1E continuam com os sprites do jogo.
 
+**Levantamento dos estados (20/10/2026, `rpg/estados.py`).** Todo ícone de estado aparece em 16 px de arte (~18 px de tela
+a 1920×945, pelo zoom da HUD) em dois lugares da luta: o chip da carta (`.ef`, com os turnos) e o selo do estado que
+chega (`.faixa-acao.selos`, ▲/▼); a família pinta o brilho da carta (`com-<família>`) e a borda do chip. O Grimório e a
+orientação descrevem os estados por texto. "Compartilha" lista os outros papéis do mesmo sprite (as habilidades e os
+talentos com o mesmo `icone`, e outros usos na interface): trocar o desenho de um estado é sempre por papel próprio
+(`Icones.estado`), nunca no sprite.
+
+| Estado | Efeito real | Ícone atual | Compartilha | Arte |
+|---|---|---|---|---|
+| Em guarda (`guarda`, +) | dano recebido −v% em todo golpe que acerta (Erguer Escudo: −50% por 2 turnos; Ordem da Fera: −30% no animal); ativa o Revide do Broquel do Vigia | `escudo` | Erguer Escudo; os talentos Aura de Proteção, Escudo Rúnico, Muralha e Pele de Ferro; o escudo/apoio vazio e outros usos | **proposta G1** (em avaliação) |
+| Fortalecido (`fortalecido`, +) | dano causado +v% | `espada` | Investida; Contra-ataque, Golpe Brutal; o elemento físico e outros | pendente |
+| Fúria (`furia`, +) | dano causado +v% (soma com o Fortalecido) | `machado` | Redemoinho | pendente |
+| Frenesi (`frenesi`, +) | cada abate soma dano até o fim da luta | `raio` | Julgamento Divino | pendente |
+| Iniciativa (`iniciativa`, +) | o primeiro golpe deste turno sai +v% mais forte | `bota` | a reserva dos pés (a bota de couro) | pendente |
+| Esquiva (`esquiva`, +) | +v na chance de esquiva, até o teto (Passo Ágil: +30% por 2 turnos; Desaparecer: +50% por 1) | `folha` | Fúria da Natureza; Pés Leves; o Antídoto; a Agilidade das celebrações e do Inventário | **proposta E1** (em avaliação) |
+| Barreira (`barreira`, +) | absorve v de dano | `escudo_azul` | Barreira Arcana | pendente |
+| Furtivo (`furtivo`, +) | o próximo ataque é crítico garantido | `olho` | Marcar Presa; Canalização, Olho de Águia; a névoa e outros | pendente |
+| Provocando (`provocando`, +) | os inimigos atacam ele | `caveira` | Execução, Fúria Cega; Assassino, Colheita, Golpe Sombrio, Imortal, Legião de Ossos, Rei dos Mortos; derrota, fome e outros | pendente |
+| Firme (`firme`, +) | depois de um atordoamento ou congelamento, não pode ser atordoado nem congelado de novo naquele turno | `estado-firme` (próprio) | nenhum (o `cadeado` ficou nos outros papéis) | **final** (R2, 1.155.0) |
+| Veneno (`veneno`, −) | dano por turno | `gota_verde` | Flecha Envenenada; os serviços | pendente |
+| Sangramento (`sangramento`, −) | dano por turno | `gota` | Sede de Sangue; Pacto Sombrio, Pontas Venenosas, Sede Insaciável; os ferimentos e os serviços | pendente |
+| Chamas (`queimadura`, −) | dano por turno; a Combustão detona o que falta arder | `chama` | Bola de Fogo; Brasas Eternas, Chama Viva, Coração Ardente, Frenesi, Ignição; o Vigor, o Poder e a Pena de Fênix | pendente |
+| Maldição (`maldito`, −) | dano por turno e −40% de defesa | `gota_roxa` | Drenar Vida | pendente |
+| Atordoado (`atordoado`, −; também "congelado") | perde o próximo turno; depois fica Firme | `estrela` | Combustão; Eficiência, Luz Curativa; dezenas de usos genéricos da estrela | pendente |
+| Enfraquecido (`enfraquecido`, −) | dano causado −25% | `osso` | Erguer Servo | pendente |
+| Marcado (`marcado`, −) | recebe mais dano de todos | `flecha` | Tiro Certeiro; Mira Firme, Tiro de Abertura; o custo das habilidades, a orientação, o elemento "à distância", os projéteis | pendente |
+
+**Primeiro par de estados (20/10/2026, em avaliação, nada integrado):** Em guarda (G1, o escudo de ferro) e Esquiva
+(E1, a rajada de vento), em 16 px, em `ferramentas/prototipos/hud/itens-lote-noite/estados_guarda_esquiva/`.
+
 O atalho **Mapa** da doca já foi concluído; esta frente trata dos símbolos internos de caminhos e mapas.
 Não afirmar que só restam talentos e habilidades após este bloco sem conferir os consumíveis, variantes e
 compartilhamentos provisórios ainda registrados. A Capa de Patrulha, o Chapéu de Couro e a Coroa dos Afogados continuam

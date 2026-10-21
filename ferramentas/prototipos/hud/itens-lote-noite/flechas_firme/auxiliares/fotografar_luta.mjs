@@ -15,7 +15,10 @@ const PY = process.env.PYTHON || (process.platform === "win32" ? "python" : "pyt
 const espera = (ms) => new Promise((r) => setTimeout(r, ms));
 const prop = path.join(raiz, "ferramentas/prototipos/hud/itens-lote-noite/flechas_firme/proposta");
 const dados = (n) => "data:image/png;base64," + readFileSync(path.join(prop, n)).toString("base64");
-const TROCAS = {
+// TROCAS=<arquivo .json> serve outro par de propostas: {"modo": {"seletor": "caminho do png a partir da raiz"}}, com o
+// modo "atual" sempre antes (o par de estados Em guarda e Esquiva, estados_guarda_esquiva/, usa assim)
+const TROCAS = process.env.TROCAS ? Object.fromEntries(Object.entries(JSON.parse(readFileSync(process.env.TROCAS, "utf8"))).map(
+  ([m, t]) => [m, Object.fromEntries(Object.entries(t).map(([sel, arq]) => [sel, "data:image/png;base64," + readFileSync(path.join(raiz, arq)).toString("base64")]))])) : {
   proposta: { ".carta-flechas img.sprite": dados("flecha_contador-16.png"), '.ef[data-ef="firme"] img.sprite': dados("firme-16.png") },
   rodada2: { ".carta-flechas img.sprite": dados("flecha_contador_f2-16.png"), '.ef[data-ef="firme"] img.sprite': dados("firme_r2-16.png") },
 };
@@ -25,7 +28,7 @@ mkdirSync(saida, { recursive: true });
 const b = await chromium.launch();
 const registro = {};
 // MODOS=atual: só os arquivos do jogo (a conferência da integração, 1.155.0)
-for (const modo of (process.env.MODOS || "atual,proposta,rodada2").split(",")) {
+for (const modo of (process.env.MODOS || (process.env.TROCAS ? ["atual", ...Object.keys(TROCAS)].join(",") : "atual,proposta,rodada2")).split(",")) {
   const proc = spawn(PY, ["-m", "tests.navegador.cenarios", "covil"], { cwd: raiz, env: { ...process.env, PYTHONPATH: raiz, PYTHONIOENCODING: "utf-8", VELOCIDADE: "rapido", ...AMB } });
   let url = null; proc.stdout.on("data", (d) => { const m = String(d).match(/http:\S+/); if (m) url = m[0]; });
   for (let k = 0; k < 300 && !url; k++) await espera(100);

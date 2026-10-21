@@ -5184,3 +5184,13 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   `batalha.js` no chip e no selo dos estados e na `.carta-flechas`, com volta ao sprite do jogo sem desenho. O `flecha`
   e o `cadeado` ficam nos outros papéis. Conferido no jogo a 1920×945.
 - **Continua:** os outros estados e o resto do bloco 1E (inimigos, pets, caminhos) não começados.
+
+### 20/10/2026 (data do computador local) — O levantamento dos estados; Em guarda (G1) e Esquiva (E1) (proposta)
+
+- **Pedido de Jean:** o levantamento dos estados no plano 23 e o primeiro par de ícones de estados, Em guarda e Esquiva,
+  só no protótipo.
+- **Feito:** a tabela dos 17 estados no plano 23 (o efeito real, o ícone, os compartilhamentos e a situação: o Firme
+  final, o Em guarda e a Esquiva em proposta, os outros pendentes; todos em 16 px no chip e no selo); o G1 (o escudo de
+  ferro) e o E1 (a rajada de vento) em `ferramentas/prototipos/hud/itens-lote-noite/estados_guarda_esquiva/`, com as
+  fontes em camadas e a carta na luta a 1920×945.
+- **Continua:** nada integrado; a versão continua 1.155.0. Não começados: os outros estados, inimigos, pets.

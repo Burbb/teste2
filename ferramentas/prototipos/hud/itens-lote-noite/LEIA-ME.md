@@ -3571,3 +3571,45 @@ quantidades, os textos e as medidas (o mesmo `--s: 16`).
 com os mesmos dados das propostas; a linha das flechas e o ícone do Firme são idênticos aos da rodada 2 aprovada (a
 única diferença, de no máximo 12 níveis em 20 pixels, é o brilho animado da borda do chip). Sem erro no console. A folha:
 `flechas_firme/f2-r2-integracao-1.155.0.png` (antes × depois, a 2×).
+
+### Os estados Em guarda (G1) e Esquiva (E1) (`estados_guarda_esquiva/`)
+
+**Pedido de Jean (20/10/2026):** continuar pelos ícones de estados (a flecha F2 e o Firme R2 concluídos): o
+levantamento de todos os estados no plano 23 (a tabela com o efeito real, o ícone, onde e em que tamanho aparece, os
+compartilhamentos e a situação) e o primeiro par, Em guarda e Esquiva, só no protótipo, no tamanho real, com o Firme
+como referência de acabamento e de quantidade de informação. A integração fica para depois da avaliação.
+
+**As regras, antes do desenho:** o Em guarda reduz o dano recebido (−v% em todo golpe que acerta; o Erguer Escudo dá
+−50% por 2 turnos, a Ordem da Fera −30% no animal) e ativa o Revide do Broquel do Vigia; a Esquiva soma v à chance de
+esquivar, até o teto (o Passo Ágil +30% por 2 turnos, o Desaparecer +50% por 1), e não mexe na Defesa. Os dois aparecem
+em 16 px (o chip da carta e o selo do estado que chega), como todos os estados.
+
+**As propostas** (`auxiliares/icones16.py`, as grades à mão; as fontes `fontes/estado-guarda/estado-guarda-16.aseprite`
+e `fontes/estado-esquiva/estado-esquiva-16.aseprite`, em camadas, pelo `pintar.lua`):
+- **G1, Em guarda:** o escudo de ferro em pé, de frente, a ponta embaixo; o aro de 1 px (claro em cima e à esquerda,
+  escuro à direita), a face em duas águas com a aresta acesa no meio e um brilho curto no alto da esquerda; a rampa de
+  ferro do conjunto. Camadas: face, aro, contorno. Na bancada, a primeira versão (só as duas águas, sem aro nem aresta)
+  saiu chapada.
+- **E1, Esquiva:** a rajada de vento, três traços horizontais claros com a cauda mais escura à esquerda; o de cima e o
+  de baixo terminam num cacho enrolado (para cima e para baixo), o do meio é curto. A folha atual não comunica esquivar
+  (e é também a Fúria da Natureza, o Pés Leves, o Antídoto e a Agilidade das celebrações); o vento diz movimento e ar,
+  sem figura nem mão. Camadas: rajadas, cachos, contorno. Na bancada, as primeiras versões (três traços iguais, com os
+  cachos fracos) liam como o ícone de menu "≡"; os cachos fechados resolveram em parte.
+- **A distinção:** o escudo é um bloco vertical de metal; o vento, traços horizontais abertos num azul claro de ar; o
+  Firme, os dois elos na diagonal; o Atordoado, a estrela amarela.
+- **A avaliação (minha):** em tamanho real, o escudo lê de imediato como proteção e conversa com o Firme (o mesmo ferro);
+  o vento lê sobretudo pelas rajadas, e os cachos aparecem pouco a ~18 px: se não bastar, o próximo passo é aumentar o
+  cacho de cima e tirar o traço do meio.
+
+**A conferência:** as fontes pelo `pintar.lua` (0 diferenças na releitura, 0 fora da tela); exportadas por
+`exportar_aseprite.py estado-guarda|estado-esquiva estados_guarda_esquiva/proposta --fontes=estados_guarda_esquiva/fontes`;
+o composto do editor igual ao PNG e à grade (0 pixels diferentes); @2x exatos.
+
+**No contexto:** o roteiro da luta (`flechas_firme/auxiliares/fotografar_luta.mjs`) passou a aceitar `TROCAS=<json>`
+(as trocas de cada modo por seletor); com `auxiliares/trocas.json`, a página troca só as imagens dos chips
+`.ef[data-ef="guarda"]` e `.ef[data-ef="esquiva"]`. A mesma luta das flechas (o Arqueiro, o Firme, o Em guarda e a
+Esquiva no herói, os lobos atordoados), a 1920×945, atual × proposta, com os arquivos do jogo para o resto (a flecha F2
+e o Firme R2 já integrados). Sem erro no console.
+
+**A folha:** `estados_guarda_esquiva/guarda-esquiva.png` (a fileira dos estados em tamanho real e a 2× com o Firme e o
+Atordoado, atual × proposta; as ampliações 12×; a carta na luta a 1920×945, em tamanho real e a 2×). Nada integrado.
