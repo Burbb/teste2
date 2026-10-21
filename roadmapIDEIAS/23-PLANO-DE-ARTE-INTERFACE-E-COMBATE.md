@@ -848,7 +848,7 @@ talentos com o mesmo `icone`, e outros usos na interface): trocar o desenho de u
 
 | Estado | Efeito real | Ícone atual | Compartilha | Arte |
 |---|---|---|---|---|
-| Em guarda (`guarda`, +) | dano recebido −v% em todo golpe que acerta (Erguer Escudo: −50% por 2 turnos; Ordem da Fera: −30% no animal); ativa o Revide do Broquel do Vigia | `escudo` | Erguer Escudo; os talentos Aura de Proteção, Escudo Rúnico, Muralha e Pele de Ferro; o escudo/apoio vazio e outros usos | **proposta G1** (em avaliação) |
+| Em guarda (`guarda`, +) | dano recebido −v% em todo golpe que acerta (Erguer Escudo: −50% por 2 turnos; Ordem da Fera: −30% no animal); ativa o Revide do Broquel do Vigia | `escudo` | Erguer Escudo; os talentos Aura de Proteção, Escudo Rúnico, Muralha e Pele de Ferro; o escudo/apoio vazio e outros usos (todos ficam com o sprite) | **final** (G1, 1.156.0, `estado-guarda`) |
 | Fortalecido (`fortalecido`, +) | dano causado +v% | `espada` | Investida; Contra-ataque, Golpe Brutal; o elemento físico e outros | pendente |
 | Fúria (`furia`, +) | dano causado +v% (soma com o Fortalecido) | `machado` | Redemoinho | pendente |
 | Frenesi (`frenesi`, +) | cada abate soma dano até o fim da luta | `raio` | Julgamento Divino | pendente |
@@ -866,8 +866,8 @@ talentos com o mesmo `icone`, e outros usos na interface): trocar o desenho de u
 | Enfraquecido (`enfraquecido`, −) | dano causado −25% | `osso` | Erguer Servo | pendente |
 | Marcado (`marcado`, −) | recebe mais dano de todos | `flecha` | Tiro Certeiro; Mira Firme, Tiro de Abertura; o custo das habilidades, a orientação, o elemento "à distância", os projéteis | pendente |
 
-**Primeiro par de estados (20/10/2026, em avaliação, nada integrado):** Em guarda (G1, o escudo de ferro) e Esquiva
-(E1, a rajada de vento), em 16 px, em `ferramentas/prototipos/hud/itens-lote-noite/estados_guarda_esquiva/`.
+**Primeiro par de estados (20/10/2026):** Em guarda (G1, o escudo de ferro), **integrado na 1.156.0**; Esquiva
+(E1, a rajada de vento, recusada por lembrar um símbolo meteorológico; a E2 em avaliação), em 16 px, em `ferramentas/prototipos/hud/itens-lote-noite/estados_guarda_esquiva/`.
 
 O atalho **Mapa** da doca já foi concluído; esta frente trata dos símbolos internos de caminhos e mapas.
 Não afirmar que só restam talentos e habilidades após este bloco sem conferir os consumíveis, variantes e

@@ -79,7 +79,9 @@ pacote: `from rpg.combate import Combate`.
   e, em cada carta, a frase do agora com o número (`agora`: "+60% de dano por 2 turnos", não "causa mais dano").
   O ícone de um estado é o sprite que o catálogo dá; um estado com desenho próprio na família (`Icones.estado`, papel
   `ESTADO` em `icones.js`) usa o arquivo no chip da carta e no selo do estado que chega: desde a 1.155.0, o Firme (a
-  corrente rompida, `estado-firme-16.png`), enquanto o sprite `cadeado` fica nos outros papéis. A flecha ao lado da
+  corrente rompida, `estado-firme-16.png`), enquanto o sprite `cadeado` fica nos outros papéis; desde a 1.156.0, o Em
+  guarda (o escudo de ferro, `estado-guarda-16.png`), enquanto o sprite `escudo` fica no Erguer Escudo, nos talentos e
+  no espaço vazio. A flecha ao lado da
   quantidade de flechas na carta do Arqueiro também tem papel próprio (`Icones.contadorFlechas`, 1.155.0); o sprite
   `flecha` fica no custo das habilidades, na orientação, no elemento "à distância" e nos projéteis.
 - Acúmulo de bônus, como nos jogos do gênero: **a mesma fonte renova** (aplicar o mesmo estado de novo fica com o

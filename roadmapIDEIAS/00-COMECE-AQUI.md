@@ -5194,3 +5194,11 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   ferro) e o E1 (a rajada de vento) em `ferramentas/prototipos/hud/itens-lote-noite/estados_guarda_esquiva/`, com as
   fontes em camadas e a carta na luta a 1920×945.
 - **Continua:** nada integrado; a versão continua 1.155.0. Não começados: os outros estados, inimigos, pets.
+
+### 20/10/2026 (data do computador local) — O Em guarda G1 no jogo (1.156.0)
+
+- **Decisão de Jean:** integrar o G1 do `118725b6`, sem retoques, só no estado Em guarda.
+- **Feito:** a fonte em `ferramentas/arte/aseprite/estado-guarda/`; o PNG de 16 e o @2x idênticos aos aprovados; o papel
+  `ESTADO.guarda` em `icones.js` (o chip e o selo); o sprite `escudo` intacto nos outros papéis. Conferido no jogo a
+  1920×945.
+- **Continua:** a Esquiva numa rodada 2 (só no protótipo).

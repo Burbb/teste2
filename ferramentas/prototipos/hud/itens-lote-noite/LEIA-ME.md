@@ -3613,3 +3613,22 @@ e o Firme R2 já integrados). Sem erro no console.
 
 **A folha:** `estados_guarda_esquiva/guarda-esquiva.png` (a fileira dos estados em tamanho real e a 2× com o Firme e o
 Atordoado, atual × proposta; as ampliações 12×; a carta na luta a 1920×945, em tamanho real e a 2×). Nada integrado.
+
+### O Em guarda G1 no jogo (1.156.0)
+
+**Decisão de Jean (20/10/2026):** o G1 do `118725b6` aprovado e integrado sem retoques, só no estado Em guarda (o chip
+da carta e o selo do estado que chega).
+
+**Os arquivos:** a fonte do `118725b6` copiada sem mudança para `ferramentas/arte/aseprite/estado-guarda/
+estado-guarda-16.aseprite`; o `exportar_aseprite.py` grava `rpg/web/static/hud/icones/estado-guarda-16.png` e o @2x,
+idênticos, byte a byte, aos de `estados_guarda_esquiva/proposta/`.
+
+**O papel:** em `icones.js`, o `TAMANHOS` com o `estado-guarda` de 16 e o `ESTADO` com `guarda` → `estado-guarda`; as
+chamadas de `batalha.js` (o chip e o selo, por `Icones.estado`) já existiam desde o Firme. O sprite `escudo` fica no
+Erguer Escudo, nos talentos (Aura de Proteção, Escudo Rúnico, Muralha, Pele de Ferro) e no espaço vazio; as regras, os
+valores, as durações e as interações (o Revide do Broquel do Vigia) não mudam.
+
+**Conferido no jogo** com os arquivos de produção, a 1920×945 (`flechas_firme/auxiliares/fotografar_luta.mjs` com
+`MODOS=atual`, as capturas em `estados_guarda_esquiva/capturas/integracao/`): o chip do Em guarda é igual ao da
+proposta (12 pixels de no máximo 10 níveis, o brilho animado da borda); a Esquiva continua a folha do jogo. Sem erro no
+console. A folha: `estados_guarda_esquiva/g1-integracao-1.156.0.png` (antes × depois, a 2×).
