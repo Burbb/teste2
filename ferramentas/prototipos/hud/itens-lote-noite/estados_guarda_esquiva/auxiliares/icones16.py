@@ -44,6 +44,10 @@ meteorológico):
     a direita, separado do tronco; a perna da frente dobrada e a de trás esticada para a esquerda, com a cunha vazia
     entre elas; os riscos de velocidade como dois traços curtos à esquerda, nas alturas do braço e do tronco. Numa cor
     chapada, como a referência (o ferro claro dos estados; os riscos um tom abaixo), com o contorno do conjunto.
+    Retocada a pedido do Jean (a cabeça deslocada demais para a frente e um vão anormal entre o braço e o pescoço, na
+    folha do 03527be4; o antes em anterior_03527be4/): a cabeça desce e recua 1 px, assentando no alto da linha do
+    tronco, e o braço de trás passa a sair do ombro junto do pescoço; o vão fica com 1 px; as pernas e o braço da frente
+    não mudam (a figura toda desceu 1 linha, mais centrada no quadro).
 Grava grades/<id>.txt e as listas por camada para o pintar.lua (listas/<id>/<camada>.lua).
     python icones16.py <pasta>
 """
@@ -114,7 +118,7 @@ ESQUIVA_E4 = ["................", "................", "................", ".....
               "................"]
 
 
-ESQUIVA_E6 = ['...........##...', '..........#77#..', '.######..#7777#.', '#667777#.#7777#.', '.####777###77#..', '.....##777777#..', '.##..#77777777#.', '#66##77777##777#', '.###77777#..#77#', '...#777777#..##.', '..#7777##77#....', '.#777###7777#...', '#777#...####....', '77##............', '##..............', '................']
+ESQUIVA_E6 = ['................', '..........##....', '.........#77#...', '.########7777#..', '#6677777#7777#..', '.####7777777#...', '.....##777777#..', '.##..#77777777#.', '#66##77777##777#', '.###77777#..#77#', '...#777777#..##.', '..#7777##77#....', '.#777###7777#...', '#777#...####....', '77##............', '##..............']
 ESQUIVA_E5_POSE = ['................', '..XX............', '.XXXX.......XX..', '.XXXX.....XXX...', '..XX.....XX.....', '...XXX..XXX.....', '...XXXXXXX......', '..XX.XXXXXX.....', '.XX....XXXX.....', '.X......XXXX....', '.........XXX....', '........XX.XX...', '.......XX...XX..', '......XX....XX..', '.....XXX....XXX.', '................']
 ESQUIVA_E5 = ['..##............', '.#77#.......##..', '#7887#....##66#.', '#6776#...#666#..', '.#66##..#66##...', '..#677##777#....', '..#6777777#.....', '.#66#777777#....', '#66#.##7777#....', '#6#....#7777#...', '.#......#777#...', '.......#66#66#..', '......#66#.#66#.', '.....#66#..#66#.', '....#666#..#666#', '.....###....###.']
 

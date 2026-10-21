@@ -3712,3 +3712,12 @@ anteriores (G1, E1 a E4) não mudaram.
 **A folha:** `estados_guarda_esquiva/esquiva-e6.png` (a fileira Firme · Em guarda · Esquiva para a folha, a E3, a E5 e a
 E6, pelo nome; a E6 numa cor só em tamanho real, a 2× e a 12×, ao lado da E6 acabada e da referência; a carta na luta
 com a folha, a E3 e a E6, e a E3 e a E6 a 2×). Nada integrado; nenhuma Esquiva aprovada.
+
+**O retoque da E6 (21/10/2026, apontado pelo Jean na folha do `03527be4`):** a cabeça estava deslocada demais para a
+frente em relação ao movimento, com um vão anormal entre o braço de trás e o pescoço. A cabeça desce e recua 1 px,
+assentando no alto da linha do tronco, e o braço de trás passa a sair do ombro junto do pescoço (fica 1 px de separação
+entre o braço e a cabeça); as pernas e o braço da frente não mudam (a figura toda desceu 1 linha, mais centrada). O antes
+em `estados_guarda_esquiva/anterior_03527be4/` (a grade, os PNGs, a fonte e a captura da carta). Fonte refeita pelo
+`pintar.lua` (0 diferenças); o editor, o PNG e a grade iguais; @2x exato; a carta a 1920×945 refotografada com os mesmos
+dados. A folha: `estados_guarda_esquiva/esquiva-e6-retoque.png` (antes × depois na fileira, a 12× e na carta).
+

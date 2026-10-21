@@ -6,6 +6,8 @@ posição (o Em guarda e o Firme são os arquivos do jogo):
     acabada a 12× (as ampliações só para inspecionar os pixels);
   - a carta do Arqueiro na luta a 1920×945 com os mesmos dados (fotografar_luta.mjs com TROCAS=trocas-r4.json): a folha,
     a E3 e a E6, em tamanho real e a 2×.
+  - esquiva-e6-retoque.png: o retoque da cabeça e do ombro, antes (anterior_03527be4/) × depois, na fileira e a 12×, e
+    na carta a 1920×945, em tamanho real e a 2×.
     python prancha_e6.py <pasta>
 """
 import pathlib
@@ -80,3 +82,23 @@ if __name__ == "__main__":
         d.text((20 + k * (2 * cw + 20), y), f"a 2×: Esquiva {rot}", fill=TEXTO)
         out.alpha_composite(im.resize((2 * cw, 2 * ch), Image.NEAREST), (20 + k * (2 * cw + 20), y + 18))
     out.save(base / "esquiva-e6.png")
+
+    # o retoque: antes × depois
+    antes = abre(base / "anterior_03527be4/estado-esquiva-e6-16.png")
+    cartas = [abre(base / "anterior_03527be4/e6-1920x945-carta.png"), abre(base / "capturas/rodada4/e6-1920x945-carta.png")]
+    out = Image.new("RGBA", (max(40 + 2 * (16 * Z + 30), 40 + 2 * (2 * cw + 20)), 70 + 16 * Z + 30 + 26 + 3 * ch + 10), CARVAO)
+    d = ImageDraw.Draw(out)
+    try: d.font = ImageFont.truetype("arial.ttf", 13)
+    except OSError: pass
+    for k, (rot, im) in enumerate((("antes (03527be4)", antes), ("depois", e6))):
+        x = 20 + k * (16 * Z + 30)
+        d.text((x, 6), rot, fill=TEXTO)
+        for j, o in enumerate((FIRME, GUARDA, im)):
+            out.alpha_composite(o, (x + j * 22, 28)); out.alpha_composite(o.resize((32, 32), Image.NEAREST), (x + 80 + j * 40, 22))
+        out.alpha_composite(im.resize((16 * Z,) * 2, Image.NEAREST), (x, 70))
+    y = 70 + 16 * Z + 30
+    for k, (rot, im) in enumerate(zip(("antes", "depois"), cartas)):
+        x = 20 + k * (2 * cw + 20)
+        d.text((x, y), f"carta a 1920×945 ({rot}), tamanho real e 2×", fill=TEXTO)
+        out.alpha_composite(im, (x, y + 18)); out.alpha_composite(im.resize((2 * cw, 2 * ch), Image.NEAREST), (x, y + 26 + ch))
+    out.save(base / "esquiva-e6-retoque.png")
