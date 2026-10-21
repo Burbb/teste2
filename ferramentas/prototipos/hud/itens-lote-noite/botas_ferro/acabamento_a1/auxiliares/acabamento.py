@@ -19,12 +19,17 @@ ordem, cada uma com o porquê:
 Depois, os AJUSTES à mão (o que as regras não resolvem bem), cada um com o porquê. Grava grades/A1.txt e
 listas/acabamento/aco.lua para o pintar.lua.
     python acabamento.py <pasta da A1>
+O 40 e o 48 (o 32 aprovado no 945a54a8): as mesmas regras sobre as grades de 40 e 48 da B3 do jogo (grades/B3-jogo-N.txt,
+conferidas iguais aos PNGs do jogo), sem mudar a forma; só o comprimento do brilho curto acompanha a escala (2 px no 32 e
+no 40, 3 no 48). Grava grades/A1-N.txt e listas/acabamento-N/aco.lua.
+    python acabamento.py <pasta da A1> 40|48
 """
 import pathlib
 import sys
 
 FERRO = ["0e0f11", "1a1c20", "282b31", "383c44", "4c5159", "646a73", "848b94", "b0b6bd", "e4e8ec"]
-N = 32
+N = int(sys.argv[2]) if len(sys.argv) > 2 else 32
+CURTO = {32: 2, 40: 2, 48: 3}[N]   # o brilho curto: quantos 7 seguidos ficam na fileira
 AJUSTES = {}   # (x, y): (o tom novo, o porquê)
 
 
@@ -54,11 +59,11 @@ def acabar(g):
             elif c == "6" and not borda(g, x, y): novo = "5"
             elif c == "3" and not borda(g, x, y) and not junta(g, x, y): novo = "4"
             out[y][x] = novo
-    for y in range(N):                       # o brilho curto: no máximo 2 px de 7 seguidos na fileira
+    for y in range(N):                       # o brilho curto: no máximo CURTO px de 7 seguidos na fileira
         corrida = 0
         for x in range(N):
             corrida = corrida + 1 if out[y][x] == "7" else 0
-            if corrida > 2: out[y][x] = "6"
+            if corrida > CURTO: out[y][x] = "6"
     for (x, y), (t, _) in AJUSTES.items(): out[y][x] = t
     mudou = [(x, y, g[y][x], out[y][x]) for y in range(N) for x in range(N) if out[y][x] != g[y][x]]
     return out, mudou
@@ -66,10 +71,11 @@ def acabar(g):
 
 if __name__ == "__main__":
     base = pathlib.Path(sys.argv[1])
-    g = [list(l) for l in (base / "grades/B3-jogo.txt").read_text(encoding="utf-8").split("\n")[:N]]
+    sufixo = "" if N == 32 else f"-{N}"
+    g = [list(l) for l in (base / f"grades/B3-jogo{sufixo}.txt").read_text(encoding="utf-8").split("\n")[:N]]
     out, mudou = acabar(g)
-    (base / "grades/A1.txt").write_text("\n".join("".join(l) for l in out) + "\n", encoding="utf-8")
-    d = base / "listas/acabamento"; d.mkdir(parents=True, exist_ok=True)
+    (base / f"grades/A1{sufixo}.txt").write_text("\n".join("".join(l) for l in out) + "\n", encoding="utf-8")
+    d = base / f"listas/acabamento{sufixo}"; d.mkdir(parents=True, exist_ok=True)
     (d / "aco.lua").write_text('return "' + ";".join(f"{x},{y},{FERRO[int(n)]}" for x, y, _, n in mudou) + '"\n',
                                encoding="utf-8")
     from collections import Counter

@@ -5141,3 +5141,10 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   da fonte: sem quase brancos, os 7 só como brilhos curtos nas beiras, o corpo das placas no tom médio com a divisão dos
   planos, as juntas e as sombras das sobreposições mantidas; as folhas `a1.png` e `a1-ficha.png`).
 - **Continua:** a B3 no jogo, a A1 aguardando a escolha visual; a versão continua 1.153.0.
+
+### 20/10/2026 (data do computador local) — A A1 em 40 e 48 (proposta)
+
+- **Decisão de Jean:** o acabamento do 32 da A1 (`945a54a8`) aprovado; o mesmo tratamento nas fontes de 40 e 48 da B3.
+- **Feito:** o 40 e o 48 pelas mesmas regras (só os tons do aço; 135 e 213 pixels), as cópias das fontes pintadas, o 32
+  e o 64 idênticos aos aprovados; as folhas `a1-tamanhos.png` e `a1-tamanhos-no-jogo.png` (o Inventário e o saque).
+- **Continua:** a B3 no jogo; a A1 completa aguardando a avaliação; a versão continua 1.153.0.

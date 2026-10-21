@@ -3412,3 +3412,27 @@ em `tamanhos/`, só para as fotos). `ferramentas/arte/aseprite/botas-ferro/` e o
 acabamento; as duas em tamanho real e a 4× junto do capacete C1, da cota, da luva L7 e das perneiras P7;
 `auxiliares/prancha.py`) e `a1-ficha.png` (a ficha a 1920×945 com os mesmos dados, a B3 do jogo × a A1;
 `fotografar.mjs botas_a1`). Sem erro no console. Nada integrado.
+
+### A A1 em 40 e 48 (`botas_ferro/acabamento_a1/`)
+
+**Decisão de Jean (20/10/2026):** o acabamento do 32 da A1 (`945a54a8`) aprovado; o 32 e o 64 preservados byte a byte.
+Aplicar o mesmo tratamento às fontes de 40 e 48 da B3, só nos tons do aço: a forma, a pose, as placas, as tiras, as
+fivelas, as solas e o contorno integralmente preservados, sem redesenhar nem derivar formas do 32. Nada integrado.
+
+**O caminho:** o `auxiliares/acabamento.py` ganhou o tamanho (`python acabamento.py <pasta> 40|48`) e roda as mesmas
+quatro regras sobre as grades de 40 e 48 da B3 do jogo (`grades/B3-jogo-40.txt` e `-48`, cópias de `b3/grades/`,
+conferidas iguais aos PNGs do jogo, 0 pixels diferentes); só o comprimento do brilho curto acompanha a escala (no máximo 2
+px de 7 seguidos no 32 e no 40, 3 no 48). Rodado de novo no 32, ele grava a mesma grade e a mesma lista. Mudam 135 pixels
+no 40 (7→6: 56, 6→5: 41, 3→4: 24, 8→6: 13, 8→7: 1) e 213 no 48 (6→5: 80, 7→6: 69, 3→4: 35, 8→6: 29), todos na
+camada aco, conferidos antes de pintar.
+
+**A conferência:** as cópias das fontes de 40 e 48 da B3 (`fontes/A1/A1-40.aseprite`, `-48`, as camadas da B3) pintadas
+pelo `pintar.lua` (`listas/acabamento-40/` e `-48/`: 0 diferenças na releitura, 0 fora da tela); a exportação de novo
+pelo `exportar_aseprite.py A1`: o 32 e o 64 com os @2x idênticos, byte a byte, aos do `945a54a8`; no 40 e no 48, o
+composto do editor igual ao PNG e à grade (0 pixels diferentes), a silhueta igual à da B3 do jogo, o @2x exato.
+`ferramentas/arte/aseprite/botas-ferro/` e os PNGs do jogo não mudaram (a B3 anterior continua lá e em `b3/`).
+
+**As folhas:** `a1-tamanhos.png` (os quatro tamanhos, B3 do jogo × A1, em tamanho real e o 32, o 40 e o 48 ampliados 4×;
+o conjunto C1, cota, L7 e P7 no 32 e no 40 com a A1) e `a1-tamanhos-no-jogo.png` (o Inventário com o 40 e o saque com o
+64 e o "você usa" em 48, B3 do jogo × A1, com os mesmos dados; `fotografar.mjs botas_a1_tamanhos`, as capturas em
+`capturas/tamanhos/`). Sem erro no console.
