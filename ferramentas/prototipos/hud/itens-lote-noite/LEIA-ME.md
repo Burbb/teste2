@@ -3513,3 +3513,36 @@ pes 1.154.0 botas-ferro` e `elmo_cota/auxiliares/integracao.mjs . <pasta> pes bo
 pes-vazios`): o saque com as botas em 64 e o "você usa" em 48, "Equipar agora" e "Guardar na mochila", a ficha (32), o
 Inventário (40) e os pés vazios (na foto do Inventário depois de guardar, o aviso "Você tira…" cobre a fileira de baixo,
 como na integração da B3). Sem erro no console. A folha: `botas_ferro/acabamento_a1/a1-integracao-1.154.0.png`.
+
+### A flecha F2 e o Firme R2: a segunda rodada (`flechas_firme/`)
+
+**Pedido de Jean (20/10/2026):** só no protótipo, com a F1 e a R1 preservadas:
+- **o Firme:** retirar as faíscas azuis; deixar o interior dos elos mais legível, com a mesma espessura e a ruptura
+  central, sem reconstruir o símbolo;
+- **a flecha:** a F1 não foi aprovada (as penas grandes e adiantadas, com haste sobrando atrás). Pela composição da flecha
+  simples do canto de cima à esquerda da prancha "Arrows" (mandada na conversa; o papel no `LEIA-ME.md` de
+  `referencias/icones/`): as penas na extremidade de trás, com menos massa e reconhecíveis dos dois lados da haste, sem
+  madeira atrás delas (o encaixe só sugerido), a haste livre entre as penas e a ponta, a paleta aprovada e o amarrado
+  discreto; a leitura junto do número em primeiro lugar.
+
+**R2** (`firme_r2`): a grade da R1 sem a camada das faíscas, e a luz de dentro dos anéis: a borda de dentro do lado de
+baixo-direita de cada furo (que fica de frente para a luz) sobe para 6 e 5, e a de cima-esquerda desce um tom (7→6,
+6→5), com o contorno de fora e a espessura iguais; o furo deixa de se fundir com a sombra do anel (16 pixels mudados,
+mais os 4 das faíscas que saíram). Camadas: elos, contorno.
+
+**F2** (`flecha_contador_f2`): a ponta e a haste da F1; a haste termina no fim das penas; as penas são uma faixa de 1 px
+de cada lado dos últimos pixels da haste (a de cima clara, a de baixo na sombra), com a ponta de trás de cada uma virada
+para fora, como na prancha (8 pixels, contra 19 da F1); o amarrado vermelho num pixel entre as penas; o encaixe sugerido
+por um pixel de madeira escura entre as pontas das penas. Na bancada, a variante com as penas retas (sem as pontas para
+fora) lia menos como empenagem e ficou de fora. Camadas: haste, penas, amarrado, ponta, contorno.
+
+**A conferência:** as fontes `fontes/flecha_contador_f2/flecha_contador_f2-16.aseprite` e `fontes/firme_r2/firme_r2-16.aseprite`
+pelo `pintar.lua` (0 diferenças na releitura, 0 fora da tela); exportadas; o composto do editor igual ao PNG e à grade
+(0 pixels diferentes); @2x exatos. A F1 e a R1 (as grades, as listas, as fontes e os PNGs) não mudaram.
+
+**No contexto:** `auxiliares/fotografar_luta.mjs` ganhou o modo `rodada2` (a F2 e a R2 pelos mesmos dois seletores),
+com os mesmos dados do atual e da rodada 1. Sem erro no console.
+
+**A folha:** `flechas_firme/rodada2.png` (F1 × F2 e R1 × R2 em tamanho real sobre o carvão, a flecha ao lado do número e
+o Firme na fileira dos estados, a 2× e a 12×; a carta do Arqueiro na luta a 1920×945, atual × rodada 1 × rodada 2, em
+tamanho real e a 2×). Nada integrado.

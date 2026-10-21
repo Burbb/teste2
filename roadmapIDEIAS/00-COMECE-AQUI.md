@@ -5167,3 +5167,11 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   os 8 PNGs do jogo idênticos aos aprovados; os usos sem mudança (`ITEM`, `VAZIO`). Conferido no jogo a 1920×945: o
   saque, equipar e guardar, a ficha, o Inventário e os pés vazios.
 - **Continua:** o Firme (R1) e a flecha da carta (F1) em ajuste no protótipo.
+
+### 20/10/2026 (data do computador local) — A flecha F2 e o Firme R2 (proposta)
+
+- **Pedido de Jean:** o Firme sem as faíscas e com o interior dos elos mais legível; a flecha com as penas na traseira,
+  menores e sem madeira atrás, pela flecha simples da prancha "Arrows" (mandada na conversa).
+- **Feito:** a R2 e a F2 em `ferramentas/prototipos/hud/itens-lote-noite/flechas_firme/` (fontes em camadas, @2x), com a
+  F1 e a R1 preservadas; a folha `rodada2.png` com a carta na luta a 1920×945, atual × rodada 1 × rodada 2.
+- **Continua:** nada integrado da flecha nem do Firme; a versão continua 1.154.0.

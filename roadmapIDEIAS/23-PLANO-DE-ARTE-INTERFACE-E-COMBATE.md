@@ -837,7 +837,7 @@ em tamanho real e no conjunto dos estados, sem mudar nome, duração, imunidades
 **Primeiro par proposto (20/10/2026, em avaliação, nada integrado):** a flecha da carta do Arqueiro (F1) e o Firme (R1),
 em 16 px, em `ferramentas/prototipos/hud/itens-lote-noite/flechas_firme/` (o levantamento, as referências e as fotos no
 `LEIA-ME.md` do lote). A troca futura atinge só esses dois papéis: um desenho próprio para `.carta-flechas` e um ícone
-próprio para o estado `firme`; a aljava, os outros usos de `flecha` e os outros cadeados ficam.
+próprio para o estado `firme`; a aljava, os outros usos de `flecha` e os outros cadeados ficam. Segunda rodada (20/10/2026): a F2 (as penas na traseira, menores, sem madeira atrás) e a R2 (sem as faíscas, o furo dos elos mais legível), em avaliação.
 
 O atalho **Mapa** da doca já foi concluído; esta frente trata dos símbolos internos de caminhos e mapas.
 Não afirmar que só restam talentos e habilidades após este bloco sem conferir os consumíveis, variantes e

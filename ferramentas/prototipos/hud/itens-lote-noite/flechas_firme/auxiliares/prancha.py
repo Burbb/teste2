@@ -5,6 +5,10 @@
     (escudo, folha, estrela, como no jogo);
   - flechas-firme-luta.png: a carta do Arqueiro e a luta a 1920×945, atual × proposta, com os mesmos dados
     (auxiliares/fotografar_luta.mjs).
+  - rodada2.png: a segunda rodada, F1 × F2 e R1 × R2 (antes × depois), em tamanho real sobre o carvão (a flecha ao lado
+    do número, o Firme na fileira dos estados), a 2× e a 12×, com a flecha simples da prancha "Arrows" descrita; e a
+    carta do Arqueiro na luta a 1920×945, atual × rodada 1 × rodada 2, em tamanho real e 2× (o modo rodada2 do
+    fotografar_luta.mjs).
     python prancha.py <pasta>
 """
 import pathlib
@@ -89,3 +93,30 @@ if __name__ == "__main__":
         d.text((20 + k * (w + 20), 2 * ch + 40), f"{rotulo}: a luta a 1920×945", fill=TEXTO)
         out.alpha_composite(lutas[k], (20 + k * (w + 20), 2 * ch + 58))
     out.save(base / "flechas-firme-luta.png")
+
+    # a segunda rodada: antes × depois
+    ant = {"flecha": Image.open(base / "proposta/flecha_contador-16.png").convert("RGBA"),
+           "firme": Image.open(base / "proposta/firme-16.png").convert("RGBA")}
+    nov = {"flecha": Image.open(base / "proposta/flecha_contador_f2-16.png").convert("RGBA"),
+           "firme": Image.open(base / "proposta/firme_r2-16.png").convert("RGBA")}
+    cartas = [Image.open(cap / f"{m}-1920x945-carta.png").convert("RGBA") for m in ("atual", "proposta", "rodada2")]
+    cw, ch = cartas[0].size
+    out, d, grande = desenho(max(20 + 4 * (16 * Z + 20), 20 + 3 * (2 * cw + 20)), 16 * Z + 140 + 3 * ch)
+    x = 20
+    for chave, rot in (("flecha", "flecha: F1 × F2"), ("firme", "Firme: R1 × R2")):
+        d.text((x, 8), rot, fill=TEXTO)
+        for k, im in enumerate((ant[chave], nov[chave])):
+            xx = x + k * (16 * Z + 20)
+            out.alpha_composite(im, (xx, 30))
+            if chave == "flecha": d.text((xx + 19, 28), "20", fill=(235, 225, 205, 255), font=grande)
+            else:
+                for j, o in enumerate(outros): out.alpha_composite(o, (xx + 22 + j * 22, 30))
+            out.alpha_composite(im.resize((32, 32), Image.NEAREST), (xx + 100, 22))
+            out.alpha_composite(im.resize((16 * Z,) * 2, Image.NEAREST), (xx, 70))
+        x += 2 * (16 * Z + 20)
+    y = 16 * Z + 90
+    for k, (rot, im) in enumerate(zip(("atual", "rodada 1 (F1, R1)", "rodada 2 (F2, R2)"), cartas)):
+        d.text((20 + k * (2 * cw + 20), y), rot, fill=TEXTO)
+        out.alpha_composite(im, (20 + k * (2 * cw + 20), y + 18))
+        out.alpha_composite(im.resize((2 * cw, 2 * ch), Image.NEAREST), (20 + k * (2 * cw + 20), y + 26 + ch))
+    out.save(base / "rodada2.png")

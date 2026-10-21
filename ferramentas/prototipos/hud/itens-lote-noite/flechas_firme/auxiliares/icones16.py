@@ -12,6 +12,15 @@ ampliadas, não sprites de 16: delas vêm a construção e os materiais, e cada 
     cima e da esquerda; um vão entre eles; a ponta de cada elo voltada para o vão aberta (um pixel do anel tirado) com a
     face do corte acesa; os dois traços azuis curtos de cada lado do vão (as faíscas da referência, numa camada própria,
     para poderem sair se virarem ruído).
+A segunda rodada (20/10/2026, pedido do Jean), com as primeiras preservadas:
+  - a F2, a flecha com a traseira corrigida (a F1 tinha as penas grandes e adiantadas, com haste sobrando atrás): pela
+    composição da flecha simples do canto de cima à esquerda da prancha "Arrows" que o Jean mandou na conversa, as penas
+    vão para a extremidade de trás, finas (uma faixa de cada lado da haste, com a ponta de trás virada para fora), sem
+    madeira atrás delas (o encaixe só sugerido por um pixel de madeira escura entre as pontas das penas), a haste livre
+    entre as penas e a ponta, o amarrado vermelho num pixel só; a ponta e a haste são as da F1;
+  - a R2, o Firme limpo: sem as faíscas azuis, e o furo de cada elo mais legível pela luz de dentro do anel (a borda de
+    dentro do lado de baixo-direita, que fica de frente para a luz, acesa; a de cima-esquerda, na sombra), com a mesma
+    espessura, a mesma ruptura e a mesma composição.
 Os tons de aço são a rampa de ferro do conjunto; a madeira, as penas e o vermelho, os das flechas da aljava
 (rpg/web/static/hud/icones/aljava-32.png); o azul das faíscas, o da referência, mais escuro.
 
@@ -63,10 +72,45 @@ FIRME = ["...........####.",
          "#65443#.........",
          "#5443#..........",
          ".####..........."]
+FLECHA_F2 = ["..........#####.",
+             ".........#BBBBA#",
+             "..........#BBAC#",
+             "...........#ACC#",
+             "..........#DCCD#",
+             ".........#w###D#",
+             "........#w#...#.",
+             ".......#w#......",
+             "......#w#.......",
+             "....##w#........",
+             "...#gw#.........",
+             ".##fwh#.........",
+             "#ffRg#..........",
+             ".#mg#...........",
+             "..#h#...........",
+             "...#............"]
+FIRME_R2 = ["...........####.",
+            "..........#7765#",
+            ".........#76554#",
+            "........#76##64#",
+            "........#75##53#",
+            ".......#76#653#.",
+            ".......#7#443#..",
+            ".....##.#54##...",
+            "...##78#.##.....",
+            "..#776#6#.......",
+            ".#765#44#.......",
+            "#76##64#........",
+            "#75##53#........",
+            "#65653#.........",
+            "#5443#..........",
+            ".####..........."]
 CAMADAS = {   # o id do ícone: a grade e a camada de cada caractere
     "flecha_contador": (FLECHA, {"#": "contorno", **{c: "ponta" for c in "ABCD"}, "w": "haste", "m": "haste",
                                  **{c: "penas" for c in "fgh"}, "r": "amarrado", "R": "amarrado"}),
     "firme": (FIRME, {"#": "contorno", **{c: "elos" for c in "345678"}, "U": "faiscas", "u": "faiscas"}),
+    "flecha_contador_f2": (FLECHA_F2, {"#": "contorno", **{c: "ponta" for c in "ABCD"}, "w": "haste", "m": "haste",
+                                       **{c: "penas" for c in "fgh"}, "R": "amarrado"}),
+    "firme_r2": (FIRME_R2, {"#": "contorno", **{c: "elos" for c in "345678"}}),
 }
 
 if __name__ == "__main__":
