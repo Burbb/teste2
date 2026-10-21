@@ -1,0 +1,58 @@
+{
+ "1": [
+  {"nome": "heroi-ratos", "cenario": "covil", "estados": ["veneno", "sangramento"],
+   "amb": {"CLASSE": "guerreiro", "LUTA": "rato", "NIVEL_LUTA": "2", "QUANTOS": "2", "VIDA": "40",
+           "EFEITOS": "veneno:3:2,sangramento:3:2"}},
+  {"nome": "inimigo-lobos", "cenario": "covil", "estados": ["veneno"],
+   "amb": {"CLASSE": "arqueiro", "LUTA": "lobo", "NIVEL_LUTA": "2", "QUANTOS": "2", "VIDA": "40",
+           "EFEITOS_INIMIGO": "veneno:3:4"}}
+ ],
+ "2": [
+  {"nome": "heroi-cultistas", "cenario": "covil", "estados": ["queimadura", "maldito"],
+   "amb": {"CLASSE": "guerreiro", "LUTA": "cultista", "NIVEL_LUTA": "2", "QUANTOS": "2", "VIDA": "40",
+           "EFEITOS": "queimadura:3:3,maldito:3:3"}},
+  {"nome": "inimigo-lobos", "cenario": "covil", "estados": ["queimadura"],
+   "amb": {"CLASSE": "mago", "LUTA": "lobo", "NIVEL_LUTA": "2", "QUANTOS": "2", "VIDA": "40",
+           "EFEITOS_INIMIGO": "queimadura:3:4"}}
+ ],
+ "3": [
+  {"nome": "inimigo-lobos", "cenario": "covil", "estados": ["atordoado", "enfraquecido"],
+   "amb": {"CLASSE": "guerreiro", "LUTA": "lobo", "NIVEL_LUTA": "2", "QUANTOS": "2", "VIDA": "40",
+           "EFEITOS_INIMIGO": "atordoado:1,enfraquecido:2"}},
+  {"nome": "heroi-aranhas", "cenario": "covil", "estados": ["atordoado"],
+   "amb": {"CLASSE": "arqueiro", "LUTA": "aranha", "NIVEL_LUTA": "2", "QUANTOS": "2", "VIDA": "40",
+           "EFEITOS": "atordoado:1"}}
+ ],
+ "4": [
+  {"nome": "inimigo-lobos", "cenario": "covil", "estados": ["marcado"],
+   "amb": {"CLASSE": "arqueiro", "LUTA": "lobo", "NIVEL_LUTA": "2", "QUANTOS": "2", "VIDA": "40",
+           "EFEITOS_INIMIGO": "marcado:3:0.3"}},
+  {"nome": "heroi-desaparecer", "cenario": "covil", "estados": ["furtivo", "esquiva"],
+   "amb": {"CLASSE": "arqueiro", "LUTA": "lobo", "NIVEL_LUTA": "2", "QUANTOS": "2", "VIDA": "40",
+           "EFEITOS": "furtivo:2,esquiva:1:0.5"}}
+ ],
+ "5": [
+  {"nome": "heroi-barreira", "cenario": "covil", "estados": ["barreira"],
+   "amb": {"CLASSE": "mago", "LUTA": "lobo", "NIVEL_LUTA": "2", "QUANTOS": "2", "VIDA": "40",
+           "EFEITOS": "barreira:3:24"}},
+  {"nome": "servo-provocando", "cenario": "tutorial", "estados": ["provocando"], "habilidade": "erguer_servo",
+   "amb": {"CLASSE": "mago", "NIVEL": "4", "ESPEC": "necromante", "LUTA": "lobo", "NIVEL_LUTA": "2", "QUANTOS": "2",
+           "TUTORIAL": "0"}}
+ ],
+ "6": [
+  {"nome": "heroi-grito", "cenario": "covil", "estados": ["fortalecido"],
+   "amb": {"CLASSE": "guerreiro", "LUTA": "lobo", "NIVEL_LUTA": "2", "QUANTOS": "2", "VIDA": "40",
+           "EFEITOS": "fortalecido:3:0.3", "EFEITOS_INIMIGO": "enfraquecido:2"}},
+  {"nome": "heroi-iniciativa", "cenario": "covil", "estados": ["iniciativa"],
+   "amb": {"CLASSE": "arqueiro", "LUTA": "lobo", "NIVEL_LUTA": "2", "QUANTOS": "2", "VIDA": "40",
+           "EFEITOS": "iniciativa:2:0.5"}}
+ ],
+ "7": [
+  {"nome": "heroi-berserker", "cenario": "covil", "estados": ["furia", "frenesi", "fortalecido"],
+   "amb": {"CLASSE": "guerreiro", "LUTA": "lobo", "NIVEL_LUTA": "2", "QUANTOS": "2", "VIDA": "40",
+           "EFEITOS": "fortalecido:3:0.3,furia:3:0.6,frenesi:99:0.2"}},
+  {"nome": "heroi-furia", "cenario": "covil", "estados": ["furia"],
+   "amb": {"CLASSE": "guerreiro", "LUTA": "lobo", "NIVEL_LUTA": "2", "QUANTOS": "2", "VIDA": "40",
+           "EFEITOS": "furia:3:0.6"}}
+ ]
+}

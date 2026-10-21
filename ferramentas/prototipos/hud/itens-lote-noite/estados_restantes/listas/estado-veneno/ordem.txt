@@ -1,0 +1,1 @@
+corpo,olho,lingua,contorno

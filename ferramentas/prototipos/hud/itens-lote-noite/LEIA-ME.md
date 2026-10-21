@@ -3746,3 +3746,9 @@ e pelo seletor, e a foto pega o selo `.faixa-acao.selos` com `estado-esquiva-16.
 isso, o roteiro ganhou o `SELO` e o cenário `covil` dos testes de navegador, a variável `HABILIDADES` (acrescenta
 habilidades ao herói; sem ela, o cenário é o mesmo). Sem erro no console. A folha:
 `estados_guarda_esquiva/esquiva-integracao-1.157.0.png` (antes × depois na carta e o selo, a 2×).
+
+### Os 14 estados restantes, em sete lotes (`estados_restantes/`)
+
+**Pedido de Jean (21/10/2026, para a madrugada):** uma proposta por estado para os 14 estados que ainda usam os sprites
+do jogo, em sete lotes, só no protótipo. O processo, as regras conferidas, as tentativas e a avaliação de cada lote
+estão em `estados_restantes/LEIA-ME.md`; as folhas em `estados_restantes/lote<n>.png` e `geral.png`. Nada integrado.

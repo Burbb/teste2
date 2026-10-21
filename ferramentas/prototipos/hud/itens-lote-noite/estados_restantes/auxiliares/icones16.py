@@ -1,0 +1,365 @@
+"""Os 14 estados que faltavam (21/10/2026, lote da madrugada), em 16 px, o tamanho dos estados na luta (o chip da carta
+e o selo do estado que chega). Firme (R2), Em guarda (G1) e Esquiva (E6) são a referência de acabamento: contorno de
+1 px (#08080a), poucos tons por material, a luz de cima e da esquerda.
+
+Grava grades/<id>.txt e as listas por camada para o pintar.lua (listas/<id>/<camada>.lua, com ordem.txt).
+    python icones16.py <pasta do lote>
+"""
+import pathlib
+import sys
+
+CORES = {
+    "#": "08080a",
+    # ferro (a rampa dos estados finais)
+    "3": "383c44", "4": "4c5159", "5": "646a73", "6": "848b94", "7": "b0b6bd", "8": "e4e8ec",
+    # veneno
+    "G": "1f4a25", "g": "3f7f2e", "h": "6db33f", "H": "a6e05a", "i": "e4f7b0",
+    # sangue
+    "R": "4a0a0c", "r": "8a1418", "s": "c42a2e", "S": "ec5a4c", "T": "ffc0b0",
+    # fogo
+    "F": "6e1a0a", "f": "b8380e", "o": "e86a1f", "O": "ffa64a", "y": "ffe08a", "Y": "fffbe0",
+    # maldição
+    "P": "1e0e2a", "p": "4a2266", "q": "7a4ab0", "Q": "b48ae8", "Z": "e6d6ff", "m": "ff5fd0",
+    # ouro
+    "C": "6b4a0e", "c": "b08418", "d": "e0b83a", "D": "f6d86a", "e": "fff6c8",
+    # azul arcano
+    "B": "1c2a6b", "b": "3d63c9", "u": "7fb0ff", "U": "d0e4ff", "v": "24356e",
+    # couro e madeira
+    "K": "b08c62", "L": "8e6236", "M": "6b4528", "N": "4a2e18",
+    # sombra (o pano do capuz)
+    "1": "28222f", "2": "3e3850", "9": "5e5672", "0": "8a80a0", "k": "050407",
+    # osso (as presas) e o rosto da fúria
+    "W": "f1e4c4", "w": "c0b8a8", "x": "8a8070", "n": "5a1c16", "X": "3a100c",
+}
+
+def com_contorno(grade):
+    """O contorno de 1 px (#) em volta do desenho, pelos lados (como o contornar de pixel_comum)."""
+    g = [list(l) for l in grade]
+    for y in range(16):
+        for x in range(16):
+            if grade[y][x] == "." and any(0 <= x + dx < 16 and 0 <= y + dy < 16 and grade[y + dy][x + dx] != "."
+                                          for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1))):
+                g[y][x] = "#"
+    return ["".join(l) for l in g]
+
+
+# --- lote 1
+VENENO = com_contorno([
+          "................",
+          "........hhhg....",
+          ".......hHHhgg...",
+          "......hHkHhgg...",
+          "..S.SShhhhgg....",
+          "...S...hhgg.....",
+          ".....hhhgg......",
+          "...hhHhgg.......",
+          "..hHhg..........",
+          "..hhgg..........",
+          "..ghhhhhgg......",
+          "...gghhhhhggg...",
+          "........ghhgg...",
+          "......gghhgG....",
+          "..GGgggggGG.....",
+          "................"])
+SANGRAMENTO = ["................",
+               "..........#.....",
+               ".........#S#....",
+               "...#.....#S#....",
+               "..#S#...#Sss#...",
+               ".#Ssr#..#Sss#...",
+               ".#Tsr#.#SSssr#..",
+               ".#srR#.#STssr#..",
+               "..###.#STsssrr#.",
+               "......#STssssr#.",
+               "......#STssssr#.",
+               "......#Sssssrr#.",
+               "......#ssssrrR#.",
+               ".......#ssrRR#..",
+               "........#####...",
+               "................"]
+# --- lote 2
+CHAMAS = ["................",
+          "........#.......",
+          ".......#y#......",
+          ".......#O#......",
+          "......#OOo#..#..",
+          "......#OyO#.#O#.",
+          "..#..#OyYOo#OOf#",
+          ".#O#.#OyYyOo#Of#",
+          ".#Oo##OyYYyOoOf#",
+          "#OooOOyYYYyOOof#",
+          "#oOOyyYYYYyyOof#",
+          "#foOyyYYYYyOoff#",
+          "#ffoOyyyyyOoofF#",
+          ".#ffooOOOOoofF#.",
+          "..##FFffffFF##..",
+          "....########...."]
+MALDICAO = ["................",
+            "....########....",
+            "...#ZZQQQQqq#...",
+            "..#ZQQQQQQQqq#..",
+            ".#ZQQQQQQQQqqp#.",
+            ".#QQQQQQQQQqqp#.",
+            ".#QPPPQQqPPPpp#.",
+            ".#QPmPQqqPmPpp#.",
+            ".#qPPPqqqPPPpp#.",
+            ".#qqqqqPPqqqpp#.",
+            "..#qqqqPPqqpp#..",
+            "...##qqqqqp##...",
+            "....#ZpZpZp#....",
+            "....#qPqPqP#....",
+            ".....######.....",
+            "................"]
+# --- lote 3
+ATORDOADO = ["................",
+             "....########....",
+             "...#DDDDDdddd#..",
+             "..#De######ddc#.",
+             ".#De#......#dc#.",
+             ".#D#..####..#c#.",
+             "#De#.#Dddd#.#c#.",
+             "#D#.#D####.#cC#.",
+             "#D#.#d#...#cC#..",
+             "#D#.#dc###cC#...",
+             "#dd#.#cccCC#....",
+             ".#dc#.#####.....",
+             ".#cc##..........",
+             "..#cCC#####.....",
+             "...##CCCCCC#....",
+             ".....######....."]
+ENFRAQUECIDO = com_contorno([
+                "................",
+                ".......dc.......",
+                ".......LM.......",
+                ".......LM.......",
+                "...DDdddddcc....",
+                "......786.......",
+                "......786.......",
+                "......786.......",
+                "......7.5.......",
+                "................",
+                "..........67....",
+                "..........765...",
+                "...........65...",
+                "............5...",
+                "................",
+                "................"])
+# --- lote 4
+MARCADO = [".....######.....",
+           "...##SSSsss##...",
+           "..#SS######sr#..",
+           ".#S#..#SS#..#r#.",
+           "#S#...#sr#...#r#",
+           "#S#....##....#r#",
+           "#S##..####..##r#",
+           "#SSs#.#Ss#.#srr#",
+           "#Ssr#.#sr#.#rrR#",
+           "#S##..####..##R#",
+           "#s#....##....#R#",
+           "#s#...#sr#...#R#",
+           ".#s#..#rR#..#R#.",
+           "..#rr######rR#..",
+           "...##rrrRRR##...",
+           ".....######....."]
+FURTIVO = ["................",
+           ".......##.......",
+           "......#00#......",
+           ".....#0092#.....",
+           "....#009922#....",
+           "...#09####22#...",
+           "...#0#kkkk#2#...",
+           "..#09#kkkk#22#..",
+           "..#09#UkkU#21#..",
+           "..#09#kkkk#21#..",
+           ".#0992####2221#.",
+           ".#099222222221#.",
+           "#09922222222211#",
+           "#09222222222211#",
+           ".##############.",
+           "................"]
+# --- lote 5
+BARREIRA = com_contorno([
+            "................",
+            ".....UUUuuu.....",
+            "...UUUuuuuubb...",
+            "..UUu......bbb..",
+            ".UUu..UU....bbB.",
+            ".Uu..U.......bB.",
+            ".Uu..U.......bB.",
+            ".uu..........bB.",
+            ".uu..........bB.",
+            ".ub..........BB.",
+            ".ub.........vBB.",
+            ".ubb......vbBB..",
+            "..bbb....bbBB...",
+            "...bbbbbbBBB....",
+            ".....bBBBB......",
+            "................"])
+PROVOCANDO = com_contorno([
+              "................",
+              "................",
+              "................",
+              "......7886......",
+              ".....788865.....",
+              ".....788665.....",
+              "S....776655....S",
+              "Ss....7655....sS",
+              "Ssr..........rsS",
+              "Ss..77766655..sS",
+              "S..7776666555..S",
+              "...7766666555...",
+              "...7766665555...",
+              "................",
+              "................",
+              "................"])
+# --- lote 6
+FORTALECIDO = com_contorno([
+               "................",
+               "......8.........",
+               ".....786........",
+               ".....786........",
+               ".....786.....D..",
+               ".....786....Ddc.",
+               ".....786...Dddcc",
+               ".....786........",
+               ".....786.....D..",
+               ".....786....Ddc.",
+               "..DDdddddc.Dddcc",
+               "......LM........",
+               "......LM........",
+               "......LM........",
+               ".....Ddc........",
+               "................"])
+INICIATIVA = com_contorno([
+              "................",
+              "......eDDd......",
+              "......eDdc......",
+              "..d...DDdc...c..",
+              "...d..Ddcc..c...",
+              "......Ddcc......",
+              ".......Dc.......",
+              ".dd....dc....cc.",
+              ".......dC.......",
+              ".......cC.......",
+              "................",
+              ".......eD.......",
+              "......eDdc......",
+              ".......cC.......",
+              "................",
+              "................"])
+# --- lote 7
+FURIA = com_contorno([
+               "................",
+               "................",
+               "...nnnnnnnnnn...",
+               "..nRsnnnnnnsRn..",
+               ".nnnRRsnnsRRnnn.",
+               ".nnnnnRRRRnnnnn.",
+               ".nnynnnnnnnnynn.",
+               ".nnOyonnnnoyOnn.",
+               ".nnnOOonnoOOnnn.",
+               "..nnnnnnnnnnnn..",
+               "..nnnnnnnnnnXn..",
+               "...nnnXXXXnXX...",
+               "....nnnnnXXX....",
+               "......XXXX......",
+               "................",
+               "................"])
+FRENESI = com_contorno([
+           "................",
+           "................",
+           "..............s.",
+           ".............Sr.",
+           ".............Sr.",
+           "............Sr..",
+           ".........s..Sr..",
+           "........Sr.Sr...",
+           "....s...Sr.Sr...",
+           "...Sr..Sr.Sr....",
+           "...Sr..Sr.Sr....",
+           "..s...s...s.....",
+           "..s...s...s.....",
+           "................",
+           "................",
+           "................"])
+
+VENENO_PRESAS = com_contorno([
+          "................",
+          "..WWWWx..WWWWx..",
+          "..WWWwx..WWWwx..",
+          "..WWWwx..WWWwx..",
+          "...WWwx...WWwx..",
+          "...WWx....WWx...",
+          "...Wwx....Wwx...",
+          "....Wx.....Wx...",
+          "....H......H....",
+          "...HhH....HhH...",
+          "...hgG...HhhgG..",
+          "....G....hhggG..",
+          ".........hgGGG..",
+          "..........GGG...",
+          "................",
+          "................"])
+
+# as camadas de cada desenho, de baixo para cima, pela letra
+def _por(mapa, resto):
+    return lambda ch: "contorno" if ch == "#" else next((k for k, v in mapa.items() if ch in v), resto)
+
+
+ICONES = {
+    "estado-veneno": (VENENO, ["corpo", "olho", "lingua", "contorno"],
+                      lambda x, y, ch: "contorno" if ch == "#" else "olho" if ch == "k" else "lingua" if ch == "S"
+                      else "corpo"),
+    "estado-sangramento": (SANGRAMENTO, ["gotas", "contorno"], lambda x, y, ch: "contorno" if ch == "#" else "gotas"),
+    "estado-queimadura": (CHAMAS, ["chamas", "miolo", "contorno"],
+                          lambda x, y, ch: "contorno" if ch == "#" else "miolo" if ch in "yY" else "chamas"),
+    "estado-maldito": (MALDICAO, ["cranio", "olhos", "contorno"],
+                       lambda x, y, ch: "contorno" if ch == "#" else "olhos" if ch == "m" else "cranio"),
+    "estado-atordoado": (ATORDOADO, ["espiral", "contorno"], lambda x, y, ch: "contorno" if ch == "#" else "espiral"),
+    "estado-enfraquecido": (ENFRAQUECIDO, ["lamina", "ponta", "punho", "contorno"],
+                            lambda x, y, ch: "contorno" if ch == "#" else "punho" if ch not in "345678"
+                            else "ponta" if y >= 10 else "lamina"),
+    "estado-marcado": (MARCADO, ["mira", "contorno"], lambda x, y, ch: "contorno" if ch == "#" else "mira"),
+    "estado-furtivo": (FURTIVO, ["capuz", "rosto", "olhos", "contorno"],
+                       lambda x, y, ch: "contorno" if ch == "#" else "olhos" if ch == "U" else "rosto" if ch == "k" else "capuz"),
+    "estado-barreira": (BARREIRA, ["bolha", "reflexo", "contorno"],
+                        lambda x, y, ch: "contorno" if ch == "#" else "reflexo" if 4 <= y <= 6 and 4 <= x <= 7 else "bolha"),
+    "estado-provocando": (PROVOCANDO, ["figura", "setas", "contorno"],
+                          lambda x, y, ch: "contorno" if ch == "#" else "setas" if ch in "SsrR" else "figura"),
+    "estado-fortalecido": (FORTALECIDO, ["espada", "setas", "contorno"],
+                           lambda x, y, ch: "contorno" if ch == "#" else "setas" if x >= 11 and y <= 10 else "espada"),
+    "estado-iniciativa": (INICIATIVA, ["exclamacao", "raios", "contorno"],
+                          lambda x, y, ch: "contorno" if ch == "#" else "exclamacao" if 6 <= x <= 9 else "raios"),
+    "estado-furia": (FURIA, ["rosto", "sobrancelhas", "olhos", "contorno"],
+                     lambda x, y, ch: "contorno" if ch == "#" else "olhos" if ch in "yOo" else "sobrancelhas" if ch in "Rs"
+                     else "rosto"),
+    # tentativas guardadas (fora da proposta principal)
+    "estado-veneno-presas": (VENENO_PRESAS, ["presas", "veneno", "contorno"],
+                             lambda x, y, ch: "contorno" if ch == "#" else "presas" if ch in "Wwx" else "veneno"),
+    "estado-frenesi": (FRENESI, ["garras", "contorno"], lambda x, y, ch: "contorno" if ch == "#" else "garras"),
+}
+# o estado do motor de cada desenho (as alternativas têm sufixo: estado-<id>-<rodada>)
+ESTADO_DE = {k: k.split("-")[1] for k in ICONES}
+
+
+def gravar(base, ids=None):
+    for ident in ids or ICONES:
+        grade, ordem, camada = ICONES[ident]
+        assert len(grade) == 16 and all(len(l) == 16 for l in grade), (ident, [len(l) for l in grade])
+        (base / "grades").mkdir(exist_ok=True)
+        (base / f"grades/{ident}.txt").write_text("\n".join(grade) + "\n", encoding="utf-8")
+        listas = {c: [] for c in ordem}
+        for y, l in enumerate(grade):
+            for x, ch in enumerate(l):
+                if ch != ".":
+                    listas[camada(x, y, ch)].append(f"{x},{y},{CORES[ch]}")
+        d = base / f"listas/{ident}"
+        d.mkdir(parents=True, exist_ok=True)
+        for k, v in listas.items():
+            (d / f"{k}.lua").write_text(f'return "{";".join(v)}"\n', encoding="utf-8")
+        (d / "ordem.txt").write_text(",".join(ordem) + "\n", encoding="utf-8")
+        print(ident, {k: len(v) for k, v in listas.items()})
+
+
+if __name__ == "__main__":
+    gravar(pathlib.Path(sys.argv[1]), sys.argv[2:])
