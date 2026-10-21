@@ -3632,3 +3632,47 @@ valores, as durações e as interações (o Revide do Broquel do Vigia) não mud
 `MODOS=atual`, as capturas em `estados_guarda_esquiva/capturas/integracao/`): o chip do Em guarda é igual ao da
 proposta (12 pixels de no máximo 10 níveis, o brilho animado da borda); a Esquiva continua a folha do jogo. Sem erro no
 console. A folha: `estados_guarda_esquiva/g1-integracao-1.156.0.png` (antes × depois, a 2×).
+
+### A Esquiva: a E2 recusada; as alternativas E3 e E4 (`estados_guarda_esquiva/`)
+
+**Pedidos de Jean (20 e 21/10/2026):** a E1 lembrava um símbolo meteorológico (os três traços com o mesmo peso,
+regulares demais); a E2, explorando uma curva principal e um rastro mais curto, também não foi aprovada (não comunica
+evasão) e fica como histórico. Nesta rodada, abandonar a rajada e a curva abstrata e preparar duas alternativas de
+conceito em 16 px, só no protótipo: (1) uma bota dando um passo lateral rápido, com o pé reconhecível e um rastro curto;
+(2) outra solução para desviar de um ataque, diferente da primeira, sem anatomia detalhada nem excesso de elementos. O Em
+guarda continua o G1 (integrado na 1.156.0).
+
+**As duas curvas na prancha.** A imagem com duas curvas onde deviam estar o escudo e a Esquiva era de um visualizador de
+rascunho (fora do repositório) que punha as propostas por posição nas casas do escudo e da Esquiva; com as duas variantes
+de curva da E2 passadas a ele, as duas ocuparam as duas casas. Foi só montagem: o jogo mapeia só `firme` e `guarda` em
+`ESTADO` (`icones.js`) e a Esquiva segue com a folha. Para não repetir, a prancha nova (`auxiliares/prancha_esquiva.py`)
+lê o Em guarda e o Firme dos arquivos do jogo e cada Esquiva do arquivo dela, sempre com o rótulo, sem posição implícita.
+
+**As grades** (`auxiliares/icones16.py`; as fontes em camadas em `fontes/estado-esquiva-e2/`, `-e3/`, `-e4/`):
+- **E2, os crescentes (recusada, histórico):** o crescente principal fino nas pontas, de baixo-esquerda para cima-direita,
+  e um menor por dentro. Na bancada, antes dela: a curva com a cabeça pesada lia como lâmina ou "visto" (✓), o arco como
+  arco-íris ou tigela, o traço com a ponta ">" como seta comum. Camadas: crescentes, contorno.
+- **E3, a bota dando um passo:** a bota de couro escuro de perfil (as cores das botas de couro do jogo), a ponta para a
+  direita, a sola escura, e o rastro curto atrás do calcanhar, em dois traços de ar (o de baixo mais comprido). Camadas:
+  rastro, bota, contorno.
+- **E4, a figura que sai do lugar:** uma silhueta simples (a cabeça e o corpo, sem mãos nem rosto), clara, com o
+  contorno do conjunto, inclinada para a direita, e o fantasma pontilhado, em pé e sem contorno, onde ela estava (a
+  imagem que ficou para trás). Na bancada, os fantasmas sólidos liam como uma fileira de peças de xadrez. Camadas:
+  fantasma, figura, contorno.
+
+**A avaliação (minha):** a E3 é a que lê de imediato em tamanho real (uma bota em movimento), mas fica perto da bota da
+Agilidade e do Fugir (a bota laranja em passada, com os riscos de velocidade): o couro escuro e o rastro azul de ar
+são a diferença, e talvez não bastem para separar "esquivar" de "correr/fugir". A E4 é a mais distinta de tudo no jogo,
+mas em ~18 px a figura e o fantasma viram uma mancha cinza; a ideia (sair do lugar deixando a imagem) só aparece na
+ampliação.
+
+**A conferência:** as fontes pelo `pintar.lua` (0 diferenças na releitura, 0 fora da tela) e o composto de cada uma lido
+no Aseprite; exportadas; a grade igual ao PNG (0 pixels diferentes); @2x exatos; os PNGs do G1 e da E1 não mudaram.
+
+**No contexto:** `flechas_firme/auxiliares/fotografar_luta.mjs` com `TROCAS=auxiliares/trocas-r3.json` (os modos e1, e3 e
+e4 trocam só o chip `.ef[data-ef="esquiva"]`; o Em guarda e o Firme são os arquivos do jogo), a 1920×945, com os mesmos
+dados; as capturas em `capturas/rodada3/`. Sem erro no console.
+
+**A folha:** `estados_guarda_esquiva/esquiva-alternativas.png` (a fileira Firme · Em guarda · Esquiva para o jogo, a E1, a
+E2, a E3 e a E4, em tamanho real e a 2×, com o nome de cada uma; as ampliações 12×; a carta na luta com a folha, a E1, a
+E3 e a E4, e a E3 e a E4 a 2×). Nada integrado; a Esquiva continua a folha do jogo.

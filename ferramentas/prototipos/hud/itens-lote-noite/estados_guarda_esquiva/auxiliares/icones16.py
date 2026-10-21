@@ -15,6 +15,18 @@ rpg/web/static/hud/icones/estado-firme-16.png) é a referência de acabamento e 
 Os dois se distinguem do Firme (os dois elos na diagonal) e entre si pela forma: o escudo é um bloco vertical de metal;
 o vento, traços horizontais abertos, num azul claro de ar.
 
+As rodadas seguintes da Esquiva (20/10 e 21/10/2026, pedidos do Jean; a E1 não foi aprovada: lembrava um símbolo
+meteorológico):
+  - E2 (estado-esquiva-e2, guardada como histórico, não aprovada: não comunicava evasão): o crescente principal fino
+    nas pontas, de baixo-esquerda para cima-direita, e um crescente menor por dentro; antes dela, na bancada, a curva
+    com a cabeça pesada lia como lâmina ou "visto", o arco como arco-íris, o traço com a ponta ">" como seta;
+  - E3 (estado-esquiva-e3), a bota dando um passo: a bota de couro escuro de perfil (o couro das botas do jogo), a ponta
+    para a direita, a sola escura, e o rastro curto atrás do calcanhar (dois traços de ar, o de baixo mais comprido).
+    Fica perto da bota da Agilidade e do Fugir (a bota laranja em passada com os riscos): o couro escuro e o rastro em
+    azul de ar são a diferença, e a avaliação diz se basta;
+  - E4 (estado-esquiva-e4), a figura que sai do lugar: uma silhueta simples (a cabeça e o corpo, sem anatomia, o
+    contorno do conjunto) inclinada para a direita, e o fantasma pontilhado, em pé, onde ela estava (sem contorno: a
+    imagem que ficou para trás). Na bancada, os fantasmas sólidos liam como uma fileira de peças de xadrez.
 Grava grades/<id>.txt e as listas por camada para o pintar.lua (listas/<id>/<camada>.lua).
     python icones16.py <pasta>
 """
@@ -23,7 +35,8 @@ import sys
 
 CORES = {"#": "08080a",
          "3": "383c44", "4": "4c5159", "5": "646a73", "6": "848b94", "7": "b0b6bd", "8": "e4e8ec",   # a rampa de ferro
-         "a": "e8f4f6", "b": "9fd0d8", "c": "4f8a96"}                                               # o ar: claro, cacho, cauda
+         "a": "e8f4f6", "b": "9fd0d8", "c": "4f8a96",                                               # o ar: claro, cacho, cauda
+         "K": "b08c62", "L": "8e6236", "M": "724b2a", "N": "57381f", "O": "3e2716", "S": "1c1510"}    # o couro das botas
 
 GUARDA = ["................",
           "...##########...",
@@ -70,7 +83,35 @@ def camada_esquiva(x, y, ch, grade):
     return "contorno" if ch == "#" else "cachos" if ch == "b" else "rajadas"
 
 
-ICONES = {"estado-guarda": (GUARDA, camada_guarda), "estado-esquiva": (ESQUIVA, camada_esquiva)}
+ESQUIVA_E2 = [".............#..", "............#a#.", "............#a#.", "........#...#a#.", ".......#b#.#aa#.",
+              ".......#b#.#aa#.", "......#bb##aaa#.", "....##bb#.#aaa#.", "...#cbb#.#baaa#.", "....###.#bbbb#..",
+              "......##bbbb#...", "...###cbbbb#....", ".##ccccbbb#.....", "#ccccccc##......", ".#######........",
+              "................"]
+ESQUIVA_E3 = ["................", "................", "......####......", ".....#KLLM#.....", ".....#KLMN#.....",
+              ".....#KLMN#.....", ".....#KLMN#.....", ".###.#KLMNN#....", "#cba#KKLMNNN#...", ".####KKLLMNNO#..",
+              "######KKLLMMNO#.", "ccbba##SSSSSSSS#", "#####..###SSSS#.", "..........####..", "................",
+              "................"]
+ESQUIVA_E4 = ["................", "................", "................", "...........##...", "..........#66#..",
+              "...5.....#7866#.", "..5.5....#7766#.", "...5.5...##76#..", "....5...#7777#..", "...5.5.#77777#..",
+              "..5.5.5777777#..", ".5.5.5#77777#...", "..5.5.577777#...", ".5.5.5.#####....", "................",
+              "................"]
+
+
+def camada_e2(x, y, ch, grade):
+    return "contorno" if ch == "#" else "crescentes"
+
+
+def camada_e3(x, y, ch, grade):
+    return "contorno" if ch == "#" else "rastro" if ch in "abc" else "bota"
+
+
+def camada_e4(x, y, ch, grade):
+    return "contorno" if ch == "#" else "fantasma" if ch == "5" else "figura"
+
+
+ICONES = {"estado-guarda": (GUARDA, camada_guarda), "estado-esquiva": (ESQUIVA, camada_esquiva),
+          "estado-esquiva-e2": (ESQUIVA_E2, camada_e2), "estado-esquiva-e3": (ESQUIVA_E3, camada_e3),
+          "estado-esquiva-e4": (ESQUIVA_E4, camada_e4)}
 
 if __name__ == "__main__":
     base = pathlib.Path(sys.argv[1])

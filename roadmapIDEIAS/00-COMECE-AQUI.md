@@ -5202,3 +5202,12 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   `ESTADO.guarda` em `icones.js` (o chip e o selo); o sprite `escudo` intacto nos outros papéis. Conferido no jogo a
   1920×945.
 - **Continua:** a Esquiva numa rodada 2 (só no protótipo).
+
+### 21/10/2026 (data do computador local) — A Esquiva: as alternativas E3 e E4 (proposta)
+
+- **Pedido de Jean:** a E2 recusada (guardada); duas alternativas de conceito em 16 px: a bota dando um passo e outra
+  solução de desviar de um ataque; conferir as duas curvas que apareceram no lugar do escudo e da Esquiva.
+- **Feito:** a E3 (a bota) e a E4 (a figura que sai do lugar, com o fantasma) em
+  `ferramentas/prototipos/hud/itens-lote-noite/estados_guarda_esquiva/`, a E2 como histórico; a prancha nova pelo nome de
+  cada ícone (as duas curvas eram de um visualizador de rascunho que montava por posição; o jogo nunca mapeou a Esquiva).
+- **Continua:** a Esquiva fora de produção (a folha do jogo) até a avaliação; a versão continua 1.156.0.
