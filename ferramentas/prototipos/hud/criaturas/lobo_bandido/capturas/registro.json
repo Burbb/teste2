@@ -1,0 +1,77 @@
+{
+ "luta/atual": {
+  "erros": [],
+  "avisos": [],
+  "cartas": [
+   "Jean: data:image/png;base64,iVBORw0KGgoAAAANSU 32/32",
+   "Lobo Cinzento: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Lobo: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Lobo: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Aranha gigante: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Bandido: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Bandido: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Cultista: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "A Febre do TurvoDescobrir de onde vem a : data:image/png;base64,iVBORw0KGgoAAAANSU 32/16"
+  ]
+ },
+ "luta/a": {
+  "erros": [],
+  "avisos": [],
+  "cartas": [
+   "Jean: data:image/png;base64,iVBORw0KGgoAAAANSU 32/32",
+   "Lobo Cinzento: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Lobo: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Lobo: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Aranha gigante: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Bandido: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Bandido: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Cultista: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "A Febre do TurvoDescobrir de onde vem a : data:image/png;base64,iVBORw0KGgoAAAANSU 32/16"
+  ]
+ },
+ "luta/b": {
+  "erros": [],
+  "avisos": [],
+  "cartas": [
+   "Jean: data:image/png;base64,iVBORw0KGgoAAAANSU 32/32",
+   "Lobo Cinzento: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Lobo: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Lobo: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Aranha gigante: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Bandido: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Bandido: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Cultista: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "A Febre do TurvoDescobrir de onde vem a : data:image/png;base64,iVBORw0KGgoAAAANSU 32/16"
+  ]
+ },
+ "bestiario/atual": {
+  "erros": [],
+  "avisos": [],
+  "cartas": [
+   "Aranha gigante: data:image/png;base64,iVBORw0KGgoAAAANSU 48/16",
+   "Bandido: data:image/png;base64,iVBORw0KGgoAAAANSU 48/16",
+   "Cultista: data:image/png;base64,iVBORw0KGgoAAAANSU 48/16",
+   "Lobo: data:image/png;base64,iVBORw0KGgoAAAANSU 48/16"
+  ]
+ },
+ "bestiario/a": {
+  "erros": [],
+  "avisos": [],
+  "cartas": [
+   "Aranha gigante: data:image/png;base64,iVBORw0KGgoAAAANSU 48/16",
+   "Bandido: data:image/png;base64,iVBORw0KGgoAAAANSU 48/16",
+   "Cultista: data:image/png;base64,iVBORw0KGgoAAAANSU 48/16",
+   "Lobo: data:image/png;base64,iVBORw0KGgoAAAANSU 48/16"
+  ]
+ },
+ "bestiario/b": {
+  "erros": [],
+  "avisos": [],
+  "cartas": [
+   "Aranha gigante: data:image/png;base64,iVBORw0KGgoAAAANSU 48/16",
+   "Bandido: data:image/png;base64,iVBORw0KGgoAAAANSU 48/16",
+   "Cultista: data:image/png;base64,iVBORw0KGgoAAAANSU 48/16",
+   "Lobo: data:image/png;base64,iVBORw0KGgoAAAANSU 48/16"
+  ]
+ }
+}

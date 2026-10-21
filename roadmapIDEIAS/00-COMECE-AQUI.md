@@ -5436,3 +5436,14 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   `ferramentas/prototipos/hud/criaturas/afogado_ilse/afogado-ilse-final.png`.
 - **Continua:** as outras criaturas seguem pelos traços (o levantamento: o rosto de lobo compartilhado, o troll na
   caveira, o humano genérico, o Lich que troca de desenho). O próximo par é decisão do Jean.
+
+### 21/10/2026 (data do computador local) — Criaturas, segundo par: o Lobo e o Bandido (proposta)
+
+- **Pedido de Jean:** duas propostas distintas de cada, só no protótipo, para escolher a direção.
+- **Feito:** em `ferramentas/prototipos/hud/criaturas/lobo_bandido/`: o Lobo A (de frente) e B (de perfil), o
+  Bandido A (o desertor, a cabeça raspada e o lenço no pescoço) e B (a salteadora de capuz); fontes pelo MCP,
+  exportação conferida; as folhas `lobo.png` e `bandido.png` (a carta e o Bestiário a 1920×945 com os mesmos dados,
+  a fileira com o Morel, a Odette e o herói, a 12×). O alcance previsto (só as famílias `lobo` e `bandido`; o
+  `fera` do animal do herói e das outras feras e o `humano` dos outros humanos continuam) e a avaliação no
+  `LEIA-ME.md` da pasta. Minha preferência: Lobo A e Bandido A.
+- **Continua:** nada aprovado; a versão continua 1.162.0. O Afogado e a Ilse intactos.

@@ -108,3 +108,8 @@ A escolha do par e da direção é do Jean; nada foi começado.
   Ilse R3 (`ilse-r3`, com o olho 1 px para a esquerda) pela chave da capela, em `dados.retrato` e `Icones.criatura`. O
   esqueleto, o carniçal, o cavaleiro sombrio, o Lich, os servos e o guardião genérico da Bruxa Afogada continuam com a
   caveira; as outras criaturas continuam pelos traços. Os problemas 1, 2, 4 e 5 continuam abertos.
+
+## Em proposta
+
+- **O Lobo e o Bandido** (o segundo par, `lobo_bandido/`, 21/10/2026): duas propostas de cada (o lobo de frente e o
+  de perfil; o desertor e a salteadora), com o alcance previsto pelos dados. Nada integrado.

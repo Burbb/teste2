@@ -1,0 +1,16 @@
+...D........D...
+..Dld......dlD..
+..LnlD....DnlD..
+..LnldDddDdnld..
+..LLllllllllld..
+.dLLlllllllllDD.
+.dLLakllllkaldD.
+.dLLLllCClllldD.
+.dLLlCCCCCClldD.
+..dLlCCCCCCldD..
+..dLLCCkkCCldD..
+...dLlCCCCldD...
+..ddLllCClldDd..
+.ddLLlllllldDDd.
+dLLLlllllldddDDd
+LLLlllllldddDDDd

@@ -899,6 +899,9 @@ Terceira rodada (21/10/2026, proposta): a Ilse transposta da referência gerada 
 escala da comitiva (`afogado-cabelo`, `afogado-perfil`, `afogado-cranio`); a folha `afogado-ilse-r3.png`.
 **No jogo desde a 1.162.0:** o Afogado C (pela família) e a Ilse R3 com o olho ajustado (pela chave da capela),
 `dados.retrato` e `Icones.criatura`; as outras criaturas continuam pelos traços (o par seguinte fica com o Jean).
+**Segundo par (21/10/2026, proposta): o Lobo e o Bandido**, duas direções de cada em
+`ferramentas/prototipos/hud/criaturas/lobo_bandido/` (o lobo de frente e de perfil; o desertor e a salteadora), as
+folhas `lobo.png` e `bandido.png`; o alcance previsto só nas famílias `lobo` e `bandido`.
 
 O atalho **Mapa** da doca já foi concluído; esta frente trata dos símbolos internos de caminhos e mapas.
 Não afirmar que só restam talentos e habilidades após este bloco sem conferir os consumíveis, variantes e
