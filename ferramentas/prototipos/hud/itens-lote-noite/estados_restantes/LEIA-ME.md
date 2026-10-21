@@ -180,3 +180,32 @@ Esquiva (E6), já no jogo, são a referência de acabamento e não foram redesen
 - **Avaliação sincera:** a Fúria é direta, mas é um emoji: o mais "moderno" da família, menos dentro do mundo que o
   capuz ou a serpente. As garras do Frenesi leem como "rasgos" e o crescimento aparece a 2×; no 1× o que fica é "três
   traços vermelhos", o que ainda as separa do resto.
+
+## A prancha geral e a avaliação do conjunto
+
+`geral.png`: os 17 estados identificados (os três finais do jogo e os 14 candidatos), em chips no tamanho real, a 2× e
+a 4×; a fileira inteira lado a lado; e os estados de dano juntos (Fortalecido, Fúria, Frenesi, Iniciativa e o
+Enfraquecido), o grupo que mais podia confundir.
+
+**Conferência técnica (tudo passou):** os 26 desenhos (14 principais e 12 tentativas) reabertos do `.aseprite` pela
+linha de comando saem idênticos à proposta e à grade; o @2x é exato; 16×16 RGBA, alfa só 0 ou 255, fundo
+transparente; os scripts passam no `pyflakes` e no `node --check`; as 14 fotos de situação, sem erro nem aviso no
+console. O jogo não mudou (`rpg/` e `tests/` intactos; a troca das fotos é só na página).
+
+**Qualidade visual (a minha leitura em tamanho real, na carta, a 1920×945; quem aprova é o Jean):**
+
+- *Funcionam melhor:* Marcado (o alvo), Veneno (a serpente), Maldição (a caveira roxa), Iniciativa (a exclamação),
+  Furtivo (o capuz), Sangramento (as duas gotas). Leem no 1× sem precisar do nome e não se confundem com os vizinhos.
+- *Funcionam, com ressalva:* Fortalecido e Enfraquecido (claros, "ataque ↑/↓", mas são símbolos de interface, menos
+  pintados que os finais); Chamas (lê como fogo, mas mudou pouco em relação ao sprite atual); Fúria (direta, mas é um
+  emoji, o mais moderno da família); Frenesi (três rasgos vermelhos; o crescimento só se vê a 2×); Atordoado (a espiral
+  lê como tontura, mas pode ler como "@").
+- *Frágeis:* Provocando (as setas sobre a figura viram um borrão vermelho no 1×) e Barreira (lê como pessoa na bolha,
+  mas lembra o ícone de conta de usuário); os dois ainda repetem a mesma figura. São os primeiros a pedir outra
+  construção se o Jean recusar (Provocando: o grito ou a mão chamando; Barreira: a cúpula ou uma parede de energia,
+  já tentadas na bancada sem sucesso).
+- *Riscos de confusão que ficaram resolvidos:* nenhum elemento pequeno encostado no número do chip (a gota pequena, os
+  triângulos e as presas liam como pontuação e foram trocados); Fúria e Frenesi dividem o vermelho, não a forma;
+  Fortalecido e Enfraquecido são o mesmo desenho de propósito, com a direção e a cor invertidas.
+- *Limites das fotos:* o selo de chegada não foi trocado (não tem seletor por estado); o herói atordoado e a Esquiva de
+  1 turno do Desaparecer não têm foto parada válida (se gastam antes de o jogador agir).

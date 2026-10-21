@@ -5269,3 +5269,16 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
 - **Feito:** o rosto vermelho de raiva (Fúria) e as três garras crescentes (Frenesi) em `estados_restantes/`;
   `lote7.png` com o Berserker fortalecido, em fúria e em frenesi ao mesmo tempo, a 1920×945.
 - **Continua:** nada aprovado; a versão continua 1.157.0. Falta a prancha geral dos 17.
+
+### 21/10/2026 (data do computador local) — Os estados restantes: a prancha geral e a avaliação (proposta)
+
+- **Feito:** os sete lotes entregues (commits `051a4fc1`, `6cc75359`, `560a0cd2`, `1d9e8752`, `bc4035bd`, `ca37990a`,
+  `72f5360d`); a prancha `geral.png` com os 17 estados; a conferência técnica dos 26 desenhos (fonte reaberta = proposta
+  = grade, @2x exato); a avaliação no `LEIA-ME.md` de `estados_restantes/`; a tabela do plano 23 marca os 14 como
+  proposta.
+- **Pendências:** o conector do Aseprite (MCP) não conectou nesta sessão (as fontes saíram pela linha de comando; se o
+  Jean preferir, reconectar o `aseprite-bridge` antes da próxima rodada); a origem e a licença das referências antigas
+  continuam como estavam; a exclusão local de `ferramentas/arte/referencias/capacete/elmo-frente-jean.webp`, feita pelo
+  Jean, continua fora dos commits.
+- **Próximo passo:** o Jean avaliar as folhas `lote1.png` a `lote7.png` e `geral.png`; aprovar, pedir retoque ou outra
+  construção por estado. Nada integrado; a versão continua 1.157.0.

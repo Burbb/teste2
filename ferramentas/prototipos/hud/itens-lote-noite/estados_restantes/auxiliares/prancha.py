@@ -102,7 +102,7 @@ def folha_geral():
     f, f2 = fonte(14), fonte(12)
     grupos = [("finais (no jogo)", [(t, final(k)) for k, t in FINAIS])] + [
         (f"lote {n}", [(TITULO[i], proposta(f"estado-{i}")) for i in ids]) for n, ids in LOTES.items()]
-    out = Image.new("RGBA", (1400, 900), CARVAO)
+    out = Image.new("RGBA", (1400, 1200), CARVAO)
     d = ImageDraw.Draw(out)
     d.text((20, 10), "Os 17 estados: os 3 finais e os 14 candidatos (proposta, nada aprovado). Tamanho real em chips "
                      "e a 2×; a 4× só para inspecionar.", fill=TEXTO, font=f)
