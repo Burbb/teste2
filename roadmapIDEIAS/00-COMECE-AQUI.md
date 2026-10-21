@@ -5230,3 +5230,9 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   1920×945: o chip e o selo de chegada (o Passo Ágil). A origem e a licença da referência continuam pendentes.
 - **Continua:** os outros estados (Fortalecido, Fúria, Frenesi, Iniciativa, Barreira, Furtivo, Provocando e os
   negativos) com os sprites do jogo; não começados.
+
+### 21/10/2026 (data do computador local) — Os estados restantes, lote 2: Chamas e Maldição (proposta)
+
+- **Feito:** as três línguas de fogo (Chamas) e a caveira roxa de olhos acesos (Maldição) em
+  `estados_restantes/` (fontes, `lote2.png` com o herói contra cultistas e os lobos em chamas a 1920×945).
+- **Continua:** nada aprovado; a versão continua 1.157.0.

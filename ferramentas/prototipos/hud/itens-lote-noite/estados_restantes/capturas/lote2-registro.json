@@ -1,0 +1,62 @@
+{
+ "heroi-cultistas/atual": {
+  "estados": [
+   "j:queimadura",
+   "j:maldito"
+  ],
+  "imagens": [
+   "queimadura 16px → 17.9px (png 16)",
+   "maldito 16px → 17.9px (png 16)"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "heroi-cultistas/proposta": {
+  "estados": [
+   "j:queimadura",
+   "j:maldito"
+  ],
+  "imagens": [
+   "queimadura 16px → 17.9px (png 16)",
+   "maldito 16px → 17.9px (png 16)"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "inimigo-lobos/atual": {
+  "estados": [
+   "c1-1:queimadura",
+   "c1-2:queimadura"
+  ],
+  "imagens": [
+   "queimadura 16px → 16.0px (png 16)"
+  ],
+  "cartas": [
+   "c1-1",
+   "c1-2"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "inimigo-lobos/proposta": {
+  "estados": [
+   "c1-1:queimadura",
+   "c1-2:queimadura"
+  ],
+  "imagens": [
+   "queimadura 16px → 16.0px (png 16)"
+  ],
+  "cartas": [
+   "c1-1",
+   "c1-2"
+  ],
+  "erros": [],
+  "avisos": []
+ }
+}

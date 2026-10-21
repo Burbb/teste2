@@ -40,6 +40,8 @@ Esquiva (E6), já no jogo, são a referência de acabamento e não foram redesen
 |---|---|---|
 | Veneno (`veneno`) | dano por turno; não pega em mortos-vivos nem construtos | no herói (aranha, rato, lagarto, afixo "venenoso") e no inimigo (Flecha Envenenada) |
 | Sangramento (`sangramento`) | dano por turno; não pega em construtos nem etéreos | no herói (Mordida Sangrenta de lobos e ratos) e no inimigo (Sede de Sangue, o lobo do Patrulheiro) |
+| Chamas (`queimadura`) | dano por turno, acumula camadas ("em chamas ×N"); a chuva enfraquece; a Combustão detona o que falta arder | no herói (Bola de Fogo de cultistas e demônios) e no inimigo (Bola de Fogo, Inferno) |
+| Maldição (`maldito`) | dano por turno e −40% de defesa | no herói (a maldição de cultistas, afogados, chefes) e no inimigo (Drenar Vida e a Maldição do Necromante) |
 
 ## Lote 1: Veneno e Sangramento
 
@@ -57,3 +59,21 @@ Esquiva (E6), já no jogo, são a referência de acabamento e não foram redesen
   Sem erro nem aviso no console. Folha: `lote1.png`.
 - **Avaliação sincera:** a serpente é a leitura mais forte do lote (lê como cobra no 1×); o Sangramento continua na
   família da gota do jogo, agora com duas gotas: claro, mas pouco novo.
+
+## Lote 2: Chamas e Maldição
+
+- **Chamas — as três línguas de fogo** (`estado-queimadura`): a língua do meio mais alta, duas menores dos lados, o
+  miolo claro embaixo e a borda vermelha; camadas chamas, miolo, contorno. Continua sendo fogo (o estado é fogo), mas
+  aberto em línguas separadas, em vez da bola de fogo do sprite `chama` (que fica no Vigor, no Poder e na Pena de
+  Fênix).
+- **Maldição — a caveira roxa** (`estado-maldito`): o crânio de osso tingido de roxo, as órbitas escuras com um ponto
+  magenta aceso e os dentes; camadas cranio, olhos, contorno. Não é uma chama recolorida: outra silhueta (crânio) e
+  outra cor.
+- **Na bancada:** a primeira caveira tinha dois fios de fumaça em cima e lia como um inseto de antenas; a fumaça saiu e
+  as órbitas cresceram (3×3, com o ponto aceso).
+- **Fotos:** o herói contra cultistas (em chamas e amaldiçoado, os dois do cultista) e os lobos em chamas pelo Mago. Sem
+  erro nem aviso no console. Folha: `lote2.png`.
+- **Avaliação sincera:** a caveira é inconfundível em tamanho real; o risco é a leitura de "morte" mais que de
+  "maldição" (a cor roxa e os olhos acesos ajudam). As Chamas leem como fogo de imediato, mas ficaram próximas do sprite
+  atual: a mudança é de acabamento, não de conceito. A queda de 40% de defesa da Maldição não aparece no ícone (a dica
+  diz).
