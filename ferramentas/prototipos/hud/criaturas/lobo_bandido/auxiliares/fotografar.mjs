@@ -3,7 +3,7 @@
 // da criatura (o jogo escolhe pelo traço: o lobo é o "fera", o bandido o "humano"). Situações: uma luta com dois
 // lobos, uma aranha (também "fera"), dois bandidos e um cultista (também "humano"), com o Lobo Cinzento do patrulheiro
 // do lado do herói (também "fera": não troca); e o Bestiário com as mesmas espécies.
-//   [MODOS=atual,a,b | r2-base,r2-brutamontes,r2-chapeu,r2-faca] PLAYWRIGHT_MODULO=<file:// do index.mjs> node fotografar.mjs <raiz> <pasta das fotos>
+//   [MODOS=atual,a,b | r2-base,r2-brutamontes,r2-chapeu,r2-faca | final] PLAYWRIGHT_MODULO=<file:// do index.mjs> node fotografar.mjs <raiz> <pasta das fotos>
 import { spawn } from "child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import path from "path";
@@ -28,6 +28,9 @@ const SITUACOES = [
   { nome: "bestiario", cenario: "covil", amb: { CLASSE: "guerreiro", LUGAR: "vila",
     BESTIARIO: "lobo:3,bandido:3,aranha:2,cultista:2" }, passos: [{ tecla: "b" }], espera: ".cartao .cab",
     fotos: [["body", "pagina"]] },
+  // 1.163.0 (o modo "final", sem troca: o jogo como está): o rastro do contrato de caça de bandidos, no Bosque
+  { nome: "contrato", cenario: "tutorial", amb: { TUTORIAL: "0", CLASSE: "guerreiro", CONTRATO: "aceito",
+    CONTRATO_EM: "bosque", CONTRATO_FAMILIA: "bandido" }, espera: ".rastro-contrato", fotos: [["body", "pagina"]], so: ["final"] },
 ];
 mkdirSync(saida, { recursive: true });
 const b = await chromium.launch();
@@ -35,7 +38,7 @@ const b = await chromium.launch();
 const arqRegistro = path.join(saida, "registro.json");
 const registro = existsSync(arqRegistro) ? JSON.parse(readFileSync(arqRegistro, "utf-8")) : {};
 for (const sit of SITUACOES) {
-  for (const modo of MODOS) {
+  for (const modo of MODOS.filter((m) => !sit.so || sit.so.includes(m))) {
     const proc = spawn(PY, ["-m", "tests.navegador.cenarios", sit.cenario], { cwd: raiz,
       env: { ...process.env, PYTHONPATH: raiz, PYTHONIOENCODING: "utf-8", VELOCIDADE: "rapido", PERIODO: "0", ...sit.amb } });
     let url = null; proc.stdout.on("data", (d) => { const m = String(d).match(/http:\S+/); if (m) url = m[0]; });

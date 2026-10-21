@@ -255,7 +255,103 @@ def folha_bandido_r2():
     print("bandido-r2.png", out.size)
 
 
-if __name__ == "__main__" and sys.argv[1:] == ["r2"]:
+def folha_limpeza():
+    """O Lobo "só a base" (antes) × o do jogo (depois, sem as três sobras soltas): sobre o fundo da carta e sobre um
+    magenta, a 2×, 3× e 12×, com os pixels removidos marcados."""
+    f, f2 = ImageFont.truetype("arial.ttf", 15), ImageFont.truetype("arial.ttf", 12)
+    antes = imagem("lobo-a-base")
+    depois = Image.open(AQUI.parents[5] / "rpg/web/static/hud/icones/retrato-lobo-16.png").convert("RGBA")
+    tirados = [(x, y) for y in range(16) for x in range(16) if antes.getpixel((x, y)) != depois.getpixel((x, y))]
+    out = Image.new("RGBA", (1100, 640), CARVAO)
+    d = ImageDraw.Draw(out)
+    d.text((20, 10), "Lobo: a limpeza localizada (as sobras apontadas pelo Jean) — antes (\"só a base\", ef15d91d) × depois "
+                     "(no jogo)", fill=TEXTO, font=f)
+    d.text((20, 30), "removidos: " + ", ".join(f"({x},{y})" for x, y in tirados) + "; o resto igual pixel a pixel",
+           fill=TEXTO2, font=f2)
+    y = 56
+    for fundo, rot in (((13, 11, 10, 255), "sobre o fundo da carta"), ((200, 40, 170, 255), "sobre magenta (contraste)")):
+        d.text((20, y), rot, fill=TEXTO, font=f2)
+        for j, (im, nome) in enumerate(((antes, "antes"), (depois, "depois"))):
+            x = 20 + j * 520
+            d.text((x, y + 16), nome, fill=TEXTO2, font=f2)
+            for k, z in enumerate((2, 3)):
+                q = Image.new("RGBA", (16 * z + 8, 16 * z + 8), fundo)
+                q.alpha_composite(amplia(im, z), (4, 4))
+                out.alpha_composite(q, (x + k * 50, y + 34))
+            g = Image.new("RGBA", (192, 192), fundo)
+            g.alpha_composite(amplia(im, 12))
+            dd = ImageDraw.Draw(g)
+            for px, py in tirados:
+                dd.rectangle([px * 12, py * 12, px * 12 + 11, py * 12 + 11], outline=(255, 255, 255, 255) if fundo[0] > 100
+                             else (230, 40, 40, 255))
+            out.alpha_composite(g, (x + 120, y + 34))
+        y += 34 + 192 + 30
+    out = out.crop((0, 0, 1100, y))
+    out.save(PASTA / "lobo-limpeza.png")
+    print("lobo-limpeza.png", out.size, tirados)
+
+
+def folha_final():
+    """A integração (1.163.0, o modo "final" das fotos, o jogo sem troca): os PNGs do jogo × os aprovados, a fileira com
+    os vizinhos que continuam no traço, a luta, o Bestiário e o rastro do contrato a 1920×945."""
+    f, f2 = ImageFont.truetype("arial.ttf", 15), ImageFont.truetype("arial.ttf", 12)
+    jogo = AQUI.parents[5] / "rpg/web/static/hud/icones"
+    out = Image.new("RGBA", (1800, 2000), CARVAO)
+    d = ImageDraw.Draw(out)
+    d.text((20, 10), "O Lobo e o Bandido no jogo (1.163.0): o Lobo \"só a base\" sem as três sobras, o Bandido da faca sem "
+                     "retoques", fill=TEXTO, font=f)
+    y = 44
+    for j, (aprovado, arq, rot) in enumerate((("lobo-a-base", "retrato-lobo-16.png", "Lobo: aprovado (só a base) | no jogo"),
+                                              ("bandido-faca", "retrato-bandido-16.png", "Bandido: aprovado (o da faca) | no jogo"))):
+        x = 20 + j * 600
+        a, b = imagem(aprovado), Image.open(jogo / arq).convert("RGBA")
+        dif = [(px, py) for py in range(16) for px in range(16) if a.getpixel((px, py)) != b.getpixel((px, py))]
+        d.text((x, y), rot, fill=TEXTO, font=f2)
+        d.text((x, y + 16), "idêntico" if not dif else "diferentes (as sobras removidas): " +
+               ", ".join(f"({px},{py})" for px, py in dif), fill=TEXTO2, font=f2)
+        for k, im in enumerate((a, b)):
+            out.alpha_composite(caixa(im), (x + k * 250, y + 36))
+            out.alpha_composite(grade12(im), (x + k * 250 + 46, y + 36))
+    y += 36 + 192 + 20
+    luta = "luta-final-palco.png"
+    vizinhos = [("Lobo Cinzento (fera)", (52, 147, 90, 185))]
+    caixas = comitiva() + [(rot, abre(luta).crop(r)) for rot, r in vizinhos] + \
+        [("aranha (fera)", abre(luta).crop(nicho_abaixo("lobo"))),
+         ("cultista (humano)", abre(luta).crop(nicho_abaixo("bandido"))),
+         ("Lobo", abre(luta).crop(nicho("lobo"))), ("Bandido", abre(luta).crop(nicho("bandido")))]
+    d.text((20, y), "a fileira: os retratos aprovados, os vizinhos que continuam no traço e os novos — tamanho real e 3×",
+           fill=TEXTO, font=f2)
+    y = fileira_caixas(out, d, y + 20, f2, caixas)
+    c = abre(luta).crop((30, 30, 1050, 210))
+    d.text((20, y), "a luta a 1920×945 — tamanho real", fill=TEXTO, font=f2)
+    out.alpha_composite(c, (20, y + 18))
+    y += 18 + c.height + 16
+    c = abre(luta).crop((600, 30, 1050, 210))
+    d.text((20, y), "as cartas inimigas a 2×", fill=TEXTO, font=f2)
+    out.alpha_composite(amplia(c, 2), (20, y + 18))
+    y += 18 + 2 * c.height + 16
+    b = abre("bestiario-final-pagina.png").crop((585, 248, 1296, 564))
+    k = abre("contrato-final-pagina.png").crop((1505, 490, 1800, 600))
+    d.text((20, y), "o Bestiário (tamanho real) | o rastro do contrato de caça de bandidos (tamanho real e 2×)", fill=TEXTO, font=f2)
+    out.alpha_composite(b, (20, y + 18)); out.alpha_composite(k, (760, y + 18)); out.alpha_composite(amplia(k, 2), (1080, y + 18))
+    y += 18 + b.height + 16
+    out = out.crop((0, 0, 1800, y))
+    out.save(PASTA / "lobo-bandido-final.png")
+    print("lobo-bandido-final.png", out.size)
+
+
+def nicho_abaixo(nome):
+    """A caixa do retrato da carta logo abaixo da de `nome` (a terceira fileira da luta: a aranha sob o lobo, o cultista
+    sob o bandido): o mesmo nicho, 116 px mais baixo (duas cartas)."""
+    x0, y0, x1, y1 = nicho(nome)
+    return (x0, y0 + 116, x1, y1 + 116)
+
+
+if __name__ == "__main__" and sys.argv[1:] == ["final"]:
+    folha_final()
+elif __name__ == "__main__" and sys.argv[1:] == ["limpeza"]:
+    folha_limpeza()
+elif __name__ == "__main__" and sys.argv[1:] == ["r2"]:
     folha_lobo_r2()
     folha_bandido_r2()
 elif __name__ == "__main__":

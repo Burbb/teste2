@@ -173,5 +173,38 @@
    "Cultista: data:image/png;base64,iVBORw0KGgoAAAANSU 48/16",
    "Lobo: data:image/png;base64,iVBORw0KGgoAAAANSU 48/16"
   ]
+ },
+ "luta/final": {
+  "erros": [],
+  "avisos": [],
+  "cartas": [
+   "Jean: data:image/png;base64,iVBORw0KGgoAAAANSU 32/32",
+   "Lobo Cinzento: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Lobo: /static/hud/icones/retrato-lobo-32.png 32/32",
+   "Lobo: /static/hud/icones/retrato-lobo-32.png 32/32",
+   "Aranha gigante: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "Bandido: /static/hud/icones/retrato-bandido-32.pn 32/32",
+   "Bandido: /static/hud/icones/retrato-bandido-32.pn 32/32",
+   "Cultista: data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "A Febre do TurvoDescobrir de onde vem a : data:image/png;base64,iVBORw0KGgoAAAANSU 32/16"
+  ]
+ },
+ "bestiario/final": {
+  "erros": [],
+  "avisos": [],
+  "cartas": [
+   "Aranha gigante: data:image/png;base64,iVBORw0KGgoAAAANSU 48/16",
+   "Bandido: /static/hud/icones/retrato-bandido-48.pn 48/48",
+   "Cultista: data:image/png;base64,iVBORw0KGgoAAAANSU 48/16",
+   "Lobo: /static/hud/icones/retrato-lobo-48.png 48/48"
+  ]
+ },
+ "contrato/final": {
+  "erros": [],
+  "avisos": [],
+  "cartas": [
+   "A Febre do TurvoDescobrir de onde vem a : data:image/png;base64,iVBORw0KGgoAAAANSU 32/16",
+   "3 bandidos\n          Bosque do Moinho · : /static/hud/icones/retrato-bandido-32.pn 32/32"
+  ]
  }
 }

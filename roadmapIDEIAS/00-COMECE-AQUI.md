@@ -5458,3 +5458,14 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   `ferramentas/prototipos/hud/criaturas/lobo_bandido/` (a carta e o Bestiário a 1920×945 com os mesmos dados, a
   fileira com os retratos aprovados, a 12×). Minha preferência: o Lobo ajustado e o Bandido da faca.
 - **Continua:** nada aprovado; a versão continua 1.162.0.
+
+### 21/10/2026 (data do computador local) — Criaturas, o segundo par no jogo: o Lobo e o Bandido (1.163.0)
+
+- **Decisão de Jean:** o Lobo "só a base" (não o ajustado), com a limpeza de três sobras soltas, e o Bandido da faca
+  sem retoques; o Bandido do chapéu guardado como conceito para um possível chefe (fora do jogo).
+- **Feito:** fontes em `ferramentas/arte/aseprite/retrato-lobo/` e `retrato-bandido/`; `RETRATO_FAMILIA` com `lobo` e
+  `bandido`, `CRIATURA` com os dois; `tests/test_retratos.py` com as famílias e os vizinhos que continuam no traço. As
+  folhas `lobo-limpeza.png` e `lobo-bandido-final.png` em `ferramentas/prototipos/hud/criaturas/lobo_bandido/`; o
+  conceito reservado no `LEIA-ME.md` de lá ("Conceito reservado").
+- **Continua:** as outras criaturas seguem pelos traços (o `fera` do animal do herói e das outras feras, o `humano`
+  dos outros humanos, a caveira do troll). O próximo par é decisão do Jean.

@@ -17,6 +17,13 @@ class TestRetratos(unittest.TestCase):
         # a Ilse é morta-viva e conjuradora (a caveira pelos traços); a família dela é "guardiao"
         self.assertEqual(retrato(["morto-vivo", "conjurador"], "guardiao", "ilse"), "ilse")
 
+    def test_lobo_e_bandido_pela_familia(self):
+        self.assertEqual(retrato(FAMILIAS["lobo"]["tracos"], "lobo"), "lobo")
+        self.assertEqual(retrato(FAMILIAS["bandido"]["tracos"], "bandido"), "bandido")
+        # as outras feras e os outros humanos continuam no desenho do traço
+        for fam, tr in (("lobo_gelido", "fera"), ("aranha", "fera"), ("cultista", "humano"), ("mercenario", "humano")):
+            self.assertEqual(retrato(FAMILIAS[fam]["tracos"], fam), tr, fam)
+
     def test_os_outros_continuam_pelos_tracos(self):
         # o esqueleto e os outros mortos-vivos seguem com a caveira; o guardião genérico da Bruxa Afogada também
         self.assertEqual(retrato(FAMILIAS["esqueleto"]["tracos"], "esqueleto"), "caveira")

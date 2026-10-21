@@ -115,3 +115,39 @@ e pouco ameaçador): três direções novas, com ameaça, malícia ou brutalidad
   dizem "assalto" sem texto; a máscara vermelha continua a identidade do bandido de hoje, mas com rosto e intenção. Fraco:
   o capuz cinza é o mais escuro dos três, a faca encosta na borda do quadro, e a máscara esconde a boca (a expressão fica
   só nos olhos).
+
+## Integração (1.163.0)
+
+**Escolha de Jean:** o Lobo **"só a base"** (`lobo-a-base`, do `ef15d91d`: o pescoço corrigido, o olhar e o focinho do
+original; o "ajustado" não foi escolhido) e o Bandido **3, o da faca** (`bandido-faca`), sem retoques. As outras ficam
+aqui como histórico (`lobo-a`, `lobo-b`, `lobo-a-ajustado`, `bandido-a`, `bandido-b`, `bandido-brutamontes`).
+
+- **A limpeza do Lobo** (as sobras que o Jean marcou na folha): três pixels soltos das laterais de baixo, (1,11) e (2,12)
+  à esquerda e (14,11) à direita, ficaram transparentes. Os tufos presos à bochecha, (2,10) e (13,10), o pescoço, os
+  vãos e o rosto não mudaram. A folha `lobo-limpeza.png` (`python auxiliares/prancha.py limpeza`) mostra antes × depois
+  sobre o fundo da carta e sobre magenta, a 2×, 3× e 12×, com os pixels removidos marcados.
+- **As fontes de produção:** `ferramentas/arte/aseprite/retrato-lobo/retrato-lobo-16.aseprite` (pelagem, focinho,
+  detalhes) e `retrato-bandido/retrato-bandido-16.aseprite` (capuz, pele, máscara, rosto, faca, mão), abertas das fontes
+  do protótipo pelo MCP; no Lobo, os três pixels apagados na camada `pelagem` pelo `pintar.lua` (relidos). A exportação
+  reproduzível: `exportar_aseprite.py retrato-lobo` / `retrato-bandido` (`DERIVADOS`: o 32 é o 16 ×2, o 48 o 16 ×3, cada
+  um com o @2x); `--conferir`: tudo igual ao jogo. O Bandido é igual pixel a pixel ao `proposta/bandido-faca-16.png`; o
+  Lobo difere do `proposta/lobo-a-base-16.png` só nos três pixels.
+- **No jogo:** `RETRATO_FAMILIA` ganhou `lobo` e `bandido` (`dados.py`), e o papel `CRIATURA` os dois arquivos
+  (`icones.js`): a família inteira, com os afixos, os líderes de nome próprio e os invocados. O Lobo Cinzento e o Urso do
+  patrulheiro, o lobo gélido, a aranha e as outras feras continuam no `fera`; o cultista, o mercenário e os outros
+  humanos no `humano`. Nenhum sprite trocado globalmente; regras, medidas e interações iguais.
+- **Fotos a 1920×945** (o modo `final` do `fotografar.mjs`, o jogo sem troca): a luta com os dois lobos, os dois
+  bandidos, a aranha, o cultista e o Lobo Cinzento do herói; o Bestiário; o rastro do contrato de caça de bandidos no
+  Bosque (novo, só no modo `final`). As medidas: a carta 32 px de um arquivo de 32, o Bestiário 48 de 48, o rastro 32
+  de 32; sem erro nem aviso no console. A folha: `lobo-bandido-final.png` (`python auxiliares/prancha.py final`).
+
+## Conceito reservado: o Bandido do chapéu (possível chefe)
+
+O Bandido 2, o do chapéu, fica guardado como conceito para um possível chefe futuro. **Não está no jogo**: não tem chefe,
+nome, história, atributos nem mapeamento, e guardar não autoriza criar nenhum deles.
+
+- a fonte em camadas: `ferramentas/prototipos/hud/criaturas/lobo_bandido/fontes/bandido-chapeu/bandido-chapeu-16.aseprite`
+  (roupa, lenço, chapéu, cabelo, pele, rosto);
+- os PNGs: `.../lobo_bandido/proposta/bandido-chapeu-16.png` e `bandido-chapeu-16@2x.png`;
+- a grade: `.../lobo_bandido/grades/bandido-chapeu.txt` (e `BANDIDO_CHAPEU` em `auxiliares/grades.py`);
+- a prévia: `.../lobo_bandido/bandido-r2.png` (a carta, o Bestiário e a fileira) e as fotos `capturas/*-r2-chapeu-*.png`.

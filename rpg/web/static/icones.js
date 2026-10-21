@@ -39,7 +39,7 @@ const Icones = (() => {
     "manopla": [32, 40, 48, 64], "martelo": [40, 48], "moeda": [16, 32], "moedas": [24, 32], "osso": [24], "perneiras": [32, 40, 48, 64], "pocao": [16, 24, 32],
     "provisoes": [24, 32], "tocha": [16, 24, 32], "tocha_apagada": [16, 24], "frasco_vazio": [24], "tonico": [16, 32], "calca_tecido": [32, 40, 48, 64], "manto": [32, 40, 48, 64], "chapeu": [32, 40, 48, 64], "sandalia": [32, 40, 48, 64], "besta": [32, 40, 48, 64], "diadema": [32, 40, 48, 64], "unguento": [32, 64],
     "vital-foco": [20], "vital-mana": [20], "vital-vida": [20], "vital-vigor": [20],
-    "retrato-afogado": [16, 32, 48], "retrato-ilse": [16, 32, 48]};
+    "retrato-afogado": [16, 32, 48], "retrato-ilse": [16, 32, 48], "retrato-lobo": [16, 32, 48], "retrato-bandido": [16, 32, 48]};
 
   // Cada desenho vai para o tipo de ferro que o jogo já tem (elmo, armadura, manopla, calca = perneira, bota_ferro, maca);
   // couro sem desenho (a calça de couro) e as outras peças sem desenho ficam com o do jogo. O anel (1.140.0, o aro de
@@ -181,11 +181,12 @@ const Icones = (() => {
                    barreira: "estado-barreira", provocando: "estado-provocando", iniciativa: "estado-iniciativa" };
 
   // as cabeças próprias das criaturas (1.162.0), pelo retrato que o motor dá (dados.py: retrato, pela chave ou pela
-  // família, antes dos traços): o Afogado (a família, com a variante e o invocado) e a Ilse da capela. 16×16 como os
+  // família, antes dos traços): o Afogado (a família, com a variante e o invocado) e a Ilse da capela; desde a 1.163.0,
+  // o Lobo (a cabeça de frente com o começo do pescoço) e o Bandido (o capuz, a máscara e a faca). 16×16 como os
   // retratos de carta da comitiva; o 32 (a carta da luta, o rastro dos contratos) e o 48 (o Bestiário, o mural, a faixa
   // do mestre caçador) são o 16 ampliado 2× e 3×. Os outros retratos ("caveira", "fera", "humano"...) continuam os
   // sprites do jogo, também noutros papéis
-  const CRIATURA = { afogado: "retrato-afogado", ilse: "retrato-ilse" };
+  const CRIATURA = { afogado: "retrato-afogado", ilse: "retrato-ilse", lobo: "retrato-lobo", bandido: "retrato-bandido" };
 
   /** O arquivo de `peca` para mostrar em `lado` px: o tamanho igual ou o mais perto; maior que o maior, o dobro dele. */
   function arquivos(peca, lado) {

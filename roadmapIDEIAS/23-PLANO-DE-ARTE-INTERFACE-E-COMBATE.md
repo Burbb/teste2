@@ -903,7 +903,11 @@ escala da comitiva (`afogado-cabelo`, `afogado-perfil`, `afogado-cranio`); a fol
 `ferramentas/prototipos/hud/criaturas/lobo_bandido/` (o lobo de frente e de perfil; o desertor e a salteadora), as
 folhas `lobo.png` e `bandido.png`; o alcance previsto só nas famílias `lobo` e `bandido`. Segunda rodada: o Lobo A
 com a base de quadrúpede (e o ajuste do olhar) e três Bandidos novos (o brutamontes, o do chapéu, o da faca); as
-folhas `lobo-r2.png` e `bandido-r2.png`. Nada aprovado.
+folhas `lobo-r2.png` e `bandido-r2.png`.
+**No jogo desde a 1.163.0:** o Lobo "só a base" (com a limpeza de três sobras) e o Bandido da faca, pela família.
+**Reservado:** o Bandido do chapéu, conceito para um possível chefe futuro, fora do jogo (sem chefe, nome, história,
+atributos nem mapeamento); fonte, PNGs e prévia em `ferramentas/prototipos/hud/criaturas/lobo_bandido/` (a seção
+"Conceito reservado" do `LEIA-ME.md`).
 
 O atalho **Mapa** da doca já foi concluído; esta frente trata dos símbolos internos de caminhos e mapas.
 Não afirmar que só restam talentos e habilidades após este bloco sem conferir os consumíveis, variantes e
