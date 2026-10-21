@@ -948,7 +948,8 @@ troll de carne), as folhas `aranha-r2.png` e `troll-r2.png`.
 caveira e a Aranha no protótipo.
 **Propostas (21/10/2026):** o Rei Troll a partir do Troll 2 (a coroa de sucata, não escolhida; a coroa dourada pela
 referência gerada, `rei-troll-ouro`, sem mexer no rosto) e a Aranha 2B (as quelíceras e as presas reconstruídas, os
-olhos pequenos); as folhas `rei-aranha.png` e `rei-coroa.png`. Nada aprovado.
+olhos pequenos); as folhas `rei-aranha.png` e `rei-coroa.png`. O ajuste das pontas da coroa (`rei-troll-ouro2`, a
+folha `rei-pontas.png`). Nada aprovado.
 
 O atalho **Mapa** da doca já foi concluído; esta frente trata dos símbolos internos de caminhos e mapas.
 Não afirmar que só restam talentos e habilidades após este bloco sem conferir os consumíveis, variantes e

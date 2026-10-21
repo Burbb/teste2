@@ -286,6 +286,19 @@ COROA_OURO = [
     ".wsttwsstttvwstv",
     "..wstttttttttvw.",
 ]
+# o ajuste das pontas (pedido do Jean, comparando com a referência): as dos lados sobem duas linhas com uma inclinação
+# discreta para fora (antes pareciam ganchos deitados), a do meio termina num triângulo (antes o topo era largo e
+# achatado), e os vãos entre as três ficam abertos; o aro, o encaixe e a paleta iguais
+COROA_OURO2 = [
+    "..s....s.....t..",
+    "..st..stv...st..",
+    ".wsttwsstttvwstv",
+    "..wstttttttttvw.",
+]
+REI_TROLL_OURO2 = [
+    "".join(c if c != "." else t for c, t in zip(linha, TROLL_2[y])) if y < len(COROA_OURO2) else TROLL_2[y]
+    for y, linha in enumerate(COROA_OURO2 + [""] * (16 - len(COROA_OURO2)))
+]
 REI_TROLL_OURO = [
     "".join(c if c != "." else t for c, t in zip(linha, TROLL_2[y])) if y < len(COROA_OURO) else TROLL_2[y]
     for y, linha in enumerate(COROA_OURO + [""] * (16 - len(COROA_OURO)))
@@ -318,6 +331,7 @@ _REI = lambda x, y, ch: "coroa" if ch in "lpqr" or (ch == "B" and y <= 3) else "
 CAMADAS["rei-troll"] = (REI_TROLL, ["roupa", "pele", "presas", "rosto", "coroa"], _REI)
 CAMADAS["rei-troll-ouro"] = (REI_TROLL_OURO, ["roupa", "pele", "presas", "rosto", "coroa"],
                              lambda x, y, ch: "coroa" if ch in "stvw" else _TROLL2(x, y, ch))
+CAMADAS["rei-troll-ouro2"] = (REI_TROLL_OURO2,) + CAMADAS["rei-troll-ouro"][1:]
 CAMADAS["aranha-2b"] = (ARANHA_2B, ["patas", "corpo", "queliceras", "presas", "olhos"],
                         lambda x, y, ch: "olhos" if ch in "Pu" else "presas" if ch in "XY" else
                         "queliceras" if 7 <= y <= 11 and 3 <= x <= 12 and ch in "SUVR" else "patas" if x <= 2 or x >= 13 else "corpo")

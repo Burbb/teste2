@@ -336,9 +336,41 @@ def folha_coroa(ref):
     print("rei-coroa.png", out.size)
 
 
+def folha_pontas(ref):
+    """O ajuste das pontas da coroa (rei-pontas.png): a referência × a coroa anterior × a ajustada, na caixa da carta em
+    tamanho real e a 3×, e a 12× (na ajustada, os pixels mudados em vermelho)."""
+    f, f2 = ImageFont.truetype("arial.ttf", 15), ImageFont.truetype("arial.ttf", 12)
+    out = Image.new("RGBA", (1400, 400), CARVAO)
+    d = ImageDraw.Draw(out)
+    d.text((20, 10), "O Rei Troll: as pontas da coroa — a referência × a anterior × a ajustada (proposta, nada no jogo)",
+           fill=TEXTO, font=f)
+    r = Image.open(ref).convert("RGBA")
+    fundo = Image.new("RGBA", r.size, CARVAO); fundo.alpha_composite(r)
+    d.text((20, 34), "a referência", fill=TEXTO2, font=f2)
+    out.alpha_composite(fundo.resize((192, 192), Image.LANCZOS), (20, 52))
+    antes, depois = imagem("rei-troll-ouro"), imagem("rei-troll-ouro2")
+    for j, (rot, im) in enumerate((("anterior", antes), ("ajustada", depois))):
+        x = 240 + j * 560
+        d.text((x, 34), f"{rot}: a carta (tamanho real), a caixa a 3× e a 12×", fill=TEXTO2, font=f2)
+        out.alpha_composite(caixa(im), (x, 52)); out.alpha_composite(amplia(caixa(im), 3), (x + 46, 52))
+        g = grade12(im)
+        if rot == "ajustada":
+            dd = ImageDraw.Draw(g)
+            for py in range(16):
+                for px in range(16):
+                    if im.getpixel((px, py)) != antes.getpixel((px, py)):
+                        dd.rectangle([px * 12, py * 12, px * 12 + 11, py * 12 + 11], outline=(230, 40, 40, 255))
+        out.alpha_composite(g, (x + 170, 52))
+    out = out.crop((0, 0, 1400, 52 + 192 + 16))
+    out.save(PASTA / "rei-pontas.png")
+    print("rei-pontas.png", out.size)
+
+
 if __name__ == "__main__":
     import sys
-    if sys.argv[1:2] == ["coroa"]:
+    if sys.argv[1:2] == ["pontas"]:
+        folha_pontas(sys.argv[2])
+    elif sys.argv[1:2] == ["coroa"]:
         folha_coroa(sys.argv[2])
     elif sys.argv[1:] == ["r3"]:
         folha_r3()

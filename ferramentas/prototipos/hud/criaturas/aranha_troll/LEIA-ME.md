@@ -187,3 +187,22 @@ Aracnídea fora.
 - **A Aranha 2B:** saíram os dentes de morsa e o par de olhos grandes; ficou uma aranha de perto, com as quelíceras, as
   presas curtas e os olhos pequenos, e as patas presas ao corpo mantêm a espécie. Limite: as presas são pequenas a 32 px,
   e o rosto ficou mais escuro e menos agressivo que a 2.
+
+### O ajuste das pontas da coroa dourada (21/10/2026)
+
+**Pedido de Jean:** o resto da coroa está bom; só o formato das três pontas, comparando com a referência: as dos lados
+subindo mais, com uma inclinação discreta (pareciam ganchos deitados para fora); a do meio terminando num triângulo (o
+topo estava largo e achatado); vãos legíveis entre as três; a irregularidade sutil. O aro, o encaixe, a paleta e o
+Troll abaixo da coroa iguais.
+
+- **Rei Troll, coroa ajustada** (`rei-troll-ouro2`): a fonte da `rei-troll-ouro` (que fica como o antes) aberta pelo MCP
+  e gravada como `fontes/rei-troll-ouro2/`; só a camada `coroa` retocada pelo `pintar.lua` (10 pixels, 0 diferentes na
+  releitura): as pontas dos lados com duas linhas, a ponta um pixel para fora (a inclinação discreta); a do meio com a
+  base de três pixels e a ponta de um; os vãos abertos entre elas na linha de cima. O aro (as linhas 2 e 3) igual; da
+  linha 4 para baixo, igual pixel a pixel ao Troll 2 (conferido). O composto com a soma das camadas (212); a exportação
+  igual à grade, @2x exato, o 32 e o 48 em blocos inteiros.
+- **A folha:** `rei-pontas.png` (`python auxiliares/prancha.py pontas <a referência>`): a referência × a anterior × a
+  ajustada, na caixa da carta em tamanho real, a 3× e a 12× (os pixels mudados em vermelho).
+
+**Leitura a 32 px:** as três pontas leem separadas, a do meio mais alta e em ponta, como na referência; a coroa fica
+menos "ondulada" e mais coroa. Limite: com duas linhas para as pontas, a do meio sobe só um pixel acima das outras.

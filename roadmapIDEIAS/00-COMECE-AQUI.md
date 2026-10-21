@@ -5547,3 +5547,5 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   `aranha-2b`, em `ferramentas/prototipos/hud/criaturas/aranha_troll/`; as folhas `rei-aranha.png` e `rei-coroa.png`;
   a referência da coroa guardada em `ferramentas/arte/referencias/icones/`.
 - **Continua:** nada aprovado; o Rei e a Aranha fora de produção; a versão continua 1.166.0.
+- **Ajuste das pontas (pedido de Jean):** `rei-troll-ouro2`, só as três pontas da coroa dourada (as dos lados subindo,
+  a do meio em triângulo, os vãos abertos), o resto igual; a folha `rei-pontas.png`. Nada aprovado.
