@@ -1,0 +1,122 @@
+{
+ "heroi-cultistas/atual": {
+  "estados": [
+   "j:queimadura",
+   "j:maldito"
+  ],
+  "imagens": [
+   "queimadura 16px → 17.9px (sprite ou troca da página)",
+   "maldito 16px → 17.9px /static/hud/icones/estado-maldito-16.png"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "heroi-cultistas/proposta": {
+  "estados": [
+   "j:queimadura",
+   "j:maldito"
+  ],
+  "imagens": [
+   "queimadura 16px → 17.9px (sprite ou troca da página)",
+   "maldito 16px → 17.9px (sprite ou troca da página)"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "heroi-cultistas/proposta-gota": {
+  "estados": [
+   "j:queimadura",
+   "j:maldito"
+  ],
+  "imagens": [
+   "queimadura 16px → 17.9px (sprite ou troca da página)",
+   "maldito 16px → 17.9px (sprite ou troca da página)"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "heroi-cultistas/proposta-r2": {
+  "estados": [
+   "j:queimadura",
+   "j:maldito"
+  ],
+  "imagens": [
+   "queimadura 16px → 17.9px (sprite ou troca da página)",
+   "maldito 16px → 17.9px (sprite ou troca da página)"
+  ],
+  "cartas": [
+   "j"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "inimigo-lobos/atual": {
+  "estados": [
+   "c1-1:queimadura",
+   "c1-2:queimadura"
+  ],
+  "imagens": [
+   "queimadura 16px → 16.0px (sprite ou troca da página)"
+  ],
+  "cartas": [
+   "c1-1",
+   "c1-2"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "inimigo-lobos/proposta": {
+  "estados": [
+   "c1-1:queimadura",
+   "c1-2:queimadura"
+  ],
+  "imagens": [
+   "queimadura 16px → 16.0px (sprite ou troca da página)"
+  ],
+  "cartas": [
+   "c1-1",
+   "c1-2"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "inimigo-lobos/proposta-gota": {
+  "estados": [
+   "c1-1:queimadura",
+   "c1-2:queimadura"
+  ],
+  "imagens": [
+   "queimadura 16px → 16.0px (sprite ou troca da página)"
+  ],
+  "cartas": [
+   "c1-1",
+   "c1-2"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "inimigo-lobos/proposta-r2": {
+  "estados": [
+   "c1-1:queimadura",
+   "c1-2:queimadura"
+  ],
+  "imagens": [
+   "queimadura 16px → 16.0px (sprite ou troca da página)"
+  ],
+  "cartas": [
+   "c1-1",
+   "c1-2"
+  ],
+  "erros": [],
+  "avisos": []
+ }
+}

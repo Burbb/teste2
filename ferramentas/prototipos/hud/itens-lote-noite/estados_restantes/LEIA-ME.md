@@ -226,3 +226,36 @@ bandido), a Maldição do Necromante (▼), Desaparecer (Furtivo ▲, com a Esqu
 selo de chegada no jogo:** as duas fontes dele (o Marcar Presa e o evento da estrada) aplicam o estado direto, sem
 lance; o papel cobre o selo se um dia houver. O registro confirma que o Veneno, as Chamas, o Frenesi e o Fortalecido
 continuam com os sprites. Sem erro nem aviso no console. A folha: `integracao-1.158.0.png`.
+
+## A segunda rodada dos nove (21/10/2026, depois da avaliação do Jean)
+
+**Pedido de Jean:** os cinco aprovados entram no jogo (seção acima); os outros nove são refinados aqui, com as versões
+anteriores preservadas. Os candidatos do `b17ab3dd` continuam em `proposta/estado-<id>-16.png`; as alternativas novas
+ficam em `proposta/estado-<id>-r2-16.png` (e `estado-veneno-gota-16.png`), com as fontes em `fontes/` e as grades em
+`icones16.py` (a seção "a segunda rodada"). As folhas `rodada2-lote<n>.png` mostram, na carta a 1920×945 e com os
+mesmos dados: o sprite do jogo (atual), o candidato anterior (proposta) e a alternativa nova (proposta-r2 /
+proposta-gota), em tamanho real e a 2×, e a 12× com a grade.
+
+**O que foi pedido por estado e o que foi feito (grupo 1: lotes 1, 2 e 3):**
+
+- **Veneno — a gota verde como alternativa** (`estado-veneno-gota`): uma gota única, pontuda, caindo numa poça larga,
+  com dois respingos e um reflexo; camadas poca, gota, contorno. A construção se separa do Sangramento (duas gotas
+  soltas, sem chão) pela poça e pela gota única, além da cor. Na bancada, a primeira gota pendurada por um fio lia como
+  um frasco (o fio virava gargalo) e foi trocada. **Comparação:** a serpente (o candidato preservado) lê como cobra no
+  1× e não se parece com nada; a gota com a poça lê como "gota verde", mas no 1× também pode parecer uma arvorezinha num
+  vaso. **Recomendação: a serpente.**
+- **Chamas — a chama dominante** (`estado-queimadura-r2`): a silhueta primeiro, uma chama alta com a ponta inclinada e
+  duas línguas menores na base, acompanhando o mesmo movimento; depois o miolo claro embaixo e a borda escura. A leitura
+  de coroa (três pontas da mesma altura) sumiu.
+- **Atordoado — a espiral preservada, e o teste opcional de rotação** (`rodada2-atordoado-gira.png`): só na página do
+  protótipo, o selo de chegada do Atordoado ganha a espiral e gira uma volta em quatro passos de 90° (0,6 s, sem
+  rotação fracionada, que borraria o pixel), dentro de `@media (prefers-reduced-motion: no-preference)`; o chip fica
+  parado. Conferido no cenário `gelo` (a Prisão de Gelo pela roda): o registro mostra a imagem a 90°, a 270° e parada
+  ao fim da volta; com `prefers-reduced-motion: reduce`, nenhuma animação. A mudança no jogo seria pequena (uma classe
+  no selo do estado e a regra de CSS), mas pede decisão: não foi aplicada.
+- **Enfraquecido — a guarda equilibrada** (`estado-enfraquecido-r2`): a guarda da espada passa a ter 3 px de cada lado
+  da lâmina (antes, 3 de um lado e 2 do outro); a seta roxa para baixo e o resto, iguais. Coerente com o Fortalecido
+  (lote 6).
+- **Fotos:** as mesmas situações dos lotes 1, 2 e 3 (`capturas/rodada2-lote<n>/`), atual × candidato × alternativa; o
+  Sangramento e a Maldição, agora no jogo, aparecem com os arquivos de produção. Sem erro nem aviso no console. Folhas:
+  `rodada2-lote1.png`, `rodada2-lote2.png`, `rodada2-lote3.png`.

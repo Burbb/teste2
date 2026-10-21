@@ -396,7 +396,7 @@
    "habilidade": "prisao_gelo|lanca_gelo",
    "selo": true,
    "gira": true,
-   "carta": "c1-1",
+   "carta": "inimigo",
    "amb": {
     "PRISAO": "prisao"
    }

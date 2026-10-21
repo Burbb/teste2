@@ -502,6 +502,150 @@ FURIA_ROSTO = com_contorno([
                ".....RRRRRR.....",
                "................"])
 
+VENENO_GOTA = com_contorno([
+          ".......h........",
+          "......hHg.......",
+          "......hHg.......",
+          ".....hHhgg......",
+          ".....hHhgg......",
+          "....hHihhgg.....",
+          "....hiGihgG.....",
+          "...hhhihhggG....",
+          "...hhhhhhggG....",
+          "...ghhhhhgGG....",
+          "....ghhhgGG.....",
+          ".....GGGGG......",
+          "..H..........h..",
+          ".hHhhhhgggggggG.",
+          "..gggGGGGGGGGG..",
+          "................"])
+
+CHAMAS_R2 = com_contorno([
+          ".........O......",
+          "........Oo......",
+          "........Oo......",
+          ".......OOo......",
+          "...O..OyOof.....",
+          "...Oo.OyOoo.....",
+          "...oO.OyyOof.f..",
+          "...oOOOyYyOofof.",
+          "..foOOyYYyyOoof.",
+          "..foOyYYYYyOoof.",
+          "..foOyYYYYyOoff.",
+          "..ffoOyYYyOooff.",
+          "...ffoOyyOoofF..",
+          "....FffooofFF...",
+          "......FFFFF.....",
+          "................"])
+
+FORTALECIDO_R2 = com_contorno([
+               "................",
+               "....8...........",
+               "...786.....Hi...",
+               "...786....HHhg..",
+               "...786...HHHhgg.",
+               "...786.....Hg...",
+               "...786.....Hg...",
+               "...786.....hg...",
+               "...786.....hg...",
+               "...786.....hg...",
+               ".DDdddcc...hG...",
+               "....L......gG...",
+               "....L...........",
+               "....d...........",
+               "................",
+               "................"])
+
+ENFRAQUECIDO_R2 = com_contorno([
+                "................",
+                "....d...........",
+                "....L......Qq...",
+                "....L......Qq...",
+                ".DDdddcc...Qq...",
+                "...786.....Qq...",
+                "...786.....Qq...",
+                "...786.....Qq...",
+                "...786.....Qq...",
+                "...786...QQQqqq.",
+                "...786....QQqq..",
+                "...786.....Qq...",
+                "...786..........",
+                "....8...........",
+                "................",
+                "................"])
+
+BARREIRA_R2 = com_contorno([
+            "................",
+            ".....UUUuuu.....",
+            "...UUUuuuuubb...",
+            "..UUuvvvvvvbbb..",
+            ".UUuvvv87vvvbbB.",
+            ".UuvvvU76vvvvbB.",
+            ".UuvvU8876vvvbB.",
+            ".uuvvv8766vvvbB.",
+            ".uuvvv7766vvvbB.",
+            ".ubvvv7vv6vvvBB.",
+            ".ubvvv7vv6vvvBB.",
+            ".ubbvvvvvvvvbBB.",
+            "..bbbvvvvvvbBB..",
+            "...bbbbbbBBB....",
+            ".....bBBBB......",
+            "................"])
+
+PROVOCANDO_R2 = com_contorno([
+              ".......ss.......",
+              ".s.....ss.....s.",
+              "..s...SSss...s..",
+              "...s.S.Ss.S.s...",
+              "....SS....sS....",
+              "...SSS....sSS...",
+              "................",
+              ".......87.......",
+              ".......76.......",
+              "....77788766....",
+              "......8766......",
+              "......7766......",
+              "......7766......",
+              "......7..6......",
+              "......7..6......",
+              "................"])
+
+INICIATIVA_R2 = com_contorno([
+              "................",
+              ".............D..",
+              "............DeD.",
+              "...........8.D..",
+              "..........876...",
+              "....777..876....",
+              ".........76.....",
+              "..7777..876.....",
+              ".......876......",
+              "...777876.......",
+              ".....dd6........",
+              "....d.Ld........",
+              ".....L..........",
+              "....d...........",
+              "................",
+              "................"])
+
+FRENESI_R2 = com_contorno([
+           "................",
+           ".......yy.......",
+           "......yYYy......",
+           ".....Oy..yO.....",
+           "....OO....OO....",
+           "...OO......OO...",
+           ".......oo.......",
+           "......oOOo......",
+           ".....oo..oo.....",
+           "....oo....oo....",
+           "................",
+           ".......ff.......",
+           "......foof......",
+           ".....ff..ff.....",
+           "................",
+           "................"])
+
 # as camadas de cada desenho, de baixo para cima, pela letra
 def _por(mapa, resto):
     return lambda ch: "contorno" if ch == "#" else next((k for k, v in mapa.items() if ch in v), resto)
@@ -560,6 +704,24 @@ ICONES = {
                                else "bota"),
     "estado-iniciativa-taca": (INICIATIVA_TACA, ["exclamacao", "raios", "contorno"],
                                lambda x, y, ch: "contorno" if ch == "#" else "exclamacao" if 6 <= x <= 9 else "raios"),
+    # a segunda rodada (21/10/2026, depois da avaliação do Jean): as alternativas novas, com as anteriores preservadas
+    "estado-veneno-gota": (VENENO_GOTA, ["poca", "gota", "contorno"],
+                           lambda x, y, ch: "contorno" if ch == "#" else "poca" if y >= 12 else "gota"),
+    "estado-queimadura-r2": (CHAMAS_R2, ["chama", "miolo", "contorno"],
+                             lambda x, y, ch: "contorno" if ch == "#" else "miolo" if ch in "yY" else "chama"),
+    "estado-fortalecido-r2": (FORTALECIDO_R2, ["espada", "seta", "contorno"],
+                              lambda x, y, ch: "contorno" if ch == "#" else "seta" if x >= 9 else "espada"),
+    "estado-enfraquecido-r2": (ENFRAQUECIDO_R2, ["espada", "seta", "contorno"],
+                               lambda x, y, ch: "contorno" if ch == "#" else "seta" if ch in "Qq" else "espada"),
+    "estado-barreira-r2": (BARREIRA_R2, ["bolha", "figura", "contorno"],
+                           lambda x, y, ch: "contorno" if ch == "#" else "figura" if ch in "5678" and 6 <= x <= 9 else "bolha"),
+    "estado-provocando-r2": (PROVOCANDO_R2, ["figura", "setas", "contorno"],
+                             lambda x, y, ch: "contorno" if ch == "#" else "setas" if ch in "SsrR" else "figura"),
+    "estado-iniciativa-r2": (INICIATIVA_R2, ["espada", "brilho", "rastro", "contorno"],
+                             lambda x, y, ch: "contorno" if ch == "#" else "brilho" if ch in "De" and y <= 3
+                             else "rastro" if ch == "7" and x <= 6 and y in (5, 7, 9) and not (y == 9 and x >= 6)
+                             else "espada"),
+    "estado-frenesi-r2": (FRENESI_R2, ["divisas", "contorno"], lambda x, y, ch: "contorno" if ch == "#" else "divisas"),
     # tentativas guardadas (fora da proposta principal)
     "estado-veneno-presas": (VENENO_PRESAS, ["presas", "veneno", "contorno"],
                              lambda x, y, ch: "contorno" if ch == "#" else "presas" if ch in "Wwx" else "veneno"),

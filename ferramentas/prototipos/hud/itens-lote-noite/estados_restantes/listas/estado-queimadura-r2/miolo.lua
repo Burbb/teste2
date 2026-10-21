@@ -1,0 +1,1 @@
+return "7,4,ffe08a;7,5,ffe08a;7,6,ffe08a;8,6,ffe08a;7,7,ffe08a;8,7,fffbe0;9,7,ffe08a;6,8,ffe08a;7,8,fffbe0;8,8,fffbe0;9,8,ffe08a;10,8,ffe08a;5,9,ffe08a;6,9,fffbe0;7,9,fffbe0;8,9,fffbe0;9,9,fffbe0;10,9,ffe08a;5,10,ffe08a;6,10,fffbe0;7,10,fffbe0;8,10,fffbe0;9,10,fffbe0;10,10,ffe08a;6,11,ffe08a;7,11,fffbe0;8,11,fffbe0;9,11,ffe08a;7,12,ffe08a;8,12,ffe08a"

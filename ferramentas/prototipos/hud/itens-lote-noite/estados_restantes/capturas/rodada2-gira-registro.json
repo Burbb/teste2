@@ -1,0 +1,30 @@
+{
+ "selo-atordoado/proposta-gira": {
+  "selo": [
+   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAA"
+  ],
+  "dono": "c1-1",
+  "giro": [
+   "gira-estado matrix(0, 1, -1, 0, 0, 0)",
+   "gira-estado matrix(0, -1, 1, 0, 0, 0)",
+   "gira-estado none",
+   "gira-estado none"
+  ],
+  "erros": [],
+  "avisos": []
+ },
+ "selo-atordoado/proposta-gira-reduzido": {
+  "selo": [
+   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAA"
+  ],
+  "dono": "c1-1",
+  "giro": [
+   "none none",
+   "none none",
+   "none none",
+   "none none"
+  ],
+  "erros": [],
+  "avisos": []
+ }
+}

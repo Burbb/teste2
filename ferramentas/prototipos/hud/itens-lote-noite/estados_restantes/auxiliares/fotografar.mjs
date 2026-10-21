@@ -80,7 +80,8 @@ for (const sit of SITUACOES) {
             await espera(120);
           }
           await espera(200);
-          const dono = sit.carta || await s.evaluate((el) => el.closest(".carta") ? el.closest(".carta").dataset.uid : null);
+          const dono = sit.carta === "inimigo" ? await p.evaluate(() => document.querySelector('.carta:not([data-uid="j"])').dataset.uid)
+            : sit.carta || await s.evaluate((el) => el.closest(".carta") ? el.closest(".carta").dataset.uid : null);
           const c = dono ? await p.locator(`.carta[data-uid="${dono}"]`).boundingBox() : await s.boundingBox(), b = await s.boundingBox();
           const x = Math.min(c.x, b.x) - 8, y = Math.min(c.y, b.y) - 8;
           await p.screenshot({ path: path.join(saida, `${sit.nome}-${modo}-selo.png`),

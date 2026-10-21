@@ -5295,3 +5295,13 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   jogo (o Marcar Presa e o evento da estrada aplicam direto, sem lance). Folha:
   `estados_restantes/integracao-1.158.0.png`.
 - **Continua:** os outros nove estados numa segunda rodada no protótipo.
+
+### 21/10/2026 (data do computador local) — A segunda rodada dos estados, grupo 1: Veneno, Chamas, Atordoado e Enfraquecido (proposta)
+
+- **Pedido de Jean:** refinar os nove não aprovados só no protótipo, preservando as versões anteriores.
+- **Feito:** a gota verde caindo na poça (alternativa do Veneno; a recomendação continua a serpente), a chama dominante
+  (Chamas), a guarda equilibrada (Enfraquecido) e o teste opcional da rotação do selo do Atordoado (uma volta em 90°,
+  respeitando o movimento reduzido; não aplicado ao jogo), em `estados_restantes/` (`rodada2-lote1.png` a
+  `rodada2-lote3.png`, `rodada2-atordoado-gira.png`). O MCP do Aseprite continua fora; as fontes saíram pela linha de
+  comando, com a releitura e a conferência da exportação.
+- **Continua:** nada novo aprovado; a versão continua 1.158.0.
