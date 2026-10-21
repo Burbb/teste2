@@ -91,9 +91,35 @@ mesma construção de cada peça, escrita para qualquer grade (`ferramentas/prot
 couro2_r4.py`, que no 32 reproduz o aprovado pixel a pixel), pintados pelo `pintar.lua`. As rodadas estão em
 `ferramentas/prototipos/hud/couro2-aseprite/`.
 
-**Cuidado com a linha de comando e o conector:** cada `aseprite -b` (o exportador, a conferência) carrega também a
-extensão do MCP, que se conecta ao mesmo canal (`ws://127.0.0.1:6515`) e o fecha ao sair; o editor aberto perde o
-conector até ser reiniciado. Pinte e confira pelo editor primeiro; exporte pela linha de comando por último.
+**O conector, a linha de comando e as sessões (diagnóstico de 21/10/2026).** São três peças: o bridge (um processo
+`node .../aseprite-mcp-bridge/dist/index.js` que cada sessão do Claude sobe pelo `stdio`, escutando
+`ws://127.0.0.1:6515`), a extensão do Aseprite (Aseprite MCP Pro 1.0.0, que disca para a 6515 e tenta de novo a cada
+3 s) e o editor aberto. O que foi confirmado:
+
+- **"Connection closed" ao abrir uma sessão:** só um bridge pode escutar a 6515. Se outra sessão do Claude, mesmo
+  parada (por exemplo, uma de antes de uma troca de conta), ainda tem o bridge dela, o desta sessão sai na hora com
+  `listen EADDRINUSE 127.0.0.1:6515`, e o painel mostra "Connection closed". Diagnóstico: `Get-NetTCPConnection
+  -LocalPort 6515` dá o processo que escuta; o pai dele (`Win32_Process`, `ParentProcessId`) diz de qual `claude.exe` ele
+  é. Recuperação: encerrar só aquele `node` do bridge (nunca todos os `node`), e reconectar o `aseprite-bridge` pelo
+  `/mcp` da sessão que vai usar.
+- **A linha de comando derrubava o editor:** cada `aseprite -b` (o exportador, a conferência, a montagem das fontes)
+  carregava a extensão, que também discava para a 6515; o bridge adota o cliente mais novo e fecha o anterior, o do
+  editor. Corrigido por um ajuste local na extensão instalada: sem interface (`app.isUIAvailable` falso) ela não conecta.
+- **O editor que não voltava:** depois de perder a conexão (o bridge caiu ou foi substituído), a extensão podia ficar com
+  um socket que nunca abria nem avisava o fechamento, e o temporizador não discava mais (70 s sem nenhuma tentativa,
+  medido). O mesmo ajuste recria a conexão depois de dois ciclos desconectado.
+
+O ajuste local fica em `%APPDATA%\Aseprite\extensions\aseprite-mcp-pro\plugin.lua` (só a máquina do Jean; não é do
+repositório). O original e a diferença estão no bridge: `Tools\aseprite-mcp-bridge\backups\plugin.lua.orig` e
+`Tools\aseprite-mcp-bridge\patches\0002-extensao-sem-conexao-em-lote-e-reconexao.patch`. Reinstalar ou atualizar a
+extensão desfaz o ajuste: reaplique o patch. O editor só carrega a extensão ao abrir.
+
+Conferido depois do ajuste, com o editor reaberto e um bridge na 6515 (MCP pelo stdio → bridge → WebSocket →
+extensão): `get_version` (1.0.0, 121 comandos), `list_open_sprites`, a captura de uma cópia temporária, o `pintar.lua`
+pelo `execute_script` com a releitura (os dois pixels pintados e nenhum outro mudado na captura), e uma exportação
+`aseprite -b` no meio, seguida de `get_version` logo depois, a 1 s e a 4 s, sem nenhuma desconexão (o lote não tenta
+mais conectar). Cuidado: o `close_sprite` por nome falha quando o Aseprite guardou o caminho curto do Windows
+(`JEANWR~1`); feche pelo documento ativo, conferido antes com o `list_open_sprites` (o campo é `is_active`).
 
 ## Exportar os PNGs e os @2x
 
