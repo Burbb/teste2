@@ -3373,3 +3373,42 @@ usa o sprite; o retrato do herói é outro desenho.
 "você usa" em 48 (o 32 centrado), "Equipar agora" e "Guardar na mochila", a ficha (32), o Inventário (40, o corpo e a
 mochila) e a cabeça vazia, na ficha e no Inventário. As medidas, as áreas de clique, as regras e os atributos não
 mudaram. Sem erro no console. A folha: `capacete_malha/c1-integracao-1.153.0.png`.
+
+### As botas, a A1: um acabamento mais contido na B3 (`botas_ferro/acabamento_a1/`)
+
+**Pedido de Jean (20/10/2026):** a forma da B3 continua aprovada; testar só o acabamento, para aproximá-la do C1, da
+cota e das perneiras P7, com uma nova imagem gerada como referência de acabamento (só a paleta, os reflexos e a divisão
+dos planos). Na cópia da fonte final: reduzir os reflexos quase brancos, suavizar o contraste dentro das placas, manter
+os brilhos curtos nas bordas, as junções legíveis e as sombras das sobreposições, sem escurecer a peça inteira. Preservar
+a silhueta, as proporções, o tamanho, a sobreposição do par, as placas, as tiras, as fivelas, as solas e o contorno; sem
+malha nem reconstrução. Só o 32 e o 64 = 32 ×2. A B3 do jogo e os arquivos de produção intactos; nada integrado.
+
+**A referência de acabamento** em `ferramentas/arte/referencias/botas/Botas de ferro em pixel art.png` (o papel no
+`LEIA-ME.md` de lá). Medida na mesma régua (os pixels cinza pelo tom de ferro mais perto): o aço dela fica no tom médio
+(5: 33%; 3 e 4: 36%; 7 e 8: 16%), enquanto a referência da B3 se divide entre muito escuro e muito claro (2 e 3: 55%;
+7 e 8: 33%; quase nada de 5). No jogo, a B3 tem 15% do aço em 7 e 8, em manchas grandes; a cota tem 11% e a P7, 5%.
+
+**O caminho** (`auxiliares/acabamento.py`, sobre a grade da B3 do jogo, `grades/B3-jogo.txt`, conferida igual ao PNG do
+jogo): só os tons do aço mudam, nenhum pixel muda de camada (80 pixels, todos na camada aco, conferidos antes de pintar):
+1. o quase branco (8) sai: na beira da placa vira o aço claro do conjunto (7), dentro, o 6 (8 pixels);
+2. o 7 fica só como brilho curto na beira de uma placa (encostado no contorno, no vão, no couro ou numa junta); dentro,
+   vira 6; e numa fileira de 7 seguidos ficam os 2 da esquerda (a borda da boca da bota da frente lia como aro polido)
+   (34 pixels);
+3. o 6 de dentro da placa desce para 5 (30 pixels): sem isso, o cano da frente virava um plano liso de 6 e perdia a
+   divisão entre a face acesa e a do lado; assim a face acesa (6) continua separada da vizinha (5), como nos planos da
+   referência;
+4. a sombra de dentro da placa (o 3 longe das juntas, do contorno, do vão e do couro) sobe para 4 (8 pixels): o corpo
+   da placa no tom médio, sem escurecer a peça; as juntas (2 e 1) e as sombras das sobreposições ficam.
+A primeira passada (sem a regra 3) foi vista e descartada pelo cano liso.
+
+**A conferência:** a cópia da fonte `fontes/A1/A1-32.aseprite` (as camadas da B3: guia oculta, interior, couro, aco,
+contorno) pintada pelo `pintar.lua` (`listas/acabamento/aco.lua`: 0 diferenças na releitura, 0 fora da tela); exportada
+por `exportar_aseprite.py A1 botas_ferro/acabamento_a1/proposta --fontes=botas_ferro/acabamento_a1/fontes`; o composto do
+editor é igual ao PNG e à grade (0 pixels diferentes); a silhueta é igual à da B3 do jogo, com 80 pixels de tom
+diferentes; @2x exato; o 64 é o 32 ×2 (conferido pixel a pixel). PNGs em `proposta/` (as cópias com o nome `botas-ferro`
+em `tamanhos/`, só para as fotos). `ferramentas/arte/aseprite/botas-ferro/` e os PNGs do jogo não mudaram.
+
+**As folhas:** `botas_ferro/acabamento_a1/a1.png` (a B3 do jogo e a A1 a 12× sem suavização, com a referência de
+acabamento; as duas em tamanho real e a 4× junto do capacete C1, da cota, da luva L7 e das perneiras P7;
+`auxiliares/prancha.py`) e `a1-ficha.png` (a ficha a 1920×945 com os mesmos dados, a B3 do jogo × a A1;
+`fotografar.mjs botas_a1`). Sem erro no console. Nada integrado.

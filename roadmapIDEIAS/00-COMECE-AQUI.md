@@ -5131,3 +5131,13 @@ Tudo no protótipo (`ferramentas/prototipos/hud/LEIA-ME.md`, as seções de mesm
   centros do 40 e do 48 iguais ao 32. Os usos não mudaram (`ITEM`, `VAZIO`, `ICONE_ESPACO`). Conferido no jogo a 1920×945:
   o saque, equipar e guardar, a ficha, o Inventário e a cabeça vazia.
 - **Continua:** em seguida, o teste de acabamento das botas B3 (só no protótipo).
+
+### 20/10/2026 (data do computador local) — As botas, a A1: o acabamento contido (proposta)
+
+- **Pedido de Jean:** testar só o acabamento da B3 (a forma aprovada), mais contido, para aproximá-la do C1, da cota e
+  da P7, com a nova imagem gerada como referência de acabamento (`ferramentas/arte/referencias/botas/Botas de ferro em
+  pixel art.png`); só o 32 e o 64 = 32 ×2.
+- **Feito:** a A1 em `ferramentas/prototipos/hud/itens-lote-noite/botas_ferro/acabamento_a1/` (80 pixels de aço na cópia
+  da fonte: sem quase brancos, os 7 só como brilhos curtos nas beiras, o corpo das placas no tom médio com a divisão dos
+  planos, as juntas e as sombras das sobreposições mantidas; as folhas `a1.png` e `a1-ficha.png`).
+- **Continua:** a B3 no jogo, a A1 aguardando a escolha visual; a versão continua 1.153.0.
